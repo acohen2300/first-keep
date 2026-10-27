@@ -48,6 +48,33 @@ function trainButtons(kinds) {
     const sub = U.age > p.age ? `${AGES[U.age].name} age` : !ready(0, U.at).length ? `needs a ${BLD[U.at].name.toLowerCase()}` : costText(U.cost);
     return btn(`train:${k}`, stats(0, ck).name, sub + (n ? ` ×${n}` : ''), why ? 'dis' : ''); }).join('');
 }
+// Research, in four looks you can tell without reading: ready (wax seal), short of something (red ink, what is missing), busy, locked (faded)
+function techState(t) {
+  if (G.P[0].techs.has(t.id)) return 'done';
+  const why = researchWhy(0, t.id);
+  return !why ? 'ready' : why === 'Being researched.' || why === 'That line is full.' ? 'busy' : why.startsWith('Not enough') ? 'short' : 'locked';
+}
+function techBtn(t, withAt) {
+  const p = G.P[0], st = techState(t), miss = {};
+  for (const r in t.cost) if ((p.res[r] || 0) < t.cost[r]) miss[r] = Math.ceil(t.cost[r] - (p.res[r] || 0));
+  const sub = st === 'busy' ? 'researching' : st === 'short' ? `short ${costText(miss)}` : st === 'locked' ? researchWhy(0, t.id).replace(/\.$/, '') : costText(t.cost);
+  return btn(`tech:${t.id}`, t.name, sub + (withAt ? ` · ${BLD[t.at].name}` : ''), st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock');
+}
+function researchHTML() {   // everything you can research, across every building: ready first, then short, then locked
+  const p = G.P[0], by = { ready: [], short: [], busy: [], locked: [] }, ageA = AGES[p.age + 1];
+  for (const t of TECH) { const s = techState(t); if (s !== 'done') by[s].push(t); }
+  const grid = L => `<div class="acts">${L.map(t => techBtn(t, true)).join('')}</div>`, ageR = ageA && !p.aging && afford(p, ageA.cost) && keepOf(0);
+  let h = `<h3>Research<span class="who">${by.ready.length + (ageR ? 1 : 0)} ready now</span></h3>`;
+  const cap = by.ready.filter(t => t.cap), rest = by.ready.filter(t => !t.cap);
+  if (ageR) h += `<div class="sec">Next age</div><div class="acts">${keepAgeBtn()}</div>`;
+  if (cap.length) h += `<div class="sec">Room to grow</div>${grid(cap)}`;
+  if (rest.length) h += `<div class="sec">Ready</div>${grid(rest)}`;
+  if (!by.ready.length && !ageR) h += `<p>Nothing to start right now.</p>`;
+  if (by.busy.length) h += `<div class="sec">Under way</div>${grid(by.busy)}`;
+  if (by.short.length) h += `<div class="sec">Short of something</div>${grid(by.short)}`;
+  if (by.locked.length) h += fold('lockedR', `Locked · ${by.locked.length}`, grid(by.locked));
+  return h;
+}
 const trainsAt = kind => Object.keys(UNIT).filter(k => (UNIT[k].at === kind || (UNIT[k].also || []).includes(kind)) && !UNIT[k].civ && UNIT[k].cost);
 function renderCard() {
   const c = G.card; if (!c) return; infoBuf = [];
@@ -76,7 +103,7 @@ function renderCard() {
       if (tr.length) h += hd('Train') + `<div class="acts">${trainButtons(tr)}</div>`;
       if (hasR) {
         h += hd('Research') + `<div class="acts">${ageB}`;
-        for (const t of techs) { const why = researchWhy(0, t.id), busy = why === 'Being researched.'; h += btn(`tech:${t.id}`, t.name, busy ? 'researching' : why && why !== `Not enough: ${costText(t.cost)}.` ? why.replace(/\.$/, '') : costText(t.cost), why ? 'dis' : ''); }
+        for (const t of techs) h += techBtn(t);
         h += `</div>` + (done.length ? `<div class="chips">${done.map(t => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>` : '');
       }
       // everything else about the building waits behind one More, closed until you open it
@@ -176,8 +203,10 @@ function renderCard() {
   else if (c.type === 'fortress') h += `<h3>The Fortress<span class="who">${G.P[FORT].alive ? G.rel[0][FORT] + (G.P[FORT].civ ? ' · ' + CIVS[G.P[FORT].civ].name : '') : 'fallen'}</span></h3>` + diploHTML();
   else if (c.type === 'menu') {
     const M = MENUS.find(m => m.id === c.id); G.lastMenu = c.id;
-    h += `<h3>Build<span class="who">${M.blurb}</span></h3><div class="acts c5 chipsrow">${MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join('')}</div><div class="acts c3">` + M.items.map(k => { const B = BLD[k], lock = B.age > p.age; return btn(`build:${k}`, bldName(0, k), lock ? `${AGES[B.age].name} age` : costText(B.cost), lock || !afford(p, B.cost) ? 'dis' : ''); }).join('') + `</div>`;
+    h += `<h3>Build<span class="who">${M.blurb}</span></h3><div class="acts c5 chipsrow">${MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join('')}</div><div class="acts c3">` + M.items.map(k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp; return btn(`build:${k}`, bldName(0, k), lock ? `${AGES[B.age].name} age` : full ? `limit ${cp}` : costText(B.cost) + (cp > 1 && cp < 99 ? ` · ${n}/${cp}` : ''), lock || full || !afford(p, B.cost) ? 'dis' : ''); }).join('') + `</div>`;
     h += fold('menu', 'What each one does', M.items.map(k => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''));
+  } else if (c.type === 'research') {
+    h += researchHTML();
   } else if (c.type === 'score') {
     scoreAll(); const rows = G.P.filter(q => q.id !== WILD), cats = [['people', 'People'], ['army', 'Army'], ['tech', 'Tech'], ['bld', 'Buildings'], ['wealth', 'Wealth'], ['total', 'Score']];
     h += `<h3>Score<span class="who">${MODES[G.mode].secs ? `${clock(Math.max(0, MODES[G.mode].secs - G.t))} to the bell` : 'conquest'}</span></h3><table><tr><th></th>${rows.map(q => `<th style="border-bottom:3px solid ${q.color}">${q.id === 0 ? 'You' : `<button class="lnk" data-act="seek:${q.id}">${q.name}</button>`}</th>`).join('')}</tr>${cats.map(([k, n]) => `<tr><td>${n}</td>${rows.map(q => `<td>${q.alive || k === 'total' ? fmt(q.score[k]) : '–'}</td>`).join('')}</tr>`).join('')}</table>`;
@@ -209,7 +238,7 @@ function renderCard() {
   const info = infoBuf.join(''), bookOn = !!info && G.infoOpen;
   if (bookOn) h = h.replace('</h3>', `</h3><div class="infoP">${info}</div>`);
   if (h !== cardSig) { cardSig = h; patchHTML($('card'), (info ? `<button id="cardI" class="${bookOn ? 'on' : ''}" data-act="info" aria-label="About this">${BOOK}</button>` : '') + `<button id="cardX" data-act="close" aria-label="Close">×</button>` + h); }
-  $('card').classList.toggle('full', ['setup', 'resume', 'help', 'guide', 'score', 'end'].includes(c.type) || (c.type === 'bld' && (G.blds.find(b => b.id === c.id) || {}).kind === 'market')); $('card').hidden = false;
+  $('card').classList.toggle('full', ['setup', 'resume', 'help', 'guide', 'score', 'end', 'research'].includes(c.type) || (c.type === 'bld' && (G.blds.find(b => b.id === c.id) || {}).kind === 'market')); $('card').hidden = false;
 }
 $('card').addEventListener('toggle', e => { const id = e.target.dataset && e.target.dataset.f; if (id) { if (e.target.open) FOLD.add(id); else FOLD.delete(id); } }, true);
 function settingsHTML() {
@@ -532,7 +561,7 @@ function ui(force) {
   $('rf').textContent = fmt(R.f); $('rw').textContent = fmt(R.w); $('rs').textContent = fmt(R.s); $('rg').textContent = fmt(R.g); $('ri').textContent = fmt(R.i);
   const rank = 1 + G.P.filter(q => q.id && q.id !== WILD && q.score.total > p.score.total).length;
   $('scoreN').textContent = `★${fmt(p.score.total)}`; $('scoreR').textContent = ['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th';
-  if (G.t - (G.rdyT ?? -9) > 1 || G.t < G.rdyT) { G.rdyT = G.t; G.rdy = new Set(TECH.filter(t => !p.techs.has(t.id) && !researchWhy(0, t.id)).map(t => t.at)); }   // buildings with research you can start now
+  if (G.t - (G.rdyT ?? -9) > 1 || G.t < G.rdyT) { G.rdyT = G.t; G.rdy = new Map(); for (const t of TECH) if (techState(t) === 'ready') G.rdy.set(t.at, (G.rdy.get(t.at) || 0) + 1); { const A = AGES[p.age + 1]; if (A && !p.aging && keepOf(0) && afford(p, A.cost)) G.rdy.set('keep', (G.rdy.get('keep') || 0) + 1); } }   // building kind → how many researches you can start there now
   let tip = SET.tips ? advise() : ''; const urgent = tip[0] === '!'; if (urgent) tip = tip.slice(1);
   const T = G.tipS || (G.tipS = { text: '', at: -99, last: -99 });
   if (tip !== T.text && (urgent || G.t > 20 && G.t - T.last > 45)) { T.text = tip; T.at = G.t; if (tip) T.last = G.t; }
@@ -545,8 +574,9 @@ function ui(force) {
   const nq = queuedOf(0, 'vil'), room = Math.max(0, capOf(0) - popOf(0)), S = armyOf(0), idle = V.filter(u => !u.job).length; $('bVil').classList.toggle('dis', !!trainWhy(0, 'vil'));
   // have / can have now: the ceiling is what your homes allow, up to the most of each kind; idle hands are what + can place
   $('bVil').querySelector('small').textContent = `${V.length}/${Math.min(VILMAX, V.length + room)}` + (nq ? ` +${nq}` : '') + ` · ${idle} idle`;
-  $('bArmy').querySelector('small').textContent = `army ${S.length}/${Math.min(ARMYMAX, S.length + room)}` + (S.some(u => u.state === 'attack' || u.state === 'goto') ? ' out' : '');
+  $('bArmy').querySelector('small').textContent = `army ${S.length}/${Math.max(S.length, Math.min(armyRoom(0), S.length + room))}` + (S.some(u => u.state === 'attack' || u.state === 'goto') ? ' out' : '');
   $('bBuild').classList.toggle('on', !!(G.card && G.card.type === 'menu'));
+  { let n = 0; for (const v of G.rdy.values()) n += v; const t = n ? `${n} ready` : 'none ready', s = $('bRes').querySelector('small'); if (s.textContent !== t) s.textContent = t; $('bRes').classList.toggle('glow', n > 0); $('bRes').classList.toggle('on', !!(G.card && G.card.type === 'research')); }
   { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
   $('stage').classList.toggle('busy', !!(G.card || G.place));
   if (G.place) { const B = BLD[G.place.kind], t = !G.place.at ? (G.place.kind === 'wall' ? 'Press and drag a line of wall' : `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`) : G.place.why ? G.place.why : G.place.kind === 'wall' ? `${(G.place.cells || [1]).length} pieces: tap Build, or drag again` : `${B.name}: tap Build, or drag it to move · drag empty ground to look`; if ($('placeT').textContent !== t) $('placeT').textContent = t; $('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why); }

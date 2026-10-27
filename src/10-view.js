@@ -21,13 +21,24 @@ function tread(u) {   // a villager's step: after enough of them on one patch th
   const c = ((u.y / 20) | 0) * (MAP / 20) + ((u.x / 20) | 0);
   if (++TRODE[c] % 260 === 0 && TRODE[c] < 5000) { scarX.fillStyle = 'rgba(120,92,58,.07)'; scarX.beginPath(); scarX.ellipse(u.x, u.y, 5.5, 3, 0, 0, 7); scarX.fill(); }
 }
-function fit() { const r = cv.getBoundingClientRect(); dpr = LOW.n >= 2 ? 1 : Math.min(2, window.devicePixelRatio || 1); cw = r.width; ch = r.height; const W = Math.round(cw * dpr), H = Math.round(ch * dpr); if (cv.width !== W) cv.width = W; if (cv.height !== H) cv.height = H; cam.z = clamp(cam.z, minZ(), ZOOM_MAX); clampCam(); }
-function clampCam() { const hw = cw / 2 / cam.z, hh = ch / 2 / (cam.z * TILT); cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID)); cam.y = clamp(cam.y, Math.min(hh - 50, MID), Math.max(MAP - hh + 30, MID)); }
+// a small parchment tab with a book in red ink, and a count when more than one thing waits
+function researchBadge(x, y, s, n) {
+  const w = (n > 1 ? 31 : 23) * s, h = 17 * s, q = lessMotion ? 0 : Math.sin(G.t * 4) * 0.8 * s, bx = x - (n > 1 ? 6.5 : 0) * s, by = y + q;
+  ctx.save(); ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - w / 2, by - h / 2, w, h, h / 2); else ctx.rect(x - w / 2, by - h / 2, w, h);
+  ctx.fillStyle = '#e6d6ad'; ctx.fill(); ctx.strokeStyle = '#8e1d14'; ctx.lineWidth = Math.max(1.2, 1.3 * s); ctx.stroke();
+  ctx.fillStyle = '#8e1d14'; ctx.beginPath(); ctx.moveTo(bx - 6 * s, by - 4 * s); ctx.lineTo(bx, by - 2.4 * s); ctx.lineTo(bx + 6 * s, by - 4 * s); ctx.lineTo(bx + 6 * s, by + 4 * s); ctx.lineTo(bx, by + 5.6 * s); ctx.lineTo(bx - 6 * s, by + 4 * s); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#e6d6ad'; ctx.lineWidth = Math.max(1, s); ctx.beginPath(); ctx.moveTo(bx, by - 2.4 * s); ctx.lineTo(bx, by + 5.6 * s); ctx.stroke();
+  if (n > 1) { ctx.fillStyle = '#2a1c10'; ctx.font = `700 ${Math.round(11 * s)}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(n), x + 8 * s, by + 0.5 * s); }
+  ctx.restore();
+}
+let vy = 0;   // the map is full screen; the view centres on the band between the top pills and the bottom ones
+function fit() { const r = cv.getBoundingClientRect(); dpr = LOW.n >= 2 ? 1 : Math.min(2, window.devicePixelRatio || 1); cw = r.width; ch = r.height; { const h = $('hud').getBoundingClientRect(), o = $('orders').getBoundingClientRect(), t = r.top; document.documentElement.style.setProperty('--ob', Math.round(r.bottom - o.top) + 'px'); vy = Math.round(((h.bottom - t) + (o.top - t)) / 2 - ch / 2); } const W = Math.round(cw * dpr), H = Math.round(ch * dpr); if (cv.width !== W) cv.width = W; if (cv.height !== H) cv.height = H; cam.z = clamp(cam.z, minZ(), ZOOM_MAX); clampCam(); }
+function clampCam() { const hw = cw / 2 / cam.z, up = (ch / 2 + vy) / (cam.z * TILT), down = (ch / 2 - vy) / (cam.z * TILT); cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID)); cam.y = clamp(cam.y, Math.min(up - 50, MID), Math.max(MAP - down, MID)); }
 const SX = x => (x - cam.x) * cam.z + cw / 2;
-const SY = (y, h) => (y - cam.y) * cam.z * TILT + ch / 2 - (h || 0) * cam.z;
-const toWorld = (sx, sy) => ({ x: (sx - cw / 2) / cam.z + cam.x, y: (sy - ch / 2) / (cam.z * TILT) + cam.y });
+const SY = (y, h) => (y - cam.y) * cam.z * TILT + ch / 2 + vy - (h || 0) * cam.z;
+const toWorld = (sx, sy) => ({ x: (sx - cw / 2) / cam.z + cam.x, y: (sy - ch / 2 - vy) / (cam.z * TILT) + cam.y });
 const minZ = () => Math.min(cw / MAP, ch / (MAP * TILT)) || 0.2;
-function zoomAt(nz, sx, sy) { const w = toWorld(sx, sy); cam.z = clamp(nz, minZ(), ZOOM_MAX); cam.x = w.x - (sx - cw / 2) / cam.z; cam.y = w.y - (sy - ch / 2) / (cam.z * TILT); clampCam(); }
+function zoomAt(nz, sx, sy) { const w = toWorld(sx, sy); cam.z = clamp(nz, minZ(), ZOOM_MAX); cam.x = w.x - (sx - cw / 2) / cam.z; cam.y = w.y - (sy - ch / 2 - vy) / (cam.z * TILT); clampCam(); }
 const quant = v => { for (const s of SCALES) if (s >= v) return s; return SCALES[SCALES.length - 1]; };
 // the ground: one soft picture at half detail for the big shapes, a sharp grass texture over it when you are close
 function makeBg() {
@@ -154,7 +165,7 @@ function drawBld(b, s) {
     const n = b.node, slots = slotsOf(n), w = B.fp * NAVC * z, y = sy + w * TILT / 2 + 6 * z, r = Math.max(3, 3.4 * z), gap = r * 2.8;
     ctx.lineWidth = 1.2; for (let i = 0; i < slots; i++) { const x = sx + (i - (slots - 1) / 2) * gap; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fillStyle = i < (n.wk || 0) ? '#f2e3b0' : 'rgba(18,23,21,.55)'; ctx.fill(); ctx.strokeStyle = 'rgba(18,23,21,.9)'; ctx.stroke(); }
   }
-  if (b.owner === 0 && G.rdy && G.rdy.has(b.kind) && !b.q.some(j => j.tech)) { const r = Math.max(4, 4.6 * z) + (lessMotion ? 0 : Math.sin(G.t * 4) * 0.6), x = sx - B.fp * NAVC * z * 0.3, y = sy - (B.h * 1.2 + 6) * z - r; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fillStyle = '#4fb06a'; ctx.fill(); ctx.strokeStyle = '#dcf5e8'; ctx.lineWidth = 1.4; ctx.stroke(); ctx.strokeStyle = '#fff'; ctx.lineWidth = Math.max(1.4, 1.5 * z * 0.7); ctx.beginPath(); ctx.moveTo(x - r * 0.45, y + r * 0.1); ctx.lineTo(x, y - r * 0.45); ctx.lineTo(x + r * 0.45, y + r * 0.1); ctx.stroke(); }   // an arrow in a green dot: something to research here
+  if (b.owner === 0 && G.rdy && G.rdy.get(b.kind) && !b.q.some(j => j.tech || j.age)) researchBadge(sx - B.fp * NAVC * z * 0.3, sy - (B.h * 1.2 + 6) * z - 10 * Math.max(0.9, z * 0.6), Math.max(0.9, z * 0.6), G.rdy.get(b.kind));   // a parchment tab with a book and how many researches wait here
   if (b.kind === 'mill' && !lessMotion) { ctx.strokeStyle = '#efe6cf'; ctx.lineWidth = 1.6 * z; const cx = sx, cy = sy - 26 * z, a = G.t; ctx.beginPath(); for (let i = 0; i < 4; i++) { ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a + i * 1.571) * 13 * z, cy + Math.sin(a + i * 1.571) * 13 * z); } ctx.stroke(); }
   if (CHIMNEY[b.kind]) { const [dx, h] = CHIMNEY[b.kind]; smoke(sx + dx * z, sy - h * z, b.id, z); }
   blaze(b, sx, sy, z);

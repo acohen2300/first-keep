@@ -204,8 +204,19 @@ const isSoldier = u => UNIT[u.kind].tick === 'sol';
 const soldiersOf = o => G.units.filter(u => u.owner === o && isSoldier(u));
 const armyOf = o => G.units.filter(u => u.owner === o && UNIT[u.kind].cls === 'army');
 const popOf = o => G.units.filter(u => u.owner === o && UNIT[u.kind].cls).length;
-const capOf = o => Math.min(POPMAX, G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 ? BLD[b.kind].room || 0 : 0), 0));
-const clsMax = c => c === 'civ' ? VILMAX : ARMYMAX;
+const roomOf = (o, kind) => BLD[kind].room ? BLD[kind].room + fxv(o, 'room', [kind]).a : 0;   // people one home shelters, after research
+const capOf = o => Math.min(POPMAX, G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 ? roomOf(o, b.kind) : 0), 0));
+// soldiers you may keep: each finished training place, castle, temple, courthouse or hospital makes room; at most ARMYMAX
+const armyRoom = o => Math.min(ARMYMAX, G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 && ARMYROOM[b.kind] ? ARMYROOM[b.kind] + fxv(o, 'armyroom', [b.kind]).a : 0), 0));
+const clsMax = (c, o) => c === 'civ' ? VILMAX : armyRoom(o);
+// how many of a building you may have now: by age, plus research
+const capFor = (o, kind) => UNCAPPED.has(kind) ? Infinity : (CAPS[kind] ? CAPS[kind][G.P[o].age] : 1) + fxv(o, 'limit', [kind]).a;
+const atCap = (o, kind) => bldsOf(o, kind).length >= capFor(o, kind);
+function capWhy(o, kind) {   // why no more of this building, or null
+  if (!atCap(o, kind)) return null;
+  const c = capFor(o, kind), A = G.P[o].age, more = CAPS[kind] && A < 4 && CAPS[kind][A + 1] > CAPS[kind][A];
+  return c ? `At the limit of ${c}` + (more ? '. A new age allows more' : '') : 'A later age allows it';
+}
 const clsCount = (o, c) => G.units.filter(u => u.owner === o && UNIT[u.kind].cls === c).length + G.blds.reduce((n, b) => n + (b.owner === o ? b.q.reduce((m, j) => m + (j.kind && UNIT[j.kind].cls === c ? 1 : j.muster && c === 'army' ? Object.values(j.muster).reduce((x, y) => x + y, 0) : 0), 0) : 0), 0);   // a muster counts all it will bring
 const queuedOf = (o, kind) => G.blds.reduce((n, b) => n + (b.owner === o ? b.q.filter(j => j.kind && (!kind || j.kind === kind || UNIT[j.kind].replaces === kind)).length : 0), 0);
 const BN = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'];

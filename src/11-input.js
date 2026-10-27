@@ -88,6 +88,7 @@ function startPlace(kind) {
   const B = BLD[kind], p = G.P[0];
   if (B.age > p.age) { openCard({ type: 'info', kind }); return; }
   if (G.place && G.place.kind === kind) { cancelPlace(); return; }
+  const why = capWhy(0, kind); if (why) { say(why + '.', '', 3); sfx('err'); return; }
   closeCard(); G.place = { kind, at: null, a: null, cells: null };
   // start the ghost in the middle of the screen, snapped beside something of yours if it can be
   const w = toWorld(cw / 2, ch / 2); if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200);

@@ -4,7 +4,7 @@ function trainWhy(o, kind) {   // why a unit cannot be ordered right now, or nul
   const k = civKind(o, kind), U = UNIT[k], p = G.P[o];
   if (U.age > p.age) return `${plural(U.name)} need the ${AGES[U.age].name} age.`;
   if (!readyAt(o, U).length) return `Build a ${BLD[U.at].name.toLowerCase()} first.`;
-  if (U.cls && clsCount(o, U.cls) >= clsMax(U.cls)) return U.cls === 'civ' ? `Worker limit: ${VILMAX}.` : `Army limit: ${ARMYMAX}.`;
+  if (U.cls && clsCount(o, U.cls) >= clsMax(U.cls, o)) return U.cls === 'civ' ? `Worker limit: ${VILMAX}.` : ARMYFULL;
   if (p.hungry) return 'Your people are hungry: put villagers on Food or Farm.';
   if (!afford(p, U.cost)) return `Not enough: ${costText(U.cost)}.`;
   if (!readyAt(o, U).some(b => b.q.length < 5)) return 'That line is full (5 waiting).';
@@ -29,7 +29,7 @@ function musterWhy(o, plan) {
   if (!n) return 'Nothing missing.';
   if (!ready(o, 'council').some(b => b.q.length < 5)) return 'Needs a War Council.';
   for (const k in plan) { const U = UNIT[k]; if (U.age > p.age || !readyAt(o, U).length) return `Needs a ${BLD[U.at].name.toLowerCase()}.`; }
-  if (clsCount(o, 'army') + n > ARMYMAX) return `Army limit: ${ARMYMAX}.`;
+  if (clsCount(o, 'army') + n > armyRoom(o)) return ARMYFULL;
   if (popOf(o) + n > capOf(o)) return 'Needs room: build homes.';
   if (p.hungry) return 'Your people are hungry.';
   const { cost } = musterCost(o, plan); if (!afford(p, cost)) return `Not enough: ${costText(cost)}.`;

@@ -47,6 +47,8 @@ function think(p) {
   // what to build, in this personality's order
   for (const [kind, age, n, army, stock] of per.build) if (p.age >= age && has(kind) < n && armyN >= army && (!stock || afford(p, stock)) && (!saving || kind === 'barracks')) { if (put(kind, k.x, k.y, 90, 210)) break; }
   if (per.extraBarracks && ready(o, 'barracks').length && has('barracks') < 1 + per.extraBarracks && R.w > 250) put('barracks', k.x, k.y, 90, 220);
+  // army room: when the army fills it, raise another place to train, the kind it has fewest of
+  if (!saving && clsCount(o, 'army') >= armyRoom(o) - 2 && armyRoom(o) < armyCap(p) && R.w >= 250) { const kind = ['barracks', 'range', 'stable'].filter(x => p.age >= BLD[x].age && !building(x) && !atCap(o, x)).sort((a, b) => has(a) - has(b))[0]; if (kind) put(kind, k.x, k.y, 90, 220); }
   if (per.towers > has('tower') && p.age >= 1 && R.s >= 120) { const t = towardMid(k, 140); put('tower', t.x, t.y, 0, 90); }
   if (per.walls && p.age >= 1 && R.s >= 60) {
     const plan = p.ai.wallPlan || (p.ai.wallPlan = wallPlan(k)); let nb = 0;

@@ -173,6 +173,7 @@ function moveTo(u, x, y, dt, r, SP) {
 function canPlace(o, kind, x, y) {
   const B = BLD[kind], n = B.fp, sp = snapPos(kind, x, y), m = B.wallish ? 0 : 1;
   if (sp.gx < 1 || sp.gy < 1 || sp.gx + n > NC - 1 || sp.gy + n > NC - 1) return 'Too close to the edge';
+  const cw_ = capWhy(o, kind); if (cw_) return cw_;
   for (let j = -m; j < n + m; j++) for (let i = -m; i < n + m; i++) {
     const c = (sp.gy + j) * NC + sp.gx + i, inside = i >= 0 && j >= 0 && i < n && j < n;
     if (inside && NAV.lake[c]) return 'That is the lake';

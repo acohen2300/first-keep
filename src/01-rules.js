@@ -149,6 +149,17 @@ const BLD = {
   wonder:    { name: 'Wonder', fp: 6, hp: 4000, h: 60, cost: { f: 1500, w: 1500, s: 1500, g: 1500 }, t: 240, age: 2, one: true, desc: 'Your civilisation\'s great work. When it is finished every side is told, and if it still stands 8 minutes later, you win.' },
 };
 const WONDER_HOLD = 480;
+// Limits. How many of a building you may have in each age (Settlement … Gunpowder). A kind not listed: one. Homes, walls and trade posts have no limit of their own: room and stone bound them.
+const CAPS = {
+  farm: [6, 9, 12, 15, 18], treefarm: [6, 9, 12, 15, 18], pasture: [2, 3, 4, 4, 4],
+  barracks: [1, 2, 2, 3, 3], range: [1, 2, 2, 3, 3], stable: [1, 2, 2, 3, 3], siege: [1, 2, 2, 3, 3],
+  castle: [0, 0, 0, 1, 2], town: [0, 0, 1, 2, 2], tower: [3, 4, 6, 8, 8],
+  mill: [3, 3, 3, 3, 3], lumber: [4, 4, 4, 4, 4], mining: [4, 4, 4, 4, 4], dock: [2, 2, 2, 2, 2],
+};
+const UNCAPPED = new Set(['house', 'apartment', 'aqueduct', 'wall', 'gate', 'tpost']);
+// Army room: each of these, once built, makes room for this many soldiers (and spies, priests, medics). Research adds more.
+const ARMYROOM = { barracks: 8, range: 8, stable: 8, siege: 8, castle: 10, temple: 3, courthouse: 3, hospital: 3 };
+const ARMYFULL = 'Army room is full. Build more, or age up.';
 const TRAINERS = new Set(['keep', ...Object.values(UNIT).flatMap(U => U.at ? [U.at, ...(U.also || [])] : [])]);   // buildings that send people out keep a free square round them; the rest may touch
 
 // The build menus. "soon" is on the list but not built: it stays visible until built or deliberately dropped (and logged).
@@ -189,7 +200,7 @@ const TECH = [
   { id: 'armedcart', name: 'Armed caravans', at: 'market', age: 2, cost: { w: 150, g: 150 }, t: 35, fx: [{ s: 'uhp', k: 'caravan', m: 2 }], desc: 'Caravans take twice the beating and strike back at anyone who robs them.' },
   { id: 'fortpost', name: 'Fortified posts', at: 'tpost', age: 3, cost: { s: 200, g: 150 }, t: 40, fx: [{ s: 'bhp', k: 'tpost', m: 1.5 }, { s: 'dmg', k: 'tpost', a: 5 }], desc: 'Trade posts get walls: half again as sturdy, and their arrows hit twice as hard.' },
   { id: 'credit',  name: 'Letters of credit', at: 'market', age: 3, cost: { g: 300, s: 100 }, t: 45, fx: [{ s: 'trade', m: 1.25 }], desc: 'Every trade sale pays a quarter more: merchants settle on paper, not in carts of coin.' },
-  { id: 'rotation',name: 'Crop rotation',  at: 'mill',   age: 3, need: 'plough', cost: { f: 200, w: 100 }, t: 40, fx: [{ s: 'crop', k: 'food', m: 1.2 }], desc: 'Fields give 20% more food.' },
+  { id: 'rotation',name: 'Crop rotation',  at: 'mill',   age: 3, need: 'plough', cost: { f: 200, w: 100 }, t: 40, cap: true, fx: [{ s: 'crop', k: 'food', m: 1.2 }, { s: 'limit', k: 'farm', a: 3 }], desc: 'Fields give 20% more food, and you may keep 3 more farms.' },
   { id: 'heavyplough', name: 'Heavy plough', at: 'mill', age: 3, need: 'plough', cost: { f: 250, w: 150 }, t: 45, fx: [{ s: 'crop', k: 'food', m: 1.15 }], desc: 'Fields give 15% more food again.' },
   { id: 'wheelbarrow', name: 'Wheelbarrow', at: 'mill', age: 3, cost: { f: 150, w: 100 }, t: 35, fx: [{ s: 'carry', a: 5 }], desc: 'Villagers carry 15 instead of 10: fewer trips.' },
   { id: 'pikesquare', name: 'Pike square', at: 'barracks', age: 3, need: 'phalanx', cost: { f: 250, g: 150 }, t: 50, tier: { unit: 'spear', name: 'Pikeman', hp: 1.15, dmg: 1, vs: { mounted: 4 } }, desc: 'Hoplites become pikemen: tougher still, and four times as deadly to horses.' },
@@ -201,6 +212,12 @@ const TECH = [
   { id: 'machic', name: 'Machicolations', at: 'smith',  age: 3, need: 'fortify', cost: { s: 250, g: 100 }, t: 40, fx: [{ s: 'dmg', k: 'tower', a: 5 }], desc: 'Towers drop and shoot through floor openings: they hit 5 harder.' },
   { id: 'musket', name: 'Musket', at: 'range', age: 4, cost: { f: 300, g: 250, i: 150 }, t: 50, tier: { unit: 'arquebus', name: 'Musketeer', hp: 1.1, dmg: 4, rng: 10 }, desc: 'Arquebusiers become musketeers: 10% more health, hit 4 harder, shoot 10 farther.' },
   { id: 'starfort', name: 'Star fort', at: 'smith', age: 4, need: 'fortify', cost: { s: 500, g: 300, i: 200 }, t: 60, fx: [{ s: 'bhp', k: '#wallish', m: 1.5 }, { s: 'bhp', k: '#guard', m: 1.3 }], desc: 'Low angled bastions turn cannon balls: walls 50% sturdier; towers, castles and Town Centers 30%.' },
+  // capacity: how many people you may house, and how many soldiers you may keep
+  { id: 'timber',  name: 'Timber framing', at: 'lumber', age: 1, cost: { f: 100, w: 150 }, t: 30, cap: true, fx: [{ s: 'room', k: 'house', a: 1 }], desc: 'Houses shelter 6 people instead of 5.' },
+  { id: 'brick',   name: 'Brick and mortar', at: 'mining', age: 2, cost: { s: 150, w: 100 }, t: 35, cap: true, fx: [{ s: 'room', k: 'house', a: 1 }, { s: 'room', k: 'apartment', a: 4 }], desc: 'Houses hold one more, Apartments four more.' },
+  { id: 'plumbing',name: 'Plumbing',       at: 'aqueduct', age: 3, need: 'brick', cost: { s: 250, g: 100 }, t: 45, cap: true, fx: [{ s: 'room', k: 'apartment', a: 4 }], desc: 'Apartments hold four more again.' },
+  { id: 'drillyard', name: 'Drill yard',   at: 'barracks', age: 2, need: 'drill', cost: { f: 150, w: 100 }, t: 40, cap: true, fx: [{ s: 'armyroom', a: 2 }], desc: 'Every building that houses soldiers has room for 2 more.' },
+  { id: 'standing', name: 'Standing army', at: 'castle', age: 3, need: 'drillyard', cost: { f: 250, g: 150 }, t: 50, cap: true, fx: [{ s: 'armyroom', a: 2 }, { s: 'armyroom', k: 'castle', a: 2 }], desc: 'Another 2 places in each, and 2 more in a Castle.' },
   { id: 'granary', name: 'Stone granary',  at: 'mill',   age: 1, cost: { s: 150, w: 50 }, t: 30, fx: [{ s: 'plague', m: 0.5 }], desc: 'Grain kept in stone, not wood: fewer rats, half the risk of plague.' },
   // the War Council ladder: each step opens the next way to command (Battalions keeps the id 'command' so old games load)
   { id: 'engage',  name: 'Engagement',     at: 'council', age: 2, cost: { f: 150, g: 100 }, t: 30, fx: [], desc: 'Stances: Line, Shield wall or Skirmish, for the army or each battalion.' },
