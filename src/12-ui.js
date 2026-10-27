@@ -25,7 +25,8 @@ function patch(a, b) {
 }
 const tpl = document.createElement('div');
 function patchHTML(el, html) { tpl.innerHTML = html; patchKids(el, tpl); }
-const btn = (act, title, sub, cls) => `<button data-act="${act}" class="${cls || ''}"><b>${title}</b>${sub ? `<small>${sub}</small>` : ''}</button>`;
+const cap1 = t => t && t.indexOf('<') < 0 ? t.replace(/(^|· )([a-z])/g, (m, a, c) => a + c.toUpperCase()) : t;   // sentence case: a capital opens every label and every part after a dot
+const btn = (act, title, sub, cls) => `<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small>${cap1(sub)}</small>` : ''}</button>`;
 // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 const FOLD = new Set();
 // two-sided cards, one mold: two tabs; the chosen one is lit
@@ -190,7 +191,7 @@ function renderCard() {
   } else if (c.type === 'army') {
     const S = armyOf(0), by = {}; for (const u of S) { const nm = stats(0, u.kind).name; by[nm] = (by[nm] || 0) + 1; }
     const V = unitsOf(0, 'vil'), idle = V.filter(u => !u.job);
-    h += `<h3>People<span class="who">${V.length} villagers · ${S.length} soldiers</span></h3><div class="sec">Villagers</div><p>${JOBS.map(r => `${V.filter(u => u.job === r).length} ${r}`).join(' · ')} · <b>${idle.length} idle</b></p>${idle.length ? `<div class="acts c1">${btn('idlego', 'Show an idle villager', `${idle.length} idle`)}</div>` : ''}<div class="sec">Army</div><p>${Object.entries(by).map(([n, k]) => `${k} ${some(k, n.toLowerCase())}`).join(' · ') || 'Nobody yet.'}</p>`;
+    h += `<h3>People<span class="who">${V.length} villagers · ${S.length} soldiers</span></h3><div class="acts c1">${btn('card:research', 'Research', (() => { let r = 0; for (const v of G.rdy.values()) r += v; const g = G.blds.reduce((n, b) => n + (b.owner === 0 ? b.q.filter(j => j.tech || j.age).length : 0), 0); return `${r} ready · ${g} under way`; })(), (() => { for (const v of G.rdy.values()) if (v) return 'go'; return ''; })())}</div><div class="sec">Villagers</div><p>${JOBS.map(r => `${V.filter(u => u.job === r).length} ${r}`).join(' · ')} · <b>${idle.length} idle</b></p>${idle.length ? `<div class="acts c1">${btn('idlego', 'Show an idle villager', `${idle.length} idle`)}</div>` : ''}<div class="sec">Army</div><p>${Object.entries(by).map(([n, k]) => `${k} ${some(k, n.toLowerCase())}`).join(' · ') || 'Nobody yet.'}</p>`;
     if (S.length && hasCmd()) h += `<div class="sec">Orders go to</div><div class="acts c4">` + [['all', 'All', S.length]].concat(BN.map((n, i) => [i, n, S.filter(u => u.bn === i).length])).map(([k, n, cnt]) => btn(`sel:${k}`, n, `${cnt}`, G.sel === k ? 'on' : '')).join('') + `</div>`;
     if (S.length) h += `<div class="sec">Orders for the ${selName()}</div><div class="acts">${btn('recall', 'Recall home', '')}${btn('attack:near', 'Attack nearest', oddsText(orderSet(), foeNearest()), orderSet().length ? 'warn' : 'dis')}</div>`;
     if (S.length && p.techs.has('engage')) { const sn = G.sel === 'all' ? (G.stance.every(x => x === G.stance[0]) ? G.stance[0] : -1) : G.stance[G.sel]; h += `<div class="acts c1">${btn('stance', 'Stance: ' + (sn < 0 ? 'mixed' : STANCE[sn].name), '', sn > 0 ? 'on' : '')}</div>`; }
@@ -568,15 +569,19 @@ function ui(force) {
   const showTip = tip && T.text === tip && (urgent || G.t - T.at < 6) && !hushed(tip) && !G.card && !G.place && !G.over;
   if ($('tipT').textContent !== tip) $('tipT').textContent = tip; $('tip').hidden = !showTip;
   { const lim = MODES[G.mode].secs, clk = G.wonder ? `wonder ${clock(Math.max(0, G.wonder.end - G.t))}` : lim ? `${clock(Math.max(0, lim - G.t))}` : clock(G.t);
-    const info = `${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? '🌙' : ''} ${clk} · ${Math.round(cam.z * 100)}%`; if ($('cInfo').textContent !== info) $('cInfo').textContent = info; }
+    let train = 0, going = 0; for (const b of G.blds) if (b.owner === 0) for (const j of b.q) { if (j.kind) train++; else if (j.muster) train += musterN(j.muster); else going++; }
+    let ready = 0; for (const v of G.rdy.values()) ready += v;   // research you can start now (the age counts: it is research too)
+    const S = armyOf(0), out = S.filter(u => u.state === 'attack' || u.state === 'goto').length, idleN = unitsOf(0, 'vil').filter(u => !u.job).length, part = (n, t) => n ? `${t} ${n}` : '';
+    const l1 = `${CIVS[p.civ].name} · ${AGES[p.age].name} age · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? '🌙' : ''} ${clk} · ${Math.round(cam.z * 100)}%`;
+    const l2 = [part(train, 'Training'), part(going, 'Researching'), part(ready, 'Ready'), part(idleN, 'Idle')].filter(Boolean).join(' · '), l3 = [part(S.length, 'Army'), part(out, 'Marching')].filter(Boolean).join(' · ');
+    for (const [id, t] of [['sL1', l1], ['sL2', l2], ['sL3', l3]]) if ($(id).textContent !== t) $(id).textContent = t;
+    $('clock').classList.toggle('glow', ready > 0 && !G.card); }
   const V = unitsOf(0, 'vil');
   for (const r of JOBS) { $('j' + r).textContent = V.filter(u => u.job === r).length; document.querySelector(`[data-act="job:${r}"]`).classList.toggle('on', p.rally === r); }
   const nq = queuedOf(0, 'vil'), room = Math.max(0, capOf(0) - popOf(0)), S = armyOf(0), idle = V.filter(u => !u.job).length; $('bVil').classList.toggle('dis', !!trainWhy(0, 'vil'));
   // have / can have now: the ceiling is what your homes allow, up to the most of each kind; idle hands are what + can place
-  $('bVil').querySelector('small').textContent = `${V.length}/${Math.min(VILMAX, V.length + room)}` + (nq ? ` +${nq}` : '') + ` · ${idle} idle`;
-  $('bArmy').querySelector('small').textContent = `army ${S.length}/${Math.max(S.length, Math.min(armyRoom(0), S.length + room))}` + (S.some(u => u.state === 'attack' || u.state === 'goto') ? ' out' : '');
+  $('bVil').querySelector('small').textContent = `${V.length}/${Math.min(VILMAX, V.length + room)}` + (nq ? ` +${nq}` : '') + ` · Idle ${idle}`;
   $('bBuild').classList.toggle('on', !!(G.card && G.card.type === 'menu'));
-  { let n = 0; for (const v of G.rdy.values()) n += v; const t = n ? `${n} ready` : 'none ready', s = $('bRes').querySelector('small'); if (s.textContent !== t) s.textContent = t; $('bRes').classList.toggle('glow', n > 0); $('bRes').classList.toggle('on', !!(G.card && G.card.type === 'research')); }
   { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
   $('stage').classList.toggle('busy', !!(G.card || G.place));
   if (G.place) { const B = BLD[G.place.kind], t = !G.place.at ? (G.place.kind === 'wall' ? 'Press and drag a line of wall' : `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`) : G.place.why ? G.place.why : G.place.kind === 'wall' ? `${(G.place.cells || [1]).length} pieces: tap Build, or drag again` : `${B.name}: tap Build, or drag it to move · drag empty ground to look`; if ($('placeT').textContent !== t) $('placeT').textContent = t; $('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why); }

@@ -288,3 +288,12 @@ Nothing disappears unless it is listed here. Old game kept as reference: `first-
 - Cut: the Army, Town (age) and Fortress buttons. People holds villagers and army; the age is research at the Town Center; the Fortress is its star on the minimap, or its name in the score table.
 - Changed: + only places an idle villager; with nobody idle it does nothing and says so. New games start with food as the chosen job.
 - Added: idle count on + Villager; Town Centers as stars and castles as diamonds on the minimap; cards open at most 62% of the map (setup, help, guide, score and the Market can use all of it).
+
+## Build 35 (caps, army room, full-screen map)
+- Cut: the People tile and the Research tile (bottom row is now + Villager and Build). Their jobs moved to the status pill (bottom right, replaces the clock pill): tap it for the People card, which now opens with a Research button.
+- Cut: the solid top bar and bottom rows; the map is full screen and they float on it as indigo pills.
+- Cut: the map's × (now a small − on the minimap's corner).
+- Cut: separate sound, pause and ? chips (now one pill with dividers); job tiles are one tile each (name, count, − and + with inset dividers).
+- Cut: green dot with arrow research marker (now a book badge with a count).
+- Not done on purpose: the computers do not research the capacity techs; mercenaries from finds ignore army room (they are hired, not trained); old saves keep buildings above a new limit.
+- Camera: the view centres between the top and bottom pills; the camera no longer scrolls past the map's bottom edge.

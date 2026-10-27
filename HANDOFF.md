@@ -1,4 +1,4 @@
-# First Keep: handoff (Build 29)
+# First Keep: handoff (Build 35 in progress; see CUTS.md)
 
 ## What it is
 Single-file HTML mobile RTS (Albert). Live: https://claude.ai/artifact/BYdPKYCJDQS3xw5fwxvjYV (version 34, Build 29). Updated in place each build with a label.
