@@ -6,7 +6,7 @@ Single-file HTML mobile RTS (Albert). Live: https://claude.ai/artifact/BYdPKYCJD
 ## Layout
 - `src/NN-*.js` (00-pre, 01-rules … 16-boot) + `src/shell-head.html` + `src/shell-tail.html`; `build.py` joins them into `first-keep.html`; `wrap.py` makes `native/index.html`.
 - `src` is its own git repo (last commit: Build 29). Backups: `first-keep-bNN.html`.
-- Tests: `tests/gate.py` (4 iPhone sizes x web/native, 44 px taps, 12 px type, half-zoom tell-apart, calls `tests/words.py`: toasts/tips max 10 words). Playwright scripts in `/tmp/t/` (t32 orders, t34 gunpowder, t37 formations, t38 draw-error hunt, t41 top-bar measure, stress.py) are not in the repo and are lost with the container; rebuild if needed.
+- Tests: `tests/gate.py` (4 iPhone sizes x web/native, 44 px taps, 12 px type, half-zoom tell-apart, calls `tests/words.py`: toasts/tips max 10 words). Playwright scripts are in `tests/e2e/` (see below).
 - Notes: `CUTS.md` (every cut, per build), `GUIDE.md` (player guide; not regenerated for B29), `APP-PREP.md`.
 - Build/check: `python3 build.py && python3 wrap.py && python3 tests/gate.py`. Syntax-check the combined script from `first-keep.html`, not per file (IIFE spans files).
 
