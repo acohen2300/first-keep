@@ -39,4 +39,7 @@ Single-file HTML mobile RTS (Albert). Live: https://claude.ai/artifact/BYdPKYCJD
 Build 29 is live at the artifact URL (version 34) and on GitHub Pages. Nothing in progress. Next: his phone test of Build 29 and the sound-on-silent answer.
 
 ## Full transcript
-`session-log.jsonl` (this session's raw log) sits beside this file.
+`logs/session-1.jsonl` (raw log of the first session, 1.2 MB) is in the repo.
+
+## Tests in the repo
+`tests/gate.py` and `tests/words.py` are the release gate. `tests/e2e/` holds the 79 Playwright scripts used during development (t32 orders, t34 gunpowder, t37 formations, t38 draw-error hunt, t41 top-bar width, stress.py, shot*.py). They point at `file:///home/claude/first-keep/first-keep.html`; change the path to run them.

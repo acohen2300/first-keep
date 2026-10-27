@@ -1,0 +1,10 @@
+import asyncio, json
+from playwright.async_api import async_playwright
+JS="""() => { const F=window.__fk; const run=s=>{for(let i=0;i<s*30;i++)F.step(1/30);}; F.newGame(11); const G=F.G; F.setPause(false); const k=F.keepOf(0), P=G.P[0]; P.res.w+=5000; P.res.s+=3000; P.age=1;
+ const f=F.stopsAll().find(f=>f.x===1000&&f.y===1490); G.units.filter(u=>u.find===f.id).forEach(u=>{u.hp=0;}); run(1); F.act('tpost:'+f.id); const pt=F.postAt(f); const b=G.units.find(u=>u.rep===pt);
+ run(40); const tr=[]; for(let i=0;i<6;i++){ F.step(1/30); tr.push([+b.x.toFixed(2),+b.y.toFixed(2)]); } const ns=G.units.filter(v=>v!==b&&Math.hypot(v.x-b.x,v.y-b.y)<20).map(v=>v.kind+v.owner); const x0=b.x; F.TICK.vil(b,1/30,1); const dx1=b.x-x0; const x1=b.x; F.step(1/30); const dx2=b.x-x1; const so=F.standOff(b,pt.x,pt.y); const r1=F.route(b,so.x,so.y); const A1=F.astar(b.x,b.y,pt.x,pt.y,0), A2=F.astar(b.x,b.y,990,1530,0); const mv=F.moveTo(b,pt.x,pt.y,1/30,8,1); return {hp:b.hp, hurtT:b.hurtT, scaredNow:b.scared, near: G.units.filter(v=>v.owner===4&&Math.hypot(v.x-b.x,v.y-b.y)<150).map(v=>v.kind+":"+Math.round(Math.hypot(v.x-b.x,v.y-b.y))), dx1, dx2, so2:so, r1, path2:b.path&&b.path.slice(0,3), over:G.over, t:G.t, alive:G.P.map(p=>p.alive), tr, ns, A1:[A1.pts.length,A1.partial],A2:[A2.pts.length,A2.partial], mv, so:b.so, pfK:b.pfK, budget:F.NAV.budget, lcOK:b.lcOK,b:[Math.round(b.x),Math.round(b.y)], path:b.path&&b.path.length, pi:b.pi, partial:b.partial, noPath:b.noPath, lakes:G.lakes.map(l=>[Math.round(l.x),Math.round(l.y),Math.round(l.r)]), blocked: F.NAV.solid[Math.floor(b.y/10)*200+Math.floor(b.x/10)], scared:b.scared, idle:b.idle, wait:b.wait, carry:b.carry, ct:b.carryType, job:b.job, rep: !!b.rep, building:b.building, ptProg:pt.prog, ptHp:pt.hp}; }"""
+async def main():
+    async with async_playwright() as p:
+        br=await p.chromium.launch(); pg=await br.new_page(); await pg.goto('file:///home/claude/first-keep/first-keep.html'); await pg.wait_for_timeout(800)
+        print(json.dumps(await pg.evaluate(JS))); await br.close()
+asyncio.run(main())
