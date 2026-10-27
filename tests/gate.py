@@ -1,0 +1,62 @@
+# The gate: what must hold before a build goes live, measured at four iPhone sizes, not judged by eye.
+# No page errors; no two buildings alike at half zoom; nothing wider than the screen; every word inside its button; text at least 12 px; contrast at least 4.5:1 (target 7:1); no card but Help and the Guide needs scrolling from 390 × 844 up (the iPhone SE at 375 × 667 is too short for the biggest cards); every tap target at least 44 × 44 points (Apple's rule), except the job row, which has no room for 12 of them (kept by choice, Build 25).
+# Run from first-keep/:  python3 build.py && python3 wrap.py && python3 tests/gate.py
+import asyncio, json, os, sys
+from playwright.async_api import async_playwright
+SIZES = [(375, 667), (390, 844), (393, 852), (430, 932)]
+SETUP = """() => { const F = window.__fk; F.newGame(5); F.act('close'); const G = F.G, P = G.P[0], k = F.keepOf(0); F.setPause(true);
+  P.age = 3; for (const r of ['f', 'w', 's', 'g', 'i']) P.res[r] = 9999; P.goods.cloth = 30; for (let i = 0; i < 12; i++) F.addUnit(0, 'spear', k.x + 60, k.y - 60);
+  const put = kind => { const s = F.findSpot(0, kind, k.x, k.y, 70, 320); const b = F.build(0, kind, s.x, s.y); b.prog = 1; b.hp = F.BLD[kind].hp; F.built(b); return b.id; };
+  window.IDS = { bizc: put('bizc'), farm: put('farm'), market: put('market'), keep: k.id }; F.navRebuild(); F.makeVassal(1, 0, 'fair'); window.IDS.vassal = F.keepOf(1).id; }"""
+CARDS = [('help', "{type:'help'}"), ('setup', "{type:'setup'}"), ('army', "{type:'army'}"), ('home', "{type:'menu',id:'home'}"), ('guide', "{type:'guide',page:'bld'}"),
+         ('keep', "{type:'bld',id:IDS.keep}"), ('bizc', "{type:'bld',id:IDS.bizc}"), ('farm', "{type:'bld',id:IDS.farm}"),
+         ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}")]
+MEASURE = """() => {
+  const lum = c => { const f = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); };
+  const parse = s => { const m = s.match(/[\\d.]+/g); return m ? [+m[0], +m[1], +m[2], m[3] == null ? 1 : +m[3]] : [0, 0, 0, 0]; };
+  const bg = el => { const st = []; for (let e = el; e; e = e.parentElement) { const c = parse(getComputedStyle(e).backgroundColor); if (c[3] > 0) st.push(c); if (c[3] >= 1) break; } let col = [18, 23, 21]; for (let i = st.length - 1; i >= 0; i--) col = [0, 1, 2].map(j => st[i][j] * st[i][3] + col[j] * (1 - st[i][3])); return col; };
+  const out = { wide: document.documentElement.scrollWidth > innerWidth + 1, tall: document.documentElement.scrollHeight > innerHeight + 1, small: [], low: [], clip: [], tap: [], scroll: '' };
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  for (let n = w.nextNode(); n; n = w.nextNode()) {
+    const t = n.textContent.trim(), el = n.parentElement; if (!t || !el || el.closest('script,style,[hidden]')) continue;
+    const r = el.getBoundingClientRect(), cs = getComputedStyle(el); if (!r.width || !r.height || cs.visibility === 'hidden' || r.bottom < 0 || r.top > innerHeight) continue;
+    const px = parseFloat(cs.fontSize); if (px < 12) out.small.push(t.slice(0, 20) + ' ' + px);
+    const fg = parse(cs.color), b = bg(el), L1 = lum(fg), L2 = lum(b), c = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05); if (c < 4.5) out.low.push(t.slice(0, 20) + ' ' + c.toFixed(1));
+  }
+  for (const b of document.querySelectorAll('button')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden]')) continue; for (const e of b.querySelectorAll('b,small')) if (e.scrollWidth > e.clientWidth + 1 && getComputedStyle(e).overflow !== 'visible') out.clip.push(e.textContent.slice(0, 24)); if (r.right > innerWidth + 1) out.clip.push('off screen: ' + b.textContent.slice(0, 20)); }
+  for (const b of document.querySelectorAll('button,[data-act],summary')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden],.jobc') || r.bottom < 0 || r.top > innerHeight) continue; if (r.width < 44 || r.height < 44) out.tap.push((b.id || b.textContent.trim().slice(0, 14) || b.className) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height)); }
+  { const c = document.getElementById('card'); out.scroll = c && !c.hidden && c.scrollHeight > c.clientHeight + 1 ? c.scrollHeight + '>' + c.clientHeight : ''; }
+  const T = document.querySelector('.tally'); if (T) { const tr = T.getBoundingClientRect(); for (const s of T.children) if (s.getBoundingClientRect().right > tr.right + 1) out.clip.push('top bar: ' + s.title); }
+  return out; }"""
+# Readability: at half zoom, no two buildings may share both their average colour (within 18) and their size (within 5 px)
+LOOK = """() => { const F=window.__fk; F.newGame(5); const G=F.G; const s=1;   // zoom 0.5 at dpr 2
+ const kinds=Object.keys(F.BLD).filter(k=>!['wall','gate','wonder'].includes(k)), D={};
+ for (const k of kinds) { const c=F.bldSprite({kind:k,owner:0},s), x=c.getContext('2d').getImageData(0,0,c.width,c.height).data; let n=0,r=0,g=0,b=0,x0=1e9,x1=-1,y0=1e9,y1=-1;
+   for (let i=0;i<x.length;i+=4) if (x[i+3]>128) { n++; r+=x[i]; g+=x[i+1]; b+=x[i+2]; const p=i/4, px=p%c.width, py=(p/c.width)|0; x0=Math.min(x0,px); x1=Math.max(x1,px); y0=Math.min(y0,py); y1=Math.max(y1,py); }
+   D[k]={rgb:[r/n,g/n,b/n],w:x1-x0,h:y1-y0}; }
+ const same=[]; for (let i=0;i<kinds.length;i++) for (let j=i+1;j<kinds.length;j++) { const a=D[kinds[i]], b=D[kinds[j]]; const dc=Math.hypot(...a.rgb.map((v,t)=>v-b.rgb[t])), ds=Math.abs(a.w-b.w)+Math.abs(a.h-b.h); if (dc<18 && ds<5) same.push(kinds[i]+'~'+kinds[j]+' '+dc.toFixed(0)+'/'+ds); }
+ return same; }"""
+async def main():
+    fails = 0
+    import subprocess; w = subprocess.run([sys.executable, 'tests/words.py'], capture_output=True, text=True); print(('PASS ' if w.returncode == 0 else 'FAIL ') + 'toasts and tips: 10 words at most', w.stdout.strip() if w.returncode else ''); fails += w.returncode != 0
+    async with async_playwright() as p:
+        br = await p.chromium.launch()
+        for page_file in ('first-keep.html', 'native/index.html'):
+            for (W, H) in SIZES:
+                pg = await br.new_page(viewport={'width': W, 'height': H}, device_scale_factor=2); errs = []
+                pg.on('pageerror', lambda e: errs.append(str(e)))
+                await pg.goto('file://' + os.path.abspath(page_file)); await pg.wait_for_timeout(600); await pg.evaluate(SETUP)
+                bad = {}
+                for name, c in [('map', None)] + CARDS + [('end', 'END')]:
+                    if c == 'END': await pg.evaluate("() => { const F = window.__fk; F.closeCard && F.closeCard(); F.setPause(false); F.G.t = F.G.mode === 'conquest' ? F.G.t : 1799.9; F.G.mode = 't30'; for (let i = 0; i < 10; i++) F.step(1 / 30); }")
+                    elif c: await pg.evaluate(f"window.__fk.openCard({c})")
+                    await pg.wait_for_timeout(120); m = await pg.evaluate(MEASURE)
+                    issues = [k for k in ('wide', 'tall') if m[k]] + ([f"scroll:{m['scroll']}"] if m['scroll'] and W >= 390 and name not in ('help', 'guide') else []) + [f'{k}:{v[:3] if k != "tap" else v}' for k, v in (('small', m['small']), ('low', m['low']), ('clip', m['clip']), ('tap', sorted(set(m['tap'])))) if v]
+                    if issues: bad[name] = issues
+                if errs: bad['errors'] = errs[:2]
+                print(('PASS ' if not bad else 'FAIL ') + f'{page_file} {W}x{H}', '' if not bad else json.dumps(bad)[:2500]); fails += bool(bad); await pg.close()
+        pg = await br.new_page(); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
+        same = await pg.evaluate(LOOK); print(('PASS ' if not same else 'FAIL ') + 'buildings tell apart at half zoom', '' if not same else same); fails += bool(same); await pg.close()
+        await br.close()
+    sys.exit(1 if fails else 0)
+asyncio.run(main())

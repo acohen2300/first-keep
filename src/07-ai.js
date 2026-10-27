@@ -1,0 +1,180 @@
+// ═════ 07-ai.js ═════
+// ───────────────────────── The computer brain: one brain, three personalities, the same rules as you ─────────────────────────
+// Nobody has fog: everyone sees the whole map, so the computers' estimates are the real numbers, as yours are.
+const estPower = (o, of) => powerOf(soldiersOf(of)) + bldsOf(of, 'tower').length * 120 + 250;
+const nearestType = (type, from, kind) => nearest(G.nodes, from, n => n.type === type && n.amt > 0 && n.kind !== 'farm' && (!kind || n.kind === kind));
+// the soldier that best answers what the enemies field, among those this side can train now
+function bestCounter(o) {
+  const foes = G.sol.filter(v => atWar(o, v.owner) && v.owner !== WILD), p = G.P[o];
+  const can = SOLDIERK.filter(k => !UNIT[k].civ && !UNIT[k].bonly && UNIT[k].tick === 'sol' && !hasTag(k, 'siege') && UNIT[civKind(o, k)].age <= p.age && ready(o, UNIT[k].at).length);
+  if (!can.length) return null;
+  if (!foes.length) return can[p.ai.cyc++ % can.length];
+  const sc = can.map(k => { const me = { owner: o, kind: civKind(o, k) }; let s = 0; for (const v of foes) s += vsMul(me, v) / Math.max(0.5, vsMul(v, me)); return [k, s / foes.length / (sumCost(UNIT[k].cost) / 100) ** 0.3]; });
+  sc.sort((a, b) => b[1] - a[1]);
+  return sc[(p.ai.cyc++ % Math.min(2, sc.length))][0];   // the best, mixed with the next best so an army is never one kind
+}
+function think(p) {
+  const o = p.id, per = PERS[p.pers], k = keepOf(o); if (!k) return;
+  const R = p.res, vils = unitsOf(o, 'vil'), nV = vils.length + queuedOf(o, 'vil'), building = kind => bldsOf(o, kind).some(b => b.prog < 1);
+  const has = kind => bldsOf(o, kind).length, armyN = soldiersOf(o).length, jobsN = j => vils.filter(v => v.job === j).length;
+  const put = (kind, x, y, r0, r1) => { const s = findSpot(o, kind, x, y, r0, r1); return s ? build(o, kind, s.x, s.y) : null; };
+  // a site nobody is working (its builder died or was scared off) gets the nearest free villager
+  if (G.tick % 90 === o) for (const b of G.blds) if (b.owner === o && b.hp > 0 && b.prog < 1 && !vils.some(v => v.rep === b && v.job === 'repair')) autoBuilder(o, b);
+  // shelter before it is needed
+  if (!building('house') && !building('apartment') && popOf(o) + queuedOf(o) >= capOf(o) - 2 && capOf(o) < POPMAX) put(p.age >= 2 && R.s >= 60 && R.w >= 120 ? 'apartment' : 'house', k.x, k.y, 60, 190);
+  // drop-offs where the work is
+  for (const [type, kind] of [['food', 'mill'], ['wood', 'lumber'], ['gold', 'mining'], ['stone', 'mining'], ['iron', 'mining']]) {
+    if (jobsN(type) < 2 || building(kind)) continue;
+    const n = nearestType(type, k); if (!n) continue;
+    const d = dropFor(o, type, n); if (d && dist(d, n) < 110) continue;
+    put(kind, n.x, n.y, 30, 70);
+  }
+  // food from the ground once the berries near home are gone; wood from tree farms once the forest thins
+  const bushes = G.nodes.filter(n => n.kind === 'bush' && dist(n, k) < 300).length, farms = has('farm');
+  if ((bushes < 3 || jobsN('food') > bushes + 4) && farms < Math.min(12, Math.ceil((jobsN('food') + 1) / 3)) && R.w >= 60) put('farm', k.x, k.y, 60, 170);   // fields take three each
+  const trees = G.nodes.filter(n => n.kind === 'tree' && dist(n, k) < 300).length;
+  if (trees < 6 && has('treefarm') < Math.min(4, Math.max(1, jobsN('wood') - 2)) && R.w >= 80) put('treefarm', k.x, k.y, 60, 170);
+  if (farms >= 3 && !has('mill')) put('mill', k.x, k.y, 90, 170);
+  // the ages: once the town is big enough, save for the next one
+  const ageReady = p.age < per.ageTo && !p.aging && vils.length >= Math.min(per.vils, 12 + p.age * 4) && armyN >= per.ageArmy;
+  if (ageReady) ageUp(o);
+  // saving for the age stops other spending, but never for long: after 90 s of saving without getting there it spends again for a minute
+  if (ageReady && !p.aging) { if (p.ai.saveT === undefined) p.ai.saveT = G.t; } else p.ai.saveT = undefined;
+  const threat = G.threats.some(v => atWar(o, v.owner) && v.owner !== WILD && dist(v, k) < 400);
+  const saving = ageReady && !p.aging && !threat && !(p.ai.saveT !== undefined && (G.t - p.ai.saveT) % 150 > 90), need = saving ? AGES[p.age + 1].cost : {};
+  if (nV < per.vils && k.q.length < 2 && (!saving || R.f >= (need.f || 0) + 50)) train(o, 'vil');
+  if (!unitsOf(o, 'scout').length && G.t > 60 && R.f > 200 && !queuedOf(o, 'scout')) train(o, 'scout');
+  // what to build, in this personality's order
+  for (const [kind, age, n, army, stock] of per.build) if (p.age >= age && has(kind) < n && armyN >= army && (!stock || afford(p, stock)) && (!saving || kind === 'barracks')) { if (put(kind, k.x, k.y, 90, 210)) break; }
+  if (per.extraBarracks && ready(o, 'barracks').length && has('barracks') < 1 + per.extraBarracks && R.w > 250) put('barracks', k.x, k.y, 90, 220);
+  if (per.towers > has('tower') && p.age >= 1 && R.s >= 120) { const t = towardMid(k, 140); put('tower', t.x, t.y, 0, 90); }
+  if (per.walls && p.age >= 1 && R.s >= 60) {
+    const plan = p.ai.wallPlan || (p.ai.wallPlan = wallPlan(k)); let nb = 0;
+    for (const c of plan) { if (nb >= 3 || p.res.s < 40) break; if (NAV.occ[c.gy * NC + c.gx]) continue; if (build(o, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) nb++; }
+  }
+  if (per.wonder && p.age >= 2 && !has('wonder') && !G.wonder && afford(p, addRes({ f: 300, w: 300, s: 300, g: 300 }, BLD.wonder.cost)) && armyN >= 12) put('wonder', k.x, k.y, 120, 260);
+  // faith and care
+  if (ready(o, 'temple').length) {
+    if (armyN >= 8 && unitsOf(o, 'priest').length + queuedOf(o, 'priest') < (per.shrine ? 3 : 1)) train(o, 'priest');
+    if (!(p.zealT > G.t) && R.g >= 100) { const eng = soldiersOf(o).filter(u => u.tgt && u.tgt.hp > 0 && !(u.zeal > G.t)); if (eng.length >= 8) zeal(o, eng.slice(0, BNSIZE)); }
+    if (per.shrine) { const pr = unitsOf(o, 'priest').find(u => u.state !== 'shrine'); const f = pr && nearest(G.finds, k, f => FINDS[f.kind].capture && f.owner !== o && !G.units.some(v => v.kind === 'priest' && v.owner === o && v.fid === f.id)); if (f) { pr.state = 'shrine'; pr.fid = f.id; } }
+  }
+  if (ready(o, 'hospital').length && armyN >= 10 && unitsOf(o, 'medic').length + queuedOf(o, 'medic') < 2) train(o, 'medic');
+  // siege, to break what soldiers cannot
+  if (per.siege && ready(o, 'siege').length) {
+    const sg = soldiersOf(o).filter(u => hasTag(u.kind, 'siege')).length + ['ram', 'catapult', 'stower', 'ballista', 'treb', 'bombard'].reduce((n, x) => n + queuedOf(o, x), 0);
+    if (sg < per.siege + Math.floor(armyN / 12)) train(o, p.age >= 4 && sg % 3 === 2 ? 'bombard' : p.age >= 3 && sg % 3 === 2 ? 'treb' : ['ram', 'catapult', 'stower', 'ballista'][sg % 4]);
+  }
+  // trade: one Market near home, one far off, then a couple of caravans; swap a big surplus for gold
+  if (per.trade && p.age >= 1 && armyN >= 6) {
+    const ms = bldsOf(o, 'market');
+    if (ms.length === 1 && ms[0].prog >= 1 && R.w >= 300 && R.g >= 100) put('market', k.x + Math.sign(MID - k.x) * 600, k.y, 0, 160);
+    if (ms.filter(m => m.prog >= 1).length >= 2 && unitsOf(o, 'caravan').length + queuedOf(o, 'caravan') < 3 && R.w >= 150 && R.g >= 100) train(o, 'caravan');
+    if (ready(o, 'market').length) for (const r of ['f', 'w', 's', 'i']) if (R[r] > 1200 && R.g < 150) { exchange(o, r, 'sell'); break; }
+  }
+  aiEconomy(p, k, R, put, has);
+  if (per.spy && ready(o, 'courthouse').length && unitsOf(o, 'spy').length + queuedOf(o, 'spy') < 1 && R.g >= 150 && R.f >= 60) train(o, 'spy');
+  if (!saving) for (const id of per.techs) if (research(o, id)) break;
+  // the army: the counter to what the enemies field
+  if (!saving && armyN + queuedOf(o) - queuedOf(o, 'vil') < armyCap(p) && vils.length >= Math.min(per.vils, per.early)) { const want = bestCounter(o); if (want) train(o, want); }
+  // jobs: move one villager a beat toward the personality's mix
+  const mix = { ...per.mix }; if (p.age === 0) { mix.food += mix.stone * 0.5 + mix.gold * 0.3; mix.wood += mix.stone * 0.5 + mix.gold * 0.2; mix.stone = 0; mix.gold *= 0.5; }
+  if (p.age < 2) { mix.wood += mix.iron; mix.iron = 0; }   // iron is wanted from the Classical age
+  if (per.wonder && p.age >= 2) for (const r of RES) mix[r] += 0.1;
+  mix.food += (p.eats || 0) / 30 / Math.max(1, vils.length);   // enough hands on food to feed everyone (one feeds about 8)
+  { const sn = season().name, keep = (p.eats || 0) * (sn === 'Autumn' || sn === 'Winter' ? 4 : 2); if (p.hungry || R.f < keep) mix.food += 0.3; }   // fields barely grow in winter: lay in food for it, as farmers did   // hungry, or food for less than two minutes: more on food
+  for (const r of RES) { const have = R[KEY[r]]; if (have > 600) mix[r] *= 0.4; else if (have < 100 && mix[r] > 0) mix[r] *= 1.6; }
+  const tot = RES.reduce((s, r) => s + mix[r], 0) || 1; for (const r of RES) mix[r] /= tot;
+  const idle = vils.find(v => !v.job), short = RES.map(r => [r, mix[r] * vils.length - jobsN(r)]).sort((a, b) => b[1] - a[1]);
+  if (idle) idle.job = short[0][0];
+  else if (short[0][1] >= 1) { const over = short[short.length - 1][0], v = vils.find(x => x.job === over && x.carry < 3); if (v) setJob(v, short[0][0]); }
+  // finds: a detachment clears the nearest guarded one when nothing else is going on; it hires vagabonds it walks past
+  if (per.loot && armyN >= 10 && !p.wave) lootRun(p);
+  for (const f of G.finds) if (FINDS[f.kind].hire && !f.done && R.g >= 200) hire(o, f);
+  // war: attack only when the odds beat this personality's nerve; a rival's wonder is attacked at once
+  if (per.bold < 2) decideWar(p, per);
+  if (per.diplo && p.age >= 1 && !p.envoyOut && G.P[FORT].alive && G.rel[o][FORT] === 'peace' && G.P[FORT].ally === null && G.t - p.envoyAt > 180) sendEnvoy(o, FORT);
+  if (G.P[FORT].terms && G.P[FORT].terms[o] && R.g >= G.P[FORT].terms[o] + 50) payTerms(o);
+}
+// the army a side keeps grows with its age
+const armyCap = p => Math.min(ARMYMAX, PERS[p.pers].armyCap + 10 * p.age);
+function lootRun(p) {
+  const o = p.id, k = keepOf(o), out = soldiersOf(o).filter(u => u.state === 'goto' && u.loot);
+  if (out.length) { const f = G.finds.find(f => f.id === out[0].loot); if (!f || f.done || (!guardsLeft(f) && G.t - out[0].lootT > 30)) out.forEach(u => { u.state = 'home'; u.loot = null; }); return; }
+  const cf = G.contract && G.finds.find(x => x.id === G.contract.fid && !x.done && dist(x, k) < 1100);   // the Fortress's job first
+  const f = cf || nearest(G.finds, k, f => !f.done && (FINDS[f.kind].got || FINDS[f.kind].hire || (FINDS[f.kind].stop && guardsLeft(f) && p.age >= 1)) && dist(f, k) < (FINDS[f.kind].stop ? 1000 : 800));
+  if (!f) return;
+  const home = soldiersOf(o).filter(u => u.state === 'home' && !UNIT[u.kind].bonly), go = home.slice(0, Math.min(10, Math.ceil(home.length * 0.5)));
+  if (go.length < 5) return;
+  go.forEach(u => { u.state = 'goto'; u.px = f.x; u.py = f.y; u.loot = f.id; u.lootT = G.t; u.idleT = 0; });
+}
+function wallPlan(k) { // an arc 190 out from the keep, facing the middle of the map; the two squares nearest the middle are the gate
+  const base = Math.atan2(MID - k.y, MID - k.x), cells = [], seen = new Set(); let pc = null;
+  const add = (gx, gy) => { const key = gy * NC + gx; if (seen.has(key)) return; seen.add(key); const a = Math.atan2(gy * NAVC + 5 - k.y, gx * NAVC + 5 - k.x); cells.push({ gx, gy, kind: 'wall', da: Math.abs(Math.atan2(Math.sin(a - base), Math.cos(a - base))) }); };
+  for (let i = -66; i <= 66; i++) {
+    const a = base + i * 0.019, gx = Math.floor((k.x + Math.cos(a) * 190) / NAVC), gy = Math.floor((k.y + Math.sin(a) * 190) / NAVC);
+    if (pc && gx !== pc.gx && gy !== pc.gy) add(gx, pc.gy);   // four-connected: no gap to slip through
+    add(gx, gy); pc = { gx, gy };
+  }
+  cells.slice().sort((a, b) => a.da - b.da).slice(0, 2).forEach(c => c.kind = 'gate');
+  return cells;
+}
+// how the two armies' units fare against each other: spearmen against horse, archers against spearmen
+function matchup(A, B) {
+  const a = A.slice(0, 10), b = B.slice(0, 10); if (!a.length || !b.length) return 1;
+  let x = 0, y = 0; for (const u of a) for (const v of b) { x += vsMul(u, v); y += vsMul(v, u); }
+  return clamp(x / y, 0.6, 1.6);
+}
+function decideWar(p, per) {
+  const o = p.id, home = soldiersOf(o).filter(u => u.state === 'home' && !UNIT[u.kind].heal), out = soldiersOf(o).filter(u => u.state === 'attack');
+  if (p.wave) {
+    const hit = out.some(u => G.t - (u.hitT || -99) < 30);
+    if (out.length < p.wave.n * 0.35 || (!hit && G.t - p.wave.t > 45)) { out.forEach(u => u.state = 'home'); p.wave = null; }   // beaten, or stalled: go home
+    return;
+  }
+  const W = G.wonder && G.wonder.owner !== o && atWar(o, G.wonder.owner) ? G.wonder : null;
+  if (home.length < (W ? 4 : per.waveMin + (G.diff === 'easy' ? 3 : 0))) return;
+  const go = home.slice(Math.floor(home.length * (W ? 0 : per.guard))), mine = powerOf(go);
+  let best = null, bp = 0;
+  for (const q of G.P) if (q.alive && q.id !== WILD && atWar(o, q.id)) {
+    if (q.id === 0 && G.diff === 'easy' && G.t < 360 && !W) continue;   // Easy: nobody comes for you in the first six minutes
+    const r = mine / estPower(o, q.id) * matchup(go, soldiersOf(q.id)), prob = r * r / (1 + r * r);   // the square law, as odds, bent by who counters whom
+    const pr = W && W.owner === q.id ? 1 : prob;
+    if (pr > bp) { bp = pr; best = q.id; }
+  }
+  // a full army that sits at home is wasted: at its limit a side settles for even odds
+  const full = soldiersOf(o).length >= armyCap(p) - 2;
+  if (best !== null && bp > (full ? Math.min(per.bold, 0.4) : per.bold)) {
+    go.forEach(u => { u.state = 'attack'; u.target = best; u.bid = W && W.owner === best ? W.id : null; u.loot = null; });
+    p.wave = { n: go.length, t: G.t };
+    if (per.raid) {   // a few riders go for the foe's lumber camps and mines instead of the Town Center: it draws the defence apart
+      const fast = go.filter(u => (UNIT[u.kind].tags || []).includes('mounted')).slice(0, per.raid), k = keepOf(o);
+      const mark = k && nearest(G.blds, k, b => b.owner === best && b.prog >= 1 && b.hp > 0 && b.kind !== 'keep' && BLD[b.kind].drop);
+      if (mark) fast.forEach(u => { u.bid = mark.id; });
+    }
+    if (best === 0) say(`${p.name} march on you with ${go.length} soldiers.`, 'warn', 8, go[0]);
+  }
+}
+function fortressDuties(dt) {
+  const F = G.P[FORT]; if (!F.alive) return;
+  F.ai.contractT = (F.ai.contractT ?? CONTRACT.every * 0.5) - dt;
+  if (G.contract && G.t > G.contract.until) { G.contract = null; say('The Fortress\'s job went unfinished.', '', 4); }
+  if (F.ai.contractT <= 0) {
+    F.ai.contractT = CONTRACT.every;
+    const open = G.finds.filter(f => !f.done && CONTRACT.kinds.includes(f.kind));
+    if (!G.contract && open.length) { const f = open[Math.floor(rng() * open.length)]; G.contract = { fid: f.id, until: G.t + CONTRACT.secs }; say(`Fortress offers ${costText(CONTRACT.pay)}. Take the ${FINDS[f.kind].name.toLowerCase()} at ${coord(f.x, f.y)} first.`, 'good', 9, f); }
+  }
+  F.ai.tribute += dt;
+  if (F.ally !== null && F.ai.tribute > 45) {
+    F.ai.tribute = 0; const A = G.P[F.ally], share = A.pers === 'aggr' ? 0.4 : 0.2, sent = {};
+    for (const r of ['f', 'w', 's', 'g', 'i']) { const x = Math.floor(Math.max(0, F.res[r] - 200) * share); if (x > 0) { F.res[r] -= x; A.res[r] += x; sent[r] = x; } }
+    if (F.ally === 0 && Object.keys(sent).length) say(`The Fortress sends ${costText(sent)}.`, 'good', 5);
+  }
+  // it defends its ally's town, never at the cost of its own
+  if (F.ally !== null && G.t - F.ai.lastHelp > 30) {
+    const ak = keepOf(F.ally), mk = keepOf(FORT);
+    const safe = mk && !G.units.some(u => atWar(FORT, u.owner) && u.owner !== WILD && isSoldier(u) && dist(u, mk) < 320);
+    if (ak && safe && G.units.some(u => atWar(F.ally, u.owner) && u.owner !== WILD && isSoldier(u) && dist(u, ak) < 300)) { F.ai.lastHelp = G.t; sendHelp(FORT, ak, F.ally === 0); }
+  }
+}
+
