@@ -1,0 +1,210 @@
+diff -ru src/01-rules.js /tmp/claude-0/-home-claude/c3c7bc00-f3dd-527e-ac0c-5def9d66e2e1/scratchpad/mk/src/01-rules.js
+--- src/01-rules.js	2026-10-27 18:46:44.443263945 -0400
++++ /tmp/claude-0/-home-claude/c3c7bc00-f3dd-527e-ac0c-5def9d66e2e1/scratchpad/mk/src/01-rules.js	2026-10-27 19:02:28.011163940 -0400
+@@ -19,7 +19,7 @@
+   iron:  { k: 'i', name: 'Iron',  col: '#8fa3b5', drop: 'Mine' },   // the metal of the Iron age: weapons and armour from the Classical age on
+ };
+ const RES = Object.keys(RESOURCES), KEY = Object.fromEntries(RES.map(r => [r, RESOURCES[r].k])), LONG = Object.fromEntries(RES.map(r => [RESOURCES[r].k, r]));
+-const JOBS = ['food', 'farm', 'wood', 'stone', 'gold', 'iron'];
++const JOBS = ['food', 'wood', 'stone', 'gold', 'iron'];
+ 
+ const PLAYERS = [
+   { name: 'You',      pers: 'human', color: '#4f93e6', keep: [300, 1700] },
+diff -ru src/12-ui.js /tmp/claude-0/-home-claude/c3c7bc00-f3dd-527e-ac0c-5def9d66e2e1/scratchpad/mk/src/12-ui.js
+--- src/12-ui.js	2026-10-27 18:45:52.539741645 -0400
++++ /tmp/claude-0/-home-claude/c3c7bc00-f3dd-527e-ac0c-5def9d66e2e1/scratchpad/mk/src/12-ui.js	2026-10-27 19:17:14.832925331 -0400
+@@ -392,6 +392,8 @@
+ // ───────────────────────── The orders panel ─────────────────────────
+ function buildPanel() {
+   $('jobs').innerHTML = JOBS.map(r => `<div class="jobc"><button class="jn" data-act="job:${r}"><b>${r[0].toUpperCase() + r.slice(1)}</b><small id="j${r}">0</small></button><div class="pm"><button data-act="less:${r}" aria-label="One fewer on ${r}">−</button><button data-act="move:${r}" aria-label="One more on ${r}">+</button></div></div>`).join('');
++  JOBS.forEach(r => { const s = document.querySelector(`.tally span[title="${r[0].toUpperCase() + r.slice(1)}"] .ico`), jn = document.querySelector(`[data-act="job:${r}"]`); jn.querySelector('b').replaceWith(s.cloneNode(true)); });
++  { const vb = document.querySelector('#vilc .jn'); vb.innerHTML = `<span class="st"><svg class="pp" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="5.5" r="3.4" fill="currentColor"/><path d="M3.5 18 Q3.5 10.5 10 10.5 Q16.5 10.5 16.5 18 Z" fill="currentColor"/></svg><b id="vilN">3/4</b></span><span class="wk"><small id="vilI">idle 0</small></span>`; }
+   }
+ const refresh = () => { cardSig = ''; ui(true); };
+ // every button's verb, in one table
+@@ -561,7 +563,7 @@
+   document.body.classList.toggle('night', G.night > 0.5);
+   $('rf').textContent = fmt(R.f); $('rw').textContent = fmt(R.w); $('rs').textContent = fmt(R.s); $('rg').textContent = fmt(R.g); $('ri').textContent = fmt(R.i);
+   const rank = 1 + G.P.filter(q => q.id && q.id !== WILD && q.score.total > p.score.total).length;
+-  $('scoreN').textContent = `★${fmt(p.score.total)}`; $('scoreR').textContent = ['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th';
++  $('scoreP').innerHTML = `★ ${fmt(p.score.total)} <span>${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}</span>`; (0) && ['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th';
+   if (G.t - (G.rdyT ?? -9) > 1 || G.t < G.rdyT) { G.rdyT = G.t; G.rdy = new Map(); for (const t of TECH) if (techState(t) === 'ready') G.rdy.set(t.at, (G.rdy.get(t.at) || 0) + 1); { const A = AGES[p.age + 1]; if (A && !p.aging && keepOf(0) && afford(p, A.cost)) G.rdy.set('keep', (G.rdy.get('keep') || 0) + 1); } }   // building kind → how many researches you can start there now
+   let tip = SET.tips ? advise() : ''; const urgent = tip[0] === '!'; if (urgent) tip = tip.slice(1);
+   const T = G.tipS || (G.tipS = { text: '', at: -99, last: -99 });
+@@ -572,15 +574,15 @@
+     let train = 0, going = 0; for (const b of G.blds) if (b.owner === 0) for (const j of b.q) { if (j.kind) train++; else if (j.muster) train += musterN(j.muster); else going++; }
+     let ready = 0; for (const v of G.rdy.values()) ready += v;   // research you can start now (the age counts: it is research too)
+     const S = armyOf(0), out = S.filter(u => u.state === 'attack' || u.state === 'goto').length, idleN = unitsOf(0, 'vil').filter(u => !u.job).length, part = (n, t) => n ? `${t} ${n}` : '';
+-    const l1 = `${CIVS[p.civ].name} · ${AGES[p.age].name} age · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? '🌙' : ''} ${clk} · ${Math.round(cam.z * 100)}%`;
+-    const l2 = [part(train, 'Training'), part(going, 'Researching'), part(ready, 'Ready'), part(idleN, 'Idle')].filter(Boolean).join(' · '), l3 = [part(S.length, 'Army'), part(out, 'Marching')].filter(Boolean).join(' · ');
+-    for (const [id, t] of [['sL1', l1], ['sL2', l2], ['sL3', l3]]) if ($(id).textContent !== t) $(id).textContent = t;
+-    $('clock').classList.toggle('glow', ready > 0 && !G.card); }
++    const l1 = `${AGES[p.age].name} age`, l0 = `${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? '🌙' : ''}`; $('ageP').textContent = `${AGES[p.age].name} age · ${l0} ${clk}`; $('armyP').textContent = S.length ? `⚔ ${S.length}${out ? ' · ' + out + ' out' : ''}` : '';
++    const l2 = [l1, part(train, 'Training'), part(going, 'Researching'), part(ready, 'Ready'), part(idleN, 'Idle')].filter(Boolean).join(' · '), l3 = [part(S.length, 'Army'), part(out, 'Marching')].filter(Boolean).join(' · ');
++    if (0) for (const [id, t] of [['sL1', ''], ['sL2', l2], ['sL3', l3 || [part(S.length, 'Army') || 'Army 0', part(out, 'Marching')].filter(Boolean).join(' · ')]]) if ($(id).textContent !== t) $(id).textContent = t;
++    0 && $('clock').classList.toggle('glow', ready > 0 && !G.card); }
+   const V = unitsOf(0, 'vil');
+   for (const r of JOBS) { $('j' + r).textContent = V.filter(u => u.job === r).length; document.querySelector(`[data-act="job:${r}"]`).classList.toggle('on', p.rally === r); }
+   const nq = queuedOf(0, 'vil'), room = Math.max(0, capOf(0) - popOf(0)), S = armyOf(0), idle = V.filter(u => !u.job).length; $('bVil').classList.toggle('dis', !!trainWhy(0, 'vil'));
+   // have / can have now: the ceiling is what your homes allow, up to the most of each kind; idle hands are what + can place
+-  $('bVil').querySelector('small').textContent = `${V.length}/${Math.min(VILMAX, V.length + room)}` + (nq ? ` +${nq}` : '') + ` · Idle ${idle}`;
++  $('bVil').querySelector('small').innerHTML = `${V.length}/${Math.min(VILMAX, V.length + room)}` + (nq ? ` +${nq}` : '') ; + ` · Idle ${idle}`;
+   $('bBuild').classList.toggle('on', !!(G.card && G.card.type === 'menu'));
+   { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
+   $('stage').classList.toggle('busy', !!(G.card || G.place));
+diff -ru src/16-boot.js /tmp/claude-0/-home-claude/c3c7bc00-f3dd-527e-ac0c-5def9d66e2e1/scratchpad/mk/src/16-boot.js
+--- src/16-boot.js	2026-10-27 18:22:53.113038060 -0400
++++ /tmp/claude-0/-home-claude/c3c7bc00-f3dd-527e-ac0c-5def9d66e2e1/scratchpad/mk/src/16-boot.js	2026-10-27 19:20:10.499008735 -0400
+@@ -37,3 +37,39 @@
+ window.__fk = { capFor, armyRoom, capOf, atCap, capWhy, techState, get G() { return G; }, get cam() { return cam; }, set G(v) { G = v; }, SET, NAV, BLD, UNIT, TECH, TECHBY, CIVS, FINDS, MENUS, AGES, PERS, step, act, train, trainWhy, build, research, researchWhy, ageUp, addUnit, wildAt, addFind, declareWar, keepOf, stats, fxv, sendEnvoy, payTerms, canPlace, snapGhost, findSpot, think, astar, navRebuild, moveTo, wallLine, toCell, commitPlace, startPlace, zoomAt, guideModel, guideMd, coord, minZ, tapAt, openCard, renderCard, demolish, sendRepair, saveGame, readSave, loadGame, sendVil, setJob, moveVil, orderSet, clsCount, nearestNode, collide, newGame, scoreAll, hurt, sabotage, hire, zeal, zealWhy, learnTech, plunder, fall, sfx, SND, sprite, bldSprite, LOOKS, draw, fit, ui, civKind, marketTrade, findsTick, rehealth, setPause, GOODS, WEATHER, ignite, outbreak, setRoute, postAt, stopsAll, priceAt, estPay, tradeTargets, sickRisk, seasonTurn, upkeepTick, healthTick, guardedCart, dmgOf, rngOf, TICK, route, standOff, built, loyaltyParts, surrenderWhy, vassalsOf, makeVassal, rebel, mkt, get holdSave() { return holdSave; }, get caches() { return { SPR, BSPR, NSPR }; } };
+ 
+ })();
++
++/* MOCK4 wiring */
++(function(){
++const O = id => document.getElementById(id), ord = O('orders');
++const ICON = { food: 'Food', wood: 'Wood', stone: 'Stone', gold: 'Gold', iron: 'Iron' };
++const personSvg = '<svg viewBox="0 0 20 20"><circle cx="10" cy="5.5" r="3.4" fill="currentColor"/><path d="M3.5 18 Q3.5 10.5 10 10.5 Q16.5 10.5 16.5 18 Z" fill="currentColor"/></svg>';
++let sel = 'food';
++function ico(r) { const e = document.querySelector(`.tally span[title="${ICON[r]}"] .ico`); return e ? e.outerHTML : ''; }
++function drawJ() {
++  const cnt = r => { const e = O('j' + r); return e ? e.textContent : '0'; };
++  let h = '<div class="strip2"><button class="x" data-m="close" aria-label="Hide jobs">›</button>';
++  h += `<button data-m="sel:vil" class="${sel === 'vil' ? 'sel' : ''}" aria-label="People">${personSvg}<small>${O('vilN') ? O('vilN').textContent : '3/4'}</small></button><span class="gap"></span>`;
++  for (const r of Object.keys(ICON)) h += `<button data-m="sel:${r}" class="${sel === r ? 'sel' : ''}" aria-label="${ICON[r]}">${ico(r)}<small>${cnt(r)}</small></button>`;
++  h += `<span class="gap"></span><button class="step" data-m="less" aria-label="One fewer">−</button><button class="step" data-m="more" aria-label="One more">+</button></div>`;
++  O('ojRow').innerHTML = h;
++}
++function drawB() {
++  const N = [['home','Home','M3 10 L10 4 L17 10 V17 H3 Z'],['mil','Army','M10 2 L12 8 L18 8 L13 12 L15 18 L10 14 L5 18 L7 12 L2 8 L8 8 Z'],['def','Walls','M3 17 V6 H6 V8 H8 V6 H12 V8 H14 V6 H17 V17 Z'],['shop','Trade','M10 3 A7 7 0 1 0 10.01 3'],['cult','Culture','M4 4 H16 V16 H4 Z M10 4 V16']];
++  let h = '<div class="strip2"><button class="x" data-m="close" aria-label="Hide build">›</button>';
++  for (const [id, n, d] of N) h += `<button data-m="menu:${id}" aria-label="${n}"><svg viewBox="0 0 20 20"><path d="${d}" fill="currentColor" fill-opacity=".85"/></svg><b>${n}</b></button>`;
++  h += '</div>'; O('obRow').innerHTML = h;
++}
++ord.addEventListener('click', e => {
++  const t = e.target.closest('button'); if (!t) return;
++  if (t.id === 'oJ') { ord.className = 'sj'; drawJ(); return; }
++  if (t.id === 'oB') { ord.className = 'sb'; drawB(); return; }
++  const m = t.dataset.m; if (!m) return;
++  if (m === 'close') { ord.className = 's0'; return; }
++  if (m.startsWith('sel:')) { sel = m.slice(4); drawJ(); return; }
++  if (m === 'more') { __fk.act(sel === 'vil' ? 'train:vil' : 'move:' + sel); drawJ(); }
++  if (m === 'less') { __fk.act(sel === 'vil' ? 'cancel' : 'less:' + sel); drawJ(); }
++  if (m.startsWith('menu:')) { __fk.act('menu:' + m.slice(5)); }
++});
++setInterval(() => { if (ord.className === 'sj') drawJ(); const idle = O('vilI') ? O('vilI').textContent.replace(/\D/g, '') : ''; O('oIdle').hidden = !(+idle); O('oIdle').textContent = idle; }, 400);
++window.__mock = { open: k => { ord.className = k; k === 'sj' ? drawJ() : k === 'sb' ? drawB() : 0; } };
++})();
+diff -ru src/shell-head.html /tmp/claude-0/-home-claude/c3c7bc00-f3dd-527e-ac0c-5def9d66e2e1/scratchpad/mk/src/shell-head.html
+--- src/shell-head.html	2026-10-27 18:46:44.442016552 -0400
++++ /tmp/claude-0/-home-claude/c3c7bc00-f3dd-527e-ac0c-5def9d66e2e1/scratchpad/mk/src/shell-head.html	2026-10-27 19:20:10.518982007 -0400
+@@ -172,6 +172,77 @@
+ @media (max-width:440px){.tally{gap:0;font-size:12px}.tally span{gap:1px}.tally .ico{width:12px;height:12px}}
+ @media (max-width:400px){:root{--pad:6px}.tally{letter-spacing:-.02em;padding:0 4px}.tally span{gap:0}.tally .ico{width:10px;height:10px}.hb{padding:0 1px}#clock #score{padding:0 5px;gap:3px}#score b{font-size:13px}}
+ @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important;scroll-behavior:auto!important} }
++
++/* MOCK4 */
++#orders .dock2{pointer-events:none}#orders .dock2>*{pointer-events:auto}
++.o0,.oj,.ob{display:none}
++#orders.s0 .o0{display:flex;justify-content:space-between}
++#orders.sj .oj{display:flex}#orders.sb .ob{display:flex}
++.pill2{position:relative;display:flex;flex-direction:row;align-items:center;gap:8px;min-height:48px;padding:0 16px;border-radius:24px}
++.pill2 b{font-size:15px}
++.pill2 i{position:absolute;top:-6px;right:-4px;min-width:20px;height:20px;border-radius:10px;background:#b8342c;color:#fff;font:700 12px/20px inherit;text-align:center;font-style:normal;border:1px solid #f0c0b8}
++.strip2{display:flex;width:100%;border-radius:8px;border:1px solid var(--glassLine);background:var(--glass);background-color:var(--glassBg);box-shadow:0 2px 8px rgba(0,0,0,.35);overflow:hidden}
++.strip2>button{flex:1;min-width:0;min-height:56px;border:0!important;border-radius:0!important;box-shadow:none!important;background:none!important;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;position:relative;padding:0}
++.strip2>button+button::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:1px;background:var(--glassLine)}
++.strip2>button.sel{background:var(--glassOn)!important}
++.strip2 .ico{width:20px;height:20px}.strip2 small{font-size:14px;font-weight:700}.strip2 b{font-size:12px}
++.strip2 .x{flex:0 0 30px}.strip2 .step{flex:0 0 48px;font-size:24px;font-weight:700}
++.strip2 .gap{flex:0 0 6px;background:rgba(0,0,0,.25);border-left:1px solid var(--glassLine);border-right:1px solid var(--glassLine)}
++.strip2 svg{width:20px;height:20px}
++#hud{flex-direction:column!important;align-items:stretch!important}.sub{width:100%}
++.sub{display:flex;align-items:center;justify-content:space-between;gap:8px;height:30px;box-sizing:border-box;padding:0 4px 0 12px;margin:-1px 0 0;border:1px solid var(--glassLine);border-top-color:transparent;border-radius:0 0 8px 8px;background:var(--glass);background-color:var(--glassBg);box-shadow:0 2px 8px rgba(0,0,0,.35);font-size:13px;font-weight:600;color:#fff;pointer-events:auto}
++.sub #scoreP{position:static;display:flex;align-items:center;gap:5px;height:30px;min-height:30px;padding:0 8px;border:0;background:none;box-shadow:none;color:#fff;font-size:13px;font-weight:600}.sub #scoreP span{font-size:12px;color:var(--mute)}
++#armyP{flex:1;text-align:center;color:#d3d1ee}
++.jobc .jn .ico{width:20px;height:20px;margin:0 auto}
++.jobc .jn small{font-size:15px!important;font-weight:700}
++.tally .tp{position:static;height:auto;min-height:44px;margin:-6px 0;border:0;background:none;box-shadow:none;padding:0 4px;border-radius:0;font-size:13px}
++.tally{justify-content:space-between}
++.jobc .jn{gap:2px!important}
++.jobc .jn>span[title]{display:flex;align-items:center;gap:3px;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
++.jobc .jn .ico{width:14px;height:14px}
++.jobc .wk{display:flex;align-items:center;gap:2px;color:#d3d1ee}.jobc .wk small{font-size:12px!important;font-weight:600!important;color:#d3d1ee}
++.pp{width:11px;height:11px}
++#vilc .st{display:flex;align-items:center;gap:3px}#vilc .st .pp{width:14px;height:14px}#vilc .st b{font-size:15px}
++#bldc .jn{min-height:100%!important}
++.tp{position:absolute;z-index:3;top:calc(var(--hb) + 6px);height:30px;min-height:30px;padding:0 12px;display:flex;align-items:center;gap:6px;border-radius:15px;border:1px solid var(--glassLine);background:var(--glass);background-color:var(--glassBg);box-shadow:0 2px 8px rgba(0,0,0,.35);font-size:13px;font-weight:600;color:#fff;box-sizing:border-box}
++#ageP{left:var(--pad)}#scoreP{right:var(--pad);flex-direction:row!important;white-space:nowrap}#tip,#banner{display:none!important}#scoreP span{color:var(--mute);font-size:12px}
++#vilc{border-radius:0 8px 8px 0!important;border-left-width:0;flex:0 0 52px!important}
++.jrow #jobs{margin-left:6px}
++.jrow #jobs .jobc:first-child{border-radius:8px 0 0 8px!important;border-left-width:1px!important}
++.jrow #jobs .jobc:last-child{border-radius:0 8px 8px 0!important}
++#bldc{flex:0 0 52px;border-radius:8px 0 0 8px!important}
++#bldc .jn{gap:1px}
++#bldc .clk{position:relative;min-height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
++#bldc .clk::before{content:'';position:absolute;left:8px;right:8px;top:0;height:1px;background:var(--glassLine)}
++#vilc{flex:1;border-radius:0 8px 8px 0!important;border-left-width:0}
++#orders .jrow>button{flex:0 0 48px;min-height:0;padding:0;flex-direction:column;gap:2px;box-shadow:none}
++#orders .jrow>button small{font-size:12px}
++#orders .jrow #bBuild{border-radius:8px 0 0 8px}
++#orders .jrow #bVil{border-radius:0 8px 8px 0;border-left-width:0}
++#orders .jrow #bVil b{display:flex;align-items:center;font-size:18px}
++.jrow #jobs .jobc:last-child{border-radius:0}
++#orders #clock{min-height:46px}
++#mapB{top:auto;right:auto}.grp #mapB{margin:-6px 0}
++.dock{display:grid;grid-template-columns:1fr;gap:6px;pointer-events:none}
++.jrow{grid-column:1/-1;order:-1;display:flex}
++#orders .jrow #bBuild{min-height:0;border-radius:8px 0 0 8px;flex:1;box-shadow:none}
++.jrow #jobs .jobc:first-child{border-radius:0;border-left-width:0}
++.dock>*{pointer-events:auto}
++#orders .dock>button{min-height:56px;flex-direction:column;gap:1px;line-height:1.15}
++#orders .dock>button b{font-size:15px}#orders .dock>button small{font-size:12px}
++#jobs{display:flex;flex:5}
++#bJobs{display:none!important}
++#jobs .jobc{flex:1;border-radius:0;border-left-width:0}
++#jobs .jobc:first-child{border-radius:8px 0 0 8px;border-left-width:1px}
++#jobs .jobc:last-child{border-radius:0 8px 8px 0}
++.jobc .jn{flex-direction:column;justify-content:center;gap:0;min-height:36px;padding:1px 0}
++.jobc .jn b{font-size:13px}.jobc .jn small{font-size:15px;font-weight:700}
++.jobc .pm button{min-height:40px;font-size:19px}
++#orders #clock{position:static;order:0;min-height:56px;max-width:none;min-width:0;box-shadow:0 2px 8px rgba(0,0,0,.35)}
++#bVil{order:1}
++#clock #score{flex-direction:column!important;justify-content:center;gap:0!important;padding:0 6px;min-width:40px}
++#clock #status{align-items:center;text-align:center;padding:2px 6px;flex:1;min-width:0;gap:0}
++#status b,#status small{font-size:12px;white-space:nowrap!important;line-height:1.3}#status b{font-size:13px!important}#status b{font-weight:600}
+ </style>
+ 
+ <div id="app">
+@@ -190,20 +261,20 @@
+     <button class="hb" id="muteB" data-act="sound" aria-label="Mute"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor"/><path class="w" d="M11 5.5q2 2.5 0 5M12.8 3.8q3.4 4.2 0 8.4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/><path class="x" d="M11 6l4 4M15 6l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+     <button class="hb" id="pauseB" data-act="pause" aria-label="Pause"></button>
+     <button class="hb" id="speed" data-act="speed" aria-label="Game speed">×1</button>
+-    <button class="hb" id="helpB" data-act="help" aria-label="How to play"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.4 7.6a2.7 2.7 0 1 1 3.9 2.4c-.9.5-1.3 1.1-1.3 2.1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="15.2" r="1.15" fill="currentColor"/></svg></button>
+-    </div>
+-  </div></header>
+-  <section id="orders">
+-    <div class="row r6" id="jobs"></div>
+-    <div class="row r2">
+-      <button data-act="train:vil" id="bVil"><b>+ Villager</b><small>0/0</small></button>
+-      <button data-act="buildcard" id="bBuild"><b>Build</b><small>Buildings</small></button>
++    <button class="hb" id="mapB" data-act="map" aria-label="Show the map"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.5 L7.5 4 L12.5 5.5 L17 4 V14.5 L12.5 16 L7.5 14.5 L3 16 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M7.5 4 V14.5 M12.5 5.5 V16" stroke="currentColor" stroke-width="1.5"/></svg></button>
+     </div>
+-  </section>
++  </div><div class="sub"><span id="ageP"></span><span id="armyP"></span><button id="scoreP" data-act="card:score">★ 46 <span>1st</span></button></div></header>
++  <section id="orders" class="s0"><div class="dock2">
++<div class="o0"><button id="oB" class="pill2"><svg viewBox="0 0 20 20" width="22" height="22"><path d="M4 7 L9 2.5 L13 6.5 L11.5 8 L9.5 6.5 L8 8 Z" fill="currentColor"/><path d="M9.2 7.6 L16.5 15 Q17 16.6 15.5 16.6 L8 9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><b>Build</b></button><button id="oJ" class="pill2"><svg viewBox="0 0 20 20" width="20" height="20"><circle cx="10" cy="5.5" r="3.4" fill="currentColor"/><path d="M3.5 18 Q3.5 10.5 10 10.5 Q16.5 10.5 16.5 18 Z" fill="currentColor"/></svg><b>Jobs</b><i id="oIdle">2</i></button></div>
++<div class="oj" id="ojRow"></div>
++<div class="ob" id="obRow"></div>
++</div><div id="jobs" style="display:none"></div><div style="display:none"><div class="jobc" id="vilc"><button class="jn"></button></div><button id="bVil"><small></small></button><button id="bBuild"></button></div></section>
+     <canvas id="mini" width="172" height="172"></canvas>
+-    <button class="hb ic ov" id="mapB" data-act="map" aria-label="Show the map"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.5 L7.5 4 L12.5 5.5 L17 4 V14.5 L12.5 16 L7.5 14.5 L3 16 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M7.5 4 V14.5 M12.5 5.5 V16" stroke="currentColor" stroke-width="1.5"/></svg></button><button class="hb ic ov" id="miniX" data-act="map" aria-label="Shrink the map" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10 H15.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
++    <button class="hb ic ov" id="miniX" data-act="map" aria-label="Shrink the map" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10 H15.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+     <button class="hb ic ov" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 10 L10 4 L16.5 10" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round"/><path d="M5.5 9 V16 H14.5 V9" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 16 V12 H11.4 V16" fill="currentColor"/></svg></button>
+-    <div id="clock"><button class="hb" id="score" data-act="card:score" aria-label="Score and rank"><b id="scoreN">0</b><span id="scoreR"></span></button><button id="status" data-act="card:army" aria-label="Status: people, army and research"><b id="sL1"></b><small id="sL2"></small><small id="sL3"></small></button></div>
++    
++    
++    
+     <div id="banner"></div>
+     <div id="strip" hidden></div>
+     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="cancel"><b>Cancel</b></button></div>

@@ -297,3 +297,13 @@ Nothing disappears unless it is listed here. Old game kept as reference: `first-
 - Cut: green dot with arrow research marker (now a book badge with a count).
 - Not done on purpose: the computers do not research the capacity techs; mercenaries from finds ignore army room (they are hired, not trained); old saves keep buildings above a new limit.
 - Camera: the view centres between the top and bottom pills; the camera no longer scrolls past the map's bottom edge.
+
+## Build 35 (later changes, logged late)
+- Cut: the "Settlement" age name (now "Stone", shown "Stone age").
+- Cut: the separate speed pill; speed sits in the single top bar next to pause.
+- Cut: the score tile from the top bar; it moved into the status pill.
+- Cut: the line under card titles; Build menu tabs now touch and the chosen tab is filled red.
+- Added: ghost buttons so every Build menu is the same height.
+
+## Build 36 (mockups only, NOT built; see mockups/ and HANDOFF.md)
+- Proposed cuts, all awaiting his yes yes: the "?" button (help moves into the People card), the Farm job (folds into Food), the civ name and zoom % from the status line, the job names (icons), the status pill, the clock pill.
