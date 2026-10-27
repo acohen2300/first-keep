@@ -28,12 +28,15 @@ Single-file HTML mobile RTS (Albert). Live: https://claude.ai/artifact/BYdPKYCJD
 - Top bar at 375 px: homes icon hidden (`@media max-width:380px`); side padding 8 px at <=400 px.
 
 ## Open items
-1. GitHub: Albert creates empty public/private `first-keep` repo (no README); Claude attaches via add_repo (push), pushes with `first-keep.html` as `index.html`; Albert enables Pages (main, /root). Phone link: `acohen2300.github.io/first-keep`. The session `gh` token was invalid; Pages is free only for public repos (code and history visible).
+1. GitHub: DONE. Repo https://github.com/acohen2300/first-keep (main, game as `index.html`, Pages on). Phone link: https://acohen2300.github.io/first-keep. To publish a build: attach the repo with add_repo (push), copy `first-keep.html` to `index.html`, commit and push to `main`. Pages deploys in 1-2 minutes. The Claude GitHub app is installed on his account. This session could not reach github.io or the Pages API, so Albert checks the live link.
 2. Sound: obeys the iPhone silent switch (`navigator.audioSession.type='ambient'`). Albert has not decided whether it should play on silent.
 3. Real-phone test list: pinch zoom, box-select, build ghost, villager card, field dots, research dots, 30-minute bell, new top bar and corner chip, pace button.
 4. Gunpowder balance (costs, bombard damage, AI timing) is first-guess.
 5. Parked ideas: replays, biomes, interpolation, optional Auto jobs, readability cleanup before App Store, bundled fonts for native, "Add another conquest" step-up, slower first raid (~5 min), job row as one line (mockup B, he chose the old bottom).
 6. GUIDE.md needs Build 29 changes (top bar, corner chip, one pace button, Messages toggle, side-by-side building).
+
+## Status at handoff (Oct 27)
+Build 29 is live at the artifact URL (version 34) and on GitHub Pages. Nothing in progress. Next: his phone test of Build 29 and the sound-on-silent answer.
 
 ## Full transcript
 `session-log.jsonl` (this session's raw log) sits beside this file.
