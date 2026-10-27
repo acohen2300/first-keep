@@ -16,8 +16,8 @@ html,body{height:100%}
 body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font-size:15px;overflow:hidden;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
   -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
-#app{height:100%;display:flex;flex-direction:column;gap:6px;padding-block:8px;box-sizing:border-box;max-width:560px;margin:0 auto}
-#hud{display:flex;align-items:center;gap:5px}
+#app{height:100%;display:flex;flex-direction:column;gap:8px;padding-block:8px;box-sizing:border-box;max-width:560px;margin:0 auto}
+#hud{display:flex;align-items:center;gap:0;height:32px}
 .tally{display:flex;gap:6px;flex:1;font-variant-numeric:tabular-nums;font-weight:600;font-size:15px;min-width:0}
 .tally span{display:flex;align-items:center;gap:4px;white-space:nowrap}
 .hb{min-height:44px;min-width:44px;padding:0 4px;flex-direction:row}
@@ -25,10 +25,10 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 .ic{background:none;border:0;padding:0;position:relative;z-index:0;font-size:14px}
 .ic::before{content:'';position:absolute;left:50%;top:50%;width:32px;height:32px;margin:-16px 0 0 -16px;box-sizing:border-box;border-radius:8px;background:var(--panel);border:1px solid var(--line);z-index:-1}
 .ic.on{background:none}.ic.on::before{background:#2f3b36;border-color:var(--mute)}
-.ic+.ic{margin-left:-6px}   /* the 44 px tap areas may touch; the 32 px buttons keep their gap */
+.ic+.ic{margin-left:-4px}   /* every control is 32 px high with 8 px between; the 44 px tap areas overlap a little */
 .ic svg{width:16px;height:16px}#pauseB svg{width:18px;height:18px}#muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--mute)}
 #card .lvl{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}#card .lvl small{color:var(--mute)}
-#score{min-width:50px;gap:0;flex-direction:column;line-height:1;font-variant-numeric:tabular-nums}
+#score{min-width:56px;gap:0;flex-direction:column;line-height:1;font-variant-numeric:tabular-nums}#score::before{left:6px;right:6px;width:auto}
 #score b{font-size:14px}#score small{font-size:12px}
 #stage{flex:1;min-height:0;position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#20301c;touch-action:none}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -49,7 +49,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
 #card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:6px;max-height:calc(100% - 12px);overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
-#card h3{margin:0;font-family:var(--display);font-weight:400;font-size:22px;display:flex;align-items:center;gap:8px;padding-right:40px}
+#card h3{margin:0;font-family:var(--display);font-weight:400;font-size:22px;display:flex;align-items:center;gap:8px;padding-right:96px}
 #card .who{font-family:var(--ui);font-size:14px;color:var(--mute);font-weight:600}
 #card p{margin:0;color:var(--mute);line-height:1.35;font-size:15px}
 #card p i{color:var(--bone);font-style:normal;font-weight:600}
@@ -77,6 +77,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #card .chips{display:flex;flex-wrap:wrap;gap:5px}
 #card .chip{border:1px solid #4fb06a;box-shadow:inset 0 0 0 1px #4fb06a;color:#dcf5e8;border-radius:12px;padding:3px 9px;font-size:13px;font-weight:600}
 #card .dim{color:var(--mute)}
+#cardI{position:absolute;top:4px;right:52px;min-height:44px;min-width:44px;padding:0}
 #cardX{position:absolute;top:4px;right:4px;min-height:44px;min-width:44px;padding:0;font-size:18px}
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:34px;margin:0}
@@ -113,18 +114,18 @@ button.ok small{color:#8fd4a4}
 .jobc .pm button{min-height:34px;padding:0;font-size:19px;font-weight:700;background:var(--panel2)}
 #menus button{min-height:44px}
 #menus button b{font-size:14px}
-#sub{display:flex;align-items:center;gap:4px;height:32px;margin:0 -6px}
+#sub{display:flex;align-items:center;gap:0;height:32px;margin:0 -6px}
 #sub #speed{margin-left:auto}#helpB{margin-right:-6px}
 #sub .ic{margin-block:-7px}
 #stage.mapOn #banner{right:100px}
-#cInfo{margin-left:6px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+#cInfo{margin:0 6px 0 2px;height:32px;display:flex;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:0 9px;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
 /* The menu card is a page in a book: parchment, ink, page tabs, a wax seal on what you can do now. Colours are set here once; every rule inside the card reads them. */
 #card{--bone:#2a1c10;--mute:#56412b;--dim:#5a4630;--panel:#e6d6ad;--panel2:#dac796;--line:#a68e63;--blue:#8e1d14;--red:#9b1c12;--gold:#7a5a1c;color:var(--bone);border:1px solid #8a7048;border-radius:4px 8px 8px 4px;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .24 0 0 0 0 .1 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"),radial-gradient(ellipse at 28% 12%,rgba(255,250,230,.6),transparent 60%),radial-gradient(ellipse at 85% 95%,rgba(125,82,30,.2),transparent 55%),linear-gradient(#ebdeba,#decda2);background-color:#e6d6ad;
   box-shadow:inset 0 0 26px rgba(110,70,25,.38),inset 3px 0 0 rgba(90,60,25,.25),0 -6px 24px rgba(0,0,0,.5)}
 .night #card{filter:brightness(.74) sepia(.2)}
 #card h3{border-bottom:1px solid var(--line);padding-bottom:3px;margin-bottom:2px}
-#card button:not(#cardX){position:relative;box-shadow:inset 0 0 0 2px var(--panel),inset 0 0 0 3px #b9a176}
+#card button:not(#cardX):not(#cardI){position:relative;box-shadow:inset 0 0 0 2px var(--panel),inset 0 0 0 3px #b9a176}
 #card button.dis{background:#dccba1;border-style:dashed;box-shadow:none}
 #card button.on{background:#f4eac9;border-color:#2a1c10;box-shadow:inset 0 0 0 1px #2a1c10}
 #card button.go{border-color:#8e1d14;color:var(--bone)}
@@ -134,12 +135,13 @@ button.ok small{color:#8fd4a4}
 #card .done{color:#2f5a2c}
 #card .chip{border-color:#3d6b3a;box-shadow:none;background:rgba(61,107,58,.12);color:#26471f}
 #card .fold{border-top-color:var(--line)}
+#card .infoP{background:rgba(255,250,230,.5);border:1px solid var(--line);border-radius:6px;padding:6px 9px;display:flex;flex-direction:column;gap:5px}
 #card .tabs{gap:2px;margin-bottom:-2px}
 #card .tabs button{border-radius:8px 8px 0 0;border-bottom-color:var(--line);background:var(--panel2)}
 #card .tabs button.on{background:#f4eac9;border-bottom-color:#f4eac9}
 #card .tabs button.on::before{content:'';position:absolute;top:-1px;right:8px;width:9px;height:15px;background:#8e1d14;clip-path:polygon(0 0,100% 0,100% 100%,50% 72%,0 100%)}
 @media (max-width:440px){.tally{gap:1px;font-size:12px}.tally span{gap:1px}.tally .ico{width:12px;height:12px}}
-@media (max-width:400px){.tally span{gap:0}.tally .ico{width:11px;height:11px}.hb{padding:0 1px}#hud{gap:1px}#score{min-width:44px;padding:0}#score b{font-size:12px}body{padding-left:8px;padding-right:8px}}
+@media (max-width:400px){.tally span{gap:0}.tally .ico{width:11px;height:11px}.hb{padding:0 1px}#score b{font-size:13px}body{padding-left:8px;padding-right:8px}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;scroll-behavior:auto!important} }
 </style>
 
@@ -152,7 +154,7 @@ button.ok small{color:#8fd4a4}
       <span title="Gold"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="#f2cf55"/><circle cx="8" cy="8" r="4" fill="none" stroke="#b8902a" stroke-width="1.3"/></svg><span id="rg">0</span></span>
       <span title="Iron"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 11 L5 5 L11 5 L14 11 Z" fill="#8fa3b5"/><path d="M5 5 L11 5 L9.5 8 L6.5 8 Z" fill="#c9d4de"/></svg><span id="ri">0</span></span>
     </div>
-    <button class="hb" id="score" data-act="card:score" aria-label="Score"><b id="scoreN">0</b><small id="scoreR"></small></button>
+    <button class="hb ic" id="score" data-act="card:score" aria-label="Score"><b id="scoreN">0</b><small id="scoreR"></small></button>
     <button class="hb ic" id="muteB" data-act="sound" aria-label="Mute"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor"/><path class="w" d="M11 5.5q2 2.5 0 5M12.8 3.8q3.4 4.2 0 8.4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/><path class="x" d="M11 6l4 4M15 6l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
     <button class="hb ic" id="pauseB" data-act="pause" aria-label="Pause"></button>
     <button class="hb ic" id="helpB" data-act="help" aria-label="How to play">?</button>
@@ -3219,7 +3221,7 @@ function boxCut(r, n) {   // send n villagers to cut the trees in the box, then 
 }
 // ═════ 12-ui.js ═════
 // ───────────────────────── The pages: what each thing is and does ─────────────────────────
-function openCard(c) { hideStrip(); G.card = c; G.confirm = null; cardSig = ''; $('card').scrollTop = 0; renderCard(); }
+function openCard(c) { hideStrip(); G.card = c; G.infoOpen = false; G.confirm = null; cardSig = ''; $('card').scrollTop = 0; renderCard(); }
 function closeCard() { if (G) G.card = null; $('card').hidden = true; }
 let cardSig = '', bannerSig = '';
 // Live panels are patched, never rebuilt: the new markup is laid over the old node by node, and only the words, numbers
@@ -3248,9 +3250,11 @@ const btn = (act, title, sub, cls) => `<button data-act="${act}" class="${cls ||
 // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 const FOLD = new Set();
 // two-sided cards, one mold: two tabs; the chosen one is lit
+const BOOK = '<svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path d="M2 3.5 Q5.2 2.4 8 4 Q10.8 2.4 14 3.5 V12.5 Q10.8 11.4 8 13 Q5.2 11.4 2 12.5 Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 4 V13" stroke="currentColor" stroke-width="1.2"/></svg>';
 const TABIC = { train: '<svg class="ti" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13 L9 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 3.5 L10 2 L13.5 5.5 L12 8.5 Z" fill="currentColor"/></svg>', research: '<svg class="ti" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3.5 Q5.2 2.4 8 4 Q10.8 2.4 14 3.5 V12.5 Q10.8 11.4 8 13 Q5.2 11.4 2 12.5 Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 4 V13" stroke="currentColor" stroke-width="1.2"/></svg>' };   // a hammer for making things, a book for learning them
 const twoTabs = (key, opts, cur) => `<div class="acts tabs">${opts.map(([k, t, sub]) => btn(`${key}:${k}`, (TABIC[k] || '') + t, sub, cur === k ? 'on' : '')).join('')}</div>`;
-const fold = (id, title, html) => html ? `<details class="fold" data-f="${id}"${FOLD.has(id) ? ' open' : ''}><summary>${title}</summary>${html}</details>` : '';
+const INFO = new Set(['why', 'bmore', 'about', 'menu', 'bnabout']); let infoBuf = [];   // the explaining text of a card waits behind the book icon
+const fold = (id, title, html) => INFO.has(id) ? (html && infoBuf.push(html), '') : html ? `<details class="fold" data-f="${id}"${FOLD.has(id) ? ' open' : ''}><summary>${title}</summary>${html}</details>` : '';
 const hpBar = (f, col) => `<div class="hp"><i style="width:${Math.round(100 * clamp(f, 0, 1))}%;background:${col}"></i></div>`;
 const unitLine = (o, k) => { const S = stats(o, k), U = UNIT[k]; return `<p><b>${S.name}:</b> ${U.desc}${U.civ ? ` <i>${CIVS[U.civ].name} only.</i>` : ''}</p>`; };
 function beatsText(o, k) {
@@ -3267,12 +3271,12 @@ function trainButtons(kinds) {
 }
 const trainsAt = kind => Object.keys(UNIT).filter(k => (UNIT[k].at === kind || (UNIT[k].also || []).includes(kind)) && !UNIT[k].civ && UNIT[k].cost);
 function renderCard() {
-  const c = G.card; if (!c) return;
+  const c = G.card; if (!c) return; infoBuf = [];
   const p = G.P[0]; let h = '';
   if (c.type === 'bld') {
     const b = G.blds.find(x => x.id === c.id); if (!b) { closeCard(); return; }
     const B = BLD[b.kind], mine = b.owner === 0, P = G.P[b.owner], M = maxHpB(b.owner, b.kind); let td = '', moreH = '';
-    h += `<h3>${bldName(b.owner, b.kind)}<span class="who">${mine ? 'yours' : P.name + (P.civ ? ' · ' + CIVS[P.civ].name : '') + ' · ' + (P.lord === 0 ? (P.rebel ? 'in revolt' : 'your vassal') : G.rel[0][b.owner])}</span></h3>${hpBar(b.hp / M, P.color)}${mine && b.prog >= 1 ? '' : `<p>${B.desc}</p>`}`;
+    h += `<h3>${bldName(b.owner, b.kind)}<span class="who">${mine ? 'yours' : P.name + (P.civ ? ' · ' + CIVS[P.civ].name : '') + ' · ' + (P.lord === 0 ? (P.rebel ? 'in revolt' : 'your vassal') : G.rel[0][b.owner])}</span></h3>${b.hp < M - 1 ? hpBar(b.hp / M, '#b3261a') : ''}${mine && b.prog >= 1 ? '' : `<p>${B.desc}</p>`}`;
     if (b.kind === 'wonder' && P.civ) h += `<p><i>${CIVS[P.civ].wonder}:</i> ${WHY['wonder:' + P.civ]}</p>`;
     if (G.wonder && G.wonder.id === b.id) h += `<p><b>${clock(Math.max(0, G.wonder.end - G.t))} until ${mine ? 'you win' : 'they win'}.</b></p>`;
     if (b.prog < 1) h += `<p>Being built: ${Math.round(b.prog * 100)}%.${mine && !G.units.some(u => u.rep === b && u.job === 'repair') ? ' <b>Nobody is working it.</b>' : ''}</p>`;
@@ -3288,13 +3292,13 @@ function renderCard() {
       if (b.q.length) h += `<p>Working on: ${b.q.map((j, i) => (j.kind ? stats(0, j.kind).name : j.muster ? `muster ${j.bn !== undefined ? BN[j.bn] : ''}` : j.tech ? TECHBY[j.tech].name : AGES[j.age].name + ' age') + (i === 0 ? ` (${Math.ceil(j.left)} s)` : '')).join(', ')}${b.blocked ? ' · <b>needs room: House, Apartment or Aqueduct</b>' : ''}${b.stall > G.t ? ` · <b>stopped by sabotage: ${Math.ceil(b.stall - G.t)} s</b>` : ''}</p>`;
       const mk = b.kind === 'market', more = mk && G.mtab === 'more';   // the Market's two sides: trade, and caravans and ventures
       const tr = mk && !more ? [] : trainsAt(b.kind), techs = mk && !more ? [] : TECH.filter(t => t.at === b.kind && !p.techs.has(t.id)), done = mk && !more ? [] : TECH.filter(t => t.at === b.kind && p.techs.has(t.id));
-      const hasR = techs.length || done.length || b.kind === 'keep', two = !mk && tr.length && hasR, side = mk ? '' : two ? (G.btab || 'train') : '';
-      if (b.kind === 'keep') h += keepAgeHTML();
+      const ageB = b.kind === 'keep' ? keepAgeBtn() : '', hasR = techs.length || done.length || ageB, hd = t => tr.length && hasR ? `<div class="sec">${t}</div>` : '';   // one page: Train, then Research; the next age is research like any other
       if (mk) h += twoTabs('mtab', [['trade', 'Trade', 'sell and buy'], ['more', 'Caravans', 'and ventures']], more ? 'more' : 'trade');
-      if (two) h += twoTabs('btab', [['train', 'Train', `${tr.length} kind${tr.length > 1 ? 's' : ''}`], ['research', 'Research', `${techs.filter(t => !researchWhy(0, t.id)).length} ready`]], side);
-      if (tr.length && side !== 'research') h += (two ? '' : `<div class="sec">Train</div>`) + `<div class="acts">${trainButtons(tr)}</div>`;
-      if (side !== 'train') {
-        if (techs.length || done.length) { h += (two ? '' : `<div class="sec">Research</div>`) + `<div class="acts">`; for (const t of techs) { const why = researchWhy(0, t.id), busy = why === 'Being researched.'; h += btn(`tech:${t.id}`, t.name, busy ? 'researching' : why && why !== `Not enough: ${costText(t.cost)}.` ? why.replace(/\.$/, '') : costText(t.cost), why ? 'dis' : ''); } h += `</div>` + (done.length ? `<div class="chips">${done.map(t => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>` : ''); }
+      if (tr.length) h += hd('Train') + `<div class="acts">${trainButtons(tr)}</div>`;
+      if (hasR) {
+        h += hd('Research') + `<div class="acts">${ageB}`;
+        for (const t of techs) { const why = researchWhy(0, t.id), busy = why === 'Being researched.'; h += btn(`tech:${t.id}`, t.name, busy ? 'researching' : why && why !== `Not enough: ${costText(t.cost)}.` ? why.replace(/\.$/, '') : costText(t.cost), why ? 'dis' : ''); }
+        h += `</div>` + (done.length ? `<div class="chips">${done.map(t => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>` : '');
       }
       // everything else about the building waits behind one More, closed until you open it
       moreH = (tr.length && b.kind !== 'keep' && b.kind !== 'town' ? tr.map(k => unitLine(0, civKind(0, k))).join('') : '') + techs.map(t => `<p><b>${t.name}:</b> ${t.desc}</p>`).join('') + (b.kind === 'keep' ? keepMoreHTML() : '');
@@ -3422,7 +3426,9 @@ function renderCard() {
       <div class="acts">${btn('newgame', G.confirm === 'new' ? 'Tap again' : 'New game', G.confirm === 'new' ? 'this one is lost' : 'pick your people', G.confirm === 'new' ? 'warn' : '')}</div>
       <p>The game saves itself every ${SAVE_EVERY} seconds on this phone. World, game length and people take effect in the next game.</p>`;
   }
-  if (h !== cardSig) { cardSig = h; patchHTML($('card'), `<button id="cardX" data-act="close" aria-label="Close">×</button>` + h); }
+  const info = infoBuf.join(''), bookOn = !!info && G.infoOpen;
+  if (bookOn) h = h.replace('</h3>', `</h3><div class="infoP">${info}</div>`);
+  if (h !== cardSig) { cardSig = h; patchHTML($('card'), (info ? `<button id="cardI" class="${bookOn ? 'on' : ''}" data-act="info" aria-label="About this">${BOOK}</button>` : '') + `<button id="cardX" data-act="close" aria-label="Close">×</button>` + h); }
   $('card').hidden = false;
 }
 $('card').addEventListener('toggle', e => { const id = e.target.dataset && e.target.dataset.f; if (id) { if (e.target.open) FOLD.add(id); else FOLD.delete(id); } }, true);
@@ -3498,9 +3504,10 @@ function foeNearest() { const k = keepOf(0); let bd = 1e9, t = null; if (k) for 
 // the odds the computers use (07-ai.js): the square law on strength, bent by who counters whom, against their army, towers and Town Center
 function oddsText(S, t) { if (t === null || t === undefined || !S.length) return ''; const r = powerOf(S) / estPower(0, t) * matchup(S, soldiersOf(t)), p = r * r / (1 + r * r); return `odds ${p > 0.65 ? 'strong' : p > 0.4 ? 'even' : 'weak'}`; }
 // The Town Center: the age on its Research side; your people, goods and the whole research tree under More
-function keepAgeHTML() {
-  const p = G.P[0], A = AGES[p.age + 1];
-  return A ? `<div class="acts c1">${btn('age', `${A.name} age`, p.aging ? 'advancing' : costText(A.cost), p.aging || !afford(p, A.cost) ? 'dis' : 'go')}</div>` + fold('why', 'Why?', `<p>${WHY['age' + (p.age + 1)]}</p>`) : `<p>You have reached the ${AGES[p.age].name} age, the last.</p>`;
+function keepAgeBtn() {   // the next age, as one research button; the reason waits behind the book
+  const p = G.P[0], A = AGES[p.age + 1]; if (!A) return '';
+  fold('why', 'Why this age?', `<p>${WHY['age' + (p.age + 1)]}</p>`);
+  return btn('age', `${A.name} age`, p.aging ? 'advancing' : costText(A.cost), p.aging || !afford(p, A.cost) ? 'dis' : 'go');
 }
 function keepMoreHTML() {
   const p = G.P[0], C = CIVS[p.civ];
@@ -3593,6 +3600,7 @@ const ACT = {
   vibe() { SET.vibe = !SET.vibe; saveSet(); feel('snap'); refresh(); },
   menu(a) { openCard({ type: 'menu', id: a }); },
   guide(a) { openCard({ type: 'guide', page: a }); },
+  info() { G.infoOpen = !G.infoOpen; cardSig = ''; renderCard(); },
   map() { SET.mini = !SET.mini; saveSet(); applyMini(); },
   home() { const k = keepOf(0); if (k) { cam.x = k.x; cam.y = k.y; clampCam(); } },
   resume() { const S = readSave(); if (S) loadGame(S); else { closeCard(); setPause(false); } refresh(); },
@@ -3621,7 +3629,6 @@ const PLAY = {
   job(a) { G.P[0].rally = a; unitsOf(0, 'vil').forEach(u => { if (!u.job) u.job = a; }); },
   move(a) { moveVil(0, a); }, less(a) { moveVil(0, a, true); },
   mtab(a) { G.mtab = a; },
-  btab(a) { G.btab = a; },
   sel(a) { G.sel = a === 'all' ? 'all' : Number(a); },
   sendto(a) { const [f, x, y] = a.split(','), to = { x: Number(x), y: Number(y) }, S = sendPick(f === 'q' || f === 'all' ? f : Number(f), to);
     S.forEach(u => { u.state = 'goto'; u.px = to.x; u.py = to.y; u.idleT = 0; u.focus = null; }); if (S.length) { say(`${S.length} on the way.`, '', 3); ripple(to.x, to.y, '#ffd35e'); } hideStrip(); },

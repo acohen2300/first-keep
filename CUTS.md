@@ -276,3 +276,7 @@ Nothing disappears unless it is listed here. Old game kept as reference: `first-
 - Fix (Build 33): the menu card was taller than the map by its own padding (box-sizing), so its top was clipped on short screens. Now border-box. The map-button highlight no longer fills a 44 px square. New-game peoples are three across, to save a row.
 - Cut (Build 33): the one button that cycled ×1, ×2, ×3, pause. Pause is its own button (top row); ×1/×2/×3 is a second button on the state row and never pauses.
 - Fix (Build 33): my hold-to-box ring used `G.hold`, which is the Hold-ground array. Renamed to `G.press`.
+- Cut (Build 33): the Train | Research tabs on building cards. One page: Train, then Research (layout 2 of the mockups). The next age is the first Research button.
+- Cut (Build 33): the Why? and More folds on cards. All explaining text sits behind one book icon left of the ✕.
+- Cut (Build 33): the blue health bar on buildings. It appears, in red, only when the building is hurt.
+- Cut (Build 33): the gold-ring and heavy spacing in the top rows; every control is 32 px high with 8 px between.

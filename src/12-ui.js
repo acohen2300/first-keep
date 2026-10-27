@@ -1,6 +1,6 @@
 // ═════ 12-ui.js ═════
 // ───────────────────────── The pages: what each thing is and does ─────────────────────────
-function openCard(c) { hideStrip(); G.card = c; G.confirm = null; cardSig = ''; $('card').scrollTop = 0; renderCard(); }
+function openCard(c) { hideStrip(); G.card = c; G.infoOpen = false; G.confirm = null; cardSig = ''; $('card').scrollTop = 0; renderCard(); }
 function closeCard() { if (G) G.card = null; $('card').hidden = true; }
 let cardSig = '', bannerSig = '';
 // Live panels are patched, never rebuilt: the new markup is laid over the old node by node, and only the words, numbers
@@ -29,9 +29,11 @@ const btn = (act, title, sub, cls) => `<button data-act="${act}" class="${cls ||
 // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 const FOLD = new Set();
 // two-sided cards, one mold: two tabs; the chosen one is lit
+const BOOK = '<svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path d="M2 3.5 Q5.2 2.4 8 4 Q10.8 2.4 14 3.5 V12.5 Q10.8 11.4 8 13 Q5.2 11.4 2 12.5 Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 4 V13" stroke="currentColor" stroke-width="1.2"/></svg>';
 const TABIC = { train: '<svg class="ti" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13 L9 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 3.5 L10 2 L13.5 5.5 L12 8.5 Z" fill="currentColor"/></svg>', research: '<svg class="ti" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3.5 Q5.2 2.4 8 4 Q10.8 2.4 14 3.5 V12.5 Q10.8 11.4 8 13 Q5.2 11.4 2 12.5 Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 4 V13" stroke="currentColor" stroke-width="1.2"/></svg>' };   // a hammer for making things, a book for learning them
 const twoTabs = (key, opts, cur) => `<div class="acts tabs">${opts.map(([k, t, sub]) => btn(`${key}:${k}`, (TABIC[k] || '') + t, sub, cur === k ? 'on' : '')).join('')}</div>`;
-const fold = (id, title, html) => html ? `<details class="fold" data-f="${id}"${FOLD.has(id) ? ' open' : ''}><summary>${title}</summary>${html}</details>` : '';
+const INFO = new Set(['why', 'bmore', 'about', 'menu', 'bnabout']); let infoBuf = [];   // the explaining text of a card waits behind the book icon
+const fold = (id, title, html) => INFO.has(id) ? (html && infoBuf.push(html), '') : html ? `<details class="fold" data-f="${id}"${FOLD.has(id) ? ' open' : ''}><summary>${title}</summary>${html}</details>` : '';
 const hpBar = (f, col) => `<div class="hp"><i style="width:${Math.round(100 * clamp(f, 0, 1))}%;background:${col}"></i></div>`;
 const unitLine = (o, k) => { const S = stats(o, k), U = UNIT[k]; return `<p><b>${S.name}:</b> ${U.desc}${U.civ ? ` <i>${CIVS[U.civ].name} only.</i>` : ''}</p>`; };
 function beatsText(o, k) {
@@ -48,12 +50,12 @@ function trainButtons(kinds) {
 }
 const trainsAt = kind => Object.keys(UNIT).filter(k => (UNIT[k].at === kind || (UNIT[k].also || []).includes(kind)) && !UNIT[k].civ && UNIT[k].cost);
 function renderCard() {
-  const c = G.card; if (!c) return;
+  const c = G.card; if (!c) return; infoBuf = [];
   const p = G.P[0]; let h = '';
   if (c.type === 'bld') {
     const b = G.blds.find(x => x.id === c.id); if (!b) { closeCard(); return; }
     const B = BLD[b.kind], mine = b.owner === 0, P = G.P[b.owner], M = maxHpB(b.owner, b.kind); let td = '', moreH = '';
-    h += `<h3>${bldName(b.owner, b.kind)}<span class="who">${mine ? 'yours' : P.name + (P.civ ? ' · ' + CIVS[P.civ].name : '') + ' · ' + (P.lord === 0 ? (P.rebel ? 'in revolt' : 'your vassal') : G.rel[0][b.owner])}</span></h3>${hpBar(b.hp / M, P.color)}${mine && b.prog >= 1 ? '' : `<p>${B.desc}</p>`}`;
+    h += `<h3>${bldName(b.owner, b.kind)}<span class="who">${mine ? 'yours' : P.name + (P.civ ? ' · ' + CIVS[P.civ].name : '') + ' · ' + (P.lord === 0 ? (P.rebel ? 'in revolt' : 'your vassal') : G.rel[0][b.owner])}</span></h3>${b.hp < M - 1 ? hpBar(b.hp / M, '#b3261a') : ''}${mine && b.prog >= 1 ? '' : `<p>${B.desc}</p>`}`;
     if (b.kind === 'wonder' && P.civ) h += `<p><i>${CIVS[P.civ].wonder}:</i> ${WHY['wonder:' + P.civ]}</p>`;
     if (G.wonder && G.wonder.id === b.id) h += `<p><b>${clock(Math.max(0, G.wonder.end - G.t))} until ${mine ? 'you win' : 'they win'}.</b></p>`;
     if (b.prog < 1) h += `<p>Being built: ${Math.round(b.prog * 100)}%.${mine && !G.units.some(u => u.rep === b && u.job === 'repair') ? ' <b>Nobody is working it.</b>' : ''}</p>`;
@@ -69,13 +71,13 @@ function renderCard() {
       if (b.q.length) h += `<p>Working on: ${b.q.map((j, i) => (j.kind ? stats(0, j.kind).name : j.muster ? `muster ${j.bn !== undefined ? BN[j.bn] : ''}` : j.tech ? TECHBY[j.tech].name : AGES[j.age].name + ' age') + (i === 0 ? ` (${Math.ceil(j.left)} s)` : '')).join(', ')}${b.blocked ? ' · <b>needs room: House, Apartment or Aqueduct</b>' : ''}${b.stall > G.t ? ` · <b>stopped by sabotage: ${Math.ceil(b.stall - G.t)} s</b>` : ''}</p>`;
       const mk = b.kind === 'market', more = mk && G.mtab === 'more';   // the Market's two sides: trade, and caravans and ventures
       const tr = mk && !more ? [] : trainsAt(b.kind), techs = mk && !more ? [] : TECH.filter(t => t.at === b.kind && !p.techs.has(t.id)), done = mk && !more ? [] : TECH.filter(t => t.at === b.kind && p.techs.has(t.id));
-      const hasR = techs.length || done.length || b.kind === 'keep', two = !mk && tr.length && hasR, side = mk ? '' : two ? (G.btab || 'train') : '';
-      if (b.kind === 'keep') h += keepAgeHTML();
+      const ageB = b.kind === 'keep' ? keepAgeBtn() : '', hasR = techs.length || done.length || ageB, hd = t => tr.length && hasR ? `<div class="sec">${t}</div>` : '';   // one page: Train, then Research; the next age is research like any other
       if (mk) h += twoTabs('mtab', [['trade', 'Trade', 'sell and buy'], ['more', 'Caravans', 'and ventures']], more ? 'more' : 'trade');
-      if (two) h += twoTabs('btab', [['train', 'Train', `${tr.length} kind${tr.length > 1 ? 's' : ''}`], ['research', 'Research', `${techs.filter(t => !researchWhy(0, t.id)).length} ready`]], side);
-      if (tr.length && side !== 'research') h += (two ? '' : `<div class="sec">Train</div>`) + `<div class="acts">${trainButtons(tr)}</div>`;
-      if (side !== 'train') {
-        if (techs.length || done.length) { h += (two ? '' : `<div class="sec">Research</div>`) + `<div class="acts">`; for (const t of techs) { const why = researchWhy(0, t.id), busy = why === 'Being researched.'; h += btn(`tech:${t.id}`, t.name, busy ? 'researching' : why && why !== `Not enough: ${costText(t.cost)}.` ? why.replace(/\.$/, '') : costText(t.cost), why ? 'dis' : ''); } h += `</div>` + (done.length ? `<div class="chips">${done.map(t => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>` : ''); }
+      if (tr.length) h += hd('Train') + `<div class="acts">${trainButtons(tr)}</div>`;
+      if (hasR) {
+        h += hd('Research') + `<div class="acts">${ageB}`;
+        for (const t of techs) { const why = researchWhy(0, t.id), busy = why === 'Being researched.'; h += btn(`tech:${t.id}`, t.name, busy ? 'researching' : why && why !== `Not enough: ${costText(t.cost)}.` ? why.replace(/\.$/, '') : costText(t.cost), why ? 'dis' : ''); }
+        h += `</div>` + (done.length ? `<div class="chips">${done.map(t => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>` : '');
       }
       // everything else about the building waits behind one More, closed until you open it
       moreH = (tr.length && b.kind !== 'keep' && b.kind !== 'town' ? tr.map(k => unitLine(0, civKind(0, k))).join('') : '') + techs.map(t => `<p><b>${t.name}:</b> ${t.desc}</p>`).join('') + (b.kind === 'keep' ? keepMoreHTML() : '');
@@ -203,7 +205,9 @@ function renderCard() {
       <div class="acts">${btn('newgame', G.confirm === 'new' ? 'Tap again' : 'New game', G.confirm === 'new' ? 'this one is lost' : 'pick your people', G.confirm === 'new' ? 'warn' : '')}</div>
       <p>The game saves itself every ${SAVE_EVERY} seconds on this phone. World, game length and people take effect in the next game.</p>`;
   }
-  if (h !== cardSig) { cardSig = h; patchHTML($('card'), `<button id="cardX" data-act="close" aria-label="Close">×</button>` + h); }
+  const info = infoBuf.join(''), bookOn = !!info && G.infoOpen;
+  if (bookOn) h = h.replace('</h3>', `</h3><div class="infoP">${info}</div>`);
+  if (h !== cardSig) { cardSig = h; patchHTML($('card'), (info ? `<button id="cardI" class="${bookOn ? 'on' : ''}" data-act="info" aria-label="About this">${BOOK}</button>` : '') + `<button id="cardX" data-act="close" aria-label="Close">×</button>` + h); }
   $('card').hidden = false;
 }
 $('card').addEventListener('toggle', e => { const id = e.target.dataset && e.target.dataset.f; if (id) { if (e.target.open) FOLD.add(id); else FOLD.delete(id); } }, true);
@@ -279,9 +283,10 @@ function foeNearest() { const k = keepOf(0); let bd = 1e9, t = null; if (k) for 
 // the odds the computers use (07-ai.js): the square law on strength, bent by who counters whom, against their army, towers and Town Center
 function oddsText(S, t) { if (t === null || t === undefined || !S.length) return ''; const r = powerOf(S) / estPower(0, t) * matchup(S, soldiersOf(t)), p = r * r / (1 + r * r); return `odds ${p > 0.65 ? 'strong' : p > 0.4 ? 'even' : 'weak'}`; }
 // The Town Center: the age on its Research side; your people, goods and the whole research tree under More
-function keepAgeHTML() {
-  const p = G.P[0], A = AGES[p.age + 1];
-  return A ? `<div class="acts c1">${btn('age', `${A.name} age`, p.aging ? 'advancing' : costText(A.cost), p.aging || !afford(p, A.cost) ? 'dis' : 'go')}</div>` + fold('why', 'Why?', `<p>${WHY['age' + (p.age + 1)]}</p>`) : `<p>You have reached the ${AGES[p.age].name} age, the last.</p>`;
+function keepAgeBtn() {   // the next age, as one research button; the reason waits behind the book
+  const p = G.P[0], A = AGES[p.age + 1]; if (!A) return '';
+  fold('why', 'Why this age?', `<p>${WHY['age' + (p.age + 1)]}</p>`);
+  return btn('age', `${A.name} age`, p.aging ? 'advancing' : costText(A.cost), p.aging || !afford(p, A.cost) ? 'dis' : 'go');
 }
 function keepMoreHTML() {
   const p = G.P[0], C = CIVS[p.civ];
@@ -374,6 +379,7 @@ const ACT = {
   vibe() { SET.vibe = !SET.vibe; saveSet(); feel('snap'); refresh(); },
   menu(a) { openCard({ type: 'menu', id: a }); },
   guide(a) { openCard({ type: 'guide', page: a }); },
+  info() { G.infoOpen = !G.infoOpen; cardSig = ''; renderCard(); },
   map() { SET.mini = !SET.mini; saveSet(); applyMini(); },
   home() { const k = keepOf(0); if (k) { cam.x = k.x; cam.y = k.y; clampCam(); } },
   resume() { const S = readSave(); if (S) loadGame(S); else { closeCard(); setPause(false); } refresh(); },
@@ -402,7 +408,6 @@ const PLAY = {
   job(a) { G.P[0].rally = a; unitsOf(0, 'vil').forEach(u => { if (!u.job) u.job = a; }); },
   move(a) { moveVil(0, a); }, less(a) { moveVil(0, a, true); },
   mtab(a) { G.mtab = a; },
-  btab(a) { G.btab = a; },
   sel(a) { G.sel = a === 'all' ? 'all' : Number(a); },
   sendto(a) { const [f, x, y] = a.split(','), to = { x: Number(x), y: Number(y) }, S = sendPick(f === 'q' || f === 'all' ? f : Number(f), to);
     S.forEach(u => { u.state = 'goto'; u.px = to.x; u.py = to.y; u.idleT = 0; u.focus = null; }); if (S.length) { say(`${S.length} on the way.`, '', 3); ripple(to.x, to.y, '#ffd35e'); } hideStrip(); },
