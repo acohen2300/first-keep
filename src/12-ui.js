@@ -97,7 +97,7 @@ function renderCard() {
       if (I) h += `<p><b>A spy's report</b> (${clock(G.t - I.t)} ago): ${costText(I.res)} in store · ${AGES[I.age].name} age · ${I.techs} researched · ${Object.entries(I.army).map(([k, n]) => n + ' ' + stats(b.owner, k).name.toLowerCase()).join(', ') || 'no army'}.</p>`;
       const spies = unitsOf(0, 'spy').length;
       if (b.kind === 'keep') { const why = surrenderWhy(0, b.owner); h += `<div class="acts c1">${btn(`demand:${b.owner}`, 'Demand surrender', why ? why.replace(/\.$/, '') : 'they become your vassal and pay tax', why ? 'dis' : 'go')}</div>`; }
-      h += `<div class="acts c1">${btn(`sab:${b.id}`, 'Sabotage', !B.sab ? 'too well guarded' : !spies ? 'needs a spy: Culture → Courthouse' : guarded(b) ? 'defended: the spy would be shot' : 'a spy goes and is used up', B.sab && spies ? 'warn' : 'dis')}</div>${qsHTML(`qatk:${b.id}`, 'Attack with', b)}`;
+      h += `<div class="acts c1">${btn(`sab:${b.id}`, 'Sabotage', !B.sab ? 'too well guarded' : !spies ? 'needs a spy: Build → Courthouse' : guarded(b) ? 'defended: the spy would be shot' : 'a spy goes and is used up', B.sab && spies ? 'warn' : 'dis')}</div>${qsHTML(`qatk:${b.id}`, 'Attack with', b)}`;
     }
     if (mine && b.prog >= 1) h += fold('bmore', 'More', moreH + `<p>${B.desc}</p>` + (WHY[b.kind] ? `<p><i>Why:</i> ${WHY[b.kind]}</p>` : ''));
     h += td;
@@ -107,7 +107,7 @@ function renderCard() {
     h += `<h3>${F.name}<span class="who">${coord(f.x, f.y)}${f.done && !F.capture ? ' · taken' : ''}</span></h3><p>${F.desc}</p>`;
     if (gl.length) h += `<p>Guarded by ${gl.length} ${some(gl.length, UNIT[gl[0].kind].name.toLowerCase())}.</p>`;
     if (F.got && !f.done) h += `<p>Inside: ${costText(Object.fromEntries(Object.entries(F.got).map(([k, v]) => [k, Math.round(v * (G.fantasy ? 1.5 : 1))])))}${F.tech ? ' and a free research' : ''}.</p>`;
-    if (F.capture) { h += `<p>${f.owner === null ? 'Nobody holds it.' : f.owner === 0 ? 'Yours: it pays you.' : `Held by ${G.P[f.owner].name}.`}</p>`; if (f.owner !== 0) h += `<div class="acts c1">${btn(`shrine:${f.id}`, 'Send a priest', unitsOf(0, 'priest').length ? 'it stands there and takes it' : 'needs a priest: Culture → Temple', unitsOf(0, 'priest').length ? 'go' : 'dis')}</div>`; }
+    if (F.capture) { h += `<p>${f.owner === null ? 'Nobody holds it.' : f.owner === 0 ? 'Yours: it pays you.' : `Held by ${G.P[f.owner].name}.`}</p>`; if (f.owner !== 0) h += `<div class="acts c1">${btn(`shrine:${f.id}`, 'Send a priest', unitsOf(0, 'priest').length ? 'it stands there and takes it' : 'needs a priest: Build → Temple', unitsOf(0, 'priest').length ? 'go' : 'dis')}</div>`; }
     if (F.hire && !f.done) { const why = hireWhy(0, f); h += `<div class="acts c1">${btn(`hire:${f.id}`, `Hire ${F.hire.n} vagabonds`, why ? why.replace(/\.$/, '') : costText(F.hire.cost), why ? 'dis' : 'go')}</div>`; }
     h += qsHTML(`qgo:${Math.round(f.x)},${Math.round(f.y)}`, 'Send', f) + (unitsOf(0, 'scout').length ? `<div class="acts c1">${btn(`scoutgo:${Math.round(f.x)},${Math.round(f.y)}`, 'Send the scout', 'fast, but it does not fight')}</div>` : '');
     if (F.stop) h += stopHTML(f);
@@ -162,7 +162,8 @@ function renderCard() {
     h += fold('about', 'About', `<p>The nearest idle villager goes; if none is idle, one from the job you hold the most of.</p>`);
   } else if (c.type === 'army') {
     const S = armyOf(0), by = {}; for (const u of S) { const nm = stats(0, u.kind).name; by[nm] = (by[nm] || 0) + 1; }
-    h += `<h3>Your army<span class="who">${S.length}/${ARMYMAX}</span></h3><p>${Object.entries(by).map(([n, k]) => `${k} ${some(k, n.toLowerCase())}`).join(' · ') || 'Nobody yet.'}</p>`;
+    const V = unitsOf(0, 'vil'), idle = V.filter(u => !u.job);
+    h += `<h3>People<span class="who">${V.length} villagers · ${S.length} soldiers</span></h3><div class="sec">Villagers</div><p>${JOBS.map(r => `${V.filter(u => u.job === r).length} ${r}`).join(' · ')} · <b>${idle.length} idle</b></p>${idle.length ? `<div class="acts c1">${btn('idlego', 'Show an idle villager', `${idle.length} idle`)}</div>` : ''}<div class="sec">Army</div><p>${Object.entries(by).map(([n, k]) => `${k} ${some(k, n.toLowerCase())}`).join(' · ') || 'Nobody yet.'}</p>`;
     if (S.length && hasCmd()) h += `<div class="sec">Orders go to</div><div class="acts c4">` + [['all', 'All', S.length]].concat(BN.map((n, i) => [i, n, S.filter(u => u.bn === i).length])).map(([k, n, cnt]) => btn(`sel:${k}`, n, `${cnt}`, G.sel === k ? 'on' : '')).join('') + `</div>`;
     if (S.length) h += `<div class="sec">Orders for the ${selName()}</div><div class="acts">${btn('recall', 'Recall home', '')}${btn('attack:near', 'Attack nearest', oddsText(orderSet(), foeNearest()), orderSet().length ? 'warn' : 'dis')}</div>`;
     if (S.length && p.techs.has('engage')) { const sn = G.sel === 'all' ? (G.stance.every(x => x === G.stance[0]) ? G.stance[0] : -1) : G.stance[G.sel]; h += `<div class="acts c1">${btn('stance', 'Stance: ' + (sn < 0 ? 'mixed' : STANCE[sn].name), '', sn > 0 ? 'on' : '')}</div>`; }
@@ -174,12 +175,12 @@ function renderCard() {
   } else if (c.type === 'keep') { const k = keepOf(0); if (k) { G.card = { type: 'bld', id: k.id }; renderCard(); return; } closeCard(); return; }
   else if (c.type === 'fortress') h += `<h3>The Fortress<span class="who">${G.P[FORT].alive ? G.rel[0][FORT] + (G.P[FORT].civ ? ' · ' + CIVS[G.P[FORT].civ].name : '') : 'fallen'}</span></h3>` + diploHTML();
   else if (c.type === 'menu') {
-    const M = MENUS.find(m => m.id === c.id);
-    h += `<h3>${M.name}<span class="who">${M.blurb}</span></h3><div class="acts">` + M.items.map(k => { const B = BLD[k], lock = B.age > p.age; return btn(`build:${k}`, bldName(0, k), lock ? `${AGES[B.age].name} age` : costText(B.cost), lock || !afford(p, B.cost) ? 'dis' : ''); }).join('') + `</div>`;
+    const M = MENUS.find(m => m.id === c.id); G.lastMenu = c.id;
+    h += `<h3>Build<span class="who">${M.blurb}</span></h3><div class="acts c5 chipsrow">${MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join('')}</div><div class="acts c3">` + M.items.map(k => { const B = BLD[k], lock = B.age > p.age; return btn(`build:${k}`, bldName(0, k), lock ? `${AGES[B.age].name} age` : costText(B.cost), lock || !afford(p, B.cost) ? 'dis' : ''); }).join('') + `</div>`;
     h += fold('menu', 'What each one does', M.items.map(k => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''));
   } else if (c.type === 'score') {
     scoreAll(); const rows = G.P.filter(q => q.id !== WILD), cats = [['people', 'People'], ['army', 'Army'], ['tech', 'Tech'], ['bld', 'Buildings'], ['wealth', 'Wealth'], ['total', 'Score']];
-    h += `<h3>Score<span class="who">${MODES[G.mode].secs ? `${clock(Math.max(0, MODES[G.mode].secs - G.t))} to the bell` : 'conquest'}</span></h3><table><tr><th></th>${rows.map(q => `<th style="border-bottom:3px solid ${q.color}">${q.id === 0 ? 'You' : q.name}</th>`).join('')}</tr>${cats.map(([k, n]) => `<tr><td>${n}</td>${rows.map(q => `<td>${q.alive || k === 'total' ? fmt(q.score[k]) : '–'}</td>`).join('')}</tr>`).join('')}</table>`;
+    h += `<h3>Score<span class="who">${MODES[G.mode].secs ? `${clock(Math.max(0, MODES[G.mode].secs - G.t))} to the bell` : 'conquest'}</span></h3><table><tr><th></th>${rows.map(q => `<th style="border-bottom:3px solid ${q.color}">${q.id === 0 ? 'You' : `<button class="lnk" data-act="seek:${q.id}">${q.name}</button>`}</th>`).join('')}</tr>${cats.map(([k, n]) => `<tr><td>${n}</td>${rows.map(q => `<td>${q.alive || k === 'total' ? fmt(q.score[k]) : '–'}</td>`).join('')}</tr>`).join('')}</table>`;
     h += `<p>People and Army: what you hold, cost ÷ ${SCORE.unit}. Tech: research and ages paid ÷ ${SCORE.tech}. Buildings: standing, cost ÷ ${SCORE.bld}. Wealth: everything gathered, traded, found and plundered ÷ ${SCORE.wealth}. ${G.wonder ? `A wonder stands: ${clock(Math.max(0, G.wonder.end - G.t))} left.` : ''}</p>`;
   } else if (c.type === 'guide') {
     const pg = c.page || 'bld';
@@ -208,7 +209,7 @@ function renderCard() {
   const info = infoBuf.join(''), bookOn = !!info && G.infoOpen;
   if (bookOn) h = h.replace('</h3>', `</h3><div class="infoP">${info}</div>`);
   if (h !== cardSig) { cardSig = h; patchHTML($('card'), (info ? `<button id="cardI" class="${bookOn ? 'on' : ''}" data-act="info" aria-label="About this">${BOOK}</button>` : '') + `<button id="cardX" data-act="close" aria-label="Close">×</button>` + h); }
-  $('card').hidden = false;
+  $('card').classList.toggle('full', ['setup', 'resume', 'help', 'guide', 'score', 'end'].includes(c.type) || (c.type === 'bld' && (G.blds.find(b => b.id === c.id) || {}).kind === 'market')); $('card').hidden = false;
 }
 $('card').addEventListener('toggle', e => { const id = e.target.dataset && e.target.dataset.f; if (id) { if (e.target.open) FOLD.add(id); else FOLD.delete(id); } }, true);
 function settingsHTML() {
@@ -361,8 +362,7 @@ function guideMd() {
 // ───────────────────────── The orders panel ─────────────────────────
 function buildPanel() {
   $('jobs').innerHTML = JOBS.map(r => `<div class="jobc"><button class="jn" data-act="job:${r}"><b>${r[0].toUpperCase() + r.slice(1)}</b><small id="j${r}">0</small></button><div class="pm"><button data-act="less:${r}" aria-label="One fewer on ${r}">−</button><button data-act="move:${r}" aria-label="One more on ${r}">+</button></div></div>`).join('');
-  $('menus').innerHTML = MENUS.map(m => `<button data-act="menu:${m.id}" id="m${m.id}"><b>${m.name}</b></button>`).join('');
-}
+  }
 const refresh = () => { cardSig = ''; ui(true); };
 // every button's verb, in one table
 const ACT = {
@@ -377,7 +377,10 @@ const ACT = {
   help() { openCard({ type: 'help' }); },
   reload() { location.reload(); },
   vibe() { SET.vibe = !SET.vibe; saveSet(); feel('snap'); refresh(); },
-  menu(a) { openCard({ type: 'menu', id: a }); },
+  menu(a) { const keep = G.card && G.card.type === 'menu'; openCard({ type: 'menu', id: a }); if (keep) $('card').scrollTop = 0; },
+  buildcard() { if (G.card && G.card.type === 'menu') { closeCard(); return; } openCard({ type: 'menu', id: G.lastMenu || 'home' }); },
+  idlego() { const u = unitsOf(0, 'vil').find(v => !v.job); if (!u) return; cam.x = u.x; cam.y = u.y; clampCam(); closeCard(); },
+  seek(a) { const o = Number(a), k = keepOf(o) || G.blds.find(b => b.owner === o); if (!k) { say('Nothing of theirs stands.', '', 3); return; } cam.x = k.x; cam.y = k.y; clampCam(); if (k.kind === 'keep') { G.card = null; openCard({ type: 'bld', id: k.id }); } else closeCard(); },
   guide(a) { openCard({ type: 'guide', page: a }); },
   info() { G.infoOpen = !G.infoOpen; cardSig = ''; renderCard(); },
   map() { SET.mini = !SET.mini; saveSet(); applyMini(); },
@@ -406,7 +409,7 @@ const ACT = {
 // orders that change the game: refused once it is over
 const PLAY = {
   job(a) { G.P[0].rally = a; unitsOf(0, 'vil').forEach(u => { if (!u.job) u.job = a; }); },
-  move(a) { moveVil(0, a); }, less(a) { moveVil(0, a, true); },
+  move(a) { if (!unitsOf(0, 'vil').some(u => !u.job)) { say('Nobody is idle. Use − on another job.', '', 3); return; } moveVil(0, a); }, less(a) { moveVil(0, a, true); },
   mtab(a) { G.mtab = a; },
   sel(a) { G.sel = a === 'all' ? 'all' : Number(a); },
   sendto(a) { const [f, x, y] = a.split(','), to = { x: Number(x), y: Number(y) }, S = sendPick(f === 'q' || f === 'all' ? f : Number(f), to);
@@ -434,7 +437,7 @@ const PLAY = {
   douse(a) { const b = G.blds.find(x => x.id === Number(a) && x.owner === 0); let n = 0; if (b && b.fire > 0) for (let i = 0; i < 2; i++) { const v = pickVil(0, b, null, b); if (v) { if (v.job !== 'repair') v.pj = v.job; setJob(v, 'repair'); v.rep = b; v.fireman = true; n++; } } G.log = G.log.filter(m => m.act !== 'douse:' + a); if (n) say(`${n} more run to the fire.`, '', 3); else if (b && b.fire > 0) say('No villager is free.', '', 3); },
   tpost(a) { const f = G.finds.find(x => x.id === Number(a)); if (!f) return; const why = canPlace(0, 'tpost', f.x, f.y); if (why) { say(why + '.', '', 3); return; } if (!afford(G.P[0], BLD.tpost.cost)) { say(`Not enough: ${costText(BLD.tpost.cost)}.`, '', 3); return; } if (G.P[0].age < BLD.tpost.age) { say('Trade posts need the Bronze age.', '', 3); return; } build(0, 'tpost', f.x, f.y); say('A villager sets out to build the trade post.', '', 4); },
   want(a) { const f = G.finds.find(x => x.id === Number(a)); if (f && f.owner === 0) { f.want = WARES[(WARES.indexOf(f.want) + 1) % WARES.length]; } },
-  route(a) { const [cid, s, id] = a.split(','), c = G.units.find(u => u.id === Number(cid) && u.owner === 0), t = s === 's' ? G.finds.find(f => f.id === Number(id)) : G.blds.find(b => b.id === Number(id)); if (c && t) { if (!homeBiz(0, c)) { say('Build a Business Center first: Trade → Business Center.', '', 4); return; } setRoute(c, t, true, s === 's'); say('The caravan takes the route, and repeats it.', '', 3); } },
+  route(a) { const [cid, s, id] = a.split(','), c = G.units.find(u => u.id === Number(cid) && u.owner === 0), t = s === 's' ? G.finds.find(f => f.id === Number(id)) : G.blds.find(b => b.id === Number(id)); if (c && t) { if (!homeBiz(0, c)) { say('Build a Business Center first: Build → Business Center.', '', 4); return; } setRoute(c, t, true, s === 's'); say('The caravan takes the route, and repeats it.', '', 3); } },
   rrep(a) { const c = G.units.find(u => u.id === Number(a)); if (c && c.route) c.route.rep = !c.route.rep; },
   rsp(a) { const c = G.units.find(u => u.id === Number(a)); if (c && c.route) c.route.spice = !c.route.spice; },
   rclr(a) { const c = G.units.find(u => u.id === Number(a)); if (c) { c.route = null; c.dest = null; } }, sendbld(a) { sendBuild(0, Number(a)); }, buildat(a) { const [v, s] = a.split(',').map(Number); sendBuild(0, s, v); }, hunt(a) { sendHunt(0, Number(a)); }, repair(a) { sendRepair(0, Number(a)); },
@@ -442,7 +445,6 @@ const PLAY = {
   train(a) { if (!train(0, a)) say(trainWhy(0, a) || 'Not now.', '', 3); },
   tech(a) { if (!research(0, a)) say(researchWhy(0, a) || 'Not now.', '', 3); },
   age() { ageUp(0); },
-  agebtn() { const p = G.P[0], A = AGES[p.age + 1]; if (A && !p.aging && afford(p, A.cost) && ageUp(0)) { say(`${A.name} age: advancing.`, 'good', 3); return; } openCard({ type: 'keep' }); }, build(a) { startPlace(a); },
   scoutgo(a) { const [x, y] = a.split(',').map(Number), s = unitsOf(0, 'scout')[0]; if (s) { s.state = 'goto'; s.px = x; s.py = y; say('The scout rides out.', '', 3); } closeCard(); },
   rally(a) { const [x, y] = a.split(',').map(Number); G.rally0 = G.rally0 ? null : { x, y }; },
   recall() { orderSet().forEach(u => { u.state = 'home'; u.fid = null; }); closeCard(); },
@@ -457,7 +459,7 @@ const PLAY = {
   dismiss() { const v = unitsOf(0, 'vil').sort((a, b) => a.carry - b.carry)[0]; if (v) { v.hp = 0; v.gone = true; say('A villager was sent home.', '', 3); } },
   sab(a) { const b = G.blds.find(x => x.id === Number(a)), sp = b && unitsOf(0, 'spy').filter(u => u.state !== 'sab').sort((x, y) => dist(x, b) - dist(y, b))[0]; if (!b || !BLD[b.kind].sab || !sp) { say(!sp ? 'You have no free spy.' : 'That cannot be sabotaged.', '', 3); return; } sp.state = 'sab'; sp.tid = b.id; say('A spy slips away to sabotage it.', '', 4); closeCard(); },
   spygo(a) { const [x, y] = a.split(',').map(Number), sp = unitsOf(0, 'spy').filter(u => u.state !== 'sab').sort((p, q) => dist(p, { x, y }) - dist(q, { x, y }))[0]; if (!sp) { say('You have no free spy.', '', 3); return; } sp.state = 'goto'; sp.px = x; sp.py = y; say('A spy goes to look.', '', 3); closeCard(); },
-  shrine(a) { const f = G.finds.find(x => x.id === Number(a)), pr = f && unitsOf(0, 'priest').sort((p, q) => dist(p, f) - dist(q, f))[0]; if (!pr) { say('You have no priest: Culture → Temple.', '', 3); return; } pr.state = 'shrine'; pr.fid = f.id; say('A priest walks to the shrine.', '', 3); closeCard(); },
+  shrine(a) { const f = G.finds.find(x => x.id === Number(a)), pr = f && unitsOf(0, 'priest').sort((p, q) => dist(p, f) - dist(q, f))[0]; if (!pr) { say('You have no priest: Build → Temple.', '', 3); return; } pr.state = 'shrine'; pr.fid = f.id; say('A priest walks to the shrine.', '', 3); closeCard(); },
   hire(a) { const f = G.finds.find(x => x.id === Number(a)); if (f && !hire(0, f)) say(hireWhy(0, f), '', 3); },
   guard(a) { const [t, i] = a.split(','), id = Number(i), at = t === 'f' ? G.finds.find(f => f.id === id) : G.units.find(v => v.id === id); if (!at) return;
     const room = POST.guard - guardsOf(t, id).length, S = sendable().sort((p, q) => dist(p, at) - dist(q, at)).slice(0, Math.max(0, Math.min(4, room)));
@@ -497,31 +499,31 @@ function hushed(t) { const k = hushKey(t), w = G.hushW && G.hushW[k]; return !!(
 function advise() {
   const p = G.P[0], k = keepOf(0); if (!k || G.over) return '';
   const V = unitsOf(0, 'vil'), on = j => V.filter(u => u.job === j).length, S = soldiersOf(0);
-  if (V.some(u => u.noPath && G.t - (u.noPathT || -9) < 4) && !L('build:gate')) return 'Some villagers cannot get through your wall: Defense → Gate.';
-  if ((k.blocked || (popOf(0) >= capOf(0) && capOf(0) < POPMAX && !bldsOf(0, 'house').some(b => b.prog < 1))) && !L('build:house')) return p.age >= 2 ? 'You are full: Home → House, Apartment or Aqueduct.' : `You are full: Home → House (${costText(BLD.house.cost)}).`;
+  if (V.some(u => u.noPath && G.t - (u.noPathT || -9) < 4) && !L('build:gate')) return 'Some villagers cannot get through your wall: Build → Gate.';
+  if ((k.blocked || (popOf(0) >= capOf(0) && capOf(0) < POPMAX && !bldsOf(0, 'house').some(b => b.prog < 1))) && !L('build:house')) return p.age >= 2 ? 'You are full: Build → House, Apartment or Aqueduct.' : `You are full: Build → House (${costText(BLD.house.cost)}).`;
   if (V.length < 6 && !k.q.length && afford(p, UNIT.vil.cost) && !L('train:vil')) return 'Train villagers: more hands bring in more of everything.';
   if (V.length >= 3 && (on('wood') === 0 || (p.res.w < 80 && on('wood') < 2)) && !L('job:wood')) return 'Wood is low. Tap + under Wood.';
   if (G.blds.some(b => b.owner === 0 && b.hp > 0 && b.prog < 1 && !V.some(v => v.rep === b && v.job === 'repair')) && !L('sendbld')) return 'Nobody is building. Tap the site, send a villager.';
   { const idle = V.filter(u => u.idle).length; if (idle && G.t > 20 && !L('job')) return `${idle} villager${idle > 1 ? 's' : ''} idle (z). Tap + under a job.`; }
   if (bldsOf(0, 'farm').some(b => b.prog >= 1 && b.node && !(b.node.wk > 0)) && !L('job:farm')) return 'A field has no workers. Tap + under Farm.';
-  if (!bldsOf(0, 'barracks').length && G.t > 75 && !L('build:barracks')) return G.diff === 'easy' ? 'Raiders come after minute 6 on Easy: Military → Barracks before then.' : 'Raiders often come around minute 3 or 4: Military → Barracks.';
+  if (!bldsOf(0, 'barracks').length && G.t > 75 && !L('build:barracks')) return G.diff === 'easy' ? 'Raiders come after minute 6 on Easy: Build → Barracks before then.' : 'Raiders often come around minute 3 or 4: Build → Barracks.';
   if (ready(0, 'barracks').length && S.length < 3 && G.t < 600 && !L('train:spear')) return 'Train spearmen: tap Army, or tap your Barracks.';
-  if (on('wood') >= 3 && !bldsOf(0, 'lumber').length && !L('build:lumber')) return 'Wood is far. Home → Lumber camp, by trees.';
-  if (G.nodes.filter(n => n.kind === 'bush' && dist(n, k) < 300).length < 3 && !bldsOf(0, 'farm').length && !L('build:farm')) return 'Berries are running low. Home → Farm, or hunt deer.';
-  if (p.age === 0 && !p.aging && V.length >= 10 && !L('age')) return 'Ready to grow: tap the age button below.';
+  if (on('wood') >= 3 && !bldsOf(0, 'lumber').length && !L('build:lumber')) return 'Wood is far. Build → Lumber camp, by trees.';
+  if (G.nodes.filter(n => n.kind === 'bush' && dist(n, k) < 300).length < 3 && !bldsOf(0, 'farm').length && !L('build:farm')) return 'Berries are running low. Build → Farm, or hunt deer.';
+  if (p.age === 0 && !p.aging && V.length >= 10 && !L('age')) return 'Ready to grow: Town Center, then Bronze age.';
   if (S.length >= 8 && G.finds.some(f => !f.done && FINDS[f.kind].got && dist(f, k) < 600) && !L('goto')) return 'Treasure nearby. Tap it, then send your army.';
-  if (p.age >= 1 && G.P[FORT].alive && G.rel[0][FORT] === 'peace' && G.P[FORT].ally === null && !p.envoyOut && !L('envoy')) return 'The Fortress is neutral: tap Fortress to send an emissary.';
+  if (p.age >= 1 && G.P[FORT].alive && G.rel[0][FORT] === 'peace' && G.P[FORT].ally === null && !p.envoyOut && !L('envoy')) return 'The Fortress is neutral: tap its star, send an emissary.';
   if (p.hungry) return '!Hungry. Put villagers on Food or Farm.';
   if (!p.hungry && p.res.f < (p.eats || 0) * 1.5 && G.t > 120 && !L('job:food')) return `Food runs out in 90 seconds. Add Food workers.`;
   if (vassalsOf(0).some(q => q.unrest > 70 && !q.rebel)) return '!A vassal is restless. Cut tax or add soldiers.';
-  if (p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && !L('trade')) return ready(0, 'market').length ? 'Gold is low: sell wood, food or stone at the Market.' : 'Gold is low: Trade → Market, then sell what you have too much of.';
+  if (p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && !L('trade')) return ready(0, 'market').length ? 'Gold is low: sell wood, food or stone at the Market.' : 'Gold is low: Build → Market, then sell what you have too much of.';
   if (G.blds.some(b => b.owner === 0 && b.fire > 0 && !G.units.some(u => u.rep === b && u.job === 'repair'))) return '!Fire, and nobody is there. Tap it, send a villager.';
-  if (G.units.some(u => u.owner === 0 && u.sick > G.t) && !ready(0, 'hospital').length && p.age >= 2 && !L('build:hospital')) return 'Your people are sick: Culture → Hospital cures them.';
+  if (G.units.some(u => u.owner === 0 && u.sick > G.t) && !ready(0, 'hospital').length && p.age >= 2 && !L('build:hospital')) return 'Your people are sick: Build → Hospital cures them.';
   if (on('gold') === 0 && p.age >= 1 && !L('job:gold')) return 'Gold buys riders and research. Put villagers on Gold.';
   return '';
 }
 const SEASON_ICON = { Spring: '🌱', Summer: '☀️', Autumn: '🍂', Winter: '❄️' }, WX_ICON = { rain: '🌧', drought: '🔥', frost: '🧊' };
-function applyMini() { mini.hidden = !SET.mini; $('mapB').classList.toggle('on', !!SET.mini); $('stage').classList.toggle('mapOn', !!SET.mini); }
+function applyMini() { mini.hidden = !SET.mini; $('mapB').hidden = !!SET.mini; $('miniX').hidden = !SET.mini; $('stage').classList.toggle('mapOn', !!SET.mini); }
 let uiAt = 0;
 function ui(force) {
   const now = performance.now(); if (!force && now - uiAt < 150) return; uiAt = now;
@@ -529,7 +531,7 @@ function ui(force) {
   document.body.classList.toggle('night', G.night > 0.5);
   $('rf').textContent = fmt(R.f); $('rw').textContent = fmt(R.w); $('rs').textContent = fmt(R.s); $('rg').textContent = fmt(R.g); $('ri').textContent = fmt(R.i);
   const rank = 1 + G.P.filter(q => q.id && q.id !== WILD && q.score.total > p.score.total).length;
-  $('scoreN').textContent = `★${fmt(p.score.total)}`; $('scoreR').textContent = `#${rank} of ${G.P.length - 1}`;
+  $('scoreN').textContent = `★${fmt(p.score.total)}`; $('scoreR').textContent = ['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th';
   if (G.t - (G.rdyT ?? -9) > 1 || G.t < G.rdyT) { G.rdyT = G.t; G.rdy = new Set(TECH.filter(t => !p.techs.has(t.id) && !researchWhy(0, t.id)).map(t => t.at)); }   // buildings with research you can start now
   let tip = SET.tips ? advise() : ''; const urgent = tip[0] === '!'; if (urgent) tip = tip.slice(1);
   const T = G.tipS || (G.tipS = { text: '', at: -99, last: -99 });
@@ -540,14 +542,13 @@ function ui(force) {
     const info = `${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? '🌙' : ''} ${clk} · ${Math.round(cam.z * 100)}%`; if ($('cInfo').textContent !== info) $('cInfo').textContent = info; }
   const V = unitsOf(0, 'vil');
   for (const r of JOBS) { $('j' + r).textContent = V.filter(u => u.job === r).length; document.querySelector(`[data-act="job:${r}"]`).classList.toggle('on', p.rally === r); }
-  for (const m of MENUS) $('m' + m.id).classList.toggle('on', !!(G.card && G.card.type === 'menu' && G.card.id === m.id));
-  const nq = queuedOf(0, 'vil'), room = Math.max(0, capOf(0) - popOf(0)), S = armyOf(0); $('bVil').classList.toggle('dis', !!trainWhy(0, 'vil'));
-  // have / can have now: the ceiling is what your homes allow, up to the most of each kind
-  $('bVil').querySelector('small').textContent = `${V.length}/${Math.min(VILMAX, V.length + room)}` + (nq ? ` +${nq}` : '');
-  $('bArmy').querySelector('small').textContent = `${S.length}/${Math.min(ARMYMAX, S.length + room)}` + (S.some(u => u.state === 'attack' || u.state === 'goto') ? ' out' : '');
-  { const A = AGES[p.age + 1], ok = A && !p.aging && afford(p, A.cost); $('bAge').querySelector('b').textContent = A ? (p.aging ? AGES[p.age + 1].name : `To ${A.name}`) : AGES[p.age].name; $('bAge').querySelector('small').textContent = p.aging ? 'advancing' : A ? costText(A.cost) : 'last age'; $('bAge').classList.toggle('go', !!ok); $('bAge').classList.toggle('dis', !!A && !ok && !p.aging); }
-  $('bDip').querySelector('small').textContent = G.P[FORT].alive ? (G.P[FORT].ally === 0 ? 'your ally' : G.P[FORT].ally !== null ? 'allied: ' + G.P[G.P[FORT].ally].name : G.rel[0][FORT]) : 'fallen';
-  $('bDip').classList.toggle('on', G.P[FORT].ally === 0);
+  const nq = queuedOf(0, 'vil'), room = Math.max(0, capOf(0) - popOf(0)), S = armyOf(0), idle = V.filter(u => !u.job).length; $('bVil').classList.toggle('dis', !!trainWhy(0, 'vil'));
+  // have / can have now: the ceiling is what your homes allow, up to the most of each kind; idle hands are what + can place
+  $('bVil').querySelector('small').textContent = `${V.length}/${Math.min(VILMAX, V.length + room)}` + (nq ? ` +${nq}` : '') + ` · ${idle} idle`;
+  $('bArmy').querySelector('small').textContent = `army ${S.length}/${Math.min(ARMYMAX, S.length + room)}` + (S.some(u => u.state === 'attack' || u.state === 'goto') ? ' out' : '');
+  $('bBuild').classList.toggle('on', !!(G.card && G.card.type === 'menu'));
+  { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
+  $('stage').classList.toggle('busy', !!(G.card || G.place));
   if (G.place) { const B = BLD[G.place.kind], t = !G.place.at ? (G.place.kind === 'wall' ? 'Press and drag a line of wall' : `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`) : G.place.why ? G.place.why : G.place.kind === 'wall' ? `${(G.place.cells || [1]).length} pieces: tap Build, or drag again` : `${B.name}: tap Build, or drag it to move · drag empty ground to look`; if ($('placeT').textContent !== t) $('placeT').textContent = t; $('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why); }
   const msgs = G.log.filter(m => m.until > G.t);
   let html = msgs.map(m => `<div class="msg ${m.cls || ''}"><span${m.act ? ` data-act="${m.act}"` : m.at ? ` data-act="jump:${m.at.x},${m.at.y}"` : ''}>${m.text}</span><button data-act="hush:${encodeURIComponent(m.text)}" aria-label="Silence this kind of message">🔕</button></div>`).join('');

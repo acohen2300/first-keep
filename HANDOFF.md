@@ -54,3 +54,6 @@ Build 29 is live at the artifact URL (version 34) and on GitHub Pages. Nothing i
 
 ## Build 33 (preview)
 Hold-to-box (no ⬚), state chip and Home on a second top row, map button (minimap shut after the first look), rank under the score, age button at the top of the Town Center card and as the bottom button, book and hammer tab icons, muted selected fill, rain rings on the ground, one-cell gap between buildings, parchment and ink cards (night dims them). Gate passes. Next: Build 34 the world, Build 35 the front door, Build 36 roads.
+
+## Build 34 (preview, separate artifact)
+One top bar; map, home and clock on the map corners; bottom = job row, ± row, then + Villager | People | Build. Build card with five filters. Score names jump to players. Minimap stars and diamonds. Build 33 stays at its own preview artifact for comparison.

@@ -280,7 +280,12 @@ function drawMini() {
   const m = mctx, k = 172 / MAP;
   m.clearRect(0, 0, 172, 172); m.drawImage(terrainMini, 0, 0); m.drawImage(forestLayer(), 0, 0, 172, 172);
   for (const f of G.finds) if (!f.done || FINDS[f.kind].capture) { m.fillStyle = f.owner !== null && FINDS[f.kind].capture ? G.P[f.owner].color : '#f2cf55'; m.fillRect(f.x * k - 1.5, f.y * k - 1.5, 3, 3); }
-  for (const b of G.blds) { m.fillStyle = G.P[b.owner].color; const s = b.kind === 'keep' ? 7 : BLD[b.kind].wallish ? 2 : BLD[b.kind].fp >= 5 ? 6 : 4; m.fillRect(b.x * k - s / 2, b.y * k - s / 2, s, s); }
+  for (const b of G.blds) {   // Town Centers are stars, castles diamonds, the rest small squares
+    m.fillStyle = G.P[b.owner].color; const x = b.x * k, y = b.y * k;
+    if (b.kind === 'keep' || b.kind === 'town') { m.beginPath(); for (let i = 0; i < 10; i++) { const r = i % 2 ? 3 : 7.5, a = -Math.PI / 2 + i * Math.PI / 5; m.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r); } m.closePath(); m.fill(); m.strokeStyle = 'rgba(0,0,0,.6)'; m.lineWidth = 1; m.stroke(); }
+    else if (b.kind === 'castle') { m.beginPath(); m.moveTo(x, y - 5.5); m.lineTo(x + 5.5, y); m.lineTo(x, y + 5.5); m.lineTo(x - 5.5, y); m.closePath(); m.fill(); m.strokeStyle = 'rgba(0,0,0,.6)'; m.lineWidth = 1; m.stroke(); }
+    else { const s = BLD[b.kind].wallish ? 2 : BLD[b.kind].fp >= 5 ? 5 : 3.5; m.fillRect(x - s / 2, y - s / 2, s, s); }
+  }
   for (const u of G.units) if (u.owner !== WILD ? visibleTo0(u) : !UNIT[u.kind].flee && !UNIT[u.kind].passive) { m.fillStyle = G.P[u.owner].color; m.fillRect(u.x * k - 1, u.y * k - 1, 2, 2); }
   const a = toWorld(0, 0), b = toWorld(cw, ch);
   m.strokeStyle = '#fff'; m.lineWidth = 1.5; m.strokeRect(a.x * k, a.y * k, (b.x - a.x) * k, (b.y - a.y) * k);

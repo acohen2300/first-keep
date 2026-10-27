@@ -39,7 +39,7 @@ function blankGame(seed) {
 function mkPlayer(i, civ) {
   const d = PLAYERS[i];
   return { id: i, name: d.name, pers: d.pers, color: d.color, keep: d.keep.slice(), civ, res: { f: 200, w: 200, s: 100, g: 50, i: 0 }, goods: Object.fromEntries(GOODK.map(k => [k, 0])), ventures: [], hungry: false, lord: null, tax: 'fair', unrest: 0, loyal: 0, health: 100, ration: 1, rations: {}, age: 0, aging: false, techs: new Set(),
-    rally: 'wood', ally: null, alive: i !== WILD, terms: null, envoyOut: false, envoyAt: -999, zealT: 0, wave: null, killer: undefined,
+    rally: 'food', ally: null, alive: i !== WILD, terms: null, envoyOut: false, envoyAt: -999, zealT: 0, wave: null, killer: undefined,
     ai: { t: 1 + i * 0.3, lastHelp: 0, tribute: 0, cyc: 0 }, gathered: 0, spent: 0, score: { people: 0, army: 0, tech: 0, bld: 0, wealth: 0, total: 0 }, fxc: null, uc: {} };
 }
 function newGame(seed, carry) {

@@ -280,3 +280,11 @@ Nothing disappears unless it is listed here. Old game kept as reference: `first-
 - Cut (Build 33): the Why? and More folds on cards. All explaining text sits behind one book icon left of the ✕.
 - Cut (Build 33): the blue health bar on buildings. It appears, in red, only when the building is hurt.
 - Cut (Build 33): the gold-ring and heavy spacing in the top rows; every control is 32 px high with 8 px between.
+
+## Build 34 (preview)
+- Cut: the second top row. One 32 px bar: resources, ★score and rank on one line, sound, pause, ?.
+- Moved: map icon to the top right of the map (opens the minimap, ✕ closes it); home to the bottom left, shown only when the Town Center is out of sight; speed, season, weather, clock and zoom to one pill at the bottom right.
+- Cut: the menu row (Home, Military, Defense, Trade, Culture). One Build card with those five as filters.
+- Cut: the Army, Town (age) and Fortress buttons. People holds villagers and army; the age is research at the Town Center; the Fortress is its star on the minimap, or its name in the score table.
+- Changed: + only places an idle villager; with nobody idle it does nothing and says so. New games start with food as the chosen job.
+- Added: idle count on + Villager; Town Centers as stars and castles as diamonds on the minimap; cards open at most 62% of the map (setup, help, guide, score and the Market can use all of it).
