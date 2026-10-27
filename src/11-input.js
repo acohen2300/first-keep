@@ -2,7 +2,7 @@
 // ───────────────────────── Touch: drag to look, pinch to zoom, tap to ask, press and slide to place ─────────────────────────
 const ptrs = new Map(); let drag = null, pinch = null;
 const HOLD_MS = 320; let holdT = 0;   // hold a finger on open ground, then drag: a box
-const holdStop = () => { clearTimeout(holdT); G.hold = null; };
+const holdStop = () => { clearTimeout(holdT); G.press = null; };
 const lp = e => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
 let EDGE = null;   // where the finger is while it drags the ghost: near the screen edge the map scrolls
 function edgeScroll(dt) {
@@ -26,8 +26,8 @@ cv.addEventListener('pointerdown', e => { hideStrip(); holdStop();
     return;
   }
   drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false };
-  G.hold = { x: p.x, y: p.y, t: performance.now() };
-  holdT = setTimeout(() => { const d = drag; if (d && d.mode === 'pan' && !d.moved && G.hold) { drag = { mode: 'box', x0: G.hold.x, y0: G.hold.y, x1: G.hold.x, y1: G.hold.y }; G.box = drag; G.hold = null; if (navigator.vibrate) navigator.vibrate(12); } }, HOLD_MS);
+  G.press = { x: p.x, y: p.y, t: performance.now() };
+  holdT = setTimeout(() => { const d = drag; if (d && d.mode === 'pan' && !d.moved && G.press) { drag = { mode: 'box', x0: G.press.x, y0: G.press.y, x1: G.press.x, y1: G.press.y }; G.box = drag; G.press = null; if (navigator.vibrate) navigator.vibrate(12); } }, HOLD_MS);
 });
 cv.addEventListener('pointermove', e => {
   const p = lp(e); if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, p);

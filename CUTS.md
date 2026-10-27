@@ -274,3 +274,5 @@ Nothing disappears unless it is listed here. Old game kept as reference: `first-
 - Placement rule: one cell gap beside any non-wall, non-crop building, so a building's east wall never sits under its neighbour.
 - Not changed: sprite sharpness. Sprites are re-cut per zoom up to 6x; nothing to fix.
 - Fix (Build 33): the menu card was taller than the map by its own padding (box-sizing), so its top was clipped on short screens. Now border-box. The map-button highlight no longer fills a 44 px square. New-game peoples are three across, to save a row.
+- Cut (Build 33): the one button that cycled ×1, ×2, ×3, pause. Pause is its own button (top row); ×1/×2/×3 is a second button on the state row and never pauses.
+- Fix (Build 33): my hold-to-box ring used `G.hold`, which is the Hold-ground array. Renamed to `G.press`.

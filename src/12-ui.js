@@ -361,7 +361,8 @@ function buildPanel() {
 const refresh = () => { cardSig = ''; ui(true); };
 // every button's verb, in one table
 const ACT = {
-  speed() { if (G.paused) setPause(false); else if (G.speed >= 3) { G.speed = 1; setPause(true); } else { G.speed++; paceBtn(); } },   // one button: ×1, ×2, ×3, paused
+  pause() { setPause(!G.paused); },
+  speed() { G.speed = G.speed >= 3 ? 1 : G.speed + 1; paceBtn(); },   // ×1, ×2, ×3, back to ×1; it never pauses
   again() { $('end').hidden = true; openCard({ type: 'setup' }); },
   free() { G.over = null; G.free = true; $('end').hidden = true; setPause(false); say('Free play: no clock, no victory.', '', 6); },
   next() { const p = G.P[0], keep = { age: p.age, techs: [...p.techs] }; $('end').hidden = true; newGame(undefined, keep); setPause(false); say('A new land. You keep your age and research.', 'good', 8); saveGame(true); },

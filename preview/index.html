@@ -26,7 +26,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 .ic::before{content:'';position:absolute;left:50%;top:50%;width:32px;height:32px;margin:-16px 0 0 -16px;box-sizing:border-box;border-radius:8px;background:var(--panel);border:1px solid var(--line);z-index:-1}
 .ic.on{background:none}.ic.on::before{background:#2f3b36;border-color:var(--mute)}
 .ic+.ic{margin-left:-6px}   /* the 44 px tap areas may touch; the 32 px buttons keep their gap */
-.ic svg{width:16px;height:16px}#muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--mute)}
+.ic svg{width:16px;height:16px}#pauseB svg{width:18px;height:18px}#muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--mute)}
 #card .lvl{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}#card .lvl small{color:var(--mute)}
 #score{min-width:50px;gap:0;flex-direction:column;line-height:1;font-variant-numeric:tabular-nums}
 #score b{font-size:14px}#score small{font-size:12px}
@@ -113,7 +113,8 @@ button.ok small{color:#8fd4a4}
 .jobc .pm button{min-height:34px;padding:0;font-size:19px;font-weight:700;background:var(--panel2)}
 #menus button{min-height:44px}
 #menus button b{font-size:14px}
-#sub{display:flex;align-items:center;gap:4px;height:30px;margin-top:-2px}
+#sub{display:flex;align-items:center;gap:4px;height:32px;margin:0 -6px}
+#sub #speed{margin-left:auto}#helpB{margin-right:-6px}
 #sub .ic{margin-block:-7px}
 #stage.mapOn #banner{right:100px}
 #cInfo{margin-left:6px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -153,10 +154,10 @@ button.ok small{color:#8fd4a4}
     </div>
     <button class="hb" id="score" data-act="card:score" aria-label="Score"><b id="scoreN">0</b><small id="scoreR"></small></button>
     <button class="hb ic" id="muteB" data-act="sound" aria-label="Mute"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor"/><path class="w" d="M11 5.5q2 2.5 0 5M12.8 3.8q3.4 4.2 0 8.4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/><path class="x" d="M11 6l4 4M15 6l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
-    <button class="hb ic" id="speed" data-act="speed" aria-label="Pause, play, speed">×1</button>
+    <button class="hb ic" id="pauseB" data-act="pause" aria-label="Pause"></button>
     <button class="hb ic" id="helpB" data-act="help" aria-label="How to play">?</button>
   </header>
-  <div id="sub"><button class="hb ic" data-act="home" aria-label="Back to your Town Center"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 10 L10 3.5 L17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M5.5 9 V16.5 H14.5 V9" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.6 16.5 V12.2 H11.4 V16.5" fill="currentColor"/></svg></button><button class="hb ic" id="mapB" data-act="map" aria-label="Show or hide the map"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 5.5 L7.5 4 L12.5 5.5 L17 4 V14.5 L12.5 16 L7.5 14.5 L3 16 Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7.5 4 V14.5 M12.5 5.5 V16" stroke="currentColor" stroke-width="1.6"/></svg></button><span id="cInfo"></span></div>
+  <div id="sub"><button class="hb ic" data-act="home" aria-label="Back to your Town Center"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 10 L10 3.5 L17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M5.5 9 V16.5 H14.5 V9" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.6 16.5 V12.2 H11.4 V16.5" fill="currentColor"/></svg></button><button class="hb ic" id="mapB" data-act="map" aria-label="Show or hide the map"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 5.5 L7.5 4 L12.5 5.5 L17 4 V14.5 L12.5 16 L7.5 14.5 L3 16 Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7.5 4 V14.5 M12.5 5.5 V16" stroke="currentColor" stroke-width="1.6"/></svg></button><span id="cInfo"></span><button class="hb ic" id="speed" data-act="speed" aria-label="Game speed">×1</button></div>
 
   <div id="stage">
     <canvas id="cv"></canvas>
@@ -624,7 +625,7 @@ const WHY = {
 const TRIGGERS = () => [
   ['You start a game', `Pick your civilisation (${CIVK.map(k => CIVS[k].name).join(', ')}). The three computers take three of the others at random. Each civilisation has one unique soldier, one small bonus and its own wonder; the rest is shared.`, 'A real people, but the same rules for all: no civilisation is stronger on paper.'],
   ['You order a unit and the town is full', 'The order waits ("needs room") and nothing is lost. Room opens when a House, Apartment or Aqueduct finishes or a unit dies.', 'A town is as big as its shelter.'],
-  ['The screen', `Top: food, wood, stone, gold, iron; the score (★, tap for the table); one pace button (×1, ×2, ×3, paused); ? for how to play. Bottom: Villagers and Army show how many you have of the most (${VILMAX} and ${ARMYMAX}), or "full" when your homes are. Bottom-left of the map: Home, season, weather, clock, zoom.`, 'Only what you act on stays in sight; the rest is a tap away.'],
+  ['The screen', `Top: food, wood, stone, gold, iron; the score (★, tap for the table); pause and play; ? for how to play; ×1, ×2, ×3 under the score. Bottom: Villagers and Army show how many you have of the most (${VILMAX} and ${ARMYMAX}), or "full" when your homes are. Bottom-left of the map: Home, season, weather, clock, zoom.`, 'Only what you act on stays in sight; the rest is a tap away.'],
   ['Messages and sound', 'Every message is 10 words or fewer, one at a time. Tips and Messages can each be turned off; warnings stay on. Sound follows your phone\'s silent switch.', 'A phone game is played in short looks, often in company.'],
   ['Room', `You start with room for ${BLD.keep.room}. A House adds ${BLD.house.room}, an Apartment ${BLD.apartment.room}, an Aqueduct ${BLD.aqueduct.room}. At most ${POPMAX} people: ${VILMAX} villagers and workers, ${ARMYMAX} soldiers.`, 'Town Centers the game readable on a phone, and every side has the same limits.'],
   ['The War Council ladder', 'Four researches, each opening the next. Engagement: stances. Battalions: six, Alpha to Zeta; set what each holds, by type; new soldiers fill them, the rest are the reserve. Formations: Line, Column, Wedge, Square. Muster (Gunpowder): a battalion\'s missing soldiers in one order, twice the cost, a quarter longer, the time shared by every building that trains them. The computers climb it too.', 'Rome levied whole legions at once; Maurice of Nassau\'s drill (1590s) made trained formations, and armies like the New Model Army (1645) were raised as one force.'],
@@ -2867,7 +2868,7 @@ function draw() {
   drawRadar(wv, wv2);
   { const seen = new Set(); ctx.setLineDash([5, 5]); ctx.strokeStyle = 'rgba(192,138,88,.6)'; ctx.lineWidth = 1.5;   // boxes of trees being cut
     for (const u of G.units) if (u.owner === 0 && u.patch && !seen.has(u.patch.x0)) { seen.add(u.patch.x0); const r = u.patch; ctx.strokeRect(SX(r.x0), SY(r.y0), (r.x1 - r.x0) * z, (r.y1 - r.y0) * z * TILT); }
-    if (G.hold && performance.now() - G.hold.t > 90) { const f = Math.min(1, (performance.now() - G.hold.t) / HOLD_MS); ctx.strokeStyle = 'rgba(255,211,94,.85)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(G.hold.x, G.hold.y, 26, -Math.PI / 2, -Math.PI / 2 + f * 6.2832); ctx.stroke(); }   // the ring fills: let go and it is a tap, hold and drag and it is a box
+    if (G.press && performance.now() - G.press.t > 90) { const f = Math.min(1, (performance.now() - G.press.t) / HOLD_MS); ctx.strokeStyle = 'rgba(255,211,94,.85)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(G.press.x, G.press.y, 26, -Math.PI / 2, -Math.PI / 2 + f * 6.2832); ctx.stroke(); }   // the ring fills: let go and it is a tap, hold and drag and it is a box
     if (G.box) { const b = G.box; ctx.fillStyle = 'rgba(255,211,94,.12)'; ctx.fillRect(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.abs(b.x1 - b.x0), Math.abs(b.y1 - b.y0)); ctx.strokeStyle = '#ffd35e'; ctx.lineWidth = 2; ctx.strokeRect(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.abs(b.x1 - b.x0), Math.abs(b.y1 - b.y0)); }
     ctx.setLineDash([]); }
   drawGhost();
@@ -3088,7 +3089,7 @@ function forestLayer() {
 // ───────────────────────── Touch: drag to look, pinch to zoom, tap to ask, press and slide to place ─────────────────────────
 const ptrs = new Map(); let drag = null, pinch = null;
 const HOLD_MS = 320; let holdT = 0;   // hold a finger on open ground, then drag: a box
-const holdStop = () => { clearTimeout(holdT); G.hold = null; };
+const holdStop = () => { clearTimeout(holdT); G.press = null; };
 const lp = e => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
 let EDGE = null;   // where the finger is while it drags the ghost: near the screen edge the map scrolls
 function edgeScroll(dt) {
@@ -3112,8 +3113,8 @@ cv.addEventListener('pointerdown', e => { hideStrip(); holdStop();
     return;
   }
   drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false };
-  G.hold = { x: p.x, y: p.y, t: performance.now() };
-  holdT = setTimeout(() => { const d = drag; if (d && d.mode === 'pan' && !d.moved && G.hold) { drag = { mode: 'box', x0: G.hold.x, y0: G.hold.y, x1: G.hold.x, y1: G.hold.y }; G.box = drag; G.hold = null; if (navigator.vibrate) navigator.vibrate(12); } }, HOLD_MS);
+  G.press = { x: p.x, y: p.y, t: performance.now() };
+  holdT = setTimeout(() => { const d = drag; if (d && d.mode === 'pan' && !d.moved && G.press) { drag = { mode: 'box', x0: G.press.x, y0: G.press.y, x1: G.press.x, y1: G.press.y }; G.box = drag; G.press = null; if (navigator.vibrate) navigator.vibrate(12); } }, HOLD_MS);
 });
 cv.addEventListener('pointermove', e => {
   const p = lp(e); if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, p);
@@ -3579,7 +3580,8 @@ function buildPanel() {
 const refresh = () => { cardSig = ''; ui(true); };
 // every button's verb, in one table
 const ACT = {
-  speed() { if (G.paused) setPause(false); else if (G.speed >= 3) { G.speed = 1; setPause(true); } else { G.speed++; paceBtn(); } },   // one button: ×1, ×2, ×3, paused
+  pause() { setPause(!G.paused); },
+  speed() { G.speed = G.speed >= 3 ? 1 : G.speed + 1; paceBtn(); },   // ×1, ×2, ×3, back to ×1; it never pauses
   again() { $('end').hidden = true; openCard({ type: 'setup' }); },
   free() { G.over = null; G.free = true; $('end').hidden = true; setPause(false); say('Free play: no clock, no victory.', '', 6); },
   next() { const p = G.P[0], keep = { age: p.age, techs: [...p.techs] }; $('end').hidden = true; newGame(undefined, keep); setPause(false); say('A new land. You keep your age and research.', 'good', 8); saveGame(true); },
@@ -3868,7 +3870,8 @@ function loadGame(S) {
   $('end').hidden = true; closeCard(); cancelPlace(); holdSave = false; setPause(false);
 }
 function muteBtn() { $('muteB').classList.toggle('off', !SND.on); $('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on'); }
-function paceBtn() { $('speed').textContent = G.paused ? '▶' : '×' + G.speed; $('speed').classList.toggle('on', !!G.paused); }
+const ICON_PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8 L13 8 L4.5 13.2 Z" fill="currentColor"/></svg>', ICON_PAUSE = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/></svg>';
+function paceBtn() { const pb = $('pauseB'); pb.innerHTML = G.paused ? ICON_PLAY : ICON_PAUSE; pb.setAttribute('aria-label', G.paused ? 'Play' : 'Pause'); pb.classList.toggle('on', !!G.paused); $('speed').textContent = '×' + G.speed; }
 function setPause(v) { G.paused = v; paceBtn(); }
 document.addEventListener('visibilitychange', () => { if (document.hidden) saveGame(); });
 window.addEventListener('pagehide', () => saveGame());

@@ -49,7 +49,8 @@ function loadGame(S) {
   $('end').hidden = true; closeCard(); cancelPlace(); holdSave = false; setPause(false);
 }
 function muteBtn() { $('muteB').classList.toggle('off', !SND.on); $('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on'); }
-function paceBtn() { $('speed').textContent = G.paused ? '▶' : '×' + G.speed; $('speed').classList.toggle('on', !!G.paused); }
+const ICON_PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8 L13 8 L4.5 13.2 Z" fill="currentColor"/></svg>', ICON_PAUSE = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/></svg>';
+function paceBtn() { const pb = $('pauseB'); pb.innerHTML = G.paused ? ICON_PLAY : ICON_PAUSE; pb.setAttribute('aria-label', G.paused ? 'Play' : 'Pause'); pb.classList.toggle('on', !!G.paused); $('speed').textContent = '×' + G.speed; }
 function setPause(v) { G.paused = v; paceBtn(); }
 document.addEventListener('visibilitychange', () => { if (document.hidden) saveGame(); });
 window.addEventListener('pagehide', () => saveGame());
