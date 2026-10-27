@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <title>First Keep</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap">
+<!--FONTS-->
 <style>
 /* One screen, a war table at night: the tally, the map, three rows of orders. One dark look by choice. */
 :root{
@@ -53,7 +53,6 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #card .who{font-family:var(--ui);font-size:14px;color:var(--mute);font-weight:600}
 #card p{margin:0;color:var(--mute);line-height:1.35;font-size:15px}
 #card p i{color:var(--bone);font-style:normal;font-weight:600}
-#card p.soon{opacity:.75}
 #card .fold{border-top:1px solid #2a332e;padding-top:2px}
 #card .fold summary{color:var(--mute);font-size:14px;min-height:44px;display:flex;align-items:center;cursor:pointer;list-style:none}
 #card .fold summary::-webkit-details-marker{display:none}
@@ -82,11 +81,10 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:34px;margin:0}
 #end p{margin:0;color:var(--mute);font-size:16px}
-#endActs button small{white-space:normal}
 #card .qs{display:grid;grid-template-columns:1fr 44px 76px 44px;gap:6px;align-items:center;margin:4px 0}
 #card .qs span{text-align:center;font-variant-numeric:tabular-nums;font-size:14px}
 #card .qs button{padding:0;font-size:19px;font-weight:700;min-height:44px}
-#endActs{display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px}
+#endActs{display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px}#endActs button small{white-space:normal}
 #orders{display:flex;flex-direction:column;gap:6px}
 .row{display:grid;gap:6px}
 .r4{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -114,13 +112,12 @@ button.ok small{color:#8fd4a4}
 .jobc .pm button{min-height:34px;padding:0;font-size:19px;font-weight:700;background:var(--panel2)}
 #menus button{min-height:44px}
 #menus button b{font-size:14px}
-#zoom{position:absolute;right:8px;top:102px;display:flex;flex-direction:column;gap:6px}
+#tools{position:absolute;right:8px;top:102px;display:flex;flex-direction:column;gap:6px}
 #corner{position:absolute;left:8px;bottom:8px;display:flex;align-items:center;gap:6px}
-#corner button{min-height:44px;min-width:44px;width:44px;padding:0;background:rgba(27,34,31,.92)}
 #cInfo{background:rgba(18,23,21,.82);border-radius:8px;padding:6px 9px;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
-#zoom button{min-height:44px;min-width:44px;width:44px;padding:0;font-size:20px;font-weight:700;background:rgba(27,34,31,.92)}
+#tools button,#corner button{min-height:44px;min-width:44px;width:44px;padding:0;background:rgba(27,34,31,.92)}#tools button{font-size:20px;font-weight:700}
 @media (max-width:440px){.tally{gap:1px;font-size:12px}.tally span{gap:1px}.tally .ico{width:12px;height:12px}}
-@media (max-width:400px){.tally{font-size:12px;gap:1px}.tally span{gap:0}.tally .ico{width:11px;height:11px}.hb{padding:0 1px}#hud{gap:1px}#score{min-width:44px;padding:0}#score b{font-size:12px}body{padding-left:8px;padding-right:8px}}
+@media (max-width:400px){.tally span{gap:0}.tally .ico{width:11px;height:11px}.hb{padding:0 1px}#hud{gap:1px}#score{min-width:44px;padding:0}#score b{font-size:12px}body{padding-left:8px;padding-right:8px}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;scroll-behavior:auto!important} }
 </style>
 
@@ -143,7 +140,7 @@ button.ok small{color:#8fd4a4}
     <canvas id="cv"></canvas>
     <div id="vig"></div>
     <canvas id="mini" width="172" height="172"></canvas>
-    <div id="zoom"><button data-act="selmode" id="selB" aria-label="Select with a box">⬚</button></div>
+    <div id="tools"><button data-act="selmode" id="selB" aria-label="Select with a box">⬚</button></div>
     <div id="corner"><button data-act="home" aria-label="Back to your Town Center"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 10 L10 3.5 L17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M5.5 9 V16.5 H14.5 V9" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.6 16.5 V12.2 H11.4 V16.5" fill="currentColor"/></svg></button><span id="cInfo"></span></div>
     <div id="banner"></div>
     <div id="strip" hidden></div>

@@ -14,11 +14,12 @@ const WEATHER = {
 const WX_ODDS = { Spring: { rain: 0.45 }, Summer: { drought: 0.3, rain: 0.15 }, Autumn: { rain: 0.45 }, Winter: { frost: 0.6 } }, WX_EVERY = 60;
 // two old trade routes, west to east and north to south, each with four stops; they bend around the great lake
 const ROUTES = [[[510, 1000], [680, 1000], [1320, 1000], [1490, 1000]], [[1000, 510], [1000, 680], [1000, 1320], [1000, 1490]]];
-const POST = { pay: 0.1, step: 0.25, full: 2, cut: 0.2, safe: 120 };   // gold a second for one stop held; +25% a stop on the same route; ×2 for all four; 20% of other sides' sales
+const POST = { all: 2, cut: [0, 0.2, 0.25, 0.3, 0.4], safe: 120, guard: 12 };   // each route has four stops. all: gold a second to whoever holds all four of a route; cut: of other sides' sales at a stop, by how many of its route you hold; guard: soldiers per stop or caravan
 const HEALTH = { every: 60, risk: 0.06, sickFor: 60, spread: 0.08, death: 0.004, cure: 0.3, plague: 0.15, plagueCap: 0.1 };   // risk: the chance a minute that sickness breaks out
 
 const stopsAll = () => G.finds.filter(f => f.kind === 'stop');
 const postAt = f => G.blds.find(b => b.kind === 'tpost' && b.sid === f.id && b.hp > 0);
+const stopsHeld = (o, r) => stopsAll().filter(f => f.route === r && f.owner === o).length;   // of one route's four stops
 const goodsOf = o => G.P[o].goods;
 function stash(o, type, amt) { const p = G.P[o]; if (KEY[type]) p.res[KEY[type]] += amt; else p.goods[type] = (p.goods[type] || 0) + amt; p.gathered += amt; }
 
@@ -33,17 +34,13 @@ const distF = d => clamp(1 + d / 1000, 1, 2.5);
 function priceAt(o, good, place, from) {
   const G0 = GOODS[good]; let m = 1;
   if (place.kind === 'stop' && good === 'spice') return 0;   // a stop sells spice; it does not buy it
-  if (place.kind === 'stop') m = place.want === good ? 1.5 : 1;
-  else if (place.owner !== o && G.P[place.owner].wants && G.P[place.owner].wants.includes(good)) m = 1.5;
+  m = place.want === good ? 1.5 : 1;
   return G0.base * m * mkt(good) * (from ? distF(dist(from, place)) : 1) * fxv(o, 'trade').m;
 }
-// where a caravan of yours may sell: your Markets, the Markets and Town Center of anyone at peace, and any trade stop
-function tradeTargets(o) {
-  const out = [];
-  for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && (b.kind === 'market' || (b.kind === 'keep' && b.owner !== o)) && b.owner !== WILD && G.P[b.owner].alive && !atWar(o, b.owner)) out.push(b);
-  for (const f of stopsAll()) if (!guardsLeft(f) && !(f.owner !== null && f.owner !== o && atWar(o, f.owner) && postAt(f))) out.push(f);
-  return out;
-}
+// Trade has two lanes. One: a caravan with a route carries goods to a trade stop, the world's old markets, and sells them.
+// Two: a caravan with no route runs between your Market and an ally's Market or Town Center, paid by distance.
+const tradeTargets = o => stopsAll().filter(f => !guardsLeft(f) && !(f.owner !== null && f.owner !== o && atWar(o, f.owner) && postAt(f)));
+function allyMarket(o, from) { let best = null, bd = -1; for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && (b.kind === 'market' || b.kind === 'keep') && b.owner !== o && b.owner !== WILD && G.P[b.owner].alive && G.rel[o][b.owner] === 'ally') { const d = dist(from, b); if (d > bd) { bd = d; best = b; } } return best; }
 const targetOf = r => r && (r.s ? G.finds.find(f => f.id === r.to) : G.blds.find(b => b.id === r.to && b.hp > 0));
 const homeBiz = (o, u) => nearest(G.blds, u, b => b.owner === o && b.kind === 'bizc' && b.prog >= 1 && b.hp > 0);
 function estPay(o, place, from) { const g = goodsOf(o); let n = LOAD, s = 0; for (const k of WARES.slice().sort((a, b) => priceAt(o, b, place, from) - priceAt(o, a, place, from))) { const q = priceAt(o, k, place, from) > 0 ? Math.min(n, Math.floor(g[k] || 0)) : 0; s += q * priceAt(o, k, place, from); n -= q; } return Math.round(s); }
@@ -66,7 +63,7 @@ function routeTick(u, dt, SP) {
     let gold = 0, sold = [];
     for (const k in u.goods) { const v = u.goods[k] * priceAt(o, k, t, u.from); gold += v; sold.push(u.goods[k] + ' ' + GOODS[k].name.toLowerCase()); }
     const keeper = t.kind === 'stop' ? t.owner : null;
-    if (keeper !== null && keeper !== o && gold > 0) { const cut = gold * POST.cut; gold -= cut; G.P[keeper].res.g += cut; G.P[keeper].gathered += cut; }
+    if (keeper !== null && keeper !== o && gold > 0) { const cut = gold * POST.cut[stopsHeld(keeper, t.route)]; gold -= cut; G.P[keeper].res.g += cut; G.P[keeper].gathered += cut; }
     for (const k in u.goods) mktHit(k, u.goods[k], -1);
     gold = Math.round(shareUp(o, gold)); p.res.g += gold; p.gathered += gold; u.goods = {};
     if (r.spice && t.kind === 'stop') { const c = spiceCost(), q = Math.min(LOAD, Math.floor(p.res.g / c)); if (q > 0) { p.res.g -= Math.round(q * c); u.goods.spice = q; mktHit('spice', q, 1); } }
@@ -83,7 +80,7 @@ function routeTick(u, dt, SP) {
   }
 }
 // caravans within reach of a trade post or tower of yours, or with a soldier of yours close by, are left alone by robbers
-const guardedCart = v => v.kind === 'caravan' && (G.blds.some(b => b.owner === v.owner && (b.kind === 'tpost' || b.kind === 'tower') && b.prog >= 1 && b.hp > 0 && dist(b, v) < POST.safe) || G.units.some(s => s.owner === v.owner && UNIT[s.kind].tick === 'sol' && Math.abs(s.x - v.x) < 60 && Math.abs(s.y - v.y) < 60));
+const guardedCart = v => v.kind === 'caravan' && (G.blds.some(b => b.owner === v.owner && (b.kind === 'tpost' || b.kind === 'tower') && b.prog >= 1 && b.hp > 0 && dist(b, v) < POST.safe) || G.units.some(s => s.owner === v.owner && isSoldier(s) && Math.abs(s.x - v.x) < 60 && Math.abs(s.y - v.y) < 60));
 // a robbed caravan's load goes into the nearest robbers' camp, and comes back to whoever breaks the camp
 function robbed(u) {
   let v = u.cargo || 0; for (const k in u.goods || {}) v += u.goods[k] * GOODS[k].base;
@@ -101,12 +98,9 @@ function natureTick() {
     const worked = G.t - (b.node.workT || -9) < 2;
     b.fert = clamp((b.fert ?? 1) + (worked ? -FERT.loss / YEAR : FERT.rest / SEASON_LEN), FERT.floor, 1);
   }
-  // trade posts pay their keepers
+  // trade posts: whoever holds all four stops is paid every second
   for (const f of stopsAll()) { const pt = postAt(f); f.owner = pt && pt.prog >= 1 ? pt.owner : null; }
-  for (const p of G.P) if (p.alive && p.id !== WILD) {
-    let g = 0; for (let r = 0; r < ROUTES.length; r++) { const n = stopsAll().filter(f => f.route === r && f.owner === p.id).length; if (n) g += n * POST.pay * (1 + POST.step * (n - 1)) * (n === ROUTES[r].length ? POST.full : 1); }
-    if (g) { g = shareUp(p.id, g); p.res.g += g; p.gathered += g; }
-  }
+  for (let r = 0; r < ROUTES.length; r++) { const S = stopsAll().filter(f => f.route === r), o = S[0] && S[0].owner; if (o !== null && o !== undefined && S.every(f => f.owner === o) && G.P[o].alive) { const g = shareUp(o, POST.all); G.P[o].res.g += g; G.P[o].gathered += g; } }
   if (G.tick % 300 === 150) { priceDrift(); ventureTick(); vassalTick(); }
 }
 function seasonTurn() {
@@ -236,13 +230,6 @@ function priceDrift() {
   const full = ROUTES.some((r, i) => { const o = stopsAll().filter(f => f.route === i).map(f => f.owner); return o[0] !== null && o.every(x => x === o[0]); });
   for (const k of MKTK) { const aim = k === 'spice' ? (G.plague && G.plague.until > G.t ? 1.4 : 1) * (full ? 1.2 : 1) : 1; G.mkt[k] += (aim - G.mkt[k]) * PRICE.drift * 5; }
 }
-// sell or buy goods at the Market: at the going price, no caravan, no distance bonus
-function exTrade(o, k, dir) {
-  const p = G.P[o], n = 10; if (!ready(o, 'market').length) return false;
-  if (dir === 'sell') { if ((p.goods[k] || 0) < n || k === 'wool') return false; const v = Math.round(n * GOODS[k].base * mkt(k)); p.goods[k] -= n; p.res.g += v; p.gathered += v; mktHit(k, n, -1); }
-  else { if (k !== 'spice') return false; const c = Math.round(n * spiceCost() * 1.5); if (p.res.g < c) return false; p.res.g -= c; p.goods.spice += n; mktHit('spice', n, 1); }
-  if (o === 0) sfx('coin'); return true;
-}
 // ventures: gold put into a merchant voyage; a year later it comes back with 40% more, or not at all
 function venture(o, amt) {
   const p = G.P[o]; p.ventures = p.ventures || [];
@@ -265,7 +252,7 @@ function shareUp(o, gold) { const p = G.P[o]; if (p.lord === null || p.lord === 
 function loyaltyParts(p) {
   const L = p.lord, k = keepOf(p.id), r = VASSAL.r; if (!k) return { invest: 0, garrison: 0, protect: 0, hate: 0, target: 0 };
   let invest = 0; for (const b of G.blds) if (b.owner === L && b.prog >= 1 && b.hp > 0 && Math.abs(b.x - k.x) < r && Math.abs(b.y - k.y) < r && dist(b, k) < r) invest += INVEST[b.kind] ?? 3;
-  const n = G.units.filter(u => u.owner === L && UNIT[u.kind].tick === 'sol' && dist(u, k) < r).length, garrison = Math.min(VASSAL.garrisonMax, n * VASSAL.garrison);
+  const n = G.units.filter(u => u.owner === L && isSoldier(u) && dist(u, k) < r).length, garrison = Math.min(VASSAL.garrisonMax, n * VASSAL.garrison);
   const protect = Math.round(p.protect || 0), hate = TAX[p.tax || 'fair'].hate;
   return { invest, garrison, protect, hate, target: clamp(20 + invest + garrison + protect - hate, 0, 100) };
 }
@@ -280,7 +267,7 @@ function makeVassal(q, L, tax) {
 function surrenderWhy(o, q) {
   const P = G.P[q], k = keepOf(q); if (!k || !P.alive || q === WILD || P.lord === o) return 'Not now.';
   if (!atWar(o, q)) return 'Only an enemy can be made to surrender.';
-  const mine = G.units.filter(u => u.owner === o && UNIT[u.kind].tick === 'sol' && dist(u, k) < 300);
+  const mine = G.units.filter(u => u.owner === o && isSoldier(u) && dist(u, k) < 300);
   if (mine.length < 8) return 'Stand at least 8 soldiers by their Town Center first.';
   if (powerOf(soldiersOf(q)) > powerOf(mine) * 0.4) return 'Their army is still too strong.';
   return null;
@@ -291,7 +278,7 @@ function rebel(p, coalition) {
   const L = p.lord, V = G.units.filter(u => u.owner === p.id && u.kind === 'vil'), n = Math.ceil(V.length * 0.33);
   for (const v of V.slice(0, n)) { v.hp = 0; v.gone = true; const r = addUnit(p.id, 'rebel', v.x, v.y); r.state = 'attack'; r.target = L; }
   G.rel[p.id][L] = G.rel[L][p.id] = 'war';
-  for (const u of G.units) if (u.owner === p.id && UNIT[u.kind].tick === 'sol') { u.state = 'attack'; u.target = L; u.bid = null; }
+  for (const u of G.units) if (u.owner === p.id && isSoldier(u)) { u.state = 'attack'; u.target = L; u.bid = null; }
   p.rebel = { t0: G.t, n0: Math.max(1, soldiersOf(p.id).length + n) };
   if (L === 0) { say(coalition ? `Your vassals rise together: ${p.name} march on you with ${n} rebels!` : `${p.name} rebel: ${n} villagers take up arms. Crush them, or they go free in ${VASSAL.freeAfter / 60} minutes.`, 'warn', 10, keepOf(p.id)); sfx('horn'); }
 }

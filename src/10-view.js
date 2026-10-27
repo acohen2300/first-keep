@@ -11,7 +11,7 @@ function resetScars() { scarCv = document.createElement('canvas'); scarCv.width 
 function scarFall(u) {
   const x = u.x, big = (LOOKBOX[UNIT[u.kind].look] || [26])[0] > 30;
   scarX.fillStyle = 'rgba(40,18,12,.22)'; scarX.beginPath(); scarX.ellipse(x, u.y, 4 + (big ? 3 : 0), 2.2, 0, 0, 7); scarX.fill();
-  if (UNIT[u.kind].tick === 'sol') { scarX.strokeStyle = 'rgba(60,45,30,.5)'; scarX.lineWidth = 0.7; scarX.beginPath(); scarX.moveTo(x - 4, u.y + 1); scarX.lineTo(x + 3, u.y - 1.5); scarX.stroke(); }
+  if (isSoldier(u)) { scarX.strokeStyle = 'rgba(60,45,30,.5)'; scarX.lineWidth = 0.7; scarX.beginPath(); scarX.moveTo(x - 4, u.y + 1); scarX.lineTo(x + 3, u.y - 1.5); scarX.stroke(); }
 }
 function scarBurn(b) {
   const h = halfOf(b); scarX.fillStyle = 'rgba(25,20,18,.38)'; scarX.beginPath(); scarX.ellipse(b.x, b.y, h * 1.05, h * 0.8, 0, 0, 7); scarX.fill();
@@ -71,15 +71,17 @@ function draw() {
   const list = [];
   for (const b of G.blds) if (inView(b)) list.push([BLD[b.kind].crop ? b.y - 60 : b.y + halfOf(b) * 0.4, 1, b]);
   const far = z < 0.55; if (far) layer(forestLayer());   // zoomed out, the forest is one picture; close in, each tree
-  for (const n of G.nodes) if (n.kind !== 'farm' && !(far && n.kind === 'tree') && inView(n)) list.push([n.y, 0, n]);
   for (const f of G.finds) if (inView(f) && !(f.done && FINDS[f.kind].got)) list.push([f.y, 3, f]);
   for (const u of G.units) if (!u.inside && inView(u) && visibleTo0(u)) list.push([u.y, 2, u]);
   list.sort((a, b) => a[0] - b[0]);
-  const sB = quant(z * dpr), sU = quant(z * dpr * FIG);
-  for (const [, t, e] of list) { try { t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : drawFind(e); } catch (er) { fault(er); } }   // one bad piece must never take the rest of the picture with it
+  const N = viewNodes(wv, wv2, far), sB = quant(z * dpr), sU = quant(z * dpr * FIG);
+  // the standing nodes (about 2,000 trees, bushes and rocks) are kept sorted until the view moves a step; the few moving things are merged in
+  for (let i = 0, j = 0; i < N.length || j < list.length;) {
+    const take = j >= list.length || (i < N.length && N[i].y < list[j][0]), e = take ? N[i++] : list[j][2], t = take ? 0 : list[j++][1];
+    try { t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : drawFind(e); } catch (er) { fault(er); }   // one bad piece must never take the rest of the picture with it
+  }
   sparkDraw(); ripDraw();
   if (G.rally0) flagAt(SX(G.rally0.x), SY(G.rally0.y), G.P[0].color, z);
-  { let on = false; for (const m of G.blds) if (m.owner === 0 && m.kind === 'market' && m.prog >= 1) { const f = farMarket(m); if (f) { if (!on) { on = true; ctx.setLineDash([6, 6]); ctx.strokeStyle = 'rgba(242,207,85,.45)'; ctx.lineWidth = 1.5; } ctx.beginPath(); ctx.moveTo(SX(m.x), SY(m.y)); ctx.lineTo(SX(f.x), SY(f.y)); ctx.stroke(); } } if (on) ctx.setLineDash([]); }
   ctx.strokeStyle = 'rgba(255,238,200,.85)'; ctx.lineWidth = 1.2;
   for (const t of G.tracers) {   // a short streak along the curve: the head and a point just behind it
     const p = 1 - t.life / t.dur, q = Math.max(0, p - 0.12), at = f => [SX(t.x1 + (t.x2 - t.x1) * f), SY(t.y1 + (t.y2 - t.y1) * f, t.h1 + (6 - t.h1) * f + 4 * t.arc * f * (1 - f))];
@@ -189,6 +191,16 @@ function sparkDraw() {
     for (let i = 0; i < 5; i++) { const an = i * 1.26 + k.t * 7; ctx.moveTo(x + Math.cos(an) * 2 * z, y + Math.sin(an) * 2 * z); ctx.lineTo(x + Math.cos(an) * (3 + a * 6) * z, y + Math.sin(an) * (3 + a * 6) * z); }
     ctx.stroke();
   }
+}
+const NV = { ref: null, len: 0, key: '', arr: [] };
+function viewNodes(a, b, far) {   // the nodes on screen, sorted back to front; rebuilt only when the view moves 40 units or a node comes or goes
+  const q = v => Math.floor(v / 40), key = `${q(a.x)},${q(a.y)},${q(b.x)},${q(b.y)},${far}`;
+  if (NV.ref !== G.nodes || NV.len !== G.nodes.length || NV.key !== key) {
+    const x0 = q(a.x) * 40, y0 = q(a.y) * 40, x1 = (q(b.x) + 1) * 40, y1 = (q(b.y) + 1) * 40;
+    NV.arr = G.nodes.filter(n => n.kind !== 'farm' && !(far && n.kind === 'tree') && n.x > x0 && n.x < x1 && n.y > y0 && n.y < y1).sort((p, r) => p.y - r.y);
+    NV.ref = G.nodes; NV.len = G.nodes.length; NV.key = key;
+  }
+  return NV.arr;
 }
 function drawNode(n, s) {
   const z = cam.z, sx = SX(n.x), sy = SY(n.y);

@@ -1,11 +1,30 @@
 // ═════ 12-ui.js ═════
 // ───────────────────────── The pages: what each thing is and does ─────────────────────────
-function openCard(c) { hideStrip(); G.card = c; G.confirm = null; cardSig = ''; renderCard(); }
+function openCard(c) { hideStrip(); G.card = c; G.confirm = null; cardSig = ''; $('card').scrollTop = 0; renderCard(); }
 function closeCard() { if (G) G.card = null; $('card').hidden = true; }
-let cardSig = '', heldT = 0;
-// a finger on a card holds its live numbers still: rebuilding the buttons under a press loses the tap
-$('card').addEventListener('pointerdown', () => { heldT = 1e12; }, { passive: true });
-for (const ev of ['pointerup', 'pointercancel']) $('card').addEventListener(ev, () => { heldT = performance.now() + 400; }, { passive: true });
+let cardSig = '', bannerSig = '';
+// Live panels are patched, never rebuilt: the new markup is laid over the old node by node, and only the words, numbers
+// and states that changed are touched. A button under a finger stays the same button, so no tap is ever lost.
+const sig = x => x.nodeType === 3 ? '#' : x.nodeName + '|' + (x.getAttribute('data-act') || x.getAttribute('data-f') || x.getAttribute('class') || '');
+function patchKids(a, b) {
+  const B = [...b.childNodes];
+  B.forEach((y, i) => {
+    const x = a.childNodes[i], k = sig(y);
+    let m = x && sig(x) === k ? x : null;
+    if (!m) for (let j = i + 1; j < a.childNodes.length; j++) if (sig(a.childNodes[j]) === k) { m = a.childNodes[j]; a.insertBefore(m, x); break; }   // a line came or went above it: the same node moves up, it is not rebuilt
+    if (!m) { a.insertBefore(y, x || null); return; }
+    if (m.nodeType === 3) { if (m.nodeValue !== y.nodeValue) m.nodeValue = y.nodeValue; } else patch(m, y);
+  });
+  while (a.childNodes.length > B.length) a.lastChild.remove();
+}
+function patch(a, b) {
+  const own = a.nodeName === 'DETAILS' && a.dataset.f === b.dataset.f;   // a fold the player is opening or closing keeps its own state
+  for (const { name, value } of [...b.attributes]) if (!(own && name === 'open') && a.getAttribute(name) !== value) a.setAttribute(name, value);
+  for (const { name } of [...a.attributes]) if (!(own && name === 'open') && !b.hasAttribute(name)) a.removeAttribute(name);
+  patchKids(a, b);
+}
+const tpl = document.createElement('div');
+function patchHTML(el, html) { tpl.innerHTML = html; patchKids(el, tpl); }
 const btn = (act, title, sub, cls) => `<button data-act="${act}" class="${cls || ''}"><b>${title}</b>${sub ? `<small>${sub}</small>` : ''}</button>`;
 // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 const FOLD = new Set();
@@ -63,8 +82,10 @@ function renderCard() {
       if (b.kind === 'council') h += councilHTML(b);
       h += econCard(b);
       if (b.kind === 'treefarm') h += `<p>Tended by ${b.node && b.node.wk > 0 ? `${b.node.wk} of ${slotsOf(b.node)}` : 'nobody yet: tap Send a villager, or + under Wood'}. ${Math.round(b.node ? b.node.amt : 0)} wood left, then the plot is cut out.</p>`;
-      if (b.kind === 'market' && G.mtab !== 'more') { h += `<div class="sec">Sell 100</div><div class="acts c4">${['f', 'w', 's', 'i'].map(k => btn(`trade:sell:${k}`, RESOURCES[LONG[k]].name, `+${sellPrice(0, k)}g`, p.res[k] < 100 ? 'dis' : '')).join('')}</div><div class="sec">Buy 100</div><div class="acts c4">${['f', 'w', 's', 'i'].map(k => btn(`trade:buy:${k}`, RESOURCES[LONG[k]].name, `${buyPrice(k)}g`, p.res.g < buyPrice(k) ? 'dis' : '')).join('')}</div>`; }
-      if (b.kind === 'market' && G.mtab === 'more') { const nm = ready(0, 'market').length; h += `<p>${nm < 2 ? 'Caravans need two Markets. Build the second far from the first: they pay by distance.' : `${unitsOf(0, 'caravan').length} caravans on your routes. Pay per delivery grows with the square of the distance, up to ${TRADE_CAP}g.`}</p>`; }
+      if (b.kind === 'market' && G.mtab !== 'more') { const nm = k => GOODS[k] ? GOODS[k].name : RESOURCES[LONG[k]].name;
+        h += `<div class="sec">Sell · 100 of a resource, 10 of a good</div><div class="acts c4">${MKT_SELL.map(k => btn(`trade:sell:${k}`, nm(k), `+${sellPrice(0, k)}g`, haveOf(p, k) < LOT(k) ? 'dis' : '')).join('')}</div>`
+          + `<div class="sec">Buy</div><div class="acts c4">${MKT_BUY.map(k => btn(`trade:buy:${k}`, nm(k), `${buyPrice(k)}g`, p.res.g < buyPrice(k) ? 'dis' : '')).join('')}</div>`; }
+      if (b.kind === 'market' && G.mtab === 'more') h += `<p>Two lanes. One: a caravan with a route takes goods from your Business Center to a trade stop and sells them. Two: a caravan with no route runs to an ally's Market or Town Center and earns distance² ÷ ${TRADE_DIV}, at most ${TRADE_CAP} gold. ${unitsOf(0, 'caravan').length} caravans; ${allyMarket(0, b) ? 'an ally to trade with' : 'no ally yet'}.</p>`;
     }
     if (!mine && b.kind === 'keep' && P.lord === 0) h += vassalHTML(P);
     else if (!mine && b.owner === FORT && b.kind === 'keep') h += diploHTML();
@@ -92,7 +113,7 @@ function renderCard() {
     const u = G.units.find(x => x.id === c.id); if (!u) { closeCard(); return; }
     const U = UNIT[u.kind], o = u.owner, S = o === WILD ? U : stats(o, u.kind), P = G.P[o];
     h += `<h3>${S.name}<span class="who">${o === 0 ? 'yours' + (u.bn !== undefined ? ' · ' + BN[u.bn] : '') : o === WILD ? 'the wild' : P.name + (P.civ ? ' · ' + CIVS[P.civ].name : '')}</span></h3>${hpBar(u.hp / u.max, o === WILD ? '#c9b48a' : P.color)}`;
-    h += `<p>Health ${Math.round(u.hp)}/${Math.round(u.max)}${U.dmg ? ` · hits ${Math.round(S.dmg * 10) / 10} · reach ${Math.round(S.rng)}` : ''} · speed ${Math.round(S.spd)}${o !== WILD && UNIT[u.kind].tick === 'sol' ? ` · takes ${Math.round(S.armor * 100)}% damage` : ''}.</p>`;
+    h += `<p>Health ${Math.round(u.hp)}/${Math.round(u.max)}${U.dmg ? ` · hits ${Math.round(S.dmg * 10) / 10} · reach ${Math.round(S.rng)}` : ''} · speed ${Math.round(S.spd)}${o !== WILD && isSoldier(u) ? ` · takes ${Math.round(S.armor * 100)}% damage` : ''}.</p>`;
     if (o === WILD && U.meat && U.tick === 'wild') { const who = unitsOf(0, 'vil').filter(v => v.hunt === u).length; h += `<div class="acts c1">${btn(`hunt:${u.id}`, 'Send a hunter', who ? `${who} hunting` : 'nobody yet', 'go')}</div>`; }
     if (o === 0 && u.kind === 'vil') {   // this villager's work, and sending them home
       h += `<div class="sec">Work${u.job ? ': ' + (u.job === 'repair' ? 'building' : u.job) : ': idle'}</div><div class="acts c3">${JOBS.map(j => btn(`vjob:${u.id},${j}`, j[0].toUpperCase() + j.slice(1), u.job === j ? 'tap to rest' : '', u.job === j ? 'on' : '')).join('')}</div>`;
@@ -143,7 +164,6 @@ function renderCard() {
     if (S.length) h += `<div class="sec">Orders for the ${selName()}</div><div class="acts">${btn('recall', 'Recall home', '')}${btn('attack:near', 'Attack nearest', oddsText(orderSet(), foeNearest()), orderSet().length ? 'warn' : 'dis')}</div>`;
     if (S.length && p.techs.has('engage')) { const sn = G.sel === 'all' ? (G.stance.every(x => x === G.stance[0]) ? G.stance[0] : -1) : G.stance[G.sel]; h += `<div class="acts c1">${btn('stance', 'Stance: ' + (sn < 0 ? 'mixed' : STANCE[sn].name), '', sn > 0 ? 'on' : '')}</div>`; }
     if (S.length) { const hold = G.sel === 'all' ? G.hold.every(x => x) : !!G.hold[G.sel]; h += `<div class="acts c1">${btn('hold', 'Hold ground', hold ? 'on' : 'off', hold ? 'on' : '')}</div>`; }
-    if (S.length && unitsOf(0, 'caravan').length) h += `<div class="acts c1">${btn('escort', 'Escort caravans', '', '')}</div>`;
     if (S.length && ready(0, 'temple').length) { const why = zealWhy(0, orderSet()); h += `<div class="acts c1">${btn('zeal', 'Zeal', why ? why.replace(/\.$/, '') : `${costText(zealCost(0))} · ${ZEAL.secs} s of harder blows`, why ? 'dis' : 'go')}</div>`; }
     const kinds = ARMYK.filter(k => !UNIT[k].civ && UNIT[civKind(0, k)].age <= p.age + 1);
     h += fold('armytrain', 'Train soldiers', `<div class="acts">${trainButtons(kinds)}</div>`);
@@ -169,26 +189,25 @@ function renderCard() {
   } else if (c.type === 'help') {
     h += `<h3>How to play<span class="who">build ${BUILD}</span></h3>
       <div class="acts">${btn('guide:bld', 'Guide', 'what leads to what, and why', 'go')}${btn('guide:rule', 'Rules', 'what triggers what')}</div>
-      <p><b>Grow:</b> train villagers at the Town Center. Under each job, + puts one more villager on it and − takes one off. Tap a tree, bush, rock, field or deer to send a villager there. Houses give room for 5, Apartments 20, Aqueducts 15.</p>
-      <p><b>Build:</b> pick a menu, then a building. Press where it goes: it waits above your finger and lines up beside your other buildings. Green fits, red says why. Let go, drag to adjust, then tap Build. Drag empty ground to look around. A building rises only while villagers work it: the nearest free one goes at once; tap the site to send more, or tap a villager to pick who builds.</p>
-      <p><b>Army:</b> tap open ground: Send ¼ or All. A War Council opens stances, battalions, formations and Muster. Research upgrades units in place (Spearman → Hoplite → Pikeman).</p>
-      <p><b>Forest:</b> trees are a wall until cut. Paths lead to your neighbours' trade stops and to the great lake. Tap ⬚, drag a box over trees and send villagers to cut a way through; or box your villagers to put them all on one job.</p>
-      <p><b>Trade:</b> a Brewery brews food into beer, a Pasture's wool feeds a Weaver; goods go to the Business Center. Give a caravan a route on its card: it sells at a Market or a trade stop, farther and where it is wanted pays more, and buys spice at stops. Clear a stop's guards and build a Trade post to own it. Robbers hit caravans near their camps; posts, towers and soldiers keep them safe.</p>
-      <p><b>Nature:</b> rain slows marches, drought burns fields and spreads fire, frost stops stone building. Soil tires; a poor harvest comes about one year in six. Crowded towns and big armies camped at home fall sick: Houses, an Aqueduct and Clean water prevent it, a Hospital cures it. Soldiers near home or a Courier station eat bread, beer and spice: each on hand +5%.</p>
-      <p><b>The wild:</b> treasure, ruins, cemeteries and robbers' camps wait in every corner, guarded. Kill the guards, then touch the find. Priests take shrines. A wayfarer joins whoever meets him first.</p>
-      <p><b>Score</b> is top right: tap it. <b>Win</b> by conquest, by holding your wonder ${WONDER_HOLD / 60} minutes, or by the top score at the bell in a timed game.</p>
+      <p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
+      <p><b>Build:</b> pick a menu, then a building. It waits above your finger: drag it, then tap Build. Villagers raise it.</p>
+      <p><b>Army:</b> tap open ground: Send ¼ or All. Tap an enemy to attack. The War Council opens stances, battalions, formations and Muster.</p>
+      <p><b>Forest:</b> trees are a wall until cut. Tap ⬚ and box trees to cut a road.</p>
+      <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
+      <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>
+      <p><b>Win</b> by conquest, a wonder held ${WONDER_HOLD / 60} minutes, or the top score at the bell. Score is top right. The Guide and Rules above hold every number.</p>
       ${settingsHTML()}
       <div class="acts c3">${btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '')}${btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '')}${btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off')}</div>
       ${Object.keys(SET.hush).length ? `<div class="acts c1">${btn('unhush', 'Unmute all messages', Object.keys(SET.hush).length + ' kinds silenced')}</div>` : ''}
       <div class="acts">${btn('newgame', G.confirm === 'new' ? 'Tap again' : 'New game', G.confirm === 'new' ? 'this one is lost' : 'pick your people', G.confirm === 'new' ? 'warn' : '')}</div>
-      <p>The game saves itself every 10 seconds on this phone. World, game length and people take effect in the next game.</p>`;
+      <p>The game saves itself every ${SAVE_EVERY} seconds on this phone. World, game length and people take effect in the next game.</p>`;
   }
-  if (h !== cardSig) { cardSig = h; $('card').innerHTML = `<button id="cardX" data-act="close" aria-label="Close">×</button>` + h; }
+  if (h !== cardSig) { cardSig = h; patchHTML($('card'), `<button id="cardX" data-act="close" aria-label="Close">×</button>` + h); }
   $('card').hidden = false;
 }
 $('card').addEventListener('toggle', e => { const id = e.target.dataset && e.target.dataset.f; if (id) { if (e.target.open) FOLD.add(id); else FOLD.delete(id); } }, true);
 function settingsHTML() {
-  return `<div class="sec">Difficulty</div><div class="acts">${btn('diff:easy', 'Easy', 'they think slower; no raid before 6:00', SET.diff === 'easy' ? 'on' : '')}${btn('diff:normal', 'Normal', 'they think once a second', SET.diff === 'normal' ? 'on' : '')}</div>
+  return `<div class="sec">Difficulty</div><div class="acts">${btn('diff:easy', 'Easy', `they think slower; no raid before ${clock(EASY_SAFE)}`, SET.diff === 'easy' ? 'on' : '')}${btn('diff:normal', 'Normal', 'they think once a second', SET.diff === 'normal' ? 'on' : '')}</div>
     <div class="sec">Game</div><div class="acts c3">${Object.entries(MODES).map(([k, m]) => btn(`mode:${k}`, m.name, k === 'conquest' ? 'no limit' : 'top score wins', SET.mode === k ? 'on' : '')).join('')}</div>
     <div class="sec">World</div><div class="acts">${btn('fantasy:0', 'Real', 'wolves, bandits, robbers', !SET.fantasy ? 'on' : '')}${btn('fantasy:1', 'Fantasy', 'dire wolves, goblins, trolls', SET.fantasy ? 'on' : '')}</div>`;
 }
@@ -210,7 +229,13 @@ function qsHTML(verb, label, to) {
 }
 // The send strip: tap open ground and a small row of choices sits at your finger: a quarter, all, a battalion, more, cancel.
 // A quarter takes a quarter of each type, nearest first, so the mix of the army goes along.
-const sendable = () => armyOf(0).filter(u => u.kind !== 'spy' && u.state !== 'shrine');
+const sendable = () => armyOf(0).filter(u => u.kind !== 'spy' && u.state !== 'shrine' && u.state !== 'escort');   // guards keep to what they guard
+// Guards: up to 12 soldiers escort one caravan or garrison one trade stop; 4 more at a tap, the nearest free ones
+const guardsOf = (t, id) => armyOf(0).filter(u => u.state === 'escort' && (t === 'f' ? u.escF === id : u.escId === id));
+function guardRow(t, id) {
+  const n = guardsOf(t, id).length, free = sendable().length, verb = t === 'f' ? 'Garrison' : 'Escort';
+  return `<div class="acts">${btn(`guard:${t},${id}`, `${verb} +4`, n >= POST.guard ? `full: ${n}/${POST.guard}` : free ? `${n}/${POST.guard} · ${free} free` : 'no free soldiers', n < POST.guard && free ? '' : 'dis')}${btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis')}</div>`;
+}
 function sendPick(from, to) {
   const A = sendable(), by = {};
   for (const u of A) if (from === 'q' || from === 'all' || u.bn === from) (by[u.kind] = by[u.kind] || []).push(u);
@@ -349,7 +374,6 @@ const ACT = {
   menu(a) { openCard({ type: 'menu', id: a }); },
   guide(a) { openCard({ type: 'guide', page: a }); },
   home() { const k = keepOf(0); if (k) { cam.x = k.x; cam.y = k.y; clampCam(); } },
-  zoom(a) { zoomAt(a === 'in' ? cam.z * ZOOM_STEP : a === 'out' ? cam.z / ZOOM_STEP : 0, cw / 2, ch / 2); },
   resume() { const S = readSave(); if (S) loadGame(S); else { closeCard(); setPause(false); } refresh(); },
   fresh() { clearSave(); holdSave = false; newGame(); closeCard(); setPause(false); saveGame(true); refresh(); },
   newgame() { if (G.confirm === 'new') { openCard({ type: 'setup' }); return; } G.confirm = 'new'; refresh(); },
@@ -399,7 +423,6 @@ const PLAY = {
   demand(a) { demandSurrender(0, Number(a)); closeCard(); },
   overlord() { if (powerOf(soldiersOf(0)) >= 2 * powerOf(soldiersOf(FORT)) && G.P[FORT].ally === 0) makeVassal(FORT, 0, 'light'); },
   tax(a) { const [q, t] = a.split(','), P = G.P[Number(q)]; if (P && P.lord === 0 && TAX[t]) { P.tax = t; say(`Tax on ${P.name}: ${t}.`, '', 3); } },
-  extrade(a) { const [k, d] = a.split(','); if (!exTrade(0, k, d)) say(d === 'sell' ? 'You need 10 of it.' : 'Not enough gold.', '', 3); },
   venture(a) { if (!venture(0, Number(a))) say('Needs Medieval age, gold, and under 3 ventures.', '', 4); },
   douse(a) { const b = G.blds.find(x => x.id === Number(a) && x.owner === 0); let n = 0; if (b && b.fire > 0) for (let i = 0; i < 2; i++) { const v = pickVil(0, b, null, b); if (v) { if (v.job !== 'repair') v.pj = v.job; setJob(v, 'repair'); v.rep = b; v.fireman = true; n++; } } G.log = G.log.filter(m => m.act !== 'douse:' + a); if (n) say(`${n} more run to the fire.`, '', 3); else if (b && b.fire > 0) say('No villager is free.', '', 3); },
   tpost(a) { const f = G.finds.find(x => x.id === Number(a)); if (!f) return; const why = canPlace(0, 'tpost', f.x, f.y); if (why) { say(why + '.', '', 3); return; } if (!afford(G.P[0], BLD.tpost.cost)) { say(`Not enough: ${costText(BLD.tpost.cost)}.`, '', 3); return; } if (G.P[0].age < BLD.tpost.age) { say('Trade posts need the Bronze age.', '', 3); return; } build(0, 'tpost', f.x, f.y); say('A villager sets out to build the trade post.', '', 4); },
@@ -412,7 +435,6 @@ const PLAY = {
   train(a) { if (!train(0, a)) say(trainWhy(0, a) || 'Not now.', '', 3); },
   tech(a) { if (!research(0, a)) say(researchWhy(0, a) || 'Not now.', '', 3); },
   age() { ageUp(0); }, build(a) { startPlace(a); },
-  goto(a) { const [x, y] = a.split(',').map(Number), S = orderSet(); S.forEach(u => { u.state = 'goto'; u.px = x; u.py = y; u.idleT = 0; }); if (S.length) say(`${S.length} on the way.`, '', 3); closeCard(); },
   scoutgo(a) { const [x, y] = a.split(',').map(Number), s = unitsOf(0, 'scout')[0]; if (s) { s.state = 'goto'; s.px = x; s.py = y; say('The scout rides out.', '', 3); } closeCard(); },
   rally(a) { const [x, y] = a.split(',').map(Number); G.rally0 = G.rally0 ? null : { x, y }; },
   recall() { orderSet().forEach(u => { u.state = 'home'; u.fid = null; }); closeCard(); },
@@ -429,8 +451,11 @@ const PLAY = {
   spygo(a) { const [x, y] = a.split(',').map(Number), sp = unitsOf(0, 'spy').filter(u => u.state !== 'sab').sort((p, q) => dist(p, { x, y }) - dist(q, { x, y }))[0]; if (!sp) { say('You have no free spy.', '', 3); return; } sp.state = 'goto'; sp.px = x; sp.py = y; say('A spy goes to look.', '', 3); closeCard(); },
   shrine(a) { const f = G.finds.find(x => x.id === Number(a)), pr = f && unitsOf(0, 'priest').sort((p, q) => dist(p, f) - dist(q, f))[0]; if (!pr) { say('You have no priest: Culture → Temple.', '', 3); return; } pr.state = 'shrine'; pr.fid = f.id; say('A priest walks to the shrine.', '', 3); closeCard(); },
   hire(a) { const f = G.finds.find(x => x.id === Number(a)); if (f && !hire(0, f)) say(hireWhy(0, f), '', 3); },
-  escort() { const L = orderSet(); if (!unitsOf(0, 'caravan').length || !L.length) { say('No caravan to escort.', '', 3); return; } L.forEach(u => { u.state = 'escort'; u.esc = null; }); say(`The ${selName()} escorts your caravans.`, '', 4); },
-  trade(a) { const [dir, k] = a.split(':'); if (!exchange(0, k, dir)) say(dir === 'sell' ? 'Not enough to sell.' : 'Not enough gold.', '', 3); },
+  guard(a) { const [t, i] = a.split(','), id = Number(i), at = t === 'f' ? G.finds.find(f => f.id === id) : G.units.find(v => v.id === id); if (!at) return;
+    const room = POST.guard - guardsOf(t, id).length, S = sendable().sort((p, q) => dist(p, at) - dist(q, at)).slice(0, Math.max(0, Math.min(4, room)));
+    S.forEach(u => { u.state = 'escort'; u.esc = null; u.focus = null; if (t === 'f') { u.escF = id; u.escId = undefined; } else { u.escId = id; u.escF = undefined; } }); if (S.length) ripple(at.x, at.y, '#ffd35e'); },
+  unguard(a) { const [t, i] = a.split(','); guardsOf(t, Number(i)).forEach(u => { u.state = 'home'; u.esc = null; u.escId = u.escF = undefined; }); },
+  trade(a) { const [dir, k] = a.split(':'); if (!marketTrade(0, k, dir)) say(dir === 'sell' ? 'Not enough to sell.' : 'Not enough gold.', '', 3); },
   stance() { const cur = G.sel === 'all' ? (G.stance.every(x => x === G.stance[0]) ? G.stance[0] : -1) : G.stance[G.sel], nx = (cur + 1) % STANCE.length; if (G.sel === 'all') G.stance = Array(BNS + 1).fill(nx); else G.stance[G.sel] = nx; },
   hold() { const on = G.sel === 'all' ? !G.hold.every(x => x) : !G.hold[G.sel]; if (G.sel === 'all') G.hold = Array(BNS + 1).fill(Number(on)); else G.hold[G.sel] = Number(on); },
   zeal() { if (!zeal(0, orderSet())) say(zealWhy(0, orderSet()) || 'Not now.', '', 3); },
@@ -518,8 +543,8 @@ function ui(force) {
   const msgs = G.log.filter(m => m.until > G.t);
   let html = msgs.map(m => `<div class="msg ${m.cls || ''}"><span${m.act ? ` data-act="${m.act}"` : m.at ? ` data-act="jump:${m.at.x},${m.at.y}"` : ''}>${m.text}</span><button data-act="hush:${encodeURIComponent(m.text)}" aria-label="Silence this kind of message">🔕</button></div>`).join('');
   if (G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup'))) html = '<div class="msg"><span>Paused · ▶ to carry on</span></div>' + html;
-  if ($('banner').innerHTML !== html) $('banner').innerHTML = html;
-  if (G.card && performance.now() > heldT) renderCard();
+  if (html !== bannerSig) { bannerSig = html; patchHTML($('banner'), html); }
+  if (G.card) renderCard();
 }
 
 
@@ -536,7 +561,6 @@ function econCard(b) {
   if (b.kind === 'market') {
     const P = p, more = G.mtab === 'more';
     if (!more) h += fold('prices', 'Going prices', `<p>${MKTK.map(k => `${GOODS[k] ? GOODS[k].name : RESOURCES[LONG[k]].name} ×${mkt(k).toFixed(2)}`).join(' · ')} (1 = normal)</p>`);
-    if (!more) h += `<div class="sec">Sell 10 here</div><div class="acts c3">${WARES.map(k => btn(`extrade:${k},sell`, GOODS[k].name, `+${Math.round(10 * GOODS[k].base * mkt(k))}g`, (P.goods[k] || 0) < 10 ? 'dis' : '')).join('')}</div><div class="acts c1">${btn('extrade:spice,buy', 'Buy 10 spice', `${Math.round(10 * spiceCost() * 1.5)}g · dearer than at a stop`, P.res.g < 10 * spiceCost() * 1.5 ? 'dis' : '')}</div>`;
     const V = P.ventures || [];
     if (more) h += `<div class="sec">Ventures</div><p>${P.age < VENTURE.age ? 'From the Medieval age: put gold into a merchant venture.' : `Back in a year with ${Math.round((VENTURE.back - 1) * 100)}% more; about 1 in ${Math.round(1 / VENTURE.lost)} is lost.`} ${V.length ? 'Out: ' + V.map(v => `${v.amt}g (${clock(Math.max(0, v.due - G.t))})`).join(', ') + '.' : ''}</p>`;
     if (more && P.age >= VENTURE.age) h += `<div class="acts c3">${VENTURE.sizes.map(a => btn(`venture:${a}`, `${a} gold`, '', P.res.g < a || V.length >= VENTURE.max ? 'dis' : '')).join('')}</div>`;
@@ -546,19 +570,21 @@ function econCard(b) {
 }
 function stopHTML(f) {
   const p = G.P[0], from = homeBiz(0, f) || keepOf(0), pt = postAt(f), mine = f.owner === 0;
-  let h = `<p>Route ${f.route === 0 ? 'west–east' : 'north–south'}. ${f.owner === null ? (pt ? 'A post is going up.' : 'Nobody holds it.') : mine ? 'Yours: it pays you every minute, and a cut of every sale here.' : `Held by ${G.P[f.owner].name}: they take ${Math.round(POST.cut * 100)}% of your sales here.`} Wants <b>${GOODS[f.want].name.toLowerCase()}</b> (×1.5).</p>`;
+  let h = `<p>Route ${f.route === 0 ? 'west–east' : 'north–south'}. ${f.owner === null ? (pt ? 'A post is going up.' : 'Nobody holds it.') : mine ? `Yours: ${Math.round(POST.cut[stopsHeld(0, f.route)] * 100)}% of everyone else's sales here (you hold ${stopsHeld(0, f.route)} of this route's 4${stopsHeld(0, f.route) === 4 ? `, so it pays ${Math.round(POST.all * 60)} gold a minute` : ''}).` : `Held by ${G.P[f.owner].name}: they take ${Math.round(POST.cut[stopsHeld(f.owner, f.route)] * 100)}% of your sales here.`} Wants <b>${GOODS[f.want].name.toLowerCase()}</b> (×1.5).</p>`;
   h += `<p><i>Paid here, per good from your ${homeBiz(0, f) ? 'Business Center' : 'Town Center'}:</i> ${WARES.filter(k => k !== 'spice').map(k => `${GOODS[k].name} ${Math.round(priceAt(0, k, f, from))}g`).join(' · ')}. Spice costs ${GOODS.spice.buy}g here.</p>`;
   if (!pt && !guardsLeft(f)) h += `<div class="acts c1">${btn(`tpost:${f.id}`, 'Build a Trade post', p.age < 1 ? 'Bronze age' : costText(BLD.tpost.cost), p.age < 1 || !afford(p, BLD.tpost.cost) ? 'dis' : 'go')}</div>`;
+  if (mine) h += guardRow('f', f.id);
   if (mine) h += `<div class="acts c1">${btn(`want:${f.id}`, `Wanted: ${GOODS[f.want].name.toLowerCase()}`, 'yours: tap to change what it buys dear')}</div>`;
   return h;
 }
 function caravanHTML(u) {
-  const r = u.route, t = targetOf(r), h0 = homeBiz(0, u);
-  let h = `<p>${r && t ? `On a route to ${t.kind === 'stop' ? 'the trade stop at ' + coord(t.x, t.y) : (t.owner === 0 ? 'your ' : G.P[t.owner].name + "' ") + bldName(t.owner, t.kind).toLowerCase()}${r.rep ? ', again and again' : ''}. ${u.leg === 'go' ? 'Carrying ' + (goodsText(u.goods || {}) || 'nothing') : u.leg === 'back' ? 'Coming home' + (u.goods && u.goods.spice ? ' with ' + u.goods.spice + ' spice' : '') : 'Loading'}.` : 'No route: it runs between your Markets for gold.'}</p>`;
-  if (!h0) return h + '<p>Build a Business Center (Trade) to send goods.</p>';
+  const r = u.route, t = targetOf(r), h0 = homeBiz(0, u), d = !r && u.dest ? G.blds.find(b => b.id === u.dest) : null;
+  let h = `<p>${r && t ? `Lane one: to the trade stop at ${coord(t.x, t.y)}${r.rep ? ', again and again' : ''}. ${u.leg === 'go' ? 'Carrying ' + (goodsText(u.goods || {}) || 'nothing') : u.leg === 'back' ? 'Coming home' + (u.goods && u.goods.spice ? ' with ' + u.goods.spice + ' spice' : '') : 'Loading'}.` : d && d.owner !== 0 ? `Lane two: to ${G.P[d.owner].name}' ${bldName(d.owner, d.kind).toLowerCase()}, ${u.cargo} gold on arrival.` : allyMarket(0, u) ? 'Lane two: on its way to trade with your ally.' : 'No route, and no ally to trade with: it waits at your Market.'}</p>`;
+  h += guardRow('c', u.id);
+  if (!h0) return h + '<p>Build a Business Center (Trade) to send goods to the trade stops.</p>';
   const T = tradeTargets(0).map(t => [t, estPay(0, t, h0)]).sort((a, b) => b[1] - a[1]).slice(0, 4);
-  h += `<div class="sec">Send it to</div><div class="acts c1">${T.map(([t, v]) => btn(`route:${u.id},${t.kind === 'stop' ? 's' : 'b'},${t.id}`, t.kind === 'stop' ? `Trade stop ${coord(t.x, t.y)}` : `${t.owner === 0 ? 'Your' : G.P[t.owner].name} ${bldName(t.owner, t.kind).toLowerCase()}`, `about ${v}g a load · ${Math.round(dist(h0, t))} away`, r && t === targetOf(r) ? 'on' : '')).join('')}</div>`;
-  if (r) h += `<div class="acts">${btn(`rrep:${u.id}`, 'Repeat', r.rep ? 'on' : 'off', r.rep ? 'on' : '')}${r.s ? btn(`rsp:${u.id}`, 'Buy spice', r.spice ? 'on' : 'off', r.spice ? 'on' : '') : ''}${btn(`rclr:${u.id}`, 'No route', 'back to gold runs')}</div>`;
+  h += `<div class="sec">Send it to</div><div class="acts c1">${T.map(([t, v]) => btn(`route:${u.id},s,${t.id}`, `Trade stop ${coord(t.x, t.y)}`, `about ${v}g a load · ${Math.round(dist(h0, t))} away`, r && t === targetOf(r) ? 'on' : '')).join('') || '<p>No stop open: clear one of its guards first.</p>'}</div>`;
+  if (r) h += `<div class="acts">${btn(`rrep:${u.id}`, 'Repeat', r.rep ? 'on' : 'off', r.rep ? 'on' : '')}${btn(`rsp:${u.id}`, 'Buy spice', r.spice ? 'on' : 'off', r.spice ? 'on' : '')}${btn(`rclr:${u.id}`, 'No route', 'trade with an ally')}</div>`;
   return h;
 }
 

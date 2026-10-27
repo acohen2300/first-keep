@@ -201,7 +201,7 @@ const ready = (o, kind) => bldsOf(o, kind).filter(b => b.prog >= 1);
 const readyAt = (o, U) => [U.at, ...(U.also || [])].flatMap(k => ready(o, k));   // where a unit can be trained: its building, and any other that also trains it
 const unitsOf = (o, kind) => G.units.filter(u => u.owner === o && (!kind || u.kind === kind));
 const isSoldier = u => UNIT[u.kind].tick === 'sol';
-const soldiersOf = o => G.units.filter(u => u.owner === o && UNIT[u.kind].tick === 'sol');
+const soldiersOf = o => G.units.filter(u => u.owner === o && isSoldier(u));
 const armyOf = o => G.units.filter(u => u.owner === o && UNIT[u.kind].cls === 'army');
 const popOf = o => G.units.filter(u => u.owner === o && UNIT[u.kind].cls).length;
 const capOf = o => Math.min(POPMAX, G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 ? BLD[b.kind].room || 0 : 0), 0));
@@ -287,5 +287,5 @@ function rehealth(o) {
   for (const b of G.blds) if (b.owner === o && b.prog >= 1) { const M = maxHpB(o, b.kind); if (b.mx && Math.abs(M - b.mx) > 0.01) b.hp *= M / b.mx; b.mx = M; }
 }
 const unitPower = u => u.hp * Math.max(1, dmgOf(u)) / 6 * (UNIT[u.kind].bonly ? 0.3 : 1);
-const powerOf = list => list.reduce((s, u) => s + (UNIT[u.kind].tick === 'sol' ? unitPower(u) : 0), 0);
+const powerOf = list => list.reduce((s, u) => s + (isSoldier(u) ? unitPower(u) : 0), 0);
 

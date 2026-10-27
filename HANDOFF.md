@@ -35,6 +35,13 @@ Single-file HTML mobile RTS (Albert). Live: https://claude.ai/artifact/BYdPKYCJD
 5. Parked ideas: replays, biomes, interpolation, optional Auto jobs, readability cleanup before App Store, bundled fonts for native, "Add another conquest" step-up, slower first raid (~5 min), job row as one line (mockup B, he chose the old bottom).
 6. GUIDE.md needs Build 29 changes (top bar, corner chip, one pace button, Messages toggle, side-by-side building).
 
+## Status (Oct 27, evening)
+- Live (index.html, Pages root): **Build 30**. Preview (preview/index.html, acohen2300.github.io/first-keep/preview): **Build 32**, waiting for Albert's phone test before it goes live (copy preview/index.html to index.html).
+- Build 31-32 changes: see CUTS.md. Build 31: send strip, silence, Sound page, two-sided building cards, War Council ladder (Engagement, Battalions, Formations, Muster), save version 28. Build 32: trade in two lanes (stops, allies), guards (12 per caravan or stop), three trade researches, one Market rule, cards patched not rebuilt, text from tables, speed, fonts inside the file, build check.
+- Scorecard doc (best in class vs First Keep): https://claude.ai/artifact/3rJiUoFJHj4t6BfWKgpsXv
+- Agreed order: Build 33 elite touch and access; 34 the world (weather, wind, snow, battlefields, world settings: night/weather/seasons on/off or fixed); 35 the front door (demo world behind the menu with a visible finger, look around, story, did-you-know facts, tech map, new score card); 36 roads (counter-offer: dragged like walls, speed and +10% work, never required; Albert to decide). Then an elite pressure test against measurable bars, then a new list.
+- Build checks: `python3 build.py` refuses syntax errors and duplicate top-level names; fonts are embedded from src/fonts at build time.
+
 ## Status at handoff (Oct 27)
 Build 29 is live at the artifact URL (version 34) and on GitHub Pages. Nothing in progress. Next: his phone test of Build 29 and the sound-on-silent answer.
 

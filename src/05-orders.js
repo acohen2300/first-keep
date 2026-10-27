@@ -159,12 +159,18 @@ function sendHelp(f, pt, tell, asked) {
 }
 
 // ───────────────────────── Trade, zeal, spies, hiring ─────────────────────────
-const sellPrice = (o, k) => Math.floor(TRADE[k] * (SELL + fxv(o, 'sell').a) * mkt(k));
-const buyPrice = k => Math.ceil(TRADE[k] * BUY * mkt(k));
-function exchange(o, k, dir) {
-  const p = G.P[o]; if (!ready(o, 'market').length || !TRADE[k]) return false;
-  if (dir === 'sell') { if (p.res[k] < 100) return false; p.res[k] -= 100; p.res.g += sellPrice(o, k); mktHit(k, 25, -1); }
-  else { const c = buyPrice(k); if (p.res.g < c) return false; p.res.g -= c; p.res[k] += 100; mktHit(k, 25, 1); }
+// The Market, one rule for everything it trades: resources by the 100, goods by the 10; it pays 80% of worth (90% with Coinage)
+// and charges 125%, both moved by the going price. A trade stop pays full worth and more, which is why caravans go there.
+const LOT = k => TRADE[k] ? 100 : 10;
+const worth = k => TRADE[k] ? TRADE[k] / 100 : GOODS[k].buy || GOODS[k].base;   // spice is worth what it costs at a stop
+const sellPrice = (o, k) => Math.floor(LOT(k) * worth(k) * (SELL + fxv(o, 'sell').a) * mkt(k));
+const buyPrice = k => Math.ceil(LOT(k) * worth(k) * BUY * mkt(k));
+const MKT_SELL = ['f', 'w', 's', 'i', ...WARES], MKT_BUY = ['f', 'w', 's', 'i', 'spice'];   // wool goes to a Weaver, not to market; spice is the only good not made here
+const haveOf = (p, k) => TRADE[k] ? p.res[k] : p.goods[k] || 0;
+function marketTrade(o, k, dir) {
+  const p = G.P[o], n = LOT(k); if (!ready(o, 'market').length) return false;
+  if (dir === 'sell') { if (!MKT_SELL.includes(k) || haveOf(p, k) < n) return false; const v = sellPrice(o, k); if (TRADE[k]) p.res[k] -= n; else p.goods[k] -= n; p.res.g += v; if (!TRADE[k]) p.gathered += v; mktHit(k, TRADE[k] ? 25 : n, -1); }
+  else { if (!MKT_BUY.includes(k)) return false; const c = buyPrice(k); if (p.res.g < c) return false; p.res.g -= c; if (TRADE[k]) p.res[k] += n; else p.goods[k] = (p.goods[k] || 0) + n; mktHit(k, TRADE[k] ? 25 : n, 1); }
   if (o === 0) sfx('coin'); return true;
 }
 const zealCost = o => ({ g: Math.round(ZEAL.cost.g * fxv(o, 'zealcost').m) });

@@ -1,12 +1,13 @@
 // ═════ 01-rules.js ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 30;
+const BUILD = 32;
 const MAP = 2000, MID = MAP / 2, DT = 1 / 30;
 const POPMAX = 150, VILMAX = 60, ARMYMAX = 90, BNSIZE = 30, BNS = 6;   // six battalions, once Command is researched at a War Council; BNSIZE: the most one Zeal blesses
 const RICH = 2.5, PLUNDER = 0.25, CARRY = 10, NAVC = 10;                // NAVC: the walking grid, 10 units a square (never shown)
 const LAKE0 = { x: MID, y: MID, r: 170 };                              // the great lake in the middle; each corner also gets a lake of its own (G.lakes)
 const SEASON_LEN = 180, DAY_LEN = 120, NIGHT_SIGHT = 0.6;
-const ZOOM_MAX = 4, ZOOM_STEP = 1.3, TILT = 0.66, SIDE = 0.4;   // SIDE: how far right the back of a building sits, per unit of depth, so its east wall shows
+const EASY_SAFE = 360, SAVE_EVERY = 10, REACT = { easy: 2, normal: 1 };   // Easy: no raid before 6:00; the game saves every 10 s; seconds between computer decisions
+const ZOOM_MAX = 4, TILT = 0.66, SIDE = 0.4;   // SIDE: how far right the back of a building sits, per unit of depth, so its east wall shows
 const WILD = 4;                                                          // the fifth side: animals, bandits, robbers, monsters
 
 // One table for the four resources: short key, colour, name, where it is dropped off.
@@ -144,7 +145,7 @@ const BLD = {
   brewery:   { name: 'Brewery', fp: 3, hp: 250, h: 18, cost: { w: 100, s: 40 }, t: 20, age: 1, crop: 'beer', from: { f: 3 }, rate: 0.15, sab: 'burn', wood: true, desc: 'Brews ale from your grain: 3 food make 1 beer, a good to trade. One villager works it.' },
   bizc:      { name: 'Business Center', fp: 4, hp: 450, h: 24, cost: { w: 200, s: 100 }, t: 30, age: 1, drop: GOODK, sab: 'stall', desc: 'Stores your goods and loads your caravans. Give a caravan a route and it shuttles goods to a Market or a trade stop.' },
   council:   { name: 'War Council', fp: 3, hp: 600, h: 22, cost: { w: 200, s: 150, g: 50 }, t: 35, age: 2, sab: 'stall', desc: 'Where your generals plan. Research Engagement, then Battalions, then Formations, then in the Gunpowder age Muster.' },
-  tpost:     { name: 'Trade post', fp: 2, hp: 300, h: 20, cost: { w: 100, s: 30 }, t: 20, age: 1, atStop: true, sight: 140, dmg: 5, rng: 120, cd: 1.6, sab: 'burn', desc: 'Built on a trade stop once its guards are gone. You own the stop: a cut of every sale there, gold every minute, more for each stop you hold on the same route, double for the whole route. Caravans within 120 are safe from robbers.' },
+  tpost:     { name: 'Trade post', fp: 2, hp: 300, h: 20, cost: { w: 100, s: 30 }, t: 20, age: 1, atStop: true, sight: 140, dmg: 5, rng: 120, cd: 1.6, sab: 'burn', desc: 'Built on a trade stop once its guards are gone. You own the stop: a cut of everyone else\'s sales there, 20% for one stop of its route up to 40% for all four; all four of a route also pay gold every second. Up to 12 soldiers can garrison it.' },
   wonder:    { name: 'Wonder', fp: 6, hp: 4000, h: 60, cost: { f: 1500, w: 1500, s: 1500, g: 1500 }, t: 240, age: 2, one: true, desc: 'Your civilisation\'s great work. When it is finished every side is told, and if it still stands 8 minutes later, you win.' },
 };
 const WONDER_HOLD = 480;
@@ -184,6 +185,10 @@ const TECH = [
   { id: 'architecture', name: 'Architecture', at: 'library', age: 2, need: 'maths', cost: { w: 200, s: 150 }, t: 45, fx: [{ s: 'build', m: 0.8 }], desc: 'Buildings go up 20% faster.' },
   { id: 'roads',   name: 'Roads',          at: 'library', age: 2, cost: { s: 200, g: 100 }, t: 45, fx: [{ s: 'mud', m: 0.5 }, { s: 'trade', m: 1.15 }], desc: 'Halves the slowing of spring mud and winter cold; caravans earn 15% more.' },
   { id: 'coinage', name: 'Coinage',        at: 'market', age: 2, cost: { s: 100, g: 150 }, t: 40, fx: [{ s: 'sell', a: 0.1 }], desc: 'The Market pays 90% of a resource\'s worth instead of 80%.' },
+  // trade research: hardier carts, posts that hold, better credit (history: armed caravans, walled caravanserais, Italian letters of credit)
+  { id: 'armedcart', name: 'Armed caravans', at: 'market', age: 2, cost: { w: 150, g: 150 }, t: 35, fx: [{ s: 'uhp', k: 'caravan', m: 2 }], desc: 'Caravans take twice the beating and strike back at anyone who robs them.' },
+  { id: 'fortpost', name: 'Fortified posts', at: 'tpost', age: 3, cost: { s: 200, g: 150 }, t: 40, fx: [{ s: 'bhp', k: 'tpost', m: 1.5 }, { s: 'dmg', k: 'tpost', a: 5 }], desc: 'Trade posts get walls: half again as sturdy, and their arrows hit twice as hard.' },
+  { id: 'credit',  name: 'Letters of credit', at: 'market', age: 3, cost: { g: 300, s: 100 }, t: 45, fx: [{ s: 'trade', m: 1.25 }], desc: 'Every trade sale pays a quarter more: merchants settle on paper, not in carts of coin.' },
   { id: 'rotation',name: 'Crop rotation',  at: 'mill',   age: 3, need: 'plough', cost: { f: 200, w: 100 }, t: 40, fx: [{ s: 'crop', k: 'food', m: 1.2 }], desc: 'Fields give 20% more food.' },
   { id: 'heavyplough', name: 'Heavy plough', at: 'mill', age: 3, need: 'plough', cost: { f: 250, w: 150 }, t: 45, fx: [{ s: 'crop', k: 'food', m: 1.15 }], desc: 'Fields give 15% more food again.' },
   { id: 'wheelbarrow', name: 'Wheelbarrow', at: 'mill', age: 3, cost: { f: 150, w: 100 }, t: 35, fx: [{ s: 'carry', a: 5 }], desc: 'Villagers carry 15 instead of 10: fewer trips.' },
@@ -263,7 +268,7 @@ const PERS = {
                   ['hospital', 2, 1, 8, { w: 250, s: 200 }], ['library', 2, 1, 8, { w: 400, s: 300 }], ['aqueduct', 2, 1, 8, { s: 400 }], ['castle', 3, 1, 12, { s: 1100, w: 400 }], ['council', 2, 1, 10, { w: 250, s: 150 }]],
           techs: ['masonry', 'leather', 'axes', 'picks', 'bronze', 'plough', 'coppice', 'writing', 'maths', 'chain', 'iron', 'drill', 'deep', 'architecture', 'medicine', 'slits', 'rotation', 'wheelbarrow', 'engage', 'phalanx', 'fortify', 'plate', 'heavyplough', 'pikesquare', 'longbow'] },
 };
-const TRADE = { f: 80, w: 80, s: 110, i: 120 }, TRADE_CAP = 80, TRADE_DIV = 16000, SELL = 0.8, BUY = 1.25;
+const TRADE = { f: 80, w: 80, s: 110, i: 120 }, TRADE_CAP = 80, TRADE_DIV = 16000, SELL = 0.8, BUY = 1.25;   // TRADE_CAP, TRADE_DIV: an ally run pays distance² ÷ 16000, at most 80 gold
 const ZEAL = { cost: { g: 60 }, secs: 45, cd: 120, mul: 1.2 };
 const SAB = { burn: 0.6, stall: 40 };
 const FLANK = 1.3;      // a blow from behind lands 30% harder

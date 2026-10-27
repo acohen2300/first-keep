@@ -58,10 +58,10 @@ function formUp() {
     if (!home) { let slow = 1e9; for (const u of a) if (!hasTag(u.kind, 'siege')) slow = Math.min(slow, stats(u.owner, u.kind).spd); for (const u of a) u.cap = u.tgt || slow === 1e9 || hasTag(u.kind, 'siege') ? 0 : slow; }   // a marching group keeps together at its slowest; engaged units run free; siege trails at its own pace
   }
   const atk = new Map();   // an attack goes at the pace of its battalion until a foe is in sight
-  for (const u of G.units) if (u.hp > 0 && !u.inside && u.state === 'attack' && UNIT[u.kind].tick === 'sol') { if (hasTag(u.kind, 'siege')) continue; const key = u.owner + ':' + (u.bn ?? 9) + ':' + (u.bid || 0); const s = stats(u.owner, u.kind).spd; atk.set(key, Math.min(atk.get(key) ?? 1e9, s)); }   // raiders sent at a camp make their own group
-  for (const u of G.units) if (u.hp > 0 && UNIT[u.kind].tick === 'sol') { if (u.state === 'attack') u.cap = u.tgt || hasTag(u.kind, 'siege') ? 0 : atk.get(u.owner + ':' + (u.bn ?? 9) + ':' + (u.bid || 0)) || 0; else if (u.state !== 'goto' && u.state !== 'assist') u.cap = 0; }
+  for (const u of G.units) if (u.hp > 0 && !u.inside && u.state === 'attack' && isSoldier(u)) { if (hasTag(u.kind, 'siege')) continue; const key = u.owner + ':' + (u.bn ?? 9) + ':' + (u.bid || 0); const s = stats(u.owner, u.kind).spd; atk.set(key, Math.min(atk.get(key) ?? 1e9, s)); }   // raiders sent at a camp make their own group
+  for (const u of G.units) if (u.hp > 0 && isSoldier(u)) { if (u.state === 'attack') u.cap = u.tgt || hasTag(u.kind, 'siege') ? 0 : atk.get(u.owner + ':' + (u.bn ?? 9) + ':' + (u.bid || 0)) || 0; else if (u.state !== 'goto' && u.state !== 'assist') u.cap = 0; }
 }
-const react = () => G.diff === 'easy' ? 2.0 : 1.0;   // seconds between computer decisions: human-like, no cheats
+const react = () => REACT[G.diff] || 1;   // seconds between computer decisions: human-like, no cheats
 function died(u) {
   if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
   if (u.kind === 'envoy') G.P[u.owner].envoyOut = false;
@@ -73,7 +73,7 @@ function died(u) {
     for (const v of G.units) if (v.hunt === u) { v.hunt = null; v.node = m; }
   }
   if (u.owner === 0 && isSoldier(u) && !u.gone) G.lost = (G.lost || 0) + 1;
-  if (u.by !== undefined && UNIT[u.kind].tick === 'sol') for (const p of G.P) if (p.lord === u.by && !p.rebel && atWar(p.id, u.owner)) { const k = keepOf(p.id); if (k && dist(u, k) < VASSAL.r) p.protect = Math.min(VASSAL.protectMax, (p.protect || 0) + VASSAL.kill); }   // the lord who kills their enemies near them earns their thanks
+  if (u.by !== undefined && isSoldier(u)) for (const p of G.P) if (p.lord === u.by && !p.rebel && atWar(p.id, u.owner)) { const k = keepOf(p.id); if (k && dist(u, k) < VASSAL.r) p.protect = Math.min(VASSAL.protectMax, (p.protect || 0) + VASSAL.kill); }   // the lord who kills their enemies near them earns their thanks
 }
 function judge() {
   if (G.over) return;
@@ -155,7 +155,7 @@ function jobDone(b, j) {
 function learnTech(o, id) {
   const T = TECHBY[id]; G.P[o].techs.add(id); rehealth(o);
   if (o === 0) { say(T.tier ? `${T.name}: your ${plural(UNIT[T.tier.unit].name.toLowerCase())} are now ${plural(stats(0, civKind(0, T.tier.unit)).name.toLowerCase())}.` : `${T.name} learned.`, 'good', 5); sfx('done');
-    const hit = T.tier ? u => u.owner === 0 && baseKind(u.kind) === T.tier.unit : (T.fx || []).some(f => f.k === '#soldier') ? u => u.owner === 0 && UNIT[u.kind].tick === 'sol' : null;
+    const hit = T.tier ? u => u.owner === 0 && baseKind(u.kind) === T.tier.unit : (T.fx || []).some(f => f.k === '#soldier') ? u => u.owner === 0 && isSoldier(u) : null;
     if (hit && G.units.some(hit)) { const c = keepOf(0); celebrate(2, c ? c.x : 0, c ? c.y : 0, hit); } }
 }
 
@@ -168,6 +168,7 @@ const unsafe = p => (G.guarded || []).some(f => Math.abs(f.x - p.x) < 120 && Mat
 function nearestNode(u, job) {
   let best = null, bd = 1e9, bdist = 1e9, farm = null, fd = 1e9;   // bd scores a find by the walk to it and the walk home with the load
   for (const n of G.nodes) {
+    if (n.kind !== 'farm' && (job === 'farm' || Math.abs(n.x - u.x) * 0.4 > bd)) continue;   // the cheap tests first: most of the map is farther than the best so far
     if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n))) continue;
     if (n.kind === 'farm') {
       if (n.farm.owner !== u.owner || n.farm.prog < 1 || n.farm.hp <= 0 || (n.wk || 0) - (u.node === n ? 1 : 0) >= slotsOf(n)) continue;
@@ -295,21 +296,22 @@ function envoyTick(u, dt, SP) {
   if (u.state === 'envoy') { const k = keepOf(u.target); if (!k) { u.state = 'return'; return; } if (moveTo(u, k.x, k.y, dt, 30, SP)) judgeEnvoy(u.target, u.owner, u); }
   else { const k = keepOf(u.owner); if (!k || moveTo(u, k.x, k.y, dt, 20, SP)) { u.hp = 0; u.gone = true; } }
 }
-const farMarket = (m, skip) => { let best = null, bd = -1; for (const x of G.blds) if (x.owner === m.owner && x.kind === 'market' && x.prog >= 1 && x.hp > 0 && x.id !== m.id && x.id !== skip) { const d = dist(m, x); if (d > bd) { bd = d; best = x; } } return best; };
+// a caravan with no route trades with an ally: out from your Market to theirs, paid by distance on arrival, then home again
 function caravanTick(u, dt, SP) {
   const o = u.owner; u.idle = false;
+  if (G.P[o].techs.has('armedcart') && (G.tick + u.id) % 30 === 0) { const f = nearestFoe(o, u, 24); if (f) hurt(o, u, f, 4); }   // armed caravans strike back
   if (u.route) { routeTick(u, dt, SP); return; }
-  let d = u.dest ? G.blds.find(b => b.id === u.dest && b.hp > 0 && b.owner === o) : null;
+  const home = G.blds.find(b => b.id === u.lastId && b.hp > 0 && b.owner === o && b.kind === 'market') || nearest(G.blds, u, b => b.owner === o && b.kind === 'market' && b.prog >= 1 && b.hp > 0);
+  let d = u.dest ? G.blds.find(b => b.id === u.dest && b.hp > 0) : null;
+  if (d && d.owner !== o && G.rel[o][d.owner] !== 'ally') d = null;   // the alliance broke: turn back
   if (!d) {
-    const from = G.blds.find(b => b.id === u.lastId && b.hp > 0 && b.owner === o) || G.blds.find(b => b.owner === o && b.kind === 'market' && b.prog >= 1 && b.hp > 0);
-    const to = from && farMarket(from);
-    if (!to) { u.idle = true; u.dest = null; u.cargo = 0; return; }
-    u.dest = to.id; d = to; u.cargo = Math.min(TRADE_CAP, Math.floor(dist(from, to) ** 2 / TRADE_DIV * fxv(o, 'trade').m)); u.lastId = from.id;
+    const to = home && allyMarket(o, home);
+    if (!to) { u.idle = true; u.dest = null; u.cargo = 0; if (home && dist(u, home) > halfOf(home) + 8) moveTo(u, home.x, home.y, dt, halfOf(home) + 4, SP); return; }
+    u.dest = to.id; d = to; u.cargo = Math.min(TRADE_CAP, Math.floor(dist(home, to) ** 2 / TRADE_DIV * fxv(o, 'trade').m)); u.lastId = home.id;
   }
   if (moveTo(u, d.x, d.y, dt, halfOf(d) + 4, SP)) {
-    G.P[o].res.g += u.cargo; G.P[o].gathered += u.cargo;
-    if (o === 0 && u.cargo) { say(`A caravan delivers ${u.cargo} gold.`, 'good', 3); sfx('coin'); }
-    u.lastId = d.id; u.dest = null; u.cargo = 0;
+    if (d.owner !== o) { G.P[o].res.g += u.cargo; G.P[o].gathered += u.cargo; if (o === 0 && u.cargo) { say(`A caravan earns ${u.cargo} gold from your ally.`, 'good', 3, d); sfx('coin'); } u.dest = u.lastId; u.cargo = 0; }
+    else u.dest = null;   // home: the next run
   }
 }
 function spyTick(u, dt, SP) {
@@ -425,9 +427,12 @@ function solTick(u, dt, SP) {
   }
   const h = homeSpot(u, 90); if (h) moveTo(u, h.x, h.y, dt, 3, SP);
 }
+// a guard keeps to what it guards: a caravan (escort) or a trade stop you hold (garrison); when that is gone, it goes home
 function escortPick(u) {
+  if (u.escF !== undefined) { const f = G.finds.find(x => x.id === u.escF); u.esc = f && f.owner === u.owner ? f : null; if (!u.esc) u.escF = undefined; return; }
   if (u.esc && u.esc.hp > 0 && (G.tick + u.id) % 20) return;
-  u.esc = nearest(G.units, u, v => v.kind === 'caravan' && v.owner === u.owner);
+  u.esc = u.escId !== undefined ? G.units.find(v => v.id === u.escId && v.hp > 0) || null : nearest(G.units, u, v => v.kind === 'caravan' && v.owner === u.owner);
+  if (!u.esc) u.escId = undefined;
 }
 
 // ───────────────────────── The wild ─────────────────────────
@@ -510,7 +515,7 @@ let UGX = new Int32Array(1024);
 function buildGrid() {
   const U = G.units, n = U.length; if (UGX.length < n) UGX = new Int32Array(n * 2);
   UGH.fill(-1); G.sol = [];
-  for (let i = 0; i < n; i++) { const u = U[i], c = clamp((u.y / UG) | 0, 0, UGN - 1) * UGN + clamp((u.x / UG) | 0, 0, UGN - 1); UGX[i] = UGH[c]; UGH[c] = i; if (UNIT[u.kind].tick === 'sol') G.sol.push(u); }
+  for (let i = 0; i < n; i++) { const u = U[i], c = clamp((u.y / UG) | 0, 0, UGN - 1) * UGN + clamp((u.x / UG) | 0, 0, UGN - 1); UGX[i] = UGH[c]; UGH[c] = i; if (isSoldier(u)) G.sol.push(u); }
   G.ugTick = G.tick;
 }
 // soldiers ignore grazing deer, drifters and wayfarers; spies are seen only up close
@@ -552,7 +557,7 @@ function hurt(o, a, t, base) {
   if (isB) d *= A.bld ?? 1;
   else {
     if (a) d *= vsMul(a, t);
-    if (UNIT[t.kind].tick === 'sol' && t.owner !== WILD) {
+    if (isSoldier(t) && t.owner !== WILD) {
       d *= stats(t.owner, t.kind).armor;
       if (t.stance === 1) d *= STANCE[1].hit;
       { const F = FORM[formOf(t)]; d *= F.hit || 1; if (F.vsMounted && a && hasTag(a.kind, 'mounted')) d *= F.vsMounted; }   // the battalion's formation

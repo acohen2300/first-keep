@@ -65,12 +65,11 @@ function think(p) {
     const sg = soldiersOf(o).filter(u => hasTag(u.kind, 'siege')).length + ['ram', 'catapult', 'stower', 'ballista', 'treb', 'bombard'].reduce((n, x) => n + queuedOf(o, x), 0);
     if (sg < per.siege + Math.floor(armyN / 12)) train(o, p.age >= 4 && sg % 3 === 2 ? 'bombard' : p.age >= 3 && sg % 3 === 2 ? 'treb' : ['ram', 'catapult', 'stower', 'ballista'][sg % 4]);
   }
-  // trade: one Market near home, one far off, then a couple of caravans; swap a big surplus for gold
+  // trade: a couple of caravans once there is somewhere to take them (an ally, or goods for the stops); swap a big surplus for gold
   if (per.trade && p.age >= 1 && armyN >= 6) {
-    const ms = bldsOf(o, 'market');
-    if (ms.length === 1 && ms[0].prog >= 1 && R.w >= 300 && R.g >= 100) put('market', k.x + Math.sign(MID - k.x) * 600, k.y, 0, 160);
-    if (ms.filter(m => m.prog >= 1).length >= 2 && unitsOf(o, 'caravan').length + queuedOf(o, 'caravan') < 3 && R.w >= 150 && R.g >= 100) train(o, 'caravan');
-    if (ready(o, 'market').length) for (const r of ['f', 'w', 's', 'i']) if (R[r] > 1200 && R.g < 150) { exchange(o, r, 'sell'); break; }
+    const m = ready(o, 'market')[0];
+    if (m && (allyMarket(o, m) || ready(o, 'bizc').length) && unitsOf(o, 'caravan').length + queuedOf(o, 'caravan') < 3 && R.w >= 150 && R.g >= 100) train(o, 'caravan');
+    if (ready(o, 'market').length) for (const r of ['f', 'w', 's', 'i']) if (R[r] > 1200 && R.g < 150) { marketTrade(o, r, 'sell'); break; }
   }
   aiEconomy(p, k, R, put, has);
   if (per.spy && ready(o, 'courthouse').length && unitsOf(o, 'spy').length + queuedOf(o, 'spy') < 1 && R.g >= 150 && R.f >= 60) train(o, 'spy');
@@ -138,7 +137,7 @@ function decideWar(p, per) {
   const go = home.slice(Math.floor(home.length * (W ? 0 : per.guard))), mine = powerOf(go);
   let best = null, bp = 0;
   for (const q of G.P) if (q.alive && q.id !== WILD && atWar(o, q.id)) {
-    if (q.id === 0 && G.diff === 'easy' && G.t < 360 && !W) continue;   // Easy: nobody comes for you in the first six minutes
+    if (q.id === 0 && G.diff === 'easy' && G.t < EASY_SAFE && !W) continue;   // Easy: nobody comes for you in the first six minutes
     const r = mine / estPower(o, q.id) * matchup(go, soldiersOf(q.id)), prob = r * r / (1 + r * r);   // the square law, as odds, bent by who counters whom
     const pr = W && W.owner === q.id ? 1 : prob;
     if (pr > bp) { bp = pr; best = q.id; }

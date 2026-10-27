@@ -13,7 +13,7 @@ async def main():
           F.act('close'); F.setPause(true); F.cam.x=k.x+120; F.cam.y=k.y-110; F.cam.z=1.3; }""")
         await pg.wait_for_timeout(400); await pg.screenshot(path='grid_home.png')
         r = await pg.evaluate("""() => { const F=window.__fk, G=F.G; F.setPause(false); const k=F.keepOf(0);
-          F.act('close'); F.act('goto:900,1200'); for (let i=0;i<30*9;i++) F.step(1/30); F.act('close'); F.setPause(true); F.cam.x=700; F.cam.y=1400; F.cam.z=0.9;
+          F.act('close'); F.act('sendto:all,900,1200'); for (let i=0;i<30*9;i++) F.step(1/30); F.act('close'); F.setPause(true); F.cam.x=700; F.cam.y=1400; F.cam.z=0.9;
           const s=G.units.filter(u=>u.owner===0&&F.UNIT[u.kind].tick==='sol'); return [s.length, s.filter(u=>u.state==='goto').length, Math.round(s.reduce((a,u)=>a+u.x,0)/s.length), Math.round(s.reduce((a,u)=>a+u.y,0)/s.length)]; }""")
         print(r)
         await pg.wait_for_timeout(400); await pg.screenshot(path='grid_march.png')
