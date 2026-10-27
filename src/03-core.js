@@ -22,7 +22,7 @@ const plural = n => /^man-at-arms$/i.test(n) ? n.replace(/^(m)an/i, '$1en') : /m
 const some = (k, n) => k === 1 ? n : plural(n);
 
 // Settings remembered on this phone.
-const SET = { diff: 'easy', tips: true, msgs: true, civ: 'roman', fantasy: false, mode: 't30', sound: true, vol: 0.6, mix: {}, hush: {}, vibe: true, learned: {} };
+const SET = { diff: 'easy', tips: true, msgs: true, civ: 'roman', fantasy: false, mode: 't30', sound: true, vol: 0.6, mix: {}, hush: {}, mini: undefined, mapSeen: false, vibe: true, learned: {} };
 try { Object.assign(SET, JSON.parse(localStorage.getItem('firstkeep.settings') || '{}')); } catch (e) {}
 if (!CIVS[SET.civ]) SET.civ = 'roman';
 SET.mix = Object.assign({ fx: 1, amb: 1, alert: 1 }, SET.mix);   // three volumes: effects, ambience, alerts

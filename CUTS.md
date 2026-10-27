@@ -264,3 +264,12 @@ Nothing disappears unless it is listed here. Old game kept as reference: `first-
 - **Cut, unused:** the zoom +/− action and `ZOOM_STEP`, the test-only `goto` order (t7 uses the send strip now), the `.soon` style. Merged: the two `#endActs` rules, the map button styles (`#tools`, renamed from `#zoom`, and `#corner`), a repeated top-bar rule. `isSoldier` used everywhere (was typed out 15 times).
 - **The build refuses bad code:** a syntax error, or one top-level name declared twice across files (how the towers broke in Build 23).
 - **Fonts inside the file:** the two typefaces, cut to the letters the game uses (about 110 KB), so nothing loads from the web. The native copy's security rule now allows fonts only from the file. Licences (OFL) in `src/fonts`.
+
+## Build 33
+- Cut: the ⬚ select-box button and Select mode (`selmode`, `G.selMode`, `#tools`). Replaced by hold, then drag, on open ground.
+- Cut: the map-corner chip (`#corner`). The state chip and Home moved to a second top row; the minimap moved behind a map button, shut by default after the first look.
+- Cut: the gold ring on selected buttons. Selected is now a muted fill.
+- Cut: the screen-space rain rings drawn over buildings. Rings now sit on the ground, fixed to the world; 110 streaks became 70.
+- Cut: the age button inside the Research tab of the Town Center. It now sits at the top of the card, and the bottom Town button is the age button itself.
+- Placement rule: one cell gap beside any non-wall, non-crop building, so a building's east wall never sits under its neighbour.
+- Not changed: sprite sharpness. Sprites are re-cut per zoom up to 6x; nothing to fix.

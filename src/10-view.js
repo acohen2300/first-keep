@@ -65,6 +65,15 @@ function draw() {
   layer(scarCv);
   if (!lessMotion) { ctx.strokeStyle = 'rgba(220,240,255,.28)'; ctx.lineWidth = 1.2; for (const L of G.lakes) { if (Math.abs(L.x - cam.x) > cw / cam.z / 2 + L.r || Math.abs(L.y - cam.y) > ch / cam.z / TILT / 2 + L.r) continue; for (let i = 0; i < 18; i++) { const a = i * 2.4 + G.t * 0.05, r = L.r * (0.25 + 0.6 * ((i * 0.37 + G.t * 0.02) % 1)); const lx = SX(L.x + Math.cos(a) * r), ly = SY(L.y + Math.sin(a) * r); ctx.beginPath(); ctx.moveTo(lx - 6 * z, ly); ctx.quadraticCurveTo(lx, ly - 2 * z, lx + 6 * z, ly); ctx.stroke(); } } }
   if (sn.tint) { ctx.fillStyle = sn.tint; ctx.fillRect(x0, y0, MAP * z, MAP * z * TILT); }
+  if (G.wx === 'rain' && z > 1.2 && !lessMotion) {   // rain rings sit on the ground, fixed to the world, under buildings and people
+    const t = performance.now() / 1000, C = 120, a0 = toWorld(0, 0), b0 = toWorld(cw, ch); ctx.strokeStyle = 'rgba(215,230,245,.30)'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let gy = Math.floor(a0.y / C); gy <= Math.floor(b0.y / C); gy++) for (let gx = Math.floor(a0.x / C); gx <= Math.floor(b0.x / C); gx++) {
+      const h = ((gx * 73856093) ^ (gy * 19349663)) >>> 0; if (h % 3) continue;
+      const ph = (t * 1.6 + ((h >> 8) & 255) / 256) % 1, r = Math.min(10, (1 + ph * 4) * z), px = SX((gx + (h & 255) / 256) * C), py = SY((gy + ((h >> 16) & 255) / 256) * C);
+      ctx.moveTo(px + r, py); ctx.ellipse(px, py, r, r * TILT, 0, 0, 7);
+    }
+    ctx.stroke();
+  }
   // everything standing, back to front
   // what is on screen: margins in world units, wide enough for the widest building (its turned east wall) and the tallest (a wonder, standing just below the edge)
   const a0 = toWorld(0, 0), b0 = toWorld(cw, ch), mx = Math.max(80 / z, 44), wv = { x: a0.x - mx, y: a0.y - Math.max(120 / (z * TILT), 34) }, wv2 = { x: b0.x + mx, y: b0.y + Math.max(160 / (z * TILT), 115) }, inView = e => e.x > wv.x && e.x < wv2.x && e.y > wv.y && e.y < wv2.y;
@@ -101,10 +110,11 @@ function draw() {
   drawRadar(wv, wv2);
   { const seen = new Set(); ctx.setLineDash([5, 5]); ctx.strokeStyle = 'rgba(192,138,88,.6)'; ctx.lineWidth = 1.5;   // boxes of trees being cut
     for (const u of G.units) if (u.owner === 0 && u.patch && !seen.has(u.patch.x0)) { seen.add(u.patch.x0); const r = u.patch; ctx.strokeRect(SX(r.x0), SY(r.y0), (r.x1 - r.x0) * z, (r.y1 - r.y0) * z * TILT); }
-    if (G.box) { const b = G.box; ctx.strokeStyle = '#ffd35e'; ctx.strokeRect(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.abs(b.x1 - b.x0), Math.abs(b.y1 - b.y0)); }
+    if (G.hold && performance.now() - G.hold.t > 90) { const f = Math.min(1, (performance.now() - G.hold.t) / HOLD_MS); ctx.strokeStyle = 'rgba(255,211,94,.85)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(G.hold.x, G.hold.y, 26, -Math.PI / 2, -Math.PI / 2 + f * 6.2832); ctx.stroke(); }   // the ring fills: let go and it is a tap, hold and drag and it is a box
+    if (G.box) { const b = G.box; ctx.fillStyle = 'rgba(255,211,94,.12)'; ctx.fillRect(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.abs(b.x1 - b.x0), Math.abs(b.y1 - b.y0)); ctx.strokeStyle = '#ffd35e'; ctx.lineWidth = 2; ctx.strokeRect(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.abs(b.x1 - b.x0), Math.abs(b.y1 - b.y0)); }
     ctx.setLineDash([]); }
   drawGhost();
-  { const now = performance.now(); if (now - miniT > 150) { miniT = now; drawMini(); } }   // the map corner needs no more than seven looks a second
+  { const now = performance.now(); if (SET.mini && now - miniT > 150) { miniT = now; drawMini(); } }   // the map corner needs no more than seven looks a second
 }
 // Enemy soldiers close to your Town Center but off screen: a red marker on the edge, pointing at them. Tap it to look.
 let RADAR = null;
@@ -284,10 +294,9 @@ function drawWeather() {
   if (wx === 'rain') {
     ctx.fillStyle = 'rgba(20,30,50,.12)'; ctx.fillRect(0, 0, cw, ch);
     if (!lessMotion) {
-      ctx.strokeStyle = 'rgba(205,220,240,.38)'; ctx.lineWidth = 1; ctx.beginPath();
-      for (let i = 0; i < 110; i++) { const x = ((i * 97.3 + t * 60) % (cw + 60)) - 30, y = ((i * 53.7 + t * 520) % (ch + 60)) - 30; ctx.moveTo(x, y); ctx.lineTo(x - 4, y + 14); }
+      ctx.strokeStyle = 'rgba(205,220,240,.30)'; ctx.lineWidth = 1; ctx.beginPath();
+      for (let i = 0; i < 70; i++) { const x = ((i * 97.3 + t * 60) % (cw + 60)) - 30, y = ((i * 53.7 + t * 520) % (ch + 60)) - 30; ctx.moveTo(x, y); ctx.lineTo(x - 4, y + 14); }
       ctx.stroke();
-      if (z > 1.2) { ctx.strokeStyle = 'rgba(215,230,245,.30)'; ctx.beginPath(); for (let i = 0; i < 18; i++) { const ph = (t * 2 + i * 0.37) % 1, x = (i * 211.7) % cw, y = (i * 137.3 + Math.floor(t * 2 + i * 0.37) * 59) % ch; ctx.moveTo(x + (1 + ph * 4) * z, y); ctx.ellipse(x, y, (1 + ph * 4) * z, (0.6 + ph * 2) * z, 0, 0, 7); } ctx.stroke(); }
     }
   }
   if (wx === 'frost') {

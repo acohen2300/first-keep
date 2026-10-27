@@ -178,6 +178,7 @@ function canPlace(o, kind, x, y) {
     if (inside && NAV.lake[c]) return 'That is the lake';
     const q = NAV.occ[c]; if (!q) continue;
     if (inside) { if (kind === 'gate' && q.kind === 'wall' && q.owner === o) continue; return 'Something is in the way'; }
+    if (!B.wallish && !B.crop && j >= 0 && j < n && (i === -1 || i === n) && !BLD[q.kind].wallish && !BLD[q.kind].crop) return 'Leave a gap: a wall shows on each side';
     if (!BLD[q.kind].wallish && (TRAINERS.has(kind) || TRAINERS.has(q.kind))) return 'Leave a lane around buildings that train people';
   }
   if (!B.wallish) { const h = n * 5 + 6; for (const nd of G.nodes) if (nd.kind !== 'farm' && nd.kind !== 'fish' && Math.abs(nd.x - sp.x) < h && Math.abs(nd.y - sp.y) < h) return 'Clear of trees and rocks, please'; }

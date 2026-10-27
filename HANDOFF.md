@@ -50,3 +50,7 @@ Build 29 is live at the artifact URL (version 34) and on GitHub Pages. Nothing i
 
 ## Tests in the repo
 `tests/gate.py` and `tests/words.py` are the release gate. `tests/e2e/` holds the 79 Playwright scripts used during development (t32 orders, t34 gunpowder, t37 formations, t38 draw-error hunt, t41 top-bar width, stress.py, shot*.py). They point at `file:///home/claude/first-keep/first-keep.html`; change the path to run them.
+
+
+## Build 33 (preview)
+Hold-to-box (no ⬚), state chip and Home on a second top row, map button (minimap shut after the first look), rank under the score, age button at the top of the Town Center card and as the bottom button, book and hammer tab icons, muted selected fill, rain rings on the ground, one-cell gap between buildings, parchment and ink cards (night dims them). Gate passes. Next: Build 34 the world, Build 35 the front door, Build 36 roads.

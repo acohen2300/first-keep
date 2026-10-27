@@ -24,7 +24,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 /* small icon buttons: drawn at 32 px, tapped at 44 px */
 .ic{background:none;border:0;padding:0;position:relative;z-index:0;font-size:14px}
 .ic::before{content:'';position:absolute;left:50%;top:50%;width:32px;height:32px;margin:-16px 0 0 -16px;box-sizing:border-box;border-radius:8px;background:var(--panel);border:1px solid var(--line);z-index:-1}
-.ic.on{box-shadow:none}.ic.on::before{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.ic.on::before{background:#2f3b36;border-color:var(--mute)}
 .ic+.ic{margin-left:-6px}   /* the 44 px tap areas may touch; the 32 px buttons keep their gap */
 .ic svg{width:16px;height:16px}#muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--mute)}
 #card .lvl{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}#card .lvl small{color:var(--mute)}
@@ -34,7 +34,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 #vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse farthest-corner at 50% 50%,rgba(0,0,0,0) 42%,rgba(0,0,0,.3) 100%)}
 #mini{position:absolute;top:8px;right:8px;width:86px;height:86px;border:1px solid rgba(236,229,211,.5);border-radius:4px;background:#000}
-#banner{position:absolute;left:8px;right:60px;top:8px;font-weight:600;font-size:15px;pointer-events:none;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+#banner{position:absolute;left:8px;right:8px;top:8px;font-weight:600;font-size:15px;pointer-events:none;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
 #banner .msg{display:flex;align-items:center;max-width:100%;background:rgba(18,23,21,.88);border-radius:6px;pointer-events:auto}
 #banner .msg span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;padding:5px 0 5px 9px;flex:1;min-width:0}
 #banner .msg.warn{color:#ffe1da;background:rgba(124,32,22,.92)}
@@ -45,7 +45,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #banner .msg button,#tip button{min-height:44px;min-width:44px;padding:0;background:none;border:0;font-size:15px;opacity:.75}
 #place{position:absolute;left:8px;right:8px;bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:8px;padding:6px 6px 6px 10px;font-weight:600}
 #strip{position:absolute;display:flex;gap:4px;padding:4px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:10px;z-index:5;max-width:calc(100% - 8px);overflow-x:auto}
-#strip[hidden]{display:none}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button b{font-size:14px}#strip button small{font-size:12px}
+#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button b{font-size:14px}#strip button small{font-size:12px}
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
 #card{position:absolute;left:6px;right:6px;bottom:6px;max-height:calc(100% - 12px);overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
@@ -69,7 +69,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #card .g{border-top:1px solid var(--line);padding-top:7px;display:flex;flex-direction:column;gap:3px}
 #card .g b{font-size:17px;font-weight:700}
 #card .g small{color:var(--dim);font-size:13px;white-space:normal}
-#card table{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px;width:100%}
+#card table{color:var(--bone);border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px;width:100%}
 #card td,#card th{padding:3px 4px;text-align:right;border-bottom:1px solid var(--line)}
 #card td:first-child,#card th:first-child{text-align:left}
 #card th{color:var(--mute);font-weight:600}
@@ -96,11 +96,12 @@ button{font:inherit;color:var(--bone);background:var(--panel);border:1px solid v
   display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;touch-action:manipulation;cursor:pointer}
 button:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
 button b{font-weight:700;font-size:15px;white-space:nowrap}
+button b .ti{width:14px;height:14px;vertical-align:-2px;margin-right:5px}
 button small{font-size:14px;color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
 #card button small{white-space:normal;text-align:center;line-height:1.15}
 button.dis{color:var(--dim)}
 button.dis small{color:var(--dim)}
-button.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+button.on{background:#2f3b36;border-color:var(--mute)}
 button.go{border-color:var(--blue);color:#dbe9ff}
 button.warn{border-color:var(--red)}
 button.ok{border-color:#4fb06a;box-shadow:inset 0 0 0 1px #4fb06a;color:#dcf5e8}
@@ -112,10 +113,30 @@ button.ok small{color:#8fd4a4}
 .jobc .pm button{min-height:34px;padding:0;font-size:19px;font-weight:700;background:var(--panel2)}
 #menus button{min-height:44px}
 #menus button b{font-size:14px}
-#tools{position:absolute;right:8px;top:102px;display:flex;flex-direction:column;gap:6px}
-#corner{position:absolute;left:8px;bottom:8px;display:flex;align-items:center;gap:6px}
-#cInfo{background:rgba(18,23,21,.82);border-radius:8px;padding:6px 9px;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
-#tools button,#corner button{min-height:44px;min-width:44px;width:44px;padding:0;background:rgba(27,34,31,.92)}#tools button{font-size:20px;font-weight:700}
+#sub{display:flex;align-items:center;gap:4px;height:30px;margin-top:-2px}
+#sub .ic{margin-block:-7px}
+#stage.mapOn #banner{right:100px}
+#cInfo{margin-left:6px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* The menu card is a page in a book: parchment, ink, page tabs, a wax seal on what you can do now. Colours are set here once; every rule inside the card reads them. */
+#card{--bone:#2a1c10;--mute:#56412b;--dim:#5a4630;--panel:#e6d6ad;--panel2:#dac796;--line:#a68e63;--blue:#8e1d14;--red:#9b1c12;--gold:#7a5a1c;color:var(--bone);border:1px solid #8a7048;border-radius:4px 8px 8px 4px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .24 0 0 0 0 .1 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"),radial-gradient(ellipse at 28% 12%,rgba(255,250,230,.6),transparent 60%),radial-gradient(ellipse at 85% 95%,rgba(125,82,30,.2),transparent 55%),linear-gradient(#ebdeba,#decda2);background-color:#e6d6ad;
+  box-shadow:inset 0 0 26px rgba(110,70,25,.38),inset 3px 0 0 rgba(90,60,25,.25),0 -6px 24px rgba(0,0,0,.5)}
+.night #card{filter:brightness(.74) sepia(.2)}
+#card h3{border-bottom:1px solid var(--line);padding-bottom:3px;margin-bottom:2px}
+#card button:not(#cardX){position:relative;box-shadow:inset 0 0 0 2px var(--panel),inset 0 0 0 3px #b9a176}
+#card button.dis{background:#dccba1;border-style:dashed;box-shadow:none}
+#card button.on{background:#f4eac9;border-color:#2a1c10;box-shadow:inset 0 0 0 1px #2a1c10}
+#card button.go{border-color:#8e1d14;color:var(--bone)}
+#card button.go::after{content:'';position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#dc5f52,#8e1d14);box-shadow:0 1px 1px rgba(0,0,0,.35)}
+#card button.warn{border-color:#9b1c12;color:#7d160e}
+#card button.ok{border-color:#3d6b3a;box-shadow:inset 0 0 0 1px #3d6b3a;color:#26471f}#card button.ok small{color:#3d6b3a}
+#card .done{color:#2f5a2c}
+#card .chip{border-color:#3d6b3a;box-shadow:none;background:rgba(61,107,58,.12);color:#26471f}
+#card .fold{border-top-color:var(--line)}
+#card .tabs{gap:2px;margin-bottom:-2px}
+#card .tabs button{border-radius:8px 8px 0 0;border-bottom-color:var(--line);background:var(--panel2)}
+#card .tabs button.on{background:#f4eac9;border-bottom-color:#f4eac9}
+#card .tabs button.on::before{content:'';position:absolute;top:-1px;right:8px;width:9px;height:15px;background:#8e1d14;clip-path:polygon(0 0,100% 0,100% 100%,50% 72%,0 100%)}
 @media (max-width:440px){.tally{gap:1px;font-size:12px}.tally span{gap:1px}.tally .ico{width:12px;height:12px}}
 @media (max-width:400px){.tally span{gap:0}.tally .ico{width:11px;height:11px}.hb{padding:0 1px}#hud{gap:1px}#score{min-width:44px;padding:0}#score b{font-size:12px}body{padding-left:8px;padding-right:8px}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;scroll-behavior:auto!important} }
@@ -130,18 +151,17 @@ button.ok small{color:#8fd4a4}
       <span title="Gold"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="#f2cf55"/><circle cx="8" cy="8" r="4" fill="none" stroke="#b8902a" stroke-width="1.3"/></svg><span id="rg">0</span></span>
       <span title="Iron"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 11 L5 5 L11 5 L14 11 Z" fill="#8fa3b5"/><path d="M5 5 L11 5 L9.5 8 L6.5 8 Z" fill="#c9d4de"/></svg><span id="ri">0</span></span>
     </div>
-    <button class="hb" id="score" data-act="card:score" aria-label="Score"><b id="scoreN">0</b></button>
+    <button class="hb" id="score" data-act="card:score" aria-label="Score"><b id="scoreN">0</b><small id="scoreR"></small></button>
     <button class="hb ic" id="muteB" data-act="sound" aria-label="Mute"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor"/><path class="w" d="M11 5.5q2 2.5 0 5M12.8 3.8q3.4 4.2 0 8.4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/><path class="x" d="M11 6l4 4M15 6l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
     <button class="hb ic" id="speed" data-act="speed" aria-label="Pause, play, speed">×1</button>
     <button class="hb ic" id="helpB" data-act="help" aria-label="How to play">?</button>
   </header>
+  <div id="sub"><button class="hb ic" data-act="home" aria-label="Back to your Town Center"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 10 L10 3.5 L17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M5.5 9 V16.5 H14.5 V9" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.6 16.5 V12.2 H11.4 V16.5" fill="currentColor"/></svg></button><button class="hb ic" id="mapB" data-act="map" aria-label="Show or hide the map"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 5.5 L7.5 4 L12.5 5.5 L17 4 V14.5 L12.5 16 L7.5 14.5 L3 16 Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7.5 4 V14.5 M12.5 5.5 V16" stroke="currentColor" stroke-width="1.6"/></svg></button><span id="cInfo"></span></div>
 
   <div id="stage">
     <canvas id="cv"></canvas>
     <div id="vig"></div>
     <canvas id="mini" width="172" height="172"></canvas>
-    <div id="tools"><button data-act="selmode" id="selB" aria-label="Select with a box">⬚</button></div>
-    <div id="corner"><button data-act="home" aria-label="Back to your Town Center"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 10 L10 3.5 L17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M5.5 9 V16.5 H14.5 V9" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.6 16.5 V12.2 H11.4 V16.5" fill="currentColor"/></svg></button><span id="cInfo"></span></div>
     <div id="banner"></div>
     <div id="strip" hidden></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="cancel"><b>Cancel</b></button></div>
@@ -160,7 +180,7 @@ button.ok small{color:#8fd4a4}
     <div class="row r4">
       <button data-act="train:vil" id="bVil"><b>Villagers</b><small>50f</small></button>
       <button data-act="card:army" id="bArmy"><b>Army</b><small>0</small></button>
-      <button data-act="card:keep" id="bAge"><b>Town</b><small>age</small></button>
+      <button data-act="agebtn" id="bAge"><b>Town</b><small>age</small></button>
       <button data-act="card:fortress" id="bDip"><b>Fortress</b><small>neutral</small></button>
     </div>
   </section>

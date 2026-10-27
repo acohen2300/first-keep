@@ -1,6 +1,6 @@
 // ═════ 01-rules.js ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 32;
+const BUILD = 33;
 const MAP = 2000, MID = MAP / 2, DT = 1 / 30;
 const POPMAX = 150, VILMAX = 60, ARMYMAX = 90, BNSIZE = 30, BNS = 6;   // six battalions, once Command is researched at a War Council; BNSIZE: the most one Zeal blesses
 const RICH = 2.5, PLUNDER = 0.25, CARRY = 10, NAVC = 10;                // NAVC: the walking grid, 10 units a square (never shown)

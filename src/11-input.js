@@ -1,6 +1,8 @@
 // ═════ 11-input.js ═════
 // ───────────────────────── Touch: drag to look, pinch to zoom, tap to ask, press and slide to place ─────────────────────────
 const ptrs = new Map(); let drag = null, pinch = null;
+const HOLD_MS = 320; let holdT = 0;   // hold a finger on open ground, then drag: a box
+const holdStop = () => { clearTimeout(holdT); G.hold = null; };
 const lp = e => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
 let EDGE = null;   // where the finger is while it drags the ghost: near the screen edge the map scrolls
 function edgeScroll(dt) {
@@ -14,10 +16,9 @@ function ghostAt(p, touch) {
   if (pl.kind === 'wall') { const c = toCell(w); if (!pl.a) pl.a = c; pl.cells = wallLine(pl.a, c); pl.at = { x: c.gx * NAVC + 5, y: c.gy * NAVC + 5 }; }
   else pl.at = snapGhost(0, pl.kind, w.x, w.y, Math.max(14, 26 / cam.z));
 }
-cv.addEventListener('pointerdown', e => { hideStrip();
+cv.addEventListener('pointerdown', e => { hideStrip(); holdStop();
   try { cv.setPointerCapture(e.pointerId); } catch (err) {} const p = lp(e); ptrs.set(e.pointerId, p);
   if (ptrs.size >= 2) { drag = null; const [a, b] = [...ptrs.values()]; pinch = { d: hyp(a.x - b.x, a.y - b.y) || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 }; return; }
-  if (G.selMode && !G.place) { drag = { mode: 'box', x0: p.x, y0: p.y, x1: p.x, y1: p.y }; G.box = drag; return; }   // Select: drag a box
   if (G.place) {
     const touch = e.pointerType !== 'mouse', at = G.place.at, gx = at ? SX(at.x) : 0, gy = at ? SY(at.y) : 0, nearGhost = !at || Math.min(hyp(p.x - gx, p.y - gy), hyp(p.x - gx, p.y - (touch ? LIFT : 0) - gy)) < Math.max(70, BLD[G.place.kind].fp * NAVC * cam.z * 0.7);
     if (nearGhost) { if (G.place.kind === 'wall') { G.place.a = null; } ghostAt(p, touch); drag = { mode: 'place', touch }; EDGE = p; ui(true); return; }
@@ -25,6 +26,8 @@ cv.addEventListener('pointerdown', e => { hideStrip();
     return;
   }
   drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false };
+  G.hold = { x: p.x, y: p.y, t: performance.now() };
+  holdT = setTimeout(() => { const d = drag; if (d && d.mode === 'pan' && !d.moved && G.hold) { drag = { mode: 'box', x0: G.hold.x, y0: G.hold.y, x1: G.hold.x, y1: G.hold.y }; G.box = drag; G.hold = null; if (navigator.vibrate) navigator.vibrate(12); } }, HOLD_MS);
 });
 cv.addEventListener('pointermove', e => {
   const p = lp(e); if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, p);
@@ -38,22 +41,22 @@ cv.addEventListener('pointermove', e => {
   if (G.place && !drag && e.pointerType === 'mouse' && G.place.kind !== 'wall') { ghostAt(p, false); return; }
   if (!drag || drag.mode !== 'pan') return;
   const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-  if (!drag.moved && hyp(dx, dy) > 8) drag.moved = true;
+  if (!drag.moved && hyp(dx, dy) > 8) { drag.moved = true; holdStop(); }
   if (drag.moved) { cam.x = drag.cx - dx / cam.z; cam.y = drag.cy - dy / (cam.z * TILT); clampCam(); }
 });
 cv.addEventListener('pointerup', e => {
-  ptrs.delete(e.pointerId);
+  ptrs.delete(e.pointerId); holdStop();
   if (pinch) { if (ptrs.size < 2) pinch = null; drag = null; return; }
   const d = drag; drag = null; if (!d) return;
   EDGE = null;
-  if (d.mode === 'box') { G.box = null; G.selMode = false; boxPick(d); ui(true); return; }
+  if (d.mode === 'box') { G.box = null; if (Math.abs(d.x1 - d.x0) < 12 && Math.abs(d.y1 - d.y0) < 12) { const q = lp(e); tapAt(q.x, q.y); } else boxPick(d); ui(true); return; }   // held but never dragged: it was a tap
   if (d.mode === 'place') { ui(true); return; }   // it waits: drag again to adjust, or tap Build
   if (d.moved) return;
   const p = lp(e);
   if (G.place) { if (G.place.kind === 'wall') G.place.a = null; ghostAt(p, d.touch); ui(true); return; }
   tapAt(p.x, p.y);
 });
-cv.addEventListener('pointercancel', e => { EDGE = null; ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; drag = null; });
+cv.addEventListener('pointercancel', e => { EDGE = null; holdStop(); G.box = null; ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; drag = null; });
 cv.addEventListener('wheel', e => { e.preventDefault(); const p = lp(e); zoomAt(cam.z * Math.exp(-e.deltaY * 0.0015), p.x, p.y); }, { passive: false });
 ['gesturestart', 'gesturechange', 'gestureend'].forEach(t => document.addEventListener(t, e => e.preventDefault()));
 mini.addEventListener('pointerdown', e => { e.stopPropagation(); const r = mini.getBoundingClientRect(); cam.x = (e.clientX - r.left) / r.width * MAP; cam.y = (e.clientY - r.top) / r.height * MAP; clampCam(); });
@@ -118,7 +121,6 @@ function cancelPlace() { if (G) G.place = null; $('place').hidden = true; }
 // Select: the box drawn on screen, turned into the trees and villagers of yours inside it
 function boxPick(d) {
   const a = toWorld(Math.min(d.x0, d.x1), Math.min(d.y0, d.y1)), b = toWorld(Math.max(d.x0, d.x1), Math.max(d.y0, d.y1)), r = { x0: a.x, y0: a.y, x1: b.x, y1: b.y };
-  if (Math.abs(d.x1 - d.x0) < 12 && Math.abs(d.y1 - d.y0) < 12) { say('Drag a box over trees or villagers.', '', 3); return; }
   const trees = G.nodes.filter(n => n.kind === 'tree' && n.amt > 0 && inBox(n, r)).length, vils = unitsOf(0, 'vil').filter(u => !u.inside && inBox(u, r)).map(u => u.id);
   if (!trees && !vils.length) { say('Nothing to pick in that box: trees or villagers.', '', 3); return; }
   openCard({ type: 'box', r, trees, vils });

@@ -24,7 +24,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 /* small icon buttons: drawn at 32 px, tapped at 44 px */
 .ic{background:none;border:0;padding:0;position:relative;z-index:0;font-size:14px}
 .ic::before{content:'';position:absolute;left:50%;top:50%;width:32px;height:32px;margin:-16px 0 0 -16px;box-sizing:border-box;border-radius:8px;background:var(--panel);border:1px solid var(--line);z-index:-1}
-.ic.on{box-shadow:none}.ic.on::before{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.ic.on::before{background:#2f3b36;border-color:var(--mute)}
 .ic+.ic{margin-left:-6px}   /* the 44 px tap areas may touch; the 32 px buttons keep their gap */
 .ic svg{width:16px;height:16px}#muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--mute)}
 #card .lvl{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}#card .lvl small{color:var(--mute)}
@@ -34,7 +34,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 #vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse farthest-corner at 50% 50%,rgba(0,0,0,0) 42%,rgba(0,0,0,.3) 100%)}
 #mini{position:absolute;top:8px;right:8px;width:86px;height:86px;border:1px solid rgba(236,229,211,.5);border-radius:4px;background:#000}
-#banner{position:absolute;left:8px;right:60px;top:8px;font-weight:600;font-size:15px;pointer-events:none;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+#banner{position:absolute;left:8px;right:8px;top:8px;font-weight:600;font-size:15px;pointer-events:none;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
 #banner .msg{display:flex;align-items:center;max-width:100%;background:rgba(18,23,21,.88);border-radius:6px;pointer-events:auto}
 #banner .msg span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;padding:5px 0 5px 9px;flex:1;min-width:0}
 #banner .msg.warn{color:#ffe1da;background:rgba(124,32,22,.92)}
@@ -45,7 +45,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #banner .msg button,#tip button{min-height:44px;min-width:44px;padding:0;background:none;border:0;font-size:15px;opacity:.75}
 #place{position:absolute;left:8px;right:8px;bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:8px;padding:6px 6px 6px 10px;font-weight:600}
 #strip{position:absolute;display:flex;gap:4px;padding:4px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:10px;z-index:5;max-width:calc(100% - 8px);overflow-x:auto}
-#strip[hidden]{display:none}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button b{font-size:14px}#strip button small{font-size:12px}
+#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button b{font-size:14px}#strip button small{font-size:12px}
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
 #card{position:absolute;left:6px;right:6px;bottom:6px;max-height:calc(100% - 12px);overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
@@ -69,7 +69,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #card .g{border-top:1px solid var(--line);padding-top:7px;display:flex;flex-direction:column;gap:3px}
 #card .g b{font-size:17px;font-weight:700}
 #card .g small{color:var(--dim);font-size:13px;white-space:normal}
-#card table{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px;width:100%}
+#card table{color:var(--bone);border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px;width:100%}
 #card td,#card th{padding:3px 4px;text-align:right;border-bottom:1px solid var(--line)}
 #card td:first-child,#card th:first-child{text-align:left}
 #card th{color:var(--mute);font-weight:600}
@@ -96,11 +96,12 @@ button{font:inherit;color:var(--bone);background:var(--panel);border:1px solid v
   display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;touch-action:manipulation;cursor:pointer}
 button:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
 button b{font-weight:700;font-size:15px;white-space:nowrap}
+button b .ti{width:14px;height:14px;vertical-align:-2px;margin-right:5px}
 button small{font-size:14px;color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
 #card button small{white-space:normal;text-align:center;line-height:1.15}
 button.dis{color:var(--dim)}
 button.dis small{color:var(--dim)}
-button.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+button.on{background:#2f3b36;border-color:var(--mute)}
 button.go{border-color:var(--blue);color:#dbe9ff}
 button.warn{border-color:var(--red)}
 button.ok{border-color:#4fb06a;box-shadow:inset 0 0 0 1px #4fb06a;color:#dcf5e8}
@@ -112,10 +113,30 @@ button.ok small{color:#8fd4a4}
 .jobc .pm button{min-height:34px;padding:0;font-size:19px;font-weight:700;background:var(--panel2)}
 #menus button{min-height:44px}
 #menus button b{font-size:14px}
-#tools{position:absolute;right:8px;top:102px;display:flex;flex-direction:column;gap:6px}
-#corner{position:absolute;left:8px;bottom:8px;display:flex;align-items:center;gap:6px}
-#cInfo{background:rgba(18,23,21,.82);border-radius:8px;padding:6px 9px;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
-#tools button,#corner button{min-height:44px;min-width:44px;width:44px;padding:0;background:rgba(27,34,31,.92)}#tools button{font-size:20px;font-weight:700}
+#sub{display:flex;align-items:center;gap:4px;height:30px;margin-top:-2px}
+#sub .ic{margin-block:-7px}
+#stage.mapOn #banner{right:100px}
+#cInfo{margin-left:6px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* The menu card is a page in a book: parchment, ink, page tabs, a wax seal on what you can do now. Colours are set here once; every rule inside the card reads them. */
+#card{--bone:#2a1c10;--mute:#56412b;--dim:#5a4630;--panel:#e6d6ad;--panel2:#dac796;--line:#a68e63;--blue:#8e1d14;--red:#9b1c12;--gold:#7a5a1c;color:var(--bone);border:1px solid #8a7048;border-radius:4px 8px 8px 4px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .24 0 0 0 0 .1 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"),radial-gradient(ellipse at 28% 12%,rgba(255,250,230,.6),transparent 60%),radial-gradient(ellipse at 85% 95%,rgba(125,82,30,.2),transparent 55%),linear-gradient(#ebdeba,#decda2);background-color:#e6d6ad;
+  box-shadow:inset 0 0 26px rgba(110,70,25,.38),inset 3px 0 0 rgba(90,60,25,.25),0 -6px 24px rgba(0,0,0,.5)}
+.night #card{filter:brightness(.74) sepia(.2)}
+#card h3{border-bottom:1px solid var(--line);padding-bottom:3px;margin-bottom:2px}
+#card button:not(#cardX){position:relative;box-shadow:inset 0 0 0 2px var(--panel),inset 0 0 0 3px #b9a176}
+#card button.dis{background:#dccba1;border-style:dashed;box-shadow:none}
+#card button.on{background:#f4eac9;border-color:#2a1c10;box-shadow:inset 0 0 0 1px #2a1c10}
+#card button.go{border-color:#8e1d14;color:var(--bone)}
+#card button.go::after{content:'';position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#dc5f52,#8e1d14);box-shadow:0 1px 1px rgba(0,0,0,.35)}
+#card button.warn{border-color:#9b1c12;color:#7d160e}
+#card button.ok{border-color:#3d6b3a;box-shadow:inset 0 0 0 1px #3d6b3a;color:#26471f}#card button.ok small{color:#3d6b3a}
+#card .done{color:#2f5a2c}
+#card .chip{border-color:#3d6b3a;box-shadow:none;background:rgba(61,107,58,.12);color:#26471f}
+#card .fold{border-top-color:var(--line)}
+#card .tabs{gap:2px;margin-bottom:-2px}
+#card .tabs button{border-radius:8px 8px 0 0;border-bottom-color:var(--line);background:var(--panel2)}
+#card .tabs button.on{background:#f4eac9;border-bottom-color:#f4eac9}
+#card .tabs button.on::before{content:'';position:absolute;top:-1px;right:8px;width:9px;height:15px;background:#8e1d14;clip-path:polygon(0 0,100% 0,100% 100%,50% 72%,0 100%)}
 @media (max-width:440px){.tally{gap:1px;font-size:12px}.tally span{gap:1px}.tally .ico{width:12px;height:12px}}
 @media (max-width:400px){.tally span{gap:0}.tally .ico{width:11px;height:11px}.hb{padding:0 1px}#hud{gap:1px}#score{min-width:44px;padding:0}#score b{font-size:12px}body{padding-left:8px;padding-right:8px}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;scroll-behavior:auto!important} }
@@ -130,18 +151,17 @@ button.ok small{color:#8fd4a4}
       <span title="Gold"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="#f2cf55"/><circle cx="8" cy="8" r="4" fill="none" stroke="#b8902a" stroke-width="1.3"/></svg><span id="rg">0</span></span>
       <span title="Iron"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 11 L5 5 L11 5 L14 11 Z" fill="#8fa3b5"/><path d="M5 5 L11 5 L9.5 8 L6.5 8 Z" fill="#c9d4de"/></svg><span id="ri">0</span></span>
     </div>
-    <button class="hb" id="score" data-act="card:score" aria-label="Score"><b id="scoreN">0</b></button>
+    <button class="hb" id="score" data-act="card:score" aria-label="Score"><b id="scoreN">0</b><small id="scoreR"></small></button>
     <button class="hb ic" id="muteB" data-act="sound" aria-label="Mute"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor"/><path class="w" d="M11 5.5q2 2.5 0 5M12.8 3.8q3.4 4.2 0 8.4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/><path class="x" d="M11 6l4 4M15 6l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
     <button class="hb ic" id="speed" data-act="speed" aria-label="Pause, play, speed">×1</button>
     <button class="hb ic" id="helpB" data-act="help" aria-label="How to play">?</button>
   </header>
+  <div id="sub"><button class="hb ic" data-act="home" aria-label="Back to your Town Center"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 10 L10 3.5 L17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M5.5 9 V16.5 H14.5 V9" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.6 16.5 V12.2 H11.4 V16.5" fill="currentColor"/></svg></button><button class="hb ic" id="mapB" data-act="map" aria-label="Show or hide the map"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 5.5 L7.5 4 L12.5 5.5 L17 4 V14.5 L12.5 16 L7.5 14.5 L3 16 Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7.5 4 V14.5 M12.5 5.5 V16" stroke="currentColor" stroke-width="1.6"/></svg></button><span id="cInfo"></span></div>
 
   <div id="stage">
     <canvas id="cv"></canvas>
     <div id="vig"></div>
     <canvas id="mini" width="172" height="172"></canvas>
-    <div id="tools"><button data-act="selmode" id="selB" aria-label="Select with a box">⬚</button></div>
-    <div id="corner"><button data-act="home" aria-label="Back to your Town Center"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 10 L10 3.5 L17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><path d="M5.5 9 V16.5 H14.5 V9" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.6 16.5 V12.2 H11.4 V16.5" fill="currentColor"/></svg></button><span id="cInfo"></span></div>
     <div id="banner"></div>
     <div id="strip" hidden></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="cancel"><b>Cancel</b></button></div>
@@ -160,7 +180,7 @@ button.ok small{color:#8fd4a4}
     <div class="row r4">
       <button data-act="train:vil" id="bVil"><b>Villagers</b><small>50f</small></button>
       <button data-act="card:army" id="bArmy"><b>Army</b><small>0</small></button>
-      <button data-act="card:keep" id="bAge"><b>Town</b><small>age</small></button>
+      <button data-act="agebtn" id="bAge"><b>Town</b><small>age</small></button>
       <button data-act="card:fortress" id="bDip"><b>Fortress</b><small>neutral</small></button>
     </div>
   </section>
@@ -171,7 +191,7 @@ button.ok small{color:#8fd4a4}
 'use strict';
 // ═════ 01-rules.js ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 32;
+const BUILD = 33;
 const MAP = 2000, MID = MAP / 2, DT = 1 / 30;
 const POPMAX = 150, VILMAX = 60, ARMYMAX = 90, BNSIZE = 30, BNS = 6;   // six battalions, once Command is researched at a War Council; BNSIZE: the most one Zeal blesses
 const RICH = 2.5, PLUNDER = 0.25, CARRY = 10, NAVC = 10;                // NAVC: the walking grid, 10 units a square (never shown)
@@ -648,7 +668,7 @@ const TRIGGERS = () => [
   ['You send an emissary (Bronze age)', 'It rides to the Fortress. At war: killed. Allied elsewhere: sent back. If you are its biggest threat and clearly stronger: sent back with nothing. If you are weaker than half its biggest threat: terms of 150 gold. Otherwise: an alliance.', 'A neutral state allies with whoever raises its odds of surviving.'],
   ['The Fortress is your ally', 'Every 45 s it sends part of what it has above 200. It sends soldiers when your town is attacked and its own is safe.', 'An ally who shares is worth having.'],
   ['A computer decides to attack', 'It compares its power with the enemy\'s: odds = r²/(1+r²), the square law of aimed fire (Lanchester, 1916, a modern model). It goes only if the odds beat its nerve: Raiders .5, Rivals .65, the Fortress never. A wave that stalls goes home.', 'A rule of thumb, not history: ancient melee followed the square law less well.'],
-  ['Trees stand in the way', 'Forest blocks people, carts and armies. A tree can be cut only from open ground beside it, so a forest is worked from its edge inward; a felled tree opens its ground. Box trees with ⬚ to send villagers to cut a road.', 'Old forests were barriers: roads were cut through them, and armies kept to the roads.'],
+  ['Trees stand in the way', 'Forest blocks people, carts and armies. A tree can be cut only from open ground beside it, so a forest is worked from its edge inward; a felled tree opens its ground. Hold and drag a box over trees to send villagers to cut a road.', 'Old forests were barriers: roads were cut through them, and armies kept to the roads.'],
   ['The seasons turn', `Each lasts ${SEASON_LEN / 60} minutes. ${SEASONS.map(S => `${S.name}: marching ×${S.spd}, fields ×${S.farm}`).join('; ')}. Roads halve the slowing. Each spring sheep are shorn, lambs born, and the year's harvest set (about one year in six poor, one in twenty failed).`, 'Real farming years: mud and cold slowed armies, and the harvest decided the year.'],
   ['The weather changes, every minute', `Rain: marching ${Math.round((1 - WEATHER.rain.spd) * 100)}% slower, bows reach ${Math.round((1 - WEATHER.rain.rng) * 100)}% less, fires spread less. Drought (summer): fields give ${Math.round((1 - WEATHER.drought.crop) * 100)}% less, fires spread fast. Frost (winter): stone buildings go up at ${WEATHER.frost.stone * 100}% speed.`, 'Wet roads were mud, wet bowstrings sagged, dry thatch burned, and mortar does not set in frost.'],
   ['A wooden building catches fire', 'Sabotage, summer lightning or sparks from a bakery or smithy. It burns down in about half a minute; two villagers run with buckets; it can spread to wooden buildings next to it. Stone does not burn.', 'Towns of timber and thatch burned often: London in 1212 and 1666.'],
@@ -687,7 +707,7 @@ const plural = n => /^man-at-arms$/i.test(n) ? n.replace(/^(m)an/i, '$1en') : /m
 const some = (k, n) => k === 1 ? n : plural(n);
 
 // Settings remembered on this phone.
-const SET = { diff: 'easy', tips: true, msgs: true, civ: 'roman', fantasy: false, mode: 't30', sound: true, vol: 0.6, mix: {}, hush: {}, vibe: true, learned: {} };
+const SET = { diff: 'easy', tips: true, msgs: true, civ: 'roman', fantasy: false, mode: 't30', sound: true, vol: 0.6, mix: {}, hush: {}, mini: undefined, mapSeen: false, vibe: true, learned: {} };
 try { Object.assign(SET, JSON.parse(localStorage.getItem('firstkeep.settings') || '{}')); } catch (e) {}
 if (!CIVS[SET.civ]) SET.civ = 'roman';
 SET.mix = Object.assign({ fx: 1, amb: 1, alert: 1 }, SET.mix);   // three volumes: effects, ambience, alerts
@@ -1134,6 +1154,7 @@ function canPlace(o, kind, x, y) {
     if (inside && NAV.lake[c]) return 'That is the lake';
     const q = NAV.occ[c]; if (!q) continue;
     if (inside) { if (kind === 'gate' && q.kind === 'wall' && q.owner === o) continue; return 'Something is in the way'; }
+    if (!B.wallish && !B.crop && j >= 0 && j < n && (i === -1 || i === n) && !BLD[q.kind].wallish && !BLD[q.kind].crop) return 'Leave a gap: a wall shows on each side';
     if (!BLD[q.kind].wallish && (TRAINERS.has(kind) || TRAINERS.has(q.kind))) return 'Leave a lane around buildings that train people';
   }
   if (!B.wallish) { const h = n * 5 + 6; for (const nd of G.nodes) if (nd.kind !== 'farm' && nd.kind !== 'fish' && Math.abs(nd.x - sp.x) < h && Math.abs(nd.y - sp.y) < h) return 'Clear of trees and rocks, please'; }
@@ -2801,6 +2822,15 @@ function draw() {
   layer(scarCv);
   if (!lessMotion) { ctx.strokeStyle = 'rgba(220,240,255,.28)'; ctx.lineWidth = 1.2; for (const L of G.lakes) { if (Math.abs(L.x - cam.x) > cw / cam.z / 2 + L.r || Math.abs(L.y - cam.y) > ch / cam.z / TILT / 2 + L.r) continue; for (let i = 0; i < 18; i++) { const a = i * 2.4 + G.t * 0.05, r = L.r * (0.25 + 0.6 * ((i * 0.37 + G.t * 0.02) % 1)); const lx = SX(L.x + Math.cos(a) * r), ly = SY(L.y + Math.sin(a) * r); ctx.beginPath(); ctx.moveTo(lx - 6 * z, ly); ctx.quadraticCurveTo(lx, ly - 2 * z, lx + 6 * z, ly); ctx.stroke(); } } }
   if (sn.tint) { ctx.fillStyle = sn.tint; ctx.fillRect(x0, y0, MAP * z, MAP * z * TILT); }
+  if (G.wx === 'rain' && z > 1.2 && !lessMotion) {   // rain rings sit on the ground, fixed to the world, under buildings and people
+    const t = performance.now() / 1000, C = 120, a0 = toWorld(0, 0), b0 = toWorld(cw, ch); ctx.strokeStyle = 'rgba(215,230,245,.30)'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let gy = Math.floor(a0.y / C); gy <= Math.floor(b0.y / C); gy++) for (let gx = Math.floor(a0.x / C); gx <= Math.floor(b0.x / C); gx++) {
+      const h = ((gx * 73856093) ^ (gy * 19349663)) >>> 0; if (h % 3) continue;
+      const ph = (t * 1.6 + ((h >> 8) & 255) / 256) % 1, r = Math.min(10, (1 + ph * 4) * z), px = SX((gx + (h & 255) / 256) * C), py = SY((gy + ((h >> 16) & 255) / 256) * C);
+      ctx.moveTo(px + r, py); ctx.ellipse(px, py, r, r * TILT, 0, 0, 7);
+    }
+    ctx.stroke();
+  }
   // everything standing, back to front
   // what is on screen: margins in world units, wide enough for the widest building (its turned east wall) and the tallest (a wonder, standing just below the edge)
   const a0 = toWorld(0, 0), b0 = toWorld(cw, ch), mx = Math.max(80 / z, 44), wv = { x: a0.x - mx, y: a0.y - Math.max(120 / (z * TILT), 34) }, wv2 = { x: b0.x + mx, y: b0.y + Math.max(160 / (z * TILT), 115) }, inView = e => e.x > wv.x && e.x < wv2.x && e.y > wv.y && e.y < wv2.y;
@@ -2837,10 +2867,11 @@ function draw() {
   drawRadar(wv, wv2);
   { const seen = new Set(); ctx.setLineDash([5, 5]); ctx.strokeStyle = 'rgba(192,138,88,.6)'; ctx.lineWidth = 1.5;   // boxes of trees being cut
     for (const u of G.units) if (u.owner === 0 && u.patch && !seen.has(u.patch.x0)) { seen.add(u.patch.x0); const r = u.patch; ctx.strokeRect(SX(r.x0), SY(r.y0), (r.x1 - r.x0) * z, (r.y1 - r.y0) * z * TILT); }
-    if (G.box) { const b = G.box; ctx.strokeStyle = '#ffd35e'; ctx.strokeRect(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.abs(b.x1 - b.x0), Math.abs(b.y1 - b.y0)); }
+    if (G.hold && performance.now() - G.hold.t > 90) { const f = Math.min(1, (performance.now() - G.hold.t) / HOLD_MS); ctx.strokeStyle = 'rgba(255,211,94,.85)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(G.hold.x, G.hold.y, 26, -Math.PI / 2, -Math.PI / 2 + f * 6.2832); ctx.stroke(); }   // the ring fills: let go and it is a tap, hold and drag and it is a box
+    if (G.box) { const b = G.box; ctx.fillStyle = 'rgba(255,211,94,.12)'; ctx.fillRect(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.abs(b.x1 - b.x0), Math.abs(b.y1 - b.y0)); ctx.strokeStyle = '#ffd35e'; ctx.lineWidth = 2; ctx.strokeRect(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.abs(b.x1 - b.x0), Math.abs(b.y1 - b.y0)); }
     ctx.setLineDash([]); }
   drawGhost();
-  { const now = performance.now(); if (now - miniT > 150) { miniT = now; drawMini(); } }   // the map corner needs no more than seven looks a second
+  { const now = performance.now(); if (SET.mini && now - miniT > 150) { miniT = now; drawMini(); } }   // the map corner needs no more than seven looks a second
 }
 // Enemy soldiers close to your Town Center but off screen: a red marker on the edge, pointing at them. Tap it to look.
 let RADAR = null;
@@ -3020,10 +3051,9 @@ function drawWeather() {
   if (wx === 'rain') {
     ctx.fillStyle = 'rgba(20,30,50,.12)'; ctx.fillRect(0, 0, cw, ch);
     if (!lessMotion) {
-      ctx.strokeStyle = 'rgba(205,220,240,.38)'; ctx.lineWidth = 1; ctx.beginPath();
-      for (let i = 0; i < 110; i++) { const x = ((i * 97.3 + t * 60) % (cw + 60)) - 30, y = ((i * 53.7 + t * 520) % (ch + 60)) - 30; ctx.moveTo(x, y); ctx.lineTo(x - 4, y + 14); }
+      ctx.strokeStyle = 'rgba(205,220,240,.30)'; ctx.lineWidth = 1; ctx.beginPath();
+      for (let i = 0; i < 70; i++) { const x = ((i * 97.3 + t * 60) % (cw + 60)) - 30, y = ((i * 53.7 + t * 520) % (ch + 60)) - 30; ctx.moveTo(x, y); ctx.lineTo(x - 4, y + 14); }
       ctx.stroke();
-      if (z > 1.2) { ctx.strokeStyle = 'rgba(215,230,245,.30)'; ctx.beginPath(); for (let i = 0; i < 18; i++) { const ph = (t * 2 + i * 0.37) % 1, x = (i * 211.7) % cw, y = (i * 137.3 + Math.floor(t * 2 + i * 0.37) * 59) % ch; ctx.moveTo(x + (1 + ph * 4) * z, y); ctx.ellipse(x, y, (1 + ph * 4) * z, (0.6 + ph * 2) * z, 0, 0, 7); } ctx.stroke(); }
     }
   }
   if (wx === 'frost') {
@@ -3057,6 +3087,8 @@ function forestLayer() {
 // ═════ 11-input.js ═════
 // ───────────────────────── Touch: drag to look, pinch to zoom, tap to ask, press and slide to place ─────────────────────────
 const ptrs = new Map(); let drag = null, pinch = null;
+const HOLD_MS = 320; let holdT = 0;   // hold a finger on open ground, then drag: a box
+const holdStop = () => { clearTimeout(holdT); G.hold = null; };
 const lp = e => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
 let EDGE = null;   // where the finger is while it drags the ghost: near the screen edge the map scrolls
 function edgeScroll(dt) {
@@ -3070,10 +3102,9 @@ function ghostAt(p, touch) {
   if (pl.kind === 'wall') { const c = toCell(w); if (!pl.a) pl.a = c; pl.cells = wallLine(pl.a, c); pl.at = { x: c.gx * NAVC + 5, y: c.gy * NAVC + 5 }; }
   else pl.at = snapGhost(0, pl.kind, w.x, w.y, Math.max(14, 26 / cam.z));
 }
-cv.addEventListener('pointerdown', e => { hideStrip();
+cv.addEventListener('pointerdown', e => { hideStrip(); holdStop();
   try { cv.setPointerCapture(e.pointerId); } catch (err) {} const p = lp(e); ptrs.set(e.pointerId, p);
   if (ptrs.size >= 2) { drag = null; const [a, b] = [...ptrs.values()]; pinch = { d: hyp(a.x - b.x, a.y - b.y) || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 }; return; }
-  if (G.selMode && !G.place) { drag = { mode: 'box', x0: p.x, y0: p.y, x1: p.x, y1: p.y }; G.box = drag; return; }   // Select: drag a box
   if (G.place) {
     const touch = e.pointerType !== 'mouse', at = G.place.at, gx = at ? SX(at.x) : 0, gy = at ? SY(at.y) : 0, nearGhost = !at || Math.min(hyp(p.x - gx, p.y - gy), hyp(p.x - gx, p.y - (touch ? LIFT : 0) - gy)) < Math.max(70, BLD[G.place.kind].fp * NAVC * cam.z * 0.7);
     if (nearGhost) { if (G.place.kind === 'wall') { G.place.a = null; } ghostAt(p, touch); drag = { mode: 'place', touch }; EDGE = p; ui(true); return; }
@@ -3081,6 +3112,8 @@ cv.addEventListener('pointerdown', e => { hideStrip();
     return;
   }
   drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false };
+  G.hold = { x: p.x, y: p.y, t: performance.now() };
+  holdT = setTimeout(() => { const d = drag; if (d && d.mode === 'pan' && !d.moved && G.hold) { drag = { mode: 'box', x0: G.hold.x, y0: G.hold.y, x1: G.hold.x, y1: G.hold.y }; G.box = drag; G.hold = null; if (navigator.vibrate) navigator.vibrate(12); } }, HOLD_MS);
 });
 cv.addEventListener('pointermove', e => {
   const p = lp(e); if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, p);
@@ -3094,22 +3127,22 @@ cv.addEventListener('pointermove', e => {
   if (G.place && !drag && e.pointerType === 'mouse' && G.place.kind !== 'wall') { ghostAt(p, false); return; }
   if (!drag || drag.mode !== 'pan') return;
   const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-  if (!drag.moved && hyp(dx, dy) > 8) drag.moved = true;
+  if (!drag.moved && hyp(dx, dy) > 8) { drag.moved = true; holdStop(); }
   if (drag.moved) { cam.x = drag.cx - dx / cam.z; cam.y = drag.cy - dy / (cam.z * TILT); clampCam(); }
 });
 cv.addEventListener('pointerup', e => {
-  ptrs.delete(e.pointerId);
+  ptrs.delete(e.pointerId); holdStop();
   if (pinch) { if (ptrs.size < 2) pinch = null; drag = null; return; }
   const d = drag; drag = null; if (!d) return;
   EDGE = null;
-  if (d.mode === 'box') { G.box = null; G.selMode = false; boxPick(d); ui(true); return; }
+  if (d.mode === 'box') { G.box = null; if (Math.abs(d.x1 - d.x0) < 12 && Math.abs(d.y1 - d.y0) < 12) { const q = lp(e); tapAt(q.x, q.y); } else boxPick(d); ui(true); return; }   // held but never dragged: it was a tap
   if (d.mode === 'place') { ui(true); return; }   // it waits: drag again to adjust, or tap Build
   if (d.moved) return;
   const p = lp(e);
   if (G.place) { if (G.place.kind === 'wall') G.place.a = null; ghostAt(p, d.touch); ui(true); return; }
   tapAt(p.x, p.y);
 });
-cv.addEventListener('pointercancel', e => { EDGE = null; ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; drag = null; });
+cv.addEventListener('pointercancel', e => { EDGE = null; holdStop(); G.box = null; ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; drag = null; });
 cv.addEventListener('wheel', e => { e.preventDefault(); const p = lp(e); zoomAt(cam.z * Math.exp(-e.deltaY * 0.0015), p.x, p.y); }, { passive: false });
 ['gesturestart', 'gesturechange', 'gestureend'].forEach(t => document.addEventListener(t, e => e.preventDefault()));
 mini.addEventListener('pointerdown', e => { e.stopPropagation(); const r = mini.getBoundingClientRect(); cam.x = (e.clientX - r.left) / r.width * MAP; cam.y = (e.clientY - r.top) / r.height * MAP; clampCam(); });
@@ -3174,7 +3207,6 @@ function cancelPlace() { if (G) G.place = null; $('place').hidden = true; }
 // Select: the box drawn on screen, turned into the trees and villagers of yours inside it
 function boxPick(d) {
   const a = toWorld(Math.min(d.x0, d.x1), Math.min(d.y0, d.y1)), b = toWorld(Math.max(d.x0, d.x1), Math.max(d.y0, d.y1)), r = { x0: a.x, y0: a.y, x1: b.x, y1: b.y };
-  if (Math.abs(d.x1 - d.x0) < 12 && Math.abs(d.y1 - d.y0) < 12) { say('Drag a box over trees or villagers.', '', 3); return; }
   const trees = G.nodes.filter(n => n.kind === 'tree' && n.amt > 0 && inBox(n, r)).length, vils = unitsOf(0, 'vil').filter(u => !u.inside && inBox(u, r)).map(u => u.id);
   if (!trees && !vils.length) { say('Nothing to pick in that box: trees or villagers.', '', 3); return; }
   openCard({ type: 'box', r, trees, vils });
@@ -3215,7 +3247,8 @@ const btn = (act, title, sub, cls) => `<button data-act="${act}" class="${cls ||
 // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 const FOLD = new Set();
 // two-sided cards, one mold: two tabs; the chosen one is lit
-const twoTabs = (key, opts, cur) => `<div class="acts">${opts.map(([k, t, sub]) => btn(`${key}:${k}`, t, sub, cur === k ? 'on' : '')).join('')}</div>`;
+const TABIC = { train: '<svg class="ti" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13 L9 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 3.5 L10 2 L13.5 5.5 L12 8.5 Z" fill="currentColor"/></svg>', research: '<svg class="ti" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3.5 Q5.2 2.4 8 4 Q10.8 2.4 14 3.5 V12.5 Q10.8 11.4 8 13 Q5.2 11.4 2 12.5 Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 4 V13" stroke="currentColor" stroke-width="1.2"/></svg>' };   // a hammer for making things, a book for learning them
+const twoTabs = (key, opts, cur) => `<div class="acts tabs">${opts.map(([k, t, sub]) => btn(`${key}:${k}`, (TABIC[k] || '') + t, sub, cur === k ? 'on' : '')).join('')}</div>`;
 const fold = (id, title, html) => html ? `<details class="fold" data-f="${id}"${FOLD.has(id) ? ' open' : ''}><summary>${title}</summary>${html}</details>` : '';
 const hpBar = (f, col) => `<div class="hp"><i style="width:${Math.round(100 * clamp(f, 0, 1))}%;background:${col}"></i></div>`;
 const unitLine = (o, k) => { const S = stats(o, k), U = UNIT[k]; return `<p><b>${S.name}:</b> ${U.desc}${U.civ ? ` <i>${CIVS[U.civ].name} only.</i>` : ''}</p>`; };
@@ -3255,11 +3288,11 @@ function renderCard() {
       const mk = b.kind === 'market', more = mk && G.mtab === 'more';   // the Market's two sides: trade, and caravans and ventures
       const tr = mk && !more ? [] : trainsAt(b.kind), techs = mk && !more ? [] : TECH.filter(t => t.at === b.kind && !p.techs.has(t.id)), done = mk && !more ? [] : TECH.filter(t => t.at === b.kind && p.techs.has(t.id));
       const hasR = techs.length || done.length || b.kind === 'keep', two = !mk && tr.length && hasR, side = mk ? '' : two ? (G.btab || 'train') : '';
+      if (b.kind === 'keep') h += keepAgeHTML();
       if (mk) h += twoTabs('mtab', [['trade', 'Trade', 'sell and buy'], ['more', 'Caravans', 'and ventures']], more ? 'more' : 'trade');
       if (two) h += twoTabs('btab', [['train', 'Train', `${tr.length} kind${tr.length > 1 ? 's' : ''}`], ['research', 'Research', `${techs.filter(t => !researchWhy(0, t.id)).length} ready`]], side);
       if (tr.length && side !== 'research') h += (two ? '' : `<div class="sec">Train</div>`) + `<div class="acts">${trainButtons(tr)}</div>`;
       if (side !== 'train') {
-        if (b.kind === 'keep') h += keepAgeHTML();
         if (techs.length || done.length) { h += (two ? '' : `<div class="sec">Research</div>`) + `<div class="acts">`; for (const t of techs) { const why = researchWhy(0, t.id), busy = why === 'Being researched.'; h += btn(`tech:${t.id}`, t.name, busy ? 'researching' : why && why !== `Not enough: ${costText(t.cost)}.` ? why.replace(/\.$/, '') : costText(t.cost), why ? 'dis' : ''); } h += `</div>` + (done.length ? `<div class="chips">${done.map(t => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>` : ''); }
       }
       // everything else about the building waits behind one More, closed until you open it
@@ -3362,7 +3395,7 @@ function renderCard() {
     h += fold('menu', 'What each one does', M.items.map(k => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''));
   } else if (c.type === 'score') {
     scoreAll(); const rows = G.P.filter(q => q.id !== WILD), cats = [['people', 'People'], ['army', 'Army'], ['tech', 'Tech'], ['bld', 'Buildings'], ['wealth', 'Wealth'], ['total', 'Score']];
-    h += `<h3>Score<span class="who">${MODES[G.mode].secs ? `${clock(Math.max(0, MODES[G.mode].secs - G.t))} to the bell` : 'conquest'}</span></h3><table><tr><th></th>${rows.map(q => `<th style="color:${q.color}">${q.id === 0 ? 'You' : q.name}</th>`).join('')}</tr>${cats.map(([k, n]) => `<tr><td>${n}</td>${rows.map(q => `<td>${q.alive || k === 'total' ? fmt(q.score[k]) : '–'}</td>`).join('')}</tr>`).join('')}</table>`;
+    h += `<h3>Score<span class="who">${MODES[G.mode].secs ? `${clock(Math.max(0, MODES[G.mode].secs - G.t))} to the bell` : 'conquest'}</span></h3><table><tr><th></th>${rows.map(q => `<th style="border-bottom:3px solid ${q.color}">${q.id === 0 ? 'You' : q.name}</th>`).join('')}</tr>${cats.map(([k, n]) => `<tr><td>${n}</td>${rows.map(q => `<td>${q.alive || k === 'total' ? fmt(q.score[k]) : '–'}</td>`).join('')}</tr>`).join('')}</table>`;
     h += `<p>People and Army: what you hold, cost ÷ ${SCORE.unit}. Tech: research and ages paid ÷ ${SCORE.tech}. Buildings: standing, cost ÷ ${SCORE.bld}. Wealth: everything gathered, traded, found and plundered ÷ ${SCORE.wealth}. ${G.wonder ? `A wonder stands: ${clock(Math.max(0, G.wonder.end - G.t))} left.` : ''}</p>`;
   } else if (c.type === 'guide') {
     const pg = c.page || 'bld';
@@ -3378,7 +3411,7 @@ function renderCard() {
       <p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
       <p><b>Build:</b> pick a menu, then a building. It waits above your finger: drag it, then tap Build. Villagers raise it.</p>
       <p><b>Army:</b> tap open ground: Send ¼ or All. Tap an enemy to attack. The War Council opens stances, battalions, formations and Muster.</p>
-      <p><b>Forest:</b> trees are a wall until cut. Tap ⬚ and box trees to cut a road.</p>
+      <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>
       <p><b>Win</b> by conquest, a wonder held ${WONDER_HOLD / 60} minutes, or the top score at the bell. Score is top right. The Guide and Rules above hold every number.</p>
@@ -3432,7 +3465,7 @@ function showStrip(sx, sy, x, y) {
   closeCard(); const el = $('strip'), at = `${Math.round(x)},${Math.round(y)}`, to = { x, y }, n = from => sendPick(from, to).length;
   const bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
   el.innerHTML = (n('all') ? btn(`sendto:q,${at}`, 'Send ¼', String(n('q')), 'go') + btn(`sendto:all,${at}`, 'All', String(n('all'))) + bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') : '')
-    + btn(`more:${at}`, '⋯', '') + `<button data-act="nostrip" aria-label="Cancel">✕</button>`;
+    + btn(`more:${at}`, '⋯', '') + `<button data-act="nostrip" aria-label="Cancel">✕</button><small class="sn">Hold, then drag to box a group</small>`;
   el.hidden = false; G.strip = to;
   const r = $('stage').getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight;
   el.style.left = clamp(sx - w / 2, 4, r.width - w - 4) + 'px'; el.style.top = clamp(sy - h - 18, 4, r.height - h - 4) + 'px';
@@ -3554,11 +3587,11 @@ const ACT = {
   cancel() { cancelPlace(); },
   placeok() { commitPlace(); },
   help() { openCard({ type: 'help' }); },
-  selmode() { G.selMode = !G.selMode; if (G.selMode) { closeCard(); say('Select: drag a box over trees or villagers.', '', 4); } $('selB').classList.toggle('on', !!G.selMode); },
   reload() { location.reload(); },
   vibe() { SET.vibe = !SET.vibe; saveSet(); feel('snap'); refresh(); },
   menu(a) { openCard({ type: 'menu', id: a }); },
   guide(a) { openCard({ type: 'guide', page: a }); },
+  map() { SET.mini = !SET.mini; saveSet(); applyMini(); },
   home() { const k = keepOf(0); if (k) { cam.x = k.x; cam.y = k.y; clampCam(); } },
   resume() { const S = readSave(); if (S) loadGame(S); else { closeCard(); setPause(false); } refresh(); },
   fresh() { clearSave(); holdSave = false; newGame(); closeCard(); setPause(false); saveGame(true); refresh(); },
@@ -3620,7 +3653,8 @@ const PLAY = {
   takedown(a) { const id = Number(a), b = G.blds.find(x => x.id === id && x.owner === 0); if (b && b.kind !== 'keep') { if (BLD[b.kind].wallish || b.prog < 0.15 || G.confirm === id) { demolish(0, id); G.confirm = null; closeCard(); } else G.confirm = id; } },
   train(a) { if (!train(0, a)) say(trainWhy(0, a) || 'Not now.', '', 3); },
   tech(a) { if (!research(0, a)) say(researchWhy(0, a) || 'Not now.', '', 3); },
-  age() { ageUp(0); }, build(a) { startPlace(a); },
+  age() { ageUp(0); },
+  agebtn() { const p = G.P[0], A = AGES[p.age + 1]; if (A && !p.aging && afford(p, A.cost) && ageUp(0)) { say(`${A.name} age: advancing.`, 'good', 3); return; } openCard({ type: 'keep' }); }, build(a) { startPlace(a); },
   scoutgo(a) { const [x, y] = a.split(',').map(Number), s = unitsOf(0, 'scout')[0]; if (s) { s.state = 'goto'; s.px = x; s.py = y; say('The scout rides out.', '', 3); } closeCard(); },
   rally(a) { const [x, y] = a.split(',').map(Number); G.rally0 = G.rally0 ? null : { x, y }; },
   recall() { orderSet().forEach(u => { u.state = 'home'; u.fid = null; }); closeCard(); },
@@ -3686,7 +3720,7 @@ function advise() {
   if (ready(0, 'barracks').length && S.length < 3 && G.t < 600 && !L('train:spear')) return 'Train spearmen: tap Army, or tap your Barracks.';
   if (on('wood') >= 3 && !bldsOf(0, 'lumber').length && !L('build:lumber')) return 'Wood is far. Home → Lumber camp, by trees.';
   if (G.nodes.filter(n => n.kind === 'bush' && dist(n, k) < 300).length < 3 && !bldsOf(0, 'farm').length && !L('build:farm')) return 'Berries are running low. Home → Farm, or hunt deer.';
-  if (p.age === 0 && !p.aging && V.length >= 10 && !L('age')) return 'Ready to grow. Tap Town Center to advance.';
+  if (p.age === 0 && !p.aging && V.length >= 10 && !L('age')) return 'Ready to grow: tap the age button below.';
   if (S.length >= 8 && G.finds.some(f => !f.done && FINDS[f.kind].got && dist(f, k) < 600) && !L('goto')) return 'Treasure nearby. Tap it, then send your army.';
   if (p.age >= 1 && G.P[FORT].alive && G.rel[0][FORT] === 'peace' && G.P[FORT].ally === null && !p.envoyOut && !L('envoy')) return 'The Fortress is neutral: tap Fortress to send an emissary.';
   if (p.hungry) return '!Hungry. Put villagers on Food or Farm.';
@@ -3699,20 +3733,21 @@ function advise() {
   return '';
 }
 const SEASON_ICON = { Spring: '🌱', Summer: '☀️', Autumn: '🍂', Winter: '❄️' }, WX_ICON = { rain: '🌧', drought: '🔥', frost: '🧊' };
+function applyMini() { mini.hidden = !SET.mini; $('mapB').classList.toggle('on', !!SET.mini); $('stage').classList.toggle('mapOn', !!SET.mini); }
 let uiAt = 0;
 function ui(force) {
   const now = performance.now(); if (!force && now - uiAt < 150) return; uiAt = now;
   const p = G.P[0], R = p.res;
+  document.body.classList.toggle('night', G.night > 0.5);
   $('rf').textContent = fmt(R.f); $('rw').textContent = fmt(R.w); $('rs').textContent = fmt(R.s); $('rg').textContent = fmt(R.g); $('ri').textContent = fmt(R.i);
   const rank = 1 + G.P.filter(q => q.id && q.id !== WILD && q.score.total > p.score.total).length;
-  $('scoreN').textContent = `★${fmt(p.score.total)}`;
+  $('scoreN').textContent = `★${fmt(p.score.total)}`; $('scoreR').textContent = `#${rank} of ${G.P.length - 1}`;
   if (G.t - (G.rdyT ?? -9) > 1 || G.t < G.rdyT) { G.rdyT = G.t; G.rdy = new Set(TECH.filter(t => !p.techs.has(t.id) && !researchWhy(0, t.id)).map(t => t.at)); }   // buildings with research you can start now
   let tip = SET.tips ? advise() : ''; const urgent = tip[0] === '!'; if (urgent) tip = tip.slice(1);
   const T = G.tipS || (G.tipS = { text: '', at: -99, last: -99 });
   if (tip !== T.text && (urgent || G.t > 20 && G.t - T.last > 45)) { T.text = tip; T.at = G.t; if (tip) T.last = G.t; }
   const showTip = tip && T.text === tip && (urgent || G.t - T.at < 6) && !hushed(tip) && !G.card && !G.place && !G.over;
   if ($('tipT').textContent !== tip) $('tipT').textContent = tip; $('tip').hidden = !showTip;
-  $('selB').classList.toggle('on', !!G.selMode);
   { const lim = MODES[G.mode].secs, clk = G.wonder ? `wonder ${clock(Math.max(0, G.wonder.end - G.t))}` : lim ? `${clock(Math.max(0, lim - G.t))}` : clock(G.t);
     const info = `${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? '🌙' : ''} ${clk} · ${Math.round(cam.z * 100)}%`; if ($('cInfo').textContent !== info) $('cInfo').textContent = info; }
   const V = unitsOf(0, 'vil');
@@ -3722,7 +3757,7 @@ function ui(force) {
   // have / can have now: the ceiling is what your homes allow, up to the most of each kind
   $('bVil').querySelector('small').textContent = `${V.length}/${Math.min(VILMAX, V.length + room)}` + (nq ? ` +${nq}` : '');
   $('bArmy').querySelector('small').textContent = `${S.length}/${Math.min(ARMYMAX, S.length + room)}` + (S.some(u => u.state === 'attack' || u.state === 'goto') ? ' out' : '');
-  $('bAge').querySelector('b').textContent = AGES[p.age].name; $('bAge').querySelector('small').textContent = p.aging ? 'advancing' : AGES[p.age + 1] ? `→ ${AGES[p.age + 1].name}` : 'last age';
+  { const A = AGES[p.age + 1], ok = A && !p.aging && afford(p, A.cost); $('bAge').querySelector('b').textContent = A ? (p.aging ? AGES[p.age + 1].name : `To ${A.name}`) : AGES[p.age].name; $('bAge').querySelector('small').textContent = p.aging ? 'advancing' : A ? costText(A.cost) : 'last age'; $('bAge').classList.toggle('go', !!ok); $('bAge').classList.toggle('dis', !!A && !ok && !p.aging); }
   $('bDip').querySelector('small').textContent = G.P[FORT].alive ? (G.P[FORT].ally === 0 ? 'your ally' : G.P[FORT].ally !== null ? 'allied: ' + G.P[G.P[FORT].ally].name : G.rel[0][FORT]) : 'fallen';
   $('bDip').classList.toggle('on', G.P[FORT].ally === 0);
   if (G.place) { const B = BLD[G.place.kind], t = !G.place.at ? (G.place.kind === 'wall' ? 'Press and drag a line of wall' : `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`) : G.place.why ? G.place.why : G.place.kind === 'wall' ? `${(G.place.cells || [1]).length} pieces: tap Build, or drag again` : `${B.name}: tap Build, or drag it to move · drag empty ground to look`; if ($('placeT').textContent !== t) $('placeT').textContent = t; $('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why); }
@@ -4273,7 +4308,8 @@ function frame(now) {
 }
 for (const ev of ['pointerdown', 'pointermove', 'wheel']) document.addEventListener(ev, () => { inputT = performance.now(); }, { passive: true, capture: true });
 window.addEventListener('resize', fit);
-buildPanel(); fit(); newGame(); scoreAll(); ui(true);
+{ const first = !SET.mapSeen; SET.mapSeen = true; if (first) SET.mini = true; else if (SET.mini === undefined) SET.mini = false; saveSet(); }   // the first look shows the map; after that it stays shut until opened
+applyMini(); buildPanel(); fit(); newGame(); scoreAll(); ui(true);
 { const sv = readSave(); if (sv && sv.t > 20) { holdSave = true; setPause(true); openCard({ type: 'resume', t: sv.t, age: sv.P[0].age, civ: sv.P[0].civ }); } else { setPause(true); openCard({ type: 'setup' }); } lastSave = performance.now(); }
 requestAnimationFrame(frame);
 window.__fk = { get G() { return G; }, get cam() { return cam; }, set G(v) { G = v; }, SET, NAV, BLD, UNIT, TECH, TECHBY, CIVS, FINDS, MENUS, AGES, PERS, step, act, train, trainWhy, build, research, researchWhy, ageUp, addUnit, wildAt, addFind, declareWar, keepOf, stats, fxv, sendEnvoy, payTerms, canPlace, snapGhost, findSpot, think, astar, navRebuild, moveTo, wallLine, toCell, commitPlace, startPlace, zoomAt, guideModel, guideMd, coord, minZ, tapAt, openCard, renderCard, demolish, sendRepair, saveGame, readSave, loadGame, sendVil, setJob, moveVil, orderSet, clsCount, nearestNode, collide, newGame, scoreAll, hurt, sabotage, hire, zeal, zealWhy, learnTech, plunder, fall, sfx, SND, sprite, bldSprite, LOOKS, draw, fit, ui, civKind, marketTrade, findsTick, rehealth, setPause, GOODS, WEATHER, ignite, outbreak, setRoute, postAt, stopsAll, priceAt, estPay, tradeTargets, sickRisk, seasonTurn, upkeepTick, healthTick, guardedCart, dmgOf, rngOf, TICK, route, standOff, built, loyaltyParts, surrenderWhy, vassalsOf, makeVassal, rebel, mkt, get holdSave() { return holdSave; }, get caches() { return { SPR, BSPR, NSPR }; } };

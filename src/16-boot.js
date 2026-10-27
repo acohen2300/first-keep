@@ -30,7 +30,8 @@ function frame(now) {
 }
 for (const ev of ['pointerdown', 'pointermove', 'wheel']) document.addEventListener(ev, () => { inputT = performance.now(); }, { passive: true, capture: true });
 window.addEventListener('resize', fit);
-buildPanel(); fit(); newGame(); scoreAll(); ui(true);
+{ const first = !SET.mapSeen; SET.mapSeen = true; if (first) SET.mini = true; else if (SET.mini === undefined) SET.mini = false; saveSet(); }   // the first look shows the map; after that it stays shut until opened
+applyMini(); buildPanel(); fit(); newGame(); scoreAll(); ui(true);
 { const sv = readSave(); if (sv && sv.t > 20) { holdSave = true; setPause(true); openCard({ type: 'resume', t: sv.t, age: sv.P[0].age, civ: sv.P[0].civ }); } else { setPause(true); openCard({ type: 'setup' }); } lastSave = performance.now(); }
 requestAnimationFrame(frame);
 window.__fk = { get G() { return G; }, get cam() { return cam; }, set G(v) { G = v; }, SET, NAV, BLD, UNIT, TECH, TECHBY, CIVS, FINDS, MENUS, AGES, PERS, step, act, train, trainWhy, build, research, researchWhy, ageUp, addUnit, wildAt, addFind, declareWar, keepOf, stats, fxv, sendEnvoy, payTerms, canPlace, snapGhost, findSpot, think, astar, navRebuild, moveTo, wallLine, toCell, commitPlace, startPlace, zoomAt, guideModel, guideMd, coord, minZ, tapAt, openCard, renderCard, demolish, sendRepair, saveGame, readSave, loadGame, sendVil, setJob, moveVil, orderSet, clsCount, nearestNode, collide, newGame, scoreAll, hurt, sabotage, hire, zeal, zealWhy, learnTech, plunder, fall, sfx, SND, sprite, bldSprite, LOOKS, draw, fit, ui, civKind, marketTrade, findsTick, rehealth, setPause, GOODS, WEATHER, ignite, outbreak, setRoute, postAt, stopsAll, priceAt, estPay, tradeTargets, sickRisk, seasonTurn, upkeepTick, healthTick, guardedCart, dmgOf, rngOf, TICK, route, standOff, built, loyaltyParts, surrenderWhy, vassalsOf, makeVassal, rebel, mkt, get holdSave() { return holdSave; }, get caches() { return { SPR, BSPR, NSPR }; } };
