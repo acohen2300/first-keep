@@ -24,7 +24,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 /* small icon buttons: drawn at 32 px, tapped at 44 px */
 .ic{background:none;border:0;padding:0;position:relative;z-index:0;font-size:14px}
 .ic::before{content:'';position:absolute;left:50%;top:50%;width:32px;height:32px;margin:-16px 0 0 -16px;box-sizing:border-box;border-radius:8px;background:var(--panel);border:1px solid var(--line);z-index:-1}
-.ic.on::before{background:#2f3b36;border-color:var(--mute)}
+.ic.on{background:none}.ic.on::before{background:#2f3b36;border-color:var(--mute)}
 .ic+.ic{margin-left:-6px}   /* the 44 px tap areas may touch; the 32 px buttons keep their gap */
 .ic svg{width:16px;height:16px}#muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--mute)}
 #card .lvl{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}#card .lvl small{color:var(--mute)}
@@ -48,7 +48,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button b{font-size:14px}#strip button small{font-size:12px}
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
-#card{position:absolute;left:6px;right:6px;bottom:6px;max-height:calc(100% - 12px);overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
+#card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:6px;max-height:calc(100% - 12px);overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
 #card h3{margin:0;font-family:var(--display);font-weight:400;font-size:22px;display:flex;align-items:center;gap:8px;padding-right:40px}
 #card .who{font-family:var(--ui);font-size:14px;color:var(--mute);font-weight:600}
 #card p{margin:0;color:var(--mute);line-height:1.35;font-size:15px}

@@ -147,7 +147,7 @@ function renderCard() {
   } else if (c.type === 'resume') {
     h += `<h3>Welcome back<span class="who">saved on this phone</span></h3><p>Your game from ${clock(c.t)}: ${CIVS[c.civ] ? CIVS[c.civ].name + ', ' : ''}${AGES[c.age].name} age. Resume it, or start a new one.</p><div class="acts">${btn('resume', 'Resume', clock(c.t), 'go')}${btn('card:setup', 'New game', '')}</div>`;
   } else if (c.type === 'setup') {
-    h += `<h3>A new game<span class="who">pick your people</span></h3><div class="acts">${CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, UNIT[CIVS[k].uu].name, SET.civ === k ? 'on' : '')).join('')}</div>`;
+    h += `<h3>A new game<span class="who">pick your people</span></h3><div class="acts c3">${CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, UNIT[CIVS[k].uu].name, SET.civ === k ? 'on' : '')).join('')}</div>`;
     const C = CIVS[SET.civ]; h += `<p><i>${C.name}:</i> ${C.bonus} Unique soldier: ${UNIT[C.uu].name} (in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}). Wonder: ${C.wonder}.</p>` + fold('why', 'Why?', `<p>${WHY['bonus:' + SET.civ]}</p>`);
     if (staleSave) h += `<p class="dim">Your last game came from an older version (${staleSave}) and cannot be opened. It is kept aside, not deleted.</p>`;
     h += `<div class="acts c1">${btn('fresh', 'Start', `${C.name} · ${MODES[SET.mode].name} · ${SET.fantasy ? 'fantasy' : 'real world'} · ${SET.diff}`, 'go')}</div>` + fold('settings', 'Game settings', settingsHTML()) + fold('about', 'About', `<p>The other three sides take three of the other civilisations at random. Every civilisation has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`);
