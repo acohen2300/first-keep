@@ -165,7 +165,7 @@ function renderCard() {
       ${settingsHTML()}
       <div class="acts c3">${btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '')}${btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '')}${btn('sound', 'Sound', SND.on ? 'on' : 'off', SND.on ? 'on' : '')}</div>
       <div class="acts">${btn('vibe', 'Vibration', SET.vibe ? 'on' : 'off', SET.vibe ? 'on' : '')}</div>
-      <div class="acts">${btn('vol:-', 'Quieter', Math.round(SND.vol * 100) + '%')}${btn('vol:+', 'Louder', '')}</div>
+      <div class="acts">${btn('vol:-', 'Quieter', Math.round(SND.vol * 100) + '%')}${btn('vol:+', 'Louder', 'silent switch mutes')}</div>
       <div class="acts">${btn('newgame', G.confirm === 'new' ? 'Tap again' : 'New game', G.confirm === 'new' ? 'this one is lost' : 'pick your people', G.confirm === 'new' ? 'warn' : '')}</div>
       <p>The game saves itself every 10 seconds on this phone. World, game length and people take effect in the next game.</p>`;
   }
@@ -395,7 +395,7 @@ function learnAct(verb, arg) {
   else if (['sendbld', 'buildat', 'age', 'goto', 'envoy', 'trade'].includes(verb)) learn(verb === 'buildat' ? 'sendbld' : verb);
 }
 document.addEventListener('click', e => { const el = e.target.closest('[data-act]'); if (!el) return; e.stopPropagation(); sndInit(); sfx('tap'); act(el.dataset.act); });
-for (const ev of ['pointerdown', 'touchend']) document.addEventListener(ev, sndInit, { passive: true });
+for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndInit, { passive: true });   // Safari unlocks audio on the finger lifting, not landing
 
 function say(text, cls, secs, at, act) { if (!G) return; if (SET.msgs === false && cls !== 'warn') return;   // Messages off: warnings only
   const same = G.log.find(m => m.text === text && m.until > G.t); if (same) { same.until = G.t + (secs || 4); return; }   // the same line never shows twice at once
@@ -433,7 +433,6 @@ function ui(force) {
   const now = performance.now(); if (!force && now - uiAt < 150) return; uiAt = now;
   const p = G.P[0], R = p.res;
   $('rf').textContent = fmt(R.f); $('rw').textContent = fmt(R.w); $('rs').textContent = fmt(R.s); $('rg').textContent = fmt(R.g); $('ri').textContent = fmt(R.i);
-  $('rp').textContent = `${popOf(0)}/${capOf(0)}`;
   const rank = 1 + G.P.filter(q => q.id && q.id !== WILD && q.score.total > p.score.total).length;
   $('scoreN').textContent = `★${fmt(p.score.total)}`;
   if (G.t - (G.rdyT ?? -9) > 1 || G.t < G.rdyT) { G.rdyT = G.t; G.rdy = new Set(TECH.filter(t => !p.techs.has(t.id) && !researchWhy(0, t.id)).map(t => t.at)); }   // buildings with research you can start now
@@ -448,9 +447,9 @@ function ui(force) {
   const V = unitsOf(0, 'vil');
   for (const r of JOBS) { $('j' + r).textContent = V.filter(u => u.job === r).length; document.querySelector(`[data-act="job:${r}"]`).classList.toggle('on', p.rally === r); }
   for (const m of MENUS) $('m' + m.id).classList.toggle('on', !!(G.card && G.card.type === 'menu' && G.card.id === m.id));
-  const nq = queuedOf(0, 'vil'), kp = keepOf(0); $('bVil').classList.toggle('dis', !!trainWhy(0, 'vil'));
-  $('bVil').querySelector('small').textContent = clsCount(0, 'civ') >= VILMAX ? `${V.length} · limit ${VILMAX}` : `${V.length} · ${costText(UNIT.vil.cost)}` + (nq ? ` +${nq}` : '') + (kp && kp.blocked ? ' · room!' : '');
-  const S = armyOf(0); $('bArmy').querySelector('small').textContent = `${S.length} of ${ARMYMAX}` + (S.some(u => u.state === 'attack' || u.state === 'goto') ? ' out' : '');
+  const nq = queuedOf(0, 'vil'), full = popOf(0) >= capOf(0) && (capOf(0) >= POPMAX ? `max ${POPMAX}` : 'full'); $('bVil').classList.toggle('dis', !!trainWhy(0, 'vil'));
+  $('bVil').querySelector('small').textContent = full ? `${V.length} · ${full}` : `${V.length} of ${VILMAX}` + (nq ? ` +${nq}` : '')   // read like Army;   // homes show only when they stop you
+  const S = armyOf(0); $('bArmy').querySelector('small').textContent = full ? `${S.length} · ${full}` : `${S.length} of ${ARMYMAX}` + (S.some(u => u.state === 'attack' || u.state === 'goto') ? ' out' : '');
   $('bAge').querySelector('b').textContent = AGES[p.age].name; $('bAge').querySelector('small').textContent = p.aging ? 'advancing' : AGES[p.age + 1] ? `→ ${AGES[p.age + 1].name}` : 'last age';
   $('bDip').querySelector('small').textContent = G.P[FORT].alive ? (G.P[FORT].ally === 0 ? 'your ally' : G.P[FORT].ally !== null ? 'allied: ' + G.P[G.P[FORT].ally].name : G.rel[0][FORT]) : 'fallen';
   $('bDip').classList.toggle('on', G.P[FORT].ally === 0);

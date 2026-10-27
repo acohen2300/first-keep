@@ -7,14 +7,14 @@ let AC = null, master = null, NOISE = null, voices = 0, panV = 0; const sfxLast 
 // to the speakers; a sound from the left or right of the screen comes from that side
 function sink(gn) { if (panV && AC.createStereoPanner) { const p = AC.createStereoPanner(); p.pan.value = panV; gn.connect(p); p.connect(master); } else gn.connect(master); }
 function sndInit() {
-  if (AC) { if (AC.state === 'suspended') AC.resume(); return; }
+  if (AC) { if (AC.state !== 'running') AC.resume().catch(() => {}); return; }   // iPhone leaves audio 'interrupted' after a call, a lock or another app: wake it on the next tap
   try { if (navigator.audioSession) navigator.audioSession.type = 'ambient'; } catch (e) {}   // iPhone: the mute switch silences the game
   try {
     const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
     AC = new C(); master = AC.createGain(); master.gain.value = SND.vol * 0.5;
     { const L = AC.createDynamicsCompressor(); L.threshold.value = -3; L.knee.value = 10; L.ratio.value = 4; L.attack.value = 0.005; L.release.value = 0.25; master.connect(L); L.connect(AC.destination); }   // a limiter: a battle's many hits never clip a phone speaker
     NOISE = AC.createBuffer(1, AC.sampleRate, AC.sampleRate); const d = NOISE.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-    if (AC.state === 'suspended') AC.resume();
+    if (AC.state !== 'running') AC.resume().catch(() => {});
   } catch (e) { AC = null; }
 }
 function tone(f, dur, type, vol, f2, at) {

@@ -110,7 +110,6 @@ button.ok small{color:#8fd4a4}
 #zoom button{min-height:44px;min-width:44px;width:44px;padding:0;font-size:20px;font-weight:700;background:rgba(27,34,31,.92)}
 @media (max-width:440px){.tally{gap:1px;font-size:12px}.tally span{gap:1px}.tally .ico{width:12px;height:12px}}
 @media (max-width:400px){.tally{font-size:12px;gap:1px}.tally span{gap:0}.tally .ico{width:11px;height:11px}.hb{padding:0 1px}#hud{gap:1px}#score{min-width:44px;padding:0}#score b{font-size:12px}body{padding-left:8px;padding-right:8px}}
-@media (max-width:380px){.tally span:last-child .ico{display:none}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;scroll-behavior:auto!important} }
 </style>
 
@@ -122,7 +121,6 @@ button.ok small{color:#8fd4a4}
       <span title="Stone"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 12.5 L3.5 5 L8.5 2.5 L14.5 6.5 L13.5 13.5 Z" fill="#b4bbc0" stroke="#6b7378"/><path d="M3.5 5 L8.5 7 L14.5 6.5 M8.5 7 L8 13.5" stroke="#868e93" fill="none"/></svg><span id="rs">0</span></span>
       <span title="Gold"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="#f2cf55"/><circle cx="8" cy="8" r="4" fill="none" stroke="#b8902a" stroke-width="1.3"/></svg><span id="rg">0</span></span>
       <span title="Iron"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 11 L5 5 L11 5 L14 11 Z" fill="#8fa3b5"/><path d="M5 5 L11 5 L9.5 8 L6.5 8 Z" fill="#c9d4de"/></svg><span id="ri">0</span></span>
-      <span title="People / homes"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 L8 2.5 L14 8 V14 H2 Z" fill="#d8cdb4"/><path d="M1 8.5 L8 2 L15 8.5" stroke="#b5533c" stroke-width="2" fill="none"/></svg><span id="rp">0/5</span></span>
     </div>
     <button class="hb" id="score" data-act="card:score" aria-label="Score"><b id="scoreN">0</b></button>
     <button class="hb" id="speed" data-act="speed" aria-label="Pause, play, speed">×1</button>
@@ -163,7 +161,7 @@ button.ok small{color:#8fd4a4}
 'use strict';
 // ═════ 01-rules.js ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 29;
+const BUILD = 30;
 const MAP = 2000, MID = MAP / 2, DT = 1 / 30;
 const POPMAX = 150, VILMAX = 60, ARMYMAX = 90, BNSIZE = 30, BNS = 6;   // six battalions, once Command is researched at a War Council; BNSIZE: the most one Zeal blesses
 const RICH = 2.5, PLUNDER = 0.25, CARRY = 10, NAVC = 10;                // NAVC: the walking grid, 10 units a square (never shown)
@@ -588,11 +586,13 @@ const WHY = {
 const TRIGGERS = () => [
   ['You start a game', `Pick your civilisation (${CIVK.map(k => CIVS[k].name).join(', ')}). The three computers take three of the others at random. Each civilisation has one unique soldier, one small bonus and its own wonder; the rest is shared.`, 'A real people, but the same rules for all: no civilisation is stronger on paper.'],
   ['You order a unit and the town is full', 'The order waits ("needs room") and nothing is lost. Room opens when a House, Apartment or Aqueduct finishes or a unit dies.', 'A town is as big as its shelter.'],
+  ['The screen', `Top: food, wood, stone, gold, iron; the score (★, tap for the table); one pace button (×1, ×2, ×3, paused); ? for how to play. Bottom: Villagers and Army show how many you have of the most (${VILMAX} and ${ARMYMAX}), or "full" when your homes are. Bottom-left of the map: Home, season, weather, clock, zoom.`, 'Only what you act on stays in sight; the rest is a tap away.'],
+  ['Messages and sound', 'Every message is 10 words or fewer, one at a time. Tips and Messages can each be turned off; warnings stay on. Sound follows your phone\'s silent switch.', 'A phone game is played in short looks, often in company.'],
   ['Room', `You start with room for ${BLD.keep.room}. A House adds ${BLD.house.room}, an Apartment ${BLD.apartment.room}, an Aqueduct ${BLD.aqueduct.room}. At most ${POPMAX} people: ${VILMAX} villagers and workers, ${ARMYMAX} soldiers.`, 'Town Centers the game readable on a phone, and every side has the same limits.'],
   ['Battalions, from a War Council', 'Research Command at a War Council for six battalions, Alpha to Zeta. Set what each holds there, by type; new soldiers fill them, the rest are the reserve. Then Formations: Line, Column, Wedge, Square.', 'An army that moves as one cannot guard and attack at once.'],
   ['Villager jobs: Food, Farm, Wood, Stone, Gold', 'The − and + under each job move one villager off or on. Food takes a free field first if one is within 160, else the nearest berries, game or fish (fish only within 150 of a dock). Farm takes free fields only.', 'You decide who does what.'],
   ['Hunting', `Villagers on Food hunt deer and boar near home: they throw javelins, the animal falls, and they butcher it where it lies (a deer gives ${UNIT.deer.meat * RICH | 0}, a boar ${UNIT.boar.meat * RICH | 0}). Boar fight back.`, 'Meat came before fields everywhere.'],
-  ['You build', 'Press where it goes: the building waits above your finger and snaps flush beside your other buildings, leaving one walking lane. Green fits, red says why not. Let go, drag to adjust, then tap Build. Houses, fields and gates offer the next spot beside.', 'Rows that line up, no hidden gaps, and you never cover what you are placing.'],
+  ['You build', 'Press where it goes: the building waits above your finger and snaps flush beside your other buildings, side by side; buildings that train keep a walking lane around them. Green fits, red says why not. Let go, drag to adjust, then tap Build. Houses, fields and gates offer the next spot beside.', 'Rows that line up, no hidden gaps, and you never cover what you are placing.'],
   ['Everyone eats', `Every minute each villager eats a share (${(UPKEEP.share * 60).toFixed(2)} food), a foot soldier 1.5 shares, a rider or elephant 3 (horse fodder), a cart 2. One villager gathering food feeds about 8. With no food, work and damage drop by a quarter and nothing can be trained; nobody starves.`, 'Real towns and armies ate every day; an army\'s horses ate more than its men.'],
   ['You hold a vassal', 'Beat their army and stand at their Town Center, then Demand surrender; or, as the Fortress\'s ally and twice its strength, offer to be its overlord. Every 10 s you take the tax (light 10%, fair 20%, heavy 35% of what they gathered). Loyalty heads for 20 + your buildings near them (castle 20, town 15, market 10, tower, post, business center 6, field 2, others 3) + your soldiers there (0.5 each, up to 15) + enemies you killed near them (1 each, up to 20, fading) − the tax\'s resentment (0, 10, 30). Unrest moves by the tax push (0.3, 1.5, 4) minus loyalty/25. At 60 loyalty they send gifts; at 50 you get a quarter of their trade profit.', 'Rulers who protected and built up their subjects were paid more and kept them; those who only squeezed them faced revolt.'],
   ['Unrest reaches 100', 'A rebellion: a third of their villagers take up arms and their army turns on you. Kill three quarters of them and it is crushed (the rebels are lost); if they hold out 4 minutes, they are free. With two or more vassals, every minute there is a chance that all the restless ones rise together: the chance grows with their unrest and their number.', 'Overstretched empires fell to joint revolts.'],
@@ -3282,7 +3282,7 @@ function renderCard() {
       ${settingsHTML()}
       <div class="acts c3">${btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '')}${btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '')}${btn('sound', 'Sound', SND.on ? 'on' : 'off', SND.on ? 'on' : '')}</div>
       <div class="acts">${btn('vibe', 'Vibration', SET.vibe ? 'on' : 'off', SET.vibe ? 'on' : '')}</div>
-      <div class="acts">${btn('vol:-', 'Quieter', Math.round(SND.vol * 100) + '%')}${btn('vol:+', 'Louder', '')}</div>
+      <div class="acts">${btn('vol:-', 'Quieter', Math.round(SND.vol * 100) + '%')}${btn('vol:+', 'Louder', 'silent switch mutes')}</div>
       <div class="acts">${btn('newgame', G.confirm === 'new' ? 'Tap again' : 'New game', G.confirm === 'new' ? 'this one is lost' : 'pick your people', G.confirm === 'new' ? 'warn' : '')}</div>
       <p>The game saves itself every 10 seconds on this phone. World, game length and people take effect in the next game.</p>`;
   }
@@ -3512,7 +3512,7 @@ function learnAct(verb, arg) {
   else if (['sendbld', 'buildat', 'age', 'goto', 'envoy', 'trade'].includes(verb)) learn(verb === 'buildat' ? 'sendbld' : verb);
 }
 document.addEventListener('click', e => { const el = e.target.closest('[data-act]'); if (!el) return; e.stopPropagation(); sndInit(); sfx('tap'); act(el.dataset.act); });
-for (const ev of ['pointerdown', 'touchend']) document.addEventListener(ev, sndInit, { passive: true });
+for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndInit, { passive: true });   // Safari unlocks audio on the finger lifting, not landing
 
 function say(text, cls, secs, at, act) { if (!G) return; if (SET.msgs === false && cls !== 'warn') return;   // Messages off: warnings only
   const same = G.log.find(m => m.text === text && m.until > G.t); if (same) { same.until = G.t + (secs || 4); return; }   // the same line never shows twice at once
@@ -3550,7 +3550,6 @@ function ui(force) {
   const now = performance.now(); if (!force && now - uiAt < 150) return; uiAt = now;
   const p = G.P[0], R = p.res;
   $('rf').textContent = fmt(R.f); $('rw').textContent = fmt(R.w); $('rs').textContent = fmt(R.s); $('rg').textContent = fmt(R.g); $('ri').textContent = fmt(R.i);
-  $('rp').textContent = `${popOf(0)}/${capOf(0)}`;
   const rank = 1 + G.P.filter(q => q.id && q.id !== WILD && q.score.total > p.score.total).length;
   $('scoreN').textContent = `★${fmt(p.score.total)}`;
   if (G.t - (G.rdyT ?? -9) > 1 || G.t < G.rdyT) { G.rdyT = G.t; G.rdy = new Set(TECH.filter(t => !p.techs.has(t.id) && !researchWhy(0, t.id)).map(t => t.at)); }   // buildings with research you can start now
@@ -3565,9 +3564,9 @@ function ui(force) {
   const V = unitsOf(0, 'vil');
   for (const r of JOBS) { $('j' + r).textContent = V.filter(u => u.job === r).length; document.querySelector(`[data-act="job:${r}"]`).classList.toggle('on', p.rally === r); }
   for (const m of MENUS) $('m' + m.id).classList.toggle('on', !!(G.card && G.card.type === 'menu' && G.card.id === m.id));
-  const nq = queuedOf(0, 'vil'), kp = keepOf(0); $('bVil').classList.toggle('dis', !!trainWhy(0, 'vil'));
-  $('bVil').querySelector('small').textContent = clsCount(0, 'civ') >= VILMAX ? `${V.length} · limit ${VILMAX}` : `${V.length} · ${costText(UNIT.vil.cost)}` + (nq ? ` +${nq}` : '') + (kp && kp.blocked ? ' · room!' : '');
-  const S = armyOf(0); $('bArmy').querySelector('small').textContent = `${S.length} of ${ARMYMAX}` + (S.some(u => u.state === 'attack' || u.state === 'goto') ? ' out' : '');
+  const nq = queuedOf(0, 'vil'), full = popOf(0) >= capOf(0) && (capOf(0) >= POPMAX ? `max ${POPMAX}` : 'full'); $('bVil').classList.toggle('dis', !!trainWhy(0, 'vil'));
+  $('bVil').querySelector('small').textContent = full ? `${V.length} · ${full}` : `${V.length} of ${VILMAX}` + (nq ? ` +${nq}` : '')   // read like Army;   // homes show only when they stop you
+  const S = armyOf(0); $('bArmy').querySelector('small').textContent = full ? `${S.length} · ${full}` : `${S.length} of ${ARMYMAX}` + (S.some(u => u.state === 'attack' || u.state === 'goto') ? ' out' : '');
   $('bAge').querySelector('b').textContent = AGES[p.age].name; $('bAge').querySelector('small').textContent = p.aging ? 'advancing' : AGES[p.age + 1] ? `→ ${AGES[p.age + 1].name}` : 'last age';
   $('bDip').querySelector('small').textContent = G.P[FORT].alive ? (G.P[FORT].ally === 0 ? 'your ally' : G.P[FORT].ally !== null ? 'allied: ' + G.P[G.P[FORT].ally].name : G.rel[0][FORT]) : 'fallen';
   $('bDip').classList.toggle('on', G.P[FORT].ally === 0);
@@ -3689,14 +3688,14 @@ let AC = null, master = null, NOISE = null, voices = 0, panV = 0; const sfxLast 
 // to the speakers; a sound from the left or right of the screen comes from that side
 function sink(gn) { if (panV && AC.createStereoPanner) { const p = AC.createStereoPanner(); p.pan.value = panV; gn.connect(p); p.connect(master); } else gn.connect(master); }
 function sndInit() {
-  if (AC) { if (AC.state === 'suspended') AC.resume(); return; }
+  if (AC) { if (AC.state !== 'running') AC.resume().catch(() => {}); return; }   // iPhone leaves audio 'interrupted' after a call, a lock or another app: wake it on the next tap
   try { if (navigator.audioSession) navigator.audioSession.type = 'ambient'; } catch (e) {}   // iPhone: the mute switch silences the game
   try {
     const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
     AC = new C(); master = AC.createGain(); master.gain.value = SND.vol * 0.5;
     { const L = AC.createDynamicsCompressor(); L.threshold.value = -3; L.knee.value = 10; L.ratio.value = 4; L.attack.value = 0.005; L.release.value = 0.25; master.connect(L); L.connect(AC.destination); }   // a limiter: a battle's many hits never clip a phone speaker
     NOISE = AC.createBuffer(1, AC.sampleRate, AC.sampleRate); const d = NOISE.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-    if (AC.state === 'suspended') AC.resume();
+    if (AC.state !== 'running') AC.resume().catch(() => {});
   } catch (e) { AC = null; }
 }
 function tone(f, dur, type, vol, f2, at) {

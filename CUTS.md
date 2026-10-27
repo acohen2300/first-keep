@@ -232,3 +232,8 @@ Nothing disappears unless it is listed here. Old game kept as reference: `first-
 - **Messages:** every toast and tip is 10 words or fewer, one of each at a time, two lines at most. "Messages" on/off beside "Tips"; warnings stay on. The gate fails on a longer one (`tests/words.py`).
 - **Home pocket:** berries, grove, stone, gold and iron behind the Town Center, away from the raid side.
 - **Gate rules kept:** taps stay 44 px, type 12 px or more. Old saves load as Messages on.
+
+## Build 30 (sound, population, guide)
+- **Sound wakes up again:** iPhone leaves the audio "interrupted" after a call, a lock or another app; the game only woke it from "suspended", so it stayed silent until a reload. It now wakes on the next tap whatever the state. Audio starts on the finger lifting (Safari's rule), not landing. Still follows the silent switch; "silent switch mutes" sits under Louder.
+- **Cut: people / homes from the top bar.** Villagers now read like Army: "12 of 60", "40 of 90". When homes are full both say "full" (at 150 people, "max 150"). Cut with it: the villager cost on the button (it is on the Town Center card and in the guide) and the "room!" note.
+- **Guide:** regenerated for Build 30, with new rows for the screen and for messages and sound; building row says side by side, with a lane only around trainers.
