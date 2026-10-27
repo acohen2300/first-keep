@@ -19,13 +19,14 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
   -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 #app{height:100%;position:relative;max-width:560px;margin:0 auto}
 #hud{position:absolute;top:max(8px,env(safe-area-inset-top,0px));left:0;right:0;box-sizing:border-box;padding:0 var(--pad);display:flex;align-items:center;gap:0;height:32px;pointer-events:none}#hud>*{pointer-events:auto}
-.grp{display:flex;align-items:center;height:32px;box-sizing:border-box;border-radius:8px;border:1px solid var(--glassLine);background:var(--glass);background-color:var(--glassBg);box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.bar{flex:1;min-width:0;display:flex;align-items:center;height:32px;box-sizing:border-box;border-radius:8px;border:1px solid var(--glassLine);background:var(--glass);background-color:var(--glassBg);box-shadow:0 2px 8px rgba(0,0,0,.35)}   /* one bar: the tally, then four controls, each cell cut off by a divider */
+.grp{display:flex;align-items:center;height:32px}
 .grp button{position:relative;z-index:0;margin:-6px 0;min-width:44px;padding:0;border:0;border-radius:0;background:none;box-shadow:none;font-size:14px}
-.grp button+button::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:1px;background:var(--glassLine)}
+.grp button::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:1px;background:var(--glassLine)}
 .grp button.on{background:none;border:0}
 .grp button.on::after{content:'';position:absolute;inset:6px 0;background:var(--glassOn);z-index:-1}
 .grp svg{width:18px;height:18px}
-.tally{display:flex;align-items:center;gap:6px;flex:1;height:32px;box-sizing:border-box;padding:0 4px;margin-right:8px;overflow:hidden;border-radius:8px;border:1px solid var(--glassLine);background:var(--glass);background-color:var(--glassBg);box-shadow:0 2px 8px rgba(0,0,0,.35);font-variant-numeric:tabular-nums;font-weight:600;font-size:15px;min-width:0;justify-content:space-between}
+.tally{display:flex;align-items:center;gap:6px;flex:1;height:32px;box-sizing:border-box;padding:0 4px;overflow:hidden;font-variant-numeric:tabular-nums;font-weight:600;font-size:15px;min-width:0;justify-content:space-between}
 .tally span{display:flex;align-items:center;gap:4px;white-space:nowrap}
 .hb{min-height:44px;min-width:44px;padding:0 4px;flex-direction:row}
 /* small icon buttons: drawn at 32 px, tapped at 44 px */
@@ -35,7 +36,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 .ic+.ic{margin-left:-4px}   /* every control is 32 px high with 8 px between; the 44 px tap areas overlap a little */
 .ic svg{width:18px;height:18px}#pauseB svg{width:18px;height:18px}#muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--mute)}
 #card .lvl{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}#card .lvl small{color:var(--mute)}
-#score{min-width:44px;padding:0 6px;margin-right:8px;gap:4px;flex-direction:row;line-height:1;font-variant-numeric:tabular-nums}#score::before{left:0;right:0;width:auto;margin:-16px 0 0 0}#scoreR{font-size:12px;color:var(--mute);font-weight:600}
+#clock #score{align-self:stretch;min-width:44px;margin:0;padding:0 8px;gap:4px;flex-direction:row;line-height:1;font-variant-numeric:tabular-nums;border:0;border-right:1px solid var(--glassLine);border-radius:0;background:none;box-shadow:none}#scoreR{font-size:12px;color:var(--mute);font-weight:600}
 #score b{font-size:14px}
 #stage{position:absolute;inset:0;overflow:hidden;background:#20301c;touch-action:none}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -56,7 +57,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button b{font-size:14px}#strip button small{font-size:12px}
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
-#card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
+#card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:8px 10px 10px;display:flex;flex-direction:column;gap:5px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
 #card h3{margin:0;font-family:var(--display);font-weight:400;font-size:22px;display:flex;align-items:center;gap:8px;padding-right:96px}
 #card .who{font-family:var(--ui);font-size:14px;color:var(--mute);font-weight:600}
 #card p{margin:0;color:var(--mute);line-height:1.35;font-size:15px}
@@ -97,6 +98,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--pad) max(8px,env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:6px;pointer-events:none}
 #orders button{pointer-events:auto;background:var(--glass);background-color:var(--glassBg);border-color:var(--glassLine);box-shadow:0 2px 8px rgba(0,0,0,.35)}
 #orders button.on{background:var(--glassOn);background-color:#483e96;border-color:#d6b262}
+button.ghost{visibility:hidden}
 #orders button.dis,#orders button.dis small{color:var(--glassDim)}
 #orders button small{color:#d3d1ee}
 #clock.glow{animation:glowp 1.8s ease-in-out infinite}@keyframes glowp{0%,100%{box-shadow:0 0 6px rgba(230,185,71,.45)}50%{box-shadow:0 0 16px rgba(230,185,71,.95)}}
@@ -111,7 +113,6 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font
 #mapB{top:calc(var(--hb) + 2px);right:calc(var(--pad) - 6px)}#miniX{top:var(--hb);right:0}#miniX::before{width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:6px}#miniX svg{width:14px;height:14px}#homeB{left:2px;bottom:calc(var(--ob) + 2px)}
 #stage.mapOn #banner{right:136px}
 #clock{position:absolute;right:8px;bottom:calc(var(--ob) + 8px);z-index:3;max-width:calc(100% - 16px);display:flex;align-items:center;border-radius:8px;border:1px solid var(--glassLine);background:var(--glass);background-color:var(--glassBg);box-shadow:0 2px 8px rgba(0,0,0,.35);font-variant-numeric:tabular-nums}
-#clock #speed{align-self:stretch;margin:0;font-size:14px;border:0;border-right:1px solid var(--glassLine);border-radius:0;background:none;box-shadow:none;min-height:44px;min-width:44px}#clock #speed::before{display:none}
 #status{align-items:flex-end;text-align:right;gap:1px;padding:4px 10px;border:0;background:none;box-shadow:none;border-radius:0;min-height:44px;pointer-events:auto}#status b{font-size:14px;white-space:nowrap}#status small{font-size:12px;color:#d3d1ee;white-space:nowrap}#status small:empty{display:none}
 #stage.busy #homeB,#stage.busy #clock{display:none}
 #tip{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 48px);display:flex;align-items:center;gap:8px;background:rgba(16,28,44,.93);border:1px solid var(--blue);border-radius:8px;padding:6px 6px 6px 10px;font-weight:600;font-size:14px;line-height:1.3}
@@ -146,7 +147,6 @@ button.ok small{color:#8fd4a4}
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .24 0 0 0 0 .1 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"),radial-gradient(ellipse at 28% 12%,rgba(255,250,230,.6),transparent 60%),radial-gradient(ellipse at 85% 95%,rgba(125,82,30,.2),transparent 55%),linear-gradient(#ebdeba,#decda2);background-color:#e6d6ad;
   box-shadow:inset 0 0 26px rgba(110,70,25,.38),inset 3px 0 0 rgba(90,60,25,.25),0 -6px 24px rgba(0,0,0,.5)}
 .night #card{filter:brightness(.74) sepia(.2)}
-#card h3{border-bottom:1px solid var(--line);padding-bottom:3px;margin-bottom:2px}
 #card button:not(#cardX):not(#cardI){position:relative;box-shadow:inset 0 0 0 2px var(--panel),inset 0 0 0 3px #b9a176}
 #card button.dis{background:#dccba1;border-style:dashed;box-shadow:none}
 #card button.on{background:#f4eac9;border-color:#2a1c10;box-shadow:inset 0 0 0 1px #2a1c10}
@@ -158,14 +158,19 @@ button.ok small{color:#8fd4a4}
 #card .chip{border-color:#3d6b3a;box-shadow:none;background:rgba(61,107,58,.12);color:#26471f}
 #card .fold{border-top-color:var(--line)}
 #card .infoP{background:rgba(255,250,230,.5);border:1px solid var(--line);border-radius:6px;padding:6px 9px;display:flex;flex-direction:column;gap:5px}
-#card .acts.c5{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}#card .chipsrow button{min-height:44px;padding:2px}#card .chipsrow b{font-size:14px}
+#card .acts.c5{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+#card .chipsrow{gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel2)}   /* the menu tabs touch: one strip, the chosen one filled in red ink */
+#card .chipsrow button:not(#cardX):not(#cardI){min-height:44px;padding:2px;border:0;border-radius:0;box-shadow:none;background:none}
+#card .chipsrow button+button::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--line)}
+#card .chipsrow b{font-size:14px}
+#card .chipsrow button.on:not(#cardX):not(#cardI){background:#8e1d14;border:0;box-shadow:none}#card .chipsrow button.on b{color:#f4eac9}#card .chipsrow button.on::before,#card .chipsrow button.on+button::before{background:#8e1d14}
 #card .lnk{min-height:44px;width:100%;padding:0;background:none;border:0;box-shadow:none;color:inherit;font-weight:700;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
 #card .tabs{gap:2px;margin-bottom:-2px}
 #card .tabs button{border-radius:8px 8px 0 0;border-bottom-color:var(--line);background:var(--panel2)}
 #card .tabs button.on{background:#f4eac9;border-bottom-color:#f4eac9}
 #card .tabs button.on::before{content:'';position:absolute;top:-1px;right:8px;width:9px;height:15px;background:#8e1d14;clip-path:polygon(0 0,100% 0,100% 100%,50% 72%,0 100%)}
 @media (max-width:440px){.tally{gap:0;font-size:12px}.tally span{gap:1px}.tally .ico{width:12px;height:12px}}
-@media (max-width:400px){:root{--pad:6px}.tally{letter-spacing:-.02em}.grp button+button{margin-left:-4px}#score{gap:3px;padding:0 4px}.tally span{gap:0}.tally .ico{width:10px;height:10px}.hb{padding:0 1px}#score b{font-size:13px}.tally{padding:0 3px}#score{padding:0 5px}}
+@media (max-width:400px){:root{--pad:6px}.tally{letter-spacing:-.02em;padding:0 4px}.tally span{gap:0}.tally .ico{width:10px;height:10px}.hb{padding:0 1px}#clock #score{padding:0 5px;gap:3px}#score b{font-size:13px}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important;scroll-behavior:auto!important} }
 </style>
 
@@ -173,7 +178,7 @@ button.ok small{color:#8fd4a4}
   <div id="stage">
     <canvas id="cv"></canvas>
     <div id="vig"></div>
-  <header id="hud">
+  <header id="hud"><div class="bar">
     <div class="tally">
       <span title="Food"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 4.5 L10.5 1.5" stroke="#6aa04f" stroke-width="1.6" stroke-linecap="round"/><circle cx="5.2" cy="10" r="3.3" fill="#d9607a"/><circle cx="10.8" cy="10" r="3.3" fill="#d9607a"/><circle cx="8" cy="6.4" r="3.3" fill="#ec8ea3"/></svg><span id="rf">0</span></span>
       <span title="Wood"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="5" width="13" height="7" rx="3.5" fill="#a8743f"/><circle cx="11.6" cy="8.5" r="2.7" fill="#e3b98a"/><circle cx="11.6" cy="8.5" r="1.1" fill="#a8743f"/></svg><span id="rw">0</span></span>
@@ -181,13 +186,13 @@ button.ok small{color:#8fd4a4}
       <span title="Gold"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="#f2cf55"/><circle cx="8" cy="8" r="4" fill="none" stroke="#b8902a" stroke-width="1.3"/></svg><span id="rg">0</span></span>
       <span title="Iron"><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 11 L5 5 L11 5 L14 11 Z" fill="#8fa3b5"/><path d="M5 5 L11 5 L9.5 8 L6.5 8 Z" fill="#c9d4de"/></svg><span id="ri">0</span></span>
     </div>
-    <button class="hb ic" id="score" data-act="card:score" aria-label="Score and rank"><b id="scoreN">0</b><span id="scoreR"></span></button>
     <div class="grp">
     <button class="hb" id="muteB" data-act="sound" aria-label="Mute"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor"/><path class="w" d="M11 5.5q2 2.5 0 5M12.8 3.8q3.4 4.2 0 8.4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/><path class="x" d="M11 6l4 4M15 6l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
     <button class="hb" id="pauseB" data-act="pause" aria-label="Pause"></button>
+    <button class="hb" id="speed" data-act="speed" aria-label="Game speed">×1</button>
     <button class="hb" id="helpB" data-act="help" aria-label="How to play"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.4 7.6a2.7 2.7 0 1 1 3.9 2.4c-.9.5-1.3 1.1-1.3 2.1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="15.2" r="1.15" fill="currentColor"/></svg></button>
     </div>
-  </header>
+  </div></header>
   <section id="orders">
     <div class="row r6" id="jobs"></div>
     <div class="row r2">
@@ -198,7 +203,7 @@ button.ok small{color:#8fd4a4}
     <canvas id="mini" width="172" height="172"></canvas>
     <button class="hb ic ov" id="mapB" data-act="map" aria-label="Show the map"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.5 L7.5 4 L12.5 5.5 L17 4 V14.5 L12.5 16 L7.5 14.5 L3 16 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M7.5 4 V14.5 M12.5 5.5 V16" stroke="currentColor" stroke-width="1.5"/></svg></button><button class="hb ic ov" id="miniX" data-act="map" aria-label="Shrink the map" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10 H15.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
     <button class="hb ic ov" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 10 L10 4 L16.5 10" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round"/><path d="M5.5 9 V16 H14.5 V9" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 16 V12 H11.4 V16" fill="currentColor"/></svg></button>
-    <div id="clock"><button class="hb ic" id="speed" data-act="speed" aria-label="Game speed">×1</button><button id="status" data-act="card:army" aria-label="Status: people, army and research"><b id="sL1"></b><small id="sL2"></small><small id="sL3"></small></button></div>
+    <div id="clock"><button class="hb" id="score" data-act="card:score" aria-label="Score and rank"><b id="scoreN">0</b><span id="scoreR"></span></button><button id="status" data-act="card:army" aria-label="Status: people, army and research"><b id="sL1"></b><small id="sL2"></small><small id="sL3"></small></button></div>
     <div id="banner"></div>
     <div id="strip" hidden></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="cancel"><b>Cancel</b></button></div>
@@ -249,7 +254,7 @@ const PLAYERS = [
 const FORT = 3;   // the neutral side that can be won as an ally
 
 const AGES = [
-  { name: 'Settlement' },
+  { name: 'Stone' },
   { name: 'Bronze',    cost: { f: 300, w: 100 },         t: 40 },
   { name: 'Classical', cost: { f: 600, g: 200 },         t: 60 },
   { name: 'Medieval',  cost: { f: 1000, g: 500, s: 200 }, t: 80 },
@@ -367,7 +372,7 @@ const BLD = {
   wonder:    { name: 'Wonder', fp: 6, hp: 4000, h: 60, cost: { f: 1500, w: 1500, s: 1500, g: 1500 }, t: 240, age: 2, one: true, desc: 'Your civilisation\'s great work. When it is finished every side is told, and if it still stands 8 minutes later, you win.' },
 };
 const WONDER_HOLD = 480;
-// Limits. How many of a building you may have in each age (Settlement … Gunpowder). A kind not listed: one. Homes, walls and trade posts have no limit of their own: room and stone bound them.
+// Limits. How many of a building you may have in each age (Stone … Gunpowder). A kind not listed: one. Homes, walls and trade posts have no limit of their own: room and stone bound them.
 const CAPS = {
   farm: [6, 9, 12, 15, 18], treefarm: [6, 9, 12, 15, 18], pasture: [2, 3, 4, 4, 4],
   barracks: [1, 2, 2, 3, 3], range: [1, 2, 2, 3, 3], stable: [1, 2, 2, 3, 3], siege: [1, 2, 2, 3, 3],
@@ -386,7 +391,7 @@ const MENUS = [
   { id: 'mil',  name: 'Military', blurb: 'where soldiers are trained',      items: ['barracks', 'range', 'stable', 'siege', 'smith', 'council'] },
   { id: 'def',  name: 'Defense',  blurb: 'towers, walls and gates',         items: ['tower', 'castle', 'wall', 'gate'] },
   { id: 'shop', name: 'Trade',    blurb: 'markets, goods and caravans',       items: ['market', 'bizc', 'weaver', 'brewery'] },
-  { id: 'cult', name: 'Culture',  blurb: 'learning, faith, law and wonders', items: ['school', 'library', 'hospital', 'temple', 'courthouse', 'amphi', 'wonder'] },
+  { id: 'cult', name: 'Culture',  blurb: 'faith, law, learning, wonders', items: ['school', 'library', 'hospital', 'temple', 'courthouse', 'amphi', 'wonder'] },
 ];
 
 // Research. fx: what it changes, by stat; k narrows it (a resource, a unit kind or #tag, a building kind or #wallish).
@@ -673,7 +678,7 @@ const WHY = {
 const TRIGGERS = () => [
   ['You start a game', `Pick your civilisation (${CIVK.map(k => CIVS[k].name).join(', ')}). The three computers take three of the others at random. Each civilisation has one unique soldier, one small bonus and its own wonder; the rest is shared.`, 'A real people, but the same rules for all: no civilisation is stronger on paper.'],
   ['You order a unit and the town is full', 'The order waits ("needs room") and nothing is lost. Room opens when a House, Apartment or Aqueduct finishes or a unit dies.', 'A town is as big as its shelter.'],
-  ['The screen', `Top, one line: food, wood, stone, gold, iron; your score and rank (tap for the table, then a name to go there); sound; pause and play; ? for how to play. On the map: the map icon top right; home bottom left, when your Town Center is out of sight; speed, season, weather and clock bottom right. The map fills the screen and these sit on it as indigo pills. Bottom: each job with − and + (+ places an idle villager; new villagers go to the job you picked); + Villager trains one and shows how many are idle; People holds your villagers and army; Build holds every building; Research lists everything you can research now, and glows when something is ready. A book on a building means research waits there.`, 'Only what you act on stays in sight; the rest is a tap away.'],
+  ['The screen', `Top, one bar: food, wood, stone, gold, iron; then sound, pause and play, speed, and ? for how to play. The map fills the screen and these sit on it as indigo pills. On the map: the map icon top right (its − shrinks it again); home bottom left, when your Town Center is out of sight. Bottom right, the status pill: your score and rank (tap for the table, then a name to go there), then your people, age, season and clock; tap the rest of it for your people, army and research. Bottom: each job with − and + (+ places an idle villager; new villagers go to the job you picked); + Villager trains one and shows how many are idle; Build holds every building. A book on a building means research waits there.`, 'Only what you act on stays in sight; the rest is a tap away.'],
   ['Messages and sound', 'Every message is 10 words or fewer, one at a time. Tips and Messages can each be turned off; warnings stay on. Sound follows your phone\'s silent switch.', 'A phone game is played in short looks, often in company.'],
   ['Room', `You start with room for ${BLD.keep.room}. A House adds ${BLD.house.room}, an Apartment ${BLD.apartment.room}, an Aqueduct ${BLD.aqueduct.room}; Timber framing, Brick and mortar and Plumbing add more. At most ${POPMAX} people: ${VILMAX} villagers and workers, ${ARMYMAX} soldiers.`, 'Town Centers the game readable on a phone, and every side has the same limits.'],
   ['Limits', `Each building has a limit that grows with the age: farms ${CAPS.farm[0]} at first, up to ${CAPS.farm[4]}; one Barracks, up to ${CAPS.barracks[4]}; most other buildings one. Soldiers need room: a Barracks, Archery range, Stable or Siege workshop holds ${ARMYROOM.barracks}, a Castle ${ARMYROOM.castle}, a Temple, Courthouse or Hospital ${ARMYROOM.temple}. Drill yard and Standing army add more. Every side has the same limits.`, 'A real army needs barracks, stables and stores, not just men, and a town can only feed so many fields.'],
@@ -3503,7 +3508,7 @@ function renderCard() {
   else if (c.type === 'fortress') h += `<h3>The Fortress<span class="who">${G.P[FORT].alive ? G.rel[0][FORT] + (G.P[FORT].civ ? ' · ' + CIVS[G.P[FORT].civ].name : '') : 'fallen'}</span></h3>` + diploHTML();
   else if (c.type === 'menu') {
     const M = MENUS.find(m => m.id === c.id); G.lastMenu = c.id;
-    h += `<h3>Build<span class="who">${M.blurb}</span></h3><div class="acts c5 chipsrow">${MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join('')}</div><div class="acts c3">` + M.items.map(k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp; return btn(`build:${k}`, bldName(0, k), lock ? `${AGES[B.age].name} age` : full ? `limit ${cp}` : costText(B.cost) + (cp > 1 && cp < 99 ? ` · ${n}/${cp}` : ''), lock || full || !afford(p, B.cost) ? 'dis' : ''); }).join('') + `</div>`;
+    h += `<h3>Build<span class="who">${M.blurb}</span></h3><div class="acts c5 chipsrow">${MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join('')}</div><div class="acts c3">` + M.items.map(k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp; return btn(`build:${k}`, bldName(0, k), lock ? `${AGES[B.age].name} age` : full ? `limit ${cp}` : costText(B.cost) + (cp > 1 && cp < 99 ? ` · ${n}/${cp}` : ''), lock || full || !afford(p, B.cost) ? 'dis' : ''); }).join('') + '<button class="ghost" disabled aria-hidden="true" tabindex="-1"><b>.</b><small>.</small></button>'.repeat(Math.max(0, MENUS[0].items.length - M.items.length)) + `</div>`;   // blank places keep every menu as tall as the biggest, so the page never changes height
     h += fold('menu', 'What each one does', M.items.map(k => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''));
   } else if (c.type === 'research') {
     h += researchHTML();

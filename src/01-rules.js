@@ -31,7 +31,7 @@ const PLAYERS = [
 const FORT = 3;   // the neutral side that can be won as an ally
 
 const AGES = [
-  { name: 'Settlement' },
+  { name: 'Stone' },
   { name: 'Bronze',    cost: { f: 300, w: 100 },         t: 40 },
   { name: 'Classical', cost: { f: 600, g: 200 },         t: 60 },
   { name: 'Medieval',  cost: { f: 1000, g: 500, s: 200 }, t: 80 },
@@ -149,7 +149,7 @@ const BLD = {
   wonder:    { name: 'Wonder', fp: 6, hp: 4000, h: 60, cost: { f: 1500, w: 1500, s: 1500, g: 1500 }, t: 240, age: 2, one: true, desc: 'Your civilisation\'s great work. When it is finished every side is told, and if it still stands 8 minutes later, you win.' },
 };
 const WONDER_HOLD = 480;
-// Limits. How many of a building you may have in each age (Settlement … Gunpowder). A kind not listed: one. Homes, walls and trade posts have no limit of their own: room and stone bound them.
+// Limits. How many of a building you may have in each age (Stone … Gunpowder). A kind not listed: one. Homes, walls and trade posts have no limit of their own: room and stone bound them.
 const CAPS = {
   farm: [6, 9, 12, 15, 18], treefarm: [6, 9, 12, 15, 18], pasture: [2, 3, 4, 4, 4],
   barracks: [1, 2, 2, 3, 3], range: [1, 2, 2, 3, 3], stable: [1, 2, 2, 3, 3], siege: [1, 2, 2, 3, 3],
@@ -168,7 +168,7 @@ const MENUS = [
   { id: 'mil',  name: 'Military', blurb: 'where soldiers are trained',      items: ['barracks', 'range', 'stable', 'siege', 'smith', 'council'] },
   { id: 'def',  name: 'Defense',  blurb: 'towers, walls and gates',         items: ['tower', 'castle', 'wall', 'gate'] },
   { id: 'shop', name: 'Trade',    blurb: 'markets, goods and caravans',       items: ['market', 'bizc', 'weaver', 'brewery'] },
-  { id: 'cult', name: 'Culture',  blurb: 'learning, faith, law and wonders', items: ['school', 'library', 'hospital', 'temple', 'courthouse', 'amphi', 'wonder'] },
+  { id: 'cult', name: 'Culture',  blurb: 'faith, law, learning, wonders', items: ['school', 'library', 'hospital', 'temple', 'courthouse', 'amphi', 'wonder'] },
 ];
 
 // Research. fx: what it changes, by stat; k narrows it (a resource, a unit kind or #tag, a building kind or #wallish).
