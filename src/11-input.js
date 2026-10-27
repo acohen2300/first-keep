@@ -14,7 +14,7 @@ function ghostAt(p, touch) {
   if (pl.kind === 'wall') { const c = toCell(w); if (!pl.a) pl.a = c; pl.cells = wallLine(pl.a, c); pl.at = { x: c.gx * NAVC + 5, y: c.gy * NAVC + 5 }; }
   else pl.at = snapGhost(0, pl.kind, w.x, w.y, Math.max(14, 26 / cam.z));
 }
-cv.addEventListener('pointerdown', e => {
+cv.addEventListener('pointerdown', e => { hideStrip();
   try { cv.setPointerCapture(e.pointerId); } catch (err) {} const p = lp(e); ptrs.set(e.pointerId, p);
   if (ptrs.size >= 2) { drag = null; const [a, b] = [...ptrs.values()]; pinch = { d: hyp(a.x - b.x, a.y - b.y) || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 }; return; }
   if (G.selMode && !G.place) { drag = { mode: 'box', x0: p.x, y0: p.y, x1: p.x, y1: p.y }; G.box = drag; return; }   // Select: drag a box
@@ -59,7 +59,7 @@ cv.addEventListener('wheel', e => { e.preventDefault(); const p = lp(e); zoomAt(
 mini.addEventListener('pointerdown', e => { e.stopPropagation(); const r = mini.getBoundingClientRect(); cam.x = (e.clientX - r.left) / r.width * MAP; cam.y = (e.clientY - r.top) / r.height * MAP; clampCam(); });
 // what is under the finger: a building (they have height), a find, a unit, a resource, else the ground
 function tapAt(sx, sy) {
-  if (G.over) return;
+  hideStrip(); if (G.over) return;
   if (RADAR && hyp(sx - RADAR.sx, sy - RADAR.sy) < 26) { cam.x = RADAR.x; cam.y = RADAR.y; clampCam(); return; }
   const z = cam.z; let foot = null, roof = null, fy = -1e9, ry = -1e9;
   for (const b of G.blds) {   // footprint: the ground it stands on; roof: the height drawn above it
@@ -79,7 +79,7 @@ function tapAt(sx, sy) {
   for (const n of G.nodes) if (n.kind !== 'farm') { const d = hyp(SX(n.x) - sx, SY(n.y) - 6 * z - sy); if (d < nr) { nr = d; nd = n; } }
   if (nd) { openCard({ type: 'node', id: nd.id }); return; }
   const w = toWorld(sx, sy);
-  openCard({ type: 'ground', x: w.x, y: w.y });
+  showStrip(sx, sy, w.x, w.y);   // open ground: the small send strip at your finger
 }
 function startPlace(kind) {
   const B = BLD[kind], p = G.P[0];

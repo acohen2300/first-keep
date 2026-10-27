@@ -16,6 +16,30 @@ function train(o, kind) {
   const t = U.t * stats(o, k).train;
   pay(p, U.cost); at.q.push({ kind: k, left: t, total: t }); return true;
 }
+// Muster: a whole battalion in one order at the War Council: twice the cost and a quarter longer; the time is shared by every building that trains each kind
+const musterN = plan => Object.values(plan).reduce((n, k) => n + k, 0);
+function musterCost(o, plan) {
+  const cost = {}; let t = 0;
+  for (const k in plan) { const U = UNIT[k], n = plan[k]; for (const r in U.cost) cost[r] = (cost[r] || 0) + U.cost[r] * n * 2; t = Math.max(t, n * U.t * stats(o, k).train / Math.max(1, readyAt(o, U).length)); }
+  return { cost, t: Math.ceil(t * 1.25) };
+}
+function musterWhy(o, plan) {
+  const p = G.P[o], n = musterN(plan);
+  if (!p.techs.has('muster')) return 'Needs Muster.';
+  if (!n) return 'Nothing missing.';
+  if (!ready(o, 'council').some(b => b.q.length < 5)) return 'Needs a War Council.';
+  for (const k in plan) { const U = UNIT[k]; if (U.age > p.age || !readyAt(o, U).length) return `Needs a ${BLD[U.at].name.toLowerCase()}.`; }
+  if (clsCount(o, 'army') + n > ARMYMAX) return `Army limit: ${ARMYMAX}.`;
+  if (popOf(o) + n > capOf(o)) return 'Needs room: build homes.';
+  if (p.hungry) return 'Your people are hungry.';
+  const { cost } = musterCost(o, plan); if (!afford(p, cost)) return `Not enough: ${costText(cost)}.`;
+  return null;
+}
+function muster(o, plan, bn) {
+  if (musterWhy(o, plan)) return false;
+  const { cost, t } = musterCost(o, plan), at = ready(o, 'council').sort((a, b) => a.q.length - b.q.length)[0];
+  pay(G.P[o], cost); at.q.push({ muster: plan, bn, left: t, total: t }); return true;
+}
 function researchWhy(o, id) {
   const T = TECHBY[id], p = G.P[o];
   if (p.techs.has(id)) return 'Already known.';

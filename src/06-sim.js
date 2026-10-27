@@ -102,7 +102,7 @@ function bldTick(b, dt) {
   }
   const j = b.q[0];
   if (j && !(b.stall > G.t)) {
-    if (j.kind && UNIT[j.kind].cls && popOf(o) >= capOf(o)) b.blocked = true;
+    if (j.kind && UNIT[j.kind].cls && popOf(o) >= capOf(o) || j.muster && popOf(o) + musterN(j.muster) > capOf(o)) b.blocked = true;
     else {
       b.blocked = false; j.left -= dt;
       if (j.left <= 0) { b.q.shift(); jobDone(b, j); }
@@ -142,6 +142,9 @@ function jobDone(b, j) {
     if (j.kind === 'vil') u.job = o === 0 ? p.rally : null;
     else if (j.kind === 'caravan') u.lastId = b.id;
     else if (o === 0 && G.rally0 && UNIT[j.kind].cls === 'army') { u.state = 'goto'; u.px = G.rally0.x; u.py = G.rally0.y; }
+  } else if (j.muster) {
+    for (const k in j.muster) for (let i = 0; i < j.muster[k]; i++) { const s = towardMid(b, B.fp * 5 + 12), u = addUnit(o, k, s.x + rnd(-14, 14), s.y + rnd(-14, 14)); u.bornT = G.t; if (j.bn !== undefined) u.bn = j.bn; }
+    if (o === 0) { sfx('done', b.x, b.y); say(`${j.bn !== undefined ? BN[j.bn] : 'A battalion'} mustered: ${musterN(j.muster)} soldiers.`, 'good', 5, b); }
   } else if (j.tech) {
     learnTech(o, j.tech);
   } else if (j.age) {
@@ -376,6 +379,7 @@ function shot(x1, y1, h1, x2, y2) { const d = hyp(x2 - x1, y2 - y1), dur = 0.12 
 function stanceOf(u) {
   const U = UNIT[u.kind], tg = U.tags || [], shoots = tg.includes('ranged'), foot = tg.includes('infantry') && !shoots;
   if (U.kite) return 2;
+  const P = G.P[u.owner]; if (!P || !P.techs.has('engage')) return 0;   // stances come with Engagement, for every side
   const want = u.owner === 0 ? G.stance[u.bn ?? BNS] || 0 : shoots ? 2 : foot && u.state === 'home' ? 1 : 0;
   return want === 1 && foot ? 1 : want === 2 && shoots ? 2 : 0;
 }

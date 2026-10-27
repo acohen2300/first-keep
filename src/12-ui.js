@@ -1,11 +1,16 @@
 // ═════ 12-ui.js ═════
 // ───────────────────────── The pages: what each thing is and does ─────────────────────────
-function openCard(c) { G.card = c; G.confirm = null; cardSig = ''; renderCard(); }
+function openCard(c) { hideStrip(); G.card = c; G.confirm = null; cardSig = ''; renderCard(); }
 function closeCard() { if (G) G.card = null; $('card').hidden = true; }
-let cardSig = '';
+let cardSig = '', heldT = 0;
+// a finger on a card holds its live numbers still: rebuilding the buttons under a press loses the tap
+$('card').addEventListener('pointerdown', () => { heldT = 1e12; }, { passive: true });
+for (const ev of ['pointerup', 'pointercancel']) $('card').addEventListener(ev, () => { heldT = performance.now() + 400; }, { passive: true });
 const btn = (act, title, sub, cls) => `<button data-act="${act}" class="${cls || ''}"><b>${title}</b>${sub ? `<small>${sub}</small>` : ''}</button>`;
 // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 const FOLD = new Set();
+// two-sided cards, one mold: two tabs; the chosen one is lit
+const twoTabs = (key, opts, cur) => `<div class="acts">${opts.map(([k, t, sub]) => btn(`${key}:${k}`, t, sub, cur === k ? 'on' : '')).join('')}</div>`;
 const fold = (id, title, html) => html ? `<details class="fold" data-f="${id}"${FOLD.has(id) ? ' open' : ''}><summary>${title}</summary>${html}</details>` : '';
 const hpBar = (f, col) => `<div class="hp"><i style="width:${Math.round(100 * clamp(f, 0, 1))}%;background:${col}"></i></div>`;
 const unitLine = (o, k) => { const S = stats(o, k), U = UNIT[k]; return `<p><b>${S.name}:</b> ${U.desc}${U.civ ? ` <i>${CIVS[U.civ].name} only.</i>` : ''}</p>`; };
@@ -27,7 +32,7 @@ function renderCard() {
   const p = G.P[0]; let h = '';
   if (c.type === 'bld') {
     const b = G.blds.find(x => x.id === c.id); if (!b) { closeCard(); return; }
-    const B = BLD[b.kind], mine = b.owner === 0, P = G.P[b.owner], M = maxHpB(b.owner, b.kind); let td = '';
+    const B = BLD[b.kind], mine = b.owner === 0, P = G.P[b.owner], M = maxHpB(b.owner, b.kind); let td = '', moreH = '';
     h += `<h3>${bldName(b.owner, b.kind)}<span class="who">${mine ? 'yours' : P.name + (P.civ ? ' · ' + CIVS[P.civ].name : '') + ' · ' + (P.lord === 0 ? (P.rebel ? 'in revolt' : 'your vassal') : G.rel[0][b.owner])}</span></h3>${hpBar(b.hp / M, P.color)}${mine && b.prog >= 1 ? '' : `<p>${B.desc}</p>`}`;
     if (b.kind === 'wonder' && P.civ) h += `<p><i>${CIVS[P.civ].wonder}:</i> ${WHY['wonder:' + P.civ]}</p>`;
     if (G.wonder && G.wonder.id === b.id) h += `<p><b>${clock(Math.max(0, G.wonder.end - G.t))} until ${mine ? 'you win' : 'they win'}.</b></p>`;
@@ -41,14 +46,19 @@ function renderCard() {
     }
     if (mine && b.kind === 'keep') { h += `<div class="acts">${b.hp < M - 1 ? btn(`repair:${b.id}`, 'Repair', costText(repairCost(0, b)), 'go') : ''}</div>`; }
     if (mine && b.prog >= 1) {
-      if (b.q.length) h += `<p>Working on: ${b.q.map((j, i) => (j.kind ? stats(0, j.kind).name : j.tech ? TECHBY[j.tech].name : AGES[j.age].name + ' age') + (i === 0 ? ` (${Math.ceil(j.left)} s)` : '')).join(', ')}${b.blocked ? ' · <b>needs room: House, Apartment or Aqueduct</b>' : ''}${b.stall > G.t ? ` · <b>stopped by sabotage: ${Math.ceil(b.stall - G.t)} s</b>` : ''}</p>`;
-      const mk = b.kind === 'market', more = mk && G.mtab === 'more';   // the Market has two pages: trade, and caravans and ventures
-      if (mk) h += `<div class="acts">${btn('mtab:trade', 'Trade', 'sell and buy', more ? '' : 'on')}${btn('mtab:more', 'Caravans', 'and ventures', more ? 'on' : '')}</div>`;
-      const tr = mk && !more ? [] : trainsAt(b.kind);
-      if (tr.length) h += `<div class="sec">Train</div><div class="acts">${trainButtons(tr)}</div>` + (b.kind === 'keep' || b.kind === 'town' ? '' : fold('units', 'About these soldiers', tr.map(k => unitLine(0, civKind(0, k))).join('')));
-      const techs = mk && !more ? [] : TECH.filter(t => t.at === b.kind && !p.techs.has(t.id)), done = mk && !more ? [] : TECH.filter(t => t.at === b.kind && p.techs.has(t.id));
-      if (techs.length || done.length) { h += `<div class="sec">Research</div><div class="acts">`; for (const t of techs) { const why = researchWhy(0, t.id), busy = why === 'Being researched.'; h += btn(`tech:${t.id}`, t.name, busy ? 'researching' : why && why !== `Not enough: ${costText(t.cost)}.` ? why.replace(/\.$/, '') : costText(t.cost), why ? 'dis' : ''); } h += `</div>` + (done.length ? `<div class="chips">${done.map(t => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>` : '') + (techs.length ? fold('techs', 'About this research', techs.map(t => `<p><b>${t.name}:</b> ${t.desc}</p>`).join('')) : ''); }
-      if (b.kind === 'keep') h += keepHTML();
+      if (b.q.length) h += `<p>Working on: ${b.q.map((j, i) => (j.kind ? stats(0, j.kind).name : j.muster ? `muster ${j.bn !== undefined ? BN[j.bn] : ''}` : j.tech ? TECHBY[j.tech].name : AGES[j.age].name + ' age') + (i === 0 ? ` (${Math.ceil(j.left)} s)` : '')).join(', ')}${b.blocked ? ' · <b>needs room: House, Apartment or Aqueduct</b>' : ''}${b.stall > G.t ? ` · <b>stopped by sabotage: ${Math.ceil(b.stall - G.t)} s</b>` : ''}</p>`;
+      const mk = b.kind === 'market', more = mk && G.mtab === 'more';   // the Market's two sides: trade, and caravans and ventures
+      const tr = mk && !more ? [] : trainsAt(b.kind), techs = mk && !more ? [] : TECH.filter(t => t.at === b.kind && !p.techs.has(t.id)), done = mk && !more ? [] : TECH.filter(t => t.at === b.kind && p.techs.has(t.id));
+      const hasR = techs.length || done.length || b.kind === 'keep', two = !mk && tr.length && hasR, side = mk ? '' : two ? (G.btab || 'train') : '';
+      if (mk) h += twoTabs('mtab', [['trade', 'Trade', 'sell and buy'], ['more', 'Caravans', 'and ventures']], more ? 'more' : 'trade');
+      if (two) h += twoTabs('btab', [['train', 'Train', `${tr.length} kind${tr.length > 1 ? 's' : ''}`], ['research', 'Research', `${techs.filter(t => !researchWhy(0, t.id)).length} ready`]], side);
+      if (tr.length && side !== 'research') h += (two ? '' : `<div class="sec">Train</div>`) + `<div class="acts">${trainButtons(tr)}</div>`;
+      if (side !== 'train') {
+        if (b.kind === 'keep') h += keepAgeHTML();
+        if (techs.length || done.length) { h += (two ? '' : `<div class="sec">Research</div>`) + `<div class="acts">`; for (const t of techs) { const why = researchWhy(0, t.id), busy = why === 'Being researched.'; h += btn(`tech:${t.id}`, t.name, busy ? 'researching' : why && why !== `Not enough: ${costText(t.cost)}.` ? why.replace(/\.$/, '') : costText(t.cost), why ? 'dis' : ''); } h += `</div>` + (done.length ? `<div class="chips">${done.map(t => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>` : ''); }
+      }
+      // everything else about the building waits behind one More, closed until you open it
+      moreH = (tr.length && b.kind !== 'keep' && b.kind !== 'town' ? tr.map(k => unitLine(0, civKind(0, k))).join('') : '') + techs.map(t => `<p><b>${t.name}:</b> ${t.desc}</p>`).join('') + (b.kind === 'keep' ? keepMoreHTML() : '');
       if (b.kind === 'farm') h += `<p>Worked by ${b.node && b.node.wk > 0 ? `${b.node.wk} of ${slotsOf(b.node)}` : 'nobody yet: tap Send a villager' + (b.node && b.node.type === 'food' ? ', or + under Farm' : '')}. This season: ${season().name}, ×${season().farm}${G.harvest !== 1 ? ` · this year's harvest ×${G.harvest}` : ''}${WEATHER[G.wx].crop ? ` · ${WEATHER[G.wx].name.toLowerCase()} ×${WEATHER[G.wx].crop}` : ''} · soil ${Math.round((b.fert ?? 1) * 100)}%${b.node && b.node.type === 'food' && bakeryNear(0, b.node) ? ' · a bakery near: ×1.15' : ''}.</p>`;
       if (b.kind === 'council') h += councilHTML(b);
       h += econCard(b);
@@ -65,7 +75,7 @@ function renderCard() {
       if (b.kind === 'keep') { const why = surrenderWhy(0, b.owner); h += `<div class="acts c1">${btn(`demand:${b.owner}`, 'Demand surrender', why ? why.replace(/\.$/, '') : 'they become your vassal and pay tax', why ? 'dis' : 'go')}</div>`; }
       h += `<div class="acts c1">${btn(`sab:${b.id}`, 'Sabotage', !B.sab ? 'too well guarded' : !spies ? 'needs a spy: Culture → Courthouse' : guarded(b) ? 'defended: the spy would be shot' : 'a spy goes and is used up', B.sab && spies ? 'warn' : 'dis')}</div>${qsHTML(`qatk:${b.id}`, 'Attack with', b)}`;
     }
-    if (mine && b.prog >= 1) h += fold('bdesc', 'What it does', `<p>${B.desc}</p>` + (WHY[b.kind] ? `<p><i>Why:</i> ${WHY[b.kind]}</p>` : ''));
+    if (mine && b.prog >= 1) h += fold('bmore', 'More', moreH + `<p>${B.desc}</p>` + (WHY[b.kind] ? `<p><i>Why:</i> ${WHY[b.kind]}</p>` : ''));
     h += td;
   } else if (c.type === 'find') {
     const f = G.finds.find(x => x.id === c.id); if (!f) { closeCard(); return; }
@@ -100,8 +110,8 @@ function renderCard() {
   } else if (c.type === 'info') {
     const B = BLD[c.kind];
     h += `<h3>${bldName(0, c.kind)}<span class="who">${AGES[B.age].name} age · ${costText(B.cost)}</span></h3><p>${B.desc}</p><p>Unlocks in the ${AGES[B.age].name} age. Advance at your Town Center.</p>`;
-  } else if (c.type === 'ground') {
-    h += `<h3>Here<span class="who">${coord(c.x, c.y)}</span></h3>` + qsHTML(`qgo:${Math.round(c.x)},${Math.round(c.y)}`, 'Send', c);
+  } else if (c.type === 'ground') {   // ⋯ on the send strip: the rally point, the scout, the spy
+    h += `<h3>Here<span class="who">${coord(c.x, c.y)}</span></h3>`;
     h += `<div class="acts">${btn(`rally:${Math.round(c.x)},${Math.round(c.y)}`, 'New soldiers here', G.rally0 ? 'set: tap to clear' : 'off')}</div>`;
     h += `<div class="acts">${unitsOf(0, 'scout').length ? btn(`scoutgo:${Math.round(c.x)},${Math.round(c.y)}`, 'Send the scout', '') : ''}${unitsOf(0, 'spy').length ? btn(`spygo:${Math.round(c.x)},${Math.round(c.y)}`, 'Send a spy here', 'to look') : ''}</div>`;
     h += fold('about', 'About', `<p>Soldiers you send hold the spot and fight what comes. Drag the map to look around; tap the small map to jump.</p>`);
@@ -131,13 +141,13 @@ function renderCard() {
     h += `<h3>Your army<span class="who">${S.length}/${ARMYMAX}</span></h3><p>${Object.entries(by).map(([n, k]) => `${k} ${some(k, n.toLowerCase())}`).join(' · ') || 'Nobody yet.'}</p>`;
     if (S.length && hasCmd()) h += `<div class="sec">Orders go to</div><div class="acts c4">` + [['all', 'All', S.length]].concat(BN.map((n, i) => [i, n, S.filter(u => u.bn === i).length])).map(([k, n, cnt]) => btn(`sel:${k}`, n, `${cnt}`, G.sel === k ? 'on' : '')).join('') + `</div>`;
     if (S.length) h += `<div class="sec">Orders for the ${selName()}</div><div class="acts">${btn('recall', 'Recall home', '')}${btn('attack:near', 'Attack nearest', oddsText(orderSet(), foeNearest()), orderSet().length ? 'warn' : 'dis')}</div>`;
-    if (S.length) { const sn = G.sel === 'all' ? (G.stance.every(x => x === G.stance[0]) ? G.stance[0] : -1) : G.stance[G.sel]; h += `<div class="acts c1">${btn('stance', 'Stance: ' + (sn < 0 ? 'mixed' : STANCE[sn].name), '', sn > 0 ? 'on' : '')}</div>`; }
+    if (S.length && p.techs.has('engage')) { const sn = G.sel === 'all' ? (G.stance.every(x => x === G.stance[0]) ? G.stance[0] : -1) : G.stance[G.sel]; h += `<div class="acts c1">${btn('stance', 'Stance: ' + (sn < 0 ? 'mixed' : STANCE[sn].name), '', sn > 0 ? 'on' : '')}</div>`; }
     if (S.length) { const hold = G.sel === 'all' ? G.hold.every(x => x) : !!G.hold[G.sel]; h += `<div class="acts c1">${btn('hold', 'Hold ground', hold ? 'on' : 'off', hold ? 'on' : '')}</div>`; }
     if (S.length && unitsOf(0, 'caravan').length) h += `<div class="acts c1">${btn('escort', 'Escort caravans', '', '')}</div>`;
     if (S.length && ready(0, 'temple').length) { const why = zealWhy(0, orderSet()); h += `<div class="acts c1">${btn('zeal', 'Zeal', why ? why.replace(/\.$/, '') : `${costText(zealCost(0))} · ${ZEAL.secs} s of harder blows`, why ? 'dis' : 'go')}</div>`; }
     const kinds = ARMYK.filter(k => !UNIT[k].civ && UNIT[civKind(0, k)].age <= p.age + 1);
     h += fold('armytrain', 'Train soldiers', `<div class="acts">${trainButtons(kinds)}</div>`);
-    h += fold('about', 'About orders', `<p>Tap the ground to send soldiers: pick how many of each type, then Send. Tap an enemy to attack the same way. A War Council (Command) gives you six battalions to send by name; a gold ring marks the one picked here.</p><p><b>Stance:</b> ${STANCE.map(s => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Hold ground:</b> on, they fight only what comes within reach and do not chase.</p>`);
+    h += fold('about', 'About orders', `<p>Tap open ground: Send ¼, All, or a battalion by name. Tap an enemy to pick how many attack. The War Council opens stances, battalions, formations and Muster; a gold ring marks the one picked here.</p><p><b>Stance:</b> ${STANCE.map(s => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Hold ground:</b> on, they fight only what comes within reach and do not chase.</p>`);
   } else if (c.type === 'keep') { const k = keepOf(0); if (k) { G.card = { type: 'bld', id: k.id }; renderCard(); return; } closeCard(); return; }
   else if (c.type === 'fortress') h += `<h3>The Fortress<span class="who">${G.P[FORT].alive ? G.rel[0][FORT] + (G.P[FORT].civ ? ' · ' + CIVS[G.P[FORT].civ].name : '') : 'fallen'}</span></h3>` + diploHTML();
   else if (c.type === 'menu') {
@@ -151,21 +161,25 @@ function renderCard() {
   } else if (c.type === 'guide') {
     const pg = c.page || 'bld';
     h += `<h3>Guide<span class="who">what leads to what, and why</span></h3><div class="acts c3">${[['bld', 'Buildings'], ['unit', 'Units'], ['tech', 'Research'], ['age', 'Ages'], ['civ', 'Peoples'], ['rule', 'Rules']].map(([k, n]) => btn(`guide:${k}`, n, '', pg === k ? 'on' : '')).join('')}</div>` + guideHTML(pg);
+  } else if (c.type === 'sound') {
+    const row = (k, name, v) => `<div class="acts c3">${btn(`vol:${k},-`, '−', '')}<div class="lvl"><b>${name}</b><small>${Math.round(v * 100)}%</small></div>${btn(`vol:${k},+`, '+', '')}</div>`;
+    h += `<h3>Sound</h3><div class="acts">${btn('sound', 'Sound', SND.on ? 'on' : 'off', SND.on ? 'on' : '')}${btn('vibe', 'Vibration', SET.vibe ? 'on' : 'off', SET.vibe ? 'on' : '')}</div>
+      ${row('all', 'All', SND.vol)}${row('fx', 'Effects', SET.mix.fx)}${row('amb', 'Ambience', SET.mix.amb)}${row('alert', 'Alerts', SET.mix.alert)}
+      <p>Effects: work and battle. Ambience: birds, wind, crickets, thunder. Alerts: horn, ready, done, a new age. Your phone's silent switch mutes the game.</p>`;
   } else if (c.type === 'help') {
     h += `<h3>How to play<span class="who">build ${BUILD}</span></h3>
       <div class="acts">${btn('guide:bld', 'Guide', 'what leads to what, and why', 'go')}${btn('guide:rule', 'Rules', 'what triggers what')}</div>
       <p><b>Grow:</b> train villagers at the Town Center. Under each job, + puts one more villager on it and − takes one off. Tap a tree, bush, rock, field or deer to send a villager there. Houses give room for 5, Apartments 20, Aqueducts 15.</p>
       <p><b>Build:</b> pick a menu, then a building. Press where it goes: it waits above your finger and lines up beside your other buildings. Green fits, red says why. Let go, drag to adjust, then tap Build. Drag empty ground to look around. A building rises only while villagers work it: the nearest free one goes at once; tap the site to send more, or tap a villager to pick who builds.</p>
-      <p><b>Army:</b> tap the ground, pick how many of each type, Send. A War Council gives you six named battalions and formations. Research upgrades units in place (Spearman → Hoplite → Pikeman).</p>
+      <p><b>Army:</b> tap open ground: Send ¼ or All. A War Council opens stances, battalions, formations and Muster. Research upgrades units in place (Spearman → Hoplite → Pikeman).</p>
       <p><b>Forest:</b> trees are a wall until cut. Paths lead to your neighbours' trade stops and to the great lake. Tap ⬚, drag a box over trees and send villagers to cut a way through; or box your villagers to put them all on one job.</p>
       <p><b>Trade:</b> a Brewery brews food into beer, a Pasture's wool feeds a Weaver; goods go to the Business Center. Give a caravan a route on its card: it sells at a Market or a trade stop, farther and where it is wanted pays more, and buys spice at stops. Clear a stop's guards and build a Trade post to own it. Robbers hit caravans near their camps; posts, towers and soldiers keep them safe.</p>
       <p><b>Nature:</b> rain slows marches, drought burns fields and spreads fire, frost stops stone building. Soil tires; a poor harvest comes about one year in six. Crowded towns and big armies camped at home fall sick: Houses, an Aqueduct and Clean water prevent it, a Hospital cures it. Soldiers near home or a Courier station eat bread, beer and spice: each on hand +5%.</p>
       <p><b>The wild:</b> treasure, ruins, cemeteries and robbers' camps wait in every corner, guarded. Kill the guards, then touch the find. Priests take shrines. A wayfarer joins whoever meets him first.</p>
       <p><b>Score</b> is top right: tap it. <b>Win</b> by conquest, by holding your wonder ${WONDER_HOLD / 60} minutes, or by the top score at the bell in a timed game.</p>
       ${settingsHTML()}
-      <div class="acts c3">${btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '')}${btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '')}${btn('sound', 'Sound', SND.on ? 'on' : 'off', SND.on ? 'on' : '')}</div>
-      <div class="acts">${btn('vibe', 'Vibration', SET.vibe ? 'on' : 'off', SET.vibe ? 'on' : '')}</div>
-      <div class="acts">${btn('vol:-', 'Quieter', Math.round(SND.vol * 100) + '%')}${btn('vol:+', 'Louder', 'silent switch mutes')}</div>
+      <div class="acts c3">${btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '')}${btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '')}${btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off')}</div>
+      ${Object.keys(SET.hush).length ? `<div class="acts c1">${btn('unhush', 'Unmute all messages', Object.keys(SET.hush).length + ' kinds silenced')}</div>` : ''}
       <div class="acts">${btn('newgame', G.confirm === 'new' ? 'Tap again' : 'New game', G.confirm === 'new' ? 'this one is lost' : 'pick your people', G.confirm === 'new' ? 'warn' : '')}</div>
       <p>The game saves itself every 10 seconds on this phone. World, game length and people take effect in the next game.</p>`;
   }
@@ -178,8 +192,7 @@ function settingsHTML() {
     <div class="sec">Game</div><div class="acts c3">${Object.entries(MODES).map(([k, m]) => btn(`mode:${k}`, m.name, k === 'conquest' ? 'no limit' : 'top score wins', SET.mode === k ? 'on' : '')).join('')}</div>
     <div class="sec">World</div><div class="acts">${btn('fantasy:0', 'Real', 'wolves, bandits, robbers', !SET.fantasy ? 'on' : '')}${btn('fantasy:1', 'Fantasy', 'dire wolves, goblins, trolls', SET.fantasy ? 'on' : '')}</div>`;
 }
-// The Town Center: the ages, your people, and everything researched so far
-// Quick send: from the whole army or one battalion, how many of each type (all, until you change it), then send. The nearest of each type go.
+// Attack with: on an enemy or a find card, from the whole army or one battalion, how many of each type, then go. The nearest of each type go.
 const qsPool = () => armyOf(0).filter(u => u.kind !== 'spy' && u.state !== 'shrine' && (G.qs.from === 'all' || u.bn === G.qs.from));
 function qsPick(to) {
   const by = {}; for (const u of qsPool()) (by[u.kind] = by[u.kind] || []).push(u);
@@ -195,33 +208,65 @@ function qsHTML(verb, label, to) {
   const S = qsPick(to), foe = to.owner !== undefined && to.owner !== 0 && to.owner !== WILD ? to.owner : null;
   return h + `<div class="acts c1">${btn(verb, `${label} ${S.length}`, foe !== null ? oddsText(S, foe) : '', S.length ? (foe !== null ? 'warn' : 'go') : 'dis')}</div>`;
 }
+// The send strip: tap open ground and a small row of choices sits at your finger: a quarter, all, a battalion, more, cancel.
+// A quarter takes a quarter of each type, nearest first, so the mix of the army goes along.
+const sendable = () => armyOf(0).filter(u => u.kind !== 'spy' && u.state !== 'shrine');
+function sendPick(from, to) {
+  const A = sendable(), by = {};
+  for (const u of A) if (from === 'q' || from === 'all' || u.bn === from) (by[u.kind] = by[u.kind] || []).push(u);
+  const out = []; for (const k in by) { const a = by[k].sort((p, q) => dist(p, to) - dist(q, to)); out.push(...a.slice(0, from === 'q' ? Math.ceil(a.length / 4) : a.length)); }
+  return out;
+}
+function showStrip(sx, sy, x, y) {
+  closeCard(); const el = $('strip'), at = `${Math.round(x)},${Math.round(y)}`, to = { x, y }, n = from => sendPick(from, to).length;
+  const bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
+  el.innerHTML = (n('all') ? btn(`sendto:q,${at}`, 'Send ¼', String(n('q')), 'go') + btn(`sendto:all,${at}`, 'All', String(n('all'))) + bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') : '')
+    + btn(`more:${at}`, '⋯', '') + `<button data-act="nostrip" aria-label="Cancel">✕</button>`;
+  el.hidden = false; G.strip = to;
+  const r = $('stage').getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight;
+  el.style.left = clamp(sx - w / 2, 4, r.width - w - 4) + 'px'; el.style.top = clamp(sy - h - 18, 4, r.height - h - 4) + 'px';
+}
+function hideStrip() { const el = $('strip'); if (el && !el.hidden) { el.hidden = true; if (G) G.strip = null; } }
 // the War Council: six battalions, what each holds by type, its stance and formation
+// what a battalion still lacks: its plan, less the members it has and the soldiers already mustering for it
+function musterGap(i) {
+  const gap = { ...G.bnPlan[i] };
+  for (const u of armyOf(0)) if (u.bn === i && gap[u.kind]) gap[u.kind]--;
+  for (const b of G.blds) if (b.owner === 0) for (const j of b.q) if (j.muster && j.bn === i) for (const k in j.muster) gap[k] = (gap[k] || 0) - j.muster[k];
+  for (const k in gap) if (gap[k] <= 0) delete gap[k];
+  return gap;
+}
 function councilHTML(b) {
-  if (!hasCmd()) return `<p>Research Command here for six battalions, Alpha to Zeta.</p>`;
+  const p0 = G.P[0];
+  if (!hasCmd()) return `<p>${p0.techs.has('engage') ? 'Stances are open: set them in the Army card. Next: Battalions, six of them, Alpha to Zeta.' : 'Research Engagement first: stances for your army. Then Battalions, Formations and Muster.'}</p>`;
   const p = G.P[0], i = G.bnEdit, plan = G.bnPlan[i], S = armyOf(0).filter(u => u.kind !== 'spy');
   let h = `<div class="sec">Battalions</div><div class="acts c3">${BN.map((n, j) => btn(`bned:${j}`, n, `${S.filter(u => u.bn === j).length} in it`, j === i ? 'on' : '')).join('')}</div>`;
   const kinds = [...new Set([...S.map(u => u.kind), ...Object.keys(plan)])];
   h += `<div class="sec">${BN[i]} holds</div>` + (kinds.length ? kinds.map(k => `<div class="qs"><b>${stats(0, k).name}</b>${btn(`bnn:${k},-`, '−')}<span>${plan[k] || 0} · has ${S.filter(u => u.bn === i && u.kind === k).length}</span>${btn(`bnn:${k},+`, '+')}</div>`).join('') : '<p>Train soldiers first.</p>');
   const f = FORM[G.form[i] || 0];
   h += `<div class="acts">${btn('bnstance', 'Stance: ' + STANCE[G.stance[i] || 0].name, '')}${p.techs.has('formations') ? btn('bnform', 'Formation: ' + f.name, f.note) : ''}</div>`;
-  return h + fold('bnabout', 'About battalions', `<p>New soldiers fill each battalion up to what you set; the rest are the reserve. Send a battalion from Quick send: tap the ground, pick it, Send.</p><p><b>Formations:</b> ${FORM.map(F => `${F.name}: ${F.note}`).join('. ')}.</p>`);
+  if (p.techs.has('muster')) { const miss = musterGap(i), why = musterWhy(0, miss), mc = musterCost(0, miss); h += `<div class="acts c1">${btn(`muster:${i}`, `Muster ${BN[i]}: +${musterN(miss)}`, why ? why.replace(/\.$/, '') : `${costText(mc.cost)} · ${mc.t} s`, why ? 'dis' : 'go')}</div>`; }
+  return h + fold('bnabout', 'About battalions', `<p>New soldiers fill each battalion up to what you set; the rest are the reserve. Send a battalion from the strip: tap open ground, then its name.</p><p><b>Formations:</b> ${FORM.map(F => `${F.name}: ${F.note}`).join('. ')}.</p>`);
 }
 // the side at war with you whose Town Center is nearest yours
 function foeNearest() { const k = keepOf(0); let bd = 1e9, t = null; if (k) for (const q of G.P) if (q.alive && q.id !== WILD && atWar(0, q.id)) { const d = hyp(q.keep[0] - k.x, q.keep[1] - k.y); if (d < bd) { bd = d; t = q.id; } } return t; }
 // the odds the computers use (07-ai.js): the square law on strength, bent by who counters whom, against their army, towers and Town Center
 function oddsText(S, t) { if (t === null || t === undefined || !S.length) return ''; const r = powerOf(S) / estPower(0, t) * matchup(S, soldiersOf(t)), p = r * r / (1 + r * r); return `odds ${p > 0.65 ? 'strong' : p > 0.4 ? 'even' : 'weak'}`; }
-function keepHTML() {
-  const p = G.P[0], A = AGES[p.age + 1], C = CIVS[p.civ];
-  let h = `<div class="sec">The age</div>`;
-  h += A ? `<div class="acts">${btn('age', `${A.name} age`, p.aging ? 'advancing' : costText(A.cost), p.aging || !afford(p, A.cost) ? 'dis' : 'go')}${btn('dismiss', 'Dismiss villager', 'frees a place')}</div>` + fold('why', 'Why?', `<p>${WHY['age' + (p.age + 1)]}</p>`) : `<div class="acts">${btn('dismiss', 'Dismiss villager', 'frees a place')}</div><p>You have reached the ${AGES[p.age].name} age, the last.</p>`;
-  let pp = `<p><i>${C.name}.</i> ${C.bonus} Unique soldier: ${UNIT[C.uu].name}. Wonder: ${C.wonder}.</p>`;
+// The Town Center: the age on its Research side; your people, goods and the whole research tree under More
+function keepAgeHTML() {
+  const p = G.P[0], A = AGES[p.age + 1];
+  return A ? `<div class="acts c1">${btn('age', `${A.name} age`, p.aging ? 'advancing' : costText(A.cost), p.aging || !afford(p, A.cost) ? 'dis' : 'go')}</div>` + fold('why', 'Why?', `<p>${WHY['age' + (p.age + 1)]}</p>`) : `<p>You have reached the ${AGES[p.age].name} age, the last.</p>`;
+}
+function keepMoreHTML() {
+  const p = G.P[0], C = CIVS[p.civ];
+  let h = `<div class="acts c1">${btn('dismiss', 'Dismiss villager', 'frees a place')}</div>`;
+  h += `<p><i>${C.name}.</i> ${C.bonus} Unique soldier: ${UNIT[C.uu].name}. Wonder: ${C.wonder}.</p>`;
   h += `<p><i>Food:</i> your people eat ${Math.round(p.eats || 0)} a minute${p.hungry ? ' · <b>none left: work and fighting −25%, no training</b>' : ''}. ${vassalsOf(0).length ? `<i>Vassals:</i> ${vassalsOf(0).map(q => `${q.name} (${q.rebel ? 'in revolt' : `unrest ${Math.round(q.unrest)}%`})`).join(', ')}.` : ''}</p>`;
-  pp += `<p><i>Goods:</i> ${goodsText(p.goods) || 'none yet'}. <i>Wanted by others here:</i> ${G.P.filter(q => q.id && q.id !== WILD && q.alive).map(q => `${q.name} ${q.wants.map(k => GOODS[k].name.toLowerCase()).join(' and ')}`).join('; ')}.</p>`;
+  h += `<p><i>Goods:</i> ${goodsText(p.goods) || 'none yet'}. <i>Wanted by others here:</i> ${G.P.filter(q => q.id && q.id !== WILD && q.alive).map(q => `${q.name} ${q.wants.map(k => GOODS[k].name.toLowerCase()).join(' and ')}`).join('; ')}.</p>`;
   const done = TECH.filter(t => p.techs.has(t.id)), going = [], open = TECH.filter(t => !p.techs.has(t.id) && !researchWhy(0, t.id));
   for (const b of G.blds) if (b.owner === 0) b.q.forEach((j, i) => { if (j.tech) going.push(`${TECHBY[j.tech].name}${i === 0 ? ` (${Math.ceil(j.left)} s)` : ' (waiting)'}`); });
-  h += fold('people', 'Your people and goods', pp);
-  h += fold('tree', `Research: ${done.length} of ${TECH.length} done`, (open.length ? `<p><i>Ready now:</i> ${open.map(t => `${t.name} (${BLD[t.at].name})`).join(' · ')}</p>` : '') + AGES.map((A, i) => { const T = TECH.filter(t => t.age === i); return T.length ? `<p><b>${A.name}:</b> ${T.map(t => p.techs.has(t.id) ? `<span class="done">✓ ${t.name}</span>` : `<span class="dim">${t.name}</span>`).join(' · ')}</p>` : ''; }).join(''));
-  if (going.length) h += `<p><i>Under way:</i> ${going.join(' · ')}</p>`;
+  h += `<p><b>Research: ${done.length} of ${TECH.length} done.</b>${going.length ? ` <i>Under way:</i> ${going.join(' · ')}.` : ''}${open.length ? ` <i>Ready now:</i> ${open.map(t => `${t.name} (${BLD[t.at].name})`).join(' · ')}.` : ''}</p>`;
+  h += AGES.map((A, i) => { const T = TECH.filter(t => t.age === i); return T.length ? `<p><b>${A.name}:</b> ${T.map(t => p.techs.has(t.id) ? `<span class="done">✓ ${t.name}</span>` : `<span class="dim">${t.name}</span>`).join(' · ')}</p>` : ''; }).join('');
   return h;
 }
 function diploHTML() {
@@ -314,9 +359,15 @@ const ACT = {
   fantasy(a) { SET.fantasy = a === '1'; saveSet(); refresh(); },
   tips() { SET.tips = !SET.tips; saveSet(); refresh(); },
   msgs() { SET.msgs = SET.msgs === false; saveSet(); refresh(); },
-  tipx() { G.tipOff = G.tipOff || new Set(); G.tipOff.add($('tipT').textContent); ui(true); },
-  sound() { SND.on = !SND.on; saveSnd(); sndInit(); sfx('tap'); refresh(); },
-  vol(a) { SND.vol = clamp(Math.round((SND.vol + (a === '+' ? 0.1 : -0.1)) * 10) / 10, 0, 1); saveSnd(); sndInit(); sfx('tap'); refresh(); },
+  hush(a) { const t = decodeURIComponent(a || $('tipT').textContent), k = hushKey(t), m = G.log.find(x => x.text === t);
+    if (m && m.cls === 'warn') (G.hushW = G.hushW || {})[k] = G.t + 120; else { (SET.hush = SET.hush || {})[k] = 1; saveSet(); }
+    G.log = G.log.filter(x => hushKey(x.text) !== k); ui(true); },
+  unhush() { SET.hush = {}; G.hushW = {}; saveSet(); refresh(); },
+  sound() { SND.on = !SND.on; saveSnd(); sndInit(); sfx('tap'); muteBtn(); refresh(); },
+  soundpage() { openCard({ type: 'sound' }); },
+  // one step rule for every volume: tenths, 0 to 100%
+  vol(a) { const [k, d] = a.split(','), step = v => clamp(Math.round((v + (d === '+' ? 0.1 : -0.1)) * 10) / 10, 0, 1);
+    if (k === 'all') SND.vol = step(SND.vol); else SET.mix[k] = step(SET.mix[k]); saveSnd(); sndInit(); sfx(k === 'amb' ? 'bird' : k === 'alert' ? 'ready' : 'tap'); refresh(); },
   jump(a) { const [x, y] = a.split(',').map(Number); cam.x = x; cam.y = y; clampCam(); },
   card(a) { openCard({ type: a }); },
 };
@@ -325,13 +376,19 @@ const PLAY = {
   job(a) { G.P[0].rally = a; unitsOf(0, 'vil').forEach(u => { if (!u.job) u.job = a; }); },
   move(a) { moveVil(0, a); }, less(a) { moveVil(0, a, true); },
   mtab(a) { G.mtab = a; },
+  btab(a) { G.btab = a; },
   sel(a) { G.sel = a === 'all' ? 'all' : Number(a); },
+  sendto(a) { const [f, x, y] = a.split(','), to = { x: Number(x), y: Number(y) }, S = sendPick(f === 'q' || f === 'all' ? f : Number(f), to);
+    S.forEach(u => { u.state = 'goto'; u.px = to.x; u.py = to.y; u.idleT = 0; u.focus = null; }); if (S.length) { say(`${S.length} on the way.`, '', 3); ripple(to.x, to.y, '#ffd35e'); } hideStrip(); },
+  nostrip() { hideStrip(); },
+  more(a) { const [x, y] = a.split(',').map(Number); openCard({ type: 'ground', x, y }); },
   qsfrom(a) { G.qs.from = a === 'all' ? 'all' : Number(a); },
   qsn(a) { const [k, d] = a.split(','), have = qsPool().filter(u => u.kind === k).length, cur = Math.min(have, G.qs.n[k] ?? have); G.qs.n[k] = clamp(cur + (d === '+' ? 1 : -1), 0, have); },
   qgo(a) { const [x, y] = a.split(',').map(Number), S = qsPick({ x, y }); S.forEach(u => { u.state = 'goto'; u.px = x; u.py = y; u.idleT = 0; u.focus = null; }); if (S.length) { say(`${S.length} on the way.`, '', 3); ripple(x, y, '#ffd35e'); } closeCard(); },
   qatk(a) { const b = G.blds.find(x => x.id === Number(a) && x.hp > 0); if (!b) return; const S = qsPick(b); S.forEach(u => { u.state = 'attack'; u.target = b.owner; u.bid = b.id; u.focus = null; }); if (S.length) { say(`${S.length} march on the ${bldName(b.owner, b.kind).toLowerCase()}.`, '', 3); ripple(b.x, b.y, '#ff8a70'); } closeCard(); },
   qfoe(a) { const v = G.units.find(x => x.id === Number(a) && x.hp > 0); if (!v) return; const S = qsPick(v); S.forEach(u => { u.state = 'goto'; u.px = v.x; u.py = v.y; u.idleT = 0; u.focus = v; }); if (S.length) ripple(v.x, v.y, '#ff8a70'); closeCard(); },
   bned(a) { G.bnEdit = Number(a); },
+  muster(a) { const i = Number(a); if (muster(0, musterGap(i), i)) sfx('place'); else sfx('err'); },
   bnn(a) { const [k, d] = a.split(','), P = G.bnPlan[G.bnEdit], cur = P[k] || 0, st = d === '+' ? (cur < 10 ? 1 : 5) : (cur <= 10 ? 1 : 5); P[k] = clamp(cur + (d === '+' ? st : -st), 0, ARMYMAX); if (!P[k]) delete P[k]; rebattalion(); },
   bnstance() { const i = G.bnEdit; G.stance[i] = ((G.stance[i] || 0) + 1) % STANCE.length; },
   bnform() { const i = G.bnEdit; G.form[i] = ((G.form[i] || 0) + 1) % FORM.length; },
@@ -397,10 +454,13 @@ function learnAct(verb, arg) {
 document.addEventListener('click', e => { const el = e.target.closest('[data-act]'); if (!el) return; e.stopPropagation(); sndInit(); sfx('tap'); act(el.dataset.act); });
 for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndInit, { passive: true });   // Safari unlocks audio on the finger lifting, not landing
 
-function say(text, cls, secs, at, act) { if (!G) return; if (SET.msgs === false && cls !== 'warn') return;   // Messages off: warnings only
+function say(text, cls, secs, at, act) { if (!G) return; if (SET.msgs === false && cls !== 'warn') return; if (hushed(text)) return;   // Messages off: warnings only; a silenced kind stays quiet
   const same = G.log.find(m => m.text === text && m.until > G.t); if (same) { same.until = G.t + (secs || 4); return; }   // the same line never shows twice at once
   G.log.unshift({ text, cls, act, until: G.t + (secs || 4), at: at ? { x: Math.round(at.x), y: Math.round(at.y) } : null }); G.log = G.log.slice(0, 3); }
 // The next useful step, read from your situation. One line, shown for six seconds, then at most one more every 45; a warning (starts with !) stays until fixed. Tap × to hide one.
+// Silence: 🔕 on any message or tip mutes its kind (numbers ignored) until Unmute all; a warning comes back after 2 minutes, in case the danger is new
+const hushKey = t => t.replace(/[\d,.]+/g, '#');
+function hushed(t) { const k = hushKey(t), w = G.hushW && G.hushW[k]; return !!(SET.hush && SET.hush[k]) || (w !== undefined && G.t < w); }
 function advise() {
   const p = G.P[0], k = keepOf(0); if (!k || G.over) return '';
   const V = unitsOf(0, 'vil'), on = j => V.filter(u => u.job === j).length, S = soldiersOf(0);
@@ -439,7 +499,7 @@ function ui(force) {
   let tip = SET.tips ? advise() : ''; const urgent = tip[0] === '!'; if (urgent) tip = tip.slice(1);
   const T = G.tipS || (G.tipS = { text: '', at: -99, last: -99 });
   if (tip !== T.text && (urgent || G.t > 20 && G.t - T.last > 45)) { T.text = tip; T.at = G.t; if (tip) T.last = G.t; }
-  const showTip = tip && T.text === tip && (urgent || G.t - T.at < 6) && !(G.tipOff && G.tipOff.has(tip)) && !G.card && !G.place && !G.over;
+  const showTip = tip && T.text === tip && (urgent || G.t - T.at < 6) && !hushed(tip) && !G.card && !G.place && !G.over;
   if ($('tipT').textContent !== tip) $('tipT').textContent = tip; $('tip').hidden = !showTip;
   $('selB').classList.toggle('on', !!G.selMode);
   { const lim = MODES[G.mode].secs, clk = G.wonder ? `wonder ${clock(Math.max(0, G.wonder.end - G.t))}` : lim ? `${clock(Math.max(0, lim - G.t))}` : clock(G.t);
@@ -447,18 +507,19 @@ function ui(force) {
   const V = unitsOf(0, 'vil');
   for (const r of JOBS) { $('j' + r).textContent = V.filter(u => u.job === r).length; document.querySelector(`[data-act="job:${r}"]`).classList.toggle('on', p.rally === r); }
   for (const m of MENUS) $('m' + m.id).classList.toggle('on', !!(G.card && G.card.type === 'menu' && G.card.id === m.id));
-  const nq = queuedOf(0, 'vil'), full = popOf(0) >= capOf(0) && (capOf(0) >= POPMAX ? `max ${POPMAX}` : 'full'); $('bVil').classList.toggle('dis', !!trainWhy(0, 'vil'));
-  $('bVil').querySelector('small').textContent = full ? `${V.length} · ${full}` : `${V.length} of ${VILMAX}` + (nq ? ` +${nq}` : '')   // read like Army;   // homes show only when they stop you
-  const S = armyOf(0); $('bArmy').querySelector('small').textContent = full ? `${S.length} · ${full}` : `${S.length} of ${ARMYMAX}` + (S.some(u => u.state === 'attack' || u.state === 'goto') ? ' out' : '');
+  const nq = queuedOf(0, 'vil'), room = Math.max(0, capOf(0) - popOf(0)), S = armyOf(0); $('bVil').classList.toggle('dis', !!trainWhy(0, 'vil'));
+  // have / can have now: the ceiling is what your homes allow, up to the most of each kind
+  $('bVil').querySelector('small').textContent = `${V.length}/${Math.min(VILMAX, V.length + room)}` + (nq ? ` +${nq}` : '');
+  $('bArmy').querySelector('small').textContent = `${S.length}/${Math.min(ARMYMAX, S.length + room)}` + (S.some(u => u.state === 'attack' || u.state === 'goto') ? ' out' : '');
   $('bAge').querySelector('b').textContent = AGES[p.age].name; $('bAge').querySelector('small').textContent = p.aging ? 'advancing' : AGES[p.age + 1] ? `→ ${AGES[p.age + 1].name}` : 'last age';
   $('bDip').querySelector('small').textContent = G.P[FORT].alive ? (G.P[FORT].ally === 0 ? 'your ally' : G.P[FORT].ally !== null ? 'allied: ' + G.P[G.P[FORT].ally].name : G.rel[0][FORT]) : 'fallen';
   $('bDip').classList.toggle('on', G.P[FORT].ally === 0);
   if (G.place) { const B = BLD[G.place.kind], t = !G.place.at ? (G.place.kind === 'wall' ? 'Press and drag a line of wall' : `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`) : G.place.why ? G.place.why : G.place.kind === 'wall' ? `${(G.place.cells || [1]).length} pieces: tap Build, or drag again` : `${B.name}: tap Build, or drag it to move · drag empty ground to look`; if ($('placeT').textContent !== t) $('placeT').textContent = t; $('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why); }
   const msgs = G.log.filter(m => m.until > G.t);
-  let html = msgs.map(m => `<span class="${m.cls || ''}"${m.act ? ` data-act="${m.act}"` : m.at ? ` data-act="jump:${m.at.x},${m.at.y}"` : ''}>${m.text}</span>`).join('');
-  if (G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup'))) html = '<span>Paused · ▶ to carry on</span>' + html;
+  let html = msgs.map(m => `<div class="msg ${m.cls || ''}"><span${m.act ? ` data-act="${m.act}"` : m.at ? ` data-act="jump:${m.at.x},${m.at.y}"` : ''}>${m.text}</span><button data-act="hush:${encodeURIComponent(m.text)}" aria-label="Silence this kind of message">🔕</button></div>`).join('');
+  if (G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup'))) html = '<div class="msg"><span>Paused · ▶ to carry on</span></div>' + html;
   if ($('banner').innerHTML !== html) $('banner').innerHTML = html;
-  if (G.card) renderCard();
+  if (G.card && performance.now() > heldT) renderCard();
 }
 
 

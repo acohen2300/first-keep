@@ -1,7 +1,9 @@
 // ═════ 13-save.js ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
-const SAVEKEY = 'firstkeep.save', SAVEV = 27;   // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
-const MIGRATE = {};   // { 24: S => S-in-the-shape-of-25 }, run in order
+const SAVEKEY = 'firstkeep.save', SAVEV = 28;   // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+const MIGRATE = {   // { 24: S => S-in-the-shape-of-25 }, run in order
+  27: S => { for (const p of S.P) if (p.techs && p.techs.includes('command') && !p.techs.includes('engage')) p.techs.push('engage'); S.v = 28; return S; },   // Build 31: Engagement comes before Battalions; who had them keeps stances
+};
 let staleSave = 0;   // the version of a save we could not open, so the setup card can say so
 const SKIP_U = new Set(['focus', 'tgt', 'bt', 'esc', 'blocker', 'path', 'so', 'aggro', 'node', 'rep', 'hunt', 'lcOK', 'lcT', 'pv', 'pk', 'pfK', 'pfV', 'pfT', 'pi', 'partial']);
 let holdSave = false;   // while the Resume card waits, nothing may overwrite the save it offers
@@ -43,9 +45,10 @@ function loadGame(S) {
   const byU = new Map(G.units.map(u => [u.id, u])); for (const u of G.units) { if (u._hunt) u.hunt = byU.get(u._hunt) || null; delete u._hunt; }
   fxDirty(); navRebuild(); scoreAll();
   if (S.cam) { cam.x = S.cam.x; cam.y = S.cam.y; cam.z = clamp(S.cam.z, minZ(), ZOOM_MAX); clampCam(); }
-  paceBtn();
+  paceBtn(); muteBtn();
   $('end').hidden = true; closeCard(); cancelPlace(); holdSave = false; setPause(false);
 }
+function muteBtn() { $('muteB').classList.toggle('off', !SND.on); $('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on'); }
 function paceBtn() { $('speed').textContent = G.paused ? '▶' : '×' + G.speed; $('speed').classList.toggle('on', !!G.paused); }
 function setPause(v) { G.paused = v; paceBtn(); }
 document.addEventListener('visibilitychange', () => { if (document.hidden) saveGame(); });

@@ -57,13 +57,16 @@ const SFX = {
   wind:   [4, v => hiss(2.4, 0.08 * v, 500, 0.6, 280)],
   thunder:[0.5, (v, at) => { hiss(0.12, 0.5 * v, 2500, 0.8, 600, at); hiss(2.2, 0.4 * v, 160, 0.5, 50, at + 0.05); tone(45, 1.8, 'sine', 0.25 * v, 30, at); }],
 };
+// which of the three volumes each sound belongs to (everything else is an effect)
+const CHAN = { bird: 'amb', cricket: 'amb', wind: 'amb', thunder: 'amb', horn: 'alert', age: 'alert', win: 'alert', lose: 'alert', done: 'alert', ready: 'alert', zeal: 'alert', coin: 'alert' };
+const chanVol = name => SET.mix[CHAN[name] || 'fx'];
 function sfx(name, x, y) {
   if (HAPTIC[name] && (x === undefined || onScreen(x, y))) feel(HAPTIC[name]);
   if (!SND.on || !AC || AC.state !== 'running' || document.hidden || voices > 14) return;
   const S = SFX[name]; if (!S) return;
   const now = AC.currentTime; if (now - (sfxLast[name] ?? -9) < S[0]) return;
-  let v = 1;
-  if (x !== undefined) { const R = hyp(cw, ch) / 2 / cam.z, d = hyp(x - cam.x, y - cam.y); if (d > R * 1.1) return; v = clamp(1.1 - d / (R * 1.1), 0.15, 1); }
+  let v = chanVol(name); if (!v) return;
+  if (x !== undefined) { const R = hyp(cw, ch) / 2 / cam.z, d = hyp(x - cam.x, y - cam.y); if (d > R * 1.1) return; v *= clamp(1.1 - d / (R * 1.1), 0.15, 1); }
   panV = x === undefined ? 0 : clamp((x - cam.x) / (cw / 2 / cam.z), -1, 1) * 0.8;
   sfxLast[name] = now; S[1](v); panV = 0;
 }
@@ -74,7 +77,7 @@ function ambience(dt) { ambT -= dt; if (ambT > 0 || !AC) return; ambT = 2.5 + Ma
 // Thunder comes after the flash by the real delay: sound covers about 340 m a second (a world unit is about 0.14 m), so it is quieter and later the farther away.
 function thunder(x, y) {
   if (!SND.on || !AC || AC.state !== 'running' || document.hidden) return;
-  const d = hyp(x - cam.x, y - cam.y), v = clamp(1.1 - d / 1400, 0.12, 1); panV = clamp((x - cam.x) / (cw / 2 / cam.z), -1, 1) * 0.6; SFX.thunder[1](v, d * 0.14 / 340); panV = 0;
+  const d = hyp(x - cam.x, y - cam.y), v = clamp(1.1 - d / 1400, 0.12, 1) * chanVol('thunder'); if (!v) return; panV = clamp((x - cam.x) / (cw / 2 / cam.z), -1, 1) * 0.6; SFX.thunder[1](v, d * 0.14 / 340); panV = 0;
 }
 // ── Touch you can feel: one table of felt events, three strengths, never more often than every 50 ms.
 // In the native app the Haptics plugin fills NATIVE (Apple's taptic engine); in a browser, vibrate where the phone allows it (iPhone Safari cannot).

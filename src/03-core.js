@@ -22,9 +22,10 @@ const plural = n => /^man-at-arms$/i.test(n) ? n.replace(/^(m)an/i, '$1en') : /m
 const some = (k, n) => k === 1 ? n : plural(n);
 
 // Settings remembered on this phone.
-const SET = { diff: 'easy', tips: true, msgs: true, civ: 'roman', fantasy: false, mode: 't30', sound: true, vol: 0.6, vibe: true, learned: {} };
+const SET = { diff: 'easy', tips: true, msgs: true, civ: 'roman', fantasy: false, mode: 't30', sound: true, vol: 0.6, mix: {}, hush: {}, vibe: true, learned: {} };
 try { Object.assign(SET, JSON.parse(localStorage.getItem('firstkeep.settings') || '{}')); } catch (e) {}
 if (!CIVS[SET.civ]) SET.civ = 'roman';
+SET.mix = Object.assign({ fx: 1, amb: 1, alert: 1 }, SET.mix);   // three volumes: effects, ambience, alerts
 function saveSet() { try { localStorage.setItem('firstkeep.settings', JSON.stringify(SET)); } catch (e) {} }
 const MODES = { conquest: { name: 'Conquest', secs: 0 }, t30: { name: '30 minutes', secs: 1800 }, t60: { name: '60 minutes', secs: 3600 } };
 
@@ -205,7 +206,7 @@ const armyOf = o => G.units.filter(u => u.owner === o && UNIT[u.kind].cls === 'a
 const popOf = o => G.units.filter(u => u.owner === o && UNIT[u.kind].cls).length;
 const capOf = o => Math.min(POPMAX, G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 ? BLD[b.kind].room || 0 : 0), 0));
 const clsMax = c => c === 'civ' ? VILMAX : ARMYMAX;
-const clsCount = (o, c) => G.units.filter(u => u.owner === o && UNIT[u.kind].cls === c).length + G.blds.reduce((n, b) => n + (b.owner === o ? b.q.filter(j => j.kind && UNIT[j.kind].cls === c).length : 0), 0);
+const clsCount = (o, c) => G.units.filter(u => u.owner === o && UNIT[u.kind].cls === c).length + G.blds.reduce((n, b) => n + (b.owner === o ? b.q.reduce((m, j) => m + (j.kind && UNIT[j.kind].cls === c ? 1 : j.muster && c === 'army' ? Object.values(j.muster).reduce((x, y) => x + y, 0) : 0), 0) : 0), 0);   // a muster counts all it will bring
 const queuedOf = (o, kind) => G.blds.reduce((n, b) => n + (b.owner === o ? b.q.filter(j => j.kind && (!kind || j.kind === kind || UNIT[j.kind].replaces === kind)).length : 0), 0);
 const BN = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'];
 const orderSet = () => armyOf(0).filter(u => u.kind !== 'spy' && u.state !== 'shrine' && (G.sel === 'all' || u.bn === G.sel));   // spies and priests holding a shrine keep their own work
