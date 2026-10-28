@@ -162,20 +162,20 @@ function learnTech(o, id) {
 // ───────────────────────── Villagers: gather, hunt, carry, mend, shelter ─────────────────────────
 function dropFor(o, type, from) { return nearest(G.blds, from, b => b.owner === o && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(type)); }
 const dockNear = (o, n) => G.blds.some(b => b.owner === o && b.kind === 'dock' && b.prog >= 1 && b.hp > 0 && Math.abs(b.x - n.x) < DOCKR && Math.abs(b.y - n.y) < DOCKR && dist(b, n) < DOCKR);
-const nodeFits = (n, job) => job === 'farm' ? n.kind === 'farm' && n.type === 'food' : n.type === job;
-// Food takes a free field first if one is near, else the nearest berries, fish, carcass or game. Farm takes free fields only.
+const nodeFits = (n, job) => n.type === job;
+// Food takes a free field first if one is near (within 160), else the nearest berries, fish, carcass or game.
 const unsafe = p => (G.guarded || []).some(f => Math.abs(f.x - p.x) < 120 && Math.abs(f.y - p.y) < 120 && dist(f, p) < 120);
 function nearestNode(u, job) {
   let best = null, bd = 1e9, bdist = 1e9, farm = null, fd = 1e9;   // bd scores a find by the walk to it and the walk home with the load
   for (const n of G.nodes) {
-    if (n.kind !== 'farm' && (job === 'farm' || Math.abs(n.x - u.x) * 0.4 > bd)) continue;   // the cheap tests first: most of the map is farther than the best so far
+    if (n.kind !== 'farm' && Math.abs(n.x - u.x) * 0.4 > bd) continue;   // the cheap tests first: most of the map is farther than the best so far
     if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n))) continue;
     if (n.kind === 'farm') {
       if (n.farm.owner !== u.owner || n.farm.prog < 1 || n.farm.hp <= 0 || (n.wk || 0) - (u.node === n ? 1 : 0) >= slotsOf(n)) continue;
       const d = dist(u, n); if (d < fd) { fd = d; farm = n; }
-    } else if (job !== 'farm') { if (n.kind === 'fish' && !dockNear(u.owner, n)) continue; if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue; if (Math.abs(n.x - u.x) * 0.4 > bd) continue; const d = dist(u, n) * 0.4; if (d < bd) { const dr = n.kind === 'fish' ? null : dropFor(u.owner, n.type, n) || keepOf(u.owner), s = d + (dr ? dist(dr, n) * 0.6 : 0) + 25 * Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0)); if (s < bd) { bd = s; best = n; bdist = d / 0.4; } } }
+    } else { if (n.kind === 'fish' && !dockNear(u.owner, n)) continue; if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue; if (Math.abs(n.x - u.x) * 0.4 > bd) continue; const d = dist(u, n) * 0.4; if (d < bd) { const dr = n.kind === 'fish' ? null : dropFor(u.owner, n.type, n) || keepOf(u.owner), s = d + (dr ? dist(dr, n) * 0.6 : 0) + 25 * Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0)); if (s < bd) { bd = s; best = n; bdist = d / 0.4; } } }
   }
-  if (farm && (job === 'farm' || fd < 160 || !best)) return farm;
+  if (farm && (fd < 160 || !best)) return farm;
   if (job === 'food') {   // game: deer and boar within reach of home, if nearer than anything else
     const k = keepOf(u.owner);
     const g = k && nearest(G.units, u, v => v.owner === WILD && UNIT[v.kind].meat && UNIT[v.kind].tick === 'wild' && dist(v, k) < 420 && !unsafe(v), Math.min(bdist, 420));
@@ -202,7 +202,7 @@ function vilTick(u, dt, SP) {
     return;
   }
   const cap = carryOf(u.owner);
-  if (u.carry > 0 && (u.carry >= cap - 1e-6 || u.carryType !== jobRes(u.job) || !u.job || (!u.hunt && (!u.node || u.node.amt <= 0)))) {
+  if (u.carry > 0 && (u.carry >= cap - 1e-6 || u.carryType !== u.job || !u.job || (!u.hunt && (!u.node || u.node.amt <= 0)))) {
     const drop = dropFor(u.owner, u.carryType, u); if (!drop) { u.idle = true; return; }
     if (moveTo(u, drop.x, drop.y, dt, halfOf(drop) + 4, SP)) { stash(u.owner, u.carryType, Math.round(u.carry)); u.carry = 0; }
     if (u.carry > 0 || u.hunt || !u.node || u.node.amt > 0) return;
@@ -672,7 +672,7 @@ const TICK = { vil: vilTick, scout: scoutTick, envoy: envoyTick, caravan: carava
 const slotsOf = n => (n.farm && BLD[n.farm.kind].slots) || 1;
 function startWork(u, b) {
   const B = BLD[b.kind], take = (job, n) => { u.pj = null; setJob(u, job, n); return true; };
-  if (B.crop && b.node) return (b.node.wk || 0) < slotsOf(b.node) && take(b.node.type === 'food' ? 'farm' : b.node.type, b.node);
+  if (B.crop && b.node) return (b.node.wk || 0) < slotsOf(b.node) && take(b.node.type, b.node);
   if (b.kind === 'dock') { const f = nearest(G.nodes, b, n => n.kind === 'fish' && n.amt > 0, DOCKR); return !!f && take('food', f); }
   if (B.drop && B.drop.length <= 3) { const n = nearest(G.nodes, b, n => B.drop.includes(n.type) && n.kind !== 'farm' && n.amt > 0 && (n.kind !== 'tree' || n.open), 220); return !!n && take(n.type, n); }
   return false;

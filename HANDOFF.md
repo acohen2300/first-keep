@@ -1,4 +1,4 @@
-# First Keep: handoff (Build 35 pushed; Build 36 = layout, mockups only; see CUTS.md)
+# First Keep: handoff (Build 36 live: the new screen layout; see CUTS.md)
 
 ## What it is
 Single-file HTML mobile RTS (Albert). Live: https://claude.ai/artifact/BYdPKYCJDQS3xw5fwxvjYV (version 34, Build 29). Updated in place each build with a label.
@@ -59,25 +59,12 @@ Hold-to-box (no ⬚), state chip and Home on a second top row, map button (minim
 One top bar; map, home and clock on the map corners; bottom = job row, ± row, then + Villager | People | Build. Build card with five filters. Score names jump to players. Minimap stars and diamonds. Build 33 stays at its own preview artifact for comparison.
 
 
-## Build 36: the screen layout (OPEN, mockups only, nothing built in src/)
-**Problem (Albert, Oct 27):** the bottom of the screen is "crazy": ~29% of a 390x844 phone (status pill + 6 job tiles with -/+ + Villager/Build row, ~290 px). He wants far less, and wants it to look good. Work in quick mockups, then one build, one test run, one push. He confirms with "yes yes".
-
-**Albert's rules for this screen:** icons, not words, where possible; fewest rows; everything touching or evenly spaced; resource COUNTS belong top left; the "?" button should go and the map icon take its place; age on the top left and score on the top right (thin pills, middle clear, room for the iPhone pill); jobs are used a lot; a gap between groups; Build and People should look like the resource tiles.
-
-**Facts that bound the design**
-- Job tiles are Food, Farm, Wood, Stone, Gold, Iron. Albert thinks Farm should go (fold into Food: food workers already use free fields first). Hints and old saves mention "+ under Farm".
-- Build has 5 categories (MENUS): Home, Military, Defense, Trade, Culture. Each opens a 12-slot card.
-- 44 px tap rule (tests/gate.py). Six job tiles across 390 px leave ~30 px per - and +, so the gate needs an exception, OR one shared -|+ (see C).
-- Status info that needs a home: age, season, clock, score and rank, training count, researching/ready (glows), idle villagers, army count and marching.
-- Zoom % and civ name are being dropped from the status line.
-
-**Layouts tried (all in `mockups/`)**
-- A. Always-visible single row (Build icon | People | 5 job tiles), age/clock/score in a thin strip attached under the top bar, resources top left: ~76 px top + 86 px bottom. Image: `layout-always-visible.png`.
-- B. Resources merged into the job tiles (each tile = icon + stock + workers + -|+), top bar holds age, clock, score: smallest, but pushes resource counts to the bottom (Albert prefers top left). Image: `layout-merged-tiles.png`.
-- C. LATEST idea (Albert's): two collapsed icon pills at the bottom corners (Build left, Jobs right, ~56 px); tap one and the bottom row becomes that thing. Jobs row = hide arrow, People, 5 resources, ONE shared -|+ acting on the selected one (48 px wide each). Build row = hide arrow + 5 category tabs that open the existing card. Image: `layout-three-states.png`. Closed is the most map; costs 2-3 taps to change a job. Open question: keep a one-tap + Villager beside the Jobs pill when closed (my recommendation), and the idle badge on the Jobs pill.
-
-**Files:** `mockups/layout-lab.html` is a playable scratch build with layout C (use `__mock.open('s0'|'sj'|'sb')`); `mockups/layout-lab.diff` is its change against `src/`. The scratch copy's JS wiring for C is at the end of its `16-boot.js`; the list stub elements in `shell-head.html` (#vilc, #bVil, #bBuild) only exist to keep old code from throwing. Rebuild C properly in `src/`, not from the diff, and delete the stubs.
-
-**If Albert says "yes yes" to a layout, the full Build 36 list is:** the layout; Farm folded into Food; "?" removed (help into People card); map icon in the top bar; minimap and tip message repositioned under the new top strip; army count and research glow in the status strip; People - cancels a queued villager, tapping People opens the People card; every cut logged in CUTS.md (civ name and zoom % from the status line, Farm job, "?", job names); then ONE build, one `tests/gate.py` run at 4 sizes, one push, preview artifact update. Also update: stale tests that click #bArmy/#bRes (tests/e2e, b33.py), GUIDE.md, and the two hint texts that say "+ under Farm".
-
-**Build 35 state:** preview https://claude.ai/artifact/GU58PoGRonFiVFanonJ5Rj (version 3); commit f41d288 on main; live `index.html` is still Build 30. Promote with `cp preview/index.html index.html`, commit, push, only when he decides.
+## Build 36: the screen layout (DONE, live on GitHub Pages: index.html = preview/index.html = Build 36)
+Albert approved the final layout (mockups/build36-*.png) and said to ship it. What it is:
+- Top: one joined pill of 8 equal cells (Food, Wood, Stone, Gold, Iron counts; mute; pause; speed). Under it a 28 px strip: age, season and clock on the left (gold glow when the next age or a research is ready; tap = Town Center card), idle villagers beside it in gold when above 0, score and rank on the right (tap = score card). Tap targets are 44 px tall though the strip is 28.
+- Bottom, closed: six columns, People then Food, Wood, Stone, Gold, Iron. Each = tile (44) + a - | + pair (44 tall, 26-29 wide). People tile opens the People card (which now holds How to play); its - cancels the newest waiting villager (refund), its + trains one; count shows have/room, or have+waiting.
+- Build: 44 px corner button bottom right (Home button mirrors it bottom left). Tapping swaps the jobs for one row: Home, War, Walls, Trade, Culture, close. `setBuildRow()` in 12-ui.js calls `fit()` so the camera and `--ob` follow the new height.
+- One mold in `src/shell-head.html`: `.cell`, `.gl` (icon spot), `.wd` (word spot); tokens `--row --strip --t2 --r --hair --sheet`. Do not style controls with the global `button{}` rule; `button.cell` uses `all:unset`.
+- Farm job folded into Food (`JOBS` has 5). Save version 29; `MIGRATE[28]` turns saved Farm workers and the Farm rally into Food. Menus renamed War and Walls (ids `mil`, `def` unchanged).
+- Gate: tap exception is now `.pm` (the - and + tiles) only; the old top-bar clip check became a clip check on `.wd`, `.top .c` and the strip text. Passes at 375x667, 390x844, 393x852, 430x932, web and native.
+- Stale: `tests/e2e/t27.py` still reads #sClock, #bVil, #bArmy (gone since Build 33/34/36); it was already broken before this build. Real-phone test list: tap sizes, the strip taps, Build row, People - and +, glow.

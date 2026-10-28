@@ -305,5 +305,15 @@ Nothing disappears unless it is listed here. Old game kept as reference: `first-
 - Cut: the line under card titles; Build menu tabs now touch and the chosen tab is filled red.
 - Added: ghost buttons so every Build menu is the same height.
 
-## Build 36 (mockups only, NOT built; see mockups/ and HANDOFF.md)
-- Proposed cuts, all awaiting his yes yes: the "?" button (help moves into the People card), the Farm job (folds into Food), the civ name and zoom % from the status line, the job names (icons), the status pill, the clock pill.
+## Build 36: the screen layout (built, live)
+The bottom of a 390 x 844 phone went from about 290 px (29%) to 91 px (11%); the top from three rows to a 46 px pill and a 28 px strip. One mold (`.cell`), two type sizes, named sizes.
+- Cut: the "?" button (How to play is now a button in the People card).
+- Cut: the Farm job. Food takes a free field within 160 first, else berries, game or fish; a food worker moves onto a field when one comes free. The old "fields only" control is gone. Save version 28 to 29 turns saved Farm workers (and the Farm rally choice) into Food.
+- Cut: the old bottom row (+ Villager | Build): People is now the first column (icon, have/room count; - cancels a villager waiting to train and gives the cost back, + trains one, tap opens the People card). Build is a 44 px corner button bottom right; it swaps the jobs for one row: Home, War, Walls, Trade, Culture, and a close button.
+- Cut: the status pill (people, army, research, age, season, clock, zoom %, civ name) and the clock pill. Age, season and clock now sit in a thin strip under the top bar; idle villagers show there in gold only when there are some; score and rank (just "1st") sit at the right of it.
+- Cut: the Research tile and the research-ready glow/badge on the status pill. Replaced by: the age text in the strip glows gold when the next age or any research is ready; tapping it opens the Town Center card. Research stays under the People card.
+- Cut: Army and marching counts. Training and researching counts (they showed only in the status pill). Training now shows as "have+waiting" in the People tile.
+- Cut: zoom % and the civ name from the screen.
+- Renamed everywhere (card tabs too): Military to War, Defense to Walls (Walls still holds towers, castles and gates).
+- Cut: the job names were replaced by icon, count and a one-word name under it; the indigo glass look gave way to the dark panel look of Build 30.
+- Gate: the tap-size exception now covers only the - and + tiles under each job (26 to 29 points wide; the tile above each is 44 high). Everything else is at least 44 x 44.

@@ -1,6 +1,6 @@
 // ═════ 01-rules.js ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 35;
+const BUILD = 36;
 const MAP = 2000, MID = MAP / 2, DT = 1 / 30;
 const POPMAX = 150, VILMAX = 60, ARMYMAX = 90, BNSIZE = 30, BNS = 6;   // six battalions, once Command is researched at a War Council; BNSIZE: the most one Zeal blesses
 const RICH = 2.5, PLUNDER = 0.25, CARRY = 10, NAVC = 10;                // NAVC: the walking grid, 10 units a square (never shown)
@@ -19,7 +19,7 @@ const RESOURCES = {
   iron:  { k: 'i', name: 'Iron',  col: '#8fa3b5', drop: 'Mine' },   // the metal of the Iron age: weapons and armour from the Classical age on
 };
 const RES = Object.keys(RESOURCES), KEY = Object.fromEntries(RES.map(r => [r, RESOURCES[r].k])), LONG = Object.fromEntries(RES.map(r => [RESOURCES[r].k, r]));
-const JOBS = ['food', 'farm', 'wood', 'stone', 'gold', 'iron'];
+const JOBS = ['food', 'wood', 'stone', 'gold', 'iron'];
 
 const PLAYERS = [
   { name: 'You',      pers: 'human', color: '#4f93e6', keep: [300, 1700] },
@@ -165,8 +165,8 @@ const TRAINERS = new Set(['keep', ...Object.values(UNIT).flatMap(U => U.at ? [U.
 // The build menus. "soon" is on the list but not built: it stays visible until built or deliberately dropped (and logged).
 const MENUS = [
   { id: 'home', name: 'Home',     blurb: 'room to live, food, wood, stone', items: ['house', 'apartment', 'aqueduct', 'town', 'farm', 'pasture', 'treefarm', 'mill', 'dock', 'lumber', 'mining', 'bakery'] },
-  { id: 'mil',  name: 'Military', blurb: 'where soldiers are trained',      items: ['barracks', 'range', 'stable', 'siege', 'smith', 'council'] },
-  { id: 'def',  name: 'Defense',  blurb: 'towers, walls and gates',         items: ['tower', 'castle', 'wall', 'gate'] },
+  { id: 'mil',  name: 'War',      blurb: 'where soldiers are trained',      items: ['barracks', 'range', 'stable', 'siege', 'smith', 'council'] },
+  { id: 'def',  name: 'Walls',    blurb: 'towers, walls and gates',         items: ['tower', 'castle', 'wall', 'gate'] },
   { id: 'shop', name: 'Trade',    blurb: 'markets, goods and caravans',       items: ['market', 'bizc', 'weaver', 'brewery'] },
   { id: 'cult', name: 'Culture',  blurb: 'faith, law, learning, wonders', items: ['school', 'library', 'hospital', 'temple', 'courthouse', 'amphi', 'wonder'] },
 ];

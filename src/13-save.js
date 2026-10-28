@@ -1,8 +1,9 @@
 // ═════ 13-save.js ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
-const SAVEKEY = 'firstkeep.save', SAVEV = 28;   // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+const SAVEKEY = 'firstkeep.save', SAVEV = 29;   // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {   // { 24: S => S-in-the-shape-of-25 }, run in order
   27: S => { for (const p of S.P) if (p.techs && p.techs.includes('command') && !p.techs.includes('engage')) p.techs.push('engage'); S.v = 28; return S; },   // Build 31: Engagement comes before Battalions; who had them keeps stances
+  28: S => { for (const u of S.units) if (u.job === 'farm') u.job = 'food'; for (const p of S.P) if (p.rally === 'farm') p.rally = 'food'; S.v = 29; return S; },   // Build 36: Farm is folded into Food
 };
 let staleSave = 0;   // the version of a save we could not open, so the setup card can say so
 const SKIP_U = new Set(['focus', 'tgt', 'bt', 'esc', 'blocker', 'path', 'so', 'aggro', 'node', 'rep', 'hunt', 'lcOK', 'lcT', 'pv', 'pk', 'pfK', 'pfV', 'pfT', 'pi', 'partial']);
@@ -49,8 +50,8 @@ function loadGame(S) {
   $('end').hidden = true; closeCard(); cancelPlace(); holdSave = false; setPause(false);
 }
 function muteBtn() { $('muteB').classList.toggle('off', !SND.on); $('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on'); }
-const ICON_PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8 L13 8 L4.5 13.2 Z" fill="currentColor"/></svg>', ICON_PAUSE = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/></svg>';
-function paceBtn() { const pb = $('pauseB'); pb.innerHTML = G.paused ? ICON_PLAY : ICON_PAUSE; pb.setAttribute('aria-label', G.paused ? 'Play' : 'Pause'); pb.classList.toggle('on', !!G.paused); $('speed').textContent = '×' + G.speed; }
+const ICON_PLAY = '<svg class="gl" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8 L13 8 L4.5 13.2 Z" fill="currentColor"/></svg>', ICON_PAUSE = '<svg class="gl" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/></svg>';
+function paceBtn() { const pb = $('pauseB'); pb.innerHTML = G.paused ? ICON_PLAY : ICON_PAUSE; pb.setAttribute('aria-label', G.paused ? 'Play' : 'Pause'); pb.classList.toggle('on', !!G.paused); $('speedT').textContent = '×' + G.speed; }
 function setPause(v) { G.paused = v; paceBtn(); }
 document.addEventListener('visibilitychange', () => { if (document.hidden) saveGame(); });
 window.addEventListener('pagehide', () => saveGame());

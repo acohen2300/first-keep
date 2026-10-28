@@ -16,6 +16,10 @@ function train(o, kind) {
   const t = U.t * stats(o, k).train;
   pay(p, U.cost); at.q.push({ kind: k, left: t, total: t }); return true;
 }
+function unTrain(o, kind) {   // cancel the newest villager waiting in any queue; the cost comes back
+  for (const b of G.blds) if (b.owner === o) for (let i = b.q.length - 1; i >= 0; i--) { const j = b.q[i]; if (j.kind === kind || (j.kind && UNIT[j.kind].replaces === kind)) { b.q.splice(i, 1); const c = UNIT[j.kind].cost, p = G.P[o]; for (const r in c) p.res[r] += c[r]; return true; } }
+  return false;
+}
 // Muster: a whole battalion in one order at the War Council: twice the cost and a quarter longer; the time is shared by every building that trains each kind
 const musterN = plan => Object.values(plan).reduce((n, k) => n + k, 0);
 function musterCost(o, plan) {
@@ -225,12 +229,11 @@ function hire(o, f) {
 }
 
 // ───────────────────────── Villager orders ─────────────────────────
-const jobRes = j => j === 'farm' ? 'food' : j;
 function setJob(u, job, n) { if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1); u.job = job; u.node = n || null; if (n && n.farm) n.wk = (n.wk || 0) + 1; if (job !== 'repair') u.rep = null; }
 // the villager to send: the nearest idle one; if none is idle, one from the job whose stock you hold the most of
 function pickVil(o, to, skipJob, site) {
   const p = G.P[o], V = unitsOf(o, 'vil').filter(u => !u.inside && !(site && u.rep === site)), idle = V.filter(u => !u.job), other = V.filter(u => u.job && u.job !== skipJob && u.job !== 'repair');
-  const stock = u => p.res[KEY[jobRes(u.job)]] || 0;
+  const stock = u => p.res[KEY[u.job]] || 0;
   if (idle.length) return nearest(idle, to);
   const pool = other.length ? other : V.filter(u => u.job !== 'repair'); if (!pool.length) return null;   // nobody is pulled off a site: with all hands busy, the order waits
   return pool.sort((a, b) => (stock(b) - stock(a)) || (dist(a, to) - dist(b, to)))[0];
@@ -244,7 +247,7 @@ function moveVil(o, job, down) {
 }
 function sendVil(o, id) {
   const n = G.nodes.find(x => x.id === id); if (!n || (n.amt <= 0 && n.kind !== 'farm')) return false;
-  const job = n.kind === 'farm' && n.type === 'food' ? 'farm' : n.type, v = pickVil(o, n, job);
+  const job = n.type, v = pickVil(o, n, job);
   if (!v) { if (o === 0) say('No villager is free.', '', 3); return false; }
   setJob(v, job, n); if (o === 0) say(`A villager heads for the ${nodeName(n).toLowerCase()}.`, '', 3); return true;
 }

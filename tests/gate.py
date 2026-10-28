@@ -1,5 +1,5 @@
 # The gate: what must hold before a build goes live, measured at four iPhone sizes, not judged by eye.
-# No page errors; no two buildings alike at half zoom; nothing wider than the screen; every word inside its button; text at least 12 px; contrast at least 4.5:1 (target 7:1); no card but Help and the Guide needs scrolling from 390 × 844 up (the iPhone SE at 375 × 667 is too short for the biggest cards); every tap target at least 44 × 44 points (Apple's rule), except the job row, which has no room for 12 of them (kept by choice, Build 25).
+# No page errors; no two buildings alike at half zoom; nothing wider than the screen; every word inside its button; text at least 12 px; contrast at least 4.5:1 (target 7:1); no card but Help and the Guide needs scrolling from 390 × 844 up (the iPhone SE at 375 × 667 is too short for the biggest cards); every tap target at least 44 × 44 points (Apple's rule), except the − and + tiles under each job (six columns leave them 26 to 29 points wide; kept by choice, Build 36).
 # Run from first-keep/:  python3 build.py && python3 wrap.py && python3 tests/gate.py
 import asyncio, json, os, sys
 from playwright.async_api import async_playwright
@@ -24,9 +24,9 @@ MEASURE = """() => {
     const fg = parse(cs.color), b = bg(el), L1 = lum(fg), L2 = lum(b), c = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05); if (c < 4.5) out.low.push(t.slice(0, 20) + ' ' + c.toFixed(1));
   }
   for (const b of document.querySelectorAll('button')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden]')) continue; for (const e of b.querySelectorAll('b,small')) if (e.scrollWidth > e.clientWidth + 1 && getComputedStyle(e).overflow !== 'visible') out.clip.push(e.textContent.slice(0, 24)); if (r.right > innerWidth + 1) out.clip.push('off screen: ' + b.textContent.slice(0, 20)); }
-  for (const b of document.querySelectorAll('button,[data-act],summary')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden],.jobc') || r.bottom < 0 || r.top > innerHeight) continue; if (r.width < 44 || r.height < 44) out.tap.push((b.id || b.textContent.trim().slice(0, 14) || b.className) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height)); }
+  for (const b of document.querySelectorAll('button,[data-act],summary')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden],.pm') || r.bottom < 0 || r.top > innerHeight) continue; if (r.width < 44 || r.height < 44) out.tap.push((b.id || b.textContent.trim().slice(0, 14) || b.className) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height)); }
   { const c = document.getElementById('card'); out.scroll = c && !c.hidden && c.scrollHeight > c.clientHeight + 1 ? c.scrollHeight + '>' + c.clientHeight : ''; }
-  const T = document.querySelector('.tally'); if (T) { const tr = T.getBoundingClientRect(); for (const s of T.children) if (s.getBoundingClientRect().right > tr.right + 1) out.clip.push('top bar: ' + s.title); }
+  for (const e of document.querySelectorAll('.wd,.top .c,.strip button span')) { if (e.closest('[hidden]') || !e.getBoundingClientRect().width) continue; if (e.scrollWidth > e.clientWidth + 1) out.clip.push('tile: ' + e.textContent.slice(0, 16)); }
   return out; }"""
 # Readability: at half zoom, no two buildings may share both their average colour (within 18) and their size (within 5 px)
 LOOK = """() => { const F=window.__fk; F.newGame(5); const G=F.G; const s=1;   // zoom 0.5 at dpr 2

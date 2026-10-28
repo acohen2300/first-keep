@@ -109,7 +109,7 @@ function renderCard() {
       }
       // everything else about the building waits behind one More, closed until you open it
       moreH = (tr.length && b.kind !== 'keep' && b.kind !== 'town' ? tr.map(k => unitLine(0, civKind(0, k))).join('') : '') + techs.map(t => `<p><b>${t.name}:</b> ${t.desc}</p>`).join('') + (b.kind === 'keep' ? keepMoreHTML() : '');
-      if (b.kind === 'farm') h += `<p>Worked by ${b.node && b.node.wk > 0 ? `${b.node.wk} of ${slotsOf(b.node)}` : 'nobody yet: tap Send a villager' + (b.node && b.node.type === 'food' ? ', or + under Farm' : '')}. This season: ${season().name}, ×${season().farm}${G.harvest !== 1 ? ` · this year's harvest ×${G.harvest}` : ''}${WEATHER[G.wx].crop ? ` · ${WEATHER[G.wx].name.toLowerCase()} ×${WEATHER[G.wx].crop}` : ''} · soil ${Math.round((b.fert ?? 1) * 100)}%${b.node && b.node.type === 'food' && bakeryNear(0, b.node) ? ' · a bakery near: ×1.15' : ''}.</p>`;
+      if (b.kind === 'farm') h += `<p>Worked by ${b.node && b.node.wk > 0 ? `${b.node.wk} of ${slotsOf(b.node)}` : 'nobody yet: tap Send a villager' + (b.node && b.node.type === 'food' ? ', or + under Food' : '')}. This season: ${season().name}, ×${season().farm}${G.harvest !== 1 ? ` · this year's harvest ×${G.harvest}` : ''}${WEATHER[G.wx].crop ? ` · ${WEATHER[G.wx].name.toLowerCase()} ×${WEATHER[G.wx].crop}` : ''} · soil ${Math.round((b.fert ?? 1) * 100)}%${b.node && b.node.type === 'food' && bakeryNear(0, b.node) ? ' · a bakery near: ×1.15' : ''}.</p>`;
       if (b.kind === 'council') h += councilHTML(b);
       h += econCard(b);
       if (b.kind === 'treefarm') h += `<p>Tended by ${b.node && b.node.wk > 0 ? `${b.node.wk} of ${slotsOf(b.node)}` : 'nobody yet: tap Send a villager, or + under Wood'}. ${Math.round(b.node ? b.node.amt : 0)} wood left, then the plot is cut out.</p>`;
@@ -191,7 +191,7 @@ function renderCard() {
   } else if (c.type === 'army') {
     const S = armyOf(0), by = {}; for (const u of S) { const nm = stats(0, u.kind).name; by[nm] = (by[nm] || 0) + 1; }
     const V = unitsOf(0, 'vil'), idle = V.filter(u => !u.job);
-    h += `<h3>People<span class="who">${V.length} villagers · ${S.length} soldiers</span></h3><div class="acts c1">${btn('card:research', 'Research', (() => { let r = 0; for (const v of G.rdy.values()) r += v; const g = G.blds.reduce((n, b) => n + (b.owner === 0 ? b.q.filter(j => j.tech || j.age).length : 0), 0); return `${r} ready · ${g} under way`; })(), (() => { for (const v of G.rdy.values()) if (v) return 'go'; return ''; })())}</div><div class="sec">Villagers</div><p>${JOBS.map(r => `${V.filter(u => u.job === r).length} ${r}`).join(' · ')} · <b>${idle.length} idle</b></p>${idle.length ? `<div class="acts c1">${btn('idlego', 'Show an idle villager', `${idle.length} idle`)}</div>` : ''}<div class="sec">Army</div><p>${Object.entries(by).map(([n, k]) => `${k} ${some(k, n.toLowerCase())}`).join(' · ') || 'Nobody yet.'}</p>`;
+    h += `<h3>People<span class="who">${V.length} villagers · ${S.length} soldiers</span></h3><div class="acts c1">${btn('card:research', 'Research', (() => { let r = 0; for (const v of G.rdy.values()) r += v; const g = G.blds.reduce((n, b) => n + (b.owner === 0 ? b.q.filter(j => j.tech || j.age).length : 0), 0); return `${r} ready · ${g} under way`; })(), (() => { for (const v of G.rdy.values()) if (v) return 'go'; return ''; })())}${btn('help', 'How to play', 'the guide and the rules')}</div><div class="sec">Villagers</div><p>${JOBS.map(r => `${V.filter(u => u.job === r).length} ${r}`).join(' · ')} · <b>${idle.length} idle</b></p>${idle.length ? `<div class="acts c1">${btn('idlego', 'Show an idle villager', `${idle.length} idle`)}</div>` : ''}<div class="sec">Army</div><p>${Object.entries(by).map(([n, k]) => `${k} ${some(k, n.toLowerCase())}`).join(' · ') || 'Nobody yet.'}</p>`;
     if (S.length && hasCmd()) h += `<div class="sec">Orders go to</div><div class="acts c4">` + [['all', 'All', S.length]].concat(BN.map((n, i) => [i, n, S.filter(u => u.bn === i).length])).map(([k, n, cnt]) => btn(`sel:${k}`, n, `${cnt}`, G.sel === k ? 'on' : '')).join('') + `</div>`;
     if (S.length) h += `<div class="sec">Orders for the ${selName()}</div><div class="acts">${btn('recall', 'Recall home', '')}${btn('attack:near', 'Attack nearest', oddsText(orderSet(), foeNearest()), orderSet().length ? 'warn' : 'dis')}</div>`;
     if (S.length && p.techs.has('engage')) { const sn = G.sel === 'all' ? (G.stance.every(x => x === G.stance[0]) ? G.stance[0] : -1) : G.stance[G.sel]; h += `<div class="acts c1">${btn('stance', 'Stance: ' + (sn < 0 ? 'mixed' : STANCE[sn].name), '', sn > 0 ? 'on' : '')}</div>`; }
@@ -390,9 +390,28 @@ function guideMd() {
 }
 
 // ───────────────────────── The orders panel ─────────────────────────
+const RIC = {   // the icons: five resources, then the build categories and the small controls
+  food: '<svg class="gl" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 4.5 L10.5 1.5" stroke="#6aa04f" stroke-width="1.6" stroke-linecap="round"/><circle cx="5.2" cy="10" r="3.3" fill="#d9607a"/><circle cx="10.8" cy="10" r="3.3" fill="#d9607a"/><circle cx="8" cy="6.4" r="3.3" fill="#ec8ea3"/></svg>',
+  wood: '<svg class="gl" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="5" width="13" height="7" rx="3.5" fill="#a8743f"/><circle cx="11.6" cy="8.5" r="2.7" fill="#e3b98a"/><circle cx="11.6" cy="8.5" r="1.1" fill="#a8743f"/></svg>',
+  stone: '<svg class="gl" viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 12.5 L3.5 5 L8.5 2.5 L14.5 6.5 L13.5 13.5 Z" fill="#b4bbc0" stroke="#6b7378"/><path d="M3.5 5 L8.5 7 L14.5 6.5 M8.5 7 L8 13.5" stroke="#868e93" fill="none"/></svg>',
+  gold: '<svg class="gl" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="#f2cf55"/><circle cx="8" cy="8" r="4" fill="none" stroke="#b8902a" stroke-width="1.3"/></svg>',
+  iron: '<svg class="gl" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 11 L5 5 L11 5 L14 11 Z" fill="#8fa3b5"/><path d="M5 5 L11 5 L9.5 8 L6.5 8 Z" fill="#c9d4de"/></svg>',
+  people: '<svg class="gl" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="6.2" r="3.2" fill="currentColor"/><path d="M3.8 16.5 C3.8 12.6 6.6 10.8 10 10.8 C13.4 10.8 16.2 12.6 16.2 16.5 Z" fill="currentColor"/></svg>',
+  home: '<svg class="gl" viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 10 L10 4 L16.5 10" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round"/><path d="M5.5 9 V16 H14.5 V9" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 16 V12 H11.4 V16" fill="currentColor"/></svg>',
+  mil: '<svg class="gl" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3 L16 5.4 V10 C16 13.4 13.4 15.8 10 17 C6.6 15.8 4 13.4 4 10 V5.4 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M10 3 V17" stroke="currentColor" stroke-width="1.4"/></svg>',
+  def: '<svg class="gl" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 17 V6 H6.5 V8.2 H8.6 V6 H11.4 V8.2 H13.5 V6 H16 V17 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 17 V13 H11.4 V17" fill="currentColor"/></svg>',
+  shop: '<svg class="gl" viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 7.5 H15.5 M12.5 4.5 L15.5 7.5 L12.5 10.5 M16.5 13 H4.5 M7.5 10 L4.5 13 L7.5 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  cult: '<svg class="gl" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8.2 L10 4 L17 8.2 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M5.2 9.5 V15 M8.4 9.5 V15 M11.6 9.5 V15 M14.8 9.5 V15 M3 16.5 H17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+  close: '<svg class="gl" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 5.5 L14.5 14.5 M14.5 5.5 L5.5 14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+};
+// The bottom: People, then one column per job (the job tile, and − | + under it). Build swaps the whole row for the categories.
 function buildPanel() {
-  $('jobs').innerHTML = JOBS.map(r => `<div class="jobc"><button class="jn" data-act="job:${r}"><b>${r[0].toUpperCase() + r.slice(1)}</b><small id="j${r}">0</small></button><div class="pm"><button data-act="less:${r}" aria-label="One fewer on ${r}">−</button><button data-act="move:${r}" aria-label="One more on ${r}">+</button></div></div>`).join('');
-  }
+  const st = (act, t, label, id) => `<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
+  $('jobs').innerHTML = `<div class="col"><button class="cell" id="tPeople" data-act="card:army" aria-label="People: army, research, how to play">${RIC.people}<span class="wd" id="tPeopleN">0/0</span></button><div class="pm">${st('unvil', '−', 'Cancel a villager waiting to train', 'tUn')}${st('train:vil', '+', 'Train a villager', 'tVil')}</div></div>`
+    + JOBS.map(r => `<div class="col"><button class="cell" id="tj_${r}" data-act="job:${r}"><span class="top">${RIC[r]}<span class="c" id="tn_${r}">0</span></span><span class="wd">${r[0].toUpperCase() + r.slice(1)}</span></button><div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`).join('');
+  $('bmenu').innerHTML = MENUS.map(m => `<button class="cell" id="bm_${m.id}" data-act="menu:${m.id}">${RIC[m.id]}<span class="wd">${m.name}</span></button>`).join('') + `<button class="cell one" data-act="buildrow" aria-label="Close the build row">${RIC.close}</button>`;
+}
+function setBuildRow(on) { $('bmenu').hidden = !on; $('jobs').hidden = on; $('buildB').hidden = on; if (!on && G && G.card && G.card.type === 'menu') closeCard(); fit(); if (G) ui(true); }
 const refresh = () => { cardSig = ''; ui(true); };
 // every button's verb, in one table
 const ACT = {
@@ -408,7 +427,9 @@ const ACT = {
   reload() { location.reload(); },
   vibe() { SET.vibe = !SET.vibe; saveSet(); feel('snap'); refresh(); },
   menu(a) { const keep = G.card && G.card.type === 'menu'; openCard({ type: 'menu', id: a }); if (keep) $('card').scrollTop = 0; },
-  buildcard() { if (G.card && G.card.type === 'menu') { closeCard(); return; } openCard({ type: 'menu', id: G.lastMenu || 'home' }); },
+  buildrow() { setBuildRow($('bmenu').hidden); },
+  towncard() { const k = keepOf(0); if (k) openCard({ type: 'bld', id: k.id }); },
+  unvil() { if (!unTrain(0, 'vil')) say('Nobody is waiting to train.', '', 3); },
   idlego() { const u = unitsOf(0, 'vil').find(v => !v.job); if (!u) return; cam.x = u.x; cam.y = u.y; clampCam(); closeCard(); },
   seek(a) { const o = Number(a), k = keepOf(o) || G.blds.find(b => b.owner === o); if (!k) { say('Nothing of theirs stands.', '', 3); return; } cam.x = k.x; cam.y = k.y; clampCam(); if (k.kind === 'keep') { G.card = null; openCard({ type: 'bld', id: k.id }); } else closeCard(); },
   guide(a) { openCard({ type: 'guide', page: a }); },
@@ -512,7 +533,7 @@ function learn(k) { SET.learned = SET.learned || {}; if ((SET.learned[k] || 0) >
 function learnAct(verb, arg) {
   if (verb === 'train') learn('train:' + arg);
   else if (verb === 'move' || verb === 'job') { learn('job'); learn('job:' + arg); }
-  else if (verb === 'sendvil') { learn('job'); const n = G.nodes.find(x => x.id === Number(arg)); if (n) learn('job:' + (n.kind === 'farm' && n.type === 'food' ? 'farm' : n.type)); }
+  else if (verb === 'sendvil') { learn('job'); const n = G.nodes.find(x => x.id === Number(arg)); if (n) learn('job:' + (n.kind === 'farm' && n.type === 'food' ? 'field' : n.type)); }
   else if (verb === 'boxjob') { learn('job'); learn('job:' + arg); }
   else if (['sendbld', 'buildat', 'age', 'goto', 'envoy', 'trade'].includes(verb)) learn(verb === 'buildat' ? 'sendbld' : verb);
 }
@@ -535,7 +556,7 @@ function advise() {
   if (V.length >= 3 && (on('wood') === 0 || (p.res.w < 80 && on('wood') < 2)) && !L('job:wood')) return 'Wood is low. Tap + under Wood.';
   if (G.blds.some(b => b.owner === 0 && b.hp > 0 && b.prog < 1 && !V.some(v => v.rep === b && v.job === 'repair')) && !L('sendbld')) return 'Nobody is building. Tap the site, send a villager.';
   { const idle = V.filter(u => u.idle).length; if (idle && G.t > 20 && !L('job')) return `${idle} villager${idle > 1 ? 's' : ''} idle (z). Tap + under a job.`; }
-  if (bldsOf(0, 'farm').some(b => b.prog >= 1 && b.node && !(b.node.wk > 0)) && !L('job:farm')) return 'A field has no workers. Tap + under Farm.';
+  if (bldsOf(0, 'farm').some(b => b.prog >= 1 && b.node && !(b.node.wk > 0)) && !L('job:field')) return 'A field has no workers. Tap + under Food.';
   if (!bldsOf(0, 'barracks').length && G.t > 75 && !L('build:barracks')) return G.diff === 'easy' ? 'Raiders come after minute 6 on Easy: Build → Barracks before then.' : 'Raiders often come around minute 3 or 4: Build → Barracks.';
   if (ready(0, 'barracks').length && S.length < 3 && G.t < 600 && !L('train:spear')) return 'Train spearmen: tap Army, or tap your Barracks.';
   if (on('wood') >= 3 && !bldsOf(0, 'lumber').length && !L('build:lumber')) return 'Wood is far. Build → Lumber camp, by trees.';
@@ -569,19 +590,16 @@ function ui(force) {
   const showTip = tip && T.text === tip && (urgent || G.t - T.at < 6) && !hushed(tip) && !G.card && !G.place && !G.over;
   if ($('tipT').textContent !== tip) $('tipT').textContent = tip; $('tip').hidden = !showTip;
   { const lim = MODES[G.mode].secs, clk = G.wonder ? `wonder ${clock(Math.max(0, G.wonder.end - G.t))}` : lim ? `${clock(Math.max(0, lim - G.t))}` : clock(G.t);
-    let train = 0, going = 0; for (const b of G.blds) if (b.owner === 0) for (const j of b.q) { if (j.kind) train++; else if (j.muster) train += musterN(j.muster); else going++; }
     let ready = 0; for (const v of G.rdy.values()) ready += v;   // research you can start now (the age counts: it is research too)
-    const S = armyOf(0), out = S.filter(u => u.state === 'attack' || u.state === 'goto').length, idleN = unitsOf(0, 'vil').filter(u => !u.job).length, part = (n, t) => n ? `${t} ${n}` : '';
-    const l1 = `${CIVS[p.civ].name} · ${AGES[p.age].name} age · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? '🌙' : ''} ${clk} · ${Math.round(cam.z * 100)}%`;
-    const l2 = [part(train, 'Training'), part(going, 'Researching'), part(ready, 'Ready'), part(idleN, 'Idle')].filter(Boolean).join(' · '), l3 = [part(S.length, 'Army'), part(out, 'Marching')].filter(Boolean).join(' · ');
-    for (const [id, t] of [['sL1', l1], ['sL2', l2], ['sL3', l3]]) if ($(id).textContent !== t) $(id).textContent = t;
-    $('clock').classList.toggle('glow', ready > 0 && !G.card); }
+    const idleN = unitsOf(0, 'vil').filter(u => !u.job).length, t1 = `${AGES[p.age].name} age · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? '🌙' : ''} ${clk}`, t2 = idleN ? `${idleN} idle` : '';
+    if ($('sAgeT').textContent !== t1) $('sAgeT').textContent = t1; if ($('sIdle').textContent !== t2) $('sIdle').textContent = t2; $('sIdle').hidden = !idleN;
+    $('sAge').classList.toggle('glow', ready > 0 && !G.card); }   // gold when the next age or any research is ready: tap it for the Town Center
   const V = unitsOf(0, 'vil');
-  for (const r of JOBS) { $('j' + r).textContent = V.filter(u => u.job === r).length; document.querySelector(`[data-act="job:${r}"]`).classList.toggle('on', p.rally === r); }
-  const nq = queuedOf(0, 'vil'), room = Math.max(0, capOf(0) - popOf(0)), S = armyOf(0), idle = V.filter(u => !u.job).length; $('bVil').classList.toggle('dis', !!trainWhy(0, 'vil'));
-  // have / can have now: the ceiling is what your homes allow, up to the most of each kind; idle hands are what + can place
-  $('bVil').querySelector('small').textContent = `${V.length}/${Math.min(VILMAX, V.length + room)}` + (nq ? ` +${nq}` : '') + ` · Idle ${idle}`;
-  $('bBuild').classList.toggle('on', !!(G.card && G.card.type === 'menu'));
+  for (const r of JOBS) { $('tn_' + r).textContent = V.filter(u => u.job === r).length; $('tj_' + r).classList.toggle('sel', p.rally === r); }
+  const nq = queuedOf(0, 'vil'), room = Math.max(0, capOf(0) - popOf(0));
+  $('tPeopleN').textContent = nq ? `${V.length}+${nq}` : `${V.length}/${Math.min(VILMAX, V.length + room)}`;   // have / can have now; with villagers waiting, have + waiting
+  $('tVil').classList.toggle('dis', !!trainWhy(0, 'vil')); $('tUn').classList.toggle('dis', !nq);
+  for (const m of MENUS) $('bm_' + m.id).classList.toggle('sel', !!(G.card && G.card.type === 'menu' && G.card.id === m.id));
   { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
   $('stage').classList.toggle('busy', !!(G.card || G.place));
   if (G.place) { const B = BLD[G.place.kind], t = !G.place.at ? (G.place.kind === 'wall' ? 'Press and drag a line of wall' : `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`) : G.place.why ? G.place.why : G.place.kind === 'wall' ? `${(G.place.cells || [1]).length} pieces: tap Build, or drag again` : `${B.name}: tap Build, or drag it to move · drag empty ground to look`; if ($('placeT').textContent !== t) $('placeT').textContent = t; $('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why); }
