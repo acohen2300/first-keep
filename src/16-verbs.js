@@ -32,8 +32,8 @@ const ACT = {
   diff(a) { SET.diff = a; G.diff = a; saveSet(); refresh(); },
   mode(a) { SET.mode = a; saveSet(); refresh(); },
   fantasy(a) { SET.fantasy = a === '1'; saveSet(); refresh(); },
-  hzq(a) { G.hzQ = G.hzQ === a ? null : a; refresh(); },   // the ? beside a hazard: what it does, one at a time
-  hz(a) { SET.hz = { ...(SET.hz || HZ_DEFAULT) }; SET.hz[a] = SET.hz[a] ? 0 : 1; saveSet(); refresh(); },   // a hazard on or off; the points add up to the level
+  daily() { SET.daily = !SET.daily; saveSet(); refresh(); },   // the challenge of the day: its map and its hazards
+  hz(a) { if (SET.daily) { SET.daily = false; SET.hz = { ...TODAY_HZ }; } else SET.hz = { ...(SET.hz || HZ_DEFAULT) }; SET.hz[a] = SET.hz[a] ? 0 : 1; saveSet(); refresh(); },   // a hazard on or off; the points add up to the level
   today() { clearSave(); holdSave = false; newGame(todaySeed()); closeCard(); setPause(false); saveGame(true); refresh(); say(`Challenge of the day: level ${levelOf(G.hz)}.`, 'good', 8); },
   tips() { SET.tips = !SET.tips; saveSet(); refresh(); },
   msgs() { SET.msgs = SET.msgs === false; saveSet(); refresh(); },

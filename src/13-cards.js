@@ -422,15 +422,15 @@ const CARDS = {
   fault: () => title('Something went wrong', 'your game is saved') + `<p>Restart to carry on from the save.</p>` + acts(btn('reload', 'Restart', 'from the save', 'go') + btn('close', 'Carry on', 'as it is')),
   resume: c => title('Welcome back', 'saved on this phone') + `<p>Your game from ${clock(c.t)}: ${CIVS[c.civ] ? CIVS[c.civ].name + ', ' : ''}${AGES[c.age].name} age. Resume it, or start a new one.</p>` + acts(btn('resume', 'Resume', clock(c.t), 'go') + btn('card:setup', 'New game', '')),
   setup() {   // the annoying part before the fun part (Albert): the settings first, then your people, the challenge as ticks, and Start at the foot
-    const C = CIVS[SET.civ], H = SET.hz || HZ_DEFAULT, lv = levelOf(H), short = k => cap1(UNIT[CIVS[k].uu].name.replace(new RegExp('^' + CIVS[k].name + ' ', 'i'), ''));
+    const C = CIVS[SET.civ], H = SET.daily ? TODAY_HZ : SET.hz || HZ_DEFAULT, lv = levelOf(H), short = k => cap1(UNIT[CIVS[k].uu].name.replace(new RegExp('^' + CIVS[k].name + ' ', 'i'), ''));
     let h = title('A new game', '') + settingsHTML()
       + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, '', SET.civ === k ? 'on' : '')).join(''), 'c6 civs')
       + `<p class="civline"><b>${short(SET.civ)}</b> · ${C.bonus}</p>`   // one row of peoples, their soldier in the line under it: the whole card on one page (Albert) + fold('why', 'Why?', `<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`)
-      + sec(`Challenge · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}`).replace('class="sec"', 'class="sec hzh"')
-      + `<div class="hzl">${HZK.map(k => `<div class="hzr"><button class="tick${H[k] ? ' on' : ''}" data-act="hz:${k}"><b>${HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small></button><button class="q${G.hzQ === k ? ' on' : ''}" data-act="hzq:${k}" aria-label="What ${HAZARDS[k].name} does">?</button></div>`).join('')}</div>`
-      + (G.hzQ && HAZARDS[G.hzQ] ? `<p><b>${HAZARDS[G.hzQ].name}:</b> ${HAZARDS[G.hzQ].desc}</p>` : '');
+      + `<div class="hzhead"><button class="tick${SET.daily ? ' on' : ''}" data-act="daily"><b>Of the day</b></button><span class="sec">Challenge · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}</span></div>`   // the challenge of the day is a tick on the challenge line (Albert)
+      + `<div class="hzl">${HZK.map(k => `<button class="tick${H[k] ? ' on' : ''}" data-act="hz:${k}"><b>${HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small></button>`).join('')}</div>`
+      + fold('about', 'What each hazard does', HZK.map(k => `<p><b>${HAZARDS[k].name}:</b> ${HAZARDS[k].desc}</p>`).join('') + `<p><b>Of the day:</b> the same map and the same hazards for everyone, all day.</p>`);
     if (staleSave) h += `<p class="dim">Your last game came from an older version (${staleSave}) and cannot be opened. It is kept aside, not deleted.</p>`;
-    return h + acts(btn('fresh', 'Start', `${C.name} · ${MODES[SET.mode].name} · level ${lv}`, 'go big') + btn('today', 'Of the day', `level ${levelOf(TODAY_HZ)}, one map`), 'startrow');
+    return h + acts(btn(SET.daily ? 'today' : 'fresh', 'Start', SET.daily ? `${C.name} · the challenge of the day · level ${lv}` : `${C.name} · ${MODES[SET.mode].name} · level ${lv}`, 'go big'), 'c1');
   },
   node(c) {
     const n = G.nodes.find(x => x.id === c.id); if (!n) return null;
