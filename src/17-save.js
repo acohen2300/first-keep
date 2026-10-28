@@ -1,9 +1,10 @@
 // ═════ 17-save.js ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
-const SAVEKEY = 'firstkeep.save', SAVEV = 29;   // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+const SAVEKEY = 'firstkeep.save', SAVEV = 30;   // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {   // { 24: S => S-in-the-shape-of-25 }, run in order
   27: S => { for (const p of S.P) if (p.techs && p.techs.includes('command') && !p.techs.includes('engage')) p.techs.push('engage'); S.v = 28; return S; },   // Build 31: Engagement comes before Battalions; who had them keeps stances
   28: S => { for (const u of S.units) if (u.job === 'farm') u.job = 'food'; for (const p of S.P) if (p.rally === 'farm') p.rally = 'food'; S.v = 29; return S; },   // Build 36: Farm is folded into Food
+  29: S => { for (const u of S.units) u.st = u.st || { got: 0, trips: 0, walk: 0, kills: 0, built: 0 }; for (const p of S.P) { p.flow = p.flow || {}; p.rate = p.rate || {}; } S.warAt = S.warAt || {}; S.v = 30; return S; },   // Build 40: a life's tally on every unit, the stores' flow, notice given
 };
 let staleSave = 0;   // the version of a save we could not open, so the setup card can say so
 const SKIP_U = new Set(['focus', 'tgt', 'bt', 'esc', 'blocker', 'path', 'so', 'aggro', 'node', 'rep', 'hunt', 'lcOK', 'lcT', 'pv', 'pk', 'pfK', 'pfV', 'pfT', 'pi', 'partial', 'drop', 'dropR', 'dropN', 'dropT', 'dropV', 'dropAt', 'lean']);
@@ -16,7 +17,7 @@ function saveGame(force) {
   try {
     const units = G.units.map(u => { const r = {}; for (const k in u) if (!SKIP_U.has(k)) r[k] = u[k]; r.nodeId = u.node ? u.node.id : null; r.repId = u.rep ? u.rep.id : null; r.huntId = u.hunt ? u.hunt.id : null; return r; });
     const blds = G.blds.map(b => { const r = {}; for (const k in b) if (k !== 'node') r[k] = b[k]; if (b.node) { r.nodeId = b.node.id; r.res = isFinite(b.node.amt) ? b.node.amt : undefined; } return r; });
-    const S = { v: SAVEV, at: Date.now(), t: G.t, tick: G.tick, speed: G.speed, seed: G.seed, rs: G.rs, nid: NID, sel: G.sel, rally0: G.rally0 || null, hold: G.hold, stance: G.stance, bnPlan: G.bnPlan, form: G.form, contract: G.contract || null, intel: G.intel, fantasy: G.fantasy, mode: G.mode, diff: G.diff, wayT: G.wayT, wayI: G.wayI, wonder: G.wonder, ords: G.ords || {}, ordN: G.ordN || 0, land: G.land || null, mkt: G.mkt || null, reignT: G.reignT ?? null, free: !!G.free, bell: G.bell || null, wx: G.wx, wxT: G.wxT, harvest: G.harvest, plague: G.plague, seasonN: G.seasonN,
+    const S = { v: SAVEV, at: Date.now(), t: G.t, tick: G.tick, speed: G.speed, seed: G.seed, rs: G.rs, nid: NID, sel: G.sel, rally0: G.rally0 || null, hold: G.hold, stance: G.stance, bnPlan: G.bnPlan, form: G.form, contract: G.contract || null, intel: G.intel, fantasy: G.fantasy, mode: G.mode, diff: G.diff, wayT: G.wayT, wayI: G.wayI, wonder: G.wonder, ords: G.ords || {}, ordN: G.ordN || 0, land: G.land || null, warAt: G.warAt || {}, mkt: G.mkt || null, reignT: G.reignT ?? null, free: !!G.free, bell: G.bell || null, wx: G.wx, wxT: G.wxT, harvest: G.harvest, plague: G.plague, seasonN: G.seasonN,
       cam: { x: cam.x, y: cam.y, z: cam.z }, rel: G.rel, finds: G.finds, lakes: G.lakes,
       P: G.P.map(p => { const { fxc, uc, ...q } = p; return { ...q, techs: [...p.techs] }; }),
       nodes: G.nodes.filter(n => n.kind !== 'farm').map(n => n.kind === 'tree' ? [n.id, n.x, n.y, n.amt, n.max] : (({ open, wk, ...r }) => r)(n)), blds, units };   // trees are most of the map: five numbers each
@@ -47,7 +48,7 @@ function loadGame(S) {
   const byB = new Map(G.blds.map(b => [b.id, b]));
   for (const su of S.units) { const { nodeId, repId, huntId, ...u } = su; u.node = nodeId ? byNode.get(nodeId) || null : null; u.rep = repId ? byB.get(repId) || null : null; u._hunt = huntId; G.units.push(u); }
   const byU = new Map(G.units.map(u => [u.id, u])); for (const u of G.units) { if (u._hunt) u.hunt = byU.get(u._hunt) || null; delete u._hunt; }
-  G.ords = S.ords || {}; G.ordN = S.ordN || 0; G.land = S.land || null; for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined;   // orders on the march come back with the game; a stray number is cleared (Build 38 review)
+  G.ords = S.ords || {}; G.ordN = S.ordN || 0; G.land = S.land || null; G.warAt = S.warAt || {}; setPick([]); for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined;   // orders on the march come back with the game; a stray number is cleared (Build 38 review)
   fxDirty(); navRebuild(); recount(); scoreAll();
   if (S.cam) { cam.x = S.cam.x; cam.y = S.cam.y; cam.z = clamp(S.cam.z, minZ(), ZOOM_MAX); clampCam(); }
   paceBtn(); muteBtn();

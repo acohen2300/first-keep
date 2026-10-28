@@ -95,8 +95,19 @@ function think(p) {
   for (const f of G.finds) if (FINDS[f.kind].hire && !f.done && R.g >= 200) hire(o, f);
   // war: attack only when the odds beat this personality's nerve; a rival's wonder is attacked at once
   if (per.bold < 2) decideWar(p, per);
-  if (per.diplo && p.age >= 1 && !p.envoyOut && G.P[FORT].alive && G.rel[o][FORT] === 'peace' && G.P[FORT].ally === null && G.t - p.envoyAt > 180) sendEnvoy(o, FORT);
+  if (per.diplo) aiDiplomacy(p, per);   // peace when losing comes before courting the Fortress
+  if (per.diplo && p.age >= 1 && !p.envoyOut && G.P[FORT].alive && G.rel[o][FORT] === 'peace' && G.P[FORT].ally === null && G.t - p.envoyAt > 180) sendEnvoy(o, FORT, 'ally');
   if (G.P[FORT].terms && G.P[FORT].terms[o] && R.g >= G.P[FORT].terms[o] + 50) payTerms(o);
+}
+// A computer's relations move by its odds, the way a court's did: losing badly, it asks for peace; at peace with nobody to fight and the odds in its favour, it gives notice
+function aiDiplomacy(p, per) {
+  const o = p.id; if (p.age < 1 || p.envoyOut || G.t - p.envoyAt < 180) return;
+  const warOn = G.P.some(r => r.alive && r.id !== WILD && r.id !== o && atWar(o, r.id) && !(r.lord === o));
+  for (const q of G.P) {
+    if (!q.alive || q.id === o || q.id === WILD || q.id === FORT || q.lord === o || p.lord === q.id) continue;
+    if (atWar(o, q.id) && oddsOf(o, q.id) < 0.3 && soldiersOf(o).length < per.waveMin) { if (setRel(o, q.id, 'peace')) return; }
+    if (!warOn && G.rel[o][q.id] === 'peace' && !noticeLeft(o, q.id) && oddsOf(o, q.id) > per.bold + 0.15) { if (setRel(o, q.id, 'war')) return; }
+  }
 }
 // the army a side keeps grows with its age
 const armyCap = p => Math.min(ARMYMAX, PERS[p.pers].armyCap + 10 * p.age);

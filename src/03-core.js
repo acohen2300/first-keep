@@ -49,6 +49,9 @@ const capOf = o => { const C = qc(); if (C.cap[o] === undefined) C.cap[o] = Math
 // soldiers you may keep: each finished training place, castle, temple, courthouse or hospital makes room; at most ARMYMAX
 const armyRoom = o => Math.min(ARMYMAX, G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 && BLD[b.kind].armyRoom ? BLD[b.kind].armyRoom + fxv(o, 'armyroom', [b.kind]).a : 0), 0));
 const clsMax = (c, o) => c === 'civ' ? VILMAX : armyRoom(o);
+const armyFull = o => `Army full, ${clsCount(o, 'army')}/${armyRoom(o)}. ${ARMY_ADDS}.`;   // the limit, and what lifts it, wherever it bites
+const qMax = o => QUEUE + fxv(o, 'queue').a;   // orders one building's line holds (Written records, Guilds add to it)
+const lineFree = (o, kinds) => kinds.some(k => ready(o, k).some(b => b.q.length < qMax(o)));
 // how many of a building you may have now: by age, plus research
 const capFor = (o, kind) => BLD[kind].nocap ? Infinity : (BLD[kind].cap ? BLD[kind].cap[G.P[o].age] : 1) + fxv(o, 'limit', [kind]).a;
 const atCap = (o, kind) => bldsOf(o, kind).length >= capFor(o, kind);

@@ -4,10 +4,10 @@ function trainWhy(o, kind) {   // why a unit cannot be ordered right now, or nul
   const k = civKind(o, kind), U = UNIT[k], p = G.P[o];
   if (U.age > p.age) return `${plural(U.name)} need the ${AGES[U.age].name} age.`;
   if (!readyAt(o, U).length) return `Build a ${BLD[U.at].name.toLowerCase()} first.`;
-  if (U.cls && clsCount(o, U.cls) >= clsMax(U.cls, o)) return U.cls === 'civ' ? `Worker limit: ${VILMAX}.` : ARMYFULL;
+  if (U.cls && clsCount(o, U.cls) >= clsMax(U.cls, o)) return U.cls === 'civ' ? `Worker limit: ${VILMAX}.` : armyFull(o);
   if (p.hungry) return 'Your people are hungry: put villagers on Food.';
   if (!afford(p, U.cost)) return `Not enough: ${costText(U.cost)}.`;
-  if (!readyAt(o, U).some(b => b.q.length < 5)) return 'That line is full (5 waiting).';
+  if (!readyAt(o, U).some(b => b.q.length < qMax(o))) return `That line is full (${qMax(o)} waiting).`;
   return null;
 }
 function train(o, kind) {
@@ -16,8 +16,15 @@ function train(o, kind) {
   const t = U.t * stats(o, k).train;
   pay(p, U.cost); at.q.push({ kind: k, left: t, total: t }); return true;
 }
-function unTrain(o, kind) {   // cancel the newest villager waiting in any queue; the cost comes back
-  for (const b of G.blds) if (b.owner === o) for (let i = b.q.length - 1; i >= 0; i--) { const j = b.q[i]; if (j.kind === kind || (j.kind && UNIT[j.kind].replaces === kind)) { b.q.splice(i, 1); const c = UNIT[j.kind].cost, p = G.P[o]; for (const r in c) p.res[r] += c[r]; return true; } }
+// cancel one order in a building's line: its cost comes back in full (a muster's too); research and the age give back what was paid
+function cancelOrder(o, b, i) {
+  const j = b.q[i], p = G.P[o]; if (!j || b.owner !== o) return false;
+  b.q.splice(i, 1); const back = {};
+  if (j.kind) addRes(back, UNIT[j.kind].cost); else if (j.muster) addRes(back, musterCost(o, j.muster).cost); else if (j.tech) { addRes(back, TECHBY[j.tech].cost); p.spent -= sumCost(TECHBY[j.tech].cost); } else if (j.age) { addRes(back, AGES[j.age].cost); p.spent -= sumCost(AGES[j.age].cost); p.aging = false; }
+  addRes(p.res, back); return true;
+}
+function unTrain(o, kind) {   // cancel the newest villager waiting in any queue
+  for (const b of G.blds) if (b.owner === o) for (let i = b.q.length - 1; i >= 0; i--) { const j = b.q[i]; if (j.kind === kind || (j.kind && UNIT[j.kind].replaces === kind)) return cancelOrder(o, b, i); }
   return false;
 }
 // Muster: a whole battalion in one order at the War Council: twice the cost and a quarter longer; the time is shared by every building that trains each kind
@@ -31,9 +38,9 @@ function musterWhy(o, plan) {
   const p = G.P[o], n = musterN(plan);
   if (!p.techs.has('muster')) return 'Needs Muster.';
   if (!n) return 'Nothing missing.';
-  if (!ready(o, 'council').some(b => b.q.length < 5)) return 'Needs a War Council.';
+  if (!lineFree(o, ['council'])) return 'Needs a War Council.';
   for (const k in plan) { const U = UNIT[k]; if (U.age > p.age || !readyAt(o, U).length) return `Needs a ${BLD[U.at].name.toLowerCase()}.`; }
-  if (clsCount(o, 'army') + n > armyRoom(o)) return ARMYFULL;
+  if (clsCount(o, 'army') + n > armyRoom(o)) return armyFull(o);
   if (popOf(o) + n > capOf(o)) return 'Needs room: build homes.';
   if (p.hungry) return 'Your people are hungry.';
   const { cost } = musterCost(o, plan); if (!afford(p, cost)) return `Not enough: ${costText(cost)}.`;
@@ -52,7 +59,7 @@ function researchWhy(o, id) {
   if (T.need && !p.techs.has(T.need)) return `Needs ${TECHBY[T.need].name}.`;
   if (G.blds.some(b => b.owner === o && b.q.some(j => j.tech === id))) return 'Being researched.';
   const at = ready(o, T.at)[0]; if (!at) return `Needs a ${BLD[T.at].name.toLowerCase()}.`;
-  if (at.q.length >= 5) return 'That line is full.';
+  if (at.q.length >= qMax(o)) return 'That line is full.';
   if (!afford(p, T.cost)) return `Not enough: ${costText(T.cost)}.`;
   return null;
 }
@@ -63,7 +70,7 @@ function research(o, id) {
 }
 function ageUp(o) {
   const p = G.P[o], A = AGES[p.age + 1], k = keepOf(o);
-  if (!A || p.aging || !k || !afford(p, A.cost) || k.q.length >= 5) return false;
+  if (!A || p.aging || !k || !afford(p, A.cost) || k.q.length >= qMax(o)) return false;
   pay(p, A.cost); p.spent += sumCost(A.cost); k.q.push({ age: p.age + 1, left: A.t, total: A.t }); p.aging = true; return true;
 }
 function build(o, kind, x, y) {
@@ -109,27 +116,75 @@ function demolish(o, id) {
   return true;
 }
 
-// ───────────────────────── Diplomacy: acts of war and acts of peace ─────────────────────────
+// ───────────────────────── Diplomacy: one table of relations, one way to change them ─────────────────────────
+// Relations are ally, peace (neutral) or war (hostile), the same for every side. Hostile is declared with NOTICE seconds' warning (Rome's fetial
+// priests declared war before a campaign; no ambush from peace). Neutral is granted at once by an ally, or asked of an enemy by an envoy.
+// Ally needs the other side's yes, carried by an envoy. The computers answer by their odds, and change their own minds the same way.
 function declareWar(a, b, why) {
   if (a === b || a === WILD || b === WILD || G.rel[a][b] === 'war') return;
   const wasAlly = G.rel[a][b] === 'ally';
-  G.rel[a][b] = G.rel[b][a] = 'war'; G.navDirty = true;
+  G.rel[a][b] = G.rel[b][a] = 'war'; G.navDirty = true; delete G.warAt[a + ',' + b]; delete G.warAt[b + ',' + a];
   if (G.P[a].ally === b) G.P[a].ally = null; if (G.P[b].ally === a) G.P[b].ally = null;
   if (a === 0 || b === 0) say(`${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken. ' : ''}war, ${why}.`, 'warn', 6);
-  else if (a === FORT || b === FORT) say(`${G.P[a].name} and ${G.P[b].name} are now at war.`, '', 5);
+  else say(`${G.P[a].name} and ${G.P[b].name} are now at war.`, '', 5);
 }
-function sendEnvoy(o, to) {
+function makePeace(a, b) { G.rel[a][b] = G.rel[b][a] = 'peace'; G.navDirty = true; if (G.P[a].ally === b) G.P[a].ally = null; if (G.P[b].ally === a) G.P[b].ally = null; for (const u of G.units) if ((u.owner === a && u.state === 'attack' && u.target === b) || (u.owner === b && u.state === 'attack' && u.target === a)) u.state = 'home'; }
+function makeAlly(a, b) {
+  G.rel[a][b] = G.rel[b][a] = 'ally'; G.P[a].ally = b; G.P[b].ally = a; G.navDirty = true;
+  if (b !== 0 && a !== 0) say(`${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', 6);
+}
+const noticeLeft = (a, b) => { const t = G.warAt[a + ',' + b]; return t === undefined ? 0 : Math.max(0, Math.ceil(t - G.t)); };
+// why a side cannot take this stance toward another right now, or null
+function relWhy(o, q, want) {
+  const p = G.P[o], Q = G.P[q], rel = G.rel[o][q]; if (q === o || q === WILD || !Q.alive) return 'Not now.';
+  if (Q.lord === o && !Q.rebel) return 'Your vassal: see their card.';
+  if (p.lord === q && !p.rebel) return 'Your overlord.';
+  if (want === rel) return 'Already.';
+  if (want === 'war') return noticeLeft(o, q) ? `Notice given: ${noticeLeft(o, q)} s.` : null;
+  if (want === 'ally' && rel === 'war') return 'Make peace first.';
+  if (p.envoyOut) return 'Your emissary is out.';
+  if (p.age < 1) return 'Needs the Bronze age.';
+  if (!afford(p, UNIT.envoy.cost)) return `Not enough: ${costText(UNIT.envoy.cost)}.`;
+  return null;
+}
+function setRel(o, q, want) {
+  if (relWhy(o, q, want)) return false;
+  const rel = G.rel[o][q];
+  if (want === 'war') { if (rel === 'ally') makePeace(o, q); G.warAt[o + ',' + q] = G.t + NOTICE; if (o === 0 || q === 0) say(`${G.P[o === 0 ? q : o].name}: hostile in ${NOTICE} s${o === 0 ? ' (notice given)' : ''}.`, 'warn', 6); return true; }
+  delete G.warAt[o + ',' + q];   // a side that was giving notice has thought again
+  if (want === 'peace' && rel === 'ally') { makePeace(o, q); if (q === 0) say(`${G.P[o].name} ended the alliance.`, 'warn', 6); return true; }
+  return sendEnvoy(o, q, want);   // peace from war, or an alliance: carried over, answered there
+}
+function noticeTick() { for (const k in G.warAt) if (G.t >= G.warAt[k]) { const [a, b] = k.split(',').map(Number); declareWar(a, b, 'the notice ran out'); } }
+function sendEnvoy(o, to, ask) {
   const p = G.P[o], k = keepOf(o), tk = keepOf(to);
   if (!k || !tk || p.envoyOut || p.age < 1 || !afford(p, UNIT.envoy.cost)) return false;
   pay(p, UNIT.envoy.cost);
-  const u = addUnit(o, 'envoy', k.x, k.y); u.state = 'envoy'; u.target = to; p.envoyOut = true; p.envoyAt = G.t;
-  if (o === 0) say('Your emissary rides to the Fortress.', '', 4);
+  const u = addUnit(o, 'envoy', k.x, k.y); u.state = 'envoy'; u.target = to; u.ask = ask || 'ally'; p.envoyOut = true; p.envoyAt = G.t;
+  if (o === 0) say(`Your emissary rides to the ${G.P[to].name}: ${ask === 'peace' ? 'peace' : 'alliance'}.`, '', 4);
   return true;
 }
-// The Fortress allies only with whoever raises its odds of surviving.
-function judgeEnvoy(fort, from, envoy) {
+// the square law on strength, bent by who counters whom: the odds q gives itself against o
+const oddsOf = (q, o) => { const S = soldiersOf(q), r = powerOf(S) / estPower(q, o) * matchup(S, soldiersOf(o)); return r * r / (1 + r * r); };
+function judgeEnvoy(to, from, envoy) {
+  const T = G.P[to], ask = envoy.ask || 'ally';
+  if (G.rel[to][from] === 'war' && ask !== 'peace') { envoy.hp = 0; if (from === 0) say(`The ${T.name} killed your emissary.`, 'warn', 6); return; }
+  if (to === FORT && ask === 'ally') return judgeFortress(to, from, envoy);
+  const busy = G.P.some(q => q.alive && q.id !== WILD && q.id !== from && atWar(to, q.id));   // another war on their hands
+  if (ask === 'peace') {
+    if (G.rel[to][from] !== 'war') { reply(from, envoy, `The ${T.name} are already at peace with you.`); return; }
+    if (oddsOf(to, from) > 0.6 && !busy && !T.rebel) { reply(from, envoy, `The ${T.name} want more of this war.`); return; }
+    makePeace(to, from); reply(from, envoy, `The ${T.name} accept peace.`); return;
+  }
+  if (T.ally !== null && T.ally !== from) { reply(from, envoy, `The ${T.name} are already allied with ${G.P[T.ally].name}.`); return; }
+  if (T.ally === from) { reply(from, envoy, `The ${T.name} are already your ally.`); return; }
+  if (oddsOf(from, to) < 0.3) { reply(from, envoy, `The ${T.name} see no strength in you worth an alliance.`); return; }
+  if (!busy && oddsOf(to, from) > 0.7) { reply(from, envoy, `The ${T.name} need no ally today.`); return; }
+  makeAlly(to, from); reply(from, envoy, `The ${T.name} accept. You are allies.`);
+}
+// The Fortress allies only with whoever raises its odds of surviving (until Build 42 makes it a player like the rest)
+function judgeFortress(fort, from, envoy) {
   const F = G.P[fort];
-  if (G.rel[fort][from] === 'war') { envoy.hp = 0; if (from === 0) say('The Fortress killed your emissary.', 'warn', 6); return; }
   if (F.ally !== null && F.ally !== from) { reply(from, envoy, `The Fortress is already allied with ${G.P[F.ally].name}.`); return; }
   if (F.ally === from) { reply(from, envoy, 'The Fortress is already your ally.'); return; }
   const est = o => estPower(fort, o), mine = powerOf(soldiersOf(fort)) + 600 + bldsOf(fort, 'tower').length * 120 + (bldsOf(fort, 'wall').length + bldsOf(fort, 'gate').length) * 7;
@@ -138,17 +193,13 @@ function judgeEnvoy(fort, from, envoy) {
   if (est(from) < top * 0.5) { F.terms = F.terms || {}; F.terms[from] = 150; reply(from, envoy, 'The Fortress sends terms: 150 gold for an alliance.'); return; }
   makeAlly(fort, from); reply(from, envoy, 'The Fortress accepts. You are allies.');
 }
-function reply(from, envoy, text) { envoy.state = 'return'; if (from === 0) say(text, text.includes('accepts') ? 'good' : '', 7); }
+function reply(from, envoy, text) { envoy.state = 'return'; if (from === 0) say(text, text.includes('accept') ? 'good' : '', 7); }
 function payTerms(o) {
   const F = G.P[FORT], price = F.terms && F.terms[o];
   if (!price || G.P[o].res.g < price || G.rel[FORT][o] === 'war' || F.ally !== null) return false;
   G.P[o].res.g -= price; F.res.g += price; delete F.terms[o]; makeAlly(FORT, o);
   if (o === 0) say('Tribute paid. The Fortress is your ally.', 'good', 6);
   return true;
-}
-function makeAlly(a, b) {
-  G.rel[a][b] = G.rel[b][a] = 'ally'; G.P[a].ally = b; G.P[b].ally = a; G.navDirty = true;
-  if (b !== 0 && a !== 0) say(`${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', 6);
 }
 function askHelp(o) {
   if (G.P[FORT].ally !== o) return false;
@@ -163,18 +214,53 @@ function sendHelp(f, pt, tell, asked) {
   return true;
 }
 
+// ── A lord's hand on a vassal: cut them loose, demand, force tribute, call up their soldiers (Assyria taxed at spear-point; Rome's client kings sent auxiliaries)
+function breakTies(L, q) {
+  const Q = G.P[q]; if (Q.lord !== L) return false;
+  Q.lord = null; Q.rebel = null; for (const u of G.units) if (u.levy === q && u.owner === L) releaseLevy(u);
+  for (const v of vassalsOf(L)) v.unrest = clamp((v.unrest || 0) + DEMAND.tributeUnrest, 0, 100);   // the others grow warier of you
+  declareWar(L, q, L === 0 ? 'you cut them loose' : `${G.P[L].name} cut them loose`); return true;
+}
+const demandCost = Q => DEMAND.loyal * (1 + (Q.demands || []).filter(t => G.t - t < DEMAND.recent).length);
+function demandWhy(L, q, r) { const Q = G.P[q]; if (Q.lord !== L || Q.rebel) return 'Not now.'; if (!(Q.res[r] > 0)) return `They have no ${LONG[r]}.`; return null; }
+function demand(L, q, r) {
+  if (demandWhy(L, q, r)) return false;
+  const Q = G.P[q], x = Math.min(DEMAND.amt, Math.floor(Q.res[r])), cost = demandCost(Q);
+  Q.res[r] -= x; G.P[L].res[r] += x; Q.loyal = Math.max(0, (Q.loyal || 0) - cost); (Q.demands = Q.demands || []).push(G.t);
+  if (L === 0) say(`${Q.name} hand over ${x} ${LONG[r]}: loyalty −${cost}.`, '', 4); return true;
+}
+const menAt = (L, q) => { const k = keepOf(q); return k ? G.units.filter(u => u.owner === L && isSoldier(u) && dist(u, k) < VASSAL.r).length : 0; };
+function tributeWhy(L, q) { const Q = G.P[q]; if (Q.lord !== L || Q.rebel) return 'Not now.'; if (Q.forced > G.t) return `Already forced: ${Math.ceil(Q.forced - G.t)} s.`; if (menAt(L, q) < DEMAND.tributeMen) return `Stand ${DEMAND.tributeMen} soldiers at their town first.`; return null; }
+function forceTribute(L, q) {
+  if (tributeWhy(L, q)) return false;
+  const Q = G.P[q]; Q.forced = G.t + DEMAND.tribute; Q.unrest = clamp((Q.unrest || 0) + DEMAND.tributeUnrest, 0, 100);
+  if (L === 0) say(`${Q.name} pay double for ${DEMAND.tribute / 60} minutes.`, '', 4); return true;
+}
+const levyOf = (L, q) => G.units.filter(u => u.owner === L && u.levy === q && u.hp > 0);
+function levyWhy(L, q, n) { const Q = G.P[q], home = soldiersOf(q).filter(u => u.state === 'home'); if (Q.lord !== L || Q.rebel) return 'Not now.'; if (!home.length) return 'None at home.'; if (n > Math.ceil(soldiersOf(q).length * DEMAND.levyMax)) return 'Half at most.'; return null; }
+function levy(L, q, n) {   // their soldiers march under your colours until released; their dead cost loyalty
+  if (levyWhy(L, q, n)) return false;
+  const home = soldiersOf(q).filter(u => u.state === 'home').slice(0, n), k = keepOf(L);
+  for (const u of home) { u.owner = L; u.levy = q; u.state = 'goto'; u.px = k ? k.x : u.x; u.py = k ? k.y : u.y; u.idleT = 0; u.hb = undefined; u.bn = G.sel !== 'all' && L === 0 ? G.sel : undefined; }
+  if (L === 0) { say(`${home.length} of ${G.P[q].name}' soldiers march to you.`, 'good', 5); march(home, k || home[0], 'your town'); }
+  return true;
+}
+function releaseLevy(u) { const q = u.levy; u.levy = undefined; u.owner = q; u.state = 'home'; u.bn = undefined; u.ord = undefined; u.focus = null; u.tgt = null; }
+function releaseAll(L, q) { const S = levyOf(L, q); S.forEach(releaseLevy); if (L === 0 && S.length) say(`${S.length} soldiers go home to ${G.P[q].name}.`, '', 4); return S.length > 0; }
+
 // ───────────────────────── Trade, zeal, spies, hiring ─────────────────────────
 // The Market, one rule for everything it trades: resources by the 100, goods by the 10; it pays 80% of worth (90% with Coinage)
 // and charges 125%, both moved by the going price. A trade stop pays full worth and more, which is why caravans go there.
 const LOT = k => TRADE[k] ? 100 : 10;
 const worth = k => TRADE[k] ? TRADE[k] / 100 : GOODS[k].buy || GOODS[k].base;   // spice is worth what it costs at a stop
-const sellPrice = (o, k) => Math.floor(LOT(k) * worth(k) * (SELL + fxv(o, 'sell').a) * mkt(k));
-const buyPrice = k => Math.ceil(LOT(k) * worth(k) * BUY * mkt(k));
+const coinOf = o => G.P[o].debased ? MINT.price : 1;   // debased coin: dearer to buy, less for what you sell
+const sellPrice = (o, k) => Math.floor(LOT(k) * worth(k) * (SELL + fxv(o, 'sell').a) * mkt(k) / coinOf(o));
+const buyPrice = (o, k) => Math.ceil(LOT(k) * worth(k) * BUY * mkt(k) * coinOf(o));
 const haveOf = (p, k) => TRADE[k] ? p.res[k] : p.goods[k] || 0;
 function marketTrade(o, k, dir) {
   const p = G.P[o], n = LOT(k); if (!ready(o, 'market').length) return false;
   if (dir === 'sell') { if (!MKT_SELL.includes(k) || haveOf(p, k) < n) return false; const v = sellPrice(o, k); if (TRADE[k]) p.res[k] -= n; else p.goods[k] -= n; p.res.g += v; if (!TRADE[k]) p.gathered += v; mktHit(k, TRADE[k] ? 25 : n, -1); }
-  else { if (!MKT_BUY.includes(k)) return false; const c = buyPrice(k); if (p.res.g < c) return false; p.res.g -= c; if (TRADE[k]) p.res[k] += n; else p.goods[k] = (p.goods[k] || 0) + n; mktHit(k, TRADE[k] ? 25 : n, 1); }
+  else { if (!MKT_BUY.includes(k)) return false; const c = buyPrice(o, k); if (p.res.g < c) return false; p.res.g -= c; if (TRADE[k]) p.res[k] += n; else p.goods[k] = (p.goods[k] || 0) + n; mktHit(k, TRADE[k] ? 25 : n, 1); }
   if (o === 0) sfx('coin'); return true;
 }
 const zealCost = o => ({ g: Math.round(ZEAL.cost.g * fxv(o, 'zealcost').m) });
@@ -229,7 +315,7 @@ function hire(o, f) {
 }
 
 // ───────────────────────── Villager orders ─────────────────────────
-function setJob(u, job, n) { if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1); u.job = job; u.node = n || null; if (n && n.farm) n.wk = (n.wk || 0) + 1; if (job !== 'repair') u.rep = null; }
+function setJob(u, job, n) { if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1); u.job = job; u.node = n || null; if (job) u.post = null; if (n && n.farm) n.wk = (n.wk || 0) + 1; if (job !== 'repair') u.rep = null; }
 // the villager to send: the nearest idle one; if none is idle, one from the job whose stock you hold the most of
 function pickVil(o, to, skipJob, site) {
   const p = G.P[o], V = unitsOf(o, 'vil').filter(u => !u.inside && !(site && u.rep === site)), idle = V.filter(u => !u.job), other = V.filter(u => u.job && u.job !== skipJob && u.job !== 'repair' && !GOODK.includes(u.job));   // weavers, brewers and shepherds keep their posts unless nobody else can go

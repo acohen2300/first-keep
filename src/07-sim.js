@@ -15,7 +15,7 @@ function step(dt) {
   for (const b of G.blds) if (b.hp > 0) bldTick(b, dt);
   econTick(dt);
   if (G.tick % 3 === 0) formUp();
-  if (G.tick % 30 === 1) { recount(); ordersTick(); }
+  if (G.tick % 30 === 1) { recount(); ordersTick(); noticeTick(); }
   for (const u of G.units) if (u.hp > 0) TICK[UNIT[u.kind].tick](u, dt, SPS[u.owner]);
   healTick(dt);
   collide();
@@ -97,6 +97,7 @@ function died(u) {
     for (const v of G.units) if (v.hunt === u) { v.hunt = null; v.node = m; }
   }
   if (u.owner === 0 && isSoldier(u) && !u.gone) G.lost = (G.lost || 0) + 1;
+  if (u.levy !== undefined && G.P[u.levy]) G.P[u.levy].loyal = Math.max(0, (G.P[u.levy].loyal || 0) - DEMAND.levyLoyal);   // a vassal's soldier lost under your colours
   if (u.by !== undefined && isSoldier(u)) for (const p of G.P) if (p.lord === u.by && !p.rebel && atWar(p.id, u.owner)) { const k = keepOf(p.id); if (k && dist(u, k) < VASSAL.r) p.protect = Math.min(VASSAL.protectMax, (p.protect || 0) + VASSAL.kill); }   // the lord who kills their enemies near them earns their thanks
 }
 function judge() {
@@ -150,7 +151,8 @@ function built(b) {
   const o = b.owner, B = BLD[b.kind]; b.mx = maxHpB(o, b.kind); b.hp = Math.max(b.hp, b.mx * 0.999); G.bldV = (G.bldV || 0) + 1;   // a new place to drop at: every villager picks again
   if (b.kind === 'gate') G.navDirty = true;
   if (B.fx) fxDirty();
-  b.doneT = G.t; if (o === 0) { sfx('done', b.x, b.y); celebrate(b.kind === 'wonder' ? 3 : 1, b.x, b.y); }
+  b.doneT = G.t; if (o === 0) { sfx(B.armyRoom || (B.dmg && !B.spyonly) || B.wallish ? 'doneWar' : 'done', b.x, b.y); celebrate(b.kind === 'wonder' ? 3 : 1, b.x, b.y); }   // a drum for a place of war, a knock for a home
+  for (const u of G.units) if (u.rep === b && u.job === 'repair') u.st.built++;
   if (B.sheep && b.node) b.node.amt = (b.sheep || 0) * FLEECE * 0.5;   // a new flock comes with half a year's wool on its back
   if (b.kind === 'wonder') {
     G.wonder = { owner: o, id: b.id, end: G.t + WONDER_HOLD };
@@ -162,7 +164,7 @@ function jobDone(b, j) {
   const o = b.owner, p = G.P[o], B = BLD[b.kind];
   if (j.kind) {
     const s = towardMid(b, B.fp * 5 + 12), u = addUnit(o, j.kind, s.x + rnd(-8, 8), s.y + rnd(-8, 8)); u.hb = b.id;
-    u.bornT = G.t; if (o === 0) sfx('ready', b.x, b.y);
+    u.bornT = G.t; if (o === 0) sfx(isSoldier(u) ? 'readySol' : 'ready', b.x, b.y);   // a brass call for a soldier, a chime for anyone else
     if (j.kind === 'vil') u.job = o === 0 ? p.rally : null;
     else if (j.kind === 'caravan') u.lastId = b.id;
     else if (o === 0 && G.rally0 && UNIT[j.kind].cls === 'army') { u.state = 'goto'; u.px = G.rally0.x; u.py = G.rally0.y; }
@@ -229,14 +231,15 @@ function vilTick(u, dt, SP) {
   if (u.carry > 0 && (u.carry >= cap - 1e-6 || u.carryType !== u.job || !u.job || (!u.hunt && (!u.node || u.node.amt <= 0)))) {
     if (!(u.drop && u.drop.hp > 0 && u.dropT === u.carryType && u.dropN === G.blds.length && u.dropR === G.blds && u.dropV === G.bldV && u.dropAt === u.node)) { u.drop = dropFor(u.owner, u.carryType, u); u.dropT = u.carryType; u.dropN = G.blds.length; u.dropR = G.blds; u.dropV = G.bldV; u.dropAt = u.node; }
     const drop = u.drop; if (!drop) { u.idle = true; return; }
-    if (moveTo(u, drop.x, drop.y, dt, halfOf(drop) + 4, SP)) { stash(u.owner, u.carryType, Math.round(u.carry)); u.carry = 0; }
+    if (moveTo(u, drop.x, drop.y, dt, halfOf(drop) + 4, SP)) { const got = Math.round(u.carry); stash(u.owner, u.carryType, got); u.st.got += got; u.st.trips++; u.carry = 0; }
     if (u.carry > 0 || u.hunt || !u.node || u.node.amt > 0) return;
   }
   if (u.job === 'repair') { repairTick(u, dt, SP); return; }
-  if (!u.job) { u.idle = true; if (kk) moveTo(u, kk.x + u.ox, kk.y + u.oy, dt, 2, SP); return; }
+  if (!u.job) { u.idle = true; if (u.post) moveTo(u, u.post.x, u.post.y, dt, 2, SP); else if (kk) moveTo(u, kk.x + u.ox, kk.y + u.oy, dt, 2, SP); return; }   // sent somewhere by the finger, it stands there; else it waits by the Town Center
   if ((G.tick + u.id) % 20 === 0 && ((u.node && u.node.kind !== 'farm' && unsafe(u.node)) || (u.hunt && unsafe(u.hunt)))) { if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1); u.node = null; u.hunt = null; }   // work or game has strayed beside a guarded find: leave it
   if (u.hunt) { huntTick(u, dt, SP); return; }
   const flock = u.node && u.node.farm && BLD[u.node.farm.kind].sheep && u.node.farm.hp > 0;   // a shepherd stays with the flock between shearings
+  if (flock && u.node.farm.prog >= 1 && dist(u, u.node) < 40) { const b = u.node.farm, m = (b.sheep || 0) * BLD[b.kind].milk * dt * gatherMul(u.owner, u.node) * hungerOf(u.owner); if (m > 0) { stash(u.owner, 'food', m); u.st.got += m; u.work = G.t; } }   // milk and meat go straight to the stores
   if (!flock && (!u.node || u.node.amt <= 0 || !nodeFits(u.node, u.job) || (u.node.farm && u.node.wk > slotsOf(u.node)))) {
     if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
     if (u.nnT > G.t) { u.node = null; u.idle = true; return; }   // nothing was found a moment ago: wait, do not search every step
@@ -547,7 +550,7 @@ function buildGrid() {
   G.ugTick = G.tick;
 }
 // soldiers ignore grazing deer, drifters and wayfarers; spies are seen only up close
-const ignorable = v => { const U = UNIT[v.kind]; return U.flee || U.passive || U.tick === 'wayfarer'; };
+const ignorable = v => { const U = UNIT[v.kind]; return U.flee || U.passive || U.tick === 'wayfarer' || U.tick === 'envoy'; };   // a herald is sacred: nobody shoots at an emissary on its way (it dies only by a side's own order)
 function nearestFoe(o, from, range, anchor) {
   const a = anchor || from, U = G.units, isB = !!from.q, sR = UNIT.spy.stealth[isB ? 1 : 0]; let best = null, bd = range;
   const grid = G.ugTick === G.tick, r = range + 3;
@@ -614,7 +617,7 @@ function hurt(o, a, t, base) {
     }
     if (UNIT[t.kind].rarmor && (!a || A.rng > 20)) d *= UNIT[t.kind].rarmor;   // roofed: arrows and bolts glance off
   }
-  t.hp -= d; t.hurtT = G.t;
+  t.hp -= d; t.hurtT = G.t; if (a && t.hp <= 0 && !isB && a.st) a.st.kills++;
   if (a && A.knock && !isB && t.hp > 0 && t.kind !== 'caravan') {   // a heavy blow drives the target back and flashes it
     const dx = t.x - a.x, dy = t.y - a.y, dd = hyp(dx, dy) || 1, nx = t.x + dx / dd * A.knock, ny = t.y + dy / dd * A.knock;
     if (!blockedCell(gcell(nx, ny), t.owner)) { t.x = clamp(nx, 8, MAP - 8); t.y = clamp(ny, 8, MAP - 8); }

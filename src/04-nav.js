@@ -167,7 +167,7 @@ function moveTo(u, x, y, dt, r, SP) {
   const m = Math.min(Math.min(stats(o, u.kind).spd, u.cap || 1e9) * (u.kind === 'vil' && u.carry > 0 ? 0.9 : 1) * (u.sick > G.t ? 0.8 : 1) * SP * dt * (u.stance === 1 ? STANCE[1].spd : 1) * (FORM[formOf(u)].spd || 1), lim);
   let nx = u.x + dx / dd * m, ny = u.y + dy / dd * m;
   if (blockedCell(gcell(nx, ny), o)) { if (!blockedCell(gcell(nx, u.y), o)) ny = u.y; else if (!blockedCell(gcell(u.x, ny), o)) nx = u.x; else { nx = u.x; ny = u.y; } }
-  u.x = nx; u.y = ny; if (m > 0.3) { if (!(u.kT > G.t - 0.5)) { u.fx = dx / dd; u.fy = dy / dd; } u.mvT = G.t; if (u.kind === 'vil') tread(u); }   // real steps only: a small nudge neither turns the figure round nor starts its walk
+  u.x = nx; u.y = ny; if (m > 0.3) { if (!(u.kT > G.t - 0.5)) { u.fx = dx / dd; u.fy = dy / dd; } u.mvT = G.t; u.st.walk += m; if (u.kind === 'vil') tread(u); }   // real steps only: a small nudge neither turns the figure round nor starts its walk
   if (stand) return hyp(tx - u.x, ty - u.y) <= 7;
   return hyp(x - u.x, y - u.y) <= r + 0.5;
 }

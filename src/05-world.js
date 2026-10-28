@@ -4,13 +4,13 @@ let G;
 function blankGame(seed) {
   return { t: 0, tick: 0, speed: G ? G.speed : 1, over: null, seed, rs: seed, units: [], blds: [], nodes: [], finds: [], tracers: [], log: [],
     P: [], rel: [], card: null, place: null, sel: 'all', alertT: -99, warnT: -99, confirm: null, night: 0, loot: {}, lootT: 0,
-    hold: Array(BNS + 1).fill(0), stance: Array(BNS + 1).fill(0), bnPlan: BN.map(() => ({})), form: BN.map(() => 0), bnEdit: 0, qs: { from: 'all', n: {} }, intel: {}, fantasy: SET.fantasy, mode: SET.mode, diff: SET.diff, wayT: WAYFARER_EVERY * 0.5, wayI: 0, wonder: null, navDirty: true, fxv: 1 };
+    hold: Array(BNS + 1).fill(0), stance: Array(BNS + 1).fill(0), bnPlan: BN.map(() => ({})), form: BN.map(() => 0), bnEdit: 0, qs: { from: 'all', n: {} }, intel: {}, fantasy: SET.fantasy, mode: SET.mode, diff: SET.diff, wayT: WAYFARER_EVERY * 0.5, wayI: 0, wonder: null, navDirty: true, fxv: 1, warAt: {}, pick: [] };   // warAt: notice given, 'a,b' → when it falls due; pick: what the finger holds
 }
 function mkPlayer(i, civ) {
   const d = PLAYERS[i];
   return { id: i, name: d.name, pers: d.pers, color: d.color, keep: d.keep.slice(), civ, res: { f: 200, w: 200, s: 100, g: 50, i: 0 }, goods: Object.fromEntries(GOODK.map(k => [k, 0])), ventures: [], hungry: false, lord: null, tax: 'fair', unrest: 0, loyal: 0, health: 100, ration: 1, rations: {}, age: 0, aging: false, techs: new Set(),
     rally: 'food', ally: null, alive: i !== WILD, terms: null, envoyOut: false, envoyAt: -999, zealT: 0, wave: null, killer: undefined,
-    ai: { t: 1 + i * 0.3, lastHelp: 0, tribute: 0, cyc: 0 }, gathered: 0, spent: 0, score: { people: 0, army: 0, tech: 0, bld: 0, wealth: 0, total: 0 }, fxc: null, uc: {} };
+    ai: { t: 1 + i * 0.3, lastHelp: 0, tribute: 0, cyc: 0 }, gathered: 0, spent: 0, flow: {}, rate: {}, score: { people: 0, army: 0, tech: 0, bld: 0, wealth: 0, total: 0 }, fxc: null, uc: {} };
 }
 function newGame(seed, carry) {
   seed = seed === undefined ? (Math.random() * 2 ** 31) | 0 : seed;
@@ -166,7 +166,7 @@ function mkBld(owner, kind, x, y, prog) {
 function addUnit(owner, kind, x, y) {
   const U = UNIT[kind];
   const u = { id: NID++, owner, kind, x, y, hp: 1, max: 1, cd: 0, carry: 0, carryType: null, job: null, node: null, state: 'home', px: 0, py: 0,
-              ox: rnd(-30, 30), oy: rnd(-30, 30), target: null, idleT: 0, fx: 1, fy: 0 };
+              ox: rnd(-30, 30), oy: rnd(-30, 30), target: null, idleT: 0, fx: 1, fy: 0, bornT: G.t, st: { got: 0, trips: 0, walk: 0, kills: 0, built: 0 } };   // st: a life's tally, for its card
   u.max = u.hp = owner === WILD ? U.hp : maxHpU(owner, kind);
   G.units.push(u); return u;
 }

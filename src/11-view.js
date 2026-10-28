@@ -58,6 +58,12 @@ function makeBg() {
     lg.addColorStop(0, '#1b4466'); lg.addColorStop(0.7, '#2a6488'); lg.addColorStop(0.95, '#4e93ad'); lg.addColorStop(1, '#79b2bf');
     b.fillStyle = lg; b.beginPath(); b.arc(L.x, L.y, L.r + 2, 0, 7); b.fill();
   }
+  // the old trade roads: a worn dirt track through each route's stops, bending round the great lake (drawn once, into the ground)
+  b.lineCap = 'round'; b.lineJoin = 'round';
+  for (const r of ROUTES) { const [a, c, d, e] = r.map(([x, y]) => ({ x, y })), vert = a.x === c.x, bend = 2 * (LAKE0.r + 70), m1 = vert ? { x: MID - bend, y: MID } : { x: MID, y: MID - bend };   // a quadratic's middle sits halfway to its control point: twice the clearance
+    const path = () => { b.beginPath(); b.moveTo(a.x, a.y); b.lineTo(c.x, c.y); b.quadraticCurveTo(m1.x + (vert ? -40 : 0), m1.y + (vert ? 0 : -40), d.x, d.y); b.lineTo(e.x, e.y); };
+    for (const [w, col] of [[14, 'rgba(120,96,58,.35)'], [8, 'rgba(150,124,78,.45)'], [3, 'rgba(96,74,44,.35)']]) { b.strokeStyle = col; b.lineWidth = w; b.setLineDash(w === 3 ? [10, 14] : []); path(); b.stroke(); } b.setLineDash([]);
+  }
   terrainMini = document.createElement('canvas'); terrainMini.width = terrainMini.height = 172; terrainMini.getContext('2d').drawImage(bg, 0, 0, 172, 172);
   // a 64-unit square of grass blades, repeated
   const t = document.createElement('canvas'); t.width = t.height = 128; const q = t.getContext('2d'); q.lineCap = 'round';
@@ -101,7 +107,7 @@ function draw() {
     const take = j >= list.length || (i < N.length && N[i].y < list[j][0]), e = take ? N[i++] : list[j][2], t = take ? 0 : list[j++][1];
     try { t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : drawFind(e); } catch (er) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.setLineDash([]); fault(er); }   // one bad piece must never take the rest of the picture with it: the canvas is put back as it was
   }
-  sparkDraw(); ripDraw();
+  drawPicks(z); sparkDraw(); ripDraw();
   if (G.ords) {   // your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
     ctx.save(); ctx.strokeStyle = G.P[0].color; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.7; ctx.setLineDash([6, 6]); ctx.lineDashOffset = -performance.now() / 60;
     for (const id in G.ords) { const O = G.ords[id]; if (O.arrived || O.cx === undefined) continue; const ax = SX(O.cx), ay = SY(O.cy), bx = SX(O.x), by = SY(O.y); ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke(); ctx.beginPath(); ctx.ellipse(bx, by, 10 * cam.z, 10 * cam.z * TILT, 0, 0, 7); ctx.stroke(); }
@@ -286,6 +292,17 @@ function drawFind(f) {
   else if (f.kind === 'stop') { if (!postAt(f)) { L_(0, 2, 0, -14, '#5a3a1c', 1); P_([[0, -14], [9, -12.5], [0, -11]], f.owner !== null ? G.P[f.owner].color : '#d8c79c', INK, 0.4); P_([[-9, 2], [-3, 2], [-3, -3], [-9, -3]], '#8a5d34', INK, 0.4); E_(4, 1, 2.6, 1.6, GOODS[f.want].col, INK, 0.3); } }
   else if (f.kind === 'vagabonds') { if (!f.done) { E_(0, 2, 3, 1.2, '#3a2a1a'); if (!lessMotion) E_(0, 0, 1.4, 2.2, 'rgba(250,150,40,.85)'); P_([[-10, 3], [-4, 3], [-4, 1], [-10, 1]], '#6b4a3a'); P_([[5, 4], [11, 4], [11, 2], [5, 2]], '#4a5a6a'); } }
   ctx.restore(); g = null;
+}
+// what the finger holds: a ring on the ground under each, green for yours, red for a foe's, gold for the wild and the land
+function drawPicks(z) {
+  if (!G.pickE || !G.pickE.length) return;
+  ctx.lineWidth = 2; ctx.setLineDash([]);
+  for (const e of G.pickE) {
+    if (e.hp !== undefined && e.hp <= 0) continue; if (e.amt !== undefined && e.amt <= 0 && !e.farm) continue;
+    const own = e.owner, r = e.q ? halfOf(e) + 6 : e.kind && FINDS[e.kind] ? 18 : 9;
+    ctx.strokeStyle = own === 0 ? '#5ad27a' : own === undefined || own === null || own === WILD ? '#ffd35e' : '#ff6a52';
+    ctx.beginPath(); ctx.ellipse(SX(e.x), SY(e.y), r * z + 3, r * z * TILT + 2, 0, 0, 7); ctx.stroke();
+  }
 }
 function bar(x, y, w, f, col) { ctx.fillStyle = 'rgba(0,0,0,.65)'; ctx.fillRect(x - w / 2, y, w, 4); ctx.fillStyle = col; ctx.fillRect(x - w / 2, y, w * clamp(f, 0, 1), 4); }
 function flagAt(x, y, col, z) { ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - 16 * z); ctx.stroke(); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(x, y - 16 * z); ctx.lineTo(x + 10 * z, y - 13 * z); ctx.lineTo(x, y - 10 * z); ctx.closePath(); ctx.fill(); }

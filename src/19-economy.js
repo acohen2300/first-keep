@@ -8,7 +8,9 @@ const stopsAll = () => G.finds.filter(f => f.kind === 'stop');
 const postAt = f => G.blds.find(b => b.kind === 'tpost' && b.sid === f.id && b.hp > 0);
 const stopsHeld = (o, r) => stopsAll().filter(f => f.route === r && f.owner === o).length;   // of one route's four stops
 const goodsOf = o => G.P[o].goods;
-function stash(o, type, amt) { const p = G.P[o]; if (KEY[type]) p.res[KEY[type]] += amt; else p.goods[type] = (p.goods[type] || 0) + amt; p.gathered += amt; }
+function stash(o, type, amt) { const p = G.P[o], k = KEY[type] || type; if (KEY[type]) p.res[k] += amt; else p.goods[k] = (p.goods[k] || 0) + amt; p.gathered += amt; p.flow[k] = (p.flow[k] || 0) + amt; }
+// what came in over the last minute, by resource and good: kept for the stores card (the flow is counted as it is stashed, read once a minute)
+function flowTick() { for (const p of G.P) if (p.id !== WILD) { p.rate = p.flow; p.flow = {}; } }
 
 function initEconomy() {
   Object.assign(G, { wx: 'clear', wxT: WX_EVERY, harvest: 1, plague: null, seasonN: 0, yearN: 0, mkt: Object.fromEntries(MKTK.map(k => [k, 1])) });   // prices float from the start
@@ -41,7 +43,7 @@ function routeTick(u, dt, SP) {
   if (u.leg === 'load') {
     if (!moveTo(u, h.x, h.y, dt, halfOf(h) + 4, SP)) return;
     u.goods = {}; let n = LOAD;
-    for (const k of WARES.slice().sort((a, b) => priceAt(o, b, t, h) - priceAt(o, a, t, h))) { const q = priceAt(o, k, t, h) > 0 ? Math.min(n, Math.floor(p.goods[k] || 0)) : 0; if (q > 0) { u.goods[k] = q; p.goods[k] -= q; n -= q; } }
+    for (const k of WARES.slice().sort((a, b) => priceAt(o, b, t, h) - priceAt(o, a, t, h))) { if (t.sell && !t.sell[k]) continue; const q = priceAt(o, k, t, h) > 0 ? Math.min(n, Math.floor(p.goods[k] || 0)) : 0; if (q > 0) { u.goods[k] = q; p.goods[k] -= q; n -= q; } }   // a stop you hold sells what you chose for it
     if (n === LOAD && !(r.spice && t.kind === 'stop')) { u.idle = true; return; }   // nothing to carry: wait for goods
     u.leg = 'go'; u.from = { x: h.x, y: h.y }; return;
   }
@@ -89,6 +91,7 @@ function natureTick() {
   for (const f of stopsAll()) { const pt = postAt(f); f.owner = pt && pt.prog >= 1 ? pt.owner : null; }
   for (let r = 0; r < ROUTES.length; r++) { const S = stopsAll().filter(f => f.route === r), o = S[0] && S[0].owner; if (o !== null && o !== undefined && S.every(f => f.owner === o) && G.P[o].alive) { const g = shareUp(o, POST.all); G.P[o].res.g += g; G.P[o].gathered += g; } }
   if (G.tick % 300 === 150) { priceDrift(); ventureTick(); vassalTick(); }
+  if (G.tick % 1800 === 0) flowTick();
 }
 function seasonTurn() {
   const s = season().name;
@@ -209,6 +212,10 @@ const hungerOf = o => G.P[o] && G.P[o].hungry ? UPKEEP.hunger : 1;
 
 // ── prices float with what is sold and bought, and drift back
 const mkt = k => G.mkt ? G.mkt[k] ?? 1 : 1;
+function debase(o) {   // Rome's denarius: more coin at once, worth less for good
+  const p = G.P[o]; if (p.debased || !ready(o, 'mint').length) return false;
+  p.debased = true; p.res.g += MINT.debase; p.gathered += MINT.debase; if (o === 0) say(`Debased: +${MINT.debase} gold, prices ×${MINT.price} for good.`, 'warn', 7); return true;
+}
 function mktHit(k, q, dir) { if (!G.mkt) return; G.mkt[k] = clamp((G.mkt[k] ?? 1) * (1 + dir * PRICE.hit * q), PRICE.floor, PRICE.cap); }
 const spiceCost = () => GOODS.spice.buy * mkt('spice');
 function priceDrift() {
@@ -261,7 +268,8 @@ function surrenderWhy(o, q) {
 function demandSurrender(o, q) { const why = surrenderWhy(o, q); if (why) { if (o === 0) say(why, '', 4); return false; } makeVassal(q, o, 'fair'); return true; }
 function rebel(p, coalition) {
   if (p.rebel || !keepOf(p.id)) return;
-  const L = p.lord, V = G.units.filter(u => u.owner === p.id && u.kind === 'vil'), n = Math.ceil(V.length * 0.33);
+  const L = p.lord; levyOf(L, p.id).forEach(releaseLevy);
+  const V = G.units.filter(u => u.owner === p.id && u.kind === 'vil'), n = Math.ceil(V.length * 0.33);
   for (const v of V.slice(0, n)) { v.hp = 0; v.gone = true; const r = addUnit(p.id, 'rebel', v.x, v.y); r.state = 'attack'; r.target = L; }
   G.rel[p.id][L] = G.rel[L][p.id] = 'war';
   for (const u of G.units) if (u.owner === p.id && isSoldier(u)) { u.state = 'attack'; u.target = L; u.bid = null; }
@@ -275,15 +283,16 @@ function vassalTick() {   // every 10 seconds
     if (p.rebel) {   // crushed, or free
       const force = soldiersOf(p.id).length;
       if (force < p.rebel.n0 * VASSAL.crushed) { p.rebel = null; p.unrest = 30; p.loyal = Math.max(0, (p.loyal || 0) - 10); G.rel[p.id][L.id] = G.rel[L.id][p.id] = 'ally'; for (const u of G.units) if (u.owner === p.id && (u.kind === 'rebel' || u.state === 'attack')) { if (u.kind === 'rebel') { u.hp = 0; u.gone = true; } else u.state = 'home'; } if (L.id === 0) say(`Rebellion in ${p.name}'s lands crushed.`, 'good', 7); }
-      else if (G.t - p.rebel.t0 > VASSAL.freeAfter) { p.rebel = null; p.lord = null; if (L.id === 0) say(`${p.name} have thrown off your rule.`, 'warn', 8); }
+      else if (G.t - p.rebel.t0 > VASSAL.freeAfter) { p.rebel = null; p.lord = null; levyOf(L.id, p.id).forEach(releaseLevy); if (L.id === 0) say(`${p.name} have thrown off your rule.`, 'warn', 8); }
       continue;
     }
+    for (const u of levyOf(L.id, p.id)) if (!keepOf(L.id)) releaseLevy(u);   // a levy serves its lord while the lord stands
     const d = Math.max(0, p.gathered - (p.taxBase || 0)); p.taxBase = p.gathered;   // tax: a share of what they gathered, from their stores
-    let take = d * TAX[p.tax].take; const tot = p.res.f + p.res.w + p.res.s + p.res.g + p.res.i; p.paid = 0;
+    let take = d * TAX[p.tax].take * (p.forced > G.t ? 2 : 1); const tot = p.res.f + p.res.w + p.res.s + p.res.g + p.res.i; p.paid = 0;
     if (tot > 0 && take > 0) for (const r of ['f', 'w', 's', 'g', 'i']) { const x = Math.min(p.res[r], take * p.res[r] / tot); p.res[r] -= x; L.res[r] += x; p.paid += x; }
     p.protect = (p.protect || 0) * VASSAL.decay;
     const parts = loyaltyParts(p); p.loyal = (p.loyal || 0) + (parts.target - (p.loyal || 0)) * 0.05;
-    p.unrest = clamp((p.unrest || 0) + TAX[p.tax].push - p.loyal / 25, 0, 100);
+    p.unrest = clamp((p.unrest || 0) + TAX[p.tax].push + (p.forced > G.t ? 1 : 0) - p.loyal / 25, 0, 100);
     if (p.loyal >= VASSAL.giftAt && G.tick % (30 * VASSAL.gift) === 150) { const gift = {}; for (const r of ['f', 'w', 's', 'g', 'i']) { const x = Math.floor(p.res[r] * 0.1 * (p.loyal - 50) / 100); if (x > 0) { p.res[r] -= x; L.res[r] += x; gift[r] = x; } } if (L.id === 0 && Object.keys(gift).length) say(`${p.name} send a gift: ${costText(gift)}.`, 'good', 5); }
     if (L.id === 0 && p.unrest > 70 && G.t - (p.warnT || -99) > 60) { p.warnT = G.t; say(`${p.name}: unrest ${Math.round(p.unrest)}%. Cut tax.`, 'warn', 7, keepOf(p.id)); }
     if (p.unrest >= 100) rebel(p);

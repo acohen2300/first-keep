@@ -35,8 +35,10 @@ const SFX = {
   err:    [0.2, v => { tone(180, 0.12, 'square', 0.1 * v); tone(140, 0.14, 'square', 0.1 * v, 0, 0.09); }],
   place:  [0.1, v => { hiss(0.08, 0.3 * v, 500, 1); tone(120, 0.1, 'sine', 0.3 * v, 70); }],
   hammer: [0.25, v => { hiss(0.04, 0.3 * v, 2200, 3); tone(900, 0.05, 'square', 0.06 * v, 500); }],
-  done:   [0.2, v => { tone(523, 0.14, 'triangle', 0.2 * v); tone(659, 0.14, 'triangle', 0.2 * v, 0, 0.11); tone(784, 0.26, 'triangle', 0.22 * v, 0, 0.22); }],
-  ready:  [0.34, v => { tone(440, 0.08, 'sine', 0.2 * v); tone(587, 0.14, 'sine', 0.2 * v, 0, 0.08); }],
+  done:   [0.2, v => { hiss(0.06, 0.25 * v, 900, 2); tone(220, 0.12, 'triangle', 0.22 * v, 160); tone(330, 0.3, 'triangle', 0.18 * v, 0, 0.12); }],   // a home or a field: a wooden knock, warm
+  doneWar:[0.2, v => { hiss(0.08, 0.35 * v, 180, 1, 90); tone(80, 0.25, 'sine', 0.35 * v, 55); tone(196, 0.5, 'sawtooth', 0.09 * v, 220, 0.2); tone(262, 0.6, 'sawtooth', 0.09 * v, 294, 0.45); }],   // a place of war: a drum, then a horn
+  ready:  [0.34, v => { tone(440, 0.08, 'sine', 0.2 * v); tone(587, 0.14, 'sine', 0.2 * v, 0, 0.08); }],   // a villager: a light chime
+  readySol:[0.34, v => { tone(294, 0.12, 'sawtooth', 0.08 * v); tone(392, 0.12, 'sawtooth', 0.08 * v, 0, 0.11); tone(440, 0.3, 'sawtooth', 0.09 * v, 0, 0.22); }],   // a soldier: a short brass call
   chop:   [0.18, v => { hiss(0.05, 0.22 * v, 1800, 2); tone(220, 0.06, 'triangle', 0.14 * v, 120); }],
   mine:   [0.18, v => { tone(1400, 0.05, 'square', 0.05 * v, 900); hiss(0.04, 0.2 * v, 4000, 2); }],
   pick:   [0.3, v => tone(520, 0.05, 'sine', 0.07 * v, 700)],
@@ -58,7 +60,7 @@ const SFX = {
   thunder:[0.5, (v, at) => { hiss(0.12, 0.5 * v, 2500, 0.8, 600, at); hiss(2.2, 0.4 * v, 160, 0.5, 50, at + 0.05); tone(45, 1.8, 'sine', 0.25 * v, 30, at); }],
 };
 // which of the three volumes each sound belongs to (everything else is an effect)
-const CHAN = { bird: 'amb', cricket: 'amb', wind: 'amb', thunder: 'amb', horn: 'alert', age: 'alert', win: 'alert', lose: 'alert', done: 'alert', ready: 'alert', zeal: 'alert', coin: 'alert' };
+const CHAN = { bird: 'amb', cricket: 'amb', wind: 'amb', thunder: 'amb', horn: 'alert', age: 'alert', win: 'alert', lose: 'alert', done: 'alert', doneWar: 'alert', readySol: 'alert', ready: 'alert', zeal: 'alert', coin: 'alert' };
 const chanVol = name => SET.mix[CHAN[name] || 'fx'];
 function sfx(name, x, y) {
   if (HAPTIC[name] && (x === undefined || onScreen(x, y))) feel(HAPTIC[name]);
@@ -83,7 +85,7 @@ function thunder(x, y) {
 // In the native app the Haptics plugin fills NATIVE (Apple's taptic engine); in a browser, vibrate where the phone allows it (iPhone Safari cannot).
 const NATIVE = { haptics: () => window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics };
 const FEEL = { tick: ['LIGHT', 8], snap: ['MEDIUM', 15], thock: ['HEAVY', 25], crack: ['HEAVY', [30, 40, 20]] };
-const HAPTIC = { place: 'snap', done: 'thock', ready: 'tick', horn: 'crack', crash: 'crack', thunder: 'crack', err: 'tick' };   // which sound is also felt
+const HAPTIC = { place: 'snap', done: 'thock', doneWar: 'thock', ready: 'tick', readySol: 'tick', horn: 'crack', crash: 'crack', thunder: 'crack', err: 'tick' };   // which sound is also felt
 let feltT = 0;
 function feel(kind) {
   if (!SET.vibe || !FEEL[kind]) return; const now = performance.now(); if (now - feltT < 50) return; feltT = now;

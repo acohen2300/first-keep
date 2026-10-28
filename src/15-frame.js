@@ -34,7 +34,7 @@ const cell = (attrs, icon, word, cls = '') => `<button class="cell ${cls}" ${att
 const wd = (t, id) => `<span class="wd"${id ? ` id="${id}"` : ''}>${t}</span>`;
 // The top: the tally (five counts, mute, pause, speed), then the strip (age, season, clock; idle; score). The bottom: People, then one column per job; Build swaps the row for the categories.
 function buildPanel() {
-  $('tally').innerHTML = [['f', 'Food'], ['w', 'Wood'], ['s', 'Stone'], ['g', 'Gold'], ['i', 'Iron']].map(([r, n]) => `<div class="cell" title="${n}">${ICON[n.toLowerCase()]}${wd('0', 'r' + r)}</div>`).join('')
+  $('tally').innerHTML = [['f', 'Food'], ['w', 'Wood'], ['s', 'Stone'], ['g', 'Gold'], ['i', 'Iron']].map(([r, n]) => cell(`data-act="card:stores" aria-label="${n}: open the stores"`, ICON[n.toLowerCase()], wd('0', 'r' + r))).join('')
     + cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') + cell('id="pauseB" data-act="pause" aria-label="Pause"', ICON.pause, '', 'one') + cell('id="speed" data-act="speed" aria-label="Game speed"', '', wd('×1', 'speedT'), 'one');
   const st = (act, t, label, id) => `<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
   $('jobs').innerHTML = `<div class="col">${cell('id="tPeople" data-act="card:army" aria-label="People: army, research, how to play"', ICON.people, wd('0/0', 'tPeopleN'))}<div class="pm">${st('unvil', '−', 'Cancel a villager waiting to train', 'tUn')}${st('train:vil', '+', 'Train a villager', 'tVil')}</div></div>`
@@ -78,7 +78,7 @@ function advise() {
   if (S.length >= 8 && G.finds.some(f => !f.done && FINDS[f.kind].got && dist(f, k) < 600) && !L('goto')) return 'Treasure nearby: tap it, send troops.';
   if (p.age >= 1 && G.P[FORT].alive && G.rel[0][FORT] === 'peace' && G.P[FORT].ally === null && !p.envoyOut && !L('envoy')) return 'The Fortress is neutral: send an envoy.';
   if (p.hungry) return '!Hungry. Put villagers on Food.';
-  if (!p.hungry && p.res.f < (p.eats || 0) * 1.5 && G.t > 120 && !L('job:food')) return 'Food lasts 90 s. Add Food workers.';
+  { const inF = (p.rate && p.rate.f) || 0, out = p.eats || 0; if (!p.hungry && G.t > 120 && inF < out && p.res.f < out * 3) return `Food −${Math.round(out - inF)} a minute. Add farmers.`; }   // the stores' own arithmetic: what comes in against what is eaten
   if (vassalsOf(0).some(q => q.unrest > 70 && !q.rebel)) return '!A vassal is restless: cut tax.';
   if (p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && !L('trade')) return ready(0, 'market').length ? 'Gold is low: sell wood, food or stone at the Market.' : 'Gold is low: Build → Market, then sell what you have too much of.';
   if (G.blds.some(b => b.owner === 0 && b.fire > 0 && !G.units.some(u => u.rep === b && u.job === 'repair'))) return '!Fire! Tap it, send a villager.';
@@ -114,6 +114,8 @@ function ui(force) {
   $('tVil').classList.toggle('dis', !!trainWhy(0, 'vil')); $('tUn').classList.toggle('dis', !nq);
   { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; if ($('homeB').hidden === away) $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
   $('stage').classList.toggle('busy', !!(G.card || G.place));
+  { const on = !!(G.card && G.card.type === 'menu'); $('buildB').classList.toggle('on', on); if (on) { const top = Math.round($('card').getBoundingClientRect().top - $('stage').getBoundingClientRect().top) - 45; if (ui.tab !== top) { ui.tab = top; $('stage').style.setProperty('--tabtop', top + 'px'); } } }   // the Build tab rides the card's top edge
+  { const n = picked().length, show = n > 0 && !G.card && !G.place, el = $('pickbar'); if (el.hidden === show) el.hidden = !show; $('stage').classList.toggle('picking', show); if (show) txt('pickT', `${n} picked${G.pickMore ? ' · tap to add more' : ''}`); }
   if (G.place) { const B = BLD[G.place.kind], t = !G.place.at ? (G.place.kind === 'wall' ? 'Press and drag a line of wall' : `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`) : G.place.why ? G.place.why : G.place.kind === 'wall' ? `${(G.place.cells || [1]).length} pieces: tap Build, or drag again` : `${B.name}: tap Build, or drag it to move · drag empty ground to look`; txt('placeT', t); $('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why); }
   tick();
   if (G.card) renderCard();
