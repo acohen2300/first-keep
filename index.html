@@ -119,7 +119,7 @@ button.ghost{visibility:hidden}
 #tPeople .gl{width:20px;height:20px}
 #tPeople .wd{color:var(--bone)}
 /* on the map: the corners, one look (.fab). Map top right, Home bottom left (only when away), Build bottom right */
-#spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}#spdPop[hidden]{display:none}#spdPop button{min-width:52px;min-height:44px}
+#spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}#spdPop[hidden]{display:none}#spdPop button{min-width:52px;min-height:44px}#spdPop button.cur{box-shadow:inset 0 0 0 2px var(--mute);border-color:var(--mute)}
 .strip #sStats,.strip #sIdle{padding:0 5px;min-width:44px;gap:9px}.strip #sStats span,.strip #tkBell>*,.strip #sAgeT,.strip #scoreN,.strip #scoreR{display:inline-flex;align-items:center;height:26px;gap:3px}.strip .gl{position:static;transform:none;width:15px;height:15px;display:block;margin:0;flex:none}   /* one line: icon and number share a centre */
 #tally button.cell{isolation:isolate}#tally button.cell.sel::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:7px;background:#2f3b36;border:1px solid var(--mute)}   /* the on mark: a small tile inside the cell; ::before is the divider */
 #pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}
@@ -186,6 +186,7 @@ button.ok small{color:#8fd4a4}
 #card .segT button:not(#cardX):not(#cardI){position:relative;min-height:44px;padding:0 2px;background:none;border:0;box-shadow:none;border-radius:20px;font-weight:700;font-size:14px;color:var(--bone)}
 #card .segT button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;box-shadow:0 0 10px rgba(242,210,122,.4);border:0;transition:background-color .15s}#card .segT button::after{content:none}
 @media (max-height:720px){#card.setup .civline,#card.setup .hzh{display:none}}   /* small phones: the people line and the challenge heading step aside, so the whole card fits on one page */
+#card .menu .cnt{font-size:12px;font-style:normal;font-weight:600;color:var(--mute)}
 #card .acts.startrow{grid-template-columns:2fr 1fr}#card.setup{gap:4px}#card.setup h3{min-height:36px}#card .acts.civs button:not(#cardX):not(#cardI){padding:0 1px}#card .acts.civs b{font-size:13px}
 #card .hzl{display:grid;grid-template-columns:1fr 1fr;gap:4px 6px}#card .hzr{display:flex;gap:3px;min-width:0}
 #card .hzr button.tick:not(#cardX):not(#cardI){flex:1;min-width:0;flex-direction:row;justify-content:flex-start;gap:5px;min-height:44px;padding:0 5px;background:transparent;box-shadow:none;border-color:#4a3a28}
@@ -685,7 +686,7 @@ const WAYFARER_EVERY = 240;
 // with gifts, blows and time; at PEACE they leave you be, at ALLY their gate opens. Gifts follow the Danegeld rule: each one buys less than
 // the last. Pits and nets on the causeways; prisoners for ransom; outlaw raids on whoever they regard least. They command the camps.
 const NATIVE = { regard0: 20, peaceAt: 40, allyAt: 70, decay: 0.1, hitCost: 2, gifts: [100, 300], danegeld: 0.5, giftWindow: 600, garrison: 24, perAge: 8, regrow: 20, ambush: 1.3, gunAge: 4, gunMax: 0.6, gunRegrow: 2, gunHit: 1.5,
-  traps: 4, trapR: 10, pit: 0.4, stuck: 4, relay: 90, scoutSees: 60, raidEvery: 180, raidN: 4, raidSecs: 45, handover: 60, handoverMen: 8 };
+  traps: 4, trapR: 10, pit: 0.4, stuck: 4, relay: 90, scoutSees: 60, raidEvery: 180, raidN: 2, raidFrom: 600, raidSecs: 45, handover: 60, handoverMen: 8 };
 const THRONE = { hold: 900, tithe: 0.1, score: 50, r: 80, isle: 100, cause: 30 };   // hold: seconds to win in a 60-minute game (scaled to the game's length); tithe of every other side's gathering; score a minute
 
 // The three computer personalities: one brain, three settings. Every behaviour is a field, never a name check.
@@ -1422,6 +1423,8 @@ function navRebuild() {
       if (b.kind === 'gate') NAV.gate[c] = b.owner + 1; else if (!B.walk) NAV.solid[c] = 1;   // a gate, even half built, is an opening for its own side (Build 38: an unbuilt gate sealed the Fortress in)
     }
   }
+  // a one-square slit between two buildings is shut: a figure is wider than the gap and read as walking through the wall (Albert, Build 41)
+  for (let y = 1; y < NC - 1; y++) for (let x = 1; x < NC - 1; x++) { const c = y * NC + x; if (NAV.solid[c] || NAV.occ[c] || NAV.gate[c]) continue; const B = d => { const b = NAV.occ[d]; return b && !BLD[b.kind].walk && b.kind !== 'gate'; }; if ((B(c - 1) && B(c + 1)) || (B(c - NC) && B(c + NC))) NAV.solid[c] = 1; }
   // which squares are joined by open ground (gates counted open: the finest cut is made by the search itself)
   const C = NAV.comp, Q = AS.q; C.fill(0); let id = 0;
   for (let s = 0; s < NC * NC; s++) {
@@ -4282,7 +4285,7 @@ function startPlace(kind) {
   const why = capWhy(0, kind); if (why) { say(why + '.', '', 3); sfx('err'); return; }
   closeCard(); setPick([]); G.place = { kind, at: null, a: null, cells: null };
   // start the ghost in the middle of the screen, snapped beside something of yours if it can be
-  const w = G.buildAt || toWorld(cw / 2, ch / 2); G.buildAt = null; if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200);   // from the hammer on open ground: there; otherwise the middle of the screen
+  const w = G.buildAt && G.buildAt.x !== undefined ? G.buildAt : toWorld(cw / 2, ch / 2); G.buildAt = null; if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200);   // from the hammer on open ground: there; otherwise the middle of the screen
   $('place').hidden = false; ui(true);
 }
 // you tapped Build: build what the ghost shows; houses, fields and gates offer the next spot beside it
@@ -4458,12 +4461,25 @@ function showStrip(sx, sy, x, y, step) {
   const r = $('stage').getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight, th = el.querySelector('.thumb'), tx = th ? th.offsetLeft + th.offsetWidth / 2 : w / 2, ty = th ? th.offsetTop + th.offsetHeight / 2 : h / 2;
   el.style.left = clamp(sx - tx, 4, r.width - w - 4) + 'px'; el.style.top = clamp(sy - ty, 4, r.height - h - 4) + 'px';   // the sword opens under the finger
 }
-// what the game thinks fits a spot: the drop-off for what grows there, if none is near; a house when room is short
+// what the game thinks fits a spot (Albert, Build 41): each reason scores a kind, the best one is marked and its menu opens.
+// A drop-off for what grows there with none near; more of what stands around you (houses: a house; fields: a mill, then a field; army buildings: the one you lack);
+// a narrow way between forest, water or buildings: a wall, or a gate beside your wall; and a house when room is short.
+const SUGGEST = { r: 140, drop: 3, kin: 3.5, choke: [0.35, 0.75], chokeW: 4, room: 2 };
 function suggestAt(x, y) {
-  const by = {}; for (const nd of G.nodes) if (nd.amt > 0 && !nd.farm && hyp(nd.x - x, nd.y - y) < 120) { const k = nd.kind === 'fish' ? 'dock' : nd.type === 'wood' ? 'lumber' : nd.type === 'food' ? 'mill' : 'mining'; if (!dropFor(0, nd.type, nd) || dist(dropFor(0, nd.type, nd), nd) > 110) by[k] = (by[k] || 0) + 1; }
-  const best = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
-  if (best && BLD[best[0]].age <= G.P[0].age) return best[0];
-  return capOf(0) - popOf(0) - queuedOf(0) <= 2 ? 'house' : null;
+  const p = G.P[0], sc = {}, add = (k, v) => { if (k && BLD[k] && BLD[k].age <= p.age && !capWhy(0, k)) sc[k] = (sc[k] || 0) + v; };
+  { const drops = new Set(); for (const nd of G.nodes) if (nd.amt > 0 && !nd.farm && hyp(nd.x - x, nd.y - y) < SUGGEST.r * 0.85) { const k = nd.kind === 'fish' ? 'dock' : nd.type === 'wood' ? 'lumber' : nd.type === 'food' ? 'mill' : 'mining', d = dropFor(0, nd.type, nd); if (!d || dist(d, nd) > 110) drops.add(k); } for (const k of drops) add(k, SUGGEST.drop); }   // each drop-off it lacks counts once
+  const near = G.blds.filter(b => b.owner === 0 && b.hp > 0 && hyp(b.x - x, b.y - y) < SUGGEST.r), has = k => near.some(b => b.kind === k);
+  for (const b of near) {
+    const m = MENUS.find(M => M.items.includes(b.kind)); if (!m) continue;
+    if (m.id === 'home') add(b.kind === 'apartment' ? 'apartment' : 'house', SUGGEST.kin);
+    else if (b.kind === 'farm' || b.kind === 'pasture') add(has('mill') ? 'farm' : 'mill', SUGGEST.kin);
+    else if (m.id === 'mil') add(m.items.find(k => !bldsOf(0, k).length && BLD[k].age <= p.age) || b.kind, SUGGEST.kin);
+    else if (b.kind === 'wall') add('gate', SUGGEST.kin);
+    else add(b.kind === 'keep' ? 'house' : null, 1);
+  }
+  { const cx = Math.floor(x / NAVC), cy = Math.floor(y / NAVC); let solid = 0, n = 0; for (let j = -4; j <= 4; j++) for (let i = -4; i <= 4; i++) { const gx = cx + i, gy = cy + j; if (gx < 0 || gy < 0 || gx >= NC || gy >= NC || i * i + j * j > 16) continue; n++; if (NAV.solid[gy * NC + gx]) solid++; } const f = solid / (n || 1); if (f > SUGGEST.choke[0] && f < SUGGEST.choke[1] && !NAV.solid[cy * NC + cx]) add(has('wall') ? 'gate' : 'wall', SUGGEST.chokeW); }
+  if (capOf(0) - popOf(0) - queuedOf(0) <= SUGGEST.room) add('house', 1.5);
+  const best = Object.entries(sc).sort((a, b) => b[1] - a[1])[0]; return best ? best[0] : null;
 }
 function hideStrip() { const el = $('strip'); if (el && !el.hidden) { el.hidden = true; if (G) G.strip = null; } }
 // ── the War Council: six battalions, what each holds by type, its stance and formation
@@ -4747,9 +4763,9 @@ const CARDS = {
   keep() { const k = keepOf(0); if (!k) return null; G.card = { type: 'bld', id: k.id }; return CARDS.bld(G.card); },
   menu(c) {
     const p = G.P[0], M = MENUS.find(m => m.id === c.id); G.lastMenu = c.id;
-    const item = k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp, fits = G.buildAt && G.buildAt.hint === k; return btn(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? `limit ${cp}` : !afford(p, B.cost) ? `short ${need(B.cost)}` : (fits ? 'fits here · ' : '') + costText(B.cost) + (cp > 1 && cp < 99 ? ` · ${n}/${cp}` : ''), lock || full || !afford(p, B.cost) ? 'dis' : fits ? 'go' : ''); };
+    const item = k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp, fits = G.buildAt && G.buildAt.hint === k; return btn(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? `limit ${cp}` : !afford(p, B.cost) ? `short ${need(B.cost)}` : (fits ? 'fits here · ' : '') + costText(B.cost), lock || full || !afford(p, B.cost) ? 'dis' : fits ? 'go' : '').replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>'); };   // how many of how many beside the name, dimmed: every cost stays on one line
     const most = Math.max(...MENUS.map(m => m.items.length)), ghosts = '<button class="ghost" disabled aria-hidden="true" tabindex="-1"><b>.</b><small>.</small></button>'.repeat(most - M.items.length);   // blank places keep every menu as tall as the biggest (two rows), so the page never changes height
-    return title('Build', G.buildAt ? 'here' : '') + acts(MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join(''), 'c6 chipsrow') + acts(M.items.map(item).join('') + ghosts, 'c4 menu')
+    return title('Build', G.buildAt && G.buildAt.x !== undefined ? 'here' : '') + acts(MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join(''), 'c6 chipsrow') + acts(M.items.map(item).join('') + ghosts, 'c4 menu')
       + fold('menu', 'What each one does', M.items.map(k => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''));
   },
   research: () => researchHTML(),
@@ -4773,7 +4789,7 @@ const CARDS = {
     return title('How to play', `build ${BUILD}`) + acts(btn('guide:bld', 'Guide', 'what leads to what, and why', 'go') + btn('guide:rule', 'Rules', 'what triggers what'))
       + `<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
       <p><b>Build:</b> pick a menu, then a building. It waits above your finger: drag it, then tap Build. Villagers raise it.</p>
-      <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Hold the play button for the speeds.</p>
+      <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Pause shows the speeds under the button.</p>
       <p><b>Army:</b> tap open ground with nothing picked: Send ¼ or All. The War Council opens stances, battalions, formations and Muster.</p>
       <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
@@ -4891,7 +4907,7 @@ const wd = (t, id) => `<span class="wd"${id ? ` id="${id}"` : ''}>${t}</span>`;
 // The top: the tally (five counts, mute, pause, speed), then the strip (age, season, clock; idle; score). The bottom: People, then one column per job; Build swaps the row for the categories.
 function buildPanel() {
   $('tally').innerHTML = [['f', 'Food'], ['w', 'Wood'], ['s', 'Stone'], ['g', 'Gold'], ['i', 'Iron']].map(([r, n]) => cell(`data-act="card:stores" aria-label="${n}: open the stores"`, ICON[n.toLowerCase()], wd('0', 'r' + r))).join('')
-    + cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') + cell('id="pauseB" data-act="pause" aria-label="Pause; hold for speed"', ICON.pause, '', 'one') + cell('id="mapT" data-act="map" aria-label="The small map"', ICON.map, '', 'one');   // one button for play, pause and speed (hold it); the freed cell is the map (Albert, Build 40)
+    + cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') + cell('id="pauseB" data-act="pause" aria-label="Pause"', ICON.pause, '', 'one') + cell('id="mapT" data-act="map" aria-label="The small map"', ICON.map, '', 'one');   // one button for play, pause and speed (hold it); the freed cell is the map (Albert, Build 40)
   const st = (act, t, label, id) => `<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
   $('jobs').innerHTML = `<div class="col">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}${st('buildrow', ICON.hammer, 'Build', 'buildT')}</div>`   // one tap makes a villager; Build under it (Albert, Build 41)
     + JOBS.map(r => `<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`).join('');
@@ -4899,14 +4915,23 @@ function buildPanel() {
 }
 const refresh = () => { cardSig = ''; ui(true); };
 function muteBtn() { $('muteB').classList.toggle('off', !SND.on); $('muteB').classList.toggle('sel', !SND.on); $('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on'); }
-function paceBtn() { const pb = $('pauseB'); pb.innerHTML = (G.paused ? ICON.play : ICON.pause) + (G.speed > 1 ? `<span class="spd">×${G.speed}</span>` : ''); pb.setAttribute('aria-label', (G.paused ? 'Play' : 'Pause') + '; hold for speed'); pb.classList.toggle('sel', !!G.paused); }
-function setPause(v) { G.paused = v; paceBtn(); }
+function paceBtn() { const pb = $('pauseB'); pb.innerHTML = (G.paused ? ICON.play : ICON.pause) + (G.speed > 1 ? `<span class="spd">×${G.speed}</span>` : ''); pb.setAttribute('aria-label', G.paused ? 'Play' : 'Pause'); pb.classList.toggle('sel', !!G.paused); }
+function setPause(v) { G.paused = v; paceBtn(); if (!v && typeof spdPop === 'function') spdPop(false); }
 function applyMini() { mini.hidden = !SET.mini; $('mapT').classList.toggle('sel', !!SET.mini); $('stage').classList.toggle('mapOn', !!SET.mini); }
 // the end of a game: the sim says who won and why; the screen shows it
 function showEnd(won, text) { $('endT').textContent = won ? 'Victory' : 'Defeat'; $('endP').textContent = text; $('endNext').hidden = $('endFree').hidden = !won; $('end').hidden = false; closeCard(); }
 // The page's own measures: how tall the orders are (the map's bottom edge) and where the map's middle sits between the bars
 function fit() { const r = cv.getBoundingClientRect(); dpr = LOW.n >= 2 ? 1 : Math.min(2, window.devicePixelRatio || 1); cw = r.width; ch = r.height; { const h = $('hud').getBoundingClientRect(), o = $('orders').getBoundingClientRect(), t = r.top; document.documentElement.style.setProperty('--ob', Math.round(r.bottom - o.top) + 'px'); vy = Math.round(((h.bottom - t) + (o.top - t)) / 2 - ch / 2); bandH = Math.max(100, o.top - h.bottom); } const W = Math.round(cw * dpr), H = Math.round(ch * dpr); if (cv.width !== W) cv.width = W; if (cv.height !== H) cv.height = H; cam.z = clamp(cam.z, minZ(), ZOOM_MAX); clampCam(); }
 
+// who a unit not yours belongs to, in a few words: a rival and how you stand, the Natives, the horde, outlaws, the wild
+function whoIs(u) {
+  const nm = UNIT[u.kind].name;
+  if (u.owner !== WILD) { const P = G.P[u.owner]; return `${nm} · ${P.name}${P.civ ? ', ' + CIVS[P.civ].name : ''} · ${REL_WORD[G.rel[0][u.owner]].toLowerCase()}`; }
+  if (u.native) return `${nm} · the Natives · ${REL_WORD[G.rel[0][WILD]].toLowerCase()}`;
+  if (u.horde && !u.back) return `${nm} · the horde`;
+  if (u.back || u.find !== undefined) return `${nm} · outlaws from a camp`;
+  return `${nm} · ${UNIT[u.kind].tags && UNIT[u.kind].tags.includes('animal') ? 'a wild animal' : 'the wild'}`;
+}
 // ───────────────────────── Messages and tips ─────────────────────────
 // quiet kinds (news, the spectacle's 'coming' lines) never take the line: they wait in the list and count on the bell (Albert: too many alerts to keep up with)
 const QUIET = new Set(['news', 'soft']);
@@ -4975,8 +5000,9 @@ function ui(force) {
   { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; if ($('homeB').hidden === away) $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
   $('stage').classList.toggle('busy', !!(G.card || G.place));
   $('buildT').classList.toggle('sel', !!(G.card && G.card.type === 'menu'));   // one look for on: the outline, as the default job wears it
-  { const P = picked(), n = P.length, prey = !n && G.pickE && G.pickE.length === 1 && G.pickE[0].owner === WILD && UNIT[G.pickE[0].kind] && UNIT[G.pickE[0].kind].meat && G.pickE[0].hp > 0 ? G.pickE[0] : null, show = (n > 0 || !!prey) && !G.card && !G.place, el = $('pickbar'); if (el.hidden === show) el.hidden = !show; $('stage').classList.toggle('picking', show);   // the action bar (Albert, Build 41)
+  { const P = picked(), n = P.length, one = !n && G.pickE && G.pickE.length === 1 && G.pickE[0].hp > 0 && UNIT[G.pickE[0].kind] && G.pickE[0].owner !== 0 ? G.pickE[0] : null, prey = one && one.owner === WILD && UNIT[one.kind].meat ? one : null, foe = one && !prey ? one : null, show = (n > 0 || !!one) && !G.card && !G.place, el = $('pickbar'); if (el.hidden === show) el.hidden = !show; $('stage').classList.toggle('picking', show);   // the action bar (Albert, Build 41)
     if (show && prey) { txt('pickT', UNIT[prey.kind].name); $('pMore').hidden = true; const hunters = unitsOf(0, 'vil').filter(v => v.hunt === prey).length, row = `<button data-act="hunt:${prey.id}" class="go"><b>Hunt</b><small>${hunters ? hunters + ' on it' : 'nearest villager'}</small></button><button data-act="hunt3:${prey.id}"><b>Hunt ×3</b></button>`; if (el.rowH !== row) { el.rowH = row; $('pickRow').innerHTML = row; } }   // a deer, a boar: hunt it from the bar
+    else if (show && foe) { txt('pickT', whoIs(foe)); $('pMore').hidden = true; const sol = armyOf(0).filter(isSoldier).length, war = foe.owner === WILD ? (!foe.native || atWar(0, WILD)) : atWar(0, foe.owner), row = `<button data-act="pattack:${foe.id}" class="${war && sol ? 'warn' : 'dis'}"><b>Attack</b><small>${!sol ? 'no soldiers' : war ? 'all soldiers' : 'not at war'}</small></button><button data-act="look:${foe.id}"><b>More</b></button>`; if (el.rowH !== row) { el.rowH = row; $('pickRow').innerHTML = row; } }   // who is this? the bar says, and offers the fight (Albert, Build 41)
     else if (show) { $('pMore').hidden = false; txt('pickT', `${n} picked`); $('pMore').innerHTML = G.pickMore ? '<b>Done</b>' : '<b>＋ More</b>'; $('pMore').classList.toggle('on', !!G.pickMore);
       const sol = P.some(isSoldier), vil = P.some(u => u.kind === 'vil'), ic = (act, icon, label) => `<button data-act="${act}" aria-label="${label}">${icon}</button>`, tx = (act, t) => `<button data-act="${act}"><b>${t}</b></button>`;
       const tch = sol && fxv(0, 'teach').a >= 1 && P.some(u => isSoldier(u) && teachTo(u) && u.state !== 'school');
@@ -5008,8 +5034,8 @@ function tick() {
 // ───────────────────────── What every button does: one table ─────────────────────────
 // every button's verb, in one table
 const ACT = {
-  pause() { setPause(!G.paused); },
-  spd(a) { G.speed = clamp(Number(a), 1, 3); $('spdPop').hidden = true; if (G.paused) setPause(false); paceBtn(); },   // from the speed drop-down under the play button
+  pause() { setPause(!G.paused); spdPop(G.paused && !G.card); },   // paused: the speeds drop down under the button
+  spd(a) { G.speed = clamp(Number(a), 1, 3); spdPop(false); if (G.paused) setPause(false); paceBtn(); },   // from the speed drop-down under the play button
   again() { $('end').hidden = true; openCard({ type: 'setup' }); },
   free() { G.over = null; G.free = true; $('end').hidden = true; setPause(false); say('Free play: no clock, no victory.', '', 6); },
   next() { const p = G.P[0], keep = { age: p.age, techs: [...p.techs] }; $('end').hidden = true; newGame(undefined, keep); setPause(false); say('New land. Your age and research stay.', 'good', 8); saveGame(true); },
@@ -5020,7 +5046,7 @@ const ACT = {
   reload() { location.reload(); },
   vibe() { SET.vibe = !SET.vibe; saveSet(); feel('snap'); refresh(); },
   menu(a) { const keep = G.card && G.card.type === 'menu'; openCard({ type: 'menu', id: a }); if (keep) $('card').scrollTop = 0; },
-  buildrow() { G.buildAt = null; G.buildBy = null; if (G.card && G.card.type === 'menu') closeCard(); else openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // Build opens the Build card on the menu last used; again, it closes
+  buildrow() { G.buildBy = null; if (G.card && G.card.type === 'menu') { G.buildAt = null; closeCard(); return; } const w = toWorld(cw / 2, ch / 2 + vy), hint = suggestAt(w.x, w.y), M = hint && MENUS.find(m => m.items.includes(hint)); G.buildAt = hint ? { hint } : null; openCard({ type: 'menu', id: M ? M.id : G.lastMenu || MENUS[0].id }); },   // Build opens on what fits the middle of the view   // Build opens the Build card on the menu last used; again, it closes
   towncard() { const k = keepOf(0); if (k) openCard({ type: 'bld', id: k.id }); },
   unvil() { if (!unTrain(0, 'vil')) say('Nobody is waiting to train.', '', 3); },
   idlego() { const u = unitsOf(0, 'vil').find(v => !v.job); if (!u) return; cam.x = u.x; cam.y = u.y; clampCam(); closeCard(); },
@@ -5091,6 +5117,8 @@ const PLAY = {
   sendvil(a) { sendVil(0, Number(a)); },
   boxcut(a) { if (G.card && G.card.type === 'box') boxCut(G.card.r, Number(a)); closeCard(); },
   unpick() { setPick([]); },
+  pattack(id) { const e = G.units.find(u => u.id === Number(id)); const S = armyOf(0).filter(isSoldier); if (e && S.length) { order(S, { t: 'unit', e }); setPick([]); } },
+  look(id) { const e = G.units.find(u => u.id === Number(id)); if (e) { setPick([]); openCard({ type: 'unit', id: e.id }); } },
   pmore() { G.pickMore = !G.pickMore; ui(true); },   // + More: each tap on your people adds or drops one; Done stops
   pjob(j) { for (const u of picked()) if (u.kind === 'vil') { setJob(u, j); u.pj = null; u.post = null; u.idleT = 0; } say(`To ${j}.`, '', 2); setPick([]); },
   pbuild() { G.buildBy = picked().filter(u => u.kind === 'vil').map(u => u.id); setPick([]); openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // whatever you place next, the picked villagers raise it
@@ -5818,10 +5846,11 @@ function trapsTick() {
 }
 // Outlaw raids: every few minutes the camp nearest the side they regard least sends robbers at its drop-offs, who come back after a spell
 function natRaid() {
-  const N = natState(); if (G.t - N.raidT < NATIVE.raidEvery / (hz('horde') ? 2 : 1)) return;   // Hordes and gangs: twice as often N.raidT = G.t;
+  // no raid before minute 10 (Easy: 16), then every three minutes (Hordes and gangs: twice as often); the band grows with the age of the side it raids
+  const N = natState(); if (G.t < NATIVE.raidFrom + (G.diff === 'easy' ? EASY_SAFE : 0) || G.t - N.raidT < NATIVE.raidEvery / (hz('horde') ? 2 : 1)) return; N.raidT = G.t;
   const sides = G.P.filter(p => p.id !== WILD && p.alive && keepOf(p.id) && G.rel[p.id][WILD] === 'war').sort((a, b) => regardOf(a.id) - regardOf(b.id)); if (!sides.length) return;
   const q = sides[0], k = keepOf(q.id), camps = G.finds.filter(f => f.kind === 'camp' && !f.done && guardsLeft(f)).sort((a, b) => dist(a, k) - dist(b, k)); if (!camps.length) return;
-  const f = camps[0], R = G.units.filter(u => u.find === f.id && u.hp > 0 && UNIT[u.kind].dmg).slice(0, NATIVE.raidN); if (!R.length) return;
+  const f = camps[0], R = G.units.filter(u => u.find === f.id && u.hp > 0 && UNIT[u.kind].dmg).slice(0, NATIVE.raidN + q.age); if (!R.length) return;
   const mark = nearest(G.blds, f, b => b.owner === q.id && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && b.kind !== 'keep') || k;
   for (const u of R) { u.camp = { x: u.hx, y: u.hy }; u.hx = mark.x; u.hy = mark.y; u.horde = true; u.back = G.t + NATIVE.raidSecs; }
   if (q.id === 0) say(`Outlaws ride for your ${bldName(0, mark.kind).toLowerCase()} (${coord(mark.x, mark.y)}).`, 'warn', 7, mark);
@@ -5878,18 +5907,13 @@ for (const ev of ['pointerdown', 'pointermove', 'wheel']) document.addEventListe
 window.addEventListener('resize', fit);
 { SET.mapSeen = true; if (SET.mini === undefined) SET.mini = false; saveSet(); }   // the small map starts closed; the map cell at the top opens it   // the first look shows the map; after that it stays shut until opened
 buildPanel(); applyMini(); fit(); newGame(); scoreAll(); ui(true);
-// the play button: a tap plays or pauses; a hold opens the speeds under it (Albert, Build 40)
-{ const pb = $('pauseB'), pop = $('spdPop'); let t = 0, held = false;
-  const open = () => { held = true; const r = pb.getBoundingClientRect(), s = $('stage').getBoundingClientRect(); pop.hidden = false; pop.style.top = (r.bottom - s.top + 4) + 'px'; pop.style.left = Math.max(4, Math.min(s.width - pop.offsetWidth - 4, r.right - s.left - pop.offsetWidth)) + 'px'; feel('tick'); };
-  pb.addEventListener('pointerdown', () => { held = false; clearTimeout(t); t = setTimeout(open, 420); });
-  for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) pb.addEventListener(ev, () => clearTimeout(t));
-  pb.addEventListener('click', e => { if (held) { e.stopPropagation(); held = false; } }, true);
-  document.addEventListener('pointerdown', e => { if (!pop.hidden && !pop.contains(e.target) && e.target !== pb && !pb.contains(e.target)) pop.hidden = true; }); }
+// the speeds drop down under the play button whenever the game is paused; play or a speed closes them (Albert, Build 41)
+function spdPop(open) { const pb = $('pauseB'), pop = $('spdPop'); if (!open) { pop.hidden = true; return; } for (const b of pop.children) b.classList.toggle('cur', b.dataset.act === 'spd:' + G.speed); pop.hidden = false; const r = pb.getBoundingClientRect(), st = $('stage').getBoundingClientRect(); pop.style.top = (r.bottom - st.top + 4) + 'px'; pop.style.left = Math.max(4, Math.min(st.width - pop.offsetWidth - 4, r.left - st.left + r.width / 2 - pop.offsetWidth / 2)) + 'px'; }
 { const sv = readSave(); if (sv && sv.t > 20) { holdSave = true; setPause(true); openCard({ type: 'resume', t: sv.t, age: sv.P[0].age, civ: sv.P[0].civ }); } else { setPause(true); openCard({ type: 'setup' }); } lastSave = performance.now(); }
 requestAnimationFrame(frame);
 window.__fkq = v => { G.gq = v; const el = $('gres'); if (el) el.innerHTML = histHTML(v); };   // the History search: the list follows the typing, the field keeps its focus
 const clip = text => { try { navigator.clipboard.writeText(text).then(() => say('Copied.', 'good', 2), () => say('Could not copy here.', '', 3)); } catch (e) { say('Could not copy here.', '', 3); } };
-window.__fk = { isNext, nextStep, needsOf, teachWhy, teachCost, teachSecs, teach, teachTo, graduate, groundSpd, wearMul, say, showStrip, capFor, armyRoom, capOf, atCap, capWhy, techState, get G() { return G; }, get cam() { return cam; }, set G(v) { G = v; }, SET, NAV, BLD, UNIT, TECH, TECHBY, CIVS, FINDS, MENUS, AGES, PERS, step, act, train, trainWhy, build, research, researchWhy, ageUp, addUnit, wildAt, addFind, declareWar, keepOf, stats, fxv, sendEnvoy, canPlace, snapGhost, findSpot, think, astar, navRebuild, moveTo, wallLine, toCell, commitPlace, startPlace, zoomAt, guideModel, guideMd, coord, minZ, tapAt, openCard, renderCard, demolish, sendRepair, saveGame, readSave, loadGame, sendVil, setJob, moveVil, orderSet, clsCount, nearestNode, collide, newGame, scoreAll, hurt, sabotage, hire, zeal, zealWhy, learnTech, plunder, fall, sfx, SND, sprite, bldSprite, LOOKS, draw, fit, ui, civKind, marketTrade, findsTick, rehealth, setPause, GOODS, WEATHER, ignite, outbreak, setRoute, postAt, stopsAll, priceAt, estPay, tradeTargets, sickRisk, seasonTurn, upkeepTick, healthTick, guardedCart, dmgOf, rngOf, TICK, route, standOff, built, loyaltyParts, surrenderWhy, vassalsOf, makeVassal, rebel, mkt, hitAt, setPick, picked, order, setRel, relWhy, noticeLeft, demand, forceTribute, levy, releaseAll, breakTies, cancelOrder, qMax, debase, SFX, statusOf, lifeText, SX, SY, mkBld, qcDrop, startEvent, endEvent, EVENTS, EV, HAZARDS, throneB, takeThrone, regardOf, chargeWhy, charge, fallBack, fogTick, fogAt, visibleTo0, prisonersOf, natRegard, giveGift, natState, layTraps, throneHold, payRansom, onLand, lakeGap, hz, levelOf, levelMul, EVM, moonLight, eventsTick, hordeTick, starveTick, todaySeed, get holdSave() { return holdSave; }, get caches() { return { SPR, BSPR, NSPR }; } };
+window.__fk = { suggestAt, whoIs, isNext, nextStep, needsOf, teachWhy, teachCost, teachSecs, teach, teachTo, graduate, groundSpd, wearMul, say, showStrip, capFor, armyRoom, capOf, atCap, capWhy, techState, get G() { return G; }, get cam() { return cam; }, set G(v) { G = v; }, SET, NAV, BLD, UNIT, TECH, TECHBY, CIVS, FINDS, MENUS, AGES, PERS, step, act, train, trainWhy, build, research, researchWhy, ageUp, addUnit, wildAt, addFind, declareWar, keepOf, stats, fxv, sendEnvoy, canPlace, snapGhost, findSpot, think, astar, navRebuild, moveTo, wallLine, toCell, commitPlace, startPlace, zoomAt, guideModel, guideMd, coord, minZ, tapAt, openCard, renderCard, demolish, sendRepair, saveGame, readSave, loadGame, sendVil, setJob, moveVil, orderSet, clsCount, nearestNode, collide, newGame, scoreAll, hurt, sabotage, hire, zeal, zealWhy, learnTech, plunder, fall, sfx, SND, sprite, bldSprite, LOOKS, draw, fit, ui, civKind, marketTrade, findsTick, rehealth, setPause, GOODS, WEATHER, ignite, outbreak, setRoute, postAt, stopsAll, priceAt, estPay, tradeTargets, sickRisk, seasonTurn, upkeepTick, healthTick, guardedCart, dmgOf, rngOf, TICK, route, standOff, built, loyaltyParts, surrenderWhy, vassalsOf, makeVassal, rebel, mkt, hitAt, setPick, picked, order, setRel, relWhy, noticeLeft, demand, forceTribute, levy, releaseAll, breakTies, cancelOrder, qMax, debase, SFX, statusOf, lifeText, SX, SY, mkBld, qcDrop, startEvent, endEvent, EVENTS, EV, HAZARDS, throneB, takeThrone, regardOf, chargeWhy, charge, fallBack, fogTick, fogAt, visibleTo0, prisonersOf, natRegard, giveGift, natState, layTraps, throneHold, payRansom, onLand, lakeGap, hz, levelOf, levelMul, EVM, moonLight, eventsTick, hordeTick, starveTick, todaySeed, get holdSave() { return holdSave; }, get caches() { return { SPR, BSPR, NSPR }; } };
 
 })();
 </script>
