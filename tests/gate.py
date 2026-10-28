@@ -80,7 +80,7 @@ def verbs():
     import re, glob
     s = open('src/16-verbs.js').read()
     def keys(name):
-        i = s.index(f'const {name} = {{'); j = s.index('\n};', i); return set(re.findall(r'(?:^|[{;,]\s*|\n\s{2})([a-z][a-zA-Z0-9]*)\(\w*\)\s*\{', s[i:j]))
+        i = s.index(f'const {name} = {{'); j = s.index('\n};', i); return set(re.findall(r'(?:^|[{;,]\s*|\n(?:\t| {2}))([a-z][a-zA-Z0-9]*)\(\w*\)\s*\{', s[i:j]))
     have = keys('ACT') | keys('PLAY')
     src = ''.join(open(f).read() for f in ['src/shell-head.html'] + sorted(glob.glob('src/*.js')))
     used = set(re.findall(r'data-act="([a-z]+)', src)) | set(re.findall(r"btn\([`']([a-z]+)", src))
