@@ -163,7 +163,7 @@ const EVENTS = {
 	eclipse: { name: 'Eclipse', secs: 20, dmg: 0.6, spd: 0.7, sight: 0.7, harm: 1 },
 	storm: { name: 'Thunderstorm', secs: 40, band: 260 },
 	stampede: { name: 'Stampede', secs: 30, n: 10, harm: 1 },
-	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.02, harm: 1 },
+	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.004, harm: 1 },
 	locusts: { name: 'Locusts', secs: 30, r: 70, strip: 90, harm: 1 },
 	meteor: { name: 'Falling star', secs: 3 },
 	wildfire: { name: 'Wildfire', secs: 60, spread: 0.2, r: 32, burn: 0.12, most: 20, need: 'drought', harm: 1 }, // most: trees alight at once
@@ -173,12 +173,12 @@ const EVENTS = {
 	quicksand: { name: 'Quicksand', secs: 120, r: 60, slow: 0.3 },
 	heatwave: { name: 'Heat', secs: 60, dmg: 0.85, spd: 0.9, need: 'drought', season: 'Summer' },
 	mirage: { name: 'Mirage', secs: 30, n: 12, season: 'Summer' },
-	circus: { name: 'Travelling show', secs: 60, n: 5, r: 150, cheer: 120, mul: 1.1, gift: 1 },
+	circus: { name: 'Circus', secs: 60, n: 5, r: 150, cheer: 120, mul: 1.1, gift: 1 },
 	wagon: { name: 'Wagon train', secs: 90, gift: 1 },
 	mercs: { name: 'Mercenaries', secs: 180, gift: 1 },
 	dragon: { name: 'Dragon', secs: 25, fantasy: true, harm: 1 },
 	troll: { name: 'Troll', secs: 90, fantasy: true },
-	aurora: { name: 'Northern lights', secs: 45, fantasy: true, night: true },
+	aurora: { name: 'Aurora', secs: 45, fantasy: true, night: true },
 };
 const EVK = Object.keys(EVENTS),
 	NEWS_EVERY = 150;

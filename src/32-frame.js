@@ -512,6 +512,40 @@ function ui(force) {
 // The ticker: the newest live message, or the last one faded; paused says so when nothing newer is live. Tap the line to see where it happened
 // (or, with nowhere to show, open the list); the list holds the last five, each with its bell to silence that kind; the arrow hides it all.
 const linkOf = (m) => m && (m.act || (m.at ? `jump:${m.at.x},${m.at.y}` : ''));
+// The alert bar, in SoRen's pattern: a sign, the name in bold, one line in italics, a ring and the seconds. It takes the ticker line while an event is coming
+// (EV_WARN seconds, with how long it lasts) or running (what it does); a warning from the game still wins. Tap it to see where. The horde joins for its last 45 s.
+function alertNow() {
+	const V = G.ev;
+	if (!V || G.over) return null;
+	const e = V.cur,
+		k = e ? e.kind : V.warned,
+		E = k && EVENTS[k];
+	if (E) {
+		const quake = k === 'tremor' && hz('winter'),
+			A = { name: quake ? 'Earthquake' : E.name, line: quake ? EV_LINE.quake : EV_LINE[k], now: !!e, secs: E.secs };
+		if (e)
+			return {
+				...A,
+				left: e.until - G.t,
+				total: E.secs,
+				at:
+					e.at || (e.units && e.units[0]) || (e.x !== undefined ? { x: e.x, y: e.y === undefined ? MID : e.y } : null),
+			};
+		return { ...A, left: V.next - G.t, total: EV_WARN, at: null };
+	}
+	const H = G.horde;
+	if (H && H !== 'done' && H.said && H.at - G.t <= 45)
+		return { name: 'Horde', line: EV_LINE.horde, now: false, secs: 0, left: H.at - G.t, total: 45, at: null };
+	return null;
+}
+const RING = 50.27; // the circumference of the countdown ring (radius 8)
+function alertHTML(A) {
+	const left = Math.max(0, A.left),
+		t = left < 60 ? `${Math.ceil(left)}s` : clock(left),
+		f = clamp(left / A.total, 0, 1),
+		line = A.now ? A.line : A.secs > 5 ? `coming, lasts ${A.secs}s` : 'is coming';
+	return `<span class="al"><svg class="tri" viewBox="0 0 16 16"><path d="M8 1.5 L15 14 H1 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 6 V9.6 M8 11.6 V12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><b>${A.name}</b><i>${line}</i><span class="cd"><svg class="ring" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><circle class="v" cx="10" cy="10" r="8" style="stroke-dashoffset:${(RING * (1 - f)).toFixed(1)}"/></svg>${t}</span></span>`;
+}
 function tick() {
 	const hide = !!SET.tkMin || !!G.card,
 		live = G.log.find((m) => m.until > G.t),
@@ -545,14 +579,26 @@ function tick() {
 		G.tkW = false;
 		tick.bell = tick.list = '';
 	} // the list opened: what was counted has been seen
-	const m =
+	const A = !paused && !(live && live.cls === 'warn') ? alertNow() : null, // a live warning, or paused, comes before the alert bar
+		m =
 			paused && !(live && live.cls === 'warn')
 				? { text: 'Paused · ▶ to carry on', cls: '' }
 				: live || G.log.find((x) => !x.quiet),
 		el = $('tkT'); // paused says so, unless a warning is up; a quiet line never takes the line
-	txt('tkT', m ? m.text : '');
-	el.dataset.act = linkOf(live) || 'tklist';
-	$('ticker').className = 'tick ' + (m && m === live ? live.cls || '' : m && !G.log.includes(m) ? '' : 'old');
+	if (A) {
+		const h = alertHTML(A);
+		if (tick.h !== h) {
+			tick.h = h;
+			el.innerHTML = h;
+		}
+		el.dataset.act = A.at ? `jump:${Math.round(A.at.x)},${Math.round(A.at.y)}` : 'tklist';
+		$('ticker').className = 'tick alert ' + (A.now ? 'now' : 'soon');
+	} else {
+		tick.h = '';
+		txt('tkT', m ? m.text : '');
+		el.dataset.act = linkOf(live) || 'tklist';
+		$('ticker').className = 'tick ' + (m && m === live ? live.cls || '' : m && !G.log.includes(m) ? '' : 'old');
+	}
 	const pop =
 		G.tkOpen && G.log.length
 			? G.log

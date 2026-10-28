@@ -326,6 +326,8 @@ window.__fk = {
 	EVM,
 	moonLight,
 	eventsTick,
+	alertNow,
+	alertHTML,
 	hordeTick,
 	starveTick,
 	todaySeed,

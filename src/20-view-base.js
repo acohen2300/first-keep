@@ -49,6 +49,16 @@ function scarStrike(x, y) {
 		scarX.fill();
 	}
 } // where lightning struck
+function scarCrack(c) {
+	if (!scarX) return;
+	scarX.strokeStyle = 'rgba(22,15,10,.5)';
+	scarX.lineWidth = 1.3;
+	for (const arm of c.arms) {
+		scarX.beginPath();
+		arm.forEach(([x, y], i) => (i ? scarX.lineTo(c.x + x, c.y + y * 0.7) : scarX.moveTo(c.x, c.y)));
+		scarX.stroke();
+	}
+} // where the ground split
 function scarBurn(b) {
 	const h = halfOf(b);
 	scarX.fillStyle = 'rgba(25,20,18,.38)';

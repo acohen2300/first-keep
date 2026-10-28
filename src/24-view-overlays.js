@@ -31,118 +31,55 @@ function drawGround() {
 		ctx.fillRect(0, 0, w, h);
 	}
 }
+// the cracks of a tremor: dark jagged arms with a pale edge, and a puff of dust that rises and thins over four seconds; gone after forty-five
+function drawCracks(z) {
+	if (!G.cracks || !G.cracks.length) return;
+	G.cracks = G.cracks.filter((c) => G.t - c.t0 < 45);
+	for (const c of G.cracks) {
+		const age = G.t - c.t0,
+			fade = age < 30 ? 1 : (45 - age) / 15,
+			x = SX(c.x),
+			y = SY(c.y);
+		if (x < -200 || x > cw + 200 || y < -200 || y > ch + 200) continue;
+		ctx.lineJoin = 'round';
+		for (const [col, w] of [
+			[`rgba(236,222,190,${0.35 * fade})`, 4.2],
+			[`rgba(18,12,8,${0.9 * fade})`, 2.4],
+		]) {
+			ctx.strokeStyle = col;
+			ctx.lineWidth = w * Math.max(0.6, z);
+			ctx.beginPath();
+			for (const arm of c.arms)
+				arm.forEach(([ax, ay], i) => {
+					const k = Math.min(1, age / 0.6); // the crack opens in the first half second
+					i ? ctx.lineTo(x + ax * z * k, y + ay * z * TILT * k) : ctx.moveTo(x, y);
+				});
+			ctx.stroke();
+		}
+		if (age < 4 && !lessMotion)
+			for (let i = 0; i < 9; i++) {
+				const a = i * 2.4,
+					d = (6 + age * 14 + (i % 3) * 5) * z;
+				ctx.fillStyle = `rgba(150,128,98,${0.5 * (1 - age / 4)})`;
+				ctx.beginPath();
+				ctx.ellipse(
+					x + Math.cos(a) * d,
+					y + Math.sin(a) * d * TILT - age * 9 * z,
+					(5 + age * 4) * z,
+					(3.5 + age * 2.5) * z,
+					0,
+					0,
+					7,
+				);
+				ctx.fill();
+			}
+	}
+}
 function drawEvents(z) {
 	const e = G.ev && G.ev.cur,
 		t = performance.now() / 1000;
-	if (e && e.kind === 'storm' && !lessMotion) {
-		// a dark band of cloud walking east, rain under it
-		const x = SX(e.x),
-			w = EVENTS.storm.band * z;
-		const gr = ctx.createLinearGradient(x - w, 0, x + w, 0);
-		gr.addColorStop(0, 'rgba(20,24,34,0)');
-		gr.addColorStop(0.5, 'rgba(14,18,28,.62)');
-		gr.addColorStop(1, 'rgba(20,24,34,0)');
-		ctx.fillStyle = gr;
-		ctx.fillRect(x - w, 0, 2 * w, ch);
-		ctx.fillStyle = 'rgba(40,46,60,.85)';
-		for (let i = 0; i < 9; i++) {
-			ctx.beginPath();
-			ctx.ellipse(
-				x + (i - 4) * w * 0.22 + Math.sin(t * 0.7 + i) * 8,
-				30 + (i % 3) * 14,
-				70 + (i % 2) * 30,
-				26,
-				0,
-				0,
-				7,
-			);
-			ctx.fill();
-		} // the cloud itself along the top of the glass
-	}
-	if (e && e.kind === 'locusts') {
-		const x = SX(e.x),
-			y = SY(e.y);
-		ctx.fillStyle = 'rgba(20,16,8,.28)';
-		ctx.beginPath();
-		ctx.ellipse(x, y, 70 * z, 40 * z, 0, 0, 7);
-		ctx.fill();
-		ctx.fillStyle = 'rgba(230,200,120,.9)';
-		for (let i = 0; i < 70; i++) {
-			const a = i * 2.4 + t * (1 + (i % 5) * 0.3),
-				r = (20 + ((i * 37) % 60)) * z;
-			ctx.fillRect(
-				x + Math.cos(a) * r + Math.sin(t * 7 + i) * 3 * z,
-				y + Math.sin(a) * r * TILT - 20 * z + Math.cos(t * 9 + i) * 3 * z,
-				2.2 * z,
-				1.4 * z,
-			);
-		}
-	} // a dark cloud of specks
-	if (e && e.kind === 'meteor') {
-		const f = clamp((G.t - e.t0) / (e.until - e.t0), 0, 1),
-			x1 = SX(e.at.x),
-			y1 = SY(e.at.y),
-			x0 = x1 - 420,
-			y0 = y1 - 560,
-			x = x0 + (x1 - x0) * f,
-			y = y0 + (y1 - y0) * f;
-		ctx.strokeStyle = 'rgba(255,240,200,.9)';
-		ctx.lineWidth = 3;
-		ctx.beginPath();
-		ctx.moveTo(x - (x1 - x0) * 0.12, y - (y1 - y0) * 0.12);
-		ctx.lineTo(x, y);
-		ctx.stroke();
-		ctx.fillStyle = '#fff6dc';
-		ctx.beginPath();
-		ctx.arc(x, y, 4, 0, 7);
-		ctx.fill();
-	}
-	if (e && e.kind === 'eclipse') {
-		const f = Math.sin(Math.PI * clamp((G.t - e.t0) / (e.until - e.t0), 0, 1)),
-			x = cw * 0.5,
-			y = ch * 0.28;
-		ctx.globalAlpha = f;
-		const gl = ctx.createRadialGradient(x, y, 26, x, y, 60);
-		gl.addColorStop(0, 'rgba(255,250,230,.9)');
-		gl.addColorStop(1, 'rgba(255,250,230,0)');
-		ctx.fillStyle = gl;
-		ctx.beginPath();
-		ctx.arc(x, y, 60, 0, 7);
-		ctx.fill();
-		ctx.fillStyle = '#0b0f0d';
-		ctx.beginPath();
-		ctx.arc(x, y, 27, 0, 7);
-		ctx.fill();
-		ctx.globalAlpha = 1;
-	} // the corona at the top of the glass
-	if (e && e.kind === 'fog') {
-		const f = Math.min(1, (G.t - e.t0) / 4, (e.until - G.t) / 4);
-		ctx.fillStyle = `rgba(214,220,222,${0.55 * f})`;
-		ctx.fillRect(0, 0, cw, ch);
-		if (!lessMotion) {
-			ctx.fillStyle = `rgba(230,234,236,${0.25 * f})`;
-			for (let i = 0; i < 8; i++) {
-				ctx.beginPath();
-				ctx.ellipse(((i * 173 + t * 12) % (cw + 300)) - 150, (i * 97) % ch, 160, 50, 0, 0, 7);
-				ctx.fill();
-			}
-		}
-	}
-	if (e && e.kind === 'aurora') {
-		const f = Math.sin(Math.PI * clamp((G.t - e.t0) / (e.until - e.t0), 0, 1));
-		for (let i = 0; i < 3; i++) {
-			const gr = ctx.createLinearGradient(0, 0, 0, ch * 0.5);
-			gr.addColorStop(0, `rgba(${i ? 120 : 60},${220 - i * 40},${140 + i * 40},${0.5 * f})`);
-			gr.addColorStop(1, 'rgba(60,200,140,0)');
-			ctx.fillStyle = gr;
-			ctx.beginPath();
-			ctx.moveTo(0, 0);
-			for (let x = 0; x <= cw; x += 20) ctx.lineTo(x, ch * 0.18 + Math.sin(x / 60 + t * 0.6 + i) * 30 + i * 25);
-			ctx.lineTo(cw, 0);
-			ctx.closePath();
-			ctx.fill();
-		}
-	}
+	drawCracks(z);
+	if (e && EV[e.kind].draw) EV[e.kind].draw(e, z, t); // each event draws itself: its block in 37-events
 	if (G.wx === 'blizzard' && !lessMotion) {
 		ctx.fillStyle = 'rgba(245,248,252,.9)';
 		for (let i = 0; i < 160; i++) {

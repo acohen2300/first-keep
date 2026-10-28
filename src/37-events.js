@@ -70,6 +70,24 @@ const herdAt = (kind, n, a, b, spread) => {
 }; // tier: which coat a performer wears
 const EV = {
 	eclipse: {
+		draw(e, z, t) {
+			const f = Math.sin(Math.PI * clamp((G.t - e.t0) / (e.until - e.t0), 0, 1)),
+				x = cw * 0.5,
+				y = ch * 0.28;
+			ctx.globalAlpha = f;
+			const gl = ctx.createRadialGradient(x, y, 26, x, y, 60);
+			gl.addColorStop(0, 'rgba(255,250,230,.9)');
+			gl.addColorStop(1, 'rgba(255,250,230,0)');
+			ctx.fillStyle = gl;
+			ctx.beginPath();
+			ctx.arc(x, y, 60, 0, 7);
+			ctx.fill();
+			ctx.fillStyle = '#0b0f0d';
+			ctx.beginPath();
+			ctx.arc(x, y, 27, 0, 7);
+			ctx.fill();
+			ctx.globalAlpha = 1;
+		}, // the corona at the top of the glass
 		start(e) {
 			EVM.dmg = EVENTS.eclipse.dmg;
 			EVM.spd = EVENTS.eclipse.spd;
@@ -81,6 +99,32 @@ const EV = {
 		},
 	},
 	storm: {
+		draw(e, z, t) {
+			if (lessMotion) return;
+			// a dark band of cloud walking east, rain under it
+			const x = SX(e.x),
+				w = EVENTS.storm.band * z;
+			const gr = ctx.createLinearGradient(x - w, 0, x + w, 0);
+			gr.addColorStop(0, 'rgba(20,24,34,0)');
+			gr.addColorStop(0.5, 'rgba(14,18,28,.62)');
+			gr.addColorStop(1, 'rgba(20,24,34,0)');
+			ctx.fillStyle = gr;
+			ctx.fillRect(x - w, 0, 2 * w, ch);
+			ctx.fillStyle = 'rgba(40,46,60,.85)';
+			for (let i = 0; i < 9; i++) {
+				ctx.beginPath();
+				ctx.ellipse(
+					x + (i - 4) * w * 0.22 + Math.sin(t * 0.7 + i) * 8,
+					30 + (i % 3) * 14,
+					70 + (i % 2) * 30,
+					26,
+					0,
+					0,
+					7,
+				);
+				ctx.fill();
+			} // the cloud itself along the top of the glass
+		},
 		start(e) {
 			e.a = { x: -EVENTS.storm.band, y: MID };
 			e.b = { x: MAP + EVENTS.storm.band, y: MID };
@@ -89,7 +133,7 @@ const EV = {
 		tick(e) {
 			const c = crossing(e);
 			e.x = c.x;
-			if (G.tick % 60 === 0) {
+			if (e.s % 2 === 0) {
 				const x = clamp(e.x + rnd(-EVENTS.storm.band, EVENTS.storm.band), 40, MAP - 40),
 					y = rnd(80, MAP - 80),
 					W = G.blds.filter(
@@ -108,7 +152,7 @@ const EV = {
 			sfx('hooves');
 		},
 		tick(e) {
-			if (G.tick % 90 === 0) sfx('hooves', e.units[0] && e.units[0].x, e.units[0] && e.units[0].y);
+			if (e.s % 3 === 0) sfx('hooves', e.units[0] && e.units[0].x, e.units[0] && e.units[0].y);
 		},
 		end(e) {
 			for (const u of e.units)
@@ -124,7 +168,6 @@ const EV = {
 			G.navDirty = true;
 		},
 		tick(e) {
-			if (G.tick % 30 !== 0) return;
 			for (const b of G.blds)
 				if (
 					b.prog >= 1 &&
@@ -133,7 +176,7 @@ const EV = {
 					lakeGap(b.x, b.y) < EVENTS.flood.rise - halfOf(b)
 				) {
 					b.hp -= maxHpB(b.owner, b.kind) * EVENTS.flood.hit;
-					if (b.owner === 0 && G.tick % 300 === 0)
+					if (b.owner === 0 && e.s % 10 === 1)
 						say(`Water at the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 5, b);
 				}
 		},
@@ -143,6 +186,25 @@ const EV = {
 		},
 	},
 	locusts: {
+		draw(e, z, t) {
+			const x = SX(e.x),
+				y = SY(e.y);
+			ctx.fillStyle = 'rgba(20,16,8,.28)';
+			ctx.beginPath();
+			ctx.ellipse(x, y, 70 * z, 40 * z, 0, 0, 7);
+			ctx.fill();
+			ctx.fillStyle = 'rgba(230,200,120,.9)';
+			for (let i = 0; i < 70; i++) {
+				const a = i * 2.4 + t * (1 + (i % 5) * 0.3),
+					r = (20 + ((i * 37) % 60)) * z;
+				ctx.fillRect(
+					x + Math.cos(a) * r + Math.sin(t * 7 + i) * 3 * z,
+					y + Math.sin(a) * r * TILT - 20 * z + Math.cos(t * 9 + i) * 3 * z,
+					2.2 * z,
+					1.4 * z,
+				);
+			}
+		}, // a dark cloud of specks
 		start(e) {
 			e.a = edgeSpot();
 			e.b = across(e.a);
@@ -152,16 +214,34 @@ const EV = {
 			const c = crossing(e);
 			e.x = c.x;
 			e.y = c.y;
-			if (G.tick % 15 === 0)
-				for (const b of G.blds)
-					if (b.kind === 'farm' && b.prog >= 1 && dist(b, c) < EVENTS.locusts.r && !(b.locust > G.t)) {
-						b.locust = G.t + EVENTS.locusts.strip;
-						b.fert = FERT.floor;
-						if (b.owner === 0) say(`Locusts on the field at ${coord(b.x, b.y)}.`, 'warn', 4, b);
-					}
+			for (const b of G.blds)
+				if (b.kind === 'farm' && b.prog >= 1 && dist(b, c) < EVENTS.locusts.r && !(b.locust > G.t)) {
+					b.locust = G.t + EVENTS.locusts.strip;
+					b.fert = FERT.floor;
+					if (b.owner === 0) say(`Locusts on the field at ${coord(b.x, b.y)}.`, 'warn', 4, b);
+				}
 		},
 	},
 	meteor: {
+		draw(e, z, t) {
+			const f = clamp((G.t - e.t0) / (e.until - e.t0), 0, 1),
+				x1 = SX(e.at.x),
+				y1 = SY(e.at.y),
+				x0 = x1 - 420,
+				y0 = y1 - 560,
+				x = x0 + (x1 - x0) * f,
+				y = y0 + (y1 - y0) * f;
+			ctx.strokeStyle = 'rgba(255,240,200,.9)';
+			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.moveTo(x - (x1 - x0) * 0.12, y - (y1 - y0) * 0.12);
+			ctx.lineTo(x, y);
+			ctx.stroke();
+			ctx.fillStyle = '#fff6dc';
+			ctx.beginPath();
+			ctx.arc(x, y, 4, 0, 7);
+			ctx.fill();
+		},
 		start(e) {
 			e.at = wildSpot();
 			e.a = { x: e.at.x - 900, y: e.at.y - 700 };
@@ -219,6 +299,19 @@ const EV = {
 		},
 	},
 	fog: {
+		draw(e, z, t) {
+			const f = Math.min(1, (G.t - e.t0) / 4, (e.until - G.t) / 4);
+			ctx.fillStyle = `rgba(214,220,222,${0.55 * f})`;
+			ctx.fillRect(0, 0, cw, ch);
+			if (!lessMotion) {
+				ctx.fillStyle = `rgba(230,234,236,${0.25 * f})`;
+				for (let i = 0; i < 8; i++) {
+					ctx.beginPath();
+					ctx.ellipse(((i * 173 + t * 12) % (cw + 300)) - 150, (i * 97) % ch, 160, 50, 0, 0, 7);
+					ctx.fill();
+				}
+			}
+		},
 		start() {
 			EVM.sight = EVENTS.fog.sight;
 		},
@@ -240,6 +333,7 @@ const EV = {
 			scarStrike(b.x, b.y - 4);
 			scarStrike(b.x + 5, b.y + 3);
 			G.shake = G.t + 1;
+			crackAt(b.x, b.y, 36);
 			sfx('rumble', b.x, b.y);
 			if (b.owner === 0)
 				say(`A sinkhole under the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 6, b);
@@ -283,7 +377,6 @@ const EV = {
 			sfx('jingle');
 		},
 		tick(e) {
-			if (G.tick % 30 !== 0) return;
 			for (const p of e.units)
 				if (p.hp > 0)
 					unitsNear(p, EVENTS.circus.r, (v) => {
@@ -333,7 +426,7 @@ const EV = {
 		},
 		tick(e) {
 			const d = e.units[0];
-			if (!d || d.hp <= 0 || G.tick % 10) return;
+			if (!d || d.hp <= 0) return;
 			nodesNear(d.x, d.y, UNIT.dragon.scorch, (n) => {
 				if (n.kind === 'tree' && n.amt > 0 && rng() < 0.5) {
 					n.amt = 0;
@@ -374,8 +467,49 @@ const EV = {
 				}
 		},
 	},
-	aurora: {},
+	aurora: {
+		draw(e, z, t) {
+			const f = Math.sin(Math.PI * clamp((G.t - e.t0) / (e.until - e.t0), 0, 1));
+			for (let i = 0; i < 3; i++) {
+				const gr = ctx.createLinearGradient(0, 0, 0, ch * 0.5);
+				gr.addColorStop(0, `rgba(${i ? 120 : 60},${220 - i * 40},${140 + i * 40},${0.5 * f})`);
+				gr.addColorStop(1, 'rgba(60,200,140,0)');
+				ctx.fillStyle = gr;
+				ctx.beginPath();
+				ctx.moveTo(0, 0);
+				for (let x = 0; x <= cw; x += 20) ctx.lineTo(x, ch * 0.18 + Math.sin(x / 60 + t * 0.6 + i) * 30 + i * 25);
+				ctx.lineTo(cw, 0);
+				ctx.closePath();
+				ctx.fill();
+			}
+		},
+	},
 };
+// The ground splits: a star of jagged cracks and a puff of dust at (x, y), r wide. Cosmetic: the damage is done by quake() and sinkhole.
+// The arms are worked out once from a seed; the view draws them for 45 s and the ground keeps a faint scar of them.
+function crackAt(x, y, r) {
+	let s = Math.floor(Math.random() * 4e9) || 1;
+	const rn = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296,
+		n = 5 + Math.floor(rn() * 3),
+		arms = [];
+	for (let i = 0; i < n; i++) {
+		let a = (i / n) * 6.2832 + rn() * 0.6,
+			px = 0,
+			py = 0;
+		const len = r * (0.45 + rn() * 0.55),
+			arm = [[0, 0]];
+		for (let j = 1; j <= 6; j++) {
+			a += (rn() - 0.5) * 0.9;
+			px += (Math.cos(a) * len) / 6;
+			py += (Math.sin(a) * len) / 6;
+			arm.push([px, py]);
+		}
+		arms.push(arm);
+	}
+	const c = { x, y, r, t0: G.t, arms };
+	(G.cracks = G.cracks || []).push(c);
+	scarCrack(c);
+}
 // a tremor, or an earthquake when the hazard is on: everything within r loses a share of its health, walls more, and wood may catch
 function quake(e, E, Q) {
 	const r = Q ? Q.r : E.r,
@@ -384,6 +518,7 @@ function quake(e, E, Q) {
 		fire = Q ? Q.fire : E.fire;
 	e.at = { x: rnd(200, MAP - 200), y: rnd(200, MAP - 200) };
 	G.shake = G.t + 1.5;
+	crackAt(e.at.x, e.at.y, Math.min(r * 0.45, 130));
 	sfx('rumble', e.at.x, e.at.y);
 	let mine = 0;
 	bldsNear(e.at.x, e.at.y, r, (b) => {
@@ -417,6 +552,7 @@ function eventsTick() {
 	const V = G.ev;
 	if (!V.next) V.next = G.t + rnd(EV_GAP[0], EV_GAP[1]);
 	if (V.cur) {
+		V.cur.s = (V.cur.s || 0) + 1; // seconds the event has run: a tick comes once a second
 		if (EV[V.cur.kind].tick) EV[V.cur.kind].tick(V.cur);
 		if (G.t >= V.cur.until) endEvent();
 	} else if (!V.warned && G.t >= V.next - EV_WARN) {

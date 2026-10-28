@@ -126,7 +126,8 @@ function showStrip(sx, sy, x, y, step) {
 			btn(`sendto:h,${at}`, '½', String(n('h')), 'ic') +
 			btn(`sendto:all,${at}`, 'All', String(nAll), 'ic go thumb') +
 			ic('stripmore', '⋯', 'More ways to send') +
-			ic('nostrip', ICON.close, 'Cancel'); // three taps in one spot: open, sword, All (Albert: a fast dispatch)
+			ic('nostrip', ICON.close, 'Cancel');
+	// three taps in one spot: open, sword, All (Albert: a fast dispatch)
 	else {
 		const bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
 		el.innerHTML =

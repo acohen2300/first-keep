@@ -76,6 +76,29 @@ async def fingerprint(br):
     if not os.path.exists(BASELINE): return ['no baseline: run  python3 tests/gate.py --accept "first baseline"'], got
     want = json.load(open(BASELINE))['minutes']
     return [f'minute {i + 1}: {w}  now  {g}' for i, (w, g) in enumerate(zip(want, got)) if w != g] + (['length differs'] if len(want) != len(got) else []), got
+# Every event does what its name says (Build 42: the clocks of the storm, flood, locusts, circus and dragon had tested a tick that never came, so they did nothing).
+EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame(3); F.act('close'); const G = F.G; G.fantasy = true; F.setPause(true);
+  const bad = [], run = (s) => { for (let i = 0; i < s * 30; i++) F.step(1 / 30); };
+  const clear = () => { F.endEvent(); G.bolts = []; G.ev.warned = null; };
+  // the storm: a bolt every two seconds
+  F.startEvent('storm'); run(42); if ((G.bolts || []).length < 15) bad.push('storm: ' + (G.bolts || []).length + ' bolts in 40 s'); clear();
+  // the flood: a house at the shore loses health
+  { const L = G.lakes.filter((l) => Math.hypot(l.x - 1000, l.y - 1000) > 400).sort((a, b) => a.r - b.r)[0], dx = L.x > 1000 ? 1 : -1;
+    const b = F.mkBld(0, 'house', L.x + dx * (L.r + 30), L.y, 1); G.blds.push(b); F.navRebuild(); run(1); const hp = b.hp; F.startEvent('flood'); run(30); if (!(b.hp < hp)) bad.push('flood: the shore house lost nothing'); clear(); run(2); }
+  // locusts: a farm under the swarm is stripped
+  { F.startEvent('locusts'); run(4); const e = G.ev.cur, b = F.mkBld(0, 'farm', e.x, e.y, 1); G.blds.push(b); run(3); if (!(b.locust > G.t)) bad.push('locusts: the field under the swarm kept its crop'); clear(); }
+  // the dragon: a soldier under it is burned
+  { F.startEvent('dragon'); run(2); const d = G.ev.cur.units[0], u = F.addUnit(0, 'spear', d.x, d.y); const hp = u.hp; run(2); if (!(u.hp < hp) && u.hp > 0) bad.push('dragon: nobody burned'); clear(); }
+  // the travelling show: a villager beside the performers cheers
+  { F.startEvent('circus'); run(3); const p = G.ev.cur.units[0], v = F.addUnit(0, 'vil', p.x + 10, p.y); run(3); if (!(v.cheer > G.t)) bad.push('circus: nobody cheered'); clear(); }
+  // the tremor: the ground splits and shakes
+  { G.cracks = []; F.startEvent('tremor'); if (!G.cracks || !G.cracks.length) bad.push('tremor: no crack'); if (!(G.shake > G.t)) bad.push('tremor: no shake'); clear(); }
+  // the alert bar: named while an event is coming and while it runs
+  { G.ev.cur = null; G.ev.warned = 'eclipse'; G.ev.next = G.t + 9; let a = F.alertNow(); if (!a || a.name !== 'Eclipse' || a.now) bad.push('alert: not shown before the eclipse');
+    G.ev.warned = null; F.startEvent('eclipse'); a = F.alertNow(); if (!a || !a.now || !(a.left > 0)) bad.push('alert: not shown during the eclipse'); clear(); }
+  // the horde: named for its last 45 seconds
+  { G.horde = { at: G.t + 30, said: 1 }; const a = F.alertNow(); if (!a || a.name !== 'Horde') bad.push('alert: the horde is not named'); G.horde = null; }
+  return bad; }"""
 def verbs():
     import re, glob
     s = open('src/33-verbs.js').read()
@@ -114,6 +137,9 @@ async def main():
         pg = await br.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
         await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
         play = await pg.evaluate(PLAY) + errs[:2]; print(('PASS ' if not play else 'FAIL ') + 'taps do what they say', '' if not play else play); fails += bool(play); await pg.close()
+        pg = await br.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
+        await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
+        evs = await pg.evaluate(EVENTS_TEST) + errs[:2]; print(('PASS ' if not evs else 'FAIL ') + 'events do what they say', '' if not evs else evs); fails += bool(evs); await pg.close()
         # a phone lays the page out at its own width (without the viewport line an iPhone uses 980: the tall, narrow column of Build 37)
         for page_file in ('first-keep.html', 'native/index.html'):
             ctx = await br.new_context(viewport={'width': 390, 'height': 844}, is_mobile=True, has_touch=True, device_scale_factor=3); pg = await ctx.new_page()
@@ -125,6 +151,12 @@ async def main():
         wraps = await pg.evaluate("""(L) => { const F = window.__fk; F.newGame(5); F.act('close'); F.setPause(true); const e = document.getElementById('tkT'), out = [];
           for (const t of L) { e.textContent = t; if (e.scrollWidth > e.clientWidth + 1) out.push(t); } return out; }""", L); await pg.close()
         print(('PASS ' if not wraps else 'FAIL ') + f'{len(L)} messages fit the ticker at 375 px', '' if not wraps else wraps[:6]); fails += bool(wraps)
+        # the alert bar (an event coming, an event running) whole on the ticker's line at 375 px, for every event
+        pg = await br.new_page(viewport={'width': 375, 'height': 667}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(500)
+        cut = await pg.evaluate("""() => { const F = window.__fk; F.newGame(5); F.act('close'); F.setPause(true); const G = F.G, e = document.getElementById('tkT'), out = [];
+          const test = (k, ph) => { const a = F.alertNow(); if (!a) { out.push(k + ' ' + ph + ': no alert'); return; } e.innerHTML = F.alertHTML(a); const i = e.querySelector('i'); if (i.scrollWidth > i.clientWidth + 1 || e.scrollWidth > e.clientWidth + 1) out.push(k + ' ' + ph + ': ' + e.textContent); };
+          for (const k of Object.keys(F.EVENTS)) { G.ev.cur = null; G.ev.warned = k; G.ev.next = G.t + 12; test(k, 'coming'); G.ev.warned = null; F.startEvent(k); test(k, 'running'); F.endEvent(); } return out; }"""); await pg.close()
+        print(('PASS ' if not cut else 'FAIL ') + 'the alert bar fits the ticker at 375 px, for every event', '' if not cut else cut[:6]); fails += bool(cut)
         fp, _ = await fingerprint(br); print(('PASS ' if not fp else 'FAIL ') + 'the game plays as the baseline says', '' if not fp else '\n  ' + '\n  '.join(fp[:4]) + '\n  (a deliberate rule change: python3 tests/gate.py --accept "why")'); fails += bool(fp)
         await br.close()
     if '--soak' in sys.argv: fails += subprocess.run([sys.executable, 'tests/soak.py']).returncode != 0   # opt-in, about 3 minutes: long games on three seeds
