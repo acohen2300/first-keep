@@ -26,7 +26,7 @@ const EV = {
   wildfire: { start(e) { const far = G.nodes.filter(n => n.kind === 'tree' && n.amt > 0 && !G.P.some(p => p.id !== WILD && p.alive && keepOf(p.id) && dist(keepOf(p.id), n) < 300)); const t = far[Math.floor(rng() * far.length)]; e.burn = t ? [t] : []; e.at = t ? { x: t.x, y: t.y } : null; G.fire = e.burn; sfx('crash', t && t.x, t && t.y); },
     tick(e) { if (G.wx === 'rain') { e.until = G.t; return; } const E = EVENTS.wildfire, next = []; for (const n of e.burn) { n.amt -= n.max * E.burn; if (n.amt > 0) next.push(n); else { scarStrike(n.x, n.y); } nodesNear(n.x, n.y, E.r, m => { if (m.kind === 'tree' && m.amt > 0 && !e.burn.includes(m) && !next.includes(m) && rng() < E.spread) next.push(m); }); bldsNear(n.x, n.y, 40, b => { if (BLD[b.kind].wood && b.prog >= 1) ignite(b, 'the wildfire'); }); } e.burn = next.slice(0, E.most); G.fire = e.burn; if (!e.burn.length) e.until = G.t; }, end() { G.fire = null; } },
   fog: { start() { EVM.sight = EVENTS.fog.sight; }, end() { EVM.sight = 1; } },
-  tremor: { start(e) { quake(e, EVENTS.tremor, hz('quake') ? QUAKE : null); } },
+  tremor: { start(e) { quake(e, EVENTS.tremor, hz('winter') ? QUAKE : null); } },
   sinkhole: { start(e) { const B = G.blds.filter(b => b.prog >= 1 && !BLD[b.kind].wallish && b.kind !== 'keep'); const b = B[Math.floor(rng() * B.length)]; if (!b) return; b.hp -= maxHpB(b.owner, b.kind) * EVENTS.sinkhole.hit; scarStrike(b.x, b.y - 4); scarStrike(b.x + 5, b.y + 3); G.shake = G.t + 1; sfx('rumble', b.x, b.y); if (b.owner === 0) say(`A sinkhole under the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 6, b); } },
   quicksand: { start(e) { e.at = wildSpot(); G.sand = { x: e.at.x, y: e.at.y, r: EVENTS.quicksand.r, until: e.until }; }, end() { G.sand = null; } },
   heatwave: { start() { EVM.dmg = EVENTS.heatwave.dmg; EVM.spd = EVENTS.heatwave.spd; }, end() { EVM.dmg = EVM.spd = 1; } },
@@ -56,7 +56,7 @@ function eventsTick() {   // once a second
   else if (!V.warned && G.t >= V.next - EV_WARN) { V.warned = pickEvent(); say(EV_TEXT[V.warned][0], 'soft', EV_WARN); }   // the warning is quiet: in the list, not on the line
   else if (V.warned && G.t >= V.next) { if (canEv(V.warned)) startEvent(V.warned); else { V.warned = null; V.next = G.t + 30; } }
   hordeTick(); newsTick();
-  if (hz('quake') && G.t >= (V.quakeAt || (V.quakeAt = G.t + QUAKE.every))) { V.quakeAt = G.t + QUAKE.every; if (!V.cur) { say(EV_TEXT.tremor[0], 'warn', 8); V.warned = 'tremor'; V.next = G.t + 8; } }
+  if (hz('winter') && G.t >= (V.quakeAt || (V.quakeAt = G.t + QUAKE.every))) { V.quakeAt = G.t + QUAKE.every; if (!V.cur) { say(EV_TEXT.tremor[0], 'warn', 8); V.warned = 'tremor'; V.next = G.t + 8; } }
 }
 // The horde (the hazard): announced two seasons ahead, then one; from an edge or out of the wild, for the weakest side; its number grows with the age
 function hordeTick() {

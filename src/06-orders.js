@@ -89,6 +89,7 @@ function build(o, kind, x, y) {
 }
 // A site rises only while villagers work it. The nearest free villager goes at once; a line of wall gets two at most, who then work down it.
 function autoBuilder(o, b) {
+  if (o === 0 && G.buildBy && G.buildBy.length) { const V = G.buildBy.map(id => G.units.find(u => u.id === id)).filter(u => u && u.hp > 0 && u.kind === 'vil'); G.buildBy = null; if (V.length) { V.forEach(v => { sendBuilder(v, b); v.post = null; }); return; } }   // the villagers you picked raise it
   if (BLD[b.kind].wallish && G.blds.filter(s => s.owner === o && s.prog < 1 && BLD[s.kind].wallish && unitsOf(o, 'vil').some(v => v.rep === s && v.job === 'repair')).length >= 2) return;
   const v = pickVil(o, b); if (v) sendBuilder(v, b);
 }

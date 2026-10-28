@@ -129,7 +129,8 @@ button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44p
 #dock #dockMin{min-height:44px;min-width:44px;padding:0;background:rgba(18,23,21,.94)}#dock #dockMin::before{content:'⌄';font-size:20px;line-height:1}
 #dock.min #dockRow{display:none}#dock.min{left:auto}#dock.min #dockMin::before{content:'⚔'}
 #pickbar{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid #5ad27a;border-radius:8px;padding:4px 4px 4px 10px;font-weight:600;z-index:3}
-#pickbar span{flex:1;min-width:0;line-height:1.25}#pickbar button{min-height:44px;min-width:44px;padding:0 10px}
+#pickbar{flex-direction:column;align-items:stretch;gap:4px;padding:4px}#pickbar .pbTop,#pickbar .pbRow{display:flex;gap:4px;align-items:center}#pickbar .pbRow:empty{display:none}#pickbar span{flex:1;min-width:0;line-height:1.25;padding-left:6px}#pickbar button{min-height:44px;min-width:44px;padding:0 10px}#pickbar .pbRow button{flex:1;padding:0 4px}#pickbar .gl{position:static;transform:none;width:18px;height:18px;display:block}#pickbar button.on{border-color:var(--gold);color:var(--gold)}
+#stage.picking #dock{bottom:calc(var(--ob) + 112px)}
 /* a building's line: one slot per order it can hold; a filled slot shows what is in it and how far along; tap one to cancel it */
 #card .slots{display:grid;grid-template-columns:repeat(var(--qn,5),minmax(0,1fr));gap:4px}
 #card .slot{position:relative;overflow:hidden;min-height:44px;padding:2px 3px;font-size:12px;line-height:1.1;text-align:center;border-radius:6px}
@@ -175,14 +176,18 @@ button.ok small{color:#8fd4a4}
 #card .chipsrow button.on:not(#cardX):not(#cardI){min-height:48px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);border-color:#f2d27a;box-shadow:0 0 12px rgba(242,210,122,.45)}#card .chipsrow button.on b{color:#2a1c10}
 #card .q{font:inherit;font-size:16px;color:var(--bone);background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:6px;min-height:44px;padding:4px 10px;width:100%;box-sizing:border-box}#card .row{display:flex;gap:12px;align-items:center}#card .look{color:var(--lamp);font-weight:700;min-height:44px;display:inline-flex;align-items:center}#card .row .lnk{width:auto}
 #card .acts.set{grid-template-columns:58px repeat(4,minmax(0,1fr));gap:4px}#card .acts.set .lbl b{font-size:14px}#card .acts.set .lbl{min-height:44px}#card .acts.set button:not(#cardX):not(#cardI){min-height:44px}
+#card .seg{display:flex;align-items:center;gap:8px;min-height:44px}#card .seg>b{flex:0 0 78px;font-size:14px}
+#card .segT{flex:1;min-width:0;position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));border:1px solid var(--brass);border-radius:22px;background:rgba(0,0,0,.3);padding:0;box-sizing:border-box}
+#card .segT button:not(#cardX):not(#cardI){position:relative;min-height:44px;padding:0 2px;background:none;border:0;box-shadow:none;border-radius:20px;font-weight:700;font-size:14px;color:var(--bone)}
+#card .segT button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;box-shadow:0 0 10px rgba(242,210,122,.4);border:0;transition:background-color .15s}#card .segT button::after{content:none}
 #card .hzl{display:grid;grid-template-columns:1fr 1fr;gap:4px 6px}#card .hzr{display:flex;gap:3px;min-width:0}
 #card .hzr button.tick:not(#cardX):not(#cardI){flex:1;min-width:0;flex-direction:row;justify-content:flex-start;gap:5px;min-height:44px;padding:0 5px;background:transparent;box-shadow:none;border-color:#4a3a28}
 #card .hzr button.tick::before{content:'';flex:0 0 16px;height:16px;border:1.5px solid var(--brass);border-radius:3px;box-sizing:border-box}
 #card .hzr button.tick.on::before{content:'✓';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#2a1c10;background:var(--lamp);border-color:var(--lamp)}
 #card .hzr button.tick.on:not(#cardX):not(#cardI){background:transparent;color:var(--bone);border-color:var(--brass);box-shadow:none}#card .hzr button.tick.on small{color:var(--mute)}
-#card .hzr button.tick b{flex:1;text-align:left;font-size:13px;overflow:hidden;text-overflow:ellipsis}#card .hzr button.tick small{flex:0 0 auto}
+#card .hzr button.tick b{flex:1;text-align:left;font-size:13px;white-space:normal;line-height:1.1}#card .hzr button.tick small{flex:0 0 auto}
 #card .hzr button.q:not(#cardX):not(#cardI){flex:0 0 44px;min-height:44px;padding:0;font-weight:700}
-#card button.big:not(#cardX):not(#cardI){min-height:60px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;box-shadow:0 0 14px rgba(242,210,122,.45)}#card button.big small{color:#4a3518}#card button.big::after{content:none}#card button.big b{font-size:20px;letter-spacing:.04em}
+#card button.big:not(#cardX):not(#cardI){min-height:52px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;box-shadow:0 0 14px rgba(242,210,122,.45)}#card button.big small{color:#4a3518}#card button.big::after{content:none}#card button.big b{font-size:20px;letter-spacing:.04em}
 #card button.lnk:not(#cardX):not(#cardI){min-height:44px;width:100%;padding:0;background:none;border:0;box-shadow:none;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;text-align:left}
 #card .tabs{gap:3px;margin-bottom:0}
 #card .tabs button:not(#cardX):not(#cardI){border-radius:8px 8px 0 0}
@@ -208,7 +213,7 @@ button.ok small{color:#8fd4a4}
     <button class="fab" id="buildB" data-act="buildrow" aria-label="Build"></button>
     <div id="strip" hidden></div>
     <div id="dock" hidden><div id="dockRow"></div><button data-act="dockmin" id="dockMin" aria-label="Army dock"></button></div>
-    <div id="pickbar" hidden><span id="pickT"></span><button data-act="pcharge" id="pCharge" hidden><b>Charge</b></button><button data-act="pfall" id="pFall" hidden><b>Fall back</b></button><button data-act="pteach" id="pTeach" hidden><b>Teach</b></button><button data-act="unpick" aria-label="Let go"><b>✕</b></button></div>
+    <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="pmore" id="pMore"><b>＋ More</b></button><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="cancel"><b>Cancel</b></button></div>
     <div id="card" hidden></div>
     <div id="end" hidden>

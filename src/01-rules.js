@@ -7,7 +7,11 @@ const POPMAX = 150, VILMAX = 60, ARMYMAX = 90, BNSIZE = 30, SHARE_FALLEN = 0.5; 
 const RICH = 2.5, PLUNDER = 0.25, CARRY = 10, NAVC = 10;                // NAVC: the walking grid, 10 units a square (never shown)
 const LAKE0 = { x: MID, y: MID, r: 170 };                              // the great lake in the middle; each corner also gets a lake of its own (G.lakes)
 const SEASON_LEN = 180, DAY_LEN = 120, NIGHT_SIGHT = 0.6;
-const EASY_SAFE = 360, SAVE_EVERY = 10, REACT = { easy: 2, normal: 1 };   // Easy: no raid before 6:00; the game saves every 10 s; seconds between computer decisions
+const EASY_SAFE = 360, SAVE_EVERY = 10;   // Easy: no raid before 6:00; the game saves every 10 s
+// Difficulty turns the computers' minds, never their stores (Albert, Build 41): react, seconds between decisions; bold, added to the odds they need to attack (lower is bolder);
+// opp, how much more a side with another war on its hands tempts them; allyAt, when they start courting allies; gang, whether they ally against the score leader even at peace; envoy, seconds between emissaries
+const DIFF = { easy: { react: 2, bold: 0.1, opp: 0.8, allyAt: 900, gang: 0, envoy: 240 }, normal: { react: 1, bold: 0, opp: 1, allyAt: 600, gang: 0, envoy: 180 }, hard: { react: 0.5, bold: -0.08, opp: 1.4, allyAt: 300, gang: 1, envoy: 120 } };
+const DIFK = Object.keys(DIFF);
 const ZOOM_MAX = 4, TILT = 0.66, SIDE = 0.4;   // SIDE: how far right the back of a building sits, per unit of depth, so its east wall shows
 const FOG = 40, FOGN = Math.ceil(MAP / 40);   // fog of war: squares of 40; unseen, explored (stays lit, dim), in sight now
 const WILD = 4;                                                          // the fifth side: animals, bandits, robbers, monsters
@@ -522,16 +526,15 @@ const MOON = 8;   // days from new moon to new moon (the real month is 29.5; the
 
 // ───────────────────────── The Challenge: hazards you switch on. Their points are your level; the level multiplies your score ─────────────────────────
 // Random when, never random whether: everything a hazard sends is announced first. Easy keeps the old polite game whatever is switched on.
-const HAZARDS = {
-  hard:   { pts: 3, name: 'Hard enemies', desc: 'They strike in winter, send more riders at your villagers and drop-offs, and need shorter odds.' },
-  starve: { pts: 2, name: 'Starvation', desc: 'No food for a minute: work stops. After two, a villager leaves and a soldier deserts every half minute.' },
-  winter: { pts: 2, name: 'Harsh winters', desc: 'Winter fields give a quarter, marches crawl, and blizzards come: whiteouts that blind the small map.' },
-  plague: { pts: 2, name: 'Plague', desc: 'Plague is three times as likely and spreads twice as fast along the roads. Hospitals matter.' },
-  horde:  { pts: 3, name: 'The horde', desc: 'Between minute 20 and 40 a horde comes, from an edge or out of the wild, for the weakest side. Announced two seasons ahead.' },
-  quake:  { pts: 2, name: 'Earthquakes', desc: 'Tremors come every few minutes and hit harder: stone cracks, walls fall, wood catches fire.' },
-  notips: { pts: 1, name: 'No tips', desc: 'The advisor is silent.' },
+const HAZARDS = {   // six, in two columns (Albert, Build 41)
+  hard:    { pts: 3, name: 'Hardest', desc: 'The computers strike in winter, send more riders at your villagers and drop-offs, and need shorter odds to come.' },
+  starve:  { pts: 2, name: 'Famine', desc: 'No food for a minute: work stops. After two, a villager leaves and a soldier deserts every half minute.' },
+  winter:  { pts: 2, name: 'Extreme weather', desc: 'Winter fields give a quarter and marches crawl; blizzards blind the small map; tremors come every few minutes and hit hard.' },
+  drought: { pts: 2, name: 'Drought', desc: 'Summers run dry three times as often and springs can too: fields give 30% less and fires spread fast.' },
+  horde:   { pts: 3, name: 'Hordes and gangs', desc: 'Between minute 20 and 40 a horde comes for the weakest side, announced two seasons ahead; outlaws raid twice as often.' },
+  plague:  { pts: 2, name: 'Plague', desc: 'Plague is three times as likely and spreads twice as fast along the roads. Hospitals matter.' },
 };
-const HZK = Object.keys(HAZARDS), HZ_DEFAULT = { hard: 1, starve: 1 }, TODAY_HZ = { hard: 1, starve: 1, horde: 1, quake: 1 };   // a new game starts at level 5; The challenge today is level 10 on the day's seed
+const HZK = Object.keys(HAZARDS), HZ_DEFAULT = { hard: 1, starve: 1 }, TODAY_HZ = { hard: 1, starve: 1, horde: 1, winter: 1 };   // a new game starts at level 5; The challenge today is level 10 on the day's seed
 const STARVE = { stop: 60, leave: 120, every: 30 }, HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 }, HORDE = { from: 1200, to: 2400, warn: SEASON_LEN * 2, n: 16, perAge: 6 }, QUAKE = { every: 240, r: 350, hit: 0.1, wall: 0.3, fire: 0.15 };
 // Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 19-events.
 const EV_GAP = [60, 180], EV_WARN = 12;

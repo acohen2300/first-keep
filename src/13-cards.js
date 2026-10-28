@@ -307,11 +307,9 @@ function researchHTML() {   // everything you can research, across every buildin
   return h;
 }
 // the Challenge: each hazard a switch with its points; the sum is the level, and the level multiplies the score
-function settingsHTML() {
-  return sec('Difficulty') + acts(btn('diff:easy', 'Easy', `they think slower; no raid before ${clock(EASY_SAFE)}`, SET.diff === 'easy' ? 'on' : '') + btn('diff:normal', 'Normal', 'they think once a second', SET.diff === 'normal' ? 'on' : ''))
-    + sec('Game') + acts(Object.entries(MODES).map(([k, m]) => btn(`mode:${k}`, m.name, k === 'conquest' ? 'no limit' : 'top score wins', SET.mode === k ? 'on' : '')).join(''), 'c3')
-    + sec('World') + acts(btn('fantasy:0', 'Real', 'wolves, bandits, robbers', !SET.fantasy ? 'on' : '') + btn('fantasy:1', 'Fantasy', 'dire wolves, goblins, trolls', SET.fantasy ? 'on' : ''));
-}
+// one mold for a setting (Albert, Build 41): the label on the left, a sliding toggle on the right; the lit part slides to the choice
+const seg = (label, opts, cur) => { const n = opts.length; return `<div class="seg"><b>${label}</b><div class="segT" style="--n:${n}">${opts.map(([act, name, v]) => `<button data-act="${act}" class="${v === cur ? 'on' : ''}" aria-pressed="${v === cur}">${name}</button>`).join('')}</div></div>`; };
+const settingsHTML = () => seg('Difficulty', DIFK.map(k => [`diff:${k}`, cap1(k), k]), SET.diff) + seg('Length', Object.entries(MODES).map(([k, m]) => [`mode:${k}`, m.name.replace(' minutes', ''), k]), SET.mode) + seg('World', [['fantasy:0', 'Real', false], ['fantasy:1', 'Fantasy', true]], !!SET.fantasy);
 
 // ───────────────────────── The cards, one entry each ─────────────────────────
 // Each takes the card's description (G.card) and returns its page, or null when what it showed is gone.
@@ -410,11 +408,8 @@ const CARDS = {
   resume: c => title('Welcome back', 'saved on this phone') + `<p>Your game from ${clock(c.t)}: ${CIVS[c.civ] ? CIVS[c.civ].name + ', ' : ''}${AGES[c.age].name} age. Resume it, or start a new one.</p>` + acts(btn('resume', 'Resume', clock(c.t), 'go') + btn('card:setup', 'New game', '')),
   setup() {   // the annoying part before the fun part (Albert): the settings first, then your people, the challenge as ticks, and Start at the foot
     const C = CIVS[SET.civ], H = SET.hz || HZ_DEFAULT, lv = levelOf(H), short = k => cap1(UNIT[CIVS[k].uu].name.replace(new RegExp('^' + CIVS[k].name + ' ', 'i'), ''));
-    const row = (label, opts) => acts(`<div class="lbl"><b>${label}</b></div>` + opts.map(([v, n, on]) => btn(v, n, '', on ? 'on' : '')).join(''), 'c4 set');
-    let h = title('A new game', '')
-      + row('Game', [['diff:easy', 'Easy', SET.diff === 'easy'], ['diff:normal', 'Normal', SET.diff === 'normal'], ['fantasy:0', 'Real', !SET.fantasy], ['fantasy:1', 'Fantasy', SET.fantasy]])
-      + row('Length', Object.entries(MODES).map(([k, m]) => [`mode:${k}`, m.name.replace(' minutes', ' min'), SET.mode === k]))
-      + sec('Your people') + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, short(k), SET.civ === k ? 'on' : '')).join(''), 'c3')
+    let h = title('A new game', '') + settingsHTML()
+      + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, short(k), SET.civ === k ? 'on' : '')).join(''), 'c3')
       + `<p>${C.bonus}</p>` + fold('why', 'Why?', `<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`)
       + sec(`Challenge · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}`)
       + `<div class="hzl">${HZK.map(k => `<div class="hzr"><button class="tick${H[k] ? ' on' : ''}" data-act="hz:${k}"><b>${HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small></button><button class="q${G.hzQ === k ? ' on' : ''}" data-act="hzq:${k}" aria-label="What ${HAZARDS[k].name} does">?</button></div>`).join('')}</div>`

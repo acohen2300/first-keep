@@ -411,7 +411,7 @@ const TRIGGERS = () => [
   ['Fog of war', 'You see what your people and your allies see; the rest of the map is as you last saw it, and the unseen is dark. Spies stay hidden until something of yours is close. Night shortens sight. Turn it off in Help for an open map.', 'Scouts earned their pay by what they saw first.'],
   ['A wall or building stands in the way', 'People walk around it. If nothing can get through, soldiers attack the wall in the way; villagers wait.', 'Walls delay; they do not stop an army with time.'],
   ['The game saves itself', `Every ${SAVE_EVERY} seconds, and when you leave the page, on this phone. Next time it offers Resume or New game.`, 'You should never lose a game to a phone call.'],
-  ['Difficulty', `Easy: the computers think every ${REACT.easy} s and nobody comes for you before ${clock(EASY_SAFE)}. Normal: every ${REACT.normal} s. Neither one changes the resources of anyone.`, 'No cheating: only how fast they think.'],
+  ['Difficulty', `It turns the minds of the computers, never their stores. Easy: they think every ${DIFF.easy.react} s, wait longer to attack and to ally, and nobody comes for you before ${clock(EASY_SAFE)}. Normal: every ${DIFF.normal.react} s. Hard: twice a second, bolder, quicker to pounce on a side at war, and they ally against whoever leads the score.`, 'No cheating: only how they think.'],
   ['Winning and losing', `Conquest: win when the Raiders, the Rivals and the Fortress have all fallen, or hold the Throne for its time; lose when your Town Center falls. Or hold a wonder for ${WONDER_HOLD / 60} minutes, or have the top score at the bell in a timed game.`, 'A seat of power is what a state is.'],
 ];
 

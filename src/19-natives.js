@@ -71,7 +71,7 @@ function trapsTick() {
 }
 // Outlaw raids: every few minutes the camp nearest the side they regard least sends robbers at its drop-offs, who come back after a spell
 function natRaid() {
-  const N = natState(); if (G.t - N.raidT < NATIVE.raidEvery) return; N.raidT = G.t;
+  const N = natState(); if (G.t - N.raidT < NATIVE.raidEvery / (hz('horde') ? 2 : 1)) return;   // Hordes and gangs: twice as often N.raidT = G.t;
   const sides = G.P.filter(p => p.id !== WILD && p.alive && keepOf(p.id) && G.rel[p.id][WILD] === 'war').sort((a, b) => regardOf(a.id) - regardOf(b.id)); if (!sides.length) return;
   const q = sides[0], k = keepOf(q.id), camps = G.finds.filter(f => f.kind === 'camp' && !f.done && guardsLeft(f)).sort((a, b) => dist(a, k) - dist(b, k)); if (!camps.length) return;
   const f = camps[0], R = G.units.filter(u => u.find === f.id && u.hp > 0 && UNIT[u.kind].dmg).slice(0, NATIVE.raidN); if (!R.length) return;

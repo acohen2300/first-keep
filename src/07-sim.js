@@ -88,7 +88,8 @@ function formUp() {
   for (const u of G.units) if (u.hp > 0 && !u.inside && u.state === 'attack' && isSoldier(u)) { if (hasTag(u.kind, 'siege')) continue; const key = u.owner + ':' + (u.bn ?? 9) + ':' + (u.bid || 0); const s = stats(u.owner, u.kind).spd; atk.set(key, Math.min(atk.get(key) ?? 1e9, s)); }   // raiders sent at a camp make their own group
   for (const u of G.units) if (u.hp > 0 && isSoldier(u)) { if (u.state === 'attack') u.cap = u.tgt || hasTag(u.kind, 'siege') ? 0 : atk.get(u.owner + ':' + (u.bn ?? 9) + ':' + (u.bid || 0)) || 0; else if (u.state !== 'goto' && u.state !== 'assist') u.cap = 0; }
 }
-const react = () => REACT[G.diff] || 1;   // seconds between computer decisions: human-like, no cheats
+const DF = () => DIFF[G.diff] || DIFF.normal;
+const react = () => DF().react;   // seconds between computer decisions: human-like, no cheats
 function died(u) {
   if (isSoldier(u) && !u.gone) unitsNear(u, 40, v => { if (v.owner === u.owner && isSoldier(v) && v.hp > 0) v.mor -= MORALE.loss; });   // a loss beside you shakes the nerve
   if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);

@@ -40,7 +40,7 @@ function buildPanel() {
   const st = (act, t, label, id) => `<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
   $('jobs').innerHTML = `<div class="col">${cell('id="tPeople" data-act="card:army" aria-label="People: army, research, how to play"', ICON.people, wd('0/0', 'tPeopleN'))}<div class="pm">${st('unvil', '−', 'Cancel a villager waiting to train', 'tUn')}${st('train:vil', '+', 'Train a villager', 'tVil')}</div></div>`
     + JOBS.map(r => `<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`).join('');
-  $('tkList').innerHTML = ICON.list; $('tkMin').innerHTML = ICON.up; $('homeB').innerHTML = ICON.home; $('buildB').innerHTML = ICON.hammer;
+  $('tkList').innerHTML = ICON.list; $('tkMin').innerHTML = ICON.up; $('homeB').innerHTML = ICON.home; $('pX').innerHTML = ICON.close; $('buildB').innerHTML = ICON.hammer;
 }
 const refresh = () => { cardSig = ''; ui(true); };
 function muteBtn() { $('muteB').classList.toggle('off', !SND.on); $('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on'); }
@@ -64,7 +64,7 @@ function say(text, cls, secs, at, act) { if (!G) return; if (SET.msgs === false 
 const hushKey = t => t.replace(/[\d,.]+/g, '#');
 function hushed(t) { const k = hushKey(t), w = G.hushW && G.hushW[k]; return !!(SET.hush && SET.hush[k]) || (w !== undefined && G.t < w); }
 function advise() {
-  const p = G.P[0], k = keepOf(0); if (!k || G.over || hz('notips')) return '';
+  const p = G.P[0], k = keepOf(0); if (!k || G.over) return '';
   const V = unitsOf(0, 'vil'), on = j => V.filter(u => u.job === j).length, S = soldiersOf(0);
   if (V.some(u => u.noPath && G.t - (u.noPathT || -9) < 4) && !L('build:gate')) return 'Walled in: build a Gate.';
   if ((k.blocked || (popOf(0) >= capOf(0) && capOf(0) < POPMAX && !bldsOf(0, 'house').some(b => b.prog < 1))) && !L('build:house')) return p.age >= 2 ? 'You are full: Build → House, Apartment or Aqueduct.' : `You are full: Build → House (${costText(BLD.house.cost)}).`;
@@ -118,7 +118,13 @@ function ui(force) {
   { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; if ($('homeB').hidden === away) $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
   $('stage').classList.toggle('busy', !!(G.card || G.place));
   { const on = !!(G.card && G.card.type === 'menu'); $('buildB').classList.toggle('on', on); if (on) { const top = Math.round($('card').getBoundingClientRect().top - $('stage').getBoundingClientRect().top) - 45; if (ui.tab !== top) { ui.tab = top; $('stage').style.setProperty('--tabtop', top + 'px'); } } }   // the Build tab rides the card's top edge
-  { const n = picked().length, show = n > 0 && !G.card && !G.place, el = $('pickbar'); if (el.hidden === show) el.hidden = !show; $('stage').classList.toggle('picking', show); if (show) { txt('pickT', `${n} picked${G.pickMore ? ' · tap to add more' : ''}`); const sol = picked().some(isSoldier), tch = sol && fxv(0, 'teach').a >= 1 && picked().some(u => isSoldier(u) && teachTo(u) && u.state !== 'school'); if ($('pCharge').hidden === sol) { $('pCharge').hidden = $('pFall').hidden = !sol; } if ($('pTeach').hidden === tch) $('pTeach').hidden = !tch; } }
+  { const P = picked(), n = P.length, show = n > 0 && !G.card && !G.place, el = $('pickbar'); if (el.hidden === show) el.hidden = !show; $('stage').classList.toggle('picking', show);   // the action bar (Albert, Build 41)
+    if (show) { txt('pickT', `${n} picked`); $('pMore').innerHTML = G.pickMore ? '<b>Done</b>' : '<b>＋ More</b>'; $('pMore').classList.toggle('on', !!G.pickMore);
+      const sol = P.some(isSoldier), vil = P.some(u => u.kind === 'vil'), ic = (act, icon, label) => `<button data-act="${act}" aria-label="${label}">${icon}</button>`, tx = (act, t) => `<button data-act="${act}"><b>${t}</b></button>`;
+      const tch = sol && fxv(0, 'teach').a >= 1 && P.some(u => isSoldier(u) && teachTo(u) && u.state !== 'school');
+      const row = sol ? tx('pcharge', 'Charge') + tx('pfall', 'Fall back') + tx('phold', 'Hold') + (tch ? tx('pteach', 'Teach') : '') + (vil ? ic('pvil', ICON.people, 'Keep only the villagers') : '')
+        : vil ? JOBS.map(j => ic(`pjob:${j}`, ICON[j], `All to ${j}`)).join('') + ic('pbuild', ICON.hammer, 'Build: they raise it') : '';
+      if (el.rowH !== row) { el.rowH = row; $('pickRow').innerHTML = row; } } }
   { const S = armyOf(0), show = hasCmd() && S.length > 0 && !G.card && !G.place, el = $('dock'); if (el.hidden === show) el.hidden = !show;   // the army dock
     if (show) { el.classList.toggle('min', !!SET.dockMin); if (!SET.dockMin) { const used = BN.map((n, i) => [i, n, S.filter(u => u.bn === i).length]).filter(x => x[2]); const h = [['all', 'All', S.length], ...used].map(([k, n, c]) => `<button data-act="dock:${k}" class="${G.sel === k ? 'on' : ''}"><b>${n}</b><small>${c}</small></button>`).join(''); if (el.dockH !== h) { el.dockH = h; $('dockRow').innerHTML = h; } } } }
   if (G.place) { const B = BLD[G.place.kind], t = !G.place.at ? (G.place.kind === 'wall' ? 'Press and drag a line of wall' : `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`) : G.place.why ? G.place.why : G.place.kind === 'wall' ? `${(G.place.cells || [1]).length} pieces: tap Build, or drag again` : `${B.name}: tap Build, or drag it to move · drag empty ground to look`; txt('placeT', t); $('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why); }

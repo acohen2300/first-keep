@@ -102,13 +102,14 @@ function think(p) {
 }
 // A computer's relations move by its odds, the way a court's did: losing badly, it asks for peace; at peace with nobody to fight and the odds in its favour, it gives notice
 function aiDiplomacy(p, per) {
-  const o = p.id; if (p.age < 1 || p.envoyOut || G.t - p.envoyAt < 180) return;
+  const o = p.id, D = DF(); if (p.age < 1 || p.envoyOut || G.t - p.envoyAt < D.envoy) return;
+  const lead = G.P.filter(r => r.alive && r.id !== WILD).sort((a, b) => b.score.total - a.score.total)[0];   // Hard: the courts close ranks against whoever leads
   const warOn = G.P.some(r => r.alive && r.id !== WILD && r.id !== o && atWar(o, r.id) && !(r.lord === o));
   for (const q of G.P) {
     if (!q.alive || q.id === o || q.id === WILD || q.lord === o || p.lord === q.id) continue;
     if (atWar(o, q.id) && oddsOf(o, q.id) < 0.3 && soldiersOf(o).length < per.waveMin) { if (setRel(o, q.id, 'peace')) return; }
-    if (!warOn && G.rel[o][q.id] === 'peace' && !noticeLeft(o, q.id) && oddsOf(o, q.id) > per.bold + 0.15) { if (setRel(o, q.id, 'war')) return; }
-    if (p.ally === null && q.ally === null && G.rel[o][q.id] === 'peace' && warOn && G.t > 600) { if (setRel(o, q.id, 'ally')) return; }   // at war with someone: court a friend
+    if (!warOn && G.rel[o][q.id] === 'peace' && !noticeLeft(o, q.id) && oddsOf(o, q.id) > per.bold + 0.15 + D.bold) { if (setRel(o, q.id, 'war')) return; }
+    if (p.ally === null && q.ally === null && G.rel[o][q.id] === 'peace' && G.t > D.allyAt && (warOn || (D.gang && lead && lead.id !== o && lead.id !== q.id))) { if (setRel(o, q.id, 'ally')) return; }   // at war with someone, or on Hard against the leader: court a friend
   }
   if (G.throne && G.throne.owner !== o && G.throne.owner !== WILD && G.rel[o][G.throne.owner] !== 'war' && !noticeLeft(o, G.throne.owner) && G.P[G.throne.owner].lord !== o && p.lord !== G.throne.owner) setRel(o, G.throne.owner, 'war');   // whoever takes the Throne finds every court against them
 }
@@ -167,7 +168,7 @@ function decideWar(p, per) {
   if (home.length < (W ? 4 : per.waveMin + (G.diff === 'easy' ? 3 : 0))) return;
   const sn = season().name, toWinter = sn === 'Autumn' && SEASON_LEN - G.t % SEASON_LEN < HARD.waitForWinter;
   if (hz('hard') && toWinter && !W) return;   // hard: winter is a month away; they wait for it, as raiders did
-  const bold = per.bold + (hz('hard') ? HARD.bold + (sn === 'Winter' ? HARD.winterBold : 0) : 0);
+  const bold = per.bold + DF().bold + (hz('hard') ? HARD.bold + (sn === 'Winter' ? HARD.winterBold : 0) : 0);
   const go = home.slice(Math.floor(home.length * (W ? 0 : per.guard))), mine = powerOf(go);
   let best = null, bp = 0;
   for (const q of G.P) if (q.alive && q.id !== WILD && atWar(o, q.id)) {
@@ -175,7 +176,7 @@ function decideWar(p, per) {
     const r = mine / estPower(o, q.id) * matchup(go, soldiersOf(q.id)), prob = r * r / (1 + r * r);   // the square law, as odds, bent by who counters whom
     const busy = per.opportunist && G.P.some(x => x.alive && x.id !== WILD && x.id !== o && x.id !== q.id && atWar(q.id, x.id));   // the opportunist: a side with another war on its hands
     const T = G.throne && G.throne.owner === q.id;
-    const pr = (W && W.owner === q.id) || T ? Math.max(prob, 0.75) : prob * (busy ? per.opportunist : 1);
+    const pr = (W && W.owner === q.id) || T ? Math.max(prob, 0.75) : prob * (busy ? per.opportunist * DF().opp : 1);
     if (pr > bp) { bp = pr; best = q.id; }
   }
   // a full army that sits at home is wasted: at its limit a side settles for even odds

@@ -14,7 +14,7 @@ const ACT = {
   reload() { location.reload(); },
   vibe() { SET.vibe = !SET.vibe; saveSet(); feel('snap'); refresh(); },
   menu(a) { const keep = G.card && G.card.type === 'menu'; openCard({ type: 'menu', id: a }); if (keep) $('card').scrollTop = 0; },
-  buildrow() { G.buildAt = null; if (G.card && G.card.type === 'menu') closeCard(); else openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // Build opens the Build card on the menu last used; again, it closes
+  buildrow() { G.buildAt = null; G.buildBy = null; if (G.card && G.card.type === 'menu') closeCard(); else openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // Build opens the Build card on the menu last used; again, it closes
   towncard() { const k = keepOf(0); if (k) openCard({ type: 'bld', id: k.id }); },
   unvil() { if (!unTrain(0, 'vil')) say('Nobody is waiting to train.', '', 3); },
   idlego() { const u = unitsOf(0, 'vil').find(v => !v.job); if (!u) return; cam.x = u.x; cam.y = u.y; clampCam(); closeCard(); },
@@ -85,6 +85,11 @@ const PLAY = {
   sendvil(a) { sendVil(0, Number(a)); },
   boxcut(a) { if (G.card && G.card.type === 'box') boxCut(G.card.r, Number(a)); closeCard(); },
   unpick() { setPick([]); },
+  pmore() { G.pickMore = !G.pickMore; ui(true); },   // + More: each tap on your people adds or drops one; Done stops
+  pjob(j) { for (const u of picked()) if (u.kind === 'vil') { setJob(u, j); u.pj = null; u.post = null; u.idleT = 0; } say(`To ${j}.`, '', 2); setPick([]); },
+  pbuild() { G.buildBy = picked().filter(u => u.kind === 'vil').map(u => u.id); setPick([]); openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // whatever you place next, the picked villagers raise it
+  phold() { for (const u of picked()) if (isSoldier(u)) { u.state = 'goto'; u.px = u.x; u.py = u.y; u.focus = null; u.tgt = null; u.idleT = 0; } say('Holding here.', '', 2); },
+  pvil() { setPick(picked().filter(u => u.kind === 'vil').map(u => ({ t: 'unit', id: u.id }))); },
   pcharge() { const S = picked(); if (!charge(0, S)) say(chargeWhy(0, S) || 'Not now.', '', 3); },
   pfall() { fallBack(0, picked()); },
   pteach() { const S = picked().filter(u => isSoldier(u) && teachTo(u)); let n = 0, why = null; for (const u of S) { if (teach(0, u)) n++; else why = why || teachWhy(0, u); } say(n ? `${n} to the School.` : why || 'Nobody here can be taught.', n ? 'good' : '', 3); },
