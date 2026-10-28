@@ -506,3 +506,7 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 - Three sizes: 12 (was 12, 13, 14), 15 (was 15, 16, 17), 19 (was 19, 20, 22, 34). The end-screen title is 19.
 - Trees, bushes, berries, stone, gold, iron redrawn: clumped crowns with a lit side, a thin soft outline, a long shadow, faceted rocks with glints. Six tree kinds (was four): three broadleaf, two conifers. Lighter greens. Drawing cost is a few dozen calls each, cached as before.
 - `publish.py --preview` publishes to preview/ only; the live index.html and the push hook stamp are untouched.
+
+## Menu polish (preview only)
+- Card text up one step: 12→13, 15→16, 19→20 px.
+- Trimmed card padding and gaps (a few px each). Every tap stays 44x44 CSS px.
