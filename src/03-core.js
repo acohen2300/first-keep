@@ -28,6 +28,12 @@ if (!CIVS[SET.civ]) SET.civ = 'roman';
 if (!(SET.setV >= 38)) { let old = false; try { old = !!localStorage.getItem('firstkeep.settings'); } catch (e) {} if (old && SET.diff === 'easy' && SET.mode === 't30') { SET.diff = 'normal'; SET.mode = 't60'; } SET.setV = 38; }   // Build 38: Normal and an hour by default; a phone that kept Easy and 30 minutes from the old default moves once, and a choice made after stays
 SET.mix = Object.assign({ fx: 1, amb: 1, alert: 1 }, SET.mix);   // three volumes: effects, ambience, alerts
 function saveSet() { try { localStorage.setItem('firstkeep.settings', JSON.stringify(SET)); } catch (e) {} }
+// Research lines: the steps of one line at one building come in table order; a step waits on the one before it and on what it names in need
+const lineOf = t => TECH.filter(x => x.at === t.at && x.line === t.line && (!x.civ || x.civ === t.civ));
+const prevOf = t => { const L = lineOf(t), i = L.indexOf(t); return i > 0 ? L[i - 1] : null; };
+const needsOf = t => { const pv = prevOf(t); return (pv ? [pv.id] : []).concat(t.need || []); };
+const nextStep = (o, t) => { const L = lineOf(t); return L.find(x => !G.P[o].techs.has(x.id)) || null; };   // the first unknown step of t's line
+const isNext = (o, t) => nextStep(o, t) === t;
 const todaySeed = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };   // the same map for everyone that day
 const MODES = { conquest: { name: 'Conquest', secs: 0 }, t30: { name: '30 minutes', secs: 1800 }, t60: { name: '60 minutes', secs: 3600 } };
 
@@ -125,9 +131,9 @@ function stats(o, kind) {
 }
 const maxHpU = (o, kind) => stats(o, kind).hp;
 const maxHpB = (o, kind) => BLD[kind].hp * (o === WILD ? 1 : fxv(o, 'bhp', ['*', ...bldKeys(kind)]).m);
-const dmgOf = u => stats(u.owner, u.kind).dmg * (FORM[formOf(u)].dmg && hasTag(u.kind, 'mounted') ? FORM[formOf(u)].dmg : 1) * (u.zeal > G.t ? ZEAL.mul : 1) * (u.sick > G.t ? 0.6 : 1) * hungerOf(u.owner) * EVM.dmg * (u.chg > G.t ? CHARGE.dmg : 1);
+const dmgOf = u => stats(u.owner, u.kind).dmg * (u.owner === WILD ? 1 : wearMul(u.owner)) * (FORM[formOf(u)].dmg && hasTag(u.kind, 'mounted') ? FORM[formOf(u)].dmg : 1) * (u.zeal > G.t ? ZEAL.mul : 1) * (u.sick > G.t ? 0.6 : 1) * hungerOf(u.owner) * EVM.dmg * (u.chg > G.t ? CHARGE.dmg * fxv(u.owner, 'charge').m : 1);
 const rngOf = u => { const r = stats(u.owner, u.kind).rng; return r > 20 ? r * (WEATHER[G.wx] && WEATHER[G.wx].rng || 1) : r; };
-const sightOf = e => ((UNIT[e.kind] || BLD[e.kind]).sight || 100) * (1 - (1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) * G.night) * EVM.sight * (WEATHER[G.wx].sight || 1);   // night, the moon, an eclipse or fog, a blizzard
+const sightOf = e => (((UNIT[e.kind] || BLD[e.kind]).sight || 100) + (e.owner !== undefined && e.owner !== WILD && e.owner !== null ? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]).a : 0)) * (1 - (1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) * G.night) * EVM.sight * (WEATHER[G.wx].sight || 1);   // night, the moon, an eclipse or fog, a blizzard
 const carryOf = o => CARRY + fxv(o, 'carry').a;
 function gatherMul(o, n) {
   let m = fxv(o, 'gather', [n.type, n.kind]).m * EVM.gather * (WEATHER[G.wx].gather || 1);

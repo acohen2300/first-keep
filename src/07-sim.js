@@ -10,13 +10,13 @@ function step(dt) {
   buildGrid();
   if (G.navDirty) navRebuild();
   NAV.budget = 4;
-  const sp = season().spd * (hz('winter') && season().name === 'Winter' ? 0.8 : 1), wsp = WEATHER[G.wx].spd || 1, SP = o => (1 - (1 - sp) * (o === WILD ? 1 : fxv(o, 'mud').m)) * wsp;
+  const sp = season().spd * (hz('winter') && season().name === 'Winter' ? 0.8 : 1), wsp = WEATHER[G.wx].spd || 1, SP = o => o === WILD ? sp * wsp : (1 - (1 - sp) * fxv(o, 'mud').m * (season().name === 'Winter' ? 1 - Math.min(1, fxv(o, 'cold').a) : 1)) * (1 - (1 - wsp) * (G.wx === 'rain' ? 1 - Math.min(1, fxv(o, 'wet').a) : 1));
   const SPS = [SP(0), SP(1), SP(2), SP(3), SP(4)];
   for (const b of G.blds) if (b.hp > 0) bldTick(b, dt);
   econTick(dt);
   if (G.tick % 3 === 0) formUp();
   if (G.tick % 30 === 1) { recount(); ordersTick(); noticeTick(); }
-  if (G.tick % 30 === 2) eventsTick();
+  if (G.tick % 30 === 2) { eventsTick(); groundTick(1); }
   if (SET.fog && G.tick % 10 === 0) fogTick();
   for (const u of G.units) if (u.hp > 0) TICK[UNIT[u.kind].tick](u, dt, SPS[u.owner]);
   healTick(dt);
@@ -432,6 +432,8 @@ const nearHome = (u, t, k) => (u.hax !== undefined && hyp(t.x - u.hax, t.y - u.h
 function solTick(u, dt, SP) {
   const U = UNIT[u.kind], o = u.owner, k = keepOf(o);
   u.cd = Math.max(0, u.cd - dt); u.stance = stanceOf(u);
+  if (u.state === 'school') { u.idleT = 0; if (G.t >= u.schoolT) graduate(u); return; }   // at the School: it stands, learns, and comes out a newer soldier
+  if (u.hp < u.max && !u.tgt && o !== WILD && (G.tick + u.id) % 30 === 0 && G.blds.some(b => b.owner === o && b.hp > 0 && b.prog >= 1 && (b.kind === 'castle' || b.kind === 'barracks' || b.kind === 'keep') && dist(b, u) < GARRISON.r)) u.hp = Math.min(u.max, u.hp + GARRISON.heal * fxv(o, 'garrison').m);   // garrisoned: it heals
   if (u.state === 'rout') {   // broken: it runs from the nearest foe toward home, then comes to itself
     if (G.t > u.routT) { u.state = 'home'; u.mor = MORALE.after; return; }
     const f = (G.tick + u.id) % 6 === 0 || !u.fleeFrom ? (u.fleeFrom = nearestFoe(o, u, 220)) : u.fleeFrom, h = homeOf(o) || u;
@@ -478,7 +480,9 @@ function solTick(u, dt, SP) {
         const f = nearestFoe(o, u, KITE); if (f && !f.q && UNIT[f.kind].rng <= 20) { const dx = u.x - f.x, dy = u.y - f.y, dd = hyp(dx, dy) || 1; const kx = clamp(u.x + dx / dd * 28, 15, MAP - 15), ky = clamp(u.y + dy / dd * 28, 15, MAP - 15); if (!blockedCell(gcell(kx, ky), o)) { u.kx = kx; u.ky = ky; u.kT = G.t; } }
       }
       if (u.kT > G.t - 0.5 && u.cd > 0) { moveTo(u, u.kx, u.ky, dt, 2, SP); return; }
-      if (u.cd <= 0) { hurt(o, u, tgt, dmgOf(u)); u.cd = U.cd; u.hitT = G.t; if (U.rng > 20) shot(u.x, u.y, 9, tgt.x, tgt.y); }
+      if (u.cd <= 0) { u.cd = U.cd; u.hitT = G.t;
+        if (hasTag(u.kind, 'siege') && G.ground.snow > 0 && rng() < GROUND.miss * G.ground.snow * (1 - fxv(o, 'snow').a)) { u.hp -= u.max * GROUND.missHurt; scarStrike(u.x + u.fx * 30, u.y + u.fy * 30); if (o === 0 && (G.tick + u.id) % 90 < 3) say('Snow: the engine slid, shot short.', 'warn', 4, u); }   // an engine on snow
+        else { hurt(o, u, tgt, dmgOf(u)); if (U.rng > 20) shot(u.x, u.y, 9, tgt.x, tgt.y); } }
     } else moveTo(u, tgt.x, tgt.y, dt, Math.max(2, reach - 2 + (tgt.q ? halfOf(tgt) : 0)), SP);
     u.idleT = 0; return;
   }
@@ -637,7 +641,10 @@ function vsMul(a, t) {
 function hurt(o, a, t, base) {
   const A = a ? UNIT[a.kind] : {}, isB = !!t.q;
   let d = base;
-  if (isB) d *= A.bld ?? 1;
+  if (isB) { d *= A.bld ?? 1;
+    if (a && o !== WILD && t.prog >= 1 && BLD[t.kind].wood && !t.fire) { const keys = unitKeys(a.kind), blast = A.gun && fxv(o, 'blast', keys).a >= 1; if ((blast || fxv(o, 'fire', keys).a >= 1) && rng() < (blast ? FIREARMS.blast : FIREARMS.chance) * (WEATHER[G.wx].fire || 1)) ignite(t, 'a shot'); }   // fire arrows, burning shot, petards
+    if (a && A.gun && fxv(o, 'blast', unitKeys(a.kind)).a >= 1) for (const n of G.blds) if (n !== t && n.hp > 0 && n.owner === t.owner && dist(n, t) < FIREARMS.splash) n.hp -= d * FIREARMS.splashHit;   // the blast shakes the neighbours
+  }
   else {
     if (a) d *= vsMul(a, t);
     if (isSoldier(t)) { if (t.state === 'rout') d *= MORALE.routHit; else if (t.fb > G.t) d *= FALLBACK.hit; const dot = a && t.fx !== undefined ? ((a.x - t.x) * t.fx + (a.y - t.y) * t.fy) / (dist(a, t) || 1) : 1; t.mor -= MORALE.hit * d / t.max * (dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1); }   // nerve: a blow from the side counts twice, from behind three times

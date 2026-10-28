@@ -55,7 +55,6 @@ const PLAY = {
   job(a) { G.P[0].rally = a; unitsOf(0, 'vil').forEach(u => { if (!u.job) u.job = a; }); },
   move(a) { if (!unitsOf(0, 'vil').some(u => !u.job)) { say('Nobody is idle. Use − on another job.', '', 3); return; } moveVil(0, a); }, less(a) { moveVil(0, a, true); },
   mtab(a) { G.mtab = a; },
-  rtab(a) { G.rtab = +a; },
   ktab(a) { G.ktab = a; },
   sel(a) { G.sel = a === 'all' ? 'all' : Number(a); },
   sendto(a) { const [f, x, y] = a.split(','), to = { x: Number(x), y: Number(y) }, S = sendPick(/^(q|all|n\d+)$/.test(f) ? f : Number(f), to);
@@ -77,6 +76,8 @@ const PLAY = {
   unpick() { setPick([]); },
   pcharge() { const S = picked(); if (!charge(0, S)) say(chargeWhy(0, S) || 'Not now.', '', 3); },
   pfall() { fallBack(0, picked()); },
+  pteach() { const S = picked().filter(u => isSoldier(u) && teachTo(u)); let n = 0, why = null; for (const u of S) { if (teach(0, u)) n++; else why = why || teachWhy(0, u); } say(n ? `${n} to the School.` : why || 'Nobody here can be taught.', n ? 'good' : '', 3); },
+  teach(id) { const u = G.units.find(x => x.id === +id); if (u && !teach(0, u)) say(teachWhy(0, u) || 'Not now.', '', 3); },
   charge() { const S = orderSet(), bn = G.sel === 'all' ? undefined : G.sel; if (!charge(0, S, bn)) say(chargeWhy(0, S, bn) || 'Not now.', '', 3); },
   fallback() { fallBack(0, orderSet(), G.sel === 'all' ? undefined : G.sel); closeCard(); },
   // relations and a lord's hand: one verb each, the reason on the card when it cannot be done

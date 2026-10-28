@@ -75,7 +75,8 @@ function think(p) {
   }
   aiEconomy(p, k, R, put, has);
   if (per.spy && ready(o, 'courthouse').length && unitsOf(o, 'spy').length + queuedOf(o, 'spy') < 1 && R.g >= 150 && R.f >= 60) train(o, 'spy');
-  if (!saving) for (const id of p.civ ? [...per.techs, 'elite_' + p.civ] : per.techs) if (research(o, id)) break;   // their own elite rank last
+  if (!saving) { let did = false; for (const id of p.civ ? [...per.techs, 'elite_' + p.civ] : per.techs) if (research(o, id)) { did = true; break; }   // their own elite rank last
+    if (!did && G.tick % 300 === o * 7) for (const t of TECH) if ((!t.civ || t.civ === p.civ) && isNext(o, t) && research(o, t.id)) break; }   // then whatever line is open: the tree is deep now
   // the army: the counter to what the enemies field; with Muster and gold to spare, eight at once from the War Council
   if (!saving && p.techs.has('muster') && armyN + queuedOf(o) - queuedOf(o, 'vil') + 8 <= armyCap(p)) { const want = bestCounter(o); if (want) muster(o, { [civKind(o, want)]: 8 }); }
   if (!saving && armyN + queuedOf(o) - queuedOf(o, 'vil') < armyCap(p) && vils.length >= Math.min(per.vils, per.early)) { const want = bestCounter(o); if (want) train(o, want); }

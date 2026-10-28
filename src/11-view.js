@@ -101,6 +101,7 @@ function draw() {
     }
     ctx.stroke();
   }
+  drawGround();   // the weather's mark on the land, under everything standing
   // everything standing, back to front
   // what is on screen: margins in world units, wide enough for the widest building (its turned east wall) and the tallest (a wonder, standing just below the edge)
   const a0 = toWorld(0, 0), b0 = toWorld(cw, ch), mx = Math.max(80 / z, 44), wv = { x: a0.x - mx, y: a0.y - Math.max(120 / (z * TILT), 34) }, wv2 = { x: b0.x + mx, y: b0.y + Math.max(160 / (z * TILT), 115) }, inView = e => e.x > wv.x && e.x < wv2.x && e.y > wv.y && e.y < wv2.y;
@@ -343,6 +344,14 @@ function drawPicks(z) {
 }
 const rnd2 = () => Math.random() * 2 - 1;
 // Spectacle on the glass: each event's picture, drawn over the world. Light, particles, a real shape; nothing that hides the game.
+// the ground after the weather: mud darkens the land, snow whitens it, ice gives it a sheen
+function drawGround() {
+  const g = G.ground; if (!g || (g.mud < 0.02 && g.snow < 0.02 && g.ice < 0.02)) return;
+  const w = cw, h = ch;
+  if (g.mud >= 0.02) { ctx.fillStyle = `rgba(70,45,22,${0.22 * g.mud})`; ctx.fillRect(0, 0, w, h); ctx.fillStyle = `rgba(50,32,14,${0.3 * g.mud})`; const z = cam.z, s = 90 * z; for (let i = 0; i < 60; i++) { const sx = SX(((i * 173) % MAP)), sy = SY(((i * 311) % MAP)); if (sx > -s && sx < w + s && sy > -s && sy < h + s) { ctx.beginPath(); ctx.ellipse(sx, sy, s * (0.5 + (i % 3) * 0.25), s * 0.3, 0, 0, 6.3); ctx.fill(); } } }
+  if (g.snow >= 0.02) { ctx.fillStyle = `rgba(235,240,245,${0.55 * g.snow})`; ctx.fillRect(0, 0, w, h); }
+  if (g.ice >= 0.02) { ctx.fillStyle = `rgba(190,215,240,${0.25 * g.ice})`; ctx.fillRect(0, 0, w, h); }
+}
 function drawEvents(z) {
   const e = G.ev && G.ev.cur, t = performance.now() / 1000;
   if (e && e.kind === 'storm' && !lessMotion) {   // a dark band of cloud walking east, rain under it

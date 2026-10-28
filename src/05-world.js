@@ -4,7 +4,7 @@ let G;
 function blankGame(seed) {
   return { t: 0, tick: 0, speed: G ? G.speed : 1, over: null, seed, rs: seed, units: [], blds: [], nodes: [], finds: [], tracers: [], log: [],
     P: [], rel: [], card: null, place: null, sel: 'all', alertT: -99, warnT: -99, confirm: null, night: 0, loot: {}, lootT: 0,
-    hold: Array(BNS + 1).fill(0), stance: Array(BNS + 1).fill(0), bnPlan: BN.map(() => ({})), form: BN.map(() => 0), bnEdit: 0, qs: { from: 'all', n: {} }, intel: {}, fantasy: SET.fantasy, mode: SET.mode, diff: SET.diff, wayT: WAYFARER_EVERY * 0.5, wayI: 0, wonder: null, navDirty: true, fxv: 1, warAt: {}, pick: [], hz: {}, ev: {}, horde: null, flood: 0, fog: new Uint8Array(FOGN * FOGN) };   // warAt: notice given, 'a,b' → when it falls due; pick: what the finger holds; hz: the hazards on; ev: the spectacle's state
+    hold: Array(BNS + 1).fill(0), stance: Array(BNS + 1).fill(0), bnPlan: BN.map(() => ({})), form: BN.map(() => 0), bnEdit: 0, qs: { from: 'all', n: {} }, intel: {}, fantasy: SET.fantasy, mode: SET.mode, diff: SET.diff, wayT: WAYFARER_EVERY * 0.5, wayI: 0, wonder: null, navDirty: true, fxv: 1, warAt: {}, pick: [], hz: {}, ev: {}, horde: null, flood: 0, ground: { mud: 0, snow: 0, ice: 0 }, fog: new Uint8Array(FOGN * FOGN) };   // warAt: notice given, 'a,b' → when it falls due; pick: what the finger holds; hz: the hazards on; ev: the spectacle's state
 }
 function mkPlayer(i, civ) {
   const d = PLAYERS[i];

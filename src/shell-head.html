@@ -171,19 +171,8 @@ button.ok small{color:#8fd4a4}
 #card .tabs{gap:2px;margin-bottom:-2px}
 #card .tabs button{border-radius:8px 8px 0 0;border-bottom-color:var(--line);background:var(--panel2)}
 #card .tabs button.on{background:#f4eac9;border-bottom-color:#f4eac9}
-#card .tabs.ages button{border-top:4px solid;padding:4px 0;min-height:44px;font-size:11px;letter-spacing:0;background:#e6dbb9}
-#card .tabs.ages button.dim{color:#5a5040;background:#ddd2b1}
-#card .tabs.ages button.a0{border-top-color:#9a9890}
-#card .tabs.ages button.a0.on{background:#e0d8bc}
-#card .tabs.ages button.a1{border-top-color:#b5793a}
-#card .tabs.ages button.a1.on{background:#e6d1aa}
-#card .tabs.ages button.a2{border-top-color:#c9c2a6}
-#card .tabs.ages button.a2.on{background:#ebe1c1}
-#card .tabs.ages button.a3{border-top-color:#4d6b9e}
-#card .tabs.ages button.a3.on{background:#dcd8c6}
-#card .tabs.ages button.a4{border-top-color:#8e2f2a}
-#card .tabs.ages button.a4.on{background:#e8d4b8}
-#card .tabs.ages button.on::before{display:none}
+#card button[class*=" a"]::before,#card button[class^="a"]::before{content:'';position:absolute;left:10px;right:10px;top:4px;height:3px;border-radius:2px;background:var(--age)}   /* a research step wears the colour of its age */
+#card button.a0{--age:#9a9890}#card button.a1{--age:#b5793a}#card button.a2{--age:#c9c2a6}#card button.a3{--age:#4d6b9e}#card button.a4{--age:#8e2f2a}
 #card .tabs button.on::before{content:'';position:absolute;top:-1px;right:8px;width:9px;height:15px;background:#8e1d14;clip-path:polygon(0 0,100% 0,100% 100%,50% 72%,0 100%)}
 @media (max-width:400px){:root{--pad:6px}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important;scroll-behavior:auto!important} }
@@ -204,7 +193,7 @@ button.ok small{color:#8fd4a4}
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
     <button class="fab" id="buildB" data-act="buildrow" aria-label="Build"></button>
     <div id="strip" hidden></div>
-    <div id="pickbar" hidden><span id="pickT"></span><button data-act="pcharge" id="pCharge" hidden><b>Charge</b></button><button data-act="pfall" id="pFall" hidden><b>Fall back</b></button><button data-act="unpick" aria-label="Let go"><b>✕</b></button></div>
+    <div id="pickbar" hidden><span id="pickT"></span><button data-act="pcharge" id="pCharge" hidden><b>Charge</b></button><button data-act="pfall" id="pFall" hidden><b>Fall back</b></button><button data-act="pteach" id="pTeach" hidden><b>Teach</b></button><button data-act="unpick" aria-label="Let go"><b>✕</b></button></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="cancel"><b>Cancel</b></button></div>
     <div id="card" hidden></div>
     <div id="end" hidden>

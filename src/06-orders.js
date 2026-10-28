@@ -58,7 +58,7 @@ function researchWhy(o, id) {
   if (p.techs.has(id)) return 'Already known.';
   if (T.civ && T.civ !== p.civ) return 'Another people\'s.';
   if (T.age > p.age) return `Needs the ${AGES[T.age].name} age.`;
-  if (T.need && !p.techs.has(T.need)) return `Needs ${TECHBY[T.need].name}.`;
+  for (const n of needsOf(T)) if (!p.techs.has(n)) return `Needs ${TECHBY[n].name}.`;
   if (G.blds.some(b => b.owner === o && b.q.some(j => j.tech === id))) return 'Being researched.';
   const at = ready(o, T.at)[0]; if (!at) return `Needs a ${BLD[T.at].name.toLowerCase()}.`;
   if (at.q.length >= qMax(o)) return 'That line is full.';
@@ -261,6 +261,24 @@ function payRansom(o, i) {
   const k = keepOf(o); if (k) { const u = addUnit(o, x.kind, k.x + 40, k.y + 40); u.state = 'home'; }
   if (o === 0) say(`Ransom paid: your ${UNIT[x.kind].name.toLowerCase()} walks home.`, 'good', 5); return true;
 }
+// ── Teach: a soldier of an older kind learns a newer one at the School. It stands frozen for the lesson; tuition is paid up front.
+const teachTo = u => { const k = TEACH_TO[baseKind(u.kind)]; return k && UNIT[k].age > UNIT[baseKind(u.kind)].age ? k : null; };
+const teachGap = u => UNIT[teachTo(u)].age - UNIT[baseKind(u.kind)].age;
+function teachCost(o, u) { const A = unitCost(o, baseKind(u.kind)), B = unitCost(o, teachTo(u)), c = {}; for (const r in B) if ((B[r] || 0) - (A[r] || 0) > 0) c[r] = B[r] - (A[r] || 0); c.g = (c.g || 0) + TEACH.tuition * teachGap(u); return c; }
+const teachSecs = (o, u) => UNIT[teachTo(u)].t * TEACH.mul * teachGap(u) * fxv(o, 'teach').m;
+const schooling = o => G.units.filter(v => v.owner === o && v.state === 'school' && v.hp > 0).length;
+function teachWhy(o, u) {
+  const p = G.P[o], to = teachTo(u); if (!to) return 'Nothing newer to learn.';
+  if (u.state === 'school') return 'Already learning.';
+  if (fxv(o, 'teach').a < 1) return 'Research Veterans at the Barracks.';
+  if (UNIT[to].age > p.age) return `Needs the ${AGES[UNIT[to].age].name} age.`;
+  const S = ready(o, 'school'); if (!S.length) return 'Needs a School.';
+  if (schooling(o) >= TEACH.seats * S.length) return 'The School is full.';
+  if (!afford(p, teachCost(o, u))) return `Not enough: ${costText(teachCost(o, u))}.`;
+  return null;
+}
+function teach(o, u) { if (teachWhy(o, u)) return false; pay(G.P[o], teachCost(o, u)); u.state = 'school'; u.schoolT = G.t + teachSecs(o, u); u.tgt = null; u.fb = 0; u.chg = 0; return true; }
+function graduate(u) { const o = u.owner, to = civKind(o, teachTo(u)), f = u.hp / u.max; u.kind = to; u.max = maxHpU(o, to); u.hp = Math.max(1, u.max * f); u.state = 'home'; u.schoolT = 0; if (o === 0) say(`Taught: a ${stats(0, to).name.toLowerCase()} joins the ranks.`, 'good', 4, u); }
 function prisonersTick() {   // every five seconds: the unransomed change sides
   for (const x of (G.prisoners || []).slice()) if (G.t - x.t > PRISON.secs) {
     G.prisoners.splice(G.prisoners.indexOf(x), 1); const T = throneB(), k = x.by === WILD ? T : keepOf(x.by);

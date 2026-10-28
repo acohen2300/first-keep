@@ -8,7 +8,8 @@ const lakeR = L => L.r + (G.flood > G.t ? EVENTS.flood.rise : 0);   // a lake in
 // how far a point stands from water (negative: in it). The great lake holds the Throne's island and four causeways, which are land.
 const onLand = (x, y) => (Math.abs(x - MID) < THRONE.cause / 2 || Math.abs(y - MID) < THRONE.cause / 2) && hyp(x - MID, y - MID) < LAKE0.r + 60 || hyp(x - MID, y - MID) < THRONE.isle;
 const lakeGap = (x, y) => onLand(x, y) ? 1e9 : G.lakes.reduce((m, L) => Math.min(m, hyp(x - L.x, y - L.y) - lakeR(L)), 1e9);   // how far from the nearest lake's edge
-function lakeGrid() { NAV.lake.fill(0); for (const L of G.lakes) for (let y = 0; y < NC; y++) for (let x = 0; x < NC; x++) if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeR(L) + 2 && !onLand(x * NAVC + 5, y * NAVC + 5)) NAV.lake[y * NC + x] = 1; lakeFor = G.lakes; lakeHi = G.flood > G.t; }
+// lake cells: 1 water, 2 flood water only, which a side with levees wades
+function lakeGrid() { NAV.lake.fill(0); for (const L of G.lakes) for (let y = 0; y < NC; y++) for (let x = 0; x < NC; x++) if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeR(L) + 2 && !onLand(x * NAVC + 5, y * NAVC + 5)) NAV.lake[y * NC + x] = hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < L.r + 2 ? 1 : 2; lakeFor = G.lakes; lakeHi = G.flood > G.t; }
 const gcell = (x, y) => clamp(Math.floor(y / NAVC), 0, NC - 1) * NC + clamp(Math.floor(x / NAVC), 0, NC - 1);
 const toCell = w => ({ gx: clamp(Math.floor(w.x / NAVC), 0, NC - 1), gy: clamp(Math.floor(w.y / NAVC), 0, NC - 1) });
 const coord = (x, y) => String.fromCharCode(65 + clamp(Math.floor(x / 100), 0, 19)) + (clamp(Math.floor(y / 100), 0, 19) + 1);
@@ -45,7 +46,7 @@ function navRebuild() {
   if (!same) NAV.v++; G.navDirty = false; G.treeV = (G.treeV || 0) + 1;
 }
 // can this side's unit not stand on this square? (a gate is shut only to those at war with its owner)
-function blockedCell(c, o) { if (NAV.solid[c]) return true; const g = NAV.gate[c]; return g !== 0 && atWar(o, g - 1); }
+function blockedCell(c, o) { if (NAV.solid[c]) return NAV.solid[c] !== 2 || o === WILD || fxv(o, 'flood').a < 1; const g = NAV.gate[c]; return g !== 0 && atWar(o, g - 1); }
 function lineClear(x1, y1, x2, y2, o, avoid) {
   const dx = x2 - x1, dy = y2 - y1, n = Math.ceil(hyp(dx, dy) / 4);
   for (let i = 1; i <= n; i++) { const c = gcell(x1 + dx * i / n, y1 + dy * i / n); if (blockedCell(c, o) || (avoid && DANGER[c])) return false; }
@@ -158,7 +159,8 @@ function route(u, tx, ty) {
 }
 // one step toward (x, y); true once within r. A building as the goal means "arrive beside it".
 function moveTo(u, x, y, dt, r, SP) {
-  if (u.stuck > G.t) return false;   // in a pit
+  if (u.stuck > G.t) return false;   // in a pit, or slipped on ice
+  if (G.ground.ice > 0 && !u.fly && u.owner !== WILD && (G.tick + u.id) % 30 === 0 && rng() < GROUND.slip * G.ground.ice * (1 - fxv(u.owner, 'ice', unitKeys(u.kind)).a)) { u.stuck = G.t + GROUND.slipSecs; if (u.owner === 0 && !(G.slipT > G.t - 20)) { G.slipT = G.t; say('Ice: your people slip and fall.', 'soft', 4, u); } return false; }
   const o = u.owner, gc = gcell(x, y), gb = NAV.occ[gc];
   let tx = x, ty = y, stand = false;
   if (gb && !BLD[gb.kind].walk) { if (rectGap(u.x, u.y, gb) <= Math.max(6, r - halfOf(gb))) return true; stand = true; }
@@ -168,7 +170,7 @@ function moveTo(u, x, y, dt, r, SP) {
   const wp = route(u, tx, ty);
   const dx = wp.x - u.x, dy = wp.y - u.y, dd = hyp(dx, dy) || 1e-6;
   const lim = wp.direct ? (stand ? dd : Math.max(0, dd - r)) : dd;
-  const m = Math.min(Math.min(stats(o, u.kind).spd, u.cap || 1e9) * (u.kind === 'vil' && u.carry > 0 ? 0.9 : 1) * (u.sick > G.t ? 0.8 : 1) * SP * dt * (u.stance === 1 ? STANCE[1].spd : 1) * (FORM[formOf(u)].spd || 1) * EVM.spd * (G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1) * (u.chg > G.t ? CHARGE.spd : u.tired > G.t ? CHARGE.tiredSpd : 1), lim);
+  const m = Math.min(Math.min(stats(o, u.kind).spd, u.cap || 1e9) * (u.kind === 'vil' && u.carry > 0 ? 0.9 : 1) * (u.sick > G.t ? 0.8 : 1) * SP * dt * (u.stance === 1 ? STANCE[1].spd : 1) * (FORM[formOf(u)].spd || 1) * EVM.spd * (o === WILD ? 1 : groundSpd(o, unitKeys(u.kind))) * (G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1) * (u.chg > G.t ? CHARGE.spd : u.tired > G.t ? CHARGE.tiredSpd : 1), lim);
   let nx = u.x + dx / dd * m, ny = u.y + dy / dd * m;
   if (blockedCell(gcell(nx, ny), o)) { if (!blockedCell(gcell(nx, u.y), o)) ny = u.y; else if (!blockedCell(gcell(u.x, ny), o)) nx = u.x; else { nx = u.x; ny = u.y; } }
   u.x = nx; u.y = ny; if (m > 0.3) { if (!(u.kT > G.t - 0.5)) { u.fx = dx / dd; u.fy = dy / dd; } u.mvT = G.t; u.st.walk += m; if (u.kind === 'vil') tread(u); }   // real steps only: a small nudge neither turns the figure round nor starts its walk

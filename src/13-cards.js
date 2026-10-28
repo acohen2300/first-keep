@@ -29,9 +29,8 @@ function patchHTML(el, html) { tpl.innerHTML = html; patchKids(el, tpl); }
 const cap1 = t => t && t.indexOf('<') < 0 ? t.replace(/(^|· )([a-z])/g, (m, a, c) => a + c.toUpperCase()) : t;   // sentence case: a capital opens every label and every part after a dot
 const btn = (act, title, sub, cls) => `<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small${sub.startsWith('short ') ? ' class="need"' : ''}>${cap1(sub)}</small>` : ''}</button>`;   // a sub-line that says what is short reads in red
 const FOLD = new Set();   // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
-// age tabs on a building's research: one per age it teaches, shaded in that age's colour; the open one is the first with work left you can do
-const ageTab = (ages, techs) => ages.includes(G.rtab) ? G.rtab : (ages.filter(a => a <= G.P[0].age && techs.some(t => t.age === a)).pop() ?? ages.filter(a => a <= G.P[0].age).pop() ?? ages[0]);
-const ageTabs = (ages, cur) => `<div class="acts tabs ages c${Math.min(ages.length, 5)}">${ages.map(a => `<button data-act="rtab:${a}" class="a${a}${a === cur ? ' on' : ''}${a > G.P[0].age ? ' dim' : ''}"><b>${AGES[a].name}</b></button>`).join('')}</div>`;
+// the book entry of a research step: the date, what it changed, and its weight, which is its cost
+const techBook = t => `<p><b>${t.name}</b>${t.when ? ` · ${t.when}` : ''}${t.w ? ` · weight ${t.w} of 10` : ''}: ${t.desc}${WHY[t.id] ? ` ${WHY[t.id]}` : ''}${t.w ? ` Cost and time ×${(0.5 + 0.1 * t.w).toFixed(1)} for its age.` : ''}</p>`;
 const twoTabs = (key, opts, cur) => `<div class="acts tabs">${opts.map(([k, t, sub]) => btn(`${key}:${k}`, (ICON.tab[k] || '') + t, sub, cur === k ? 'on' : '')).join('')}</div>`;   // two-sided cards, one mold: two tabs; the chosen one is lit
 const INFO = new Set(['why', 'bmore', 'about', 'menu', 'bnabout']); let infoBuf = [];   // the explaining text of a card waits behind the book icon
 const fold = (id, title, html) => INFO.has(id) ? (html && infoBuf.push(html), '') : html ? `<details class="fold" data-f="${id}"${FOLD.has(id) ? ' open' : ''}><summary>${title}</summary>${html}</details>` : '';
@@ -63,7 +62,7 @@ function techState(t) {
 function techBtn(t, withAt) {
   const st = techState(t);
   const sub = st === 'busy' ? 'researching' : st === 'short' ? `short ${need(t.cost)}` : st === 'locked' ? researchWhy(0, t.id).replace(/\.$/, '') : costText(t.cost);
-  return btn(`tech:${t.id}`, t.name, sub + (withAt ? ` · ${BLD[t.at].name}` : ''), st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock');
+  return btn(`tech:${t.id}`, t.name, sub + (withAt ? ` · ${BLD[t.at].name}` : ''), `a${t.age} ` + (st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock'));   // a${age}: the top edge wears the age's colour
 }
 const trainsAt = kind => Object.keys(UNIT).filter(k => (UNIT[k].at === kind || (UNIT[k].also || []).includes(kind)) && !UNIT[k].civ && UNIT[k].cost);
 function keepAgeBtn() {   // the next age, as one research button; the reason waits behind the book
@@ -75,6 +74,7 @@ function keepAgeBtn() {   // the next age, as one research button; the reason wa
 function statusOf(u) {
   const nm = b => bldName(0, b.kind).toLowerCase();
   if (u.inside) return 'sheltering inside';
+  if (u.state === 'school') return `learning at the School, ${Math.ceil(u.schoolT - G.t)} s`;
   if (u.kind === 'vil') {
     if (u.scared) return 'running for shelter';
     if (u.job === 'repair') return !u.rep ? 'looking for work' : u.rep.fire > 0 ? `fighting the fire at the ${nm(u.rep)}` : u.rep.prog < 1 ? `raising the ${nm(u.rep)}, ${Math.round(u.rep.prog * 100)}%` : `mending the ${nm(u.rep)}`;
@@ -166,6 +166,8 @@ function musterGap(i) {   // what a battalion still lacks: its plan, less the me
 // ───────────────────────── What a building's page says, by kind ─────────────────────────
 // The generic page (health, crew, train, research, more) is one function; what a kind adds to it is one line here, never a branch in the page.
 const BLD_PAGE = {
+  castle: b => { const n = G.units.filter(u => u.owner === 0 && isSoldier(u) && u.hp < u.max && dist(u, b) < GARRISON.r).length; return `<p>Soldiers resting here heal ${GARRISON.heal * fxv(0, 'garrison').m} a second${n ? `: ${n} mending now` : ''}.</p>`; },
+  school: b => { const n = schooling(0), S = ready(0, 'school').length; return `<p>Teaching ${n} of ${TEACH.seats * S} seats${fxv(0, 'teach').a < 1 ? ' · research Veterans at the Barracks to send soldiers' : ' · tap a soldier, then Teach'}.</p>`; },
   farm: b => `<p>Worked by ${b.node && b.node.wk > 0 ? slotText(b.node) : 'nobody yet: tap Send a villager' + (b.node && b.node.type === 'food' ? ', or + under Food' : '')}. This season: ${season().name}, ×${season().farm}${G.harvest !== 1 ? ` · this year's harvest ×${G.harvest}` : ''}${WEATHER[G.wx].crop ? ` · ${WEATHER[G.wx].name.toLowerCase()} ×${WEATHER[G.wx].crop}` : ''} · soil ${Math.round((b.fert ?? 1) * 100)}%.</p>` + (b.node ? yieldText(b.node, 0) : ''),
   treefarm: b => `<p>Tended by ${b.node && b.node.wk > 0 ? slotText(b.node) : 'nobody yet: tap Send a villager, or + under Wood'}. ${Math.round(b.node ? b.node.amt : 0)} wood left, then the plot is cut out.</p>`,
   pasture: b => `<p>${b.sheep || 0} sheep: ${b.node && b.node.wk > 0 ? `milk and meat, about ${Math.round((b.sheep || 0) * BLD.pasture.milk * 60 * gatherMul(0, b.node))} food a minute` : 'nobody tends them: tap Send a villager'}. ${Math.floor(b.node ? b.node.amt : 0)} wool to bring in${ready(0, 'workshop').length ? '' : ' · <b>wool waits for a Workshop</b>'}. Shorn each spring, when lambs come too.</p>`,
@@ -280,7 +282,7 @@ function caravanHTML(u) {
 }
 function researchHTML() {   // everything you can research, across every building: ready first, then short, then locked
   const p = G.P[0], by = { ready: [], short: [], busy: [], locked: [] }, ageA = AGES[p.age + 1];
-  for (const t of TECH) { if (!ownTech(t)) continue; const s = techState(t); if (s !== 'done') by[s].push(t); }
+  for (const t of TECH) { if (!ownTech(t) || !isNext(0, t)) continue; const s = techState(t); if (s !== 'done') by[s].push(t); }
   const grid = L => acts(L.map(t => techBtn(t, true)).join('')), ageR = ageA && !p.aging && afford(p, ageA.cost) && keepOf(0);
   let h = title('Research', `${by.ready.length + (ageR ? 1 : 0)} ready now`);
   const cap = by.ready.filter(t => t.cap), rest = by.ready.filter(t => !t.cap);
@@ -326,14 +328,13 @@ const CARDS = {
     if (mine && b.prog >= 1) {
       if (!(b.kind === 'keep' && G.ktab === 'rel') && (trainsAt(b.kind).length || TECH.some(t => t.at === b.kind) || b.kind === 'keep')) h += slotsHTML(b);
       const mk = b.kind === 'market', kp = b.kind === 'keep', trade = (mk && G.mtab !== 'more') || (kp && G.ktab === 'rel');   // the Market's trade side and the Town Center's relations side show no training or research
-      const tr = trade ? [] : trainsAt(b.kind), techs = trade ? [] : TECH.filter(t => ownTech(t) && t.at === b.kind && !p.techs.has(t.id)), done = trade ? [] : TECH.filter(t => t.at === b.kind && p.techs.has(t.id));
+      const tr = trade ? [] : trainsAt(b.kind), techs = trade ? [] : TECH.filter(t => ownTech(t) && t.at === b.kind && isNext(0, t)), done = trade ? [] : TECH.filter(t => t.at === b.kind && p.techs.has(t.id));   // one step per line: the next
       const ageB = kp && !trade ? keepAgeBtn() : '', hasR = techs.length || done.length || ageB, hd = t => tr.length && hasR ? sec(t) : '';   // one page: Train, then Research; the next age is research like any other
-      const ages = [...new Set([...techs, ...done].map(t => t.age))].sort(), rt = ages.length > 1 ? ageTab(ages, techs) : -1, inTab = t => rt < 0 || t.age === rt;   // age tabs when a building teaches across ages
       if (mk) h += twoTabs('mtab', [['trade', 'Trade', 'sell and buy'], ['more', 'Caravans', 'and ventures']], trade ? 'trade' : 'more');
       if (kp) h += twoTabs('ktab', [['town', 'Town', 'train and research'], ['rel', 'Relations', 'ally, neutral, hostile']], trade ? 'rel' : 'town');
       if (tr.length) h += hd('Train') + acts(trainButtons(tr));
-      if (hasR) h += hd('Research') + (rt < 0 ? '' : ageTabs(ages, rt)) + acts(ageB + techs.filter(inTab).map(t => techBtn(t)).join('')) + (done.some(inTab) ? `<div class="chips">${done.filter(inTab).map(t => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>` : '');
-      moreH = (tr.length && b.kind !== 'keep' && b.kind !== 'town' ? tr.map(k => unitLine(0, civKind(0, k))).join('') : '') + techs.map(t => `<p><b>${t.name}:</b> ${t.desc}</p>`).join('') + (b.kind === 'keep' ? keepMoreHTML() : '');
+      if (hasR) h += hd('Research') + acts(ageB + techs.map(t => techBtn(t)).join('')) + (done.length ? `<div class="chips">${done.map(t => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>` : '');
+      moreH = (tr.length && b.kind !== 'keep' && b.kind !== 'town' ? tr.map(k => unitLine(0, civKind(0, k))).join('') : '') + techs.map(techBook).join('') + (b.kind === 'keep' ? keepMoreHTML() : '');
       if (BLD_PAGE[b.kind]) h += BLD_PAGE[b.kind](b);
       if (kp && trade) h += relHTML();
       if (B.makes) h += workshopHTML(b);
@@ -375,6 +376,7 @@ const CARDS = {
       if (sites.length) h += sec('Build') + acts(sites.map(s => btn(`buildat:${u.id},${s.id}`, bldName(0, s.kind), `${Math.round(s.prog * 100)}% · ${Math.round(dist(s, u))} away`, 'go')).join(''), 'c1');
     }
     if (o === 0 && u.kind === 'caravan') h += caravanHTML(u);
+    if (o === 0 && isSoldier(u) && teachTo(u)) { const why = teachWhy(0, u); h += acts(u.state === 'school' ? btn(`teach:${u.id}`, `Learning: ${stats(0, teachTo(u)).name}`, `${Math.ceil(u.schoolT - G.t)} s left`, 'dis') : btn(`teach:${u.id}`, `Teach: ${stats(0, teachTo(u)).name}`, why ? why.replace(/\.$/, '') : `${costText(teachCost(0, u))} · ${Math.round(teachSecs(0, u))} s at the School`, why ? 'dis' : 'go'), 'c1'); }   // a soldier learns a newer kind
     if (u.sick > G.t) h += `<p><b>${u.plague ? 'Plague' : 'Sick'}:</b> works and fights at half strength. A Hospital or a medic nearby cures it.</p>`;
     const bt = o !== WILD && beatsText(o, u.kind); if (bt) h += `<p><i>Strong against:</i> ${bt}.</p>`;
     if (o !== 0 && atWar(0, o)) h += qsHTML(`qfoe:${u.id}`, 'Attack with', u);

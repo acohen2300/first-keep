@@ -430,3 +430,14 @@ Built: nerve, rout, charge, fall back, prisoners and ransom; priests convert; fo
 
 Cut: Business centre, Weaver, Brewery, Bakery, Amphitheatre (single-function buildings; their work is now research or the Workshop); the Fortress card and its contracts (the Fortress is a player now); a generic elite guide line (each people has its own).
 Fixed on the way: stale references to the cut buildings in the farm and pasture cards, the sprite test and the native wrapper.
+
+- **Play fingerprint accepted:** Stage 4b: the research tree is rebuilt from history (206 steps in lines, costs by weight); the computers follow the lines; the ground keeps mud, snow and ice
+
+## Build 40, stage 4b — the tree from history, the ground, Teach
+
+Built: the research tree rebuilt from history: 206 steps in lines (Smithy: Blades, Armour, Walls …), one button per line showing its next step; each step needs the one before and sometimes one elsewhere; cost and time from the weight of the step (1–10); the book gives the date and what it changed. Stone age thin, Gunpowder thick, as the record is. The computers follow the lines too.
+The ground keeps the weather: mud, ice and snow build and fade over days and show on the map; mud and snow slow marches, ice makes men slip, engines on snow slide and shoot short, frost and rain blunt blades. Research answers each: drains, snow clearing, crampons, levees, cloaks, oiled cloaks, tempering, oiling, horseshoes, the weather glass.
+Fire arrows, burning shot and petards set wooden buildings alight (rain halves it); petards shake the neighbours. Soldiers resting by a Castle, Barracks or Town Center heal (Garrison wards double it). Teach: Veterans + a School let a soldier learn a newer kind, frozen at its post for the lesson, four a School.
+
+Cut: the age tabs on research (built in stage 4, replaced by lines the same morning); apostrophes in the new text (Albert: none needed).
+Parked: old text still has apostrophes (a sweep for stage 5 or later); region fill treats flood water as solid for everyone, so a levee side wades it only on short routes.

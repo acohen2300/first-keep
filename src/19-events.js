@@ -20,7 +20,7 @@ const EV = {
   storm: { start(e) { e.a = { x: -EVENTS.storm.band, y: MID }; e.b = { x: MAP + EVENTS.storm.band, y: MID }; sfx('wind'); },
     tick(e) { const c = crossing(e); e.x = c.x; if ((G.tick % 60) === 0) { const x = clamp(e.x + rnd(-EVENTS.storm.band, EVENTS.storm.band), 40, MAP - 40), y = rnd(80, MAP - 80), W = G.blds.filter(b => BLD[b.kind].wood && b.prog >= 1 && Math.abs(b.x - e.x) < EVENTS.storm.band && rng() < 0.3); const b = W.length && rng() < 0.25 ? W[Math.floor(rng() * W.length)] : null; strike(b ? b.x : x, b ? b.y : y, b); } } },
   stampede: { start(e) { e.a = edgeSpot(); e.b = across(e.a); e.units = herdAt('bison', EVENTS.stampede.n, e.a, e.b, 40); sfx('hooves'); }, tick(e) { if ((G.tick % 90) === 0) sfx('hooves', e.units[0] && e.units[0].x, e.units[0] && e.units[0].y); }, end(e) { for (const u of e.units) if (u.hp > 0 && dist(u, { x: u.px, y: u.py }) < 120) { u.hp = 0; u.gone = true; } } },
-  flood: { start(e) { G.flood = e.until; G.navDirty = true; }, tick(e) { if ((G.tick % 30) !== 0) return; for (const b of G.blds) if (b.prog >= 1 && lakeGap(b.x, b.y) < EVENTS.flood.rise - halfOf(b)) { b.hp -= maxHpB(b.owner, b.kind) * EVENTS.flood.hit; if (b.owner === 0 && (G.tick % 300) === 0) say(`Water at the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 5, b); } }, end() { G.flood = 0; G.navDirty = true; } },
+  flood: { start(e) { G.flood = e.until; G.navDirty = true; }, tick(e) { if ((G.tick % 30) !== 0) return; for (const b of G.blds) if (b.prog >= 1 && b.owner !== WILD && fxv(b.owner, 'flood').a < 1 && lakeGap(b.x, b.y) < EVENTS.flood.rise - halfOf(b)) { b.hp -= maxHpB(b.owner, b.kind) * EVENTS.flood.hit; if (b.owner === 0 && (G.tick % 300) === 0) say(`Water at the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 5, b); } }, end() { G.flood = 0; G.navDirty = true; } },
   locusts: { start(e) { e.a = edgeSpot(); e.b = across(e.a); sfx('buzz'); }, tick(e) { const c = crossing(e); e.x = c.x; e.y = c.y; if ((G.tick % 15) === 0) for (const b of G.blds) if (b.kind === 'farm' && b.prog >= 1 && dist(b, c) < EVENTS.locusts.r && !(b.locust > G.t)) { b.locust = G.t + EVENTS.locusts.strip; b.fert = FERT.floor; if (b.owner === 0) say(`Locusts on the field at ${coord(b.x, b.y)}.`, 'warn', 4, b); } } },
   meteor: { start(e) { e.at = wildSpot(); e.a = { x: e.at.x - 900, y: e.at.y - 700 }; }, end(e) { addFind('meteor', e.at.x, e.at.y); scarStrike(e.at.x, e.at.y); scarStrike(e.at.x + 6, e.at.y + 4); sfx('boom', e.at.x, e.at.y); G.whiteT = G.t; say(EV_TEXT.meteor[1], 'good', 7, e.at); } },
   wildfire: { start(e) { const far = G.nodes.filter(n => n.kind === 'tree' && n.amt > 0 && !G.P.some(p => p.id !== WILD && p.alive && keepOf(p.id) && dist(keepOf(p.id), n) < 300)); const t = far[Math.floor(rng() * far.length)]; e.burn = t ? [t] : []; e.at = t ? { x: t.x, y: t.y } : null; G.fire = e.burn; sfx('crash', t && t.x, t && t.y); },
@@ -71,6 +71,15 @@ function hordeTick() {
   for (let i = 0; i < n; i++) { const u = wildAt(kinds[i % 3], from.x + rnd(-40, 40), from.y + rnd(-40, 40)); u.hx = k.x; u.hy = k.y; u.horde = true; }
   say(EV_TEXT.horde[2], 'warn', 10, from); sfx('horn'); G.horde = 'done';
 }
+// the ground after the weather: mud, ice and snow build while it rains, freezes or blows, and go slowly after
+function groundTick(dt) {
+  const g = G.ground, wx = G.wx, storm = !!(G.ev.cur && G.ev.cur.kind === 'storm');
+  g.mud = clamp(g.mud + (wx === 'rain' ? (storm ? GROUND.storm : GROUND.rain) : -GROUND.dry) * dt, 0, 1);
+  g.ice = clamp(g.ice + (wx === 'frost' ? GROUND.frost : -GROUND.thaw * (season().name === 'Winter' ? 0.3 : 1)) * dt, 0, 1);
+  g.snow = clamp(g.snow + (wx === 'blizzard' ? GROUND.blizzard : -GROUND.melt * (season().name === 'Winter' ? 0.2 : season().name === 'Summer' ? 3 : 1)) * dt, 0, 1);
+}
+const groundSpd = (o, keys) => (1 - GROUND.mudSlow * G.ground.mud * fxv(o, 'mud', keys).m) * (1 - GROUND.snowSlow * G.ground.snow * (1 - fxv(o, 'snow', keys).a));   // what the ground takes off a march
+const wearMul = o => (G.wx === 'frost' || G.wx === 'rain' || G.wx === 'blizzard') ? 1 - GROUND.wear * (1 - Math.min(1, fxv(o, 'wear').a)) : 1;   // brittle in frost, rusted in rain
 function newsTick() { if (G.t - (G.ev.newsT || 0) < NEWS_EVERY || G.t < 60) return; G.ev.newsT = G.t; const L = NEWS[Math.min(G.P[0].age, NEWS.length - 1)], i = (G.ev.newsI = ((G.ev.newsI || 0) + 1)) % L.length; say(L[i], 'news', 8); }
 // a herd crosses: bison trample what they run over; performers only pass; a dragon flies (it is drawn above everything and walks through walls)
 function herdTick(u, dt, SP) {
