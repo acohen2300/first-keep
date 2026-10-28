@@ -118,7 +118,7 @@ const PLAY = {
   routeto(a) { const f = G.finds.find(x => x.id === Number(a)); if (!f || !homeBiz(0, f)) { say('Build a Market first.', '', 4); return; } const c = unitsOf(0, 'caravan').sort((p, q) => (!!p.route - !!q.route) || dist(p, f) - dist(q, f))[0]; if (!c) { say('No caravan: train one at the Market.', '', 3); return; } setRoute(c, f, true, true); say('A caravan takes the route, on repeat.', '', 3); },
   rrep(a) { const c = G.units.find(u => u.id === Number(a)); if (c && c.route) c.route.rep = !c.route.rep; },
   rsp(a) { const c = G.units.find(u => u.id === Number(a)); if (c && c.route) c.route.spice = !c.route.spice; },
-  rclr(a) { const c = G.units.find(u => u.id === Number(a)); if (c) { c.route = null; c.dest = null; } }, sendbld(a) { sendBuild(0, Number(a)); }, buildat(a) { const [v, s] = a.split(',').map(Number); sendBuild(0, s, v); }, hunt(a) { sendHunt(0, Number(a)); }, repair(a) { sendRepair(0, Number(a)); },
+  rclr(a) { const c = G.units.find(u => u.id === Number(a)); if (c) { c.route = null; c.dest = null; } }, sendbld(a) { sendBuild(0, Number(a)); }, buildat(a) { const [v, s] = a.split(',').map(Number); sendBuild(0, s, v); }, hunt3(a) { for (let i = 0; i < 3; i++) sendHunt(0, Number(a)); }, hunt(a) { sendHunt(0, Number(a)); }, repair(a) { sendRepair(0, Number(a)); },
   takedown(a) { const id = Number(a), b = G.blds.find(x => x.id === id && x.owner === 0); if (b && b.kind !== 'keep') { if (BLD[b.kind].wallish || b.prog < 0.15 || G.confirm === id) { demolish(0, id); G.confirm = null; closeCard(); } else G.confirm = id; } },
   train(a) { if (!train(0, a)) say(trainWhy(0, a) || 'Not now.', '', 3); },
   tech(a) { if (!research(0, a)) say(researchWhy(0, a) || 'Not now.', '', 3); },

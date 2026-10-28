@@ -150,12 +150,13 @@ function sendPick(from, to) {   // 'q' a quarter of each type, 'all', 'n8' the n
 function showStrip(sx, sy, x, y, step) {
   if (step === undefined) closeCard(); const el = $('strip'), at = `${Math.round(x)},${Math.round(y)}`, to = { x, y }, n = from => sendPick(from, to).length, nAll = n('all'), ic = (act, icon, label, cls) => `<button data-act="${act}" class="ic ${cls || ''}" aria-label="${label}">${icon}</button>`;
   const sh = { sx, sy, x, y }; G.stripAt = sh;
-  if (!step) el.innerHTML = ic(`buildhere:${at}`, ICON.hammer, 'Build here', 'go') + (nAll ? ic('striparmy', ICON.sword, 'Send soldiers here') : '') + ic(`more:${at}`, '⋯', 'More about this place') + ic('nostrip', ICON.close, 'Cancel');
-  else if (step === 1) el.innerHTML = btn(`sendto:all,${at}`, 'All', String(nAll), 'go') + btn(`sendto:h,${at}`, '½', String(n('h'))) + ic('stripmore', '⋯', 'More ways to send') + ic('nostrip', ICON.close, 'Cancel');
+  if (!step) el.innerHTML = ic(`buildhere:${at}`, ICON.hammer, 'Build here') + ic(nAll ? 'striparmy' : 'nostrip', ICON.sword, 'Send soldiers here', nAll ? 'go thumb' : 'dis thumb') + ic(`more:${at}`, '⋯', 'More about this place') + ic('nostrip', ICON.close, 'Cancel');
+  else if (step === 1) el.innerHTML = btn(`sendto:h,${at}`, '½', String(n('h')), 'ic') + btn(`sendto:all,${at}`, 'All', String(nAll), 'ic go thumb') + ic('stripmore', '⋯', 'More ways to send') + ic('nostrip', ICON.close, 'Cancel');   // three taps in one spot: open, sword, All (Albert: a fast dispatch)
   else { const bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : []; el.innerHTML = btn(`sendto:q,${at}`, '¼', String(n('q'))) + [8, 12].filter(k => nAll > k).map(k => btn(`sendto:n${k},${at}`, String(k), 'nearest')).join('') + bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') + ic('nostrip', ICON.close, 'Cancel'); }
   el.hidden = false; G.strip = to;
-  const r = $('stage').getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight;
-  el.style.left = clamp(sx - w / 2, 4, r.width - w - 4) + 'px'; el.style.top = clamp(sy - h - 18, 4, r.height - h - 4) + 'px';
+  if (step === 1 || step === 2) return;   // the next step stays exactly where it was: the thumb does not move
+  const r = $('stage').getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight, th = el.querySelector('.thumb'), tx = th ? th.offsetLeft + th.offsetWidth / 2 : w / 2, ty = th ? th.offsetTop + th.offsetHeight / 2 : h / 2;
+  el.style.left = clamp(sx - tx, 4, r.width - w - 4) + 'px'; el.style.top = clamp(sy - ty, 4, r.height - h - 4) + 'px';   // the sword opens under the finger
 }
 // what the game thinks fits a spot: the drop-off for what grows there, if none is near; a house when room is short
 function suggestAt(x, y) {
