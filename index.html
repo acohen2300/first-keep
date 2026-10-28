@@ -769,9 +769,9 @@ const MOON = 8;   // days from new moon to new moon (the real month is 29.5; the
 const HAZARDS = {   // six, in two columns (Albert, Build 41)
   hard:    { pts: 3, name: 'Hardest', desc: 'The computers strike in winter, send more riders at your villagers and drop-offs, and need shorter odds to come.' },
   starve:  { pts: 2, name: 'Famine', desc: 'No food for a minute: work stops. After two, a villager leaves and a soldier deserts every half minute.' },
-  winter:  { pts: 2, name: 'Extreme weather', desc: 'Winter fields give a quarter and marches crawl; blizzards blind the small map; tremors come every few minutes and hit hard.' },
+  winter:  { pts: 2, name: 'Bad weather', desc: 'Winter fields give a quarter and marches crawl; blizzards blind the small map; tremors come every few minutes and hit hard.' },
   drought: { pts: 2, name: 'Drought', desc: 'Summers run dry three times as often and springs can too: fields give 30% less and fires spread fast.' },
-  horde:   { pts: 3, name: 'Hordes and gangs', desc: 'Between minute 20 and 40 a horde comes for the weakest side, announced two seasons ahead; outlaws raid twice as often.' },
+  horde:   { pts: 3, name: 'Outlaws', desc: 'Between minute 20 and 40 a horde comes for the weakest side, announced two seasons ahead; outlaws raid twice as often.' },
   plague:  { pts: 2, name: 'Plague', desc: 'Plague is three times as likely and spreads twice as fast along the roads. Hospitals matter.' },
 };
 const HZK = Object.keys(HAZARDS), HZ_DEFAULT = { hard: 1, starve: 1 }, TODAY_HZ = { hard: 1, starve: 1, horde: 1, winter: 1 };   // a new game starts at level 5; The challenge today is level 10 on the day's seed
