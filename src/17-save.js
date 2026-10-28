@@ -1,10 +1,11 @@
 // ═════ 17-save.js ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
-const SAVEKEY = 'firstkeep.save', SAVEV = 30;   // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+const SAVEKEY = 'firstkeep.save', SAVEV = 31;   // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {   // { 24: S => S-in-the-shape-of-25 }, run in order
   27: S => { for (const p of S.P) if (p.techs && p.techs.includes('command') && !p.techs.includes('engage')) p.techs.push('engage'); S.v = 28; return S; },   // Build 31: Engagement comes before Battalions; who had them keeps stances
   28: S => { for (const u of S.units) if (u.job === 'farm') u.job = 'food'; for (const p of S.P) if (p.rally === 'farm') p.rally = 'food'; S.v = 29; return S; },   // Build 36: Farm is folded into Food
   29: S => { for (const u of S.units) u.st = u.st || { got: 0, trips: 0, walk: 0, kills: 0, built: 0 }; for (const p of S.P) { p.flow = p.flow || {}; p.rate = p.rate || {}; } S.warAt = S.warAt || {}; S.v = 30; return S; },   // Build 40: a life's tally on every unit, the stores' flow, notice given
+  30: S => { const gone = new Set(['bizc', 'weaver', 'brewery', 'bakery', 'amphi']); S.blds = S.blds.filter(b => !gone.has(b.kind)); for (const u of S.units) { if (u.mor === undefined) u.mor = 1; } S.v = 31; return S; },   // Build 40: the one-job buildings folded into research and the Workshop; nerve on every soldier
 };
 const evSave = () => { const V = G.ev || {}, e = V.cur; return { ...V, cur: e ? { kind: e.kind, t0: e.t0, until: e.until, at: e.at, a: e.a, b: e.b, x: e.x, y: e.y } : null }; };   // no unit or node objects in the save
 let staleSave = 0;   // the version of a save we could not open, so the setup card can say so
@@ -18,7 +19,7 @@ function saveGame(force) {
   try {
     const units = G.units.map(u => { const r = {}; for (const k in u) if (!SKIP_U.has(k)) r[k] = u[k]; r.nodeId = u.node ? u.node.id : null; r.repId = u.rep ? u.rep.id : null; r.huntId = u.hunt ? u.hunt.id : null; return r; });
     const blds = G.blds.map(b => { const r = {}; for (const k in b) if (k !== 'node') r[k] = b[k]; if (b.node) { r.nodeId = b.node.id; r.res = isFinite(b.node.amt) ? b.node.amt : undefined; } return r; });
-    const S = { v: SAVEV, at: Date.now(), t: G.t, tick: G.tick, speed: G.speed, seed: G.seed, rs: G.rs, nid: NID, sel: G.sel, rally0: G.rally0 || null, hold: G.hold, stance: G.stance, bnPlan: G.bnPlan, form: G.form, intel: G.intel, throne: G.throne || null, traps: G.traps || [], prisoners: G.prisoners || [], nat: G.nat || null, fantasy: G.fantasy, mode: G.mode, diff: G.diff, wayT: G.wayT, wayI: G.wayI, wonder: G.wonder, ords: G.ords || {}, ordN: G.ordN || 0, land: G.land || null, warAt: G.warAt || {}, hz: G.hz || {}, ev: evSave(), horde: G.horde, flood: G.flood || 0, sand: G.sand || null, mirage: G.mirage || null, mkt: G.mkt || null, reignT: G.reignT ?? null, free: !!G.free, bell: G.bell || null, wx: G.wx, wxT: G.wxT, harvest: G.harvest, plague: G.plague, seasonN: G.seasonN,
+    const S = { v: SAVEV, at: Date.now(), t: G.t, tick: G.tick, speed: G.speed, seed: G.seed, rs: G.rs, nid: NID, sel: G.sel, rally0: G.rally0 || null, hold: G.hold, stance: G.stance, bnPlan: G.bnPlan, form: G.form, intel: G.intel, throne: G.throne || null, prisoners: G.prisoners || [], nat: G.nat || null, fantasy: G.fantasy, mode: G.mode, diff: G.diff, wayT: G.wayT, wayI: G.wayI, wonder: G.wonder, ords: G.ords || {}, ordN: G.ordN || 0, land: G.land || null, warAt: G.warAt || {}, hz: G.hz || {}, ev: evSave(), fog: btoa(String.fromCharCode(...G.fog)), horde: G.horde, flood: G.flood || 0, sand: G.sand || null, mirage: G.mirage || null, mkt: G.mkt || null, reignT: G.reignT ?? null, free: !!G.free, bell: G.bell || null, wx: G.wx, wxT: G.wxT, harvest: G.harvest, plague: G.plague, seasonN: G.seasonN,
       cam: { x: cam.x, y: cam.y, z: cam.z }, rel: G.rel, finds: G.finds, lakes: G.lakes,
       P: G.P.map(p => { const { fxc, uc, ...q } = p; return { ...q, techs: [...p.techs] }; }),
       nodes: G.nodes.filter(n => n.kind !== 'farm').map(n => n.kind === 'tree' ? [n.id, n.x, n.y, n.amt, n.max] : (({ open, wk, ...r }) => r)(n)), blds, units };   // trees are most of the map: five numbers each
@@ -50,7 +51,8 @@ function loadGame(S) {
   for (const su of S.units) { const { nodeId, repId, huntId, ...u } = su; u.node = nodeId ? byNode.get(nodeId) || null : null; u.rep = repId ? byB.get(repId) || null : null; u._hunt = huntId; G.units.push(u); }
   const byU = new Map(G.units.map(u => [u.id, u])); for (const u of G.units) { if (u._hunt) u.hunt = byU.get(u._hunt) || null; delete u._hunt; }
   G.ords = S.ords || {}; G.ordN = S.ordN || 0; G.land = S.land || null; G.warAt = S.warAt || {}; setPick([]);
-  G.throne = S.throne || null; G.traps = S.traps || []; G.prisoners = S.prisoners || []; G.nat = S.nat || null;
+  G.throne = S.throne || null; G.prisoners = S.prisoners || []; G.nat = S.nat || null;
+  if (S.fog) { try { const s = atob(S.fog); for (let i = 0; i < s.length && i < G.fog.length; i++) G.fog[i] = s.charCodeAt(i); } catch (e) {} }
   G.hz = S.hz || {}; G.ev = S.ev || {}; G.horde = S.horde ?? null; G.flood = S.flood || 0; G.sand = S.sand || null; G.mirage = S.mirage || null; if (G.ev.cur) { const e = G.ev.cur; e.units = G.units.filter(u => u.herd); if (!EV[e.kind].tick || e.kind === 'wildfire') G.ev.cur = null; }   // an event with its own pieces on the map is dropped on load; the pieces finish on their own for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined;   // orders on the march come back with the game; a stray number is cleared (Build 38 review)
   fxDirty(); navRebuild(); recount(); scoreAll();
   if (S.cam) { cam.x = S.cam.x; cam.y = S.cam.y; cam.z = clamp(S.cam.z, minZ(), ZOOM_MAX); clampCam(); }

@@ -70,7 +70,7 @@ function think(p) {
   // trade: a couple of caravans once there is somewhere to take them (an ally, or goods for the stops); swap a big surplus for gold
   if (per.trade && p.age >= 1 && armyN >= 6) {
     const m = ready(o, 'market')[0];
-    if (m && (allyMarket(o, m) || ready(o, 'bizc').length) && unitsOf(o, 'caravan').length + queuedOf(o, 'caravan') < 3 && R.w >= 150 && R.g >= 100) train(o, 'caravan');
+    if (m && unitsOf(o, 'caravan').length + queuedOf(o, 'caravan') < 3 && R.w >= 150 && R.g >= 100) train(o, 'caravan');
     if (ready(o, 'market').length) for (const r of ['f', 'w', 's', 'i']) if (R[r] > 1200 && R.g < 150) { marketTrade(o, r, 'sell'); break; }
   }
   aiEconomy(p, k, R, put, has);
@@ -158,6 +158,7 @@ function decideWar(p, per) {
   const o = p.id, home = soldiersOf(o).filter(u => u.state === 'home' && !UNIT[u.kind].heal), out = soldiersOf(o).filter(u => u.state === 'attack');
   if (p.wave) {
     const hit = out.some(u => G.t - (u.hitT || -99) < 30);
+    if (!p.wave.charged && out.some(u => u.tgt && !u.tgt.q)) { p.wave.charged = true; charge(o, out); }   // on contact, once a wave
     if (out.length < p.wave.n * 0.35 || (!hit && G.t - p.wave.t > 45)) { out.forEach(u => u.state = 'home'); p.wave = null; }   // beaten, or stalled: go home
     return;
   }

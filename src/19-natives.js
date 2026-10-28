@@ -45,27 +45,27 @@ function takeThrone(o, sworn) {
   say(o === 0 ? (sworn ? 'The Natives swear: the Throne is yours.' : 'The Throne is yours. Hold it.') : `${G.P[o].name} ${sworn ? 'were sworn' : 'took'} the Throne!`, o === 0 ? 'good' : 'warn', 10, T); sfx(o === 0 ? 'win' : 'horn');
   if (was !== WILD && was !== o && G.P[was]) G.P[was].wave = null;
 }
-// a prisoner's ransom: paid, the soldier walks home; unpaid, they join the Natives
-function payRansom(o, i) {
-  const P = (G.prisoners || []).filter(x => x.o === o), x = P[i]; if (!x || G.P[o].res.g < x.ransom) return false;
-  G.P[o].res.g -= x.ransom; G.prisoners.splice(G.prisoners.indexOf(x), 1); const k = keepOf(o); if (k) { const u = addUnit(o, x.kind, k.x + 40, k.y + 40); u.state = 'home'; }
-  if (o === 0) say(`Ransom paid: your ${UNIT[x.kind].name.toLowerCase()} walks home.`, 'good', 5); return true;
-}
-// Traps on the causeways: pits and nets, laid by the Natives, found by scouts, relaid after they spring. A net takes a man, not an engine.
+// Traps: hidden buildings (pits, nets, stakes) of any side. A foe who steps on one springs it; a scout within reach finds it for its side, who then step round it;
+// allies walk free; a net takes a man, not an engine. The Natives keep four on each causeway and lay fresh ones while they hold the Throne.
+const trapAt = (owner, kind, x, y) => { const b = mkBld(owner, kind, x, y, 1); b.seen = {}; G.blds.push(b); return b; };
 function layTraps() {
-  G.traps = [];
-  for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) for (let i = 0; i < NATIVE.traps; i++) { const d = THRONE.r + 20 + rnd(10, LAKE0.r - THRONE.r - 40), s = rnd(-THRONE.cause / 2 + 6, THRONE.cause / 2 - 6); G.traps.push({ x: MID + dx * d + dy * s, y: MID + dy * d + dx * s, kind: i % 2 ? 'net' : 'pit', armed: true, seen: {}, at: 0 }); }
+  if (!throneB() || (G.throne && G.throne.owner !== WILD)) return;
+  for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+    const have = G.blds.filter(b => BLD[b.kind].trap && b.owner === WILD && b.hp > 0 && Math.sign(Math.round((b.x - MID) / 50)) === dx && Math.sign(Math.round((b.y - MID) / 50)) === dy).length;
+    for (let i = have; i < NATIVE.traps; i++) { const d = THRONE.r + 20 + rnd(10, LAKE0.r - THRONE.r - 40), s = rnd(-THRONE.cause / 2 + 6, THRONE.cause / 2 - 6); trapAt(WILD, i % 2 ? 'net' : 'pit', MID + dx * d + dy * s, MID + dy * d + dx * s); }
+  }
 }
 function trapsTick() {
-  for (const t of G.traps || []) {
-    if (!t.armed) { if (G.t - t.at > NATIVE.relay && throneB() && (!G.throne || G.throne.owner === WILD)) { t.armed = true; t.seen = {}; } continue; }
-    unitsNear(t, NATIVE.scoutSees, v => {
-      if (v.owner === WILD || v.hp <= 0 || v.fly || v.herd || !t.armed) return;
-      if (v.kind === 'scout' && !t.seen[v.owner]) { t.seen[v.owner] = 1; if (v.owner === 0) say(`Your scout found a ${t.kind} on the causeway.`, 'good', 5, t); return; }
-      if (t.seen[v.owner] || G.rel[v.owner][WILD] === 'ally' || dist(v, t) > NATIVE.trapR) return;
-      t.armed = false; t.at = G.t;
-      if (t.kind === 'pit') { v.hp -= v.max * NATIVE.pit; v.hurtT = G.t; v.stuck = G.t + NATIVE.stuck; if (v.owner === 0) say(`A pit! Your ${UNIT[v.kind].name.toLowerCase()} is hurt and stuck.`, 'warn', 5, t); }
-      else if ((isSoldier(v) && !hasTag(v.kind, 'siege')) || v.kind === 'vil') { const ransom = Math.round(Math.max(40, sumCost(UNIT[v.kind].cost || { f: 40 }) * NATIVE.ransom)); (G.prisoners = G.prisoners || []).push({ o: v.owner, kind: v.kind, t: G.t, ransom }); v.hp = 0; v.gone = true; if (v.owner === 0) say(`Netted: a prisoner. Ransom ${ransom} gold.`, 'warn', 7, t); }
+  for (const b of G.blds) {
+    if (!BLD[b.kind].trap || b.prog < 1 || b.hp <= 0) continue; const kind = BLD[b.kind].trap;
+    unitsNear(b, NATIVE.scoutSees, v => {
+      if (b.hp <= 0 || v.hp <= 0 || v.fly || v.herd || v.inside || v.owner === b.owner || friendly(v.owner, b.owner) || (v.owner === WILD && !v.horde)) return;
+      if (v.kind === 'scout' && !b.seen[v.owner]) { b.seen[v.owner] = 1; if (v.owner === 0) say(`Your scout found ${kind === 'pit' ? 'a pit' : kind === 'net' ? 'a net' : 'stakes'} at ${coord(b.x, b.y)}.`, 'good', 5, b); return; }
+      if (b.seen[v.owner] || dist(v, b) > NATIVE.trapR) return;
+      b.hp = 0; b.gone = true; scarStrike(b.x, b.y);
+      if (kind === 'pit') { v.hp -= v.max * NATIVE.pit; v.hurtT = G.t; v.stuck = G.t + NATIVE.stuck; if (v.owner === 0) say(`A pit! Your ${UNIT[v.kind].name.toLowerCase()} is hurt and stuck.`, 'warn', 5, b); else if (b.owner === 0) say(`Your pit took ${G.P[v.owner].name}' ${UNIT[v.kind].name.toLowerCase()}.`, 'good', 4, b); }
+      else if (kind === 'stakes') { v.hp -= v.max * (hasTag(v.kind, 'mounted') ? 0.45 : 0.25); v.hurtT = G.t; v.flashT = G.t; if (b.owner === 0) say(`Your stakes caught ${G.P[v.owner].name}' ${UNIT[v.kind].name.toLowerCase()}.`, 'good', 4, b); }
+      else if ((isSoldier(v) && !hasTag(v.kind, 'siege')) || v.kind === 'vil') takePrisoner(b.owner, v);
     });
   }
 }
@@ -81,14 +81,14 @@ function natRaid() {
 }
 function nativesTick(dt) {
   if (G.tick % 10 === 5) trapsTick();
+  if (G.tick % 1800 === 900) layTraps();   // fresh traps for the Natives, every minute
   for (const u of G.units) if (u.back && G.t > u.back) { u.back = 0; u.horde = false; if (u.camp) { u.hx = u.camp.x; u.hy = u.camp.y; } }   // raiders go home
   if (G.tick % 150 !== 7) return;   // the rest every five seconds
   const N = natState(), T = throneB(), held = G.throne && G.throne.owner !== WILD;
   for (const p of G.P) if (p.id !== WILD && p.alive) { N.regard[p.id] += (NATIVE.regard0 - N.regard[p.id]) * NATIVE.decay / 100 * 5; natSync(p.id); }
   if (T && !held && G.units.filter(u => u.native && u.hp > 0).length < garrisonMax() && G.t - (N.grewT || 0) > NATIVE.regrow * (gunAge() ? NATIVE.gunRegrow : 1)) { N.grewT = G.t; natSpawn(T, rng() < 0.4 ? 'nativebow' : 'native'); }
   natRaid();
-  // prisoners unpaid join the Natives
-  for (const x of (G.prisoners || []).slice()) if (G.t - x.t > NATIVE.ransomSecs) { G.prisoners.splice(G.prisoners.indexOf(x), 1); if (T) natSpawn(T, 'native'); if (x.o === 0) say(`Unransomed: your ${UNIT[x.kind].name.toLowerCase()} is a Native now.`, 'warn', 6); }
+  prisonersTick();
   // the sworn handover: an ally with soldiers inside for a minute
   if (T && !held) for (const p of G.P) if (p.id !== WILD && p.alive && G.rel[p.id][WILD] === 'ally') {
     const n = G.units.filter(u => u.owner === p.id && isSoldier(u) && dist(u, T) < THRONE.r).length;

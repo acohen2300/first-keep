@@ -421,3 +421,12 @@ Albert's call: everything up to the old Build 44 in one build, one gate, one pus
 - **Alerts reworked (Albert):** world news and the spectacle's "coming" lines are quiet: they go to the list and count on the list button, never take the line; only events that can hurt you take it. World news has an off switch in Help.
 - The citadel is drawn once into the ground: a paved island and four stone causeways; traps show when sprung, or armed when your scout found them.
 - Play fingerprint accepted twice (the Natives' raids and the Fortress's new mind move the dice).
+
+- **Play fingerprint accepted:** Stage 4: the Natives' 16 causeway traps are hidden buildings from the first minute; new research (Baskets, Irrigation, Informers…) and unit costs by tech shift the early economy
+
+## Build 40, stage 4 — combat, fog, the deeper tree
+
+Built: nerve, rout, charge, fall back, prisoners and ransom; priests convert; fog of war (toggle in Help); traps as hidden buildings (pit, stakes, net) for every side; Workshop, Mint, Foundry, Quarry make goods in-house; shared caps (a fallen rival's room split among the living); 50 researches across every building with an age tab row shaded by age; the Town Center folds to two sides, Town and Relations.
+
+Cut: Business centre, Weaver, Brewery, Bakery, Amphitheatre (single-function buildings; their work is now research or the Workshop); the Fortress card and its contracts (the Fortress is a player now); a generic elite guide line (each people has its own).
+Fixed on the way: stale references to the cut buildings in the farm and pasture cards, the sprite test and the native wrapper.

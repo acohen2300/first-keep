@@ -35,6 +35,7 @@ const ACT = {
   tips() { SET.tips = !SET.tips; saveSet(); refresh(); },
   msgs() { SET.msgs = SET.msgs === false; saveSet(); refresh(); },
   news() { SET.news = SET.news === false; saveSet(); refresh(); },
+  fog() { SET.fog = !SET.fog; saveSet(); refresh(); },
   tkmin() { SET.tkMin = !SET.tkMin; saveSet(); G.tkN = 0; G.tkW = false; G.tkOpen = false; ui(true); fit(); },   // hide or show the ticker
   tklist() { G.tkOpen = !G.tkOpen && G.log.length > 0; ui(true); },   // the last five
   hush(a) { const t = decodeURIComponent(a || ''), k = hushKey(t), m = G.log.find(x => x.text === t);
@@ -54,6 +55,8 @@ const PLAY = {
   job(a) { G.P[0].rally = a; unitsOf(0, 'vil').forEach(u => { if (!u.job) u.job = a; }); },
   move(a) { if (!unitsOf(0, 'vil').some(u => !u.job)) { say('Nobody is idle. Use − on another job.', '', 3); return; } moveVil(0, a); }, less(a) { moveVil(0, a, true); },
   mtab(a) { G.mtab = a; },
+  rtab(a) { G.rtab = +a; },
+  ktab(a) { G.ktab = a; },
   sel(a) { G.sel = a === 'all' ? 'all' : Number(a); },
   sendto(a) { const [f, x, y] = a.split(','), to = { x: Number(x), y: Number(y) }, S = sendPick(/^(q|all|n\d+)$/.test(f) ? f : Number(f), to);
     S.forEach(u => { u.state = 'goto'; u.px = to.x; u.py = to.y; u.idleT = 0; u.focus = null; }); march(S, to, coord(to.x, to.y)); if (S.length) ripple(to.x, to.y, '#ffd35e'); hideStrip(); },
@@ -72,6 +75,10 @@ const PLAY = {
   sendvil(a) { sendVil(0, Number(a)); },
   boxcut(a) { if (G.card && G.card.type === 'box') boxCut(G.card.r, Number(a)); closeCard(); },
   unpick() { setPick([]); },
+  pcharge() { const S = picked(); if (!charge(0, S)) say(chargeWhy(0, S) || 'Not now.', '', 3); },
+  pfall() { fallBack(0, picked()); },
+  charge() { const S = orderSet(), bn = G.sel === 'all' ? undefined : G.sel; if (!charge(0, S, bn)) say(chargeWhy(0, S, bn) || 'Not now.', '', 3); },
+  fallback() { fallBack(0, orderSet(), G.sel === 'all' ? undefined : G.sel); closeCard(); },
   // relations and a lord's hand: one verb each, the reason on the card when it cannot be done
   rel(a) { const [q, want] = a.split(','); if (!setRel(0, Number(q), want)) say(relWhy(0, Number(q), want) || 'Not now.', '', 3); },
   breakties(a) { if (G.confirm !== 'bt' + a) { G.confirm = 'bt' + a; return; } G.confirm = null; breakTies(0, Number(a)); },
@@ -89,8 +96,9 @@ const PLAY = {
   douse(a) { const b = G.blds.find(x => x.id === Number(a) && x.owner === 0); let n = 0; if (b && b.fire > 0) for (let i = 0; i < 2; i++) { const v = pickVil(0, b, null, b); if (v) { if (v.job !== 'repair') v.pj = v.job; setJob(v, 'repair'); v.rep = b; v.fireman = true; n++; } } G.log = G.log.filter(m => m.act !== 'douse:' + a); if (n) say(`${n} more run to the fire.`, '', 3); else if (b && b.fire > 0) say('No villager is free.', '', 3); },
   tpost(a) { const f = G.finds.find(x => x.id === Number(a)); if (!f) return; const why = canPlace(0, 'tpost', f.x, f.y); if (why) { say(why + '.', '', 3); return; } if (!afford(G.P[0], BLD.tpost.cost)) { say(`Not enough: ${costText(BLD.tpost.cost)}.`, '', 3); return; } if (G.P[0].age < BLD.tpost.age) { say('Trade posts need the Bronze age.', '', 3); return; } build(0, 'tpost', f.x, f.y); say('A villager sets out to build the trade post.', '', 4); },
   want(a) { const f = G.finds.find(x => x.id === Number(a)); if (f && f.owner === 0) { f.want = WARES[(WARES.indexOf(f.want) + 1) % WARES.length]; } },
-  route(a) { const [cid, s, id] = a.split(','), c = G.units.find(u => u.id === Number(cid) && u.owner === 0), t = s === 's' ? G.finds.find(f => f.id === Number(id)) : G.blds.find(b => b.id === Number(id)); if (c && t) { if (!homeBiz(0, c)) { say('Build a Business Center first.', '', 4); return; } setRoute(c, t, true, s === 's'); say('The caravan runs the route on repeat.', '', 3); } },
-  routeto(a) { const f = G.finds.find(x => x.id === Number(a)); if (!f || !homeBiz(0, f)) { say('Build a Business Center first.', '', 4); return; } const c = unitsOf(0, 'caravan').sort((p, q) => (!!p.route - !!q.route) || dist(p, f) - dist(q, f))[0]; if (!c) { say('No caravan: train one at the Market.', '', 3); return; } setRoute(c, f, true, true); say('A caravan takes the route, on repeat.', '', 3); },
+  route(a) { const [cid, s, id] = a.split(','), c = G.units.find(u => u.id === Number(cid) && u.owner === 0), t = s === 's' ? G.finds.find(f => f.id === Number(id)) : G.blds.find(b => b.id === Number(id)); if (c && t) { if (!homeBiz(0, c)) { say('Build a Market first.', '', 4); return; } setRoute(c, t, true, s === 's'); say('The caravan runs the route on repeat.', '', 3); } },
+  make(a) { const [b, t] = a.split(','), B = G.blds.find(x => x.id === Number(b) && x.owner === 0); if (B) setMake(B, t); },
+  routeto(a) { const f = G.finds.find(x => x.id === Number(a)); if (!f || !homeBiz(0, f)) { say('Build a Market first.', '', 4); return; } const c = unitsOf(0, 'caravan').sort((p, q) => (!!p.route - !!q.route) || dist(p, f) - dist(q, f))[0]; if (!c) { say('No caravan: train one at the Market.', '', 3); return; } setRoute(c, f, true, true); say('A caravan takes the route, on repeat.', '', 3); },
   rrep(a) { const c = G.units.find(u => u.id === Number(a)); if (c && c.route) c.route.rep = !c.route.rep; },
   rsp(a) { const c = G.units.find(u => u.id === Number(a)); if (c && c.route) c.route.spice = !c.route.spice; },
   rclr(a) { const c = G.units.find(u => u.id === Number(a)); if (c) { c.route = null; c.dest = null; } }, sendbld(a) { sendBuild(0, Number(a)); }, buildat(a) { const [v, s] = a.split(',').map(Number); sendBuild(0, s, v); }, hunt(a) { sendHunt(0, Number(a)); }, repair(a) { sendRepair(0, Number(a)); },

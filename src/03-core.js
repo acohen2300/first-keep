@@ -22,7 +22,7 @@ const plural = n => /^man-at-arms$/i.test(n) ? n.replace(/^(m)an/i, '$1en') : /m
 const some = (k, n) => k === 1 ? n : plural(n);
 
 // Settings remembered on this phone.
-const SET = { diff: 'normal', tips: true, msgs: true, civ: 'roman', fantasy: false, mode: 't60', sound: true, vol: 0.6, mix: {}, hush: {}, mini: undefined, mapSeen: false, vibe: true, learned: {} };
+const SET = { diff: 'normal', tips: true, msgs: true, fog: true, civ: 'roman', fantasy: false, mode: 't60', sound: true, vol: 0.6, mix: {}, hush: {}, mini: undefined, mapSeen: false, vibe: true, learned: {} };
 try { Object.assign(SET, JSON.parse(localStorage.getItem('firstkeep.settings') || '{}')); } catch (e) {}
 if (!CIVS[SET.civ]) SET.civ = 'roman';
 if (!(SET.setV >= 38)) { let old = false; try { old = !!localStorage.getItem('firstkeep.settings'); } catch (e) {} if (old && SET.diff === 'easy' && SET.mode === 't30') { SET.diff = 'normal'; SET.mode = 't60'; } SET.setV = 38; }   // Build 38: Normal and an hour by default; a phone that kept Easy and 30 minutes from the old default moves once, and a choice made after stays
@@ -48,8 +48,8 @@ const popOf = o => { const C = qc(); if (C.pop[o] === undefined) { let n = 0; fo
 const roomOf = (o, kind) => BLD[kind].room ? BLD[kind].room + fxv(o, 'room', [kind]).a : 0;   // people one home shelters, after research
 const capOf = o => { const C = qc(); if (C.cap[o] === undefined) C.cap[o] = Math.min(POPMAX, G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 ? roomOf(o, b.kind) : 0), 0)); return C.cap[o]; };
 // soldiers you may keep: each finished training place, castle, temple, courthouse or hospital makes room; at most ARMYMAX
-const armyRoom = o => Math.min(ARMYMAX, G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 && BLD[b.kind].armyRoom ? BLD[b.kind].armyRoom + fxv(o, 'armyroom', [b.kind]).a : 0), 0));
-const clsMax = (c, o) => c === 'civ' ? VILMAX : armyRoom(o);
+const armyRoom = o => Math.min(ARMYMAX + (G.P[o].capA || 0), G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 && BLD[b.kind].armyRoom ? BLD[b.kind].armyRoom + fxv(o, 'armyroom', [b.kind]).a : 0), 0));
+const clsMax = (c, o) => c === 'civ' ? VILMAX + (G.P[o].capV || 0) : armyRoom(o);
 const armyFull = o => `Army full, ${clsCount(o, 'army')}/${armyRoom(o)}. ${ARMY_ADDS}.`;   // the limit, and what lifts it, wherever it bites
 const qMax = o => QUEUE + fxv(o, 'queue').a;   // orders one building's line holds (Written records, Guilds add to it)
 const lineFree = (o, kinds) => kinds.some(k => ready(o, k).some(b => b.q.length < qMax(o)));
@@ -125,7 +125,7 @@ function stats(o, kind) {
 }
 const maxHpU = (o, kind) => stats(o, kind).hp;
 const maxHpB = (o, kind) => BLD[kind].hp * (o === WILD ? 1 : fxv(o, 'bhp', ['*', ...bldKeys(kind)]).m);
-const dmgOf = u => stats(u.owner, u.kind).dmg * (FORM[formOf(u)].dmg && hasTag(u.kind, 'mounted') ? FORM[formOf(u)].dmg : 1) * (u.zeal > G.t ? ZEAL.mul : 1) * (u.sick > G.t ? 0.6 : 1) * hungerOf(u.owner) * EVM.dmg;
+const dmgOf = u => stats(u.owner, u.kind).dmg * (FORM[formOf(u)].dmg && hasTag(u.kind, 'mounted') ? FORM[formOf(u)].dmg : 1) * (u.zeal > G.t ? ZEAL.mul : 1) * (u.sick > G.t ? 0.6 : 1) * hungerOf(u.owner) * EVM.dmg * (u.chg > G.t ? CHARGE.dmg : 1);
 const rngOf = u => { const r = stats(u.owner, u.kind).rng; return r > 20 ? r * (WEATHER[G.wx] && WEATHER[G.wx].rng || 1) : r; };
 const sightOf = e => ((UNIT[e.kind] || BLD[e.kind]).sight || 100) * (1 - (1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) * G.night) * EVM.sight * (WEATHER[G.wx].sight || 1);   // night, the moon, an eclipse or fog, a blizzard
 const carryOf = o => CARRY + fxv(o, 'carry').a;
@@ -134,11 +134,12 @@ function gatherMul(o, n) {
   if (n.farm && n.farm.locust > G.t) return 0;   // a field stripped by locusts gives nothing for a while
   if (n.kind === 'farm') {
     m *= fxv(o, 'crop', [n.type]).m;
-    if (n.type === 'food') { m *= season().farm * (hz('winter') && season().name === 'Winter' ? 0.6 : 1) * (G.harvest || 1) * (WEATHER[G.wx].crop || 1) * (n.farm.fert ?? 1); if (n.type === 'food' && bakeryNear(o, n)) m *= BLD.bakery.aura.m; }
+    if (n.type === 'food') { m *= season().farm * (hz('winter') && season().name === 'Winter' ? 0.6 : 1) * (G.harvest || 1) * (WEATHER[G.wx].crop || 1) * (n.farm.fert ?? 1); }
+    if (BLD[n.farm.kind].makes) m *= fxv(o, 'make', [n.type]).m;
   }
   return m;
 }
-const bakeryNear = (o, n) => { const C = qc(), L = C.bak || (C.bak = []), B = L[o] || (L[o] = G.blds.filter(b => b.owner === o && b.kind === 'bakery' && b.prog >= 1 && b.hp > 0)); for (const b of B) if (dist(b, n) < BLD.bakery.aura.r) return true; return false; };
+const makeOf = b => BLD[b.kind].makes ? BLD[b.kind].makes[b.cropT || BLD[b.kind].crop] : null;   // what a workshop makes now: from what, how fast
 // after research or a new building: every unit and building of that side takes its new health at once (same share of it)
 function rehealth(o) {
   fxDirty();

@@ -69,13 +69,14 @@ function hitAt(sx, sy) {
   { let u = null, ud = Math.max(16, 9 * z); for (const v of G.units) if (!v.inside && visibleTo0(v)) { const d = hyp(SX(v.x) - sx, SY(v.y) - 6 * z - sy); if (d < ud) { ud = d; u = v; } } if (u) return { t: 'unit', e: u }; }   // a person is the smallest thing under the finger: it wins over the ground it stands on
   for (const b of G.blds) {   // footprint: the ground it stands on; roof: the height drawn above it
     const B = BLD[b.kind], w = Math.max(B.fp * NAVC * z, 22), x = SX(b.x), gy = SY(b.y), d = B.fp * NAVC * z * TILT;
+    if ((B.trap && !trapShown(b)) || !known0(b)) continue;
     if (sx <= x - w / 2 - 4 || sx >= x + w / 2 + 4 || sy >= gy + d / 2 + 4) continue;
     if (sy > gy - d / 2 - 4) { if (gy > fy) { foot = b; fy = gy; } }
     else if (sy > gy - d / 2 - (B.h + 8) * z - 10 && gy > ry) { roof = b; ry = gy; }
   }
   if (foot) return { t: 'bld', e: foot };
   const near = (x, y, r) => hyp(SX(x) - sx, SY(y) - 6 * z - sy) < r;
-  const f = G.finds.find(f => !(f.done && FINDS[f.kind].got) && near(f.x, f.y, Math.max(22, 14 * z)));
+  const f = G.finds.find(f => !(f.done && FINDS[f.kind].got) && known0(f) && near(f.x, f.y, Math.max(22, 14 * z)));
   if (f) return { t: 'find', e: f };
   if (roof) return { t: 'bld', e: roof };
   let nd = null, nr = Math.max(16, 11 * z);
@@ -115,6 +116,7 @@ function order(S, h) {
   if (h.t === 'unit' && e.owner !== 0) {
     if (e.owner !== WILD && !atWar(0, e.owner)) { say(`${REL_WORD[G.rel[0][e.owner]]}: set Hostile at your Town Center first.`, '', 4); return; }
     if (UNIT[e.kind].meat && vil.length) vil.forEach(v => { setJob(v, 'food'); v.hunt = e; v.post = null; });
+    for (const pr of S) if (pr.kind === 'priest' && e.owner !== WILD && UNIT[e.kind].cls && !(pr.cvCd > G.t)) { pr.state = 'convert'; pr.cv = e.id; pr.cvT = 0; }   // a priest sent at a foe converts them
     sol.forEach(u => { u.state = 'goto'; u.px = e.x; u.py = e.y; u.idleT = 0; u.focus = e; }); if (sol.length) march(sol, e, e.owner === WILD ? UNIT[e.kind].name : G.P[e.owner].name);
   } else if (h.t === 'bld' && e.owner !== 0) {
     if (!atWar(0, e.owner)) { say(`${REL_WORD[G.rel[0][e.owner]]}: set Hostile at your Town Center first.`, '', 4); return; }

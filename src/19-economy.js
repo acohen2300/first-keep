@@ -32,12 +32,12 @@ function priceAt(o, good, place, from) {
 const tradeTargets = o => stopsAll().filter(f => !guardsLeft(f) && !(f.owner !== null && f.owner !== o && atWar(o, f.owner) && postAt(f)));
 function allyMarket(o, from) { let best = null, bd = -1; for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && (b.kind === 'market' || b.kind === 'keep') && b.owner !== o && b.owner !== WILD && G.P[b.owner].alive && G.rel[o][b.owner] === 'ally') { const d = dist(from, b); if (d > bd) { bd = d; best = b; } } return best; }
 const targetOf = r => r && (r.s ? G.finds.find(f => f.id === r.to) : G.blds.find(b => b.id === r.to && b.hp > 0));
-const homeBiz = (o, u) => nearest(G.blds, u, b => b.owner === o && b.kind === 'bizc' && b.prog >= 1 && b.hp > 0);
+const homeBiz = (o, u) => nearest(G.blds, u, b => b.owner === o && b.kind === 'market' && b.prog >= 1 && b.hp > 0);   // the Market stores goods and loads caravans
 function estPay(o, place, from) { const g = goodsOf(o); let n = LOAD, s = 0; for (const k of WARES.slice().sort((a, b) => priceAt(o, b, place, from) - priceAt(o, a, place, from))) { const q = priceAt(o, k, place, from) > 0 ? Math.min(n, Math.floor(g[k] || 0)) : 0; s += q * priceAt(o, k, place, from); n -= q; } return Math.round(s); }
 function setRoute(c, place, rep, spice) { c.route = { to: place.id, s: place.kind === 'stop', rep: !!rep, spice: !!spice }; c.leg = 'load'; c.dest = null; c.cargo = 0; }
 function bestTarget(o, c) { const h = homeBiz(o, c); if (!h) return null; let best = null, bv = 0; for (const t of tradeTargets(o)) { const v = estPay(o, t, h) + (t.kind === 'stop' ? 40 : 0); if (v > bv) { bv = v; best = t; } } return best; }
 
-// A caravan on a route: load at the Business Center, sell at the far end (and buy spice at a stop), bring the spice home, again if it repeats.
+// A caravan on a route: load at the Market, sell at the far end (and buy spice at a stop), bring the spice home, again if it repeats.
 function routeTick(u, dt, SP) {
   const o = u.owner, p = G.P[o], r = u.route, t = targetOf(r), h = homeBiz(o, u);
   if (!t || !h || (t.owner !== undefined && t.kind !== 'stop' && atWar(o, t.owner))) { u.route = null; u.idle = true; return; }
@@ -53,7 +53,7 @@ function routeTick(u, dt, SP) {
     let gold = 0, sold = [];
     for (const k in u.goods) { const v = u.goods[k] * priceAt(o, k, t, u.from); gold += v; sold.push(u.goods[k] + ' ' + GOODS[k].name.toLowerCase()); }
     const keeper = t.kind === 'stop' ? t.owner : null;
-    if (keeper !== null && keeper !== o && gold > 0) { const cut = gold * POST.cut[stopsHeld(keeper, t.route)]; gold -= cut; G.P[keeper].res.g += cut; G.P[keeper].gathered += cut; }
+    if (keeper !== null && keeper !== o && gold > 0) { const cut = gold * Math.min(0.6, POST.cut[stopsHeld(keeper, t.route)] + fxv(keeper, 'cut').a); gold -= cut; G.P[keeper].res.g += cut; G.P[keeper].gathered += cut; }
     for (const k in u.goods) mktHit(k, u.goods[k], -1);
     gold = Math.round(shareUp(o, gold)); p.res.g += gold; p.gathered += gold; u.goods = {};
     if (r.spice && t.kind === 'stop') { const c = spiceCost(), q = Math.min(LOAD, Math.floor(p.res.g / c)); if (q > 0) { p.res.g -= Math.round(q * c); u.goods.spice = q; mktHit('spice', q, 1); } }
@@ -86,7 +86,7 @@ function natureTick() {
   if (storm() && rng() < 0.05) strike(rnd(80, MAP - 80), rnd(80, MAP - 80));   // a strike on open ground, about every 20 s in a storm
   for (const b of G.blds) if (b.node && BLD[b.kind].crop && b.prog >= 1 && b.node.type === 'food') {   // soil tires when worked and rests when not
     const worked = G.t - (b.node.workT || -9) < 2;
-    b.fert = clamp((b.fert ?? 1) + (worked ? -FERT.loss / YEAR : FERT.rest / SEASON_LEN), FERT.floor, 1);
+    b.fert = clamp((b.fert ?? 1) + (worked ? -FERT.loss / YEAR : FERT.rest / SEASON_LEN), FERT.floor + fxv(b.owner, 'soil').a, 1);   // irrigation lifts the floor
   }
   // trade posts: whoever holds all four stops is paid every second
   for (const f of stopsAll()) { const pt = postAt(f); f.owner = pt && pt.prog >= 1 ? pt.owner : null; }
@@ -103,7 +103,7 @@ function seasonTurn() {
   }
   if (s === 'Spring') {
     if (G.t > 1) { const r = rng(); G.harvest = 1; let acc = 0; for (const H of HARVEST) { acc += H.p; if (r < acc) { G.harvest = H.m; say(H.text, 'warn', 8); break; } } }
-    if (G.P.some(p => p.alive && p.id !== WILD && ready(p.id, 'bizc').length) && rng() < HEALTH.plague * (hz('plague') ? 3 : 1)) { G.plague = { until: G.t + SEASON_LEN * 2 }; say('Plague on the roads: build a Hospital.', 'warn', 10); }
+    if (G.P.some(p => p.alive && p.id !== WILD && unitsOf(p.id, 'caravan').some(c => c.route)) && rng() < HEALTH.plague * (hz('plague') ? 3 : 1)) { G.plague = { until: G.t + SEASON_LEN * 2 }; say('Plague on the roads: build a Hospital.', 'warn', 10); }
     if (G.blds.some(b => b.owner === 0 && b.kind === 'pasture')) say('Spring: sheep shorn, lambs born.', 'good', 5);
   }
   if (s !== 'Spring' && s !== 'Summer' && G.plague && G.plague.until <= G.t) G.plague = null;
@@ -129,7 +129,7 @@ function strike(x, y, b) {
 }
 function lightning() {   // once a minute
   if (storm()) for (const p of G.P) if (p.alive && p.id !== WILD && rng() < (G.wx === 'drought' ? 0.1 : 0.04)) { const W = G.blds.filter(b => b.owner === p.id && BLD[b.kind].wood && b.prog >= 1); if (W.length) { const b = W[Math.floor(rng() * W.length)]; strike(b.x, b.y, b); } }
-  for (const b of G.blds) if ((b.kind === 'bakery' || b.kind === 'smith') && b.prog >= 1 && rng() < 0.01) { const n = nearest(G.blds, b, c => c !== b && c.owner === b.owner && BLD[c.kind].wood && c.prog >= 1, 60); if (n) ignite(n, `sparks from the ${BLD[b.kind].name.toLowerCase()}`); }
+  for (const b of G.blds) if ((b.kind === 'foundry' || b.kind === 'smith') && b.prog >= 1 && rng() < 0.01) { const n = nearest(G.blds, b, c => c !== b && c.owner === b.owner && BLD[c.kind].wood && c.prog >= 1, 60); if (n) ignite(n, `sparks from the ${BLD[b.kind].name.toLowerCase()}`); }
 }
 function fireTick(dt) {
   const W = WEATHER[G.wx];
@@ -160,7 +160,7 @@ function healthTick() {   // every 5 seconds
     if (H.some(h => h.owner === o && dist(h, u) < (BLD[h.kind] || UNIT[h.kind]).hrng) && rng() < HEALTH.cure * fxv(o, 'cure').m) { u.sick = 0; u.plague = false; continue; }
     const capOk = !u.plague || (P.plagueDead || 0) < Math.max(1, popOf(o) * HEALTH.plagueCap);
     if (capOk && rng() < HEALTH.death * (u.plague ? 4 : 1) * fxv(o, 'death').m) { u.hp = 0; u.gone = true; if (u.plague) P.plagueDead = (P.plagueDead || 0) + 1; continue; }
-    if (rng() < HEALTH.spread * (u.plague && hz('plague') ? 2 : 1)) { const v = G.units.find(w => w.owner === o && w !== u && UNIT[w.kind].cls && !(w.sick > G.t) && Math.abs(w.x - u.x) < 18 && Math.abs(w.y - u.y) < 18); if (v) { v.sick = G.t + HEALTH.sickFor; v.plague = u.plague; } }
+    if (rng() < HEALTH.spread * (u.plague && hz('plague') ? 2 : 1) * fxv(o, 'spread').m) { const v = G.units.find(w => w.owner === o && w !== u && UNIT[w.kind].cls && !(w.sick > G.t) && Math.abs(w.x - u.x) < 18 && Math.abs(w.y - u.y) < 18); if (v) { v.sick = G.t + HEALTH.sickFor; v.plague = u.plague; } }
   }
 }
 
@@ -182,7 +182,7 @@ function econTick(dt) {
   fireTick(dt);
 }
 
-// ── the computers: a Business Center, one industry each, caravans with routes, posts on the free stops near them
+// ── the computers: a Market, one workshop each, caravans with routes, posts on the free stops near them
 function aiEconomy(p, k, R, put, has) {
   const o = p.id, per = PERS[p.pers];
   if (p.age < 1 || G.t < 200) return;
@@ -190,14 +190,9 @@ function aiEconomy(p, k, R, put, has) {
   if (R.w >= 140 && R.s >= 40) { const f = nearest(stopsAll(), k, f => !guardsLeft(f) && !postAt(f), 1100); if (f && !canPlace(o, 'tpost', f.x, f.y)) { build(o, 'tpost', f.x, f.y); return; } }
   if (!per.trade) return;
   if (!has('market')) { if (R.w >= 150 && R.s >= 50) put('market', k.x, k.y, 90, 210); return; }
-  if (!has('bizc')) { if (R.w >= 200 && R.s >= 100) put('bizc', k.x, k.y, 90, 210); return; }
   const brew = p.pers === 'aggr';
-  if (brew) {
-    if (!has('brewery') && R.w >= 140 && R.s >= 40) { put('brewery', k.x, k.y, 80, 200); return; }
-  } else {
-    if (!has('pasture') && R.w >= 80 && R.f >= 80) { put('pasture', k.x, k.y, 80, 200); return; }
-    if (!has('weaver') && R.w >= 140 && R.s >= 40) { put('weaver', k.x, k.y, 80, 200); return; }
-  }
+  if (!brew && !has('pasture') && R.w >= 80 && R.f >= 80) { put('pasture', k.x, k.y, 80, 200); return; }
+  if (!has('workshop') && R.w >= 140 && R.s >= 40) { const b = put('workshop', k.x, k.y, 80, 200); if (b && brew) setMake(b, 'beer'); return; }
   for (const b of G.blds) if (b.owner === o && b.prog >= 1 && b.node && b.node.type !== 'food' && b.node.type !== 'wood' && !(b.node.wk > 0)) { sendVil(o, b.node.id); break; }
   const cs = unitsOf(o, 'caravan'); if (cs.length + queuedOf(o, 'caravan') < 2 && ready(o, 'market').length && afford(p, UNIT.caravan.cost)) train(o, 'caravan');
   for (const c of cs) if (!c.route && (G.tick + c.id) % 300 < 30) { const t = bestTarget(o, c); if (t) setRoute(c, t, true, true); }
@@ -212,6 +207,8 @@ function shareOf(u) {
 const hungerOf = o => G.P[o] && G.P[o].hungry ? UPKEEP.hunger : 1;
 
 // ── prices float with what is sold and bought, and drift back
+// a workshop's choice: what it makes now (the node's type and rate follow)
+function setMake(b, type) { const mk = BLD[b.kind].makes && BLD[b.kind].makes[type]; if (!mk || !b.node) return false; b.cropT = type; b.node.type = type; b.node.rate = mk.rate; for (const u of G.units) if (u.node === b.node) { u.job = type; u.carry = 0; } return true; }
 const mkt = k => G.mkt ? G.mkt[k] ?? 1 : 1;
 function debase(o) {   // Rome's denarius: more coin at once, worth less for good
   const p = G.P[o]; if (p.debased || !ready(o, 'mint').length) return false;
@@ -234,7 +231,7 @@ function ventureTick() {
   for (const p of G.P) if (p.ventures && p.ventures.length) p.ventures = p.ventures.filter(v => {
     if (v.due > G.t) return true;
     if (rng() < VENTURE.lost) { if (p.id === 0) say(`Robbers took a venture of ${v.amt} gold.`, 'warn', 6); }
-    else { const back = Math.round(shareUp(p.id, v.amt * VENTURE.back)); p.res.g += back; p.gathered += back - v.amt; if (p.id === 0) say(`A venture comes home: ${back} gold for ${v.amt}.`, 'good', 6); }
+    else { const back = Math.round(shareUp(p.id, v.amt * (VENTURE.back + fxv(p.id, 'venture').a))); p.res.g += back; p.gathered += back - v.amt; if (p.id === 0) say(`A venture comes home: ${back} gold for ${v.amt}.`, 'good', 6); }
     return false;
   });
 }
@@ -293,7 +290,7 @@ function vassalTick() {   // every 10 seconds
     if (tot > 0 && take > 0) for (const r of ['f', 'w', 's', 'g', 'i']) { const x = Math.min(p.res[r], take * p.res[r] / tot); p.res[r] -= x; L.res[r] += x; p.paid += x; }
     p.protect = (p.protect || 0) * VASSAL.decay;
     const parts = loyaltyParts(p); p.loyal = (p.loyal || 0) + (parts.target - (p.loyal || 0)) * 0.05;
-    p.unrest = clamp((p.unrest || 0) + TAX[p.tax].push + (p.forced > G.t ? 1 : 0) - p.loyal / 25, 0, 100);
+    p.unrest = clamp((p.unrest || 0) + TAX[p.tax].push * fxv(L.id, 'push').m + (p.forced > G.t ? 1 : 0) - p.loyal / 25, 0, 100);   // magistrates slow the climb
     if (p.loyal >= VASSAL.giftAt && G.tick % (30 * VASSAL.gift) === 150) { const gift = {}; for (const r of ['f', 'w', 's', 'g', 'i']) { const x = Math.floor(p.res[r] * 0.1 * (p.loyal - 50) / 100); if (x > 0) { p.res[r] -= x; L.res[r] += x; gift[r] = x; } } if (L.id === 0 && Object.keys(gift).length) say(`${p.name} send a gift: ${costText(gift)}.`, 'good', 5); }
     if (L.id === 0 && p.unrest > 70 && G.t - (p.warnT || -99) > 60) { p.warnT = G.t; say(`${p.name}: unrest ${Math.round(p.unrest)}%. Cut tax.`, 'warn', 7, keepOf(p.id)); }
     if (p.unrest >= 100) rebel(p);

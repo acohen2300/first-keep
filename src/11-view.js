@@ -105,7 +105,7 @@ function draw() {
   // what is on screen: margins in world units, wide enough for the widest building (its turned east wall) and the tallest (a wonder, standing just below the edge)
   const a0 = toWorld(0, 0), b0 = toWorld(cw, ch), mx = Math.max(80 / z, 44), wv = { x: a0.x - mx, y: a0.y - Math.max(120 / (z * TILT), 34) }, wv2 = { x: b0.x + mx, y: b0.y + Math.max(160 / (z * TILT), 115) }, inView = e => e.x > wv.x && e.x < wv2.x && e.y > wv.y && e.y < wv2.y;
   const list = [];
-  for (const b of G.blds) if (inView(b)) list.push([BLD[b.kind].crop ? b.y - 60 : b.y + halfOf(b) * 0.4, 1, b]);
+  for (const b of G.blds) if (inView(b) && trapShown(b) && known0(b)) list.push([BLD[b.kind].crop ? b.y - 60 : b.y + halfOf(b) * 0.4, 1, b]);
   const far = z < 0.55; if (far) layer(forestLayer());   // zoomed out, the forest is one picture; close in, each tree
   for (const f of G.finds) if (inView(f) && !(f.done && FINDS[f.kind].got)) list.push([f.y, 3, f]);
   for (const u of G.units) if (!u.inside && inView(u) && visibleTo0(u)) list.push([u.y, 2, u]);
@@ -116,8 +116,8 @@ function draw() {
     const take = j >= list.length || (i < N.length && N[i].y < list[j][0]), e = take ? N[i++] : list[j][2], t = take ? 0 : list[j++][1];
     try { t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : drawFind(e); } catch (er) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.setLineDash([]); fault(er); }   // one bad piece must never take the rest of the picture with it: the canvas is put back as it was
   }
-  for (const t of G.traps || []) { if (!inView(t) || (t.armed && !t.seen[0])) continue; const x = SX(t.x), y = SY(t.y); if (t.kind === 'pit' || !t.armed) { ctx.fillStyle = t.armed ? 'rgba(60,50,30,.55)' : 'rgba(20,16,12,.7)'; ctx.beginPath(); ctx.ellipse(x, y, 7 * z, 4 * z, 0, 0, 7); ctx.fill(); } else { ctx.strokeStyle = 'rgba(120,100,60,.8)'; ctx.lineWidth = 1; for (let i = -6; i <= 6; i += 3) { ctx.beginPath(); ctx.moveTo(x + i * z, y - 4 * z); ctx.lineTo(x + i * z, y + 4 * z); ctx.moveTo(x - 6 * z, y + i * z * 0.6); ctx.lineTo(x + 6 * z, y + i * z * 0.6); ctx.stroke(); } } }
   if (G.fire) for (const n of G.fire) if (inView(n)) { const x = SX(n.x), y = SY(n.y), ph = (G.t * 5 + n.id) % 1; ctx.fillStyle = 'rgba(250,150,40,.85)'; ctx.beginPath(); ctx.ellipse(x, y - 8 * z, (3 + ph * 2) * z, (6 + ph * 4) * z, 0, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,230,120,.9)'; ctx.beginPath(); ctx.ellipse(x, y - 7 * z, 1.5 * z, 3 * z, 0, 0, 7); ctx.fill(); smoke(x, y - 14 * z, n.id, z); }   // the wildfire
+  if (SET.fog) { if (fogT < 0) fogTick(); const a1 = toWorld(0, 0), b1 = toWorld(cw, ch), sx0 = clamp(a1.x, 0, MAP), sy0 = clamp(a1.y, 0, MAP), sx1 = clamp(b1.x, 0, MAP), sy1 = clamp(b1.y, 0, MAP); ctx.imageSmoothingEnabled = true; if (sx1 > sx0 && sy1 > sy0) ctx.drawImage(fogLayer(), sx0 / FOG, sy0 / FOG, (sx1 - sx0) / FOG, (sy1 - sy0) / FOG, SX(sx0), SY(sy0), (sx1 - sx0) * z, (sy1 - sy0) * z * TILT); }   // the fog, soft, over everything standing
   drawPicks(z); sparkDraw(); ripDraw(); drawEvents(z);
   if (G.ords) {   // your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
     ctx.save(); ctx.strokeStyle = G.P[0].color; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.7; ctx.setLineDash([6, 6]); ctx.lineDashOffset = -performance.now() / 60;
@@ -166,9 +166,33 @@ function drawRadar(wv, wv2) {
 }
 const hg = [];
 // an enemy spy shows only when something of yours is close enough to see it
-const visibleTo0 = u => u.kind !== 'spy' || friendly(0, u.owner) || u.exposed;
+// Fog of war, yours alone (the computers play without it, as the doc says): what your people and towers see now is lit; what they saw stays, dim; the rest is dark.
+const fogAt = (x, y) => G.fog[clamp((y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((x / FOG) | 0, 0, FOGN - 1)];
+const seen0 = e => !SET.fog || friendly(0, e.owner) || fogAt(e.x, e.y) === 2;   // in your sight now, or yours
+const known0 = e => !SET.fog || friendly(0, e.owner) || fogAt(e.x, e.y) > 0;    // ever seen: a building you found stays on the map
+const visibleTo0 = u => (u.kind !== 'spy' || friendly(0, u.owner) || u.exposed) && seen0(u);
+let fogCv = null, fogImg = null, fogT = -1;
+function fogTick() {   // every ten ticks: what is lit now
+  const F = G.fog; for (let i = 0; i < F.length; i++) if (F[i] === 2) F[i] = 1;
+  const light = (x, y, r) => { const c = (r / FOG) + 0.5, cx = x / FOG, cy = y / FOG, x0 = clamp((cx - c) | 0, 0, FOGN - 1), x1 = clamp((cx + c) | 0, 0, FOGN - 1), y0 = clamp((cy - c) | 0, 0, FOGN - 1), y1 = clamp((cy + c) | 0, 0, FOGN - 1);
+    for (let gy = y0; gy <= y1; gy++) for (let gx = x0; gx <= x1; gx++) if (hyp(gx + 0.5 - cx, gy + 0.5 - cy) <= c) F[gy * FOGN + gx] = 2; };
+  for (const u of G.units) if (u.hp > 0 && friendly(0, u.owner) && !u.inside) light(u.x, u.y, sightOf(u));
+  for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && friendly(0, b.owner)) light(b.x, b.y, (BLD[b.kind].sight || 90));
+  fogT = G.tick;
+}
+function fogLayer() {   // the fog as one small picture, drawn soft over the world
+  if (!fogCv) { fogCv = document.createElement('canvas'); fogCv.width = fogCv.height = FOGN; fogImg = fogCv.getContext('2d').createImageData(FOGN, FOGN); }
+  const d = fogImg.data, F = G.fog; for (let i = 0; i < F.length; i++) { d[i * 4] = 8; d[i * 4 + 1] = 12; d[i * 4 + 2] = 10; d[i * 4 + 3] = F[i] === 2 ? 0 : F[i] === 1 ? 110 : 235; }
+  fogCv.getContext('2d').putImageData(fogImg, 0, 0); return fogCv;
+}
 function stamp(c, sx, sy, k, flip) { if (flip) { ctx.save(); ctx.translate(sx, sy); ctx.scale(-1, 1); ctx.drawImage(c, -c.ax * k, -c.ay * k, c.width * k, c.height * k); ctx.restore(); } else ctx.drawImage(c, sx - c.ax * k, sy - c.ay * k, c.width * k, c.height * k); }
+const trapShown = b => !BLD[b.kind].trap || b.owner === 0 || friendly(0, b.owner) || (b.seen && b.seen[0]);   // a hidden trap shows only to its side, its allies, and a side whose scout found it
 function drawBld(b, s) {
+  if (BLD[b.kind].trap) { const z = cam.z, x = SX(b.x), y = SY(b.y), k = BLD[b.kind].trap, own = b.owner === 0 || friendly(0, b.owner); if (b.prog < 1) { ctx.strokeStyle = 'rgba(255,211,94,.7)'; ctx.setLineDash([3, 3]); ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(x, y, 6 * z, 3.6 * z, 0, 0, 7); ctx.stroke(); ctx.setLineDash([]); return; }
+    if (k === 'pit') { ctx.fillStyle = own ? 'rgba(60,50,30,.5)' : 'rgba(180,40,30,.55)'; ctx.beginPath(); ctx.ellipse(x, y, 6 * z, 3.6 * z, 0, 0, 7); ctx.fill(); }
+    else if (k === 'net') { ctx.strokeStyle = own ? 'rgba(120,100,60,.8)' : 'rgba(200,60,40,.8)'; ctx.lineWidth = 1; for (let i = -6; i <= 6; i += 3) { ctx.beginPath(); ctx.moveTo(x + i * z, y - 4 * z); ctx.lineTo(x + i * z, y + 4 * z); ctx.moveTo(x - 6 * z, y + i * z * 0.6); ctx.lineTo(x + 6 * z, y + i * z * 0.6); ctx.stroke(); } }
+    else { ctx.strokeStyle = own ? 'rgba(120,90,40,.9)' : 'rgba(200,60,40,.9)'; ctx.lineWidth = 1.2; for (let i = -5; i <= 5; i += 2.5) { ctx.beginPath(); ctx.moveTo(x + i * z, y + 2 * z); ctx.lineTo(x + i * z + 1.5 * z, y - 5 * z); ctx.stroke(); } }
+    return; }
   const z = cam.z, sx = SX(b.x), sy = SY(b.y), B = BLD[b.kind], c = bldSprite(b, s), k = z / s;
   if (!B.crop) { ctx.fillStyle = 'rgba(0,0,0,.25)'; const w = B.fp * NAVC * z; ctx.beginPath(); ctx.ellipse(sx + w * 0.12, sy + w * TILT * 0.18, w * 0.62, w * TILT * 0.5, 0, 0, 7); ctx.fill(); }
   if (b.prog < 1) {
@@ -197,7 +221,7 @@ function drawBld(b, s) {
   if (b.hp < M - 1) bar(sx, sy - c.ay * k - 4, Math.min(60 * z, B.fp * NAVC * z), b.hp / M, G.P[b.owner].color);
   if (G.wonder && G.wonder.id === b.id) { ctx.font = '700 ' + Math.max(12, 12 * z) + 'px ' + fontF(); ctx.fillStyle = '#ffd35e'; ctx.textAlign = 'center'; ctx.fillText(clock(Math.max(0, G.wonder.end - G.t)), sx, sy - c.ay * k - 10); ctx.textAlign = 'left'; }
 }
-const CHIMNEY = { house: [6.2, 26], smith: [9, 28], keep: [-20, 44], bakery: [-6, 16] };
+const CHIMNEY = { house: [6.2, 26], smith: [9, 28], keep: [-20, 44], foundry: [9, 34] };
 function smoke(x, y, seed, z) {
   if (lessMotion) return;
   for (let i = 0; i < 3; i++) { const ph = (G.t * 0.35 + i / 3 + seed * 0.37) % 1, r = (2 + ph * 5) * z; ctx.fillStyle = `rgba(215,215,210,${0.3 * (1 - ph)})`; ctx.beginPath(); ctx.arc(x + ph * 7 * z, y - ph * 24 * z, r, 0, 7); ctx.fill(); }
@@ -286,6 +310,9 @@ function drawUnit(u, s) {
   if (u.carry > 0) { ctx.fillStyle = (RESOURCES[u.carryType] || GOODS[u.carryType] || RESOURCES.food).col; ctx.beginPath(); ctx.arc(sx - 3 * z * ((u.fx || 1) < 0 ? -1 : 1), sy - 7 * z, 2 * z + 0.5, 0, 7); ctx.fill(); }
   if (u.zeal > G.t) { ctx.strokeStyle = 'rgba(244,206,90,.85)'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.ellipse(sx, sy - 6 * z, 8 * z, 9 * z, 0, 0, 7); ctx.stroke(); }
   if (u.hp < u.max - 0.5 && z > 0.45) bar(sx, top - 5, Math.max(12, 12 * z), u.hp / u.max, u.owner === WILD ? '#c9b48a' : col);
+  if (isSoldier(u) && u.mor < 0.6 && z > 0.45 && u.state !== 'rout') bar(sx, top - 10, Math.max(12, 12 * z), u.mor, '#f2cf55');   // nerve, when it is low
+  if (u.state === 'rout') { ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx + 5 * z, sy - 6 * z); ctx.lineTo(sx + 5 * z, sy - 20 * z); ctx.stroke(); ctx.fillStyle = '#f4f0e6'; ctx.beginPath(); ctx.moveTo(sx + 5 * z, sy - 20 * z); ctx.lineTo(sx + 13 * z, sy - 17 * z); ctx.lineTo(sx + 5 * z, sy - 14 * z); ctx.closePath(); ctx.fill(); }   // a white flag: broken, running
+  if (u.state === 'convert' && u.cvT > 0) { ctx.strokeStyle = 'rgba(244,206,90,.9)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(sx, sy - 6 * z, 9 * z, -Math.PI / 2, -Math.PI / 2 + 6.28 * u.cvT / (CONVERT.secs * fxv(u.owner, 'convert').m)); ctx.stroke(); }   // the conversion, filling
   if (u.owner === 0 && u.idle) idleMark(sx, top, z);
   if (u.sick > G.t) { ctx.fillStyle = u.plague ? '#7a3a8a' : '#7aa04a'; ctx.beginPath(); ctx.arc(sx - 5 * z, top - 2, 2 * z + 1, 0, 7); ctx.fill(); }
   if (u.kind === 'caravan' && u.goods) { const k = Object.keys(u.goods).find(k => u.goods[k] > 0); if (k) { ctx.fillStyle = GOODS[k].col; ctx.fillRect(sx - 4 * z, sy - 12 * z, 5 * z, 3 * z); } }
@@ -355,12 +382,13 @@ function drawGhost() {
 function drawMini() {
   const m = mctx, k = 172 / MAP;
   m.clearRect(0, 0, 172, 172); m.drawImage(terrainMini, 0, 0); m.drawImage(forestLayer(), 0, 0, 172, 172);
-  for (const f of G.finds) if (!f.done || FINDS[f.kind].capture) { m.fillStyle = f.owner !== null && FINDS[f.kind].capture ? G.P[f.owner].color : '#f2cf55'; m.fillRect(f.x * k - 1.5, f.y * k - 1.5, 3, 3); }
+  if (SET.fog) { m.imageSmoothingEnabled = false; m.drawImage(fogLayer(), 0, 0, 172, 172); }
+  for (const f of G.finds) if ((!f.done || FINDS[f.kind].capture) && known0(f)) { m.fillStyle = f.owner !== null && FINDS[f.kind].capture ? G.P[f.owner].color : '#f2cf55'; m.fillRect(f.x * k - 1.5, f.y * k - 1.5, 3, 3); }
   for (const b of G.blds) {   // Town Centers are stars, castles diamonds, the rest small squares
-    m.fillStyle = G.P[b.owner].color; const x = b.x * k, y = b.y * k;
+    if (!known0(b)) continue; m.fillStyle = G.P[b.owner].color; const x = b.x * k, y = b.y * k;
     if (b.kind === 'keep' || b.kind === 'town') { m.beginPath(); for (let i = 0; i < 10; i++) { const r = i % 2 ? 3 : 7.5, a = -Math.PI / 2 + i * Math.PI / 5; m.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r); } m.closePath(); m.fill(); m.strokeStyle = 'rgba(0,0,0,.6)'; m.lineWidth = 1; m.stroke(); }
     else if (b.kind === 'castle') { m.beginPath(); m.moveTo(x, y - 5.5); m.lineTo(x + 5.5, y); m.lineTo(x, y + 5.5); m.lineTo(x - 5.5, y); m.closePath(); m.fill(); m.strokeStyle = 'rgba(0,0,0,.6)'; m.lineWidth = 1; m.stroke(); }
-    else { const s = BLD[b.kind].wallish ? 2 : BLD[b.kind].fp >= 5 ? 5 : 3.5; m.fillRect(x - s / 2, y - s / 2, s, s); }
+    else if (!BLD[b.kind].trap) { const s = BLD[b.kind].wallish ? 2 : BLD[b.kind].fp >= 5 ? 5 : 3.5; m.fillRect(x - s / 2, y - s / 2, s, s); }
   }
   if (G.wx === 'blizzard') { m.fillStyle = 'rgba(235,240,245,.92)'; m.fillRect(0, 0, 172, 172); return; }   // a whiteout: the small map shows nothing
   for (const u of G.units) if (u.owner !== WILD ? visibleTo0(u) : !UNIT[u.kind].flee && !UNIT[u.kind].passive) { m.fillStyle = G.P[u.owner].color; m.fillRect(u.x * k - 1, u.y * k - 1, 2, 2); }

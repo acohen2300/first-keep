@@ -1,12 +1,14 @@
 // ═════ 06-orders.js ═════
 // ───────────────────────── Orders anyone can give (the computers use the same ones) ─────────────────────────
+// what a unit costs this side now (Informers make spies cheaper)
+const unitCost = (o, k) => { const m = fxv(o, 'cost', unitKeys(k)).m; if (m === 1) return UNIT[k].cost; const c = {}; for (const r in UNIT[k].cost) c[r] = Math.round(UNIT[k].cost[r] * m); return c; };
 function trainWhy(o, kind) {   // why a unit cannot be ordered right now, or null
   const k = civKind(o, kind), U = UNIT[k], p = G.P[o];
   if (U.age > p.age) return `${plural(U.name)} need the ${AGES[U.age].name} age.`;
   if (!readyAt(o, U).length) return `Build a ${BLD[U.at].name.toLowerCase()} first.`;
   if (U.cls && clsCount(o, U.cls) >= clsMax(U.cls, o)) return U.cls === 'civ' ? `Worker limit: ${VILMAX}.` : armyFull(o);
   if (p.hungry) return 'Your people are hungry: put villagers on Food.';
-  if (!afford(p, U.cost)) return `Not enough: ${costText(U.cost)}.`;
+  if (!afford(p, unitCost(o, k))) return `Not enough: ${costText(unitCost(o, k))}.`;
   if (!readyAt(o, U).some(b => b.q.length < qMax(o))) return `That line is full (${qMax(o)} waiting).`;
   return null;
 }
@@ -14,7 +16,7 @@ function train(o, kind) {
   if (trainWhy(o, kind)) return false;
   const k = civKind(o, kind), U = UNIT[k], p = G.P[o], at = readyAt(o, U).sort((a, b) => a.q.length - b.q.length)[0];
   const t = U.t * stats(o, k).train;
-  pay(p, U.cost); at.q.push({ kind: k, left: t, total: t }); return true;
+  pay(p, unitCost(o, k)); at.q.push({ kind: k, left: t, total: t }); return true;
 }
 // cancel one order in a building's line: its cost comes back in full (a muster's too); research and the age give back what was paid
 function cancelOrder(o, b, i) {
@@ -176,13 +178,13 @@ function judgeEnvoy(to, from, envoy) {
   const busy = G.P.some(q => q.alive && q.id !== WILD && q.id !== from && atWar(to, q.id));   // another war on their hands
   if (ask === 'peace') {
     if (G.rel[to][from] !== 'war') { reply(from, envoy, `The ${T.name} are already at peace with you.`); return; }
-    if (oddsOf(to, from) > 0.6 && !busy && !T.rebel) { reply(from, envoy, `The ${T.name} want more of this war.`); return; }
+    if (oddsOf(to, from) > 0.6 + fxv(from, 'diplo').a && !busy && !T.rebel) { reply(from, envoy, `The ${T.name} want more of this war.`); return; }
     makePeace(to, from); reply(from, envoy, `The ${T.name} accept peace.`); return;
   }
   if (T.ally !== null && T.ally !== from) { reply(from, envoy, `The ${T.name} are already allied with ${G.P[T.ally].name}.`); return; }
   if (T.ally === from) { reply(from, envoy, `The ${T.name} are already your ally.`); return; }
   if (oddsOf(from, to) < 0.3) { reply(from, envoy, `The ${T.name} see no strength in you worth an alliance.`); return; }
-  if (!busy && oddsOf(to, from) > 0.7) { reply(from, envoy, `The ${T.name} need no ally today.`); return; }
+  if (!busy && oddsOf(to, from) > 0.7 + fxv(from, 'diplo').a) { reply(from, envoy, `The ${T.name} need no ally today.`); return; }
   makeAlly(to, from); reply(from, envoy, `The ${T.name} accept. You are allies.`);
 }
 function reply(from, envoy, text) { envoy.state = 'return'; if (from === 0) say(text, text.includes('accept') ? 'good' : '', 7); }
@@ -232,6 +234,40 @@ function levy(L, q, n) {   // their soldiers march under your colours until rele
 function releaseLevy(u) { const q = u.levy; u.levy = undefined; u.owner = q; u.state = 'home'; u.bn = undefined; u.ord = undefined; u.focus = null; u.tgt = null; }
 function releaseAll(L, q) { const S = levyOf(L, q); S.forEach(releaseLevy); if (L === 0 && S.length) say(`${S.length} soldiers go home to ${G.P[q].name}.`, '', 4); return S.length > 0; }
 
+// ───────────────────────── Combat you steer: charge, fall back, prisoners ─────────────────────────
+const chargeWhy = (o, S, bn) => { const t = (G.chargeT || {})[o + ':' + (bn ?? 'all')]; if (!S.some(u => isSoldier(u) && !UNIT[u.kind].bonly)) return 'Nobody to charge.'; if (t > G.t) return `Winded: ${Math.ceil(t - G.t)} s.`; return null; };
+function charge(o, S, bn) {   // a burst of speed and blows for a few seconds, then tired; once a half minute a battalion
+  if (chargeWhy(o, S, bn)) return false;
+  (G.chargeT = G.chargeT || {})[o + ':' + (bn ?? 'all')] = G.t + CHARGE.cd;
+  for (const u of S) if (isSoldier(u) && !UNIT[u.kind].bonly) { u.chg = G.t + CHARGE.secs; u.mor = Math.min(1, u.mor + 0.1); }
+  if (o === 0) { say(`${bn !== undefined ? BN[bn] : 'The army'} charge!`, 'good', 4); sfx('horn'); } return true;
+}
+function fallBack(o, S, bn) {   // withdraw in order toward home: fewer losses than a rout, and no rout while it lasts
+  const h = homeOf(o); if (!h) return false; let n = 0;
+  for (const u of S) { if (!isSoldier(u)) continue; const f = nearestFoe(o, u, 200), dx = f ? u.x - f.x : h.x - u.x, dy = f ? u.y - f.y : h.y - u.y, dd = hyp(dx, dy) || 1; u.fb = G.t + FALLBACK.secs; u.state = 'goto'; u.px = clamp(u.x + dx / dd * FALLBACK.back, 20, MAP - 20); u.py = clamp(u.y + dy / dd * FALLBACK.back, 20, MAP - 20); u.idleT = 0; u.tgt = null; u.focus = null; u.ord = undefined; n++; }
+  if (o === 0 && n) say(`${bn !== undefined ? BN[bn] : 'The army'} fall back.`, '', 4); return n > 0;
+}
+// Prisoners: a runner touched by a foe, or a man netted by the Natives. The owner may ransom them back; unransomed, they serve the captor.
+function takePrisoner(by, v) {
+  const ransom = Math.round(Math.max(40, sumCost(UNIT[v.kind].cost || { f: 40 }) * PRISON.ransom));
+  (G.prisoners = G.prisoners || []).push({ o: v.owner, by, kind: v.kind, t: G.t, ransom }); v.hp = 0; v.gone = true;
+  if (v.owner === 0) say(`${by === WILD ? 'Netted' : G.P[by].name + ' took a prisoner'}: your ${UNIT[v.kind].name.toLowerCase()}. Ransom ${ransom}g.`, 'warn', 7, v);
+  else if (by === 0) say(`A prisoner taken: their ${UNIT[v.kind].name.toLowerCase()}.`, 'good', 4, v);
+}
+const prisonersOf = o => (G.prisoners || []).filter(x => x.o === o);
+function payRansom(o, i) {
+  const x = prisonersOf(o)[i]; if (!x || G.P[o].res.g < x.ransom) return false;
+  G.P[o].res.g -= x.ransom; if (x.by !== WILD && G.P[x.by]) G.P[x.by].res.g += x.ransom; G.prisoners.splice(G.prisoners.indexOf(x), 1);
+  const k = keepOf(o); if (k) { const u = addUnit(o, x.kind, k.x + 40, k.y + 40); u.state = 'home'; }
+  if (o === 0) say(`Ransom paid: your ${UNIT[x.kind].name.toLowerCase()} walks home.`, 'good', 5); return true;
+}
+function prisonersTick() {   // every five seconds: the unransomed change sides
+  for (const x of (G.prisoners || []).slice()) if (G.t - x.t > PRISON.secs) {
+    G.prisoners.splice(G.prisoners.indexOf(x), 1); const T = throneB(), k = x.by === WILD ? T : keepOf(x.by);
+    if (x.by === WILD) { if (T) natSpawn(T, 'native'); } else if (k && G.P[x.by].alive) { const u = addUnit(x.by, x.kind, k.x + 30, k.y + 30); u.state = 'home'; }
+    if (x.o === 0) say(`Unransomed: your ${UNIT[x.kind].name.toLowerCase()} serves ${x.by === WILD ? 'the Natives' : G.P[x.by].name} now.`, 'warn', 6);
+  }
+}
 // ───────────────────────── Trade, zeal, spies, hiring ─────────────────────────
 // The Market, one rule for everything it trades: resources by the 100, goods by the 10; it pays 80% of worth (90% with Coinage)
 // and charges 125%, both moved by the going price. A trade stop pays full worth and more, which is why caravans go there.
@@ -260,7 +296,7 @@ function zealWhy(o, list) {
 function zeal(o, list) {
   if (zealWhy(o, list)) return false;
   const p = G.P[o]; pay(p, zealCost(o)); p.zealT = G.t + ZEAL.cd * fxv(o, 'zealcd').m;
-  for (const u of list) if (isSoldier(u)) u.zeal = G.t + ZEAL.secs;
+  for (const u of list) if (isSoldier(u)) u.zeal = G.t + ZEAL.secs + fxv(o, 'zealsecs').a;
   if (o === 0) { say(`Zeal on the ${selName()} for ${ZEAL.secs} s.`, 'good', 5); sfx('zeal'); }
   return true;
 }

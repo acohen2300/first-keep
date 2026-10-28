@@ -29,6 +29,9 @@ function patchHTML(el, html) { tpl.innerHTML = html; patchKids(el, tpl); }
 const cap1 = t => t && t.indexOf('<') < 0 ? t.replace(/(^|· )([a-z])/g, (m, a, c) => a + c.toUpperCase()) : t;   // sentence case: a capital opens every label and every part after a dot
 const btn = (act, title, sub, cls) => `<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small${sub.startsWith('short ') ? ' class="need"' : ''}>${cap1(sub)}</small>` : ''}</button>`;   // a sub-line that says what is short reads in red
 const FOLD = new Set();   // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
+// age tabs on a building's research: one per age it teaches, shaded in that age's colour; the open one is the first with work left you can do
+const ageTab = (ages, techs) => ages.includes(G.rtab) ? G.rtab : (ages.filter(a => a <= G.P[0].age && techs.some(t => t.age === a)).pop() ?? ages.filter(a => a <= G.P[0].age).pop() ?? ages[0]);
+const ageTabs = (ages, cur) => `<div class="acts tabs ages c${Math.min(ages.length, 5)}">${ages.map(a => `<button data-act="rtab:${a}" class="a${a}${a === cur ? ' on' : ''}${a > G.P[0].age ? ' dim' : ''}"><b>${AGES[a].name}</b></button>`).join('')}</div>`;
 const twoTabs = (key, opts, cur) => `<div class="acts tabs">${opts.map(([k, t, sub]) => btn(`${key}:${k}`, (ICON.tab[k] || '') + t, sub, cur === k ? 'on' : '')).join('')}</div>`;   // two-sided cards, one mold: two tabs; the chosen one is lit
 const INFO = new Set(['why', 'bmore', 'about', 'menu', 'bnabout']); let infoBuf = [];   // the explaining text of a card waits behind the book icon
 const fold = (id, title, html) => INFO.has(id) ? (html && infoBuf.push(html), '') : html ? `<details class="fold" data-f="${id}"${FOLD.has(id) ? ' open' : ''}><summary>${title}</summary>${html}</details>` : '';
@@ -48,7 +51,7 @@ function trainButtons(kinds) {
   const p = G.P[0];
   return kinds.map(k => { const ck = civKind(0, k), U = UNIT[ck], why = trainWhy(0, k), n = queuedOf(0, k);
     const full = U.cls && clsCount(0, U.cls) >= clsMax(U.cls, 0);
-    const sub = U.age > p.age ? `${AGES[U.age].name} age` : !ready(0, U.at).length ? `needs a ${BLD[U.at].name.toLowerCase()}` : full ? `short of room ${clsCount(0, U.cls)}/${clsMax(U.cls, 0)}` : !afford(p, U.cost) ? `short ${need(U.cost)}` : costText(U.cost);
+    const cost = unitCost(0, ck), sub = U.age > p.age ? `${AGES[U.age].name} age` : !ready(0, U.at).length ? `needs a ${BLD[U.at].name.toLowerCase()}` : full ? `short of room ${clsCount(0, U.cls)}/${clsMax(U.cls, 0)}` : !afford(p, cost) ? `short ${need(cost)}` : costText(cost);
     return btn(`train:${k}`, stats(0, ck).name, sub + (n ? ` ×${n}` : ''), why ? 'dis' : ''); }).join('');
 }
 // Research, in four looks you can tell without reading: ready (wax seal), short of something (red ink, what is missing), busy, locked (faded)
@@ -163,10 +166,9 @@ function musterGap(i) {   // what a battalion still lacks: its plan, less the me
 // ───────────────────────── What a building's page says, by kind ─────────────────────────
 // The generic page (health, crew, train, research, more) is one function; what a kind adds to it is one line here, never a branch in the page.
 const BLD_PAGE = {
-  farm: b => `<p>Worked by ${b.node && b.node.wk > 0 ? slotText(b.node) : 'nobody yet: tap Send a villager' + (b.node && b.node.type === 'food' ? ', or + under Food' : '')}. This season: ${season().name}, ×${season().farm}${G.harvest !== 1 ? ` · this year's harvest ×${G.harvest}` : ''}${WEATHER[G.wx].crop ? ` · ${WEATHER[G.wx].name.toLowerCase()} ×${WEATHER[G.wx].crop}` : ''} · soil ${Math.round((b.fert ?? 1) * 100)}%${b.node && b.node.type === 'food' && bakeryNear(0, b.node) ? ' · a bakery near: ×1.15' : ''}.</p>` + (b.node ? yieldText(b.node, 0) : ''),
+  farm: b => `<p>Worked by ${b.node && b.node.wk > 0 ? slotText(b.node) : 'nobody yet: tap Send a villager' + (b.node && b.node.type === 'food' ? ', or + under Food' : '')}. This season: ${season().name}, ×${season().farm}${G.harvest !== 1 ? ` · this year's harvest ×${G.harvest}` : ''}${WEATHER[G.wx].crop ? ` · ${WEATHER[G.wx].name.toLowerCase()} ×${WEATHER[G.wx].crop}` : ''} · soil ${Math.round((b.fert ?? 1) * 100)}%.</p>` + (b.node ? yieldText(b.node, 0) : ''),
   treefarm: b => `<p>Tended by ${b.node && b.node.wk > 0 ? slotText(b.node) : 'nobody yet: tap Send a villager, or + under Wood'}. ${Math.round(b.node ? b.node.amt : 0)} wood left, then the plot is cut out.</p>`,
-  pasture: b => `<p>${b.sheep || 0} sheep: ${b.node && b.node.wk > 0 ? `milk and meat, about ${Math.round((b.sheep || 0) * BLD.pasture.milk * 60 * gatherMul(0, b.node))} food a minute` : 'nobody tends them: tap Send a villager'}. ${Math.floor(b.node ? b.node.amt : 0)} wool to bring in${ready(0, 'weaver').length ? '' : ' · <b>wool waits for a Weaver</b>'}. Shorn each spring, when lambs come too.</p>`,
-  bizc: () => { const cs = unitsOf(0, 'caravan'), on = cs.filter(c => c.route).length; return `<p><i>In store:</i> ${goodsText(G.P[0].goods) || 'nothing yet'}.</p><p>${cs.length} caravans, ${on} on routes. Tap a caravan to give it a route.</p>`; },
+  pasture: b => `<p>${b.sheep || 0} sheep: ${b.node && b.node.wk > 0 ? `milk and meat, about ${Math.round((b.sheep || 0) * BLD.pasture.milk * 60 * gatherMul(0, b.node))} food a minute` : 'nobody tends them: tap Send a villager'}. ${Math.floor(b.node ? b.node.amt : 0)} wool to bring in${ready(0, 'workshop').length ? '' : ' · <b>wool waits for a Workshop</b>'}. Shorn each spring, when lambs come too.</p>`,
   throne: b => { const T = G.throne, mine = b.owner === 0; return `<p>${!T ? 'The Natives hold it. Regard opens its gate; siege breaks it.' : `${mine ? 'Yours' : G.P[T.owner].name + ' hold it'} since ${clock(T.since)}: ${clock(Math.max(0, throneHold() - (G.t - T.since)))} to ${mine ? 'win' : 'their win'}. A tithe of ${THRONE.tithe * 100}% of everyone else's gathering, ${THRONE.score} score a minute.`}</p>`; },
   tpost: b => { const f = G.finds.find(x => x.id === b.sid); return f ? `<p>Holds the stop at ${coord(f.x, f.y)}: tap the stop for prices and what it wants.</p>` : ''; },
   council: b => councilHTML(b),
@@ -183,7 +185,8 @@ function slotsHTML(b) {
 function nativesHTML() {
   const o = 0, r = Math.round(regardOf(o)), rel = G.rel[0][WILD], P = (G.prisoners || []).filter(x => x.o === 0);
   let h = acts(`<div class="lbl"><b>Natives</b><small>regard ${r} · ${REL_WORD[rel].toLowerCase()}</small></div>` + NATIVE.gifts.map(a => btn(`gift:${WILD},${a}`, `Gift ${a}g`, giftWhy(0, a) ? giftWhy(0, a).replace(/\.$/, '') : `regard +${giftGain(0, a)}`, giftWhy(0, a) ? 'dis' : '')).join('') + btn(`rel:${WILD},ally`, 'Ally', rel === 'ally' ? '' : relWhy(0, WILD, 'ally') ? relWhy(0, WILD, 'ally').replace(/\.$/, '') : 'by emissary', rel === 'ally' ? 'on' : relWhy(0, WILD, 'ally') ? 'dis' : ''), 'c4');
-  if (P.length) h += acts(P.map((x, i) => btn(`ransom:${i}`, `Ransom ${UNIT[x.kind].name.toLowerCase()}`, `${x.ransom}g · ${clock(Math.max(0, x.t + NATIVE.ransomSecs - G.t))} left`, G.P[0].res.g >= x.ransom ? 'warn' : 'dis')).join(''), 'c2');
+  if (P.length) h += sec('Your people held') + acts(P.map((x, i) => btn(`ransom:${i}`, `Ransom ${UNIT[x.kind].name.toLowerCase()}`, `${x.ransom}g · ${x.by === WILD ? 'Natives' : G.P[x.by].name} · ${clock(Math.max(0, x.t + PRISON.secs - G.t))}`, G.P[0].res.g >= x.ransom ? 'warn' : 'dis')).join(''), 'c2');
+  { const H = (G.prisoners || []).filter(x => x.by === 0); if (H.length) h += `<p><i>You hold ${H.length}:</i> ${H.map(x => `${G.P[x.o].name}' ${UNIT[x.kind].name.toLowerCase()}`).join(', ')}. Unransomed in ${PRISON.secs / 60} minutes, they serve you.</p>`; }
   return h;
 }
 function relHTML() {
@@ -200,8 +203,9 @@ function relHTML() {
 }
 // a workshop turns what is in store into goods: the same line for every one of them
 function workshopHTML(b) {
-  const p = G.P[0], n = b.node, [k, r] = Object.entries(BLD[b.kind].from)[0], kn = GOODS[k] ? GOODS[k].name.toLowerCase() : LONG[k];
-  return `<p>In store: ${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${kn} (${r} make 1 ${GOODS[BLD[b.kind].crop].name.toLowerCase()}). Worked by ${n && n.wk > 0 ? (G.units.some(u => u.node === n && u.wait) ? 'a villager, waiting for ' + kn : 'a villager') : 'nobody yet: tap Send a villager'}.</p>`;
+  const p = G.P[0], n = b.node, B = BLD[b.kind], cur = b.cropT || B.crop, mk = B.makes[cur], [k, r] = Object.entries(mk.from)[0], kn = GOODS[k] ? GOODS[k].name.toLowerCase() : LONG[k], nm = t => GOODS[t] ? GOODS[t].name : RESOURCES[LONG[t]].name, keys = Object.keys(B.makes);
+  return (keys.length > 1 ? acts(keys.map(t => btn(`make:${b.id},${t}`, nm(t), `${Object.entries(B.makes[t].from).map(([a, q]) => q + ' ' + (GOODS[a] ? GOODS[a].name.toLowerCase() : LONG[a])).join(', ')} make 1`, t === cur ? 'on' : '')).join(''), 'c2') : '')
+    + `<p>In store: ${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${kn} (${r} make 1 ${nm(cur).toLowerCase()}, ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} a minute). Worked by ${n && n.wk > 0 ? (G.units.some(u => u.node === n && u.wait) ? 'a villager, waiting for ' + kn : 'a villager') : 'nobody yet: tap Send a villager'}.</p>`;
 }
 function marketHTML(b) {   // the Market's two sides: trade, and caravans and ventures
   const p = G.P[0], more = G.mtab === 'more', V = p.ventures || [], nm = k => GOODS[k] ? GOODS[k].name : RESOURCES[LONG[k]].name; let h = '';
@@ -210,7 +214,7 @@ function marketHTML(b) {   // the Market's two sides: trade, and caravans and ve
       + sec('Buy') + acts(MKT_BUY.map(k => btn(`trade:buy:${k}`, nm(k), `${buyPrice(0, k)}g`, p.res.g < buyPrice(0, k) ? 'dis' : '')).join(''), 'c4');
     h += fold('prices', 'Going prices', `<p>${MKTK.map(k => `${nm(k)} ×${mkt(k).toFixed(2)}`).join(' · ')} (1 = normal)</p>`);
   } else {
-    h += `<p>Two lanes. One: a caravan with a route takes goods from your Business Center to a trade stop and sells them. Two: a caravan with no route runs to an ally's Market or Town Center and earns distance² ÷ ${TRADE_DIV}, at most ${TRADE_CAP} gold. ${unitsOf(0, 'caravan').length} caravans; ${allyMarket(0, b) ? 'an ally to trade with' : 'no ally yet'}.</p>`;
+    h += `<p>Two lanes. One: a caravan with a route takes goods from here to a trade stop and sells them. Two: a caravan with no route runs to an ally's Market or Town Center and earns distance² ÷ ${TRADE_DIV}, at most ${TRADE_CAP} gold. ${unitsOf(0, 'caravan').length} caravans; ${allyMarket(0, b) ? 'an ally to trade with' : 'no ally yet'}.</p>`;
     h += sec('Ventures') + `<p>${p.age < VENTURE.age ? 'From the Medieval age: put gold into a merchant venture.' : `Back in a year with ${Math.round((VENTURE.back - 1) * 100)}% more; about 1 in ${Math.round(1 / VENTURE.lost)} is lost.`} ${V.length ? 'Out: ' + V.map(v => `${v.amt}g (${clock(Math.max(0, v.due - G.t))})`).join(', ') + '.' : ''}</p>`;
     if (p.age >= VENTURE.age) h += acts(VENTURE.sizes.map(a => btn(`venture:${a}`, `${a} gold`, '', p.res.g < a || V.length >= VENTURE.max ? 'dis' : '')).join(''), 'c3');
   }
@@ -257,18 +261,18 @@ function vassalHTML(P) {
 function stopHTML(f) {
   const p = G.P[0], from = homeBiz(0, f) || keepOf(0), pt = postAt(f), mine = f.owner === 0, held = stopsHeld(mine ? 0 : f.owner, f.route);
   let h = `<p>Route ${f.route === 0 ? 'west–east' : 'north–south'}. ${f.owner === null ? (pt ? 'A post is going up.' : 'Nobody holds it.') : mine ? `Yours: ${Math.round(POST.cut[held] * 100)}% of everyone else's sales here (you hold ${held} of this route's 4${held === 4 ? `, so it pays ${Math.round(POST.all * 60)} gold a minute` : ''}).` : `Held by ${G.P[f.owner].name}: they take ${Math.round(POST.cut[held] * 100)}% of your sales here.`} Wants <b>${GOODS[f.want].name.toLowerCase()}</b> (×${POST.want}).</p>`;
-  h += `<p><i>Paid here, per good from your ${homeBiz(0, f) ? 'Business Center' : 'Town Center'}:</i> ${WARES.filter(k => k !== 'spice').map(k => `${GOODS[k].name} ${Math.round(priceAt(0, k, f, from))}g`).join(' · ')}. Spice costs ${GOODS.spice.buy}g here.</p>`;
+  h += `<p><i>Paid here, per good from your ${homeBiz(0, f) ? 'Market' : 'Town Center'}:</i> ${WARES.filter(k => k !== 'spice').map(k => `${GOODS[k].name} ${Math.round(priceAt(0, k, f, from))}g`).join(' · ')}. Spice costs ${GOODS.spice.buy}g here.</p>`;
   if (!pt && !guardsLeft(f)) h += acts(btn(`tpost:${f.id}`, 'Build a Trade post', p.age < 1 ? 'Bronze age' : costText(BLD.tpost.cost), p.age < 1 || !afford(p, BLD.tpost.cost) ? 'dis' : 'go'), 'c1');
   if (mine) { const sl = f.sell || {}; h += guardRow('f', f.id) + acts(btn(`want:${f.id}`, `Wanted: ${GOODS[f.want].name.toLowerCase()}`, 'yours: tap to change what it buys dear'), 'c1')
     + sec('Your caravans sell here') + acts(WARES.filter(k => k !== 'spice').map(k => btn(`sellat:${f.id},${k}`, GOODS[k].name, (f.sell ? sl[k] : 1) ? `${Math.floor(p.goods[k] || 0)} in store` : 'kept home', (f.sell ? sl[k] : 1) ? 'on' : '')).join(''), 'c3'); }
-  h += acts(btn(`routeto:${f.id}`, 'Send a caravan here', homeBiz(0, f) ? `${unitsOf(0, 'caravan').filter(c => c.route && c.route.to === f.id).length} on this route` : 'needs a Business Center', homeBiz(0, f) && unitsOf(0, 'caravan').length ? 'go' : 'dis'), 'c1');
+  h += acts(btn(`routeto:${f.id}`, 'Send a caravan here', homeBiz(0, f) ? `${unitsOf(0, 'caravan').filter(c => c.route && c.route.to === f.id).length} on this route` : 'needs a Market', homeBiz(0, f) && unitsOf(0, 'caravan').length ? 'go' : 'dis'), 'c1');
   return h;
 }
 function caravanHTML(u) {
   const r = u.route, t = targetOf(r), h0 = homeBiz(0, u), d = !r && u.dest ? G.blds.find(b => b.id === u.dest) : null;
   let h = `<p>${r && t ? `Lane one: to the trade stop at ${coord(t.x, t.y)}${r.rep ? ', again and again' : ''}. ${u.leg === 'go' ? 'Carrying ' + (goodsText(u.goods || {}) || 'nothing') : u.leg === 'back' ? 'Coming home' + (u.goods && u.goods.spice ? ' with ' + u.goods.spice + ' spice' : '') : 'Loading'}.` : d && d.owner !== 0 ? `Lane two: to ${G.P[d.owner].name}' ${bldName(d.owner, d.kind).toLowerCase()}, ${u.cargo} gold on arrival.` : allyMarket(0, u) ? 'Lane two: on its way to trade with your ally.' : 'No route, and no ally to trade with: it waits at your Market.'}</p>`;
   h += guardRow('c', u.id);
-  if (!h0) return h + '<p>Build a Business Center (Trade) to send goods to the trade stops.</p>';
+  if (!h0) return h + '<p>Build a Market (Trade) to send goods to the trade stops.</p>';
   const T = tradeTargets(0).map(t => [t, estPay(0, t, h0)]).sort((a, b) => b[1] - a[1]).slice(0, 4);
   h += sec('Send it to') + acts(T.map(([t, v]) => btn(`route:${u.id},s,${t.id}`, `Trade stop ${coord(t.x, t.y)}`, `about ${v}g a load · ${Math.round(dist(h0, t))} away`, r && t === targetOf(r) ? 'on' : '')).join('') || '<p>No stop open: clear one of its guards first.</p>', 'c1');
   if (r) h += acts(btn(`rrep:${u.id}`, 'Repeat', r.rep ? 'on' : 'off', r.rep ? 'on' : '') + btn(`rsp:${u.id}`, 'Buy spice', r.spice ? 'on' : 'off', r.spice ? 'on' : '') + btn(`rclr:${u.id}`, 'No route', 'trade with an ally'));
@@ -320,17 +324,19 @@ const CARDS = {
     }
     if (mine && b.kind === 'keep') h += acts(b.hp < M - 1 ? btn(`repair:${b.id}`, 'Repair', costText(repairCost(0, b)), 'go') : '');
     if (mine && b.prog >= 1) {
-      if (trainsAt(b.kind).length || TECH.some(t => t.at === b.kind) || b.kind === 'keep') h += slotsHTML(b);
-      const mk = b.kind === 'market', trade = mk && G.mtab !== 'more';   // the Market's trade side shows no training or research
+      if (!(b.kind === 'keep' && G.ktab === 'rel') && (trainsAt(b.kind).length || TECH.some(t => t.at === b.kind) || b.kind === 'keep')) h += slotsHTML(b);
+      const mk = b.kind === 'market', kp = b.kind === 'keep', trade = (mk && G.mtab !== 'more') || (kp && G.ktab === 'rel');   // the Market's trade side and the Town Center's relations side show no training or research
       const tr = trade ? [] : trainsAt(b.kind), techs = trade ? [] : TECH.filter(t => ownTech(t) && t.at === b.kind && !p.techs.has(t.id)), done = trade ? [] : TECH.filter(t => t.at === b.kind && p.techs.has(t.id));
-      const ageB = b.kind === 'keep' ? keepAgeBtn() : '', hasR = techs.length || done.length || ageB, hd = t => tr.length && hasR ? sec(t) : '';   // one page: Train, then Research; the next age is research like any other
+      const ageB = kp && !trade ? keepAgeBtn() : '', hasR = techs.length || done.length || ageB, hd = t => tr.length && hasR ? sec(t) : '';   // one page: Train, then Research; the next age is research like any other
+      const ages = [...new Set([...techs, ...done].map(t => t.age))].sort(), rt = ages.length > 1 ? ageTab(ages, techs) : -1, inTab = t => rt < 0 || t.age === rt;   // age tabs when a building teaches across ages
       if (mk) h += twoTabs('mtab', [['trade', 'Trade', 'sell and buy'], ['more', 'Caravans', 'and ventures']], trade ? 'trade' : 'more');
+      if (kp) h += twoTabs('ktab', [['town', 'Town', 'train and research'], ['rel', 'Relations', 'ally, neutral, hostile']], trade ? 'rel' : 'town');
       if (tr.length) h += hd('Train') + acts(trainButtons(tr));
-      if (hasR) h += hd('Research') + acts(ageB + techs.map(t => techBtn(t)).join('')) + (done.length ? `<div class="chips">${done.map(t => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>` : '');
+      if (hasR) h += hd('Research') + (rt < 0 ? '' : ageTabs(ages, rt)) + acts(ageB + techs.filter(inTab).map(t => techBtn(t)).join('')) + (done.some(inTab) ? `<div class="chips">${done.filter(inTab).map(t => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>` : '');
       moreH = (tr.length && b.kind !== 'keep' && b.kind !== 'town' ? tr.map(k => unitLine(0, civKind(0, k))).join('') : '') + techs.map(t => `<p><b>${t.name}:</b> ${t.desc}</p>`).join('') + (b.kind === 'keep' ? keepMoreHTML() : '');
       if (BLD_PAGE[b.kind]) h += BLD_PAGE[b.kind](b);
-      if (b.kind === 'keep') h += relHTML();
-      if (B.from) h += workshopHTML(b);
+      if (kp && trade) h += relHTML();
+      if (B.makes) h += workshopHTML(b);
     }
     if (!mine && b.kind === 'keep' && P.lord === 0) h += vassalHTML(P);
     else if (!mine && b.kind === 'keep' && G.rel[0][b.owner] === 'ally') { const why = overlordWhy(0, b.owner); h += acts(btn(`overlord:${b.owner}`, 'Offer overlordship', why ? why.replace(/\.$/, '') : 'they become your vassal at a light tax', why ? 'dis' : 'go'), 'c1'); }
@@ -411,7 +417,7 @@ const CARDS = {
   army() {
     const p = G.P[0], S = armyOf(0), by = {}; for (const u of S) { const nm = stats(0, u.kind).name; by[nm] = (by[nm] || 0) + 1; }
     const V = unitsOf(0, 'vil'), idle = V.filter(u => !u.job); let r = 0; if (G.rdy) for (const v of G.rdy.values()) r += v; const going = G.blds.reduce((n, b) => n + (b.owner === 0 ? b.q.filter(j => j.tech || j.age).length : 0), 0);
-    let h = title('People', `${V.length} villagers · ${S.length} soldiers`) + acts(btn('card:research', 'Research', `${r} ready · ${going} under way`, r ? 'go' : '') + btn('help', 'How to play', 'the guide and the rules'), 'c1');
+    let h = title('People', `${V.length} villagers · ${S.length} soldiers`) + acts(btn('card:research', 'Research', `${r} ready · ${going} under way`, r ? 'go' : '') + btn('help', 'How to play', 'the guide and the rules'));
     h += sec('Villagers') + `<p>${JOBS.map(j => `${V.filter(u => u.job === j).length} ${j}`).join(' · ')} · <b>${idle.length} idle</b></p>` + (idle.length ? acts(btn('idlego', 'Show an idle villager', `${idle.length} idle`), 'c1') : '');
     h += sec('Army') + `<p>${Object.entries(by).map(([n, k]) => `${k} ${some(k, n.toLowerCase())}`).join(' · ') || 'Nobody yet.'}</p>`;
     const ords = Object.values(G.ords || {}).filter(O => O.n);
@@ -419,6 +425,7 @@ const CARDS = {
     if (S.length && hasCmd()) h += sec('Orders go to') + acts([['all', 'All', S.length]].concat(BN.map((n, i) => [i, n, S.filter(u => u.bn === i).length])).map(([k, n, cnt]) => btn(`sel:${k}`, n, `${cnt}`, G.sel === k ? 'on' : '')).join(''), 'c4');
     if (S.length) {
       h += sec(`Orders for the ${selName()}`) + acts(btn('recall', 'Recall home', '') + btn('attack:near', 'Attack nearest', oddsText(orderSet(), foeNearest()), orderSet().length ? 'warn' : 'dis'));
+      { const bn = G.sel === 'all' ? undefined : G.sel, cw = chargeWhy(0, orderSet(), bn), S = orderSet(), nerve = S.length ? Math.round(100 * S.reduce((a, u) => a + (u.mor ?? 1), 0) / S.length) : 0; h += acts(btn('charge', 'Charge', cw ? cw.replace(/\.$/, '') : `${CHARGE.secs} s of speed and blows, then tired`, cw ? 'dis' : 'warn') + btn('fallback', 'Fall back', `withdraw ${FALLBACK.back}, fewer losses`)) + `<p><i>Nerve:</i> ${nerve}%${nerve < 40 ? ' · <b>close to breaking</b>' : ''}.</p>` + fold('about', 'Nerve', '<p>Blows from the side and behind drain nerve; rest, a wall, a tower or a priest restore it. Under 20% a soldier runs.</p>'); }
       if (p.techs.has('engage')) { const sn = G.sel === 'all' ? (G.stance.every(x => x === G.stance[0]) ? G.stance[0] : -1) : G.stance[G.sel]; h += acts(btn('stance', 'Stance: ' + (sn < 0 ? 'mixed' : STANCE[sn].name), '', sn > 0 ? 'on' : ''), 'c1'); }
       const hold = G.sel === 'all' ? G.hold.every(x => x) : !!G.hold[G.sel]; h += acts(btn('hold', 'Hold ground', hold ? 'on' : 'off', hold ? 'on' : ''), 'c1');
       if (ready(0, 'temple').length) { const why = zealWhy(0, orderSet()); h += acts(btn('zeal', 'Zeal', why ? why.replace(/\.$/, '') : `${costText(zealCost(0))} · ${ZEAL.secs} s of harder blows`, why ? 'dis' : 'go'), 'c1'); }
@@ -463,7 +470,7 @@ const CARDS = {
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>
       <p><b>Win</b> by conquest, a wonder held ${WONDER_HOLD / 60} minutes, or the top score at the bell. Score is top right. The Guide and Rules above hold every number.</p>`
       + settingsHTML()
-      + acts(btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '') + btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '') + btn('news', 'World news', SET.news !== false ? 'on' : 'off', SET.news !== false ? 'on' : '') + btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off'), 'c4')
+      + acts(btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '') + btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '') + btn('news', 'World news', SET.news !== false ? 'on' : 'off', SET.news !== false ? 'on' : '') + btn('fog', 'Fog of war', SET.fog ? 'on' : 'off', SET.fog ? 'on' : '') + btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off'), 'c3')
       + (Object.keys(SET.hush).length ? acts(btn('unhush', 'Unmute all messages', Object.keys(SET.hush).length + ' kinds silenced'), 'c1') : '')
       + acts(btn('newgame', G.confirm === 'new' ? 'Tap again' : 'New game', G.confirm === 'new' ? 'this one is lost' : 'pick your people', G.confirm === 'new' ? 'warn' : ''))
       + `<p>The game saves itself every ${SAVE_EVERY} seconds on this phone. World, game length and people take effect in the next game.</p>`;

@@ -4,7 +4,7 @@ let G;
 function blankGame(seed) {
   return { t: 0, tick: 0, speed: G ? G.speed : 1, over: null, seed, rs: seed, units: [], blds: [], nodes: [], finds: [], tracers: [], log: [],
     P: [], rel: [], card: null, place: null, sel: 'all', alertT: -99, warnT: -99, confirm: null, night: 0, loot: {}, lootT: 0,
-    hold: Array(BNS + 1).fill(0), stance: Array(BNS + 1).fill(0), bnPlan: BN.map(() => ({})), form: BN.map(() => 0), bnEdit: 0, qs: { from: 'all', n: {} }, intel: {}, fantasy: SET.fantasy, mode: SET.mode, diff: SET.diff, wayT: WAYFARER_EVERY * 0.5, wayI: 0, wonder: null, navDirty: true, fxv: 1, warAt: {}, pick: [], hz: {}, ev: {}, horde: null, flood: 0 };   // warAt: notice given, 'a,b' → when it falls due; pick: what the finger holds; hz: the hazards on; ev: the spectacle's state
+    hold: Array(BNS + 1).fill(0), stance: Array(BNS + 1).fill(0), bnPlan: BN.map(() => ({})), form: BN.map(() => 0), bnEdit: 0, qs: { from: 'all', n: {} }, intel: {}, fantasy: SET.fantasy, mode: SET.mode, diff: SET.diff, wayT: WAYFARER_EVERY * 0.5, wayI: 0, wonder: null, navDirty: true, fxv: 1, warAt: {}, pick: [], hz: {}, ev: {}, horde: null, flood: 0, fog: new Uint8Array(FOGN * FOGN) };   // warAt: notice given, 'a,b' → when it falls due; pick: what the finger holds; hz: the hazards on; ev: the spectacle's state
 }
 function mkPlayer(i, civ) {
   const d = PLAYERS[i];
@@ -156,7 +156,7 @@ function makeCitadel() {
   for (const [sx, sy] of [[-1, -1], [1, 1]]) put('tower', MID + sx * (THRONE.r - 5), MID + sy * (THRONE.r - 5));   // two towers: a citadel that can be broken by a real army, not an ambush
   addFind('shrine', MID - 52, MID + 46);
   for (let i = 0; i < NATIVE.garrison; i++) natSpawn(T, i % 3 === 2 ? 'nativebow' : 'native');
-  layTraps(); G.throne = null; G.prisoners = []; natState();
+  G.throne = null; G.prisoners = []; natState(); layTraps();
 }
 function wildAt(kind, x, y, find) { const u = addUnit(WILD, kind, x, y); u.hx = x; u.hy = y; if (find) u.find = find.id; return u; }
 function addFind(kind, x, y) {
@@ -170,13 +170,13 @@ function mkBld(owner, kind, x, y, prog) {
   const b = { id: NID++, owner, kind, x: sp.x, y: sp.y, gx: sp.gx, gy: sp.gy, prog, hp: 0, cd: 0, q: [] };
   b.hp = prog >= 1 ? maxHpB(owner, kind) : maxHpB(owner, kind) * 0.1;
   if (B.sheep) b.sheep = B.sheep;
-  if (B.crop) { const r = 'reserve' in B ? B.reserve : Infinity; b.node = { id: NID++, kind: 'farm', type: B.crop, rate: B.rate, x: b.x, y: b.y, amt: r, max: r || Infinity, farm: b, worker: null }; G.nodes.push(b.node); }
+  if (B.crop) { const r = 'reserve' in B ? B.reserve : Infinity, mk = B.makes && B.makes[B.crop]; b.node = { id: NID++, kind: 'farm', type: B.crop, rate: mk ? mk.rate : B.rate, x: b.x, y: b.y, amt: r, max: r || Infinity, farm: b, worker: null }; G.nodes.push(b.node); }
   return b;
 }
 function addUnit(owner, kind, x, y) {
   const U = UNIT[kind];
   const u = { id: NID++, owner, kind, x, y, hp: 1, max: 1, cd: 0, carry: 0, carryType: null, job: null, node: null, state: 'home', px: 0, py: 0,
-              ox: rnd(-30, 30), oy: rnd(-30, 30), target: null, idleT: 0, fx: 1, fy: 0, bornT: G.t, st: { got: 0, trips: 0, walk: 0, kills: 0, built: 0 } };   // st: a life's tally, for its card
+              ox: rnd(-30, 30), oy: rnd(-30, 30), target: null, idleT: 0, fx: 1, fy: 0, bornT: G.t, mor: 1, st: { got: 0, trips: 0, walk: 0, kills: 0, built: 0 } };   // mor: nerve   // st: a life's tally, for its card
   u.max = u.hp = owner === WILD ? U.hp : maxHpU(owner, kind);
   G.units.push(u); return u;
 }
