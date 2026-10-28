@@ -52,10 +52,10 @@ function showEnd(won, text) { $('endT').textContent = won ? 'Victory' : 'Defeat'
 function fit() { const r = cv.getBoundingClientRect(); dpr = LOW.n >= 2 ? 1 : Math.min(2, window.devicePixelRatio || 1); cw = r.width; ch = r.height; { const h = $('hud').getBoundingClientRect(), o = $('orders').getBoundingClientRect(), t = r.top; document.documentElement.style.setProperty('--ob', Math.round(r.bottom - o.top) + 'px'); vy = Math.round(((h.bottom - t) + (o.top - t)) / 2 - ch / 2); } const W = Math.round(cw * dpr), H = Math.round(ch * dpr); if (cv.width !== W) cv.width = W; if (cv.height !== H) cv.height = H; cam.z = clamp(cam.z, minZ(), ZOOM_MAX); clampCam(); }
 
 // ───────────────────────── Messages and tips ─────────────────────────
-function say(text, cls, secs, at, act) { if (!G) return; if (SET.msgs === false && cls !== 'warn') return; if (hushed(text)) return;   // Messages off: warnings only; a silenced kind stays quiet
+function say(text, cls, secs, at, act) { if (!G) return; if (SET.msgs === false && cls !== 'warn' && cls !== 'tip') return; if (hushed(text)) return;   // Messages off: warnings only; a silenced kind stays quiet
   const same = G.log.find(m => m.text === text && m.until > G.t); if (same) { same.until = G.t + (secs || 4); return; }   // the same line never shows twice at once
   G.log.unshift({ text, cls, act, until: G.t + (secs || 4), at: at ? { x: Math.round(at.x), y: Math.round(at.y) } : null }); G.log = G.log.slice(0, 5);
-  if (SET.tkMin) { G.tkN = (G.tkN || 0) + 1; if (cls === 'warn') G.tkW = true; } }   // hidden: the bell in the strip counts what came
+  if (SET.tkMin || G.card) { G.tkN = (G.tkN || 0) + 1; if (cls === 'warn') G.tkW = true; } }   // hidden: the bell in the strip counts what came
 // The next useful step, read from your situation. One line, shown for six seconds, then at most one more every 45; a warning (starts with !) stays until fixed. Tap × to hide one.
 // Silence: the bell on any message or tip mutes its kind (numbers ignored) until Unmute all; a warning comes back after 2 minutes, in case the danger is new
 const hushKey = t => t.replace(/[\d,.]+/g, '#');
@@ -101,7 +101,7 @@ function ui(force) {
   const T = G.tipS || (G.tipS = { text: '', at: -99, last: -99 });
   if (tip !== T.text && (urgent || G.t > 20 && G.t - T.last > 45)) { T.text = tip; T.at = G.t; if (tip) T.last = G.t; }
   const showTip = tip && T.text === tip && (urgent || G.t - T.at < 6) && !hushed(tip) && !G.card && !G.place && !G.over;
-  if (showTip && T.said !== T.text) { T.said = T.text; say(tip, urgent ? 'warn' : 'tip', urgent ? 10 : 6); }   // a tip is a message like any other, in the ticker
+  if (showTip && (urgent || T.said !== T.text)) { T.said = T.text; say(tip, urgent ? 'warn' : 'tip', urgent ? 3 : 6); }   // a warning is said again while it holds (the same line only stays up), a tip once   // a tip is a message like any other, in the ticker
   { const lim = MODES[G.mode].secs, clk = G.wonder ? `wonder ${clock(Math.max(0, G.wonder.end - G.t))}` : lim ? `${clock(Math.max(0, lim - G.t))}` : clock(G.t);
     let ready = 0; for (const v of G.rdy.values()) ready += v;   // research you can start now (the age counts: it is research too)
     const idleN = unitsOf(0, 'vil').filter(u => !u.job).length, t1 = `${AGES[p.age].name} age · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? '🌙' : ''} ${clk}`, t2 = idleN ? `${idleN} idle` : '';
@@ -122,12 +122,13 @@ function ui(force) {
 // (or, with nowhere to show, open the list); the list holds the last five, each with its bell to silence that kind; the arrow hides it all.
 const linkOf = m => m && (m.act || (m.at ? `jump:${m.at.x},${m.at.y}` : ''));
 function tick() {
-  const hide = !!SET.tkMin, live = G.log.find(m => m.until > G.t), paused = G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup'));
+  const hide = !!SET.tkMin || !!G.card, live = G.log.find(m => m.until > G.t), paused = G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup'));   // a card open is a moment of reading: the ticker steps aside, the bell counts
   $('stage').classList.toggle('tk', !hide); $('ticker').hidden = hide; $('tkBell').hidden = !hide;
-  if (hide) { const n = G.tkN || 0; $('tkBell').innerHTML = ICON.bell + (n ? `<span>${n}</span>` : ''); $('tkBell').classList.toggle('warn', !!G.tkW); $('tkPop').hidden = true; return; }
-  const m = live || (paused ? { text: 'Paused · ▶ to carry on', cls: '' } : G.log[0]), el = $('tkT');
+  if (hide) { const n = G.tkN || 0, bs = n + (G.tkW ? 'w' : ''); if (tick.bell !== bs) { tick.bell = bs; $('tkBell').innerHTML = ICON.bell + (n ? `<span>${n}</span>` : ''); $('tkBell').classList.toggle('warn', !!G.tkW); } $('tkPop').hidden = true; tick.sig = ''; return; }
+  if (G.tkN || G.tkW) { G.tkN = 0; G.tkW = false; tick.bell = ''; }   // shown again: what was counted is in the list
+  const m = paused && !(live && live.cls === 'warn') ? { text: 'Paused · ▶ to carry on', cls: '' } : live || G.log[0], el = $('tkT');   // paused says so, unless a warning is up
   txt('tkT', m ? m.text : ''); el.dataset.act = linkOf(live) || 'tklist';
-  $('ticker').className = 'tick ' + (live ? live.cls || '' : 'old');
+  $('ticker').className = 'tick ' + (m && m === live ? live.cls || '' : m && !G.log.includes(m) ? '' : 'old');
   const pop = G.tkOpen && G.log.length ? G.log.map(x => `<div class="row ${x.cls || ''}"><button class="t" data-act="${linkOf(x) || 'tklist'}">${x.text}</button><button class="h" data-act="hush:${encodeURIComponent(x.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`).join('') : '';
   if (pop !== tick.sig) { tick.sig = pop; $('tkPop').innerHTML = pop; $('tkPop').hidden = !pop; }
 }

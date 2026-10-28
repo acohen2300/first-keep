@@ -95,20 +95,21 @@ function makeForest(spot, loc) {
 }
 function makeMap() {
   const N = G.nodes, loc = makeLakes(), taken = [], spot = {};
-  const room = [{ x: 700, y: 700, r: LAKE0.r + 25 }, ...loc.map(l => ({ x: l.x, y: l.y, r: l.r + 25 }))];
+  const sh = (hyp(700, 700) - LAKE0.r - 90) / Math.SQRT2, room = [{ x: 700, y: 700, r: LAKE0.r + 25 }, { x: sh, y: sh, r: 50 }, ...loc.map(l => ({ x: l.x, y: l.y, r: l.r + 25 }))];   // the great lake, this corner's shrine on its shore, the corner's lakes
   // this game's land: its character, how far its rings stretch, which way its home pocket turns (Build 39: every map felt the same)
   G.land = LANDK[Math.floor(rng() * LANDK.length)]; const Ld = LAND[G.land], k = rnd(SPREAD[0], SPREAD[1]), turn = rnd(-TURN, TURN);
-  const lay = LAYOUT.map(([id, r0, r1, clr, a0, a1]) => [id, r0 * (a0 === undefined ? k : 1), r1 * (a0 === undefined ? k : 1), clr, a0 === undefined ? a0 : a0 + turn, a1 === undefined ? a1 : a1 + turn]);
+  const lay = LAYOUT.map(([id, r0, r1, clr, a0, a1]) => [id, Math.min(560, r0 * (a0 === undefined ? k : 1)), Math.min(640, r1 * (a0 === undefined ? k : 1)), clr, a0 === undefined ? a0 : a0 + turn, a1 === undefined ? a1 : a1 + turn]);   // stretched, never past the old outer ring
   if (Ld.extra) lay.push(['extra', 240, 380, 30]);
   for (const [id, r0, r1, clr, a0, a1] of lay) {
     let best = null;
-    for (let t = 0; t < 150 && !best; t++) {
-      const a = a0 === undefined ? rnd(-Math.PI, Math.PI) : rnd(a0, a1), d = rnd(r0, r1), x = Math.cos(a) * d, y = Math.sin(a) * d;
+    for (let t = 0; t < 300 && !best; t++) {   // 150 tries as set; then 150 more with the ring widened and the room halved, before any fallback
+      const loose = t >= 150, w = loose ? 0.25 : 0, a = a0 === undefined ? rnd(-Math.PI, Math.PI) : rnd(a0 - w, a1 + w), d = rnd(r0 * (loose ? 0.85 : 1), r1 * (loose ? 1.15 : 1)), x = Math.cos(a) * d, y = Math.sin(a) * d, c = loose ? clr / 2 : clr;
       if (x < -190 || y < -190 || x > 640 || y > 640) continue;
-      if (taken.some(q => hyp(q.x - x, q.y - y) < q.r + clr) || room.some(q => hyp(q.x - x, q.y - y) < q.r + clr)) continue;
+      if (taken.some(q => hyp(q.x - x, q.y - y) < q.r + c) || room.some(q => hyp(q.x - x, q.y - y) < q.r + c)) continue;
       best = { x, y };
     }
-    spot[id] = best || { x: (r0 + r1) / 2 * 0.7 * (a0 === undefined ? 1 : -1), y: (r0 + r1) / 2 * 0.7 * (a0 === undefined ? 1 : -1) };
+    const am = a0 === undefined ? Math.PI / 4 : (a0 + a1) / 2, dm = (r0 + r1) / 2 * 0.7;   // the fallback: the middle of its own range, turned with the home pocket
+    spot[id] = best || { x: Math.cos(am) * dm, y: Math.sin(am) * dm };
     taken.push({ x: spot[id].x, y: spot[id].y, r: clr });
   }
   const { trees: forest, dep } = makeForest(spot, loc);

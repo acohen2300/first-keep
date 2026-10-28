@@ -410,15 +410,17 @@ function stanceOf(u) {
   const want = u.owner === 0 ? G.stance[u.bn ?? BNS] || 0 : shoots ? 2 : foot && u.state === 'home' ? 1 : 0;
   return want === 1 && foot ? 1 : want === 2 && shoots ? 2 : 0;
 }
+// a soldier at home guards the ground round its own yard and round the Town Center (Build 39 review: a yard far from the Town Center was left undefended)
+const nearHome = (u, t, k) => (u.hax !== undefined && hyp(t.x - u.hax, t.y - u.hay) < 320) || (!!k && dist(t, k) < 320);
 function solTick(u, dt, SP) {
   const U = UNIT[u.kind], o = u.owner, k = keepOf(o);
   u.cd = Math.max(0, u.cd - dt); u.stance = stanceOf(u);
   let tgt = u.tgt;   // looks for the nearest foe a few times a second, and keeps hitting the one it has between looks
-  if (tgt && !(tgt.hp > 0 && !tgt.inside && atWar(o, tgt.owner) && (edge(u, tgt) < sightOf(u) * 1.4 || (u.state === 'home' && k && dist(tgt, k) < 320)))) tgt = u.tgt = null;   // the one it had is gone; a soldier at home keeps a foe it was sent after near the Town Center (Build 38: dropping it the next step made new soldiers spin)
+  if (tgt && !(tgt.hp > 0 && !tgt.inside && atWar(o, tgt.owner) && (edge(u, tgt) < sightOf(u) * 1.4 || (u.state === 'home' && nearHome(u, tgt, k))))) tgt = u.tgt = null;   // the one it had is gone; a soldier at home keeps a foe it was sent after near the Town Center (Build 38: dropping it the next step made new soldiers spin)
   if ((G.tick + u.id) % 4 === 0) {   // its turn to look, about seven times a second: with a foe or without
     tgt = U.bonly ? nearestFoeBld(o, u, undefined, sightOf(u)) : nearestFoe(o, u, sightOf(u));
-    if (u.state === 'home' && tgt && k && dist(tgt, k) > 320) tgt = null;
-    if (!tgt && u.state === 'home' && k && !U.bonly) tgt = nearestFoe(o, u, 320, k);
+    if (u.state === 'home' && tgt && !nearHome(u, tgt, k)) tgt = null;
+    if (!tgt && u.state === 'home' && !U.bonly) tgt = (u.hax !== undefined && nearestFoe(o, u, 320, { x: u.hax, y: u.hay })) || (k && nearestFoe(o, u, 320, k)) || null;   // a foe near its own yard first, then near the Town Center
     u.tgt = tgt;
   }
   if (u.focus) { if (u.focus.hp > 0 && !u.focus.inside && atWar(o, u.focus.owner)) { tgt = u.focus; u.tgt = tgt; } else u.focus = null; }   // told to hit this one

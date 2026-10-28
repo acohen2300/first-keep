@@ -2,8 +2,8 @@
 // ───────────────────────── The cards: one engine, one table ─────────────────────────
 // A card is a page of the book. CARDS[type] writes its page from the game's tables; the engine lays the new page over the old one
 // node by node, so only the words and numbers that changed are touched and a button under a finger stays the same button.
-function openCard(c) { hideStrip(); G.card = c; G.infoOpen = false; G.confirm = null; cardSig = ''; $('card').scrollTop = 0; renderCard(); }
-function closeCard() { if (G) G.card = null; $('card').hidden = true; }
+function openCard(c) { hideStrip(); G.card = c; G.infoOpen = false; G.confirm = null; cardSig = ''; $('card').scrollTop = 0; tick(); renderCard(); }
+function closeCard() { if (G) { G.card = null; tick(); } $('card').hidden = true; }   // the ticker steps aside or back at once, so the card gets its room on the first frame
 let cardSig = '';
 const sig = x => x.nodeType === 3 ? '#' : x.nodeName + '|' + (x.getAttribute('data-act') || x.getAttribute('data-f') || x.getAttribute('class') || '');
 function patchKids(a, b) {
@@ -179,7 +179,7 @@ function keepMoreHTML() {   // the Town Center's More: your people, goods and th
   h += `<p><i>Goods:</i> ${goodsText(p.goods) || 'none yet'}. <i>Wanted by others here:</i> ${G.P.filter(q => q.id && q.id !== WILD && q.alive).map(q => `${q.name} ${q.wants.map(k => GOODS[k].name.toLowerCase()).join(' and ')}`).join('; ')}.</p>`;
   const done = TECH.filter(t => p.techs.has(t.id)), going = [], open = TECH.filter(t => ownTech(t) && !p.techs.has(t.id) && !researchWhy(0, t.id));
   for (const b of G.blds) if (b.owner === 0) b.q.forEach((j, i) => { if (j.tech) going.push(`${TECHBY[j.tech].name}${i === 0 ? ` (${Math.ceil(j.left)} s)` : ' (waiting)'}`); });
-  h += `<p><b>Research: ${done.length} of ${TECH.length} done.</b>${going.length ? ` <i>Under way:</i> ${going.join(' · ')}.` : ''}${open.length ? ` <i>Ready now:</i> ${open.map(t => `${t.name} (${BLD[t.at].name})`).join(' · ')}.` : ''}</p>`;
+  h += `<p><b>Research: ${done.length} of ${TECH.filter(ownTech).length} done.</b>${going.length ? ` <i>Under way:</i> ${going.join(' · ')}.` : ''}${open.length ? ` <i>Ready now:</i> ${open.map(t => `${t.name} (${BLD[t.at].name})`).join(' · ')}.` : ''}</p>`;
   h += AGES.map((A, i) => { const T = TECH.filter(t => ownTech(t) && t.age === i); return T.length ? `<p><b>${A.name}:</b> ${T.map(t => p.techs.has(t.id) ? `<span class="done">✓ ${t.name}</span>` : `<span class="dim">${t.name}</span>`).join(' · ')}</p>` : ''; }).join('');
   return h;
 }
