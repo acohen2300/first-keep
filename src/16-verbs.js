@@ -38,6 +38,9 @@ const ACT = {
   msgs() { SET.msgs = SET.msgs === false; saveSet(); refresh(); },
   news() { SET.news = SET.news === false; saveSet(); refresh(); },
   fog() { SET.fog = !SET.fog; saveSet(); refresh(); },
+  cardpause() { SET.cardPause = SET.cardPause === false; saveSet(); refresh(); },
+  dockmin() { SET.dockMin = !SET.dockMin; saveSet(); ui(true); },
+  dock(a) { G.sel = a === 'all' ? 'all' : Number(a); setPick(orderSet().map(u => ({ t: 'unit', id: u.id }))); feel('tick'); },   // the dock: a battalion picked in one tap; the pick bar then carries Charge, Fall back and Teach
   tkmin() { SET.tkMin = !SET.tkMin; saveSet(); G.tkN = 0; G.tkW = false; G.tkOpen = false; ui(true); fit(); },   // hide or show the ticker
   tklist() { G.tkOpen = !G.tkOpen && G.log.length > 0; ui(true); },   // the last five
   hush(a) { const t = decodeURIComponent(a || ''), k = hushKey(t), m = G.log.find(x => x.text === t);

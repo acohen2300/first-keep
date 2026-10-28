@@ -2,8 +2,8 @@
 // ───────────────────────── The cards: one engine, one table ─────────────────────────
 // A card is a page of the book. CARDS[type] writes its page from the game's tables; the engine lays the new page over the old one
 // node by node, so only the words and numbers that changed are touched and a button under a finger stays the same button.
-function openCard(c) { hideStrip(); G.card = c; G.infoOpen = false; G.confirm = null; cardSig = ''; $('card').scrollTop = 0; tick(); renderCard(); }
-function closeCard() { if (G) { G.card = null; tick(); } $('card').hidden = true; }   // the ticker steps aside or back at once, so the card gets its room on the first frame
+function openCard(c) { hideStrip(); G.card = c; G.infoOpen = false; G.confirm = null; cardSig = ''; $('card').scrollTop = 0; if (SET.cardPause !== false && !G.paused && !G.over && c.type !== 'setup') { setPause(true); G.cardPaused = true; } tick(); renderCard(); }   // a card pauses the game (Help: Pause on cards); closing it carries on
+function closeCard() { if (G) { G.card = null; if (G.cardPaused) { G.cardPaused = false; if (!G.over) setPause(false); } tick(); } $('card').hidden = true; }   // the ticker steps aside or back at once, so the card gets its room on the first frame
 let cardSig = '';
 const sig = x => x.nodeType === 3 ? '#' : x.nodeName + '|' + (x.getAttribute('data-act') || x.getAttribute('data-f') || x.getAttribute('class') || '');
 function patchKids(a, b) {
@@ -471,7 +471,7 @@ const CARDS = {
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>
       <p><b>Win</b> by conquest, a wonder held ${WONDER_HOLD / 60} minutes, or the top score at the bell. Score is top right. The Guide and Rules above hold every number.</p>`
       + settingsHTML()
-      + acts(btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '') + btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '') + btn('news', 'World news', SET.news !== false ? 'on' : 'off', SET.news !== false ? 'on' : '') + btn('fog', 'Fog of war', SET.fog ? 'on' : 'off', SET.fog ? 'on' : '') + btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off'), 'c3')
+      + acts(btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '') + btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '') + btn('news', 'World news', SET.news !== false ? 'on' : 'off', SET.news !== false ? 'on' : '') + btn('fog', 'Fog of war', SET.fog ? 'on' : 'off', SET.fog ? 'on' : '') + btn('cardpause', 'Pause on cards', SET.cardPause !== false ? 'on' : 'off', SET.cardPause !== false ? 'on' : '') + btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off'), 'c3')
       + (Object.keys(SET.hush).length ? acts(btn('unhush', 'Unmute all messages', Object.keys(SET.hush).length + ' kinds silenced'), 'c1') : '')
       + acts(btn('newgame', G.confirm === 'new' ? 'Tap again' : 'New game', G.confirm === 'new' ? 'this one is lost' : 'pick your people', G.confirm === 'new' ? 'warn' : ''))
       + `<p>The game saves itself every ${SAVE_EVERY} seconds on this phone. World, game length and people take effect in the next game.</p>`;
