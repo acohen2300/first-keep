@@ -1,4 +1,4 @@
-# First Keep: handoff (Build 39)
+# First Keep: handoff (Build 40)
 
 ## What it is
 Albert's single-file HTML mobile RTS (Age of Empires style). Albert is not a coder.
@@ -42,6 +42,20 @@ One pill of 8 cells on top (five counts, mute, pause, speed), the strip (age · 
 
 ## Design
 The long-game design doc (Oct 28): https://claude.ai/artifact/P3ThRoHEPXSjQXHaLTAiYM. Diagnosis, the Throne, politics, teeth (a Challenge level borrowed from SoRen), spectacle and world news, combat you steer, variety, look and sound, scale, and the build order 39-43. Read it before proposing features.
+
+## Build 40 (one shot, five stages; see CUTS.md for each)
+- **Relations at the Town Center** (Town | Relations sides): Ally / Neutral / Hostile per side, 30 s notice before war; emissaries judged by odds; vassal verbs (break ties, demand, force tribute, levy). `setRel`, `judgeEnvoy`, `noticeTick` in `06-orders`.
+- **The Natives**, the fifth side with one brain (`19-natives`): the Throne citadel in the centre with the shrine inside, causeways, hidden traps (pit, stakes, net, as buildings of any side), regard (gifts with the Danegeld rule), raids, the sworn handover, the Throne as a win. The Fortress is a player (`PERS.fort`).
+- **Events and hazards** (`19-events`): `EVENTS` scheduler (storm, flood, locusts, meteor, eclipse, quake, wildfire …), `HAZARDS` as the Challenge, the moon, news, the horde.
+- **Combat**: nerve/rout, charge, fall back, prisoners and ransom, priest convert; shared caps (`capV`/`capA`); a fallen rival's room split among the living.
+- **Fog of war** (`G.fog`, toggle in Help). **Tap rules**: tap selects, double tap opens the card, hold adds more (`12-input`).
+- **Goods in-house**: Workshop (`BLD.makes`), Mint, Foundry, Quarry.
+- **The research tree from history** (`TECH` in `01-rules`): 206 steps in lines (`line`), only the next step of a line shows; `need` for cross-unlocks; `w` (weight 1–10) sets cost and time; `when` is the date; `WHY[id]` the book. Helpers `lineOf/prevOf/needsOf/nextStep/isNext` in `03-core`. The generator that built the table lives in the session scratchpad (`techs.py`, `gen.py`); edit the table by hand from here on.
+- **The ground remembers the weather** (`G.ground` mud/snow/ice, `groundTick`/`groundSpd`/`wearMul` in `19-events`): slows marches, ice slips, engines slide on snow, blades blunt; `GROUND` in rules. Levees: flood cells are 2 in `NAV.lake`.
+- **Fire weapons** (`fire`/`blast` fx stats, in `hurt`), **garrison healing** (`GARRISON`, in `solTick`), **Teach** (`TEACH`, `TEACH_TO`, `teachWhy/teach/graduate` in `06-orders`; unit state `school`).
+- **The look**: the war table (`shell-head.html`, `#card` block); the Build button is the card's lit tab; research steps carry `a{age}` for the age stripe. Rain pool, three-stroke lightning, sky band (`drawWeather`, `drawSky` in `11-view`).
+- New fx stats the engine reads: soil, shelter, venture, diplo, convert, push, rest, cost, cut, zealsecs, spread, snow, ice, cold, wet, wear, flood, fire, blast, teach, garrison, charge, sight.
+- Text rule: no apostrophes in game text (Albert, Build 40).
 
 ## Open items
 1. Albert's real-phone test of Build 37 (same checks as 36: tap sizes, strip taps, Build row, People − and +, the glow, 375 px).
