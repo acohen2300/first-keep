@@ -356,3 +356,6 @@ Cut, merged or folded while taking the code apart and putting it back by element
 - **Added:** quick sends of 8 and 12; "All" and "¼" send free troops only (a raid or march you ordered keeps going); a dashed line from each marching group to its target; "arrived" messages; an "Out on orders" list in the People card.
 - **build.py** refuses a // comment that swallowed code, as SoRen's does (caught this build's own battalion line).
 - **After the fresh-eyes review:** orders now save and load (a reload restarted the order counter, so a new send swallowed an old group and could lock idle troops out of the strip); a group counts as arrived when every member has stopped; the settings move touches only the old Easy + 30-minute default (it reset a Conquest choice); + on an old over-30 battalion plan no longer lowers it.
+
+### Parked (Albert, Oct 28)
+- **Higher caps: 80 villagers and 120 soldiers per side** (today 60 and 90). Parked by Albert. Before raising them: a speed pass on the soldiers' foe search and an 800-unit test run on his phone; a 700-unit battle already uses about 22 of the 33 ms a step has at phone speed.
