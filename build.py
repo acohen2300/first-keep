@@ -36,7 +36,7 @@ if r.returncode: sys.exit('build refused: syntax error\n' + r.stderr.strip())
 # the fonts travel inside the file: no network call, the same look offline (subset to the letters the game uses; licences in src/fonts)
 import base64
 face = lambda fam, f, w: "@font-face{font-family:'%s';font-weight:%s;font-display:swap;src:url(data:font/woff;base64,%s) format('woff')}" % (fam, w, base64.b64encode(open('src/fonts/' + f, 'rb').read()).decode())
-fonts = '<style>' + ''.join(face('Barlow Semi Condensed', f'barlow-{w}.woff', w) for w in (500, 700)) + '</style>'
+fonts = '<style>' + face('IM Fell English SC', 'fell-sc.woff', 400) + ''.join(face('Barlow Semi Condensed', f'barlow-{w}.woff', w) for w in (500, 700)) + '</style>'
 h = open('src/shell-head.html').read().replace('<!--FONTS-->', fonts)
 t = open('src/shell-tail.html').read()
 i = h.index('\n<div id="app">')   # the head's part ends where the markup starts

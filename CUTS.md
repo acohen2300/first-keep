@@ -502,7 +502,7 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 - Cut: the white flag over a routed soldier.
 
 ## Build 43 preview (Albert, Oct 28): one font, three sizes, new nodes (preview only, not live)
-- One font: Barlow Semi Condensed, weights 500 and 700. Cut: IM Fell English SC (card titles, end screen) and the 600 weight (about 66 KB of fonts). The ticker is weight 500 so every message still fits at 375 px.
+- Two fonts, not one (Albert, 15:53: he likes the old style on the menus): IM Fell English SC stays for card titles and the end screen; Barlow Semi Condensed for everything else, weights 500 and 700. Cut: the 600 weight (about 23 KB). The ticker is weight 500 so every message still fits at 375 px.
 - Three sizes: 12 (was 12, 13, 14), 15 (was 15, 16, 17), 19 (was 19, 20, 22, 34). The end-screen title is 19.
 - Trees, bushes, berries, stone, gold, iron redrawn: clumped crowns with a lit side, a thin soft outline, a long shadow, faceted rocks with glints. Six tree kinds (was four): three broadleaf, two conifers. Lighter greens. Drawing cost is a few dozen calls each, cached as before.
 - `publish.py --preview` publishes to preview/ only; the live index.html and the push hook stamp are untouched.
