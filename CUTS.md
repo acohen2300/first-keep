@@ -441,3 +441,8 @@ Fire arrows, burning shot and petards set wooden buildings alight (rain halves i
 
 Cut: the age tabs on research (built in stage 4, replaced by lines the same morning); apostrophes in the new text (Albert: none needed).
 Parked: old text still has apostrophes (a sweep for stage 5 or later); region fill treats flood water as solid for everyone, so a levee side wades it only on short routes.
+
+## Build 40, stage 5 — the war table, the weather on the glass, art
+
+Built: every card in the war-table dress (lacquered wood, brass rims on what you can do, the lit lantern on the open tab; the Build button is the card's lit tab); menu categories as file tabs on a brass rule; research steps wear their age's colour on the top edge. Rain as a pool of drops with real sizes and fall speeds, leaning with the wind; lightning as SoRen's three-stroke bolt with forks, a sky flash that decays in a tenth of a second, far sheet flashes, one flash at a time; the sky band under the top bars takes the hour and the weather, clouds cross it. The shrine in the Throne (steps, columns, gold dome, the holder's finial); the trade stop as a bazaar stall; a gold pennant on each people's elite rank. No apostrophes anywhere in the game's text.
+Cut: the parchment card (the ledger look of Build 39); the old streak rain and the two-stroke bolt.

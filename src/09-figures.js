@@ -229,12 +229,15 @@ const SPR = new Map();
 function trim(M, max) { if (M.size > max) for (const [k, v] of M) { M.delete(k); if (v.getContext) v.width = v.height = 0;   // give the picture's memory back at once: iPhone drops pages that hold too much
     if (M.size <= max * 0.8) break; } }   // oldest first: a Map keeps insertion order
 const SCALES = [1, 1.5, 2, 3, 4, 5, 6];
+// the elite rank (Build 40): a people's finest carry a gold pennant on a staff at the back, and a gold edge to the figure
+const ELITE_LOOK = new Set(['legion', 'crossbow', 'immortal', 'harcher', 'elephant', 'malihorse']);   // the looks the six peoples' finest wear; the common kinds that share a look never reach a tier
+function elitePennant(c) { const x = 8, y0 = -4, y1 = -30; L_(x, y0, x, y1, '#5a3a1c', 0.9); P_([[x, y1], [x + 8, y1 + 2.5], [x, y1 + 5]], '#e6b947', '#8a6a1a', 0.4); P_([[x + 0.6, y1 + 1], [x + 5.5, y1 + 2.5], [x + 0.6, y1 + 4]], c, null); E_(x, y1 - 0.8, 1.1, 1.1, '#f2d27a', '#8a6a1a', 0.3); }
 function sprite(look, col, tier, fr, s, kit = 0) {
   const key = look + col + tier + fr + s + (kit ? 'k' + kit : ''); let c = SPR.get(key); if (c) return c;
   const [bw, bh] = LOOKBOX[look] || [26, 30], pad = 3;
   c = document.createElement('canvas'); c.width = Math.ceil((bw + pad * 2) * s); c.height = Math.ceil((bh + pad * 2) * s);
   g = c.getContext('2d'); g.scale(s, s); g.translate(bw / 2 + pad, bh + pad - 1); g.lineJoin = 'round'; g.lineCap = 'round';
-  KIT = kit; try { LOOKS[look](col, tier, fr); } catch (e) { fault(e); } KIT = 0;
+  KIT = kit; try { LOOKS[look](col, tier, fr); if (tier > 0 && ELITE_LOOK.has(look)) elitePennant(col); } catch (e) { fault(e); } KIT = 0;
   c.ax = (bw / 2 + pad) * s; c.ay = (bh + pad - 1) * s; g = null;
   trim(SPR, 600);
   SPR.set(key, c); return c;

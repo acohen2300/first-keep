@@ -30,7 +30,7 @@ function step(dt) {
   let fxChange = false;
   for (const b of G.blds) if (b.node && b.node.amt <= 0 && b.hp > 0 && BLD[b.kind].reserve > 0) { b.hp = 0; if (b.owner === 0) say('A tree farm is cut out. Plant another.', '', 5); }   // a coppice plot, spent
   for (const b of G.blds) if (b.kind === 'throne' && b.hp <= 0 && !b.gone) { if (b.by !== undefined && b.by !== WILD) takeThrone(b.by); else b.hp = 1; }   // the Throne is taken, never broken
-  for (const b of G.blds) if (b.hp <= 0) { if (!b.gone && b.prog >= 1 && !BLD[b.kind].wallish) scarBurn(b); if (b.node) b.node.amt = 0; if (b.by !== undefined) plunderBld(b); if (BLD[b.kind].fx) fxChange = true; if (G.wonder && G.wonder.id === b.id) { say(`${G.P[b.owner].name === 'You' ? 'Your' : G.P[b.owner].name + '\'s'} wonder has fallen.`, b.owner === 0 ? 'warn' : 'good', 7); G.wonder = null; } }
+  for (const b of G.blds) if (b.hp <= 0) { if (!b.gone && b.prog >= 1 && !BLD[b.kind].wallish) scarBurn(b); if (b.node) b.node.amt = 0; if (b.by !== undefined) plunderBld(b); if (BLD[b.kind].fx) fxChange = true; if (G.wonder && G.wonder.id === b.id) { say(`${G.P[b.owner].name === 'You' ? 'Your wonder' : 'The wonder of ' + G.P[b.owner].name} has fallen.`, b.owner === 0 ? 'warn' : 'good', 7); G.wonder = null; } }
   if (fxChange) fxDirty();
   if (G.lootT && G.t - G.lootT > 1.5) { say(`Plunder: ${costText(G.loot)}.`, 'good', 6); G.loot = {}; G.lootT = 0; }
   { let gone = false; for (const b of G.blds) if (b.hp <= 0) { gone = true; break; } if (gone) { G.blds = G.blds.filter(b => b.hp > 0); G.navDirty = true; qcDrop(); } }

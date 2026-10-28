@@ -141,7 +141,7 @@ function draw() {
     ctx.globalAlpha = 1 - (G.t - G.hitT) / 1.6; ctx.fillStyle = hg[H]; ctx.fillRect(0, 0, cw, ch); ctx.globalAlpha = 1;
   }
   if (G.whiteT !== undefined && G.t - G.whiteT < 0.9) { ctx.globalAlpha = 0.55 * (1 - (G.t - G.whiteT) / 0.9); ctx.fillStyle = '#fff6dc'; ctx.fillRect(0, 0, cw, ch); ctx.globalAlpha = 1; }   // a new age, a wonder, a victory
-  drawWeather();
+  drawSky(); drawWeather();
   drawRadar(wv, wv2);
   { const seen = new Set(); ctx.setLineDash([5, 5]); ctx.strokeStyle = 'rgba(192,138,88,.6)'; ctx.lineWidth = 1.5;   // boxes of trees being cut
     for (const u of G.units) if (u.owner === 0 && u.patch && !seen.has(u.patch.x0)) { seen.add(u.patch.x0); const r = u.patch; ctx.strokeRect(SX(r.x0), SY(r.y0), (r.x1 - r.x0) * z, (r.y1 - r.y0) * z * TILT); }
@@ -326,8 +326,23 @@ function drawFind(f) {
   else if (f.kind === 'cemetery') { for (let i = 0; i < 6; i++) { const dx = -12 + (i % 3) * 10, dy = -3 + Math.floor(i / 3) * 6; P_([[dx - 1.8, dy], [dx + 1.8, dy], [dx + 1.8, dy - 4], [dx, dy - 5.4], [dx - 1.8, dy - 4]], '#9a9890', INK, 0.4); } L_(-16, 6, 16, 6, '#3a3028', 0.6); for (let x = -16; x <= 16; x += 4) L_(x, 6, x, 2, '#3a3028', 0.6); }
   else if (f.kind === 'camp') { for (const [dx, col] of [[-9, '#7a6a50'], [8, '#6a5a44']]) P_([[dx - 6, 0], [dx + 6, 0], [dx, -9]], col, INK, 0.5); E_(0, 2, 3, 1.2, '#3a2a1a'); if (!lessMotion) { const ph = (G.t * 3) % 1; E_(0, 0, 1.6, 2.4 + ph, 'rgba(250,150,40,.85)'); } L_(14, 2, 14, -14, '#3a2a1a', 0.6); P_([[14, -14], [20, -12.6], [14, -11]], '#2a2a2a'); }
   else if (f.kind === 'den') { P_([[-12, 1], [-9, -8], [0, -12], [10, -7], [13, 1]], LG(0, -12, 0, 1, ['#8a8478', '#5a5650']), INK, 0.5); E_(0, -2, 4.4, 4, '#1a1612'); }
-  else if (f.kind === 'shrine') { const oc = f.owner !== null ? G.P[f.owner].color : '#d8cdb4'; P_([[-6, 1], [6, 1], [6, -1], [-6, -1]], '#b8ac92', INK, 0.4); P_([[-4, -1], [4, -1], [4, -9], [-4, -9]], '#e0d6bc', INK, 0.4); P_([[-5.4, -9], [5.4, -9], [0, -14]], oc, INK, 0.4); if (!lessMotion) E_(0, -4, 1.4, 2 + Math.sin(G.t * 6) * 0.4, 'rgba(255,190,70,.9)'); if (f.cap) { const t = f.cap.t / F.capture; ctx.strokeStyle = G.P[f.cap.o].color; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(0, -6, 10, -Math.PI / 2, -Math.PI / 2 + t * 6.28); ctx.stroke(); } }
-  else if (f.kind === 'stop') { if (!postAt(f)) { L_(0, 2, 0, -14, '#5a3a1c', 1); P_([[0, -14], [9, -12.5], [0, -11]], f.owner !== null ? G.P[f.owner].color : '#d8c79c', INK, 0.4); P_([[-9, 2], [-3, 2], [-3, -3], [-9, -3]], '#8a5d34', INK, 0.4); E_(4, 1, 2.6, 1.6, GOODS[f.want].col, INK, 0.3); } }
+  else if (f.kind === 'shrine') {   // the shrine inside the Throne: three steps, four columns, a gold dome, the flame; the holder's colour on the dome's finial
+    const oc = f.owner !== null ? G.P[f.owner].color : '#d8cdb4';
+    for (let k = 0; k < 3; k++) P_([[-10 + k * 2, 2 - k * 1.6], [10 - k * 2, 2 - k * 1.6], [10 - k * 2, 0.4 - k * 1.6], [-10 + k * 2, 0.4 - k * 1.6]], k % 2 ? '#c8bda0' : '#b8ac92', INK, 0.35);
+    for (const cx of [-6, -2, 2, 6]) { L_(cx, -3, cx, -11, '#e8e0c8', 1.6); L_(cx, -3, cx, -11, 'rgba(90,70,40,.35)', 0.5); }
+    P_([[-8, -11], [8, -11], [8, -12.4], [-8, -12.4]], '#d8cdb4', INK, 0.35);
+    E_(0, -12.4, 7, 4.2, LG(-7, 0, 7, 0, ['#f2d27a', '#c9a227', '#8a6a1a']), INK, 0.4); ctx.save(); ctx.beginPath(); ctx.rect(-8, -17, 16, 4.6); ctx.clip(); E_(0, -12.4, 7, 4.2, LG(-7, 0, 7, 0, ['#f2d27a', '#c9a227', '#8a6a1a']), INK, 0.4); ctx.restore();
+    L_(0, -16.6, 0, -19.5, '#8a6a1a', 0.8); E_(0, -20, 1.3, 1.3, oc, INK, 0.3);
+    if (!lessMotion) E_(0, -6, 1.6, 2.4 + Math.sin(G.t * 6) * 0.5, 'rgba(255,190,70,.9)');
+    if (f.cap) { const t = f.cap.t / F.capture; ctx.strokeStyle = G.P[f.cap.o].color; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(0, -8, 12, -Math.PI / 2, -Math.PI / 2 + t * 6.28); ctx.stroke(); } }
+  else if (f.kind === 'stop') { if (!postAt(f)) {   // a bazaar stall: striped awning on two poles, a table of goods with the wanted one in front, the holder's pennant
+    const oc = f.owner !== null ? G.P[f.owner].color : '#d8c79c';
+    L_(-9, 2, -9, -11, '#5a3a1c', 1); L_(9, 2, 9, -11, '#5a3a1c', 1);
+    for (let k = 0; k < 6; k++) P_([[-11 + k * 3.7, -11], [-7.3 + k * 3.7, -11], [-7.3 + k * 3.7 + 1, -14.5], [-11 + k * 3.7 + 1, -14.5]], k % 2 ? '#efe6d0' : oc, null); P_([[-11, -11], [11, -11], [12, -14.5], [-10, -14.5]], null, INK, 0.4);
+    for (let k = 0; k < 6; k++) P_([[-11 + k * 3.7, -11], [-9.2 + k * 3.7, -9.4], [-7.3 + k * 3.7, -11]], k % 2 ? '#efe6d0' : oc, INK, 0.3);
+    P_([[-8, 1], [8, 1], [8, -3], [-8, -3]], '#8a5d34', INK, 0.4); L_(-7, 1, -7, 3, '#5a3a1c', 0.8); L_(7, 1, 7, 3, '#5a3a1c', 0.8);
+    { const ks = Object.keys(GOODS).filter(k => k !== f.want).slice(0, 2); E_(-4.5, -4, 2.2, 1.4, GOODS[ks[0]].col, INK, 0.3); E_(4.5, -4, 2.2, 1.4, GOODS[ks[1] || ks[0]].col, INK, 0.3); E_(0, -2.2, 2.8, 1.8, GOODS[f.want].col, INK, 0.4); }
+    L_(12, -11, 12, -20, '#5a3a1c', 0.8); P_([[12, -20], [19, -18.6], [12, -17]], oc, INK, 0.4); } }
   else if (f.kind === 'vagabonds') { if (!f.done) { E_(0, 2, 3, 1.2, '#3a2a1a'); if (!lessMotion) E_(0, 0, 1.4, 2.2, 'rgba(250,150,40,.85)'); P_([[-10, 3], [-4, 3], [-4, 1], [-10, 1]], '#6b4a3a'); P_([[5, 4], [11, 4], [11, 2], [5, 2]], '#4a5a6a'); } }
   ctx.restore(); g = null;
 }
@@ -357,7 +372,6 @@ function drawEvents(z) {
   if (e && e.kind === 'storm' && !lessMotion) {   // a dark band of cloud walking east, rain under it
     const x = SX(e.x), w = EVENTS.storm.band * z; const gr = ctx.createLinearGradient(x - w, 0, x + w, 0); gr.addColorStop(0, 'rgba(20,24,34,0)'); gr.addColorStop(0.5, 'rgba(14,18,28,.62)'); gr.addColorStop(1, 'rgba(20,24,34,0)'); ctx.fillStyle = gr; ctx.fillRect(x - w, 0, 2 * w, ch);
     ctx.fillStyle = 'rgba(40,46,60,.85)'; for (let i = 0; i < 9; i++) { ctx.beginPath(); ctx.ellipse(x + (i - 4) * w * 0.22 + Math.sin(t * 0.7 + i) * 8, 30 + (i % 3) * 14, 70 + (i % 2) * 30, 26, 0, 0, 7); ctx.fill(); }   // the cloud itself along the top of the glass
-    ctx.strokeStyle = 'rgba(205,220,240,.35)'; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 0; i < 60; i++) { const rx = x - w + ((i * 97.3) % (2 * w)), ry = ((i * 53.7 + t * 520) % (ch + 60)) - 30; ctx.moveTo(rx, ry); ctx.lineTo(rx - 4, ry + 14); } ctx.stroke();
   }
   if (e && e.kind === 'locusts') { const x = SX(e.x), y = SY(e.y); ctx.fillStyle = 'rgba(20,16,8,.28)'; ctx.beginPath(); ctx.ellipse(x, y, 70 * z, 40 * z, 0, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(230,200,120,.9)'; for (let i = 0; i < 70; i++) { const a = i * 2.4 + t * (1 + (i % 5) * 0.3), r = (20 + (i * 37) % 60) * z; ctx.fillRect(x + Math.cos(a) * r + Math.sin(t * 7 + i) * 3 * z, y + Math.sin(a) * r * TILT - 20 * z + Math.cos(t * 9 + i) * 3 * z, 2.2 * z, 1.4 * z); } }   // a dark cloud of specks
   if (e && e.kind === 'meteor') { const f = clamp((G.t - e.t0) / (e.until - e.t0), 0, 1), x1 = SX(e.at.x), y1 = SY(e.at.y), x0 = x1 - 420, y0 = y1 - 560, x = x0 + (x1 - x0) * f, y = y0 + (y1 - y0) * f; ctx.strokeStyle = 'rgba(255,240,200,.9)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x - (x1 - x0) * 0.12, y - (y1 - y0) * 0.12); ctx.lineTo(x, y); ctx.stroke(); ctx.fillStyle = '#fff6dc'; ctx.beginPath(); ctx.arc(x, y, 4, 0, 7); ctx.fill(); }
@@ -407,33 +421,59 @@ function drawMini() {
 }
 
 
-// ── Weather on the glass: rain, snow, lightning. Seen from above, so no sky: streaks and splashes, drifting flakes, a flash and a bolt.
+// ── Weather on the glass, after SoRen's model: rain is a pool of drops whose size sets its speed and weight (Marshall-Palmer sizes,
+// Atlas's fall speeds); a storm doubles the drops and leans them with the wind. Lightning is SoRen's three-stroke bolt (glow, mid, core) with forks;
+// the sky lights from inside and decays in a tenth of a second; far strikes are sheet flashes with no bolt; thunder comes by distance (18-sound).
+// Safety as SoRen's: one flash at a time, never two inside a third of a second. The sky band along the top of the glass is the horizon: it
+// takes the colour of the hour and the weather, and the storm's cloud walks across it.
+const RAINP = { n: 240, lambda: 4.1 * 5 ** -0.21, dMin: 0.5, dMax: 4 }, fallV = D => 9.65 - 10.3 * Math.exp(-0.6 * D);
+const RAIN = Array.from({ length: RAINP.n }, (_, i) => { const D = Math.min(RAINP.dMax, RAINP.dMin - Math.log(1 - ((i * 0.618) % 1 || 0.5)) / RAINP.lambda), d = clamp(0.4 + 0.6 * (D - RAINP.dMin) / 2.5, 0.4, 1); return { x: (i * 97.3) % 1000, y: (i * 53.7) % 1000, d, v: 9.6 * fallV(D) / fallV(2) }; });
+let wxT = 0, wind = 0, flashA = 0, flashT = -9, sheetT = -9; const FLASH_GAP = 0.34;
+const flashOK = now => now - flashT >= FLASH_GAP;
 function drawWeather() {
-  const z = cam.z, t = performance.now() / 1000, wx = G.wx;
-  if (wx === 'rain') {
-    if (!lessMotion) {
-      ctx.strokeStyle = 'rgba(205,220,240,.30)'; ctx.lineWidth = 1; ctx.beginPath();
-      for (let i = 0; i < 70; i++) { const x = ((i * 97.3 + t * 60) % (cw + 60)) - 30, y = ((i * 53.7 + t * 520) % (ch + 60)) - 30; ctx.moveTo(x, y); ctx.lineTo(x - 4, y + 14); }
-      ctx.stroke();
-    }
+  const z = cam.z, now = performance.now() / 1000, dt = Math.min(0.05, now - (wxT || now)), wx = G.wx, e = G.ev.cur; wxT = now;
+  const stormy = e && e.kind === 'storm', raining = wx === 'rain' || stormy;
+  wind += ((stormy ? 0.8 : raining ? 0.3 : 0.1) * Math.sin(now * 0.07) - wind) * dt * 0.3;   // the wind wanders; a storm leans it hard
+  if (raining && !lessMotion) {
+    const n = stormy ? RAINP.n : wx === 'rain' ? 150 : 0, slant = wind * 0.35, fall = 420 * dt;
+    ctx.lineCap = 'round';
+    for (let i = 0; i < n; i++) { const m = RAIN[i]; m.y += m.v * fall; m.x += wind * 60 * dt; if (m.y > ch + 12) { m.y = -12; m.x = Math.random() * cw; } if (m.x < -24) m.x = cw + 12; else if (m.x > cw + 24) m.x = -12;
+      const len = 8 + 12 * m.d; ctx.strokeStyle = `rgba(205,232,250,${(0.2 + 0.4 * m.d).toFixed(2)})`; ctx.lineWidth = 0.8 + 0.8 * m.d; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x - slant * len, m.y + len); ctx.stroke(); }
   }
-  if (wx === 'frost') {
-    if (!lessMotion) { ctx.fillStyle = 'rgba(245,248,252,.85)'; for (let i = 0; i < 80; i++) { const y = ((i * 71.9 + t * 34) % (ch + 20)) - 10, x = (i * 113.7 + Math.sin(t * 0.8 + i) * 14) % cw; ctx.fillRect(x, y, 2 + (i % 3 === 0), 2 + (i % 3 === 0)); } }
+  if (wx === 'frost' || wx === 'blizzard') {
+    if (!lessMotion) { const n = wx === 'blizzard' ? 160 : 80, sp = wx === 'blizzard' ? 90 : 34; ctx.fillStyle = 'rgba(245,248,252,.85)'; for (let i = 0; i < n; i++) { const y = ((i * 71.9 + now * sp) % (ch + 20)) - 10, x = (i * 113.7 + Math.sin(now * 0.8 + i) * 14 + wind * now * 40) % cw; ctx.fillRect(x < 0 ? x + cw : x, y, 2 + (i % 3 === 0), 2 + (i % 3 === 0)); } }
   }
+  // the storm's own lightning: far sheet flashes while it walks, a close bolt now and then (the strikes on buildings come from 19-economy)
+  if (stormy && !lessMotion && now - sheetT > 2.5 + 6 * Math.random() && flashOK(now)) { sheetT = now; const close = Math.random(); if (close > 0.75) { const bx = cam.x + (Math.random() - 0.5) * cw / z, by = cam.y + (Math.random() - 0.5) * ch / z; (G.bolts = G.bolts || []).push({ x: bx, y: by, t: G.t, seed: Math.random() }); thunder(bx, by); } else { flashA = Math.max(flashA, 0.25 + 0.3 * close); flashT = now; } }
   if (G.bolts && G.bolts.length) {
-    G.bolts = G.bolts.filter(b => G.t - b.t < 0.5);
+    G.bolts = G.bolts.filter(b => G.t - b.t < 0.7);
     for (const b of G.bolts) {
-      const age = G.t - b.t; if (age < 0.12) { ctx.fillStyle = `rgba(235,240,255,${0.45 * (1 - age / 0.12)})`; ctx.fillRect(0, 0, cw, ch); }
-      if (age > 0.3) continue;
-      let r = b.seed * 1e6 | 1; const rr = () => ((r = (r * 16807) % 2147483647) / 2147483647) - 0.5;   // the same jagged path every frame
-      const x1 = SX(b.x), y1 = SY(b.y), x0 = x1 + rr() * 80, y0 = Math.min(0, y1 - 400), n = 10;
-      ctx.strokeStyle = `rgba(250,252,255,${1 - age / 0.3})`; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(x0, y0);
-      let bx = 0, by = 0; for (let i = 1; i <= n; i++) { const f = i / n, x = x0 + (x1 - x0) * f + (i < n ? rr() * 28 : 0), y = y0 + (y1 - y0) * f; ctx.lineTo(x, y); if (i === 4) { bx = x; by = y; } }
-      ctx.moveTo(bx, by); ctx.lineTo(bx + rr() * 60, by + (y1 - y0) * 0.18); ctx.stroke();
+      const age = G.t - b.t; if (!b.lit && flashOK(now)) { b.lit = true; flashA = Math.max(flashA, 0.6 + 0.4 * (1 - Math.min(1, hyp(b.x - cam.x, b.y - cam.y) / 900))); flashT = now; }
+      if (age > 0.45) continue;
+      let r = b.seed * 1e6 | 1; const rr = () => ((r = (r * 16807) % 2147483647) / 2147483647);   // the same jagged path every frame
+      const x1 = SX(b.x), y1 = SY(b.y), paths = [], main = []; let x = x1 + (rr() - 0.5) * 80, y = Math.min(0, y1 - 300);
+      main.push([x, y]); while (y < y1) { y += 9 + rr() * 15; x += (rr() - 0.5) * 34; main.push([x, y]); } main[main.length - 1] = [x1, y1]; paths.push(main);
+      for (let f = 0, nf = 1 + (rr() * 3 | 0); f < nf; f++) { const fk = main[1 + Math.floor(rr() * (main.length - 3))], dir = rr() < 0.5 ? -1 : 1, br = [fk]; for (let k = 1, kn = 3 + (rr() * 3 | 0); k <= kn; k++) br.push([fk[0] + dir * k * (7 + rr() * 9), fk[1] + k * (8 + rr() * 9)]); paths.push(br); }
+      const a = clamp(1 - age / 0.45, 0, 1), w = 12;
+      ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.globalCompositeOperation = 'lighter';
+      for (const [lw, col] of [[w, `rgba(170,200,255,${(0.18 * a).toFixed(2)})`], [w * 0.38, `rgba(210,228,255,${(0.45 * a).toFixed(2)})`], [w * 0.16, `rgba(255,255,255,${a.toFixed(2)})`]]) { ctx.strokeStyle = col; paths.forEach((path, i) => { ctx.lineWidth = i ? lw * 0.55 : lw; ctx.beginPath(); path.forEach(([px, py], j) => j ? ctx.lineTo(px, py) : ctx.moveTo(px, py)); ctx.stroke(); }); }
+      ctx.restore();
     }
   }
+  if (flashA > 0.005) { ctx.fillStyle = `rgba(190,210,255,${Math.min(0.75, flashA).toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); flashA *= Math.exp(-dt / 0.09); } else flashA = 0;   // the sky lights from inside, once, and is gone in a tenth of a second
 }
-
+// the horizon: a band of sky along the top of the glass, coloured by the hour and the weather; clouds cross it with the wind, the storm's front walks it
+const SKY = { day: [120, 170, 225], dusk: [235, 150, 80], night: [16, 22, 48], rain: [120, 130, 145], storm: [50, 56, 70], blizzard: [205, 210, 220], drought: [220, 190, 130], frost: [185, 205, 230] };
+function drawSky() {
+  const nt = G.night, dusk = 4 * nt * (1 - nt), wx = G.wx, e = G.ev.cur, stormy = e && e.kind === 'storm', h = Math.round(Math.min(ch * 0.16, 110));
+  const mix = (a, b, f) => a.map((v, i) => Math.round(v + (b[i] - v) * f)), base = mix(mix(SKY.day, SKY.dusk, dusk), SKY.night, nt), cast = stormy ? SKY.storm : SKY[wx], col = cast ? mix(base, cast, wx === 'rain' ? 0.7 : 0.55) : base;
+  const top = (parseFloat(getComputedStyle($('stage')).getPropertyValue('--hb')) || 86) + 2;   // the sky begins under the top bars
+  const gr = ctx.createLinearGradient(0, top, 0, top + h); gr.addColorStop(0, `rgba(${col},.6)`); gr.addColorStop(1, `rgba(${col},0)`); ctx.fillStyle = gr; ctx.fillRect(0, top, cw, h);
+  if (lessMotion) return;
+  const now = performance.now() / 1000, cloudy = stormy ? 1 : wx === 'rain' ? 0.8 : wx === 'blizzard' ? 0.9 : wx === 'clear' || wx === 'drought' ? 0.25 : 0.5, dark = stormy ? 0.75 : wx === 'rain' ? 0.5 : 0.2;
+  const c = mix(mix([245, 248, 252], [60, 66, 80], dark), SKY.night, nt * 0.8); ctx.fillStyle = `rgba(${c},${0.5 * cloudy})`;
+  for (let i = 0; i < 7; i++) { const sp = 6 + (i % 3) * 3, x = ((i * 173 + now * sp * (0.4 + wind)) % (cw + 240)) - 120, y = 8 + (i % 3) * 9, rw = 60 + (i % 4) * 22; ctx.beginPath(); ctx.ellipse(x, top + y, rw, 10 + (i % 2) * 5, 0, 0, 7); ctx.ellipse(x + rw * 0.5, top + y - 4, rw * 0.55, 9, 0, 0, 7); ctx.fill(); }
+}
 // the whole forest as one picture, for far views and the small map; redrawn when trees fall, at most once a second
 let forestCv = null, forestV = -1, forestT = 0, forestG = null;
 function forestLayer() {
