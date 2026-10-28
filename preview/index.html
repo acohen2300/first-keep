@@ -60,7 +60,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card.full{max-height:calc(100% - var(--ob) - var(--hb) - 14px)}
 #place{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:8px;padding:6px 6px 6px 10px;font-weight:600}
 #strip{position:absolute;display:flex;gap:4px;padding:4px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:10px;z-index:5;max-width:calc(100% - 8px);overflow-x:auto}
-#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button b{font-size:14px}#strip button small{font-size:12px}
+#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:20px;font-weight:700}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:14px}#strip button small{font-size:12px}
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
 #card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:8px 10px 10px;display:flex;flex-direction:column;gap:5px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
@@ -118,8 +118,8 @@ button.ghost{visibility:hidden}
 #tPeople .gl{width:20px;height:20px}
 #tPeople .wd{color:var(--bone)}
 /* on the map: the corners, one look (.fab). Map top right, Home bottom left (only when away), Build bottom right */
-#mapB{top:calc(var(--hb) + 8px);right:var(--pad);bottom:auto}
-#miniX{top:calc(var(--hb) - 2px);right:96px;bottom:auto;background:none;border:0;box-shadow:none}#miniX::before{content:'';position:absolute;inset:10px;background:var(--sheet);border:1px solid var(--hair);border-radius:6px}#miniX svg{width:14px;height:14px}   /* the minus on the map's corner: 24 px to see, 44 px to tap */
+#spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}#spdPop[hidden]{display:none}#spdPop button{min-width:52px;min-height:44px}
+#pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}#mapT.lit{background:#2f3b36}
 button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad)}#buildB{right:var(--pad)}
 #stage.busy #homeB,#stage.busy #buildB:not(.on){display:none}
 #buildB.on{background:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;bottom:auto;top:var(--tabtop);z-index:6;border-radius:var(--r) var(--r) 0 0;border-bottom-color:#b8862e;height:46px;box-shadow:0 0 12px rgba(242,210,122,.45)}   /* the Build card is open: the button sits on the page's top edge as its tab, and closes it */
@@ -136,6 +136,7 @@ button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44p
 /* a building's line: one slot per order it can hold; a filled slot shows what is in it and how far along; tap one to cancel it */
 #card .slots{display:grid;grid-template-columns:repeat(var(--qn,5),minmax(0,1fr));gap:4px}
 #card .slot{position:relative;overflow:hidden;min-height:44px;padding:2px 3px;font-size:12px;line-height:1.1;text-align:center;border-radius:6px}
+#card button.slot.lock:not(#cardX):not(#cardI){border-style:dashed;background:transparent;box-shadow:none;color:var(--mute);font-size:12px}
 #card button.slot.empty{border-style:dashed;background:transparent;box-shadow:none;color:var(--dim)}
 #card .slot i{position:absolute;left:0;bottom:0;height:3px;background:#8e1d14;width:var(--p)}
 button{font:inherit;color:var(--bone);background:var(--panel);border:1px solid var(--line);border-radius:8px;min-height:46px;padding:4px 6px;
@@ -176,6 +177,15 @@ button.ok small{color:#8fd4a4}
 #card .chipsrow b{font-size:13px}
 #card .chipsrow button.on:not(#cardX):not(#cardI){min-height:48px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);border-color:#f2d27a;box-shadow:0 0 12px rgba(242,210,122,.45)}#card .chipsrow button.on b{color:#2a1c10}
 #card .q{font:inherit;font-size:16px;color:var(--bone);background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:6px;min-height:44px;padding:4px 10px;width:100%;box-sizing:border-box}#card .row{display:flex;gap:12px;align-items:center}#card .look{color:var(--lamp);font-weight:700;min-height:44px;display:inline-flex;align-items:center}#card .row .lnk{width:auto}
+#card .acts.set{grid-template-columns:58px repeat(4,minmax(0,1fr));gap:4px}#card .acts.set .lbl b{font-size:14px}#card .acts.set .lbl{min-height:44px}#card .acts.set button:not(#cardX):not(#cardI){min-height:44px}
+#card .hzl{display:grid;grid-template-columns:1fr 1fr;gap:4px 6px}#card .hzr{display:flex;gap:3px;min-width:0}
+#card .hzr button.tick:not(#cardX):not(#cardI){flex:1;min-width:0;flex-direction:row;justify-content:flex-start;gap:5px;min-height:44px;padding:0 5px;background:transparent;box-shadow:none;border-color:#4a3a28}
+#card .hzr button.tick::before{content:'';flex:0 0 16px;height:16px;border:1.5px solid var(--brass);border-radius:3px;box-sizing:border-box}
+#card .hzr button.tick.on::before{content:'✓';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#2a1c10;background:var(--lamp);border-color:var(--lamp)}
+#card .hzr button.tick.on:not(#cardX):not(#cardI){background:transparent;color:var(--bone);border-color:var(--brass);box-shadow:none}#card .hzr button.tick.on small{color:var(--mute)}
+#card .hzr button.tick b{flex:1;text-align:left;font-size:13px;overflow:hidden;text-overflow:ellipsis}#card .hzr button.tick small{flex:0 0 auto}
+#card .hzr button.q:not(#cardX):not(#cardI){flex:0 0 44px;min-height:44px;padding:0;font-weight:700}
+#card button.big:not(#cardX):not(#cardI){min-height:60px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;box-shadow:0 0 14px rgba(242,210,122,.45)}#card button.big small{color:#4a3518}#card button.big::after{content:none}#card button.big b{font-size:20px;letter-spacing:.04em}
 #card button.lnk:not(#cardX):not(#cardI){min-height:44px;width:100%;padding:0;background:none;border:0;box-shadow:none;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;text-align:left}
 #card .tabs{gap:3px;margin-bottom:0}
 #card .tabs button:not(#cardX):not(#cardI){border-radius:8px 8px 0 0}
@@ -198,7 +208,7 @@ button.ok small{color:#8fd4a4}
   </header>
   <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
-    <button class="fab" id="mapB" data-act="map" aria-label="Show the map"></button><button class="fab" id="miniX" data-act="map" aria-label="Shrink the map" hidden></button>
+    <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
     <button class="fab" id="buildB" data-act="buildrow" aria-label="Build"></button>
     <div id="strip" hidden></div>
@@ -220,7 +230,7 @@ button.ok small{color:#8fd4a4}
 'use strict';
 // ═════ 01-rules.js ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 40;
+const BUILD = 41;
 const MAP = 2000, MID = MAP / 2, DT = 1 / 30;
 const BN = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'], BNS = BN.length;   // the battalions, once Command is researched
 const POPMAX = 150, VILMAX = 60, ARMYMAX = 90, BNSIZE = 30, SHARE_FALLEN = 0.5;   // a fallen side's room: half of it is split among whoever is left   // six battalions, once Command is researched at a War Council; BNSIZE: the most one Zeal blesses
@@ -3660,7 +3670,8 @@ function researchBadge(x, y, s, n) {
 }
 let vy = 0;   // the map is full screen; the view centres on the band between the top pills and the bottom ones
 /* fit() is in 14-frame.js: it reads the page's bars */
-function clampCam() { const hw = cw / 2 / cam.z, up = (ch / 2 + vy) / (cam.z * TILT), down = (ch / 2 - vy) / (cam.z * TILT); cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID)); cam.y = clamp(cam.y, Math.min(up - 50, MID), Math.max(MAP - down, MID)); }
+let bandH = 0;   // the height of the clear band between the top bars and the jobs (fit sets it)
+function clampCam() { const hw = cw / 2 / cam.z, half = (bandH || ch) / 2 / (cam.z * TILT); cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID)); cam.y = clamp(cam.y, Math.min(half, MID), Math.max(MAP - half, MID)); }   // the map's edges can come up to the bars, never under them (Albert, Build 40)
 const SX = x => (x - cam.x) * cam.z + cw / 2;
 const SY = (y, h) => (y - cam.y) * cam.z * TILT + ch / 2 + vy - (h || 0) * cam.z;
 const toWorld = (sx, sy) => ({ x: (sx - cw / 2) / cam.z + cam.x, y: (sy - ch / 2 - vy) / (cam.z * TILT) + cam.y });
@@ -3728,6 +3739,7 @@ function draw() {
     ctx.stroke();
   }
   drawGround();   // the weather's mark on the land, under everything standing
+  drawPicks(z);   // the pick rings lie on the ground, under the figure and the building (Albert, Build 40)
   // everything standing, back to front
   // what is on screen: margins in world units, wide enough for the widest building (its turned east wall) and the tallest (a wonder, standing just below the edge)
   const a0 = toWorld(0, 0), b0 = toWorld(cw, ch), mx = Math.max(80 / z, 44), wv = { x: a0.x - mx, y: a0.y - Math.max(120 / (z * TILT), 34) }, wv2 = { x: b0.x + mx, y: b0.y + Math.max(160 / (z * TILT), 115) }, inView = e => e.x > wv.x && e.x < wv2.x && e.y > wv.y && e.y < wv2.y;
@@ -3745,7 +3757,7 @@ function draw() {
   }
   if (G.fire) for (const n of G.fire) if (inView(n)) { const x = SX(n.x), y = SY(n.y), ph = (G.t * 5 + n.id) % 1; ctx.fillStyle = 'rgba(250,150,40,.85)'; ctx.beginPath(); ctx.ellipse(x, y - 8 * z, (3 + ph * 2) * z, (6 + ph * 4) * z, 0, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,230,120,.9)'; ctx.beginPath(); ctx.ellipse(x, y - 7 * z, 1.5 * z, 3 * z, 0, 0, 7); ctx.fill(); smoke(x, y - 14 * z, n.id, z); }   // the wildfire
   if (SET.fog) { if (fogT < 0) fogTick(); const a1 = toWorld(0, 0), b1 = toWorld(cw, ch), sx0 = clamp(a1.x, 0, MAP), sy0 = clamp(a1.y, 0, MAP), sx1 = clamp(b1.x, 0, MAP), sy1 = clamp(b1.y, 0, MAP); ctx.imageSmoothingEnabled = true; if (sx1 > sx0 && sy1 > sy0) ctx.drawImage(fogLayer(), sx0 / FOG, sy0 / FOG, (sx1 - sx0) / FOG, (sy1 - sy0) / FOG, SX(sx0), SY(sy0), (sx1 - sx0) * z, (sy1 - sy0) * z * TILT); }   // the fog, soft, over everything standing
-  drawPicks(z); sparkDraw(); ripDraw(); drawEvents(z);
+  sparkDraw(); ripDraw(); drawEvents(z);
   if (G.ords) {   // your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
     ctx.save(); ctx.strokeStyle = G.P[0].color; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.7; ctx.setLineDash([6, 6]); ctx.lineDashOffset = -performance.now() / 60;
     for (const id in G.ords) { const O = G.ords[id]; if (O.arrived || O.cx === undefined) continue; const ax = SX(O.cx), ay = SY(O.cy), bx = SX(O.x), by = SY(O.y); ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke(); ctx.beginPath(); ctx.ellipse(bx, by, 10 * cam.z, 10 * cam.z * TILT, 0, 0, 7); ctx.stroke(); }
@@ -4197,7 +4209,7 @@ function hitAt(sx, sy) {
   return { t: 'ground', e: toWorld(sx, sy) };
 }
 const cardFor = h => h.t === 'bld' ? { type: 'bld', id: h.e.id } : h.t === 'find' ? { type: 'find', id: h.e.id } : h.t === 'unit' ? { type: 'unit', id: h.e.id } : { type: 'node', id: h.e.id };
-// One rule for the finger (Albert, Build 40): a tap picks, a double tap opens the card, a hold does more (picks and keeps picking; on open ground, a box).
+// One rule for the finger (Albert, Build 40): a tap picks a unit, a double tap opens its card, a hold does more (picks and keeps picking; on open ground, a box). Buildings and places open on one tap.
 // With one or more of yours picked, a tap on anything else is the obvious order, without a menu: attack, hunt, gather, build, mend, walk.
 // The order goes at once (Build 40 reviews: a waiting order reads as lag); a second tap on the same thing within a blink opens its card, the order already given.
 let lastTap = { key: '', t: 0 };
@@ -4211,7 +4223,8 @@ function tapAt(sx, sy) {
   const mine = picked();
   if (mine.length) { order(mine, h); refresh(); return; }
   if (h.t === 'ground') { showStrip(sx, sy, h.e.x, h.e.y); return; }   // nothing picked: the send strip, as before
-  setPick([{ t: h.t, id: h.e.id }]);   // something that is not yours: a ring says what the finger found; a second tap opens its page
+  if (h.t !== 'unit') { setPick([]); openCard(cardFor(h)); return; }   // a building, a field, a find: nothing to pick, so one tap opens it (Albert, Build 40)
+  setPick([{ t: h.t, id: h.e.id }]);   // a unit not yours: a ring says what the finger found; a second tap opens its page
 }
 // what the finger holds
 const picked = () => G.pick.filter(k => k.t === 'unit').map(k => G.units.find(u => u.id === k.id)).filter(u => u && u.owner === 0 && u.hp > 0 && !u.inside);
@@ -4254,7 +4267,7 @@ function startPlace(kind) {
   const why = capWhy(0, kind); if (why) { say(why + '.', '', 3); sfx('err'); return; }
   closeCard(); setPick([]); G.place = { kind, at: null, a: null, cells: null };
   // start the ghost in the middle of the screen, snapped beside something of yours if it can be
-  const w = toWorld(cw / 2, ch / 2); if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200);
+  const w = G.buildAt || toWorld(cw / 2, ch / 2); G.buildAt = null; if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200);   // from the hammer on open ground: there; otherwise the middle of the screen
   $('place').hidden = false; ui(true);
 }
 // you tapped Build: build what the ghost shows; houses, fields and gates offer the next spot beside it
@@ -4409,21 +4422,31 @@ function guardRow(t, id) {
   return acts(btn(`guard:${t},${id}`, `${verb} +4`, n >= POST.guard ? `full: ${n}/${POST.guard}` : free ? `${n}/${POST.guard} · ${free} free` : 'no free soldiers', n < POST.guard && free ? '' : 'dis') + btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis'));
 }
 function sendPick(from, to) {   // 'q' a quarter of each type, 'all', 'n8' the nearest eight, or a battalion by its number
+  if (from === 'h') { const A = free(), by = {}; for (const u of A) (by[u.kind] = by[u.kind] || []).push(u); const out = []; for (const k in by) out.push(...by[k].sort((p, q) => dist(p, to) - dist(q, to)).slice(0, Math.ceil(by[k].length / 2))); return out; }   // half of each type, nearest first
   if (typeof from === 'string' && from[0] === 'n') return free().sort((p, q) => dist(p, to) - dist(q, to)).slice(0, Number(from.slice(1)));
   const A = typeof from === 'number' ? sendable() : free(), by = {};
   for (const u of A) if (from === 'q' || from === 'all' || u.bn === from) (by[u.kind] = by[u.kind] || []).push(u);
   const out = []; for (const k in by) { const a = by[k].sort((p, q) => dist(p, to) - dist(q, to)); out.push(...a.slice(0, from === 'q' ? Math.ceil(a.length / 4) : a.length)); }
   return out;
 }
-function showStrip(sx, sy, x, y) {
-  closeCard(); const el = $('strip'), at = `${Math.round(x)},${Math.round(y)}`, to = { x, y }, n = from => sendPick(from, to).length;
-  const bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
-  const nAll = n('all'), quick = [8, 12].filter(k => nAll > k).map(k => btn(`sendto:n${k},${at}`, String(k), 'quick')).join('');   // a quick 8 or 12: the nearest free ones
-  el.innerHTML = (nAll ? btn(`sendto:q,${at}`, 'Send ¼', String(n('q')), 'go') + quick + btn(`sendto:all,${at}`, 'All', String(nAll)) + bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') : '')
-    + btn(`more:${at}`, '⋯', '') + `<button data-act="nostrip" aria-label="Cancel">✕</button><small class="sn">Hold, then drag to box a group</small>`;
+// A tap on open ground (Albert, Build 40): a small row of icons. Hammer: build here (the menu opens on what fits the spot). Sword: the army, in place:
+// All, half, and more (a quarter, the nearest few, a battalion). Three dots: more about the place. Cross: away.
+function showStrip(sx, sy, x, y, step) {
+  if (step === undefined) closeCard(); const el = $('strip'), at = `${Math.round(x)},${Math.round(y)}`, to = { x, y }, n = from => sendPick(from, to).length, nAll = n('all'), ic = (act, icon, label, cls) => `<button data-act="${act}" class="ic ${cls || ''}" aria-label="${label}">${icon}</button>`;
+  const sh = { sx, sy, x, y }; G.stripAt = sh;
+  if (!step) el.innerHTML = ic(`buildhere:${at}`, ICON.hammer, 'Build here', 'go') + (nAll ? ic('striparmy', ICON.sword, 'Send soldiers here') : '') + ic(`more:${at}`, '⋯', 'More about this place') + ic('nostrip', ICON.close, 'Cancel');
+  else if (step === 1) el.innerHTML = btn(`sendto:all,${at}`, 'All', String(nAll), 'go') + btn(`sendto:h,${at}`, '½', String(n('h'))) + ic('stripmore', '⋯', 'More ways to send') + ic('nostrip', ICON.close, 'Cancel');
+  else { const bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : []; el.innerHTML = btn(`sendto:q,${at}`, '¼', String(n('q'))) + [8, 12].filter(k => nAll > k).map(k => btn(`sendto:n${k},${at}`, String(k), 'nearest')).join('') + bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') + ic('nostrip', ICON.close, 'Cancel'); }
   el.hidden = false; G.strip = to;
   const r = $('stage').getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight;
   el.style.left = clamp(sx - w / 2, 4, r.width - w - 4) + 'px'; el.style.top = clamp(sy - h - 18, 4, r.height - h - 4) + 'px';
+}
+// what the game thinks fits a spot: the drop-off for what grows there, if none is near; a house when room is short
+function suggestAt(x, y) {
+  const by = {}; for (const nd of G.nodes) if (nd.amt > 0 && !nd.farm && hyp(nd.x - x, nd.y - y) < 120) { const k = nd.kind === 'fish' ? 'dock' : nd.type === 'wood' ? 'lumber' : nd.type === 'food' ? 'mill' : 'mining'; if (!dropFor(0, nd.type, nd) || dist(dropFor(0, nd.type, nd), nd) > 110) by[k] = (by[k] || 0) + 1; }
+  const best = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
+  if (best && BLD[best[0]].age <= G.P[0].age) return best[0];
+  return capOf(0) - popOf(0) - queuedOf(0) <= 2 ? 'house' : null;
 }
 function hideStrip() { const el = $('strip'); if (el && !el.hidden) { el.hidden = true; if (G) G.strip = null; } }
 // ── the War Council: six battalions, what each holds by type, its stance and formation
@@ -4452,8 +4475,10 @@ const BLD_PAGE = {
 // A building's line: one slot per order it can hold. A filled slot shows the order and how far along it is; tap it and the order is cancelled, its cost back.
 function slotsHTML(b) {
   const n = qMax(0), cells = [];
-  for (let i = 0; i < n; i++) { const j = b.q[i]; cells.push(j ? `<button class="slot" data-act="qcancel:${b.id},${i}" style="--p:${i === 0 ? Math.round(100 * (1 - j.left / j.total)) : 0}%" aria-label="Cancel ${qName(j)}">${qName(j)}${i === 0 ? `<br>${Math.ceil(j.left)} s` : ''}<i></i></button>` : `<button class="slot empty" disabled>·</button>`); }
-  return `<div class="slots" style="--qn:${n}">${cells.join('')}</div>` + (b.blocked ? '<p><b>Needs room: House, Apartment or Aqueduct.</b></p>' : b.stall > G.t ? `<p><b>Stopped by sabotage: ${Math.ceil(b.stall - G.t)} s.</b></p>` : '');
+  for (let i = 0; i < n; i++) { const j = b.q[i]; cells.push(j ? `<button class="slot" data-act="qcancel:${b.id},${i}" style="--p:${i === 0 ? Math.round(100 * (1 - j.left / j.total)) : 0}%" aria-label="Cancel ${qName(j)}">${qName(j)}${i === 0 ? `<br>${Math.ceil(j.left)} s` : ''}<i></i></button>` : `<button class="slot empty" disabled>Slot ${i + 1}</button>`); }
+  const more = TECH.find(t => (t.fx || []).some(f => f.s === 'queue') && !G.P[0].techs.has(t.id));   // the next slot, locked: a tap says how to open it
+  if (more) cells.push(`<button class="slot lock" data-act="qlock:${more.id}" aria-label="A locked slot">🔒 Slot ${n + 1}</button>`);
+  return `<div class="slots" style="--qn:${cells.length}">${cells.join('')}</div>` + (b.blocked ? '<p><b>Needs room: House, Apartment or Aqueduct.</b></p>' : b.stall > G.t ? `<p><b>Stopped by sabotage: ${Math.ceil(b.stall - G.t)} s.</b></p>` : '');
 }
 // Relations, at the Town Center: one row per side, the stance you take toward them. Neutral keeps both swords sheathed; Hostile takes effect after notice; Ally needs their yes.
 function nativesHTML() {
@@ -4567,10 +4592,6 @@ function researchHTML() {   // everything you can research, across every buildin
   return h;
 }
 // the Challenge: each hazard a switch with its points; the sum is the level, and the level multiplies the score
-function hazardsHTML() {
-  const H = SET.hz || HZ_DEFAULT, lv = levelOf(H);
-  return sec(`Challenge · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}`) + acts(HZK.map(k => btn(`hz:${k}`, HAZARDS[k].name, `${HAZARDS[k].pts} pt${HAZARDS[k].pts > 1 ? 's' : ''}`, H[k] ? 'on' : '')).join(''), 'c3') + fold('hazards', 'What each hazard does', HZK.map(k => `<p><b>${HAZARDS[k].name}:</b> ${HAZARDS[k].desc}</p>`).join('') + `<p>Easy keeps the polite game whatever is on. Everything a hazard sends is announced first.</p>`);
-}
 function settingsHTML() {
   return sec('Difficulty') + acts(btn('diff:easy', 'Easy', `they think slower; no raid before ${clock(EASY_SAFE)}`, SET.diff === 'easy' ? 'on' : '') + btn('diff:normal', 'Normal', 'they think once a second', SET.diff === 'normal' ? 'on' : ''))
     + sec('Game') + acts(Object.entries(MODES).map(([k, m]) => btn(`mode:${k}`, m.name, k === 'conquest' ? 'no limit' : 'top score wins', SET.mode === k ? 'on' : '')).join(''), 'c3')
@@ -4672,12 +4693,19 @@ const CARDS = {
   },
   fault: () => title('Something went wrong', 'your game is saved') + `<p>Restart to carry on from the save.</p>` + acts(btn('reload', 'Restart', 'from the save', 'go') + btn('close', 'Carry on', 'as it is')),
   resume: c => title('Welcome back', 'saved on this phone') + `<p>Your game from ${clock(c.t)}: ${CIVS[c.civ] ? CIVS[c.civ].name + ', ' : ''}${AGES[c.age].name} age. Resume it, or start a new one.</p>` + acts(btn('resume', 'Resume', clock(c.t), 'go') + btn('card:setup', 'New game', '')),
-  setup() {
-    const C = CIVS[SET.civ];
-    let h = title('A new game', 'pick your people') + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, UNIT[CIVS[k].uu].name, SET.civ === k ? 'on' : '')).join(''), 'c3');
-    h += `<p><i>${C.name}:</i> ${C.bonus} Unique soldier: ${UNIT[C.uu].name} (in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}). Wonder: ${C.wonder}.</p>` + fold('why', 'Why?', `<p>${WHY['bonus:' + SET.civ]}</p>`);
+  setup() {   // the annoying part before the fun part (Albert): the settings first, then your people, the challenge as ticks, and Start at the foot
+    const C = CIVS[SET.civ], H = SET.hz || HZ_DEFAULT, lv = levelOf(H), short = k => cap1(UNIT[CIVS[k].uu].name.replace(new RegExp('^' + CIVS[k].name + ' ', 'i'), ''));
+    const row = (label, opts) => acts(`<div class="lbl"><b>${label}</b></div>` + opts.map(([v, n, on]) => btn(v, n, '', on ? 'on' : '')).join(''), 'c4 set');
+    let h = title('A new game', '')
+      + row('Game', [['diff:easy', 'Easy', SET.diff === 'easy'], ['diff:normal', 'Normal', SET.diff === 'normal'], ['fantasy:0', 'Real', !SET.fantasy], ['fantasy:1', 'Fantasy', SET.fantasy]])
+      + row('Length', Object.entries(MODES).map(([k, m]) => [`mode:${k}`, m.name.replace(' minutes', ' min'), SET.mode === k]))
+      + sec('Your people') + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, short(k), SET.civ === k ? 'on' : '')).join(''), 'c3')
+      + `<p>${C.bonus}</p>` + fold('why', 'Why?', `<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`)
+      + sec(`Challenge · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}`)
+      + `<div class="hzl">${HZK.map(k => `<div class="hzr"><button class="tick${H[k] ? ' on' : ''}" data-act="hz:${k}"><b>${HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small></button><button class="q${G.hzQ === k ? ' on' : ''}" data-act="hzq:${k}" aria-label="What ${HAZARDS[k].name} does">?</button></div>`).join('')}</div>`
+      + (G.hzQ && HAZARDS[G.hzQ] ? `<p><b>${HAZARDS[G.hzQ].name}:</b> ${HAZARDS[G.hzQ].desc}</p>` : '');
     if (staleSave) h += `<p class="dim">Your last game came from an older version (${staleSave}) and cannot be opened. It is kept aside, not deleted.</p>`;
-    return h + acts(btn('fresh', 'Start', `${C.name} · ${MODES[SET.mode].name} · ${SET.fantasy ? 'fantasy' : 'real world'} · ${SET.diff} · level ${levelOf(SET.hz || HZ_DEFAULT)}`, 'go') + btn('today', 'The challenge today', `level ${levelOf(TODAY_HZ)} on the map of the day, for everyone`), 'c1') + hazardsHTML() + fold('settings', 'Game settings', settingsHTML()) + fold('about', 'About', `<p>The other three sides take three of the other civilisations at random. Every civilisation has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`);
+    return h + acts(btn('fresh', 'Start', `${C.name} · ${MODES[SET.mode].name} · level ${lv}`, 'go big'), 'c1') + `<button class="lnk" data-act="today">Or the challenge of the day: level ${levelOf(TODAY_HZ)}</button>`;
   },
   node(c) {
     const n = G.nodes.find(x => x.id === c.id); if (!n) return null;
@@ -4710,9 +4738,9 @@ const CARDS = {
   keep() { const k = keepOf(0); if (!k) return null; G.card = { type: 'bld', id: k.id }; return CARDS.bld(G.card); },
   menu(c) {
     const p = G.P[0], M = MENUS.find(m => m.id === c.id); G.lastMenu = c.id;
-    const item = k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp; return btn(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? `limit ${cp}` : !afford(p, B.cost) ? `short ${need(B.cost)}` : costText(B.cost) + (cp > 1 && cp < 99 ? ` · ${n}/${cp}` : ''), lock || full || !afford(p, B.cost) ? 'dis' : ''); };
+    const item = k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp, fits = G.buildAt && G.buildAt.hint === k; return btn(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? `limit ${cp}` : !afford(p, B.cost) ? `short ${need(B.cost)}` : (fits ? 'fits here · ' : '') + costText(B.cost) + (cp > 1 && cp < 99 ? ` · ${n}/${cp}` : ''), lock || full || !afford(p, B.cost) ? 'dis' : fits ? 'go' : ''); };
     const most = Math.max(...MENUS.map(m => m.items.length)), ghosts = '<button class="ghost" disabled aria-hidden="true" tabindex="-1"><b>.</b><small>.</small></button>'.repeat(most - M.items.length);   // blank places keep every menu as tall as the biggest (two rows), so the page never changes height
-    return title('Build', '') + acts(MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join(''), 'c6 chipsrow') + acts(M.items.map(item).join('') + ghosts, 'c4 menu')
+    return title('Build', G.buildAt ? 'here' : '') + acts(MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join(''), 'c6 chipsrow') + acts(M.items.map(item).join('') + ghosts, 'c4 menu')
       + fold('menu', 'What each one does', M.items.map(k => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''));
   },
   research: () => researchHTML(),
@@ -4736,7 +4764,7 @@ const CARDS = {
     return title('How to play', `build ${BUILD}`) + acts(btn('guide:bld', 'Guide', 'what leads to what, and why', 'go') + btn('guide:rule', 'Rules', 'what triggers what'))
       + `<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
       <p><b>Build:</b> pick a menu, then a building. It waits above your finger: drag it, then tap Build. Villagers raise it.</p>
-      <p><b>The finger:</b> tap to pick, tap twice to open a page, hold to pick more (or box a group on open ground). With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there.</p>
+      <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Hold the play button for the speeds.</p>
       <p><b>Army:</b> tap open ground with nothing picked: Send ¼ or All. The War Council opens stances, battalions, formations and Muster.</p>
       <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
@@ -4832,6 +4860,7 @@ const ICON = {
   def: SVG(20, '<path d="M4 17 V6 H6.5 V8.2 H8.6 V6 H11.4 V8.2 H13.5 V6 H16 V17 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 17 V13 H11.4 V17" fill="currentColor"/>'),
   shop: SVG(20, '<path d="M3.5 7.5 H15.5 M12.5 4.5 L15.5 7.5 L12.5 10.5 M16.5 13 H4.5 M7.5 10 L4.5 13 L7.5 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>'),
   cult: SVG(20, '<path d="M3 8.2 L10 4 L17 8.2 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M5.2 9.5 V15 M8.4 9.5 V15 M11.6 9.5 V15 M14.8 9.5 V15 M3 16.5 H17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'),
+  sword: SVG(16, '<path d="M12.5 2.5 L13.5 3.5 L6 11 L5 10 Z" fill="currentColor"/><path d="M3.5 9.5 L6.5 12.5 M2.5 13.5 L4.5 11.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'),
   close: SVG(20, '<path d="M5.5 5.5 L14.5 14.5 M14.5 5.5 L5.5 14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'),
   hammer: SVG(16, '<path d="M3 13 L9 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 3.5 L10 2 L13.5 5.5 L12 8.5 Z" fill="currentColor"/>'),
   book: SVG(16, '<path d="M2 3.5 Q5.2 2.4 8 4 Q10.8 2.4 14 3.5 V12.5 Q10.8 11.4 8 13 Q5.2 11.4 2 12.5 Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 4 V13" stroke="currentColor" stroke-width="1.2"/>'),
@@ -4853,21 +4882,21 @@ const wd = (t, id) => `<span class="wd"${id ? ` id="${id}"` : ''}>${t}</span>`;
 // The top: the tally (five counts, mute, pause, speed), then the strip (age, season, clock; idle; score). The bottom: People, then one column per job; Build swaps the row for the categories.
 function buildPanel() {
   $('tally').innerHTML = [['f', 'Food'], ['w', 'Wood'], ['s', 'Stone'], ['g', 'Gold'], ['i', 'Iron']].map(([r, n]) => cell(`data-act="card:stores" aria-label="${n}: open the stores"`, ICON[n.toLowerCase()], wd('0', 'r' + r))).join('')
-    + cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') + cell('id="pauseB" data-act="pause" aria-label="Pause"', ICON.pause, '', 'one') + cell('id="speed" data-act="speed" aria-label="Game speed"', '', wd('×1', 'speedT'), 'one');
+    + cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') + cell('id="pauseB" data-act="pause" aria-label="Pause; hold for speed"', ICON.pause, '', 'one') + cell('id="mapT" data-act="map" aria-label="The small map"', ICON.map, '', 'one');   // one button for play, pause and speed (hold it); the freed cell is the map (Albert, Build 40)
   const st = (act, t, label, id) => `<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
   $('jobs').innerHTML = `<div class="col">${cell('id="tPeople" data-act="card:army" aria-label="People: army, research, how to play"', ICON.people, wd('0/0', 'tPeopleN'))}<div class="pm">${st('unvil', '−', 'Cancel a villager waiting to train', 'tUn')}${st('train:vil', '+', 'Train a villager', 'tVil')}</div></div>`
     + JOBS.map(r => `<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`).join('');
-  $('tkList').innerHTML = ICON.list; $('tkMin').innerHTML = ICON.up; $('mapB').innerHTML = ICON.map; $('miniX').innerHTML = ICON.less; $('homeB').innerHTML = ICON.home; $('buildB').innerHTML = ICON.hammer;
+  $('tkList').innerHTML = ICON.list; $('tkMin').innerHTML = ICON.up; $('homeB').innerHTML = ICON.home; $('buildB').innerHTML = ICON.hammer;
 }
 const refresh = () => { cardSig = ''; ui(true); };
 function muteBtn() { $('muteB').classList.toggle('off', !SND.on); $('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on'); }
-function paceBtn() { const pb = $('pauseB'); pb.innerHTML = G.paused ? ICON.play : ICON.pause; pb.setAttribute('aria-label', G.paused ? 'Play' : 'Pause'); pb.classList.toggle('on', !!G.paused); $('speedT').textContent = '×' + G.speed; }
+function paceBtn() { const pb = $('pauseB'); pb.innerHTML = (G.paused ? ICON.play : ICON.pause) + (G.speed > 1 ? `<span class="spd">×${G.speed}</span>` : ''); pb.setAttribute('aria-label', (G.paused ? 'Play' : 'Pause') + '; hold for speed'); pb.classList.toggle('on', !!G.paused); }
 function setPause(v) { G.paused = v; paceBtn(); }
-function applyMini() { mini.hidden = !SET.mini; $('mapB').hidden = !!SET.mini; $('miniX').hidden = !SET.mini; $('stage').classList.toggle('mapOn', !!SET.mini); }
+function applyMini() { mini.hidden = !SET.mini; $('mapT').classList.toggle('lit', !!SET.mini); $('stage').classList.toggle('mapOn', !!SET.mini); }
 // the end of a game: the sim says who won and why; the screen shows it
 function showEnd(won, text) { $('endT').textContent = won ? 'Victory' : 'Defeat'; $('endP').textContent = text; $('endNext').hidden = $('endFree').hidden = !won; $('end').hidden = false; closeCard(); }
 // The page's own measures: how tall the orders are (the map's bottom edge) and where the map's middle sits between the bars
-function fit() { const r = cv.getBoundingClientRect(); dpr = LOW.n >= 2 ? 1 : Math.min(2, window.devicePixelRatio || 1); cw = r.width; ch = r.height; { const h = $('hud').getBoundingClientRect(), o = $('orders').getBoundingClientRect(), t = r.top; document.documentElement.style.setProperty('--ob', Math.round(r.bottom - o.top) + 'px'); vy = Math.round(((h.bottom - t) + (o.top - t)) / 2 - ch / 2); } const W = Math.round(cw * dpr), H = Math.round(ch * dpr); if (cv.width !== W) cv.width = W; if (cv.height !== H) cv.height = H; cam.z = clamp(cam.z, minZ(), ZOOM_MAX); clampCam(); }
+function fit() { const r = cv.getBoundingClientRect(); dpr = LOW.n >= 2 ? 1 : Math.min(2, window.devicePixelRatio || 1); cw = r.width; ch = r.height; { const h = $('hud').getBoundingClientRect(), o = $('orders').getBoundingClientRect(), t = r.top; document.documentElement.style.setProperty('--ob', Math.round(r.bottom - o.top) + 'px'); vy = Math.round(((h.bottom - t) + (o.top - t)) / 2 - ch / 2); bandH = Math.max(100, o.top - h.bottom); } const W = Math.round(cw * dpr), H = Math.round(ch * dpr); if (cv.width !== W) cv.width = W; if (cv.height !== H) cv.height = H; cam.z = clamp(cam.z, minZ(), ZOOM_MAX); clampCam(); }
 
 // ───────────────────────── Messages and tips ─────────────────────────
 // quiet kinds (news, the spectacle's 'coming' lines) never take the line: they wait in the list and count on the bell (Albert: too many alerts to keep up with)
@@ -4954,7 +4983,7 @@ function tick() {
   const m = paused && !(live && live.cls === 'warn') ? { text: 'Paused · ▶ to carry on', cls: '' } : live || G.log.find(x => !x.quiet), el = $('tkT');   // paused says so, unless a warning is up; a quiet line never takes the line
   txt('tkT', m ? m.text : ''); el.dataset.act = linkOf(live) || 'tklist';
   $('ticker').className = 'tick ' + (m && m === live ? live.cls || '' : m && !G.log.includes(m) ? '' : 'old');
-  const pop = G.tkOpen && G.log.length ? G.log.map(x => `<div class="row ${x.cls || ''}"><button class="t" data-act="${linkOf(x) || 'tklist'}">${x.text}</button><button class="h" data-act="hush:${encodeURIComponent(x.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`).join('') : '';
+  const pop = G.tkOpen && G.log.length ? G.log.map(x => `<div class="row ${x.cls || ''}"><button class="t" data-act="${linkOf(x) || 'tklist'}">${x.text}</button><button class="h" data-act="hush:${encodeURIComponent(x.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`).join('') + `<div class="row end"><button class="t" data-act="tkclear">Clear all</button><button class="h" data-act="tklist" aria-label="Close the list">✕</button></div>` : '';
   if (pop !== tick.sig) { tick.sig = pop; $('tkPop').innerHTML = pop; $('tkPop').hidden = !pop; }
 }
 // ═════ 16-verbs.js ═════
@@ -4962,7 +4991,7 @@ function tick() {
 // every button's verb, in one table
 const ACT = {
   pause() { setPause(!G.paused); },
-  speed() { G.speed = G.speed >= 3 ? 1 : G.speed + 1; paceBtn(); },   // ×1, ×2, ×3, back to ×1; it never pauses
+  spd(a) { G.speed = clamp(Number(a), 1, 3); $('spdPop').hidden = true; if (G.paused) setPause(false); paceBtn(); },   // from the speed drop-down under the play button
   again() { $('end').hidden = true; openCard({ type: 'setup' }); },
   free() { G.over = null; G.free = true; $('end').hidden = true; setPause(false); say('Free play: no clock, no victory.', '', 6); },
   next() { const p = G.P[0], keep = { age: p.age, techs: [...p.techs] }; $('end').hidden = true; newGame(undefined, keep); setPause(false); say('New land. Your age and research stay.', 'good', 8); saveGame(true); },
@@ -4973,7 +5002,7 @@ const ACT = {
   reload() { location.reload(); },
   vibe() { SET.vibe = !SET.vibe; saveSet(); feel('snap'); refresh(); },
   menu(a) { const keep = G.card && G.card.type === 'menu'; openCard({ type: 'menu', id: a }); if (keep) $('card').scrollTop = 0; },
-  buildrow() { if (G.card && G.card.type === 'menu') closeCard(); else openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // Build opens the Build card on the menu last used; again, it closes
+  buildrow() { G.buildAt = null; if (G.card && G.card.type === 'menu') closeCard(); else openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // Build opens the Build card on the menu last used; again, it closes
   towncard() { const k = keepOf(0); if (k) openCard({ type: 'bld', id: k.id }); },
   unvil() { if (!unTrain(0, 'vil')) say('Nobody is waiting to train.', '', 3); },
   idlego() { const u = unitsOf(0, 'vil').find(v => !v.job); if (!u) return; cam.x = u.x; cam.y = u.y; clampCam(); closeCard(); },
@@ -4991,6 +5020,7 @@ const ACT = {
   diff(a) { SET.diff = a; G.diff = a; saveSet(); refresh(); },
   mode(a) { SET.mode = a; saveSet(); refresh(); },
   fantasy(a) { SET.fantasy = a === '1'; saveSet(); refresh(); },
+  hzq(a) { G.hzQ = G.hzQ === a ? null : a; refresh(); },   // the ? beside a hazard: what it does, one at a time
   hz(a) { SET.hz = { ...(SET.hz || HZ_DEFAULT) }; SET.hz[a] = SET.hz[a] ? 0 : 1; saveSet(); refresh(); },   // a hazard on or off; the points add up to the level
   today() { clearSave(); holdSave = false; newGame(todaySeed()); closeCard(); setPause(false); saveGame(true); refresh(); say(`Challenge of the day: level ${levelOf(G.hz)}.`, 'good', 8); },
   tips() { SET.tips = !SET.tips; saveSet(); refresh(); },
@@ -5001,6 +5031,8 @@ const ACT = {
   dockmin() { SET.dockMin = !SET.dockMin; saveSet(); ui(true); },
   dock(a) { G.sel = a === 'all' ? 'all' : Number(a); setPick(orderSet().map(u => ({ t: 'unit', id: u.id }))); feel('tick'); },   // the dock: a battalion picked in one tap; the pick bar then carries Charge, Fall back and Teach
   tkmin() { SET.tkMin = !SET.tkMin; saveSet(); G.tkN = 0; G.tkW = false; G.tkOpen = false; ui(true); fit(); },   // hide or show the ticker
+  qlock(id) { const t = TECHBY[id]; say(`Research ${t.name} at the ${BLD[t.at].name} for more slots.`, '', 5); },
+  tkclear() { G.log = []; G.tkOpen = false; G.tkN = 0; ui(true); },
   tklist() { G.tkOpen = !G.tkOpen && G.log.length > 0; ui(true); },   // the last five
   hush(a) { const t = decodeURIComponent(a || ''), k = hushKey(t), m = G.log.find(x => x.text === t);
     if (m && m.cls === 'warn') (G.hushW = G.hushW || {})[k] = G.t + 120; else { (SET.hush = SET.hush || {})[k] = 1; saveSet(); }
@@ -5021,9 +5053,12 @@ const PLAY = {
   mtab(a) { G.mtab = a; },
   ktab(a) { G.ktab = a; },
   sel(a) { G.sel = a === 'all' ? 'all' : Number(a); },
-  sendto(a) { const [f, x, y] = a.split(','), to = { x: Number(x), y: Number(y) }, S = sendPick(/^(q|all|n\d+)$/.test(f) ? f : Number(f), to);
+  sendto(a) { const [f, x, y] = a.split(','), to = { x: Number(x), y: Number(y) }, S = sendPick(/^(q|h|all|n\d+)$/.test(f) ? f : Number(f), to);
     S.forEach(u => { u.state = 'goto'; u.px = to.x; u.py = to.y; u.idleT = 0; u.focus = null; }); march(S, to, coord(to.x, to.y)); if (S.length) ripple(to.x, to.y, '#ffd35e'); hideStrip(); },
   nostrip() { hideStrip(); },
+  striparmy() { const s = G.stripAt; if (s) showStrip(s.sx, s.sy, s.x, s.y, 1); },
+  stripmore() { const s = G.stripAt; if (s) showStrip(s.sx, s.sy, s.x, s.y, 2); },
+  buildhere(a) { const [x, y] = a.split(',').map(Number), hint = suggestAt(x, y), M = hint && MENUS.find(m => m.items.includes(hint)); hideStrip(); G.buildAt = { x, y, hint }; openCard({ type: 'menu', id: M ? M.id : G.lastMenu || MENUS[0].id }); },   // the hammer on open ground: the menu, on what fits there
   more(a) { const [x, y] = a.split(',').map(Number); openCard({ type: 'ground', x, y }); },
   qsfrom(a) { G.qs.from = a === 'all' ? 'all' : Number(a); },
   qsn(a) { const [k, d] = a.split(','), have = qsPool().filter(u => u.kind === k).length, cur = Math.min(have, G.qs.n[k] ?? have); G.qs.n[k] = clamp(cur + (d === '+' ? 1 : -1), 0, have); },
@@ -5818,8 +5853,15 @@ function frame(now) {
 }
 for (const ev of ['pointerdown', 'pointermove', 'wheel']) document.addEventListener(ev, () => { inputT = performance.now(); }, { passive: true, capture: true });
 window.addEventListener('resize', fit);
-{ const first = !SET.mapSeen; SET.mapSeen = true; if (first) SET.mini = true; else if (SET.mini === undefined) SET.mini = false; saveSet(); }   // the first look shows the map; after that it stays shut until opened
-applyMini(); buildPanel(); fit(); newGame(); scoreAll(); ui(true);
+{ SET.mapSeen = true; if (SET.mini === undefined) SET.mini = false; saveSet(); }   // the small map starts closed; the map cell at the top opens it   // the first look shows the map; after that it stays shut until opened
+buildPanel(); applyMini(); fit(); newGame(); scoreAll(); ui(true);
+// the play button: a tap plays or pauses; a hold opens the speeds under it (Albert, Build 40)
+{ const pb = $('pauseB'), pop = $('spdPop'); let t = 0, held = false;
+  const open = () => { held = true; const r = pb.getBoundingClientRect(), s = $('stage').getBoundingClientRect(); pop.hidden = false; pop.style.top = (r.bottom - s.top + 4) + 'px'; pop.style.left = Math.max(4, Math.min(s.width - pop.offsetWidth - 4, r.right - s.left - pop.offsetWidth)) + 'px'; feel('tick'); };
+  pb.addEventListener('pointerdown', () => { held = false; clearTimeout(t); t = setTimeout(open, 420); });
+  for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) pb.addEventListener(ev, () => clearTimeout(t));
+  pb.addEventListener('click', e => { if (held) { e.stopPropagation(); held = false; } }, true);
+  document.addEventListener('pointerdown', e => { if (!pop.hidden && !pop.contains(e.target) && e.target !== pb && !pb.contains(e.target)) pop.hidden = true; }); }
 { const sv = readSave(); if (sv && sv.t > 20) { holdSave = true; setPause(true); openCard({ type: 'resume', t: sv.t, age: sv.P[0].age, civ: sv.P[0].civ }); } else { setPause(true); openCard({ type: 'setup' }); } lastSave = performance.now(); }
 requestAnimationFrame(frame);
 window.__fkq = v => { G.gq = v; const el = $('gres'); if (el) el.innerHTML = histHTML(v); };   // the History search: the list follows the typing, the field keeps its focus

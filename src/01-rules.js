@@ -1,6 +1,6 @@
 // ═════ 01-rules.js ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 40;
+const BUILD = 41;
 const MAP = 2000, MID = MAP / 2, DT = 1 / 30;
 const BN = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'], BNS = BN.length;   // the battalions, once Command is researched
 const POPMAX = 150, VILMAX = 60, ARMYMAX = 90, BNSIZE = 30, SHARE_FALLEN = 0.5;   // a fallen side's room: half of it is split among whoever is left   // six battalions, once Command is researched at a War Council; BNSIZE: the most one Zeal blesses
