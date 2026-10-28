@@ -8,13 +8,13 @@ const ZEAL = { cost: { g: 60 }, secs: 45, cd: 120, mul: 1.2 };
 const SAB = { burn: 0.6, stall: 40 };
 const FLANK = 1.3; // a blow from behind lands 30% harder
 // ───────────────────────── Combat you steer: nerve, flanks, charge and fall back, prisoners, conversion ─────────────────────────
-// Every soldier has nerve (0..1). Blows drain it by the share of health they take, times hit (a flank blow twice, a rear blow three times), being outnumbered drains it, losses beside it drain it;
+// Every soldier has nerve (0..1). Blows drain it by the share of health they take, times hit (a flank blow 1.5 times, a rear blow twice), being outnumbered drains it, losses beside it drain it;
 // quiet restores it, as do a wall or tower of its own, its Town Center, a priest, and Engagement at the War Council (a shorter rout). At zero it routs:
 // runs for home for a spell, takes more harm, and can be taken prisoner by any foe who lays a hand on it. Most real battles ended in a rout.
 const MORALE = {
-	hit: 1.2,
-	side: 2,
-	rear: 3,
+	hit: 0.8,
+	side: 1.5,
+	rear: 2,
 	kill: 0.04,
 	loss: 0.03,
 	odds: 0.02,
@@ -25,7 +25,8 @@ const MORALE = {
 	rout: 8,
 	routHit: 1.5,
 	routSpd: 1.3,
-	after: 0.35,
+	after: 0.6,
+	wild: 0.5, // animals hit soldiers at half strength and do not shake their nerve (Build 44)
 	capR: 10,
 };
 const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }; // a burst, then tired

@@ -280,6 +280,7 @@ function tapAt(sx, sy) {
 		clampCam();
 		return;
 	}
+	if (G.hud.aim) return aimAt(sx, sy); // Aim: the next tap is the target
 	const h = hitAt(sx, sy),
 		key = h.t === 'ground' ? '' : h.t + h.e.id,
 		now = performance.now(),

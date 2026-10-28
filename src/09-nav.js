@@ -461,6 +461,18 @@ function route(u, tx, ty) {
 	return { x: P[u.pi].x, y: P[u.pi].y, direct: last };
 }
 // one step toward (x, y); true once within r. A building as the goal means "arrive beside it".
+// how far a unit walks in a second: its speed, its load, the side's season and weather (SP), its stance and formation, the ground and any charge
+const paceOf = (u, SP) =>
+	Math.min(stats(u.owner, u.kind).spd, u.cap || 1e9) *
+	(u.kind === 'vil' && u.carry > 0 ? 0.9 : 1) *
+	(u.sick > G.t ? 0.8 : 1) *
+	SP *
+	(u.stance === 1 ? STANCE[1].spd : 1) *
+	(FORM[formOf(u)].spd || 1) *
+	EVM.spd *
+	(u.owner === WILD ? 1 : groundSpd(u.owner, unitKeys(u.kind))) *
+	(G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1) *
+	(u.chg > G.t ? CHARGE.spd : u.tired > G.t ? CHARGE.tiredSpd : 1);
 function moveTo(u, x, y, dt, r, SP) {
 	if (u.stuck > G.t) return false; // in a pit, or slipped on ice
 	if (
@@ -499,20 +511,7 @@ function moveTo(u, x, y, dt, r, SP) {
 		dy = wp.y - u.y,
 		dd = hyp(dx, dy) || 1e-6;
 	const lim = wp.direct ? (stand ? dd : Math.max(0, dd - r)) : dd;
-	const m = Math.min(
-		Math.min(stats(o, u.kind).spd, u.cap || 1e9) *
-			(u.kind === 'vil' && u.carry > 0 ? 0.9 : 1) *
-			(u.sick > G.t ? 0.8 : 1) *
-			SP *
-			dt *
-			(u.stance === 1 ? STANCE[1].spd : 1) *
-			(FORM[formOf(u)].spd || 1) *
-			EVM.spd *
-			(o === WILD ? 1 : groundSpd(o, unitKeys(u.kind))) *
-			(G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1) *
-			(u.chg > G.t ? CHARGE.spd : u.tired > G.t ? CHARGE.tiredSpd : 1),
-		lim,
-	);
+	const m = Math.min(paceOf(u, SP) * dt, lim);
 	let nx = u.x + (dx / dd) * m,
 		ny = u.y + (dy / dd) * m;
 	if (blockedCell(gcell(nx, ny), o)) {

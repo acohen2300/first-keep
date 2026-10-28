@@ -5,6 +5,7 @@
 function openCard(c) {
 	hideStrip();
 	G.techTip = null;
+	G.qs = { from: 'all', n: {} }; // the Attack-with counts start fresh on every card
 	G.card = c;
 	G.infoOpen = false;
 	G.confirm = null;
@@ -204,7 +205,8 @@ function keepAgeBtn() {
 // what one of yours is doing, in words read from its state; and what it has done in its life
 function statusOf(u) {
 	const nm = (b) => bldName(0, b.kind).toLowerCase();
-	if (u.inside) return 'sheltering inside';
+	if (u.inside) return u.state === 'garrison' ? 'DEFENDING inside' : 'sheltering inside';
+	if (u.state === 'garrison') return 'DEFENDING: going in';
 	if (u.state === 'school') return `learning at the School, ${Math.ceil(u.schoolT - G.t)} s`;
 	if (u.kind === 'vil') {
 		if (u.scared) return 'running for shelter';

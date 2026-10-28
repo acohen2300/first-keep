@@ -1,4 +1,4 @@
-# First Keep: handoff (Build 42)
+# First Keep: handoff (Build 44, preview only)
 
 ## What it is
 Albert's single-file HTML mobile RTS (Age of Empires style). Albert is not a coder.
@@ -11,6 +11,7 @@ Albert's single-file HTML mobile RTS (Age of Empires style). Albert is not a cod
 - Simplest, leanest design. No fixes on fixes: redo it cleanly. Merge, cut bloat. One mold, uniform sizes. Analyze by element (does it exist, why, where is its source, where else can it be reused).
 - Log every cut in `CUTS.md`.
 - Honest, neutral pushback. No flattery. Keep pitching good ideas, flagging which rule they break.
+- Albert's thread rules (Oct 28): "Do it all, pristine, no patches or fixes, simpler the better; use the buttons we have, reskin them and point them somewhere else; this is an overlay on concepts most games already have." Preview first, live only when he says so. Keep pitching good ideas even if they break a rule. Commit trailers go in the `TRAILER` env var. No fixes on fixes. Fewest words.
 - Tell him before switching models (he switches them).
 - **Git identity: the repo is public, so commit as `Albert <acohen2300@users.noreply.github.com>`, never his Gmail** (`git config user.email` before the first commit; history was rewritten on Oct 28 to remove it).
 - Real game design: real science and history; fun and hard, not annoying; pay to help, never pay to win.
@@ -22,7 +23,7 @@ Source in `src/`, 40 files joined in name order by `build.py` into `first-keep.h
 - Doing: `11-orders` what a side can do (`train`, `build`, `march`, `ordersTick`, `incomingTick`) · `12-sim-core` `step` (calls `reap`, `sidesTick`) · `13-sim-civil` `14-sim-troops` `15-sim-spatial` `16-sim-fight` · `17-ai` the computers (`think`)
 - Seeing: `18-figures` `19-building-art` `20-view-base` (camera, `followCam`) `21-view-frame` (`draw`, a list of named layers) `22-view-fog` `23-view-things` `24-view-overlays` (the layers: orders, tracers, light, cracks, events) `25-view-weather`
 - Touch and cards: `26-input` `27-cards-core` `28-army-strip` (`armyStatus`, the Army list) `29-card-pages` `30-cards` (the `CARDS` table) `31-guide` `32-frame` (ticker, `alertNow`, `advise`, pick bar) `33-verbs` (the buttons)
-- The rest: `34-save` `35-sound` `36-economy` `37-events` `38-natives` `39-boot` (`window.__fk`, the test hook).
+- The rest: `34-save` `35-sound` `36-economy` `37-events` `38-natives` `39-huddle` `40-emergency` `41-boot` (`window.__fk`, the test hook).
 - `shell-head.html` CSS and the static markup.
 - Tools: `tests/fmt.py` (Prettier, tabs, width 120) · `tests/lint.py` (ESLint) · `tests/bot.py [seed] [minutes]` (plays the first minutes from the ticker alone; a test tool) · `tests/soak.py`.
 - Check: `python3 build.py && python3 wrap.py && python3 tests/gate.py` (from the repo root; add `--soak` for `tests/soak.py`: three seeds, 20 game minutes, Hard, every hazard on, fails on any error, NaN or negative stock; about 3 minutes; run it before a big release, the fingerprint only plays five minutes). **Publish only with `python3 publish.py "Build NN: what changed"`**: it builds, runs the whole gate, and only then copies to `index.html` and `preview/`, commits and pushes. It installs a pre-push hook that refuses any push whose `index.html` the gate has not passed (`tests/gate-passed.sha`), so a push by hand is refused. Commit trailers go in the `TRAILER` environment variable.
@@ -67,6 +68,15 @@ The long-game design doc (Oct 28): https://claude.ai/artifact/P3ThRoHEPXSjQXHaLT
 
 ## Build 41 (a to j, Oct 28; CUTS.md has each)
 Play, pause and speed in one button; the Map cell; new-game setup on one page (settings as sliding toggles, Easy / Normal / Hard, the challenge as ticks, the daily challenge as a tick); the action bar (More, Done; Charge, Fall back, Hold, Teach; Hunt); three-tap dispatch from open ground; People makes a villager in one tap with Build under it; the Build card opens on what fits; tap a foe to name it. Six hazards: Hardest, Famine, Bad weather, Drought, Outlaws, Plague. Outlaw raids start at minute 10 (Easy 16), random 3 to 8 minutes apart, aimed fairly. `build.py` now also refuses a comment that ends in an assignment.
+
+## Build 44 (preview only; CUTS.md has each)
+- **The huddle** (`39-huddle`): the sword fab swaps the job bar for the attack bar (`#huddle`, same six-column grid). Column 1 Ready over Aim (lamp line: red not set, green set); columns 2-5 Foot/Arch/Horse/Siege steppers while drafting, the four missions (Alpha to Delta) while viewing; column 6 Fire over Abort. Aim: the next map tap is the target (`aimAt` in `tapAt`). Fire goes through `order()` and takes a slot in `G.msn` (saved); the mission is a normal march order (`G.ords`) plus a promise (`due`), a status (go, act, done, lost) and odds.
+- **ETA** counts the weather on screen (`sideSpd`, `paceOf`, `etaOf`), no leeway; later weather is bad luck. **Odds** reuse `unitPower`/`matchup` as r²/(1+r²), smoothed about 3 s. Below 40% the tile flashes red (clears at 50%) with one toast; above 75% it flashes green and `spare` lists who can leave while keeping 65%.
+- **Reinforce** (`reinforcePlan`): idle reserve only, fastest first, only those who arrive before the mission's survival time (HP over enemy damage a second), enough to even the fight, shown as up to three waves. **Spare** drags (or tap "Spare N" then a tile): onto a mission, an empty slot (a new draft of just them) or Ready (home).
+- **Emergency** (`40-emergency`, the Army card and the red attack alert): Shelter, Battle stations, All hands on deck, Resume. One ranking: shelter buildings by current hit points, room breaks ties; each filled with the nearest units (shooters first for soldiers); the rest wait behind the Town Center (villagers) or hold a line toward the threat (soldiers). Soldiers garrison (`state 'garrison'`, add arrows, DEFENDING) and stay until a new order; Resume only restores villagers (`G.emg.snap`). Pressing one leaves the huddle and snaps the camera home.
+- **Army controls**: All = everyone but guards, Rest = idle ones, nearest-N/half/quarter use idle only; Attack-with takes idle first, then nearest; its counts reset on every card; `sendto/qgo/qatk/qfoe` go through `order()`.
+- **Balance**: animals hit soldiers at half and cost no nerve; nerve hit 0.8, side 1.5, rear 2, rout return 0.6.
+- Files: `39-huddle`, `40-emergency` are new; `41-boot` is the old `39-boot`.
 
 ## Open items
 1. Albert's real-phone test of Build 41j (tap sizes, the action bar, three-tap dispatch, People tile, 375 px).

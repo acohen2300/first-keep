@@ -459,6 +459,7 @@ const CARDS = {
 							`<p data-act="ordpick:${O.id}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`,
 					)
 					.join(''); // tap a line: that group is picked, and the camera goes to it
+		h += acts(btn('card:emergency', 'Emergency', 'shelter · battle stations · all hands', G.emg ? 'warn' : ''));
 		if (S.length && hasCmd())
 			h +=
 				sec('Orders go to') +
@@ -719,6 +720,7 @@ function renderCard() {
 	}
 	const cc = G.card;
 	$('card').classList.toggle('setup', cc.type === 'setup');
+	$('card').classList.toggle('hud', cc.type === 'mission' || cc.type === 'emergency'); // the covert look of the attack bar
 	$('card').classList.toggle(
 		'full',
 		FULL.has(cc.type) || (cc.type === 'bld' && (G.blds.find((b) => b.id === cc.id) || {}).kind === 'market'),

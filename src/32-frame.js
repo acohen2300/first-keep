@@ -129,6 +129,7 @@ function buildPanel() {
 			(r) =>
 				`<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`,
 		).join('');
+	$('hudB').innerHTML = ICON.sword;
 	$('tkList').innerHTML = ICON.list;
 	$('tkMin').innerHTML = ICON.up;
 	$('homeB').innerHTML = ICON.home;
@@ -396,6 +397,7 @@ function ui(force) {
 		);
 		$('sAge').classList.toggle('glow', ready > 0 && !G.card);
 	} // gold when the next age or any research is ready: tap it for everything you can research
+	huddleUI();
 	const V = unitsOf(0, 'vil');
 	for (const r of JOBS) {
 		let n = 0;
@@ -612,7 +614,7 @@ function tick() {
 			tick.h = h;
 			el.innerHTML = h;
 		}
-		el.dataset.act = A.at ? `jump:${Math.round(A.at.x)},${Math.round(A.at.y)}` : 'tklist';
+		el.dataset.act = A.hot ? 'card:emergency' : A.at ? `jump:${Math.round(A.at.x)},${Math.round(A.at.y)}` : 'tklist';
 		$('ticker').className = 'tick alert ' + (A.now ? 'now' : 'soon') + (A.hot ? ' hot' : '');
 	} else {
 		tick.h = '';

@@ -242,6 +242,7 @@ function draw() {
 	ripDraw();
 	drawEvents(z);
 	drawOrders(z);
+	drawReticle();
 	if (G.rally0) flagAt(SX(G.rally0.x), SY(G.rally0.y), G.P[0].color, z);
 	drawTracers();
 	drawLight(z, inView);

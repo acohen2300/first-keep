@@ -9,7 +9,7 @@ function vilTick(u, dt, SP) {
 			u.inside = false;
 			return;
 		}
-		if ((G.tick + u.id) % 10 === 0 && !nearU(rb, SHELTER.clear, (v) => v.thr && atWar(u.owner, v.owner))) {
+		if (!u.emg && (G.tick + u.id) % 10 === 0 && !nearU(rb, SHELTER.clear, (v) => v.thr && atWar(u.owner, v.owner))) {
 			u.inside = false;
 			u.scared = false;
 			u.hid = 0;
@@ -29,7 +29,8 @@ function vilTick(u, dt, SP) {
 				else foe++;
 			}
 		});
-		u.scared = !!kk && (foe > 0 || (wild > 0 && (wild >= SHELTER.raid || G.t - (u.hurtT || -99) < SHELTER.hurt)));
+		u.scared =
+			!!kk && (u.emg || foe > 0 || (wild > 0 && (wild >= SHELTER.raid || G.t - (u.hurtT || -99) < SHELTER.hurt)));
 		if (u.scared && !was) {
 			const tw = nearest(
 				G.blds,
@@ -47,6 +48,10 @@ function vilTick(u, dt, SP) {
 		}
 	}
 	if (u.scared && kk) {
+		if (u.safe) {
+			moveTo(u, u.safe.x, u.safe.y, dt, 6, SP); // no room inside: waits behind the Town Center
+			return;
+		}
 		if (moveTo(u, rb.x, rb.y, dt, BLD[rb.kind].fp * 5 + 4, SP)) {
 			u.inside = true;
 			setJob(u, u.job);

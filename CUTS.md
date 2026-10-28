@@ -520,3 +520,15 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 - Hold a research button (0.45 s): book entry plus cost and time. Tap anywhere to close.
 - Build button: opens on the selected building's menu first, else what is near the middle of the view.
 - Nothing cut.
+
+- **Play fingerprint accepted:** Build 44: animals hit soldiers at half and cost no nerve; nerve hit 1.2->0.8, side 2->1.5, rear 3->2, rout return .35->.6
+
+## Build 44 (everything below is preview only, not live)
+- **Army controls:** "All" now means everyone except guards; new "Rest" is the idle ones; the nearest-N, half and quarter sends use idle soldiers only; Attack-with takes idle first, then the nearest busy ones; the Attack-with counts and battalion reset on every card; four duplicate send paths now go through `order()`. Cut: the old "All = idle only" and the sticky counts.
+- **Balance:** animals hit soldiers at half strength and never shake their nerve (villagers unchanged). Nerve: hit 1.2 to 0.8, side blow 2 to 1.5, rear 3 to 2, return from a rout 0.35 to 0.6. Play fingerprint re-accepted.
+- **Research blue** toned down (tint, rim and glow).
+- **The huddle:** new attack bar, four missions, aim, fire, abort, odds, flashing tiles, reinforce, spare (drag or tap), mission card. Nothing cut; the villager bar is unchanged and returns when you leave.
+- **Emergency:** Shelter, Battle stations, All hands on deck, Resume; soldiers can garrison buildings and add arrows (new). Hold ground is switched on for all battalions by Battle stations and stays until you change it.
+- **Vagabonds' camp** redrawn (fire ring, bedrolls, lean-to); the old flame and two rectangles are cut. "No soldiers yet" no longer shows on find cards.
+- **Marches count the season and weather** in their time (`sideSpd`, `paceOf`); the time shown is the real one.
+- Size: first-keep.html 909 KB to 942 KB (+33 KB).

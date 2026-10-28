@@ -124,12 +124,36 @@ button.ghost{visibility:hidden}
 .tiles .wd{color:var(--mute)}.tiles .sel .wd{color:var(--bone)}
 #tPeople .gl{width:20px;height:20px}
 #tPeople .wd{color:var(--bone)}
+/* the attack cards: the same dark glass, hairlines and one amber accent as the huddle bar */
+#card.hud{background:rgba(10,13,15,.9);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.09);border-radius:14px;box-shadow:none}
+#card.hud h3{font-family:inherit;font-weight:700;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:#ffb23d}
+#card.hud .who{color:#98a2a6;letter-spacing:.08em}
+#card.hud p{color:#e6e9e6;font-variant-numeric:tabular-nums}#card.hud p b{display:inline-block;min-width:64px;color:#98a2a6;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+#card.hud .acts button{background:#161b1f;border:1px solid rgba(255,255,255,.09);border-radius:10px;box-shadow:none;color:#e6e9e6}
+#card.hud .acts button.go{border-color:#ffb23d;color:#ffb23d}#card.hud .acts button.warn{border-color:#ff5a4a;color:#ff9a8c}#card.hud .acts button.dis{opacity:.5}
+#card.hud .acts small{color:#98a2a6}
+#jobs[hidden],#huddle[hidden]{display:none}
+/* the huddle: dark flat glass, hairlines, one amber accent; only while planning an attack. A lamp line on top of a button: red not set, green set */
+#orders.hud{background:rgba(10,13,15,.82);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
+#huddle button.cell{position:relative;overflow:hidden;background:#161b1f;border:1px solid rgba(255,255,255,.09);border-radius:10px;box-shadow:none;color:#e6e9e6}
+#huddle .wd{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#98a2a6}#huddle .wd.mid{top:50%}
+#huddle .top .c{font-size:20px}
+#huddle .st.w{font-size:12px;letter-spacing:.08em;text-transform:uppercase;line-height:calc(var(--row) - 2px)}
+#huddle .bar::after,#huddle .msn:not(.empty):first-child::after{content:'';position:absolute;left:10px;right:10px;top:0;height:3px;border-radius:0 0 3px 3px;background:var(--mc,#e0503f)}
+#huddle .bar.on{--mc:#4fe0a0}#huddle .bar.on::after{box-shadow:0 0 8px #4fe0a0}
+#huddle .cell.sel{border-color:#ffb23d}
+#huddle .fire.go{background:#ffb23d;border-color:#ffb23d;box-shadow:0 0 16px rgba(255,178,61,.4)}#huddle .fire .wd{color:#6c767a;font-size:13px;letter-spacing:.2em}#huddle .fire.go .wd{color:#1a1204}
+#huddle .msn{touch-action:none}#huddle .msn.empty{background:transparent;border-style:dashed}
+#huddle .msn.lose{--pc:#ff5a4a;animation:hudPulse 1s infinite}#huddle .msn.win{--pc:#43c06b;animation:hudPulse 1.2s infinite}
+@keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc),0 0 10px var(--pc)}}
+@media (prefers-reduced-motion:reduce){#huddle .msn.lose,#huddle .msn.win{animation:none;border-color:var(--pc)}}
+.hudGhost{position:fixed;left:0;top:0;z-index:20;pointer-events:none;padding:8px 12px;border-radius:10px;background:rgba(12,16,20,.95);border:1px solid #43c06b;color:#43c06b;font:700 13px system-ui,sans-serif}
 /* on the map: the corners, one look (.fab). Map top right, Home bottom left (only when away), Build bottom right */
 #spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}#spdPop[hidden]{display:none}#spdPop button{min-width:52px;min-height:44px}#spdPop button.cur{box-shadow:inset 0 0 0 2px var(--mute);border-color:var(--mute)}
 .strip #sStats,.strip #sIdle{padding:0 5px;min-width:44px;gap:9px}.strip #sStats span,.strip #tkBell>*,.strip #sAgeT,.strip #scoreN,.strip #scoreR{display:inline-flex;align-items:center;height:26px;gap:3px}.strip .gl{position:static;transform:none;width:15px;height:15px;display:block;margin:0;flex:none}   /* one line: icon and number share a centre */
 #tally button.cell{isolation:isolate}#tally button.cell.sel::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:7px;background:#2f3b36;border:1px solid var(--mute)}   /* the on mark: a small tile inside the cell; ::before is the divider */
 #pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}
-button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad)}#buildB{right:var(--pad)}
+button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad)}#hudB{right:var(--pad)}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB{display:none}
 #stage.busy #homeB{display:none}
 #stage.picking #homeB{display:none}
 #card .lbl{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.1;min-height:44px}#card .lbl b{font-size:16px}#card .lbl small{color:var(--mute);font-size:13px}
@@ -208,9 +232,9 @@ button.ok small{color:#8fd4a4}
 #card .tabs button:not(#cardX):not(#cardI){border-radius:8px 8px 0 0}
 #card button[class*=" a"]::before,#card button[class^="a"]::before{content:'';position:absolute;left:10px;right:10px;top:4px;height:3px;border-radius:2px;background:var(--age)}   /* a research step wears the colour of its age */
 #card button.a0{--age:#9a9890}#card button.a1{--age:#b5793a}#card button.a2{--age:#c9c2a6}#card button.a3{--age:#4d6b9e}#card button.a4{--age:#8e2f2a}
-#card button:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){background-color:#1d2836;background-image:linear-gradient(#26364a,#18222f),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3 2h8v10H3zM5 5h4M5 7h4M5 9h3' fill='none' stroke='%23a9c4e6' stroke-width='1.2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:0 0,5px 5px;border-color:#5f7fa3;box-shadow:inset 0 1px 0 rgba(170,200,240,.18)}
+#card button:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){background-color:#1c232c;background-image:linear-gradient(#222c38,#191f27),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3 2h8v10H3zM5 5h4M5 7h4M5 9h3' fill='none' stroke='%23a9c4e6' stroke-width='1.2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:0 0,5px 5px;border-color:#556a85;box-shadow:inset 0 1px 0 rgba(170,200,240,.1)}
 #card button.dis:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){background-color:transparent;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3 2h8v10H3zM5 5h4M5 7h4M5 9h3' fill='none' stroke='%237c8ea6' stroke-width='1.2'/%3E%3C/svg%3E");border-color:#3d4f66;box-shadow:none}
-#card button.go:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){border-color:#8fb4e6;box-shadow:inset 0 0 0 1px #8fb4e6,0 0 10px rgba(130,170,230,.35)}   /* research reads blue: cool tint, a small scroll, a blue rim when ready */
+#card button.go:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){border-color:#7d9bc4;box-shadow:inset 0 0 0 1px #7d9bc4,0 0 10px rgba(130,170,230,.2)}   /* research reads blue: cool tint, a small scroll, a blue rim when ready */
 @media (max-width:400px){:root{--pad:6px}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important;scroll-behavior:auto!important} }
 </style>
@@ -226,9 +250,10 @@ button.ok small{color:#8fd4a4}
     <div class="strip"><div class="sg"><button id="sAge" data-act="card:research" aria-label="Age, season and clock: what you can research"><span id="sAgeT"></span></button><button id="sIdle" data-act="idlego" aria-label="Show an idle villager" hidden></button><button id="sStats" data-act="card:troops" aria-label="Research ready, people, soldiers: the Army card"></button></div><div class="sg"><button id="tkBell" data-act="tkmin" aria-label="Show messages" hidden><span id="tkBellN"></span></button><button id="scoreP" data-act="card:score" aria-label="Score and rank"><span id="scoreN">★0</span> <span id="scoreR"></span></button></div></div>
     <div class="tick" id="ticker"><button id="tkT" data-act="tklist" aria-label="Latest message"></button><button id="tkList" data-act="tklist" aria-label="Recent messages"></button><button id="tkMin" data-act="tkmin" aria-label="Hide messages"></button></div><div class="tkpop" id="tkPop" hidden></div>
   </header>
-  <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div></div></section>
+  <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div><div class="tr" id="huddle" hidden></div></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
+    <button class="fab" id="hudB" data-act="huddle" aria-label="Huddle: plan an attack"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
     
     <div id="strip" hidden></div>
@@ -4924,13 +4949,13 @@ const ZEAL = { cost: { g: 60 }, secs: 45, cd: 120, mul: 1.2 };
 const SAB = { burn: 0.6, stall: 40 };
 const FLANK = 1.3; // a blow from behind lands 30% harder
 // ───────────────────────── Combat you steer: nerve, flanks, charge and fall back, prisoners, conversion ─────────────────────────
-// Every soldier has nerve (0..1). Blows drain it by the share of health they take, times hit (a flank blow twice, a rear blow three times), being outnumbered drains it, losses beside it drain it;
+// Every soldier has nerve (0..1). Blows drain it by the share of health they take, times hit (a flank blow 1.5 times, a rear blow twice), being outnumbered drains it, losses beside it drain it;
 // quiet restores it, as do a wall or tower of its own, its Town Center, a priest, and Engagement at the War Council (a shorter rout). At zero it routs:
 // runs for home for a spell, takes more harm, and can be taken prisoner by any foe who lays a hand on it. Most real battles ended in a rout.
 const MORALE = {
-	hit: 1.2,
-	side: 2,
-	rear: 3,
+	hit: 0.8,
+	side: 1.5,
+	rear: 2,
 	kill: 0.04,
 	loss: 0.03,
 	odds: 0.02,
@@ -4941,7 +4966,8 @@ const MORALE = {
 	rout: 8,
 	routHit: 1.5,
 	routSpd: 1.3,
-	after: 0.35,
+	after: 0.6,
+	wild: 0.5, // animals hit soldiers at half strength and do not shake their nerve (Build 44)
 	capR: 10,
 };
 const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }; // a burst, then tired
@@ -5958,6 +5984,16 @@ const TRIGGERS = () => [
 		'Thumbs on the map, not in a menu: a phone is not a desk.',
 	],
 	[
+		'The huddle: four missions',
+		'The sword button above the bar plans an attack: Aim, tap the target, set how many Foot, Archers, Horse and Siege go, then Fire. Each mission (Alpha to Delta) shows its arrival time, then ACTIVE with its odds in colour. A flashing red tile is losing: open it to Reinforce from the idle reserve, or call it off. A flashing green tile has soldiers to spare: drag them to another mission or Ready.',
+		'A plan you can read: time, odds and who is where. The weather on the screen is counted in the time; a storm that comes later is bad luck.',
+	],
+	[
+		'Emergency: shelter and battle stations',
+		'The Army card and the red attack bar open it. Shelter puts villagers in the sturdiest shelter first, Battle stations sends soldiers into buildings (they add arrows) and a line toward the danger, All hands does both. Resume sends villagers back to work; soldiers stay until you give them an order.',
+		'One rule for everyone: the strongest walls first, the nearest hands first.',
+	],
+	[
 		'Teach',
 		`Research Veterans at the Barracks, build a School: a soldier of an older kind can be taught a newer one (spear to sword, archer to crossbow, catapult to trebuchet). It stands frozen at its post for the lesson; tuition is ${TEACH.tuition} gold an age, plus the difference in cost. Four learn at a time per School. Fire arrows, burning shot and petards set wooden buildings alight; rain halves the chance. Soldiers resting by a Castle, Barracks or Town Center heal.`,
 		'Marius retrained his veterans rather than raising new legions; the Spanish army kept wards for its garrisons from 1500.',
@@ -6946,6 +6982,18 @@ function route(u, tx, ty) {
 	return { x: P[u.pi].x, y: P[u.pi].y, direct: last };
 }
 // one step toward (x, y); true once within r. A building as the goal means "arrive beside it".
+// how far a unit walks in a second: its speed, its load, the side's season and weather (SP), its stance and formation, the ground and any charge
+const paceOf = (u, SP) =>
+	Math.min(stats(u.owner, u.kind).spd, u.cap || 1e9) *
+	(u.kind === 'vil' && u.carry > 0 ? 0.9 : 1) *
+	(u.sick > G.t ? 0.8 : 1) *
+	SP *
+	(u.stance === 1 ? STANCE[1].spd : 1) *
+	(FORM[formOf(u)].spd || 1) *
+	EVM.spd *
+	(u.owner === WILD ? 1 : groundSpd(u.owner, unitKeys(u.kind))) *
+	(G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1) *
+	(u.chg > G.t ? CHARGE.spd : u.tired > G.t ? CHARGE.tiredSpd : 1);
 function moveTo(u, x, y, dt, r, SP) {
 	if (u.stuck > G.t) return false; // in a pit, or slipped on ice
 	if (
@@ -6984,20 +7032,7 @@ function moveTo(u, x, y, dt, r, SP) {
 		dy = wp.y - u.y,
 		dd = hyp(dx, dy) || 1e-6;
 	const lim = wp.direct ? (stand ? dd : Math.max(0, dd - r)) : dd;
-	const m = Math.min(
-		Math.min(stats(o, u.kind).spd, u.cap || 1e9) *
-			(u.kind === 'vil' && u.carry > 0 ? 0.9 : 1) *
-			(u.sick > G.t ? 0.8 : 1) *
-			SP *
-			dt *
-			(u.stance === 1 ? STANCE[1].spd : 1) *
-			(FORM[formOf(u)].spd || 1) *
-			EVM.spd *
-			(o === WILD ? 1 : groundSpd(o, unitKeys(u.kind))) *
-			(G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1) *
-			(u.chg > G.t ? CHARGE.spd : u.tired > G.t ? CHARGE.tiredSpd : 1),
-		lim,
-	);
+	const m = Math.min(paceOf(u, SP) * dt, lim);
 	let nx = u.x + (dx / dd) * m,
 		ny = u.y + (dy / dd) * m;
 	if (blockedCell(gcell(nx, ny), o)) {
@@ -7183,6 +7218,9 @@ function blankGame(seed) {
 		form: BN.map(() => 0),
 		bnEdit: 0,
 		qs: { from: 'all', n: {} },
+		hud: { on: false, n: {} },
+		msn: [null, null, null, null],
+		emg: null,
 		intel: {},
 		fantasy: SET.fantasy,
 		mode: SET.mode,
@@ -8730,29 +8768,48 @@ function boxCut(r, n) {
 // lists it, and the game says when it gets there (Build 38: an attack that marched 90 seconds with no sign looked like it never left)
 // A group sent somewhere is an order: it has a line and a ring on the map, a count and a time on the Army card, and a message when everyone has stopped.
 // k is how much longer the walk is than the straight line (one path found when the order is given); the time shown is the slowest marcher's.
+// the centre of a group, how much longer the walk is than the straight line (one path found), and the slowest marcher's time to arrive: the weather on the screen is counted, nothing extra is added
+const centreOf = (S) => ({
+	x: S.reduce((s, u) => s + u.x, 0) / S.length,
+	y: S.reduce((s, u) => s + u.y, 0) / S.length,
+});
+function routeK(c, to) {
+	const p = astar(c.x, c.y, to.x, to.y, 0),
+		len = p.pts.reduce(
+			(s, q, i) => s + (i ? hyp(q.x - p.pts[i - 1].x, q.y - p.pts[i - 1].y) : hyp(q.x - c.x, q.y - c.y)),
+			0,
+		);
+	return p.pts.length ? clamp(len / Math.max(1, hyp(to.x - c.x, to.y - c.y)), 1, 3) : 1;
+}
+const etaOf = (S, to, k) =>
+	Math.max(0, ...S.map((u) => (hyp(u.x - to.x, u.y - to.y) * k) / Math.max(1, paceOf(u, sideSpd(0)))));
 function march(S, to, label) {
 	if (!S.length) return;
 	const id = (G.ordN = (G.ordN || 0) + 1);
-	let cx = 0,
-		cy = 0;
-	for (const u of S) {
-		cx += u.x;
-		cy += u.y;
-	}
-	cx /= S.length;
-	cy /= S.length;
-	const p = astar(cx, cy, to.x, to.y, 0),
-		len = p.pts.reduce(
-			(s, q, i) => s + (i ? hyp(q.x - p.pts[i - 1].x, q.y - p.pts[i - 1].y) : hyp(q.x - cx, q.y - cy)),
-			0,
-		),
-		k = p.pts.length ? clamp(len / Math.max(1, hyp(to.x - cx, to.y - cy)), 1, 3) : 1;
-	(G.ords = G.ords || {})[id] = { id, x: Math.round(to.x), y: Math.round(to.y), label, t: G.t, arrived: false, k };
+	(G.ords = G.ords || {})[id] = {
+		id,
+		x: Math.round(to.x),
+		y: Math.round(to.y),
+		label,
+		t: G.t,
+		arrived: false,
+		k: routeK(centreOf(S), to),
+	};
 	for (const u of S) {
 		u.ord = id;
 		u.mvT = G.t; // just ordered: counts as moving until it proves otherwise
 	}
 	say(`${S.length} marching: ${label}.`, '', 3);
+}
+// soldiers called home: off whatever they were doing and off their order
+function sendHome(S) {
+	for (const u of S) {
+		u.state = 'home';
+		u.fid = null;
+		u.focus = null;
+		u.tgt = null;
+		u.ord = undefined;
+	}
 }
 function incomingTick() {
 	// the nearest hostile group you can see that is heading for your buildings: how many, and how long until it arrives (Build 42)
@@ -8783,7 +8840,7 @@ function incomingTick() {
 		y: best.y,
 		n,
 		what: n > 1 ? 'enemy soldiers' : 'enemy soldier',
-		eta: Math.ceil(bd / Math.max(1, stats(best.owner, best.kind).spd)),
+		eta: Math.ceil(bd / Math.max(1, paceOf(best, sideSpd(best.owner)))),
 	};
 }
 function ordersTick() {
@@ -8811,7 +8868,7 @@ function ordersTick() {
 			const st = armyStatus(u);
 			if (st === 'march') {
 				walk++;
-				eta = Math.max(eta, (hyp(u.x - O.x, u.y - O.y) * (O.k || 1)) / Math.max(1, stats(0, u.kind).spd));
+				eta = Math.max(eta, etaOf([u], O, O.k || 1));
 			} else if (st === 'fight') fight++;
 			else if (st === 'rout') rout++;
 		}
@@ -8826,6 +8883,7 @@ function ordersTick() {
 		} // every one has stopped: a straggler that never got there is counted as stopped too
 		O.eta = O.arrived ? 0 : Math.ceil(eta);
 	}
+	missionsTick();
 	for (const u of G.units) if (u.ord && (!G.ords[u.ord] || u.state === 'home')) u.ord = undefined; // called home: no longer on that order
 }
 // ═════ 12-sim-core.js: the step, formations, deaths, victory, buildings built, research learned ═════
@@ -8841,6 +8899,15 @@ function recount() {
 	for (const n of G.nodes) n.wk = 0;
 	for (const u of G.units) if (u.node && u.kind === 'vil') u.node.wk++;
 }
+// what the season and the weather take off a march, for one side: moveTo and the mission clocks read the same number
+function sideSpd(o) {
+	const sp = season().spd * (hz('winter') && season().name === 'Winter' ? 0.8 : 1),
+		wsp = WEATHER[G.wx].spd || 1;
+	return o === WILD
+		? sp * wsp
+		: (1 - (1 - sp) * fxv(o, 'mud').m * (season().name === 'Winter' ? 1 - Math.min(1, fxv(o, 'cold').a) : 1)) *
+				(1 - (1 - wsp) * (G.wx === 'rain' ? 1 - Math.min(1, fxv(o, 'wet').a) : 1));
+}
 function step(dt) {
 	if (G.over) return;
 	G.t += dt;
@@ -8851,14 +8918,7 @@ function step(dt) {
 	buildGrid();
 	if (G.navDirty) navRebuild();
 	NAV.budget = 4;
-	const sp = season().spd * (hz('winter') && season().name === 'Winter' ? 0.8 : 1),
-		wsp = WEATHER[G.wx].spd || 1,
-		SP = (o) =>
-			o === WILD
-				? sp * wsp
-				: (1 - (1 - sp) * fxv(o, 'mud').m * (season().name === 'Winter' ? 1 - Math.min(1, fxv(o, 'cold').a) : 1)) *
-					(1 - (1 - wsp) * (G.wx === 'rain' ? 1 - Math.min(1, fxv(o, 'wet').a) : 1));
-	const SPS = [SP(0), SP(1), SP(2), SP(3), SP(4)];
+	const SPS = [0, 1, 2, 3, 4].map(sideSpd);
 	for (const b of G.blds) if (b.hp > 0) bldTick(b, dt);
 	econTick(dt);
 	if (G.tick % 3 === 0) formUp();
@@ -9439,7 +9499,7 @@ function vilTick(u, dt, SP) {
 			u.inside = false;
 			return;
 		}
-		if ((G.tick + u.id) % 10 === 0 && !nearU(rb, SHELTER.clear, (v) => v.thr && atWar(u.owner, v.owner))) {
+		if (!u.emg && (G.tick + u.id) % 10 === 0 && !nearU(rb, SHELTER.clear, (v) => v.thr && atWar(u.owner, v.owner))) {
 			u.inside = false;
 			u.scared = false;
 			u.hid = 0;
@@ -9459,7 +9519,8 @@ function vilTick(u, dt, SP) {
 				else foe++;
 			}
 		});
-		u.scared = !!kk && (foe > 0 || (wild > 0 && (wild >= SHELTER.raid || G.t - (u.hurtT || -99) < SHELTER.hurt)));
+		u.scared =
+			!!kk && (u.emg || foe > 0 || (wild > 0 && (wild >= SHELTER.raid || G.t - (u.hurtT || -99) < SHELTER.hurt)));
 		if (u.scared && !was) {
 			const tw = nearest(
 				G.blds,
@@ -9477,6 +9538,10 @@ function vilTick(u, dt, SP) {
 		}
 	}
 	if (u.scared && kk) {
+		if (u.safe) {
+			moveTo(u, u.safe.x, u.safe.y, dt, 6, SP); // no room inside: waits behind the Town Center
+			return;
+		}
 		if (moveTo(u, rb.x, rb.y, dt, BLD[rb.kind].fp * 5 + 4, SP)) {
 			u.inside = true;
 			setJob(u, u.job);
@@ -10085,6 +10150,29 @@ function solTick(u, dt, SP) {
 		if (G.t >= u.schoolT) graduate(u);
 		return;
 	} // at the School: it stands, learns, and comes out a newer soldier
+	if (u.state === 'garrison') {
+		// Battle stations: it walks to its building, goes inside and adds an arrow, and stays until given a new order
+		const b = G.blds.find((x) => x.id === u.gar && x.hp > 0 && x.prog >= 1);
+		if (!b) u.state = 'home';
+		else {
+			u.idleT = 0;
+			if (!u.inside && moveTo(u, b.x, b.y, dt, BLD[b.kind].fp * 5 + 4, SP)) {
+				u.inside = true;
+				u.hid = b.id;
+			}
+			return;
+		}
+	}
+	if (u.inside) {
+		// a new order: out of the building
+		const b = G.blds.find((x) => x.id === u.hid);
+		u.inside = false;
+		u.hid = 0;
+		if (b) {
+			u.x = b.x + u.ox * 0.8;
+			u.y = b.y + 30;
+		}
+	}
 	if (
 		u.hp < u.max &&
 		!u.tgt &&
@@ -10681,11 +10769,12 @@ function hurt(o, a, t, base) {
 	} else {
 		if (a) d *= vsMul(a, t);
 		if (isSoldier(t)) {
+			if (o === WILD && t.owner !== WILD) d *= MORALE.wild;
 			if (t.state === 'rout') d *= MORALE.routHit;
 			else if (t.fb > G.t) d *= FALLBACK.hit;
 			const dot = a && t.fx !== undefined ? ((a.x - t.x) * t.fx + (a.y - t.y) * t.fy) / (dist(a, t) || 1) : 1;
-			t.mor -= ((MORALE.hit * d) / t.max) * (dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
-		} // nerve: a blow from the side counts twice, from behind three times
+			if (o !== WILD) t.mor -= ((MORALE.hit * d) / t.max) * (dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
+		} // nerve: a blow from the side counts half again, from behind twice; animals do not shake it
 		if (a && a.native && !isB && onLand(t.x, t.y) && hyp(t.x - MID, t.y - MID) > THRONE.isle - 10) d *= NATIVE.ambush; // the Natives at the causeways: the ground is theirs
 		if (a && A.gun && hasTag(t.kind, 'native')) d *= NATIVE.gunHit; // gunpowder against hide shields
 		if (isSoldier(t) && t.owner !== WILD) {
@@ -15848,6 +15937,7 @@ function draw() {
 	ripDraw();
 	drawEvents(z);
 	drawOrders(z);
+	drawReticle();
 	if (G.rally0) flagAt(SX(G.rally0.x), SY(G.rally0.y), G.P[0].color, z);
 	drawTracers();
 	drawLight(z, inView);
@@ -16753,26 +16843,82 @@ function drawFind(f) {
 			);
 		}
 	} else if (f.kind === 'vagabonds') {
+		// a drifters' camp: a stone ring round a small fire, two logs, two bedrolls laid at an angle and a lean-to
 		if (!f.done) {
-			E_(0, 2, 3, 1.2, '#3a2a1a');
-			if (!lessMotion) E_(0, 0, 1.4, 2.2, 'rgba(250,150,40,.85)');
+			E_(0, 4, 20, 7, 'rgba(0,0,0,.2)');
 			P_(
 				[
-					[-10, 3],
-					[-4, 3],
-					[-4, 1],
-					[-10, 1],
+					[12, 5],
+					[18, -9],
+					[25, 5],
 				],
-				'#6b4a3a',
+				'#8a7650',
+			); // the lean-to
+			P_(
+				[
+					[16, 5],
+					[18, -3],
+					[22, 5],
+				],
+				'#4a3c26',
 			);
 			P_(
 				[
-					[5, 4],
-					[11, 4],
-					[11, 2],
-					[5, 2],
+					[-19, 7],
+					[-9, 4],
+					[-7, 7],
+					[-17, 10],
+				],
+				'#6b4a3a',
+			); // a bedroll and its pillow
+			E_(-17, 6, 2.4, 1.6, '#c9b28a');
+			P_(
+				[
+					[-12, 11],
+					[-3, 8],
+					[-1, 11],
+					[-10, 14],
 				],
 				'#4a5a6a',
+			);
+			E_(-10, 10, 2.4, 1.6, '#c9b28a');
+			E_(0, 3, 6, 2.6, '#3a2418');
+			for (let i = 0; i < 8; i++)
+				E_(Math.cos(i * 0.785) * 8, 3 + Math.sin(i * 0.785) * 3.2, 1.9, 1.3, i % 2 ? '#8a8a82' : '#a09e94');
+			P_(
+				[
+					[-6, 4],
+					[5, 1],
+					[6, 3],
+					[-5, 6],
+				],
+				'#6b4a2a',
+			);
+			P_(
+				[
+					[-5, 1],
+					[6, 4],
+					[5, 6],
+					[-6, 3],
+				],
+				'#7d5a34',
+			);
+			const fl = lessMotion ? 0 : Math.sin(performance.now() / 110 + f.id) * 1.2;
+			P_(
+				[
+					[-3, 3],
+					[0, -8 + fl],
+					[3, 3],
+				],
+				'#ff9a2a',
+			);
+			P_(
+				[
+					[-1.4, 3],
+					[0, -3.5 + fl * 0.5],
+					[1.4, 3],
+				],
+				'#ffe27a',
 			);
 		}
 	}
@@ -17832,6 +17978,7 @@ function tapAt(sx, sy) {
 		clampCam();
 		return;
 	}
+	if (G.hud.aim) return aimAt(sx, sy); // Aim: the next tap is the target
 	const h = hitAt(sx, sy),
 		key = h.t === 'ground' ? '' : h.t + h.e.id,
 		now = performance.now(),
@@ -18069,6 +18216,7 @@ function boxPick(d) {
 function openCard(c) {
 	hideStrip();
 	G.techTip = null;
+	G.qs = { from: 'all', n: {} }; // the Attack-with counts start fresh on every card
 	G.card = c;
 	G.infoOpen = false;
 	G.confirm = null;
@@ -18268,7 +18416,8 @@ function keepAgeBtn() {
 // what one of yours is doing, in words read from its state; and what it has done in its life
 function statusOf(u) {
 	const nm = (b) => bldName(0, b.kind).toLowerCase();
-	if (u.inside) return 'sheltering inside';
+	if (u.inside) return u.state === 'garrison' ? 'DEFENDING inside' : 'sheltering inside';
+	if (u.state === 'garrison') return 'DEFENDING: going in';
 	if (u.state === 'school') return `learning at the School, ${Math.ceil(u.schoolT - G.t)} s`;
 	if (u.kind === 'vil') {
 		if (u.scared) return 'running for shelter';
@@ -18416,9 +18565,10 @@ const qsPool = () =>
 function qsPick(to) {
 	const by = {};
 	for (const u of qsPool()) (by[u.kind] = by[u.kind] || []).push(u);
-	const out = [];
+	const out = [],
+		key = (u) => (idleSoldier(u) ? 0 : 1e6) + dist(u, to); // idle soldiers first, then the nearest busy ones
 	for (const k in by) {
-		by[k].sort((a, b) => dist(a, to) - dist(b, to));
+		by[k].sort((a, b) => key(a) - key(b));
 		out.push(...by[k].slice(0, Math.min(by[k].length, G.qs.n[k] ?? by[k].length)));
 	}
 	return out;
@@ -18443,10 +18593,10 @@ function qsHTML(verb, label, to) {
 	const by = {};
 	for (const u of qsPool()) by[u.kind] = (by[u.kind] || 0) + 1;
 	if (!Object.keys(by).length)
-		return (
-			h +
-			`<p>No soldiers${G.qs.from === 'all' ? ' yet: train them at a Barracks, Range or Stable' : ' in ' + BN[G.qs.from]}.</p>`
-		);
+		return verb.startsWith('qgo')
+			? h // a find with no soldiers to send: nothing to say
+			: h +
+					`<p>No soldiers${G.qs.from === 'all' ? ' yet: train them at a Barracks, Range or Stable' : ' in ' + BN[G.qs.from]}.</p>`;
 	h += Object.entries(by)
 		.map(
 			([k, have]) =>
@@ -18477,6 +18627,7 @@ const sendable = () => armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== '
 const ARMY_STILL = 2.5;
 function armyStatus(u) {
 	if (u.state === 'rout') return 'rout';
+	if (u.state === 'garrison') return 'hold'; // defending inside a building
 	if (u.tgt && u.tgt.hp > 0) return 'fight';
 	if (u.state === 'attack') return 'march';
 	if (u.state === 'goto') {
@@ -18490,7 +18641,7 @@ const idleSoldier = (u) => {
 	const s = armyStatus(u);
 	return s === 'hold' || s === 'rally';
 };
-// All, a half, a quarter, the nearest five, ten, twenty: idle soldiers only, so a group on the march is never pulled off its way (Build 38; Build 42: counted soldier by soldier)
+// Rest, a half, a quarter, the nearest five, ten, twenty: idle soldiers only, so a group on the march is never pulled off its way. All is everyone but guards (Build 44)
 const free = () => sendable().filter(idleSoldier);
 // why nobody can be sent: nobody exists, or who is busy doing what
 function freeWhy() {
@@ -18520,27 +18671,20 @@ function guardRow(t, id) {
 	);
 }
 function sendPick(from, to) {
-	// 'q' a quarter of each type, 'all', 'n8' the nearest eight, or a battalion by its number
-	if (from === 'h') {
-		const A = free(),
-			by = {};
-		for (const u of A) (by[u.kind] = by[u.kind] || []).push(u);
-		const out = [];
-		for (const k in by)
-			out.push(...by[k].sort((p, q) => dist(p, to) - dist(q, to)).slice(0, Math.ceil(by[k].length / 2)));
-		return out;
-	} // half of each type, nearest first
-	if (typeof from === 'string' && from[0] === 'n')
+	// 'all' everyone but guards, 'rest' the idle ones, 'h' half and 'q' a quarter of each idle type, 'n8' the nearest eight idle, or a battalion by its number
+	if (from === 'all') return sendable();
+	if (typeof from === 'number') return sendable().filter((u) => u.bn === from);
+	if (from === 'rest') return free();
+	if (from[0] === 'n')
 		return free()
 			.sort((p, q) => dist(p, to) - dist(q, to))
 			.slice(0, Number(from.slice(1)));
-	const A = typeof from === 'number' ? sendable() : free(),
-		by = {};
-	for (const u of A) if (from === 'q' || from === 'all' || u.bn === from) (by[u.kind] = by[u.kind] || []).push(u);
-	const out = [];
+	const by = {},
+		out = [];
+	for (const u of free()) (by[u.kind] = by[u.kind] || []).push(u);
 	for (const k in by) {
 		const a = by[k].sort((p, q) => dist(p, to) - dist(q, to));
-		out.push(...a.slice(0, from === 'q' ? Math.ceil(a.length / 4) : a.length));
+		out.push(...a.slice(0, Math.ceil(a.length / (from === 'h' ? 2 : 4))));
 	}
 	return out;
 }
@@ -18566,16 +18710,18 @@ function showStrip(sx, sy, x, y, step) {
 	else if (step === 1)
 		el.innerHTML =
 			btn(`sendto:h,${at}`, '½', String(n('h')), 'ic') +
-			btn(`sendto:all,${at}`, 'All', `${nAll} idle`, 'ic go thumb') +
+			btn(`sendto:all,${at}`, 'All', String(nAll), 'ic go thumb') +
 			ic('stripmore', '⋯', 'More ways to send') +
 			ic('nostrip', ICON.close, 'Cancel');
 	// three taps in one spot: open, sword, All (Albert: a fast dispatch)
 	else {
-		const bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
+		const nRest = n('rest'),
+			bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
 		el.innerHTML =
 			btn(`sendto:q,${at}`, '¼', String(n('q'))) +
+			btn(`sendto:rest,${at}`, 'Rest', `${nRest} idle`) +
 			[5, 10, 20]
-				.filter((k) => nAll > k)
+				.filter((k) => nRest > k)
 				.map((k) => btn(`sendto:n${k},${at}`, String(k), 'nearest'))
 				.join('') +
 			bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') +
@@ -19671,6 +19817,7 @@ const CARDS = {
 							`<p data-act="ordpick:${O.id}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`,
 					)
 					.join(''); // tap a line: that group is picked, and the camera goes to it
+		h += acts(btn('card:emergency', 'Emergency', 'shelter · battle stations · all hands', G.emg ? 'warn' : ''));
 		if (S.length && hasCmd())
 			h +=
 				sec('Orders go to') +
@@ -19931,6 +20078,7 @@ function renderCard() {
 	}
 	const cc = G.card;
 	$('card').classList.toggle('setup', cc.type === 'setup');
+	$('card').classList.toggle('hud', cc.type === 'mission' || cc.type === 'emergency'); // the covert look of the attack bar
 	$('card').classList.toggle(
 		'full',
 		FULL.has(cc.type) || (cc.type === 'bld' && (G.blds.find((b) => b.id === cc.id) || {}).kind === 'market'),
@@ -20348,6 +20496,7 @@ function buildPanel() {
 			(r) =>
 				`<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`,
 		).join('');
+	$('hudB').innerHTML = ICON.sword;
 	$('tkList').innerHTML = ICON.list;
 	$('tkMin').innerHTML = ICON.up;
 	$('homeB').innerHTML = ICON.home;
@@ -20615,6 +20764,7 @@ function ui(force) {
 		);
 		$('sAge').classList.toggle('glow', ready > 0 && !G.card);
 	} // gold when the next age or any research is ready: tap it for everything you can research
+	huddleUI();
 	const V = unitsOf(0, 'vil');
 	for (const r of JOBS) {
 		let n = 0;
@@ -20831,7 +20981,7 @@ function tick() {
 			tick.h = h;
 			el.innerHTML = h;
 		}
-		el.dataset.act = A.at ? `jump:${Math.round(A.at.x)},${Math.round(A.at.y)}` : 'tklist';
+		el.dataset.act = A.hot ? 'card:emergency' : A.at ? `jump:${Math.round(A.at.x)},${Math.round(A.at.y)}` : 'tklist';
 		$('ticker').className = 'tick alert ' + (A.now ? 'now' : 'soon') + (A.hot ? ' hot' : '');
 	} else {
 		tick.h = '';
@@ -21216,19 +21366,72 @@ const PLAY = {
 	},
 	sendto(a) {
 		const [f, x, y] = a.split(','),
-			to = { x: Number(x), y: Number(y) },
-			S = sendPick(/^(q|h|all|n\d+)$/.test(f) ? f : Number(f), to);
-		if (!S.length) say(freeWhy(), '', 4);
-		S.forEach((u) => {
-			u.state = 'goto';
-			u.px = to.x;
-			u.py = to.y;
-			u.idleT = 0;
-			u.focus = null;
-		});
-		march(S, to, coord(to.x, to.y));
-		if (S.length) ripple(to.x, to.y, '#ffd35e');
+			e = { x: Number(x), y: Number(y) },
+			S = sendPick(/^(q|h|all|rest|n\d+)$/.test(f) ? f : Number(f), e);
+		if (S.length) order(S, { t: 'ground', e });
+		else say(freeWhy(), '', 4);
 		hideStrip();
+	},
+	emg(a) {
+		emgStart(a);
+		hudOpen(false);
+		ACT.home();
+		closeCard();
+	},
+	emgresume() {
+		emgResume();
+		closeCard();
+	},
+	huddle() {
+		hudOpen(!G.hud.on);
+	},
+	hready() {
+		const H = G.hud;
+		H.view = !H.view;
+		H.aim = false;
+		H.carry = null;
+	},
+	haim() {
+		G.hud.aim = !G.hud.aim;
+	},
+	hudc(a) {
+		delete G.hud.n[a]; // a tap on the class: all the idle ones again
+	},
+	hudn(a) {
+		const [c, d] = a.split(','),
+			pool = hudPool(),
+			have = hudHave(pool, Number(c));
+		G.hud.n[c] = clamp(hudN(pool, Number(c)) + (d === '+' ? 1 : -1), 0, have);
+	},
+	hfire() {
+		hudFire();
+	},
+	habort() {
+		hudCancel();
+	},
+	habortall() {
+		hudAbortAll();
+	},
+	hdel(a) {
+		hudAbort(Number(a));
+	},
+	mcard(a) {
+		if (performance.now() - (G.hud.dragged || -1e9) > 400) hudTile(Number(a));
+	},
+	hslot(a) {
+		if (performance.now() - (G.hud.dragged || -1e9) > 400) hudTile(Number(a));
+	},
+	hudrein(a) {
+		hudReinforce(Number(a));
+	},
+	hspare(a) {
+		const m = G.msn[Number(a)];
+		if (m && m.spare && m.spare.length) {
+			G.hud.carry = Number(a);
+			G.hud.view = true;
+			closeCard();
+			say('Tap a tile, or Ready to send them home.', '', 4);
+		}
 	},
 	nostrip() {
 		hideStrip();
@@ -21268,45 +21471,18 @@ const PLAY = {
 	},
 	qgo(a) {
 		const [x, y] = a.split(',').map(Number),
-			S = qsPick({ x, y });
-		S.forEach((u) => {
-			u.state = 'goto';
-			u.px = x;
-			u.py = y;
-			u.idleT = 0;
-			u.focus = null;
-		});
-		march(S, { x, y }, coord(x, y));
-		if (S.length) ripple(x, y, '#ffd35e');
+			e = { x, y };
+		order(qsPick(e), { t: 'ground', e });
 		closeCard();
 	},
 	qatk(a) {
-		const b = G.blds.find((x) => x.id === Number(a) && x.hp > 0);
-		if (!b) return;
-		const S = qsPick(b);
-		S.forEach((u) => {
-			u.state = 'attack';
-			u.target = b.owner;
-			u.bid = b.id;
-			u.focus = null;
-		});
-		march(S, b, `the ${bldName(b.owner, b.kind)} of ${G.P[b.owner].name}`);
-		if (S.length) ripple(b.x, b.y, '#ff8a70');
+		const e = G.blds.find((x) => x.id === Number(a) && x.hp > 0);
+		if (e) order(qsPick(e), { t: 'bld', e });
 		closeCard();
 	},
 	qfoe(a) {
-		const v = G.units.find((x) => x.id === Number(a) && x.hp > 0);
-		if (!v) return;
-		const S = qsPick(v);
-		S.forEach((u) => {
-			u.state = 'goto';
-			u.px = v.x;
-			u.py = v.y;
-			u.idleT = 0;
-			u.focus = v;
-		});
-		march(S, v, G.P[v.owner].name);
-		if (S.length) ripple(v.x, v.y, '#ff8a70');
+		const e = G.units.find((x) => x.id === Number(a) && x.hp > 0);
+		if (e) order(qsPick(e), { t: 'unit', e });
 		closeCard();
 	},
 	bned(a) {
@@ -21396,14 +21572,7 @@ const PLAY = {
 		say('Holding here.', '', 2);
 	},
 	precall() {
-		for (const u of picked())
-			if (isSoldier(u)) {
-				u.state = 'home';
-				u.fid = null;
-				u.focus = null;
-				u.tgt = null;
-				u.ord = undefined;
-			}
+		sendHome(picked().filter(isSoldier));
 		say('Called home.', '', 2);
 	},
 	pvil() {
@@ -21650,10 +21819,7 @@ const PLAY = {
 		G.rally0 = G.rally0 ? null : { x, y };
 	},
 	recall() {
-		orderSet().forEach((u) => {
-			u.state = 'home';
-			u.fid = null;
-		});
+		sendHome(orderSet());
 		closeCard();
 	},
 	attack(a) {
@@ -21998,6 +22164,8 @@ function saveGame(force) {
 			wayI: G.wayI,
 			wonder: G.wonder,
 			ords: G.ords || {},
+			msn: G.msn,
+			emg: G.emg,
 			ordN: G.ordN || 0,
 			land: G.land || null,
 			warAt: G.warAt || {},
@@ -22082,6 +22250,9 @@ function loadGame(S) {
 		form: S.form || BN.map(() => 0),
 		bnEdit: 0,
 		qs: { from: 'all', n: {} },
+		hud: { on: false, n: {} },
+		msn: S.msn || [null, null, null, null],
+		emg: S.emg || null,
 		intel: S.intel || {},
 		fantasy: !!S.fantasy,
 		mode: S.mode || 'conquest',
@@ -24485,6 +24656,603 @@ function nativesTick(dt) {
 	// the holder's score and the clock
 	if (held && G.P[G.throne.owner].alive) G.P[G.throne.owner].gathered += (THRONE.score * SCORE.wealth) / 12; // 50 score a minute, as wealth, in twelve beats
 }
+// ═════ 39-huddle.js: the huddle: four missions you plan, fire, watch and call off, over the same bar the jobs use ═════
+// The sword button swaps the job bar for the attack bar. Column 1: Ready over Aim, each with a light (red: not set, green: set).
+// Columns 2-5: while drafting, how many Foot, Archers, Horse and Siege go (the idle ones); while viewing, the four missions (Alpha to Delta).
+// Column 6: Fire over Abort. A mission is a march order (G.ords) with a slot (G.msn) that keeps its promise: when it should arrive, how the fight goes, how it ended.
+const MSN = ['Alpha', 'Bravo', 'Charlie', 'Delta'];
+const CLS = [
+	['foot', 'Foot', 'barracks', 'foot'],
+	['arch', 'Arch', 'range', 'archers'],
+	['horse', 'Horse', 'stable', 'riders'],
+	['siege', 'Siege', 'siege', 'siege'],
+];
+const HUD = {
+	near: 140, // a fight is what hostile soldiers within this reach of the group make
+	lose: 0.4, // a tile flashes red below this chance, and stops above clear
+	clear: 0.5,
+	win: 0.75, // green above this: the extra soldiers can be spared
+	keep: 0.65, // sparing never takes the chance below this
+	smooth: 0.3, // the chance moves a third of the way each second: about three seconds to settle
+	gap: 8, // reinforcements arriving within this many seconds of each other are one wave
+	waves: 3,
+};
+const clsOf = (u) => CLS.findIndex((c) => c[2] === UNIT[u.kind].at);
+const mUnits = (m) => G.units.filter((u) => u.owner === 0 && u.ord === m.ord && u.hp > 0);
+const hostile = (v) =>
+	v.owner !== 0 &&
+	v.hp > 0 &&
+	!v.inside &&
+	atWar(0, v.owner) &&
+	(isSoldier(v) || (v.owner === WILD && UNIT[v.kind].tick === 'wild'));
+function foesNear(c) {
+	const out = [];
+	unitsNear(c, HUD.near, (v) => hostile(v) && out.push(v));
+	return out;
+}
+const powerSum = (L) => L.reduce((s, u) => s + unitPower(u), 0);
+// the chance to win: the engine every odds line uses (power against power, the matchup of arms), as r²/(1+r²)
+function chance(S, foes) {
+	const r = (powerSum(S) / Math.max(1, powerSum(foes))) * matchup(S, foes);
+	return (r * r) / (1 + r * r);
+}
+const dpsOf = (L) => L.reduce((s, v) => s + dmgOf(v) / (UNIT[v.kind].cd || 1.5), 0);
+const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const wxWord = () => (G.wx !== 'clear' && WEATHER[G.wx] ? WEATHER[G.wx].name : season().name);
+
+// ── the draft: who goes, and where
+const hudPool = () =>
+	(G.hud.pre ? G.hud.pre.map((id) => G.units.find((u) => u.id === id)).filter((u) => u && u.hp > 0) : free()).filter(
+		(u) => clsOf(u) >= 0,
+	);
+const hudHave = (pool, c) => pool.filter((u) => clsOf(u) === c).length;
+const hudN = (pool, c) => Math.min(hudHave(pool, c), G.hud.n[c] ?? 1e9);
+function hudPick() {
+	const pool = hudPool(),
+		to = G.hud.h && G.hud.h.e;
+	return CLS.flatMap((_, c) => {
+		const a = pool.filter((u) => clsOf(u) === c);
+		if (to) a.sort((p, q) => dist(p, to) - dist(q, to));
+		return a.slice(0, hudN(pool, c));
+	});
+}
+const hudSlot = () => G.hud.slot ?? G.msn.findIndex((m) => !m);
+// the time the draft would take to arrive, worked out again when the target, the numbers or (every few seconds) the weather change
+function hudEta() {
+	const H = G.hud,
+		S = hudPick();
+	if (!H.h || !S.length) return 0;
+	const key = `${H.h.e.x | 0},${H.h.e.y | 0},${S.length},${G.wx},${(G.t / 3) | 0}`;
+	if (H.etaKey !== key) {
+		H.etaKey = key;
+		H.eta = etaOf(S, H.h.e, routeK(centreOf(S), H.h.e));
+	}
+	return H.eta;
+}
+function aimAt(sx, sy) {
+	const H = G.hud;
+	let h = hitAt(sx, sy);
+	if (h.t === 'unit' && h.e.owner === 0) h = { t: 'ground', e: { x: h.e.x, y: h.e.y } }; // your own: just the spot
+	H.h = h;
+	H.aim = false;
+	H.etaKey = '';
+	ripple(h.e.x, h.e.y, '#ffb23d');
+	feel('tick');
+}
+function hudOpen(on) {
+	const H = G.hud;
+	H.on = on;
+	H.aim = H.view = false;
+	H.h = H.pre = H.slot = H.carry = H.sel = null;
+	H.n = {};
+	if (on) closeCard();
+}
+// Fire: the draft marches as one order and takes the slot
+function hudFire() {
+	const H = G.hud,
+		slot = hudSlot(),
+		S = hudPick();
+	if (slot < 0 || G.msn[slot]) return say('All four missions are out.', '', 3);
+	if (!H.h || !S.length) return;
+	const before = G.ordN || 0;
+	order(S, H.h);
+	if ((G.ordN || 0) === before) return; // refused: the reason was said
+	const O = G.ords[G.ordN];
+	G.msn[slot] = {
+		name: MSN[slot],
+		ord: G.ordN,
+		n0: S.length,
+		what: H.h.t === 'unit' || (H.h.t === 'bld' && H.h.e.owner !== 0) ? 'Attack' : 'Go to',
+		label: O.label,
+		x: O.x,
+		y: O.y,
+		t: G.t,
+		due: G.t + etaOf(S, O, O.k),
+		st: 'go',
+		odds: 0.5,
+	};
+	H.h = H.pre = H.slot = null;
+	H.n = {};
+	H.view = true;
+	H.sel = slot;
+	feel('thock');
+}
+// a mission leaves: the soldiers go home, the slot is free
+function hudAbort(slot) {
+	const m = G.msn[slot];
+	if (!m) return;
+	sendHome(mUnits(m));
+	G.msn[slot] = null;
+	if (G.hud.sel === slot) G.hud.sel = null;
+	if (G.card && G.card.type === 'mission') closeCard();
+	say(`${m.name} called home.`, '', 3);
+}
+function hudAbortAll() {
+	G.msn.forEach((_, i) => hudAbort(i));
+}
+// the draft's Abort: clears the draft, or (viewing) the picked mission
+function hudCancel() {
+	const H = G.hud;
+	if (H.view && H.sel !== null && G.msn[H.sel]) hudAbort(H.sel);
+	else {
+		H.h = H.pre = H.slot = null;
+		H.n = {};
+		H.aim = false;
+	}
+}
+
+// ── each second: where a mission is, how it goes, what to say
+function missionsTick() {
+	G.msn.forEach((m, i) => {
+		if (!m || m.end) return;
+		const S = mUnits(m),
+			O = G.ords && G.ords[m.ord];
+		if (!S.length) {
+			m.end = G.t;
+			m.st = 'lost';
+			m.flash = null;
+			say(`${m.name} is lost.`, 'warn', 4);
+			return;
+		}
+		const c = centreOf(S),
+			foes = foesNear(c),
+			walk = S.filter((u) => armyStatus(u) === 'march').length,
+			fight = S.some((u) => armyStatus(u) === 'fight');
+		m.eta = O && !O.arrived ? O.eta || 0 : 0;
+		if (fight || (!walk && foes.length)) m.st = 'act';
+		else if (!walk) {
+			m.st = 'done';
+			m.end = G.t;
+			m.flash = null;
+			m.late = Math.max(0, Math.round(G.t - m.due));
+			return;
+		} else m.st = 'go';
+		if (m.st !== 'act') return;
+		m.odds += (chance(S, foes) - m.odds) * HUD.smooth;
+		if (m.odds < HUD.lose && m.flash !== 'lose') {
+			m.flash = 'lose';
+			say(`${m.name} is losing.`, 'warn', 4);
+		} else if (m.flash === 'lose' && m.odds > HUD.clear) m.flash = null;
+		m.spare = [];
+		if (m.odds > HUD.win) {
+			m.flash = 'win';
+			let rest = S.slice();
+			for (const u of S.slice().sort((p, q) => unitPower(p) - unitPower(q))) {
+				const next = rest.filter((v) => v !== u);
+				if (!next.length || chance(next, foes) < HUD.keep) break;
+				rest = next;
+				m.spare.push(u.id);
+			}
+		} else if (m.flash === 'win') m.flash = null;
+	});
+}
+// who can still reach a fight in time, fastest first, and how many it takes to even it: waves by arrival
+function reinforcePlan(m) {
+	const S = mUnits(m);
+	if (!S.length) return null;
+	const c = centreOf(S),
+		foes = foesNear(c);
+	if (!foes.length) return null;
+	const res = free().filter((u) => !S.includes(u)),
+		k = res.length ? routeK(centreOf(res), c) : 1,
+		survive = S.reduce((s, u) => s + u.hp, 0) / Math.max(1, dpsOf(foes)),
+		mu = matchup(S, foes),
+		foe = Math.max(1, powerSum(foes)),
+		cand = res.map((u) => ({ u, t: (dist(u, c) * k) / Math.max(1, paceOf(u, sideSpd(0))) })).sort((p, q) => p.t - q.t),
+		go = [];
+	let pow = powerSum(S);
+	const even = (pow / foe) * mu >= 1;
+	for (const r of cand) {
+		if (r.t > survive || (pow / foe) * mu >= 1) break; // too late for the rest, or the fight is even
+		go.push(r);
+		pow += unitPower(r.u);
+	}
+	const waves = [];
+	for (const r of go) {
+		const w = waves[waves.length - 1];
+		if (w && (r.t - w.t < HUD.gap || waves.length === HUD.waves)) w.list.push(r);
+		else waves.push({ t: r.t, list: [r] });
+	}
+	return { c, go: go.map((r) => r.u), waves, even, late: !go.length && !even && cand.length > 0 };
+}
+function waveLine(plan) {
+	const word = (list) => {
+		const k = new Set(list.map((r) => clsOf(r.u)));
+		return k.size === 1 ? CLS[[...k][0]][3] : 'soldiers';
+	};
+	return plan.waves
+		.map((w, i) => `${w.list.length} ${i ? 'more' : word(w.list)} ${i ? 'by' : 'in'} ${mmss(w.t)}`)
+		.join(', ');
+}
+// units moved into a mission (a reinforcement, a spare soldier from another): they march to its middle and join its order
+function hudJoin(S, m) {
+	if (!S.length) return;
+	const c = centreOf(mUnits(m)),
+		before = G.ordN || 0;
+	order(S, { t: 'ground', e: c });
+	if ((G.ordN || 0) === before) return;
+	const id = G.ordN;
+	for (const u of S) u.ord = m.ord;
+	delete G.ords[id];
+}
+function hudReinforce(slot) {
+	const m = G.msn[slot],
+		plan = m && reinforcePlan(m);
+	if (!plan || !plan.go.length) return say('Too late: nobody can get there in time.', '', 3);
+	hudJoin(plan.go, m);
+	say(`${plan.go.length} reinforce ${m.name}.`, 'good', 3);
+}
+const spareOf = (m) => (m.spare || []).map((id) => G.units.find((u) => u.id === id)).filter((u) => u && u.hp > 0);
+// spare soldiers go: to another mission (reinforce), an empty slot (a new draft of just them), or Ready (home)
+function hudDrop(from, to) {
+	const m = G.msn[from],
+		S = m ? spareOf(m) : [];
+	G.hud.carry = null;
+	if (!S.length) return;
+	if (to === 'home') {
+		sendHome(S);
+		say(`${S.length} home from ${m.name}.`, '', 3);
+	} else if (G.msn[to] && to !== from) {
+		hudJoin(S, G.msn[to]);
+		say(`${S.length} from ${m.name} to ${G.msn[to].name}.`, 'good', 3);
+	} else if (!G.msn[to]) {
+		const H = G.hud;
+		H.pre = S.map((u) => u.id);
+		H.n = {};
+		H.h = null;
+		H.slot = to;
+		H.view = false;
+		H.aim = true;
+		say(`Tap where ${MSN[to]} goes.`, '', 3);
+	}
+	m.spare = [];
+	m.flash = null;
+}
+function hudTile(slot) {
+	const m = G.msn[slot];
+	if (G.hud.carry !== null && G.hud.carry !== undefined) return hudDrop(G.hud.carry, slot);
+	if (m) openCard({ type: 'mission', slot });
+	G.hud.sel = m ? slot : null;
+}
+
+// ── the bar
+const odds2 = (p) => `hsl(${Math.round(Math.max(0, Math.min(1, p)) * 120)} 75% 58%)`;
+function mStatus(m) {
+	if (m.st === 'go') return [mmss(m.eta || 0), '#7db4ff'];
+	if (m.st === 'act') return ['ACTIVE', odds2(m.odds)];
+	if (m.st === 'lost') return ['LOST', '#ff6a5a'];
+	return [m.late ? `LATE +${m.late}s` : '✓ DONE', m.late ? '#ffd35e' : '#5fd08a'];
+}
+function huddleHTML() {
+	const H = G.hud,
+		pool = hudPool(),
+		st = (act, t, cls, extra = '') => `<button class="cell st w ${cls || ''}" data-act="${act}"${extra}>${t}</button>`,
+		draft = !H.view,
+		picked = hudPick().length,
+		fire = picked && H.h && hudSlot() >= 0,
+		col1 =
+			`<button class="cell bar${picked ? ' on' : ''}${draft ? ' sel' : ''}" data-act="hready" aria-label="Ready"><span class="wd mid">Ready</span></button>` +
+			`<button class="cell st w bar${H.h ? ' on' : ''}${H.aim ? ' sel' : ''}" data-act="haim" aria-label="Aim">Aim</button>`,
+		mid = (draft ? CLS : MSN)
+			.map((x, i) => {
+				if (draft) {
+					const have = hudHave(pool, i);
+					return `<div class="col"><button class="cell${have ? '' : ' dis'}" data-act="hudc:${i}"><span class="top"><span class="c">${hudN(pool, i)}</span></span>${wd(x[1])}</button><div class="pm">${st(`hudn:${i},-`, '−')}${st(`hudn:${i},+`, '+')}</div></div>`;
+				}
+				const m = G.msn[i];
+				if (!m)
+					return `<div class="col"><button class="cell msn empty" data-slot="${i}" data-act="hslot:${i}"><span class="wd mid">${x}</span></button>${st(`hslot:${i}`, '', 'msn empty', ` data-slot="${i}"`)}</div>`;
+				const [t, color] = mStatus(m),
+					n = mUnits(m).length,
+					fl = m.flash ? ' ' + m.flash : '';
+				return `<div class="col"><button class="cell msn${fl}${H.sel === i ? ' sel' : ''}" data-slot="${i}" data-act="mcard:${i}" style="--mc:${color}"><span class="top"><span class="c">${n}</span></span>${wd(m.name)}</button><button class="cell st w msn${fl}" data-slot="${i}" data-act="mcard:${i}" style="color:${color}">${t}</button></div>`;
+			})
+			.join(''),
+		col6 = `<div class="col"><button class="cell fire ${fire ? 'go' : 'dis'}" data-act="hfire" aria-label="Fire"><span class="wd mid">FIRE</span></button>${st('habort', 'Abort')}</div>`;
+	return `<div class="col">${col1}</div>${mid}${col6}`;
+}
+function huddleUI() {
+	const H = G.hud,
+		el = $('huddle'),
+		flip = el.hidden === H.on;
+	if (flip) {
+		el.hidden = !H.on;
+		$('jobs').hidden = H.on;
+		$('orders').classList.toggle('hud', H.on);
+		$('hudB').classList.toggle('sel', H.on);
+		$('hudB').innerHTML = H.on ? ICON.close : ICON.sword;
+		$('hudB').setAttribute('aria-label', H.on ? 'Leave the huddle' : 'Huddle: plan an attack');
+	}
+	if (H.on) {
+		const h = huddleHTML();
+		if (el.sigH !== h) {
+			el.sigH = h;
+			el.innerHTML = h;
+		}
+	}
+	if (flip) fit(); // the bar is whole again: the corner buttons sit on top of it
+}
+// the reticle: thin brackets round the target and a tag with the time it would take
+function drawReticle() {
+	const H = G.hud;
+	if (!H.on || !H.h) return;
+	const x = SX(H.h.e.x),
+		y = SY(H.h.e.y),
+		r = 16 * cam.z + 6,
+		q = r * 0.45,
+		eta = hudEta();
+	ctx.save();
+	ctx.strokeStyle = ctx.fillStyle = '#ffb23d';
+	ctx.lineWidth = 1.5;
+	ctx.beginPath();
+	for (const [sx, sy] of [
+		[-1, -1],
+		[1, -1],
+		[1, 1],
+		[-1, 1],
+	]) {
+		ctx.moveTo(x + sx * r, y + sy * (r - q));
+		ctx.lineTo(x + sx * r, y + sy * r);
+		ctx.lineTo(x + sx * (r - q), y + sy * r);
+	}
+	ctx.stroke();
+	ctx.font = '700 12px system-ui, sans-serif';
+	ctx.textAlign = 'center';
+	ctx.fillText(eta ? `${mmss(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - r - 5);
+	ctx.restore();
+}
+// the details card for one mission: who, what, where, when, status, and what you can do
+CARDS.mission = (c) => {
+	const m = G.msn[c.slot];
+	if (!m) return null;
+	const S = mUnits(m),
+		cls = CLS.map((k, i) => [k[1], S.filter((u) => clsOf(u) === i).length])
+			.filter((r) => r[1])
+			.map((r) => `${r[1]} ${r[0]}`)
+			.join(', '),
+		[word] = mStatus(m),
+		plan = m.st === 'act' ? reinforcePlan(m) : null,
+		spare = spareOf(m),
+		slow = sideSpd(0),
+		row = (k, v) => `<p><b>${k}</b> ${v}</p>`;
+	return (
+		title(m.name, m.st === 'act' ? `${Math.round(m.odds * 100)}%` : word) +
+		row('Who', `${S.length} of ${m.n0}${cls ? ' · ' + cls : ''}`) +
+		row('What', `${m.what} ${m.label}`) +
+		`<p data-act="jump:${m.x},${m.y}"><b>Where</b> ${coord(m.x, m.y)} · tap to go</p>` +
+		row('When', m.st === 'go' ? `Due in ${mmss(m.eta || 0)}` : m.late ? `${m.late} s late` : 'On time') +
+		row('Status', m.st === 'act' ? `Active · ${Math.round(m.odds * 100)}% to win` : word) +
+		(slow < 0.98
+			? row(G.wx !== 'clear' ? 'Weather' : 'Season', `${wxWord()}, walking ×${slow.toFixed(2)}, included`)
+			: '') +
+		(m.st === 'act' || spare.length
+			? acts(
+					(m.st === 'act'
+						? btn(
+								`hudrein:${c.slot}`,
+								plan && plan.go.length ? `Reinforce +${plan.go.length}` : 'Reinforce',
+								plan && plan.go.length
+									? waveLine(plan)
+									: plan && plan.even
+										? 'Already even'
+										: plan && plan.late
+											? 'Too late'
+											: 'No reserve',
+								plan && plan.go.length ? 'go' : 'dis',
+							)
+						: '') + (spare.length ? btn(`hspare:${c.slot}`, `Spare ${spare.length}`, 'then tap a tile', 'go') : ''),
+				)
+			: '') +
+		acts(btn(`hdel:${c.slot}`, 'Abort', 'soldiers go home', 'warn') + btn('habortall', 'Abort all', '', 'warn'))
+	);
+};
+// drag a green tile's spare soldiers: onto a mission, an empty slot, or Ready
+function hudDrag(ev) {
+	const t = ev.target.closest && ev.target.closest('#huddle [data-slot]'),
+		m = t && G.msn[t.dataset.slot];
+	if (!m || !m.spare || !m.spare.length) return;
+	const from = Number(t.dataset.slot),
+		x0 = ev.clientX,
+		y0 = ev.clientY;
+	let ghost = null;
+	const move = (e) => {
+			if (!ghost && Math.hypot(e.clientX - x0, e.clientY - y0) > 10) {
+				ghost = document.createElement('div');
+				ghost.className = 'hudGhost';
+				ghost.textContent = `Spare ${m.spare.length}`;
+				document.body.appendChild(ghost);
+			}
+			if (ghost) ghost.style.transform = `translate(${e.clientX - 40}px,${e.clientY - 60}px)`;
+		},
+		end = (e) => {
+			window.removeEventListener('pointermove', move);
+			window.removeEventListener('pointerup', end);
+			window.removeEventListener('pointercancel', end);
+			if (!ghost) return;
+			ghost.remove();
+			G.hud.dragged = performance.now();
+			const d = document.elementFromPoint(e.clientX, e.clientY),
+				slot = d && d.closest('[data-slot]'),
+				ready = d && d.closest('[data-act="hready"]');
+			if (ready) hudDrop(from, 'home');
+			else if (slot) hudDrop(from, Number(slot.dataset.slot));
+			refresh();
+		};
+	window.addEventListener('pointermove', move);
+	window.addEventListener('pointerup', end);
+	window.addEventListener('pointercancel', end);
+}
+document.addEventListener('pointerdown', hudDrag);
+// ═════ 40-emergency.js: Shelter, Battle stations, All hands on deck, Resume ═════
+// One ranking for everyone: buildings that shelter, the sturdiest first (current hit points, then room); each is filled to its room with the nearest units who can go there;
+// whoever is left over goes to a safe spot behind the Town Center. Villagers go in and stay until Resume (a note of each one's job and spot is kept).
+// Soldiers who garrison a building add an arrow like villagers do and stay in the plan (DEFENDING) until you give them a new order; Resume does not touch them.
+const EMERGENCY = [
+	['shelter', 'Shelter', 'villagers take cover'],
+	['battle', 'Battle stations', 'soldiers to the walls and the line'],
+	['hands', 'All hands on deck', 'villagers and soldiers'],
+];
+const EMG = { line: 110, row: 12, perRow: 12, behind: 60 };
+const shelterRank = () =>
+	G.blds
+		.filter((b) => b.owner === 0 && b.hp > 0 && b.prog >= 1 && BLD[b.kind].shelter)
+		.sort((a, b) => b.hp - a.hp || BLD[b.kind].shelter - BLD[a.kind].shelter);
+const roomIn = (b) =>
+	BLD[b.kind].shelter -
+	G.units.filter((u) => (u.hid === b.id && u.inside) || (u.state === 'garrison' && u.gar === b.id)).length;
+// the way the danger lies from the Town Center: the attack coming, else the nearest threat, else across the map
+function threatDir(k) {
+	const t = G.incoming || nearest(G.threats, k, (v) => atWar(0, v.owner), 700) || { x: MID, y: MID },
+		d = hyp(t.x - k.x, t.y - k.y) || 1;
+	return { x: (t.x - k.x) / d, y: (t.y - k.y) / d };
+}
+// fill the ranked buildings with the nearest of these units (shooters first when asked); what is left over is returned
+function fillRank(units, pick) {
+	let rest = units.slice();
+	for (const b of shelterRank()) {
+		const take = rest
+			.sort((p, q) => (pick.first ? pick.first(p) - pick.first(q) : 0) || dist(p, b) - dist(q, b))
+			.slice(0, Math.max(0, roomIn(b)));
+		take.forEach((u) => pick.into(u, b));
+		rest = rest.filter((u) => !take.includes(u));
+	}
+	return rest;
+}
+function villagersIn() {
+	const V = unitsOf(0, 'vil'),
+		k = keepOf(0);
+	if (!G.emg)
+		G.emg = {
+			kind: 'shelter',
+			snap: V.map((u) => ({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post })),
+		}; // once: Resume goes back to the first picture
+	const left = fillRank(V, {
+		into: (u, b) => {
+			u.emg = true;
+			u.scared = true;
+			u.safe = null;
+			u.hid = b.id;
+		},
+	});
+	if (!k) return;
+	const d = threatDir(k);
+	left.forEach((u, i) => {
+		u.emg = true;
+		u.scared = true;
+		u.hid = 0;
+		u.safe = {
+			x: clamp(k.x - d.x * EMG.behind + (i % 6) * 10 - 25, 20, MAP - 20),
+			y: clamp(k.y - d.y * EMG.behind + Math.floor(i / 6) * 10, 20, MAP - 20),
+		};
+	});
+}
+function soldiersIn() {
+	hudAbortAll();
+	const k = keepOf(0),
+		S = armyOf(0).filter((u) => isSoldier(u) && u.state !== 'escort' && u.state !== 'rout');
+	if (!k || !S.length) return;
+	for (const u of S) {
+		u.ord = undefined;
+		u.focus = u.tgt = null;
+		u.fid = null;
+	}
+	const left = fillRank(S, {
+		first: (u) => (UNIT[u.kind].rng > 20 ? 0 : 1),
+		into: (u, b) => {
+			u.state = 'garrison';
+			u.gar = b.id;
+		},
+	});
+	const d = threatDir(k),
+		cx = k.x + d.x * EMG.line,
+		cy = k.y + d.y * EMG.line;
+	G.hold = Array(BNS + 1).fill(1); // hold ground: they fight what comes within reach and keep the line
+	left.forEach((u, i) => {
+		const row = Math.floor(i / EMG.perRow),
+			col = (i % EMG.perRow) - (Math.min(left.length, EMG.perRow) - 1) / 2;
+		u.state = 'goto';
+		u.px = clamp(cx - d.x * row * EMG.row - d.y * col * EMG.row, 20, MAP - 20);
+		u.py = clamp(cy - d.y * row * EMG.row + d.x * col * EMG.row, 20, MAP - 20);
+		u.idleT = 0;
+	});
+}
+function emgStart(kind) {
+	if (kind === 'battle' || kind === 'hands') soldiersIn(); // soldiers first: the strongest places are theirs
+	if (kind === 'shelter' || kind === 'hands') villagersIn();
+	if (G.emg) G.emg.kind = kind;
+	say(`${EMERGENCY.find((e) => e[0] === kind)[1]}.`, 'warn', 4);
+	feel('crack');
+}
+// Resume: every villager back to what it was doing; soldiers stay where the plan put them
+function emgResume() {
+	if (!G.emg) return;
+	for (const n of G.emg.snap) {
+		const u = G.units.find((v) => v.id === n.id && v.hp > 0),
+			node = n.nid && G.nodes.find((x) => x.id === n.nid && x.amt > 0);
+		if (!u) continue;
+		u.emg = false;
+		u.scared = false;
+		u.safe = null;
+		if (u.inside) {
+			const b = G.blds.find((x) => x.id === u.hid);
+			u.inside = false;
+			if (b) {
+				u.x = b.x + u.ox * 0.8;
+				u.y = b.y + 30;
+			}
+		}
+		u.hid = 0;
+		setJob(u, n.job, node && node.farm ? node : null);
+		if (node && !node.farm) u.node = node;
+		u.post = n.post;
+	}
+	G.emg = null;
+	say('Back to work.', 'good', 3);
+}
+CARDS.emergency = () => {
+	const I = G.incoming,
+		kids = unitsOf(0, 'vil').length,
+		def = armyOf(0).filter((u) => u.state === 'garrison').length;
+	return (
+		title('Emergency', G.emg ? EMERGENCY.find((e) => e[0] === G.emg.kind)[1] : 'calm') +
+		(I
+			? `<p data-act="jump:${Math.round(I.x)},${Math.round(I.y)}"><b>${I.n}</b> ${I.what} · ${I.eta} s away · tap to go</p>`
+			: '') +
+		acts(
+			btn('emg:shelter', 'Shelter', `${kids} villagers`, kids ? 'warn' : 'dis') +
+				btn('emg:battle', 'Battle stations', def ? `${def} defending` : 'soldiers', 'warn'),
+		) +
+		acts(
+			btn('emg:hands', 'All hands on deck', 'everyone', 'warn') +
+				btn('emgresume', 'Resume', 'villagers back to work', G.emg ? 'go' : 'dis'),
+		) +
+		fold(
+			'why',
+			'How it works',
+			`<p>Buildings that shelter are filled sturdiest first, each with the nearest units; any left over wait behind the Town Center. Soldiers inside add arrows and stay defending until you send them somewhere. Resume sends the villagers back to their jobs.</p>`,
+		)
+	);
+};
 // ═════ 39-boot.js: start-up, and closes the one scope ═════
 // ───────────────────────── The loop and the start ─────────────────────────
 let last = performance.now(),
@@ -24698,6 +25466,16 @@ window.__fk = {
 	coord,
 	minZ,
 	tapAt,
+	hudOpen,
+	emgStart,
+	emgResume,
+	hudFire,
+	hudPick,
+	hudDrop,
+	hudReinforce,
+	reinforcePlan,
+	missionsTick,
+	aimAt,
 	openCard,
 	renderCard,
 	demolish,

@@ -359,19 +359,72 @@ const PLAY = {
 	},
 	sendto(a) {
 		const [f, x, y] = a.split(','),
-			to = { x: Number(x), y: Number(y) },
-			S = sendPick(/^(q|h|all|n\d+)$/.test(f) ? f : Number(f), to);
-		if (!S.length) say(freeWhy(), '', 4);
-		S.forEach((u) => {
-			u.state = 'goto';
-			u.px = to.x;
-			u.py = to.y;
-			u.idleT = 0;
-			u.focus = null;
-		});
-		march(S, to, coord(to.x, to.y));
-		if (S.length) ripple(to.x, to.y, '#ffd35e');
+			e = { x: Number(x), y: Number(y) },
+			S = sendPick(/^(q|h|all|rest|n\d+)$/.test(f) ? f : Number(f), e);
+		if (S.length) order(S, { t: 'ground', e });
+		else say(freeWhy(), '', 4);
 		hideStrip();
+	},
+	emg(a) {
+		emgStart(a);
+		hudOpen(false);
+		ACT.home();
+		closeCard();
+	},
+	emgresume() {
+		emgResume();
+		closeCard();
+	},
+	huddle() {
+		hudOpen(!G.hud.on);
+	},
+	hready() {
+		const H = G.hud;
+		H.view = !H.view;
+		H.aim = false;
+		H.carry = null;
+	},
+	haim() {
+		G.hud.aim = !G.hud.aim;
+	},
+	hudc(a) {
+		delete G.hud.n[a]; // a tap on the class: all the idle ones again
+	},
+	hudn(a) {
+		const [c, d] = a.split(','),
+			pool = hudPool(),
+			have = hudHave(pool, Number(c));
+		G.hud.n[c] = clamp(hudN(pool, Number(c)) + (d === '+' ? 1 : -1), 0, have);
+	},
+	hfire() {
+		hudFire();
+	},
+	habort() {
+		hudCancel();
+	},
+	habortall() {
+		hudAbortAll();
+	},
+	hdel(a) {
+		hudAbort(Number(a));
+	},
+	mcard(a) {
+		if (performance.now() - (G.hud.dragged || -1e9) > 400) hudTile(Number(a));
+	},
+	hslot(a) {
+		if (performance.now() - (G.hud.dragged || -1e9) > 400) hudTile(Number(a));
+	},
+	hudrein(a) {
+		hudReinforce(Number(a));
+	},
+	hspare(a) {
+		const m = G.msn[Number(a)];
+		if (m && m.spare && m.spare.length) {
+			G.hud.carry = Number(a);
+			G.hud.view = true;
+			closeCard();
+			say('Tap a tile, or Ready to send them home.', '', 4);
+		}
 	},
 	nostrip() {
 		hideStrip();
@@ -411,45 +464,18 @@ const PLAY = {
 	},
 	qgo(a) {
 		const [x, y] = a.split(',').map(Number),
-			S = qsPick({ x, y });
-		S.forEach((u) => {
-			u.state = 'goto';
-			u.px = x;
-			u.py = y;
-			u.idleT = 0;
-			u.focus = null;
-		});
-		march(S, { x, y }, coord(x, y));
-		if (S.length) ripple(x, y, '#ffd35e');
+			e = { x, y };
+		order(qsPick(e), { t: 'ground', e });
 		closeCard();
 	},
 	qatk(a) {
-		const b = G.blds.find((x) => x.id === Number(a) && x.hp > 0);
-		if (!b) return;
-		const S = qsPick(b);
-		S.forEach((u) => {
-			u.state = 'attack';
-			u.target = b.owner;
-			u.bid = b.id;
-			u.focus = null;
-		});
-		march(S, b, `the ${bldName(b.owner, b.kind)} of ${G.P[b.owner].name}`);
-		if (S.length) ripple(b.x, b.y, '#ff8a70');
+		const e = G.blds.find((x) => x.id === Number(a) && x.hp > 0);
+		if (e) order(qsPick(e), { t: 'bld', e });
 		closeCard();
 	},
 	qfoe(a) {
-		const v = G.units.find((x) => x.id === Number(a) && x.hp > 0);
-		if (!v) return;
-		const S = qsPick(v);
-		S.forEach((u) => {
-			u.state = 'goto';
-			u.px = v.x;
-			u.py = v.y;
-			u.idleT = 0;
-			u.focus = v;
-		});
-		march(S, v, G.P[v.owner].name);
-		if (S.length) ripple(v.x, v.y, '#ff8a70');
+		const e = G.units.find((x) => x.id === Number(a) && x.hp > 0);
+		if (e) order(qsPick(e), { t: 'unit', e });
 		closeCard();
 	},
 	bned(a) {
@@ -539,14 +565,7 @@ const PLAY = {
 		say('Holding here.', '', 2);
 	},
 	precall() {
-		for (const u of picked())
-			if (isSoldier(u)) {
-				u.state = 'home';
-				u.fid = null;
-				u.focus = null;
-				u.tgt = null;
-				u.ord = undefined;
-			}
+		sendHome(picked().filter(isSoldier));
 		say('Called home.', '', 2);
 	},
 	pvil() {
@@ -793,10 +812,7 @@ const PLAY = {
 		G.rally0 = G.rally0 ? null : { x, y };
 	},
 	recall() {
-		orderSet().forEach((u) => {
-			u.state = 'home';
-			u.fid = null;
-		});
+		sendHome(orderSet());
 		closeCard();
 	},
 	attack(a) {

@@ -140,6 +140,29 @@ function solTick(u, dt, SP) {
 		if (G.t >= u.schoolT) graduate(u);
 		return;
 	} // at the School: it stands, learns, and comes out a newer soldier
+	if (u.state === 'garrison') {
+		// Battle stations: it walks to its building, goes inside and adds an arrow, and stays until given a new order
+		const b = G.blds.find((x) => x.id === u.gar && x.hp > 0 && x.prog >= 1);
+		if (!b) u.state = 'home';
+		else {
+			u.idleT = 0;
+			if (!u.inside && moveTo(u, b.x, b.y, dt, BLD[b.kind].fp * 5 + 4, SP)) {
+				u.inside = true;
+				u.hid = b.id;
+			}
+			return;
+		}
+	}
+	if (u.inside) {
+		// a new order: out of the building
+		const b = G.blds.find((x) => x.id === u.hid);
+		u.inside = false;
+		u.hid = 0;
+		if (b) {
+			u.x = b.x + u.ox * 0.8;
+			u.y = b.y + 30;
+		}
+	}
 	if (
 		u.hp < u.max &&
 		!u.tgt &&

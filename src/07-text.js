@@ -816,6 +816,16 @@ const TRIGGERS = () => [
 		'Thumbs on the map, not in a menu: a phone is not a desk.',
 	],
 	[
+		'The huddle: four missions',
+		'The sword button above the bar plans an attack: Aim, tap the target, set how many Foot, Archers, Horse and Siege go, then Fire. Each mission (Alpha to Delta) shows its arrival time, then ACTIVE with its odds in colour. A flashing red tile is losing: open it to Reinforce from the idle reserve, or call it off. A flashing green tile has soldiers to spare: drag them to another mission or Ready.',
+		'A plan you can read: time, odds and who is where. The weather on the screen is counted in the time; a storm that comes later is bad luck.',
+	],
+	[
+		'Emergency: shelter and battle stations',
+		'The Army card and the red attack bar open it. Shelter puts villagers in the sturdiest shelter first, Battle stations sends soldiers into buildings (they add arrows) and a line toward the danger, All hands does both. Resume sends villagers back to work; soldiers stay until you give them an order.',
+		'One rule for everyone: the strongest walls first, the nearest hands first.',
+	],
+	[
 		'Teach',
 		`Research Veterans at the Barracks, build a School: a soldier of an older kind can be taught a newer one (spear to sword, archer to crossbow, catapult to trebuchet). It stands frozen at its post for the lesson; tuition is ${TEACH.tuition} gold an age, plus the difference in cost. Four learn at a time per School. Fire arrows, burning shot and petards set wooden buildings alight; rain halves the chance. Soldiers resting by a Castle, Barracks or Town Center heal.`,
 		'Marius retrained his veterans rather than raising new legions; the Spanish army kept wards for its garrisons from 1500.',

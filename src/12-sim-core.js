@@ -11,6 +11,15 @@ function recount() {
 	for (const n of G.nodes) n.wk = 0;
 	for (const u of G.units) if (u.node && u.kind === 'vil') u.node.wk++;
 }
+// what the season and the weather take off a march, for one side: moveTo and the mission clocks read the same number
+function sideSpd(o) {
+	const sp = season().spd * (hz('winter') && season().name === 'Winter' ? 0.8 : 1),
+		wsp = WEATHER[G.wx].spd || 1;
+	return o === WILD
+		? sp * wsp
+		: (1 - (1 - sp) * fxv(o, 'mud').m * (season().name === 'Winter' ? 1 - Math.min(1, fxv(o, 'cold').a) : 1)) *
+				(1 - (1 - wsp) * (G.wx === 'rain' ? 1 - Math.min(1, fxv(o, 'wet').a) : 1));
+}
 function step(dt) {
 	if (G.over) return;
 	G.t += dt;
@@ -21,14 +30,7 @@ function step(dt) {
 	buildGrid();
 	if (G.navDirty) navRebuild();
 	NAV.budget = 4;
-	const sp = season().spd * (hz('winter') && season().name === 'Winter' ? 0.8 : 1),
-		wsp = WEATHER[G.wx].spd || 1,
-		SP = (o) =>
-			o === WILD
-				? sp * wsp
-				: (1 - (1 - sp) * fxv(o, 'mud').m * (season().name === 'Winter' ? 1 - Math.min(1, fxv(o, 'cold').a) : 1)) *
-					(1 - (1 - wsp) * (G.wx === 'rain' ? 1 - Math.min(1, fxv(o, 'wet').a) : 1));
-	const SPS = [SP(0), SP(1), SP(2), SP(3), SP(4)];
+	const SPS = [0, 1, 2, 3, 4].map(sideSpd);
 	for (const b of G.blds) if (b.hp > 0) bldTick(b, dt);
 	econTick(dt);
 	if (G.tick % 3 === 0) formUp();

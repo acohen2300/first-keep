@@ -5,9 +5,10 @@ const qsPool = () =>
 function qsPick(to) {
 	const by = {};
 	for (const u of qsPool()) (by[u.kind] = by[u.kind] || []).push(u);
-	const out = [];
+	const out = [],
+		key = (u) => (idleSoldier(u) ? 0 : 1e6) + dist(u, to); // idle soldiers first, then the nearest busy ones
 	for (const k in by) {
-		by[k].sort((a, b) => dist(a, to) - dist(b, to));
+		by[k].sort((a, b) => key(a) - key(b));
 		out.push(...by[k].slice(0, Math.min(by[k].length, G.qs.n[k] ?? by[k].length)));
 	}
 	return out;
@@ -32,10 +33,10 @@ function qsHTML(verb, label, to) {
 	const by = {};
 	for (const u of qsPool()) by[u.kind] = (by[u.kind] || 0) + 1;
 	if (!Object.keys(by).length)
-		return (
-			h +
-			`<p>No soldiers${G.qs.from === 'all' ? ' yet: train them at a Barracks, Range or Stable' : ' in ' + BN[G.qs.from]}.</p>`
-		);
+		return verb.startsWith('qgo')
+			? h // a find with no soldiers to send: nothing to say
+			: h +
+					`<p>No soldiers${G.qs.from === 'all' ? ' yet: train them at a Barracks, Range or Stable' : ' in ' + BN[G.qs.from]}.</p>`;
 	h += Object.entries(by)
 		.map(
 			([k, have]) =>
@@ -66,6 +67,7 @@ const sendable = () => armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== '
 const ARMY_STILL = 2.5;
 function armyStatus(u) {
 	if (u.state === 'rout') return 'rout';
+	if (u.state === 'garrison') return 'hold'; // defending inside a building
 	if (u.tgt && u.tgt.hp > 0) return 'fight';
 	if (u.state === 'attack') return 'march';
 	if (u.state === 'goto') {
@@ -79,7 +81,7 @@ const idleSoldier = (u) => {
 	const s = armyStatus(u);
 	return s === 'hold' || s === 'rally';
 };
-// All, a half, a quarter, the nearest five, ten, twenty: idle soldiers only, so a group on the march is never pulled off its way (Build 38; Build 42: counted soldier by soldier)
+// Rest, a half, a quarter, the nearest five, ten, twenty: idle soldiers only, so a group on the march is never pulled off its way. All is everyone but guards (Build 44)
 const free = () => sendable().filter(idleSoldier);
 // why nobody can be sent: nobody exists, or who is busy doing what
 function freeWhy() {
@@ -109,27 +111,20 @@ function guardRow(t, id) {
 	);
 }
 function sendPick(from, to) {
-	// 'q' a quarter of each type, 'all', 'n8' the nearest eight, or a battalion by its number
-	if (from === 'h') {
-		const A = free(),
-			by = {};
-		for (const u of A) (by[u.kind] = by[u.kind] || []).push(u);
-		const out = [];
-		for (const k in by)
-			out.push(...by[k].sort((p, q) => dist(p, to) - dist(q, to)).slice(0, Math.ceil(by[k].length / 2)));
-		return out;
-	} // half of each type, nearest first
-	if (typeof from === 'string' && from[0] === 'n')
+	// 'all' everyone but guards, 'rest' the idle ones, 'h' half and 'q' a quarter of each idle type, 'n8' the nearest eight idle, or a battalion by its number
+	if (from === 'all') return sendable();
+	if (typeof from === 'number') return sendable().filter((u) => u.bn === from);
+	if (from === 'rest') return free();
+	if (from[0] === 'n')
 		return free()
 			.sort((p, q) => dist(p, to) - dist(q, to))
 			.slice(0, Number(from.slice(1)));
-	const A = typeof from === 'number' ? sendable() : free(),
-		by = {};
-	for (const u of A) if (from === 'q' || from === 'all' || u.bn === from) (by[u.kind] = by[u.kind] || []).push(u);
-	const out = [];
+	const by = {},
+		out = [];
+	for (const u of free()) (by[u.kind] = by[u.kind] || []).push(u);
 	for (const k in by) {
 		const a = by[k].sort((p, q) => dist(p, to) - dist(q, to));
-		out.push(...a.slice(0, from === 'q' ? Math.ceil(a.length / 4) : a.length));
+		out.push(...a.slice(0, Math.ceil(a.length / (from === 'h' ? 2 : 4))));
 	}
 	return out;
 }
@@ -155,16 +150,18 @@ function showStrip(sx, sy, x, y, step) {
 	else if (step === 1)
 		el.innerHTML =
 			btn(`sendto:h,${at}`, '½', String(n('h')), 'ic') +
-			btn(`sendto:all,${at}`, 'All', `${nAll} idle`, 'ic go thumb') +
+			btn(`sendto:all,${at}`, 'All', String(nAll), 'ic go thumb') +
 			ic('stripmore', '⋯', 'More ways to send') +
 			ic('nostrip', ICON.close, 'Cancel');
 	// three taps in one spot: open, sword, All (Albert: a fast dispatch)
 	else {
-		const bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
+		const nRest = n('rest'),
+			bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
 		el.innerHTML =
 			btn(`sendto:q,${at}`, '¼', String(n('q'))) +
+			btn(`sendto:rest,${at}`, 'Rest', `${nRest} idle`) +
 			[5, 10, 20]
-				.filter((k) => nAll > k)
+				.filter((k) => nRest > k)
 				.map((k) => btn(`sendto:n${k},${at}`, String(k), 'nearest'))
 				.join('') +
 			bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') +

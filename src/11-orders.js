@@ -976,29 +976,48 @@ function boxCut(r, n) {
 // lists it, and the game says when it gets there (Build 38: an attack that marched 90 seconds with no sign looked like it never left)
 // A group sent somewhere is an order: it has a line and a ring on the map, a count and a time on the Army card, and a message when everyone has stopped.
 // k is how much longer the walk is than the straight line (one path found when the order is given); the time shown is the slowest marcher's.
+// the centre of a group, how much longer the walk is than the straight line (one path found), and the slowest marcher's time to arrive: the weather on the screen is counted, nothing extra is added
+const centreOf = (S) => ({
+	x: S.reduce((s, u) => s + u.x, 0) / S.length,
+	y: S.reduce((s, u) => s + u.y, 0) / S.length,
+});
+function routeK(c, to) {
+	const p = astar(c.x, c.y, to.x, to.y, 0),
+		len = p.pts.reduce(
+			(s, q, i) => s + (i ? hyp(q.x - p.pts[i - 1].x, q.y - p.pts[i - 1].y) : hyp(q.x - c.x, q.y - c.y)),
+			0,
+		);
+	return p.pts.length ? clamp(len / Math.max(1, hyp(to.x - c.x, to.y - c.y)), 1, 3) : 1;
+}
+const etaOf = (S, to, k) =>
+	Math.max(0, ...S.map((u) => (hyp(u.x - to.x, u.y - to.y) * k) / Math.max(1, paceOf(u, sideSpd(0)))));
 function march(S, to, label) {
 	if (!S.length) return;
 	const id = (G.ordN = (G.ordN || 0) + 1);
-	let cx = 0,
-		cy = 0;
-	for (const u of S) {
-		cx += u.x;
-		cy += u.y;
-	}
-	cx /= S.length;
-	cy /= S.length;
-	const p = astar(cx, cy, to.x, to.y, 0),
-		len = p.pts.reduce(
-			(s, q, i) => s + (i ? hyp(q.x - p.pts[i - 1].x, q.y - p.pts[i - 1].y) : hyp(q.x - cx, q.y - cy)),
-			0,
-		),
-		k = p.pts.length ? clamp(len / Math.max(1, hyp(to.x - cx, to.y - cy)), 1, 3) : 1;
-	(G.ords = G.ords || {})[id] = { id, x: Math.round(to.x), y: Math.round(to.y), label, t: G.t, arrived: false, k };
+	(G.ords = G.ords || {})[id] = {
+		id,
+		x: Math.round(to.x),
+		y: Math.round(to.y),
+		label,
+		t: G.t,
+		arrived: false,
+		k: routeK(centreOf(S), to),
+	};
 	for (const u of S) {
 		u.ord = id;
 		u.mvT = G.t; // just ordered: counts as moving until it proves otherwise
 	}
 	say(`${S.length} marching: ${label}.`, '', 3);
+}
+// soldiers called home: off whatever they were doing and off their order
+function sendHome(S) {
+	for (const u of S) {
+		u.state = 'home';
+		u.fid = null;
+		u.focus = null;
+		u.tgt = null;
+		u.ord = undefined;
+	}
 }
 function incomingTick() {
 	// the nearest hostile group you can see that is heading for your buildings: how many, and how long until it arrives (Build 42)
@@ -1029,7 +1048,7 @@ function incomingTick() {
 		y: best.y,
 		n,
 		what: n > 1 ? 'enemy soldiers' : 'enemy soldier',
-		eta: Math.ceil(bd / Math.max(1, stats(best.owner, best.kind).spd)),
+		eta: Math.ceil(bd / Math.max(1, paceOf(best, sideSpd(best.owner)))),
 	};
 }
 function ordersTick() {
@@ -1057,7 +1076,7 @@ function ordersTick() {
 			const st = armyStatus(u);
 			if (st === 'march') {
 				walk++;
-				eta = Math.max(eta, (hyp(u.x - O.x, u.y - O.y) * (O.k || 1)) / Math.max(1, stats(0, u.kind).spd));
+				eta = Math.max(eta, etaOf([u], O, O.k || 1));
 			} else if (st === 'fight') fight++;
 			else if (st === 'rout') rout++;
 		}
@@ -1072,5 +1091,6 @@ function ordersTick() {
 		} // every one has stopped: a straggler that never got there is counted as stopped too
 		O.eta = O.arrived ? 0 : Math.ceil(eta);
 	}
+	missionsTick();
 	for (const u of G.units) if (u.ord && (!G.ords[u.ord] || u.state === 'home')) u.ord = undefined; // called home: no longer on that order
 }
