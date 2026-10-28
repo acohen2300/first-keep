@@ -362,31 +362,41 @@ function drawFogLayer(z) {
 }
 // your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
 function drawOrders(z) {
-	if (G.ords) {
-		// your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
-		ctx.save();
-		ctx.strokeStyle = G.P[0].color;
-		ctx.lineWidth = 1.5;
-		ctx.globalAlpha = 0.7;
+	if (!G.ords) return;
+	// your groups: a dashed line from the group to where it is going, a ring to tap, the time left beside it.
+	// Once arrived the ring stays, faint, so the order can still be tapped (Build 42)
+	ctx.save();
+	ctx.strokeStyle = G.P[0].color;
+	ctx.fillStyle = G.P[0].color;
+	ctx.font = '700 11px system-ui, sans-serif';
+	ctx.textAlign = 'center';
+	for (const id in G.ords) {
+		const O = G.ords[id];
+		const bx = SX(O.x),
+			by = SY(O.y),
+			r = 14 * cam.z;
 		ctx.setLineDash([6, 6]);
-		ctx.lineDashOffset = -performance.now() / 60;
-		for (const id in G.ords) {
-			const O = G.ords[id];
-			if (O.arrived || O.cx === undefined) continue;
-			const ax = SX(O.cx),
-				ay = SY(O.cy),
-				bx = SX(O.x),
-				by = SY(O.y);
+		ctx.lineWidth = 1.5;
+		if (!O.arrived && O.cx !== undefined) {
+			ctx.globalAlpha = 0.7;
+			ctx.lineDashOffset = -performance.now() / 60;
 			ctx.beginPath();
-			ctx.moveTo(ax, ay);
+			ctx.moveTo(SX(O.cx), SY(O.cy));
 			ctx.lineTo(bx, by);
 			ctx.stroke();
-			ctx.beginPath();
-			ctx.ellipse(bx, by, 10 * cam.z, 10 * cam.z * TILT, 0, 0, 7);
-			ctx.stroke();
 		}
-		ctx.restore();
+		ctx.globalAlpha = O.arrived ? 0.35 : 0.85;
+		ctx.lineWidth = O.arrived ? 1.2 : 2;
+		ctx.setLineDash(O.arrived ? [3, 5] : [6, 6]);
+		ctx.beginPath();
+		ctx.ellipse(bx, by, r, r * TILT, 0, 0, 7);
+		ctx.stroke();
+		if (!O.arrived && O.eta > 0) {
+			ctx.globalAlpha = 0.95;
+			ctx.fillText(Math.ceil(O.eta) + 's', bx, by - r * TILT - 4);
+		}
 	}
+	ctx.restore();
 }
 // arrows and shots: a short streak along the curve
 function drawTracers() {

@@ -546,6 +546,16 @@ const EV_LINE = {
 // What triggers what: when, then, why. Numbers come from the tables, so the text cannot drift from the game.
 const TRIGGERS = () => [
 	[
+		'You send soldiers somewhere',
+		'Each soldier shows its state in the Army list: Rallying, Marching, Fighting, Holding or Routed. A ring on the map marks the spot with the time left; tap the ring to pick that group. Recall brings a marching group home. Follow keeps the camera on the picked soldiers.',
+		'You always see what each soldier is doing and where it will stand.',
+	],
+	[
+		'An enemy group you can see heads for your buildings',
+		'The bar turns red: how many, and seconds until they arrive. Tap it to jump to them.',
+		'Time to pick your soldiers before the first hit.',
+	],
+	[
 		'You start a game',
 		`Pick your civilisation (${CIVK.map((k) => CIVS[k].name).join(', ')}). The three computers take three of the others at random. Each civilisation has one unique soldier, one small bonus and its own wonder; the rest is shared.`,
 		'A real people, but the same rules for all: no civilisation is stronger on paper.',

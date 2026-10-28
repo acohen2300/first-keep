@@ -247,23 +247,29 @@ function statusOf(u) {
 				: 'waiting at the Market';
 	if (u.tgt && u.tgt.hp > 0)
 		return `fighting ${u.tgt.q ? `their ${bldName(u.tgt.owner, u.tgt.kind).toLowerCase()}` : UNIT[u.tgt.kind].name.toLowerCase()}`;
-	return u.state === 'attack'
-		? `marching on the ${G.P[u.target] ? G.P[u.target].name : 'enemy'}`
-		: u.state === 'goto'
-			? u.idleT > 1
-				? 'holding the spot'
-				: 'marching'
-			: u.state === 'escort'
-				? 'guarding'
-				: u.state === 'shrine'
-					? 'holding the shrine'
-					: u.state === 'assist'
-						? 'helping an ally'
-						: u.state === 'sab'
-							? 'slipping toward a target'
-							: u.levy !== undefined
-								? `on levy from ${G.P[u.levy].name}`
-								: 'at home';
+	{
+		const st = armyStatus(u),
+			O = u.ord && G.ords && G.ords[u.ord],
+			eta = O && !O.arrived && O.eta ? `, ${O.eta} s` : '';
+		if (st === 'rout') return 'routed: running from the fight';
+		if (st === 'rally') return 'walking to its place';
+		if (st === 'march')
+			return u.state === 'attack'
+				? `marching on the ${G.P[u.target] ? G.P[u.target].name : 'enemy'}${eta}`
+				: `marching${eta}`;
+		if (st === 'hold') return u.state === 'goto' ? 'holding the spot' : 'holding at home';
+	} // Rallying, Marching, Holding, Routed: one word each (Build 42); Fighting is above
+	return u.state === 'escort'
+		? 'guarding'
+		: u.state === 'shrine'
+			? 'holding the shrine'
+			: u.state === 'assist'
+				? 'helping an ally'
+				: u.state === 'sab'
+					? 'slipping toward a target'
+					: u.levy !== undefined
+						? `on levy from ${G.P[u.levy].name}`
+						: 'at home';
 }
 function lifeText(u) {
 	const S = u.st || {},

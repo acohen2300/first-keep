@@ -132,6 +132,24 @@ function clampCam() {
 	cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID));
 	cam.y = clamp(cam.y, Math.min(half, MID), Math.max(MAP - half, MID));
 } // the map's edges can come up to the bars, never under them (Albert, Build 40)
+// Follow (the pick bar): the camera eases to the middle of what is picked, until you drag, pinch or tap the small map, or let go of them
+function followCam() {
+	if (!G.follow) return;
+	const P = picked();
+	if (!P.length) {
+		G.follow = false;
+		return;
+	}
+	let x = 0,
+		y = 0;
+	for (const u of P) {
+		x += u.x;
+		y += u.y;
+	}
+	cam.x += (x / P.length - cam.x) * 0.2;
+	cam.y += (y / P.length - cam.y) * 0.2;
+	clampCam();
+}
 const SX = (x) => (x - cam.x) * cam.z + cw / 2;
 const SY = (y, h) => (y - cam.y) * cam.z * TILT + ch / 2 + vy - (h || 0) * cam.z;
 const toWorld = (sx, sy) => ({ x: (sx - cw / 2) / cam.z + cam.x, y: (sy - ch / 2 - vy) / (cam.z * TILT) + cam.y });

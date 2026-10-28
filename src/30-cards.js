@@ -388,7 +388,8 @@ const CARDS = {
 					'go big',
 				),
 				'c1',
-			)
+			) +
+			`<p class="dim copy">© Albert Labs, all rights reserved</p>`
 		);
 	},
 	node(c) {
@@ -427,16 +428,32 @@ const CARDS = {
 					.map(([n, k]) => `${k} ${some(k, n.toLowerCase())}`)
 					.join(' · ') || 'Nobody yet: train soldiers below.'
 			}</p>`;
-		const ords = Object.values(G.ords || {}).filter((O) => O.n);
+		{
+			// who is doing what, soldier by soldier (Build 42)
+			const c = { hold: 0, rally: 0, march: 0, fight: 0, rout: 0 },
+				W = { hold: 'holding', rally: 'rallying', march: 'marching', fight: 'fighting', rout: 'routed' };
+			for (const u of S) if (c[armyStatus(u)] !== undefined) c[armyStatus(u)]++;
+			const line = Object.keys(c)
+				.filter((k) => c[k])
+				.map((k) => `<b>${c[k]}</b> ${W[k]}`)
+				.join(' · ');
+			if (line) h += `<p>${line}</p>`;
+		}
+		const ords = Object.values(G.ords || {}).filter((O) => O.n),
+			inc = G.incoming;
+		if (inc)
+			h +=
+				sec('Coming at you') +
+				`<p data-act="jump:${Math.round(inc.x)},${Math.round(inc.y)}"><b>${inc.n}</b> ${inc.what} · ${inc.eta} s away</p>`;
 		if (ords.length)
 			h +=
 				sec('Out on orders') +
 				ords
 					.map(
 						(O) =>
-							`<p data-act="jump:${O.x},${O.y}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`,
+							`<p data-act="ordpick:${O.id}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`,
 					)
-					.join(''); // tap a line to look
+					.join(''); // tap a line: that group is picked, and the camera goes to it
 		if (S.length && hasCmd())
 			h +=
 				sec('Orders go to') +

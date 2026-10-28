@@ -444,20 +444,37 @@ function drawUnit(u, s) {
 	if (isSoldier(u) && u.mor < 0.6 && z > 0.45 && u.state !== 'rout')
 		bar(sx, top - 10, Math.max(12, 12 * z), u.mor, '#f2cf55'); // nerve, when it is low
 	if (u.state === 'rout') {
-		ctx.strokeStyle = '#2b2b2b';
-		ctx.lineWidth = 1;
+		ctx.fillStyle = '#d8432f';
+		ctx.strokeStyle = 'rgba(0,0,0,.65)';
+		ctx.lineWidth = 1.2;
 		ctx.beginPath();
-		ctx.moveTo(sx + 5 * z, sy - 6 * z);
-		ctx.lineTo(sx + 5 * z, sy - 20 * z);
-		ctx.stroke();
-		ctx.fillStyle = '#f4f0e6';
-		ctx.beginPath();
-		ctx.moveTo(sx + 5 * z, sy - 20 * z);
-		ctx.lineTo(sx + 13 * z, sy - 17 * z);
-		ctx.lineTo(sx + 5 * z, sy - 14 * z);
-		ctx.closePath();
+		ctx.arc(sx + 7 * z, top - 2, 4.6 * z + 1.6, 0, 7);
 		ctx.fill();
-	} // a white flag: broken, running
+		ctx.stroke();
+		ctx.strokeStyle = '#fff';
+		ctx.lineWidth = Math.max(1.3, 1.5 * z);
+		ctx.lineCap = 'round';
+		ctx.beginPath();
+		ctx.moveTo(sx + 7 * z, top - 2 - 2.4 * z);
+		ctx.lineTo(sx + 7 * z, top - 2 + 0.6 * z);
+		ctx.moveTo(sx + 7 * z, top - 2 + 2.3 * z);
+		ctx.lineTo(sx + 7 * z, top - 2 + 2.4 * z);
+		ctx.stroke();
+		ctx.lineCap = 'butt';
+	} // a red badge with a mark: its nerve broke and it is running (Build 42: it was a white flag, which reads as surrender)
+	else if (u.owner === 0 && z > 0.55 && isSoldier(u) && armyStatus(u) === 'march') {
+		const d = (u.fx || 1) < 0 ? -1 : 1;
+		ctx.strokeStyle = '#ffd35e';
+		ctx.lineWidth = Math.max(1.4, 1.6 * z);
+		ctx.lineCap = 'round';
+		ctx.lineJoin = 'round';
+		ctx.beginPath();
+		ctx.moveTo(sx + d * (6 * z - 2), top + 1 * z - 3);
+		ctx.lineTo(sx + d * (6 * z + 1), top + 1 * z);
+		ctx.lineTo(sx + d * (6 * z - 2), top + 1 * z + 3);
+		ctx.stroke();
+		ctx.lineCap = 'butt';
+	} // a small gold chevron beside the head: on the march (Build 42)
 	if (u.state === 'convert' && u.cvT > 0) {
 		ctx.strokeStyle = 'rgba(244,206,90,.9)';
 		ctx.lineWidth = 2;

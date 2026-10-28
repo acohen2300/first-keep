@@ -45,10 +45,12 @@ function think(p) {
 		return s ? build(o, kind, s.x, s.y) : null;
 	};
 	// a site nobody is working (its builder died or was scared off) gets the nearest free villager
-	if (G.tick % 90 === o)
+	if (G.t - (p.ai.siteT ?? -99) >= 3) {
+		p.ai.siteT = G.t; // every few seconds; it was tick % 90, which a think that runs on its own timer hit only by luck (Build 42)
 		for (const b of G.blds)
 			if (b.owner === o && b.hp > 0 && b.prog < 1 && !vils.some((v) => v.rep === b && v.job === 'repair'))
 				autoBuilder(o, b);
+	}
 	// shelter before it is needed
 	if (!building('house') && !building('apartment') && popOf(o) + queuedOf(o) >= capOf(o) - 2 && capOf(o) < POPMAX)
 		put(p.age >= 2 && R.s >= 60 && R.w >= 120 ? 'apartment' : 'house', k.x, k.y, 60, 190);
@@ -91,6 +93,16 @@ function think(p) {
 	const threat = G.threats.some((v) => atWar(o, v.owner) && v.owner !== WILD && dist(v, k) < 400);
 	const saving = ageReady && !p.aging && !threat && !(p.ai.saveT !== undefined && (G.t - p.ai.saveT) % 150 > 90),
 		need = saving ? AGES[p.age + 1].cost : {};
+	const foodShort = saving && (need.f || 0) > R.f;
+	if (foodShort && ready(o, 'market').length) {
+		// saving for an age and short of food: sell a surplus for gold, then buy food with the gold above the age cost (Build 42)
+		for (const r of ['w', 's', 'i'])
+			if (R[r] > (need[r] || 0) + 600) {
+				marketTrade(o, r, 'sell');
+				break;
+			}
+		if (R.g > (need.g || 0) + 150) marketTrade(o, 'f', 'buy');
+	}
 	if (nV < per.vils && k.q.length < 2 && (!saving || R.f >= (need.f || 0) + 50)) train(o, 'vil');
 	if (!unitsOf(o, 'scout').length && G.t > 60 && R.f > 200 && !queuedOf(o, 'scout')) train(o, 'scout');
 	// what to build, in this personality's order
@@ -237,7 +249,7 @@ function think(p) {
 	{
 		const sn = season().name,
 			keep = (p.eats || 0) * (sn === 'Autumn' || sn === 'Winter' ? 4 : 2);
-		if (p.hungry || R.f < keep) mix.food += 0.3;
+		if (p.hungry || R.f < keep || foodShort) mix.food += 0.3;
 	} // fields barely grow in winter: lay in food for it, as farmers did   // hungry, or food for less than two minutes: more on food
 	for (const r of RES) {
 		const have = R[KEY[r]];

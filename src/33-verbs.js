@@ -302,6 +302,23 @@ const ACT = {
 		sfx(k === 'amb' ? 'bird' : k === 'alert' ? 'ready' : 'tap');
 		refresh();
 	},
+	ordpick(a) {
+		const id = Number(a),
+			O = G.ords && G.ords[id],
+			S = G.units.filter((u) => u.owner === 0 && u.ord === id && u.hp > 0 && !u.inside);
+		if (!S.length) return;
+		closeCard();
+		setPick(S.map((u) => ({ t: 'unit', id: u.id })));
+		if (O && O.cx !== undefined) {
+			cam.x = O.cx;
+			cam.y = O.cy;
+			clampCam();
+		}
+	}, // a group on the march: picked, and the camera goes to it (the Army card line, the ring on the map)
+	pfollow() {
+		G.follow = !G.follow;
+		ui(true);
+	}, // the camera follows what is picked, until you drag, pinch or tap the small map
 	jump(a) {
 		const [x, y] = a.split(',').map(Number);
 		cam.x = x;
@@ -343,6 +360,7 @@ const PLAY = {
 		const [f, x, y] = a.split(','),
 			to = { x: Number(x), y: Number(y) },
 			S = sendPick(/^(q|h|all|n\d+)$/.test(f) ? f : Number(f), to);
+		if (!S.length) say(freeWhy(), '', 4);
 		S.forEach((u) => {
 			u.state = 'goto';
 			u.px = to.x;
@@ -357,6 +375,10 @@ const PLAY = {
 	nostrip() {
 		hideStrip();
 	},
+	nofree() {
+		say(freeWhy(), '', 4);
+		hideStrip();
+	}, // the sword with nobody to send says why
 	striparmy() {
 		const s = G.stripAt;
 		if (s) showStrip(s.sx, s.sy, s.x, s.y, 1);
@@ -510,9 +532,21 @@ const PLAY = {
 				u.py = u.y;
 				u.focus = null;
 				u.tgt = null;
-				u.idleT = 0;
+				u.idleT = 2; // stopped at once: Holding, and free for the next send
+				u.ord = undefined; // and off the old order
 			}
 		say('Holding here.', '', 2);
+	},
+	precall() {
+		for (const u of picked())
+			if (isSoldier(u)) {
+				u.state = 'home';
+				u.fid = null;
+				u.focus = null;
+				u.tgt = null;
+				u.ord = undefined;
+			}
+		say('Called home.', '', 2);
 	},
 	pvil() {
 		setPick(

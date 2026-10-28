@@ -3,6 +3,8 @@
 // Squares of 10, never shown. Buildings fill whole squares and leave one free around them. Walls are one square each.
 const NC = MAP / NAVC;
 const NAV = {
+	share: {},
+	shareN: 0,
 	solid: new Uint8Array(NC * NC),
 	gate: new Uint8Array(NC * NC),
 	lake: new Uint8Array(NC * NC),
@@ -412,8 +414,20 @@ function route(u, tx, ty) {
 	if (!u.path || u.pv !== NAV.v || u.pk !== key) {
 		if (u.pfK === key && u.pfV === NAV.v && T - u.pfT < 3) return { x: tx, y: ty, direct: true }; // already known: no way
 		if (NAV.budget <= 0) return { x: u.x, y: u.y, direct: true }; // out of thinking time this moment: wait where it stands, ask again next tick
-		NAV.budget--;
-		const p = astar(u.x, u.y, tx, ty, o, avoid);
+		const ck = `${o}|${avoid ? 1 : 0}|${gcell(u.x, u.y)}|${key}|${NAV.v}`,
+			hit = NAV.share[ck];
+		let p;
+		if (hit && T - hit.t < 2)
+			p = hit.p; // a big army leaves one spot for one place: it asks once and all of it follows (Build 42)
+		else {
+			NAV.budget--;
+			p = astar(u.x, u.y, tx, ty, o, avoid);
+			if (NAV.shareN++ > 60) {
+				NAV.share = {};
+				NAV.shareN = 0;
+			}
+			NAV.share[ck] = { t: T, p };
+		}
 		u.pi = 0;
 		u.pv = NAV.v;
 		u.pk = key;

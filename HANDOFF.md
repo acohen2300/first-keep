@@ -1,4 +1,4 @@
-# First Keep: handoff (Build 41j)
+# First Keep: handoff (Build 42)
 
 ## What it is
 Albert's single-file HTML mobile RTS (Age of Empires style). Albert is not a coder.
@@ -16,17 +16,18 @@ Albert's single-file HTML mobile RTS (Age of Empires style). Albert is not a cod
 - Real game design: real science and history; fun and hard, not annoying; pay to help, never pay to win.
 - SoRen (`acohen2300/soren-archive`, `p16/src`) is the yardstick for clean structure: one `cell()` mold, one `ICON` table, cards as a table plus one engine, files named by element.
 
-## Repo layout (Build 41)
-Source in `src/`, joined by `build.py` into `first-keep.html` (refuses syntax errors and duplicate top-level names; embeds the fonts). `wrap.py` writes `native/index.html` for the App Store wrapper.
-- `00-pre` opens the one scope · `01-rules` **every number** (buildings carry their own `cap`, `nocap`, `armyRoom`, `invest`, `shelter`; weather, soil, sickness, routes, market, gather rates) · `02-text` every word (`WHY`, `TRIGGERS`; numbers read from the tables) · `03-core` helpers, settings, queries (`keepOf`/`popOf`/`capOf` answered once a step via `qc()`), effects (`fxv` memoised) · `04-nav` the walking grid and paths · `05-world` the map, `newGame`, `mkBld`, `addUnit`
-- `06-orders` what a side can do and why not (`trainWhy`/`train` pairs), placing and box orders · `07-sim` the step, every tick, foes and grids (`nearestFoe`, `unitsNear`, `bldsNear`, `nodesNear`) · `08-ai` the computers
-- `09-figures` people and beasts (data-driven looks) · `10-buildings` building art · `11-view` the camera and the draw (one tint fill; `scarStrike`) · `12-input` the finger
-- `13-cards` the card engine (`openCard`, `renderCard`, patch) and the `CARDS` table, one entry per card type; `BLD_PAGE` for what a building kind adds · `14-guide` the Guide written from the tables · `15-frame` `ICON`, `cell()`, `buildPanel()` (the markup is built from the table), `ui()` (writes only changed words), messages, tips, `fit()`, `showEnd()` · `16-verbs` `ACT` and `PLAY`: every button's verb
-- `17-save` (`SAVEV` 29, `MIGRATE`; trees as five numbers, hundredths, never mid-fight) · `18-sound` (and haptics) · `19-economy` trade, weather, fire, sickness, vassals, the computers' economy · `19-events` spectacle, hazards, the ground · `19-natives` the fifth side · `20-boot` the loop and the `window.__fk` test hook
-- `shell-head.html` CSS and the static markup (the tally and corner buttons are empty shells filled by `buildPanel`).
+## Repo layout (Build 42)
+Source in `src/`, 40 files joined in name order by `build.py` into `first-keep.html` (refuses syntax errors, duplicate top-level names and comments that swallow code; embeds the fonts). `wrap.py` writes `native/index.html` for the App Store wrapper. Each file opens with `// ═════ NN-name.js: what it holds ═════`.
+- Rules (numbers only): `01-rules-basics` `02-rules-units` `03-rules-buildings` `04-rules-tech` `05-rules-wild` `06-rules-tuning` (events, weather, market, tuning) · `07-text` every word (`EV_TEXT`, `EV_LINE`, `TRIGGERS`) · `08-core` state, helpers, `say` · `09-nav` paths (`astar`, `route`, shared-path cache) · `10-world` map making
+- Doing: `11-orders` what a side can do (`train`, `build`, `march`, `ordersTick`, `incomingTick`) · `12-sim-core` `step` (calls `reap`, `sidesTick`) · `13-sim-civil` `14-sim-troops` `15-sim-spatial` `16-sim-fight` · `17-ai` the computers (`think`)
+- Seeing: `18-figures` `19-building-art` `20-view-base` (camera, `followCam`) `21-view-frame` (`draw`, a list of named layers) `22-view-fog` `23-view-things` `24-view-overlays` (the layers: orders, tracers, light, cracks, events) `25-view-weather`
+- Touch and cards: `26-input` `27-cards-core` `28-army-strip` (`armyStatus`, the Army list) `29-card-pages` `30-cards` (the `CARDS` table) `31-guide` `32-frame` (ticker, `alertNow`, `advise`, pick bar) `33-verbs` (the buttons)
+- The rest: `34-save` `35-sound` `36-economy` `37-events` `38-natives` `39-boot` (`window.__fk`, the test hook).
+- `shell-head.html` CSS and the static markup.
+- Tools: `tests/fmt.py` (Prettier, tabs, width 120) · `tests/lint.py` (ESLint) · `tests/bot.py [seed] [minutes]` (plays the first minutes from the ticker alone; a test tool) · `tests/soak.py`.
 - Check: `python3 build.py && python3 wrap.py && python3 tests/gate.py` (from the repo root; add `--soak` for `tests/soak.py`: three seeds, 20 game minutes, Hard, every hazard on, fails on any error, NaN or negative stock; about 3 minutes; run it before a big release, the fingerprint only plays five minutes). **Publish only with `python3 publish.py "Build NN: what changed"`**: it builds, runs the whole gate, and only then copies to `index.html` and `preview/`, commits and pushes. It installs a pre-push hook that refuses any push whose `index.html` the gate has not passed (`tests/gate-passed.sha`), so a push by hand is refused. Commit trailers go in the `TRAILER` environment variable.
 - **The play fingerprint** (`tests/baseline.json`): the gate plays a fixed scripted game on seed 7 and compares every side's counts at each minute. The game cannot play differently by accident. A deliberate rule or balance change is accepted with `python3 tests/gate.py --accept "why"`, which rewrites the baseline and logs the reason in CUTS.md. This is First Keep's equivalent of SoRen's locked physics block.
-- Notes: `CUTS.md` (every cut, per build; Build 37 lists the rebuild), `GUIDE.md` (player guide, regenerated from the game at Build 41j; regenerate with `F.guideMd()` after rule changes, it is written from the tables), `APP-PREP.md`.
+- Notes: `CUTS.md` (every cut, per build; Build 37 lists the rebuild), `GUIDE.md` (player guide, regenerated from the game at Build 42; regenerate with `F.guideMd()` after rule changes, it is written from the tables), `APP-PREP.md`.
 
 ## The gate (`tests/gate.py`, `tests/words.py`)
 4 sizes × web and native: no page errors; taps at least 44×44 (except `.pm`); text at least 12 px; contrast at least 4.5:1; no clipped words; no card scroll from 390×844 up (except Help and Guide); buildings tell apart at half zoom; toasts and tips at most 10 words. **Build 37 added:** every button verb has a handler (static); every Guide entry has a why; real taps: Build row → Home menu → House starts placing, People − and +, + under Wood, People and Score cards, Pause, save and reload. **Also:** the play fingerprint (above). Last run: all PASS.
@@ -71,5 +72,7 @@ Play, pause and speed in one button; the Map cell; new-game setup on one page (s
 1. Albert's real-phone test of Build 41j (tap sizes, the action bar, three-tap dispatch, People tile, 375 px).
 2. Sound on the iPhone silent switch: undecided.
 3. Gunpowder balance is a first guess.
-4. **The computers starve for food (found Oct 28, not fixed; a balance change, so Albert decides).** In 36-minute games on seeds 1 and 3 (Normal, no hazards, an idle but defended player) the computer sides sat at age 1 or 2 of 5 (the Balanced one may go to 4). Food is the bottleneck: Classical needs 600 food and they hover at 10 to 150 while their armies grow; the aggressive side on seed 3 held about 5000 wood, 4000 gold and 4000 stone while 94 food short of the age. Options: the AI sells surplus at the market for food while saving for an age; more fields when saving. Any change needs `python3 tests/gate.py --accept "why"`.
+4. Build 42 fixed the computers' food (they buy food with surplus when saving for an age, and shift villagers to food). Watch 36-minute games on seeds 1 and 3 for the ages they reach.
 5. Idea backlog (ask first): replays, biomes, interpolation, optional Auto jobs, "Add another conquest" step-up, slower first raid; the parked list at the end of CUTS.md.
+6. Item 18 (batch stroke calls in unit drawing) waits for Albert's phone test.
+7. The setup card's Why fold is inside a comment (old, harmless): decide to cut or restore.

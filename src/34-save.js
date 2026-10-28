@@ -75,6 +75,7 @@ const SKIP_U = new Set([
 let holdSave = false; // while the Resume card waits, nothing may overwrite the save it offers
 const inFight = () => G.units.some((u) => u.owner === 0 && u.tgt && u.tgt.hp > 0);
 let fightHold = 0;
+let saveFailT;
 function saveGame(force) {
 	if (!G || G.over || (holdSave && !force)) return;
 	if (!force && inFight() && (fightHold = fightHold || G.t) && G.t - fightHold < 60) return;
@@ -162,7 +163,12 @@ function saveGame(force) {
 			SAVEKEY,
 			JSON.stringify(S, (k, v) => (typeof v === 'number' && !Number.isInteger(v) ? Math.round(v * 100) / 100 : v)),
 		); // hundredths are plenty: a third of the size
-	} catch (e) {}
+	} catch (e) {
+		if (G.t - (saveFailT ?? -999) > 60) {
+			saveFailT = G.t;
+			say('Save failed. Storage may be full.', 'warn', 6);
+		}
+	} // a save that did not happen says so, once a minute (Build 42: it used to fail silently)
 }
 function readSave() {
 	try {
@@ -229,6 +235,7 @@ function loadGame(S) {
 	);
 	const byNode = new Map(G.nodes.map((n) => [n.id, n]));
 	for (const sb of S.blds) {
+		if (!sb || !BLD[sb.kind] || !Number.isFinite(sb.x) || !Number.isFinite(sb.y)) continue; // a damaged building is left out, not the whole save (Build 42)
 		const { nodeId, res, ...rest } = sb,
 			b = { ...rest, q: sb.q || [] };
 		G.blds.push(b);
@@ -255,6 +262,7 @@ function loadGame(S) {
 	}
 	const byB = new Map(G.blds.map((b) => [b.id, b]));
 	for (const su of S.units) {
+		if (!su || !UNIT[su.kind] || !Number.isFinite(su.x) || !Number.isFinite(su.y)) continue; // likewise a damaged unit
 		const { nodeId, repId, huntId, ...u } = su;
 		u.node = nodeId ? byNode.get(nodeId) || null : null;
 		u.rep = repId ? byB.get(repId) || null : null;

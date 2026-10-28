@@ -101,6 +101,7 @@ cv.addEventListener('pointermove', (e) => {
 			d = hyp(a.x - b.x, a.y - b.y) || 1,
 			mx = (a.x + b.x) / 2,
 			my = (a.y + b.y) / 2;
+		if (G) G.follow = false; // a pinch is yours: the camera stops following
 		zoomAt((cam.z * d) / pinch.d, mx, my);
 		cam.x -= (mx - pinch.mx) / cam.z;
 		cam.y -= (my - pinch.my) / (cam.z * TILT);
@@ -132,6 +133,7 @@ cv.addEventListener('pointermove', (e) => {
 		holdStop();
 	}
 	if (drag.moved) {
+		if (G) G.follow = false; // a drag is yours too
 		cam.x = drag.cx - dx / cam.z;
 		cam.y = drag.cy - dy / (cam.z * TILT);
 		clampCam();
@@ -185,6 +187,7 @@ cv.addEventListener(
 	(e) => {
 		e.preventDefault();
 		const p = lp(e);
+		if (G) G.follow = false;
 		zoomAt(cam.z * Math.exp(-e.deltaY * 0.0015), p.x, p.y);
 	},
 	{ passive: false },
@@ -192,6 +195,7 @@ cv.addEventListener(
 ['gesturestart', 'gesturechange', 'gestureend'].forEach((t) => document.addEventListener(t, (e) => e.preventDefault()));
 mini.addEventListener('pointerdown', (e) => {
 	e.stopPropagation();
+	if (G) G.follow = false;
 	const r = mini.getBoundingClientRect();
 	cam.x = ((e.clientX - r.left) / r.width) * MAP;
 	cam.y = ((e.clientY - r.top) / r.height) * MAP;
@@ -270,6 +274,7 @@ function tapAt(sx, sy) {
 	hideStrip();
 	if (G.over) return;
 	if (RADAR && hyp(sx - RADAR.sx, sy - RADAR.sy) < 26) {
+		G.follow = false;
 		cam.x = RADAR.x;
 		cam.y = RADAR.y;
 		clampCam();
@@ -296,6 +301,12 @@ function tapAt(sx, sy) {
 		return;
 	}
 	if (h.t === 'ground') {
+		const O = ordAt(sx, sy);
+		if (O) {
+			ACT.ordpick(String(O.id));
+			return;
+		} // the ring of a group on the march: tap it to pick the group
+
 		showStrip(sx, sy, h.e.x, h.e.y);
 		return;
 	} // nothing picked: the send strip, as before
@@ -305,6 +316,20 @@ function tapAt(sx, sy) {
 		return;
 	} // a building, a field, a find: nothing to pick, so one tap opens it (Albert, Build 40)
 	setPick([{ t: h.t, id: h.e.id }]); // a unit not yours: a ring says what the finger found; a second tap opens its page
+}
+// the order ring under a finger (tap slop 26 px): the nearest group ring wins
+function ordAt(sx, sy) {
+	let best = null,
+		bd = 26;
+	for (const id in G.ords || {}) {
+		const O = G.ords[id],
+			d = hyp(SX(O.x) - sx, SY(O.y) - sy);
+		if (O.n && d < bd) {
+			bd = d;
+			best = O;
+		}
+	}
+	return best;
 }
 // what the finger holds
 const picked = () =>

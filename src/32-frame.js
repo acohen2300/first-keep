@@ -63,6 +63,10 @@ const ICON = {
 		16,
 		'<path d="M2 3.5 Q5.2 2.4 8 4 Q10.8 2.4 14 3.5 V12.5 Q10.8 11.4 8 13 Q5.2 11.4 2 12.5 Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 4 V13" stroke="currentColor" stroke-width="1.2"/>',
 	),
+	follow: SVG(
+		16,
+		'<circle cx="8" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 1.5 V4 M8 12 V14.5 M1.5 8 H4 M12 8 H14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+	),
 	map: SVG(
 		20,
 		'<path d="M3 5.5 L7.5 4 L12.5 5.5 L17 4 V14.5 L12.5 16 L7.5 14.5 L3 16 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M7.5 4 V14.5 M12.5 5.5 V16" stroke="currentColor" stroke-width="1.5"/>',
@@ -454,15 +458,20 @@ function ui(force) {
 				ic = (act, icon, label) => `<button data-act="${act}" aria-label="${label}">${icon}</button>`,
 				tx = (act, t) => `<button data-act="${act}"><b>${t}</b></button>`;
 			const tch = sol && fxv(0, 'teach').a >= 1 && P.some((u) => isSoldier(u) && teachTo(u) && u.state !== 'school');
+			const away = sol && P.some((u) => isSoldier(u) && u.state !== 'home'), // Recall: whoever is out on an order, or standing where you sent them
+				follow = `<button data-act="pfollow" class="${G.follow ? 'on' : ''}" aria-label="Follow: the camera goes with them">${ICON.follow}</button>`;
 			const row = sol
 				? tx('pcharge', 'Charge') +
 					tx('pfall', 'Fall back') +
 					tx('phold', 'Hold') +
+					(away ? tx('precall', 'Recall') : '') +
 					(tch ? tx('pteach', 'Teach') : '') +
-					(vil ? ic('pvil', ICON.people, 'Keep only the villagers') : '')
+					(vil ? ic('pvil', ICON.people, 'Keep only the villagers') : '') +
+					follow
 				: vil
 					? JOBS.map((j) => ic(`pjob:${j}`, ICON[j], `All to ${j}`)).join('') +
-						ic('pbuild', ICON.hammer, 'Build: they raise it')
+						ic('pbuild', ICON.hammer, 'Build: they raise it') +
+						follow
 					: '';
 			if (el.rowH !== row) {
 				el.rowH = row;
@@ -515,6 +524,18 @@ const linkOf = (m) => m && (m.act || (m.at ? `jump:${m.at.x},${m.at.y}` : ''));
 // The alert bar, in SoRen's pattern: a sign, the name in bold, one line in italics, a ring and the seconds. It takes the ticker line while an event is coming
 // (EV_WARN seconds, with how long it lasts) or running (what it does); a warning from the game still wins. Tap it to see where. The horde joins for its last 45 s.
 function alertNow() {
+	const I = G.incoming;
+	if (I && !G.over)
+		return {
+			name: 'Attack',
+			line: `${I.n} coming`,
+			now: true,
+			secs: 0,
+			left: I.eta,
+			total: 60,
+			at: { x: I.x, y: I.y },
+			hot: true,
+		};
 	const V = G.ev;
 	if (!V || G.over) return null;
 	const e = V.cur,
@@ -592,7 +613,7 @@ function tick() {
 			el.innerHTML = h;
 		}
 		el.dataset.act = A.at ? `jump:${Math.round(A.at.x)},${Math.round(A.at.y)}` : 'tklist';
-		$('ticker').className = 'tick alert ' + (A.now ? 'now' : 'soon');
+		$('ticker').className = 'tick alert ' + (A.now ? 'now' : 'soon') + (A.hot ? ' hot' : '');
 	} else {
 		tick.h = '';
 		txt('tkT', m ? m.text : '');

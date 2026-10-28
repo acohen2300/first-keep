@@ -487,3 +487,16 @@ Cut: the fixed three-minute raid clock.
 
 ## Housekeeping, Oct 28 (after Build 41j)
 GUIDE.md regenerated from the game (it was Build 32 and about half the size). HANDOFF.md brought to 41j; its item to purge a session log is cut (no session log is in the history). `tests/soak.py` added, run with `python3 tests/gate.py --soak`. Commit email changed to the GitHub noreply address and history rewritten to match (the repo is public). No game code changed.
+
+- **Play fingerprint accepted:** Build 42: soldiers on one order share one path search (paths differ slightly); computer sides buy food and shift villagers to food when saving for an age; the build-site check runs every 3 s, not on a lucky tick
+
+## Build 42 (Albert approved a 26-item list, Oct 28)
+- Source split into 40 files named by element; `draw` is a list of named layers, `step` calls `reap` and `sidesTick`. Prettier tabs, ESLint, unused names cut. No play change.
+- Events: the dead timers fixed (storm bolts every 2 s, stampede, flood, locusts, circus, dragon work). Flood hits 0.004, was too weak to see. Circus is now named Circus, Aurora named Aurora. Event lines shortened to fit the ticker.
+- Alert bar (from SoRen): names the event coming or running with a countdown ring; tap jumps to it. Quakes now show a crack and dust above the fog.
+- Army: each soldier has a state (Rallying, Marching, Fighting, Holding, Routed). Orders show a ring on the map with the seconds left; a finished order keeps a faint ring to tap. Pick bar: Recall for marching soldiers, Follow for the camera. A visible enemy group heading for your buildings turns the bar red with a count and seconds. Soldiers sent together share one path search.
+- Routed shows a red badge with a mark, not a white flag (a white flag reads as surrender). Marching soldiers show a small gold chevron.
+- Computers short of food while saving for an age sell surplus wood, stone or iron for gold and buy food, and move villagers to food. The build-site check ran on `tick % 90 === side`, which a timer-driven think hit by luck; now every 3 s. Balance change.
+- Saves: a failed save says so, once a minute. A damaged unit or building in a save is skipped, not the whole game.
+- Added: `tests/bot.py`, `tests/fmt.py`, `tests/lint.py`. Copyright line on the setup card and in the README.
+- Cut: the white flag over a routed soldier.

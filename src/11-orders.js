@@ -974,15 +974,67 @@ function boxCut(r, n) {
 
 // ── Orders you can follow: a group sent somewhere is stamped with its order; the map draws a line to where it is going, the People card
 // lists it, and the game says when it gets there (Build 38: an attack that marched 90 seconds with no sign looked like it never left)
+// A group sent somewhere is an order: it has a line and a ring on the map, a count and a time on the Army card, and a message when everyone has stopped.
+// k is how much longer the walk is than the straight line (one path found when the order is given); the time shown is the slowest marcher's.
 function march(S, to, label) {
 	if (!S.length) return;
 	const id = (G.ordN = (G.ordN || 0) + 1);
-	(G.ords = G.ords || {})[id] = { id, x: Math.round(to.x), y: Math.round(to.y), label, t: G.t, arrived: false };
-	for (const u of S) u.ord = id;
+	let cx = 0,
+		cy = 0;
+	for (const u of S) {
+		cx += u.x;
+		cy += u.y;
+	}
+	cx /= S.length;
+	cy /= S.length;
+	const p = astar(cx, cy, to.x, to.y, 0),
+		len = p.pts.reduce(
+			(s, q, i) => s + (i ? hyp(q.x - p.pts[i - 1].x, q.y - p.pts[i - 1].y) : hyp(q.x - cx, q.y - cy)),
+			0,
+		),
+		k = p.pts.length ? clamp(len / Math.max(1, hyp(to.x - cx, to.y - cy)), 1, 3) : 1;
+	(G.ords = G.ords || {})[id] = { id, x: Math.round(to.x), y: Math.round(to.y), label, t: G.t, arrived: false, k };
+	for (const u of S) {
+		u.ord = id;
+		u.mvT = G.t; // just ordered: counts as moving until it proves otherwise
+	}
 	say(`${S.length} marching: ${label}.`, '', 3);
 }
+function incomingTick() {
+	// the nearest hostile group you can see that is heading for your buildings: how many, and how long until it arrives (Build 42)
+	const mine = G.blds.filter((b) => b.owner === 0 && b.hp > 0);
+	let best = null,
+		bd = 520;
+	if (mine.length)
+		for (const u of G.units) {
+			if (u.hp <= 0 || u.owner === 0 || friendly(0, u.owner) || !isSoldier(u) || u.state !== 'attack' || !seen0(u))
+				continue;
+			for (const b of mine) {
+				const d = hyp(u.x - b.x, u.y - b.y);
+				if (d < bd) {
+					bd = d;
+					best = u;
+				}
+			}
+		}
+	if (!best) {
+		G.incoming = null;
+		return;
+	}
+	const n = G.units.filter(
+		(u) => u.hp > 0 && u.owner === best.owner && u.state === 'attack' && hyp(u.x - best.x, u.y - best.y) < 140,
+	).length;
+	G.incoming = {
+		x: best.x,
+		y: best.y,
+		n,
+		what: n > 1 ? 'enemy soldiers' : 'enemy soldier',
+		eta: Math.ceil(bd / Math.max(1, stats(best.owner, best.kind).spd)),
+	};
+}
 function ordersTick() {
-	// once a second: who is still on each order, and has it arrived
+	// once a second: who is still on each order, how many are still walking, and has everyone stopped
+	incomingTick();
 	if (!G.ords) return;
 	const by = {};
 	for (const u of G.units) if (u.owner === 0 && u.ord && u.hp > 0) (by[u.ord] = by[u.ord] || []).push(u);
@@ -994,24 +1046,31 @@ function ordersTick() {
 			continue;
 		}
 		let x = 0,
-			y = 0;
+			y = 0,
+			walk = 0,
+			fight = 0,
+			rout = 0,
+			eta = 0;
 		for (const u of S) {
 			x += u.x;
 			y += u.y;
+			const st = armyStatus(u);
+			if (st === 'march') {
+				walk++;
+				eta = Math.max(eta, (hyp(u.x - O.x, u.y - O.y) * (O.k || 1)) / Math.max(1, stats(0, u.kind).spd));
+			} else if (st === 'fight') fight++;
+			else if (st === 'rout') rout++;
 		}
 		O.cx = x / S.length;
 		O.cy = y / S.length;
 		O.n = S.length;
-		O.fight = S.some((u) => u.tgt && u.tgt.hp > 0);
-		if (!O.arrived && (hyp(O.cx - O.x, O.cy - O.y) < 90 || S.every((u) => u.state === 'goto' && u.idleT > 1))) {
+		O.walk = walk;
+		O.fight = fight > 0;
+		if (!O.arrived && !walk && !fight && !rout && G.t - O.t > 3) {
 			O.arrived = true;
 			say(`${S.length} arrived: ${O.label}.`, 'good', 4, O);
-		} // there, or every one has stopped: a straggler cannot hold the rest on the order
-		if (!O.arrived) {
-			let spd = 1e9;
-			for (const u of S) spd = Math.min(spd, stats(0, u.kind).spd);
-			O.eta = Math.round(hyp(O.cx - O.x, O.cy - O.y) / Math.max(1, spd));
-		}
+		} // every one has stopped: a straggler that never got there is counted as stopped too
+		O.eta = O.arrived ? 0 : Math.ceil(eta);
 	}
 	for (const u of G.units) if (u.ord && (!G.ords[u.ord] || u.state === 'home')) u.ord = undefined; // called home: no longer on that order
 }

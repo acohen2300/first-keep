@@ -60,8 +60,39 @@ function qsHTML(verb, label, to) {
 // ── The send strip: tap open ground and a small row of choices sits at your finger: a quarter, all, a battalion, more, cancel.
 // A quarter takes a quarter of each type, nearest first, so the mix of the army goes along.
 const sendable = () => armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && u.state !== 'escort'); // guards keep to what they guard
-const onOrder = (u) => u.state === 'attack' || (u.ord && G.ords && G.ords[u.ord] && !G.ords[u.ord].arrived); // marching or attacking under an order you gave
-const free = () => sendable().filter((u) => !onOrder(u)); // All, a quarter, 8 and 12 never pull a raid off its way (Build 38)
+// What each soldier is doing, in one word (Albert, Build 42), worked out from the soldier alone:
+// rally (just trained or called home, walking to its place), march (on your order), fight, hold (stopped: at its place or at the spot you sent it), rout (nerve broke, running).
+// 'other' is a guard, a priest at a shrine, a student, a spy. A soldier that has not moved for two and a half seconds is holding, even if it never got there.
+const ARMY_STILL = 2.5;
+function armyStatus(u) {
+	if (u.state === 'rout') return 'rout';
+	if (u.tgt && u.tgt.hp > 0) return 'fight';
+	if (u.state === 'attack') return 'march';
+	if (u.state === 'goto') {
+		if (u.idleT > 1 || G.t - (u.mvT ?? -9) > ARMY_STILL) return 'hold';
+		return !u.ord && G.rally0 && hyp(u.px - G.rally0.x, u.py - G.rally0.y) < 4 ? 'rally' : 'march'; // a new soldier walking to your rally flag is rallying
+	}
+	if (u.state === 'home') return u.hax !== undefined && hyp(u.x - u.hax, u.y - u.hay) > 14 ? 'rally' : 'hold';
+	return 'other';
+}
+const idleSoldier = (u) => {
+	const s = armyStatus(u);
+	return s === 'hold' || s === 'rally';
+};
+// All, a half, a quarter, the nearest five, ten, twenty: idle soldiers only, so a group on the march is never pulled off its way (Build 38; Build 42: counted soldier by soldier)
+const free = () => sendable().filter(idleSoldier);
+// why nobody can be sent: nobody exists, or who is busy doing what
+function freeWhy() {
+	if (!sendable().length) return 'No soldiers yet. Train some.';
+	const c = { march: 0, fight: 0, rout: 0 };
+	for (const u of sendable()) if (c[armyStatus(u)] !== undefined) c[armyStatus(u)]++;
+	const parts = [
+		c.march && `${c.march} marching`,
+		c.fight && `${c.fight} fighting`,
+		c.rout && `${c.rout} routed`,
+	].filter(Boolean);
+	return `None idle: ${parts.slice(0, 2).join(', ') || 'all are guarding'}.`;
+}
 const guardsOf = (t, id) =>
 	armyOf(0).filter((u) => u.state === 'escort' && (t === 'f' ? u.escF === id : u.escId === id)); // up to 12 soldiers escort one caravan or garrison one trade stop
 function guardRow(t, id) {
@@ -118,13 +149,13 @@ function showStrip(sx, sy, x, y, step) {
 	if (!step)
 		el.innerHTML =
 			ic(`buildhere:${at}`, ICON.hammer, 'Build here') +
-			ic(nAll ? 'striparmy' : 'nostrip', ICON.sword, 'Send soldiers here', nAll ? 'go thumb' : 'dis thumb') +
+			ic(nAll ? 'striparmy' : 'nofree', ICON.sword, 'Send soldiers here', nAll ? 'go thumb' : 'dis thumb') +
 			ic(`more:${at}`, '⋯', 'More about this place') +
 			ic('nostrip', ICON.close, 'Cancel');
 	else if (step === 1)
 		el.innerHTML =
 			btn(`sendto:h,${at}`, '½', String(n('h')), 'ic') +
-			btn(`sendto:all,${at}`, 'All', String(nAll), 'ic go thumb') +
+			btn(`sendto:all,${at}`, 'All', `${nAll} idle`, 'ic go thumb') +
 			ic('stripmore', '⋯', 'More ways to send') +
 			ic('nostrip', ICON.close, 'Cancel');
 	// three taps in one spot: open, sword, All (Albert: a fast dispatch)
@@ -132,7 +163,7 @@ function showStrip(sx, sy, x, y, step) {
 		const bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
 		el.innerHTML =
 			btn(`sendto:q,${at}`, '¼', String(n('q'))) +
-			[8, 12]
+			[5, 10, 20]
 				.filter((k) => nAll > k)
 				.map((k) => btn(`sendto:n${k},${at}`, String(k), 'nearest'))
 				.join('') +

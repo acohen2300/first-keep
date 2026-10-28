@@ -100,7 +100,7 @@ const EV = {
 	},
 	storm: {
 		draw(e, z, t) {
-			if (lessMotion) return;
+			if (lessMotion || !Number.isFinite(e.x)) return; // no place yet in the first second
 			// a dark band of cloud walking east, rain under it
 			const x = SX(e.x),
 				w = EVENTS.storm.band * z;
