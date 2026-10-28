@@ -119,7 +119,7 @@ function wallPlan(k) { // an arc 190 out from the keep, facing the middle of the
     add(gx, gy); pc = { gx, gy };
   }
   cells.slice().sort((a, b) => a.da - b.da).slice(0, 2).forEach(c => c.kind = 'gate');
-  return cells;
+  return cells.filter(c => c.kind === 'gate').concat(cells.filter(c => c.kind !== 'gate'));   // the gate first, so the ring never closes without one
 }
 // how the two armies' units fare against each other: spearmen against horse, archers against spearmen
 function matchup(A, B) {

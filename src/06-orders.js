@@ -199,7 +199,7 @@ const guarded = b => G.blds.some(d => d.owner === b.owner && watchtower(d) && di
 function sabotage(u, b) {
   const how = BLD[b.kind].sab; if (!how) return false;
   if (how === 'burn') { b.hp -= maxHpB(b.owner, b.kind) * SAB.burn; if (b.hp > 0) ignite(b, 'sabotage'); }
-  else { b.stall = G.t + SAB.stall; const j = b.q.shift(); if (j && j.age) G.P[b.owner].aging = false; }
+  else { b.stall = G.t + SAB.stall; const j = b.q.shift(); if (j && j.age) G.P[b.owner].aging = false; if (j && (j.tech || j.age)) G.P[b.owner].spent -= sumCost(j.tech ? TECHBY[j.tech].cost : AGES[j.age].cost); }   // lost research is not counted as research paid
   if (b.hp <= 0) b.by = undefined;   // a fire pays nobody
   u.hp = 0; sfx(how === 'burn' ? 'crash' : 'err', b.x, b.y);
   const nm = bldName(b.owner, b.kind);
@@ -231,7 +231,7 @@ function hire(o, f) {
 function setJob(u, job, n) { if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1); u.job = job; u.node = n || null; if (n && n.farm) n.wk = (n.wk || 0) + 1; if (job !== 'repair') u.rep = null; }
 // the villager to send: the nearest idle one; if none is idle, one from the job whose stock you hold the most of
 function pickVil(o, to, skipJob, site) {
-  const p = G.P[o], V = unitsOf(o, 'vil').filter(u => !u.inside && !(site && u.rep === site)), idle = V.filter(u => !u.job), other = V.filter(u => u.job && u.job !== skipJob && u.job !== 'repair');
+  const p = G.P[o], V = unitsOf(o, 'vil').filter(u => !u.inside && !(site && u.rep === site)), idle = V.filter(u => !u.job), other = V.filter(u => u.job && u.job !== skipJob && u.job !== 'repair' && !GOODK.includes(u.job));   // weavers, brewers and shepherds keep their posts unless nobody else can go
   const stock = u => p.res[KEY[u.job]] || 0;
   if (idle.length) return nearest(idle, to);
   const pool = other.length ? other : V.filter(u => u.job !== 'repair'); if (!pool.length) return null;   // nobody is pulled off a site: with all hands busy, the order waits
@@ -290,4 +290,24 @@ function boxCut(r, n) {   // send n villagers to cut the trees in the box, then 
   const mid = { x: (r.x0 + r.x1) / 2, y: (r.y0 + r.y1) / 2 }, V = unitsOf(0, 'vil').filter(u => !u.inside && !u.patch && u.job !== 'repair').sort((a, b) => (!!a.job - !!b.job) || dist(a, mid) - dist(b, mid));   // idle first, then the nearest
   let sent = 0; for (const v of V.slice(0, n)) { v.pj = v.job === 'wood' ? null : v.job; setJob(v, 'wood'); v.patch = { ...r }; sent++; }
   say(sent ? `${sent} villager${sent > 1 ? 's go' : ' goes'} to cut the trees in the box.` : 'No villager is free.', '', 4);
+}
+
+// ── Orders you can follow: a group sent somewhere is stamped with its order; the map draws a line to where it is going, the People card
+// lists it, and the game says when it gets there (Build 38: an attack that marched 90 seconds with no sign looked like it never left)
+function march(S, to, label) {
+  if (!S.length) return;
+  const id = (G.ordN = (G.ordN || 0) + 1); (G.ords = G.ords || {})[id] = { id, x: Math.round(to.x), y: Math.round(to.y), label, t: G.t, arrived: false };
+  for (const u of S) u.ord = id;
+  say(`${S.length} marching: ${label}.`, '', 3);
+}
+function ordersTick() {   // once a second: who is still on each order, and has it arrived
+  if (!G.ords) return;
+  const by = {}; for (const u of G.units) if (u.owner === 0 && u.ord && u.hp > 0) (by[u.ord] = by[u.ord] || []).push(u);
+  for (const id in G.ords) {
+    const O = G.ords[id], S = by[id]; if (!S) { delete G.ords[id]; continue; }
+    let x = 0, y = 0; for (const u of S) { x += u.x; y += u.y; } O.cx = x / S.length; O.cy = y / S.length; O.n = S.length; O.fight = S.some(u => u.tgt && u.tgt.hp > 0);
+    if (!O.arrived && hyp(O.cx - O.x, O.cy - O.y) < 90) { O.arrived = true; say(`${S.length} arrived: ${O.label}.`, 'good', 4, O); }
+    if (!O.arrived) { let spd = 1e9; for (const u of S) spd = Math.min(spd, stats(0, u.kind).spd); O.eta = Math.round(hyp(O.cx - O.x, O.cy - O.y) / Math.max(1, spd)); }
+  }
+  for (const u of G.units) if (u.ord && (!G.ords[u.ord] || u.state === 'home')) u.ord = undefined;   // called home: no longer on that order
 }

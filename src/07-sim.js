@@ -1,6 +1,8 @@
 // ═════ 07-sim.js ═════
 // ───────────────────────── The simulation ─────────────────────────
 const isThreat = v => { const U = UNIT[v.kind]; return !v.inside && v.hp > 0 && (U.tick === 'sol' ? !U.bonly : U.tick === 'wild' && U.dmg && !U.flee && !U.passive); };
+// once a second, and at once after a load: finds with live guards (villagers keep away from work beside them), and how many work each find (so workers spread out)
+function recount() { G.guarded = G.finds.filter(f => !f.done && guardsLeft(f)); dangerMap(); for (const n of G.nodes) n.wk = 0; for (const u of G.units) if (u.node && u.kind === 'vil') u.node.wk++; }
 function step(dt) {
   if (G.over) return;
   G.t += dt; G.tick++; G.night = nightness();
@@ -13,7 +15,7 @@ function step(dt) {
   for (const b of G.blds) if (b.hp > 0) bldTick(b, dt);
   econTick(dt);
   if (G.tick % 3 === 0) formUp();
-  if (G.tick % 30 === 1) { G.guarded = G.finds.filter(f => !f.done && guardsLeft(f)); dangerMap(); for (const n of G.nodes) n.wk = 0; for (const u of G.units) if (u.node && u.kind === 'vil') u.node.wk++; }   // how many work each find: workers spread out instead of crowding one bush   // finds with live guards: villagers keep away from work beside them
+  if (G.tick % 30 === 1) { recount(); ordersTick(); }
   for (const u of G.units) if (u.hp > 0) TICK[UNIT[u.kind].tick](u, dt, SPS[u.owner]);
   healTick(dt);
   collide();
@@ -85,7 +87,7 @@ function judge() {
   if (G.wonder && G.t >= G.wonder.end) { const o = G.wonder.owner; finish(o === 0, o === 0 ? `Your ${civOf(0).wonder} stood for ${WONDER_HOLD / 60} minutes.` : `${G.P[o].name}' ${civOf(o).wonder} stood for ${WONDER_HOLD / 60} minutes.`); return; }
   const lim = MODES[G.mode].secs;
   if (lim && !G.bell) G.bell = {};
-  if (lim) for (const m of [300, 60]) if (G.t >= lim - m && !G.bell[m]) { G.bell[m] = 1; if (G.t < lim - m + 5) say(`${m / 60} minute${m > 60 ? 's' : ''} to the bell: whoever leads on score wins.`, 'warn', 7); }
+  if (lim) for (const m of [300, 60]) if (G.t >= lim - m && !G.bell[m]) { G.bell[m] = 1; if (G.t < lim - m + 5) say(`${m / 60} minute${m > 60 ? 's' : ''} left: top score wins.`, 'warn', 7); }
   if (lim && G.t >= lim) { scoreAll(); const top = G.P.filter(p => p.id !== WILD && p.alive).sort((a, b) => b.score.total - a.score.total)[0]; finish(top.id === 0, top.id === 0 ? `The bell: you lead with ${fmt(top.score.total)}.` : `The bell: ${top.name} lead with ${fmt(top.score.total)}; you have ${fmt(G.P[0].score.total)}.`); }
 }
 
@@ -130,7 +132,7 @@ function built(b) {
   if (B.sheep && b.node) b.node.amt = (b.sheep || 0) * FLEECE * 0.5;   // a new flock comes with half a year's wool on its back
   if (b.kind === 'wonder') {
     G.wonder = { owner: o, id: b.id, end: G.t + WONDER_HOLD };
-    say(o === 0 ? `Your ${civOf(0).wonder} is finished. Hold it ${WONDER_HOLD / 60} minutes to win.` : `${G.P[o].name} finished the ${civOf(o).wonder}. Destroy it within ${WONDER_HOLD / 60} minutes or they win.`, o === 0 ? 'good' : 'warn', 10, b);
+    say(o === 0 ? `Your wonder stands. Hold it ${WONDER_HOLD / 60} min to win.` : `${G.P[o].name} built a wonder: break it in ${WONDER_HOLD / 60} min!`, o === 0 ? 'good' : 'warn', 10, b);
     sfx('age');
   }
 }
@@ -260,7 +262,7 @@ function repairTick(u, dt, SP) {
   if (u.fireman && !(b && b.hp > 0 && b.fire > 0)) { u.fireman = false; const pj = u.pj; u.pj = null; setJob(u, pj && pj !== 'repair' ? pj : null); return; }   // the fire is out: back to work
   if (!b || b.hp <= 0 || b.owner !== o) { u.building = false; setJob(u, null); return; }
   if (b.fire > 0) { if (rectGap(u.x, u.y, b) > 7 && !moveTo(u, b.x, b.y, dt, 8, SP)) return;
-    if (!b.smoke && (b.spread || b.hp < maxHpB(o, b.kind) / 2) && rng() < FIRE_SMOKE * dt) { b.smoke = true; u.hp = 0; if (o === 0) say(`Smoke killed a villager at the ${bldName(0, b.kind).toLowerCase()}. Catch fires early.`, 'warn', 6, b); return; }   // a big fire can take one of its fighters
+    if (!b.smoke && (b.spread || b.hp < maxHpB(o, b.kind) / 2) && rng() < FIRE_SMOKE * dt) { b.smoke = true; u.hp = 0; if (o === 0) say(`Smoke killed a villager at the ${bldName(0, b.kind).toLowerCase()}.`, 'warn', 6, b); return; }   // a big fire can take one of its fighters
     b.fire = Math.max(0, b.fire - 0.2 * dt); u.work = G.t; if (!b.fire && b.owner === 0) say(`The fire at the ${bldName(0, b.kind).toLowerCase()} is out.`, 'good', 4, b); return; }
   if (b.prog < 1) {   // raising a site: walk there and work it
     u.building = true;
@@ -472,7 +474,7 @@ function wayfarers(dt) {
   G.wayT -= dt; if (G.wayT > 0) return; G.wayT = WAYFARER_EVERY;
   const E = [[MID, 60], [MAP - 60, MID], [MID, MAP - 60], [60, MID]], i = G.wayI++ % 4, a = E[i], b = E[(i + 2) % 4];
   const w = addUnit(WILD, 'wayfarer', a[0], a[1]); w.px = b[0]; w.py = b[1];
-  say('A wayfarer walks the road. First there gains a villager.', '', 6, w);
+  say('A wayfarer: reach him first to gain him.', '', 6, w);
 }
 function wayfarerTick(u, dt, SP) {
   if ((G.tick + u.id) % 6 === 0) {

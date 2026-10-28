@@ -1,7 +1,7 @@
 # The gate: what must hold before a build goes live, measured at four iPhone sizes, not judged by eye.
 # No page errors; no two buildings alike at half zoom; nothing wider than the screen; every word inside its button; text at least 12 px; contrast at least 4.5:1 (target 7:1); no card but Help and the Guide needs scrolling from 390 × 844 up (the iPhone SE at 375 × 667 is too short for the biggest cards); every tap target at least 44 × 44 points (Apple's rule), except the − and + tiles under each job (six columns leave them 26 to 29 points wide; kept by choice, Build 36).
 # Run from first-keep/:  python3 build.py && python3 wrap.py && python3 tests/gate.py
-import asyncio, json, os, sys
+import asyncio, json, os, subprocess, sys
 from playwright.async_api import async_playwright
 SIZES = [(375, 667), (390, 844), (393, 852), (430, 932)]
 SETUP = """() => { const F = window.__fk; F.newGame(5); F.act('close'); const G = F.G, P = G.P[0], k = F.keepOf(0); F.setPause(true);
@@ -40,8 +40,8 @@ LOOK = """() => { const F=window.__fk; F.newGame(5); const G=F.G; const s=1;   /
 PLAY = """async () => {
   const F = window.__fk, out = [], tap = sel => { const el = document.querySelector(sel); if (!el) { out.push('missing ' + sel); return; } el.click(); };
   F.setPause(false); F.newGame(5); F.act('close'); const G = F.G; G.P[0].res = { f: 9999, w: 9999, s: 9999, g: 9999, i: 9999 };
-  tap('#buildB'); if (document.getElementById('bmenu').hidden) out.push('Build row did not open');
-  tap('#bm_home'); if (!G.card || G.card.type !== 'menu') out.push('Home menu card did not open');
+  tap('#buildB'); if (!G.card || G.card.type !== 'menu') out.push('Build did not open the Build card');
+  tap('[data-act="menu:home"]'); if (!G.card || G.card.id !== 'home') out.push('the Home tab did not open');
   tap('[data-act="build:house"]'); if (!G.place || G.place.kind !== 'house') out.push('tapping House did not start placing');
   F.act('cancel'); if (G.place) out.push('Cancel left a placement');
   const q0 = F.keepOf(0).q.length; tap('#tVil'); if (F.keepOf(0).q.length !== q0 + 1) out.push('+ did not queue a villager');
@@ -114,6 +114,17 @@ async def main():
         pg = await br.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
         await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
         play = await pg.evaluate(PLAY) + errs[:2]; print(('PASS ' if not play else 'FAIL ') + 'taps do what they say', '' if not play else play); fails += bool(play); await pg.close()
+        # a phone lays the page out at its own width (without the viewport line an iPhone uses 980: the tall, narrow column of Build 37)
+        for page_file in ('first-keep.html', 'native/index.html'):
+            ctx = await br.new_context(viewport={'width': 390, 'height': 844}, is_mobile=True, has_touch=True, device_scale_factor=3); pg = await ctx.new_page()
+            await pg.goto('file://' + os.path.abspath(page_file)); await pg.wait_for_timeout(400); w = await pg.evaluate('() => [document.documentElement.clientWidth, document.compatMode]'); await ctx.close()
+            ok = w[0] == 390 and w[1] == 'CSS1Compat'; print(('PASS ' if ok else 'FAIL ') + f'{page_file} lays out at the phone width, standards mode', '' if ok else w); fails += not ok
+        # every message and tip on ONE line of the banner at 375 px, the small map open and shut (Albert, Build 38: "these sentences are too long")
+        L = json.loads(subprocess.run([sys.executable, 'tests/words.py', '--list'], capture_output=True, text=True).stdout)
+        pg = await br.new_page(viewport={'width': 375, 'height': 667}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(500)
+        wraps = await pg.evaluate("""(L) => { const F = window.__fk; F.newGame(5); F.act('close'); const out = []; const b = document.getElementById('banner'); for (const open of [false, true]) { document.getElementById('stage').classList.toggle('mapOn', open);
+          for (const t of L) { b.innerHTML = '<div class="msg"><span>' + t + '</span><button aria-label="x">x</button></div>'; const s = b.querySelector('span'), r = document.createRange(); r.selectNodeContents(s); if (new Set([...r.getClientRects()].map(x => Math.round(x.top))).size > 1) out.push((open ? 'map open: ' : '') + t); } } b.innerHTML = ''; return out; }""", L); await pg.close()
+        print(('PASS ' if not wraps else 'FAIL ') + f'{len(L)} messages fit one line at 375 px', '' if not wraps else wraps[:6]); fails += bool(wraps)
         fp, _ = await fingerprint(br); print(('PASS ' if not fp else 'FAIL ') + 'the game plays as the baseline says', '' if not fp else '\n  ' + '\n  '.join(fp[:4]) + '\n  (a deliberate rule change: python3 tests/gate.py --accept "why")'); fails += bool(fp)
         await br.close()
     sys.exit(1 if fails else 0)

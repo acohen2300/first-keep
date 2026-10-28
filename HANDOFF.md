@@ -1,4 +1,4 @@
-# First Keep: handoff (Build 37)
+# First Keep: handoff (Build 38)
 
 ## What it is
 Albert's single-file HTML mobile RTS (Age of Empires style). Albert is not a coder.
@@ -39,6 +39,9 @@ One pill of 8 cells on top (five counts, mute, pause, speed), the strip (age · 
 - Draw: per-item try/catch to `fault(e)`, which now also puts the canvas back; sprite builders report through `fault` too.
 - Toasts: `say(text, cls, secs, at, act)`; `SET.msgs`, `SET.tips`, `advise()` ('!' = urgent). Pace: `speed()`, `paceBtn()`, `setPause()`.
 - Measured (phone-speed emulation, Build 36 → 37): one step early game 2.5 → 2.1 ms; 700-unit battle 27.5 → 22.4 ms; idle screen rewrites 37/s → 0.2/s; save 350 → 159 KB.
+
+## Design
+The long-game design doc (Oct 28): https://claude.ai/artifact/P3ThRoHEPXSjQXHaLTAiYM. Diagnosis, the Throne, politics, teeth (a Challenge level borrowed from SoRen), spectacle and world news, combat you steer, variety, look and sound, scale, and the build order 39-43. Read it before proposing features.
 
 ## Open items
 1. Albert's real-phone test of Build 37 (same checks as 36: tap sizes, strip taps, Build row, People − and +, the glow, 375 px).

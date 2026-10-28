@@ -27,7 +27,7 @@ const tpl = document.createElement('div');
 function patchHTML(el, html) { tpl.innerHTML = html; patchKids(el, tpl); }
 // ── the pieces every card is made of
 const cap1 = t => t && t.indexOf('<') < 0 ? t.replace(/(^|· )([a-z])/g, (m, a, c) => a + c.toUpperCase()) : t;   // sentence case: a capital opens every label and every part after a dot
-const btn = (act, title, sub, cls) => `<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small>${cap1(sub)}</small>` : ''}</button>`;
+const btn = (act, title, sub, cls) => `<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small${sub.startsWith('short ') ? ' class="need"' : ''}>${cap1(sub)}</small>` : ''}</button>`;   // a sub-line that says what is short reads in red
 const FOLD = new Set();   // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 const twoTabs = (key, opts, cur) => `<div class="acts tabs">${opts.map(([k, t, sub]) => btn(`${key}:${k}`, (ICON.tab[k] || '') + t, sub, cur === k ? 'on' : '')).join('')}</div>`;   // two-sided cards, one mold: two tabs; the chosen one is lit
 const INFO = new Set(['why', 'bmore', 'about', 'menu', 'bnabout']); let infoBuf = [];   // the explaining text of a card waits behind the book icon
@@ -47,7 +47,7 @@ function beatsText(o, k) {
 function trainButtons(kinds) {
   const p = G.P[0];
   return kinds.map(k => { const ck = civKind(0, k), U = UNIT[ck], why = trainWhy(0, k), n = queuedOf(0, k);
-    const sub = U.age > p.age ? `${AGES[U.age].name} age` : !ready(0, U.at).length ? `needs a ${BLD[U.at].name.toLowerCase()}` : costText(U.cost);
+    const sub = U.age > p.age ? `${AGES[U.age].name} age` : !ready(0, U.at).length ? `needs a ${BLD[U.at].name.toLowerCase()}` : !afford(p, U.cost) ? `short ${need(U.cost)}` : costText(U.cost);
     return btn(`train:${k}`, stats(0, ck).name, sub + (n ? ` ×${n}` : ''), why ? 'dis' : ''); }).join('');
 }
 // Research, in four looks you can tell without reading: ready (wax seal), short of something (red ink, what is missing), busy, locked (faded)
@@ -57,9 +57,8 @@ function techState(t) {
   return !why ? 'ready' : why === 'Being researched.' || why === 'That line is full.' ? 'busy' : why.startsWith('Not enough') ? 'short' : 'locked';
 }
 function techBtn(t, withAt) {
-  const p = G.P[0], st = techState(t), miss = {};
-  for (const r in t.cost) if ((p.res[r] || 0) < t.cost[r]) miss[r] = Math.ceil(t.cost[r] - (p.res[r] || 0));
-  const sub = st === 'busy' ? 'researching' : st === 'short' ? `short ${costText(miss)}` : st === 'locked' ? researchWhy(0, t.id).replace(/\.$/, '') : costText(t.cost);
+  const st = techState(t);
+  const sub = st === 'busy' ? 'researching' : st === 'short' ? `short ${need(t.cost)}` : st === 'locked' ? researchWhy(0, t.id).replace(/\.$/, '') : costText(t.cost);
   return btn(`tech:${t.id}`, t.name, sub + (withAt ? ` · ${BLD[t.at].name}` : ''), st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock');
 }
 const trainsAt = kind => Object.keys(UNIT).filter(k => (UNIT[k].at === kind || (UNIT[k].also || []).includes(kind)) && !UNIT[k].civ && UNIT[k].cost);
@@ -69,6 +68,7 @@ function keepAgeBtn() {   // the next age, as one research button; the reason wa
   return btn('age', `${A.name} age`, p.aging ? 'advancing' : costText(A.cost), p.aging || !afford(p, A.cost) ? 'dis' : 'go');
 }
 const goodsText = g => GOODK.filter(k => g[k] >= 1).map(k => `${Math.floor(g[k])} ${GOODS[k].name.toLowerCase()}`).join(', ');
+const need = c => { const p = G.P[0], miss = {}; for (const r in c) if ((p.res[r] || 0) < c[r]) miss[r] = Math.ceil(c[r] - (p.res[r] || 0)); return costText(miss); };   // what a cost is short of now
 const slotText = n => n && n.wk > 0 ? `${n.wk} of ${slotsOf(n)}` : 'nobody yet';
 const qName = j => j.kind ? stats(0, j.kind).name : j.muster ? `muster ${j.bn !== undefined ? BN[j.bn] : ''}` : j.tech ? TECHBY[j.tech].name : AGES[j.age].name + ' age';
 // the side at war with you whose Town Center is nearest yours
@@ -95,13 +95,16 @@ function qsHTML(verb, label, to) {
 // ── The send strip: tap open ground and a small row of choices sits at your finger: a quarter, all, a battalion, more, cancel.
 // A quarter takes a quarter of each type, nearest first, so the mix of the army goes along.
 const sendable = () => armyOf(0).filter(u => u.kind !== 'spy' && u.state !== 'shrine' && u.state !== 'escort');   // guards keep to what they guard
+const onOrder = u => u.state === 'attack' || (u.ord && G.ords && G.ords[u.ord] && !G.ords[u.ord].arrived);   // marching or attacking under an order you gave
+const free = () => sendable().filter(u => !onOrder(u));   // All, a quarter, 8 and 12 never pull a raid off its way (Build 38)
 const guardsOf = (t, id) => armyOf(0).filter(u => u.state === 'escort' && (t === 'f' ? u.escF === id : u.escId === id));   // up to 12 soldiers escort one caravan or garrison one trade stop
 function guardRow(t, id) {
   const n = guardsOf(t, id).length, free = sendable().length, verb = t === 'f' ? 'Garrison' : 'Escort';
   return acts(btn(`guard:${t},${id}`, `${verb} +4`, n >= POST.guard ? `full: ${n}/${POST.guard}` : free ? `${n}/${POST.guard} · ${free} free` : 'no free soldiers', n < POST.guard && free ? '' : 'dis') + btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis'));
 }
-function sendPick(from, to) {
-  const A = sendable(), by = {};
+function sendPick(from, to) {   // 'q' a quarter of each type, 'all', 'n8' the nearest eight, or a battalion by its number
+  if (typeof from === 'string' && from[0] === 'n') return free().sort((p, q) => dist(p, to) - dist(q, to)).slice(0, Number(from.slice(1)));
+  const A = typeof from === 'number' ? sendable() : free(), by = {};
   for (const u of A) if (from === 'q' || from === 'all' || u.bn === from) (by[u.kind] = by[u.kind] || []).push(u);
   const out = []; for (const k in by) { const a = by[k].sort((p, q) => dist(p, to) - dist(q, to)); out.push(...a.slice(0, from === 'q' ? Math.ceil(a.length / 4) : a.length)); }
   return out;
@@ -109,7 +112,8 @@ function sendPick(from, to) {
 function showStrip(sx, sy, x, y) {
   closeCard(); const el = $('strip'), at = `${Math.round(x)},${Math.round(y)}`, to = { x, y }, n = from => sendPick(from, to).length;
   const bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
-  el.innerHTML = (n('all') ? btn(`sendto:q,${at}`, 'Send ¼', String(n('q')), 'go') + btn(`sendto:all,${at}`, 'All', String(n('all'))) + bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') : '')
+  const nAll = n('all'), quick = [8, 12].filter(k => nAll > k).map(k => btn(`sendto:n${k},${at}`, String(k), 'quick')).join('');   // a quick 8 or 12: the nearest free ones
+  el.innerHTML = (nAll ? btn(`sendto:q,${at}`, 'Send ¼', String(n('q')), 'go') + quick + btn(`sendto:all,${at}`, 'All', String(nAll)) + bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') : '')
     + btn(`more:${at}`, '⋯', '') + `<button data-act="nostrip" aria-label="Cancel">✕</button><small class="sn">Hold, then drag to box a group</small>`;
   el.hidden = false; G.strip = to;
   const r = $('stage').getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight;
@@ -345,6 +349,8 @@ const CARDS = {
     let h = title('People', `${V.length} villagers · ${S.length} soldiers`) + acts(btn('card:research', 'Research', `${r} ready · ${going} under way`, r ? 'go' : '') + btn('help', 'How to play', 'the guide and the rules'), 'c1');
     h += sec('Villagers') + `<p>${JOBS.map(j => `${V.filter(u => u.job === j).length} ${j}`).join(' · ')} · <b>${idle.length} idle</b></p>` + (idle.length ? acts(btn('idlego', 'Show an idle villager', `${idle.length} idle`), 'c1') : '');
     h += sec('Army') + `<p>${Object.entries(by).map(([n, k]) => `${k} ${some(k, n.toLowerCase())}`).join(' · ') || 'Nobody yet.'}</p>`;
+    const ords = Object.values(G.ords || {}).filter(O => O.n);
+    if (ords.length) h += sec('Out on orders') + ords.map(O => `<p data-act="jump:${O.x},${O.y}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`).join('');   // tap a line to look
     if (S.length && hasCmd()) h += sec('Orders go to') + acts([['all', 'All', S.length]].concat(BN.map((n, i) => [i, n, S.filter(u => u.bn === i).length])).map(([k, n, cnt]) => btn(`sel:${k}`, n, `${cnt}`, G.sel === k ? 'on' : '')).join(''), 'c4');
     if (S.length) {
       h += sec(`Orders for the ${selName()}`) + acts(btn('recall', 'Recall home', '') + btn('attack:near', 'Attack nearest', oddsText(orderSet(), foeNearest()), orderSet().length ? 'warn' : 'dis'));
@@ -360,7 +366,7 @@ const CARDS = {
   fortress: () => title('The Fortress', G.P[FORT].alive ? G.rel[0][FORT] + (G.P[FORT].civ ? ' · ' + CIVS[G.P[FORT].civ].name : '') : 'fallen') + diploHTML(),
   menu(c) {
     const p = G.P[0], M = MENUS.find(m => m.id === c.id); G.lastMenu = c.id;
-    const item = k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp; return btn(`build:${k}`, bldName(0, k), lock ? `${AGES[B.age].name} age` : full ? `limit ${cp}` : costText(B.cost) + (cp > 1 && cp < 99 ? ` · ${n}/${cp}` : ''), lock || full || !afford(p, B.cost) ? 'dis' : ''); };
+    const item = k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp; return btn(`build:${k}`, bldName(0, k), lock ? `${AGES[B.age].name} age` : full ? `limit ${cp}` : !afford(p, B.cost) ? `short ${need(B.cost)}` : costText(B.cost) + (cp > 1 && cp < 99 ? ` · ${n}/${cp}` : ''), lock || full || !afford(p, B.cost) ? 'dis' : ''); };
     const ghosts = '<button class="ghost" disabled aria-hidden="true" tabindex="-1"><b>.</b><small>.</small></button>'.repeat(Math.max(0, MENUS[0].items.length - M.items.length));   // blank places keep every menu as tall as the biggest, so the page never changes height
     return title('Build', M.blurb) + acts(MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join(''), 'c5 chipsrow') + acts(M.items.map(item).join('') + ghosts, 'c3')
       + fold('menu', 'What each one does', M.items.map(k => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''));

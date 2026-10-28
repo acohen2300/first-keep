@@ -1,6 +1,6 @@
 // ═════ 01-rules.js ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 37;
+const BUILD = 38;
 const MAP = 2000, MID = MAP / 2, DT = 1 / 30;
 const BN = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'], BNS = BN.length;   // the battalions, once Command is researched
 const POPMAX = 150, VILMAX = 60, ARMYMAX = 90, BNSIZE = 30;   // six battalions, once Command is researched at a War Council; BNSIZE: the most one Zeal blesses
@@ -264,7 +264,7 @@ const PERS = {
           early: 6, ageArmy: 6, diplo: true, trade: true, spy: true, loot: true, wonder: false, siege: 1, shrine: false,
           build: [['barracks', 0, 1, 0], ['range', 1, 1, 0], ['stable', 1, 1, 4], ['smith', 1, 1, 6], ['market', 1, 1, 6, { w: 250, g: 100 }], ['courthouse', 1, 1, 8, { w: 250, g: 100 }], ['siege', 2, 1, 10, { w: 300 }], ['council', 2, 1, 12, { w: 250, s: 150 }]],
           techs: ['drill', 'bronze', 'axes', 'plough', 'horses', 'leather', 'composite', 'iron', 'cavalry', 'engage', 'phalanx', 'chain'] },
-  bal:  { vils: 26, mix: { food: .4, wood: .3, gold: .2, stone: .1, iron: .1 }, ageTo: 4, extraBarracks: 0, armyCap: 34, waveMin: 10, bold: .65, guard: .3, raid: 2, towers: 1, walls: false,
+  bal:  { vils: 26, mix: { food: .4, wood: .3, gold: .2, stone: .1, iron: .1 }, ageTo: 4, extraBarracks: 0, armyCap: 34, waveMin: 10, bold: .65, guard: .3, raid: 2, towers: 1, walls: true,
           early: 12, ageArmy: 0, diplo: true, trade: true, spy: true, loot: true, wonder: true, siege: 2, shrine: true,
           build: [['barracks', 0, 1, 0], ['range', 1, 1, 0], ['smith', 1, 1, 0], ['stable', 1, 1, 4], ['market', 1, 1, 6, { w: 250, g: 100 }], ['school', 1, 1, 8, { w: 300, s: 100 }], ['temple', 1, 1, 10, { s: 450, g: 300 }], ['courthouse', 1, 1, 8, { w: 250, g: 100 }], ['bakery', 1, 1, 6, { w: 200 }],
                   ['siege', 2, 1, 8, { w: 300, s: 100 }], ['hospital', 2, 1, 10, { w: 250, s: 200 }], ['library', 2, 1, 10, { w: 400, s: 300 }], ['amphi', 2, 1, 14, { s: 600, w: 300, g: 300 }], ['council', 2, 1, 12, { w: 250, s: 150 }]],

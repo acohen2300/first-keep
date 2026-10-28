@@ -102,6 +102,6 @@ function cancelPlace() { if (G) G.place = null; $('place').hidden = true; }
 function boxPick(d) {
   const a = toWorld(Math.min(d.x0, d.x1), Math.min(d.y0, d.y1)), b = toWorld(Math.max(d.x0, d.x1), Math.max(d.y0, d.y1)), r = { x0: a.x, y0: a.y, x1: b.x, y1: b.y };
   const trees = G.nodes.filter(n => n.kind === 'tree' && n.amt > 0 && inBox(n, r)).length, vils = unitsOf(0, 'vil').filter(u => !u.inside && inBox(u, r)).map(u => u.id);
-  if (!trees && !vils.length) { say('Nothing to pick in that box: trees or villagers.', '', 3); return; }
+  if (!trees && !vils.length) { say('No trees or villagers in that box.', '', 3); return; }
   openCard({ type: 'box', r, trees, vils });
 }

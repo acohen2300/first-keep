@@ -47,7 +47,7 @@ function loadGame(S) {
   const byB = new Map(G.blds.map(b => [b.id, b]));
   for (const su of S.units) { const { nodeId, repId, huntId, ...u } = su; u.node = nodeId ? byNode.get(nodeId) || null : null; u.rep = repId ? byB.get(repId) || null : null; u._hunt = huntId; G.units.push(u); }
   const byU = new Map(G.units.map(u => [u.id, u])); for (const u of G.units) { if (u._hunt) u.hunt = byU.get(u._hunt) || null; delete u._hunt; }
-  fxDirty(); navRebuild(); scoreAll();
+  fxDirty(); navRebuild(); recount(); scoreAll();
   if (S.cam) { cam.x = S.cam.x; cam.y = S.cam.y; cam.z = clamp(S.cam.z, minZ(), ZOOM_MAX); clampCam(); }
   paceBtn(); muteBtn();
   $('end').hidden = true; closeCard(); cancelPlace(); holdSave = false; setPause(false);

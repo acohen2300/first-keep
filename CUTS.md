@@ -342,3 +342,16 @@ Cut, merged or folded while taking the code apart and putting it back by element
 - **Rewriting git history** to purge the session log: needs a force-push; asked separately.
 
 - **Play fingerprint accepted:** first baseline: Build 37 as pushed, before the fingerprint existed
+
+## Build 38: Albert's first long play, three Argon reviews (Oct 28, 2026)
+- **The Build row** (Home · War · Walls · Trade · Culture · close above the jobs). The Build card already has the five tabs; the Build button now opens the card on the last menu used.
+- **The 🔕 emoji** on messages and tips: a drawn bell from the icon table, in the text colour.
+- **Long messages.** 30 messages that wrapped to two lines at 375 px rewritten to one line (e.g. "Gather, grow, explore. Tap anything."); the gate now renders every message at 375 px, the small map open and shut, and fails any that wraps. The word sieve now reads both sides of a ternary.
+- **Easy and 30 minutes as the default.** Normal and 60 minutes now; a phone that kept the old default moves once, a later choice stays.
+- **The minimap's minus** off the map (it hid the purple Rivals' corner); beside it now.
+- **Card buttons on equal footing.** What you can afford: a bright raised face. What you cannot: flat, dashed, with a red line saying what is short ("Short 20w").
+- **A page without a viewport line.** The site rendered at 980 px on an iPhone (the tall, narrow column Albert saw); build.py now writes a whole page (doctype, head with viewport, body) and the gate checks the phone width in mobile mode. wrap.py adds the native header to that page's head instead of wrapping it in a body.
+- **Fixed from the Argon audit:** rebel count counted the new rebels twice; dead units counted as alive until the step ended (Dismiss while paused); sabotage left lost research in the Tech score; iron miners swung an axe; a battalion's plan could exceed 30; automatic picks pulled weavers and brewers off their posts; a loaded game waited a second to know its dangers and field crews.
+- **A gate under construction was solid wall.** It is now an opening for its own side; computers build their gate first. Rivals now wall too (Raiders stay a raiding side).
+- **Added:** quick sends of 8 and 12; "All" and "¼" send free troops only (a raid or march you ordered keeps going); a dashed line from each marching group to its target; "arrived" messages; an "Out on orders" list in the People card.
+- **build.py** refuses a // comment that swallowed code, as SoRen's does (caught this build's own battalion line).

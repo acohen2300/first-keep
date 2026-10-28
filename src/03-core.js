@@ -22,9 +22,10 @@ const plural = n => /^man-at-arms$/i.test(n) ? n.replace(/^(m)an/i, '$1en') : /m
 const some = (k, n) => k === 1 ? n : plural(n);
 
 // Settings remembered on this phone.
-const SET = { diff: 'easy', tips: true, msgs: true, civ: 'roman', fantasy: false, mode: 't30', sound: true, vol: 0.6, mix: {}, hush: {}, mini: undefined, mapSeen: false, vibe: true, learned: {} };
+const SET = { diff: 'normal', tips: true, msgs: true, civ: 'roman', fantasy: false, mode: 't60', sound: true, vol: 0.6, mix: {}, hush: {}, mini: undefined, mapSeen: false, vibe: true, learned: {} };
 try { Object.assign(SET, JSON.parse(localStorage.getItem('firstkeep.settings') || '{}')); } catch (e) {}
 if (!CIVS[SET.civ]) SET.civ = 'roman';
+if (!(SET.setV >= 38)) { let old = false; try { old = !!localStorage.getItem('firstkeep.settings'); } catch (e) {} if (old) { SET.diff = 'normal'; SET.mode = 't60'; } SET.setV = 38; }   // Build 38: Normal and an hour by default; a phone that kept Easy and 30 minutes from the old default moves once, and a choice made after stays
 SET.mix = Object.assign({ fx: 1, amb: 1, alert: 1 }, SET.mix);   // three volumes: effects, ambience, alerts
 function saveSet() { try { localStorage.setItem('firstkeep.settings', JSON.stringify(SET)); } catch (e) {} }
 const MODES = { conquest: { name: 'Conquest', secs: 0 }, t30: { name: '30 minutes', secs: 1800 }, t60: { name: '60 minutes', secs: 3600 } };
@@ -38,10 +39,10 @@ const qcDrop = () => { QC.tick = -1; };   // a building came or went inside a st
 const bldsOf = (o, kind) => G.blds.filter(b => b.owner === o && b.kind === kind && b.hp > 0);
 const ready = (o, kind) => bldsOf(o, kind).filter(b => b.prog >= 1);
 const readyAt = (o, U) => [U.at, ...(U.also || [])].flatMap(k => ready(o, k));   // where a unit can be trained: its building, and any other that also trains it
-const unitsOf = (o, kind) => G.units.filter(u => u.owner === o && (!kind || u.kind === kind));
+const unitsOf = (o, kind) => G.units.filter(u => u.owner === o && u.hp > 0 && (!kind || u.kind === kind));   // the living: the dead leave the list only at the end of a step
 const isSoldier = u => UNIT[u.kind].tick === 'sol';
-const soldiersOf = o => G.units.filter(u => u.owner === o && isSoldier(u));
-const armyOf = o => G.units.filter(u => u.owner === o && UNIT[u.kind].cls === 'army');
+const soldiersOf = o => G.units.filter(u => u.owner === o && u.hp > 0 && isSoldier(u));
+const armyOf = o => G.units.filter(u => u.owner === o && u.hp > 0 && UNIT[u.kind].cls === 'army');
 const popOf = o => { const C = qc(); if (C.pop[o] === undefined) { let n = 0; for (const u of G.units) if (u.owner === o && UNIT[u.kind].cls) n++; C.pop[o] = n; } return C.pop[o]; };
 const roomOf = (o, kind) => BLD[kind].room ? BLD[kind].room + fxv(o, 'room', [kind]).a : 0;   // people one home shelters, after research
 const capOf = o => { const C = qc(); if (C.cap[o] === undefined) C.cap[o] = Math.min(POPMAX, G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 ? roomOf(o, b.kind) : 0), 0)); return C.cap[o]; };

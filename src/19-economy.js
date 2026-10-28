@@ -72,7 +72,7 @@ const guardedCart = v => v.kind === 'caravan' && (G.blds.some(b => b.owner === v
 function robbed(u) {
   let v = u.cargo || 0; for (const k in u.goods || {}) v += u.goods[k] * GOODS[k].base;
   const f = nearest(G.finds, u, f => f.kind === 'camp' && !f.done); if (f && v > 0) f.hoard = (f.hoard || 0) + Math.round(v);
-  if (u.owner === 0) say(`Robbers took a caravan at ${coord(u.x, u.y)}${v ? ` (${Math.round(v)} gold of goods)` : ''}. Break their camp to get it back.`, 'warn', 7, u);
+  if (u.owner === 0) say(`Caravan robbed${v ? ` (${Math.round(v)}g)` : ''}. Break their camp.`, 'warn', 7, u);
 }
 
 // ── the calendar: weather every minute, the seasons' work, the year's harvest
@@ -100,7 +100,7 @@ function seasonTurn() {
   if (s === 'Spring') {
     if (G.t > 1) { const r = rng(); G.harvest = 1; let acc = 0; for (const H of HARVEST) { acc += H.p; if (r < acc) { G.harvest = H.m; say(H.text, 'warn', 8); break; } } }
     if (G.P.some(p => p.alive && p.id !== WILD && ready(p.id, 'bizc').length) && rng() < HEALTH.plague) { G.plague = { until: G.t + SEASON_LEN * 2 }; say('Plague on the trade routes. Build a Hospital.', 'warn', 10); }
-    if (G.blds.some(b => b.owner === 0 && b.kind === 'pasture')) say('Spring: the sheep are shorn and lambs are born.', 'good', 5);
+    if (G.blds.some(b => b.owner === 0 && b.kind === 'pasture')) say('Spring: sheep shorn, lambs born.', 'good', 5);
   }
   if (s !== 'Spring' && s !== 'Summer' && G.plague && G.plague.until <= G.t) G.plague = null;
 }
@@ -145,7 +145,7 @@ function outbreak(o, share, plague, at) {
   const n = Math.max(1, Math.round(ppl.length * share * (plague ? fxv(o, 'plague').m : 1)));
   for (let i = 0; i < n && ppl.length; i++) { const u = ppl.splice(Math.floor(rng() * ppl.length), 1)[0]; u.sick = G.t + HEALTH.sickFor; u.plague = !!plague; }
   if (plague) p.plagueDead = 0;
-  if (o === 0) say(plague ? 'Plague has reached your town with a caravan. The sick work slowly; a Hospital and medics cure them.' : `Sickness in your town: ${n} ill. A Hospital and medics cure them; Clean water halves the risk.`, 'warn', 9, at);
+  if (o === 0) say(plague ? 'Plague, brought by a caravan!' : `Sickness: ${n} ill. A Hospital cures them.`, 'warn', 9, at);
 }
 function healthTick() {   // every 5 seconds
   const H = []; for (const b of G.blds) if (BLD[b.kind].heal && b.prog >= 1 && b.hp > 0) H.push(b); for (const u of G.units) if (UNIT[u.kind].heal) H.push(u);
@@ -247,7 +247,7 @@ function makeVassal(q, L, tax) {
   for (let r = 0; r <= WILD; r++) if (r !== q && r !== WILD) { const rel = r === L ? 'ally' : G.rel[L][r] === 'war' ? 'war' : 'peace'; G.rel[q][r] = G.rel[r][q] = rel; }
   for (const u of G.units) if (u.owner === q && u.state === 'attack') u.state = 'home';
   for (const u of G.units) if (u.owner === L && u.state === 'attack' && u.target === q) u.state = 'home';
-  say(L === 0 ? `${p.name} kneel: they are your vassal. Tap their Town Center to set the tax.` : `${p.name} became a vassal of ${G.P[L].name}.`, L === 0 ? 'good' : '', 8, keepOf(q));
+  say(L === 0 ? `${p.name} kneel: your vassal now.` : `${p.name} became a vassal of ${G.P[L].name}.`, L === 0 ? 'good' : '', 8, keepOf(q));
 }
 // can this side be made to surrender? Their army is beaten and yours stands at their Town Center.
 function surrenderWhy(o, q) {
@@ -265,8 +265,8 @@ function rebel(p, coalition) {
   for (const v of V.slice(0, n)) { v.hp = 0; v.gone = true; const r = addUnit(p.id, 'rebel', v.x, v.y); r.state = 'attack'; r.target = L; }
   G.rel[p.id][L] = G.rel[L][p.id] = 'war';
   for (const u of G.units) if (u.owner === p.id && isSoldier(u)) { u.state = 'attack'; u.target = L; u.bid = null; }
-  p.rebel = { t0: G.t, n0: Math.max(1, soldiersOf(p.id).length + n) };
-  if (L === 0) { say(coalition ? `Your vassals rise together: ${p.name} march on you with ${n} rebels!` : `${p.name} rebel: ${n} villagers take up arms. Crush them, or they go free in ${VASSAL.freeAfter / 60} minutes.`, 'warn', 10, keepOf(p.id)); sfx('horn'); }
+  p.rebel = { t0: G.t, n0: Math.max(1, soldiersOf(p.id).length) };   // the new rebels are already soldiers: counted once
+  if (L === 0) { say(coalition ? `Vassals rise: ${n} rebels march on you!` : `${p.name} rebel! Crush them in ${VASSAL.freeAfter / 60} min.`, 'warn', 10, keepOf(p.id)); sfx('horn'); }
 }
 function vassalTick() {   // every 10 seconds
   for (const p of G.P) {
@@ -285,7 +285,7 @@ function vassalTick() {   // every 10 seconds
     const parts = loyaltyParts(p); p.loyal = (p.loyal || 0) + (parts.target - (p.loyal || 0)) * 0.05;
     p.unrest = clamp((p.unrest || 0) + TAX[p.tax].push - p.loyal / 25, 0, 100);
     if (p.loyal >= VASSAL.giftAt && G.tick % (30 * VASSAL.gift) === 150) { const gift = {}; for (const r of ['f', 'w', 's', 'g', 'i']) { const x = Math.floor(p.res[r] * 0.1 * (p.loyal - 50) / 100); if (x > 0) { p.res[r] -= x; L.res[r] += x; gift[r] = x; } } if (L.id === 0 && Object.keys(gift).length) say(`${p.name} send a gift: ${costText(gift)}.`, 'good', 5); }
-    if (L.id === 0 && p.unrest > 70 && G.t - (p.warnT || -99) > 60) { p.warnT = G.t; say(`Unrest in ${p.name}'s lands: ${Math.round(p.unrest)}%. Cut tax or add soldiers.`, 'warn', 7, keepOf(p.id)); }
+    if (L.id === 0 && p.unrest > 70 && G.t - (p.warnT || -99) > 60) { p.warnT = G.t; say(`${p.name}: unrest ${Math.round(p.unrest)}%. Cut tax.`, 'warn', 7, keepOf(p.id)); }
     if (p.unrest >= 100) rebel(p);
   }
   if (G.tick % 1800 === 150) for (const L of G.P) {   // coalition: many restless vassals may rise together

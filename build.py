@@ -12,6 +12,21 @@ for f in files:
             k = m.group(1) or m.group(2)
             if k in names: sys.exit(f'build refused: {k} declared twice ({names[k]} and {f}:{n})')
             names[k] = f'{f}:{n}'
+# a // comment that ends in a statement has swallowed code (Build 38's battalion line): refuse it, as SoRen's build does
+def comment_of(line):
+    q = None; i = 0
+    while i < len(line) - 1:
+        c = line[i]
+        if q:
+            if c == '\\': i += 2; continue
+            if c == q: q = None
+        elif c in '\'"`': q = c
+        elif c == '/' and line[i + 1] == '/': return line[i + 2:].strip()
+        i += 1
+for f in files:
+    for n, line in enumerate(open(f), 1):
+        c = comment_of(line)
+        if c and re.search(r'\w\(.*\)\s*;\s*(\},?)?\s*$', c): sys.exit(f'build refused: {f}:{n} a comment ends in code: ...{c[-60:]}')
 os.makedirs('/tmp/fk-build', exist_ok=True)
 open('/tmp/fk-build/game.js', 'w').write(js)
 r = subprocess.run(['node', '--check', '/tmp/fk-build/game.js'], capture_output=True, text=True)
@@ -22,4 +37,5 @@ face = lambda fam, f, w: "@font-face{font-family:'%s';font-weight:%s;font-displa
 fonts = '<style>' + face('IM Fell English SC', 'fell-sc.woff', 400) + ''.join(face('Barlow Semi Condensed', f'barlow-{w}.woff', w) for w in (500, 600, 700)) + '</style>'
 h = open('src/shell-head.html').read().replace('<!--FONTS-->', fonts)
 t = open('src/shell-tail.html').read()
-open('first-keep.html', 'w').write(h + js.rstrip('\n') + '\n' + t)
+i = h.index('\n<div id="app">')   # the head's part ends where the markup starts
+open('first-keep.html', 'w').write('<!doctype html>\n<html lang="en">\n<head>\n' + h[:i] + '\n</head>\n<body>' + h[i:] + js.rstrip('\n') + '\n' + t + '\n</body>\n</html>\n')

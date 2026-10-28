@@ -23,7 +23,7 @@ function navRebuild() {
     const B = BLD[b.kind], n = B.fp;
     for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
       const c = (b.gy + j) * NC + b.gx + i; if (c < 0 || c >= NC * NC) continue; NAV.occ[c] = b;
-      if (b.kind === 'gate' && b.prog >= 1) NAV.gate[c] = b.owner + 1; else if (!B.walk) NAV.solid[c] = 1;
+      if (b.kind === 'gate') NAV.gate[c] = b.owner + 1; else if (!B.walk) NAV.solid[c] = 1;   // a gate, even half built, is an opening for its own side (Build 38: an unbuilt gate sealed the Fortress in)
     }
   }
   // which squares are joined by open ground (gates counted open: the finest cut is made by the search itself)

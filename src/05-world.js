@@ -24,7 +24,7 @@ function newGame(seed, carry) {
   navRebuild();
   const k = G.P[0].keep; cam.x = k[0] + 120; cam.y = k[1] - 120; cam.z = 1.3; clampCam();
   if (carry) { const p = G.P[0]; p.age = carry.age; p.techs = new Set(carry.techs); fxDirty(); }
-  else say('Gather, grow, explore. Tap anything to see what it does.', '', 8);
+  else say('Gather, grow, explore. Tap anything.', '', 8);
 }
 const inBox = (p, r) => p.x >= r.x0 && p.x <= r.x1 && p.y >= r.y0 && p.y <= r.y1;
 const node = (kind, type, x, y, amt) => ({ id: NID++, kind, type, x, y, amt, max: amt });

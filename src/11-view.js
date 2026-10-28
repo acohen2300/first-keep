@@ -102,6 +102,11 @@ function draw() {
     try { t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : drawFind(e); } catch (er) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.setLineDash([]); fault(er); }   // one bad piece must never take the rest of the picture with it: the canvas is put back as it was
   }
   sparkDraw(); ripDraw();
+  if (G.ords) {   // your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
+    ctx.save(); ctx.strokeStyle = G.P[0].color; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.7; ctx.setLineDash([6, 6]); ctx.lineDashOffset = -performance.now() / 60;
+    for (const id in G.ords) { const O = G.ords[id]; if (O.arrived || O.cx === undefined) continue; const ax = SX(O.cx), ay = SY(O.cy), bx = SX(O.x), by = SY(O.y); ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke(); ctx.beginPath(); ctx.ellipse(bx, by, 10 * cam.z, 10 * cam.z * TILT, 0, 0, 7); ctx.stroke(); }
+    ctx.restore();
+  }
   if (G.rally0) flagAt(SX(G.rally0.x), SY(G.rally0.y), G.P[0].color, z);
   ctx.strokeStyle = 'rgba(255,238,200,.85)'; ctx.lineWidth = 1.2;
   for (const t of G.tracers) {   // a short streak along the curve: the head and a point just behind it
@@ -244,7 +249,7 @@ function drawNode(n, s) {
   const f = (0.6 + 0.4 * Math.min(1, n.amt / n.max)) * (n.kind === 'tree' ? 1.4 : 1), c = nodeSprite(n, s), k = z / s * f;   // trees drawn as wide as the ground they block
   stamp(c, sx, sy, k);
 }
-const workOf = u => u.job === 'repair' ? 5 : !u.node ? 0 : u.node.kind === 'fish' ? 4 : u.node.kind === 'bush' || u.node.kind === 'meat' ? 1 : u.node.kind === 'stone' || u.node.kind === 'gold' ? 2 : u.node.kind === 'farm' ? (u.node.type === 'wood' ? 0 : 3) : 0;   // which work a villager is doing: chop, forage, mine, farm, fish, mend
+const workOf = u => u.job === 'repair' ? 5 : !u.node ? 0 : u.node.kind === 'fish' ? 4 : u.node.kind === 'bush' || u.node.kind === 'meat' ? 1 : u.node.kind === 'stone' || u.node.kind === 'gold' || u.node.kind === 'iron' ? 2 : u.node.kind === 'farm' ? (u.node.type === 'wood' ? 0 : 3) : 0;   // which work a villager is doing: chop, forage, mine, farm, fish, mend
 function drawUnit(u, s) {
   const z = cam.z, sx = SX(u.x), sy = SY(u.y), U = UNIT[u.kind], col = G.P[u.owner].color, st = u.owner === WILD ? null : stats(u.owner, u.kind);
   const moving = G.t - (u.mvT || -9) < 0.15, working = u.work && G.t - u.work < 0.25;
