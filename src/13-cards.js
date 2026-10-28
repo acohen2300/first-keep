@@ -3,7 +3,7 @@
 // A card is a page of the book. CARDS[type] writes its page from the game's tables; the engine lays the new page over the old one
 // node by node, so only the words and numbers that changed are touched and a button under a finger stays the same button.
 function openCard(c) { hideStrip(); G.card = c; G.infoOpen = false; G.confirm = null; cardSig = ''; $('card').scrollTop = 0; if (SET.cardPause !== false && !G.paused && !G.over && (READ_CARDS.has(c.type) || (c.type === 'bld' && G.ktab === 'rel' && G.blds.some(b => b.id === c.id && b.kind === 'keep')))) { setPause(true); G.cardPaused = true; } tick(); renderCard(); }   // a card pauses the game (Help: Pause on cards); closing it carries on
-const READ_CARDS = new Set(['research', 'council', 'army', 'guide', 'help', 'score', 'stores', 'sound']);   // the cards you sit and read pause the game; a building, a unit or a field to glance at does not (Albert, Build 41)
+const READ_CARDS = new Set(['research', 'council', 'troops', 'guide', 'help', 'score', 'stores', 'sound']);   // the cards you sit and read pause the game; a building, a unit or a field to glance at does not (Albert, Build 41)
 function closeCard() { if (G) { G.card = null; if (G.cardPaused) { G.cardPaused = false; if (!G.over) setPause(false); } tick(); } $('card').hidden = true; }   // the ticker steps aside or back at once, so the card gets its room on the first frame
 let cardSig = '';
 const sig = x => x.nodeType === 3 ? '#' : x.nodeName + '|' + (x.getAttribute('data-act') || x.getAttribute('data-f') || x.getAttribute('class') || '');
@@ -427,12 +427,9 @@ const CARDS = {
       + `<p>${far === null ? `No drop-off for ${n.type} yet: build a ${dropName}.` : far > 110 ? `Nearest drop-off is ${far} away: build a ${dropName} closer.` : `Nearest drop-off: ${far} away.`}</p>`
       + fold('about', 'About', `<p>The nearest idle villager goes; if none is idle, one from the job you hold the most of.</p>`);
   },
-  army() {
+  troops() {   // the Army card (Albert, Build 41): from the sword under Build
     const p = G.P[0], S = armyOf(0), by = {}; for (const u of S) { const nm = stats(0, u.kind).name; by[nm] = (by[nm] || 0) + 1; }
-    const V = unitsOf(0, 'vil'), idle = V.filter(u => !u.job); let r = 0; if (G.rdy) for (const v of G.rdy.values()) r += v; const going = G.blds.reduce((n, b) => n + (b.owner === 0 ? b.q.filter(j => j.tech || j.age).length : 0), 0);
-    let h = title('People', `${V.length} villagers · ${S.length} soldiers`) + acts(btn('card:research', 'Research', `${r} ready · ${going} under way`, r ? 'go' : '') + btn('help', 'How to play', 'the guide and the rules'));
-    h += sec('Villagers') + `<p>${JOBS.map(j => `${V.filter(u => u.job === j).length} ${j}`).join(' · ')} · <b>${idle.length} idle</b></p>` + (idle.length ? acts(btn('idlego', 'Show an idle villager', `${idle.length} idle`), 'c1') : '');
-    h += sec('Army') + `<p>${Object.entries(by).map(([n, k]) => `${k} ${some(k, n.toLowerCase())}`).join(' · ') || 'Nobody yet.'}</p>`;
+    let h = title('Army', `${S.length} soldiers`) + `<p>${Object.entries(by).map(([n, k]) => `${k} ${some(k, n.toLowerCase())}`).join(' · ') || 'Nobody yet: train soldiers below.'}</p>`;
     const ords = Object.values(G.ords || {}).filter(O => O.n);
     if (ords.length) h += sec('Out on orders') + ords.map(O => `<p data-act="jump:${O.x},${O.y}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`).join('');   // tap a line to look
     if (S.length && hasCmd()) h += sec('Orders go to') + acts([['all', 'All', S.length]].concat(BN.map((n, i) => [i, n, S.filter(u => u.bn === i).length])).map(([k, n, cnt]) => btn(`sel:${k}`, n, `${cnt}`, G.sel === k ? 'on' : '')).join(''), 'c4');
@@ -460,7 +457,7 @@ const CARDS = {
     scoreAll(); const rows = G.P.filter(q => q.id !== WILD), cats = [['people', 'People'], ['army', 'Army'], ['tech', 'Tech'], ['bld', 'Buildings'], ['wealth', 'Wealth'], ['total', 'Score']];
     return title('Score', (MODES[G.mode].secs ? `${clock(Math.max(0, MODES[G.mode].secs - G.t))} to the bell` : 'conquest') + (levelOf(G.hz) ? ` · level ${levelOf(G.hz)} ×${levelMul().toFixed(1)}` : ''))
       + `<table><tr><th></th>${rows.map(q => `<th style="border-bottom:3px solid ${q.color}">${q.id === 0 ? 'You' : `<button class="lnk" data-act="seek:${q.id}">${q.name}</button>`}</th>`).join('')}</tr>${cats.map(([k, n]) => `<tr><td>${n}</td>${rows.map(q => `<td>${q.alive || k === 'total' ? fmt(q.score[k]) : '–'}</td>`).join('')}</tr>`).join('')}</table>`
-      + `<p>People and Army: what you hold, cost ÷ ${SCORE.unit}. Tech: research and ages paid ÷ ${SCORE.tech}. Buildings: standing, cost ÷ ${SCORE.bld}. Wealth: everything gathered, traded, found and plundered ÷ ${SCORE.wealth}. ${G.wonder ? `A wonder stands: ${clock(Math.max(0, G.wonder.end - G.t))} left.` : ''}</p>`;
+      + `<p>People and Army: what you hold, cost ÷ ${SCORE.unit}. Tech: research and ages paid ÷ ${SCORE.tech}. Buildings: standing, cost ÷ ${SCORE.bld}. Wealth: everything gathered, traded, found and plundered ÷ ${SCORE.wealth}. ${G.wonder ? `A wonder stands: ${clock(Math.max(0, G.wonder.end - G.t))} left.` : ''}</p>` + acts(btn('help', 'How to play', 'the guide, the rules, the settings'), 'c1');
   },
   guide(c) {
     const pg = c.page || 'bld';

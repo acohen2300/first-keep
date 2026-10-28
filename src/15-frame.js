@@ -14,7 +14,7 @@ const ICON = {
   def: SVG(20, '<path d="M4 17 V6 H6.5 V8.2 H8.6 V6 H11.4 V8.2 H13.5 V6 H16 V17 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 17 V13 H11.4 V17" fill="currentColor"/>'),
   shop: SVG(20, '<path d="M3.5 7.5 H15.5 M12.5 4.5 L15.5 7.5 L12.5 10.5 M16.5 13 H4.5 M7.5 10 L4.5 13 L7.5 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>'),
   cult: SVG(20, '<path d="M3 8.2 L10 4 L17 8.2 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M5.2 9.5 V15 M8.4 9.5 V15 M11.6 9.5 V15 M14.8 9.5 V15 M3 16.5 H17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'),
-  sword: SVG(16, '<path d="M12.5 2.5 L13.5 3.5 L6 11 L5 10 Z" fill="currentColor"/><path d="M3.5 9.5 L6.5 12.5 M2.5 13.5 L4.5 11.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'),
+  sword: SVG(16, '<path d="M13.5 2.5 L13.5 4.6 L6.6 11.5 L4.5 9.4 L11.4 2.5 Z" fill="currentColor"/><path d="M3.2 8.6 L7.4 12.8 M2.4 13.6 L5 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'),
   close: SVG(20, '<path d="M5.5 5.5 L14.5 14.5 M14.5 5.5 L5.5 14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'),
   hammer: SVG(16, '<path d="M3 13 L9 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 3.5 L10 2 L13.5 5.5 L12 8.5 Z" fill="currentColor"/>'),
   book: SVG(16, '<path d="M2 3.5 Q5.2 2.4 8 4 Q10.8 2.4 14 3.5 V12.5 Q10.8 11.4 8 13 Q5.2 11.4 2 12.5 Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 4 V13" stroke="currentColor" stroke-width="1.2"/>'),
@@ -38,9 +38,8 @@ function buildPanel() {
   $('tally').innerHTML = [['f', 'Food'], ['w', 'Wood'], ['s', 'Stone'], ['g', 'Gold'], ['i', 'Iron']].map(([r, n]) => cell(`data-act="card:stores" aria-label="${n}: open the stores"`, ICON[n.toLowerCase()], wd('0', 'r' + r))).join('')
     + cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') + cell('id="pauseB" data-act="pause" aria-label="Pause; hold for speed"', ICON.pause, '', 'one') + cell('id="mapT" data-act="map" aria-label="The small map"', ICON.map, '', 'one');   // one button for play, pause and speed (hold it); the freed cell is the map (Albert, Build 40)
   const st = (act, t, label, id) => `<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
-  $('jobs').innerHTML = `<div class="col">${cell('id="tPeople" data-act="card:army" aria-label="People: army, research, how to play"', ICON.people, wd('0/0', 'tPeopleN'))}<div class="pm">${st('unvil', '−', 'Cancel a villager waiting to train', 'tUn')}${st('train:vil', '+', 'Train a villager', 'tVil')}</div></div>`
-    + JOBS.map(r => `<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`).join('')
-    + `<div class="col">${cell('id="buildT" data-act="buildrow" aria-label="Build"', ICON.hammer, wd('Build'), 'tall')}</div>`;   // Build closes the row (Albert, Build 41)
+  $('jobs').innerHTML = `<div class="col">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}${st('buildrow', ICON.hammer, 'Build', 'buildT')}</div>`   // one tap makes a villager; Build under it (Albert, Build 41)
+    + JOBS.map(r => `<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`).join('');
   $('tkList').innerHTML = ICON.list; $('tkMin').innerHTML = ICON.up; $('homeB').innerHTML = ICON.home; $('pX').innerHTML = ICON.close;
 }
 const refresh = () => { cardSig = ''; ui(true); };
@@ -117,7 +116,7 @@ function ui(force) {
   for (const r of JOBS) { let n = 0; for (const v of V) if (v.job === r) n++; txt('tn_' + r, String(n)); $('tj_' + r).classList.toggle('sel', p.rally === r); }
   const nq = queuedOf(0, 'vil'), room = Math.max(0, capOf(0) - popOf(0));
   txt('tPeopleN', nq ? `${V.length}+${nq}` : `${V.length}/${Math.min(VILMAX, V.length + room)}`);   // have / can have now; with villagers waiting, have + waiting
-  $('tVil').classList.toggle('dis', !!trainWhy(0, 'vil')); $('tUn').classList.toggle('dis', !nq);
+  $('tPeople').classList.toggle('dis', !!trainWhy(0, 'vil'));
   { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; if ($('homeB').hidden === away) $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
   $('stage').classList.toggle('busy', !!(G.card || G.place));
   $('buildT').classList.toggle('sel', !!(G.card && G.card.type === 'menu'));   // one look for on: the outline, as the default job wears it

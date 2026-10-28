@@ -101,8 +101,8 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--pad) max(8px,env(safe-area-inset-bottom,0px));pointer-events:none}
 #orders .tiles{pointer-events:auto}
 button.ghost{visibility:hidden}
-.tr{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
-.col>button.cell.tall{flex:1 1 auto}#buildT .gl{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);width:18px;height:18px}#buildT .wd{top:auto;bottom:8px;transform:none}
+.tr{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+#buildT .gl{position:static;transform:none;width:18px;height:18px;display:block;margin:auto}
 .col{display:flex;flex-direction:column;gap:3px;min-width:0}.col>button.cell{flex:none}
 .pm{display:grid;grid-template-columns:1fr 1fr;gap:3px}
 .tiles button.cell{background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}
@@ -205,7 +205,7 @@ button.ok small{color:#8fd4a4}
     <div id="vig"></div>
   <header id="hud">
     <div class="pill" id="tally"></div>
-    <div class="strip"><div class="sg"><button id="sAge" data-act="card:research" aria-label="Age, season and clock: what you can research"><span id="sAgeT"></span></button><button id="sIdle" data-act="idlego" aria-label="Show an idle villager" hidden></button><button id="sStats" data-act="card:army" aria-label="Research ready, people, soldiers: the People card"></button></div><div class="sg"><button id="tkBell" data-act="tkmin" aria-label="Show messages" hidden><span id="tkBellN"></span></button><button id="scoreP" data-act="card:score" aria-label="Score and rank"><span id="scoreN">★0</span> <span id="scoreR"></span></button></div></div>
+    <div class="strip"><div class="sg"><button id="sAge" data-act="card:research" aria-label="Age, season and clock: what you can research"><span id="sAgeT"></span></button><button id="sIdle" data-act="idlego" aria-label="Show an idle villager" hidden></button><button id="sStats" data-act="card:troops" aria-label="Research ready, people, soldiers: the Army card"></button></div><div class="sg"><button id="tkBell" data-act="tkmin" aria-label="Show messages" hidden><span id="tkBellN"></span></button><button id="scoreP" data-act="card:score" aria-label="Score and rank"><span id="scoreN">★0</span> <span id="scoreR"></span></button></div></div>
     <div class="tick" id="ticker"><button id="tkT" data-act="tklist" aria-label="Latest message"></button><button id="tkList" data-act="tklist" aria-label="Recent messages"></button><button id="tkMin" data-act="tkmin" aria-label="Hide messages"></button></div><div class="tkpop" id="tkPop" hidden></div>
   </header>
   <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div></div></section>

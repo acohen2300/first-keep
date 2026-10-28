@@ -57,6 +57,12 @@ The long-game design doc (Oct 28): https://claude.ai/artifact/P3ThRoHEPXSjQXHaLT
 - New fx stats the engine reads: soil, shelter, venture, diplo, convert, push, rest, cost, cut, zealsecs, spread, snow, ice, cold, wet, wear, flood, fire, blast, teach, garrison, charge, sight.
 - Text rule: no apostrophes in game text (Albert, Build 40).
 
+## The screen grammar (Albert, Build 41): every new control goes in one of these four, or it does not go in
+- **Top bars: status, controls and info.** Tappable doors: each number or word opens the place it describes (age → Research, the People numbers → Army, ★ → Score and How to play, the bell → messages).
+- **The game screen:** the world. One tap opens a building or a place; units are picked; open ground gives the quick strip (three taps in one spot: open, sword, All).
+- **The action bar:** what is happening now and your control of it (what you picked, what it can do: jobs and Build, or Charge, Fall back, Hold, Teach; a deer: Hunt).
+- **The bottom row: quick actions.** People makes a villager in one tap, Build under it; the five jobs with − and +.
+
 ## Open items
 1. Albert's real-phone test of Build 37 (same checks as 36: tap sizes, strip taps, Build row, People − and +, the glow, 375 px).
 2. Sound on the iPhone silent switch: undecided.
