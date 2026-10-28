@@ -55,7 +55,7 @@ PLAY = """async () => {
 # Every verb a button can send must have a handler: the class of bug behind the dead Build menu
 def verbs():
     import re, glob
-    s = open('src/12-ui.js').read()
+    s = open('src/15-verbs.js').read()
     def keys(name):
         i = s.index(f'const {name} = {{'); j = s.index('\n};', i); return set(re.findall(r'(?:^|[{;,]\s*|\n\s{2})([a-z][a-zA-Z0-9]*)\(\w*\)\s*\{', s[i:j]))
     have = keys('ACT') | keys('PLAY')

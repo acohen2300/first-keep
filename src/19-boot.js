@@ -1,4 +1,4 @@
-// ═════ 15-boot.js ═════
+// ═════ 19-boot.js ═════
 // ───────────────────────── The loop and the start ─────────────────────────
 let last = performance.now(), acc = 0, lastSave = 0, inputT = 0;
 const CATCHUP = 6;

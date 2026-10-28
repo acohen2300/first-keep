@@ -1,4 +1,4 @@
-// ═════ 15-economy.js ═════
+// ═════ 18-economy.js ═════
 // ───────────────────────── Goods, trade routes, nature, sickness and food ─────────────────────────
 // Real ratios on a compressed calendar: one year is 12 minutes, and every rate below is set against that clock.
 const YEAR = SEASON_LEN * 4;
@@ -133,7 +133,7 @@ function ignite(b, why) {
 const storm = () => season().name === 'Summer' && (G.wx === 'rain' || G.wx === 'drought');
 function strike(x, y, b) {
   (G.bolts = G.bolts || []).push({ x, y, t: G.t, seed: Math.random() });
-  if (scarX) { scarX.fillStyle = 'rgba(20,16,12,.35)'; scarX.beginPath(); scarX.ellipse(x, y, 6, 4, 0, 0, 7); scarX.fill(); }
+  scarStrike(x, y);
   thunder(x, y); if (b) ignite(b, 'lightning');
 }
 function lightning() {   // once a minute

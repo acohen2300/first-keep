@@ -1,4 +1,4 @@
-// ═════ 14-sound.js ═════
+// ═════ 17-sound.js ═════
 // ───────────────────────── Sound ─────────────────────────
 // Made in the phone from tones and noise: no files, nothing downloaded. Quieter toward the edge of the screen; nothing from off screen.
 const SND = { get on() { return SET.sound; }, set on(v) { SET.sound = v; }, get vol() { return SET.vol; }, set vol(v) { SET.vol = v; } };

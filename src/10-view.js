@@ -13,6 +13,7 @@ function scarFall(u) {
   scarX.fillStyle = 'rgba(40,18,12,.22)'; scarX.beginPath(); scarX.ellipse(x, u.y, 4 + (big ? 3 : 0), 2.2, 0, 0, 7); scarX.fill();
   if (isSoldier(u)) { scarX.strokeStyle = 'rgba(60,45,30,.5)'; scarX.lineWidth = 0.7; scarX.beginPath(); scarX.moveTo(x - 4, u.y + 1); scarX.lineTo(x + 3, u.y - 1.5); scarX.stroke(); }
 }
+function scarStrike(x, y) { if (scarX) { scarX.fillStyle = 'rgba(20,16,12,.35)'; scarX.beginPath(); scarX.ellipse(x, y, 6, 4, 0, 0, 7); scarX.fill(); } }   // where lightning struck
 function scarBurn(b) {
   const h = halfOf(b); scarX.fillStyle = 'rgba(25,20,18,.38)'; scarX.beginPath(); scarX.ellipse(b.x, b.y, h * 1.05, h * 0.8, 0, 0, 7); scarX.fill();
   scarX.fillStyle = 'rgba(95,90,84,.55)'; for (let i = 0; i < 5; i++) { const a = i * 1.3 + b.id, r = h * 0.6 * ((i * 0.37) % 1 + 0.2); scarX.fillRect(b.x + Math.cos(a) * r - 1.5, b.y + Math.sin(a) * r * 0.7 - 1, 3, 2); }
@@ -32,7 +33,7 @@ function researchBadge(x, y, s, n) {
   ctx.restore();
 }
 let vy = 0;   // the map is full screen; the view centres on the band between the top pills and the bottom ones
-function fit() { const r = cv.getBoundingClientRect(); dpr = LOW.n >= 2 ? 1 : Math.min(2, window.devicePixelRatio || 1); cw = r.width; ch = r.height; { const h = $('hud').getBoundingClientRect(), o = $('orders').getBoundingClientRect(), t = r.top; document.documentElement.style.setProperty('--ob', Math.round(r.bottom - o.top) + 'px'); vy = Math.round(((h.bottom - t) + (o.top - t)) / 2 - ch / 2); } const W = Math.round(cw * dpr), H = Math.round(ch * dpr); if (cv.width !== W) cv.width = W; if (cv.height !== H) cv.height = H; cam.z = clamp(cam.z, minZ(), ZOOM_MAX); clampCam(); }
+/* fit() is in 14-frame.js: it reads the page's bars */
 function clampCam() { const hw = cw / 2 / cam.z, up = (ch / 2 + vy) / (cam.z * TILT), down = (ch / 2 - vy) / (cam.z * TILT); cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID)); cam.y = clamp(cam.y, Math.min(up - 50, MID), Math.max(MAP - down, MID)); }
 const SX = x => (x - cam.x) * cam.z + cw / 2;
 const SY = (y, h) => (y - cam.y) * cam.z * TILT + ch / 2 + vy - (h || 0) * cam.z;

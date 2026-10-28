@@ -1,0 +1,128 @@
+// ═════ 15-verbs.js ═════
+// ───────────────────────── What every button does: one table ─────────────────────────
+// every button's verb, in one table
+const ACT = {
+  pause() { setPause(!G.paused); },
+  speed() { G.speed = G.speed >= 3 ? 1 : G.speed + 1; paceBtn(); },   // ×1, ×2, ×3, back to ×1; it never pauses
+  again() { $('end').hidden = true; openCard({ type: 'setup' }); },
+  free() { G.over = null; G.free = true; $('end').hidden = true; setPause(false); say('Free play: no clock, no victory.', '', 6); },
+  next() { const p = G.P[0], keep = { age: p.age, techs: [...p.techs] }; $('end').hidden = true; newGame(undefined, keep); setPause(false); say('A new land. You keep your age and research.', 'good', 8); saveGame(true); },
+  close() { if (G.card && (G.card.type === 'resume' || G.card.type === 'setup') && G.paused) { setPause(false); } closeCard(); if (G.over) $('end').hidden = false; },   // backing out of New game brings the end screen back
+  cancel() { cancelPlace(); },
+  placeok() { commitPlace(); },
+  help() { openCard({ type: 'help' }); },
+  reload() { location.reload(); },
+  vibe() { SET.vibe = !SET.vibe; saveSet(); feel('snap'); refresh(); },
+  menu(a) { const keep = G.card && G.card.type === 'menu'; openCard({ type: 'menu', id: a }); if (keep) $('card').scrollTop = 0; },
+  buildrow() { setBuildRow($('bmenu').hidden); },
+  towncard() { const k = keepOf(0); if (k) openCard({ type: 'bld', id: k.id }); },
+  unvil() { if (!unTrain(0, 'vil')) say('Nobody is waiting to train.', '', 3); },
+  idlego() { const u = unitsOf(0, 'vil').find(v => !v.job); if (!u) return; cam.x = u.x; cam.y = u.y; clampCam(); closeCard(); },
+  seek(a) { const o = Number(a), k = keepOf(o) || G.blds.find(b => b.owner === o); if (!k) { say('Nothing of theirs stands.', '', 3); return; } cam.x = k.x; cam.y = k.y; clampCam(); if (k.kind === 'keep') { G.card = null; openCard({ type: 'bld', id: k.id }); } else closeCard(); },
+  guide(a) { openCard({ type: 'guide', page: a }); },
+  info() { G.infoOpen = !G.infoOpen; cardSig = ''; renderCard(); },
+  map() { SET.mini = !SET.mini; saveSet(); applyMini(); },
+  home() { const k = keepOf(0); if (k) { cam.x = k.x; cam.y = k.y; clampCam(); } },
+  resume() { const S = readSave(); if (S) loadGame(S); else { closeCard(); setPause(false); } refresh(); },
+  fresh() { clearSave(); holdSave = false; newGame(); closeCard(); setPause(false); saveGame(true); refresh(); },
+  newgame() { if (G.confirm === 'new') { openCard({ type: 'setup' }); return; } G.confirm = 'new'; refresh(); },
+  civ(a) { SET.civ = a; saveSet(); refresh(); },
+  diff(a) { SET.diff = a; G.diff = a; saveSet(); refresh(); },
+  mode(a) { SET.mode = a; saveSet(); refresh(); },
+  fantasy(a) { SET.fantasy = a === '1'; saveSet(); refresh(); },
+  tips() { SET.tips = !SET.tips; saveSet(); refresh(); },
+  msgs() { SET.msgs = SET.msgs === false; saveSet(); refresh(); },
+  hush(a) { const t = decodeURIComponent(a || $('tipT').textContent), k = hushKey(t), m = G.log.find(x => x.text === t);
+    if (m && m.cls === 'warn') (G.hushW = G.hushW || {})[k] = G.t + 120; else { (SET.hush = SET.hush || {})[k] = 1; saveSet(); }
+    G.log = G.log.filter(x => hushKey(x.text) !== k); ui(true); },
+  unhush() { SET.hush = {}; G.hushW = {}; saveSet(); refresh(); },
+  sound() { SND.on = !SND.on; saveSnd(); sndInit(); sfx('tap'); muteBtn(); refresh(); },
+  soundpage() { openCard({ type: 'sound' }); },
+  // one step rule for every volume: tenths, 0 to 100%
+  vol(a) { const [k, d] = a.split(','), step = v => clamp(Math.round((v + (d === '+' ? 0.1 : -0.1)) * 10) / 10, 0, 1);
+    if (k === 'all') SND.vol = step(SND.vol); else SET.mix[k] = step(SET.mix[k]); saveSnd(); sndInit(); sfx(k === 'amb' ? 'bird' : k === 'alert' ? 'ready' : 'tap'); refresh(); },
+  jump(a) { const [x, y] = a.split(',').map(Number); cam.x = x; cam.y = y; clampCam(); },
+  card(a) { openCard({ type: a }); },
+};
+// orders that change the game: refused once it is over
+const PLAY = {
+  job(a) { G.P[0].rally = a; unitsOf(0, 'vil').forEach(u => { if (!u.job) u.job = a; }); },
+  move(a) { if (!unitsOf(0, 'vil').some(u => !u.job)) { say('Nobody is idle. Use − on another job.', '', 3); return; } moveVil(0, a); }, less(a) { moveVil(0, a, true); },
+  mtab(a) { G.mtab = a; },
+  sel(a) { G.sel = a === 'all' ? 'all' : Number(a); },
+  sendto(a) { const [f, x, y] = a.split(','), to = { x: Number(x), y: Number(y) }, S = sendPick(f === 'q' || f === 'all' ? f : Number(f), to);
+    S.forEach(u => { u.state = 'goto'; u.px = to.x; u.py = to.y; u.idleT = 0; u.focus = null; }); if (S.length) { say(`${S.length} on the way.`, '', 3); ripple(to.x, to.y, '#ffd35e'); } hideStrip(); },
+  nostrip() { hideStrip(); },
+  more(a) { const [x, y] = a.split(',').map(Number); openCard({ type: 'ground', x, y }); },
+  qsfrom(a) { G.qs.from = a === 'all' ? 'all' : Number(a); },
+  qsn(a) { const [k, d] = a.split(','), have = qsPool().filter(u => u.kind === k).length, cur = Math.min(have, G.qs.n[k] ?? have); G.qs.n[k] = clamp(cur + (d === '+' ? 1 : -1), 0, have); },
+  qgo(a) { const [x, y] = a.split(',').map(Number), S = qsPick({ x, y }); S.forEach(u => { u.state = 'goto'; u.px = x; u.py = y; u.idleT = 0; u.focus = null; }); if (S.length) { say(`${S.length} on the way.`, '', 3); ripple(x, y, '#ffd35e'); } closeCard(); },
+  qatk(a) { const b = G.blds.find(x => x.id === Number(a) && x.hp > 0); if (!b) return; const S = qsPick(b); S.forEach(u => { u.state = 'attack'; u.target = b.owner; u.bid = b.id; u.focus = null; }); if (S.length) { say(`${S.length} march on the ${bldName(b.owner, b.kind).toLowerCase()}.`, '', 3); ripple(b.x, b.y, '#ff8a70'); } closeCard(); },
+  qfoe(a) { const v = G.units.find(x => x.id === Number(a) && x.hp > 0); if (!v) return; const S = qsPick(v); S.forEach(u => { u.state = 'goto'; u.px = v.x; u.py = v.y; u.idleT = 0; u.focus = v; }); if (S.length) ripple(v.x, v.y, '#ff8a70'); closeCard(); },
+  bned(a) { G.bnEdit = Number(a); },
+  muster(a) { const i = Number(a); if (muster(0, musterGap(i), i)) sfx('place'); else sfx('err'); },
+  bnn(a) { const [k, d] = a.split(','), P = G.bnPlan[G.bnEdit], cur = P[k] || 0, st = d === '+' ? (cur < 10 ? 1 : 5) : (cur <= 10 ? 1 : 5); P[k] = clamp(cur + (d === '+' ? st : -st), 0, ARMYMAX); if (!P[k]) delete P[k]; rebattalion(); },
+  bnstance() { const i = G.bnEdit; G.stance[i] = ((G.stance[i] || 0) + 1) % STANCE.length; },
+  bnform() { const i = G.bnEdit; G.form[i] = ((G.form[i] || 0) + 1) % FORM.length; },
+  sendvil(a) { sendVil(0, Number(a)); },
+  boxcut(a) { if (G.card && G.card.type === 'box') boxCut(G.card.r, Number(a)); closeCard(); },
+  boxjob(a) { const c = G.card; if (!c || c.type !== 'box') return; for (const id of c.vils) { const u = G.units.find(x => x.id === id); if (u) { u.patch = null; setJob(u, a); } } say(`${c.vils.length} on ${a}.`, '', 3); closeCard(); },
+  boxbuild() { const c = G.card; if (!c || c.type !== 'box') return; for (const id of c.vils) { const u = G.units.find(x => x.id === id), s = u && nearest(G.blds, u, b => b.owner === 0 && b.prog < 1 && b.hp > 0); if (s) sendBuild(0, s.id, u.id); } closeCard(); },
+  demand(a) { demandSurrender(0, Number(a)); closeCard(); },
+  overlord() { if (powerOf(soldiersOf(0)) >= 2 * powerOf(soldiersOf(FORT)) && G.P[FORT].ally === 0) makeVassal(FORT, 0, 'light'); },
+  tax(a) { const [q, t] = a.split(','), P = G.P[Number(q)]; if (P && P.lord === 0 && TAX[t]) { P.tax = t; say(`Tax on ${P.name}: ${t}.`, '', 3); } },
+  venture(a) { if (!venture(0, Number(a))) say('Needs Medieval age, gold, and under 3 ventures.', '', 4); },
+  douse(a) { const b = G.blds.find(x => x.id === Number(a) && x.owner === 0); let n = 0; if (b && b.fire > 0) for (let i = 0; i < 2; i++) { const v = pickVil(0, b, null, b); if (v) { if (v.job !== 'repair') v.pj = v.job; setJob(v, 'repair'); v.rep = b; v.fireman = true; n++; } } G.log = G.log.filter(m => m.act !== 'douse:' + a); if (n) say(`${n} more run to the fire.`, '', 3); else if (b && b.fire > 0) say('No villager is free.', '', 3); },
+  tpost(a) { const f = G.finds.find(x => x.id === Number(a)); if (!f) return; const why = canPlace(0, 'tpost', f.x, f.y); if (why) { say(why + '.', '', 3); return; } if (!afford(G.P[0], BLD.tpost.cost)) { say(`Not enough: ${costText(BLD.tpost.cost)}.`, '', 3); return; } if (G.P[0].age < BLD.tpost.age) { say('Trade posts need the Bronze age.', '', 3); return; } build(0, 'tpost', f.x, f.y); say('A villager sets out to build the trade post.', '', 4); },
+  want(a) { const f = G.finds.find(x => x.id === Number(a)); if (f && f.owner === 0) { f.want = WARES[(WARES.indexOf(f.want) + 1) % WARES.length]; } },
+  route(a) { const [cid, s, id] = a.split(','), c = G.units.find(u => u.id === Number(cid) && u.owner === 0), t = s === 's' ? G.finds.find(f => f.id === Number(id)) : G.blds.find(b => b.id === Number(id)); if (c && t) { if (!homeBiz(0, c)) { say('Build a Business Center first: Build → Business Center.', '', 4); return; } setRoute(c, t, true, s === 's'); say('The caravan takes the route, and repeats it.', '', 3); } },
+  rrep(a) { const c = G.units.find(u => u.id === Number(a)); if (c && c.route) c.route.rep = !c.route.rep; },
+  rsp(a) { const c = G.units.find(u => u.id === Number(a)); if (c && c.route) c.route.spice = !c.route.spice; },
+  rclr(a) { const c = G.units.find(u => u.id === Number(a)); if (c) { c.route = null; c.dest = null; } }, sendbld(a) { sendBuild(0, Number(a)); }, buildat(a) { const [v, s] = a.split(',').map(Number); sendBuild(0, s, v); }, hunt(a) { sendHunt(0, Number(a)); }, repair(a) { sendRepair(0, Number(a)); },
+  takedown(a) { const id = Number(a), b = G.blds.find(x => x.id === id && x.owner === 0); if (b && b.kind !== 'keep') { if (BLD[b.kind].wallish || b.prog < 0.15 || G.confirm === id) { demolish(0, id); G.confirm = null; closeCard(); } else G.confirm = id; } },
+  train(a) { if (!train(0, a)) say(trainWhy(0, a) || 'Not now.', '', 3); },
+  tech(a) { if (!research(0, a)) say(researchWhy(0, a) || 'Not now.', '', 3); },
+  age() { ageUp(0); }, build(a) { startPlace(a); },
+  scoutgo(a) { const [x, y] = a.split(',').map(Number), s = unitsOf(0, 'scout')[0]; if (s) { s.state = 'goto'; s.px = x; s.py = y; say('The scout rides out.', '', 3); } closeCard(); },
+  rally(a) { const [x, y] = a.split(',').map(Number); G.rally0 = G.rally0 ? null : { x, y }; },
+  recall() { orderSet().forEach(u => { u.state = 'home'; u.fid = null; }); closeCard(); },
+  attack(a) {
+    const target = a === 'near' ? foeNearest() : Number(a);
+    if (target !== null) { orderSet().forEach(u => { u.state = 'attack'; u.target = target; u.bid = null; }); say(`Marching on the ${G.P[target].name}.`, '', 3); }
+    closeCard();
+  },
+  envoy() { sendEnvoy(0, FORT); }, terms() { payTerms(0); }, askhelp() { askHelp(0); },
+  vjob(a) { const [id, j] = a.split(','), u = G.units.find(x => x.id === Number(id)); if (u && u.owner === 0) { setJob(u, u.job === j ? null : j); u.pj = null; u.idleT = 0; } },
+  vgo(a) { const u = G.units.find(x => x.id === Number(a)); if (!u) return; if (G.confirm !== 'v' + u.id) { G.confirm = 'v' + u.id; return; } G.confirm = null; setJob(u, null); u.hp = 0; u.gone = true; say('A villager was sent home.', '', 3); closeCard(); },
+  dismiss() { const v = unitsOf(0, 'vil').sort((a, b) => a.carry - b.carry)[0]; if (v) { v.hp = 0; v.gone = true; say('A villager was sent home.', '', 3); } },
+  sab(a) { const b = G.blds.find(x => x.id === Number(a)), sp = b && unitsOf(0, 'spy').filter(u => u.state !== 'sab').sort((x, y) => dist(x, b) - dist(y, b))[0]; if (!b || !BLD[b.kind].sab || !sp) { say(!sp ? 'You have no free spy.' : 'That cannot be sabotaged.', '', 3); return; } sp.state = 'sab'; sp.tid = b.id; say('A spy slips away to sabotage it.', '', 4); closeCard(); },
+  spygo(a) { const [x, y] = a.split(',').map(Number), sp = unitsOf(0, 'spy').filter(u => u.state !== 'sab').sort((p, q) => dist(p, { x, y }) - dist(q, { x, y }))[0]; if (!sp) { say('You have no free spy.', '', 3); return; } sp.state = 'goto'; sp.px = x; sp.py = y; say('A spy goes to look.', '', 3); closeCard(); },
+  shrine(a) { const f = G.finds.find(x => x.id === Number(a)), pr = f && unitsOf(0, 'priest').sort((p, q) => dist(p, f) - dist(q, f))[0]; if (!pr) { say('You have no priest: Build → Temple.', '', 3); return; } pr.state = 'shrine'; pr.fid = f.id; say('A priest walks to the shrine.', '', 3); closeCard(); },
+  hire(a) { const f = G.finds.find(x => x.id === Number(a)); if (f && !hire(0, f)) say(hireWhy(0, f), '', 3); },
+  guard(a) { const [t, i] = a.split(','), id = Number(i), at = t === 'f' ? G.finds.find(f => f.id === id) : G.units.find(v => v.id === id); if (!at) return;
+    const room = POST.guard - guardsOf(t, id).length, S = sendable().sort((p, q) => dist(p, at) - dist(q, at)).slice(0, Math.max(0, Math.min(4, room)));
+    S.forEach(u => { u.state = 'escort'; u.esc = null; u.focus = null; if (t === 'f') { u.escF = id; u.escId = undefined; } else { u.escId = id; u.escF = undefined; } }); if (S.length) ripple(at.x, at.y, '#ffd35e'); },
+  unguard(a) { const [t, i] = a.split(','); guardsOf(t, Number(i)).forEach(u => { u.state = 'home'; u.esc = null; u.escId = u.escF = undefined; }); },
+  trade(a) { const [dir, k] = a.split(':'); if (!marketTrade(0, k, dir)) say(dir === 'sell' ? 'Not enough to sell.' : 'Not enough gold.', '', 3); },
+  stance() { const cur = G.sel === 'all' ? (G.stance.every(x => x === G.stance[0]) ? G.stance[0] : -1) : G.stance[G.sel], nx = (cur + 1) % STANCE.length; if (G.sel === 'all') G.stance = Array(BNS + 1).fill(nx); else G.stance[G.sel] = nx; },
+  hold() { const on = G.sel === 'all' ? !G.hold.every(x => x) : !G.hold[G.sel]; if (G.sel === 'all') G.hold = Array(BNS + 1).fill(Number(on)); else G.hold[G.sel] = Number(on); },
+  zeal() { if (!zeal(0, orderSet())) say(zealWhy(0, orderSet()) || 'Not now.', '', 3); },
+};
+function act(a) {
+  const [verb, arg] = a.split(/:(.*)/s);
+  if (ACT[verb]) { ACT[verb](arg); return; }
+  if (G.over || !PLAY[verb]) return;
+  PLAY[verb](arg); learnAct(verb, arg); refresh();
+}
+// Hints retire once learned: each counts the times you did what it teaches, kept on this phone; at 3 it is not shown again. Warnings (hunger, fire, plague, unrest) always show.
+const L = k => ((SET.learned || {})[k] || 0) >= 3;
+function learn(k) { SET.learned = SET.learned || {}; if ((SET.learned[k] || 0) >= 3) return; SET.learned[k] = (SET.learned[k] || 0) + 1; saveSet(); }
+function learnAct(verb, arg) {
+  if (verb === 'train') learn('train:' + arg);
+  else if (verb === 'move' || verb === 'job') { learn('job'); learn('job:' + arg); }
+  else if (verb === 'sendvil') { learn('job'); const n = G.nodes.find(x => x.id === Number(arg)); if (n) learn('job:' + (n.kind === 'farm' && n.type === 'food' ? 'field' : n.type)); }
+  else if (verb === 'boxjob') { learn('job'); learn('job:' + arg); }
+  else if (['sendbld', 'buildat', 'age', 'goto', 'envoy', 'trade'].includes(verb)) learn(verb === 'buildat' ? 'sendbld' : verb);
+}
+document.addEventListener('click', e => { const el = e.target.closest('[data-act]'); if (!el) return; e.stopPropagation(); sndInit(); sfx('tap'); act(el.dataset.act); });
+for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndInit, { passive: true });   // Safari unlocks audio on the finger lifting, not landing

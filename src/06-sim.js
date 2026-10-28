@@ -685,9 +685,7 @@ function finish(won, text) {
   let best = null; try { best = Number(localStorage.getItem('firstkeep.best')) || null; } catch (e) {}
   const sc = G.P[0].score.total;
   if (won && (!best || sc > best)) { best = sc; try { localStorage.setItem('firstkeep.best', String(sc)); } catch (e) {} }
-  $('endT').textContent = won ? 'Victory' : 'Defeat';
-  $('endP').textContent = `${text} Score ${fmt(sc)}${best ? ' · best ' + fmt(best) : ''}.`;
-  $('endNext').hidden = $('endFree').hidden = !won; $('end').hidden = false; closeCard();
+  showEnd(won, `${text} Score ${fmt(sc)}${best ? ' · best ' + fmt(best) : ''}.`);
 }
 const TICK = { vil: vilTick, scout: scoutTick, envoy: envoyTick, caravan: caravanTick, spy: spyTick, priest: priestTick, medic: medicTick, sol: solTick, wild: wildTick, wayfarer: wayfarerTick };
 

@@ -95,27 +95,6 @@ function startPlace(kind) {
   $('place').hidden = false; ui(true);
 }
 // you tapped Build: build what the ghost shows; houses, fields and gates offer the next spot beside it
-function commitPlace() {
-  const pl = G.place; if (!pl || !pl.at) return;
-  const kind = pl.kind, B = BLD[kind], p = G.P[0];
-  if (kind === 'wall') {
-    const cells = pl.cells && pl.cells.length ? pl.cells : [toCell(pl.at)];
-    let built = 0, blocked = 0, broke = false;
-    for (const c of cells) { if (!afford(p, B.cost)) { broke = true; break; } if (build(0, 'wall', c.gx * NAVC + 5, c.gy * NAVC + 5)) built++; else blocked++; }
-    say(built ? `${built} wall piece${built > 1 ? 's' : ''} going up${blocked ? `; ${blocked} blocked` : ''}${broke ? '; out of stone' : ''}.` : broke ? `Not enough stone: ${B.cost.s} a piece.` : 'Something is in the way.', '', 4);
-    pl.cells = null; pl.a = null; pl.at = null; ui(true); return;
-  }
-  const why = canPlace(0, kind, pl.at.x, pl.at.y);
-  if (why) { say(why + '.', '', 3); sfx('err'); return; }
-  if (!afford(p, B.cost)) { say(`Not enough for a ${B.name.toLowerCase()}: ${costText(B.cost)}.`, '', 3); sfx('err'); return; }
-  const b = build(0, kind, pl.at.x, pl.at.y);
-  if (b && B.repeat) {
-    const n = B.fp * NAVC + NAVC, spots = [[n, 0], [0, n], [-n, 0], [0, -n]].map(([dx, dy]) => snapPos(kind, b.x + dx, b.y + dy));
-    pl.at = spots.find(s => !canPlace(0, kind, s.x, s.y)) || null;
-    if (!pl.at) cancelPlace();
-  } else cancelPlace();
-  ui(true);
-}
 function cancelPlace() { if (G) G.place = null; $('place').hidden = true; }
 
 
@@ -125,9 +104,4 @@ function boxPick(d) {
   const trees = G.nodes.filter(n => n.kind === 'tree' && n.amt > 0 && inBox(n, r)).length, vils = unitsOf(0, 'vil').filter(u => !u.inside && inBox(u, r)).map(u => u.id);
   if (!trees && !vils.length) { say('Nothing to pick in that box: trees or villagers.', '', 3); return; }
   openCard({ type: 'box', r, trees, vils });
-}
-function boxCut(r, n) {   // send n villagers to cut the trees in the box, then back to their work
-  const mid = { x: (r.x0 + r.x1) / 2, y: (r.y0 + r.y1) / 2 }, V = unitsOf(0, 'vil').filter(u => !u.inside && !u.patch && u.job !== 'repair').sort((a, b) => (!!a.job - !!b.job) || dist(a, mid) - dist(b, mid));   // idle first, then the nearest
-  let sent = 0; for (const v of V.slice(0, n)) { v.pj = v.job === 'wood' ? null : v.job; setJob(v, 'wood'); v.patch = { ...r }; sent++; }
-  say(sent ? `${sent} villager${sent > 1 ? 's go' : ' goes'} to cut the trees in the box.` : 'No villager is free.', '', 4);
 }
