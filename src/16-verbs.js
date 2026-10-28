@@ -61,7 +61,7 @@ const PLAY = {
   qfoe(a) { const v = G.units.find(x => x.id === Number(a) && x.hp > 0); if (!v) return; const S = qsPick(v); S.forEach(u => { u.state = 'goto'; u.px = v.x; u.py = v.y; u.idleT = 0; u.focus = v; }); march(S, v, G.P[v.owner].name); if (S.length) ripple(v.x, v.y, '#ff8a70'); closeCard(); },
   bned(a) { G.bnEdit = Number(a); },
   muster(a) { const i = Number(a); if (muster(0, musterGap(i), i)) sfx('place'); else sfx('err'); },
-  bnn(a) { const [k, d] = a.split(','), P = G.bnPlan[G.bnEdit], cur = P[k] || 0, st = d === '+' ? (cur < 10 ? 1 : 5) : (cur <= 10 ? 1 : 5); const others = Object.entries(P).reduce((n, [q, v]) => n + (q === k ? 0 : v), 0); P[k] = clamp(cur + (d === '+' ? st : -st), 0, BNSIZE - others); if (!P[k]) delete P[k]; rebattalion(); },   // a battalion holds BNSIZE at most, every kind together
+  bnn(a) { const [k, d] = a.split(','), P = G.bnPlan[G.bnEdit], cur = P[k] || 0, st = d === '+' ? (cur < 10 ? 1 : 5) : (cur <= 10 ? 1 : 5); const others = Object.entries(P).reduce((n, [q, v]) => n + (q === k ? 0 : v), 0); P[k] = clamp(cur + (d === '+' ? st : -st), 0, Math.max(cur, BNSIZE - others)); if (!P[k]) delete P[k]; rebattalion(); },   // a battalion holds BNSIZE at most, every kind together
   bnstance() { const i = G.bnEdit; G.stance[i] = ((G.stance[i] || 0) + 1) % STANCE.length; },
   bnform() { const i = G.bnEdit; G.form[i] = ((G.form[i] || 0) + 1) % FORM.length; },
   sendvil(a) { sendVil(0, Number(a)); },

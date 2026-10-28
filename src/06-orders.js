@@ -306,7 +306,7 @@ function ordersTick() {   // once a second: who is still on each order, and has 
   for (const id in G.ords) {
     const O = G.ords[id], S = by[id]; if (!S) { delete G.ords[id]; continue; }
     let x = 0, y = 0; for (const u of S) { x += u.x; y += u.y; } O.cx = x / S.length; O.cy = y / S.length; O.n = S.length; O.fight = S.some(u => u.tgt && u.tgt.hp > 0);
-    if (!O.arrived && hyp(O.cx - O.x, O.cy - O.y) < 90) { O.arrived = true; say(`${S.length} arrived: ${O.label}.`, 'good', 4, O); }
+    if (!O.arrived && (hyp(O.cx - O.x, O.cy - O.y) < 90 || S.every(u => u.state === 'goto' && u.idleT > 1))) { O.arrived = true; say(`${S.length} arrived: ${O.label}.`, 'good', 4, O); }   // there, or every one has stopped: a straggler cannot hold the rest on the order
     if (!O.arrived) { let spd = 1e9; for (const u of S) spd = Math.min(spd, stats(0, u.kind).spd); O.eta = Math.round(hyp(O.cx - O.x, O.cy - O.y) / Math.max(1, spd)); }
   }
   for (const u of G.units) if (u.ord && (!G.ords[u.ord] || u.state === 'home')) u.ord = undefined;   // called home: no longer on that order

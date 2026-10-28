@@ -25,7 +25,7 @@ const some = (k, n) => k === 1 ? n : plural(n);
 const SET = { diff: 'normal', tips: true, msgs: true, civ: 'roman', fantasy: false, mode: 't60', sound: true, vol: 0.6, mix: {}, hush: {}, mini: undefined, mapSeen: false, vibe: true, learned: {} };
 try { Object.assign(SET, JSON.parse(localStorage.getItem('firstkeep.settings') || '{}')); } catch (e) {}
 if (!CIVS[SET.civ]) SET.civ = 'roman';
-if (!(SET.setV >= 38)) { let old = false; try { old = !!localStorage.getItem('firstkeep.settings'); } catch (e) {} if (old) { SET.diff = 'normal'; SET.mode = 't60'; } SET.setV = 38; }   // Build 38: Normal and an hour by default; a phone that kept Easy and 30 minutes from the old default moves once, and a choice made after stays
+if (!(SET.setV >= 38)) { let old = false; try { old = !!localStorage.getItem('firstkeep.settings'); } catch (e) {} if (old && SET.diff === 'easy' && SET.mode === 't30') { SET.diff = 'normal'; SET.mode = 't60'; } SET.setV = 38; }   // Build 38: Normal and an hour by default; a phone that kept Easy and 30 minutes from the old default moves once, and a choice made after stays
 SET.mix = Object.assign({ fx: 1, amb: 1, alert: 1 }, SET.mix);   // three volumes: effects, ambience, alerts
 function saveSet() { try { localStorage.setItem('firstkeep.settings', JSON.stringify(SET)); } catch (e) {} }
 const MODES = { conquest: { name: 'Conquest', secs: 0 }, t30: { name: '30 minutes', secs: 1800 }, t60: { name: '60 minutes', secs: 3600 } };

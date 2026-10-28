@@ -16,7 +16,7 @@ function saveGame(force) {
   try {
     const units = G.units.map(u => { const r = {}; for (const k in u) if (!SKIP_U.has(k)) r[k] = u[k]; r.nodeId = u.node ? u.node.id : null; r.repId = u.rep ? u.rep.id : null; r.huntId = u.hunt ? u.hunt.id : null; return r; });
     const blds = G.blds.map(b => { const r = {}; for (const k in b) if (k !== 'node') r[k] = b[k]; if (b.node) { r.nodeId = b.node.id; r.res = isFinite(b.node.amt) ? b.node.amt : undefined; } return r; });
-    const S = { v: SAVEV, at: Date.now(), t: G.t, tick: G.tick, speed: G.speed, seed: G.seed, rs: G.rs, nid: NID, sel: G.sel, rally0: G.rally0 || null, hold: G.hold, stance: G.stance, bnPlan: G.bnPlan, form: G.form, contract: G.contract || null, intel: G.intel, fantasy: G.fantasy, mode: G.mode, diff: G.diff, wayT: G.wayT, wayI: G.wayI, wonder: G.wonder, mkt: G.mkt || null, reignT: G.reignT ?? null, free: !!G.free, bell: G.bell || null, wx: G.wx, wxT: G.wxT, harvest: G.harvest, plague: G.plague, seasonN: G.seasonN,
+    const S = { v: SAVEV, at: Date.now(), t: G.t, tick: G.tick, speed: G.speed, seed: G.seed, rs: G.rs, nid: NID, sel: G.sel, rally0: G.rally0 || null, hold: G.hold, stance: G.stance, bnPlan: G.bnPlan, form: G.form, contract: G.contract || null, intel: G.intel, fantasy: G.fantasy, mode: G.mode, diff: G.diff, wayT: G.wayT, wayI: G.wayI, wonder: G.wonder, ords: G.ords || {}, ordN: G.ordN || 0, mkt: G.mkt || null, reignT: G.reignT ?? null, free: !!G.free, bell: G.bell || null, wx: G.wx, wxT: G.wxT, harvest: G.harvest, plague: G.plague, seasonN: G.seasonN,
       cam: { x: cam.x, y: cam.y, z: cam.z }, rel: G.rel, finds: G.finds, lakes: G.lakes,
       P: G.P.map(p => { const { fxc, uc, ...q } = p; return { ...q, techs: [...p.techs] }; }),
       nodes: G.nodes.filter(n => n.kind !== 'farm').map(n => n.kind === 'tree' ? [n.id, n.x, n.y, n.amt, n.max] : (({ open, wk, ...r }) => r)(n)), blds, units };   // trees are most of the map: five numbers each
@@ -47,6 +47,7 @@ function loadGame(S) {
   const byB = new Map(G.blds.map(b => [b.id, b]));
   for (const su of S.units) { const { nodeId, repId, huntId, ...u } = su; u.node = nodeId ? byNode.get(nodeId) || null : null; u.rep = repId ? byB.get(repId) || null : null; u._hunt = huntId; G.units.push(u); }
   const byU = new Map(G.units.map(u => [u.id, u])); for (const u of G.units) { if (u._hunt) u.hunt = byU.get(u._hunt) || null; delete u._hunt; }
+  G.ords = S.ords || {}; G.ordN = S.ordN || 0; for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined;   // orders on the march come back with the game; a stray number is cleared (Build 38 review)
   fxDirty(); navRebuild(); recount(); scoreAll();
   if (S.cam) { cam.x = S.cam.x; cam.y = S.cam.y; cam.z = clamp(S.cam.z, minZ(), ZOOM_MAX); clampCam(); }
   paceBtn(); muteBtn();
