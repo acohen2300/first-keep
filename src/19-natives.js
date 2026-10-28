@@ -71,10 +71,11 @@ function trapsTick() {
 }
 // Outlaw raids: every few minutes the camp nearest the side they regard least sends robbers at its drop-offs, who come back after a spell
 function natRaid() {
-  const N = natState(); if (G.t - N.raidT < NATIVE.raidEvery / (hz('horde') ? 2 : 1)) return;   // Hordes and gangs: twice as often N.raidT = G.t;
+  // no raid before minute 10 (Easy: 16), then every three minutes (Hordes and gangs: twice as often); the band grows with the age of the side it raids
+  const N = natState(); if (G.t < NATIVE.raidFrom + (G.diff === 'easy' ? EASY_SAFE : 0) || G.t - N.raidT < NATIVE.raidEvery / (hz('horde') ? 2 : 1)) return; N.raidT = G.t;
   const sides = G.P.filter(p => p.id !== WILD && p.alive && keepOf(p.id) && G.rel[p.id][WILD] === 'war').sort((a, b) => regardOf(a.id) - regardOf(b.id)); if (!sides.length) return;
   const q = sides[0], k = keepOf(q.id), camps = G.finds.filter(f => f.kind === 'camp' && !f.done && guardsLeft(f)).sort((a, b) => dist(a, k) - dist(b, k)); if (!camps.length) return;
-  const f = camps[0], R = G.units.filter(u => u.find === f.id && u.hp > 0 && UNIT[u.kind].dmg).slice(0, NATIVE.raidN); if (!R.length) return;
+  const f = camps[0], R = G.units.filter(u => u.find === f.id && u.hp > 0 && UNIT[u.kind].dmg).slice(0, NATIVE.raidN + q.age); if (!R.length) return;
   const mark = nearest(G.blds, f, b => b.owner === q.id && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && b.kind !== 'keep') || k;
   for (const u of R) { u.camp = { x: u.hx, y: u.hy }; u.hx = mark.x; u.hy = mark.y; u.horde = true; u.back = G.t + NATIVE.raidSecs; }
   if (q.id === 0) say(`Outlaws ride for your ${bldName(0, mark.kind).toLowerCase()} (${coord(mark.x, mark.y)}).`, 'warn', 7, mark);

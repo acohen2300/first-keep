@@ -30,6 +30,8 @@ function navRebuild() {
       if (b.kind === 'gate') NAV.gate[c] = b.owner + 1; else if (!B.walk) NAV.solid[c] = 1;   // a gate, even half built, is an opening for its own side (Build 38: an unbuilt gate sealed the Fortress in)
     }
   }
+  // a one-square slit between two buildings is shut: a figure is wider than the gap and read as walking through the wall (Albert, Build 41)
+  for (let y = 1; y < NC - 1; y++) for (let x = 1; x < NC - 1; x++) { const c = y * NC + x; if (NAV.solid[c] || NAV.occ[c] || NAV.gate[c]) continue; const B = d => { const b = NAV.occ[d]; return b && !BLD[b.kind].walk && b.kind !== 'gate'; }; if ((B(c - 1) && B(c + 1)) || (B(c - NC) && B(c + NC))) NAV.solid[c] = 1; }
   // which squares are joined by open ground (gates counted open: the finest cut is made by the search itself)
   const C = NAV.comp, Q = AS.q; C.fill(0); let id = 0;
   for (let s = 0; s < NC * NC; s++) {

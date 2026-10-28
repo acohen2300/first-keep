@@ -143,7 +143,7 @@ function startPlace(kind) {
   const why = capWhy(0, kind); if (why) { say(why + '.', '', 3); sfx('err'); return; }
   closeCard(); setPick([]); G.place = { kind, at: null, a: null, cells: null };
   // start the ghost in the middle of the screen, snapped beside something of yours if it can be
-  const w = G.buildAt || toWorld(cw / 2, ch / 2); G.buildAt = null; if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200);   // from the hammer on open ground: there; otherwise the middle of the screen
+  const w = G.buildAt && G.buildAt.x !== undefined ? G.buildAt : toWorld(cw / 2, ch / 2); G.buildAt = null; if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200);   // from the hammer on open ground: there; otherwise the middle of the screen
   $('place').hidden = false; ui(true);
 }
 // you tapped Build: build what the ghost shows; houses, fields and gates offer the next spot beside it

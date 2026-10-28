@@ -2,8 +2,8 @@
 // ───────────────────────── What every button does: one table ─────────────────────────
 // every button's verb, in one table
 const ACT = {
-  pause() { setPause(!G.paused); },
-  spd(a) { G.speed = clamp(Number(a), 1, 3); $('spdPop').hidden = true; if (G.paused) setPause(false); paceBtn(); },   // from the speed drop-down under the play button
+  pause() { setPause(!G.paused); spdPop(G.paused && !G.card); },   // paused: the speeds drop down under the button
+  spd(a) { G.speed = clamp(Number(a), 1, 3); spdPop(false); if (G.paused) setPause(false); paceBtn(); },   // from the speed drop-down under the play button
   again() { $('end').hidden = true; openCard({ type: 'setup' }); },
   free() { G.over = null; G.free = true; $('end').hidden = true; setPause(false); say('Free play: no clock, no victory.', '', 6); },
   next() { const p = G.P[0], keep = { age: p.age, techs: [...p.techs] }; $('end').hidden = true; newGame(undefined, keep); setPause(false); say('New land. Your age and research stay.', 'good', 8); saveGame(true); },
@@ -14,7 +14,7 @@ const ACT = {
   reload() { location.reload(); },
   vibe() { SET.vibe = !SET.vibe; saveSet(); feel('snap'); refresh(); },
   menu(a) { const keep = G.card && G.card.type === 'menu'; openCard({ type: 'menu', id: a }); if (keep) $('card').scrollTop = 0; },
-  buildrow() { G.buildAt = null; G.buildBy = null; if (G.card && G.card.type === 'menu') closeCard(); else openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // Build opens the Build card on the menu last used; again, it closes
+  buildrow() { G.buildBy = null; if (G.card && G.card.type === 'menu') { G.buildAt = null; closeCard(); return; } const w = toWorld(cw / 2, ch / 2 + vy), hint = suggestAt(w.x, w.y), M = hint && MENUS.find(m => m.items.includes(hint)); G.buildAt = hint ? { hint } : null; openCard({ type: 'menu', id: M ? M.id : G.lastMenu || MENUS[0].id }); },   // Build opens on what fits the middle of the view   // Build opens the Build card on the menu last used; again, it closes
   towncard() { const k = keepOf(0); if (k) openCard({ type: 'bld', id: k.id }); },
   unvil() { if (!unTrain(0, 'vil')) say('Nobody is waiting to train.', '', 3); },
   idlego() { const u = unitsOf(0, 'vil').find(v => !v.job); if (!u) return; cam.x = u.x; cam.y = u.y; clampCam(); closeCard(); },
@@ -85,6 +85,8 @@ const PLAY = {
   sendvil(a) { sendVil(0, Number(a)); },
   boxcut(a) { if (G.card && G.card.type === 'box') boxCut(G.card.r, Number(a)); closeCard(); },
   unpick() { setPick([]); },
+  pattack(id) { const e = G.units.find(u => u.id === Number(id)); const S = armyOf(0).filter(isSoldier); if (e && S.length) { order(S, { t: 'unit', e }); setPick([]); } },
+  look(id) { const e = G.units.find(u => u.id === Number(id)); if (e) { setPick([]); openCard({ type: 'unit', id: e.id }); } },
   pmore() { G.pickMore = !G.pickMore; ui(true); },   // + More: each tap on your people adds or drops one; Done stops
   pjob(j) { for (const u of picked()) if (u.kind === 'vil') { setJob(u, j); u.pj = null; u.post = null; u.idleT = 0; } say(`To ${j}.`, '', 2); setPick([]); },
   pbuild() { G.buildBy = picked().filter(u => u.kind === 'vil').map(u => u.id); setPick([]); openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // whatever you place next, the picked villagers raise it

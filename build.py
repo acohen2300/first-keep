@@ -26,8 +26,9 @@ def comment_of(line):
 for f in files:
     for n, line in enumerate(open(f), 1):
         c = comment_of(line)
+        # Build 41: a comment that ends in an assignment is refused too (one swallowed the raid clock)
         if c and re.search(r'\w\(.*\)\s*;\s*(\},?)?\s*$', c): sys.exit(f'build refused: {f}:{n} a comment ends in code: ...{c[-60:]}')
-        if c and re.search(r'(;|\))\s*(if \(|for \(|while \(|[A-Za-z_$][\w$.\[\]]*\s*([*+/-]?=[^=]|\())', c): sys.exit(f'build refused: {f}:{n} a comment holds statements (code swallowed?): ...{c[:70]}')   # Build 39: statements hid in a comment and every rank upgrade lost its numbers
+        if c and (re.search(r'(;|\))\s*(if \(|for \(|while \(|[A-Za-z_$][\w$.\[\]]*\s*([*+/-]?=[^=]|\())', c) or re.search(r'\b[A-Za-z_$][\w$]*(\.[\w$]+)+\s*=\s*[^=\s][^;]*;\s*$', c)): sys.exit(f'build refused: {f}:{n} a comment holds statements (code swallowed?): ...{c[:70]}')   # Build 39: statements hid in a comment and every rank upgrade lost its numbers
 os.makedirs('/tmp/fk-build', exist_ok=True)
 open('/tmp/fk-build/game.js', 'w').write(js)
 r = subprocess.run(['node', '--check', '/tmp/fk-build/game.js'], capture_output=True, text=True)

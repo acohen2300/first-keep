@@ -158,12 +158,25 @@ function showStrip(sx, sy, x, y, step) {
   const r = $('stage').getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight, th = el.querySelector('.thumb'), tx = th ? th.offsetLeft + th.offsetWidth / 2 : w / 2, ty = th ? th.offsetTop + th.offsetHeight / 2 : h / 2;
   el.style.left = clamp(sx - tx, 4, r.width - w - 4) + 'px'; el.style.top = clamp(sy - ty, 4, r.height - h - 4) + 'px';   // the sword opens under the finger
 }
-// what the game thinks fits a spot: the drop-off for what grows there, if none is near; a house when room is short
+// what the game thinks fits a spot (Albert, Build 41): each reason scores a kind, the best one is marked and its menu opens.
+// A drop-off for what grows there with none near; more of what stands around you (houses: a house; fields: a mill, then a field; army buildings: the one you lack);
+// a narrow way between forest, water or buildings: a wall, or a gate beside your wall; and a house when room is short.
+const SUGGEST = { r: 140, drop: 3, kin: 3.5, choke: [0.35, 0.75], chokeW: 4, room: 2 };
 function suggestAt(x, y) {
-  const by = {}; for (const nd of G.nodes) if (nd.amt > 0 && !nd.farm && hyp(nd.x - x, nd.y - y) < 120) { const k = nd.kind === 'fish' ? 'dock' : nd.type === 'wood' ? 'lumber' : nd.type === 'food' ? 'mill' : 'mining'; if (!dropFor(0, nd.type, nd) || dist(dropFor(0, nd.type, nd), nd) > 110) by[k] = (by[k] || 0) + 1; }
-  const best = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
-  if (best && BLD[best[0]].age <= G.P[0].age) return best[0];
-  return capOf(0) - popOf(0) - queuedOf(0) <= 2 ? 'house' : null;
+  const p = G.P[0], sc = {}, add = (k, v) => { if (k && BLD[k] && BLD[k].age <= p.age && !capWhy(0, k)) sc[k] = (sc[k] || 0) + v; };
+  { const drops = new Set(); for (const nd of G.nodes) if (nd.amt > 0 && !nd.farm && hyp(nd.x - x, nd.y - y) < SUGGEST.r * 0.85) { const k = nd.kind === 'fish' ? 'dock' : nd.type === 'wood' ? 'lumber' : nd.type === 'food' ? 'mill' : 'mining', d = dropFor(0, nd.type, nd); if (!d || dist(d, nd) > 110) drops.add(k); } for (const k of drops) add(k, SUGGEST.drop); }   // each drop-off it lacks counts once
+  const near = G.blds.filter(b => b.owner === 0 && b.hp > 0 && hyp(b.x - x, b.y - y) < SUGGEST.r), has = k => near.some(b => b.kind === k);
+  for (const b of near) {
+    const m = MENUS.find(M => M.items.includes(b.kind)); if (!m) continue;
+    if (m.id === 'home') add(b.kind === 'apartment' ? 'apartment' : 'house', SUGGEST.kin);
+    else if (b.kind === 'farm' || b.kind === 'pasture') add(has('mill') ? 'farm' : 'mill', SUGGEST.kin);
+    else if (m.id === 'mil') add(m.items.find(k => !bldsOf(0, k).length && BLD[k].age <= p.age) || b.kind, SUGGEST.kin);
+    else if (b.kind === 'wall') add('gate', SUGGEST.kin);
+    else add(b.kind === 'keep' ? 'house' : null, 1);
+  }
+  { const cx = Math.floor(x / NAVC), cy = Math.floor(y / NAVC); let solid = 0, n = 0; for (let j = -4; j <= 4; j++) for (let i = -4; i <= 4; i++) { const gx = cx + i, gy = cy + j; if (gx < 0 || gy < 0 || gx >= NC || gy >= NC || i * i + j * j > 16) continue; n++; if (NAV.solid[gy * NC + gx]) solid++; } const f = solid / (n || 1); if (f > SUGGEST.choke[0] && f < SUGGEST.choke[1] && !NAV.solid[cy * NC + cx]) add(has('wall') ? 'gate' : 'wall', SUGGEST.chokeW); }
+  if (capOf(0) - popOf(0) - queuedOf(0) <= SUGGEST.room) add('house', 1.5);
+  const best = Object.entries(sc).sort((a, b) => b[1] - a[1])[0]; return best ? best[0] : null;
 }
 function hideStrip() { const el = $('strip'); if (el && !el.hidden) { el.hidden = true; if (G) G.strip = null; } }
 // ── the War Council: six battalions, what each holds by type, its stance and formation
@@ -447,9 +460,9 @@ const CARDS = {
   keep() { const k = keepOf(0); if (!k) return null; G.card = { type: 'bld', id: k.id }; return CARDS.bld(G.card); },
   menu(c) {
     const p = G.P[0], M = MENUS.find(m => m.id === c.id); G.lastMenu = c.id;
-    const item = k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp, fits = G.buildAt && G.buildAt.hint === k; return btn(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? `limit ${cp}` : !afford(p, B.cost) ? `short ${need(B.cost)}` : (fits ? 'fits here · ' : '') + costText(B.cost) + (cp > 1 && cp < 99 ? ` · ${n}/${cp}` : ''), lock || full || !afford(p, B.cost) ? 'dis' : fits ? 'go' : ''); };
+    const item = k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp, fits = G.buildAt && G.buildAt.hint === k; return btn(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? `limit ${cp}` : !afford(p, B.cost) ? `short ${need(B.cost)}` : (fits ? 'fits here · ' : '') + costText(B.cost), lock || full || !afford(p, B.cost) ? 'dis' : fits ? 'go' : '').replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>'); };   // how many of how many beside the name, dimmed: every cost stays on one line
     const most = Math.max(...MENUS.map(m => m.items.length)), ghosts = '<button class="ghost" disabled aria-hidden="true" tabindex="-1"><b>.</b><small>.</small></button>'.repeat(most - M.items.length);   // blank places keep every menu as tall as the biggest (two rows), so the page never changes height
-    return title('Build', G.buildAt ? 'here' : '') + acts(MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join(''), 'c6 chipsrow') + acts(M.items.map(item).join('') + ghosts, 'c4 menu')
+    return title('Build', G.buildAt && G.buildAt.x !== undefined ? 'here' : '') + acts(MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join(''), 'c6 chipsrow') + acts(M.items.map(item).join('') + ghosts, 'c4 menu')
       + fold('menu', 'What each one does', M.items.map(k => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''));
   },
   research: () => researchHTML(),
@@ -473,7 +486,7 @@ const CARDS = {
     return title('How to play', `build ${BUILD}`) + acts(btn('guide:bld', 'Guide', 'what leads to what, and why', 'go') + btn('guide:rule', 'Rules', 'what triggers what'))
       + `<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
       <p><b>Build:</b> pick a menu, then a building. It waits above your finger: drag it, then tap Build. Villagers raise it.</p>
-      <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Hold the play button for the speeds.</p>
+      <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Pause shows the speeds under the button.</p>
       <p><b>Army:</b> tap open ground with nothing picked: Send ¼ or All. The War Council opens stances, battalions, formations and Muster.</p>
       <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>

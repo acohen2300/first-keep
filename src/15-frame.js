@@ -36,7 +36,7 @@ const wd = (t, id) => `<span class="wd"${id ? ` id="${id}"` : ''}>${t}</span>`;
 // The top: the tally (five counts, mute, pause, speed), then the strip (age, season, clock; idle; score). The bottom: People, then one column per job; Build swaps the row for the categories.
 function buildPanel() {
   $('tally').innerHTML = [['f', 'Food'], ['w', 'Wood'], ['s', 'Stone'], ['g', 'Gold'], ['i', 'Iron']].map(([r, n]) => cell(`data-act="card:stores" aria-label="${n}: open the stores"`, ICON[n.toLowerCase()], wd('0', 'r' + r))).join('')
-    + cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') + cell('id="pauseB" data-act="pause" aria-label="Pause; hold for speed"', ICON.pause, '', 'one') + cell('id="mapT" data-act="map" aria-label="The small map"', ICON.map, '', 'one');   // one button for play, pause and speed (hold it); the freed cell is the map (Albert, Build 40)
+    + cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') + cell('id="pauseB" data-act="pause" aria-label="Pause"', ICON.pause, '', 'one') + cell('id="mapT" data-act="map" aria-label="The small map"', ICON.map, '', 'one');   // one button for play, pause and speed (hold it); the freed cell is the map (Albert, Build 40)
   const st = (act, t, label, id) => `<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
   $('jobs').innerHTML = `<div class="col">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}${st('buildrow', ICON.hammer, 'Build', 'buildT')}</div>`   // one tap makes a villager; Build under it (Albert, Build 41)
     + JOBS.map(r => `<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`).join('');
@@ -44,14 +44,23 @@ function buildPanel() {
 }
 const refresh = () => { cardSig = ''; ui(true); };
 function muteBtn() { $('muteB').classList.toggle('off', !SND.on); $('muteB').classList.toggle('sel', !SND.on); $('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on'); }
-function paceBtn() { const pb = $('pauseB'); pb.innerHTML = (G.paused ? ICON.play : ICON.pause) + (G.speed > 1 ? `<span class="spd">×${G.speed}</span>` : ''); pb.setAttribute('aria-label', (G.paused ? 'Play' : 'Pause') + '; hold for speed'); pb.classList.toggle('sel', !!G.paused); }
-function setPause(v) { G.paused = v; paceBtn(); }
+function paceBtn() { const pb = $('pauseB'); pb.innerHTML = (G.paused ? ICON.play : ICON.pause) + (G.speed > 1 ? `<span class="spd">×${G.speed}</span>` : ''); pb.setAttribute('aria-label', G.paused ? 'Play' : 'Pause'); pb.classList.toggle('sel', !!G.paused); }
+function setPause(v) { G.paused = v; paceBtn(); if (!v && typeof spdPop === 'function') spdPop(false); }
 function applyMini() { mini.hidden = !SET.mini; $('mapT').classList.toggle('sel', !!SET.mini); $('stage').classList.toggle('mapOn', !!SET.mini); }
 // the end of a game: the sim says who won and why; the screen shows it
 function showEnd(won, text) { $('endT').textContent = won ? 'Victory' : 'Defeat'; $('endP').textContent = text; $('endNext').hidden = $('endFree').hidden = !won; $('end').hidden = false; closeCard(); }
 // The page's own measures: how tall the orders are (the map's bottom edge) and where the map's middle sits between the bars
 function fit() { const r = cv.getBoundingClientRect(); dpr = LOW.n >= 2 ? 1 : Math.min(2, window.devicePixelRatio || 1); cw = r.width; ch = r.height; { const h = $('hud').getBoundingClientRect(), o = $('orders').getBoundingClientRect(), t = r.top; document.documentElement.style.setProperty('--ob', Math.round(r.bottom - o.top) + 'px'); vy = Math.round(((h.bottom - t) + (o.top - t)) / 2 - ch / 2); bandH = Math.max(100, o.top - h.bottom); } const W = Math.round(cw * dpr), H = Math.round(ch * dpr); if (cv.width !== W) cv.width = W; if (cv.height !== H) cv.height = H; cam.z = clamp(cam.z, minZ(), ZOOM_MAX); clampCam(); }
 
+// who a unit not yours belongs to, in a few words: a rival and how you stand, the Natives, the horde, outlaws, the wild
+function whoIs(u) {
+  const nm = UNIT[u.kind].name;
+  if (u.owner !== WILD) { const P = G.P[u.owner]; return `${nm} · ${P.name}${P.civ ? ', ' + CIVS[P.civ].name : ''} · ${REL_WORD[G.rel[0][u.owner]].toLowerCase()}`; }
+  if (u.native) return `${nm} · the Natives · ${REL_WORD[G.rel[0][WILD]].toLowerCase()}`;
+  if (u.horde && !u.back) return `${nm} · the horde`;
+  if (u.back || u.find !== undefined) return `${nm} · outlaws from a camp`;
+  return `${nm} · ${UNIT[u.kind].tags && UNIT[u.kind].tags.includes('animal') ? 'a wild animal' : 'the wild'}`;
+}
 // ───────────────────────── Messages and tips ─────────────────────────
 // quiet kinds (news, the spectacle's 'coming' lines) never take the line: they wait in the list and count on the bell (Albert: too many alerts to keep up with)
 const QUIET = new Set(['news', 'soft']);
@@ -120,8 +129,9 @@ function ui(force) {
   { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; if ($('homeB').hidden === away) $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
   $('stage').classList.toggle('busy', !!(G.card || G.place));
   $('buildT').classList.toggle('sel', !!(G.card && G.card.type === 'menu'));   // one look for on: the outline, as the default job wears it
-  { const P = picked(), n = P.length, prey = !n && G.pickE && G.pickE.length === 1 && G.pickE[0].owner === WILD && UNIT[G.pickE[0].kind] && UNIT[G.pickE[0].kind].meat && G.pickE[0].hp > 0 ? G.pickE[0] : null, show = (n > 0 || !!prey) && !G.card && !G.place, el = $('pickbar'); if (el.hidden === show) el.hidden = !show; $('stage').classList.toggle('picking', show);   // the action bar (Albert, Build 41)
+  { const P = picked(), n = P.length, one = !n && G.pickE && G.pickE.length === 1 && G.pickE[0].hp > 0 && UNIT[G.pickE[0].kind] && G.pickE[0].owner !== 0 ? G.pickE[0] : null, prey = one && one.owner === WILD && UNIT[one.kind].meat ? one : null, foe = one && !prey ? one : null, show = (n > 0 || !!one) && !G.card && !G.place, el = $('pickbar'); if (el.hidden === show) el.hidden = !show; $('stage').classList.toggle('picking', show);   // the action bar (Albert, Build 41)
     if (show && prey) { txt('pickT', UNIT[prey.kind].name); $('pMore').hidden = true; const hunters = unitsOf(0, 'vil').filter(v => v.hunt === prey).length, row = `<button data-act="hunt:${prey.id}" class="go"><b>Hunt</b><small>${hunters ? hunters + ' on it' : 'nearest villager'}</small></button><button data-act="hunt3:${prey.id}"><b>Hunt ×3</b></button>`; if (el.rowH !== row) { el.rowH = row; $('pickRow').innerHTML = row; } }   // a deer, a boar: hunt it from the bar
+    else if (show && foe) { txt('pickT', whoIs(foe)); $('pMore').hidden = true; const sol = armyOf(0).filter(isSoldier).length, war = foe.owner === WILD ? (!foe.native || atWar(0, WILD)) : atWar(0, foe.owner), row = `<button data-act="pattack:${foe.id}" class="${war && sol ? 'warn' : 'dis'}"><b>Attack</b><small>${!sol ? 'no soldiers' : war ? 'all soldiers' : 'not at war'}</small></button><button data-act="look:${foe.id}"><b>More</b></button>`; if (el.rowH !== row) { el.rowH = row; $('pickRow').innerHTML = row; } }   // who is this? the bar says, and offers the fight (Albert, Build 41)
     else if (show) { $('pMore').hidden = false; txt('pickT', `${n} picked`); $('pMore').innerHTML = G.pickMore ? '<b>Done</b>' : '<b>＋ More</b>'; $('pMore').classList.toggle('on', !!G.pickMore);
       const sol = P.some(isSoldier), vil = P.some(u => u.kind === 'vil'), ic = (act, icon, label) => `<button data-act="${act}" aria-label="${label}">${icon}</button>`, tx = (act, t) => `<button data-act="${act}"><b>${t}</b></button>`;
       const tch = sol && fxv(0, 'teach').a >= 1 && P.some(u => isSoldier(u) && teachTo(u) && u.state !== 'school');
