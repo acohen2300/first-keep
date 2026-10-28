@@ -101,7 +101,8 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--pad) max(8px,env(safe-area-inset-bottom,0px));pointer-events:none}
 #orders .tiles{pointer-events:auto}
 button.ghost{visibility:hidden}
-.tr{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.tr{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.col>button.cell.tall{flex:1 1 auto}#buildT .gl{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);width:18px;height:18px}#buildT .wd{top:auto;bottom:8px;transform:none}
 .col{display:flex;flex-direction:column;gap:3px;min-width:0}.col>button.cell{flex:none}
 .pm{display:grid;grid-template-columns:1fr 1fr;gap:3px}
 .tiles button.cell{background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}
@@ -116,11 +117,12 @@ button.ghost{visibility:hidden}
 #tPeople .wd{color:var(--bone)}
 /* on the map: the corners, one look (.fab). Map top right, Home bottom left (only when away), Build bottom right */
 #spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}#spdPop[hidden]{display:none}#spdPop button{min-width:52px;min-height:44px}
-#pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}#mapT.lit{background:#2f3b36}
+.strip #sStats,.strip #sIdle{padding:0 5px;min-width:44px}.strip #sStats span{margin-right:7px}.strip #sStats span:last-child{margin-right:0}.strip .gl{position:static;transform:none;width:14px;height:14px;display:inline-block;vertical-align:-2px;margin-right:3px}
+#tally button.cell.sel{background:#2f3b36;box-shadow:inset 0 0 0 1px var(--mute)}
+#pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}
 button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad)}#buildB{right:var(--pad)}
-#stage.busy #homeB,#stage.busy #buildB:not(.on){display:none}
-#buildB.on{background:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;bottom:auto;top:var(--tabtop);z-index:6;border-radius:var(--r) var(--r) 0 0;border-bottom-color:#b8862e;height:46px;box-shadow:0 0 12px rgba(242,210,122,.45)}   /* the Build card is open: the button sits on the page's top edge as its tab, and closes it */
-#stage.picking #homeB,#stage.picking #buildB{display:none}
+#stage.busy #homeB{display:none}
+#stage.picking #homeB{display:none}
 #card .lbl{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.1;min-height:44px}#card .lbl b{font-size:15px}#card .lbl small{color:var(--mute);font-size:13px}
 /* the army dock (Build 40 reviews): once Battalions is researched, the battalions sit above the job bar, one tap each; the chevron folds it to a tab */
 #dock{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 60px);display:flex;align-items:center;gap:4px;z-index:3}
@@ -203,14 +205,14 @@ button.ok small{color:#8fd4a4}
     <div id="vig"></div>
   <header id="hud">
     <div class="pill" id="tally"></div>
-    <div class="strip"><div class="sg"><button id="sAge" data-act="towncard" aria-label="Age, season and clock: open the Town Center"><span id="sAgeT"></span></button><button id="sIdle" data-act="idlego" aria-label="Show an idle villager" hidden></button></div><div class="sg"><button id="tkBell" data-act="tkmin" aria-label="Show messages" hidden><span id="tkBellN"></span></button><button id="scoreP" data-act="card:score" aria-label="Score and rank"><span id="scoreN">★0</span> <span id="scoreR"></span></button></div></div>
+    <div class="strip"><div class="sg"><button id="sAge" data-act="card:research" aria-label="Age, season and clock: what you can research"><span id="sAgeT"></span></button><button id="sIdle" data-act="idlego" aria-label="Show an idle villager" hidden></button><button id="sStats" data-act="card:army" aria-label="Research ready, people, soldiers: the People card"></button></div><div class="sg"><button id="tkBell" data-act="tkmin" aria-label="Show messages" hidden><span id="tkBellN"></span></button><button id="scoreP" data-act="card:score" aria-label="Score and rank"><span id="scoreN">★0</span> <span id="scoreR"></span></button></div></div>
     <div class="tick" id="ticker"><button id="tkT" data-act="tklist" aria-label="Latest message"></button><button id="tkList" data-act="tklist" aria-label="Recent messages"></button><button id="tkMin" data-act="tkmin" aria-label="Hide messages"></button></div><div class="tkpop" id="tkPop" hidden></div>
   </header>
   <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
-    <button class="fab" id="buildB" data-act="buildrow" aria-label="Build"></button>
+    
     <div id="strip" hidden></div>
     <div id="dock" hidden><div id="dockRow"></div><button data-act="dockmin" id="dockMin" aria-label="Army dock"></button></div>
     <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="pmore" id="pMore"><b>＋ More</b></button><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>

@@ -40,7 +40,7 @@ LOOK = """() => { const F=window.__fk; F.newGame(5); const G=F.G; const s=1;   /
 PLAY = """async () => {
   const F = window.__fk, out = [], tap = sel => { const el = document.querySelector(sel); if (!el) { out.push('missing ' + sel); return; } el.click(); };
   F.setPause(false); F.newGame(5); F.act('close'); const G = F.G; G.P[0].res = { f: 9999, w: 9999, s: 9999, g: 9999, i: 9999 };
-  tap('#buildB'); if (!G.card || G.card.type !== 'menu') out.push('Build did not open the Build card');
+  tap('#buildT'); if (!G.card || G.card.type !== 'menu') out.push('Build did not open the Build card');
   tap('[data-act="menu:home"]'); if (!G.card || G.card.id !== 'home') out.push('the Home tab did not open');
   tap('[data-act="build:house"]'); if (!G.place || G.place.kind !== 'house') out.push('tapping House did not start placing');
   F.act('cancel'); if (G.place) out.push('Cancel left a placement');

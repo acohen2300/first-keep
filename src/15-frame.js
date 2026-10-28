@@ -39,14 +39,15 @@ function buildPanel() {
     + cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') + cell('id="pauseB" data-act="pause" aria-label="Pause; hold for speed"', ICON.pause, '', 'one') + cell('id="mapT" data-act="map" aria-label="The small map"', ICON.map, '', 'one');   // one button for play, pause and speed (hold it); the freed cell is the map (Albert, Build 40)
   const st = (act, t, label, id) => `<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
   $('jobs').innerHTML = `<div class="col">${cell('id="tPeople" data-act="card:army" aria-label="People: army, research, how to play"', ICON.people, wd('0/0', 'tPeopleN'))}<div class="pm">${st('unvil', '−', 'Cancel a villager waiting to train', 'tUn')}${st('train:vil', '+', 'Train a villager', 'tVil')}</div></div>`
-    + JOBS.map(r => `<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`).join('');
-  $('tkList').innerHTML = ICON.list; $('tkMin').innerHTML = ICON.up; $('homeB').innerHTML = ICON.home; $('pX').innerHTML = ICON.close; $('buildB').innerHTML = ICON.hammer;
+    + JOBS.map(r => `<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`).join('')
+    + `<div class="col">${cell('id="buildT" data-act="buildrow" aria-label="Build"', ICON.hammer, wd('Build'), 'tall')}</div>`;   // Build closes the row (Albert, Build 41)
+  $('tkList').innerHTML = ICON.list; $('tkMin').innerHTML = ICON.up; $('homeB').innerHTML = ICON.home; $('pX').innerHTML = ICON.close;
 }
 const refresh = () => { cardSig = ''; ui(true); };
-function muteBtn() { $('muteB').classList.toggle('off', !SND.on); $('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on'); }
-function paceBtn() { const pb = $('pauseB'); pb.innerHTML = (G.paused ? ICON.play : ICON.pause) + (G.speed > 1 ? `<span class="spd">×${G.speed}</span>` : ''); pb.setAttribute('aria-label', (G.paused ? 'Play' : 'Pause') + '; hold for speed'); pb.classList.toggle('on', !!G.paused); }
+function muteBtn() { $('muteB').classList.toggle('off', !SND.on); $('muteB').classList.toggle('sel', !SND.on); $('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on'); }
+function paceBtn() { const pb = $('pauseB'); pb.innerHTML = (G.paused ? ICON.play : ICON.pause) + (G.speed > 1 ? `<span class="spd">×${G.speed}</span>` : ''); pb.setAttribute('aria-label', (G.paused ? 'Play' : 'Pause') + '; hold for speed'); pb.classList.toggle('sel', !!G.paused); }
 function setPause(v) { G.paused = v; paceBtn(); }
-function applyMini() { mini.hidden = !SET.mini; $('mapT').classList.toggle('lit', !!SET.mini); $('stage').classList.toggle('mapOn', !!SET.mini); }
+function applyMini() { mini.hidden = !SET.mini; $('mapT').classList.toggle('sel', !!SET.mini); $('stage').classList.toggle('mapOn', !!SET.mini); }
 // the end of a game: the sim says who won and why; the screen shows it
 function showEnd(won, text) { $('endT').textContent = won ? 'Victory' : 'Defeat'; $('endP').textContent = text; $('endNext').hidden = $('endFree').hidden = !won; $('end').hidden = false; closeCard(); }
 // The page's own measures: how tall the orders are (the map's bottom edge) and where the map's middle sits between the bars
@@ -107,9 +108,11 @@ function ui(force) {
   if (showTip && (urgent || T.said !== T.text)) { T.said = T.text; say(tip, urgent ? 'warn' : 'tip', urgent ? 3 : 6); }   // a warning is said again while it holds (the same line only stays up), a tip once   // a tip is a message like any other, in the ticker
   { const lim = MODES[G.mode].secs, clk = G.wonder ? `wonder ${clock(Math.max(0, G.wonder.end - G.t))}` : lim ? `${clock(Math.max(0, lim - G.t))}` : clock(G.t);
     let ready = 0; for (const v of G.rdy.values()) ready += v;   // research you can start now (the age counts: it is research too)
-    const idleN = unitsOf(0, 'vil').filter(u => !u.job).length, t1 = `${AGES[p.age].name} age · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''} ${clk}`, t2 = idleN ? `${idleN} idle` : '';
-    txt('sAgeT', t1); txt('sIdle', t2); if ($('sIdle').hidden === !!idleN) $('sIdle').hidden = !idleN;
-    $('sAge').classList.toggle('glow', ready > 0 && !G.card); }   // gold when the next age or any research is ready: tap it for the Town Center
+    const idleN = unitsOf(0, 'vil').filter(u => !u.job).length, t1 = `${AGES[p.age].name} · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''} ${clk}`;
+    txt('sAgeT', t1); if ($('sIdle').hidden === !!idleN) $('sIdle').hidden = !idleN;
+    const sol = armyOf(0).length, stat = (id, icon, n, show) => { const el = $(id), h = show ? icon + n : ''; if (el.statH !== h) { el.statH = h; el.innerHTML = h; } if (el.hidden === !!show) el.hidden = !show; };   // the People card in numbers (Albert, Build 41)
+    stat('sIdle', '<b>idle</b> ', idleN, idleN > 0); stat('sStats', '', [ready ? `<span>${ICON.book}${ready}</span>` : '', `<span>${ICON.people}${popOf(0)}</span>`, sol ? `<span>${ICON.mil}${sol}</span>` : ''].join(''), true);
+    $('sAge').classList.toggle('glow', ready > 0 && !G.card); }   // gold when the next age or any research is ready: tap it for everything you can research
   const V = unitsOf(0, 'vil');
   for (const r of JOBS) { let n = 0; for (const v of V) if (v.job === r) n++; txt('tn_' + r, String(n)); $('tj_' + r).classList.toggle('sel', p.rally === r); }
   const nq = queuedOf(0, 'vil'), room = Math.max(0, capOf(0) - popOf(0));
@@ -117,7 +120,7 @@ function ui(force) {
   $('tVil').classList.toggle('dis', !!trainWhy(0, 'vil')); $('tUn').classList.toggle('dis', !nq);
   { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; if ($('homeB').hidden === away) $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
   $('stage').classList.toggle('busy', !!(G.card || G.place));
-  { const on = !!(G.card && G.card.type === 'menu'); $('buildB').classList.toggle('on', on); if (on) { const top = Math.round($('card').getBoundingClientRect().top - $('stage').getBoundingClientRect().top) - 45; if (ui.tab !== top) { ui.tab = top; $('stage').style.setProperty('--tabtop', top + 'px'); } } }   // the Build tab rides the card's top edge
+  $('buildT').classList.toggle('sel', !!(G.card && G.card.type === 'menu'));   // one look for on: the outline, as the default job wears it
   { const P = picked(), n = P.length, show = n > 0 && !G.card && !G.place, el = $('pickbar'); if (el.hidden === show) el.hidden = !show; $('stage').classList.toggle('picking', show);   // the action bar (Albert, Build 41)
     if (show) { txt('pickT', `${n} picked`); $('pMore').innerHTML = G.pickMore ? '<b>Done</b>' : '<b>＋ More</b>'; $('pMore').classList.toggle('on', !!G.pickMore);
       const sol = P.some(isSoldier), vil = P.some(u => u.kind === 'vil'), ic = (act, icon, label) => `<button data-act="${act}" aria-label="${label}">${icon}</button>`, tx = (act, t) => `<button data-act="${act}"><b>${t}</b></button>`;

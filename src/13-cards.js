@@ -2,7 +2,8 @@
 // ───────────────────────── The cards: one engine, one table ─────────────────────────
 // A card is a page of the book. CARDS[type] writes its page from the game's tables; the engine lays the new page over the old one
 // node by node, so only the words and numbers that changed are touched and a button under a finger stays the same button.
-function openCard(c) { hideStrip(); G.card = c; G.infoOpen = false; G.confirm = null; cardSig = ''; $('card').scrollTop = 0; if (SET.cardPause !== false && !G.paused && !G.over && c.type !== 'setup') { setPause(true); G.cardPaused = true; } tick(); renderCard(); }   // a card pauses the game (Help: Pause on cards); closing it carries on
+function openCard(c) { hideStrip(); G.card = c; G.infoOpen = false; G.confirm = null; cardSig = ''; $('card').scrollTop = 0; if (SET.cardPause !== false && !G.paused && !G.over && (READ_CARDS.has(c.type) || (c.type === 'bld' && G.ktab === 'rel' && G.blds.some(b => b.id === c.id && b.kind === 'keep')))) { setPause(true); G.cardPaused = true; } tick(); renderCard(); }   // a card pauses the game (Help: Pause on cards); closing it carries on
+const READ_CARDS = new Set(['research', 'council', 'army', 'guide', 'help', 'score', 'stores', 'sound']);   // the cards you sit and read pause the game; a building, a unit or a field to glance at does not (Albert, Build 41)
 function closeCard() { if (G) { G.card = null; if (G.cardPaused) { G.cardPaused = false; if (!G.over) setPause(false); } tick(); } $('card').hidden = true; }   // the ticker steps aside or back at once, so the card gets its room on the first frame
 let cardSig = '';
 const sig = x => x.nodeType === 3 ? '#' : x.nodeName + '|' + (x.getAttribute('data-act') || x.getAttribute('data-f') || x.getAttribute('class') || '');
