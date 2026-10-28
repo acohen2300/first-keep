@@ -132,7 +132,8 @@ button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44p
 #dock #dockMin{min-height:44px;min-width:44px;padding:0;background:rgba(18,23,21,.94)}#dock #dockMin::before{content:'⌄';font-size:20px;line-height:1}
 #dock.min #dockRow{display:none}#dock.min{left:auto}#dock.min #dockMin::before{content:'⚔'}
 #pickbar{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid #5ad27a;border-radius:8px;padding:4px 4px 4px 10px;font-weight:600;z-index:3}
-#pickbar span{flex:1;min-width:0;line-height:1.25}#pickbar button{min-height:44px;min-width:44px;padding:0 10px}
+#pickbar{flex-direction:column;align-items:stretch;gap:4px;padding:4px}#pickbar .pbTop,#pickbar .pbRow{display:flex;gap:4px;align-items:center}#pickbar .pbRow:empty{display:none}#pickbar span{flex:1;min-width:0;line-height:1.25;padding-left:6px}#pickbar button{min-height:44px;min-width:44px;padding:0 10px}#pickbar .pbRow button{flex:1;padding:0 4px}#pickbar .gl{position:static;transform:none;width:18px;height:18px;display:block}#pickbar button.on{border-color:var(--gold);color:var(--gold)}
+#stage.picking #dock{bottom:calc(var(--ob) + 112px)}
 /* a building's line: one slot per order it can hold; a filled slot shows what is in it and how far along; tap one to cancel it */
 #card .slots{display:grid;grid-template-columns:repeat(var(--qn,5),minmax(0,1fr));gap:4px}
 #card .slot{position:relative;overflow:hidden;min-height:44px;padding:2px 3px;font-size:12px;line-height:1.1;text-align:center;border-radius:6px}
@@ -178,14 +179,18 @@ button.ok small{color:#8fd4a4}
 #card .chipsrow button.on:not(#cardX):not(#cardI){min-height:48px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);border-color:#f2d27a;box-shadow:0 0 12px rgba(242,210,122,.45)}#card .chipsrow button.on b{color:#2a1c10}
 #card .q{font:inherit;font-size:16px;color:var(--bone);background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:6px;min-height:44px;padding:4px 10px;width:100%;box-sizing:border-box}#card .row{display:flex;gap:12px;align-items:center}#card .look{color:var(--lamp);font-weight:700;min-height:44px;display:inline-flex;align-items:center}#card .row .lnk{width:auto}
 #card .acts.set{grid-template-columns:58px repeat(4,minmax(0,1fr));gap:4px}#card .acts.set .lbl b{font-size:14px}#card .acts.set .lbl{min-height:44px}#card .acts.set button:not(#cardX):not(#cardI){min-height:44px}
+#card .seg{display:flex;align-items:center;gap:8px;min-height:44px}#card .seg>b{flex:0 0 78px;font-size:14px}
+#card .segT{flex:1;min-width:0;position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));border:1px solid var(--brass);border-radius:22px;background:rgba(0,0,0,.3);padding:0;box-sizing:border-box}
+#card .segT button:not(#cardX):not(#cardI){position:relative;min-height:44px;padding:0 2px;background:none;border:0;box-shadow:none;border-radius:20px;font-weight:700;font-size:14px;color:var(--bone)}
+#card .segT button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;box-shadow:0 0 10px rgba(242,210,122,.4);border:0;transition:background-color .15s}#card .segT button::after{content:none}
 #card .hzl{display:grid;grid-template-columns:1fr 1fr;gap:4px 6px}#card .hzr{display:flex;gap:3px;min-width:0}
 #card .hzr button.tick:not(#cardX):not(#cardI){flex:1;min-width:0;flex-direction:row;justify-content:flex-start;gap:5px;min-height:44px;padding:0 5px;background:transparent;box-shadow:none;border-color:#4a3a28}
 #card .hzr button.tick::before{content:'';flex:0 0 16px;height:16px;border:1.5px solid var(--brass);border-radius:3px;box-sizing:border-box}
 #card .hzr button.tick.on::before{content:'✓';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#2a1c10;background:var(--lamp);border-color:var(--lamp)}
 #card .hzr button.tick.on:not(#cardX):not(#cardI){background:transparent;color:var(--bone);border-color:var(--brass);box-shadow:none}#card .hzr button.tick.on small{color:var(--mute)}
-#card .hzr button.tick b{flex:1;text-align:left;font-size:13px;overflow:hidden;text-overflow:ellipsis}#card .hzr button.tick small{flex:0 0 auto}
+#card .hzr button.tick b{flex:1;text-align:left;font-size:13px;white-space:normal;line-height:1.1}#card .hzr button.tick small{flex:0 0 auto}
 #card .hzr button.q:not(#cardX):not(#cardI){flex:0 0 44px;min-height:44px;padding:0;font-weight:700}
-#card button.big:not(#cardX):not(#cardI){min-height:60px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;box-shadow:0 0 14px rgba(242,210,122,.45)}#card button.big small{color:#4a3518}#card button.big::after{content:none}#card button.big b{font-size:20px;letter-spacing:.04em}
+#card button.big:not(#cardX):not(#cardI){min-height:52px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;box-shadow:0 0 14px rgba(242,210,122,.45)}#card button.big small{color:#4a3518}#card button.big::after{content:none}#card button.big b{font-size:20px;letter-spacing:.04em}
 #card button.lnk:not(#cardX):not(#cardI){min-height:44px;width:100%;padding:0;background:none;border:0;box-shadow:none;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;text-align:left}
 #card .tabs{gap:3px;margin-bottom:0}
 #card .tabs button:not(#cardX):not(#cardI){border-radius:8px 8px 0 0}
@@ -213,7 +218,7 @@ button.ok small{color:#8fd4a4}
     <button class="fab" id="buildB" data-act="buildrow" aria-label="Build"></button>
     <div id="strip" hidden></div>
     <div id="dock" hidden><div id="dockRow"></div><button data-act="dockmin" id="dockMin" aria-label="Army dock"></button></div>
-    <div id="pickbar" hidden><span id="pickT"></span><button data-act="pcharge" id="pCharge" hidden><b>Charge</b></button><button data-act="pfall" id="pFall" hidden><b>Fall back</b></button><button data-act="pteach" id="pTeach" hidden><b>Teach</b></button><button data-act="unpick" aria-label="Let go"><b>✕</b></button></div>
+    <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="pmore" id="pMore"><b>＋ More</b></button><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="cancel"><b>Cancel</b></button></div>
     <div id="card" hidden></div>
     <div id="end" hidden>
@@ -237,7 +242,11 @@ const POPMAX = 150, VILMAX = 60, ARMYMAX = 90, BNSIZE = 30, SHARE_FALLEN = 0.5; 
 const RICH = 2.5, PLUNDER = 0.25, CARRY = 10, NAVC = 10;                // NAVC: the walking grid, 10 units a square (never shown)
 const LAKE0 = { x: MID, y: MID, r: 170 };                              // the great lake in the middle; each corner also gets a lake of its own (G.lakes)
 const SEASON_LEN = 180, DAY_LEN = 120, NIGHT_SIGHT = 0.6;
-const EASY_SAFE = 360, SAVE_EVERY = 10, REACT = { easy: 2, normal: 1 };   // Easy: no raid before 6:00; the game saves every 10 s; seconds between computer decisions
+const EASY_SAFE = 360, SAVE_EVERY = 10;   // Easy: no raid before 6:00; the game saves every 10 s
+// Difficulty turns the computers' minds, never their stores (Albert, Build 41): react, seconds between decisions; bold, added to the odds they need to attack (lower is bolder);
+// opp, how much more a side with another war on its hands tempts them; allyAt, when they start courting allies; gang, whether they ally against the score leader even at peace; envoy, seconds between emissaries
+const DIFF = { easy: { react: 2, bold: 0.1, opp: 0.8, allyAt: 900, gang: 0, envoy: 240 }, normal: { react: 1, bold: 0, opp: 1, allyAt: 600, gang: 0, envoy: 180 }, hard: { react: 0.5, bold: -0.08, opp: 1.4, allyAt: 300, gang: 1, envoy: 120 } };
+const DIFK = Object.keys(DIFF);
 const ZOOM_MAX = 4, TILT = 0.66, SIDE = 0.4;   // SIDE: how far right the back of a building sits, per unit of depth, so its east wall shows
 const FOG = 40, FOGN = Math.ceil(MAP / 40);   // fog of war: squares of 40; unseen, explored (stays lit, dim), in sight now
 const WILD = 4;                                                          // the fifth side: animals, bandits, robbers, monsters
@@ -752,16 +761,15 @@ const MOON = 8;   // days from new moon to new moon (the real month is 29.5; the
 
 // ───────────────────────── The Challenge: hazards you switch on. Their points are your level; the level multiplies your score ─────────────────────────
 // Random when, never random whether: everything a hazard sends is announced first. Easy keeps the old polite game whatever is switched on.
-const HAZARDS = {
-  hard:   { pts: 3, name: 'Hard enemies', desc: 'They strike in winter, send more riders at your villagers and drop-offs, and need shorter odds.' },
-  starve: { pts: 2, name: 'Starvation', desc: 'No food for a minute: work stops. After two, a villager leaves and a soldier deserts every half minute.' },
-  winter: { pts: 2, name: 'Harsh winters', desc: 'Winter fields give a quarter, marches crawl, and blizzards come: whiteouts that blind the small map.' },
-  plague: { pts: 2, name: 'Plague', desc: 'Plague is three times as likely and spreads twice as fast along the roads. Hospitals matter.' },
-  horde:  { pts: 3, name: 'The horde', desc: 'Between minute 20 and 40 a horde comes, from an edge or out of the wild, for the weakest side. Announced two seasons ahead.' },
-  quake:  { pts: 2, name: 'Earthquakes', desc: 'Tremors come every few minutes and hit harder: stone cracks, walls fall, wood catches fire.' },
-  notips: { pts: 1, name: 'No tips', desc: 'The advisor is silent.' },
+const HAZARDS = {   // six, in two columns (Albert, Build 41)
+  hard:    { pts: 3, name: 'Hardest', desc: 'The computers strike in winter, send more riders at your villagers and drop-offs, and need shorter odds to come.' },
+  starve:  { pts: 2, name: 'Famine', desc: 'No food for a minute: work stops. After two, a villager leaves and a soldier deserts every half minute.' },
+  winter:  { pts: 2, name: 'Extreme weather', desc: 'Winter fields give a quarter and marches crawl; blizzards blind the small map; tremors come every few minutes and hit hard.' },
+  drought: { pts: 2, name: 'Drought', desc: 'Summers run dry three times as often and springs can too: fields give 30% less and fires spread fast.' },
+  horde:   { pts: 3, name: 'Hordes and gangs', desc: 'Between minute 20 and 40 a horde comes for the weakest side, announced two seasons ahead; outlaws raid twice as often.' },
+  plague:  { pts: 2, name: 'Plague', desc: 'Plague is three times as likely and spreads twice as fast along the roads. Hospitals matter.' },
 };
-const HZK = Object.keys(HAZARDS), HZ_DEFAULT = { hard: 1, starve: 1 }, TODAY_HZ = { hard: 1, starve: 1, horde: 1, quake: 1 };   // a new game starts at level 5; The challenge today is level 10 on the day's seed
+const HZK = Object.keys(HAZARDS), HZ_DEFAULT = { hard: 1, starve: 1 }, TODAY_HZ = { hard: 1, starve: 1, horde: 1, winter: 1 };   // a new game starts at level 5; The challenge today is level 10 on the day's seed
 const STARVE = { stop: 60, leave: 120, every: 30 }, HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 }, HORDE = { from: 1200, to: 2400, warn: SEASON_LEN * 2, n: 16, perAge: 6 }, QUAKE = { every: 240, r: 350, hit: 0.1, wall: 0.3, fire: 0.15 };
 // Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 19-events.
 const EV_GAP = [60, 180], EV_WARN = 12;
@@ -1217,7 +1225,7 @@ const TRIGGERS = () => [
   ['Fog of war', 'You see what your people and your allies see; the rest of the map is as you last saw it, and the unseen is dark. Spies stay hidden until something of yours is close. Night shortens sight. Turn it off in Help for an open map.', 'Scouts earned their pay by what they saw first.'],
   ['A wall or building stands in the way', 'People walk around it. If nothing can get through, soldiers attack the wall in the way; villagers wait.', 'Walls delay; they do not stop an army with time.'],
   ['The game saves itself', `Every ${SAVE_EVERY} seconds, and when you leave the page, on this phone. Next time it offers Resume or New game.`, 'You should never lose a game to a phone call.'],
-  ['Difficulty', `Easy: the computers think every ${REACT.easy} s and nobody comes for you before ${clock(EASY_SAFE)}. Normal: every ${REACT.normal} s. Neither one changes the resources of anyone.`, 'No cheating: only how fast they think.'],
+  ['Difficulty', `It turns the minds of the computers, never their stores. Easy: they think every ${DIFF.easy.react} s, wait longer to attack and to ally, and nobody comes for you before ${clock(EASY_SAFE)}. Normal: every ${DIFF.normal.react} s. Hard: twice a second, bolder, quicker to pounce on a side at war, and they ally against whoever leads the score.`, 'No cheating: only how they think.'],
   ['Winning and losing', `Conquest: win when the Raiders, the Rivals and the Fortress have all fallen, or hold the Throne for its time; lose when your Town Center falls. Or hold a wonder for ${WONDER_HOLD / 60} minutes, or have the top score at the bell in a timed game.`, 'A seat of power is what a state is.'],
 ];
 
@@ -1900,6 +1908,7 @@ function build(o, kind, x, y) {
 }
 // A site rises only while villagers work it. The nearest free villager goes at once; a line of wall gets two at most, who then work down it.
 function autoBuilder(o, b) {
+  if (o === 0 && G.buildBy && G.buildBy.length) { const V = G.buildBy.map(id => G.units.find(u => u.id === id)).filter(u => u && u.hp > 0 && u.kind === 'vil'); G.buildBy = null; if (V.length) { V.forEach(v => { sendBuilder(v, b); v.post = null; }); return; } }   // the villagers you picked raise it
   if (BLD[b.kind].wallish && G.blds.filter(s => s.owner === o && s.prog < 1 && BLD[s.kind].wallish && unitsOf(o, 'vil').some(v => v.rep === s && v.job === 'repair')).length >= 2) return;
   const v = pickVil(o, b); if (v) sendBuilder(v, b);
 }
@@ -2340,7 +2349,8 @@ function formUp() {
   for (const u of G.units) if (u.hp > 0 && !u.inside && u.state === 'attack' && isSoldier(u)) { if (hasTag(u.kind, 'siege')) continue; const key = u.owner + ':' + (u.bn ?? 9) + ':' + (u.bid || 0); const s = stats(u.owner, u.kind).spd; atk.set(key, Math.min(atk.get(key) ?? 1e9, s)); }   // raiders sent at a camp make their own group
   for (const u of G.units) if (u.hp > 0 && isSoldier(u)) { if (u.state === 'attack') u.cap = u.tgt || hasTag(u.kind, 'siege') ? 0 : atk.get(u.owner + ':' + (u.bn ?? 9) + ':' + (u.bid || 0)) || 0; else if (u.state !== 'goto' && u.state !== 'assist') u.cap = 0; }
 }
-const react = () => REACT[G.diff] || 1;   // seconds between computer decisions: human-like, no cheats
+const DF = () => DIFF[G.diff] || DIFF.normal;
+const react = () => DF().react;   // seconds between computer decisions: human-like, no cheats
 function died(u) {
   if (isSoldier(u) && !u.gone) unitsNear(u, 40, v => { if (v.owner === u.owner && isSoldier(v) && v.hp > 0) v.mor -= MORALE.loss; });   // a loss beside you shakes the nerve
   if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
@@ -3126,13 +3136,14 @@ function think(p) {
 }
 // A computer's relations move by its odds, the way a court's did: losing badly, it asks for peace; at peace with nobody to fight and the odds in its favour, it gives notice
 function aiDiplomacy(p, per) {
-  const o = p.id; if (p.age < 1 || p.envoyOut || G.t - p.envoyAt < 180) return;
+  const o = p.id, D = DF(); if (p.age < 1 || p.envoyOut || G.t - p.envoyAt < D.envoy) return;
+  const lead = G.P.filter(r => r.alive && r.id !== WILD).sort((a, b) => b.score.total - a.score.total)[0];   // Hard: the courts close ranks against whoever leads
   const warOn = G.P.some(r => r.alive && r.id !== WILD && r.id !== o && atWar(o, r.id) && !(r.lord === o));
   for (const q of G.P) {
     if (!q.alive || q.id === o || q.id === WILD || q.lord === o || p.lord === q.id) continue;
     if (atWar(o, q.id) && oddsOf(o, q.id) < 0.3 && soldiersOf(o).length < per.waveMin) { if (setRel(o, q.id, 'peace')) return; }
-    if (!warOn && G.rel[o][q.id] === 'peace' && !noticeLeft(o, q.id) && oddsOf(o, q.id) > per.bold + 0.15) { if (setRel(o, q.id, 'war')) return; }
-    if (p.ally === null && q.ally === null && G.rel[o][q.id] === 'peace' && warOn && G.t > 600) { if (setRel(o, q.id, 'ally')) return; }   // at war with someone: court a friend
+    if (!warOn && G.rel[o][q.id] === 'peace' && !noticeLeft(o, q.id) && oddsOf(o, q.id) > per.bold + 0.15 + D.bold) { if (setRel(o, q.id, 'war')) return; }
+    if (p.ally === null && q.ally === null && G.rel[o][q.id] === 'peace' && G.t > D.allyAt && (warOn || (D.gang && lead && lead.id !== o && lead.id !== q.id))) { if (setRel(o, q.id, 'ally')) return; }   // at war with someone, or on Hard against the leader: court a friend
   }
   if (G.throne && G.throne.owner !== o && G.throne.owner !== WILD && G.rel[o][G.throne.owner] !== 'war' && !noticeLeft(o, G.throne.owner) && G.P[G.throne.owner].lord !== o && p.lord !== G.throne.owner) setRel(o, G.throne.owner, 'war');   // whoever takes the Throne finds every court against them
 }
@@ -3191,7 +3202,7 @@ function decideWar(p, per) {
   if (home.length < (W ? 4 : per.waveMin + (G.diff === 'easy' ? 3 : 0))) return;
   const sn = season().name, toWinter = sn === 'Autumn' && SEASON_LEN - G.t % SEASON_LEN < HARD.waitForWinter;
   if (hz('hard') && toWinter && !W) return;   // hard: winter is a month away; they wait for it, as raiders did
-  const bold = per.bold + (hz('hard') ? HARD.bold + (sn === 'Winter' ? HARD.winterBold : 0) : 0);
+  const bold = per.bold + DF().bold + (hz('hard') ? HARD.bold + (sn === 'Winter' ? HARD.winterBold : 0) : 0);
   const go = home.slice(Math.floor(home.length * (W ? 0 : per.guard))), mine = powerOf(go);
   let best = null, bp = 0;
   for (const q of G.P) if (q.alive && q.id !== WILD && atWar(o, q.id)) {
@@ -3199,7 +3210,7 @@ function decideWar(p, per) {
     const r = mine / estPower(o, q.id) * matchup(go, soldiersOf(q.id)), prob = r * r / (1 + r * r);   // the square law, as odds, bent by who counters whom
     const busy = per.opportunist && G.P.some(x => x.alive && x.id !== WILD && x.id !== o && x.id !== q.id && atWar(q.id, x.id));   // the opportunist: a side with another war on its hands
     const T = G.throne && G.throne.owner === q.id;
-    const pr = (W && W.owner === q.id) || T ? Math.max(prob, 0.75) : prob * (busy ? per.opportunist : 1);
+    const pr = (W && W.owner === q.id) || T ? Math.max(prob, 0.75) : prob * (busy ? per.opportunist * DF().opp : 1);
     if (pr > bp) { bp = pr; best = q.id; }
   }
   // a full army that sits at home is wasted: at its limit a side settles for even odds
@@ -4592,11 +4603,9 @@ function researchHTML() {   // everything you can research, across every buildin
   return h;
 }
 // the Challenge: each hazard a switch with its points; the sum is the level, and the level multiplies the score
-function settingsHTML() {
-  return sec('Difficulty') + acts(btn('diff:easy', 'Easy', `they think slower; no raid before ${clock(EASY_SAFE)}`, SET.diff === 'easy' ? 'on' : '') + btn('diff:normal', 'Normal', 'they think once a second', SET.diff === 'normal' ? 'on' : ''))
-    + sec('Game') + acts(Object.entries(MODES).map(([k, m]) => btn(`mode:${k}`, m.name, k === 'conquest' ? 'no limit' : 'top score wins', SET.mode === k ? 'on' : '')).join(''), 'c3')
-    + sec('World') + acts(btn('fantasy:0', 'Real', 'wolves, bandits, robbers', !SET.fantasy ? 'on' : '') + btn('fantasy:1', 'Fantasy', 'dire wolves, goblins, trolls', SET.fantasy ? 'on' : ''));
-}
+// one mold for a setting (Albert, Build 41): the label on the left, a sliding toggle on the right; the lit part slides to the choice
+const seg = (label, opts, cur) => { const n = opts.length; return `<div class="seg"><b>${label}</b><div class="segT" style="--n:${n}">${opts.map(([act, name, v]) => `<button data-act="${act}" class="${v === cur ? 'on' : ''}" aria-pressed="${v === cur}">${name}</button>`).join('')}</div></div>`; };
+const settingsHTML = () => seg('Difficulty', DIFK.map(k => [`diff:${k}`, cap1(k), k]), SET.diff) + seg('Length', Object.entries(MODES).map(([k, m]) => [`mode:${k}`, m.name.replace(' minutes', ''), k]), SET.mode) + seg('World', [['fantasy:0', 'Real', false], ['fantasy:1', 'Fantasy', true]], !!SET.fantasy);
 
 // ───────────────────────── The cards, one entry each ─────────────────────────
 // Each takes the card's description (G.card) and returns its page, or null when what it showed is gone.
@@ -4695,11 +4704,8 @@ const CARDS = {
   resume: c => title('Welcome back', 'saved on this phone') + `<p>Your game from ${clock(c.t)}: ${CIVS[c.civ] ? CIVS[c.civ].name + ', ' : ''}${AGES[c.age].name} age. Resume it, or start a new one.</p>` + acts(btn('resume', 'Resume', clock(c.t), 'go') + btn('card:setup', 'New game', '')),
   setup() {   // the annoying part before the fun part (Albert): the settings first, then your people, the challenge as ticks, and Start at the foot
     const C = CIVS[SET.civ], H = SET.hz || HZ_DEFAULT, lv = levelOf(H), short = k => cap1(UNIT[CIVS[k].uu].name.replace(new RegExp('^' + CIVS[k].name + ' ', 'i'), ''));
-    const row = (label, opts) => acts(`<div class="lbl"><b>${label}</b></div>` + opts.map(([v, n, on]) => btn(v, n, '', on ? 'on' : '')).join(''), 'c4 set');
-    let h = title('A new game', '')
-      + row('Game', [['diff:easy', 'Easy', SET.diff === 'easy'], ['diff:normal', 'Normal', SET.diff === 'normal'], ['fantasy:0', 'Real', !SET.fantasy], ['fantasy:1', 'Fantasy', SET.fantasy]])
-      + row('Length', Object.entries(MODES).map(([k, m]) => [`mode:${k}`, m.name.replace(' minutes', ' min'), SET.mode === k]))
-      + sec('Your people') + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, short(k), SET.civ === k ? 'on' : '')).join(''), 'c3')
+    let h = title('A new game', '') + settingsHTML()
+      + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, short(k), SET.civ === k ? 'on' : '')).join(''), 'c3')
       + `<p>${C.bonus}</p>` + fold('why', 'Why?', `<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`)
       + sec(`Challenge · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}`)
       + `<div class="hzl">${HZK.map(k => `<div class="hzr"><button class="tick${H[k] ? ' on' : ''}" data-act="hz:${k}"><b>${HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small></button><button class="q${G.hzQ === k ? ' on' : ''}" data-act="hzq:${k}" aria-label="What ${HAZARDS[k].name} does">?</button></div>`).join('')}</div>`
@@ -4886,7 +4892,7 @@ function buildPanel() {
   const st = (act, t, label, id) => `<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
   $('jobs').innerHTML = `<div class="col">${cell('id="tPeople" data-act="card:army" aria-label="People: army, research, how to play"', ICON.people, wd('0/0', 'tPeopleN'))}<div class="pm">${st('unvil', '−', 'Cancel a villager waiting to train', 'tUn')}${st('train:vil', '+', 'Train a villager', 'tVil')}</div></div>`
     + JOBS.map(r => `<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`).join('');
-  $('tkList').innerHTML = ICON.list; $('tkMin').innerHTML = ICON.up; $('homeB').innerHTML = ICON.home; $('buildB').innerHTML = ICON.hammer;
+  $('tkList').innerHTML = ICON.list; $('tkMin').innerHTML = ICON.up; $('homeB').innerHTML = ICON.home; $('pX').innerHTML = ICON.close; $('buildB').innerHTML = ICON.hammer;
 }
 const refresh = () => { cardSig = ''; ui(true); };
 function muteBtn() { $('muteB').classList.toggle('off', !SND.on); $('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on'); }
@@ -4910,7 +4916,7 @@ function say(text, cls, secs, at, act) { if (!G) return; if (SET.msgs === false 
 const hushKey = t => t.replace(/[\d,.]+/g, '#');
 function hushed(t) { const k = hushKey(t), w = G.hushW && G.hushW[k]; return !!(SET.hush && SET.hush[k]) || (w !== undefined && G.t < w); }
 function advise() {
-  const p = G.P[0], k = keepOf(0); if (!k || G.over || hz('notips')) return '';
+  const p = G.P[0], k = keepOf(0); if (!k || G.over) return '';
   const V = unitsOf(0, 'vil'), on = j => V.filter(u => u.job === j).length, S = soldiersOf(0);
   if (V.some(u => u.noPath && G.t - (u.noPathT || -9) < 4) && !L('build:gate')) return 'Walled in: build a Gate.';
   if ((k.blocked || (popOf(0) >= capOf(0) && capOf(0) < POPMAX && !bldsOf(0, 'house').some(b => b.prog < 1))) && !L('build:house')) return p.age >= 2 ? 'You are full: Build → House, Apartment or Aqueduct.' : `You are full: Build → House (${costText(BLD.house.cost)}).`;
@@ -4964,7 +4970,13 @@ function ui(force) {
   { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; if ($('homeB').hidden === away) $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
   $('stage').classList.toggle('busy', !!(G.card || G.place));
   { const on = !!(G.card && G.card.type === 'menu'); $('buildB').classList.toggle('on', on); if (on) { const top = Math.round($('card').getBoundingClientRect().top - $('stage').getBoundingClientRect().top) - 45; if (ui.tab !== top) { ui.tab = top; $('stage').style.setProperty('--tabtop', top + 'px'); } } }   // the Build tab rides the card's top edge
-  { const n = picked().length, show = n > 0 && !G.card && !G.place, el = $('pickbar'); if (el.hidden === show) el.hidden = !show; $('stage').classList.toggle('picking', show); if (show) { txt('pickT', `${n} picked${G.pickMore ? ' · tap to add more' : ''}`); const sol = picked().some(isSoldier), tch = sol && fxv(0, 'teach').a >= 1 && picked().some(u => isSoldier(u) && teachTo(u) && u.state !== 'school'); if ($('pCharge').hidden === sol) { $('pCharge').hidden = $('pFall').hidden = !sol; } if ($('pTeach').hidden === tch) $('pTeach').hidden = !tch; } }
+  { const P = picked(), n = P.length, show = n > 0 && !G.card && !G.place, el = $('pickbar'); if (el.hidden === show) el.hidden = !show; $('stage').classList.toggle('picking', show);   // the action bar (Albert, Build 41)
+    if (show) { txt('pickT', `${n} picked`); $('pMore').innerHTML = G.pickMore ? '<b>Done</b>' : '<b>＋ More</b>'; $('pMore').classList.toggle('on', !!G.pickMore);
+      const sol = P.some(isSoldier), vil = P.some(u => u.kind === 'vil'), ic = (act, icon, label) => `<button data-act="${act}" aria-label="${label}">${icon}</button>`, tx = (act, t) => `<button data-act="${act}"><b>${t}</b></button>`;
+      const tch = sol && fxv(0, 'teach').a >= 1 && P.some(u => isSoldier(u) && teachTo(u) && u.state !== 'school');
+      const row = sol ? tx('pcharge', 'Charge') + tx('pfall', 'Fall back') + tx('phold', 'Hold') + (tch ? tx('pteach', 'Teach') : '') + (vil ? ic('pvil', ICON.people, 'Keep only the villagers') : '')
+        : vil ? JOBS.map(j => ic(`pjob:${j}`, ICON[j], `All to ${j}`)).join('') + ic('pbuild', ICON.hammer, 'Build: they raise it') : '';
+      if (el.rowH !== row) { el.rowH = row; $('pickRow').innerHTML = row; } } }
   { const S = armyOf(0), show = hasCmd() && S.length > 0 && !G.card && !G.place, el = $('dock'); if (el.hidden === show) el.hidden = !show;   // the army dock
     if (show) { el.classList.toggle('min', !!SET.dockMin); if (!SET.dockMin) { const used = BN.map((n, i) => [i, n, S.filter(u => u.bn === i).length]).filter(x => x[2]); const h = [['all', 'All', S.length], ...used].map(([k, n, c]) => `<button data-act="dock:${k}" class="${G.sel === k ? 'on' : ''}"><b>${n}</b><small>${c}</small></button>`).join(''); if (el.dockH !== h) { el.dockH = h; $('dockRow').innerHTML = h; } } } }
   if (G.place) { const B = BLD[G.place.kind], t = !G.place.at ? (G.place.kind === 'wall' ? 'Press and drag a line of wall' : `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`) : G.place.why ? G.place.why : G.place.kind === 'wall' ? `${(G.place.cells || [1]).length} pieces: tap Build, or drag again` : `${B.name}: tap Build, or drag it to move · drag empty ground to look`; txt('placeT', t); $('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why); }
@@ -5002,7 +5014,7 @@ const ACT = {
   reload() { location.reload(); },
   vibe() { SET.vibe = !SET.vibe; saveSet(); feel('snap'); refresh(); },
   menu(a) { const keep = G.card && G.card.type === 'menu'; openCard({ type: 'menu', id: a }); if (keep) $('card').scrollTop = 0; },
-  buildrow() { G.buildAt = null; if (G.card && G.card.type === 'menu') closeCard(); else openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // Build opens the Build card on the menu last used; again, it closes
+  buildrow() { G.buildAt = null; G.buildBy = null; if (G.card && G.card.type === 'menu') closeCard(); else openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // Build opens the Build card on the menu last used; again, it closes
   towncard() { const k = keepOf(0); if (k) openCard({ type: 'bld', id: k.id }); },
   unvil() { if (!unTrain(0, 'vil')) say('Nobody is waiting to train.', '', 3); },
   idlego() { const u = unitsOf(0, 'vil').find(v => !v.job); if (!u) return; cam.x = u.x; cam.y = u.y; clampCam(); closeCard(); },
@@ -5073,6 +5085,11 @@ const PLAY = {
   sendvil(a) { sendVil(0, Number(a)); },
   boxcut(a) { if (G.card && G.card.type === 'box') boxCut(G.card.r, Number(a)); closeCard(); },
   unpick() { setPick([]); },
+  pmore() { G.pickMore = !G.pickMore; ui(true); },   // + More: each tap on your people adds or drops one; Done stops
+  pjob(j) { for (const u of picked()) if (u.kind === 'vil') { setJob(u, j); u.pj = null; u.post = null; u.idleT = 0; } say(`To ${j}.`, '', 2); setPick([]); },
+  pbuild() { G.buildBy = picked().filter(u => u.kind === 'vil').map(u => u.id); setPick([]); openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // whatever you place next, the picked villagers raise it
+  phold() { for (const u of picked()) if (isSoldier(u)) { u.state = 'goto'; u.px = u.x; u.py = u.y; u.focus = null; u.tgt = null; u.idleT = 0; } say('Holding here.', '', 2); },
+  pvil() { setPick(picked().filter(u => u.kind === 'vil').map(u => ({ t: 'unit', id: u.id }))); },
   pcharge() { const S = picked(); if (!charge(0, S)) say(chargeWhy(0, S) || 'Not now.', '', 3); },
   pfall() { fallBack(0, picked()); },
   pteach() { const S = picked().filter(u => isSoldier(u) && teachTo(u)); let n = 0, why = null; for (const u of S) { if (teach(0, u)) n++; else why = why || teachWhy(0, u); } say(n ? `${n} to the School.` : why || 'Nobody here can be taught.', n ? 'good' : '', 3); },
@@ -5398,7 +5415,7 @@ function robbed(u) {
 function natureTick() {
   const sn = Math.floor(G.t / SEASON_LEN);
   if (sn !== G.seasonN) { G.seasonN = sn; seasonTurn(); }
-  G.wxT -= 1; if (G.wxT <= 0) { G.wxT = WX_EVERY; const was = G.wx, odds = hz('winter') && season().name === 'Winter' ? { frost: 0.3, blizzard: 0.5 } : WX_ODDS[season().name], r = rng(); let acc = 0; G.wx = 'clear'; for (const k in odds) { acc += odds[k]; if (r < acc) { G.wx = k; break; } } if (G.wx !== was && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6); lightning(); }
+  G.wxT -= 1; if (G.wxT <= 0) { G.wxT = WX_EVERY; const was = G.wx, odds = hz('winter') && season().name === 'Winter' ? { frost: 0.3, blizzard: 0.5 } : hz('drought') && season().name === 'Summer' ? { drought: 0.9 } : hz('drought') && season().name === 'Spring' ? { drought: 0.25, rain: 0.3 } : WX_ODDS[season().name], r = rng(); let acc = 0; G.wx = 'clear'; for (const k in odds) { acc += odds[k]; if (r < acc) { G.wx = k; break; } } if (G.wx !== was && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6); lightning(); }
   if (storm() && rng() < 0.05) strike(rnd(80, MAP - 80), rnd(80, MAP - 80));   // a strike on open ground, about every 20 s in a storm
   for (const b of G.blds) if (b.node && BLD[b.kind].crop && b.prog >= 1 && b.node.type === 'food') {   // soil tires when worked and rests when not
     const worked = G.t - (b.node.workT || -9) < 2;
@@ -5646,7 +5663,7 @@ const EV = {
   wildfire: { start(e) { const far = G.nodes.filter(n => n.kind === 'tree' && n.amt > 0 && !G.P.some(p => p.id !== WILD && p.alive && keepOf(p.id) && dist(keepOf(p.id), n) < 300)); const t = far[Math.floor(rng() * far.length)]; e.burn = t ? [t] : []; e.at = t ? { x: t.x, y: t.y } : null; G.fire = e.burn; sfx('crash', t && t.x, t && t.y); },
     tick(e) { if (G.wx === 'rain') { e.until = G.t; return; } const E = EVENTS.wildfire, next = []; for (const n of e.burn) { n.amt -= n.max * E.burn; if (n.amt > 0) next.push(n); else { scarStrike(n.x, n.y); } nodesNear(n.x, n.y, E.r, m => { if (m.kind === 'tree' && m.amt > 0 && !e.burn.includes(m) && !next.includes(m) && rng() < E.spread) next.push(m); }); bldsNear(n.x, n.y, 40, b => { if (BLD[b.kind].wood && b.prog >= 1) ignite(b, 'the wildfire'); }); } e.burn = next.slice(0, E.most); G.fire = e.burn; if (!e.burn.length) e.until = G.t; }, end() { G.fire = null; } },
   fog: { start() { EVM.sight = EVENTS.fog.sight; }, end() { EVM.sight = 1; } },
-  tremor: { start(e) { quake(e, EVENTS.tremor, hz('quake') ? QUAKE : null); } },
+  tremor: { start(e) { quake(e, EVENTS.tremor, hz('winter') ? QUAKE : null); } },
   sinkhole: { start(e) { const B = G.blds.filter(b => b.prog >= 1 && !BLD[b.kind].wallish && b.kind !== 'keep'); const b = B[Math.floor(rng() * B.length)]; if (!b) return; b.hp -= maxHpB(b.owner, b.kind) * EVENTS.sinkhole.hit; scarStrike(b.x, b.y - 4); scarStrike(b.x + 5, b.y + 3); G.shake = G.t + 1; sfx('rumble', b.x, b.y); if (b.owner === 0) say(`A sinkhole under the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 6, b); } },
   quicksand: { start(e) { e.at = wildSpot(); G.sand = { x: e.at.x, y: e.at.y, r: EVENTS.quicksand.r, until: e.until }; }, end() { G.sand = null; } },
   heatwave: { start() { EVM.dmg = EVENTS.heatwave.dmg; EVM.spd = EVENTS.heatwave.spd; }, end() { EVM.dmg = EVM.spd = 1; } },
@@ -5676,7 +5693,7 @@ function eventsTick() {   // once a second
   else if (!V.warned && G.t >= V.next - EV_WARN) { V.warned = pickEvent(); say(EV_TEXT[V.warned][0], 'soft', EV_WARN); }   // the warning is quiet: in the list, not on the line
   else if (V.warned && G.t >= V.next) { if (canEv(V.warned)) startEvent(V.warned); else { V.warned = null; V.next = G.t + 30; } }
   hordeTick(); newsTick();
-  if (hz('quake') && G.t >= (V.quakeAt || (V.quakeAt = G.t + QUAKE.every))) { V.quakeAt = G.t + QUAKE.every; if (!V.cur) { say(EV_TEXT.tremor[0], 'warn', 8); V.warned = 'tremor'; V.next = G.t + 8; } }
+  if (hz('winter') && G.t >= (V.quakeAt || (V.quakeAt = G.t + QUAKE.every))) { V.quakeAt = G.t + QUAKE.every; if (!V.cur) { say(EV_TEXT.tremor[0], 'warn', 8); V.warned = 'tremor'; V.next = G.t + 8; } }
 }
 // The horde (the hazard): announced two seasons ahead, then one; from an edge or out of the wild, for the weakest side; its number grows with the age
 function hordeTick() {
@@ -5795,7 +5812,7 @@ function trapsTick() {
 }
 // Outlaw raids: every few minutes the camp nearest the side they regard least sends robbers at its drop-offs, who come back after a spell
 function natRaid() {
-  const N = natState(); if (G.t - N.raidT < NATIVE.raidEvery) return; N.raidT = G.t;
+  const N = natState(); if (G.t - N.raidT < NATIVE.raidEvery / (hz('horde') ? 2 : 1)) return;   // Hordes and gangs: twice as often N.raidT = G.t;
   const sides = G.P.filter(p => p.id !== WILD && p.alive && keepOf(p.id) && G.rel[p.id][WILD] === 'war').sort((a, b) => regardOf(a.id) - regardOf(b.id)); if (!sides.length) return;
   const q = sides[0], k = keepOf(q.id), camps = G.finds.filter(f => f.kind === 'camp' && !f.done && guardsLeft(f)).sort((a, b) => dist(a, k) - dist(b, k)); if (!camps.length) return;
   const f = camps[0], R = G.units.filter(u => u.find === f.id && u.hp > 0 && UNIT[u.kind].dmg).slice(0, NATIVE.raidN); if (!R.length) return;
