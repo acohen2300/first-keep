@@ -119,12 +119,12 @@ async def main():
             ctx = await br.new_context(viewport={'width': 390, 'height': 844}, is_mobile=True, has_touch=True, device_scale_factor=3); pg = await ctx.new_page()
             await pg.goto('file://' + os.path.abspath(page_file)); await pg.wait_for_timeout(400); w = await pg.evaluate('() => [document.documentElement.clientWidth, document.compatMode]'); await ctx.close()
             ok = w[0] == 390 and w[1] == 'CSS1Compat'; print(('PASS ' if ok else 'FAIL ') + f'{page_file} lays out at the phone width, standards mode', '' if ok else w); fails += not ok
-        # every message and tip on ONE line of the banner at 375 px, the small map open and shut (Albert, Build 38: "these sentences are too long")
+        # every message and tip whole on the ticker's one line at 375 px (Albert, Build 38: "these sentences are too long"; Build 39: one ticker for all)
         L = json.loads(subprocess.run([sys.executable, 'tests/words.py', '--list'], capture_output=True, text=True).stdout)
         pg = await br.new_page(viewport={'width': 375, 'height': 667}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(500)
-        wraps = await pg.evaluate("""(L) => { const F = window.__fk; F.newGame(5); F.act('close'); const out = []; const b = document.getElementById('banner'); for (const open of [false, true]) { document.getElementById('stage').classList.toggle('mapOn', open);
-          for (const t of L) { b.innerHTML = '<div class="msg"><span>' + t + '</span><button aria-label="x">x</button></div>'; const s = b.querySelector('span'), r = document.createRange(); r.selectNodeContents(s); if (new Set([...r.getClientRects()].map(x => Math.round(x.top))).size > 1) out.push((open ? 'map open: ' : '') + t); } } b.innerHTML = ''; return out; }""", L); await pg.close()
-        print(('PASS ' if not wraps else 'FAIL ') + f'{len(L)} messages fit one line at 375 px', '' if not wraps else wraps[:6]); fails += bool(wraps)
+        wraps = await pg.evaluate("""(L) => { const F = window.__fk; F.newGame(5); F.act('close'); F.setPause(true); const e = document.getElementById('tkT'), out = [];
+          for (const t of L) { e.textContent = t; if (e.scrollWidth > e.clientWidth + 1) out.push(t); } return out; }""", L); await pg.close()
+        print(('PASS ' if not wraps else 'FAIL ') + f'{len(L)} messages fit the ticker at 375 px', '' if not wraps else wraps[:6]); fails += bool(wraps)
         fp, _ = await fingerprint(br); print(('PASS ' if not fp else 'FAIL ') + 'the game plays as the baseline says', '' if not fp else '\n  ' + '\n  '.join(fp[:4]) + '\n  (a deliberate rule change: python3 tests/gate.py --accept "why")'); fails += bool(fp)
         await br.close()
     sys.exit(1 if fails else 0)

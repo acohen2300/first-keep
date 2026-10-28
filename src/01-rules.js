@@ -1,6 +1,6 @@
 // ═════ 01-rules.js ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 38;
+const BUILD = 39;
 const MAP = 2000, MID = MAP / 2, DT = 1 / 30;
 const BN = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'], BNS = BN.length;   // the battalions, once Command is researched
 const POPMAX = 150, VILMAX = 60, ARMYMAX = 90, BNSIZE = 30;   // six battalions, once Command is researched at a War Council; BNSIZE: the most one Zeal blesses
@@ -218,6 +218,12 @@ const TECH = [
   { id: 'cleanwater', name: 'Clean water', at: 'aqueduct', age: 2, cost: { s: 200, g: 100 }, t: 40, fx: [{ s: 'sick', m: 0.5 }], desc: 'Settling tanks and clean channels: half the risk of sickness.' },
   { id: 'medschool', name: 'Medical school', at: 'library', age: 3, need: 'medicine', cost: { f: 200, g: 200 }, t: 50, fx: [{ s: 'death', m: 0.5 }, { s: 'cure', m: 2 }], desc: 'Trained physicians: half as many of the sick die, and they are cured twice as fast.' },
 ];
+// Elite ranks (Build 39): each people's unique soldier gains a top rank at the Castle in the Medieval age, as Age of Empires' Paladin crowns its cavalry.
+// Only that people can research it. Numbers first; the art (armour, a banner, a richer colour) comes in the look-and-sound build.
+for (const [civ, uu, name, fx] of [
+  ['roman', 'legion', 'Praetorian', { hp: 1.25, dmg: 3 }], ['han', 'hanxbow', 'Elite crossbowman', { dmg: 2, rng: 15 }], ['persian', 'immortal', 'Apple-bearer', { hp: 1.25, dmg: 2 }],
+  ['mongol', 'mongolha', 'Keshig', { hp: 1.2, dmg: 2, spd: 1.08 }], ['maurya', 'mauryael', 'Royal elephant', { hp: 1.25, dmg: 3 }], ['mali', 'malihorse', 'Elite horseman', { hp: 1.2, dmg: 2, spd: 1.08 }],
+]) TECH.push({ id: 'elite_' + civ, civ, name: `Elite: ${name}`, at: 'castle', age: 3, cost: { f: 400, g: 400, i: 150 }, t: 60, tier: { unit: uu, name, ...fx }, desc: `Your people's own soldiers become ${name}s, their finest: tougher, harder hitting.` });
 const TECHBY = Object.fromEntries(TECH.map(t => [t.id, t]));
 
 // Six civilisations: one unique unit (replaces a common one, same role, a little better), one small bonus, one wonder (same cost and effect for all).
@@ -317,3 +323,13 @@ const HEALTH = { every: 60, risk: 0.06, sickFor: 60, spread: 0.08, death: 0.004,
 const MKT_SELL = ['f', 'w', 's', 'i', ...WARES], MKT_BUY = ['f', 'w', 's', 'i', 'spice'];   // wool goes to a Weaver, not to market; spice is the only good not made here
 const MKTK = [...GOODK, 'f', 'w', 's', 'i'];
 const RATE_OF = { bush: 0.9, fish: 0.8, tree: 0.75, stone: 0.55, gold: 0.6, iron: 0.5, meat: 1.2 };   // what a villager gathers a second from each kind of find (fields carry their own rate)
+
+// The land's character: each game rolls one, the same for all four corners (fair), so no two games share a map. amt: what each resource
+// is worth there; extra: one more deposit of its specialty, farther out; spread: how far the rings may stretch; turn: how far the home pocket may swing.
+const LAND = {
+  fertile: { name: 'Fertile land', amt: { food: 1.4, wood: 1, stone: 0.8, gold: 1, iron: 1 }, extra: 'bush' },
+  timber:  { name: 'Timberland',   amt: { food: 1, wood: 1.35, stone: 1, gold: 0.8, iron: 1 }, extra: null },
+  stony:   { name: 'Stony hills',  amt: { food: 0.85, wood: 1, stone: 1.5, gold: 1, iron: 1.2 }, extra: 'stone' },
+  golden:  { name: 'Gold country', amt: { food: 1, wood: 0.85, stone: 1, gold: 1.5, iron: 1 }, extra: 'gold' },
+};
+const LANDK = Object.keys(LAND), SPREAD = [0.85, 1.25], TURN = 0.5;

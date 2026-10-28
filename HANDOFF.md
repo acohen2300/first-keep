@@ -1,4 +1,4 @@
-# First Keep: handoff (Build 38)
+# First Keep: handoff (Build 39)
 
 ## What it is
 Albert's single-file HTML mobile RTS (Age of Empires style). Albert is not a coder.

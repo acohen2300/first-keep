@@ -4,7 +4,7 @@
 // node by node, so only the words and numbers that changed are touched and a button under a finger stays the same button.
 function openCard(c) { hideStrip(); G.card = c; G.infoOpen = false; G.confirm = null; cardSig = ''; $('card').scrollTop = 0; renderCard(); }
 function closeCard() { if (G) G.card = null; $('card').hidden = true; }
-let cardSig = '', bannerSig = '';
+let cardSig = '';
 const sig = x => x.nodeType === 3 ? '#' : x.nodeName + '|' + (x.getAttribute('data-act') || x.getAttribute('data-f') || x.getAttribute('class') || '');
 function patchKids(a, b) {
   const B = [...b.childNodes];
@@ -68,6 +68,7 @@ function keepAgeBtn() {   // the next age, as one research button; the reason wa
   return btn('age', `${A.name} age`, p.aging ? 'advancing' : costText(A.cost), p.aging || !afford(p, A.cost) ? 'dis' : 'go');
 }
 const goodsText = g => GOODK.filter(k => g[k] >= 1).map(k => `${Math.floor(g[k])} ${GOODS[k].name.toLowerCase()}`).join(', ');
+const ownTech = t => !t.civ || t.civ === G.P[0].civ;   // research this people can do: the others' elite ranks stay out of sight
 const need = c => { const p = G.P[0], miss = {}; for (const r in c) if ((p.res[r] || 0) < c[r]) miss[r] = Math.ceil(c[r] - (p.res[r] || 0)); return costText(miss); };   // what a cost is short of now
 const slotText = n => n && n.wk > 0 ? `${n.wk} of ${slotsOf(n)}` : 'nobody yet';
 const qName = j => j.kind ? stats(0, j.kind).name : j.muster ? `muster ${j.bn !== undefined ? BN[j.bn] : ''}` : j.tech ? TECHBY[j.tech].name : AGES[j.age].name + ' age';
@@ -176,10 +177,10 @@ function keepMoreHTML() {   // the Town Center's More: your people, goods and th
   h += `<p><i>${C.name}.</i> ${C.bonus} Unique soldier: ${UNIT[C.uu].name}. Wonder: ${C.wonder}.</p>`;
   h += `<p><i>Food:</i> your people eat ${Math.round(p.eats || 0)} a minute${p.hungry ? ' · <b>none left: work and fighting −25%, no training</b>' : ''}. ${vassalsOf(0).length ? `<i>Vassals:</i> ${vassalsOf(0).map(q => `${q.name} (${q.rebel ? 'in revolt' : `unrest ${Math.round(q.unrest)}%`})`).join(', ')}.` : ''}</p>`;
   h += `<p><i>Goods:</i> ${goodsText(p.goods) || 'none yet'}. <i>Wanted by others here:</i> ${G.P.filter(q => q.id && q.id !== WILD && q.alive).map(q => `${q.name} ${q.wants.map(k => GOODS[k].name.toLowerCase()).join(' and ')}`).join('; ')}.</p>`;
-  const done = TECH.filter(t => p.techs.has(t.id)), going = [], open = TECH.filter(t => !p.techs.has(t.id) && !researchWhy(0, t.id));
+  const done = TECH.filter(t => p.techs.has(t.id)), going = [], open = TECH.filter(t => ownTech(t) && !p.techs.has(t.id) && !researchWhy(0, t.id));
   for (const b of G.blds) if (b.owner === 0) b.q.forEach((j, i) => { if (j.tech) going.push(`${TECHBY[j.tech].name}${i === 0 ? ` (${Math.ceil(j.left)} s)` : ' (waiting)'}`); });
   h += `<p><b>Research: ${done.length} of ${TECH.length} done.</b>${going.length ? ` <i>Under way:</i> ${going.join(' · ')}.` : ''}${open.length ? ` <i>Ready now:</i> ${open.map(t => `${t.name} (${BLD[t.at].name})`).join(' · ')}.` : ''}</p>`;
-  h += AGES.map((A, i) => { const T = TECH.filter(t => t.age === i); return T.length ? `<p><b>${A.name}:</b> ${T.map(t => p.techs.has(t.id) ? `<span class="done">✓ ${t.name}</span>` : `<span class="dim">${t.name}</span>`).join(' · ')}</p>` : ''; }).join('');
+  h += AGES.map((A, i) => { const T = TECH.filter(t => ownTech(t) && t.age === i); return T.length ? `<p><b>${A.name}:</b> ${T.map(t => p.techs.has(t.id) ? `<span class="done">✓ ${t.name}</span>` : `<span class="dim">${t.name}</span>`).join(' · ')}</p>` : ''; }).join('');
   return h;
 }
 function diploHTML() {
@@ -222,7 +223,7 @@ function caravanHTML(u) {
 }
 function researchHTML() {   // everything you can research, across every building: ready first, then short, then locked
   const p = G.P[0], by = { ready: [], short: [], busy: [], locked: [] }, ageA = AGES[p.age + 1];
-  for (const t of TECH) { const s = techState(t); if (s !== 'done') by[s].push(t); }
+  for (const t of TECH) { if (!ownTech(t)) continue; const s = techState(t); if (s !== 'done') by[s].push(t); }
   const grid = L => acts(L.map(t => techBtn(t, true)).join('')), ageR = ageA && !p.aging && afford(p, ageA.cost) && keepOf(0);
   let h = title('Research', `${by.ready.length + (ageR ? 1 : 0)} ready now`);
   const cap = by.ready.filter(t => t.cap), rest = by.ready.filter(t => !t.cap);
@@ -262,7 +263,7 @@ const CARDS = {
     if (mine && b.prog >= 1) {
       if (b.q.length) h += `<p>Working on: ${b.q.map((j, i) => qName(j) + (i === 0 ? ` (${Math.ceil(j.left)} s)` : '')).join(', ')}${b.blocked ? ' · <b>needs room: House, Apartment or Aqueduct</b>' : ''}${b.stall > G.t ? ` · <b>stopped by sabotage: ${Math.ceil(b.stall - G.t)} s</b>` : ''}</p>`;
       const mk = b.kind === 'market', trade = mk && G.mtab !== 'more';   // the Market's trade side shows no training or research
-      const tr = trade ? [] : trainsAt(b.kind), techs = trade ? [] : TECH.filter(t => t.at === b.kind && !p.techs.has(t.id)), done = trade ? [] : TECH.filter(t => t.at === b.kind && p.techs.has(t.id));
+      const tr = trade ? [] : trainsAt(b.kind), techs = trade ? [] : TECH.filter(t => ownTech(t) && t.at === b.kind && !p.techs.has(t.id)), done = trade ? [] : TECH.filter(t => t.at === b.kind && p.techs.has(t.id));
       const ageB = b.kind === 'keep' ? keepAgeBtn() : '', hasR = techs.length || done.length || ageB, hd = t => tr.length && hasR ? sec(t) : '';   // one page: Train, then Research; the next age is research like any other
       if (mk) h += twoTabs('mtab', [['trade', 'Trade', 'sell and buy'], ['more', 'Caravans', 'and ventures']], trade ? 'trade' : 'more');
       if (tr.length) h += hd('Train') + acts(trainButtons(tr));

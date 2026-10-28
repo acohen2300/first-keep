@@ -359,3 +359,15 @@ Cut, merged or folded while taking the code apart and putting it back by element
 
 ### Parked (Albert, Oct 28)
 - **Higher caps: 80 villagers and 120 soldiers per side** (today 60 and 90). Parked by Albert. Before raising them: a speed pass on the soldiers' foe search and an 800-unit test run on his phone; a 700-unit battle already uses about 22 of the 33 ms a step has at phone speed.
+
+- **Play fingerprint accepted:** Build 39: every game rolls its land (character, amounts, an extra deposit, stretched rings, a turned home pocket); soldiers at home keep a foe near the Town Center again (the Build 37 spin) and form up by their building
+
+## Build 39: Albert's second play (Oct 28, 2026)
+- **New soldiers spun in place.** From Build 37's speed work: a soldier at home found a foe near the Town Center, dropped it the next step, and stepped back and forth 14 times a second. It keeps the foe again, as in Build 36.
+- **Woodcutters swung at air.** A tree blocks a 3×3 patch of ground (forest is a wall until cut), so a cutter stands 20 to 39 away. It is now drawn leaning in to the trunk while it chops; the game does not move it.
+- **Soldiers formed a diagonal grid by the Town Center.** They now stand in the yard of the building that trained them (below it on screen, never behind its roof), one block per battalion, foot in the front rank, shooters behind.
+- **The banner and the tip box** (two places for messages, overlapping the map button): one ticker under the strip. Newest message, tap to see where; the list button holds the last five, each with its silence bell; the arrow hides it all and a bell in the strip counts what comes. Tips arrive in it like any message.
+- **The same map every game.** Each game now rolls its land: Fertile land, Timberland, Stony hills or Gold country (what is rich, what is poor, one extra deposit of its specialty), with the rings of resources stretched and the home pocket turned. All four corners stay mirrored. The opening message names the land.
+- **Added:** an Elite rank for each people's own soldier at the Castle in the Medieval age (Praetorian, Elite crossbowman, Apple-bearer, Keshig, Royal elephant, Elite horseman). Only that people sees and researches it; the computers research theirs last. Art comes later.
+- **Caught before it shipped:** a comment swallowed the numbers of every rank upgrade (names changed, stats did not). build.py now also refuses a comment holding a chain of statements.
+- **Play fingerprint accepted** with the land roll and the spin fix as the reason.

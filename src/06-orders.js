@@ -47,6 +47,7 @@ function muster(o, plan, bn) {
 function researchWhy(o, id) {
   const T = TECHBY[id], p = G.P[o];
   if (p.techs.has(id)) return 'Already known.';
+  if (T.civ && T.civ !== p.civ) return 'Another people\'s.';
   if (T.age > p.age) return `Needs the ${AGES[T.age].name} age.`;
   if (T.need && !p.techs.has(T.need)) return `Needs ${TECHBY[T.need].name}.`;
   if (G.blds.some(b => b.owner === o && b.q.some(j => j.tech === id))) return 'Being researched.';

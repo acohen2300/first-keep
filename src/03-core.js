@@ -112,8 +112,8 @@ function stats(o, kind) {
   if (p.uc[kind]) return p.uc[kind];
   const U = UNIT[kind], base = baseKind(kind), keys = unitKeys(kind);
   let name = U.name, hp = U.hp, dmg = U.dmg || 0, rng_ = U.rng || 0, spd = U.spd, vs = U.vs || {}, tier = 0;
-  for (const T of TECH) if (T.tier && T.tier.unit === base && p.techs.has(T.id)) {
-    const R = T.tier; tier++; if (!U.civ) name = R.name; hp *= R.hp || 1; dmg += R.dmg || 0; rng_ += R.rng || 0; spd *= R.spd || 1; if (R.vs) vs = { ...vs, ...R.vs };
+  for (const T of TECH) if (T.tier && (T.tier.unit === base || T.tier.unit === kind) && p.techs.has(T.id)) {
+    const R = T.tier; tier++; if (!U.civ || R.unit === kind) name = R.name; hp *= R.hp || 1; dmg += R.dmg || 0; rng_ += R.rng || 0; spd *= R.spd || 1; if (R.vs) vs = { ...vs, ...R.vs };   // a people's own soldier keeps its name through the common ranks, and takes its elite one
   }
   const S = { name, tier, kit: ['leather', 'chain', 'plate'].filter(id => p.techs.has(id)).length, hp: hp * fxv(o, 'uhp', keys).m, dmg: U.dmg ? dmg + fxv(o, 'dmg', keys).a : 0, rng: rng_ + fxv(o, 'rng', keys).a,
     spd: spd * fxv(o, 'spd', keys).m, vs, armor: fxv(o, 'armor', keys).min, train: fxv(o, 'train', keys).m };

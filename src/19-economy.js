@@ -99,7 +99,7 @@ function seasonTurn() {
   }
   if (s === 'Spring') {
     if (G.t > 1) { const r = rng(); G.harvest = 1; let acc = 0; for (const H of HARVEST) { acc += H.p; if (r < acc) { G.harvest = H.m; say(H.text, 'warn', 8); break; } } }
-    if (G.P.some(p => p.alive && p.id !== WILD && ready(p.id, 'bizc').length) && rng() < HEALTH.plague) { G.plague = { until: G.t + SEASON_LEN * 2 }; say('Plague on the trade routes. Build a Hospital.', 'warn', 10); }
+    if (G.P.some(p => p.alive && p.id !== WILD && ready(p.id, 'bizc').length) && rng() < HEALTH.plague) { G.plague = { until: G.t + SEASON_LEN * 2 }; say('Plague on the roads: build a Hospital.', 'warn', 10); }
     if (G.blds.some(b => b.owner === 0 && b.kind === 'pasture')) say('Spring: sheep shorn, lambs born.', 'good', 5);
   }
   if (s !== 'Spring' && s !== 'Summer' && G.plague && G.plague.until <= G.t) G.plague = null;

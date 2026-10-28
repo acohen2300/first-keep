@@ -251,7 +251,10 @@ function drawNode(n, s) {
 }
 const workOf = u => u.job === 'repair' ? 5 : !u.node ? 0 : u.node.kind === 'fish' ? 4 : u.node.kind === 'bush' || u.node.kind === 'meat' ? 1 : u.node.kind === 'stone' || u.node.kind === 'gold' || u.node.kind === 'iron' ? 2 : u.node.kind === 'farm' ? (u.node.type === 'wood' ? 0 : 3) : 0;   // which work a villager is doing: chop, forage, mine, farm, fish, mend
 function drawUnit(u, s) {
-  const z = cam.z, sx = SX(u.x), sy = SY(u.y), U = UNIT[u.kind], col = G.P[u.owner].color, st = u.owner === WILD ? null : stats(u.owner, u.kind);
+  // a woodcutter leans in to its tree while it chops: the tree's ground keeps it 20 away, so it is drawn up to 12 closer (drawing only; the game does not move it)
+  { const n = u.node, on = u.kind === 'vil' && n && n.kind === 'tree' && u.work && G.t - u.work < 0.25; u.lean = clamp((u.lean || 0) + (on ? 0.08 : -0.08), 0, 1); }
+  const ln = u.lean && u.node ? Math.min(12, Math.max(0, dist(u, u.node) - 10)) * u.lean / (dist(u, u.node) || 1) : 0, ux = u.node ? u.x + (u.node.x - u.x) * ln : u.x, uy = u.node ? u.y + (u.node.y - u.y) * ln : u.y;
+  const z = cam.z, sx = SX(ux), sy = SY(uy), U = UNIT[u.kind], col = G.P[u.owner].color, st = u.owner === WILD ? null : stats(u.owner, u.kind);
   const moving = G.t - (u.mvT || -9) < 0.15, working = u.work && G.t - u.work < 0.25;
   const fr = G.t - (u.hitT || -9) < 0.25 ? 3 : moving ? 1 + (((G.t * 6) | 0) + u.id) % 2 : working ? (U.look === 'vil' ? 10 + workOf(u) * 2 + (((G.t * 2.5) | 0) + u.id) % 2 : 1 + (((G.t * 6) | 0) + u.id) % 2) : 0;
   if (z < 0.3) { const big = (LOOKBOX[U.look] || [26])[0]; ctx.fillStyle = u.owner === WILD ? '#c9b48a' : col; const r = Math.max(1.8, big * 0.07 * z * FIG); ctx.fillRect(sx - r, sy - r * 1.6, r * 2, r * 2); return; }   // seen from far away a person is a dot of their colour

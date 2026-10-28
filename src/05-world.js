@@ -24,7 +24,7 @@ function newGame(seed, carry) {
   navRebuild();
   const k = G.P[0].keep; cam.x = k[0] + 120; cam.y = k[1] - 120; cam.z = 1.3; clampCam();
   if (carry) { const p = G.P[0]; p.age = carry.age; p.techs = new Set(carry.techs); fxDirty(); }
-  else say('Gather, grow, explore. Tap anything.', '', 8);
+  else say(`${LAND[G.land].name}. Gather, grow, explore.`, '', 8);
 }
 const inBox = (p, r) => p.x >= r.x0 && p.x <= r.x1 && p.y >= r.y0 && p.y <= r.y1;
 const node = (kind, type, x, y, amt) => ({ id: NID++, kind, type, x, y, amt, max: amt });
@@ -96,7 +96,11 @@ function makeForest(spot, loc) {
 function makeMap() {
   const N = G.nodes, loc = makeLakes(), taken = [], spot = {};
   const room = [{ x: 700, y: 700, r: LAKE0.r + 25 }, ...loc.map(l => ({ x: l.x, y: l.y, r: l.r + 25 }))];
-  for (const [id, r0, r1, clr, a0, a1] of LAYOUT) {
+  // this game's land: its character, how far its rings stretch, which way its home pocket turns (Build 39: every map felt the same)
+  G.land = LANDK[Math.floor(rng() * LANDK.length)]; const Ld = LAND[G.land], k = rnd(SPREAD[0], SPREAD[1]), turn = rnd(-TURN, TURN);
+  const lay = LAYOUT.map(([id, r0, r1, clr, a0, a1]) => [id, r0 * (a0 === undefined ? k : 1), r1 * (a0 === undefined ? k : 1), clr, a0 === undefined ? a0 : a0 + turn, a1 === undefined ? a1 : a1 + turn]);
+  if (Ld.extra) lay.push(['extra', 240, 380, 30]);
+  for (const [id, r0, r1, clr, a0, a1] of lay) {
     let best = null;
     for (let t = 0; t < 150 && !best; t++) {
       const a = a0 === undefined ? rnd(-Math.PI, Math.PI) : rnd(a0, a1), d = rnd(r0, r1), x = Math.cos(a) * d, y = Math.sin(a) * d;
@@ -122,6 +126,7 @@ function makeMap() {
     for (const [id, kind] of [['stoneP', 'stone'], ['goldP', 'gold'], ['ironP', 'iron']]) for (const o of SHAPE.pair) N.push(node(kind, kind, ...P(id, o), 300 * RICH));
     for (const o of SHAPE.pair) N.push(node('stone', 'stone', ...P('stone', o), 350 * RICH));
     for (const o of SHAPE.pair) N.push(node('gold', 'gold', ...P('gold', o), 350 * RICH));
+    if (Ld.extra === 'bush') for (const o of SHAPE.bushes) N.push(node('bush', 'food', ...P('extra', o), 180 * RICH)); else if (Ld.extra) for (const o of SHAPE.pair) N.push(node(Ld.extra, Ld.extra, ...P('extra', o), 350 * RICH));   // the land's specialty, once more
     for (let i = 0; i < 6; i++) N.push(node('bush', 'food', ...P('bushFar', [rnd(-24, 24), rnd(-24, 24)]), 180 * RICH));
     for (const t of forest) N.push(node('tree', 'wood', ...at(t.x, t.y), 60 * RICH));
     for (const d of dep) { if (d.kind === 'bush') for (const [ox, oy] of SHAPE.bushes.slice(0, 4)) N.push(node('bush', 'food', ...at(d.x + ox, d.y + oy), 180 * RICH)); else for (const [ox, oy] of SHAPE.pair) N.push(node(d.kind, d.kind, ...at(d.x + ox, d.y + oy), 300 * RICH)); }   // a forest tree: half a grove tree's wood, so a way can be cut through
@@ -140,6 +145,7 @@ function makeMap() {
   for (const [x, y] of [[MID, 160], [MID, MAP - 160], [160, MID], [MAP - 160, MID]]) addFind('camp', x, y);
   for (const [x, y] of [[MID, MID - 270], [MID, MID + 270], [MID - 270, MID], [MID + 270, MID]]) N.push(node('gold', 'gold', x - 12, y, 500 * RICH), node('gold', 'gold', x + 12, y + 6, 500 * RICH), node('iron', 'iron', x - 2, y + 20, 500 * RICH), node('stone', 'stone', x + 4, y - 16, 400 * RICH));
   for (const L of G.lakes) { const n = Math.round(L.r / 10); for (let a = 0; a < n; a++) { const ang = a / n * Math.PI * 2; N.push(node('fish', 'food', L.x + Math.cos(ang) * (L.r - 8), L.y + Math.sin(ang) * (L.r - 8), 350 * RICH)); } }
+  for (const n of N) { const m = Ld.amt[n.type] || 1; if (m !== 1) { n.amt *= m; n.max *= m; } }   // what the land is rich and poor in
 }
 function wildAt(kind, x, y, find) { const u = addUnit(WILD, kind, x, y); u.hx = x; u.hy = y; if (find) u.find = find.id; return u; }
 function addFind(kind, x, y) {

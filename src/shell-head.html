@@ -37,20 +37,24 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #scoreP{gap:4px}#sIdle{color:var(--gold)}#scoreN{color:var(--bone)}
 #sAge.glow{color:var(--gold);animation:glowt 1.8s ease-in-out infinite}@keyframes glowt{0%,100%{text-shadow:0 0 3px rgba(230,185,71,.35)}50%{text-shadow:0 0 12px rgba(230,185,71,1)}}
 #card .lvl{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}#card .lvl small{color:var(--mute)}
+/* The ticker: every message and tip in one line under the strip, the newest first; tap it to see it, the list for the last five, the arrow to hide them all (a bell in the strip counts what comes while hidden). Albert, Build 39 */
+.tick{display:flex;box-sizing:border-box;height:46px;border:1px solid var(--hair);border-radius:var(--r);background:var(--sheet);box-shadow:0 2px 8px rgba(0,0,0,.35);overflow:hidden;color:var(--bone)}
+.tick button,.tkpop button{all:unset;box-sizing:border-box;min-height:44px;cursor:pointer;touch-action:manipulation}
+#tkT{flex:1;min-width:0;padding:0 10px;font-size:15px;font-weight:600;line-height:44px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tkList,#tkMin,.tkpop .h{width:44px;display:flex;align-items:center;justify-content:center;color:var(--mute)}
+.tick.warn{background:rgba(124,32,22,.95);color:#ffe1da}.tick.warn #tkList,.tick.warn #tkMin{color:#ffe1da}.tick.good{background:rgba(28,84,58,.95);color:#dcf5e8}.tick.tip{border-color:var(--blue)}.tick.old #tkT{color:var(--mute)}
+.tkpop{display:flex;flex-direction:column;border:1px solid var(--hair);border-radius:var(--r);background:var(--sheet);box-shadow:0 2px 8px rgba(0,0,0,.35);overflow:hidden}
+.tkpop .row{display:flex}.tkpop .row+.row{border-top:1px solid var(--hair)}.tkpop .t{flex:1;min-width:0;padding:6px 10px;display:flex;align-items:center;font-size:14px;font-weight:600;line-height:1.25;color:var(--bone)}.tkpop .row.warn .t{color:#ffb4a6}.tkpop .row.good .t{color:#9fd8b5}
+#tkBell{gap:4px;color:var(--gold)}#tkBell.warn{color:#ff8a70}#tkBell .gl{position:static;transform:none;width:16px;height:16px;margin-top:5px}
+.tick .gl,.tkpop .gl{position:static;transform:none;width:16px;height:16px}   /* icons sit in their own button, not on the tally's spots */
+#hud{z-index:4}   /* the ticker and its list above the small map */
+.hi{width:16px;height:16px}
+#stage.tk{--hb:calc(max(8px,env(safe-area-inset-top,0px)) + 128px)}   /* the ticker shown: everything under the top bars moves down by its height */
 #stage{position:absolute;inset:0;overflow:hidden;background:#20301c;touch-action:none}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 #vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse farthest-corner at 50% 50%,rgba(0,0,0,0) 42%,rgba(0,0,0,.3) 100%)}
 #mini{position:absolute;top:calc(var(--hb) + 8px);right:8px;width:86px;height:86px;border:1px solid rgba(236,229,211,.5);border-radius:4px;background:#000}
 #card.full{max-height:calc(100% - var(--ob) - var(--hb) - 14px)}
-#banner{position:absolute;left:8px;right:52px;top:calc(var(--hb) + 8px);font-weight:600;font-size:15px;pointer-events:none;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
-#banner .msg{display:flex;align-items:center;max-width:100%;background:rgba(18,23,21,.88);border-radius:6px;pointer-events:auto}
-#banner .msg span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;padding:12px 0 12px 9px;flex:1;min-width:0;box-sizing:border-box;min-height:44px}   /* a message you can tap is 44 tall, as every tap is */
-#banner .msg.warn{color:#ffe1da;background:rgba(124,32,22,.92)}
-#banner .msg.good{color:#dcf5e8;background:rgba(28,84,58,.92)}
-#banner span[data-act]{cursor:pointer}
-#banner span[data-act]::after{content:" · show me";color:#ffd0c4;font-weight:700}
-#banner .help span[data-act]::after{content:" · send help"}
-#banner .msg button,#tip button{min-height:44px;min-width:44px;padding:0;background:none;border:0;opacity:.75;color:inherit}.hi{width:16px;height:16px}
 #place{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:8px;padding:6px 6px 6px 10px;font-weight:600}
 #strip{position:absolute;display:flex;gap:4px;padding:4px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:10px;z-index:5;max-width:calc(100% - 8px);overflow-x:auto}
 #strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button b{font-size:14px}#strip button small{font-size:12px}
@@ -113,11 +117,8 @@ button.ghost{visibility:hidden}
 /* on the map: the corners, one look (.fab). Map top right, Home bottom left (only when away), Build bottom right */
 #mapB{top:calc(var(--hb) + 8px);right:var(--pad);bottom:auto}
 #miniX{top:calc(var(--hb) - 2px);right:96px;bottom:auto;background:none;border:0;box-shadow:none}#miniX::before{content:'';position:absolute;inset:10px;background:var(--sheet);border:1px solid var(--hair);border-radius:6px}#miniX svg{width:14px;height:14px}   /* the minus on the map's corner: 24 px to see, 44 px to tap */
-#stage.mapOn #banner{right:8px;top:calc(var(--hb) + 102px)}   /* the small map open: messages go under it, the full width, so a line fits */
 button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad)}#buildB{right:var(--pad)}
 #stage.busy #homeB,#stage.busy #buildB{display:none}
-#tip{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 60px);display:flex;align-items:center;gap:8px;background:rgba(16,28,44,.93);border:1px solid var(--blue);border-radius:8px;padding:6px 6px 6px 10px;font-weight:600;font-size:14px;line-height:1.3}
-#tip span{flex:1;min-width:0}
 button{font:inherit;color:var(--bone);background:var(--panel);border:1px solid var(--line);border-radius:8px;min-height:46px;padding:4px 6px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;touch-action:manipulation;cursor:pointer}
 button:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
@@ -171,17 +172,16 @@ button.ok small{color:#8fd4a4}
     <div id="vig"></div>
   <header id="hud">
     <div class="pill" id="tally"></div>
-    <div class="strip"><div class="sg"><button id="sAge" data-act="towncard" aria-label="Age, season and clock: open the Town Center"><span id="sAgeT"></span></button><button id="sIdle" data-act="idlego" aria-label="Show an idle villager" hidden></button></div><button id="scoreP" data-act="card:score" aria-label="Score and rank"><span id="scoreN">★0</span> <span id="scoreR"></span></button></div>
+    <div class="strip"><div class="sg"><button id="sAge" data-act="towncard" aria-label="Age, season and clock: open the Town Center"><span id="sAgeT"></span></button><button id="sIdle" data-act="idlego" aria-label="Show an idle villager" hidden></button></div><div class="sg"><button id="tkBell" data-act="tkmin" aria-label="Show messages" hidden><span id="tkBellN"></span></button><button id="scoreP" data-act="card:score" aria-label="Score and rank"><span id="scoreN">★0</span> <span id="scoreR"></span></button></div></div>
+    <div class="tick" id="ticker"><button id="tkT" data-act="tklist" aria-label="Latest message"></button><button id="tkList" data-act="tklist" aria-label="Recent messages"></button><button id="tkMin" data-act="tkmin" aria-label="Hide messages"></button></div><div class="tkpop" id="tkPop" hidden></div>
   </header>
   <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <button class="fab" id="mapB" data-act="map" aria-label="Show the map"></button><button class="fab" id="miniX" data-act="map" aria-label="Shrink the map" hidden></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
     <button class="fab" id="buildB" data-act="buildrow" aria-label="Build"></button>
-    <div id="banner"></div>
     <div id="strip" hidden></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="cancel"><b>Cancel</b></button></div>
-    <div id="tip" hidden><span id="tipT"></span><button data-act="hush" aria-label="Silence this tip"></button></div>
     <div id="card" hidden></div>
     <div id="end" hidden>
       <h2 id="endT">Victory</h2>

@@ -20,6 +20,9 @@ const ICON = {
   map: SVG(20, '<path d="M3 5.5 L7.5 4 L12.5 5.5 L17 4 V14.5 L12.5 16 L7.5 14.5 L3 16 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M7.5 4 V14.5 M12.5 5.5 V16" stroke="currentColor" stroke-width="1.5"/>'),
   less: SVG(20, '<path d="M4.5 10 H15.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'),
   sound: SVG(16, '<path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor"/><path class="w" d="M11 5.5q2 2.5 0 5M12.8 3.8q3.4 4.2 0 8.4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/><path class="x" d="M11 6l4 4M15 6l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'),
+  list: SVG(16, '<path d="M3 4.5h10M3 8h10M3 11.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'),
+  up: SVG(16, '<path d="M3.5 10l4.5-4.5 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
+  bell: SVG(16, '<path d="M8 2.2c-2.3 0-3.9 1.8-3.9 4.1v2.6L2.8 11h10.4l-1.3-2.1V6.3C11.9 4 10.3 2.2 8 2.2z" fill="currentColor"/><path d="M6.6 12.6a1.5 1.5 0 0 0 2.8 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>'),
   play: SVG(16, '<path d="M4.5 2.8 L13 8 L4.5 13.2 Z" fill="currentColor"/>'),
   pause: SVG(16, '<path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/>'),
   hush: SVG(16, '<path d="M8 2.2c-2.3 0-3.9 1.8-3.9 4.1v2.6L2.8 11h10.4l-1.3-2.1V6.3C11.9 4 10.3 2.2 8 2.2z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6.6 12.6a1.5 1.5 0 0 0 2.8 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M2.5 2.5l11 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>', 'hi'),   // silence this kind
@@ -36,7 +39,7 @@ function buildPanel() {
   const st = (act, t, label, id) => `<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
   $('jobs').innerHTML = `<div class="col">${cell('id="tPeople" data-act="card:army" aria-label="People: army, research, how to play"', ICON.people, wd('0/0', 'tPeopleN'))}<div class="pm">${st('unvil', '−', 'Cancel a villager waiting to train', 'tUn')}${st('train:vil', '+', 'Train a villager', 'tVil')}</div></div>`
     + JOBS.map(r => `<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`).join('');
-  $('tip').querySelector('button').innerHTML = ICON.hush; $('mapB').innerHTML = ICON.map; $('miniX').innerHTML = ICON.less; $('homeB').innerHTML = ICON.home; $('buildB').innerHTML = ICON.hammer;
+  $('tkList').innerHTML = ICON.list; $('tkMin').innerHTML = ICON.up; $('mapB').innerHTML = ICON.map; $('miniX').innerHTML = ICON.less; $('homeB').innerHTML = ICON.home; $('buildB').innerHTML = ICON.hammer;
 }
 const refresh = () => { cardSig = ''; ui(true); };
 function muteBtn() { $('muteB').classList.toggle('off', !SND.on); $('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on'); }
@@ -51,7 +54,8 @@ function fit() { const r = cv.getBoundingClientRect(); dpr = LOW.n >= 2 ? 1 : Ma
 // ───────────────────────── Messages and tips ─────────────────────────
 function say(text, cls, secs, at, act) { if (!G) return; if (SET.msgs === false && cls !== 'warn') return; if (hushed(text)) return;   // Messages off: warnings only; a silenced kind stays quiet
   const same = G.log.find(m => m.text === text && m.until > G.t); if (same) { same.until = G.t + (secs || 4); return; }   // the same line never shows twice at once
-  G.log.unshift({ text, cls, act, until: G.t + (secs || 4), at: at ? { x: Math.round(at.x), y: Math.round(at.y) } : null }); G.log = G.log.slice(0, 3); }
+  G.log.unshift({ text, cls, act, until: G.t + (secs || 4), at: at ? { x: Math.round(at.x), y: Math.round(at.y) } : null }); G.log = G.log.slice(0, 5);
+  if (SET.tkMin) { G.tkN = (G.tkN || 0) + 1; if (cls === 'warn') G.tkW = true; } }   // hidden: the bell in the strip counts what came
 // The next useful step, read from your situation. One line, shown for six seconds, then at most one more every 45; a warning (starts with !) stays until fixed. Tap × to hide one.
 // Silence: the bell on any message or tip mutes its kind (numbers ignored) until Unmute all; a warning comes back after 2 minutes, in case the danger is new
 const hushKey = t => t.replace(/[\d,.]+/g, '#');
@@ -92,12 +96,12 @@ function ui(force) {
   txt('rf', fmt(R.f)); txt('rw', fmt(R.w)); txt('rs', fmt(R.s)); txt('rg', fmt(R.g)); txt('ri', fmt(R.i));
   const rank = 1 + G.P.filter(q => q.id && q.id !== WILD && q.score.total > p.score.total).length;
   txt('scoreN', `★${fmt(p.score.total)}`); txt('scoreR', ['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th');
-  if (G.t - (G.rdyT ?? -9) > 1 || G.t < G.rdyT) { G.rdyT = G.t; G.rdy = new Map(); for (const t of TECH) if (techState(t) === 'ready') G.rdy.set(t.at, (G.rdy.get(t.at) || 0) + 1); { const A = AGES[p.age + 1]; if (A && !p.aging && keepOf(0) && afford(p, A.cost)) G.rdy.set('keep', (G.rdy.get('keep') || 0) + 1); } }   // building kind → how many researches you can start there now
+  if (G.t - (G.rdyT ?? -9) > 1 || G.t < G.rdyT) { G.rdyT = G.t; G.rdy = new Map(); for (const t of TECH) if (ownTech(t) && techState(t) === 'ready') G.rdy.set(t.at, (G.rdy.get(t.at) || 0) + 1); { const A = AGES[p.age + 1]; if (A && !p.aging && keepOf(0) && afford(p, A.cost)) G.rdy.set('keep', (G.rdy.get('keep') || 0) + 1); } }   // building kind → how many researches you can start there now
   let tip = SET.tips ? advise() : ''; const urgent = tip[0] === '!'; if (urgent) tip = tip.slice(1);
   const T = G.tipS || (G.tipS = { text: '', at: -99, last: -99 });
   if (tip !== T.text && (urgent || G.t > 20 && G.t - T.last > 45)) { T.text = tip; T.at = G.t; if (tip) T.last = G.t; }
   const showTip = tip && T.text === tip && (urgent || G.t - T.at < 6) && !hushed(tip) && !G.card && !G.place && !G.over;
-  txt('tipT', tip); if ($('tip').hidden === !!showTip) $('tip').hidden = !showTip;
+  if (showTip && T.said !== T.text) { T.said = T.text; say(tip, urgent ? 'warn' : 'tip', urgent ? 10 : 6); }   // a tip is a message like any other, in the ticker
   { const lim = MODES[G.mode].secs, clk = G.wonder ? `wonder ${clock(Math.max(0, G.wonder.end - G.t))}` : lim ? `${clock(Math.max(0, lim - G.t))}` : clock(G.t);
     let ready = 0; for (const v of G.rdy.values()) ready += v;   // research you can start now (the age counts: it is research too)
     const idleN = unitsOf(0, 'vil').filter(u => !u.job).length, t1 = `${AGES[p.age].name} age · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? '🌙' : ''} ${clk}`, t2 = idleN ? `${idleN} idle` : '';
@@ -111,9 +115,19 @@ function ui(force) {
   { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; if ($('homeB').hidden === away) $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
   $('stage').classList.toggle('busy', !!(G.card || G.place));
   if (G.place) { const B = BLD[G.place.kind], t = !G.place.at ? (G.place.kind === 'wall' ? 'Press and drag a line of wall' : `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`) : G.place.why ? G.place.why : G.place.kind === 'wall' ? `${(G.place.cells || [1]).length} pieces: tap Build, or drag again` : `${B.name}: tap Build, or drag it to move · drag empty ground to look`; txt('placeT', t); $('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why); }
-  const msgs = G.log.filter(m => m.until > G.t);
-  let html = msgs.map(m => `<div class="msg ${m.cls || ''}"><span${m.act ? ` data-act="${m.act}"` : m.at ? ` data-act="jump:${m.at.x},${m.at.y}"` : ''}>${m.text}</span><button data-act="hush:${encodeURIComponent(m.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`).join('');
-  if (G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup'))) html = '<div class="msg"><span>Paused · ▶ to carry on</span></div>' + html;
-  if (html !== bannerSig) { bannerSig = html; patchHTML($('banner'), html); }
+  tick();
   if (G.card) renderCard();
+}
+// The ticker: the newest live message, or the last one faded; paused says so when nothing newer is live. Tap the line to see where it happened
+// (or, with nowhere to show, open the list); the list holds the last five, each with its bell to silence that kind; the arrow hides it all.
+const linkOf = m => m && (m.act || (m.at ? `jump:${m.at.x},${m.at.y}` : ''));
+function tick() {
+  const hide = !!SET.tkMin, live = G.log.find(m => m.until > G.t), paused = G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup'));
+  $('stage').classList.toggle('tk', !hide); $('ticker').hidden = hide; $('tkBell').hidden = !hide;
+  if (hide) { const n = G.tkN || 0; $('tkBell').innerHTML = ICON.bell + (n ? `<span>${n}</span>` : ''); $('tkBell').classList.toggle('warn', !!G.tkW); $('tkPop').hidden = true; return; }
+  const m = live || (paused ? { text: 'Paused · ▶ to carry on', cls: '' } : G.log[0]), el = $('tkT');
+  txt('tkT', m ? m.text : ''); el.dataset.act = linkOf(live) || 'tklist';
+  $('ticker').className = 'tick ' + (live ? live.cls || '' : 'old');
+  const pop = G.tkOpen && G.log.length ? G.log.map(x => `<div class="row ${x.cls || ''}"><button class="t" data-act="${linkOf(x) || 'tklist'}">${x.text}</button><button class="h" data-act="hush:${encodeURIComponent(x.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`).join('') : '';
+  if (pop !== tick.sig) { tick.sig = pop; $('tkPop').innerHTML = pop; $('tkPop').hidden = !pop; }
 }

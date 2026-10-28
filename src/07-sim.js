@@ -43,21 +43,43 @@ function step(dt) {
 }
 // An army stands in a grid: soldiers of one side that wait at home, or are going to the same spot, form rows, battalion beside battalion.
 function formUp() {
-  const grp = new Map();
+  // At home an army stands where it was trained: in the yard of its own building, one block per battalion
+  // (the reserve last), in ranks across the screen: foot soldiers in front, shooters behind (Build 39: a diagonal grid by the Town Center read as a crowd)
+  const homes = new Map(), grp = new Map(), byId = new Map(G.blds.map(b => [b.id, b]));
   for (const u of G.units) {
     if (u.hp <= 0 || u.inside || UNIT[u.kind].tick !== 'sol' || (u.state !== 'home' && u.state !== 'goto' && u.state !== 'assist')) continue;
-    const key = u.state === 'home' ? u.owner + 'h' : u.owner + 'g' + Math.round(u.px / 50) + ',' + Math.round(u.py / 50);
+    if (u.state === 'home') {
+      const hb = u.hb !== undefined ? byId.get(u.hb) : null, b = hb && hb.hp > 0 && hb.prog >= 1 ? hb : keepOf(u.owner); if (!b) continue;
+      const H = homes.get(b.id) || (homes.set(b.id, { b, blocks: new Map() }), homes.get(b.id)), bk = u.bn ?? 9;
+      (H.blocks.get(bk) || (H.blocks.set(bk, []), H.blocks.get(bk))).push(u);
+      continue;
+    }
+    const key = u.owner + 'g' + Math.round(u.px / 50) + ',' + Math.round(u.py / 50);
     const a = grp.get(key); if (a) a.push(u); else grp.set(key, [u]);
+  }
+  const gap = GRID.gap, shoots = u => (UNIT[u.kind].rng || 0) > 20;
+  for (const { b, blocks } of homes.values()) {
+    const at = { x: b.x, y: b.y + BLD[b.kind].fp * 5 + 24 }, fx = Math.sign(MID - b.x) || 1;   // the yard on the side you see (below the building on screen), never hidden behind its roof
+    const list = [...blocks.keys()].sort((p, q) => p - q).map(k => blocks.get(k).sort((p, q) => shoots(p) - shoots(q) || p.id - q.id));
+    const cols = list.map(a => clamp(Math.ceil(Math.sqrt(a.length * 2.5)), 1, 10)), width = cols.reduce((w, c) => w + c * gap, 0) + gap * (list.length - 1);
+    let x0 = at.x - width / 2;
+    list.forEach((a, bi) => {
+      const c = cols[bi];
+      a.forEach((u, i) => { const ri = Math.floor(i / c), ci = i % c;   // the front rank (foot) next to the building, the ranks behind it (shooters last) further out
+        u.hax = x0 + (ci + 0.5) * gap; u.hay = at.y + ri * gap; u.gx = 0; u.gy = 0;
+        if (!u.tgt && G.t - (u.mvT || -9) > 0.3) { u.fx = fx; u.fy = 0; } });
+      x0 += c * gap + gap;
+    });
   }
   for (const [key, a] of grp) {
     a.sort((p, q) => (p.bn ?? 9) - (q.bn ?? 9) || p.id - q.id);
-    const n = a.length, k = keepOf(a[0].owner), home = key.endsWith('h'), shape = home ? 'line' : FORM[formOf(a[0])].shape;   // marching, a battalion takes its formation's shape: narrow column, point-first wedge, closed square
-    const cols = shape === 'column' ? Math.min(n, 3) : shape === 'square' ? Math.ceil(Math.sqrt(n)) : clamp(Math.round(Math.sqrt(n * GRID.rows)), 1, 14), wr = i => Math.floor((Math.sqrt(8 * i + 1) - 1) / 2), rows = shape === 'wedge' ? wr(n - 1) + 1 : Math.ceil(n / cols);
-    // the line faces the way they look: out from the keep toward the middle at home, along the march when sent; the front rank is outermost, the rest stand behind it, and a unit standing at its place faces the same way
-    const t = home ? (k ? towardMid(k, 90) : { x: 0, y: 1 }) : { x: a[0].px, y: a[0].py }, fx0 = k ? t.x - k.x : 0, fy0 = k ? t.y - k.y : 1, fl = hyp(fx0, fy0) || 1, fx = fx0 / fl, fy = fy0 / fl;
-    for (let i = 0; i < n; i++) { const ri = shape === 'wedge' ? wr(i) : Math.floor(i / cols), c = (shape === 'wedge' ? i - ri * (ri + 1) / 2 - ri / 2 : (i % cols) - (cols - 1) / 2) * GRID.gap, r = (home ? rows - 1 - ri : -ri) * GRID.gap;   // at home the last rank stands at the usual place and the first stands furthest out; marching, ranks trail behind
-     a[i].gx = -fy * c + fx * r; a[i].gy = fx * c + fy * r; if (!a[i].tgt && G.t - (a[i].mvT || -9) > 0.3) { a[i].fx = fx; a[i].fy = fy; } }
-    if (!home) { let slow = 1e9; for (const u of a) if (!hasTag(u.kind, 'siege')) slow = Math.min(slow, stats(u.owner, u.kind).spd); for (const u of a) u.cap = u.tgt || slow === 1e9 || hasTag(u.kind, 'siege') ? 0 : slow; }   // a marching group keeps together at its slowest; engaged units run free; siege trails at its own pace
+    const n = a.length, k = keepOf(a[0].owner), shape = FORM[formOf(a[0])].shape;   // marching, a battalion takes its formation's shape: narrow column, point-first wedge, closed square
+    const cols = shape === 'column' ? Math.min(n, 3) : shape === 'square' ? Math.ceil(Math.sqrt(n)) : clamp(Math.round(Math.sqrt(n * GRID.rows)), 1, 14), wr = i => Math.floor((Math.sqrt(8 * i + 1) - 1) / 2);
+    // the line faces along the march; ranks trail behind the first, and a unit standing at its place faces the same way
+    const t = { x: a[0].px, y: a[0].py }, fx0 = k ? t.x - k.x : 0, fy0 = k ? t.y - k.y : 1, fl = hyp(fx0, fy0) || 1, fx = fx0 / fl, fy = fy0 / fl;
+    for (let i = 0; i < n; i++) { const ri = shape === 'wedge' ? wr(i) : Math.floor(i / cols), c = (shape === 'wedge' ? i - ri * (ri + 1) / 2 - ri / 2 : (i % cols) - (cols - 1) / 2) * GRID.gap, r = -ri * GRID.gap;
+     a[i].gx = -fy * c + fx * r; a[i].gy = fx * c + fy * r; a[i].hax = undefined; if (!a[i].tgt && G.t - (a[i].mvT || -9) > 0.3) { a[i].fx = fx; a[i].fy = fy; } }
+    { let slow = 1e9; for (const u of a) if (!hasTag(u.kind, 'siege')) slow = Math.min(slow, stats(u.owner, u.kind).spd); for (const u of a) u.cap = u.tgt || slow === 1e9 || hasTag(u.kind, 'siege') ? 0 : slow; }   // a marching group keeps together at its slowest; engaged units run free; siege trails at its own pace
   }
   const atk = new Map();   // an attack goes at the pace of its battalion until a foe is in sight
   for (const u of G.units) if (u.hp > 0 && !u.inside && u.state === 'attack' && isSoldier(u)) { if (hasTag(u.kind, 'siege')) continue; const key = u.owner + ':' + (u.bn ?? 9) + ':' + (u.bid || 0); const s = stats(u.owner, u.kind).spd; atk.set(key, Math.min(atk.get(key) ?? 1e9, s)); }   // raiders sent at a camp make their own group
@@ -139,13 +161,13 @@ function built(b) {
 function jobDone(b, j) {
   const o = b.owner, p = G.P[o], B = BLD[b.kind];
   if (j.kind) {
-    const s = towardMid(b, B.fp * 5 + 12), u = addUnit(o, j.kind, s.x + rnd(-8, 8), s.y + rnd(-8, 8));
+    const s = towardMid(b, B.fp * 5 + 12), u = addUnit(o, j.kind, s.x + rnd(-8, 8), s.y + rnd(-8, 8)); u.hb = b.id;
     u.bornT = G.t; if (o === 0) sfx('ready', b.x, b.y);
     if (j.kind === 'vil') u.job = o === 0 ? p.rally : null;
     else if (j.kind === 'caravan') u.lastId = b.id;
     else if (o === 0 && G.rally0 && UNIT[j.kind].cls === 'army') { u.state = 'goto'; u.px = G.rally0.x; u.py = G.rally0.y; }
   } else if (j.muster) {
-    for (const k in j.muster) for (let i = 0; i < j.muster[k]; i++) { const s = towardMid(b, B.fp * 5 + 12), u = addUnit(o, k, s.x + rnd(-14, 14), s.y + rnd(-14, 14)); u.bornT = G.t; if (j.bn !== undefined) u.bn = j.bn; }
+    for (const k in j.muster) for (let i = 0; i < j.muster[k]; i++) { const s = towardMid(b, B.fp * 5 + 12), u = addUnit(o, k, s.x + rnd(-14, 14), s.y + rnd(-14, 14)); u.bornT = G.t; u.hb = b.id; if (j.bn !== undefined) u.bn = j.bn; }
     if (o === 0) { sfx('done', b.x, b.y); say(`${j.bn !== undefined ? BN[j.bn] : 'A battalion'} mustered: ${musterN(j.muster)} soldiers.`, 'good', 5, b); }
   } else if (j.tech) {
     learnTech(o, j.tech);
@@ -281,7 +303,7 @@ function repairTick(u, dt, SP) {
 }
 
 // ───────────────────────── Other people ─────────────────────────
-const homeSpot = (u, d) => { const k = keepOf(u.owner); if (!k) return null; const g = towardMid(k, d); return { x: g.x + (u.gx ?? u.ox), y: g.y + (u.gy ?? u.oy) }; };
+const homeSpot = (u, d) => { if (u.hax !== undefined && u.state === 'home') return { x: u.hax, y: u.hay }; const k = keepOf(u.owner); if (!k) return null; const g = towardMid(k, d); return { x: g.x + (u.gx ?? u.ox), y: g.y + (u.gy ?? u.oy) }; };
 function scoutTick(u, dt, SP) {
   if (u.state === 'goto') { if (moveTo(u, u.px, u.py, dt, 6, SP)) u.state = 'home'; return; }
   // free treasure first (no guards left), then a loop of the map
