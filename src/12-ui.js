@@ -495,7 +495,7 @@ const PLAY = {
   takedown(a) { const id = Number(a), b = G.blds.find(x => x.id === id && x.owner === 0); if (b && b.kind !== 'keep') { if (BLD[b.kind].wallish || b.prog < 0.15 || G.confirm === id) { demolish(0, id); G.confirm = null; closeCard(); } else G.confirm = id; } },
   train(a) { if (!train(0, a)) say(trainWhy(0, a) || 'Not now.', '', 3); },
   tech(a) { if (!research(0, a)) say(researchWhy(0, a) || 'Not now.', '', 3); },
-  age() { ageUp(0); },
+  age() { ageUp(0); }, build(a) { startPlace(a); },
   scoutgo(a) { const [x, y] = a.split(',').map(Number), s = unitsOf(0, 'scout')[0]; if (s) { s.state = 'goto'; s.px = x; s.py = y; say('The scout rides out.', '', 3); } closeCard(); },
   rally(a) { const [x, y] = a.split(',').map(Number); G.rally0 = G.rally0 ? null : { x, y }; },
   recall() { orderSet().forEach(u => { u.state = 'home'; u.fid = null; }); closeCard(); },
@@ -564,7 +564,7 @@ function advise() {
   if (p.age === 0 && !p.aging && V.length >= 10 && !L('age')) return 'Ready to grow: Town Center, then Bronze age.';
   if (S.length >= 8 && G.finds.some(f => !f.done && FINDS[f.kind].got && dist(f, k) < 600) && !L('goto')) return 'Treasure nearby. Tap it, then send your army.';
   if (p.age >= 1 && G.P[FORT].alive && G.rel[0][FORT] === 'peace' && G.P[FORT].ally === null && !p.envoyOut && !L('envoy')) return 'The Fortress is neutral: tap its star, send an emissary.';
-  if (p.hungry) return '!Hungry. Put villagers on Food or Farm.';
+  if (p.hungry) return '!Hungry. Put villagers on Food.';
   if (!p.hungry && p.res.f < (p.eats || 0) * 1.5 && G.t > 120 && !L('job:food')) return `Food runs out in 90 seconds. Add Food workers.`;
   if (vassalsOf(0).some(q => q.unrest > 70 && !q.rebel)) return '!A vassal is restless. Cut tax or add soldiers.';
   if (p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && !L('trade')) return ready(0, 'market').length ? 'Gold is low: sell wood, food or stone at the Market.' : 'Gold is low: Build → Market, then sell what you have too much of.';

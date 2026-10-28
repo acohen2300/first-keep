@@ -2,11 +2,11 @@
 import re, glob, sys
 LIMIT = 10; bad = []
 for f in sorted(glob.glob('src/[0-9][0-9]-*.js')):
-    lines = open(f).read().split('\n')
+    src = open(f).read(); lines = src.split('\n')
+    a = src.find('function advise('); tips = range(src[:a].count('\n') + 1, src[:src.find('\n}', a)].count('\n') + 2) if a >= 0 else range(0)   # the lines of advise(), wherever it sits
     for i, l in enumerate(lines, 1):
         found = [m.group(1) for m in re.finditer(r"say\((`[^`]*`|'(?:[^'\\]|\\.)*')", l)]
-        if f.endswith('12-ui.js') and 413 <= i <= 430 or (f.endswith('12-ui.js') and 'function advise' in ''.join(lines[max(0, i - 25):i])):
-            found += [m.group(1) for m in re.finditer(r"return ('(?:[^'\\]|\\.)*'|`[^`]*`)", l)]
+        if i in tips: found += [m.group(1) for m in re.finditer(r"return ('(?:[^'\\]|\\.)*'|`[^`]*`)", l)]
         for t in found:
             t = re.sub(r"\$\{[^}]*\}", "X", t[1:-1]).lstrip('!')
             if len(t.split()) > LIMIT: bad.append(f'{len(t.split())} words {f}:{i} {t[:90]}')

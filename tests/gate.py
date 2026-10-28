@@ -36,8 +36,35 @@ LOOK = """() => { const F=window.__fk; F.newGame(5); const G=F.G; const s=1;   /
    D[k]={rgb:[r/n,g/n,b/n],w:x1-x0,h:y1-y0}; }
  const same=[]; for (let i=0;i<kinds.length;i++) for (let j=i+1;j<kinds.length;j++) { const a=D[kinds[i]], b=D[kinds[j]]; const dc=Math.hypot(...a.rgb.map((v,t)=>v-b.rgb[t])), ds=Math.abs(a.w-b.w)+Math.abs(a.h-b.h); if (dc<18 && ds<5) same.push(kinds[i]+'~'+kinds[j]+' '+dc.toFixed(0)+'/'+ds); }
  return same; }"""
+# Behaviour: real taps on the page, not calls into the game. The Build menu was dead from Build 34 to 36 because the gate only measured layout.
+PLAY = """async () => {
+  const F = window.__fk, out = [], tap = sel => { const el = document.querySelector(sel); if (!el) { out.push('missing ' + sel); return; } el.click(); };
+  F.setPause(false); F.newGame(5); F.act('close'); const G = F.G; G.P[0].res = { f: 9999, w: 9999, s: 9999, g: 9999, i: 9999 };
+  tap('#buildB'); if (document.getElementById('bmenu').hidden) out.push('Build row did not open');
+  tap('#bm_home'); if (!G.card || G.card.type !== 'menu') out.push('Home menu card did not open');
+  tap('[data-act="build:house"]'); if (!G.place || G.place.kind !== 'house') out.push('tapping House did not start placing');
+  F.act('cancel'); if (G.place) out.push('Cancel left a placement');
+  const q0 = F.keepOf(0).q.length; tap('#tVil'); if (F.keepOf(0).q.length !== q0 + 1) out.push('+ did not queue a villager');
+  tap('#tUn'); if (F.keepOf(0).q.length !== q0) out.push('- did not cancel the villager');
+  tap('[data-act="move:wood"]'); if (!F.G.units.some(u => u.owner === 0 && u.kind === 'vil' && u.job === 'wood')) out.push('+ under Wood put nobody on wood');
+  tap('#tPeople'); if (!G.card || G.card.type !== 'army') out.push('People card did not open'); F.act('close');
+  tap('#scoreP'); if (!G.card || G.card.type !== 'score') out.push('Score card did not open'); F.act('close');
+  tap('#pauseB'); if (!G.paused) out.push('Pause did not pause'); tap('#pauseB'); if (G.paused) out.push('Pause did not resume');
+  for (let i = 0; i < 90; i++) F.step(1 / 30); const t = G.t; F.saveGame(true); const S = F.readSave(); if (!S) out.push('no save written'); else { F.loadGame(S); if (Math.abs(F.G.t - t) > 0.5) out.push('reload lost the clock'); }
+  return out; }"""
+# Every verb a button can send must have a handler: the class of bug behind the dead Build menu
+def verbs():
+    import re, glob
+    s = open('src/12-ui.js').read()
+    def keys(name):
+        i = s.index(f'const {name} = {{'); j = s.index('\n};', i); return set(re.findall(r'(?:^|[{;,]\s*|\n\s{2})([a-z][a-zA-Z0-9]*)\(\w*\)\s*\{', s[i:j]))
+    have = keys('ACT') | keys('PLAY')
+    src = ''.join(open(f).read() for f in ['src/shell-head.html'] + sorted(glob.glob('src/*.js')))
+    used = set(re.findall(r'data-act="([a-z]+)', src)) | set(re.findall(r"btn\([`']([a-z]+)", src))
+    return sorted(used - have)
 async def main():
     fails = 0
+    v = verbs(); print(('PASS ' if not v else 'FAIL ') + 'every button verb has a handler', '' if not v else v); fails += bool(v)
     import subprocess; w = subprocess.run([sys.executable, 'tests/words.py'], capture_output=True, text=True); print(('PASS ' if w.returncode == 0 else 'FAIL ') + 'toasts and tips: 10 words at most', w.stdout.strip() if w.returncode else ''); fails += w.returncode != 0
     async with async_playwright() as p:
         br = await p.chromium.launch()
@@ -57,6 +84,9 @@ async def main():
                 print(('PASS ' if not bad else 'FAIL ') + f'{page_file} {W}x{H}', '' if not bad else json.dumps(bad)[:2500]); fails += bool(bad); await pg.close()
         pg = await br.new_page(); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
         same = await pg.evaluate(LOOK); print(('PASS ' if not same else 'FAIL ') + 'buildings tell apart at half zoom', '' if not same else same); fails += bool(same); await pg.close()
+        pg = await br.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
+        await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
+        play = await pg.evaluate(PLAY) + errs[:2]; print(('PASS ' if not play else 'FAIL ') + 'taps do what they say', '' if not play else play); fails += bool(play); await pg.close()
         await br.close()
     sys.exit(1 if fails else 0)
 asyncio.run(main())

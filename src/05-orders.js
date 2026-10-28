@@ -5,7 +5,7 @@ function trainWhy(o, kind) {   // why a unit cannot be ordered right now, or nul
   if (U.age > p.age) return `${plural(U.name)} need the ${AGES[U.age].name} age.`;
   if (!readyAt(o, U).length) return `Build a ${BLD[U.at].name.toLowerCase()} first.`;
   if (U.cls && clsCount(o, U.cls) >= clsMax(U.cls, o)) return U.cls === 'civ' ? `Worker limit: ${VILMAX}.` : ARMYFULL;
-  if (p.hungry) return 'Your people are hungry: put villagers on Food or Farm.';
+  if (p.hungry) return 'Your people are hungry: put villagers on Food.';
   if (!afford(p, U.cost)) return `Not enough: ${costText(U.cost)}.`;
   if (!readyAt(o, U).some(b => b.q.length < 5)) return 'That line is full (5 waiting).';
   return null;
