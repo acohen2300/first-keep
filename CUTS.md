@@ -501,7 +501,7 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 - Added: `tests/bot.py`, `tests/fmt.py`, `tests/lint.py`. Copyright line on the setup card and in the README.
 - Cut: the white flag over a routed soldier.
 
-## Build 43 preview (Albert, Oct 28): one font, three sizes, new nodes (preview only, not live)
+## Updated font (Build 43, Albert, Oct 28): old-style menu font, three sizes, new nodes (live)
 - Two fonts, not one (Albert, 15:53: he likes the old style on the menus): IM Fell English SC stays for card titles and the end screen; Barlow Semi Condensed for everything else, weights 500 and 700. Cut: the 600 weight (about 23 KB). The ticker is weight 500 so every message still fits at 375 px.
 - Three sizes: 12 (was 12, 13, 14), 15 (was 15, 16, 17), 19 (was 19, 20, 22, 34). The end-screen title is 19.
 - Trees, bushes, berries, stone, gold, iron redrawn: clumped crowns with a lit side, a thin soft outline, a long shadow, faceted rocks with glints. Six tree kinds (was four): three broadleaf, two conifers. Lighter greens. Drawing cost is a few dozen calls each, cached as before.
