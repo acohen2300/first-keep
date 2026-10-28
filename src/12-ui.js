@@ -576,33 +576,34 @@ function advise() {
 const SEASON_ICON = { Spring: '🌱', Summer: '☀️', Autumn: '🍂', Winter: '❄️' }, WX_ICON = { rain: '🌧', drought: '🔥', frost: '🧊' };
 function applyMini() { mini.hidden = !SET.mini; $('mapB').hidden = !!SET.mini; $('miniX').hidden = !SET.mini; $('stage').classList.toggle('mapOn', !!SET.mini); }
 let uiAt = 0;
+const txt = (id, s) => { const el = $(id); if (el.textContent !== s) el.textContent = s; };   // a word is written only when it changed: the page is not touched seven times a second for nothing
 function ui(force) {
   const now = performance.now(); if (!force && now - uiAt < 150) return; uiAt = now;
   const p = G.P[0], R = p.res;
   document.body.classList.toggle('night', G.night > 0.5);
-  $('rf').textContent = fmt(R.f); $('rw').textContent = fmt(R.w); $('rs').textContent = fmt(R.s); $('rg').textContent = fmt(R.g); $('ri').textContent = fmt(R.i);
+  txt('rf', fmt(R.f)); txt('rw', fmt(R.w)); txt('rs', fmt(R.s)); txt('rg', fmt(R.g)); txt('ri', fmt(R.i));
   const rank = 1 + G.P.filter(q => q.id && q.id !== WILD && q.score.total > p.score.total).length;
-  $('scoreN').textContent = `★${fmt(p.score.total)}`; $('scoreR').textContent = ['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th';
+  txt('scoreN', `★${fmt(p.score.total)}`); txt('scoreR', ['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th');
   if (G.t - (G.rdyT ?? -9) > 1 || G.t < G.rdyT) { G.rdyT = G.t; G.rdy = new Map(); for (const t of TECH) if (techState(t) === 'ready') G.rdy.set(t.at, (G.rdy.get(t.at) || 0) + 1); { const A = AGES[p.age + 1]; if (A && !p.aging && keepOf(0) && afford(p, A.cost)) G.rdy.set('keep', (G.rdy.get('keep') || 0) + 1); } }   // building kind → how many researches you can start there now
   let tip = SET.tips ? advise() : ''; const urgent = tip[0] === '!'; if (urgent) tip = tip.slice(1);
   const T = G.tipS || (G.tipS = { text: '', at: -99, last: -99 });
   if (tip !== T.text && (urgent || G.t > 20 && G.t - T.last > 45)) { T.text = tip; T.at = G.t; if (tip) T.last = G.t; }
   const showTip = tip && T.text === tip && (urgent || G.t - T.at < 6) && !hushed(tip) && !G.card && !G.place && !G.over;
-  if ($('tipT').textContent !== tip) $('tipT').textContent = tip; $('tip').hidden = !showTip;
+  txt('tipT', tip); if ($('tip').hidden === !!showTip) $('tip').hidden = !showTip;
   { const lim = MODES[G.mode].secs, clk = G.wonder ? `wonder ${clock(Math.max(0, G.wonder.end - G.t))}` : lim ? `${clock(Math.max(0, lim - G.t))}` : clock(G.t);
     let ready = 0; for (const v of G.rdy.values()) ready += v;   // research you can start now (the age counts: it is research too)
     const idleN = unitsOf(0, 'vil').filter(u => !u.job).length, t1 = `${AGES[p.age].name} age · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? '🌙' : ''} ${clk}`, t2 = idleN ? `${idleN} idle` : '';
-    if ($('sAgeT').textContent !== t1) $('sAgeT').textContent = t1; if ($('sIdle').textContent !== t2) $('sIdle').textContent = t2; $('sIdle').hidden = !idleN;
+    txt('sAgeT', t1); txt('sIdle', t2); if ($('sIdle').hidden === !!idleN) $('sIdle').hidden = !idleN;
     $('sAge').classList.toggle('glow', ready > 0 && !G.card); }   // gold when the next age or any research is ready: tap it for the Town Center
   const V = unitsOf(0, 'vil');
-  for (const r of JOBS) { $('tn_' + r).textContent = V.filter(u => u.job === r).length; $('tj_' + r).classList.toggle('sel', p.rally === r); }
+  for (const r of JOBS) { let n = 0; for (const v of V) if (v.job === r) n++; txt('tn_' + r, String(n)); $('tj_' + r).classList.toggle('sel', p.rally === r); }
   const nq = queuedOf(0, 'vil'), room = Math.max(0, capOf(0) - popOf(0));
-  $('tPeopleN').textContent = nq ? `${V.length}+${nq}` : `${V.length}/${Math.min(VILMAX, V.length + room)}`;   // have / can have now; with villagers waiting, have + waiting
+  txt('tPeopleN', nq ? `${V.length}+${nq}` : `${V.length}/${Math.min(VILMAX, V.length + room)}`);   // have / can have now; with villagers waiting, have + waiting
   $('tVil').classList.toggle('dis', !!trainWhy(0, 'vil')); $('tUn').classList.toggle('dis', !nq);
   for (const m of MENUS) $('bm_' + m.id).classList.toggle('sel', !!(G.card && G.card.type === 'menu' && G.card.id === m.id));
-  { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
+  { const k = keepOf(0), away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20; if ($('homeB').hidden === away) $('homeB').hidden = !away; }   // home shows only when your Town Center is off the screen
   $('stage').classList.toggle('busy', !!(G.card || G.place));
-  if (G.place) { const B = BLD[G.place.kind], t = !G.place.at ? (G.place.kind === 'wall' ? 'Press and drag a line of wall' : `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`) : G.place.why ? G.place.why : G.place.kind === 'wall' ? `${(G.place.cells || [1]).length} pieces: tap Build, or drag again` : `${B.name}: tap Build, or drag it to move · drag empty ground to look`; if ($('placeT').textContent !== t) $('placeT').textContent = t; $('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why); }
+  if (G.place) { const B = BLD[G.place.kind], t = !G.place.at ? (G.place.kind === 'wall' ? 'Press and drag a line of wall' : `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`) : G.place.why ? G.place.why : G.place.kind === 'wall' ? `${(G.place.cells || [1]).length} pieces: tap Build, or drag again` : `${B.name}: tap Build, or drag it to move · drag empty ground to look`; txt('placeT', t); $('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why); }
   const msgs = G.log.filter(m => m.until > G.t);
   let html = msgs.map(m => `<div class="msg ${m.cls || ''}"><span${m.act ? ` data-act="${m.act}"` : m.at ? ` data-act="jump:${m.at.x},${m.at.y}"` : ''}>${m.text}</span><button data-act="hush:${encodeURIComponent(m.text)}" aria-label="Silence this kind of message">🔕</button></div>`).join('');
   if (G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup'))) html = '<div class="msg"><span>Paused · ▶ to carry on</span></div>' + html;

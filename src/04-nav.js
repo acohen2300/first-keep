@@ -2,7 +2,7 @@
 // ───────────────────────── The walking grid: where things stand, and how people get around ─────────────────────────
 // Squares of 10, never shown. Buildings fill whole squares and leave one free around them. Walls are one square each.
 const NC = MAP / NAVC;
-const NAV = { solid: new Uint8Array(NC * NC), gate: new Uint8Array(NC * NC), lake: new Uint8Array(NC * NC), comp: new Int32Array(NC * NC), occ: new Array(NC * NC).fill(null), v: 0, budget: 4 };
+const NAV = { solid: new Uint8Array(NC * NC), gate: new Uint8Array(NC * NC), lake: new Uint8Array(NC * NC), comp: new Int32Array(NC * NC), occ: new Array(NC * NC).fill(null), prev: new Uint8Array(NC * NC), prevG: new Uint8Array(NC * NC), v: 0, budget: 4 };
 let lakeFor = null;   // the lakes the grid was drawn for
 const lakeGap = (x, y) => G.lakes.reduce((m, L) => Math.min(m, hyp(x - L.x, y - L.y) - L.r), 1e9);   // how far from the nearest lake's edge
 function lakeGrid() { NAV.lake.fill(0); for (const L of G.lakes) for (let y = 0; y < NC; y++) for (let x = 0; x < NC; x++) if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < L.r + 2) NAV.lake[y * NC + x] = 1; lakeFor = G.lakes; }
@@ -15,7 +15,7 @@ function snapPos(kind, x, y) { // the squares a building would cover if centred 
 }
 function navRebuild() {
   if (lakeFor !== G.lakes) lakeGrid();
-  NAV.solid.set(NAV.lake); NAV.gate.fill(0); NAV.occ.fill(null);
+  NAV.prev.set(NAV.solid); NAV.prevG.set(NAV.gate); NAV.solid.set(NAV.lake); NAV.gate.fill(0); NAV.occ.fill(null);
   // a tree fills the 3×3 squares round it: forest is a wall until it is cut
   const T = G.nodes.filter(n => n.kind === 'tree' && n.amt > 0);
   for (const n of T) { const cx = Math.floor(n.x / NAVC), cy = Math.floor(n.y / NAVC); for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) { const x = cx + i, y = cy + j; if (x >= 0 && y >= 0 && x < NC && y < NC) NAV.solid[y * NC + x] = 1; } }
@@ -31,11 +31,15 @@ function navRebuild() {
   for (let s = 0; s < NC * NC; s++) {
     if (C[s] || NAV.solid[s]) continue;
     C[s] = ++id; let h = 0, t = 0; Q[t++] = s;
-    while (h < t) { const i = Q[h++], x = i % NC; for (const j of [x > 0 ? i - 1 : -1, x < NC - 1 ? i + 1 : -1, i - NC, i + NC]) if (j >= 0 && j < NC * NC && !C[j] && !NAV.solid[j]) { C[j] = id; Q[t++] = j; } }
+    while (h < t) { const i = Q[h++], x = i % NC, j1 = x > 0 ? i - 1 : -1, j2 = x < NC - 1 ? i + 1 : -1, j3 = i - NC, j4 = i + NC;
+      if (j1 >= 0 && !C[j1] && !NAV.solid[j1]) { C[j1] = id; Q[t++] = j1; } if (j2 >= 0 && !C[j2] && !NAV.solid[j2]) { C[j2] = id; Q[t++] = j2; }
+      if (j3 >= 0 && !C[j3] && !NAV.solid[j3]) { C[j3] = id; Q[t++] = j3; } if (j4 < NC * NC && !C[j4] && !NAV.solid[j4]) { C[j4] = id; Q[t++] = j4; } }
   }
   // a tree can be cut only from open ground beside it: the forest is worked from its edge inward
   for (const n of T) { const cx = Math.floor(n.x / NAVC), cy = Math.floor(n.y / NAVC); n.open = false; for (const [i, j] of [[2, 0], [-2, 0], [0, 2], [0, -2], [2, 2], [-2, 2], [2, -2], [-2, -2]]) { const x = cx + i, y = cy + j; if (x >= 0 && y >= 0 && x < NC && y < NC && !NAV.solid[y * NC + x]) { n.open = true; break; } } }
-  NAV.v++; G.navDirty = false; G.treeV = (G.treeV || 0) + 1;
+  // every path is thrown away only when a square really opened or closed: a spent bush or carcass changes nothing for walkers
+  let same = true; for (let i = 0; i < NC * NC; i++) if (NAV.solid[i] !== NAV.prev[i] || NAV.gate[i] !== NAV.prevG[i]) { same = false; break; }
+  if (!same) NAV.v++; G.navDirty = false; G.treeV = (G.treeV || 0) + 1;
 }
 // can this side's unit not stand on this square? (a gate is shut only to those at war with its owner)
 function blockedCell(c, o) { if (NAV.solid[c]) return true; const g = NAV.gate[c]; return g !== 0 && atWar(o, g - 1); }
@@ -182,7 +186,7 @@ function canPlace(o, kind, x, y) {
     if (!B.wallish && !B.crop && j >= 0 && j < n && (i === -1 || i === n) && !BLD[q.kind].wallish && !BLD[q.kind].crop) return 'Leave a gap: a wall shows on each side';
     if (!BLD[q.kind].wallish && (TRAINERS.has(kind) || TRAINERS.has(q.kind))) return 'Leave a lane around buildings that train people';
   }
-  if (!B.wallish) { const h = n * 5 + 6; for (const nd of G.nodes) if (nd.kind !== 'farm' && nd.kind !== 'fish' && Math.abs(nd.x - sp.x) < h && Math.abs(nd.y - sp.y) < h) return 'Clear of trees and rocks, please'; }
+  if (!B.wallish) { const h = n * 5 + 6; if (nodesNear(sp.x, sp.y, h, nd => nd.kind !== 'farm' && nd.kind !== 'fish' && Math.abs(nd.x - sp.x) < h && Math.abs(nd.y - sp.y) < h)) return 'Clear of trees and rocks, please'; }
   let stop = null;
   if (B.atStop) {   // a trade post stands only on a trade stop, once its guards are gone
     stop = G.finds.find(f => f.kind === 'stop' && Math.abs(f.x - sp.x) < 24 && Math.abs(f.y - sp.y) < 24);

@@ -71,7 +71,7 @@ function build(o, kind, x, y) {
   const sp = snapPos(kind, x, y);
   if (kind === 'gate') { const w = NAV.occ[sp.gy * NC + sp.gx]; if (w && w.kind === 'wall') { w.hp = 0; w.gone = true; } }   // a gate takes the place of a wall square
   pay(p, B.cost);
-  const b = mkBld(o, kind, x, y, 0); G.blds.push(b); navRebuild(); if (o === 0) learn('build:' + kind);
+  const b = mkBld(o, kind, x, y, 0); G.blds.push(b); navRebuild(); qcDrop(); if (o === 0) learn('build:' + kind);
   if (B.atStop) { const f = G.finds.find(f => f.kind === 'stop' && Math.abs(f.x - b.x) < 24 && Math.abs(f.y - b.y) < 24); b.sid = f && f.id; }
   if (o === 0) sfx('place');
   autoBuilder(o, b);

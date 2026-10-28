@@ -66,8 +66,8 @@ function makeBg() {
 let SPARKS = [], miniT = 0;
 function draw() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.fillStyle = '#0b0f0d'; ctx.fillRect(0, 0, cw, ch);
   const z = cam.z, x0 = SX(0), y0 = SY(0), sn = season();
+  { const a = toWorld(0, 0), b = toWorld(cw, ch); if (a.x < 0 || a.y < 0 || b.x > MAP || b.y > MAP) { ctx.fillStyle = '#0b0f0d'; ctx.fillRect(0, 0, cw, ch); } }   // beyond the map's edge: dark; the map itself is painted over in full
   ctx.imageSmoothingEnabled = true;
   const layer = img => { const a = toWorld(0, 0), b2 = toWorld(cw, ch), sx0 = clamp(a.x, 0, MAP), sy0 = clamp(a.y, 0, MAP), sx1 = clamp(b2.x, 0, MAP), sy1 = clamp(b2.y, 0, MAP);
     if (sx1 > sx0 && sy1 > sy0) ctx.drawImage(img, sx0 * bgK, sy0 * bgK, (sx1 - sx0) * bgK, (sy1 - sy0) * bgK, SX(sx0), SY(sy0), (sx1 - sx0) * z, (sy1 - sy0) * z * TILT); };
@@ -98,7 +98,7 @@ function draw() {
   // the standing nodes (about 2,000 trees, bushes and rocks) are kept sorted until the view moves a step; the few moving things are merged in
   for (let i = 0, j = 0; i < N.length || j < list.length;) {
     const take = j >= list.length || (i < N.length && N[i].y < list[j][0]), e = take ? N[i++] : list[j][2], t = take ? 0 : list[j++][1];
-    try { t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : drawFind(e); } catch (er) { fault(er); }   // one bad piece must never take the rest of the picture with it
+    try { t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : drawFind(e); } catch (er) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.setLineDash([]); fault(er); }   // one bad piece must never take the rest of the picture with it: the canvas is put back as it was
   }
   sparkDraw(); ripDraw();
   if (G.rally0) flagAt(SX(G.rally0.x), SY(G.rally0.y), G.P[0].color, z);
@@ -109,8 +109,8 @@ function draw() {
   }
   // the light: warm at dusk and dawn, blue at night, darker toward the edges
   const nt = G.night, dusk = 4 * nt * (1 - nt);
-  if (dusk > 0.02) { ctx.fillStyle = `rgba(255,140,60,${0.13 * dusk})`; ctx.fillRect(0, 0, cw, ch); }
-  if (nt > 0) { ctx.fillStyle = `rgba(10,18,48,${0.4 * nt})`; ctx.fillRect(0, 0, cw, ch); if (nt > 0.5) for (const b of G.blds) if (inView(b) && b.prog >= 1 && (b.kind === 'house' || b.kind === 'apartment' || b.kind === 'keep')) { ctx.fillStyle = 'rgba(255,200,110,.75)'; ctx.fillRect(SX(b.x) + 3 * z, SY(b.y + halfOf(b) * 0.9, 6), 2 * z, 2 * z); } }
+  { const t = tintOf(dusk, nt); if (t) { ctx.fillStyle = t; ctx.fillRect(0, 0, cw, ch); } }   // dusk, night and the weather's cast, blended into one fill
+  if (nt > 0) { if (nt > 0.5) for (const b of G.blds) if (inView(b) && b.prog >= 1 && (b.kind === 'house' || b.kind === 'apartment' || b.kind === 'keep')) { ctx.fillStyle = 'rgba(255,200,110,.75)'; ctx.fillRect(SX(b.x) + 3 * z, SY(b.y + halfOf(b) * 0.9, 6), 2 * z, 2 * z); } }
   if (G.hitT !== undefined && G.t - G.hitT < 1.6) {   // something of yours was hit: a red glow round the edge, fading over a second and a half
     const wild = !!G.hitWild, H = wild ? 1 : 0;   // red for a rival, orange for bandits and animals
     if (!hg[H] || hg[H].w !== cw || hg[H].h !== ch) { const q = ctx.createRadialGradient(cw / 2, ch / 2, Math.min(cw, ch) * 0.3, cw / 2, ch / 2, Math.max(cw, ch) * 0.72), c = wild ? '240,150,30' : '210,40,30'; q.addColorStop(0, `rgba(${c},0)`); q.addColorStop(1, `rgba(${c},.55)`); q.w = cw; q.h = ch; hg[H] = q; }
@@ -213,6 +213,19 @@ function sparkDraw() {
     ctx.stroke();
   }
 }
+// Three translucent casts (warm dusk, blue night, the weather) laid one over another come to one colour: computed once a frame, painted once.
+const WX_TINT = { drought: [210, 160, 60, 0.10], rain: [20, 30, 50, 0.12], frost: [230, 240, 250, 0.14] };
+const tintC = { k: '', s: '' };
+function tintOf(dusk, nt) {
+  let r = 0, g = 0, b = 0, a = 0;
+  const lay = (cr, cg, cb, ca) => { if (ca <= 0) return; const na = a + ca - a * ca; r = (r * a * (1 - ca) + cr * ca) / na; g = (g * a * (1 - ca) + cg * ca) / na; b = (b * a * (1 - ca) + cb * ca) / na; a = na; };
+  if (dusk > 0.02) lay(255, 140, 60, 0.13 * dusk);
+  if (nt > 0) lay(10, 18, 48, 0.4 * nt);
+  const w = WX_TINT[G.wx]; if (w) lay(w[0], w[1], w[2], w[3]);
+  if (a <= 0.002) return '';
+  const k = `${(r | 0)},${(g | 0)},${(b | 0)},${Math.round(a * 200)}`; if (tintC.k !== k) { tintC.k = k; tintC.s = `rgba(${r | 0},${g | 0},${b | 0},${(a).toFixed(3)})`; }
+  return tintC.s;
+}
 const NV = { ref: null, len: 0, key: '', arr: [] };
 function viewNodes(a, b, far) {   // the nodes on screen, sorted back to front; rebuilt only when the view moves 40 units or a node comes or goes
   const q = v => Math.floor(v / 40), key = `${q(a.x)},${q(a.y)},${q(b.x)},${q(b.y)},${far}`;
@@ -306,9 +319,7 @@ function drawMini() {
 // ── Weather on the glass: rain, snow, lightning. Seen from above, so no sky: streaks and splashes, drifting flakes, a flash and a bolt.
 function drawWeather() {
   const z = cam.z, t = performance.now() / 1000, wx = G.wx;
-  if (wx === 'drought') { ctx.fillStyle = 'rgba(210,160,60,.10)'; ctx.fillRect(0, 0, cw, ch); }
   if (wx === 'rain') {
-    ctx.fillStyle = 'rgba(20,30,50,.12)'; ctx.fillRect(0, 0, cw, ch);
     if (!lessMotion) {
       ctx.strokeStyle = 'rgba(205,220,240,.30)'; ctx.lineWidth = 1; ctx.beginPath();
       for (let i = 0; i < 70; i++) { const x = ((i * 97.3 + t * 60) % (cw + 60)) - 30, y = ((i * 53.7 + t * 520) % (ch + 60)) - 30; ctx.moveTo(x, y); ctx.lineTo(x - 4, y + 14); }
@@ -316,7 +327,6 @@ function drawWeather() {
     }
   }
   if (wx === 'frost') {
-    ctx.fillStyle = 'rgba(230,240,250,.14)'; ctx.fillRect(0, 0, cw, ch);
     if (!lessMotion) { ctx.fillStyle = 'rgba(245,248,252,.85)'; for (let i = 0; i < 80; i++) { const y = ((i * 71.9 + t * 34) % (ch + 20)) - 10, x = (i * 113.7 + Math.sin(t * 0.8 + i) * 14) % cw; ctx.fillRect(x, y, 2 + (i % 3 === 0), 2 + (i % 3 === 0)); } }
   }
   if (G.bolts && G.bolts.length) {

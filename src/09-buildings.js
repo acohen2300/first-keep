@@ -147,7 +147,7 @@ function bldSprite(b, s) {
   const top = BLDTOP[b.kind] || 40, pad = 12, W = w + pad * 2 + 10 + 2 * w * TILT * SIDE, H = w * TILT / 2 + top + pad * 2;
   c = document.createElement('canvas'); c.width = Math.ceil(W * s); c.height = Math.ceil(H * s);
   g = c.getContext('2d'); g.scale(s, s); g.translate(W / 2, top + pad); g.lineJoin = 'round'; g.lineCap = 'round';
-  UP = up; try { (ART[b.kind] || ART.house)(col, o, var_); } catch (e) {} UP = 0;
+  UP = up; try { (ART[b.kind] || ART.house)(col, o, var_); } catch (e) { fault(e); } UP = 0;
   c.ax = W / 2 * s; c.ay = (top + pad) * s; g = null;
   trim(BSPR, 300);
   BSPR.set(key, c); return c;

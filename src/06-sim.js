@@ -22,16 +22,16 @@ function step(dt) {
   // the dead and the spent
   for (const u of G.units) if (u.hp <= 0) died(u);
   for (const u of G.units) if (u.hp <= 0 && !u.gone && !u.inside) scarFall(u);
-  G.units = G.units.filter(u => u.hp > 0); G.ugTick = -1;
+  { let gone = false; for (const u of G.units) if (u.hp <= 0) { gone = true; break; } if (gone) G.units = G.units.filter(u => u.hp > 0); } G.ugTick = -1;
   let fxChange = false;
   for (const b of G.blds) if (b.node && b.node.amt <= 0 && b.hp > 0 && BLD[b.kind].reserve > 0) { b.hp = 0; if (b.owner === 0) say('A tree farm is cut out. Plant another.', '', 5); }   // a coppice plot, spent
   for (const b of G.blds) if (b.hp <= 0) { if (!b.gone && b.prog >= 1 && !BLD[b.kind].wallish) scarBurn(b); if (b.node) b.node.amt = 0; if (b.by !== undefined) plunderBld(b); if (BLD[b.kind].fx) fxChange = true; if (G.wonder && G.wonder.id === b.id) { say(`${G.P[b.owner].name === 'You' ? 'Your' : G.P[b.owner].name + '\'s'} wonder has fallen.`, b.owner === 0 ? 'warn' : 'good', 7); G.wonder = null; } }
   if (fxChange) fxDirty();
   if (G.lootT && G.t - G.lootT > 1.5) { say(`Plunder: ${costText(G.loot)}.`, 'good', 6); G.loot = {}; G.lootT = 0; }
-  { const nb = G.blds.length; G.blds = G.blds.filter(b => b.hp > 0); if (G.blds.length !== nb) G.navDirty = true; }
-  { const nt = G.nodes.length; G.nodes = G.nodes.filter(n => n.amt > 0 || (n.farm && n.farm.hp > 0)); if (G.nodes.length !== nt) G.navDirty = true; }   // a tree felled opens its ground
+  { let gone = false; for (const b of G.blds) if (b.hp <= 0) { gone = true; break; } if (gone) { G.blds = G.blds.filter(b => b.hp > 0); G.navDirty = true; qcDrop(); } }
+  if (G.tick % 10 === 0) { const nt = G.nodes.length; G.nodes = G.nodes.filter(n => n.amt > 0 || (n.farm && n.farm.hp > 0)); if (G.nodes.length !== nt) G.navDirty = true; }   // a tree felled opens its ground; spent nodes leave every 10 steps, so the walking grid is redrawn at most three times a second
   for (const tr of G.tracers) tr.life -= dt;
-  G.tracers = G.tracers.filter(tr => tr.life > 0);
+  if (G.tracers.length && G.tracers[G.tracers.length - 1].life <= 0 || G.tracers.some(tr => tr.life <= 0)) G.tracers = G.tracers.filter(tr => tr.life > 0);
   for (const p of G.P) if (p.id && p.id !== WILD && p.alive) { p.ai.t -= dt; if (p.ai.t <= 0) { p.ai.t = react(); think(p); } }
   fortressDuties(dt);
   for (const p of G.P) if (p.alive && p.id !== WILD && !keepOf(p.id)) fall(p);
@@ -166,14 +166,14 @@ const nodeFits = (n, job) => n.type === job;
 // Food takes a free field first if one is near (within 160), else the nearest berries, fish, carcass or game.
 const unsafe = p => (G.guarded || []).some(f => Math.abs(f.x - p.x) < 120 && Math.abs(f.y - p.y) < 120 && dist(f, p) < 120);
 function nearestNode(u, job) {
-  let best = null, bd = 1e9, bdist = 1e9, farm = null, fd = 1e9;   // bd scores a find by the walk to it and the walk home with the load
+  let best = null, bd = 1e9, bdist = 1e9, farm = null, fd = 1e9, drops = null, dropT = '';   // bd scores a find by the walk to it and the walk home with the load
   for (const n of G.nodes) {
     if (n.kind !== 'farm' && Math.abs(n.x - u.x) * 0.4 > bd) continue;   // the cheap tests first: most of the map is farther than the best so far
     if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n))) continue;
     if (n.kind === 'farm') {
       if (n.farm.owner !== u.owner || n.farm.prog < 1 || n.farm.hp <= 0 || (n.wk || 0) - (u.node === n ? 1 : 0) >= slotsOf(n)) continue;
       const d = dist(u, n); if (d < fd) { fd = d; farm = n; }
-    } else { if (n.kind === 'fish' && !dockNear(u.owner, n)) continue; if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue; if (Math.abs(n.x - u.x) * 0.4 > bd) continue; const d = dist(u, n) * 0.4; if (d < bd) { const dr = n.kind === 'fish' ? null : dropFor(u.owner, n.type, n) || keepOf(u.owner), s = d + (dr ? dist(dr, n) * 0.6 : 0) + 25 * Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0)); if (s < bd) { bd = s; best = n; bdist = d / 0.4; } } }
+    } else { if (n.kind === 'fish' && !dockNear(u.owner, n)) continue; if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue; if (Math.abs(n.x - u.x) * 0.4 > bd) continue; const d = dist(u, n) * 0.4; if (d < bd) { if (n.kind !== 'fish' && dropT !== n.type) { dropT = n.type; drops = G.blds.filter(b => b.owner === u.owner && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(n.type)); } const dr = n.kind === 'fish' ? null : nearest(drops, n) || keepOf(u.owner), s = d + (dr ? dist(dr, n) * 0.6 : 0) + 25 * Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0)); if (s < bd) { bd = s; best = n; bdist = d / 0.4; } } }
   }
   if (farm && (fd < 160 || !best)) return farm;
   if (job === 'food') {   // game: deer and boar within reach of home, if nearer than anything else
@@ -193,7 +193,7 @@ function vilTick(u, dt, SP) {
   }
   if ((G.tick + u.id) % 5 === 0) {
     const was = u.scared, r = was ? SHELTER.flee * 1.6 : SHELTER.flee; let wild = 0, foe = 0;   // enemy soldiers scare everyone near; a lone beast or robber scares only the one it hits, three or more (a pack) scare all; once running, keeps running until well clear
-    for (const v of G.threats) if (v !== u.hunt && atWar(u.owner, v.owner) && Math.abs(v.x - u.x) < r && Math.abs(v.y - u.y) < r && dist(u, v) < r) { if (v.owner === WILD) wild++; else foe++; }
+    unitsNear(u, r, v => { if (v.thr && v !== u.hunt && atWar(u.owner, v.owner) && dist(u, v) < r) { if (v.owner === WILD) wild++; else foe++; } });
     u.scared = !!kk && (foe > 0 || (wild > 0 && (wild >= SHELTER.raid || G.t - (u.hurtT || -99) < SHELTER.hurt)));
     if (u.scared && !was) { const tw = nearest(G.blds, u, b => b.owner === u.owner && b.kind !== 'keep' && SHELTER.arrows[b.kind] && b.prog >= 1 && b.hp > 0 && G.units.filter(v => v.inside && v.hid === b.id).length < SHELTER.arrows[b.kind], 220); u.hid = tw && dist(u, tw) < dist(u, kk) ? tw.id : kk.id; }
   }
@@ -203,7 +203,8 @@ function vilTick(u, dt, SP) {
   }
   const cap = carryOf(u.owner);
   if (u.carry > 0 && (u.carry >= cap - 1e-6 || u.carryType !== u.job || !u.job || (!u.hunt && (!u.node || u.node.amt <= 0)))) {
-    const drop = dropFor(u.owner, u.carryType, u); if (!drop) { u.idle = true; return; }
+    if (!(u.drop && u.drop.hp > 0 && u.dropT === u.carryType && u.dropN === G.blds.length && u.dropR === G.blds)) { u.drop = dropFor(u.owner, u.carryType, u); u.dropT = u.carryType; u.dropN = G.blds.length; u.dropR = G.blds; }
+    const drop = u.drop; if (!drop) { u.idle = true; return; }
     if (moveTo(u, drop.x, drop.y, dt, halfOf(drop) + 4, SP)) { stash(u.owner, u.carryType, Math.round(u.carry)); u.carry = 0; }
     if (u.carry > 0 || u.hunt || !u.node || u.node.amt > 0) return;
   }
@@ -214,7 +215,8 @@ function vilTick(u, dt, SP) {
   const flock = u.node && u.node.farm && BLD[u.node.farm.kind].sheep && u.node.farm.hp > 0;   // a shepherd stays with the flock between shearings
   if (!flock && (!u.node || u.node.amt <= 0 || !nodeFits(u.node, u.job) || (u.node.farm && u.node.wk > slotsOf(u.node)))) {
     if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
-    const n = nearestNode(u, u.job);
+    if (u.nnT > G.t) { u.node = null; u.idle = true; return; }   // nothing was found a moment ago: wait, do not search every step
+    const n = nearestNode(u, u.job); if (!n && !u.patch) u.nnT = G.t + 2 + rng();
     if (!n && u.patch) {   // nothing open inside the box: cut in from the nearest open tree outside it; when the box is clear, back to work
       const r = u.patch, mid = { x: (r.x0 + r.x1) / 2, y: (r.y0 + r.y1) / 2 }, left = G.nodes.some(t => t.kind === 'tree' && t.amt > 0 && inBox(t, r));
       const way = left && nearest(G.nodes, mid, t => t.kind === 'tree' && t.amt > 0 && t.open, 260);
@@ -389,7 +391,8 @@ function solTick(u, dt, SP) {
   const U = UNIT[u.kind], o = u.owner, k = keepOf(o);
   u.cd = Math.max(0, u.cd - dt); u.stance = stanceOf(u);
   let tgt = u.tgt;   // looks for the nearest foe a few times a second, and keeps hitting the one it has between looks
-  if (!(tgt && tgt.hp > 0 && !tgt.inside && atWar(o, tgt.owner) && edge(u, tgt) < sightOf(u) * 1.4) || (G.tick + u.id) % 4 === 0) {
+  if (tgt && !(tgt.hp > 0 && !tgt.inside && atWar(o, tgt.owner) && edge(u, tgt) < sightOf(u) * 1.4)) tgt = u.tgt = null;   // the one it had is gone
+  if ((G.tick + u.id) % 4 === 0) {   // its turn to look, about seven times a second: with a foe or without
     tgt = U.bonly ? nearestFoeBld(o, u, undefined, sightOf(u)) : nearestFoe(o, u, sightOf(u));
     if (u.state === 'home' && tgt && k && dist(tgt, k) > 320) tgt = null;
     if (!tgt && u.state === 'home' && k && !U.bonly) tgt = nearestFoe(o, u, 320, k);
@@ -521,16 +524,14 @@ function buildGrid() {
 // soldiers ignore grazing deer, drifters and wayfarers; spies are seen only up close
 const ignorable = v => { const U = UNIT[v.kind]; return U.flee || U.passive || U.tick === 'wayfarer'; };
 function nearestFoe(o, from, range, anchor) {
-  const a = anchor || from, U = G.units, isB = !!from.q, [sR, bR] = UNIT.spy.stealth; let best = null, bd = range;
-  const consider = v => {
-    if (v.inside || v.hp <= 0 || !atWar(o, v.owner) || ignorable(v)) return;
+  const a = anchor || from, U = G.units, isB = !!from.q, sR = UNIT.spy.stealth[isB ? 1 : 0]; let best = null, bd = range;
+  const grid = G.ugTick === G.tick, r = range + 3;
+  const x0 = grid ? clamp(((a.x - r) / UG) | 0, 0, UGN - 1) : 0, x1 = grid ? clamp(((a.x + r) / UG) | 0, 0, UGN - 1) : 0, y0 = grid ? clamp(((a.y - r) / UG) | 0, 0, UGN - 1) : 0, y1 = grid ? clamp(((a.y + r) / UG) | 0, 0, UGN - 1) : 0;
+  for (let cy = y0; cy <= y1; cy++) for (let cx = x0; cx <= x1; cx++) for (let i = grid ? UGH[cy * UGN + cx] : U.length - 1; i >= 0; i = grid ? UGX[i] : i - 1) {
+    const v = U[i]; if (v.inside || v.hp <= 0 || !atWar(o, v.owner) || ignorable(v)) continue;
     const dx = a.x - v.x, dy = a.y - v.y, d = Math.sqrt(dx * dx + dy * dy);
-    if (d < bd && !(v.kind === 'spy' && d > (isB ? bR : sR))) { bd = d; best = v; }
-  };
-  if (G.ugTick === G.tick) {
-    const r = range + 3, x0 = clamp(((a.x - r) / UG) | 0, 0, UGN - 1), x1 = clamp(((a.x + r) / UG) | 0, 0, UGN - 1), y0 = clamp(((a.y - r) / UG) | 0, 0, UGN - 1), y1 = clamp(((a.y + r) / UG) | 0, 0, UGN - 1);
-    for (let cy = y0; cy <= y1; cy++) for (let cx = x0; cx <= x1; cx++) for (let i = UGH[cy * UGN + cx]; i >= 0; i = UGX[i]) consider(U[i]);
-  } else for (const v of U) consider(v);
+    if (d < bd && !(v.kind === 'spy' && d > sR)) { bd = d; best = v; }
+  }
   return best;
 }
 // the nearest unit within r that passes ok, looking only at the squares around (the grid is rebuilt each step)
@@ -543,8 +544,31 @@ function nearU(from, r, ok) {
 }
 function nearestFoeBld(o, from, owner, range) {
   let best = null, bd = range || 1e9;
-  for (const b of G.blds) if (b.hp > 0 && atWar(o, b.owner) && (owner === undefined || b.owner === owner)) { const d = rectGap(from.x, from.y, b); if (d < bd) { bd = d; best = b; } }
+  const ok = b => { if (b.hp > 0 && atWar(o, b.owner) && (owner === undefined || b.owner === owner)) { const d = rectGap(from.x, from.y, b); if (d < bd) { bd = d; best = b; } } };
+  if (range) bldsNear(from.x, from.y, range + 40, ok); else for (const b of G.blds) ok(b);
   return best;
+}
+// Buildings and nodes stand still, so each is sorted into squares of 100 once, and redone only when one comes or goes.
+const SGC = 100, SGN = Math.ceil(MAP / SGC);
+const SG = { b: { ref: null, len: 0, cells: [] }, n: { ref: null, len: 0, cells: [] } };
+function sgrid(which, list) {
+  const g = SG[which]; if (g.ref === list && g.len === list.length) return g.cells;
+  const cells = g.cells; cells.length = SGN * SGN; for (let i = 0; i < cells.length; i++) cells[i] = null;
+  for (const e of list) { const c = clamp((e.y / SGC) | 0, 0, SGN - 1) * SGN + clamp((e.x / SGC) | 0, 0, SGN - 1); (cells[c] || (cells[c] = [])).push(e); }
+  g.ref = list; g.len = list.length; return cells;
+}
+// calls fn for everything within r of (x, y) by its square (a little beyond r on the edges); stops and returns true when fn does
+function sgNear(which, list, x, y, r, fn) {
+  const cells = sgrid(which, list), x0 = clamp(((x - r) / SGC) | 0, 0, SGN - 1), x1 = clamp(((x + r) / SGC) | 0, 0, SGN - 1), y0 = clamp(((y - r) / SGC) | 0, 0, SGN - 1), y1 = clamp(((y + r) / SGC) | 0, 0, SGN - 1);
+  for (let cy = y0; cy <= y1; cy++) for (let cx = x0; cx <= x1; cx++) { const L = cells[cy * SGN + cx]; if (L) for (const e of L) if (fn(e)) return true; }
+  return false;
+}
+const bldsNear = (x, y, r, fn) => sgNear('b', G.blds, x, y, r, fn), nodesNear = (x, y, r, fn) => sgNear('n', G.nodes, x, y, r, fn);
+// the units within r of from, by the unit grid
+function unitsNear(from, r, fn) {
+  if (G.ugTick !== G.tick) { for (const v of G.units) if (v !== from && Math.abs(v.x - from.x) < r && Math.abs(v.y - from.y) < r) fn(v); return; }
+  const U = G.units, x0 = clamp(((from.x - r) / UG) | 0, 0, UGN - 1), x1 = clamp(((from.x + r) / UG) | 0, 0, UGN - 1), y0 = clamp(((from.y - r) / UG) | 0, 0, UGN - 1), y1 = clamp(((from.y + r) / UG) | 0, 0, UGN - 1);
+  for (let cy = y0; cy <= y1; cy++) for (let cx = x0; cx <= x1; cx++) for (let i = UGH[cy * UGN + cx]; i >= 0; i = UGX[i]) { const v = U[i]; if (v !== from && Math.abs(v.x - from.x) < r && Math.abs(v.y - from.y) < r) fn(v); }
 }
 function vsMul(a, t) {
   const vs = a.owner === WILD ? UNIT[a.kind].vs : stats(a.owner, a.kind).vs; if (!vs) return 1;

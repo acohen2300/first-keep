@@ -232,7 +232,7 @@ function sprite(look, col, tier, fr, s, kit = 0) {
   const [bw, bh] = LOOKBOX[look] || [26, 30], pad = 3;
   c = document.createElement('canvas'); c.width = Math.ceil((bw + pad * 2) * s); c.height = Math.ceil((bh + pad * 2) * s);
   g = c.getContext('2d'); g.scale(s, s); g.translate(bw / 2 + pad, bh + pad - 1); g.lineJoin = 'round'; g.lineCap = 'round';
-  KIT = kit; try { LOOKS[look](col, tier, fr); } catch (e) {} KIT = 0;
+  KIT = kit; try { LOOKS[look](col, tier, fr); } catch (e) { fault(e); } KIT = 0;
   c.ax = (bw / 2 + pad) * s; c.ay = (bh + pad - 1) * s; g = null;
   trim(SPR, 600);
   SPR.set(key, c); return c;

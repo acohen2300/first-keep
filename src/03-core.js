@@ -195,7 +195,11 @@ function addUnit(owner, kind, x, y) {
 }
 
 // ───────────────────────── Queries ─────────────────────────
-const keepOf = o => G.blds.find(b => b.owner === o && b.kind === 'keep' && b.hp > 0);
+// The Town Center, the head count and the room of each side are asked for by every unit every step: answered once a step, from one small cache
+const QC = { g: null, tick: -1, keep: [], pop: [], cap: [] };
+function qc() { if (QC.g !== G || QC.tick !== G.tick || QC.v !== G.fxv) { QC.g = G; QC.tick = G.tick; QC.v = G.fxv; QC.keep.length = QC.pop.length = QC.cap.length = 0; QC.bak = null; } return QC; }
+const keepOf = o => { const C = qc(); if (C.keep[o] === undefined || (C.keep[o] && C.keep[o].hp <= 0)) C.keep[o] = G.blds.find(b => b.owner === o && b.kind === 'keep' && b.hp > 0) || null; return C.keep[o]; };
+const qcDrop = () => { QC.tick = -1; };   // a building came or went inside a step: ask again
 const bldsOf = (o, kind) => G.blds.filter(b => b.owner === o && b.kind === kind && b.hp > 0);
 const ready = (o, kind) => bldsOf(o, kind).filter(b => b.prog >= 1);
 const readyAt = (o, U) => [U.at, ...(U.also || [])].flatMap(k => ready(o, k));   // where a unit can be trained: its building, and any other that also trains it
@@ -203,9 +207,9 @@ const unitsOf = (o, kind) => G.units.filter(u => u.owner === o && (!kind || u.ki
 const isSoldier = u => UNIT[u.kind].tick === 'sol';
 const soldiersOf = o => G.units.filter(u => u.owner === o && isSoldier(u));
 const armyOf = o => G.units.filter(u => u.owner === o && UNIT[u.kind].cls === 'army');
-const popOf = o => G.units.filter(u => u.owner === o && UNIT[u.kind].cls).length;
+const popOf = o => { const C = qc(); if (C.pop[o] === undefined) { let n = 0; for (const u of G.units) if (u.owner === o && UNIT[u.kind].cls) n++; C.pop[o] = n; } return C.pop[o]; };
 const roomOf = (o, kind) => BLD[kind].room ? BLD[kind].room + fxv(o, 'room', [kind]).a : 0;   // people one home shelters, after research
-const capOf = o => Math.min(POPMAX, G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 ? roomOf(o, b.kind) : 0), 0));
+const capOf = o => { const C = qc(); if (C.cap[o] === undefined) C.cap[o] = Math.min(POPMAX, G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 ? roomOf(o, b.kind) : 0), 0)); return C.cap[o]; };
 // soldiers you may keep: each finished training place, castle, temple, courthouse or hospital makes room; at most ARMYMAX
 const armyRoom = o => Math.min(ARMYMAX, G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 && ARMYROOM[b.kind] ? ARMYROOM[b.kind] + fxv(o, 'armyroom', [b.kind]).a : 0), 0));
 const clsMax = (c, o) => c === 'civ' ? VILMAX : armyRoom(o);
@@ -254,10 +258,14 @@ function fxList(o) {
   p.fxc = c; p.uc = {}; return c;
 }
 // the combined effect on one stat for something with these keys: m multiplies, a adds, min keeps the lowest
-function fxv(o, stat, keys) {
-  const L = o === WILD ? null : fxList(o)[stat]; let m = 1, a = 0, mn = 1;
-  if (L) for (const f of L) if (!f.k || f.k === '*' || (keys && keys.includes(f.k))) { if (f.m) m *= f.m; if (f.a) a += f.a; if (f.min) mn = Math.min(mn, f.min); }
-  return { m, a, min: mn };
+const FX1 = { m: 1, a: 0, min: 1 };
+function fxv(o, stat, keys) {   // answered once per side, stat and keys until the effects change: no new object on the hot paths
+  if (o === WILD) return FX1;
+  const c = fxList(o), L = c[stat]; if (!L) return FX1;
+  const key = keys ? stat + '|' + keys.join() : stat, M = c.memo || (c.memo = {}); if (M[key]) return M[key];
+  let m = 1, a = 0, mn = 1;
+  for (const f of L) if (!f.k || f.k === '*' || (keys && keys.includes(f.k))) { if (f.m) m *= f.m; if (f.a) a += f.a; if (f.min) mn = Math.min(mn, f.min); }
+  return (M[key] = { m, a, min: mn });
 }
 const fxDirty = () => { G.fxv++; };
 const unitKeys = kind => { const U = UNIT[kind], k = [kind, baseKind(kind)]; for (const t of U.tags || []) k.push('#' + t); if (U.tick === 'sol') k.push('#soldier'); return k; };
@@ -290,7 +298,7 @@ function gatherMul(o, n) {
   }
   return m;
 }
-const bakeryNear = (o, n) => G.blds.some(b => b.owner === o && b.kind === 'bakery' && b.prog >= 1 && b.hp > 0 && dist(b, n) < BLD.bakery.aura.r);
+const bakeryNear = (o, n) => { const C = qc(), L = C.bak || (C.bak = []), B = L[o] || (L[o] = G.blds.filter(b => b.owner === o && b.kind === 'bakery' && b.prog >= 1 && b.hp > 0)); for (const b of B) if (dist(b, n) < BLD.bakery.aura.r) return true; return false; };
 // after research or a new building: every unit and building of that side takes its new health at once (same share of it)
 function rehealth(o) {
   fxDirty();
