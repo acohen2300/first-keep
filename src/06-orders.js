@@ -1,4 +1,4 @@
-// ═════ 05-orders.js ═════
+// ═════ 06-orders.js ═════
 // ───────────────────────── Orders anyone can give (the computers use the same ones) ─────────────────────────
 function trainWhy(o, kind) {   // why a unit cannot be ordered right now, or null
   const k = civKind(o, kind), U = UNIT[k], p = G.P[o];
@@ -169,7 +169,6 @@ const LOT = k => TRADE[k] ? 100 : 10;
 const worth = k => TRADE[k] ? TRADE[k] / 100 : GOODS[k].buy || GOODS[k].base;   // spice is worth what it costs at a stop
 const sellPrice = (o, k) => Math.floor(LOT(k) * worth(k) * (SELL + fxv(o, 'sell').a) * mkt(k));
 const buyPrice = k => Math.ceil(LOT(k) * worth(k) * BUY * mkt(k));
-const MKT_SELL = ['f', 'w', 's', 'i', ...WARES], MKT_BUY = ['f', 'w', 's', 'i', 'spice'];   // wool goes to a Weaver, not to market; spice is the only good not made here
 const haveOf = (p, k) => TRADE[k] ? p.res[k] : p.goods[k] || 0;
 function marketTrade(o, k, dir) {
   const p = G.P[o], n = LOT(k); if (!ready(o, 'market').length) return false;

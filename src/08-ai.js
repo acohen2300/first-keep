@@ -1,4 +1,4 @@
-// ═════ 07-ai.js ═════
+// ═════ 08-ai.js ═════
 // ───────────────────────── The computer brain: one brain, three personalities, the same rules as you ─────────────────────────
 // Nobody has fog: everyone sees the whole map, so the computers' estimates are the real numbers, as yours are.
 const estPower = (o, of) => powerOf(soldiersOf(of)) + bldsOf(of, 'tower').length * 120 + 250;

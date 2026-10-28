@@ -1,4 +1,4 @@
-// ═════ 10-view.js ═════
+// ═════ 11-view.js ═════
 // ───────────────────────── The view: a tilted table, seen from the south ─────────────────────────
 const cv = $('cv'), ctx = cv.getContext('2d'), mini = $('mini'), mctx = mini.getContext('2d');
 const cam = { x: 400, y: 1600, z: 0.9 };

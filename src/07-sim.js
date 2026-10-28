@@ -1,4 +1,4 @@
-// ═════ 06-sim.js ═════
+// ═════ 07-sim.js ═════
 // ───────────────────────── The simulation ─────────────────────────
 const isThreat = v => { const U = UNIT[v.kind]; return !v.inside && v.hp > 0 && (U.tick === 'sol' ? !U.bonly : U.tick === 'wild' && U.dmg && !U.flee && !U.passive); };
 function step(dt) {
@@ -114,7 +114,7 @@ function bldTick(b, dt) {
       const keys = bldKeys(b.kind), reach = B.rng + fxv(o, 'rng', keys).a;
       const t = B.spyonly ? G.units.find(v => v.kind === 'spy' && atWar(o, v.owner) && dist(v, b) < reach) : nearestFoe(o, b, reach);
       if (t) {
-        const sheltered = SHELTER.arrows[b.kind] ? Math.min(SHELTER.arrows[b.kind], G.units.filter(u => u.inside && u.hid === b.id).length) : 0;
+        const sheltered = BLD[b.kind].shelter ? Math.min(BLD[b.kind].shelter, G.units.filter(u => u.inside && u.hid === b.id).length) : 0;
         hurt(o, null, t, B.dmg + sheltered + (B.spyonly ? 0 : fxv(o, 'dmg', keys).a)); b.cd = B.cd;
         if (o === 0 && b.kind === 'tower' && G.t - (b.alarmT || -99) > 20) { b.alarmT = G.t; say(`Foes at your tower at ${coord(b.x, b.y)}.`, 'warn', 6, b); sfx('horn', b.x, b.y); }
         shot(b.x, b.y, B.h, t.x, t.y);
@@ -163,7 +163,7 @@ function learnTech(o, id) {
 function dropFor(o, type, from) { return nearest(G.blds, from, b => b.owner === o && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(type)); }
 const dockNear = (o, n) => G.blds.some(b => b.owner === o && b.kind === 'dock' && b.prog >= 1 && b.hp > 0 && Math.abs(b.x - n.x) < DOCKR && Math.abs(b.y - n.y) < DOCKR && dist(b, n) < DOCKR);
 const nodeFits = (n, job) => n.type === job;
-// Food takes a free field first if one is near (within 160), else the nearest berries, fish, carcass or game.
+// Food takes a free field first if one is near (within FIELD_NEAR), else the nearest berries, fish, carcass or game.
 const unsafe = p => (G.guarded || []).some(f => Math.abs(f.x - p.x) < 120 && Math.abs(f.y - p.y) < 120 && dist(f, p) < 120);
 function nearestNode(u, job) {
   let best = null, bd = 1e9, bdist = 1e9, farm = null, fd = 1e9, drops = null, dropT = '';   // bd scores a find by the walk to it and the walk home with the load
@@ -175,7 +175,7 @@ function nearestNode(u, job) {
       const d = dist(u, n); if (d < fd) { fd = d; farm = n; }
     } else { if (n.kind === 'fish' && !dockNear(u.owner, n)) continue; if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue; if (Math.abs(n.x - u.x) * 0.4 > bd) continue; const d = dist(u, n) * 0.4; if (d < bd) { if (n.kind !== 'fish' && dropT !== n.type) { dropT = n.type; drops = G.blds.filter(b => b.owner === u.owner && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(n.type)); } const dr = n.kind === 'fish' ? null : nearest(drops, n) || keepOf(u.owner), s = d + (dr ? dist(dr, n) * 0.6 : 0) + 25 * Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0)); if (s < bd) { bd = s; best = n; bdist = d / 0.4; } } }
   }
-  if (farm && (fd < 160 || !best)) return farm;
+  if (farm && (fd < FIELD_NEAR || !best)) return farm;
   if (job === 'food') {   // game: deer and boar within reach of home, if nearer than anything else
     const k = keepOf(u.owner);
     const g = k && nearest(G.units, u, v => v.owner === WILD && UNIT[v.kind].meat && UNIT[v.kind].tick === 'wild' && dist(v, k) < 420 && !unsafe(v), Math.min(bdist, 420));
@@ -195,7 +195,7 @@ function vilTick(u, dt, SP) {
     const was = u.scared, r = was ? SHELTER.flee * 1.6 : SHELTER.flee; let wild = 0, foe = 0;   // enemy soldiers scare everyone near; a lone beast or robber scares only the one it hits, three or more (a pack) scare all; once running, keeps running until well clear
     unitsNear(u, r, v => { if (v.thr && v !== u.hunt && atWar(u.owner, v.owner) && dist(u, v) < r) { if (v.owner === WILD) wild++; else foe++; } });
     u.scared = !!kk && (foe > 0 || (wild > 0 && (wild >= SHELTER.raid || G.t - (u.hurtT || -99) < SHELTER.hurt)));
-    if (u.scared && !was) { const tw = nearest(G.blds, u, b => b.owner === u.owner && b.kind !== 'keep' && SHELTER.arrows[b.kind] && b.prog >= 1 && b.hp > 0 && G.units.filter(v => v.inside && v.hid === b.id).length < SHELTER.arrows[b.kind], 220); u.hid = tw && dist(u, tw) < dist(u, kk) ? tw.id : kk.id; }
+    if (u.scared && !was) { const tw = nearest(G.blds, u, b => b.owner === u.owner && b.kind !== 'keep' && BLD[b.kind].shelter && b.prog >= 1 && b.hp > 0 && G.units.filter(v => v.inside && v.hid === b.id).length < BLD[b.kind].shelter, 220); u.hid = tw && dist(u, tw) < dist(u, kk) ? tw.id : kk.id; }
   }
   if (u.scared && kk) {
     if (moveTo(u, rb.x, rb.y, dt, BLD[rb.kind].fp * 5 + 4, SP)) { u.inside = true; setJob(u, u.job); u.node = null; u.hunt = null; }
@@ -240,7 +240,6 @@ function vilTick(u, dt, SP) {
     if ((G.tick + u.id) % 40 === 0) sfx(n.type === 'wood' ? 'chop' : n.type === 'food' ? 'pick' : 'mine', u.x, u.y);
   }
 }
-const RATE_OF = { bush: 0.9, fish: 0.8, tree: 0.75, stone: 0.55, gold: 0.6, iron: 0.5, meat: 1.2 };
 function huntTick(u, dt, SP) {
   const a = u.hunt;
   if (!a || a.hp <= 0) { u.hunt = null; return; }

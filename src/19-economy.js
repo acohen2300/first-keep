@@ -1,21 +1,8 @@
-// ═════ 18-economy.js ═════
+// ═════ 19-economy.js ═════
 // ───────────────────────── Goods, trade routes, nature, sickness and food ─────────────────────────
 // Real ratios on a compressed calendar: one year is 12 minutes, and every rate below is set against that clock.
 const YEAR = SEASON_LEN * 4;
 const FLEECE = 7, LAMBS = 0.35, FLOCK = 12;          // wool per sheep at the spring shearing; a flock grows about a third each spring, up to 12
-const FERT = { loss: 0.1, floor: 0.6, rest: 0.4 };    // soil: 10% a year worked, never below 60%; a season of rest gives back 40%
-const HARVEST = [{ p: 1 / 20, m: 0.5, text: 'A failed harvest this year: fields give half.' }, { p: 1 / 6, m: 0.7, text: 'A poor harvest this year: fields give 30% less.' }];
-const WEATHER = {
-  clear:   { name: 'Clear' },
-  rain:    { name: 'Rain',    spd: 0.8, rng: 0.85, fire: 0.5, text: 'Rain: marching is slower and bows reach less.' },
-  drought: { name: 'Drought', crop: 0.7, fire: 2,           text: 'Drought: fields give 30% less and fires spread fast.' },
-  frost:   { name: 'Frost',   stone: 0.5,                    text: 'Frost: mortar will not set, stone buildings go up at half speed.' },
-};
-const WX_ODDS = { Spring: { rain: 0.45 }, Summer: { drought: 0.3, rain: 0.15 }, Autumn: { rain: 0.45 }, Winter: { frost: 0.6 } }, WX_EVERY = 60;
-// two old trade routes, west to east and north to south, each with four stops; they bend around the great lake
-const ROUTES = [[[510, 1000], [680, 1000], [1320, 1000], [1490, 1000]], [[1000, 510], [1000, 680], [1000, 1320], [1000, 1490]]];
-const POST = { all: 2, cut: [0, 0.2, 0.25, 0.3, 0.4], safe: 120, guard: 12 };   // each route has four stops. all: gold a second to whoever holds all four of a route; cut: of other sides' sales at a stop, by how many of its route you hold; guard: soldiers per stop or caravan
-const HEALTH = { every: 60, risk: 0.06, sickFor: 60, spread: 0.08, death: 0.004, cure: 0.3, plague: 0.15, plagueCap: 0.1 };   // risk: the chance a minute that sickness breaks out
 
 const stopsAll = () => G.finds.filter(f => f.kind === 'stop');
 const postAt = f => G.blds.find(b => b.kind === 'tpost' && b.sid === f.id && b.hp > 0);
@@ -30,11 +17,11 @@ function initEconomy() {
 }
 
 // ── prices: base, more where it is wanted, more the farther it travels
-const distF = d => clamp(1 + d / 1000, 1, 2.5);
+const distF = d => clamp(1 + d / 1000, 1, POST.far);
 function priceAt(o, good, place, from) {
   const G0 = GOODS[good]; let m = 1;
   if (place.kind === 'stop' && good === 'spice') return 0;   // a stop sells spice; it does not buy it
-  m = place.want === good ? 1.5 : 1;
+  m = place.want === good ? POST.want : 1;
   return G0.base * m * mkt(good) * (from ? distF(dist(from, place)) : 1) * fxv(o, 'trade').m;
 }
 // Trade has two lanes. One: a caravan with a route carries goods to a trade stop, the world's old markets, and sells them.
@@ -221,7 +208,6 @@ function shareOf(u) {
 const hungerOf = o => G.P[o] && G.P[o].hungry ? UPKEEP.hunger : 1;
 
 // ── prices float with what is sold and bought, and drift back
-const MKTK = [...GOODK, 'f', 'w', 's', 'i'];
 const mkt = k => G.mkt ? G.mkt[k] ?? 1 : 1;
 function mktHit(k, q, dir) { if (!G.mkt) return; G.mkt[k] = clamp((G.mkt[k] ?? 1) * (1 + dir * PRICE.hit * q), PRICE.floor, PRICE.cap); }
 const spiceCost = () => GOODS.spice.buy * mkt('spice');
@@ -251,7 +237,7 @@ const vassalsOf = L => G.P.filter(p => p.alive && p.id !== WILD && p.lord === L)
 function shareUp(o, gold) { const p = G.P[o]; if (p.lord === null || p.lord === undefined || p.rebel || (p.loyal || 0) < VASSAL.shareAt || gold <= 0) return gold; const s = gold * VASSAL.share; G.P[p.lord].res.g += s; G.P[p.lord].gathered += s; return gold - s; }
 function loyaltyParts(p) {
   const L = p.lord, k = keepOf(p.id), r = VASSAL.r; if (!k) return { invest: 0, garrison: 0, protect: 0, hate: 0, target: 0 };
-  let invest = 0; for (const b of G.blds) if (b.owner === L && b.prog >= 1 && b.hp > 0 && Math.abs(b.x - k.x) < r && Math.abs(b.y - k.y) < r && dist(b, k) < r) invest += INVEST[b.kind] ?? 3;
+  let invest = 0; for (const b of G.blds) if (b.owner === L && b.prog >= 1 && b.hp > 0 && Math.abs(b.x - k.x) < r && Math.abs(b.y - k.y) < r && dist(b, k) < r) invest += BLD[b.kind].invest ?? 3;
   const n = G.units.filter(u => u.owner === L && isSoldier(u) && dist(u, k) < r).length, garrison = Math.min(VASSAL.garrisonMax, n * VASSAL.garrison);
   const protect = Math.round(p.protect || 0), hate = TAX[p.tax || 'fair'].hate;
   return { invest, garrison, protect, hate, target: clamp(20 + invest + garrison + protect - hate, 0, 100) };

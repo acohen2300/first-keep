@@ -1,4 +1,4 @@
-// ═════ 13-guide.js ═════
+// ═════ 14-guide.js ═════
 function guideModel() {
   const unitsAt = k => Object.values(UNIT).filter(U => U.at === k && !U.civ).map(U => U.name), techsAt = k => TECH.filter(t => t.at === k).map(t => t.name);
   const menuOf = {}; MENUS.forEach(m => m.items.forEach(i => { menuOf[i] = m.name; }));

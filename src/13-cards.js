@@ -1,4 +1,4 @@
-// ═════ 12-cards.js ═════
+// ═════ 13-cards.js ═════
 // ───────────────────────── The cards: one engine, one table ─────────────────────────
 // A card is a page of the book. CARDS[type] writes its page from the game's tables; the engine lays the new page over the old one
 // node by node, so only the words and numbers that changed are touched and a button under a finger stays the same button.
@@ -200,7 +200,7 @@ function vassalHTML(P) {
 }
 function stopHTML(f) {
   const p = G.P[0], from = homeBiz(0, f) || keepOf(0), pt = postAt(f), mine = f.owner === 0, held = stopsHeld(mine ? 0 : f.owner, f.route);
-  let h = `<p>Route ${f.route === 0 ? 'west–east' : 'north–south'}. ${f.owner === null ? (pt ? 'A post is going up.' : 'Nobody holds it.') : mine ? `Yours: ${Math.round(POST.cut[held] * 100)}% of everyone else's sales here (you hold ${held} of this route's 4${held === 4 ? `, so it pays ${Math.round(POST.all * 60)} gold a minute` : ''}).` : `Held by ${G.P[f.owner].name}: they take ${Math.round(POST.cut[held] * 100)}% of your sales here.`} Wants <b>${GOODS[f.want].name.toLowerCase()}</b> (×1.5).</p>`;
+  let h = `<p>Route ${f.route === 0 ? 'west–east' : 'north–south'}. ${f.owner === null ? (pt ? 'A post is going up.' : 'Nobody holds it.') : mine ? `Yours: ${Math.round(POST.cut[held] * 100)}% of everyone else's sales here (you hold ${held} of this route's 4${held === 4 ? `, so it pays ${Math.round(POST.all * 60)} gold a minute` : ''}).` : `Held by ${G.P[f.owner].name}: they take ${Math.round(POST.cut[held] * 100)}% of your sales here.`} Wants <b>${GOODS[f.want].name.toLowerCase()}</b> (×${POST.want}).</p>`;
   h += `<p><i>Paid here, per good from your ${homeBiz(0, f) ? 'Business Center' : 'Town Center'}:</i> ${WARES.filter(k => k !== 'spice').map(k => `${GOODS[k].name} ${Math.round(priceAt(0, k, f, from))}g`).join(' · ')}. Spice costs ${GOODS.spice.buy}g here.</p>`;
   if (!pt && !guardsLeft(f)) h += acts(btn(`tpost:${f.id}`, 'Build a Trade post', p.age < 1 ? 'Bronze age' : costText(BLD.tpost.cost), p.age < 1 || !afford(p, BLD.tpost.cost) ? 'dis' : 'go'), 'c1');
   if (mine) h += guardRow('f', f.id) + acts(btn(`want:${f.id}`, `Wanted: ${GOODS[f.want].name.toLowerCase()}`, 'yours: tap to change what it buys dear'), 'c1');

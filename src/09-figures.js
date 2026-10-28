@@ -1,4 +1,4 @@
-// ═════ 08-figures.js ═════
+// ═════ 09-figures.js ═════
 // ───────────────────────── Figures: every unit drawn once per look, colour, pose and zoom, then stamped ─────────────────────────
 // Local units: 1 = one world unit; feet at (0, 0), facing right, up is negative. A person stands about 21 tall.
 let lessMotion = false; try { lessMotion = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}

@@ -1,4 +1,4 @@
-// ═════ 11-input.js ═════
+// ═════ 12-input.js ═════
 // ───────────────────────── Touch: drag to look, pinch to zoom, tap to ask, press and slide to place ─────────────────────────
 const ptrs = new Map(); let drag = null, pinch = null;
 const HOLD_MS = 320; let holdT = 0;   // hold a finger on open ground, then drag: a box

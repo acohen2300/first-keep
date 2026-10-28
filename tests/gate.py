@@ -55,7 +55,7 @@ PLAY = """async () => {
 # Every verb a button can send must have a handler: the class of bug behind the dead Build menu
 def verbs():
     import re, glob
-    s = open('src/15-verbs.js').read()
+    s = open('src/16-verbs.js').read()
     def keys(name):
         i = s.index(f'const {name} = {{'); j = s.index('\n};', i); return set(re.findall(r'(?:^|[{;,]\s*|\n\s{2})([a-z][a-zA-Z0-9]*)\(\w*\)\s*\{', s[i:j]))
     have = keys('ACT') | keys('PLAY')
@@ -83,6 +83,8 @@ async def main():
                 if errs: bad['errors'] = errs[:2]
                 print(('PASS ' if not bad else 'FAIL ') + f'{page_file} {W}x{H}', '' if not bad else json.dumps(bad)[:2500]); fails += bool(bad); await pg.close()
         pg = await br.new_page(); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
+        why = await pg.evaluate("() => { const g = window.__fk.guideModel(), m = []; for (const k of ['buildings', 'units', 'techs', 'ages', 'civs', 'finds']) for (const e of g[k]) if (!e.why) m.push(k + ':' + e.id); return m; }")
+        print(('PASS ' if not why else 'FAIL ') + 'every guide entry says why', '' if not why else why); fails += bool(why)
         same = await pg.evaluate(LOOK); print(('PASS ' if not same else 'FAIL ') + 'buildings tell apart at half zoom', '' if not same else same); fails += bool(same); await pg.close()
         pg = await br.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
         await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)

@@ -1,4 +1,4 @@
-// ═════ 16-save.js ═════
+// ═════ 17-save.js ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = 'firstkeep.save', SAVEV = 29;   // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {   // { 24: S => S-in-the-shape-of-25 }, run in order

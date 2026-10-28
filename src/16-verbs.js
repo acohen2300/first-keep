@@ -1,4 +1,4 @@
-// ═════ 15-verbs.js ═════
+// ═════ 16-verbs.js ═════
 // ───────────────────────── What every button does: one table ─────────────────────────
 // every button's verb, in one table
 const ACT = {
