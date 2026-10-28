@@ -1,6 +1,7 @@
 # The one way a build goes live. It builds, runs the whole gate, and only then copies to index.html and preview/, commits and pushes.
 # It also installs a pre-push hook that refuses any push where index.html is not a build the gate passed, so a push by hand is refused too.
-#   python3 publish.py "Build 38: what changed"
+#   python3 publish.py "Build 38: what changed"            (live: index.html and preview/)
+#   python3 publish.py --preview "Build 43: what changed"   (preview/ only: the live game stays as it is)
 import hashlib, os, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); os.chdir(HERE)
 STAMP = 'tests/gate-passed.sha'   # the sha256 of the last first-keep.html the gate passed, written only by this script
@@ -16,14 +17,15 @@ def install_hook():
     d = subprocess.run(['git', 'rev-parse', '--git-path', 'hooks'], capture_output=True, text=True).stdout.strip(); os.makedirs(d, exist_ok=True)
     p = os.path.join(d, 'pre-push'); open(p, 'w').write(HOOK); os.chmod(p, 0o755)
 install_hook()
-if len(sys.argv) < 2: sys.exit('usage: python3 publish.py "Build NN: what changed"')
-msg = sys.argv[1]
+PREVIEW = '--preview' in sys.argv; args = [a for a in sys.argv[1:] if a != '--preview']
+if not args: sys.exit('usage: python3 publish.py [--preview] "Build NN: what changed"')
+msg = args[0]
 if not run(sys.executable, 'build.py') or not run(sys.executable, 'wrap.py'): sys.exit('publish refused: the build failed')
 if not run(sys.executable, 'tests/gate.py'): sys.exit('publish refused: the gate failed. Nothing was copied, committed or pushed.')
-open(STAMP, 'w').write(sha('first-keep.html') + '\n')
-for dst in ('index.html', 'preview/index.html'): open(dst, 'wb').write(open('first-keep.html', 'rb').read())
+if not PREVIEW: open(STAMP, 'w').write(sha('first-keep.html') + '\n')   # a preview does not touch the stamp, so the hook keeps checking the live index.html
+for dst in (('preview/index.html',) if PREVIEW else ('index.html', 'preview/index.html')): open(dst, 'wb').write(open('first-keep.html', 'rb').read())
 trailer = os.environ.get('TRAILER', '')
 if not run('git', 'add', '-A') or not run('git', 'commit', '-q', '-m', msg + ('\n\n' + trailer if trailer else '')): sys.exit('nothing to commit, or the commit failed')
 if not run('git', 'fetch', '-q', 'origin', 'main'): sys.exit('could not fetch; not pushed')
 if not run('git', 'push', 'origin', 'HEAD:main'): sys.exit('the push was refused')
-print('live in a minute or two: https://acohen2300.github.io/first-keep')
+print('preview in a minute or two: https://acohen2300.github.io/first-keep/preview/' if PREVIEW else 'live in a minute or two: https://acohen2300.github.io/first-keep')

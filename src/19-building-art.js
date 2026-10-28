@@ -1725,105 +1725,196 @@ function bldSprite(b, s) {
 }
 // trees, bushes, rocks: a few variants each, cached the same way
 const NSPR = new Map();
+const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647;
+const NS_c = (hex, f) => {
+	const n = parseInt(hex.slice(1), 16),
+		k = (v) => Math.max(0, Math.min(255, Math.round(v * f)));
+	return `rgb(${k(n >> 16)},${k((n >> 8) & 255)},${k(n & 255)})`;
+};
+const NS_poly = (pts, fill, stroke, lw) => {
+	g.beginPath();
+	pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
+	g.closePath();
+	if (fill) {
+		g.fillStyle = fill;
+		g.fill();
+	}
+	if (stroke) {
+		g.strokeStyle = stroke;
+		g.lineWidth = lw;
+		g.stroke();
+	}
+};
+const NS_blob = (cx, cy, rx, ry, n, jit, r) =>
+	Array.from({ length: n }, (_, i) => {
+		const a = (i / n) * 6.283,
+			k = 1 - jit + r() * jit * 2;
+		return [cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k];
+	});
+const NS_INK = 'rgba(14,20,12,.34)';
+const NS_shadow = (len) => {
+	g.fillStyle = 'rgba(0,0,0,.22)';
+	g.beginPath();
+	g.ellipse(len * 0.45, 1, len, 3, 0, 0, 7);
+	g.fill();
+};
 function nodeSprite(n, s) {
 	const sn = season().name,
-		v = n.kind === 'tree' ? n.id % 4 : 0,
+		v = n.kind === 'tree' ? n.id % 6 : n.id % 3,
 		key = n.kind + v + (n.kind === 'tree' ? sn : '') + s;
 	let c = NSPR.get(key);
 	if (c) return c;
-	const W = 30,
-		H = 34;
+	const W = 46,
+		H = 58,
+		r = NS_rng(11 + v * 7 + n.kind.length);
 	c = document.createElement('canvas');
 	c.width = Math.ceil(W * s);
 	c.height = Math.ceil(H * s);
 	g = c.getContext('2d');
 	g.scale(s, s);
-	g.translate(W / 2, H - 4);
+	g.translate(W / 2 - 6, H - 4);
 	g.lineJoin = 'round';
+	g.scale(
+		n.kind === 'tree' ? 0.88 : n.kind === 'bush' ? 1.45 : 1.25,
+		n.kind === 'tree' ? 0.88 : n.kind === 'bush' ? 1.45 : 1.25,
+	);
 	if (n.kind === 'tree') {
-		const TC = ['#244a22', '#2b5427', '#1f4320', '#33592a'][v],
+		const TC = ['#2f5a2a', '#3c6c32', '#2a5428', '#3a6a38', '#2f6048', '#4a7430'][v],
 			col = sn === 'Autumn' && v === 0 ? '#9a6224' : sn === 'Autumn' && v === 2 ? '#7a6a24' : TC;
-		E_(3, 0.6, 9, 3, 'rgba(0,0,0,.25)');
-		P_(
+		NS_shadow(13);
+		NS_poly(
 			[
-				[-1.4, 0],
-				[1.4, 0],
-				[1, -9],
-				[-1, -9],
+				[-2.4, 0],
+				[2.4, 0],
+				[1.3, -8],
+				[0.7, -14],
+				[-0.7, -14],
+				[-1.4, -8],
 			],
-			'#5b4128',
-			INK,
+			'#4d3823',
+			NS_INK,
 			0.3,
 		);
-		if (v === 3) {
-			for (let i = 0; i < 3; i++)
-				P_(
+		if (v === 3 || v === 4) {
+			const T = v === 4 ? 6 : 5,
+				dy = v === 4 ? 4.6 : 4.8,
+				w0 = v === 4 ? 10 : 12.5;
+			for (let i = 0; i < T; i++) {
+				const y = -4 - i * dy,
+					w = w0 - i * (w0 / T) * 0.86,
+					pts = [[-w, y + 2.4]];
+				for (let k = 1; k < 7; k++) pts.push([-w + (2 * w * k) / 7, y + 2.6 + (k % 2 ? 0.1 : 1.7) * (0.6 + r())]);
+				pts.push([w, y + 2.4], [w * 0.4, y - 1.5], [0, y - 6], [-w * 0.4, y - 1.5]);
+				NS_poly(pts, NS_c(col, 0.78 + i * 0.07), NS_INK, 0.35);
+				NS_poly(
 					[
-						[-8 + i * 1.6, -6 - i * 6],
-						[8 - i * 1.6, -6 - i * 6],
-						[0, -16 - i * 6],
+						[0, y - 6],
+						[w * 0.4, y - 1.5],
+						[w * 0.1, y + 0.4],
+						[-w * 0.15, y - 1],
 					],
-					LG(-8, 0, 8, 0, [shade(col, 1.3), col, shade(col, 0.7)]),
-					INK,
-					0.4,
+					NS_c(col, 1.32),
 				);
+			}
 		} else {
-			E_(0, -15, 9, 8.6, LG(-9, -24, 9, -6, [shade(col, 1.35), col, shade(col, 0.7)]), INK, 0.4);
-			E_(-3, -18, 5, 4.4, shade(col, 1.3));
-			E_(3.6, -12.6, 4, 3.4, shade(col, 0.85));
+			NS_poly(NS_blob(0, -16, 11, 8.8, 24, 0.15, r), NS_c(col, 0.68), NS_INK, 0.35);
+			const L = [
+				[-5, -13.5, 5.4, 4.3],
+				[4.6, -14, 5.2, 4.1],
+				[0, -20, 5.8, 4.5],
+				[-5.4, -19, 3.8, 3.1],
+				[5.6, -19.4, 4, 3.2],
+			];
+			L.forEach(([x, y, rx, ry], i) => {
+				NS_poly(NS_blob(x, y, rx, ry, 13, 0.22, r), NS_c(col, 1 + i * 0.06), 'rgba(14,20,12,.3)', 0.25);
+				NS_poly(NS_blob(x - rx * 0.25, y - ry * 0.35, rx * 0.5, ry * 0.4, 8, 0.2, r), NS_c(col, 1.45));
+			});
 		}
 		if (sn === 'Winter') {
-			E_(-2, -21, 5, 1.6, '#e8eef0');
-			E_(3, -17, 3, 1.1, '#e8eef0');
+			NS_poly(NS_blob(-2, -22, 5, 1.6, 8, 0.2, r), '#e8eef0');
+			NS_poly(NS_blob(3.4, -17.6, 3, 1.1, 8, 0.2, r), '#e8eef0');
 		}
 	} else if (n.kind === 'bush') {
-		E_(0, -4, 8, 5.6, LG(-8, -10, 8, 0, ['#4a7a3a', '#2f5427']), INK, 0.4);
-		g.fillStyle = RESOURCES.food.col;
+		NS_shadow(9);
+		[
+			[-4, -3.5, 4.8, 3.4, 0.8],
+			[4, -3.5, 4.6, 3.2, 0.85],
+			[0, -6, 5, 3.6, 1],
+		].forEach(([x, y, rx, ry, f]) => {
+			NS_poly(NS_blob(x, y, rx, ry, 10, 0.2, r), NS_c('#3f6b33', f), NS_INK, 0.3);
+			NS_poly(NS_blob(x - rx * 0.25, y - ry * 0.35, rx * 0.5, ry * 0.4, 8, 0.2, r), NS_c('#3f6b33', f * 1.4));
+		});
 		for (const [a, b] of [
 			[-3, -6],
 			[3, -4],
-			[0, -2],
-			[-4, -2],
-			[4, -7],
-		])
-			E_(a, b, 1.5, 1.5, RESOURCES.food.col);
+			[0, -3],
+			[-5, -3],
+			[5, -6.5],
+			[1, -8],
+		]) {
+			g.fillStyle = RESOURCES.food.col;
+			g.beginPath();
+			g.arc(a, b, 1.15, 0, 7);
+			g.fill();
+			g.fillStyle = 'rgba(255,255,255,.55)';
+			g.beginPath();
+			g.arc(a - 0.3, b - 0.4, 0.38, 0, 7);
+			g.fill();
+		}
 	} else {
 		const gold = n.kind === 'gold',
 			iron = n.kind === 'iron',
 			base = gold ? '#9a7a2a' : iron ? '#5a4a42' : '#7c8489',
-			top = gold ? '#f2cf55' : iron ? '#8fa3b5' : '#b4bbc0';
-		E_(2, 0.6, 11, 3.4, 'rgba(0,0,0,.25)');
-		P_(
+			top = gold ? '#f2cf55' : iron ? '#8fa3b5' : '#b4bbc0',
+			k = () => 0.92 + r() * 0.16,
+			P = [
+				[-10 * k(), 0],
+				[-9 * k(), -5],
+				[-5, -10 * k()],
+				[0, -12 * k()],
+				[5, -10.5 * k()],
+				[9.5 * k(), -5],
+				[10 * k(), -1],
+				[4, 1],
+			];
+		NS_shadow(12);
+		NS_poly(P, NS_c(base, 0.8), 'rgba(14,16,18,.6)', 0.5);
+		NS_poly([P[1], P[2], P[3], P[4], [3, -6.5], [-3, -5]], top, 'rgba(0,0,0,.25)', 0.3);
+		NS_poly(
 			[
-				[-10, 0],
-				[-7, -8],
-				[-1, -11],
-				[6, -9],
-				[10, -2],
-				[6, 1],
+				[-3, -5],
+				[3, -6.5],
+				[5.5, -2],
+				[0, 0.6],
+				[-6, -1],
 			],
-			LG(0, -11, 0, 1, [shade(base, 1.2), base, shade(base, 0.7)]),
-			INK,
-			0.5,
+			NS_c(base, 1.05),
 		);
-		P_(
-			[
-				[-7, -8],
-				[-1, -11],
-				[6, -9],
-				[2, -4],
+		g.strokeStyle = 'rgba(10,12,14,.5)';
+		g.lineWidth = 0.4;
+		g.beginPath();
+		g.moveTo(-2, -5);
+		g.lineTo(-1, -1);
+		g.moveTo(4, -6);
+		g.lineTo(5, -9);
+		g.stroke();
+		if (gold || iron)
+			for (const [x, y] of [
+				[-1, -7],
+				[3, -5],
 				[-5, -4],
-			],
-			top,
-			INK,
-			0.3,
-		);
-		if (gold) {
-			E_(-1, -7, 0.9, 0.9, '#fff6c8');
-			E_(3, -5, 0.7, 0.7, '#fff6c8');
-		}
+			]) {
+				g.fillStyle = gold ? '#fff6c8' : '#d5e2ee';
+				NS_poly([
+					[x, y - 1.1],
+					[x + 0.9, y],
+					[x, y + 1.1],
+					[x - 0.9, y],
+				]);
+				g.fill();
+			}
 	}
-	c.ax = (W / 2) * s;
+	c.ax = (W / 2 - 6) * s;
 	c.ay = (H - 4) * s;
 	g = null;
 	trim(NSPR, 200);

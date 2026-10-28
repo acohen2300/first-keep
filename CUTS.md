@@ -500,3 +500,9 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 - Saves: a failed save says so, once a minute. A damaged unit or building in a save is skipped, not the whole game.
 - Added: `tests/bot.py`, `tests/fmt.py`, `tests/lint.py`. Copyright line on the setup card and in the README.
 - Cut: the white flag over a routed soldier.
+
+## Build 43 preview (Albert, Oct 28): one font, three sizes, new nodes (preview only, not live)
+- One font: Barlow Semi Condensed, weights 500 and 700. Cut: IM Fell English SC (card titles, end screen) and the 600 weight (about 66 KB of fonts). The ticker is weight 500 so every message still fits at 375 px.
+- Three sizes: 12 (was 12, 13, 14), 15 (was 15, 16, 17), 19 (was 19, 20, 22, 34). The end-screen title is 19.
+- Trees, bushes, berries, stone, gold, iron redrawn: clumped crowns with a lit side, a thin soft outline, a long shadow, faceted rocks with glints. Six tree kinds (was four): three broadleaf, two conifers. Lighter greens. Drawing cost is a few dozen calls each, cached as before.
+- `publish.py --preview` publishes to preview/ only; the live index.html and the push hook stamp are untouched.
