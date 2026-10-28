@@ -3,7 +3,6 @@
 // Local units: 1 = one world unit; feet at (0, 0), facing right, up is negative. A person stands about 21 tall.
 let lessMotion = false; try { lessMotion = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
 const shade = (hex, k) => { const n = parseInt(hex.slice(1), 16), f = c => clamp(Math.round(c * k), 0, 255); return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`; };
-const mix = (a, b, t) => { const A = parseInt(a.slice(1), 16), B = parseInt(b.slice(1), 16), f = s => Math.round(((A >> s) & 255) * (1 - t) + ((B >> s) & 255) * t); return '#' + ((1 << 24) + (f(16) << 16) + (f(8) << 8) + f(0)).toString(16).slice(1); };
 let g = null;   // the context being drawn into
 let KIT = 0;    // how much armour research the side being drawn has (0-3: leather, chain, plate); soldiers only
 const P_ = (pts, f, s, w) => { g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.closePath(); if (f) { g.fillStyle = f; g.fill(); } if (s) { g.strokeStyle = s; g.lineWidth = w || 0.5; g.stroke(); } };
@@ -76,7 +75,6 @@ function helm(kind, x, y, o) {
     case 'tiara': P_([[x - 2.6, y - 1], [x - 2.2, y - 5.6], [x + 2, y - 5.6], [x + 2.6, y - 1]], o.helmCol || '#e8dcc0', INK, 0.4); L_(x - 2.4, y - 1.6, x + 2.4, y - 1.6, '#c9a227', 0.6); break;
     case 'fur': E_(x, y - 2, 3.2, 1.8, '#6b4a2c', INK, 0.4); P_([[x - 1.6, y - 3], [x, y - 6], [x + 1.6, y - 3]], o.helmCol || '#b33a2e', INK, 0.3); break;
     case 'turban': E_(x, y - 2.2, 3, 1.9, o.helmCol || '#efe4cc', INK, 0.4); L_(x - 2.6, y - 2.4, x + 2.6, y - 1.6, 'rgba(0,0,0,.2)', 0.4); break;
-    case 'hanhat': P_([[x - 2.8, y - 1], [x - 2.4, y - 3.4], [x + 2.6, y - 3.4], [x + 3, y - 1]], '#2f2f36', INK, 0.4); P_([[x - 0.6, y - 3.4], [x - 0.2, y - 5.2], [x + 1.6, y - 5], [x + 1.4, y - 3.4]], '#2f2f36'); break;
     case 'skull': E_(x, y, 2.6, 2.7, '#e8e4d8', '#6b6658', 0.4); E_(x + 1.2, y - 0.2, 0.8, 0.9, '#1a1a1a'); E_(x - 0.4, y - 0.2, 0.7, 0.8, '#1a1a1a'); L_(x - 0.2, y + 1.6, x + 2.2, y + 1.6, '#3a3630', 0.4); break;
     case 'mask': P_([[x - 0.4, y - 0.2], [x + 2.8, y - 0.4], [x + 2.6, y + 2.4], [x - 0.2, y + 2.6]], '#2a2420'); helm('hood', x, y, { ...o, hoodCol: '#3a3028' }); break;
   }
@@ -103,7 +101,6 @@ function weapon(w, h, atk, sh) {
     case 'lance': { const a = atk ? 0 : -0.16, dx = Math.cos(a), dy = Math.sin(a); L_(x - dx * 8, y - dy * 8, x + dx * 18, y + dy * 18, '#d9c79a', 1.1); P_([[x + dx * 18, y + dy * 18 - 0.6], [x + dx * 21, y + dy * 21], [x + dx * 18, y + dy * 18 + 0.6]], '#dfe4e8', '#555', 0.3); break; }
     case 'scroll': P_([[x - 0.6, y - 2.6], [x + 1.4, y - 2.6], [x + 1.4, y + 1.6], [x - 0.6, y + 1.6]], '#f2ead2', '#8a7a5a', 0.3); break;
     case 'bag': E_(x + 0.4, y + 2, 1.8, 1.5, '#7a5a3a', INK, 0.3); L_(x - 0.2, y + 0.8, x + 1, y + 0.8, '#c33', 0.6); break;
-    case 'torch': L_(x, y, x + 1, y - 5, '#6b4a2c', 0.8); E_(x + 1.1, y - 6, 1, 1.5, '#f2a03a'); break;
   }
 }
 function shield(kind, o, sh, hip, atk) {

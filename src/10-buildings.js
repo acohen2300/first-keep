@@ -37,10 +37,6 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
     P_([[x1 + 1, yf - h + 1], [x1 + 1 + k, yb - h + 1], [x1 - w * 0.25 + m, ry]], shade(roofCol, 0.62), INK, 0.5);
     P_([[x0 - 1, yf - h + 1], [x1 + 1, yf - h + 1], [x1 - w * 0.25 + m, ry], [x0 + w * 0.25 + m, ry]], near, INK, 0.6); return { ...r, top: ry };
   }
-  if (roof === 'pagoda') {   // the curved eaves of a Han hall
-    g.beginPath(); g.moveTo(x0 - 5, yf - h + 2); g.quadraticCurveTo(x0 + 2, yf - h - 1, x0 + w * 0.2 + m, ry); g.lineTo(x1 - w * 0.2 + m, ry); g.quadraticCurveTo(x1 - 2 + k, yf - h - 1, x1 + 5 + k, yf - h + 2); g.closePath();
-    g.fillStyle = LG(0, ry, 0, yf - h, [shade(roofCol, 1.2), roofCol]); g.fill(); g.strokeStyle = INK; g.lineWidth = 0.6; g.stroke(); return { ...r, top: ry };
-  }
   return r;
 }
 function texture(tex, x0, y0, x1, y1, wall) {
@@ -72,7 +68,7 @@ const ART = {
   castle(c, o) {
     const w = 50, castle = true, d = w * TILT;
     block(w, 30, STONE, 'stone', 'flat'); crenels(-25, 25, d / 2 - 30, STONE);
-    for (const sx of [-1, 1]) { g.save(); g.translate(sx * 20, d / 2 - 2); const tk = sides(-6, 6, 0, 42, 12 * TILT, STONE); P_([[-6, 0], [6, 0], [6, -42], [-6, -42]], LG(-6, 0, 6, 0, [shade(STONE, 0.95), shade(STONE, 0.7)]), INK, 0.6); texture('stone', -6, -42, 6, 0, STONE); crenels(-6, 6, -42, STONE); if (castle) { P_([[-7, -44], [7 + tk, -44 - 12 * TILT], [tk / 2, -56]], shade(SLATE, 0.6), INK, 0.5); P_([[-7, -44], [7, -44], [tk / 2, -56]], SLATE, INK, 0.5); } win(0, -30, 1.6, 3.4, '#14100c'); g.restore(); }
+    for (const sx of [-1, 1]) { g.save(); g.translate(sx * 20, d / 2 - 2); const tk = sides(-6, 6, 0, 42, 12 * TILT, STONE); P_([[-6, 0], [6, 0], [6, -42], [-6, -42]], LG(-6, 0, 6, 0, [shade(STONE, 0.95), shade(STONE, 0.7)]), INK, 0.6); texture('stone', -6, -42, 6, 0, STONE); crenels(-6, 6, -42, STONE); { P_([[-7, -44], [7 + tk, -44 - 12 * TILT], [tk / 2, -56]], shade(SLATE, 0.6), INK, 0.5); P_([[-7, -44], [7, -44], [tk / 2, -56]], SLATE, INK, 0.5); } win(0, -30, 1.6, 3.4, '#14100c'); g.restore(); }
     door(0, d / 2, 9, 14, '#4a2e16'); L_(-4.5, d / 2 - 9, 4.5, d / 2 - 9, '#2a1a0a', 0.6); win(-9, d / 2 - 18, 1.6, 3.4); win(9, d / 2 - 18, 1.6, 3.4);
     banner(0, d / 2 - 32, c, 14); L_(-25, d / 2 - 1, 25, d / 2 - 1, c, 1.4);
   },
@@ -90,16 +86,16 @@ const ART = {
     const d = 30 * TILT; P_([[-15, d / 2], [15, d / 2], [15, -d / 2], [-15, -d / 2]], '#b59a72', INK, 0.4);
     for (const [x, y, col] of [[-8, -4, '#b2563a'], [8, -4, c], [-8, 6, c], [8, 6, '#c9a227']]) { L_(x - 6, y, x - 6, y - 9, WOOD, 0.7); L_(x + 6, y, x + 6, y - 9, WOOD, 0.7); for (let i = 0; i < 6; i++) P_([[x - 6.5 + i * 2.2, y - 9], [x - 4.3 + i * 2.2, y - 9], [x - 4.3 + i * 2.2, y - 12], [x - 6.5 + i * 2.2, y - 12]], i % 2 ? '#f0e6d0' : col, null); P_([[x - 6, y], [x + 6, y], [x + 6, y - 2.4], [x - 6, y - 2.4]], WOOD); E_(x - 2.4, y - 3.2, 1.4, 1, '#e0708a'); E_(x + 1, y - 3.2, 1.4, 1, '#f2cf55'); E_(x + 3.6, y - 3.2, 1.2, 1, '#9acd5a'); }
   },
-  school(c) { const r = block(30, 16, PLASTER, 'plaster', 'gable', SLATE, 8); door(0, r.d / 2, 5, 9); win(-8, r.d / 2 - 5); win(8, r.d / 2 - 5); P_([[-1.4 + r.k / 2, -24], [1.4 + r.k / 2, -24], [1.4 + r.k / 2, -28], [-1.4 + r.k / 2, -28]], '#5a4a3a'); E_(r.k / 2, -26, 1, 1.2, '#e6c75a'); L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2); },
+  school(c) { const r = block(30, 16, PLASTER, null, 'gable', SLATE, 8); door(0, r.d / 2, 5, 9); win(-8, r.d / 2 - 5); win(8, r.d / 2 - 5); P_([[-1.4 + r.k / 2, -24], [1.4 + r.k / 2, -24], [1.4 + r.k / 2, -28], [-1.4 + r.k / 2, -28]], '#5a4a3a'); E_(r.k / 2, -26, 1, 1.2, '#e6c75a'); L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2); },
   library(c, o) {
     const d = 40 * TILT, uni = G.P[o] && G.P[o].age >= 3; P_([[-21, d / 2 + 1], [21, d / 2 + 1], [21, d / 2 - 2], [-21, d / 2 - 2]], '#d8cdb4', INK, 0.5);
-    block(40, 22, PLASTER, 'plaster', 'flat'); for (let x = -16; x <= 16; x += 6.4) column(x, d / 2 - 2, d / 2 - 21);
+    block(40, 22, PLASTER, null, 'flat'); for (let x = -16; x <= 16; x += 6.4) column(x, d / 2 - 2, d / 2 - 21);
     const k = d * SIDE;
     if (uni) { P_([[20, d / 2 - 22], [20 + k, d / 2 - 22 - d], [14 + k / 2, d / 2 - 34 - d / 2]], shade(SLATE, 0.6), INK, 0.5); P_([[-20, d / 2 - 22], [20, d / 2 - 22], [14 + k / 2, d / 2 - 34 - d / 2], [-14 + k / 2, d / 2 - 34 - d / 2]], SLATE, INK, 0.6); P_([[-3, d / 2 - 34], [3, d / 2 - 34], [3, d / 2 - 44], [0, d / 2 - 48], [-3, d / 2 - 44]], STONE, INK, 0.5); }
     else ridgeRoof(21, d / 2 - 22, d / 2 - 31, d, '#efe6d4'), P_([[-21, d / 2 - 22], [21, d / 2 - 22], [0, d / 2 - 31]], LG(0, -30, 0, -20, ['#efe6d4', '#c8bca2']), INK, 0.6);
     L_(-20, d / 2 - 0.5, 20, d / 2 - 0.5, c, 1.2);
   },
-  hospital(c) { const r = block(30, 16, '#efe8da', 'plaster', 'hip', TILE, 7); door(0, r.d / 2, 5, 9); P_([[-9.6, r.d / 2 - 11], [-6.4, r.d / 2 - 11], [-6.4, r.d / 2 - 3], [-9.6, r.d / 2 - 3]], '#c23a30'); P_([[-12, r.d / 2 - 8.6], [-4, r.d / 2 - 8.6], [-4, r.d / 2 - 5.4], [-12, r.d / 2 - 5.4]], '#c23a30'); win(8, r.d / 2 - 5); L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2); },
+  hospital(c) { const r = block(30, 16, '#efe8da', null, 'hip', TILE, 7); door(0, r.d / 2, 5, 9); P_([[-9.6, r.d / 2 - 11], [-6.4, r.d / 2 - 11], [-6.4, r.d / 2 - 3], [-9.6, r.d / 2 - 3]], '#c23a30'); P_([[-12, r.d / 2 - 8.6], [-4, r.d / 2 - 8.6], [-4, r.d / 2 - 5.4], [-12, r.d / 2 - 5.4]], '#c23a30'); win(8, r.d / 2 - 5); L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2); },
   temple(c) {
     const d = 40 * TILT; for (let i = 0; i < 3; i++) P_([[-21 + i * 1.5, d / 2 - i * 1.6], [21 - i * 1.5, d / 2 - i * 1.6], [21 - i * 1.5, d / 2 - i * 1.6 - 1.6], [-21 + i * 1.5, d / 2 - i * 1.6 - 1.6]], '#d8cdb4', INK, 0.4);
     sides(-16, 16, d / 2 - 5, 22, d, '#c9bfa6'); P_([[-16, d / 2 - 5], [16, d / 2 - 5], [16, d / 2 - 27], [-16, d / 2 - 27]], '#c9bfa6', INK, 0.4);

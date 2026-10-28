@@ -317,3 +317,25 @@ The bottom of a 390 x 844 phone went from about 290 px (29%) to 91 px (11%); the
 - Renamed everywhere (card tabs too): Military to War, Defense to Walls (Walls still holds towers, castles and gates).
 - Cut: the job names were replaced by icon, count and a one-word name under it; the indigo glass look gave way to the dark panel look of Build 30.
 - Gate: the tap-size exception now covers only the - and + tiles under each job (26 to 29 points wide; the tile above each is 44 high). Everything else is at least 44 x 44.
+
+## Build 37: the rebuild (Oct 27, 2026)
+Cut, merged or folded while taking the code apart and putting it back by element. The game plays the same except where noted.
+- **79 old test scripts** (`tests/e2e/`). None could run from the checkout and 11 called things that no longer exist. The gate now taps real buttons instead (Build menu, People − and +, a job's +, People, Score, Pause, save and reload) and refuses a build where a button has no handler.
+- **The session log** (`logs/session-1.jsonl`, 1.8 MB, held an email address). Out of the repo; `logs/` is ignored.
+- **The mockup images** (`mockups/`, 8 MB of PNGs and the layout lab). They were Build 36's working drawings; the live screen is the record.
+- **The dead art.** The Han hat and the torch (no look used them), the pagoda roof (the Han wonder draws its own eaves), the `plaster` texture (it drew nothing), `mix()`. **Kept and wired instead:** the Mali horseman's own look, drawn but never used; the unit now shows it.
+- **The indigo glass** on the map button (`.ic`, `.hb`, `--glass*`): a leftover of Build 35. The map button is now a `.fab` like Home and Build.
+- **Second copies of the icons.** The five resources, the hammer and the book were drawn twice (markup and `RIC`). One `ICON` table now; the markup is built from it.
+- **The tables outside the rules file.** `CAPS`, `UNCAPPED`, `ARMYROOM`, `INVEST` and `SHELTER.arrows` are fields on each building (`cap`, `nocap`, `armyRoom`, `invest`, `shelter`). `WEATHER`, `HARVEST`, `FERT`, `POST`, `HEALTH`, `ROUTES`, `MKT_SELL`, `MKT_BUY`, `MKTK`, `RATE_OF` moved to `01-rules.js`.
+- **Hand-typed numbers in the help text.** The Guide's rules now read `FIELD_NEAR`, `DOCKR`, `UPKEEP`, `TAX`, `BUILDER_POW`, `POST.far`, `POST.want`, the buildings' `heal`, `cap`, `armyRoom`, `shelter` and `invest`. A number changed in a table changes in the Guide.
+- **Duplicates.** `JOBS` is `RES`; `BNS` is `BN.length`; the unique units are counted from the table, not a typed list. Unused fields: the peoples' `color`, the seasons' `note`, the computers' `hunt`.
+- **Four full-screen tints a frame** (dusk, night, drought/rain/frost). One fill, blended.
+- **The clear before the map** when the map fills the screen.
+- **The `build` action** was missing since Build 34 (deleted with the old Age button): tapping a building in a Build menu did nothing. Restored.
+- **Broken text** from the Keep → Town Center rename ("Town Centers the game readable", "Town Center it behind the line"), a stale send-strip row in the Guide, "Food or Farm" after Farm was folded.
+
+### Parked (ideas from the review, not built)
+- **An event bus** between the game and the screen (the sim calls `say`, `sfx`, `celebrate` in about 87 places). `say()` already is the one door; a bus would move 87 lines for no change the player sees. Revisit if the screen is ever rebuilt again.
+- **Stripping the test hook from the App Store build.** The gate measures the native page through it, so it stays. On an iPhone no player reaches a console.
+- **Saving only the node amounts** and regenerating the map from its seed. The save is a third the size now (trees as five numbers, hundredths); the rest can wait.
+- **Rewriting git history** to purge the session log: needs a force-push; asked separately.

@@ -1,6 +1,6 @@
 // ═════ 01-rules.js ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 36;
+const BUILD = 37;
 const MAP = 2000, MID = MAP / 2, DT = 1 / 30;
 const BN = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'], BNS = BN.length;   // the battalions, once Command is researched
 const POPMAX = 150, VILMAX = 60, ARMYMAX = 90, BNSIZE = 30;   // six battalions, once Command is researched at a War Council; BNSIZE: the most one Zeal blesses
@@ -237,7 +237,7 @@ Object.assign(UNIT, {
   immortal: { ...UNIT.sword,   name: 'Immortal', civ: 'persian', replaces: 'sword', hp: 75, vs: { infantry: 1.5, mounted: 1.6, siege: 2 }, look: 'immortal', desc: 'Elite guard with spear, bow and wicker shield. Beats foot soldiers and holds against horse.' },
   mongolha: { ...UNIT.harcher, name: 'Mongol horse archer', civ: 'mongol', replaces: 'harcher', rng: 90, spd: 40, look: 'harcher', desc: 'Shoots farther and rides faster than any other horse archer.' },
   mauryael: { ...UNIT.elephant, name: 'Maurya war elephant', civ: 'maurya', replaces: 'elephant', hp: 320, look: 'elephant', desc: 'The royal elephant corps: a quarter tougher than any other war elephant.' },
-  malihorse:{ ...UNIT.cata,    name: 'Mali horseman', civ: 'mali', replaces: 'cata', hp: 135, spd: 38, look: 'cata', desc: 'Mali\'s standing cavalry, with lance and bow: tougher and quicker than a cataphract.' },
+  malihorse:{ ...UNIT.cata,    name: 'Mali horseman', civ: 'mali', replaces: 'cata', hp: 135, spd: 38, look: 'malihorse', desc: 'Mali\'s standing cavalry, with lance and bow: tougher and quicker than a cataphract.' },
 });
 const ARMYK = Object.keys(UNIT).filter(k => UNIT[k].cls === 'army'), SOLDIERK = Object.keys(UNIT).filter(k => UNIT[k].tick === 'sol');   // counted once every unit, the peoples' own included, is in the table
 
