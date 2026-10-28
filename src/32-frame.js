@@ -130,6 +130,7 @@ function buildPanel() {
 				`<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`,
 		).join('');
 	$('hudB').innerHTML = ICON.sword;
+	$('emgB').innerHTML = ICON.def;
 	$('tkList').innerHTML = ICON.list;
 	$('tkMin').innerHTML = ICON.up;
 	$('homeB').innerHTML = ICON.home;

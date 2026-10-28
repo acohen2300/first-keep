@@ -532,3 +532,5 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 - **Vagabonds' camp** redrawn (fire ring, bedrolls, lean-to); the old flame and two rectangles are cut. "No soldiers yet" no longer shows on find cards.
 - **Marches count the season and weather** in their time (`sideSpd`, `paceOf`); the time shown is the real one.
 - Size: first-keep.html 909 KB to 942 KB (+33 KB).
+- **Aim (changed after Albert's test):** tapping Aim shows the reticle at once (breathing ring and "Tap the map to move it"); a map tap moves it as often as you like; the button reads Lock, and Lock sets the target (lamp green). Cut: the first map tap used to set and end the aim.
+- **Shield button** (right corner, above the sword) opens the Emergency card from anywhere; the Army card and the red attack bar still open it too.

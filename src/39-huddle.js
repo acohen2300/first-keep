@@ -71,12 +71,23 @@ function hudEta() {
 	}
 	return H.eta;
 }
+// Aim: the reticle appears at the middle of the view, a tap on the map moves it, Lock sets it
+function hudAim() {
+	const H = G.hud;
+	if (H.aim) {
+		H.aim = false; // Lock
+		return feel('snap');
+	}
+	H.aim = true;
+	H.view = false;
+	if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
+	H.etaKey = '';
+}
 function aimAt(sx, sy) {
 	const H = G.hud;
 	let h = hitAt(sx, sy);
 	if (h.t === 'unit' && h.e.owner === 0) h = { t: 'ground', e: { x: h.e.x, y: h.e.y } }; // your own: just the spot
 	H.h = h;
-	H.aim = false;
 	H.etaKey = '';
 	ripple(h.e.x, h.e.y, '#ffb23d');
 	feel('tick');
@@ -96,6 +107,7 @@ function hudFire() {
 		S = hudPick();
 	if (slot < 0 || G.msn[slot]) return say('All four missions are out.', '', 3);
 	if (!H.h || !S.length) return;
+	H.aim = false;
 	const before = G.ordN || 0;
 	order(S, H.h);
 	if ((G.ordN || 0) === before) return; // refused: the reason was said
@@ -263,8 +275,7 @@ function hudDrop(from, to) {
 		H.n = {};
 		H.h = null;
 		H.slot = to;
-		H.view = false;
-		H.aim = true;
+		hudAim();
 		say(`Tap where ${MSN[to]} goes.`, '', 3);
 	}
 	m.spare = [];
@@ -294,7 +305,7 @@ function huddleHTML() {
 		fire = picked && H.h && hudSlot() >= 0,
 		col1 =
 			`<button class="cell bar${picked ? ' on' : ''}${draft ? ' sel' : ''}" data-act="hready" aria-label="Ready"><span class="wd mid">Ready</span></button>` +
-			`<button class="cell st w bar${H.h ? ' on' : ''}${H.aim ? ' sel' : ''}" data-act="haim" aria-label="Aim">Aim</button>`,
+			`<button class="cell st w bar${H.h && !H.aim ? ' on' : ''}${H.aim ? ' sel' : ''}" data-act="haim" aria-label="${H.aim ? 'Lock the target' : 'Aim'}">${H.aim ? 'Lock' : 'Aim'}</button>`,
 		mid = (draft ? CLS : MSN)
 			.map((x, i) => {
 				if (draft) {
@@ -332,6 +343,7 @@ function huddleUI() {
 			el.innerHTML = h;
 		}
 	}
+	$('emgB').classList.toggle('on', !!G.emg);
 	if (flip) fit(); // the bar is whole again: the corner buttons sit on top of it
 }
 // the reticle: thin brackets round the target and a tag with the time it would take
@@ -358,8 +370,18 @@ function drawReticle() {
 		ctx.lineTo(x + sx * (r - q), y + sy * r);
 	}
 	ctx.stroke();
+	if (H.aim && !lessMotion) {
+		// the gesture: a ring that breathes out from the reticle, so it reads as something to move
+		const ph = (performance.now() % 1400) / 1400;
+		ctx.globalAlpha = 1 - ph;
+		ctx.beginPath();
+		ctx.ellipse(x, y, r + ph * 22, (r + ph * 22) * TILT, 0, 0, 7);
+		ctx.stroke();
+		ctx.globalAlpha = 1;
+	}
 	ctx.font = '700 12px system-ui, sans-serif';
 	ctx.textAlign = 'center';
+	if (H.aim) ctx.fillText('Tap the map to move it', x, y + r * TILT + 18);
 	ctx.fillText(eta ? `${mmss(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - r - 5);
 	ctx.restore();
 }

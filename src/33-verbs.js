@@ -385,7 +385,7 @@ const PLAY = {
 		H.carry = null;
 	},
 	haim() {
-		G.hud.aim = !G.hud.aim;
+		hudAim();
 	},
 	hudc(a) {
 		delete G.hud.n[a]; // a tap on the class: all the idle ones again
