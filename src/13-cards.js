@@ -453,7 +453,7 @@ const CARDS = {
   },
   guide(c) {
     const pg = c.page || 'bld';
-    return title('Guide', 'what leads to what, and why') + acts([['bld', 'Buildings'], ['unit', 'Units'], ['tech', 'Research'], ['age', 'Ages'], ['civ', 'Peoples'], ['rule', 'Rules']].map(([k, n]) => btn(`guide:${k}`, n, '', pg === k ? 'on' : '')).join(''), 'c3') + guideHTML(pg);
+    return title('Guide', 'what leads to what, and why') + acts([['bld', 'Buildings'], ['unit', 'Units'], ['tech', 'Research'], ['age', 'Ages'], ['civ', 'Peoples'], ['rule', 'Rules'], ['hist', 'History']].map(([k, n]) => btn(`guide:${k}`, n, '', pg === k ? 'on' : '')).join(''), pg === 'hist' ? 'c4' : 'c3') + (pg === 'hist' ? `<p><b>History · beta.</b> ${HIST_NOTE}</p><input id="gq" class="q" type="search" placeholder="Search: a thing, a place, a date" value="${(G.gq || '').replace(/"/g, '')}" oninput="window.__fkq(this.value)"><div class="row"><button class="lnk" data-act="copyhist">Copy the whole timeline</button></div><div id="gres">${histHTML(G.gq)}</div><p>${HIST_ASK}</p>` : guideHTML(pg));
   },
   sound() {
     const row = (k, name, v) => acts(btn(`vol:${k},-`, '−', '') + `<div class="lvl"><b>${name}</b><small>${Math.round(v * 100)}%</small></div>` + btn(`vol:${k},+`, '+', ''), 'c3');

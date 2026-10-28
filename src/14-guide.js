@@ -24,6 +24,18 @@ function guideHTML(pg) {
   if (pg === 'civ') return g2.civs.map(c => E(c.name, `${c.unit} (in place of the ${c.replaces}) · ${c.wonder}`, [c.bonus, `<i>Why:</i> ${c.why}`, `<i>${c.unit}:</i> ${c.uwhy}`, `<i>${c.wonder}:</i> ${c.wwhy}`])).join('') + g2.finds.map(f => E(f.name, 'in the wild', [f.what, f.why && `<i>Why:</i> ${f.why}`])).join('');
   return g2.rules.map(r => E(r.when, '', [r.then, `<i>Why:</i> ${r.why}`])).join('');
 }
+// ── History (beta): the dated things of the game in order, searchable, each with a trail to the real source. For people with homework.
+const HIST_NOTE = 'Dates are the first clear evidence; scholars argue many of them. The game compresses ages and sizes effects for play. Check before you cite.';
+const HIST_ASK = 'Spotted a wrong date or a better story? Tell us: github.com/acohen2300/first-keep/issues';
+const yearOf = w => { if (!w) return 9e9; const s = String(w); const m = s.match(/([\d,]+)\s*BC/); if (m) return -parseInt(m[1].replace(/,/g, '')); const n = s.match(/(\d+)/); if (n) return parseInt(n[1]); return { 'Stone age': -8000, 'Bronze age': -2500, 'Roman': 100, 'Medieval': 1100 }[s] || 9e9; };
+function histRows() { const g2 = guideModel(); return g2.techs.filter(t => t.when).map(t => ({ ...t, y: yearOf(t.when) })).sort((a, b) => a.y - b.y); }
+const histText = t => `${t.name} · ${t.when} · ${t.line}, ${t.at}. ${t.what} ${t.why || ''}`;
+function histHTML(q) {
+  const words = (q || '').toLowerCase().split(/\s+/).filter(Boolean), rows = histRows().filter(t => !words.length || words.every(w => histText(t).toLowerCase().includes(w) || t.age.toLowerCase().includes(w)));
+  if (!rows.length) return '<p>Nothing by that name. Try a date, a place or a thing.</p>';
+  const look = t => `<a class="look" href="https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(t.name)}" target="_blank" rel="noopener">Look it up</a>`;
+  return rows.map(t => `<div class="g"><b>${t.name}</b><small>${t.when} · ${t.line}, ${t.at} · ${t.age} age</small><p>${t.what} ${t.why || ''}</p><p class="row">${look(t)} <button class="lnk" data-act="copy:${t.id}">Copy</button></p></div>`).join('');
+}
 function guideMd() {
   const g2 = guideModel(), L = [], cell = s => String(s || '-').replace(/\|/g, '/');
   L.push(`# First Keep (build ${BUILD}): what triggers what, what begets what, and why`, '', 'Written by the game from its own rule tables, so it cannot disagree with the game.', '');

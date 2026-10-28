@@ -20,6 +20,8 @@ const ACT = {
   idlego() { const u = unitsOf(0, 'vil').find(v => !v.job); if (!u) return; cam.x = u.x; cam.y = u.y; clampCam(); closeCard(); },
   seek(a) { const o = Number(a), k = keepOf(o) || G.blds.find(b => b.owner === o); if (!k) { say('Nothing of theirs stands.', '', 3); return; } cam.x = k.x; cam.y = k.y; clampCam(); if (k.kind === 'keep') { G.card = null; openCard({ type: 'bld', id: k.id }); } else closeCard(); },
   guide(a) { openCard({ type: 'guide', page: a }); },
+  copy(id) { const t = histRows().find(x => x.id === id); if (t) clip(histText(t)); },
+  copyhist() { clip(`First Keep history (build ${BUILD}). ${HIST_NOTE}\n\n` + histRows().map(histText).join('\n')); },
   info() { G.infoOpen = !G.infoOpen; cardSig = ''; renderCard(); },
   map() { SET.mini = !SET.mini; saveSet(); applyMini(); },
   home() { const k = keepOf(0); if (k) { cam.x = k.x; cam.y = k.y; clampCam(); } },
