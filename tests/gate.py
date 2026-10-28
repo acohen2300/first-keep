@@ -84,6 +84,8 @@ async def main():
                 print(('PASS ' if not bad else 'FAIL ') + f'{page_file} {W}x{H}', '' if not bad else json.dumps(bad)[:2500]); fails += bool(bad); await pg.close()
         pg = await br.new_page(); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
         why = await pg.evaluate("() => { const g = window.__fk.guideModel(), m = []; for (const k of ['buildings', 'units', 'techs', 'ages', 'civs', 'finds']) for (const e of g[k]) if (!e.why) m.push(k + ':' + e.id); return m; }")
+        raw = await pg.evaluate("() => { const F = window.__fk, out = []; for (const pg of ['bld', 'unit', 'tech', 'age', 'civ', 'rule']) { F.openCard({ type: 'guide', page: pg }); const t = document.getElementById('card').textContent; if (t.includes('${')) out.push(pg); } for (const k of ['help', 'army', 'score', 'setup']) { F.openCard({ type: k }); if (document.getElementById('card').textContent.includes('${')) out.push(k); } F.act('close'); return out; }")
+        print(('PASS ' if not raw else 'FAIL ') + 'no raw code on any card', '' if not raw else raw); fails += bool(raw)
         print(('PASS ' if not why else 'FAIL ') + 'every guide entry says why', '' if not why else why); fails += bool(why)
         same = await pg.evaluate(LOOK); print(('PASS ' if not same else 'FAIL ') + 'buildings tell apart at half zoom', '' if not same else same); fails += bool(same); await pg.close()
         pg = await br.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))

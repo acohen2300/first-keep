@@ -6,7 +6,7 @@ const MIGRATE = {   // { 24: S => S-in-the-shape-of-25 }, run in order
   28: S => { for (const u of S.units) if (u.job === 'farm') u.job = 'food'; for (const p of S.P) if (p.rally === 'farm') p.rally = 'food'; S.v = 29; return S; },   // Build 36: Farm is folded into Food
 };
 let staleSave = 0;   // the version of a save we could not open, so the setup card can say so
-const SKIP_U = new Set(['focus', 'tgt', 'bt', 'esc', 'blocker', 'path', 'so', 'aggro', 'node', 'rep', 'hunt', 'lcOK', 'lcT', 'pv', 'pk', 'pfK', 'pfV', 'pfT', 'pi', 'partial', 'drop', 'dropR', 'dropN', 'dropT']);
+const SKIP_U = new Set(['focus', 'tgt', 'bt', 'esc', 'blocker', 'path', 'so', 'aggro', 'node', 'rep', 'hunt', 'lcOK', 'lcT', 'pv', 'pk', 'pfK', 'pfV', 'pfT', 'pi', 'partial', 'drop', 'dropR', 'dropN', 'dropT', 'dropV', 'dropAt']);
 let holdSave = false;   // while the Resume card waits, nothing may overwrite the save it offers
 const inFight = () => G.units.some(u => u.owner === 0 && u.tgt && u.tgt.hp > 0);
 let fightHold = 0;
@@ -52,6 +52,6 @@ function loadGame(S) {
   paceBtn(); muteBtn();
   $('end').hidden = true; closeCard(); cancelPlace(); holdSave = false; setPause(false);
 }
-document.addEventListener('visibilitychange', () => { if (document.hidden) saveGame(); });
-window.addEventListener('pagehide', () => saveGame());
+document.addEventListener('visibilitychange', () => { if (document.hidden) saveGame(true); });   // leaving the app: saved whatever is going on
+window.addEventListener('pagehide', () => saveGame(true));
 

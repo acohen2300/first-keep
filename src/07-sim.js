@@ -29,7 +29,7 @@ function step(dt) {
   if (fxChange) fxDirty();
   if (G.lootT && G.t - G.lootT > 1.5) { say(`Plunder: ${costText(G.loot)}.`, 'good', 6); G.loot = {}; G.lootT = 0; }
   { let gone = false; for (const b of G.blds) if (b.hp <= 0) { gone = true; break; } if (gone) { G.blds = G.blds.filter(b => b.hp > 0); G.navDirty = true; qcDrop(); } }
-  if (G.tick % 10 === 0) { const nt = G.nodes.length; G.nodes = G.nodes.filter(n => n.amt > 0 || (n.farm && n.farm.hp > 0)); if (G.nodes.length !== nt) G.navDirty = true; }   // a tree felled opens its ground; spent nodes leave every 10 steps, so the walking grid is redrawn at most three times a second
+  { let spent = false; for (const n of G.nodes) if (!(n.amt > 0 || (n.farm && n.farm.hp > 0))) { spent = true; break; } if (spent) { G.nodes = G.nodes.filter(n => n.amt > 0 || (n.farm && n.farm.hp > 0)); G.navDirty = true; } }   // a tree felled opens its ground the same step (held longer, cutters beside it stall); the list is copied only when something is spent
   for (const tr of G.tracers) tr.life -= dt;
   if (G.tracers.length && G.tracers[G.tracers.length - 1].life <= 0 || G.tracers.some(tr => tr.life <= 0)) G.tracers = G.tracers.filter(tr => tr.life > 0);
   for (const p of G.P) if (p.id && p.id !== WILD && p.alive) { p.ai.t -= dt; if (p.ai.t <= 0) { p.ai.t = react(); think(p); } }
@@ -123,7 +123,7 @@ function bldTick(b, dt) {
   }
 }
 function built(b) {
-  const o = b.owner, B = BLD[b.kind]; b.mx = maxHpB(o, b.kind); b.hp = Math.max(b.hp, b.mx * 0.999);
+  const o = b.owner, B = BLD[b.kind]; b.mx = maxHpB(o, b.kind); b.hp = Math.max(b.hp, b.mx * 0.999); G.bldV = (G.bldV || 0) + 1;   // a new place to drop at: every villager picks again
   if (b.kind === 'gate') G.navDirty = true;
   if (B.fx) fxDirty();
   b.doneT = G.t; if (o === 0) { sfx('done', b.x, b.y); celebrate(b.kind === 'wonder' ? 3 : 1, b.x, b.y); }
@@ -203,7 +203,7 @@ function vilTick(u, dt, SP) {
   }
   const cap = carryOf(u.owner);
   if (u.carry > 0 && (u.carry >= cap - 1e-6 || u.carryType !== u.job || !u.job || (!u.hunt && (!u.node || u.node.amt <= 0)))) {
-    if (!(u.drop && u.drop.hp > 0 && u.dropT === u.carryType && u.dropN === G.blds.length && u.dropR === G.blds)) { u.drop = dropFor(u.owner, u.carryType, u); u.dropT = u.carryType; u.dropN = G.blds.length; u.dropR = G.blds; }
+    if (!(u.drop && u.drop.hp > 0 && u.dropT === u.carryType && u.dropN === G.blds.length && u.dropR === G.blds && u.dropV === G.bldV && u.dropAt === u.node)) { u.drop = dropFor(u.owner, u.carryType, u); u.dropT = u.carryType; u.dropN = G.blds.length; u.dropR = G.blds; u.dropV = G.bldV; u.dropAt = u.node; }
     const drop = u.drop; if (!drop) { u.idle = true; return; }
     if (moveTo(u, drop.x, drop.y, dt, halfOf(drop) + 4, SP)) { stash(u.owner, u.carryType, Math.round(u.carry)); u.carry = 0; }
     if (u.carry > 0 || u.hunt || !u.node || u.node.amt > 0) return;

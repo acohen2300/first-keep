@@ -34,10 +34,10 @@ One pill of 8 cells on top (five counts, mute, pause, speed), the strip (age · 
 
 ## Key technical notes
 - Fixed timestep (DT 1/30), global `G`, nav grid, cached sprites, turned view (`SIDE`, `TILT`). Player keep at (300,1700); local frame mirrors per corner.
-- Grids: units in squares of 48 (`UG`), buildings and nodes in squares of 100 (`SG`, rebuilt when a list changes). Spent nodes leave every 10 steps; the walking grid bumps `NAV.v` (throwing paths away) only when a square really changed.
+- Grids: units in squares of 48 (`UG`), buildings and nodes in squares of 100 (`SG`, rebuilt when a list changes). Spent nodes leave the list the same step (holding them stalls cutters beside them; the list is only copied when one is spent); the walking grid bumps `NAV.v` (throwing paths away) only when a square really changed.
 - Draw: per-item try/catch to `fault(e)`, which now also puts the canvas back; sprite builders report through `fault` too.
 - Toasts: `say(text, cls, secs, at, act)`; `SET.msgs`, `SET.tips`, `advise()` ('!' = urgent). Pace: `speed()`, `paceBtn()`, `setPause()`.
-- Measured (phone-speed emulation, Build 36 → 37): one step early game 2.5 → 1.7 ms; 700-unit battle 27.5 → 23.3 ms; idle screen rewrites 37/s → 0.2/s; save 350 → 159 KB.
+- Measured (phone-speed emulation, Build 36 → 37): one step early game 2.5 → 2.1 ms; 700-unit battle 27.5 → 22.4 ms; idle screen rewrites 37/s → 0.2/s; save 350 → 159 KB.
 
 ## Open items
 1. Albert's real-phone test of Build 37 (same checks as 36: tap sizes, strip taps, Build row, People − and +, the glow, 375 px).

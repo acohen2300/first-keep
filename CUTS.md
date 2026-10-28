@@ -331,6 +331,7 @@ Cut, merged or folded while taking the code apart and putting it back by element
 - **Duplicates.** `JOBS` is `RES`; `BNS` is `BN.length`; the unique units are counted from the table, not a typed list. Unused fields: the peoples' `color`, the seasons' `note`, the computers' `hunt`.
 - **Four full-screen tints a frame** (dusk, night, drought/rain/frost). One fill, blended.
 - **The clear before the map** when the map fills the screen.
+- **Tried and reverted:** holding spent trees in the node list for 10 steps (to redraw the walking grid less often). An independent review found two of seven cutters stalled beside a camp for a minute; back to the same step, without the copy when nothing is spent.
 - **The `build` action** was missing since Build 34 (deleted with the old Age button): tapping a building in a Build menu did nothing. Restored.
 - **Broken text** from the Keep → Town Center rename ("Town Centers the game readable", "Town Center it behind the line"), a stale send-strip row in the Guide, "Food or Farm" after Farm was folded.
 

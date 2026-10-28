@@ -674,7 +674,7 @@ const TRIGGERS = () => [
   ['Hunting', `Villagers on Food hunt deer and boar near home: they throw javelins, the animal falls, and they butcher it where it lies (a deer gives ${UNIT.deer.meat * RICH | 0}, a boar ${UNIT.boar.meat * RICH | 0}). Boar fight back.`, 'Meat came before fields everywhere.'],
   ['You build', 'Press where it goes: the building waits above your finger and snaps flush beside your other buildings, side by side; buildings that train keep a walking lane around them. Green fits, red says why not. Let go, drag to adjust, then tap Build. Houses, fields and gates offer the next spot beside.', 'Rows that line up, no hidden gaps, and you never cover what you are placing.'],
   ['Everyone eats', `Every minute each villager eats a share (${(UPKEEP.share * 60).toFixed(2)} food), a foot soldier ${UPKEEP.foot} shares, a rider or elephant ${UPKEEP.mounted} (horse fodder), a cart ${UPKEEP.cart}. One villager gathering food feeds about 8. With no food, work and damage drop by ${Math.round((1 - UPKEEP.hunger) * 100)}% and nothing can be trained; nobody starves.`, 'Real towns and armies ate every day; an army\'s horses ate more than its men.'],
-  ['You hold a vassal', 'Beat their army and stand at their Town Center, then Demand surrender; or, as the Fortress\'s ally and twice its strength, offer to be its overlord. Every 10 s you take the tax (light ${TAX.light.take * 100}%, fair ${TAX.fair.take * 100}%, heavy ${TAX.heavy.take * 100}% of what they gathered). Loyalty heads for 20 + your buildings near them (castle ${BLD.castle.invest}, town ${BLD.town.invest}, market ${BLD.market.invest}, tower, post, business center ${BLD.tower.invest}, field ${BLD.farm.invest}, others 3) + your soldiers there (0.5 each, up to 15) + enemies you killed near them (1 each, up to 20, fading) − the tax\'s resentment (0, 10, 30). Unrest moves by the tax push (0.3, 1.5, 4) minus loyalty/25. At 60 loyalty they send gifts; at 50 you get a quarter of their trade profit.', 'Rulers who protected and built up their subjects were paid more and kept them; those who only squeezed them faced revolt.'],
+  ['You hold a vassal', `Beat their army and stand at their Town Center, then Demand surrender; or, as the Fortress's ally and twice its strength, offer to be its overlord. Every 10 s you take the tax (light ${TAX.light.take * 100}%, fair ${TAX.fair.take * 100}%, heavy ${TAX.heavy.take * 100}% of what they gathered). Loyalty heads for 20 + your buildings near them (castle ${BLD.castle.invest}, town ${BLD.town.invest}, market ${BLD.market.invest}, tower, post, business center ${BLD.tower.invest}, field ${BLD.farm.invest}, others 3) + your soldiers there (0.5 each, up to 15) + enemies you killed near them (1 each, up to 20, fading) − the tax's resentment (0, 10, 30). Unrest moves by the tax push (0.3, 1.5, 4) minus loyalty/25. At 60 loyalty they send gifts; at 50 you get a quarter of their trade profit.`, 'Rulers who protected and built up their subjects were paid more and kept them; those who only squeezed them faced revolt.'],
   ['Unrest reaches 100', 'A rebellion: a third of their villagers take up arms and their army turns on you. Kill three quarters of them and it is crushed (the rebels are lost); if they hold out 4 minutes, they are free. With two or more vassals, every minute there is a chance that all the restless ones rise together: the chance grows with their unrest and their number.', 'Overstretched empires fell to joint revolts.'],
   ['You take down a building', 'Half its cost comes back; whatever was waiting in it comes back in full. Cancel in the first 15% of the build returns all of it. The Town Center cannot be taken down.', 'Salvage, never a way to make money.'],
   ['Soldiers destroy a building', `Its destroyer takes ${PLUNDER * 100}% of what it cost. Taking a building down yourself pays the enemy nothing.`, 'Spoils of war, never worth more than the fight. Every side is paid the same way.'],
@@ -715,9 +715,9 @@ const TRIGGERS = () => [
   ['The weather changes, every minute', `Rain: marching ${Math.round((1 - WEATHER.rain.spd) * 100)}% slower, bows reach ${Math.round((1 - WEATHER.rain.rng) * 100)}% less, fires spread less. Drought (summer): fields give ${Math.round((1 - WEATHER.drought.crop) * 100)}% less, fires spread fast. Frost (winter): stone buildings go up at ${WEATHER.frost.stone * 100}% speed.`, 'Wet roads were mud, wet bowstrings sagged, dry thatch burned, and mortar does not set in frost.'],
   ['A wooden building catches fire', 'Sabotage, summer lightning or sparks from a bakery or smithy. It burns down in about half a minute; two villagers run with buckets; it can spread to wooden buildings next to it. Stone does not burn.', 'Towns of timber and thatch burned often: London in 1212 and 1666.'],
   ['Sickness', 'Now and then, more in summer and winter, a few of your people fall sick; Clean water (at an Aqueduct) halves it. The sick work and fight at 60% and a few die; a Hospital or medics cure them. Plague comes along the trade routes in some springs.', 'Summer flux and winter fever were the yearly toll; plague followed trade.'],
-  ['A caravan has a route', 'It loads goods at the Business Center, sells them at a trade stop (farther pays more, up to ×${POST.far}; a wanted good ×${POST.want}), can buy spice there, and repeats. Robbers attack carts near their camps unless a post, tower or soldier is close. Up to ${POST.guard} soldiers can escort one: tap the caravan, Escort +4.', 'Merchants carried goods where they were scarce, and paid for guards.'],
+  ['A caravan has a route', `It loads goods at the Business Center, sells them at a trade stop (farther pays more, up to ×${POST.far}; a wanted good ×${POST.want}), can buy spice there, and repeats. Robbers attack carts near their camps unless a post, tower or soldier is close. Up to ${POST.guard} soldiers can escort one: tap the caravan, Escort +4.`, 'Merchants carried goods where they were scarce, and paid for guards.'],
   ['You hold trade stops', `Each of the two routes has four stops. Build a Trade post on a stop to hold it. You take a cut of every other side's sales there, by how many of that route you hold: ${POST.cut.slice(1).map((c, i) => `${i + 1}: ${c * 100}%`).join(', ')}. Hold all four of a route and it also pays ${POST.all * 60} gold a minute. Up to ${POST.guard} soldiers garrison each stop. You set what the stop wants.`, 'Whoever held the road taxed the trade on it.'],
-  ['A building is placed', 'It is paid for and stands as a site at 0%. The nearest free villager walks there and builds it in the listed time; more builders are faster (two ≈ ${(2 ** BUILDER_POW).toFixed(1)}×). With nobody on it, it does not rise. A line of wall gets two builders who work down it. When done, a builder goes back to what he was doing.', 'Building takes hands: a far-off site is only as safe as its builder, and the army has to escort it.'],
+  ['A building is placed', `It is paid for and stands as a site at 0%. The nearest free villager walks there and builds it in the listed time; more builders are faster (two ≈ ${(2 ** BUILDER_POW).toFixed(1)}×). With nobody on it, it does not rise. A line of wall gets two builders who work down it. When done, a builder goes back to what he was doing.`, 'Building takes hands: a far-off site is only as safe as its builder, and the army has to escort it.'],
   ['No fog', 'You see the whole map, and so does everyone else. Only enemy spies stay hidden until something of yours is close. Night still shortens how far soldiers look for a target.', 'Your call: the map open, the same for every side.'],
   ['A wall or building stands in the way', 'People walk around it. If nothing can get through, soldiers attack the wall in the way; villagers wait.', 'Walls delay; they do not stop an army with time.'],
   ['The game saves itself', `Every ${SAVE_EVERY} seconds, and when you leave the page, on this phone. Next time it offers Resume or New game.`, 'You should never lose a game to a phone call.'],
@@ -1601,7 +1601,7 @@ function step(dt) {
   if (fxChange) fxDirty();
   if (G.lootT && G.t - G.lootT > 1.5) { say(`Plunder: ${costText(G.loot)}.`, 'good', 6); G.loot = {}; G.lootT = 0; }
   { let gone = false; for (const b of G.blds) if (b.hp <= 0) { gone = true; break; } if (gone) { G.blds = G.blds.filter(b => b.hp > 0); G.navDirty = true; qcDrop(); } }
-  if (G.tick % 10 === 0) { const nt = G.nodes.length; G.nodes = G.nodes.filter(n => n.amt > 0 || (n.farm && n.farm.hp > 0)); if (G.nodes.length !== nt) G.navDirty = true; }   // a tree felled opens its ground; spent nodes leave every 10 steps, so the walking grid is redrawn at most three times a second
+  { let spent = false; for (const n of G.nodes) if (!(n.amt > 0 || (n.farm && n.farm.hp > 0))) { spent = true; break; } if (spent) { G.nodes = G.nodes.filter(n => n.amt > 0 || (n.farm && n.farm.hp > 0)); G.navDirty = true; } }   // a tree felled opens its ground the same step (held longer, cutters beside it stall); the list is copied only when something is spent
   for (const tr of G.tracers) tr.life -= dt;
   if (G.tracers.length && G.tracers[G.tracers.length - 1].life <= 0 || G.tracers.some(tr => tr.life <= 0)) G.tracers = G.tracers.filter(tr => tr.life > 0);
   for (const p of G.P) if (p.id && p.id !== WILD && p.alive) { p.ai.t -= dt; if (p.ai.t <= 0) { p.ai.t = react(); think(p); } }
@@ -1695,7 +1695,7 @@ function bldTick(b, dt) {
   }
 }
 function built(b) {
-  const o = b.owner, B = BLD[b.kind]; b.mx = maxHpB(o, b.kind); b.hp = Math.max(b.hp, b.mx * 0.999);
+  const o = b.owner, B = BLD[b.kind]; b.mx = maxHpB(o, b.kind); b.hp = Math.max(b.hp, b.mx * 0.999); G.bldV = (G.bldV || 0) + 1;   // a new place to drop at: every villager picks again
   if (b.kind === 'gate') G.navDirty = true;
   if (B.fx) fxDirty();
   b.doneT = G.t; if (o === 0) { sfx('done', b.x, b.y); celebrate(b.kind === 'wonder' ? 3 : 1, b.x, b.y); }
@@ -1775,7 +1775,7 @@ function vilTick(u, dt, SP) {
   }
   const cap = carryOf(u.owner);
   if (u.carry > 0 && (u.carry >= cap - 1e-6 || u.carryType !== u.job || !u.job || (!u.hunt && (!u.node || u.node.amt <= 0)))) {
-    if (!(u.drop && u.drop.hp > 0 && u.dropT === u.carryType && u.dropN === G.blds.length && u.dropR === G.blds)) { u.drop = dropFor(u.owner, u.carryType, u); u.dropT = u.carryType; u.dropN = G.blds.length; u.dropR = G.blds; }
+    if (!(u.drop && u.drop.hp > 0 && u.dropT === u.carryType && u.dropN === G.blds.length && u.dropR === G.blds && u.dropV === G.bldV && u.dropAt === u.node)) { u.drop = dropFor(u.owner, u.carryType, u); u.dropT = u.carryType; u.dropN = G.blds.length; u.dropR = G.blds; u.dropV = G.bldV; u.dropAt = u.node; }
     const drop = u.drop; if (!drop) { u.idle = true; return; }
     if (moveTo(u, drop.x, drop.y, dt, halfOf(drop) + 4, SP)) { stash(u.owner, u.carryType, Math.round(u.carry)); u.carry = 0; }
     if (u.carry > 0 || u.hunt || !u.node || u.node.amt > 0) return;
@@ -4041,7 +4041,7 @@ const MIGRATE = {   // { 24: S => S-in-the-shape-of-25 }, run in order
   28: S => { for (const u of S.units) if (u.job === 'farm') u.job = 'food'; for (const p of S.P) if (p.rally === 'farm') p.rally = 'food'; S.v = 29; return S; },   // Build 36: Farm is folded into Food
 };
 let staleSave = 0;   // the version of a save we could not open, so the setup card can say so
-const SKIP_U = new Set(['focus', 'tgt', 'bt', 'esc', 'blocker', 'path', 'so', 'aggro', 'node', 'rep', 'hunt', 'lcOK', 'lcT', 'pv', 'pk', 'pfK', 'pfV', 'pfT', 'pi', 'partial', 'drop', 'dropR', 'dropN', 'dropT']);
+const SKIP_U = new Set(['focus', 'tgt', 'bt', 'esc', 'blocker', 'path', 'so', 'aggro', 'node', 'rep', 'hunt', 'lcOK', 'lcT', 'pv', 'pk', 'pfK', 'pfV', 'pfT', 'pi', 'partial', 'drop', 'dropR', 'dropN', 'dropT', 'dropV', 'dropAt']);
 let holdSave = false;   // while the Resume card waits, nothing may overwrite the save it offers
 const inFight = () => G.units.some(u => u.owner === 0 && u.tgt && u.tgt.hp > 0);
 let fightHold = 0;
@@ -4087,8 +4087,8 @@ function loadGame(S) {
   paceBtn(); muteBtn();
   $('end').hidden = true; closeCard(); cancelPlace(); holdSave = false; setPause(false);
 }
-document.addEventListener('visibilitychange', () => { if (document.hidden) saveGame(); });
-window.addEventListener('pagehide', () => saveGame());
+document.addEventListener('visibilitychange', () => { if (document.hidden) saveGame(true); });   // leaving the app: saved whatever is going on
+window.addEventListener('pagehide', () => saveGame(true));
 
 // ═════ 18-sound.js ═════
 // ───────────────────────── Sound ─────────────────────────
