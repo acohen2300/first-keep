@@ -484,3 +484,6 @@ Cut: the Of the day button beside Start; the ? beside each hazard (now in the bo
 Also in Build 41 (Albert, 11:31 and 11:33): the daily challenge written out as one tick row ("Daily challenge: level 10 · one map for all, today"), the level and score multiplier on Start. Outlaw raids random and fair: none before minute 10 (Easy 16), then a random 3 to 8 minutes apart (Hordes and gangs: half), aimed at a side at war with the Natives, the less regarded more likely, never the same side twice running.
 Cut: the fixed three-minute raid clock.
 - Hazards renamed (Albert): Bad weather, Outlaws.
+
+## Housekeeping, Oct 28 (after Build 41j)
+GUIDE.md regenerated from the game (it was Build 32 and about half the size). HANDOFF.md brought to 41j; its item to purge a session log is cut (no session log is in the history). `tests/soak.py` added, run with `python3 tests/gate.py --soak`. Commit email changed to the GitHub noreply address and history rewritten to match (the repo is public). No game code changed.

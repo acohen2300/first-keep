@@ -1,6 +1,6 @@
 # The gate: what must hold before a build goes live, measured at four iPhone sizes, not judged by eye.
 # No page errors; no two buildings alike at half zoom; nothing wider than the screen; every word inside its button; text at least 12 px; contrast at least 4.5:1 (target 7:1); no card but Help and the Guide needs scrolling from 390 × 844 up (the iPhone SE at 375 × 667 is too short for the biggest cards); every tap target at least 44 × 44 points (Apple's rule), except the − and + tiles under each job (six columns leave them 26 to 29 points wide; kept by choice, Build 36).
-# Run from first-keep/:  python3 build.py && python3 wrap.py && python3 tests/gate.py
+# Run from first-keep/:  python3 build.py && python3 wrap.py && python3 tests/gate.py   (add --soak for the long games, tests/soak.py)
 import asyncio, json, os, subprocess, sys
 from playwright.async_api import async_playwright
 SIZES = [(375, 667), (390, 844), (393, 852), (430, 932)]
@@ -127,5 +127,6 @@ async def main():
         print(('PASS ' if not wraps else 'FAIL ') + f'{len(L)} messages fit the ticker at 375 px', '' if not wraps else wraps[:6]); fails += bool(wraps)
         fp, _ = await fingerprint(br); print(('PASS ' if not fp else 'FAIL ') + 'the game plays as the baseline says', '' if not fp else '\n  ' + '\n  '.join(fp[:4]) + '\n  (a deliberate rule change: python3 tests/gate.py --accept "why")'); fails += bool(fp)
         await br.close()
+    if '--soak' in sys.argv: fails += subprocess.run([sys.executable, 'tests/soak.py']).returncode != 0   # opt-in, about 3 minutes: long games on three seeds
     sys.exit(1 if fails else 0)
 asyncio.run(main())
