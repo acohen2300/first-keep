@@ -1,4 +1,4 @@
-// ═════ 12-input.js ═════
+// ═════ 26-input.js: the finger: tap, hold, box, pick ═════
 // ───────────────────────── Touch: drag to look, pinch to zoom, tap to ask, press and slide to place ─────────────────────────
 const ptrs = new Map();
 let drag = null,

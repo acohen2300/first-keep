@@ -1,4 +1,4 @@
-// ═════ 10-buildings.js ═════
+// ═════ 19-building-art.js: building art ═════
 // ───────────────────────── Buildings: each drawn once per kind, colour and zoom, then stamped ─────────────────────────
 // Local units = world units. Origin = the middle of the footprint on the ground. The ground is squashed by TILT; height is not.
 // The view is turned a little: the back of each building sits SIDE × its depth to the right, so we see its front and its shaded east wall.

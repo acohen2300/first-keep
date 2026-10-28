@@ -78,7 +78,7 @@ async def fingerprint(br):
     return [f'minute {i + 1}: {w}  now  {g}' for i, (w, g) in enumerate(zip(want, got)) if w != g] + (['length differs'] if len(want) != len(got) else []), got
 def verbs():
     import re, glob
-    s = open('src/16-verbs.js').read()
+    s = open('src/33-verbs.js').read()
     def keys(name):
         i = s.index(f'const {name} = {{'); j = s.index('\n};', i); return set(re.findall(r'(?:^|[{;,]\s*|\n(?:\t| {2}))([a-z][a-zA-Z0-9]*)\(\w*\)\s*\{', s[i:j]))
     have = keys('ACT') | keys('PLAY')

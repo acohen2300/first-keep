@@ -1,4 +1,4 @@
-// ═════ 14-guide.js ═════
+// ═════ 31-guide.js: the Guide, written from the tables ═════
 function guideModel() {
 	const unitsAt = (k) =>
 			Object.values(UNIT)

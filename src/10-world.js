@@ -1,4 +1,4 @@
-// ═════ 05-world.js ═════
+// ═════ 10-world.js: the map and what is on it ═════
 // ───────────────────────── The world ─────────────────────────
 let G;
 function blankGame(seed) {

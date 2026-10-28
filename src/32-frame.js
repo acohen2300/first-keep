@@ -1,4 +1,4 @@
-// ═════ 15-frame.js ═════
+// ═════ 32-frame.js: the frame: ticker, bars, the page ═════
 // ───────────────────────── The frame: the screen round the map, and its refresh ─────────────────────────
 // Every icon is drawn once, here. The markup reads from this table, so a resource looks the same in the tally and under the jobs.
 const SVG = (vb, body, cls = 'gl') => `<svg class="${cls}" viewBox="0 0 ${vb} ${vb}" aria-hidden="true">${body}</svg>`;

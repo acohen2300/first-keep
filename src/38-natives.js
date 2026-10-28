@@ -1,4 +1,4 @@
-// ═════ 19-natives.js ═════
+// ═════ 38-natives.js: the Natives and the Throne ═════
 // ───────────────────────── The Natives: the fifth side's one brain, and the Throne ─────────────────────────
 // Regard is what they think of each side (0..100). It is the one number behind peace, alliance, raids and the gate.
 const throneB = () => G.blds.find((b) => b.kind === 'throne' && b.hp > 0) || null;

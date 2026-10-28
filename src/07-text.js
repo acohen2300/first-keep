@@ -1,4 +1,4 @@
-// ═════ 02-text.js ═════
+// ═════ 07-text.js: every line of wording the game says ═════
 // ───────────────────────── Why it is so: the history behind each row ─────────────────────────
 // Dates are "about" unless exact; where historians disagree the text says so. Each line credits more than one place where the record allows.
 const WHY = {

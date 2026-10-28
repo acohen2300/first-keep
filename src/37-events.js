@@ -1,4 +1,4 @@
-// ═════ 19-events.js ═════
+// ═════ 37-events.js: the event scheduler and what each event does ═════
 // ───────────────────────── The Challenge and the spectacle: one scheduler, one table of events, one set of knobs ─────────────────────────
 // EVM: the knobs an event turns (every unit reads them: damage, speed, sight, gathering). A hazard is a switch in G.hz; a spectacle is a row of EVENTS.
 // Random when, never random whether: the next event is picked when the last ends, announced EV_WARN seconds ahead, then run for its seconds.

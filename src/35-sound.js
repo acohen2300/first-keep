@@ -1,4 +1,4 @@
-// ═════ 18-sound.js ═════
+// ═════ 35-sound.js: sound and haptics ═════
 // ───────────────────────── Sound ─────────────────────────
 // Made in the phone from tones and noise: no files, nothing downloaded. Quieter toward the edge of the screen; nothing from off screen.
 const SND = {

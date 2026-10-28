@@ -1,4 +1,4 @@
-// ═════ 04-nav.js ═════
+// ═════ 09-nav.js: paths ═════
 // ───────────────────────── The walking grid: where things stand, and how people get around ─────────────────────────
 // Squares of 10, never shown. Buildings fill whole squares and leave one free around them. Walls are one square each.
 const NC = MAP / NAVC;

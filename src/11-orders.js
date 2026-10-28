@@ -1,4 +1,4 @@
-// ═════ 06-orders.js ═════
+// ═════ 11-orders.js: what a side can do, and why not ═════
 // ───────────────────────── Orders anyone can give (the computers use the same ones) ─────────────────────────
 // what a unit costs this side now (Informers make spies cheaper)
 const unitCost = (o, k) => {
@@ -892,7 +892,7 @@ const nodeName = (n) =>
 				n.kind
 			];
 
-// ── the player's placing and box orders (the finger's work is in 11-input.js; what it orders is here)
+// ── the player's placing and box orders (the finger's work is in 26-input.js; what it orders is here)
 function commitPlace() {
 	const pl = G.place;
 	if (!pl || !pl.at) return;

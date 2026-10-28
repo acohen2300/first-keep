@@ -1,4 +1,4 @@
-// ═════ 19-economy.js ═════
+// ═════ 36-economy.js: trade, weather, fire, sickness, vassals, the computers' economy ═════
 // ───────────────────────── Goods, trade routes, nature, sickness and food ─────────────────────────
 // Real ratios on a compressed calendar: one year is 12 minutes, and every rate below is set against that clock.
 const YEAR = SEASON_LEN * 4;

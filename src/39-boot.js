@@ -1,4 +1,4 @@
-// ═════ 20-boot.js ═════
+// ═════ 39-boot.js: start-up, and closes the one scope ═════
 // ───────────────────────── The loop and the start ─────────────────────────
 let last = performance.now(),
 	acc = 0,
