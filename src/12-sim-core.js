@@ -55,7 +55,16 @@ function step(dt) {
 	collide();
 	if (G.tick % 15 === 0) findsTick(0.5);
 	wayfarers(dt);
-	// the dead and the spent
+	reap();
+	for (const tr of G.tracers) tr.life -= dt;
+	if ((G.tracers.length && G.tracers[G.tracers.length - 1].life <= 0) || G.tracers.some((tr) => tr.life <= 0))
+		G.tracers = G.tracers.filter((tr) => tr.life > 0);
+	sidesTick(dt);
+	watchHome();
+	judge();
+}
+// the dead and the spent: the fallen leave, buildings that burned or ran dry go, lists shrink once
+function reap() {
 	for (const u of G.units) if (u.hp <= 0) died(u);
 	for (const u of G.units) if (u.hp <= 0 && !u.gone && !u.inside) scarFall(u);
 	{
@@ -125,9 +134,9 @@ function step(dt) {
 			G.navDirty = true;
 		}
 	} // a tree felled opens its ground the same step (held longer, cutters beside it stall); the list is copied only when something is spent
-	for (const tr of G.tracers) tr.life -= dt;
-	if ((G.tracers.length && G.tracers[G.tracers.length - 1].life <= 0) || G.tracers.some((tr) => tr.life <= 0))
-		G.tracers = G.tracers.filter((tr) => tr.life > 0);
+}
+// the computers think, the Natives act, a side without a keep falls, scores and battalions refresh
+function sidesTick(dt) {
 	for (const p of G.P)
 		if (p.id && p.id !== WILD && p.alive) {
 			p.ai.t -= dt;
@@ -142,8 +151,6 @@ function step(dt) {
 		scoreAll();
 		rebattalion();
 	}
-	watchHome();
-	judge();
 }
 // An army stands in a grid: soldiers of one side that wait at home, or are going to the same spot, form rows, battalion beside battalion.
 function formUp() {
