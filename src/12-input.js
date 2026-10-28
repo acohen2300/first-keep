@@ -85,7 +85,7 @@ function hitAt(sx, sy) {
   return { t: 'ground', e: toWorld(sx, sy) };
 }
 const cardFor = h => h.t === 'bld' ? { type: 'bld', id: h.e.id } : h.t === 'find' ? { type: 'find', id: h.e.id } : h.t === 'unit' ? { type: 'unit', id: h.e.id } : { type: 'node', id: h.e.id };
-// One rule for the finger (Albert, Build 40): a tap picks, a double tap opens the card, a hold does more (picks and keeps picking; on open ground, a box).
+// One rule for the finger (Albert, Build 40): a tap picks a unit, a double tap opens its card, a hold does more (picks and keeps picking; on open ground, a box). Buildings and places open on one tap.
 // With one or more of yours picked, a tap on anything else is the obvious order, without a menu: attack, hunt, gather, build, mend, walk.
 // The order goes at once (Build 40 reviews: a waiting order reads as lag); a second tap on the same thing within a blink opens its card, the order already given.
 let lastTap = { key: '', t: 0 };
@@ -99,7 +99,8 @@ function tapAt(sx, sy) {
   const mine = picked();
   if (mine.length) { order(mine, h); refresh(); return; }
   if (h.t === 'ground') { showStrip(sx, sy, h.e.x, h.e.y); return; }   // nothing picked: the send strip, as before
-  setPick([{ t: h.t, id: h.e.id }]);   // something that is not yours: a ring says what the finger found; a second tap opens its page
+  if (h.t !== 'unit') { setPick([]); openCard(cardFor(h)); return; }   // a building, a field, a find: nothing to pick, so one tap opens it (Albert, Build 40)
+  setPick([{ t: h.t, id: h.e.id }]);   // a unit not yours: a ring says what the finger found; a second tap opens its page
 }
 // what the finger holds
 const picked = () => G.pick.filter(k => k.t === 'unit').map(k => G.units.find(u => u.id === k.id)).filter(u => u && u.owner === 0 && u.hp > 0 && !u.inside);
@@ -142,7 +143,7 @@ function startPlace(kind) {
   const why = capWhy(0, kind); if (why) { say(why + '.', '', 3); sfx('err'); return; }
   closeCard(); setPick([]); G.place = { kind, at: null, a: null, cells: null };
   // start the ghost in the middle of the screen, snapped beside something of yours if it can be
-  const w = toWorld(cw / 2, ch / 2); if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200);
+  const w = G.buildAt || toWorld(cw / 2, ch / 2); G.buildAt = null; if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200);   // from the hammer on open ground: there; otherwise the middle of the screen
   $('place').hidden = false; ui(true);
 }
 // you tapped Build: build what the ghost shows; houses, fields and gates offer the next spot beside it

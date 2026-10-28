@@ -14,6 +14,7 @@ const ICON = {
   def: SVG(20, '<path d="M4 17 V6 H6.5 V8.2 H8.6 V6 H11.4 V8.2 H13.5 V6 H16 V17 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 17 V13 H11.4 V17" fill="currentColor"/>'),
   shop: SVG(20, '<path d="M3.5 7.5 H15.5 M12.5 4.5 L15.5 7.5 L12.5 10.5 M16.5 13 H4.5 M7.5 10 L4.5 13 L7.5 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>'),
   cult: SVG(20, '<path d="M3 8.2 L10 4 L17 8.2 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M5.2 9.5 V15 M8.4 9.5 V15 M11.6 9.5 V15 M14.8 9.5 V15 M3 16.5 H17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'),
+  sword: SVG(16, '<path d="M12.5 2.5 L13.5 3.5 L6 11 L5 10 Z" fill="currentColor"/><path d="M3.5 9.5 L6.5 12.5 M2.5 13.5 L4.5 11.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'),
   close: SVG(20, '<path d="M5.5 5.5 L14.5 14.5 M14.5 5.5 L5.5 14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'),
   hammer: SVG(16, '<path d="M3 13 L9 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 3.5 L10 2 L13.5 5.5 L12 8.5 Z" fill="currentColor"/>'),
   book: SVG(16, '<path d="M2 3.5 Q5.2 2.4 8 4 Q10.8 2.4 14 3.5 V12.5 Q10.8 11.4 8 13 Q5.2 11.4 2 12.5 Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 4 V13" stroke="currentColor" stroke-width="1.2"/>'),
@@ -35,21 +36,21 @@ const wd = (t, id) => `<span class="wd"${id ? ` id="${id}"` : ''}>${t}</span>`;
 // The top: the tally (five counts, mute, pause, speed), then the strip (age, season, clock; idle; score). The bottom: People, then one column per job; Build swaps the row for the categories.
 function buildPanel() {
   $('tally').innerHTML = [['f', 'Food'], ['w', 'Wood'], ['s', 'Stone'], ['g', 'Gold'], ['i', 'Iron']].map(([r, n]) => cell(`data-act="card:stores" aria-label="${n}: open the stores"`, ICON[n.toLowerCase()], wd('0', 'r' + r))).join('')
-    + cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') + cell('id="pauseB" data-act="pause" aria-label="Pause"', ICON.pause, '', 'one') + cell('id="speed" data-act="speed" aria-label="Game speed"', '', wd('×1', 'speedT'), 'one');
+    + cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') + cell('id="pauseB" data-act="pause" aria-label="Pause; hold for speed"', ICON.pause, '', 'one') + cell('id="mapT" data-act="map" aria-label="The small map"', ICON.map, '', 'one');   // one button for play, pause and speed (hold it); the freed cell is the map (Albert, Build 40)
   const st = (act, t, label, id) => `<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
   $('jobs').innerHTML = `<div class="col">${cell('id="tPeople" data-act="card:army" aria-label="People: army, research, how to play"', ICON.people, wd('0/0', 'tPeopleN'))}<div class="pm">${st('unvil', '−', 'Cancel a villager waiting to train', 'tUn')}${st('train:vil', '+', 'Train a villager', 'tVil')}</div></div>`
     + JOBS.map(r => `<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`).join('');
-  $('tkList').innerHTML = ICON.list; $('tkMin').innerHTML = ICON.up; $('mapB').innerHTML = ICON.map; $('miniX').innerHTML = ICON.less; $('homeB').innerHTML = ICON.home; $('buildB').innerHTML = ICON.hammer;
+  $('tkList').innerHTML = ICON.list; $('tkMin').innerHTML = ICON.up; $('homeB').innerHTML = ICON.home; $('buildB').innerHTML = ICON.hammer;
 }
 const refresh = () => { cardSig = ''; ui(true); };
 function muteBtn() { $('muteB').classList.toggle('off', !SND.on); $('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on'); }
-function paceBtn() { const pb = $('pauseB'); pb.innerHTML = G.paused ? ICON.play : ICON.pause; pb.setAttribute('aria-label', G.paused ? 'Play' : 'Pause'); pb.classList.toggle('on', !!G.paused); $('speedT').textContent = '×' + G.speed; }
+function paceBtn() { const pb = $('pauseB'); pb.innerHTML = (G.paused ? ICON.play : ICON.pause) + (G.speed > 1 ? `<span class="spd">×${G.speed}</span>` : ''); pb.setAttribute('aria-label', (G.paused ? 'Play' : 'Pause') + '; hold for speed'); pb.classList.toggle('on', !!G.paused); }
 function setPause(v) { G.paused = v; paceBtn(); }
-function applyMini() { mini.hidden = !SET.mini; $('mapB').hidden = !!SET.mini; $('miniX').hidden = !SET.mini; $('stage').classList.toggle('mapOn', !!SET.mini); }
+function applyMini() { mini.hidden = !SET.mini; $('mapT').classList.toggle('lit', !!SET.mini); $('stage').classList.toggle('mapOn', !!SET.mini); }
 // the end of a game: the sim says who won and why; the screen shows it
 function showEnd(won, text) { $('endT').textContent = won ? 'Victory' : 'Defeat'; $('endP').textContent = text; $('endNext').hidden = $('endFree').hidden = !won; $('end').hidden = false; closeCard(); }
 // The page's own measures: how tall the orders are (the map's bottom edge) and where the map's middle sits between the bars
-function fit() { const r = cv.getBoundingClientRect(); dpr = LOW.n >= 2 ? 1 : Math.min(2, window.devicePixelRatio || 1); cw = r.width; ch = r.height; { const h = $('hud').getBoundingClientRect(), o = $('orders').getBoundingClientRect(), t = r.top; document.documentElement.style.setProperty('--ob', Math.round(r.bottom - o.top) + 'px'); vy = Math.round(((h.bottom - t) + (o.top - t)) / 2 - ch / 2); } const W = Math.round(cw * dpr), H = Math.round(ch * dpr); if (cv.width !== W) cv.width = W; if (cv.height !== H) cv.height = H; cam.z = clamp(cam.z, minZ(), ZOOM_MAX); clampCam(); }
+function fit() { const r = cv.getBoundingClientRect(); dpr = LOW.n >= 2 ? 1 : Math.min(2, window.devicePixelRatio || 1); cw = r.width; ch = r.height; { const h = $('hud').getBoundingClientRect(), o = $('orders').getBoundingClientRect(), t = r.top; document.documentElement.style.setProperty('--ob', Math.round(r.bottom - o.top) + 'px'); vy = Math.round(((h.bottom - t) + (o.top - t)) / 2 - ch / 2); bandH = Math.max(100, o.top - h.bottom); } const W = Math.round(cw * dpr), H = Math.round(ch * dpr); if (cv.width !== W) cv.width = W; if (cv.height !== H) cv.height = H; cam.z = clamp(cam.z, minZ(), ZOOM_MAX); clampCam(); }
 
 // ───────────────────────── Messages and tips ─────────────────────────
 // quiet kinds (news, the spectacle's 'coming' lines) never take the line: they wait in the list and count on the bell (Albert: too many alerts to keep up with)
@@ -136,6 +137,6 @@ function tick() {
   const m = paused && !(live && live.cls === 'warn') ? { text: 'Paused · ▶ to carry on', cls: '' } : live || G.log.find(x => !x.quiet), el = $('tkT');   // paused says so, unless a warning is up; a quiet line never takes the line
   txt('tkT', m ? m.text : ''); el.dataset.act = linkOf(live) || 'tklist';
   $('ticker').className = 'tick ' + (m && m === live ? live.cls || '' : m && !G.log.includes(m) ? '' : 'old');
-  const pop = G.tkOpen && G.log.length ? G.log.map(x => `<div class="row ${x.cls || ''}"><button class="t" data-act="${linkOf(x) || 'tklist'}">${x.text}</button><button class="h" data-act="hush:${encodeURIComponent(x.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`).join('') : '';
+  const pop = G.tkOpen && G.log.length ? G.log.map(x => `<div class="row ${x.cls || ''}"><button class="t" data-act="${linkOf(x) || 'tklist'}">${x.text}</button><button class="h" data-act="hush:${encodeURIComponent(x.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`).join('') + `<div class="row end"><button class="t" data-act="tkclear">Clear all</button><button class="h" data-act="tklist" aria-label="Close the list">✕</button></div>` : '';
   if (pop !== tick.sig) { tick.sig = pop; $('tkPop').innerHTML = pop; $('tkPop').hidden = !pop; }
 }

@@ -30,8 +30,15 @@ function frame(now) {
 }
 for (const ev of ['pointerdown', 'pointermove', 'wheel']) document.addEventListener(ev, () => { inputT = performance.now(); }, { passive: true, capture: true });
 window.addEventListener('resize', fit);
-{ const first = !SET.mapSeen; SET.mapSeen = true; if (first) SET.mini = true; else if (SET.mini === undefined) SET.mini = false; saveSet(); }   // the first look shows the map; after that it stays shut until opened
-applyMini(); buildPanel(); fit(); newGame(); scoreAll(); ui(true);
+{ SET.mapSeen = true; if (SET.mini === undefined) SET.mini = false; saveSet(); }   // the small map starts closed; the map cell at the top opens it   // the first look shows the map; after that it stays shut until opened
+buildPanel(); applyMini(); fit(); newGame(); scoreAll(); ui(true);
+// the play button: a tap plays or pauses; a hold opens the speeds under it (Albert, Build 40)
+{ const pb = $('pauseB'), pop = $('spdPop'); let t = 0, held = false;
+  const open = () => { held = true; const r = pb.getBoundingClientRect(), s = $('stage').getBoundingClientRect(); pop.hidden = false; pop.style.top = (r.bottom - s.top + 4) + 'px'; pop.style.left = Math.max(4, Math.min(s.width - pop.offsetWidth - 4, r.right - s.left - pop.offsetWidth)) + 'px'; feel('tick'); };
+  pb.addEventListener('pointerdown', () => { held = false; clearTimeout(t); t = setTimeout(open, 420); });
+  for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) pb.addEventListener(ev, () => clearTimeout(t));
+  pb.addEventListener('click', e => { if (held) { e.stopPropagation(); held = false; } }, true);
+  document.addEventListener('pointerdown', e => { if (!pop.hidden && !pop.contains(e.target) && e.target !== pb && !pb.contains(e.target)) pop.hidden = true; }); }
 { const sv = readSave(); if (sv && sv.t > 20) { holdSave = true; setPause(true); openCard({ type: 'resume', t: sv.t, age: sv.P[0].age, civ: sv.P[0].civ }); } else { setPause(true); openCard({ type: 'setup' }); } lastSave = performance.now(); }
 requestAnimationFrame(frame);
 window.__fkq = v => { G.gq = v; const el = $('gres'); if (el) el.innerHTML = histHTML(v); };   // the History search: the list follows the typing, the field keeps its focus

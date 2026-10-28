@@ -3,7 +3,7 @@
 // every button's verb, in one table
 const ACT = {
   pause() { setPause(!G.paused); },
-  speed() { G.speed = G.speed >= 3 ? 1 : G.speed + 1; paceBtn(); },   // ×1, ×2, ×3, back to ×1; it never pauses
+  spd(a) { G.speed = clamp(Number(a), 1, 3); $('spdPop').hidden = true; if (G.paused) setPause(false); paceBtn(); },   // from the speed drop-down under the play button
   again() { $('end').hidden = true; openCard({ type: 'setup' }); },
   free() { G.over = null; G.free = true; $('end').hidden = true; setPause(false); say('Free play: no clock, no victory.', '', 6); },
   next() { const p = G.P[0], keep = { age: p.age, techs: [...p.techs] }; $('end').hidden = true; newGame(undefined, keep); setPause(false); say('New land. Your age and research stay.', 'good', 8); saveGame(true); },
@@ -14,7 +14,7 @@ const ACT = {
   reload() { location.reload(); },
   vibe() { SET.vibe = !SET.vibe; saveSet(); feel('snap'); refresh(); },
   menu(a) { const keep = G.card && G.card.type === 'menu'; openCard({ type: 'menu', id: a }); if (keep) $('card').scrollTop = 0; },
-  buildrow() { if (G.card && G.card.type === 'menu') closeCard(); else openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // Build opens the Build card on the menu last used; again, it closes
+  buildrow() { G.buildAt = null; if (G.card && G.card.type === 'menu') closeCard(); else openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id }); },   // Build opens the Build card on the menu last used; again, it closes
   towncard() { const k = keepOf(0); if (k) openCard({ type: 'bld', id: k.id }); },
   unvil() { if (!unTrain(0, 'vil')) say('Nobody is waiting to train.', '', 3); },
   idlego() { const u = unitsOf(0, 'vil').find(v => !v.job); if (!u) return; cam.x = u.x; cam.y = u.y; clampCam(); closeCard(); },
@@ -32,6 +32,7 @@ const ACT = {
   diff(a) { SET.diff = a; G.diff = a; saveSet(); refresh(); },
   mode(a) { SET.mode = a; saveSet(); refresh(); },
   fantasy(a) { SET.fantasy = a === '1'; saveSet(); refresh(); },
+  hzq(a) { G.hzQ = G.hzQ === a ? null : a; refresh(); },   // the ? beside a hazard: what it does, one at a time
   hz(a) { SET.hz = { ...(SET.hz || HZ_DEFAULT) }; SET.hz[a] = SET.hz[a] ? 0 : 1; saveSet(); refresh(); },   // a hazard on or off; the points add up to the level
   today() { clearSave(); holdSave = false; newGame(todaySeed()); closeCard(); setPause(false); saveGame(true); refresh(); say(`Challenge of the day: level ${levelOf(G.hz)}.`, 'good', 8); },
   tips() { SET.tips = !SET.tips; saveSet(); refresh(); },
@@ -42,6 +43,8 @@ const ACT = {
   dockmin() { SET.dockMin = !SET.dockMin; saveSet(); ui(true); },
   dock(a) { G.sel = a === 'all' ? 'all' : Number(a); setPick(orderSet().map(u => ({ t: 'unit', id: u.id }))); feel('tick'); },   // the dock: a battalion picked in one tap; the pick bar then carries Charge, Fall back and Teach
   tkmin() { SET.tkMin = !SET.tkMin; saveSet(); G.tkN = 0; G.tkW = false; G.tkOpen = false; ui(true); fit(); },   // hide or show the ticker
+  qlock(id) { const t = TECHBY[id]; say(`Research ${t.name} at the ${BLD[t.at].name} for more slots.`, '', 5); },
+  tkclear() { G.log = []; G.tkOpen = false; G.tkN = 0; ui(true); },
   tklist() { G.tkOpen = !G.tkOpen && G.log.length > 0; ui(true); },   // the last five
   hush(a) { const t = decodeURIComponent(a || ''), k = hushKey(t), m = G.log.find(x => x.text === t);
     if (m && m.cls === 'warn') (G.hushW = G.hushW || {})[k] = G.t + 120; else { (SET.hush = SET.hush || {})[k] = 1; saveSet(); }
@@ -62,9 +65,12 @@ const PLAY = {
   mtab(a) { G.mtab = a; },
   ktab(a) { G.ktab = a; },
   sel(a) { G.sel = a === 'all' ? 'all' : Number(a); },
-  sendto(a) { const [f, x, y] = a.split(','), to = { x: Number(x), y: Number(y) }, S = sendPick(/^(q|all|n\d+)$/.test(f) ? f : Number(f), to);
+  sendto(a) { const [f, x, y] = a.split(','), to = { x: Number(x), y: Number(y) }, S = sendPick(/^(q|h|all|n\d+)$/.test(f) ? f : Number(f), to);
     S.forEach(u => { u.state = 'goto'; u.px = to.x; u.py = to.y; u.idleT = 0; u.focus = null; }); march(S, to, coord(to.x, to.y)); if (S.length) ripple(to.x, to.y, '#ffd35e'); hideStrip(); },
   nostrip() { hideStrip(); },
+  striparmy() { const s = G.stripAt; if (s) showStrip(s.sx, s.sy, s.x, s.y, 1); },
+  stripmore() { const s = G.stripAt; if (s) showStrip(s.sx, s.sy, s.x, s.y, 2); },
+  buildhere(a) { const [x, y] = a.split(',').map(Number), hint = suggestAt(x, y), M = hint && MENUS.find(m => m.items.includes(hint)); hideStrip(); G.buildAt = { x, y, hint }; openCard({ type: 'menu', id: M ? M.id : G.lastMenu || MENUS[0].id }); },   // the hammer on open ground: the menu, on what fits there
   more(a) { const [x, y] = a.split(',').map(Number); openCard({ type: 'ground', x, y }); },
   qsfrom(a) { G.qs.from = a === 'all' ? 'all' : Number(a); },
   qsn(a) { const [k, d] = a.split(','), have = qsPool().filter(u => u.kind === k).length, cur = Math.min(have, G.qs.n[k] ?? have); G.qs.n[k] = clamp(cur + (d === '+' ? 1 : -1), 0, have); },

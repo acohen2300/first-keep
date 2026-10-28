@@ -34,7 +34,8 @@ function researchBadge(x, y, s, n) {
 }
 let vy = 0;   // the map is full screen; the view centres on the band between the top pills and the bottom ones
 /* fit() is in 14-frame.js: it reads the page's bars */
-function clampCam() { const hw = cw / 2 / cam.z, up = (ch / 2 + vy) / (cam.z * TILT), down = (ch / 2 - vy) / (cam.z * TILT); cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID)); cam.y = clamp(cam.y, Math.min(up - 50, MID), Math.max(MAP - down, MID)); }
+let bandH = 0;   // the height of the clear band between the top bars and the jobs (fit sets it)
+function clampCam() { const hw = cw / 2 / cam.z, half = (bandH || ch) / 2 / (cam.z * TILT); cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID)); cam.y = clamp(cam.y, Math.min(half, MID), Math.max(MAP - half, MID)); }   // the map's edges can come up to the bars, never under them (Albert, Build 40)
 const SX = x => (x - cam.x) * cam.z + cw / 2;
 const SY = (y, h) => (y - cam.y) * cam.z * TILT + ch / 2 + vy - (h || 0) * cam.z;
 const toWorld = (sx, sy) => ({ x: (sx - cw / 2) / cam.z + cam.x, y: (sy - ch / 2 - vy) / (cam.z * TILT) + cam.y });
@@ -102,6 +103,7 @@ function draw() {
     ctx.stroke();
   }
   drawGround();   // the weather's mark on the land, under everything standing
+  drawPicks(z);   // the pick rings lie on the ground, under the figure and the building (Albert, Build 40)
   // everything standing, back to front
   // what is on screen: margins in world units, wide enough for the widest building (its turned east wall) and the tallest (a wonder, standing just below the edge)
   const a0 = toWorld(0, 0), b0 = toWorld(cw, ch), mx = Math.max(80 / z, 44), wv = { x: a0.x - mx, y: a0.y - Math.max(120 / (z * TILT), 34) }, wv2 = { x: b0.x + mx, y: b0.y + Math.max(160 / (z * TILT), 115) }, inView = e => e.x > wv.x && e.x < wv2.x && e.y > wv.y && e.y < wv2.y;
@@ -119,7 +121,7 @@ function draw() {
   }
   if (G.fire) for (const n of G.fire) if (inView(n)) { const x = SX(n.x), y = SY(n.y), ph = (G.t * 5 + n.id) % 1; ctx.fillStyle = 'rgba(250,150,40,.85)'; ctx.beginPath(); ctx.ellipse(x, y - 8 * z, (3 + ph * 2) * z, (6 + ph * 4) * z, 0, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,230,120,.9)'; ctx.beginPath(); ctx.ellipse(x, y - 7 * z, 1.5 * z, 3 * z, 0, 0, 7); ctx.fill(); smoke(x, y - 14 * z, n.id, z); }   // the wildfire
   if (SET.fog) { if (fogT < 0) fogTick(); const a1 = toWorld(0, 0), b1 = toWorld(cw, ch), sx0 = clamp(a1.x, 0, MAP), sy0 = clamp(a1.y, 0, MAP), sx1 = clamp(b1.x, 0, MAP), sy1 = clamp(b1.y, 0, MAP); ctx.imageSmoothingEnabled = true; if (sx1 > sx0 && sy1 > sy0) ctx.drawImage(fogLayer(), sx0 / FOG, sy0 / FOG, (sx1 - sx0) / FOG, (sy1 - sy0) / FOG, SX(sx0), SY(sy0), (sx1 - sx0) * z, (sy1 - sy0) * z * TILT); }   // the fog, soft, over everything standing
-  drawPicks(z); sparkDraw(); ripDraw(); drawEvents(z);
+  sparkDraw(); ripDraw(); drawEvents(z);
   if (G.ords) {   // your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
     ctx.save(); ctx.strokeStyle = G.P[0].color; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.7; ctx.setLineDash([6, 6]); ctx.lineDashOffset = -performance.now() / 60;
     for (const id in G.ords) { const O = G.ords[id]; if (O.arrived || O.cx === undefined) continue; const ax = SX(O.cx), ay = SY(O.cy), bx = SX(O.x), by = SY(O.y); ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke(); ctx.beginPath(); ctx.ellipse(bx, by, 10 * cam.z, 10 * cam.z * TILT, 0, 0, 7); ctx.stroke(); }

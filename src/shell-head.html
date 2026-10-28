@@ -57,7 +57,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card.full{max-height:calc(100% - var(--ob) - var(--hb) - 14px)}
 #place{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:8px;padding:6px 6px 6px 10px;font-weight:600}
 #strip{position:absolute;display:flex;gap:4px;padding:4px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:10px;z-index:5;max-width:calc(100% - 8px);overflow-x:auto}
-#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button b{font-size:14px}#strip button small{font-size:12px}
+#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:20px;font-weight:700}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:14px}#strip button small{font-size:12px}
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
 #card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:8px 10px 10px;display:flex;flex-direction:column;gap:5px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
@@ -115,8 +115,8 @@ button.ghost{visibility:hidden}
 #tPeople .gl{width:20px;height:20px}
 #tPeople .wd{color:var(--bone)}
 /* on the map: the corners, one look (.fab). Map top right, Home bottom left (only when away), Build bottom right */
-#mapB{top:calc(var(--hb) + 8px);right:var(--pad);bottom:auto}
-#miniX{top:calc(var(--hb) - 2px);right:96px;bottom:auto;background:none;border:0;box-shadow:none}#miniX::before{content:'';position:absolute;inset:10px;background:var(--sheet);border:1px solid var(--hair);border-radius:6px}#miniX svg{width:14px;height:14px}   /* the minus on the map's corner: 24 px to see, 44 px to tap */
+#spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}#spdPop[hidden]{display:none}#spdPop button{min-width:52px;min-height:44px}
+#pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}#mapT.lit{background:#2f3b36}
 button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad)}#buildB{right:var(--pad)}
 #stage.busy #homeB,#stage.busy #buildB:not(.on){display:none}
 #buildB.on{background:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;bottom:auto;top:var(--tabtop);z-index:6;border-radius:var(--r) var(--r) 0 0;border-bottom-color:#b8862e;height:46px;box-shadow:0 0 12px rgba(242,210,122,.45)}   /* the Build card is open: the button sits on the page's top edge as its tab, and closes it */
@@ -133,6 +133,7 @@ button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44p
 /* a building's line: one slot per order it can hold; a filled slot shows what is in it and how far along; tap one to cancel it */
 #card .slots{display:grid;grid-template-columns:repeat(var(--qn,5),minmax(0,1fr));gap:4px}
 #card .slot{position:relative;overflow:hidden;min-height:44px;padding:2px 3px;font-size:12px;line-height:1.1;text-align:center;border-radius:6px}
+#card button.slot.lock:not(#cardX):not(#cardI){border-style:dashed;background:transparent;box-shadow:none;color:var(--mute);font-size:12px}
 #card button.slot.empty{border-style:dashed;background:transparent;box-shadow:none;color:var(--dim)}
 #card .slot i{position:absolute;left:0;bottom:0;height:3px;background:#8e1d14;width:var(--p)}
 button{font:inherit;color:var(--bone);background:var(--panel);border:1px solid var(--line);border-radius:8px;min-height:46px;padding:4px 6px;
@@ -173,6 +174,15 @@ button.ok small{color:#8fd4a4}
 #card .chipsrow b{font-size:13px}
 #card .chipsrow button.on:not(#cardX):not(#cardI){min-height:48px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);border-color:#f2d27a;box-shadow:0 0 12px rgba(242,210,122,.45)}#card .chipsrow button.on b{color:#2a1c10}
 #card .q{font:inherit;font-size:16px;color:var(--bone);background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:6px;min-height:44px;padding:4px 10px;width:100%;box-sizing:border-box}#card .row{display:flex;gap:12px;align-items:center}#card .look{color:var(--lamp);font-weight:700;min-height:44px;display:inline-flex;align-items:center}#card .row .lnk{width:auto}
+#card .acts.set{grid-template-columns:58px repeat(4,minmax(0,1fr));gap:4px}#card .acts.set .lbl b{font-size:14px}#card .acts.set .lbl{min-height:44px}#card .acts.set button:not(#cardX):not(#cardI){min-height:44px}
+#card .hzl{display:grid;grid-template-columns:1fr 1fr;gap:4px 6px}#card .hzr{display:flex;gap:3px;min-width:0}
+#card .hzr button.tick:not(#cardX):not(#cardI){flex:1;min-width:0;flex-direction:row;justify-content:flex-start;gap:5px;min-height:44px;padding:0 5px;background:transparent;box-shadow:none;border-color:#4a3a28}
+#card .hzr button.tick::before{content:'';flex:0 0 16px;height:16px;border:1.5px solid var(--brass);border-radius:3px;box-sizing:border-box}
+#card .hzr button.tick.on::before{content:'✓';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#2a1c10;background:var(--lamp);border-color:var(--lamp)}
+#card .hzr button.tick.on:not(#cardX):not(#cardI){background:transparent;color:var(--bone);border-color:var(--brass);box-shadow:none}#card .hzr button.tick.on small{color:var(--mute)}
+#card .hzr button.tick b{flex:1;text-align:left;font-size:13px;overflow:hidden;text-overflow:ellipsis}#card .hzr button.tick small{flex:0 0 auto}
+#card .hzr button.q:not(#cardX):not(#cardI){flex:0 0 44px;min-height:44px;padding:0;font-weight:700}
+#card button.big:not(#cardX):not(#cardI){min-height:60px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;box-shadow:0 0 14px rgba(242,210,122,.45)}#card button.big small{color:#4a3518}#card button.big::after{content:none}#card button.big b{font-size:20px;letter-spacing:.04em}
 #card button.lnk:not(#cardX):not(#cardI){min-height:44px;width:100%;padding:0;background:none;border:0;box-shadow:none;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;text-align:left}
 #card .tabs{gap:3px;margin-bottom:0}
 #card .tabs button:not(#cardX):not(#cardI){border-radius:8px 8px 0 0}
@@ -193,7 +203,7 @@ button.ok small{color:#8fd4a4}
   </header>
   <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
-    <button class="fab" id="mapB" data-act="map" aria-label="Show the map"></button><button class="fab" id="miniX" data-act="map" aria-label="Shrink the map" hidden></button>
+    <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
     <button class="fab" id="buildB" data-act="buildrow" aria-label="Build"></button>
     <div id="strip" hidden></div>

@@ -137,21 +137,31 @@ function guardRow(t, id) {
   return acts(btn(`guard:${t},${id}`, `${verb} +4`, n >= POST.guard ? `full: ${n}/${POST.guard}` : free ? `${n}/${POST.guard} · ${free} free` : 'no free soldiers', n < POST.guard && free ? '' : 'dis') + btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis'));
 }
 function sendPick(from, to) {   // 'q' a quarter of each type, 'all', 'n8' the nearest eight, or a battalion by its number
+  if (from === 'h') { const A = free(), by = {}; for (const u of A) (by[u.kind] = by[u.kind] || []).push(u); const out = []; for (const k in by) out.push(...by[k].sort((p, q) => dist(p, to) - dist(q, to)).slice(0, Math.ceil(by[k].length / 2))); return out; }   // half of each type, nearest first
   if (typeof from === 'string' && from[0] === 'n') return free().sort((p, q) => dist(p, to) - dist(q, to)).slice(0, Number(from.slice(1)));
   const A = typeof from === 'number' ? sendable() : free(), by = {};
   for (const u of A) if (from === 'q' || from === 'all' || u.bn === from) (by[u.kind] = by[u.kind] || []).push(u);
   const out = []; for (const k in by) { const a = by[k].sort((p, q) => dist(p, to) - dist(q, to)); out.push(...a.slice(0, from === 'q' ? Math.ceil(a.length / 4) : a.length)); }
   return out;
 }
-function showStrip(sx, sy, x, y) {
-  closeCard(); const el = $('strip'), at = `${Math.round(x)},${Math.round(y)}`, to = { x, y }, n = from => sendPick(from, to).length;
-  const bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
-  const nAll = n('all'), quick = [8, 12].filter(k => nAll > k).map(k => btn(`sendto:n${k},${at}`, String(k), 'quick')).join('');   // a quick 8 or 12: the nearest free ones
-  el.innerHTML = (nAll ? btn(`sendto:q,${at}`, 'Send ¼', String(n('q')), 'go') + quick + btn(`sendto:all,${at}`, 'All', String(nAll)) + bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') : '')
-    + btn(`more:${at}`, '⋯', '') + `<button data-act="nostrip" aria-label="Cancel">✕</button><small class="sn">Hold, then drag to box a group</small>`;
+// A tap on open ground (Albert, Build 40): a small row of icons. Hammer: build here (the menu opens on what fits the spot). Sword: the army, in place:
+// All, half, and more (a quarter, the nearest few, a battalion). Three dots: more about the place. Cross: away.
+function showStrip(sx, sy, x, y, step) {
+  if (step === undefined) closeCard(); const el = $('strip'), at = `${Math.round(x)},${Math.round(y)}`, to = { x, y }, n = from => sendPick(from, to).length, nAll = n('all'), ic = (act, icon, label, cls) => `<button data-act="${act}" class="ic ${cls || ''}" aria-label="${label}">${icon}</button>`;
+  const sh = { sx, sy, x, y }; G.stripAt = sh;
+  if (!step) el.innerHTML = ic(`buildhere:${at}`, ICON.hammer, 'Build here', 'go') + (nAll ? ic('striparmy', ICON.sword, 'Send soldiers here') : '') + ic(`more:${at}`, '⋯', 'More about this place') + ic('nostrip', ICON.close, 'Cancel');
+  else if (step === 1) el.innerHTML = btn(`sendto:all,${at}`, 'All', String(nAll), 'go') + btn(`sendto:h,${at}`, '½', String(n('h'))) + ic('stripmore', '⋯', 'More ways to send') + ic('nostrip', ICON.close, 'Cancel');
+  else { const bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : []; el.innerHTML = btn(`sendto:q,${at}`, '¼', String(n('q'))) + [8, 12].filter(k => nAll > k).map(k => btn(`sendto:n${k},${at}`, String(k), 'nearest')).join('') + bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') + ic('nostrip', ICON.close, 'Cancel'); }
   el.hidden = false; G.strip = to;
   const r = $('stage').getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight;
   el.style.left = clamp(sx - w / 2, 4, r.width - w - 4) + 'px'; el.style.top = clamp(sy - h - 18, 4, r.height - h - 4) + 'px';
+}
+// what the game thinks fits a spot: the drop-off for what grows there, if none is near; a house when room is short
+function suggestAt(x, y) {
+  const by = {}; for (const nd of G.nodes) if (nd.amt > 0 && !nd.farm && hyp(nd.x - x, nd.y - y) < 120) { const k = nd.kind === 'fish' ? 'dock' : nd.type === 'wood' ? 'lumber' : nd.type === 'food' ? 'mill' : 'mining'; if (!dropFor(0, nd.type, nd) || dist(dropFor(0, nd.type, nd), nd) > 110) by[k] = (by[k] || 0) + 1; }
+  const best = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
+  if (best && BLD[best[0]].age <= G.P[0].age) return best[0];
+  return capOf(0) - popOf(0) - queuedOf(0) <= 2 ? 'house' : null;
 }
 function hideStrip() { const el = $('strip'); if (el && !el.hidden) { el.hidden = true; if (G) G.strip = null; } }
 // ── the War Council: six battalions, what each holds by type, its stance and formation
@@ -180,8 +190,10 @@ const BLD_PAGE = {
 // A building's line: one slot per order it can hold. A filled slot shows the order and how far along it is; tap it and the order is cancelled, its cost back.
 function slotsHTML(b) {
   const n = qMax(0), cells = [];
-  for (let i = 0; i < n; i++) { const j = b.q[i]; cells.push(j ? `<button class="slot" data-act="qcancel:${b.id},${i}" style="--p:${i === 0 ? Math.round(100 * (1 - j.left / j.total)) : 0}%" aria-label="Cancel ${qName(j)}">${qName(j)}${i === 0 ? `<br>${Math.ceil(j.left)} s` : ''}<i></i></button>` : `<button class="slot empty" disabled>·</button>`); }
-  return `<div class="slots" style="--qn:${n}">${cells.join('')}</div>` + (b.blocked ? '<p><b>Needs room: House, Apartment or Aqueduct.</b></p>' : b.stall > G.t ? `<p><b>Stopped by sabotage: ${Math.ceil(b.stall - G.t)} s.</b></p>` : '');
+  for (let i = 0; i < n; i++) { const j = b.q[i]; cells.push(j ? `<button class="slot" data-act="qcancel:${b.id},${i}" style="--p:${i === 0 ? Math.round(100 * (1 - j.left / j.total)) : 0}%" aria-label="Cancel ${qName(j)}">${qName(j)}${i === 0 ? `<br>${Math.ceil(j.left)} s` : ''}<i></i></button>` : `<button class="slot empty" disabled>Slot ${i + 1}</button>`); }
+  const more = TECH.find(t => (t.fx || []).some(f => f.s === 'queue') && !G.P[0].techs.has(t.id));   // the next slot, locked: a tap says how to open it
+  if (more) cells.push(`<button class="slot lock" data-act="qlock:${more.id}" aria-label="A locked slot">🔒 Slot ${n + 1}</button>`);
+  return `<div class="slots" style="--qn:${cells.length}">${cells.join('')}</div>` + (b.blocked ? '<p><b>Needs room: House, Apartment or Aqueduct.</b></p>' : b.stall > G.t ? `<p><b>Stopped by sabotage: ${Math.ceil(b.stall - G.t)} s.</b></p>` : '');
 }
 // Relations, at the Town Center: one row per side, the stance you take toward them. Neutral keeps both swords sheathed; Hostile takes effect after notice; Ally needs their yes.
 function nativesHTML() {
@@ -295,10 +307,6 @@ function researchHTML() {   // everything you can research, across every buildin
   return h;
 }
 // the Challenge: each hazard a switch with its points; the sum is the level, and the level multiplies the score
-function hazardsHTML() {
-  const H = SET.hz || HZ_DEFAULT, lv = levelOf(H);
-  return sec(`Challenge · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}`) + acts(HZK.map(k => btn(`hz:${k}`, HAZARDS[k].name, `${HAZARDS[k].pts} pt${HAZARDS[k].pts > 1 ? 's' : ''}`, H[k] ? 'on' : '')).join(''), 'c3') + fold('hazards', 'What each hazard does', HZK.map(k => `<p><b>${HAZARDS[k].name}:</b> ${HAZARDS[k].desc}</p>`).join('') + `<p>Easy keeps the polite game whatever is on. Everything a hazard sends is announced first.</p>`);
-}
 function settingsHTML() {
   return sec('Difficulty') + acts(btn('diff:easy', 'Easy', `they think slower; no raid before ${clock(EASY_SAFE)}`, SET.diff === 'easy' ? 'on' : '') + btn('diff:normal', 'Normal', 'they think once a second', SET.diff === 'normal' ? 'on' : ''))
     + sec('Game') + acts(Object.entries(MODES).map(([k, m]) => btn(`mode:${k}`, m.name, k === 'conquest' ? 'no limit' : 'top score wins', SET.mode === k ? 'on' : '')).join(''), 'c3')
@@ -400,12 +408,19 @@ const CARDS = {
   },
   fault: () => title('Something went wrong', 'your game is saved') + `<p>Restart to carry on from the save.</p>` + acts(btn('reload', 'Restart', 'from the save', 'go') + btn('close', 'Carry on', 'as it is')),
   resume: c => title('Welcome back', 'saved on this phone') + `<p>Your game from ${clock(c.t)}: ${CIVS[c.civ] ? CIVS[c.civ].name + ', ' : ''}${AGES[c.age].name} age. Resume it, or start a new one.</p>` + acts(btn('resume', 'Resume', clock(c.t), 'go') + btn('card:setup', 'New game', '')),
-  setup() {
-    const C = CIVS[SET.civ];
-    let h = title('A new game', 'pick your people') + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, UNIT[CIVS[k].uu].name, SET.civ === k ? 'on' : '')).join(''), 'c3');
-    h += `<p><i>${C.name}:</i> ${C.bonus} Unique soldier: ${UNIT[C.uu].name} (in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}). Wonder: ${C.wonder}.</p>` + fold('why', 'Why?', `<p>${WHY['bonus:' + SET.civ]}</p>`);
+  setup() {   // the annoying part before the fun part (Albert): the settings first, then your people, the challenge as ticks, and Start at the foot
+    const C = CIVS[SET.civ], H = SET.hz || HZ_DEFAULT, lv = levelOf(H), short = k => cap1(UNIT[CIVS[k].uu].name.replace(new RegExp('^' + CIVS[k].name + ' ', 'i'), ''));
+    const row = (label, opts) => acts(`<div class="lbl"><b>${label}</b></div>` + opts.map(([v, n, on]) => btn(v, n, '', on ? 'on' : '')).join(''), 'c4 set');
+    let h = title('A new game', '')
+      + row('Game', [['diff:easy', 'Easy', SET.diff === 'easy'], ['diff:normal', 'Normal', SET.diff === 'normal'], ['fantasy:0', 'Real', !SET.fantasy], ['fantasy:1', 'Fantasy', SET.fantasy]])
+      + row('Length', Object.entries(MODES).map(([k, m]) => [`mode:${k}`, m.name.replace(' minutes', ' min'), SET.mode === k]))
+      + sec('Your people') + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, short(k), SET.civ === k ? 'on' : '')).join(''), 'c3')
+      + `<p>${C.bonus}</p>` + fold('why', 'Why?', `<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`)
+      + sec(`Challenge · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}`)
+      + `<div class="hzl">${HZK.map(k => `<div class="hzr"><button class="tick${H[k] ? ' on' : ''}" data-act="hz:${k}"><b>${HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small></button><button class="q${G.hzQ === k ? ' on' : ''}" data-act="hzq:${k}" aria-label="What ${HAZARDS[k].name} does">?</button></div>`).join('')}</div>`
+      + (G.hzQ && HAZARDS[G.hzQ] ? `<p><b>${HAZARDS[G.hzQ].name}:</b> ${HAZARDS[G.hzQ].desc}</p>` : '');
     if (staleSave) h += `<p class="dim">Your last game came from an older version (${staleSave}) and cannot be opened. It is kept aside, not deleted.</p>`;
-    return h + acts(btn('fresh', 'Start', `${C.name} · ${MODES[SET.mode].name} · ${SET.fantasy ? 'fantasy' : 'real world'} · ${SET.diff} · level ${levelOf(SET.hz || HZ_DEFAULT)}`, 'go') + btn('today', 'The challenge today', `level ${levelOf(TODAY_HZ)} on the map of the day, for everyone`), 'c1') + hazardsHTML() + fold('settings', 'Game settings', settingsHTML()) + fold('about', 'About', `<p>The other three sides take three of the other civilisations at random. Every civilisation has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`);
+    return h + acts(btn('fresh', 'Start', `${C.name} · ${MODES[SET.mode].name} · level ${lv}`, 'go big'), 'c1') + `<button class="lnk" data-act="today">Or the challenge of the day: level ${levelOf(TODAY_HZ)}</button>`;
   },
   node(c) {
     const n = G.nodes.find(x => x.id === c.id); if (!n) return null;
@@ -438,9 +453,9 @@ const CARDS = {
   keep() { const k = keepOf(0); if (!k) return null; G.card = { type: 'bld', id: k.id }; return CARDS.bld(G.card); },
   menu(c) {
     const p = G.P[0], M = MENUS.find(m => m.id === c.id); G.lastMenu = c.id;
-    const item = k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp; return btn(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? `limit ${cp}` : !afford(p, B.cost) ? `short ${need(B.cost)}` : costText(B.cost) + (cp > 1 && cp < 99 ? ` · ${n}/${cp}` : ''), lock || full || !afford(p, B.cost) ? 'dis' : ''); };
+    const item = k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp, fits = G.buildAt && G.buildAt.hint === k; return btn(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? `limit ${cp}` : !afford(p, B.cost) ? `short ${need(B.cost)}` : (fits ? 'fits here · ' : '') + costText(B.cost) + (cp > 1 && cp < 99 ? ` · ${n}/${cp}` : ''), lock || full || !afford(p, B.cost) ? 'dis' : fits ? 'go' : ''); };
     const most = Math.max(...MENUS.map(m => m.items.length)), ghosts = '<button class="ghost" disabled aria-hidden="true" tabindex="-1"><b>.</b><small>.</small></button>'.repeat(most - M.items.length);   // blank places keep every menu as tall as the biggest (two rows), so the page never changes height
-    return title('Build', '') + acts(MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join(''), 'c6 chipsrow') + acts(M.items.map(item).join('') + ghosts, 'c4 menu')
+    return title('Build', G.buildAt ? 'here' : '') + acts(MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join(''), 'c6 chipsrow') + acts(M.items.map(item).join('') + ghosts, 'c4 menu')
       + fold('menu', 'What each one does', M.items.map(k => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''));
   },
   research: () => researchHTML(),
@@ -464,7 +479,7 @@ const CARDS = {
     return title('How to play', `build ${BUILD}`) + acts(btn('guide:bld', 'Guide', 'what leads to what, and why', 'go') + btn('guide:rule', 'Rules', 'what triggers what'))
       + `<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
       <p><b>Build:</b> pick a menu, then a building. It waits above your finger: drag it, then tap Build. Villagers raise it.</p>
-      <p><b>The finger:</b> tap to pick, tap twice to open a page, hold to pick more (or box a group on open ground). With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there.</p>
+      <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Hold the play button for the speeds.</p>
       <p><b>Army:</b> tap open ground with nothing picked: Send ¼ or All. The War Council opens stances, battalions, formations and Muster.</p>
       <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
