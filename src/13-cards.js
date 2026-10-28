@@ -293,6 +293,11 @@ function researchHTML() {   // everything you can research, across every buildin
   if (by.locked.length) h += fold('lockedR', `Locked · ${by.locked.length}`, grid(by.locked));
   return h;
 }
+// the Challenge: each hazard a switch with its points; the sum is the level, and the level multiplies the score
+function hazardsHTML() {
+  const H = SET.hz || HZ_DEFAULT, lv = levelOf(H);
+  return sec(`Challenge · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}`) + acts(HZK.map(k => btn(`hz:${k}`, HAZARDS[k].name, `${HAZARDS[k].pts} pt${HAZARDS[k].pts > 1 ? 's' : ''}`, H[k] ? 'on' : '')).join(''), 'c3') + fold('hazards', 'What each hazard does', HZK.map(k => `<p><b>${HAZARDS[k].name}:</b> ${HAZARDS[k].desc}</p>`).join('') + `<p>Easy keeps the polite game whatever is on. Everything a hazard sends is announced first.</p>`);
+}
 function settingsHTML() {
   return sec('Difficulty') + acts(btn('diff:easy', 'Easy', `they think slower; no raid before ${clock(EASY_SAFE)}`, SET.diff === 'easy' ? 'on' : '') + btn('diff:normal', 'Normal', 'they think once a second', SET.diff === 'normal' ? 'on' : ''))
     + sec('Game') + acts(Object.entries(MODES).map(([k, m]) => btn(`mode:${k}`, m.name, k === 'conquest' ? 'no limit' : 'top score wins', SET.mode === k ? 'on' : '')).join(''), 'c3')
@@ -396,7 +401,7 @@ const CARDS = {
     let h = title('A new game', 'pick your people') + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, UNIT[CIVS[k].uu].name, SET.civ === k ? 'on' : '')).join(''), 'c3');
     h += `<p><i>${C.name}:</i> ${C.bonus} Unique soldier: ${UNIT[C.uu].name} (in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}). Wonder: ${C.wonder}.</p>` + fold('why', 'Why?', `<p>${WHY['bonus:' + SET.civ]}</p>`);
     if (staleSave) h += `<p class="dim">Your last game came from an older version (${staleSave}) and cannot be opened. It is kept aside, not deleted.</p>`;
-    return h + acts(btn('fresh', 'Start', `${C.name} · ${MODES[SET.mode].name} · ${SET.fantasy ? 'fantasy' : 'real world'} · ${SET.diff}`, 'go'), 'c1') + fold('settings', 'Game settings', settingsHTML()) + fold('about', 'About', `<p>The other three sides take three of the other civilisations at random. Every civilisation has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`);
+    return h + acts(btn('fresh', 'Start', `${C.name} · ${MODES[SET.mode].name} · ${SET.fantasy ? 'fantasy' : 'real world'} · ${SET.diff} · level ${levelOf(SET.hz || HZ_DEFAULT)}`, 'go') + btn('today', "Today's challenge", `level ${levelOf(TODAY_HZ)} on today's map, for everyone`), 'c1') + hazardsHTML() + fold('settings', 'Game settings', settingsHTML()) + fold('about', 'About', `<p>The other three sides take three of the other civilisations at random. Every civilisation has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`);
   },
   node(c) {
     const n = G.nodes.find(x => x.id === c.id); if (!n) return null;
@@ -431,13 +436,13 @@ const CARDS = {
     const p = G.P[0], M = MENUS.find(m => m.id === c.id); G.lastMenu = c.id;
     const item = k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp; return btn(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? `limit ${cp}` : !afford(p, B.cost) ? `short ${need(B.cost)}` : costText(B.cost) + (cp > 1 && cp < 99 ? ` · ${n}/${cp}` : ''), lock || full || !afford(p, B.cost) ? 'dis' : ''); };
     const most = Math.max(...MENUS.map(m => m.items.length)), ghosts = '<button class="ghost" disabled aria-hidden="true" tabindex="-1"><b>.</b><small>.</small></button>'.repeat(most - M.items.length);   // blank places keep every menu as tall as the biggest (two rows), so the page never changes height
-    return title('Build', M.blurb) + acts(MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join(''), 'c6 chipsrow') + acts(M.items.map(item).join('') + ghosts, 'c4 menu')
+    return title('Build', '') + acts(MENUS.map(m => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join(''), 'c6 chipsrow') + acts(M.items.map(item).join('') + ghosts, 'c4 menu')
       + fold('menu', 'What each one does', M.items.map(k => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''));
   },
   research: () => researchHTML(),
   score() {
     scoreAll(); const rows = G.P.filter(q => q.id !== WILD), cats = [['people', 'People'], ['army', 'Army'], ['tech', 'Tech'], ['bld', 'Buildings'], ['wealth', 'Wealth'], ['total', 'Score']];
-    return title('Score', MODES[G.mode].secs ? `${clock(Math.max(0, MODES[G.mode].secs - G.t))} to the bell` : 'conquest')
+    return title('Score', (MODES[G.mode].secs ? `${clock(Math.max(0, MODES[G.mode].secs - G.t))} to the bell` : 'conquest') + (levelOf(G.hz) ? ` · level ${levelOf(G.hz)} ×${levelMul().toFixed(1)}` : ''))
       + `<table><tr><th></th>${rows.map(q => `<th style="border-bottom:3px solid ${q.color}">${q.id === 0 ? 'You' : `<button class="lnk" data-act="seek:${q.id}">${q.name}</button>`}</th>`).join('')}</tr>${cats.map(([k, n]) => `<tr><td>${n}</td>${rows.map(q => `<td>${q.alive || k === 'total' ? fmt(q.score[k]) : '–'}</td>`).join('')}</tr>`).join('')}</table>`
       + `<p>People and Army: what you hold, cost ÷ ${SCORE.unit}. Tech: research and ages paid ÷ ${SCORE.tech}. Buildings: standing, cost ÷ ${SCORE.bld}. Wealth: everything gathered, traded, found and plundered ÷ ${SCORE.wealth}. ${G.wonder ? `A wonder stands: ${clock(Math.max(0, G.wonder.end - G.t))} left.` : ''}</p>`;
   },

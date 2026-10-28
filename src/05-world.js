@@ -4,7 +4,7 @@ let G;
 function blankGame(seed) {
   return { t: 0, tick: 0, speed: G ? G.speed : 1, over: null, seed, rs: seed, units: [], blds: [], nodes: [], finds: [], tracers: [], log: [],
     P: [], rel: [], card: null, place: null, sel: 'all', alertT: -99, warnT: -99, confirm: null, night: 0, loot: {}, lootT: 0,
-    hold: Array(BNS + 1).fill(0), stance: Array(BNS + 1).fill(0), bnPlan: BN.map(() => ({})), form: BN.map(() => 0), bnEdit: 0, qs: { from: 'all', n: {} }, intel: {}, fantasy: SET.fantasy, mode: SET.mode, diff: SET.diff, wayT: WAYFARER_EVERY * 0.5, wayI: 0, wonder: null, navDirty: true, fxv: 1, warAt: {}, pick: [] };   // warAt: notice given, 'a,b' → when it falls due; pick: what the finger holds
+    hold: Array(BNS + 1).fill(0), stance: Array(BNS + 1).fill(0), bnPlan: BN.map(() => ({})), form: BN.map(() => 0), bnEdit: 0, qs: { from: 'all', n: {} }, intel: {}, fantasy: SET.fantasy, mode: SET.mode, diff: SET.diff, wayT: WAYFARER_EVERY * 0.5, wayI: 0, wonder: null, navDirty: true, fxv: 1, warAt: {}, pick: [], hz: {}, ev: {}, horde: null, flood: 0 };   // warAt: notice given, 'a,b' → when it falls due; pick: what the finger holds; hz: the hazards on; ev: the spectacle's state
 }
 function mkPlayer(i, civ) {
   const d = PLAYERS[i];
@@ -20,6 +20,7 @@ function newGame(seed, carry) {
   for (let i = 0; i <= WILD; i++) G.P.push(mkPlayer(i, i === 0 ? SET.civ : i === WILD ? null : others[i - 1]));
   // relations: 'war' | 'peace' | 'ally'. Raiders and Rivals are at war with everyone but the Fortress; the Fortress is at peace with all; the wild is at war with all.
   for (let a = 0; a <= WILD; a++) { G.rel[a] = []; for (let b = 0; b <= WILD; b++) G.rel[a][b] = a === b ? 'self' : a === WILD || b === WILD ? 'war' : (a === FORT || b === FORT ? 'peace' : 'war'); }
+  G.hz = seed === todaySeed() ? { ...TODAY_HZ } : { ...(SET.hz || HZ_DEFAULT) };   // today's challenge: the day's seed and the day's hazards
   makeMap(); initEconomy(); makeBg();
   navRebuild();
   const k = G.P[0].keep; cam.x = k[0] + 120; cam.y = k[1] - 120; cam.z = 1.3; clampCam();

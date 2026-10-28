@@ -3,9 +3,10 @@
 // Squares of 10, never shown. Buildings fill whole squares and leave one free around them. Walls are one square each.
 const NC = MAP / NAVC;
 const NAV = { solid: new Uint8Array(NC * NC), gate: new Uint8Array(NC * NC), lake: new Uint8Array(NC * NC), comp: new Int32Array(NC * NC), occ: new Array(NC * NC).fill(null), prev: new Uint8Array(NC * NC), prevG: new Uint8Array(NC * NC), v: 0, budget: 4 };
-let lakeFor = null;   // the lakes the grid was drawn for
-const lakeGap = (x, y) => G.lakes.reduce((m, L) => Math.min(m, hyp(x - L.x, y - L.y) - L.r), 1e9);   // how far from the nearest lake's edge
-function lakeGrid() { NAV.lake.fill(0); for (const L of G.lakes) for (let y = 0; y < NC; y++) for (let x = 0; x < NC; x++) if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < L.r + 2) NAV.lake[y * NC + x] = 1; lakeFor = G.lakes; }
+let lakeFor = null, lakeHi = false;   // the lakes the grid was drawn for, and whether in flood
+const lakeR = L => L.r + (G.flood > G.t ? EVENTS.flood.rise : 0);   // a lake in flood reaches farther up its shore
+const lakeGap = (x, y) => G.lakes.reduce((m, L) => Math.min(m, hyp(x - L.x, y - L.y) - lakeR(L)), 1e9);   // how far from the nearest lake's edge
+function lakeGrid() { NAV.lake.fill(0); for (const L of G.lakes) for (let y = 0; y < NC; y++) for (let x = 0; x < NC; x++) if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeR(L) + 2) NAV.lake[y * NC + x] = 1; lakeFor = G.lakes; lakeHi = G.flood > G.t; }
 const gcell = (x, y) => clamp(Math.floor(y / NAVC), 0, NC - 1) * NC + clamp(Math.floor(x / NAVC), 0, NC - 1);
 const toCell = w => ({ gx: clamp(Math.floor(w.x / NAVC), 0, NC - 1), gy: clamp(Math.floor(w.y / NAVC), 0, NC - 1) });
 const coord = (x, y) => String.fromCharCode(65 + clamp(Math.floor(x / 100), 0, 19)) + (clamp(Math.floor(y / 100), 0, 19) + 1);
@@ -14,7 +15,7 @@ function snapPos(kind, x, y) { // the squares a building would cover if centred 
   return { gx, gy, x: (gx + n / 2) * NAVC, y: (gy + n / 2) * NAVC };
 }
 function navRebuild() {
-  if (lakeFor !== G.lakes) lakeGrid();
+  if (lakeFor !== G.lakes || lakeHi !== (G.flood > G.t)) lakeGrid();
   NAV.prev.set(NAV.solid); NAV.prevG.set(NAV.gate); NAV.solid.set(NAV.lake); NAV.gate.fill(0); NAV.occ.fill(null);
   // a tree fills the 3×3 squares round it: forest is a wall until it is cut
   const T = G.nodes.filter(n => n.kind === 'tree' && n.amt > 0);
@@ -164,7 +165,7 @@ function moveTo(u, x, y, dt, r, SP) {
   const wp = route(u, tx, ty);
   const dx = wp.x - u.x, dy = wp.y - u.y, dd = hyp(dx, dy) || 1e-6;
   const lim = wp.direct ? (stand ? dd : Math.max(0, dd - r)) : dd;
-  const m = Math.min(Math.min(stats(o, u.kind).spd, u.cap || 1e9) * (u.kind === 'vil' && u.carry > 0 ? 0.9 : 1) * (u.sick > G.t ? 0.8 : 1) * SP * dt * (u.stance === 1 ? STANCE[1].spd : 1) * (FORM[formOf(u)].spd || 1), lim);
+  const m = Math.min(Math.min(stats(o, u.kind).spd, u.cap || 1e9) * (u.kind === 'vil' && u.carry > 0 ? 0.9 : 1) * (u.sick > G.t ? 0.8 : 1) * SP * dt * (u.stance === 1 ? STANCE[1].spd : 1) * (FORM[formOf(u)].spd || 1) * EVM.spd * (G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1), lim);
   let nx = u.x + dx / dd * m, ny = u.y + dy / dd * m;
   if (blockedCell(gcell(nx, ny), o)) { if (!blockedCell(gcell(nx, u.y), o)) ny = u.y; else if (!blockedCell(gcell(u.x, ny), o)) nx = u.x; else { nx = u.x; ny = u.y; } }
   u.x = nx; u.y = ny; if (m > 0.3) { if (!(u.kT > G.t - 0.5)) { u.fx = dx / dd; u.fy = dy / dd; } u.mvT = G.t; u.st.walk += m; if (u.kind === 'vil') tread(u); }   // real steps only: a small nudge neither turns the figure round nor starts its walk

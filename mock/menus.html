@@ -1,0 +1,130 @@
+<title>First Keep Menu Mockups</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=Barlow+Semi+Condensed:wght@500;600;700&family=Cinzel:wght@600;700&display=swap">
+<style>
+/* layout: three phone frames in a row (stacking on a phone), each a static rendering of the same Build card in one direction */
+:root{--bg:#efe9dc;--fg:#1f1b16;--mute:#6a6258;--line:#d8cfbd;--pick:#8e1d14;
+  --disp:"IM Fell English SC",Georgia,serif;--ui:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;--cap:"Cinzel",Georgia,serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171513;--fg:#ece5d3;--mute:#a79f90;--line:#3a352e;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#171513;--fg:#ece5d3;--mute:#a79f90;--line:#3a352e;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--ui);padding-block:28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font-family:var(--disp);font-weight:400;font-size:34px;margin:0 0 6px;text-wrap:balance}
+.lede{max-width:62ch;color:var(--mute);font-size:17px;line-height:1.4;margin:0 0 26px}
+.row{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.dir{flex:1 1 330px;max-width:390px;min-width:0}
+.dir h2{font-family:var(--disp);font-weight:400;font-size:26px;margin:0 0 4px}
+.dir p{margin:0 0 12px;color:var(--mute);line-height:1.4;font-size:15px;max-width:48ch}
+.phone{width:100%;max-width:375px;aspect-ratio:375/420;position:relative;border-radius:14px;overflow:hidden;background:#20301c url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='20' cy='30' r='14' fill='%232f5a2a'/%3E%3Ccircle cx='60' cy='60' r='12' fill='%232a4f26'/%3E%3C/svg%3E");border:1px solid var(--line)}
+.card{position:absolute;left:6px;right:6px;bottom:8px;padding:8px 10px 10px;display:flex;flex-direction:column;gap:6px;box-sizing:border-box}
+.card h3{margin:0;display:flex;align-items:baseline;gap:8px;font-weight:400;font-size:22px;min-height:34px}
+.card h3 small{font-family:var(--ui);font-size:14px;font-weight:600}
+.tabs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
+.tabs b{display:flex;align-items:center;justify-content:center;min-height:40px;font-size:14px;font-weight:700}
+.items{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.it{position:relative;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:14px;font-weight:700;line-height:1.1;text-align:center}
+.it small{font-size:12px;font-weight:600;opacity:.8}
+.it svg{width:18px;height:18px;display:block}
+.fab{position:absolute;right:8px;width:44px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:8px 8px 0 0}
+.fab svg{width:20px;height:20px}
+/* A · the ledger: the current parchment, finished: ruled lines, inked tabs with page ears, a wax seal on what is ready, an ink glyph on every building */
+.A .card{background:linear-gradient(#ebdeba,#decda2);border:1px solid #8a7048;border-radius:4px 8px 8px 4px;color:#2a1c10;box-shadow:inset 0 0 26px rgba(110,70,25,.38),inset 3px 0 0 rgba(90,60,25,.25)}
+.A .card h3{font-family:var(--disp);border-bottom:1px solid #a68e63}.A .card h3 small{color:#56412b}
+.A .tabs{border:1px solid #a68e63;border-radius:8px;overflow:hidden;background:#dac796}.A .tabs b{border-right:1px solid #a68e63}.A .tabs b:last-child{border:0}
+.A .tabs b.on{background:#8e1d14;color:#f4eac9;position:relative}
+.A .it{background:#f4eac9;border:1px solid #6b5432;border-radius:8px;box-shadow:inset 0 0 0 2px #e6d6ad,inset 0 0 0 3px #b9a176}
+.A .it.dis{background:transparent;border-style:dashed;box-shadow:none;color:#5a4630}.A .it .need{color:#8e1d14}
+.A .it.go::after{content:'';position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#dc5f52,#8e1d14)}
+.A .fab{background:#e6d6ad;color:#2a1c10;border:1px solid #8a7048;border-bottom:0;bottom:calc(8px + 212px)}
+.A svg{color:#2a1c10}
+/* B · the war table: lacquered wood and brass, the page lives in the same world as the tally and the strip; the chosen tab is the lit lantern */
+.B .card{background:linear-gradient(170deg,#3a2a1c,#241911 60%,#1c130d);border:1px solid #8f7442;border-radius:10px;color:#ece5d3;box-shadow:inset 0 0 0 2px #241911,inset 0 0 0 3px #6b5230,0 -6px 24px rgba(0,0,0,.5)}
+.B .card h3{font-family:var(--cap);font-size:18px;letter-spacing:.06em;color:#e6b947}.B .card h3 small{color:#a7b1aa;letter-spacing:0;text-transform:none}
+.B .tabs{gap:3px}.B .tabs b{border:1px solid #6b5230;border-radius:6px;background:#2b1f15;color:#c9bca2}
+.B .tabs b.on{background:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;box-shadow:0 0 14px rgba(242,210,122,.55)}
+.B .it{background:linear-gradient(#3b2b1d,#2a1d13);border:1px solid #8f7442;border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,220,150,.18)}
+.B .it.dis{opacity:.5;border-color:#4a3a28}.B .it .need{color:#ff8a70}
+.B .it.go{border-color:#e6b947;box-shadow:inset 0 0 0 1px #e6b947,0 0 10px rgba(230,185,71,.35)}
+.B .fab{background:#241911;color:#e6b947;border:1px solid #8f7442;border-bottom:0;bottom:calc(8px + 212px)}
+.B svg{color:#e6b947}
+/* C · illuminated: vellum with a painted border, the category as a drop capital, gold leaf on what you can raise now, red rubric where you are short, marginalia */
+.C .card{background:linear-gradient(#f3ead3,#e9dcbb);border:2px solid #1f4f7a;outline:1px solid #b8902a;outline-offset:-6px;border-radius:3px;color:#1f1b16;box-shadow:inset 0 0 30px rgba(140,100,40,.25)}
+.C .card h3{font-family:var(--cap);font-size:16px;letter-spacing:.08em;align-items:center}
+.C .card h3 .cap{font-family:var(--disp);font-size:40px;line-height:.9;color:#8e1d14;padding:2px 6px;border:1px solid #b8902a;background:linear-gradient(#f7e9b8,#dcb95a);margin-right:4px}
+.C .tabs{border-top:1px solid #1f4f7a;border-bottom:1px solid #1f4f7a}.C .tabs b{color:#1f4f7a;font-family:var(--cap);font-size:12px;letter-spacing:.04em}.C .tabs b.on{color:#8e1d14;text-decoration:underline;text-underline-offset:6px;text-decoration-color:#b8902a;text-decoration-thickness:2px}
+.C .it{border:1px solid #b8902a;background:#f6edd6;border-radius:2px}
+.C .it.go{background:linear-gradient(135deg,#f7e9b8,#e3c56c 55%,#f7e9b8);border-color:#8a6a1a}
+.C .it.dis{background:transparent;border-style:dotted;color:#7a6a50}.C .it .need{color:#8e1d14;font-style:italic}
+.C .fab{background:#f3ead3;color:#1f4f7a;border:2px solid #1f4f7a;border-bottom:0;bottom:calc(8px + 212px)}
+.C svg{color:#1f4f7a}
+.C .marg{position:absolute;left:-2px;top:36px;width:22px;height:120px;opacity:.6}
+.note{margin-top:28px;max-width:62ch;color:var(--mute);line-height:1.45;font-size:15px}
+.note b{color:var(--fg)}
+</style>
+<h1>Three faces for the Build card</h1>
+<p class="lede">The same page three ways: Land, with the Build button sitting on the card's top edge as its tab. Every direction keeps the four-a-row grid, two rows, 44-pixel taps, and the three states (ready, short of something in red, locked). Pick one; the unit, building and research cards take the same dress.</p>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-farm" viewBox="0 0 20 20"><path d="M3 17h14M5 17V9l3 2V6l2 3 2-3v5l3-2v8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+<symbol id="i-sheep" viewBox="0 0 20 20"><ellipse cx="10" cy="10" rx="6.5" ry="4.5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="9" r="2" fill="currentColor"/><path d="M6 14v3M9 14v3M12 14v3" stroke="currentColor" stroke-width="1.4"/></symbol>
+<symbol id="i-tree" viewBox="0 0 20 20"><path d="M10 2l6 9h-3l4 5H3l4-5H4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 16v3" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="i-mill" viewBox="0 0 20 20"><path d="M6 18V9l4-5 4 5v9z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 9l5-5M10 9l-5-5M10 9l5 5M10 9l-5 5" stroke="currentColor" stroke-width="1.2"/></symbol>
+<symbol id="i-oven" viewBox="0 0 20 20"><path d="M3 17h14M4 17V10a6 6 0 0 1 12 0v7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 17v-4h4v4" fill="currentColor"/></symbol>
+<symbol id="i-dock" viewBox="0 0 20 20"><path d="M2 13h16M5 13v4M10 13v4M15 13v4" stroke="currentColor" stroke-width="1.6"/><path d="M4 9l4-4 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+<symbol id="i-axe" viewBox="0 0 20 20"><path d="M4 16L13 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M11 5l3-2 4 4-2 3z" fill="currentColor"/></symbol>
+<symbol id="i-pick" viewBox="0 0 20 20"><path d="M4 17L12 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 5q5-2 9 3M8 5l1 2M17 8l-2 1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+<symbol id="i-hammer" viewBox="0 0 16 16"><path d="M3 13 L9 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 3.5 L10 2 L13.5 5.5 L12 8.5 Z" fill="currentColor"/></symbol>
+</svg>
+<div class="row">
+<section class="dir A">
+<h2>A · The ledger</h2>
+<p>What you have, finished. The parchment stays; the tabs become inked page ears, every building gets an ink glyph, and a wax seal marks what you can raise now. Cheapest to build, closest to the Guide and the cards you know.</p>
+<div class="phone"><div class="fab"><svg><use href="#i-hammer"/></svg></div><div class="card">
+<h3>Build <small>food, wood, stone, gold</small></h3>
+<div class="tabs"><b>Home</b><b class="on">Land</b><b>War</b><b>Walls</b><b>Trade</b><b>Culture</b></div>
+<div class="items">
+<div class="it go"><svg><use href="#i-farm"/></svg>Farm<small>60w · 2/9</small></div>
+<div class="it go"><svg><use href="#i-sheep"/></svg>Pasture<small>60w 60f</small></div>
+<div class="it go"><svg><use href="#i-tree"/></svg>Tree farm<small>80w · 0/9</small></div>
+<div class="it go"><svg><use href="#i-mill"/></svg>Mill<small>80w · 1/3</small></div>
+<div class="it dis"><svg><use href="#i-oven"/></svg>Bakery<small class="need">short 40s</small></div>
+<div class="it go"><svg><use href="#i-dock"/></svg>Dock<small>100w · 0/2</small></div>
+<div class="it go"><svg><use href="#i-axe"/></svg>Lumber<small>80w · 1/4</small></div>
+<div class="it dis"><svg><use href="#i-pick"/></svg>Mine<small>Bronze</small></div>
+</div></div></div>
+</section>
+<section class="dir B">
+<h2>B · The war table</h2>
+<p>The card joins the world of the tally and the strip: lacquered wood, brass fittings, gold lettering. The chosen tab is a lit lantern; what you can build now has a brass rim. One material from top to bottom, so the black button and the page no longer argue.</p>
+<div class="phone"><div class="fab"><svg><use href="#i-hammer"/></svg></div><div class="card">
+<h3>Build <small>food, wood, stone, gold</small></h3>
+<div class="tabs"><b>Home</b><b class="on">Land</b><b>War</b><b>Walls</b><b>Trade</b><b>Culture</b></div>
+<div class="items">
+<div class="it go"><svg><use href="#i-farm"/></svg>Farm<small>60w · 2/9</small></div>
+<div class="it go"><svg><use href="#i-sheep"/></svg>Pasture<small>60w 60f</small></div>
+<div class="it go"><svg><use href="#i-tree"/></svg>Tree farm<small>80w · 0/9</small></div>
+<div class="it go"><svg><use href="#i-mill"/></svg>Mill<small>80w · 1/3</small></div>
+<div class="it dis"><svg><use href="#i-oven"/></svg>Bakery<small class="need">short 40s</small></div>
+<div class="it go"><svg><use href="#i-dock"/></svg>Dock<small>100w · 0/2</small></div>
+<div class="it go"><svg><use href="#i-axe"/></svg>Lumber<small>80w · 1/4</small></div>
+<div class="it dis"><svg><use href="#i-pick"/></svg>Mine<small>Bronze</small></div>
+</div></div></div>
+</section>
+<section class="dir C">
+<h2>C · Illuminated</h2>
+<p>A manuscript page: vellum, a painted border in lapis and gold, the category as a drop capital, gold leaf on what you can raise now, red rubric where you are short, a vine in the margin. The most artistic; it reads slower, and the paint has to be drawn well everywhere.</p>
+<div class="phone"><div class="fab"><svg><use href="#i-hammer"/></svg></div><div class="card">
+<svg class="marg" viewBox="0 0 22 120" aria-hidden="true"><path d="M11 0v120" stroke="#1f4f7a" stroke-width="1"/><path d="M11 20q8-6 8 4t-8 4M11 50q-8-6-8 4t8 4M11 80q8-6 8 4t-8 4" fill="none" stroke="#b8902a" stroke-width="1.4"/><circle cx="11" cy="20" r="2.2" fill="#8e1d14"/><circle cx="11" cy="80" r="2.2" fill="#8e1d14"/></svg>
+<h3><span class="cap">L</span>and <small>food, wood, stone, gold</small></h3>
+<div class="tabs"><b>Home</b><b class="on">Land</b><b>War</b><b>Walls</b><b>Trade</b><b>Culture</b></div>
+<div class="items">
+<div class="it go"><svg><use href="#i-farm"/></svg>Farm<small>60w · 2/9</small></div>
+<div class="it go"><svg><use href="#i-sheep"/></svg>Pasture<small>60w 60f</small></div>
+<div class="it go"><svg><use href="#i-tree"/></svg>Tree farm<small>80w · 0/9</small></div>
+<div class="it go"><svg><use href="#i-mill"/></svg>Mill<small>80w · 1/3</small></div>
+<div class="it dis"><svg><use href="#i-oven"/></svg>Bakery<small class="need">short 40s</small></div>
+<div class="it go"><svg><use href="#i-dock"/></svg>Dock<small>100w · 0/2</small></div>
+<div class="it go"><svg><use href="#i-axe"/></svg>Lumber<small>80w · 1/4</small></div>
+<div class="it dis"><svg><use href="#i-pick"/></svg>Mine<small>Bronze</small></div>
+</div></div></div>
+</section>
+</div>
+<p class="note"><b>My lean: B, the war table.</b> It is the one that makes the black button and the paper page one thing, which was the flow you missed; it keeps the parchment for the Guide and the book, where reading is the point. A is the safe finish. C is the most beautiful and the most work, and it costs reading speed in a game played at a glance. Elements and shells in any direction are built once and only the words change.</p>

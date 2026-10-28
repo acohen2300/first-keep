@@ -141,6 +141,8 @@ const WHY = {
   den: 'Bears and wolves were real dangers in the forests of Europe and Asia well into the Middle Ages.',
   shrine: 'Holy sites drew pilgrims and gifts, and rulers fought to hold them (Delphi, Jerusalem, Mecca, Bodh Gaya).',
   vagabonds: 'Mercenaries are as old as armies: Xenophon\'s Ten Thousand were Greeks hired by a Persian prince.',
+  mercs: 'The free companies of the 1300s sold whole armies by the season: the White Company under Hawkwood hired itself to whoever paid in Italy.',
+  meteor: 'Meteoric iron was worked before anyone could smelt it: Tutankhamun\'s dagger and Inuit tools were made from fallen stars.',
   wayfarer: 'Towns grew by newcomers: settlers, refugees and travellers who stayed.',
   // civilisations' wonders
   'wonder:roman': 'The Flavian Amphitheatre, opened by Titus in AD 80 with a hundred days of games, seated about 50,000 Romans.',
@@ -157,6 +159,37 @@ const WHY = {
   'bonus:mali': 'Mali held the Bambuk goldfields. Mansa Musa spent so much gold in Cairo in 1324 that its value there fell for years.',
 };
 
+// World news: a line from the rest of history now and then, matched to your age. Every line is a real event at its real date; the joke is in the wording, never in a people.
+const NEWS = [
+  ['Somewhere, someone has tamed a horse. Opinions are divided.', 'Jericho builds a wall. Neighbours unimpressed, for now.', 'Çatalhöyük: 8,000 people, no streets. Walk across the roofs.', 'Sumer invents writing. First document: a grain receipt.', 'Ötzi crosses the Alps with a copper axe. Weather fine.'],
+  ['The Great Pyramid at Giza is finished. 2.3 million blocks, no complaints filed.', 'Hammurabi publishes 282 laws. An eye for an eye, in stone.', 'Knossos installs flushing toilets. Guests astonished.', 'Thera erupts. Minoan shipping advises patience.', 'Tin is scarce again. Bronze prices climb.'],
+  ['Rome opens new public baths. Attendance is mandatory, socially.', 'Caesar stabbed in the Senate. Twenty-three times. Politics continues.', 'Alexander reaches the Indus. His army would like to go home.', 'Library of Alexandria now the largest. Overdue scrolls pursued.', 'Qin Shi Huang unites China. Also standardises axle widths.', 'Eratosthenes measures the Earth with a stick. Close enough.'],
+  ['The wall of China, previously just okay, is becoming great.', 'The Black Death reaches the ports. Hospitals advised.', 'Charlemagne crowned on Christmas Day. Says he was not expecting it.', 'Vikings reach Newfoundland. Will not be writing home.', 'Mansa Musa passes through Cairo. Gold prices fall for a decade.', 'Oxford founded. Students already complaining about rent.'],
+  ['Constantinople falls to cannon. Wall builders reconsider.', 'Gutenberg prints a Bible. Scribes start a union.', 'Columbus lands, insists it is Asia.', 'The arquebus at Pavia: knights advised to reconsider.', 'Magellan\'s ship returns. Magellan does not.'],
+];
+// What each spectacle says: the warning, then the event itself
+const EV_TEXT = {
+  eclipse:  ['An eclipse is coming: the sun goes dark.', 'The sun is black. Both armies falter.'],
+  storm:    ['A storm walks in from the west.', 'Thunderstorm: lightning under the cloud.'],
+  stampede: ['Thunder of hooves: bison are coming.', 'Stampede! Fields trampled in its path.'],
+  flood:    ['The lakes are rising.', 'Flood: the shores are under water for a while.'],
+  locusts:  ['A dark cloud on the wind: locusts.', 'Locusts strip the fields they cross.'],
+  meteor:   ['A light in the sky.', 'A star fell in the wild: iron, if you reach it.'],
+  wildfire: ['Smoke in the dry forest.', 'Wildfire! Keep wood away from the trees.'],
+  fog:      ['Fog is rolling in.', 'Fog: nobody sees far.'],
+  tremor:   ['The ground rumbles.', 'A tremor cracks the walls.'],
+  sinkhole: ['The ground is groaning somewhere.', 'A sinkhole opened under a building.'],
+  quicksand:['The ground has gone soft after the rain.', 'Quicksand: a patch that traps whoever walks in.'],
+  heatwave: ['A heat wave is coming.', 'Heat: armies tire and fight weaker.'],
+  mirage:   ['Scouts report an army on the move.', 'Scouts report an army. Or do they?'],
+  circus:   ['A travelling show is on the road.', 'A show passes: whoever sees it works lighter.'],
+  wagon:    ['A wagon train is crossing the land.', 'Settlers: reach the wagon first, three join you.'],
+  mercs:    ['A free company has camped by the road.', 'Mercenaries for hire, for three minutes.'],
+  dragon:   ['Something large is flying this way.', 'A dragon passes. What it flies over, burns.'],
+  troll:    ['A troll has left its bridge.', 'A troll is out. It goes home at dusk.'],
+  aurora:   ['The sky is stirring in the north.', 'Northern lights.'],
+  horde:    ['A horde is coming: two seasons.', 'A horde is coming: one season.', 'The horde is here!'],
+};
 // What triggers what: when, then, why. Numbers come from the tables, so the text cannot drift from the game.
 const TRIGGERS = () => [
   ['You start a game', `Pick your civilisation (${CIVK.map(k => CIVS[k].name).join(', ')}). The three computers take three of the others at random. Each civilisation has one unique soldier, one small bonus and its own wonder; the rest is shared.`, 'A real people, but the same rules for all: no civilisation is stronger on paper.'],

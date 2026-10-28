@@ -5,17 +5,18 @@ const isThreat = v => { const U = UNIT[v.kind]; return !v.inside && v.hp > 0 && 
 function recount() { G.guarded = G.finds.filter(f => !f.done && guardsLeft(f)); dangerMap(); for (const n of G.nodes) n.wk = 0; for (const u of G.units) if (u.node && u.kind === 'vil') u.node.wk++; }
 function step(dt) {
   if (G.over) return;
-  G.t += dt; G.tick++; G.night = nightness();
+  G.t += dt; G.tick++; G.night = evOn('eclipse') ? 1 : nightness();
   G.threats = []; for (const v of G.units) if ((v.thr = isThreat(v))) G.threats.push(v);
   buildGrid();
   if (G.navDirty) navRebuild();
   NAV.budget = 4;
-  const sp = season().spd, wsp = WEATHER[G.wx].spd || 1, SP = o => (1 - (1 - sp) * (o === WILD ? 1 : fxv(o, 'mud').m)) * wsp;
+  const sp = season().spd * (hz('winter') && season().name === 'Winter' ? 0.8 : 1), wsp = WEATHER[G.wx].spd || 1, SP = o => (1 - (1 - sp) * (o === WILD ? 1 : fxv(o, 'mud').m)) * wsp;
   const SPS = [SP(0), SP(1), SP(2), SP(3), SP(4)];
   for (const b of G.blds) if (b.hp > 0) bldTick(b, dt);
   econTick(dt);
   if (G.tick % 3 === 0) formUp();
   if (G.tick % 30 === 1) { recount(); ordersTick(); noticeTick(); }
+  if (G.tick % 30 === 2) eventsTick();
   for (const u of G.units) if (u.hp > 0) TICK[UNIT[u.kind].tick](u, dt, SPS[u.owner]);
   healTick(dt);
   collide();
@@ -260,7 +261,8 @@ function vilTick(u, dt, SP) {
   // a worker already at work keeps its place a little further out (4 more), so crowd spacing and walking in no longer fight
   if (moveTo(u, n.x, n.y, dt, (n.kind === 'fish' ? 13 : n.kind === 'farm' ? 4 : 9) + (G.t - (u.work || -9) < 0.5 ? 4 : 0), SP)) {
     const rate = n.rate || RATE_OF[n.kind];
-    let g = Math.min(rate * dt * gatherMul(u.owner, n) * (u.sick > G.t ? 0.5 : 1) * hungerOf(u.owner), n.amt, cap - u.carry);
+    let g = Math.min(rate * dt * gatherMul(u.owner, n) * (u.sick > G.t ? 0.5 : 1) * hungerOf(u.owner) * (u.cheer > G.t ? EVENTS.circus.mul : 1), n.amt, cap - u.carry);
+    if (starving(u.owner)) g = 0;
     const from = n.farm && BLD[n.farm.kind].from;   // a workshop turns what is in store into goods: 2 wool make 1 cloth, 3 food 1 beer
     if (from) { const P = G.P[u.owner], box = k => k in P.res ? P.res : P.goods; for (const k in from) g = Math.min(g, (box(k)[k] || 0) / from[k]); if (g <= 1e-6) { u.wait = true; return; } for (const k in from) box(k)[k] -= g * from[k]; }
     u.wait = false; n.amt -= g; u.carry += g; n.workT = G.t; u.carryType = n.type; u.work = G.t; u.fx = Math.sign(n.x - u.x) || u.fx;
@@ -480,18 +482,19 @@ function wildTick(u, dt, SP) {
     return;
   }
   u.cd = Math.max(0, u.cd - dt);
-  const home = { x: u.hx, y: u.hy }, leash = (U.raid || 120) + 60;
+  const home = { x: u.hx, y: u.hy }, leash = u.horde ? 1e9 : (U.raid || 120) + 60;
   let t = u.tgt;
   if ((G.tick + u.id) % 5 === 0 || !(t && t.hp > 0 && !t.inside)) {
     t = null;
     if (u.aggro && u.aggro.hp > 0 && !u.aggro.inside && dist(u.aggro, home) < leash) t = u.aggro;
-    if (!t) t = nearU(u, U.raid ? U.raid + 40 : 140, v => v.owner !== WILD && !v.inside && v.kind !== 'envoy' && dist(v, home) < (U.raid && hasTag(v.kind, 'civ') ? U.raid : 90) && !(U.raid && guardedCart(v)));
+    if (!t) t = nearU(u, U.raid ? U.raid + 40 : 140, v => v.owner !== WILD && !v.inside && v.kind !== 'envoy' && (u.horde || dist(v, home) < (U.raid && hasTag(v.kind, 'civ') ? U.raid : 90)) && !(U.raid && guardedCart(v)));
+    if (!t && u.horde) { const b = nearestFoeBld(WILD, u, undefined, 200); if (b) t = b; }   // the horde breaks buildings too
     u.tgt = t;
   }
   if (t && dist(t, home) > leash) { t = u.tgt = null; u.aggro = null; }
   if (t) {
-    const reach = U.rng + 5;
-    if (dist(u, t) <= reach) { u.fx = Math.sign(t.x - u.x) || u.fx; if (u.cd <= 0) { hurt(WILD, u, t, U.dmg); u.cd = U.cd; u.hitT = G.t; } }
+    const reach = U.rng + 5 + (t.q ? halfOf(t) : 0);
+    if (edge(u, t) <= reach) { u.fx = Math.sign(t.x - u.x) || u.fx; if (u.cd <= 0) { hurt(WILD, u, t, U.dmg); u.cd = U.cd; u.hitT = G.t; } }
     else moveTo(u, t.x, t.y, dt, reach - 2, SP);
     return;
   }
@@ -508,8 +511,8 @@ function wayfarerTick(u, dt, SP) {
     const m = nearU(u, 22, v => v.owner !== WILD && v.kind !== 'envoy' && !v.inside);
     if (m) {
       const o = m.owner; u.hp = 0; u.gone = true;
-      if (clsCount(o, 'civ') < VILMAX) { const v = addUnit(o, 'vil', u.x, u.y); v.job = o === 0 ? G.P[0].rally : null; } else { G.P[o].res.f += 50; }
-      if (o === 0) say('A wayfarer joins your people.', 'good', 5); return;
+      for (let i = 0; i < (UNIT[u.kind].joins || 1); i++) if (clsCount(o, 'civ') < VILMAX) { const v = addUnit(o, 'vil', u.x + i * 6, u.y); v.job = o === 0 ? G.P[0].rally : null; } else { G.P[o].res.f += 50; }
+      if (o === 0) say(UNIT[u.kind].joins > 1 ? 'The settlers join your people.' : 'A wayfarer joins your people.', 'good', 5); return;
     }
   }
   if (moveTo(u, u.px, u.py, dt, 10, SP)) { u.hp = 0; u.gone = true; }
@@ -658,7 +661,7 @@ function collide() {
   }
   for (const u of U) {
     if (u.inside) continue;
-    for (const L of G.lakes) { const dl = hyp(u.x - L.x, u.y - L.y); if (dl < L.r + 6) { const s = (L.r + 6) / (dl || 1); u.x = L.x + (u.x - L.x) * s; u.y = L.y + (u.y - L.y) * s; } }
+    for (const L of G.lakes) { const dl = hyp(u.x - L.x, u.y - L.y), lr = lakeR(L); if (dl < lr + 6 && !u.fly) { const s = (lr + 6) / (dl || 1); u.x = L.x + (u.x - L.x) * s; u.y = L.y + (u.y - L.y) * s; } }
     u.x = clamp(u.x, 6, MAP - 6); u.y = clamp(u.y, 6, MAP - 6);
     if (blockedCell(gcell(u.x, u.y), u.owner)) { const f = freeNear(Math.floor(u.x / NAVC), Math.floor(u.y / NAVC), u.owner, 8, u.x, u.y); if (f) { u.x = f.x; u.y = f.y; u.path = null; } }
   }
@@ -711,11 +714,11 @@ function watchHome() {
 function finish(won, text) {
   G.over = won ? 'won' : 'lost'; clearSave(); sfx(won ? 'win' : 'lose'); scoreAll(); if (won) { const k = keepOf(0); if (k) celebrate(3, k.x, k.y); }
   let best = null; try { best = Number(localStorage.getItem('firstkeep.best')) || null; } catch (e) {}
-  const sc = G.P[0].score.total;
+  const sc = Math.round(G.P[0].score.total * levelMul());   // the level played multiplies the score
   if (won && (!best || sc > best)) { best = sc; try { localStorage.setItem('firstkeep.best', String(sc)); } catch (e) {} }
   showEnd(won, `${text} Score ${fmt(sc)}${best ? ' · best ' + fmt(best) : ''}.`);
 }
-const TICK = { vil: vilTick, scout: scoutTick, envoy: envoyTick, caravan: caravanTick, spy: spyTick, priest: priestTick, medic: medicTick, sol: solTick, wild: wildTick, wayfarer: wayfarerTick };
+const TICK = { vil: vilTick, scout: scoutTick, envoy: envoyTick, caravan: caravanTick, spy: spyTick, priest: priestTick, medic: medicTick, sol: solTick, wild: wildTick, wayfarer: wayfarerTick, herd: herdTick };
 
 
 // builders who finish a place of work start on it: fields and workshops take them up to their places, a dock sets them fishing, a camp sends them to what it is for

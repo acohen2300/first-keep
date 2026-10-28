@@ -82,13 +82,17 @@ const UNIT = {
   bear:     { name: 'Bear',      tick: 'wild', tags: ['animal'], hp: 150, spd: 30, sight: 90, dmg: 10, rng: 12, cd: 1.6, meat: 300, look: 'bear', desc: 'Strong and short-tempered. Stays near its den.' },
   bandit:   { name: 'Bandit',    tick: 'wild', tags: ['infantry'], hp: 55, spd: 26, sight: 120, dmg: 6, rng: 12, cd: 1.2, look: 'bandit', desc: 'Outlaws holed up in old ruins.' },
   robber:   { name: 'Robber',    tick: 'wild', tags: ['infantry'], hp: 60, spd: 32, sight: 140, dmg: 7, rng: 12, cd: 1.2, vs: { civ: 1.5 }, raid: 260, look: 'robber', desc: 'Robs caravans and villagers that come near the camp.' },
-  wayfarer: { name: 'Wayfarer',  tick: 'wayfarer', tags: ['civ'], hp: 30, spd: 22, sight: 60, look: 'wayfarer', desc: 'A traveller looking for a place to settle. The first side to meet him gains a villager.' },
+  wayfarer: { name: 'Wayfarer',  tick: 'wayfarer', tags: ['civ'], hp: 30, spd: 22, sight: 60, joins: 1, look: 'wayfarer', desc: 'A traveller looking for a place to settle. The first side to meet him gains a villager.' },
+  wagon:    { name: 'Wagon train', tick: 'wayfarer', tags: ['civ'], hp: 60, spd: 16, sight: 60, joins: 3, look: 'caravan', desc: 'Settlers with everything they own. They join whoever reaches them first: three villagers.' },
+  bison:    { name: 'Bison',     tick: 'herd', tags: ['animal'], hp: 120, spd: 70, sight: 60, meat: 400, trample: 6, look: 'bison', desc: 'A herd on the move tramples fields and anyone in its path. Good meat, if you can bring one down.' },
+  performer:{ name: 'Performer', tick: 'herd', tags: ['civ'], hp: 30, spd: 20, sight: 60, cheer: 150, look: 'performer', desc: 'A travelling show. Villagers who see it pass work a little harder for a while.' },
   vagabond: { name: 'Vagabond',  tick: 'wild', tags: ['civ'], hp: 30, spd: 20, sight: 40, passive: true, look: 'vagabond', desc: 'Drifters by a fire. They will fight for whoever pays.' },
   // the fantasy toggle swaps the guards for these
   direwolf: { name: 'Dire wolf', tick: 'wild', tags: ['animal'], hp: 90, spd: 42, sight: 120, dmg: 9, rng: 10, cd: 1.1, fantasy: true, look: 'direwolf', desc: 'A wolf the size of a pony.' },
   goblin:   { name: 'Goblin',    tick: 'wild', tags: ['infantry'], hp: 40, spd: 30, sight: 120, dmg: 5, rng: 12, cd: 1.0, fantasy: true, look: 'goblin', desc: 'Small, quick and greedy.' },
   skeleton: { name: 'Skeleton',  tick: 'wild', tags: ['infantry'], hp: 50, spd: 22, sight: 110, dmg: 6, rng: 12, cd: 1.3, fantasy: true, rarmor: 0.5, look: 'skeleton', desc: 'The dead guard their graves. Arrows pass through the ribs.' },
   troll:    { name: 'Troll',     tick: 'wild', tags: ['infantry', 'heavy'], hp: 320, spd: 22, sight: 130, dmg: 18, rng: 14, cd: 2.2, fantasy: true, raid: 200, look: 'troll', desc: 'Lives under the robbers\' bridge. Hits like a ram.' },
+  dragon:   { name: 'Dragon',    tick: 'herd', tags: ['animal'], hp: 900, spd: 90, sight: 200, fantasy: true, scorch: 30, look: 'dragon', desc: 'Passes over now and then. What it flies over, burns.' },
 };
 const hasTag = (kind, tag) => (UNIT[kind].tags || []).includes(tag) || kind === tag;
 
@@ -270,6 +274,8 @@ const FINDS = {
   stop:     { name: 'Trade stop', guard: ['bandit', 'goblin', 3], stop: true, desc: 'A stop on an old trade route. Caravans sell goods here and buy spice. Clear its guards and build a Trade post to own it.' },
   shrine:   { name: 'Shrine', capture: 10, pay: 0.25, desc: 'A holy site. Stand a priest by it for 10 s and it pays its keeper 15 gold a minute. Another side\'s priest can take it back.' },
   vagabonds:{ name: 'Vagabonds', hire: { cost: { g: 90 }, unit: 'spear', n: 3 }, desc: 'Three drifters will fight for whoever pays 90 gold. A unit of yours has to be within 80.' },
+  mercs:    { name: 'Mercenaries', hire: { cost: { g: 240 }, unit: 'sword', n: 6 }, gone: 180, desc: 'A free company camped by the road: six swords for 240 gold, for three minutes, then they move on.' },
+  meteor:   { name: 'Fallen star', got: { i: 300, g: 100 }, desc: 'Iron from the sky. Before smelting, this was where iron came from; Tutankhamun\'s dagger was forged from it.' },
 };
 const WAYFARER_EVERY = 240;
 // the Fortress posts a job: break one guarded find, first side to take it is paid
@@ -326,8 +332,48 @@ const WEATHER = {
   rain:    { name: 'Rain',    spd: 0.8, rng: 0.85, fire: 0.5, text: 'Rain: marching is slower and bows reach less.' },
   drought: { name: 'Drought', crop: 0.7, fire: 2,           text: 'Drought: fields give 30% less and fires spread fast.' },
   frost:   { name: 'Frost',   stone: 0.5,                    text: 'Frost: mortar will not set, stone buildings go up at half speed.' },
+  blizzard:{ name: 'Blizzard', spd: 0.6, sight: 0.35, gather: 0.5, fire: 0.3, text: 'Blizzard: a whiteout. Marches crawl, sight is gone, gathering halves.' },   // Harsh winters only
 };
 const WX_ODDS = { Spring: { rain: 0.45 }, Summer: { drought: 0.3, rain: 0.15 }, Autumn: { rain: 0.45 }, Winter: { frost: 0.6 } }, WX_EVERY = 60;
+const MOON = 8;   // days from new moon to new moon (the real month is 29.5; the game's day is two minutes): at new moon the night is darker and sight shorter
+
+// ───────────────────────── The Challenge: hazards you switch on. Their points are your level; the level multiplies your score ─────────────────────────
+// Random when, never random whether: everything a hazard sends is announced first. Easy keeps the old polite game whatever is switched on.
+const HAZARDS = {
+  hard:   { pts: 3, name: 'Hard enemies', desc: 'They strike in winter, send more riders at your villagers and drop-offs, and need shorter odds.' },
+  starve: { pts: 2, name: 'Starvation', desc: 'No food for a minute: work stops. After two, a villager leaves and a soldier deserts every half minute.' },
+  winter: { pts: 2, name: 'Harsh winters', desc: 'Winter fields give a quarter, marches crawl, and blizzards come: whiteouts that blind the small map.' },
+  plague: { pts: 2, name: 'Plague', desc: 'Plague is three times as likely and spreads twice as fast along the roads. Hospitals matter.' },
+  horde:  { pts: 3, name: 'The horde', desc: 'Between minute 20 and 40 a horde comes, from an edge or out of the wild, for the weakest side. Announced two seasons ahead.' },
+  quake:  { pts: 2, name: 'Earthquakes', desc: 'Tremors come every few minutes and hit harder: stone cracks, walls fall, wood catches fire.' },
+  notips: { pts: 1, name: 'No tips', desc: 'The advisor is silent.' },
+};
+const HZK = Object.keys(HAZARDS), HZ_DEFAULT = { hard: 1, starve: 1 }, TODAY_HZ = { hard: 1, starve: 1, horde: 1, quake: 1 };   // a new game starts at level 5; Today's challenge is level 10 on the day's seed
+const STARVE = { stop: 60, leave: 120, every: 30 }, HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 }, HORDE = { from: 1200, to: 2400, warn: SEASON_LEN * 2, n: 16, perAge: 6 }, QUAKE = { every: 240, r: 350, hit: 0.1, wall: 0.3, fire: 0.15 };
+// Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 19-events.
+const EV_GAP = [60, 180], EV_WARN = 12;
+const EVENTS = {
+  eclipse:  { name: 'Eclipse',        secs: 20,  dmg: 0.6, spd: 0.7, sight: 0.7 },
+  storm:    { name: 'Thunderstorm',   secs: 40,  band: 260, strike: 2 },
+  stampede: { name: 'Stampede',       secs: 30,  n: 10 },
+  flood:    { name: 'Flood',          secs: 90,  rise: 40, hit: 0.02 },
+  locusts:  { name: 'Locusts',        secs: 30,  r: 70, strip: 90 },
+  meteor:   { name: 'Falling star',   secs: 3 },
+  wildfire: { name: 'Wildfire',       secs: 60,  spread: 0.2, r: 32, burn: 0.12, most: 20, need: 'drought' },   // most: trees alight at once
+  fog:      { name: 'Fog',            secs: 60,  sight: 0.4 },
+  tremor:   { name: 'Tremor',         secs: 2,   r: 220, hit: 0.05, wall: 0.2, fire: 0.05 },
+  sinkhole: { name: 'Sinkhole',       secs: 2,   hit: 0.4 },
+  quicksand:{ name: 'Quicksand',      secs: 120, r: 60, slow: 0.3 },
+  heatwave: { name: 'Heat',           secs: 60,  dmg: 0.85, spd: 0.9, need: 'drought', season: 'Summer' },
+  mirage:   { name: 'Mirage',         secs: 30,  n: 12, season: 'Summer' },
+  circus:   { name: 'Travelling show', secs: 60, n: 5, r: 150, cheer: 120, mul: 1.1 },
+  wagon:    { name: 'Wagon train',    secs: 90 },
+  mercs:    { name: 'Mercenaries',    secs: 180 },
+  dragon:   { name: 'Dragon',         secs: 25,  fantasy: true },
+  troll:    { name: 'Troll',          secs: 90,  fantasy: true },
+  aurora:   { name: 'Northern lights', secs: 45, fantasy: true, night: true },
+};
+const EVK = Object.keys(EVENTS), NEWS_EVERY = 150;
 // two old trade routes, west to east and north to south, each with four stops; they bend around the great lake
 const ROUTES = [[[510, 1000], [680, 1000], [1320, 1000], [1490, 1000]], [[1000, 510], [1000, 680], [1000, 1320], [1000, 1490]]];
 const POST = { all: 2, cut: [0, 0.2, 0.25, 0.3, 0.4], safe: 120, guard: 12, far: 2.5, want: 1.5 };   // each route has four stops. all: gold a second to whoever holds all four of a route; cut: of other sides' sales at a stop, by how many of its route you hold; guard: soldiers per stop or caravan

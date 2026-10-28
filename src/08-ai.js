@@ -147,6 +147,9 @@ function decideWar(p, per) {
   }
   const W = G.wonder && G.wonder.owner !== o && atWar(o, G.wonder.owner) ? G.wonder : null;
   if (home.length < (W ? 4 : per.waveMin + (G.diff === 'easy' ? 3 : 0))) return;
+  const sn = season().name, toWinter = sn === 'Autumn' && SEASON_LEN - G.t % SEASON_LEN < HARD.waitForWinter;
+  if (hz('hard') && toWinter && !W) return;   // hard: winter is a month away; they wait for it, as raiders did
+  const bold = per.bold + (hz('hard') ? HARD.bold + (sn === 'Winter' ? HARD.winterBold : 0) : 0);
   const go = home.slice(Math.floor(home.length * (W ? 0 : per.guard))), mine = powerOf(go);
   let best = null, bp = 0;
   for (const q of G.P) if (q.alive && q.id !== WILD && atWar(o, q.id)) {
@@ -157,11 +160,11 @@ function decideWar(p, per) {
   }
   // a full army that sits at home is wasted: at its limit a side settles for even odds
   const full = soldiersOf(o).length >= armyCap(p) - 2;
-  if (best !== null && bp > (full ? Math.min(per.bold, 0.4) : per.bold)) {
+  if (best !== null && bp > (full ? Math.min(bold, 0.4) : bold)) {
     go.forEach(u => { u.state = 'attack'; u.target = best; u.bid = W && W.owner === best ? W.id : null; u.loot = null; });
     p.wave = { n: go.length, t: G.t };
     if (per.raid) {   // a few riders go for the foe's lumber camps and mines instead of the Town Center: it draws the defence apart
-      const fast = go.filter(u => (UNIT[u.kind].tags || []).includes('mounted')).slice(0, per.raid), k = keepOf(o);
+      const fast = go.filter(u => (UNIT[u.kind].tags || []).includes('mounted')).slice(0, per.raid + (hz('hard') ? HARD.raid : 0)), k = keepOf(o);
       const mark = k && nearest(G.blds, k, b => b.owner === best && b.prog >= 1 && b.hp > 0 && b.kind !== 'keep' && BLD[b.kind].drop);
       if (mark) fast.forEach(u => { u.bid = mark.id; });
     }

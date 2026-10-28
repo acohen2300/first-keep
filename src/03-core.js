@@ -28,6 +28,7 @@ if (!CIVS[SET.civ]) SET.civ = 'roman';
 if (!(SET.setV >= 38)) { let old = false; try { old = !!localStorage.getItem('firstkeep.settings'); } catch (e) {} if (old && SET.diff === 'easy' && SET.mode === 't30') { SET.diff = 'normal'; SET.mode = 't60'; } SET.setV = 38; }   // Build 38: Normal and an hour by default; a phone that kept Easy and 30 minutes from the old default moves once, and a choice made after stays
 SET.mix = Object.assign({ fx: 1, amb: 1, alert: 1 }, SET.mix);   // three volumes: effects, ambience, alerts
 function saveSet() { try { localStorage.setItem('firstkeep.settings', JSON.stringify(SET)); } catch (e) {} }
+const todaySeed = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };   // the same map for everyone that day
 const MODES = { conquest: { name: 'Conquest', secs: 0 }, t30: { name: '30 minutes', secs: 1800 }, t60: { name: '60 minutes', secs: 3600 } };
 
 // ───────────────────────── Queries ─────────────────────────
@@ -124,15 +125,16 @@ function stats(o, kind) {
 }
 const maxHpU = (o, kind) => stats(o, kind).hp;
 const maxHpB = (o, kind) => BLD[kind].hp * (o === WILD ? 1 : fxv(o, 'bhp', ['*', ...bldKeys(kind)]).m);
-const dmgOf = u => stats(u.owner, u.kind).dmg * (FORM[formOf(u)].dmg && hasTag(u.kind, 'mounted') ? FORM[formOf(u)].dmg : 1) * (u.zeal > G.t ? ZEAL.mul : 1) * (u.sick > G.t ? 0.6 : 1) * hungerOf(u.owner);
+const dmgOf = u => stats(u.owner, u.kind).dmg * (FORM[formOf(u)].dmg && hasTag(u.kind, 'mounted') ? FORM[formOf(u)].dmg : 1) * (u.zeal > G.t ? ZEAL.mul : 1) * (u.sick > G.t ? 0.6 : 1) * hungerOf(u.owner) * EVM.dmg;
 const rngOf = u => { const r = stats(u.owner, u.kind).rng; return r > 20 ? r * (WEATHER[G.wx] && WEATHER[G.wx].rng || 1) : r; };
-const sightOf = e => ((UNIT[e.kind] || BLD[e.kind]).sight || 100) * (1 - (1 - NIGHT_SIGHT) * G.night);
+const sightOf = e => ((UNIT[e.kind] || BLD[e.kind]).sight || 100) * (1 - (1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) * G.night) * EVM.sight * (WEATHER[G.wx].sight || 1);   // night, the moon, an eclipse or fog, a blizzard
 const carryOf = o => CARRY + fxv(o, 'carry').a;
 function gatherMul(o, n) {
-  let m = fxv(o, 'gather', [n.type, n.kind]).m;
+  let m = fxv(o, 'gather', [n.type, n.kind]).m * EVM.gather * (WEATHER[G.wx].gather || 1);
+  if (n.farm && n.farm.locust > G.t) return 0;   // a field stripped by locusts gives nothing for a while
   if (n.kind === 'farm') {
     m *= fxv(o, 'crop', [n.type]).m;
-    if (n.type === 'food') { m *= season().farm * (G.harvest || 1) * (WEATHER[G.wx].crop || 1) * (n.farm.fert ?? 1); if (n.type === 'food' && bakeryNear(o, n)) m *= BLD.bakery.aura.m; }
+    if (n.type === 'food') { m *= season().farm * (hz('winter') && season().name === 'Winter' ? 0.6 : 1) * (G.harvest || 1) * (WEATHER[G.wx].crop || 1) * (n.farm.fert ?? 1); if (n.type === 'food' && bakeryNear(o, n)) m *= BLD.bakery.aura.m; }
   }
   return m;
 }

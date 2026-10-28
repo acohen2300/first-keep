@@ -61,7 +61,7 @@ function say(text, cls, secs, at, act) { if (!G) return; if (SET.msgs === false 
 const hushKey = t => t.replace(/[\d,.]+/g, '#');
 function hushed(t) { const k = hushKey(t), w = G.hushW && G.hushW[k]; return !!(SET.hush && SET.hush[k]) || (w !== undefined && G.t < w); }
 function advise() {
-  const p = G.P[0], k = keepOf(0); if (!k || G.over) return '';
+  const p = G.P[0], k = keepOf(0); if (!k || G.over || hz('notips')) return '';
   const V = unitsOf(0, 'vil'), on = j => V.filter(u => u.job === j).length, S = soldiersOf(0);
   if (V.some(u => u.noPath && G.t - (u.noPathT || -9) < 4) && !L('build:gate')) return 'Walled in: build a Gate.';
   if ((k.blocked || (popOf(0) >= capOf(0) && capOf(0) < POPMAX && !bldsOf(0, 'house').some(b => b.prog < 1))) && !L('build:house')) return p.age >= 2 ? 'You are full: Build → House, Apartment or Aqueduct.' : `You are full: Build → House (${costText(BLD.house.cost)}).`;
@@ -86,7 +86,7 @@ function advise() {
   if (on('gold') === 0 && p.age >= 1 && !L('job:gold')) return 'Put villagers on Gold: it buys riders.';
   return '';
 }
-const SEASON_ICON = { Spring: '🌱', Summer: '☀️', Autumn: '🍂', Winter: '❄️' }, WX_ICON = { rain: '🌧', drought: '🔥', frost: '🧊' };
+const SEASON_ICON = { Spring: '🌱', Summer: '☀️', Autumn: '🍂', Winter: '❄️' }, WX_ICON = { rain: '🌧', drought: '🔥', frost: '🧊', blizzard: '🌨' };
 let uiAt = 0;
 const txt = (id, s) => { const el = $(id); if (el.textContent !== s) el.textContent = s; };   // a word is written only when it changed: the page is not touched seven times a second for nothing
 function ui(force) {
@@ -104,7 +104,7 @@ function ui(force) {
   if (showTip && (urgent || T.said !== T.text)) { T.said = T.text; say(tip, urgent ? 'warn' : 'tip', urgent ? 3 : 6); }   // a warning is said again while it holds (the same line only stays up), a tip once   // a tip is a message like any other, in the ticker
   { const lim = MODES[G.mode].secs, clk = G.wonder ? `wonder ${clock(Math.max(0, G.wonder.end - G.t))}` : lim ? `${clock(Math.max(0, lim - G.t))}` : clock(G.t);
     let ready = 0; for (const v of G.rdy.values()) ready += v;   // research you can start now (the age counts: it is research too)
-    const idleN = unitsOf(0, 'vil').filter(u => !u.job).length, t1 = `${AGES[p.age].name} age · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? '🌙' : ''} ${clk}`, t2 = idleN ? `${idleN} idle` : '';
+    const idleN = unitsOf(0, 'vil').filter(u => !u.job).length, t1 = `${AGES[p.age].name} age · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''} ${clk}`, t2 = idleN ? `${idleN} idle` : '';
     txt('sAgeT', t1); txt('sIdle', t2); if ($('sIdle').hidden === !!idleN) $('sIdle').hidden = !idleN;
     $('sAge').classList.toggle('glow', ready > 0 && !G.card); }   // gold when the next age or any research is ready: tap it for the Town Center
   const V = unitsOf(0, 'vil');

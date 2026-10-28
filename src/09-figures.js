@@ -209,6 +209,9 @@ const LOOKS = {
   wolf: (c, t, fr) => quad({ col: '#7a7570', len: 13, h: 5, legH: 5.2, legW: 0.7, head: 2.2, headY: 1.0, tail: 1.6 }, fr),
   direwolf: (c, t, fr) => quad({ col: '#3c3a40', len: 20, h: 8, legH: 7.5, legW: 1.1, head: 3.4, headY: 1.0, tail: 2.4, eye: '#e33' }, fr),
   bear: (c, t, fr) => quad({ col: '#4e3524', len: 17, h: 9, legH: 4.5, legW: 1.5, head: 3.2, headY: 0.8, hump: true, tail: 0 }, fr),
+  bison: (c, t, fr) => { quad({ col: '#3e2a1c', len: 20, h: 10, legH: 6, legW: 1.4, head: 3.4, headY: 0.4, hump: true, bristle: true, tail: 0.8 }, fr); g.strokeStyle = '#e8dcc4'; g.lineWidth = 0.7; g.beginPath(); g.moveTo(14, -13); g.quadraticCurveTo(16, -17, 13, -17.5); g.stroke(); },   // the hump, a shaggy mane and a short horn
+  performer: (c, t, fr) => { person({ tunic: ['#c33a2e', '#2d6fb5', '#d9a62a', '#3d8a4a', '#8e3a9a'][t % 5], head: 'cap', weapon: 'none', legs: ['#d9a62a', '#c33a2e', '#2d6fb5', '#8e3a9a', '#3d8a4a'][t % 5], cape: '#f2d27a' }, fr); L_(-6, -14, -6, -26, '#5a3a1c', 0.6); P_([[-6, -26], [1, -24], [-6, -22]], ['#c33a2e', '#2d6fb5', '#d9a62a'][t % 3]); },   // bright coats and a pennant
+  dragon: (c, t, fr) => { const f = fr === 1 ? 1 : fr === 2 ? -1 : 0; P_([[-18, -4 + f * 6], [-4, -12], [6, -12], [-2, -2 + f * 4]], '#6a2a1a', INK, 0.5); P_([[18, -4 + f * 6], [4, -12], [-6, -12], [2, -2 + f * 4]], '#6a2a1a', INK, 0.5); E_(0, -10, 10, 3.4, LG(0, -13, 0, -7, ['#b04a2a', '#6a2a1a']), INK, 0.5); L_(-10, -10, -22, -6, '#8a3a22', 2); P_([[10, -10], [17, -13], [19, -9], [12, -7]], '#8a3a22', INK, 0.5); E_(17, -11, 0.6, 0.6, '#ffd35e'); },   // seen from above: two wings, a long tail
   bandit: (c, t, fr) => person({ tunic: '#5a5040', head: 'hood', hoodCol: '#4a3e2e', weapon: 'club', legs: '#3a3228', beard: '#3a2a1a' }, fr),
   robber: (c, t, fr) => person({ tunic: '#4a3a30', head: 'mask', weapon: 'sword', shield: 'round', trim: '#6b3a2a', legs: '#2e2620' }, fr),
   wayfarer: (c, t, fr) => person({ tunic: '#7a6a50', head: 'straw', weapon: 'crook', legs: '#5a4a38', beard: '#8a8070', cape: '#6b5a40' }, fr),
@@ -218,7 +221,7 @@ const LOOKS = {
   troll: (c, t, fr) => { g.save(); g.scale(1.6, 1.6); person({ tunic: '#5a6a4a', head: 'bare', skin: '#7a8a6a', weapon: 'bigclub', legs: '#4a5a3a', beard: '#3a4a2a' }, fr); g.restore(); },
 };
 // how big each look's sprite box is (local units): [width, height]
-const LOOKBOX = { scout: [44, 34], caravan: [36, 30], chariot: [36, 34], cata: [58, 36], malihorse: [58, 36], harcher: [36, 36], elephant: [48, 44], ram: [42, 30], stower: [24, 58], catapult: [32, 26], ballista: [30, 24], treb: [48, 50], deer: [26, 22], boar: [24, 16], wolf: [24, 16], direwolf: [36, 24], bear: [30, 22], troll: [26, 46], spear: [52, 34], vil: [30, 30], legion: [30, 30], immortal: [44, 30], sword: [30, 30], jav: [34, 30], crossbow: [34, 30], arquebus: [40, 30], bombard: [44, 30] };
+const LOOKBOX = { scout: [44, 34], caravan: [36, 30], chariot: [36, 34], cata: [58, 36], malihorse: [58, 36], harcher: [36, 36], elephant: [48, 44], ram: [42, 30], stower: [24, 58], catapult: [32, 26], ballista: [30, 24], treb: [48, 50], deer: [26, 22], boar: [24, 16], wolf: [24, 16], direwolf: [36, 24], bear: [30, 22], bison: [40, 26], dragon: [48, 24], troll: [26, 46], spear: [52, 34], vil: [30, 30], legion: [30, 30], immortal: [44, 30], sword: [30, 30], jav: [34, 30], crossbow: [34, 30], arquebus: [40, 30], bombard: [44, 30] };
 // ── the sprite cache: one canvas per look, colour, tier, pose and zoom step
 const SPR = new Map();
 function trim(M, max) { if (M.size > max) for (const [k, v] of M) { M.delete(k); if (v.getContext) v.width = v.height = 0;   // give the picture's memory back at once: iPhone drops pages that hold too much

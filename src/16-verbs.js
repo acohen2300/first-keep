@@ -30,6 +30,8 @@ const ACT = {
   diff(a) { SET.diff = a; G.diff = a; saveSet(); refresh(); },
   mode(a) { SET.mode = a; saveSet(); refresh(); },
   fantasy(a) { SET.fantasy = a === '1'; saveSet(); refresh(); },
+  hz(a) { SET.hz = { ...(SET.hz || HZ_DEFAULT) }; SET.hz[a] = SET.hz[a] ? 0 : 1; saveSet(); refresh(); },   // a hazard on or off; the points add up to the level
+  today() { clearSave(); holdSave = false; newGame(todaySeed()); closeCard(); setPause(false); saveGame(true); refresh(); say(`Today's challenge: level ${levelOf(G.hz)}. Beat your best.`, 'good', 8); },
   tips() { SET.tips = !SET.tips; saveSet(); refresh(); },
   msgs() { SET.msgs = SET.msgs === false; saveSet(); refresh(); },
   tkmin() { SET.tkMin = !SET.tkMin; saveSet(); G.tkN = 0; G.tkW = false; G.tkOpen = false; ui(true); fit(); },   // hide or show the ticker

@@ -80,7 +80,10 @@ function draw() {
     if (sx1 > sx0 && sy1 > sy0) ctx.drawImage(img, sx0 * bgK, sy0 * bgK, (sx1 - sx0) * bgK, (sy1 - sy0) * bgK, SX(sx0), SY(sy0), (sx1 - sx0) * z, (sy1 - sy0) * z * TILT); };
   layer(bg);
   if (z > 1.1 && grassPat) { if (grassM.a !== z * 0.5 || grassM.e !== x0 || grassM.f !== y0) { grassM.a = z * 0.5; grassM.d = z * 0.5 * TILT; grassM.e = x0; grassM.f = y0; grassPat.setTransform(grassM); } ctx.globalAlpha = Math.min(1, (z - 1.1) * 1.5); ctx.fillStyle = grassPat; ctx.fillRect(Math.max(0, x0), Math.max(0, y0), Math.min(cw, MAP * z), Math.min(ch, MAP * z * TILT)); ctx.globalAlpha = 1; }
+  if (G.shake > G.t && !lessMotion) { const k = (G.shake - G.t) * 3; ctx.translate(rnd2() * k, rnd2() * k); }   // a tremor: the whole view judders for a moment
   layer(scarCv);
+  if (G.flood > G.t) { ctx.fillStyle = 'rgba(42,100,136,.55)'; for (const L of G.lakes) { ctx.beginPath(); ctx.ellipse(SX(L.x), SY(L.y), (L.r + EVENTS.flood.rise) * z, (L.r + EVENTS.flood.rise) * z * TILT, 0, 0, 7); ctx.fill(); } }   // the flood: water over the shore
+  if (G.sand && G.sand.until > G.t) { const s = G.sand; ctx.fillStyle = 'rgba(200,180,120,.7)'; ctx.beginPath(); ctx.ellipse(SX(s.x), SY(s.y), s.r * z, s.r * z * TILT, 0, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(120,100,60,.5)'; ctx.lineWidth = 1; for (let i = 1; i <= 3; i++) { ctx.beginPath(); ctx.ellipse(SX(s.x), SY(s.y), s.r * z * i / 4, s.r * z * TILT * i / 4, 0, 0, 7); ctx.stroke(); } }   // quicksand: a pale patch with ripples
   if (!lessMotion) { ctx.strokeStyle = 'rgba(220,240,255,.28)'; ctx.lineWidth = 1.2; for (const L of G.lakes) { if (Math.abs(L.x - cam.x) > cw / cam.z / 2 + L.r || Math.abs(L.y - cam.y) > ch / cam.z / TILT / 2 + L.r) continue; for (let i = 0; i < 18; i++) { const a = i * 2.4 + G.t * 0.05, r = L.r * (0.25 + 0.6 * ((i * 0.37 + G.t * 0.02) % 1)); const lx = SX(L.x + Math.cos(a) * r), ly = SY(L.y + Math.sin(a) * r); ctx.beginPath(); ctx.moveTo(lx - 6 * z, ly); ctx.quadraticCurveTo(lx, ly - 2 * z, lx + 6 * z, ly); ctx.stroke(); } } }
   if (sn.tint) { ctx.fillStyle = sn.tint; ctx.fillRect(x0, y0, MAP * z, MAP * z * TILT); }
   if (G.wx === 'rain' && z > 1.2 && !lessMotion) {   // rain rings sit on the ground, fixed to the world, under buildings and people
@@ -107,7 +110,8 @@ function draw() {
     const take = j >= list.length || (i < N.length && N[i].y < list[j][0]), e = take ? N[i++] : list[j][2], t = take ? 0 : list[j++][1];
     try { t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : drawFind(e); } catch (er) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.setLineDash([]); fault(er); }   // one bad piece must never take the rest of the picture with it: the canvas is put back as it was
   }
-  drawPicks(z); sparkDraw(); ripDraw();
+  if (G.fire) for (const n of G.fire) if (inView(n)) { const x = SX(n.x), y = SY(n.y), ph = (G.t * 5 + n.id) % 1; ctx.fillStyle = 'rgba(250,150,40,.85)'; ctx.beginPath(); ctx.ellipse(x, y - 8 * z, (3 + ph * 2) * z, (6 + ph * 4) * z, 0, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,230,120,.9)'; ctx.beginPath(); ctx.ellipse(x, y - 7 * z, 1.5 * z, 3 * z, 0, 0, 7); ctx.fill(); smoke(x, y - 14 * z, n.id, z); }   // the wildfire
+  drawPicks(z); sparkDraw(); ripDraw(); drawEvents(z);
   if (G.ords) {   // your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
     ctx.save(); ctx.strokeStyle = G.P[0].color; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.7; ctx.setLineDash([6, 6]); ctx.lineDashOffset = -performance.now() / 60;
     for (const id in G.ords) { const O = G.ords[id]; if (O.arrived || O.cx === undefined) continue; const ax = SX(O.cx), ay = SY(O.cy), bx = SX(O.x), by = SY(O.y); ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke(); ctx.beginPath(); ctx.ellipse(bx, by, 10 * cam.z, 10 * cam.z * TILT, 0, 0, 7); ctx.stroke(); }
@@ -232,7 +236,7 @@ function tintOf(dusk, nt) {
   let r = 0, g = 0, b = 0, a = 0;
   const lay = (cr, cg, cb, ca) => { if (ca <= 0) return; const na = a + ca - a * ca; r = (r * a * (1 - ca) + cr * ca) / na; g = (g * a * (1 - ca) + cg * ca) / na; b = (b * a * (1 - ca) + cb * ca) / na; a = na; };
   if (dusk > 0.02) lay(255, 140, 60, 0.13 * dusk);
-  if (nt > 0) lay(10, 18, 48, 0.4 * nt);
+  if (nt > 0) lay(10, 18, 48, 0.4 * nt * (1.15 - 0.3 * moonLight()));   // darker toward the new moon
   const w = WX_TINT[G.wx]; if (w) lay(w[0], w[1], w[2], w[3]);
   if (a <= 0.002) return '';
   const k = `${(r | 0)},${(g | 0)},${(b | 0)},${Math.round(a * 200)}`; if (tintC.k !== k) { tintC.k = k; tintC.s = `rgba(${r | 0},${g | 0},${b | 0},${(a).toFixed(3)})`; }
@@ -260,11 +264,11 @@ function drawUnit(u, s) {
   // a woodcutter leans in to its tree while it chops: the tree's ground keeps it 20 away, so it is drawn up to 12 closer (drawing only; the game does not move it)
   { const n = u.node, on = u.kind === 'vil' && n && n.kind === 'tree' && u.work && G.t - u.work < 0.25; u.lean = clamp((u.lean || 0) + (on ? 0.08 : -0.08), 0, 1); }
   const ln = u.lean && u.node ? Math.min(12, Math.max(0, dist(u, u.node) - 10)) * u.lean / (dist(u, u.node) || 1) : 0, ux = u.node ? u.x + (u.node.x - u.x) * ln : u.x, uy = u.node ? u.y + (u.node.y - u.y) * ln : u.y;
-  const z = cam.z, sx = SX(ux), sy = SY(uy), U = UNIT[u.kind], col = G.P[u.owner].color, st = u.owner === WILD ? null : stats(u.owner, u.kind);
+  const z = cam.z, sx = SX(ux), sy = SY(uy) - (u.fly || 0) * z, U = UNIT[u.kind], col = G.P[u.owner].color, st = u.owner === WILD ? null : stats(u.owner, u.kind);
   const moving = G.t - (u.mvT || -9) < 0.15, working = u.work && G.t - u.work < 0.25;
   const fr = G.t - (u.hitT || -9) < 0.25 ? 3 : moving ? 1 + (((G.t * 6) | 0) + u.id) % 2 : working ? (U.look === 'vil' ? 10 + workOf(u) * 2 + (((G.t * 2.5) | 0) + u.id) % 2 : 1 + (((G.t * 6) | 0) + u.id) % 2) : 0;
   if (z < 0.3) { const big = (LOOKBOX[U.look] || [26])[0]; ctx.fillStyle = u.owner === WILD ? '#c9b48a' : col; const r = Math.max(1.8, big * 0.07 * z * FIG); ctx.fillRect(sx - r, sy - r * 1.6, r * 2, r * 2); return; }   // seen from far away a person is a dot of their colour
-  const c = sprite(U.look, col, st ? st.tier : 0, fr, s, st && U.tick === 'sol' && !hasTag(u.kind, 'siege') ? st.kit : 0), k = z * FIG / s, big = (LOOKBOX[U.look] || [26])[0];
+  const c = sprite(U.look, col, st ? st.tier : u.tier || 0, fr, s, st && U.tick === 'sol' && !hasTag(u.kind, 'siege') ? st.kit : 0), k = z * FIG / s, big = (LOOKBOX[U.look] || [26])[0];
   ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(sx, sy, big * 0.28 * z * FIG + 2, 2.4 * z + 1, 0, 0, 7); ctx.fill();
   if (u.owner === 0 && G.sel !== 'all' && u.bn === G.sel) { ctx.strokeStyle = '#ffd35e'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.ellipse(sx, sy, 7 * z + 2, 3.4 * z + 1, 0, 0, 7); ctx.stroke(); }
   if (u.owner !== WILD) { ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(sx, sy, 3.4 * z + 1, 1.6 * z + 0.6, 0, 0, 7); ctx.fill(); }
@@ -304,6 +308,22 @@ function drawPicks(z) {
     ctx.beginPath(); ctx.ellipse(SX(e.x), SY(e.y), r * z + 3, r * z * TILT + 2, 0, 0, 7); ctx.stroke();
   }
 }
+const rnd2 = () => Math.random() * 2 - 1;
+// Spectacle on the glass: each event's picture, drawn over the world. Light, particles, a real shape; nothing that hides the game.
+function drawEvents(z) {
+  const e = G.ev && G.ev.cur, t = performance.now() / 1000;
+  if (e && e.kind === 'storm' && !lessMotion) {   // a dark band of cloud walking east, rain under it
+    const x = SX(e.x), w = EVENTS.storm.band * z; const gr = ctx.createLinearGradient(x - w, 0, x + w, 0); gr.addColorStop(0, 'rgba(20,24,34,0)'); gr.addColorStop(0.5, 'rgba(14,18,28,.62)'); gr.addColorStop(1, 'rgba(20,24,34,0)'); ctx.fillStyle = gr; ctx.fillRect(x - w, 0, 2 * w, ch);
+    ctx.fillStyle = 'rgba(40,46,60,.85)'; for (let i = 0; i < 9; i++) { ctx.beginPath(); ctx.ellipse(x + (i - 4) * w * 0.22 + Math.sin(t * 0.7 + i) * 8, 30 + (i % 3) * 14, 70 + (i % 2) * 30, 26, 0, 0, 7); ctx.fill(); }   // the cloud itself along the top of the glass
+    ctx.strokeStyle = 'rgba(205,220,240,.35)'; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 0; i < 60; i++) { const rx = x - w + ((i * 97.3) % (2 * w)), ry = ((i * 53.7 + t * 520) % (ch + 60)) - 30; ctx.moveTo(rx, ry); ctx.lineTo(rx - 4, ry + 14); } ctx.stroke();
+  }
+  if (e && e.kind === 'locusts') { const x = SX(e.x), y = SY(e.y); ctx.fillStyle = 'rgba(20,16,8,.28)'; ctx.beginPath(); ctx.ellipse(x, y, 70 * z, 40 * z, 0, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(230,200,120,.9)'; for (let i = 0; i < 70; i++) { const a = i * 2.4 + t * (1 + (i % 5) * 0.3), r = (20 + (i * 37) % 60) * z; ctx.fillRect(x + Math.cos(a) * r + Math.sin(t * 7 + i) * 3 * z, y + Math.sin(a) * r * TILT - 20 * z + Math.cos(t * 9 + i) * 3 * z, 2.2 * z, 1.4 * z); } }   // a dark cloud of specks
+  if (e && e.kind === 'meteor') { const f = clamp((G.t - e.t0) / (e.until - e.t0), 0, 1), x1 = SX(e.at.x), y1 = SY(e.at.y), x0 = x1 - 420, y0 = y1 - 560, x = x0 + (x1 - x0) * f, y = y0 + (y1 - y0) * f; ctx.strokeStyle = 'rgba(255,240,200,.9)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x - (x1 - x0) * 0.12, y - (y1 - y0) * 0.12); ctx.lineTo(x, y); ctx.stroke(); ctx.fillStyle = '#fff6dc'; ctx.beginPath(); ctx.arc(x, y, 4, 0, 7); ctx.fill(); }
+  if (e && e.kind === 'eclipse') { const f = Math.sin(Math.PI * clamp((G.t - e.t0) / (e.until - e.t0), 0, 1)), x = cw * 0.5, y = ch * 0.28; ctx.globalAlpha = f; const gl = ctx.createRadialGradient(x, y, 26, x, y, 60); gl.addColorStop(0, 'rgba(255,250,230,.9)'); gl.addColorStop(1, 'rgba(255,250,230,0)'); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(x, y, 60, 0, 7); ctx.fill(); ctx.fillStyle = '#0b0f0d'; ctx.beginPath(); ctx.arc(x, y, 27, 0, 7); ctx.fill(); ctx.globalAlpha = 1; }   // the corona at the top of the glass
+  if (e && e.kind === 'fog') { const f = Math.min(1, (G.t - e.t0) / 4, (e.until - G.t) / 4); ctx.fillStyle = `rgba(214,220,222,${0.55 * f})`; ctx.fillRect(0, 0, cw, ch); if (!lessMotion) { ctx.fillStyle = `rgba(230,234,236,${0.25 * f})`; for (let i = 0; i < 8; i++) { ctx.beginPath(); ctx.ellipse(((i * 173 + t * 12) % (cw + 300)) - 150, (i * 97) % ch, 160, 50, 0, 0, 7); ctx.fill(); } } }
+  if (e && e.kind === 'aurora') { const f = Math.sin(Math.PI * clamp((G.t - e.t0) / (e.until - e.t0), 0, 1)); for (let i = 0; i < 3; i++) { const gr = ctx.createLinearGradient(0, 0, 0, ch * 0.5); gr.addColorStop(0, `rgba(${i ? 120 : 60},${220 - i * 40},${140 + i * 40},${0.5 * f})`); gr.addColorStop(1, 'rgba(60,200,140,0)'); ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(0, 0); for (let x = 0; x <= cw; x += 20) ctx.lineTo(x, ch * 0.18 + Math.sin(x / 60 + t * 0.6 + i) * 30 + i * 25); ctx.lineTo(cw, 0); ctx.closePath(); ctx.fill(); } }
+  if (G.wx === 'blizzard' && !lessMotion) { ctx.fillStyle = 'rgba(245,248,252,.9)'; for (let i = 0; i < 160; i++) { const y = ((i * 71.9 + t * 90) % (ch + 20)) - 10, x = ((i * 113.7 + t * 140 + Math.sin(t * 0.8 + i) * 14) % (cw + 40)) - 20; ctx.fillRect(x, y, 2 + (i % 3 === 0), 2 + (i % 3 === 0)); } ctx.fillStyle = 'rgba(235,240,245,.35)'; ctx.fillRect(0, 0, cw, ch); }
+}
 function bar(x, y, w, f, col) { ctx.fillStyle = 'rgba(0,0,0,.65)'; ctx.fillRect(x - w / 2, y, w, 4); ctx.fillStyle = col; ctx.fillRect(x - w / 2, y, w * clamp(f, 0, 1), 4); }
 function flagAt(x, y, col, z) { ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - 16 * z); ctx.stroke(); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(x, y - 16 * z); ctx.lineTo(x + 10 * z, y - 13 * z); ctx.lineTo(x, y - 10 * z); ctx.closePath(); ctx.fill(); }
 let FONTF = null; const fontF = () => FONTF || (FONTF = getComputedStyle(document.body).fontFamily);
@@ -336,7 +356,9 @@ function drawMini() {
     else if (b.kind === 'castle') { m.beginPath(); m.moveTo(x, y - 5.5); m.lineTo(x + 5.5, y); m.lineTo(x, y + 5.5); m.lineTo(x - 5.5, y); m.closePath(); m.fill(); m.strokeStyle = 'rgba(0,0,0,.6)'; m.lineWidth = 1; m.stroke(); }
     else { const s = BLD[b.kind].wallish ? 2 : BLD[b.kind].fp >= 5 ? 5 : 3.5; m.fillRect(x - s / 2, y - s / 2, s, s); }
   }
+  if (G.wx === 'blizzard') { m.fillStyle = 'rgba(235,240,245,.92)'; m.fillRect(0, 0, 172, 172); return; }   // a whiteout: the small map shows nothing
   for (const u of G.units) if (u.owner !== WILD ? visibleTo0(u) : !UNIT[u.kind].flee && !UNIT[u.kind].passive) { m.fillStyle = G.P[u.owner].color; m.fillRect(u.x * k - 1, u.y * k - 1, 2, 2); }
+  if (G.mirage && G.mirage.until > G.t) { m.fillStyle = '#de5a44'; for (let i = 0; i < G.mirage.n; i++) m.fillRect((G.mirage.x + (i % 4) * 14 - 20) * k - 1, (G.mirage.y + Math.floor(i / 4) * 14 - 14) * k - 1, 2, 2); }   // the mirage
   const a = toWorld(0, 0), b = toWorld(cw, ch);
   m.strokeStyle = '#fff'; m.lineWidth = 1.5; m.strokeRect(a.x * k, a.y * k, (b.x - a.x) * k, (b.y - a.y) * k);
 }

@@ -81,7 +81,7 @@ function robbed(u) {
 function natureTick() {
   const sn = Math.floor(G.t / SEASON_LEN);
   if (sn !== G.seasonN) { G.seasonN = sn; seasonTurn(); }
-  G.wxT -= 1; if (G.wxT <= 0) { G.wxT = WX_EVERY; const was = G.wx, odds = WX_ODDS[season().name], r = rng(); let acc = 0; G.wx = 'clear'; for (const k in odds) { acc += odds[k]; if (r < acc) { G.wx = k; break; } } if (G.wx !== was && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6); lightning(); }
+  G.wxT -= 1; if (G.wxT <= 0) { G.wxT = WX_EVERY; const was = G.wx, odds = hz('winter') && season().name === 'Winter' ? { frost: 0.3, blizzard: 0.5 } : WX_ODDS[season().name], r = rng(); let acc = 0; G.wx = 'clear'; for (const k in odds) { acc += odds[k]; if (r < acc) { G.wx = k; break; } } if (G.wx !== was && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6); lightning(); }
   if (storm() && rng() < 0.05) strike(rnd(80, MAP - 80), rnd(80, MAP - 80));   // a strike on open ground, about every 20 s in a storm
   for (const b of G.blds) if (b.node && BLD[b.kind].crop && b.prog >= 1 && b.node.type === 'food') {   // soil tires when worked and rests when not
     const worked = G.t - (b.node.workT || -9) < 2;
@@ -102,7 +102,7 @@ function seasonTurn() {
   }
   if (s === 'Spring') {
     if (G.t > 1) { const r = rng(); G.harvest = 1; let acc = 0; for (const H of HARVEST) { acc += H.p; if (r < acc) { G.harvest = H.m; say(H.text, 'warn', 8); break; } } }
-    if (G.P.some(p => p.alive && p.id !== WILD && ready(p.id, 'bizc').length) && rng() < HEALTH.plague) { G.plague = { until: G.t + SEASON_LEN * 2 }; say('Plague on the roads: build a Hospital.', 'warn', 10); }
+    if (G.P.some(p => p.alive && p.id !== WILD && ready(p.id, 'bizc').length) && rng() < HEALTH.plague * (hz('plague') ? 3 : 1)) { G.plague = { until: G.t + SEASON_LEN * 2 }; say('Plague on the roads: build a Hospital.', 'warn', 10); }
     if (G.blds.some(b => b.owner === 0 && b.kind === 'pasture')) say('Spring: sheep shorn, lambs born.', 'good', 5);
   }
   if (s !== 'Spring' && s !== 'Summer' && G.plague && G.plague.until <= G.t) G.plague = null;
@@ -159,7 +159,7 @@ function healthTick() {   // every 5 seconds
     if (H.some(h => h.owner === o && dist(h, u) < (BLD[h.kind] || UNIT[h.kind]).hrng) && rng() < HEALTH.cure * fxv(o, 'cure').m) { u.sick = 0; u.plague = false; continue; }
     const capOk = !u.plague || (P.plagueDead || 0) < Math.max(1, popOf(o) * HEALTH.plagueCap);
     if (capOk && rng() < HEALTH.death * (u.plague ? 4 : 1) * fxv(o, 'death').m) { u.hp = 0; u.gone = true; if (u.plague) P.plagueDead = (P.plagueDead || 0) + 1; continue; }
-    if (rng() < HEALTH.spread) { const v = G.units.find(w => w.owner === o && w !== u && UNIT[w.kind].cls && !(w.sick > G.t) && Math.abs(w.x - u.x) < 18 && Math.abs(w.y - u.y) < 18); if (v) { v.sick = G.t + HEALTH.sickFor; v.plague = u.plague; } }
+    if (rng() < HEALTH.spread * (u.plague && hz('plague') ? 2 : 1)) { const v = G.units.find(w => w.owner === o && w !== u && UNIT[w.kind].cls && !(w.sick > G.t) && Math.abs(w.x - u.x) < 18 && Math.abs(w.y - u.y) < 18); if (v) { v.sick = G.t + HEALTH.sickFor; v.plague = u.plague; } }
   }
 }
 
@@ -169,7 +169,7 @@ function upkeepTick() {   // every second
     const o = p.id;
     // everyone eats: a share a person, more for soldiers and far more for horses
     let sh = 0; for (const u of G.units) if (u.owner === o) sh += shareOf(u);
-    const eat = sh * UPKEEP.share; p.eats = eat * 60;
+    const eat = sh * UPKEEP.share; p.eats = eat * 60; starveTick(p);
     if (p.res.f >= eat) { p.res.f -= eat; if (p.hungry && p.res.f > 20) { p.hungry = false; if (o === 0) say('Your people are fed again.', 'good', 4); } }
     else { p.res.f = 0; if (!p.hungry) { p.hungry = true; if (o === 0) say('No food. Work slows. Put villagers on Food.', 'warn', 8); } }
   }
