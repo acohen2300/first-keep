@@ -1,70 +1,51 @@
-# First Keep: handoff (Build 36 live: the new screen layout; see CUTS.md)
+# First Keep: handoff (Build 36, live)
 
 ## What it is
-Single-file HTML mobile RTS (Albert). Live: https://claude.ai/artifact/BYdPKYCJDQS3xw5fwxvjYV (version 34, Build 29). Updated in place each build with a label.
+Albert's single-file HTML mobile RTS (Age of Empires style). Albert is not a coder.
+- Live: https://acohen2300.github.io/first-keep (`index.html`). Preview copy: `/preview` (same file as live right now).
+- Repo: https://github.com/acohen2300/first-keep, branch `main`. Pages deploys 1-2 minutes after a push. Sessions usually cannot reach github.io, so Albert checks the live link.
+- Last commit: Build 36 (5e98b58).
 
-## Layout
-- `src/NN-*.js` (00-pre, 01-rules … 16-boot) + `src/shell-head.html` + `src/shell-tail.html`; `build.py` joins them into `first-keep.html`; `wrap.py` makes `native/index.html`.
-- `src` is its own git repo (last commit: Build 29). Backups: `first-keep-bNN.html`.
-- Tests: `tests/gate.py` (4 iPhone sizes x web/native, 44 px taps, 12 px type, half-zoom tell-apart, calls `tests/words.py`: toasts/tips max 10 words). Playwright scripts are in `tests/e2e/` (see below).
-- Notes: `CUTS.md` (every cut, per build), `GUIDE.md` (player guide; not regenerated for B29), `APP-PREP.md`.
-- Build/check: `python3 build.py && python3 wrap.py && python3 tests/gate.py`. Syntax-check the combined script from `first-keep.html`, not per file (IIFE spans files).
+## How to work with Albert (standing rules)
+- Talk it out first. Make a list; build only after his double confirm ("yes yes", "go", "Sure go"). His standing vote on a list is "do all", with exceptions named by him.
+- Mockups first, then ONE build, ONE gate run, ONE push. No build per tweak. Look at every render yourself (and measure it) before showing him.
+- Simplest, leanest design. No fixes on fixes: redo it cleanly. Merge, cut bloat. One mold, uniform sizes.
+- Log every cut in `CUTS.md`.
+- Honest, neutral pushback. No flattery. Keep pitching good ideas, flagging which rule they break. Analyze by element (does it exist, why, where is its source, where else can it be reused).
+- Tell him before switching models (he switches them).
+- Be brief and move fast: he said the Build 36 layout work was "too painful for no reason". Real game design: real science and history; fun and hard, not annoying; pay to help, never pay to win.
+- SoRen (`/home/claude/soren-archive`, his other app) is read-only for ideas.
 
-## Working rules (Albert, standing)
-- Make a list first; execute only after his double confirm ("yes yes", "go go go", "Sure go"). His standing vote on a list is "do all", exceptions named by him.
-- Talk things out first. Simplest, leanest design; no fixes on fixes; merge; log every cut in CUTS.md.
-- Honest, neutral pushback; no flattery. Real science and history. Bad events are an inconvenience, never game-ruining. Pay to help, never pay to win. Fun and hard, not annoying.
-- Tell him before switching to Opus (he switches the model).
-- SoRen (`/home/claude/soren-archive`) is read-only for ideas; no changes without his yes yes.
+## Repo layout
+- `src/NN-*.js` (00-pre ... 16-boot) + `src/shell-head.html` + `src/shell-tail.html`. `build.py` joins them into `first-keep.html` (refuses syntax errors and duplicate top-level names; embeds fonts from `src/fonts`). `wrap.py` writes `native/index.html`.
+- Check: `python3 build.py && python3 wrap.py && python3 tests/gate.py` (run from the repo root).
+- Publish: copy `first-keep.html` to `index.html` (live) and `preview/index.html`, commit, `git fetch`, push to `main`. Commit trailers: `Co-Authored-By: ...` and `Claude-Session: ...` lines as the session instructs.
+- Notes: `CUTS.md` (every cut, per build), `GUIDE.md` (player guide; the two lines for the screen and jobs are current, the rest is as of Build 29), `APP-PREP.md`, `mockups/` (layout images; `build36-*.png` are the final screens), `logs/session-1.jsonl` (raw first-session log).
+- The gate (`tests/gate.py`, with `tests/words.py`): 4 sizes (375x667, 390x844, 393x852, 430x932) x web and native; no page errors; taps at least 44x44 (except the - and + tiles, `.pm`); text at least 12 px; contrast at least 4.5:1; no clipped words; no card scroll from 390x844 up (except Help and Guide); buildings tell apart at half zoom; toasts and tips at most 10 words. Last run: all PASS.
+- `tests/e2e/` holds ~79 old Playwright scripts. They point at `file:///home/claude/first-keep/first-keep.html`. `t27.py` is stale (reads #sClock, #bVil, #bArmy, which no longer exist).
+
+## The screen (Build 36)
+Built to fix a bottom area that took ~29% of a phone. Source of truth: `src/shell-head.html` (CSS and markup) and `buildPanel()`, `setBuildRow()`, `ui()` in `src/12-ui.js`.
+- One mold: `.cell` (icon spot `.gl`, word spot `.wd`), tokens `--row:44px --strip:28px --t2:14px --r:8px --hair --sheet`. `button.cell` uses `all:unset`; do not style controls through the global `button{}` rule or the old `.row` grid (they leaked into earlier attempts). Use unique class names.
+- Top: one pill of 8 equal cells (Food, Wood, Stone, Gold, Iron counts; mute; pause; speed). Strip under it (28 px to see, 44 px to tap): age + season + clock on the left (glows gold when the next age or any research is ready; tap = Town Center card), idle villagers in gold when above 0, score + rank on the right (tap = score card). Map button top right (minimap toggle).
+- Bottom: six columns: People, Food, Wood, Stone, Gold, Iron. Each is a 44 px tile plus a - | + pair beneath. People tile opens the People card (`card:army`, which now holds Research and How to play); its - (`unvil`, `unTrain()` in 05-orders.js) cancels the newest waiting villager and refunds it; + trains one. Count shows have/room, or have+waiting.
+- Build: 44 px corner button bottom right (Home mirrors it bottom left, only when the Town Center is off screen). It swaps the jobs for one row: Home, War, Walls, Trade, Culture, close. Each opens its existing 12-slot card.
+- Layout variables: `fit()` in `10-view.js` sets `--ob` (bottom offset) from the real height of `#orders`; `--hb` (top) is 78 px + the safe area in CSS. Anything that changes those heights must call `fit()`.
+- Cut or folded this build (details in CUTS.md): "?" button, Farm job (now Food), old +Villager|Build row, status and clock pills, Research tile and glow, Army and marching counts, zoom % and civ name. Menus renamed: Military is War, Defense is Walls (ids `mil`, `def` unchanged).
+- Farm folded into Food: `JOBS` has five entries. Food workers take a free field within 160, else berries, game or fish; they move onto a field when one frees up. Save version 29 (`MIGRATE[28]` turns saved Farm workers and rally into Food).
 
 ## Key technical notes
-- Fixed timestep (DT 1/30, global `G`), nav grid NC=200 x NAVC=10, cached sprites (`SPR`, `BSPR`, `NSPR`), turned view (`SIDE`, `TILT`).
-- Player keep at global (300,1700). Local frame: keep (0,0), `at(dx,dy)` mirrors per corner. Forest cleared within `FOREST.home`=360. Home pocket (berries, grove, stone, gold, iron) behind the keep via `LAYOUT` rows with angle ranges.
-- Gunpowder is age 5 (`AGES[4]`): arquebus, bombard, musket, starfort; units flagged `gun`, not `archer`.
-- Armour kit `KIT` 0-3 is part of the sprite cache key. Theatrics: `popC`, `celebrate`, `b.doneT`, `u.bornT`, `u.glowT`.
-- Draw: painter list sorted by y, per-item try/catch -> `fault(e)` (saves and pauses after 2 distinct errors). Past bug: villagers carrying cloth/wool/beer threw in `drawUnit` and hid the Town Center.
-- Toasts: `say(text, cls, secs, at, act)`; one of each at a time; `SET.msgs`, `SET.tips`, `advise()` ('!' = urgent). Pace: `speed()`, `paceBtn()`, `setPause()`.
-- Save `SAVEV` = 27; old saves load with Messages on.
-- Top bar at 375 px: homes icon hidden (`@media max-width:380px`); side padding 8 px at <=400 px.
+- Fixed timestep (DT 1/30), global `G`, nav grid, cached sprites, turned view (`SIDE`, `TILT`). Player keep at (300,1700); local frame mirrors per corner.
+- Villager cap 60, army 90. Gunpowder is age 5; units flagged `gun`.
+- Draw: per-item try/catch to `fault(e)` (saves and pauses after 2 distinct errors).
+- Toasts: `say(text, cls, secs, at, act)`; `SET.msgs`, `SET.tips`, `advise()` ('!' = urgent). Pace: `speed()`, `paceBtn()`, `setPause()`. Every button verb lives in the `ACT` table in `12-ui.js`.
+- Save: `SAVEV` (shape only) plus `MIGRATE` steps; old saves are kept aside, never lost.
+- Test hook: `window.__fk` exposes `G`, `act`, `openCard`, `saveGame`, `ui`, `setPause` and more (see `16-boot.js`).
 
 ## Open items
-1. GitHub: DONE. Repo https://github.com/acohen2300/first-keep (main, game as `index.html`, Pages on). Phone link: https://acohen2300.github.io/first-keep. To publish a build: attach the repo with add_repo (push), copy `first-keep.html` to `index.html`, commit and push to `main`. Pages deploys in 1-2 minutes. The Claude GitHub app is installed on his account. This session could not reach github.io or the Pages API, so Albert checks the live link.
-2. Sound: obeys the iPhone silent switch (`navigator.audioSession.type='ambient'`). Albert has not decided whether it should play on silent.
-3. Real-phone test list: pinch zoom, box-select, build ghost, villager card, field dots, research dots, 30-minute bell, new top bar and corner chip, pace button.
-4. Gunpowder balance (costs, bombard damage, AI timing) is first-guess.
-5. Parked ideas: replays, biomes, interpolation, optional Auto jobs, readability cleanup before App Store, bundled fonts for native, "Add another conquest" step-up, slower first raid (~5 min), job row as one line (mockup B, he chose the old bottom).
-6. GUIDE.md needs Build 29 changes (top bar, corner chip, one pace button, Messages toggle, side-by-side building).
-
-## Status (Oct 27, evening)
-- Live (index.html, Pages root): **Build 30**. Preview (preview/index.html, acohen2300.github.io/first-keep/preview): **Build 32**, waiting for Albert's phone test before it goes live (copy preview/index.html to index.html).
-- Build 31-32 changes: see CUTS.md. Build 31: send strip, silence, Sound page, two-sided building cards, War Council ladder (Engagement, Battalions, Formations, Muster), save version 28. Build 32: trade in two lanes (stops, allies), guards (12 per caravan or stop), three trade researches, one Market rule, cards patched not rebuilt, text from tables, speed, fonts inside the file, build check.
-- Scorecard doc (best in class vs First Keep): https://claude.ai/artifact/3rJiUoFJHj4t6BfWKgpsXv
-- Agreed order: Build 33 elite touch and access; 34 the world (weather, wind, snow, battlefields, world settings: night/weather/seasons on/off or fixed); 35 the front door (demo world behind the menu with a visible finger, look around, story, did-you-know facts, tech map, new score card); 36 roads (counter-offer: dragged like walls, speed and +10% work, never required; Albert to decide). Then an elite pressure test against measurable bars, then a new list.
-- Build checks: `python3 build.py` refuses syntax errors and duplicate top-level names; fonts are embedded from src/fonts at build time.
-
-## Status at handoff (Oct 27)
-Build 29 is live at the artifact URL (version 34) and on GitHub Pages. Nothing in progress. Next: his phone test of Build 29 and the sound-on-silent answer.
-
-## Full transcript
-`logs/session-1.jsonl` (raw log of the first session, 1.2 MB) is in the repo.
-
-## Tests in the repo
-`tests/gate.py` and `tests/words.py` are the release gate. `tests/e2e/` holds the 79 Playwright scripts used during development (t32 orders, t34 gunpowder, t37 formations, t38 draw-error hunt, t41 top-bar width, stress.py, shot*.py). They point at `file:///home/claude/first-keep/first-keep.html`; change the path to run them.
-
-
-## Build 33 (preview)
-Hold-to-box (no ⬚), state chip and Home on a second top row, map button (minimap shut after the first look), rank under the score, age button at the top of the Town Center card and as the bottom button, book and hammer tab icons, muted selected fill, rain rings on the ground, one-cell gap between buildings, parchment and ink cards (night dims them). Gate passes. Next: Build 34 the world, Build 35 the front door, Build 36 roads.
-
-## Build 34 (preview, separate artifact)
-One top bar; map, home and clock on the map corners; bottom = job row, ± row, then + Villager | People | Build. Build card with five filters. Score names jump to players. Minimap stars and diamonds. Build 33 stays at its own preview artifact for comparison.
-
-
-## Build 36: the screen layout (DONE, live on GitHub Pages: index.html = preview/index.html = Build 36)
-Albert approved the final layout (mockups/build36-*.png) and said to ship it. What it is:
-- Top: one joined pill of 8 equal cells (Food, Wood, Stone, Gold, Iron counts; mute; pause; speed). Under it a 28 px strip: age, season and clock on the left (gold glow when the next age or a research is ready; tap = Town Center card), idle villagers beside it in gold when above 0, score and rank on the right (tap = score card). Tap targets are 44 px tall though the strip is 28.
-- Bottom, closed: six columns, People then Food, Wood, Stone, Gold, Iron. Each = tile (44) + a - | + pair (44 tall, 26-29 wide). People tile opens the People card (which now holds How to play); its - cancels the newest waiting villager (refund), its + trains one; count shows have/room, or have+waiting.
-- Build: 44 px corner button bottom right (Home button mirrors it bottom left). Tapping swaps the jobs for one row: Home, War, Walls, Trade, Culture, close. `setBuildRow()` in 12-ui.js calls `fit()` so the camera and `--ob` follow the new height.
-- One mold in `src/shell-head.html`: `.cell`, `.gl` (icon spot), `.wd` (word spot); tokens `--row --strip --t2 --r --hair --sheet`. Do not style controls with the global `button{}` rule; `button.cell` uses `all:unset`.
-- Farm job folded into Food (`JOBS` has 5). Save version 29; `MIGRATE[28]` turns saved Farm workers and the Farm rally into Food. Menus renamed War and Walls (ids `mil`, `def` unchanged).
-- Gate: tap exception is now `.pm` (the - and + tiles) only; the old top-bar clip check became a clip check on `.wd`, `.top .c` and the strip text. Passes at 375x667, 390x844, 393x852, 430x932, web and native.
-- Stale: `tests/e2e/t27.py` still reads #sClock, #bVil, #bArmy (gone since Build 33/34/36); it was already broken before this build. Real-phone test list: tap sizes, the strip taps, Build row, People - and +, glow.
+1. Albert's real-phone test of Build 36: tap sizes, strip taps, Build row, People - and +, the gold glow, 375 px width. Fix whatever he reports in ONE batch.
+2. Sound obeys the iPhone silent switch; he has not decided whether it should play on silent.
+3. Gunpowder balance (costs, bombard damage, AI timing) is a first guess.
+4. Idea backlog (ask first): replays, biomes, interpolation, optional Auto jobs, readability cleanup before the App Store, bundled fonts for native, "Add another conquest" step-up, slower first raid (~5 min).
+5. Agreed roadmap before Build 36 changed priorities: Build 34 the world (weather, wind, snow, battlefields, world settings), Build 35 the front door (demo world behind the menu, story, facts, tech map, new score card), a roads idea (dragged like walls, +10% work, never required; undecided). Check CUTS.md for what actually shipped before assuming any of these is still open.
+6. GUIDE.md still needs the Build 29-36 changes outside the screen and jobs lines.
