@@ -28,6 +28,7 @@ function step(dt) {
   { let gone = false; for (const u of G.units) if (u.hp <= 0) { gone = true; break; } if (gone) G.units = G.units.filter(u => u.hp > 0); } G.ugTick = -1;
   let fxChange = false;
   for (const b of G.blds) if (b.node && b.node.amt <= 0 && b.hp > 0 && BLD[b.kind].reserve > 0) { b.hp = 0; if (b.owner === 0) say('A tree farm is cut out. Plant another.', '', 5); }   // a coppice plot, spent
+  for (const b of G.blds) if (b.kind === 'throne' && b.hp <= 0 && !b.gone) { if (b.by !== undefined && b.by !== WILD) takeThrone(b.by); else b.hp = 1; }   // the Throne is taken, never broken
   for (const b of G.blds) if (b.hp <= 0) { if (!b.gone && b.prog >= 1 && !BLD[b.kind].wallish) scarBurn(b); if (b.node) b.node.amt = 0; if (b.by !== undefined) plunderBld(b); if (BLD[b.kind].fx) fxChange = true; if (G.wonder && G.wonder.id === b.id) { say(`${G.P[b.owner].name === 'You' ? 'Your' : G.P[b.owner].name + '\'s'} wonder has fallen.`, b.owner === 0 ? 'warn' : 'good', 7); G.wonder = null; } }
   if (fxChange) fxDirty();
   if (G.lootT && G.t - G.lootT > 1.5) { say(`Plunder: ${costText(G.loot)}.`, 'good', 6); G.loot = {}; G.lootT = 0; }
@@ -36,7 +37,7 @@ function step(dt) {
   for (const tr of G.tracers) tr.life -= dt;
   if (G.tracers.length && G.tracers[G.tracers.length - 1].life <= 0 || G.tracers.some(tr => tr.life <= 0)) G.tracers = G.tracers.filter(tr => tr.life > 0);
   for (const p of G.P) if (p.id && p.id !== WILD && p.alive) { p.ai.t -= dt; if (p.ai.t <= 0) { p.ai.t = react(); think(p); } }
-  fortressDuties(dt);
+  nativesTick(dt);
   for (const p of G.P) if (p.alive && p.id !== WILD && !keepOf(p.id)) fall(p);
   if (G.tick % 30 === 0) { scoreAll(); rebattalion(); }
   watchHome();
@@ -105,9 +106,10 @@ function judge() {
   if (G.over) return;
   if (!G.P[0].alive) { finish(false, `Your keep fell. You held out ${clock(G.t)}.`); return; }
   if (G.free) return;   // free play: nothing to win; only your own fall ends it
-  if (!G.P[1].alive && !G.P[2].alive) { finish(true, `Raiders and Rivals have fallen. ${clock(G.t)}`); return; }
+  if (!G.P[1].alive && !G.P[2].alive && !G.P[3].alive) { finish(true, `Every rival has fallen. ${clock(G.t)}`); return; }
+  if (G.throne && G.throne.owner !== WILD && G.t - G.throne.since >= throneHold()) { const o = G.throne.owner; finish(o === 0, o === 0 ? `You held the Throne ${Math.round(throneHold() / 60)} minutes.` : `${G.P[o].name} held the Throne ${Math.round(throneHold() / 60)} minutes.`); return; }
   { const ruled = i => !G.P[i].alive || (G.P[i].lord === 0 && !G.P[i].rebel);   // or rule them as vassals for five minutes
-    if (ruled(1) && ruled(2)) { G.reignT = G.reignT ?? G.t; if (G.t - G.reignT >= VASSAL.reign) { finish(true, `You have ruled the Raiders and the Rivals for ${VASSAL.reign / 60} minutes. ${clock(G.t)}`); return; } } else G.reignT = null; }
+    if (ruled(1) && ruled(2) && ruled(3)) { G.reignT = G.reignT ?? G.t; if (G.t - G.reignT >= VASSAL.reign) { finish(true, `You have ruled every rival for ${VASSAL.reign / 60} minutes. ${clock(G.t)}`); return; } } else G.reignT = null; }
   if (G.wonder && G.t >= G.wonder.end) { const o = G.wonder.owner; finish(o === 0, o === 0 ? `Your ${civOf(0).wonder} stood for ${WONDER_HOLD / 60} minutes.` : `${G.P[o].name}' ${civOf(o).wonder} stood for ${WONDER_HOLD / 60} minutes.`); return; }
   const lim = MODES[G.mode].secs;
   if (lim && !G.bell) G.bell = {};
@@ -323,7 +325,7 @@ function scoutTick(u, dt, SP) {
   if (moveTo(u, w.x, w.y, dt, 8, SP)) u.wp = (u.wp + 1) % u.route.length;
 }
 function envoyTick(u, dt, SP) {
-  if (u.state === 'envoy') { const k = keepOf(u.target); if (!k) { u.state = 'return'; return; } if (moveTo(u, k.x, k.y, dt, 30, SP)) judgeEnvoy(u.target, u.owner, u); }
+  if (u.state === 'envoy') { const k = homeOf(u.target); if (!k) { u.state = 'return'; return; } if (moveTo(u, k.x, k.y, dt, 30, SP)) judgeEnvoy(u.target, u.owner, u); }
   else { const k = keepOf(u.owner); if (!k || moveTo(u, k.x, k.y, dt, 20, SP)) { u.hp = 0; u.gone = true; } }
 }
 // a caravan with no route trades with an ally: out from your Market to theirs, paid by distance on arrival, then home again
@@ -433,7 +435,7 @@ function solTick(u, dt, SP) {
   if (u.state === 'escort') { escortPick(u); if (!u.esc) u.state = 'home'; else if (tgt && dist(tgt, u.esc) > 110) tgt = nearestFoe(o, u, 110, u.esc); }
   if (!tgt && u.blocker && u.blocker.hp > 0 && atWar(o, u.blocker.owner) && G.t - u.blockT < 1) tgt = u.blocker;
   if (!tgt && u.state === 'attack') {
-    if (!(u.bt && u.bt.hp > 0 && u.bt.owner === u.target && atWar(o, u.bt.owner)) || (G.tick + u.id) % 5 === 0) u.bt = (u.bid && G.blds.find(b => b.id === u.bid && b.hp > 0)) || nearestFoeBld(o, u, u.target, 260);
+    if (!(u.bt && u.bt.hp > 0 && u.bt.owner === u.target && atWar(o, u.bt.owner)) || (G.tick + u.id) % 5 === 0) u.bt = (u.bid && G.blds.find(b => b.id === u.bid && b.hp > 0 && atWar(o, b.owner))) || nearestFoeBld(o, u, u.target, 260);   // a mark that changed hands is no mark
     tgt = u.bt;
     if (!tgt) {
       const kp = keepOf(u.target);
@@ -538,7 +540,6 @@ function findsTick(dt) {
     let extra = '';
     if (F.tech) { const T = TECH.find(T => !G.P[o].techs.has(T.id) && T.age <= G.P[o].age && (!T.need || G.P[o].techs.has(T.need)) && !T.tier && !G.blds.some(b => b.owner === o && b.q.some(j => j.tech === T.id))); if (T) { learnTech(o, T.id); extra = ` and a scroll: ${T.name}`; } }
     if (o === 0) { say(`${F.name}: ${costText(got)}${extra}.`, 'good', 6); sfx('coin'); }
-    if (G.contract && G.contract.fid === f.id) { addRes(G.P[o].res, CONTRACT.pay); G.P[o].gathered += sumCost(CONTRACT.pay); G.contract = null; say(o === 0 ? `The Fortress pays you ${costText(CONTRACT.pay)} for the job.` : `${G.P[o].name} took the Fortress's job.`, o === 0 ? 'good' : '', 6); }
   }
 }
 
@@ -612,6 +613,8 @@ function hurt(o, a, t, base) {
   if (isB) d *= A.bld ?? 1;
   else {
     if (a) d *= vsMul(a, t);
+    if (a && a.native && !isB && onLand(t.x, t.y) && hyp(t.x - MID, t.y - MID) > THRONE.isle - 10) d *= NATIVE.ambush;   // the Natives at the causeways: the ground is theirs
+    if (a && A.gun && hasTag(t.kind, 'native')) d *= NATIVE.gunHit;   // gunpowder against hide shields
     if (isSoldier(t) && t.owner !== WILD) {
       d *= stats(t.owner, t.kind).armor;
       if (t.stance === 1) d *= STANCE[1].hit;
@@ -621,6 +624,7 @@ function hurt(o, a, t, base) {
     if (UNIT[t.kind].rarmor && (!a || A.rng > 20)) d *= UNIT[t.kind].rarmor;   // roofed: arrows and bolts glance off
   }
   t.hp -= d; t.hurtT = G.t; if (a && t.hp <= 0 && !isB && a.st) a.st.kills++;
+  if (t.native && o !== WILD && G.t - (natState().hitT ? natState().hitT[o] || -9 : -9) > 3) { (natState().hitT = natState().hitT || {})[o] = G.t; natRegard(o, -NATIVE.hitCost); }   // blows on the Natives cost regard
   if (a && A.knock && !isB && t.hp > 0 && t.kind !== 'caravan') {   // a heavy blow drives the target back and flashes it
     const dx = t.x - a.x, dy = t.y - a.y, dd = hyp(dx, dy) || 1, nx = t.x + dx / dd * A.knock, ny = t.y + dy / dd * A.knock;
     if (!blockedCell(gcell(nx, ny), t.owner)) { t.x = clamp(nx, 8, MAP - 8); t.y = clamp(ny, 8, MAP - 8); }
@@ -661,7 +665,7 @@ function collide() {
   }
   for (const u of U) {
     if (u.inside) continue;
-    for (const L of G.lakes) { const dl = hyp(u.x - L.x, u.y - L.y), lr = lakeR(L); if (dl < lr + 6 && !u.fly) { const s = (lr + 6) / (dl || 1); u.x = L.x + (u.x - L.x) * s; u.y = L.y + (u.y - L.y) * s; } }
+    for (const L of G.lakes) { const dl = hyp(u.x - L.x, u.y - L.y), lr = lakeR(L); if (dl < lr + 6 && !u.fly && !onLand(u.x, u.y)) { const s = (lr + 6) / (dl || 1); u.x = L.x + (u.x - L.x) * s; u.y = L.y + (u.y - L.y) * s; } }
     u.x = clamp(u.x, 6, MAP - 6); u.y = clamp(u.y, 6, MAP - 6);
     if (blockedCell(gcell(u.x, u.y), u.owner)) { const f = freeNear(Math.floor(u.x / NAVC), Math.floor(u.y / NAVC), u.owner, 8, u.x, u.y); if (f) { u.x = f.x; u.y = f.y; u.path = null; } }
   }
@@ -692,7 +696,7 @@ function fall(p) {
   G.blds.forEach(b => { if (b.owner === p.id) { b.hp = 0; b.gone = true; } });
   for (const f of G.finds) if (f.owner === p.id && FINDS[f.kind].capture) f.owner = null;
   if (p.ally !== null) { const q = G.P[p.ally]; if (q.ally === p.id) q.ally = null; }
-  if (p.id) say(`${p.name} has fallen.`, p.id === FORT ? 'warn' : 'good', 7);
+  if (p.id) say(`${p.name} has fallen.`, 'good', 7);
 }
 function scoreAll() {
   for (const p of G.P) {

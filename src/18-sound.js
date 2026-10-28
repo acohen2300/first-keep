@@ -88,13 +88,13 @@ function thunder(x, y) {
   const d = hyp(x - cam.x, y - cam.y), v = clamp(1.1 - d / 1400, 0.12, 1) * chanVol('thunder'); if (!v) return; panV = clamp((x - cam.x) / (cw / 2 / cam.z), -1, 1) * 0.6; SFX.thunder[1](v, d * 0.14 / 340); panV = 0;
 }
 // ── Touch you can feel: one table of felt events, three strengths, never more often than every 50 ms.
-// In the native app the Haptics plugin fills NATIVE (Apple's taptic engine); in a browser, vibrate where the phone allows it (iPhone Safari cannot).
-const NATIVE = { haptics: () => window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics };
+// In the native app the Haptics plugin fills APP (Apple's taptic engine); in a browser, vibrate where the phone allows it (iPhone Safari cannot).
+const APP = { haptics: () => window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics };
 const FEEL = { tick: ['LIGHT', 8], snap: ['MEDIUM', 15], thock: ['HEAVY', 25], crack: ['HEAVY', [30, 40, 20]] };
 const HAPTIC = { place: 'snap', done: 'thock', doneWar: 'thock', rumble: 'crack', hooves: 'thock', ready: 'tick', readySol: 'tick', horn: 'crack', crash: 'crack', thunder: 'crack', err: 'tick' };   // which sound is also felt
 let feltT = 0;
 function feel(kind) {
   if (!SET.vibe || !FEEL[kind]) return; const now = performance.now(); if (now - feltT < 50) return; feltT = now;
-  try { const H = NATIVE.haptics(); if (H) H.impact({ style: FEEL[kind][0] }).catch(() => {}); else if (navigator.vibrate) navigator.vibrate(FEEL[kind][1]); } catch (e) {}
+  try { const H = APP.haptics(); if (H) H.impact({ style: FEEL[kind][0] }).catch(() => {}); else if (navigator.vibrate) navigator.vibrate(FEEL[kind][1]); } catch (e) {}
 }
 const onScreen = (x, y) => Math.abs(x - cam.x) < cw / 2 / cam.z && Math.abs(y - cam.y) < ch / 2 / (cam.z * TILT);

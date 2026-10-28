@@ -34,6 +34,7 @@ const ACT = {
   today() { clearSave(); holdSave = false; newGame(todaySeed()); closeCard(); setPause(false); saveGame(true); refresh(); say(`Today's challenge: level ${levelOf(G.hz)}. Beat your best.`, 'good', 8); },
   tips() { SET.tips = !SET.tips; saveSet(); refresh(); },
   msgs() { SET.msgs = SET.msgs === false; saveSet(); refresh(); },
+  news() { SET.news = SET.news === false; saveSet(); refresh(); },
   tkmin() { SET.tkMin = !SET.tkMin; saveSet(); G.tkN = 0; G.tkW = false; G.tkOpen = false; ui(true); fit(); },   // hide or show the ticker
   tklist() { G.tkOpen = !G.tkOpen && G.log.length > 0; ui(true); },   // the last five
   hush(a) { const t = decodeURIComponent(a || ''), k = hushKey(t), m = G.log.find(x => x.text === t);
@@ -82,7 +83,7 @@ const PLAY = {
   sellat(a) { const [f, k] = a.split(','), F = G.finds.find(x => x.id === Number(f)); if (F && F.owner === 0) { F.sell = F.sell || Object.fromEntries(WARES.map(w => [w, 1])); F.sell[k] = F.sell[k] ? 0 : 1; } },
   debase() { if (!debase(0)) say('Needs a finished Mint, once a game.', '', 3); },
   surrender(a) { demandSurrender(0, Number(a)); closeCard(); },
-  overlord() { if (powerOf(soldiersOf(0)) >= 2 * powerOf(soldiersOf(FORT)) && G.P[FORT].ally === 0) makeVassal(FORT, 0, 'light'); },
+  overlord(a) { if (!offerOverlord(0, Number(a))) say(overlordWhy(0, Number(a)) || 'Not now.', '', 3); },
   tax(a) { const [q, t] = a.split(','), P = G.P[Number(q)]; if (P && P.lord === 0 && TAX[t]) { P.tax = t; say(`Tax on ${P.name}: ${t}.`, '', 3); } },
   venture(a) { if (!venture(0, Number(a))) say('Needs Medieval age, gold; 3 at most.', '', 4); },
   douse(a) { const b = G.blds.find(x => x.id === Number(a) && x.owner === 0); let n = 0; if (b && b.fire > 0) for (let i = 0; i < 2; i++) { const v = pickVil(0, b, null, b); if (v) { if (v.job !== 'repair') v.pj = v.job; setJob(v, 'repair'); v.rep = b; v.fireman = true; n++; } } G.log = G.log.filter(m => m.act !== 'douse:' + a); if (n) say(`${n} more run to the fire.`, '', 3); else if (b && b.fire > 0) say('No villager is free.', '', 3); },
@@ -105,7 +106,8 @@ const PLAY = {
     if (target !== null) { orderSet().forEach(u => { u.state = 'attack'; u.target = target; u.bid = null; }); say(`Marching on the ${G.P[target].name}.`, '', 3); }
     closeCard();
   },
-  envoy() { sendEnvoy(0, FORT, 'ally'); }, terms() { payTerms(0); }, askhelp() { askHelp(0); },
+  gift(a) { const [q, amt] = a.split(',').map(Number); if (!giveGift(0, amt)) say(giftWhy(0, amt) || 'Not now.', '', 3); },
+  ransom(a) { if (!payRansom(0, Number(a))) say('Not enough gold.', '', 3); },
   vjob(a) { const [id, j] = a.split(','), u = G.units.find(x => x.id === Number(id)); if (u && u.owner === 0) { setJob(u, u.job === j ? null : j); u.pj = null; u.idleT = 0; } },
   vgo(a) { const u = G.units.find(x => x.id === Number(a)); if (!u) return; if (G.confirm !== 'v' + u.id) { G.confirm = 'v' + u.id; return; } G.confirm = null; setJob(u, null); u.hp = 0; u.gone = true; say('A villager was sent home.', '', 3); closeCard(); },
   dismiss() { const v = unitsOf(0, 'vil').sort((a, b) => a.carry - b.carry)[0]; if (v) { setJob(v, null); v.hp = 0; v.gone = true; say('A villager was sent home.', '', 3); } },

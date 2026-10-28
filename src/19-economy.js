@@ -8,7 +8,8 @@ const stopsAll = () => G.finds.filter(f => f.kind === 'stop');
 const postAt = f => G.blds.find(b => b.kind === 'tpost' && b.sid === f.id && b.hp > 0);
 const stopsHeld = (o, r) => stopsAll().filter(f => f.route === r && f.owner === o).length;   // of one route's four stops
 const goodsOf = o => G.P[o].goods;
-function stash(o, type, amt) { const p = G.P[o], k = KEY[type] || type; if (KEY[type]) p.res[k] += amt; else p.goods[k] = (p.goods[k] || 0) + amt; p.gathered += amt; p.flow[k] = (p.flow[k] || 0) + amt; }
+function stash(o, type, amt) { const p = G.P[o], k = KEY[type] || type; if (KEY[type] && G.throne && G.throne.owner !== o && G.throne.owner !== WILD && G.P[G.throne.owner].alive) { const t = amt * THRONE.tithe; amt -= t; G.P[G.throne.owner].res[k] += t; G.P[G.throne.owner].gathered += t; }   // the Throne's tithe
+  if (KEY[type]) p.res[k] += amt; else p.goods[k] = (p.goods[k] || 0) + amt; p.gathered += amt; p.flow[k] = (p.flow[k] || 0) + amt; }
 // what came in over the last minute, by resource and good: kept for the stores card (the flow is counted as it is stashed, read once a minute)
 function flowTick() { for (const p of G.P) if (p.id !== WILD) { p.rate = p.flow; p.flow = {}; } }
 

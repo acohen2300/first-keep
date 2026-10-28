@@ -58,6 +58,12 @@ function makeBg() {
     lg.addColorStop(0, '#1b4466'); lg.addColorStop(0.7, '#2a6488'); lg.addColorStop(0.95, '#4e93ad'); lg.addColorStop(1, '#79b2bf');
     b.fillStyle = lg; b.beginPath(); b.arc(L.x, L.y, L.r + 2, 0, 7); b.fill();
   }
+  { const L = LAKE0, R = THRONE.isle, W = THRONE.cause;   // the Throne's island and its four causeways: stone over the water
+    b.fillStyle = 'rgba(206,190,138,1)'; b.beginPath(); b.arc(L.x, L.y, R + 10, 0, 7); b.fill();
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const len = L.r + 30; b.fillStyle = '#9a917e'; b.fillRect(L.x + (dx < 0 ? -len : dy ? -W / 2 - 4 : 0), L.y + (dy < 0 ? -len : dx ? -W / 2 - 4 : 0), dx ? len : W + 8, dy ? len : W + 8); }
+    const pv = b.createRadialGradient(L.x, L.y, 20, L.x, L.y, R); pv.addColorStop(0, '#b8ad98'); pv.addColorStop(1, '#8f8775'); b.fillStyle = pv; b.beginPath(); b.arc(L.x, L.y, R, 0, 7); b.fill();
+    b.strokeStyle = 'rgba(60,50,40,.25)'; b.lineWidth = 1; for (let i = -R; i <= R; i += 12) { b.beginPath(); b.moveTo(L.x - R, L.y + i); b.lineTo(L.x + R, L.y + i); b.stroke(); b.beginPath(); b.moveTo(L.x + i, L.y - R); b.lineTo(L.x + i, L.y + R); b.stroke(); }
+  }
   // the old trade roads: a worn dirt track through each route's stops, bending round the great lake (drawn once, into the ground)
   b.lineCap = 'round'; b.lineJoin = 'round';
   for (const r of ROUTES) { const [a, c, d, e] = r.map(([x, y]) => ({ x, y })), vert = a.x === c.x, bend = 2 * (LAKE0.r + 70), m1 = vert ? { x: MID - bend, y: MID } : { x: MID, y: MID - bend };   // a quadratic's middle sits halfway to its control point: twice the clearance
@@ -110,6 +116,7 @@ function draw() {
     const take = j >= list.length || (i < N.length && N[i].y < list[j][0]), e = take ? N[i++] : list[j][2], t = take ? 0 : list[j++][1];
     try { t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : drawFind(e); } catch (er) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.setLineDash([]); fault(er); }   // one bad piece must never take the rest of the picture with it: the canvas is put back as it was
   }
+  for (const t of G.traps || []) { if (!inView(t) || (t.armed && !t.seen[0])) continue; const x = SX(t.x), y = SY(t.y); if (t.kind === 'pit' || !t.armed) { ctx.fillStyle = t.armed ? 'rgba(60,50,30,.55)' : 'rgba(20,16,12,.7)'; ctx.beginPath(); ctx.ellipse(x, y, 7 * z, 4 * z, 0, 0, 7); ctx.fill(); } else { ctx.strokeStyle = 'rgba(120,100,60,.8)'; ctx.lineWidth = 1; for (let i = -6; i <= 6; i += 3) { ctx.beginPath(); ctx.moveTo(x + i * z, y - 4 * z); ctx.lineTo(x + i * z, y + 4 * z); ctx.moveTo(x - 6 * z, y + i * z * 0.6); ctx.lineTo(x + 6 * z, y + i * z * 0.6); ctx.stroke(); } } }
   if (G.fire) for (const n of G.fire) if (inView(n)) { const x = SX(n.x), y = SY(n.y), ph = (G.t * 5 + n.id) % 1; ctx.fillStyle = 'rgba(250,150,40,.85)'; ctx.beginPath(); ctx.ellipse(x, y - 8 * z, (3 + ph * 2) * z, (6 + ph * 4) * z, 0, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,230,120,.9)'; ctx.beginPath(); ctx.ellipse(x, y - 7 * z, 1.5 * z, 3 * z, 0, 0, 7); ctx.fill(); smoke(x, y - 14 * z, n.id, z); }   // the wildfire
   drawPicks(z); sparkDraw(); ripDraw(); drawEvents(z);
   if (G.ords) {   // your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
@@ -285,7 +292,6 @@ function drawUnit(u, s) {
 }
 function drawFind(f) {
   const z = cam.z, x = SX(f.x), y = SY(f.y), F = FINDS[f.kind];
-  if (G.contract && G.contract.fid === f.id && !lessMotion) { ctx.strokeStyle = 'rgba(255,211,94,' + (0.5 + 0.4 * Math.sin(G.t * 4)) + ')'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(x, y, 22 * z, 22 * z * TILT, 0, 0, 7); ctx.stroke(); }   // the Fortress's job
   ctx.save(); ctx.translate(x, y); ctx.scale(z, z); g = ctx; ctx.lineJoin = 'round';
   if (f.kind === 'chest') { E_(0, 1, 7, 2.4, 'rgba(0,0,0,.3)'); P_([[-5, 0], [5, 0], [5, -5], [-5, -5]], '#7a4e24', INK, 0.5); P_([[-5, -5], [5, -5], [4, -8], [-4, -8]], '#8a5a2a', INK, 0.5); L_(-5, -3, 5, -3, '#c9a227', 0.8); E_(0, -4.4, 1, 1, '#f2cf55'); }
   else if (f.kind === 'ruins') { for (const [dx, h] of [[-10, 14], [-4, 8], [3, 16], [9, 5]]) { P_([[dx - 1.6, 0], [dx + 1.6, 0], [dx + 1.6, -h], [dx - 1.6, -h]], LG(dx - 2, 0, dx + 2, 0, ['#e0d8c4', '#a89e88']), INK, 0.4); } P_([[-12, -14], [5, -16.5], [5, -18], [-12, -15.6]], '#d0c8b2', INK, 0.4); P_([[-6, 1], [2, 1], [1, -2], [-5, -2]], '#b8b0a0', INK, 0.4); }

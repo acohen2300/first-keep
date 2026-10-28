@@ -29,9 +29,9 @@ const PLAYERS = [
   { name: 'Raiders',  pers: 'aggr',  color: '#de5a44', keep: [300, 300] },
   { name: 'Rivals',   pers: 'bal',   color: '#b07ae6', keep: [1700, 300] },
   { name: 'Fortress', pers: 'fort',  color: '#5fb08a', keep: [1700, 1700] },
-  { name: 'The wild', pers: 'wild',  color: '#9b8b72', keep: [MID, MID] },
+  { name: 'Natives',  pers: 'wild',  color: '#9b8b72', keep: [MID, MID] },
 ];
-const FORT = 3;   // the neutral side that can be won as an ally
+const FORT = 3;   // a player like the others since Build 40: it defends first, and strikes whoever is weak or busy
 
 const AGES = [
   { name: 'Stone' },
@@ -92,6 +92,8 @@ const UNIT = {
   goblin:   { name: 'Goblin',    tick: 'wild', tags: ['infantry'], hp: 40, spd: 30, sight: 120, dmg: 5, rng: 12, cd: 1.0, fantasy: true, look: 'goblin', desc: 'Small, quick and greedy.' },
   skeleton: { name: 'Skeleton',  tick: 'wild', tags: ['infantry'], hp: 50, spd: 22, sight: 110, dmg: 6, rng: 12, cd: 1.3, fantasy: true, rarmor: 0.5, look: 'skeleton', desc: 'The dead guard their graves. Arrows pass through the ribs.' },
   troll:    { name: 'Troll',     tick: 'wild', tags: ['infantry', 'heavy'], hp: 320, spd: 22, sight: 130, dmg: 18, rng: 14, cd: 2.2, fantasy: true, raid: 200, look: 'troll', desc: 'Lives under the robbers\' bridge. Hits like a ram.' },
+  native:   { name: 'Warrior',   tick: 'sol', tags: ['infantry', 'spear', 'native'], hp: 55, spd: 32, sight: 140, dmg: 6, rng: 12, cd: 1.1, vs: { mounted: 2.5 }, look: 'native', desc: 'The Throne\'s own guard: light, swift and many. A spear and a hide shield, and the ground on their side.' },
+  nativebow:{ name: 'Bowman',    tick: 'sol', tags: ['infantry', 'archer', 'ranged', 'native'], hp: 36, spd: 32, sight: 160, dmg: 5, rng: 85, cd: 1.3, vs: { infantry: 1.3 }, look: 'nativebow', desc: 'The Throne\'s archers, on the walls and at the causeways.' },
   dragon:   { name: 'Dragon',    tick: 'herd', tags: ['animal'], hp: 900, spd: 90, sight: 200, fantasy: true, scorch: 30, look: 'dragon', desc: 'Passes over now and then. What it flies over, burns.' },
 };
 const hasTag = (kind, tag) => (UNIT[kind].tags || []).includes(tag) || kind === tag;
@@ -151,6 +153,7 @@ const BLD = {
   council:   { invest: 6, short: 'Council', name: 'War Council', fp: 3, hp: 600, h: 22, cost: { w: 200, s: 150, g: 50 }, t: 35, age: 2, sab: 'stall', desc: 'Where your generals plan. Research Engagement, then Battalions, then Formations, then in the Gunpowder age Muster.' },
   tpost:     { nocap: 1, invest: 6, name: 'Trade post', fp: 2, hp: 300, h: 20, cost: { w: 100, s: 30 }, t: 20, age: 1, atStop: true, sight: 140, dmg: 5, rng: 120, cd: 1.6, sab: 'burn', desc: 'Built on a trade stop once its guards are gone. You own the stop: a cut of everyone else\'s sales there, 20% for one stop of its route up to 40% for all four; all four of a route also pay gold every second. Up to 12 soldiers can garrison it.' },
   mint:      { cap: [0, 0, 0, 1, 1], invest: 6, name: 'Mint', fp: 3, hp: 500, h: 22, cost: { s: 300, g: 200 }, t: 45, age: 3, fx: [{ s: 'gather', k: 'gold', m: 1.15 }], sab: 'stall', desc: 'Strikes your gold into coin: gold gathered pays 15% more. Or debase the coin, once: a heap of gold now, and dearer prices at your Market for the rest of the game.' },
+  throne:    { nocap: 1, name: 'Throne', fp: 6, hp: 3600, h: 56, sight: 260, dmg: 8, rng: 180, cd: 1.5, shelter: 12, drop: [], desc: 'The old citadel in the middle of the world. Whoever holds it takes a tithe of everyone else\'s gathering and climbs the score; hold it long enough and the game is won. It is taken, not broken: break it down and it is yours at a third of its strength.' },
   wonder:    { name: 'Wonder', fp: 6, hp: 4000, h: 60, cost: { f: 1500, w: 1500, s: 1500, g: 1500 }, t: 240, age: 2, one: true, desc: 'Your civilisation\'s great work. When it is finished every side is told, and if it still stands 8 minutes later, you win.' },
 };
 const WONDER_HOLD = 480;
@@ -272,14 +275,20 @@ const FINDS = {
   camp:     { name: 'Robbers\' camp', guard: ['robber', 'troll', 4], got: { f: 200, w: 200, g: 250 }, desc: 'Robbers who prey on caravans and villagers near the map edge. Break the camp and take its hoard.' },
   den:      { name: 'Bear den', guard: ['bear', 'bear', 1], got: { f: 60 }, desc: 'A bear and its stores. The meat is good too.' },
   stop:     { name: 'Trade stop', guard: ['bandit', 'goblin', 3], stop: true, desc: 'A stop on an old trade route. Caravans sell goods here and buy spice. Clear its guards and build a Trade post to own it.' },
-  shrine:   { name: 'Shrine', capture: 10, pay: 0.25, desc: 'A holy site. Stand a priest by it for 10 s and it pays its keeper 15 gold a minute. Another side\'s priest can take it back.' },
+  shrine:   { name: 'Shrine', capture: 10, pay: 0.25, desc: 'The one holy site, at the foot of the Throne. Stand a priest by it for 10 s and it pays its keeper 15 gold a minute. Another side\'s priest can take it back.' },
   vagabonds:{ name: 'Vagabonds', hire: { cost: { g: 90 }, unit: 'spear', n: 3 }, desc: 'Three drifters will fight for whoever pays 90 gold. A unit of yours has to be within 80.' },
   mercs:    { name: 'Mercenaries', hire: { cost: { g: 240 }, unit: 'sword', n: 6 }, gone: 180, desc: 'A free company camped by the road: six swords for 240 gold, for three minutes, then they move on.' },
   meteor:   { name: 'Fallen star', got: { i: 300, g: 100 }, desc: 'Iron from the sky. Before smelting, this was where iron came from; Tutankhamun\'s dagger was forged from it.' },
 };
 const WAYFARER_EVERY = 240;
 // the Fortress posts a job: break one guarded find, first side to take it is paid
-const CONTRACT = { every: 240, secs: 300, pay: { g: 200 }, kinds: ['camp', 'cemetery', 'chest', 'den', 'ruins'] };
+// ───────────────────────── The Natives: the fifth side, with one brain ─────────────────────────
+// They hold the Throne, a citadel on the great lake's island, reached by four causeways (the choke points). Their regard for each side moves
+// with gifts, blows and time; at PEACE they leave you be, at ALLY their gate opens. Gifts follow the Danegeld rule: each one buys less than
+// the last. Pits and nets on the causeways; prisoners for ransom; outlaw raids on whoever they regard least. They command the camps.
+const NATIVE = { regard0: 20, peaceAt: 40, allyAt: 70, decay: 0.1, hitCost: 2, gifts: [100, 300], danegeld: 0.5, giftWindow: 600, garrison: 24, perAge: 8, regrow: 20, ambush: 1.3, gunAge: 4, gunMax: 0.6, gunRegrow: 2, gunHit: 1.5,
+  traps: 4, trapR: 10, pit: 0.4, stuck: 4, relay: 90, scoutSees: 60, ransom: 1.0, ransomSecs: 180, raidEvery: 180, raidN: 4, raidSecs: 45, handover: 60, handoverMen: 8 };
+const THRONE = { hold: 900, tithe: 0.1, score: 50, r: 80, isle: 100, cause: 30 };   // hold: seconds to win in a 60-minute game (scaled to the game's length); tithe of every other side's gathering; score a minute
 
 // The three computer personalities: one brain, three settings. Every behaviour is a field, never a name check.
 // build: [kind, from age, how many, needs army of at least, needs stock]; techs in the order they want them.
@@ -293,8 +302,8 @@ const PERS = {
           build: [['barracks', 0, 1, 0], ['range', 1, 1, 0], ['smith', 1, 1, 0], ['stable', 1, 1, 4], ['market', 1, 1, 6, { w: 250, g: 100 }], ['school', 1, 1, 8, { w: 300, s: 100 }], ['temple', 1, 1, 10, { s: 450, g: 300 }], ['courthouse', 1, 1, 8, { w: 250, g: 100 }], ['bakery', 1, 1, 6, { w: 200 }],
                   ['siege', 2, 1, 8, { w: 300, s: 100 }], ['hospital', 2, 1, 10, { w: 250, s: 200 }], ['library', 2, 1, 10, { w: 400, s: 300 }], ['amphi', 2, 1, 14, { s: 600, w: 300, g: 300 }], ['council', 2, 1, 12, { w: 250, s: 150 }]],
           techs: ['axes', 'picks', 'plough', 'bronze', 'leather', 'drill', 'coppice', 'composite', 'writing', 'maths', 'horses', 'iron', 'chain', 'engage', 'phalanx', 'cavalry', 'deep', 'masonry', 'architecture', 'medicine', 'roads', 'coinage', 'rotation', 'wheelbarrow', 'arms', 'knighthood', 'longbow', 'plate', 'heavyplough', 'pikesquare', 'slits', 'fortify', 'muster'] },
-  fort: { vils: 28, mix: { food: .4, wood: .3, gold: .15, stone: .15, iron: .08 }, ageTo: 3, extraBarracks: 0, armyCap: 26, waveMin: 999, bold: 9, guard: 1, towers: 3, walls: true,
-          early: 12, ageArmy: 0, diplo: false, trade: false, spy: false, loot: false, wonder: true, siege: 0, shrine: true,
+  fort: { vils: 28, mix: { food: .4, wood: .3, gold: .15, stone: .15, iron: .08 }, ageTo: 3, extraBarracks: 0, armyCap: 30, waveMin: 12, bold: .85, guard: .5, raid: 1, towers: 3, walls: true, opportunist: 1.3,
+          early: 12, ageArmy: 0, diplo: true, trade: true, spy: true, loot: true, wonder: true, siege: 1, shrine: true,
           build: [['barracks', 0, 1, 0], ['range', 1, 1, 0], ['smith', 1, 1, 0], ['stable', 1, 1, 6], ['school', 1, 1, 6, { w: 300, s: 100 }], ['temple', 1, 1, 8, { s: 450, g: 300 }], ['courthouse', 1, 1, 6, { w: 250, g: 100 }], ['bakery', 1, 1, 4, { w: 200 }],
                   ['hospital', 2, 1, 8, { w: 250, s: 200 }], ['library', 2, 1, 8, { w: 400, s: 300 }], ['aqueduct', 2, 1, 8, { s: 400 }], ['castle', 3, 1, 12, { s: 1100, w: 400 }], ['council', 2, 1, 10, { w: 250, s: 150 }]],
           techs: ['masonry', 'leather', 'axes', 'picks', 'bronze', 'plough', 'coppice', 'writing', 'maths', 'chain', 'iron', 'drill', 'deep', 'architecture', 'medicine', 'slits', 'rotation', 'wheelbarrow', 'engage', 'phalanx', 'fortify', 'plate', 'heavyplough', 'pikesquare', 'longbow'] },
@@ -353,23 +362,23 @@ const STARVE = { stop: 60, leave: 120, every: 30 }, HARD = { bold: -0.1, raid: 2
 // Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 19-events.
 const EV_GAP = [60, 180], EV_WARN = 12;
 const EVENTS = {
-  eclipse:  { name: 'Eclipse',        secs: 20,  dmg: 0.6, spd: 0.7, sight: 0.7 },
+  eclipse:  { name: 'Eclipse',        secs: 20,  dmg: 0.6, spd: 0.7, sight: 0.7, harm: 1 },
   storm:    { name: 'Thunderstorm',   secs: 40,  band: 260, strike: 2 },
-  stampede: { name: 'Stampede',       secs: 30,  n: 10 },
-  flood:    { name: 'Flood',          secs: 90,  rise: 40, hit: 0.02 },
-  locusts:  { name: 'Locusts',        secs: 30,  r: 70, strip: 90 },
+  stampede: { name: 'Stampede',       secs: 30,  n: 10, harm: 1 },
+  flood:    { name: 'Flood',          secs: 90,  rise: 40, hit: 0.02, harm: 1 },
+  locusts:  { name: 'Locusts',        secs: 30,  r: 70, strip: 90, harm: 1 },
   meteor:   { name: 'Falling star',   secs: 3 },
-  wildfire: { name: 'Wildfire',       secs: 60,  spread: 0.2, r: 32, burn: 0.12, most: 20, need: 'drought' },   // most: trees alight at once
+  wildfire: { name: 'Wildfire',       secs: 60,  spread: 0.2, r: 32, burn: 0.12, most: 20, need: 'drought', harm: 1 },   // most: trees alight at once
   fog:      { name: 'Fog',            secs: 60,  sight: 0.4 },
   tremor:   { name: 'Tremor',         secs: 2,   r: 220, hit: 0.05, wall: 0.2, fire: 0.05 },
   sinkhole: { name: 'Sinkhole',       secs: 2,   hit: 0.4 },
   quicksand:{ name: 'Quicksand',      secs: 120, r: 60, slow: 0.3 },
   heatwave: { name: 'Heat',           secs: 60,  dmg: 0.85, spd: 0.9, need: 'drought', season: 'Summer' },
   mirage:   { name: 'Mirage',         secs: 30,  n: 12, season: 'Summer' },
-  circus:   { name: 'Travelling show', secs: 60, n: 5, r: 150, cheer: 120, mul: 1.1 },
-  wagon:    { name: 'Wagon train',    secs: 90 },
-  mercs:    { name: 'Mercenaries',    secs: 180 },
-  dragon:   { name: 'Dragon',         secs: 25,  fantasy: true },
+  circus:   { name: 'Travelling show', secs: 60, n: 5, r: 150, cheer: 120, mul: 1.1, gift: 1 },
+  wagon:    { name: 'Wagon train',    secs: 90, gift: 1 },
+  mercs:    { name: 'Mercenaries',    secs: 180, gift: 1 },
+  dragon:   { name: 'Dragon',         secs: 25,  fantasy: true, harm: 1 },
   troll:    { name: 'Troll',          secs: 90,  fantasy: true },
   aurora:   { name: 'Northern lights', secs: 45, fantasy: true, night: true },
 };

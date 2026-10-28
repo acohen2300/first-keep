@@ -167,6 +167,7 @@ const BLD_PAGE = {
   treefarm: b => `<p>Tended by ${b.node && b.node.wk > 0 ? slotText(b.node) : 'nobody yet: tap Send a villager, or + under Wood'}. ${Math.round(b.node ? b.node.amt : 0)} wood left, then the plot is cut out.</p>`,
   pasture: b => `<p>${b.sheep || 0} sheep: ${b.node && b.node.wk > 0 ? `milk and meat, about ${Math.round((b.sheep || 0) * BLD.pasture.milk * 60 * gatherMul(0, b.node))} food a minute` : 'nobody tends them: tap Send a villager'}. ${Math.floor(b.node ? b.node.amt : 0)} wool to bring in${ready(0, 'weaver').length ? '' : ' · <b>wool waits for a Weaver</b>'}. Shorn each spring, when lambs come too.</p>`,
   bizc: () => { const cs = unitsOf(0, 'caravan'), on = cs.filter(c => c.route).length; return `<p><i>In store:</i> ${goodsText(G.P[0].goods) || 'nothing yet'}.</p><p>${cs.length} caravans, ${on} on routes. Tap a caravan to give it a route.</p>`; },
+  throne: b => { const T = G.throne, mine = b.owner === 0; return `<p>${!T ? 'The Natives hold it. Regard opens its gate; siege breaks it.' : `${mine ? 'Yours' : G.P[T.owner].name + ' hold it'} since ${clock(T.since)}: ${clock(Math.max(0, throneHold() - (G.t - T.since)))} to ${mine ? 'win' : 'their win'}. A tithe of ${THRONE.tithe * 100}% of everyone else's gathering, ${THRONE.score} score a minute.`}</p>`; },
   tpost: b => { const f = G.finds.find(x => x.id === b.sid); return f ? `<p>Holds the stop at ${coord(f.x, f.y)}: tap the stop for prices and what it wants.</p>` : ''; },
   council: b => councilHTML(b),
   mint: () => G.P[0].debased ? `<p>The coin is debased: prices at your Market are ×${MINT.price}.</p>` : acts(btn('debase', 'Debase the coin', `+${MINT.debase} gold now · Market prices ×${MINT.price} for good`, 'warn'), 'c1'),
@@ -179,8 +180,14 @@ function slotsHTML(b) {
   return `<div class="slots" style="--qn:${n}">${cells.join('')}</div>` + (b.blocked ? '<p><b>Needs room: House, Apartment or Aqueduct.</b></p>' : b.stall > G.t ? `<p><b>Stopped by sabotage: ${Math.ceil(b.stall - G.t)} s.</b></p>` : '');
 }
 // Relations, at the Town Center: one row per side, the stance you take toward them. Neutral keeps both swords sheathed; Hostile takes effect after notice; Ally needs their yes.
+function nativesHTML() {
+  const o = 0, r = Math.round(regardOf(o)), rel = G.rel[0][WILD], P = (G.prisoners || []).filter(x => x.o === 0);
+  let h = acts(`<div class="lbl"><b>Natives</b><small>regard ${r} · ${REL_WORD[rel].toLowerCase()}</small></div>` + NATIVE.gifts.map(a => btn(`gift:${WILD},${a}`, `Gift ${a}g`, giftWhy(0, a) ? giftWhy(0, a).replace(/\.$/, '') : `regard +${giftGain(0, a)}`, giftWhy(0, a) ? 'dis' : '')).join('') + btn(`rel:${WILD},ally`, 'Ally', rel === 'ally' ? '' : relWhy(0, WILD, 'ally') ? relWhy(0, WILD, 'ally').replace(/\.$/, '') : 'by emissary', rel === 'ally' ? 'on' : relWhy(0, WILD, 'ally') ? 'dis' : ''), 'c4');
+  if (P.length) h += acts(P.map((x, i) => btn(`ransom:${i}`, `Ransom ${UNIT[x.kind].name.toLowerCase()}`, `${x.ransom}g · ${clock(Math.max(0, x.t + NATIVE.ransomSecs - G.t))} left`, G.P[0].res.g >= x.ransom ? 'warn' : 'dis')).join(''), 'c2');
+  return h;
+}
 function relHTML() {
-  let h = sec('Relations');
+  let h = sec('Relations') + nativesHTML();
   for (const q of G.P) {
     if (q.id === 0 || q.id === WILD || !q.alive) continue;
     const rel = G.rel[0][q.id], nl = noticeLeft(0, q.id) || noticeLeft(q.id, 0), who = `${q.name}${q.civ ? ' · ' + CIVS[q.civ].name : ''}`;
@@ -232,17 +239,6 @@ function keepMoreHTML() {   // the Town Center's More: your people, goods and th
   h += `<p><b>Research: ${done.length} of ${TECH.filter(ownTech).length} done.</b>${going.length ? ` <i>Under way:</i> ${going.join(' · ')}.` : ''}${open.length ? ` <i>Ready now:</i> ${open.map(t => `${t.name} (${BLD[t.at].name})`).join(' · ')}.` : ''}</p>`;
   h += AGES.map((A, i) => { const T = TECH.filter(t => ownTech(t) && t.age === i); return T.length ? `<p><b>${A.name}:</b> ${T.map(t => p.techs.has(t.id) ? `<span class="done">✓ ${t.name}</span>` : `<span class="dim">${t.name}</span>`).join(' · ')}</p>` : ''; }).join('');
   return h;
-}
-function diploHTML() {
-  const F = G.P[FORT], p = G.P[0];
-  if (!F.alive) return '<p>The Fortress has fallen.</p>';
-  let h = `<p>They stay home behind their walls and ally with whoever helps them survive. ${F.ally !== null ? `Allied with ${F.ally === 0 ? 'you' : G.P[F.ally].name}.` : 'No ally yet.'}</p>`;
-  if (G.rel[0][FORT] === 'war') return h + '<p>You are at war with them.</p>';
-  const strong = powerOf(soldiersOf(0)) >= 2 * powerOf(soldiersOf(FORT));
-  if (F.ally === 0) return h + acts(btn('askhelp', 'Ask for troops', 'to your army', 'go') + btn('overlord', 'Offer to be overlord', strong ? 'they pay a light tax and you protect them' : 'needs twice their army', strong ? 'go' : 'dis')) + `<p>As your ally they send part of their surplus every 45 seconds and defend your town when it is attacked.</p>`;
-  const terms = F.terms && F.terms[0];
-  if (terms) h += acts(btn('terms', 'Pay their terms', `${terms}g`, p.res.g >= terms ? 'go' : 'dis'), 'c1');
-  return h + `<p>Offer an alliance from your Town Center's Relations row. Attacking them is an act of war.</p>`;
 }
 function vassalHTML(P) {
   const L = loyaltyParts(P);
@@ -312,6 +308,7 @@ const CARDS = {
     const p = G.P[0], B = BLD[b.kind], mine = b.owner === 0, P = G.P[b.owner], M = maxHpB(b.owner, b.kind), crew = unitsOf(0, 'vil').filter(u => u.rep === b && u.job === 'repair'); let h = '', td = '', moreH = '';
     h += title(bldName(b.owner, b.kind), mine ? 'yours' : P.name + ' · ' + (P.lord === 0 ? (P.rebel ? 'in revolt' : 'your vassal') : REL_WORD[G.rel[0][b.owner]].toLowerCase())) + (b.hp < M - 1 ? hpBar(b.hp / M, '#b3261a') : '') + ((mine && b.prog >= 1) || (!mine && b.kind === 'keep') ? '' : `<p>${B.desc}</p>`);   // their Town Center needs no blurb about yours
     if (b.kind === 'wonder' && P.civ) h += `<p><i>${CIVS[P.civ].wonder}:</i> ${WHY['wonder:' + P.civ]}</p>`;
+    if (b.kind === 'throne' && !mine) h += BLD_PAGE.throne(b);
     if (G.wonder && G.wonder.id === b.id) h += `<p><b>${clock(Math.max(0, G.wonder.end - G.t))} until ${mine ? 'you win' : 'they win'}.</b></p>`;
     if (b.prog < 1) h += `<p>Being built: ${Math.round(b.prog * 100)}%.${mine && !crew.length ? ' <b>Nobody is working it.</b>' : ''}</p>`;
     if (mine && b.fire > 0) h += `<p><b>On fire.</b> ${crew.length} villagers with buckets.</p>` + acts(btn(`douse:${b.id}`, 'Send help', 'two more with buckets', 'warn'), 'c1');
@@ -336,7 +333,7 @@ const CARDS = {
       if (B.from) h += workshopHTML(b);
     }
     if (!mine && b.kind === 'keep' && P.lord === 0) h += vassalHTML(P);
-    else if (!mine && b.owner === FORT && b.kind === 'keep') h += diploHTML();
+    else if (!mine && b.kind === 'keep' && G.rel[0][b.owner] === 'ally') { const why = overlordWhy(0, b.owner); h += acts(btn(`overlord:${b.owner}`, 'Offer overlordship', why ? why.replace(/\.$/, '') : 'they become your vassal at a light tax', why ? 'dis' : 'go'), 'c1'); }
     else if (!mine && atWar(0, b.owner)) {
       const I = G.intel[b.owner], spies = unitsOf(0, 'spy').length;
       if (I) h += `<p><b>A spy's report</b> (${clock(G.t - I.t)} ago): ${costText(I.res)} in store · ${AGES[I.age].name} age · ${I.techs} researched · ${Object.entries(I.army).map(([k, n]) => n + ' ' + stats(b.owner, k).name.toLowerCase()).join(', ') || 'no army'}.</p>`;
@@ -431,7 +428,6 @@ const CARDS = {
     return h + fold('about', 'About orders', `<p>Tap open ground: Send ¼, All, or a battalion by name. Tap an enemy to pick how many attack. The War Council opens stances, battalions, formations and Muster; a gold ring marks the one picked here.</p><p><b>Stance:</b> ${STANCE.map(s => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Hold ground:</b> on, they fight only what comes within reach and do not chase.</p>`);
   },
   keep() { const k = keepOf(0); if (!k) return null; G.card = { type: 'bld', id: k.id }; return CARDS.bld(G.card); },
-  fortress: () => title('The Fortress', G.P[FORT].alive ? G.rel[0][FORT] + (G.P[FORT].civ ? ' · ' + CIVS[G.P[FORT].civ].name : '') : 'fallen') + diploHTML(),
   menu(c) {
     const p = G.P[0], M = MENUS.find(m => m.id === c.id); G.lastMenu = c.id;
     const item = k => { const B = BLD[k], lock = B.age > p.age, cp = capFor(0, k), n = bldsOf(0, k).length, full = !lock && n >= cp; return btn(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? `limit ${cp}` : !afford(p, B.cost) ? `short ${need(B.cost)}` : costText(B.cost) + (cp > 1 && cp < 99 ? ` · ${n}/${cp}` : ''), lock || full || !afford(p, B.cost) ? 'dis' : ''); };
@@ -467,7 +463,7 @@ const CARDS = {
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>
       <p><b>Win</b> by conquest, a wonder held ${WONDER_HOLD / 60} minutes, or the top score at the bell. Score is top right. The Guide and Rules above hold every number.</p>`
       + settingsHTML()
-      + acts(btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '') + btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '') + btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off'), 'c3')
+      + acts(btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '') + btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '') + btn('news', 'World news', SET.news !== false ? 'on' : 'off', SET.news !== false ? 'on' : '') + btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off'), 'c4')
       + (Object.keys(SET.hush).length ? acts(btn('unhush', 'Unmute all messages', Object.keys(SET.hush).length + ' kinds silenced'), 'c1') : '')
       + acts(btn('newgame', G.confirm === 'new' ? 'Tap again' : 'New game', G.confirm === 'new' ? 'this one is lost' : 'pick your people', G.confirm === 'new' ? 'warn' : ''))
       + `<p>The game saves itself every ${SAVE_EVERY} seconds on this phone. World, game length and people take effect in the next game.</p>`;

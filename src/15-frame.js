@@ -52,10 +52,12 @@ function showEnd(won, text) { $('endT').textContent = won ? 'Victory' : 'Defeat'
 function fit() { const r = cv.getBoundingClientRect(); dpr = LOW.n >= 2 ? 1 : Math.min(2, window.devicePixelRatio || 1); cw = r.width; ch = r.height; { const h = $('hud').getBoundingClientRect(), o = $('orders').getBoundingClientRect(), t = r.top; document.documentElement.style.setProperty('--ob', Math.round(r.bottom - o.top) + 'px'); vy = Math.round(((h.bottom - t) + (o.top - t)) / 2 - ch / 2); } const W = Math.round(cw * dpr), H = Math.round(ch * dpr); if (cv.width !== W) cv.width = W; if (cv.height !== H) cv.height = H; cam.z = clamp(cam.z, minZ(), ZOOM_MAX); clampCam(); }
 
 // ───────────────────────── Messages and tips ─────────────────────────
-function say(text, cls, secs, at, act) { if (!G) return; if (SET.msgs === false && cls !== 'warn' && cls !== 'tip') return; if (hushed(text)) return;   // Messages off: warnings only; a silenced kind stays quiet
+// quiet kinds (news, the spectacle's 'coming' lines) never take the line: they wait in the list and count on the bell (Albert: too many alerts to keep up with)
+const QUIET = new Set(['news', 'soft']);
+function say(text, cls, secs, at, act) { if (!G) return; if (SET.msgs === false && cls !== 'warn' && cls !== 'tip') return; if (hushed(text)) return; if (cls === 'news' && SET.news === false) return;   // Messages off: warnings only; a silenced kind stays quiet
   const same = G.log.find(m => m.text === text && m.until > G.t); if (same) { same.until = G.t + (secs || 4); return; }   // the same line never shows twice at once
-  G.log.unshift({ text, cls, act, until: G.t + (secs || 4), at: at ? { x: Math.round(at.x), y: Math.round(at.y) } : null }); G.log = G.log.slice(0, 5);
-  if (SET.tkMin || G.card) { G.tkN = (G.tkN || 0) + 1; if (cls === 'warn') G.tkW = true; } }   // hidden: the bell in the strip counts what came
+  const quiet = QUIET.has(cls); G.log.unshift({ text, cls, act, quiet, until: quiet ? G.t : G.t + (secs || 4), at: at ? { x: Math.round(at.x), y: Math.round(at.y) } : null }); G.log = G.log.slice(0, 5);
+  if (SET.tkMin || G.card || quiet) { G.tkN = (G.tkN || 0) + 1; if (cls === 'warn') G.tkW = true; } }   // hidden: the bell in the strip counts what came
 // The next useful step, read from your situation. One line, shown for six seconds, then at most one more every 45; a warning (starts with !) stays until fixed. Tap × to hide one.
 // Silence: the bell on any message or tip mutes its kind (numbers ignored) until Unmute all; a warning comes back after 2 minutes, in case the danger is new
 const hushKey = t => t.replace(/[\d,.]+/g, '#');
@@ -76,7 +78,7 @@ function advise() {
   if (G.nodes.filter(n => n.kind === 'bush' && dist(n, k) < 300).length < 3 && !bldsOf(0, 'farm').length && !L('build:farm')) return 'Berries running low: build a Farm.';
   if (p.age === 0 && !p.aging && V.length >= 10 && !L('age')) return 'Ready: Bronze age, at the Town Center.';
   if (S.length >= 8 && G.finds.some(f => !f.done && FINDS[f.kind].got && dist(f, k) < 600) && !L('goto')) return 'Treasure nearby: tap it, send troops.';
-  if (p.age >= 1 && G.P[FORT].alive && G.rel[0][FORT] === 'peace' && G.P[FORT].ally === null && !p.envoyOut && !L('envoy')) return 'The Fortress is neutral: send an envoy.';
+  if (p.age >= 1 && G.P.some(q => q.id && q.id !== WILD && q.alive && G.rel[0][q.id] === 'peace' && q.ally === null) && G.P[0].ally === null && !p.envoyOut && !L('envoy')) return 'A neutral side could be your ally: Relations.';
   if (p.hungry) return '!Hungry. Put villagers on Food.';
   { const inF = (p.rate && p.rate.f) || 0, out = p.eats || 0; if (!p.hungry && G.t > 120 && inF < out && p.res.f < out * 3) return `Food −${Math.round(out - inF)} a minute. Add farmers.`; }   // the stores' own arithmetic: what comes in against what is eaten
   if (vassalsOf(0).some(q => q.unrest > 70 && !q.rebel)) return '!A vassal is restless: cut tax.';
@@ -126,9 +128,10 @@ const linkOf = m => m && (m.act || (m.at ? `jump:${m.at.x},${m.at.y}` : ''));
 function tick() {
   const hide = !!SET.tkMin || !!G.card, live = G.log.find(m => m.until > G.t), paused = G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup'));   // a card open is a moment of reading: the ticker steps aside, the bell counts
   $('stage').classList.toggle('tk', !hide); $('ticker').hidden = hide; $('tkBell').hidden = !hide;
+  { const n = G.tkN || 0, bs = n + (G.tkW ? 'w' : ''); if (!hide && tick.list !== bs) { tick.list = bs; $('tkList').innerHTML = ICON.list + (n ? `<span class="n">${n}</span>` : ''); $('tkList').classList.toggle('warn', !!G.tkW); } }   // the list button counts what waits quietly
   if (hide) { const n = G.tkN || 0, bs = n + (G.tkW ? 'w' : ''); if (tick.bell !== bs) { tick.bell = bs; $('tkBell').innerHTML = ICON.bell + (n ? `<span>${n}</span>` : ''); $('tkBell').classList.toggle('warn', !!G.tkW); } $('tkPop').hidden = true; tick.sig = ''; return; }
-  if (G.tkN || G.tkW) { G.tkN = 0; G.tkW = false; tick.bell = ''; }   // shown again: what was counted is in the list
-  const m = paused && !(live && live.cls === 'warn') ? { text: 'Paused · ▶ to carry on', cls: '' } : live || G.log[0], el = $('tkT');   // paused says so, unless a warning is up
+  if ((G.tkN || G.tkW) && G.tkOpen) { G.tkN = 0; G.tkW = false; tick.bell = tick.list = ''; }   // the list opened: what was counted has been seen
+  const m = paused && !(live && live.cls === 'warn') ? { text: 'Paused · ▶ to carry on', cls: '' } : live || G.log.find(x => !x.quiet), el = $('tkT');   // paused says so, unless a warning is up; a quiet line never takes the line
   txt('tkT', m ? m.text : ''); el.dataset.act = linkOf(live) || 'tklist';
   $('ticker').className = 'tick ' + (m && m === live ? live.cls || '' : m && !G.log.includes(m) ? '' : 'old');
   const pop = G.tkOpen && G.log.length ? G.log.map(x => `<div class="row ${x.cls || ''}"><button class="t" data-act="${linkOf(x) || 'tklist'}">${x.text}</button><button class="h" data-act="hush:${encodeURIComponent(x.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`).join('') : '';

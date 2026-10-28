@@ -140,14 +140,23 @@ function makeMap() {
     for (const id of ['deerA', 'deerB']) for (let i = 0; i < 4; i++) wildAt('deer', ...P(id, [rnd(-20, 20), rnd(-20, 20)]));
     wildAt('boar', ...c('boar'));
     for (const id of ['chest', 'ruins', 'den', 'cemetery', 'vagabonds']) addFind(id, ...c(id));
-    // a shrine on the great lake's shore facing this corner
-    const s = towardMid({ x: kx, y: ky }, hyp(MID - kx, MID - ky) - LAKE0.r - 90); addFind('shrine', s.x, s.y);
   }
   // shared ground: a robbers' camp at the middle of each map edge, at the end of a trade route; gold and stone near the great lake
   for (const [x, y] of [[MID, 160], [MID, MAP - 160], [160, MID], [MAP - 160, MID]]) addFind('camp', x, y);
   for (const [x, y] of [[MID, MID - 270], [MID, MID + 270], [MID - 270, MID], [MID + 270, MID]]) N.push(node('gold', 'gold', x - 12, y, 500 * RICH), node('gold', 'gold', x + 12, y + 6, 500 * RICH), node('iron', 'iron', x - 2, y + 20, 500 * RICH), node('stone', 'stone', x + 4, y - 16, 400 * RICH));
   for (const L of G.lakes) { const n = Math.round(L.r / 10); for (let a = 0; a < n; a++) { const ang = a / n * Math.PI * 2; N.push(node('fish', 'food', L.x + Math.cos(ang) * (L.r - 8), L.y + Math.sin(ang) * (L.r - 8), 350 * RICH)); } }
   for (const n of N) { const m = Ld.amt[n.type] || 1; if (m !== 1) { n.amt *= m; n.max *= m; } }   // what the land is rich and poor in
+  makeCitadel();
+}
+// The Throne: a walled citadel on the great lake's island, four gates at the four causeways, a tower at each corner, the one shrine at its foot, the Natives' garrison in its yard
+function makeCitadel() {
+  const c = Math.floor(MID / NAVC), R = THRONE.r / NAVC, put = (kind, x, y) => { const b = mkBld(WILD, kind, x, y, 1); b.citadel = true; G.blds.push(b); return b; };
+  const T = put('throne', MID, MID);
+  for (let gx = c - R; gx <= c + R; gx++) for (let gy = c - R; gy <= c + R; gy++) { if (Math.max(Math.abs(gx - c), Math.abs(gy - c)) !== R) continue; const corner = Math.abs(gx - c) === R && Math.abs(gy - c) === R, gate = (gx === c && Math.abs(gy - c) === R) || (gy === c && Math.abs(gx - c) === R); if (corner) continue; put(gate ? 'gate' : 'wall', gx * NAVC + 5, gy * NAVC + 5); }
+  for (const [sx, sy] of [[-1, -1], [1, 1]]) put('tower', MID + sx * (THRONE.r - 5), MID + sy * (THRONE.r - 5));   // two towers: a citadel that can be broken by a real army, not an ambush
+  addFind('shrine', MID - 52, MID + 46);
+  for (let i = 0; i < NATIVE.garrison; i++) natSpawn(T, i % 3 === 2 ? 'nativebow' : 'native');
+  layTraps(); G.throne = null; G.prisoners = []; natState();
 }
 function wildAt(kind, x, y, find) { const u = addUnit(WILD, kind, x, y); u.hx = x; u.hy = y; if (find) u.find = find.id; return u; }
 function addFind(kind, x, y) {

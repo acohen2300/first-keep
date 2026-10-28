@@ -5,8 +5,10 @@ const NC = MAP / NAVC;
 const NAV = { solid: new Uint8Array(NC * NC), gate: new Uint8Array(NC * NC), lake: new Uint8Array(NC * NC), comp: new Int32Array(NC * NC), occ: new Array(NC * NC).fill(null), prev: new Uint8Array(NC * NC), prevG: new Uint8Array(NC * NC), v: 0, budget: 4 };
 let lakeFor = null, lakeHi = false;   // the lakes the grid was drawn for, and whether in flood
 const lakeR = L => L.r + (G.flood > G.t ? EVENTS.flood.rise : 0);   // a lake in flood reaches farther up its shore
-const lakeGap = (x, y) => G.lakes.reduce((m, L) => Math.min(m, hyp(x - L.x, y - L.y) - lakeR(L)), 1e9);   // how far from the nearest lake's edge
-function lakeGrid() { NAV.lake.fill(0); for (const L of G.lakes) for (let y = 0; y < NC; y++) for (let x = 0; x < NC; x++) if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeR(L) + 2) NAV.lake[y * NC + x] = 1; lakeFor = G.lakes; lakeHi = G.flood > G.t; }
+// how far a point stands from water (negative: in it). The great lake holds the Throne's island and four causeways, which are land.
+const onLand = (x, y) => (Math.abs(x - MID) < THRONE.cause / 2 || Math.abs(y - MID) < THRONE.cause / 2) && hyp(x - MID, y - MID) < LAKE0.r + 60 || hyp(x - MID, y - MID) < THRONE.isle;
+const lakeGap = (x, y) => onLand(x, y) ? 1e9 : G.lakes.reduce((m, L) => Math.min(m, hyp(x - L.x, y - L.y) - lakeR(L)), 1e9);   // how far from the nearest lake's edge
+function lakeGrid() { NAV.lake.fill(0); for (const L of G.lakes) for (let y = 0; y < NC; y++) for (let x = 0; x < NC; x++) if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeR(L) + 2 && !onLand(x * NAVC + 5, y * NAVC + 5)) NAV.lake[y * NC + x] = 1; lakeFor = G.lakes; lakeHi = G.flood > G.t; }
 const gcell = (x, y) => clamp(Math.floor(y / NAVC), 0, NC - 1) * NC + clamp(Math.floor(x / NAVC), 0, NC - 1);
 const toCell = w => ({ gx: clamp(Math.floor(w.x / NAVC), 0, NC - 1), gy: clamp(Math.floor(w.y / NAVC), 0, NC - 1) });
 const coord = (x, y) => String.fromCharCode(65 + clamp(Math.floor(x / 100), 0, 19)) + (clamp(Math.floor(y / 100), 0, 19) + 1);
@@ -156,6 +158,7 @@ function route(u, tx, ty) {
 }
 // one step toward (x, y); true once within r. A building as the goal means "arrive beside it".
 function moveTo(u, x, y, dt, r, SP) {
+  if (u.stuck > G.t) return false;   // in a pit
   const o = u.owner, gc = gcell(x, y), gb = NAV.occ[gc];
   let tx = x, ty = y, stand = false;
   if (gb && !BLD[gb.kind].walk) { if (rectGap(u.x, u.y, gb) <= Math.max(6, r - halfOf(gb))) return true; stand = true; }

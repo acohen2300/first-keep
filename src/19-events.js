@@ -47,13 +47,13 @@ function quake(e, E, Q) {
 }
 function startEvent(kind) {
   const E = EVENTS[kind], e = { kind, t0: G.t, until: G.t + E.secs }; G.ev.cur = e; G.ev.last = kind; G.ev.warned = null;
-  if (EV[kind].start) EV[kind].start(e); if (EV_TEXT[kind] && kind !== 'meteor' && kind !== 'mirage') say(EV_TEXT[kind][1], kind === 'wagon' || kind === 'mercs' || kind === 'circus' ? 'good' : 'warn', 6, e.at || (e.units && e.units[0]) || null);
+  if (EV[kind].start) EV[kind].start(e); if (EV_TEXT[kind] && kind !== 'meteor' && kind !== 'mirage') say(EV_TEXT[kind][1], E.harm ? 'warn' : E.gift ? 'good' : 'soft', 6, e.at || (e.units && e.units[0]) || null);   // only what can hurt you takes the line
 }
 function endEvent() { const e = G.ev.cur; if (!e) return; if (EV[e.kind].end) EV[e.kind].end(e); G.ev.cur = null; G.ev.next = G.t + rnd(EV_GAP[0], EV_GAP[1]); }
 function eventsTick() {   // once a second
   const V = G.ev; if (!V.next) V.next = G.t + rnd(EV_GAP[0], EV_GAP[1]);
   if (V.cur) { if (EV[V.cur.kind].tick) EV[V.cur.kind].tick(V.cur); if (G.t >= V.cur.until) endEvent(); }
-  else if (!V.warned && G.t >= V.next - EV_WARN) { V.warned = pickEvent(); say(EV_TEXT[V.warned][0], '', EV_WARN); }
+  else if (!V.warned && G.t >= V.next - EV_WARN) { V.warned = pickEvent(); say(EV_TEXT[V.warned][0], 'soft', EV_WARN); }   // the warning is quiet: in the list, not on the line
   else if (V.warned && G.t >= V.next) { if (canEv(V.warned)) startEvent(V.warned); else { V.warned = null; V.next = G.t + 30; } }
   hordeTick(); newsTick();
   if (hz('quake') && G.t >= (V.quakeAt || (V.quakeAt = G.t + QUAKE.every))) { V.quakeAt = G.t + QUAKE.every; if (!V.cur) { say(EV_TEXT.tremor[0], 'warn', 8); V.warned = 'tremor'; V.next = G.t + 8; } }

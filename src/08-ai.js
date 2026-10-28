@@ -59,7 +59,7 @@ function think(p) {
   if (ready(o, 'temple').length) {
     if (armyN >= 8 && unitsOf(o, 'priest').length + queuedOf(o, 'priest') < (per.shrine ? 3 : 1)) train(o, 'priest');
     if (!(p.zealT > G.t) && R.g >= 100) { const eng = soldiersOf(o).filter(u => u.tgt && u.tgt.hp > 0 && !(u.zeal > G.t)); if (eng.length >= 8) zeal(o, eng.slice(0, BNSIZE)); }
-    if (per.shrine) { const pr = unitsOf(o, 'priest').find(u => u.state !== 'shrine'); const f = pr && nearest(G.finds, k, f => FINDS[f.kind].capture && f.owner !== o && !G.units.some(v => v.kind === 'priest' && v.owner === o && v.fid === f.id)); if (f) { pr.state = 'shrine'; pr.fid = f.id; } }
+    if (per.shrine && (G.rel[o][WILD] !== 'war' || (G.throne && G.throne.owner === o))) { const pr = unitsOf(o, 'priest').find(u => u.state !== 'shrine'); const f = pr && nearest(G.finds, k, f => FINDS[f.kind].capture && f.owner !== o && !G.units.some(v => v.kind === 'priest' && v.owner === o && v.fid === f.id)); if (f) { pr.state = 'shrine'; pr.fid = f.id; } }
   }
   if (ready(o, 'hospital').length && armyN >= 10 && unitsOf(o, 'medic').length + queuedOf(o, 'medic') < 2) train(o, 'medic');
   // siege, to break what soldiers cannot
@@ -92,34 +92,50 @@ function think(p) {
   else if (short[0][1] >= 1) { const over = short[short.length - 1][0], v = vils.find(x => x.job === over && x.carry < 3); if (v) setJob(v, short[0][0]); }
   // finds: a detachment clears the nearest guarded one when nothing else is going on; it hires vagabonds it walks past
   if (per.loot && armyN >= 10 && !p.wave) lootRun(p);
+  throneRun(p, per);
   for (const f of G.finds) if (FINDS[f.kind].hire && !f.done && R.g >= 200) hire(o, f);
   // war: attack only when the odds beat this personality's nerve; a rival's wonder is attacked at once
   if (per.bold < 2) decideWar(p, per);
-  if (per.diplo) aiDiplomacy(p, per);   // peace when losing comes before courting the Fortress
-  if (per.diplo && p.age >= 1 && !p.envoyOut && G.P[FORT].alive && G.rel[o][FORT] === 'peace' && G.P[FORT].ally === null && G.t - p.envoyAt > 180) sendEnvoy(o, FORT, 'ally');
-  if (G.P[FORT].terms && G.P[FORT].terms[o] && R.g >= G.P[FORT].terms[o] + 50) payTerms(o);
+  if (per.diplo) aiDiplomacy(p, per);
+  allyDuty(p);
 }
 // A computer's relations move by its odds, the way a court's did: losing badly, it asks for peace; at peace with nobody to fight and the odds in its favour, it gives notice
 function aiDiplomacy(p, per) {
   const o = p.id; if (p.age < 1 || p.envoyOut || G.t - p.envoyAt < 180) return;
   const warOn = G.P.some(r => r.alive && r.id !== WILD && r.id !== o && atWar(o, r.id) && !(r.lord === o));
   for (const q of G.P) {
-    if (!q.alive || q.id === o || q.id === WILD || q.id === FORT || q.lord === o || p.lord === q.id) continue;
+    if (!q.alive || q.id === o || q.id === WILD || q.lord === o || p.lord === q.id) continue;
     if (atWar(o, q.id) && oddsOf(o, q.id) < 0.3 && soldiersOf(o).length < per.waveMin) { if (setRel(o, q.id, 'peace')) return; }
     if (!warOn && G.rel[o][q.id] === 'peace' && !noticeLeft(o, q.id) && oddsOf(o, q.id) > per.bold + 0.15) { if (setRel(o, q.id, 'war')) return; }
+    if (p.ally === null && q.ally === null && G.rel[o][q.id] === 'peace' && warOn && G.t > 600) { if (setRel(o, q.id, 'ally')) return; }   // at war with someone: court a friend
   }
+  if (G.throne && G.throne.owner !== o && G.throne.owner !== WILD && G.rel[o][G.throne.owner] !== 'war' && !noticeLeft(o, G.throne.owner) && G.P[G.throne.owner].lord !== o && p.lord !== G.throne.owner) setRel(o, G.throne.owner, 'war');   // whoever takes the Throne finds every court against them
+}
+// an ally defends a friend's town under attack, never at the cost of its own
+function allyDuty(p) {
+  const o = p.id; if (p.ally === null || G.t - p.ai.lastHelp < 30) return;
+  const ak = keepOf(p.ally), mk = keepOf(o), near = (k, side) => k && G.units.some(u => atWar(side, u.owner) && u.owner !== WILD && isSoldier(u) && dist(u, k) < 320);
+  if (ak && mk && !near(mk, o) && near(ak, p.ally)) { p.ai.lastHelp = G.t; sendHelp(o, ak, p.ally === 0); }
 }
 // the army a side keeps grows with its age
 const armyCap = p => Math.min(ARMYMAX, PERS[p.pers].armyCap + 10 * p.age);
 function lootRun(p) {
   const o = p.id, k = keepOf(o), out = soldiersOf(o).filter(u => u.state === 'goto' && u.loot);
   if (out.length) { const f = G.finds.find(f => f.id === out[0].loot); if (!f || f.done || (!guardsLeft(f) && G.t - out[0].lootT > 30)) out.forEach(u => { u.state = 'home'; u.loot = null; }); return; }
-  const cf = G.contract && G.finds.find(x => x.id === G.contract.fid && !x.done && dist(x, k) < 1100);   // the Fortress's job first
-  const f = cf || nearest(G.finds, k, f => !f.done && (FINDS[f.kind].got || FINDS[f.kind].hire || (FINDS[f.kind].stop && guardsLeft(f) && p.age >= 1)) && dist(f, k) < (FINDS[f.kind].stop ? 1000 : 800));
+  const f = nearest(G.finds, k, f => !f.done && (FINDS[f.kind].got || FINDS[f.kind].hire || (FINDS[f.kind].stop && guardsLeft(f) && p.age >= 1)) && dist(f, k) < (FINDS[f.kind].stop ? 1000 : 800));
   if (!f) return;
   const home = soldiersOf(o).filter(u => u.state === 'home' && !UNIT[u.kind].bonly), go = home.slice(0, Math.min(10, Math.ceil(home.length * 0.5)));
   if (go.length < 5) return;
   go.forEach(u => { u.state = 'goto'; u.px = f.x; u.py = f.y; u.loot = f.id; u.lootT = G.t; u.idleT = 0; });
+}
+// the Throne: from the Medieval age a side with siege and a big army marches on the citadel, or walks in as the Natives' ally
+function throneRun(p, per) {
+  const o = p.id, T = G.blds.find(b => b.kind === 'throne' && b.hp > 0); if (!T || p.wave || p.age < 3 || (G.throne && G.throne.owner === o)) return;
+  const home = soldiersOf(o).filter(u => u.state === 'home'), sg = home.filter(u => hasTag(u.kind, 'siege')).length;
+  const holder = G.throne ? G.throne.owner : WILD, odds = powerOf(home) / (powerOf(soldiersOf(holder).filter(u => dist(u, T) < 300)) + 800);
+  if (home.length < 20 || (holder === WILD && sg < 2 && G.rel[o][WILD] !== 'ally') || odds < 1.2 || (holder !== WILD && !atWar(o, holder))) return;
+  home.forEach(u => { u.state = 'attack'; u.target = holder; u.bid = T.id; }); p.wave = { n: home.length, t: G.t };
+  say(`${p.name} march on the Throne.`, 'warn', 8, T);
 }
 function wallPlan(k) { // an arc 190 out from the keep, facing the middle of the map; the two squares nearest the middle are the gate
   const base = Math.atan2(MID - k.y, MID - k.x), cells = [], seen = new Set(); let pc = null;
@@ -155,13 +171,16 @@ function decideWar(p, per) {
   for (const q of G.P) if (q.alive && q.id !== WILD && atWar(o, q.id)) {
     if (q.id === 0 && G.diff === 'easy' && G.t < EASY_SAFE && !W) continue;   // Easy: nobody comes for you in the first six minutes
     const r = mine / estPower(o, q.id) * matchup(go, soldiersOf(q.id)), prob = r * r / (1 + r * r);   // the square law, as odds, bent by who counters whom
-    const pr = W && W.owner === q.id ? 1 : prob;
+    const busy = per.opportunist && G.P.some(x => x.alive && x.id !== WILD && x.id !== o && x.id !== q.id && atWar(q.id, x.id));   // the opportunist: a side with another war on its hands
+    const T = G.throne && G.throne.owner === q.id;
+    const pr = (W && W.owner === q.id) || T ? Math.max(prob, 0.75) : prob * (busy ? per.opportunist : 1);
     if (pr > bp) { bp = pr; best = q.id; }
   }
   // a full army that sits at home is wasted: at its limit a side settles for even odds
   const full = soldiersOf(o).length >= armyCap(p) - 2;
   if (best !== null && bp > (full ? Math.min(bold, 0.4) : bold)) {
-    go.forEach(u => { u.state = 'attack'; u.target = best; u.bid = W && W.owner === best ? W.id : null; u.loot = null; });
+    const TB = G.throne && G.throne.owner === best && G.blds.find(b => b.kind === 'throne' && b.hp > 0);
+    go.forEach(u => { u.state = 'attack'; u.target = best; u.bid = W && W.owner === best ? W.id : TB ? TB.id : null; u.loot = null; });
     p.wave = { n: go.length, t: G.t };
     if (per.raid) {   // a few riders go for the foe's lumber camps and mines instead of the Town Center: it draws the defence apart
       const fast = go.filter(u => (UNIT[u.kind].tags || []).includes('mounted')).slice(0, per.raid + (hz('hard') ? HARD.raid : 0)), k = keepOf(o);
@@ -169,28 +188,6 @@ function decideWar(p, per) {
       if (mark) fast.forEach(u => { u.bid = mark.id; });
     }
     if (best === 0) say(`${p.name} march on you with ${go.length} soldiers.`, 'warn', 8, go[0]);
-  }
-}
-function fortressDuties(dt) {
-  const F = G.P[FORT]; if (!F.alive) return;
-  F.ai.contractT = (F.ai.contractT ?? CONTRACT.every * 0.5) - dt;
-  if (G.contract && G.t > G.contract.until) { G.contract = null; say('The Fortress\'s job went unfinished.', '', 4); }
-  if (F.ai.contractT <= 0) {
-    F.ai.contractT = CONTRACT.every;
-    const open = G.finds.filter(f => !f.done && CONTRACT.kinds.includes(f.kind));
-    if (!G.contract && open.length) { const f = open[Math.floor(rng() * open.length)]; G.contract = { fid: f.id, until: G.t + CONTRACT.secs }; say(`Fortress offers ${costText(CONTRACT.pay)}. Take the ${FINDS[f.kind].name.toLowerCase()} at ${coord(f.x, f.y)} first.`, 'good', 9, f); }
-  }
-  F.ai.tribute += dt;
-  if (F.ally !== null && F.ai.tribute > 45) {
-    F.ai.tribute = 0; const A = G.P[F.ally], share = A.pers === 'aggr' ? 0.4 : 0.2, sent = {};
-    for (const r of ['f', 'w', 's', 'g', 'i']) { const x = Math.floor(Math.max(0, F.res[r] - 200) * share); if (x > 0) { F.res[r] -= x; A.res[r] += x; sent[r] = x; } }
-    if (F.ally === 0 && Object.keys(sent).length) say(`The Fortress sends ${costText(sent)}.`, 'good', 5);
-  }
-  // it defends its ally's town, never at the cost of its own
-  if (F.ally !== null && G.t - F.ai.lastHelp > 30) {
-    const ak = keepOf(F.ally), mk = keepOf(FORT);
-    const safe = mk && !G.units.some(u => atWar(FORT, u.owner) && u.owner !== WILD && isSoldier(u) && dist(u, mk) < 320);
-    if (ak && safe && G.units.some(u => atWar(F.ally, u.owner) && u.owner !== WILD && isSoldier(u) && dist(u, ak) < 300)) { F.ai.lastHelp = G.t; sendHelp(FORT, ak, F.ally === 0); }
   }
 }
 

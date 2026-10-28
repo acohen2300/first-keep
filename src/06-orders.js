@@ -136,10 +136,12 @@ function makeAlly(a, b) {
 const noticeLeft = (a, b) => { const t = G.warAt[a + ',' + b]; return t === undefined ? 0 : Math.max(0, Math.ceil(t - G.t)); };
 // why a side cannot take this stance toward another right now, or null
 function relWhy(o, q, want) {
-  const p = G.P[o], Q = G.P[q], rel = G.rel[o][q]; if (q === o || q === WILD || !Q.alive) return 'Not now.';
+  const p = G.P[o], Q = G.P[q], rel = G.rel[o][q]; if (q === o || (q !== WILD && !Q.alive)) return 'Not now.';
   if (Q.lord === o && !Q.rebel) return 'Your vassal: see their card.';
   if (p.lord === q && !p.rebel) return 'Your overlord.';
   if (want === rel) return 'Already.';
+  if (q === WILD && want === 'peace') return 'Their regard decides.';   // the Natives: peace comes from regard, alliance by emissary when regard is high
+  if (q === WILD && want === 'ally' && regardOf(o) < NATIVE.allyAt) return `Needs regard ${NATIVE.allyAt}.`;
   if (want === 'war') return noticeLeft(o, q) ? `Notice given: ${noticeLeft(o, q)} s.` : null;
   if (want === 'ally' && rel === 'war') return 'Make peace first.';
   if (p.envoyOut) return 'Your emissary is out.';
@@ -150,6 +152,7 @@ function relWhy(o, q, want) {
 function setRel(o, q, want) {
   if (relWhy(o, q, want)) return false;
   const rel = G.rel[o][q];
+  if (q === WILD && want === 'war') { makePeace(o, q); G.rel[o][q] = G.rel[q][o] = 'war'; G.navDirty = true; natRegard(o, -20); return true; }   // turning on the Natives costs regard, and needs no notice: they are not a court
   if (want === 'war') { if (rel === 'ally') makePeace(o, q); G.warAt[o + ',' + q] = G.t + NOTICE; if (o === 0 || q === 0) say(`${G.P[o === 0 ? q : o].name}: hostile in ${NOTICE} s${o === 0 ? ' (notice given)' : ''}.`, 'warn', 6); return true; }
   delete G.warAt[o + ',' + q];   // a side that was giving notice has thought again
   if (want === 'peace' && rel === 'ally') { makePeace(o, q); if (q === 0) say(`${G.P[o].name} ended the alliance.`, 'warn', 6); return true; }
@@ -157,7 +160,7 @@ function setRel(o, q, want) {
 }
 function noticeTick() { for (const k in G.warAt) if (G.t >= G.warAt[k]) { const [a, b] = k.split(',').map(Number); declareWar(a, b, 'the notice ran out'); } }
 function sendEnvoy(o, to, ask) {
-  const p = G.P[o], k = keepOf(o), tk = keepOf(to);
+  const p = G.P[o], k = keepOf(o), tk = homeOf(to);
   if (!k || !tk || p.envoyOut || p.age < 1 || !afford(p, UNIT.envoy.cost)) return false;
   pay(p, UNIT.envoy.cost);
   const u = addUnit(o, 'envoy', k.x, k.y); u.state = 'envoy'; u.target = to; u.ask = ask || 'ally'; p.envoyOut = true; p.envoyAt = G.t;
@@ -169,7 +172,7 @@ const oddsOf = (q, o) => { const S = soldiersOf(q), r = powerOf(S) / estPower(q,
 function judgeEnvoy(to, from, envoy) {
   const T = G.P[to], ask = envoy.ask || 'ally';
   if (G.rel[to][from] === 'war' && ask !== 'peace') { envoy.hp = 0; if (from === 0) say(`The ${T.name} killed your emissary.`, 'warn', 6); return; }
-  if (to === FORT && ask === 'ally') return judgeFortress(to, from, envoy);
+  if (to === WILD) return judgeNatives(from, envoy, ask);
   const busy = G.P.some(q => q.alive && q.id !== WILD && q.id !== from && atWar(to, q.id));   // another war on their hands
   if (ask === 'peace') {
     if (G.rel[to][from] !== 'war') { reply(from, envoy, `The ${T.name} are already at peace with you.`); return; }
@@ -182,37 +185,18 @@ function judgeEnvoy(to, from, envoy) {
   if (!busy && oddsOf(to, from) > 0.7) { reply(from, envoy, `The ${T.name} need no ally today.`); return; }
   makeAlly(to, from); reply(from, envoy, `The ${T.name} accept. You are allies.`);
 }
-// The Fortress allies only with whoever raises its odds of surviving (until Build 42 makes it a player like the rest)
-function judgeFortress(fort, from, envoy) {
-  const F = G.P[fort];
-  if (F.ally !== null && F.ally !== from) { reply(from, envoy, `The Fortress is already allied with ${G.P[F.ally].name}.`); return; }
-  if (F.ally === from) { reply(from, envoy, 'The Fortress is already your ally.'); return; }
-  const est = o => estPower(fort, o), mine = powerOf(soldiersOf(fort)) + 600 + bldsOf(fort, 'tower').length * 120 + (bldsOf(fort, 'wall').length + bldsOf(fort, 'gate').length) * 7;
-  let threat = -1, top = 0; for (const q of G.P) if (q.id !== fort && q.id !== WILD && q.alive && est(q.id) > top) { top = est(q.id); threat = q.id; }
-  if (threat === from && est(from) > mine * 1.2) { reply(from, envoy, 'The Fortress sent your emissary back with nothing. You are the one they fear.'); return; }
-  if (est(from) < top * 0.5) { F.terms = F.terms || {}; F.terms[from] = 150; reply(from, envoy, 'The Fortress sends terms: 150 gold for an alliance.'); return; }
-  makeAlly(fort, from); reply(from, envoy, 'The Fortress accepts. You are allies.');
-}
 function reply(from, envoy, text) { envoy.state = 'return'; if (from === 0) say(text, text.includes('accept') ? 'good' : '', 7); }
-function payTerms(o) {
-  const F = G.P[FORT], price = F.terms && F.terms[o];
-  if (!price || G.P[o].res.g < price || G.rel[FORT][o] === 'war' || F.ally !== null) return false;
-  G.P[o].res.g -= price; F.res.g += price; delete F.terms[o]; makeAlly(FORT, o);
-  if (o === 0) say('Tribute paid. The Fortress is your ally.', 'good', 6);
-  return true;
-}
-function askHelp(o) {
-  if (G.P[FORT].ally !== o) return false;
-  const army = soldiersOf(o), pt = army.length ? { x: army.reduce((s, u) => s + u.x, 0) / army.length, y: army.reduce((s, u) => s + u.y, 0) / army.length } : keepOf(o);
-  return sendHelp(FORT, pt, o === 0, true);
-}
-function sendHelp(f, pt, tell, asked) {
+// an ally sends half of what stands at home to a friend's town under attack (every computer does this for its ally, the Fortress included)
+function sendHelp(f, pt, tell) {
   const mine = soldiersOf(f).filter(u => u.state === 'home'), keep = Math.ceil(mine.length * 0.5), go = mine.slice(keep);
-  if (!go.length || !pt) { if (tell && asked) say('The Fortress has no soldiers to spare yet.', '', 5); return false; }
+  if (!go.length || !pt) return false;
   go.forEach(u => { u.state = 'assist'; u.px = pt.x; u.py = pt.y; u.idleT = 0; });
-  if (tell) say(`The Fortress sends ${go.length} soldiers to help.`, 'good', 5);
+  if (tell) say(`${G.P[f].name} send ${go.length} soldiers to help.`, 'good', 5);
   return true;
 }
+// an ally twice your strength may be offered overlordship: they become your vassal at a light tax
+function overlordWhy(o, q) { const Q = G.P[q]; if (!Q.alive || G.rel[o][q] !== 'ally') return 'Only an ally.'; if (powerOf(soldiersOf(o)) < 2 * powerOf(soldiersOf(q))) return 'Needs twice their army.'; return null; }
+function offerOverlord(o, q) { if (overlordWhy(o, q)) return false; makeVassal(q, o, 'light'); return true; }
 
 // ── A lord's hand on a vassal: cut them loose, demand, force tribute, call up their soldiers (Assyria taxed at spear-point; Rome's client kings sent auxiliaries)
 function breakTies(L, q) {

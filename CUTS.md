@@ -404,3 +404,20 @@ Albert's call: everything up to the old Build 44 in one build, one gate, one pus
 - **Sounds:** hush (eclipse), hooves, buzz, rumble, jingle, roar.
 - **Cut:** the Build card's blurb (Albert: people will figure it out).
 - Play fingerprint accepted (the dice and the computers' timing changed).
+
+- **Play fingerprint accepted:** Build 40 stage 3: the Natives hold the Throne, the Fortress plays, the shore shrines are gone
+
+- **Play fingerprint accepted:** Build 40 stage 3: the Natives tuned light, swift and many; gunpowder tells against them
+
+### Stage 3: the Natives, the Throne, the Fortress as a player
+- **The fifth side has one brain.** The Wild is the Natives. Regard (0..100, starts 20) is the one number behind everything: gifts raise it under the Danegeld rule (each gift in ten minutes buys less than the last; the card says so), blows on them lower it (2 a blow, at most once in 3 s), it drifts back to 20 slowly (about twenty minutes from 90). Regard 40: peace, they leave you be. Regard 70: an emissary makes them allies and their gate opens; the alliance ends if regard falls under 60. Turning hostile on them costs 20 regard and needs no notice.
+- **The Throne:** a walled citadel on the great lake's island, four stone causeways with a gate on each, two towers, the one shrine at its foot (the four shore shrines are cut). Taken, never broken: at zero health it changes hands at a third of its strength, walls and towers with it, the garrison dies (sworn over, the garrison serves the new lord). Whoever holds it takes a 10% tithe of every other side's gathering and 50 score a minute, and every court turns on them; hold it 15 minutes in a 60-minute game (scaled) and the game is won. As the Natives' ally, 8 soldiers inside for 60 s and they swear to you. A mark that changed hands is dropped by the soldiers sent at it.
+- **The garrison, Albert's rule:** light, swift and many (55 health, speed 32, 24 + 8 an age, back to strength in 20 s a man), no research, no armour; blows they land on anyone standing on a causeway hit 30% harder. Gunpowder is the turn: once any side reaches that age the garrison thins to 60%, grows back half as fast, and guns hit them 50% harder.
+- **Traps:** four a causeway, pits (40% of health, stuck 4 s) and nets (a prisoner; ransom the unit's cost; unransomed in 3 minutes they join the Natives), relaid every 90 s while the Natives hold the Throne. A scout within 60 finds them and that side steps round them; allies walk free; a net takes a man, not an engine.
+- **Outlaws on a plan:** every 3 minutes the camp nearest the side the Natives regard least sends four robbers at its nearest drop-off, home after 45 s.
+- **The Fortress is a player:** defends first (bold .85, keeps half at home), opportunist (a target already at war with someone else looks 1.3× better), trades, spies, courts allies. **Cut:** the Fortress's jobs (contracts), its terms and tribute, Ask-for-troops, its own card and the Send-emissary button; the computers' Fortress-courting line. **Kept and widened:** an ally sends half of what stands at home to a friend's town under attack (every computer does it now).
+- **Diplomacy for the computers:** a side at war courts a neutral as an ally after minute 10; whoever holds the Throne gets notice from every court. From the Medieval age a computer with 20 at home, siege (or the Natives' alliance) and the odds marches on the Throne.
+- **Conquest:** every rival fallen or ruled (the Fortress counts now).
+- **Alerts reworked (Albert):** world news and the spectacle's "coming" lines are quiet: they go to the list and count on the list button, never take the line; only events that can hurt you take it. World news has an off switch in Help.
+- The citadel is drawn once into the ground: a paved island and four stone causeways; traps show when sprung, or armed when your scout found them.
+- Play fingerprint accepted twice (the Natives' raids and the Fortress's new mind move the dice).
