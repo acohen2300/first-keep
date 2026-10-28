@@ -200,7 +200,7 @@ const CARDS = {
 				? acts(btn(`scoutgo:${at}`, 'Send the scout', 'fast, but it does not fight'), 'c1')
 				: '');
 		if (F.stop) h += stopHTML(f);
-		return h + fold('why', 'Why?', `<p>${WHY[f.kind]}</p>`);
+		return h + fold('why', 'Why?', `<p>${WHY[f.kind]}</p>`); // one row of peoples, their soldier in the line under it: the whole card on one page (Albert)
 	},
 	unit(c) {
 		const u = G.units.find((x) => x.id === c.id);
@@ -367,7 +367,12 @@ const CARDS = {
 			title('A new game', '') +
 			settingsHTML() +
 			acts(CIVK.map((k) => btn(`civ:${k}`, CIVS[k].name, '', SET.civ === k ? 'on' : '')).join(''), 'c6 civs') +
-			`<p class="civline"><b>${short(SET.civ)}</b> · ${C.bonus}</p>` + // one row of peoples, their soldier in the line under it: the whole card on one page (Albert) + fold('why', 'Why?', `<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`)
+			`<p class="civline"><b>${short(SET.civ)}</b> · ${C.bonus}</p>` +
+			fold(
+				'why',
+				'Why?',
+				`<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`,
+			) +
 			`<button class="tick daily${SET.daily ? ' on' : ''}" data-act="daily"><b>Daily challenge: level ${levelOf(TODAY_HZ)}</b><small>one map for all, today</small></button>` + // one tick, written out (Albert)
 			`<div class="hzl">${HZK.map((k) => `<button class="tick${H[k] ? ' on' : ''}" data-act="hz:${k}"><b>${HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small></button>`).join('')}</div>` +
 			fold(
@@ -555,6 +560,7 @@ const CARDS = {
 							? `short ${need(B.cost)}`
 							: (fits ? 'fits here · ' : '') + costText(B.cost),
 				lock || full || !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
+				!lock && !full && !afford(p, B.cost) ? fillOf(B.cost) : undefined,
 			).replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>');
 		}; // how many of how many beside the name, dimmed: every cost stays on one line
 		const most = Math.max(...MENUS.map((m) => m.items.length)),
@@ -694,6 +700,12 @@ function renderCard() {
 	const info = infoBuf.join(''),
 		bookOn = !!info && G.infoOpen;
 	if (bookOn) h = h.replace('</h3>', `</h3><div class="infoP">${info}</div>`);
+	const tip = G.techTip && TECHBY[G.techTip];
+	if (tip)
+		h = h.replace(
+			'</h3>',
+			`</h3><div class="infoP">${techBook(tip)}<p>Cost ${costText(tip.cost)} · ${tip.t} s to research.</p></div>`,
+		);
 	if (h !== cardSig) {
 		cardSig = h;
 		patchHTML(

@@ -510,3 +510,13 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 ## Menu polish (preview only)
 - Card text up one step: 12→13, 15→16, 19→20 px.
 - Trimmed card padding and gaps (a few px each). Every tap stays 44x44 CSS px.
+
+## Build 44 preview (not live)
+- Setup card: the "Why?" note (unique soldier, wonder, why the bonus) was dead inside a comment; restored behind the book icon. No height added.
+- Costs: "short" text fades red to white as the stock nears the cost (train, research, build, age).
+- Research (techs and the next age) wears a cool blue tint, a small scroll, a blue rim when ready.
+- A tap on a disabled button glows red for 0.45 s.
+- Attack warning also shows on the minimap as a flashing red dot; tapping the map already moves the view.
+- Hold a research button (0.45 s): book entry plus cost and time. Tap anywhere to close.
+- Build button: opens on the selected building's menu first, else what is near the middle of the view.
+- Nothing cut.

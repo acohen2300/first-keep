@@ -173,6 +173,22 @@ function drawGhost() {
 	ctx.globalAlpha = 1;
 	tag(why || `${B.name} · ${costText(B.cost)}`, SX(sp.x - n / 2), SY(sp.y - n / 2) - 8 - (BLD[kind].h + 10) * z);
 }
+function miniIncoming(m, k) {
+	const I = G.incoming;
+	if (!I) return;
+	const x = I.x * k,
+		y = I.y * k,
+		on = Math.floor(performance.now() / 350) % 2 === 0;
+	m.strokeStyle = '#ff3b2f';
+	m.lineWidth = 2;
+	m.beginPath();
+	m.arc(x, y, on ? 9 : 6, 0, Math.PI * 2);
+	m.stroke();
+	m.fillStyle = on ? '#ff3b2f' : '#ffd0c8';
+	m.beginPath();
+	m.arc(x, y, 4, 0, Math.PI * 2);
+	m.fill();
+} // an attack on its way: a red dot that flashes on the small map; tap the map and you are there
 function drawMini() {
 	const m = mctx,
 		k = 172 / MAP;
@@ -225,6 +241,7 @@ function drawMini() {
 	if (G.wx === 'blizzard') {
 		m.fillStyle = 'rgba(235,240,245,.92)';
 		m.fillRect(0, 0, 172, 172);
+		miniIncoming(m, k);
 		return;
 	} // a whiteout: the small map shows nothing
 	for (const u of G.units)
@@ -237,6 +254,7 @@ function drawMini() {
 		for (let i = 0; i < G.mirage.n; i++)
 			m.fillRect((G.mirage.x + (i % 4) * 14 - 20) * k - 1, (G.mirage.y + Math.floor(i / 4) * 14 - 14) * k - 1, 2, 2);
 	} // the mirage
+	miniIncoming(m, k);
 	const a = toWorld(0, 0),
 		b = toWorld(cw, ch);
 	m.strokeStyle = '#fff';

@@ -69,7 +69,8 @@ const ACT = {
 			closeCard();
 			return;
 		}
-		const w = toWorld(cw / 2, ch / 2 + vy),
+		const sel = G.card && G.card.type === 'bld' && G.blds.find((b) => b.id === G.card.id && b.owner === 0),
+			w = sel || toWorld(cw / 2, ch / 2 + vy),
 			hint = suggestAt(w.x, w.y),
 			M = hint && MENUS.find((m) => m.items.includes(hint));
 		G.buildAt = hint ? { hint } : null;
@@ -976,12 +977,41 @@ function learnAct(verb, arg) {
 		if (n) learn('job:' + (n.kind === 'farm' && n.type === 'food' ? 'field' : n.type));
 	} else if (['sendbld', 'buildat', 'age', 'trade'].includes(verb)) learn(verb === 'buildat' ? 'sendbld' : verb);
 }
+let lpT = 0,
+	lpDone = false;
+const lpStop = () => clearTimeout(lpT);
+document.addEventListener('pointerdown', (e) => {
+	lpStop();
+	lpDone = false;
+	const el = e.target.closest('[data-act^="tech:"]');
+	if (el)
+		lpT = setTimeout(() => {
+			lpDone = true;
+			feel('snap');
+			G.techTip = el.dataset.act.slice(5);
+			renderCard();
+		}, 450);
+}); // hold a research step: what it does, the number, the date, the weight and why, the cost
+for (const ev of ['pointerup', 'pointercancel', 'pointermove'])
+	document.addEventListener(ev, lpStop, { passive: true });
 document.addEventListener('click', (e) => {
 	const el = e.target.closest('[data-act]');
 	if (!el) return;
 	e.stopPropagation();
+	if (lpDone) {
+		lpDone = false;
+		return;
+	}
+	if (G.techTip) {
+		G.techTip = null;
+		renderCard();
+	}
 	sndInit();
 	sfx('tap');
+	if (/(^|\s)(dis|lock)(\s|$)/.test(el.className)) {
+		el.classList.add('nope');
+		setTimeout(() => el.classList.remove('nope'), 450);
+	} // a tap it cannot do glows red a moment
 	act(el.dataset.act);
 });
 for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndInit, { passive: true }); // Safari unlocks audio on the finger lifting, not landing

@@ -4,6 +4,7 @@
 // node by node, so only the words and numbers that changed are touched and a button under a finger stays the same button.
 function openCard(c) {
 	hideStrip();
+	G.techTip = null;
 	G.card = c;
 	G.infoOpen = false;
 	G.confirm = null;
@@ -25,6 +26,7 @@ function openCard(c) {
 const READ_CARDS = new Set(['research', 'council', 'troops', 'guide', 'help', 'score', 'stores', 'sound']); // the cards you sit and read pause the game; a building, a unit or a field to glance at does not (Albert, Build 41)
 function closeCard() {
 	if (G) {
+		G.techTip = null;
 		G.card = null;
 		if (G.cardPaused) {
 			G.cardPaused = false;
@@ -77,8 +79,8 @@ function patchHTML(el, html) {
 }
 // ── the pieces every card is made of
 const cap1 = (t) => (t && t.indexOf('<') < 0 ? t.replace(/(^|· )([a-z])/g, (m, a, c) => a + c.toUpperCase()) : t); // sentence case: a capital opens every label and every part after a dot
-const btn = (act, title, sub, cls) =>
-	`<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small${sub.startsWith('short ') ? ' class="need"' : ''}>${cap1(sub)}</small>` : ''}</button>`; // a sub-line that says what is short reads in red
+const btn = (act, title, sub, cls, fr) =>
+	`<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small${sub.startsWith('short ') ? ` class="need"${fr === undefined ? '' : ` style="--fr:${fr.toFixed(2)}"`}` : ''}>${cap1(sub)}</small>` : ''}</button>`; // a sub-line that says what is short reads in red ink that fades to white as you near the cost (fr: 0 to 1)
 const FOLD = new Set(); // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 // the book entry of a research step: the date, what it changed, and its weight, which is its cost
 const techBook = (t) =>
@@ -141,7 +143,13 @@ function trainButtons(kinds) {
 								: !afford(p, cost)
 									? `short ${need(cost)}`
 									: costText(cost);
-			return btn(`train:${k}`, stats(0, ck).name, sub + (n ? ` ×${n}` : ''), why ? 'dis' : '');
+			return btn(
+				`train:${k}`,
+				stats(0, ck).name,
+				sub + (n ? ` ×${n}` : ''),
+				why ? 'dis' : '',
+				sub.startsWith('short ') && !full ? fillOf(cost) : undefined,
+			);
 		})
 		.join('');
 }
@@ -172,6 +180,7 @@ function techBtn(t, withAt) {
 		t.name,
 		sub + (withAt ? ` · ${BLD[t.at].name}` : ''),
 		`a${t.age} ` + (st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock'),
+		st === 'short' ? fillOf(t.cost) : undefined,
 	); // a${age}: the top edge wears the age's colour
 }
 const trainsAt = (kind) =>
@@ -187,8 +196,9 @@ function keepAgeBtn() {
 	return btn(
 		'age',
 		`${A.name} age`,
-		p.aging ? 'advancing' : costText(A.cost),
+		p.aging ? 'advancing' : !afford(p, A.cost) ? `short ${need(A.cost)}` : costText(A.cost),
 		p.aging || !afford(p, A.cost) ? 'dis' : 'go',
+		!p.aging && !afford(p, A.cost) ? fillOf(A.cost) : undefined,
 	);
 }
 // what one of yours is doing, in words read from its state; and what it has done in its life
@@ -296,6 +306,7 @@ const goodsText = (g) =>
 		.map((k) => `${Math.floor(g[k])} ${GOODS[k].name.toLowerCase()}`)
 		.join(', ');
 const ownTech = (t) => !t.civ || t.civ === G.P[0].civ; // research this people can do: the others' elite ranks stay out of sight
+const fillOf = (c) => Math.min(1, ...Object.keys(c || {}).map((r) => (G.P[0].res[r] || 0) / (c[r] || 1)));
 const need = (c) => {
 	const p = G.P[0],
 		miss = {};

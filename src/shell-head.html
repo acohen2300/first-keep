@@ -166,7 +166,8 @@ button.ok small{color:#8fd4a4}
 #card h3{font-size:20px;letter-spacing:.05em;color:var(--lamp);min-height:36px}
 #card button:not(#cardX):not(#cardI){position:relative;background-color:#312218;background-image:linear-gradient(#3b2b1d,#2a1d13);border:1px solid var(--brass);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,220,150,.18);color:var(--bone);min-height:44px;padding:3px 5px}
 #card button.dis{border-color:#4a3a28;background:transparent;box-shadow:none;color:#bfb49c}#card button.dis b{color:#bfb49c}   /* what you cannot: flat on the table */
-#card small.need{color:#ff8a70;font-weight:700}   /* what it is short of */
+#card button.nope:not(#cardX):not(#cardI){border-color:var(--red);box-shadow:0 0 12px rgba(220,70,50,.7),inset 0 0 8px rgba(220,70,50,.35)}
+#card small.need{color:color-mix(in srgb,#fff calc(var(--fr,0)*100%),#ff8a70);font-weight:700}   /* what it is short of */
 #card button.go{border-color:var(--lamp);box-shadow:inset 0 0 0 1px var(--lamp),0 0 10px rgba(230,185,71,.35)}   /* what you can do now: a brass rim */
 #card button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;box-shadow:0 0 14px rgba(242,210,122,.5)}#card button.on small{color:#4a3518}
 #card button.warn{border-color:var(--red);color:#ffb3a7}
@@ -204,6 +205,9 @@ button.ok small{color:#8fd4a4}
 #card .tabs button:not(#cardX):not(#cardI){border-radius:8px 8px 0 0}
 #card button[class*=" a"]::before,#card button[class^="a"]::before{content:'';position:absolute;left:10px;right:10px;top:4px;height:3px;border-radius:2px;background:var(--age)}   /* a research step wears the colour of its age */
 #card button.a0{--age:#9a9890}#card button.a1{--age:#b5793a}#card button.a2{--age:#c9c2a6}#card button.a3{--age:#4d6b9e}#card button.a4{--age:#8e2f2a}
+#card button:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){background-color:#1d2836;background-image:linear-gradient(#26364a,#18222f),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3 2h8v10H3zM5 5h4M5 7h4M5 9h3' fill='none' stroke='%23a9c4e6' stroke-width='1.2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:0 0,5px 5px;border-color:#5f7fa3;box-shadow:inset 0 1px 0 rgba(170,200,240,.18)}
+#card button.dis:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){background-color:transparent;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3 2h8v10H3zM5 5h4M5 7h4M5 9h3' fill='none' stroke='%237c8ea6' stroke-width='1.2'/%3E%3C/svg%3E");border-color:#3d4f66;box-shadow:none}
+#card button.go:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){border-color:#8fb4e6;box-shadow:inset 0 0 0 1px #8fb4e6,0 0 10px rgba(130,170,230,.35)}   /* research reads blue: cool tint, a small scroll, a blue rim when ready */
 @media (max-width:400px){:root{--pad:6px}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important;scroll-behavior:auto!important} }
 </style>
