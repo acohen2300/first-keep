@@ -33,7 +33,7 @@ const ACT = {
   mode(a) { SET.mode = a; saveSet(); refresh(); },
   fantasy(a) { SET.fantasy = a === '1'; saveSet(); refresh(); },
   hz(a) { SET.hz = { ...(SET.hz || HZ_DEFAULT) }; SET.hz[a] = SET.hz[a] ? 0 : 1; saveSet(); refresh(); },   // a hazard on or off; the points add up to the level
-  today() { clearSave(); holdSave = false; newGame(todaySeed()); closeCard(); setPause(false); saveGame(true); refresh(); say(`Today's challenge: level ${levelOf(G.hz)}. Beat your best.`, 'good', 8); },
+  today() { clearSave(); holdSave = false; newGame(todaySeed()); closeCard(); setPause(false); saveGame(true); refresh(); say(`Challenge of the day: level ${levelOf(G.hz)}.`, 'good', 8); },
   tips() { SET.tips = !SET.tips; saveSet(); refresh(); },
   msgs() { SET.msgs = SET.msgs === false; saveSet(); refresh(); },
   news() { SET.news = SET.news === false; saveSet(); refresh(); },
@@ -66,7 +66,7 @@ const PLAY = {
   qsfrom(a) { G.qs.from = a === 'all' ? 'all' : Number(a); },
   qsn(a) { const [k, d] = a.split(','), have = qsPool().filter(u => u.kind === k).length, cur = Math.min(have, G.qs.n[k] ?? have); G.qs.n[k] = clamp(cur + (d === '+' ? 1 : -1), 0, have); },
   qgo(a) { const [x, y] = a.split(',').map(Number), S = qsPick({ x, y }); S.forEach(u => { u.state = 'goto'; u.px = x; u.py = y; u.idleT = 0; u.focus = null; }); march(S, { x, y }, coord(x, y)); if (S.length) ripple(x, y, '#ffd35e'); closeCard(); },
-  qatk(a) { const b = G.blds.find(x => x.id === Number(a) && x.hp > 0); if (!b) return; const S = qsPick(b); S.forEach(u => { u.state = 'attack'; u.target = b.owner; u.bid = b.id; u.focus = null; }); march(S, b, `${G.P[b.owner].name}' ${bldName(b.owner, b.kind)}`); if (S.length) ripple(b.x, b.y, '#ff8a70'); closeCard(); },
+  qatk(a) { const b = G.blds.find(x => x.id === Number(a) && x.hp > 0); if (!b) return; const S = qsPick(b); S.forEach(u => { u.state = 'attack'; u.target = b.owner; u.bid = b.id; u.focus = null; }); march(S, b, `the ${bldName(b.owner, b.kind)} of ${G.P[b.owner].name}`); if (S.length) ripple(b.x, b.y, '#ff8a70'); closeCard(); },
   qfoe(a) { const v = G.units.find(x => x.id === Number(a) && x.hp > 0); if (!v) return; const S = qsPick(v); S.forEach(u => { u.state = 'goto'; u.px = v.x; u.py = v.y; u.idleT = 0; u.focus = v; }); march(S, v, G.P[v.owner].name); if (S.length) ripple(v.x, v.y, '#ff8a70'); closeCard(); },
   bned(a) { G.bnEdit = Number(a); },
   muster(a) { const i = Number(a); if (muster(0, musterGap(i), i)) sfx('place'); else sfx('err'); },
@@ -148,8 +148,7 @@ function learnAct(verb, arg) {
   if (verb === 'train') learn('train:' + arg);
   else if (verb === 'move' || verb === 'job') { learn('job'); learn('job:' + arg); }
   else if (verb === 'sendvil') { learn('job'); const n = G.nodes.find(x => x.id === Number(arg)); if (n) learn('job:' + (n.kind === 'farm' && n.type === 'food' ? 'field' : n.type)); }
-  else if (verb === 'boxjob') { learn('job'); learn('job:' + arg); }
-  else if (['sendbld', 'buildat', 'age', 'goto', 'envoy', 'trade'].includes(verb)) learn(verb === 'buildat' ? 'sendbld' : verb);
+  else if (['sendbld', 'buildat', 'age', 'trade'].includes(verb)) learn(verb === 'buildat' ? 'sendbld' : verb);
 }
 document.addEventListener('click', e => { const el = e.target.closest('[data-act]'); if (!el) return; e.stopPropagation(); sndInit(); sfx('tap'); act(el.dataset.act); });
 for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndInit, { passive: true });   // Safari unlocks audio on the finger lifting, not landing

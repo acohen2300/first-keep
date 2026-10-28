@@ -87,17 +87,17 @@ function hitAt(sx, sy) {
 const cardFor = h => h.t === 'bld' ? { type: 'bld', id: h.e.id } : h.t === 'find' ? { type: 'find', id: h.e.id } : h.t === 'unit' ? { type: 'unit', id: h.e.id } : { type: 'node', id: h.e.id };
 // One rule for the finger (Albert, Build 40): a tap picks, a double tap opens the card, a hold does more (picks and keeps picking; on open ground, a box).
 // With one or more of yours picked, a tap on anything else is the obvious order, without a menu: attack, hunt, gather, build, mend, walk.
-// The order waits a blink, in case a second tap is coming for the card; picking never waits.
-let lastTap = { key: '', t: 0 }, orderT = 0;
+// The order goes at once (Build 40 reviews: a waiting order reads as lag); a second tap on the same thing within a blink opens its card, the order already given.
+let lastTap = { key: '', t: 0 };
 function tapAt(sx, sy) {
   hideStrip(); if (G.over) return;
   if (RADAR && hyp(sx - RADAR.sx, sy - RADAR.sy) < 26) { cam.x = RADAR.x; cam.y = RADAR.y; clampCam(); return; }
   const h = hitAt(sx, sy), key = h.t === 'ground' ? '' : h.t + h.e.id, now = performance.now(), dbl = key && key === lastTap.key && now - lastTap.t < DBL_MS;
-  lastTap = { key, t: now }; clearTimeout(orderT);
+  lastTap = { key, t: now };
   if (dbl) { setPick([]); openCard(cardFor(h)); return; }
   if (h.t === 'unit' && h.e.owner === 0 && !h.e.inside) { pickToggle(h.e); return; }
   const mine = picked();
-  if (mine.length) { orderT = setTimeout(() => { order(mine, h); refresh(); }, DBL_MS); return; }
+  if (mine.length) { order(mine, h); refresh(); return; }
   if (h.t === 'ground') { showStrip(sx, sy, h.e.x, h.e.y); return; }   // nothing picked: the send strip, as before
   setPick([{ t: h.t, id: h.e.id }]);   // something that is not yours: a ring says what the finger found; a second tap opens its page
 }
@@ -120,7 +120,7 @@ function order(S, h) {
     sol.forEach(u => { u.state = 'goto'; u.px = e.x; u.py = e.y; u.idleT = 0; u.focus = e; }); if (sol.length) march(sol, e, e.owner === WILD ? UNIT[e.kind].name : G.P[e.owner].name);
   } else if (h.t === 'bld' && e.owner !== 0) {
     if (!atWar(0, e.owner)) { say(`${REL_WORD[G.rel[0][e.owner]]}: set Hostile at your Town Center first.`, '', 4); return; }
-    sol.forEach(u => { u.state = 'attack'; u.target = e.owner; u.bid = e.id; u.focus = null; }); if (sol.length) march(sol, e, `${G.P[e.owner].name}' ${bldName(e.owner, e.kind)}`);
+    sol.forEach(u => { u.state = 'attack'; u.target = e.owner; u.bid = e.id; u.focus = null; }); if (sol.length) march(sol, e, `the ${bldName(e.owner, e.kind)} of ${G.P[e.owner].name}`);
   } else if (h.t === 'bld') {
     if (e.prog < 1) vil.forEach(v => { sendBuilder(v, e); v.post = null; });
     else if (e.hp < maxHpB(0, e.kind) - 0.5) vil.forEach(v => { setJob(v, 'repair'); v.rep = e; v.post = null; });

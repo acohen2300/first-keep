@@ -55,7 +55,7 @@ const UNIT = {
   vil:      { name: 'Villager',  cls: 'civ', tick: 'vil', tags: ['civ'], hp: 25, spd: 24, sight: 90, dmg: 3, rng: 30, cd: 1.5, cost: { f: 50 }, t: 8, at: 'keep', also: ['town'], age: 0, look: 'vil', desc: 'Gathers food, wood, stone and gold and carries it to the nearest drop-off. Hunts deer and boar with a javelin.' },
   scout:    { name: 'Scout',     cls: 'civ', tick: 'scout', tags: ['civ', 'mounted'], hp: 45, spd: 36, sight: 220, dmg: 3, rng: 12, cd: 1.5, cost: { f: 80 }, t: 12, at: 'keep', age: 0, look: 'scout', desc: 'A fast rider. Tours the map and picks up any treasure nobody guards. Tap the map to send it.' },
   envoy:    { name: 'Emissary',  cls: null,  tick: 'envoy', tags: ['civ'], hp: 20, spd: 36, sight: 100, cost: { g: 40 }, t: 0, age: 1, look: 'envoy', desc: 'Carries your offer of peace or alliance to another side. Killing one is an act of war.' },
-  caravan:  { name: 'Caravan',   cls: 'civ', tick: 'caravan', tags: ['civ'], hp: 40, spd: 16, sight: 100, cost: { w: 80, f: 40 }, t: 14, at: 'market', age: 1, look: 'caravan', desc: 'An ox cart: about two thirds of walking pace. With no route it runs between your Markets for gold, the farther the more. Give it a route on its card and it carries goods from your Business Center to a Market or a trade stop. Robbers come for it near their camps.' },
+  caravan:  { name: 'Caravan',   cls: 'civ', tick: 'caravan', tags: ['civ'], hp: 40, spd: 16, sight: 100, cost: { w: 80, f: 40 }, t: 14, at: 'market', age: 1, look: 'caravan', desc: 'An ox cart: about two thirds of walking pace. With no route it runs between your Markets for gold, the farther the more. Give it a route on its card and it carries goods from your Market to a trade stop. Robbers come for it near their camps.' },
   spy:      { name: 'Spy',       cls: 'army', tick: 'spy', tags: ['civ'], hp: 20, spd: 24, sight: 120, cost: { f: 30, g: 60 }, t: 12, at: 'courthouse', age: 1, stealth: [45, 140], look: 'spy', desc: 'Hidden: soldiers see it only within 45, towers, the Town Center and Courthouses within 140. Near an enemy building it reads their stores, age, research and army. Sent to sabotage, it is used up.' },
   priest:   { name: 'Priest',    cls: 'army', tick: 'priest', tags: ['civ'], hp: 30, spd: 24, sight: 120, cost: { f: 40, g: 60 }, t: 14, at: 'temple', age: 1, look: 'priest', desc: 'Does not fight. Walks with the army so you can call Zeal, and takes holy sites: stand it at a shrine for 10 s and the shrine pays you gold.' },
   medic:    { name: 'Medic',     cls: 'army', tick: 'medic', tags: ['civ'], hp: 30, spd: 24, sight: 120, heal: 3, hrng: 55, cost: { f: 40, g: 40 }, t: 12, at: 'hospital', age: 2, look: 'medic', desc: 'Walks with the army and binds wounds: soldiers within 55 heal 3 health a second. Keep it behind the line.' },
@@ -92,9 +92,9 @@ const UNIT = {
   direwolf: { name: 'Dire wolf', tick: 'wild', tags: ['animal'], hp: 90, spd: 42, sight: 120, dmg: 9, rng: 10, cd: 1.1, fantasy: true, look: 'direwolf', desc: 'A wolf the size of a pony.' },
   goblin:   { name: 'Goblin',    tick: 'wild', tags: ['infantry'], hp: 40, spd: 30, sight: 120, dmg: 5, rng: 12, cd: 1.0, fantasy: true, look: 'goblin', desc: 'Small, quick and greedy.' },
   skeleton: { name: 'Skeleton',  tick: 'wild', tags: ['infantry'], hp: 50, spd: 22, sight: 110, dmg: 6, rng: 12, cd: 1.3, fantasy: true, rarmor: 0.5, look: 'skeleton', desc: 'The dead guard their graves. Arrows pass through the ribs.' },
-  troll:    { name: 'Troll',     tick: 'wild', tags: ['infantry', 'heavy'], hp: 320, spd: 22, sight: 130, dmg: 18, rng: 14, cd: 2.2, fantasy: true, raid: 200, look: 'troll', desc: 'Lives under the robbers\' bridge. Hits like a ram.' },
-  native:   { name: 'Warrior',   tick: 'sol', tags: ['infantry', 'spear', 'native'], hp: 55, spd: 32, sight: 140, dmg: 6, rng: 12, cd: 1.1, vs: { mounted: 2.5 }, look: 'native', desc: 'The Throne\'s own guard: light, swift and many. A spear and a hide shield, and the ground on their side.' },
-  nativebow:{ name: 'Bowman',    tick: 'sol', tags: ['infantry', 'archer', 'ranged', 'native'], hp: 36, spd: 32, sight: 160, dmg: 5, rng: 85, cd: 1.3, vs: { infantry: 1.3 }, look: 'nativebow', desc: 'The Throne\'s archers, on the walls and at the causeways.' },
+  troll:    { name: 'Troll',     tick: 'wild', tags: ['infantry', 'heavy'], hp: 320, spd: 22, sight: 130, dmg: 18, rng: 14, cd: 2.2, fantasy: true, raid: 200, look: 'troll', desc: 'Lives under the bridge of the robbers. Hits like a ram.' },
+  native:   { name: 'Warrior',   tick: 'sol', tags: ['infantry', 'spear', 'native'], hp: 55, spd: 32, sight: 140, dmg: 6, rng: 12, cd: 1.1, vs: { mounted: 2.5 }, look: 'native', desc: 'The guard of the Throne: light, swift and many. A spear and a hide shield, and the ground on their side.' },
+  nativebow:{ name: 'Bowman',    tick: 'sol', tags: ['infantry', 'archer', 'ranged', 'native'], hp: 36, spd: 32, sight: 160, dmg: 5, rng: 85, cd: 1.3, vs: { infantry: 1.3 }, look: 'nativebow', desc: 'The archers of the Throne, on the walls and at the causeways.' },
   dragon:   { name: 'Dragon',    tick: 'herd', tags: ['animal'], hp: 900, spd: 90, sight: 200, fantasy: true, scorch: 30, look: 'dragon', desc: 'Passes over now and then. What it flies over, burns.' },
 };
 const hasTag = (kind, tag) => (UNIT[kind].tags || []).includes(tag) || kind === tag;
@@ -113,7 +113,7 @@ const UPKEEP = { share: 30 / 8 / 60, foot: 1.5, mounted: 3, cart: 2, hunger: 0.7
 // Vassals. Every 10 seconds: tax takes a share of what the vassal gathered; unrest moves by the tax push minus loyalty/25 (0..100).
 // Loyalty moves 5% of the way to its target: 20 + investment + garrison + protection − the tax's resentment (0..100).
 const TAX = { light: { take: 0.10, push: 0.3, hate: 0 }, fair: { take: 0.20, push: 1.5, hate: 10 }, heavy: { take: 0.35, push: 4, hate: 30 } };
-const VASSAL = { r: 450, garrison: 0.5, garrisonMax: 15, kill: 1, protectMax: 20, decay: 0.98, gift: 60, share: 0.25, shareAt: 50, giftAt: 60, rise: 0.3, crushed: 0.25, freeAfter: 240, reign: 300 };
+const VASSAL = { r: 450, garrison: 0.5, garrisonMax: 15, kill: 1, protectMax: 20, decay: 0.98, gift: 60, share: 0.25, shareAt: 50, giftAt: 60, crushed: 0.25, freeAfter: 240, reign: 300 };
 const VENTURE = { age: 3, back: 1.4, lost: 0.2, max: 3, sizes: [100, 250, 500] };
 const PRICE = { hit: 0.004, floor: 0.5, cap: 2.5, drift: 0.02 };   // each unit sold lowers the price 0.4%, bought raises it; prices drift 2% back toward normal every 10 s   // a caravan carries 20 goods
 // Buildings. fp = squares a side (10 units each). h = how tall it stands. room = people it shelters.
@@ -129,7 +129,7 @@ const BLD = {
   barracks:  { cap: [1, 2, 2, 3, 3], armyRoom: 8, name: 'Barracks', fp: 4, hp: 450, h: 22, cost: { w: 150 }, t: 25, age: 0, sab: 'stall', wood: true, desc: 'Trains the foot: spearmen, then swordsmen.' },
   wall:      { nocap: 1, name: 'Wall', fp: 1, hp: 100, h: 18, cost: { s: 5 }, t: 10, age: 0, wallish: true, desc: 'One square of stone. It blocks everyone, you too: leave a Gate. Drag to draw a line of them.' },
   pit:       { nocap: 1, name: 'Pit', fp: 1, hp: 60, h: 0, cost: { w: 20 }, t: 8, age: 1, trap: 'pit', walk: true, desc: 'A hidden pit: a foe who steps in is hurt and stuck. Your people walk round it. An enemy scout finds it.' },
-  net:       { nocap: 1, name: 'Net', fp: 1, hp: 60, h: 0, t: 8, age: 0, trap: 'net', walk: true, desc: 'A hidden net on the causeway, the Natives\' own: a man who steps in is taken prisoner.' },
+  net:       { nocap: 1, name: 'Net', fp: 1, hp: 60, h: 0, t: 8, age: 0, trap: 'net', walk: true, desc: 'A hidden net on the causeway, laid by the Natives: a man who steps in is taken prisoner.' },
   stakes:    { nocap: 1, name: 'Stakes', fp: 1, hp: 60, h: 0, cost: { w: 30 }, t: 8, age: 1, trap: 'stakes', walk: true, desc: 'Sharpened stakes hidden in the grass: a foe who runs onto them is hurt, horses worst. Your people walk round them.' },
   gate:      { nocap: 1, name: 'Gate', fp: 1, hp: 150, h: 18, cost: { s: 10, w: 10 }, t: 12, age: 0, wallish: true, repeat: true, wood: true, desc: 'A gap in your wall. Your people, your allies and anyone at peace with you walk through. Enemies have to break it.' },
   tower:     { cap: [3, 4, 6, 8, 8], invest: 6, shelter: 5, name: 'Tower', fp: 2, hp: 500, h: 44, cost: { s: 100, w: 40 }, t: 25, age: 0, sight: 220, dmg: 10, rng: 140, cd: 1.2, desc: 'Shoots enemies in range and sounds the horn. Up to 5 villagers shelter inside and each adds an arrow.' },
@@ -147,17 +147,17 @@ const BLD = {
   aqueduct:  { nocap: 1, name: 'Aqueduct', fp: 3, hp: 600, h: 28, cost: { s: 250, w: 150 }, t: 40, age: 2, room: 15, sab: 'burn', desc: 'Water for a city: room for fifteen more people.' },
   dock:      { cap: [2, 2, 2, 2, 2], name: 'Dock', fp: 2, hp: 200, h: 6, cost: { w: 100 }, t: 15, age: 0, shore: true, drop: ['food'], sab: 'burn', wood: true, desc: 'Stands on a shore. Villagers on Food fish from it and bring the catch here. No dock, no fishing.' },
   town:      { cap: [0, 0, 1, 2, 2], invest: 15, shelter: 6, short: 'Town', name: 'Town Center', fp: 4, hp: 1800, h: 30, cost: { w: 400, s: 300, f: 200 }, t: 60, age: 2, sight: 180, dmg: 6, rng: 120, cd: 1.2, drop: [...RES, ...GOODK], room: 5, desc: 'A second town: trains villagers, takes every drop-off, shoots and shelters villagers. Losing it does not lose the game; losing your first does.' },
-  castle:    { cap: [0, 0, 0, 1, 2], armyRoom: 10, invest: 20, shelter: 10, name: 'Castle', fp: 5, hp: 3200, h: 40, cost: { s: 900, w: 300 }, t: 90, age: 3, sight: 240, dmg: 12, rng: 170, cd: 1.0, desc: 'A stone castle: the strongest building there is. Shoots far and shelters ten villagers who add their arrows. Built in a vassal\'s lands, it keeps them safe and loyal.' },
-  pasture:   { cap: [2, 3, 4, 4, 4], invest: 2, name: 'Pasture', fp: 3, hp: 120, h: 1, cost: { w: 60, f: 60 }, t: 10, age: 0, crop: 'wool', reserve: 0, rate: 1.5, walk: true, sheep: 6, milk: 0.03, sab: 'burn', desc: 'A fenced flock. While a shepherd tends it every sheep gives milk and meat: food straight to your stores. Sheep are shorn in spring, and the wool waits for a Weaver; lambs come in spring (up to 12). Wolves take sheep.' },
+  castle:    { cap: [0, 0, 0, 1, 2], armyRoom: 10, invest: 20, shelter: 10, name: 'Castle', fp: 5, hp: 3200, h: 40, cost: { s: 900, w: 300 }, t: 90, age: 3, sight: 240, dmg: 12, rng: 170, cd: 1.0, desc: 'A stone castle: the strongest building there is. Shoots far and shelters ten villagers who add their arrows. Built in the lands of a vassal, it keeps them safe and loyal.' },
+  pasture:   { cap: [2, 3, 4, 4, 4], invest: 2, name: 'Pasture', fp: 3, hp: 120, h: 1, cost: { w: 60, f: 60 }, t: 10, age: 0, crop: 'wool', reserve: 0, rate: 1.5, walk: true, sheep: 6, milk: 0.03, sab: 'burn', desc: 'A fenced flock. While a shepherd tends it every sheep gives milk and meat: food straight to your stores. Sheep are shorn in spring, and the wool waits for a Workshop; lambs come in spring (up to 12). Wolves take sheep.' },
   council:   { invest: 6, short: 'Council', name: 'War Council', fp: 3, hp: 600, h: 22, cost: { w: 200, s: 150, g: 50 }, t: 35, age: 2, sab: 'stall', desc: 'Where your generals plan. Research Engagement, then Battalions, then Formations, then in the Gunpowder age Muster.' },
-  tpost:     { nocap: 1, invest: 6, name: 'Trade post', fp: 2, hp: 300, h: 20, cost: { w: 100, s: 30 }, t: 20, age: 1, atStop: true, sight: 140, dmg: 5, rng: 120, cd: 1.6, sab: 'burn', desc: 'Built on a trade stop once its guards are gone. You own the stop: a cut of everyone else\'s sales there, 20% for one stop of its route up to 40% for all four; all four of a route also pay gold every second. Up to 12 soldiers can garrison it.' },
+  tpost:     { nocap: 1, invest: 6, name: 'Trade post', fp: 2, hp: 300, h: 20, cost: { w: 100, s: 30 }, t: 20, age: 1, atStop: true, sight: 140, dmg: 5, rng: 120, cd: 1.6, sab: 'burn', desc: 'Built on a trade stop once its guards are gone. You own the stop: a cut of the sales of everyone else there, 20% for one stop of its route up to 40% for all four; all four of a route also pay gold every second. Up to 12 soldiers can garrison it.' },
   // Workshops turn what is in store into something else; one villager works each. makes: what it can make, from what, how fast; the card picks which.
   workshop:  { name: 'Workshop', fp: 3, hp: 250, h: 16, cost: { w: 120, s: 30 }, t: 20, age: 1, crop: 'cloth', makes: { cloth: { from: { wool: 2 }, rate: 0.12 }, beer: { from: { f: 3 }, rate: 0.15 } }, drop: ['wool'], sab: 'burn', wood: true, desc: 'Spins and weaves wool into cloth (2 wool make 1), or brews ale from your grain (3 food make 1 beer): goods to trade. One villager works it; the card picks what it makes.' },
   mint:      { cap: [0, 0, 0, 1, 1], invest: 6, name: 'Mint', fp: 3, hp: 500, h: 22, cost: { s: 300, g: 200 }, t: 45, age: 3, crop: 'gold', makes: { gold: { from: { s: 3 }, rate: 0.2 } }, fx: [{ s: 'gather', k: 'gold', m: 1.15 }], sab: 'stall', desc: 'Strikes coin from the silver in your stone: 3 stone make 1 gold, and gold gathered pays 15% more. Or debase the coin, once: a heap of gold now, and dearer prices at your Market for the rest of the game.' },
   foundry:   { cap: [0, 0, 0, 1, 2], name: 'Foundry', fp: 3, hp: 500, h: 24, cost: { s: 250, w: 150 }, t: 40, age: 3, crop: 'iron', makes: { iron: { from: { w: 3 }, rate: 0.2 } }, sab: 'stall', desc: 'Smelts iron from bog ore with charcoal: 3 wood make 1 iron. One villager works it. Iron in-house, without a vein.' },
   quarry:    { cap: [0, 0, 2, 3, 3], name: 'Quarry', fp: 3, slots: 2, hp: 150, h: 1, cost: { w: 80 }, t: 15, age: 2, crop: 'stone', rate: 0.45, walk: true, sab: 'burn', desc: 'Cut stone from the bedrock, anywhere: two villagers work it, slower than a quarry face in the hills, but it never runs out.' },
-  throne:    { nocap: 1, name: 'Throne', fp: 6, hp: 3600, h: 56, sight: 260, dmg: 8, rng: 180, cd: 1.5, shelter: 12, drop: [], desc: 'The old citadel in the middle of the world. Whoever holds it takes a tithe of everyone else\'s gathering and climbs the score; hold it long enough and the game is won. It is taken, not broken: break it down and it is yours at a third of its strength.' },
-  wonder:    { name: 'Wonder', fp: 6, hp: 4000, h: 60, cost: { f: 1500, w: 1500, s: 1500, g: 1500 }, t: 240, age: 2, one: true, desc: 'Your civilisation\'s great work. When it is finished every side is told, and if it still stands 8 minutes later, you win.' },
+  throne:    { nocap: 1, name: 'Throne', fp: 6, hp: 3600, h: 56, sight: 260, dmg: 8, rng: 180, cd: 1.5, shelter: 12, drop: [], desc: 'The old citadel in the middle of the world. Whoever holds it takes a tithe of the gathering of everyone else and climbs the score; hold it long enough and the game is won. It is taken, not broken: break it down and it is yours at a third of its strength.' },
+  wonder:    { name: 'Wonder', fp: 6, hp: 4000, h: 60, cost: { f: 1500, w: 1500, s: 1500, g: 1500 }, t: 240, age: 2, one: true, desc: 'The great work of your civilisation. When it is finished every side is told, and if it still stands 8 minutes later, you win.' },
 };
 const WONDER_HOLD = 480;
 const QUEUE = 5;   // orders a building holds in its line, before Written records and Guilds
@@ -267,7 +267,6 @@ const TECH = [
   { id: 'drillyard', name: 'Drill yard', at: 'barracks', line: 'Levy', age: 2, w: 4, when: '300 BC', cost: { f: 150, g: 100 }, t: 35, fx: [{ s: 'armyroom', a: 2 }], desc: 'Room for 2 more soldiers.' },
   { id: 'veterans', name: 'Veterans', at: 'barracks', line: 'Levy', age: 2, w: 6, when: '100 BC', cost: { f: 180, g: 120 }, t: 41, fx: [{ s: 'teach', a: 1 }], need: ['writing'], desc: 'Soldiers can be taught up to a newer kind.' },
   { id: 'feudal', name: 'Feudal levy', at: 'barracks', line: 'Levy', age: 3, w: 4, when: '900s', cost: { f: 240, g: 160 }, t: 48, fx: [{ s: 'cost', k: '#infantry', m: 0.9 }], desc: 'Infantry cost 10% less.' },
-  { id: 'muster', name: 'Muster', at: 'council', line: 'Command', age: 4, w: 6, when: '1600s', cost: { f: 430, g: 290 }, t: 71, fx: [], desc: 'Set formations for whole battalions.' },
   { id: 'slings', name: 'Slings', at: 'range', line: 'Shot', age: 1, w: 3, when: '7000 BC', cost: { w: 80, g: 50 }, t: 24, fx: [{ s: 'dmg', k: 'jav', a: 1 }], desc: 'Javelineers hit harder.' },
   { id: 'composite', name: 'Composite bow', at: 'range', line: 'Shot', age: 1, w: 7, when: '2000 BC', cost: { w: 120, g: 80 }, t: 32, fx: [{ s: 'rng', k: '#archer', a: 15 }], desc: 'Archers reach farther.' },
   { id: 'bodkin', name: 'Bodkin points', at: 'range', line: 'Shot', age: 2, w: 4, when: '1000s', cost: { w: 150, g: 100 }, t: 35, fx: [{ s: 'dmg', k: '#archer', a: 1 }], need: ['iron'], desc: 'Archers hit harder.' },
@@ -360,6 +359,7 @@ const TECH = [
   { id: 'formations', name: 'Formations', at: 'council', line: 'Command', age: 2, w: 5, when: '300 BC', cost: { f: 170, g: 110 }, t: 38, fx: [], need: ['command'], desc: 'Set the shape of a battalion.' },
   { id: 'standards', name: 'Standards', at: 'council', line: 'Command', age: 3, w: 5, when: '100 BC', cost: { f: 260, g: 180 }, t: 52, fx: [{ s: 'rest', m: 1.5 }], desc: 'Resting soldiers recover nerve 50% faster.' },
   { id: 'supply', name: 'Supply trains', at: 'council', line: 'Command', age: 3, w: 5, when: '1200s', cost: { f: 260, g: 180 }, t: 52, fx: [{ s: 'rest', m: 1.2 }], desc: 'Resting soldiers recover nerve 20% faster.' },
+  { id: 'muster', name: 'Muster', at: 'council', line: 'Command', age: 4, w: 6, when: '1600s', cost: { f: 430, g: 290 }, t: 71, fx: [], desc: 'Set formations for whole battalions.' },
   { id: 'staff', name: 'General staff', at: 'council', line: 'Command', age: 4, w: 6, when: '1630s', cost: { f: 430, g: 290 }, t: 71, fx: [{ s: 'charge', m: 1.2 }], need: ['muster'], desc: 'Charges hit 20% harder.' },
   { id: 'weights', name: 'Weights and measures', at: 'market', line: 'Trade', age: 1, w: 5, when: '3000 BC', cost: { g: 100, s: 70 }, t: 28, fx: [{ s: 'sell', a: 0.05 }], desc: 'Goods sell 5% dearer.' },
   { id: 'coinage', name: 'Coinage', at: 'market', line: 'Trade', age: 2, w: 8, when: '600 BC', cost: { g: 220, s: 150 }, t: 47, fx: [{ s: 'sell', a: 0.1 }], desc: 'Goods sell 10% dearer.' },
@@ -383,8 +383,8 @@ const TECH = [
   { id: 'dies', name: 'Engraved dies', at: 'mint', line: 'Coin', age: 3, w: 4, when: '500 BC', cost: { g: 240, i: 160 }, t: 48, fx: [{ s: 'make', k: 'gold', m: 1.2 }], desc: 'The Mint makes 20% more.' },
   { id: 'assay', name: 'Assaying', at: 'mint', line: 'Coin', age: 4, w: 5, when: '1200s', cost: { g: 390, i: 260 }, t: 66, fx: [{ s: 'make', k: 'gold', m: 1.5 }], desc: 'The Mint makes 50% more.' },
   { id: 'milled', name: 'Milled coin', at: 'mint', line: 'Coin', age: 4, w: 5, when: '1550s', cost: { g: 390, i: 260 }, t: 66, fx: [{ s: 'sell', a: 0.05 }], need: ['assay'], desc: 'Goods sell 5% dearer.' },
-  { id: 'castiron', name: 'Cast iron', at: 'foundry', line: 'Furnace', age: 3, w: 6, when: '500 BC', cost: { w: 290, s: 190 }, t: 56, fx: [{ s: 'make', k: 'iron', m: 1.15 }], need: ['bellows'], desc: 'Foundries make 15% more iron.' },
   { id: 'bellows', name: 'Water bellows', at: 'foundry', line: 'Furnace', age: 3, w: 6, when: '31 AD', cost: { w: 290, s: 190 }, t: 56, fx: [{ s: 'make', k: 'iron', m: 1.2 }], desc: 'Foundries make 20% more iron.' },
+  { id: 'castiron', name: 'Cast iron', at: 'foundry', line: 'Furnace', age: 3, w: 6, when: '500 BC', cost: { w: 290, s: 190 }, t: 56, fx: [{ s: 'make', k: 'iron', m: 1.15 }], desc: 'Foundries make 15% more iron.' },
   { id: 'blast', name: 'Blast furnace', at: 'foundry', line: 'Furnace', age: 4, w: 8, when: '1300s', cost: { w: 510, s: 340 }, t: 82, fx: [{ s: 'make', k: 'iron', m: 1.5 }], need: ['castiron'], desc: 'Foundries make 50% more iron.' },
   { id: 'finery', name: 'Finery forge', at: 'foundry', line: 'Furnace', age: 4, w: 5, when: '1400s', cost: { w: 390, s: 260 }, t: 66, fx: [{ s: 'make', k: 'iron', m: 1.15 }], need: ['blast'], desc: 'Foundries make 15% more iron.' },
   { id: 'cleanwater', name: 'Clean water', at: 'aqueduct', line: 'Water', age: 2, w: 7, when: '312 BC', cost: { s: 200, g: 130 }, t: 44, fx: [{ s: 'sick', m: 0.5 }], desc: 'Sickness strikes half as often.' },
@@ -417,7 +417,7 @@ Object.assign(UNIT, {
   immortal: { ...UNIT.sword,   name: 'Immortal', civ: 'persian', replaces: 'sword', hp: 75, vs: { infantry: 1.5, mounted: 1.6, siege: 2 }, look: 'immortal', desc: 'Elite guard with spear, bow and wicker shield. Beats foot soldiers and holds against horse.' },
   mongolha: { ...UNIT.harcher, name: 'Mongol horse archer', civ: 'mongol', replaces: 'harcher', rng: 90, spd: 40, look: 'harcher', desc: 'Shoots farther and rides faster than any other horse archer.' },
   mauryael: { ...UNIT.elephant, name: 'Maurya war elephant', civ: 'maurya', replaces: 'elephant', hp: 320, look: 'elephant', desc: 'The royal elephant corps: a quarter tougher than any other war elephant.' },
-  malihorse:{ ...UNIT.cata,    name: 'Mali horseman', civ: 'mali', replaces: 'cata', hp: 135, spd: 38, look: 'malihorse', desc: 'Mali\'s standing cavalry, with lance and bow: tougher and quicker than a cataphract.' },
+  malihorse:{ ...UNIT.cata,    name: 'Mali horseman', civ: 'mali', replaces: 'cata', hp: 135, spd: 38, look: 'malihorse', desc: 'The standing cavalry of Mali, with lance and bow: tougher and quicker than a cataphract.' },
 });
 const ARMYK = Object.keys(UNIT).filter(k => UNIT[k].cls === 'army'), SOLDIERK = Object.keys(UNIT).filter(k => UNIT[k].tick === 'sol');   // counted once every unit, the peoples' own included, is in the table
 
@@ -427,13 +427,13 @@ const FINDS = {
   chest:    { name: 'Treasure chest', guard: ['wolf', 'direwolf', 2], got: { f: 100, g: 150 }, desc: 'Someone buried this and never came back. Kill the guards, then touch it.' },
   ruins:    { name: 'Ruins', guard: ['bandit', 'goblin', 3], got: { g: 50 }, tech: true, desc: 'An old library in ruins, held by outlaws. Clear it and you find a scroll: one research of your age, free.' },
   cemetery: { name: 'Old cemetery', guard: ['robber', 'skeleton', 2], got: { g: 250 }, desc: 'Grave goods, and grave robbers already at work. Clear them and the gold is yours.' },
-  camp:     { name: 'Robbers\' camp', guard: ['robber', 'troll', 4], got: { f: 200, w: 200, g: 250 }, desc: 'Robbers who prey on caravans and villagers near the map edge. Break the camp and take its hoard.' },
+  camp:     { name: 'Robber camp', guard: ['robber', 'troll', 4], got: { f: 200, w: 200, g: 250 }, desc: 'Robbers who prey on caravans and villagers near the map edge. Break the camp and take its hoard.' },
   den:      { name: 'Bear den', guard: ['bear', 'bear', 1], got: { f: 60 }, desc: 'A bear and its stores. The meat is good too.' },
   stop:     { name: 'Trade stop', guard: ['bandit', 'goblin', 3], stop: true, desc: 'A stop on an old trade route. Caravans sell goods here and buy spice. Clear its guards and build a Trade post to own it.' },
-  shrine:   { name: 'Shrine', capture: 10, pay: 0.25, desc: 'The one holy site, at the foot of the Throne. Stand a priest by it for 10 s and it pays its keeper 15 gold a minute. Another side\'s priest can take it back.' },
+  shrine:   { name: 'Shrine', capture: 10, pay: 0.25, desc: 'The one holy site, at the foot of the Throne. Stand a priest by it for 10 s and it pays its keeper 15 gold a minute. A priest of another side can take it back.' },
   vagabonds:{ name: 'Vagabonds', hire: { cost: { g: 90 }, unit: 'spear', n: 3 }, desc: 'Three drifters will fight for whoever pays 90 gold. A unit of yours has to be within 80.' },
   mercs:    { name: 'Mercenaries', hire: { cost: { g: 240 }, unit: 'sword', n: 6 }, gone: 180, desc: 'A free company camped by the road: six swords for 240 gold, for three minutes, then they move on.' },
-  meteor:   { name: 'Fallen star', got: { i: 300, g: 100 }, desc: 'Iron from the sky. Before smelting, this was where iron came from; Tutankhamun\'s dagger was forged from it.' },
+  meteor:   { name: 'Fallen star', got: { i: 300, g: 100 }, desc: 'Iron from the sky. Before smelting, this was where iron came from; the dagger of Tutankhamun was forged from it.' },
 };
 const WAYFARER_EVERY = 240;
 // the Fortress posts a job: break one guarded find, first side to take it is paid
@@ -469,9 +469,9 @@ const SAB = { burn: 0.6, stall: 40 };
 const FLANK = 1.3;      // a blow from behind lands 30% harder
 // ───────────────────────── Combat you steer: nerve, flanks, charge and fall back, prisoners, conversion ─────────────────────────
 // Every soldier has nerve (0..1). Blows drain it by the share of health they take, times hit (a flank blow twice, a rear blow three times), being outnumbered drains it, losses beside it drain it;
-// quiet restores it, as do a wall or tower of its own, its Town Center, a priest, and Engagement at the War Council (a floor). At zero it routs:
+// quiet restores it, as do a wall or tower of its own, its Town Center, a priest, and Engagement at the War Council (a shorter rout). At zero it routs:
 // runs for home for a spell, takes more harm, and can be taken prisoner by any foe who lays a hand on it. Most real battles ended in a rout.
-const MORALE = { hit: 1.2, side: 2, rear: 3, kill: 0.04, loss: 0.03, odds: 0.02, rest: 0.03, shelter: 0.02, priest: 0.03, priestR: 120, floor: 0.2, rout: 8, routHit: 1.5, routSpd: 1.3, after: 0.35, capR: 10 };
+const MORALE = { hit: 1.2, side: 2, rear: 3, kill: 0.04, loss: 0.03, odds: 0.02, rest: 0.03, shelter: 0.02, priest: 0.03, priestR: 120, rout: 8, routHit: 1.5, routSpd: 1.3, after: 0.35, capR: 10 };
 const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 };   // a burst, then tired
 // The ground remembers the weather: rain leaves mud for days, frost leaves ice, a blizzard leaves snow. Each is 0..1 and shows on the map.
 // Research at the Library (Weather line), Stable (horseshoes), Barracks (cloaks) and Smithy (tempering, oiling) takes the edge off, never all of it at once.
@@ -514,7 +514,7 @@ const WEATHER = {
   clear:   { name: 'Clear' },
   rain:    { name: 'Rain',    spd: 0.8, rng: 0.85, fire: 0.5, text: 'Rain: marching is slower and bows reach less.' },
   drought: { name: 'Drought', crop: 0.7, fire: 2,           text: 'Drought: fields give 30% less and fires spread fast.' },
-  frost:   { name: 'Frost',   stone: 0.5,                    text: 'Frost: mortar will not set, stone buildings go up at half speed.' },
+  frost:   { name: 'Frost',   stone: 0.5,                    text: 'Frost: mortar will not set, stone builds at half speed.' },
   blizzard:{ name: 'Blizzard', spd: 0.6, sight: 0.35, gather: 0.5, fire: 0.3, text: 'Blizzard: a whiteout. Marches crawl, sight is gone, gathering halves.' },   // Harsh winters only
 };
 const WX_ODDS = { Spring: { rain: 0.45 }, Summer: { drought: 0.3, rain: 0.15 }, Autumn: { rain: 0.45 }, Winter: { frost: 0.6 } }, WX_EVERY = 60;
@@ -531,13 +531,13 @@ const HAZARDS = {
   quake:  { pts: 2, name: 'Earthquakes', desc: 'Tremors come every few minutes and hit harder: stone cracks, walls fall, wood catches fire.' },
   notips: { pts: 1, name: 'No tips', desc: 'The advisor is silent.' },
 };
-const HZK = Object.keys(HAZARDS), HZ_DEFAULT = { hard: 1, starve: 1 }, TODAY_HZ = { hard: 1, starve: 1, horde: 1, quake: 1 };   // a new game starts at level 5; Today's challenge is level 10 on the day's seed
+const HZK = Object.keys(HAZARDS), HZ_DEFAULT = { hard: 1, starve: 1 }, TODAY_HZ = { hard: 1, starve: 1, horde: 1, quake: 1 };   // a new game starts at level 5; The challenge today is level 10 on the day's seed
 const STARVE = { stop: 60, leave: 120, every: 30 }, HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 }, HORDE = { from: 1200, to: 2400, warn: SEASON_LEN * 2, n: 16, perAge: 6 }, QUAKE = { every: 240, r: 350, hit: 0.1, wall: 0.3, fire: 0.15 };
 // Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 19-events.
 const EV_GAP = [60, 180], EV_WARN = 12;
 const EVENTS = {
   eclipse:  { name: 'Eclipse',        secs: 20,  dmg: 0.6, spd: 0.7, sight: 0.7, harm: 1 },
-  storm:    { name: 'Thunderstorm',   secs: 40,  band: 260, strike: 2 },
+  storm:    { name: 'Thunderstorm',   secs: 40,  band: 260 },
   stampede: { name: 'Stampede',       secs: 30,  n: 10, harm: 1 },
   flood:    { name: 'Flood',          secs: 90,  rise: 40, hit: 0.02, harm: 1 },
   locusts:  { name: 'Locusts',        secs: 30,  r: 70, strip: 90, harm: 1 },
@@ -561,7 +561,7 @@ const EVK = Object.keys(EVENTS), NEWS_EVERY = 150;
 const ROUTES = [[[510, 1000], [680, 1000], [1320, 1000], [1490, 1000]], [[1000, 510], [1000, 680], [1000, 1320], [1000, 1490]]];
 const POST = { all: 2, cut: [0, 0.2, 0.25, 0.3, 0.4], safe: 120, guard: 12, far: 2.5, want: 1.5 };   // each route has four stops. all: gold a second to whoever holds all four of a route; cut: of other sides' sales at a stop, by how many of its route you hold; guard: soldiers per stop or caravan
 const HEALTH = { every: 60, risk: 0.06, sickFor: 60, spread: 0.08, death: 0.004, cure: 0.3, plague: 0.15, plagueCap: 0.1 };   // risk: the chance a minute that sickness breaks out
-const MKT_SELL = ['f', 'w', 's', 'i', ...WARES], MKT_BUY = ['f', 'w', 's', 'i', 'spice'];   // wool goes to a Weaver, not to market; spice is the only good not made here
+const MKT_SELL = ['f', 'w', 's', 'i', ...WARES], MKT_BUY = ['f', 'w', 's', 'i', 'spice'];   // wool goes to a Workshop, not to market; spice is the only good not made here
 const MKTK = [...GOODK, 'f', 'w', 's', 'i'];
 const RATE_OF = { bush: 0.9, fish: 0.8, tree: 0.75, stone: 0.55, gold: 0.6, iron: 0.5, meat: 1.2 };   // what a villager gathers a second from each kind of find (fields carry their own rate)
 

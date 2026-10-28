@@ -168,10 +168,10 @@ function musterGap(i) {   // what a battalion still lacks: its plan, less the me
 const BLD_PAGE = {
   castle: b => { const n = G.units.filter(u => u.owner === 0 && isSoldier(u) && u.hp < u.max && dist(u, b) < GARRISON.r).length; return `<p>Soldiers resting here heal ${GARRISON.heal * fxv(0, 'garrison').m} a second${n ? `: ${n} mending now` : ''}.</p>`; },
   school: b => { const n = schooling(0), S = ready(0, 'school').length; return `<p>Teaching ${n} of ${TEACH.seats * S} seats${fxv(0, 'teach').a < 1 ? ' · research Veterans at the Barracks to send soldiers' : ' · tap a soldier, then Teach'}.</p>`; },
-  farm: b => `<p>Worked by ${b.node && b.node.wk > 0 ? slotText(b.node) : 'nobody yet: tap Send a villager' + (b.node && b.node.type === 'food' ? ', or + under Food' : '')}. This season: ${season().name}, ×${season().farm}${G.harvest !== 1 ? ` · this year's harvest ×${G.harvest}` : ''}${WEATHER[G.wx].crop ? ` · ${WEATHER[G.wx].name.toLowerCase()} ×${WEATHER[G.wx].crop}` : ''} · soil ${Math.round((b.fert ?? 1) * 100)}%.</p>` + (b.node ? yieldText(b.node, 0) : ''),
+  farm: b => `<p>Worked by ${b.node && b.node.wk > 0 ? slotText(b.node) : 'nobody yet: tap Send a villager' + (b.node && b.node.type === 'food' ? ', or + under Food' : '')}. This season: ${season().name}, ×${season().farm}${G.harvest !== 1 ? ` · the harvest this year ×${G.harvest}` : ''}${WEATHER[G.wx].crop ? ` · ${WEATHER[G.wx].name.toLowerCase()} ×${WEATHER[G.wx].crop}` : ''} · soil ${Math.round((b.fert ?? 1) * 100)}%.</p>` + (b.node ? yieldText(b.node, 0) : ''),
   treefarm: b => `<p>Tended by ${b.node && b.node.wk > 0 ? slotText(b.node) : 'nobody yet: tap Send a villager, or + under Wood'}. ${Math.round(b.node ? b.node.amt : 0)} wood left, then the plot is cut out.</p>`,
   pasture: b => `<p>${b.sheep || 0} sheep: ${b.node && b.node.wk > 0 ? `milk and meat, about ${Math.round((b.sheep || 0) * BLD.pasture.milk * 60 * gatherMul(0, b.node))} food a minute` : 'nobody tends them: tap Send a villager'}. ${Math.floor(b.node ? b.node.amt : 0)} wool to bring in${ready(0, 'workshop').length ? '' : ' · <b>wool waits for a Workshop</b>'}. Shorn each spring, when lambs come too.</p>`,
-  throne: b => { const T = G.throne, mine = b.owner === 0; return `<p>${!T ? 'The Natives hold it. Regard opens its gate; siege breaks it.' : `${mine ? 'Yours' : G.P[T.owner].name + ' hold it'} since ${clock(T.since)}: ${clock(Math.max(0, throneHold() - (G.t - T.since)))} to ${mine ? 'win' : 'their win'}. A tithe of ${THRONE.tithe * 100}% of everyone else's gathering, ${THRONE.score} score a minute.`}</p>`; },
+  throne: b => { const T = G.throne, mine = b.owner === 0; return `<p>${!T ? 'The Natives hold it. Regard opens its gate; siege breaks it.' : `${mine ? 'Yours' : G.P[T.owner].name + ' hold it'} since ${clock(T.since)}: ${clock(Math.max(0, throneHold() - (G.t - T.since)))} to ${mine ? 'win' : 'their win'}. A tithe of ${THRONE.tithe * 100}% of the gathering of everyone else, ${THRONE.score} score a minute.`}</p>`; },
   tpost: b => { const f = G.finds.find(x => x.id === b.sid); return f ? `<p>Holds the stop at ${coord(f.x, f.y)}: tap the stop for prices and what it wants.</p>` : ''; },
   council: b => councilHTML(b),
   mint: () => G.P[0].debased ? `<p>The coin is debased: prices at your Market are ×${MINT.price}.</p>` : acts(btn('debase', 'Debase the coin', `+${MINT.debase} gold now · Market prices ×${MINT.price} for good`, 'warn'), 'c1'),
@@ -187,8 +187,9 @@ function slotsHTML(b) {
 function nativesHTML() {
   const o = 0, r = Math.round(regardOf(o)), rel = G.rel[0][WILD], P = (G.prisoners || []).filter(x => x.o === 0);
   let h = acts(`<div class="lbl"><b>Natives</b><small>regard ${r} · ${REL_WORD[rel].toLowerCase()}</small></div>` + NATIVE.gifts.map(a => btn(`gift:${WILD},${a}`, `Gift ${a}g`, giftWhy(0, a) ? giftWhy(0, a).replace(/\.$/, '') : `regard +${giftGain(0, a)}`, giftWhy(0, a) ? 'dis' : '')).join('') + btn(`rel:${WILD},ally`, 'Ally', rel === 'ally' ? '' : relWhy(0, WILD, 'ally') ? relWhy(0, WILD, 'ally').replace(/\.$/, '') : 'by emissary', rel === 'ally' ? 'on' : relWhy(0, WILD, 'ally') ? 'dis' : ''), 'c4');
+  h += acts(['peace', 'war'].map(w => btn(`rel:${WILD},${w}`, REL_WORD[w], rel === w ? '' : relWhy(0, WILD, w) ? relWhy(0, WILD, w).replace(/\.$/, '') : w === 'war' ? 'costs 20 regard, no notice' : 'the swords go up', rel === w ? 'on' : relWhy(0, WILD, w) ? 'dis' : w === 'war' ? 'warn' : '')).join(''), 'c4');
   if (P.length) h += sec('Your people held') + acts(P.map((x, i) => btn(`ransom:${i}`, `Ransom ${UNIT[x.kind].name.toLowerCase()}`, `${x.ransom}g · ${x.by === WILD ? 'Natives' : G.P[x.by].name} · ${clock(Math.max(0, x.t + PRISON.secs - G.t))}`, G.P[0].res.g >= x.ransom ? 'warn' : 'dis')).join(''), 'c2');
-  { const H = (G.prisoners || []).filter(x => x.by === 0); if (H.length) h += `<p><i>You hold ${H.length}:</i> ${H.map(x => `${G.P[x.o].name}' ${UNIT[x.kind].name.toLowerCase()}`).join(', ')}. Unransomed in ${PRISON.secs / 60} minutes, they serve you.</p>`; }
+  { const H = (G.prisoners || []).filter(x => x.by === 0); if (H.length) h += `<p><i>You hold ${H.length}:</i> ${H.map(x => `a ${UNIT[x.kind].name.toLowerCase()} of ${G.P[x.o].name}`).join(', ')}. Unransomed in ${PRISON.secs / 60} minutes, they serve you.</p>`; }
   return h;
 }
 function relHTML() {
@@ -205,7 +206,7 @@ function relHTML() {
 }
 // a workshop turns what is in store into goods: the same line for every one of them
 function workshopHTML(b) {
-  const p = G.P[0], n = b.node, B = BLD[b.kind], cur = b.cropT || B.crop, mk = B.makes[cur], [k, r] = Object.entries(mk.from)[0], kn = GOODS[k] ? GOODS[k].name.toLowerCase() : LONG[k], nm = t => GOODS[t] ? GOODS[t].name : RESOURCES[LONG[t]].name, keys = Object.keys(B.makes);
+  const p = G.P[0], n = b.node, B = BLD[b.kind], cur = b.cropT || B.crop, mk = B.makes[cur], [k, r] = Object.entries(mk.from)[0], kn = GOODS[k] ? GOODS[k].name.toLowerCase() : LONG[k], nm = t => GOODS[t] ? GOODS[t].name : (RESOURCES[t] || RESOURCES[LONG[t]]).name, keys = Object.keys(B.makes);
   return (keys.length > 1 ? acts(keys.map(t => btn(`make:${b.id},${t}`, nm(t), `${Object.entries(B.makes[t].from).map(([a, q]) => q + ' ' + (GOODS[a] ? GOODS[a].name.toLowerCase() : LONG[a])).join(', ')} make 1`, t === cur ? 'on' : '')).join(''), 'c2') : '')
     + `<p>In store: ${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${kn} (${r} make 1 ${nm(cur).toLowerCase()}, ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} a minute). Worked by ${n && n.wk > 0 ? (G.units.some(u => u.node === n && u.wait) ? 'a villager, waiting for ' + kn : 'a villager') : 'nobody yet: tap Send a villager'}.</p>`;
 }
@@ -262,7 +263,7 @@ function vassalHTML(P) {
 }
 function stopHTML(f) {
   const p = G.P[0], from = homeBiz(0, f) || keepOf(0), pt = postAt(f), mine = f.owner === 0, held = stopsHeld(mine ? 0 : f.owner, f.route);
-  let h = `<p>Route ${f.route === 0 ? 'west–east' : 'north–south'}. ${f.owner === null ? (pt ? 'A post is going up.' : 'Nobody holds it.') : mine ? `Yours: ${Math.round(POST.cut[held] * 100)}% of everyone else's sales here (you hold ${held} of this route's 4${held === 4 ? `, so it pays ${Math.round(POST.all * 60)} gold a minute` : ''}).` : `Held by ${G.P[f.owner].name}: they take ${Math.round(POST.cut[held] * 100)}% of your sales here.`} Wants <b>${GOODS[f.want].name.toLowerCase()}</b> (×${POST.want}).</p>`;
+  let h = `<p>Route ${f.route === 0 ? 'west–east' : 'north–south'}. ${f.owner === null ? (pt ? 'A post is going up.' : 'Nobody holds it.') : mine ? `Yours: ${Math.round(POST.cut[held] * 100)}% of the sales of everyone else here (you hold ${held} of this route's 4${held === 4 ? `, so it pays ${Math.round(POST.all * 60)} gold a minute` : ''}).` : `Held by ${G.P[f.owner].name}: they take ${Math.round(POST.cut[held] * 100)}% of your sales here.`} Wants <b>${GOODS[f.want].name.toLowerCase()}</b> (×${POST.want}).</p>`;
   h += `<p><i>Paid here, per good from your ${homeBiz(0, f) ? 'Market' : 'Town Center'}:</i> ${WARES.filter(k => k !== 'spice').map(k => `${GOODS[k].name} ${Math.round(priceAt(0, k, f, from))}g`).join(' · ')}. Spice costs ${GOODS.spice.buy}g here.</p>`;
   if (!pt && !guardsLeft(f)) h += acts(btn(`tpost:${f.id}`, 'Build a Trade post', p.age < 1 ? 'Bronze age' : costText(BLD.tpost.cost), p.age < 1 || !afford(p, BLD.tpost.cost) ? 'dis' : 'go'), 'c1');
   if (mine) { const sl = f.sell || {}; h += guardRow('f', f.id) + acts(btn(`want:${f.id}`, `Wanted: ${GOODS[f.want].name.toLowerCase()}`, 'yours: tap to change what it buys dear'), 'c1')
@@ -272,7 +273,7 @@ function stopHTML(f) {
 }
 function caravanHTML(u) {
   const r = u.route, t = targetOf(r), h0 = homeBiz(0, u), d = !r && u.dest ? G.blds.find(b => b.id === u.dest) : null;
-  let h = `<p>${r && t ? `Lane one: to the trade stop at ${coord(t.x, t.y)}${r.rep ? ', again and again' : ''}. ${u.leg === 'go' ? 'Carrying ' + (goodsText(u.goods || {}) || 'nothing') : u.leg === 'back' ? 'Coming home' + (u.goods && u.goods.spice ? ' with ' + u.goods.spice + ' spice' : '') : 'Loading'}.` : d && d.owner !== 0 ? `Lane two: to ${G.P[d.owner].name}' ${bldName(d.owner, d.kind).toLowerCase()}, ${u.cargo} gold on arrival.` : allyMarket(0, u) ? 'Lane two: on its way to trade with your ally.' : 'No route, and no ally to trade with: it waits at your Market.'}</p>`;
+  let h = `<p>${r && t ? `Lane one: to the trade stop at ${coord(t.x, t.y)}${r.rep ? ', again and again' : ''}. ${u.leg === 'go' ? 'Carrying ' + (goodsText(u.goods || {}) || 'nothing') : u.leg === 'back' ? 'Coming home' + (u.goods && u.goods.spice ? ' with ' + u.goods.spice + ' spice' : '') : 'Loading'}.` : d && d.owner !== 0 ? `Lane two: to the ${bldName(d.owner, d.kind).toLowerCase()} of ${G.P[d.owner].name}, ${u.cargo} gold on arrival.` : allyMarket(0, u) ? 'Lane two: on its way to trade with your ally.' : 'No route, and no ally to trade with: it waits at your Market.'}</p>`;
   h += guardRow('c', u.id);
   if (!h0) return h + '<p>Build a Market (Trade) to send goods to the trade stops.</p>';
   const T = tradeTargets(0).map(t => [t, estPay(0, t, h0)]).sort((a, b) => b[1] - a[1]).slice(0, 4);
@@ -285,10 +286,8 @@ function researchHTML() {   // everything you can research, across every buildin
   for (const t of TECH) { if (!ownTech(t) || !isNext(0, t)) continue; const s = techState(t); if (s !== 'done') by[s].push(t); }
   const grid = L => acts(L.map(t => techBtn(t, true)).join('')), ageR = ageA && !p.aging && afford(p, ageA.cost) && keepOf(0);
   let h = title('Research', `${by.ready.length + (ageR ? 1 : 0)} ready now`);
-  const cap = by.ready.filter(t => t.cap), rest = by.ready.filter(t => !t.cap);
   if (ageR) h += sec('Next age') + acts(keepAgeBtn());
-  if (cap.length) h += sec('Room to grow') + grid(cap);
-  if (rest.length) h += sec('Ready') + grid(rest);
+  if (by.ready.length) h += sec('Ready') + grid(by.ready);
   if (!by.ready.length && !ageR) h += `<p>Nothing to start right now.</p>`;
   if (by.busy.length) h += sec('Under way') + grid(by.busy);
   if (by.short.length) h += sec('Short of something') + grid(by.short);
@@ -343,7 +342,7 @@ const CARDS = {
     else if (!mine && b.kind === 'keep' && G.rel[0][b.owner] === 'ally') { const why = overlordWhy(0, b.owner); h += acts(btn(`overlord:${b.owner}`, 'Offer overlordship', why ? why.replace(/\.$/, '') : 'they become your vassal at a light tax', why ? 'dis' : 'go'), 'c1'); }
     else if (!mine && atWar(0, b.owner)) {
       const I = G.intel[b.owner], spies = unitsOf(0, 'spy').length;
-      if (I) h += `<p><b>A spy's report</b> (${clock(G.t - I.t)} ago): ${costText(I.res)} in store · ${AGES[I.age].name} age · ${I.techs} researched · ${Object.entries(I.army).map(([k, n]) => n + ' ' + stats(b.owner, k).name.toLowerCase()).join(', ') || 'no army'}.</p>`;
+      if (I) h += `<p><b>Report of a spy</b> (${clock(G.t - I.t)} ago): ${costText(I.res)} in store · ${AGES[I.age].name} age · ${I.techs} researched · ${Object.entries(I.army).map(([k, n]) => n + ' ' + stats(b.owner, k).name.toLowerCase()).join(', ') || 'no army'}.</p>`;
       if (b.kind === 'keep') { const why = surrenderWhy(0, b.owner); h += acts(btn(`surrender:${b.owner}`, 'Demand surrender', why ? why.replace(/\.$/, '') : 'they become your vassal and pay tax', why ? 'dis' : 'go'), 'c1'); }
       h += acts(btn(`sab:${b.id}`, 'Sabotage', !B.sab ? 'too well guarded' : !spies ? 'needs a spy: Build → Courthouse' : guarded(b) ? 'defended: the spy would be shot' : 'a spy goes and is used up', B.sab && spies ? 'warn' : 'dis'), 'c1') + qsHTML(`qatk:${b.id}`, 'Attack with', b);
     }
@@ -396,7 +395,7 @@ const CARDS = {
   stores() {   // what you hold, what came in over the last minute, and who is on it
     const p = G.P[0], V = unitsOf(0, 'vil'), el = (G.tick % 1800) / 30, rt = p.rate && Object.keys(p.rate).length ? p.rate : Object.fromEntries(Object.entries(p.flow || {}).map(([k, v]) => [k, v * 60 / Math.max(10, el)]));   // the last full minute; before there is one, the pace so far
     let h = title('Stores', 'the last minute') + `<table><tr><th></th><th>Have</th><th>In</th><th>Out</th><th>On it</th></tr>${RES.map(r => { const k = KEY[r]; return `<tr><td>${RESOURCES[r].name}</td><td>${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${r === 'food' ? '−' + Math.round(p.eats || 0) : ''}</td><td>${V.filter(u => u.job === r).length}</td></tr>`; }).join('')}</table>`;
-    h += `<p><i>Goods:</i> ${GOODK.map(k => `${GOODS[k].name} ${Math.floor(p.goods[k] || 0)}${rt[k] ? ` (+${Math.round(rt[k])})` : ''}`).join(' · ')}. Goods wait in your Business Center for caravans; wool for a Weaver.</p>`;
+    h += `<p><i>Goods:</i> ${GOODK.map(k => `${GOODS[k].name} ${Math.floor(p.goods[k] || 0)}${rt[k] ? ` (+${Math.round(rt[k])})` : ''}`).join(' · ')}. Goods wait at your Market for caravans; wool for a Workshop.</p>`;
     return h + `<p>In: gathered and brought home in the last minute. Out: what your people eat a minute${p.hungry ? ' · <b>they are hungry</b>' : ''}.</p>`;
   },
   fault: () => title('Something went wrong', 'your game is saved') + `<p>Restart to carry on from the save.</p>` + acts(btn('reload', 'Restart', 'from the save', 'go') + btn('close', 'Carry on', 'as it is')),
@@ -406,7 +405,7 @@ const CARDS = {
     let h = title('A new game', 'pick your people') + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, UNIT[CIVS[k].uu].name, SET.civ === k ? 'on' : '')).join(''), 'c3');
     h += `<p><i>${C.name}:</i> ${C.bonus} Unique soldier: ${UNIT[C.uu].name} (in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}). Wonder: ${C.wonder}.</p>` + fold('why', 'Why?', `<p>${WHY['bonus:' + SET.civ]}</p>`);
     if (staleSave) h += `<p class="dim">Your last game came from an older version (${staleSave}) and cannot be opened. It is kept aside, not deleted.</p>`;
-    return h + acts(btn('fresh', 'Start', `${C.name} · ${MODES[SET.mode].name} · ${SET.fantasy ? 'fantasy' : 'real world'} · ${SET.diff} · level ${levelOf(SET.hz || HZ_DEFAULT)}`, 'go') + btn('today', "Today's challenge", `level ${levelOf(TODAY_HZ)} on today's map, for everyone`), 'c1') + hazardsHTML() + fold('settings', 'Game settings', settingsHTML()) + fold('about', 'About', `<p>The other three sides take three of the other civilisations at random. Every civilisation has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`);
+    return h + acts(btn('fresh', 'Start', `${C.name} · ${MODES[SET.mode].name} · ${SET.fantasy ? 'fantasy' : 'real world'} · ${SET.diff} · level ${levelOf(SET.hz || HZ_DEFAULT)}`, 'go') + btn('today', 'The challenge today', `level ${levelOf(TODAY_HZ)} on the map of the day, for everyone`), 'c1') + hazardsHTML() + fold('settings', 'Game settings', settingsHTML()) + fold('about', 'About', `<p>The other three sides take three of the other civilisations at random. Every civilisation has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`);
   },
   node(c) {
     const n = G.nodes.find(x => x.id === c.id); if (!n) return null;
@@ -459,7 +458,7 @@ const CARDS = {
     const row = (k, name, v) => acts(btn(`vol:${k},-`, '−', '') + `<div class="lvl"><b>${name}</b><small>${Math.round(v * 100)}%</small></div>` + btn(`vol:${k},+`, '+', ''), 'c3');
     return `<h3>Sound</h3>` + acts(btn('sound', 'Sound', SND.on ? 'on' : 'off', SND.on ? 'on' : '') + btn('vibe', 'Vibration', SET.vibe ? 'on' : 'off', SET.vibe ? 'on' : ''))
       + row('all', 'All', SND.vol) + row('fx', 'Effects', SET.mix.fx) + row('amb', 'Ambience', SET.mix.amb) + row('alert', 'Alerts', SET.mix.alert)
-      + `<p>Effects: work and battle. Ambience: birds, wind, crickets, thunder. Alerts: horn, ready, done, a new age. Your phone's silent switch mutes the game.</p>`;
+      + `<p>Effects: work and battle. Ambience: birds, wind, crickets, thunder. Alerts: horn, ready, done, a new age. The silent switch of your phone mutes the game.</p>`;
   },
   help() {
     return title('How to play', `build ${BUILD}`) + acts(btn('guide:bld', 'Guide', 'what leads to what, and why', 'go') + btn('guide:rule', 'Rules', 'what triggers what'))

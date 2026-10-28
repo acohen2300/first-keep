@@ -414,7 +414,7 @@ function drawMini() {
     else if (!BLD[b.kind].trap) { const s = BLD[b.kind].wallish ? 2 : BLD[b.kind].fp >= 5 ? 5 : 3.5; m.fillRect(x - s / 2, y - s / 2, s, s); }
   }
   if (G.wx === 'blizzard') { m.fillStyle = 'rgba(235,240,245,.92)'; m.fillRect(0, 0, 172, 172); return; }   // a whiteout: the small map shows nothing
-  for (const u of G.units) if (u.owner !== WILD ? visibleTo0(u) : !UNIT[u.kind].flee && !UNIT[u.kind].passive) { m.fillStyle = G.P[u.owner].color; m.fillRect(u.x * k - 1, u.y * k - 1, 2, 2); }
+  for (const u of G.units) if (u.owner !== WILD ? visibleTo0(u) : !UNIT[u.kind].flee && !UNIT[u.kind].passive && (!SET.fog || seen0(u))) { m.fillStyle = G.P[u.owner].color; m.fillRect(u.x * k - 1, u.y * k - 1, 2, 2); }
   if (G.mirage && G.mirage.until > G.t) { m.fillStyle = '#de5a44'; for (let i = 0; i < G.mirage.n; i++) m.fillRect((G.mirage.x + (i % 4) * 14 - 20) * k - 1, (G.mirage.y + Math.floor(i / 4) * 14 - 14) * k - 1, 2, 2); }   // the mirage
   const a = toWorld(0, 0), b = toWorld(cw, ch);
   m.strokeStyle = '#fff'; m.lineWidth = 1.5; m.strokeRect(a.x * k, a.y * k, (b.x - a.x) * k, (b.y - a.y) * k);

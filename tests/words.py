@@ -86,4 +86,10 @@ if __name__ == '__main__':
     M = messages()
     if '--list' in sys.argv: print(json.dumps(sorted({t for _, _, t in M}))); sys.exit(0)
     bad = [f'{len(t.split())} words {f}:{n} {t[:90]}' for f, n, t in M if len(t.split()) > LIMIT]
+    # Albert's rule (Build 40): no apostrophes in the game's words. An escaped apostrophe in any string, or a possessive inside a template, fails.
+    import glob
+    for f in sorted(glob.glob('src/*.js')):
+        for n, line in enumerate(open(f), 1):
+            code = line.split('   //')[0]
+            if "\\'" in code or re.search(r"[}a-z]'s? [a-z]", code.split('//')[0] if code.lstrip().startswith('//') is False and '`' in code else ''): bad.append(f'apostrophe {f}:{n} {code.strip()[:90]}')
     print('\n'.join(bad) if bad else f'words ok ({len(M)} messages)'); sys.exit(1 if bad else 0)

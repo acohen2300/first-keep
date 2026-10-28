@@ -127,7 +127,7 @@ function declareWar(a, b, why) {
   const wasAlly = G.rel[a][b] === 'ally';
   G.rel[a][b] = G.rel[b][a] = 'war'; G.navDirty = true; delete G.warAt[a + ',' + b]; delete G.warAt[b + ',' + a];
   if (G.P[a].ally === b) G.P[a].ally = null; if (G.P[b].ally === a) G.P[b].ally = null;
-  if (a === 0 || b === 0) say(`${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken. ' : ''}war, ${why}.`, 'warn', 6);
+  if (a === 0 || b === 0) say(`${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken; ' : ''}war, ${why}.`, 'warn', 6);
   else say(`${G.P[a].name} and ${G.P[b].name} are now at war.`, '', 5);
 }
 function makePeace(a, b) { G.rel[a][b] = G.rel[b][a] = 'peace'; G.navDirty = true; if (G.P[a].ally === b) G.P[a].ally = null; if (G.P[b].ally === a) G.P[b].ally = null; for (const u of G.units) if ((u.owner === a && u.state === 'attack' && u.target === b) || (u.owner === b && u.state === 'attack' && u.target === a)) u.state = 'home'; }
@@ -142,7 +142,7 @@ function relWhy(o, q, want) {
   if (Q.lord === o && !Q.rebel) return 'Your vassal: see their card.';
   if (p.lord === q && !p.rebel) return 'Your overlord.';
   if (want === rel) return 'Already.';
-  if (q === WILD && want === 'peace') return 'Their regard decides.';   // the Natives: peace comes from regard, alliance by emissary when regard is high
+  if (q === WILD && want === 'peace') return regardOf(o) < NATIVE.peaceAt ? `Needs regard ${NATIVE.peaceAt}.` : null;   // the Natives: peace needs regard; alliance by emissary when regard is high; war is yours to declare
   if (q === WILD && want === 'ally' && regardOf(o) < NATIVE.allyAt) return `Needs regard ${NATIVE.allyAt}.`;
   if (want === 'war') return noticeLeft(o, q) ? `Notice given: ${noticeLeft(o, q)} s.` : null;
   if (want === 'ally' && rel === 'war') return 'Make peace first.';
@@ -154,7 +154,8 @@ function relWhy(o, q, want) {
 function setRel(o, q, want) {
   if (relWhy(o, q, want)) return false;
   const rel = G.rel[o][q];
-  if (q === WILD && want === 'war') { makePeace(o, q); G.rel[o][q] = G.rel[q][o] = 'war'; G.navDirty = true; natRegard(o, -20); return true; }   // turning on the Natives costs regard, and needs no notice: they are not a court
+  if (q === WILD && want === 'war') { makePeace(o, q); G.rel[o][q] = G.rel[q][o] = 'war'; natState().warBy[o] = true; G.navDirty = true; natRegard(o, -20); return true; }   // turning on the Natives costs regard, and needs no notice: they are not a court; it holds until you make peace
+  if (q === WILD && want === 'peace') { natState().warBy[o] = false; makePeace(o, q); return true; }
   if (want === 'war') { if (rel === 'ally') makePeace(o, q); G.warAt[o + ',' + q] = G.t + NOTICE; if (o === 0 || q === 0) say(`${G.P[o === 0 ? q : o].name}: hostile in ${NOTICE} s${o === 0 ? ' (notice given)' : ''}.`, 'warn', 6); return true; }
   delete G.warAt[o + ',' + q];   // a side that was giving notice has thought again
   if (want === 'peace' && rel === 'ally') { makePeace(o, q); if (q === 0) say(`${G.P[o].name} ended the alliance.`, 'warn', 6); return true; }
@@ -175,6 +176,7 @@ function judgeEnvoy(to, from, envoy) {
   const T = G.P[to], ask = envoy.ask || 'ally';
   if (G.rel[to][from] === 'war' && ask !== 'peace') { envoy.hp = 0; if (from === 0) say(`The ${T.name} killed your emissary.`, 'warn', 6); return; }
   if (to === WILD) return judgeNatives(from, envoy, ask);
+  if (to === 0) { envoy.state = 'return'; say(`${G.P[from].name} offer ${ask === 'peace' ? 'peace' : 'an alliance'}: answer at your Town Center.`, 'soft', 8); return; }   // the player answers for themselves, on the Relations side
   const busy = G.P.some(q => q.alive && q.id !== WILD && q.id !== from && atWar(to, q.id));   // another war on their hands
   if (ask === 'peace') {
     if (G.rel[to][from] !== 'war') { reply(from, envoy, `The ${T.name} are already at peace with you.`); return; }
@@ -193,7 +195,7 @@ function sendHelp(f, pt, tell) {
   const mine = soldiersOf(f).filter(u => u.state === 'home'), keep = Math.ceil(mine.length * 0.5), go = mine.slice(keep);
   if (!go.length || !pt) return false;
   go.forEach(u => { u.state = 'assist'; u.px = pt.x; u.py = pt.y; u.idleT = 0; });
-  if (tell) say(`${G.P[f].name} send ${go.length} soldiers to help.`, 'good', 5);
+  if (tell) say(`${G.P[f].name} send ${some(go.length, 'soldier')} to help.`, 'good', 5);
   return true;
 }
 // an ally twice your strength may be offered overlordship: they become your vassal at a light tax
@@ -228,7 +230,7 @@ function levy(L, q, n) {   // their soldiers march under your colours until rele
   if (levyWhy(L, q, n)) return false;
   const home = soldiersOf(q).filter(u => u.state === 'home').slice(0, n), k = keepOf(L);
   for (const u of home) { u.owner = L; u.levy = q; u.state = 'goto'; u.px = k ? k.x : u.x; u.py = k ? k.y : u.y; u.idleT = 0; u.hb = undefined; u.bn = G.sel !== 'all' && L === 0 ? G.sel : undefined; }
-  if (L === 0) { say(`${home.length} of ${G.P[q].name}' soldiers march to you.`, 'good', 5); march(home, k || home[0], 'your town'); }
+  if (L === 0) { say(`${home.length} soldiers of ${G.P[q].name} march to you.`, 'good', 5); march(home, k || home[0], 'your town'); }
   return true;
 }
 function releaseLevy(u) { const q = u.levy; u.levy = undefined; u.owner = q; u.state = 'home'; u.bn = undefined; u.ord = undefined; u.focus = null; u.tgt = null; }
@@ -249,6 +251,7 @@ function fallBack(o, S, bn) {   // withdraw in order toward home: fewer losses t
 }
 // Prisoners: a runner touched by a foe, or a man netted by the Natives. The owner may ransom them back; unransomed, they serve the captor.
 function takePrisoner(by, v) {
+  if (v.owner === WILD) { v.hp = 0; v.gone = true; return; }   // the wild are not ransomed: a netted robber or warrior is simply gone
   const ransom = Math.round(Math.max(40, sumCost(UNIT[v.kind].cost || { f: 40 }) * PRISON.ransom));
   (G.prisoners = G.prisoners || []).push({ o: v.owner, by, kind: v.kind, t: G.t, ransom }); v.hp = 0; v.gone = true;
   if (v.owner === 0) say(`${by === WILD ? 'Netted' : G.P[by].name + ' took a prisoner'}: your ${UNIT[v.kind].name.toLowerCase()}. Ransom ${ransom}g.`, 'warn', 7, v);

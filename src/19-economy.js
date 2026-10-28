@@ -280,7 +280,7 @@ function vassalTick() {   // every 10 seconds
     const L = G.P[p.lord]; if (!L.alive) { p.lord = null; p.rebel = null; continue; }
     if (p.rebel) {   // crushed, or free
       const force = soldiersOf(p.id).length;
-      if (force < p.rebel.n0 * VASSAL.crushed) { p.rebel = null; p.unrest = 30; p.loyal = Math.max(0, (p.loyal || 0) - 10); G.rel[p.id][L.id] = G.rel[L.id][p.id] = 'ally'; for (const u of G.units) if (u.owner === p.id && (u.kind === 'rebel' || u.state === 'attack')) { if (u.kind === 'rebel') { u.hp = 0; u.gone = true; } else u.state = 'home'; } if (L.id === 0) say(`Rebellion in ${p.name}'s lands crushed.`, 'good', 7); }
+      if (force < p.rebel.n0 * VASSAL.crushed) { p.rebel = null; p.unrest = 30; p.loyal = Math.max(0, (p.loyal || 0) - 10); G.rel[p.id][L.id] = G.rel[L.id][p.id] = 'ally'; for (const u of G.units) if (u.owner === p.id && (u.kind === 'rebel' || u.state === 'attack')) { if (u.kind === 'rebel') { u.hp = 0; u.gone = true; } else u.state = 'home'; } if (L.id === 0) say(`Rebellion in the lands of ${p.name} crushed.`, 'good', 7); }
       else if (G.t - p.rebel.t0 > VASSAL.freeAfter) { p.rebel = null; p.lord = null; levyOf(L.id, p.id).forEach(releaseLevy); if (L.id === 0) say(`${p.name} have thrown off your rule.`, 'warn', 8); }
       continue;
     }

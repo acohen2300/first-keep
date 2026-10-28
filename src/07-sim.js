@@ -18,7 +18,7 @@ function step(dt) {
   if (G.tick % 30 === 1) { recount(); ordersTick(); noticeTick(); }
   if (G.tick % 30 === 2) { eventsTick(); groundTick(1); }
   if (SET.fog && G.tick % 10 === 0) fogTick();
-  for (const u of G.units) if (u.hp > 0) TICK[UNIT[u.kind].tick](u, dt, SPS[u.owner]);
+  { const U = G.units, n = U.length, s0 = n ? G.tick % n : 0; for (let i = 0; i < n; i++) { const u = U[(s0 + i) % n]; if (u.hp > 0) TICK[UNIT[u.kind].tick](u, dt, SPS[u.owner]); } }   // the start rotates each tick, so the path budget is not always spent on the same few
   healTick(dt);
   collide();
   if (G.tick % 15 === 0) findsTick(0.5);
@@ -112,7 +112,7 @@ function judge() {
   if (G.throne && G.throne.owner !== WILD && G.t - G.throne.since >= throneHold()) { const o = G.throne.owner; finish(o === 0, o === 0 ? `You held the Throne ${Math.round(throneHold() / 60)} minutes.` : `${G.P[o].name} held the Throne ${Math.round(throneHold() / 60)} minutes.`); return; }
   { const ruled = i => !G.P[i].alive || (G.P[i].lord === 0 && !G.P[i].rebel);   // or rule them as vassals for five minutes
     if (ruled(1) && ruled(2) && ruled(3)) { G.reignT = G.reignT ?? G.t; if (G.t - G.reignT >= VASSAL.reign) { finish(true, `You have ruled every rival for ${VASSAL.reign / 60} minutes. ${clock(G.t)}`); return; } } else G.reignT = null; }
-  if (G.wonder && G.t >= G.wonder.end) { const o = G.wonder.owner; finish(o === 0, o === 0 ? `Your ${civOf(0).wonder} stood for ${WONDER_HOLD / 60} minutes.` : `${G.P[o].name}' ${civOf(o).wonder} stood for ${WONDER_HOLD / 60} minutes.`); return; }
+  if (G.wonder && G.t >= G.wonder.end) { const o = G.wonder.owner; finish(o === 0, o === 0 ? `Your ${civOf(0).wonder} stood for ${WONDER_HOLD / 60} minutes.` : `The ${civOf(o).wonder} of ${G.P[o].name} stood for ${WONDER_HOLD / 60} minutes.`); return; }
   const lim = MODES[G.mode].secs;
   if (lim && !G.bell) G.bell = {};
   if (lim) for (const m of [300, 60]) if (G.t >= lim - m && !G.bell[m]) { G.bell[m] = 1; if (G.t < lim - m + 5) say(`${m / 60} minute${m > 60 ? 's' : ''} left: top score wins.`, 'warn', 7); }
@@ -388,7 +388,7 @@ function priestTick(u, dt, SP) {
   if (u.state === 'convert') {   // beside an enemy for a spell, the priest turns them; the counter is to kill the priest
     const t = G.units.find(v => v.id === u.cv && v.hp > 0 && !v.inside && atWar(u.owner, v.owner) && UNIT[v.kind].cls);
     if (!t || u.cvCd > G.t) { u.state = 'home'; u.cv = null; return; }
-    if (dist(u, t) <= CONVERT.r) { u.cvT = (u.cvT || 0) + dt; u.work = G.t; if (u.cvT >= CONVERT.secs * fxv(u.owner, 'convert').m) { const was = t.owner; t.owner = u.owner; t.state = 'home'; t.tgt = null; t.focus = null; t.bn = undefined; t.hb = undefined; t.job = t.kind === 'vil' ? G.P[u.owner].rally : null; t.node = null; t.levy = undefined; u.cvCd = G.t + CONVERT.cd; u.cvT = 0; u.state = 'home'; if (u.owner === 0) say(`Converted: their ${UNIT[t.kind].name.toLowerCase()} is yours.`, 'good', 5, t); else if (was === 0) say(`A priest turned your ${UNIT[t.kind].name.toLowerCase()}!`, 'warn', 5, t); } }
+    if (dist(u, t) <= CONVERT.r) { u.cvT = (u.cvT || 0) + dt; u.work = G.t; if (u.cvT >= CONVERT.secs * fxv(u.owner, 'convert').m) { const was = t.owner; t.owner = u.owner; t.state = 'home'; t.tgt = null; t.focus = null; t.bn = undefined; t.hb = undefined; setJob(t, t.kind === 'vil' ? G.P[u.owner].rally : null); t.levy = undefined; t.max = maxHpU(u.owner, t.kind); t.hp = Math.min(t.hp, t.max); u.cvCd = G.t + CONVERT.cd; u.cvT = 0; u.state = 'home'; if (u.owner === 0) say(`Converted: their ${UNIT[t.kind].name.toLowerCase()} is yours.`, 'good', 5, t); else if (was === 0) say(`A priest turned your ${UNIT[t.kind].name.toLowerCase()}!`, 'warn', 5, t); } }
     else { u.cvT = Math.max(0, (u.cvT || 0) - dt); moveTo(u, t.x, t.y, dt, CONVERT.r - 6, SP); }
     return;
   }
@@ -435,7 +435,7 @@ function solTick(u, dt, SP) {
   if (u.state === 'school') { u.idleT = 0; if (G.t >= u.schoolT) graduate(u); return; }   // at the School: it stands, learns, and comes out a newer soldier
   if (u.hp < u.max && !u.tgt && o !== WILD && (G.tick + u.id) % 30 === 0 && G.blds.some(b => b.owner === o && b.hp > 0 && b.prog >= 1 && (b.kind === 'castle' || b.kind === 'barracks' || b.kind === 'keep') && dist(b, u) < GARRISON.r)) u.hp = Math.min(u.max, u.hp + GARRISON.heal * fxv(o, 'garrison').m);   // garrisoned: it heals
   if (u.state === 'rout') {   // broken: it runs from the nearest foe toward home, then comes to itself
-    if (G.t > u.routT) { u.state = 'home'; u.mor = MORALE.after; return; }
+    if (G.t > u.routT) { u.state = 'home'; u.mor = MORALE.after; u.fleeFrom = null; return; }
     const f = (G.tick + u.id) % 6 === 0 || !u.fleeFrom ? (u.fleeFrom = nearestFoe(o, u, 220)) : u.fleeFrom, h = homeOf(o) || u;
     const dx = f ? u.x - f.x : h.x - u.x, dy = f ? u.y - f.y : h.y - u.y, dd = hyp(dx, dy) || 1;
     moveTo(u, clamp(u.x + dx / dd * 60, 20, MAP - 20), clamp(u.y + dy / dd * 60, 20, MAP - 20), dt, 3, SP * MORALE.routSpd); u.idleT = 0; return;
@@ -569,7 +569,7 @@ function findsTick(dt) {
     const o = m.owner, got = {}; addRes(got, F.got, G.fantasy ? 1.5 : 1); if (f.hoard) got.g = (got.g || 0) + f.hoard; for (const k in got) got[k] = Math.round(got[k]);
     f.done = true; f.owner = o; addRes(G.P[o].res, got); G.P[o].gathered += sumCost(got);
     let extra = '';
-    if (F.tech) { const T = TECH.find(T => !G.P[o].techs.has(T.id) && T.age <= G.P[o].age && (!T.need || G.P[o].techs.has(T.need)) && !T.tier && !G.blds.some(b => b.owner === o && b.q.some(j => j.tech === T.id))); if (T) { learnTech(o, T.id); extra = ` and a scroll: ${T.name}`; } }
+    if (F.tech) { const T = TECH.find(T => !G.P[o].techs.has(T.id) && T.age <= G.P[o].age && (!T.civ || T.civ === G.P[o].civ) && isNext(o, T) && needsOf(T).every(n => G.P[o].techs.has(n)) && !T.tier && !G.blds.some(b => b.owner === o && b.q.some(j => j.tech === T.id))); if (T) { learnTech(o, T.id); extra = ` and a scroll: ${T.name}`; } }
     if (o === 0) { say(`${F.name}: ${costText(got)}${extra}.`, 'good', 6); sfx('coin'); }
   }
 }

@@ -133,7 +133,7 @@ const WONDERART = {
 const BLDTOP = { castle: 66, town: 52, keep: 62, tower: 62, wonder: 72, library: 56, temple: 50, apartment: 46, aqueduct: 40, siege: 40 };
 const BSPR = new Map();
 function bldSprite(b, s) {
-  const o = b.owner, B = BLD[b.kind], col = G.P[o].color, w = B.fp * NAVC, var_ = b.kind === 'keep' ? (G.P[o].techs.has('castle') ? 1 : 0) + (G.P[o].age >= 4 ? 2 : 0) : b.kind === 'town' ? (G.P[o].age >= 4 ? 2 : 0) : b.kind === 'library' ? G.P[o].age >= 3 : b.kind === 'wonder' ? G.P[o].civ : b.kind === 'farm' ? season().name + (b.node ? b.node.type : '') : b.kind === 'pasture' ? (b.sheep || 0) : '';
+  const o = b.owner, B = BLD[b.kind], col = G.P[o].color, w = B.fp * NAVC, var_ = b.kind === 'keep' ? (G.P[o].age >= 4 ? 2 : 0) : b.kind === 'town' ? (G.P[o].age >= 4 ? 2 : 0) : b.kind === 'library' ? G.P[o].age >= 3 : b.kind === 'wonder' ? G.P[o].civ : b.kind === 'farm' ? season().name + (b.node ? b.node.type : '') : b.kind === 'pasture' ? (b.sheep || 0) : '';
   const up = upTier(b.kind, G.P[o]), key = b.kind + col + var_ + up + s; let c = BSPR.get(key); if (c) return c;
   const top = BLDTOP[b.kind] || 40, pad = 12, W = w + pad * 2 + 10 + 2 * w * TILT * SIDE, H = w * TILT / 2 + top + pad * 2;
   c = document.createElement('canvas'); c.width = Math.ceil(W * s); c.height = Math.ceil(H * s);

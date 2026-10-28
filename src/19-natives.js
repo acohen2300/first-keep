@@ -3,7 +3,7 @@
 // Regard is what they think of each side (0..100). It is the one number behind peace, alliance, raids and the gate.
 const throneB = () => G.blds.find(b => b.kind === 'throne' && b.hp > 0) || null;
 const homeOf = o => o === WILD ? throneB() : keepOf(o);
-const natState = () => G.nat || (G.nat = { regard: G.P.map(() => NATIVE.regard0), gifts: G.P.map(() => []), raidT: 0, handT: {}, said: {} });
+const natState = () => G.nat || (G.nat = { regard: G.P.map(() => NATIVE.regard0), gifts: G.P.map(() => []), raidT: 0, handT: {}, said: {}, warBy: {} });
 const regardOf = o => natState().regard[o];
 function natRegard(o, d) { const N = natState(); N.regard[o] = clamp(N.regard[o] + d, 0, 100); natSync(o); }
 // peace and war follow regard; an alliance needs an emissary and ends the moment regard falls under the line
@@ -11,7 +11,7 @@ function natSync(o) {
   if (o === WILD || !G.P[o].alive) return;
   const r = regardOf(o), rel = G.rel[o][WILD];
   if (rel === 'ally' && r < NATIVE.allyAt - 10) { makePeace(o, WILD); if (o === 0) say('The Natives end the alliance: regard fell.', 'warn', 6); }
-  else if (rel !== 'ally') { const want = r >= NATIVE.peaceAt ? 'peace' : 'war'; if (want !== rel) { G.rel[o][WILD] = G.rel[WILD][o] = want; G.navDirty = true; if (o === 0) say(want === 'peace' ? 'The Natives leave you be: regard above 40.' : 'The Natives turn on you: regard under 40.', want === 'peace' ? 'good' : 'warn', 6); } }
+  else if (rel !== 'ally') { const N = natState(); if (!N.warBy) N.warBy = {}; if (N.warBy[o] && r >= NATIVE.allyAt) N.warBy[o] = false; const want = N.warBy[o] ? 'war' : r >= NATIVE.peaceAt ? 'peace' : 'war'; if (want !== rel) { G.rel[o][WILD] = G.rel[WILD][o] = want; G.navDirty = true; if (o === 0) say(want === 'peace' ? 'The Natives leave you be: regard above 40.' : 'The Natives turn on you: regard under 40.', want === 'peace' ? 'good' : 'warn', 6); } }
 }
 // gifts: the Danegeld rule, each buys less than the last within the window
 const giftsRecent = o => natState().gifts[o].filter(t => G.t - t < NATIVE.giftWindow).length;
@@ -20,7 +20,7 @@ function giftWhy(o, amt) { if (!throneB()) return 'The Throne is taken.'; if (G.
 function giveGift(o, amt) {
   if (giftWhy(o, amt)) return false;
   const gain = giftGain(o, amt); G.P[o].res.g -= amt; natState().gifts[o].push(G.t); natRegard(o, gain);
-  if (o === 0) say(`The Natives take ${amt} gold: regard +${gain}${giftsRecent(o) > 1 ? ', and expect more next time' : ''}.`, 'good', 6);
+  if (o === 0) say(`Natives: ${amt} gold, regard +${gain}${giftsRecent(o) > 1 ? '. They expect more' : ''}.`, 'good', 6);
   return true;
 }
 function judgeNatives(from, envoy, ask) {
@@ -63,8 +63,8 @@ function trapsTick() {
       if (v.kind === 'scout' && !b.seen[v.owner]) { b.seen[v.owner] = 1; if (v.owner === 0) say(`Your scout found ${kind === 'pit' ? 'a pit' : kind === 'net' ? 'a net' : 'stakes'} at ${coord(b.x, b.y)}.`, 'good', 5, b); return; }
       if (b.seen[v.owner] || dist(v, b) > NATIVE.trapR) return;
       b.hp = 0; b.gone = true; scarStrike(b.x, b.y);
-      if (kind === 'pit') { v.hp -= v.max * NATIVE.pit; v.hurtT = G.t; v.stuck = G.t + NATIVE.stuck; if (v.owner === 0) say(`A pit! Your ${UNIT[v.kind].name.toLowerCase()} is hurt and stuck.`, 'warn', 5, b); else if (b.owner === 0) say(`Your pit took ${G.P[v.owner].name}' ${UNIT[v.kind].name.toLowerCase()}.`, 'good', 4, b); }
-      else if (kind === 'stakes') { v.hp -= v.max * (hasTag(v.kind, 'mounted') ? 0.45 : 0.25); v.hurtT = G.t; v.flashT = G.t; if (b.owner === 0) say(`Your stakes caught ${G.P[v.owner].name}' ${UNIT[v.kind].name.toLowerCase()}.`, 'good', 4, b); }
+      if (kind === 'pit') { v.hp -= v.max * NATIVE.pit; v.hurtT = G.t; v.stuck = G.t + NATIVE.stuck; if (v.owner === 0) say(`A pit! Your ${UNIT[v.kind].name.toLowerCase()} is hurt and stuck.`, 'warn', 5, b); else if (b.owner === 0) say(`Your pit took a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', 4, b); }
+      else if (kind === 'stakes') { v.hp -= v.max * (hasTag(v.kind, 'mounted') ? 0.45 : 0.25); v.hurtT = G.t; v.flashT = G.t; if (b.owner === 0) say(`Your stakes caught a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', 4, b); }
       else if ((isSoldier(v) && !hasTag(v.kind, 'siege')) || v.kind === 'vil') takePrisoner(b.owner, v);
     });
   }
@@ -81,7 +81,7 @@ function natRaid() {
 }
 function nativesTick(dt) {
   if (G.tick % 10 === 5) trapsTick();
-  if (G.tick % 1800 === 900) layTraps();   // fresh traps for the Natives, every minute
+  if (G.tick % (NATIVE.relay * 30) === 900) layTraps();   // fresh traps for the Natives, every relay
   for (const u of G.units) if (u.back && G.t > u.back) { u.back = 0; u.horde = false; if (u.camp) { u.hx = u.camp.x; u.hy = u.camp.y; } }   // raiders go home
   if (G.tick % 150 !== 7) return;   // the rest every five seconds
   const N = natState(), T = throneB(), held = G.throne && G.throne.owner !== WILD;
