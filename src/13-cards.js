@@ -411,13 +411,13 @@ const CARDS = {
   setup() {   // the annoying part before the fun part (Albert): the settings first, then your people, the challenge as ticks, and Start at the foot
     const C = CIVS[SET.civ], H = SET.hz || HZ_DEFAULT, lv = levelOf(H), short = k => cap1(UNIT[CIVS[k].uu].name.replace(new RegExp('^' + CIVS[k].name + ' ', 'i'), ''));
     let h = title('A new game', '') + settingsHTML()
-      + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, short(k), SET.civ === k ? 'on' : '')).join(''), 'c3')
-      + `<p>${C.bonus}</p>` + fold('why', 'Why?', `<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`)
-      + sec(`Challenge · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}`)
+      + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, '', SET.civ === k ? 'on' : '')).join(''), 'c6 civs')
+      + `<p class="civline"><b>${short(SET.civ)}</b> · ${C.bonus}</p>`   // one row of peoples, their soldier in the line under it: the whole card on one page (Albert) + fold('why', 'Why?', `<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`)
+      + sec(`Challenge · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}`).replace('class="sec"', 'class="sec hzh"')
       + `<div class="hzl">${HZK.map(k => `<div class="hzr"><button class="tick${H[k] ? ' on' : ''}" data-act="hz:${k}"><b>${HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small></button><button class="q${G.hzQ === k ? ' on' : ''}" data-act="hzq:${k}" aria-label="What ${HAZARDS[k].name} does">?</button></div>`).join('')}</div>`
       + (G.hzQ && HAZARDS[G.hzQ] ? `<p><b>${HAZARDS[G.hzQ].name}:</b> ${HAZARDS[G.hzQ].desc}</p>` : '');
     if (staleSave) h += `<p class="dim">Your last game came from an older version (${staleSave}) and cannot be opened. It is kept aside, not deleted.</p>`;
-    return h + acts(btn('fresh', 'Start', `${C.name} · ${MODES[SET.mode].name} · level ${lv}`, 'go big'), 'c1') + `<button class="lnk" data-act="today">Or the challenge of the day: level ${levelOf(TODAY_HZ)}</button>`;
+    return h + acts(btn('fresh', 'Start', `${C.name} · ${MODES[SET.mode].name} · level ${lv}`, 'go big') + btn('today', 'Of the day', `level ${levelOf(TODAY_HZ)}, one map`), 'startrow');
   },
   node(c) {
     const n = G.nodes.find(x => x.id === c.id); if (!n) return null;
@@ -493,6 +493,6 @@ function renderCard() {
   const info = infoBuf.join(''), bookOn = !!info && G.infoOpen;
   if (bookOn) h = h.replace('</h3>', `</h3><div class="infoP">${info}</div>`);
   if (h !== cardSig) { cardSig = h; patchHTML($('card'), (info ? `<button id="cardI" class="${bookOn ? 'on' : ''}" data-act="info" aria-label="About this">${ICON.book}</button>` : '') + `<button id="cardX" data-act="close" aria-label="Close">×</button>` + h); }
-  const cc = G.card; $('card').classList.toggle('full', FULL.has(cc.type) || (cc.type === 'bld' && (G.blds.find(b => b.id === cc.id) || {}).kind === 'market')); $('card').hidden = false;
+  const cc = G.card; $('card').classList.toggle('setup', cc.type === 'setup'); $('card').classList.toggle('full', FULL.has(cc.type) || (cc.type === 'bld' && (G.blds.find(b => b.id === cc.id) || {}).kind === 'market')); $('card').hidden = false;
 }
 $('card').addEventListener('toggle', e => { const id = e.target.dataset && e.target.dataset.f; if (id) { if (e.target.open) FOLD.add(id); else FOLD.delete(id); } }, true);
