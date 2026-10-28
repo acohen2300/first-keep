@@ -446,7 +446,7 @@ const WAYFARER_EVERY = 240;
 // with gifts, blows and time; at PEACE they leave you be, at ALLY their gate opens. Gifts follow the Danegeld rule: each one buys less than
 // the last. Pits and nets on the causeways; prisoners for ransom; outlaw raids on whoever they regard least. They command the camps.
 const NATIVE = { regard0: 20, peaceAt: 40, allyAt: 70, decay: 0.1, hitCost: 2, gifts: [100, 300], danegeld: 0.5, giftWindow: 600, garrison: 24, perAge: 8, regrow: 20, ambush: 1.3, gunAge: 4, gunMax: 0.6, gunRegrow: 2, gunHit: 1.5,
-  traps: 4, trapR: 10, pit: 0.4, stuck: 4, relay: 90, scoutSees: 60, raidEvery: 180, raidN: 2, raidFrom: 600, raidSecs: 45, handover: 60, handoverMen: 8 };
+  traps: 4, trapR: 10, pit: 0.4, stuck: 4, relay: 90, scoutSees: 60, raidGap: [180, 480], raidN: 2, raidFrom: 600, raidSecs: 45, handover: 60, handoverMen: 8 };
 const THRONE = { hold: 900, tithe: 0.1, score: 50, r: 80, isle: 100, cause: 30 };   // hold: seconds to win in a 60-minute game (scaled to the game's length); tithe of every other side's gathering; score a minute
 
 // The three computer personalities: one brain, three settings. Every behaviour is a field, never a name check.

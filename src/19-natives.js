@@ -3,7 +3,7 @@
 // Regard is what they think of each side (0..100). It is the one number behind peace, alliance, raids and the gate.
 const throneB = () => G.blds.find(b => b.kind === 'throne' && b.hp > 0) || null;
 const homeOf = o => o === WILD ? throneB() : keepOf(o);
-const natState = () => G.nat || (G.nat = { regard: G.P.map(() => NATIVE.regard0), gifts: G.P.map(() => []), raidT: 0, handT: {}, said: {}, warBy: {} });
+const natState = () => G.nat || (G.nat = { regard: G.P.map(() => NATIVE.regard0), gifts: G.P.map(() => []), handT: {}, said: {}, warBy: {} });
 const regardOf = o => natState().regard[o];
 function natRegard(o, d) { const N = natState(); N.regard[o] = clamp(N.regard[o] + d, 0, 100); natSync(o); }
 // peace and war follow regard; an alliance needs an emissary and ends the moment regard falls under the line
@@ -71,10 +71,13 @@ function trapsTick() {
 }
 // Outlaw raids: every few minutes the camp nearest the side they regard least sends robbers at its drop-offs, who come back after a spell
 function natRaid() {
-  // no raid before minute 10 (Easy: 16), then every three minutes (Hordes and gangs: twice as often); the band grows with the age of the side it raids
-  const N = natState(); if (G.t < NATIVE.raidFrom + (G.diff === 'easy' ? EASY_SAFE : 0) || G.t - N.raidT < NATIVE.raidEvery / (hz('horde') ? 2 : 1)) return; N.raidT = G.t;
-  const sides = G.P.filter(p => p.id !== WILD && p.alive && keepOf(p.id) && G.rel[p.id][WILD] === 'war').sort((a, b) => regardOf(a.id) - regardOf(b.id)); if (!sides.length) return;
-  const q = sides[0], k = keepOf(q.id), camps = G.finds.filter(f => f.kind === 'camp' && !f.done && guardsLeft(f)).sort((a, b) => dist(a, k) - dist(b, k)); if (!camps.length) return;
+  // random and fair (Albert, Build 41): none before minute 10 (Easy: 16); then a random wait of 3 to 8 minutes (Hordes and gangs: half that); the band goes to a side at war with the Natives,
+  // the less regarded more likely, never the one raided last when another is open; it grows with that side's age
+  const N = natState(), from = NATIVE.raidFrom + (G.diff === 'easy' ? EASY_SAFE : 0), gap = () => rnd(NATIVE.raidGap[0], NATIVE.raidGap[1]) / (hz('horde') ? 2 : 1);
+  if (!N.raidAt) N.raidAt = from + gap() / 2; if (G.t < N.raidAt) return; N.raidAt = G.t + gap();
+  let sides = G.P.filter(p => p.id !== WILD && p.alive && keepOf(p.id) && G.rel[p.id][WILD] === 'war'); if (sides.length > 1) sides = sides.filter(p => p.id !== N.raidLast); if (!sides.length) return;
+  const w = sides.map(p => 1 + (100 - regardOf(p.id)) / 25), tot = w.reduce((a, b) => a + b, 0); let r = rng() * tot, qi = 0; while (qi < sides.length - 1 && (r -= w[qi]) > 0) qi++;
+  const q = sides[qi]; N.raidLast = q.id; const k = keepOf(q.id), camps = G.finds.filter(f => f.kind === 'camp' && !f.done && guardsLeft(f)).sort((a, b) => dist(a, k) - dist(b, k)); if (!camps.length) return;
   const f = camps[0], R = G.units.filter(u => u.find === f.id && u.hp > 0 && UNIT[u.kind].dmg).slice(0, NATIVE.raidN + q.age); if (!R.length) return;
   const mark = nearest(G.blds, f, b => b.owner === q.id && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && b.kind !== 'keep') || k;
   for (const u of R) { u.camp = { x: u.hx, y: u.hy }; u.hx = mark.x; u.hy = mark.y; u.horde = true; u.back = G.t + NATIVE.raidSecs; }

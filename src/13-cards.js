@@ -426,11 +426,11 @@ const CARDS = {
     let h = title('A new game', '') + settingsHTML()
       + acts(CIVK.map(k => btn(`civ:${k}`, CIVS[k].name, '', SET.civ === k ? 'on' : '')).join(''), 'c6 civs')
       + `<p class="civline"><b>${short(SET.civ)}</b> · ${C.bonus}</p>`   // one row of peoples, their soldier in the line under it: the whole card on one page (Albert) + fold('why', 'Why?', `<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`)
-      + `<div class="hzhead"><button class="tick${SET.daily ? ' on' : ''}" data-act="daily"><b>Of the day</b></button><span class="sec">Challenge · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}</span></div>`   // the challenge of the day is a tick on the challenge line (Albert)
+      + `<button class="tick daily${SET.daily ? ' on' : ''}" data-act="daily"><b>Daily challenge: level ${levelOf(TODAY_HZ)}</b><small>one map for all, today</small></button>`   // one tick, written out (Albert)
       + `<div class="hzl">${HZK.map(k => `<button class="tick${H[k] ? ' on' : ''}" data-act="hz:${k}"><b>${HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small></button>`).join('')}</div>`
-      + fold('about', 'What each hazard does', HZK.map(k => `<p><b>${HAZARDS[k].name}:</b> ${HAZARDS[k].desc}</p>`).join('') + `<p><b>Of the day:</b> the same map and the same hazards for everyone, all day.</p>`);
+      + fold('about', 'What each hazard does', HZK.map(k => `<p><b>${HAZARDS[k].name}:</b> ${HAZARDS[k].desc}</p>`).join('') + `<p><b>Daily challenge:</b> the same map and the same hazards for everyone, all day. Tick a hazard yourself and it becomes your own game again.</p>`);
     if (staleSave) h += `<p class="dim">Your last game came from an older version (${staleSave}) and cannot be opened. It is kept aside, not deleted.</p>`;
-    return h + acts(btn(SET.daily ? 'today' : 'fresh', 'Start', SET.daily ? `${C.name} · the challenge of the day · level ${lv}` : `${C.name} · ${MODES[SET.mode].name} · level ${lv}`, 'go big'), 'c1');
+    return h + acts(btn(SET.daily ? 'today' : 'fresh', 'Start', `${C.name} · ${SET.daily ? 'daily challenge' : MODES[SET.mode].name} · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}`, 'go big'), 'c1');
   },
   node(c) {
     const n = G.nodes.find(x => x.id === c.id); if (!n) return null;
