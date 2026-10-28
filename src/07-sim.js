@@ -392,7 +392,7 @@ function solTick(u, dt, SP) {
   const U = UNIT[u.kind], o = u.owner, k = keepOf(o);
   u.cd = Math.max(0, u.cd - dt); u.stance = stanceOf(u);
   let tgt = u.tgt;   // looks for the nearest foe a few times a second, and keeps hitting the one it has between looks
-  if (tgt && !(tgt.hp > 0 && !tgt.inside && atWar(o, tgt.owner) && edge(u, tgt) < sightOf(u) * 1.4)) tgt = u.tgt = null;   // the one it had is gone
+  if (tgt && !(tgt.hp > 0 && !tgt.inside && atWar(o, tgt.owner) && (edge(u, tgt) < sightOf(u) * 1.4 || (u.state === 'home' && k && dist(tgt, k) < 320)))) tgt = u.tgt = null;   // the one it had is gone; a soldier at home keeps a foe it was sent after near the Town Center (Build 38: dropping it the next step made new soldiers spin)
   if ((G.tick + u.id) % 4 === 0) {   // its turn to look, about seven times a second: with a foe or without
     tgt = U.bonly ? nearestFoeBld(o, u, undefined, sightOf(u)) : nearestFoe(o, u, sightOf(u));
     if (u.state === 'home' && tgt && k && dist(tgt, k) > 320) tgt = null;
