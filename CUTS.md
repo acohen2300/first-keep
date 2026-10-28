@@ -340,3 +340,5 @@ Cut, merged or folded while taking the code apart and putting it back by element
 - **Stripping the test hook from the App Store build.** The gate measures the native page through it, so it stays. On an iPhone no player reaches a console.
 - **Saving only the node amounts** and regenerating the map from its seed. The save is a third the size now (trees as five numbers, hundredths); the rest can wait.
 - **Rewriting git history** to purge the session log: needs a force-push; asked separately.
+
+- **Play fingerprint accepted:** first baseline: Build 37 as pushed, before the fingerprint existed

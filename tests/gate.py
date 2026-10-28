@@ -53,6 +53,29 @@ PLAY = """async () => {
   for (let i = 0; i < 90; i++) F.step(1 / 30); const t = G.t; F.saveGame(true); const S = F.readSave(); if (!S) out.push('no save written'); else { F.loadGame(S); if (Math.abs(F.G.t - t) > 0.5) out.push('reload lost the clock'); }
   return out; }"""
 # Every verb a button can send must have a handler: the class of bug behind the dead Build menu
+# The play fingerprint: a fixed game on a fixed seed, scripted the same way every time, and every side's counts at each minute.
+# The game may not play differently by accident. A deliberate change to the rules is accepted with:  python3 tests/gate.py --accept "why"
+# (the baseline is rewritten and the reason logged in CUTS.md). The simulation's dice are seeded, so this is exact, like SoRen's locked physics block.
+BASELINE = 'tests/baseline.json'
+FINGERPRINT = """() => { const F = window.__fk; F.newGame(7); F.act('close'); const G = F.G; F.setPause(true); G.diff = 'normal';
+  const P = G.P[0], k = F.keepOf(0), put = (kind, dx, dy) => { const s = F.findSpot(0, kind, k.x + dx, k.y + dy, 40, 300); return s && F.build(0, kind, s.x, s.y); };
+  const script = { 20: () => { F.train(0, 'vil'); F.train(0, 'vil'); }, 40: () => F.moveVil(0, 'wood'), 60: () => put('house', 60, -60), 90: () => { P.res.w += 150; put('barracks', -80, -80); }, 120: () => F.moveVil(0, 'stone'), 150: () => { P.res.f += 200; F.train(0, 'spear'); F.train(0, 'spear'); }, 200: () => { P.res.w += 200; put('farm', 90, 40); }, 240: () => { P.res.f += 400; P.res.g += 100; F.ageUp(0); } };
+  const out = [];
+  for (let i = 1; i <= 30 * 300; i++) { F.step(1 / 30); const t = i / 30; if (script[t]) script[t]();
+    if (i % 1800 === 0) out.push(G.P.map(q => [Math.round(q.res.f), Math.round(q.res.w), Math.round(q.res.s), Math.round(q.res.g), G.units.filter(u => u.owner === q.id && u.hp > 0).length, G.blds.filter(b => b.owner === q.id && b.hp > 0).length, q.age].join('/')).join(' | ')); }
+  return out; }"""
+async def fingerprint(br):
+    pg = await br.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
+    await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
+    got = await pg.evaluate(FINGERPRINT); await pg.close()
+    if errs: return ['page error: ' + errs[0][:120]], got
+    accept = '--accept' in sys.argv
+    if accept:
+        why = sys.argv[sys.argv.index('--accept') + 1] if len(sys.argv) > sys.argv.index('--accept') + 1 else 'no reason given'
+        json.dump({'why': why, 'minutes': got}, open(BASELINE, 'w'), indent=1); open('CUTS.md', 'a').write(f'\n- **Play fingerprint accepted:** {why}\n'); return [], got
+    if not os.path.exists(BASELINE): return ['no baseline: run  python3 tests/gate.py --accept "first baseline"'], got
+    want = json.load(open(BASELINE))['minutes']
+    return [f'minute {i + 1}: {w}  now  {g}' for i, (w, g) in enumerate(zip(want, got)) if w != g] + (['length differs'] if len(want) != len(got) else []), got
 def verbs():
     import re, glob
     s = open('src/16-verbs.js').read()
@@ -91,6 +114,7 @@ async def main():
         pg = await br.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
         await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
         play = await pg.evaluate(PLAY) + errs[:2]; print(('PASS ' if not play else 'FAIL ') + 'taps do what they say', '' if not play else play); fails += bool(play); await pg.close()
+        fp, _ = await fingerprint(br); print(('PASS ' if not fp else 'FAIL ') + 'the game plays as the baseline says', '' if not fp else '\n  ' + '\n  '.join(fp[:4]) + '\n  (a deliberate rule change: python3 tests/gate.py --accept "why")'); fails += bool(fp)
         await br.close()
     sys.exit(1 if fails else 0)
 asyncio.run(main())
