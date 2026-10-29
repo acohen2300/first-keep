@@ -25,6 +25,16 @@ function resetScars() {
 	scarX.scale(bgK, bgK);
 	TRODE.fill(0);
 }
+// the ground round a building is worn bare by feet (Build 52): painted once into the ground's memory when it is finished, so it costs nothing a frame and stays when the building is gone
+function wearGround(b) {
+	const B = BLD[b.kind];
+	if (!scarX || B.crop || B.wallish || B.trap) return;
+	const w = B.fp * NAVC;
+	scarX.fillStyle = 'rgba(118,96,64,.3)';
+	scarX.beginPath();
+	scarX.ellipse(b.x + w * 0.08, b.y + w * 0.12, w * 0.86, w * 0.72, 0, 0, 7);
+	scarX.fill();
+}
 function scarFall(u) {
 	const x = u.x,
 		big = (LOOKBOX[UNIT[u.kind].look] || [26])[0] > 30;

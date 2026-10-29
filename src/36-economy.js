@@ -62,6 +62,7 @@ const nameOf = (k) => (GOODS[k] ? GOODS[k].name : RAW_NAME[k]).toLowerCase();
 const colOf = (k) => (GOODS[k] ? GOODS[k].col : RESOURCES[LONG[k]].col); // a cart's load shows its colour: a good's own, or the resource's
 const loadable = (p, k) => (TRADE[k] ? Math.max(0, (p.res[k] || 0) - CARAVAN.keep) : p.goods[k] || 0); // what a caravan may take: all of a made good, a raw find's surplus
 const takeFrom = (p, k, q) => (TRADE[k] ? (p.res[k] -= q) : (p.goods[k] -= q));
+const giveTo = (p, k, q) => (TRADE[k] ? (p.res[k] += q) : (p.goods[k] = (p.goods[k] || 0) + q)); // a load put down: raw into the stores, a good with the goods (Build 52: a raw load taken from a cart made the goods count NaN)
 function priceAt(o, good, place, from) {
 	let m = 1;
 	if (place.kind === 'stop' && good === 'spice') return 0; // a stop sells spice; it does not buy it
@@ -204,7 +205,7 @@ function routeTick(u, dt, SP) {
 	}
 	if (moveTo(u, h.x, h.y, dt, halfOf(h) + 4, SP)) {
 		// home
-		for (const k in u.goods || {}) p.goods[k] = (p.goods[k] || 0) + u.goods[k];
+		for (const k in u.goods || {}) giveTo(p, k, u.goods[k]);
 		u.goods = {};
 		if (u.foreign && G.plague && G.plague.until > G.t && rng() < 0.5) outbreak(o, 0.25, true, u);
 		u.inspected = false;

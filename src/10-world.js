@@ -129,6 +129,7 @@ function newGame(seed, carry) {
 		if (!best || f.worst < best.worst) best = { tr, worst: f.worst };
 	}
 	makeBg();
+	for (const b of G.blds) wearGround(b);
 	evmSet();
 	const k = G.P[0].keep;
 	cam.x = k[0] + 120;

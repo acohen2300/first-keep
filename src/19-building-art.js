@@ -317,8 +317,13 @@ const win = (x, y, w = 2, h = 2.6, col = '#2a2014') => {
 		0.3,
 	);
 };
+let FLAGS = null; // while a building is drawn: where its flags fly, so they are drawn live over it and wave (Build 52)
 const banner = (x, y, col, len = 9) => {
 	L_(x, y, x, y - len - 4, '#3a2a1a', 0.7);
+	if (FLAGS) {
+		FLAGS.push([x, y - len - 4]);
+		return;
+	}
 	P_(
 		[
 			[x, y - len - 4],
@@ -1790,11 +1795,14 @@ function bldSprite(b, s) {
 	g.lineJoin = 'round';
 	g.lineCap = 'round';
 	UP = up;
+	FLAGS = [];
 	try {
 		(ART[b.kind] || ART.house)(col, o, var_);
 	} catch (e) {
 		fault(e);
 	}
+	c.flags = FLAGS;
+	FLAGS = null;
 	UP = 0;
 	c.ax = (W / 2) * s;
 	c.ay = (top + pad) * s;

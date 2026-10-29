@@ -117,7 +117,7 @@ const prevOf = (t) => {
 };
 const needsOf = (t) => {
 	const pv = prevOf(t);
-	return (pv ? [pv.id] : []).concat(t.need || []);
+	return [...new Set((pv ? [pv.id] : []).concat(t.need || []))]; // once each: the step before in the line is often also named as a need (Build 52: the Guide said "Curtain walls, Curtain walls")
 };
 const nextStep = (o, t) => {
 	const L = lineOf(t);

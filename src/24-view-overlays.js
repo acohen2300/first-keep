@@ -203,6 +203,7 @@ function drawGhost() {
 		c = bldSprite({ kind, owner: 0 }, s);
 	ctx.globalAlpha = 0.6;
 	stamp(c, SX(sp.x), SY(sp.y), z / s);
+	flagsOn(c, SX(sp.x), SY(sp.y), z, G.P[0].color, 0);
 	ctx.globalAlpha = 1;
 	tag(why || `${B.name} · ${costText(B.cost)}`, SX(sp.x - n / 2), SY(sp.y - n / 2) - 8 - (BLD[kind].h + 10) * z);
 }

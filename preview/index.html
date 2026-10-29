@@ -6253,7 +6253,7 @@ const prevOf = (t) => {
 };
 const needsOf = (t) => {
 	const pv = prevOf(t);
-	return (pv ? [pv.id] : []).concat(t.need || []);
+	return [...new Set((pv ? [pv.id] : []).concat(t.need || []))]; // once each: the step before in the line is often also named as a need (Build 52: the Guide said "Curtain walls, Curtain walls")
 };
 const nextStep = (o, t) => {
 	const L = lineOf(t);
@@ -7491,6 +7491,7 @@ function newGame(seed, carry) {
 		if (!best || f.worst < best.worst) best = { tr, worst: f.worst };
 	}
 	makeBg();
+	for (const b of G.blds) wearGround(b);
 	evmSet();
 	const k = G.P[0].keep;
 	cam.x = k[0] + 120;
@@ -9272,7 +9273,11 @@ function step(dt) {
 // the dead and the spent: the fallen leave, buildings that burned or ran dry go, lists shrink once
 function reap() {
 	for (const u of G.units) if (u.hp <= 0) died(u);
-	for (const u of G.units) if (u.hp <= 0 && !u.gone && !u.inside) scarFall(u);
+	for (const u of G.units)
+		if (u.hp <= 0 && !u.gone && !u.inside) {
+			scarFall(u);
+			fallen(u);
+		}
 	{
 		let gone = false;
 		for (const u of G.units)
@@ -9498,7 +9503,7 @@ function died(u) {
 	if (u.kind === 'caravan' && u.by === WILD) robbed(u);
 	else if (u.kind === 'caravan' && u.by !== undefined && u.by !== WILD) {
 		if (u.cargo > 0) plunder(u.by, { g: u.cargo });
-		for (const k in u.goods || {}) G.P[u.by].goods[k] += u.goods[k];
+		for (const k in u.goods || {}) giveTo(G.P[u.by], k, u.goods[k]);
 	}
 	const U = UNIT[u.kind];
 	if (U.meat && !u.gone) {
@@ -9640,6 +9645,7 @@ function built(b) {
 		B = BLD[b.kind];
 	b.mx = maxHpB(o, b.kind);
 	b.hp = Math.max(b.hp, b.mx * 0.999);
+	wearGround(b);
 	G.bldV = (G.bldV || 0) + 1; // a new place to drop at: every villager picks again
 	if (b.kind === 'gate') G.navDirty = true;
 	if (B.trap) b.seen = b.seen || {};
@@ -14305,8 +14311,13 @@ const win = (x, y, w = 2, h = 2.6, col = '#2a2014') => {
 		0.3,
 	);
 };
+let FLAGS = null; // while a building is drawn: where its flags fly, so they are drawn live over it and wave (Build 52)
 const banner = (x, y, col, len = 9) => {
 	L_(x, y, x, y - len - 4, '#3a2a1a', 0.7);
+	if (FLAGS) {
+		FLAGS.push([x, y - len - 4]);
+		return;
+	}
 	P_(
 		[
 			[x, y - len - 4],
@@ -15778,11 +15789,14 @@ function bldSprite(b, s) {
 	g.lineJoin = 'round';
 	g.lineCap = 'round';
 	UP = up;
+	FLAGS = [];
 	try {
 		(ART[b.kind] || ART.house)(col, o, var_);
 	} catch (e) {
 		fault(e);
 	}
+	c.flags = FLAGS;
+	FLAGS = null;
 	UP = 0;
 	c.ax = (W / 2) * s;
 	c.ay = (top + pad) * s;
@@ -16016,6 +16030,16 @@ function resetScars() {
 	scarX.scale(bgK, bgK);
 	TRODE.fill(0);
 }
+// the ground round a building is worn bare by feet (Build 52): painted once into the ground's memory when it is finished, so it costs nothing a frame and stays when the building is gone
+function wearGround(b) {
+	const B = BLD[b.kind];
+	if (!scarX || B.crop || B.wallish || B.trap) return;
+	const w = B.fp * NAVC;
+	scarX.fillStyle = 'rgba(118,96,64,.3)';
+	scarX.beginPath();
+	scarX.ellipse(b.x + w * 0.08, b.y + w * 0.12, w * 0.86, w * 0.72, 0, 0, 7);
+	scarX.fill();
+}
 function scarFall(u) {
 	const x = u.x,
 		big = (LOOKBOX[UNIT[u.kind].look] || [26])[0] > 30;
@@ -16176,6 +16200,13 @@ function makeBg() {
 		}
 	};
 	blot(1400, ['rgba(88,124,56,.22)', 'rgba(52,78,38,.22)', 'rgba(104,128,60,.16)'], 20, 90);
+	b.fillStyle = 'rgba(30,42,22,.22)';
+	for (const n of G.nodes)
+		if (n.kind === 'tree') {
+			b.beginPath();
+			b.ellipse(n.x + 2, n.y + 3, 17, 12, 0, 0, 7);
+			b.fill();
+		} // the floor of a wood is darker, needles and leaf litter, and stays when the trees are cut (Build 52)
 	blot(220, ['rgba(122,100,62,.16)', 'rgba(140,118,76,.12)'], 10, 34);
 	for (let i = 0; i < 500; i++) {
 		b.fillStyle = Math.random() < 0.5 ? 'rgba(230,220,120,.5)' : 'rgba(235,235,245,.45)';
@@ -16385,6 +16416,11 @@ function draw() {
 	if (far) layer(forestLayer()); // zoomed out, the forest is one picture; close in, each tree
 	for (const f of G.finds) if (inView(f) && !(f.done && FINDS[f.kind].got)) list.push([f.y, 3, f]);
 	for (const u of G.units) if (!u.inside && inView(u) && visibleTo0(u)) list.push([u.y, 2, u]);
+	{
+		const now = performance.now();
+		while (FALL.length && now - FALL[0].t > 1400) FALL.shift();
+		for (const f of FALL) if (inView(f)) list.push([f.y, 4, f]);
+	}
 	list.sort((a, b) => a[0] - b[0]);
 	const N = viewNodes(wv, wv2, far),
 		sB = quant(z * dpr),
@@ -16395,7 +16431,7 @@ function draw() {
 			e = take ? N[i++] : list[j][2],
 			t = take ? 0 : list[j++][1];
 		try {
-			t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : drawFind(e);
+			t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : t === 4 ? drawFallen(e, sU) : drawFind(e);
 		} catch (er) {
 			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 			ctx.globalAlpha = 1;
@@ -16405,6 +16441,7 @@ function draw() {
 		} // one bad piece must never take the rest of the picture with it: the canvas is put back as it was
 	}
 	drawFire(z, inView);
+	drawStandards(z, inView);
 	drawFogLayer(z);
 	sparkDraw();
 	ripDraw();
@@ -16646,6 +16683,8 @@ function drawBld(b, s) {
 	}
 	const fa = G.t - (b.doneT ?? -99);
 	stamp(c, sx, sy, k * popC(fa / 0.6));
+	flagsOn(c, sx, sy, z, G.P[b.owner].color, b.id);
+	if (PILE[b.kind] && friendly(0, b.owner)) pileAt(b, sx, sy, z);
 	if (fa < 8 && !lessMotion) {
 		ctx.globalCompositeOperation = 'lighter';
 		ctx.globalAlpha = 0.32 * (1 - fa / 8);
@@ -16692,10 +16731,10 @@ function drawBld(b, s) {
 		}
 		ctx.stroke();
 	}
-	if (CHIMNEY[b.kind]) {
+	if (CHIMNEY[b.kind] && (b.kind === 'house' || b.q.length || (b.node && G.t - (b.node.workT ?? -99) < 3))) {
 		const [dx, h] = CHIMNEY[b.kind];
 		smoke(sx + dx * z, sy - h * z, b.id, z);
-	}
+	} // a hearth always; a forge, a foundry or a Town Center only while it works (Build 52: smoke shows who is busy)
 	blaze(b, sx, sy, z);
 	if (b.owner === 0 && B.crop && b.node && !(b.node.wk > 0)) idleMark(sx, sy, z * 1.2);
 	const M = maxHpB(b.owner, b.kind);
@@ -16709,6 +16748,68 @@ function drawBld(b, s) {
 	}
 }
 const CHIMNEY = { house: [6.2, 26], smith: [9, 28], keep: [-20, 44], foundry: [9, 34] };
+// a building's flags fly with the wind: a cloth from the pole top, its tip lifting and falling, longer in a strong wind (Build 52; they were painted on)
+function flagsOn(c, sx, sy, z, col, seed) {
+	if (!c.flags || !c.flags.length) return;
+	const t = lessMotion ? 0 : performance.now() / 1000,
+		wv = 0.85 + Math.min(0.6, Math.abs(wind) * 0.9);
+	ctx.fillStyle = col;
+	ctx.strokeStyle = 'rgba(16,12,8,.75)';
+	ctx.lineWidth = Math.max(0.6, 0.3 * z);
+	for (const [x, y] of c.flags) {
+		const fx = sx + x * z,
+			fy = sy + y * z,
+			a = Math.sin(t * 5 + seed * 0.7 + x) * z,
+			w = 6 * wv * z;
+		ctx.beginPath();
+		ctx.moveTo(fx, fy);
+		ctx.quadraticCurveTo(fx + w * 0.5, fy + 0.4 * z + a * 0.8, fx + w, fy + 1.4 * z + a * 1.4);
+		ctx.quadraticCurveTo(fx + w * 0.5, fy + 2.6 * z + a * 0.8, fx, fy + 3 * z);
+		ctx.closePath();
+		ctx.fill();
+		ctx.stroke();
+	}
+}
+// what a side has in store shows as a pile by the camp that takes it in: logs by the lumber camp, cut stone and gold by the mine, sacks by the mill (Build 52)
+const PILE = {
+	lumber: [['w', 'log', '#8a6644']],
+	mining: [
+		['s', 'block', '#a29d90'],
+		['g', 'block', '#e0b83c'],
+	],
+	mill: [['f', 'sack', '#cdb27a']],
+};
+function pileAt(b, sx, sy, z) {
+	if (b.prog < 1 || z < 0.45) return;
+	const w = BLD[b.kind].fp * NAVC * z,
+		R = G.P[b.owner].res;
+	PILE[b.kind].forEach(([r, shape, col], pi) => {
+		const n = clamp(Math.round(Math.log10((R[r] || 0) + 1) * 1.9), 0, 6); // a pyramid of 3, 2 and 1: full at about 1500
+		let x0 = sx + w * 0.62 + pi * 10 * z,
+			y0 = sy + w * TILT * 0.42 - pi * 2 * z,
+			i = 0;
+		for (let row = 0; row < 3 && i < n; row++)
+			for (let j = 0; j < 3 - row && i < n; j++, i++) {
+				const x = x0 + (j + row * 0.5) * 4.4 * z,
+					y = y0 - row * 2.8 * z;
+				ctx.fillStyle = col;
+				ctx.strokeStyle = 'rgba(16,12,8,.7)';
+				ctx.lineWidth = Math.max(0.5, 0.3 * z);
+				ctx.beginPath();
+				if (shape === 'log') ctx.ellipse(x, y, 2.2 * z, 1.4 * z, 0, 0, 7);
+				else if (shape === 'sack') ctx.ellipse(x, y - 0.4 * z, 1.9 * z, 1.7 * z, 0, 0, 7);
+				else ctx.rect(x - 1.9 * z, y - 1.4 * z, 3.8 * z, 2.8 * z);
+				ctx.fill();
+				ctx.stroke();
+				if (shape === 'log') {
+					ctx.fillStyle = '#c9a476';
+					ctx.beginPath();
+					ctx.ellipse(x + 1.5 * z, y, 0.6 * z, 1.1 * z, 0, 0, 7);
+					ctx.fill();
+				} // the cut end
+			}
+	});
+}
 function smoke(x, y, seed, z) {
 	if (lessMotion) return;
 	for (let i = 0; i < 3; i++) {
@@ -16899,6 +17000,97 @@ const workOf = (u) =>
 								? 0
 								: 3
 							: 0; // which work a villager is doing: chop, forage, mine, farm, fish, mend
+const STRIDE = 7; // ground covered by one step, in world units
+// an army on the move carries its standard (Build 52): five or more soldiers of one side bound for one place (the grouping formUp makes) show a pole
+// over their middle with the side's cloth, and round its foot a ring that is as full as the group's health
+function drawStandards(z, inView) {
+	if (z < 0.4) return;
+	const grp = new Map();
+	for (const u of G.units) {
+		if (u.hp <= 0 || u.inside || !isSoldier(u) || hasTag(u.kind, 'siege')) continue;
+		if (u.state !== 'goto' && u.state !== 'assist' && u.state !== 'attack') continue;
+		if (u.px === undefined || !visibleTo0(u)) continue;
+		const key = u.owner + 'g' + Math.round(u.px / 50) + ',' + Math.round(u.py / 50),
+			g = grp.get(key) || (grp.set(key, { o: u.owner, n: 0, x: 0, y: 0, hp: 0, mx: 0 }), grp.get(key));
+		g.n++;
+		g.x += u.x;
+		g.y += u.y;
+		g.hp += u.hp;
+		g.mx += u.max;
+	}
+	const t = lessMotion ? 0 : performance.now() / 1000;
+	for (const g of grp.values()) {
+		if (g.n < 5) continue;
+		const c = { x: g.x / g.n, y: g.y / g.n };
+		if (!inView(c)) continue;
+		const x = SX(c.x),
+			y = SY(c.y),
+			h = 30 * z,
+			col = G.P[g.o].color,
+			r = 6 * z + 2,
+			f = clamp(g.hp / g.mx, 0, 1);
+		ctx.lineWidth = Math.max(2, 2.4 * z);
+		ctx.strokeStyle = 'rgba(16,12,8,.6)';
+		ctx.beginPath();
+		ctx.ellipse(x, y, r, r * TILT, 0, 0, 7);
+		ctx.stroke();
+		ctx.strokeStyle = col;
+		ctx.beginPath();
+		ctx.ellipse(x, y, r, r * TILT, 0, -Math.PI / 2, -Math.PI / 2 + f * 6.283);
+		ctx.stroke(); // the ring: how much of the group's health is left
+		ctx.strokeStyle = '#3a2a1a';
+		ctx.lineWidth = Math.max(1, 1.1 * z);
+		ctx.beginPath();
+		ctx.moveTo(x, y);
+		ctx.lineTo(x, y - h);
+		ctx.stroke();
+		const a = Math.sin(t * 4 + g.o) * 1.4 * z,
+			w = 10 * z;
+		ctx.fillStyle = col;
+		ctx.strokeStyle = 'rgba(16,12,8,.8)';
+		ctx.lineWidth = Math.max(0.6, 0.35 * z);
+		ctx.beginPath();
+		ctx.moveTo(x, y - h);
+		ctx.quadraticCurveTo(x + w * 0.5, y - h + a, x + w, y - h + 1 * z + a * 1.5);
+		ctx.lineTo(x + w, y - h + 6 * z + a * 1.5);
+		ctx.quadraticCurveTo(x + w * 0.5, y - h + 6 * z + a, x, y - h + 7 * z);
+		ctx.closePath();
+		ctx.fill();
+		ctx.stroke();
+	}
+}
+// the fallen (Build 52): a figure that dies where you can see it topples over in a third of a second and fades, instead of vanishing; kept for the picture only
+const FALL = [];
+function fallen(u) {
+	const U = UNIT[u.kind];
+	if (!U.look || hasTag(u.kind, 'siege') || !visibleTo0(u) || FALL.length > 80) return;
+	const st = u.owner === WILD ? null : stats(u.owner, u.kind);
+	FALL.push({
+		x: u.x,
+		y: u.y,
+		look: U.look,
+		col: G.P[u.owner].color,
+		tier: st ? st.tier : u.tier || 0,
+		kit: st && U.tick === 'sol' ? st.kit : 0,
+		face: (u.fx || 1) < 0 ? -1 : 1,
+		t: performance.now(),
+	});
+}
+function drawFallen(f, s) {
+	const a = (performance.now() - f.t) / 1000;
+	if (a > 1.4) return;
+	const z = cam.z,
+		c = sprite(f.look, f.col, f.tier, 0, s, f.kit),
+		k = (z * FIG) / s,
+		r = (lessMotion ? 1 : Math.min(1, a / 0.35)) * (Math.PI / 2) * -f.face; // falls back, away from the way it faced
+	ctx.save();
+	ctx.globalAlpha = a < 0.7 ? 1 : 1 - (a - 0.7) / 0.7;
+	ctx.translate(SX(f.x), SY(f.y));
+	ctx.rotate(r);
+	if (f.face < 0) ctx.scale(-1, 1);
+	ctx.drawImage(c, -c.ax * k, -c.ay * k, c.width * k, c.height * k);
+	ctx.restore();
+}
 function drawUnit(u, s) {
 	// a woodcutter leans in to its tree while it chops: the tree's ground keeps it 20 away, so it is drawn up to 12 closer (drawing only; the game does not move it)
 	{
@@ -16916,12 +17108,13 @@ function drawUnit(u, s) {
 		col = G.P[u.owner].color,
 		st = u.owner === WILD ? null : stats(u.owner, u.kind);
 	const moving = G.t - (u.mvT || -9) < 0.15,
-		working = u.work && G.t - u.work < 0.25;
+		working = u.work && G.t - u.work < 0.25,
+		pace = (u.st ? u.st.walk : G.t * 30) / STRIDE; // steps follow the ground covered, not the clock (Build 52): feet no longer slide
 	const fr =
 		G.t - (u.hitT || -9) < 0.25
 			? 3
 			: moving
-				? 1 + ((((G.t * 6) | 0) + u.id) % 2)
+				? 1 + (((pace | 0) + u.id) % 2)
 				: working
 					? U.look === 'vil'
 						? 10 + workOf(u) * 2 + ((((G.t * 2.5) | 0) + u.id) % 2)
@@ -16961,13 +17154,21 @@ function drawUnit(u, s) {
 		ctx.ellipse(sx, sy, 3.4 * z + 1, 1.6 * z + 0.6, 0, 0, 7);
 		ctx.fill();
 	}
-	stamp(c, sx, sy, k * popC((G.t - (u.bornT ?? -9)) / 0.4), (u.fx || 1) < 0);
+	// the body in motion (Build 52): a rise and fall with each step; a lunge into the blow and back; a shooter's kick on the release
+	const face = (u.fx || 1) < 0 ? -1 : 1,
+		ha = G.t - (u.hitT ?? -9),
+		near = (U.rng || 0) <= 20,
+		bob = moving && !lessMotion ? Math.abs(Math.sin(pace * Math.PI)) * 1.2 * z : 0,
+		lunge = lessMotion || ha > 0.3 ? 0 : near ? Math.sin((ha / 0.3) * Math.PI) * 2.6 * z : ha < 0.18 ? -1.3 * z * (1 - ha / 0.18) : 0,
+		bx = sx + face * lunge,
+		by = sy - bob;
+	stamp(c, bx, by, k * popC((G.t - (u.bornT ?? -9)) / 0.4), face < 0);
 	{
 		const ga = G.t - (u.glowT ?? -9);
 		if (ga >= 0 && ga < 0.6) {
 			ctx.globalCompositeOperation = 'lighter';
 			ctx.globalAlpha = 0.7 * Math.sin((ga / 0.6) * Math.PI);
-			stamp(c, sx, sy, k, (u.fx || 1) < 0);
+			stamp(c, bx, by, k, face < 0);
 			ctx.globalAlpha = 1;
 			ctx.globalCompositeOperation = 'source-over';
 		}
@@ -16975,7 +17176,7 @@ function drawUnit(u, s) {
 	if (G.t - (u.flashT || -9) < 0.12) {
 		ctx.globalCompositeOperation = 'lighter';
 		ctx.globalAlpha = 0.55;
-		stamp(c, sx, sy, k, (u.fx || 1) < 0);
+		stamp(c, bx, by, k, face < 0);
 		ctx.globalAlpha = 1;
 		ctx.globalCompositeOperation = 'source-over';
 	}
@@ -17622,6 +17823,7 @@ function drawGhost() {
 		c = bldSprite({ kind, owner: 0 }, s);
 	ctx.globalAlpha = 0.6;
 	stamp(c, SX(sp.x), SY(sp.y), z / s);
+	flagsOn(c, SX(sp.x), SY(sp.y), z, G.P[0].color, 0);
 	ctx.globalAlpha = 1;
 	tag(why || `${B.name} · ${costText(B.cost)}`, SX(sp.x - n / 2), SY(sp.y - n / 2) - 8 - (BLD[kind].h + 10) * z);
 }
@@ -22958,6 +23160,7 @@ function loadGame(S) {
 	} // an event with its own pieces on the map is dropped on load; the pieces finish on their own. An eclipse, a fog or a heat wave goes on.
 	evmSet();
 	for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined; // orders on the march come back with the game; a stray number is cleared (Build 38 review)
+	for (const b of G.blds) if (b.prog >= 1) wearGround(b); // the ground's memory is not saved: the worn ground round buildings is laid again
 	fxDirty();
 	navRebuild();
 	recount();
@@ -23458,6 +23661,7 @@ const nameOf = (k) => (GOODS[k] ? GOODS[k].name : RAW_NAME[k]).toLowerCase();
 const colOf = (k) => (GOODS[k] ? GOODS[k].col : RESOURCES[LONG[k]].col); // a cart's load shows its colour: a good's own, or the resource's
 const loadable = (p, k) => (TRADE[k] ? Math.max(0, (p.res[k] || 0) - CARAVAN.keep) : p.goods[k] || 0); // what a caravan may take: all of a made good, a raw find's surplus
 const takeFrom = (p, k, q) => (TRADE[k] ? (p.res[k] -= q) : (p.goods[k] -= q));
+const giveTo = (p, k, q) => (TRADE[k] ? (p.res[k] += q) : (p.goods[k] = (p.goods[k] || 0) + q)); // a load put down: raw into the stores, a good with the goods (Build 52: a raw load taken from a cart made the goods count NaN)
 function priceAt(o, good, place, from) {
 	let m = 1;
 	if (place.kind === 'stop' && good === 'spice') return 0; // a stop sells spice; it does not buy it
@@ -23600,7 +23804,7 @@ function routeTick(u, dt, SP) {
 	}
 	if (moveTo(u, h.x, h.y, dt, halfOf(h) + 4, SP)) {
 		// home
-		for (const k in u.goods || {}) p.goods[k] = (p.goods[k] || 0) + u.goods[k];
+		for (const k in u.goods || {}) giveTo(p, k, u.goods[k]);
 		u.goods = {};
 		if (u.foreign && G.plague && G.plague.until > G.t && rng() < 0.5) outbreak(o, 0.25, true, u);
 		u.inspected = false;

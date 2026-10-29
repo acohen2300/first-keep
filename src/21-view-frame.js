@@ -18,6 +18,13 @@ function makeBg() {
 		}
 	};
 	blot(1400, ['rgba(88,124,56,.22)', 'rgba(52,78,38,.22)', 'rgba(104,128,60,.16)'], 20, 90);
+	b.fillStyle = 'rgba(30,42,22,.22)';
+	for (const n of G.nodes)
+		if (n.kind === 'tree') {
+			b.beginPath();
+			b.ellipse(n.x + 2, n.y + 3, 17, 12, 0, 0, 7);
+			b.fill();
+		} // the floor of a wood is darker, needles and leaf litter, and stays when the trees are cut (Build 52)
 	blot(220, ['rgba(122,100,62,.16)', 'rgba(140,118,76,.12)'], 10, 34);
 	for (let i = 0; i < 500; i++) {
 		b.fillStyle = Math.random() < 0.5 ? 'rgba(230,220,120,.5)' : 'rgba(235,235,245,.45)';
@@ -227,6 +234,11 @@ function draw() {
 	if (far) layer(forestLayer()); // zoomed out, the forest is one picture; close in, each tree
 	for (const f of G.finds) if (inView(f) && !(f.done && FINDS[f.kind].got)) list.push([f.y, 3, f]);
 	for (const u of G.units) if (!u.inside && inView(u) && visibleTo0(u)) list.push([u.y, 2, u]);
+	{
+		const now = performance.now();
+		while (FALL.length && now - FALL[0].t > 1400) FALL.shift();
+		for (const f of FALL) if (inView(f)) list.push([f.y, 4, f]);
+	}
 	list.sort((a, b) => a[0] - b[0]);
 	const N = viewNodes(wv, wv2, far),
 		sB = quant(z * dpr),
@@ -237,7 +249,7 @@ function draw() {
 			e = take ? N[i++] : list[j][2],
 			t = take ? 0 : list[j++][1];
 		try {
-			t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : drawFind(e);
+			t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : t === 4 ? drawFallen(e, sU) : drawFind(e);
 		} catch (er) {
 			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 			ctx.globalAlpha = 1;
@@ -247,6 +259,7 @@ function draw() {
 		} // one bad piece must never take the rest of the picture with it: the canvas is put back as it was
 	}
 	drawFire(z, inView);
+	drawStandards(z, inView);
 	drawFogLayer(z);
 	sparkDraw();
 	ripDraw();

@@ -91,6 +91,8 @@ function drawBld(b, s) {
 	}
 	const fa = G.t - (b.doneT ?? -99);
 	stamp(c, sx, sy, k * popC(fa / 0.6));
+	flagsOn(c, sx, sy, z, G.P[b.owner].color, b.id);
+	if (PILE[b.kind] && friendly(0, b.owner)) pileAt(b, sx, sy, z);
 	if (fa < 8 && !lessMotion) {
 		ctx.globalCompositeOperation = 'lighter';
 		ctx.globalAlpha = 0.32 * (1 - fa / 8);
@@ -137,10 +139,10 @@ function drawBld(b, s) {
 		}
 		ctx.stroke();
 	}
-	if (CHIMNEY[b.kind]) {
+	if (CHIMNEY[b.kind] && (b.kind === 'house' || b.q.length || (b.node && G.t - (b.node.workT ?? -99) < 3))) {
 		const [dx, h] = CHIMNEY[b.kind];
 		smoke(sx + dx * z, sy - h * z, b.id, z);
-	}
+	} // a hearth always; a forge, a foundry or a Town Center only while it works (Build 52: smoke shows who is busy)
 	blaze(b, sx, sy, z);
 	if (b.owner === 0 && B.crop && b.node && !(b.node.wk > 0)) idleMark(sx, sy, z * 1.2);
 	const M = maxHpB(b.owner, b.kind);
@@ -154,6 +156,68 @@ function drawBld(b, s) {
 	}
 }
 const CHIMNEY = { house: [6.2, 26], smith: [9, 28], keep: [-20, 44], foundry: [9, 34] };
+// a building's flags fly with the wind: a cloth from the pole top, its tip lifting and falling, longer in a strong wind (Build 52; they were painted on)
+function flagsOn(c, sx, sy, z, col, seed) {
+	if (!c.flags || !c.flags.length) return;
+	const t = lessMotion ? 0 : performance.now() / 1000,
+		wv = 0.85 + Math.min(0.6, Math.abs(wind) * 0.9);
+	ctx.fillStyle = col;
+	ctx.strokeStyle = 'rgba(16,12,8,.75)';
+	ctx.lineWidth = Math.max(0.6, 0.3 * z);
+	for (const [x, y] of c.flags) {
+		const fx = sx + x * z,
+			fy = sy + y * z,
+			a = Math.sin(t * 5 + seed * 0.7 + x) * z,
+			w = 6 * wv * z;
+		ctx.beginPath();
+		ctx.moveTo(fx, fy);
+		ctx.quadraticCurveTo(fx + w * 0.5, fy + 0.4 * z + a * 0.8, fx + w, fy + 1.4 * z + a * 1.4);
+		ctx.quadraticCurveTo(fx + w * 0.5, fy + 2.6 * z + a * 0.8, fx, fy + 3 * z);
+		ctx.closePath();
+		ctx.fill();
+		ctx.stroke();
+	}
+}
+// what a side has in store shows as a pile by the camp that takes it in: logs by the lumber camp, cut stone and gold by the mine, sacks by the mill (Build 52)
+const PILE = {
+	lumber: [['w', 'log', '#8a6644']],
+	mining: [
+		['s', 'block', '#a29d90'],
+		['g', 'block', '#e0b83c'],
+	],
+	mill: [['f', 'sack', '#cdb27a']],
+};
+function pileAt(b, sx, sy, z) {
+	if (b.prog < 1 || z < 0.45) return;
+	const w = BLD[b.kind].fp * NAVC * z,
+		R = G.P[b.owner].res;
+	PILE[b.kind].forEach(([r, shape, col], pi) => {
+		const n = clamp(Math.round(Math.log10((R[r] || 0) + 1) * 1.9), 0, 6); // a pyramid of 3, 2 and 1: full at about 1500
+		let x0 = sx + w * 0.62 + pi * 10 * z,
+			y0 = sy + w * TILT * 0.42 - pi * 2 * z,
+			i = 0;
+		for (let row = 0; row < 3 && i < n; row++)
+			for (let j = 0; j < 3 - row && i < n; j++, i++) {
+				const x = x0 + (j + row * 0.5) * 4.4 * z,
+					y = y0 - row * 2.8 * z;
+				ctx.fillStyle = col;
+				ctx.strokeStyle = 'rgba(16,12,8,.7)';
+				ctx.lineWidth = Math.max(0.5, 0.3 * z);
+				ctx.beginPath();
+				if (shape === 'log') ctx.ellipse(x, y, 2.2 * z, 1.4 * z, 0, 0, 7);
+				else if (shape === 'sack') ctx.ellipse(x, y - 0.4 * z, 1.9 * z, 1.7 * z, 0, 0, 7);
+				else ctx.rect(x - 1.9 * z, y - 1.4 * z, 3.8 * z, 2.8 * z);
+				ctx.fill();
+				ctx.stroke();
+				if (shape === 'log') {
+					ctx.fillStyle = '#c9a476';
+					ctx.beginPath();
+					ctx.ellipse(x + 1.5 * z, y, 0.6 * z, 1.1 * z, 0, 0, 7);
+					ctx.fill();
+				} // the cut end
+			}
+	});
+}
 function smoke(x, y, seed, z) {
 	if (lessMotion) return;
 	for (let i = 0; i < 3; i++) {
@@ -344,6 +408,97 @@ const workOf = (u) =>
 								? 0
 								: 3
 							: 0; // which work a villager is doing: chop, forage, mine, farm, fish, mend
+const STRIDE = 7; // ground covered by one step, in world units
+// an army on the move carries its standard (Build 52): five or more soldiers of one side bound for one place (the grouping formUp makes) show a pole
+// over their middle with the side's cloth, and round its foot a ring that is as full as the group's health
+function drawStandards(z, inView) {
+	if (z < 0.4) return;
+	const grp = new Map();
+	for (const u of G.units) {
+		if (u.hp <= 0 || u.inside || !isSoldier(u) || hasTag(u.kind, 'siege')) continue;
+		if (u.state !== 'goto' && u.state !== 'assist' && u.state !== 'attack') continue;
+		if (u.px === undefined || !visibleTo0(u)) continue;
+		const key = u.owner + 'g' + Math.round(u.px / 50) + ',' + Math.round(u.py / 50),
+			g = grp.get(key) || (grp.set(key, { o: u.owner, n: 0, x: 0, y: 0, hp: 0, mx: 0 }), grp.get(key));
+		g.n++;
+		g.x += u.x;
+		g.y += u.y;
+		g.hp += u.hp;
+		g.mx += u.max;
+	}
+	const t = lessMotion ? 0 : performance.now() / 1000;
+	for (const g of grp.values()) {
+		if (g.n < 5) continue;
+		const c = { x: g.x / g.n, y: g.y / g.n };
+		if (!inView(c)) continue;
+		const x = SX(c.x),
+			y = SY(c.y),
+			h = 30 * z,
+			col = G.P[g.o].color,
+			r = 6 * z + 2,
+			f = clamp(g.hp / g.mx, 0, 1);
+		ctx.lineWidth = Math.max(2, 2.4 * z);
+		ctx.strokeStyle = 'rgba(16,12,8,.6)';
+		ctx.beginPath();
+		ctx.ellipse(x, y, r, r * TILT, 0, 0, 7);
+		ctx.stroke();
+		ctx.strokeStyle = col;
+		ctx.beginPath();
+		ctx.ellipse(x, y, r, r * TILT, 0, -Math.PI / 2, -Math.PI / 2 + f * 6.283);
+		ctx.stroke(); // the ring: how much of the group's health is left
+		ctx.strokeStyle = '#3a2a1a';
+		ctx.lineWidth = Math.max(1, 1.1 * z);
+		ctx.beginPath();
+		ctx.moveTo(x, y);
+		ctx.lineTo(x, y - h);
+		ctx.stroke();
+		const a = Math.sin(t * 4 + g.o) * 1.4 * z,
+			w = 10 * z;
+		ctx.fillStyle = col;
+		ctx.strokeStyle = 'rgba(16,12,8,.8)';
+		ctx.lineWidth = Math.max(0.6, 0.35 * z);
+		ctx.beginPath();
+		ctx.moveTo(x, y - h);
+		ctx.quadraticCurveTo(x + w * 0.5, y - h + a, x + w, y - h + 1 * z + a * 1.5);
+		ctx.lineTo(x + w, y - h + 6 * z + a * 1.5);
+		ctx.quadraticCurveTo(x + w * 0.5, y - h + 6 * z + a, x, y - h + 7 * z);
+		ctx.closePath();
+		ctx.fill();
+		ctx.stroke();
+	}
+}
+// the fallen (Build 52): a figure that dies where you can see it topples over in a third of a second and fades, instead of vanishing; kept for the picture only
+const FALL = [];
+function fallen(u) {
+	const U = UNIT[u.kind];
+	if (!U.look || hasTag(u.kind, 'siege') || !visibleTo0(u) || FALL.length > 80) return;
+	const st = u.owner === WILD ? null : stats(u.owner, u.kind);
+	FALL.push({
+		x: u.x,
+		y: u.y,
+		look: U.look,
+		col: G.P[u.owner].color,
+		tier: st ? st.tier : u.tier || 0,
+		kit: st && U.tick === 'sol' ? st.kit : 0,
+		face: (u.fx || 1) < 0 ? -1 : 1,
+		t: performance.now(),
+	});
+}
+function drawFallen(f, s) {
+	const a = (performance.now() - f.t) / 1000;
+	if (a > 1.4) return;
+	const z = cam.z,
+		c = sprite(f.look, f.col, f.tier, 0, s, f.kit),
+		k = (z * FIG) / s,
+		r = (lessMotion ? 1 : Math.min(1, a / 0.35)) * (Math.PI / 2) * -f.face; // falls back, away from the way it faced
+	ctx.save();
+	ctx.globalAlpha = a < 0.7 ? 1 : 1 - (a - 0.7) / 0.7;
+	ctx.translate(SX(f.x), SY(f.y));
+	ctx.rotate(r);
+	if (f.face < 0) ctx.scale(-1, 1);
+	ctx.drawImage(c, -c.ax * k, -c.ay * k, c.width * k, c.height * k);
+	ctx.restore();
+}
 function drawUnit(u, s) {
 	// a woodcutter leans in to its tree while it chops: the tree's ground keeps it 20 away, so it is drawn up to 12 closer (drawing only; the game does not move it)
 	{
@@ -361,12 +516,13 @@ function drawUnit(u, s) {
 		col = G.P[u.owner].color,
 		st = u.owner === WILD ? null : stats(u.owner, u.kind);
 	const moving = G.t - (u.mvT || -9) < 0.15,
-		working = u.work && G.t - u.work < 0.25;
+		working = u.work && G.t - u.work < 0.25,
+		pace = (u.st ? u.st.walk : G.t * 30) / STRIDE; // steps follow the ground covered, not the clock (Build 52): feet no longer slide
 	const fr =
 		G.t - (u.hitT || -9) < 0.25
 			? 3
 			: moving
-				? 1 + ((((G.t * 6) | 0) + u.id) % 2)
+				? 1 + (((pace | 0) + u.id) % 2)
 				: working
 					? U.look === 'vil'
 						? 10 + workOf(u) * 2 + ((((G.t * 2.5) | 0) + u.id) % 2)
@@ -406,13 +562,21 @@ function drawUnit(u, s) {
 		ctx.ellipse(sx, sy, 3.4 * z + 1, 1.6 * z + 0.6, 0, 0, 7);
 		ctx.fill();
 	}
-	stamp(c, sx, sy, k * popC((G.t - (u.bornT ?? -9)) / 0.4), (u.fx || 1) < 0);
+	// the body in motion (Build 52): a rise and fall with each step; a lunge into the blow and back; a shooter's kick on the release
+	const face = (u.fx || 1) < 0 ? -1 : 1,
+		ha = G.t - (u.hitT ?? -9),
+		near = (U.rng || 0) <= 20,
+		bob = moving && !lessMotion ? Math.abs(Math.sin(pace * Math.PI)) * 1.2 * z : 0,
+		lunge = lessMotion || ha > 0.3 ? 0 : near ? Math.sin((ha / 0.3) * Math.PI) * 2.6 * z : ha < 0.18 ? -1.3 * z * (1 - ha / 0.18) : 0,
+		bx = sx + face * lunge,
+		by = sy - bob;
+	stamp(c, bx, by, k * popC((G.t - (u.bornT ?? -9)) / 0.4), face < 0);
 	{
 		const ga = G.t - (u.glowT ?? -9);
 		if (ga >= 0 && ga < 0.6) {
 			ctx.globalCompositeOperation = 'lighter';
 			ctx.globalAlpha = 0.7 * Math.sin((ga / 0.6) * Math.PI);
-			stamp(c, sx, sy, k, (u.fx || 1) < 0);
+			stamp(c, bx, by, k, face < 0);
 			ctx.globalAlpha = 1;
 			ctx.globalCompositeOperation = 'source-over';
 		}
@@ -420,7 +584,7 @@ function drawUnit(u, s) {
 	if (G.t - (u.flashT || -9) < 0.12) {
 		ctx.globalCompositeOperation = 'lighter';
 		ctx.globalAlpha = 0.55;
-		stamp(c, sx, sy, k, (u.fx || 1) < 0);
+		stamp(c, bx, by, k, face < 0);
 		ctx.globalAlpha = 1;
 		ctx.globalCompositeOperation = 'source-over';
 	}

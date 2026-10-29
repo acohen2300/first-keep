@@ -68,7 +68,11 @@ function step(dt) {
 // the dead and the spent: the fallen leave, buildings that burned or ran dry go, lists shrink once
 function reap() {
 	for (const u of G.units) if (u.hp <= 0) died(u);
-	for (const u of G.units) if (u.hp <= 0 && !u.gone && !u.inside) scarFall(u);
+	for (const u of G.units)
+		if (u.hp <= 0 && !u.gone && !u.inside) {
+			scarFall(u);
+			fallen(u);
+		}
 	{
 		let gone = false;
 		for (const u of G.units)
@@ -294,7 +298,7 @@ function died(u) {
 	if (u.kind === 'caravan' && u.by === WILD) robbed(u);
 	else if (u.kind === 'caravan' && u.by !== undefined && u.by !== WILD) {
 		if (u.cargo > 0) plunder(u.by, { g: u.cargo });
-		for (const k in u.goods || {}) G.P[u.by].goods[k] += u.goods[k];
+		for (const k in u.goods || {}) giveTo(G.P[u.by], k, u.goods[k]);
 	}
 	const U = UNIT[u.kind];
 	if (U.meat && !u.gone) {
@@ -436,6 +440,7 @@ function built(b) {
 		B = BLD[b.kind];
 	b.mx = maxHpB(o, b.kind);
 	b.hp = Math.max(b.hp, b.mx * 0.999);
+	wearGround(b);
 	G.bldV = (G.bldV || 0) + 1; // a new place to drop at: every villager picks again
 	if (b.kind === 'gate') G.navDirty = true;
 	if (B.trap) b.seen = b.seen || {};

@@ -327,6 +327,7 @@ function loadGame(S) {
 	} // an event with its own pieces on the map is dropped on load; the pieces finish on their own. An eclipse, a fog or a heat wave goes on.
 	evmSet();
 	for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined; // orders on the march come back with the game; a stray number is cleared (Build 38 review)
+	for (const b of G.blds) if (b.prog >= 1) wearGround(b); // the ground's memory is not saved: the worn ground round buildings is laid again
 	fxDirty();
 	navRebuild();
 	recount();
