@@ -30,6 +30,8 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   { let k = 0; const N = 20000; for (let i = 0; i < N; i++) if (F.hazard(0.05, 1)) k++; near('hazard 0.05', k / N, 1 - Math.exp(-0.05), 0.006); }
   // the SIR chain: with R0 = 2 the final size solves z = 1 − e^(−R0 z): 0.7968 (Kermack & McKendrick)
   { const R0 = F.HEALTH.R0; let z = 0.5; for (let i = 0; i < 100; i++) z = 1 - Math.exp(-R0 * z); if (R0 === 2) near('SIR final size', z, 0.7968, 1e-3); }
+  // Lanchester's square law as odds: even strength is a coin toss; twice the strength wins 4 in 5
+  near('lanchester even', F.lanchester(1), 0.5, 1e-9); near('lanchester double', F.lanchester(2), 0.8, 1e-9);
   return out; }"""
 async def main():
     async with async_playwright() as p:

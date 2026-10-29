@@ -544,6 +544,11 @@ const settingsHTML = () =>
 		SET.mode,
 	) +
 	seg(
+		'Scenario',
+		Object.keys(SCENARIOS).map((k) => [`scen:${k}`, SCEN_TEXT[k][0].replace('The ', ''), k]),
+		SET.scen || 'open',
+	) +
+	seg(
 		'World',
 		[
 			['fantasy:0', 'Real', false],

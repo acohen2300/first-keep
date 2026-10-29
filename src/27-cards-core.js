@@ -345,6 +345,6 @@ function foeNearest() {
 function oddsText(S, t) {
 	if (t === null || t === undefined || !S.length) return '';
 	const r = (powerOf(S) / estPower(0, t)) * matchup(S, soldiersOf(t)),
-		p = (r * r) / (1 + r * r);
+		p = lanchester(r);
 	return `odds ${p > 0.65 ? 'strong' : p > 0.4 ? 'even' : 'weak'}`;
 }

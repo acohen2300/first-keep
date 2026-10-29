@@ -190,6 +190,11 @@ const ACT = {
 		saveSet();
 		refresh();
 	},
+	scen(a) {
+		SET.scen = SCENARIOS[a] ? a : 'open';
+		saveSet();
+		refresh();
+	},
 	fantasy(a) {
 		SET.fantasy = a === '1';
 		saveSet();

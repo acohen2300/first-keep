@@ -253,6 +253,8 @@ window.__fk = {
 	CLIMATE,
 	PEACE,
 	nextIn,
+	lanchester,
+	WHY,
 	hazard,
 	HEALTH,
 	truceAll,

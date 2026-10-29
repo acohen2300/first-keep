@@ -457,7 +457,7 @@ function decideWar(p, per) {
 		if (q.alive && q.id !== WILD && atWar(o, q.id)) {
 			if (q.id === 0 && G.diff === 'easy' && G.t < EASY_SAFE && !W) continue; // Easy: nobody comes for you in the first six minutes
 			const r = (mine / estPower(o, q.id)) * matchup(go, soldiersOf(q.id)),
-				prob = (r * r) / (1 + r * r); // the square law, as odds, bent by who counters whom
+				prob = lanchester(r); // the square law, as odds, bent by who counters whom
 			const busy =
 				per.opportunist &&
 				G.P.some((x) => x.alive && x.id !== WILD && x.id !== o && x.id !== q.id && atWar(q.id, x.id)); // the opportunist: a side with another war on its hands

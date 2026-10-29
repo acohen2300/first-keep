@@ -36,7 +36,7 @@ const powerSum = (L) => L.reduce((s, u) => s + unitPower(u), 0);
 // the chance to win: the engine every odds line uses (power against power, the matchup of arms), as r²/(1+r²)
 function chance(S, foes) {
 	const r = (powerSum(S) / Math.max(1, powerSum(foes))) * matchup(S, foes);
-	return (r * r) / (1 + r * r);
+	return lanchester(r);
 }
 const dpsOf = (L) => L.reduce((s, v) => s + dmgOf(v) / (UNIT[v.kind].cd || 1.5), 0);
 const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;

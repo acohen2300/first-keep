@@ -250,3 +250,40 @@ const LANDK = Object.keys(LAND),
 // If the sides differ by more than a tenth in any of the three, the map is laid out again (up to 20 times) and the fairest is kept.
 const FAIR = { tries: 20, spread: 0.1 };
 const RIVER = { w: [20, 26], step: 0.9, bend: 45, waves: 1.6, ford1: [0.28, 0.4], ford2: [0.6, 0.72], fish: 3 }; // a corner's river: pools 20 to 26 across in radius, one every 0.9 of that (smooth banks), bending up to 45 aside; fords at about a third and two thirds; a fish in every third pool
+
+// Scenarios (Build 58, item 41): three set starts on the same rules, each a table of what differs, read by applyScenario in 10-world.
+// Nothing here is a new rule: an age, a store, relations, hazards, buildings already in the game, and the mode.
+const SCENARIOS = {
+	open: {}, // the ordinary start
+	siege: {
+		// The Siege: a Medieval town behind its walls, a full store, every rival at war with you, the horde a few minutes out
+		age: 3,
+		res: { f: 1200, w: 900, s: 900, g: 500, i: 150 },
+		techs: ['masonry', 'towers'],
+		rel: 'war',
+		hz: { hard: 1, starve: 1, horde: 1 },
+		hordeAt: 420,
+		walls: true,
+		blds: [['tower', 150], ['tower', -150], ['barracks', 110], ['range', -110]],
+		vils: 8,
+		mode: 't30',
+	},
+	road: {
+		// The Silk Road: every court Classical and at peace, markets up, the board truce already running
+		age: 2,
+		all: true, // the ages and stores go to every court
+		res: { f: 800, w: 600, s: 300, g: 600, i: 50 },
+		rel: 'peace',
+		truce: true,
+		sworn: 600, // no court may declare war for ten minutes: the peace is sworn, as the Olympic truce was
+		blds: [['market', 120]],
+		vils: 6,
+		mode: 't60',
+	},
+	last: {
+		// Last Keep: three courts allied against you from the first minute, nothing else changed
+		league: true,
+		rel: 'war',
+		mode: 'conquest',
+	},
+};

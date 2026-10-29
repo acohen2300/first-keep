@@ -54,6 +54,8 @@ function blankGame(seed) {
 		flood: 0,
 		clim: blankClim(),
 		truce: null, // when the whole board came to peace, or null (39-games)
+		sworn: 0, // until when no court may declare war (a scenario's term)
+		scen: null,
 		enlight: false,
 		stood: false,
 		gamesT: 0,
@@ -98,6 +100,9 @@ function mkPlayer(i, civ) {
 		spent: 0,
 		flow: {},
 		rate: {},
+		spent1: {},
+		orate: {},
+		ledger: { in: {}, out: {} },
 		score: { people: 0, army: 0, tech: 0, bld: 0, wealth: 0, total: 0 },
 		fxc: null,
 		uc: {},
@@ -149,6 +154,48 @@ function newGame(seed, carry) {
 		p.techs = new Set(carry.techs);
 		fxDirty();
 	} else say(`${LAND[G.land].name}. Gather, grow, explore.`, '', 8);
+	if (!carry && seed !== todaySeed()) applyScenario(SET.scen);
+}
+// a scenario is the ordinary game with some things set (SCENARIOS in 06): an age, a store, relations, hazards, a few buildings already up
+function applyScenario(id) {
+	const S = SCENARIOS[id];
+	if (!S || !Object.keys(S).length) return;
+	G.scen = id;
+	const sides = S.all ? G.P.filter((p) => p.id !== WILD) : [G.P[0]];
+	for (const p of sides) {
+		if (S.age) p.age = Math.max(p.age, S.age);
+		if (S.res) for (const k in S.res) p.res[k] = Math.max(p.res[k], S.res[k]);
+		if (S.techs) for (const t of S.techs) if (TECHBY[t]) p.techs.add(t);
+		if (S.mode) G.mode = S.mode;
+	}
+	if (S.rel)
+		for (let q = 1; q < WILD; q++) {
+			G.rel[0][q] = G.rel[q][0] = S.rel;
+			if (S.rel === 'peace') for (let r = 1; r < WILD; r++) if (q !== r) G.rel[q][r] = G.rel[r][q] = 'peace';
+		}
+	if (S.league) {
+		for (let q = 1; q < WILD; q++) for (let r = 1; r < WILD; r++) if (q !== r) G.rel[q][r] = G.rel[r][q] = 'ally';
+		G.P[1].ally = 2;
+		G.P[2].ally = 1;
+	} // three against one: the third stands with the two, allied in all but the one-ally slot
+	if (S.hz) G.hz = { ...S.hz };
+	if (S.truce) G.truce = 0;
+	if (S.sworn) G.sworn = S.sworn;
+	const k = keepOf(0);
+	for (const [kind, dx] of S.blds || []) {
+		const s = findSpot(0, kind, k.x + dx, k.y, 0, 120);
+		if (!s) continue;
+		const b = mkBld(0, kind, s.x, s.y, 1);
+		G.blds.push(b);
+	}
+	if (S.walls) {
+		for (const c of wallPlan(k)) if (!NAV.occ[c.gy * NC + c.gx] && !canPlace(0, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) G.blds.push(mkBld(0, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5, 1));
+	}
+	for (let i = 0; i < (S.vils || 0); i++) addUnit(0, 'vil', k.x + 30 + i * 8, k.y + 40);
+	navRebuild();
+	fxDirty();
+	if (S.hordeAt) G.horde = { at: S.hordeAt, said: 0 };
+	say(`${SCEN_TEXT[id][0]}: ${SCEN_TEXT[id][1]}`, 'soft', 10);
 }
 const inBox = (p, r) => p.x >= r.x0 && p.x <= r.x1 && p.y >= r.y0 && p.y <= r.y1;
 const node = (kind, type, x, y, amt) => ({ id: NID++, kind, type, x, y, amt, max: amt });

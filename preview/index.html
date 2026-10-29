@@ -31,6 +31,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 .pill .cell+.cell::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--hair)}
 .gl{position:absolute;left:50%;top:13px;width:20px;height:20px;transform:translate(-50%,-50%);display:block}
 .wd{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);text-align:center;font-size:var(--t2);font-weight:700;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.wd.up,#card td.up{color:#8fd0a8}.wd.down,#card td.down{color:var(--gold)}.wd.low,#card td.low{color:var(--red)}
 .cell.one .gl,.cell.one .wd{top:50%}.cell.one .gl{width:18px;height:18px}
 .pill .cell.on{background:#2f3b36}
 #muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--mute)}
@@ -103,6 +104,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
 #end p{margin:0;color:var(--mute);font-size:15px}
+#tkPop .t .why{display:block;font-size:12px;color:var(--mute);font-weight:500}
 #endX .crowns{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:8px 0}
 #endX .crowns p{font-size:15px}#endX .crowns b{color:var(--bone)}
 #endX details{text-align:left}#endX summary{color:var(--mute);font-size:13px;min-height:44px;display:flex;align-items:center;cursor:pointer;list-style:none}#endX summary::-webkit-details-marker{display:none}#endX summary::before{content:'+';display:inline-block;width:18px;font-weight:700}#endX details[open] summary::before{content:'−'}
@@ -384,13 +386,14 @@ const UNIT = {
 		desc: 'Gathers food, wood, stone and gold and carries it to the nearest drop-off. Hunts deer and boar with a javelin.',
 	},
 	scout: {
+		// on foot in the Stone Age (the horse was tamed on the steppe about 3500 BC); Horse breeding mounts it (TECH.tier). Build 58.
 		name: 'Scout',
 		cls: 'civ',
 		tick: 'scout',
-		tags: ['civ', 'mounted'],
+		tags: ['civ'],
 		hp: 45,
-		spd: 36,
-		sight: 220,
+		spd: 27,
+		sight: 170,
 		dmg: 3,
 		rng: 12,
 		cd: 1.5,
@@ -399,7 +402,7 @@ const UNIT = {
 		at: 'keep',
 		age: 0,
 		look: 'scout',
-		desc: 'A fast rider. Tours the map and picks up any treasure nobody guards. Tap the map to send it.',
+		desc: 'A runner, a rider once horses are bred. Tours the map and picks up any treasure nobody guards. Tap the map to send it.',
 	},
 	envoy: {
 		name: 'Emissary',
@@ -1773,7 +1776,7 @@ const TECH = [
 		name: 'Iron axes',
 		at: 'lumber',
 		line: 'Felling',
-		age: 2,
+		age: 1,
 		w: 6,
 		when: '1000 BC',
 		cost: { f: 180, w: 120 },
@@ -1892,7 +1895,7 @@ const TECH = [
 		name: 'Charcoal burning',
 		at: 'lumber',
 		line: 'Carpentry',
-		age: 2,
+		age: 1,
 		w: 5,
 		when: '1000 BC',
 		cost: { f: 170, w: 110 },
@@ -1944,7 +1947,7 @@ const TECH = [
 		name: 'Threshing sledge',
 		at: 'mill',
 		line: 'Harvest',
-		age: 1,
+		age: 0,
 		w: 3,
 		when: '6000 BC',
 		cost: { f: 80, w: 50 },
@@ -1957,7 +1960,7 @@ const TECH = [
 		name: 'Plough',
 		at: 'mill',
 		line: 'Harvest',
-		age: 1,
+		age: 0,
 		w: 9,
 		when: '3500 BC',
 		cost: { f: 140, w: 100 },
@@ -2010,7 +2013,7 @@ const TECH = [
 		name: 'Windmill',
 		at: 'mill',
 		line: 'Harvest',
-		age: 4,
+		age: 3,
 		w: 6,
 		when: '1180s',
 		cost: { f: 430, w: 290 },
@@ -2045,6 +2048,19 @@ const TECH = [
 		desc: 'Soil tires less.',
 	},
 	{
+		id: 'irrigation',
+		name: 'Irrigation',
+		at: 'mill',
+		line: 'Soil',
+		age: 1,
+		w: 7,
+		when: '3000 BC',
+		cost: { f: 200, w: 130 },
+		t: 44,
+		fx: [{ s: 'soil', a: 0.15 }],
+		desc: 'Soil tires less still.',
+	},
+	{
 		id: 'manure',
 		name: 'Manuring',
 		at: 'mill',
@@ -2056,19 +2072,6 @@ const TECH = [
 		t: 26,
 		fx: [{ s: 'soil', a: 0.1 }],
 		desc: 'Soil tires less.',
-	},
-	{
-		id: 'irrigation',
-		name: 'Irrigation',
-		at: 'mill',
-		line: 'Soil',
-		age: 2,
-		w: 7,
-		when: '3000 BC',
-		cost: { f: 200, w: 130 },
-		t: 44,
-		fx: [{ s: 'soil', a: 0.15 }],
-		desc: 'Soil tires less still.',
 	},
 	{
 		id: 'rotation',
@@ -2249,6 +2252,22 @@ const TECH = [
 		desc: 'Stone and iron come in 25% faster.',
 	},
 	{
+		id: 'brick',
+		name: 'Fired brick',
+		at: 'mining',
+		line: 'Building',
+		age: 1,
+		w: 5,
+		when: '3000 BC',
+		cost: { f: 170, s: 110 },
+		t: 38,
+		fx: [
+			{ s: 'room', k: 'house', a: 1 },
+			{ s: 'room', k: 'apartment', a: 4 },
+		],
+		desc: 'Houses hold 1 more, apartments 4.',
+	},
+	{
 		id: 'masonry',
 		name: 'Masonry',
 		at: 'mining',
@@ -2260,22 +2279,6 @@ const TECH = [
 		t: 32,
 		fx: [{ s: 'bhp', k: '*', m: 1.3 }],
 		desc: 'Buildings are 30% tougher.',
-	},
-	{
-		id: 'brick',
-		name: 'Fired brick',
-		at: 'mining',
-		line: 'Building',
-		age: 2,
-		w: 5,
-		when: '3000 BC',
-		cost: { f: 170, s: 110 },
-		t: 38,
-		fx: [
-			{ s: 'room', k: 'house', a: 1 },
-			{ s: 'room', k: 'apartment', a: 4 },
-		],
-		desc: 'Houses hold 1 more, apartments 4.',
 	},
 	{
 		id: 'ventilation',
@@ -2375,7 +2378,7 @@ const TECH = [
 		name: 'Nets',
 		at: 'dock',
 		line: 'Fishing',
-		age: 1,
+		age: 0,
 		w: 5,
 		when: '6000 BC',
 		cost: { w: 100, f: 70 },
@@ -2599,22 +2602,6 @@ const TECH = [
 		desc: 'Warm homes: winter sickness halves and winter work is 5% better.',
 	},
 	{
-		id: 'townwatch',
-		name: 'Town watch',
-		at: 'keep',
-		line: 'Watch',
-		age: 1,
-		w: 4,
-		when: '1200s',
-		cost: { f: 90, g: 60 },
-		t: 26,
-		fx: [
-			{ s: 'rng', k: 'keep', a: 15 },
-			{ s: 'rng', k: 'town', a: 15 },
-		],
-		desc: 'The Town Center shoots farther.',
-	},
-	{
 		id: 'calendar',
 		name: 'Calendar',
 		at: 'keep',
@@ -2632,6 +2619,22 @@ const TECH = [
 		desc: 'Farms give 5% more; research 5% faster.',
 	},
 	{
+		id: 'townwatch',
+		name: 'Town watch',
+		at: 'keep',
+		line: 'Watch',
+		age: 3,
+		w: 4,
+		when: '1200s',
+		cost: { f: 90, g: 60 },
+		t: 26,
+		fx: [
+			{ s: 'rng', k: 'keep', a: 15 },
+			{ s: 'rng', k: 'town', a: 15 },
+		],
+		desc: 'The Town Center shoots farther.',
+	},
+	{
 		id: 'pride',
 		name: 'Civic pride',
 		at: 'keep',
@@ -2643,19 +2646,6 @@ const TECH = [
 		t: 48,
 		fx: [{ s: 'shelter', m: 2 }],
 		desc: 'Walls and towers steady nerve twice as much.',
-	},
-	{
-		id: 'postal',
-		name: 'Post riders',
-		at: 'keep',
-		line: 'Watch',
-		age: 4,
-		w: 5,
-		when: '1490',
-		cost: { f: 390, g: 260 },
-		t: 66,
-		fx: [{ s: 'diplo', a: 0.1 }],
-		desc: 'Emissaries are heard more readily.',
 	},
 	{
 		id: 'lanterns',
@@ -2671,11 +2661,24 @@ const TECH = [
 		desc: 'Lanterns hung at every door: the town is lit, and its buildings keep 60% of their lost night sight.',
 	},
 	{
+		id: 'postal',
+		name: 'Post riders',
+		at: 'keep',
+		line: 'Watch',
+		age: 4,
+		w: 5,
+		when: '1490',
+		cost: { f: 390, g: 260 },
+		t: 66,
+		fx: [{ s: 'diplo', a: 0.1 }],
+		desc: 'Emissaries are heard more readily.',
+	},
+	{
 		id: 'shields',
 		name: 'Shields',
 		at: 'barracks',
 		line: 'Ranks',
-		age: 0,
+		age: 1,
 		w: 5,
 		when: '3000 BC',
 		cost: { f: 50, g: 40 },
@@ -2825,7 +2828,7 @@ const TECH = [
 		name: 'Marching camps',
 		at: 'barracks',
 		line: 'March',
-		age: 1,
+		age: 2,
 		w: 5,
 		when: '400 BC',
 		cost: { f: 100, g: 70 },
@@ -2941,25 +2944,11 @@ const TECH = [
 		desc: 'Archers reach farther.',
 	},
 	{
-		id: 'bodkin',
-		name: 'Bodkin points',
-		at: 'range',
-		line: 'Shot',
-		age: 2,
-		w: 4,
-		when: '1000s',
-		cost: { w: 150, g: 100 },
-		t: 35,
-		fx: [{ s: 'dmg', k: '#archer', a: 1 }],
-		need: ['iron'],
-		desc: 'Archers hit harder.',
-	},
-	{
 		id: 'firearrows',
 		name: 'Fire arrows',
 		at: 'range',
 		line: 'Shot',
-		age: 2,
+		age: 3,
 		w: 5,
 		when: '900s',
 		cost: { w: 170, g: 110 },
@@ -2969,17 +2958,18 @@ const TECH = [
 		desc: 'Archers set wooden buildings alight.',
 	},
 	{
-		id: 'longbow',
-		name: 'Longbow',
+		id: 'bodkin',
+		name: 'Bodkin points',
 		at: 'range',
 		line: 'Shot',
 		age: 3,
-		w: 6,
-		when: '1300s',
-		cost: { w: 290, g: 190 },
-		t: 56,
-		tier: { unit: 'archer', name: 'Longbowman', rng: 20, dmg: 1 },
-		desc: 'Archers become Longbowmen.',
+		w: 4,
+		when: '1000s',
+		cost: { w: 150, g: 100 },
+		t: 35,
+		fx: [{ s: 'dmg', k: '#archer', a: 1 }],
+		need: ['iron'],
+		desc: 'Archers hit harder.',
 	},
 	{
 		id: 'xbowdrill',
@@ -2993,6 +2983,19 @@ const TECH = [
 		t: 48,
 		fx: [{ s: 'dmg', k: 'crossbow', a: 2 }],
 		desc: 'Crossbowmen hit harder.',
+	},
+	{
+		id: 'longbow',
+		name: 'Longbow',
+		at: 'range',
+		line: 'Shot',
+		age: 3,
+		w: 6,
+		when: '1300s',
+		cost: { w: 290, g: 190 },
+		t: 56,
+		tier: { unit: 'archer', name: 'Longbowman', rng: 20, dmg: 1 },
+		desc: 'Archers become Longbowmen.',
 	},
 	{
 		id: 'musket',
@@ -3033,7 +3036,8 @@ const TECH = [
 		cost: { f: 130, g: 90 },
 		t: 35,
 		fx: [{ s: 'spd', k: '#mounted', m: 1.12 }],
-		desc: 'Mounted units are 12% faster.',
+		tier: { unit: 'scout', name: 'Rider scout', spd: 1.35, sight: 50 },
+		desc: 'Mounted units are 12% faster; the scout rides.',
 	},
 	{
 		id: 'bridles',
@@ -3179,7 +3183,7 @@ const TECH = [
 		name: 'Iron working',
 		at: 'smith',
 		line: 'Blades',
-		age: 2,
+		age: 1,
 		w: 9,
 		when: '1200 BC',
 		cost: { g: 240, i: 160 },
@@ -3217,19 +3221,6 @@ const TECH = [
 		desc: 'Soldiers hit harder.',
 	},
 	{
-		id: 'leather',
-		name: 'Leather armour',
-		at: 'smith',
-		line: 'Armour',
-		age: 1,
-		w: 4,
-		when: '2000 BC',
-		cost: { g: 60 },
-		t: 26,
-		fx: [{ s: 'armor', k: '#soldier', min: 0.85 }],
-		desc: 'Soldiers take 15% less harm.',
-	},
-	{
 		id: 'helmets',
 		name: 'Helmets',
 		at: 'smith',
@@ -3241,6 +3232,19 @@ const TECH = [
 		t: 26,
 		fx: [{ s: 'armor', k: '#infantry', min: 0.9 }],
 		desc: 'Infantry take 10% less harm.',
+	},
+	{
+		id: 'leather',
+		name: 'Leather armour',
+		at: 'smith',
+		line: 'Armour',
+		age: 1,
+		w: 4,
+		when: '2000 BC',
+		cost: { g: 60 },
+		t: 26,
+		fx: [{ s: 'armor', k: '#soldier', min: 0.85 }],
+		desc: 'Soldiers take 15% less harm.',
 	},
 	{
 		id: 'scale',
@@ -3341,6 +3345,37 @@ const TECH = [
 		need: ['fortify'],
 		desc: 'Towers hit harder.',
 	},
+	{
+		id: 'guncast',
+		name: 'Gun founding',
+		at: 'smith',
+		line: 'Walls',
+		age: 4,
+		w: 7,
+		when: '1400s',
+		cost: { g: 470, i: 310 },
+		t: 77,
+		fx: [{ s: 'dmg', k: '#gun', a: 10 }],
+		need: ['blast'],
+		desc: 'Guns hit harder.',
+	},
+	{
+		id: 'starfort',
+		name: 'Star fort',
+		at: 'smith',
+		line: 'Walls',
+		age: 4,
+		w: 8,
+		when: '1500s',
+		cost: { g: 510, i: 340 },
+		t: 82,
+		fx: [
+			{ s: 'bhp', k: '#wallish', m: 1.5 },
+			{ s: 'bhp', k: '#guard', m: 1.3 },
+		],
+		need: ['guncast'],
+		desc: 'Walls 50% tougher, towers 30%.',
+	},
 	// the tower's three steps (Build 51), researched at a tower, every tower raised at once: beacons, then the great tower, then the gun tower
 	{
 		id: 'beacons',
@@ -3398,50 +3433,6 @@ const TECH = [
 		desc: 'Every great tower cut down and thickened for cannon: 40% tougher again, +10 damage, +30 reach, +20 sight, 3 more inside.',
 	},
 	{
-		id: 'guncast',
-		name: 'Gun founding',
-		at: 'smith',
-		line: 'Walls',
-		age: 4,
-		w: 7,
-		when: '1400s',
-		cost: { g: 470, i: 310 },
-		t: 77,
-		fx: [{ s: 'dmg', k: '#gun', a: 10 }],
-		need: ['blast'],
-		desc: 'Guns hit harder.',
-	},
-	{
-		id: 'starfort',
-		name: 'Star fort',
-		at: 'smith',
-		line: 'Walls',
-		age: 4,
-		w: 8,
-		when: '1500s',
-		cost: { g: 510, i: 340 },
-		t: 82,
-		fx: [
-			{ s: 'bhp', k: '#wallish', m: 1.5 },
-			{ s: 'bhp', k: '#guard', m: 1.3 },
-		],
-		need: ['guncast'],
-		desc: 'Walls 50% tougher, towers 30%.',
-	},
-	{
-		id: 'engineers',
-		name: 'Siege engineers',
-		at: 'siege',
-		line: 'Engines',
-		age: 2,
-		w: 5,
-		when: '300 BC',
-		cost: { w: 170, g: 110 },
-		t: 38,
-		fx: [{ s: 'train', k: '#siege', m: 0.75 }],
-		desc: 'Engines build 25% faster.',
-	},
-	{
 		id: 'torsion',
 		name: 'Torsion springs',
 		at: 'siege',
@@ -3458,17 +3449,17 @@ const TECH = [
 		desc: 'Catapults and ballistae reach farther.',
 	},
 	{
-		id: 'counterweight',
-		name: 'Counterweight',
+		id: 'engineers',
+		name: 'Siege engineers',
 		at: 'siege',
 		line: 'Engines',
-		age: 3,
-		w: 7,
-		when: '1100s',
-		cost: { w: 320, g: 210 },
-		t: 60,
-		fx: [{ s: 'dmg', k: 'treb', a: 10 }],
-		desc: 'Trebuchets hit harder.',
+		age: 2,
+		w: 5,
+		when: '300 BC',
+		cost: { w: 170, g: 110 },
+		t: 38,
+		fx: [{ s: 'train', k: '#siege', m: 0.75 }],
+		desc: 'Engines build 25% faster.',
 	},
 	{
 		id: 'burningshot',
@@ -3483,6 +3474,19 @@ const TECH = [
 		fx: [{ s: 'fire', k: '#siege', a: 1 }],
 		need: ['firearrows'],
 		desc: 'Engines set buildings alight.',
+	},
+	{
+		id: 'counterweight',
+		name: 'Counterweight',
+		at: 'siege',
+		line: 'Engines',
+		age: 3,
+		w: 7,
+		when: '1100s',
+		cost: { w: 320, g: 210 },
+		t: 60,
+		fx: [{ s: 'dmg', k: 'treb', a: 10 }],
+		desc: 'Trebuchets hit harder.',
 	},
 	{
 		id: 'corned',
@@ -3526,6 +3530,19 @@ const TECH = [
 		desc: 'Bombards set what they hit alight.',
 	},
 	{
+		id: 'drawbridge',
+		name: 'Drawbridge',
+		at: 'castle',
+		line: 'Garrison',
+		age: 3,
+		w: 4,
+		when: '1200s',
+		cost: { g: 240, i: 160 },
+		t: 48,
+		fx: [{ s: 'bhp', k: 'castle', m: 1.2 }],
+		desc: 'Castles are 20% tougher.',
+	},
+	{
 		id: 'standing',
 		name: 'Standing army',
 		at: 'castle',
@@ -3540,19 +3557,6 @@ const TECH = [
 			{ s: 'armyroom', k: 'castle', a: 2 },
 		],
 		desc: 'Room for 4 more soldiers.',
-	},
-	{
-		id: 'drawbridge',
-		name: 'Drawbridge',
-		at: 'castle',
-		line: 'Garrison',
-		age: 3,
-		w: 4,
-		when: '1200s',
-		cost: { g: 240, i: 160 },
-		t: 48,
-		fx: [{ s: 'bhp', k: 'castle', m: 1.2 }],
-		desc: 'Castles are 20% tougher.',
 	},
 	{
 		id: 'garrison',
@@ -3656,7 +3660,7 @@ const TECH = [
 		name: 'Geometry',
 		at: 'school',
 		line: 'Numbers',
-		age: 1,
+		age: 2,
 		w: 6,
 		when: '300 BC',
 		cost: { w: 110, g: 70 },
@@ -3760,19 +3764,6 @@ const TECH = [
 		desc: 'Building is 20% faster.',
 	},
 	{
-		id: 'guilds',
-		name: 'Guilds',
-		at: 'library',
-		line: 'Learning',
-		age: 3,
-		w: 5,
-		when: '1100s',
-		cost: { g: 260, s: 180 },
-		t: 52,
-		fx: [{ s: 'queue', a: 2 }],
-		desc: 'Two more orders in every queue.',
-	},
-	{
 		id: 'medschool',
 		name: 'Medical school',
 		at: 'library',
@@ -3788,6 +3779,19 @@ const TECH = [
 		],
 		need: ['medicine'],
 		desc: 'Half as many die of plague; cures twice as fast.',
+	},
+	{
+		id: 'guilds',
+		name: 'Guilds',
+		at: 'library',
+		line: 'Learning',
+		age: 3,
+		w: 5,
+		when: '1100s',
+		cost: { g: 260, s: 180 },
+		t: 52,
+		fx: [{ s: 'queue', a: 2 }],
+		desc: 'Two more orders in every queue.',
 	},
 	{
 		id: 'press',
@@ -3829,19 +3833,6 @@ const TECH = [
 		t: 90,
 		fx: [{ s: 'research', m: 0.75 }],
 		desc: 'Research is 25% faster.',
-	},
-	{
-		id: 'vaccine',
-		name: 'Vaccination',
-		at: 'library',
-		line: 'Enlightenment',
-		age: 5,
-		w: 2,
-		when: '1796',
-		cost: { g: 600, f: 400 },
-		t: 90,
-		fx: [{ s: 'sick', m: 0.5 }],
-		desc: 'Half as much sickness.',
 	},
 	{
 		id: 'fourcourse',
@@ -3896,6 +3887,19 @@ const TECH = [
 		desc: 'Trade pays 25% more. The last step: the match ends and the crowns are given.',
 	},
 	{
+		id: 'vaccine',
+		name: 'Vaccination',
+		at: 'library',
+		line: 'Enlightenment',
+		age: 5,
+		w: 2,
+		when: '1796',
+		cost: { g: 600, f: 400 },
+		t: 90,
+		fx: [{ s: 'sick', m: 0.5 }],
+		desc: 'Half as much sickness.',
+	},
+	{
 		id: 'roads',
 		name: 'Roads',
 		at: 'library',
@@ -3925,6 +3929,20 @@ const TECH = [
 		desc: 'Mud slows 30% less.',
 	},
 	{
+		id: 'levees',
+		name: 'Levees',
+		at: 'library',
+		line: 'Weather',
+		age: 3,
+		w: 6,
+		when: '1000s',
+		cost: { g: 290, s: 190 },
+		t: 56,
+		fx: [{ s: 'flood', a: 1 }],
+		need: ['irrigation'],
+		desc: 'Floods stop short of your buildings.',
+	},
+	{
 		id: 'snowclear',
 		name: 'Snow clearing',
 		at: 'library',
@@ -3950,20 +3968,6 @@ const TECH = [
 		fx: [{ s: 'ice', a: 0.5 }],
 		need: ['horseshoes'],
 		desc: 'Men slip half as often on ice.',
-	},
-	{
-		id: 'levees',
-		name: 'Levees',
-		at: 'library',
-		line: 'Weather',
-		age: 3,
-		w: 6,
-		when: '1000s',
-		cost: { g: 290, s: 190 },
-		t: 56,
-		fx: [{ s: 'flood', a: 1 }],
-		need: ['irrigation'],
-		desc: 'Floods stop short of your buildings.',
 	},
 	{
 		id: 'meteorology',
@@ -4049,17 +4053,18 @@ const TECH = [
 		desc: 'Plague spreads half as fast.',
 	},
 	{
-		id: 'surgeons',
-		name: 'Surgeons',
+		id: 'inoculation',
+		name: 'Inoculation',
 		at: 'hospital',
 		line: 'Wards',
 		age: 4,
-		w: 6,
-		when: '1545',
-		cost: { f: 430, g: 290 },
-		t: 71,
-		fx: [{ s: 'heal', m: 1.5 }],
-		desc: 'Healing is 50% faster.',
+		w: 8,
+		when: '1500s',
+		cost: { f: 510, g: 340 },
+		t: 82,
+		fx: [{ s: 'plague', m: 0.3 }],
+		need: ['quarantine'],
+		desc: 'Plague strikes 70% less.',
 	},
 	{
 		id: 'anatomy',
@@ -4076,18 +4081,17 @@ const TECH = [
 		desc: 'Healing is 20% faster.',
 	},
 	{
-		id: 'inoculation',
-		name: 'Inoculation',
+		id: 'surgeons',
+		name: 'Surgeons',
 		at: 'hospital',
 		line: 'Wards',
 		age: 4,
-		w: 8,
-		when: '1500s',
-		cost: { f: 510, g: 340 },
-		t: 82,
-		fx: [{ s: 'plague', m: 0.3 }],
-		need: ['quarantine'],
-		desc: 'Plague strikes 70% less.',
+		w: 6,
+		when: '1545',
+		cost: { f: 430, g: 290 },
+		t: 71,
+		fx: [{ s: 'heal', m: 1.5 }],
+		desc: 'Healing is 50% faster.',
 	},
 	{
 		id: 'rites',
@@ -4159,24 +4163,11 @@ const TECH = [
 		desc: 'Zeal costs 30% less.',
 	},
 	{
-		id: 'watch',
-		name: 'Night watch',
-		at: 'courthouse',
-		line: 'Order',
-		age: 1,
-		w: 3,
-		when: '1200s',
-		cost: { g: 80, w: 50 },
-		t: 24,
-		fx: [{ s: 'spysight', a: 60 }],
-		desc: 'Spies are seen from farther.',
-	},
-	{
 		id: 'codes',
 		name: 'Law code',
 		at: 'courthouse',
 		line: 'Order',
-		age: 2,
+		age: 1,
 		w: 7,
 		when: '1750 BC',
 		cost: { g: 200, w: 130 },
@@ -4197,6 +4188,19 @@ const TECH = [
 		t: 52,
 		fx: [{ s: 'push', m: 0.8 }],
 		desc: 'Vassal unrest climbs 20% slower.',
+	},
+	{
+		id: 'watch',
+		name: 'Night watch',
+		at: 'courthouse',
+		line: 'Order',
+		age: 3,
+		w: 3,
+		when: '1200s',
+		cost: { g: 80, w: 50 },
+		t: 24,
+		fx: [{ s: 'spysight', a: 60 }],
+		desc: 'Spies are seen from farther.',
 	},
 	{
 		id: 'informers',
@@ -4300,7 +4304,7 @@ const TECH = [
 		name: 'Standards',
 		at: 'council',
 		line: 'Command',
-		age: 3,
+		age: 2,
 		w: 5,
 		when: '100 BC',
 		cost: { f: 260, g: 180 },
@@ -4443,19 +4447,6 @@ const TECH = [
 		desc: 'Caravans are 50% tougher.',
 	},
 	{
-		id: 'milestones',
-		name: 'Milestones',
-		at: 'tpost',
-		line: 'Roads',
-		age: 2,
-		w: 3,
-		when: '250 BC',
-		cost: { w: 130, g: 90 },
-		t: 32,
-		fx: [{ s: 'trade', m: 1.05 }],
-		desc: 'Trade pays 5% more.',
-	},
-	{
 		id: 'caravanserai',
 		name: 'Caravanserai',
 		at: 'tpost',
@@ -4467,6 +4458,19 @@ const TECH = [
 		t: 38,
 		fx: [{ s: 'uhp', k: 'caravan', m: 1.5 }],
 		desc: 'Caravans are 50% tougher.',
+	},
+	{
+		id: 'milestones',
+		name: 'Milestones',
+		at: 'tpost',
+		line: 'Roads',
+		age: 2,
+		w: 3,
+		when: '250 BC',
+		cost: { w: 130, g: 90 },
+		t: 32,
+		fx: [{ s: 'trade', m: 1.05 }],
+		desc: 'Trade pays 5% more.',
 	},
 	{
 		id: 'fortpost',
@@ -4486,6 +4490,19 @@ const TECH = [
 		desc: 'Posts are 50% tougher and shoot harder.',
 	},
 	{
+		id: 'customs',
+		name: 'Customs',
+		at: 'tpost',
+		line: 'Roads',
+		age: 4,
+		w: 5,
+		when: '1300s',
+		cost: { w: 390, g: 260 },
+		t: 66,
+		fx: [{ s: 'cut', a: 0.1 }],
+		desc: 'Your posts take 10% more from passing trade.',
+	},
+	{
 		id: 'postroads',
 		name: 'Post roads',
 		at: 'tpost',
@@ -4498,19 +4515,6 @@ const TECH = [
 		fx: [{ s: 'trade', m: 1.1 }],
 		need: ['roads'],
 		desc: 'Trade pays 10% more.',
-	},
-	{
-		id: 'customs',
-		name: 'Customs',
-		at: 'tpost',
-		line: 'Roads',
-		age: 4,
-		w: 5,
-		when: '1300s',
-		cost: { w: 390, g: 260 },
-		t: 66,
-		fx: [{ s: 'cut', a: 0.1 }],
-		desc: 'Your posts take 10% more from passing trade.',
 	},
 	{
 		id: 'looms',
@@ -4530,7 +4534,7 @@ const TECH = [
 		name: 'Spinning wheel',
 		at: 'workshop',
 		line: 'Cloth',
-		age: 2,
+		age: 3,
 		w: 6,
 		when: '1000s',
 		cost: { w: 180, g: 120 },
@@ -4570,7 +4574,7 @@ const TECH = [
 		name: 'Hops',
 		at: 'workshop',
 		line: 'Drink',
-		age: 2,
+		age: 3,
 		w: 4,
 		when: '1100s',
 		cost: { w: 150, g: 100 },
@@ -4622,7 +4626,7 @@ const TECH = [
 		name: 'Assaying',
 		at: 'mint',
 		line: 'Coin',
-		age: 4,
+		age: 3,
 		w: 5,
 		when: '1200s',
 		cost: { g: 390, i: 260 },
@@ -4645,19 +4649,6 @@ const TECH = [
 		desc: 'Goods sell 5% dearer.',
 	},
 	{
-		id: 'bellows',
-		name: 'Water bellows',
-		at: 'foundry',
-		line: 'Furnace',
-		age: 3,
-		w: 6,
-		when: '31 AD',
-		cost: { w: 290, s: 190 },
-		t: 56,
-		fx: [{ s: 'make', k: 'iron', m: 1.2 }],
-		desc: 'Foundries make 20% more iron.',
-	},
-	{
 		id: 'castiron',
 		name: 'Cast iron',
 		at: 'foundry',
@@ -4669,6 +4660,19 @@ const TECH = [
 		t: 56,
 		fx: [{ s: 'make', k: 'iron', m: 1.15 }],
 		desc: 'Foundries make 15% more iron.',
+	},
+	{
+		id: 'bellows',
+		name: 'Water bellows',
+		at: 'foundry',
+		line: 'Furnace',
+		age: 3,
+		w: 6,
+		when: '31 AD',
+		cost: { w: 290, s: 190 },
+		t: 56,
+		fx: [{ s: 'make', k: 'iron', m: 1.2 }],
+		desc: 'Foundries make 20% more iron.',
 	},
 	{
 		id: 'blast',
@@ -4699,6 +4703,19 @@ const TECH = [
 		desc: 'Foundries make 15% more iron.',
 	},
 	{
+		id: 'sewers',
+		name: 'Sewers',
+		at: 'aqueduct',
+		line: 'Water',
+		age: 2,
+		w: 7,
+		when: '600 BC',
+		cost: { s: 320, g: 210 },
+		t: 60,
+		fx: [{ s: 'plague', m: 0.6 }],
+		desc: 'Plague strikes 40% less.',
+	},
+	{
 		id: 'cleanwater',
 		name: 'Clean water',
 		at: 'aqueduct',
@@ -4712,24 +4729,11 @@ const TECH = [
 		desc: 'Sickness strikes half as often.',
 	},
 	{
-		id: 'sewers',
-		name: 'Sewers',
-		at: 'aqueduct',
-		line: 'Water',
-		age: 3,
-		w: 7,
-		when: '600 BC',
-		cost: { s: 320, g: 210 },
-		t: 60,
-		fx: [{ s: 'plague', m: 0.6 }],
-		desc: 'Plague strikes 40% less.',
-	},
-	{
 		id: 'plumbing',
 		name: 'Plumbing',
 		at: 'aqueduct',
 		line: 'Water',
-		age: 3,
+		age: 2,
 		w: 5,
 		when: '100s',
 		cost: { s: 260, g: 180 },
@@ -5439,9 +5443,72 @@ const LANDK = Object.keys(LAND),
 // If the sides differ by more than a tenth in any of the three, the map is laid out again (up to 20 times) and the fairest is kept.
 const FAIR = { tries: 20, spread: 0.1 };
 const RIVER = { w: [20, 26], step: 0.9, bend: 45, waves: 1.6, ford1: [0.28, 0.4], ford2: [0.6, 0.72], fish: 3 }; // a corner's river: pools 20 to 26 across in radius, one every 0.9 of that (smooth banks), bending up to 45 aside; fords at about a third and two thirds; a fish in every third pool
+
+// Scenarios (Build 58, item 41): three set starts on the same rules, each a table of what differs, read by applyScenario in 10-world.
+// Nothing here is a new rule: an age, a store, relations, hazards, buildings already in the game, and the mode.
+const SCENARIOS = {
+	open: {}, // the ordinary start
+	siege: {
+		// The Siege: a Medieval town behind its walls, a full store, every rival at war with you, the horde a few minutes out
+		age: 3,
+		res: { f: 1200, w: 900, s: 900, g: 500, i: 150 },
+		techs: ['masonry', 'towers'],
+		rel: 'war',
+		hz: { hard: 1, starve: 1, horde: 1 },
+		hordeAt: 420,
+		walls: true,
+		blds: [['tower', 150], ['tower', -150], ['barracks', 110], ['range', -110]],
+		vils: 8,
+		mode: 't30',
+	},
+	road: {
+		// The Silk Road: every court Classical and at peace, markets up, the board truce already running
+		age: 2,
+		all: true, // the ages and stores go to every court
+		res: { f: 800, w: 600, s: 300, g: 600, i: 50 },
+		rel: 'peace',
+		truce: true,
+		sworn: 600, // no court may declare war for ten minutes: the peace is sworn, as the Olympic truce was
+		blds: [['market', 120]],
+		vils: 6,
+		mode: 't60',
+	},
+	last: {
+		// Last Keep: three courts allied against you from the first minute, nothing else changed
+		league: true,
+		rel: 'war',
+		mode: 'conquest',
+	},
+};
 // ═════ 07-text.js: every line of wording the game says ═════
 // ───────────────────────── Why it is so: the history behind each row ─────────────────────────
 // Dates are "about" unless exact; where historians disagree the text says so. Each line credits more than one place where the record allows.
+// the ledger's words (earn and spend, 08-core)
+const LEDGER_WORD = {
+	gather: 'gathered',
+	trade: 'trade',
+	tithe: 'the Throne tithe',
+	tribute: 'tribute',
+	ransom: 'ransoms',
+	market: 'the Market',
+	loot: 'loot',
+	mint: 'the Mint',
+	venture: 'ventures',
+	tax: 'tax',
+	units: 'people and soldiers',
+	buildings: 'buildings',
+	research: 'research and ages',
+	upkeep: 'eaten',
+	zeal: 'zeal',
+	repairs: 'repairs',
+};
+// the scenarios' words (SCENARIOS in 06)
+const SCEN_TEXT = {
+	open: ['Open', 'The ordinary start: a keep, five villagers, the land.'],
+	siege: ['The Siege', 'A Medieval town behind its walls with a full store; every rival at war with you and the horde seven minutes out. Hold for thirty.'],
+	road: ['The Silk Road', 'Every court Classical and at peace, a Market up, the board truce already running and sworn for ten minutes. Trade, the Games, and the age that only peace opens.'],
+	last: ['Last Keep', 'Three courts allied against you from the first minute, on the ordinary rules. Conquest.'],
+};
 const WHY = {
 	age0: 'Farming villages of the Neolithic (from about 10,000 years ago): fields, houses, a wall. Jericho had a stone wall and tower about 8000 BC.',
 	age1: 'Bronze (from about 3300 BC in the Near East): the first cities, writing, law, chariots and standing armies, in Sumer, Egypt, the Indus valley and China.',
@@ -5523,7 +5590,7 @@ const WHY = {
 	chisels: 'Hardened chisels dressed ashlar for the cathedrals; the marks of the masons are still on the blocks.',
 	stonesaw:
 		'Water-driven saws cut marble at Hierapolis in the 200s and again in Renaissance Italy; sand under the blade did the cutting.',
-	rollers: 'Stone moved on sledges over wetted sand and rollers; a tomb painting shows 172 men pulling a colossus.',
+	rollers: 'Stone moved on sledges over wetted sand and rollers; a tomb painting shows 172 men pulling a colossus. Game: the Rollers and sledges is older than the Classical age it waits for here, because its building comes then.',
 	cranes:
 		'Two men walking inside a wheel lifted a ton of stone; the cranes of Gothic cathedrals still stand in some towers.',
 	fishtraps:
@@ -5570,7 +5637,7 @@ const WHY = {
 		'Men who train together hold together; Sparta drilled from the age of seven and nobody stood against them for a century.',
 	phalanx: 'Eight ranks of shields and spears: the Greek phalanx held Marathon and broke Persia.',
 	legion:
-		'The manipular legion, in three lines that relieved each other, beat the phalanx at Cynoscephalae and ruled for five centuries.',
+		'The manipular legion, in three lines that relieved each other, beat the phalanx at Cynoscephalae (197 BC) and ruled for five centuries. Game: it replaces the swordsman of the Bronze age, three centuries before its time, so a Roman player has a Roman army from the start.',
 	pikesquare: 'Swiss pike squares at Morgarten and Sempach killed the mounted knight as the master of the field.',
 	arms: 'Dismounted men-at-arms in full harness won Crécy and Agincourt on foot, the knight turned heavy infantry.',
 	halberd: 'Axe and spear on one pole: the Swiss halberd cut knights from their horses at Morgarten.',
@@ -5586,7 +5653,7 @@ const WHY = {
 	drillyard: 'The campus Martius was the drill ground of Rome; a town with a yard to drill in fielded more men.',
 	veterans: 'Marius kept his veterans with the standards; an old soldier retrained is worth two recruits. Opens Teach.',
 	feudal: 'The tenants of a lord owed him forty days a year in arms; the levy was cheap, if not always willing.',
-	slings: 'The Balearic slingers hired out to Carthage and Rome; a lead bullet broke bone through a shield.',
+	slings: 'The Balearic slingers hired out to Carthage and Rome; a lead bullet broke bone through a shield. Game: the Slings is older than the Bronze age it waits for here, because its building comes then.',
 	composite: 'Horn, sinew and wood glued in layers: the bow of the steppe and Egypt shot farther from a shorter stave.',
 	bodkin: 'The bodkin, narrow and square, was made to punch mail; it was in the quivers at Crécy.',
 	firearrows:
@@ -5597,7 +5664,7 @@ const WHY = {
 		'The Spanish musket, heavier than the arquebus, put a ball through plate at a hundred paces; armour left the field after it.',
 	volley:
 		'Ranks that fired and countermarched kept a steady fire; Maurice of Nassau drilled it, Nagashino had shown it.',
-	horses: 'The horse was tamed on the steppe about 3500 BC; the people who bred it moved faster than anyone on earth.',
+	horses: 'The horse was tamed on the steppe about 3500 BC; the people who bred it moved faster than anyone on earth. Game: the Horse breeding is older than the Bronze age it waits for here, because its building comes then.',
 	bridles: 'A bronze bit turns a horse at a gallop; with it the chariot could be steered, and later the rider.',
 	saddles: 'The framed saddle, from the steppe, let a rider sit a shock without sliding off the back of the horse.',
 	stirrups: 'The stirrup let a rider stand to strike and brace a lance; it remade the cavalry charge.',
@@ -5730,7 +5797,7 @@ const WHY = {
 	postroads: 'Relay stations a day apart with fresh horses; goods and news moved at a gallop from Lisbon to Vienna.',
 	customs:
 		'Customs houses at every port and gate took a cut of all that passed; the keeper of the road grew rich on it.',
-	looms: 'Loom weights of clay are in every Neolithic village; the loom turned wool into the first trade good.',
+	looms: 'Loom weights of clay are in every Neolithic village; the loom turned wool into the first trade good. Game: the Warp-weighted loom is older than the Bronze age it waits for here, because its building comes then.',
 	spinwheel:
 		'The spinning wheel reached Europe by the 1200s and spun thread several times faster than the drop spindle.',
 	fulling: 'Fulling mills pounded cloth with water-driven hammers from the 1000s, work that had been done by foot.',
@@ -5740,12 +5807,12 @@ const WHY = {
 	brewhouse:
 		'Town brewhouses with copper kettles replaced the pot of the alewife; Hamburg had five hundred brewers by 1400.',
 	lager: 'Bavarian brewers stored beer in cold cellars through summer; the Reinheitsgebot of 1516 set what went in.',
-	dies: 'A struck coin from a good die is hard to clip and easy to trust; good dies mean more coin from the same silver.',
+	dies: 'A struck coin from a good die is hard to clip and easy to trust; good dies mean more coin from the same silver. Game: the Engraved dies is older than the Medieval age it waits for here, because its building comes then.',
 	assay: 'The Trial of the Pyx tested English coin against a standard from 1282; a trusted coin passes at full value.',
 	milled: 'The screw press struck a round coin with a milled edge that could not be clipped; Paris had one by 1551.',
 	bellows:
-		'The water-driven bellows blew Chinese furnaces in 31 AD; Europe had them by 1200. A hotter blast, more iron.',
-	castiron: 'China poured iron into moulds from 500 BC; Europe only learned to from the 1400s.',
+		'The water-driven bellows blew Chinese furnaces in 31 AD; Europe had them by 1200. A hotter blast, more iron. Game: the Water bellows is older than the Medieval age it waits for here, because its building comes then.',
+	castiron: 'China poured iron into moulds from 500 BC; Europe only learned to from the 1400s. Game: the Cast iron is older than the Medieval age it waits for here, because its building comes then.',
 	blast: 'The blast furnace, blown by water, reached Europe by the 1300s and made iron in a continuous stream.',
 	finery: 'The finery hammered cast iron into wrought bar that could be forged; the Walloon method spread from Liège.',
 	cleanwater: 'The Aqua Appia brought Rome clean water in 312 BC; by Trajan eleven aqueducts fed a million people.',
@@ -5863,7 +5930,7 @@ const WHY = {
 	hanxbow:
 		'Han armies fielded crossbows by the tens of thousands: one arsenal list from 13 BC counts over 11,000, with bronze triggers cast to a standard pattern.',
 	immortal:
-		'Herodotus says the Persian royal guard of 10,000 was never allowed to fall below strength, so the Greeks called them Immortals. They carried spear, bow and wicker shield.',
+		'Herodotus says the Persian royal guard of 10,000 was never allowed to fall below strength, so the Greeks called them Immortals. They carried spear, bow and wicker shield (about 500 BC). Game: it replaces the swordsman of the Bronze age, earlier than its time, so a Persian player has a Persian army from the start.',
 	mongolha:
 		'A Mongol rider went to war with three or four horses and changed mounts to keep moving for days; the armies of the khans outpaced every enemy on the continent.',
 	mauryael:
@@ -5965,6 +6032,26 @@ const NEWS = [
 	],
 ];
 // What each spectacle says: the warning, then the event itself
+// why an event happened, under its line in the list (Build 58): the real cause, in a few words
+const EV_WHY = {
+	eclipse: 'the moon crosses the sun; Babylon could foretell it by 600 BC',
+	storm: 'warm wet air rising fast: thunder',
+	stampede: 'the herd runs from fire or wolves',
+	flood: 'heavy rain upstream, the lakes spill',
+	meteor: 'a stone from space; the Hittites forged iron from one',
+	wildfire: 'dry forest and one spark',
+	fog: 'cool night air over wet ground',
+	sinkhole: 'limestone dissolved beneath the floor',
+	quicksand: 'sand standing on rising water',
+	heatwave: 'high pressure sits and will not move',
+	mirage: 'hot air bends the light',
+	circus: 'the road brought them; they go where the coin is',
+	wagon: 'a trader lost on the road',
+	mercs: 'swords for hire follow the wars',
+	dragon: 'Fantasy: it smelled the gold',
+	troll: 'Fantasy: it came down from the hills',
+	aurora: 'a solar storm lights the high air',
+};
 const EV_TEXT = {
 	eclipse: ['An eclipse is coming: the sun goes dark.', 'The sun is black. Both armies falter.'],
 	storm: ['A storm walks in from the west.', 'Thunderstorm: lightning under the cloud.'],
@@ -6105,7 +6192,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'A timed game',
-		'Help → Game: Conquest (no limit), 30 minutes or 60 minutes. At the bell the highest score wins.',
+		'Help → Game: Conquest (no limit), 15, 30 or 60 minutes. At the bell the highest score wins. A scenario sets the start: the Siege, the Silk Road, Last Keep.',
 		'A guaranteed end, and a reason to build more than an army.',
 	],
 	[
@@ -6391,8 +6478,31 @@ const costText = (c) =>
 		.map(([k, v]) => Math.round(v) + k)
 		.join(' ');
 const afford = (p, c) => Object.entries(c || {}).every(([k, v]) => p.res[k] >= v);
-const pay = (p, c) => {
-	for (const [k, v] of Object.entries(c || {})) p.res[k] -= v;
+// Every resource in or out goes through earn and spend: one home for the stores, the flow of the last minute (p.flow, p.spent1), the
+// ledger of where it came from and went (p.ledger) and the gathered total. Build 58; before, 25 lines wrote p.res directly (Albert: one home).
+const LEDGER = {
+	in: ['gather', 'trade', 'tithe', 'tribute', 'ransom', 'market', 'loot', 'mint', 'venture', 'tax'],
+	out: ['units', 'buildings', 'research', 'upkeep', 'trade', 'tribute', 'ransom', 'market', 'tax', 'venture', 'zeal', 'repairs'],
+};
+function earn(p, k, amt, why, counts = true) {
+	if (!(amt > 0)) return 0;
+	p.res[k] += amt;
+	if (counts) p.gathered += amt;
+	p.flow[k] = (p.flow[k] || 0) + amt;
+	const L = p.ledger || (p.ledger = { in: {}, out: {} });
+	L.in[why] = (L.in[why] || 0) + amt;
+	return amt;
+}
+function spend(p, k, amt, why) {
+	if (!(amt > 0)) return 0;
+	p.res[k] -= amt;
+	p.spent1[k] = (p.spent1[k] || 0) + amt;
+	const L = p.ledger || (p.ledger = { in: {}, out: {} });
+	L.out[why] = (L.out[why] || 0) + amt;
+	return amt;
+}
+const pay = (p, c, why = 'units') => {
+	for (const [k, v] of Object.entries(c || {})) spend(p, k, v, why);
 };
 const addRes = (a, c, f = 1) => {
 	for (const [k, v] of Object.entries(c || {})) a[k] = (a[k] || 0) + v * f;
@@ -6459,6 +6569,7 @@ const SET = {
 	civ: 'roman',
 	fantasy: false,
 	mode: 't60',
+	scen: 'open', // the scenario (SCENARIOS)
 	tension: 'diplomacy',
 	sound: true,
 	vol: 0.6,
@@ -6512,6 +6623,7 @@ const todaySeed = () => {
 }; // the same map for everyone that day
 const MODES = {
 	conquest: { name: 'Conquest', secs: 0 },
+	t15: { name: '15 minutes', secs: 900 }, // a game on the bus (Build 58): a Bronze Age town and the bell; the Throne hold scales to 225 s
 	t30: { name: '30 minutes', secs: 1800 },
 	t60: { name: '60 minutes', secs: 3600 },
 };
@@ -6787,6 +6899,7 @@ function stats(o, kind) {
 		dmg = U.dmg || 0,
 		rng_ = U.rng || 0,
 		spd = U.spd,
+		sight = U.sight,
 		vs = U.vs || {},
 		tier = 0;
 	for (const T of TECH)
@@ -6798,6 +6911,7 @@ function stats(o, kind) {
 			dmg += R.dmg || 0;
 			rng_ += R.rng || 0;
 			spd *= R.spd || 1;
+			sight += R.sight || 0;
 			if (R.vs) vs = { ...vs, ...R.vs }; // a people's own soldier keeps its name through the common ranks, and takes its elite one
 		}
 	const S = {
@@ -6808,6 +6922,7 @@ function stats(o, kind) {
 		dmg: U.dmg ? dmg + fxv(o, 'dmg', keys).a : 0,
 		rng: rng_ + fxv(o, 'rng', keys).a,
 		spd: spd * fxv(o, 'spd', keys).m,
+		sight,
 		vs,
 		armor: fxv(o, 'armor', keys).min,
 		train: fxv(o, 'train', keys).m,
@@ -6836,7 +6951,7 @@ const rangeFrom = (r0, h) => (r0 / 2) * (1 + Math.sqrt(1 + (4 * h) / r0));
 const rangeOf = (o, kind) => rangeFrom(BLD[kind].bow, BLD[kind].h) + (o === WILD ? 0 : fxv(o, 'rng', bldKeys(kind)).a);
 const lookout = (kind) => Math.round(LOOKOUT.base + LOOKOUT.k * Math.sqrt(BLD[kind].h || 0)); // how far a building sees, from its height
 const sightOf = (e) =>
-	((UNIT[e.kind] ? UNIT[e.kind].sight || 100 : lookout(e.kind)) +
+	((UNIT[e.kind] ? (e.owner !== undefined && e.owner !== WILD && e.owner !== null ? stats(e.owner, e.kind).sight : UNIT[e.kind].sight) || 100 : lookout(e.kind)) + // a tier can add sight (the mounted scout)
 		(e.owner !== undefined && e.owner !== WILD && e.owner !== null
 			? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]).a
 			: 0)) *
@@ -6881,6 +6996,9 @@ function rehealth(o) {
 }
 const unitPower = (u) => ((u.hp * Math.max(1, dmgOf(u))) / 6) * (UNIT[u.kind].bonly ? 0.3 : 1);
 const powerOf = (list) => list.reduce((s, u) => s + (isSoldier(u) ? unitPower(u) : 0), 0);
+// the square law as odds: with a power ratio r, the chance is r² / (1 + r²) (Lanchester, Aircraft in Warfare, 1916). One home; it was written
+// in four places until Build 58. Every odds line (the computers' war choice, the envoy's answer, the pick bar, the Huddle, the Games) reads it.
+const lanchester = (r) => (r * r) / (1 + r * r);
 // ═════ 09-nav.js: paths ═════
 // ───────────────────────── The walking grid: where things stand, and how people get around ─────────────────────────
 // Squares of 10, never shown. Buildings fill whole squares and leave one free around them. Walls are one square each.
@@ -7699,6 +7817,8 @@ function blankGame(seed) {
 		flood: 0,
 		clim: blankClim(),
 		truce: null, // when the whole board came to peace, or null (39-games)
+		sworn: 0, // until when no court may declare war (a scenario's term)
+		scen: null,
 		enlight: false,
 		stood: false,
 		gamesT: 0,
@@ -7743,6 +7863,9 @@ function mkPlayer(i, civ) {
 		spent: 0,
 		flow: {},
 		rate: {},
+		spent1: {},
+		orate: {},
+		ledger: { in: {}, out: {} },
 		score: { people: 0, army: 0, tech: 0, bld: 0, wealth: 0, total: 0 },
 		fxc: null,
 		uc: {},
@@ -7794,6 +7917,48 @@ function newGame(seed, carry) {
 		p.techs = new Set(carry.techs);
 		fxDirty();
 	} else say(`${LAND[G.land].name}. Gather, grow, explore.`, '', 8);
+	if (!carry && seed !== todaySeed()) applyScenario(SET.scen);
+}
+// a scenario is the ordinary game with some things set (SCENARIOS in 06): an age, a store, relations, hazards, a few buildings already up
+function applyScenario(id) {
+	const S = SCENARIOS[id];
+	if (!S || !Object.keys(S).length) return;
+	G.scen = id;
+	const sides = S.all ? G.P.filter((p) => p.id !== WILD) : [G.P[0]];
+	for (const p of sides) {
+		if (S.age) p.age = Math.max(p.age, S.age);
+		if (S.res) for (const k in S.res) p.res[k] = Math.max(p.res[k], S.res[k]);
+		if (S.techs) for (const t of S.techs) if (TECHBY[t]) p.techs.add(t);
+		if (S.mode) G.mode = S.mode;
+	}
+	if (S.rel)
+		for (let q = 1; q < WILD; q++) {
+			G.rel[0][q] = G.rel[q][0] = S.rel;
+			if (S.rel === 'peace') for (let r = 1; r < WILD; r++) if (q !== r) G.rel[q][r] = G.rel[r][q] = 'peace';
+		}
+	if (S.league) {
+		for (let q = 1; q < WILD; q++) for (let r = 1; r < WILD; r++) if (q !== r) G.rel[q][r] = G.rel[r][q] = 'ally';
+		G.P[1].ally = 2;
+		G.P[2].ally = 1;
+	} // three against one: the third stands with the two, allied in all but the one-ally slot
+	if (S.hz) G.hz = { ...S.hz };
+	if (S.truce) G.truce = 0;
+	if (S.sworn) G.sworn = S.sworn;
+	const k = keepOf(0);
+	for (const [kind, dx] of S.blds || []) {
+		const s = findSpot(0, kind, k.x + dx, k.y, 0, 120);
+		if (!s) continue;
+		const b = mkBld(0, kind, s.x, s.y, 1);
+		G.blds.push(b);
+	}
+	if (S.walls) {
+		for (const c of wallPlan(k)) if (!NAV.occ[c.gy * NC + c.gx] && !canPlace(0, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) G.blds.push(mkBld(0, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5, 1));
+	}
+	for (let i = 0; i < (S.vils || 0); i++) addUnit(0, 'vil', k.x + 30 + i * 8, k.y + 40);
+	navRebuild();
+	fxDirty();
+	if (S.hordeAt) G.horde = { at: S.hordeAt, said: 0 };
+	say(`${SCEN_TEXT[id][0]}: ${SCEN_TEXT[id][1]}`, 'soft', 10);
 }
 const inBox = (p, r) => p.x >= r.x0 && p.x <= r.x1 && p.y >= r.y0 && p.y <= r.y1;
 const node = (kind, type, x, y, amt) => ({ id: NID++, kind, type, x, y, amt, max: amt });
@@ -8486,7 +8651,7 @@ function muster(o, plan, bn) {
 	if (musterWhy(o, plan)) return false;
 	const { cost, t } = musterCost(o, plan),
 		at = ready(o, 'council').sort((a, b) => a.q.length - b.q.length)[0];
-	pay(G.P[o], cost);
+	pay(G.P[o], cost, 'units');
 	at.q.push({ muster: plan, bn, left: t, total: t });
 	return true;
 }
@@ -8510,7 +8675,7 @@ function research(o, id) {
 		p = G.P[o],
 		at = ready(o, T.at)[0],
 		tt = T.t * fxv(o, 'research').m;
-	pay(p, T.cost);
+	pay(p, T.cost, 'research');
 	p.spent += sumCost(T.cost);
 	at.q.push({ tech: id, left: tt, total: tt });
 	return true;
@@ -8520,7 +8685,7 @@ function ageUp(o) {
 		A = nextAge(o),
 		k = keepOf(o);
 	if (!A || p.aging || !k || !afford(p, A.cost) || k.q.length >= qMax(o)) return false;
-	pay(p, A.cost);
+	pay(p, A.cost, 'research');
 	p.spent += sumCost(A.cost);
 	k.q.push({ age: p.age + 1, left: A.t, total: A.t });
 	p.aging = true;
@@ -8538,7 +8703,7 @@ function build(o, kind, x, y) {
 			w.gone = true;
 		}
 	} // a gate takes the place of a wall square
-	pay(p, B.cost);
+	pay(p, B.cost, 'buildings');
 	const b = mkBld(o, kind, x, y, 0);
 	G.blds.push(b);
 	navRebuild();
@@ -8681,6 +8846,7 @@ function relWhy(o, q, want) {
 	if (want === rel) return 'Already.';
 	if (q === WILD && want === 'peace') return regardOf(o) < NATIVE.peaceAt ? `Needs regard ${NATIVE.peaceAt}.` : null; // the Natives: peace needs regard; alliance by emissary when regard is high; war is yours to declare
 	if (q === WILD && want === 'ally' && regardOf(o) < NATIVE.allyAt) return `Needs regard ${NATIVE.allyAt}.`;
+	if (want === 'war' && q !== WILD && G.sworn > G.t) return `A sworn peace holds ${clock(G.sworn - G.t)} more.`; // a scenario's term of peace (the Olympic truce was sworn for the festival)
 	if (want === 'war') return noticeLeft(o, q) ? `Notice given: ${noticeLeft(o, q)} s.` : null;
 	if (want === 'ally' && rel === 'war') return 'Make peace first.';
 	if (p.envoyOut) return 'Your emissary is out.';
@@ -8745,7 +8911,7 @@ function sendEnvoy(o, to, ask) {
 const oddsOf = (q, o) => {
 	const S = soldiersOf(q),
 		r = (powerOf(S) / estPower(q, o)) * matchup(S, soldiersOf(o));
-	return (r * r) / (1 + r * r);
+	return lanchester(r);
 };
 function judgeEnvoy(to, from, envoy) {
 	const T = G.P[to],
@@ -8774,9 +8940,8 @@ function judgeEnvoy(to, from, envoy) {
 				reply(from, envoy, `The ${T.name} want more of this war, or ${price} gold.`);
 				return;
 			}
-			G.P[from].res.g -= price;
-			T.res.g += price;
-			T.gathered += price;
+			spend(G.P[from], 'g', price, 'tribute');
+			earn(T, 'g', price, 'tribute');
 			makePeace(to, from);
 			reply(from, envoy, `The ${T.name} accept peace for ${price} gold.`);
 			return;
@@ -8859,8 +9024,8 @@ function demand(L, q, r) {
 	const Q = G.P[q],
 		x = Math.min(DEMAND.amt, Math.floor(Q.res[r])),
 		cost = demandCost(Q);
-	Q.res[r] -= x;
-	G.P[L].res[r] += x;
+	spend(Q, r, x, 'tax');
+	earn(G.P[L], r, x, 'tax');
 	Q.loyal = Math.max(0, (Q.loyal || 0) - cost);
 	(Q.demands = Q.demands || []).push(G.t);
 	if (L === 0) say(`${Q.name} hand over ${x} ${LONG[r]}: loyalty −${cost}.`, '', 4);
@@ -9009,8 +9174,8 @@ const prisonersOf = (o) => (G.prisoners || []).filter((x) => x.o === o);
 function payRansom(o, i) {
 	const x = prisonersOf(o)[i];
 	if (!x || G.P[o].res.g < x.ransom) return false;
-	G.P[o].res.g -= x.ransom;
-	if (x.by !== WILD && G.P[x.by]) G.P[x.by].res.g += x.ransom;
+	spend(G.P[o], 'g', x.ransom, 'ransom');
+	if (x.by !== WILD && G.P[x.by]) earn(G.P[x.by], 'g', x.ransom, 'ransom');
 	G.prisoners.splice(G.prisoners.indexOf(x), 1);
 	const k = keepOf(o);
 	if (k) {
@@ -9051,7 +9216,7 @@ function teachWhy(o, u) {
 }
 function teach(o, u) {
 	if (teachWhy(o, u)) return false;
-	pay(G.P[o], teachCost(o, u));
+	pay(G.P[o], teachCost(o, u), 'research');
 	u.state = 'school';
 	u.schoolT = G.t + teachSecs(o, u);
 	u.tgt = null;
@@ -9112,17 +9277,16 @@ function marketTrade(o, k, dir) {
 	if (dir === 'sell') {
 		if (!MKT_SELL.includes(k) || haveOf(p, k) < n) return false;
 		const v = sellPrice(o, k);
-		if (TRADE[k]) p.res[k] -= n;
+		if (TRADE[k]) spend(p, k, n, 'market');
 		else p.goods[k] -= n;
-		p.res.g += v;
-		if (!TRADE[k]) p.gathered += v;
+		earn(p, 'g', v, 'market', !TRADE[k]); // raw sold for gold is a swap, not a gain; a good sold counts
 		mktHit(k, TRADE[k] ? 25 : n, -1);
 	} else {
 		if (!MKT_BUY.includes(k)) return false;
 		const c = buyPrice(o, k);
 		if (p.res.g < c) return false;
-		p.res.g -= c;
-		if (TRADE[k]) p.res[k] += n;
+		spend(p, 'g', c, 'market');
+		if (TRADE[k]) earn(p, k, n, 'market', false);
 		else p.goods[k] = (p.goods[k] || 0) + n;
 		mktHit(k, TRADE[k] ? 25 : n, 1);
 	}
@@ -9143,7 +9307,7 @@ function zealWhy(o, list) {
 function zeal(o, list) {
 	if (zealWhy(o, list)) return false;
 	const p = G.P[o];
-	pay(p, zealCost(o));
+	pay(p, zealCost(o), 'zeal');
 	p.zealT = G.t + ZEAL.cd * fxv(o, 'zealcd').m;
 	for (const u of list) if (isSoldier(u)) u.zeal = G.t + ZEAL.secs + fxv(o, 'zealsecs').a;
 	if (o === 0) {
@@ -10514,7 +10678,7 @@ function repairTick(u, dt, SP) {
 	}
 	for (const k in due) {
 		const whole = Math.floor(due[k]);
-		p.res[k] -= whole;
+		spend(p, k, whole, 'repairs');
 		b.rd[k] = due[k] - whole;
 	}
 	b.hp += heal;
@@ -10622,8 +10786,7 @@ function caravanTick(u, dt, SP) {
 	}
 	if (moveTo(u, d.x, d.y, dt, halfOf(d) + 4, SP)) {
 		if (d.owner !== o) {
-			G.P[o].res.g += u.cargo;
-			G.P[o].gathered += u.cargo;
+			earn(G.P[o], 'g', u.cargo, 'trade');
 			if (o === 0 && u.cargo) {
 				say(`A caravan earns ${u.cargo} gold from your ally.`, 'good', 3, d);
 				sfx('tribute');
@@ -11241,8 +11404,7 @@ function findsTick(dt) {
 				if (f.acc >= 1) {
 					const g = Math.floor(f.acc);
 					f.acc -= g;
-					G.P[f.owner].res.g += g;
-					G.P[f.owner].gathered += g;
+					earn(G.P[f.owner], 'g', g, 'loot');
 				}
 			}
 			continue;
@@ -11629,8 +11791,7 @@ function plunder(to, got) {
 	let any = false;
 	for (const [k, v] of Object.entries(got))
 		if (v > 0) {
-			P.res[k] += v;
-			P.gathered += v;
+			earn(P, k, v, 'loot');
 			any = true;
 			if (to === 0) G.loot[k] = (G.loot[k] || 0) + v;
 		}
@@ -12241,7 +12402,7 @@ function decideWar(p, per) {
 		if (q.alive && q.id !== WILD && atWar(o, q.id)) {
 			if (q.id === 0 && G.diff === 'easy' && G.t < EASY_SAFE && !W) continue; // Easy: nobody comes for you in the first six minutes
 			const r = (mine / estPower(o, q.id)) * matchup(go, soldiersOf(q.id)),
-				prob = (r * r) / (1 + r * r); // the square law, as odds, bent by who counters whom
+				prob = lanchester(r); // the square law, as odds, bent by who counters whom
 			const busy =
 				per.opportunist &&
 				G.P.some((x) => x.alive && x.id !== WILD && x.id !== o && x.id !== q.id && atWar(q.id, x.id)); // the opportunist: a side with another war on its hands
@@ -13617,6 +13778,11 @@ const LOOKS = {
 		);
 	},
 	scout: (c, t, fr) => {
+		// a runner with a staff and cape until Horse breeding (tier 1) puts it on a horse
+		if (!t) {
+			person({ tunic: c, head: 'cap', capCol: shade(c, 0.6), weapon: 'staff', cape: shade(c, 0.6) }, fr);
+			return;
+		}
 		horse({ coat: '#9a7046' }, fr);
 		g.save();
 		g.translate(-0.6, -1);
@@ -19433,8 +19599,13 @@ function pickToggle(u, hold) {
 				: [...picked().map((v) => ({ t: 'unit', id: v.id })), k],
 		);
 	else setPick([k]);
-	feel('tick');
+	sfx(pickSound(u));
 }
+// the sound a picked unit answers with: by what it is made of and how it moves (35-sound)
+const pickSound = (u) => {
+	const T = UNIT[u.kind].tags || [];
+	return T.includes('mounted') ? 'pickHoof' : T.includes('ranged') ? 'pickTwang' : isSoldier(u) ? 'pickMetal' : 'pickWood';
+};
 function order(S, h) {
 	const sol = S.filter(isSoldier),
 		vil = S.filter((u) => u.kind === 'vil'),
@@ -19934,7 +20105,7 @@ function foeNearest() {
 function oddsText(S, t) {
 	if (t === null || t === undefined || !S.length) return '';
 	const r = (powerOf(S) / estPower(0, t)) * matchup(S, soldiersOf(t)),
-		p = (r * r) / (1 + r * r);
+		p = lanchester(r);
 	return `odds ${p > 0.65 ? 'strong' : p > 0.4 ? 'even' : 'weak'}`;
 }
 // ═════ 28-army-strip.js: the army strip: who can be sent, how many, and the sends ═════
@@ -20744,6 +20915,11 @@ const settingsHTML = () =>
 		SET.mode,
 	) +
 	seg(
+		'Scenario',
+		Object.keys(SCENARIOS).map((k) => [`scen:${k}`, SCEN_TEXT[k][0].replace('The ', ''), k]),
+		SET.scen || 'open',
+	) +
+	seg(
 		'World',
 		[
 			['fantasy:0', 'Real', false],
@@ -21098,17 +21274,31 @@ const CARDS = {
 				p.rate && Object.keys(p.rate).length
 					? p.rate
 					: Object.fromEntries(Object.entries(p.flow || {}).map(([k, v]) => [k, (v * 60) / Math.max(10, el)])); // the last full minute; before there is one, the pace so far
+		const ot =
+			p.rate && Object.keys(p.rate).length
+				? p.orate || {}
+				: Object.fromEntries(Object.entries(p.spent1 || {}).map(([k, v]) => [k, (v * 60) / Math.max(10, el)]));
 		let h =
 			title('Stores', 'the last minute') +
 			`<table><tr><th></th><th>Have</th><th>In</th><th>Out</th><th>On it</th></tr>${RES.map((r) => {
-				const k = KEY[r];
-				return `<tr><td>${RESOURCES[r].name}</td><td>${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${r === 'food' ? '−' + Math.round(p.eats || 0) : ''}</td><td>${V.filter((u) => u.job === r).length}</td></tr>`;
+				const k = KEY[r],
+					net = Math.round(rt[k] || 0) - Math.round(ot[k] || 0);
+				return `<tr><td>${RESOURCES[r].name}</td><td class="${net > 0 ? 'up' : net < 0 ? (p.res[k] < -net * 2 ? 'low' : 'down') : ''}">${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${ot[k] ? '−' + Math.round(ot[k]) : ''}</td><td>${V.filter((u) => u.job === r).length}</td></tr>`;
 			}).join('')}</table>`;
 		h += `<p><i>Goods:</i> ${GOODK.map((k) => `${GOODS[k].name} ${Math.floor(p.goods[k] || 0)}${rt[k] ? ` (+${Math.round(rt[k])})` : ''}`).join(' · ')}. Goods wait at your Market for caravans; wool for a Workshop.</p>`;
-		return (
-			h +
-			`<p>In: gathered and brought home in the last minute. Out: what your people eat a minute${p.hungry ? ' · <b>they are hungry</b>' : ''}.</p>`
-		);
+		h += `<p>In and Out: the last minute. A count is green while it rises, gold while it falls, red when it falls with under two minutes left${p.hungry ? ' · <b>they are hungry</b>' : ''}.</p>`;
+		{
+			// the ledger: every resource that ever came in or went out, by where it came from and went (earn and spend, 08-core)
+			const L = p.ledger || { in: {}, out: {} },
+				row = (o) =>
+					Object.entries(o)
+						.filter(([, v]) => v >= 1)
+						.sort((a, b) => b[1] - a[1])
+						.map(([k, v]) => `${LEDGER_WORD[k] || k} ${fmt(v)}`)
+						.join(' · ') || 'nothing yet';
+			h += fold('ledger', `Ledger · the whole game`, `<p><i>In:</i> ${row(L.in)}.</p><p><i>Out:</i> ${row(L.out)}.</p><p>Trade is caravans, routes held and the cut of other caravans at your stops; the Market is sales and buys; tax is what vassals send; tribute is gifts and peace bought.</p>`);
+		}
+		return h;
 	},
 	fault: () =>
 		title('Something went wrong', 'your game is saved') +
@@ -21973,7 +22163,7 @@ function whoIs(u) {
 // ───────────────────────── Messages and tips ─────────────────────────
 // quiet kinds (news, the spectacle's 'coming' lines) never take the line: they wait in the list and count on the bell (Albert: too many alerts to keep up with)
 const QUIET = new Set(['news', 'soft']);
-function say(text, cls, secs, at, act) {
+function say(text, cls, secs, at, act, why) {
 	if (!G) return;
 	if (SET.msgs === false && cls !== 'warn' && cls !== 'tip') return;
 	if (hushed(text)) return;
@@ -21988,6 +22178,7 @@ function say(text, cls, secs, at, act) {
 		text,
 		cls,
 		act,
+		why, // a line under the message in the list: why it happened (Build 58)
 		quiet,
 		until: quiet ? G.t : G.t + (secs || 4),
 		at: at ? { x: Math.round(at.x), y: Math.round(at.y) } : null,
@@ -22098,11 +22289,16 @@ function ui(force) {
 	const p = G.P[0],
 		R = p.res;
 	document.body.classList.toggle('night', G.night > 0.5);
-	txt('rf', fmt(R.f));
-	txt('rw', fmt(R.w));
-	txt('rs', fmt(R.s));
-	txt('rg', fmt(R.g));
-	txt('ri', fmt(R.i));
+	for (const k of ['f', 'w', 's', 'g', 'i']) {
+		txt('r' + k, fmt(R[k]));
+		const el = $('r' + k),
+			net = netOf(p, k),
+			cls = net > 0.5 ? 'up' : net < -0.5 ? (R[k] < -net * 2 ? 'low' : 'down') : '';
+		if (el.dataset.h !== cls) {
+			el.dataset.h = cls;
+			el.className = 'wd' + (cls ? ' ' + cls : '');
+		}
+	} // the word's colour is the net flow of the last minute: rising, steady, falling, falling with under two minutes left (Build 58)
 	const rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length;
 	txt('scoreN', `★${fmt(p.score.total)}`);
 	txt('scoreR', ['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th');
@@ -22395,7 +22591,7 @@ function tick() {
 			? G.log
 					.map(
 						(x) =>
-							`<div class="row ${x.cls || ''}"><button class="t" data-act="${linkOf(x) || 'tklist'}">${x.text}</button><button class="h" data-act="hush:${encodeURIComponent(x.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`,
+							`<div class="row ${x.cls || ''}"><button class="t" data-act="${linkOf(x) || 'tklist'}">${x.text}${x.why ? `<small class="why">${x.why}</small>` : ''}</button><button class="h" data-act="hush:${encodeURIComponent(x.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`,
 					)
 					.join('') +
 				`<div class="row end"><button class="t" data-act="tkclear">Clear all</button><button class="h" data-act="tklist" aria-label="Close the list">✕</button></div>`
@@ -22595,6 +22791,11 @@ const ACT = {
 	},
 	mode(a) {
 		SET.mode = a;
+		saveSet();
+		refresh();
+	},
+	scen(a) {
+		SET.scen = SCENARIOS[a] ? a : 'open';
 		saveSet();
 		refresh();
 	},
@@ -23477,6 +23678,9 @@ const MIGRATE = {
 		for (const u of S.units) u.st = u.st || { got: 0, trips: 0, walk: 0, kills: 0, built: 0 };
 		for (const p of S.P) {
 			p.flow = p.flow || {};
+			p.spent1 = p.spent1 || {};
+			p.orate = p.orate || {};
+			p.ledger = p.ledger || { in: {}, out: {} };
 			p.rate = p.rate || {};
 		}
 		S.warAt = S.warAt || {};
@@ -23619,6 +23823,8 @@ function saveGame(force) {
 			flood: G.flood,
 			clim: G.clim,
 			truce: G.truce,
+			sworn: G.sworn,
+			scen: G.scen,
 			enlight: G.enlight,
 			stood: G.stood,
 			gamesT: G.gamesT,
@@ -23792,6 +23998,8 @@ function loadGame(S) {
 	G.flood = S.flood || 0;
 	G.clim = S.clim ? { ...blankClim(), ...S.clim } : blankClim();
 	G.truce = S.truce ?? null;
+	G.sworn = S.sworn || 0;
+	G.scen = S.scen || null;
 	G.enlight = !!S.enlight;
 	G.stood = !!S.stood;
 	G.gamesT = S.gamesT || 0;
@@ -24016,6 +24224,12 @@ const SFX = {
 	chop: [0.18, (v) => knock('wood', 220, 0.3 * v)], // an axe in a trunk
 	mine: [0.18, (v) => knock('stone', 1400, 0.12 * v)], // a pick on rock
 	pick: [0.3, (v) => tone(520, 0.05, 'sine', 0.07 * v, 700)],
+	// a unit picked answers in its material (Build 58): a villager's tool creaks (wood), a blade clinks (metal), a bowstring twangs
+	// (a plucked string: the fundamental and its harmonics, short), a rider's horse stamps twice (two dull thuds)
+	pickWood: [0.15, (v) => knock('wood', 330, 0.18 * v, 0, 0.6)],
+	pickMetal: [0.15, (v) => knock('metal', 1800, 0.08 * v, 0, 0.4)],
+	pickTwang: [0.15, (v) => [1, 2, 3].forEach((k) => tone(180 * k, 0.18 / k, 'triangle', (0.12 * v) / k))],
+	pickHoof: [0.15, (v) => [0, 0.11].forEach((at) => knock('wood', 90, 0.22 * v, at, 0.3))],
 	hit: [
 		0.07,
 		(v) => {
@@ -24215,6 +24429,10 @@ function thunder(x, y) {
 const APP = { haptics: () => window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics };
 const FEEL = { tick: ['LIGHT', 8], snap: ['MEDIUM', 15], thock: ['HEAVY', 25], crack: ['HEAVY', [30, 40, 20]] };
 const HAPTIC = {
+	pickWood: 'tick',
+	pickMetal: 'tick',
+	pickTwang: 'tick',
+	pickHoof: 'tick',
 	place: 'snap',
 	done: 'thock',
 	doneWar: 'thock',
@@ -24257,20 +24475,31 @@ function stash(o, type, amt) {
 	if (KEY[type] && G.throne && G.throne.owner !== o && G.throne.owner !== WILD && G.P[G.throne.owner].alive) {
 		const t = amt * THRONE.tithe;
 		amt -= t;
-		G.P[G.throne.owner].res[k] += t;
-		G.P[G.throne.owner].gathered += t;
+		earn(G.P[G.throne.owner], k, t, 'tithe');
 	} // the Throne's tithe
-	if (KEY[type]) p.res[k] += amt;
-	else p.goods[k] = (p.goods[k] || 0) + amt;
-	p.gathered += amt;
-	p.flow[k] = (p.flow[k] || 0) + amt;
+	if (KEY[type]) earn(p, k, amt, 'gather');
+	else {
+		p.goods[k] = (p.goods[k] || 0) + amt;
+		p.gathered += amt;
+		p.flow[k] = (p.flow[k] || 0) + amt;
+	}
 }
 // what came in over the last minute, by resource and good: kept for the stores card (the flow is counted as it is stashed, read once a minute)
+// a resource's net flow a minute: what came in over the last full minute less what went out (the minute so far, scaled, before there is one)
+function netOf(p, k) {
+	const el = (G.tick % 1800) / 30,
+		full = p.rate && Object.keys(p.rate).length,
+		inn = full ? p.rate[k] || 0 : ((p.flow[k] || 0) * 60) / Math.max(10, el),
+		out = full ? (p.orate && p.orate[k]) || 0 : ((p.spent1[k] || 0) * 60) / Math.max(10, el);
+	return inn - out;
+}
 function flowTick() {
 	for (const p of G.P)
 		if (p.id !== WILD) {
 			p.rate = p.flow;
 			p.flow = {};
+			p.orate = p.spent1;
+			p.spent1 = {};
 		}
 }
 
@@ -24414,19 +24643,17 @@ function routeTick(u, dt, SP) {
 		if (keeper !== null && keeper !== o && gold > 0) {
 			const cut = gold * Math.min(0.6, POST.cut[stopsHeld(keeper, t.route)] + fxv(keeper, 'cut').a);
 			gold -= cut;
-			G.P[keeper].res.g += cut;
-			G.P[keeper].gathered += cut;
+			earn(G.P[keeper], 'g', cut, 'trade');
 		}
 		for (const k in u.goods) mktHit(k, TRADE[k] ? u.goods[k] / 4 : u.goods[k], -1);
 		gold = Math.round(shareUp(o, gold));
-		p.res.g += gold;
-		p.gathered += gold;
+		earn(p, 'g', gold, 'trade');
 		u.goods = {};
 		if (r.spice && t.kind === 'stop') {
 			const c = spiceCost(),
 				q = Math.min(LOAD, Math.floor(p.res.g / c));
 			if (q > 0) {
-				p.res.g -= Math.round(q * c);
+				spend(p, 'g', Math.round(q * c), 'trade');
 				u.goods.spice = q;
 				mktHit('spice', q, 1);
 			}
@@ -24508,8 +24735,7 @@ function natureTick() {
 			o = S[0] && S[0].owner;
 		if (o !== null && o !== undefined && S.every((f) => f.owner === o) && G.P[o].alive) {
 			const g = shareUp(o, POST.all);
-			G.P[o].res.g += g;
-			G.P[o].gathered += g;
+			earn(G.P[o], 'g', g, 'trade');
 			if (o === 0 && G.tick % 300 === 0) sfx('tribute'); // held routes pay all the time: a chime every ten seconds
 		}
 	}
@@ -24746,7 +24972,7 @@ function upkeepTick() {
 			p.eats = eat * 60;
 			starveTick(p);
 			if (p.res.f >= eat) {
-				p.res.f -= eat;
+				spend(p, 'f', eat, 'upkeep');
 				if (p.hungry && p.res.f > 20) {
 					p.hungry = false;
 					if (o === 0) say('Your people are fed again.', 'good', 4);
@@ -24851,8 +25077,7 @@ function debase(o) {
 	const p = G.P[o];
 	if (p.debased || !ready(o, 'mint').length) return false;
 	p.debased = true;
-	p.res.g += MINT.debase;
-	p.gathered += MINT.debase;
+	earn(p, 'g', MINT.debase, 'mint');
 	if (o === 0) say(`Debased: +${MINT.debase} gold, prices ×${MINT.price} for good.`, 'warn', 7);
 	return true;
 }
@@ -24880,7 +25105,7 @@ function venture(o, amt) {
 	p.ventures = p.ventures || [];
 	if (p.age < VENTURE.age || !ready(o, 'market').length || p.res.g < amt || p.ventures.length >= VENTURE.max)
 		return false;
-	p.res.g -= amt;
+	spend(p, 'g', amt, 'venture');
 	p.ventures.push({ amt, due: G.t + YEAR });
 	if (o === 0) say(`${amt} gold sent out. Back in a year.`, '', 5);
 	return true;
@@ -24894,8 +25119,8 @@ function ventureTick() {
 					if (p.id === 0) say(`Robbers took a venture of ${v.amt} gold.`, 'warn', 6);
 				} else {
 					const back = Math.round(shareUp(p.id, v.amt * (VENTURE.back + fxv(p.id, 'venture').a)));
-					p.res.g += back;
-					p.gathered += back - v.amt;
+					earn(p, 'g', back, 'venture');
+					p.gathered -= v.amt; // only the profit counts as gathered
 					if (p.id === 0) say(`A venture comes home: ${back} gold for ${v.amt}.`, 'good', 6);
 				}
 				return false;
@@ -24909,8 +25134,7 @@ function shareUp(o, gold) {
 	const p = G.P[o];
 	if (p.lord === null || p.lord === undefined || p.rebel || (p.loyal || 0) < VASSAL.shareAt || gold <= 0) return gold;
 	const s = gold * VASSAL.share;
-	G.P[p.lord].res.g += s;
-	G.P[p.lord].gathered += s;
+	earn(G.P[p.lord], 'g', s, 'tax');
 	return gold - s;
 }
 function loyaltyParts(p) {
@@ -25058,8 +25282,8 @@ function vassalTick() {
 		if (tot > 0 && take > 0)
 			for (const r of ['f', 'w', 's', 'g', 'i']) {
 				const x = Math.min(p.res[r], (take * p.res[r]) / tot);
-				p.res[r] -= x;
-				L.res[r] += x;
+				spend(p, r, x, 'tax');
+				earn(L, r, x, 'tax');
 				p.paid += x;
 			}
 		if (L.id === 0 && p.paid > 0) sfx('tribute');
@@ -25076,8 +25300,8 @@ function vassalTick() {
 			for (const r of ['f', 'w', 's', 'g', 'i']) {
 				const x = Math.floor((p.res[r] * 0.1 * (p.loyal - 50)) / 100);
 				if (x > 0) {
-					p.res[r] -= x;
-					L.res[r] += x;
+					spend(p, r, x, 'tax');
+					earn(L, r, x, 'tax');
 					gift[r] = x;
 				}
 			}
@@ -25575,7 +25799,7 @@ function startEvent(kind) {
 	if (EV[kind].start) EV[kind].start(e);
 	evmSet();
 	if (EV_TEXT[kind] && kind !== 'meteor' && kind !== 'mirage')
-		say(EV_TEXT[kind][1], E.harm ? 'warn' : E.gift ? 'good' : 'soft', 6, e.at || (e.units && e.units[0]) || null); // only what can hurt you takes the line
+		say(EV_TEXT[kind][1], E.harm ? 'warn' : E.gift ? 'good' : 'soft', 6, e.at || (e.units && e.units[0]) || null, null, EV_WHY[kind]); // only what can hurt you takes the line
 }
 function endEvent() {
 	const e = G.ev.cur;
@@ -25653,6 +25877,17 @@ const airTemp = (t = G.t) =>
 	CLIMATE.mean +
 	CLIMATE.year * Math.cos(2 * Math.PI * ((t % YEAR) / YEAR - CLIMATE.peakDay)) +
 	CLIMATE.day * Math.cos(2 * Math.PI * ((t % DAY_LEN) / DAY_LEN - CLIMATE.peakHour)); // °C now: the year's swing and the day's
+// why the sky turned, in the chain's own numbers: the list shows it under the line (Build 58)
+function wxWhy(wx, was, P, c) {
+	const pct = (x) => Math.round(x * 10) + ' in 10',
+		wet = precip(wx),
+		wasWet = precip(was);
+	if (wet && wasWet) return `the wet spell holds: ${pct(P[1])} each minute`;
+	if (wet) return `rain begins ${pct(P[0])} of dry minutes${wx === 'snow' ? '; below freezing it falls as snow' : wx === 'blizzard' ? '; a winter storm' : ''}`;
+	if (wx === 'frost') return `clear and the air at ${Math.round(c.T)} °C: frost`;
+	if (wx === 'drought') return `${c.dry} dry minutes in heat of ${Math.round(c.T)} °C`;
+	return wasWet ? `the rain stopped: ${pct(1 - P[1])} each wet minute` : 'a dry minute: the chain stays dry';
+}
 const precip = (wx) => wx === 'rain' || wx === 'snow' || wx === 'blizzard';
 function skyTurn() {
 	// the next minute's sky from this one: the chain, then what falls from the air's temperature
@@ -25673,7 +25908,7 @@ function skyTurn() {
 			: c.dry >= CLIMATE.drought.dry && c.T > CLIMATE.drought.temp
 				? 'drought'
 				: 'clear';
-	if (G.wx !== was && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6);
+	if (G.wx !== was && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6, null, null, wxWhy(G.wx, was, P, c));
 }
 function climateTick(dt) {
 	const c = G.clim;
@@ -25812,7 +26047,7 @@ function giftWhy(o, amt) {
 function giveGift(o, amt) {
 	if (giftWhy(o, amt)) return false;
 	const gain = giftGain(o, amt);
-	G.P[o].res.g -= amt;
+	spend(G.P[o], 'g', amt, 'tribute');
 	natState().gifts[o].push(G.t);
 	natRegard(o, gain);
 	if (o === 0)
@@ -26289,7 +26524,7 @@ const powerSum = (L) => L.reduce((s, u) => s + unitPower(u), 0);
 // the chance to win: the engine every odds line uses (power against power, the matchup of arms), as r²/(1+r²)
 function chance(S, foes) {
 	const r = (powerSum(S) / Math.max(1, powerSum(foes))) * matchup(S, foes);
-	return (r * r) / (1 + r * r);
+	return lanchester(r);
 }
 const dpsOf = (L) => L.reduce((s, v) => s + dmgOf(v) / (UNIT[v.kind].cd || 1.5), 0);
 const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
@@ -27248,6 +27483,8 @@ window.__fk = {
 	CLIMATE,
 	PEACE,
 	nextIn,
+	lanchester,
+	WHY,
 	hazard,
 	HEALTH,
 	truceAll,

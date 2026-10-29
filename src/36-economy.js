@@ -15,20 +15,31 @@ function stash(o, type, amt) {
 	if (KEY[type] && G.throne && G.throne.owner !== o && G.throne.owner !== WILD && G.P[G.throne.owner].alive) {
 		const t = amt * THRONE.tithe;
 		amt -= t;
-		G.P[G.throne.owner].res[k] += t;
-		G.P[G.throne.owner].gathered += t;
+		earn(G.P[G.throne.owner], k, t, 'tithe');
 	} // the Throne's tithe
-	if (KEY[type]) p.res[k] += amt;
-	else p.goods[k] = (p.goods[k] || 0) + amt;
-	p.gathered += amt;
-	p.flow[k] = (p.flow[k] || 0) + amt;
+	if (KEY[type]) earn(p, k, amt, 'gather');
+	else {
+		p.goods[k] = (p.goods[k] || 0) + amt;
+		p.gathered += amt;
+		p.flow[k] = (p.flow[k] || 0) + amt;
+	}
 }
 // what came in over the last minute, by resource and good: kept for the stores card (the flow is counted as it is stashed, read once a minute)
+// a resource's net flow a minute: what came in over the last full minute less what went out (the minute so far, scaled, before there is one)
+function netOf(p, k) {
+	const el = (G.tick % 1800) / 30,
+		full = p.rate && Object.keys(p.rate).length,
+		inn = full ? p.rate[k] || 0 : ((p.flow[k] || 0) * 60) / Math.max(10, el),
+		out = full ? (p.orate && p.orate[k]) || 0 : ((p.spent1[k] || 0) * 60) / Math.max(10, el);
+	return inn - out;
+}
 function flowTick() {
 	for (const p of G.P)
 		if (p.id !== WILD) {
 			p.rate = p.flow;
 			p.flow = {};
+			p.orate = p.spent1;
+			p.spent1 = {};
 		}
 }
 
@@ -172,19 +183,17 @@ function routeTick(u, dt, SP) {
 		if (keeper !== null && keeper !== o && gold > 0) {
 			const cut = gold * Math.min(0.6, POST.cut[stopsHeld(keeper, t.route)] + fxv(keeper, 'cut').a);
 			gold -= cut;
-			G.P[keeper].res.g += cut;
-			G.P[keeper].gathered += cut;
+			earn(G.P[keeper], 'g', cut, 'trade');
 		}
 		for (const k in u.goods) mktHit(k, TRADE[k] ? u.goods[k] / 4 : u.goods[k], -1);
 		gold = Math.round(shareUp(o, gold));
-		p.res.g += gold;
-		p.gathered += gold;
+		earn(p, 'g', gold, 'trade');
 		u.goods = {};
 		if (r.spice && t.kind === 'stop') {
 			const c = spiceCost(),
 				q = Math.min(LOAD, Math.floor(p.res.g / c));
 			if (q > 0) {
-				p.res.g -= Math.round(q * c);
+				spend(p, 'g', Math.round(q * c), 'trade');
 				u.goods.spice = q;
 				mktHit('spice', q, 1);
 			}
@@ -266,8 +275,7 @@ function natureTick() {
 			o = S[0] && S[0].owner;
 		if (o !== null && o !== undefined && S.every((f) => f.owner === o) && G.P[o].alive) {
 			const g = shareUp(o, POST.all);
-			G.P[o].res.g += g;
-			G.P[o].gathered += g;
+			earn(G.P[o], 'g', g, 'trade');
 			if (o === 0 && G.tick % 300 === 0) sfx('tribute'); // held routes pay all the time: a chime every ten seconds
 		}
 	}
@@ -504,7 +512,7 @@ function upkeepTick() {
 			p.eats = eat * 60;
 			starveTick(p);
 			if (p.res.f >= eat) {
-				p.res.f -= eat;
+				spend(p, 'f', eat, 'upkeep');
 				if (p.hungry && p.res.f > 20) {
 					p.hungry = false;
 					if (o === 0) say('Your people are fed again.', 'good', 4);
@@ -609,8 +617,7 @@ function debase(o) {
 	const p = G.P[o];
 	if (p.debased || !ready(o, 'mint').length) return false;
 	p.debased = true;
-	p.res.g += MINT.debase;
-	p.gathered += MINT.debase;
+	earn(p, 'g', MINT.debase, 'mint');
 	if (o === 0) say(`Debased: +${MINT.debase} gold, prices ×${MINT.price} for good.`, 'warn', 7);
 	return true;
 }
@@ -638,7 +645,7 @@ function venture(o, amt) {
 	p.ventures = p.ventures || [];
 	if (p.age < VENTURE.age || !ready(o, 'market').length || p.res.g < amt || p.ventures.length >= VENTURE.max)
 		return false;
-	p.res.g -= amt;
+	spend(p, 'g', amt, 'venture');
 	p.ventures.push({ amt, due: G.t + YEAR });
 	if (o === 0) say(`${amt} gold sent out. Back in a year.`, '', 5);
 	return true;
@@ -652,8 +659,8 @@ function ventureTick() {
 					if (p.id === 0) say(`Robbers took a venture of ${v.amt} gold.`, 'warn', 6);
 				} else {
 					const back = Math.round(shareUp(p.id, v.amt * (VENTURE.back + fxv(p.id, 'venture').a)));
-					p.res.g += back;
-					p.gathered += back - v.amt;
+					earn(p, 'g', back, 'venture');
+					p.gathered -= v.amt; // only the profit counts as gathered
 					if (p.id === 0) say(`A venture comes home: ${back} gold for ${v.amt}.`, 'good', 6);
 				}
 				return false;
@@ -667,8 +674,7 @@ function shareUp(o, gold) {
 	const p = G.P[o];
 	if (p.lord === null || p.lord === undefined || p.rebel || (p.loyal || 0) < VASSAL.shareAt || gold <= 0) return gold;
 	const s = gold * VASSAL.share;
-	G.P[p.lord].res.g += s;
-	G.P[p.lord].gathered += s;
+	earn(G.P[p.lord], 'g', s, 'tax');
 	return gold - s;
 }
 function loyaltyParts(p) {
@@ -816,8 +822,8 @@ function vassalTick() {
 		if (tot > 0 && take > 0)
 			for (const r of ['f', 'w', 's', 'g', 'i']) {
 				const x = Math.min(p.res[r], (take * p.res[r]) / tot);
-				p.res[r] -= x;
-				L.res[r] += x;
+				spend(p, r, x, 'tax');
+				earn(L, r, x, 'tax');
 				p.paid += x;
 			}
 		if (L.id === 0 && p.paid > 0) sfx('tribute');
@@ -834,8 +840,8 @@ function vassalTick() {
 			for (const r of ['f', 'w', 's', 'g', 'i']) {
 				const x = Math.floor((p.res[r] * 0.1 * (p.loyal - 50)) / 100);
 				if (x > 0) {
-					p.res[r] -= x;
-					L.res[r] += x;
+					spend(p, r, x, 'tax');
+					earn(L, r, x, 'tax');
 					gift[r] = x;
 				}
 			}

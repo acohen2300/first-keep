@@ -23,13 +23,14 @@ const UNIT = {
 		desc: 'Gathers food, wood, stone and gold and carries it to the nearest drop-off. Hunts deer and boar with a javelin.',
 	},
 	scout: {
+		// on foot in the Stone Age (the horse was tamed on the steppe about 3500 BC); Horse breeding mounts it (TECH.tier). Build 58.
 		name: 'Scout',
 		cls: 'civ',
 		tick: 'scout',
-		tags: ['civ', 'mounted'],
+		tags: ['civ'],
 		hp: 45,
-		spd: 36,
-		sight: 220,
+		spd: 27,
+		sight: 170,
 		dmg: 3,
 		rng: 12,
 		cd: 1.5,
@@ -38,7 +39,7 @@ const UNIT = {
 		at: 'keep',
 		age: 0,
 		look: 'scout',
-		desc: 'A fast rider. Tours the map and picks up any treasure nobody guards. Tap the map to send it.',
+		desc: 'A runner, a rider once horses are bred. Tours the map and picks up any treasure nobody guards. Tap the map to send it.',
 	},
 	envoy: {
 		name: 'Emissary',

@@ -184,6 +184,12 @@ const SFX = {
 	chop: [0.18, (v) => knock('wood', 220, 0.3 * v)], // an axe in a trunk
 	mine: [0.18, (v) => knock('stone', 1400, 0.12 * v)], // a pick on rock
 	pick: [0.3, (v) => tone(520, 0.05, 'sine', 0.07 * v, 700)],
+	// a unit picked answers in its material (Build 58): a villager's tool creaks (wood), a blade clinks (metal), a bowstring twangs
+	// (a plucked string: the fundamental and its harmonics, short), a rider's horse stamps twice (two dull thuds)
+	pickWood: [0.15, (v) => knock('wood', 330, 0.18 * v, 0, 0.6)],
+	pickMetal: [0.15, (v) => knock('metal', 1800, 0.08 * v, 0, 0.4)],
+	pickTwang: [0.15, (v) => [1, 2, 3].forEach((k) => tone(180 * k, 0.18 / k, 'triangle', (0.12 * v) / k))],
+	pickHoof: [0.15, (v) => [0, 0.11].forEach((at) => knock('wood', 90, 0.22 * v, at, 0.3))],
 	hit: [
 		0.07,
 		(v) => {
@@ -383,6 +389,10 @@ function thunder(x, y) {
 const APP = { haptics: () => window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics };
 const FEEL = { tick: ['LIGHT', 8], snap: ['MEDIUM', 15], thock: ['HEAVY', 25], crack: ['HEAVY', [30, 40, 20]] };
 const HAPTIC = {
+	pickWood: 'tick',
+	pickMetal: 'tick',
+	pickTwang: 'tick',
+	pickHoof: 'tick',
 	place: 'snap',
 	done: 'thock',
 	doneWar: 'thock',

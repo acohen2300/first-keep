@@ -464,7 +464,7 @@ function startEvent(kind) {
 	if (EV[kind].start) EV[kind].start(e);
 	evmSet();
 	if (EV_TEXT[kind] && kind !== 'meteor' && kind !== 'mirage')
-		say(EV_TEXT[kind][1], E.harm ? 'warn' : E.gift ? 'good' : 'soft', 6, e.at || (e.units && e.units[0]) || null); // only what can hurt you takes the line
+		say(EV_TEXT[kind][1], E.harm ? 'warn' : E.gift ? 'good' : 'soft', 6, e.at || (e.units && e.units[0]) || null, null, EV_WHY[kind]); // only what can hurt you takes the line
 }
 function endEvent() {
 	const e = G.ev.cur;
@@ -542,6 +542,17 @@ const airTemp = (t = G.t) =>
 	CLIMATE.mean +
 	CLIMATE.year * Math.cos(2 * Math.PI * ((t % YEAR) / YEAR - CLIMATE.peakDay)) +
 	CLIMATE.day * Math.cos(2 * Math.PI * ((t % DAY_LEN) / DAY_LEN - CLIMATE.peakHour)); // °C now: the year's swing and the day's
+// why the sky turned, in the chain's own numbers: the list shows it under the line (Build 58)
+function wxWhy(wx, was, P, c) {
+	const pct = (x) => Math.round(x * 10) + ' in 10',
+		wet = precip(wx),
+		wasWet = precip(was);
+	if (wet && wasWet) return `the wet spell holds: ${pct(P[1])} each minute`;
+	if (wet) return `rain begins ${pct(P[0])} of dry minutes${wx === 'snow' ? '; below freezing it falls as snow' : wx === 'blizzard' ? '; a winter storm' : ''}`;
+	if (wx === 'frost') return `clear and the air at ${Math.round(c.T)} °C: frost`;
+	if (wx === 'drought') return `${c.dry} dry minutes in heat of ${Math.round(c.T)} °C`;
+	return wasWet ? `the rain stopped: ${pct(1 - P[1])} each wet minute` : 'a dry minute: the chain stays dry';
+}
 const precip = (wx) => wx === 'rain' || wx === 'snow' || wx === 'blizzard';
 function skyTurn() {
 	// the next minute's sky from this one: the chain, then what falls from the air's temperature
@@ -562,7 +573,7 @@ function skyTurn() {
 			: c.dry >= CLIMATE.drought.dry && c.T > CLIMATE.drought.temp
 				? 'drought'
 				: 'clear';
-	if (G.wx !== was && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6);
+	if (G.wx !== was && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6, null, null, wxWhy(G.wx, was, P, c));
 }
 function climateTick(dt) {
 	const c = G.clim;

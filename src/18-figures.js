@@ -1306,6 +1306,11 @@ const LOOKS = {
 		);
 	},
 	scout: (c, t, fr) => {
+		// a runner with a staff and cape until Horse breeding (tier 1) puts it on a horse
+		if (!t) {
+			person({ tunic: c, head: 'cap', capCol: shade(c, 0.6), weapon: 'staff', cape: shade(c, 0.6) }, fr);
+			return;
+		}
 		horse({ coat: '#9a7046' }, fr);
 		g.save();
 		g.translate(-0.6, -1);

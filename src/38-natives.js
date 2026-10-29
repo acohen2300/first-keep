@@ -48,7 +48,7 @@ function giftWhy(o, amt) {
 function giveGift(o, amt) {
 	if (giftWhy(o, amt)) return false;
 	const gain = giftGain(o, amt);
-	G.P[o].res.g -= amt;
+	spend(G.P[o], 'g', amt, 'tribute');
 	natState().gifts[o].push(G.t);
 	natRegard(o, gain);
 	if (o === 0)

@@ -15,8 +15,31 @@ const costText = (c) =>
 		.map(([k, v]) => Math.round(v) + k)
 		.join(' ');
 const afford = (p, c) => Object.entries(c || {}).every(([k, v]) => p.res[k] >= v);
-const pay = (p, c) => {
-	for (const [k, v] of Object.entries(c || {})) p.res[k] -= v;
+// Every resource in or out goes through earn and spend: one home for the stores, the flow of the last minute (p.flow, p.spent1), the
+// ledger of where it came from and went (p.ledger) and the gathered total. Build 58; before, 25 lines wrote p.res directly (Albert: one home).
+const LEDGER = {
+	in: ['gather', 'trade', 'tithe', 'tribute', 'ransom', 'market', 'loot', 'mint', 'venture', 'tax'],
+	out: ['units', 'buildings', 'research', 'upkeep', 'trade', 'tribute', 'ransom', 'market', 'tax', 'venture', 'zeal', 'repairs'],
+};
+function earn(p, k, amt, why, counts = true) {
+	if (!(amt > 0)) return 0;
+	p.res[k] += amt;
+	if (counts) p.gathered += amt;
+	p.flow[k] = (p.flow[k] || 0) + amt;
+	const L = p.ledger || (p.ledger = { in: {}, out: {} });
+	L.in[why] = (L.in[why] || 0) + amt;
+	return amt;
+}
+function spend(p, k, amt, why) {
+	if (!(amt > 0)) return 0;
+	p.res[k] -= amt;
+	p.spent1[k] = (p.spent1[k] || 0) + amt;
+	const L = p.ledger || (p.ledger = { in: {}, out: {} });
+	L.out[why] = (L.out[why] || 0) + amt;
+	return amt;
+}
+const pay = (p, c, why = 'units') => {
+	for (const [k, v] of Object.entries(c || {})) spend(p, k, v, why);
 };
 const addRes = (a, c, f = 1) => {
 	for (const [k, v] of Object.entries(c || {})) a[k] = (a[k] || 0) + v * f;
@@ -83,6 +106,7 @@ const SET = {
 	civ: 'roman',
 	fantasy: false,
 	mode: 't60',
+	scen: 'open', // the scenario (SCENARIOS)
 	tension: 'diplomacy',
 	sound: true,
 	vol: 0.6,
@@ -136,6 +160,7 @@ const todaySeed = () => {
 }; // the same map for everyone that day
 const MODES = {
 	conquest: { name: 'Conquest', secs: 0 },
+	t15: { name: '15 minutes', secs: 900 }, // a game on the bus (Build 58): a Bronze Age town and the bell; the Throne hold scales to 225 s
 	t30: { name: '30 minutes', secs: 1800 },
 	t60: { name: '60 minutes', secs: 3600 },
 };
@@ -411,6 +436,7 @@ function stats(o, kind) {
 		dmg = U.dmg || 0,
 		rng_ = U.rng || 0,
 		spd = U.spd,
+		sight = U.sight,
 		vs = U.vs || {},
 		tier = 0;
 	for (const T of TECH)
@@ -422,6 +448,7 @@ function stats(o, kind) {
 			dmg += R.dmg || 0;
 			rng_ += R.rng || 0;
 			spd *= R.spd || 1;
+			sight += R.sight || 0;
 			if (R.vs) vs = { ...vs, ...R.vs }; // a people's own soldier keeps its name through the common ranks, and takes its elite one
 		}
 	const S = {
@@ -432,6 +459,7 @@ function stats(o, kind) {
 		dmg: U.dmg ? dmg + fxv(o, 'dmg', keys).a : 0,
 		rng: rng_ + fxv(o, 'rng', keys).a,
 		spd: spd * fxv(o, 'spd', keys).m,
+		sight,
 		vs,
 		armor: fxv(o, 'armor', keys).min,
 		train: fxv(o, 'train', keys).m,
@@ -460,7 +488,7 @@ const rangeFrom = (r0, h) => (r0 / 2) * (1 + Math.sqrt(1 + (4 * h) / r0));
 const rangeOf = (o, kind) => rangeFrom(BLD[kind].bow, BLD[kind].h) + (o === WILD ? 0 : fxv(o, 'rng', bldKeys(kind)).a);
 const lookout = (kind) => Math.round(LOOKOUT.base + LOOKOUT.k * Math.sqrt(BLD[kind].h || 0)); // how far a building sees, from its height
 const sightOf = (e) =>
-	((UNIT[e.kind] ? UNIT[e.kind].sight || 100 : lookout(e.kind)) +
+	((UNIT[e.kind] ? (e.owner !== undefined && e.owner !== WILD && e.owner !== null ? stats(e.owner, e.kind).sight : UNIT[e.kind].sight) || 100 : lookout(e.kind)) + // a tier can add sight (the mounted scout)
 		(e.owner !== undefined && e.owner !== WILD && e.owner !== null
 			? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]).a
 			: 0)) *
@@ -505,3 +533,6 @@ function rehealth(o) {
 }
 const unitPower = (u) => ((u.hp * Math.max(1, dmgOf(u))) / 6) * (UNIT[u.kind].bonly ? 0.3 : 1);
 const powerOf = (list) => list.reduce((s, u) => s + (isSoldier(u) ? unitPower(u) : 0), 0);
+// the square law as odds: with a power ratio r, the chance is r² / (1 + r²) (Lanchester, Aircraft in Warfare, 1916). One home; it was written
+// in four places until Build 58. Every odds line (the computers' war choice, the envoy's answer, the pick bar, the Huddle, the Games) reads it.
+const lanchester = (r) => (r * r) / (1 + r * r);

@@ -190,8 +190,7 @@ function plunder(to, got) {
 	let any = false;
 	for (const [k, v] of Object.entries(got))
 		if (v > 0) {
-			P.res[k] += v;
-			P.gathered += v;
+			earn(P, k, v, 'loot');
 			any = true;
 			if (to === 0) G.loot[k] = (G.loot[k] || 0) + v;
 		}

@@ -1,4 +1,4 @@
-# First Keep: the science (Build 57, Oct 29, 2026)
+# First Keep: the science (Build 58, Oct 29, 2026)
 
 Every number that stands for the real world, with its label and its source. Rule 4 of `RULES.md`.
 - **verified**: checked against the source in the session named.
@@ -11,7 +11,7 @@ Each equation has a test in `tests/science.py` against known values (from Build 
 
 | Where | What | Value or form | Label | Source |
 |---|---|---|---|---|
-| `11-orders` `17-ai` `27-cards-core` `39-huddle` | Battle odds | r² / (1 + r²), r the power ratio | cited | Lanchester, *Aircraft in Warfare* (1916), the square law of aimed fire. The game's own note says ancient melee followed it less well. Written in four places: to merge (Build 58). |
+| `08-core` `lanchester` | Battle odds | r² / (1 + r²), r the power ratio | verified Oct 29 | Lanchester, *Aircraft in Warfare* (1916), the square law of aimed fire; one home since Build 58, checked in `tests/science.py` (even strength 0.5, double 0.8). The game's own note says ancient melee followed it less well. |
 | `08-core` `lookout` | A building's sight from its height | 60 + 24 √h | design, from physics | The horizon from a height h is √(2Rh): sight grows with the square root of height. The 60 and 24 are the game's scale. |
 | `25-view-weather` | Raindrop fall speed by size | v = 9.65 − 10.3 e^(−0.6 D) m/s | cited | Atlas, Srivastava & Sekhon (1973), a fit to Gunn & Kinzer (1949); sizes by Marshall & Palmer (1948). Borrowed from SoRen, which verified them. |
 | `25-view-weather` `FLASH_GAP` | Lightning: least gap between flashes | 0.34 s (under 3 a second) | verified Oct 29 | WCAG 2.3.1 (three flashes or below threshold). Thunder by distance in `35-sound`. |
@@ -38,7 +38,7 @@ Each equation has a test in `tests/science.py` against known values (from Build 
 | `08-core` `nextIn` `hazard` | Random events: the wait to the next is exponential, t = −mean · ln U; the chance over a step is 1 − e^(−rate·dt) | | verified Oct 29 | The Poisson process (Poisson 1837; Feller, *An Introduction to Probability Theory*, vol. 1, ch. XVII). `tests/science.py` checks the mean and the standard deviation of 20,000 waits and the step chance. The rates (an event every 120 s on average, the horde at 20 + 10 minutes, a strike every 20 s in a storm) are design. |
 | `39-games` `holdGames` | The Games: a court's odds in an event go with the square of its best strength | | cited | The same square law as battle (Lanchester 1916), chosen so one engine serves both; said so in the help. The events are Olympia's (776 BC; the chariot race from 680 BC). |
 | `39-games` `PEACE.truce` | Peace bought with gold | 120 × (1 + 2 × their odds) | design | Tribute for peace is the record (the Danegeld, 991: 10,000 pounds of silver); the price is the game's. |
-| `04-rules-tech` | Every research step's date and place | in `07-text` `WHY` | cited | Each line names a place and a date; "about" unless exact; Game: lines where compressed. The history batch (Build 58) re-checks about 25 of them. |
+| `04-rules-tech` | Every research step's date and place | in `07-text` `WHY` | cited | Each line names a place and a date; "about" unless exact; Game: lines where compressed. `tests/history.py` (Build 58) holds every dated step inside its age (Stone to 3300 BC, Bronze to 800 BC, Classical to AD 500, Medieval to 1450, Gunpowder to 1700, the Enlightenment to 1800, 150 years of slack) or demands a Game: note. |
 
 ## To add, with their sources (checked Oct 29 against the sources named; see HANDOFF.md item 14)
 

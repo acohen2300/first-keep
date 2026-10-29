@@ -97,7 +97,7 @@ function muster(o, plan, bn) {
 	if (musterWhy(o, plan)) return false;
 	const { cost, t } = musterCost(o, plan),
 		at = ready(o, 'council').sort((a, b) => a.q.length - b.q.length)[0];
-	pay(G.P[o], cost);
+	pay(G.P[o], cost, 'units');
 	at.q.push({ muster: plan, bn, left: t, total: t });
 	return true;
 }
@@ -121,7 +121,7 @@ function research(o, id) {
 		p = G.P[o],
 		at = ready(o, T.at)[0],
 		tt = T.t * fxv(o, 'research').m;
-	pay(p, T.cost);
+	pay(p, T.cost, 'research');
 	p.spent += sumCost(T.cost);
 	at.q.push({ tech: id, left: tt, total: tt });
 	return true;
@@ -131,7 +131,7 @@ function ageUp(o) {
 		A = nextAge(o),
 		k = keepOf(o);
 	if (!A || p.aging || !k || !afford(p, A.cost) || k.q.length >= qMax(o)) return false;
-	pay(p, A.cost);
+	pay(p, A.cost, 'research');
 	p.spent += sumCost(A.cost);
 	k.q.push({ age: p.age + 1, left: A.t, total: A.t });
 	p.aging = true;
@@ -149,7 +149,7 @@ function build(o, kind, x, y) {
 			w.gone = true;
 		}
 	} // a gate takes the place of a wall square
-	pay(p, B.cost);
+	pay(p, B.cost, 'buildings');
 	const b = mkBld(o, kind, x, y, 0);
 	G.blds.push(b);
 	navRebuild();
@@ -292,6 +292,7 @@ function relWhy(o, q, want) {
 	if (want === rel) return 'Already.';
 	if (q === WILD && want === 'peace') return regardOf(o) < NATIVE.peaceAt ? `Needs regard ${NATIVE.peaceAt}.` : null; // the Natives: peace needs regard; alliance by emissary when regard is high; war is yours to declare
 	if (q === WILD && want === 'ally' && regardOf(o) < NATIVE.allyAt) return `Needs regard ${NATIVE.allyAt}.`;
+	if (want === 'war' && q !== WILD && G.sworn > G.t) return `A sworn peace holds ${clock(G.sworn - G.t)} more.`; // a scenario's term of peace (the Olympic truce was sworn for the festival)
 	if (want === 'war') return noticeLeft(o, q) ? `Notice given: ${noticeLeft(o, q)} s.` : null;
 	if (want === 'ally' && rel === 'war') return 'Make peace first.';
 	if (p.envoyOut) return 'Your emissary is out.';
@@ -356,7 +357,7 @@ function sendEnvoy(o, to, ask) {
 const oddsOf = (q, o) => {
 	const S = soldiersOf(q),
 		r = (powerOf(S) / estPower(q, o)) * matchup(S, soldiersOf(o));
-	return (r * r) / (1 + r * r);
+	return lanchester(r);
 };
 function judgeEnvoy(to, from, envoy) {
 	const T = G.P[to],
@@ -385,9 +386,8 @@ function judgeEnvoy(to, from, envoy) {
 				reply(from, envoy, `The ${T.name} want more of this war, or ${price} gold.`);
 				return;
 			}
-			G.P[from].res.g -= price;
-			T.res.g += price;
-			T.gathered += price;
+			spend(G.P[from], 'g', price, 'tribute');
+			earn(T, 'g', price, 'tribute');
 			makePeace(to, from);
 			reply(from, envoy, `The ${T.name} accept peace for ${price} gold.`);
 			return;
@@ -470,8 +470,8 @@ function demand(L, q, r) {
 	const Q = G.P[q],
 		x = Math.min(DEMAND.amt, Math.floor(Q.res[r])),
 		cost = demandCost(Q);
-	Q.res[r] -= x;
-	G.P[L].res[r] += x;
+	spend(Q, r, x, 'tax');
+	earn(G.P[L], r, x, 'tax');
 	Q.loyal = Math.max(0, (Q.loyal || 0) - cost);
 	(Q.demands = Q.demands || []).push(G.t);
 	if (L === 0) say(`${Q.name} hand over ${x} ${LONG[r]}: loyalty −${cost}.`, '', 4);
@@ -620,8 +620,8 @@ const prisonersOf = (o) => (G.prisoners || []).filter((x) => x.o === o);
 function payRansom(o, i) {
 	const x = prisonersOf(o)[i];
 	if (!x || G.P[o].res.g < x.ransom) return false;
-	G.P[o].res.g -= x.ransom;
-	if (x.by !== WILD && G.P[x.by]) G.P[x.by].res.g += x.ransom;
+	spend(G.P[o], 'g', x.ransom, 'ransom');
+	if (x.by !== WILD && G.P[x.by]) earn(G.P[x.by], 'g', x.ransom, 'ransom');
 	G.prisoners.splice(G.prisoners.indexOf(x), 1);
 	const k = keepOf(o);
 	if (k) {
@@ -662,7 +662,7 @@ function teachWhy(o, u) {
 }
 function teach(o, u) {
 	if (teachWhy(o, u)) return false;
-	pay(G.P[o], teachCost(o, u));
+	pay(G.P[o], teachCost(o, u), 'research');
 	u.state = 'school';
 	u.schoolT = G.t + teachSecs(o, u);
 	u.tgt = null;
@@ -723,17 +723,16 @@ function marketTrade(o, k, dir) {
 	if (dir === 'sell') {
 		if (!MKT_SELL.includes(k) || haveOf(p, k) < n) return false;
 		const v = sellPrice(o, k);
-		if (TRADE[k]) p.res[k] -= n;
+		if (TRADE[k]) spend(p, k, n, 'market');
 		else p.goods[k] -= n;
-		p.res.g += v;
-		if (!TRADE[k]) p.gathered += v;
+		earn(p, 'g', v, 'market', !TRADE[k]); // raw sold for gold is a swap, not a gain; a good sold counts
 		mktHit(k, TRADE[k] ? 25 : n, -1);
 	} else {
 		if (!MKT_BUY.includes(k)) return false;
 		const c = buyPrice(o, k);
 		if (p.res.g < c) return false;
-		p.res.g -= c;
-		if (TRADE[k]) p.res[k] += n;
+		spend(p, 'g', c, 'market');
+		if (TRADE[k]) earn(p, k, n, 'market', false);
 		else p.goods[k] = (p.goods[k] || 0) + n;
 		mktHit(k, TRADE[k] ? 25 : n, 1);
 	}
@@ -754,7 +753,7 @@ function zealWhy(o, list) {
 function zeal(o, list) {
 	if (zealWhy(o, list)) return false;
 	const p = G.P[o];
-	pay(p, zealCost(o));
+	pay(p, zealCost(o), 'zeal');
 	p.zealT = G.t + ZEAL.cd * fxv(o, 'zealcd').m;
 	for (const u of list) if (isSoldier(u)) u.zeal = G.t + ZEAL.secs + fxv(o, 'zealsecs').a;
 	if (o === 0) {

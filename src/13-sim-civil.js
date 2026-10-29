@@ -378,7 +378,7 @@ function repairTick(u, dt, SP) {
 	}
 	for (const k in due) {
 		const whole = Math.floor(due[k]);
-		p.res[k] -= whole;
+		spend(p, k, whole, 'repairs');
 		b.rd[k] = due[k] - whole;
 	}
 	b.hp += heal;
@@ -486,8 +486,7 @@ function caravanTick(u, dt, SP) {
 	}
 	if (moveTo(u, d.x, d.y, dt, halfOf(d) + 4, SP)) {
 		if (d.owner !== o) {
-			G.P[o].res.g += u.cargo;
-			G.P[o].gathered += u.cargo;
+			earn(G.P[o], 'g', u.cargo, 'trade');
 			if (o === 0 && u.cargo) {
 				say(`A caravan earns ${u.cargo} gold from your ally.`, 'good', 3, d);
 				sfx('tribute');

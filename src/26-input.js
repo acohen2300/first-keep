@@ -419,8 +419,13 @@ function pickToggle(u, hold) {
 				: [...picked().map((v) => ({ t: 'unit', id: v.id })), k],
 		);
 	else setPick([k]);
-	feel('tick');
+	sfx(pickSound(u));
 }
+// the sound a picked unit answers with: by what it is made of and how it moves (35-sound)
+const pickSound = (u) => {
+	const T = UNIT[u.kind].tags || [];
+	return T.includes('mounted') ? 'pickHoof' : T.includes('ranged') ? 'pickTwang' : isSoldier(u) ? 'pickMetal' : 'pickWood';
+};
 function order(S, h) {
 	const sol = S.filter(isSoldier),
 		vil = S.filter((u) => u.kind === 'vil'),

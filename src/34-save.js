@@ -20,6 +20,9 @@ const MIGRATE = {
 		for (const u of S.units) u.st = u.st || { got: 0, trips: 0, walk: 0, kills: 0, built: 0 };
 		for (const p of S.P) {
 			p.flow = p.flow || {};
+			p.spent1 = p.spent1 || {};
+			p.orate = p.orate || {};
+			p.ledger = p.ledger || { in: {}, out: {} };
 			p.rate = p.rate || {};
 		}
 		S.warAt = S.warAt || {};
@@ -162,6 +165,8 @@ function saveGame(force) {
 			flood: G.flood,
 			clim: G.clim,
 			truce: G.truce,
+			sworn: G.sworn,
+			scen: G.scen,
 			enlight: G.enlight,
 			stood: G.stood,
 			gamesT: G.gamesT,
@@ -335,6 +340,8 @@ function loadGame(S) {
 	G.flood = S.flood || 0;
 	G.clim = S.clim ? { ...blankClim(), ...S.clim } : blankClim();
 	G.truce = S.truce ?? null;
+	G.sworn = S.sworn || 0;
+	G.scen = S.scen || null;
 	G.enlight = !!S.enlight;
 	G.stood = !!S.stood;
 	G.gamesT = S.gamesT || 0;

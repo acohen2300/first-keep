@@ -1,6 +1,32 @@
 // ═════ 07-text.js: every line of wording the game says ═════
 // ───────────────────────── Why it is so: the history behind each row ─────────────────────────
 // Dates are "about" unless exact; where historians disagree the text says so. Each line credits more than one place where the record allows.
+// the ledger's words (earn and spend, 08-core)
+const LEDGER_WORD = {
+	gather: 'gathered',
+	trade: 'trade',
+	tithe: 'the Throne tithe',
+	tribute: 'tribute',
+	ransom: 'ransoms',
+	market: 'the Market',
+	loot: 'loot',
+	mint: 'the Mint',
+	venture: 'ventures',
+	tax: 'tax',
+	units: 'people and soldiers',
+	buildings: 'buildings',
+	research: 'research and ages',
+	upkeep: 'eaten',
+	zeal: 'zeal',
+	repairs: 'repairs',
+};
+// the scenarios' words (SCENARIOS in 06)
+const SCEN_TEXT = {
+	open: ['Open', 'The ordinary start: a keep, five villagers, the land.'],
+	siege: ['The Siege', 'A Medieval town behind its walls with a full store; every rival at war with you and the horde seven minutes out. Hold for thirty.'],
+	road: ['The Silk Road', 'Every court Classical and at peace, a Market up, the board truce already running and sworn for ten minutes. Trade, the Games, and the age that only peace opens.'],
+	last: ['Last Keep', 'Three courts allied against you from the first minute, on the ordinary rules. Conquest.'],
+};
 const WHY = {
 	age0: 'Farming villages of the Neolithic (from about 10,000 years ago): fields, houses, a wall. Jericho had a stone wall and tower about 8000 BC.',
 	age1: 'Bronze (from about 3300 BC in the Near East): the first cities, writing, law, chariots and standing armies, in Sumer, Egypt, the Indus valley and China.',
@@ -82,7 +108,7 @@ const WHY = {
 	chisels: 'Hardened chisels dressed ashlar for the cathedrals; the marks of the masons are still on the blocks.',
 	stonesaw:
 		'Water-driven saws cut marble at Hierapolis in the 200s and again in Renaissance Italy; sand under the blade did the cutting.',
-	rollers: 'Stone moved on sledges over wetted sand and rollers; a tomb painting shows 172 men pulling a colossus.',
+	rollers: 'Stone moved on sledges over wetted sand and rollers; a tomb painting shows 172 men pulling a colossus. Game: the Rollers and sledges is older than the Classical age it waits for here, because its building comes then.',
 	cranes:
 		'Two men walking inside a wheel lifted a ton of stone; the cranes of Gothic cathedrals still stand in some towers.',
 	fishtraps:
@@ -129,7 +155,7 @@ const WHY = {
 		'Men who train together hold together; Sparta drilled from the age of seven and nobody stood against them for a century.',
 	phalanx: 'Eight ranks of shields and spears: the Greek phalanx held Marathon and broke Persia.',
 	legion:
-		'The manipular legion, in three lines that relieved each other, beat the phalanx at Cynoscephalae and ruled for five centuries.',
+		'The manipular legion, in three lines that relieved each other, beat the phalanx at Cynoscephalae (197 BC) and ruled for five centuries. Game: it replaces the swordsman of the Bronze age, three centuries before its time, so a Roman player has a Roman army from the start.',
 	pikesquare: 'Swiss pike squares at Morgarten and Sempach killed the mounted knight as the master of the field.',
 	arms: 'Dismounted men-at-arms in full harness won Crécy and Agincourt on foot, the knight turned heavy infantry.',
 	halberd: 'Axe and spear on one pole: the Swiss halberd cut knights from their horses at Morgarten.',
@@ -145,7 +171,7 @@ const WHY = {
 	drillyard: 'The campus Martius was the drill ground of Rome; a town with a yard to drill in fielded more men.',
 	veterans: 'Marius kept his veterans with the standards; an old soldier retrained is worth two recruits. Opens Teach.',
 	feudal: 'The tenants of a lord owed him forty days a year in arms; the levy was cheap, if not always willing.',
-	slings: 'The Balearic slingers hired out to Carthage and Rome; a lead bullet broke bone through a shield.',
+	slings: 'The Balearic slingers hired out to Carthage and Rome; a lead bullet broke bone through a shield. Game: the Slings is older than the Bronze age it waits for here, because its building comes then.',
 	composite: 'Horn, sinew and wood glued in layers: the bow of the steppe and Egypt shot farther from a shorter stave.',
 	bodkin: 'The bodkin, narrow and square, was made to punch mail; it was in the quivers at Crécy.',
 	firearrows:
@@ -156,7 +182,7 @@ const WHY = {
 		'The Spanish musket, heavier than the arquebus, put a ball through plate at a hundred paces; armour left the field after it.',
 	volley:
 		'Ranks that fired and countermarched kept a steady fire; Maurice of Nassau drilled it, Nagashino had shown it.',
-	horses: 'The horse was tamed on the steppe about 3500 BC; the people who bred it moved faster than anyone on earth.',
+	horses: 'The horse was tamed on the steppe about 3500 BC; the people who bred it moved faster than anyone on earth. Game: the Horse breeding is older than the Bronze age it waits for here, because its building comes then.',
 	bridles: 'A bronze bit turns a horse at a gallop; with it the chariot could be steered, and later the rider.',
 	saddles: 'The framed saddle, from the steppe, let a rider sit a shock without sliding off the back of the horse.',
 	stirrups: 'The stirrup let a rider stand to strike and brace a lance; it remade the cavalry charge.',
@@ -289,7 +315,7 @@ const WHY = {
 	postroads: 'Relay stations a day apart with fresh horses; goods and news moved at a gallop from Lisbon to Vienna.',
 	customs:
 		'Customs houses at every port and gate took a cut of all that passed; the keeper of the road grew rich on it.',
-	looms: 'Loom weights of clay are in every Neolithic village; the loom turned wool into the first trade good.',
+	looms: 'Loom weights of clay are in every Neolithic village; the loom turned wool into the first trade good. Game: the Warp-weighted loom is older than the Bronze age it waits for here, because its building comes then.',
 	spinwheel:
 		'The spinning wheel reached Europe by the 1200s and spun thread several times faster than the drop spindle.',
 	fulling: 'Fulling mills pounded cloth with water-driven hammers from the 1000s, work that had been done by foot.',
@@ -299,12 +325,12 @@ const WHY = {
 	brewhouse:
 		'Town brewhouses with copper kettles replaced the pot of the alewife; Hamburg had five hundred brewers by 1400.',
 	lager: 'Bavarian brewers stored beer in cold cellars through summer; the Reinheitsgebot of 1516 set what went in.',
-	dies: 'A struck coin from a good die is hard to clip and easy to trust; good dies mean more coin from the same silver.',
+	dies: 'A struck coin from a good die is hard to clip and easy to trust; good dies mean more coin from the same silver. Game: the Engraved dies is older than the Medieval age it waits for here, because its building comes then.',
 	assay: 'The Trial of the Pyx tested English coin against a standard from 1282; a trusted coin passes at full value.',
 	milled: 'The screw press struck a round coin with a milled edge that could not be clipped; Paris had one by 1551.',
 	bellows:
-		'The water-driven bellows blew Chinese furnaces in 31 AD; Europe had them by 1200. A hotter blast, more iron.',
-	castiron: 'China poured iron into moulds from 500 BC; Europe only learned to from the 1400s.',
+		'The water-driven bellows blew Chinese furnaces in 31 AD; Europe had them by 1200. A hotter blast, more iron. Game: the Water bellows is older than the Medieval age it waits for here, because its building comes then.',
+	castiron: 'China poured iron into moulds from 500 BC; Europe only learned to from the 1400s. Game: the Cast iron is older than the Medieval age it waits for here, because its building comes then.',
 	blast: 'The blast furnace, blown by water, reached Europe by the 1300s and made iron in a continuous stream.',
 	finery: 'The finery hammered cast iron into wrought bar that could be forged; the Walloon method spread from Liège.',
 	cleanwater: 'The Aqua Appia brought Rome clean water in 312 BC; by Trajan eleven aqueducts fed a million people.',
@@ -422,7 +448,7 @@ const WHY = {
 	hanxbow:
 		'Han armies fielded crossbows by the tens of thousands: one arsenal list from 13 BC counts over 11,000, with bronze triggers cast to a standard pattern.',
 	immortal:
-		'Herodotus says the Persian royal guard of 10,000 was never allowed to fall below strength, so the Greeks called them Immortals. They carried spear, bow and wicker shield.',
+		'Herodotus says the Persian royal guard of 10,000 was never allowed to fall below strength, so the Greeks called them Immortals. They carried spear, bow and wicker shield (about 500 BC). Game: it replaces the swordsman of the Bronze age, earlier than its time, so a Persian player has a Persian army from the start.',
 	mongolha:
 		'A Mongol rider went to war with three or four horses and changed mounts to keep moving for days; the armies of the khans outpaced every enemy on the continent.',
 	mauryael:
@@ -524,6 +550,26 @@ const NEWS = [
 	],
 ];
 // What each spectacle says: the warning, then the event itself
+// why an event happened, under its line in the list (Build 58): the real cause, in a few words
+const EV_WHY = {
+	eclipse: 'the moon crosses the sun; Babylon could foretell it by 600 BC',
+	storm: 'warm wet air rising fast: thunder',
+	stampede: 'the herd runs from fire or wolves',
+	flood: 'heavy rain upstream, the lakes spill',
+	meteor: 'a stone from space; the Hittites forged iron from one',
+	wildfire: 'dry forest and one spark',
+	fog: 'cool night air over wet ground',
+	sinkhole: 'limestone dissolved beneath the floor',
+	quicksand: 'sand standing on rising water',
+	heatwave: 'high pressure sits and will not move',
+	mirage: 'hot air bends the light',
+	circus: 'the road brought them; they go where the coin is',
+	wagon: 'a trader lost on the road',
+	mercs: 'swords for hire follow the wars',
+	dragon: 'Fantasy: it smelled the gold',
+	troll: 'Fantasy: it came down from the hills',
+	aurora: 'a solar storm lights the high air',
+};
 const EV_TEXT = {
 	eclipse: ['An eclipse is coming: the sun goes dark.', 'The sun is black. Both armies falter.'],
 	storm: ['A storm walks in from the west.', 'Thunderstorm: lightning under the cloud.'],
@@ -664,7 +710,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'A timed game',
-		'Help → Game: Conquest (no limit), 30 minutes or 60 minutes. At the bell the highest score wins.',
+		'Help → Game: Conquest (no limit), 15, 30 or 60 minutes. At the bell the highest score wins. A scenario sets the start: the Siege, the Silk Road, Last Keep.',
 		'A guaranteed end, and a reason to build more than an army.',
 	],
 	[

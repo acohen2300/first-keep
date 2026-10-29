@@ -532,8 +532,7 @@ function findsTick(dt) {
 				if (f.acc >= 1) {
 					const g = Math.floor(f.acc);
 					f.acc -= g;
-					G.P[f.owner].res.g += g;
-					G.P[f.owner].gathered += g;
+					earn(G.P[f.owner], 'g', g, 'loot');
 				}
 			}
 			continue;

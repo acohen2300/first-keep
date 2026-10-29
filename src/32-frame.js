@@ -207,7 +207,7 @@ function whoIs(u) {
 // ───────────────────────── Messages and tips ─────────────────────────
 // quiet kinds (news, the spectacle's 'coming' lines) never take the line: they wait in the list and count on the bell (Albert: too many alerts to keep up with)
 const QUIET = new Set(['news', 'soft']);
-function say(text, cls, secs, at, act) {
+function say(text, cls, secs, at, act, why) {
 	if (!G) return;
 	if (SET.msgs === false && cls !== 'warn' && cls !== 'tip') return;
 	if (hushed(text)) return;
@@ -222,6 +222,7 @@ function say(text, cls, secs, at, act) {
 		text,
 		cls,
 		act,
+		why, // a line under the message in the list: why it happened (Build 58)
 		quiet,
 		until: quiet ? G.t : G.t + (secs || 4),
 		at: at ? { x: Math.round(at.x), y: Math.round(at.y) } : null,
@@ -332,11 +333,16 @@ function ui(force) {
 	const p = G.P[0],
 		R = p.res;
 	document.body.classList.toggle('night', G.night > 0.5);
-	txt('rf', fmt(R.f));
-	txt('rw', fmt(R.w));
-	txt('rs', fmt(R.s));
-	txt('rg', fmt(R.g));
-	txt('ri', fmt(R.i));
+	for (const k of ['f', 'w', 's', 'g', 'i']) {
+		txt('r' + k, fmt(R[k]));
+		const el = $('r' + k),
+			net = netOf(p, k),
+			cls = net > 0.5 ? 'up' : net < -0.5 ? (R[k] < -net * 2 ? 'low' : 'down') : '';
+		if (el.dataset.h !== cls) {
+			el.dataset.h = cls;
+			el.className = 'wd' + (cls ? ' ' + cls : '');
+		}
+	} // the word's colour is the net flow of the last minute: rising, steady, falling, falling with under two minutes left (Build 58)
 	const rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length;
 	txt('scoreN', `★${fmt(p.score.total)}`);
 	txt('scoreR', ['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th');
@@ -629,7 +635,7 @@ function tick() {
 			? G.log
 					.map(
 						(x) =>
-							`<div class="row ${x.cls || ''}"><button class="t" data-act="${linkOf(x) || 'tklist'}">${x.text}</button><button class="h" data-act="hush:${encodeURIComponent(x.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`,
+							`<div class="row ${x.cls || ''}"><button class="t" data-act="${linkOf(x) || 'tklist'}">${x.text}${x.why ? `<small class="why">${x.why}</small>` : ''}</button><button class="h" data-act="hush:${encodeURIComponent(x.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`,
 					)
 					.join('') +
 				`<div class="row end"><button class="t" data-act="tkclear">Clear all</button><button class="h" data-act="tklist" aria-label="Close the list">✕</button></div>`

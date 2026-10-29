@@ -337,17 +337,31 @@ const CARDS = {
 				p.rate && Object.keys(p.rate).length
 					? p.rate
 					: Object.fromEntries(Object.entries(p.flow || {}).map(([k, v]) => [k, (v * 60) / Math.max(10, el)])); // the last full minute; before there is one, the pace so far
+		const ot =
+			p.rate && Object.keys(p.rate).length
+				? p.orate || {}
+				: Object.fromEntries(Object.entries(p.spent1 || {}).map(([k, v]) => [k, (v * 60) / Math.max(10, el)]));
 		let h =
 			title('Stores', 'the last minute') +
 			`<table><tr><th></th><th>Have</th><th>In</th><th>Out</th><th>On it</th></tr>${RES.map((r) => {
-				const k = KEY[r];
-				return `<tr><td>${RESOURCES[r].name}</td><td>${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${r === 'food' ? '−' + Math.round(p.eats || 0) : ''}</td><td>${V.filter((u) => u.job === r).length}</td></tr>`;
+				const k = KEY[r],
+					net = Math.round(rt[k] || 0) - Math.round(ot[k] || 0);
+				return `<tr><td>${RESOURCES[r].name}</td><td class="${net > 0 ? 'up' : net < 0 ? (p.res[k] < -net * 2 ? 'low' : 'down') : ''}">${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${ot[k] ? '−' + Math.round(ot[k]) : ''}</td><td>${V.filter((u) => u.job === r).length}</td></tr>`;
 			}).join('')}</table>`;
 		h += `<p><i>Goods:</i> ${GOODK.map((k) => `${GOODS[k].name} ${Math.floor(p.goods[k] || 0)}${rt[k] ? ` (+${Math.round(rt[k])})` : ''}`).join(' · ')}. Goods wait at your Market for caravans; wool for a Workshop.</p>`;
-		return (
-			h +
-			`<p>In: gathered and brought home in the last minute. Out: what your people eat a minute${p.hungry ? ' · <b>they are hungry</b>' : ''}.</p>`
-		);
+		h += `<p>In and Out: the last minute. A count is green while it rises, gold while it falls, red when it falls with under two minutes left${p.hungry ? ' · <b>they are hungry</b>' : ''}.</p>`;
+		{
+			// the ledger: every resource that ever came in or went out, by where it came from and went (earn and spend, 08-core)
+			const L = p.ledger || { in: {}, out: {} },
+				row = (o) =>
+					Object.entries(o)
+						.filter(([, v]) => v >= 1)
+						.sort((a, b) => b[1] - a[1])
+						.map(([k, v]) => `${LEDGER_WORD[k] || k} ${fmt(v)}`)
+						.join(' · ') || 'nothing yet';
+			h += fold('ledger', `Ledger · the whole game`, `<p><i>In:</i> ${row(L.in)}.</p><p><i>Out:</i> ${row(L.out)}.</p><p>Trade is caravans, routes held and the cut of other caravans at your stops; the Market is sales and buys; tax is what vassals send; tribute is gifts and peace bought.</p>`);
+		}
+		return h;
 	},
 	fault: () =>
 		title('Something went wrong', 'your game is saved') +
