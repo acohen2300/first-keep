@@ -115,7 +115,6 @@ Villager assignment by R = carry·(1 − danger)/(t_gather + 2d/v), switch at 18
 - **Deepen the home economy** (not cut it).
 - **Sounds**: talk when Albert is ready (the iPhone silent switch included).
 - **Pricing direction (decided)**: free, with one or two paid unlocks; a subscription possible; never pay to win. Nothing to build until the native store.
-- **Merge two-thirds of the small techs** (keep their history text): from the Google audit.
 - **Core direction review** after Build 59.
 
 ## What is left of the Oct 29 list (after Build 58)
