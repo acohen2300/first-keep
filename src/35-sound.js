@@ -288,13 +288,6 @@ const SFX = {
 			}
 		},
 	], // a stampede: a rolling drum of hooves
-	buzz: [
-		3,
-		(v) => {
-			hiss(2.6, 0.1 * v, 1800, 3, 2400);
-			tone(190, 2.4, 'sawtooth', 0.03 * v, 230);
-		},
-	], // locusts
 	rumble: [
 		1.5,
 		(v) => {
@@ -327,7 +320,6 @@ const CHAN = {
 	thunder: 'amb',
 	hush: 'amb',
 	hooves: 'amb',
-	buzz: 'amb',
 	rumble: 'amb',
 	jingle: 'alert',
 	roar: 'alert',

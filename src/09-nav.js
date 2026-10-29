@@ -2,6 +2,7 @@
 // ───────────────────────── The walking grid: where things stand, and how people get around ─────────────────────────
 // Squares of 10, never shown. Buildings fill whole squares and leave one free around them. Walls are one square each.
 const NC = MAP / NAVC;
+const SHORE = 5; // squares from water that count as its shore
 const POCKET = 300; // a joined region smaller than this many squares is a pocket: closed in by trees, buildings or water
 const NAV = {
 	share: {},
@@ -9,6 +10,7 @@ const NAV = {
 	solid: new Uint8Array(NC * NC),
 	gate: new Uint8Array(NC * NC),
 	lake: new Uint8Array(NC * NC),
+	shore: new Uint8Array(NC * NC),
 	comp: new Int32Array(NC * NC),
 	size: [0], // squares in each joined region: a pocket is small, the open land is large
 	occ: new Array(NC * NC).fill(null),
@@ -41,6 +43,16 @@ function lakeGrid() {
 					if (NAV.lake[c] !== 1) NAV.lake[c] = hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < L.r + 2 ? 1 : 2; // deep water stays deep where pools overlap
 				}
 	}
+	NAV.shore.fill(0);
+	for (let y = 0; y < NC; y++)
+		for (let x = 0; x < NC; x++)
+			if (NAV.lake[y * NC + x])
+				for (let j = -SHORE; j <= SHORE; j++)
+					for (let i = -SHORE; i <= SHORE; i++) {
+						const X = x + i,
+							Y = y + j;
+						if (X >= 0 && Y >= 0 && X < NC && Y < NC) NAV.shore[Y * NC + X] = 1;
+					} // the ground by water: mud pools here first (Build 54)
 	lakeFor = G.lakes;
 	lakeHi = G.flood > G.t;
 }
@@ -515,19 +527,19 @@ const paceOf = (u, SP) =>
 	SP *
 	(shapeOf(u).spd || 1) *
 	EVM.spd *
-	(u.owner === WILD ? 1 : groundSpd(u.owner, unitKeys(u.kind))) *
+	(u.owner === WILD ? 1 : groundSpd(u.owner, unitKeys(u.kind), u)) *
 	(G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1) *
 	(u.chg > G.t ? CHARGE.spd : u.tired > G.t ? CHARGE.tiredSpd : 1);
 function moveTo(u, x, y, dt, r, SP) {
 	if (u.stuck > G.t) return false; // in a pit, or slipped on ice
 	if (
-		G.ground.ice > 0 &&
+		G.clim.ice > 0 &&
 		!u.fly &&
 		u.owner !== WILD &&
 		(G.tick + u.id) % 30 === 0 &&
-		rng() < GROUND.slip * G.ground.ice * (1 - fxv(u.owner, 'ice', unitKeys(u.kind)).a)
+		rng() < CLIMATE.slip * G.clim.ice * (1 - fxv(u.owner, 'ice', unitKeys(u.kind)).a)
 	) {
-		u.stuck = G.t + GROUND.slipSecs;
+		u.stuck = G.t + CLIMATE.slipSecs;
 		if (u.owner === 0 && !(G.slipT > G.t - 20)) {
 			G.slipT = G.t;
 			say('Ice: your people slip and fall.', 'soft', 4, u);

@@ -21,8 +21,12 @@ Each equation has a test in `tests/science.py` against known values (from Build 
 | `06-rules-tuning` `FERT` | Soil wears 10% a year worked, rests back 40% a season, never under 60% | | design | Fallowing and rotation are real (the three-field system); the rates are the game's. |
 | `03-rules-buildings` `UPKEEP` | A person eats 30 food in 8 minutes; a foot soldier 1.5 shares, a rider 3 | | design | The ratios follow real rations: a horse eats several times what a man does. |
 | `06-rules-tuning` `HEALTH` | Sickness: 6% a minute to break out, spreads to 8% nearby | | design | Replaced by the SIR model in Build 56. |
-| `06-rules-tuning` `WX_ODDS` | Weather rolled fresh each minute by season | | design | Replaced by a Markov chain of wet and dry days in Build 54. |
-| `06-rules-tuning` `GROUND` | Mud, snow and ice as one map-wide number each, at flat rates | | design | Replaced by wetness and temperature in Build 54. |
+| `06-rules-tuning` `CLIMATE` | Air temperature: mean 10 °C, ±12 over the year, ±5 over the day; hottest mid-Summer and mid-afternoon | | design | A temperate land about 45° N; a 6-day year (Build 54). |
+| `CLIMATE.chain` | The sky as a two-state chain: P(wet next \| dry) 0.3, P(wet next \| wet) 0.7 (Summer 0.15, 0.5) | | cited, rounded | Gabriel & Neumann, *QJRMS* 88 (1962): Tel Aviv winter 0.25 and 0.66. Summer and the hazards are design. |
+| `CLIMATE.tau` `eq` | Wetness closes 63% of its gap in 20 s getting wet, 50 s drying | M(t) = Me + (M0 − Me) e^(−t/τ) | cited, scaled | The timelag fuel-moisture model (10-hour fuels); scaled to the 2-minute day. Where it settles under each sky is design. |
+| `rothermel` `fireMul` | Fire against wetness | η = 1 − 2.59r + 5.11r² − 3.52r³, r ≤ 1, as a share of a clear day | verified Oct 29 | Rothermel (1972); USDA RMRS-GTR-371. |
+| `CLIMATE.terrain` `groundSpd` | Walking: speed = 1/η; η = 1 + 0.8·mud + 0.6·snow | | cited | Pandolf, Givoni & Goldman (1977): dirt 1.1, swamp 1.8, soft snow about 1.6, over a hard road 1.0; the mud and snow shares are the game's. |
+| `CLIMATE.snow` `ice` | Snow melts 0.004 of full depth a second per degree above 0; ice forms on wet ground below 0 and thaws by the degree | | design, by the degree-day method | The form is the standard degree-day model; the rates fit the game's day. |
 | `04-rules-tech` | Every research step's date and place | in `07-text` `WHY` | cited | Each line names a place and a date; "about" unless exact; Game: lines where compressed. The history batch (Build 58) re-checks about 25 of them. |
 
 ## To add, with their sources (checked Oct 29 against the sources named; see HANDOFF.md item 14)

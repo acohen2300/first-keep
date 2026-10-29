@@ -10,7 +10,7 @@ function hurt(o, a, t, base) {
 				blast = A.gun && fxv(o, 'blast', keys).a >= 1;
 			if (
 				(blast || fxv(o, 'fire', keys).a >= 1) &&
-				rng() < (blast ? FIREARMS.blast : FIREARMS.chance) * (WEATHER[G.wx].fire || 1)
+				rng() < (blast ? FIREARMS.blast : FIREARMS.chance) * fireMul()
 			)
 				ignite(t, 'a shot');
 		} // fire arrows, burning shot, petards

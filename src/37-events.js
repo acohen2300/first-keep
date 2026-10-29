@@ -186,43 +186,6 @@ const EV = {
 			G.navDirty = true;
 		},
 	},
-	locusts: {
-		draw(e, z, t) {
-			const x = SX(e.x),
-				y = SY(e.y);
-			ctx.fillStyle = 'rgba(20,16,8,.28)';
-			ctx.beginPath();
-			ctx.ellipse(x, y, 70 * z, 40 * z, 0, 0, 7);
-			ctx.fill();
-			ctx.fillStyle = 'rgba(230,200,120,.9)';
-			for (let i = 0; i < 70; i++) {
-				const a = i * 2.4 + t * (1 + (i % 5) * 0.3),
-					r = (20 + ((i * 37) % 60)) * z;
-				ctx.fillRect(
-					x + Math.cos(a) * r + Math.sin(t * 7 + i) * 3 * z,
-					y + Math.sin(a) * r * TILT - 20 * z + Math.cos(t * 9 + i) * 3 * z,
-					2.2 * z,
-					1.4 * z,
-				);
-			}
-		}, // a dark cloud of specks
-		start(e) {
-			e.a = edgeSpot();
-			e.b = across(e.a);
-			sfx('buzz');
-		},
-		tick(e) {
-			const c = crossing(e);
-			e.x = c.x;
-			e.y = c.y;
-			for (const b of G.blds)
-				if (b.kind === 'farm' && b.prog >= 1 && dist(b, c) < EVENTS.locusts.r && !(b.locust > G.t)) {
-					b.locust = G.t + EVENTS.locusts.strip;
-					b.fert = FERT.floor;
-					if (b.owner === 0) say(`Locusts on the field at ${coord(b.x, b.y)}.`, 'warn', 4, b);
-				}
-		},
-	},
 	meteor: {
 		draw(e, z, t) {
 			const f = clamp((G.t - e.t0) / (e.until - e.t0), 0, 1),
@@ -271,7 +234,7 @@ const EV = {
 			sfx('crash', t && t.x, t && t.y);
 		},
 		tick(e) {
-			if (G.wx === 'rain') {
+			if (precip(G.wx)) {
 				e.until = G.t;
 				return;
 			}
@@ -284,7 +247,7 @@ const EV = {
 					scarStrike(n.x, n.y);
 				}
 				nodesNear(n.x, n.y, E.r, (m) => {
-					if (m.kind === 'tree' && m.amt > 0 && !e.burn.includes(m) && !next.includes(m) && rng() < E.spread)
+					if (m.kind === 'tree' && m.amt > 0 && !e.burn.includes(m) && !next.includes(m) && rng() < E.spread * fireMul())
 						next.push(m);
 				});
 				bldsNear(n.x, n.y, 40, (b) => {
@@ -572,34 +535,62 @@ function hordeTick() {
 	sfx('horn');
 	G.horde = 'done';
 }
-// the ground after the weather: mud, ice and snow build while it rains, freezes or blows, and go slowly after
-function groundTick(dt) {
-	const g = G.ground,
-		wx = G.wx,
-		storm = !!(G.ev.cur && G.ev.cur.kind === 'storm');
-	g.mud = clamp(g.mud + (wx === 'rain' ? (storm ? GROUND.storm : GROUND.rain) : -GROUND.dry) * dt, 0, 1);
-	g.ice = clamp(
-		g.ice + (wx === 'frost' ? GROUND.frost : -GROUND.thaw * (season().name === 'Winter' ? 0.3 : 1)) * dt,
-		0,
-		1,
-	);
-	g.snow = clamp(
-		g.snow +
-			(wx === 'blizzard'
-				? GROUND.blizzard
-				: -GROUND.melt * (season().name === 'Winter' ? 0.2 : season().name === 'Summer' ? 3 : 1)) *
-				dt,
-		0,
-		1,
-	);
+// ── The climate (Build 54): one tick a second. The air's temperature from the year and the hour; the sky's run as a chain, a new minute
+// at a time; wetness closing on where the sky puts it; mud, snow and ice from those. `G.wx` stays the sky's name, which the rest reads.
+const blankClim = () => ({ T: CLIMATE.mean, W: CLIMATE.eq.clear, snow: 0, ice: 0, mud: 0, wet: false, dry: 0 });
+const airTemp = (t = G.t) =>
+	CLIMATE.mean +
+	CLIMATE.year * Math.cos(2 * Math.PI * ((t % YEAR) / YEAR - CLIMATE.peakDay)) +
+	CLIMATE.day * Math.cos(2 * Math.PI * ((t % DAY_LEN) / DAY_LEN - CLIMATE.peakHour)); // °C now: the year's swing and the day's
+const precip = (wx) => wx === 'rain' || wx === 'snow' || wx === 'blizzard';
+function skyTurn() {
+	// the next minute's sky from this one: the chain, then what falls from the air's temperature
+	const c = G.clim,
+		s = season().name,
+		P = hz('drought') && s === 'Summer' ? CLIMATE.hazard.drought : hz('winter') && s === 'Winter' ? CLIMATE.hazard.winter : CLIMATE.chain[s],
+		was = G.wx;
+	c.wet = rng() < P[c.wet ? 1 : 0];
+	c.dry = c.wet ? 0 : c.dry + 1;
+	G.wx = c.wet
+		? c.T <= 0
+			? hz('winter') && rng() < CLIMATE.blizzard
+				? 'blizzard'
+				: 'snow'
+			: 'rain'
+		: c.T < 0
+			? 'frost'
+			: c.dry >= CLIMATE.drought.dry && c.T > CLIMATE.drought.temp
+				? 'drought'
+				: 'clear';
+	if (G.wx !== was && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6);
 }
-const groundSpd = (o, keys) =>
-	(1 - GROUND.mudSlow * G.ground.mud * fxv(o, 'mud', keys).m) *
-	(1 - GROUND.snowSlow * G.ground.snow * (1 - fxv(o, 'snow', keys).a)); // what the ground takes off a march
+function climateTick(dt) {
+	const c = G.clim;
+	c.T = airTemp();
+	G.wxT -= dt;
+	if (G.wxT <= 0) {
+		G.wxT = WX_EVERY;
+		skyTurn();
+		lightning();
+	}
+	const eq = CLIMATE.eq[G.wx] ?? CLIMATE.eq.clear,
+		tau = eq > c.W ? CLIMATE.tau.wet : CLIMATE.tau.dry;
+	c.W += (eq - c.W) * (1 - Math.exp(-dt / tau)); // M(t) = Me + (M0 − Me) e^(−t/τ)
+	c.snow = clamp(c.snow + (precip(G.wx) && c.T <= 0 ? CLIMATE.snow.fall * (G.wx === 'blizzard' ? 2 : 1) : -CLIMATE.snow.melt * Math.max(0, c.T)) * dt, 0, 1);
+	c.ice = clamp(c.ice + (c.T < 0 ? (c.W > CLIMATE.mud[0] * 0.5 ? CLIMATE.ice.freeze : 0) : -CLIMATE.ice.thaw * c.T) * dt, 0, 1);
+	c.mud = c.T < 0 ? 0 : clamp((c.W - CLIMATE.mud[0]) / (CLIMATE.mud[1] - CLIMATE.mud[0]), 0, 1); // frozen ground is hard ground
+}
+// what the ground takes off a march for one side, at a place if given (mud pools by water): Pandolf's terrain factor over dirt, as 1 / η
+const groundSpd = (o, keys, at) => {
+	const c = G.clim,
+		mud = c.mud * (at && NAV.shore[gcell(at.x, at.y)] ? CLIMATE.shore : 1);
+	return 1 / (1 + CLIMATE.terrain.mud * Math.min(1, mud) * fxv(o, 'mud', keys).m + CLIMATE.terrain.snow * c.snow * (1 - fxv(o, 'snow', keys).a));
+};
+// fire against the ground's wetness: Rothermel's damping η = 1 − 2.59r + 5.11r² − 3.52r³, r = M/Mx ≤ 1, as a share of a clear day's
+const rothermel = (r) => 1 - 2.59 * r + 5.11 * r * r - 3.52 * r * r * r;
+const fireMul = () => clamp(rothermel(Math.min(1, G.clim.W)) / rothermel(CLIMATE.eq.clear), 0, 2);
 const wearMul = (o) =>
-	G.wx === 'frost' || G.wx === 'rain' || G.wx === 'blizzard'
-		? 1 - GROUND.wear * (1 - Math.min(1, fxv(o, 'wear').a))
-		: 1; // brittle in frost, rusted in rain
+	G.wx === 'frost' || precip(G.wx) ? 1 - CLIMATE.wear * (1 - Math.min(1, fxv(o, 'wear').a)) : 1; // brittle in frost, rusted in rain
 function newsTick() {
 	if (G.t - (G.ev.newsT || 0) < NEWS_EVERY || G.t < 60) return;
 	G.ev.newsT = G.t;

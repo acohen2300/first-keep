@@ -319,7 +319,7 @@ function sparkDraw() {
 	}
 }
 // Three translucent casts (warm dusk, blue night, the weather) laid one over another come to one colour: computed once a frame, painted once.
-const WX_TINT = { drought: [210, 160, 60, 0.1], rain: [20, 30, 50, 0.12], frost: [230, 240, 250, 0.14] };
+const WX_TINT = { drought: [210, 160, 60, 0.1], rain: [20, 30, 50, 0.12], frost: [230, 240, 250, 0.14], snow: [230, 236, 246, 0.12] };
 const tintC = { k: '', s: '' };
 function tintOf(dusk, nt) {
 	let r = 0,

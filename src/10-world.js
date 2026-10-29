@@ -52,7 +52,7 @@ function blankGame(seed) {
 		ev: {},
 		horde: null,
 		flood: 0,
-		ground: { mud: 0, snow: 0, ice: 0 },
+		clim: blankClim(), // the climate: the air's temperature, the ground's wetness, snow, ice, mud, the sky's run (37-events)
 		fog: new Uint8Array(FOGN * FOGN),
 	}; // warAt: notice given, 'a,b' → when it falls due; pick: what the finger holds; hz: the hazards on; ev: the spectacle's state
 }

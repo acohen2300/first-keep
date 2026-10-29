@@ -339,10 +339,10 @@ function solTick(u, dt, SP) {
 				u.hitT = G.t;
 				if (
 					hasTag(u.kind, 'siege') &&
-					G.ground.snow > 0 &&
-					rng() < GROUND.miss * G.ground.snow * (1 - fxv(o, 'snow').a)
+					G.clim.snow > 0 &&
+					rng() < CLIMATE.miss * G.clim.snow * (1 - fxv(o, 'snow').a)
 				) {
-					u.hp -= u.max * GROUND.missHurt;
+					u.hp -= u.max * CLIMATE.missHurt;
 					scarStrike(u.x + u.fx * 30, u.y + u.fy * 30);
 					if (o === 0 && (G.tick + u.id) % 90 < 3) say('Snow: the engine slid, shot short.', 'warn', 4, u);
 				} // an engine on snow

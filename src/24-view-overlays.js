@@ -2,7 +2,7 @@
 // Spectacle on the glass: each event's picture, drawn over the world. Light, particles, a real shape; nothing that hides the game.
 // the ground after the weather: mud darkens the land, snow whitens it, ice gives it a sheen
 function drawGround() {
-	const g = G.ground;
+	const g = G.clim;
 	if (!g || (g.mud < 0.02 && g.snow < 0.02 && g.ice < 0.02)) return;
 	const w = cw,
 		h = ch;
@@ -80,15 +80,17 @@ function drawEvents(z) {
 		t = performance.now() / 1000;
 	drawCracks(z);
 	if (e && EV[e.kind].draw) EV[e.kind].draw(e, z, t); // each event draws itself: its block in 37-events
-	if (G.wx === 'blizzard' && !lessMotion) {
+	if ((G.wx === 'blizzard' || G.wx === 'snow') && !lessMotion) {
 		ctx.fillStyle = 'rgba(245,248,252,.9)';
-		for (let i = 0; i < 160; i++) {
+		for (let i = 0; i < (G.wx === 'blizzard' ? 160 : 60); i++) {
 			const y = ((i * 71.9 + t * 90) % (ch + 20)) - 10,
 				x = ((i * 113.7 + t * 140 + Math.sin(t * 0.8 + i) * 14) % (cw + 40)) - 20;
 			ctx.fillRect(x, y, 2 + (i % 3 === 0), 2 + (i % 3 === 0));
 		}
-		ctx.fillStyle = 'rgba(235,240,245,.35)';
-		ctx.fillRect(0, 0, cw, ch);
+		if (G.wx === 'blizzard') {
+			ctx.fillStyle = 'rgba(235,240,245,.35)';
+			ctx.fillRect(0, 0, cw, ch);
+		}
 	}
 }
 function bar(x, y, w, f, col) {

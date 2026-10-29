@@ -76,7 +76,7 @@ async def fingerprint(br):
     if not os.path.exists(BASELINE): return ['no baseline: run  python3 tests/gate.py --accept "first baseline"'], got
     want = json.load(open(BASELINE))['minutes']
     return [f'minute {i + 1}: {w}  now  {g}' for i, (w, g) in enumerate(zip(want, got)) if w != g] + (['length differs'] if len(want) != len(got) else []), got
-# Every event does what its name says (Build 42: the clocks of the storm, flood, locusts, circus and dragon had tested a tick that never came, so they did nothing).
+# Every event does what its name says (Build 42: the clocks of the storm, flood, circus and dragon had tested a tick that never came, so they did nothing).
 EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame(3); F.act('close'); const G = F.G; G.fantasy = true; F.setPause(true);
   const bad = [], run = (s) => { for (let i = 0; i < s * 30; i++) F.step(1 / 30); };
   const clear = () => { F.endEvent(); G.bolts = []; G.ev.warned = null; };
@@ -85,8 +85,6 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
   // the flood: a house at the shore loses health
   { const L = G.lakes.filter((l) => Math.hypot(l.x - 1000, l.y - 1000) > 400).sort((a, b) => a.r - b.r)[0], dx = L.x > 1000 ? 1 : -1;
     const b = F.mkBld(0, 'house', L.x + dx * (L.r + 30), L.y, 1); G.blds.push(b); F.navRebuild(); run(1); const hp = b.hp; F.startEvent('flood'); run(30); if (!(b.hp < hp)) bad.push('flood: the shore house lost nothing'); clear(); run(2); }
-  // locusts: a farm under the swarm is stripped
-  { F.startEvent('locusts'); run(4); const e = G.ev.cur, b = F.mkBld(0, 'farm', e.x, e.y, 1); G.blds.push(b); run(3); if (!(b.locust > G.t)) bad.push('locusts: the field under the swarm kept its crop'); clear(); }
   // the dragon: a soldier under it is burned
   { F.startEvent('dragon'); run(2); const d = G.ev.cur.units[0], u = F.addUnit(0, 'spear', d.x, d.y); const hp = u.hp; run(2); if (!(u.hp < hp) && u.hp > 0) bad.push('dragon: nobody burned'); clear(); }
   // the travelling show: a villager beside the performers cheers

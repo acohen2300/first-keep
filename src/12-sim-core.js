@@ -18,7 +18,7 @@ function sideSpd(o) {
 	return o === WILD
 		? sp * wsp
 		: (1 - (1 - sp) * fxv(o, 'mud').m * (season().name === 'Winter' ? 1 - Math.min(1, fxv(o, 'cold').a) : 1)) *
-				(1 - (1 - wsp) * (G.wx === 'rain' ? 1 - Math.min(1, fxv(o, 'wet').a) : 1));
+				(1 - (1 - wsp) * (precip(G.wx) ? 1 - Math.min(1, fxv(o, 'wet').a) : 1));
 }
 function step(dt) {
 	if (G.over) return;
@@ -41,7 +41,7 @@ function step(dt) {
 	}
 	if (G.tick % 30 === 2) {
 		eventsTick();
-		groundTick(1);
+		climateTick(1);
 	}
 	if (SET.fog && G.tick % 10 === 0) fogTick();
 	{

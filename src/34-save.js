@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = 'firstkeep.save',
-	SAVEV = 32; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 33; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -45,6 +45,13 @@ const MIGRATE = {
 		S.v = 32;
 		return S;
 	}, // Build 45: Shape and Temper replace stance, formation and hold ground
+	32: (S) => {
+		const g = S.ground || {};
+		S.clim = { T: CLIMATE.mean, W: Math.max(CLIMATE.eq.clear, g.mud || 0), snow: g.snow || 0, ice: g.ice || 0, mud: g.mud || 0, wet: S.wx === 'rain', dry: 0 };
+		delete S.ground;
+		S.v = 33;
+		return S;
+	}, // Build 54: the climate replaces the ground counters
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -149,7 +156,7 @@ function saveGame(force) {
 			seenB: Object.keys(G.seenB).map(Number),
 			horde: G.horde,
 			flood: G.flood,
-			ground: G.ground,
+			clim: G.clim,
 			chargeT: G.chargeT || {} || 0,
 			sand: G.sand || null,
 			mirage: G.mirage || null,
@@ -316,7 +323,7 @@ function loadGame(S) {
 	G.ev = S.ev || {};
 	G.horde = S.horde ?? null;
 	G.flood = S.flood || 0;
-	G.ground = S.ground || { mud: 0, snow: 0, ice: 0 };
+	G.clim = S.clim ? { ...blankClim(), ...S.clim } : blankClim();
 	G.chargeT = S.chargeT || {};
 	G.sand = S.sand || null;
 	G.mirage = S.mirage || null;

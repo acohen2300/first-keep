@@ -5029,24 +5029,37 @@ const MORALE = {
 	capR: 10,
 };
 const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }; // a burst, then tired
-// The ground remembers the weather: rain leaves mud for days, frost leaves ice, a blizzard leaves snow. Each is 0..1 and shows on the map.
+// ───────────────────────── The climate (Build 54): the whole game reads three numbers, the air's temperature, the ground's wetness and the sky's run ─────────────────────────
+// Temperature: a yearly swing and a daily swing round a mean (design: a temperate land about 45° north). The sky runs as a chain: whether the
+// next minute is wet depends on this one (Gabriel & Neumann, QJRMS 1962, Tel Aviv: P(wet|dry) 0.25, P(wet|wet) 0.66, rounded here; dry
+// summers by design). What falls is set by the temperature: rain above freezing, snow below. Wetness closes on where the sky puts it on an
+// exponential timelag (the 10-hour fuel class, scaled to the game's 2-minute day). Mud is wetness past a threshold, deeper by water (pooling).
+// Snow melts by degree-days; ice forms on wet ground below freezing and thaws above it. Walking pays Pandolf's terrain factors (1977:
+// over dirt, swamp 1.8, soft snow about 1.6). Fire follows Rothermel's moisture damping (1972; USDA RMRS-GTR-371). Every number: SCIENCE.md.
 // Research at the Library (Weather line), Stable (horseshoes), Barracks (cloaks) and Smithy (tempering, oiling) takes the edge off, never all of it at once.
-const GROUND = {
-	rain: 0.004,
-	storm: 0.01,
-	dry: 0.0008,
-	mudSlow: 0.35, // mud: a second of rain adds, a dry second takes; at full mud marching is a third slower
-	frost: 0.006,
-	thaw: 0.003,
+const CLIMATE = {
+	mean: 10,
+	year: 12,
+	day: 5, // °C: the yearly mean, half the swing of the year, half the swing of the day
+	peakDay: 0.375,
+	peakHour: 0.42, // when the year is hottest (mid-Summer) and the day (mid-afternoon)
+	chain: { Spring: [0.3, 0.7], Summer: [0.15, 0.5], Autumn: [0.3, 0.7], Winter: [0.3, 0.7] }, // P(wet next | dry now), P(wet next | wet now)
+	hazard: { drought: [0.05, 0.3], winter: [0.45, 0.8] }, // the chain under the Drought hazard (Summer) and the Harsh winter hazard (Winter)
+	drought: { dry: 4, temp: 16 }, // a drought: this many dry minutes in a row with the air above this
+	blizzard: 0.6, // under the Harsh winter hazard, this share of snowfalls is a blizzard
+	tau: { wet: 20, dry: 50 }, // seconds for wetness to close 63% of its gap, getting wet and drying
+	eq: { rain: 1, snow: 0.85, blizzard: 0.85, clear: 0.12, frost: 0.12, drought: 0.04 }, // where wetness settles under each sky
+	mud: [0.45, 0.95], // wetness where mud begins and is full
+	shore: 1.5, // mud within reach of water is this much deeper (pooling)
+	snow: { fall: 0.02, melt: 0.004 }, // depth a second of snowfall adds (a blizzard twice); melt a second per degree above 0
+	ice: { freeze: 0.01, thaw: 0.004 }, // a second below 0 on wet ground; thaw a second per degree above
+	terrain: { mud: 0.8, snow: 0.6 }, // Pandolf's factors over dirt: swamp +0.8 at full mud, soft snow +0.6 at full depth
 	slip: 0.02,
 	slipSecs: 1.5, // ice: a chance a second of a slip that holds a man in place
-	blizzard: 0.012,
-	melt: 0.0015,
-	snowSlow: 0.3,
 	miss: 0.5,
-	missHurt: 0.08, // snow: marching slower; an engine slides and its shot falls short, hurting its own crew
-	wear: 0.15,
-}; // frost makes blades brittle and rain rusts them: weapons do 15% less until tempered and oiled
+	missHurt: 0.08, // snow: an engine slides and its shot falls short, hurting its own crew
+	wear: 0.15, // frost makes blades brittle and rain rusts them: weapons do 15% less until tempered and oiled
+};
 const FIREARMS = { chance: 0.12, blast: 0.3, splash: 40, splashHit: 0.3 }; // fire arrows and burning shot ignite a wooden building on a hit (rain halves it); a petard bombard ignites and shakes the neighbours too
 const GARRISON = { r: 70, heal: 0.6 }; // soldiers resting by their own Castle, Barracks or Town Center heal; Garrison wards double it
 const TEACH = { seats: 4, mul: 1.5, tuition: 40 }; // Teach: a soldier learns a newer kind at the School, four at a time; time ×1.5 per age climbed, tuition in gold per age; opened by Veterans
@@ -5097,27 +5110,22 @@ const HARVEST = [
 	{ p: 1 / 20, m: 0.5, text: 'A failed harvest this year: fields give half.' },
 	{ p: 1 / 6, m: 0.7, text: 'A poor harvest this year: fields give 30% less.' },
 ];
+// the skies and what each does beyond the ground (the ground, mud, snow, ice and fire come from the climate): bows in rain, fields in drought, mortar in frost, sight in a whiteout
 const WEATHER = {
 	clear: { name: 'Clear' },
-	rain: { name: 'Rain', spd: 0.8, rng: 0.85, fire: 0.5, text: 'Rain: marching is slower and bows reach less.' },
-	drought: { name: 'Drought', crop: 0.7, fire: 2, text: 'Drought: fields give 30% less and fires spread fast.' },
+	rain: { name: 'Rain', rng: 0.85, text: 'Rain: the ground softens and bows reach less.' },
+	drought: { name: 'Drought', crop: 0.7, text: 'Drought: fields give 30% less and fire catches at a touch.' },
 	frost: { name: 'Frost', stone: 0.5, text: 'Frost: mortar will not set, stone builds at half speed.' },
+	snow: { name: 'Snow', sight: 0.7, text: 'Snow: the ground deepens and sight shortens.' },
 	blizzard: {
 		name: 'Blizzard',
 		spd: 0.6,
 		sight: 0.35,
 		gather: 0.5,
-		fire: 0.3,
 		text: 'Blizzard: a whiteout. Marches crawl, sight is gone, gathering halves.',
 	}, // Harsh winters only
 };
-const WX_ODDS = {
-		Spring: { rain: 0.45 },
-		Summer: { drought: 0.3, rain: 0.15 },
-		Autumn: { rain: 0.45 },
-		Winter: { frost: 0.6 },
-	},
-	WX_EVERY = 60;
+const WX_EVERY = 60;
 const MOON = 8; // days from new moon to new moon (the real month is 29.5; the game's day is two minutes): at new moon the night is darker and sight shorter
 
 // ───────────────────────── The Challenge: hazards you switch on. Their points are your level; the level multiplies your score ─────────────────────────
@@ -5169,7 +5177,6 @@ const EVENTS = {
 	storm: { name: 'Thunderstorm', secs: 40, band: 260 },
 	stampede: { name: 'Stampede', secs: 30, n: 10, harm: 1 },
 	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.004, harm: 1 },
-	locusts: { name: 'Locusts', secs: 30, r: 70, strip: 90, harm: 1 },
 	meteor: { name: 'Falling star', secs: 3 },
 	wildfire: { name: 'Wildfire', secs: 60, spread: 0.2, r: 32, burn: 0.12, most: 20, season: ['Summer', 'Autumn'], harm: 1 }, // most: trees alight at once; the dry seasons, drought or not
 	fog: { name: 'Fog', secs: 60, sight: 0.4 },
@@ -5743,7 +5750,6 @@ const EV_TEXT = {
 	storm: ['A storm walks in from the west.', 'Thunderstorm: lightning under the cloud.'],
 	stampede: ['Thunder of hooves: bison are coming.', 'Stampede! Fields trampled in its path.'],
 	flood: ['The lakes are rising.', 'Flood: the shores are under water.'],
-	locusts: ['A dark cloud on the wind: locusts.', 'Locusts strip the fields they cross.'],
 	meteor: ['A light in the sky.', 'A star fell in the wild. Reach it for iron.'],
 	wildfire: ['Smoke in the dry forest.', 'Wildfire! Keep wood away from the trees.'],
 	fog: ['Fog is rolling in.', 'Fog: nobody sees far.'],
@@ -5765,7 +5771,6 @@ const EV_LINE = {
 	storm: 'lightning strikes',
 	stampede: 'fields trampled',
 	flood: 'shores flooded',
-	locusts: 'fields stripped',
 	meteor: 'iron falls',
 	wildfire: 'forest burns',
 	fog: 'short sight',
@@ -6040,7 +6045,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The ground remembers the weather',
-		`Rain leaves mud (marching up to ${Math.round(GROUND.mudSlow * 100)}% slower; a storm twice as fast), frost leaves ice (men slip), a blizzard leaves snow (marching ${Math.round(GROUND.snowSlow * 100)}% slower; engines slide and shoot short, hurting their crews). Frost and rain take ${Math.round(GROUND.wear * 100)}% off blades. Each fades over days. The Library (Weather line), Stable, Barracks and Smithy research the answers: roads and drains, horseshoes and crampons, cloaks, tempering and oiling, levees against floods.`,
+		`The air has a temperature, by the season and the hour, and the sky runs in spells: a wet minute is likelier after a wet one. Rain soaks the ground and it dries over minutes; wet ground is mud (marching up to ${Math.round((1 - 1 / (1 + CLIMATE.terrain.mud)) * 100)}% slower, deeper by water), snow falls below freezing and melts by the degree (marching up to ${Math.round((1 - 1 / (1 + CLIMATE.terrain.snow)) * 100)}% slower; engines slide and shoot short), wet ground freezes to ice (men slip). Fire follows the wetness: it hardly catches after rain and races in a drought. Frost and rain take ${Math.round(CLIMATE.wear * 100)}% off blades. Each fades over days. The Library (Weather line), Stable, Barracks and Smithy research the answers: roads and drains, horseshoes and crampons, cloaks, tempering and oiling, levees against floods.`,
 		'Napoleon lost more to mud and cold than to armies; Agincourt was won in a ploughed field after a week of rain.',
 	],
 	[
@@ -6577,7 +6582,6 @@ const sightOf = (e) =>
 const carryOf = (o) => CARRY + fxv(o, 'carry').a;
 function gatherMul(o, n) {
 	let m = fxv(o, 'gather', [n.type, n.kind]).m * EVM.gather * (WEATHER[G.wx].gather || 1);
-	if (n.farm && n.farm.locust > G.t) return 0; // a field stripped by locusts gives nothing for a while
 	if (n.kind === 'farm') {
 		m *= fxv(o, 'crop', [n.type]).m;
 		if (n.type === 'food') {
@@ -6617,6 +6621,7 @@ const powerOf = (list) => list.reduce((s, u) => s + (isSoldier(u) ? unitPower(u)
 // ───────────────────────── The walking grid: where things stand, and how people get around ─────────────────────────
 // Squares of 10, never shown. Buildings fill whole squares and leave one free around them. Walls are one square each.
 const NC = MAP / NAVC;
+const SHORE = 5; // squares from water that count as its shore
 const POCKET = 300; // a joined region smaller than this many squares is a pocket: closed in by trees, buildings or water
 const NAV = {
 	share: {},
@@ -6624,6 +6629,7 @@ const NAV = {
 	solid: new Uint8Array(NC * NC),
 	gate: new Uint8Array(NC * NC),
 	lake: new Uint8Array(NC * NC),
+	shore: new Uint8Array(NC * NC),
 	comp: new Int32Array(NC * NC),
 	size: [0], // squares in each joined region: a pocket is small, the open land is large
 	occ: new Array(NC * NC).fill(null),
@@ -6656,6 +6662,16 @@ function lakeGrid() {
 					if (NAV.lake[c] !== 1) NAV.lake[c] = hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < L.r + 2 ? 1 : 2; // deep water stays deep where pools overlap
 				}
 	}
+	NAV.shore.fill(0);
+	for (let y = 0; y < NC; y++)
+		for (let x = 0; x < NC; x++)
+			if (NAV.lake[y * NC + x])
+				for (let j = -SHORE; j <= SHORE; j++)
+					for (let i = -SHORE; i <= SHORE; i++) {
+						const X = x + i,
+							Y = y + j;
+						if (X >= 0 && Y >= 0 && X < NC && Y < NC) NAV.shore[Y * NC + X] = 1;
+					} // the ground by water: mud pools here first (Build 54)
 	lakeFor = G.lakes;
 	lakeHi = G.flood > G.t;
 }
@@ -7130,19 +7146,19 @@ const paceOf = (u, SP) =>
 	SP *
 	(shapeOf(u).spd || 1) *
 	EVM.spd *
-	(u.owner === WILD ? 1 : groundSpd(u.owner, unitKeys(u.kind))) *
+	(u.owner === WILD ? 1 : groundSpd(u.owner, unitKeys(u.kind), u)) *
 	(G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1) *
 	(u.chg > G.t ? CHARGE.spd : u.tired > G.t ? CHARGE.tiredSpd : 1);
 function moveTo(u, x, y, dt, r, SP) {
 	if (u.stuck > G.t) return false; // in a pit, or slipped on ice
 	if (
-		G.ground.ice > 0 &&
+		G.clim.ice > 0 &&
 		!u.fly &&
 		u.owner !== WILD &&
 		(G.tick + u.id) % 30 === 0 &&
-		rng() < GROUND.slip * G.ground.ice * (1 - fxv(u.owner, 'ice', unitKeys(u.kind)).a)
+		rng() < CLIMATE.slip * G.clim.ice * (1 - fxv(u.owner, 'ice', unitKeys(u.kind)).a)
 	) {
-		u.stuck = G.t + GROUND.slipSecs;
+		u.stuck = G.t + CLIMATE.slipSecs;
 		if (u.owner === 0 && !(G.slipT > G.t - 20)) {
 			G.slipT = G.t;
 			say('Ice: your people slip and fall.', 'soft', 4, u);
@@ -7417,7 +7433,7 @@ function blankGame(seed) {
 		ev: {},
 		horde: null,
 		flood: 0,
-		ground: { mud: 0, snow: 0, ice: 0 },
+		clim: blankClim(), // the climate: the air's temperature, the ground's wetness, snow, ice, mud, the sky's run (37-events)
 		fog: new Uint8Array(FOGN * FOGN),
 	}; // warAt: notice given, 'a,b' → when it falls due; pick: what the finger holds; hz: the hazards on; ev: the spectacle's state
 }
@@ -9227,7 +9243,7 @@ function sideSpd(o) {
 	return o === WILD
 		? sp * wsp
 		: (1 - (1 - sp) * fxv(o, 'mud').m * (season().name === 'Winter' ? 1 - Math.min(1, fxv(o, 'cold').a) : 1)) *
-				(1 - (1 - wsp) * (G.wx === 'rain' ? 1 - Math.min(1, fxv(o, 'wet').a) : 1));
+				(1 - (1 - wsp) * (precip(G.wx) ? 1 - Math.min(1, fxv(o, 'wet').a) : 1));
 }
 function step(dt) {
 	if (G.over) return;
@@ -9250,7 +9266,7 @@ function step(dt) {
 	}
 	if (G.tick % 30 === 2) {
 		eventsTick();
-		groundTick(1);
+		climateTick(1);
 	}
 	if (SET.fog && G.tick % 10 === 0) fogTick();
 	{
@@ -10746,10 +10762,10 @@ function solTick(u, dt, SP) {
 				u.hitT = G.t;
 				if (
 					hasTag(u.kind, 'siege') &&
-					G.ground.snow > 0 &&
-					rng() < GROUND.miss * G.ground.snow * (1 - fxv(o, 'snow').a)
+					G.clim.snow > 0 &&
+					rng() < CLIMATE.miss * G.clim.snow * (1 - fxv(o, 'snow').a)
 				) {
-					u.hp -= u.max * GROUND.missHurt;
+					u.hp -= u.max * CLIMATE.missHurt;
 					scarStrike(u.x + u.fx * 30, u.y + u.fy * 30);
 					if (o === 0 && (G.tick + u.id) % 90 < 3) say('Snow: the engine slid, shot short.', 'warn', 4, u);
 				} // an engine on snow
@@ -11147,7 +11163,7 @@ function hurt(o, a, t, base) {
 				blast = A.gun && fxv(o, 'blast', keys).a >= 1;
 			if (
 				(blast || fxv(o, 'fire', keys).a >= 1) &&
-				rng() < (blast ? FIREARMS.blast : FIREARMS.chance) * (WEATHER[G.wx].fire || 1)
+				rng() < (blast ? FIREARMS.blast : FIREARMS.chance) * fireMul()
 			)
 				ignite(t, 'a shot');
 		} // fire arrows, burning shot, petards
@@ -16984,7 +17000,7 @@ function sparkDraw() {
 	}
 }
 // Three translucent casts (warm dusk, blue night, the weather) laid one over another come to one colour: computed once a frame, painted once.
-const WX_TINT = { drought: [210, 160, 60, 0.1], rain: [20, 30, 50, 0.12], frost: [230, 240, 250, 0.14] };
+const WX_TINT = { drought: [210, 160, 60, 0.1], rain: [20, 30, 50, 0.12], frost: [230, 240, 250, 0.14], snow: [230, 236, 246, 0.12] };
 const tintC = { k: '', s: '' };
 function tintOf(dusk, nt) {
 	let r = 0,
@@ -17696,7 +17712,7 @@ const rnd2 = () => Math.random() * 2 - 1;
 // Spectacle on the glass: each event's picture, drawn over the world. Light, particles, a real shape; nothing that hides the game.
 // the ground after the weather: mud darkens the land, snow whitens it, ice gives it a sheen
 function drawGround() {
-	const g = G.ground;
+	const g = G.clim;
 	if (!g || (g.mud < 0.02 && g.snow < 0.02 && g.ice < 0.02)) return;
 	const w = cw,
 		h = ch;
@@ -17774,15 +17790,17 @@ function drawEvents(z) {
 		t = performance.now() / 1000;
 	drawCracks(z);
 	if (e && EV[e.kind].draw) EV[e.kind].draw(e, z, t); // each event draws itself: its block in 37-events
-	if (G.wx === 'blizzard' && !lessMotion) {
+	if ((G.wx === 'blizzard' || G.wx === 'snow') && !lessMotion) {
 		ctx.fillStyle = 'rgba(245,248,252,.9)';
-		for (let i = 0; i < 160; i++) {
+		for (let i = 0; i < (G.wx === 'blizzard' ? 160 : 60); i++) {
 			const y = ((i * 71.9 + t * 90) % (ch + 20)) - 10,
 				x = ((i * 113.7 + t * 140 + Math.sin(t * 0.8 + i) * 14) % (cw + 40)) - 20;
 			ctx.fillRect(x, y, 2 + (i % 3 === 0), 2 + (i % 3 === 0));
 		}
-		ctx.fillStyle = 'rgba(235,240,245,.35)';
-		ctx.fillRect(0, 0, cw, ch);
+		if (G.wx === 'blizzard') {
+			ctx.fillStyle = 'rgba(235,240,245,.35)';
+			ctx.fillRect(0, 0, cw, ch);
+		}
 	}
 }
 function bar(x, y, w, f, col) {
@@ -21545,7 +21563,7 @@ function advise() {
 	return '';
 }
 const SEASON_ICON = { Spring: '🌱', Summer: '☀️', Autumn: '🍂', Winter: '❄️' },
-	WX_ICON = { rain: '🌧', drought: '🔥', frost: '🧊', blizzard: '🌨' };
+	WX_ICON = { rain: '🌧', drought: '🔥', frost: '🧊', snow: '❄️', blizzard: '🌨' };
 let uiAt = 0;
 const txt = (id, s) => {
 	const el = $(id);
@@ -22910,7 +22928,7 @@ for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndIni
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = 'firstkeep.save',
-	SAVEV = 32; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 33; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -22954,6 +22972,13 @@ const MIGRATE = {
 		S.v = 32;
 		return S;
 	}, // Build 45: Shape and Temper replace stance, formation and hold ground
+	32: (S) => {
+		const g = S.ground || {};
+		S.clim = { T: CLIMATE.mean, W: Math.max(CLIMATE.eq.clear, g.mud || 0), snow: g.snow || 0, ice: g.ice || 0, mud: g.mud || 0, wet: S.wx === 'rain', dry: 0 };
+		delete S.ground;
+		S.v = 33;
+		return S;
+	}, // Build 54: the climate replaces the ground counters
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -23058,7 +23083,7 @@ function saveGame(force) {
 			seenB: Object.keys(G.seenB).map(Number),
 			horde: G.horde,
 			flood: G.flood,
-			ground: G.ground,
+			clim: G.clim,
 			chargeT: G.chargeT || {} || 0,
 			sand: G.sand || null,
 			mirage: G.mirage || null,
@@ -23225,7 +23250,7 @@ function loadGame(S) {
 	G.ev = S.ev || {};
 	G.horde = S.horde ?? null;
 	G.flood = S.flood || 0;
-	G.ground = S.ground || { mud: 0, snow: 0, ice: 0 };
+	G.clim = S.clim ? { ...blankClim(), ...S.clim } : blankClim();
 	G.chargeT = S.chargeT || {};
 	G.sand = S.sand || null;
 	G.mirage = S.mirage || null;
@@ -23549,13 +23574,6 @@ const SFX = {
 			}
 		},
 	], // a stampede: a rolling drum of hooves
-	buzz: [
-		3,
-		(v) => {
-			hiss(2.6, 0.1 * v, 1800, 3, 2400);
-			tone(190, 2.4, 'sawtooth', 0.03 * v, 230);
-		},
-	], // locusts
 	rumble: [
 		1.5,
 		(v) => {
@@ -23588,7 +23606,6 @@ const CHAN = {
 	thunder: 'amb',
 	hush: 'amb',
 	hooves: 'amb',
-	buzz: 'amb',
 	rumble: 'amb',
 	jingle: 'alert',
 	roar: 'alert',
@@ -23921,31 +23938,6 @@ function natureTick() {
 		G.seasonN = sn;
 		seasonTurn();
 	}
-	G.wxT -= 1;
-	if (G.wxT <= 0) {
-		G.wxT = WX_EVERY;
-		const was = G.wx,
-			odds =
-				hz('winter') && season().name === 'Winter'
-					? { frost: 0.3, blizzard: 0.5 }
-					: hz('drought') && season().name === 'Summer'
-						? { drought: 0.9 }
-						: hz('drought') && season().name === 'Spring'
-							? { drought: 0.25, rain: 0.3 }
-							: WX_ODDS[season().name],
-			r = rng();
-		let acc = 0;
-		G.wx = 'clear';
-		for (const k in odds) {
-			acc += odds[k];
-			if (r < acc) {
-				G.wx = k;
-				break;
-			}
-		}
-		if (G.wx !== was && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6);
-		lightning();
-	}
 	if (storm() && rng() < 0.05) strike(rnd(80, MAP - 80), rnd(80, MAP - 80)); // a strike on open ground, about every 20 s in a storm
 	for (const b of G.blds)
 		if (b.node && BLD[b.kind].crop && b.prog >= 1 && b.node.type === 'food') {
@@ -24079,7 +24071,7 @@ function lightning() {
 		}
 }
 function fireTick(dt) {
-	const W = WEATHER[G.wx];
+	const fm = fireMul();
 	for (const b of G.blds) {
 		if (!(b.fire > 0) || b.hp <= 0) continue;
 		b.hp -= maxHpB(b.owner, b.kind) * 0.02 * dt * b.fire;
@@ -24096,7 +24088,7 @@ function fireTick(dt) {
 					!(c.fire > 0) &&
 					c.prog >= 1 &&
 					dist(b, c) < halfOf(b) + halfOf(c) + 20 &&
-					rng() < 0.12 * (W.fire || 1)
+					rng() < 0.12 * fm
 				)
 					ignite(c, 'it spread');
 	}
@@ -24744,43 +24736,6 @@ const EV = {
 			G.navDirty = true;
 		},
 	},
-	locusts: {
-		draw(e, z, t) {
-			const x = SX(e.x),
-				y = SY(e.y);
-			ctx.fillStyle = 'rgba(20,16,8,.28)';
-			ctx.beginPath();
-			ctx.ellipse(x, y, 70 * z, 40 * z, 0, 0, 7);
-			ctx.fill();
-			ctx.fillStyle = 'rgba(230,200,120,.9)';
-			for (let i = 0; i < 70; i++) {
-				const a = i * 2.4 + t * (1 + (i % 5) * 0.3),
-					r = (20 + ((i * 37) % 60)) * z;
-				ctx.fillRect(
-					x + Math.cos(a) * r + Math.sin(t * 7 + i) * 3 * z,
-					y + Math.sin(a) * r * TILT - 20 * z + Math.cos(t * 9 + i) * 3 * z,
-					2.2 * z,
-					1.4 * z,
-				);
-			}
-		}, // a dark cloud of specks
-		start(e) {
-			e.a = edgeSpot();
-			e.b = across(e.a);
-			sfx('buzz');
-		},
-		tick(e) {
-			const c = crossing(e);
-			e.x = c.x;
-			e.y = c.y;
-			for (const b of G.blds)
-				if (b.kind === 'farm' && b.prog >= 1 && dist(b, c) < EVENTS.locusts.r && !(b.locust > G.t)) {
-					b.locust = G.t + EVENTS.locusts.strip;
-					b.fert = FERT.floor;
-					if (b.owner === 0) say(`Locusts on the field at ${coord(b.x, b.y)}.`, 'warn', 4, b);
-				}
-		},
-	},
 	meteor: {
 		draw(e, z, t) {
 			const f = clamp((G.t - e.t0) / (e.until - e.t0), 0, 1),
@@ -24829,7 +24784,7 @@ const EV = {
 			sfx('crash', t && t.x, t && t.y);
 		},
 		tick(e) {
-			if (G.wx === 'rain') {
+			if (precip(G.wx)) {
 				e.until = G.t;
 				return;
 			}
@@ -24842,7 +24797,7 @@ const EV = {
 					scarStrike(n.x, n.y);
 				}
 				nodesNear(n.x, n.y, E.r, (m) => {
-					if (m.kind === 'tree' && m.amt > 0 && !e.burn.includes(m) && !next.includes(m) && rng() < E.spread)
+					if (m.kind === 'tree' && m.amt > 0 && !e.burn.includes(m) && !next.includes(m) && rng() < E.spread * fireMul())
 						next.push(m);
 				});
 				bldsNear(n.x, n.y, 40, (b) => {
@@ -25130,34 +25085,62 @@ function hordeTick() {
 	sfx('horn');
 	G.horde = 'done';
 }
-// the ground after the weather: mud, ice and snow build while it rains, freezes or blows, and go slowly after
-function groundTick(dt) {
-	const g = G.ground,
-		wx = G.wx,
-		storm = !!(G.ev.cur && G.ev.cur.kind === 'storm');
-	g.mud = clamp(g.mud + (wx === 'rain' ? (storm ? GROUND.storm : GROUND.rain) : -GROUND.dry) * dt, 0, 1);
-	g.ice = clamp(
-		g.ice + (wx === 'frost' ? GROUND.frost : -GROUND.thaw * (season().name === 'Winter' ? 0.3 : 1)) * dt,
-		0,
-		1,
-	);
-	g.snow = clamp(
-		g.snow +
-			(wx === 'blizzard'
-				? GROUND.blizzard
-				: -GROUND.melt * (season().name === 'Winter' ? 0.2 : season().name === 'Summer' ? 3 : 1)) *
-				dt,
-		0,
-		1,
-	);
+// ── The climate (Build 54): one tick a second. The air's temperature from the year and the hour; the sky's run as a chain, a new minute
+// at a time; wetness closing on where the sky puts it; mud, snow and ice from those. `G.wx` stays the sky's name, which the rest reads.
+const blankClim = () => ({ T: CLIMATE.mean, W: CLIMATE.eq.clear, snow: 0, ice: 0, mud: 0, wet: false, dry: 0 });
+const airTemp = (t = G.t) =>
+	CLIMATE.mean +
+	CLIMATE.year * Math.cos(2 * Math.PI * ((t % YEAR) / YEAR - CLIMATE.peakDay)) +
+	CLIMATE.day * Math.cos(2 * Math.PI * ((t % DAY_LEN) / DAY_LEN - CLIMATE.peakHour)); // °C now: the year's swing and the day's
+const precip = (wx) => wx === 'rain' || wx === 'snow' || wx === 'blizzard';
+function skyTurn() {
+	// the next minute's sky from this one: the chain, then what falls from the air's temperature
+	const c = G.clim,
+		s = season().name,
+		P = hz('drought') && s === 'Summer' ? CLIMATE.hazard.drought : hz('winter') && s === 'Winter' ? CLIMATE.hazard.winter : CLIMATE.chain[s],
+		was = G.wx;
+	c.wet = rng() < P[c.wet ? 1 : 0];
+	c.dry = c.wet ? 0 : c.dry + 1;
+	G.wx = c.wet
+		? c.T <= 0
+			? hz('winter') && rng() < CLIMATE.blizzard
+				? 'blizzard'
+				: 'snow'
+			: 'rain'
+		: c.T < 0
+			? 'frost'
+			: c.dry >= CLIMATE.drought.dry && c.T > CLIMATE.drought.temp
+				? 'drought'
+				: 'clear';
+	if (G.wx !== was && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6);
 }
-const groundSpd = (o, keys) =>
-	(1 - GROUND.mudSlow * G.ground.mud * fxv(o, 'mud', keys).m) *
-	(1 - GROUND.snowSlow * G.ground.snow * (1 - fxv(o, 'snow', keys).a)); // what the ground takes off a march
+function climateTick(dt) {
+	const c = G.clim;
+	c.T = airTemp();
+	G.wxT -= dt;
+	if (G.wxT <= 0) {
+		G.wxT = WX_EVERY;
+		skyTurn();
+		lightning();
+	}
+	const eq = CLIMATE.eq[G.wx] ?? CLIMATE.eq.clear,
+		tau = eq > c.W ? CLIMATE.tau.wet : CLIMATE.tau.dry;
+	c.W += (eq - c.W) * (1 - Math.exp(-dt / tau)); // M(t) = Me + (M0 − Me) e^(−t/τ)
+	c.snow = clamp(c.snow + (precip(G.wx) && c.T <= 0 ? CLIMATE.snow.fall * (G.wx === 'blizzard' ? 2 : 1) : -CLIMATE.snow.melt * Math.max(0, c.T)) * dt, 0, 1);
+	c.ice = clamp(c.ice + (c.T < 0 ? (c.W > CLIMATE.mud[0] * 0.5 ? CLIMATE.ice.freeze : 0) : -CLIMATE.ice.thaw * c.T) * dt, 0, 1);
+	c.mud = c.T < 0 ? 0 : clamp((c.W - CLIMATE.mud[0]) / (CLIMATE.mud[1] - CLIMATE.mud[0]), 0, 1); // frozen ground is hard ground
+}
+// what the ground takes off a march for one side, at a place if given (mud pools by water): Pandolf's terrain factor over dirt, as 1 / η
+const groundSpd = (o, keys, at) => {
+	const c = G.clim,
+		mud = c.mud * (at && NAV.shore[gcell(at.x, at.y)] ? CLIMATE.shore : 1);
+	return 1 / (1 + CLIMATE.terrain.mud * Math.min(1, mud) * fxv(o, 'mud', keys).m + CLIMATE.terrain.snow * c.snow * (1 - fxv(o, 'snow', keys).a));
+};
+// fire against the ground's wetness: Rothermel's damping η = 1 − 2.59r + 5.11r² − 3.52r³, r = M/Mx ≤ 1, as a share of a clear day's
+const rothermel = (r) => 1 - 2.59 * r + 5.11 * r * r - 3.52 * r * r * r;
+const fireMul = () => clamp(rothermel(Math.min(1, G.clim.W)) / rothermel(CLIMATE.eq.clear), 0, 2);
 const wearMul = (o) =>
-	G.wx === 'frost' || G.wx === 'rain' || G.wx === 'blizzard'
-		? 1 - GROUND.wear * (1 - Math.min(1, fxv(o, 'wear').a))
-		: 1; // brittle in frost, rusted in rain
+	G.wx === 'frost' || precip(G.wx) ? 1 - CLIMATE.wear * (1 - Math.min(1, fxv(o, 'wear').a)) : 1; // brittle in frost, rusted in rain
 function newsTick() {
 	if (G.t - (G.ev.newsT || 0) < NEWS_EVERY || G.t < 60) return;
 	G.ev.newsT = G.t;
@@ -26499,6 +26482,11 @@ window.__fk = {
 	collide,
 	newGame,
 	fairness,
+	airTemp,
+	rothermel,
+	fireMul,
+	groundSpd,
+	CLIMATE,
 	sightOf,
 	shelterOf,
 	bldName,

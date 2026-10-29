@@ -318,7 +318,7 @@ function advise() {
 	return '';
 }
 const SEASON_ICON = { Spring: '🌱', Summer: '☀️', Autumn: '🍂', Winter: '❄️' },
-	WX_ICON = { rain: '🌧', drought: '🔥', frost: '🧊', blizzard: '🌨' };
+	WX_ICON = { rain: '🌧', drought: '🔥', frost: '🧊', snow: '❄️', blizzard: '🌨' };
 let uiAt = 0;
 const txt = (id, s) => {
 	const el = $(id);

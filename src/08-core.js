@@ -441,7 +441,6 @@ const sightOf = (e) =>
 const carryOf = (o) => CARRY + fxv(o, 'carry').a;
 function gatherMul(o, n) {
 	let m = fxv(o, 'gather', [n.type, n.kind]).m * EVM.gather * (WEATHER[G.wx].gather || 1);
-	if (n.farm && n.farm.locust > G.t) return 0; // a field stripped by locusts gives nothing for a while
 	if (n.kind === 'farm') {
 		m *= fxv(o, 'crop', [n.type]).m;
 		if (n.type === 'food') {

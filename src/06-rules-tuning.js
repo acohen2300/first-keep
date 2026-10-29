@@ -30,24 +30,37 @@ const MORALE = {
 	capR: 10,
 };
 const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }; // a burst, then tired
-// The ground remembers the weather: rain leaves mud for days, frost leaves ice, a blizzard leaves snow. Each is 0..1 and shows on the map.
+// ───────────────────────── The climate (Build 54): the whole game reads three numbers, the air's temperature, the ground's wetness and the sky's run ─────────────────────────
+// Temperature: a yearly swing and a daily swing round a mean (design: a temperate land about 45° north). The sky runs as a chain: whether the
+// next minute is wet depends on this one (Gabriel & Neumann, QJRMS 1962, Tel Aviv: P(wet|dry) 0.25, P(wet|wet) 0.66, rounded here; dry
+// summers by design). What falls is set by the temperature: rain above freezing, snow below. Wetness closes on where the sky puts it on an
+// exponential timelag (the 10-hour fuel class, scaled to the game's 2-minute day). Mud is wetness past a threshold, deeper by water (pooling).
+// Snow melts by degree-days; ice forms on wet ground below freezing and thaws above it. Walking pays Pandolf's terrain factors (1977:
+// over dirt, swamp 1.8, soft snow about 1.6). Fire follows Rothermel's moisture damping (1972; USDA RMRS-GTR-371). Every number: SCIENCE.md.
 // Research at the Library (Weather line), Stable (horseshoes), Barracks (cloaks) and Smithy (tempering, oiling) takes the edge off, never all of it at once.
-const GROUND = {
-	rain: 0.004,
-	storm: 0.01,
-	dry: 0.0008,
-	mudSlow: 0.35, // mud: a second of rain adds, a dry second takes; at full mud marching is a third slower
-	frost: 0.006,
-	thaw: 0.003,
+const CLIMATE = {
+	mean: 10,
+	year: 12,
+	day: 5, // °C: the yearly mean, half the swing of the year, half the swing of the day
+	peakDay: 0.375,
+	peakHour: 0.42, // when the year is hottest (mid-Summer) and the day (mid-afternoon)
+	chain: { Spring: [0.3, 0.7], Summer: [0.15, 0.5], Autumn: [0.3, 0.7], Winter: [0.3, 0.7] }, // P(wet next | dry now), P(wet next | wet now)
+	hazard: { drought: [0.05, 0.3], winter: [0.45, 0.8] }, // the chain under the Drought hazard (Summer) and the Harsh winter hazard (Winter)
+	drought: { dry: 4, temp: 16 }, // a drought: this many dry minutes in a row with the air above this
+	blizzard: 0.6, // under the Harsh winter hazard, this share of snowfalls is a blizzard
+	tau: { wet: 20, dry: 50 }, // seconds for wetness to close 63% of its gap, getting wet and drying
+	eq: { rain: 1, snow: 0.85, blizzard: 0.85, clear: 0.12, frost: 0.12, drought: 0.04 }, // where wetness settles under each sky
+	mud: [0.45, 0.95], // wetness where mud begins and is full
+	shore: 1.5, // mud within reach of water is this much deeper (pooling)
+	snow: { fall: 0.02, melt: 0.004 }, // depth a second of snowfall adds (a blizzard twice); melt a second per degree above 0
+	ice: { freeze: 0.01, thaw: 0.004 }, // a second below 0 on wet ground; thaw a second per degree above
+	terrain: { mud: 0.8, snow: 0.6 }, // Pandolf's factors over dirt: swamp +0.8 at full mud, soft snow +0.6 at full depth
 	slip: 0.02,
 	slipSecs: 1.5, // ice: a chance a second of a slip that holds a man in place
-	blizzard: 0.012,
-	melt: 0.0015,
-	snowSlow: 0.3,
 	miss: 0.5,
-	missHurt: 0.08, // snow: marching slower; an engine slides and its shot falls short, hurting its own crew
-	wear: 0.15,
-}; // frost makes blades brittle and rain rusts them: weapons do 15% less until tempered and oiled
+	missHurt: 0.08, // snow: an engine slides and its shot falls short, hurting its own crew
+	wear: 0.15, // frost makes blades brittle and rain rusts them: weapons do 15% less until tempered and oiled
+};
 const FIREARMS = { chance: 0.12, blast: 0.3, splash: 40, splashHit: 0.3 }; // fire arrows and burning shot ignite a wooden building on a hit (rain halves it); a petard bombard ignites and shakes the neighbours too
 const GARRISON = { r: 70, heal: 0.6 }; // soldiers resting by their own Castle, Barracks or Town Center heal; Garrison wards double it
 const TEACH = { seats: 4, mul: 1.5, tuition: 40 }; // Teach: a soldier learns a newer kind at the School, four at a time; time ×1.5 per age climbed, tuition in gold per age; opened by Veterans
@@ -98,27 +111,22 @@ const HARVEST = [
 	{ p: 1 / 20, m: 0.5, text: 'A failed harvest this year: fields give half.' },
 	{ p: 1 / 6, m: 0.7, text: 'A poor harvest this year: fields give 30% less.' },
 ];
+// the skies and what each does beyond the ground (the ground, mud, snow, ice and fire come from the climate): bows in rain, fields in drought, mortar in frost, sight in a whiteout
 const WEATHER = {
 	clear: { name: 'Clear' },
-	rain: { name: 'Rain', spd: 0.8, rng: 0.85, fire: 0.5, text: 'Rain: marching is slower and bows reach less.' },
-	drought: { name: 'Drought', crop: 0.7, fire: 2, text: 'Drought: fields give 30% less and fires spread fast.' },
+	rain: { name: 'Rain', rng: 0.85, text: 'Rain: the ground softens and bows reach less.' },
+	drought: { name: 'Drought', crop: 0.7, text: 'Drought: fields give 30% less and fire catches at a touch.' },
 	frost: { name: 'Frost', stone: 0.5, text: 'Frost: mortar will not set, stone builds at half speed.' },
+	snow: { name: 'Snow', sight: 0.7, text: 'Snow: the ground deepens and sight shortens.' },
 	blizzard: {
 		name: 'Blizzard',
 		spd: 0.6,
 		sight: 0.35,
 		gather: 0.5,
-		fire: 0.3,
 		text: 'Blizzard: a whiteout. Marches crawl, sight is gone, gathering halves.',
 	}, // Harsh winters only
 };
-const WX_ODDS = {
-		Spring: { rain: 0.45 },
-		Summer: { drought: 0.3, rain: 0.15 },
-		Autumn: { rain: 0.45 },
-		Winter: { frost: 0.6 },
-	},
-	WX_EVERY = 60;
+const WX_EVERY = 60;
 const MOON = 8; // days from new moon to new moon (the real month is 29.5; the game's day is two minutes): at new moon the night is darker and sight shorter
 
 // ───────────────────────── The Challenge: hazards you switch on. Their points are your level; the level multiplies your score ─────────────────────────
@@ -170,7 +178,6 @@ const EVENTS = {
 	storm: { name: 'Thunderstorm', secs: 40, band: 260 },
 	stampede: { name: 'Stampede', secs: 30, n: 10, harm: 1 },
 	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.004, harm: 1 },
-	locusts: { name: 'Locusts', secs: 30, r: 70, strip: 90, harm: 1 },
 	meteor: { name: 'Falling star', secs: 3 },
 	wildfire: { name: 'Wildfire', secs: 60, spread: 0.2, r: 32, burn: 0.12, most: 20, season: ['Summer', 'Autumn'], harm: 1 }, // most: trees alight at once; the dry seasons, drought or not
 	fog: { name: 'Fog', secs: 60, sight: 0.4 },

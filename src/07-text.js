@@ -508,7 +508,6 @@ const EV_TEXT = {
 	storm: ['A storm walks in from the west.', 'Thunderstorm: lightning under the cloud.'],
 	stampede: ['Thunder of hooves: bison are coming.', 'Stampede! Fields trampled in its path.'],
 	flood: ['The lakes are rising.', 'Flood: the shores are under water.'],
-	locusts: ['A dark cloud on the wind: locusts.', 'Locusts strip the fields they cross.'],
 	meteor: ['A light in the sky.', 'A star fell in the wild. Reach it for iron.'],
 	wildfire: ['Smoke in the dry forest.', 'Wildfire! Keep wood away from the trees.'],
 	fog: ['Fog is rolling in.', 'Fog: nobody sees far.'],
@@ -530,7 +529,6 @@ const EV_LINE = {
 	storm: 'lightning strikes',
 	stampede: 'fields trampled',
 	flood: 'shores flooded',
-	locusts: 'fields stripped',
 	meteor: 'iron falls',
 	wildfire: 'forest burns',
 	fog: 'short sight',
@@ -805,7 +803,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The ground remembers the weather',
-		`Rain leaves mud (marching up to ${Math.round(GROUND.mudSlow * 100)}% slower; a storm twice as fast), frost leaves ice (men slip), a blizzard leaves snow (marching ${Math.round(GROUND.snowSlow * 100)}% slower; engines slide and shoot short, hurting their crews). Frost and rain take ${Math.round(GROUND.wear * 100)}% off blades. Each fades over days. The Library (Weather line), Stable, Barracks and Smithy research the answers: roads and drains, horseshoes and crampons, cloaks, tempering and oiling, levees against floods.`,
+		`The air has a temperature, by the season and the hour, and the sky runs in spells: a wet minute is likelier after a wet one. Rain soaks the ground and it dries over minutes; wet ground is mud (marching up to ${Math.round((1 - 1 / (1 + CLIMATE.terrain.mud)) * 100)}% slower, deeper by water), snow falls below freezing and melts by the degree (marching up to ${Math.round((1 - 1 / (1 + CLIMATE.terrain.snow)) * 100)}% slower; engines slide and shoot short), wet ground freezes to ice (men slip). Fire follows the wetness: it hardly catches after rain and races in a drought. Frost and rain take ${Math.round(CLIMATE.wear * 100)}% off blades. Each fades over days. The Library (Weather line), Stable, Barracks and Smithy research the answers: roads and drains, horseshoes and crampons, cloaks, tempering and oiling, levees against floods.`,
 		'Napoleon lost more to mud and cold than to armies; Agincourt was won in a ploughed field after a week of rain.',
 	],
 	[

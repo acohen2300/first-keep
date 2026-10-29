@@ -246,31 +246,6 @@ function natureTick() {
 		G.seasonN = sn;
 		seasonTurn();
 	}
-	G.wxT -= 1;
-	if (G.wxT <= 0) {
-		G.wxT = WX_EVERY;
-		const was = G.wx,
-			odds =
-				hz('winter') && season().name === 'Winter'
-					? { frost: 0.3, blizzard: 0.5 }
-					: hz('drought') && season().name === 'Summer'
-						? { drought: 0.9 }
-						: hz('drought') && season().name === 'Spring'
-							? { drought: 0.25, rain: 0.3 }
-							: WX_ODDS[season().name],
-			r = rng();
-		let acc = 0;
-		G.wx = 'clear';
-		for (const k in odds) {
-			acc += odds[k];
-			if (r < acc) {
-				G.wx = k;
-				break;
-			}
-		}
-		if (G.wx !== was && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6);
-		lightning();
-	}
 	if (storm() && rng() < 0.05) strike(rnd(80, MAP - 80), rnd(80, MAP - 80)); // a strike on open ground, about every 20 s in a storm
 	for (const b of G.blds)
 		if (b.node && BLD[b.kind].crop && b.prog >= 1 && b.node.type === 'food') {
@@ -404,7 +379,7 @@ function lightning() {
 		}
 }
 function fireTick(dt) {
-	const W = WEATHER[G.wx];
+	const fm = fireMul();
 	for (const b of G.blds) {
 		if (!(b.fire > 0) || b.hp <= 0) continue;
 		b.hp -= maxHpB(b.owner, b.kind) * 0.02 * dt * b.fire;
@@ -421,7 +396,7 @@ function fireTick(dt) {
 					!(c.fire > 0) &&
 					c.prog >= 1 &&
 					dist(b, c) < halfOf(b) + halfOf(c) + 20 &&
-					rng() < 0.12 * (W.fire || 1)
+					rng() < 0.12 * fm
 				)
 					ignite(c, 'it spread');
 	}
