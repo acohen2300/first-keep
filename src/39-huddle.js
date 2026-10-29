@@ -101,6 +101,7 @@ function hudAim() {
 	if (!H.armed) return;
 	if (H.aim) return hudLock();
 	H.aim = true;
+	H.aimT = performance.now();
 	H.moved = H.locked = H.set = false;
 	if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
 	H.etaKey = '';
@@ -117,17 +118,27 @@ function hudSet() {
 		feel('tick');
 	}
 }
+// the spot under a finger while aiming: a mission goes to the ground, a find or a foe
+function aimSpot(sx, sy) {
+	const H = G.hud;
+	let h = hitAt(sx, sy);
+	const foe = (h.t === 'unit' || h.t === 'bld') && h.e.owner !== 0;
+	if (!(h.t === 'ground' || h.t === 'find' || foe)) h = { t: 'ground', e: { x: h.e.x, y: h.e.y } };
+	H.h = h;
+	H.moved = true;
+	H.etaKey = '';
+}
+// hold the crosshair and drag it
+const aimNear = (sx, sy) => {
+	const H = G.hud;
+	return H.aim && H.h && hyp(sx - SX(H.h.e.x), sy - SY(H.h.e.y)) < 56;
+};
 // a tap on the map while aiming moves the crosshair; two quick taps in one place lock it
 function aimAt(sx, sy) {
 	const H = G.hud,
 		now = performance.now();
-	let h = hitAt(sx, sy);
-	const foe = (h.t === 'unit' || h.t === 'bld') && h.e.owner !== 0;
-	if (!(h.t === 'ground' || h.t === 'find' || foe)) h = { t: 'ground', e: { x: h.e.x, y: h.e.y } }; // a mission goes to the ground, a find or a foe; anything else is just the spot
-	H.h = h;
-	H.moved = true;
-	H.etaKey = '';
-	ripple(h.e.x, h.e.y, '#ffb23d');
+	aimSpot(sx, sy);
+	ripple(H.h.e.x, H.h.e.y, '#ffb23d');
 	feel('tick');
 	if (H.tapAt && now - H.tapAt.t < 350 && hyp(sx - H.tapAt.x, sy - H.tapAt.y) < 28) hudLock();
 	H.tapAt = { t: now, x: sx, y: sy };
@@ -370,13 +381,13 @@ function huddleHTML() {
 				return `<div class="col"><button class="cell msn${fl}${H.sel === i ? ' sel' : ''}" data-slot="${i}" data-act="mcard:${i}" style="--mc:${color}"><span class="top"><span class="c">${n}</span></span>${wd(m.name)}</button><button class="cell st w msn${fl}" data-slot="${i}" data-act="mcard:${i}" style="color:${color}">${t}</button></div>`;
 			})
 			.join(''),
-		top =
-			stage === 4
-				? `<button class="cell${hudPick().length ? lamp('red', 1) : ' dis'}" data-act="hset" aria-label="Set the counts"><span class="wd mid">Set</span></button>`
-				: stage === 5
-					? `<button class="cell${lamp('red', 1)}" data-act="hfire" aria-label="Fire"><span class="wd mid">Fire</span></button>`
-					: `<button class="cell${fired ? lamp('green') : ' dis'}" data-act="hfire" aria-label="Fire"><span class="wd mid">Fire</span></button>`;
-	return `<div class="col">${ready}${aim}</div>${mid}<div class="col">${top}${st('habort', 'Abort')}</div>`;
+		set = `<button class="cell${stage === 4 && hudPick().length ? lamp('red', 1) : stage > 4 ? lamp('green') : ' dis'}" data-act="hset" aria-label="Set the counts"><span class="wd mid">Set</span></button>`,
+		last = !draft
+			? st('habort', 'Abort')
+			: stage === 5
+				? `<button class="cell${lamp('red', 1)}" data-act="hfire" aria-label="Fire"><span class="wd mid">Fire</span></button>`
+				: `<button class="cell${fired ? lamp('green') : ' dis'}" data-act="hfire" aria-label="Fire"><span class="wd mid">Fire</span></button>`;
+	return `<div class="col">${ready}${aim}</div>${mid}<div class="col">${set}${last}</div>`;
 }
 function huddleUI() {
 	const H = G.hud,
@@ -400,43 +411,74 @@ function huddleUI() {
 	$('emgB').classList.toggle('on', !!G.emg);
 	if (flip) fit(); // the bar is whole again: the corner buttons sit on top of it
 }
-// the reticle: thin brackets round the target and a tag with the time it would take
+// the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; amber while aiming, green once locked
 function drawReticle() {
 	const H = G.hud;
 	if (!H.on || !H.h) return;
 	const x = SX(H.h.e.x),
 		y = SY(H.h.e.y),
-		r = 16 * cam.z + 6,
-		q = r * 0.45,
-		eta = hudEta();
+		L = H.aim ? 0 : 1,
+		R = Math.max(30, 16 * cam.z + 6) * (H.aim ? 1 : 0.8),
+		t = lessMotion ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
+		eta = hudEta(),
+		line = (a, b, c, d) => (ctx.moveTo(x + a, y + b), ctx.lineTo(x + c, y + d));
 	ctx.save();
-	ctx.strokeStyle = ctx.fillStyle = '#ffb23d';
+	ctx.strokeStyle = ctx.fillStyle = L ? '#4fe0a0' : '#ffb23d';
 	ctx.lineWidth = 1.5;
+	if (H.drag) {
+		ctx.globalAlpha = 0.14;
+		ctx.beginPath();
+		ctx.arc(x, y, R + 12, 0, 7);
+		ctx.fill();
+		ctx.globalAlpha = 1;
+	}
 	ctx.beginPath();
-	for (const [sx, sy] of [
+	const q = R * 0.4;
+	for (const [a, b] of [
 		[-1, -1],
 		[1, -1],
 		[1, 1],
 		[-1, 1],
 	]) {
-		ctx.moveTo(x + sx * r, y + sy * (r - q));
-		ctx.lineTo(x + sx * r, y + sy * r);
-		ctx.lineTo(x + sx * (r - q), y + sy * r);
+		line(a * R, b * (R - q), a * R, b * R);
+		line(a * R, b * R, a * (R - q), b * R);
 	}
 	ctx.stroke();
-	if (H.aim && !lessMotion) {
-		// the gesture: a ring that breathes out from the reticle, so it reads as something to move
-		const ph = (performance.now() % 1400) / 1400;
-		ctx.globalAlpha = 1 - ph;
+	if (!L) {
+		const p = (t * 0.5) % 1,
+			ph = t * 1.2;
+		ctx.globalAlpha = Math.pow(1 - p, 1.4) * 0.8;
 		ctx.beginPath();
-		ctx.ellipse(x, y, r + ph * 22, (r + ph * 22) * TILT, 0, 0, 7);
+		ctx.arc(x, y, 4 + p * R * 1.3, 0, 7);
 		ctx.stroke();
 		ctx.globalAlpha = 1;
+		ctx.beginPath();
+		for (let i = 0; i < 3; i++) {
+			const a = ph + (i * 2 * Math.PI) / 3,
+				c = Math.cos(a),
+				s = Math.sin(a),
+				rot = (u, v) => [u * c - v * s, u * s + v * c],
+				p0 = rot(R * 0.62, -5),
+				p1 = rot(R * 0.62 + 7, 0),
+				p2 = rot(R * 0.62, 5);
+			line(p0[0], p0[1], p1[0], p1[1]);
+			line(p2[0], p2[1], p1[0], p1[1]);
+		}
+		const sy = Math.sin(t * 3) * (R - 4);
+		line(-R + 3, sy, R - 3, sy);
+		ctx.stroke();
 	}
+	const g = 8;
+	ctx.beginPath();
+	line(-R - 14, 0, -g, 0);
+	line(g, 0, R + 14, 0);
+	line(0, -R - 14, 0, -g);
+	line(0, g, 0, R + 14);
+	ctx.stroke();
 	ctx.font = '700 12px system-ui, sans-serif';
 	ctx.textAlign = 'center';
-	if (H.aim) ctx.fillText('Tap the map to move it', x, y + r * TILT + 18);
-	ctx.fillText(eta ? `${mmss(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - r - 5);
+	if (H.aim) ctx.fillText(H.moved ? 'Hold and drag, or tap' : 'Tap the map to move it', x, y + R + 30);
+	ctx.fillText(eta ? `${mmss(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - R - 8);
 	ctx.restore();
 }
 // the details card for one mission: who, what, where, when, status, and what you can do

@@ -79,6 +79,12 @@ cv.addEventListener('pointerdown', (e) => {
 		const d = drag;
 		if (!(d && d.mode === 'pan' && !d.moved && G.press)) return;
 		feel('snap');
+		if (aimNear(G.press.x, G.press.y)) {
+			G.hud.drag = true;
+			drag = { mode: 'ret' };
+			G.press = null;
+			return;
+		} // held on the crosshair: it is yours to drag
 		const h = hitAt(G.press.x, G.press.y);
 		if (h.t === 'unit' && h.e.owner === 0) {
 			G.pickMore = true;
@@ -109,6 +115,10 @@ cv.addEventListener('pointermove', (e) => {
 		pinch.d = d;
 		pinch.mx = mx;
 		pinch.my = my;
+		return;
+	}
+	if (drag && drag.mode === 'ret') {
+		aimSpot(p.x, p.y);
 		return;
 	}
 	if (drag && drag.mode === 'box') {
@@ -151,6 +161,11 @@ cv.addEventListener('pointerup', (e) => {
 	drag = null;
 	if (!d) return;
 	EDGE = null;
+	if (d.mode === 'ret') {
+		G.hud.drag = false;
+		ui(true);
+		return;
+	}
 	if (d.mode === 'box') {
 		G.box = null;
 		if (Math.abs(d.x1 - d.x0) < 12 && Math.abs(d.y1 - d.y0) < 12) {
@@ -176,6 +191,7 @@ cv.addEventListener('pointerup', (e) => {
 });
 cv.addEventListener('pointercancel', (e) => {
 	EDGE = null;
+	if (G.hud) G.hud.drag = false;
 	holdStop();
 	G.box = null;
 	ptrs.delete(e.pointerId);
