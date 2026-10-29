@@ -48,13 +48,30 @@ const hudPool = () =>
 		(u) => clsOf(u) >= 0,
 	);
 const hudHave = (pool, c) => pool.filter((u) => clsOf(u) === c).length;
-// a draft holds a battalion at most (BNSIZE): the classes fill it in their order, each from what is left
-const hudN = (pool, c) => {
+// the draft, at most one battalion: a count you set stands; the room left is shared among the other kinds by how many of each are free
+// (Build 48: Foot took all 40 places in order and Archers, Horse and Siege showed 0)
+function hudCounts(pool) {
+	const have = CLS.map((_, i) => hudHave(pool, i)),
+		out = CLS.map(() => 0),
+		free = [];
 	let room = BNSIZE;
-	for (let i = 0; i < c; i++) room -= Math.min(hudHave(pool, i), G.hud.n[i] ?? 1e9, room);
-	return Math.min(hudHave(pool, c), G.hud.n[c] ?? 1e9, room);
-};
-const hudRoom = (pool) => CLS.reduce((r, _, i) => r - hudN(pool, i), BNSIZE);
+	CLS.forEach((_, i) => {
+		if (G.hud.n[i] === undefined) {
+			if (have[i]) free.push(i);
+		} else room -= out[i] = Math.min(have[i], G.hud.n[i], room);
+	});
+	const tot = free.reduce((s, i) => s + have[i], 0);
+	if (tot <= room) for (const i of free) out[i] = have[i];
+	else {
+		const part = free.map((i) => [(room * have[i]) / tot, i]);
+		for (const [x, i] of part) room -= out[i] = Math.floor(x);
+		part.sort((a, b) => b[0] % 1 - a[0] % 1 || a[1] - b[1]);
+		for (let k = 0; k < room; k++) out[part[k][1]]++;
+	} // largest share left over first, so the counts add up to the room exactly
+	return out;
+}
+const hudN = (pool, c) => hudCounts(pool)[c];
+const hudRoom = (pool) => BNSIZE - hudCounts(pool).reduce((a, b) => a + b, 0);
 function hudPick() {
 	const pool = hudPool(),
 		to = G.hud.h && G.hud.h.e;

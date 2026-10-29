@@ -81,6 +81,9 @@ const SKIP_U = new Set([
 	'dropV',
 	'dropAt',
 	'lean',
+	'sk',
+	'sgx',
+	'sgy',
 ]);
 let holdSave = false; // while the Resume card waits, nothing may overwrite the save it offers
 const inFight = () => G.units.some((u) => u.owner === 0 && u.tgt && u.tgt.hp > 0);
@@ -316,8 +319,9 @@ function loadGame(S) {
 	if (G.ev.cur) {
 		const e = G.ev.cur;
 		e.units = G.units.filter((u) => u.herd);
-		if (!EV[e.kind].tick || e.kind === 'wildfire') G.ev.cur = null;
-	} // an event with its own pieces on the map is dropped on load; the pieces finish on their own
+		if ((!EV[e.kind].tick && !KNOBS[e.kind]) || e.kind === 'wildfire') G.ev.cur = null;
+	} // an event with its own pieces on the map is dropped on load; the pieces finish on their own. An eclipse, a fog or a heat wave goes on.
+	evmSet();
 	for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined; // orders on the march come back with the game; a stray number is cleared (Build 38 review)
 	fxDirty();
 	navRebuild();

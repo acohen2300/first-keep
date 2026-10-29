@@ -252,7 +252,10 @@ function councilHTML(b) {
 			),
 			'c3',
 		);
-	const kinds = [...new Set([...S.map((u) => u.kind), ...Object.keys(plan)])];
+	const can = ARMYK.filter((k) => !UNIT[k].civ && UNIT[k].cost && k !== 'spy')
+		.map((k) => civKind(0, k))
+		.filter((k) => UNIT[k].age <= p.age && readyAt(0, UNIT[k]).length); // every soldier you can train now, not only those you have (Build 48: a kind you had lost could not be planned or mustered)
+	const kinds = [...new Set([...S.map((u) => u.kind), ...Object.keys(plan), ...can])];
 	h +=
 		sec(`${BN[i]} holds`) +
 		(kinds.length
@@ -365,7 +368,7 @@ function vassalHTML(P) {
 		);
 	const tw = tributeWhy(0, P.id),
 		lv = levyOf(0, P.id).length,
-		half = Math.ceil(soldiersOf(P.id).length * DEMAND.levyMax);
+		half = levyRoom(0, P.id);
 	h += acts(
 		btn(
 			`tribute:${P.id}`,

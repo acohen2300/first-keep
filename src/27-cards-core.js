@@ -16,7 +16,8 @@ function openCard(c) {
 		!G.paused &&
 		!G.over &&
 		(READ_CARDS.has(c.type) ||
-			(c.type === 'bld' && G.ktab === 'rel' && G.blds.some((b) => b.id === c.id && b.kind === 'keep')))
+			(c.type === 'bld' &&
+				G.blds.some((b) => b.id === c.id && b.owner === 0 && (b.kind === 'council' || (b.kind === 'keep' && G.ktab === 'rel')))))
 	) {
 		setPause(true);
 		G.cardPaused = true;
@@ -24,7 +25,7 @@ function openCard(c) {
 	tick();
 	renderCard();
 } // a card pauses the game (Help: Pause on cards); closing it carries on
-const READ_CARDS = new Set(['research', 'council', 'troops', 'guide', 'help', 'score', 'stores', 'sound']); // the cards you sit and read pause the game; a building, a unit or a field to glance at does not (Albert, Build 41)
+const READ_CARDS = new Set(['research', 'troops', 'guide', 'help', 'score', 'stores', 'sound']); // the cards you sit and read pause the game; a building, a unit or a field to glance at does not (Albert, Build 41). The War Council is a building card that pauses (Build 48: 'council' here never matched a card)
 function closeCard() {
 	if (G) {
 		G.techTip = null;
@@ -304,8 +305,8 @@ function yieldText(n, o) {
 	return `<p>${wk ? `<i>${wk} at work:</i> ` : ''}each takes ${Math.round(rate)} ${n.type} a minute and carries ${carry} a trip${wk ? `; together about ${Math.round(rate * wk)} a minute` : ''}${fin && wk ? `; gone in about ${clock((n.amt / (rate * wk)) * 60)}` : ''}.${fin && n.max > 0 ? ` Taken so far: ${Math.round(n.max - n.amt)} of ${Math.round(n.max)}.` : ''}</p>`;
 }
 const goodsText = (g) =>
-	GOODK.filter((k) => g[k] >= 1)
-		.map((k) => `${Math.floor(g[k])} ${GOODS[k].name.toLowerCase()}`)
+	[...GOODK, 'f', 'w', 's', 'i'].filter((k) => g[k] >= 1) // goods, and a cart's raw load
+		.map((k) => `${Math.floor(g[k])} ${nameOf(k)}`)
 		.join(', ');
 const ownTech = (t) => !t.civ || t.civ === G.P[0].civ; // research this people can do: the others' elite ranks stay out of sight
 const fillOf = (c) => Math.min(1, ...Object.keys(c || {}).map((r) => (G.P[0].res[r] || 0) / (c[r] || 1)));

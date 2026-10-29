@@ -230,12 +230,31 @@ function formUp() {
 			fl = hyp(fx0, fy0) || 1,
 			fx = fx0 / fl,
 			fy = fy0 / fl;
+		const cm = NAV.comp[gcell(t.x, t.y)];
 		for (let i = 0; i < n; i++) {
 			const ri = shape === 'wedge' ? wr(i) : Math.floor(i / cols),
 				c = (shape === 'wedge' ? i - (ri * (ri + 1)) / 2 - ri / 2 : (i % cols) - (cols - 1) / 2) * GRID.gap,
-				r = -ri * GRID.gap;
-			a[i].gx = -fy * c + fx * r;
-			a[i].gy = fx * c + fy * r;
+				r = -ri * GRID.gap,
+				u = a[i],
+				sk = t.x + ',' + t.y + ',' + i + ',' + n + ',' + shape + ',' + NAV.v;
+			if (u.sk !== sk) {
+				// a place in the shape that falls in a tree, a lake or a building, or across a wall, moves to the nearest open ground on the spot's side (Build 48)
+				let gx = -fy * c + fx * r,
+					gy = fx * c + fy * r;
+				const cell = gcell(t.x + gx, t.y + gy);
+				if (blockedCell(cell, u.owner) || (cm && NAV.comp[cell] !== cm)) {
+					const f = freeNear(cell % NC, Math.floor(cell / NC), u.owner, 6, t.x + gx, t.y + gy, 1, cm);
+					if (f) {
+						gx = f.x - t.x;
+						gy = f.y - t.y;
+					}
+				}
+				u.sk = sk;
+				u.sgx = gx;
+				u.sgy = gy;
+			}
+			a[i].gx = u.sgx;
+			a[i].gy = u.sgy;
 			a[i].hax = undefined;
 			if (!a[i].tgt && G.t - (a[i].mvT || -9) > 0.3) {
 				a[i].fx = fx;
@@ -534,8 +553,7 @@ const dockNear = (o, n) =>
 	);
 const nodeFits = (n, job) => n.type === job;
 // Food takes a free field first if one is near (within FIELD_NEAR), else the nearest berries, fish, carcass or game.
-const unsafe = (p) =>
-	(G.guarded || []).some((f) => Math.abs(f.x - p.x) < 120 && Math.abs(f.y - p.y) < 120 && dist(f, p) < 120);
+const unsafe = (p, o) => !!DANGER[o][gcell(p.x, p.y)]; // on the side's danger map (09-nav: dangerMap); a field is never left for it
 function nearestNode(u, job) {
 	let best = null,
 		bd = 1e9,
@@ -546,7 +564,7 @@ function nearestNode(u, job) {
 		dropT = ''; // bd scores a find by the walk to it and the walk home with the load
 	for (const n of G.nodes) {
 		if (n.kind !== 'farm' && Math.abs(n.x - u.x) * 0.4 > bd) continue; // the cheap tests first: most of the map is farther than the best so far
-		if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n)))
+		if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n, u.owner)) || (u.bad && u.bad[n.id] > G.t))
 			continue;
 		if (n.kind === 'farm') {
 			if (
@@ -593,7 +611,7 @@ function nearestNode(u, job) {
 			nearest(
 				G.units,
 				u,
-				(v) => v.owner === WILD && UNIT[v.kind].meat && UNIT[v.kind].tick === 'wild' && dist(v, k) < 420 && !unsafe(v),
+				(v) => v.owner === WILD && UNIT[v.kind].meat && UNIT[v.kind].tick === 'wild' && dist(v, k) < 420 && !unsafe(v, u.owner),
 				Math.min(bdist, 420),
 			);
 		if (g) return { hunt: g };

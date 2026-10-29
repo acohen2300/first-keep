@@ -3,6 +3,13 @@
 // EVM: the knobs an event turns (every unit reads them: damage, speed, sight, gathering). A hazard is a switch in G.hz; a spectacle is a row of EVENTS.
 // Random when, never random whether: the next event is picked when the last ends, announced EV_WARN seconds ahead, then run for its seconds.
 const EVM = { dmg: 1, spd: 1, sight: 1, gather: 1 };
+// the knobs follow the event now running and nothing else; set when one starts or ends, and on a new game or a load (Build 48: a game begun or loaded in an eclipse kept its dark)
+const KNOBS = { eclipse: ['dmg', 'spd', 'sight'], fog: ['sight'], heatwave: ['dmg', 'spd'] };
+function evmSet() {
+	EVM.dmg = EVM.spd = EVM.sight = EVM.gather = 1;
+	const e = G && G.ev && G.ev.cur;
+	if (e) for (const k of KNOBS[e.kind] || []) EVM[k] = EVENTS[e.kind][k];
+}
 const hz = (id) => !!(G.hz && G.hz[id]) && G.diff !== 'easy'; // Easy keeps the polite game whatever is switched on
 const levelOf = (h) => HZK.reduce((s, k) => s + (h && h[k] ? HAZARDS[k].pts : 0), 0);
 const levelMul = () => 1 + levelOf(G.hz) / 10; // the score's multiplier for the level played
@@ -89,13 +96,7 @@ const EV = {
 			ctx.globalAlpha = 1;
 		}, // the corona at the top of the glass
 		start(e) {
-			EVM.dmg = EVENTS.eclipse.dmg;
-			EVM.spd = EVENTS.eclipse.spd;
-			EVM.sight = EVENTS.eclipse.sight;
 			sfx('hush');
-		},
-		end() {
-			EVM.dmg = EVM.spd = EVM.sight = 1;
 		},
 	},
 	storm: {
@@ -312,12 +313,6 @@ const EV = {
 				}
 			}
 		},
-		start() {
-			EVM.sight = EVENTS.fog.sight;
-		},
-		end() {
-			EVM.sight = 1;
-		},
 	},
 	sinkhole: {
 		start(e) {
@@ -343,15 +338,7 @@ const EV = {
 			G.sand = null;
 		},
 	},
-	heatwave: {
-		start() {
-			EVM.dmg = EVENTS.heatwave.dmg;
-			EVM.spd = EVENTS.heatwave.spd;
-		},
-		end() {
-			EVM.dmg = EVM.spd = 1;
-		},
-	},
+	heatwave: {},
 	mirage: {
 		start(e) {
 			const k = keepOf(0);
@@ -512,6 +499,7 @@ function startEvent(kind) {
 	G.ev.last = kind;
 	G.ev.warned = null;
 	if (EV[kind].start) EV[kind].start(e);
+	evmSet();
 	if (EV_TEXT[kind] && kind !== 'meteor' && kind !== 'mirage')
 		say(EV_TEXT[kind][1], E.harm ? 'warn' : E.gift ? 'good' : 'soft', 6, e.at || (e.units && e.units[0]) || null); // only what can hurt you takes the line
 }
@@ -520,6 +508,7 @@ function endEvent() {
 	if (!e) return;
 	if (EV[e.kind].end) EV[e.kind].end(e);
 	G.ev.cur = null;
+	evmSet();
 	G.ev.next = G.t + rnd(EV_GAP[0], EV_GAP[1]);
 }
 function eventsTick() {

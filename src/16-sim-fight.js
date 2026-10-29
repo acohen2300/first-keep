@@ -100,17 +100,32 @@ const CHW = Math.ceil(MAP / 8) + 1,
 	CHEAD = new Int32Array(CHW * CHW),
 	CHCELL = [];
 let CHNEXT = new Int32Array(1024);
+// Who gives way (Build 48; it was always half and half): one at work or in a fight hardly moves, one walking moves one standing about,
+// one standing gives way. Nobody is pushed into a tree, a wall or water.
+const heft = (u) => (u.tgt || G.t - (u.work ?? -9) < 0.5 ? 9 : G.t - (u.mvT ?? -9) < 0.25 ? 3 : 1);
 function pushApart(a, b) {
 	const dx = b.x - a.x,
 		dy = b.y - a.y;
 	if (dx > 8 || dx < -8 || dy > 8 || dy < -8) return;
 	const d = hyp(dx, dy);
 	if (d > 0 && d < 8) {
-		const p = (8 - d) / 2 / d;
-		a.x -= dx * p;
-		a.y -= dy * p;
-		b.x += dx * p;
-		b.y += dy * p;
+		const ha = heft(a),
+			hb = heft(b),
+			k = (8 - d) / d,
+			pa = (k * hb) / (ha + hb),
+			pb = (k * ha) / (ha + hb),
+			ax = a.x - dx * pa,
+			ay = a.y - dy * pa,
+			bx = b.x + dx * pb,
+			by = b.y + dy * pb;
+		if (!blockedCell(gcell(ax, ay), a.owner)) {
+			a.x = ax;
+			a.y = ay;
+		}
+		if (!blockedCell(gcell(bx, by), b.owner)) {
+			b.x = bx;
+			b.y = by;
+		}
 	}
 }
 function collide() {

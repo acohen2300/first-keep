@@ -198,6 +198,7 @@ window.__fk = {
 	snapGhost,
 	findSpot,
 	think,
+	react,
 	astar,
 	navRebuild,
 	moveTo,

@@ -441,6 +441,8 @@ const UNIT = {
 	rebel: {
 		name: 'Rebel',
 		tick: 'sol',
+		cls: 'army',
+		at: 'barracks', // never trained (no cost, no age): it says which kind of soldier it fights as, so a rebel taken into your army is Foot (Build 48)
 		tags: ['infantry'],
 		hp: 40,
 		spd: 24,
@@ -651,6 +653,8 @@ const UNIT = {
 	native: {
 		name: 'Warrior',
 		tick: 'sol',
+		cls: 'army',
+		at: 'barracks', // never trained: a warrior sworn to you is Foot in the army, the battalions and the huddle (Build 48: they were in none)
 		tags: ['infantry', 'spear', 'native'],
 		hp: 55,
 		spd: 32,
@@ -665,6 +669,8 @@ const UNIT = {
 	nativebow: {
 		name: 'Bowman',
 		tick: 'sol',
+		cls: 'army',
+		at: 'range', // never trained: a sworn bowman is an archer
 		tags: ['infantry', 'archer', 'ranged', 'native'],
 		hp: 36,
 		spd: 32,

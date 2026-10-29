@@ -794,6 +794,8 @@ const UNIT = {
 	rebel: {
 		name: 'Rebel',
 		tick: 'sol',
+		cls: 'army',
+		at: 'barracks', // never trained (no cost, no age): it says which kind of soldier it fights as, so a rebel taken into your army is Foot (Build 48)
 		tags: ['infantry'],
 		hp: 40,
 		spd: 24,
@@ -1004,6 +1006,8 @@ const UNIT = {
 	native: {
 		name: 'Warrior',
 		tick: 'sol',
+		cls: 'army',
+		at: 'barracks', // never trained: a warrior sworn to you is Foot in the army, the battalions and the huddle (Build 48: they were in none)
 		tags: ['infantry', 'spear', 'native'],
 		hp: 55,
 		spd: 32,
@@ -1018,6 +1022,8 @@ const UNIT = {
 	nativebow: {
 		name: 'Bowman',
 		tick: 'sol',
+		cls: 'army',
+		at: 'range', // never trained: a sworn bowman is an archer
 		tags: ['infantry', 'archer', 'ranged', 'native'],
 		hp: 36,
 		spd: 32,
@@ -5017,7 +5023,7 @@ const FORM = [
 	{ name: 'Square', shape: 'square', spd: 0.8, hit: 0.9, vsMounted: 0.7, note: '10% less damage, 30% less from riders, 20% slower' },
 ];
 const COLUMN = { name: 'Column', shape: 'column', spd: 1.15, hit: 1.1 };
-const GRID = { gap: 15, rows: 2.0 }; // an army stands in a grid: 15 apart, about twice as wide as deep
+const GRID = { gap: 15, rows: 2.0, fan: 90, share: 40 }; // an army stands in a grid: 15 apart, about twice as wide as deep; on the march it follows one way to the spot and opens into its shape in the last 90 (as real armies marched in column and deployed); a soldier within 40 of where a path began takes that path too
 const FIELD_NEAR = 160; // a Food worker takes a free field within this before anything else
 const DOCKR = 150; // fish are caught only within 150 of a finished dock of yours
 const KITE = 45; // a shooter steps back from a foe this close while it reloads
@@ -5031,6 +5037,7 @@ const T_HOLD = 0,
 	T_GUARD = 1,
 	T_PRESS = 2;
 const SHELTER = { flee: 70, clear: 150, raid: 3, hurt: 6 }; // villagers run into the nearest Town Center or tower when an enemy soldier comes within 70, when three or more beasts or robbers do, or when a lone beast or robber hits them (it scares only the one it hits); out when none within 150 of it; each adds an arrow up to the limit (the room is the same)
+const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, keep: 8 }; // a gatherer will not work within 110 of an enemy or a hunting beast, inside an enemy tower's reach plus 30, within 60 of a fire, or for 45 s within 80 of where one of its side was frightened more than 200 from home (the last 8 such places are kept)
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
 // ───────────────────────── The world's own numbers: weather, soil, sickness, the trade routes, the market ─────────────────────────
@@ -6540,6 +6547,7 @@ const powerOf = (list) => list.reduce((s, u) => s + (isSoldier(u) ? unitPower(u)
 // ───────────────────────── The walking grid: where things stand, and how people get around ─────────────────────────
 // Squares of 10, never shown. Buildings fill whole squares and leave one free around them. Walls are one square each.
 const NC = MAP / NAVC;
+const POCKET = 300; // a joined region smaller than this many squares is a pocket: closed in by trees, buildings or water
 const NAV = {
 	share: {},
 	shareN: 0,
@@ -6547,6 +6555,7 @@ const NAV = {
 	gate: new Uint8Array(NC * NC),
 	lake: new Uint8Array(NC * NC),
 	comp: new Int32Array(NC * NC),
+	size: [0], // squares in each joined region: a pocket is small, the open land is large
 	occ: new Array(NC * NC).fill(null),
 	prev: new Uint8Array(NC * NC),
 	prevG: new Uint8Array(NC * NC),
@@ -6632,6 +6641,7 @@ function navRebuild() {
 	const C = NAV.comp,
 		Q = AS.q;
 	C.fill(0);
+	NAV.size.length = 1;
 	let id = 0;
 	for (let s = 0; s < NC * NC; s++) {
 		if (C[s] || NAV.solid[s]) continue;
@@ -6663,8 +6673,10 @@ function navRebuild() {
 				Q[t++] = j4;
 			}
 		}
+		NAV.size[id] = t;
 	}
-	// a tree can be cut only from open ground beside it: the forest is worked from its edge inward
+	// a tree can be cut only from open ground beside it: the forest is worked from its edge inward,
+	// and the ground must be open land, not a sealed pocket inside the wood (Build 48: workers walked to pocket trees they could never reach)
 	for (const n of T) {
 		const cx = Math.floor(n.x / NAVC),
 			cy = Math.floor(n.y / NAVC);
@@ -6681,7 +6693,7 @@ function navRebuild() {
 		]) {
 			const x = cx + i,
 				y = cy + j;
-			if (x >= 0 && y >= 0 && x < NC && y < NC && !NAV.solid[y * NC + x]) {
+			if (x >= 0 && y >= 0 && x < NC && y < NC && !NAV.solid[y * NC + x] && NAV.size[C[y * NC + x]] >= POCKET) {
 				n.open = true;
 				break;
 			}
@@ -6710,12 +6722,12 @@ function lineClear(x1, y1, x2, y2, o, avoid) {
 		n = Math.ceil(hyp(dx, dy) / 4);
 	for (let i = 1; i <= n; i++) {
 		const c = gcell(x1 + (dx * i) / n, y1 + (dy * i) / n);
-		if (blockedCell(c, o) || (avoid && DANGER[c])) return false;
+		if (blockedCell(c, o) || (avoid && DANGER[o][c])) return false;
 	}
 	return true;
 }
-// the free square nearest (px, py) among the rings around square (cx, cy)
-function freeNear(cx, cy, o, R, px, py, slack = 2) {
+// the free square nearest (px, py) among the rings around square (cx, cy); with a region (cm), only squares in it
+function freeNear(cx, cy, o, R, px, py, slack = 2, cm = 0) {
 	let best = null,
 		bd = 1e9,
 		found = -1;
@@ -6726,7 +6738,7 @@ function freeNear(cx, cy, o, R, px, py, slack = 2) {
 				if (Math.max(Math.abs(dx), Math.abs(dy)) !== rad) continue;
 				const x = cx + dx,
 					y = cy + dy;
-				if (x < 0 || y < 0 || x >= NC || y >= NC || blockedCell(y * NC + x, o)) continue;
+				if (x < 0 || y < 0 || x >= NC || y >= NC || blockedCell(y * NC + x, o) || (cm && NAV.comp[y * NC + x] !== cm)) continue;
 				if (found < 0) found = rad;
 				const d = hyp(x * NAVC + 5 - px, y * NAVC + 5 - py);
 				if (d < bd) {
@@ -6737,19 +6749,41 @@ function freeNear(cx, cy, o, R, px, py, slack = 2) {
 	}
 	return best;
 }
-// Where guards and robbers wait: workers and carts walk round it (a soft cost, not a wall). Rebuilt every second from the finds still guarded.
-const DANGER = new Uint8Array(NC * NC);
+// Where workers will not go: one map for each side, redrawn every second, the one home for danger (Build 48).
+// Beside a find still guarded; near a live enemy or a beast that hunts (game that is hunted on purpose is not danger); inside an enemy tower's reach;
+// beside a fire; and, for a while, where one of the side's own was frightened out in the open. Gatherers pick their work off it; workers and carts walk round it (a soft cost, not a wall).
+const DANGER = [0, 1, 2, 3, 4].map(() => new Uint8Array(NC * NC));
+function stampDanger(D, px, py, r) {
+	const R = Math.ceil(r / NAVC),
+		cx = Math.floor(px / NAVC),
+		cy = Math.floor(py / NAVC);
+	for (let y = Math.max(0, cy - R); y <= Math.min(NC - 1, cy + R); y++)
+		for (let x = Math.max(0, cx - R); x <= Math.min(NC - 1, cx + R); x++)
+			if ((x - cx) ** 2 + (y - cy) ** 2 <= R * R) D[y * NC + x] = 1;
+}
 function dangerMap() {
-	DANGER.fill(0);
+	for (const D of DANGER) D.fill(0);
+	const sides = G.P.filter((p) => p.id !== WILD && p.alive).map((p) => p.id);
 	for (const f of G.guarded || []) {
 		const F = FINDS[f.kind],
 			gk = F.guard && F.guard[G.fantasy ? 1 : 0],
-			R = Math.ceil(((gk && UNIT[gk].raid) || 90) / NAVC) + 4,
-			cx = Math.floor(f.x / NAVC),
-			cy = Math.floor(f.y / NAVC);
-		for (let y = Math.max(0, cy - R); y <= Math.min(NC - 1, cy + R); y++)
-			for (let x = Math.max(0, cx - R); x <= Math.min(NC - 1, cx + R); x++)
-				if ((x - cx) ** 2 + (y - cy) ** 2 <= R * R) DANGER[y * NC + x] = 1;
+			r = ((gk && UNIT[gk].raid) || 90) + 40;
+		for (const o of sides) stampDanger(DANGER[o], f.x, f.y, r);
+	}
+	for (const v of G.threats || []) {
+		if (UNIT[v.kind].meat) continue;
+		for (const o of sides) if (atWar(o, v.owner)) stampDanger(DANGER[o], v.x, v.y, DANGER_R.near);
+	}
+	for (const b of G.blds) {
+		if (b.hp <= 0) continue;
+		const B = BLD[b.kind];
+		if (b.fire > 0) for (const o of sides) stampDanger(DANGER[o], b.x, b.y, DANGER_R.fire);
+		if (B.dmg && b.prog >= 1) for (const o of sides) if (atWar(o, b.owner)) stampDanger(DANGER[o], b.x, b.y, (B.rng || 0) + DANGER_R.reach);
+	}
+	for (const o of sides) {
+		const p = G.P[o];
+		p.scares = (p.scares || []).filter((s) => s.t > G.t);
+		for (const s of p.scares) stampDanger(DANGER[o], s.x, s.y, DANGER_R.mem);
 	}
 }
 const AS = {
@@ -6878,7 +6912,7 @@ function astar(sx, sy, tx, ty, o, avoid) {
 			const ni = ny * NC + nx;
 			if (AS.done[ni] === gen || blockedCell(ni, o)) continue;
 			if (d >= 4 && (blockedCell(cy * NC + nx, o) || blockedCell(ny * NC + cx, o))) continue;
-			const ng = AS.g[i] + (d >= 4 ? 1.414 : 1) + (avoid && DANGER[ni] ? 3 : 0);
+			const ng = AS.g[i] + (d >= 4 ? 1.414 : 1) + (avoid && DANGER[o][ni] ? 3 : 0);
 			if (AS.seen[ni] !== gen || ng < AS.g[ni]) {
 				AS.seen[ni] = gen;
 				AS.g[ni] = ng;
@@ -6924,17 +6958,22 @@ function findBlocker(u) {
 	return best;
 }
 function standOff(u, x, y) {
-	// the free square nearest the goal on the side the unit is on
+	// the free square nearest the goal on the side the unit is on, in the unit's own region (Build 48: it chose the far side of a wall or a dead-end alley)
 	const k = gcell(x, y);
 	if (u.so && u.so.k === k && u.so.v === NAV.v) return u.so;
-	const f = freeNear(Math.floor(x / NAVC), Math.floor(y / NAVC), u.owner, 14, u.x, u.y, 0) || { x: u.x, y: u.y };
+	const cx = Math.floor(x / NAVC),
+		cy = Math.floor(y / NAVC),
+		cm = NAV.comp[gcell(u.x, u.y)],
+		f0 = freeNear(cx, cy, u.owner, 14, u.x, u.y, 0),
+		near = f0 && Math.max(Math.abs(f0.cx - cx), Math.abs(f0.cy - cy)) + 1, // no farther than one ring past the nearest open square: it works from beside the thing, not across a wood
+		f = (f0 && cm && NAV.comp[f0.cy * NC + f0.cx] !== cm && freeNear(cx, cy, u.owner, near, u.x, u.y, 0, cm)) || f0 || { x: u.x, y: u.y };
 	return (u.so = { k, v: NAV.v, x: f.x, y: f.y });
 }
 // where to head next on the way to (tx, ty)
 function route(u, tx, ty) {
 	const o = u.owner,
 		T = G.t,
-		avoid = UNIT[u.kind].cls === 'civ' && !DANGER[gcell(u.x, u.y)] && !DANGER[gcell(tx, ty)]; // workers and carts keep off guarded ground, unless they are already on it or going into it
+		avoid = UNIT[u.kind].cls === 'civ' && !DANGER[o][gcell(tx, ty)]; // workers and carts keep off dangerous ground unless going into it; one already on it takes the shortest way off (Build 48)
 	if (!u.path) {
 		if (T - (u.lcT || -9) < 0.25 && u.lcOK) return { x: tx, y: ty, direct: true };
 		u.lcT = T;
@@ -6950,13 +6989,16 @@ function route(u, tx, ty) {
 	}
 	const key = gcell(tx, ty);
 	if (!u.path || u.pv !== NAV.v || u.pk !== key) {
-		if (u.pfK === key && u.pfV === NAV.v && T - u.pfT < 3) return { x: tx, y: ty, direct: true }; // already known: no way
+		if (u.pfK === key && u.pfV === NAV.v && T - u.pfT < 3) {
+			u.noPathT = T;
+			return { x: tx, y: ty, direct: true };
+		} // already known: no way
 		if (NAV.budget <= 0) return { x: u.x, y: u.y, direct: true }; // out of thinking time this moment: wait where it stands, ask again next tick
-		const ck = `${o}|${avoid ? 1 : 0}|${gcell(u.x, u.y)}|${key}|${NAV.v}`,
+		const ck = `${o}|${avoid ? 1 : 0}|${key}|${NAV.v}`,
 			hit = NAV.share[ck];
 		let p;
-		if (hit && T - hit.t < 2)
-			p = hit.p; // a big army leaves one spot for one place: it asks once and all of it follows (Build 42)
+		if (hit && T - hit.t < 2 && hyp(hit.x - u.x, hit.y - u.y) < GRID.share && lineClear(u.x, u.y, hit.x, hit.y, o, avoid))
+			p = hit.p; // a big army leaves one spot for one place: it asks once and all of it follows (Build 42; Build 48: from nearby squares too, not only the same one)
 		else {
 			NAV.budget--;
 			p = astar(u.x, u.y, tx, ty, o, avoid);
@@ -6964,7 +7006,7 @@ function route(u, tx, ty) {
 				NAV.share = {};
 				NAV.shareN = 0;
 			}
-			NAV.share[ck] = { t: T, p };
+			NAV.share[ck] = { t: T, p, x: u.x, y: u.y };
 		}
 		u.pi = 0;
 		u.pv = NAV.v;
@@ -6972,6 +7014,8 @@ function route(u, tx, ty) {
 		u.partial = p.partial;
 		if (!p.pts.length) {
 			u.path = null;
+			u.noPath = true;
+			u.noPathT = T; // no way at all, as much as a way that ends short
 			u.pfK = key;
 			u.pfV = NAV.v;
 			u.pfT = T;
@@ -7360,6 +7404,7 @@ function newGame(seed, carry) {
 	initEconomy();
 	makeBg();
 	navRebuild();
+	evmSet();
 	const k = G.P[0].keep;
 	cam.x = k[0] + 120;
 	cam.y = k[1] - 120;
@@ -8333,12 +8378,17 @@ function forceTribute(L, q) {
 	return true;
 }
 const levyOf = (L, q) => G.units.filter((u) => u.owner === L && u.levy === q && u.hp > 0);
+// how many more may be called up: half of all their soldiers, counting those already marching for you (Build 48: half of what was left, again and again)
+const levyRoom = (L, q) => {
+	const out = levyOf(L, q).length;
+	return Math.max(0, Math.ceil((soldiersOf(q).length + out) * DEMAND.levyMax) - out);
+};
 function levyWhy(L, q, n) {
 	const Q = G.P[q],
 		home = soldiersOf(q).filter((u) => u.state === 'home');
 	if (Q.lord !== L || Q.rebel) return 'Not now.';
 	if (!home.length) return 'None at home.';
-	if (n > Math.ceil(soldiersOf(q).length * DEMAND.levyMax)) return 'Half at most.';
+	if (n < 1 || n > levyRoom(L, q)) return 'Half at most.';
 	return null;
 }
 function levy(L, q, n) {
@@ -8504,7 +8554,12 @@ function teach(o, u) {
 function graduate(u) {
 	const o = u.owner,
 		to = civKind(o, teachTo(u)),
-		f = u.hp / u.max;
+		f = u.hp / u.max,
+		plan = o === 0 && u.bn !== undefined && G.bnPlan[u.bn];
+	if (plan && plan[u.kind] > 0) {
+		plan[u.kind]--;
+		plan[to] = (plan[to] || 0) + 1;
+	} // its place in the battalion goes with it (Build 48: a graduate fell out to the reserve)
 	u.kind = to;
 	u.max = maxHpU(o, to);
 	u.hp = Math.max(1, u.max * f);
@@ -9175,12 +9230,31 @@ function formUp() {
 			fl = hyp(fx0, fy0) || 1,
 			fx = fx0 / fl,
 			fy = fy0 / fl;
+		const cm = NAV.comp[gcell(t.x, t.y)];
 		for (let i = 0; i < n; i++) {
 			const ri = shape === 'wedge' ? wr(i) : Math.floor(i / cols),
 				c = (shape === 'wedge' ? i - (ri * (ri + 1)) / 2 - ri / 2 : (i % cols) - (cols - 1) / 2) * GRID.gap,
-				r = -ri * GRID.gap;
-			a[i].gx = -fy * c + fx * r;
-			a[i].gy = fx * c + fy * r;
+				r = -ri * GRID.gap,
+				u = a[i],
+				sk = t.x + ',' + t.y + ',' + i + ',' + n + ',' + shape + ',' + NAV.v;
+			if (u.sk !== sk) {
+				// a place in the shape that falls in a tree, a lake or a building, or across a wall, moves to the nearest open ground on the spot's side (Build 48)
+				let gx = -fy * c + fx * r,
+					gy = fx * c + fy * r;
+				const cell = gcell(t.x + gx, t.y + gy);
+				if (blockedCell(cell, u.owner) || (cm && NAV.comp[cell] !== cm)) {
+					const f = freeNear(cell % NC, Math.floor(cell / NC), u.owner, 6, t.x + gx, t.y + gy, 1, cm);
+					if (f) {
+						gx = f.x - t.x;
+						gy = f.y - t.y;
+					}
+				}
+				u.sk = sk;
+				u.sgx = gx;
+				u.sgy = gy;
+			}
+			a[i].gx = u.sgx;
+			a[i].gy = u.sgy;
 			a[i].hax = undefined;
 			if (!a[i].tgt && G.t - (a[i].mvT || -9) > 0.3) {
 				a[i].fx = fx;
@@ -9479,8 +9553,7 @@ const dockNear = (o, n) =>
 	);
 const nodeFits = (n, job) => n.type === job;
 // Food takes a free field first if one is near (within FIELD_NEAR), else the nearest berries, fish, carcass or game.
-const unsafe = (p) =>
-	(G.guarded || []).some((f) => Math.abs(f.x - p.x) < 120 && Math.abs(f.y - p.y) < 120 && dist(f, p) < 120);
+const unsafe = (p, o) => !!DANGER[o][gcell(p.x, p.y)]; // on the side's danger map (09-nav: dangerMap); a field is never left for it
 function nearestNode(u, job) {
 	let best = null,
 		bd = 1e9,
@@ -9491,7 +9564,7 @@ function nearestNode(u, job) {
 		dropT = ''; // bd scores a find by the walk to it and the walk home with the load
 	for (const n of G.nodes) {
 		if (n.kind !== 'farm' && Math.abs(n.x - u.x) * 0.4 > bd) continue; // the cheap tests first: most of the map is farther than the best so far
-		if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n)))
+		if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n, u.owner)) || (u.bad && u.bad[n.id] > G.t))
 			continue;
 		if (n.kind === 'farm') {
 			if (
@@ -9538,7 +9611,7 @@ function nearestNode(u, job) {
 			nearest(
 				G.units,
 				u,
-				(v) => v.owner === WILD && UNIT[v.kind].meat && UNIT[v.kind].tick === 'wild' && dist(v, k) < 420 && !unsafe(v),
+				(v) => v.owner === WILD && UNIT[v.kind].meat && UNIT[v.kind].tick === 'wild' && dist(v, k) < 420 && !unsafe(v, u.owner),
 				Math.min(bdist, 420),
 			);
 		if (g) return { hunt: g };
@@ -9592,7 +9665,13 @@ function vilTick(u, dt, SP) {
 				220,
 			);
 			u.hid = tw && dist(u, tw) < dist(u, kk) ? tw.id : kk.id;
-		}
+			const P = G.P[u.owner],
+				S = P.scares || (P.scares = []);
+			if (dist(u, kk) > DANGER_R.far && !S.some((s) => dist(s, u) < DANGER_R.mem)) {
+				S.push({ x: Math.round(u.x), y: Math.round(u.y), t: G.t + DANGER_R.secs });
+				if (S.length > DANGER_R.keep) S.shift();
+			}
+		} // out in the open, the side remembers where it was frightened, and keeps its workers off that ground for a while (Build 48: they walked straight back to the wolves)
 	}
 	if (u.scared && kk) {
 		if (u.safe) {
@@ -9656,12 +9735,12 @@ function vilTick(u, dt, SP) {
 	} // sent somewhere by the finger, it stands there; else it waits by the Town Center
 	if (
 		(G.tick + u.id) % 20 === 0 &&
-		((u.node && u.node.kind !== 'farm' && unsafe(u.node)) || (u.hunt && unsafe(u.hunt)))
+		((u.node && u.node.kind !== 'farm' && unsafe(u.node, u.owner)) || (u.hunt && unsafe(u.hunt, u.owner)))
 	) {
 		if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 		u.node = null;
 		u.hunt = null;
-	} // work or game has strayed beside a guarded find: leave it
+	} // work or game is on dangerous ground now: leave it
 	if (u.hunt) {
 		huntTick(u, dt, SP);
 		return;
@@ -9768,6 +9847,13 @@ function vilTick(u, dt, SP) {
 		u.work = G.t;
 		u.fx = Math.sign(n.x - u.x) || u.fx;
 		if ((G.tick + u.id) % 40 === 0) sfx(n.type === 'wood' ? 'chop' : n.type === 'food' ? 'pick' : 'mine', u.x, u.y);
+	} else if (u.noPathT === G.t) {
+		// the way to this work ended short of it: there is no way there. Leave it for a while and take other work (Build 48: it stood at the dead end for good)
+		const B = u.bad || (u.bad = {});
+		for (const id in B) if (B[id] <= G.t) delete B[id];
+		B[n.id] = G.t + DANGER_R.secs;
+		if (n.farm) n.wk = Math.max(0, (n.wk || 0) - 1);
+		u.node = null;
 	}
 }
 function huntTick(u, dt, SP) {
@@ -10427,7 +10513,10 @@ function solTick(u, dt, SP) {
 		return;
 	}
 	if (u.state === 'goto' || u.state === 'assist') {
-		if (moveTo(u, u.px + (u.gx ?? u.ox * 0.6), u.py + (u.gy ?? u.oy * 0.6), dt, 3, SP)) {
+		const ak = u.px + ',' + u.py;
+		if (u.fanK !== ak && hyp(u.px - u.x, u.py - u.y) < GRID.fan) u.fanK = ak; // near the spot: from here to its own place in the shape
+		const fan = u.fanK === ak; // (Build 48: each soldier walked its own way to its own place, and the army split round woods)
+		if (moveTo(u, u.px + (fan ? (u.gx ?? u.ox * 0.6) : 0), u.py + (fan ? (u.gy ?? u.oy * 0.6) : 0), dt, 3, SP)) {
 			u.idleT += dt;
 			if (u.state === 'assist' && u.idleT > 20) u.state = 'home';
 		}
@@ -10894,17 +10983,32 @@ const CHW = Math.ceil(MAP / 8) + 1,
 	CHEAD = new Int32Array(CHW * CHW),
 	CHCELL = [];
 let CHNEXT = new Int32Array(1024);
+// Who gives way (Build 48; it was always half and half): one at work or in a fight hardly moves, one walking moves one standing about,
+// one standing gives way. Nobody is pushed into a tree, a wall or water.
+const heft = (u) => (u.tgt || G.t - (u.work ?? -9) < 0.5 ? 9 : G.t - (u.mvT ?? -9) < 0.25 ? 3 : 1);
 function pushApart(a, b) {
 	const dx = b.x - a.x,
 		dy = b.y - a.y;
 	if (dx > 8 || dx < -8 || dy > 8 || dy < -8) return;
 	const d = hyp(dx, dy);
 	if (d > 0 && d < 8) {
-		const p = (8 - d) / 2 / d;
-		a.x -= dx * p;
-		a.y -= dy * p;
-		b.x += dx * p;
-		b.y += dy * p;
+		const ha = heft(a),
+			hb = heft(b),
+			k = (8 - d) / d,
+			pa = (k * hb) / (ha + hb),
+			pb = (k * ha) / (ha + hb),
+			ax = a.x - dx * pa,
+			ay = a.y - dy * pa,
+			bx = b.x + dx * pb,
+			by = b.y + dy * pb;
+		if (!blockedCell(gcell(ax, ay), a.owner)) {
+			a.x = ax;
+			a.y = ay;
+		}
+		if (!blockedCell(gcell(bx, by), b.owner)) {
+			b.x = bx;
+			b.y = by;
+		}
 	}
 }
 function collide() {
@@ -16652,7 +16756,7 @@ function drawUnit(u, s) {
 	if (u.kind === 'caravan' && u.goods) {
 		const k = Object.keys(u.goods).find((k) => u.goods[k] > 0);
 		if (k) {
-			ctx.fillStyle = GOODS[k].col;
+			ctx.fillStyle = colOf(k);
 			ctx.fillRect(sx - 4 * z, sy - 12 * z, 5 * z, 3 * z);
 		}
 	}
@@ -18396,7 +18500,8 @@ function openCard(c) {
 		!G.paused &&
 		!G.over &&
 		(READ_CARDS.has(c.type) ||
-			(c.type === 'bld' && G.ktab === 'rel' && G.blds.some((b) => b.id === c.id && b.kind === 'keep')))
+			(c.type === 'bld' &&
+				G.blds.some((b) => b.id === c.id && b.owner === 0 && (b.kind === 'council' || (b.kind === 'keep' && G.ktab === 'rel')))))
 	) {
 		setPause(true);
 		G.cardPaused = true;
@@ -18404,7 +18509,7 @@ function openCard(c) {
 	tick();
 	renderCard();
 } // a card pauses the game (Help: Pause on cards); closing it carries on
-const READ_CARDS = new Set(['research', 'council', 'troops', 'guide', 'help', 'score', 'stores', 'sound']); // the cards you sit and read pause the game; a building, a unit or a field to glance at does not (Albert, Build 41)
+const READ_CARDS = new Set(['research', 'troops', 'guide', 'help', 'score', 'stores', 'sound']); // the cards you sit and read pause the game; a building, a unit or a field to glance at does not (Albert, Build 41). The War Council is a building card that pauses (Build 48: 'council' here never matched a card)
 function closeCard() {
 	if (G) {
 		G.techTip = null;
@@ -18684,8 +18789,8 @@ function yieldText(n, o) {
 	return `<p>${wk ? `<i>${wk} at work:</i> ` : ''}each takes ${Math.round(rate)} ${n.type} a minute and carries ${carry} a trip${wk ? `; together about ${Math.round(rate * wk)} a minute` : ''}${fin && wk ? `; gone in about ${clock((n.amt / (rate * wk)) * 60)}` : ''}.${fin && n.max > 0 ? ` Taken so far: ${Math.round(n.max - n.amt)} of ${Math.round(n.max)}.` : ''}</p>`;
 }
 const goodsText = (g) =>
-	GOODK.filter((k) => g[k] >= 1)
-		.map((k) => `${Math.floor(g[k])} ${GOODS[k].name.toLowerCase()}`)
+	[...GOODK, 'f', 'w', 's', 'i'].filter((k) => g[k] >= 1) // goods, and a cart's raw load
+		.map((k) => `${Math.floor(g[k])} ${nameOf(k)}`)
 		.join(', ');
 const ownTech = (t) => !t.civ || t.civ === G.P[0].civ; // research this people can do: the others' elite ranks stay out of sight
 const fillOf = (c) => Math.min(1, ...Object.keys(c || {}).map((r) => (G.P[0].res[r] || 0) / (c[r] || 1)));
@@ -19242,7 +19347,10 @@ function councilHTML(b) {
 			),
 			'c3',
 		);
-	const kinds = [...new Set([...S.map((u) => u.kind), ...Object.keys(plan)])];
+	const can = ARMYK.filter((k) => !UNIT[k].civ && UNIT[k].cost && k !== 'spy')
+		.map((k) => civKind(0, k))
+		.filter((k) => UNIT[k].age <= p.age && readyAt(0, UNIT[k]).length); // every soldier you can train now, not only those you have (Build 48: a kind you had lost could not be planned or mustered)
+	const kinds = [...new Set([...S.map((u) => u.kind), ...Object.keys(plan), ...can])];
 	h +=
 		sec(`${BN[i]} holds`) +
 		(kinds.length
@@ -19355,7 +19463,7 @@ function vassalHTML(P) {
 		);
 	const tw = tributeWhy(0, P.id),
 		lv = levyOf(0, P.id).length,
-		half = Math.ceil(soldiersOf(P.id).length * DEMAND.levyMax);
+		half = levyRoom(0, P.id);
 	h += acts(
 		btn(
 			`tribute:${P.id}`,
@@ -20277,7 +20385,7 @@ $('card').addEventListener(
 function guideModel() {
 	const unitsAt = (k) =>
 			Object.values(UNIT)
-				.filter((U) => U.at === k && !U.civ)
+				.filter((U) => U.at === k && !U.civ && U.cost)
 				.map((U) => U.name),
 		techsAt = (k) => TECH.filter((t) => t.at === k).map((t) => t.name);
 	const menuOf = {};
@@ -21595,9 +21703,11 @@ const PLAY = {
 	hudn(a) {
 		if (hudStage() < 4) return;
 		const [c, d] = a.split(','),
+			i = Number(c),
 			pool = hudPool(),
-			have = hudHave(pool, Number(c));
-		G.hud.n[c] = clamp(hudN(pool, Number(c)) + (d === '+' ? Math.min(1, hudRoom(pool)) : -1), 0, have);
+			N = hudCounts(pool),
+			give = hudRoom(pool) > 0 || N.some((x, j) => j !== i && G.hud.n[j] === undefined && x > 0); // a + takes a free place, or one from a kind you have not set
+		G.hud.n[c] = clamp(N[i] + (d === '+' ? (give ? 1 : 0) : -1), 0, hudHave(pool, i));
 		G.hud.set = false; // changing a count opens Set again
 	},
 	hfire() {
@@ -21829,7 +21939,7 @@ const PLAY = {
 	},
 	levy(a) {
 		const [q, n] = a.split(',').map(Number);
-		if (!levy(0, q, n === 0 ? Math.ceil(soldiersOf(q).length * DEMAND.levyMax) : n))
+		if (!levy(0, q, n === 0 ? levyRoom(0, q) : n))
 			say(levyWhy(0, q, n || 1) || 'Not now.', '', 3);
 	},
 	release(a) {
@@ -22305,6 +22415,9 @@ const SKIP_U = new Set([
 	'dropV',
 	'dropAt',
 	'lean',
+	'sk',
+	'sgx',
+	'sgy',
 ]);
 let holdSave = false; // while the Resume card waits, nothing may overwrite the save it offers
 const inFight = () => G.units.some((u) => u.owner === 0 && u.tgt && u.tgt.hp > 0);
@@ -22540,8 +22653,9 @@ function loadGame(S) {
 	if (G.ev.cur) {
 		const e = G.ev.cur;
 		e.units = G.units.filter((u) => u.herd);
-		if (!EV[e.kind].tick || e.kind === 'wildfire') G.ev.cur = null;
-	} // an event with its own pieces on the map is dropped on load; the pieces finish on their own
+		if ((!EV[e.kind].tick && !KNOBS[e.kind]) || e.kind === 'wildfire') G.ev.cur = null;
+	} // an event with its own pieces on the map is dropped on load; the pieces finish on their own. An eclipse, a fog or a heat wave goes on.
+	evmSet();
 	for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined; // orders on the march come back with the game; a stray number is cleared (Build 38 review)
 	fxDirty();
 	navRebuild();
@@ -23040,6 +23154,7 @@ function initEconomy() {
 const distF = (d) => clamp(1 + d / 1000, 1, POST.far);
 const baseOf = (k) => (GOODS[k] ? GOODS[k].base : TRADE[k] / 100); // a made good's price, or a raw find's (the Market's lot price ÷ 100)
 const nameOf = (k) => (GOODS[k] ? GOODS[k].name : RAW_NAME[k]).toLowerCase();
+const colOf = (k) => (GOODS[k] ? GOODS[k].col : RESOURCES[LONG[k]].col); // a cart's load shows its colour: a good's own, or the resource's
 const loadable = (p, k) => (TRADE[k] ? Math.max(0, (p.res[k] || 0) - CARAVAN.keep) : p.goods[k] || 0); // what a caravan may take: all of a made good, a raw find's surplus
 const takeFrom = (p, k, q) => (TRADE[k] ? (p.res[k] -= q) : (p.goods[k] -= q));
 function priceAt(o, good, place, from) {
@@ -23212,7 +23327,7 @@ const guardedCart = (v) =>
 // a robbed caravan's load goes into the nearest robbers' camp, and comes back to whoever breaks the camp
 function robbed(u) {
 	let v = u.cargo || 0;
-	for (const k in u.goods || {}) v += u.goods[k] * GOODS[k].base;
+	for (const k in u.goods || {}) v += u.goods[k] * baseOf(k); // a raw load is robbed too (Build 48: it threw)
 	const f = nearest(G.finds, u, (f) => f.kind === 'camp' && !f.done);
 	if (f && v > 0) f.hoard = (f.hoard || 0) + Math.round(v);
 	if (u.owner === 0) say(`Caravan robbed${v ? ` (${Math.round(v)}g)` : ''}. Break their camp.`, 'warn', 7, u);
@@ -23865,6 +23980,13 @@ function vassalTick() {
 // EVM: the knobs an event turns (every unit reads them: damage, speed, sight, gathering). A hazard is a switch in G.hz; a spectacle is a row of EVENTS.
 // Random when, never random whether: the next event is picked when the last ends, announced EV_WARN seconds ahead, then run for its seconds.
 const EVM = { dmg: 1, spd: 1, sight: 1, gather: 1 };
+// the knobs follow the event now running and nothing else; set when one starts or ends, and on a new game or a load (Build 48: a game begun or loaded in an eclipse kept its dark)
+const KNOBS = { eclipse: ['dmg', 'spd', 'sight'], fog: ['sight'], heatwave: ['dmg', 'spd'] };
+function evmSet() {
+	EVM.dmg = EVM.spd = EVM.sight = EVM.gather = 1;
+	const e = G && G.ev && G.ev.cur;
+	if (e) for (const k of KNOBS[e.kind] || []) EVM[k] = EVENTS[e.kind][k];
+}
 const hz = (id) => !!(G.hz && G.hz[id]) && G.diff !== 'easy'; // Easy keeps the polite game whatever is switched on
 const levelOf = (h) => HZK.reduce((s, k) => s + (h && h[k] ? HAZARDS[k].pts : 0), 0);
 const levelMul = () => 1 + levelOf(G.hz) / 10; // the score's multiplier for the level played
@@ -23951,13 +24073,7 @@ const EV = {
 			ctx.globalAlpha = 1;
 		}, // the corona at the top of the glass
 		start(e) {
-			EVM.dmg = EVENTS.eclipse.dmg;
-			EVM.spd = EVENTS.eclipse.spd;
-			EVM.sight = EVENTS.eclipse.sight;
 			sfx('hush');
-		},
-		end() {
-			EVM.dmg = EVM.spd = EVM.sight = 1;
 		},
 	},
 	storm: {
@@ -24174,12 +24290,6 @@ const EV = {
 				}
 			}
 		},
-		start() {
-			EVM.sight = EVENTS.fog.sight;
-		},
-		end() {
-			EVM.sight = 1;
-		},
 	},
 	sinkhole: {
 		start(e) {
@@ -24205,15 +24315,7 @@ const EV = {
 			G.sand = null;
 		},
 	},
-	heatwave: {
-		start() {
-			EVM.dmg = EVENTS.heatwave.dmg;
-			EVM.spd = EVENTS.heatwave.spd;
-		},
-		end() {
-			EVM.dmg = EVM.spd = 1;
-		},
-	},
+	heatwave: {},
 	mirage: {
 		start(e) {
 			const k = keepOf(0);
@@ -24374,6 +24476,7 @@ function startEvent(kind) {
 	G.ev.last = kind;
 	G.ev.warned = null;
 	if (EV[kind].start) EV[kind].start(e);
+	evmSet();
 	if (EV_TEXT[kind] && kind !== 'meteor' && kind !== 'mirage')
 		say(EV_TEXT[kind][1], E.harm ? 'warn' : E.gift ? 'good' : 'soft', 6, e.at || (e.units && e.units[0]) || null); // only what can hurt you takes the line
 }
@@ -24382,6 +24485,7 @@ function endEvent() {
 	if (!e) return;
 	if (EV[e.kind].end) EV[e.kind].end(e);
 	G.ev.cur = null;
+	evmSet();
 	G.ev.next = G.t + rnd(EV_GAP[0], EV_GAP[1]);
 }
 function eventsTick() {
@@ -24882,13 +24986,30 @@ const hudPool = () =>
 		(u) => clsOf(u) >= 0,
 	);
 const hudHave = (pool, c) => pool.filter((u) => clsOf(u) === c).length;
-// a draft holds a battalion at most (BNSIZE): the classes fill it in their order, each from what is left
-const hudN = (pool, c) => {
+// the draft, at most one battalion: a count you set stands; the room left is shared among the other kinds by how many of each are free
+// (Build 48: Foot took all 40 places in order and Archers, Horse and Siege showed 0)
+function hudCounts(pool) {
+	const have = CLS.map((_, i) => hudHave(pool, i)),
+		out = CLS.map(() => 0),
+		free = [];
 	let room = BNSIZE;
-	for (let i = 0; i < c; i++) room -= Math.min(hudHave(pool, i), G.hud.n[i] ?? 1e9, room);
-	return Math.min(hudHave(pool, c), G.hud.n[c] ?? 1e9, room);
-};
-const hudRoom = (pool) => CLS.reduce((r, _, i) => r - hudN(pool, i), BNSIZE);
+	CLS.forEach((_, i) => {
+		if (G.hud.n[i] === undefined) {
+			if (have[i]) free.push(i);
+		} else room -= out[i] = Math.min(have[i], G.hud.n[i], room);
+	});
+	const tot = free.reduce((s, i) => s + have[i], 0);
+	if (tot <= room) for (const i of free) out[i] = have[i];
+	else {
+		const part = free.map((i) => [(room * have[i]) / tot, i]);
+		for (const [x, i] of part) room -= out[i] = Math.floor(x);
+		part.sort((a, b) => b[0] % 1 - a[0] % 1 || a[1] - b[1]);
+		for (let k = 0; k < room; k++) out[part[k][1]]++;
+	} // largest share left over first, so the counts add up to the room exactly
+	return out;
+}
+const hudN = (pool, c) => hudCounts(pool)[c];
+const hudRoom = (pool) => BNSIZE - hudCounts(pool).reduce((a, b) => a + b, 0);
 function hudPick() {
 	const pool = hudPool(),
 		to = G.hud.h && G.hud.h.e;
@@ -25438,14 +25559,19 @@ function fillRank(units, pick) {
 	}
 	return rest;
 }
+// once, at the first call: the picture Resume goes back to, every villager's work and every battalion's temper
+// (Build 48: Battle Stations kept no picture, so its Hold stayed on every battalion for good)
+function emgSnap(kind) {
+	if (!G.emg)
+		G.emg = {
+			kind,
+			snap: unitsOf(0, 'vil').map((u) => ({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post })),
+			temper: G.temper.slice(),
+		};
+}
 function villagersIn() {
 	const V = unitsOf(0, 'vil'),
 		k = keepOf(0);
-	if (!G.emg)
-		G.emg = {
-			kind: 'shelter',
-			snap: V.map((u) => ({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post })),
-		}; // once: Resume goes back to the first picture
 	const left = fillRank(V, {
 		into: (u, b) => {
 			u.emg = true;
@@ -25497,6 +25623,7 @@ function soldiersIn() {
 	});
 }
 function emgStart(kind) {
+	emgSnap(kind);
 	if (kind === 'battle' || kind === 'hands') soldiersIn(); // soldiers first: the strongest places are theirs
 	if (kind === 'shelter' || kind === 'hands') villagersIn();
 	if (G.emg) G.emg.kind = kind;
@@ -25526,6 +25653,7 @@ function emgResume() {
 		if (node && !node.farm) u.node = node;
 		u.post = n.post;
 	}
+	if (G.emg.temper) G.temper = G.emg.temper;
 	G.emg = null;
 	say('Back to work.', 'good', 3);
 }
@@ -25753,6 +25881,7 @@ window.__fk = {
 	snapGhost,
 	findSpot,
 	think,
+	react,
 	astar,
 	navRebuild,
 	moveTo,

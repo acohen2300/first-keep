@@ -74,7 +74,7 @@ const FORM = [
 	{ name: 'Square', shape: 'square', spd: 0.8, hit: 0.9, vsMounted: 0.7, note: '10% less damage, 30% less from riders, 20% slower' },
 ];
 const COLUMN = { name: 'Column', shape: 'column', spd: 1.15, hit: 1.1 };
-const GRID = { gap: 15, rows: 2.0 }; // an army stands in a grid: 15 apart, about twice as wide as deep
+const GRID = { gap: 15, rows: 2.0, fan: 90, share: 40 }; // an army stands in a grid: 15 apart, about twice as wide as deep; on the march it follows one way to the spot and opens into its shape in the last 90 (as real armies marched in column and deployed); a soldier within 40 of where a path began takes that path too
 const FIELD_NEAR = 160; // a Food worker takes a free field within this before anything else
 const DOCKR = 150; // fish are caught only within 150 of a finished dock of yours
 const KITE = 45; // a shooter steps back from a foe this close while it reloads
@@ -88,6 +88,7 @@ const T_HOLD = 0,
 	T_GUARD = 1,
 	T_PRESS = 2;
 const SHELTER = { flee: 70, clear: 150, raid: 3, hurt: 6 }; // villagers run into the nearest Town Center or tower when an enemy soldier comes within 70, when three or more beasts or robbers do, or when a lone beast or robber hits them (it scares only the one it hits); out when none within 150 of it; each adds an arrow up to the limit (the room is the same)
+const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, keep: 8 }; // a gatherer will not work within 110 of an enemy or a hunting beast, inside an enemy tower's reach plus 30, within 60 of a fire, or for 45 s within 80 of where one of its side was frightened more than 200 from home (the last 8 such places are kept)
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
 // ───────────────────────── The world's own numbers: weather, soil, sickness, the trade routes, the market ─────────────────────────

@@ -59,6 +59,7 @@ function initEconomy() {
 const distF = (d) => clamp(1 + d / 1000, 1, POST.far);
 const baseOf = (k) => (GOODS[k] ? GOODS[k].base : TRADE[k] / 100); // a made good's price, or a raw find's (the Market's lot price ÷ 100)
 const nameOf = (k) => (GOODS[k] ? GOODS[k].name : RAW_NAME[k]).toLowerCase();
+const colOf = (k) => (GOODS[k] ? GOODS[k].col : RESOURCES[LONG[k]].col); // a cart's load shows its colour: a good's own, or the resource's
 const loadable = (p, k) => (TRADE[k] ? Math.max(0, (p.res[k] || 0) - CARAVAN.keep) : p.goods[k] || 0); // what a caravan may take: all of a made good, a raw find's surplus
 const takeFrom = (p, k, q) => (TRADE[k] ? (p.res[k] -= q) : (p.goods[k] -= q));
 function priceAt(o, good, place, from) {
@@ -231,7 +232,7 @@ const guardedCart = (v) =>
 // a robbed caravan's load goes into the nearest robbers' camp, and comes back to whoever breaks the camp
 function robbed(u) {
 	let v = u.cargo || 0;
-	for (const k in u.goods || {}) v += u.goods[k] * GOODS[k].base;
+	for (const k in u.goods || {}) v += u.goods[k] * baseOf(k); // a raw load is robbed too (Build 48: it threw)
 	const f = nearest(G.finds, u, (f) => f.kind === 'camp' && !f.done);
 	if (f && v > 0) f.hoard = (f.hoard || 0) + Math.round(v);
 	if (u.owner === 0) say(`Caravan robbed${v ? ` (${Math.round(v)}g)` : ''}. Break their camp.`, 'warn', 7, u);

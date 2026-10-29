@@ -2,7 +2,7 @@
 function guideModel() {
 	const unitsAt = (k) =>
 			Object.values(UNIT)
-				.filter((U) => U.at === k && !U.civ)
+				.filter((U) => U.at === k && !U.civ && U.cost)
 				.map((U) => U.name),
 		techsAt = (k) => TECH.filter((t) => t.at === k).map((t) => t.name);
 	const menuOf = {};

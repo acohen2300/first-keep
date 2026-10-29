@@ -498,7 +498,7 @@ function drawUnit(u, s) {
 	if (u.kind === 'caravan' && u.goods) {
 		const k = Object.keys(u.goods).find((k) => u.goods[k] > 0);
 		if (k) {
-			ctx.fillStyle = GOODS[k].col;
+			ctx.fillStyle = colOf(k);
 			ctx.fillRect(sx - 4 * z, sy - 12 * z, 5 * z, 3 * z);
 		}
 	}

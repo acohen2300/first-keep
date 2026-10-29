@@ -360,7 +360,10 @@ function solTick(u, dt, SP) {
 		return;
 	}
 	if (u.state === 'goto' || u.state === 'assist') {
-		if (moveTo(u, u.px + (u.gx ?? u.ox * 0.6), u.py + (u.gy ?? u.oy * 0.6), dt, 3, SP)) {
+		const ak = u.px + ',' + u.py;
+		if (u.fanK !== ak && hyp(u.px - u.x, u.py - u.y) < GRID.fan) u.fanK = ak; // near the spot: from here to its own place in the shape
+		const fan = u.fanK === ak; // (Build 48: each soldier walked its own way to its own place, and the army split round woods)
+		if (moveTo(u, u.px + (fan ? (u.gx ?? u.ox * 0.6) : 0), u.py + (fan ? (u.gy ?? u.oy * 0.6) : 0), dt, 3, SP)) {
 			u.idleT += dt;
 			if (u.state === 'assist' && u.idleT > 20) u.state = 'home';
 		}

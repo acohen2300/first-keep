@@ -2,6 +2,7 @@
 // ───────────────────────── The walking grid: where things stand, and how people get around ─────────────────────────
 // Squares of 10, never shown. Buildings fill whole squares and leave one free around them. Walls are one square each.
 const NC = MAP / NAVC;
+const POCKET = 300; // a joined region smaller than this many squares is a pocket: closed in by trees, buildings or water
 const NAV = {
 	share: {},
 	shareN: 0,
@@ -9,6 +10,7 @@ const NAV = {
 	gate: new Uint8Array(NC * NC),
 	lake: new Uint8Array(NC * NC),
 	comp: new Int32Array(NC * NC),
+	size: [0], // squares in each joined region: a pocket is small, the open land is large
 	occ: new Array(NC * NC).fill(null),
 	prev: new Uint8Array(NC * NC),
 	prevG: new Uint8Array(NC * NC),
@@ -94,6 +96,7 @@ function navRebuild() {
 	const C = NAV.comp,
 		Q = AS.q;
 	C.fill(0);
+	NAV.size.length = 1;
 	let id = 0;
 	for (let s = 0; s < NC * NC; s++) {
 		if (C[s] || NAV.solid[s]) continue;
@@ -125,8 +128,10 @@ function navRebuild() {
 				Q[t++] = j4;
 			}
 		}
+		NAV.size[id] = t;
 	}
-	// a tree can be cut only from open ground beside it: the forest is worked from its edge inward
+	// a tree can be cut only from open ground beside it: the forest is worked from its edge inward,
+	// and the ground must be open land, not a sealed pocket inside the wood (Build 48: workers walked to pocket trees they could never reach)
 	for (const n of T) {
 		const cx = Math.floor(n.x / NAVC),
 			cy = Math.floor(n.y / NAVC);
@@ -143,7 +148,7 @@ function navRebuild() {
 		]) {
 			const x = cx + i,
 				y = cy + j;
-			if (x >= 0 && y >= 0 && x < NC && y < NC && !NAV.solid[y * NC + x]) {
+			if (x >= 0 && y >= 0 && x < NC && y < NC && !NAV.solid[y * NC + x] && NAV.size[C[y * NC + x]] >= POCKET) {
 				n.open = true;
 				break;
 			}
@@ -172,12 +177,12 @@ function lineClear(x1, y1, x2, y2, o, avoid) {
 		n = Math.ceil(hyp(dx, dy) / 4);
 	for (let i = 1; i <= n; i++) {
 		const c = gcell(x1 + (dx * i) / n, y1 + (dy * i) / n);
-		if (blockedCell(c, o) || (avoid && DANGER[c])) return false;
+		if (blockedCell(c, o) || (avoid && DANGER[o][c])) return false;
 	}
 	return true;
 }
-// the free square nearest (px, py) among the rings around square (cx, cy)
-function freeNear(cx, cy, o, R, px, py, slack = 2) {
+// the free square nearest (px, py) among the rings around square (cx, cy); with a region (cm), only squares in it
+function freeNear(cx, cy, o, R, px, py, slack = 2, cm = 0) {
 	let best = null,
 		bd = 1e9,
 		found = -1;
@@ -188,7 +193,7 @@ function freeNear(cx, cy, o, R, px, py, slack = 2) {
 				if (Math.max(Math.abs(dx), Math.abs(dy)) !== rad) continue;
 				const x = cx + dx,
 					y = cy + dy;
-				if (x < 0 || y < 0 || x >= NC || y >= NC || blockedCell(y * NC + x, o)) continue;
+				if (x < 0 || y < 0 || x >= NC || y >= NC || blockedCell(y * NC + x, o) || (cm && NAV.comp[y * NC + x] !== cm)) continue;
 				if (found < 0) found = rad;
 				const d = hyp(x * NAVC + 5 - px, y * NAVC + 5 - py);
 				if (d < bd) {
@@ -199,19 +204,41 @@ function freeNear(cx, cy, o, R, px, py, slack = 2) {
 	}
 	return best;
 }
-// Where guards and robbers wait: workers and carts walk round it (a soft cost, not a wall). Rebuilt every second from the finds still guarded.
-const DANGER = new Uint8Array(NC * NC);
+// Where workers will not go: one map for each side, redrawn every second, the one home for danger (Build 48).
+// Beside a find still guarded; near a live enemy or a beast that hunts (game that is hunted on purpose is not danger); inside an enemy tower's reach;
+// beside a fire; and, for a while, where one of the side's own was frightened out in the open. Gatherers pick their work off it; workers and carts walk round it (a soft cost, not a wall).
+const DANGER = [0, 1, 2, 3, 4].map(() => new Uint8Array(NC * NC));
+function stampDanger(D, px, py, r) {
+	const R = Math.ceil(r / NAVC),
+		cx = Math.floor(px / NAVC),
+		cy = Math.floor(py / NAVC);
+	for (let y = Math.max(0, cy - R); y <= Math.min(NC - 1, cy + R); y++)
+		for (let x = Math.max(0, cx - R); x <= Math.min(NC - 1, cx + R); x++)
+			if ((x - cx) ** 2 + (y - cy) ** 2 <= R * R) D[y * NC + x] = 1;
+}
 function dangerMap() {
-	DANGER.fill(0);
+	for (const D of DANGER) D.fill(0);
+	const sides = G.P.filter((p) => p.id !== WILD && p.alive).map((p) => p.id);
 	for (const f of G.guarded || []) {
 		const F = FINDS[f.kind],
 			gk = F.guard && F.guard[G.fantasy ? 1 : 0],
-			R = Math.ceil(((gk && UNIT[gk].raid) || 90) / NAVC) + 4,
-			cx = Math.floor(f.x / NAVC),
-			cy = Math.floor(f.y / NAVC);
-		for (let y = Math.max(0, cy - R); y <= Math.min(NC - 1, cy + R); y++)
-			for (let x = Math.max(0, cx - R); x <= Math.min(NC - 1, cx + R); x++)
-				if ((x - cx) ** 2 + (y - cy) ** 2 <= R * R) DANGER[y * NC + x] = 1;
+			r = ((gk && UNIT[gk].raid) || 90) + 40;
+		for (const o of sides) stampDanger(DANGER[o], f.x, f.y, r);
+	}
+	for (const v of G.threats || []) {
+		if (UNIT[v.kind].meat) continue;
+		for (const o of sides) if (atWar(o, v.owner)) stampDanger(DANGER[o], v.x, v.y, DANGER_R.near);
+	}
+	for (const b of G.blds) {
+		if (b.hp <= 0) continue;
+		const B = BLD[b.kind];
+		if (b.fire > 0) for (const o of sides) stampDanger(DANGER[o], b.x, b.y, DANGER_R.fire);
+		if (B.dmg && b.prog >= 1) for (const o of sides) if (atWar(o, b.owner)) stampDanger(DANGER[o], b.x, b.y, (B.rng || 0) + DANGER_R.reach);
+	}
+	for (const o of sides) {
+		const p = G.P[o];
+		p.scares = (p.scares || []).filter((s) => s.t > G.t);
+		for (const s of p.scares) stampDanger(DANGER[o], s.x, s.y, DANGER_R.mem);
 	}
 }
 const AS = {
@@ -340,7 +367,7 @@ function astar(sx, sy, tx, ty, o, avoid) {
 			const ni = ny * NC + nx;
 			if (AS.done[ni] === gen || blockedCell(ni, o)) continue;
 			if (d >= 4 && (blockedCell(cy * NC + nx, o) || blockedCell(ny * NC + cx, o))) continue;
-			const ng = AS.g[i] + (d >= 4 ? 1.414 : 1) + (avoid && DANGER[ni] ? 3 : 0);
+			const ng = AS.g[i] + (d >= 4 ? 1.414 : 1) + (avoid && DANGER[o][ni] ? 3 : 0);
 			if (AS.seen[ni] !== gen || ng < AS.g[ni]) {
 				AS.seen[ni] = gen;
 				AS.g[ni] = ng;
@@ -386,17 +413,22 @@ function findBlocker(u) {
 	return best;
 }
 function standOff(u, x, y) {
-	// the free square nearest the goal on the side the unit is on
+	// the free square nearest the goal on the side the unit is on, in the unit's own region (Build 48: it chose the far side of a wall or a dead-end alley)
 	const k = gcell(x, y);
 	if (u.so && u.so.k === k && u.so.v === NAV.v) return u.so;
-	const f = freeNear(Math.floor(x / NAVC), Math.floor(y / NAVC), u.owner, 14, u.x, u.y, 0) || { x: u.x, y: u.y };
+	const cx = Math.floor(x / NAVC),
+		cy = Math.floor(y / NAVC),
+		cm = NAV.comp[gcell(u.x, u.y)],
+		f0 = freeNear(cx, cy, u.owner, 14, u.x, u.y, 0),
+		near = f0 && Math.max(Math.abs(f0.cx - cx), Math.abs(f0.cy - cy)) + 1, // no farther than one ring past the nearest open square: it works from beside the thing, not across a wood
+		f = (f0 && cm && NAV.comp[f0.cy * NC + f0.cx] !== cm && freeNear(cx, cy, u.owner, near, u.x, u.y, 0, cm)) || f0 || { x: u.x, y: u.y };
 	return (u.so = { k, v: NAV.v, x: f.x, y: f.y });
 }
 // where to head next on the way to (tx, ty)
 function route(u, tx, ty) {
 	const o = u.owner,
 		T = G.t,
-		avoid = UNIT[u.kind].cls === 'civ' && !DANGER[gcell(u.x, u.y)] && !DANGER[gcell(tx, ty)]; // workers and carts keep off guarded ground, unless they are already on it or going into it
+		avoid = UNIT[u.kind].cls === 'civ' && !DANGER[o][gcell(tx, ty)]; // workers and carts keep off dangerous ground unless going into it; one already on it takes the shortest way off (Build 48)
 	if (!u.path) {
 		if (T - (u.lcT || -9) < 0.25 && u.lcOK) return { x: tx, y: ty, direct: true };
 		u.lcT = T;
@@ -412,13 +444,16 @@ function route(u, tx, ty) {
 	}
 	const key = gcell(tx, ty);
 	if (!u.path || u.pv !== NAV.v || u.pk !== key) {
-		if (u.pfK === key && u.pfV === NAV.v && T - u.pfT < 3) return { x: tx, y: ty, direct: true }; // already known: no way
+		if (u.pfK === key && u.pfV === NAV.v && T - u.pfT < 3) {
+			u.noPathT = T;
+			return { x: tx, y: ty, direct: true };
+		} // already known: no way
 		if (NAV.budget <= 0) return { x: u.x, y: u.y, direct: true }; // out of thinking time this moment: wait where it stands, ask again next tick
-		const ck = `${o}|${avoid ? 1 : 0}|${gcell(u.x, u.y)}|${key}|${NAV.v}`,
+		const ck = `${o}|${avoid ? 1 : 0}|${key}|${NAV.v}`,
 			hit = NAV.share[ck];
 		let p;
-		if (hit && T - hit.t < 2)
-			p = hit.p; // a big army leaves one spot for one place: it asks once and all of it follows (Build 42)
+		if (hit && T - hit.t < 2 && hyp(hit.x - u.x, hit.y - u.y) < GRID.share && lineClear(u.x, u.y, hit.x, hit.y, o, avoid))
+			p = hit.p; // a big army leaves one spot for one place: it asks once and all of it follows (Build 42; Build 48: from nearby squares too, not only the same one)
 		else {
 			NAV.budget--;
 			p = astar(u.x, u.y, tx, ty, o, avoid);
@@ -426,7 +461,7 @@ function route(u, tx, ty) {
 				NAV.share = {};
 				NAV.shareN = 0;
 			}
-			NAV.share[ck] = { t: T, p };
+			NAV.share[ck] = { t: T, p, x: u.x, y: u.y };
 		}
 		u.pi = 0;
 		u.pv = NAV.v;
@@ -434,6 +469,8 @@ function route(u, tx, ty) {
 		u.partial = p.partial;
 		if (!p.pts.length) {
 			u.path = null;
+			u.noPath = true;
+			u.noPathT = T; // no way at all, as much as a way that ends short
 			u.pfK = key;
 			u.pfV = NAV.v;
 			u.pfT = T;

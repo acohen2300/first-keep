@@ -118,6 +118,7 @@ function newGame(seed, carry) {
 	initEconomy();
 	makeBg();
 	navRebuild();
+	evmSet();
 	const k = G.P[0].keep;
 	cam.x = k[0] + 120;
 	cam.y = k[1] - 120;

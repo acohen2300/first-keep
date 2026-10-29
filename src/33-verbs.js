@@ -410,9 +410,11 @@ const PLAY = {
 	hudn(a) {
 		if (hudStage() < 4) return;
 		const [c, d] = a.split(','),
+			i = Number(c),
 			pool = hudPool(),
-			have = hudHave(pool, Number(c));
-		G.hud.n[c] = clamp(hudN(pool, Number(c)) + (d === '+' ? Math.min(1, hudRoom(pool)) : -1), 0, have);
+			N = hudCounts(pool),
+			give = hudRoom(pool) > 0 || N.some((x, j) => j !== i && G.hud.n[j] === undefined && x > 0); // a + takes a free place, or one from a kind you have not set
+		G.hud.n[c] = clamp(N[i] + (d === '+' ? (give ? 1 : 0) : -1), 0, hudHave(pool, i));
 		G.hud.set = false; // changing a count opens Set again
 	},
 	hfire() {
@@ -644,7 +646,7 @@ const PLAY = {
 	},
 	levy(a) {
 		const [q, n] = a.split(',').map(Number);
-		if (!levy(0, q, n === 0 ? Math.ceil(soldiersOf(q).length * DEMAND.levyMax) : n))
+		if (!levy(0, q, n === 0 ? levyRoom(0, q) : n))
 			say(levyWhy(0, q, n || 1) || 'Not now.', '', 3);
 	},
 	release(a) {

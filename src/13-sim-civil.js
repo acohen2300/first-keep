@@ -45,7 +45,13 @@ function vilTick(u, dt, SP) {
 				220,
 			);
 			u.hid = tw && dist(u, tw) < dist(u, kk) ? tw.id : kk.id;
-		}
+			const P = G.P[u.owner],
+				S = P.scares || (P.scares = []);
+			if (dist(u, kk) > DANGER_R.far && !S.some((s) => dist(s, u) < DANGER_R.mem)) {
+				S.push({ x: Math.round(u.x), y: Math.round(u.y), t: G.t + DANGER_R.secs });
+				if (S.length > DANGER_R.keep) S.shift();
+			}
+		} // out in the open, the side remembers where it was frightened, and keeps its workers off that ground for a while (Build 48: they walked straight back to the wolves)
 	}
 	if (u.scared && kk) {
 		if (u.safe) {
@@ -109,12 +115,12 @@ function vilTick(u, dt, SP) {
 	} // sent somewhere by the finger, it stands there; else it waits by the Town Center
 	if (
 		(G.tick + u.id) % 20 === 0 &&
-		((u.node && u.node.kind !== 'farm' && unsafe(u.node)) || (u.hunt && unsafe(u.hunt)))
+		((u.node && u.node.kind !== 'farm' && unsafe(u.node, u.owner)) || (u.hunt && unsafe(u.hunt, u.owner)))
 	) {
 		if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 		u.node = null;
 		u.hunt = null;
-	} // work or game has strayed beside a guarded find: leave it
+	} // work or game is on dangerous ground now: leave it
 	if (u.hunt) {
 		huntTick(u, dt, SP);
 		return;
@@ -221,6 +227,13 @@ function vilTick(u, dt, SP) {
 		u.work = G.t;
 		u.fx = Math.sign(n.x - u.x) || u.fx;
 		if ((G.tick + u.id) % 40 === 0) sfx(n.type === 'wood' ? 'chop' : n.type === 'food' ? 'pick' : 'mine', u.x, u.y);
+	} else if (u.noPathT === G.t) {
+		// the way to this work ended short of it: there is no way there. Leave it for a while and take other work (Build 48: it stood at the dead end for good)
+		const B = u.bad || (u.bad = {});
+		for (const id in B) if (B[id] <= G.t) delete B[id];
+		B[n.id] = G.t + DANGER_R.secs;
+		if (n.farm) n.wk = Math.max(0, (n.wk || 0) - 1);
+		u.node = null;
 	}
 }
 function huntTick(u, dt, SP) {

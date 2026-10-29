@@ -484,12 +484,17 @@ function forceTribute(L, q) {
 	return true;
 }
 const levyOf = (L, q) => G.units.filter((u) => u.owner === L && u.levy === q && u.hp > 0);
+// how many more may be called up: half of all their soldiers, counting those already marching for you (Build 48: half of what was left, again and again)
+const levyRoom = (L, q) => {
+	const out = levyOf(L, q).length;
+	return Math.max(0, Math.ceil((soldiersOf(q).length + out) * DEMAND.levyMax) - out);
+};
 function levyWhy(L, q, n) {
 	const Q = G.P[q],
 		home = soldiersOf(q).filter((u) => u.state === 'home');
 	if (Q.lord !== L || Q.rebel) return 'Not now.';
 	if (!home.length) return 'None at home.';
-	if (n > Math.ceil(soldiersOf(q).length * DEMAND.levyMax)) return 'Half at most.';
+	if (n < 1 || n > levyRoom(L, q)) return 'Half at most.';
 	return null;
 }
 function levy(L, q, n) {
@@ -655,7 +660,12 @@ function teach(o, u) {
 function graduate(u) {
 	const o = u.owner,
 		to = civKind(o, teachTo(u)),
-		f = u.hp / u.max;
+		f = u.hp / u.max,
+		plan = o === 0 && u.bn !== undefined && G.bnPlan[u.bn];
+	if (plan && plan[u.kind] > 0) {
+		plan[u.kind]--;
+		plan[to] = (plan[to] || 0) + 1;
+	} // its place in the battalion goes with it (Build 48: a graduate fell out to the reserve)
 	u.kind = to;
 	u.max = maxHpU(o, to);
 	u.hp = Math.max(1, u.max * f);
