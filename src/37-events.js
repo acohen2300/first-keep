@@ -629,8 +629,6 @@ function herdTick(u, dt, SP) {
 		if (n && n.farm.fert > FERT.floor) n.farm.fert = Math.max(FERT.floor, n.farm.fert - 0.02);
 	}
 }
-// the moon: the night is darker and sight shorter toward the new moon (the real month compressed to MOON days)
-const moonLight = () => 0.5 + 0.5 * Math.cos((G.t / (DAY_LEN * MOON)) * 2 * Math.PI); // 1 at full moon, 0 at new
 // starvation (the hazard): work stops after a minute without food; after two, people leave
 function starveTick(p) {
 	if (!hz('starve') || !p.hungry) {

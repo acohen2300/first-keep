@@ -20,6 +20,11 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   F.G.clim.snow = 0; near('dry factor', F.groundSpd(0, ['foot']), 1, 1e-9);
   // fire: a clear day is 1; soaked ground is 0; a drought is above 1
   F.G.clim.W = C.eq.clear; near('fire clear', F.fireMul(), 1, 1e-9); F.G.clim.W = 1; near('fire soaked', F.fireMul(), 0, 1e-9); F.G.clim.W = C.eq.drought; if (F.fireMul() <= 1) out.push('fire drought: not above a clear day');
+  // the sun (the sunrise equation): daylight at 45° N is half the day at the equinox, about 15.4 of 24 hours at midsummer (June 21, day 172) and 8.6 at midwinter (day 355)
+  const light = (N) => { let up = 0; for (let k = 0; k < 2400; k++) if (F.sunAltAt(N, k / 2400) > 0) up++; return 24 * up / 2400; };
+  near('daylight equinox', light(80), 12, 0.15); near('daylight midsummer', light(172), 15.4, 0.15); near('daylight midwinter', light(355), 8.6, 0.15);
+  // the moon: new to new in SYNODIC days; lit fraction 0 at new, 1 at full (Meeus 48.1)
+  near('moon new', F.moonPhase(0), 0, 1e-9); near('moon full', F.moonPhase(29.53 * DAY / 2), 0.5, 1e-6);
   return out; }"""
 async def main():
     async with async_playwright() as p:

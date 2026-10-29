@@ -74,6 +74,7 @@ const SET = {
 	tips: true,
 	msgs: true,
 	fog: true,
+	lights: true, // flames light the ground after dark
 	civ: 'roman',
 	fantasy: false,
 	mode: 't60',
@@ -287,10 +288,28 @@ function rebattalion() {
 const atWar = (a, b) => a !== b && G.rel[a][b] === 'war';
 const friendly = (a, b) => a === b || G.rel[a][b] === 'ally';
 const season = () => SEASONS[Math.floor(G.t / SEASON_LEN) % 4];
-function nightness() {
-	const ph = (G.t % DAY_LEN) / DAY_LEN;
-	return ph < 0.62 ? 0 : ph < 0.7 ? (ph - 0.62) / 0.08 : ph < 0.94 ? 1 : 1 - (ph - 0.94) / 0.06;
-}
+// ── The sky (Build 55): the sun's height from the calendar and the land's latitude, by the standard sunrise arithmetic; the moon's lit
+// fraction from the synodic month. Night is how far the sun stands below the horizon: civil twilight ends at −6°, full dark at −12°
+// (nautical twilight). Everything that reads the night (sight, the tint, the crickets, the events that need dark) reads these.
+// where a body stands for a declination d (radians) and hour angle H: its east and north parts on the ground and its height (the unit vector;
+// Meeus 13.5, 13.6 in another form), at the land's latitude
+const skyVec = (d, H) => {
+	const p = (CLIMATE.lat * Math.PI) / 180;
+	return { e: -Math.cos(d) * Math.sin(H), n: Math.sin(d) * Math.cos(p) - Math.cos(d) * Math.cos(H) * Math.sin(p), z: Math.sin(p) * Math.sin(d) + Math.cos(p) * Math.cos(d) * Math.cos(H) };
+};
+const sunDecl = (N) => ((-23.44 * Math.PI) / 180) * Math.cos((2 * Math.PI * (N + 10)) / 365); // the sun's declination on day N (the standard approximation)
+const dayN = (t) => CLIMATE.equinox + (((Math.floor(t / DAY_LEN) * DAY_LEN) % YEAR) / YEAR) * 365; // the day of the real year, held through a game day (six a year: each spans two real months)
+const hourH = (f) => 2 * Math.PI * (f - CLIMATE.noon); // the hour angle: 0 at solar noon
+const sunAltAt = (N, f) => (Math.asin(skyVec(sunDecl(N), hourH(f)).z) * 180) / Math.PI; // degrees above the horizon on day N at fraction f of the day
+const sunAlt = (t = G.t) => sunAltAt(dayN(t), (t % DAY_LEN) / DAY_LEN);
+const sunVec = (t = G.t) => skyVec(sunDecl(dayN(t)), hourH((t % DAY_LEN) / DAY_LEN));
+// the moon's place, to first order (design, said in SCIENCE.md): it runs ahead of the sun by its phase (a full moon rises at sunset) on a
+// declination that swings from the sun's at new to its opposite at full
+const moonVec = (t = G.t) => skyVec(sunDecl(dayN(t)) * Math.cos(2 * Math.PI * moonPhase(t)), hourH((t % DAY_LEN) / DAY_LEN) + 2 * Math.PI * moonPhase(t));
+const nightOf = (alt) => clamp(-alt / 12, 0, 1); // 0 with the sun up, 1 from nautical twilight on
+const nightness = () => nightOf(sunAlt());
+const moonPhase = (t = G.t) => (t / DAY_LEN / SYNODIC) % 1; // 0 new, 0.5 full
+const moonLight = () => 0.5 - 0.5 * Math.cos(2 * Math.PI * moonPhase()); // the lit fraction k = (1 − cos i) / 2 (Meeus 48.1), 1 at full moon
 const civOf = (o) => CIVS[G.P[o].civ];
 // the kind a side actually trains for a common unit (its civilisation's own, if it has one)
 const civKind = (o, kind) => {

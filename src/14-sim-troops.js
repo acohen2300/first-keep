@@ -110,10 +110,10 @@ function healTick(dt) {
 
 // ───────────────────────── Soldiers ─────────────────────────
 // a missile in the air: it flies for a time that grows with the distance, on a curve that rises with it
-function shot(x1, y1, h1, x2, y2) {
+function shot(x1, y1, h1, x2, y2, fire) {
 	const d = hyp(x2 - x1, y2 - y1),
 		dur = 0.12 + d / 600;
-	G.tracers.push({ x1, y1, h1, x2, y2, life: dur, dur, arc: 4 + d * 0.16 });
+	G.tracers.push({ x1, y1, h1, x2, y2, life: dur, dur, arc: 4 + d * 0.16, fire: !!fire });
 }
 // a soldier at home guards the ground round its own yard and round the Town Center (Build 39 review: a yard far from the Town Center was left undefended)
 const nearHome = (u, t, k) => (u.hax !== undefined && hyp(t.x - u.hax, t.y - u.hay) < 320) || (!!k && dist(t, k) < 320);
@@ -348,7 +348,7 @@ function solTick(u, dt, SP) {
 				} // an engine on snow
 				else {
 					hurt(o, u, tgt, dmgOf(u));
-					if (U.rng > 20) shot(u.x, u.y, 9, tgt.x, tgt.y);
+					if (U.rng > 20) shot(u.x, u.y, 9, tgt.x, tgt.y, fxv(o, 'fire', unitKeys(u.kind)).a >= 1); // fire arrows burn on the way
 				}
 			}
 		} else moveTo(u, tgt.x, tgt.y, dt, Math.max(2, reach - 2 + (tgt.q ? halfOf(tgt) : 0)), SP);

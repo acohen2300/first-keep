@@ -659,6 +659,7 @@ const CARDS = {
 					btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '') +
 					btn('news', 'World news', SET.news !== false ? 'on' : 'off', SET.news !== false ? 'on' : '') +
 					btn('fog', 'Fog of war', SET.fog ? 'on' : 'off', SET.fog ? 'on' : '') +
+					btn('lights', 'Lights', SET.lights !== false ? 'on' : 'off', SET.lights !== false ? 'on' : '') +
 					btn(
 						'cardpause',
 						'Pause on cards',

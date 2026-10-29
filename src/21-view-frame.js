@@ -179,6 +179,7 @@ let SPARKS = [],
 	miniT = 0;
 function draw() {
 	followCam();
+	shadeFrame();
 	ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 	const z = cam.z,
 		x0 = SX(0),

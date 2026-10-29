@@ -239,6 +239,11 @@ const ACT = {
 		saveSet();
 		refresh();
 	},
+	lights() {
+		SET.lights = SET.lights === false;
+		saveSet();
+		refresh();
+	},
 	cardpause() {
 		SET.cardPause = SET.cardPause === false;
 		saveSet();

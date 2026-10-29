@@ -16,9 +16,11 @@ const RICH = 2.5,
 	CARRY = 10,
 	NAVC = 10; // NAVC: the walking grid, 10 units a square (never shown)
 const LAKE0 = { x: MID, y: MID, r: 170 }; // the great lake in the middle; each corner also gets a lake of its own (G.lakes)
-const SEASON_LEN = 180,
-	DAY_LEN = 120,
-	NIGHT_SIGHT = 0.6;
+const SEASON_LEN = 180, // seconds a season
+	YEAR = SEASON_LEN * 4,
+	DAY_LEN = 120, // seconds a day: six days a year
+	NIGHT_SIGHT = 0.6,
+	SYNODIC = 29.53; // days from new moon to new moon (Meeus 49.1), in game days
 const EASY_SAFE = 360,
 	SAVE_EVERY = 10; // Easy: no raid before 6:00; the game saves every 10 s
 // Difficulty turns the computers' minds, never their stores (Albert, Build 41): react, seconds between decisions; bold, added to the odds they need to attack (lower is bolder);

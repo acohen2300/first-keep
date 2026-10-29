@@ -39,6 +39,9 @@ const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }
 // over dirt, swamp 1.8, soft snow about 1.6). Fire follows Rothermel's moisture damping (1972; USDA RMRS-GTR-371). Every number: SCIENCE.md.
 // Research at the Library (Weather line), Stable (horseshoes), Barracks (cloaks) and Smithy (tempering, oiling) takes the edge off, never all of it at once.
 const CLIMATE = {
+	lat: 45, // degrees north: the land's place, which sets the sun's arc and the day's length by season
+	equinox: 80, // the game's year begins in Spring: day 80 of the real year (about March 21)
+	noon: 0.28, // the game day's fraction at which the sun is highest (midnight at 0.78, as the old night was)
 	mean: 10,
 	year: 12,
 	day: 5, // °C: the yearly mean, half the swing of the year, half the swing of the day
@@ -127,7 +130,6 @@ const WEATHER = {
 	}, // Harsh winters only
 };
 const WX_EVERY = 60;
-const MOON = 8; // days from new moon to new moon (the real month is 29.5; the game's day is two minutes): at new moon the night is darker and sight shorter
 
 // ───────────────────────── The Challenge: hazards you switch on. Their points are your level; the level multiplies your score ─────────────────────────
 // Random when, never random whether: everything a hazard sends is announced first. Easy keeps the old polite game whatever is switched on.

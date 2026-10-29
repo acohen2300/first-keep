@@ -456,9 +456,9 @@ function drawOrders(z) {
 }
 // arrows and shots: a short streak along the curve
 function drawTracers() {
-	ctx.strokeStyle = 'rgba(255,238,200,.85)';
 	ctx.lineWidth = 1.2;
 	for (const t of G.tracers) {
+		ctx.strokeStyle = t.fire ? `rgba(${FLAME_RGB.torch},.95)` : 'rgba(255,238,200,.85)';
 		// a short streak along the curve: the head and a point just behind it
 		const p = 1 - t.life / t.dur,
 			q = Math.max(0, p - 0.12),
@@ -472,6 +472,7 @@ function drawTracers() {
 		ctx.moveTo(ax, ay);
 		ctx.lineTo(bx, by);
 		ctx.stroke();
+		if (t.fire) glow(bx, by, 'candle', cam.z * 1.5); // a burning arrow lights its own way
 	}
 }
 // the light: warm at dusk and dawn, blue at night, darker toward the edges; lit windows
@@ -486,15 +487,34 @@ function drawLight(z, inView) {
 			ctx.fillRect(0, 0, cw, ch);
 		}
 	} // dusk, night and the weather's cast, blended into one fill
-	if (nt > 0) {
-		if (nt > 0.5)
-			for (const b of G.blds)
-				if (inView(b) && b.prog >= 1 && (b.kind === 'house' || b.kind === 'apartment' || b.kind === 'keep')) {
-					ctx.fillStyle = 'rgba(255,200,110,.75)';
-					ctx.fillRect(SX(b.x) + 3 * z, SY(b.y + halfOf(b) * 0.9, 6), 2 * z, 2 * z);
-				}
+	// the lights (Build 55): every flame in view throws its glow on the ground, from one table (FLAME in 23-view-things). Hearths in homes and
+	// the Town Center; the robbers' campfires; a lantern on every caravan; a torch on every standard; a building ablaze. Lights off keeps the windows.
+	if (nt > 0.5)
+		for (const b of G.blds)
+			if (inView(b) && b.prog >= 1 && HEARTH.has(b.kind) && knownB(b)) {
+				ctx.fillStyle = 'rgba(255,200,110,.75)';
+				ctx.fillRect(SX(b.x) + 3 * z, SY(b.y + halfOf(b) * 0.9, 6), 2 * z, 2 * z);
+			}
+	if (!SET.lights || (nt < 0.05 && G.wx !== 'rain' && !G.blds.some((b) => b.fire > 0))) return;
+	for (const b of G.blds) {
+		if (!inView(b) || !knownB(b)) continue;
+		if (b.fire > 0 || b.hp < maxHpB(b.owner, b.kind) * 0.5) glow(SX(b.x), SY(b.y), 'blaze', z);
+		else if (b.prog >= 1 && HEARTH.has(b.kind)) glow(SX(b.x), SY(b.y) + halfOf(b) * TILT * 0.4, 'hearth', z);
+	}
+	for (const f of G.finds) if (f.kind === 'camp' && !f.done && inView(f) && known0(f)) glow(SX(f.x), SY(f.y), 'campfire', z);
+	for (const u of G.units)
+		if (u.kind === 'caravan' && u.hp > 0 && !u.inside && inView(u) && visibleTo0(u)) {
+			const x = SX(u.x) + 5 * z,
+				y = SY(u.y) - 9 * z;
+			glow(SX(u.x), SY(u.y), 'lantern', z);
+			flame(x, y, 'lantern', z * 0.8, u.id);
+		}
+	for (const s of STANDARDS) {
+		glow(s.x, s.y, 'torch', z);
+		flame(s.x, s.y - 30 * z, 'torch', z, s.o);
 	}
 }
+const HEARTH = new Set(['house', 'apartment', 'keep', 'town']); // where a fire is always lit after dark
 // something of yours was hit: a red glow round the edge, fading over a second and a half
 function drawHitGlow() {
 	if (G.hitT !== undefined && G.t - G.hitT < 1.6) {

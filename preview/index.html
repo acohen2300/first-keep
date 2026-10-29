@@ -293,9 +293,11 @@ const RICH = 2.5,
 	CARRY = 10,
 	NAVC = 10; // NAVC: the walking grid, 10 units a square (never shown)
 const LAKE0 = { x: MID, y: MID, r: 170 }; // the great lake in the middle; each corner also gets a lake of its own (G.lakes)
-const SEASON_LEN = 180,
-	DAY_LEN = 120,
-	NIGHT_SIGHT = 0.6;
+const SEASON_LEN = 180, // seconds a season
+	YEAR = SEASON_LEN * 4,
+	DAY_LEN = 120, // seconds a day: six days a year
+	NIGHT_SIGHT = 0.6,
+	SYNODIC = 29.53; // days from new moon to new moon (Meeus 49.1), in game days
 const EASY_SAFE = 360,
 	SAVE_EVERY = 10; // Easy: no raid before 6:00; the game saves every 10 s
 // Difficulty turns the computers' minds, never their stores (Albert, Build 41): react, seconds between decisions; bold, added to the odds they need to attack (lower is bolder);
@@ -5038,6 +5040,9 @@ const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }
 // over dirt, swamp 1.8, soft snow about 1.6). Fire follows Rothermel's moisture damping (1972; USDA RMRS-GTR-371). Every number: SCIENCE.md.
 // Research at the Library (Weather line), Stable (horseshoes), Barracks (cloaks) and Smithy (tempering, oiling) takes the edge off, never all of it at once.
 const CLIMATE = {
+	lat: 45, // degrees north: the land's place, which sets the sun's arc and the day's length by season
+	equinox: 80, // the game's year begins in Spring: day 80 of the real year (about March 21)
+	noon: 0.28, // the game day's fraction at which the sun is highest (midnight at 0.78, as the old night was)
 	mean: 10,
 	year: 12,
 	day: 5, // °C: the yearly mean, half the swing of the year, half the swing of the day
@@ -5126,7 +5131,6 @@ const WEATHER = {
 	}, // Harsh winters only
 };
 const WX_EVERY = 60;
-const MOON = 8; // days from new moon to new moon (the real month is 29.5; the game's day is two minutes): at new moon the night is darker and sight shorter
 
 // ───────────────────────── The Challenge: hazards you switch on. Their points are your level; the level multiplies your score ─────────────────────────
 // Random when, never random whether: everything a hazard sends is announced first. Easy keeps the old polite game whatever is switched on.
@@ -6215,6 +6219,7 @@ const SET = {
 	tips: true,
 	msgs: true,
 	fog: true,
+	lights: true, // flames light the ground after dark
 	civ: 'roman',
 	fantasy: false,
 	mode: 't60',
@@ -6428,10 +6433,28 @@ function rebattalion() {
 const atWar = (a, b) => a !== b && G.rel[a][b] === 'war';
 const friendly = (a, b) => a === b || G.rel[a][b] === 'ally';
 const season = () => SEASONS[Math.floor(G.t / SEASON_LEN) % 4];
-function nightness() {
-	const ph = (G.t % DAY_LEN) / DAY_LEN;
-	return ph < 0.62 ? 0 : ph < 0.7 ? (ph - 0.62) / 0.08 : ph < 0.94 ? 1 : 1 - (ph - 0.94) / 0.06;
-}
+// ── The sky (Build 55): the sun's height from the calendar and the land's latitude, by the standard sunrise arithmetic; the moon's lit
+// fraction from the synodic month. Night is how far the sun stands below the horizon: civil twilight ends at −6°, full dark at −12°
+// (nautical twilight). Everything that reads the night (sight, the tint, the crickets, the events that need dark) reads these.
+// where a body stands for a declination d (radians) and hour angle H: its east and north parts on the ground and its height (the unit vector;
+// Meeus 13.5, 13.6 in another form), at the land's latitude
+const skyVec = (d, H) => {
+	const p = (CLIMATE.lat * Math.PI) / 180;
+	return { e: -Math.cos(d) * Math.sin(H), n: Math.sin(d) * Math.cos(p) - Math.cos(d) * Math.cos(H) * Math.sin(p), z: Math.sin(p) * Math.sin(d) + Math.cos(p) * Math.cos(d) * Math.cos(H) };
+};
+const sunDecl = (N) => ((-23.44 * Math.PI) / 180) * Math.cos((2 * Math.PI * (N + 10)) / 365); // the sun's declination on day N (the standard approximation)
+const dayN = (t) => CLIMATE.equinox + (((Math.floor(t / DAY_LEN) * DAY_LEN) % YEAR) / YEAR) * 365; // the day of the real year, held through a game day (six a year: each spans two real months)
+const hourH = (f) => 2 * Math.PI * (f - CLIMATE.noon); // the hour angle: 0 at solar noon
+const sunAltAt = (N, f) => (Math.asin(skyVec(sunDecl(N), hourH(f)).z) * 180) / Math.PI; // degrees above the horizon on day N at fraction f of the day
+const sunAlt = (t = G.t) => sunAltAt(dayN(t), (t % DAY_LEN) / DAY_LEN);
+const sunVec = (t = G.t) => skyVec(sunDecl(dayN(t)), hourH((t % DAY_LEN) / DAY_LEN));
+// the moon's place, to first order (design, said in SCIENCE.md): it runs ahead of the sun by its phase (a full moon rises at sunset) on a
+// declination that swings from the sun's at new to its opposite at full
+const moonVec = (t = G.t) => skyVec(sunDecl(dayN(t)) * Math.cos(2 * Math.PI * moonPhase(t)), hourH((t % DAY_LEN) / DAY_LEN) + 2 * Math.PI * moonPhase(t));
+const nightOf = (alt) => clamp(-alt / 12, 0, 1); // 0 with the sun up, 1 from nautical twilight on
+const nightness = () => nightOf(sunAlt());
+const moonPhase = (t = G.t) => (t / DAY_LEN / SYNODIC) % 1; // 0 new, 0.5 full
+const moonLight = () => 0.5 - 0.5 * Math.cos(2 * Math.PI * moonPhase()); // the lit fraction k = (1 − cos i) / 2 (Meeus 48.1), 1 at full moon
 const civOf = (o) => CIVS[G.P[o].civ];
 // the kind a side actually trains for a common unit (its civilisation's own, if it has one)
 const civKind = (o, kind) => {
@@ -10533,10 +10556,10 @@ function healTick(dt) {
 
 // ───────────────────────── Soldiers ─────────────────────────
 // a missile in the air: it flies for a time that grows with the distance, on a curve that rises with it
-function shot(x1, y1, h1, x2, y2) {
+function shot(x1, y1, h1, x2, y2, fire) {
 	const d = hyp(x2 - x1, y2 - y1),
 		dur = 0.12 + d / 600;
-	G.tracers.push({ x1, y1, h1, x2, y2, life: dur, dur, arc: 4 + d * 0.16 });
+	G.tracers.push({ x1, y1, h1, x2, y2, life: dur, dur, arc: 4 + d * 0.16, fire: !!fire });
 }
 // a soldier at home guards the ground round its own yard and round the Town Center (Build 39 review: a yard far from the Town Center was left undefended)
 const nearHome = (u, t, k) => (u.hax !== undefined && hyp(t.x - u.hax, t.y - u.hay) < 320) || (!!k && dist(t, k) < 320);
@@ -10771,7 +10794,7 @@ function solTick(u, dt, SP) {
 				} // an engine on snow
 				else {
 					hurt(o, u, tgt, dmgOf(u));
-					if (U.rng > 20) shot(u.x, u.y, 9, tgt.x, tgt.y);
+					if (U.rng > 20) shot(u.x, u.y, 9, tgt.x, tgt.y, fxv(o, 'fire', unitKeys(u.kind)).a >= 1); // fire arrows burn on the way
 				}
 			}
 		} else moveTo(u, tgt.x, tgt.y, dt, Math.max(2, reach - 2 + (tgt.q ? halfOf(tgt) : 0)), SP);
@@ -16423,6 +16446,7 @@ let SPARKS = [],
 	miniT = 0;
 function draw() {
 	followCam();
+	shadeFrame();
 	ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 	const z = cam.z,
 		x0 = SX(0),
@@ -16731,13 +16755,7 @@ function drawBld(b, s) {
 		B = BLD[b.kind],
 		c = bldSprite(b, s),
 		k = z / s;
-	if (!B.crop) {
-		ctx.fillStyle = 'rgba(0,0,0,.25)';
-		const w = B.fp * NAVC * z;
-		ctx.beginPath();
-		ctx.ellipse(sx + w * 0.12, sy + w * TILT * 0.18, w * 0.62, w * TILT * 0.5, 0, 0, 7);
-		ctx.fill();
-	}
+	if (!B.crop) shadowOf(sx, sy, B.h, B.fp * NAVC * 0.55 * z, z);
 	if (b.prog < 1) {
 		// a building site: the outline staked out, the walls rising with the work
 		const w = B.fp * NAVC * z,
@@ -16837,6 +16855,130 @@ function drawBld(b, s) {
 	}
 }
 const CHIMNEY = { house: [6.2, 26], smith: [9, 28], keep: [-20, 44], foundry: [9, 34] };
+// ── Fire (Build 55): one element for every flame in the game. A row names a source: its power (how far its light reaches follows the
+// inverse-square law: the glow fades to nothing at LIGHT.k × √power), its flame temperature (its colour: a black body, Tanner Helland's fit,
+// the same function SoRen colours its stars with), its flame's size on the glass, and whether it is covered (a lantern keeps its light in
+// rain; a torch and a campfire dim). Everything that burns, from a candle to a building ablaze, is drawn by flame() and lit by glow().
+const FLAME = {
+	candle: { p: 1, K: 1850, s: 0, covered: true },
+	lantern: { p: 4, K: 2000, s: 1.4, covered: true },
+	torch: { p: 9, K: 1900, s: 2.4 },
+	hearth: { p: 16, K: 1900, s: 0, covered: true },
+	campfire: { p: 36, K: 1900, s: 4 },
+	blaze: { p: 100, K: 2200, s: 7 },
+};
+const LIGHT = { k: 12, wet: 0.4, a: 0.22 }; // reach in world units per √power; what rain leaves of an open flame; the glow's strength
+// ── Shadows (Build 55, Albert: shadows match the light). A thing of height h casts a shadow away from the light, h·cot(altitude) long for
+// the sun or the moon (capped at CAST.max heights: near the horizon it would run to the edge of the world), and h·d/(H − h) long from a flame
+// at height H and distance d, which for the low fires here means long and fading with distance. The sky's shadow is the sun's by day and the
+// moon's by night, as strong as the light is; a cloudy sky softens it. Worked out once a frame (SHADE), read by every unit and building.
+const CAST = { sun: 0.3, moon: 0.07, max: 3, cloud: { rain: 0.25, snow: 0.3, blizzard: 0.1, drought: 1.1 } };
+const SHADE = { x: 0, y: 0, len: 0, a: 0 }; // the shadow's direction on the glass (unit), its length per unit of height (world units), its darkness
+function shadeFrame() {
+	const s = sunVec(),
+		m = moonVec(),
+		nt = G.night,
+		sunA = s.z > 0.02 ? CAST.sun * Math.min(1, s.z * 4) * (1 - nt) : 0,
+		moonA = m.z > 0.02 ? CAST.moon * moonLight() * nt : 0,
+		v = sunA >= moonA ? s : m,
+		a = Math.max(sunA, moonA) * (CAST.cloud[G.wx] ?? 1) * (G.ev.cur && G.ev.cur.kind === 'storm' ? 0.1 : 1);
+	if (a < 0.02 || v.z <= 0.02) {
+		SHADE.a = 0;
+		return;
+	}
+	const horiz = Math.hypot(v.e, v.n) || 1e-6;
+	SHADE.x = -v.e / horiz; // away from the light: east is right on the glass, north is up
+	SHADE.y = (v.n / horiz) * TILT;
+	SHADE.len = Math.min(CAST.max, horiz / v.z); // cot(altitude), capped
+	SHADE.a = a;
+}
+// the shadow of a thing h tall with a footprint r wide at (sx, sy) on the glass: an ellipse laid along the shadow, from the foot outward
+function shadowOf(sx, sy, h, r, z) {
+	if (SHADE.a < 0.02) {
+		ctx.fillStyle = 'rgba(0,0,0,.18)';
+		ctx.beginPath();
+		ctx.ellipse(sx, sy, r, r * TILT, 0, 0, 7);
+		ctx.fill();
+		return;
+	} // no light to cast one: the soft pool under a thing on an overcast day or a moonless night
+	const L = h * SHADE.len * z,
+		cx = sx + SHADE.x * L * 0.5,
+		cy = sy + SHADE.y * L * 0.5,
+		ang = Math.atan2(SHADE.y, SHADE.x);
+	ctx.fillStyle = `rgba(0,0,0,${SHADE.a.toFixed(3)})`;
+	ctx.beginPath();
+	ctx.ellipse(cx, cy, L * 0.5 + r, Math.max(r * 0.55, r * TILT), ang, 0, 7);
+	ctx.fill();
+}
+// a flame's shadow of a thing near it: away from the fire, long, fading as the light does (1/d²)
+function flameShadow(sx, sy, h, r, z, fx, fy, kind) {
+	const F = FLAME[kind],
+		reach = LIGHT.k * Math.sqrt(F.p) * z,
+		dx = sx - fx,
+		dy = (sy - fy) / TILT,
+		d = Math.hypot(dx, dy);
+	if (d < 1 || d > reach) return;
+	const a = LIGHT.a * 1.4 * G.night * (1 - (d / reach) ** 2) * flameLife(kind),
+		L = Math.min(CAST.max * h * z, (h * z * d) / Math.max(1, F.s * z * 2)),
+		ux = dx / d,
+		uy = (dy / d) * TILT,
+		ang = Math.atan2(uy, ux);
+	if (a < 0.02) return;
+	ctx.fillStyle = `rgba(0,0,0,${a.toFixed(3)})`;
+	ctx.beginPath();
+	ctx.ellipse(sx + ux * L * 0.5, sy + uy * L * 0.5, L * 0.5 + r, Math.max(r * 0.55, r * TILT), ang, 0, 7);
+	ctx.fill();
+}
+const kelvinRGB = (K) => {
+	// a black body's colour by temperature (Tanner Helland's fit to the CIE locus, 1000 to 40000 K)
+	const t = K / 100,
+		r = t <= 66 ? 255 : 329.698727446 * (t - 60) ** -0.1332047592,
+		g = t <= 66 ? 99.4708025861 * Math.log(t) - 161.1195681661 : 288.1221695283 * (t - 60) ** -0.0755148492,
+		b = t >= 66 ? 255 : t <= 19 ? 0 : 138.5177312231 * Math.log(t - 10) - 305.0447927307;
+	return [r, g, b].map((v) => Math.round(clamp(v, 0, 255)));
+};
+const FLAME_RGB = Object.fromEntries(Object.keys(FLAME).map((k) => [k, kelvinRGB(FLAME[k].K)]));
+const flameLife = (kind) => (FLAME[kind].covered || !precip(G.wx) ? 1 : LIGHT.wet); // what the weather leaves of a flame
+// the flame itself: a teardrop that leans with the wind and flickers; its heart whiter than its edge
+function flame(x, y, kind, z, seed) {
+	const F = FLAME[kind];
+	if (!F.s || lessMotion) return;
+	const t = performance.now() / 1000,
+		s = F.s * z * flameLife(kind),
+		fl = 0.85 + 0.15 * Math.sin(t * 11 + seed) * Math.sin(t * 7.3 + seed * 1.7),
+		lean = wind * 0.6 * s,
+		[r, g, b] = FLAME_RGB[kind];
+	ctx.fillStyle = `rgba(${r},${g},${b},.9)`;
+	ctx.beginPath();
+	ctx.moveTo(x - s * 0.5, y);
+	ctx.quadraticCurveTo(x - s * 0.55 + lean * 0.5, y - s * 1.2 * fl, x + lean, y - s * 2.4 * fl);
+	ctx.quadraticCurveTo(x + s * 0.55 + lean * 0.5, y - s * 1.2 * fl, x + s * 0.5, y);
+	ctx.closePath();
+	ctx.fill();
+	ctx.fillStyle = 'rgba(255,245,210,.85)';
+	ctx.beginPath();
+	ctx.ellipse(x + lean * 0.3, y - s * 0.6 * fl, s * 0.28, s * 0.7 * fl, 0, 0, 7);
+	ctx.fill();
+}
+// the light a flame throws on the ground: a disc that fades as the inverse square, drawn additively, only when there is dark to light
+function glow(x, y, kind, z) {
+	const F = FLAME[kind],
+		dark = Math.max(G.night, 0.3 * (G.wx === 'rain' ? 1 : 0)),
+		life = flameLife(kind);
+	if (!SET.lights || dark < 0.05 || life <= 0) return;
+	const r = LIGHT.k * Math.sqrt(F.p) * z * life,
+		[cr, cg, cb] = FLAME_RGB[kind],
+		gr = ctx.createRadialGradient(x, y, 0, x, y, r);
+	gr.addColorStop(0, `rgba(${cr},${cg},${cb},${(LIGHT.a * dark).toFixed(3)})`);
+	gr.addColorStop(0.5, `rgba(${cr},${cg},${cb},${(LIGHT.a * dark * 0.25).toFixed(3)})`); // a quarter at half the reach: 1/r²
+	gr.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+	ctx.globalCompositeOperation = 'lighter';
+	ctx.fillStyle = gr;
+	ctx.beginPath();
+	ctx.ellipse(x, y, r, r * TILT, 0, 0, 7);
+	ctx.fill();
+	ctx.globalCompositeOperation = 'source-over';
+}
 // a building's flags fly with the wind: a cloth from the pole top, its tip lifting and falling, longer in a strong wind (Build 52; they were painted on)
 function flagsOn(c, sx, sy, z, col, seed) {
 	if (!c.flags || !c.flags.length) return;
@@ -16919,16 +17061,7 @@ function blaze(b, x, y, z) {
 		w = BLD[b.kind].fp * NAVC * z;
 	if (!low && !stalled) return;
 	const top = y - BLD[b.kind].h * 0.7 * z;
-	if (low)
-		for (let i = 0; i < 3; i++) {
-			const ph = (G.t * 2.2 + i * 0.33 + b.id * 0.17) % 1,
-				fx = x + (i - 1) * w * 0.25,
-				r = (3.5 - ph * 2) * z + 1;
-			ctx.fillStyle = `rgba(${ph < 0.5 ? '250,150,40' : '230,70,30'},${0.9 - ph * 0.6})`;
-			ctx.beginPath();
-			ctx.arc(fx, top - ph * 9 * z, r, 0, 7);
-			ctx.fill();
-		}
+	if (low) for (let i = 0; i < 3; i++) flame(x + (i - 1) * w * 0.25, top + 4 * z, 'blaze', z * 0.5, b.id + i * 7);
 	for (let i = 0; i < 3; i++) {
 		const ph = (G.t * 0.4 + i / 3 + b.id * 0.29) % 1;
 		ctx.fillStyle = `rgba(60,58,56,${0.45 * (1 - ph)})`;
@@ -17093,7 +17226,9 @@ const workOf = (u) =>
 const STRIDE = 7; // ground covered by one step, in world units
 // an army on the move carries its standard (Build 52): five or more soldiers of one side bound for one place (the grouping formUp makes) show a pole
 // over their middle with the side's cloth, and round its foot a ring that is as full as the group's health
+const STANDARDS = []; // the poles drawn this frame (screen x, y, side): the lights put a torch on each after dark
 function drawStandards(z, inView) {
+	STANDARDS.length = 0;
 	if (z < 0.4) return;
 	const grp = new Map();
 	for (const u of G.units) {
@@ -17119,6 +17254,7 @@ function drawStandards(z, inView) {
 			col = G.P[g.o].color,
 			r = 6 * z + 2,
 			f = clamp(g.hp / g.mx, 0, 1);
+		STANDARDS.push({ x, y, o: g.o });
 		ctx.lineWidth = Math.max(2, 2.4 * z);
 		ctx.strokeStyle = 'rgba(16,12,8,.6)';
 		ctx.beginPath();
@@ -17227,10 +17363,8 @@ function drawUnit(u, s) {
 		),
 		k = (z * FIG) / s,
 		big = (LOOKBOX[U.look] || [26])[0];
-	ctx.fillStyle = 'rgba(0,0,0,.28)';
-	ctx.beginPath();
-	ctx.ellipse(sx, sy, big * 0.28 * z * FIG + 2, 2.4 * z + 1, 0, 0, 7);
-	ctx.fill();
+	shadowOf(sx, sy, (LOOKBOX[U.look] || [26, 30])[1] * FIG, big * 0.28 * z * FIG + 2, z);
+	for (const s of STANDARDS) flameShadow(sx, sy, (LOOKBOX[U.look] || [26, 30])[1] * FIG, big * 0.28 * z * FIG + 2, z, s.x, s.y, 'torch');
 	if (u.owner === 0 && G.sel !== 'all' && u.bn === G.sel) {
 		ctx.strokeStyle = '#ffd35e';
 		ctx.lineWidth = 1.4;
@@ -17354,6 +17488,7 @@ function drawFind(f) {
 		x = SX(f.x),
 		y = SY(f.y),
 		F = FINDS[f.kind];
+	if (f.kind === 'camp' && !f.done) flame(x, y + 1.5 * z, 'campfire', z, f.id); // the robbers' fire, before the tents (the glow comes with the lights)
 	ctx.save();
 	ctx.translate(x, y);
 	ctx.scale(z, z);
@@ -17461,10 +17596,6 @@ function drawFind(f) {
 				0.5,
 			);
 		E_(0, 2, 3, 1.2, '#3a2a1a');
-		if (!lessMotion) {
-			const ph = (G.t * 3) % 1;
-			E_(0, 0, 1.6, 2.4 + ph, 'rgba(250,150,40,.85)');
-		}
 		L_(14, 2, 14, -14, '#3a2a1a', 0.6);
 		P_(
 			[
@@ -18166,9 +18297,9 @@ function drawOrders(z) {
 }
 // arrows and shots: a short streak along the curve
 function drawTracers() {
-	ctx.strokeStyle = 'rgba(255,238,200,.85)';
 	ctx.lineWidth = 1.2;
 	for (const t of G.tracers) {
+		ctx.strokeStyle = t.fire ? `rgba(${FLAME_RGB.torch},.95)` : 'rgba(255,238,200,.85)';
 		// a short streak along the curve: the head and a point just behind it
 		const p = 1 - t.life / t.dur,
 			q = Math.max(0, p - 0.12),
@@ -18182,6 +18313,7 @@ function drawTracers() {
 		ctx.moveTo(ax, ay);
 		ctx.lineTo(bx, by);
 		ctx.stroke();
+		if (t.fire) glow(bx, by, 'candle', cam.z * 1.5); // a burning arrow lights its own way
 	}
 }
 // the light: warm at dusk and dawn, blue at night, darker toward the edges; lit windows
@@ -18196,15 +18328,34 @@ function drawLight(z, inView) {
 			ctx.fillRect(0, 0, cw, ch);
 		}
 	} // dusk, night and the weather's cast, blended into one fill
-	if (nt > 0) {
-		if (nt > 0.5)
-			for (const b of G.blds)
-				if (inView(b) && b.prog >= 1 && (b.kind === 'house' || b.kind === 'apartment' || b.kind === 'keep')) {
-					ctx.fillStyle = 'rgba(255,200,110,.75)';
-					ctx.fillRect(SX(b.x) + 3 * z, SY(b.y + halfOf(b) * 0.9, 6), 2 * z, 2 * z);
-				}
+	// the lights (Build 55): every flame in view throws its glow on the ground, from one table (FLAME in 23-view-things). Hearths in homes and
+	// the Town Center; the robbers' campfires; a lantern on every caravan; a torch on every standard; a building ablaze. Lights off keeps the windows.
+	if (nt > 0.5)
+		for (const b of G.blds)
+			if (inView(b) && b.prog >= 1 && HEARTH.has(b.kind) && knownB(b)) {
+				ctx.fillStyle = 'rgba(255,200,110,.75)';
+				ctx.fillRect(SX(b.x) + 3 * z, SY(b.y + halfOf(b) * 0.9, 6), 2 * z, 2 * z);
+			}
+	if (!SET.lights || (nt < 0.05 && G.wx !== 'rain' && !G.blds.some((b) => b.fire > 0))) return;
+	for (const b of G.blds) {
+		if (!inView(b) || !knownB(b)) continue;
+		if (b.fire > 0 || b.hp < maxHpB(b.owner, b.kind) * 0.5) glow(SX(b.x), SY(b.y), 'blaze', z);
+		else if (b.prog >= 1 && HEARTH.has(b.kind)) glow(SX(b.x), SY(b.y) + halfOf(b) * TILT * 0.4, 'hearth', z);
+	}
+	for (const f of G.finds) if (f.kind === 'camp' && !f.done && inView(f) && known0(f)) glow(SX(f.x), SY(f.y), 'campfire', z);
+	for (const u of G.units)
+		if (u.kind === 'caravan' && u.hp > 0 && !u.inside && inView(u) && visibleTo0(u)) {
+			const x = SX(u.x) + 5 * z,
+				y = SY(u.y) - 9 * z;
+			glow(SX(u.x), SY(u.y), 'lantern', z);
+			flame(x, y, 'lantern', z * 0.8, u.id);
+		}
+	for (const s of STANDARDS) {
+		glow(s.x, s.y, 'torch', z);
+		flame(s.x, s.y - 30 * z, 'torch', z, s.o);
 	}
 }
+const HEARTH = new Set(['house', 'apartment', 'keep', 'town']); // where a fire is always lit after dark
 // something of yours was hit: a red glow round the edge, fading over a second and a half
 function drawHitGlow() {
 	if (G.hitT !== undefined && G.t - G.hitT < 1.6) {
@@ -20900,6 +21051,7 @@ const CARDS = {
 					btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '') +
 					btn('news', 'World news', SET.news !== false ? 'on' : 'off', SET.news !== false ? 'on' : '') +
 					btn('fog', 'Fog of war', SET.fog ? 'on' : 'off', SET.fog ? 'on' : '') +
+					btn('lights', 'Lights', SET.lights !== false ? 'on' : 'off', SET.lights !== false ? 'on' : '') +
 					btn(
 						'cardpause',
 						'Pause on cards',
@@ -22122,6 +22274,11 @@ const ACT = {
 	},
 	fog() {
 		SET.fog = !SET.fog;
+		saveSet();
+		refresh();
+	},
+	lights() {
+		SET.lights = SET.lights === false;
 		saveSet();
 		refresh();
 	},
@@ -23693,7 +23850,6 @@ const onScreen = (x, y) => Math.abs(x - cam.x) < cw / 2 / cam.z && Math.abs(y - 
 // ═════ 36-economy.js: trade, weather, fire, sickness, vassals, the computers' economy ═════
 // ───────────────────────── Goods, trade routes, nature, sickness and food ─────────────────────────
 // Real ratios on a compressed calendar: one year is 12 minutes, and every rate below is set against that clock.
-const YEAR = SEASON_LEN * 4;
 const FLEECE = 7,
 	LAMBS = 0.35,
 	FLOCK = 12; // wool per sheep at the spring shearing; a flock grows about a third each spring, up to 12
@@ -25179,8 +25335,6 @@ function herdTick(u, dt, SP) {
 		if (n && n.farm.fert > FERT.floor) n.farm.fert = Math.max(FERT.floor, n.farm.fert - 0.02);
 	}
 }
-// the moon: the night is darker and sight shorter toward the new moon (the real month compressed to MOON days)
-const moonLight = () => 0.5 + 0.5 * Math.cos((G.t / (DAY_LEN * MOON)) * 2 * Math.PI); // 1 at full moon, 0 at new
 // starvation (the hazard): work stops after a minute without food; after two, people leave
 function starveTick(p) {
 	if (!hz('starve') || !p.hungry) {
@@ -26483,6 +26637,12 @@ window.__fk = {
 	newGame,
 	fairness,
 	airTemp,
+	sunAlt,
+	sunAltAt,
+	sunVec,
+	moonVec,
+	shadowOf,
+	moonPhase,
 	rothermel,
 	fireMul,
 	groundSpd,
