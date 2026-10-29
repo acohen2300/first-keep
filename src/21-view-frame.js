@@ -26,14 +26,24 @@ function makeBg() {
 		b.fill();
 	}
 	for (const L of G.lakes) {
-		const sand = b.createRadialGradient(L.x, L.y, L.r - 4, L.x, L.y, L.r + 26);
+		const bank = L.river ? 14 : 26,
+			sand = b.createRadialGradient(L.x, L.y, L.r - 4, L.x, L.y, L.r + bank);
 		sand.addColorStop(0, 'rgba(206,190,138,1)');
 		sand.addColorStop(0.5, 'rgba(196,180,128,.85)');
 		sand.addColorStop(1, 'rgba(196,180,128,0)');
 		b.fillStyle = sand;
 		b.beginPath();
-		b.arc(L.x, L.y, L.r + 26, 0, 7);
+		b.arc(L.x, L.y, L.r + bank, 0, 7);
 		b.fill();
+	} // every shore first, then every water, so the pools of a river run together instead of reading as beads (Build 50)
+	for (const L of G.lakes) {
+		if (L.river) {
+			b.fillStyle = '#2f6c8e';
+			b.beginPath();
+			b.arc(L.x, L.y, L.r + 2, 0, 7);
+			b.fill();
+			continue;
+		} // a river is one even colour: shallow, running water
 		const lg = b.createRadialGradient(L.x - L.r * 0.2, L.y - L.r * 0.2, 10, L.x, L.y, L.r + 2);
 		lg.addColorStop(0, '#1b4466');
 		lg.addColorStop(0.7, '#2a6488');

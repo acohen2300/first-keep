@@ -160,6 +160,7 @@ function collide() {
 	for (const u of U) {
 		if (u.inside) continue;
 		for (const L of G.lakes) {
+			if (Math.abs(u.x - L.x) > L.r + 60 || Math.abs(u.y - L.y) > L.r + 60) continue; // far from this one: the cheap test first
 			const dl = hyp(u.x - L.x, u.y - L.y),
 				lr = lakeR(L);
 			if (dl < lr + 6 && !u.fly && !onLand(u.x, u.y)) {

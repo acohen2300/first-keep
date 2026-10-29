@@ -344,6 +344,39 @@ function makeForest(spot, loc) {
 	}
 	return { trees: T, dep };
 }
+// A corner's river (Build 50): its lake drains to the outer edge of the map down one flank, past home at a distance, as a chain of small round pools
+// that overlap (the water and the walking grid are made of circles already). Where the chain breaks there is a ford: two, about a third and two thirds down.
+// A river is water like any lake: nobody walks or builds on it; it is crossed at a ford, and fished and docked like a lake.
+function makeRiver(L, w) {
+	const toY = L.x >= L.y, // down the flank farther from the middle line it is nearer
+		E = toY ? { x: L.x + rnd(-80, 40), y: -330 } : { x: -330, y: L.y + rnd(-80, 40) },
+		dx = E.x - L.x,
+		dy = E.y - L.y,
+		len = hyp(dx, dy),
+		ux = dx / len,
+		uy = dy / len,
+		S = { x: L.x + ux * L.r * 0.8, y: L.y + uy * L.r * 0.8 },
+		ph = rnd(0, 6.28),
+		at = (t) => {
+			const m = Math.sin(Math.PI * t) * RIVER.bend * Math.sin(t * Math.PI * RIVER.waves + ph); // a bend that fades at both ends
+			return { x: S.x + (E.x - S.x) * t - uy * m, y: S.y + (E.y - S.y) * t + ux * m };
+		};
+	const C = [];
+	let last = at(0);
+	for (let t = 0; t <= 1; t += 0.002) {
+		const p = at(t);
+		if (hyp(p.x - last.x, p.y - last.y) >= w * RIVER.step || !C.length) {
+			C.push({ x: p.x, y: p.y, r: w, river: true });
+			last = p;
+		}
+	}
+	const cut = new Set();
+	for (const f of [rnd(RIVER.ford1[0], RIVER.ford1[1]), rnd(RIVER.ford2[0], RIVER.ford2[1])]) {
+		const i = Math.round(f * (C.length - 1));
+		for (let j = i - 1; j <= i + 1; j++) cut.add(j);
+	} // three pools left out: about 60 of dry ground between the banks
+	return C.filter((_, i) => !cut.has(i));
+}
 // one corner's finds: each at the distance every corner shares (dist), at an angle of its own; the home pocket keeps to the corner behind the Town Center
 function laySpots(lay, dist, loc) {
 	const taken = [],
@@ -399,11 +432,13 @@ function makeMap() {
 	if (Ld.extra) lay.push(['extra', 240, 380, 30]);
 	const dist = lay.map(([, r0, r1]) => rnd(r0, r1)),
 		lakeD = rnd(430, 580),
-		lakeR = rnd(85, 120);
+		lakeR = rnd(85, 120),
+		riverW = rnd(RIVER.w[0], RIVER.w[1]);
 	G.lakes = [{ ...LAKE0 }];
 	for (const p of G.P) {
 		if (p.id === WILD) continue;
-		const loc = makeLakes(lakeD, lakeR),
+		const lake = makeLakes(lakeD, lakeR),
+			loc = [...lake, ...makeRiver(lake[0], riverW)],
 			spot = laySpots(lay, dist, loc),
 			{ trees: forest, dep } = makeForest(spot, loc);
 		const [kx, ky] = p.keep,
@@ -412,7 +447,7 @@ function makeMap() {
 			at = (dx, dy) => [kx + dx * sx, ky + dy * sy];
 		for (const l of loc) {
 			const [x, y] = at(l.x, l.y);
-			G.lakes.push({ x, y, r: l.r });
+			G.lakes.push(l.river ? { x, y, r: l.r, river: true } : { x, y, r: l.r });
 		}
 		const c = (id) => at(spot[id].x, spot[id].y),
 			P = (id, [dx, dy]) => at(spot[id].x + dx, spot[id].y + dy);
@@ -498,13 +533,17 @@ function makeMap() {
 			node('iron', 'iron', x - 2, y + 20, 500 * RICH),
 			node('stone', 'stone', x + 4, y - 16, 400 * RICH),
 		);
-	for (const L of G.lakes) {
+	G.lakes.forEach((L, i) => {
+		if (L.river) {
+			if (i % RIVER.fish === 0) N.push(node('fish', 'food', L.x, L.y, 350 * RICH));
+			return;
+		} // a river is fished at every few pools, in mid-stream
 		const n = Math.round(L.r / 10);
 		for (let a = 0; a < n; a++) {
 			const ang = (a / n) * Math.PI * 2;
 			N.push(node('fish', 'food', L.x + Math.cos(ang) * (L.r - 8), L.y + Math.sin(ang) * (L.r - 8), 350 * RICH));
 		}
-	}
+	});
 	for (const n of N) {
 		const m = Ld.amt[n.type] || 1;
 		if (m !== 1) {

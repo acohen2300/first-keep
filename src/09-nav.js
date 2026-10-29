@@ -30,11 +30,17 @@ const lakeGap = (x, y) =>
 // lake cells: 1 water, 2 flood water only, which a side with levees wades
 function lakeGrid() {
 	NAV.lake.fill(0);
-	for (const L of G.lakes)
-		for (let y = 0; y < NC; y++)
-			for (let x = 0; x < NC; x++)
-				if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeR(L) + 2 && !onLand(x * NAVC + 5, y * NAVC + 5))
-					NAV.lake[y * NC + x] = hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < L.r + 2 ? 1 : 2;
+	for (const L of G.lakes) {
+		const R = Math.ceil((lakeR(L) + 2) / NAVC) + 1,
+			cx = Math.floor(L.x / NAVC),
+			cy = Math.floor(L.y / NAVC); // only the squares round each lake (Build 50: a river is many small pools)
+		for (let y = Math.max(0, cy - R); y <= Math.min(NC - 1, cy + R); y++)
+			for (let x = Math.max(0, cx - R); x <= Math.min(NC - 1, cx + R); x++)
+				if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeR(L) + 2 && !onLand(x * NAVC + 5, y * NAVC + 5)) {
+					const c = y * NC + x;
+					if (NAV.lake[c] !== 1) NAV.lake[c] = hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < L.r + 2 ? 1 : 2; // deep water stays deep where pools overlap
+				}
+	}
 	lakeFor = G.lakes;
 	lakeHi = G.flood > G.t;
 }

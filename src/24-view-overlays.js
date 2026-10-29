@@ -329,7 +329,7 @@ function drawLakeRipples(z) {
 		ctx.lineWidth = 1.2;
 		for (const L of G.lakes) {
 			if (Math.abs(L.x - cam.x) > cw / cam.z / 2 + L.r || Math.abs(L.y - cam.y) > ch / cam.z / TILT / 2 + L.r) continue;
-			for (let i = 0; i < 18; i++) {
+			for (let i = 0; i < (L.river ? 2 : 18); i++) {
 				const a = i * 2.4 + G.t * 0.05,
 					r = L.r * (0.25 + 0.6 * ((i * 0.37 + G.t * 0.02) % 1));
 				const lx = SX(L.x + Math.cos(a) * r),

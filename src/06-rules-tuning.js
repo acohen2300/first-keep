@@ -230,5 +230,6 @@ const LANDK = Object.keys(LAND),
 	TURN = 0.5;
 // Fair, not copied (Build 49): every corner gets the same finds at the same distances from home, each at its own angle, with its own lake and its own forest.
 // Then the map is measured: from each Town Center, the walk to its nearest food, wood, stone, gold and iron, to the Throne's island and to its nearest neighbour.
-// If the sides differ by more than a tenth in any of the three, the map is laid out again (up to 12 times) and the fairest is kept.
-const FAIR = { tries: 12, spread: 0.1 };
+// If the sides differ by more than a tenth in any of the three, the map is laid out again (up to 20 times) and the fairest is kept.
+const FAIR = { tries: 20, spread: 0.1 };
+const RIVER = { w: [20, 26], step: 0.9, bend: 45, waves: 1.6, ford1: [0.28, 0.4], ford2: [0.6, 0.72], fish: 3 }; // a corner's river: pools 20 to 26 across in radius, one every 0.9 of that (smooth banks), bending up to 45 aside; fords at about a third and two thirds; a fish in every third pool

@@ -584,3 +584,13 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 - **Gate:** new test "maps are fair on ten seeds". `fairness` and `FAIR` exported for tests.
 
 - **Play fingerprint accepted:** Build 49: each corner laid out on its own with shared distances, rerolled until fair
+
+## Build 50 preview (not live): rivers
+- **Added: a river in every corner** (`makeRiver` in `10-world`, numbers in `RIVER`). The corner's lake drains to the outer edge of the map down one flank, past home at a distance, bending as it goes. It is a chain of small round pools that overlap, so it is water like any lake for walking, building, docks and fish (a fish in every third pool) with no new kind of terrain. Two fords where the chain breaks, at about a third and two thirds down, each about 40 of dry ground: the river is crossed there or not at all. Every corner gets one, the same width, so the fairness check still compares like with like (it lays the map out again if a river makes one side's walks longer). Measured on seeds 1 to 10: every map fair, in 0 to 14 rolls, 62 to 846 ms here.
+- **Changed: drawing water.** Every shore first, then every water, so a river's pools run together; a river is one even blue with a narrower bank and two ripples a pool.
+- **Faster:** the lake grid scans only the squares round each lake, and the push off water tests the nearest lakes first (a river is many pools). Deep water stays deep where pools overlap in a flood.
+- **Changed:** the fairness check now tries up to 20 rolls (was 12).
+- **Said before, changed now (honest):** I told Albert one or two rivers a map; it is one a corner, four a map, because a river on two corners only would hand those two a moat.
+- **Not done:** hills (later, as agreed).
+
+- **Play fingerprint accepted:** Build 50: a river with two fords in every corner
