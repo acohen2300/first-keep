@@ -5,7 +5,7 @@ Albert's single-file HTML mobile RTS (Age of Empires style). Albert is not a cod
 - Live: https://acohen2300.github.io/first-keep (`index.html`). Preview copy: `/preview`.
 - Repo: https://github.com/acohen2300/first-keep, branch `main` (public). Pages deploys 1-2 minutes after a push. Sessions usually cannot reach github.io, so Albert checks the live link.
 
-## How to work with Albert (standing rules)
+## How to work with Albert (standing rules; the whole rule book is `RULES.md`)
 - Talk it out first. Make a list; build only after his double confirm ("yes yes", "go", "Sure go"). His standing vote on a list is "do all", with exceptions named by him.
 - Mockups first, then ONE build, ONE gate run, ONE push. No build per tweak. Look at every render yourself (and measure it) before showing him.
 - Simplest, leanest design. No fixes on fixes: redo it cleanly. Merge, cut bloat. One mold, uniform sizes. Analyze by element (does it exist, why, where is its source, where else can it be reused).
