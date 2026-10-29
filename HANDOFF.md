@@ -104,6 +104,20 @@ Play, pause and speed in one button; the Map cell; new-game setup on one page (s
 - **Harness after 58** (12 seeds, 40 min): Fortress seat 7 of 12 again; Classical reached by 28 of 48 sides (57 at 20 of 48; the earlier ages for iron, the plough and the camps move it); blocked villager-seconds median 206 (57: 234, 52b: about 180); board at peace at the end 4 of 12; hidden age 0; crowns: War to Raiders 9/12, Wellbeing to Fortress 8/12, Wealth to Fortress 7/12.
 - **57:** peace as a path (`39-games.js`, `PEACE`): the board truce, tribute for peace, standing down, the Games at the Throne, the hidden Enlightenment age with six steps, the three crowns and the chronicle on every end card; random events as a Poisson process (`nextIn`, `hazard`). Harness (12 seeds, 40 min, computers in every seat): board at peace at the end in 3 of 12; the hidden age opened in 1, reached by none (computers still stall in Classical: 20 of 48 sides by 40 min, as in Build 47); Games held median 0 (the first falls at 24 min and needs the truce). The crowns split as meant: War to the Raiders seat 8 of 12, Wellbeing to the Fortress seat 6 of 12, Wealth to the Rivals seat 6 of 12. Blocked villager-seconds median 234 a game (Build 52b: about 180; the Poisson order changed the seeds, not a regression to chase yet).
 
+## Build 59 (agreed Oct 29 evening; awaiting the go)
+Villager assignment by R = carry·(1 − danger)/(t_gather + 2d/v), switch at 18%, a new building takes from its own resource; the three computer fixes (farms per real field size, savings kept between windows, no age caps by personality); the news system (seen, heard, told; five groups; messengers by age); soldier targeting by V = (target dps × matchup)·(1 − danger)/(time to kill + d/v), finish who you started unless it runs or V is 18% higher; market elasticity P = P0 (Q/Q0)^(−1/ε); hide controls until their age; figures at 0.66; spoilage Q = Q0 e^(−kt); tap counters, the button cap, save and frame measurements; the setup card's Why fold back; the drawing speed-up (batched strokes), measured before and after.
+
+## To do (Albert, Oct 29; the talk list folded in)
+- **Milestones**: remind Albert; not yet defined.
+- **Home Screen and end screen**: the match page (crowns, timeline charts, chronicle that jumps the map), best-moment ghost replays, full replays later (native). Mockup first.
+- **The Games as a stadium**: the Throne island at night, floodlights, a green oval, four champions, a crowd in court colours, seen from above. Mockup first.
+- **Merge the two army systems**: one Army row (mockup 31).
+- **Deepen the home economy** (not cut it).
+- **Sounds**: talk when Albert is ready (the iPhone silent switch included).
+- **Pricing direction (decided)**: free, with one or two paid unlocks; a subscription possible; never pay to win. Nothing to build until the native store.
+- **Merge two-thirds of the small techs** (keep their history text): from the Google audit.
+- **Core direction review** after Build 59.
+
 ## What is left of the Oct 29 list (after Build 58)
 - **Mockups before any build:** 31 merge the two army systems (Battalions and Huddle missions, one set of names; removes the dock); 32 hide controls until their age; 36 figures from 0.55 to about 0.66 (may crowd at phone width).
 - **Talk, not work:** 23 market elasticity (P = P0 (Q/Q0)^(−1/ε), the constant-elasticity form; the Market's `mktHit` is a hand-set drift today); 44 core direction; 45 the one toy; 46 balance (the Fortress seat still wins most; computers stall in Classical by 40 minutes, so the hidden age is out of their reach: the first thing to fix); 47 idle workshops; 48 spoilage.
