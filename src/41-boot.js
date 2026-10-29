@@ -254,6 +254,8 @@ window.__fk = {
 	PEACE,
 	nextIn,
 	lanchester,
+	unitsOf,
+	soldiersOf,
 	WHY,
 	hazard,
 	HEALTH,
