@@ -5177,6 +5177,10 @@ const LAND = {
 const LANDK = Object.keys(LAND),
 	SPREAD = [0.85, 1.25],
 	TURN = 0.5;
+// Fair, not copied (Build 49): every corner gets the same finds at the same distances from home, each at its own angle, with its own lake and its own forest.
+// Then the map is measured: from each Town Center, the walk to its nearest food, wood, stone, gold and iron, to the Throne's island and to its nearest neighbour.
+// If the sides differ by more than a tenth in any of the three, the map is laid out again (up to 12 times) and the fairest is kept.
+const FAIR = { tries: 12, spread: 0.1 };
 // ═════ 07-text.js: every line of wording the game says ═════
 // ───────────────────────── Why it is so: the history behind each row ─────────────────────────
 // Dates are "about" unless exact; where historians disagree the text says so. Each line credits more than one place where the record allows.
@@ -7384,26 +7388,36 @@ function mkPlayer(i, civ) {
 }
 function newGame(seed, carry) {
 	seed = seed === undefined ? (Math.random() * 2 ** 31) | 0 : seed;
-	NID = 1;
-	G = blankGame(seed);
-	resetScars();
-	const others = CIVK.filter((k) => k !== SET.civ);
-	for (let i = others.length - 1; i > 0; i--) {
-		const j = Math.floor(rng() * (i + 1));
-		[others[i], others[j]] = [others[j], others[i]];
+	// the world is laid out, measured for fairness, and laid out again from the next roll of the same seed if it is not fair; the fairest is kept (Build 49)
+	let best = null;
+	for (let tr = 0; tr <= FAIR.tries; tr++) {
+		const roll = tr < FAIR.tries ? tr : best.tr; // the last pass lays out the fairest again, if no roll was fair
+		NID = 1;
+		G = blankGame(seed);
+		G.rs = (seed + roll * 0x9e3779b9) | 0;
+		resetScars();
+		const others = CIVK.filter((k) => k !== SET.civ);
+		for (let i = others.length - 1; i > 0; i--) {
+			const j = Math.floor(rng() * (i + 1));
+			[others[i], others[j]] = [others[j], others[i]];
+		}
+		for (let i = 0; i <= WILD; i++) G.P.push(mkPlayer(i, i === 0 ? SET.civ : i === WILD ? null : others[i - 1]));
+		// relations: 'war' | 'peace' | 'ally'. Raiders and Rivals are at war with everyone but the Fortress; the Fortress is at peace with all; the wild is at war with all.
+		for (let a = 0; a <= WILD; a++) {
+			G.rel[a] = [];
+			for (let b = 0; b <= WILD; b++)
+				G.rel[a][b] = a === b ? 'self' : a === WILD || b === WILD ? 'war' : a === FORT || b === FORT ? 'peace' : 'war';
+		}
+		G.hz = seed === todaySeed() ? { ...TODAY_HZ } : { ...(SET.hz || HZ_DEFAULT) }; // today's challenge: the day's seed and the day's hazards
+		makeMap();
+		initEconomy();
+		navRebuild();
+		const f = fairness();
+		G.fair = { roll, spread: f.spread };
+		if (f.worst <= FAIR.spread || tr === FAIR.tries) break;
+		if (!best || f.worst < best.worst) best = { tr, worst: f.worst };
 	}
-	for (let i = 0; i <= WILD; i++) G.P.push(mkPlayer(i, i === 0 ? SET.civ : i === WILD ? null : others[i - 1]));
-	// relations: 'war' | 'peace' | 'ally'. Raiders and Rivals are at war with everyone but the Fortress; the Fortress is at peace with all; the wild is at war with all.
-	for (let a = 0; a <= WILD; a++) {
-		G.rel[a] = [];
-		for (let b = 0; b <= WILD; b++)
-			G.rel[a][b] = a === b ? 'self' : a === WILD || b === WILD ? 'war' : a === FORT || b === FORT ? 'peace' : 'war';
-	}
-	G.hz = seed === todaySeed() ? { ...TODAY_HZ } : { ...(SET.hz || HZ_DEFAULT) }; // today's challenge: the day's seed and the day's hazards
-	makeMap();
-	initEconomy();
 	makeBg();
-	navRebuild();
 	evmSet();
 	const k = G.P[0].keep;
 	cam.x = k[0] + 120;
@@ -7419,7 +7433,7 @@ function newGame(seed, carry) {
 }
 const inBox = (p, r) => p.x >= r.x0 && p.x <= r.x1 && p.y >= r.y0 && p.y <= r.y1;
 const node = (kind, type, x, y, amt) => ({ id: NID++, kind, type, x, y, amt, max: amt });
-// One corner is laid out at random, then copied (mirrored) to all four, so every side is equal and no two games are alike.
+// Each corner is laid out on its own (Build 49; it was one corner mirrored to all four): the same finds at the same distances, each at its own angle.
 // Local coordinates: the keep is (0,0); x and y grow toward the middle of the map.
 const SHAPE = {
 	bushes: [
@@ -7460,23 +7474,19 @@ const LAYOUT = [
 	['cemetery', 480, 640, 46],
 	['vagabonds', 480, 640, 46],
 ];
-function makeLakes() {
-	// the great lake, and one more for each corner (same size, same place in each)
-	const local = [];
-	for (let t = 0; t < 80 && !local.length; t++) {
+function makeLakes(d, r) {
+	// a corner's own lake: the same size and the same distance from home in every corner, at its own angle
+	for (let t = 0; t < 80; t++) {
 		const a = rnd(0.2, 1.37),
-			d = rnd(430, 580),
-			r = rnd(85, 120),
 			x = Math.cos(a) * d,
 			y = Math.sin(a) * d;
 		if (x + r + 70 > 700 || y + r + 70 > 700) continue; // a wide lane along the middle lines
 		if (hyp(x - 700, y - 700) < r + LAKE0.r + 110) continue; // and between it and the great lake
-		local.push({ x, y, r });
+		return [{ x, y, r }];
 	}
-	if (!local.length) local.push({ x: 430, y: 330, r: 90 });
-	return local;
+	return [{ x: 430, y: 330, r: 90 }];
 }
-// The dense forest, laid out for one corner and mirrored to all four like everything else (local: keep at 0,0, the middle at 700,700).
+// The dense forest, laid out for each corner on its own (local: keep at 0,0, the middle at 700,700).
 // Trees on a 26-unit lattice where an organic field runs high, thicker away from home; clear round the Town Center, the lakes, every find,
 // stop and camp, along the trade lanes, and along three winding paths: to each neighbour's nearest stop and to the great lake. Anything left
 // cut off is joined to home by a straight cut. About 375 trees a corner.
@@ -7624,39 +7634,29 @@ function makeForest(spot, loc) {
 	}
 	return { trees: T, dep };
 }
-function makeMap() {
-	const N = G.nodes,
-		loc = makeLakes(),
-		taken = [],
-		spot = {};
-	const sh = (hyp(700, 700) - LAKE0.r - 90) / Math.SQRT2,
+// one corner's finds: each at the distance every corner shares (dist), at an angle of its own; the home pocket keeps to the corner behind the Town Center
+function laySpots(lay, dist, loc) {
+	const taken = [],
+		spot = {},
+		sh = (hyp(700, 700) - LAKE0.r - 90) / Math.SQRT2,
 		room = [
 			{ x: 700, y: 700, r: LAKE0.r + 25 },
 			{ x: sh, y: sh, r: 50 },
 			...loc.map((l) => ({ x: l.x, y: l.y, r: l.r + 25 })),
-		]; // the great lake, this corner's shrine on its shore, the corner's lakes
-	// this game's land: its character, how far its rings stretch, which way its home pocket turns (Build 39: every map felt the same)
-	G.land = LANDK[Math.floor(rng() * LANDK.length)];
-	const Ld = LAND[G.land],
-		k = rnd(SPREAD[0], SPREAD[1]),
+		], // the great lake, this corner's shrine on its shore, the corner's lake
 		turn = rnd(-TURN, TURN);
-	const lay = LAYOUT.map(([id, r0, r1, clr, a0, a1]) => [
-		id,
-		Math.min(560, r0 * (a0 === undefined ? k : 1)),
-		Math.min(640, r1 * (a0 === undefined ? k : 1)),
-		clr,
-		a0 === undefined ? a0 : a0 + turn,
-		a1 === undefined ? a1 : a1 + turn,
-	]); // stretched, never past the old outer ring
-	if (Ld.extra) lay.push(['extra', 240, 380, 30]);
-	for (const [id, r0, r1, clr, a0, a1] of lay) {
+	lay.forEach(([id, r0, r1, clr, a0, a1], i) => {
+		if (a0 !== undefined) {
+			a0 += turn;
+			a1 += turn;
+		}
 		let best = null;
 		for (let t = 0; t < 300 && !best; t++) {
-			// 150 tries as set; then 150 more with the ring widened and the room halved, before any fallback
+			// 150 tries at the shared distance; then 150 more with the ring widened and the room halved, before any fallback
 			const loose = t >= 150,
 				w = loose ? 0.25 : 0,
 				a = a0 === undefined ? rnd(-Math.PI, Math.PI) : rnd(a0 - w, a1 + w),
-				d = rnd(r0 * (loose ? 0.85 : 1), r1 * (loose ? 1.15 : 1)),
+				d = loose ? rnd(r0 * 0.85, r1 * 1.15) : dist[i],
 				x = Math.cos(a) * d,
 				y = Math.sin(a) * d,
 				c = loose ? clr / 2 : clr;
@@ -7669,11 +7669,33 @@ function makeMap() {
 			dm = ((r0 + r1) / 2) * 0.7; // the fallback: the middle of its own range, turned with the home pocket
 		spot[id] = best || { x: Math.cos(am) * dm, y: Math.sin(am) * dm };
 		taken.push({ x: spot[id].x, y: spot[id].y, r: clr });
-	}
-	const { trees: forest, dep } = makeForest(spot, loc);
+	});
+	return spot;
+}
+function makeMap() {
+	const N = G.nodes;
+	// this game's land: its character, how far its rings stretch (Build 39: every map felt the same); what every corner shares: each find's distance from home, the lake's size and distance
+	G.land = LANDK[Math.floor(rng() * LANDK.length)];
+	const Ld = LAND[G.land],
+		k = rnd(SPREAD[0], SPREAD[1]);
+	const lay = LAYOUT.map(([id, r0, r1, clr, a0, a1]) => [
+		id,
+		Math.min(560, r0 * (a0 === undefined ? k : 1)),
+		Math.min(640, r1 * (a0 === undefined ? k : 1)),
+		clr,
+		a0,
+		a1,
+	]); // stretched, never past the old outer ring
+	if (Ld.extra) lay.push(['extra', 240, 380, 30]);
+	const dist = lay.map(([, r0, r1]) => rnd(r0, r1)),
+		lakeD = rnd(430, 580),
+		lakeR = rnd(85, 120);
 	G.lakes = [{ ...LAKE0 }];
 	for (const p of G.P) {
 		if (p.id === WILD) continue;
+		const loc = makeLakes(lakeD, lakeR),
+			spot = laySpots(lay, dist, loc),
+			{ trees: forest, dep } = makeForest(spot, loc);
 		const [kx, ky] = p.keep,
 			sx = kx < MID ? 1 : -1,
 			sy = ky < MID ? 1 : -1,
@@ -7781,6 +7803,76 @@ function makeMap() {
 		}
 	} // what the land is rich and poor in
 	makeCitadel();
+}
+// ── fairness: the walk from a Town Center over open ground (trees, water and buildings stop it; a square costs 2 straight, 3 corner to corner), in a bucket queue
+function walkFrom(b) {
+	const D = new Uint16Array(NC * NC).fill(65535),
+		Q = [[]],
+		n = BLD[b.kind].fp;
+	for (let j = -1; j <= n; j++)
+		for (let i = -1; i <= n; i++) {
+			const c = (b.gy + j) * NC + b.gx + i;
+			if (c >= 0 && c < NC * NC && !NAV.solid[c]) {
+				D[c] = 0;
+				Q[0].push(c);
+			}
+		} // from the open ground round its walls
+	for (let d = 0; d < Q.length; d++)
+		for (const c of Q[d] || []) {
+			if (D[c] !== d) continue;
+			const x = c % NC,
+				y = (c / NC) | 0;
+			for (let k = 0; k < 8; k++) {
+				const nx = x + DX8[k],
+					ny = y + DY8[k];
+				if (nx < 0 || ny < 0 || nx >= NC || ny >= NC) continue;
+				const e = ny * NC + nx,
+					nd = d + (k < 4 ? 2 : 3);
+				if (NAV.solid[e] || nd >= D[e] || (k >= 4 && (NAV.solid[y * NC + nx] || NAV.solid[ny * NC + x]))) continue;
+				D[e] = nd;
+				(Q[nd] || (Q[nd] = [])).push(e);
+			}
+		}
+	return D;
+}
+// the nearest walk to anything within r of (x, y)
+function walkTo(D, x, y, r) {
+	const R = Math.ceil(r / NAVC),
+		cx = Math.floor(x / NAVC),
+		cy = Math.floor(y / NAVC);
+	let m = 65535;
+	for (let j = -R; j <= R; j++)
+		for (let i = -R; i <= R; i++) {
+			const X = cx + i,
+				Y = cy + j;
+			if (X >= 0 && Y >= 0 && X < NC && Y < NC && i * i + j * j <= R * R) m = Math.min(m, D[Y * NC + X]);
+		}
+	return m;
+}
+// each side's walk to its nearest food, wood, stone, gold and iron (summed), to the Throne's island, and to its nearest neighbour; and how far apart the sides are in each (a share of their average)
+function fairness() {
+	const S = G.P.filter((p) => p.id !== WILD).map((p) => {
+			const k = keepOf(p.id),
+				D = walkFrom(k),
+				work = ['bush', 'tree', 'stone', 'gold', 'iron'].reduce(
+					(s, kind) =>
+						s +
+						G.nodes
+							.filter((n) => n.kind === kind && (kind !== 'tree' || n.open) && Math.abs(n.x - k.x) < 700 && Math.abs(n.y - k.y) < 700)
+							.reduce((m, n) => Math.min(m, walkTo(D, n.x, n.y, 20)), 65535),
+					0,
+				);
+			return { k, D, work, throne: walkTo(D, MID, MID, THRONE.isle) };
+		}),
+		R = (BLD.keep.fp / 2 + 2) * NAVC;
+	for (const s of S) s.near = Math.min(...S.filter((q) => q !== s).map((q) => walkTo(s.D, q.k.x, q.k.y, R)));
+	const spread = {};
+	for (const m of ['work', 'throne', 'near']) {
+		const v = S.map((s) => s[m]),
+			mean = v.reduce((a, b) => a + b, 0) / v.length;
+		spread[m] = Math.round(((Math.max(...v) - Math.min(...v)) / (mean || 1)) * 100) / 100;
+	}
+	return { spread, worst: Math.max(...Object.values(spread)), sides: S.map(({ work, throne, near }) => ({ work, throne, near })) };
 }
 // The Throne: a walled citadel on the great lake's island, four gates at the four causeways, a tower at each corner, the one shrine at its foot, the Natives' garrison in its yard
 function makeCitadel() {
@@ -25920,6 +26012,8 @@ window.__fk = {
 	nearestNode,
 	collide,
 	newGame,
+	fairness,
+	FAIR,
 	scoreAll,
 	hurt,
 	sabotage,

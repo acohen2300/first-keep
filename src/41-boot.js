@@ -237,6 +237,8 @@ window.__fk = {
 	nearestNode,
 	collide,
 	newGame,
+	fairness,
+	FAIR,
 	scoreAll,
 	hurt,
 	sabotage,

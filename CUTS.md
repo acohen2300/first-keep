@@ -577,3 +577,10 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 - **Test hook:** `react` exported for the harness. **New test tool:** `tests/balance.py` (computers in all four seats, headless, many seeds: wins by civilisation and seat, minutes to each age, kills per 100 resources by unit, villager-seconds stuck).
 
 - **Play fingerprint accepted:** Build 48: pocket trees, per-side danger map, shared march route, unequal crowd push, slots on open ground
+
+## Build 49 preview (not live): maps that are fair, not copied
+- **Cut: the mirror.** One corner used to be laid out and copied to all four. Now each corner is laid out on its own (`laySpots`, `makeLakes`, `makeForest` per corner in `10-world`): every find sits at the same distance from home in every corner (the distances are rolled once per game), each at its own angle; each corner has its own lake (same size, same distance, its own angle), its own forest and its own winding paths; the home pocket still keeps to the corner behind the Town Center, turned by its own amount. The land's character, the middle (Throne, causeways, the great lake, the camps, the shared gold and stone) and the trade lanes are as before.
+- **Added: the fairness check** (`fairness`, `walkFrom`, `walkTo`; numbers in `FAIR`). From each Town Center, the walk over open ground (trees, water and buildings stop it) to its nearest berries, open trees, stone, gold and iron (summed), to the Throne's island, and to its nearest neighbour. If the four sides differ by more than a tenth of their average in any of the three, the map is laid out again from the next roll of the same seed, up to 12 times, and the fairest is kept. Measured on seeds 1 to 10: every map fair within 0 to 8 rolls, 66 to 423 ms on this machine (a phone is slower; worth timing on the iPhone). Same seed, same map, as before.
+- **Gate:** new test "maps are fair on ten seeds". `fairness` and `FAIR` exported for tests.
+
+- **Play fingerprint accepted:** Build 49: each corner laid out on its own with shared distances, rerolled until fair

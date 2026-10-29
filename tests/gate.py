@@ -176,6 +176,10 @@ async def main():
           const test = (k, ph) => { const a = F.alertNow(); if (!a) { out.push(k + ' ' + ph + ': no alert'); return; } e.innerHTML = F.alertHTML(a); const i = e.querySelector('i'); if (i.scrollWidth > i.clientWidth + 1 || e.scrollWidth > e.clientWidth + 1) out.push(k + ' ' + ph + ': ' + e.textContent); };
           for (const k of Object.keys(F.EVENTS)) { G.ev.cur = null; G.ev.warned = k; G.ev.next = G.t + 12; test(k, 'coming'); G.ev.warned = null; F.startEvent(k); test(k, 'running'); F.endEvent(); } return out; }"""); await pg.close()
         print(('PASS ' if not cut else 'FAIL ') + 'the alert bar fits the ticker at 375 px, for every event', '' if not cut else cut[:6]); fails += bool(cut)
+        # every map is fair (Build 49: corners are no longer copies): on ten seeds, the sides' walks to work, the Throne and a neighbour within FAIR.spread
+        pg = await br.new_page(); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(400)
+        unfair = await pg.evaluate("() => { const F = window.__fk, out = []; for (let s = 1; s <= 10; s++) { F.newGame(s); const f = F.fairness(); if (f.worst > F.FAIR.spread) out.push(s + ': ' + JSON.stringify(f.spread)); } return out; }"); await pg.close()
+        print(('PASS ' if not unfair else 'FAIL ') + 'maps are fair on ten seeds', '' if not unfair else unfair); fails += bool(unfair)
         fp, _ = await fingerprint(br); print(('PASS ' if not fp else 'FAIL ') + 'the game plays as the baseline says', '' if not fp else '\n  ' + '\n  '.join(fp[:4]) + '\n  (a deliberate rule change: python3 tests/gate.py --accept "why")'); fails += bool(fp)
         await br.close()
     if '--soak' in sys.argv: fails += subprocess.run([sys.executable, 'tests/soak.py']).returncode != 0   # opt-in, about 3 minutes: long games on three seeds
