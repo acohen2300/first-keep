@@ -85,6 +85,14 @@ Play, pause and speed in one button; the Map cell; new-game setup on one page (s
 - **Tension:** `SET.tension` / `G.tension` (`winner`, `diplomacy`); `leagueTick` in `17-ai`, called every 10 s from the economy beat.
 - Earthquakes and the Shield wall are cut.
 
+## Queue (agreed in talk, not built; each needs Albert's go; Oct 29)
+- **Build 48, fixes:** stuck villagers (open trees only via sealed pockets: component size filter, standing spot from the unit's own region); danger check for gatherers (hostile unit within about 110 of a node, in both the node pick and the recheck); snap formation slots to free ground; reset `EVM` on new game and load; huddle default shares BNSIZE across classes; Natives and rebels get an army class; War Council plans any unlocked unit type; levy cap counts levied soldiers; graduates keep their battalion; Battle Stations restores tempers on Resume; War Council pauses the game.
+- **Build 49, maps:** each corner gets the same resource package placed independently, plus a fairness check at generation (resources in reach, walk to the Throne and nearest neighbour within about 10%); build the check before the generator.
+- **Build 50, rivers:** a river is a chain of overlapping lakes with fords where the chain breaks. Hills later.
+- **Build 51, sight and towers:** building sight from height (tall sees far) plus tech lines (beacons, spyglass); tower evolutions in place (watchtower, stone tower, bastion) from one tiers table; fog memory of what towers saw.
+- **Build 52, looks:** every building varies by age tier (three variants: palette plus one or two features from a central table); animation pass for units (walk cycle, swing, death) and smoke and flags for buildings.
+- **Also queued:** history text batch (about 25 fixes, "Game:" labels, date-against-age test); reveal controls by age; resource health colours; banners with a group health arc; 15-minute mode; scenarios; safe code merges. Full detail: the audit doc.
+
 ## Open items
 1. Albert's real-phone test of Build 41j (tap sizes, the action bar, three-tap dispatch, People tile, 375 px).
 2. Sound on the iPhone silent switch: undecided.
