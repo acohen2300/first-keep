@@ -29,7 +29,7 @@ function edgeScroll(dt) {
 const LIFT = 64; // on a phone the building waits this far above your finger, so you can see it
 function ghostAt(p, touch) {
 	const pl = G.place,
-		w = toWorld(p.x, p.y - (touch ? LIFT : 0));
+		w = toWorld(p.x, p.y - (touch && pl.kind !== 'wall' ? LIFT : 0)); // a wall goes exactly where the finger lands; its count shows above
 	if (pl.kind === 'wall') {
 		const c = toCell(w);
 		if (!pl.a) pl.a = c;

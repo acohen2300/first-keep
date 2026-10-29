@@ -554,3 +554,8 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 - Charters (East India Company style) and named Silk Road routes.
 
 - **Play fingerprint accepted:** Build 45: caps 60/120/180, one worker per building, mint 1:1, foundry 2:1, farm rate 0.8, no earthquakes, shape and temper dials replace stances
+
+## Build 46 preview (not live)
+- **Seal check** (`sealPath` in `09-nav`, `drawSeal` in `24-view-overlays`): while a wall or gate is being placed, a walk from the keep over every square a foe can stand on (walls, shut gates, buildings, water, forest and the wall being drawn all stop it) either reaches 380 units out, and the shortest way is drawn as a red dashed line with "Open: a foe walks in", or it does not, and "Sealed" shows over the keep. The forest was already a wall: a tree fills the 3×3 squares around it.
+- **Changed: the wall ignores the finger lift.** The 64-unit lift (so a fingertip does not cover a building) still applies to every other building; a wall now lands exactly where the finger does, and its count tag shows above it.
+- Not done: wall as long single pieces (still one square a piece, drawn as a line); the aim-and-lock two-handle placement. Both wait for Albert's test of the two changes above.

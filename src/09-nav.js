@@ -662,3 +662,45 @@ function wallLine(a, b) {
 	}
 	return cells;
 }
+
+// Is your keep walled in? A walk outward from the keep over every square a foe can stand on (walls, shut gates, buildings, water and forest all stop it).
+// If the walk gets SEAL.r away, there is a way in, and the shortest way is the path to show; `extra` is wall not built yet, so the preview counts it.
+const SEAL = { r: 380, every: 0.3 };
+const sealSeen = new Int32Array(NC * NC),
+	sealFrom = new Int32Array(NC * NC);
+let sealGen = 0;
+function sealPath(extra) {
+	const k = keepOf(0);
+	if (!k) return null;
+	const at = (c) => (c.gy * NC + c.gx),
+		pend = new Set(extra.map(at)),
+		kc = toCell(k),
+		S = freeNear(kc.gx, kc.gy, 0, 8, k.x, k.y);
+	if (!S) return null;
+	const gen = ++sealGen,
+		q = [S.cy * NC + S.cx],
+		r2 = (SEAL.r / NAVC) ** 2;
+	sealSeen[q[0]] = gen;
+	sealFrom[q[0]] = -1;
+	for (let h = 0; h < q.length; h++) {
+		const c = q[h],
+			x = c % NC,
+			y = (c - x) / NC;
+		if ((x - S.cx) ** 2 + (y - S.cy) ** 2 >= r2) {
+			const pts = [];
+			for (let i = c; i >= 0; i = sealFrom[i]) pts.push({ x: (i % NC) * NAVC + NAVC / 2, y: Math.floor(i / NC) * NAVC + NAVC / 2 });
+			return pts; // a way out, so a way in: from the keep's side to the open ground
+		}
+		for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+			const nx = x + dx,
+				ny = y + dy;
+			if (nx < 0 || ny < 0 || nx >= NC || ny >= NC) continue;
+			const n = ny * NC + nx;
+			if (sealSeen[n] === gen || NAV.solid[n] || NAV.gate[n] || pend.has(n)) continue;
+			sealSeen[n] = gen;
+			sealFrom[n] = c;
+			q.push(n);
+		}
+	}
+	return []; // sealed
+}

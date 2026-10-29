@@ -346,6 +346,8 @@ window.__fk = {
 	starveTick,
 	todaySeed,
 	gatherMul,
+	sealPath,
+	toCell,
 	RATE_OF,
 	makeOf,
 	shareOf,

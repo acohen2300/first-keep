@@ -132,8 +132,31 @@ function tag(text, x, y) {
 	ctx.fillText(text, x + 5, y + 1);
 }
 // the building you are placing: its footprint green where it fits and red where it does not, and the reason
+// the seal check while a wall or gate is being placed: a red line where a foe could walk in, or "Sealed" over the keep
+function drawSeal(pl) {
+	if (!pl.seal || G.t - pl.sealT > SEAL.every || pl.sealN !== (pl.cells || []).length) {
+		const extra = pl.at ? (pl.cells || [toCell(pl.at)]).filter((c) => !canPlace(0, pl.kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) : [];
+		pl.seal = sealPath(extra);
+		pl.sealT = G.t;
+		pl.sealN = (pl.cells || []).length;
+	}
+	const P = pl.seal,
+		k = keepOf(0);
+	if (!P || !k) return;
+	if (!P.length) return tag('Sealed', SX(k.x) - 22, SY(k.y) - 40);
+	ctx.strokeStyle = '#de5a44';
+	ctx.lineWidth = 3;
+	ctx.setLineDash([8, 6]);
+	ctx.beginPath();
+	P.forEach((q, i) => (i ? ctx.lineTo(SX(q.x), SY(q.y)) : ctx.moveTo(SX(q.x), SY(q.y))));
+	ctx.stroke();
+	ctx.setLineDash([]);
+	const e = P[0];
+	tag('Open: a foe walks in', SX(e.x) - 50, SY(e.y) - 10);
+}
 function drawGhost() {
 	const pl = G.place;
+	if (pl && BLD[pl.kind].wallish) drawSeal(pl);
 	if (!pl || !pl.at) return;
 	const z = cam.z,
 		kind = pl.kind,
