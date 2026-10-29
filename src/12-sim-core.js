@@ -415,7 +415,7 @@ function bldTick(b, dt) {
 		b.cd = Math.max(0, b.cd - dt);
 		if (b.cd <= 0) {
 			const keys = bldKeys(b.kind),
-				reach = B.rng + fxv(o, 'rng', keys).a;
+				reach = rangeOf(o, b.kind);
 			const t = B.spyonly
 				? G.units.find((v) => v.kind === 'spy' && atWar(o, v.owner) && dist(v, b) < reach + fxv(o, 'spysight').a)
 				: nearestFoe(o, b, reach);

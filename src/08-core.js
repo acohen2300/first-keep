@@ -389,6 +389,7 @@ const bldKeys = (kind) => {
 		k = [kind];
 	if (B.wallish) k.push('#wallish');
 	if (B.dmg && !B.spyonly) k.push('#guard');
+	k.push('#bld');
 	return k;
 };
 // what a side's unit of this kind is, after its research: name, health, damage, reach, speed, what it beats
@@ -448,18 +449,22 @@ const rngOf = (u) => {
 	const r = stats(u.owner, u.kind).rng;
 	return r > 20 ? r * ((WEATHER[G.wx] && WEATHER[G.wx].rng) || 1) : r;
 };
+// how far a building shoots: a shot at 45° from height h with the range r0 it would have from the ground lands at (r0/2)(1 + √(1 + 4h/r0))
+// (the projectile range from a height, R = (v cos θ / g)(v sin θ + √(v² sin² θ + 2gh), with v² = g r0; air drag left out and said so in SCIENCE.md)
+const rangeFrom = (r0, h) => (r0 / 2) * (1 + Math.sqrt(1 + (4 * h) / r0));
+const rangeOf = (o, kind) => rangeFrom(BLD[kind].bow, BLD[kind].h) + (o === WILD ? 0 : fxv(o, 'rng', bldKeys(kind)).a);
 const lookout = (kind) => Math.round(LOOKOUT.base + LOOKOUT.k * Math.sqrt(BLD[kind].h || 0)); // how far a building sees, from its height
 const sightOf = (e) =>
 	((UNIT[e.kind] ? UNIT[e.kind].sight || 100 : lookout(e.kind)) +
 		(e.owner !== undefined && e.owner !== WILD && e.owner !== null
 			? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]).a
 			: 0)) *
-	(1 - (1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) * G.night) *
+	(1 - (1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) * G.night * (UNIT[e.kind] || e.owner === WILD ? 1 : 1 - fxv(e.owner, 'lamp', bldKeys(e.kind)).a)) * // lanterns give a building back part of its night sight
 	EVM.sight *
 	(WEATHER[G.wx].sight || 1); // night, the moon, an eclipse or fog, a blizzard
 const carryOf = (o) => CARRY + fxv(o, 'carry').a;
 function gatherMul(o, n) {
-	let m = fxv(o, 'gather', [n.type, n.kind]).m * EVM.gather * (WEATHER[G.wx].gather || 1);
+	let m = fxv(o, 'gather', [n.type, n.kind]).m * EVM.gather * (WEATHER[G.wx].gather || 1) * (season().name === 'Winter' ? 1 + fxv(o, 'warm').a : 1); // warm homes: better winter work
 	if (n.kind === 'farm') {
 		m *= fxv(o, 'crop', [n.type]).m;
 		if (n.type === 'food') {

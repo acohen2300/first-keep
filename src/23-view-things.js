@@ -256,12 +256,12 @@ function flame(x, y, kind, z, seed) {
 	ctx.fill();
 }
 // the light a flame throws on the ground: a disc that fades as the inverse square, drawn additively, only when there is dark to light
-function glow(x, y, kind, z) {
+function glow(x, y, kind, z, more = 1) {
 	const F = FLAME[kind],
 		dark = Math.max(G.night, 0.3 * (G.wx === 'rain' ? 1 : 0)),
 		life = flameLife(kind);
 	if (!SET.lights || dark < 0.05 || life <= 0) return;
-	const r = LIGHT.k * Math.sqrt(F.p) * z * life,
+	const r = LIGHT.k * Math.sqrt(F.p * more) * z * life,
 		[cr, cg, cb] = FLAME_RGB[kind],
 		gr = ctx.createRadialGradient(x, y, 0, x, y, r);
 	gr.addColorStop(0, `rgba(${cr},${cg},${cb},${(LIGHT.a * dark).toFixed(3)})`);

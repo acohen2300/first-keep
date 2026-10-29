@@ -212,16 +212,22 @@ const ROUTES = [
 	],
 ];
 const POST = { all: 2, cut: [0, 0.2, 0.25, 0.3, 0.4], safe: 120, guard: 12, far: 2.5, want: 1.5 }; // each route has four stops. all: gold a second to whoever holds all four of a route; cut: of other sides' sales at a stop, by how many of its route you hold; guard: soldiers per stop or caravan
+// Sickness as the SIR model (Kermack & McKendrick 1927; Build 56): among a side's people, those who are well (S), sick (I) and over it (R, well
+// again after the course, as the game has no lasting immunity). New cases a tick = β S I / N, the mass-action law; the course lasts sickFor
+// (recovery γ = 1/sickFor). R0 = β/γ: 2 here, in the range of influenza (1.5 to 3; measles would be 12 to 18). Clean water, sewers and
+// quarantine lower β; medicine raises the cure and lowers the death. A case is seeded now and then (risk) as if from outside; plague on the roads
+// multiplies R0 and the death.
 const HEALTH = {
 	every: 60,
-	risk: 0.06,
-	sickFor: 60,
-	spread: 0.08,
+	risk: 0.06, // the chance a minute that a case arrives from outside
+	sickFor: 60, // the course of the illness, seconds (γ = 1/60)
+	R0: 2, // cases one case makes in a well population
 	death: 0.004,
 	cure: 0.3,
 	plague: 0.15,
+	plagueR0: 1.5, // plague: R0 × this, death × 4
 	plagueCap: 0.1,
-}; // risk: the chance a minute that sickness breaks out
+};
 const MKT_SELL = ['f', 'w', 's', 'i', ...WARES],
 	MKT_BUY = ['f', 'w', 's', 'i', 'spice']; // wool goes to a Workshop, not to market; spice is the only good not made here
 const MKTK = [...GOODK, 'f', 'w', 's', 'i'];

@@ -2,8 +2,8 @@
 // ───────────────────────── Goods, trade routes, nature, sickness and food ─────────────────────────
 // Real ratios on a compressed calendar: one year is 12 minutes, and every rate below is set against that clock.
 const FLEECE = 7,
-	LAMBS = 0.35,
-	FLOCK = 12; // wool per sheep at the spring shearing; a flock grows about a third each spring, up to 12
+	LAMBS = 0.6,
+	FLOCK = 12; // wool per sheep at the spring shearing; a flock grows by logistic growth (Verhulst), r = 0.6 a spring toward a pasture that carries 12 (Build 56)
 
 const stopsAll = () => G.finds.filter((f) => f.kind === 'stop');
 const postAt = (f) => G.blds.find((b) => b.kind === 'tpost' && b.sid === f.id && b.hp > 0);
@@ -206,7 +206,7 @@ function routeTick(u, dt, SP) {
 		// home
 		for (const k in u.goods || {}) giveTo(p, k, u.goods[k]);
 		u.goods = {};
-		if (u.foreign && G.plague && G.plague.until > G.t && rng() < 0.5) outbreak(o, 0.25, true, u);
+		if (u.foreign && G.plague && G.plague.until > G.t && rng() < 0.5) outbreak(o, 0.05, true, u); // a few cases come home with the cart; the spread does the rest (SIR)
 		u.inspected = false;
 		u.inspT = 0; // plague came home with the carts
 		u.foreign = false;
@@ -285,7 +285,7 @@ function seasonTurn() {
 		if (b.kind === 'pasture' && b.prog >= 1 && b.hp > 0) {
 			if (s === 'Spring') {
 				b.node.amt += (b.sheep || 0) * FLEECE;
-				b.sheep = Math.min(FLOCK, Math.round((b.sheep || 0) * (1 + LAMBS)));
+				b.sheep = Math.min(FLOCK, Math.round((b.sheep || 0) + LAMBS * (b.sheep || 0) * (1 - (b.sheep || 0) / FLOCK))); // ΔN = r N (1 − N/K): fast while the pasture is empty, slowing as it fills
 			}
 			const wolf = G.units.find(
 				(v) =>
@@ -404,7 +404,7 @@ function fireTick(dt) {
 // ── sickness: a few fall ill now and then, more in summer and winter; Clean water halves it; medicine cures and saves lives
 function sickRisk(o) {
 	const s = season().name;
-	return HEALTH.risk * (s === 'Summer' || s === 'Winter' ? 1.2 : 1) * fxv(o, 'sick').m;
+	return HEALTH.risk * (s === 'Summer' || s === 'Winter' ? 1.2 : 1) * fxv(o, 'sick').m * (s === 'Winter' ? fxv(o, 'warm').m : 1); // warm homes: a milder winter
 }
 function outbreak(o, share, plague, at) {
 	const p = G.P[o],
@@ -433,9 +433,36 @@ function healthTick() {
 			p.ai.sickT = (p.ai.sickT ?? HEALTH.every) - 5;
 			if (p.ai.sickT <= 0) {
 				p.ai.sickT = HEALTH.every;
-				if (rng() < sickRisk(p.id)) outbreak(p.id, 0.08, false);
+				if (rng() < sickRisk(p.id)) outbreak(p.id, 0, false);
 			}
 		}
+	// the spread, by side: β S I / N new cases in these five seconds (SIR), among the people near home
+	for (const p of G.P) {
+		if (!p.alive || p.id === WILD) continue;
+		const k = keepOf(p.id);
+		if (!k) continue;
+		const S = [];
+		let I = 0,
+			plague = false;
+		for (const u of G.units)
+			if (u.owner === p.id && UNIT[u.kind].cls && !u.inside && dist(u, k) < 500) {
+				if (u.sick > G.t) {
+					I++;
+					plague = plague || u.plague;
+				} else S.push(u);
+			}
+		if (!I || !S.length) continue;
+		const N = I + S.length,
+			beta = ((HEALTH.R0 * (plague ? HEALTH.plagueR0 : 1)) / HEALTH.sickFor) * 5 * fxv(p.id, 'spread').m,
+			x = (beta * S.length * I) / N;
+		let n = Math.floor(x);
+		if (rng() < x - n) n++;
+		for (let i = 0; i < n && S.length; i++) {
+			const v = S.splice(Math.floor(rng() * S.length), 1)[0];
+			v.sick = G.t + HEALTH.sickFor;
+			v.plague = plague;
+		}
+	}
 	for (const u of G.units) {
 		if (!(u.sick > G.t)) {
 			if (u.sick) {
@@ -461,21 +488,6 @@ function healthTick() {
 			if (u.plague) P.plagueDead = (P.plagueDead || 0) + 1;
 			continue;
 		}
-		if (rng() < HEALTH.spread * (u.plague && hz('plague') ? 2 : 1) * fxv(o, 'spread').m) {
-			const v = G.units.find(
-				(w) =>
-					w.owner === o &&
-					w !== u &&
-					UNIT[w.kind].cls &&
-					!(w.sick > G.t) &&
-					Math.abs(w.x - u.x) < 18 &&
-					Math.abs(w.y - u.y) < 18,
-			);
-			if (v) {
-				v.sick = G.t + HEALTH.sickFor;
-				v.plague = u.plague;
-			}
-		}
 	}
 }
 
@@ -488,7 +500,7 @@ function upkeepTick() {
 			// everyone eats: a share a person, more for soldiers and far more for horses
 			let sh = 0;
 			for (const u of G.units) if (u.owner === o) sh += shareOf(u);
-			const eat = sh * UPKEEP.share;
+			const eat = sh * UPKEEP.share * fxv(o, 'eat').m; // cooked food feeds better (hearth)
 			p.eats = eat * 60;
 			starveTick(p);
 			if (p.res.f >= eat) {
@@ -678,7 +690,7 @@ function loyaltyParts(p) {
 	const n = G.units.filter((u) => u.owner === L && isSoldier(u) && dist(u, k) < r).length,
 		garrison = Math.min(VASSAL.garrisonMax, n * VASSAL.garrison);
 	const protect = Math.round(p.protect || 0),
-		hate = TAX[p.tax || 'fair'].hate;
+		hate = TAX[p.tax || 'fair'].hate * fxv(L, 'hate').m; // a tavern in the lord's town: the tax grumbles less
 	return { invest, garrison, protect, hate, target: clamp(20 + invest + garrison + protect - hate, 0, 100) };
 }
 function makeVassal(q, L, tax) {

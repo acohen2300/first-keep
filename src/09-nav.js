@@ -252,7 +252,7 @@ function dangerMap() {
 		const B = BLD[b.kind];
 		if (b.fire > 0) for (const o of sides) stampDanger(DANGER[o], b.x, b.y, DANGER_R.fire);
 		if (B.dmg && b.prog >= 1) {
-			const reach = (B.rng || 0) + (b.owner === WILD ? 0 : fxv(b.owner, 'rng', bldKeys(b.kind)).a) + DANGER_R.reach; // its real reach, after research, as it shoots
+			const reach = rangeOf(b.owner, b.kind) + DANGER_R.reach; // its real reach, after research, as it shoots
 			for (const o of sides) if (atWar(o, b.owner)) stampDanger(DANGER[o], b.x, b.y, reach);
 		}
 	}

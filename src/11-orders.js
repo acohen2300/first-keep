@@ -752,7 +752,7 @@ function zeal(o, list) {
 }
 // a spy stands unseen beyond 45 of soldiers and 140 of towers, the Town Center and Courthouses
 const watchtower = (b) => b.prog >= 1 && b.hp > 0 && (BLD[b.kind].dmg || BLD[b.kind].spyonly);
-const guarded = (b) => G.blds.some((d) => d.owner === b.owner && watchtower(d) && dist(d, b) < BLD[d.kind].rng);
+const guarded = (b) => G.blds.some((d) => d.owner === b.owner && watchtower(d) && dist(d, b) < rangeOf(d.owner, d.kind));
 function sabotage(u, b) {
 	const how = BLD[b.kind].sab;
 	if (!how) return false;

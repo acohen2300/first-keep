@@ -489,17 +489,27 @@ function drawLight(z, inView) {
 	} // dusk, night and the weather's cast, blended into one fill
 	// the lights (Build 55): every flame in view throws its glow on the ground, from one table (FLAME in 23-view-things). Hearths in homes and
 	// the Town Center; the robbers' campfires; a lantern on every caravan; a torch on every standard; a building ablaze. Lights off keeps the windows.
+	const tnow = performance.now() / 1000;
 	if (nt > 0.5)
 		for (const b of G.blds)
 			if (inView(b) && b.prog >= 1 && HEARTH.has(b.kind) && knownB(b)) {
-				ctx.fillStyle = 'rgba(255,200,110,.75)';
+				const fire = b.owner !== WILD && G.P[b.owner].techs.has('chimney'), // a fireplace flickers from inside
+					a = fire ? 0.6 + 0.3 * Math.sin(tnow * 9 + b.id) * Math.sin(tnow * 5.3 + b.id * 0.7) : 0.75;
+				ctx.fillStyle = `rgba(255,${fire ? 185 : 200},${fire ? 90 : 110},${a.toFixed(2)})`;
 				ctx.fillRect(SX(b.x) + 3 * z, SY(b.y + halfOf(b) * 0.9, 6), 2 * z, 2 * z);
 			}
 	if (!SET.lights || (nt < 0.05 && G.wx !== 'rain' && !G.blds.some((b) => b.fire > 0))) return;
 	for (const b of G.blds) {
 		if (!inView(b) || !knownB(b)) continue;
+		const B = BLD[b.kind];
 		if (b.fire > 0 || b.hp < maxHpB(b.owner, b.kind) * 0.5) glow(SX(b.x), SY(b.y), 'blaze', z);
-		else if (b.prog >= 1 && HEARTH.has(b.kind)) glow(SX(b.x), SY(b.y) + halfOf(b) * TILT * 0.4, 'hearth', z);
+		else if (b.prog >= 1 && HEARTH.has(b.kind)) glow(SX(b.x), SY(b.y) + halfOf(b) * TILT * 0.4, 'hearth', z, 1 + 0.5 * (b.owner === WILD ? 0 : upTier(b.kind === 'keep' || b.kind === 'town' ? 'house' : b.kind, G.P[b.owner]))); // the Home line lights the hearth more
+		else if (b.prog >= 1 && !B.wallish && !B.crop && b.owner !== WILD && fxv(b.owner, 'lamp', bldKeys(b.kind)).a > 0) {
+			const x = SX(b.x) - halfOf(b) * z * 0.6,
+				y = SY(b.y) + halfOf(b) * TILT * z * 0.5;
+			glow(x, y, 'lantern', z);
+			flame(x, y - 3 * z, 'lantern', z * 0.7, b.id);
+		} // Lanterns: one at every door
 	}
 	for (const f of G.finds) if (f.kind === 'camp' && !f.done && inView(f) && known0(f)) glow(SX(f.x), SY(f.y), 'campfire', z);
 	for (const u of G.units)

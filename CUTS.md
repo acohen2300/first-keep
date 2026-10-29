@@ -663,3 +663,13 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 - **Tests:** `tests/science.py` checks the daylight hours and the moon; the fingerprint is accepted (night falls at the sun's time now).
 
 - **Play fingerprint accepted:** Build 55: night from the sun's arc, the moon's real month
+
+## Build 56 preview (not live): the home, the town, the real math, the sounds
+- **Sickness is SIR** (`HEALTH` in `06`, `healthTick` in `36`): the flat "6% a minute to break out, 8% nearby" is gone. New cases a tick = β S I / N (Kermack & McKendrick 1927), R0 = 2 (influenza's range), the course 60 s, recovery back to susceptible (no lasting immunity, said so). Plague multiplies R0 and the death. Baths cut it a quarter. The old `HEALTH` numbers are deleted, not kept behind a switch.
+- **Flocks grow logistically** (`LAMBS`, `FLOCK` in `36`): lambs each spring ΔN = r N (1 − N/K), r 0.6, K 12 (Verhulst 1838), replacing the fixed lambs-per-spring.
+- **Range from height** (`rangeFrom`, `rangeOf` in `08`; `BLD.bow` replaces `BLD.rng` for keep, tower, courthouse, town, tpost at 106 and castle and throne at 140): a building shoots as far as the projectile from its height lets it, R = (R0/2)(1 + √(1 + 4h/R0)), air drag left out and said so in SCIENCE.md. Calibrated so the Watchtower keeps its 140; `09-nav` danger reach and `12-sim-core` building shots both read `rangeOf`.
+- **The hearth line at the House** (`04`: hearth, icehouse, chimney; `lanterns` at the Keep after Post riders): hearth and pot (eating −10%), ice house (fish and meat +15%), chimney and fireplace (warm: winter sickness halved, +5% work), lanterns at every door (a town that sees at night; buildings keep more sight). Each with its WHY and date. The view reads the same techs: hearth glow grows with the House tier, the fireplace window flickers with the chimney, a lantern flame at each door with lanterns.
+- **Recreation** (Albert: "why is it just war?"): Baths (Classical; sickness ×0.75), Theatre (Classical; nerve recovers ×1.3 at rest), Tavern (Medieval; tax grumbling ×0.7, wired into `loyaltyOf`), on the Culture menu, each counting as care for a vassal town, each with art and a history line. One per age band, as agreed.
+- **Sounds by material** (`MAT`, `knock` in `35`): chop, mine, coin and done ring as wood, stone and metal with their own decay (Klatzky, Pai & Krotkov 2000), replacing four hand-set beeps; `buzz` (the locust sound) is gone with the locusts.
+- **Words:** four possessive apostrophes rewritten (the no-apostrophe rule, Build 40).
+- **Play fingerprint accepted:** Build 56: SIR sickness, logistic flocks, range from height, hearth line upkeep, recreation buildings change play.

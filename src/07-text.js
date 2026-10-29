@@ -106,6 +106,14 @@ const WHY = {
 	calendar:
 		'The Julian calendar fixed the year at 365 days and a quarter; sowing and festival fell on the same day each year.',
 	pride: 'Athens and Florence built to be admired; people fight harder for a home they are proud of.',
+	hearth:
+		'Cooking is far older than farming, but the hearth with a pot over it is the Neolithic home: cooked grain and stew give the body more of what it eats (Wrangham, and the pottery of Jōmon Japan and the Near East from about 10,000 years ago). Game: the share is a round number.',
+	icehouse:
+		'Ice houses stood at Persepolis and across Persia by about 400 BC (the yakhchāl), and root cellars are older still: cold kept meat, fish and roots through the warm months.',
+	chimney:
+		'The chimney spread through Europe in the 1100s (the Normans at Conisbrough; the great halls before it had a smoke hole): a warm, smoke-free home, and the fireplace a family sat by. Game: the warmth and sleep behind the 5% are real but the number is ours.',
+	lanterns:
+		'Antioch lit its streets with oil lamps in the 300s AD (Libanius praised them); London ordered every householder to hang a lantern in 1417, and Paris in 1524. Game: one research for a town that in truth lit itself over centuries.',
 	postal:
 		'Thurn und Taxis ran relays of riders from Innsbruck to Brussels in five days; a court that hears first answers first.',
 	shields: 'A wall of locked shields turned arrows and blades alike; the Stele of the Vultures shows it in 2450 BC.',
@@ -336,6 +344,12 @@ const WHY = {
 		'The library of Ashurbanipal at Nineveh (7th century BC) and the Library of Alexandria (about 295 BC) gathered texts and scholars. Universities came later: Bologna in the 11th century, with al-Qarawiyyin (859) and Nalanda (5th century) older in their own traditions.',
 	hospital:
 		'Roman forts had valetudinaria (military hospitals); the bimaristan of Baghdad (about 805) and Byzantine xenones cared for the sick. Rest and care near the camp saved more men than the field surgeon.',
+	baths:
+		'Public baths were Roman civic life: the Stabian Baths at Pompeii (2nd century BC), the baths of Agrippa in Rome (about 25 BC), and later the great imperial baths. Bathing, latrines and aqueducts kept a crowded city healthier than its neighbours. Game: a quarter less sickness, a rough figure for clean water; the record gives no single number.',
+	theatre:
+		'The theatre of Dionysus at Athens held festivals from the 6th century BC; Epidaurus (about 340 BC) still stands. Rome gave soldiers games and plays as a right. Game: a rested soldier recovers nerve faster where there is something to do but wait.',
+	tavern:
+		'The alehouse is in the code of Hammurabi (about 1754 BC) and the taberna of Rome; the English alehouse was licensed from 1552. A town that drinks together complains together, and less: that is the loyalty bonus, a design choice.',
 	temple:
 		'Temples are older than cities (Göbekli Tepe, about 9500 BC). Armies prayed and took omens before battle; belief steadied soldiers: that is zeal.',
 	pasture:
@@ -358,7 +372,7 @@ const WHY = {
 	stop: 'Spice did not grow in Europe: pepper, cinnamon and cloves came along the caravan and sea routes from Asia, and sold for many times what they cost where they grew.',
 	dock: 'Every river and lake town had landing stages: fishing boats and ferries tied up at wooden piers, and the catch was sold on the quay.',
 	tower:
-		'Every walled people built towers: height gives sight and range. The tower of Jericho stood about 8.5 m high around 8000 BC.',
+		'Every walled people built towers: height gives sight and range, and here both are worked out from it: sight grows with the square root of the height (the horizon), a shot from a height lands farther by the arithmetic of a thrown stone. The tower of Jericho stood about 8.5 m high around 8000 BC.',
 	wall: 'Walls are among the oldest defences: Jericho had one about 8000 BC. They delay an attacker so defenders can shoot.',
 	gate: 'A wall nobody can pass is a prison. Every walled city had gates, the weak point and the guarded point.',
 	wonder: 'The great work of each civilisation: built to be seen, and costly enough to show a state at its height.',
@@ -837,9 +851,9 @@ const TRIGGERS = () => [
 		'Real farming years: mud and cold slowed armies, and the harvest decided the year.',
 	],
 	[
-		'The weather changes, every minute',
-		`Rain: marching ${Math.round((1 - WEATHER.rain.spd) * 100)}% slower, bows reach ${Math.round((1 - WEATHER.rain.rng) * 100)}% less, fires spread less. Drought (summer): fields give ${Math.round((1 - WEATHER.drought.crop) * 100)}% less, fires spread fast. Frost (winter): stone buildings go up at ${WEATHER.frost.stone * 100}% speed.`,
-		'Wet roads were mud, wet bowstrings sagged, dry thatch burned, and mortar does not set in frost.',
+		'The weather runs in spells',
+		`A wet minute is likelier after a wet one. Rain: the ground softens to mud, bows reach ${Math.round((1 - WEATHER.rain.rng) * 100)}% less, fire hardly catches. Snow below freezing: the ground deepens, sight shortens. Drought after dry warm days: fields give ${Math.round((1 - WEATHER.drought.crop) * 100)}% less, fire catches at a touch. Frost: stone buildings go up at ${WEATHER.frost.stone * 100}% speed, the ground hardens.`,
+		'Wet roads were mud, wet bowstrings sagged, dry thatch burned, and mortar does not set in frost. Gabriel and Neumann (1962) showed rain runs in spells: tomorrow depends on today.',
 	],
 	[
 		'A wooden building catches fire',
@@ -848,8 +862,8 @@ const TRIGGERS = () => [
 	],
 	[
 		'Sickness',
-		'Now and then, more in summer and winter, a few of your people fall sick; Clean water (at an Aqueduct) halves it. The sick work and fight at 60% and a few die; a Hospital or medics cure them. Plague comes along the trade routes in some springs.',
-		'Summer flux and winter fever were the yearly toll; plague followed trade.',
+		`Now and then, more in summer and winter, a case arrives; it spreads through the town as real sickness does: each case makes about ${HEALTH.R0} more while people are well to catch it, fewer as the sick recover (the SIR model). Clean water, sewers and quarantine halve the spread. The sick work and fight at 60% and a few die; a Hospital or medics cure them. Plague comes along the trade routes in some springs and spreads ${HEALTH.plagueR0}× faster.`,
+		'Summer flux and winter fever were the yearly toll; plague followed trade. Kermack and McKendrick wrote the arithmetic of an epidemic in 1927: a sickness grows while each case makes more than one, and burns out as it runs short of the well.',
 	],
 	[
 		'A caravan has a route',

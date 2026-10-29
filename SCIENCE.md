@@ -1,4 +1,4 @@
-# First Keep: the science (Build 53, Oct 29, 2026)
+# First Keep: the science (Build 56, Oct 29, 2026)
 
 Every number that stands for the real world, with its label and its source. Rule 4 of `RULES.md`.
 - **verified**: checked against the source in the session named.
@@ -24,7 +24,11 @@ Each equation has a test in `tests/science.py` against known values (from Build 
 | `23-view-things` `FLAME` `kelvinRGB` | Flame colour from temperature; light's reach | candle 1850 K, wood and torch 1900 K, oil lamp 2000 K, a building ablaze 2200 K; reach ∝ √power (inverse square) | cited | Flame temperatures: standard values (a candle's outer flame about 1400 °C). Colour: a black body by Tanner Helland's fit, as SoRen's stars. The powers are design. |
 | `06-rules-tuning` `FERT` | Soil wears 10% a year worked, rests back 40% a season, never under 60% | | design | Fallowing and rotation are real (the three-field system); the rates are the game's. |
 | `03-rules-buildings` `UPKEEP` | A person eats 30 food in 8 minutes; a foot soldier 1.5 shares, a rider 3 | | design | The ratios follow real rations: a horse eats several times what a man does. |
-| `06-rules-tuning` `HEALTH` | Sickness: 6% a minute to break out, spreads to 8% nearby | | design | Replaced by the SIR model in Build 56. |
+| `06-rules-tuning` `HEALTH` `healthTick` | Sickness as SIR: new cases = β S I / N a tick; recovery γ = 1/60 s; R0 = β/γ = 2 (plague ×1.5) | | verified Oct 29 | Kermack & McKendrick, *Proc. R. Soc. A* 115 (1927). R0 of 2 sits in the influenza range (1.5 to 3); measles would be 12 to 18. Game: recovery returns to susceptible (no lasting immunity); baths ×0.75 is design. `tests/science.py` checks the chain. |
+| `36-economy` `LAMBS` `FLOCK` | Flocks: ΔN = r N (1 − N/K) each spring, r 0.6, K 12 | | verified Oct 29 | Verhulst (1838), logistic growth. The rates are the game's. |
+| `08-core` `rangeFrom` | A building's range from its height | R = (R0/2)(1 + √(1 + 4h/R0)), R0 the range from the ground | verified Oct 29 | Projectile motion at the 45° optimum, air drag left out (it would shorten every range by the same share, so the ratio between towers stands). R0 (`BLD.bow`) is design, set so the Watchtower keeps 140. |
+| `35-sound` `MAT` `knock` | Sounds by material: wood, stone, metal; each a decaying mode, metal longest, wood shortest | | cited | Klatzky, Pai & Krotkov, *Presence* 9 (2000): listeners tell materials by decay rate; as in SoRen's `MAT`. |
+| `04-rules-tech` hearth, icehouse, chimney, lanterns; `03` baths, theatre, tavern | Dates and places | in `WHY` | cited | Persepolis yakhchāl about 400 BC; the chimney in 12th-century Europe (Conisbrough); Antioch's street lamps 300s AD, London 1417; Pompeii's Stabian Baths 2nd century BC; Epidaurus about 340 BC; the alehouse in Hammurabi's code. The effects (−10% eating, +15% fish and meat, ×0.5 winter sickness, ×0.75 sickness, ×1.3 nerve, ×0.7 grumbling) are design, said so in each line. |
 | `06-rules-tuning` `CLIMATE` | Air temperature: mean 10 °C, ±12 over the year, ±5 over the day; hottest mid-Summer and mid-afternoon | | design | A temperate land about 45° N; a 6-day year (Build 54). |
 | `CLIMATE.chain` | The sky as a two-state chain: P(wet next \| dry) 0.3, P(wet next \| wet) 0.7 (Summer 0.15, 0.5) | | cited, rounded | Gabriel & Neumann, *QJRMS* 88 (1962): Tel Aviv winter 0.25 and 0.66. Summer and the hazards are design. |
 | `CLIMATE.tau` `eq` | Wetness closes 63% of its gap in 20 s getting wet, 50 s drying | M(t) = Me + (M0 − Me) e^(−t/τ) | cited, scaled | The timelag fuel-moisture model (10-hour fuels); scaled to the 2-minute day. Where it settles under each sky is design. |
@@ -46,8 +50,4 @@ Each equation has a test in `tests/science.py` against known values (from Build 
 | 55 | The moon's phase and the sun's place | Meeus ch. 25 and 47 | SoRen's `25-sky-model.js`, cited by line |
 | 55 | Fire colour from flame temperature | a black-body fit | Tanner Helland's fit, as in SoRen's `bvRGB`; candle about 1850 K, wood fire about 1900 K, oil lamp about 2000 K |
 | 55 | Light's reach | inverse square | physics |
-| 56 | Sickness | dS/dt = −βSI/N, dI/dt = βSI/N − γI, dR/dt = γI | Kermack & McKendrick (1927) |
-| 56 | Flocks | dN/dt = rN(1 − N/K) | Verhulst (1838), logistic growth |
-| 56 | Arrow range from height | R = (v cos θ / g)(v sin θ + √((v sin θ)² + 2gh)) | projectile motion; air drag left out and said so |
-| 56 | Sound by material | ring time τ/f per mode; glass long, wood a blink, steel longest | Klatzky, Pai & Krotkov (2000), as in SoRen's `MAT` |
 | talk | Market prices | P = P0 (Q/Q0)^(−1/ε) | constant-elasticity demand |

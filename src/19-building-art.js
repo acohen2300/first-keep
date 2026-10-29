@@ -881,6 +881,89 @@ const ART = {
 		win(8, r.d / 2 - 5);
 		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
 	},
+	baths(c) {
+		// a low hall of pale stone, a shallow dome, steam from a vent, a pool in front
+		const r = block(28, 14, '#e6dcc6', 'stone', 'flat', null, 0, 30);
+		const d = r.d;
+		E_(0, -14, 10, 4.5, LG(-10, 0, 10, 0, [shade(TILE, 1.1), shade(TILE, 0.72)]), INK, 0.5);
+		E_(0, -16.5, 6, 2.6, shade(TILE, 1.2), INK, 0.4);
+		E_(0, d / 2 + 2, 9, 3.2, '#4e93ad', INK, 0.5);
+		E_(-2, d / 2 + 1.4, 5, 1.6, 'rgba(230,245,255,.5)');
+		column(-10, d / 2 - 1, d / 2 - 13);
+		column(10, d / 2 - 1, d / 2 - 13);
+		door(0, d / 2, 5, 9, '#2a2014');
+		banner(13, d / 2 - 14, c, 7);
+	},
+	theatre(c) {
+		// a half-ring of stone seats open to the front, a stage wall at the back
+		const d = 40 * TILT,
+			k = d * SIDE;
+		for (let i = 3; i >= 0; i--) {
+			const rx = 20 - i * 3.6,
+				ry = rx * TILT * 0.9,
+				y = -2 - i * 2.2;
+			P_(
+				[
+					[-rx, y],
+					[rx, y],
+					[rx, y - 2.2],
+					[-rx, y - 2.2],
+				],
+				shade('#d9d0bc', 0.9 - i * 0.04),
+				INK,
+				0.3,
+			);
+			E_(0, y - 2.2, rx, ry, shade('#e6dcc6', 1 - i * 0.05), INK, 0.4);
+		}
+		E_(0, -4, 7, 7 * TILT, '#c9b98f', INK, 0.4);
+		P_(
+			[
+				[-14, -22],
+				[14, -22],
+				[14 + k * 0.5, -22 - 8],
+				[-14 + k * 0.5, -22 - 8],
+			],
+			shade('#d9d0bc', 0.8),
+			INK,
+			0.4,
+		);
+		P_(
+			[
+				[-14, -22],
+				[14, -22],
+				[14, -36],
+				[-14, -36],
+			],
+			LG(-14, 0, 14, 0, [shade('#e6dcc6', 1.0), shade('#e6dcc6', 0.72)]),
+			INK,
+			0.5,
+		);
+		for (const x of [-9, 0, 9]) column(x, -22, -35, '#efe6d4');
+		banner(16, -36, c, 8);
+	},
+	tavern(c) {
+		// a timber house with a bright door, a lantern and a hanging sign
+		const r = block(26, 16, '#6b4a2c', 'timber', 'gable', SLATE, 9);
+		const d = r.d;
+		door(-5, d / 2, 5, 9, '#2a1a0c');
+		win(4, d / 2 - 6, 2.6, 2.6, '#e8b85a');
+		win(9, d / 2 - 6, 2.6, 2.6, '#e8b85a');
+		win(-10, d / 2 - 6, 2.6, 2.6, '#e8b85a');
+		L_(9, d / 2 - 12, 9, d / 2 - 5, '#3a2a1a', 0.7);
+		P_(
+			[
+				[9, d / 2 - 11],
+				[14, d / 2 - 11],
+				[14, d / 2 - 7],
+				[9, d / 2 - 7],
+			],
+			'#8a5a2a',
+			INK,
+			0.4,
+		);
+		E_(11.5, d / 2 - 9, 1.6, 1.6, '#e8c860');
+		banner(-8, d / 2 - 14, c, 6);
+	},
 	temple(c) {
 		const d = 40 * TILT;
 		for (let i = 0; i < 3; i++)
@@ -1750,6 +1833,7 @@ const BLDTOP = {
 	wonder: 72,
 	library: 56,
 	temple: 50,
+	theatre: 44,
 	apartment: 46,
 	aqueduct: 40,
 	siege: 40,

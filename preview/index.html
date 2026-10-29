@@ -1101,7 +1101,7 @@ const BLD = {
 		hp: 2400,
 		h: 34,
 		dmg: 7,
-		rng: 130,
+		bow: 106,
 		cd: 1.0,
 		drop: [...RES, ...GOODK],
 		room: 5,
@@ -1289,7 +1289,7 @@ const BLD = {
 		t: 25,
 		age: 0,
 		dmg: 10,
-		rng: 140,
+		bow: 106,
 		cd: 1.2,
 		desc: 'Shoots enemies in range and sounds the horn. Up to 5 villagers shelter inside and each adds an arrow.',
 	},
@@ -1370,6 +1370,48 @@ const BLD = {
 		sab: 'stall',
 		desc: 'Very costly. Trains priests, who take holy sites, and lets you call Zeal on a battalion.',
 	},
+	// Recreation (Build 56, Albert: "why is it just war?"): three places a town lives in, each from the record, each with a real effect on health,
+	// nerve or the vassal's temper, and each counting as investment in a vassal's town. One per age band.
+	baths: {
+		invest: 5,
+		name: 'Baths',
+		fp: 3,
+		hp: 400,
+		h: 18,
+		cost: { s: 200, w: 60 },
+		t: 32,
+		age: 2,
+		fx: [{ s: 'sick', m: 0.75 }],
+		sab: 'stall',
+		desc: 'Public baths: a clean people falls sick a quarter less. Counts as care for a vassal town.',
+	},
+	theatre: {
+		invest: 6,
+		name: 'Theatre',
+		fp: 4,
+		hp: 450,
+		h: 20,
+		cost: { s: 240, w: 120 },
+		t: 36,
+		age: 2,
+		fx: [{ s: 'rest', m: 1.3 }],
+		sab: 'stall',
+		desc: 'An open theatre: soldiers at rest recover their nerve 30% faster. Counts as care for a vassal town.',
+	},
+	tavern: {
+		invest: 4,
+		name: 'Tavern',
+		fp: 2,
+		hp: 260,
+		h: 16,
+		cost: { w: 120, f: 60 },
+		t: 20,
+		age: 3,
+		fx: [{ s: 'hate', m: 0.7 }],
+		sab: 'burn',
+		wood: true,
+		desc: 'An alehouse: a people with somewhere to drink grumbles 30% less at your tax. Counts as care for a vassal town.',
+	},
 	courthouse: {
 		armyRoom: 3,
 		name: 'Courthouse',
@@ -1381,7 +1423,7 @@ const BLD = {
 		age: 1,
 		spyonly: true,
 		dmg: 12,
-		rng: 140,
+		bow: 106,
 		cd: 1.5,
 		desc: 'Written law and the watch. Trains spies, and its guards shoot enemy spies within 140. Nothing else.',
 	},
@@ -1479,7 +1521,7 @@ const BLD = {
 		t: 60,
 		age: 2,
 		dmg: 6,
-		rng: 120,
+		bow: 106,
 		cd: 1.2,
 		drop: [...RES, ...GOODK],
 		room: 5,
@@ -1498,7 +1540,7 @@ const BLD = {
 		t: 90,
 		age: 3,
 		dmg: 12,
-		rng: 170,
+		bow: 140,
 		cd: 1.0,
 		desc: 'A stone castle: the strongest building there is. Shoots far and shelters ten villagers who add their arrows. Built in the lands of a vassal, it keeps them safe and loyal.',
 	},
@@ -1546,12 +1588,14 @@ const BLD = {
 		age: 1,
 		atStop: true,
 		dmg: 5,
-		rng: 120,
+		bow: 106,
 		cd: 1.6,
 		sab: 'burn',
 		desc: 'Built on a trade stop once its guards are gone. You own the stop: a cut of the sales of everyone else there, 20% for one stop of its route up to 40% for all four; all four of a route also pay gold every second. Up to 12 soldiers can garrison it.',
 	},
-	// Workshops turn what is in store into something else; one villager works each. makes: what it can make, from what, how fast; the card picks which.
+	// A building that shoots has a bow (what its weapon reaches from the ground: a bow 106, the engines on a castle's or the Throne's walls 140)
+// and a height (h); its range is the two by projectile arithmetic (rangeOf in 08-core, Build 56): a tower shoots farther because it is tall.
+// Workshops turn what is in store into something else; one villager works each. makes: what it can make, from what, how fast; the card picks which.
 	workshop: {
 		name: 'Workshop',
 		fp: 3,
@@ -1619,7 +1663,7 @@ const BLD = {
 		hp: 3600,
 		h: 56,
 		dmg: 8,
-		rng: 180,
+		bow: 140,
 		cd: 1.5,
 		shelter: 12,
 		drop: [],
@@ -1684,7 +1728,7 @@ const MENUS = [
 		id: 'cult',
 		name: 'Culture',
 		blurb: 'faith, law, learning, wonders',
-		items: ['school', 'library', 'hospital', 'temple', 'courthouse', 'wonder'],
+		items: ['school', 'library', 'hospital', 'temple', 'courthouse', 'baths', 'theatre', 'tavern', 'wonder'],
 	},
 ];
 // ═════ 04-rules-tech.js: the research tree from history, and the civilizations ═════
@@ -2505,6 +2549,49 @@ const TECH = [
 		need: ['press'],
 		desc: 'Research is 15% faster.',
 	},
+	// the home (Build 56, Albert's hearth line): three steps at the House, each from the record, each with a real effect, and each lights the home more
+	{
+		id: 'hearth',
+		name: 'Hearth and pot',
+		at: 'house',
+		line: 'Home',
+		age: 0,
+		w: 4,
+		when: 'about 8000 BC',
+		cost: { w: 40, f: 30 },
+		t: 20,
+		fx: [{ s: 'eat', m: 0.9 }],
+		desc: 'Cooked food feeds better: your people eat 10% less.',
+	},
+	{
+		id: 'icehouse',
+		name: 'Ice house',
+		at: 'house',
+		line: 'Home',
+		age: 2,
+		w: 4,
+		when: 'about 400 BC',
+		cost: { s: 120, w: 80 },
+		t: 32,
+		fx: [
+			{ s: 'gather', k: 'fish', m: 1.15 },
+			{ s: 'gather', k: 'meat', m: 1.15 },
+		],
+		desc: 'Fish and game keep: 15% more of each reaches the table.',
+	},
+	{
+		id: 'chimney',
+		name: 'Chimney and fireplace',
+		at: 'house',
+		line: 'Home',
+		age: 3,
+		w: 5,
+		when: '1100s',
+		cost: { s: 180, w: 120 },
+		t: 40,
+		fx: [{ s: 'warm', m: 0.5, a: 0.05 }],
+		desc: 'Warm homes: winter sickness halves and winter work is 5% better.',
+	},
 	{
 		id: 'townwatch',
 		name: 'Town watch',
@@ -2563,6 +2650,19 @@ const TECH = [
 		t: 66,
 		fx: [{ s: 'diplo', a: 0.1 }],
 		desc: 'Emissaries are heard more readily.',
+	},
+	{
+		id: 'lanterns',
+		name: 'Lanterns',
+		at: 'keep',
+		line: 'Watch',
+		age: 3,
+		w: 4,
+		when: '1417',
+		cost: { w: 200, g: 120 },
+		t: 40,
+		fx: [{ s: 'lamp', k: '#bld', a: 0.6 }],
+		desc: 'Lanterns hung at every door: the town is lit, and its buildings keep 60% of their lost night sight.',
 	},
 	{
 		id: 'shields',
@@ -5213,16 +5313,22 @@ const ROUTES = [
 	],
 ];
 const POST = { all: 2, cut: [0, 0.2, 0.25, 0.3, 0.4], safe: 120, guard: 12, far: 2.5, want: 1.5 }; // each route has four stops. all: gold a second to whoever holds all four of a route; cut: of other sides' sales at a stop, by how many of its route you hold; guard: soldiers per stop or caravan
+// Sickness as the SIR model (Kermack & McKendrick 1927; Build 56): among a side's people, those who are well (S), sick (I) and over it (R, well
+// again after the course, as the game has no lasting immunity). New cases a tick = β S I / N, the mass-action law; the course lasts sickFor
+// (recovery γ = 1/sickFor). R0 = β/γ: 2 here, in the range of influenza (1.5 to 3; measles would be 12 to 18). Clean water, sewers and
+// quarantine lower β; medicine raises the cure and lowers the death. A case is seeded now and then (risk) as if from outside; plague on the roads
+// multiplies R0 and the death.
 const HEALTH = {
 	every: 60,
-	risk: 0.06,
-	sickFor: 60,
-	spread: 0.08,
+	risk: 0.06, // the chance a minute that a case arrives from outside
+	sickFor: 60, // the course of the illness, seconds (γ = 1/60)
+	R0: 2, // cases one case makes in a well population
 	death: 0.004,
 	cure: 0.3,
 	plague: 0.15,
+	plagueR0: 1.5, // plague: R0 × this, death × 4
 	plagueCap: 0.1,
-}; // risk: the chance a minute that sickness breaks out
+};
 const MKT_SELL = ['f', 'w', 's', 'i', ...WARES],
 	MKT_BUY = ['f', 'w', 's', 'i', 'spice']; // wool goes to a Workshop, not to market; spice is the only good not made here
 const MKTK = [...GOODK, 'f', 'w', 's', 'i'];
@@ -5352,6 +5458,14 @@ const WHY = {
 	calendar:
 		'The Julian calendar fixed the year at 365 days and a quarter; sowing and festival fell on the same day each year.',
 	pride: 'Athens and Florence built to be admired; people fight harder for a home they are proud of.',
+	hearth:
+		'Cooking is far older than farming, but the hearth with a pot over it is the Neolithic home: cooked grain and stew give the body more of what it eats (Wrangham, and the pottery of Jōmon Japan and the Near East from about 10,000 years ago). Game: the share is a round number.',
+	icehouse:
+		'Ice houses stood at Persepolis and across Persia by about 400 BC (the yakhchāl), and root cellars are older still: cold kept meat, fish and roots through the warm months.',
+	chimney:
+		'The chimney spread through Europe in the 1100s (the Normans at Conisbrough; the great halls before it had a smoke hole): a warm, smoke-free home, and the fireplace a family sat by. Game: the warmth and sleep behind the 5% are real but the number is ours.',
+	lanterns:
+		'Antioch lit its streets with oil lamps in the 300s AD (Libanius praised them); London ordered every householder to hang a lantern in 1417, and Paris in 1524. Game: one research for a town that in truth lit itself over centuries.',
 	postal:
 		'Thurn und Taxis ran relays of riders from Innsbruck to Brussels in five days; a court that hears first answers first.',
 	shields: 'A wall of locked shields turned arrows and blades alike; the Stele of the Vultures shows it in 2450 BC.',
@@ -5582,6 +5696,12 @@ const WHY = {
 		'The library of Ashurbanipal at Nineveh (7th century BC) and the Library of Alexandria (about 295 BC) gathered texts and scholars. Universities came later: Bologna in the 11th century, with al-Qarawiyyin (859) and Nalanda (5th century) older in their own traditions.',
 	hospital:
 		'Roman forts had valetudinaria (military hospitals); the bimaristan of Baghdad (about 805) and Byzantine xenones cared for the sick. Rest and care near the camp saved more men than the field surgeon.',
+	baths:
+		'Public baths were Roman civic life: the Stabian Baths at Pompeii (2nd century BC), the baths of Agrippa in Rome (about 25 BC), and later the great imperial baths. Bathing, latrines and aqueducts kept a crowded city healthier than its neighbours. Game: a quarter less sickness, a rough figure for clean water; the record gives no single number.',
+	theatre:
+		'The theatre of Dionysus at Athens held festivals from the 6th century BC; Epidaurus (about 340 BC) still stands. Rome gave soldiers games and plays as a right. Game: a rested soldier recovers nerve faster where there is something to do but wait.',
+	tavern:
+		'The alehouse is in the code of Hammurabi (about 1754 BC) and the taberna of Rome; the English alehouse was licensed from 1552. A town that drinks together complains together, and less: that is the loyalty bonus, a design choice.',
 	temple:
 		'Temples are older than cities (Göbekli Tepe, about 9500 BC). Armies prayed and took omens before battle; belief steadied soldiers: that is zeal.',
 	pasture:
@@ -5604,7 +5724,7 @@ const WHY = {
 	stop: 'Spice did not grow in Europe: pepper, cinnamon and cloves came along the caravan and sea routes from Asia, and sold for many times what they cost where they grew.',
 	dock: 'Every river and lake town had landing stages: fishing boats and ferries tied up at wooden piers, and the catch was sold on the quay.',
 	tower:
-		'Every walled people built towers: height gives sight and range. The tower of Jericho stood about 8.5 m high around 8000 BC.',
+		'Every walled people built towers: height gives sight and range, and here both are worked out from it: sight grows with the square root of the height (the horizon), a shot from a height lands farther by the arithmetic of a thrown stone. The tower of Jericho stood about 8.5 m high around 8000 BC.',
 	wall: 'Walls are among the oldest defences: Jericho had one about 8000 BC. They delay an attacker so defenders can shoot.',
 	gate: 'A wall nobody can pass is a prison. Every walled city had gates, the weak point and the guarded point.',
 	wonder: 'The great work of each civilisation: built to be seen, and costly enough to show a state at its height.',
@@ -6083,9 +6203,9 @@ const TRIGGERS = () => [
 		'Real farming years: mud and cold slowed armies, and the harvest decided the year.',
 	],
 	[
-		'The weather changes, every minute',
-		`Rain: marching ${Math.round((1 - WEATHER.rain.spd) * 100)}% slower, bows reach ${Math.round((1 - WEATHER.rain.rng) * 100)}% less, fires spread less. Drought (summer): fields give ${Math.round((1 - WEATHER.drought.crop) * 100)}% less, fires spread fast. Frost (winter): stone buildings go up at ${WEATHER.frost.stone * 100}% speed.`,
-		'Wet roads were mud, wet bowstrings sagged, dry thatch burned, and mortar does not set in frost.',
+		'The weather runs in spells',
+		`A wet minute is likelier after a wet one. Rain: the ground softens to mud, bows reach ${Math.round((1 - WEATHER.rain.rng) * 100)}% less, fire hardly catches. Snow below freezing: the ground deepens, sight shortens. Drought after dry warm days: fields give ${Math.round((1 - WEATHER.drought.crop) * 100)}% less, fire catches at a touch. Frost: stone buildings go up at ${WEATHER.frost.stone * 100}% speed, the ground hardens.`,
+		'Wet roads were mud, wet bowstrings sagged, dry thatch burned, and mortar does not set in frost. Gabriel and Neumann (1962) showed rain runs in spells: tomorrow depends on today.',
 	],
 	[
 		'A wooden building catches fire',
@@ -6094,8 +6214,8 @@ const TRIGGERS = () => [
 	],
 	[
 		'Sickness',
-		'Now and then, more in summer and winter, a few of your people fall sick; Clean water (at an Aqueduct) halves it. The sick work and fight at 60% and a few die; a Hospital or medics cure them. Plague comes along the trade routes in some springs.',
-		'Summer flux and winter fever were the yearly toll; plague followed trade.',
+		`Now and then, more in summer and winter, a case arrives; it spreads through the town as real sickness does: each case makes about ${HEALTH.R0} more while people are well to catch it, fewer as the sick recover (the SIR model). Clean water, sewers and quarantine halve the spread. The sick work and fight at 60% and a few die; a Hospital or medics cure them. Plague comes along the trade routes in some springs and spreads ${HEALTH.plagueR0}× faster.`,
+		'Summer flux and winter fever were the yearly toll; plague followed trade. Kermack and McKendrick wrote the arithmetic of an epidemic in 1927: a sickness grows while each case makes more than one, and burns out as it runs short of the well.',
 	],
 	[
 		'A caravan has a route',
@@ -6534,6 +6654,7 @@ const bldKeys = (kind) => {
 		k = [kind];
 	if (B.wallish) k.push('#wallish');
 	if (B.dmg && !B.spyonly) k.push('#guard');
+	k.push('#bld');
 	return k;
 };
 // what a side's unit of this kind is, after its research: name, health, damage, reach, speed, what it beats
@@ -6593,18 +6714,22 @@ const rngOf = (u) => {
 	const r = stats(u.owner, u.kind).rng;
 	return r > 20 ? r * ((WEATHER[G.wx] && WEATHER[G.wx].rng) || 1) : r;
 };
+// how far a building shoots: a shot at 45° from height h with the range r0 it would have from the ground lands at (r0/2)(1 + √(1 + 4h/r0))
+// (the projectile range from a height, R = (v cos θ / g)(v sin θ + √(v² sin² θ + 2gh), with v² = g r0; air drag left out and said so in SCIENCE.md)
+const rangeFrom = (r0, h) => (r0 / 2) * (1 + Math.sqrt(1 + (4 * h) / r0));
+const rangeOf = (o, kind) => rangeFrom(BLD[kind].bow, BLD[kind].h) + (o === WILD ? 0 : fxv(o, 'rng', bldKeys(kind)).a);
 const lookout = (kind) => Math.round(LOOKOUT.base + LOOKOUT.k * Math.sqrt(BLD[kind].h || 0)); // how far a building sees, from its height
 const sightOf = (e) =>
 	((UNIT[e.kind] ? UNIT[e.kind].sight || 100 : lookout(e.kind)) +
 		(e.owner !== undefined && e.owner !== WILD && e.owner !== null
 			? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]).a
 			: 0)) *
-	(1 - (1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) * G.night) *
+	(1 - (1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) * G.night * (UNIT[e.kind] || e.owner === WILD ? 1 : 1 - fxv(e.owner, 'lamp', bldKeys(e.kind)).a)) * // lanterns give a building back part of its night sight
 	EVM.sight *
 	(WEATHER[G.wx].sight || 1); // night, the moon, an eclipse or fog, a blizzard
 const carryOf = (o) => CARRY + fxv(o, 'carry').a;
 function gatherMul(o, n) {
-	let m = fxv(o, 'gather', [n.type, n.kind]).m * EVM.gather * (WEATHER[G.wx].gather || 1);
+	let m = fxv(o, 'gather', [n.type, n.kind]).m * EVM.gather * (WEATHER[G.wx].gather || 1) * (season().name === 'Winter' ? 1 + fxv(o, 'warm').a : 1); // warm homes: better winter work
 	if (n.kind === 'farm') {
 		m *= fxv(o, 'crop', [n.type]).m;
 		if (n.type === 'food') {
@@ -6894,7 +7019,7 @@ function dangerMap() {
 		const B = BLD[b.kind];
 		if (b.fire > 0) for (const o of sides) stampDanger(DANGER[o], b.x, b.y, DANGER_R.fire);
 		if (B.dmg && b.prog >= 1) {
-			const reach = (B.rng || 0) + (b.owner === WILD ? 0 : fxv(b.owner, 'rng', bldKeys(b.kind)).a) + DANGER_R.reach; // its real reach, after research, as it shoots
+			const reach = rangeOf(b.owner, b.kind) + DANGER_R.reach; // its real reach, after research, as it shoots
 			for (const o of sides) if (atWar(o, b.owner)) stampDanger(DANGER[o], b.x, b.y, reach);
 		}
 	}
@@ -8894,7 +9019,7 @@ function zeal(o, list) {
 }
 // a spy stands unseen beyond 45 of soldiers and 140 of towers, the Town Center and Courthouses
 const watchtower = (b) => b.prog >= 1 && b.hp > 0 && (BLD[b.kind].dmg || BLD[b.kind].spyonly);
-const guarded = (b) => G.blds.some((d) => d.owner === b.owner && watchtower(d) && dist(d, b) < BLD[d.kind].rng);
+const guarded = (b) => G.blds.some((d) => d.owner === b.owner && watchtower(d) && dist(d, b) < rangeOf(d.owner, d.kind));
 function sabotage(u, b) {
 	const how = BLD[b.kind].sab;
 	if (!how) return false;
@@ -9663,7 +9788,7 @@ function bldTick(b, dt) {
 		b.cd = Math.max(0, b.cd - dt);
 		if (b.cd <= 0) {
 			const keys = bldKeys(b.kind),
-				reach = B.rng + fxv(o, 'rng', keys).a;
+				reach = rangeOf(o, b.kind);
 			const t = B.spyonly
 				? G.units.find((v) => v.kind === 'spy' && atWar(o, v.owner) && dist(v, b) < reach + fxv(o, 'spysight').a)
 				: nearestFoe(o, b, reach);
@@ -14958,6 +15083,89 @@ const ART = {
 		win(8, r.d / 2 - 5);
 		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
 	},
+	baths(c) {
+		// a low hall of pale stone, a shallow dome, steam from a vent, a pool in front
+		const r = block(28, 14, '#e6dcc6', 'stone', 'flat', null, 0, 30);
+		const d = r.d;
+		E_(0, -14, 10, 4.5, LG(-10, 0, 10, 0, [shade(TILE, 1.1), shade(TILE, 0.72)]), INK, 0.5);
+		E_(0, -16.5, 6, 2.6, shade(TILE, 1.2), INK, 0.4);
+		E_(0, d / 2 + 2, 9, 3.2, '#4e93ad', INK, 0.5);
+		E_(-2, d / 2 + 1.4, 5, 1.6, 'rgba(230,245,255,.5)');
+		column(-10, d / 2 - 1, d / 2 - 13);
+		column(10, d / 2 - 1, d / 2 - 13);
+		door(0, d / 2, 5, 9, '#2a2014');
+		banner(13, d / 2 - 14, c, 7);
+	},
+	theatre(c) {
+		// a half-ring of stone seats open to the front, a stage wall at the back
+		const d = 40 * TILT,
+			k = d * SIDE;
+		for (let i = 3; i >= 0; i--) {
+			const rx = 20 - i * 3.6,
+				ry = rx * TILT * 0.9,
+				y = -2 - i * 2.2;
+			P_(
+				[
+					[-rx, y],
+					[rx, y],
+					[rx, y - 2.2],
+					[-rx, y - 2.2],
+				],
+				shade('#d9d0bc', 0.9 - i * 0.04),
+				INK,
+				0.3,
+			);
+			E_(0, y - 2.2, rx, ry, shade('#e6dcc6', 1 - i * 0.05), INK, 0.4);
+		}
+		E_(0, -4, 7, 7 * TILT, '#c9b98f', INK, 0.4);
+		P_(
+			[
+				[-14, -22],
+				[14, -22],
+				[14 + k * 0.5, -22 - 8],
+				[-14 + k * 0.5, -22 - 8],
+			],
+			shade('#d9d0bc', 0.8),
+			INK,
+			0.4,
+		);
+		P_(
+			[
+				[-14, -22],
+				[14, -22],
+				[14, -36],
+				[-14, -36],
+			],
+			LG(-14, 0, 14, 0, [shade('#e6dcc6', 1.0), shade('#e6dcc6', 0.72)]),
+			INK,
+			0.5,
+		);
+		for (const x of [-9, 0, 9]) column(x, -22, -35, '#efe6d4');
+		banner(16, -36, c, 8);
+	},
+	tavern(c) {
+		// a timber house with a bright door, a lantern and a hanging sign
+		const r = block(26, 16, '#6b4a2c', 'timber', 'gable', SLATE, 9);
+		const d = r.d;
+		door(-5, d / 2, 5, 9, '#2a1a0c');
+		win(4, d / 2 - 6, 2.6, 2.6, '#e8b85a');
+		win(9, d / 2 - 6, 2.6, 2.6, '#e8b85a');
+		win(-10, d / 2 - 6, 2.6, 2.6, '#e8b85a');
+		L_(9, d / 2 - 12, 9, d / 2 - 5, '#3a2a1a', 0.7);
+		P_(
+			[
+				[9, d / 2 - 11],
+				[14, d / 2 - 11],
+				[14, d / 2 - 7],
+				[9, d / 2 - 7],
+			],
+			'#8a5a2a',
+			INK,
+			0.4,
+		);
+		E_(11.5, d / 2 - 9, 1.6, 1.6, '#e8c860');
+		banner(-8, d / 2 - 14, c, 6);
+	},
 	temple(c) {
 		const d = 40 * TILT;
 		for (let i = 0; i < 3; i++)
@@ -15827,6 +16035,7 @@ const BLDTOP = {
 	wonder: 72,
 	library: 56,
 	temple: 50,
+	theatre: 44,
 	apartment: 46,
 	aqueduct: 40,
 	siege: 40,
@@ -16961,12 +17170,12 @@ function flame(x, y, kind, z, seed) {
 	ctx.fill();
 }
 // the light a flame throws on the ground: a disc that fades as the inverse square, drawn additively, only when there is dark to light
-function glow(x, y, kind, z) {
+function glow(x, y, kind, z, more = 1) {
 	const F = FLAME[kind],
 		dark = Math.max(G.night, 0.3 * (G.wx === 'rain' ? 1 : 0)),
 		life = flameLife(kind);
 	if (!SET.lights || dark < 0.05 || life <= 0) return;
-	const r = LIGHT.k * Math.sqrt(F.p) * z * life,
+	const r = LIGHT.k * Math.sqrt(F.p * more) * z * life,
 		[cr, cg, cb] = FLAME_RGB[kind],
 		gr = ctx.createRadialGradient(x, y, 0, x, y, r);
 	gr.addColorStop(0, `rgba(${cr},${cg},${cb},${(LIGHT.a * dark).toFixed(3)})`);
@@ -18330,17 +18539,27 @@ function drawLight(z, inView) {
 	} // dusk, night and the weather's cast, blended into one fill
 	// the lights (Build 55): every flame in view throws its glow on the ground, from one table (FLAME in 23-view-things). Hearths in homes and
 	// the Town Center; the robbers' campfires; a lantern on every caravan; a torch on every standard; a building ablaze. Lights off keeps the windows.
+	const tnow = performance.now() / 1000;
 	if (nt > 0.5)
 		for (const b of G.blds)
 			if (inView(b) && b.prog >= 1 && HEARTH.has(b.kind) && knownB(b)) {
-				ctx.fillStyle = 'rgba(255,200,110,.75)';
+				const fire = b.owner !== WILD && G.P[b.owner].techs.has('chimney'), // a fireplace flickers from inside
+					a = fire ? 0.6 + 0.3 * Math.sin(tnow * 9 + b.id) * Math.sin(tnow * 5.3 + b.id * 0.7) : 0.75;
+				ctx.fillStyle = `rgba(255,${fire ? 185 : 200},${fire ? 90 : 110},${a.toFixed(2)})`;
 				ctx.fillRect(SX(b.x) + 3 * z, SY(b.y + halfOf(b) * 0.9, 6), 2 * z, 2 * z);
 			}
 	if (!SET.lights || (nt < 0.05 && G.wx !== 'rain' && !G.blds.some((b) => b.fire > 0))) return;
 	for (const b of G.blds) {
 		if (!inView(b) || !knownB(b)) continue;
+		const B = BLD[b.kind];
 		if (b.fire > 0 || b.hp < maxHpB(b.owner, b.kind) * 0.5) glow(SX(b.x), SY(b.y), 'blaze', z);
-		else if (b.prog >= 1 && HEARTH.has(b.kind)) glow(SX(b.x), SY(b.y) + halfOf(b) * TILT * 0.4, 'hearth', z);
+		else if (b.prog >= 1 && HEARTH.has(b.kind)) glow(SX(b.x), SY(b.y) + halfOf(b) * TILT * 0.4, 'hearth', z, 1 + 0.5 * (b.owner === WILD ? 0 : upTier(b.kind === 'keep' || b.kind === 'town' ? 'house' : b.kind, G.P[b.owner]))); // the Home line lights the hearth more
+		else if (b.prog >= 1 && !B.wallish && !B.crop && b.owner !== WILD && fxv(b.owner, 'lamp', bldKeys(b.kind)).a > 0) {
+			const x = SX(b.x) - halfOf(b) * z * 0.6,
+				y = SY(b.y) + halfOf(b) * TILT * z * 0.5;
+			glow(x, y, 'lantern', z);
+			flame(x, y - 3 * z, 'lantern', z * 0.7, b.id);
+		} // Lanterns: one at every door
 	}
 	for (const f of G.finds) if (f.kind === 'camp' && !f.done && inView(f) && known0(f)) glow(SX(f.x), SY(f.y), 'campfire', z);
 	for (const u of G.units)
@@ -23553,6 +23772,23 @@ function hiss(dur, vol, fq, q, fq2, at) {
 	};
 }
 // name: [least seconds between two, how to make it (v = loudness 0 to 1)]
+// ── Materials (Build 56, after SoRen): what a struck thing is made of is told mostly by how long it rings (Klatzky, Pai & Krotkov 2000):
+// each mode of a struck bar dies with a time constant of tau / f seconds, so wood is gone in a blink, stone is short and dull, metal rings on.
+// The modes of a free bar sit at 1 : 2.756 : 5.404 (Rossing). One knock() makes every blow, chop, pick and clink from this table.
+const MAT = {
+	wood: { tau: 3.2, modes: [[1, 1], [2.756, 0.25]] },
+	stone: { tau: 12, modes: [[1, 1], [2.756, 0.35], [5.404, 0.12]] },
+	metal: { tau: 447, modes: [[1, 1], [2.756, 0.5], [5.404, 0.3]] },
+};
+function knock(mat, f, vol, at = 0, snap = 1) {
+	const M = MAT[mat];
+	if (snap) hiss(0.03, 0.2 * vol * snap, Math.min(6000, f * 6), 2, undefined, at); // the blow itself: a short burst of noise
+	for (const [k, a] of M.modes) {
+		const fk = f * k,
+			dur = Math.min(1.2, (9.2 * M.tau) / fk); // to 80 dB down (e^−9.2)
+		tone(fk, Math.max(0.04, dur), mat === 'metal' ? 'sine' : 'triangle', vol * a * 0.5, 0, at);
+	}
+}
 const SFX = {
 	tap: [0.03, (v) => tone(700, 0.05, 'triangle', 0.16 * v)],
 	err: [
@@ -23579,11 +23815,10 @@ const SFX = {
 	done: [
 		0.2,
 		(v) => {
-			hiss(0.06, 0.25 * v, 900, 2);
-			tone(220, 0.12, 'triangle', 0.22 * v, 160);
-			tone(330, 0.3, 'triangle', 0.18 * v, 0, 0.12);
+			knock('wood', 220, 0.4 * v);
+			knock('wood', 330, 0.3 * v, 0.12, 0.5);
 		},
-	], // a home or a field: a wooden knock, warm
+	], // a home or a field: two wooden knocks, warm
 	doneWar: [
 		0.2,
 		(v) => {
@@ -23608,20 +23843,8 @@ const SFX = {
 			tone(440, 0.3, 'sawtooth', 0.09 * v, 0, 0.22);
 		},
 	], // a soldier: a short brass call
-	chop: [
-		0.18,
-		(v) => {
-			hiss(0.05, 0.22 * v, 1800, 2);
-			tone(220, 0.06, 'triangle', 0.14 * v, 120);
-		},
-	],
-	mine: [
-		0.18,
-		(v) => {
-			tone(1400, 0.05, 'square', 0.05 * v, 900);
-			hiss(0.04, 0.2 * v, 4000, 2);
-		},
-	],
+	chop: [0.18, (v) => knock('wood', 220, 0.3 * v)], // an axe in a trunk
+	mine: [0.18, (v) => knock('stone', 1400, 0.12 * v)], // a pick on rock
 	pick: [0.3, (v) => tone(520, 0.05, 'sine', 0.07 * v, 700)],
 	hit: [
 		0.07,
@@ -23680,10 +23903,10 @@ const SFX = {
 	coin: [
 		0.1,
 		(v) => {
-			tone(1319, 0.07, 'square', 0.08 * v);
-			tone(1760, 0.2, 'square', 0.08 * v, 0, 0.07);
+			knock('metal', 1319, 0.08 * v, 0, 0.3);
+			knock('metal', 1760, 0.08 * v, 0.07, 0);
 		},
-	],
+	], // two coins: metal rings
 	tribute: [
 		3,
 		(v) => {
@@ -23851,8 +24074,8 @@ const onScreen = (x, y) => Math.abs(x - cam.x) < cw / 2 / cam.z && Math.abs(y - 
 // ───────────────────────── Goods, trade routes, nature, sickness and food ─────────────────────────
 // Real ratios on a compressed calendar: one year is 12 minutes, and every rate below is set against that clock.
 const FLEECE = 7,
-	LAMBS = 0.35,
-	FLOCK = 12; // wool per sheep at the spring shearing; a flock grows about a third each spring, up to 12
+	LAMBS = 0.6,
+	FLOCK = 12; // wool per sheep at the spring shearing; a flock grows by logistic growth (Verhulst), r = 0.6 a spring toward a pasture that carries 12 (Build 56)
 
 const stopsAll = () => G.finds.filter((f) => f.kind === 'stop');
 const postAt = (f) => G.blds.find((b) => b.kind === 'tpost' && b.sid === f.id && b.hp > 0);
@@ -24055,7 +24278,7 @@ function routeTick(u, dt, SP) {
 		// home
 		for (const k in u.goods || {}) giveTo(p, k, u.goods[k]);
 		u.goods = {};
-		if (u.foreign && G.plague && G.plague.until > G.t && rng() < 0.5) outbreak(o, 0.25, true, u);
+		if (u.foreign && G.plague && G.plague.until > G.t && rng() < 0.5) outbreak(o, 0.05, true, u); // a few cases come home with the cart; the spread does the rest (SIR)
 		u.inspected = false;
 		u.inspT = 0; // plague came home with the carts
 		u.foreign = false;
@@ -24134,7 +24357,7 @@ function seasonTurn() {
 		if (b.kind === 'pasture' && b.prog >= 1 && b.hp > 0) {
 			if (s === 'Spring') {
 				b.node.amt += (b.sheep || 0) * FLEECE;
-				b.sheep = Math.min(FLOCK, Math.round((b.sheep || 0) * (1 + LAMBS)));
+				b.sheep = Math.min(FLOCK, Math.round((b.sheep || 0) + LAMBS * (b.sheep || 0) * (1 - (b.sheep || 0) / FLOCK))); // ΔN = r N (1 − N/K): fast while the pasture is empty, slowing as it fills
 			}
 			const wolf = G.units.find(
 				(v) =>
@@ -24253,7 +24476,7 @@ function fireTick(dt) {
 // ── sickness: a few fall ill now and then, more in summer and winter; Clean water halves it; medicine cures and saves lives
 function sickRisk(o) {
 	const s = season().name;
-	return HEALTH.risk * (s === 'Summer' || s === 'Winter' ? 1.2 : 1) * fxv(o, 'sick').m;
+	return HEALTH.risk * (s === 'Summer' || s === 'Winter' ? 1.2 : 1) * fxv(o, 'sick').m * (s === 'Winter' ? fxv(o, 'warm').m : 1); // warm homes: a milder winter
 }
 function outbreak(o, share, plague, at) {
 	const p = G.P[o],
@@ -24282,9 +24505,36 @@ function healthTick() {
 			p.ai.sickT = (p.ai.sickT ?? HEALTH.every) - 5;
 			if (p.ai.sickT <= 0) {
 				p.ai.sickT = HEALTH.every;
-				if (rng() < sickRisk(p.id)) outbreak(p.id, 0.08, false);
+				if (rng() < sickRisk(p.id)) outbreak(p.id, 0, false);
 			}
 		}
+	// the spread, by side: β S I / N new cases in these five seconds (SIR), among the people near home
+	for (const p of G.P) {
+		if (!p.alive || p.id === WILD) continue;
+		const k = keepOf(p.id);
+		if (!k) continue;
+		const S = [];
+		let I = 0,
+			plague = false;
+		for (const u of G.units)
+			if (u.owner === p.id && UNIT[u.kind].cls && !u.inside && dist(u, k) < 500) {
+				if (u.sick > G.t) {
+					I++;
+					plague = plague || u.plague;
+				} else S.push(u);
+			}
+		if (!I || !S.length) continue;
+		const N = I + S.length,
+			beta = ((HEALTH.R0 * (plague ? HEALTH.plagueR0 : 1)) / HEALTH.sickFor) * 5 * fxv(p.id, 'spread').m,
+			x = (beta * S.length * I) / N;
+		let n = Math.floor(x);
+		if (rng() < x - n) n++;
+		for (let i = 0; i < n && S.length; i++) {
+			const v = S.splice(Math.floor(rng() * S.length), 1)[0];
+			v.sick = G.t + HEALTH.sickFor;
+			v.plague = plague;
+		}
+	}
 	for (const u of G.units) {
 		if (!(u.sick > G.t)) {
 			if (u.sick) {
@@ -24310,21 +24560,6 @@ function healthTick() {
 			if (u.plague) P.plagueDead = (P.plagueDead || 0) + 1;
 			continue;
 		}
-		if (rng() < HEALTH.spread * (u.plague && hz('plague') ? 2 : 1) * fxv(o, 'spread').m) {
-			const v = G.units.find(
-				(w) =>
-					w.owner === o &&
-					w !== u &&
-					UNIT[w.kind].cls &&
-					!(w.sick > G.t) &&
-					Math.abs(w.x - u.x) < 18 &&
-					Math.abs(w.y - u.y) < 18,
-			);
-			if (v) {
-				v.sick = G.t + HEALTH.sickFor;
-				v.plague = u.plague;
-			}
-		}
 	}
 }
 
@@ -24337,7 +24572,7 @@ function upkeepTick() {
 			// everyone eats: a share a person, more for soldiers and far more for horses
 			let sh = 0;
 			for (const u of G.units) if (u.owner === o) sh += shareOf(u);
-			const eat = sh * UPKEEP.share;
+			const eat = sh * UPKEEP.share * fxv(o, 'eat').m; // cooked food feeds better (hearth)
 			p.eats = eat * 60;
 			starveTick(p);
 			if (p.res.f >= eat) {
@@ -24527,7 +24762,7 @@ function loyaltyParts(p) {
 	const n = G.units.filter((u) => u.owner === L && isSoldier(u) && dist(u, k) < r).length,
 		garrison = Math.min(VASSAL.garrisonMax, n * VASSAL.garrison);
 	const protect = Math.round(p.protect || 0),
-		hate = TAX[p.tax || 'fair'].hate;
+		hate = TAX[p.tax || 'fair'].hate * fxv(L, 'hate').m; // a tavern in the lord's town: the tax grumbles less
 	return { invest, garrison, protect, hate, target: clamp(20 + invest + garrison + protect - hate, 0, 100) };
 }
 function makeVassal(q, L, tax) {
@@ -26642,6 +26877,8 @@ window.__fk = {
 	sunVec,
 	moonVec,
 	shadowOf,
+	rangeFrom,
+	rangeOf,
 	moonPhase,
 	rothermel,
 	fireMul,

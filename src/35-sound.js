@@ -110,6 +110,23 @@ function hiss(dur, vol, fq, q, fq2, at) {
 	};
 }
 // name: [least seconds between two, how to make it (v = loudness 0 to 1)]
+// ── Materials (Build 56, after SoRen): what a struck thing is made of is told mostly by how long it rings (Klatzky, Pai & Krotkov 2000):
+// each mode of a struck bar dies with a time constant of tau / f seconds, so wood is gone in a blink, stone is short and dull, metal rings on.
+// The modes of a free bar sit at 1 : 2.756 : 5.404 (Rossing). One knock() makes every blow, chop, pick and clink from this table.
+const MAT = {
+	wood: { tau: 3.2, modes: [[1, 1], [2.756, 0.25]] },
+	stone: { tau: 12, modes: [[1, 1], [2.756, 0.35], [5.404, 0.12]] },
+	metal: { tau: 447, modes: [[1, 1], [2.756, 0.5], [5.404, 0.3]] },
+};
+function knock(mat, f, vol, at = 0, snap = 1) {
+	const M = MAT[mat];
+	if (snap) hiss(0.03, 0.2 * vol * snap, Math.min(6000, f * 6), 2, undefined, at); // the blow itself: a short burst of noise
+	for (const [k, a] of M.modes) {
+		const fk = f * k,
+			dur = Math.min(1.2, (9.2 * M.tau) / fk); // to 80 dB down (e^−9.2)
+		tone(fk, Math.max(0.04, dur), mat === 'metal' ? 'sine' : 'triangle', vol * a * 0.5, 0, at);
+	}
+}
 const SFX = {
 	tap: [0.03, (v) => tone(700, 0.05, 'triangle', 0.16 * v)],
 	err: [
@@ -136,11 +153,10 @@ const SFX = {
 	done: [
 		0.2,
 		(v) => {
-			hiss(0.06, 0.25 * v, 900, 2);
-			tone(220, 0.12, 'triangle', 0.22 * v, 160);
-			tone(330, 0.3, 'triangle', 0.18 * v, 0, 0.12);
+			knock('wood', 220, 0.4 * v);
+			knock('wood', 330, 0.3 * v, 0.12, 0.5);
 		},
-	], // a home or a field: a wooden knock, warm
+	], // a home or a field: two wooden knocks, warm
 	doneWar: [
 		0.2,
 		(v) => {
@@ -165,20 +181,8 @@ const SFX = {
 			tone(440, 0.3, 'sawtooth', 0.09 * v, 0, 0.22);
 		},
 	], // a soldier: a short brass call
-	chop: [
-		0.18,
-		(v) => {
-			hiss(0.05, 0.22 * v, 1800, 2);
-			tone(220, 0.06, 'triangle', 0.14 * v, 120);
-		},
-	],
-	mine: [
-		0.18,
-		(v) => {
-			tone(1400, 0.05, 'square', 0.05 * v, 900);
-			hiss(0.04, 0.2 * v, 4000, 2);
-		},
-	],
+	chop: [0.18, (v) => knock('wood', 220, 0.3 * v)], // an axe in a trunk
+	mine: [0.18, (v) => knock('stone', 1400, 0.12 * v)], // a pick on rock
 	pick: [0.3, (v) => tone(520, 0.05, 'sine', 0.07 * v, 700)],
 	hit: [
 		0.07,
@@ -237,10 +241,10 @@ const SFX = {
 	coin: [
 		0.1,
 		(v) => {
-			tone(1319, 0.07, 'square', 0.08 * v);
-			tone(1760, 0.2, 'square', 0.08 * v, 0, 0.07);
+			knock('metal', 1319, 0.08 * v, 0, 0.3);
+			knock('metal', 1760, 0.08 * v, 0.07, 0);
 		},
-	],
+	], // two coins: metal rings
 	tribute: [
 		3,
 		(v) => {

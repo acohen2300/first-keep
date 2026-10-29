@@ -244,6 +244,8 @@ window.__fk = {
 	sunVec,
 	moonVec,
 	shadowOf,
+	rangeFrom,
+	rangeOf,
 	moonPhase,
 	rothermel,
 	fireMul,
