@@ -241,6 +241,7 @@ window.__fk = {
 	sightOf,
 	shelterOf,
 	bldName,
+	statusOf,
 	FAIR,
 	scoreAll,
 	hurt,

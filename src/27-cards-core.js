@@ -206,7 +206,7 @@ function keepAgeBtn() {
 // what one of yours is doing, in words read from its state; and what it has done in its life
 function statusOf(u) {
 	const nm = (b) => bldName(0, b.kind).toLowerCase();
-	if (u.inside) return u.state === 'garrison' ? 'DEFENDING inside' : 'sheltering inside';
+	if (u.inside) return u.shop && u.node ? `at work in the ${nm(u.node.farm)}` : u.state === 'garrison' ? 'DEFENDING inside' : 'sheltering inside';
 	if (u.state === 'garrison') return 'DEFENDING: going in';
 	if (u.state === 'school') return `learning at the School, ${Math.ceil(u.schoolT - G.t)} s`;
 	if (u.kind === 'vil') {

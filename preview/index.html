@@ -9833,8 +9833,60 @@ function nearestNode(u, job) {
 	return best;
 }
 // ═════ 13-sim-civil.js: villagers, hunters, repairers, scouts, envoys, caravans, spies ═════
+// A worker at a workshop, a mint or a foundry works inside it (Build 53, Albert: "a worker who works in a shop should be in the shop"):
+// it walks to the door and goes in; what it makes goes straight to the stores, as a shepherd's milk does; it comes out when its work
+// there ends, or the building does. Indoors it is not drawn, not scared and not shot; a raider must break the building. No standing
+// spot beside the wall is ever needed (the boxed-in villager of Build 52b stood in a one-square pocket at a workshop's corner).
+function shopTick(u, dt) {
+	const n = u.node,
+		b = n && n.farm;
+	if (!b || b.id !== u.shop || b.hp <= 0 || u.job !== n.type || !makeOf(b)) {
+		const at = b || { x: u.x, y: u.y, kind: 'house' };
+		u.inside = false;
+		u.shop = 0;
+		u.x = at.x;
+		u.y = at.y + halfOf(at) + 6;
+		return;
+	}
+	const g = makeNow(u, n, dt, Infinity);
+	if (g > 0) {
+		stash(u.owner, n.type, g);
+		u.st.got += g;
+	}
+}
+// what a worker makes in this moment from a field, a find or a workshop's inputs (which it takes from the stores), at most `room`
+function makeNow(u, n, dt, room) {
+	const rate = n.rate || RATE_OF[n.kind];
+	let g = Math.min(
+		rate * dt * gatherMul(u.owner, n) * (u.sick > G.t ? 0.5 : 1) * hungerOf(u.owner) * (u.cheer > G.t ? EVENTS.circus.mul : 1),
+		n.amt,
+		room,
+	);
+	if (starving(u.owner)) g = 0;
+	const mk = n.farm && makeOf(n.farm),
+		from = mk && mk.from; // a workshop turns what is in store into something else: 2 wool make 1 cloth, 3 wood 1 iron
+	if (from) {
+		const P = G.P[u.owner],
+			box = (k) => (k in P.res ? P.res : P.goods);
+		for (const k in from) g = Math.min(g, (box(k)[k] || 0) / from[k]);
+		if (g <= 1e-6) {
+			u.wait = true;
+			return 0;
+		}
+		for (const k in from) box(k)[k] -= g * from[k];
+	}
+	u.wait = false;
+	n.amt -= g;
+	n.workT = G.t;
+	u.work = G.t;
+	return g;
+}
 function vilTick(u, dt, SP) {
 	u.idle = false;
+	if (u.inside && u.shop) {
+		shopTick(u, dt);
+		return;
+	}
 	const kk = keepOf(u.owner),
 		rb = (u.hid && G.blds.find((b) => b.id === u.hid && b.hp > 0 && b.prog >= 1)) || kk; // where it hides: the Town Center, or a tower with room
 	if (u.inside) {
@@ -10018,6 +10070,19 @@ function vilTick(u, dt, SP) {
 		u.idle = true;
 		return;
 	}
+	if (n.farm && BLD[n.farm.kind].makes) {
+		// a shop: in at the door (once it stands), and the work goes on inside
+		const b = n.farm;
+		if (moveTo(u, b.x, b.y, dt, halfOf(b) + 4, SP) && b.prog >= 1) {
+			if (u.carry > 0) {
+				stash(u.owner, u.carryType, Math.round(u.carry));
+				u.carry = 0;
+			}
+			u.inside = true;
+			u.shop = b.id;
+		} else if (u.noPathT === G.t) leaveWork(u, n);
+		return;
+	}
 	// a worker already at work keeps its place a little further out (4 more), so crowd spacing and walking in no longer fight
 	if (
 		moveTo(
@@ -10029,46 +10094,21 @@ function vilTick(u, dt, SP) {
 			SP,
 		)
 	) {
-		const rate = n.rate || RATE_OF[n.kind];
-		let g = Math.min(
-			rate *
-				dt *
-				gatherMul(u.owner, n) *
-				(u.sick > G.t ? 0.5 : 1) *
-				hungerOf(u.owner) *
-				(u.cheer > G.t ? EVENTS.circus.mul : 1),
-			n.amt,
-			cap - u.carry,
-		);
-		if (starving(u.owner)) g = 0;
-		const mk = n.farm && makeOf(n.farm),
-			from = mk && mk.from; // a workshop turns what is in store into something else: 2 wool make 1 cloth, 3 wood 1 iron
-		if (from) {
-			const P = G.P[u.owner],
-				box = (k) => (k in P.res ? P.res : P.goods);
-			for (const k in from) g = Math.min(g, (box(k)[k] || 0) / from[k]);
-			if (g <= 1e-6) {
-				u.wait = true;
-				return;
-			}
-			for (const k in from) box(k)[k] -= g * from[k];
-		}
-		u.wait = false;
-		n.amt -= g;
+		const g = makeNow(u, n, dt, cap - u.carry);
+		if (g <= 0) return;
 		u.carry += g;
-		n.workT = G.t;
 		u.carryType = n.type;
-		u.work = G.t;
 		u.fx = Math.sign(n.x - u.x) || u.fx;
 		if ((G.tick + u.id) % 40 === 0) sfx(n.type === 'wood' ? 'chop' : n.type === 'food' ? 'pick' : 'mine', u.x, u.y);
-	} else if (u.noPathT === G.t) {
-		// the way to this work ended short of it: there is no way there. Leave it for a while and take other work (Build 48: it stood at the dead end for good)
-		const B = u.bad || (u.bad = {});
-		for (const id in B) if (B[id] <= G.t) delete B[id];
-		B[n.id] = G.t + DANGER_R.secs;
-		if (n.farm) n.wk = Math.max(0, (n.wk || 0) - 1);
-		u.node = null;
-	}
+	} else if (u.noPathT === G.t) leaveWork(u, n);
+}
+// the way to this work ended short of it: there is no way there. Leave it for a while and take other work (Build 48: it stood at the dead end for good)
+function leaveWork(u, n) {
+	const B = u.bad || (u.bad = {});
+	for (const id in B) if (B[id] <= G.t) delete B[id];
+	B[n.id] = G.t + DANGER_R.secs;
+	if (n.farm) n.wk = Math.max(0, (n.wk || 0) - 1);
+	u.node = null;
 }
 function huntTick(u, dt, SP) {
 	const a = u.hunt;
@@ -16220,25 +16260,48 @@ function makeBg() {
 		b.arc(Math.random() * MAP, Math.random() * MAP, 2.4, 0, 7);
 		b.fill();
 	}
+	// A river is drawn as one stream (Build 53): each unbroken run of pools is a smooth curve through their centres, stroked three times
+	// (the outer bank, the inner bank, the water) with round ends, so it leaves its lake and reaches a ford as one body of water. The pools
+	// themselves stay the walking grid's truth; the curve through their centres covers the same ground (a pool every 0.9 of its radius).
+	const runs = [];
 	for (const L of G.lakes) {
-		const bank = L.river ? 14 : 26,
-			sand = b.createRadialGradient(L.x, L.y, L.r - 4, L.x, L.y, L.r + bank);
+		const last = runs.length ? runs[runs.length - 1] : null,
+			tail = last && last[last.length - 1];
+		if (L.river && tail && tail.river && hyp(L.x - tail.x, L.y - tail.y) < 2.2 * L.r) last.push(L);
+		else if (L.river) runs.push([L]);
+	}
+	const stream = (run, extra, col) => {
+		b.strokeStyle = col;
+		b.lineWidth = 2 * (run[0].r + extra);
+		b.lineCap = b.lineJoin = 'round';
+		b.beginPath();
+		b.moveTo(run[0].x, run[0].y);
+		for (let i = 1; i < run.length; i++) {
+			const p = run[i - 1],
+				q = run[i];
+			if (i < run.length - 1) b.quadraticCurveTo(p.x, p.y, (p.x + q.x) / 2, (p.y + q.y) / 2);
+			else b.lineTo(q.x, q.y);
+		}
+		b.stroke();
+	};
+	for (const L of G.lakes) {
+		if (L.river) continue;
+		const sand = b.createRadialGradient(L.x, L.y, L.r - 4, L.x, L.y, L.r + 26);
 		sand.addColorStop(0, 'rgba(206,190,138,1)');
 		sand.addColorStop(0.5, 'rgba(196,180,128,.85)');
 		sand.addColorStop(1, 'rgba(196,180,128,0)');
 		b.fillStyle = sand;
 		b.beginPath();
-		b.arc(L.x, L.y, L.r + bank, 0, 7);
+		b.arc(L.x, L.y, L.r + 26, 0, 7);
 		b.fill();
-	} // every shore first, then every water, so the pools of a river run together instead of reading as beads (Build 50)
+	} // every shore first, then every water
+	for (const run of runs) {
+		stream(run, 14, 'rgba(196,180,128,.55)');
+		stream(run, 7, 'rgba(201,185,133,.9)');
+	}
+	for (const run of runs) stream(run, 2, '#2f6c8e'); // the river: one even colour, shallow running water
 	for (const L of G.lakes) {
-		if (L.river) {
-			b.fillStyle = '#2f6c8e';
-			b.beginPath();
-			b.arc(L.x, L.y, L.r + 2, 0, 7);
-			b.fill();
-			continue;
-		} // a river is one even colour: shallow, running water
+		if (L.river) continue;
 		const lg = b.createRadialGradient(L.x - L.r * 0.2, L.y - L.r * 0.2, 10, L.x, L.y, L.r + 2);
 		lg.addColorStop(0, '#1b4466');
 		lg.addColorStop(0.7, '#2a6488');
@@ -19202,7 +19265,7 @@ function keepAgeBtn() {
 // what one of yours is doing, in words read from its state; and what it has done in its life
 function statusOf(u) {
 	const nm = (b) => bldName(0, b.kind).toLowerCase();
-	if (u.inside) return u.state === 'garrison' ? 'DEFENDING inside' : 'sheltering inside';
+	if (u.inside) return u.shop && u.node ? `at work in the ${nm(u.node.farm)}` : u.state === 'garrison' ? 'DEFENDING inside' : 'sheltering inside';
 	if (u.state === 'garrison') return 'DEFENDING: going in';
 	if (u.state === 'school') return `learning at the School, ${Math.ceil(u.schoolT - G.t)} s`;
 	if (u.kind === 'vil') {
@@ -26085,7 +26148,7 @@ function emgSnap(kind) {
 		G.emg.snap = unitsOf(0, 'vil').map((u) => ({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post })); // villagers only when they are sent in: Battle Stations leaves their work alone
 }
 function villagersIn() {
-	const V = unitsOf(0, 'vil'),
+	const V = unitsOf(0, 'vil').filter((u) => !(u.inside && u.shop)), // those at work indoors are indoors already
 		k = keepOf(0);
 	const left = fillRank(V, {
 		into: (u, b) => {
@@ -26439,6 +26502,7 @@ window.__fk = {
 	sightOf,
 	shelterOf,
 	bldName,
+	statusOf,
 	FAIR,
 	scoreAll,
 	hurt,

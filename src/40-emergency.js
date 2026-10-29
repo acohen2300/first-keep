@@ -41,7 +41,7 @@ function emgSnap(kind) {
 		G.emg.snap = unitsOf(0, 'vil').map((u) => ({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post })); // villagers only when they are sent in: Battle Stations leaves their work alone
 }
 function villagersIn() {
-	const V = unitsOf(0, 'vil'),
+	const V = unitsOf(0, 'vil').filter((u) => !(u.inside && u.shop)), // those at work indoors are indoors already
 		k = keepOf(0);
 	const left = fillRank(V, {
 		into: (u, b) => {

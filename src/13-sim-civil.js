@@ -1,6 +1,58 @@
 // ═════ 13-sim-civil.js: villagers, hunters, repairers, scouts, envoys, caravans, spies ═════
+// A worker at a workshop, a mint or a foundry works inside it (Build 53, Albert: "a worker who works in a shop should be in the shop"):
+// it walks to the door and goes in; what it makes goes straight to the stores, as a shepherd's milk does; it comes out when its work
+// there ends, or the building does. Indoors it is not drawn, not scared and not shot; a raider must break the building. No standing
+// spot beside the wall is ever needed (the boxed-in villager of Build 52b stood in a one-square pocket at a workshop's corner).
+function shopTick(u, dt) {
+	const n = u.node,
+		b = n && n.farm;
+	if (!b || b.id !== u.shop || b.hp <= 0 || u.job !== n.type || !makeOf(b)) {
+		const at = b || { x: u.x, y: u.y, kind: 'house' };
+		u.inside = false;
+		u.shop = 0;
+		u.x = at.x;
+		u.y = at.y + halfOf(at) + 6;
+		return;
+	}
+	const g = makeNow(u, n, dt, Infinity);
+	if (g > 0) {
+		stash(u.owner, n.type, g);
+		u.st.got += g;
+	}
+}
+// what a worker makes in this moment from a field, a find or a workshop's inputs (which it takes from the stores), at most `room`
+function makeNow(u, n, dt, room) {
+	const rate = n.rate || RATE_OF[n.kind];
+	let g = Math.min(
+		rate * dt * gatherMul(u.owner, n) * (u.sick > G.t ? 0.5 : 1) * hungerOf(u.owner) * (u.cheer > G.t ? EVENTS.circus.mul : 1),
+		n.amt,
+		room,
+	);
+	if (starving(u.owner)) g = 0;
+	const mk = n.farm && makeOf(n.farm),
+		from = mk && mk.from; // a workshop turns what is in store into something else: 2 wool make 1 cloth, 3 wood 1 iron
+	if (from) {
+		const P = G.P[u.owner],
+			box = (k) => (k in P.res ? P.res : P.goods);
+		for (const k in from) g = Math.min(g, (box(k)[k] || 0) / from[k]);
+		if (g <= 1e-6) {
+			u.wait = true;
+			return 0;
+		}
+		for (const k in from) box(k)[k] -= g * from[k];
+	}
+	u.wait = false;
+	n.amt -= g;
+	n.workT = G.t;
+	u.work = G.t;
+	return g;
+}
 function vilTick(u, dt, SP) {
 	u.idle = false;
+	if (u.inside && u.shop) {
+		shopTick(u, dt);
+		return;
+	}
 	const kk = keepOf(u.owner),
 		rb = (u.hid && G.blds.find((b) => b.id === u.hid && b.hp > 0 && b.prog >= 1)) || kk; // where it hides: the Town Center, or a tower with room
 	if (u.inside) {
@@ -184,6 +236,19 @@ function vilTick(u, dt, SP) {
 		u.idle = true;
 		return;
 	}
+	if (n.farm && BLD[n.farm.kind].makes) {
+		// a shop: in at the door (once it stands), and the work goes on inside
+		const b = n.farm;
+		if (moveTo(u, b.x, b.y, dt, halfOf(b) + 4, SP) && b.prog >= 1) {
+			if (u.carry > 0) {
+				stash(u.owner, u.carryType, Math.round(u.carry));
+				u.carry = 0;
+			}
+			u.inside = true;
+			u.shop = b.id;
+		} else if (u.noPathT === G.t) leaveWork(u, n);
+		return;
+	}
 	// a worker already at work keeps its place a little further out (4 more), so crowd spacing and walking in no longer fight
 	if (
 		moveTo(
@@ -195,46 +260,21 @@ function vilTick(u, dt, SP) {
 			SP,
 		)
 	) {
-		const rate = n.rate || RATE_OF[n.kind];
-		let g = Math.min(
-			rate *
-				dt *
-				gatherMul(u.owner, n) *
-				(u.sick > G.t ? 0.5 : 1) *
-				hungerOf(u.owner) *
-				(u.cheer > G.t ? EVENTS.circus.mul : 1),
-			n.amt,
-			cap - u.carry,
-		);
-		if (starving(u.owner)) g = 0;
-		const mk = n.farm && makeOf(n.farm),
-			from = mk && mk.from; // a workshop turns what is in store into something else: 2 wool make 1 cloth, 3 wood 1 iron
-		if (from) {
-			const P = G.P[u.owner],
-				box = (k) => (k in P.res ? P.res : P.goods);
-			for (const k in from) g = Math.min(g, (box(k)[k] || 0) / from[k]);
-			if (g <= 1e-6) {
-				u.wait = true;
-				return;
-			}
-			for (const k in from) box(k)[k] -= g * from[k];
-		}
-		u.wait = false;
-		n.amt -= g;
+		const g = makeNow(u, n, dt, cap - u.carry);
+		if (g <= 0) return;
 		u.carry += g;
-		n.workT = G.t;
 		u.carryType = n.type;
-		u.work = G.t;
 		u.fx = Math.sign(n.x - u.x) || u.fx;
 		if ((G.tick + u.id) % 40 === 0) sfx(n.type === 'wood' ? 'chop' : n.type === 'food' ? 'pick' : 'mine', u.x, u.y);
-	} else if (u.noPathT === G.t) {
-		// the way to this work ended short of it: there is no way there. Leave it for a while and take other work (Build 48: it stood at the dead end for good)
-		const B = u.bad || (u.bad = {});
-		for (const id in B) if (B[id] <= G.t) delete B[id];
-		B[n.id] = G.t + DANGER_R.secs;
-		if (n.farm) n.wk = Math.max(0, (n.wk || 0) - 1);
-		u.node = null;
-	}
+	} else if (u.noPathT === G.t) leaveWork(u, n);
+}
+// the way to this work ended short of it: there is no way there. Leave it for a while and take other work (Build 48: it stood at the dead end for good)
+function leaveWork(u, n) {
+	const B = u.bad || (u.bad = {});
+	for (const id in B) if (B[id] <= G.t) delete B[id];
+	B[n.id] = G.t + DANGER_R.secs;
+	if (n.farm) n.wk = Math.max(0, (n.wk || 0) - 1);
+	u.node = null;
 }
 function huntTick(u, dt, SP) {
 	const a = u.hunt;

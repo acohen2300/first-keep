@@ -32,25 +32,48 @@ function makeBg() {
 		b.arc(Math.random() * MAP, Math.random() * MAP, 2.4, 0, 7);
 		b.fill();
 	}
+	// A river is drawn as one stream (Build 53): each unbroken run of pools is a smooth curve through their centres, stroked three times
+	// (the outer bank, the inner bank, the water) with round ends, so it leaves its lake and reaches a ford as one body of water. The pools
+	// themselves stay the walking grid's truth; the curve through their centres covers the same ground (a pool every 0.9 of its radius).
+	const runs = [];
 	for (const L of G.lakes) {
-		const bank = L.river ? 14 : 26,
-			sand = b.createRadialGradient(L.x, L.y, L.r - 4, L.x, L.y, L.r + bank);
+		const last = runs.length ? runs[runs.length - 1] : null,
+			tail = last && last[last.length - 1];
+		if (L.river && tail && tail.river && hyp(L.x - tail.x, L.y - tail.y) < 2.2 * L.r) last.push(L);
+		else if (L.river) runs.push([L]);
+	}
+	const stream = (run, extra, col) => {
+		b.strokeStyle = col;
+		b.lineWidth = 2 * (run[0].r + extra);
+		b.lineCap = b.lineJoin = 'round';
+		b.beginPath();
+		b.moveTo(run[0].x, run[0].y);
+		for (let i = 1; i < run.length; i++) {
+			const p = run[i - 1],
+				q = run[i];
+			if (i < run.length - 1) b.quadraticCurveTo(p.x, p.y, (p.x + q.x) / 2, (p.y + q.y) / 2);
+			else b.lineTo(q.x, q.y);
+		}
+		b.stroke();
+	};
+	for (const L of G.lakes) {
+		if (L.river) continue;
+		const sand = b.createRadialGradient(L.x, L.y, L.r - 4, L.x, L.y, L.r + 26);
 		sand.addColorStop(0, 'rgba(206,190,138,1)');
 		sand.addColorStop(0.5, 'rgba(196,180,128,.85)');
 		sand.addColorStop(1, 'rgba(196,180,128,0)');
 		b.fillStyle = sand;
 		b.beginPath();
-		b.arc(L.x, L.y, L.r + bank, 0, 7);
+		b.arc(L.x, L.y, L.r + 26, 0, 7);
 		b.fill();
-	} // every shore first, then every water, so the pools of a river run together instead of reading as beads (Build 50)
+	} // every shore first, then every water
+	for (const run of runs) {
+		stream(run, 14, 'rgba(196,180,128,.55)');
+		stream(run, 7, 'rgba(201,185,133,.9)');
+	}
+	for (const run of runs) stream(run, 2, '#2f6c8e'); // the river: one even colour, shallow running water
 	for (const L of G.lakes) {
-		if (L.river) {
-			b.fillStyle = '#2f6c8e';
-			b.beginPath();
-			b.arc(L.x, L.y, L.r + 2, 0, 7);
-			b.fill();
-			continue;
-		} // a river is one even colour: shallow, running water
+		if (L.river) continue;
 		const lg = b.createRadialGradient(L.x - L.r * 0.2, L.y - L.r * 0.2, 10, L.x, L.y, L.r + 2);
 		lg.addColorStop(0, '#1b4466');
 		lg.addColorStop(0.7, '#2a6488');
