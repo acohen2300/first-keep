@@ -192,7 +192,7 @@ const trainsAt = (kind) =>
 function keepAgeBtn() {
 	// the next age, as one research button; the reason waits behind the book
 	const p = G.P[0],
-		A = AGES[p.age + 1];
+		A = nextAge(0);
 	if (!A) return '';
 	fold('why', 'Why this age?', `<p>${WHY['age' + (p.age + 1)]}</p>`);
 	return btn(

@@ -104,6 +104,7 @@ const THRONE = { hold: 900, tithe: 0.1, score: 50, r: 80, isle: 100, cause: 30 }
 // build: [kind, from age, how many, needs army of at least, needs stock]; techs in the order they want them.
 const PERS = {
 	aggr: {
+		crown: 'war', // the crown this personality chases (39-games)
 		vils: 16,
 		mix: { food: 0.5, wood: 0.35, gold: 0.15, stone: 0, iron: 0.08 },
 		ageTo: 2,
@@ -150,6 +151,7 @@ const PERS = {
 		],
 	},
 	bal: {
+		crown: 'wealth',
 		vils: 26,
 		mix: { food: 0.4, wood: 0.3, gold: 0.2, stone: 0.1, iron: 0.1 },
 		ageTo: 4,
@@ -225,6 +227,7 @@ const PERS = {
 		],
 	},
 	fort: {
+		crown: 'wellbeing',
 		vils: 28,
 		mix: { food: 0.4, wood: 0.3, gold: 0.15, stone: 0.15, iron: 0.08 },
 		ageTo: 3,

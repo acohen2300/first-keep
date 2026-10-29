@@ -858,6 +858,9 @@ const PLAY = {
 	ransom(a) {
 		if (!payRansom(0, Number(a))) say('Not enough gold.', '', 3);
 	},
+	stand() {
+		if (!standDown(0)) say('No spare soldiers at home to stand down.', '', 3);
+	},
 	vjob(a) {
 		const [id, j] = a.split(','),
 			u = G.units.find((x) => x.id === Number(id));

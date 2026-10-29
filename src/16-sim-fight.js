@@ -45,6 +45,7 @@ function hurt(o, a, t, base) {
 	t.hurtT = G.t;
 	if (a && t.hp <= 0 && !isB && a.st) {
 		a.st.kills++;
+		if (a.owner !== WILD && t.owner !== a.owner) G.P[a.owner].kills = (G.P[a.owner].kills || 0) + 1;
 		if (isSoldier(a)) a.mor = Math.min(1, a.mor + MORALE.kill);
 	}
 	if (t.native && o !== WILD && G.t - (natState().hitT ? natState().hitT[o] || -9 : -9) > 3) {
@@ -253,6 +254,7 @@ function fall(p) {
 		if (q.ally === p.id) q.ally = null;
 	}
 	if (p.id) say(`${p.name} has fallen.`, 'good', 7);
+	chron(`${p.id === 0 ? 'Your keep' : p.name} fell.`);
 }
 function scoreAll() {
 	for (const p of G.P) {
@@ -279,8 +281,9 @@ function watchHome() {
 		say('Enemies at your town!', 'warn', 7, near);
 	}
 }
-function finish(won, text) {
+function finish(won, text, all) {
 	G.over = won ? 'won' : 'lost';
+	if (!all) chron(won ? 'Victory.' : 'Defeat.');
 	clearSave();
 	sfx(won ? 'win' : 'lose');
 	scoreAll();
@@ -299,7 +302,7 @@ function finish(won, text) {
 			localStorage.setItem('firstkeep.best', String(sc));
 		} catch (e) {}
 	}
-	showEnd(won, `${text} Score ${fmt(sc)}${best ? ' · best ' + fmt(best) : ''}.`);
+	showEnd(won, `${text} Score ${fmt(sc)}${best ? ' · best ' + fmt(best) : ''}.`, all);
 }
 const TICK = {
 	vil: vilTick,

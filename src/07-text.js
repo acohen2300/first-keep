@@ -6,6 +6,13 @@ const WHY = {
 	age1: 'Bronze (from about 3300 BC in the Near East): the first cities, writing, law, chariots and standing armies, in Sumer, Egypt, the Indus valley and China.',
 	age2: 'Classical antiquity (about 500 BC to AD 500): iron weapons, legions and phalanxes, libraries, roads and aqueducts, from Rome and Persia to Maurya India and Han China.',
 	age3: 'The Middle Ages (about AD 500 to 1500): castles, knights, crossbows and longbows, universities, and the heavy plough.',
+	age5: 'The Enlightenment (about 1650 to 1800): the Royal Society (1660), the Encyclopédie (1751), inoculation, the turnip and the clover, the school for every child. Game: an age that only a year of peace across the whole board opens, with no soldiers in it; its six steps are the match, and its last step ends it with the crowns.',
+	method: 'The Royal Society (1660) and its Philosophical Transactions (1665): experiment, record, publish, repeat. Knowledge compounded.',
+	vaccine: 'Jenner showed in 1796 that cowpox guards against smallpox; variolation had come to London from Constantinople in 1721 with Lady Mary Wortley Montagu, and was older still in the Ottoman lands, China and India.',
+	fourcourse: 'The Norfolk four-course (wheat, turnips, barley, clover) spread through England in the 1730s: no fallow year, more fodder, more manure, more grain. The Low Countries had it a century earlier.',
+	encyclopedia: 'Diderot and his fellow editors published the Encyclopédie from 1751: 28 volumes, every trade drawn and described, so no craft had to be learned twice.',
+	schooling: 'Prussia ordered every child to school in 1763 (the Generallandschulreglement); Scotland had parish schools from 1696. A people that reads works smarter.',
+	freetrade: 'Adam Smith, The Wealth of Nations (1776): trade is not a war with a loser; both sides gain. Game: the last step, because a board that trades freely has finished what the truce began.',
 	age4: 'Gunpowder (about AD 1400 to 1600): matchlock guns and cannon. Great bombards broke the walls of Constantinople in 1453; Italian engineers answered with low angled star forts, and walls stopped being the end of a siege.',
 	arquebus:
 		'The matchlock arquebus (late 15th century) let a few weeks of drill make a soldier. Spanish arquebusiers won at Cerignola in 1503, and pike-and-shot formations ruled the next century.',
@@ -864,6 +871,21 @@ const TRIGGERS = () => [
 		'Sickness',
 		`Now and then, more in summer and winter, a case arrives; it spreads through the town as real sickness does: each case makes about ${HEALTH.R0} more while people are well to catch it, fewer as the sick recover (the SIR model). Clean water, sewers and quarantine halve the spread. The sick work and fight at 60% and a few die; a Hospital or medics cure them. Plague comes along the trade routes in some springs and spreads ${HEALTH.plagueR0}× faster.`,
 		'Summer flux and winter fever were the yearly toll; plague followed trade. Kermack and McKendrick wrote the arithmetic of an epidemic in 1927: a sickness grows while each case makes more than one, and burns out as it runs short of the well.',
+	],
+	[
+		'The whole board is at peace',
+		`When no two courts are at war and no notice runs, the board is at peace. After ${PEACE.stand.after} s the computers stand their spare soldiers down to the fields; after a year the ${AGES[5].name} opens to every court. The Games are held at the Throne every ${PEACE.games.every / YEAR} years, but only under this peace: war cancels them. Peace from a court that wants more war can be bought with gold (tribute).`,
+		'The Olympic truce (ekecheiria) stopped the wars of Greece for the festival; Æthelred bought peace from the Danes in 991 with 10,000 pounds of silver, the Danegeld.',
+	],
+	[
+		'The Games',
+		`Four events: the footrace, the wrestling, the javelin, the chariot race. Each court sends the best it has in the field; the odds go with the square of that strength, as battle does. A win is a laurel, counted toward the Wellbeing crown.`,
+		'Olympia, from 776 BC: the stadion footrace, wrestling (pale), the pentathlon with its javelin, and the four-horse chariot race (tethrippon) from 680 BC. Winners took a wreath of olive and a lifetime of honour at home.',
+	],
+	[
+		'The crowns',
+		`When a match ends, three crowns are pointed to: Wealth (all a court gathered and holds), War (its kills) and Wellbeing (its people in health, its places of care and recreation, its laurels), and an overall crown from the three. A match that ends in the ${AGES[5].name} is won by everyone; the crowns say who won what. Carry on as free play if you like.`,
+		'Game: every path has its crown, so the trader, the warlord and the builder can each say they won. Albert, Oct 29.',
 	],
 	[
 		'A caravan has a route',

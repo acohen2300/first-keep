@@ -171,9 +171,10 @@ const HZK = Object.keys(HAZARDS),
 	TODAY_HZ = { hard: 1, starve: 1, horde: 1, winter: 1 }; // a new game starts at level 5; The challenge today is level 10 on the day's seed
 const STARVE = { stop: 60, leave: 120, every: 30 },
 	HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 },
-	HORDE = { from: 1200, to: 2400, warn: SEASON_LEN * 2, n: 16, perAge: 6 };
+	HORDE = { min: 1200, mean: 1800, warn: SEASON_LEN * 2, n: 16, perAge: 6 }; // the horde comes after min seconds, at an exponential wait about mean (nextIn)
 // Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 37-events.
-const EV_GAP = [60, 180],
+const EV_MEAN = 120, // the mean wait between events (an exponential wait, nextIn); EV_MIN keeps two from stacking
+	EV_MIN = 30,
 	EV_WARN = 12;
 const EVENTS = {
 	eclipse: { name: 'Eclipse', secs: 20, dmg: 0.6, spd: 0.7, sight: 0.7, harm: 1 },

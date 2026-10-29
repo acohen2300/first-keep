@@ -103,6 +103,10 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
 #end p{margin:0;color:var(--mute);font-size:15px}
+#endX .crowns{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:8px 0}
+#endX .crowns p{font-size:15px}#endX .crowns b{color:var(--bone)}
+#endX details{text-align:left}#endX summary{color:var(--mute);font-size:13px;min-height:44px;display:flex;align-items:center;cursor:pointer;list-style:none}#endX summary::-webkit-details-marker{display:none}#endX summary::before{content:'+';display:inline-block;width:18px;font-weight:700}#endX details[open] summary::before{content:'−'}
+#endX details p{font-size:12px;margin:2px 0}#endX details small{font-size:12px;color:var(--mute);margin-right:6px}
 #card .qs{display:grid;grid-template-columns:1fr 44px 76px 44px;gap:4px;align-items:center;margin:2px 0}
 #card .qs span{text-align:center;font-variant-numeric:tabular-nums;font-size:13px}
 #card .qs button{padding:0;font-size:20px;font-weight:700;min-height:44px}
@@ -266,6 +270,7 @@ button.ok small{color:#8fd4a4}
     <div id="end" hidden>
       <h2 id="endT">Victory</h2>
       <p id="endP"></p>
+      <div id="endX"></div>
       <div class="acts c1" id="endActs"><button data-act="next" id="endNext" class="go"><b>Add another conquest</b><small>new map · keeps your age and research</small></button><button data-act="free" id="endFree"><b>Continue as free play</b><small>no clock, no victory</small></button><button data-act="again"><b>New game</b></button></div>
     </div>
   </div>
@@ -345,6 +350,7 @@ const AGES = [
 	{ name: 'Classical', cost: { f: 600, g: 200 }, t: 60 },
 	{ name: 'Medieval', cost: { f: 1000, g: 500, s: 200 }, t: 80 },
 	{ name: 'Gunpowder', cost: { f: 1600, g: 900, s: 300, i: 400 }, t: 100 },
+	{ name: 'Enlightenment', cost: { f: 2000, g: 1400, s: 400, i: 400 }, t: 120, hidden: true }, // opens only after a year of peace across the board (39-games); six research steps, no units; its last step ends the match
 ];
 const SEASONS = [
 	// one year is 12 minutes; real effects, simplified
@@ -3810,6 +3816,85 @@ const TECH = [
 		need: ['press'],
 		desc: 'Everyone sees farther.',
 	},
+	// The Enlightenment (the hidden age, 39-games): six steps, no soldiers. Each is a real turn of the 1600s and 1700s, with its date in WHY.
+	{
+		id: 'method',
+		name: 'Scientific method',
+		at: 'library',
+		line: 'Enlightenment',
+		age: 5,
+		w: 1,
+		when: '1660',
+		cost: { g: 600, s: 300 },
+		t: 90,
+		fx: [{ s: 'research', m: 0.75 }],
+		desc: 'Research is 25% faster.',
+	},
+	{
+		id: 'vaccine',
+		name: 'Vaccination',
+		at: 'library',
+		line: 'Enlightenment',
+		age: 5,
+		w: 2,
+		when: '1796',
+		cost: { g: 600, f: 400 },
+		t: 90,
+		fx: [{ s: 'sick', m: 0.5 }],
+		desc: 'Half as much sickness.',
+	},
+	{
+		id: 'fourcourse',
+		name: 'Four-course rotation',
+		at: 'library',
+		line: 'Enlightenment',
+		age: 5,
+		w: 3,
+		when: '1730s',
+		cost: { g: 600, w: 400 },
+		t: 90,
+		fx: [{ s: 'crop', k: 'food', m: 1.25 }],
+		desc: 'Fields give 25% more.',
+	},
+	{
+		id: 'encyclopedia',
+		name: 'Encyclopédie',
+		at: 'library',
+		line: 'Enlightenment',
+		age: 5,
+		w: 4,
+		when: '1751',
+		cost: { g: 700, s: 300 },
+		t: 100,
+		fx: [{ s: 'cost', m: 0.85 }],
+		desc: 'Research costs 15% less.',
+	},
+	{
+		id: 'schooling',
+		name: 'Public schooling',
+		at: 'library',
+		line: 'Enlightenment',
+		age: 5,
+		w: 5,
+		when: '1763',
+		cost: { g: 700, f: 500 },
+		t: 100,
+		fx: [{ s: 'gather', m: 1.1 }],
+		desc: 'Every gatherer works 10% faster.',
+	},
+	{
+		id: 'freetrade',
+		name: 'Free trade',
+		at: 'library',
+		line: 'Enlightenment',
+		age: 5,
+		w: 6,
+		when: '1776',
+		cost: { g: 800, s: 400 },
+		t: 110,
+		fx: [{ s: 'trade', m: 1.25 }],
+		desc: 'Trade pays 25% more. The last step: the match ends and the crowns are given.',
+	},
 	{
 		id: 'roads',
 		name: 'Roads',
@@ -4912,6 +4997,7 @@ const THRONE = { hold: 900, tithe: 0.1, score: 50, r: 80, isle: 100, cause: 30 }
 // build: [kind, from age, how many, needs army of at least, needs stock]; techs in the order they want them.
 const PERS = {
 	aggr: {
+		crown: 'war', // the crown this personality chases (39-games)
 		vils: 16,
 		mix: { food: 0.5, wood: 0.35, gold: 0.15, stone: 0, iron: 0.08 },
 		ageTo: 2,
@@ -4958,6 +5044,7 @@ const PERS = {
 		],
 	},
 	bal: {
+		crown: 'wealth',
 		vils: 26,
 		mix: { food: 0.4, wood: 0.3, gold: 0.2, stone: 0.1, iron: 0.1 },
 		ageTo: 4,
@@ -5033,6 +5120,7 @@ const PERS = {
 		],
 	},
 	fort: {
+		crown: 'wellbeing',
 		vils: 28,
 		mix: { food: 0.4, wood: 0.3, gold: 0.15, stone: 0.15, iron: 0.08 },
 		ageTo: 3,
@@ -5272,9 +5360,10 @@ const HZK = Object.keys(HAZARDS),
 	TODAY_HZ = { hard: 1, starve: 1, horde: 1, winter: 1 }; // a new game starts at level 5; The challenge today is level 10 on the day's seed
 const STARVE = { stop: 60, leave: 120, every: 30 },
 	HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 },
-	HORDE = { from: 1200, to: 2400, warn: SEASON_LEN * 2, n: 16, perAge: 6 };
+	HORDE = { min: 1200, mean: 1800, warn: SEASON_LEN * 2, n: 16, perAge: 6 }; // the horde comes after min seconds, at an exponential wait about mean (nextIn)
 // Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 37-events.
-const EV_GAP = [60, 180],
+const EV_MEAN = 120, // the mean wait between events (an exponential wait, nextIn); EV_MIN keeps two from stacking
+	EV_MIN = 30,
 	EV_WARN = 12;
 const EVENTS = {
 	eclipse: { name: 'Eclipse', secs: 20, dmg: 0.6, spd: 0.7, sight: 0.7, harm: 1 },
@@ -5358,6 +5447,13 @@ const WHY = {
 	age1: 'Bronze (from about 3300 BC in the Near East): the first cities, writing, law, chariots and standing armies, in Sumer, Egypt, the Indus valley and China.',
 	age2: 'Classical antiquity (about 500 BC to AD 500): iron weapons, legions and phalanxes, libraries, roads and aqueducts, from Rome and Persia to Maurya India and Han China.',
 	age3: 'The Middle Ages (about AD 500 to 1500): castles, knights, crossbows and longbows, universities, and the heavy plough.',
+	age5: 'The Enlightenment (about 1650 to 1800): the Royal Society (1660), the Encyclopédie (1751), inoculation, the turnip and the clover, the school for every child. Game: an age that only a year of peace across the whole board opens, with no soldiers in it; its six steps are the match, and its last step ends it with the crowns.',
+	method: 'The Royal Society (1660) and its Philosophical Transactions (1665): experiment, record, publish, repeat. Knowledge compounded.',
+	vaccine: 'Jenner showed in 1796 that cowpox guards against smallpox; variolation had come to London from Constantinople in 1721 with Lady Mary Wortley Montagu, and was older still in the Ottoman lands, China and India.',
+	fourcourse: 'The Norfolk four-course (wheat, turnips, barley, clover) spread through England in the 1730s: no fallow year, more fodder, more manure, more grain. The Low Countries had it a century earlier.',
+	encyclopedia: 'Diderot and his fellow editors published the Encyclopédie from 1751: 28 volumes, every trade drawn and described, so no craft had to be learned twice.',
+	schooling: 'Prussia ordered every child to school in 1763 (the Generallandschulreglement); Scotland had parish schools from 1696. A people that reads works smarter.',
+	freetrade: 'Adam Smith, The Wealth of Nations (1776): trade is not a war with a loser; both sides gain. Game: the last step, because a board that trades freely has finished what the truce began.',
 	age4: 'Gunpowder (about AD 1400 to 1600): matchlock guns and cannon. Great bombards broke the walls of Constantinople in 1453; Italian engineers answered with low angled star forts, and walls stopped being the end of a siege.',
 	arquebus:
 		'The matchlock arquebus (late 15th century) let a few weeks of drill make a soldier. Spanish arquebusiers won at Cerignola in 1503, and pike-and-shot formations ruled the next century.',
@@ -6218,6 +6314,21 @@ const TRIGGERS = () => [
 		'Summer flux and winter fever were the yearly toll; plague followed trade. Kermack and McKendrick wrote the arithmetic of an epidemic in 1927: a sickness grows while each case makes more than one, and burns out as it runs short of the well.',
 	],
 	[
+		'The whole board is at peace',
+		`When no two courts are at war and no notice runs, the board is at peace. After ${PEACE.stand.after} s the computers stand their spare soldiers down to the fields; after a year the ${AGES[5].name} opens to every court. The Games are held at the Throne every ${PEACE.games.every / YEAR} years, but only under this peace: war cancels them. Peace from a court that wants more war can be bought with gold (tribute).`,
+		'The Olympic truce (ekecheiria) stopped the wars of Greece for the festival; Æthelred bought peace from the Danes in 991 with 10,000 pounds of silver, the Danegeld.',
+	],
+	[
+		'The Games',
+		`Four events: the footrace, the wrestling, the javelin, the chariot race. Each court sends the best it has in the field; the odds go with the square of that strength, as battle does. A win is a laurel, counted toward the Wellbeing crown.`,
+		'Olympia, from 776 BC: the stadion footrace, wrestling (pale), the pentathlon with its javelin, and the four-horse chariot race (tethrippon) from 680 BC. Winners took a wreath of olive and a lifetime of honour at home.',
+	],
+	[
+		'The crowns',
+		`When a match ends, three crowns are pointed to: Wealth (all a court gathered and holds), War (its kills) and Wellbeing (its people in health, its places of care and recreation, its laurels), and an overall crown from the three. A match that ends in the ${AGES[5].name} is won by everyone; the crowns say who won what. Carry on as free play if you like.`,
+		'Game: every path has its crown, so the trader, the warlord and the builder can each say they won. Albert, Oct 29.',
+	],
+	[
 		'A caravan has a route',
 		`It loads goods at the Market, sells them at a trade stop (farther pays more, up to ×${POST.far}; a wanted good ×${POST.want}), can buy spice there, and repeats. Robbers attack carts near their camps unless a post, tower or soldier is close. Up to ${POST.guard} soldiers can escort one: tap the caravan, Escort +4.`,
 		'Merchants carried goods where they were scarce, and paid for guards.',
@@ -6317,6 +6428,11 @@ function rng() {
 	return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 }
 const rnd = (a, b) => a + rng() * (b - a);
+// Random events are a Poisson process, the established model of independent rare events (Poisson 1837; Feller, vol. 1, ch. XVII):
+// the wait to the next one is exponential with the stated mean, t = −mean · ln U, and the chance of one in a step is 1 − e^(−rate · dt) (hazard).
+// Every random "when" in the game draws from these two (Build 57, Albert: "the established and correct formula for random events").
+const nextIn = (mean) => -mean * Math.log(1 - rng());
+const hazard = (rate, dt = 1) => rng() < 1 - Math.exp(-rate * dt);
 let NID = 1;
 // one wolf, two wolves; one spearman, two spearmen; one man-at-arms, two men-at-arms
 const plural = (n) =>
@@ -7581,7 +7697,13 @@ function blankGame(seed) {
 		ev: {},
 		horde: null,
 		flood: 0,
-		clim: blankClim(), // the climate: the air's temperature, the ground's wetness, snow, ice, mud, the sky's run (37-events)
+		clim: blankClim(),
+		truce: null, // when the whole board came to peace, or null (39-games)
+		enlight: false,
+		stood: false,
+		gamesT: 0,
+		gamesN: 0,
+		chron: [], // the climate: the air's temperature, the ground's wetness, snow, ice, mud, the sky's run (37-events)
 		fog: new Uint8Array(FOGN * FOGN),
 	}; // warAt: notice given, 'a,b' → when it falls due; pick: what the finger holds; hz: the hazards on; ev: the spectacle's state
 }
@@ -8395,7 +8517,7 @@ function research(o, id) {
 }
 function ageUp(o) {
 	const p = G.P[o],
-		A = AGES[p.age + 1],
+		A = nextAge(o),
 		k = keepOf(o);
 	if (!A || p.aging || !k || !afford(p, A.cost) || k.q.length >= qMax(o)) return false;
 	pay(p, A.cost);
@@ -8521,8 +8643,10 @@ function declareWar(a, b, why) {
 	if (a === 0 || b === 0)
 		say(`${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken; ' : ''}war, ${why}.`, 'warn', 6);
 	else say(`${G.P[a].name} and ${G.P[b].name} are now at war.`, '', 5);
+	chron(`${a === 0 ? 'You' : G.P[a].name} and ${b === 0 ? 'you' : G.P[b].name}: war, ${why}.`);
 }
 function makePeace(a, b) {
+	if (G.rel[a][b] === 'war') chron(`Peace between ${a === 0 ? 'you' : G.P[a].name} and ${b === 0 ? 'you' : G.P[b].name}.`);
 	G.rel[a][b] = G.rel[b][a] = 'peace';
 	G.navDirty = true;
 	if (G.P[a].ally === b) G.P[a].ally = null;
@@ -8540,6 +8664,7 @@ function makeAlly(a, b) {
 	G.P[b].ally = a;
 	G.navDirty = true;
 	if (b !== 0 && a !== 0) say(`${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', 6);
+	chron(`${a === 0 ? 'You' : G.P[a].name} allied with ${b === 0 ? 'you' : G.P[b].name}.`);
 }
 const noticeLeft = (a, b) => {
 	const t = G.warAt[a + ',' + b];
@@ -8643,7 +8768,17 @@ function judgeEnvoy(to, from, envoy) {
 			return;
 		}
 		if (oddsOf(to, from) > 0.6 + fxv(from, 'diplo').a && !busy && !T.rebel) {
-			reply(from, envoy, `The ${T.name} want more of this war.`);
+			// a truce has a price: tribute, as the Danegeld of 991 bought off the Danes
+			const price = Math.round((PEACE.truce.gold * (1 + PEACE.truce.odds * oddsOf(to, from))) / 10) * 10;
+			if (G.P[from].res.g < price) {
+				reply(from, envoy, `The ${T.name} want more of this war, or ${price} gold.`);
+				return;
+			}
+			G.P[from].res.g -= price;
+			T.res.g += price;
+			T.gathered += price;
+			makePeace(to, from);
+			reply(from, envoy, `The ${T.name} accept peace for ${price} gold.`);
 			return;
 		}
 		makePeace(to, from);
@@ -9415,6 +9550,7 @@ function step(dt) {
 	if (G.tick % 30 === 2) {
 		eventsTick();
 		climateTick(1);
+		peaceTick();
 	}
 	if (SET.fog && G.tick % 10 === 0) fogTick();
 	{
@@ -9883,12 +10019,14 @@ function jobDone(b, j) {
 				celebrate(3, k.x, k.y);
 			}
 		} else say(`${p.name} entered the ${AGES[p.age].name} age.`, '', 4);
+		chron(`${o === 0 ? 'You' : p.name} entered the ${AGES[p.age].name} age.`);
 	}
 }
 function learnTech(o, id) {
 	const T = TECHBY[id];
 	G.P[o].techs.add(id);
 	rehealth(o);
+	if (T.age === 5) enlightenTick(o);
 	if (o === 0) {
 		say(
 			T.tier
@@ -11346,6 +11484,7 @@ function hurt(o, a, t, base) {
 	t.hurtT = G.t;
 	if (a && t.hp <= 0 && !isB && a.st) {
 		a.st.kills++;
+		if (a.owner !== WILD && t.owner !== a.owner) G.P[a.owner].kills = (G.P[a.owner].kills || 0) + 1;
 		if (isSoldier(a)) a.mor = Math.min(1, a.mor + MORALE.kill);
 	}
 	if (t.native && o !== WILD && G.t - (natState().hitT ? natState().hitT[o] || -9 : -9) > 3) {
@@ -11554,6 +11693,7 @@ function fall(p) {
 		if (q.ally === p.id) q.ally = null;
 	}
 	if (p.id) say(`${p.name} has fallen.`, 'good', 7);
+	chron(`${p.id === 0 ? 'Your keep' : p.name} fell.`);
 }
 function scoreAll() {
 	for (const p of G.P) {
@@ -11580,8 +11720,9 @@ function watchHome() {
 		say('Enemies at your town!', 'warn', 7, near);
 	}
 }
-function finish(won, text) {
+function finish(won, text, all) {
 	G.over = won ? 'won' : 'lost';
+	if (!all) chron(won ? 'Victory.' : 'Defeat.');
 	clearSave();
 	sfx(won ? 'win' : 'lose');
 	scoreAll();
@@ -11600,7 +11741,7 @@ function finish(won, text) {
 			localStorage.setItem('firstkeep.best', String(sc));
 		} catch (e) {}
 	}
-	showEnd(won, `${text} Score ${fmt(sc)}${best ? ' · best ' + fmt(best) : ''}.`);
+	showEnd(won, `${text} Score ${fmt(sc)}${best ? ' · best ' + fmt(best) : ''}.`, all);
 }
 const TICK = {
 	vil: vilTick,
@@ -11727,7 +11868,7 @@ function think(p) {
 	if (farms >= 3 && !has('mill')) put('mill', k.x, k.y, 90, 170);
 	// the ages: once the town is big enough, save for the next one
 	const ageReady =
-		p.age < per.ageTo && !p.aging && vils.length >= Math.min(per.vils, 12 + p.age * 4) && armyN >= per.ageArmy;
+		(p.age < per.ageTo || (G.enlight && p.age === 4)) && !p.aging && vils.length >= Math.min(per.vils, 12 + p.age * 4) && armyN >= per.ageArmy;
 	if (ageReady) ageUp(o);
 	// saving for the age stops other spending, but never for long: after 90 s of saving without getting there it spends again for a minute
 	if (ageReady && !p.aging) {
@@ -11735,7 +11876,7 @@ function think(p) {
 	} else p.ai.saveT = undefined;
 	const threat = G.threats.some((v) => atWar(o, v.owner) && v.owner !== WILD && dist(v, k) < 400);
 	const saving = ageReady && !p.aging && !threat && !(p.ai.saveT !== undefined && (G.t - p.ai.saveT) % 150 > 90),
-		need = saving ? AGES[p.age + 1].cost : {};
+		need = saving && nextAge(o) ? nextAge(o).cost : {};
 	const foodShort = saving && (need.f || 0) > R.f;
 	if (foodShort && ready(o, 'market').length) {
 		// saving for an age and short of food: sell a surplus for gold, then buy food with the gold above the age cost (Build 42)
@@ -11772,6 +11913,7 @@ function think(p) {
 		const t = towardMid(k, 140);
 		put('tower', t.x, t.y, 0, 90);
 	}
+	chaseCrown(p, (kind) => put(kind, k.x, k.y, 90, 210));
 	if (per.walls && p.age >= 1 && R.s >= 60) {
 		const plan = p.ai.wallPlan || (p.ai.wallPlan = wallPlan(k));
 		let nb = 0;
@@ -11930,7 +12072,7 @@ function aiDiplomacy(p, per) {
 		if (atWar(o, q.id) && oddsOf(o, q.id) < 0.3 && soldiersOf(o).length < per.waveMin) {
 			if (setRel(o, q.id, 'peace')) return;
 		}
-		if (!warOn && G.rel[o][q.id] === 'peace' && !noticeLeft(o, q.id) && oddsOf(o, q.id) > per.bold + 0.15 + D.bold) {
+		if (!warOn && G.rel[o][q.id] === 'peace' && !noticeLeft(o, q.id) && oddsOf(o, q.id) > per.bold + 0.15 + D.bold && (per.crown === 'war' || G.truce === null)) {
 			if (setRel(o, q.id, 'war')) return;
 		}
 		if (
@@ -19639,7 +19781,7 @@ const trainsAt = (kind) =>
 function keepAgeBtn() {
 	// the next age, as one research button; the reason waits behind the book
 	const p = G.P[0],
-		A = AGES[p.age + 1];
+		A = nextAge(0);
 	if (!A) return '';
 	fold('why', 'Why this age?', `<p>${WHY['age' + (p.age + 1)]}</p>`);
 	return btn(
@@ -20189,6 +20331,14 @@ function nativesHTML() {
 }
 function relHTML() {
 	let h = sec('Relations') + nativesHTML();
+	{
+		// the board: at peace or not, the hidden age, the Games, standing down
+		const tf = truceFor(),
+			spare = Math.max(0, soldiersOf(0).filter((u) => u.state === 'home' && !u.inside).length - Math.ceil(ARMYMAX * PEACE.stand.keep)),
+			next = Math.max(0, PEACE.games.every - (G.t - (G.gamesT ?? 0)));
+		h += `<p><i>The board:</i> ${G.truce === null ? 'not at peace.' : `at peace for ${clock(tf)}.`} ${G.enlight ? `The ${AGES[5].name} is open.` : `A year of peace opens the ${AGES[5].name}${G.truce === null ? '' : ` (${clock(Math.max(0, PEACE.age.truce - tf))} to go)`}.`} Games in ${clock(next)}${G.truce === null ? ', if the board is at peace' : ''}. Laurels: ${G.P[0].laurels || 0}.</p>`;
+		h += acts(btn('stand', 'Stand down', spare ? `${spare} spare soldiers to the fields` : 'no spare soldiers at home', spare ? 'warn' : 'dis'), 'c2');
+	}
 	for (const q of G.P) {
 		if (q.id === 0 || q.id === WILD || !q.alive) continue;
 		const rel = G.rel[0][q.id],
@@ -20559,7 +20709,7 @@ function researchHTML() {
 	// everything you can research, across every building: ready first, then short, then locked
 	const p = G.P[0],
 		by = { ready: [], short: [], busy: [], locked: [] },
-		ageA = AGES[p.age + 1];
+		ageA = nextAge(0);
 	for (const t of TECH) {
 		if (!ownTech(t) || !isNext(0, t)) continue;
 		const s = techState(t);
@@ -21778,9 +21928,10 @@ function applyMini() {
 	$('stage').classList.toggle('mapOn', !!SET.mini);
 }
 // the end of a game: the sim says who won and why; the screen shows it
-function showEnd(won, text) {
-	$('endT').textContent = won ? 'Victory' : 'Defeat';
+function showEnd(won, text, all) {
+	$('endT').textContent = all ? 'Everyone wins' : won ? 'Victory' : 'Defeat';
 	$('endP').textContent = text;
+	$('endX').innerHTML = crownsHTML(); // the three crowns and the overall, then the chronicle
 	$('endNext').hidden = $('endFree').hidden = !won;
 	$('end').hidden = false;
 	closeCard();
@@ -21960,7 +22111,7 @@ function ui(force) {
 		G.rdy = new Map();
 		for (const t of TECH) if (ownTech(t) && techState(t) === 'ready') G.rdy.set(t.at, (G.rdy.get(t.at) || 0) + 1);
 		{
-			const A = AGES[p.age + 1];
+			const A = nextAge(0);
 			if (A && !p.aging && keepOf(0) && afford(p, A.cost)) G.rdy.set('keep', (G.rdy.get('keep') || 0) + 1);
 		}
 	} // building kind → how many researches you can start there now
@@ -23115,6 +23266,9 @@ const PLAY = {
 	ransom(a) {
 		if (!payRansom(0, Number(a))) say('Not enough gold.', '', 3);
 	},
+	stand() {
+		if (!standDown(0)) say('No spare soldiers at home to stand down.', '', 3);
+	},
 	vjob(a) {
 		const [id, j] = a.split(','),
 			u = G.units.find((x) => x.id === Number(id));
@@ -23304,7 +23458,7 @@ for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndIni
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = 'firstkeep.save',
-	SAVEV = 33; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 34; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -23355,6 +23509,10 @@ const MIGRATE = {
 		S.v = 33;
 		return S;
 	}, // Build 54: the climate replaces the ground counters
+	33: (S) => {
+		S.v = 34;
+		return S;
+	}, // Build 57: the truce, the hidden age, the Games and the chronicle; all read with defaults
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -23460,6 +23618,12 @@ function saveGame(force) {
 			horde: G.horde,
 			flood: G.flood,
 			clim: G.clim,
+			truce: G.truce,
+			enlight: G.enlight,
+			stood: G.stood,
+			gamesT: G.gamesT,
+			gamesN: G.gamesN,
+			chron: G.chron,
 			chargeT: G.chargeT || {} || 0,
 			sand: G.sand || null,
 			mirage: G.mirage || null,
@@ -23627,6 +23791,12 @@ function loadGame(S) {
 	G.horde = S.horde ?? null;
 	G.flood = S.flood || 0;
 	G.clim = S.clim ? { ...blankClim(), ...S.clim } : blankClim();
+	G.truce = S.truce ?? null;
+	G.enlight = !!S.enlight;
+	G.stood = !!S.stood;
+	G.gamesT = S.gamesT || 0;
+	G.gamesN = S.gamesN || 0;
+	G.chron = S.chron || [];
 	G.chargeT = S.chargeT || {};
 	G.sand = S.sand || null;
 	G.mirage = S.mirage || null;
@@ -24317,7 +24487,7 @@ function natureTick() {
 		G.seasonN = sn;
 		seasonTurn();
 	}
-	if (storm() && rng() < 0.05) strike(rnd(80, MAP - 80), rnd(80, MAP - 80)); // a strike on open ground, about every 20 s in a storm
+	if (storm() && hazard(1 / 20)) strike(rnd(80, MAP - 80), rnd(80, MAP - 80)); // a strike on open ground, one every 20 s in a storm on average
 	for (const b of G.blds)
 		if (b.node && BLD[b.kind].crop && b.prog >= 1 && b.node.type === 'food') {
 			// soil tires when worked and rests when not
@@ -24385,7 +24555,7 @@ function seasonTurn() {
 		}
 		if (
 			G.P.some((p) => p.alive && p.id !== WILD && unitsOf(p.id, 'caravan').some((c) => c.route)) &&
-			rng() < HEALTH.plague * (hz('plague') ? 3 : 1)
+			hazard(HEALTH.plague * (hz('plague') ? 3 : 1))
 		) {
 			G.plague = { until: G.t + SEASON_LEN * 2 };
 			say('Plague on the roads: build a Hospital.', 'warn', 10);
@@ -24436,7 +24606,7 @@ function lightning() {
 	// once a minute
 	if (storm())
 		for (const p of G.P)
-			if (p.alive && p.id !== WILD && rng() < (G.wx === 'drought' ? 0.1 : 0.04)) {
+			if (p.alive && p.id !== WILD && hazard(G.wx === 'drought' ? 0.1 : 0.04)) {
 				const W = G.blds.filter((b) => b.owner === p.id && BLD[b.kind].wood && b.prog >= 1);
 				if (W.length) {
 					const b = W[Math.floor(rng() * W.length)];
@@ -24444,7 +24614,7 @@ function lightning() {
 				}
 			}
 	for (const b of G.blds)
-		if ((b.kind === 'foundry' || b.kind === 'smith') && b.prog >= 1 && rng() < 0.01) {
+		if ((b.kind === 'foundry' || b.kind === 'smith') && b.prog >= 1 && hazard(0.01)) {
 			const n = nearest(G.blds, b, (c) => c !== b && c.owner === b.owner && BLD[c.kind].wood && c.prog >= 1, 60);
 			if (n) ignite(n, `sparks from the ${BLD[b.kind].name.toLowerCase()}`);
 		}
@@ -24467,7 +24637,7 @@ function fireTick(dt) {
 					!(c.fire > 0) &&
 					c.prog >= 1 &&
 					dist(b, c) < halfOf(b) + halfOf(c) + 20 &&
-					rng() < 0.12 * fm
+					hazard(0.12 * fm)
 				)
 					ignite(c, 'it spread');
 	}
@@ -24505,7 +24675,7 @@ function healthTick() {
 			p.ai.sickT = (p.ai.sickT ?? HEALTH.every) - 5;
 			if (p.ai.sickT <= 0) {
 				p.ai.sickT = HEALTH.every;
-				if (rng() < sickRisk(p.id)) outbreak(p.id, 0, false);
+				if (hazard(sickRisk(p.id))) outbreak(p.id, 0, false);
 			}
 		}
 	// the spread, by side: β S I / N new cases in these five seconds (SIR), among the people near home
@@ -24942,7 +25112,7 @@ function vassalTick() {
 // ═════ 37-events.js: the event scheduler and what each event does ═════
 // ───────────────────────── The Challenge and the spectacle: one scheduler, one table of events, one set of knobs ─────────────────────────
 // EVM: the knobs an event turns (every unit reads them: damage, speed, sight, gathering). A hazard is a switch in G.hz; a spectacle is a row of EVENTS.
-// Random when, never random whether: the next event is picked when the last ends, announced EV_WARN seconds ahead, then run for its seconds.
+// Random when, never random whether: the next event is picked when the last ends (an exponential wait, the Poisson process: nextIn in 08-core), announced EV_WARN seconds ahead, then run for its seconds.
 const EVM = { dmg: 1, spd: 1, sight: 1, gather: 1 };
 // the knobs follow the event now running and nothing else; set when one starts or ends, and on a new game or a load (Build 48: a game begun or loaded in an eclipse kept its dark)
 const KNOBS = { eclipse: ['dmg', 'spd', 'sight'], fog: ['sight'], heatwave: ['dmg', 'spd'] };
@@ -25413,12 +25583,12 @@ function endEvent() {
 	if (EV[e.kind].end) EV[e.kind].end(e);
 	G.ev.cur = null;
 	evmSet();
-	G.ev.next = G.t + rnd(EV_GAP[0], EV_GAP[1]);
+	G.ev.next = G.t + EV_MIN + nextIn(EV_MEAN - EV_MIN);
 }
 function eventsTick() {
 	// once a second
 	const V = G.ev;
-	if (!V.next) V.next = G.t + rnd(EV_GAP[0], EV_GAP[1]);
+	if (!V.next) V.next = G.t + EV_MIN + nextIn(EV_MEAN - EV_MIN);
 	if (V.cur) {
 		V.cur.s = (V.cur.s || 0) + 1; // seconds the event has run: a tick comes once a second
 		if (EV[V.cur.kind].tick) EV[V.cur.kind].tick(V.cur);
@@ -25441,7 +25611,7 @@ function eventsTick() {
 function hordeTick() {
 	if (!hz('horde') || G.horde === 'done') return;
 	if (!G.horde) {
-		G.horde = { at: rnd(HORDE.from, HORDE.to), said: 0 };
+		G.horde = { at: HORDE.min + nextIn(HORDE.mean - HORDE.min), said: 0 };
 		return;
 	}
 	const H = G.horde,
@@ -25888,6 +26058,198 @@ function nativesTick(dt) {
 			}
 	// the holder's score and the clock
 	if (held && G.P[G.throne.owner].alive) G.P[G.throne.owner].gathered += (THRONE.score * SCORE.wealth) / 12; // 50 score a minute, as wealth, in twelve beats
+}
+// ═════ 39-games.js: peace as a path (Build 57) ═════
+// Albert, Oct 29: "Why is it just war?" and "I build to match life. They decide." One module for everything that rewards a board at peace:
+// the board truce, the price of a truce, standing down, the Games on the Throne island, the hidden age that only a full truce opens,
+// the three crowns and the chronicle that ends a match. Every number sits in PEACE; every date is in WHY.
+const PEACE = {
+	truce: { gold: 120, odds: 2 }, // tribute buys peace from a side that wants more war: gold × (1 + odds × their odds), rounded to 10 (Danegeld, 991)
+	stand: { after: 90, keep: 0.5 }, // after 90 s of board truce a computer sends the soldiers above half its army cap home to the fields
+	games: {
+		every: 2 * YEAR, // the Olympiad: every second year (776 BC on, every four; the game's year is 12 minutes)
+		first: YEAR, // none in the first year: nobody has anyone to send
+		events: [
+			// each event asks one number of a side, the best it has in the field; the winner is rolled on the square of it (the square law, as battle)
+			{ id: 'stadion', name: 'the footrace', of: (o) => bestOf(o, (s) => s.spd) },
+			{ id: 'pale', name: 'the wrestling', of: (o) => bestOf(o, (s) => (s.rng <= 20 ? s.dmg * s.hp : 0)) },
+			{ id: 'akon', name: 'the javelin', of: (o) => bestOf(o, (s) => (s.rng > 20 ? s.dmg * s.rng : 0)) },
+			{ id: 'tethrippon', name: 'the chariot race', of: (o) => bestOf(o, (s) => (s.mounted ? s.spd * s.hp : 0)) },
+		],
+	},
+	age: { truce: YEAR }, // the hidden age opens for every side once the whole board has kept the peace for one year
+	crown: { bld: 8, laurel: 5, people: 1 }, // the Wellbeing crown: people × health, plus each place of care or recreation, plus each laurel
+	chron: 80, // lines kept in the chronicle
+};
+const CARE = ['hospital', 'temple', 'baths', 'theatre', 'tavern']; // what counts as care for the Wellbeing crown
+// the best a side has of some measure, over the soldier kinds it has alive (a side with no soldiers sends its villagers: 1)
+function bestOf(o, f) {
+	let best = 0;
+	const seen = new Set();
+	for (const u of G.units) {
+		if (u.owner !== o || u.hp <= 0 || !isSoldier(u) || seen.has(u.kind)) continue;
+		seen.add(u.kind);
+		const s = stats(o, u.kind);
+		best = Math.max(best, f({ ...s, mounted: (UNIT[u.kind].tags || []).includes('mounted') }) || 0);
+	}
+	return best || 1;
+}
+const livingSides = () => G.P.filter((p) => p.alive && p.id !== WILD);
+// a board truce: no two living courts at war, and no notice running
+function truceAll() {
+	const L = livingSides();
+	for (const a of L) for (const b of L) if (a.id < b.id && (atWar(a.id, b.id) || noticeLeft(a.id, b.id) || noticeLeft(b.id, a.id))) return false;
+	return true;
+}
+const truceFor = () => (G.truce === null ? 0 : G.t - G.truce); // seconds the whole board has been at peace
+const ageOpen = (n) => !AGES[n] || !AGES[n].hidden || G.enlight; // the hidden age, once opened, stays open for every side
+const nextAge = (o) => (ageOpen(G.P[o].age + 1) ? AGES[G.P[o].age + 1] || null : null);
+function chron(text) {
+	(G.chron || (G.chron = [])).push({ t: Math.round(G.t), text });
+	if (G.chron.length > PEACE.chron) G.chron.shift();
+}
+// once a second from the simulation: the truce clock, the hidden age, standing down, the Games
+function peaceTick() {
+	const was = G.truce;
+	if (truceAll()) {
+		if (G.truce === null) {
+			G.truce = G.t;
+			if (G.t > 30) {
+				say('The whole board is at peace.', 'soft', 6);
+				chron('The whole board at peace.');
+			}
+		}
+	} else if (G.truce !== null) {
+		G.truce = null;
+		G.stood = false;
+	}
+	if (!G.enlight && truceFor() >= PEACE.age.truce) {
+		G.enlight = true;
+		say(`A year of peace: the ${AGES[5].name} opens.`, 'good', 9);
+		chron(`A year of peace opened the ${AGES[5].name}.`);
+	}
+	if (G.truce !== null && !G.stood && truceFor() >= PEACE.stand.after) {
+		G.stood = true;
+		for (const p of livingSides()) if (p.id !== 0) standDown(p.id, true);
+	}
+	if (G.t >= PEACE.games.first && G.t - (G.gamesT ?? 0) >= PEACE.games.every) {
+		G.gamesT = G.t;
+		holdGames();
+	}
+	if (was === null && G.truce !== null) fxDirty();
+}
+// soldiers above the keep share go home and take up the villager's tools; the room they held is freed (demobilisation, as every peace since Rome)
+function standDown(o, quiet) {
+	const p = G.P[o],
+		k = keepOf(o),
+		S = soldiersOf(o).filter((u) => u.state === 'home' && !u.inside),
+		keep = Math.ceil((o === 0 ? ARMYMAX : armyCap(p)) * PEACE.stand.keep),
+		go = S.slice(keep);
+	if (!k || !go.length) return 0;
+	let n = 0;
+	for (const u of go) {
+		if (popOf(o) >= capOf(o)) break;
+		u.hp = 0;
+		u.gone = true;
+		const v = addUnit(o, 'vil', u.x, u.y);
+		if (v) n++;
+	}
+	if (n) {
+		if (o === 0) say(`${n} soldiers stood down to the fields.`, 'good', 6);
+		else if (!quiet) say(`${p.name} stood down ${n} soldiers.`, '', 4);
+		chron(`${o === 0 ? 'You' : p.name} stood down ${n} soldiers.`);
+	}
+	return n;
+}
+// the Games: held on the Throne island under the truce of the whole board, as the ekecheiria held Olympia; war cancels them
+function holdGames() {
+	const L = livingSides();
+	if (L.length < 2) return;
+	if (!truceAll()) {
+		say('No Games this year: war.', '', 5);
+		chron('The Games were not held: war.');
+		return;
+	}
+	const won = [];
+	for (const ev of PEACE.games.events) {
+		const w = L.map((p) => {
+			const v = ev.of(p.id);
+			return v * v;
+		});
+		let r = rng() * w.reduce((a, b) => a + b, 0),
+			i = 0;
+		while (i < L.length - 1 && r >= w[i]) r -= w[i++];
+		const p = L[i];
+		p.laurels = (p.laurels || 0) + 1;
+		won.push(`${p.id === 0 ? 'you' : p.name} ${ev.name}`);
+	}
+	G.gamesN = (G.gamesN || 0) + 1;
+	const mine = won.filter((w) => w.startsWith('you')).length;
+	chron(`The Games at the Throne: ${won.join(', ')}.`);
+	say(`The Games: ${mine ? mine + (mine === 1 ? ' laurel' : ' laurels') + ' for you' : 'no laurel for you'}.`, mine ? 'good' : 'soft', 8, { x: MID, y: MID });
+	celebrate(3, MID, MID);
+	if (mine) sfx('age');
+}
+// the three crowns and the overall: Wealth is all a side ever gathered and holds; War is its kills; Wellbeing is its people in health, its care and its laurels
+function crownsOf() {
+	const L = G.P.filter((p) => p.id !== WILD),
+		val = {
+			wealth: (p) => Math.round(p.gathered + Object.values(p.res).reduce((a, b) => a + b, 0)),
+			war: (p) => p.kills || 0,
+			wellbeing: (p) =>
+				Math.round(
+					(p.alive ? G.units.filter((u) => u.owner === p.id && UNIT[u.kind].cls === 'civ').length * PEACE.crown.people * (p.health / 100) : 0) +
+						(p.alive ? G.blds.filter((b) => b.owner === p.id && b.hp > 0 && b.prog >= 1 && CARE.includes(b.kind)).length * PEACE.crown.bld : 0) +
+						(p.laurels || 0) * PEACE.crown.laurel,
+				),
+		},
+		pts = Object.fromEntries(L.map((p) => [p.id, 0])),
+		out = {};
+	for (const c in val) {
+		const R = L.map((p) => ({ id: p.id, v: val[c](p) })).sort((a, b) => b.v - a.v);
+		R.forEach((r, i) => (pts[r.id] += r.v > 0 ? L.length - 1 - i : 0));
+		out[c] = R;
+	}
+	scoreAll();
+	out.overall = L.map((p) => ({ id: p.id, v: pts[p.id], tie: p.score.total })).sort((a, b) => b.v - a.v || b.tie - a.tie);
+	return out;
+}
+const CROWN_NAME = { wealth: 'Wealth', war: 'War', wellbeing: 'Wellbeing' };
+function crownsHTML() {
+	const C = crownsOf(),
+		nm = (id) => (id === 0 ? 'You' : G.P[id].name),
+		unit = { wealth: '', war: ' kills', wellbeing: '' };
+	let h = '<div class="crowns">';
+	for (const c of ['wealth', 'war', 'wellbeing']) {
+		const r = C[c][0];
+		h += `<p><b>${CROWN_NAME[c]}</b> ${r.v > 0 ? `${nm(r.id)} · ${fmt(r.v)}${unit[c]}` : 'no one'}</p>`;
+	}
+	h += `<p><b>Overall</b> ${nm(C.overall[0].id)}</p></div>`;
+	if (G.chron && G.chron.length)
+		h += `<details><summary>Chronicle · ${G.chron.length}</summary>${G.chron.map((c) => `<p><small>${clock(c.t)}</small> ${c.text}</p>`).join('')}</details>`;
+	return h;
+}
+// the last step of the hidden age ends the match for everyone: the crowns are pointed to, and play can carry on
+function enlightenTick(o) {
+	if (!AGES[5] || G.P[o].age < 5 || G.over || G.free) return;
+	const last = TECH.filter((t) => t.age === 5 && !t.civ);
+	if (!last.every((t) => G.P[o].techs.has(t.id))) return;
+	chron(`${o === 0 ? 'You' : G.P[o].name} finished the ${AGES[5].name}.`);
+	finish(true, `${o === 0 ? 'You' : G.P[o].name} finished the ${AGES[5].name}. Everyone wins; the crowns say who won what.`, true);
+}
+// a personality chases its crown: the war chaser breaks truces, the wealth chaser trades, the wellbeing chaser builds care; under a board truce only the war chaser declares
+function chaseCrown(p, put) {
+	const per = PERS[p.pers],
+		o = p.id,
+		has = (kind) => bldsOf(o, kind).length;
+	if (per.crown === 'wellbeing')
+		for (const kind of CARE) if (p.age >= BLD[kind].age && !has(kind) && afford(p, BLD[kind].cost) && put(kind)) break;
+	if (G.enlight && p.age === 4 && !p.aging) ageUp(o); // every court takes the hidden age when it opens
+	if (p.age === 5) {
+		// and runs its six steps: the match is a race to the last of them
+		if (!has('library')) put('library');
+		else for (const t of TECH) if (t.age === 5 && !t.civ && isNext(o, t) && research(o, t.id)) break;
+	}
 }
 // ═════ 39-huddle.js: the huddle: four missions you plan, fire, watch and call off, over the same bar the jobs use ═════
 // The sword button swaps the job bar for the attack bar. Column 1: Ready over Aim, each with a light (red: not set, green: set).
@@ -26884,6 +27246,15 @@ window.__fk = {
 	fireMul,
 	groundSpd,
 	CLIMATE,
+	PEACE,
+	nextIn,
+	hazard,
+	HEALTH,
+	truceAll,
+	truceFor,
+	crownsOf,
+	holdGames,
+	standDown,
 	sightOf,
 	shelterOf,
 	bldName,

@@ -100,6 +100,10 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
 #end p{margin:0;color:var(--mute);font-size:15px}
+#endX .crowns{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:8px 0}
+#endX .crowns p{font-size:15px}#endX .crowns b{color:var(--bone)}
+#endX details{text-align:left}#endX summary{color:var(--mute);font-size:13px;min-height:44px;display:flex;align-items:center;cursor:pointer;list-style:none}#endX summary::-webkit-details-marker{display:none}#endX summary::before{content:'+';display:inline-block;width:18px;font-weight:700}#endX details[open] summary::before{content:'−'}
+#endX details p{font-size:12px;margin:2px 0}#endX details small{font-size:12px;color:var(--mute);margin-right:6px}
 #card .qs{display:grid;grid-template-columns:1fr 44px 76px 44px;gap:4px;align-items:center;margin:2px 0}
 #card .qs span{text-align:center;font-variant-numeric:tabular-nums;font-size:13px}
 #card .qs button{padding:0;font-size:20px;font-weight:700;min-height:44px}
@@ -261,6 +265,7 @@ button.ok small{color:#8fd4a4}
     <div id="end" hidden>
       <h2 id="endT">Victory</h2>
       <p id="endP"></p>
+      <div id="endX"></div>
       <div class="acts c1" id="endActs"><button data-act="next" id="endNext" class="go"><b>Add another conquest</b><small>new map · keeps your age and research</small></button><button data-act="free" id="endFree"><b>Continue as free play</b><small>no clock, no victory</small></button><button data-act="again"><b>New game</b></button></div>
     </div>
   </div>

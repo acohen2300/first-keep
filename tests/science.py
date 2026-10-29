@@ -25,6 +25,11 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   near('daylight equinox', light(80), 12, 0.15); near('daylight midsummer', light(172), 15.4, 0.15); near('daylight midwinter', light(355), 8.6, 0.15);
   // the moon: new to new in SYNODIC days; lit fraction 0 at new, 1 at full (Meeus 48.1)
   near('moon new', F.moonPhase(0), 0, 1e-9); near('moon full', F.moonPhase(29.53 * DAY / 2), 0.5, 1e-6);
+  // random events are a Poisson process: the exponential wait has mean = mean and standard deviation = mean; the chance over a step is 1 − e^(−rate·dt)
+  { let s = 0, s2 = 0; const N = 20000, m = 120; for (let i = 0; i < N; i++) { const t = F.nextIn(m); s += t; s2 += t * t; } const mu = s / N, sd = Math.sqrt(s2 / N - mu * mu); near('exponential mean', mu, m, 3); near('exponential sd', sd, m, 4); }
+  { let k = 0; const N = 20000; for (let i = 0; i < N; i++) if (F.hazard(0.05, 1)) k++; near('hazard 0.05', k / N, 1 - Math.exp(-0.05), 0.006); }
+  // the SIR chain: with R0 = 2 the final size solves z = 1 − e^(−R0 z): 0.7968 (Kermack & McKendrick)
+  { const R0 = F.HEALTH.R0; let z = 0.5; for (let i = 0; i < 100; i++) z = 1 - Math.exp(-R0 * z); if (R0 === 2) near('SIR final size', z, 0.7968, 1e-3); }
   return out; }"""
 async def main():
     async with async_playwright() as p:

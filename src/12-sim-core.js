@@ -42,6 +42,7 @@ function step(dt) {
 	if (G.tick % 30 === 2) {
 		eventsTick();
 		climateTick(1);
+		peaceTick();
 	}
 	if (SET.fog && G.tick % 10 === 0) fogTick();
 	{
@@ -510,12 +511,14 @@ function jobDone(b, j) {
 				celebrate(3, k.x, k.y);
 			}
 		} else say(`${p.name} entered the ${AGES[p.age].name} age.`, '', 4);
+		chron(`${o === 0 ? 'You' : p.name} entered the ${AGES[p.age].name} age.`);
 	}
 }
 function learnTech(o, id) {
 	const T = TECHBY[id];
 	G.P[o].techs.add(id);
 	rehealth(o);
+	if (T.age === 5) enlightenTick(o);
 	if (o === 0) {
 		say(
 			T.tier

@@ -245,7 +245,7 @@ function natureTick() {
 		G.seasonN = sn;
 		seasonTurn();
 	}
-	if (storm() && rng() < 0.05) strike(rnd(80, MAP - 80), rnd(80, MAP - 80)); // a strike on open ground, about every 20 s in a storm
+	if (storm() && hazard(1 / 20)) strike(rnd(80, MAP - 80), rnd(80, MAP - 80)); // a strike on open ground, one every 20 s in a storm on average
 	for (const b of G.blds)
 		if (b.node && BLD[b.kind].crop && b.prog >= 1 && b.node.type === 'food') {
 			// soil tires when worked and rests when not
@@ -313,7 +313,7 @@ function seasonTurn() {
 		}
 		if (
 			G.P.some((p) => p.alive && p.id !== WILD && unitsOf(p.id, 'caravan').some((c) => c.route)) &&
-			rng() < HEALTH.plague * (hz('plague') ? 3 : 1)
+			hazard(HEALTH.plague * (hz('plague') ? 3 : 1))
 		) {
 			G.plague = { until: G.t + SEASON_LEN * 2 };
 			say('Plague on the roads: build a Hospital.', 'warn', 10);
@@ -364,7 +364,7 @@ function lightning() {
 	// once a minute
 	if (storm())
 		for (const p of G.P)
-			if (p.alive && p.id !== WILD && rng() < (G.wx === 'drought' ? 0.1 : 0.04)) {
+			if (p.alive && p.id !== WILD && hazard(G.wx === 'drought' ? 0.1 : 0.04)) {
 				const W = G.blds.filter((b) => b.owner === p.id && BLD[b.kind].wood && b.prog >= 1);
 				if (W.length) {
 					const b = W[Math.floor(rng() * W.length)];
@@ -372,7 +372,7 @@ function lightning() {
 				}
 			}
 	for (const b of G.blds)
-		if ((b.kind === 'foundry' || b.kind === 'smith') && b.prog >= 1 && rng() < 0.01) {
+		if ((b.kind === 'foundry' || b.kind === 'smith') && b.prog >= 1 && hazard(0.01)) {
 			const n = nearest(G.blds, b, (c) => c !== b && c.owner === b.owner && BLD[c.kind].wood && c.prog >= 1, 60);
 			if (n) ignite(n, `sparks from the ${BLD[b.kind].name.toLowerCase()}`);
 		}
@@ -395,7 +395,7 @@ function fireTick(dt) {
 					!(c.fire > 0) &&
 					c.prog >= 1 &&
 					dist(b, c) < halfOf(b) + halfOf(c) + 20 &&
-					rng() < 0.12 * fm
+					hazard(0.12 * fm)
 				)
 					ignite(c, 'it spread');
 	}
@@ -433,7 +433,7 @@ function healthTick() {
 			p.ai.sickT = (p.ai.sickT ?? HEALTH.every) - 5;
 			if (p.ai.sickT <= 0) {
 				p.ai.sickT = HEALTH.every;
-				if (rng() < sickRisk(p.id)) outbreak(p.id, 0, false);
+				if (hazard(sickRisk(p.id))) outbreak(p.id, 0, false);
 			}
 		}
 	// the spread, by side: β S I / N new cases in these five seconds (SIR), among the people near home

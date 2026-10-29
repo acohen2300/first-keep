@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = 'firstkeep.save',
-	SAVEV = 33; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 34; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -52,6 +52,10 @@ const MIGRATE = {
 		S.v = 33;
 		return S;
 	}, // Build 54: the climate replaces the ground counters
+	33: (S) => {
+		S.v = 34;
+		return S;
+	}, // Build 57: the truce, the hidden age, the Games and the chronicle; all read with defaults
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -157,6 +161,12 @@ function saveGame(force) {
 			horde: G.horde,
 			flood: G.flood,
 			clim: G.clim,
+			truce: G.truce,
+			enlight: G.enlight,
+			stood: G.stood,
+			gamesT: G.gamesT,
+			gamesN: G.gamesN,
+			chron: G.chron,
 			chargeT: G.chargeT || {} || 0,
 			sand: G.sand || null,
 			mirage: G.mirage || null,
@@ -324,6 +334,12 @@ function loadGame(S) {
 	G.horde = S.horde ?? null;
 	G.flood = S.flood || 0;
 	G.clim = S.clim ? { ...blankClim(), ...S.clim } : blankClim();
+	G.truce = S.truce ?? null;
+	G.enlight = !!S.enlight;
+	G.stood = !!S.stood;
+	G.gamesT = S.gamesT || 0;
+	G.gamesN = S.gamesN || 0;
+	G.chron = S.chron || [];
 	G.chargeT = S.chargeT || {};
 	G.sand = S.sand || null;
 	G.mirage = S.mirage || null;

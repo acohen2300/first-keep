@@ -128,7 +128,7 @@ function research(o, id) {
 }
 function ageUp(o) {
 	const p = G.P[o],
-		A = AGES[p.age + 1],
+		A = nextAge(o),
 		k = keepOf(o);
 	if (!A || p.aging || !k || !afford(p, A.cost) || k.q.length >= qMax(o)) return false;
 	pay(p, A.cost);
@@ -254,8 +254,10 @@ function declareWar(a, b, why) {
 	if (a === 0 || b === 0)
 		say(`${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken; ' : ''}war, ${why}.`, 'warn', 6);
 	else say(`${G.P[a].name} and ${G.P[b].name} are now at war.`, '', 5);
+	chron(`${a === 0 ? 'You' : G.P[a].name} and ${b === 0 ? 'you' : G.P[b].name}: war, ${why}.`);
 }
 function makePeace(a, b) {
+	if (G.rel[a][b] === 'war') chron(`Peace between ${a === 0 ? 'you' : G.P[a].name} and ${b === 0 ? 'you' : G.P[b].name}.`);
 	G.rel[a][b] = G.rel[b][a] = 'peace';
 	G.navDirty = true;
 	if (G.P[a].ally === b) G.P[a].ally = null;
@@ -273,6 +275,7 @@ function makeAlly(a, b) {
 	G.P[b].ally = a;
 	G.navDirty = true;
 	if (b !== 0 && a !== 0) say(`${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', 6);
+	chron(`${a === 0 ? 'You' : G.P[a].name} allied with ${b === 0 ? 'you' : G.P[b].name}.`);
 }
 const noticeLeft = (a, b) => {
 	const t = G.warAt[a + ',' + b];
@@ -376,7 +379,17 @@ function judgeEnvoy(to, from, envoy) {
 			return;
 		}
 		if (oddsOf(to, from) > 0.6 + fxv(from, 'diplo').a && !busy && !T.rebel) {
-			reply(from, envoy, `The ${T.name} want more of this war.`);
+			// a truce has a price: tribute, as the Danegeld of 991 bought off the Danes
+			const price = Math.round((PEACE.truce.gold * (1 + PEACE.truce.odds * oddsOf(to, from))) / 10) * 10;
+			if (G.P[from].res.g < price) {
+				reply(from, envoy, `The ${T.name} want more of this war, or ${price} gold.`);
+				return;
+			}
+			G.P[from].res.g -= price;
+			T.res.g += price;
+			T.gathered += price;
+			makePeace(to, from);
+			reply(from, envoy, `The ${T.name} accept peace for ${price} gold.`);
 			return;
 		}
 		makePeace(to, from);

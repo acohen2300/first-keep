@@ -162,9 +162,10 @@ function applyMini() {
 	$('stage').classList.toggle('mapOn', !!SET.mini);
 }
 // the end of a game: the sim says who won and why; the screen shows it
-function showEnd(won, text) {
-	$('endT').textContent = won ? 'Victory' : 'Defeat';
+function showEnd(won, text, all) {
+	$('endT').textContent = all ? 'Everyone wins' : won ? 'Victory' : 'Defeat';
 	$('endP').textContent = text;
+	$('endX').innerHTML = crownsHTML(); // the three crowns and the overall, then the chronicle
 	$('endNext').hidden = $('endFree').hidden = !won;
 	$('end').hidden = false;
 	closeCard();
@@ -344,7 +345,7 @@ function ui(force) {
 		G.rdy = new Map();
 		for (const t of TECH) if (ownTech(t) && techState(t) === 'ready') G.rdy.set(t.at, (G.rdy.get(t.at) || 0) + 1);
 		{
-			const A = AGES[p.age + 1];
+			const A = nextAge(0);
 			if (A && !p.aging && keepOf(0) && afford(p, A.cost)) G.rdy.set('keep', (G.rdy.get('keep') || 0) + 1);
 		}
 	} // building kind → how many researches you can start there now

@@ -131,6 +131,14 @@ function nativesHTML() {
 }
 function relHTML() {
 	let h = sec('Relations') + nativesHTML();
+	{
+		// the board: at peace or not, the hidden age, the Games, standing down
+		const tf = truceFor(),
+			spare = Math.max(0, soldiersOf(0).filter((u) => u.state === 'home' && !u.inside).length - Math.ceil(ARMYMAX * PEACE.stand.keep)),
+			next = Math.max(0, PEACE.games.every - (G.t - (G.gamesT ?? 0)));
+		h += `<p><i>The board:</i> ${G.truce === null ? 'not at peace.' : `at peace for ${clock(tf)}.`} ${G.enlight ? `The ${AGES[5].name} is open.` : `A year of peace opens the ${AGES[5].name}${G.truce === null ? '' : ` (${clock(Math.max(0, PEACE.age.truce - tf))} to go)`}.`} Games in ${clock(next)}${G.truce === null ? ', if the board is at peace' : ''}. Laurels: ${G.P[0].laurels || 0}.</p>`;
+		h += acts(btn('stand', 'Stand down', spare ? `${spare} spare soldiers to the fields` : 'no spare soldiers at home', spare ? 'warn' : 'dis'), 'c2');
+	}
 	for (const q of G.P) {
 		if (q.id === 0 || q.id === WILD || !q.alive) continue;
 		const rel = G.rel[0][q.id],
@@ -501,7 +509,7 @@ function researchHTML() {
 	// everything you can research, across every building: ready first, then short, then locked
 	const p = G.P[0],
 		by = { ready: [], short: [], busy: [], locked: [] },
-		ageA = AGES[p.age + 1];
+		ageA = nextAge(0);
 	for (const t of TECH) {
 		if (!ownTech(t) || !isNext(0, t)) continue;
 		const s = techState(t);

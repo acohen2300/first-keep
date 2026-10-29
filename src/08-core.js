@@ -52,6 +52,11 @@ function rng() {
 	return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 }
 const rnd = (a, b) => a + rng() * (b - a);
+// Random events are a Poisson process, the established model of independent rare events (Poisson 1837; Feller, vol. 1, ch. XVII):
+// the wait to the next one is exponential with the stated mean, t = −mean · ln U, and the chance of one in a step is 1 − e^(−rate · dt) (hazard).
+// Every random "when" in the game draws from these two (Build 57, Albert: "the established and correct formula for random events").
+const nextIn = (mean) => -mean * Math.log(1 - rng());
+const hazard = (rate, dt = 1) => rng() < 1 - Math.exp(-rate * dt);
 let NID = 1;
 // one wolf, two wolves; one spearman, two spearmen; one man-at-arms, two men-at-arms
 const plural = (n) =>

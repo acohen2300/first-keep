@@ -68,6 +68,7 @@ const AGES = [
 	{ name: 'Classical', cost: { f: 600, g: 200 }, t: 60 },
 	{ name: 'Medieval', cost: { f: 1000, g: 500, s: 200 }, t: 80 },
 	{ name: 'Gunpowder', cost: { f: 1600, g: 900, s: 300, i: 400 }, t: 100 },
+	{ name: 'Enlightenment', cost: { f: 2000, g: 1400, s: 400, i: 400 }, t: 120, hidden: true }, // opens only after a year of peace across the board (39-games); six research steps, no units; its last step ends the match
 ];
 const SEASONS = [
 	// one year is 12 minutes; real effects, simplified

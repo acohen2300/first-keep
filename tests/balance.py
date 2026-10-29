@@ -44,8 +44,10 @@ GAME = """([seed, minutes]) => {
   const winner = alive.length === 1 ? alive[0] : alive.sort((a, b) => G.P[b].score.total - G.P[a].score.total)[0];
   const units = {}; for (const r of seen.values()) { const k = r.kind, u = units[k] || (units[k] = { n: 0, spent: 0, kills: 0 }); u.n++; u.spent += cost(k); u.kills += r.kills; }
   const caravans = sides.map((s) => G.units.filter((u) => u.owner === s && u.kind === 'caravan').length);
+  const C = F.crownsOf(), crowns = { wealth: C.wealth[0].id, war: C.war[0].id, wellbeing: C.wellbeing[0].id, overall: C.overall[0].id };
+  const peace = { truceNow: F.truceAll(), truceSecs: Math.round(F.truceFor()), games: G.gamesN || 0, enlight: !!G.enlight, age5: sides.filter((s) => G.P[s].age >= 5).length, laurels: sides.map((s) => G.P[s].laurels || 0) };
   return { seed, t: Math.round(G.t), winner, lostAt, civ: sides.map((s) => G.P[s].civ), pers: sides.map((s) => G.P[s].pers), ages, fell,
-    score: sides.map((s) => G.P[s].score.total), stuck, why, units, caravans, errs: errs.slice(0, 3) }; }"""
+    score: sides.map((s) => G.P[s].score.total), stuck, why, units, caravans, crowns, peace, errs: errs.slice(0, 3) }; }"""
 async def worker(br, q, out):
     ctx = await br.new_context(viewport={'width': 390, 'height': 844}); pg = await ctx.new_page(); perr = []
     pg.on('pageerror', lambda e: perr.append(str(e)[:160]))
@@ -84,6 +86,13 @@ def report(R):
     print(f'\nvillager-seconds standing still with a job, per game (median): blocked (work to reach, not moving) {median(st)}, max {max(st)}; per seat total {[sum(r["stuck"][s] for r in R) for s in range(4)]}')
     if all('why' in r for r in R): print('  and not counted as blocked: idle, no work found', median([r['why']['idle'] for r in R]), '; waiting for input at a workshop', median([r['why']['waiting'] for r in R]))
     print('caravans at the end, per seat (summed):', [sum(r['caravans'][s] for r in R) for s in range(4)])
+    if all('peace' in r for r in R):
+        P = [r['peace'] for r in R]
+        print(f"\npeace: board at peace at the end in {sum(p['truceNow'] for p in P)} of {n}; Games held per game (median) {median([p['games'] for p in P])}; the hidden age opened in {sum(p['enlight'] for p in P)}; sides that reached it {sum(p['age5'] for p in P)}")
+        cw = defaultdict(lambda: defaultdict(int))
+        for r in R:
+            for c, s in r['crowns'].items(): cw[c][f"seat {s} ({r['pers'][s]})"] += 1
+        print('crowns by seat:', {c: dict(v) for c, v in cw.items()})
     bad = [(r['seed'], r['errs'] + r['perr']) for r in R if r['errs'] or r['perr']]
     if bad: print('\nerrors:', bad[:5])
 async def main():

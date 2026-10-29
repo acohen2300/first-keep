@@ -84,7 +84,7 @@ function think(p) {
 	if (farms >= 3 && !has('mill')) put('mill', k.x, k.y, 90, 170);
 	// the ages: once the town is big enough, save for the next one
 	const ageReady =
-		p.age < per.ageTo && !p.aging && vils.length >= Math.min(per.vils, 12 + p.age * 4) && armyN >= per.ageArmy;
+		(p.age < per.ageTo || (G.enlight && p.age === 4)) && !p.aging && vils.length >= Math.min(per.vils, 12 + p.age * 4) && armyN >= per.ageArmy;
 	if (ageReady) ageUp(o);
 	// saving for the age stops other spending, but never for long: after 90 s of saving without getting there it spends again for a minute
 	if (ageReady && !p.aging) {
@@ -92,7 +92,7 @@ function think(p) {
 	} else p.ai.saveT = undefined;
 	const threat = G.threats.some((v) => atWar(o, v.owner) && v.owner !== WILD && dist(v, k) < 400);
 	const saving = ageReady && !p.aging && !threat && !(p.ai.saveT !== undefined && (G.t - p.ai.saveT) % 150 > 90),
-		need = saving ? AGES[p.age + 1].cost : {};
+		need = saving && nextAge(o) ? nextAge(o).cost : {};
 	const foodShort = saving && (need.f || 0) > R.f;
 	if (foodShort && ready(o, 'market').length) {
 		// saving for an age and short of food: sell a surplus for gold, then buy food with the gold above the age cost (Build 42)
@@ -129,6 +129,7 @@ function think(p) {
 		const t = towardMid(k, 140);
 		put('tower', t.x, t.y, 0, 90);
 	}
+	chaseCrown(p, (kind) => put(kind, k.x, k.y, 90, 210));
 	if (per.walls && p.age >= 1 && R.s >= 60) {
 		const plan = p.ai.wallPlan || (p.ai.wallPlan = wallPlan(k));
 		let nb = 0;
@@ -287,7 +288,7 @@ function aiDiplomacy(p, per) {
 		if (atWar(o, q.id) && oddsOf(o, q.id) < 0.3 && soldiersOf(o).length < per.waveMin) {
 			if (setRel(o, q.id, 'peace')) return;
 		}
-		if (!warOn && G.rel[o][q.id] === 'peace' && !noticeLeft(o, q.id) && oddsOf(o, q.id) > per.bold + 0.15 + D.bold) {
+		if (!warOn && G.rel[o][q.id] === 'peace' && !noticeLeft(o, q.id) && oddsOf(o, q.id) > per.bold + 0.15 + D.bold && (per.crown === 'war' || G.truce === null)) {
 			if (setRel(o, q.id, 'war')) return;
 		}
 		if (

@@ -12,6 +12,13 @@ for f in files:
             k = m.group(1) or m.group(2)
             if k in names: sys.exit(f'build refused: {k} declared twice ({names[k]} and {f}:{n})')
             names[k] = f'{f}:{n}'
+# a research id used twice would make the second unreachable (Build 57 found 'inoculation' and 'rotation' twice): refuse it
+ids = {}
+for n, line in enumerate(open('src/04-rules-tech.js'), 1):
+    m = re.match(r"\s*id: '([a-z_0-9]+)',", line)
+    if m:
+        if m.group(1) in ids: sys.exit(f'build refused: research id {m.group(1)} used twice (lines {ids[m.group(1)]} and {n})')
+        ids[m.group(1)] = n
 # a // comment that ends in a statement has swallowed code (Build 38's battalion line): refuse it, as SoRen's build does
 def comment_of(line):
     q = None; i = 0

@@ -1,4 +1,4 @@
-# First Keep: the science (Build 56, Oct 29, 2026)
+# First Keep: the science (Build 57, Oct 29, 2026)
 
 Every number that stands for the real world, with its label and its source. Rule 4 of `RULES.md`.
 - **verified**: checked against the source in the session named.
@@ -35,6 +35,9 @@ Each equation has a test in `tests/science.py` against known values (from Build 
 | `rothermel` `fireMul` | Fire against wetness | η = 1 − 2.59r + 5.11r² − 3.52r³, r ≤ 1, as a share of a clear day | verified Oct 29 | Rothermel (1972); USDA RMRS-GTR-371. |
 | `CLIMATE.terrain` `groundSpd` | Walking: speed = 1/η; η = 1 + 0.8·mud + 0.6·snow | | cited | Pandolf, Givoni & Goldman (1977): dirt 1.1, swamp 1.8, soft snow about 1.6, over a hard road 1.0; the mud and snow shares are the game's. |
 | `CLIMATE.snow` `ice` | Snow melts 0.004 of full depth a second per degree above 0; ice forms on wet ground below 0 and thaws by the degree | | design, by the degree-day method | The form is the standard degree-day model; the rates fit the game's day. |
+| `08-core` `nextIn` `hazard` | Random events: the wait to the next is exponential, t = −mean · ln U; the chance over a step is 1 − e^(−rate·dt) | | verified Oct 29 | The Poisson process (Poisson 1837; Feller, *An Introduction to Probability Theory*, vol. 1, ch. XVII). `tests/science.py` checks the mean and the standard deviation of 20,000 waits and the step chance. The rates (an event every 120 s on average, the horde at 20 + 10 minutes, a strike every 20 s in a storm) are design. |
+| `39-games` `holdGames` | The Games: a court's odds in an event go with the square of its best strength | | cited | The same square law as battle (Lanchester 1916), chosen so one engine serves both; said so in the help. The events are Olympia's (776 BC; the chariot race from 680 BC). |
+| `39-games` `PEACE.truce` | Peace bought with gold | 120 × (1 + 2 × their odds) | design | Tribute for peace is the record (the Danegeld, 991: 10,000 pounds of silver); the price is the game's. |
 | `04-rules-tech` | Every research step's date and place | in `07-text` `WHY` | cited | Each line names a place and a date; "about" unless exact; Game: lines where compressed. The history batch (Build 58) re-checks about 25 of them. |
 
 ## To add, with their sources (checked Oct 29 against the sources named; see HANDOFF.md item 14)
@@ -50,4 +53,5 @@ Each equation has a test in `tests/science.py` against known values (from Build 
 | 55 | The moon's phase and the sun's place | Meeus ch. 25 and 47 | SoRen's `25-sky-model.js`, cited by line |
 | 55 | Fire colour from flame temperature | a black-body fit | Tanner Helland's fit, as in SoRen's `bvRGB`; candle about 1850 K, wood fire about 1900 K, oil lamp about 2000 K |
 | 55 | Light's reach | inverse square | physics |
+| 58 | The post by age: a delay on alerts bought down by each step | design on the record | the Royal Road (Herodotus 8.98), the cursus publicus, the Mongol yam, Thurn und Taxis 1490 |
 | talk | Market prices | P = P0 (Q/Q0)^(−1/ε) | constant-elasticity demand |

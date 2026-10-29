@@ -1,7 +1,7 @@
 // ═════ 37-events.js: the event scheduler and what each event does ═════
 // ───────────────────────── The Challenge and the spectacle: one scheduler, one table of events, one set of knobs ─────────────────────────
 // EVM: the knobs an event turns (every unit reads them: damage, speed, sight, gathering). A hazard is a switch in G.hz; a spectacle is a row of EVENTS.
-// Random when, never random whether: the next event is picked when the last ends, announced EV_WARN seconds ahead, then run for its seconds.
+// Random when, never random whether: the next event is picked when the last ends (an exponential wait, the Poisson process: nextIn in 08-core), announced EV_WARN seconds ahead, then run for its seconds.
 const EVM = { dmg: 1, spd: 1, sight: 1, gather: 1 };
 // the knobs follow the event now running and nothing else; set when one starts or ends, and on a new game or a load (Build 48: a game begun or loaded in an eclipse kept its dark)
 const KNOBS = { eclipse: ['dmg', 'spd', 'sight'], fog: ['sight'], heatwave: ['dmg', 'spd'] };
@@ -472,12 +472,12 @@ function endEvent() {
 	if (EV[e.kind].end) EV[e.kind].end(e);
 	G.ev.cur = null;
 	evmSet();
-	G.ev.next = G.t + rnd(EV_GAP[0], EV_GAP[1]);
+	G.ev.next = G.t + EV_MIN + nextIn(EV_MEAN - EV_MIN);
 }
 function eventsTick() {
 	// once a second
 	const V = G.ev;
-	if (!V.next) V.next = G.t + rnd(EV_GAP[0], EV_GAP[1]);
+	if (!V.next) V.next = G.t + EV_MIN + nextIn(EV_MEAN - EV_MIN);
 	if (V.cur) {
 		V.cur.s = (V.cur.s || 0) + 1; // seconds the event has run: a tick comes once a second
 		if (EV[V.cur.kind].tick) EV[V.cur.kind].tick(V.cur);
@@ -500,7 +500,7 @@ function eventsTick() {
 function hordeTick() {
 	if (!hz('horde') || G.horde === 'done') return;
 	if (!G.horde) {
-		G.horde = { at: rnd(HORDE.from, HORDE.to), said: 0 };
+		G.horde = { at: HORDE.min + nextIn(HORDE.mean - HORDE.min), said: 0 };
 		return;
 	}
 	const H = G.horde,
