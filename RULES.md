@@ -1,47 +1,68 @@
-# First Keep: the rule book
+# First Keep: the rule book (Oct 29, 2026; Build 52b on the preview)
 
-The one home for how First Keep is built. Every build is checked against it. Gathered from Albert's words (his build guide, the Albert Labs values, his rules restated Oct 28 and Oct 29) and SoRen's rule book where he set the same rule there.
+One home for how this game is built. Every build is checked against it. Where an older note disagrees, this file wins; where Albert restates a rule in the moment, his words win.
 
-## How we work
-- Talk it out first. Make a list; build only after Albert's double yes. Mockups and demos need no yes.
-- Mockups first, then everything at once: one build per batch, one gate run, one push. No build per tweak.
-- Preview only. Live only on Albert's explicit word.
-- Honest, open, transparent. No flattery. Neutral pushback: the goal is the best product, not his approval. Say when something is not right, flag when unsure, ask when unclear, do not act when unsure.
-- Keep pitching good ideas, even ones that break these rules, and say which rule they break.
-- Research and make design, art and sound calls ourselves; do not send him to "hire an expert".
-- Break a problem apart: is it a real problem for this game, or one inherited from others (app norms, genre habits)? Reassemble and solve for this game.
-- Analyse by element, not by interaction: does it exist, why, where is its one home, where else can it be reused, reskinned.
+## 1. Albert's build values (his words, gathered from Oct 24 to Oct 29)
+- Simple is better. Elegant. Honest. Transparent. Simplicity sells. Logic above all.
+- Don't use more words than you need. Don't use fewer words than you need.
+- Grounded in science, nature and history. When in doubt, real life rules overrule everything. If nature solved it, don't try to do it better. Fake only when it is right, and say so.
+- Everything has to live in one place. We don't do things twice: do it once and point to it. One home, central, with the skins and the screens pointing to it.
+- We use what we can. Whatever can be standardized is standardized; optimized is optimized; reused is reused; kept static is kept static. Anything that can become a module, element or overlay to run lean, should.
+- Smaller is better. Always seek optimization. Merge where possible, cut bloat, keep the code light, tidy and clean.
+- No patches, no fixes on top of fixes: tear apart, rebuild, make sure everything is perfect. Find the common denominators.
+- An exception to the logic does not redefine the logic. An anomaly is builder error, not logic error.
+- Patterns are in threes. Alliteration. Modular. Uniform: one standard, one mold.
+- Colours, shade, tint, rings and toggles for variables, to keep the visuals light.
+- Intuitive. Coherent, cohesive, with an identity. Consistent colours, style, language and grammar. Universal language.
+- Fair for all. What's good for the goose is good for the gander; if it is unfair, it is out. Pay to help, never pay to win.
+- Treat users like family. Honest, with integrity.
+- Don't skimp on the compute: use as much as you need.
+- Nothing goes away until resolved: a shelved problem or a postponed feature stays on the list until it is solved or deliberately removed.
+- "I build to match life. They decide." Whether a player chooses war, trade, the Games or growth is theirs, not ours: every path must work as well as the others under the same rules.
 
-## How we build
-- Always the simplest possible design. Smaller is better. Simplicity sells. Logic above all.
-- No patches, no fixes on top of fixes. Tear apart, rebuild the simplest, clearest, leanest way, and find the common denominators.
-- Everything has ONE home, central, with the skins and the screens pointing to it. We do not do things twice: do it once and point to it.
-- Whatever can be standardised is; whatever can be reused is; whatever can be kept static is; whatever can be optimised is; whatever can be a module, an element or an overlay is.
-- Merge where possible. Cut bloat. Keep the code light, tidy and clean.
-- An exception to the logic does not redefine the logic: an anomaly is builder error, not logic error.
-- Always seek optimisation; do not skimp on what the work needs.
-- Replacing a system means: find every current home of it, write the new one once (one module, one table, sources at its lines), delete the old completely (no wrapper, no second path), point every caller to it, migrate the save, log the cut, measure before and after.
+## 2. How a change happens
+1. Talk first. Bottom line up front. Lists when he has to scan. Neutral pushback, no flattery; say when unsure; ask when unclear; never act when unsure.
+2. Make the list of changes, in his words. Mark anything that bends a rule and name the rule. Keep pitching good ideas that break a rule, flagged.
+3. Build only after his double yes. His standing vote on a list is "do all", with exceptions he names. Mockups and measurements need no yes and come before a build.
+4. One build per agreed batch, one gate run, one push. No build per tweak.
+5. Preview only. Live only on his explicit word.
+6. Every cut, trim or replacement goes in `CUTS.md` with what went, what replaced it and why. The parked list at its end holds ideas kept for later.
+7. Tell him before switching models. He switches them.
 
-## What it is made of
-- Grounded in real-world math, science, physics, history, research. When in doubt, real life rules. If nature solved it, do not try to do it better.
-- Every number is labelled: verified (checked against a source), cited (a standard value still to spot-check) or design (a choice inside measured limits). Where the game compresses reality, the history note says "Game:".
-- Every equation is a known, relied-upon one, cited at its line, with a gate test against known values.
-- Fair for all: what is good for one side is good for every side. If it is unfair, it is out.
-- Pay to help, never pay to win.
-- "I build to match life; they decide": war, trade, the Games and peaceful growth must each be a real way to play and to win, under the same rules.
+## 3. The rebuild method (how new replaces old; the no-patch rule in practice)
+1. Find every home the element has today. Name them.
+2. Write the new element once: one module, one table at its top, from the established equation or the record, with its source cited at the line.
+3. Delete the old code completely. No wrapper, no "if new then old", no second copy. Every caller points to the new home.
+4. Migrate the save (`MIGRATE` in `34-save`) so older games still load.
+5. Log the removal in `CUTS.md`.
+6. Measure before and after: the gate, the soak, the balance harness, a screenshot looked at. Then one build, one push.
 
-## How it looks, reads and feels
-- Elegant, concise, streamlined, uniform: one standard, one mold. Static elements.
-- Logic and flow work. Intuitive. Smarter, better, faster, safer.
-- Fewest words needed, never fewer than needed. Universal language.
-- Coherent and cohesive, with an identity. Consistent colours, style, language and grammar.
-- Patterns in threes. Alliteration where it helps. Modular.
-- Colours, shade, tint, rings and toggles carry variables, to keep the picture light.
-- Treat players like family. Honest, with integrity.
-- One font, three text sizes. Change shapes before colours.
+## 4. Science, history and math
+- Every number that stands for the real world has one of three labels in `SCIENCE.md`: **verified** (checked against the source this session), **cited** (a standard value from a known source, to spot-check before live) or **design** (a choice inside a measured boundary, said plainly).
+- Every equation is the established, relied-upon form, named with its source, and has a gate test against known values so it cannot drift.
+- History text gives dates ("about" unless exact), credits more than one place where the record allows, and says where historians disagree. Where the game compresses history, the note says so with a "Game:" line.
+- Safety limits are kept: at most three light flashes a second (WCAG 2.3.1); Reduce motion honoured.
 
-## Records
-- Every cut is logged in `CUTS.md` with what replaced it, and parked ideas stay listed.
-- Nothing goes away until it is solved or deliberately removed.
-- Ruthless quality control: the gate (`tests/gate.py`), the long games (`tests/soak.py`), the balance harness (`tests/balance.py`).
-- Commits as Albert's noreply address (the repo is public), with the session's trailers.
+## 5. Code structure
+- `src/` joined in filename order by `build.py`; it refuses syntax errors, duplicate top-level names and comments that swallow code. Rules (numbers only) in `01` to `06`; every word in `07`; state and helpers in `08`; the simulation in `09` to `17` and `36` to `40`; the view in `18` to `25`; touch and cards in `26` to `33`; save in `34`; sound in `35`; boot and the test hook in `41`.
+- The simulation is deterministic from the seed: no `Math.random`, no clock, in simulation files. The view may use both.
+- One record per thing (`BLD`, `UNIT`, `TECH`, `CIVS`, `EVENTS`, `WEATHER`, `FINDS`, the dial tables, the verbs). New words go in the tables, never inline twice.
+- One font, three text sizes (12, 15, 19). Dark, flat, every button with air around it. Taps 44 px and up. Text 12 px and up. Contrast 4.5:1 and up (7:1 the target).
+- The screen grammar (Build 41): every new control goes in one of the four places (the top pill, the strip, the bottom row, a corner button) or it does not go in. A new always-visible control replaces one.
+
+## 6. Tests (before any push)
+```
+python3 build.py && python3 wrap.py && python3 tests/gate.py        # the gate, four iPhone sizes; add --soak for the long games
+python3 tests/balance.py [--seeds N] [--minutes M] [--html file]     # the balance harness, when a rule or number moved
+```
+The play fingerprint (`tests/baseline.json`) must match, or the change is accepted on purpose with `--accept "why"` and the reason logged. A test must be able to fail: measure the real thing.
+
+## 7. Records, every build
+`CUTS.md` (the build's section), `HANDOFF.md` (what stands, the queue, open items), `GUIDE.md` regenerated from the game (`F.guideMd()`), `SCIENCE.md` when a number rests on the science. Commits as Albert (`acohen2300@users.noreply.github.com`; the repo is public), with the session's trailers.
+
+## 8. Things that went wrong before (don't repeat)
+- A caravan's raw load crashed the game for seven builds because the goods table was read for a raw key (Build 45 to 52): one home means one lookup (`baseOf`, `nameOf`, `colOf`, `giveTo`).
+- A danger map that survived into the next game: reset state on a new game.
+- A screenshot test taken with the fog on reads as a black screen: turn the fog off for pictures.
+- Saying "two research steps touch the tower" when seven did: count before stating.
+- The lightning: keep its flash gap (0.34 s). Albert likes it as it is.
