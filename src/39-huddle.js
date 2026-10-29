@@ -71,33 +71,73 @@ function hudEta() {
 	}
 	return H.eta;
 }
-// Aim: the reticle appears at the middle of the view, a tap on the map moves it, Lock sets it
+// The steps of one plan, one button at a time (red: next and blinking, blue: in hand, green: done):
+// 0 Ready, 1 Armed (Aim next), 2 aiming (the crosshair is up), 3 aiming with a tap made (Lock), 4 Locked (set the counts, Set next), 5 Set (Fire next)
+const hudStage = () => {
+	const H = G.hud;
+	return !H.armed ? 0 : H.set ? 5 : H.locked ? 4 : H.aim ? (H.moved ? 3 : 2) : 1;
+};
+function hudReset() {
+	const H = G.hud;
+	H.armed = H.aim = H.moved = H.locked = H.set = false;
+	H.h = H.pre = H.slot = null;
+	H.n = {};
+}
+// Ready arms the plan; tapped again, Armed puts it down
+function hudReady() {
+	const H = G.hud;
+	H.carry = null;
+	if (H.armed) {
+		hudReset();
+		H.view = G.msn.some(Boolean);
+	} else {
+		H.armed = true;
+		H.view = false;
+	}
+}
+// Aim shows the crosshair at the middle of the view (a tap on the map moves it); Lock sets it; Locked opens it again
 function hudAim() {
 	const H = G.hud;
-	if (H.aim) {
-		H.aim = false; // Lock
-		return feel('snap');
-	}
+	if (!H.armed) return;
+	if (H.aim) return hudLock();
 	H.aim = true;
-	H.view = false;
+	H.moved = H.locked = H.set = false;
 	if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
 	H.etaKey = '';
 }
-function aimAt(sx, sy) {
+function hudLock() {
 	const H = G.hud;
+	H.aim = false;
+	H.locked = true;
+	feel('snap');
+}
+function hudSet() {
+	if (hudStage() === 4 && hudPick().length) {
+		G.hud.set = true;
+		feel('tick');
+	}
+}
+// a tap on the map while aiming moves the crosshair; two quick taps in one place lock it
+function aimAt(sx, sy) {
+	const H = G.hud,
+		now = performance.now();
 	let h = hitAt(sx, sy);
-	if (h.t === 'unit' && h.e.owner === 0) h = { t: 'ground', e: { x: h.e.x, y: h.e.y } }; // your own: just the spot
+	const foe = (h.t === 'unit' || h.t === 'bld') && h.e.owner !== 0;
+	if (!(h.t === 'ground' || h.t === 'find' || foe)) h = { t: 'ground', e: { x: h.e.x, y: h.e.y } }; // a mission goes to the ground, a find or a foe; anything else is just the spot
 	H.h = h;
+	H.moved = true;
 	H.etaKey = '';
 	ripple(h.e.x, h.e.y, '#ffb23d');
 	feel('tick');
+	if (H.tapAt && now - H.tapAt.t < 350 && hyp(sx - H.tapAt.x, sy - H.tapAt.y) < 28) hudLock();
+	H.tapAt = { t: now, x: sx, y: sy };
 }
 function hudOpen(on) {
 	const H = G.hud;
 	H.on = on;
-	H.aim = H.view = false;
-	H.h = H.pre = H.slot = H.carry = H.sel = null;
-	H.n = {};
+	hudReset();
+	H.view = false;
+	H.carry = H.sel = null;
 	if (on) closeCard();
 }
 // Fire: the draft marches as one order and takes the slot
@@ -107,7 +147,6 @@ function hudFire() {
 		S = hudPick();
 	if (slot < 0 || G.msn[slot]) return say('All four missions are out.', '', 3);
 	if (!H.h || !S.length) return;
-	H.aim = false;
 	const before = G.ordN || 0;
 	order(S, H.h);
 	if ((G.ordN || 0) === before) return; // refused: the reason was said
@@ -125,10 +164,10 @@ function hudFire() {
 		st: 'go',
 		odds: 0.5,
 	};
-	H.h = H.pre = H.slot = null;
-	H.n = {};
+	hudReset();
 	H.view = true;
 	H.sel = slot;
+	H.firedT = performance.now();
 	feel('thock');
 }
 // a mission leaves: the soldiers go home, the slot is free
@@ -149,9 +188,8 @@ function hudCancel() {
 	const H = G.hud;
 	if (H.view && H.sel !== null && G.msn[H.sel]) hudAbort(H.sel);
 	else {
-		H.h = H.pre = H.slot = null;
-		H.n = {};
-		H.aim = false;
+		hudReset();
+		H.view = G.msn.some(Boolean);
 	}
 }
 
@@ -275,6 +313,8 @@ function hudDrop(from, to) {
 		H.n = {};
 		H.h = null;
 		H.slot = to;
+		H.armed = true;
+		H.view = false;
 		hudAim();
 		say(`Tap where ${MSN[to]} goes.`, '', 3);
 	}
@@ -298,19 +338,28 @@ function mStatus(m) {
 }
 function huddleHTML() {
 	const H = G.hud,
+		stage = hudStage(),
 		pool = hudPool(),
+		lamp = (c, blink) => ` bar lamp-${c}${blink ? ' blink' : ''}`,
 		st = (act, t, cls, extra = '') => `<button class="cell st w ${cls || ''}" data-act="${act}"${extra}>${t}</button>`,
 		draft = !H.view,
-		picked = hudPick().length,
-		fire = picked && H.h && hudSlot() >= 0,
-		col1 =
-			`<button class="cell bar${picked ? ' on' : ''}${draft ? ' sel' : ''}" data-act="hready" aria-label="Ready"><span class="wd mid">Ready</span></button>` +
-			`<button class="cell st w bar${H.h && !H.aim ? ' on' : ''}${H.aim ? ' sel' : ''}" data-act="haim" aria-label="${H.aim ? 'Lock the target' : 'Aim'}">${H.aim ? 'Lock' : 'Aim'}</button>`,
+		fired = performance.now() - (H.firedT || -1e9) < 1500,
+		ready = H.armed
+			? `<button class="cell${lamp('green')}" data-act="hready" aria-label="Armed: put the plan down"><span class="wd mid">Armed</span></button>`
+			: `<button class="cell${lamp('red', 1)}" data-act="hready" aria-label="Ready"><span class="wd mid">Ready</span></button>`,
+		aim = [
+			st('haim', 'Aim', 'dis'),
+			st('haim', 'Aim', lamp('red', 1)),
+			st('haim', 'Aim', lamp('blue')),
+			st('haim', 'Lock', lamp('blue')),
+			st('haim', 'Locked', lamp('green')),
+			st('haim', 'Locked', lamp('green')),
+		][stage],
+		counts = stage < 4 ? ' dis' : stage === 4 ? lamp('blue') : lamp('green'),
 		mid = (draft ? CLS : MSN)
 			.map((x, i) => {
 				if (draft) {
-					const have = hudHave(pool, i);
-					return `<div class="col"><button class="cell${have ? '' : ' dis'}" data-act="hudc:${i}"><span class="top"><span class="c">${hudN(pool, i)}</span></span>${wd(x[1])}</button><div class="pm">${st(`hudn:${i},-`, '−')}${st(`hudn:${i},+`, '+')}</div></div>`;
+					return `<div class="col"><button class="cell${counts}" data-act="hudc:${i}"><span class="top"><span class="c">${hudN(pool, i)}</span></span>${wd(x[1])}</button><div class="pm">${st(`hudn:${i},-`, '−')}${st(`hudn:${i},+`, '+')}</div></div>`;
 				}
 				const m = G.msn[i];
 				if (!m)
@@ -321,8 +370,13 @@ function huddleHTML() {
 				return `<div class="col"><button class="cell msn${fl}${H.sel === i ? ' sel' : ''}" data-slot="${i}" data-act="mcard:${i}" style="--mc:${color}"><span class="top"><span class="c">${n}</span></span>${wd(m.name)}</button><button class="cell st w msn${fl}" data-slot="${i}" data-act="mcard:${i}" style="color:${color}">${t}</button></div>`;
 			})
 			.join(''),
-		col6 = `<div class="col"><button class="cell fire ${fire ? 'go' : 'dis'}" data-act="hfire" aria-label="Fire"><span class="wd mid">FIRE</span></button>${st('habort', 'Abort')}</div>`;
-	return `<div class="col">${col1}</div>${mid}${col6}`;
+		top =
+			stage === 4
+				? `<button class="cell${hudPick().length ? lamp('red', 1) : ' dis'}" data-act="hset" aria-label="Set the counts"><span class="wd mid">Set</span></button>`
+				: stage === 5
+					? `<button class="cell${lamp('red', 1)}" data-act="hfire" aria-label="Fire"><span class="wd mid">Fire</span></button>`
+					: `<button class="cell${fired ? lamp('green') : ' dis'}" data-act="hfire" aria-label="Fire"><span class="wd mid">Fire</span></button>`;
+	return `<div class="col">${ready}${aim}</div>${mid}<div class="col">${top}${st('habort', 'Abort')}</div>`;
 }
 function huddleUI() {
 	const H = G.hud,

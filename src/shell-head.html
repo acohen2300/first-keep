@@ -137,13 +137,14 @@ button.ghost{visibility:hidden}
 #huddle .top .c{font-size:20px}
 #huddle .st.w{font-size:12px;letter-spacing:.08em;text-transform:uppercase;line-height:calc(var(--row) - 2px)}
 #huddle .bar::after,#huddle .msn:not(.empty):first-child::after{content:'';position:absolute;left:10px;right:10px;top:0;height:3px;border-radius:0 0 3px 3px;background:var(--mc,#e0503f)}
-#huddle .bar.on{--mc:#4fe0a0}#huddle .bar.on::after{box-shadow:0 0 8px #4fe0a0}
+#huddle .lamp-red{--mc:#e0503f;color:#ff9a8c}#huddle .lamp-blue{--mc:#6fb1ff;color:#a9d0ff}#huddle .lamp-green{--mc:#4fe0a0;color:#8ff0c3}
+#huddle button.cell[class*="lamp-"]{border-color:var(--mc)}#huddle [class*="lamp-"] .wd{color:inherit}#huddle .lamp-green::after,#huddle .lamp-blue::after{box-shadow:0 0 8px var(--mc)}
+#huddle .blink{animation:hudBlink 1s infinite}@keyframes hudBlink{50%{box-shadow:inset 0 0 0 1px var(--mc),0 0 12px var(--mc)}}
 #huddle .cell.sel{border-color:#ffb23d}
-#huddle .fire.go{background:#ffb23d;border-color:#ffb23d;box-shadow:0 0 16px rgba(255,178,61,.4)}#huddle .fire .wd{color:#6c767a;font-size:13px;letter-spacing:.2em}#huddle .fire.go .wd{color:#1a1204}
 #huddle .msn{touch-action:none}#huddle .msn.empty{background:transparent;border-style:dashed}
 #huddle .msn.lose{--pc:#ff5a4a;animation:hudPulse 1s infinite}#huddle .msn.win{--pc:#43c06b;animation:hudPulse 1.2s infinite}
 @keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc),0 0 10px var(--pc)}}
-@media (prefers-reduced-motion:reduce){#huddle .msn.lose,#huddle .msn.win{animation:none;border-color:var(--pc)}}
+@media (prefers-reduced-motion:reduce){#huddle .msn.lose,#huddle .msn.win{animation:none;border-color:var(--pc)}#huddle .blink{animation:none}}
 .hudGhost{position:fixed;left:0;top:0;z-index:20;pointer-events:none;padding:8px 12px;border-radius:10px;background:rgba(12,16,20,.95);border:1px solid #43c06b;color:#43c06b;font:700 13px system-ui,sans-serif}
 /* on the map: the corners, one look (.fab). Map top right, Home bottom left (only when away), Build bottom right */
 #spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}#spdPop[hidden]{display:none}#spdPop button{min-width:52px;min-height:44px}#spdPop button.cur{box-shadow:inset 0 0 0 2px var(--mute);border-color:var(--mute)}

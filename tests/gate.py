@@ -112,7 +112,7 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
       const foes = []; for (let i = 0; i < 8; i++) foes.push(F.addUnit(4, 'bandit', home.x + 250 + i * 5, home.y + 60)); for (let i = 0; i < 12; i++) run(1);
       if (m.st !== 'act' && m.st !== 'done') bad.push('huddle: the mission is ' + m.st + ' at the fight');
       F.hudDrop(0, 'home'); for (const f of foes) f.hp = 0; run(3); if (!G.msn[0]) bad.push('huddle: a mission vanished on its own'); }
-    F.hudOpen(true); F.act('haim'); if (!G.hud.aim || !G.hud.h) bad.push('huddle: Aim shows no reticle'); F.aimAt(120, 300); F.aimAt(200, 400); if (!G.hud.aim) bad.push('huddle: a tap on the map ended the aim'); F.act('haim'); if (G.hud.aim || !G.hud.h) bad.push('huddle: Lock did not set the target');
+    F.hudOpen(true); F.act('hready'); F.act('haim'); if (!G.hud.aim || !G.hud.h) bad.push('huddle: Aim shows no reticle'); F.aimAt(120, 300); if (!G.hud.aim) bad.push('huddle: a tap on the map ended the aim'); F.act('haim'); if (G.hud.aim || !G.hud.locked) bad.push('huddle: Lock did not set the target'); F.act('hset'); if (!G.hud.set) bad.push('huddle: Set did not take'); F.hudOpen(false);
     G.hud.carry = null; F.hudOpen(false); for (let i = 0; i < 4; i++) if (G.msn[i]) { G.msn[i] = null; } }
   // emergencies: villagers take cover in the sturdiest building first and Resume sends them back; soldiers garrison and stay
   { const home = G.blds.find((b) => b.owner === 0); for (let i = 0; i < 4; i++) F.addUnit(0, 'spear', home.x + 70 + i * 6, home.y + 40); const jobs = G.units.filter((u) => u.owner === 0 && u.kind === 'vil').map((u) => u.job).join(',');

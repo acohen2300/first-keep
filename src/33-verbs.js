@@ -379,25 +379,30 @@ const PLAY = {
 		hudOpen(!G.hud.on);
 	},
 	hready() {
-		const H = G.hud;
-		H.view = !H.view;
-		H.aim = false;
-		H.carry = null;
+		hudReady();
 	},
 	haim() {
 		hudAim();
 	},
+	hset() {
+		hudSet();
+	},
 	hudc(a) {
-		delete G.hud.n[a]; // a tap on the class: all the idle ones again
+		if (hudStage() >= 4) {
+			delete G.hud.n[a]; // a tap on the class: all the idle ones again
+			G.hud.set = false;
+		}
 	},
 	hudn(a) {
+		if (hudStage() < 4) return;
 		const [c, d] = a.split(','),
 			pool = hudPool(),
 			have = hudHave(pool, Number(c));
 		G.hud.n[c] = clamp(hudN(pool, Number(c)) + (d === '+' ? 1 : -1), 0, have);
+		G.hud.set = false; // changing a count opens Set again
 	},
 	hfire() {
-		hudFire();
+		if (hudStage() === 5) hudFire();
 	},
 	habort() {
 		hudCancel();
