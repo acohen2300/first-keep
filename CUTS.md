@@ -620,3 +620,18 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 - **Fixed, a bug since Build 45:** a raw load taken from a cart (food, wood, stone or iron) was added to the goods, which made that count NaN; it goes into the stores now (`giveTo` beside `takeFrom`). The Guide listed some needs twice ("Curtain walls, Curtain walls"); once now (`needsOf`).
 - **Measured:** frame cost in a busy scene (about 250 units, a dozen buildings, the canvas flushed each frame, this machine's software drawing): Build 51 39 to 53 ms, Build 52 39 to 52 ms over repeated runs: no change outside the noise once the worn ground moved into the ground layer (drawn live it cost about 10%). Worth feeling on the iPhone.
 - GUIDE.md regenerated from the game.
+
+## Build 52b preview (not live): fixes from an independent review of 48 to 52
+- **Danger:** an enemy tower's danger reach now counts its range research, as it shoots (it used the bare number, so villagers worked inside a Gun tower's reach).
+- **Fog:** another side's worn ground appears when you first see the building, not when it is finished (it gave away buildings in ground you had only explored). On a load, it is laid again only round buildings you know.
+- **Flags:** a flag's place and size follow the drawing's scaling (the Town is the keep drawn smaller, the Throne the castle drawn larger; their flags hung off the pole). The Great tower's flag stands on the point of its cap.
+- **Load:** the background is drawn after the trees are restored, so the forest floor is there after a load.
+- **Battle Stations** keeps the tempers to put back but no longer touches villagers' work on Resume; Shelter and All hands still keep and restore it.
+- **Flood:** drawn as one shape, so a river's overlapping pools do not darken where they meet.
+- **Rivers** end at the map's edge (a few pools and fish lay off the map).
+- **Beacons** says what it does: every building that shoots sees 60 farther (towers, Town Centers, castles, trade posts). Same honest note for the older research on "#guard" (Arrow slits and the rest): they reach the Town Center and castles too.
+- **A new game starts with a fresh danger map** (the last game's could steer the first second, which made the harness depend on the game played before it in the same page).
+- **Harness:** "stuck" is split into blocked (work to reach, not moving), idle (none found) and waiting (a workshop without its input); only blocked counts as stuck. Most of what it counted before was waiting and idle.
+- **Open (not fixed, found by the harness):** now and then a villager stands in a small closed pocket of ground beside a field whose middle square is shut, and keeps finding no way to it. Seen on one seed out of four in long games; cause not yet found.
+
+- **Play fingerprint accepted:** Build 52b: rivers end at the map edge; fresh danger map on a new game

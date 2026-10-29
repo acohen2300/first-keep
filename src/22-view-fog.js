@@ -91,7 +91,11 @@ function fogTick() {
 	};
 	for (const u of G.units) if (u.hp > 0 && friendly(0, u.owner) && !u.inside) light(u.x, u.y, sightOf(u));
 	for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && friendly(0, b.owner)) light(b.x, b.y, sightOf(b)); // from its height, after research, by day or night (Build 51: a flat 90 for most)
-	for (const b of G.blds) if (b.hp > 0 && !friendly(0, b.owner) && fogAt(b.x, b.y) === 2) G.seenB[b.id] = 1; // what your people and towers have seen, remembered
+	for (const b of G.blds)
+		if (b.hp > 0 && !friendly(0, b.owner) && !G.seenB[b.id] && fogAt(b.x, b.y) === 2) {
+			G.seenB[b.id] = 1;
+			if (b.prog >= 1) wearGround(b);
+		} // what your people and towers have seen, remembered, and the ground round it
 	fogT = G.tick;
 }
 function fogLayer() {

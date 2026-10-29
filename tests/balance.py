@@ -3,7 +3,8 @@
 # Seat 0 (yours) is played by the balanced computer, on the same clock as the others; nothing here changes a rule.
 # Seat 0's civilisation turns with the seed, so every civilisation sits in every seat over enough seeds.
 # It reports: who wins by civilisation and by seat, minutes to each age, kills per 100 resources by unit kind,
-# villager-seconds stuck (a villager with a job, not working, that has not moved for 5 s or more), and caravan counts.
+# villager-seconds stuck (a villager with a job, not working, that has not moved for 5 s or more: blocked with work to reach,
+# idle with none found, or waiting at a workshop for its input), and caravan counts.
 # "Winner" is the last side standing, or the highest score among the living when time runs out.
 import asyncio, json, os, sys, time
 from collections import defaultdict
@@ -17,7 +18,7 @@ GAME = """([seed, minutes]) => {
   const F = window.__fk, CV = Object.keys(F.CIVS); F.SET.diff = 'normal'; F.SET.fog = false; F.SET.civ = CV[seed % CV.length]; F.newGame(seed); F.act('close'); F.setPause(false);
   const G = F.G, P0 = G.P[0]; P0.pers = 'bal'; P0.ai.t = 1;
   const sides = [0, 1, 2, 3], ages = sides.map(() => [0]), fell = sides.map(() => null);
-  const seen = new Map(), still = new Map(); let stuck = sides.map(() => 0), lostAt = null;
+  const seen = new Map(), still = new Map(), why = { blocked: 0, idle: 0, waiting: 0 }; let stuck = sides.map(() => 0), lostAt = null;
   const cost = (k) => Object.values(F.UNIT[k].cost || {}).reduce((a, b) => a + b, 0);
   const errs = []; const ce = console.error; console.error = (...a) => errs.push(String(a[0]).slice(0, 160));
   for (let sec = 0; sec < minutes * 60; sec++) {
@@ -33,7 +34,7 @@ GAME = """([seed, minutes]) => {
       const r = seen.get(u.id) || { kind: u.kind, o: u.owner, kills: 0 }; r.kills = Math.max(r.kills, (u.st && u.st.kills) || 0); seen.set(u.id, r);
       if (u.kind === 'vil' && u.job && !u.inside && G.t - (u.work ?? -9) > 2) {
         const w = still.get(u.id);
-        if (w && Math.abs(w.x - u.x) < 1 && Math.abs(w.y - u.y) < 1) { w.n++; if (w.n >= 5) stuck[u.owner]++; }
+        if (w && Math.abs(w.x - u.x) < 1 && Math.abs(w.y - u.y) < 1) { w.n++; if (w.n >= 5) { const c = u.wait ? 'waiting' : !u.node && !u.hunt ? 'idle' : 'blocked'; why[c]++; if (c === 'blocked') stuck[u.owner]++; } }
         else still.set(u.id, { x: u.x, y: u.y, n: 0 });
       } else still.delete(u.id);
     }
@@ -44,7 +45,7 @@ GAME = """([seed, minutes]) => {
   const units = {}; for (const r of seen.values()) { const k = r.kind, u = units[k] || (units[k] = { n: 0, spent: 0, kills: 0 }); u.n++; u.spent += cost(k); u.kills += r.kills; }
   const caravans = sides.map((s) => G.units.filter((u) => u.owner === s && u.kind === 'caravan').length);
   return { seed, t: Math.round(G.t), winner, lostAt, civ: sides.map((s) => G.P[s].civ), pers: sides.map((s) => G.P[s].pers), ages, fell,
-    score: sides.map((s) => G.P[s].score.total), stuck, units, caravans, errs: errs.slice(0, 3) }; }"""
+    score: sides.map((s) => G.P[s].score.total), stuck, why, units, caravans, errs: errs.slice(0, 3) }; }"""
 async def worker(br, q, out):
     ctx = await br.new_context(viewport={'width': 390, 'height': 844}); pg = await ctx.new_page(); perr = []
     pg.on('pageerror', lambda e: perr.append(str(e)[:160]))
@@ -80,7 +81,8 @@ def report(R):
     for k, u in sorted(U.items(), key=lambda kv: -(kv[1]['kills'] / kv[1]['spent'] if kv[1]['spent'] else 0)):
         if k != 'vil' and u['spent']: print(f"  {k:12} {u['n']:5}  {100 * u['kills'] / u['spent']:5.2f}")
     st = [sum(r['stuck']) for r in R]
-    print(f'\nvillager-seconds stuck per game: median {median(st)}, max {max(st)}; per seat total {[sum(r["stuck"][s] for r in R) for s in range(4)]}')
+    print(f'\nvillager-seconds standing still with a job, per game (median): blocked (work to reach, not moving) {median(st)}, max {max(st)}; per seat total {[sum(r["stuck"][s] for r in R) for s in range(4)]}')
+    if all('why' in r for r in R): print('  and not counted as blocked: idle, no work found', median([r['why']['idle'] for r in R]), '; waiting for input at a workshop', median([r['why']['waiting'] for r in R]))
     print('caravans at the end, per seat (summed):', [sum(r['caravans'][s] for r in R) for s in range(4)])
     bad = [(r['seed'], r['errs'] + r['perr']) for r in R if r['errs'] or r['perr']]
     if bad: print('\nerrors:', bad[:5])

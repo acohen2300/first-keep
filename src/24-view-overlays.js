@@ -299,11 +299,13 @@ function drawMini() {
 function drawFlood(z) {
 	if (G.flood > G.t) {
 		ctx.fillStyle = 'rgba(42,100,136,.55)';
+		ctx.beginPath();
 		for (const L of G.lakes) {
-			ctx.beginPath();
-			ctx.ellipse(SX(L.x), SY(L.y), (L.r + EVENTS.flood.rise) * z, (L.r + EVENTS.flood.rise) * z * TILT, 0, 0, 7);
-			ctx.fill();
+			const r = (L.r + EVENTS.flood.rise) * z;
+			ctx.moveTo(SX(L.x) + r, SY(L.y));
+			ctx.ellipse(SX(L.x), SY(L.y), r, r * TILT, 0, 0, 7);
 		}
+		ctx.fill(); // one shape, so a river's overlapping pools do not darken where they meet (Build 52)
 	} // the flood: water over the shore
 }
 // quicksand: a pale patch with ripples

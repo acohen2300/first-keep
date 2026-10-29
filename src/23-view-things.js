@@ -164,15 +164,16 @@ function flagsOn(c, sx, sy, z, col, seed) {
 	ctx.fillStyle = col;
 	ctx.strokeStyle = 'rgba(16,12,8,.75)';
 	ctx.lineWidth = Math.max(0.6, 0.3 * z);
-	for (const [x, y] of c.flags) {
-		const fx = sx + x * z,
+	for (const [x, y, sc] of c.flags) {
+		const q = z * sc,
+			fx = sx + x * z,
 			fy = sy + y * z,
-			a = Math.sin(t * 5 + seed * 0.7 + x) * z,
-			w = 6 * wv * z;
+			a = Math.sin(t * 5 + seed * 0.7 + x) * q,
+			w = 6 * wv * q;
 		ctx.beginPath();
 		ctx.moveTo(fx, fy);
-		ctx.quadraticCurveTo(fx + w * 0.5, fy + 0.4 * z + a * 0.8, fx + w, fy + 1.4 * z + a * 1.4);
-		ctx.quadraticCurveTo(fx + w * 0.5, fy + 2.6 * z + a * 0.8, fx, fy + 3 * z);
+		ctx.quadraticCurveTo(fx + w * 0.5, fy + 0.4 * q + a * 0.8, fx + w, fy + 1.4 * q + a * 1.4);
+		ctx.quadraticCurveTo(fx + w * 0.5, fy + 2.6 * q + a * 0.8, fx, fy + 3 * q);
 		ctx.closePath();
 		ctx.fill();
 		ctx.stroke();

@@ -321,7 +321,9 @@ let FLAGS = null; // while a building is drawn: where its flags fly, so they are
 const banner = (x, y, col, len = 9) => {
 	L_(x, y, x, y - len - 4, '#3a2a1a', 0.7);
 	if (FLAGS) {
-		FLAGS.push([x, y - len - 4]);
+		const m = g.getTransform(),
+			p = m.transformPoint(new DOMPoint(x, y - len - 4));
+		FLAGS.push([p.x, p.y, Math.hypot(m.a, m.b)]); // where on the picture, and how big, after any scaling the drawing did (a town is a keep drawn smaller)
 		return;
 	}
 	P_(
@@ -1092,7 +1094,7 @@ const ART = {
 				L_(x, f - h + 5.5, x + 1.5, f - h + 7, '#2e2a26', 1.6);
 			} // gun ports
 		else for (let y = f - h + 14; y < f - 8; y += 14) win(0, y, 1.2, 4, '#14100c');
-		banner(w - 2, f - h - (T.hoard ? 19 : 3), c, T.flag);
+		banner(T.hoard ? 0 : w - 2, f - h - (T.hoard ? 19 : 3), c, T.flag); // on the cap's point, or the corner of the battlements
 	},
 	wall(c) {
 		const d = 10 * TILT;
@@ -1801,11 +1803,11 @@ function bldSprite(b, s) {
 	} catch (e) {
 		fault(e);
 	}
-	c.flags = FLAGS;
-	FLAGS = null;
 	UP = 0;
 	c.ax = (W / 2) * s;
 	c.ay = (top + pad) * s;
+	c.flags = FLAGS.map(([px, py, k]) => [(px - c.ax) / s, (py - c.ay) / s, k / s]); // back to the building's own units
+	FLAGS = null;
 	g = null;
 	trim(BSPR, 300);
 	BSPR.set(key, c);

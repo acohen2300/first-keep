@@ -129,7 +129,8 @@ function newGame(seed, carry) {
 		if (!best || f.worst < best.worst) best = { tr, worst: f.worst };
 	}
 	makeBg();
-	for (const b of G.blds) wearGround(b);
+	for (const b of G.blds) if (!SET.fog || friendly(0, b.owner)) wearGround(b);
+	dangerMap(); // a fresh danger map: the last game's must not steer the first second of this one
 	evmSet();
 	const k = G.P[0].keep;
 	cam.x = k[0] + 120;
@@ -351,7 +352,7 @@ function makeForest(spot, loc) {
 // A river is water like any lake: nobody walks or builds on it; it is crossed at a ford, and fished and docked like a lake.
 function makeRiver(L, w) {
 	const toY = L.x >= L.y, // down the flank farther from the middle line it is nearer
-		E = toY ? { x: L.x + rnd(-80, 40), y: -330 } : { x: -330, y: L.y + rnd(-80, 40) },
+		E = toY ? { x: L.x + rnd(-80, 40), y: -300 } : { x: -300, y: L.y + rnd(-80, 40) }, // to the edge of the map (home is 300 in)
 		dx = E.x - L.x,
 		dy = E.y - L.y,
 		len = hyp(dx, dy),

@@ -36,12 +36,9 @@ function fillRank(units, pick) {
 // once, at the first call: the picture Resume goes back to, every villager's work and every battalion's temper
 // (Build 48: Battle Stations kept no picture, so its Hold stayed on every battalion for good)
 function emgSnap(kind) {
-	if (!G.emg)
-		G.emg = {
-			kind,
-			snap: unitsOf(0, 'vil').map((u) => ({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post })),
-			temper: G.temper.slice(),
-		};
+	if (!G.emg) G.emg = { kind, snap: null, temper: G.temper.slice() };
+	if (!G.emg.snap && kind !== 'battle')
+		G.emg.snap = unitsOf(0, 'vil').map((u) => ({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post })); // villagers only when they are sent in: Battle Stations leaves their work alone
 }
 function villagersIn() {
 	const V = unitsOf(0, 'vil'),
@@ -107,7 +104,7 @@ function emgStart(kind) {
 // Resume: every villager back to what it was doing; soldiers stay where the plan put them
 function emgResume() {
 	if (!G.emg) return;
-	for (const n of G.emg.snap) {
+	for (const n of G.emg.snap || []) {
 		const u = G.units.find((v) => v.id === n.id && v.hp > 0),
 			node = n.nid && G.nodes.find((x) => x.id === n.nid && x.amt > 0);
 		if (!u) continue;

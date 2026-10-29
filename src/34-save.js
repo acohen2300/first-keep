@@ -249,11 +249,11 @@ function loadGame(S) {
 		finds: S.finds || [],
 	});
 	G.lakes = S.lakes;
-	makeBg();
 	G.P = S.P.map((p) => ({ ...p, techs: new Set(p.techs), fxc: null, uc: {} }));
 	G.nodes = S.nodes.map((n) =>
 		Array.isArray(n) ? { id: n[0], kind: 'tree', type: 'wood', x: n[1], y: n[2], amt: n[3], max: n[4] } : { ...n },
 	);
+	makeBg(); // after the trees: the forest floor is drawn from them
 	const byNode = new Map(G.nodes.map((n) => [n.id, n]));
 	for (const sb of S.blds) {
 		if (!sb || !BLD[sb.kind] || !Number.isFinite(sb.x) || !Number.isFinite(sb.y)) continue; // a damaged building is left out, not the whole save (Build 42)
@@ -327,7 +327,7 @@ function loadGame(S) {
 	} // an event with its own pieces on the map is dropped on load; the pieces finish on their own. An eclipse, a fog or a heat wave goes on.
 	evmSet();
 	for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined; // orders on the march come back with the game; a stray number is cleared (Build 38 review)
-	for (const b of G.blds) if (b.prog >= 1) wearGround(b); // the ground's memory is not saved: the worn ground round buildings is laid again
+	for (const b of G.blds) if (b.prog >= 1 && (!SET.fog || friendly(0, b.owner) || G.seenB[b.id])) wearGround(b); // the ground's memory is not saved: the worn ground round buildings you know is laid again
 	fxDirty();
 	navRebuild();
 	recount();

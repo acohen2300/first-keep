@@ -3245,7 +3245,7 @@ const TECH = [
 		cost: { w: 150, g: 80 },
 		t: 35,
 		fx: [{ s: 'sight', k: '#guard', a: 60 }],
-		desc: 'Towers and the Town Center see 60 farther.',
+		desc: 'Every building that shoots sees 60 farther: towers, Town Centers, castles, trade posts.',
 	},
 	{
 		id: 'greattower',
@@ -6854,7 +6854,10 @@ function dangerMap() {
 		if (b.hp <= 0) continue;
 		const B = BLD[b.kind];
 		if (b.fire > 0) for (const o of sides) stampDanger(DANGER[o], b.x, b.y, DANGER_R.fire);
-		if (B.dmg && b.prog >= 1) for (const o of sides) if (atWar(o, b.owner)) stampDanger(DANGER[o], b.x, b.y, (B.rng || 0) + DANGER_R.reach);
+		if (B.dmg && b.prog >= 1) {
+			const reach = (B.rng || 0) + (b.owner === WILD ? 0 : fxv(b.owner, 'rng', bldKeys(b.kind)).a) + DANGER_R.reach; // its real reach, after research, as it shoots
+			for (const o of sides) if (atWar(o, b.owner)) stampDanger(DANGER[o], b.x, b.y, reach);
+		}
 	}
 	for (const o of sides) {
 		const p = G.P[o];
@@ -7491,7 +7494,8 @@ function newGame(seed, carry) {
 		if (!best || f.worst < best.worst) best = { tr, worst: f.worst };
 	}
 	makeBg();
-	for (const b of G.blds) wearGround(b);
+	for (const b of G.blds) if (!SET.fog || friendly(0, b.owner)) wearGround(b);
+	dangerMap(); // a fresh danger map: the last game's must not steer the first second of this one
 	evmSet();
 	const k = G.P[0].keep;
 	cam.x = k[0] + 120;
@@ -7713,7 +7717,7 @@ function makeForest(spot, loc) {
 // A river is water like any lake: nobody walks or builds on it; it is crossed at a ford, and fished and docked like a lake.
 function makeRiver(L, w) {
 	const toY = L.x >= L.y, // down the flank farther from the middle line it is nearer
-		E = toY ? { x: L.x + rnd(-80, 40), y: -330 } : { x: -330, y: L.y + rnd(-80, 40) },
+		E = toY ? { x: L.x + rnd(-80, 40), y: -300 } : { x: -300, y: L.y + rnd(-80, 40) }, // to the edge of the map (home is 300 in)
 		dx = E.x - L.x,
 		dy = E.y - L.y,
 		len = hyp(dx, dy),
@@ -9645,7 +9649,7 @@ function built(b) {
 		B = BLD[b.kind];
 	b.mx = maxHpB(o, b.kind);
 	b.hp = Math.max(b.hp, b.mx * 0.999);
-	wearGround(b);
+	if (!SET.fog || friendly(0, b.owner)) wearGround(b); // another side's worn ground shows when you first see the building (fog)
 	G.bldV = (G.bldV || 0) + 1; // a new place to drop at: every villager picks again
 	if (b.kind === 'gate') G.navDirty = true;
 	if (B.trap) b.seen = b.seen || {};
@@ -14315,7 +14319,9 @@ let FLAGS = null; // while a building is drawn: where its flags fly, so they are
 const banner = (x, y, col, len = 9) => {
 	L_(x, y, x, y - len - 4, '#3a2a1a', 0.7);
 	if (FLAGS) {
-		FLAGS.push([x, y - len - 4]);
+		const m = g.getTransform(),
+			p = m.transformPoint(new DOMPoint(x, y - len - 4));
+		FLAGS.push([p.x, p.y, Math.hypot(m.a, m.b)]); // where on the picture, and how big, after any scaling the drawing did (a town is a keep drawn smaller)
 		return;
 	}
 	P_(
@@ -15086,7 +15092,7 @@ const ART = {
 				L_(x, f - h + 5.5, x + 1.5, f - h + 7, '#2e2a26', 1.6);
 			} // gun ports
 		else for (let y = f - h + 14; y < f - 8; y += 14) win(0, y, 1.2, 4, '#14100c');
-		banner(w - 2, f - h - (T.hoard ? 19 : 3), c, T.flag);
+		banner(T.hoard ? 0 : w - 2, f - h - (T.hoard ? 19 : 3), c, T.flag); // on the cap's point, or the corner of the battlements
 	},
 	wall(c) {
 		const d = 10 * TILT;
@@ -15795,11 +15801,11 @@ function bldSprite(b, s) {
 	} catch (e) {
 		fault(e);
 	}
-	c.flags = FLAGS;
-	FLAGS = null;
 	UP = 0;
 	c.ax = (W / 2) * s;
 	c.ay = (top + pad) * s;
+	c.flags = FLAGS.map(([px, py, k]) => [(px - c.ax) / s, (py - c.ay) / s, k / s]); // back to the building's own units
+	FLAGS = null;
 	g = null;
 	trim(BSPR, 300);
 	BSPR.set(key, c);
@@ -16559,7 +16565,11 @@ function fogTick() {
 	};
 	for (const u of G.units) if (u.hp > 0 && friendly(0, u.owner) && !u.inside) light(u.x, u.y, sightOf(u));
 	for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && friendly(0, b.owner)) light(b.x, b.y, sightOf(b)); // from its height, after research, by day or night (Build 51: a flat 90 for most)
-	for (const b of G.blds) if (b.hp > 0 && !friendly(0, b.owner) && fogAt(b.x, b.y) === 2) G.seenB[b.id] = 1; // what your people and towers have seen, remembered
+	for (const b of G.blds)
+		if (b.hp > 0 && !friendly(0, b.owner) && !G.seenB[b.id] && fogAt(b.x, b.y) === 2) {
+			G.seenB[b.id] = 1;
+			if (b.prog >= 1) wearGround(b);
+		} // what your people and towers have seen, remembered, and the ground round it
 	fogT = G.tick;
 }
 function fogLayer() {
@@ -16756,15 +16766,16 @@ function flagsOn(c, sx, sy, z, col, seed) {
 	ctx.fillStyle = col;
 	ctx.strokeStyle = 'rgba(16,12,8,.75)';
 	ctx.lineWidth = Math.max(0.6, 0.3 * z);
-	for (const [x, y] of c.flags) {
-		const fx = sx + x * z,
+	for (const [x, y, sc] of c.flags) {
+		const q = z * sc,
+			fx = sx + x * z,
 			fy = sy + y * z,
-			a = Math.sin(t * 5 + seed * 0.7 + x) * z,
-			w = 6 * wv * z;
+			a = Math.sin(t * 5 + seed * 0.7 + x) * q,
+			w = 6 * wv * q;
 		ctx.beginPath();
 		ctx.moveTo(fx, fy);
-		ctx.quadraticCurveTo(fx + w * 0.5, fy + 0.4 * z + a * 0.8, fx + w, fy + 1.4 * z + a * 1.4);
-		ctx.quadraticCurveTo(fx + w * 0.5, fy + 2.6 * z + a * 0.8, fx, fy + 3 * z);
+		ctx.quadraticCurveTo(fx + w * 0.5, fy + 0.4 * q + a * 0.8, fx + w, fy + 1.4 * q + a * 1.4);
+		ctx.quadraticCurveTo(fx + w * 0.5, fy + 2.6 * q + a * 0.8, fx, fy + 3 * q);
 		ctx.closePath();
 		ctx.fill();
 		ctx.stroke();
@@ -17919,11 +17930,13 @@ function drawMini() {
 function drawFlood(z) {
 	if (G.flood > G.t) {
 		ctx.fillStyle = 'rgba(42,100,136,.55)';
+		ctx.beginPath();
 		for (const L of G.lakes) {
-			ctx.beginPath();
-			ctx.ellipse(SX(L.x), SY(L.y), (L.r + EVENTS.flood.rise) * z, (L.r + EVENTS.flood.rise) * z * TILT, 0, 0, 7);
-			ctx.fill();
+			const r = (L.r + EVENTS.flood.rise) * z;
+			ctx.moveTo(SX(L.x) + r, SY(L.y));
+			ctx.ellipse(SX(L.x), SY(L.y), r, r * TILT, 0, 0, 7);
 		}
+		ctx.fill(); // one shape, so a river's overlapping pools do not darken where they meet (Build 52)
 	} // the flood: water over the shore
 }
 // quicksand: a pale patch with ripples
@@ -23082,11 +23095,11 @@ function loadGame(S) {
 		finds: S.finds || [],
 	});
 	G.lakes = S.lakes;
-	makeBg();
 	G.P = S.P.map((p) => ({ ...p, techs: new Set(p.techs), fxc: null, uc: {} }));
 	G.nodes = S.nodes.map((n) =>
 		Array.isArray(n) ? { id: n[0], kind: 'tree', type: 'wood', x: n[1], y: n[2], amt: n[3], max: n[4] } : { ...n },
 	);
+	makeBg(); // after the trees: the forest floor is drawn from them
 	const byNode = new Map(G.nodes.map((n) => [n.id, n]));
 	for (const sb of S.blds) {
 		if (!sb || !BLD[sb.kind] || !Number.isFinite(sb.x) || !Number.isFinite(sb.y)) continue; // a damaged building is left out, not the whole save (Build 42)
@@ -23160,7 +23173,7 @@ function loadGame(S) {
 	} // an event with its own pieces on the map is dropped on load; the pieces finish on their own. An eclipse, a fog or a heat wave goes on.
 	evmSet();
 	for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined; // orders on the march come back with the game; a stray number is cleared (Build 38 review)
-	for (const b of G.blds) if (b.prog >= 1) wearGround(b); // the ground's memory is not saved: the worn ground round buildings is laid again
+	for (const b of G.blds) if (b.prog >= 1 && (!SET.fog || friendly(0, b.owner) || G.seenB[b.id])) wearGround(b); // the ground's memory is not saved: the worn ground round buildings you know is laid again
 	fxDirty();
 	navRebuild();
 	recount();
@@ -26067,12 +26080,9 @@ function fillRank(units, pick) {
 // once, at the first call: the picture Resume goes back to, every villager's work and every battalion's temper
 // (Build 48: Battle Stations kept no picture, so its Hold stayed on every battalion for good)
 function emgSnap(kind) {
-	if (!G.emg)
-		G.emg = {
-			kind,
-			snap: unitsOf(0, 'vil').map((u) => ({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post })),
-			temper: G.temper.slice(),
-		};
+	if (!G.emg) G.emg = { kind, snap: null, temper: G.temper.slice() };
+	if (!G.emg.snap && kind !== 'battle')
+		G.emg.snap = unitsOf(0, 'vil').map((u) => ({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post })); // villagers only when they are sent in: Battle Stations leaves their work alone
 }
 function villagersIn() {
 	const V = unitsOf(0, 'vil'),
@@ -26138,7 +26148,7 @@ function emgStart(kind) {
 // Resume: every villager back to what it was doing; soldiers stay where the plan put them
 function emgResume() {
 	if (!G.emg) return;
-	for (const n of G.emg.snap) {
+	for (const n of G.emg.snap || []) {
 		const u = G.units.find((v) => v.id === n.id && v.hp > 0),
 			node = n.nid && G.nodes.find((x) => x.id === n.nid && x.amt > 0);
 		if (!u) continue;

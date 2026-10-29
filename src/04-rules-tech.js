@@ -1558,7 +1558,7 @@ const TECH = [
 		cost: { w: 150, g: 80 },
 		t: 35,
 		fx: [{ s: 'sight', k: '#guard', a: 60 }],
-		desc: 'Towers and the Town Center see 60 farther.',
+		desc: 'Every building that shoots sees 60 farther: towers, Town Centers, castles, trade posts.',
 	},
 	{
 		id: 'greattower',

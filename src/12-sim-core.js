@@ -440,7 +440,7 @@ function built(b) {
 		B = BLD[b.kind];
 	b.mx = maxHpB(o, b.kind);
 	b.hp = Math.max(b.hp, b.mx * 0.999);
-	wearGround(b);
+	if (!SET.fog || friendly(0, b.owner)) wearGround(b); // another side's worn ground shows when you first see the building (fog)
 	G.bldV = (G.bldV || 0) + 1; // a new place to drop at: every villager picks again
 	if (b.kind === 'gate') G.navDirty = true;
 	if (B.trap) b.seen = b.seen || {};
