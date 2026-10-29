@@ -1031,6 +1031,21 @@ document.addEventListener('pointerdown', (e) => {
 }); // hold a research step: what it does, the number, the date, the weight and why, the cost
 for (const ev of ['pointerup', 'pointercancel', 'pointermove'])
 	document.addEventListener(ev, lpStop, { passive: true });
+// Tap counts (Build 59, from the Google audit): how often each button is used, and tapped while it could not act. Kept on this phone only,
+// never sent anywhere; read on the Tap counts card (Help). A button nobody uses, or one tapped greyed out again and again, is a design question.
+let TAPS = {};
+try {
+	TAPS = JSON.parse(localStorage.getItem('firstkeep.taps') || '{}');
+} catch (e) {}
+function tapCount(act, dis) {
+	const k = String(act).split(':')[0],
+		t = TAPS[k] || (TAPS[k] = [0, 0]);
+	t[dis ? 1 : 0]++;
+	if ((t[0] + t[1]) % 10 === 1)
+		try {
+			localStorage.setItem('firstkeep.taps', JSON.stringify(TAPS));
+		} catch (e) {}
+}
 document.addEventListener('click', (e) => {
 	const el = e.target.closest('[data-act]');
 	if (!el) return;
@@ -1045,6 +1060,7 @@ document.addEventListener('click', (e) => {
 	}
 	sndInit();
 	sfx('tap');
+	tapCount(el.dataset.act, /(^|\s)(dis|lock)(\s|$)/.test(el.className));
 	if (/(^|\s)(dis|lock)(\s|$)/.test(el.className)) {
 		el.classList.add('nope');
 		setTimeout(() => el.classList.remove('nope'), 450);

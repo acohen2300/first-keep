@@ -113,7 +113,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--pad) max(8px,env(safe-area-inset-bottom,0px));pointer-events:none}
 #orders .tiles{pointer-events:auto}
 button.ghost{visibility:hidden}
-.tr{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.tr{display:grid;grid-template-columns:repeat(var(--n,6),minmax(0,1fr));gap:6px}.tr>[hidden],.pill>[hidden]{display:none}
 #buildT .gl{position:static;transform:none;width:18px;height:18px;display:block;margin:auto}
 .col{display:flex;flex-direction:column;gap:3px;min-width:0}.col>button.cell{flex:none}
 .pm{display:grid;grid-template-columns:1fr 1fr;gap:3px}

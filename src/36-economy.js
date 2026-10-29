@@ -185,7 +185,7 @@ function routeTick(u, dt, SP) {
 			gold -= cut;
 			earn(G.P[keeper], 'g', cut, 'trade');
 		}
-		for (const k in u.goods) mktHit(k, TRADE[k] ? u.goods[k] / 4 : u.goods[k], -1);
+		for (const k in u.goods) mktHit(k, u.goods[k], -1);
 		gold = Math.round(shareUp(o, gold));
 		earn(p, 'g', gold, 'trade');
 		u.goods = {};
@@ -289,6 +289,15 @@ function natureTick() {
 }
 function seasonTurn() {
 	const s = season().name;
+	for (const p of G.P)
+		if (p.alive && p.id !== WILD && p.res.f > 0) {
+			const k = (-Math.log(1 - SPOIL.year) / 4) * fxv(p.id, 'spoil').m, // a season's rate
+				lost = Math.floor(p.res.f * (1 - Math.exp(-k)));
+			if (lost > 0) {
+				spend(p, 'f', lost, 'spoiled');
+				if (p.id === 0 && lost >= 20) say(`${lost} food spoiled in store this season.`, 'soft', 5);
+			}
+		}
 	for (const b of G.blds)
 		if (b.kind === 'pasture' && b.prog >= 1 && b.hp > 0) {
 			if (s === 'Spring') {
@@ -611,7 +620,7 @@ function setMake(b, type) {
 		}
 	return true;
 }
-const mkt = (k) => (G.mkt ? (G.mkt[k] ?? 1) : 1);
+const mkt = (k) => (G.mkt ? clamp(Math.max(0.01, G.mkt[k] ?? 1) ** (-1 / PRICE.eps[k]), PRICE.floor, PRICE.cap) : 1); // the price multiplier from the stock
 function debase(o) {
 	// Rome's denarius: more coin at once, worth less for good
 	const p = G.P[o];
@@ -622,8 +631,9 @@ function debase(o) {
 	return true;
 }
 function mktHit(k, q, dir) {
+	// q of good k sold (dir −1: the stock grows) or bought (dir 1: it shrinks)
 	if (!G.mkt) return;
-	G.mkt[k] = clamp((G.mkt[k] ?? 1) * (1 + dir * PRICE.hit * q), PRICE.floor, PRICE.cap);
+	G.mkt[k] = Math.max(0.01, (G.mkt[k] ?? 1) - (dir * q) / (TRADE[k] ? PRICE.q0.raw : PRICE.q0.good));
 }
 const spiceCost = () => GOODS.spice.buy * mkt('spice');
 function priceDrift() {
@@ -636,7 +646,7 @@ function priceDrift() {
 	});
 	for (const k of MKTK) {
 		const aim = k === 'spice' ? (G.plague && G.plague.until > G.t ? 1.4 : 1) * (full ? 1.2 : 1) : 1;
-		G.mkt[k] += (aim - G.mkt[k]) * PRICE.drift * 5;
+		G.mkt[k] += (aim ** -PRICE.eps[k] - G.mkt[k]) * (1 - Math.exp(-10 / PRICE.tau)); // every 10 s, toward the stock that gives the aimed price
 	}
 }
 // ventures: gold put into a merchant voyage; a year later it comes back with 40% more, or not at all

@@ -108,6 +108,7 @@ function think(p) {
 	const threat = G.threats.some((v) => atWar(o, v.owner) && v.owner !== WILD && dist(v, k) < 400);
 	const saving = !!A && !threat && !(p.ai.save && G.t < p.ai.save.until),
 		need = saving ? A.cost : {};
+	p.ai.saving = saving ? 1 : threat && A ? 2 : 0; // for the harness: 1 saving, 2 not saving because of a threat at home
 	const foodShort = saving && (need.f || 0) > R.f;
 	if (foodShort && ready(o, 'market').length) {
 		// saving for an age and short of food: sell a surplus for gold, then buy food with the gold above the age cost (Build 42)
@@ -119,7 +120,7 @@ function think(p) {
 		if (R.g > (need.g || 0) + 150) marketTrade(o, 'f', 'buy');
 	}
 	if (nV < per.vils && k.q.length < 2 && (!saving || R.f >= (need.f || 0) + 50)) train(o, 'vil');
-	if (!unitsOf(o, 'scout').length && G.t > 60 && R.f > 200 && !queuedOf(o, 'scout')) train(o, 'scout');
+	if (!saving && !unitsOf(o, 'scout').length && G.t > 60 && R.f > 200 && !queuedOf(o, 'scout')) train(o, 'scout'); // a lost scout is not replaced while saving for an age (Build 59: up to 13 a game were, 80 food each)
 	// what to build, in this personality's order
 	for (const [kind, age, n, army, stock] of per.build)
 		if (
@@ -208,7 +209,7 @@ function think(p) {
 	// trade: a couple of caravans once there is somewhere to take them (an ally, or goods for the stops); swap a big surplus for gold
 	if (per.trade && p.age >= 1 && armyN >= 6) {
 		const m = ready(o, 'market')[0];
-		if (m && unitsOf(o, 'caravan').length + queuedOf(o, 'caravan') < 3 && R.w >= 150 && R.g >= 100) train(o, 'caravan');
+		if (!saving && m && unitsOf(o, 'caravan').length + queuedOf(o, 'caravan') < 3 && R.w >= 150 && R.g >= 100) train(o, 'caravan'); // nor a lost caravan (Build 59: 20 in fifteen minutes, raided as fast as they were made)
 		if (ready(o, 'market').length)
 			for (const r of ['f', 'w', 's', 'i'])
 				if (R[r] > 1200 && R.g < 150) {
@@ -261,6 +262,13 @@ function think(p) {
 		mix.iron = 0;
 	} // iron is wanted from the Classical age
 	if (per.wonder && p.age >= 2) for (const r of RES) mix[r] += 0.1;
+	if (saving) {
+		// saving for an age: hands go to what is still short of its cost, in proportion (Build 59: the mix was the personality's alone, so a side
+		// saving 500 gold for the Medieval age could keep no one on gold for twenty minutes)
+		const gap = RES.map((r) => Math.max(0, (need[KEY[r]] || 0) - R[KEY[r]])),
+			sum = gap.reduce((a, b) => a + b, 0);
+		if (sum > 0) RES.forEach((r, i) => (mix[r] += gap[i] / sum));
+	}
 	mix.food += (p.eats || 0) / 30 / Math.max(1, vils.length); // enough hands on food to feed everyone (one feeds about 8)
 	{
 		const sn = season().name,

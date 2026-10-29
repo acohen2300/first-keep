@@ -19,7 +19,7 @@ const afford = (p, c) => Object.entries(c || {}).every(([k, v]) => p.res[k] >= v
 // ledger of where it came from and went (p.ledger) and the gathered total. Build 58; before, 25 lines wrote p.res directly (Albert: one home).
 const LEDGER = {
 	in: ['gather', 'trade', 'tithe', 'tribute', 'ransom', 'market', 'loot', 'mint', 'venture', 'tax'],
-	out: ['units', 'buildings', 'research', 'upkeep', 'trade', 'tribute', 'ransom', 'market', 'tax', 'venture', 'zeal', 'repairs'],
+	out: ['units', 'buildings', 'research', 'upkeep', 'spoiled', 'trade', 'tribute', 'ransom', 'market', 'tax', 'venture', 'zeal', 'repairs'],
 };
 function earn(p, k, amt, why, counts = true) {
 	if (!(amt > 0)) return 0;

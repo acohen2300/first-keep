@@ -187,7 +187,7 @@ function autoBuilder(o, b) {
 		).length >= 2
 	)
 		return;
-	const v = pickVil(o, b);
+	const v = pickVil(o, b, typesOf(b.kind));
 	if (v) sendBuilder(v, b);
 }
 function sendBuilder(v, b) {
@@ -200,7 +200,7 @@ function sendBuilder(v, b) {
 function sendBuild(o, id, vid) {
 	const b = G.blds.find((x) => x.id === id && x.owner === o && x.hp > 0 && x.prog < 1);
 	if (!b) return false;
-	const v = vid ? unitsOf(o, 'vil').find((x) => x.id === vid) : pickVil(o, b, 'repair', b);
+	const v = vid ? unitsOf(o, 'vil').find((x) => x.id === vid) : pickVil(o, b, typesOf(b.kind), b);
 	if (!v) {
 		if (o === 0) say('No villager is free.', '', 3);
 		return false;
@@ -253,7 +253,7 @@ function declareWar(a, b, why) {
 	if (G.P[b].ally === a) G.P[b].ally = null;
 	if (a === 0 || b === 0)
 		say(`${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken; ' : ''}war, ${why}.`, 'warn', 6);
-	else say(`${G.P[a].name} and ${G.P[b].name} are now at war.`, '', 5);
+	else say(`${G.P[a].name} and ${G.P[b].name} are now at war.`, '', 5, keepOf(a)); // news between other courts comes by the post
 	chron(`${a === 0 ? 'You' : G.P[a].name} and ${b === 0 ? 'you' : G.P[b].name}: war, ${why}.`);
 }
 function makePeace(a, b) {
@@ -274,7 +274,7 @@ function makeAlly(a, b) {
 	G.P[a].ally = b;
 	G.P[b].ally = a;
 	G.navDirty = true;
-	if (b !== 0 && a !== 0) say(`${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', 6);
+	if (b !== 0 && a !== 0) say(`${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', 6, keepOf(a));
 	chron(`${a === 0 ? 'You' : G.P[a].name} allied with ${b === 0 ? 'you' : G.P[b].name}.`);
 }
 const noticeLeft = (a, b) => {
@@ -726,7 +726,7 @@ function marketTrade(o, k, dir) {
 		if (TRADE[k]) spend(p, k, n, 'market');
 		else p.goods[k] -= n;
 		earn(p, 'g', v, 'market', !TRADE[k]); // raw sold for gold is a swap, not a gain; a good sold counts
-		mktHit(k, TRADE[k] ? 25 : n, -1);
+		mktHit(k, n, -1);
 	} else {
 		if (!MKT_BUY.includes(k)) return false;
 		const c = buyPrice(o, k);
@@ -734,7 +734,7 @@ function marketTrade(o, k, dir) {
 		spend(p, 'g', c, 'market');
 		if (TRADE[k]) earn(p, k, n, 'market', false);
 		else p.goods[k] = (p.goods[k] || 0) + n;
-		mktHit(k, TRADE[k] ? 25 : n, 1);
+		mktHit(k, n, 1);
 	}
 	if (o === 0) sfx('coin');
 	return true;
@@ -829,34 +829,16 @@ function setJob(u, job, n) {
 	if (n && n.farm) n.wk = (n.wk || 0) + 1;
 	if (job !== 'repair') u.rep = null;
 }
-// the villager to send: the nearest idle one; if none is idle, one from the job whose stock you hold the most of
-function pickVil(o, to, skipJob, site) {
-	const p = G.P[o],
-		V = unitsOf(o, 'vil').filter((u) => !u.inside && !(site && u.rep === site)),
-		idle = V.filter((u) => !u.job),
-		other = V.filter((u) => u.job && u.job !== skipJob && u.job !== 'repair' && !GOODK.includes(u.job)); // weavers, brewers and shepherds keep their posts unless nobody else can go
-	const stock = (u) => p.res[KEY[u.job]] || 0;
-	if (idle.length) return nearest(idle, to);
-	const pool = other.length ? other : V.filter((u) => u.job !== 'repair');
-	if (!pool.length) return null; // nobody is pulled off a site: with all hands busy, the order waits
-	return pool.sort((a, b) => stock(b) - stock(a) || dist(a, to) - dist(b, to))[0];
-}
+// the + and − under a job: + takes an idle villager, else the one earning least on another job; − sends home the one earning least on this one
 function moveVil(o, job, down) {
-	const V = unitsOf(o, 'vil');
+	const V = unitsOf(o, 'vil').filter((u) => !u.inside),
+		low = (L) => L.reduce((b, u) => (!b || forageNow(u) < forageNow(b) ? u : b), null);
 	if (down) {
-		const v = V.filter((u) => u.job === job).sort((a, b) => a.carry - b.carry)[0];
+		const v = low(V.filter((u) => u.job === job));
 		if (v) setJob(v, null);
 		return;
 	}
-	let v = V.find((u) => !u.job);
-	if (!v) {
-		const n = {};
-		V.forEach((u) => {
-			if (u.job && u.job !== job && u.job !== 'repair') n[u.job] = (n[u.job] || 0) + 1;
-		});
-		const from = Object.entries(n).sort((a, b) => b[1] - a[1])[0];
-		if (from) v = V.filter((u) => u.job === from[0]).sort((a, b) => a.carry - b.carry)[0];
-	}
+	const v = V.find((u) => !u.job) || low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job) && !(u.node && u.node.farm && BLD[u.node.farm.kind].makes)));
 	if (v) setJob(v, job);
 }
 function sendVil(o, id) {

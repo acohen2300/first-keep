@@ -17,6 +17,7 @@ const LEDGER_WORD = {
 	buildings: 'buildings',
 	research: 'research and ages',
 	upkeep: 'eaten',
+	spoiled: 'spoiled',
 	zeal: 'zeal',
 	repairs: 'repairs',
 };
@@ -147,8 +148,18 @@ const WHY = {
 		'The chimney spread through Europe in the 1100s (the Normans at Conisbrough; the great halls before it had a smoke hole): a warm, smoke-free home, and the fireplace a family sat by. Game: the warmth and sleep behind the 5% are real but the number is ours.',
 	lanterns:
 		'Antioch lit its streets with oil lamps in the 300s AD (Libanius praised them); London ordered every householder to hang a lantern in 1417, and Paris in 1524. Game: one research for a town that in truth lit itself over centuries.',
+	runners:
+		'The kings of Ur and Ebla kept runners on the roads by 2000 BC (Shulgi of Ur boasted of running from Nippur to Ur and back in a day); the Inca chasqui relays carried news 240 km a day. Game: news from your near lands at the pace of a runner.',
+	royalroad:
+		'Darius built the Royal Road from Sardis to Susa (about 500 BC): Herodotus says relays of riders, a fresh horse at every station, carried a message 2,700 km in seven days, and "neither snow nor rain" stopped them. Rome copied it as the cursus publicus.',
+	yam:
+		'The Mongol yam (from the 1230s): post stations a day apart across Asia, horses and riders always ready; Marco Polo counted 10,000 stations. A ruler heard from the edge of the empire in days, and from his allies too.',
 	postal:
-		'Thurn und Taxis ran relays of riders from Innsbruck to Brussels in five days; a court that hears first answers first.',
+		'Thurn und Taxis ran relays of riders from Innsbruck to Brussels in five days (1490), and opened the post to anyone who paid (1516): news from the whole of Europe, a court that hears first answers first.',
+	sheets:
+		'The first printed newspaper, the Relation of Strasbourg (1605): a weekly sheet of news from the courts of Europe, for anyone who could read.',
+	weathersigns:
+		'Theophrastus wrote On Weather Signs (about 300 BC): the halo round the moon, the swallows flying low, the red sky at evening. Sailors and farmers forecast by them for two thousand years.',
 	shields: 'A wall of locked shields turned arrows and blades alike; the Stele of the Vultures shows it in 2450 BC.',
 	spearwall: 'Sumer fought in massed ranks of spears behind shields; the formation was older than the sword.',
 	drill:
@@ -660,7 +671,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Villager jobs: Food, Wood, Stone, Gold, Iron',
-		`The − and + under each job move one villager off or on. Food takes a free field first if one is within ${FIELD_NEAR}, else the nearest berries, game or fish (fish only within ${DOCKR} of a dock).`,
+		`The − and + under each job move one villager off or on: + takes an idle villager, else the one earning least elsewhere; − sends home the one earning least. Each worker takes the find that brings home most a minute: its load over the time to fill it and carry it home and back (fish only within ${DOCKR} of a dock). It moves to a better find when the gain is ${Math.round((FORAGE.move - 1) * 100)}% or more. A new field or site takes the worker earning least on that resource.`,
 		'You decide who does what.',
 	],
 	[
@@ -755,7 +766,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Market',
-		`Sell 100 of a resource or 10 of a good for ${SELL * 100}% of its worth (Coinage ${(SELL + 0.1) * 100}%), or buy for ${BUY * 100}%, at the going price. Spice is the only good it sells. The same prices for every side; a round trip always loses, and a trade stop pays more.`,
+		`Sell 100 of a resource or 10 of a good for ${SELL * 100}% of its worth (Coinage ${(SELL + 0.1) * 100}%), or buy for ${BUY * 100}%, at the going price. The going price answers the stock: what is sold piles up and the price falls, what is bought runs short and it rises, by the demand curve (bread and wood move little, cloth and spice a lot); a glut or a shortage wears off over a couple of minutes. Spice is the only good it sells. The same prices for every side; a round trip always loses, and a trade stop pays more.`,
 		'The margin is the cut of the merchant.',
 	],
 	[
@@ -917,6 +928,11 @@ const TRIGGERS = () => [
 		'Sickness',
 		`Now and then, more in summer and winter, a case arrives; it spreads through the town as real sickness does: each case makes about ${HEALTH.R0} more while people are well to catch it, fewer as the sick recover (the SIR model). Clean water, sewers and quarantine halve the spread. The sick work and fight at 60% and a few die; a Hospital or medics cure them. Plague comes along the trade routes in some springs and spreads ${HEALTH.plagueR0}× faster.`,
 		'Summer flux and winter fever were the yearly toll; plague followed trade. Kermack and McKendrick wrote the arithmetic of an epidemic in 1927: a sickness grows while each case makes more than one, and burns out as it runs short of the well.',
+	],
+	[
+		'How news reaches you',
+		`You know what you see, what your people hear and what a messenger brings. Out of sight, a fight near your people is heard (which way, not what); anything else waits for a messenger, on foot or on horseback, and only if your post reaches that far: Runners your near lands, the Royal Road all your lands, Relay stations your allies, Post riders the whole board, News sheets the ages of the other courts. The sky you always see; Weather signs tell the next one a minute ahead.`,
+		'Before the telegraph (1840s) news travelled at the speed of a horse: the news of the Battle of New Orleans (January 1815) reached Washington after the peace was already signed.',
 	],
 	[
 		'The whole board is at peace',

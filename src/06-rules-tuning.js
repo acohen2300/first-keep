@@ -91,7 +91,6 @@ const FORM = [
 ];
 const COLUMN = { name: 'Column', shape: 'column', spd: 1.15, hit: 1.1 };
 const GRID = { gap: 15, rows: 2.0, fan: 90, share: 40 }; // an army stands in a grid: 15 apart, about twice as wide as deep; on the march it follows one way to the spot and opens into its shape in the last 90 (as real armies marched in column and deployed); a soldier within 40 of where a path began takes that path too
-const FIELD_NEAR = 160; // a Food worker takes a free field within this before anything else
 const DOCKR = 150; // fish are caught only within 150 of a finished dock of yours
 const KITE = 45; // a shooter steps back from a foe this close while it reloads
 // a battalion's temper, three in all (the computers keep Guard). nerve: how fast blows break it; dmg: blows dealt; chase: how far past its sight it follows a foe
@@ -173,6 +172,19 @@ const STARVE = { stop: 60, leave: 120, every: 30 },
 	HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 },
 	HORDE = { min: 1200, mean: 1800, warn: SEASON_LEN * 2, n: 16, perAge: 6 }; // the horde comes after min seconds, at an exponential wait about mean (nextIn)
 // Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 37-events.
+// How news reaches you (Build 59, Albert: "you can't have alerts if you can't see or hear them"): seen in your sight, heard by your people,
+// or told by a messenger who walks or rides the distance. The post research (keep, line Post) decides how far a messenger serves and how fast.
+//   level 1 Runners: your near lands, on foot · 2 Royal Road: your far lands, riders · 3 Yam: your allies' lands · 4 Post riders: the whole
+//   board, the other courts' news too · 5 News sheets: the digest of the board's doings (the age news)
+const TELL = {
+	near: 320, // your near lands: within this of one of your buildings
+	far: 900, // your far lands
+	hear: 380, // the noise of a fight carries this far from any of your people (shouts and clash of arms: a few hundred paces; gunfire farther)
+	gun: 2, // gunfire is heard twice as far
+	foot: 27, // a runner's speed (the scout on foot)
+	ride: 49, // a rider's (the scout on a horse)
+};
+const UI_BUDGET = 33; // always-visible buttons on the play screen, at most (Build 59, from the Google audit): a new control must replace one (the gate counts them)
 const SAVE = { step: 0.02, stall: 90, spend: 45 }; // a computer saving for an age: progress counts in steps of 2%; 90 s without one and it spends for 45 s (17-ai)
 const EV_MEAN = 120, // the mean wait between events (an exponential wait, nextIn); EV_MIN keeps two from stacking
 	EV_MIN = 30,

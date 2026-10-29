@@ -221,14 +221,23 @@ function vilTick(u, dt, SP) {
 			return;
 		}
 		u.node = n;
-		if (n && n.farm) n.wk = (n.wk || 0) + 1;
-	} else if (u.job === 'food' && u.node.kind !== 'farm' && G.t > (u.chk || 0)) {
-		// a field has come free: fields first
-		u.chk = G.t + 3 + rng() * 2;
-		const f = nearestNode(u, 'food');
-		if (f && f.kind === 'farm') {
-			u.node = f;
-			f.wk = (f.wk || 0) + 1;
+		if (n) n.wk = (n.wk || 0) + 1; // counted at once, so the next worker this second sees the crowd (recount sets it true every second)
+	} else if (!flock && u.carry === 0 && (u.evalV !== G.bldV || G.t > (u.chk || 0)) && !(u.node.farm && BLD[u.node.farm.kind].makes)) {
+		// look again, with an empty basket: after a new field or drop-off is built, and every so often (a field comes free, a find runs low).
+		// Move only when the rate there is FORAGE.move better: nobody churns between two finds that pay the same.
+		u.evalV = G.bldV;
+		u.chk = G.t + 8 + rng() * 4;
+		const b = bestNode(u, u.job);
+		if (b && b.n !== u.node && b.R > FORAGE.move * forageNow(u)) {
+			if (u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+			if (b.n.hunt) {
+				u.hunt = b.n.hunt;
+				u.node = null;
+				return;
+			}
+			if (!u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+			u.node = b.n;
+			b.n.wk = (b.n.wk || 0) + 1;
 		}
 	}
 	const n = u.node;

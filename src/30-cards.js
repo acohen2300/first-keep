@@ -381,12 +381,8 @@ const CARDS = {
 			title('A new game', '') +
 			settingsHTML() +
 			acts(CIVK.map((k) => btn(`civ:${k}`, CIVS[k].name, '', SET.civ === k ? 'on' : '')).join(''), 'c6 civs') +
-			`<p class="civline"><b>${short(SET.civ)}</b> · ${C.bonus}</p>` +
-			fold(
-				'why',
-				'Why?',
-				`<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`,
-			) +
+			// the people line opens on its history: tap it for why (Albert, Oct 29: put the Why back; one line, so the card still fits one page)
+			`<details class="fold civline" data-f="civwhy"${FOLD.has('civwhy') ? ' open' : ''}><summary><b>${short(SET.civ)}</b> · ${C.bonus}</summary>${`<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`}</details>` +
 			`<button class="tick daily${SET.daily ? ' on' : ''}" data-act="daily"><b>Daily challenge: level ${levelOf(TODAY_HZ)}</b><small>one map for all, today</small></button>` + // one tick, written out (Albert)
 			`<div class="hzl">${HZK.map((k) => `<button class="tick${H[k] ? ' on' : ''}" data-act="hz:${k}"><b>${HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small></button>`).join('')}</div>` +
 			fold(
@@ -652,6 +648,17 @@ const CARDS = {
 			`<p>Effects: work and battle. Ambience: birds, wind, crickets, thunder. Alerts: horn, ready, done, a new age. The silent switch of your phone mutes the game.</p>`
 		);
 	},
+	taps() {
+		// what you tap, kept on this phone (33-verbs: tapCount)
+		const L = Object.entries(TAPS).sort((a, b) => b[1][0] + b[1][1] - (a[1][0] + a[1][1]));
+		return (
+			title('Tap counts', 'on this phone only') +
+			(L.length
+				? `<table><tr><th>Button</th><th>Used</th><th>Greyed</th></tr>${L.map(([k, [n, d]]) => `<tr><td>${k}</td><td>${n}</td><td>${d || ''}</td></tr>`).join('')}</table>`
+				: '<p>No taps counted yet.</p>') +
+			`<p>Nothing here leaves the phone. Greyed: tapped while the button could not act.</p>`
+		);
+	},
 	help() {
 		return (
 			title('How to play', `build ${BUILD}`) +
@@ -680,7 +687,8 @@ const CARDS = {
 						SET.cardPause !== false ? 'on' : 'off',
 						SET.cardPause !== false ? 'on' : '',
 					) +
-					btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off'),
+					btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off') +
+					btn('card:taps', 'Tap counts', 'this phone only'),
 				'c3',
 			) +
 			(Object.keys(SET.hush).length

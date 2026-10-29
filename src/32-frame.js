@@ -207,8 +207,50 @@ function whoIs(u) {
 // ───────────────────────── Messages and tips ─────────────────────────
 // quiet kinds (news, the spectacle's 'coming' lines) never take the line: they wait in the list and count on the bell (Albert: too many alerts to keep up with)
 const QUIET = new Set(['news', 'soft']);
+// ───────────────────────── How news reaches you (Build 59; TELL in 06, the Post line of research)
+// You know what you see, what your people hear, and what a messenger brings. A line with a place (at) out of your sight is heard if it is a
+// fight near your people (vague: which way), else carried by a messenger at a runner's or a rider's pace, if your post reaches that far;
+// a line with no place happens at your court, or in the sky, and is first hand.
+const DIR8 = ['east', 'south-east', 'south', 'south-west', 'west', 'north-west', 'north', 'north-east'];
+function tell(text, cls, at) {
+	if (!at || at.told || !SET.fog || fogAt(at.x, at.y) === 2) return { now: true };
+	const lvl = fxv(0, 'news').a,
+		mine = (r) => G.blds.some((b) => b.owner === 0 && b.hp > 0 && Math.abs(b.x - at.x) < r && Math.abs(b.y - at.y) < r && dist(b, at) < r),
+		k = keepOf(0);
+	if (cls === 'warn') {
+		const r = TELL.hear * (G.P[0].age >= 4 ? TELL.gun : 1);
+		if (G.units.some((u) => u.owner === 0 && u.hp > 0 && Math.abs(u.x - at.x) < r && Math.abs(u.y - at.y) < r && dist(u, at) < r) || mine(r)) {
+			const from = k || at,
+				a = Math.round((Math.atan2(at.y - from.y, at.x - from.x) / (Math.PI / 4) + 8)) % 8;
+			return { now: true, text: `Sounds of fighting to the ${DIR8[a]}.` };
+		}
+	}
+	const need = mine(TELL.near) ? 1 : mine(TELL.far) ? 2 : G.blds.some((b) => b.hp > 0 && b.owner !== 0 && G.rel[0][b.owner] === 'ally' && dist(b, at) < TELL.near) ? 3 : 4;
+	if (lvl < need || !k) return null; // no messenger serves that far: the court never hears of it
+	return { delay: dist(k, at) / (lvl >= 2 ? TELL.ride : TELL.foot) };
+}
+function postTick() {
+	// the messengers arrive (once a second, from eventsTick)
+	if (!G.post || !G.post.length) return;
+	const due = G.post.filter((m) => m.t <= G.t);
+	if (!due.length) return;
+	G.post = G.post.filter((m) => m.t > G.t);
+	for (const m of due) say(m.text, m.cls, m.secs, m.at, m.act, m.why ? m.why + ' · by messenger' : 'by messenger');
+}
 function say(text, cls, secs, at, act, why) {
 	if (!G) return;
+	{
+		const N = tell(text, cls, at);
+		if (!N) return;
+		if (N.delay > 1) {
+			(G.post || (G.post = [])).push({ t: G.t + N.delay, text, cls, secs, at: { x: at.x, y: at.y, told: 1 }, act, why });
+			return;
+		}
+		if (N.text) {
+			text = N.text;
+			at = null;
+		}
+	}
 	if (SET.msgs === false && cls !== 'warn' && cls !== 'tip') return;
 	if (hushed(text)) return;
 	if (cls === 'news' && SET.news === false) return; // Messages off: warnings only; a silenced kind stays quiet
@@ -326,6 +368,37 @@ const txt = (id, s) => {
 	const el = $(id);
 	if (el.textContent !== s) el.textContent = s;
 }; // a word is written only when it changed: the page is not touched seven times a second for nothing
+// Controls appear when their age comes (Build 59, Albert: hide by age). One rule, read from the rules tables: a resource shows from the first
+// age anything costs it (iron from the Bronze age); the Huddle shows with your first soldier; Emergency with the first enemy at your town or
+// the Bronze age, whichever is first.
+let FIRST = null;
+function firstAge() {
+	const F = Object.fromEntries(RES.map((r) => [KEY[r], 9])),
+		see = (c, a) => {
+			for (const k in c || {}) if (k in F) F[k] = Math.min(F[k], a || 0);
+		};
+	for (const k in UNIT) if (!UNIT[k].civ) see(UNIT[k].cost, UNIT[k].age);
+	for (const k in BLD) see(BLD[k].cost, BLD[k].age);
+	for (const t of TECH) if (!t.civ) see(t.cost, t.age);
+	AGES.forEach((A, i) => see(A.cost, i - 1));
+	return F;
+}
+function showByAge() {
+	const p = G.P[0],
+		F = FIRST || (FIRST = firstAge());
+	let n = 1;
+	RES.forEach((r, i) => {
+		const k = KEY[r],
+			on = p.age >= F[k] || p.res[k] >= 1;
+		$('r' + k).parentElement.hidden = !on;
+		const col = $('jobs').children[i + 1];
+		if (col) col.hidden = !on;
+		if (on) n++;
+	});
+	$('jobs').style.setProperty('--n', n);
+	$('hudB').hidden = !soldiersOf(0).length && !(G.msn || []).some(Boolean);
+	$('emgB').hidden = p.age < 1 && !(G.warnT > 0);
+}
 function ui(force) {
 	const now = performance.now();
 	if (!force && now - uiAt < 150) return;
@@ -333,6 +406,7 @@ function ui(force) {
 	const p = G.P[0],
 		R = p.res;
 	document.body.classList.toggle('night', G.night > 0.5);
+	showByAge();
 	for (const k of ['f', 'w', 's', 'g', 'i']) {
 		txt('r' + k, fmt(R[k]));
 		const el = $('r' + k),

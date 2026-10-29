@@ -495,6 +495,7 @@ function eventsTick() {
 	}
 	hordeTick();
 	newsTick();
+	postTick();
 }
 // The horde (the hazard): announced two seasons ahead, then one; from an edge or out of the wild, for the weakest side; its number grows with the age
 function hordeTick() {
@@ -560,7 +561,9 @@ function skyTurn() {
 		s = season().name,
 		P = hz('drought') && s === 'Summer' ? CLIMATE.hazard.drought : hz('winter') && s === 'Winter' ? CLIMATE.hazard.winter : CLIMATE.chain[s],
 		was = G.wx;
-	c.wet = rng() < P[c.wet ? 1 : 0];
+	c.wet = c.next ?? rng() < P[c.wet ? 1 : 0]; // the minute's sky was rolled a minute ahead, so weather signs can tell it
+	c.next = rng() < P[c.wet ? 1 : 0];
+	if (fxv(0, 'forecast').a && c.next !== c.wet) say(c.next ? 'Signs of rain within the minute.' : 'Signs of a clearing sky.', 'soft', 6);
 	c.dry = c.wet ? 0 : c.dry + 1;
 	G.wx = c.wet
 		? c.T <= 0

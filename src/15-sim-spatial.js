@@ -55,6 +55,53 @@ function nearestFoe(o, from, range, anchor) {
 			}
 	return best;
 }
+// ───────────────────────── Who a soldier fights (Build 59)
+// The attack-value rule: strike first the foe that takes the most of the enemy's damage off the field per second of your effort, its damage a
+// second over the time to reach and kill it (Churchill, Saffidine & Buro 2012, "Fast heuristic search for RTS game combat"; the cμ rule of
+// queueing, Cox & Smith 1961). The same shape as the forager's rate: what is gained over the time it costs.
+//     V = (its damage a second against you) / (its health ÷ your damage a second against it + the walk to reach it ÷ your speed)
+// Only a foe it can beat one on one (the square law above one half) is chosen while one is in sight; finish who you started, unless it runs
+// out of reach or another is FORAGE.move (18%) better. The danger map is not used here: a soldier's danger is the foe itself.
+function foeValue(u, v, d) {
+	const su = stats(u.owner, u.kind),
+		sv = v.owner === WILD ? UNIT[v.kind] : stats(v.owner, v.kind),
+		mine = ((su.dmg || 0) * vsMul(u, v)) / (UNIT[u.kind].cd || 1),
+		theirs = ((sv.dmg || 0) * vsMul(v, u)) / (UNIT[v.kind].cd || 1) + 0.1, // a foe that cannot hurt you is still worth taking, last
+		reach = Math.max(0, d - (su.rng || 0)) / Math.max(1, su.spd);
+	return mine > 0 ? theirs / (v.hp / mine + reach) : 0;
+}
+const canBeat = (u, v) => lanchester((unitPower(u) * vsMul(u, v)) / Math.max(1e-6, unitPower(v) * vsMul(v, u))) > 0.5;
+function bestFoe(o, from, range, anchor) {
+	const a = anchor || from,
+		U = G.units,
+		isB = !!from.q,
+		sR = UNIT.spy.stealth[isB ? 1 : 0] + (isB ? fxv(o, 'spysight').a : 0);
+	let best = null,
+		bV = -1,
+		bBeat = false;
+	const grid = G.ugTick === G.tick,
+		r = range + 3;
+	const x0 = grid ? clamp(((a.x - r) / UG) | 0, 0, UGN - 1) : 0,
+		x1 = grid ? clamp(((a.x + r) / UG) | 0, 0, UGN - 1) : 0,
+		y0 = grid ? clamp(((a.y - r) / UG) | 0, 0, UGN - 1) : 0,
+		y1 = grid ? clamp(((a.y + r) / UG) | 0, 0, UGN - 1) : 0;
+	for (let cy = y0; cy <= y1; cy++)
+		for (let cx = x0; cx <= x1; cx++)
+			for (let i = grid ? UGH[cy * UGN + cx] : U.length - 1; i >= 0; i = grid ? UGX[i] : i - 1) {
+				const v = U[i];
+				if (v.inside || v.hp <= 0 || !atWar(o, v.owner) || ignorable(v)) continue;
+				const d = hyp(a.x - v.x, a.y - v.y);
+				if (d > range || (v.kind === 'spy' && d > sR)) continue;
+				const beat = canBeat(from, v),
+					V = foeValue(from, v, dist(from, v));
+				if ((beat && !bBeat) || (beat === bBeat && V > bV)) {
+					best = v;
+					bV = V;
+					bBeat = beat;
+				}
+			}
+	return best;
+}
 // the nearest unit within r that passes ok, looking only at the squares around (the grid is rebuilt each step)
 function nearU(from, r, ok) {
 	if (G.ugTick !== G.tick) return nearest(G.units, from, ok, r);

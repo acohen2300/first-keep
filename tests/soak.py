@@ -17,6 +17,8 @@ MINUTE = """() => { const F = window.__fk, G = F.G, out = { t: Math.round(G.t) }
   for (const u of G.units) if (!Number.isFinite(u.x) || !Number.isFinite(u.y) || !Number.isFinite(u.hp)) { bad.push('unit ' + u.kind + ' ' + u.x + ',' + u.y + ',' + u.hp); if (bad.length > 3) break; }
   for (const p of G.P) for (const r of ['f', 'w', 's', 'g', 'i']) { const v = p.res[r]; if (!Number.isFinite(v) || v < -1) bad.push('res ' + p.id + ' ' + r + '=' + v); }
   F.saveGame(true); if (!F.readSave()) bad.push('the save of a big game did not read back');
+  out.save = (localStorage.getItem(F.SAVEKEY) || '').length;   // the save's size: one localStorage string; WebKit allows about 5 MB a site
+  { const t0 = performance.now(); for (let i = 0; i < 30; i++) F.draw(); out.frame = (performance.now() - t0) / 30; }   // a frame's draw, on this machine
   out.bad = bad.slice(0, 5); out.errs = window.__errs.slice(0, 3); out.units = G.units.length; out.blds = G.blds.length; return out; }"""
 async def run(br, seed):
     pg = await br.new_page(viewport={'width': 390, 'height': 844}); perr = []; pg.on('pageerror', lambda e: perr.append(str(e)[:300]))
@@ -26,12 +28,13 @@ async def run(br, seed):
         last = await pg.evaluate(MINUTE)
         if last['bad'] or last['errs'] or perr: break
     await pg.close(); problems = (last['bad'] + last['errs'] + perr)[:3]
-    return seed, last['t'], last['units'], last['blds'], problems
+    if last.get('save', 0) > 4_000_000: problems.append(f"the save is {last['save'] // 1000} kB, near the 5 MB a site may keep")
+    return seed, last['t'], last['units'], last['blds'], problems, last.get('save', 0), last.get('frame', 0)
 async def main():
     async with async_playwright() as p:
         br = await p.chromium.launch(); res = await asyncio.gather(*[run(br, s) for s in SEEDS]); await br.close()
     fails = 0
-    for seed, t, u, b, probs in res:
-        print(('PASS ' if not probs else 'FAIL ') + f'soak seed {seed}: {t // 60} min, {u} units, {b} buildings', '' if not probs else json.dumps(probs)); fails += bool(probs)
+    for seed, t, u, b, probs, save, frame in res:
+        print(('PASS ' if not probs else 'FAIL ') + f'soak seed {seed}: {t // 60} min, {u} units, {b} buildings; save {save // 1000} kB, a frame drawn in {frame:.1f} ms here', '' if not probs else json.dumps(probs)); fails += bool(probs)
     sys.exit(1 if fails else 0)
 asyncio.run(main())

@@ -1,4 +1,4 @@
-# First Keep: the science (Build 58, Oct 29, 2026)
+# First Keep: the science (Build 59, Oct 29, 2026)
 
 Every number that stands for the real world, with its label and its source. Rule 4 of `RULES.md`.
 - **verified**: checked against the source in the session named.
@@ -38,6 +38,11 @@ Each equation has a test in `tests/science.py` against known values (from Build 
 | `08-core` `nextIn` `hazard` | Random events: the wait to the next is exponential, t = −mean · ln U; the chance over a step is 1 − e^(−rate·dt) | | verified Oct 29 | The Poisson process (Poisson 1837; Feller, *An Introduction to Probability Theory*, vol. 1, ch. XVII). `tests/science.py` checks the mean and the standard deviation of 20,000 waits and the step chance. The rates (an event every 120 s on average, the horde at 20 + 10 minutes, a strike every 20 s in a storm) are design. |
 | `39-games` `holdGames` | The Games: a court's odds in an event go with the square of its best strength | | cited | The same square law as battle (Lanchester 1916), chosen so one engine serves both; said so in the help. The events are Olympia's (776 BC; the chariot race from 680 BC). |
 | `39-games` `PEACE.truce` | Peace bought with gold | 120 × (1 + 2 × their odds) | design | Tribute for peace is the record (the Danegeld, 991: 10,000 pounds of silver); the price is the game's. |
+| `12-sim-core` `forage` | Where a villager works: R = c(1 − δ)/(c/g + 2d/v + w·c/(A·v)) | | cited | Holling, *Can. Entomol.* 91 (1959), the disc equation; Charnov, *Theor. Pop. Biol.* 9 (1976), the marginal value theorem; danger after Lima & Dill, *Can. J. Zool.* 68 (1990). The 18% to move is design (Albert). `tests/science.py`: at the door R equals the gathering rate; farther pays less. |
+| `15-sim-spatial` `foeValue` | Who a soldier fights: its damage a second ÷ (time to kill + time to reach) | | cited | Churchill, Saffidine & Buro, AIIDE 2012 ("Attack-Value"); the cμ rule (Cox & Smith, *Queues*, 1961). |
+| `03-rules-buildings` `PRICE` | Market price from stock: P = P0 (Q/Q0)^(−1/ε) | ε food 0.5, wood 0.8, stone and iron 1, wool and beer 0.8, cloth 1.2, spice 1.5 | cited (form); design (values in range) | The isoelastic demand curve. Food elasticities 0.27 to 0.81 in 160 studies (Andreyeva, Long & Brownell, *AJPH* 100, 2010); luxuries above 1 by definition. Not re-opened this session (the page was behind a check). |
+| `03-rules-buildings` `SPOIL` | Food spoils: Q = Q0 e^(−kt), about 5% a year | | cited | First-order loss kinetics (food science, Labuza); the 5% from FAO, *Grain storage techniques*, ch. 6 (2 to 10% by crop and place). |
+| `06-rules-tuning` `TELL` | News: seen, heard (a fight carries about 380, gunfire twice), told at a runner's or a rider's speed | | design, on the record | Herodotus 8.98 (the Royal Road), Marco Polo (the yam), Thurn und Taxis 1490, the Relation of Strasbourg 1605, Theophrastus, *On Weather Signs*. Distances and speeds in game units. |
 | `04-rules-tech` | Every research step's date and place | in `07-text` `WHY` | cited | Each line names a place and a date; "about" unless exact; Game: lines where compressed. `tests/history.py` (Build 58) holds every dated step inside its age (Stone to 3300 BC, Bronze to 800 BC, Classical to AD 500, Medieval to 1450, Gunpowder to 1700, the Enlightenment to 1800, 150 years of slack) or demands a Game: note. |
 
 ## To add, with their sources (checked Oct 29 against the sources named; see HANDOFF.md item 14)
@@ -54,4 +59,3 @@ Each equation has a test in `tests/science.py` against known values (from Build 
 | 55 | Fire colour from flame temperature | a black-body fit | Tanner Helland's fit, as in SoRen's `bvRGB`; candle about 1850 K, wood fire about 1900 K, oil lamp about 2000 K |
 | 55 | Light's reach | inverse square | physics |
 | 58 | The post by age: a delay on alerts bought down by each step | design on the record | the Royal Road (Herodotus 8.98), the cursus publicus, the Mongol yam, Thurn und Taxis 1490 |
-| talk | Market prices | P = P0 (Q/Q0)^(−1/ε) | constant-elasticity demand |

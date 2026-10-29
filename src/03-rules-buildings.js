@@ -37,7 +37,21 @@ const VASSAL = {
 	reign: 300,
 };
 const VENTURE = { age: 3, back: 1.4, lost: 0.2, max: 3, sizes: [100, 250, 500] };
-const PRICE = { hit: 0.004, floor: 0.5, cap: 2.5, drift: 0.02 }; // each unit sold lowers the price 0.4%, bought raises it; prices drift 2% back toward normal every 10 s   // a caravan carries 20 goods
+// Prices answer the market's stock on the constant-elasticity demand curve, P = P0 (Q/Q0)^(−1/ε) (Marshall's price elasticity; the standard
+// isoelastic form). Q/Q0 is the stock against its normal (G.mkt holds it); what is sold adds to it, what is bought takes from it, and it
+// returns to normal on a first-order lag of tau seconds as the wider world eats and makes. ε: staples are inelastic (under 1: the study of
+// 160 food studies by Andreyeva, Long & Brownell, 2010, finds 0.27 to 0.81), luxuries elastic (over 1). The values per good are design in that range.
+// Food in store spoils on first-order decay, Q = Q0 e^(−kt), the standard model of storage loss (food-science kinetics); k from the FAO's field
+// figure, about 5% a year lost in traditional grain stores (FAO, Grain storage techniques, ch. 6: 2 to 10% by crop and place). Salting and
+// the ice house each halve it. Taken at every season's turn.
+const SPOIL = { year: 0.05 };
+const PRICE = {
+	eps: { f: 0.5, w: 0.8, s: 1, i: 1, wool: 0.8, cloth: 1.2, beer: 0.8, spice: 1.5 },
+	q0: { raw: 1000, good: 100 }, // a market's normal stock: a thousand of a raw good, a hundred of a made one
+	tau: 100,
+	floor: 0.5,
+	cap: 2.5,
+};   // a caravan carries 20 goods
 // Buildings. fp = squares a side (10 units each). h = how tall it stands. room = people it shelters.
 // sab: what a spy does to it (burn: loses 60% health; stall: stops 40 s and loses the job in hand). No sab: too well guarded.
 const BLD = {

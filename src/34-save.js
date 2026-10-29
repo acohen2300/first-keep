@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = 'firstkeep.save',
-	SAVEV = 34; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 35; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -59,6 +59,11 @@ const MIGRATE = {
 		S.v = 34;
 		return S;
 	}, // Build 57: the truce, the hidden age, the Games and the chronicle; all read with defaults
+	34: (S) => {
+		if (S.mkt) for (const k in S.mkt) S.mkt[k] = S.mkt[k] ** -(PRICE.eps[k] || 1);
+		S.v = 35;
+		return S;
+	}, // Build 59: the market keeps its stock, not its price (P = P0 (Q/Q0)^(−1/ε)): a saved price p is the stock p^(−ε)
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -166,6 +171,7 @@ function saveGame(force) {
 			clim: G.clim,
 			truce: G.truce,
 			sworn: G.sworn,
+			post: G.post,
 			scen: G.scen,
 			enlight: G.enlight,
 			stood: G.stood,
@@ -341,6 +347,7 @@ function loadGame(S) {
 	G.clim = S.clim ? { ...blankClim(), ...S.clim } : blankClim();
 	G.truce = S.truce ?? null;
 	G.sworn = S.sworn || 0;
+	G.post = S.post || [];
 	G.scen = S.scen || null;
 	G.enlight = !!S.enlight;
 	G.stood = !!S.stood;

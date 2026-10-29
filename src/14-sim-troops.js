@@ -238,7 +238,7 @@ function solTick(u, dt, SP) {
 			u.chg = 0;
 		}
 	}
-	let tgt = u.tgt; // looks for the nearest foe a few times a second, and keeps hitting the one it has between looks
+	let tgt = u.tgt; // looks for the best foe a few times a second (bestFoe), and keeps the one it has unless another is clearly better
 	if (
 		tgt &&
 		!(
@@ -251,7 +251,14 @@ function solTick(u, dt, SP) {
 		tgt = u.tgt = null; // the one it had is gone; a soldier at home keeps a foe it was sent after near the Town Center (Build 38: dropping it the next step made new soldiers spin)
 	if ((G.tick + u.id) % 4 === 0) {
 		// its turn to look, about seven times a second: with a foe or without
-		tgt = U.bonly ? nearestFoeBld(o, u, undefined, sightOf(u)) : nearestFoe(o, u, sightOf(u));
+		if (U.bonly) tgt = nearestFoeBld(o, u, undefined, sightOf(u));
+		else {
+			// the best foe in sight by the attack-value rule; the one it is fighting is kept unless the new one is FORAGE.move better
+			const c = bestFoe(o, u, sightOf(u)),
+				cur = u.tgt && !u.tgt.q ? u.tgt : null,
+				keep = cur && (!c || (canBeat(u, cur) >= canBeat(u, c) && foeValue(u, c, dist(u, c)) < FORAGE.move * foeValue(u, cur, dist(u, cur))));
+			tgt = keep ? cur : c;
+		}
 		if (u.state === 'home' && tgt && !nearHome(u, tgt, k)) tgt = null;
 		if (!tgt && u.state === 'home' && !U.bonly)
 			tgt =

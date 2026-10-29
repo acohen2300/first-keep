@@ -510,7 +510,7 @@ function jobDone(b, j) {
 				k.doneT = G.t;
 				celebrate(3, k.x, k.y);
 			}
-		} else say(`${p.name} entered the ${AGES[p.age].name} age.`, '', 4);
+		} else if (fxv(0, 'news').a >= 5 || !SET.fog) say(`${p.name} entered the ${AGES[p.age].name} age.`, '', 4); // another court's age: in the news sheets
 		chron(`${o === 0 ? 'You' : p.name} entered the ${AGES[p.age].name} age.`);
 	}
 }
@@ -560,69 +560,94 @@ const dockNear = (o, n) =>
 			dist(b, n) < DOCKR,
 	);
 const nodeFits = (n, job) => n.type === job;
-// Food takes a free field first if one is near (within FIELD_NEAR), else the nearest berries, fish, carcass or game.
 const unsafe = (p, o) => !!DANGER[o][gcell(p.x, p.y)]; // on the side's danger map (09-nav: dangerMap); a field is never left for it
-function nearestNode(u, job) {
+// ───────────────────────── Where a worker gathers: the forager's rate (Build 59)
+// A villager is a forager, and nature's rule is the rate of return (Holling 1959; Charnov 1976, the marginal value theorem): over the rest
+// of a find's life, what it brings home a second. With c the load, g the gathering rate, d the walk from the find to its drop-off, v the
+// walking speed, w the walk to reach the find and A what the find has left:
+//     R = c (1 − δ) / (c/g + 2d/v + w·c/(A·v))
+// The first term is the time to fill a load, the second the trip home and back, the third the one walk out shared over every load the find
+// still holds. δ is the danger (Lima & Dill 1990): the danger map is yes-or-no today, so a find on it is not taken at all, as before.
+// One rule for every choice: which find to work, who to send to a new field or site, who leaves a job, and when to move (FORAGE.move).
+// Crowding: foragers on one find get in each other's way, so each takes less (the ideal free distribution, Fretwell & Lucas 1970, with
+// interference, Sutherland 1983): g ÷ (1 + others ÷ room), room the workers a find holds before they stand idle. Without it every worker
+// chose the same best tree and stood in line (Build 59's first harness run: blocked villager-seconds four times higher).
+const FORAGE = { move: 1.18, life: 20, room: { tree: 1, bush: 2, fish: 2, stone: 3, gold: 3, iron: 3, carcass: 2 } }; // move when 18% better (Albert, Oct 29); a field's life counts as 20 loads; room is design
+function forage(u, n, drops) {
+	const o = u.owner,
+		c = carryOf(o),
+		v = stats(o, 'vil').spd * groundSpd(0, ['foot']),
+		others = n.hunt || n.kind === 'farm' ? 0 : Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0)),
+		g = ((n.hunt ? RATE_OF.meat : n.rate || RATE_OF[n.kind]) * gatherMul(o, n.hunt ? { type: 'food', kind: 'meat' } : n)) / (1 + others / (FORAGE.room[n.kind] || 2)),
+		A = n.hunt ? UNIT[n.hunt.kind].meat : n.kind === 'farm' ? c * FORAGE.life : Math.max(1, n.amt),
+		at = n.hunt || n,
+		dr = n.kind === 'fish' ? null : (drops ? nearest(drops, at) : dropFor(o, n.type || 'food', at)) || keepOf(o),
+		d = dr ? dist(dr, at) : 0,
+		w = dist(u, at);
+	return (c / (c / Math.max(1e-6, g) + (2 * d) / v + (w * c) / (Math.min(A, c * FORAGE.life) * v)));
+}
+// the rate a worker earns where it is now: 0 idle or off gathering
+const forageNow = (u) => (!u.job || u.job === 'repair' ? 0 : u.hunt ? forage(u, { hunt: u.hunt }) : u.node && u.node.amt > 0 && !(u.node.farm && BLD[u.node.farm.kind].makes) ? forage(u, u.node) : 0);
+// the best find for this worker and its rate: fields, berries, trees, stone, gold, iron, fish, a carcass, or game within reach of home
+function bestNode(u, job) {
 	let best = null,
-		bd = 1e9,
-		bdist = 1e9,
-		farm = null,
-		fd = 1e9,
-		drops = null,
-		dropT = ''; // bd scores a find by the walk to it and the walk home with the load
+		bR = 0,
+		drops = null;
 	for (const n of G.nodes) {
-		if (n.kind !== 'farm' && Math.abs(n.x - u.x) * 0.4 > bd) continue; // the cheap tests first: most of the map is farther than the best so far
-		if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n, u.owner)) || (u.bad && u.bad[n.id] > G.t))
-			continue;
+		if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n, u.owner)) || (u.bad && u.bad[n.id] > G.t)) continue;
 		if (n.kind === 'farm') {
-			if (
-				n.farm.owner !== u.owner ||
-				n.farm.prog < 1 ||
-				n.farm.hp <= 0 ||
-				(n.wk || 0) - (u.node === n ? 1 : 0) >= slotsOf(n)
-			)
-				continue;
-			const d = dist(u, n);
-			if (d < fd) {
-				fd = d;
-				farm = n;
-			}
+			if (n.farm.owner !== u.owner || n.farm.prog < 1 || n.farm.hp <= 0 || (n.wk || 0) - (u.node === n ? 1 : 0) >= slotsOf(n)) continue;
+			if (BLD[n.farm.kind].makes || BLD[n.farm.kind].sheep) continue; // a workshop or a pasture is a post, not a find: it is staffed by its builder or by hand
 		} else {
 			if (n.kind === 'fish' && !dockNear(u.owner, n)) continue;
 			if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue;
-			if (Math.abs(n.x - u.x) * 0.4 > bd) continue;
-			const d = dist(u, n) * 0.4;
-			if (d < bd) {
-				if (n.kind !== 'fish' && dropT !== n.type) {
-					dropT = n.type;
-					drops = G.blds.filter(
-						(b) =>
-							b.owner === u.owner && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(n.type),
-					);
-				}
-				const dr = n.kind === 'fish' ? null : nearest(drops, n) || keepOf(u.owner),
-					s = d + (dr ? dist(dr, n) * 0.6 : 0) + 25 * Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0));
-				if (s < bd) {
-					bd = s;
-					best = n;
-					bdist = d / 0.4;
-				}
-			}
+		}
+		if (!drops) drops = G.blds.filter((b) => b.owner === u.owner && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(job));
+		const R = forage(u, n, drops);
+		if (R > bR) {
+			bR = R;
+			best = n;
 		}
 	}
-	if (farm && (fd < FIELD_NEAR || !best)) return farm;
 	if (job === 'food') {
-		// game: deer and boar within reach of home, if nearer than anything else
 		const k = keepOf(u.owner);
-		const g =
-			k &&
-			nearest(
-				G.units,
-				u,
-				(v) => v.owner === WILD && UNIT[v.kind].meat && UNIT[v.kind].tick === 'wild' && dist(v, k) < 420 && !unsafe(v, u.owner),
-				Math.min(bdist, 420),
-			);
-		if (g) return { hunt: g };
+		for (const a of G.units)
+			if (a.owner === WILD && a.hp > 0 && UNIT[a.kind].meat && UNIT[a.kind].tick === 'wild' && k && dist(a, k) < 420 && !unsafe(a, u.owner)) {
+				const R = forage(u, { hunt: a }, drops);
+				if (R > bR) {
+					bR = R;
+					best = { hunt: a };
+				}
+			}
+	}
+	return best && { n: best, R: bR };
+}
+const nearestNode = (u, job) => (bestNode(u, job) || { n: null }).n; // the one find a worker should take now
+// who to send: an idle villager first, the nearest; then, of the workers on the same resource (types), the one earning least; then the one
+// earning least on any gathering job. Weavers, brewers, shepherds and builders keep their posts. (Albert, Oct 29: a new field takes the
+// berry picker farthest from home, not a woodcutter)
+function pickVil(o, to, types, site) {
+	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !(site && u.rep === site)),
+		idle = V.filter((u) => !u.job);
+	if (idle.length) return nearest(idle, to);
+	const T = types ? [].concat(types) : null,
+		free = V.filter((u) => u.job && u.job !== 'repair' && !GOODK.includes(u.job) && !(u.node && u.node.farm && (BLD[u.node.farm.kind].makes || BLD[u.node.farm.kind].sheep))),
+		same = T ? free.filter((u) => T.includes(u.job)) : [],
+		pool = same.length ? same : free;
+	if (!pool.length) return null; // nobody is pulled off a site or a post: with all hands busy, the order waits
+	let best = null,
+		bR = Infinity;
+	for (const u of pool) {
+		const R = forageNow(u);
+		if (R < bR) {
+			bR = R;
+			best = u;
+		}
 	}
 	return best;
 }
+// the resource a building serves: a field its crop, a drop-off what it takes in
+const typesOf = (kind) => {
+	const B = BLD[kind];
+	return B.crop && !B.makes && !B.sheep ? [B.crop] : B.drop && B.drop.length && B.drop.length < 4 ? B.drop : null;
+};

@@ -32,6 +32,16 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   { const R0 = F.HEALTH.R0; let z = 0.5; for (let i = 0; i < 100; i++) z = 1 - Math.exp(-R0 * z); if (R0 === 2) near('SIR final size', z, 0.7968, 1e-3); }
   // Lanchester's square law as odds: even strength is a coin toss; twice the strength wins 4 in 5
   near('lanchester even', F.lanchester(1), 0.5, 1e-9); near('lanchester double', F.lanchester(2), 0.8, 1e-9);
+  // the forager's rate (Charnov 1976): standing on a find beside its drop-off, the rate is the gathering rate itself; a find twice as far
+  // from the drop-off pays less; a new field takes the worker earning least on food
+  { F.SET.scen = 'open'; F.newGame(4); const G = F.G, k = F.keepOf(0), u = G.units.find((x) => x.owner === 0 && x.kind === 'vil');
+    const n = { kind: 'bush', type: 'food', amt: 1e6, x: u.x, y: u.y }, g = F.RATE_OF.bush * F.gatherMul(0, n);
+    near('forage at the door', F.forage(u, n, [{ x: u.x, y: u.y }]), g, 1e-6);
+    const n2 = { ...n, x: u.x + 300 }; if (!(F.forage(u, n2, [{ x: u.x, y: u.y }]) < F.forage(u, { ...n, x: u.x + 150 }, [{ x: u.x, y: u.y }]))) out.push('forage: farther did not pay less'); }
+  // the market on the constant-elasticity curve: 100 food sold to a normal market of 1000 makes the stock 1.1 and the price 1.1^(−1/0.5) = 0.826
+  { F.G.mkt.f = 1; F.mktHit('f', 100, -1); near('elastic price', F.mkt('f'), Math.pow(1.1, -1 / F.PRICE.eps.f), 1e-9); near('elastic value', F.mkt('f'), 0.8264, 1e-3); }
+  // spoilage on first-order decay: a year of seasons at 5% a year keeps 95%
+  { let q = 1000; const k = -Math.log(1 - F.SPOIL.year) / 4; for (let i = 0; i < 4; i++) q *= Math.exp(-k); near('spoil a year', q, 950, 1e-6); }
   return out; }"""
 async def main():
     async with async_playwright() as p:

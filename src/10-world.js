@@ -54,7 +54,8 @@ function blankGame(seed) {
 		flood: 0,
 		clim: blankClim(),
 		truce: null, // when the whole board came to peace, or null (39-games)
-		sworn: 0, // until when no court may declare war (a scenario's term)
+		sworn: 0,
+		post: [], // news on its way to you by messenger (32-frame: tell) // until when no court may declare war (a scenario's term)
 		scen: null,
 		enlight: false,
 		stood: false,

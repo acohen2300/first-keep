@@ -180,6 +180,12 @@ async def main():
         pg = await br.new_page(); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(400)
         unfair = await pg.evaluate("() => { const F = window.__fk, out = []; for (let s = 1; s <= 10; s++) { F.newGame(s); const f = F.fairness(); if (f.worst > F.FAIR.spread) out.push(s + ': ' + JSON.stringify(f.spread)); } return out; }"); await pg.close()
         print(('PASS ' if not unfair else 'FAIL ') + 'maps are fair on ten seeds', '' if not unfair else unfair); fails += bool(unfair)
+        pg = await br.new_page(viewport={'width': 390, 'height': 844}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(400)
+        ui = await pg.evaluate("""() => { const F = window.__fk; F.SET.fog = false; F.SET.scen = 'open'; F.newGame(3); F.act('close'); const G = F.G; G.P[0].age = 4; const k = F.keepOf(0);
+          for (let i = 0; i < 5; i++) F.addUnit(0, 'spear', k.x + 30, k.y + 30); for (let i = 0; i < 10; i++) F.step(1 / 30); F.ui(true);
+          const n = [...document.querySelectorAll('[data-act]')].filter((e) => !e.closest('#card') && !e.closest('#end') && !e.closest('#tkPop') && e.offsetParent !== null && e.getBoundingClientRect().width > 0).length;
+          return [n, F.UI_BUDGET]; }"""); await pg.close()
+        print(('PASS ' if ui[0] <= ui[1] else 'FAIL ') + f'the play screen keeps to its button budget: {ui[0]} of {ui[1]}'); fails += ui[0] > ui[1]
         fp, _ = await fingerprint(br); print(('PASS ' if not fp else 'FAIL ') + 'the game plays as the baseline says', '' if not fp else '\n  ' + '\n  '.join(fp[:4]) + '\n  (a deliberate rule change: python3 tests/gate.py --accept "why")'); fails += bool(fp)
         await br.close()
     if '--soak' in sys.argv: fails += subprocess.run([sys.executable, 'tests/soak.py']).returncode != 0   # opt-in, about 3 minutes: long games on three seeds
