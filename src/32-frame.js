@@ -545,8 +545,7 @@ function alertNow() {
 		k = e ? e.kind : V.warned,
 		E = k && EVENTS[k];
 	if (E) {
-		const quake = k === 'tremor' && hz('winter'),
-			A = { name: quake ? 'Earthquake' : E.name, line: quake ? EV_LINE.quake : EV_LINE[k], now: !!e, secs: E.secs };
+		const A = { name: E.name, line: EV_LINE[k], now: !!e, secs: E.secs };
 		if (e)
 			return {
 				...A,

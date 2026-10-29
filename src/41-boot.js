@@ -345,6 +345,13 @@ window.__fk = {
 	hordeTick,
 	starveTick,
 	todaySeed,
+	gatherMul,
+	RATE_OF,
+	makeOf,
+	shareOf,
+	UPKEEP,
+	POST,
+	TAX,
 	get holdSave() {
 		return holdSave;
 	},

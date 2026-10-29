@@ -1,4 +1,4 @@
-# First Keep: handoff (Build 44, preview only)
+# First Keep: handoff (Build 45, preview only)
 
 ## What it is
 Albert's single-file HTML mobile RTS (Age of Empires style). Albert is not a coder.
@@ -77,6 +77,13 @@ Play, pause and speed in one button; the Map cell; new-game setup on one page (s
 - **Army controls**: All = everyone but guards, Rest = idle ones, nearest-N/half/quarter use idle only; Attack-with takes idle first, then nearest; its counts reset on every card; `sendto/qgo/qatk/qfoe` go through `order()`.
 - **Balance**: animals hit soldiers at half and cost no nerve; nerve hit 0.8, side 1.5, rear 2, rout return 0.6.
 - Files: `39-huddle`, `40-emergency` are new; `41-boot` is the old `39-boot`.
+
+## Build 45 (preview only; CUTS.md has each)
+- **Dials:** `FORM`/`COLUMN`/`TEMPER` in `06-rules-tuning`; `shapeOf`, `kiteOf`, `temperOf`, `dialOf`, `cycle` in `08-core`; verbs `shape` and `temper`; `dialBtns` in `28-army-strip` is the one home of the buttons (Army card and battalion page). Save v32.
+- **People and economy:** one worker per building (`slotsOf` returns 1); caps 60 villagers, 120 soldiers, 180 people, battalion 40; 12 farms, mints, foundries and quarries at the last age; mint 1:1, foundry 2:1. `tests/econ.py [--live]` measures it (the live run feeds the villagers and gives the farms two mills; without mills the walk to the keep halves the yield).
+- **Income:** `CARAVAN.keep`, `CARRIED`, `loadable`, `takeFrom` in `36-economy` (raw surplus on caravans); the `tribute` sound. Vassal tax and held trade routes were already a drip.
+- **Tension:** `SET.tension` / `G.tension` (`winner`, `diplomacy`); `leagueTick` in `17-ai`, called every 10 s from the economy beat.
+- Earthquakes and the Shield wall are cut.
 
 ## Open items
 1. Albert's real-phone test of Build 41j (tap sizes, the action bar, three-tap dispatch, People tile, 375 px).

@@ -24,18 +24,18 @@ function hurt(o, a, t, base) {
 			if (t.state === 'rout') d *= MORALE.routHit;
 			else if (t.fb > G.t) d *= FALLBACK.hit;
 			const dot = a && t.fx !== undefined ? ((a.x - t.x) * t.fx + (a.y - t.y) * t.fy) / (dist(a, t) || 1) : 1;
-			if (o !== WILD) t.mor -= ((MORALE.hit * d) / t.max) * (dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
+			if (o !== WILD)
+				t.mor -= ((MORALE.hit * d * (TEMPER[temperOf(t)].nerve || 1)) / t.max) * (dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
 		} // nerve: a blow from the side counts half again, from behind twice; animals do not shake it
 		if (a && a.native && !isB && onLand(t.x, t.y) && hyp(t.x - MID, t.y - MID) > THRONE.isle - 10) d *= NATIVE.ambush; // the Natives at the causeways: the ground is theirs
 		if (a && A.gun && hasTag(t.kind, 'native')) d *= NATIVE.gunHit; // gunpowder against hide shields
 		if (isSoldier(t) && t.owner !== WILD) {
 			d *= stats(t.owner, t.kind).armor;
-			if (t.stance === 1) d *= STANCE[1].hit;
 			{
-				const F = FORM[formOf(t)];
+				const F = shapeOf(t);
 				d *= F.hit || 1;
 				if (F.vsMounted && a && hasTag(a.kind, 'mounted')) d *= F.vsMounted;
-			} // the battalion's formation
+			} // the battalion's shape
 			if (a && A.rng <= 20 && t.fx !== undefined && (a.x - t.x) * t.fx + (a.y - t.y) * t.fy < -0.5 * (dist(a, t) || 1))
 				d *= FLANK; // from behind the way it faces
 		}
@@ -300,7 +300,7 @@ const TICK = {
 };
 
 // builders who finish a place of work start on it: fields and workshops take them up to their places, a dock sets them fishing, a camp sends them to what it is for
-const slotsOf = (n) => (n.farm && BLD[n.farm.kind].slots) || 1;
+const slotsOf = () => 1; // one worker to a field, a quarry, a workshop
 function startWork(u, b) {
 	const B = BLD[b.kind],
 		take = (job, n) => {

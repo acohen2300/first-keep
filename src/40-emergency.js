@@ -81,7 +81,7 @@ function soldiersIn() {
 	const d = threatDir(k),
 		cx = k.x + d.x * EMG.line,
 		cy = k.y + d.y * EMG.line;
-	G.hold = Array(BNS + 1).fill(1); // hold ground: they fight what comes within reach and keep the line
+	G.temper = Array(BNS + 1).fill(T_HOLD); // hold: they fight what comes within reach and keep the line
 	left.forEach((u, i) => {
 		const row = Math.floor(i / EMG.perRow),
 			col = (i % EMG.perRow) - (Math.min(left.length, EMG.perRow) - 1) / 2;

@@ -495,3 +495,32 @@ function decideWar(p, per) {
 		if (best === 0) say(`${p.name} march on you with ${go.length} soldiers.`, 'warn', 8, go[0]);
 	}
 }
+
+// ── Dynamic Diplomacy (the Tension setting): when one side runs far ahead, the computers behind it unite against it, as Greek and Italian
+// states did against Athens and Syracuse and the powers of Europe did against Napoleon. They make peace and ally among themselves and make war on the leader;
+// the leader's own vassals stay faithful. It ends when the leader falls back. Winner Takes All skips all of this.
+const LEAGUE = { lead: 1.4, release: 1.15 }; // the leader's score against the next best: it forms above lead, and breaks up below release
+function leagueTick() {
+	const S = G.P.filter((p) => p.id !== WILD && p.alive && !(p.lord !== null && p.lord !== undefined && !p.rebel));
+	if (S.length < 3) return;
+	S.sort((a, b) => b.score.total - a.score.total);
+	const lead = S[0],
+		ratio = lead.score.total / Math.max(1, S[1].score.total);
+	if (G.league === null || G.league === undefined) {
+		if (ratio < LEAGUE.lead) return;
+		G.league = lead.id;
+	} else if (G.league !== lead.id || ratio < LEAGUE.release) {
+		G.league = null;
+		say('The league against the leader breaks up.', '', 6);
+		return;
+	}
+	const M = S.slice(1).filter((p) => p.id !== 0 && p.lord !== lead.id);
+	if (!M.length) return;
+	const fresh = M.some((p) => G.rel[p.id][lead.id] !== 'war');
+	for (const p of M) {
+		if (G.rel[p.id][lead.id] !== 'war') declareWar(p.id, lead.id, 'the league against the leader');
+		for (const q of M) if (q !== p && G.rel[p.id][q.id] !== 'ally') G.rel[p.id][q.id] = 'ally';
+	}
+	G.navDirty = true;
+	if (fresh) say(`${M.map((p) => p.name).join(', ')} unite against ${lead.name}, the leader.`, 'warn', 8);
+}

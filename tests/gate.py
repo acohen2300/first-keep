@@ -91,8 +91,6 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
   { F.startEvent('dragon'); run(2); const d = G.ev.cur.units[0], u = F.addUnit(0, 'spear', d.x, d.y); const hp = u.hp; run(2); if (!(u.hp < hp) && u.hp > 0) bad.push('dragon: nobody burned'); clear(); }
   // the travelling show: a villager beside the performers cheers
   { F.startEvent('circus'); run(3); const p = G.ev.cur.units[0], v = F.addUnit(0, 'vil', p.x + 10, p.y); run(3); if (!(v.cheer > G.t)) bad.push('circus: nobody cheered'); clear(); }
-  // the tremor: the ground splits and shakes
-  { G.cracks = []; F.startEvent('tremor'); if (!G.cracks || !G.cracks.length) bad.push('tremor: no crack'); if (!(G.shake > G.t)) bad.push('tremor: no shake'); clear(); }
   // the alert bar: named while an event is coming and while it runs
   { G.ev.cur = null; G.ev.warned = 'eclipse'; G.ev.next = G.t + 9; let a = F.alertNow(); if (!a || a.name !== 'Eclipse' || a.now) bad.push('alert: not shown before the eclipse');
     G.ev.warned = null; F.startEvent('eclipse'); a = F.alertNow(); if (!a || !a.now || !(a.left > 0)) bad.push('alert: not shown during the eclipse'); clear(); }

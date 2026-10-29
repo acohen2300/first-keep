@@ -215,7 +215,7 @@ function formUp() {
 		a.sort((p, q) => (p.bn ?? 9) - (q.bn ?? 9) || p.id - q.id);
 		const n = a.length,
 			k = keepOf(a[0].owner),
-			shape = FORM[formOf(a[0])].shape; // marching, a battalion takes its formation's shape: narrow column, point-first wedge, closed square
+			shape = shapeOf(a[0]).shape; // a battalion takes its shape: a narrow column on the march, then the line, the point-first wedge or the closed square
 		const cols =
 				shape === 'column'
 					? Math.min(n, 3)

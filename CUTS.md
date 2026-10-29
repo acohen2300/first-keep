@@ -535,3 +535,22 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 - **Aim (changed after Albert's test):** tapping Aim shows the reticle at once (breathing ring and "Tap the map to move it"); a map tap moves it as often as you like; the button reads Lock, and Lock sets the target (lamp green). Cut: the first map tap used to set and end the aim.
 - **Shield button** (right corner, above the sword) opens the Emergency card from anywhere; the Army card and the red attack bar still open it too.
 - **The huddle is now one step at a time** (Albert's flow): Ready (red, blinking) > Armed (green) > Aim (red) > Aim (blue, crosshair up) > a map tap makes it Lock (blue) > Locked (green, or a double tap) > counts open in blue and Set blinks red > Set (green) > Fire blinks red > Fire goes green and the bar shows the missions. Red is next, blue is in hand, green is done. Armed again puts the plan down. Cut: the old Ready-as-toggle and the always-open counts. A target that is a tree, a field or one of your buildings now becomes just the spot (those orders never made a march, so no mission was made).
+
+## Build 45 preview (not live)
+- **Cut: earthquakes.** The tremor event and the quake (cracks, shaking, the winter "tremors" hazard text and alert lines) are gone on Albert's say-so. Wildfire now comes in Summer and Autumn without a drought.
+- **Cut: Shield wall as a stance.** Folded into the Square shape (10% less damage dealt, 30% less from riders, 20% slower). The old Hold/Guard/Skirmish/Shield-wall stances and the separate hold-ground flag are replaced by two dials: **Shape** (Line, Wedge, Square; Column is automatic on the march once Formations is learned) and **Temper** (Hold, Guard, Press). Saves migrate (v32).
+- **Cut: tag-team farming and quarrying.** One worker per building everywhere (farm and tree farm were 3, quarry 2). Caps by age at the last age: 12 farms, 12 mints, 12 foundries, 12 quarries. People: 60 villagers, 120 soldiers, 180 in all. A battalion holds 40; a mission draft holds at most one battalion.
+- **Changed: the mint** pays 1 gold for 1 stone (was 3 for 1; at 2 for 1 twelve mints still starved on the stone twelve quarries cut). **Foundry** 2 wood for 1 iron (was 3). **Farm** rate 0.7 to 0.8. Measured (tests/econ.py --live): 12 farmers with two mills give 1012 food a minute against a 900 bill; twelve quarry workers 690 stone; twelve woodcutters 763 wood.
+- **Added: caravans carry a store's surplus of food, wood, stone and iron** beyond 600 of each, priced from the Market's lot prices, along with the made goods.
+- **Added: a "tribute" chime** (a soft bell) for gold that does not come from your own mint: a caravan's sale, an ally run, a full trade route (every 10 s) and a vassal's tax. The mint's coin sound is unchanged.
+- **Added: the Tension setting** on the setup card: Winner Takes All or Dynamic Diplomacy. Easy sets Winner Takes All, Normal and Hard set Dynamic Diplomacy (the toggle can change it). Under Dynamic Diplomacy, when the leader's score is 1.4 times the next best, the computers (not yours, not the leader's vassals) make peace and ally with each other and make war on the leader; it breaks up under 1.15. The Throne hold stays the end clock.
+- **Tests:** `tests/econ.py` (new) measures the economy; the events test no longer tries the tremor.
+- **Not done (honest):** the shape/temper marks are on the Army card and the battalion page only, not on the mission tile.
+
+### Parked after Build 45 (build once the numbers hold)
+- Gold upkeep per soldier.
+- Land resources that run down.
+- Merging battalions with missions.
+- Charters (East India Company style) and named Silk Road routes.
+
+- **Play fingerprint accepted:** Build 45: caps 60/120/180, one worker per building, mint 1:1, foundry 2:1, farm rate 0.8, no earthquakes, shape and temper dials replace stances

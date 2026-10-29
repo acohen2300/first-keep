@@ -48,7 +48,13 @@ const hudPool = () =>
 		(u) => clsOf(u) >= 0,
 	);
 const hudHave = (pool, c) => pool.filter((u) => clsOf(u) === c).length;
-const hudN = (pool, c) => Math.min(hudHave(pool, c), G.hud.n[c] ?? 1e9);
+// a draft holds a battalion at most (BNSIZE): the classes fill it in their order, each from what is left
+const hudN = (pool, c) => {
+	let room = BNSIZE;
+	for (let i = 0; i < c; i++) room -= Math.min(hudHave(pool, i), G.hud.n[i] ?? 1e9, room);
+	return Math.min(hudHave(pool, c), G.hud.n[c] ?? 1e9, room);
+};
+const hudRoom = (pool) => CLS.reduce((r, _, i) => r - hudN(pool, i), BNSIZE);
 function hudPick() {
 	const pool = hudPool(),
 		to = G.hud.h && G.hud.h.e;

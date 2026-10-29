@@ -57,12 +57,15 @@ function initEconomy() {
 
 // ── prices: base, more where it is wanted, more the farther it travels
 const distF = (d) => clamp(1 + d / 1000, 1, POST.far);
+const baseOf = (k) => (GOODS[k] ? GOODS[k].base : TRADE[k] / 100); // a made good's price, or a raw find's (the Market's lot price ÷ 100)
+const nameOf = (k) => (GOODS[k] ? GOODS[k].name : RAW_NAME[k]).toLowerCase();
+const loadable = (p, k) => (TRADE[k] ? Math.max(0, (p.res[k] || 0) - CARAVAN.keep) : p.goods[k] || 0); // what a caravan may take: all of a made good, a raw find's surplus
+const takeFrom = (p, k, q) => (TRADE[k] ? (p.res[k] -= q) : (p.goods[k] -= q));
 function priceAt(o, good, place, from) {
-	const G0 = GOODS[good];
 	let m = 1;
 	if (place.kind === 'stop' && good === 'spice') return 0; // a stop sells spice; it does not buy it
 	m = place.want === good ? POST.want : 1;
-	return G0.base * m * mkt(good) * (from ? distF(dist(from, place)) : 1) * fxv(o, 'trade').m;
+	return baseOf(good) * m * mkt(good) * (from ? distF(dist(from, place)) : 1) * fxv(o, 'trade').m;
 }
 // Trade has two lanes. One: a caravan with a route carries goods to a trade stop, the world's old markets, and sells them.
 // Two: a caravan with no route runs between your Market and an ally's Market or Town Center, paid by distance.
@@ -92,11 +95,10 @@ function allyMarket(o, from) {
 const targetOf = (r) => r && (r.s ? G.finds.find((f) => f.id === r.to) : G.blds.find((b) => b.id === r.to && b.hp > 0));
 const homeBiz = (o, u) => nearest(G.blds, u, (b) => b.owner === o && b.kind === 'market' && b.prog >= 1 && b.hp > 0); // the Market stores goods and loads caravans
 function estPay(o, place, from) {
-	const g = goodsOf(o);
 	let n = LOAD,
 		s = 0;
-	for (const k of WARES.slice().sort((a, b) => priceAt(o, b, place, from) - priceAt(o, a, place, from))) {
-		const q = priceAt(o, k, place, from) > 0 ? Math.min(n, Math.floor(g[k] || 0)) : 0;
+	for (const k of CARRIED.slice().sort((a, b) => priceAt(o, b, place, from) - priceAt(o, a, place, from))) {
+		const q = priceAt(o, k, place, from) > 0 ? Math.min(n, Math.floor(loadable(G.P[o], k))) : 0;
 		s += q * priceAt(o, k, place, from);
 		n -= q;
 	}
@@ -139,12 +141,12 @@ function routeTick(u, dt, SP) {
 		if (!moveTo(u, h.x, h.y, dt, halfOf(h) + 4, SP)) return;
 		u.goods = {};
 		let n = LOAD;
-		for (const k of WARES.slice().sort((a, b) => priceAt(o, b, t, h) - priceAt(o, a, t, h))) {
+		for (const k of CARRIED.slice().sort((a, b) => priceAt(o, b, t, h) - priceAt(o, a, t, h))) {
 			if (t.sell && !t.sell[k]) continue;
-			const q = priceAt(o, k, t, h) > 0 ? Math.min(n, Math.floor(p.goods[k] || 0)) : 0;
+			const q = priceAt(o, k, t, h) > 0 ? Math.min(n, Math.floor(loadable(p, k))) : 0;
 			if (q > 0) {
 				u.goods[k] = q;
-				p.goods[k] -= q;
+				takeFrom(p, k, q);
 				n -= q;
 			}
 		} // a stop you hold sells what you chose for it
@@ -163,7 +165,7 @@ function routeTick(u, dt, SP) {
 		for (const k in u.goods) {
 			const v = u.goods[k] * priceAt(o, k, t, u.from);
 			gold += v;
-			sold.push(u.goods[k] + ' ' + GOODS[k].name.toLowerCase());
+			sold.push(u.goods[k] + ' ' + nameOf(k));
 		}
 		const keeper = t.kind === 'stop' ? t.owner : null;
 		if (keeper !== null && keeper !== o && gold > 0) {
@@ -172,7 +174,7 @@ function routeTick(u, dt, SP) {
 			G.P[keeper].res.g += cut;
 			G.P[keeper].gathered += cut;
 		}
-		for (const k in u.goods) mktHit(k, u.goods[k], -1);
+		for (const k in u.goods) mktHit(k, TRADE[k] ? u.goods[k] / 4 : u.goods[k], -1);
 		gold = Math.round(shareUp(o, gold));
 		p.res.g += gold;
 		p.gathered += gold;
@@ -193,7 +195,7 @@ function routeTick(u, dt, SP) {
 				4,
 				t,
 			);
-			sfx('coin');
+			sfx('tribute');
 		}
 		u.foreign = t.kind === 'stop' || t.owner !== o;
 		u.leg = 'back';
@@ -290,12 +292,14 @@ function natureTick() {
 			const g = shareUp(o, POST.all);
 			G.P[o].res.g += g;
 			G.P[o].gathered += g;
+			if (o === 0 && G.tick % 300 === 0) sfx('tribute'); // held routes pay all the time: a chime every ten seconds
 		}
 	}
 	if (G.tick % 300 === 150) {
 		priceDrift();
 		ventureTick();
 		vassalTick();
+		if (G.tension === 'diplomacy') leagueTick();
 	}
 	if (G.tick % 1800 === 0) flowTick();
 }
@@ -828,6 +832,7 @@ function vassalTick() {
 				L.res[r] += x;
 				p.paid += x;
 			}
+		if (L.id === 0 && p.paid > 0) sfx('tribute');
 		p.protect = (p.protect || 0) * VASSAL.decay;
 		const parts = loyaltyParts(p);
 		p.loyal = (p.loyal || 0) + (parts.target - (p.loyal || 0)) * 0.05;

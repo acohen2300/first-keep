@@ -190,7 +190,7 @@ function draw() {
 	if (G.shake > G.t && !lessMotion) {
 		const k = (G.shake - G.t) * 3;
 		ctx.translate(rnd2() * k, rnd2() * k);
-	} // a tremor: the whole view judders for a moment
+	} // a sinkhole or a falling star: the whole view judders for a moment
 	layer(scarCv);
 	drawFlood(z);
 	drawSand(z);

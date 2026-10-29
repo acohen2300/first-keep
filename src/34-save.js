@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = 'firstkeep.save',
-	SAVEV = 31; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 32; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -35,6 +35,16 @@ const MIGRATE = {
 		S.v = 31;
 		return S;
 	}, // Build 40: the one-job buildings folded into research and the Workshop; nerve on every soldier
+	31: (S) => {
+		S.temper = Array(BNS + 1)
+			.fill(T_GUARD)
+			.map((x, i) => (S.hold && S.hold[i] ? T_HOLD : x)); // hold ground became Hold; every other stance became Guard (Shield wall folded into Square, Skirmish into Guard)
+		S.form = (S.form || []).map((f) => [0, 0, 1, 2][f] ?? 0); // Line, Column, Wedge, Square: the column is no longer chosen
+		delete S.hold;
+		delete S.stance;
+		S.v = 32;
+		return S;
+	}, // Build 45: Shape and Temper replace stance, formation and hold ground
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -109,8 +119,7 @@ function saveGame(force) {
 			nid: NID,
 			sel: G.sel,
 			rally0: G.rally0 || null,
-			hold: G.hold,
-			stance: G.stance,
+			temper: G.temper,
 			bnPlan: G.bnPlan,
 			form: G.form,
 			intel: G.intel,
@@ -120,6 +129,8 @@ function saveGame(force) {
 			fantasy: G.fantasy,
 			mode: G.mode,
 			diff: G.diff,
+			tension: G.tension,
+			league: G.league,
 			wayT: G.wayT,
 			wayI: G.wayI,
 			wonder: G.wonder,
@@ -204,8 +215,7 @@ function loadGame(S) {
 		rs: S.rs,
 		sel: S.sel === undefined ? 'all' : S.sel,
 		rally0: S.rally0,
-		hold: S.hold || Array(BNS + 1).fill(0),
-		stance: S.stance || Array(BNS + 1).fill(0),
+		temper: S.temper,
 		bnPlan: S.bnPlan || BN.map(() => ({})),
 		form: S.form || BN.map(() => 0),
 		bnEdit: 0,
@@ -217,6 +227,8 @@ function loadGame(S) {
 		fantasy: !!S.fantasy,
 		mode: S.mode || 'conquest',
 		diff: S.diff || SET.diff,
+		tension: S.tension || 'winner',
+		league: S.league ?? null,
 		wayT: S.wayT,
 		wayI: S.wayI,
 		wonder: S.wonder || null,

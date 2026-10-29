@@ -437,7 +437,7 @@ function caravanTick(u, dt, SP) {
 			G.P[o].gathered += u.cargo;
 			if (o === 0 && u.cargo) {
 				say(`A caravan earns ${u.cargo} gold from your ally.`, 'good', 3, d);
-				sfx('coin');
+				sfx('tribute');
 			}
 			u.dest = u.lastId;
 			u.cargo = 0;

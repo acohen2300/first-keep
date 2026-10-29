@@ -461,14 +461,13 @@ function route(u, tx, ty) {
 	return { x: P[u.pi].x, y: P[u.pi].y, direct: last };
 }
 // one step toward (x, y); true once within r. A building as the goal means "arrive beside it".
-// how far a unit walks in a second: its speed, its load, the side's season and weather (SP), its stance and formation, the ground and any charge
+// how far a unit walks in a second: its speed, its load, the side's season and weather (SP), its shape, the ground and any charge
 const paceOf = (u, SP) =>
 	Math.min(stats(u.owner, u.kind).spd, u.cap || 1e9) *
 	(u.kind === 'vil' && u.carry > 0 ? 0.9 : 1) *
 	(u.sick > G.t ? 0.8 : 1) *
 	SP *
-	(u.stance === 1 ? STANCE[1].spd : 1) *
-	(FORM[formOf(u)].spd || 1) *
+	(shapeOf(u).spd || 1) *
 	EVM.spd *
 	(u.owner === WILD ? 1 : groundSpd(u.owner, unitKeys(u.kind))) *
 	(G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1) *

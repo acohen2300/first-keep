@@ -8,7 +8,10 @@ const GOODS = {
 };
 const GOODK = Object.keys(GOODS),
 	WARES = GOODK.filter((k) => !GOODS[k].raw);
-const LOAD = 20;
+const LOAD = 20,
+	CARAVAN = { keep: 600 }, // a caravan also carries what a store holds beyond this much of food, wood, stone or iron
+	RAW_NAME = { f: 'Food', w: 'Wood', s: 'Stone', i: 'Iron' },
+	CARRIED = [...WARES, 'f', 'w', 's', 'i'];
 // Food upkeep: one share is what a person eats; a villager gathering food brings in about 30 a minute, enough for 8 shares.
 const UPKEEP = { share: 30 / 8 / 60, foot: 1.5, mounted: 3, cart: 2, hunger: 0.75 };
 // Vassals. Every 10 seconds: tax takes a share of what the vassal gathered; unrest moves by the tax push minus loyalty/25 (0..100).
@@ -69,28 +72,26 @@ const BLD = {
 		desc: 'Shelter for five more people.',
 	},
 	farm: {
-		cap: [6, 9, 12, 15, 18],
+		cap: [6, 8, 10, 12, 12],
 		invest: 2,
 		name: 'Farm',
 		fp: 3,
-		slots: 3,
 		hp: 120,
 		h: 1,
 		cost: { w: 60 },
 		t: 10,
 		age: 0,
 		crop: 'food',
-		rate: 0.7,
+		rate: 0.8,
 		walk: true,
 		repeat: true,
 		sab: 'burn',
-		desc: 'Wheat, for food. Up to three villagers work it. Barely grows in winter; best at harvest. Soil tires when worked year after year and recovers when the field rests.',
+		desc: 'Wheat, for food. One villager works it. Barely grows in winter; best at harvest. Soil tires when worked year after year and recovers when the field rests.',
 	},
 	treefarm: {
-		cap: [6, 9, 12, 15, 18],
+		cap: [6, 8, 10, 12, 12],
 		name: 'Tree farm',
 		fp: 3,
-		slots: 3,
 		hp: 120,
 		h: 1,
 		cost: { w: 80 },
@@ -102,7 +103,7 @@ const BLD = {
 		walk: true,
 		repeat: true,
 		sab: 'burn',
-		desc: 'A coppice plot: 500 wood, then it is cut out and must regrow, so you plant another. Up to three villagers tend it. Slower than a wild forest, but safe at home.',
+		desc: 'A coppice plot: 500 wood, then it is cut out and must regrow, so you plant another. One villager tends it. Slower than a wild forest, but safe at home.',
 	},
 	mill: {
 		cap: [3, 3, 3, 3, 3],
@@ -519,7 +520,7 @@ const BLD = {
 		desc: 'Spins and weaves wool into cloth (2 wool make 1), or brews ale from your grain (3 food make 1 beer): goods to trade. One villager works it; the card picks what it makes.',
 	},
 	mint: {
-		cap: [0, 0, 0, 1, 1],
+		cap: [0, 0, 0, 6, 12],
 		invest: 6,
 		name: 'Mint',
 		fp: 3,
@@ -529,13 +530,13 @@ const BLD = {
 		t: 45,
 		age: 3,
 		crop: 'gold',
-		makes: { gold: { from: { s: 3 }, rate: 0.2 } },
+		makes: { gold: { from: { s: 1 }, rate: 0.2 } },
 		fx: [{ s: 'gather', k: 'gold', m: 1.15 }],
 		sab: 'stall',
-		desc: 'Strikes coin from the silver in your stone: 3 stone make 1 gold, and gold gathered pays 15% more. Or debase the coin, once: a heap of gold now, and dearer prices at your Market for the rest of the game.',
+		desc: 'Strikes coin from the silver in your stone: 1 stone makes 1 gold, and gold gathered pays 15% more. Or debase the coin, once: a heap of gold now, and dearer prices at your Market for the rest of the game.',
 	},
 	foundry: {
-		cap: [0, 0, 0, 1, 2],
+		cap: [0, 0, 0, 6, 12],
 		name: 'Foundry',
 		fp: 3,
 		hp: 500,
@@ -544,15 +545,14 @@ const BLD = {
 		t: 40,
 		age: 3,
 		crop: 'iron',
-		makes: { iron: { from: { w: 3 }, rate: 0.2 } },
+		makes: { iron: { from: { w: 2 }, rate: 0.2 } },
 		sab: 'stall',
-		desc: 'Smelts iron from bog ore with charcoal: 3 wood make 1 iron. One villager works it. Iron in-house, without a vein.',
+		desc: 'Smelts iron from bog ore with charcoal: 2 wood make 1 iron. One villager works it. Iron in-house, without a vein.',
 	},
 	quarry: {
-		cap: [0, 0, 2, 3, 3],
+		cap: [0, 0, 4, 8, 12],
 		name: 'Quarry',
 		fp: 3,
-		slots: 2,
 		hp: 150,
 		h: 1,
 		cost: { w: 80 },
@@ -562,7 +562,7 @@ const BLD = {
 		rate: 0.45,
 		walk: true,
 		sab: 'burn',
-		desc: 'Cut stone from the bedrock, anywhere: two villagers work it, slower than a quarry face in the hills, but it never runs out.',
+		desc: 'Cut stone from the bedrock, anywhere: one villager works it, slower than a quarry face in the hills, but it never runs out.',
 	},
 	throne: {
 		nocap: 1,

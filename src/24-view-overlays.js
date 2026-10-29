@@ -31,7 +31,7 @@ function drawGround() {
 		ctx.fillRect(0, 0, w, h);
 	}
 }
-// the cracks of a tremor: dark jagged arms with a pale edge, and a puff of dust that rises and thins over four seconds; gone after forty-five
+// the cracks of a sinkhole: dark jagged arms with a pale edge, and a puff of dust that rises and thins over four seconds; gone after forty-five
 function drawCracks(z) {
 	if (!G.cracks || !G.cracks.length) return;
 	G.cracks = G.cracks.filter((c) => G.t - c.t0 < 45);

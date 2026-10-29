@@ -506,7 +506,6 @@ const EV_TEXT = {
 	meteor: ['A light in the sky.', 'A star fell in the wild. Reach it for iron.'],
 	wildfire: ['Smoke in the dry forest.', 'Wildfire! Keep wood away from the trees.'],
 	fog: ['Fog is rolling in.', 'Fog: nobody sees far.'],
-	tremor: ['The ground rumbles.', 'A tremor cracks the walls.'],
 	sinkhole: ['The ground is groaning somewhere.', 'A sinkhole opened under a building.'],
 	quicksand: ['The ground has gone soft after the rain.', 'Quicksand: a patch that traps walkers.'],
 	heatwave: ['A heat wave is coming.', 'Heat: armies tire and fight weaker.'],
@@ -519,7 +518,7 @@ const EV_TEXT = {
 	aurora: ['The sky is stirring in the north.', 'Northern lights.'],
 	horde: ['A horde is coming: two seasons.', 'A horde is coming: one season.', 'The horde is here!'],
 };
-// The alert bar: what each event does, in a few words (the name is EVENTS[kind].name). Quake is the tremor when the Earthquake hazard is on.
+// The alert bar: what each event does, in a few words (the name is EVENTS[kind].name).
 const EV_LINE = {
 	eclipse: 'armies falter',
 	storm: 'lightning strikes',
@@ -529,8 +528,6 @@ const EV_LINE = {
 	meteor: 'iron falls',
 	wildfire: 'forest burns',
 	fog: 'short sight',
-	tremor: 'walls crack',
-	quake: 'walls fall',
 	sinkhole: 'a building hit',
 	quicksand: 'a trap patch',
 	heatwave: 'armies tire',
@@ -587,7 +584,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The War Council ladder',
-		'Four researches, each opening the next. Engagement: stances. Battalions: six, Alpha to Zeta; set what each holds, by type; new soldiers fill them, the rest are the reserve. Formations: Line, Column, Wedge, Square. Muster (Gunpowder): the missing soldiers of a battalion in one order, twice the cost, a quarter longer, the time shared by every building that trains them. The computers climb it too.',
+		'Four researches, each opening the next. Engagement: shooters step back from a foe on top of them. Battalions: six, Alpha to Zeta; set what each holds, by type; new soldiers fill them, the rest are the reserve. Formations: Line, Wedge, Square, and your armies march in column. Muster (Gunpowder): the missing soldiers of a battalion in one order, twice the cost, a quarter longer, the time shared by every building that trains them. The computers climb it too.',
 		'Rome levied whole legions at once; the drill of Maurice of Nassau (1590s) made trained formations, and armies like the New Model Army (1645) were raised as one force.',
 	],
 	[
@@ -711,9 +708,9 @@ const TRIGGERS = () => [
 		'Soldiers hit walls slowly; real armies brought engines.',
 	],
 	[
-		'Stances',
-		`Once Engagement is researched at a War Council, the army or a battalion takes a stance in the Army card. Shield wall: foot soldiers who do not shoot take ${Math.round((1 - STANCE[1].hit) * 100)}% less damage and march ${Math.round((1 - STANCE[1].spd) * 100)}% slower. Skirmish: shooters step back from anyone who comes within ${KITE} while they reload. A horse archer always skirmishes. The computers use them too once they research it: their shooters skirmish, their foot at home hold a wall.`,
-		'The phalanx and the shield wall were slow and hard to break; skirmishers and horse archers fought by not being caught (Carrhae, 53 BC).',
+		'Temper and shape',
+		`Two dials in the Army card, for all of you or one battalion. Temper: ${TEMPER.map((t) => `${t.name}, ${t.note}`).join('. ')}. Once Engagement is researched, shooters under Hold or Guard step back from anyone who comes within ${KITE} while they reload; a horse archer always does. Shape, once Formations is researched: ${FORM.map((F) => `${F.name}, ${F.note}`).join('. ')}. An army marches in column (${Math.round((COLUMN.spd - 1) * 100)}% faster, ${Math.round((COLUMN.hit - 1) * 100)}% more damage taken) and stands to its shape when it meets a foe. The computers keep Guard.`,
+		'Armies marched in column and deployed into line to fight: the Roman three lines and the medieval three battles, van, main body and rear, were the same idea. Skirmishers and horse archers fought by not being caught (Carrhae, 53 BC).',
 	],
 	[
 		'Hit from behind',

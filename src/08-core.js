@@ -77,6 +77,7 @@ const SET = {
 	civ: 'roman',
 	fantasy: false,
 	mode: 't60',
+	tension: 'diplomacy',
 	sound: true,
 	vol: 0.6,
 	mix: {},
@@ -244,6 +245,20 @@ const orderSet = () =>
 const selName = () => (G.sel === 'all' ? 'army' : BN[G.sel]);
 const hasCmd = () => G.P[0].techs.has('command');
 const formOf = (u) => (u.owner === 0 && u.bn !== undefined && G.P[0].techs.has('formations') ? G.form[u.bn] || 0 : 0);
+// Shape and temper, the two dials. On the march a side with Formations goes in column; on contact or at rest it stands to its chosen shape.
+const marching = (u) => !u.tgt && (u.state === 'goto' || u.state === 'attack') && G.t - (u.mvT ?? -9) < 0.6;
+const shapeOf = (u) => (marching(u) && G.P[u.owner] && G.P[u.owner].techs.has('formations') ? COLUMN : FORM[formOf(u)]);
+// a dial's setting for one battalion or for all of them (-1 when they differ), and one step round it
+const dialOf = (key, a) => (a === 'all' ? (G[key].every((x) => x === G[key][0]) ? G[key][0] : -1) : G[key][Number(a)]);
+const cycle = (key, a, n) => {
+	const nx = (dialOf(key, a) + 1) % n;
+	if (a === 'all') G[key] = G[key].map(() => nx);
+	else G[key][Number(a)] = nx;
+};
+const temperOf = (u) => (u.owner === 0 ? (G.temper[u.bn ?? BNS] ?? T_GUARD) : T_GUARD);
+const kiteOf = (u) =>
+	!!UNIT[u.kind].kite ||
+	(!!G.P[u.owner] && G.P[u.owner].techs.has('engage') && (UNIT[u.kind].tags || []).includes('ranged') && temperOf(u) !== T_PRESS); // shooters step back unless they press
 // Battalions, once Command is researched: each holds what you set for it, by type; members stay put, gaps fill from the rest, the rest are the reserve
 function rebattalion() {
 	const S = armyOf(0).filter((u) => u.kind !== 'spy');
@@ -396,7 +411,8 @@ const maxHpB = (o, kind) => BLD[kind].hp * (o === WILD ? 1 : fxv(o, 'bhp', ['*',
 const dmgOf = (u) =>
 	stats(u.owner, u.kind).dmg *
 	(u.owner === WILD ? 1 : wearMul(u.owner)) *
-	(FORM[formOf(u)].dmg && hasTag(u.kind, 'mounted') ? FORM[formOf(u)].dmg : 1) *
+	(shapeOf(u).dmg && hasTag(u.kind, 'mounted') ? shapeOf(u).dmg : 1) *
+	(TEMPER[temperOf(u)].dmg || 1) *
 	(u.zeal > G.t ? ZEAL.mul : 1) *
 	(u.sick > G.t ? 0.6 : 1) *
 	hungerOf(u.owner) *

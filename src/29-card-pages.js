@@ -240,7 +240,7 @@ function marketHTML(b) {
 function councilHTML(b) {
 	const p = G.P[0];
 	if (!hasCmd())
-		return `<p>${p.techs.has('engage') ? 'Stances are open: set them in the Army card. Next: Battalions, six of them, Alpha to Zeta.' : 'Research Engagement first: stances for your army. Then Battalions, Formations and Muster.'}</p>`;
+		return `<p>${p.techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, six of them, Alpha to Zeta.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`;
 	const i = G.bnEdit,
 		plan = G.bnPlan[i],
 		S = armyOf(0).filter((u) => u.kind !== 'spy');
@@ -263,11 +263,7 @@ function councilHTML(b) {
 					)
 					.join('')
 			: '<p>Train soldiers first.</p>');
-	const f = FORM[G.form[i] || 0];
-	h += acts(
-		btn('bnstance', 'Stance: ' + STANCE[G.stance[i] || 0].name, '') +
-			(p.techs.has('formations') ? btn('bnform', 'Formation: ' + f.name, f.note) : ''),
-	);
+	h += acts(dialBtns(i));
 	if (p.techs.has('muster')) {
 		const miss = musterGap(i),
 			why = musterWhy(0, miss),
@@ -287,7 +283,7 @@ function councilHTML(b) {
 		fold(
 			'bnabout',
 			'About battalions',
-			`<p>New soldiers fill each battalion up to what you set; the rest are the reserve. Send a battalion from the strip: tap open ground, then its name.</p><p><b>Formations:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
+			`<p>New soldiers fill each battalion up to what you set; the rest are the reserve. Send a battalion from the strip: tap open ground, then its name.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
 		)
 	);
 }
@@ -543,4 +539,12 @@ const settingsHTML = () =>
 			['fantasy:1', 'Fantasy', true],
 		],
 		!!SET.fantasy,
+	) +
+	seg(
+		'Tension',
+		[
+			['tension:winner', 'Winner Takes All', 'winner'],
+			['tension:diplomacy', 'Dynamic Diplomacy', 'diplomacy'],
+		],
+		SET.tension,
 	);

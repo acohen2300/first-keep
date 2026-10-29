@@ -115,18 +115,6 @@ function shot(x1, y1, h1, x2, y2) {
 		dur = 0.12 + d / 600;
 	G.tracers.push({ x1, y1, h1, x2, y2, life: dur, dur, arc: 4 + d * 0.16 });
 }
-// 0 Line, 1 Shield wall (foot who do not shoot), 2 Skirmish (shooters); a horse archer always rides away
-function stanceOf(u) {
-	const U = UNIT[u.kind],
-		tg = U.tags || [],
-		shoots = tg.includes('ranged'),
-		foot = tg.includes('infantry') && !shoots;
-	if (U.kite) return 2;
-	const P = G.P[u.owner];
-	if (!P || !P.techs.has('engage')) return 0; // stances come with Engagement, for every side
-	const want = u.owner === 0 ? G.stance[u.bn ?? BNS] || 0 : shoots ? 2 : foot && u.state === 'home' ? 1 : 0;
-	return want === 1 && foot ? 1 : want === 2 && shoots ? 2 : 0;
-}
 // a soldier at home guards the ground round its own yard and round the Town Center (Build 39 review: a yard far from the Town Center was left undefended)
 const nearHome = (u, t, k) => (u.hax !== undefined && hyp(t.x - u.hax, t.y - u.hay) < 320) || (!!k && dist(t, k) < 320);
 function solTick(u, dt, SP) {
@@ -134,7 +122,7 @@ function solTick(u, dt, SP) {
 		o = u.owner,
 		k = keepOf(o);
 	u.cd = Math.max(0, u.cd - dt);
-	u.stance = stanceOf(u);
+	u.kiting = kiteOf(u); // a shooter steps back from a foe on top of it, unless it presses; a horse archer always rides away
 	if (u.state === 'school') {
 		u.idleT = 0;
 		if (G.t >= u.schoolT) graduate(u);
@@ -257,7 +245,7 @@ function solTick(u, dt, SP) {
 			tgt.hp > 0 &&
 			!tgt.inside &&
 			atWar(o, tgt.owner) &&
-			(edge(u, tgt) < sightOf(u) * 1.4 || (u.state === 'home' && nearHome(u, tgt, k)))
+			(edge(u, tgt) < sightOf(u) * 1.4 * (TEMPER[temperOf(u)].chase || 1) || (u.state === 'home' && nearHome(u, tgt, k)))
 		)
 	)
 		tgt = u.tgt = null; // the one it had is gone; a soldier at home keeps a foe it was sent after near the Town Center (Build 38: dropping it the next step made new soldiers spin)
@@ -283,7 +271,7 @@ function solTick(u, dt, SP) {
 		o === 0 &&
 		u.state !== 'attack' &&
 		!u.focus &&
-		G.hold[u.bn ?? BNS] &&
+		temperOf(u) === T_HOLD &&
 		edge(u, tgt) > rngOf(u) + (tgt.q ? 2 : 5)
 	)
 		tgt = null; // hold ground: fight only what comes within reach
@@ -326,7 +314,7 @@ function solTick(u, dt, SP) {
 			const fd = dist(u, tgt) || 1;
 			u.fx = (tgt.x - u.x) / fd;
 			u.fy = (tgt.y - u.y) / fd;
-			if (u.stance === 2 && u.cd > 0 && (G.tick + u.id) % 3 === 0) {
+			if (u.kiting && u.cd > 0 && (G.tick + u.id) % 3 === 0) {
 				// reloading with a foe on top of it: step back
 				const f = nearestFoe(o, u, KITE);
 				if (f && !f.q && UNIT[f.kind].rng <= 20) {

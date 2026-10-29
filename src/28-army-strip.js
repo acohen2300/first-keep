@@ -239,7 +239,16 @@ function hideStrip() {
 		if (G) G.strip = null;
 	}
 }
-// ── the War Council: six battalions, what each holds by type, its stance and formation
+// The two dials of an army or one battalion (a: 'all' or its number): temper, and shape once Formations is researched. One button each, a tap steps round; a gold ring marks what is not the plain setting.
+const dialBtns = (a) => {
+	const tm = dialOf('temper', a),
+		sh = dialOf('form', a);
+	return (
+		btn(`temper:${a}`, 'Temper: ' + (tm < 0 ? 'mixed' : TEMPER[tm].name), '', tm >= 0 && tm !== T_GUARD ? 'on' : '') +
+		(G.P[0].techs.has('formations') ? btn(`shape:${a}`, 'Shape: ' + (sh < 0 ? 'mixed' : FORM[sh].name), '', sh > 0 ? 'on' : '') : '')
+	);
+};
+// ── the War Council: six battalions, what each holds by type, its shape and temper
 function musterGap(i) {
 	// what a battalion still lacks: its plan, less the members it has and the soldiers already mustering for it
 	const gap = { ...G.bnPlan[i] };

@@ -503,12 +503,7 @@ const CARDS = {
 						'<p>Blows from the side and behind drain nerve; rest, a wall, a tower or a priest restore it. Under 20% a soldier runs.</p>',
 					);
 			}
-			if (p.techs.has('engage')) {
-				const sn = G.sel === 'all' ? (G.stance.every((x) => x === G.stance[0]) ? G.stance[0] : -1) : G.stance[G.sel];
-				h += acts(btn('stance', 'Stance: ' + (sn < 0 ? 'mixed' : STANCE[sn].name), '', sn > 0 ? 'on' : ''), 'c1');
-			}
-			const hold = G.sel === 'all' ? G.hold.every((x) => x) : !!G.hold[G.sel];
-			h += acts(btn('hold', 'Hold ground', hold ? 'on' : 'off', hold ? 'on' : ''), 'c1');
+			h += acts(dialBtns(G.sel));
 			if (ready(0, 'temple').length) {
 				const why = zealWhy(0, orderSet());
 				h += acts(
@@ -529,7 +524,7 @@ const CARDS = {
 			fold(
 				'about',
 				'About orders',
-				`<p>Tap open ground: Send ¼, All, or a battalion by name. Tap an enemy to pick how many attack. The War Council opens stances, battalions, formations and Muster; a gold ring marks the one picked here.</p><p><b>Stance:</b> ${STANCE.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Hold ground:</b> on, they fight only what comes within reach and do not chase.</p>`,
+				`<p>Tap open ground: Send ¼, All, or a battalion by name. Tap an enemy to pick how many attack. The War Council opens battalions, shape and Muster; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
 			)
 		);
 	},
@@ -653,7 +648,7 @@ const CARDS = {
 			`<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
       <p><b>Build:</b> pick a menu, then a building. It waits above your finger: drag it, then tap Build. Villagers raise it.</p>
       <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Pause shows the speeds under the button.</p>
-      <p><b>Army:</b> tap open ground with nothing picked: Send ¼ or All. The War Council opens stances, battalions, formations and Muster.</p>
+      <p><b>Army:</b> tap open ground with nothing picked: Send ¼ or All. The War Council opens battalions, shape and Muster.</p>
       <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>

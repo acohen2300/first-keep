@@ -35,7 +35,7 @@ const canEv = (k) => {
 	return (
 		!(E.fantasy && !G.fantasy) &&
 		!(E.need && G.wx !== E.need) &&
-		!(E.season && season().name !== E.season) &&
+		!(E.season && ![].concat(E.season).includes(season().name)) &&
 		!(E.night && G.night < 0.5) &&
 		!(k === 'quicksand' && G.wx !== 'rain') &&
 		!(k === 'flood' && G.wx !== 'rain')
@@ -319,11 +319,6 @@ const EV = {
 			EVM.sight = 1;
 		},
 	},
-	tremor: {
-		start(e) {
-			quake(e, EVENTS.tremor, hz('winter') ? QUAKE : null);
-		},
-	},
 	sinkhole: {
 		start(e) {
 			const B = G.blds.filter((b) => b.prog >= 1 && !BLD[b.kind].wallish && b.kind !== 'keep');
@@ -485,7 +480,7 @@ const EV = {
 		},
 	},
 };
-// The ground splits: a star of jagged cracks and a puff of dust at (x, y), r wide. Cosmetic: the damage is done by quake() and sinkhole.
+// The ground splits: a star of jagged cracks and a puff of dust at (x, y), r wide. Cosmetic: the damage is done by the sinkhole.
 // The arms are worked out once from a seed; the view draws them for 45 s and the ground keeps a faint scar of them.
 function crackAt(x, y, r) {
 	let s = Math.floor(Math.random() * 4e9) || 1;
@@ -509,26 +504,6 @@ function crackAt(x, y, r) {
 	const c = { x, y, r, t0: G.t, arms };
 	(G.cracks = G.cracks || []).push(c);
 	scarCrack(c);
-}
-// a tremor, or an earthquake when the hazard is on: everything within r loses a share of its health, walls more, and wood may catch
-function quake(e, E, Q) {
-	const r = Q ? Q.r : E.r,
-		hit = Q ? Q.hit : E.hit,
-		wall = Q ? Q.wall : E.wall,
-		fire = Q ? Q.fire : E.fire;
-	e.at = { x: rnd(200, MAP - 200), y: rnd(200, MAP - 200) };
-	G.shake = G.t + 1.5;
-	crackAt(e.at.x, e.at.y, Math.min(r * 0.45, 130));
-	sfx('rumble', e.at.x, e.at.y);
-	let mine = 0;
-	bldsNear(e.at.x, e.at.y, r, (b) => {
-		if (b.prog < 1 || dist(b, e.at) > r) return;
-		b.hp -= maxHpB(b.owner, b.kind) * (BLD[b.kind].wallish ? wall : hit);
-		if (b.hp > 0 && BLD[b.kind].wood && rng() < fire) ignite(b, 'the tremor');
-		if (b.owner === 0) mine++;
-	});
-	if (mine)
-		say(`${Q ? 'Earthquake' : 'Tremor'} at ${coord(e.at.x, e.at.y)}: ${mine} of yours damaged.`, 'warn', 6, e.at);
 }
 function startEvent(kind) {
 	const E = EVENTS[kind],
@@ -568,14 +543,6 @@ function eventsTick() {
 	}
 	hordeTick();
 	newsTick();
-	if (hz('winter') && G.t >= (V.quakeAt || (V.quakeAt = G.t + QUAKE.every))) {
-		V.quakeAt = G.t + QUAKE.every;
-		if (!V.cur) {
-			say(EV_TEXT.tremor[0], 'warn', 8);
-			V.warned = 'tremor';
-			V.next = G.t + 8;
-		}
-	}
 }
 // The horde (the hazard): announced two seasons ahead, then one; from an edge or out of the wild, for the weakest side; its number grows with the age
 function hordeTick() {

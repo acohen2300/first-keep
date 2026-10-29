@@ -283,10 +283,10 @@ const MAP = 2000,
 	DT = 1 / 30;
 const BN = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'],
 	BNS = BN.length; // the battalions, once Command is researched
-const POPMAX = 150,
+const POPMAX = 180,
 	VILMAX = 60,
-	ARMYMAX = 90,
-	BNSIZE = 30,
+	ARMYMAX = 120,
+	BNSIZE = 40,
 	SHARE_FALLEN = 0.5; // a fallen side's room: half of it is split among whoever is left   // six battalions, once Command is researched at a War Council; BNSIZE: the most one Zeal blesses
 const RICH = 2.5,
 	PLUNDER = 0.25,
@@ -1053,7 +1053,10 @@ const GOODS = {
 };
 const GOODK = Object.keys(GOODS),
 	WARES = GOODK.filter((k) => !GOODS[k].raw);
-const LOAD = 20;
+const LOAD = 20,
+	CARAVAN = { keep: 600 }, // a caravan also carries what a store holds beyond this much of food, wood, stone or iron
+	RAW_NAME = { f: 'Food', w: 'Wood', s: 'Stone', i: 'Iron' },
+	CARRIED = [...WARES, 'f', 'w', 's', 'i'];
 // Food upkeep: one share is what a person eats; a villager gathering food brings in about 30 a minute, enough for 8 shares.
 const UPKEEP = { share: 30 / 8 / 60, foot: 1.5, mounted: 3, cart: 2, hunger: 0.75 };
 // Vassals. Every 10 seconds: tax takes a share of what the vassal gathered; unrest moves by the tax push minus loyalty/25 (0..100).
@@ -1114,28 +1117,26 @@ const BLD = {
 		desc: 'Shelter for five more people.',
 	},
 	farm: {
-		cap: [6, 9, 12, 15, 18],
+		cap: [6, 8, 10, 12, 12],
 		invest: 2,
 		name: 'Farm',
 		fp: 3,
-		slots: 3,
 		hp: 120,
 		h: 1,
 		cost: { w: 60 },
 		t: 10,
 		age: 0,
 		crop: 'food',
-		rate: 0.7,
+		rate: 0.8,
 		walk: true,
 		repeat: true,
 		sab: 'burn',
-		desc: 'Wheat, for food. Up to three villagers work it. Barely grows in winter; best at harvest. Soil tires when worked year after year and recovers when the field rests.',
+		desc: 'Wheat, for food. One villager works it. Barely grows in winter; best at harvest. Soil tires when worked year after year and recovers when the field rests.',
 	},
 	treefarm: {
-		cap: [6, 9, 12, 15, 18],
+		cap: [6, 8, 10, 12, 12],
 		name: 'Tree farm',
 		fp: 3,
-		slots: 3,
 		hp: 120,
 		h: 1,
 		cost: { w: 80 },
@@ -1147,7 +1148,7 @@ const BLD = {
 		walk: true,
 		repeat: true,
 		sab: 'burn',
-		desc: 'A coppice plot: 500 wood, then it is cut out and must regrow, so you plant another. Up to three villagers tend it. Slower than a wild forest, but safe at home.',
+		desc: 'A coppice plot: 500 wood, then it is cut out and must regrow, so you plant another. One villager tends it. Slower than a wild forest, but safe at home.',
 	},
 	mill: {
 		cap: [3, 3, 3, 3, 3],
@@ -1564,7 +1565,7 @@ const BLD = {
 		desc: 'Spins and weaves wool into cloth (2 wool make 1), or brews ale from your grain (3 food make 1 beer): goods to trade. One villager works it; the card picks what it makes.',
 	},
 	mint: {
-		cap: [0, 0, 0, 1, 1],
+		cap: [0, 0, 0, 6, 12],
 		invest: 6,
 		name: 'Mint',
 		fp: 3,
@@ -1574,13 +1575,13 @@ const BLD = {
 		t: 45,
 		age: 3,
 		crop: 'gold',
-		makes: { gold: { from: { s: 3 }, rate: 0.2 } },
+		makes: { gold: { from: { s: 1 }, rate: 0.2 } },
 		fx: [{ s: 'gather', k: 'gold', m: 1.15 }],
 		sab: 'stall',
-		desc: 'Strikes coin from the silver in your stone: 3 stone make 1 gold, and gold gathered pays 15% more. Or debase the coin, once: a heap of gold now, and dearer prices at your Market for the rest of the game.',
+		desc: 'Strikes coin from the silver in your stone: 1 stone makes 1 gold, and gold gathered pays 15% more. Or debase the coin, once: a heap of gold now, and dearer prices at your Market for the rest of the game.',
 	},
 	foundry: {
-		cap: [0, 0, 0, 1, 2],
+		cap: [0, 0, 0, 6, 12],
 		name: 'Foundry',
 		fp: 3,
 		hp: 500,
@@ -1589,15 +1590,14 @@ const BLD = {
 		t: 40,
 		age: 3,
 		crop: 'iron',
-		makes: { iron: { from: { w: 3 }, rate: 0.2 } },
+		makes: { iron: { from: { w: 2 }, rate: 0.2 } },
 		sab: 'stall',
-		desc: 'Smelts iron from bog ore with charcoal: 3 wood make 1 iron. One villager works it. Iron in-house, without a vein.',
+		desc: 'Smelts iron from bog ore with charcoal: 2 wood make 1 iron. One villager works it. Iron in-house, without a vein.',
 	},
 	quarry: {
-		cap: [0, 0, 2, 3, 3],
+		cap: [0, 0, 4, 8, 12],
 		name: 'Quarry',
 		fp: 3,
-		slots: 2,
 		hp: 150,
 		h: 1,
 		cost: { w: 80 },
@@ -1607,7 +1607,7 @@ const BLD = {
 		rate: 0.45,
 		walk: true,
 		sab: 'burn',
-		desc: 'Cut stone from the bedrock, anywhere: two villagers work it, slower than a quarry face in the hills, but it never runs out.',
+		desc: 'Cut stone from the bedrock, anywhere: one villager works it, slower than a quarry face in the hills, but it never runs out.',
 	},
 	throne: {
 		nocap: 1,
@@ -5009,23 +5009,27 @@ const FALLBACK = { secs: 6, back: 200, hit: 0.7 }; // withdraw in order: fewer l
 const PRISON = { secs: 180, ransom: 1.0 }; // a prisoner unransomed in three minutes serves the captor
 const CONVERT = { r: 40, secs: 12, cd: 60 }; // a priest beside an enemy for a spell turns them; the counter is to kill the priest
 const BUILDER_POW = 0.7; // a crew of n builds n^0.7 times as fast as one: two builders ≈ 1.6×, three ≈ 2.1×
-// Formations (research Formations at the War Council): each battalion takes one. spd: march speed; hit: damage taken; dmg: damage dealt by its riders; vsMounted: damage taken from riders
+// Shape (research Formations at the War Council): each battalion takes one, three in all. spd: march speed; hit: damage taken; dmg: damage dealt by its riders; vsMounted: damage taken from riders
+// An army marches in a column (COLUMN, never picked: armies did) and stands to its shape on contact: the Roman three lines, the medieval three battles.
 const FORM = [
 	{ name: 'Line', shape: 'line', note: 'as they stand' },
-	{ name: 'Column', shape: 'column', spd: 1.15, hit: 1.1, note: '15% faster, 10% more damage taken' },
 	{ name: 'Wedge', shape: 'wedge', dmg: 1.15, hit: 1.1, note: 'riders hit 15% harder, take 10% more' },
-	{ name: 'Square', shape: 'square', spd: 0.8, vsMounted: 0.7, note: '30% less from riders, 20% slower' },
+	{ name: 'Square', shape: 'square', spd: 0.8, hit: 0.9, vsMounted: 0.7, note: '10% less damage, 30% less from riders, 20% slower' },
 ];
+const COLUMN = { name: 'Column', shape: 'column', spd: 1.15, hit: 1.1 };
 const GRID = { gap: 15, rows: 2.0 }; // an army stands in a grid: 15 apart, about twice as wide as deep
 const FIELD_NEAR = 160; // a Food worker takes a free field within this before anything else
 const DOCKR = 150; // fish are caught only within 150 of a finished dock of yours
 const KITE = 45; // a shooter steps back from a foe this close while it reloads
-// a battalion's stance (the computers choose theirs: shooters skirmish, foot at home hold a wall)
-const STANCE = [
-	{ name: 'Line', note: 'fight as they stand' },
-	{ name: 'Shield wall', hit: 0.8, spd: 0.65, note: 'foot soldiers take a fifth less damage and march a third slower' },
-	{ name: 'Skirmish', note: 'shooters step back from anyone who closes in while they reload' },
+// a battalion's temper, three in all (the computers keep Guard). nerve: how fast blows break it; dmg: blows dealt; chase: how far past its sight it follows a foe
+const TEMPER = [
+	{ name: 'Hold', nerve: 0.8, note: 'fight only what comes within reach, no chase, steadier nerve' },
+	{ name: 'Guard', note: 'fight what comes; shooters step back from anyone who closes in' },
+	{ name: 'Press', nerve: 1.3, dmg: 1.1, chase: 1.3, note: 'chase and charge: blows 10% harder, nerve breaks 30% faster' },
 ];
+const T_HOLD = 0,
+	T_GUARD = 1,
+	T_PRESS = 2;
 const SHELTER = { flee: 70, clear: 150, raid: 3, hurt: 6 }; // villagers run into the nearest Town Center or tower when an enemy soldier comes within 70, when three or more beasts or robbers do, or when a lone beast or robber hits them (it scares only the one it hits); out when none within 150 of it; each adds an arrow up to the limit (the room is the same)
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
@@ -5075,7 +5079,7 @@ const HAZARDS = {
 	winter: {
 		pts: 2,
 		name: 'Bad weather',
-		desc: 'Winter fields give a quarter and marches crawl; blizzards blind the small map; tremors come every few minutes and hit hard.',
+		desc: 'Winter fields give a quarter and marches crawl; blizzards blind the small map.',
 	},
 	drought: {
 		pts: 2,
@@ -5098,8 +5102,7 @@ const HZK = Object.keys(HAZARDS),
 	TODAY_HZ = { hard: 1, starve: 1, horde: 1, winter: 1 }; // a new game starts at level 5; The challenge today is level 10 on the day's seed
 const STARVE = { stop: 60, leave: 120, every: 30 },
 	HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 },
-	HORDE = { from: 1200, to: 2400, warn: SEASON_LEN * 2, n: 16, perAge: 6 },
-	QUAKE = { every: 240, r: 350, hit: 0.1, wall: 0.3, fire: 0.15 };
+	HORDE = { from: 1200, to: 2400, warn: SEASON_LEN * 2, n: 16, perAge: 6 };
 // Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 37-events.
 const EV_GAP = [60, 180],
 	EV_WARN = 12;
@@ -5110,9 +5113,8 @@ const EVENTS = {
 	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.004, harm: 1 },
 	locusts: { name: 'Locusts', secs: 30, r: 70, strip: 90, harm: 1 },
 	meteor: { name: 'Falling star', secs: 3 },
-	wildfire: { name: 'Wildfire', secs: 60, spread: 0.2, r: 32, burn: 0.12, most: 20, need: 'drought', harm: 1 }, // most: trees alight at once
+	wildfire: { name: 'Wildfire', secs: 60, spread: 0.2, r: 32, burn: 0.12, most: 20, season: ['Summer', 'Autumn'], harm: 1 }, // most: trees alight at once; the dry seasons, drought or not
 	fog: { name: 'Fog', secs: 60, sight: 0.4 },
-	tremor: { name: 'Tremor', secs: 2, r: 220, hit: 0.05, wall: 0.2, fire: 0.05 },
 	sinkhole: { name: 'Sinkhole', secs: 2, hit: 0.4 },
 	quicksand: { name: 'Quicksand', secs: 120, r: 60, slow: 0.3 },
 	heatwave: { name: 'Heat', secs: 60, dmg: 0.85, spd: 0.9, need: 'drought', season: 'Summer' },
@@ -5676,7 +5678,6 @@ const EV_TEXT = {
 	meteor: ['A light in the sky.', 'A star fell in the wild. Reach it for iron.'],
 	wildfire: ['Smoke in the dry forest.', 'Wildfire! Keep wood away from the trees.'],
 	fog: ['Fog is rolling in.', 'Fog: nobody sees far.'],
-	tremor: ['The ground rumbles.', 'A tremor cracks the walls.'],
 	sinkhole: ['The ground is groaning somewhere.', 'A sinkhole opened under a building.'],
 	quicksand: ['The ground has gone soft after the rain.', 'Quicksand: a patch that traps walkers.'],
 	heatwave: ['A heat wave is coming.', 'Heat: armies tire and fight weaker.'],
@@ -5689,7 +5690,7 @@ const EV_TEXT = {
 	aurora: ['The sky is stirring in the north.', 'Northern lights.'],
 	horde: ['A horde is coming: two seasons.', 'A horde is coming: one season.', 'The horde is here!'],
 };
-// The alert bar: what each event does, in a few words (the name is EVENTS[kind].name). Quake is the tremor when the Earthquake hazard is on.
+// The alert bar: what each event does, in a few words (the name is EVENTS[kind].name).
 const EV_LINE = {
 	eclipse: 'armies falter',
 	storm: 'lightning strikes',
@@ -5699,8 +5700,6 @@ const EV_LINE = {
 	meteor: 'iron falls',
 	wildfire: 'forest burns',
 	fog: 'short sight',
-	tremor: 'walls crack',
-	quake: 'walls fall',
 	sinkhole: 'a building hit',
 	quicksand: 'a trap patch',
 	heatwave: 'armies tire',
@@ -5757,7 +5756,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The War Council ladder',
-		'Four researches, each opening the next. Engagement: stances. Battalions: six, Alpha to Zeta; set what each holds, by type; new soldiers fill them, the rest are the reserve. Formations: Line, Column, Wedge, Square. Muster (Gunpowder): the missing soldiers of a battalion in one order, twice the cost, a quarter longer, the time shared by every building that trains them. The computers climb it too.',
+		'Four researches, each opening the next. Engagement: shooters step back from a foe on top of them. Battalions: six, Alpha to Zeta; set what each holds, by type; new soldiers fill them, the rest are the reserve. Formations: Line, Wedge, Square, and your armies march in column. Muster (Gunpowder): the missing soldiers of a battalion in one order, twice the cost, a quarter longer, the time shared by every building that trains them. The computers climb it too.',
 		'Rome levied whole legions at once; the drill of Maurice of Nassau (1590s) made trained formations, and armies like the New Model Army (1645) were raised as one force.',
 	],
 	[
@@ -5881,9 +5880,9 @@ const TRIGGERS = () => [
 		'Soldiers hit walls slowly; real armies brought engines.',
 	],
 	[
-		'Stances',
-		`Once Engagement is researched at a War Council, the army or a battalion takes a stance in the Army card. Shield wall: foot soldiers who do not shoot take ${Math.round((1 - STANCE[1].hit) * 100)}% less damage and march ${Math.round((1 - STANCE[1].spd) * 100)}% slower. Skirmish: shooters step back from anyone who comes within ${KITE} while they reload. A horse archer always skirmishes. The computers use them too once they research it: their shooters skirmish, their foot at home hold a wall.`,
-		'The phalanx and the shield wall were slow and hard to break; skirmishers and horse archers fought by not being caught (Carrhae, 53 BC).',
+		'Temper and shape',
+		`Two dials in the Army card, for all of you or one battalion. Temper: ${TEMPER.map((t) => `${t.name}, ${t.note}`).join('. ')}. Once Engagement is researched, shooters under Hold or Guard step back from anyone who comes within ${KITE} while they reload; a horse archer always does. Shape, once Formations is researched: ${FORM.map((F) => `${F.name}, ${F.note}`).join('. ')}. An army marches in column (${Math.round((COLUMN.spd - 1) * 100)}% faster, ${Math.round((COLUMN.hit - 1) * 100)}% more damage taken) and stands to its shape when it meets a foe. The computers keep Guard.`,
+		'Armies marched in column and deployed into line to fight: the Roman three lines and the medieval three battles, van, main body and rear, were the same idea. Skirmishers and horse archers fought by not being caught (Carrhae, 53 BC).',
 	],
 	[
 		'Hit from behind',
@@ -6145,6 +6144,7 @@ const SET = {
 	civ: 'roman',
 	fantasy: false,
 	mode: 't60',
+	tension: 'diplomacy',
 	sound: true,
 	vol: 0.6,
 	mix: {},
@@ -6312,6 +6312,20 @@ const orderSet = () =>
 const selName = () => (G.sel === 'all' ? 'army' : BN[G.sel]);
 const hasCmd = () => G.P[0].techs.has('command');
 const formOf = (u) => (u.owner === 0 && u.bn !== undefined && G.P[0].techs.has('formations') ? G.form[u.bn] || 0 : 0);
+// Shape and temper, the two dials. On the march a side with Formations goes in column; on contact or at rest it stands to its chosen shape.
+const marching = (u) => !u.tgt && (u.state === 'goto' || u.state === 'attack') && G.t - (u.mvT ?? -9) < 0.6;
+const shapeOf = (u) => (marching(u) && G.P[u.owner] && G.P[u.owner].techs.has('formations') ? COLUMN : FORM[formOf(u)]);
+// a dial's setting for one battalion or for all of them (-1 when they differ), and one step round it
+const dialOf = (key, a) => (a === 'all' ? (G[key].every((x) => x === G[key][0]) ? G[key][0] : -1) : G[key][Number(a)]);
+const cycle = (key, a, n) => {
+	const nx = (dialOf(key, a) + 1) % n;
+	if (a === 'all') G[key] = G[key].map(() => nx);
+	else G[key][Number(a)] = nx;
+};
+const temperOf = (u) => (u.owner === 0 ? (G.temper[u.bn ?? BNS] ?? T_GUARD) : T_GUARD);
+const kiteOf = (u) =>
+	!!UNIT[u.kind].kite ||
+	(!!G.P[u.owner] && G.P[u.owner].techs.has('engage') && (UNIT[u.kind].tags || []).includes('ranged') && temperOf(u) !== T_PRESS); // shooters step back unless they press
 // Battalions, once Command is researched: each holds what you set for it, by type; members stay put, gaps fill from the rest, the rest are the reserve
 function rebattalion() {
 	const S = armyOf(0).filter((u) => u.kind !== 'spy');
@@ -6464,7 +6478,8 @@ const maxHpB = (o, kind) => BLD[kind].hp * (o === WILD ? 1 : fxv(o, 'bhp', ['*',
 const dmgOf = (u) =>
 	stats(u.owner, u.kind).dmg *
 	(u.owner === WILD ? 1 : wearMul(u.owner)) *
-	(FORM[formOf(u)].dmg && hasTag(u.kind, 'mounted') ? FORM[formOf(u)].dmg : 1) *
+	(shapeOf(u).dmg && hasTag(u.kind, 'mounted') ? shapeOf(u).dmg : 1) *
+	(TEMPER[temperOf(u)].dmg || 1) *
 	(u.zeal > G.t ? ZEAL.mul : 1) *
 	(u.sick > G.t ? 0.6 : 1) *
 	hungerOf(u.owner) *
@@ -6984,14 +6999,13 @@ function route(u, tx, ty) {
 	return { x: P[u.pi].x, y: P[u.pi].y, direct: last };
 }
 // one step toward (x, y); true once within r. A building as the goal means "arrive beside it".
-// how far a unit walks in a second: its speed, its load, the side's season and weather (SP), its stance and formation, the ground and any charge
+// how far a unit walks in a second: its speed, its load, the side's season and weather (SP), its shape, the ground and any charge
 const paceOf = (u, SP) =>
 	Math.min(stats(u.owner, u.kind).spd, u.cap || 1e9) *
 	(u.kind === 'vil' && u.carry > 0 ? 0.9 : 1) *
 	(u.sick > G.t ? 0.8 : 1) *
 	SP *
-	(u.stance === 1 ? STANCE[1].spd : 1) *
-	(FORM[formOf(u)].spd || 1) *
+	(shapeOf(u).spd || 1) *
 	EVM.spd *
 	(u.owner === WILD ? 1 : groundSpd(u.owner, unitKeys(u.kind))) *
 	(G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1) *
@@ -7214,8 +7228,7 @@ function blankGame(seed) {
 		night: 0,
 		loot: {},
 		lootT: 0,
-		hold: Array(BNS + 1).fill(0),
-		stance: Array(BNS + 1).fill(0),
+		temper: Array(BNS + 1).fill(T_GUARD),
 		bnPlan: BN.map(() => ({})),
 		form: BN.map(() => 0),
 		bnEdit: 0,
@@ -7227,6 +7240,8 @@ function blankGame(seed) {
 		fantasy: SET.fantasy,
 		mode: SET.mode,
 		diff: SET.diff,
+		tension: SET.tension,
+		league: null,
 		wayT: WAYFARER_EVERY * 0.5,
 		wayI: 0,
 		wonder: null,
@@ -9105,7 +9120,7 @@ function formUp() {
 		a.sort((p, q) => (p.bn ?? 9) - (q.bn ?? 9) || p.id - q.id);
 		const n = a.length,
 			k = keepOf(a[0].owner),
-			shape = FORM[formOf(a[0])].shape; // marching, a battalion takes its formation's shape: narrow column, point-first wedge, closed square
+			shape = shapeOf(a[0]).shape; // a battalion takes its shape: a narrow column on the march, then the line, the point-first wedge or the closed square
 		const cols =
 				shape === 'column'
 					? Math.min(n, 3)
@@ -9929,7 +9944,7 @@ function caravanTick(u, dt, SP) {
 			G.P[o].gathered += u.cargo;
 			if (o === 0 && u.cargo) {
 				say(`A caravan earns ${u.cargo} gold from your ally.`, 'good', 3, d);
-				sfx('coin');
+				sfx('tribute');
 			}
 			u.dest = u.lastId;
 			u.cargo = 0;
@@ -10127,18 +10142,6 @@ function shot(x1, y1, h1, x2, y2) {
 		dur = 0.12 + d / 600;
 	G.tracers.push({ x1, y1, h1, x2, y2, life: dur, dur, arc: 4 + d * 0.16 });
 }
-// 0 Line, 1 Shield wall (foot who do not shoot), 2 Skirmish (shooters); a horse archer always rides away
-function stanceOf(u) {
-	const U = UNIT[u.kind],
-		tg = U.tags || [],
-		shoots = tg.includes('ranged'),
-		foot = tg.includes('infantry') && !shoots;
-	if (U.kite) return 2;
-	const P = G.P[u.owner];
-	if (!P || !P.techs.has('engage')) return 0; // stances come with Engagement, for every side
-	const want = u.owner === 0 ? G.stance[u.bn ?? BNS] || 0 : shoots ? 2 : foot && u.state === 'home' ? 1 : 0;
-	return want === 1 && foot ? 1 : want === 2 && shoots ? 2 : 0;
-}
 // a soldier at home guards the ground round its own yard and round the Town Center (Build 39 review: a yard far from the Town Center was left undefended)
 const nearHome = (u, t, k) => (u.hax !== undefined && hyp(t.x - u.hax, t.y - u.hay) < 320) || (!!k && dist(t, k) < 320);
 function solTick(u, dt, SP) {
@@ -10146,7 +10149,7 @@ function solTick(u, dt, SP) {
 		o = u.owner,
 		k = keepOf(o);
 	u.cd = Math.max(0, u.cd - dt);
-	u.stance = stanceOf(u);
+	u.kiting = kiteOf(u); // a shooter steps back from a foe on top of it, unless it presses; a horse archer always rides away
 	if (u.state === 'school') {
 		u.idleT = 0;
 		if (G.t >= u.schoolT) graduate(u);
@@ -10269,7 +10272,7 @@ function solTick(u, dt, SP) {
 			tgt.hp > 0 &&
 			!tgt.inside &&
 			atWar(o, tgt.owner) &&
-			(edge(u, tgt) < sightOf(u) * 1.4 || (u.state === 'home' && nearHome(u, tgt, k)))
+			(edge(u, tgt) < sightOf(u) * 1.4 * (TEMPER[temperOf(u)].chase || 1) || (u.state === 'home' && nearHome(u, tgt, k)))
 		)
 	)
 		tgt = u.tgt = null; // the one it had is gone; a soldier at home keeps a foe it was sent after near the Town Center (Build 38: dropping it the next step made new soldiers spin)
@@ -10295,7 +10298,7 @@ function solTick(u, dt, SP) {
 		o === 0 &&
 		u.state !== 'attack' &&
 		!u.focus &&
-		G.hold[u.bn ?? BNS] &&
+		temperOf(u) === T_HOLD &&
 		edge(u, tgt) > rngOf(u) + (tgt.q ? 2 : 5)
 	)
 		tgt = null; // hold ground: fight only what comes within reach
@@ -10338,7 +10341,7 @@ function solTick(u, dt, SP) {
 			const fd = dist(u, tgt) || 1;
 			u.fx = (tgt.x - u.x) / fd;
 			u.fy = (tgt.y - u.y) / fd;
-			if (u.stance === 2 && u.cd > 0 && (G.tick + u.id) % 3 === 0) {
+			if (u.kiting && u.cd > 0 && (G.tick + u.id) % 3 === 0) {
 				// reloading with a foe on top of it: step back
 				const f = nearestFoe(o, u, KITE);
 				if (f && !f.q && UNIT[f.kind].rng <= 20) {
@@ -10775,18 +10778,18 @@ function hurt(o, a, t, base) {
 			if (t.state === 'rout') d *= MORALE.routHit;
 			else if (t.fb > G.t) d *= FALLBACK.hit;
 			const dot = a && t.fx !== undefined ? ((a.x - t.x) * t.fx + (a.y - t.y) * t.fy) / (dist(a, t) || 1) : 1;
-			if (o !== WILD) t.mor -= ((MORALE.hit * d) / t.max) * (dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
+			if (o !== WILD)
+				t.mor -= ((MORALE.hit * d * (TEMPER[temperOf(t)].nerve || 1)) / t.max) * (dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
 		} // nerve: a blow from the side counts half again, from behind twice; animals do not shake it
 		if (a && a.native && !isB && onLand(t.x, t.y) && hyp(t.x - MID, t.y - MID) > THRONE.isle - 10) d *= NATIVE.ambush; // the Natives at the causeways: the ground is theirs
 		if (a && A.gun && hasTag(t.kind, 'native')) d *= NATIVE.gunHit; // gunpowder against hide shields
 		if (isSoldier(t) && t.owner !== WILD) {
 			d *= stats(t.owner, t.kind).armor;
-			if (t.stance === 1) d *= STANCE[1].hit;
 			{
-				const F = FORM[formOf(t)];
+				const F = shapeOf(t);
 				d *= F.hit || 1;
 				if (F.vsMounted && a && hasTag(a.kind, 'mounted')) d *= F.vsMounted;
-			} // the battalion's formation
+			} // the battalion's shape
 			if (a && A.rng <= 20 && t.fx !== undefined && (a.x - t.x) * t.fx + (a.y - t.y) * t.fy < -0.5 * (dist(a, t) || 1))
 				d *= FLANK; // from behind the way it faces
 		}
@@ -11051,7 +11054,7 @@ const TICK = {
 };
 
 // builders who finish a place of work start on it: fields and workshops take them up to their places, a dock sets them fishing, a camp sends them to what it is for
-const slotsOf = (n) => (n.farm && BLD[n.farm.kind].slots) || 1;
+const slotsOf = () => 1; // one worker to a field, a quarry, a workshop
 function startWork(u, b) {
 	const B = BLD[b.kind],
 		take = (job, n) => {
@@ -11571,6 +11574,35 @@ function decideWar(p, per) {
 		}
 		if (best === 0) say(`${p.name} march on you with ${go.length} soldiers.`, 'warn', 8, go[0]);
 	}
+}
+
+// ── Dynamic Diplomacy (the Tension setting): when one side runs far ahead, the computers behind it unite against it, as Greek and Italian
+// states did against Athens and Syracuse and the powers of Europe did against Napoleon. They make peace and ally among themselves and make war on the leader;
+// the leader's own vassals stay faithful. It ends when the leader falls back. Winner Takes All skips all of this.
+const LEAGUE = { lead: 1.4, release: 1.15 }; // the leader's score against the next best: it forms above lead, and breaks up below release
+function leagueTick() {
+	const S = G.P.filter((p) => p.id !== WILD && p.alive && !(p.lord !== null && p.lord !== undefined && !p.rebel));
+	if (S.length < 3) return;
+	S.sort((a, b) => b.score.total - a.score.total);
+	const lead = S[0],
+		ratio = lead.score.total / Math.max(1, S[1].score.total);
+	if (G.league === null || G.league === undefined) {
+		if (ratio < LEAGUE.lead) return;
+		G.league = lead.id;
+	} else if (G.league !== lead.id || ratio < LEAGUE.release) {
+		G.league = null;
+		say('The league against the leader breaks up.', '', 6);
+		return;
+	}
+	const M = S.slice(1).filter((p) => p.id !== 0 && p.lord !== lead.id);
+	if (!M.length) return;
+	const fresh = M.some((p) => G.rel[p.id][lead.id] !== 'war');
+	for (const p of M) {
+		if (G.rel[p.id][lead.id] !== 'war') declareWar(p.id, lead.id, 'the league against the leader');
+		for (const q of M) if (q !== p && G.rel[p.id][q.id] !== 'ally') G.rel[p.id][q.id] = 'ally';
+	}
+	G.navDirty = true;
+	if (fresh) say(`${M.map((p) => p.name).join(', ')} unite against ${lead.name}, the leader.`, 'warn', 8);
 }
 // ═════ 18-figures.js: people and beasts, drawn from data ═════
 // ───────────────────────── Figures: every unit drawn once per look, colour, pose and zoom, then stamped ─────────────────────────
@@ -15887,7 +15919,7 @@ function draw() {
 	if (G.shake > G.t && !lessMotion) {
 		const k = (G.shake - G.t) * 3;
 		ctx.translate(rnd2() * k, rnd2() * k);
-	} // a tremor: the whole view judders for a moment
+	} // a sinkhole or a falling star: the whole view judders for a moment
 	layer(scarCv);
 	drawFlood(z);
 	drawSand(z);
@@ -16977,7 +17009,7 @@ function drawGround() {
 		ctx.fillRect(0, 0, w, h);
 	}
 }
-// the cracks of a tremor: dark jagged arms with a pale edge, and a puff of dust that rises and thins over four seconds; gone after forty-five
+// the cracks of a sinkhole: dark jagged arms with a pale edge, and a puff of dust that rises and thins over four seconds; gone after forty-five
 function drawCracks(z) {
 	if (!G.cracks || !G.cracks.length) return;
 	G.cracks = G.cracks.filter((c) => G.t - c.t0 < 45);
@@ -18817,7 +18849,16 @@ function hideStrip() {
 		if (G) G.strip = null;
 	}
 }
-// ── the War Council: six battalions, what each holds by type, its stance and formation
+// The two dials of an army or one battalion (a: 'all' or its number): temper, and shape once Formations is researched. One button each, a tap steps round; a gold ring marks what is not the plain setting.
+const dialBtns = (a) => {
+	const tm = dialOf('temper', a),
+		sh = dialOf('form', a);
+	return (
+		btn(`temper:${a}`, 'Temper: ' + (tm < 0 ? 'mixed' : TEMPER[tm].name), '', tm >= 0 && tm !== T_GUARD ? 'on' : '') +
+		(G.P[0].techs.has('formations') ? btn(`shape:${a}`, 'Shape: ' + (sh < 0 ? 'mixed' : FORM[sh].name), '', sh > 0 ? 'on' : '') : '')
+	);
+};
+// ── the War Council: six battalions, what each holds by type, its shape and temper
 function musterGap(i) {
 	// what a battalion still lacks: its plan, less the members it has and the soldiers already mustering for it
 	const gap = { ...G.bnPlan[i] };
@@ -19070,7 +19111,7 @@ function marketHTML(b) {
 function councilHTML(b) {
 	const p = G.P[0];
 	if (!hasCmd())
-		return `<p>${p.techs.has('engage') ? 'Stances are open: set them in the Army card. Next: Battalions, six of them, Alpha to Zeta.' : 'Research Engagement first: stances for your army. Then Battalions, Formations and Muster.'}</p>`;
+		return `<p>${p.techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, six of them, Alpha to Zeta.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`;
 	const i = G.bnEdit,
 		plan = G.bnPlan[i],
 		S = armyOf(0).filter((u) => u.kind !== 'spy');
@@ -19093,11 +19134,7 @@ function councilHTML(b) {
 					)
 					.join('')
 			: '<p>Train soldiers first.</p>');
-	const f = FORM[G.form[i] || 0];
-	h += acts(
-		btn('bnstance', 'Stance: ' + STANCE[G.stance[i] || 0].name, '') +
-			(p.techs.has('formations') ? btn('bnform', 'Formation: ' + f.name, f.note) : ''),
-	);
+	h += acts(dialBtns(i));
 	if (p.techs.has('muster')) {
 		const miss = musterGap(i),
 			why = musterWhy(0, miss),
@@ -19117,7 +19154,7 @@ function councilHTML(b) {
 		fold(
 			'bnabout',
 			'About battalions',
-			`<p>New soldiers fill each battalion up to what you set; the rest are the reserve. Send a battalion from the strip: tap open ground, then its name.</p><p><b>Formations:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
+			`<p>New soldiers fill each battalion up to what you set; the rest are the reserve. Send a battalion from the strip: tap open ground, then its name.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
 		)
 	);
 }
@@ -19373,6 +19410,14 @@ const settingsHTML = () =>
 			['fantasy:1', 'Fantasy', true],
 		],
 		!!SET.fantasy,
+	) +
+	seg(
+		'Tension',
+		[
+			['tension:winner', 'Winner Takes All', 'winner'],
+			['tension:diplomacy', 'Dynamic Diplomacy', 'diplomacy'],
+		],
+		SET.tension,
 	);
 // ═════ 30-cards.js: the CARDS table, one entry per card type, and renderCard ═════
 // ───────────────────────── The cards, one entry each ─────────────────────────
@@ -19879,12 +19924,7 @@ const CARDS = {
 						'<p>Blows from the side and behind drain nerve; rest, a wall, a tower or a priest restore it. Under 20% a soldier runs.</p>',
 					);
 			}
-			if (p.techs.has('engage')) {
-				const sn = G.sel === 'all' ? (G.stance.every((x) => x === G.stance[0]) ? G.stance[0] : -1) : G.stance[G.sel];
-				h += acts(btn('stance', 'Stance: ' + (sn < 0 ? 'mixed' : STANCE[sn].name), '', sn > 0 ? 'on' : ''), 'c1');
-			}
-			const hold = G.sel === 'all' ? G.hold.every((x) => x) : !!G.hold[G.sel];
-			h += acts(btn('hold', 'Hold ground', hold ? 'on' : 'off', hold ? 'on' : ''), 'c1');
+			h += acts(dialBtns(G.sel));
 			if (ready(0, 'temple').length) {
 				const why = zealWhy(0, orderSet());
 				h += acts(
@@ -19905,7 +19945,7 @@ const CARDS = {
 			fold(
 				'about',
 				'About orders',
-				`<p>Tap open ground: Send ¼, All, or a battalion by name. Tap an enemy to pick how many attack. The War Council opens stances, battalions, formations and Muster; a gold ring marks the one picked here.</p><p><b>Stance:</b> ${STANCE.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Hold ground:</b> on, they fight only what comes within reach and do not chase.</p>`,
+				`<p>Tap open ground: Send ¼, All, or a battalion by name. Tap an enemy to pick how many attack. The War Council opens battalions, shape and Muster; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
 			)
 		);
 	},
@@ -20029,7 +20069,7 @@ const CARDS = {
 			`<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
       <p><b>Build:</b> pick a menu, then a building. It waits above your finger: drag it, then tap Build. Villagers raise it.</p>
       <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Pause shows the speeds under the button.</p>
-      <p><b>Army:</b> tap open ground with nothing picked: Send ¼ or All. The War Council opens stances, battalions, formations and Muster.</p>
+      <p><b>Army:</b> tap open ground with nothing picked: Send ¼ or All. The War Council opens battalions, shape and Muster.</p>
       <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>
@@ -20930,8 +20970,7 @@ function alertNow() {
 		k = e ? e.kind : V.warned,
 		E = k && EVENTS[k];
 	if (E) {
-		const quake = k === 'tremor' && hz('winter'),
-			A = { name: quake ? 'Earthquake' : E.name, line: quake ? EV_LINE.quake : EV_LINE[k], now: !!e, secs: E.secs };
+		const A = { name: E.name, line: EV_LINE[k], now: !!e, secs: E.secs };
 		if (e)
 			return {
 				...A,
@@ -21191,8 +21230,14 @@ const ACT = {
 		saveSet();
 		refresh();
 	},
+	tension(a) {
+		SET.tension = a;
+		saveSet();
+		refresh();
+	},
 	diff(a) {
 		SET.diff = a;
+		SET.tension = a === 'easy' ? 'winner' : 'diplomacy'; // the difficulty sets the tension; the toggle below can change it
 		G.diff = a;
 		saveSet();
 		refresh();
@@ -21424,7 +21469,7 @@ const PLAY = {
 		const [c, d] = a.split(','),
 			pool = hudPool(),
 			have = hudHave(pool, Number(c));
-		G.hud.n[c] = clamp(hudN(pool, Number(c)) + (d === '+' ? 1 : -1), 0, have);
+		G.hud.n[c] = clamp(hudN(pool, Number(c)) + (d === '+' ? Math.min(1, hudRoom(pool)) : -1), 0, have);
 		G.hud.set = false; // changing a count opens Set again
 	},
 	hfire() {
@@ -21527,13 +21572,11 @@ const PLAY = {
 		if (!P[k]) delete P[k];
 		rebattalion();
 	}, // a battalion holds BNSIZE at most, every kind together
-	bnstance() {
-		const i = G.bnEdit;
-		G.stance[i] = ((G.stance[i] || 0) + 1) % STANCE.length;
+	shape(a) {
+		cycle('form', a, FORM.length);
 	},
-	bnform() {
-		const i = G.bnEdit;
-		G.form[i] = ((G.form[i] || 0) + 1) % FORM.length;
+	temper(a) {
+		cycle('temper', a, TEMPER.length);
 	},
 	sendvil(a) {
 		sendVil(0, Number(a));
@@ -21979,17 +22022,6 @@ const PLAY = {
 		const [dir, k] = a.split(':');
 		if (!marketTrade(0, k, dir)) say(dir === 'sell' ? 'Not enough to sell.' : 'Not enough gold.', '', 3);
 	},
-	stance() {
-		const cur = G.sel === 'all' ? (G.stance.every((x) => x === G.stance[0]) ? G.stance[0] : -1) : G.stance[G.sel],
-			nx = (cur + 1) % STANCE.length;
-		if (G.sel === 'all') G.stance = Array(BNS + 1).fill(nx);
-		else G.stance[G.sel] = nx;
-	},
-	hold() {
-		const on = G.sel === 'all' ? !G.hold.every((x) => x) : !G.hold[G.sel];
-		if (G.sel === 'all') G.hold = Array(BNS + 1).fill(Number(on));
-		else G.hold[G.sel] = Number(on);
-	},
 	zeal() {
 		if (!zeal(0, orderSet())) say(zealWhy(0, orderSet()) || 'Not now.', '', 3);
 	},
@@ -22065,7 +22097,7 @@ for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndIni
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = 'firstkeep.save',
-	SAVEV = 31; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 32; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -22099,6 +22131,16 @@ const MIGRATE = {
 		S.v = 31;
 		return S;
 	}, // Build 40: the one-job buildings folded into research and the Workshop; nerve on every soldier
+	31: (S) => {
+		S.temper = Array(BNS + 1)
+			.fill(T_GUARD)
+			.map((x, i) => (S.hold && S.hold[i] ? T_HOLD : x)); // hold ground became Hold; every other stance became Guard (Shield wall folded into Square, Skirmish into Guard)
+		S.form = (S.form || []).map((f) => [0, 0, 1, 2][f] ?? 0); // Line, Column, Wedge, Square: the column is no longer chosen
+		delete S.hold;
+		delete S.stance;
+		S.v = 32;
+		return S;
+	}, // Build 45: Shape and Temper replace stance, formation and hold ground
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -22173,8 +22215,7 @@ function saveGame(force) {
 			nid: NID,
 			sel: G.sel,
 			rally0: G.rally0 || null,
-			hold: G.hold,
-			stance: G.stance,
+			temper: G.temper,
 			bnPlan: G.bnPlan,
 			form: G.form,
 			intel: G.intel,
@@ -22184,6 +22225,8 @@ function saveGame(force) {
 			fantasy: G.fantasy,
 			mode: G.mode,
 			diff: G.diff,
+			tension: G.tension,
+			league: G.league,
 			wayT: G.wayT,
 			wayI: G.wayI,
 			wonder: G.wonder,
@@ -22268,8 +22311,7 @@ function loadGame(S) {
 		rs: S.rs,
 		sel: S.sel === undefined ? 'all' : S.sel,
 		rally0: S.rally0,
-		hold: S.hold || Array(BNS + 1).fill(0),
-		stance: S.stance || Array(BNS + 1).fill(0),
+		temper: S.temper,
 		bnPlan: S.bnPlan || BN.map(() => ({})),
 		form: S.form || BN.map(() => 0),
 		bnEdit: 0,
@@ -22281,6 +22323,8 @@ function loadGame(S) {
 		fantasy: !!S.fantasy,
 		mode: S.mode || 'conquest',
 		diff: S.diff || SET.diff,
+		tension: S.tension || 'winner',
+		league: S.league ?? null,
 		wayT: S.wayT,
 		wayI: S.wayI,
 		wonder: S.wonder || null,
@@ -22636,6 +22680,13 @@ const SFX = {
 			tone(1760, 0.2, 'square', 0.08 * v, 0, 0.07);
 		},
 	],
+	tribute: [
+		3,
+		(v) => {
+			tone(523, 0.45, 'sine', 0.1 * v);
+			tone(784, 0.6, 'sine', 0.08 * v, 0, 0.12);
+		},
+	], // gold that comes from anything but your own mint: a soft bell, lower and longer than the mint's coin
 	win: [1, (v) => [392, 523, 659, 784, 1047].forEach((f, i) => tone(f, 0.4, 'triangle', 0.22 * v, 0, i * 0.16))],
 	lose: [1, (v) => [392, 349, 311, 262].forEach((f, i) => tone(f, 0.55, 'triangle', 0.22 * v, 0, i * 0.3))],
 	bird: [
@@ -22729,6 +22780,7 @@ const CHAN = {
 	ready: 'alert',
 	zeal: 'alert',
 	coin: 'alert',
+	tribute: 'alert',
 };
 const chanVol = (name) => SET.mix[CHAN[name] || 'fx'];
 function sfx(name, x, y) {
@@ -22858,12 +22910,15 @@ function initEconomy() {
 
 // ── prices: base, more where it is wanted, more the farther it travels
 const distF = (d) => clamp(1 + d / 1000, 1, POST.far);
+const baseOf = (k) => (GOODS[k] ? GOODS[k].base : TRADE[k] / 100); // a made good's price, or a raw find's (the Market's lot price ÷ 100)
+const nameOf = (k) => (GOODS[k] ? GOODS[k].name : RAW_NAME[k]).toLowerCase();
+const loadable = (p, k) => (TRADE[k] ? Math.max(0, (p.res[k] || 0) - CARAVAN.keep) : p.goods[k] || 0); // what a caravan may take: all of a made good, a raw find's surplus
+const takeFrom = (p, k, q) => (TRADE[k] ? (p.res[k] -= q) : (p.goods[k] -= q));
 function priceAt(o, good, place, from) {
-	const G0 = GOODS[good];
 	let m = 1;
 	if (place.kind === 'stop' && good === 'spice') return 0; // a stop sells spice; it does not buy it
 	m = place.want === good ? POST.want : 1;
-	return G0.base * m * mkt(good) * (from ? distF(dist(from, place)) : 1) * fxv(o, 'trade').m;
+	return baseOf(good) * m * mkt(good) * (from ? distF(dist(from, place)) : 1) * fxv(o, 'trade').m;
 }
 // Trade has two lanes. One: a caravan with a route carries goods to a trade stop, the world's old markets, and sells them.
 // Two: a caravan with no route runs between your Market and an ally's Market or Town Center, paid by distance.
@@ -22893,11 +22948,10 @@ function allyMarket(o, from) {
 const targetOf = (r) => r && (r.s ? G.finds.find((f) => f.id === r.to) : G.blds.find((b) => b.id === r.to && b.hp > 0));
 const homeBiz = (o, u) => nearest(G.blds, u, (b) => b.owner === o && b.kind === 'market' && b.prog >= 1 && b.hp > 0); // the Market stores goods and loads caravans
 function estPay(o, place, from) {
-	const g = goodsOf(o);
 	let n = LOAD,
 		s = 0;
-	for (const k of WARES.slice().sort((a, b) => priceAt(o, b, place, from) - priceAt(o, a, place, from))) {
-		const q = priceAt(o, k, place, from) > 0 ? Math.min(n, Math.floor(g[k] || 0)) : 0;
+	for (const k of CARRIED.slice().sort((a, b) => priceAt(o, b, place, from) - priceAt(o, a, place, from))) {
+		const q = priceAt(o, k, place, from) > 0 ? Math.min(n, Math.floor(loadable(G.P[o], k))) : 0;
 		s += q * priceAt(o, k, place, from);
 		n -= q;
 	}
@@ -22940,12 +22994,12 @@ function routeTick(u, dt, SP) {
 		if (!moveTo(u, h.x, h.y, dt, halfOf(h) + 4, SP)) return;
 		u.goods = {};
 		let n = LOAD;
-		for (const k of WARES.slice().sort((a, b) => priceAt(o, b, t, h) - priceAt(o, a, t, h))) {
+		for (const k of CARRIED.slice().sort((a, b) => priceAt(o, b, t, h) - priceAt(o, a, t, h))) {
 			if (t.sell && !t.sell[k]) continue;
-			const q = priceAt(o, k, t, h) > 0 ? Math.min(n, Math.floor(p.goods[k] || 0)) : 0;
+			const q = priceAt(o, k, t, h) > 0 ? Math.min(n, Math.floor(loadable(p, k))) : 0;
 			if (q > 0) {
 				u.goods[k] = q;
-				p.goods[k] -= q;
+				takeFrom(p, k, q);
 				n -= q;
 			}
 		} // a stop you hold sells what you chose for it
@@ -22964,7 +23018,7 @@ function routeTick(u, dt, SP) {
 		for (const k in u.goods) {
 			const v = u.goods[k] * priceAt(o, k, t, u.from);
 			gold += v;
-			sold.push(u.goods[k] + ' ' + GOODS[k].name.toLowerCase());
+			sold.push(u.goods[k] + ' ' + nameOf(k));
 		}
 		const keeper = t.kind === 'stop' ? t.owner : null;
 		if (keeper !== null && keeper !== o && gold > 0) {
@@ -22973,7 +23027,7 @@ function routeTick(u, dt, SP) {
 			G.P[keeper].res.g += cut;
 			G.P[keeper].gathered += cut;
 		}
-		for (const k in u.goods) mktHit(k, u.goods[k], -1);
+		for (const k in u.goods) mktHit(k, TRADE[k] ? u.goods[k] / 4 : u.goods[k], -1);
 		gold = Math.round(shareUp(o, gold));
 		p.res.g += gold;
 		p.gathered += gold;
@@ -22994,7 +23048,7 @@ function routeTick(u, dt, SP) {
 				4,
 				t,
 			);
-			sfx('coin');
+			sfx('tribute');
 		}
 		u.foreign = t.kind === 'stop' || t.owner !== o;
 		u.leg = 'back';
@@ -23091,12 +23145,14 @@ function natureTick() {
 			const g = shareUp(o, POST.all);
 			G.P[o].res.g += g;
 			G.P[o].gathered += g;
+			if (o === 0 && G.tick % 300 === 0) sfx('tribute'); // held routes pay all the time: a chime every ten seconds
 		}
 	}
 	if (G.tick % 300 === 150) {
 		priceDrift();
 		ventureTick();
 		vassalTick();
+		if (G.tension === 'diplomacy') leagueTick();
 	}
 	if (G.tick % 1800 === 0) flowTick();
 }
@@ -23629,6 +23685,7 @@ function vassalTick() {
 				L.res[r] += x;
 				p.paid += x;
 			}
+		if (L.id === 0 && p.paid > 0) sfx('tribute');
 		p.protect = (p.protect || 0) * VASSAL.decay;
 		const parts = loyaltyParts(p);
 		p.loyal = (p.loyal || 0) + (parts.target - (p.loyal || 0)) * 0.05;
@@ -23712,7 +23769,7 @@ const canEv = (k) => {
 	return (
 		!(E.fantasy && !G.fantasy) &&
 		!(E.need && G.wx !== E.need) &&
-		!(E.season && season().name !== E.season) &&
+		!(E.season && ![].concat(E.season).includes(season().name)) &&
 		!(E.night && G.night < 0.5) &&
 		!(k === 'quicksand' && G.wx !== 'rain') &&
 		!(k === 'flood' && G.wx !== 'rain')
@@ -23996,11 +24053,6 @@ const EV = {
 			EVM.sight = 1;
 		},
 	},
-	tremor: {
-		start(e) {
-			quake(e, EVENTS.tremor, hz('winter') ? QUAKE : null);
-		},
-	},
 	sinkhole: {
 		start(e) {
 			const B = G.blds.filter((b) => b.prog >= 1 && !BLD[b.kind].wallish && b.kind !== 'keep');
@@ -24162,7 +24214,7 @@ const EV = {
 		},
 	},
 };
-// The ground splits: a star of jagged cracks and a puff of dust at (x, y), r wide. Cosmetic: the damage is done by quake() and sinkhole.
+// The ground splits: a star of jagged cracks and a puff of dust at (x, y), r wide. Cosmetic: the damage is done by the sinkhole.
 // The arms are worked out once from a seed; the view draws them for 45 s and the ground keeps a faint scar of them.
 function crackAt(x, y, r) {
 	let s = Math.floor(Math.random() * 4e9) || 1;
@@ -24186,26 +24238,6 @@ function crackAt(x, y, r) {
 	const c = { x, y, r, t0: G.t, arms };
 	(G.cracks = G.cracks || []).push(c);
 	scarCrack(c);
-}
-// a tremor, or an earthquake when the hazard is on: everything within r loses a share of its health, walls more, and wood may catch
-function quake(e, E, Q) {
-	const r = Q ? Q.r : E.r,
-		hit = Q ? Q.hit : E.hit,
-		wall = Q ? Q.wall : E.wall,
-		fire = Q ? Q.fire : E.fire;
-	e.at = { x: rnd(200, MAP - 200), y: rnd(200, MAP - 200) };
-	G.shake = G.t + 1.5;
-	crackAt(e.at.x, e.at.y, Math.min(r * 0.45, 130));
-	sfx('rumble', e.at.x, e.at.y);
-	let mine = 0;
-	bldsNear(e.at.x, e.at.y, r, (b) => {
-		if (b.prog < 1 || dist(b, e.at) > r) return;
-		b.hp -= maxHpB(b.owner, b.kind) * (BLD[b.kind].wallish ? wall : hit);
-		if (b.hp > 0 && BLD[b.kind].wood && rng() < fire) ignite(b, 'the tremor');
-		if (b.owner === 0) mine++;
-	});
-	if (mine)
-		say(`${Q ? 'Earthquake' : 'Tremor'} at ${coord(e.at.x, e.at.y)}: ${mine} of yours damaged.`, 'warn', 6, e.at);
 }
 function startEvent(kind) {
 	const E = EVENTS[kind],
@@ -24245,14 +24277,6 @@ function eventsTick() {
 	}
 	hordeTick();
 	newsTick();
-	if (hz('winter') && G.t >= (V.quakeAt || (V.quakeAt = G.t + QUAKE.every))) {
-		V.quakeAt = G.t + QUAKE.every;
-		if (!V.cur) {
-			say(EV_TEXT.tremor[0], 'warn', 8);
-			V.warned = 'tremor';
-			V.next = G.t + 8;
-		}
-	}
 }
 // The horde (the hazard): announced two seasons ahead, then one; from an edge or out of the wild, for the weakest side; its number grows with the age
 function hordeTick() {
@@ -24730,7 +24754,13 @@ const hudPool = () =>
 		(u) => clsOf(u) >= 0,
 	);
 const hudHave = (pool, c) => pool.filter((u) => clsOf(u) === c).length;
-const hudN = (pool, c) => Math.min(hudHave(pool, c), G.hud.n[c] ?? 1e9);
+// a draft holds a battalion at most (BNSIZE): the classes fill it in their order, each from what is left
+const hudN = (pool, c) => {
+	let room = BNSIZE;
+	for (let i = 0; i < c; i++) room -= Math.min(hudHave(pool, i), G.hud.n[i] ?? 1e9, room);
+	return Math.min(hudHave(pool, c), G.hud.n[c] ?? 1e9, room);
+};
+const hudRoom = (pool) => CLS.reduce((r, _, i) => r - hudN(pool, i), BNSIZE);
 function hudPick() {
 	const pool = hudPool(),
 		to = G.hud.h && G.hud.h.e;
@@ -25328,7 +25358,7 @@ function soldiersIn() {
 	const d = threatDir(k),
 		cx = k.x + d.x * EMG.line,
 		cy = k.y + d.y * EMG.line;
-	G.hold = Array(BNS + 1).fill(1); // hold ground: they fight what comes within reach and keep the line
+	G.temper = Array(BNS + 1).fill(T_HOLD); // hold: they fight what comes within reach and keep the line
 	left.forEach((u, i) => {
 		const row = Math.floor(i / EMG.perRow),
 			col = (i % EMG.perRow) - (Math.min(left.length, EMG.perRow) - 1) / 2;
@@ -25742,6 +25772,13 @@ window.__fk = {
 	hordeTick,
 	starveTick,
 	todaySeed,
+	gatherMul,
+	RATE_OF,
+	makeOf,
+	shareOf,
+	UPKEEP,
+	POST,
+	TAX,
 	get holdSave() {
 		return holdSave;
 	},

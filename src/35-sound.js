@@ -241,6 +241,13 @@ const SFX = {
 			tone(1760, 0.2, 'square', 0.08 * v, 0, 0.07);
 		},
 	],
+	tribute: [
+		3,
+		(v) => {
+			tone(523, 0.45, 'sine', 0.1 * v);
+			tone(784, 0.6, 'sine', 0.08 * v, 0, 0.12);
+		},
+	], // gold that comes from anything but your own mint: a soft bell, lower and longer than the mint's coin
 	win: [1, (v) => [392, 523, 659, 784, 1047].forEach((f, i) => tone(f, 0.4, 'triangle', 0.22 * v, 0, i * 0.16))],
 	lose: [1, (v) => [392, 349, 311, 262].forEach((f, i) => tone(f, 0.55, 'triangle', 0.22 * v, 0, i * 0.3))],
 	bird: [
@@ -334,6 +341,7 @@ const CHAN = {
 	ready: 'alert',
 	zeal: 'alert',
 	coin: 'alert',
+	tribute: 'alert',
 };
 const chanVol = (name) => SET.mix[CHAN[name] || 'fx'];
 function sfx(name, x, y) {

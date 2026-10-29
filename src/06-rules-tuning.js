@@ -66,23 +66,27 @@ const FALLBACK = { secs: 6, back: 200, hit: 0.7 }; // withdraw in order: fewer l
 const PRISON = { secs: 180, ransom: 1.0 }; // a prisoner unransomed in three minutes serves the captor
 const CONVERT = { r: 40, secs: 12, cd: 60 }; // a priest beside an enemy for a spell turns them; the counter is to kill the priest
 const BUILDER_POW = 0.7; // a crew of n builds n^0.7 times as fast as one: two builders ≈ 1.6×, three ≈ 2.1×
-// Formations (research Formations at the War Council): each battalion takes one. spd: march speed; hit: damage taken; dmg: damage dealt by its riders; vsMounted: damage taken from riders
+// Shape (research Formations at the War Council): each battalion takes one, three in all. spd: march speed; hit: damage taken; dmg: damage dealt by its riders; vsMounted: damage taken from riders
+// An army marches in a column (COLUMN, never picked: armies did) and stands to its shape on contact: the Roman three lines, the medieval three battles.
 const FORM = [
 	{ name: 'Line', shape: 'line', note: 'as they stand' },
-	{ name: 'Column', shape: 'column', spd: 1.15, hit: 1.1, note: '15% faster, 10% more damage taken' },
 	{ name: 'Wedge', shape: 'wedge', dmg: 1.15, hit: 1.1, note: 'riders hit 15% harder, take 10% more' },
-	{ name: 'Square', shape: 'square', spd: 0.8, vsMounted: 0.7, note: '30% less from riders, 20% slower' },
+	{ name: 'Square', shape: 'square', spd: 0.8, hit: 0.9, vsMounted: 0.7, note: '10% less damage, 30% less from riders, 20% slower' },
 ];
+const COLUMN = { name: 'Column', shape: 'column', spd: 1.15, hit: 1.1 };
 const GRID = { gap: 15, rows: 2.0 }; // an army stands in a grid: 15 apart, about twice as wide as deep
 const FIELD_NEAR = 160; // a Food worker takes a free field within this before anything else
 const DOCKR = 150; // fish are caught only within 150 of a finished dock of yours
 const KITE = 45; // a shooter steps back from a foe this close while it reloads
-// a battalion's stance (the computers choose theirs: shooters skirmish, foot at home hold a wall)
-const STANCE = [
-	{ name: 'Line', note: 'fight as they stand' },
-	{ name: 'Shield wall', hit: 0.8, spd: 0.65, note: 'foot soldiers take a fifth less damage and march a third slower' },
-	{ name: 'Skirmish', note: 'shooters step back from anyone who closes in while they reload' },
+// a battalion's temper, three in all (the computers keep Guard). nerve: how fast blows break it; dmg: blows dealt; chase: how far past its sight it follows a foe
+const TEMPER = [
+	{ name: 'Hold', nerve: 0.8, note: 'fight only what comes within reach, no chase, steadier nerve' },
+	{ name: 'Guard', note: 'fight what comes; shooters step back from anyone who closes in' },
+	{ name: 'Press', nerve: 1.3, dmg: 1.1, chase: 1.3, note: 'chase and charge: blows 10% harder, nerve breaks 30% faster' },
 ];
+const T_HOLD = 0,
+	T_GUARD = 1,
+	T_PRESS = 2;
 const SHELTER = { flee: 70, clear: 150, raid: 3, hurt: 6 }; // villagers run into the nearest Town Center or tower when an enemy soldier comes within 70, when three or more beasts or robbers do, or when a lone beast or robber hits them (it scares only the one it hits); out when none within 150 of it; each adds an arrow up to the limit (the room is the same)
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
@@ -132,7 +136,7 @@ const HAZARDS = {
 	winter: {
 		pts: 2,
 		name: 'Bad weather',
-		desc: 'Winter fields give a quarter and marches crawl; blizzards blind the small map; tremors come every few minutes and hit hard.',
+		desc: 'Winter fields give a quarter and marches crawl; blizzards blind the small map.',
 	},
 	drought: {
 		pts: 2,
@@ -155,8 +159,7 @@ const HZK = Object.keys(HAZARDS),
 	TODAY_HZ = { hard: 1, starve: 1, horde: 1, winter: 1 }; // a new game starts at level 5; The challenge today is level 10 on the day's seed
 const STARVE = { stop: 60, leave: 120, every: 30 },
 	HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 },
-	HORDE = { from: 1200, to: 2400, warn: SEASON_LEN * 2, n: 16, perAge: 6 },
-	QUAKE = { every: 240, r: 350, hit: 0.1, wall: 0.3, fire: 0.15 };
+	HORDE = { from: 1200, to: 2400, warn: SEASON_LEN * 2, n: 16, perAge: 6 };
 // Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 37-events.
 const EV_GAP = [60, 180],
 	EV_WARN = 12;
@@ -167,9 +170,8 @@ const EVENTS = {
 	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.004, harm: 1 },
 	locusts: { name: 'Locusts', secs: 30, r: 70, strip: 90, harm: 1 },
 	meteor: { name: 'Falling star', secs: 3 },
-	wildfire: { name: 'Wildfire', secs: 60, spread: 0.2, r: 32, burn: 0.12, most: 20, need: 'drought', harm: 1 }, // most: trees alight at once
+	wildfire: { name: 'Wildfire', secs: 60, spread: 0.2, r: 32, burn: 0.12, most: 20, season: ['Summer', 'Autumn'], harm: 1 }, // most: trees alight at once; the dry seasons, drought or not
 	fog: { name: 'Fog', secs: 60, sight: 0.4 },
-	tremor: { name: 'Tremor', secs: 2, r: 220, hit: 0.05, wall: 0.2, fire: 0.05 },
 	sinkhole: { name: 'Sinkhole', secs: 2, hit: 0.4 },
 	quicksand: { name: 'Quicksand', secs: 120, r: 60, slow: 0.3 },
 	heatwave: { name: 'Heat', secs: 60, dmg: 0.85, spd: 0.9, need: 'drought', season: 'Summer' },

@@ -165,8 +165,14 @@ const ACT = {
 		saveSet();
 		refresh();
 	},
+	tension(a) {
+		SET.tension = a;
+		saveSet();
+		refresh();
+	},
 	diff(a) {
 		SET.diff = a;
+		SET.tension = a === 'easy' ? 'winner' : 'diplomacy'; // the difficulty sets the tension; the toggle below can change it
 		G.diff = a;
 		saveSet();
 		refresh();
@@ -398,7 +404,7 @@ const PLAY = {
 		const [c, d] = a.split(','),
 			pool = hudPool(),
 			have = hudHave(pool, Number(c));
-		G.hud.n[c] = clamp(hudN(pool, Number(c)) + (d === '+' ? 1 : -1), 0, have);
+		G.hud.n[c] = clamp(hudN(pool, Number(c)) + (d === '+' ? Math.min(1, hudRoom(pool)) : -1), 0, have);
 		G.hud.set = false; // changing a count opens Set again
 	},
 	hfire() {
@@ -501,13 +507,11 @@ const PLAY = {
 		if (!P[k]) delete P[k];
 		rebattalion();
 	}, // a battalion holds BNSIZE at most, every kind together
-	bnstance() {
-		const i = G.bnEdit;
-		G.stance[i] = ((G.stance[i] || 0) + 1) % STANCE.length;
+	shape(a) {
+		cycle('form', a, FORM.length);
 	},
-	bnform() {
-		const i = G.bnEdit;
-		G.form[i] = ((G.form[i] || 0) + 1) % FORM.length;
+	temper(a) {
+		cycle('temper', a, TEMPER.length);
 	},
 	sendvil(a) {
 		sendVil(0, Number(a));
@@ -952,17 +956,6 @@ const PLAY = {
 	trade(a) {
 		const [dir, k] = a.split(':');
 		if (!marketTrade(0, k, dir)) say(dir === 'sell' ? 'Not enough to sell.' : 'Not enough gold.', '', 3);
-	},
-	stance() {
-		const cur = G.sel === 'all' ? (G.stance.every((x) => x === G.stance[0]) ? G.stance[0] : -1) : G.stance[G.sel],
-			nx = (cur + 1) % STANCE.length;
-		if (G.sel === 'all') G.stance = Array(BNS + 1).fill(nx);
-		else G.stance[G.sel] = nx;
-	},
-	hold() {
-		const on = G.sel === 'all' ? !G.hold.every((x) => x) : !G.hold[G.sel];
-		if (G.sel === 'all') G.hold = Array(BNS + 1).fill(Number(on));
-		else G.hold[G.sel] = Number(on);
 	},
 	zeal() {
 		if (!zeal(0, orderSet())) say(zealWhy(0, orderSet()) || 'Not now.', '', 3);
