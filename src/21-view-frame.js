@@ -222,7 +222,7 @@ function draw() {
 		inView = (e) => e.x > wv.x && e.x < wv2.x && e.y > wv.y && e.y < wv2.y;
 	const list = [];
 	for (const b of G.blds)
-		if (inView(b) && trapShown(b) && known0(b)) list.push([BLD[b.kind].crop ? b.y - 60 : b.y + halfOf(b) * 0.4, 1, b]);
+		if (inView(b) && trapShown(b) && knownB(b)) list.push([BLD[b.kind].crop ? b.y - 60 : b.y + halfOf(b) * 0.4, 1, b]);
 	const far = z < 0.55;
 	if (far) layer(forestLayer()); // zoomed out, the forest is one picture; close in, each tree
 	for (const f of G.finds) if (inView(f) && !(f.done && FINDS[f.kind].got)) list.push([f.y, 3, f]);

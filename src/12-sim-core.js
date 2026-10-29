@@ -417,7 +417,7 @@ function bldTick(b, dt) {
 				: nearestFoe(o, b, reach);
 			if (t) {
 				const sheltered = BLD[b.kind].shelter
-					? Math.min(BLD[b.kind].shelter, G.units.filter((u) => u.inside && u.hid === b.id).length)
+					? Math.min(shelterOf(o, b.kind), G.units.filter((u) => u.inside && u.hid === b.id).length)
 					: 0;
 				hurt(o, null, t, B.dmg + sheltered + (B.spyonly ? 0 : fxv(o, 'dmg', keys).a));
 				b.cd = B.cd;

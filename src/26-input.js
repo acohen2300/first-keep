@@ -290,7 +290,7 @@ function hitAt(sx, sy) {
 			x = SX(b.x),
 			gy = SY(b.y),
 			d = B.fp * NAVC * z * TILT;
-		if ((B.trap && !trapShown(b)) || !known0(b)) continue;
+		if ((B.trap && !trapShown(b)) || !knownB(b)) continue;
 		if (sx <= x - w / 2 - 4 || sx >= x + w / 2 + 4 || sy >= gy + d / 2 + 4) continue;
 		if (sy > gy - d / 2 - 4) {
 			if (gy > fy) {

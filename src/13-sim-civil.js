@@ -41,7 +41,7 @@ function vilTick(u, dt, SP) {
 					BLD[b.kind].shelter &&
 					b.prog >= 1 &&
 					b.hp > 0 &&
-					G.units.filter((v) => v.inside && v.hid === b.id).length < BLD[b.kind].shelter,
+					G.units.filter((v) => v.inside && v.hid === b.id).length < shelterOf(b.owner, b.kind),
 				220,
 			);
 			u.hid = tw && dist(u, tw) < dist(u, kk) ? tw.id : kk.id;

@@ -3,6 +3,12 @@
 // Local units = world units. Origin = the middle of the footprint on the ground. The ground is squashed by TILT; height is not.
 // The view is turned a little: the back of each building sits SIDE × its depth to the right, so we see its front and its shaded east wall.
 // Walls and gates stay square to the view: they join into lines, and a turned piece would give the line a sawtooth top.
+// the tower's three looks: width, height of wall, wall colour, and what each adds (a timber hoarding; a sloped foot and gun ports); one table, read by the drawing
+const TOWER_LOOK = [
+	{ w: 8, h: 44, wall: '#a29d90', flag: 7 },
+	{ w: 10, h: 52, wall: '#9a9486', flag: 9, hoard: true },
+	{ w: 12, h: 38, wall: '#8e8a80', flag: 10, batter: true, guns: true },
+];
 const STONE = '#a29d90',
 	PLASTER = '#e2d6bb',
 	PLANK = '#8a6644',
@@ -980,36 +986,108 @@ const ART = {
 			);
 		banner(9, -d / 2 - 5, c, 6);
 	},
-	tower(c) {
-		const d = 20 * TILT;
-		sides(-8, 8, d / 2, 44, 16 * TILT, STONE);
+	tower(c, o, tier) {
+		// three steps, one shape (Build 51): the watchtower; the great tower, taller, wider, with a hoarding of timber on its corbels; the gun tower, low and thick on a sloped foot, with gun ports
+		const T = TOWER_LOOK[tier || 0],
+			d = 20 * TILT,
+			w = T.w,
+			h = T.h,
+			f = d / 2;
+		if (T.batter) {
+			const b = w + 5,
+				dk = 16 * TILT,
+				k = dk * SIDE;
+			P_(
+				[
+					[b, f + 2],
+					[b + k, f + 2 - dk],
+					[w + k, f - 10 - dk],
+					[w, f - 10],
+				],
+				shade(STONE, 0.5),
+				INK,
+				0.5,
+			); // its shaded east face
+			P_(
+				[
+					[-b, f + 2],
+					[b, f + 2],
+					[w, f - 10],
+					[-w, f - 10],
+				],
+				LG(-b, 0, b, 0, [shade(STONE, 0.9), shade(STONE, 0.62)]),
+				INK,
+				0.6,
+			);
+			texture('stone', -b + 2, f - 10, b - 2, f + 2, STONE);
+		} // the gun tower's sloped foot: cannon shot glances off
+		sides(-w, w, f - (T.batter ? 10 : 0), h - (T.batter ? 10 : 0), 16 * TILT, T.wall);
 		P_(
 			[
-				[-8, d / 2],
-				[8, d / 2],
-				[8, d / 2 - 44],
-				[-8, d / 2 - 44],
+				[-w, f - (T.batter ? 10 : 0)],
+				[w, f - (T.batter ? 10 : 0)],
+				[w, f - h],
+				[-w, f - h],
 			],
-			LG(-8, 0, 8, 0, [shade(STONE, 0.95), shade(STONE, 0.7)]),
+			LG(-w, 0, w, 0, [shade(T.wall, 0.95), shade(T.wall, 0.7)]),
 			INK,
 			0.6,
 		);
-		texture('stone', -8, d / 2 - 44, 8, d / 2, STONE);
-		P_(
-			[
-				[-9, d / 2 - 44],
-				[9, d / 2 - 44],
-				[9, d / 2 - 47],
-				[-9, d / 2 - 47],
-			],
-			STONE,
-			INK,
-			0.4,
-		);
-		crenels(-9, 9, d / 2 - 47, STONE);
-		win(0, d / 2 - 30, 1.2, 4, '#14100c');
-		win(0, d / 2 - 16, 1.2, 4, '#14100c');
-		banner(6, d / 2 - 47, c, 7);
+		texture('stone', -w, f - h, w, f - (T.batter ? 10 : 0), T.wall);
+		if (T.hoard) {
+			P_(
+				[
+					[-w - 3, f - h],
+					[w + 3, f - h],
+					[w + 3, f - h - 7],
+					[-w - 3, f - h - 7],
+				],
+				LG(-w, 0, w, 0, [shade(PLANK, 1.05), shade(PLANK, 0.72)]),
+				INK,
+				0.5,
+			);
+			for (let x = -w; x <= w; x += 4) L_(x, f - h, x, f - h - 7, shade(PLANK, 0.6), 0.6);
+			P_(
+				[
+					[-w - 4, f - h - 7],
+					[w + 4, f - h - 7],
+					[0, f - h - 19],
+				],
+				LG(-w, 0, w, 0, [shade(SLATE, 1.1), shade(SLATE, 0.75)]),
+				INK,
+				0.6,
+			); // the timber hoarding round the top, under a slate cap
+		} else {
+			P_(
+				[
+					[-w - 1, f - h],
+					[w + 1, f - h],
+					[w + 1, f - h - 3],
+					[-w - 1, f - h - 3],
+				],
+				T.wall,
+				INK,
+				0.4,
+			);
+			crenels(-w - 1, w + 1, f - h - 3, T.wall);
+		}
+		if (T.guns)
+			for (const x of [-w * 0.5, w * 0.5]) {
+				P_(
+					[
+						[x - 2.6, f - h + 8],
+						[x + 2.6, f - h + 8],
+						[x + 2.6, f - h + 3],
+						[x - 2.6, f - h + 3],
+					],
+					'#14100c',
+					INK,
+					0.3,
+				);
+				L_(x, f - h + 5.5, x + 1.5, f - h + 7, '#2e2a26', 1.6);
+			} // gun ports
+		else for (let y = f - h + 14; y < f - 8; y += 14) win(0, y, 1.2, 4, '#14100c');
+		banner(w - 2, f - h - (T.hoard ? 19 : 3), c, T.flag);
 	},
 	wall(c) {
 		const d = 10 * TILT;
@@ -1661,7 +1739,7 @@ const BLDTOP = {
 	castle: 66,
 	town: 52,
 	keep: 62,
-	tower: 62,
+	tower: 84,
 	wonder: 72,
 	library: 56,
 	temple: 50,
@@ -1692,7 +1770,9 @@ function bldSprite(b, s) {
 								? season().name + (b.node ? b.node.type : '')
 								: b.kind === 'pasture'
 									? b.sheep || 0
-									: '';
+									: b.kind === 'tower'
+										? btierOf(o, 'tower')
+										: '';
 	const up = upTier(b.kind, G.P[o]),
 		key = b.kind + col + var_ + up + s;
 	let c = BSPR.get(key);

@@ -11,9 +11,9 @@ const EMG = { line: 110, row: 12, perRow: 12, behind: 60 };
 const shelterRank = () =>
 	G.blds
 		.filter((b) => b.owner === 0 && b.hp > 0 && b.prog >= 1 && BLD[b.kind].shelter)
-		.sort((a, b) => b.hp - a.hp || BLD[b.kind].shelter - BLD[a.kind].shelter);
+		.sort((a, b) => b.hp - a.hp || shelterOf(0, b.kind) - shelterOf(0, a.kind));
 const roomIn = (b) =>
-	BLD[b.kind].shelter -
+	shelterOf(b.owner, b.kind) -
 	G.units.filter((u) => (u.hid === b.id && u.inside) || (u.state === 'garrison' && u.gar === b.id)).length;
 // the way the danger lies from the Town Center: the attack coming, else the nearest threat, else across the map
 function threatDir(k) {

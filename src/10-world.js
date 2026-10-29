@@ -11,6 +11,7 @@ function blankGame(seed) {
 		rs: seed,
 		units: [],
 		blds: [],
+		seenB: {}, // the other sides' buildings you have seen (the fog's memory)
 		nodes: [],
 		finds: [],
 		tracers: [],

@@ -146,6 +146,7 @@ function saveGame(force) {
 			hz: G.hz || {},
 			ev: evSave(),
 			fog: btoa(String.fromCharCode(...G.fog)),
+			seenB: Object.keys(G.seenB).map(Number),
 			horde: G.horde,
 			flood: G.flood,
 			ground: G.ground,
@@ -308,6 +309,9 @@ function loadGame(S) {
 			for (let i = 0; i < s.length && i < G.fog.length; i++) G.fog[i] = s.charCodeAt(i);
 		} catch (e) {}
 	}
+	G.seenB = {};
+	if (S.seenB) for (const id of S.seenB) G.seenB[id] = 1;
+	else for (const b of G.blds) if (fogAt(b.x, b.y) > 0) G.seenB[b.id] = 1; // a save from before Build 51: what lay in explored ground counts as seen
 	G.hz = S.hz || {};
 	G.ev = S.ev || {};
 	G.horde = S.horde ?? null;

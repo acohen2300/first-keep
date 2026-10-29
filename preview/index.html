@@ -1098,7 +1098,6 @@ const BLD = {
 		fp: 5,
 		hp: 2400,
 		h: 34,
-		sight: 200,
 		dmg: 7,
 		rng: 130,
 		cd: 1.0,
@@ -1280,14 +1279,13 @@ const BLD = {
 		cap: [3, 4, 6, 8, 8],
 		invest: 6,
 		shelter: 5,
-		name: 'Tower',
+		name: 'Watchtower',
 		fp: 2,
 		hp: 500,
 		h: 44,
 		cost: { s: 100, w: 40 },
 		t: 25,
 		age: 0,
-		sight: 220,
 		dmg: 10,
 		rng: 140,
 		cd: 1.2,
@@ -1478,7 +1476,6 @@ const BLD = {
 		cost: { w: 400, s: 300, f: 200 },
 		t: 60,
 		age: 2,
-		sight: 180,
 		dmg: 6,
 		rng: 120,
 		cd: 1.2,
@@ -1498,7 +1495,6 @@ const BLD = {
 		cost: { s: 900, w: 300 },
 		t: 90,
 		age: 3,
-		sight: 240,
 		dmg: 12,
 		rng: 170,
 		cd: 1.0,
@@ -1547,7 +1543,6 @@ const BLD = {
 		t: 20,
 		age: 1,
 		atStop: true,
-		sight: 140,
 		dmg: 5,
 		rng: 120,
 		cd: 1.6,
@@ -1621,7 +1616,6 @@ const BLD = {
 		fp: 6,
 		hp: 3600,
 		h: 56,
-		sight: 260,
 		dmg: 8,
 		rng: 180,
 		cd: 1.5,
@@ -3238,6 +3232,62 @@ const TECH = [
 		fx: [{ s: 'dmg', k: 'tower', a: 5 }],
 		need: ['fortify'],
 		desc: 'Towers hit harder.',
+	},
+	// the tower's three steps (Build 51), researched at a tower, every tower raised at once: beacons, then the great tower, then the gun tower
+	{
+		id: 'beacons',
+		name: 'Beacons',
+		at: 'tower',
+		line: 'Towers',
+		age: 2,
+		w: 4,
+		when: 'about 200 BC',
+		cost: { w: 150, g: 80 },
+		t: 35,
+		fx: [{ s: 'sight', k: '#guard', a: 60 }],
+		desc: 'Towers and the Town Center see 60 farther.',
+	},
+	{
+		id: 'greattower',
+		name: 'Great towers',
+		at: 'tower',
+		line: 'Towers',
+		age: 3,
+		w: 6,
+		when: '1000s',
+		cost: { s: 300, g: 150 },
+		t: 50,
+		btier: { bld: 'tower', name: 'Great tower' },
+		fx: [
+			{ s: 'bhp', k: 'tower', m: 1.4 },
+			{ s: 'dmg', k: 'tower', a: 4 },
+			{ s: 'rng', k: 'tower', a: 20 },
+			{ s: 'sight', k: 'tower', a: 40 },
+			{ s: 'hold', k: 'tower', a: 2 },
+		],
+		need: ['beacons'],
+		desc: 'Every watchtower raised to a great tower: 40% tougher, +4 damage, +20 reach, +40 sight, 2 more inside.',
+	},
+	{
+		id: 'guntower',
+		name: 'Gun towers',
+		at: 'tower',
+		line: 'Towers',
+		age: 4,
+		w: 7,
+		when: '1400s',
+		cost: { s: 400, g: 200, i: 200 },
+		t: 70,
+		btier: { bld: 'tower', name: 'Gun tower' },
+		fx: [
+			{ s: 'bhp', k: 'tower', m: 1.4 },
+			{ s: 'dmg', k: 'tower', a: 10 },
+			{ s: 'rng', k: 'tower', a: 30 },
+			{ s: 'sight', k: 'tower', a: 20 },
+			{ s: 'hold', k: 'tower', a: 3 },
+		],
+		need: ['greattower'],
+		desc: 'Every great tower cut down and thickened for cannon: 40% tougher again, +10 damage, +30 reach, +20 sight, 3 more inside.',
 	},
 	{
 		id: 'guncast',
@@ -5037,6 +5087,7 @@ const T_HOLD = 0,
 	T_GUARD = 1,
 	T_PRESS = 2;
 const SHELTER = { flee: 70, clear: 150, raid: 3, hurt: 6 }; // villagers run into the nearest Town Center or tower when an enemy soldier comes within 70, when three or more beasts or robbers do, or when a lone beast or robber hits them (it scares only the one it hits); out when none within 150 of it; each adds an arrow up to the limit (the room is the same)
+const LOOKOUT = { base: 60, k: 24 }; // a building sees 60 + 24 × the square root of its height: the horizon from a height grows with its square root, so a 44 tower sees 220, a 16 house 156, a field 84 (Build 51: every building but six saw a flat 90, and no research reached them)
 const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, keep: 8 }; // a gatherer will not work within 110 of an enemy or a hunting beast, inside an enemy tower's reach plus 30, within 60 of a fire, or for 45 s within 80 of where one of its side was frightened more than 200 from home (the last 8 such places are kept)
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
@@ -5355,6 +5406,12 @@ const WHY = {
 	fortify:
 		'Thick stone curtains with towers that covered each other: Krak des Chevaliers held for a hundred and thirty years.',
 	machic: 'Openings in the floor of an overhang: stones and water dropped straight onto the men at the wall.',
+	beacons:
+		'Fires on hilltops and towers passed word faster than any rider: the Han beacon towers along the Great Wall (from about 200 BC); Aeschylus has a chain of them carry the fall of Troy to Argos.',
+	greattower:
+		'The great tower of stone, the donjon: the Normans raised them from the 1000s (the White Tower of London, about 1078), walls metres thick and the door a storey up. Game: every tower is raised at once.',
+	guntower:
+		'Cannon broke tall towers, so builders of the 1400s cut them down and thickened them: squat gun towers with walls metres thick and ports low for guns, the step before the angled bastion. Game: every tower is refitted at once.',
 	guncast:
 		'Bronze guns cast in one piece replaced the iron hoops of the bombard; the guns of Mehmet opened Constantinople in 1453.',
 	starfort:
@@ -6377,12 +6434,19 @@ const civKind = (o, kind) => {
 	return c && UNIT[c.uu].replaces === kind ? c.uu : kind;
 };
 const baseKind = (kind) => UNIT[kind].replaces || kind;
+// research that raises every building of a kind in place (btier in the research table): Watchtower, Great tower, Bastion. The step is how many a side has.
+const BTIER = {};
+for (const t of TECH) if (t.btier) (BTIER[t.btier.bld] = BTIER[t.btier.bld] || []).push(t);
+const btierOf = (o, kind) => (BTIER[kind] && G.P[o] ? BTIER[kind].filter((t) => G.P[o].techs.has(t.id)).length : 0);
+const shelterOf = (o, kind) => (BLD[kind].shelter || 0) + (o === WILD ? 0 : fxv(o, 'hold', bldKeys(kind)).a); // how many villagers a building takes in, after research
 const bldName = (o, kind) =>
 	kind === 'wonder' && civOf(o)
 		? civOf(o).wonder
-		: BLD[kind].name3 && G.P[o].age >= 3
-			? BLD[kind].name3
-			: BLD[kind].name;
+		: btierOf(o, kind)
+			? BTIER[kind][btierOf(o, kind) - 1].btier.name
+			: BLD[kind].name3 && G.P[o].age >= 3
+				? BLD[kind].name3
+				: BLD[kind].name;
 
 // ───────────────────────── Effects: research, civilisation and buildings, by table ─────────────────────────
 // Each side keeps a small cache of its active effects; it is rebuilt when research finishes or a building with effects stands or falls.
@@ -6501,8 +6565,9 @@ const rngOf = (u) => {
 	const r = stats(u.owner, u.kind).rng;
 	return r > 20 ? r * ((WEATHER[G.wx] && WEATHER[G.wx].rng) || 1) : r;
 };
+const lookout = (kind) => Math.round(LOOKOUT.base + LOOKOUT.k * Math.sqrt(BLD[kind].h || 0)); // how far a building sees, from its height
 const sightOf = (e) =>
-	(((UNIT[e.kind] || BLD[e.kind]).sight || 100) +
+	((UNIT[e.kind] ? UNIT[e.kind].sight || 100 : lookout(e.kind)) +
 		(e.owner !== undefined && e.owner !== WILD && e.owner !== null
 			? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]).a
 			: 0)) *
@@ -7308,6 +7373,7 @@ function blankGame(seed) {
 		rs: seed,
 		units: [],
 		blds: [],
+		seenB: {}, // the other sides' buildings you have seen (the fog's memory)
 		nodes: [],
 		finds: [],
 		tracers: [],
@@ -9555,7 +9621,7 @@ function bldTick(b, dt) {
 				: nearestFoe(o, b, reach);
 			if (t) {
 				const sheltered = BLD[b.kind].shelter
-					? Math.min(BLD[b.kind].shelter, G.units.filter((u) => u.inside && u.hid === b.id).length)
+					? Math.min(shelterOf(o, b.kind), G.units.filter((u) => u.inside && u.hid === b.id).length)
 					: 0;
 				hurt(o, null, t, B.dmg + sheltered + (B.spyonly ? 0 : fxv(o, 'dmg', keys).a));
 				b.cd = B.cd;
@@ -9799,7 +9865,7 @@ function vilTick(u, dt, SP) {
 					BLD[b.kind].shelter &&
 					b.prog >= 1 &&
 					b.hp > 0 &&
-					G.units.filter((v) => v.inside && v.hid === b.id).length < BLD[b.kind].shelter,
+					G.units.filter((v) => v.inside && v.hid === b.id).length < shelterOf(b.owner, b.kind),
 				220,
 			);
 			u.hid = tw && dist(u, tw) < dist(u, kk) ? tw.id : kk.id;
@@ -13925,6 +13991,12 @@ function sprite(look, col, tier, fr, s, kit = 0) {
 // Local units = world units. Origin = the middle of the footprint on the ground. The ground is squashed by TILT; height is not.
 // The view is turned a little: the back of each building sits SIDE × its depth to the right, so we see its front and its shaded east wall.
 // Walls and gates stay square to the view: they join into lines, and a turned piece would give the line a sawtooth top.
+// the tower's three looks: width, height of wall, wall colour, and what each adds (a timber hoarding; a sloped foot and gun ports); one table, read by the drawing
+const TOWER_LOOK = [
+	{ w: 8, h: 44, wall: '#a29d90', flag: 7 },
+	{ w: 10, h: 52, wall: '#9a9486', flag: 9, hoard: true },
+	{ w: 12, h: 38, wall: '#8e8a80', flag: 10, batter: true, guns: true },
+];
 const STONE = '#a29d90',
 	PLASTER = '#e2d6bb',
 	PLANK = '#8a6644',
@@ -14902,36 +14974,108 @@ const ART = {
 			);
 		banner(9, -d / 2 - 5, c, 6);
 	},
-	tower(c) {
-		const d = 20 * TILT;
-		sides(-8, 8, d / 2, 44, 16 * TILT, STONE);
+	tower(c, o, tier) {
+		// three steps, one shape (Build 51): the watchtower; the great tower, taller, wider, with a hoarding of timber on its corbels; the gun tower, low and thick on a sloped foot, with gun ports
+		const T = TOWER_LOOK[tier || 0],
+			d = 20 * TILT,
+			w = T.w,
+			h = T.h,
+			f = d / 2;
+		if (T.batter) {
+			const b = w + 5,
+				dk = 16 * TILT,
+				k = dk * SIDE;
+			P_(
+				[
+					[b, f + 2],
+					[b + k, f + 2 - dk],
+					[w + k, f - 10 - dk],
+					[w, f - 10],
+				],
+				shade(STONE, 0.5),
+				INK,
+				0.5,
+			); // its shaded east face
+			P_(
+				[
+					[-b, f + 2],
+					[b, f + 2],
+					[w, f - 10],
+					[-w, f - 10],
+				],
+				LG(-b, 0, b, 0, [shade(STONE, 0.9), shade(STONE, 0.62)]),
+				INK,
+				0.6,
+			);
+			texture('stone', -b + 2, f - 10, b - 2, f + 2, STONE);
+		} // the gun tower's sloped foot: cannon shot glances off
+		sides(-w, w, f - (T.batter ? 10 : 0), h - (T.batter ? 10 : 0), 16 * TILT, T.wall);
 		P_(
 			[
-				[-8, d / 2],
-				[8, d / 2],
-				[8, d / 2 - 44],
-				[-8, d / 2 - 44],
+				[-w, f - (T.batter ? 10 : 0)],
+				[w, f - (T.batter ? 10 : 0)],
+				[w, f - h],
+				[-w, f - h],
 			],
-			LG(-8, 0, 8, 0, [shade(STONE, 0.95), shade(STONE, 0.7)]),
+			LG(-w, 0, w, 0, [shade(T.wall, 0.95), shade(T.wall, 0.7)]),
 			INK,
 			0.6,
 		);
-		texture('stone', -8, d / 2 - 44, 8, d / 2, STONE);
-		P_(
-			[
-				[-9, d / 2 - 44],
-				[9, d / 2 - 44],
-				[9, d / 2 - 47],
-				[-9, d / 2 - 47],
-			],
-			STONE,
-			INK,
-			0.4,
-		);
-		crenels(-9, 9, d / 2 - 47, STONE);
-		win(0, d / 2 - 30, 1.2, 4, '#14100c');
-		win(0, d / 2 - 16, 1.2, 4, '#14100c');
-		banner(6, d / 2 - 47, c, 7);
+		texture('stone', -w, f - h, w, f - (T.batter ? 10 : 0), T.wall);
+		if (T.hoard) {
+			P_(
+				[
+					[-w - 3, f - h],
+					[w + 3, f - h],
+					[w + 3, f - h - 7],
+					[-w - 3, f - h - 7],
+				],
+				LG(-w, 0, w, 0, [shade(PLANK, 1.05), shade(PLANK, 0.72)]),
+				INK,
+				0.5,
+			);
+			for (let x = -w; x <= w; x += 4) L_(x, f - h, x, f - h - 7, shade(PLANK, 0.6), 0.6);
+			P_(
+				[
+					[-w - 4, f - h - 7],
+					[w + 4, f - h - 7],
+					[0, f - h - 19],
+				],
+				LG(-w, 0, w, 0, [shade(SLATE, 1.1), shade(SLATE, 0.75)]),
+				INK,
+				0.6,
+			); // the timber hoarding round the top, under a slate cap
+		} else {
+			P_(
+				[
+					[-w - 1, f - h],
+					[w + 1, f - h],
+					[w + 1, f - h - 3],
+					[-w - 1, f - h - 3],
+				],
+				T.wall,
+				INK,
+				0.4,
+			);
+			crenels(-w - 1, w + 1, f - h - 3, T.wall);
+		}
+		if (T.guns)
+			for (const x of [-w * 0.5, w * 0.5]) {
+				P_(
+					[
+						[x - 2.6, f - h + 8],
+						[x + 2.6, f - h + 8],
+						[x + 2.6, f - h + 3],
+						[x - 2.6, f - h + 3],
+					],
+					'#14100c',
+					INK,
+					0.3,
+				);
+				L_(x, f - h + 5.5, x + 1.5, f - h + 7, '#2e2a26', 1.6);
+			} // gun ports
+		else for (let y = f - h + 14; y < f - 8; y += 14) win(0, y, 1.2, 4, '#14100c');
+		banner(w - 2, f - h - (T.hoard ? 19 : 3), c, T.flag);
 	},
 	wall(c) {
 		const d = 10 * TILT;
@@ -15583,7 +15727,7 @@ const BLDTOP = {
 	castle: 66,
 	town: 52,
 	keep: 62,
-	tower: 62,
+	tower: 84,
 	wonder: 72,
 	library: 56,
 	temple: 50,
@@ -15614,7 +15758,9 @@ function bldSprite(b, s) {
 								? season().name + (b.node ? b.node.type : '')
 								: b.kind === 'pasture'
 									? b.sheep || 0
-									: '';
+									: b.kind === 'tower'
+										? btierOf(o, 'tower')
+										: '';
 	const up = upTier(b.kind, G.P[o]),
 		key = b.kind + col + var_ + up + s;
 	let c = BSPR.get(key);
@@ -16234,7 +16380,7 @@ function draw() {
 		inView = (e) => e.x > wv.x && e.x < wv2.x && e.y > wv.y && e.y < wv2.y;
 	const list = [];
 	for (const b of G.blds)
-		if (inView(b) && trapShown(b) && known0(b)) list.push([BLD[b.kind].crop ? b.y - 60 : b.y + halfOf(b) * 0.4, 1, b]);
+		if (inView(b) && trapShown(b) && knownB(b)) list.push([BLD[b.kind].crop ? b.y - 60 : b.y + halfOf(b) * 0.4, 1, b]);
 	const far = z < 0.55;
 	if (far) layer(forestLayer()); // zoomed out, the forest is one picture; close in, each tree
 	for (const f of G.finds) if (inView(f) && !(f.done && FINDS[f.kind].got)) list.push([f.y, 3, f]);
@@ -16353,7 +16499,8 @@ const hg = [];
 // Fog of war, yours alone (the computers play without it, as the doc says): what your people and towers see now is lit; what they saw stays, dim; the rest is dark.
 const fogAt = (x, y) => G.fog[clamp((y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((x / FOG) | 0, 0, FOGN - 1)];
 const seen0 = (e) => !SET.fog || friendly(0, e.owner) || fogAt(e.x, e.y) === 2; // in your sight now, or yours
-const known0 = (e) => !SET.fog || friendly(0, e.owner) || fogAt(e.x, e.y) > 0; // ever seen: a building you found stays on the map
+const known0 = (e) => !SET.fog || friendly(0, e.owner) || fogAt(e.x, e.y) > 0; // ever seen: a find you found stays on the map
+const knownB = (b) => !SET.fog || friendly(0, b.owner) || fogAt(b.x, b.y) === 2 || !!G.seenB[b.id]; // a building shows where you see it now, or where you once saw it (Build 51: one put up in ground you had only explored showed without anyone seeing it)
 const visibleTo0 = (u) => (u.kind !== 'spy' || friendly(0, u.owner) || u.exposed) && seen0(u);
 let fogCv = null,
 	fogImg = null,
@@ -16374,7 +16521,8 @@ function fogTick() {
 			for (let gx = x0; gx <= x1; gx++) if (hyp(gx + 0.5 - cx, gy + 0.5 - cy) <= c) F[gy * FOGN + gx] = 2;
 	};
 	for (const u of G.units) if (u.hp > 0 && friendly(0, u.owner) && !u.inside) light(u.x, u.y, sightOf(u));
-	for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && friendly(0, b.owner)) light(b.x, b.y, BLD[b.kind].sight || 90);
+	for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && friendly(0, b.owner)) light(b.x, b.y, sightOf(b)); // from its height, after research, by day or night (Build 51: a flat 90 for most)
+	for (const b of G.blds) if (b.hp > 0 && !friendly(0, b.owner) && fogAt(b.x, b.y) === 2) G.seenB[b.id] = 1; // what your people and towers have seen, remembered
 	fogT = G.tick;
 }
 function fogLayer() {
@@ -17510,7 +17658,7 @@ function drawMini() {
 		}
 	for (const b of G.blds) {
 		// Town Centers are stars, castles diamonds, the rest small squares
-		if (!known0(b)) continue;
+		if (!knownB(b)) continue;
 		m.fillStyle = G.P[b.owner].color;
 		const x = b.x * k,
 			y = b.y * k;
@@ -18348,7 +18496,7 @@ function hitAt(sx, sy) {
 			x = SX(b.x),
 			gy = SY(b.y),
 			d = B.fp * NAVC * z * TILT;
-		if ((B.trap && !trapShown(b)) || !known0(b)) continue;
+		if ((B.trap && !trapShown(b)) || !knownB(b)) continue;
 		if (sx <= x - w / 2 - 4 || sx >= x + w / 2 + 4 || sy >= gy + d / 2 + 4) continue;
 		if (sy > gy - d / 2 - 4) {
 			if (gy > fy) {
@@ -22629,6 +22777,7 @@ function saveGame(force) {
 			hz: G.hz || {},
 			ev: evSave(),
 			fog: btoa(String.fromCharCode(...G.fog)),
+			seenB: Object.keys(G.seenB).map(Number),
 			horde: G.horde,
 			flood: G.flood,
 			ground: G.ground,
@@ -22791,6 +22940,9 @@ function loadGame(S) {
 			for (let i = 0; i < s.length && i < G.fog.length; i++) G.fog[i] = s.charCodeAt(i);
 		} catch (e) {}
 	}
+	G.seenB = {};
+	if (S.seenB) for (const id of S.seenB) G.seenB[id] = 1;
+	else for (const b of G.blds) if (fogAt(b.x, b.y) > 0) G.seenB[b.id] = 1; // a save from before Build 51: what lay in explored ground counts as seen
 	G.hz = S.hz || {};
 	G.ev = S.ev || {};
 	G.horde = S.horde ?? null;
@@ -25686,9 +25838,9 @@ const EMG = { line: 110, row: 12, perRow: 12, behind: 60 };
 const shelterRank = () =>
 	G.blds
 		.filter((b) => b.owner === 0 && b.hp > 0 && b.prog >= 1 && BLD[b.kind].shelter)
-		.sort((a, b) => b.hp - a.hp || BLD[b.kind].shelter - BLD[a.kind].shelter);
+		.sort((a, b) => b.hp - a.hp || shelterOf(0, b.kind) - shelterOf(0, a.kind));
 const roomIn = (b) =>
-	BLD[b.kind].shelter -
+	shelterOf(b.owner, b.kind) -
 	G.units.filter((u) => (u.hid === b.id && u.inside) || (u.state === 'garrison' && u.gar === b.id)).length;
 // the way the danger lies from the Town Center: the attack coming, else the nearest threat, else across the map
 function threatDir(k) {
@@ -26070,6 +26222,9 @@ window.__fk = {
 	collide,
 	newGame,
 	fairness,
+	sightOf,
+	shelterOf,
+	bldName,
 	FAIR,
 	scoreAll,
 	hurt,

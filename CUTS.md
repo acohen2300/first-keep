@@ -594,3 +594,16 @@ GUIDE.md regenerated from the game (it was Build 32 and about half the size). HA
 - **Not done:** hills (later, as agreed).
 
 - **Play fingerprint accepted:** Build 50: a river with two fords in every corner
+
+## Build 51 preview (not live): sight, the fog's memory, the tower's three steps
+- **Changed: a building sees from its height** (`lookout` in `08-core`, numbers in `LOOKOUT`): 60 + 24 × the square root of its height, as the horizon from a height grows with its square root. A watchtower (44) sees 219, the Town Center (34) 200, a house 156, a field 84, a Wonder 246. **Cut:** the six hand-set sights (Town Center 200, tower 220, town 180, castle 240, trade post 140, Throne 260); every building now follows the one rule (castle 212, Throne 240, town 191, trade post 167).
+- **Fixed: research and night now reach buildings.** The fog lit every building with its flat number; it now uses the same sight as units (`sightOf`: research, night and the moon, eclipse and fog, weather). So the Lighthouse (docks +60) and Optics (everyone +20, the telescope of 1608) work on buildings for the first time; before, the Lighthouse did nothing. A building sees less at night, like a person.
+- **Added: the fog remembers** (`G.seenB`, `knownB` in `22-view-fog`): another side's building shows where you see it now, or where you once saw it. A building put up in ground you had only explored no longer shows itself without anyone seeing it. Saved; an older save counts what lay in explored ground as seen.
+- **Added: the tower's three steps**, researched at a tower, every tower raised at once (the way unit ranks work; `btier` in the research table, `BTIER` and `btierOf` in `08-core`):
+  - **Beacons** (Classical, about 200 BC): towers and the Town Center see 60 farther.
+  - **Great towers** (Medieval, 1000s): every Watchtower becomes a Great tower: 40% tougher, +4 damage, +20 reach, +40 sight, 2 more villagers inside. Taller and wider, a timber hoarding round the top under a slate cap.
+  - **Gun towers** (Gunpowder, 1400s): every Great tower is cut down and thickened for cannon: 40% tougher again, +10 damage, +30 reach, +20 sight, 3 more inside. Low and thick on a sloped foot, with gun ports.
+  - Measured on one tower with nothing else researched: health 500, 700, 980; sight 219, 279, 319, 339; room 5, 7, 10. The tower's old research at the Smith (Arrow slits, Curtain walls, Machicolations and the four "#guard" steps) still adds on top.
+  - **Renamed:** the base tower is the Watchtower. **Said before, changed now (honest):** I called the third step a bastion; the castle already has a research called Bastions (1530s), and a bastion is an angled wall, not a tower, so the tower's step is the Gun tower, the squat artillery tower that came first (1400s). Also: I told Albert only two research steps touched the tower; seven did (Arrow slits and four steps that hit every tower and the Town Center).
+- **Changed: how many a building shelters** has one home (`shelterOf`): the building's number plus research ("hold"); used by villagers looking for room, the arrows a full tower adds, and the emergency's shelter ranking.
+- **History:** notes for Beacons (Han beacon towers; Aeschylus's chain of fires), Great towers (the Norman donjon, the White Tower about 1078) and Gun towers, each with its "Game:" line where it compresses history.

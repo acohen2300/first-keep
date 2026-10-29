@@ -298,12 +298,19 @@ const civKind = (o, kind) => {
 	return c && UNIT[c.uu].replaces === kind ? c.uu : kind;
 };
 const baseKind = (kind) => UNIT[kind].replaces || kind;
+// research that raises every building of a kind in place (btier in the research table): Watchtower, Great tower, Bastion. The step is how many a side has.
+const BTIER = {};
+for (const t of TECH) if (t.btier) (BTIER[t.btier.bld] = BTIER[t.btier.bld] || []).push(t);
+const btierOf = (o, kind) => (BTIER[kind] && G.P[o] ? BTIER[kind].filter((t) => G.P[o].techs.has(t.id)).length : 0);
+const shelterOf = (o, kind) => (BLD[kind].shelter || 0) + (o === WILD ? 0 : fxv(o, 'hold', bldKeys(kind)).a); // how many villagers a building takes in, after research
 const bldName = (o, kind) =>
 	kind === 'wonder' && civOf(o)
 		? civOf(o).wonder
-		: BLD[kind].name3 && G.P[o].age >= 3
-			? BLD[kind].name3
-			: BLD[kind].name;
+		: btierOf(o, kind)
+			? BTIER[kind][btierOf(o, kind) - 1].btier.name
+			: BLD[kind].name3 && G.P[o].age >= 3
+				? BLD[kind].name3
+				: BLD[kind].name;
 
 // ───────────────────────── Effects: research, civilisation and buildings, by table ─────────────────────────
 // Each side keeps a small cache of its active effects; it is rebuilt when research finishes or a building with effects stands or falls.
@@ -422,8 +429,9 @@ const rngOf = (u) => {
 	const r = stats(u.owner, u.kind).rng;
 	return r > 20 ? r * ((WEATHER[G.wx] && WEATHER[G.wx].rng) || 1) : r;
 };
+const lookout = (kind) => Math.round(LOOKOUT.base + LOOKOUT.k * Math.sqrt(BLD[kind].h || 0)); // how far a building sees, from its height
 const sightOf = (e) =>
-	(((UNIT[e.kind] || BLD[e.kind]).sight || 100) +
+	((UNIT[e.kind] ? UNIT[e.kind].sight || 100 : lookout(e.kind)) +
 		(e.owner !== undefined && e.owner !== WILD && e.owner !== null
 			? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]).a
 			: 0)) *

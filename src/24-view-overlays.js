@@ -239,7 +239,7 @@ function drawMini() {
 		}
 	for (const b of G.blds) {
 		// Town Centers are stars, castles diamonds, the rest small squares
-		if (!known0(b)) continue;
+		if (!knownB(b)) continue;
 		m.fillStyle = G.P[b.owner].color;
 		const x = b.x * k,
 			y = b.y * k;

@@ -171,6 +171,12 @@ const WHY = {
 	fortify:
 		'Thick stone curtains with towers that covered each other: Krak des Chevaliers held for a hundred and thirty years.',
 	machic: 'Openings in the floor of an overhang: stones and water dropped straight onto the men at the wall.',
+	beacons:
+		'Fires on hilltops and towers passed word faster than any rider: the Han beacon towers along the Great Wall (from about 200 BC); Aeschylus has a chain of them carry the fall of Troy to Argos.',
+	greattower:
+		'The great tower of stone, the donjon: the Normans raised them from the 1000s (the White Tower of London, about 1078), walls metres thick and the door a storey up. Game: every tower is raised at once.',
+	guntower:
+		'Cannon broke tall towers, so builders of the 1400s cut them down and thickened them: squat gun towers with walls metres thick and ports low for guns, the step before the angled bastion. Game: every tower is refitted at once.',
 	guncast:
 		'Bronze guns cast in one piece replaced the iron hoops of the bombard; the guns of Mehmet opened Constantinople in 1453.',
 	starfort:

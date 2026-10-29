@@ -68,7 +68,8 @@ const hg = [];
 // Fog of war, yours alone (the computers play without it, as the doc says): what your people and towers see now is lit; what they saw stays, dim; the rest is dark.
 const fogAt = (x, y) => G.fog[clamp((y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((x / FOG) | 0, 0, FOGN - 1)];
 const seen0 = (e) => !SET.fog || friendly(0, e.owner) || fogAt(e.x, e.y) === 2; // in your sight now, or yours
-const known0 = (e) => !SET.fog || friendly(0, e.owner) || fogAt(e.x, e.y) > 0; // ever seen: a building you found stays on the map
+const known0 = (e) => !SET.fog || friendly(0, e.owner) || fogAt(e.x, e.y) > 0; // ever seen: a find you found stays on the map
+const knownB = (b) => !SET.fog || friendly(0, b.owner) || fogAt(b.x, b.y) === 2 || !!G.seenB[b.id]; // a building shows where you see it now, or where you once saw it (Build 51: one put up in ground you had only explored showed without anyone seeing it)
 const visibleTo0 = (u) => (u.kind !== 'spy' || friendly(0, u.owner) || u.exposed) && seen0(u);
 let fogCv = null,
 	fogImg = null,
@@ -89,7 +90,8 @@ function fogTick() {
 			for (let gx = x0; gx <= x1; gx++) if (hyp(gx + 0.5 - cx, gy + 0.5 - cy) <= c) F[gy * FOGN + gx] = 2;
 	};
 	for (const u of G.units) if (u.hp > 0 && friendly(0, u.owner) && !u.inside) light(u.x, u.y, sightOf(u));
-	for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && friendly(0, b.owner)) light(b.x, b.y, BLD[b.kind].sight || 90);
+	for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && friendly(0, b.owner)) light(b.x, b.y, sightOf(b)); // from its height, after research, by day or night (Build 51: a flat 90 for most)
+	for (const b of G.blds) if (b.hp > 0 && !friendly(0, b.owner) && fogAt(b.x, b.y) === 2) G.seenB[b.id] = 1; // what your people and towers have seen, remembered
 	fogT = G.tick;
 }
 function fogLayer() {
