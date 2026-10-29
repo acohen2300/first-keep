@@ -170,6 +170,16 @@ function drawGhost() {
 			ctx.fillStyle = ok ? 'rgba(120,220,120,.55)' : 'rgba(222,90,68,.65)';
 			ctx.fillRect(SX(c.gx * NAVC), SY(c.gy * NAVC), NAVC * z, NAVC * z * TILT);
 		}
+		pl.pts.forEach((c, i) => {
+			const q = wallXY(c); // the corners: round handles, the first ringed green
+			ctx.fillStyle = '#fff';
+			ctx.strokeStyle = i ? '#222' : '#7ee07e';
+			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.arc(q.x, q.y, 9, 0, Math.PI * 2);
+			ctx.fill();
+			ctx.stroke();
+		});
 		const last = cells[cells.length - 1];
 		pl.why = bad === cells.length ? 'blocked' : null;
 		tag(

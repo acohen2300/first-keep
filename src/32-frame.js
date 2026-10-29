@@ -508,14 +508,15 @@ function ui(force) {
 		const B = BLD[G.place.kind],
 			t = !G.place.at
 				? G.place.kind === 'wall'
-					? 'Press and drag a line of wall'
+					? 'Tap where the wall starts'
 					: `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`
 				: G.place.why
 					? G.place.why
 					: G.place.kind === 'wall'
-						? `${(G.place.cells || [1]).length} pieces: tap Build, or drag again`
+						? `${G.place.cells.length} pieces: tap a corner to add, drag a corner or the wall, or Build`
 						: `${B.name}: tap Build, or drag it to move · drag empty ground to look`;
 		txt('placeT', t);
+		$('placeUndo').hidden = G.place.kind !== 'wall' || !G.place.pts.length;
 		$('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why);
 	}
 	tick();

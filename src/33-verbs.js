@@ -45,6 +45,14 @@ const ACT = {
 	placeok() {
 		commitPlace();
 	},
+	wundo() {
+		const pl = G.place;
+		if (pl && pl.pts) {
+			pl.pts.pop();
+			wallSet(pl);
+			ui(true);
+		}
+	},
 	help() {
 		openCard({ type: 'help' });
 	},

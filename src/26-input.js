@@ -27,15 +27,50 @@ function edgeScroll(dt) {
 	ghostAt(EDGE, drag.touch);
 }
 const LIFT = 64; // on a phone the building waits this far above your finger, so you can see it
+// A wall is a list of corners: tap to add one, drag a corner to move it, drag the wall to slide all of it. `pl.cells` is every square of it.
+const wallSnap = (prev, c) => {
+	if (!prev) return c;
+	const dx = c.gx - prev.gx,
+		dy = c.gy - prev.gy;
+	if (Math.abs(dy) * 3 < Math.abs(dx)) return { gx: c.gx, gy: prev.gy }; // nearly flat or upright: make it so
+	if (Math.abs(dx) * 3 < Math.abs(dy)) return { gx: prev.gx, gy: c.gy };
+	return c;
+};
+function wallSet(pl) {
+	const P = pl.pts;
+	pl.cells = P.length > 1 ? P.slice(1).flatMap((c, i) => wallLine(P[i], c).slice(i ? 1 : 0)) : P.slice();
+	pl.at = P.length ? { x: P[P.length - 1].gx * NAVC + 5, y: P[P.length - 1].gy * NAVC + 5 } : null;
+}
+const wallXY = (c) => ({ x: SX(c.gx * NAVC + 5), y: SY(c.gy * NAVC + 5) });
+function wallHit(pl, p) {
+	const R = 24,
+		P = pl.pts.map(wallXY);
+	const i = P.findIndex((q) => hyp(q.x - p.x, q.y - p.y) < R);
+	if (i >= 0) return { mode: 'wpt', i };
+	for (let j = 1; j < P.length; j++) {
+		const a = P[j - 1],
+			b = P[j],
+			l2 = (b.x - a.x) ** 2 + (b.y - a.y) ** 2 || 1,
+			t = clamp(((p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y)) / l2, 0, 1);
+		if (hyp(p.x - (a.x + t * (b.x - a.x)), p.y - (a.y + t * (b.y - a.y))) < R) return { mode: 'wall' };
+	}
+	return null;
+}
 function ghostAt(p, touch) {
 	const pl = G.place,
-		w = toWorld(p.x, p.y - (touch && pl.kind !== 'wall' ? LIFT : 0)); // a wall goes exactly where the finger lands; its count shows above
-	if (pl.kind === 'wall') {
-		const c = toCell(w);
-		if (!pl.a) pl.a = c;
-		pl.cells = wallLine(pl.a, c);
-		pl.at = { x: c.gx * NAVC + 5, y: c.gy * NAVC + 5 };
-	} else pl.at = snapGhost(0, pl.kind, w.x, w.y, Math.max(14, 26 / cam.z));
+		w = toWorld(p.x, p.y - (touch ? LIFT : 0));
+	pl.at = snapGhost(0, pl.kind, w.x, w.y, Math.max(14, 26 / cam.z));
+}
+function wallDrag(d, p) {
+	const pl = G.place,
+		c = toCell(toWorld(p.x, p.y));
+	if (d.mode === 'wpt') pl.pts[d.i] = wallSnap(pl.pts[d.i - 1] || pl.pts[d.i + 1], c);
+	else {
+		const dx = c.gx - d.c0.gx,
+			dy = c.gy - d.c0.gy;
+		pl.pts = d.pts0.map((q) => ({ gx: clamp(q.gx + dx, 0, NC - 1), gy: clamp(q.gy + dy, 0, NC - 1) }));
+	}
+	wallSet(pl);
 }
 cv.addEventListener('pointerdown', (e) => {
 	hideStrip();
@@ -51,6 +86,13 @@ cv.addEventListener('pointerdown', (e) => {
 		pinch = { d: hyp(a.x - b.x, a.y - b.y) || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
 		return;
 	}
+	if (G.place && G.place.kind === 'wall') {
+		const h = wallHit(G.place, p);
+		drag = h
+			? { ...h, p0: p, c0: toCell(toWorld(p.x, p.y)), pts0: G.place.pts.map((q) => ({ ...q })), touch: true }
+			: { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, touch: true }; // on a corner or the wall: move it; elsewhere: look around, and a tap adds a corner
+		return;
+	}
 	if (G.place) {
 		const touch = e.pointerType !== 'mouse',
 			at = G.place.at,
@@ -61,9 +103,6 @@ cv.addEventListener('pointerdown', (e) => {
 				Math.min(hyp(p.x - gx, p.y - gy), hyp(p.x - gx, p.y - (touch ? LIFT : 0) - gy)) <
 					Math.max(70, BLD[G.place.kind].fp * NAVC * cam.z * 0.7);
 		if (nearGhost) {
-			if (G.place.kind === 'wall') {
-				G.place.a = null;
-			}
 			ghostAt(p, touch);
 			drag = { mode: 'place', touch };
 			EDGE = p;
@@ -126,6 +165,10 @@ cv.addEventListener('pointermove', (e) => {
 		drag.y1 = p.y;
 		return;
 	}
+	if (drag && (drag.mode === 'wpt' || drag.mode === 'wall')) {
+		wallDrag(drag, p);
+		return;
+	}
 	if (G.place && drag && drag.mode === 'place') {
 		ghostAt(p, drag.touch);
 		EDGE = p;
@@ -175,15 +218,18 @@ cv.addEventListener('pointerup', (e) => {
 		ui(true);
 		return;
 	} // held on open ground but never dragged: it was a tap
-	if (d.mode === 'place') {
+	if (d.mode === 'place' || d.mode === 'wpt' || d.mode === 'wall') {
 		ui(true);
 		return;
 	} // it waits: drag again to adjust, or tap Build
 	if (d.moved) return;
 	const p = lp(e);
 	if (G.place) {
-		if (G.place.kind === 'wall') G.place.a = null;
-		ghostAt(p, d.touch);
+		const pl = G.place;
+		if (pl.kind === 'wall') {
+			pl.pts.push(wallSnap(pl.pts[pl.pts.length - 1], toCell(toWorld(p.x, p.y)))); // a tap: the next corner, exactly where the finger is
+			wallSet(pl);
+		} else ghostAt(p, d.touch);
 		ui(true);
 		return;
 	}
@@ -494,7 +540,7 @@ function startPlace(kind) {
 	}
 	closeCard();
 	setPick([]);
-	G.place = { kind, at: null, a: null, cells: null };
+	G.place = { kind, at: null, pts: [], cells: null };
 	// start the ghost in the middle of the screen, snapped beside something of yours if it can be
 	const w = G.buildAt && G.buildAt.x !== undefined ? G.buildAt : toWorld(cw / 2, ch / 2);
 	G.buildAt = null;

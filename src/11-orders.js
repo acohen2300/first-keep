@@ -922,7 +922,7 @@ function commitPlace() {
 			4,
 		);
 		pl.cells = null;
-		pl.a = null;
+		pl.pts = [];
 		pl.at = null;
 		ui(true);
 		return;

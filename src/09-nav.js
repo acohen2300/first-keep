@@ -646,8 +646,6 @@ function findSpot(o, kind, cx, cy, rMin, rMax) {
 function wallLine(a, b) {
 	let dx = b.gx - a.gx,
 		dy = b.gy - a.gy;
-	if (Math.abs(dy) * 3 < Math.abs(dx)) dy = 0;
-	else if (Math.abs(dx) * 3 < Math.abs(dy)) dx = 0;
 	const n = Math.max(Math.abs(dx), Math.abs(dy)),
 		cells = [{ gx: a.gx, gy: a.gy }];
 	let px = a.gx,
