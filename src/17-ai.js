@@ -74,25 +74,40 @@ function think(p) {
 		farms = has('farm');
 	if (
 		(bushes < 3 || jobsN('food') > bushes + 4) &&
-		farms < Math.min(12, Math.ceil((jobsN('food') + 1) / 3)) &&
+		farms < Math.ceil(jobsN('food') / slotsOf()) &&
 		R.w >= 60
 	)
-		put('farm', k.x, k.y, 60, 170); // fields take three each
+		put('farm', k.x, k.y, 60, 170); // a field for every food worker: a field holds slotsOf() (one) worker. Until Build 59 this counted three a field, so two in three food workers walked to far bushes
 	const trees = G.nodes.filter((n) => n.kind === 'tree' && dist(n, k) < 300).length;
 	if (trees < 6 && has('treefarm') < Math.min(4, Math.max(1, jobsN('wood') - 2)) && R.w >= 80)
 		put('treefarm', k.x, k.y, 60, 170);
 	if (farms >= 3 && !has('mill')) put('mill', k.x, k.y, 90, 170);
 	// the ages: once the town is big enough, save for the next one
-	const ageReady =
-		(p.age < per.ageTo || (G.enlight && p.age === 4)) && !p.aging && vils.length >= Math.min(per.vils, 12 + p.age * 4) && armyN >= per.ageArmy;
+	// the ages: once the town is big enough, save for the next one. Every personality climbs every age it can reach (Build 59: Raiders stopped at
+	// Classical and the Fortress at Medieval by a number in PERS, so neither could reach the peace age; a personality is how a side plays, not where it stops)
+	const ageReady = !!nextAge(o) && !p.aging && vils.length >= Math.min(per.vils, 12 + p.age * 4) && armyN >= per.ageArmy;
 	if (ageReady) ageUp(o);
-	// saving for the age stops other spending, but never for long: after 90 s of saving without getting there it spends again for a minute
-	if (ageReady && !p.aging) {
-		if (p.ai.saveT === undefined) p.ai.saveT = G.t;
-	} else p.ai.saveT = undefined;
+	// saving holds while it works: other spending waits as long as the store is still filling toward the age; only when it has not grown for
+	// SAVE.stall seconds (a resource out of reach) does the side spend freely for SAVE.spend seconds. Until Build 59 the window opened every 150 s
+	// whatever happened, and a minute of spending emptied what 90 s had saved, so a side could "save" for twenty minutes and never arrive.
+	const A = ageReady && !p.aging ? nextAge(o) : null,
+		have = A ? Object.entries(A.cost).reduce((s, [r, c]) => s + Math.min(R[r] || 0, c), 0) / sumCost(A.cost) : 0;
+	if (!A) p.ai.save = null;
+	else {
+		const S = p.ai.save || (p.ai.save = { best: have, at: G.t, until: 0 });
+		if (have > S.best + SAVE.step) {
+			S.best = have;
+			S.at = G.t;
+		}
+		if (G.t >= S.until && G.t - S.at > SAVE.stall) {
+			S.until = G.t + SAVE.spend;
+			S.at = S.until;
+			S.best = 0;
+		}
+	}
 	const threat = G.threats.some((v) => atWar(o, v.owner) && v.owner !== WILD && dist(v, k) < 400);
-	const saving = ageReady && !p.aging && !threat && !(p.ai.saveT !== undefined && (G.t - p.ai.saveT) % 150 > 90),
-		need = saving && nextAge(o) ? nextAge(o).cost : {};
+	const saving = !!A && !threat && !(p.ai.save && G.t < p.ai.save.until),
+		need = saving ? A.cost : {};
 	const foodShort = saving && (need.f || 0) > R.f;
 	if (foodShort && ready(o, 'market').length) {
 		// saving for an age and short of food: sell a surplus for gold, then buy food with the gold above the age cost (Build 42)

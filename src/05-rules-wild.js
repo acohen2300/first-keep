@@ -107,7 +107,6 @@ const PERS = {
 		crown: 'war', // the crown this personality chases (39-games)
 		vils: 16,
 		mix: { food: 0.5, wood: 0.35, gold: 0.15, stone: 0, iron: 0.08 },
-		ageTo: 2,
 		extraBarracks: 1,
 		armyCap: 34,
 		waveMin: 5,
@@ -154,7 +153,6 @@ const PERS = {
 		crown: 'wealth',
 		vils: 26,
 		mix: { food: 0.4, wood: 0.3, gold: 0.2, stone: 0.1, iron: 0.1 },
-		ageTo: 4,
 		extraBarracks: 0,
 		armyCap: 34,
 		waveMin: 10,
@@ -230,7 +228,6 @@ const PERS = {
 		crown: 'wellbeing',
 		vils: 28,
 		mix: { food: 0.4, wood: 0.3, gold: 0.15, stone: 0.15, iron: 0.08 },
-		ageTo: 3,
 		extraBarracks: 0,
 		armyCap: 30,
 		waveMin: 12,

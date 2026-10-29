@@ -173,6 +173,7 @@ const STARVE = { stop: 60, leave: 120, every: 30 },
 	HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 },
 	HORDE = { min: 1200, mean: 1800, warn: SEASON_LEN * 2, n: 16, perAge: 6 }; // the horde comes after min seconds, at an exponential wait about mean (nextIn)
 // Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 37-events.
+const SAVE = { step: 0.02, stall: 90, spend: 45 }; // a computer saving for an age: progress counts in steps of 2%; 90 s without one and it spends for 45 s (17-ai)
 const EV_MEAN = 120, // the mean wait between events (an exponential wait, nextIn); EV_MIN keeps two from stacking
 	EV_MIN = 30,
 	EV_WARN = 12;
