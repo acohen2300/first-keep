@@ -1,4 +1,4 @@
-# First Keep: handoff (Build 46, preview only)
+# First Keep: handoff (Build 52 on the preview; live is older)
 
 ## What it is
 Albert's single-file HTML mobile RTS (Age of Empires style). Albert is not a coder.
@@ -25,7 +25,7 @@ Source in `src/`, 40 files joined in name order by `build.py` into `first-keep.h
 - Touch and cards: `26-input` `27-cards-core` `28-army-strip` (`armyStatus`, the Army list) `29-card-pages` `30-cards` (the `CARDS` table) `31-guide` `32-frame` (ticker, `alertNow`, `advise`, pick bar) `33-verbs` (the buttons)
 - The rest: `34-save` `35-sound` `36-economy` `37-events` `38-natives` `39-huddle` `40-emergency` `41-boot` (`window.__fk`, the test hook).
 - `shell-head.html` CSS and the static markup.
-- Tools: `tests/fmt.py` (Prettier, tabs, width 120) · `tests/lint.py` (ESLint) · `tests/bot.py [seed] [minutes]` (plays the first minutes from the ticker alone; a test tool) · `tests/soak.py`.
+- Tools: `tests/balance.py [--seeds 20] [--minutes 45] [--html file] [--out file]` (Build 48: the computers play all four seats headless; wins by civilisation and seat, minutes to each age, kills per 100 resources by unit, villager-seconds stuck; about 4 minutes a game here) · `tests/econ.py [--live]` · `tests/fmt.py` (Prettier, tabs, width 120) · `tests/lint.py` (ESLint) · `tests/bot.py [seed] [minutes]` (plays the first minutes from the ticker alone; a test tool) · `tests/soak.py`.
 - Check: `python3 build.py && python3 wrap.py && python3 tests/gate.py` (from the repo root; add `--soak` for `tests/soak.py`: three seeds, 20 game minutes, Hard, every hazard on, fails on any error, NaN or negative stock; about 3 minutes; run it before a big release, the fingerprint only plays five minutes). **Publish only with `python3 publish.py "Build NN: what changed"`**: it builds, runs the whole gate, and only then copies to `index.html` and `preview/`, commits and pushes. It installs a pre-push hook that refuses any push whose `index.html` the gate has not passed (`tests/gate-passed.sha`), so a push by hand is refused. Commit trailers go in the `TRAILER` environment variable.
 - **The play fingerprint** (`tests/baseline.json`): the gate plays a fixed scripted game on seed 7 and compares every side's counts at each minute. The game cannot play differently by accident. A deliberate rule or balance change is accepted with `python3 tests/gate.py --accept "why"`, which rewrites the baseline and logs the reason in CUTS.md. This is First Keep's equivalent of SoRen's locked physics block.
 - Notes: `CUTS.md` (every cut, per build; Build 37 lists the rebuild), `GUIDE.md` (player guide, regenerated from the game at Build 42; regenerate with `F.guideMd()` after rule changes, it is written from the tables), `APP-PREP.md`.
@@ -37,7 +37,7 @@ Source in `src/`, 40 files joined in name order by `build.py` into `first-keep.h
 One pill of 8 cells on top (five counts, mute, pause, speed), the strip (age · season · clock, idle, score), six columns at the bottom (People, then a tile and − | + per job), Build as a corner button that swaps the row for Home, War, Walls, Trade, Culture, close. Map button top right, Home bottom left when away: all three are `.fab`. Tokens `--row:44px --strip:28px --t2:14px --r:8px --hair --sheet`. `fit()` sets `--ob` from the real height of `#orders`.
 
 ## Key technical notes
-- Fixed timestep (DT 1/30), global `G`, nav grid, cached sprites, turned view (`SIDE`, `TILT`). Player keep at (300,1700); local frame mirrors per corner.
+- Fixed timestep (DT 1/30), global `G`, nav grid, cached sprites, turned view (`SIDE`, `TILT`). Player keep at (300,1700); each corner is laid out on its own in a local frame (keep at 0,0, the middle at 700,700) since Build 49, then measured by `fairness()`.
 - Grids: units in squares of 48 (`UG`), buildings and nodes in squares of 100 (`SG`, rebuilt when a list changes). Spent nodes leave the list the same step (holding them stalls cutters beside them; the list is only copied when one is spent); the walking grid bumps `NAV.v` (throwing paths away) only when a square really changed.
 - Draw: per-item try/catch to `fault(e)`, which now also puts the canvas back; sprite builders report through `fault` too.
 - Toasts: `say(text, cls, secs, at, act)`; `SET.msgs`, `SET.tips`, `advise()` ('!' = urgent). Pace: `speed()`, `paceBtn()`, `setPause()`.
