@@ -500,7 +500,8 @@ function researchHTML() {
 		const s = techState(t);
 		if (s !== 'done') by[s].push(t);
 	}
-	const grid = (L) => acts(L.map((t) => techBtn(t, true)).join('')),
+	const grid = (L) =>
+		acts(L.map((t) => `<div class="trow">${techBtn(t, true)}<button class="goto" data-act="techgo:${t.id}" aria-label="Go to the ${BLD[t.at].name}">›</button></div>`).join('')), // › takes you to the building (Albert: a purist goes there; the row itself stays the shortcut)
 		ageR = ageA && !p.aging && afford(p, ageA.cost) && keepOf(0);
 	let h = title('Research', `${by.ready.length + (ageR ? 1 : 0)} ready now`);
 	if (ageR) h += sec('Next age') + acts(keepAgeBtn());

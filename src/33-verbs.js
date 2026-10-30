@@ -335,6 +335,15 @@ const ACT = {
 		G.follow = !G.follow;
 		ui(true);
 	}, // the camera follows what is picked, until you drag, pinch or tap the small map
+	techgo(id) {
+		const t = TECHBY[id],
+			k = keepOf(0),
+			B = t && G.blds.filter((b) => b.owner === 0 && b.kind === t.at && b.prog >= 1 && b.hp > 0).sort((a, b) => (k ? dist(a, k) - dist(b, k) : 0))[0];
+		if (!B) return say(`Build a ${BLD[t.at].name} first.`, '', 3);
+		closeCard();
+		camGo(B.x, B.y);
+		openCard({ type: 'bld', id: B.id });
+	}, // the research card's ›: to the building where it is learned, its card open
 	jump(a) {
 		const [x, y] = a.split(',').map(Number);
 		camGo(x, y);
@@ -450,6 +459,25 @@ const PLAY = {
 		u.post = null;
 		closeCard();
 	}, // the worker card: back to the work it had
+	sqnew() {
+		sqNew();
+	},
+	waim() {
+		const H = G.hud;
+		H.aim = true;
+		H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
+		H.moved = false;
+		H.etaKey = '';
+		feel('tick');
+	}, // the crosshair to the middle of the screen
+	torders() {
+		const H = G.hud;
+		H.aim = true;
+		H.mode = 'rally';
+		if (G.rally0) H.h = { t: 'ground', e: { x: G.rally0.x, y: G.rally0.y } };
+		say('Tap where new soldiers should go, then ✓.', '', 4);
+		feel('tick');
+	},
 	sqcycle() {
 		sqCycle();
 	},

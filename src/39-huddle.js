@@ -20,10 +20,11 @@ const HUD = {
 	gap: 8, // reinforcements arriving within this many seconds of each other are one wave
 	waves: 3,
 };
-const PAGES = ['jobs', 'build', 'war', 'squad', 'train']; // Build 64: the order fixed for everyone (Jobs, Build, then the three military pages side by side)
-const pageName = { jobs: 'Jobs', war: 'War', build: 'Build', squad: 'Squad', train: 'Train' };
+const PAGES = ['jobs', 'realm', 'build', 'war', 'squad', 'train']; // Build 64: fixed for everyone. Jobs is home; the Realm is the dashboard; then Build and the three military pages side by side
+const pageName = { jobs: 'Jobs', realm: 'Realm', war: 'War', build: 'Build', squad: 'Squad', train: 'Train' };
 const pageIcon = () => ({
 	jobs: ICON.list,
+	realm: ICON.def,
 	war: ICON.sword,
 	build: ICON.hammer,
 	squad: ICON.squad,
@@ -101,6 +102,14 @@ const sqUnit = (tile) => {
 		u = G.hud.sq.unit[tile];
 	return K.includes(u) ? u : K[0];
 };
+function sqNew() {
+	const j = BN.findIndex((_, i) => !Object.values(G.bnPlan[i]).some(Boolean) && !sqUnits(i).length);
+	if (j < 0) return say('All squads made: pick one to change.', '', 3);
+	G.hud.sq.i = j;
+	G.hud.sq.tile = null;
+	say(`${BN[j]}: set what it holds with − and +.`, '', 3);
+	feel('tick');
+}
 function sqCycle() {
 	const Q = G.hud.sq;
 	if (Q.tile !== null) {
@@ -371,7 +380,10 @@ function warPageHTML() {
 		sel = H.sel,
 		cmd = hasCmd(),
 		canGo = !!H.h && sqFree(cmd ? sel : null).length > 0;
-	let h = SPLIT(stB('whome', ICON.home, 'war', ' aria-label="Everyone home"'), pageDoor()); // a tap on the map aims; the door under Home
+	let h = SPLIT(
+		stB('waim', ICON.aim, 'war', ' aria-label="Aim: the crosshair to the middle of the screen"'),
+		stB('whome', ICON.home, 'war', ' aria-label="Everyone home"'),
+	); // Albert's notebook (Oct 30): the War page is aim and home, four squads with − and +, Go over Abort
 	BN.forEach((nm, i) => {
 		const S = cmd ? sqUnits(i) : [],
 			n = S.length,
@@ -447,7 +459,7 @@ function buildItems() {
 function buildPageHTML() {
 	const V = unitsOf(0, 'vil').length,
 		room = Math.max(0, capOf(0) - popOf(0));
-	let h = SPLIT(cellB('train:vil', topOf(ICON.people), `${V}/${V + room}`, trainWhy(0, 'vil') ? 'dis' : '', ' aria-label="Train a villager"'), pageDoor());
+	let h = WHOLE('train:vil', topOf(ICON.people), `${V}/${V + room}`, trainWhy(0, 'vil') ? 'dis' : '', ' aria-label="Train a villager"'); // People, whole: the door lives on Jobs
 	for (const it of buildItems())
 		h += WHOLE(it.act, `<span class="top thumb">${bldThumb(it.k)}</span>`, it.word, `build st-${it.st || 'white'}`, ` aria-label="${BLD[it.k].name}${it.why ? ': ' + it.why : ''}"`);
 	h += WHOLE('buildrow', topOf(ICON.hammer), 'All', 'build', ' id="buildT" aria-label="The Build card"');
@@ -505,7 +517,10 @@ function squadPageHTML() {
 	const Q = G.hud.sq,
 		i = Q.i,
 		cmd = hasCmd();
-	let h = SPLIT(stB('sqcycle', `${ICON.cycle}<b class="plus">${BN[i][0]}</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="The next squad: an empty one is a new squad"'), pageDoor());
+	let h = SPLIT(
+		stB('sqnew', `${ICON.squad}<b class="plus">＋</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="A new squad"'),
+		stB('sqcycle', `${ICON.cycle}<b class="plus">${BN[i][0]}</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="Cycle the squads"'),
+	); // the notebook: 1A create, 1B cycle; 2 to 5 the buildings; 6 done over best
 	CLS.forEach((c, t) => {
 		const k = sqUnit(t),
 			built = cmd && k && ready(0, c[2]).length,
@@ -532,9 +547,9 @@ function trainPageHTML() {
 	const H = G.hud,
 		rs = G.recruitSq;
 	let h = SPLIT(
+		stB('torders', ICON.aim, 'train' + (H.aim ? ' sel' : ''), ' aria-label="Orders: where new soldiers go"'),
 		stB('tsq', `${ICON.squad}<b class="plus">${rs === undefined || rs === null ? '·' : BN[rs][0]}</b>`, 'train' + (hasCmd() ? '' : ' dis'), ' aria-label="Which squad new soldiers join"'),
-		pageDoor(),
-	); // the page opens aiming: a tap on the map is where new soldiers go, ✓ sets it
+	); // the notebook: "Army training: train reinforcements without going home… must contain an Orders button"
 	CLS.forEach((c, t) => {
 		const k = sqUnit(t),
 			at = k ? readyAt(0, UNIT[k]) : [],
@@ -580,20 +595,12 @@ function huddleUI() {
 	chip.className = 'fab chip ' + page;
 	chip.setAttribute('aria-label', `${pageName[page]}: the next page`);
 	if (page !== 'jobs') {
-		const h =
-			page === 'war'
-				? warPageHTML()
-				: page === 'build'
-					? buildPageHTML()
-					: page === 'squad'
-						? squadPageHTML()
-						: trainPageHTML();
+		const h = { war: warPageHTML, build: buildPageHTML, squad: squadPageHTML, train: trainPageHTML, realm: realmPageHTML }[page]();
 		if (el.sigH !== h) {
 			el.sigH = h;
 			el.innerHTML = h;
 		}
 	}
-	$('emgB').classList.toggle('on', !!G.emg);
 	if (flip) fit(); // the bar is whole again: the corner buttons sit on top of it
 }
 // the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; its colour says what is under it; green once fired
@@ -857,20 +864,29 @@ function domains() {
 		top = list.find((d) => d.st === 'red') || list.find((d) => d.st === 'blue') || null;
 	return { list, top, n: list.filter((d) => d.st === 'red' || d.st === 'blue').length };
 }
+// The Realm page: the mail, then the five domains, each a whole tile in the colour code; a tap goes where it is fixed. The realm's own
+// tile opens the emergency actions (the bell, shelter, battle stations): the button that sat on the map's right went into it.
+function realmPageHTML() {
+	const D = domains(),
+		un = G.mailN || 0;
+	let h = WHOLE('mail', topOf(ICON.mail), un ? `${un} new` : 'Mail', 'realm' + (un ? ' st-blue' : ''), ' aria-label="The mail"');
+	for (const d of D.list)
+		h += WHOLE(d.id === 'realm' ? 'card:emergency' : d.go, topOf(domainIcon()[d.id]), d.word, `realm st-${d.st}`, ` aria-label="${d.name}: ${d.word}${d.why ? ', ' + d.why : ''}"`);
+	return h;
+}
 // where a destination is: a page of the row, or a card
 const atGo = (go) =>
 	go.startsWith('page:') ? (G.hud.page || 'jobs') === go.slice(5) : go.startsWith('card:') ? !!G.card && go.slice(5).startsWith(G.card.type) : false;
 function doorTap() {
 	const T = domains().top;
-	if (T && !atGo(T.go) && !(G.card && G.card.type === 'dash')) {
+	if (T && !atGo(T.go)) {
 		closeCard();
 		act(T.go);
-	} else openCard({ type: 'dash' });
+	} else hudPage('realm'); // all is well, or already there: the Realm page
 	feel('tick');
 }
 const doorHTML = (id = 'doorB') =>
 	`<button class="cell st door"${id ? ` id="${id}"` : ''} data-act="door" aria-label="The door: the most important thing now"><span class="top"></span>${wd('')}</button>`;
-const pageDoor = () => doorHTML(''); // the same door on every page (one id, on the Jobs row)
 let DOOR = { sig: '', key: '' };
 function doorUI() {
 	if (!G || G.over) return;

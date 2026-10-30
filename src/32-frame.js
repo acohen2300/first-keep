@@ -161,6 +161,7 @@ ICON.book = ICON.book.replace('class="gl"', 'width="18" height="18"');
 const cell = (attrs, icon, word, cls = '') => `<button class="cell ${cls}" ${attrs}>${icon}${word}</button>`;
 const wd = (t, id) => `<span class="wd"${id ? ` id="${id}"` : ''}>${t}</span>`;
 // The top: the tally (five counts, mute, pause, the map), then the status pill under it, cell for cell. The bottom: People over the door, then one column per job.
+const AGE_SHORT = ['Stone', 'Bronze', 'Classical', 'Medieval', 'Powder', 'Peace']; // the age in the strip: its name where it fits the 45 pt cell (measured: Medieval 42), short for the two that do not (Gunpowder 55, Enlightenment 70)
 const STATUS = [
 	['stAge', '', 'The age'],
 	['stSea', '', 'The season and the sky'],
@@ -202,7 +203,6 @@ function buildPanel() {
 			? `<button class="cell" id="${id}" data-act="${act}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></button>`
 			: `<span class="cell" id="${id}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></span>`;
 	$('status').innerHTML = STATUS.map(([id, act, label]) => sc(id, act, label)).join('');
-	$('emgB').innerHTML = ICON.def;
 	$('homeB').innerHTML = ICON.home;
 	$('pX').innerHTML = ICON.close;
 }
@@ -538,8 +538,7 @@ function showByAge() {
 		if (on) n++;
 	});
 	$('jobs').style.setProperty('--n', n);
-	$('hudB').hidden = !soldiersOf(0).length && !hasCmd() && !(G.msn || []).some(Boolean); // the page chip: once there is an army to send or squads to make
-	$('emgB').hidden = p.age < 1 && !(G.warnT > 0);
+	$('hudB').hidden = false; // the page chip is the constant (Albert's notebook): there from the first second
 }
 function ui(force) {
 	const now = performance.now();
@@ -601,13 +600,13 @@ function ui(force) {
 				el.children[1].textContent = word;
 			};
 		const S = [
-			['', AGES[p.age].name, ''],
+			['', AGE_SHORT[p.age] || AGES[p.age].name, ''],
 			[sky, '', ''],
 			['', clk, ''],
 			[ICON.head, `${popOf(0)}/${capOf(0)}`, popOf(0) >= capOf(0) && capOf(0) < POPMAX ? 'lit-r' : ''],
 			['', `z ${idleN}`, idleN ? 'lit-r' : 'dim'],
 			[ICON.book, String(ready), ready ? 'lit-b' : 'dim'],
-			['', `★${fmt(p.score.total)} ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, ''],
+			['', `★ ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, ''], // the rank; the score itself is on the score card
 			[ICON.mil, String(sol), sol ? '' : 'dim'],
 		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
 		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2], i));

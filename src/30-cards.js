@@ -649,17 +649,6 @@ const CARDS = {
 		);
 	},
 	research: () => researchHTML(),
-	// the dashboard (Build 64): the five domains and the mail, one row on top of the row, each in the colour code with its word
-	dash() {
-		const D = domains(),
-			un = G.mailN || 0,
-			tile = (act, st, icon, word, name) =>
-				`<button class="dt ${st}" data-act="${act}"><span class="i">${icon}</span><b>${word}</b><small>${name}</small></button>`;
-		return (
-			title('The realm', D.top ? `${D.top.name}: ${D.top.word}${D.top.why ? ' · ' + D.top.why : ''}` : 'all is well') +
-			`<div class="dash">${D.list.map((d) => tile(d.go, d.st, domainIcon()[d.id], d.word, d.name)).join('')}${tile('mail', un ? 'blue' : 'white', ICON.mail, un ? `${un} new` : `${(G.mail || []).length} kept`, 'Mail')}</div>`
-		);
-	},
 	// the mail (Build 64): every line kept, newest first, by group; a group can hide its previews here or from the preview's ×
 	mail() {
 		const M = G.mail || [],
@@ -820,7 +809,7 @@ const CARDS = {
 const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'end', 'research', 'menu']); // the cards that take the whole height
 // three sizes, one mold each (Albert, Build 63): lg the whole height (the Build card, the Guide, Help, Setup); md a thing's card; sm a short one
 const SIZE_OF = (t) =>
-	FULL.has(t) ? 'lg' : t === 'squad' || t === 'stores' || t === 'emergency' || t === 'army' || t === 'dash' ? 'sm' : 'md';
+	FULL.has(t) ? 'lg' : t === 'squad' || t === 'stores' || t === 'emergency' || t === 'army' ? 'sm' : 'md';
 function renderCard() {
 	const c = G.card;
 	if (!c || !CARDS[c.type]) return;
