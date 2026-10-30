@@ -1,9 +1,10 @@
-// ═════ 39-huddle.js: the three-page row: Jobs, the Squad room, the War room (Build 61, Albert's layout) ═════
-// One row, one mold, three pages; the chip at its left end cycles them. Jobs is the row as it was. The Squad room makes squads (the four
-// battalions): Squad ＋, Cycle, the squad tile, then a tile for each army building, its unit chosen with Cycle and its count set with − / +.
-// The War room sends them: Stance and Home on the left, the four squads in the middle (+ sends one to the crosshair, − calls it back),
-// Go and Abort on the right. A tap on the map while the War room is open moves the crosshair. Ready, aim, fire, abort: the Huddle's sequence
-// lives on here (Build 42's four drafted missions, with the draft by kind and the spare-soldier drag, are gone: a squad is the draft).
+// ═════ 39-huddle.js: the one row and its pages (Build 63, Albert's "unicorn layout") ═════
+// One row, six slots, three shapes, five pages. A slot is a fixed place the thumb learns; what fills it is one of three shapes: WHOLE (one
+// button the height of the slot), SPLIT (two buttons touching, top and bottom: people over build, create over cycle, ✓ over ✕) or PM (an icon
+// and a count above, − and + below with air between: the jobs). The chip at the row's left end is the one constant: it cycles the pages
+// Jobs → War → Build → Squad → Train, and every page is always there (dimmed until the game opens it), so the order never changes under
+// the hand. The sixth slot is ✓ over ✕ on every page that confirms. The same row is a card's action bar (the worker card), so there is one
+// element to learn. The Huddle's sequence (ready, aim, fire, abort) lives on in the War page's missions.
 const CLS = [
 	['foot', 'Foot', 'barracks', 'foot'],
 	['arch', 'Archers', 'range', 'archers'],
@@ -19,9 +20,10 @@ const HUD = {
 	gap: 8, // reinforcements arriving within this many seconds of each other are one wave
 	waves: 3,
 };
-const PAGES = ['jobs', 'squad', 'war'];
-const pagesOpen = () => (hasCmd() ? PAGES : ['jobs', 'war']); // the Squad room needs Battalions
-const pageName = { jobs: 'Jobs', squad: 'Squad room', war: 'War room' };
+const PAGES = ['jobs', 'war', 'build', 'squad', 'train'];
+const pageName = { jobs: 'Jobs', war: 'War', build: 'Build', squad: 'Squad', train: 'Train' };
+const pageIcon = () => ({ jobs: ICON.list, war: ICON.sword, build: ICON.hammer, squad: ICON.squad, train: ICON.shield });
+const FAV0 = ['house', 'farm', 'barracks', 'tower', 'wall']; // the Build page's five hot keys until you pin your own (★ on the Build card)
 const shortName = (k) => stats(0, k).name.replace(/^[A-Z][a-z]+ (?=[A-Z])/, '').split(' ')[0].replace(/m[ae]n$/, '').slice(0, 7); // one short word on a tile: Spear, Archer, Chariot
 const clsOf = (u) => CLS.findIndex((c) => c[2] === UNIT[u.kind].at);
 const mUnits = (m) => G.units.filter((u) => u.owner === 0 && u.ord === m.ord && u.hp > 0);
@@ -47,15 +49,23 @@ function chance(S, foes) {
 const dpsOf = (L) => L.reduce((s, v) => s + dmgOf(v) / (UNIT[v.kind].cd || 1.5), 0);
 const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const wxWord = () => (G.wx !== 'clear' && WEATHER[G.wx] ? WEATHER[G.wx].name : season().name);
+// a squad's pace in a word, from its slowest member (an elephant makes it slow, horse alone fast): what the card and the tile say (Albert, Build 63)
+function paceWord(S) {
+	if (!S.length) return '';
+	const v = Math.min(...S.map((u) => paceOf(u, 1)));
+	return v < 14 ? 'slow' : v < 22 ? 'medium' : 'fast';
+}
 
 // ── the pages
 function hudPage(page) {
 	const H = G.hud;
 	H.page = page;
-	H.on = page === 'war';
+	H.on = page === 'war' || page === 'train';
 	if (H.on) {
 		H.aim = true;
+		H.mode = page === 'train' ? 'rally' : 'war';
 		H.aimT = performance.now();
+		if (page === 'train' && G.rally0) H.h = { t: 'ground', e: { x: G.rally0.x, y: G.rally0.y } };
 		if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
 		H.etaKey = '';
 	} else H.aim = false;
@@ -66,12 +76,11 @@ function hudOpen(on) {
 	hudPage(on ? 'war' : 'jobs');
 }
 function pageCycle() {
-	const P = pagesOpen(),
-		i = P.indexOf(G.hud.page || 'jobs');
-	hudPage(P[(i + 1) % P.length]);
+	const i = PAGES.indexOf(G.hud.page || 'jobs');
+	hudPage(PAGES[(i + 1) % PAGES.length]);
 	feel('tick');
 }
-// ── the Squad room
+// ── the Squad page
 const sqKinds = (tile) =>
 	ARMYK.filter((k) => !UNIT[k].civ && UNIT[k].cost && k !== 'spy')
 		.map((k) => civKind(0, k))
@@ -107,7 +116,28 @@ function sqPlan(i, k, d) {
 	if (!P[k]) delete P[k];
 	rebattalion();
 }
-// ── aiming: the crosshair, moved by a tap on the map while the War room is open
+// ★ Best: a helper, not a cheat (Albert, Build 63). It fills the squad's plan from the soldiers at home by the same odds the War page shows:
+// against the foes seen near the crosshair it takes the kinds the matchup favours first; with no foe in sight it takes the strongest first,
+// two foot to one shooter. It never picks for you: the plan is yours to change with − and +.
+function sqBest(i) {
+	const H = G.hud,
+		home = free().filter((u) => u.bn === undefined || u.bn === i || !sqUnits(u.bn).length),
+		foes = H.h ? foesNear(H.h.e) : [],
+		score = (u) => unitPower(u) * (foes.length ? matchup([u], foes) : 1) * (foes.length || clsOf(u) === 0 ? 1 : 0.6);
+	if (!home.length) return say('Nobody at home to put in it.', '', 3);
+	const P = {};
+	let n = 0;
+	for (const u of home.sort((a, b) => score(b) - score(a))) {
+		if (n >= BNSIZE) break;
+		P[u.kind] = (P[u.kind] || 0) + 1;
+		n++;
+	}
+	G.bnPlan[i] = P;
+	rebattalion();
+	say(`${BN[i]}: ${n} picked${foes.length ? ' for the foe in sight' : ''}.`, 'good', 3);
+	feel('thock');
+}
+// ── aiming: the crosshair, moved by a tap on the map while the War or Train page is open
 function aimSpot(sx, sy) {
 	const H = G.hud;
 	let h = hitAt(sx, sy);
@@ -124,16 +154,34 @@ const aimNear = (sx, sy) => {
 function aimAt(sx, sy) {
 	const H = G.hud;
 	aimSpot(sx, sy);
-	ripple(H.h.e.x, H.h.e.y, '#ffb23d');
+	ripple(H.h.e.x, H.h.e.y, aimColor());
 	feel('tick');
 }
+// the crosshair's colour says what is under it (Albert, Build 63): green yours, blue an ally, white nothing (nature), red an enemy or a hazard
+function aimColor() {
+	const H = G.hud,
+		h = H.h;
+	if (!h) return '#ffffff';
+	if (h.t === 'unit' || h.t === 'bld') {
+		const o = h.e.owner;
+		if (o === 0) return '#4fe0a0';
+		if (o === WILD || atWar(0, o)) return '#ff5a4a';
+		if (relOf(0, o) === 'ally') return '#6fb1ff';
+		return '#ffffff';
+	}
+	const near = nearU(h.e, 60, (v) => v.owner !== 0 && v.hp > 0 && hostile(v) && visibleTo0(v));
+	if (near || hazardAt(h.e.x, h.e.y)) return '#ff5a4a';
+	return '#ffffff';
+}
+const hazardAt = (x, y) =>
+	(G.sand && hyp(x - G.sand.x, y - G.sand.y) < G.sand.r) || G.blds.some((b) => b.fire > 0 && dist(b, { x, y }) < 60) || (G.cracks || []).some((c) => hyp(x - c.x, y - c.y) < 40);
 // who a squad sends: its idle members; with no squads yet, every idle soldier
 const sqFree = (i) => (i === null || i === undefined ? free() : free().filter((u) => u.bn === i));
-function hudEta() {
+function hudEta(i = G.hud.sel) {
 	const H = G.hud,
-		S = sqFree(H.sel);
+		S = sqFree(i);
 	if (!H.h || !S.length) return 0;
-	const key = `${H.h.e.x | 0},${H.h.e.y | 0},${S.length},${G.wx},${(G.t / 3) | 0}`;
+	const key = `${i}:${H.h.e.x | 0},${H.h.e.y | 0},${S.length},${G.wx},${(G.t / 3) | 0}`;
 	if (H.etaKey !== key) {
 		H.etaKey = key;
 		H.eta = etaOf(S, H.h.e, routeK(centreOf(S), H.h.e));
@@ -162,6 +210,7 @@ function hudFire(i) {
 		n0: S.length,
 		kinds,
 		what: H.h.t === 'unit' || (H.h.t === 'bld' && H.h.e.owner !== 0) ? 'Attack' : 'Go to',
+		intent: i !== null && i !== undefined ? G.bnIntent[i] || 0 : 0,
 		label: O.label,
 		x: O.x,
 		y: O.y,
@@ -191,6 +240,14 @@ function hudHome() {
 	hudAbortAll();
 	sendHome(sendable());
 	say('Everyone home.', '', 3);
+}
+// Orders (the Train page): where new soldiers go when they are made, and which squad they join; ✓ on the crosshair sets it
+function setRally() {
+	const H = G.hud;
+	if (!H.h) return;
+	G.rally0 = { x: Math.round(H.h.e.x), y: Math.round(H.h.e.y) };
+	say('New soldiers will go there.', 'good', 3);
+	feel('thock');
 }
 
 // ── each second: where a mission is, how it goes, what to say
@@ -286,7 +343,7 @@ function hudReinforce(slot) {
 	say(`${plan.go.length} reinforce ${m.name}.`, 'good', 3);
 }
 
-// ── the row's pages
+// ── the row: six slots, three shapes
 const odds2 = (p) => `hsl(${Math.round(Math.max(0, Math.min(1, p)) * 120)} 75% 58%)`;
 function mStatus(m) {
 	if (m.st === 'go') return [mmss(m.eta || 0), '#7db4ff'];
@@ -296,41 +353,131 @@ function mStatus(m) {
 }
 const stB = (act, t, cls = '', extra = '') => `<button class="cell st ${cls}" data-act="${act}"${extra}>${t}</button>`;
 const cellB = (act, top, word, cls = '', extra = '') => `<button class="cell ${cls}" data-act="${act}"${extra}>${top}${wd(word)}</button>`;
-function squadRoomHTML() {
-	const Q = G.hud.sq,
-		i = Q.i,
-		p = G.P[0],
-		members = sqUnits(i).length;
-	let h = `<div class="col">${cellB('sqnew', `<span class="top">${ICON.squad}<b class="plus">＋</b></span>`, 'Squad', 'sq')}${stB('sqcycle', ICON.cycle, 'sq', ' aria-label="Cycle"')}</div>`;
-	h += `<div class="col">${cellB(`sqcard:${i}`, `<span class="top">${ICON.squad}<span class="c">${members}</span></span>`, BN[i], 'sq sel')}<div class="pm">${stB('sqprev', '‹', 'sq')}${stB('sqnext', '›', 'sq')}</div></div>`;
-	CLS.forEach((c, t) => {
-		const k = sqUnit(t),
-			built = k && ready(0, c[2]).length,
-			have = k ? sqUnits(i).filter((u) => u.kind === k).length : 0,
-			want = k ? G.bnPlan[i][k] || 0 : 0,
-			icon = ICON.cls[c[0]];
-		h += `<div class="col">${cellB(`sqtile:${t}`, `<span class="top">${icon}<span class="c">${k ? `${have}/${want}` : '–'}</span></span>`, k ? shortName(k) : BLD[c[2]].name, (Q.tile === t ? 'sel' : '') + (built ? '' : ' dis'))}<div class="pm">${stB(`sqn:${t},-`, '−', built ? '' : 'dis')}${stB(`sqn:${t},+`, '+', built ? '' : 'dis')}</div></div>`;
-	});
-	return h;
-}
-function warRoomHTML() {
+const topOf = (icon, n) => `<span class="top">${icon}${n === undefined || n === null ? '' : `<span class="c">${n}</span>`}</span>`;
+// the three shapes. whole: one button the slot's height. split: two touching. pm: a tile over − and +.
+const WHOLE = (act, top, word, cls = '', extra = '') => `<div class="col whole">${cellB(act, top, word, cls + ' tall', extra)}</div>`;
+const SPLIT = (a, b) => `<div class="col join">${a}${b}</div>`;
+const PM = (tile, minus, plus) => `<div class="col">${tile}<div class="pm">${minus}${plus}</div></div>`;
+function warPageHTML() {
 	const H = G.hud,
 		sel = H.sel,
 		cmd = hasCmd(),
-		tm = sel !== null && sel !== undefined ? dialOf('temper', sel) : dialOf('temper', 'all'),
 		canGo = !!H.h && sqFree(cmd ? sel : null).length > 0;
-	let h = `<div class="col">${cellB('wstance', `<span class="top">${ICON.shield}</span>`, tm < 0 ? 'Mixed' : TEMPER[tm].name, 'war')}${stB('whome', ICON.home, 'war', ' aria-label="Everyone home"')}</div>`;
+	let h = SPLIT(stB('waim', ICON.aim, 'war', ' aria-label="Aim: the crosshair to the middle of the screen"'), stB('whome', ICON.home, 'war', ' aria-label="Everyone home"'));
 	BN.forEach((nm, i) => {
-		const n = cmd ? sqUnits(i).length : 0,
+		const S = cmd ? sqUnits(i) : [],
+			n = S.length,
 			m = sqOut(i) ? G.msn[i] : null,
 			[t, color] = m ? mStatus(m) : ['', ''],
-			fl = m && m.flash ? ' ' + m.flash : '';
-		if (!cmd)
-			h += `<div class="col">${cellB(`wsq:${i}`, `<span class="top">${ICON.squad}</span>`, 'Needs Battalions', 'dis')}<div class="pm">${stB(`wback:${i}`, '−', 'dis')}${stB(`wgo:${i}`, '+', 'dis')}</div></div>`;
-		else
-			h += `<div class="col">${cellB(`wsq:${i}`, `<span class="top">${ICON.squad}<span class="c">${n}</span></span>`, m ? `<span style="color:${color}">${t}</span>` : nm, `msn${fl}${sel === i ? ' sel' : ''}`, ` style="--mc:${color || 'transparent'}"`)}<div class="pm">${stB(`wback:${i}`, '−', m ? '' : 'dis', ' aria-label="Call back"')}${stB(`wgo:${i}`, '+', n ? '' : 'dis', ' aria-label="Send"')}</div></div>`;
+			fl = m && m.flash ? ' ' + m.flash : '',
+			eta = !m && sel === i && n ? hudEta(i) : 0,
+			word = !cmd ? 'Command' : m ? `<span style="color:${color}">${t}</span>` : eta ? `${nm[0]} · ${mmss(eta)}` : n ? `${nm[0]} · ${paceWord(S)}` : nm;
+		h += PM(
+			cellB(`wsq:${i}`, topOf(ICON.squad, cmd ? n : null), word, `msn${fl}${sel === i ? ' sel' : ''}${cmd ? '' : ' dis'}`, ` style="--mc:${color || 'transparent'}"`),
+			stB(`wback:${i}`, '−', m ? '' : 'dis', ' aria-label="Call back"'),
+			stB(`wgo:${i}`, '+', n ? '' : 'dis', ' aria-label="Send"'),
+		);
 	});
-	h += `<div class="col">${cellB('wfire', `<span class="top">${ICON.go}</span>`, 'Go', canGo ? 'go' : 'dis')}${stB('wabort', 'Abort', 'war')}</div>`;
+	h += SPLIT(stB('wfire', ICON.ok, canGo ? 'go' : 'dis', ' aria-label="Go"'), stB('wabort', ICON.close, 'no', ' aria-label="Abort"'));
+	return h;
+}
+const favKinds = () => (SET.fav && SET.fav.length ? SET.fav : FAV0).slice(0, 5);
+function buildPageHTML() {
+	let h = '';
+	for (const k of favKinds()) {
+		const B = BLD[k],
+			why = B ? capWhy(0, k) || (!afford(G.P[0], B.cost) ? 'short' : '') : 'gone',
+			img = B ? bldThumb(k) : '';
+		h += WHOLE(`build:${k}`, `<span class="top thumb">${img}</span>`, B ? B.name : '—', 'build' + (why ? ' dis' : ''), ` aria-label="${B ? B.name : ''}"`);
+	}
+	h += WHOLE('buildrow', topOf(ICON.hammer), 'All', 'build', ' aria-label="The Build card"');
+	return h;
+}
+// a small picture of a building for the Build page: its sprite, drawn once per kind and colour
+const THUMB = new Map();
+function bldThumb(kind) {
+	const key = kind + G.P[0].color;
+	let u = THUMB.get(key);
+	if (!u) {
+		const sp = bldSprite({ kind, owner: 0, prog: 1, hp: 1, id: 0, x: 0, y: 0 }, 2),
+			c = document.createElement('canvas'),
+			S = 80;
+		c.width = c.height = S;
+		// the picture is the sprite's own box, not its canvas (a sprite's canvas has air for the flags and the shadow)
+		const px = sp.getContext('2d').getImageData(0, 0, sp.width, sp.height).data;
+		let x0 = sp.width,
+			y0 = sp.height,
+			x1 = 0,
+			y1 = 0;
+		for (let i = 3; i < px.length; i += 4)
+			if (px[i] > 40) {
+				const q = (i - 3) / 4,
+					x = q % sp.width,
+					y = (q / sp.width) | 0;
+				if (x < x0) x0 = x;
+				if (x > x1) x1 = x;
+				if (y < y0) y0 = y;
+				if (y > y1) y1 = y;
+			}
+		const w = Math.max(1, x1 - x0 + 1),
+			hh = Math.max(1, y1 - y0 + 1),
+			g2 = c.getContext('2d'),
+			k = Math.min(S / w, S / hh) * 0.94;
+		g2.drawImage(sp, x0, y0, w, hh, (S - w * k) / 2, (S - hh * k) / 2, w * k, hh * k);
+		u = `<img src="${c.toDataURL()}" width="40" height="40" alt="">`;
+		THUMB.set(key, u);
+	}
+	return u;
+}
+function favToggle(kind) {
+	const F = (SET.fav && SET.fav.length ? SET.fav : FAV0).slice(0, 5),
+		i = F.indexOf(kind);
+	if (i >= 0) F.splice(i, 1);
+	else {
+		if (F.length >= 5) F.shift(); // the oldest pin goes
+		F.push(kind);
+	}
+	SET.fav = F;
+	saveSet();
+	say(i >= 0 ? `${BLD[kind].name} off the Build page.` : `${BLD[kind].name} pinned to the Build page.`, '', 3);
+}
+function squadPageHTML() {
+	const Q = G.hud.sq,
+		i = Q.i,
+		cmd = hasCmd();
+	let h = SPLIT(stB('sqnew', `${ICON.squad}<b class="plus">＋</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="A new squad"'), stB('sqcycle', `${ICON.cycle}<b class="plus">${BN[i][0]}</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="Cycle"'));
+	CLS.forEach((c, t) => {
+		const k = sqUnit(t),
+			built = cmd && k && ready(0, c[2]).length,
+			have = k ? sqUnits(i).filter((u) => u.kind === k).length : 0,
+			want = k ? G.bnPlan[i][k] || 0 : 0;
+		h += PM(
+			cellB(`sqtile:${t}`, topOf(ICON.cls[c[0]], k && cmd ? `${have}/${want}` : '–'), !cmd ? 'Command' : k ? shortName(k) : BLD[c[2]].name, 'sq' + (Q.tile === t ? ' sel' : '') + (built ? '' : ' dis')),
+			stB(`sqn:${t},-`, '−', 'sq' + (built ? '' : ' dis')),
+			stB(`sqn:${t},+`, '+', 'sq' + (built ? '' : ' dis')),
+		);
+	});
+	h += SPLIT(stB('sqdone', ICON.ok, cmd ? 'go' : 'dis', ' aria-label="Done: to the War page"'), stB(`sqbest:${i}`, ICON.star, 'sq' + (cmd ? '' : ' dis'), ' aria-label="Best: fill from the soldiers at home"'));
+	return h;
+}
+function trainPageHTML() {
+	const H = G.hud,
+		p = G.P[0],
+		rs = G.recruitSq;
+	let h = SPLIT(stB('torders', ICON.aim, 'train' + (H.aim ? ' sel' : ''), ' aria-label="Orders: where new soldiers go"'), stB('tsq', `${ICON.squad}<b class="plus">${rs === undefined || rs === null ? '·' : BN[rs][0]}</b>`, 'train' + (hasCmd() ? '' : ' dis'), ' aria-label="Which squad new soldiers join"'));
+	CLS.forEach((c, t) => {
+		const k = sqUnit(t),
+			at = k ? readyAt(0, UNIT[k]) : [],
+			q = at.flatMap((b) => b.q.filter((j) => j.kind === k)),
+			first = q.length ? Math.max(0, Math.ceil(q[0].left)) : 0,
+			why = k ? trainWhy(0, k) : 'none';
+		h += PM(
+			cellB(`sqtile:${t}`, topOf(ICON.cls[c[0]], at.length ? q.length : '–'), !at.length ? 'none' : q.length ? mmss(first) : shortName(k), 'train' + (H.sq.tile === t ? ' sel' : '') + (at.length ? '' : ' dis')),
+			stB(`tq:${t},-`, '−', 'train' + (q.length ? '' : ' dis')),
+			stB(`tq:${t},+`, '+', 'train' + (why ? ' dis' : ''), why ? ` title="${why}"` : ''),
+		);
+	});
+	h += SPLIT(stB('tok', ICON.ok, H.aim ? 'go' : 'dis', ' aria-label="Set the orders on the crosshair"'), stB('tcancel', ICON.close, 'no', ' aria-label="Cancel"'));
 	return h;
 }
 function huddleUI() {
@@ -341,14 +488,16 @@ function huddleUI() {
 	if (flip) {
 		el.hidden = page === 'jobs';
 		$('jobs').hidden = page !== 'jobs';
-		$('orders').classList.toggle('hud', page === 'war');
+		$('orders').classList.toggle('hud', page === 'war' || page === 'train');
 		$('orders').classList.toggle('sqr', page === 'squad');
 	}
+	$('orders').className = $('orders').className.replace(/\bpg-\w+/g, '').trim() + ' pg-' + page;
 	const chip = $('hudB');
-	chip.innerHTML = `<b>${pageName[page]}</b> ▸`;
+	chip.innerHTML = `${pageIcon()[page]}<b>▸</b>`;
 	chip.className = 'fab chip ' + page;
+	chip.setAttribute('aria-label', `${pageName[page]}: the next page`);
 	if (page !== 'jobs') {
-		const h = page === 'squad' ? squadRoomHTML() : warRoomHTML();
+		const h = page === 'war' ? warPageHTML() : page === 'build' ? buildPageHTML() : page === 'squad' ? squadPageHTML() : trainPageHTML();
 		if (el.sigH !== h) {
 			el.sigH = h;
 			el.innerHTML = h;
@@ -357,7 +506,7 @@ function huddleUI() {
 	$('emgB').classList.toggle('on', !!G.emg);
 	if (flip) fit(); // the bar is whole again: the corner buttons sit on top of it
 }
-// the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; amber while aiming, green once fired
+// the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; its colour says what is under it; green once fired
 function drawReticle() {
 	const H = G.hud;
 	if (!H.on || !H.h) return;
@@ -366,10 +515,10 @@ function drawReticle() {
 		L = performance.now() - (H.firedT || -1e9) < 1200 ? 1 : 0,
 		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
 		t = still() ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
-		eta = hudEta(),
+		eta = H.mode === 'rally' ? 0 : hudEta(),
 		line = (a, b, c, d) => (ctx.moveTo(x + a, y + b), ctx.lineTo(x + c, y + d));
 	ctx.save();
-	ctx.strokeStyle = ctx.fillStyle = L ? '#4fe0a0' : '#ffb23d';
+	ctx.strokeStyle = ctx.fillStyle = L ? '#4fe0a0' : aimColor();
 	ctx.lineWidth = 1.5;
 	if (H.drag) {
 		ctx.globalAlpha = 0.14;
@@ -423,11 +572,17 @@ function drawReticle() {
 	ctx.stroke();
 	ctx.font = '700 12px system-ui, sans-serif';
 	ctx.textAlign = 'center';
-	ctx.fillText(H.moved ? 'Hold and drag, or tap · Go sends' : 'Tap the map to aim', x, y + R + 30);
 	ctx.fillText(eta ? `${mmss(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - R - 8);
 	ctx.restore();
 }
 // ── the squad card: the editor while it is home, the live view while it is out (Build 61, one card, two states)
+// Commander's intent (Build 63): what the squad is for, in the words the doctrine uses. The row and the card show it; the soldiers read it in solTick.
+const INTENT = [
+	{ name: 'Engage', note: 'fight what you meet' },
+	{ name: 'No pursuit', note: 'go to the spot, fight only what blocks' },
+	{ name: 'Priority: soldiers', note: 'soldiers before buildings' },
+	{ name: 'Priority: buildings', note: 'buildings before soldiers' },
+];
 function squadEditHTML(i) {
 	const p = G.P[0],
 		plan = G.bnPlan[i],
@@ -445,8 +600,8 @@ function squadEditHTML(i) {
 				)
 				.join('')
 		: '<p>Train soldiers first.</p>';
-	h += `<p class="dim">Soldiers at home fill the plan by themselves. The rest are the reserve.</p>`;
-	h += acts(dialBtns(i));
+	h += `<p class="dim">Soldiers at home fill the plan by themselves. The rest are the reserve.${S.length ? ` Pace: ${paceWord(S)}.` : ''}</p>`;
+	h += acts(dialBtns(i) + btn(`intent:${i}`, 'Intent', INTENT[G.bnIntent[i] || 0].name), 'c3');
 	if (p.techs.has('muster')) {
 		const miss = musterGap(i),
 			why = musterWhy(0, miss),
@@ -473,7 +628,7 @@ CARDS.squad = (c) => {
 	return (
 		title(m.name, m.st === 'act' ? `fighting · ${Math.round(m.odds * 100)}% to win` : word.toLowerCase()) +
 		hpBar(hp, hp > 0.5 ? '#5fd08a' : hp > 0.25 ? '#e6b947' : '#c0392b') +
-		`<p><i>Health ${Math.round(hp * 100)}%</i> · ${S.length} of ${m.n0} standing · ${m.what.toLowerCase()} ${m.label}${m.st === 'go' ? `, ${mmss(m.eta || 0)} to arrive` : m.late ? `, ${m.late} s late` : ''}</p>` +
+		`<p><i>Health ${Math.round(hp * 100)}%</i> · ${S.length} of ${m.n0} standing · ${m.what.toLowerCase()} ${m.label}${m.st === 'go' ? `, ${mmss(m.eta || 0)} to arrive` : m.late ? `, ${m.late} s late` : ''} · ${paceWord(S)}</p>` +
 		`<table style="width:100%;border-collapse:collapse"><tr><th>Kind</th><th>Alive</th><th>Lost</th></tr>${rows}</table>` +
 		(slow < 0.98 ? `<p class="dim">${G.wx !== 'clear' ? 'Weather' : 'Season'}: ${wxWord()}, walking ×${slow.toFixed(2)}.</p>` : '') +
 		acts(
@@ -484,7 +639,7 @@ CARDS.squad = (c) => {
 				plan && plan.go.length ? 'go' : 'dis',
 			) +
 				btn(`shape:${i}`, 'Formation', FORM[dialOf('form', i)].name, G.P[0].techs.has('formations') ? '' : 'dis') +
-				btn(`temper:${i}`, 'Temper', TEMPER[dialOf('temper', i)].name),
+				btn(`intent:${i}`, 'Intent', INTENT[G.bnIntent[i] || 0].name),
 			'c3',
 		) +
 		`<p data-act="jump:${m.x},${m.y}" class="dim"><b>Where</b> ${coord(m.x, m.y)} · tap to go</p>` +

@@ -39,15 +39,16 @@ const CARDS = {
 			const back = refundOf(b),
 				hurtB = b.prog >= 1 && b.hp < M - 1,
 				menders = crew.filter((u) => !u.inside).length;
-			const row = `${b.prog >= 1 && B.reserve && b.node && b.node.amt <= 0 ? btn(`replant:${b.id}`, 'Replant', replantWhy(0, b) ? replantWhy(0, b).replace(/\.$/, '') : `${costText(scaled(B.cost, 0.5))} · half the cost`, replantWhy(0, b) ? 'dis' : 'go') : ''}${b.prog < 1 ? btn(`sendbld:${b.id}`, 'Send a villager', crew.length ? `${crew.length} building` : 'nobody yet', crew.length ? '' : 'go') : ''}${hurtB ? btn(`repair:${b.id}`, 'Repair', menders ? `${menders} mending` : costText(repairCost(0, b)), 'go') : ''}${B.crop && b.prog >= 1 && b.node ? btn(`sendvil:${b.node.id}`, 'Send a villager', slotText(b.node), b.node.wk > 0 ? '' : 'go') : ''}${B.crop && b.prog >= 1 && b.node && b.node.wk > 0 ? btn(`sendout:${b.node.id}`, 'Send out', 'one goes home') : ''}`;
+			const row = `${b.prog >= 1 && B.reserve && b.node && b.node.amt <= 0 ? btn(`replant:${b.id}`, 'Replant', replantWhy(0, b) ? replantWhy(0, b).replace(/\.$/, '') : `${costText(scaled(B.cost, 0.5))} · half the cost`, replantWhy(0, b) ? 'dis' : 'go') : ''}${b.prog < 1 ? btn(`sendbld:${b.id}`, 'Send a villager', crew.length ? `${crew.length} building` : 'nobody yet', crew.length ? '' : 'go') : ''}${B.crop && b.prog >= 1 && b.node ? btn(`sendvil:${b.node.id}`, 'Send a villager', slotText(b.node), b.node.wk > 0 ? '' : 'go') : ''}${B.crop && b.prog >= 1 && b.node ? btn(`sendout:${b.node.id}`, 'Send out', b.node.wk > 0 ? 'one goes home' : 'nobody on it', b.node.wk > 0 ? '' : 'dis') : ''}`;
 			if (row) h += acts(row);
+			// Repair and Take down share the last row, both always there so nothing jumps (Albert, Build 63): Repair dim while the building is whole
 			td = acts(
-				b.prog < 0.15
-					? btn(`takedown:${b.id}`, 'Cancel', 'all back')
-					: G.confirm === b.id
-						? btn(`takedown:${b.id}`, 'Tap again', 'to take down · ' + costText(back), 'warn')
-						: btn(`takedown:${b.id}`, 'Take down', costText(back) + ' back'),
-				'c1',
+				btn(`repair:${b.id}`, 'Repair', hurtB ? (menders ? `${menders} mending` : costText(repairCost(0, b))) : 'whole', hurtB ? 'go' : 'dis') +
+					(b.prog < 0.15
+						? btn(`takedown:${b.id}`, 'Cancel', 'all back')
+						: G.confirm === b.id
+							? btn(`takedown:${b.id}`, 'Tap again', 'to take down · ' + costText(back), 'warn')
+							: btn(`takedown:${b.id}`, 'Take down', costText(back) + ' back')),
 			); // last on the card: it is the one you rarely want
 		}
 		if (mine && b.kind === 'keep')
@@ -220,17 +221,19 @@ const CARDS = {
 			h += acts(btn(`hunt:${u.id}`, 'Send a hunter', who ? `${who} hunting` : 'nobody yet', 'go'), 'c1');
 		}
 		if (mine) {
-			// the villager's card, in one order (Build 61, Albert): what it is doing; Stop and Dismiss; the jobs; the sites it could raise
-			h += acts(
-				btn(`vstop:${u.id}`, 'Stop', u.job || u.post ? 'drops the work, stands here' : 'nothing to stop', u.job || u.post ? '' : 'dis') +
-					(G.confirm === 'v' + u.id
-						? btn(`vgo:${u.id}`, 'Tap again', 'gone for good', 'warn')
-						: btn(`vgo:${u.id}`, 'Dismiss', 'leaves the game, frees a place')),
-			);
-			h += acts(
-				JOBS.map((j) => btn(`vjob:${u.id},${j}`, cap1(j), '', u.job === j ? 'on' : '')).join(''),
-				'c3',
-			);
+			// the villager's card, small and simple (Albert, Build 63): four stats, then the one row (Back, Stop, Home, Dismiss, Why), then the jobs as a row
+			h = title(S.name, 'yours') + hpBar(u.hp / u.max, P.color);
+			h += `<div class="stats"><div><small>Status</small>${statusOf(u)}</div><div><small>Age</small>${clock(G.t - (u.bornT || 0))}</div><div><small>Stats</small>hits ${Math.round(S.dmg * 10) / 10} · reach ${Math.round(S.rng)} · speed ${Math.round(S.spd)}</div><div><small>Health</small>${Math.round(u.hp)}/${Math.round(u.max)}</div></div>`;
+			const can = !!(u.pj || u.was || G.P[0].rally);
+			h += rowHTML([
+				[`back:${u.id}`, ICON.back, 'Back', can ? '' : 'dis'],
+				[`vstop:${u.id}`, ICON.stop, 'Stop', u.job || u.post ? '' : 'dis'],
+				[`vhome:${u.id}`, ICON.home, 'Home', ''],
+				[`vgo:${u.id}`, ICON.close, G.confirm === 'v' + u.id ? 'Sure?' : 'Dismiss', G.confirm === 'v' + u.id ? 'warn' : ''],
+				[`card:guide,unit`, ICON.book, 'Why', ''],
+				null,
+			]);
+			h += rowHTML(JOBS.map((j) => [`vjob:${u.id},${j}`, ICON[j], cap1(j), u.job === j ? 'sel' : '']).concat([[`buildrow`, ICON.hammer, 'Build', '']]));
 			const sites = G.blds
 				.filter((s) => s.owner === 0 && s.hp > 0 && s.prog < 1 && u.rep !== s)
 				.sort((a, b) => dist(a, u) - dist(b, u))
@@ -545,23 +548,30 @@ const CARDS = {
 				n = bldsOf(0, k).length,
 				full = !lock && n >= cp,
 				fits = G.buildAt && G.buildAt.hint === k;
-			return btn(
-				`build:${k}`,
-				B.short || bldName(0, k),
-				lock
-					? AGES[B.age].name
-					: full
-						? `✓ all ${cp} built`
-						: !afford(p, B.cost)
-							? `short ${need(B.cost)}`
-							: (fits ? 'fits here · ' : '') + costText(B.cost),
-				lock ? 'dis' : full ? 'dis done' : !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
-				!lock && !full && !afford(p, B.cost) ? fillOf(B.cost) : undefined,
-			).replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>');
-		}; // how many of how many beside the name, dimmed: every cost stays on one line
+			const pinned = favKinds().includes(k);
+			return (
+				`<div class="bk${pinned ? ' pinned' : ''}">` +
+				btn(
+					`build:${k}`,
+					B.short || bldName(0, k),
+					lock
+						? AGES[B.age].name
+						: full
+							? `✓ all ${cp} built`
+							: !afford(p, B.cost)
+								? `short ${need(B.cost)}`
+								: (fits ? 'fits here · ' : '') + costText(B.cost),
+					lock ? 'dis' : full ? 'dis done' : !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
+					!lock && !full && !afford(p, B.cost) ? fillOf(B.cost) : undefined,
+				)
+					.replace('<b>', `${lock ? '' : bldThumb(k)}<b>`)
+					.replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>') +
+				`<button class="pin${pinned ? ' on' : ''}" data-act="fav:${k}" aria-label="${pinned ? 'Unpin from' : 'Pin to'} the Build page">${ICON.star}</button></div>`
+			);
+		}; // a picture, the name, how many of how many, the cost on one line; the star pins it to the Build page (Build 63)
 		const most = Math.max(...MENUS.map((m) => m.items.length)),
 			ghosts =
-				'<button class="ghost" disabled aria-hidden="true" tabindex="-1"><b>.</b><small>.</small></button>'.repeat(
+				'<div class="bk"><button class="ghost" disabled aria-hidden="true" tabindex="-1"><b>.</b><small>.</small></button></div>'.repeat(
 					most - M.items.length,
 				); // blank places keep every menu as tall as the biggest (two rows), so the page never changes height
 		return (
@@ -702,7 +712,9 @@ const CARDS = {
 		);
 	},
 };
-const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'end', 'research']); // the cards that take the whole height
+const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'end', 'research', 'menu']); // the cards that take the whole height
+// three sizes, one mold each (Albert, Build 63): lg the whole height (the Build card, the Guide, Help, Setup); md a thing's card; sm a short one
+const SIZE_OF = (t) => (FULL.has(t) ? 'lg' : t === 'squad' || t === 'stores' || t === 'emergency' || t === 'army' ? 'sm' : 'md');
 function renderCard() {
 	const c = G.card;
 	if (!c || !CARDS[c.type]) return;
@@ -733,10 +745,9 @@ function renderCard() {
 	const cc = G.card;
 	$('card').classList.toggle('setup', cc.type === 'setup');
 	$('card').classList.toggle('hud', cc.type === 'squad' || cc.type === 'emergency'); // the covert look of the attack bar
-	$('card').classList.toggle(
-		'full',
-		FULL.has(cc.type) || (cc.type === 'bld' && (G.blds.find((b) => b.id === cc.id) || {}).kind === 'market'),
-	);
+	const size = cc.type === 'bld' && (G.blds.find((b) => b.id === cc.id) || {}).kind === 'market' ? 'lg' : SIZE_OF(cc.type);
+	$('card').classList.toggle('full', size === 'lg');
+	for (const s of ['lg', 'md', 'sm']) $('card').classList.toggle(s, size === s);
 	$('card').hidden = false;
 }
 $('card').addEventListener(

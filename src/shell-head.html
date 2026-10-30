@@ -79,7 +79,12 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card .fold p{margin-top:4px}
 #card .hp{height:5px;background:#0b0e0c;border-radius:3px;overflow:hidden}
 #card .hp i{display:block;height:100%}
-#card .acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+#card .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}#card .stats div{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:5px 4px;text-align:center;font-size:13px;line-height:1.15;min-height:44px}#card .stats small{display:block;color:var(--mute);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;margin-bottom:2px}
+#card .acts.menu .bk{position:relative}#card .acts.menu .bk>button:first-child{width:100%;min-height:92px;padding-top:6px;align-items:center}#card .acts.menu .bk img{display:block;width:40px;height:40px;margin:0 auto 2px}#card .acts.menu .bk button.pin:not(#cardX):not(#cardI){position:absolute;right:2px;top:2px;min-width:30px;min-height:30px;width:30px;height:30px;padding:0;border:0;background:none;box-shadow:none;color:var(--dim);display:grid;place-items:center}#card .acts.menu .bk button.pin svg{width:16px;height:16px}#card .acts.menu .bk button.pin.on:not(#cardX):not(#cardI){color:var(--lamp)}#card .acts.menu .bk.pinned>button:first-child{border-color:var(--lamp)}
+#card .acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;min-height:44px}#card .acts:empty{display:none}
+#card.sm{max-height:min(46%,calc(100% - var(--ob) - var(--hb) - 14px))}
+/* a row of six in a card: the same element as the bar below the map (Build 63) */
+#card .tiles{margin:2px 0}#card .tiles .tr{gap:4px}#card .tiles button.cell{background:var(--panel2);border:1px solid var(--line);box-shadow:none}#card .tiles button.cell.sel{border-color:var(--lamp)}#card .tiles .wd{color:var(--mute)}#card .tiles button.cell.dis{opacity:.45}
 #card .acts.c1{grid-template-columns:1fr}
 #card .acts.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
 #card .acts.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -97,8 +102,8 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card .dim{color:var(--mute)}
 #card .copy{text-align:center;font-size:13px;margin:6px 0 0}
 #cardBar{position:sticky;top:6px;height:0;margin-bottom:-4px;z-index:3;flex:none}
-#cardI{position:absolute;top:-2px;right:44px;min-height:44px;min-width:44px;padding:0;background:none;border:0}
-#cardX{position:absolute;top:-2px;right:-4px;min-height:44px;min-width:44px;padding:0;background:none;border:0;display:grid;place-items:center}#cardX svg{width:26px;height:26px}#cardI svg{width:24px;height:24px}
+#cardI{position:absolute;top:0;right:44px;min-height:44px;min-width:44px;padding:0;background:none;border:0}
+#cardX{position:absolute;top:0;right:-4px;min-height:44px;min-width:44px;padding:0;background:none;border:0;display:grid;place-items:center}#cardX svg{width:26px;height:26px}#cardI svg{width:24px;height:24px}
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
 #end p{margin:0;color:var(--mute);font-size:15px}
@@ -139,6 +144,13 @@ button.ghost{visibility:hidden}
 #card.hud .acts button.go{border-color:#ffb23d;color:#ffb23d}#card.hud .acts button.warn{border-color:#ff5a4a;color:#ff9a8c}#card.hud .acts button.dis{opacity:.5}
 #card.hud .acts small{color:#98a2a6}
 #jobs[hidden],#huddle[hidden]{display:none}
+/* the one row, three shapes (Build 63): join = two touching; whole = one tall button; the plain col is a tile over − and + */
+.col.join{gap:0}.col.join>button.cell:first-child{border-radius:var(--r) var(--r) 0 0}.col.join>button.cell:last-child{border-radius:0 0 var(--r) var(--r);border-top:0}
+#huddle .col.whole>button.cell.tall{height:calc(var(--row) * 2 + 3px)}#huddle .col.whole .top.thumb{top:30px}#huddle .col.whole .top.thumb img{width:40px;height:40px;display:block}#huddle .col.whole .wd{top:74px;font-size:10px;letter-spacing:.02em;white-space:normal;overflow-wrap:anywhere;line-height:1;padding:0 2px}#huddle .col.whole .top:not(.thumb){top:34px}#huddle .col.whole .top:not(.thumb) .gl{width:22px;height:22px}
+.tiles button.cell.no{background:#2f3b36;border-color:#4a5a52;color:var(--bone)}
+.tiles button.cell.build,.tiles button.cell.st.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}.tiles button.cell.build.dis{opacity:.5}
+.tiles button.cell.train,.tiles button.cell.st.train{background:linear-gradient(#1f3d33,#14302a);border-color:#2f7a5a}.tiles button.cell.train.sel{border-color:#9fd8b5}
+#orders.pg-build{background:rgba(26,18,10,.82)}#orders.pg-build,#orders.pg-squad{backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}#orders.pg-squad{background:rgba(14,12,24,.82)}
 /* the huddle: dark flat glass, hairlines, one amber accent; only while planning an attack. A lamp line on top of a button: red not set, green set */
 #orders.hud{background:rgba(10,13,15,.82);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
 #huddle button.cell{position:relative;overflow:hidden;background:#161b1f;border:1px solid rgba(255,255,255,.09);border-radius:10px;box-shadow:none;color:#e6e9e6}
@@ -161,7 +173,7 @@ button.ghost{visibility:hidden}
 .strip #sStats,.strip #sIdle{padding:0 5px;min-width:44px;gap:9px}.strip #sStats span,.strip #tkBell>*,.strip #sAgeT,.strip #scoreN,.strip #scoreR{display:inline-flex;align-items:center;height:26px;gap:3px}.strip .gl{position:static;transform:none;width:15px;height:15px;display:block;margin:0;flex:none}   /* one line: icon and number share a centre */
 #tally button.cell{isolation:isolate}#tally button.cell.sel::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:7px;background:#2f3b36;border:1px solid var(--mute)}   /* the on mark: a small tile inside the cell; ::before is the divider */
 #pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}
-button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--pad);bottom:calc(var(--ob) + 8px);width:auto;height:44px;padding:0 12px;border-radius:22px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:4px;color:var(--bone)}#hudB b{font-weight:700}#hudB.squad{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}#hudB.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}
+button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--pad);bottom:calc(var(--ob) + 8px);width:auto;height:44px;padding:0 10px 0 8px;border-radius:22px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:3px;color:var(--bone)}#hudB svg{position:static;transform:none;width:20px;height:20px}#hudB b{font-weight:700}#hudB.squad{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}#hudB.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#hudB.train{background:linear-gradient(#1f3d33,#14302a);border-color:#2f7a5a}
 .tiles button.cell.sq,.tiles button.cell.st.sq{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}.tiles button.cell.sq.sel{background:linear-gradient(#514a78,#332e52);border-color:#a89fe0}.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}.tiles button.cell.go{background:linear-gradient(#b8862e,#8a5f18);color:#2a1c10;border-color:#f2d27a}.tiles button.cell.go .wd{color:#2a1c10}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#emgB.on{border-color:#ff5a4a;color:#ff9a8c}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB,#stage.busy #emgB{display:none}
 #stage.busy #homeB{display:none}
 #stage.picking #homeB{display:none}
@@ -192,7 +204,7 @@ button.ok small{color:#8fd4a4}
 #card{--bone:#ece5d3;--mute:#c9bca2;--dim:#a89d86;--panel:#2a1d13;--panel2:#2b1f15;--line:#6b5230;--brass:#8f7442;--lamp:#e6b947;--blue:#e6b947;--red:#c0392b;--gold:#e6b947;color:var(--bone);border:1px solid var(--brass);border-radius:10px;padding:6px 8px 8px;gap:4px;
   background:linear-gradient(170deg,#3a2a1c,#241911 60%,#1c130d);box-shadow:inset 0 0 0 2px #241911,inset 0 0 0 3px var(--line),0 -6px 24px rgba(0,0,0,.5)}
 .night #card{filter:brightness(.88)}
-#card h3{font-size:20px;letter-spacing:.05em;color:var(--lamp);min-height:36px}
+#card h3{font-size:20px;letter-spacing:.05em;color:var(--lamp);min-height:44px;border-bottom:1px solid var(--brass);padding-bottom:4px;margin-bottom:2px}#card.hud h3{border-bottom-color:rgba(255,255,255,.14)}
 #card button:not(#cardX):not(#cardI){position:relative;background-color:#312218;background-image:linear-gradient(#3b2b1d,#2a1d13);border:1px solid var(--brass);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,220,150,.18);color:var(--bone);min-height:44px;padding:3px 5px}
 #card button.dis{border-color:#4a3a28;background:transparent;box-shadow:none;color:#bfb49c}#card button.done:not(#cardX):not(#cardI){opacity:.55;border-style:solid;border-color:#5a4a30}#card .chipsrow button.done:not(.on):not(#cardX):not(#cardI){opacity:.5}#card button.dis b{color:#bfb49c}   /* what you cannot: flat on the table */
 #card button.nope:not(#cardX):not(#cardI){border-color:var(--red);box-shadow:0 0 12px rgba(220,70,50,.7),inset 0 0 8px rgba(220,70,50,.35)}

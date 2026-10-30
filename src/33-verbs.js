@@ -327,7 +327,8 @@ const ACT = {
 		camGo(x, y);
 	},
 	card(a) {
-		openCard({ type: a });
+		const [type, page] = a.split(',');
+		openCard(page ? { type, page } : { type });
 	},
 };
 // orders that change the game: refused once it is over
@@ -378,7 +379,72 @@ const PLAY = {
 	},
 	pagecycle() {
 		pageCycle();
-	}, // the chip at the row's left: Jobs, the Squad room, the War room
+	}, // the chip at the row's left: Jobs, War, Build, Squad, Train (Build 63)
+	waim() {
+		const H = G.hud;
+		H.aim = true;
+		H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
+		H.moved = false;
+		H.etaKey = '';
+		feel('tick');
+	}, // the crosshair to the middle of the screen
+	sqdone() {
+		hudPage('war');
+		G.hud.sel = G.hud.sq.i;
+		feel('tick');
+	}, // ✓ on the Squad page: to the War page with this squad picked
+	sqbest(a) {
+		sqBest(Number(a));
+	},
+	torders() {
+		const H = G.hud;
+		H.aim = true;
+		H.mode = 'rally';
+		if (G.rally0) H.h = { t: 'ground', e: { x: G.rally0.x, y: G.rally0.y } };
+		say('Tap where new soldiers should go, then ✓.', '', 4);
+		feel('tick');
+	},
+	tsq() {
+		const n = G.recruitSq;
+		G.recruitSq = n === null || n === undefined ? 0 : n + 1 >= BNS ? null : n + 1;
+		feel('tick');
+	}, // which squad new soldiers join: none, Alpha … Delta
+	tq(a) {
+		const [t, d] = a.split(','),
+			k = sqUnit(Number(t));
+		if (!k) return;
+		if (d === '+') {
+			const why = trainWhy(0, k);
+			if (why) say(why, '', 3);
+			else train(0, k);
+		} else if (!unTrain(0, k)) say('Nothing of that kind is waiting.', '', 3);
+	}, // the Train page: one more or one fewer of a kind, at the building with the shortest line
+	tok() {
+		setRally();
+	},
+	tcancel() {
+		G.hud.aim = false;
+		hudPage('jobs');
+	},
+	fav(a) {
+		favToggle(a);
+		refresh();
+	}, // ★ on the Build card: pin a building to the Build page
+	intent(a) {
+		const i = Number(a);
+		G.bnIntent[i] = ((G.bnIntent[i] || 0) + 1) % INTENT.length;
+		feel('tick');
+		refresh();
+	},
+	back(a) {
+		const u = G.units.find((v) => v.id === Number(a));
+		if (!u) return;
+		if (u.pj || u.was) setJob(u, u.pj || u.was);
+		else if (G.P[0].rally) setJob(u, G.P[0].rally);
+		else return say('No work to go back to.', '', 3);
+		u.post = null;
+		closeCard();
+	}, // the worker card: back to the work it had
 	sqnew() {
 		sqNew();
 	},
@@ -455,6 +521,14 @@ const PLAY = {
 	nostrip() {
 		hideStrip();
 	},
+	commander() {
+		const s = G.stripAt;
+		hideStrip();
+		hudPage('war');
+		if (s) G.hud.h = { t: 'ground', e: { x: s.x, y: s.y } };
+		G.hud.moved = true;
+		G.hud.etaKey = '';
+	}, // the strip's third answer: the War page, its crosshair already on the spot
 	nofree() {
 		say(freeWhy(), '', 4);
 		hideStrip();
@@ -550,6 +624,12 @@ const PLAY = {
 		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a));
 		if (u) stopVil(u, null);
 	},
+	vhome(a) {
+		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a)),
+			k = keepOf(0);
+		if (u) stopVil(u, k ? { x: k.x + u.ox, y: k.y + halfOf(k) + 8 + u.oy } : null);
+		closeCard();
+	}, // the worker card: Home, to the Town Center and idle
 	stopall() {
 		const k = keepOf(0);
 		let n = 0;

@@ -3,6 +3,11 @@
 // Every icon is drawn once, here. The markup reads from this table, so a resource looks the same in the tally and under the jobs.
 const SVG = (vb, body, cls = 'gl') => `<svg class="${cls}" viewBox="0 0 ${vb} ${vb}" aria-hidden="true">${body}</svg>`;
 const ICON = {
+	aim: SVG(20, '<circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 1v4M10 15v4M1 10h4M15 10h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="10" cy="10" r="1.6" fill="currentColor"/>'),
+	back: SVG(20, '<path d="M9 5l-5 5 5 5M4 10h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'),
+	stop: SVG(20, '<rect x="5" y="5" width="10" height="10" rx="1.5" fill="currentColor"/>'),
+	ok: SVG(20, '<path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>'),
+	star: SVG(20, '<path d="M10 2.2l2.4 5 5.4.7-3.9 3.8.9 5.4L10 14.5l-4.8 2.6.9-5.4L2.2 7.9l5.4-.7z" fill="currentColor"/>'),
 	food: SVG(
 		16,
 		'<path d="M8 4.5 L10.5 1.5" stroke="#6aa04f" stroke-width="1.6" stroke-linecap="round"/><circle cx="5.2" cy="10" r="3.3" fill="#d9607a"/><circle cx="10.8" cy="10" r="3.3" fill="#d9607a"/><circle cx="8" cy="6.4" r="3.3" fill="#ec8ea3"/>',
@@ -147,7 +152,7 @@ function buildPanel() {
 	const st = (act, t, label, id) =>
 		`<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
 	$('jobs').innerHTML =
-		`<div class="col">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}${st('buildrow', ICON.hammer, 'Build', 'buildT')}</div>` + // one tap makes a villager; Build under it (Albert, Build 41)
+		`<div class="col join">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}${st('buildrow', ICON.hammer, 'Build', 'buildT')}</div>` + // one tap makes a villager; Build under it (Albert, Build 41)
 		JOBS.map(
 			(r) =>
 				`<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`,

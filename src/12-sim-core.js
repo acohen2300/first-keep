@@ -483,10 +483,15 @@ function jobDone(b, j) {
 		if (o === 0) sfx(isSoldier(u) ? 'readySol' : 'ready', b.x, b.y); // a brass call for a soldier, a chime for anyone else
 		if (j.kind === 'vil') u.job = o === 0 ? p.rally : null;
 		else if (j.kind === 'caravan') u.lastId = b.id;
-		else if (o === 0 && G.rally0 && UNIT[j.kind].cls === 'army') {
-			u.state = 'goto';
-			u.px = G.rally0.x;
-			u.py = G.rally0.y;
+		else if (o === 0 && UNIT[j.kind].cls === 'army') {
+			if (G.recruitSq !== null && G.recruitSq !== undefined && hasCmd()) u.bn = G.recruitSq; // Orders: the squad new soldiers join (Build 63)
+			if (G.rally0) {
+				// sorted by kind at the rally (Albert, Build 63): each kind has its own stand, a step apart, so a new man finds his own
+				const ki = Math.max(0, CLS.findIndex((c) => c[2] === UNIT[j.kind].at));
+				u.state = 'goto';
+				u.px = G.rally0.x + (ki - 1.5) * 22;
+				u.py = G.rally0.y;
+			}
 		}
 	} else if (j.muster) {
 		for (const k in j.muster)

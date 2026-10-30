@@ -130,25 +130,30 @@ function showStrip(sx, sy, x, y, step) {
 			`<button data-act="${act}" class="ic ${cls || ''}" aria-label="${label}">${icon}</button>`;
 	const sh = { sx, sy, x, y };
 	G.stripAt = sh;
+	// muscle memory (Albert, Build 63): the sword opens under the finger; the next tap's answer, All, sits exactly where the sword was
 	if (!step)
 		el.innerHTML =
-			ic('strippeople', ICON.head, 'Your people here', 'people thumb') +
-			ic(nAll ? 'striparmy' : 'nofree', ICON.sword, 'Send soldiers here', nAll ? 'war' : 'dis') +
+			ic(nAll ? 'striparmy' : 'nofree', ICON.sword, 'Send soldiers here', (nAll ? 'war' : 'dis') + ' thumb') +
+			ic('strippeople', ICON.head, 'Your people here', 'people') +
 			ic(`more:${at}`, '⋯', 'More about this place') +
 			ic('nostrip', ICON.close, 'Cancel');
 	else if (step === 1) {
 		const nRest = n('rest'),
 			bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
 		el.innerHTML =
-			btn(`sendto:rest,${at}`, 'Idle', `${nRest} soldiers`, 'war thumb') +
-			btn(`sendto:all,${at}`, 'All', String(nAll)) +
+			btn(`sendto:all,${at}`, 'All', String(nAll), 'war thumb') +
+			btn(`sendto:rest,${at}`, 'Idle', String(nRest), nRest ? '' : 'dis') +
 			bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') +
+			ic('commander', ICON.aim, 'The War page, aimed here', 'war') +
 			ic('nostrip', ICON.close, 'Cancel');
 	} else {
 		const idle = unitsOf(0, 'vil').filter((u) => freeVil(u) && !postedAt(to).includes(u)).length,
-			here = postedAt(to).length;
+			here = postedAt(to).length,
+			p = G.P[0],
+			pop = unitsOf(0, 'vil').length;
 		el.innerHTML =
-			btn(`buildhere:${at}`, 'Build here', 'the menu, aimed here', 'build thumb') +
+			btn('train:vil', `+ Villager`, `${pop}/${capOf(0)} · ${costText(unitCost(0, 'vil'))}`, 'people thumb') + // the People tile, pasted in (Albert, Build 63)
+			btn(`buildhere:${at}`, 'Build here', 'the menu, aimed here', 'build') +
 			btn(`idleto:${at}`, 'Send idle here', `${idle} idle villager${idle === 1 ? '' : 's'}`, idle ? 'people' : 'dis') +
 			`<div class="dial"><b>Workers here</b>${btn(`wkhere:-,${at}`, '−', '', here ? '' : 'dis')}<span>${here}</span>${btn(`wkhere:+,${at}`, '+', '')}</div>` +
 			ic('nostrip', ICON.close, 'Cancel');

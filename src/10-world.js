@@ -30,6 +30,8 @@ function blankGame(seed) {
 		lootT: 0,
 		temper: Array(BNS + 1).fill(T_GUARD),
 		bnPlan: BN.map(() => ({})),
+		bnIntent: BN.map(() => 0), // commander's intent per squad (INTENT in 39)
+		recruitSq: null, // the squad new soldiers join (the Train page)
 		form: BN.map(() => 0),
 		bnEdit: 0,
 		qs: { from: 'all', n: {} },

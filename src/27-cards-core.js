@@ -100,6 +100,11 @@ const fold = (id, title, html) =>
 const hpBar = (f, col) =>
 	`<div class="hp"><i style="width:${Math.round(100 * clamp(f, 0, 1))}%;background:${col}"></i></div>`;
 const sec = (t) => `<div class="sec">${t}</div>`;
+// a row of six in a card: the same mold as the bar below the map (Build 63). Each slot: [act, icon, word, cls] or null for an empty slot
+const rowHTML = (slots) =>
+	`<div class="tiles"><div class="tr">${slots
+		.map((s) => (s ? `<div class="col whole"><button class="cell ${s[3] || ''}" data-act="${s[0]}">${s[1] ? `<span class="top">${s[1]}</span>` : ''}${wd(s[2])}</button></div>` : '<div class="col whole"></div>'))
+		.join('')}</div></div>`;
 const acts = (h, cls) => `<div class="acts${cls ? ' ' + cls : ''}">${h}</div>`;
 const title = (t, who) => `<h3>${t}<span class="who">${who}</span></h3>`;
 const unitLine = (o, k) => {
