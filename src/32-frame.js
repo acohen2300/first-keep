@@ -1,4 +1,4 @@
-// ═════ 32-frame.js: the frame: ticker, bars, the page ═════
+// ═════ 32-frame.js: the frame: the bars, the preview and the mail, the page ═════
 // ───────────────────────── The frame: the screen round the map, and its refresh ─────────────────────────
 // Every icon is drawn once, here. The markup reads from this table, so a resource looks the same in the tally and under the jobs.
 const SVG = (vb, body, cls = 'gl') => `<svg class="${cls}" viewBox="0 0 ${vb} ${vb}" aria-hidden="true">${body}</svg>`;
@@ -140,6 +140,10 @@ const ICON = {
 		16,
 		'<path d="M8 2.2c-2.3 0-3.9 1.8-3.9 4.1v2.6L2.8 11h10.4l-1.3-2.1V6.3C11.9 4 10.3 2.2 8 2.2z" fill="currentColor"/><path d="M6.6 12.6a1.5 1.5 0 0 0 2.8 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>',
 	),
+	mail: SVG(
+		20,
+		'<rect x="2.5" y="4.5" width="15" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3 5.5 L10 11 L17 5.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+	),
 	play: SVG(16, '<path d="M4.5 2.8 L13 8 L4.5 13.2 Z" fill="currentColor"/>'),
 	pause: SVG(16, '<path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/>'),
 	hush: SVG(
@@ -156,7 +160,17 @@ ICON.book = ICON.book.replace('class="gl"', 'width="18" height="18"');
 // One mold for every control: a cell is an icon spot and a word spot. The tally is a pill of cells; a tile is one cell in its own box.
 const cell = (attrs, icon, word, cls = '') => `<button class="cell ${cls}" ${attrs}>${icon}${word}</button>`;
 const wd = (t, id) => `<span class="wd"${id ? ` id="${id}"` : ''}>${t}</span>`;
-// The top: the tally (five counts, mute, pause, speed), then the strip (age, season, clock; idle; score). The bottom: People, then one column per job; Build swaps the row for the categories.
+// The top: the tally (five counts, mute, pause, the map), then the status pill under it, cell for cell. The bottom: People over the door, then one column per job.
+const STATUS = [
+	['stAge', '', 'The age'],
+	['stSea', '', 'The season and the sky'],
+	['stClk', '', 'The clock'],
+	['stPeo', 'card:troops', 'Everyone you have, of the room your homes give'],
+	['stIdl', 'idlego', 'Idle villagers: show one'],
+	['stRes', 'card:research', 'Research you can start now'],
+	['scoreP', 'card:score', 'Score and rank'],
+	['stArm', '', 'Soldiers'],
+];
 function buildPanel() {
 	$('tally').innerHTML =
 		[
@@ -176,14 +190,19 @@ function buildPanel() {
 	const st = (act, t, label, id) =>
 		`<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
 	$('jobs').innerHTML =
-		`<div class="col join">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}${st('buildrow', ICON.hammer, 'Build', 'buildT')}</div>` + // one tap makes a villager; Build under it (Albert, Build 41)
+		`<div class="col join">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}${doorHTML()}</div>` + // one tap makes a villager; the door under it (Build 64: it took the hammer's place; Build is a page now)
 		JOBS.map(
 			(r) =>
 				`<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`,
 		).join('');
+	// the status pill: the state of the world, one cell under each column of the tally (Albert, Build 64: "age under Food, season under
+	// Wood"); the cells never move, and a narrow tally shows the first ones (the age, the season, the clock, the people come first)
+	const sc = (id, act, label) =>
+		act
+			? `<button class="cell" id="${id}" data-act="${act}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></button>`
+			: `<span class="cell" id="${id}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></span>`;
+	$('status').innerHTML = STATUS.map(([id, act, label]) => sc(id, act, label)).join('');
 	$('emgB').innerHTML = ICON.def;
-	$('tkList').innerHTML = ICON.list;
-	$('tkMin').innerHTML = ICON.up;
 	$('homeB').innerHTML = ICON.home;
 	$('pX').innerHTML = ICON.close;
 }
@@ -255,9 +274,29 @@ function whoIs(u) {
 	if (u.back || u.find !== undefined) return `${nm} · outlaws from a camp`;
 	return `${nm} · ${UNIT[u.kind].tags && UNIT[u.kind].tags.includes('animal') ? 'a wild animal' : 'the wild'}`;
 }
-// ───────────────────────── Messages and tips ─────────────────────────
-// quiet kinds (news, the spectacle's 'coming' lines) never take the line: they wait in the list and count on the bell (Albert: too many alerts to keep up with)
-const QUIET = new Set(['news', 'soft']);
+// ───────────────────────── Messages (Build 64, Albert) ─────────────────────────
+// A line arrives as a preview, the way a phone shows a text, over the map, and fades after MSG.secs; every line is kept in the mail (the
+// dashboard's last tile). Two kinds: a reply, from say, answers your own tap and is never hidden; news, from news, comes from the world by group,
+// and a group can be hidden from the preview's ×: its lines then go quietly to the mail, unless urgent (red). A repeat in the same group
+// within MSG.merge seconds is a count on the first (Raid ×3), not a new flash. The best of the genre do the same: one alert a place, a
+// sound and a place to tap, the text short and gone, a list to read later.
+const MSG = { secs: 4, merge: 30, keep: 30 };
+const GROUPS = {
+	war: 'War',
+	home: 'Home',
+	land: 'Land',
+	trade: 'Trade',
+	realm: 'Realm',
+	chronicle: 'Chronicle',
+	lesson: 'Lessons',
+	advice: 'Advice',
+	reply: 'Replies',
+};
+const QUIET = new Set(['news', 'soft']); // quiet kinds never preview: they wait in the mail
+const urgentCls = (cls) => !!cls && cls.startsWith('warn');
+const ccOf = (cls) => (urgentCls(cls) ? '#ff6b5b' : cls === 'good' ? '#5fd08a' : cls === 'tip' ? '#4f9dff' : '#e9ecef'); // the colour code
+const hiddenG = (g) => !!(SET.hideG && SET.hideG[g]);
+const news = (grp, text, cls, secs, at, act, why) => say(text, cls, secs, at, act, why, grp);
 // ───────────────────────── How news reaches you (Build 59; TELL in 06, the Post line of research)
 // You know what you see, what your people hear, and what a messenger brings. A line with a place (at) out of your sight is heard if it is a
 // fight near your people (vague: which way), else carried by a messenger at a runner's or a rider's pace, if your post reaches that far;
@@ -300,23 +339,15 @@ function postTick() {
 	const due = G.post.filter((m) => m.t <= G.t);
 	if (!due.length) return;
 	G.post = G.post.filter((m) => m.t > G.t);
-	for (const m of due) say(m.text, m.cls, m.secs, m.at, m.act, m.why ? m.why + ' · by messenger' : 'by messenger');
+	for (const m of due) say(m.text, m.cls, m.secs, m.at, m.act, m.why ? m.why + ' · by messenger' : 'by messenger', m.grp);
 }
-function say(text, cls, secs, at, act, why) {
+function say(text, cls, secs, at, act, why, grp = 'reply') {
 	if (!G) return;
 	{
 		const N = tell(text, cls, at);
 		if (!N) return;
 		if (N.delay > 1) {
-			(G.post || (G.post = [])).push({
-				t: G.t + N.delay,
-				text,
-				cls,
-				secs,
-				at: { x: at.x, y: at.y, told: 1 },
-				act,
-				why,
-			});
+			(G.post || (G.post = [])).push({ t: G.t + N.delay, text, cls, secs, at: { x: at.x, y: at.y, told: 1 }, act, why, grp });
 			return;
 		}
 		if (N.text) {
@@ -324,38 +355,29 @@ function say(text, cls, secs, at, act, why) {
 			at = null;
 		}
 	}
-	if (SET.msgs === false && cls !== 'warn' && cls !== 'tip') return;
-	if (hushed(text)) return;
-	if (cls === 'news' && SET.news === false) return; // Messages off: warnings only; a silenced kind stays quiet
-	const same = G.log.find((m) => m.text === text && m.until > G.t);
+	const urg = urgentCls(cls);
+	if (SET.msgs === false && !urg && cls !== 'tip' && grp !== 'reply') return;
+	if (cls === 'news' && SET.news === false) return; // Messages off: warnings and replies only; a silenced kind stays quiet
+	const M = G.mail || (G.mail = []),
+		key = hushKey(text),
+		now = performance.now(),
+		show = Math.max(secs || 0, MSG.secs) * 1000,
+		pre = !QUIET.has(cls) && (urg || !hiddenG(grp)),
+		pt = at ? { x: Math.round(at.x), y: Math.round(at.y) } : null,
+		same = M.find((m) => m.grp === grp && m.key === key && G.t - m.t < MSG.merge);
 	if (same) {
-		same.until = G.t + (secs || 4);
+		same.n++;
+		same.t = G.t;
+		same.text = text;
+		if (pt) same.at = pt;
+		if (pre && same.ru > now - 500) same.ru = now + show; // still showing: it stays a little longer, with its count
 		return;
-	} // the same line never shows twice at once
-	const quiet = QUIET.has(cls);
-	G.log.unshift({
-		text,
-		cls,
-		act,
-		why, // a line under the message in the list: why it happened (Build 58)
-		quiet,
-		until: quiet ? G.t : G.t + (secs || 4),
-		at: at ? { x: Math.round(at.x), y: Math.round(at.y) } : null,
-	});
-	G.log = G.log.slice(0, 5);
-	if (SET.tkMin || G.card || quiet) {
-		G.tkN = (G.tkN || 0) + 1;
-		if (cls === 'warn') G.tkW = true;
-	}
-} // hidden: the bell in the strip counts what came
-// The next useful step, read from your situation. One line, shown for six seconds, then at most one more every 45; a warning (starts with !) stays until fixed. Tap × to hide one.
-// Silence: the bell on any message or tip mutes its kind (numbers ignored) until Unmute all; a warning comes back after 2 minutes, in case the danger is new
-const hushKey = (t) => t.replace(/[\d,.]+/g, '#');
-function hushed(t) {
-	const k = hushKey(t),
-		w = G.hushW && G.hushW[k];
-	return !!(SET.hush && SET.hush[k]) || (w !== undefined && G.t < w);
+	} // a repeat is a count on the first, not a new flash
+	M.unshift({ text, cls, grp, key, act, why, n: 1, t: G.t, ru: pre ? now + show : 0, at: pt });
+	if (M.length > MSG.keep) M.length = MSG.keep;
+	if (!pre) G.mailN = (G.mailN || 0) + 1; // what came quietly: the count on the mail
 }
+const hushKey = (t) => t.replace(/[\d,.]+/g, '#'); // a line's kind: its words, the numbers aside (Raid 3 and Raid 5 are one kind)
 // the milestones' tests (words in MS_TEXT): each is a moment; the first time it is true it fires, once a game. {pct} and {spd} are filled.
 const MS_TEST = {
 	house: () => bldsOf(0, 'house').some((b) => b.prog >= 1),
@@ -389,7 +411,7 @@ function milestoneTick() {
 		if (!on) continue;
 		M.push({ id, t: Math.round(G.t) });
 		const [line] = MS_TEXT[id];
-		say(msFill(line), 'good', 7, null, `card:milestone,${id}`);
+		news('lesson', msFill(line), 'good', 7, null, `card:milestone,${id}`);
 		sfx('coin');
 		return; // one a tick: they never pile up
 	}
@@ -518,19 +540,13 @@ function ui(force) {
 		R = p.res;
 	document.body.classList.toggle('night', G.night > 0.5);
 	showByAge();
+	const VC = {};
 	for (const k of ['f', 'w', 's', 'g', 'i']) {
 		txt('r' + k, fmt(R[k]));
-		const el = $('r' + k),
-			net = netOf(p, k),
-			cls = net > 0.5 ? 'up' : net < -0.5 ? (R[k] < -net * 2 ? 'low' : 'down') : '';
-		if (el.dataset.h !== cls) {
-			el.dataset.h = cls;
-			el.className = 'wd' + (cls ? ' ' + cls : '');
-		}
-	} // the word's colour is the net flow of the last minute: rising, steady, falling, falling with under two minutes left (Build 58)
-	const rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length;
-	txt('scoreN', `★${fmt(p.score.total)}`);
-	txt('scoreR', ['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th');
+		const c = (VC[k] = grad(velOf(p, k))),
+			el = $('r' + k);
+		if (el.style.color !== c) el.style.color = c;
+	} // the count's colour is its velocity on the one gradient (Build 64): deep green gaining fast, white steady, red losing badly
 	if (G.t - (G.rdyT ?? -9) > 1 || G.t < G.rdyT) {
 		G.rdyT = G.t;
 		G.rdy = new Map();
@@ -550,53 +566,54 @@ function ui(force) {
 		T.at = G.t;
 		if (tip) T.last = G.t;
 	}
-	const showTip = tip && T.text === tip && (urgent || G.t - T.at < 6) && !hushed(tip) && !G.card && !G.place && !G.over;
+	const showTip = tip && T.text === tip && (urgent || G.t - T.at < 6) && !G.card && !G.place && !G.over;
 	if (showTip && (urgent || T.said !== T.text)) {
 		T.said = T.text;
-		say(tip, urgent ? 'warn' : 'tip', urgent ? 3 : 6);
-	} // a warning is said again while it holds (the same line only stays up), a tip once   // a tip is a message like any other, in the ticker
+		news('advice', tip, urgent ? 'warn' : 'tip', urgent ? 3 : 6);
+	} // a warning is said again while it holds (a repeat is a count, not a flash), a tip once: a tip is a message like any other
 	{
 		const lim = MODES[G.mode].secs,
-			clk = G.wonder
-				? `wonder ${clock(Math.max(0, G.wonder.end - G.t))}`
-				: lim
-					? `${clock(Math.max(0, lim - G.t))}`
-					: clock(G.t);
+			clk = G.wonder ? clock(Math.max(0, G.wonder.end - G.t)) : lim ? clock(Math.max(0, lim - G.t)) : clock(G.t);
 		let ready = 0;
 		for (const v of G.rdy.values()) ready += v; // research you can start now (the age counts: it is research too)
 		const idleN = unitsOf(0, 'vil').filter(freeVil).length,
-			t1 = `${AGES[p.age].name} · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''} ${clk}`;
-		txt('sAgeT', t1);
-		if ($('sIdle').hidden === !!idleN) $('sIdle').hidden = !idleN;
-		const sol = armyOf(0).length,
-			stat = (id, icon, n, show) => {
+			sol = armyOf(0).length,
+			rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length,
+			sky = `${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''}`,
+			n = Math.min(STATUS.length, [...$('tally').children].filter((e) => !e.hidden).length),
+			put = (id, gl, word, cls, i) => {
 				const el = $(id),
-					h = show ? icon + n : '';
-				if (el.statH !== h) {
-					el.statH = h;
-					el.innerHTML = h;
-				}
-				if (el.hidden === !!show) el.hidden = !show;
-			}; // the People card in numbers (Albert, Build 41)
-		stat('sIdle', '<b>idle</b> ', idleN, idleN > 0);
-		stat(
-			'sStats',
-			'',
-			[
-				ready ? `<span>${ICON.book}${ready}</span>` : '',
-				`<span>${ICON.head}${popOf(0)}</span>`,
-				sol ? `<span>${ICON.mil}${sol}</span>` : '',
-			].join(''),
-			true,
-		);
-		$('sAge').classList.toggle('glow', ready > 0 && !G.card);
-	} // gold when the next age or any research is ready: tap it for everything you can research
+					sig = gl + '|' + word + '|' + cls + '|' + (i < n);
+				if (el.sig === sig) return;
+				el.sig = sig;
+				el.hidden = i >= n;
+				el.className = 'cell' + (cls ? ' ' + cls : '');
+				el.children[0].innerHTML = gl;
+				el.children[1].textContent = word;
+			};
+		const S = [
+			['', AGES[p.age].name, ''],
+			[sky, '', ''],
+			['', clk, ''],
+			[ICON.head, `${popOf(0)}/${capOf(0)}`, popOf(0) >= capOf(0) && capOf(0) < POPMAX ? 'lit-r' : ''],
+			['', `z ${idleN}`, idleN ? 'lit-r' : 'dim'],
+			[ICON.book, String(ready), ready ? 'lit-b' : 'dim'],
+			['', `★${fmt(p.score.total)} ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, ''],
+			[ICON.mil, String(sol), sol ? '' : 'dim'],
+		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
+		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2], i));
+	} // the colour code on the pill: blue research you can start, red the people at the roof or idle hands; dim is nothing to see
 	huddleUI();
 	const V = unitsOf(0, 'vil');
 	for (const r of JOBS) {
 		let n = 0;
 		for (const v of V) if (v.job === r) n++;
 		txt('tn_' + r, String(n));
+		{
+			const el = $('tn_' + r),
+				c = VC[KEY[r]] || '';
+			if (el.style.color !== c) el.style.color = c;
+		} // the job's number wears its store's colour: the row reads as one
 		$('tj_' + r).classList.toggle('sel', p.rally === r);
 	}
 	const nq = queuedOf(0, 'vil'),
@@ -609,7 +626,8 @@ function ui(force) {
 		if ($('homeB').hidden === away) $('homeB').hidden = !away;
 	} // home shows only when your Town Center is off the screen
 	$('stage').classList.toggle('busy', !!(G.card || G.place));
-	$('buildT').classList.toggle('sel', !!(G.card && G.card.type === 'menu')); // one look for on: the outline, as the default job wears it
+	if ($('buildT')) $('buildT').classList.toggle('sel', !!(G.card && G.card.type === 'menu')); // one look for on: the outline, as the default job wears it
+	doorUI();
 	{
 		const P = picked(),
 			n = P.length,
@@ -685,123 +703,35 @@ function ui(force) {
 		$('placeUndo').hidden = G.place.kind !== 'wall' || !G.place.pts.length;
 		$('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why);
 	}
-	tick();
+	preview();
 	if (G.card) renderCard();
 }
-// The ticker: the newest live message, or the last one faded; paused says so when nothing newer is live. Tap the line to see where it happened
-// (or, with nowhere to show, open the list); the list holds the last five, each with its bell to silence that kind; the arrow hides it all.
 const linkOf = (m) => m && (m.act || (m.at ? `jump:${m.at.x},${m.at.y}` : ''));
-// The alert bar, in SoRen's pattern: a sign, the name in bold, one line in italics, a ring and the seconds. It takes the ticker line while an event is coming
-// (EV_WARN seconds, with how long it lasts) or running (what it does); a warning from the game still wins. Tap it to see where. The horde joins for its last 45 s.
-function alertNow() {
-	const I = G.incoming;
-	if (I && !G.over)
-		return {
-			name: 'Attack',
-			line: `${I.n} coming`,
-			now: true,
-			secs: 0,
-			left: I.eta,
-			total: 60,
-			at: { x: I.x, y: I.y },
-			hot: true,
-		};
-	const V = G.ev;
-	if (!V || G.over) return null;
-	const e = V.cur,
-		k = e ? e.kind : V.warned,
-		E = k && EVENTS[k];
-	if (E) {
-		const A = { name: E.name, line: EV_LINE[k], now: !!e, secs: E.secs };
-		if (e)
-			return {
-				...A,
-				left: e.until - G.t,
-				total: E.secs,
-				at:
-					e.at || (e.units && e.units[0]) || (e.x !== undefined ? { x: e.x, y: e.y === undefined ? MID : e.y } : null),
-			};
-		return { ...A, left: V.next - G.t, total: EV_WARN, at: null };
+// The preview (Build 64): the newest live line, or the question that hides its group; paused says so when nothing is live. A full card
+// is a moment of reading: the preview steps aside, and the line waits in the mail.
+function preview() {
+	const el = $('pv'),
+		M = G.mail || [],
+		now = performance.now(),
+		paused = G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup')),
+		live = M.find((m) => m.ru > now),
+		big = !!G.card && $('card').classList.contains('full'),
+		ask = G.pvAsk;
+	let h = '',
+		cc = '#e9ecef';
+	if (!big && !G.over) {
+		if (ask)
+			h = `<div class="t"><small>${GROUPS[ask]}</small><span>Hide ${GROUPS[ask]} messages?</span></div><div class="ask"><button class="yes" data-act="pvhide:${ask}">Hide</button><button data-act="pvkeep">Keep</button></div>`;
+		else if (live) {
+			cc = ccOf(live.cls);
+			h = `<button class="t" data-act="${linkOf(live) || 'pvx'}"><small>${GROUPS[live.grp]}${live.n > 1 ? ' ×' + live.n : ''}</small><span>${live.text}</span></button><button class="x" data-act="pvx" aria-label="Close">${ICON.close}</button>`;
+		} else if (paused) h = `<button class="t" data-act="pause"><small>Paused</small><span>Tap to carry on</span></button>`;
 	}
-	const H = G.horde;
-	if (H && H !== 'done' && H.said && H.at - G.t <= 45)
-		return { name: 'Horde', line: EV_LINE.horde, now: false, secs: 0, left: H.at - G.t, total: 45, at: null };
-	return null;
-}
-const RING = 50.27; // the circumference of the countdown ring (radius 8)
-function alertHTML(A) {
-	const left = Math.max(0, A.left),
-		t = left < 60 ? `${Math.ceil(left)}s` : clock(left),
-		f = clamp(left / A.total, 0, 1),
-		line = A.now ? A.line : A.secs > 5 ? `coming, lasts ${A.secs}s` : 'is coming';
-	return `<span class="al"><svg class="tri" viewBox="0 0 16 16"><path d="M8 1.5 L15 14 H1 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 6 V9.6 M8 11.6 V12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><b>${A.name}</b><i>${line}</i><span class="cd"><svg class="ring" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><circle class="v" cx="10" cy="10" r="8" style="stroke-dashoffset:${(RING * (1 - f)).toFixed(1)}"/></svg>${t}</span></span>`;
-}
-function tick() {
-	const hide = !!SET.tkMin || !!G.card,
-		live = G.log.find((m) => m.until > G.t),
-		paused = G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup')); // a card open is a moment of reading: the ticker steps aside, the bell counts
-	$('stage').classList.toggle('tk', !hide);
-	$('ticker').hidden = hide;
-	$('tkBell').hidden = !hide;
-	{
-		const n = G.tkN || 0,
-			bs = n + (G.tkW ? 'w' : '');
-		if (!hide && tick.list !== bs) {
-			tick.list = bs;
-			$('tkList').innerHTML = ICON.list + (n ? `<span class="n">${n}</span>` : '');
-			$('tkList').classList.toggle('warn', !!G.tkW);
-		}
-	} // the list button counts what waits quietly
-	if (hide) {
-		const n = G.tkN || 0,
-			bs = n + (G.tkW ? 'w' : '');
-		if (tick.bell !== bs) {
-			tick.bell = bs;
-			$('tkBell').innerHTML = ICON.bell + (n ? `<span>${n}</span>` : '');
-			$('tkBell').classList.toggle('warn', !!G.tkW);
-		}
-		$('tkPop').hidden = true;
-		tick.sig = '';
-		return;
+	if (h !== preview.h) {
+		preview.h = h;
+		el.innerHTML = h;
+		el.hidden = !h;
 	}
-	if ((G.tkN || G.tkW) && G.tkOpen) {
-		G.tkN = 0;
-		G.tkW = false;
-		tick.bell = tick.list = '';
-	} // the list opened: what was counted has been seen
-	const A = !paused && !(live && live.cls === 'warn') ? alertNow() : null, // a live warning, or paused, comes before the alert bar
-		m =
-			paused && !(live && live.cls === 'warn')
-				? { text: 'Paused · ▶ to carry on', cls: '' }
-				: live || G.log.find((x) => !x.quiet),
-		el = $('tkT'); // paused says so, unless a warning is up; a quiet line never takes the line
-	if (A) {
-		const h = alertHTML(A);
-		if (tick.h !== h) {
-			tick.h = h;
-			el.innerHTML = h;
-		}
-		el.dataset.act = A.hot ? 'card:emergency' : A.at ? `jump:${Math.round(A.at.x)},${Math.round(A.at.y)}` : 'tklist';
-		$('ticker').className = 'tick alert ' + (A.now ? 'now' : 'soon') + (A.hot ? ' hot' : '');
-	} else {
-		tick.h = '';
-		txt('tkT', m ? m.text : '');
-		el.dataset.act = linkOf(live) || 'tklist';
-		$('ticker').className = 'tick ' + (m && m === live ? live.cls || '' : m && !G.log.includes(m) ? '' : 'old');
-	}
-	const pop =
-		G.tkOpen && G.log.length
-			? G.log
-					.map(
-						(x) =>
-							`<div class="row ${x.cls || ''}"><button class="t" data-act="${linkOf(x) || 'tklist'}">${x.text}${x.why ? `<small class="why">${x.why}</small>` : ''}</button><button class="h" data-act="hush:${encodeURIComponent(x.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`,
-					)
-					.join('') +
-				`<div class="row end"><button class="t" data-act="tkclear">Clear all</button><button class="h" data-act="tklist" aria-label="Close the list">✕</button></div>`
-			: '';
-	if (pop !== tick.sig) {
-		tick.sig = pop;
-		$('tkPop').innerHTML = pop;
-		$('tkPop').hidden = !pop;
-	}
+	if (el.style.getPropertyValue('--cc') !== cc) el.style.setProperty('--cc', cc);
+	el.classList.toggle('fade', !!live && !ask && live.ru - now < 400);
 }

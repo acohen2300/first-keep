@@ -360,9 +360,8 @@ const CARDS = {
 		let h =
 			title('Stores', 'the last minute') +
 			`<table><tr><th></th><th>Have</th><th>In</th><th>Out</th><th>On it</th></tr>${RES.map((r) => {
-				const k = KEY[r],
-					net = Math.round(rt[k] || 0) - Math.round(ot[k] || 0);
-				return `<tr data-act="storesk:${k}" class="${G.storesK === k ? 'sel' : ''}"><td>${RESOURCES[r].name}</td><td class="${net > 0 ? 'up' : net < 0 ? (p.res[k] < -net * 2 ? 'low' : 'down') : ''}">${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${ot[k] ? '−' + Math.round(ot[k]) : ''}</td><td>${V.filter((u) => u.job === r).length}</td></tr>`;
+				const k = KEY[r];
+				return `<tr data-act="storesk:${k}" class="${G.storesK === k ? 'sel' : ''}"><td>${RESOURCES[r].name}</td><td style="color:${grad(velOf(p, k))}">${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${ot[k] ? '−' + Math.round(ot[k]) : ''}</td><td>${V.filter((u) => u.job === r).length}</td></tr>`;
 			}).join('')}</table>`;
 		if (G.storesK) {
 			// the drill-down (Albert, Build 63): a tapped row says why, both ways. By reason: where the minute's in and out came from and went.
@@ -394,7 +393,7 @@ const CARDS = {
 			h += `<p><i>Who:</i> ${V.filter((u) => u.job === r).length} villagers on it${makers.length ? `; made at ${who(makers)}` : ''}${takers.length ? `; taken by ${who(takers)}` : ''}.</p>`;
 		}
 		h += `<p><i>Goods:</i> ${GOODK.map((k) => `${GOODS[k].name} ${Math.floor(p.goods[k] || 0)}${rt[k] ? ` (+${Math.round(rt[k])})` : ''}`).join(' · ')}. Goods wait at your Market for caravans; wool for a Workshop.</p>`;
-		h += `<p>In and Out: the last minute. A count is green while it rises, gold while it falls, red when it falls with under two minutes left${p.hungry ? ' · <b>they are hungry</b>' : ''}.</p>`;
+		h += `<p>In and Out: the last minute. A count is green while it gains, deeper the faster; white while it holds; red as it loses, reddest with under two minutes left${p.hungry ? ' · <b>they are hungry</b>' : ''}.</p>`;
 		{
 			// the ledger: every resource that ever came in or went out, by where it came from and went (earn and spend, 08-core)
 			const L = p.ledger || { in: {}, out: {} },
@@ -618,7 +617,7 @@ const CARDS = {
 								? `short ${need(B.cost)}`
 								: (fits ? 'fits here · ' : '') + costText(B.cost),
 					lock ? 'dis' : full ? 'dis done' : !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
-					!lock && !full && !afford(p, B.cost) ? fillOf(B.cost) : undefined,
+					lock || full ? undefined : afford(p, B.cost) ? 1 : fillOf(B.cost),
 				)
 					.replace('<b>', `${lock ? '' : bldThumb(k)}<b>`)
 					.replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>') +
@@ -650,6 +649,35 @@ const CARDS = {
 		);
 	},
 	research: () => researchHTML(),
+	// the dashboard (Build 64): the five domains and the mail, one row on top of the row, each in the colour code with its word
+	dash() {
+		const D = domains(),
+			un = G.mailN || 0,
+			tile = (act, st, icon, word, name) =>
+				`<button class="dt ${st}" data-act="${act}"><span class="i">${icon}</span><b>${word}</b><small>${name}</small></button>`;
+		return (
+			title('The realm', D.top ? `${D.top.name}: ${D.top.word}${D.top.why ? ' · ' + D.top.why : ''}` : 'all is well') +
+			`<div class="dash">${D.list.map((d) => tile(d.go, d.st, domainIcon()[d.id], d.word, d.name)).join('')}${tile('mail', un ? 'blue' : 'white', ICON.mail, un ? `${un} new` : `${(G.mail || []).length} kept`, 'Mail')}</div>`
+		);
+	},
+	// the mail (Build 64): every line kept, newest first, by group; a group can hide its previews here or from the preview's ×
+	mail() {
+		const M = G.mail || [],
+			g = G.mailG,
+			show = M.filter((m) => !g || m.grp === g).slice(0, 6),
+			gs = Object.keys(GROUPS).filter((k) => k === g || M.some((m) => m.grp === k));
+		let h = title('Mail', g ? GROUPS[g] : `${M.length} kept`);
+		h += acts(
+			[btn('mailg:', 'All', '', g ? '' : 'on'), ...gs.map((k) => btn(`mailg:${k}`, GROUPS[k], hiddenG(k) ? 'hidden' : '', g === k ? 'on' : ''))].join(''),
+			'c5',
+		);
+		if (g && g !== 'reply')
+			h += acts(btn(`mailtog:${g}`, hiddenG(g) ? 'Show as it comes' : 'Hide the previews', hiddenG(g) ? 'now: quietly to the mail, red still shows' : 'now: a preview, then here'), 'c1');
+		h += show.length
+			? `<div class="mrows">${show.map((m) => `<button class="mr" data-act="${linkOf(m) || 'mail'}" style="--cc:${ccOf(m.cls)}"><b>${m.text}${m.n > 1 ? ` ×${m.n}` : ''}</b><small>${GROUPS[m.grp]} · ${clock(m.t)}${m.why ? ' · ' + m.why : ''}</small></button>`).join('')}</div>`
+			: '<p class="dim">Nothing here yet.</p>';
+		return h;
+	},
 	milestone(c) {
 		const id = c.page,
 			T = id && MS_TEXT[id],
@@ -749,9 +777,11 @@ const CARDS = {
 					btn('guide:rule', 'Rules', 'what triggers what'),
 			) +
 			`<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
-      <p><b>Build:</b> pick a menu, then a building. It waits above your finger: drag it, then tap Build. Villagers raise it.</p>
+      <p><b>The door:</b> under People, it shows the most important thing now: red something wrong, blue something you can do, white all is well. Tap it to go where it is fixed; tap it again, or when all is well, for the dashboard: the realm, people, work, stores, tech and the mail.</p>
+      <p><b>Build:</b> the chip above the row turns the pages: Jobs, Build, War, Squad, Train. The Build page shows what the town needs (blue: build it now; green: going up; red: what stands in the way) and All opens every building. It waits above your finger: drag it, then tap Build.</p>
+      <p><b>Messages</b> arrive at the top and fade; tap one to see where. × on a group of news asks to hide that group: it then goes quietly to the mail, and red still shows. Numbers wear one colour scale: green gaining, white steady, red losing.</p>
       <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Pause shows the speeds under the button.</p>
-      <p><b>Army:</b> tap open ground with nothing picked, then the sword: Idle, All or a squad goes there. The chip by the jobs turns the row into the Squad room and the War room.</p>
+      <p><b>Army:</b> tap open ground with nothing picked, then the sword: Idle, All or a squad goes there. The War, Squad and Train pages hold your squads, what they are made of, and what is being trained.</p>
       <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>
@@ -772,8 +802,8 @@ const CARDS = {
 					btn('card:taps', 'Tap counts', 'this phone only'),
 				'c3',
 			) +
-			(Object.keys(SET.hush).length
-				? acts(btn('unhush', 'Unmute all messages', Object.keys(SET.hush).length + ' kinds silenced'), 'c1')
+			(SET.hideG && Object.keys(SET.hideG).length
+				? acts(btn('mailall', 'Show every group again', Object.keys(SET.hideG).map((g) => GROUPS[g]).join(', ') + ' hidden'), 'c1')
 				: '') +
 			acts(
 				btn(
@@ -790,7 +820,7 @@ const CARDS = {
 const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'end', 'research', 'menu']); // the cards that take the whole height
 // three sizes, one mold each (Albert, Build 63): lg the whole height (the Build card, the Guide, Help, Setup); md a thing's card; sm a short one
 const SIZE_OF = (t) =>
-	FULL.has(t) ? 'lg' : t === 'squad' || t === 'stores' || t === 'emergency' || t === 'army' ? 'sm' : 'md';
+	FULL.has(t) ? 'lg' : t === 'squad' || t === 'stores' || t === 'emergency' || t === 'army' || t === 'dash' ? 'sm' : 'md';
 function renderCard() {
 	const c = G.card;
 	if (!c || !CARDS[c.type]) return;

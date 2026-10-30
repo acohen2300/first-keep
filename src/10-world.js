@@ -16,7 +16,7 @@ function blankGame(seed) {
 		nodes: [],
 		finds: [],
 		tracers: [],
-		log: [],
+		mail: [], // every line, newest first (the dashboard's mail)
 		P: [],
 		rel: [],
 		card: null,
@@ -160,7 +160,7 @@ function newGame(seed, carry) {
 		p.age = carry.age;
 		p.techs = new Set(carry.techs);
 		fxDirty();
-	} else say(`${LAND[G.land].name}. Gather, grow, explore.`, '', 8);
+	} else news('land', `${LAND[G.land].name}. Gather, grow, explore.`, '', 8);
 	if (!carry && seed !== todaySeed()) applyScenario(SET.scen);
 }
 // a scenario is the ordinary game with some things set (SCENARIOS in 06): an age, a store, relations, hazards, a few buildings already up
@@ -209,7 +209,7 @@ function applyScenario(id) {
 	navRebuild();
 	fxDirty();
 	if (S.hordeAt) G.horde = { at: S.hordeAt, said: 0 };
-	say(`${SCEN_TEXT[id][0]}: ${SCEN_TEXT[id][1]}`, 'soft', 10);
+	news('realm', `${SCEN_TEXT[id][0]}: ${SCEN_TEXT[id][1]}`, 'soft', 10);
 }
 const inBox = (p, r) => p.x >= r.x0 && p.x <= r.x1 && p.y >= r.y0 && p.y <= r.y1;
 const node = (kind, type, x, y, amt) => ({ id: NID++, kind, type, x, y, amt, max: amt });

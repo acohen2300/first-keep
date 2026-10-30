@@ -24,8 +24,8 @@ function openCard(c) {
 		setPause(true);
 		G.cardPaused = true;
 	}
-	tick();
 	renderCard();
+	preview();
 } // a card pauses the game (Help: Pause on cards); closing it carries on
 const READ_CARDS = new Set(['research', 'troops', 'guide', 'help', 'score', 'stores', 'sound']); // the cards you sit and read pause the game; a building, a unit or a field to glance at does not (Albert, Build 41). The War Council is a building card that pauses (Build 48: 'council' here never matched a card)
 function closeCard() {
@@ -36,10 +36,10 @@ function closeCard() {
 			G.cardPaused = false;
 			if (!G.over) setPause(false);
 		}
-		tick();
 	}
 	$('card').hidden = true;
-} // the ticker steps aside or back at once, so the card gets its room on the first frame
+	if (G) preview();
+} // the preview steps back at once
 let cardSig = '';
 const sig = (x) =>
 	x.nodeType === 3
@@ -84,7 +84,7 @@ function patchHTML(el, html) {
 // ── the pieces every card is made of
 const cap1 = (t) => (t && t.indexOf('<') < 0 ? t.replace(/(^|· )([a-z])/g, (m, a, c) => a + c.toUpperCase()) : t); // sentence case: a capital opens every label and every part after a dot
 const btn = (act, title, sub, cls, fr) =>
-	`<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small${sub.startsWith('short ') ? ` class="need"${fr === undefined ? '' : ` style="--fr:${fr.toFixed(2)}"`}` : ''}>${cap1(sub)}</small>` : ''}</button>`; // a sub-line that says what is short reads in red ink that fades to white as you near the cost (fr: 0 to 1)
+	`<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small${fr === undefined ? '' : ` class="${fr < 1 ? 'need' : 'can'}" style="--gc:${costCol(fr)}"`}>${cap1(sub)}</small>` : ''}</button>`; // a cost line on the one gradient (fr: what you have of it, 0 to 1): red at nothing, white near, light green when you can pay
 const FOLD = new Set(); // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 // the book entry of a research step: the date, what it changed, and its weight, which is its cost
 const techBook = (t) =>
@@ -161,7 +161,7 @@ function trainButtons(kinds) {
 				stats(0, ck).name,
 				sub + (n ? ` ×${n}` : ''),
 				why ? 'dis' : '',
-				sub.startsWith('short ') && !full ? fillOf(cost) : undefined,
+				sub.startsWith('short ') && !full ? fillOf(cost) : sub === costText(cost) ? 1 : undefined,
 			);
 		})
 		.join('');
@@ -194,7 +194,7 @@ function techBtn(t, withAt) {
 		t.name,
 		sub + (withAt ? ` · ${BLD[t.at].name}` : ''),
 		`a${t.age} ` + (st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock'),
-		st === 'short' ? fillOf(c) : undefined,
+		st === 'short' ? fillOf(c) : st === 'ready' ? 1 : undefined,
 	); // a${age}: the top edge wears the age's colour
 }
 const trainsAt = (kind) =>
@@ -212,7 +212,7 @@ function keepAgeBtn() {
 		`${A.name} age`,
 		p.aging ? 'advancing' : !afford(p, A.cost) ? `short ${need(A.cost)}` : costText(A.cost),
 		p.aging || !afford(p, A.cost) ? 'dis' : 'go',
-		!p.aging && !afford(p, A.cost) ? fillOf(A.cost) : undefined,
+		p.aging ? undefined : afford(p, A.cost) ? 1 : fillOf(A.cost),
 	);
 }
 // what one of yours is doing, in words read from its state; and what it has done in its life

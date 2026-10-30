@@ -43,7 +43,11 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   // ruts: depth grows as passes^0.4 toward full at n0 (USFS trafficability)
   { const T = F.ruts(), i = 5 * 50 + 5; const was = T[i]; T[i] = F.CLIMATE.rut.n0 / 4; near('rut quarter', F.rutOf(5 * 40 + 1, 5 * 40 + 1), F.CLIMATE.rut.deep * 0.25 ** 0.4, 1e-9); T[i] = was; }
   // sound (ISO 9613-2): full within d0, then the inverse-square law: twice the distance is half the amplitude (−6 dB), less the air's small take
-  { const d0 = (Math.hypot(innerWidth, innerHeight) / 2 / F.cam.z) * F.SOUND.d0; near('hearing near', F.hearing(d0 / 2), 10 ** ((-F.SOUND.alphaKm * (d0 / 2) * F.SOUND.metre) / 1000 / 20), 1e-6); const a = F.hearing(d0 * 4), b = F.hearing(d0 * 8); near('inverse square', a / b, 2 * 10 ** ((F.SOUND.alphaKm * d0 * 4 * F.SOUND.metre) / 1000 / 20), 1e-6); }
+  // the ear at a height (Build 64): at the closest zoom a sound under the camera is full; zoom out twice as far, half the amplitude (−6 dB); along the ground, twice the slant distance is half
+  { const z0 = F.cam.z, H = (z) => F.camH(z), air = (s) => 10 ** ((-F.SOUND.alphaKm * s * F.SOUND.metre) / 1000 / 20);
+    F.cam.z = F.ZOOM_MAX; near('hearing under the camera', F.hearing(0), air(H(F.ZOOM_MAX)), 1e-6);
+    F.cam.z = F.ZOOM_MAX / 2; near('zoom out twice, half as loud', F.hearing(0), 0.5 * air(H(F.ZOOM_MAX / 2)), 1e-6);
+    const h = H(F.cam.z), a = F.hearing(Math.sqrt((4 * h) ** 2 - h * h)), b = F.hearing(Math.sqrt((8 * h) ** 2 - h * h)); near('inverse square on the slant', a / b, 2 * air(4 * h) / air(8 * h), 1e-6); F.cam.z = z0; }
   // a crew on a site: output ∝ n^0.7 (Thomas & Smith 1990: per-worker productivity falls about n^−0.3 with overmanning); two builders 1.6×, four 2.6×
   near('crew of two', 2 ** F.BUILDER_POW, 1.62, 0.02); near('crew of four', 4 ** F.BUILDER_POW, 2.64, 0.02);
   // the sun (the sunrise equation): daylight at 45° N is half the day at the equinox, about 15.4 of 24 hours at midsummer (June 21, day 172) and 8.6 at midwinter (day 355)

@@ -246,45 +246,58 @@ const ACT = {
 		saveSet();
 		refresh();
 	},
-	tkmin() {
-		SET.tkMin = !SET.tkMin;
-		saveSet();
-		G.tkN = 0;
-		G.tkW = false;
-		G.tkOpen = false;
-		ui(true);
-		fit();
-	}, // hide or show the ticker
 	qlock(id) {
 		const t = TECHBY[id];
 		say(`Research ${t.name} at the ${BLD[t.at].name} for more slots.`, '', 5);
 	},
-	tkclear() {
-		G.log = [];
-		G.tkOpen = false;
-		G.tkN = 0;
+	door() {
+		doorTap();
+	}, // the door: to the most important thing, else the dashboard (Build 64)
+	page(a) {
+		hudPage(a);
+		feel('tick');
+	},
+	pvx() {
+		const now = performance.now(),
+			m = (G.mail || []).find((x) => x.ru > now);
+		if (!m) return;
+		m.ru = 0;
+		if (m.grp !== 'reply' && !urgentCls(m.cls) && !hiddenG(m.grp)) G.pvAsk = m.grp; // × on news asks once: hide this group?
 		ui(true);
 	},
-	tklist() {
-		G.tkOpen = !G.tkOpen && G.log.length > 0;
-		ui(true);
-	}, // the last five
-	hush(a) {
-		const t = decodeURIComponent(a || ''),
-			k = hushKey(t),
-			m = G.log.find((x) => x.text === t);
-		if (m && m.cls === 'warn') (G.hushW = G.hushW || {})[k] = G.t + 120;
-		else {
-			(SET.hush = SET.hush || {})[k] = 1;
-			saveSet();
-		}
-		G.log = G.log.filter((x) => hushKey(x.text) !== k);
-		ui(true);
-	},
-	unhush() {
-		SET.hush = {};
-		G.hushW = {};
+	pvhide(g) {
+		(SET.hideG = SET.hideG || {})[g] = 1;
 		saveSet();
+		G.pvAsk = null;
+		say(`${GROUPS[g]} now goes quietly to the mail.`, '', 3);
+	}, // the group goes to the mail without a preview; red still comes through
+	pvkeep() {
+		G.pvAsk = null;
+		ui(true);
+	},
+	mail() {
+		G.mailN = 0;
+		openCard({ type: 'mail' });
+	},
+	mailg(g) {
+		G.mailG = g && G.mailG !== g ? g : null;
+		refresh();
+	},
+	mailtog(g) {
+		const H = (SET.hideG = SET.hideG || {});
+		if (H[g]) delete H[g];
+		else H[g] = 1;
+		saveSet();
+		refresh();
+	},
+	mailall() {
+		SET.hideG = {};
+		saveSet();
+		refresh();
+	},
+	mailclear() {
+		G.mail = [];
+		G.mailN = 0;
 		refresh();
 	},
 	sound() {
@@ -388,14 +401,6 @@ const PLAY = {
 	pagecycle() {
 		pageCycle();
 	}, // the chip at the row's left: Jobs, War, Build, Squad, Train (Build 63)
-	waim() {
-		const H = G.hud;
-		H.aim = true;
-		H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
-		H.moved = false;
-		H.etaKey = '';
-		feel('tick');
-	}, // the crosshair to the middle of the screen
 	sqdone() {
 		hudPage('war');
 		G.hud.sel = G.hud.sq.i;
@@ -403,14 +408,6 @@ const PLAY = {
 	}, // ✓ on the Squad page: to the War page with this squad picked
 	sqbest(a) {
 		sqBest(Number(a));
-	},
-	torders() {
-		const H = G.hud;
-		H.aim = true;
-		H.mode = 'rally';
-		if (G.rally0) H.h = { t: 'ground', e: { x: G.rally0.x, y: G.rally0.y } };
-		say('Tap where new soldiers should go, then ✓.', '', 4);
-		feel('tick');
 	},
 	tsq() {
 		const n = G.recruitSq;
@@ -453,9 +450,6 @@ const PLAY = {
 		u.post = null;
 		closeCard();
 	}, // the worker card: back to the work it had
-	sqnew() {
-		sqNew();
-	},
 	sqcycle() {
 		sqCycle();
 	},
@@ -829,7 +823,7 @@ const PLAY = {
 					n++;
 				}
 			}
-		G.log = G.log.filter((m) => m.act !== 'douse:' + a);
+		G.mail = (G.mail || []).filter((m) => m.act !== 'douse:' + a);
 		if (n) say(`${n} more run to the fire.`, '', 3);
 		else if (b && b.fire > 0) say('No villager is free.', '', 3);
 	},

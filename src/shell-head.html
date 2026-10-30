@@ -28,34 +28,28 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 .pill .cell+.cell::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--hair)}
 .gl{position:absolute;left:50%;top:13px;width:20px;height:20px;transform:translate(-50%,-50%);display:block}
 .wd{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);text-align:center;font-size:var(--t2);font-weight:700;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
-.wd.up,#card td.up{color:#8fd0a8}.wd.down,#card td.down{color:var(--gold)}.wd.low,#card td.low{color:var(--red)}
+#card td.low{color:var(--red)}
 .cell.one .gl,.cell.one .wd{top:50%}.cell.one .gl{width:18px;height:18px}
 .pill .cell.on{background:#2f3b36}
 #muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--mute)}
-.strip{display:flex;align-items:flex-start;justify-content:space-between;box-sizing:border-box;height:var(--strip);border:1px solid var(--hair);border-radius:var(--r);background:var(--sheet);box-shadow:0 2px 8px rgba(0,0,0,.35);padding:0 2px;font-size:var(--t2);font-weight:700;color:var(--mute);line-height:26px}   /* 28 px tall to look at, 44 px tall to tap: the buttons hang below it */
-.strip .sg{display:flex;align-items:flex-start}
-.strip button{all:unset;display:flex;align-items:flex-start;justify-content:center;box-sizing:border-box;height:44px;min-width:44px;padding:0 8px;text-align:center;white-space:nowrap;cursor:pointer;touch-action:manipulation;font-variant-numeric:tabular-nums}
-#scoreP{gap:4px}#sIdle{color:var(--gold)}#scoreN{color:var(--bone)}
-#sAge.glow{color:var(--gold);animation:glowt 1.8s ease-in-out infinite}@keyframes glowt{0%,100%{text-shadow:0 0 3px rgba(230,185,71,.35)}50%{text-shadow:0 0 12px rgba(230,185,71,1)}}
 #card .lvl{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}#card .lvl small{color:var(--mute)}
-/* The ticker: every message and tip in one line under the strip, the newest first; tap it to see it, the list for the last five, the arrow to hide them all (a bell in the strip counts what comes while hidden). Albert, Build 39 */
-.tick{display:flex;box-sizing:border-box;height:46px;border:1px solid var(--hair);border-radius:var(--r);background:var(--sheet);box-shadow:0 2px 8px rgba(0,0,0,.35);overflow:hidden;color:var(--bone)}
-.tick button,.tkpop button{all:unset;box-sizing:border-box;min-height:44px;cursor:pointer;touch-action:manipulation}
-#tkT{flex:1;min-width:0;padding:0 10px;font-size:15px;font-weight:500;line-height:44px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#tkList,#tkMin,.tkpop .h{width:44px;display:flex;align-items:center;justify-content:center;color:var(--mute)}#tkList .n{font-size:12px;font-weight:700;margin-left:2px;color:var(--gold)}#tkList.warn .n{color:#ff8a70}
-.tick.alert.hot{background:rgba(92,22,18,.96);color:#ffd9d2;border-color:#d8432f}.tick.alert.hot #tkList,.tick.alert.hot #tkMin{color:#ffd9d2}
-.tick.alert{background:rgba(70,48,12,.96);color:#fbe7b8;border-color:var(--gold)}.tick.alert #tkList,.tick.alert #tkMin{color:#fbe7b8}
 #tkT .al{display:flex;align-items:center;gap:6px;height:44px}#tkT .al b{flex:none;font-weight:700}#tkT .al i{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:500;opacity:.92}
 #tkT .tri{flex:none;width:16px;height:16px;color:#ffc24a}#tkT .cd{flex:none;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
 .ring{width:20px;height:20px;transform:rotate(-90deg)}.ring circle{fill:none;stroke:currentColor;stroke-width:2.6;opacity:.28}.ring .v{opacity:1;stroke-dasharray:50.27;stroke-linecap:round}
-.tick.warn{background:rgba(124,32,22,.95);color:#ffe1da}.tick.warn #tkList,.tick.warn #tkMin{color:#ffe1da}.tick.good{background:rgba(28,84,58,.95);color:#dcf5e8}.tick.tip{border-color:var(--blue)}.tick.old #tkT{color:var(--mute)}
-.tkpop{display:flex;flex-direction:column;border:1px solid var(--hair);border-radius:var(--r);background:var(--sheet);box-shadow:0 2px 8px rgba(0,0,0,.35);overflow:hidden}
-.tkpop .row{display:flex}.tkpop .row+.row{border-top:1px solid var(--hair)}.tkpop .t{flex:1;min-width:0;padding:6px 10px;display:flex;align-items:center;font-size:12px;font-weight:700;line-height:1.25;color:var(--bone)}.tkpop .row.warn .t{color:#ffb4a6}.tkpop .row.good .t{color:#9fd8b5}
-#tkBell{gap:4px;color:var(--gold)}#tkBell.warn{color:#ff8a70}#tkBell .gl{position:static;transform:none;width:15px;height:26px;margin:0}
-.tick .gl,.tkpop .gl{position:static;transform:none;width:16px;height:16px}   /* icons sit in their own button, not on the tally's spots */
-#hud{z-index:4}   /* the ticker and its list above the small map */
+#hud{z-index:4}
+/* The status pill (Build 64): the state of the world in the tally's mold, one cell under each store column, so the eye reads down a column. */
+#status{height:var(--strip);overflow:visible;align-items:flex-start}#status .cell{height:44px;display:flex;align-items:flex-start;justify-content:center;gap:2px;padding-top:0}#status button.cell{height:44px}#status .cell .gl,#status .cell .wd{position:static;transform:none;width:auto;height:26px;line-height:26px;font-size:12px;white-space:nowrap}#status .cell span.gl{display:inline-flex;align-items:center}#status .cell .gl svg{position:static;transform:none;width:13px;height:13px}#status .cell .gl:empty{display:none}#status.pill .cell+.cell::before{top:6px;bottom:auto;height:14px}   /* thin to look at (28 px), 44 px to tap: the buttons hang below it, as the strip did */#status .cell.lit .wd{color:var(--gold)}
+#status span.cell{display:block}#status .cell.dim{color:var(--mute)}#status .cell.dim .wd{color:var(--mute)}#status .cell.lit-r .wd{color:#ff6b5b}#status .cell.lit-b .wd{color:#7db8ff}#status .cell.lit-b{animation:glowb 1.8s ease-in-out infinite}@keyframes glowb{0%,100%{text-shadow:0 0 3px rgba(79,157,255,.35)}50%{text-shadow:0 0 12px rgba(79,157,255,1)}}
+/* The preview (Build 64): a message arrives the way a phone shows a text, over the map, and fades; nothing under it moves. The bar on its
+   left is the colour code: red wrong, green done, blue act on it, white news. */
+#pv{position:absolute;z-index:5;top:calc(var(--hb) + 6px);left:var(--pad);right:var(--pad);display:flex;align-items:stretch;min-height:44px;box-sizing:border-box;border:1px solid var(--hair);border-left:5px solid var(--cc,#e9ecef);border-radius:var(--r);background:var(--sheet);box-shadow:0 4px 14px rgba(0,0,0,.45);color:var(--bone);transition:opacity .4s}
+#pv.fade{opacity:0}#pv button{all:unset;box-sizing:border-box;min-height:44px;cursor:pointer;touch-action:manipulation}
+#pv .t{flex:1;min-width:0;padding:4px 10px;display:flex;flex-direction:column;justify-content:center;font-size:15px;font-weight:600;line-height:1.2}
+#pv .t small{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}#pv .t span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pv .x{width:44px;display:flex;align-items:center;justify-content:center;color:var(--mute)}#pv .x .gl{position:static;transform:none}
+#pv .ask{display:flex;gap:4px;padding:4px}#pv .ask button{padding:0 12px;border:1px solid var(--hair);border-radius:6px;display:flex;align-items:center;font-weight:700}
+#pv .ask button.yes{background:#2f3b36}
 .hi{width:16px;height:16px}
-#stage.tk{--hb:calc(max(8px,env(safe-area-inset-top,0px)) + 128px)}   /* the ticker shown: everything under the top bars moves down by its height */
 #stage{position:absolute;inset:0;overflow:hidden;background:#20301c;touch-action:none}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 #vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse farthest-corner at 50% 50%,rgba(0,0,0,0) 42%,rgba(0,0,0,.3) 100%)}
@@ -63,7 +57,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card.full{max-height:calc(100% - var(--ob) - var(--hb) - 14px)}
 #place{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:8px;padding:6px 6px 6px 10px;font-weight:700}
 #strip{position:absolute;display:flex;gap:4px;padding:4px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:10px;z-index:5;max-width:calc(100% - 8px);overflow-x:auto}
-#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:19px;font-weight:700}#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}#strip button.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}#strip button.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:44px}#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--bone);font-size:14px}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:44px;padding:0}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:12px}#strip button small{font-size:12px}
+#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:19px;font-weight:700}#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}#strip button.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#strip button.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:44px}#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--bone);font-size:14px}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:44px;padding:0}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:12px}#strip button small{font-size:12px}
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
 #card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:6px 8px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
@@ -107,7 +101,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
 #end p{margin:0;color:var(--mute);font-size:15px}
-#card p.why{font-size:12px;line-height:1.25;margin:0}#tkPop .t .why{display:block;font-size:12px;color:var(--mute);font-weight:500}
+#card p.why{font-size:12px;line-height:1.25;margin:0}
 #endX .crowns{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:8px 0}
 #endX .crowns p{font-size:15px}#endX .crowns b{color:var(--bone)}
 #endX details{text-align:left}#endX summary{color:var(--mute);font-size:13px;min-height:44px;display:flex;align-items:center;cursor:pointer;list-style:none}#endX summary::-webkit-details-marker{display:none}#endX summary::before{content:'+';display:inline-block;width:18px;font-weight:700}#endX details[open] summary::before{content:'−'}
@@ -149,8 +143,8 @@ button.ghost{visibility:hidden}
 #huddle .col.whole>button.cell.tall{height:calc(var(--row) * 2 + 3px)}#huddle .col.whole .top.thumb{top:30px}#huddle .col.whole .top.thumb img{width:40px;height:40px;display:block}#huddle .col.whole .wd{top:74px;font-size:10px;letter-spacing:.02em;white-space:normal;overflow-wrap:anywhere;line-height:1;padding:0 2px}#huddle .col.whole .top:not(.thumb){top:34px}#huddle .col.whole .top:not(.thumb) .gl{width:22px;height:22px}
 .tiles button.cell.no{background:#2f3b36;border-color:#4a5a52;color:var(--bone)}
 .tiles button.cell.build,.tiles button.cell.st.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}.tiles button.cell.build.dis{opacity:.5}
-.tiles button.cell.train,.tiles button.cell.st.train{background:linear-gradient(#1f3d33,#14302a);border-color:#2f7a5a}.tiles button.cell.train.sel{border-color:#9fd8b5}
-#orders.pg-build{background:rgba(26,18,10,.82)}#orders.pg-build,#orders.pg-squad{backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}#orders.pg-squad{background:rgba(14,12,24,.82)}
+.tiles button.cell.train,.tiles button.cell.st.train{background:linear-gradient(#323a44,#232a31);border-color:#56616e}.tiles button.cell.train.sel{border-color:#aab6c4}
+#orders.pg-build{background:rgba(26,18,10,.82)}#orders.pg-build,#orders.pg-squad{backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}#orders.pg-squad{background:rgba(16,19,23,.84)}
 /* the huddle: dark flat glass, hairlines, one amber accent; only while planning an attack. A lamp line on top of a button: red not set, green set */
 #orders.hud{background:rgba(10,13,15,.82);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
 #huddle button.cell{position:relative;overflow:hidden;background:#161b1f;border:1px solid rgba(255,255,255,.09);border-radius:10px;box-shadow:none;color:#e6e9e6}
@@ -162,7 +156,7 @@ button.ghost{visibility:hidden}
 #huddle button.cell[class*="lamp-"]{border-color:var(--mc)}#huddle [class*="lamp-"] .wd{color:inherit}#huddle .lamp-green::after,#huddle .lamp-blue::after{box-shadow:0 0 8px var(--mc)}
 #huddle .blink{animation:hudBlink 1s infinite}@keyframes hudBlink{50%{box-shadow:inset 0 0 0 1px var(--mc),0 0 12px var(--mc)}}
 #huddle .cell.sel{border-color:#ffb23d}
-#huddle button.cell.sq,#huddle button.cell.st.sq{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}#huddle button.cell.sq.sel{background:linear-gradient(#514a78,#332e52);border-color:#a89fe0}#huddle button.cell.war,#huddle button.cell.st.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}#huddle button.cell.go{background:linear-gradient(#b8862e,#8a5f18);border-color:#f2d27a}#huddle button.cell.go .wd{color:#2a1c10}#huddle button.cell.go .gl{color:#2a1c10}#orders.sqr{background:rgba(22,20,34,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
+#huddle button.cell.sq,#huddle button.cell.st.sq{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#huddle button.cell.sq.sel{background:linear-gradient(#46525f,#2f3842);border-color:#aab6c4}#huddle button.cell.war,#huddle button.cell.st.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#huddle button.cell.go{background:linear-gradient(#2f6fc4,#1d4f94);border-color:#8cc0ff}#huddle button.cell.go .wd,#huddle button.cell.go .gl{color:#fff}#orders.sqr{background:rgba(16,19,23,.84);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
 #huddle .msn{touch-action:none}#huddle .msn.empty{background:transparent;border-style:dashed}
 #huddle .msn.lose{--pc:#ff5a4a;animation:hudPulse 1s infinite}#huddle .msn.win{--pc:#43c06b;animation:hudPulse 1.2s infinite}
 @keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc),0 0 10px var(--pc)}}
@@ -170,11 +164,10 @@ button.ghost{visibility:hidden}
 .hudGhost{position:fixed;left:0;top:0;z-index:20;pointer-events:none;padding:8px 12px;border-radius:10px;background:rgba(12,16,20,.95);border:1px solid #43c06b;color:#43c06b;font:700 13px system-ui,sans-serif}
 /* on the map: the corners, one look (.fab). Map top right, Home bottom left (only when away), Build bottom right */
 #spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}#spdPop[hidden]{display:none}#spdPop button{min-width:52px;min-height:44px}#spdPop button.cur{box-shadow:inset 0 0 0 2px var(--mute);border-color:var(--mute)}
-.strip #sStats,.strip #sIdle{padding:0 5px;min-width:44px;gap:9px}.strip #sStats span,.strip #tkBell>*,.strip #sAgeT,.strip #scoreN,.strip #scoreR{display:inline-flex;align-items:center;height:26px;gap:3px}.strip .gl{position:static;transform:none;width:15px;height:15px;display:block;margin:0;flex:none}   /* one line: icon and number share a centre */
 #tally button.cell{isolation:isolate}#tally button.cell.sel::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:7px;background:#2f3b36;border:1px solid var(--mute)}   /* the on mark: a small tile inside the cell; ::before is the divider */
 #pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}
-button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--pad);bottom:calc(var(--ob) + 8px);width:auto;height:44px;padding:0 10px 0 8px;border-radius:22px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:3px;color:var(--bone)}#hudB svg{position:static;transform:none;width:20px;height:20px}#hudB b{font-weight:700}#hudB.squad{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}#hudB.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#hudB.train{background:linear-gradient(#1f3d33,#14302a);border-color:#2f7a5a}
-.tiles button.cell.sq,.tiles button.cell.st.sq{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}.tiles button.cell.sq.sel{background:linear-gradient(#514a78,#332e52);border-color:#a89fe0}.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}.tiles button.cell.go{background:linear-gradient(#b8862e,#8a5f18);color:#2a1c10;border-color:#f2d27a}.tiles button.cell.go .wd{color:#2a1c10}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#emgB.on{border-color:#ff5a4a;color:#ff9a8c}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB,#stage.busy #emgB{display:none}
+button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--pad);bottom:calc(var(--ob) + 8px);width:auto;height:44px;padding:0 10px 0 8px;border-radius:22px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:3px;color:var(--bone)}#hudB svg{position:static;transform:none;width:20px;height:20px}#hudB b{font-weight:700}#hudB.squad{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#hudB.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#hudB.train{background:linear-gradient(#1f3d33,#14302a);border-color:#2f7a5a}
+.tiles button.cell.sq,.tiles button.cell.st.sq{background:linear-gradient(#323a44,#232a31);border-color:#56616e}.tiles button.cell.sq.sel{background:linear-gradient(#46525f,#2f3842);border-color:#aab6c4}.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}.tiles button.cell.go{background:linear-gradient(#2f6fc4,#1d4f94);color:#fff;border-color:#8cc0ff}.tiles button.cell.go .wd{color:#fff}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#emgB.on{border-color:#ff5a4a;color:#ff9a8c}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB,#stage.busy #emgB{display:none}
 #stage.busy #homeB{display:none}
 #stage.picking #homeB{display:none}
 #card .lbl{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.1;min-height:44px}#card .lbl b{font-size:16px}#card .lbl small{color:var(--mute);font-size:13px}
@@ -208,8 +201,8 @@ button.ok small{color:#8fd4a4}
 #card button:not(#cardX):not(#cardI){position:relative;background-color:#312218;background-image:linear-gradient(#3b2b1d,#2a1d13);border:1px solid var(--brass);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,220,150,.18);color:var(--bone);min-height:44px;padding:3px 5px}
 #card button.dis{border-color:#4a3a28;background:transparent;box-shadow:none;color:#bfb49c}#card button.done:not(#cardX):not(#cardI){opacity:.55;border-style:solid;border-color:#5a4a30}#card .chipsrow button.done:not(.on):not(#cardX):not(#cardI){opacity:.5}#card button.dis b{color:#bfb49c}   /* what you cannot: flat on the table */
 #card button.nope:not(#cardX):not(#cardI){border-color:var(--red);box-shadow:0 0 12px rgba(220,70,50,.7),inset 0 0 8px rgba(220,70,50,.35)}
-#card small.need{color:color-mix(in srgb,#fff calc(var(--fr,0)*100%),#ff8a70);font-weight:700}   /* what it is short of */
-#card button.go{border-color:var(--lamp);box-shadow:inset 0 0 0 1px var(--lamp),0 0 10px rgba(230,185,71,.35)}   /* what you can do now: a brass rim */
+#card small.need,#card small.can{color:var(--gc);font-weight:700}#card button.go small.can{color:inherit}   /* a cost on the one gradient; a go button already says it */
+#card button.go{border-color:#6aaeff;box-shadow:inset 0 0 0 1px #6aaeff,0 0 10px rgba(79,157,255,.35)}   /* what you can do now: blue, the colour code (Build 64; it was a brass rim) */
 #card button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;box-shadow:0 0 14px rgba(242,210,122,.5)}#card button.on small{color:#4a3518}
 #card button.warn{border-color:var(--red);color:#ffb3a7}
 #card button.ok{border-color:#4fb06a;box-shadow:inset 0 0 0 1px #4fb06a;color:#dcf5e8}#card button.ok small{color:#8fd4a4}
@@ -251,6 +244,23 @@ button.ok small{color:#8fd4a4}
 #card button.go:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){border-color:#7d9bc4;box-shadow:inset 0 0 0 1px #7d9bc4,0 0 10px rgba(130,170,230,.2)}   /* research reads blue: cool tint, a small scroll, a blue rim when ready */
 @media (max-width:400px){:root{--pad:6px}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important;scroll-behavior:auto!important} }
+/* The door (Build 64): the bottom of the row's first slot; its colour is the most important thing now, in the colour code */
+#orders button.cell.door{background:linear-gradient(#2a3330,#1f2724);border-color:#4a5a52}
+#orders button.cell.door.red{background:linear-gradient(#5c1a14,#3a1110);border-color:#ff6b5b;color:#ffd9d2}#orders button.cell.door.red .wd{color:#ffd9d2}
+#orders button.cell.door.blue{background:linear-gradient(#1d4f94,#143766);border-color:#8cc0ff;color:#e4f0ff}#orders button.cell.door.blue .wd{color:#e4f0ff}
+#orders button.cell.door{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px}#orders button.cell.door .top{position:static;display:inline-flex;transform:none;height:auto}#orders button.cell.door .top .gl{position:static;transform:none;width:15px;height:15px}#orders button.cell.door .wd{position:static;transform:none;font-size:12px;line-height:14px;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}#orders button.cell.door .pill{position:absolute;top:1px;right:2px;display:block;height:auto;min-width:12px;padding:0 3px;border:0;border-radius:8px;background:#b3261e;color:#fff;font-size:12px;line-height:15px;box-shadow:none;overflow:visible}
+#orders button.cell.door.pulse{animation:doorp 1.2s ease-out 1}@keyframes doorp{0%{box-shadow:0 0 0 0 rgba(255,255,255,.75)}100%{box-shadow:0 0 0 14px rgba(255,255,255,0)}}
+@media (prefers-reduced-motion:reduce){#orders button.cell.door.pulse{animation:none;outline:2px solid #fff}}
+#huddle button.cell.st-blue{border-color:#8cc0ff;box-shadow:inset 0 0 0 1px #8cc0ff}#huddle button.cell.st-blue .wd{color:#bcd9ff}#huddle button.cell.st-green{border-color:#5fd08a}#huddle button.cell.st-green .wd{color:#a8e0b0}#huddle button.cell.st-red{border-color:#ff6b5b;box-shadow:inset 0 0 0 1px #ff6b5b}#huddle button.cell.st-red .wd{color:#ff9a8c}
+/* The dashboard: the five domains and the mail in one row on the row's six-column mold */
+#card .dash{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+#card button.dt:not(#cardX):not(#cardI){min-height:84px;padding:4px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px solid var(--line);border-radius:8px;background:#241a12;box-shadow:none}
+#card button.dt .i svg{width:20px;height:20px;position:static;transform:none}#card button.dt b{font-size:12px;line-height:1.1;text-align:center}#card button.dt small{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
+#card button.dt.red:not(#cardX):not(#cardI){border-color:#ff6b5b;box-shadow:inset 0 0 0 1px #ff6b5b}#card button.dt.red b{color:#ff9a8c}
+#card button.dt.blue:not(#cardX):not(#cardI){border-color:#6aaeff;box-shadow:inset 0 0 0 1px #6aaeff}#card button.dt.blue b{color:#9cc8ff}
+#card button.dt.green:not(#cardX):not(#cardI){border-color:#5fd08a}#card button.dt.green b{color:#a8e0b0}
+/* The mail: each line with its colour on its left edge */
+#card .mrows{display:flex;flex-direction:column;gap:4px}#card button.mr:not(#cardX):not(#cardI){min-height:44px;padding:4px 8px;align-items:flex-start;text-align:left;border-left:4px solid var(--cc)}#card button.mr b{font-size:13px;font-weight:600}#card button.mr small{font-size:12px;color:var(--mute)}
 </style>
 
 <div id="app">
@@ -259,9 +269,9 @@ button.ok small{color:#8fd4a4}
     <div id="vig"></div>
   <header id="hud">
     <div class="pill" id="tally"></div>
-    <div class="strip"><div class="sg"><button id="sAge" data-act="card:research" aria-label="Age, season and clock: what you can research"><span id="sAgeT"></span></button><button id="sIdle" data-act="idlego" aria-label="Show an idle villager" hidden></button><button id="sStats" data-act="card:troops" aria-label="Research ready, people, soldiers: the Army card"></button></div><div class="sg"><button id="tkBell" data-act="tkmin" aria-label="Show messages" hidden><span id="tkBellN"></span></button><button id="scoreP" data-act="card:score" aria-label="Score and rank"><span id="scoreN">★0</span> <span id="scoreR"></span></button></div></div>
-    <div class="tick" id="ticker"><button id="tkT" data-act="tklist" aria-label="Latest message"></button><button id="tkList" data-act="tklist" aria-label="Recent messages"></button><button id="tkMin" data-act="tkmin" aria-label="Hide messages"></button></div><div class="tkpop" id="tkPop" hidden></div>
+    <div class="pill" id="status"></div>
   </header>
+  <div id="pv" hidden></div>
   <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div><div class="tr" id="huddle" hidden></div></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>

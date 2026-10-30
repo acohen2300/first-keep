@@ -1,4 +1,4 @@
-# First Keep: the rule book (Oct 30, 2026; Build 63 on the preview)
+# First Keep: the rule book (Oct 30, 2026; Build 64 on the preview)
 
 One home for how this game is built and how the work is done. Every build is checked against it. Where an older note disagrees, this file wins; where Albert restates a rule in the moment, his words win.
 
@@ -28,6 +28,7 @@ One home for how this game is built and how the work is done. Every build is che
 - "Real life is the beat." (Oct 30, on the preview of Build 63.) No music. The sounds are the work itself: a stroke sounds when a stroke lands, at the find's own rate, so crews fall into rhythm on their own, and the birds and wind sit on top at random. It plays like meditation; it stays that way.
 - The colour code for every game (Oct 30): **blue** available, act on it now (it is your choice: an ally on the crosshair asks "are you sure"); **white** all is well; **green** active, on, or done right; **red** something wrong; **gold** the chosen thing. Numbers fade on one gradient: red, pink, white, light green, green (cost rows by distance from enough; store and job counts by velocity). Colour is never alone: an icon or the number says the same thing.
 - The bottom row is static (Oct 30): it is the most important row in the game and never moves, shrinks or is covered. Everything else grows upward from it, on its six-column mold, one row, two rows or full height. Its first slot holds the door: the most important thing now, in the colour code; a tap swaps the row's page to the one that deals with it, and always leads back to Jobs in one tap.
+- One job per control (Oct 30): a button is a button and an indicator is an indicator; a button that also flashes for an emergency becomes a second element and is built as one (the door).
 - Muscle memory (Oct 30): the same tap in the same place does the same thing. The map tap puts the sword, then All, under the thumb: tap one the screen, tap two the sword, tap three All.
 
 ## 2. How a change happens

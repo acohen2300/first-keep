@@ -414,7 +414,7 @@ function throneRun(p, per) {
 		u.bid = T.id;
 	});
 	p.wave = { n: home.length, t: G.t };
-	say(`${p.name} march on the Throne.`, 'warn', 8, T);
+	news('war', `${p.name} march on the Throne.`, 'warn', 8, T);
 }
 function wallPlan(k) {
 	// an arc 190 out from the keep, facing the middle of the map; the two squares nearest the middle are the gate
@@ -524,7 +524,7 @@ function decideWar(p, per) {
 					u.bid = mark.id;
 				});
 		}
-		if (best === 0) say(`${p.name} march on you with ${go.length} soldiers.`, 'warn', 8, go[0]);
+		if (best === 0) news('realm', `${p.name} march on you with ${go.length} soldiers.`, 'warn', 8, go[0]);
 	}
 }
 
@@ -543,7 +543,7 @@ function leagueTick() {
 		G.league = lead.id;
 	} else if (G.league !== lead.id || ratio < LEAGUE.release) {
 		G.league = null;
-		say('The league against the leader breaks up.', '', 6);
+		news('realm', 'The league against the leader breaks up.', '', 6);
 		return;
 	}
 	const M = S.slice(1).filter((p) => p.id !== 0 && p.lord !== lead.id);
@@ -554,5 +554,5 @@ function leagueTick() {
 		for (const q of M) if (q !== p && G.rel[p.id][q.id] !== 'ally') G.rel[p.id][q.id] = 'ally';
 	}
 	G.navDirty = true;
-	if (fresh) say(`${M.map((p) => p.name).join(', ')} unite against ${lead.name}, the leader.`, 'warn', 8);
+	if (fresh) news('realm', `${M.map((p) => p.name).join(', ')} unite against ${lead.name}, the leader.`, 'warn', 8);
 }

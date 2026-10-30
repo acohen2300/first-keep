@@ -10,7 +10,7 @@ SETUP = """() => { const F = window.__fk; F.newGame(5); F.act('close'); const G 
   window.IDS = { workshop: put('workshop'), farm: put('farm'), market: put('market'), keep: k.id }; F.navRebuild(); F.makeVassal(1, 0, 'fair'); window.IDS.vassal = F.keepOf(1).id; }"""
 CARDS = [('help', "{type:'help'}"), ('setup', "{type:'setup'}"), ('army', "{type:'troops'}"), ('home', "{type:'menu',id:'home'}"), ('guide', "{type:'guide',page:'bld'}"),
          ('keep', "{type:'bld',id:IDS.keep}"), ('workshop', "{type:'bld',id:IDS.workshop}"), ('farm', "{type:'bld',id:IDS.farm}"),
-         ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}")]
+         ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}"), ('dash', "{type:'dash'}"), ('mail', "{type:'mail'}")]
 MEASURE = """() => {
   const lum = c => { const f = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); };
   const parse = s => { const m = s.match(/[\\d.]+/g); return m ? [+m[0], +m[1], +m[2], m[3] == null ? 1 : +m[3]] : [0, 0, 0, 0]; };
@@ -40,10 +40,13 @@ LOOK = """() => { const F=window.__fk; F.newGame(5); const G=F.G; const s=1;   /
 PLAY = """async () => {
   const F = window.__fk, out = [], tap = sel => { const el = document.querySelector(sel); if (!el) { out.push('missing ' + sel); return; } el.click(); };
   F.setPause(false); F.newGame(5); F.act('close'); const G = F.G; G.P[0].res = { f: 9999, w: 9999, s: 9999, g: 9999, i: 9999 };
-  tap('#buildT'); if (!G.card || G.card.type !== 'menu') out.push('Build did not open the Build card');
+  F.hudPage('build'); F.ui(true); tap('#buildT'); if (!G.card || G.card.type !== 'menu') out.push('All on the Build page did not open the Build card');
   tap('[data-act="menu:home"]'); if (!G.card || G.card.id !== 'home') out.push('the Home tab did not open');
   tap('[data-act="build:house"]'); if (!G.place || G.place.kind !== 'house') out.push('tapping House did not start placing');
-  F.act('cancel'); if (G.place) out.push('Cancel left a placement');
+  F.act('cancel'); if (G.place) out.push('Cancel left a placement'); F.hudPage('jobs'); F.ui(true);
+  tap('#doorB'); if (!G.card && !G.place && (G.hud.page || 'jobs') === 'jobs') out.push('the door went nowhere'); F.act('close'); F.act('cancel'); F.hudPage('jobs');
+  F.openCard({ type: 'dash' }); if (document.querySelectorAll('#card .dt').length !== 6) out.push('the dashboard does not hold six tiles'); F.act('close');
+  F.news('trade', 'A test line for the mail.', '', 4); F.act('pvx'); if (G.pvAsk !== 'trade') out.push('× on news did not ask to hide its group'); F.act('pvhide:trade'); F.news('trade', 'Another quiet line.', '', 4); if ((G.mail[0] || {}).ru) out.push('a hidden group still previewed'); F.news('trade', 'Raiders took the caravan.', 'warn', 4); if (!(G.mail[0] || {}).ru) out.push('a red line from a hidden group did not show'); F.act('mailall');
   const q0 = F.keepOf(0).q.length; tap('#tPeople'); if (F.keepOf(0).q.length !== q0 + 1) out.push('People did not queue a villager');
   F.act('qcancel:' + F.keepOf(0).id + ',' + q0); if (F.keepOf(0).q.length !== q0) out.push('a slot tap did not cancel the villager');
   tap('[data-act="move:wood"]'); if (!F.G.units.some(u => u.owner === 0 && u.kind === 'vil' && u.job === 'wood')) out.push('+ under Wood put nobody on wood');
@@ -93,15 +96,15 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
   // the travelling show: a villager beside the performers cheers
   { F.startEvent('circus'); run(3); const p = G.ev.cur.units[0], v = F.addUnit(0, 'vil', p.x + 10, p.y); run(3); if (!(v.cheer > G.t)) bad.push('circus: nobody cheered'); clear(); }
   // the alert bar: named while an event is coming and while it runs
-  { G.ev.cur = null; G.ev.warned = 'eclipse'; G.ev.next = G.t + 9; let a = F.alertNow(); if (!a || a.name !== 'Eclipse' || a.now) bad.push('alert: not shown before the eclipse');
-    G.ev.warned = null; F.startEvent('eclipse'); a = F.alertNow(); if (!a || !a.now || !(a.left > 0)) bad.push('alert: not shown during the eclipse'); clear(); }
+  { G.ev.cur = null; G.ev.warned = 'eclipse'; G.ev.next = G.t + 9; const realm = () => F.domains().list.find((d) => d.id === 'realm'); let a = realm(); if (a.st !== 'red' || a.word !== 'Eclipse') bad.push('the door: not red before the eclipse');
+    G.ev.warned = null; F.startEvent('eclipse'); a = realm(); if (a.st !== 'red' || a.word !== 'Eclipse') bad.push('the door: not red during the eclipse'); clear(); }
   // the horde: named for its last 45 seconds
-  { G.horde = { at: G.t + 30, said: 1 }; const a = F.alertNow(); if (!a || a.name !== 'Horde') bad.push('alert: the horde is not named'); G.horde = null; }
+  { G.horde = { at: G.t + 30, said: 1 }; const a = F.domains().list.find((d) => d.id === 'realm'); if (a.st !== 'red' || !a.word.startsWith('Horde')) bad.push('the door: the horde is not named'); G.horde = null; }
   // the army: a marched group has an order and a time, a hostile group heading in is named, a recall ends the order
   { G.fogOn = false; for (const u of G.units) if (u.owner !== 0) u.hp = 0; run(1); const home = G.blds.find((b) => b.owner === 0), a = F.addUnit(0, 'spear', home.x + 60, home.y), c = F.addUnit(0, 'spear', home.x + 70, home.y);
     const to = { x: home.x + 400, y: home.y }; for (const u of [a, c]) { u.state = 'goto'; u.px = to.x; u.py = to.y; u.idleT = 0; } F.march([a, c], to, 'test'); run(2); const O = Object.values(G.ords)[0];
     if (!O || !(O.eta > 0)) bad.push('army: no time left on the order'); if (F.armyStatus(a) !== 'march') bad.push('army: ' + F.armyStatus(a) + ', not marching');
-    const e = F.addUnit(1, 'spear', home.x + 300, home.y + 100); e.state = 'attack'; run(1); if (!G.incoming || G.incoming.n < 1) bad.push('army: no attack named'); else { const t = F.alertNow(); if (!t || t.name !== 'Attack') bad.push('army: the bar does not show it'); }
+    const e = F.addUnit(1, 'spear', home.x + 300, home.y + 100); e.state = 'attack'; run(1); if (!G.incoming || G.incoming.n < 1) bad.push('army: no attack named'); else { const t = F.domains().list.find((d) => d.id === 'realm'); if (t.st !== 'red' || !t.word.startsWith('Raid')) bad.push('army: the door does not show it'); }
     e.hp = 0; run(2); if (G.incoming) bad.push('army: the attack is still named after it died'); }
   // the War room (Build 61): Go sends a squad on the crosshair as a mission with a promised time; a fight gives it odds; Abort frees the slot
   { const home = G.blds.find((b) => b.owner === 0), sp = []; for (let i = 0; i < 6; i++) sp.push(F.addUnit(0, 'spear', home.x + 40 + i * 6, home.y + 60)); for (let i = 0; i < 6; i++) F.addUnit(0, 'chariot', home.x + 40 + i * 6, home.y + 90);
@@ -112,7 +115,7 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
       if (!met) bad.push('war room: the mission is ' + m.st + ' at the fight');
       F.hudAbort(0); for (const f of foes) f.hp = 0; run(3); if (G.msn[0]) bad.push('war room: Abort left the mission'); }
     // the Squad room: a plan set with + fills from the soldiers at home
-    G.P[0].techs.add('command'); F.fxDirty(); F.hudPage('squad'); F.sqNew(); F.sqPlan(0, 'spear', 1); F.sqPlan(0, 'spear', 1); run(2); if (F.sqUnits(0).length !== 2) bad.push('squad room: the plan did not fill (' + F.sqUnits(0).length + ')');
+    G.P[0].techs.add('command'); F.fxDirty(); F.hudPage('squad'); F.G.hud.sq.i = 0; F.sqPlan(0, 'spear', 1); F.sqPlan(0, 'spear', 1); run(2); if (F.sqUnits(0).length !== 2) bad.push('squad room: the plan did not fill (' + F.sqUnits(0).length + ')');
     F.hudPage('jobs'); G.P[0].techs.delete('command'); F.fxDirty(); for (let i = 0; i < 4; i++) G.msn[i] = null; G.bnPlan[0] = {}; }
   // emergencies: villagers take cover in the sturdiest building first and Resume sends them back; soldiers garrison and stay
   { const home = G.blds.find((b) => b.owner === 0); for (let i = 0; i < 4; i++) F.addUnit(0, 'spear', home.x + 70 + i * 6, home.y + 40); const jobs = G.units.filter((u) => u.owner === 0 && u.kind === 'vil').map((u) => u.job).join(',');
@@ -171,15 +174,15 @@ async def main():
         # every message and tip whole on the ticker's one line at 375 px (Albert, Build 38: "these sentences are too long"; Build 39: one ticker for all)
         L = json.loads(subprocess.run([sys.executable, 'tests/words.py', '--list'], capture_output=True, text=True).stdout)
         pg = await br.new_page(viewport={'width': 375, 'height': 667}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(500)
-        wraps = await pg.evaluate("""(L) => { const F = window.__fk; F.newGame(5); F.act('close'); F.setPause(true); const e = document.getElementById('tkT'), out = [];
-          for (const t of L) { e.textContent = t; if (e.scrollWidth > e.clientWidth + 1) out.push(t); } return out; }""", L); await pg.close()
-        print(('PASS ' if not wraps else 'FAIL ') + f'{len(L)} messages fit the ticker at 375 px', '' if not wraps else wraps[:6]); fails += bool(wraps)
-        # the alert bar (an event coming, an event running) whole on the ticker's line at 375 px, for every event
+        wraps = await pg.evaluate("""(L) => { const F = window.__fk; F.newGame(5); F.act('close'); F.setPause(false); F.say('x', '', 60); F.ui(true); const e = document.querySelector('#pv .t span'), out = [];
+          if (!e) return ['no preview']; for (const t of L) { e.textContent = t; if (e.scrollWidth > e.clientWidth + 1) out.push(t); } return out; }""", L); await pg.close()
+        print(('PASS ' if not wraps else 'FAIL ') + f'{len(L)} messages fit the preview at 375 px', '' if not wraps else wraps[:6]); fails += bool(wraps)
+        # the door's word whole at 375 px, for every event, coming and running (Build 64: the alert bar folded into the door)
         pg = await br.new_page(viewport={'width': 375, 'height': 667}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(500)
-        cut = await pg.evaluate("""() => { const F = window.__fk; F.newGame(5); F.act('close'); F.setPause(true); const G = F.G, e = document.getElementById('tkT'), out = [];
-          const test = (k, ph) => { const a = F.alertNow(); if (!a) { out.push(k + ' ' + ph + ': no alert'); return; } e.innerHTML = F.alertHTML(a); const i = e.querySelector('i'); if (i.scrollWidth > i.clientWidth + 1 || e.scrollWidth > e.clientWidth + 1) out.push(k + ' ' + ph + ': ' + e.textContent); };
+        cut = await pg.evaluate("""() => { const F = window.__fk; F.newGame(5); F.act('close'); F.setPause(true); const G = F.G, out = [];
+          const test = (k, ph) => { F.ui(true); const e = document.querySelector('#doorB .wd'); if (!e) { out.push('no door'); return; } if (e.scrollWidth > e.clientWidth + 1) out.push(k + ' ' + ph + ': ' + e.textContent); };
           for (const k of Object.keys(F.EVENTS)) { G.ev.cur = null; G.ev.warned = k; G.ev.next = G.t + 12; test(k, 'coming'); G.ev.warned = null; F.startEvent(k); test(k, 'running'); F.endEvent(); } return out; }"""); await pg.close()
-        print(('PASS ' if not cut else 'FAIL ') + 'the alert bar fits the ticker at 375 px, for every event', '' if not cut else cut[:6]); fails += bool(cut)
+        print(('PASS ' if not cut else 'FAIL ') + 'the door says every event whole at 375 px', '' if not cut else cut[:6]); fails += bool(cut)
         # every map is fair (Build 49: corners are no longer copies): on ten seeds, the sides' walks to work, the Throne and a neighbour within FAIR.spread
         pg = await br.new_page(); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(400)
         unfair = await pg.evaluate("() => { const F = window.__fk, out = []; for (let s = 1; s <= 10; s++) { F.newGame(s); const f = F.fairness(); if (f.worst > F.FAIR.spread) out.push(s + ': ' + JSON.stringify(f.spread)); } return out; }"); await pg.close()
@@ -187,7 +190,7 @@ async def main():
         pg = await br.new_page(viewport={'width': 390, 'height': 844}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(400)
         ui = await pg.evaluate("""() => { const F = window.__fk; F.SET.fog = false; F.SET.scen = 'open'; F.newGame(3); F.act('close'); const G = F.G; G.P[0].age = 4; const k = F.keepOf(0);
           for (let i = 0; i < 5; i++) F.addUnit(0, 'spear', k.x + 30, k.y + 30); for (let i = 0; i < 10; i++) F.step(1 / 30); F.ui(true);
-          const n = [...document.querySelectorAll('[data-act]')].filter((e) => !e.closest('#card') && !e.closest('#end') && !e.closest('#tkPop') && e.offsetParent !== null && e.getBoundingClientRect().width > 0).length;
+          const n = [...document.querySelectorAll('[data-act]')].filter((e) => !e.closest('#card') && !e.closest('#end') && e.offsetParent !== null && e.getBoundingClientRect().width > 0).length;
           return [n, F.UI_BUDGET]; }"""); await pg.close()
         print(('PASS ' if ui[0] <= ui[1] else 'FAIL ') + f'the play screen keeps to its button budget: {ui[0]} of {ui[1]}'); fails += ui[0] > ui[1]
         fp, _ = await fingerprint(br); print(('PASS ' if not fp else 'FAIL ') + 'the game plays as the baseline says', '' if not fp else '\n  ' + '\n  '.join(fp[:4]) + '\n  (a deliberate rule change: python3 tests/gate.py --accept "why")'); fails += bool(fp)

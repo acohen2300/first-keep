@@ -394,17 +394,41 @@ function sfx(name, x, y) {
 	S[1](v);
 	panV = 0;
 }
-// how loud a sound at distance d (world units) reaches the ear over the screen's middle: ISO 9613-2 (SOUND), as a share of full
+// The ear is the camera, at a height (Albert, Build 64: "it should get quieter as I zoom out, with the real math"). The ground on screen
+// is cw/z wide; a lens of SOUND.fov sees that from h = (w/2)/tan(fov/2). A sound d away along the ground is √(d² + h²) from the ear,
+// and ISO 9613-2 gives its level: full within d0 (the height at the closest zoom), then the inverse-square law, less the air's take.
+// Zoom out twice as far and the height doubles: everything is about half as loud (−6 dB), the near falling more than the far.
+const camH = (z = cam.z) => cw / z / 2 / Math.tan((SOUND.fov * Math.PI) / 360);
 const hearing = (d) => {
-	const d0 = (hyp(cw, ch) / 2 / cam.z) * SOUND.d0;
-	return Math.min(1, d0 / Math.max(1, d)) * 10 ** ((-SOUND.alphaKm * d * SOUND.metre) / 1000 / 20);
+	const s = hyp(d, camH()),
+		d0 = camH(ZOOM_MAX);
+	return Math.min(1, d0 / Math.max(1, s)) * 10 ** ((-SOUND.alphaKm * s * SOUND.metre) / 1000 / 20);
 };
+// Ambience as events (Build 64, "the game plays only what happens"): a bird sings from a tree you can see, by day and not in winter; a
+// cricket from the open ground at night, not in winter; the wind as hard as the wind blows. Each comes from its place, so distance and
+// height hold for it too. When a song comes is a Poisson process, its rate by how many singers are in view (a bird a tree every ~40 s).
+const AMB = { bird: 1 / 40, cricket: 1 / 25, maxSingers: 12, wind: 0.35 };
 let ambT = 0;
 function ambience(dt) {
 	ambT -= dt;
-	if (ambT > 0 || !AC) return;
-	ambT = 2.5 + Math.random() * 4;
-	sfx(G.night > 0.5 ? 'cricket' : season().name === 'Winter' ? 'wind' : 'bird');
+	if (ambT > 0 || !AC || !G) return;
+	ambT = 1; // look once a second
+	const winter = season().name === 'Winter',
+		night = G.night > 0.5,
+		x0 = cam.x - cw / 2 / cam.z,
+		x1 = cam.x + cw / 2 / cam.z,
+		y0 = cam.y - ch / 2 / cam.z,
+		y1 = cam.y + ch / 2 / cam.z,
+		T = [];
+	if (!winter && !night)
+		for (const n of G.nodes) if (n.kind === 'tree' && n.amt > 0 && n.x > x0 && n.x < x1 && n.y > y0 && n.y < y1 && T.push(n) >= AMB.maxSingers) break;
+	if (T.length && Math.random() < 1 - Math.exp(-AMB.bird * T.length)) {
+		const t = T[(Math.random() * T.length) | 0];
+		return sfx('bird', t.x, t.y);
+	}
+	if (night && !winter && Math.random() < 1 - Math.exp(-AMB.cricket * AMB.maxSingers))
+		return sfx('cricket', cam.x + (Math.random() - 0.5) * (x1 - x0), cam.y + (Math.random() - 0.5) * (y1 - y0));
+	if (Math.abs(wind) > AMB.wind && Math.random() < Math.abs(wind) / 4) sfx('wind'); // the wind is everywhere: no place, its own strength
 }
 
 // Thunder comes after the flash by the real delay (SOUND.c over SOUND.metre), quieter by the same law as every sound; a strike is loud enough to carry the map

@@ -20,7 +20,7 @@ const HUD = {
 	gap: 8, // reinforcements arriving within this many seconds of each other are one wave
 	waves: 3,
 };
-const PAGES = ['jobs', 'war', 'build', 'squad', 'train'];
+const PAGES = ['jobs', 'build', 'war', 'squad', 'train']; // Build 64: the order fixed for everyone (Jobs, Build, then the three military pages side by side)
 const pageName = { jobs: 'Jobs', war: 'War', build: 'Build', squad: 'Squad', train: 'Train' };
 const pageIcon = () => ({
 	jobs: ICON.list,
@@ -101,14 +101,6 @@ const sqUnit = (tile) => {
 		u = G.hud.sq.unit[tile];
 	return K.includes(u) ? u : K[0];
 };
-function sqNew() {
-	const j = BN.findIndex((_, i) => !Object.values(G.bnPlan[i]).some(Boolean) && !sqUnits(i).length);
-	if (j < 0) return say('All squads made: pick one to change.', '', 3);
-	G.hud.sq.i = j;
-	G.hud.sq.tile = null;
-	say(`${BN[j]}: set what it holds with − and +.`, '', 3);
-	feel('tick');
-}
 function sqCycle() {
 	const Q = G.hud.sq;
 	if (Q.tile !== null) {
@@ -379,10 +371,7 @@ function warPageHTML() {
 		sel = H.sel,
 		cmd = hasCmd(),
 		canGo = !!H.h && sqFree(cmd ? sel : null).length > 0;
-	let h = SPLIT(
-		stB('waim', ICON.aim, 'war', ' aria-label="Aim: the crosshair to the middle of the screen"'),
-		stB('whome', ICON.home, 'war', ' aria-label="Everyone home"'),
-	);
+	let h = SPLIT(stB('whome', ICON.home, 'war', ' aria-label="Everyone home"'), pageDoor()); // a tap on the map aims; the door under Home
 	BN.forEach((nm, i) => {
 		const S = cmd ? sqUnits(i) : [],
 			n = S.length,
@@ -418,21 +407,50 @@ function warPageHTML() {
 	return h;
 }
 const favKinds = () => (SET.fav && SET.fav.length ? SET.fav : FAV0).slice(0, 5);
-function buildPageHTML() {
-	let h = '';
-	for (const k of favKinds()) {
-		const B = BLD[k],
-			why = B ? capWhy(0, k) || (!afford(G.P[0], B.cost) ? 'short' : '') : 'gone',
-			img = B ? bldThumb(k) : '';
-		h += WHOLE(
-			`build:${k}`,
-			`<span class="top thumb">${img}</span>`,
-			B ? B.short || B.name : '—', // the short name where there is one: the slot is 56 wide
-			'build' + (why ? ' dis' : ''),
-			` aria-label="${B ? B.name : ''}"`,
+// The Build page (Build 64): what the town needs, in the colour code. Blue: wanted and you can build it now; green: going up; red: wanted
+// but blocked, with the reason (what it is short of, or what it needs first); then your pinned favourites, white. The sixth is the Build card.
+function buildWants() {
+	const p = G.P[0],
+		k = keepOf(0),
+		V = unitsOf(0, 'vil'),
+		on = (j) => V.filter((u) => u.job === j).length,
+		W = [];
+	if (popOf(0) >= capOf(0) - 1 && capOf(0) < POPMAX) W.push('house');
+	if (!bldsOf(0, 'barracks').length && G.t > 75) W.push('barracks');
+	if (on('wood') >= 3 && !bldsOf(0, 'lumber').length) W.push('lumber');
+	if (k && G.nodes.filter((n) => n.kind === 'bush' && dist(n, k) < 300).length < 3 && !bldsOf(0, 'farm').length) W.push('farm');
+	if (p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && !bldsOf(0, 'market').length) W.push('market');
+	if (G.units.some((u) => u.owner === 0 && u.sick > G.t) && !bldsOf(0, 'hospital').length && p.age >= 2) W.push('hospital');
+	return W; // the same reads the tips make: one source for what the town wants
+}
+function buildItems() {
+	const p = G.P[0],
+		out = [],
+		has = (k) => out.some((x) => x.k === k);
+	for (const b of G.blds)
+		if (out.length < 2 && b.owner === 0 && b.hp > 0 && b.prog < 1)
+			out.push({ k: b.kind, st: 'green', word: `${Math.floor(b.prog * 100)}%`, act: `card:bld,${b.id}` });
+	for (const k of buildWants()) {
+		if (out.length >= 4 || has(k) || !BLD[k]) continue;
+		const why = capWhy(0, k);
+		out.push(
+			why
+				? { k, st: 'red', word: BLD[k].age > p.age ? AGES[BLD[k].age].name : 'blocked', act: `build:${k}`, why }
+				: afford(p, BLD[k].cost)
+					? { k, st: 'blue', word: BLD[k].short || BLD[k].name, act: `build:${k}` }
+					: { k, st: 'red', word: `short ${costText(Object.fromEntries(Object.entries(BLD[k].cost).filter(([r, v]) => (p.res[r] || 0) < v).map(([r, v]) => [r, Math.ceil(v - (p.res[r] || 0))])))}`, act: `build:${k}` },
 		);
 	}
-	h += WHOLE('buildrow', topOf(ICON.hammer), 'All', 'build', ' aria-label="The Build card"');
+	for (const k of favKinds()) if (out.length < 4 && !has(k) && BLD[k]) out.push({ k, st: '', word: BLD[k].short || BLD[k].name, act: `build:${k}` });
+	return out;
+}
+function buildPageHTML() {
+	const V = unitsOf(0, 'vil').length,
+		room = Math.max(0, capOf(0) - popOf(0));
+	let h = SPLIT(cellB('train:vil', topOf(ICON.people), `${V}/${V + room}`, trainWhy(0, 'vil') ? 'dis' : '', ' aria-label="Train a villager"'), pageDoor());
+	for (const it of buildItems())
+		h += WHOLE(it.act, `<span class="top thumb">${bldThumb(it.k)}</span>`, it.word, `build st-${it.st || 'white'}`, ` aria-label="${BLD[it.k].name}${it.why ? ': ' + it.why : ''}"`);
+	h += WHOLE('buildrow', topOf(ICON.hammer), 'All', 'build', ' id="buildT" aria-label="The Build card"');
 	return h;
 }
 // a small picture of a building for the Build page: its sprite, drawn once per kind and colour
@@ -487,10 +505,7 @@ function squadPageHTML() {
 	const Q = G.hud.sq,
 		i = Q.i,
 		cmd = hasCmd();
-	let h = SPLIT(
-		stB('sqnew', `${ICON.squad}<b class="plus">＋</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="A new squad"'),
-		stB('sqcycle', `${ICON.cycle}<b class="plus">${BN[i][0]}</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="Cycle"'),
-	);
+	let h = SPLIT(stB('sqcycle', `${ICON.cycle}<b class="plus">${BN[i][0]}</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="The next squad: an empty one is a new squad"'), pageDoor());
 	CLS.forEach((c, t) => {
 		const k = sqUnit(t),
 			built = cmd && k && ready(0, c[2]).length,
@@ -517,14 +532,9 @@ function trainPageHTML() {
 	const H = G.hud,
 		rs = G.recruitSq;
 	let h = SPLIT(
-		stB('torders', ICON.aim, 'train' + (H.aim ? ' sel' : ''), ' aria-label="Orders: where new soldiers go"'),
-		stB(
-			'tsq',
-			`${ICON.squad}<b class="plus">${rs === undefined || rs === null ? '·' : BN[rs][0]}</b>`,
-			'train' + (hasCmd() ? '' : ' dis'),
-			' aria-label="Which squad new soldiers join"',
-		),
-	);
+		stB('tsq', `${ICON.squad}<b class="plus">${rs === undefined || rs === null ? '·' : BN[rs][0]}</b>`, 'train' + (hasCmd() ? '' : ' dis'), ' aria-label="Which squad new soldiers join"'),
+		pageDoor(),
+	); // the page opens aiming: a tap on the map is where new soldiers go, ✓ sets it
 	CLS.forEach((c, t) => {
 		const k = sqUnit(t),
 			at = k ? readyAt(0, UNIT[k]) : [],
@@ -748,3 +758,151 @@ CARDS.squad = (c) => {
 		acts(btn(`hdel:${i}`, 'Abort', 'they come home', 'warn'), 'c1')
 	);
 };
+
+// ═════ The door and its domains (Albert, Build 64) ═════
+// Five domains, each a verdict the game already computes, in the colour code: red something wrong, blue available (act on it now),
+// green active, white all is well. The door, under People in the row's first slot, shows the highest red, else the highest blue, in
+// this order of importance: the realm (what is coming at you), the people, the work, the stores, the tech. A tap goes where that is
+// fixed; from there, or when all is well, it opens the dashboard: the five and the mail, one row on top of the row. Colour is never
+// alone: each tile has its icon and its word.
+const DOMAIN_ORDER = ['realm', 'people', 'work', 'stores', 'tech'];
+const DOMAIN_NAME = { realm: 'Realm', people: 'People', work: 'Work', stores: 'Stores', tech: 'Tech' };
+const domainIcon = () => ({ realm: ICON.def, people: ICON.head, work: ICON.hammer, stores: ICON.gold, tech: ICON.book });
+function domains() {
+	const p = G.P[0],
+		V = unitsOf(0, 'vil'),
+		D = {},
+		at = (q) => (q ? `jump:${Math.round(q.x)},${Math.round(q.y)}` : '');
+	// the realm: what is coming at you, and your squads out
+	{
+		const I = G.incoming,
+			ev = G.ev || {},
+			ek = ev.cur ? ev.cur.kind : ev.warned,
+			E = ek && EVENTS[ek],
+			H = G.horde,
+			rout = soldiersOf(0).some((u) => u.state === 'rout'),
+			out = BN.some((_, i) => sqOut(i));
+		D.realm = I
+			? { st: 'red', word: `Raid ${Math.ceil(I.eta)}s`, why: `${I.n} ${I.what} coming`, go: 'page:war' }
+			: G.t - (G.warnT ?? -99) < 20
+				? { st: 'red', word: 'Foes here', go: 'page:war' }
+				: H && H !== 'done' && H.said && H.at - G.t <= 45
+					? { st: 'red', word: `Horde ${Math.max(0, Math.ceil(H.at - G.t))}s`, why: EV_LINE.horde, go: 'page:war' }
+					: E && E.harm
+						? { st: 'red', word: E.door || E.name, why: EV_LINE[ek], go: at(ev.cur && (ev.cur.at || (ev.cur.x !== undefined ? ev.cur : null))) || 'card:guide,rule' }
+						: rout
+							? { st: 'red', word: 'Rout', go: 'page:war' }
+							: E && E.gift
+								? { st: 'blue', word: E.door || E.name, why: EV_LINE[ek], go: at(ev.cur && ev.cur.at) || 'card:guide,rule' }
+								: out
+									? { st: 'green', word: 'Squads out', go: 'page:war' }
+									: { st: 'white', word: 'Quiet', go: 'page:war' };
+	}
+	// the people: room and food
+	{
+		const pop = popOf(0),
+			cap = capOf(0),
+			raising = G.blds.some((b) => b.owner === 0 && b.hp > 0 && b.prog < 1 && (b.kind === 'house' || b.kind === 'apartment')),
+			canHouse = afford(p, BLD.house.cost) && !capWhy(0, 'house'),
+			q = queuedOf(0, 'vil');
+		D.people = p.hungry
+			? { st: 'red', word: 'Hungry', go: 'job:food' }
+			: pop >= cap && cap < POPMAX && !raising && !canHouse
+				? { st: 'red', word: 'No room', go: 'page:build' }
+				: pop >= cap - 1 && cap < POPMAX && !raising && canHouse
+					? { st: 'blue', word: 'A house', go: 'build:house' }
+					: q || raising
+						? { st: 'green', word: 'Growing', go: 'page:build' }
+						: { st: 'white', word: `${pop}/${cap}`, go: 'page:build' };
+	}
+	// the work: idle hands, a site nobody builds, a field nobody works
+	{
+		const idle = V.filter(freeVil).length,
+			site = G.blds.find((b) => b.owner === 0 && b.hp > 0 && b.prog < 1 && !V.some((v) => v.rep === b && v.job === 'repair')),
+			field = bldsOf(0, 'farm').find((b) => b.prog >= 1 && b.node && !(b.node.wk > 0)),
+			busy = G.blds.some((b) => b.owner === 0 && b.hp > 0 && b.prog < 1);
+		D.work =
+			idle && G.t > 20
+				? { st: 'red', word: `${idle} idle`, go: 'idlego' }
+				: site
+					? { st: 'red', word: 'Site waits', go: `card:bld,${site.id}` }
+					: field
+						? { st: 'red', word: 'No farmer', go: 'job:food' }
+						: busy
+							? { st: 'green', word: 'Building', go: 'page:jobs' }
+							: { st: 'white', word: 'At work', go: 'page:jobs' };
+	}
+	// the stores: what runs out within two minutes, and what a market would turn into gold
+	{
+		const low = RES.map((r) => KEY[r]).find((k) => p.res[k] !== undefined && velOf(p, k) <= -1 && $('r' + k) && !$('r' + k).parentElement.hidden),
+			sell = p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && ready(0, 'market').length;
+		D.stores = low
+			? { st: 'red', word: `${RESOURCES[LONG[low]].name} low`, go: `job:${LONG[low]}` }
+			: sell
+				? { st: 'blue', word: 'Sell', go: `card:bld,${ready(0, 'market')[0].id}` }
+				: { st: 'white', word: 'Steady', go: 'card:stores' };
+	}
+	// the tech: research you can start, research under way
+	{
+		let n = 0;
+		for (const v of (G.rdy || new Map()).values()) n += v;
+		const learning = p.aging || G.blds.some((b) => b.owner === 0 && b.q.some((j) => j.tech));
+		D.tech = n
+			? { st: 'blue', word: `${n} ready`, go: 'card:research' }
+			: learning
+				? { st: 'green', word: 'Learning', go: 'card:research' }
+				: { st: 'white', word: 'Nothing new', go: 'card:research' };
+	}
+	const list = DOMAIN_ORDER.map((id) => ({ id, name: DOMAIN_NAME[id], ...D[id] })),
+		top = list.find((d) => d.st === 'red') || list.find((d) => d.st === 'blue') || null;
+	return { list, top, n: list.filter((d) => d.st === 'red' || d.st === 'blue').length };
+}
+// where a destination is: a page of the row, or a card
+const atGo = (go) =>
+	go.startsWith('page:') ? (G.hud.page || 'jobs') === go.slice(5) : go.startsWith('card:') ? !!G.card && go.slice(5).startsWith(G.card.type) : false;
+function doorTap() {
+	const T = domains().top;
+	if (T && !atGo(T.go) && !(G.card && G.card.type === 'dash')) {
+		closeCard();
+		act(T.go);
+	} else openCard({ type: 'dash' });
+	feel('tick');
+}
+const doorHTML = (id = 'doorB') =>
+	`<button class="cell st door"${id ? ` id="${id}"` : ''} data-act="door" aria-label="The door: the most important thing now"><span class="top"></span>${wd('')}</button>`;
+const pageDoor = () => doorHTML(''); // the same door on every page (one id, on the Jobs row)
+let DOOR = { sig: '', key: '' };
+function doorUI() {
+	if (!G || G.over) return;
+	const D = domains(),
+		T = D.top,
+		st = T ? T.st : 'white',
+		icon = T ? domainIcon()[T.id] : ICON.ok,
+		word = T ? T.word : 'All well',
+		sig = st + icon + word + D.n,
+		key = T ? T.id + T.st : '',
+		fresh = key !== DOOR.key;
+	for (const el of document.querySelectorAll('button.door')) {
+		if (el.sig !== sig) {
+			el.sig = sig;
+			el.className = 'cell st door ' + st;
+			el.children[0].innerHTML = icon;
+			const pl = el.querySelector(':scope > .pill');
+			if (pl) pl.remove();
+			if (D.n > 1) el.insertAdjacentHTML('beforeend', `<span class="pill">${D.n}</span>`);
+			el.children[1].textContent = word;
+			el.setAttribute('aria-label', T ? `${T.name}: ${word}` : 'All is well: the dashboard');
+		}
+		if (fresh && T) {
+			el.classList.remove('pulse');
+			void el.offsetWidth;
+			el.classList.add('pulse'); // a new red or blue pulses the door once and is heard: seen and heard, as every alert must be
+		}
+	}
+	if (fresh) {
+		DOOR.key = key;
+		if (T) {
+			if (T.id !== 'realm' && G.t > 5) sfx(T.st === 'red' ? 'err' : 'pick'); // the realm's alarms already sound (the horn, the bell)
+		}
+	}
+}

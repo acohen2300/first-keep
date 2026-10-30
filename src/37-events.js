@@ -178,7 +178,7 @@ const EV = {
 				) {
 					b.hp -= maxHpB(b.owner, b.kind) * EVENTS.flood.hit;
 					if (b.owner === 0 && e.s % 10 === 1)
-						say(`Water at the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 5, b);
+						news('land', `Water at the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 5, b);
 				}
 		},
 		end() {
@@ -216,7 +216,7 @@ const EV = {
 			scarStrike(e.at.x + 6, e.at.y + 4);
 			sfx('boom', e.at.x, e.at.y);
 			G.whiteT = G.t;
-			say(EV_TEXT.meteor[1], 'good', 7, e.at);
+			news('land', EV_TEXT.meteor[1], 'good', 7, e.at);
 		},
 	},
 	wildfire: {
@@ -295,7 +295,7 @@ const EV = {
 			crackAt(b.x, b.y, 36);
 			sfx('rumble', b.x, b.y);
 			if (b.owner === 0)
-				say(`A sinkhole under the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 6, b);
+				news('land', `A sinkhole under the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 6, b);
 		},
 	},
 	quicksand: {
@@ -313,11 +313,11 @@ const EV = {
 			const k = keepOf(0);
 			e.at = k ? towardMid(k, 500) : { x: MID, y: MID };
 			G.mirage = { x: e.at.x, y: e.at.y, n: EVENTS.mirage.n, until: e.until };
-			say(`An army seen at ${coord(e.at.x, e.at.y)}.`, 'warn', 5, e.at);
+			news('war', `An army seen at ${coord(e.at.x, e.at.y)}.`, 'warn', 5, e.at);
 		},
 		end() {
 			G.mirage = null;
-			say('The army at that spot was a mirage.', '', 5);
+			news('war', 'The army at that spot was a mirage.', '', 5);
 		},
 	},
 	circus: {
@@ -470,7 +470,7 @@ function startEvent(kind) {
 	if (EV[kind].start) EV[kind].start(e);
 	evmSet();
 	if (EV_TEXT[kind] && kind !== 'meteor' && kind !== 'mirage')
-		say(
+		news('land', 
 			EV_TEXT[kind][1],
 			E.harm ? 'warn' : E.gift ? 'good' : 'soft',
 			6,
@@ -498,7 +498,7 @@ function eventsTick() {
 		if (G.t >= V.cur.until) endEvent();
 	} else if (!V.warned && G.t >= V.next - EV_WARN) {
 		V.warned = pickEvent();
-		say(EV_TEXT[V.warned][0], 'soft', EV_WARN);
+		news('land', EV_TEXT[V.warned][0], 'soft', EV_WARN);
 	} // the warning is quiet: in the list, not on the line
 	else if (V.warned && G.t >= V.next) {
 		if (canEv(V.warned)) startEvent(V.warned);
@@ -522,11 +522,11 @@ function hordeTick() {
 		left = H.at - G.t;
 	if (H.said < 1 && left <= HORDE.warn) {
 		H.said = 1;
-		say(EV_TEXT.horde[0], 'warn', 8);
+		news('war', EV_TEXT.horde[0], 'warn', 8);
 	}
 	if (H.said < 2 && left <= HORDE.warn / 2) {
 		H.said = 2;
-		say(EV_TEXT.horde[1], 'warn', 8);
+		news('war', EV_TEXT.horde[1], 'warn', 8);
 	}
 	if (left > 0) return;
 	const sides = G.P.filter((p) => p.id !== WILD && p.alive && keepOf(p.id)),
@@ -546,7 +546,7 @@ function hordeTick() {
 		u.hy = k.y;
 		u.horde = true;
 	}
-	say(EV_TEXT.horde[2], 'warn', 10, from);
+	news('war', EV_TEXT.horde[2], 'warn', 10, from);
 	sfx('horn');
 	G.horde = 'done';
 }
@@ -584,7 +584,7 @@ function skyTurn() {
 	c.wet = c.next ?? rng() < P[c.wet ? 1 : 0]; // the minute's sky was rolled a minute ahead, so weather signs can tell it
 	c.next = rng() < P[c.wet ? 1 : 0];
 	if (fxv(0, 'forecast').a && c.next !== c.wet)
-		say(c.next ? 'Signs of rain within the minute.' : 'Signs of a clearing sky.', 'soft', 6);
+		news('land', c.next ? 'Signs of rain within the minute.' : 'Signs of a clearing sky.', 'soft', 6);
 	c.dry = c.wet ? 0 : c.dry + 1;
 	G.wx = c.wet
 		? c.T <= CLIMATE.snowAt
@@ -597,7 +597,7 @@ function skyTurn() {
 			: c.dry >= CLIMATE.drought.dry && c.T > CLIMATE.drought.temp
 				? 'drought'
 				: 'clear';
-	if (G.wx !== was && G.t > 1 && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6, null, null, wxWhy(G.wx, was, P, c));
+	if (G.wx !== was && G.t > 1 && WEATHER[G.wx].text) news('land', WEATHER[G.wx].text, '', 6, null, null, wxWhy(G.wx, was, P, c));
 }
 function climateTick(dt) {
 	const c = G.clim;
@@ -689,7 +689,7 @@ function newsTick() {
 	G.ev.newsT = G.t;
 	const L = NEWS[Math.min(G.P[0].age, NEWS.length - 1)],
 		i = (G.ev.newsI = (G.ev.newsI || 0) + 1) % L.length;
-	say(L[i], 'news', 8);
+	news('chronicle', L[i], 'news', 8);
 }
 // a herd crosses: bison trample what they run over; performers only pass; a dragon flies (it is drawn above everything and walks through walls)
 function herdTick(u, dt, SP) {
@@ -730,7 +730,7 @@ function starveTick(p) {
 	}
 	p.hungryT = (p.hungryT || 0) + 1;
 	const o = p.id;
-	if (p.hungryT === STARVE.stop && o === 0) say('Starving: work has stopped. Food, now.', 'warn', 8);
+	if (p.hungryT === STARVE.stop && o === 0) news('home', 'Starving: work has stopped. Food, now.', 'warn', 8);
 	if (p.hungryT >= STARVE.leave && (p.hungryT - STARVE.leave) % STARVE.every === 0) {
 		const v = unitsOf(o, 'vil').sort((a, b) => a.carry - b.carry)[0],
 			s = soldiersOf(o).filter((u) => u.state === 'home')[0];
@@ -740,7 +740,7 @@ function starveTick(p) {
 				u.gone = true;
 			}
 		if (o === 0 && (v || s))
-			say(`Starving: ${v ? 'a villager left' : ''}${v && s ? ', ' : ''}${s ? 'a soldier deserted' : ''}.`, 'warn', 6);
+			news('home', `Starving: ${v ? 'a villager left' : ''}${v && s ? ', ' : ''}${s ? 'a soldier deserted' : ''}.`, 'warn', 6);
 	}
 }
 const starving = (o) => hz('starve') && (G.P[o].hungryT || 0) >= STARVE.stop; // nobody works

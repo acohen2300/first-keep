@@ -1,4 +1,4 @@
-# First Keep: the science (Build 63, Oct 30, 2026)
+# First Keep: the science (Build 64, Oct 30, 2026)
 
 Every number that stands for the real world, with its label and its source. Rule 4 of `RULES.md`.
 - **verified**: checked against the source in the session named.
@@ -65,6 +65,8 @@ Each equation has a test in `tests/science.py` against known values (from Build 
 | `06-rules-tuning` `BUILDER_POW` | A crew of n builds n^0.7 times as fast | 0.7 | cited | Thomas & Smith (1990), overmanning: productivity per worker falls about n^−0.3. Was in the game as a design number; now cited and tested (two builders 1.6×, four 2.6×). |
 | `15-sim-spatial` `groupPower`, `canBeat` | Whether a soldier can take a target is judged by its group, not itself: the power of everyone within 60 against the power of the foe's group, by the square law | `GROUP_R` 60 | verified (form) | Lanchester (1916): aimed fire concentrates, so a group's strength goes as the square of its number; the old test weighed one man against the elephant and every man turned away (the outside audits' finding). `tests/science.py`: twelve swords beat the elephant. |
 | `12-sim-core` `turtlePlan`; `10-world` `fairness` | The villager-minutes to the next age: each cost's shortfall over the best rate a villager earns it from home (the forager's rate with the walk), summed; the fairness measure across corners | | design on a measured rule | The rate is the forager's (Build 59, Charnov 1976); the sum in villager-minutes is Albert's turtle calculator ("rss calcs equal as per turtle play per segment of board"). On ten seeds the corners differ by 0 to 5%. |
+| `35-sound` `camH`, `hearing` | The ear is the camera at a height: h = (w/2) / tan(fov/2) for the ground w on screen; a sound's distance is √(d² + h²) | fov 60° | verified (form); design (fov) | ISO 9613-2 as above, with the slant distance; the 60° lens is a choice (a phone camera's is 60 to 80°). `tests/science.py`: full under the camera at the closest zoom, half at half the zoom. Albert, Build 64. |
+| `36-economy` `velOf` | A store's velocity as a colour: tanh(net a minute / 40), the worst when it will run out within two minutes | VEL.ref 40 | design | A display mapping, not a law: tanh keeps the middle gentle and the ends firm. |
 | `04-rules-tech` | Every research step's date and place | in `07-text` `WHY` | cited | Each line names a place and a date; "about" unless exact; Game: lines where compressed. `tests/history.py` (Build 58) holds every dated step inside its age (Stone to 3300 BC, Bronze to 800 BC, Classical to AD 500, Medieval to 1450, Gunpowder to 1700, the Enlightenment to 1800, 150 years of slack) or demands a Game: note. |
 
 ## To add, with their sources (checked Oct 29 against the sources named; see HANDOFF.md item 14)

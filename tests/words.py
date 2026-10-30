@@ -75,12 +75,15 @@ def messages():
         for m in re.finditer(r'\bsay\(', src):
             line = src[:m.start()].count('\n') + 1
             for t in literals(first_arg(src, m.end() - 1)): found.append((f, line, t))
+        for m in re.finditer(r"\bnews\('\w+',\s*", src):   # Build 64: news(group, text, …): the text is the second argument
+            line = src[:m.start()].count('\n') + 1
+            for t in literals(first_arg(src, m.end() - 1)): found.append((f, line, t))
         a = src.find('function advise(')
         if a >= 0:
             body = src[a:src.find('\n}', a)]
             for m in re.finditer(r"return (`(?:[^`\\]|\\.)*`|'(?:[^'\\]|\\.)*')", body):
                 for t in literals(m.group(1)): found.append((f, src[:a].count('\n') + body[:m.start()].count('\n') + 1, t))
-    # the spectacle's lines are said through variables (say(EV_TEXT[k][1])), so read the table itself; EV_LINE is what the alert bar shows
+    # the spectacle's lines are said through variables (say(EV_TEXT[k][1])), so read the table itself; EV_LINE is what the dashboard says of an event
     t = open('src/07-text.js').read()
     for name in ('EV_TEXT', 'EV_LINE'):
         a = t.find(f'const {name} = {{'); b = t.find('\n}', a)

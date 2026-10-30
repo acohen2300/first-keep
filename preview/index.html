@@ -31,34 +31,28 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 .pill .cell+.cell::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--hair)}
 .gl{position:absolute;left:50%;top:13px;width:20px;height:20px;transform:translate(-50%,-50%);display:block}
 .wd{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);text-align:center;font-size:var(--t2);font-weight:700;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
-.wd.up,#card td.up{color:#8fd0a8}.wd.down,#card td.down{color:var(--gold)}.wd.low,#card td.low{color:var(--red)}
+#card td.low{color:var(--red)}
 .cell.one .gl,.cell.one .wd{top:50%}.cell.one .gl{width:18px;height:18px}
 .pill .cell.on{background:#2f3b36}
 #muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--mute)}
-.strip{display:flex;align-items:flex-start;justify-content:space-between;box-sizing:border-box;height:var(--strip);border:1px solid var(--hair);border-radius:var(--r);background:var(--sheet);box-shadow:0 2px 8px rgba(0,0,0,.35);padding:0 2px;font-size:var(--t2);font-weight:700;color:var(--mute);line-height:26px}   /* 28 px tall to look at, 44 px tall to tap: the buttons hang below it */
-.strip .sg{display:flex;align-items:flex-start}
-.strip button{all:unset;display:flex;align-items:flex-start;justify-content:center;box-sizing:border-box;height:44px;min-width:44px;padding:0 8px;text-align:center;white-space:nowrap;cursor:pointer;touch-action:manipulation;font-variant-numeric:tabular-nums}
-#scoreP{gap:4px}#sIdle{color:var(--gold)}#scoreN{color:var(--bone)}
-#sAge.glow{color:var(--gold);animation:glowt 1.8s ease-in-out infinite}@keyframes glowt{0%,100%{text-shadow:0 0 3px rgba(230,185,71,.35)}50%{text-shadow:0 0 12px rgba(230,185,71,1)}}
 #card .lvl{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}#card .lvl small{color:var(--mute)}
-/* The ticker: every message and tip in one line under the strip, the newest first; tap it to see it, the list for the last five, the arrow to hide them all (a bell in the strip counts what comes while hidden). Albert, Build 39 */
-.tick{display:flex;box-sizing:border-box;height:46px;border:1px solid var(--hair);border-radius:var(--r);background:var(--sheet);box-shadow:0 2px 8px rgba(0,0,0,.35);overflow:hidden;color:var(--bone)}
-.tick button,.tkpop button{all:unset;box-sizing:border-box;min-height:44px;cursor:pointer;touch-action:manipulation}
-#tkT{flex:1;min-width:0;padding:0 10px;font-size:15px;font-weight:500;line-height:44px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#tkList,#tkMin,.tkpop .h{width:44px;display:flex;align-items:center;justify-content:center;color:var(--mute)}#tkList .n{font-size:12px;font-weight:700;margin-left:2px;color:var(--gold)}#tkList.warn .n{color:#ff8a70}
-.tick.alert.hot{background:rgba(92,22,18,.96);color:#ffd9d2;border-color:#d8432f}.tick.alert.hot #tkList,.tick.alert.hot #tkMin{color:#ffd9d2}
-.tick.alert{background:rgba(70,48,12,.96);color:#fbe7b8;border-color:var(--gold)}.tick.alert #tkList,.tick.alert #tkMin{color:#fbe7b8}
 #tkT .al{display:flex;align-items:center;gap:6px;height:44px}#tkT .al b{flex:none;font-weight:700}#tkT .al i{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:500;opacity:.92}
 #tkT .tri{flex:none;width:16px;height:16px;color:#ffc24a}#tkT .cd{flex:none;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
 .ring{width:20px;height:20px;transform:rotate(-90deg)}.ring circle{fill:none;stroke:currentColor;stroke-width:2.6;opacity:.28}.ring .v{opacity:1;stroke-dasharray:50.27;stroke-linecap:round}
-.tick.warn{background:rgba(124,32,22,.95);color:#ffe1da}.tick.warn #tkList,.tick.warn #tkMin{color:#ffe1da}.tick.good{background:rgba(28,84,58,.95);color:#dcf5e8}.tick.tip{border-color:var(--blue)}.tick.old #tkT{color:var(--mute)}
-.tkpop{display:flex;flex-direction:column;border:1px solid var(--hair);border-radius:var(--r);background:var(--sheet);box-shadow:0 2px 8px rgba(0,0,0,.35);overflow:hidden}
-.tkpop .row{display:flex}.tkpop .row+.row{border-top:1px solid var(--hair)}.tkpop .t{flex:1;min-width:0;padding:6px 10px;display:flex;align-items:center;font-size:12px;font-weight:700;line-height:1.25;color:var(--bone)}.tkpop .row.warn .t{color:#ffb4a6}.tkpop .row.good .t{color:#9fd8b5}
-#tkBell{gap:4px;color:var(--gold)}#tkBell.warn{color:#ff8a70}#tkBell .gl{position:static;transform:none;width:15px;height:26px;margin:0}
-.tick .gl,.tkpop .gl{position:static;transform:none;width:16px;height:16px}   /* icons sit in their own button, not on the tally's spots */
-#hud{z-index:4}   /* the ticker and its list above the small map */
+#hud{z-index:4}
+/* The status pill (Build 64): the state of the world in the tally's mold, one cell under each store column, so the eye reads down a column. */
+#status{height:var(--strip);overflow:visible;align-items:flex-start}#status .cell{height:44px;display:flex;align-items:flex-start;justify-content:center;gap:2px;padding-top:0}#status button.cell{height:44px}#status .cell .gl,#status .cell .wd{position:static;transform:none;width:auto;height:26px;line-height:26px;font-size:12px;white-space:nowrap}#status .cell span.gl{display:inline-flex;align-items:center}#status .cell .gl svg{position:static;transform:none;width:13px;height:13px}#status .cell .gl:empty{display:none}#status.pill .cell+.cell::before{top:6px;bottom:auto;height:14px}   /* thin to look at (28 px), 44 px to tap: the buttons hang below it, as the strip did */#status .cell.lit .wd{color:var(--gold)}
+#status span.cell{display:block}#status .cell.dim{color:var(--mute)}#status .cell.dim .wd{color:var(--mute)}#status .cell.lit-r .wd{color:#ff6b5b}#status .cell.lit-b .wd{color:#7db8ff}#status .cell.lit-b{animation:glowb 1.8s ease-in-out infinite}@keyframes glowb{0%,100%{text-shadow:0 0 3px rgba(79,157,255,.35)}50%{text-shadow:0 0 12px rgba(79,157,255,1)}}
+/* The preview (Build 64): a message arrives the way a phone shows a text, over the map, and fades; nothing under it moves. The bar on its
+   left is the colour code: red wrong, green done, blue act on it, white news. */
+#pv{position:absolute;z-index:5;top:calc(var(--hb) + 6px);left:var(--pad);right:var(--pad);display:flex;align-items:stretch;min-height:44px;box-sizing:border-box;border:1px solid var(--hair);border-left:5px solid var(--cc,#e9ecef);border-radius:var(--r);background:var(--sheet);box-shadow:0 4px 14px rgba(0,0,0,.45);color:var(--bone);transition:opacity .4s}
+#pv.fade{opacity:0}#pv button{all:unset;box-sizing:border-box;min-height:44px;cursor:pointer;touch-action:manipulation}
+#pv .t{flex:1;min-width:0;padding:4px 10px;display:flex;flex-direction:column;justify-content:center;font-size:15px;font-weight:600;line-height:1.2}
+#pv .t small{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}#pv .t span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pv .x{width:44px;display:flex;align-items:center;justify-content:center;color:var(--mute)}#pv .x .gl{position:static;transform:none}
+#pv .ask{display:flex;gap:4px;padding:4px}#pv .ask button{padding:0 12px;border:1px solid var(--hair);border-radius:6px;display:flex;align-items:center;font-weight:700}
+#pv .ask button.yes{background:#2f3b36}
 .hi{width:16px;height:16px}
-#stage.tk{--hb:calc(max(8px,env(safe-area-inset-top,0px)) + 128px)}   /* the ticker shown: everything under the top bars moves down by its height */
 #stage{position:absolute;inset:0;overflow:hidden;background:#20301c;touch-action:none}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 #vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse farthest-corner at 50% 50%,rgba(0,0,0,0) 42%,rgba(0,0,0,.3) 100%)}
@@ -66,7 +60,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card.full{max-height:calc(100% - var(--ob) - var(--hb) - 14px)}
 #place{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:8px;padding:6px 6px 6px 10px;font-weight:700}
 #strip{position:absolute;display:flex;gap:4px;padding:4px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:10px;z-index:5;max-width:calc(100% - 8px);overflow-x:auto}
-#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:19px;font-weight:700}#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}#strip button.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}#strip button.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:44px}#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--bone);font-size:14px}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:44px;padding:0}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:12px}#strip button small{font-size:12px}
+#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:19px;font-weight:700}#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}#strip button.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#strip button.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:44px}#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--bone);font-size:14px}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:44px;padding:0}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:12px}#strip button small{font-size:12px}
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
 #card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:6px 8px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
@@ -110,7 +104,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
 #end p{margin:0;color:var(--mute);font-size:15px}
-#card p.why{font-size:12px;line-height:1.25;margin:0}#tkPop .t .why{display:block;font-size:12px;color:var(--mute);font-weight:500}
+#card p.why{font-size:12px;line-height:1.25;margin:0}
 #endX .crowns{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:8px 0}
 #endX .crowns p{font-size:15px}#endX .crowns b{color:var(--bone)}
 #endX details{text-align:left}#endX summary{color:var(--mute);font-size:13px;min-height:44px;display:flex;align-items:center;cursor:pointer;list-style:none}#endX summary::-webkit-details-marker{display:none}#endX summary::before{content:'+';display:inline-block;width:18px;font-weight:700}#endX details[open] summary::before{content:'−'}
@@ -152,8 +146,8 @@ button.ghost{visibility:hidden}
 #huddle .col.whole>button.cell.tall{height:calc(var(--row) * 2 + 3px)}#huddle .col.whole .top.thumb{top:30px}#huddle .col.whole .top.thumb img{width:40px;height:40px;display:block}#huddle .col.whole .wd{top:74px;font-size:10px;letter-spacing:.02em;white-space:normal;overflow-wrap:anywhere;line-height:1;padding:0 2px}#huddle .col.whole .top:not(.thumb){top:34px}#huddle .col.whole .top:not(.thumb) .gl{width:22px;height:22px}
 .tiles button.cell.no{background:#2f3b36;border-color:#4a5a52;color:var(--bone)}
 .tiles button.cell.build,.tiles button.cell.st.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}.tiles button.cell.build.dis{opacity:.5}
-.tiles button.cell.train,.tiles button.cell.st.train{background:linear-gradient(#1f3d33,#14302a);border-color:#2f7a5a}.tiles button.cell.train.sel{border-color:#9fd8b5}
-#orders.pg-build{background:rgba(26,18,10,.82)}#orders.pg-build,#orders.pg-squad{backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}#orders.pg-squad{background:rgba(14,12,24,.82)}
+.tiles button.cell.train,.tiles button.cell.st.train{background:linear-gradient(#323a44,#232a31);border-color:#56616e}.tiles button.cell.train.sel{border-color:#aab6c4}
+#orders.pg-build{background:rgba(26,18,10,.82)}#orders.pg-build,#orders.pg-squad{backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}#orders.pg-squad{background:rgba(16,19,23,.84)}
 /* the huddle: dark flat glass, hairlines, one amber accent; only while planning an attack. A lamp line on top of a button: red not set, green set */
 #orders.hud{background:rgba(10,13,15,.82);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
 #huddle button.cell{position:relative;overflow:hidden;background:#161b1f;border:1px solid rgba(255,255,255,.09);border-radius:10px;box-shadow:none;color:#e6e9e6}
@@ -165,7 +159,7 @@ button.ghost{visibility:hidden}
 #huddle button.cell[class*="lamp-"]{border-color:var(--mc)}#huddle [class*="lamp-"] .wd{color:inherit}#huddle .lamp-green::after,#huddle .lamp-blue::after{box-shadow:0 0 8px var(--mc)}
 #huddle .blink{animation:hudBlink 1s infinite}@keyframes hudBlink{50%{box-shadow:inset 0 0 0 1px var(--mc),0 0 12px var(--mc)}}
 #huddle .cell.sel{border-color:#ffb23d}
-#huddle button.cell.sq,#huddle button.cell.st.sq{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}#huddle button.cell.sq.sel{background:linear-gradient(#514a78,#332e52);border-color:#a89fe0}#huddle button.cell.war,#huddle button.cell.st.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}#huddle button.cell.go{background:linear-gradient(#b8862e,#8a5f18);border-color:#f2d27a}#huddle button.cell.go .wd{color:#2a1c10}#huddle button.cell.go .gl{color:#2a1c10}#orders.sqr{background:rgba(22,20,34,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
+#huddle button.cell.sq,#huddle button.cell.st.sq{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#huddle button.cell.sq.sel{background:linear-gradient(#46525f,#2f3842);border-color:#aab6c4}#huddle button.cell.war,#huddle button.cell.st.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#huddle button.cell.go{background:linear-gradient(#2f6fc4,#1d4f94);border-color:#8cc0ff}#huddle button.cell.go .wd,#huddle button.cell.go .gl{color:#fff}#orders.sqr{background:rgba(16,19,23,.84);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
 #huddle .msn{touch-action:none}#huddle .msn.empty{background:transparent;border-style:dashed}
 #huddle .msn.lose{--pc:#ff5a4a;animation:hudPulse 1s infinite}#huddle .msn.win{--pc:#43c06b;animation:hudPulse 1.2s infinite}
 @keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc),0 0 10px var(--pc)}}
@@ -173,11 +167,10 @@ button.ghost{visibility:hidden}
 .hudGhost{position:fixed;left:0;top:0;z-index:20;pointer-events:none;padding:8px 12px;border-radius:10px;background:rgba(12,16,20,.95);border:1px solid #43c06b;color:#43c06b;font:700 13px system-ui,sans-serif}
 /* on the map: the corners, one look (.fab). Map top right, Home bottom left (only when away), Build bottom right */
 #spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}#spdPop[hidden]{display:none}#spdPop button{min-width:52px;min-height:44px}#spdPop button.cur{box-shadow:inset 0 0 0 2px var(--mute);border-color:var(--mute)}
-.strip #sStats,.strip #sIdle{padding:0 5px;min-width:44px;gap:9px}.strip #sStats span,.strip #tkBell>*,.strip #sAgeT,.strip #scoreN,.strip #scoreR{display:inline-flex;align-items:center;height:26px;gap:3px}.strip .gl{position:static;transform:none;width:15px;height:15px;display:block;margin:0;flex:none}   /* one line: icon and number share a centre */
 #tally button.cell{isolation:isolate}#tally button.cell.sel::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:7px;background:#2f3b36;border:1px solid var(--mute)}   /* the on mark: a small tile inside the cell; ::before is the divider */
 #pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}
-button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--pad);bottom:calc(var(--ob) + 8px);width:auto;height:44px;padding:0 10px 0 8px;border-radius:22px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:3px;color:var(--bone)}#hudB svg{position:static;transform:none;width:20px;height:20px}#hudB b{font-weight:700}#hudB.squad{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}#hudB.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#hudB.train{background:linear-gradient(#1f3d33,#14302a);border-color:#2f7a5a}
-.tiles button.cell.sq,.tiles button.cell.st.sq{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}.tiles button.cell.sq.sel{background:linear-gradient(#514a78,#332e52);border-color:#a89fe0}.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}.tiles button.cell.go{background:linear-gradient(#b8862e,#8a5f18);color:#2a1c10;border-color:#f2d27a}.tiles button.cell.go .wd{color:#2a1c10}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#emgB.on{border-color:#ff5a4a;color:#ff9a8c}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB,#stage.busy #emgB{display:none}
+button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--pad);bottom:calc(var(--ob) + 8px);width:auto;height:44px;padding:0 10px 0 8px;border-radius:22px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:3px;color:var(--bone)}#hudB svg{position:static;transform:none;width:20px;height:20px}#hudB b{font-weight:700}#hudB.squad{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#hudB.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#hudB.train{background:linear-gradient(#1f3d33,#14302a);border-color:#2f7a5a}
+.tiles button.cell.sq,.tiles button.cell.st.sq{background:linear-gradient(#323a44,#232a31);border-color:#56616e}.tiles button.cell.sq.sel{background:linear-gradient(#46525f,#2f3842);border-color:#aab6c4}.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}.tiles button.cell.go{background:linear-gradient(#2f6fc4,#1d4f94);color:#fff;border-color:#8cc0ff}.tiles button.cell.go .wd{color:#fff}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#emgB.on{border-color:#ff5a4a;color:#ff9a8c}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB,#stage.busy #emgB{display:none}
 #stage.busy #homeB{display:none}
 #stage.picking #homeB{display:none}
 #card .lbl{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.1;min-height:44px}#card .lbl b{font-size:16px}#card .lbl small{color:var(--mute);font-size:13px}
@@ -211,8 +204,8 @@ button.ok small{color:#8fd4a4}
 #card button:not(#cardX):not(#cardI){position:relative;background-color:#312218;background-image:linear-gradient(#3b2b1d,#2a1d13);border:1px solid var(--brass);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,220,150,.18);color:var(--bone);min-height:44px;padding:3px 5px}
 #card button.dis{border-color:#4a3a28;background:transparent;box-shadow:none;color:#bfb49c}#card button.done:not(#cardX):not(#cardI){opacity:.55;border-style:solid;border-color:#5a4a30}#card .chipsrow button.done:not(.on):not(#cardX):not(#cardI){opacity:.5}#card button.dis b{color:#bfb49c}   /* what you cannot: flat on the table */
 #card button.nope:not(#cardX):not(#cardI){border-color:var(--red);box-shadow:0 0 12px rgba(220,70,50,.7),inset 0 0 8px rgba(220,70,50,.35)}
-#card small.need{color:color-mix(in srgb,#fff calc(var(--fr,0)*100%),#ff8a70);font-weight:700}   /* what it is short of */
-#card button.go{border-color:var(--lamp);box-shadow:inset 0 0 0 1px var(--lamp),0 0 10px rgba(230,185,71,.35)}   /* what you can do now: a brass rim */
+#card small.need,#card small.can{color:var(--gc);font-weight:700}#card button.go small.can{color:inherit}   /* a cost on the one gradient; a go button already says it */
+#card button.go{border-color:#6aaeff;box-shadow:inset 0 0 0 1px #6aaeff,0 0 10px rgba(79,157,255,.35)}   /* what you can do now: blue, the colour code (Build 64; it was a brass rim) */
 #card button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;box-shadow:0 0 14px rgba(242,210,122,.5)}#card button.on small{color:#4a3518}
 #card button.warn{border-color:var(--red);color:#ffb3a7}
 #card button.ok{border-color:#4fb06a;box-shadow:inset 0 0 0 1px #4fb06a;color:#dcf5e8}#card button.ok small{color:#8fd4a4}
@@ -254,6 +247,23 @@ button.ok small{color:#8fd4a4}
 #card button.go:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){border-color:#7d9bc4;box-shadow:inset 0 0 0 1px #7d9bc4,0 0 10px rgba(130,170,230,.2)}   /* research reads blue: cool tint, a small scroll, a blue rim when ready */
 @media (max-width:400px){:root{--pad:6px}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important;scroll-behavior:auto!important} }
+/* The door (Build 64): the bottom of the row's first slot; its colour is the most important thing now, in the colour code */
+#orders button.cell.door{background:linear-gradient(#2a3330,#1f2724);border-color:#4a5a52}
+#orders button.cell.door.red{background:linear-gradient(#5c1a14,#3a1110);border-color:#ff6b5b;color:#ffd9d2}#orders button.cell.door.red .wd{color:#ffd9d2}
+#orders button.cell.door.blue{background:linear-gradient(#1d4f94,#143766);border-color:#8cc0ff;color:#e4f0ff}#orders button.cell.door.blue .wd{color:#e4f0ff}
+#orders button.cell.door{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px}#orders button.cell.door .top{position:static;display:inline-flex;transform:none;height:auto}#orders button.cell.door .top .gl{position:static;transform:none;width:15px;height:15px}#orders button.cell.door .wd{position:static;transform:none;font-size:12px;line-height:14px;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}#orders button.cell.door .pill{position:absolute;top:1px;right:2px;display:block;height:auto;min-width:12px;padding:0 3px;border:0;border-radius:8px;background:#b3261e;color:#fff;font-size:12px;line-height:15px;box-shadow:none;overflow:visible}
+#orders button.cell.door.pulse{animation:doorp 1.2s ease-out 1}@keyframes doorp{0%{box-shadow:0 0 0 0 rgba(255,255,255,.75)}100%{box-shadow:0 0 0 14px rgba(255,255,255,0)}}
+@media (prefers-reduced-motion:reduce){#orders button.cell.door.pulse{animation:none;outline:2px solid #fff}}
+#huddle button.cell.st-blue{border-color:#8cc0ff;box-shadow:inset 0 0 0 1px #8cc0ff}#huddle button.cell.st-blue .wd{color:#bcd9ff}#huddle button.cell.st-green{border-color:#5fd08a}#huddle button.cell.st-green .wd{color:#a8e0b0}#huddle button.cell.st-red{border-color:#ff6b5b;box-shadow:inset 0 0 0 1px #ff6b5b}#huddle button.cell.st-red .wd{color:#ff9a8c}
+/* The dashboard: the five domains and the mail in one row on the row's six-column mold */
+#card .dash{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+#card button.dt:not(#cardX):not(#cardI){min-height:84px;padding:4px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px solid var(--line);border-radius:8px;background:#241a12;box-shadow:none}
+#card button.dt .i svg{width:20px;height:20px;position:static;transform:none}#card button.dt b{font-size:12px;line-height:1.1;text-align:center}#card button.dt small{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
+#card button.dt.red:not(#cardX):not(#cardI){border-color:#ff6b5b;box-shadow:inset 0 0 0 1px #ff6b5b}#card button.dt.red b{color:#ff9a8c}
+#card button.dt.blue:not(#cardX):not(#cardI){border-color:#6aaeff;box-shadow:inset 0 0 0 1px #6aaeff}#card button.dt.blue b{color:#9cc8ff}
+#card button.dt.green:not(#cardX):not(#cardI){border-color:#5fd08a}#card button.dt.green b{color:#a8e0b0}
+/* The mail: each line with its colour on its left edge */
+#card .mrows{display:flex;flex-direction:column;gap:4px}#card button.mr:not(#cardX):not(#cardI){min-height:44px;padding:4px 8px;align-items:flex-start;text-align:left;border-left:4px solid var(--cc)}#card button.mr b{font-size:13px;font-weight:600}#card button.mr small{font-size:12px;color:var(--mute)}
 </style>
 
 </head>
@@ -264,9 +274,9 @@ button.ok small{color:#8fd4a4}
     <div id="vig"></div>
   <header id="hud">
     <div class="pill" id="tally"></div>
-    <div class="strip"><div class="sg"><button id="sAge" data-act="card:research" aria-label="Age, season and clock: what you can research"><span id="sAgeT"></span></button><button id="sIdle" data-act="idlego" aria-label="Show an idle villager" hidden></button><button id="sStats" data-act="card:troops" aria-label="Research ready, people, soldiers: the Army card"></button></div><div class="sg"><button id="tkBell" data-act="tkmin" aria-label="Show messages" hidden><span id="tkBellN"></span></button><button id="scoreP" data-act="card:score" aria-label="Score and rank"><span id="scoreN">★0</span> <span id="scoreR"></span></button></div></div>
-    <div class="tick" id="ticker"><button id="tkT" data-act="tklist" aria-label="Latest message"></button><button id="tkList" data-act="tklist" aria-label="Recent messages"></button><button id="tkMin" data-act="tkmin" aria-label="Hide messages"></button></div><div class="tkpop" id="tkPop" hidden></div>
+    <div class="pill" id="status"></div>
   </header>
+  <div id="pv" hidden></div>
   <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div><div class="tr" id="huddle" hidden></div></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
@@ -293,7 +303,7 @@ button.ok small{color:#8fd4a4}
 'use strict';
 // ═════ 01-rules-basics.js: the map, speeds, difficulty, resources, jobs, players, ages, seasons ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 63; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
+const BUILD = 64; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
 const MAP = 2000,
 	MID = MAP / 2,
 	DT = 1 / 30;
@@ -5372,7 +5382,7 @@ const FIREARMS = { chance: 0.12, blast: 0.3, splash: 40, splashHit: 0.3 }; // fi
 // Sound by distance (Build 62): ISO 9613-2, L = L0 − 20 log10(d / d0) − α d. Full within d0 (half the screen's radius: you hear what you look at),
 // then the inverse-square law, less the air's absorption α: 5 dB a kilometre at 1 kHz, 20 °C, 50% humidity (ISO 9613-1), over a world unit of 0.14 m.
 // Thunder reaches the ear after the flash at 340 m/s over the same metre. floor: below this share it is not played.
-const SOUND = { d0: 0.5, alphaKm: 5, metre: 0.14, floor: 0.03, c: 340 };
+const SOUND = { fov: 60, alphaKm: 5, metre: 0.14, floor: 0.03, c: 340 }; // fov: the camera's field of view, degrees, which turns the zoom into a height (Albert, Build 64)
 const GARRISON = { r: 70, heal: 0.6 }; // soldiers resting by their own Castle, Barracks or Town Center heal; Garrison wards double it
 const TEACH = { seats: 4, mul: 1.5, tuition: 40 }; // Teach: a soldier learns a newer kind at the School, four at a time; time ×1.5 per age climbed, tuition in gold per age; opened by Veterans
 const TEACH_TO = {
@@ -5515,10 +5525,10 @@ const EV_MEAN = 120, // the mean wait between events (an exponential wait, nextI
 	EV_WARN = 12;
 const EVENTS = {
 	eclipse: { name: 'Eclipse', secs: 20, dmg: 0.6, spd: 0.7, sight: 0.7, harm: 1 },
-	storm: { name: 'Thunderstorm', secs: 40, band: 260 },
+	storm: { name: 'Thunderstorm', door: 'Storm', secs: 40, band: 260 },
 	stampede: { name: 'Stampede', secs: 30, n: 10, harm: 1 },
 	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.004, harm: 1 },
-	meteor: { name: 'Falling star', secs: 3 },
+	meteor: { name: 'Falling star', door: 'Star', secs: 3 },
 	wildfire: {
 		name: 'Wildfire',
 		secs: 60,
@@ -5531,12 +5541,12 @@ const EVENTS = {
 	}, // most: trees alight at once; the dry seasons, drought or not
 	fog: { name: 'Fog', secs: 60, vis: 70 },
 	sinkhole: { name: 'Sinkhole', secs: 2, hit: 0.4 },
-	quicksand: { name: 'Quicksand', secs: 120, r: 60, slow: 0.3 },
+	quicksand: { name: 'Quicksand', door: 'Sand', secs: 120, r: 60, slow: 0.3 },
 	heatwave: { name: 'Heat', secs: 60, dmg: 0.85, spd: 0.9, need: 'drought', season: 'Summer' },
 	mirage: { name: 'Mirage', secs: 30, n: 12, season: 'Summer' },
 	circus: { name: 'Circus', secs: 60, n: 5, r: 150, cheer: 120, mul: 1.1, gift: 1 },
-	wagon: { name: 'Wagon train', secs: 90, gift: 1 },
-	mercs: { name: 'Mercenaries', secs: 180, gift: 1 },
+	wagon: { name: 'Wagon train', door: 'Wagons', secs: 90, gift: 1 },
+	mercs: { name: 'Mercenaries', door: 'Mercs', secs: 180, gift: 1 }, // door: the word on the row's door, which has room for eight letters
 	dragon: { name: 'Dragon', secs: 25, fantasy: true, harm: 1 },
 	troll: { name: 'Troll', secs: 90, fantasy: true },
 	aurora: { name: 'Aurora', secs: 45, fantasy: true, night: true },
@@ -6546,6 +6556,11 @@ const TRIGGERS = () => [
 		'Most real battles ended in a rout, not a last man: armies broke when losses reached a tenth to a third (Dupuy, Understanding War, 1987).',
 	],
 	[
+		'The song',
+		'There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, composed by your decisions. Every stroke sounds when it lands, at the pace of the find it works; crews fall into step on their own; the birds, the wind and the thunder sit on top. Nobody else writes a note of it.',
+		'Work songs kept crews in time long before metronomes: sea shanties, the sowing songs of the fields, the smith striking on the beat. The game plays only what happens.',
+	],
+	[
 		'Hit from behind',
 		`A foot soldier or rider struck from behind the line it holds takes ${Math.round((FLANK - 1) * 100)}% more damage, and its nerve shakes more. It counts only when the man cannot turn to meet it (engaged with another, slipped, or broken) and no comrade stands in the way: a big group is turned only at its ends. Shooters do not get it. Splitting the army to catch a line from two sides pays.`,
 		'Armies lost most men when their line was turned: Cannae, 216 BC.',
@@ -6751,6 +6766,25 @@ const TRIGGERS = () => [
 const $ = (id) => document.getElementById(id);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const hyp = (x, y) => Math.sqrt(x * x + y * y);
+// The one gradient (Albert, Build 64): red, pink, white, light green, green, for every number that has a meaning. v runs from −1 (the
+// worst) to +1 (the best); a cost row reads how near you are to paying, a store and its job read their velocity. Colour is never alone:
+// the number is always there, and the two ends differ in brightness as well as hue.
+const GRAD = [
+	[255, 107, 91],
+	[246, 166, 160],
+	[233, 236, 239],
+	[168, 224, 176],
+	[95, 208, 138],
+];
+function grad(v) {
+	const x = (clamp(v, -1, 1) + 1) * 2,
+		i = Math.min(3, Math.floor(x)),
+		f = x - i,
+		a = GRAD[i],
+		b = GRAD[i + 1];
+	return `rgb(${a.map((c, j) => Math.round(c + (b[j] - c) * f)).join(',')})`;
+}
+const costCol = (fr) => grad(fr >= 1 ? 0.55 : fr - 1); // short: red at nothing, white near enough; enough: light green
 const dist = (a, b) => {
 	const dx = a.x - b.x,
 		dy = a.y - b.y;
@@ -6896,7 +6930,7 @@ const SET = {
 	sound: true,
 	vol: 0.6,
 	mix: {},
-	hush: {},
+	hideG: {}, // the message groups whose lines go quietly to the mail (Build 64; the old per-line hush folds into this)
 	mini: undefined,
 	mapSeen: false,
 	vibe: true,
@@ -7985,7 +8019,7 @@ function moveTo(u, x, y, dt, r, SP) {
 			u.stuck = G.t + CLIMATE.slipSecs;
 			if (u.owner === 0 && !(G.slipT > G.t - 20)) {
 				G.slipT = G.t;
-				say('Ice: your people slip and fall.', 'soft', 4, u);
+				news('land', 'Ice: your people slip and fall.', 'soft', 4, u);
 			}
 			return false;
 		}
@@ -8228,7 +8262,7 @@ function blankGame(seed) {
 		nodes: [],
 		finds: [],
 		tracers: [],
-		log: [],
+		mail: [], // every line, newest first (the dashboard's mail)
 		P: [],
 		rel: [],
 		card: null,
@@ -8372,7 +8406,7 @@ function newGame(seed, carry) {
 		p.age = carry.age;
 		p.techs = new Set(carry.techs);
 		fxDirty();
-	} else say(`${LAND[G.land].name}. Gather, grow, explore.`, '', 8);
+	} else news('land', `${LAND[G.land].name}. Gather, grow, explore.`, '', 8);
 	if (!carry && seed !== todaySeed()) applyScenario(SET.scen);
 }
 // a scenario is the ordinary game with some things set (SCENARIOS in 06): an age, a store, relations, hazards, a few buildings already up
@@ -8421,7 +8455,7 @@ function applyScenario(id) {
 	navRebuild();
 	fxDirty();
 	if (S.hordeAt) G.horde = { at: S.hordeAt, said: 0 };
-	say(`${SCEN_TEXT[id][0]}: ${SCEN_TEXT[id][1]}`, 'soft', 10);
+	news('realm', `${SCEN_TEXT[id][0]}: ${SCEN_TEXT[id][1]}`, 'soft', 10);
 }
 const inBox = (p, r) => p.x >= r.x0 && p.x <= r.x1 && p.y >= r.y0 && p.y <= r.y1;
 const node = (kind, type, x, y, amt) => ({ id: NID++, kind, type, x, y, amt, max: amt });
@@ -10304,7 +10338,7 @@ function reap() {
 	for (const b of G.blds)
 		if (b.node && b.node.amt <= 0 && b.hp > 0 && BLD[b.kind].reserve > 0 && !b.spent) {
 			b.spent = true;
-			if (b.owner === 0) say(`${bldName(0, b.kind)} cut out: tap it to replant.`, '', 5, b);
+			if (b.owner === 0) news('home', `${bldName(0, b.kind)} cut out: tap it to replant.`, '', 5, b);
 		} else if (b.spent && b.node && b.node.amt > 0) b.spent = false; // a coppice plot, spent: it stands, stumps and all, until it is replanted (Build 61; it used to vanish)
 	for (const b of G.blds)
 		if (b.kind === 'throne' && b.hp <= 0 && !b.gone) {
@@ -10318,7 +10352,7 @@ function reap() {
 			if (b.by !== undefined && G.t - (b.byT || 0) < 20) plunderBld(b); // a flood twenty minutes after a scratch is nobody's kill (Build 63)
 			if (BLD[b.kind].fx) fxChange = true;
 			if (G.wonder && G.wonder.id === b.id) {
-				say(
+				news('realm', 
 					`${G.P[b.owner].name === 'You' ? 'Your wonder' : 'The wonder of ' + G.P[b.owner].name} has fallen.`,
 					b.owner === 0 ? 'warn' : 'good',
 					7,
@@ -10328,7 +10362,7 @@ function reap() {
 		}
 	if (fxChange) fxDirty();
 	if (G.lootT && G.t - G.lootT > 1.5) {
-		say(`Plunder: ${costText(G.loot)}.`, 'good', 6);
+		news('trade', `Plunder: ${costText(G.loot)}.`, 'good', 6);
 		G.loot = {};
 		G.lootT = 0;
 	}
@@ -10589,7 +10623,7 @@ function judge() {
 		for (const m of [300, 60])
 			if (G.t >= lim - m && !G.bell[m]) {
 				G.bell[m] = 1;
-				if (G.t < lim - m + 5) say(`${m / 60} minute${m > 60 ? 's' : ''} left: top score wins.`, 'warn', 7);
+				if (G.t < lim - m + 5) news('realm', `${m / 60} minute${m > 60 ? 's' : ''} left: top score wins.`, 'warn', 7);
 			}
 	if (lim && G.t >= lim) {
 		scoreAll();
@@ -10649,7 +10683,7 @@ function bldTick(b, dt) {
 				b.cd = B.cd;
 				if (o === 0 && b.kind === 'tower' && G.t - (b.alarmT || -99) > 20) {
 					b.alarmT = G.t;
-					say(`Foes at your tower at ${coord(b.x, b.y)}.`, 'warn', 6, b);
+					news('war', `Foes at your tower at ${coord(b.x, b.y)}.`, 'warn', 6, b);
 					sfx('horn', b.x, b.y);
 				}
 				shot(b.x, b.y, B.h, t.x, t.y);
@@ -10676,7 +10710,7 @@ function built(b) {
 	if (B.sheep && b.node) b.node.amt = (b.sheep || 0) * FLEECE * 0.5; // a new flock comes with half a year's wool on its back
 	if (b.kind === 'wonder') {
 		G.wonder = { owner: o, id: b.id, end: G.t + WONDER_HOLD };
-		say(
+		news('realm', 
 			o === 0
 				? `Your wonder stands. Hold it ${WONDER_HOLD / 60} min to win.`
 				: `${G.P[o].name} built a wonder: break it in ${WONDER_HOLD / 60} min!`,
@@ -10723,7 +10757,7 @@ function jobDone(b, j) {
 			}
 		if (o === 0) {
 			sfx('done', b.x, b.y);
-			say(`${j.bn !== undefined ? BN[j.bn] : 'A battalion'} mustered: ${musterN(j.muster)} soldiers.`, 'good', 5, b);
+			news('war', `${j.bn !== undefined ? BN[j.bn] : 'A battalion'} mustered: ${musterN(j.muster)} soldiers.`, 'good', 5, b);
 		}
 	} else if (j.tech) {
 		learnTech(o, j.tech);
@@ -10732,14 +10766,14 @@ function jobDone(b, j) {
 		p.aging = false;
 		fxDirty();
 		if (o === 0) {
-			say(`You enter the ${AGES[p.age].name} age.`, 'good', 6);
+			news('realm', `You enter the ${AGES[p.age].name} age.`, 'good', 6);
 			sfx('age');
 			const k = keepOf(0);
 			if (k) {
 				k.doneT = G.t;
 				celebrate(3, k.x, k.y);
 			}
-		} else if (fxv(0, 'news').a >= 5 || !G.fogOn) say(`${p.name} entered the ${AGES[p.age].name} age.`, '', 4); // another court's age: in the news sheets
+		} else if (fxv(0, 'news').a >= 5 || !G.fogOn) news('chronicle', `${p.name} entered the ${AGES[p.age].name} age.`, '', 4); // another court's age: in the news sheets
 		chron(`${o === 0 ? 'You' : p.name} entered the ${AGES[p.age].name} age.`);
 	}
 }
@@ -10749,7 +10783,7 @@ function learnTech(o, id) {
 	rehealth(o);
 	if (T.age === 5) enlightenTick(o);
 	if (o === 0) {
-		say(
+		news('realm', 
 			T.tier
 				? `${T.name}: your ${plural(UNIT[T.tier.unit].name.toLowerCase())} are now ${plural(stats(0, civKind(0, T.tier.unit)).name.toLowerCase())}.`
 				: `${T.name} learned.`,
@@ -11204,7 +11238,7 @@ function vilTick(u, dt, SP) {
 			setJob(u, null);
 			u.post = dr ? { x: dr.x + halfOf(dr) + 6, y: dr.y + 6 } : null;
 			if (u.owner === 0)
-				say(
+				news('home', 
 					`No ${what === 'tree' ? 'trees' : what} in sight: one waits at the ${dr ? bldName(0, dr.kind).toLowerCase() : 'Town Center'}.`,
 					'',
 					4,
@@ -11375,12 +11409,12 @@ function repairTick(u, dt, SP) {
 		if (!b.smoke && (b.spread || b.hp < maxHpB(o, b.kind) / 2) && rng() < FIRE_SMOKE * dt) {
 			b.smoke = true;
 			u.hp = 0;
-			if (o === 0) say(`Smoke killed a villager at the ${bldName(0, b.kind).toLowerCase()}.`, 'warn', 6, b);
+			if (o === 0) news('home', `Smoke killed a villager at the ${bldName(0, b.kind).toLowerCase()}.`, 'warn', 6, b);
 			return;
 		} // a big fire can take one of its fighters
 		b.fire = Math.max(0, b.fire - 0.2 * dt);
 		u.work = G.t;
-		if (!b.fire && b.owner === 0) say(`The fire at the ${bldName(0, b.kind).toLowerCase()} is out.`, 'good', 4, b);
+		if (!b.fire && b.owner === 0) news('home', `The fire at the ${bldName(0, b.kind).toLowerCase()} is out.`, 'good', 4, b);
 		return;
 	}
 	if (b.prog < 1) {
@@ -11528,7 +11562,7 @@ function caravanTick(u, dt, SP) {
 		if (d.owner !== o) {
 			earn(G.P[o], 'g', u.cargo, 'trade');
 			if (o === 0 && u.cargo) {
-				say(`A caravan earns ${u.cargo} gold from your ally.`, 'good', 3, d);
+				news('trade', `A caravan earns ${u.cargo} gold from your ally.`, 'good', 3, d);
 				sfx('tribute');
 			}
 			u.dest = u.lastId;
@@ -11663,8 +11697,8 @@ function priestTick(u, dt, SP) {
 				u.cvCd = G.t + CONVERT.cd;
 				u.cvT = 0;
 				u.state = 'home';
-				if (u.owner === 0) say(`Converted: their ${UNIT[t.kind].name.toLowerCase()} is yours.`, 'good', 5, t);
-				else if (was === 0) say(`A priest turned your ${UNIT[t.kind].name.toLowerCase()}!`, 'warn', 5, t);
+				if (u.owner === 0) news('war', `Converted: their ${UNIT[t.kind].name.toLowerCase()} is yours.`, 'good', 5, t);
+				else if (was === 0) news('war', `A priest turned your ${UNIT[t.kind].name.toLowerCase()}!`, 'warn', 5, t);
 			}
 		} else {
 			u.cvT = Math.max(0, (u.cvT || 0) - dt);
@@ -11847,7 +11881,7 @@ function solTick(u, dt, SP) {
 			u.fleeFrom = null;
 			if (o === 0 && G.t - (G.routSay || -99) > 8) {
 				G.routSay = G.t;
-				say(`${u.bn !== undefined ? BN[u.bn] : 'Your soldiers'} break and run!`, 'warn', 5, u);
+				news('war', `${u.bn !== undefined ? BN[u.bn] : 'Your soldiers'} break and run!`, 'warn', 5, u);
 			}
 			return;
 		}
@@ -11975,7 +12009,7 @@ function solTick(u, dt, SP) {
 				if (hasTag(u.kind, 'siege') && G.clim.snow > 0 && rng() < CLIMATE.miss * G.clim.snow * (1 - fxv(o, 'snow').a)) {
 					u.hp -= u.max * CLIMATE.missHurt;
 					scarStrike(u.x + u.fx * 30, u.y + u.fy * 30);
-					if (o === 0 && (G.tick + u.id) % 90 < 3) say('Snow: the engine slid, shot short.', 'warn', 4, u);
+					if (o === 0 && (G.tick + u.id) % 90 < 3) news('war', 'Snow: the engine slid, shot short.', 'warn', 4, u);
 				} // an engine on snow
 				else {
 					hurt(o, u, tgt, dmgOf(u));
@@ -12122,7 +12156,7 @@ function wayfarers(dt) {
 	const w = addUnit(WILD, 'wayfarer', a[0], a[1]);
 	w.px = b[0];
 	w.py = b[1];
-	say('A wayfarer: reach him first to gain him.', '', 6, w);
+	news('realm', 'A wayfarer: reach him first to gain him.', '', 6, w);
 }
 function wayfarerTick(u, dt, SP) {
 	if ((G.tick + u.id) % 6 === 0) {
@@ -12137,7 +12171,7 @@ function wayfarerTick(u, dt, SP) {
 					v.job = o === 0 ? G.P[0].rally : null;
 				} else earn(G.P[o], 'f', 50, 'finds'); // no room: what it carried
 			if (o === 0)
-				say(UNIT[u.kind].joins > 1 ? 'The settlers join your people.' : 'A wayfarer joins your people.', 'good', 5);
+				news('realm', UNIT[u.kind].joins > 1 ? 'The settlers join your people.' : 'A wayfarer joins your people.', 'good', 5);
 			return;
 		}
 	}
@@ -12164,8 +12198,8 @@ function findsTick(dt) {
 					const was = f.owner;
 					f.owner = o;
 					f.cap = null;
-					if (o === 0) say('Your priest holds the shrine.', 'good', 5);
-					else if (was === 0) say(`${G.P[o].name} took your shrine.`, 'warn', 5, f);
+					if (o === 0) news('realm', 'Your priest holds the shrine.', 'good', 5);
+					else if (was === 0) news('realm', `${G.P[o].name} took your shrine.`, 'warn', 5, f);
 				}
 			} else if (!sides.length) f.cap = null;
 			if (f.owner !== null && G.P[f.owner].alive) {
@@ -12207,7 +12241,7 @@ function findsTick(dt) {
 			}
 		}
 		if (o === 0) {
-			say(`${F.name}: ${costText(got)}${extra}.`, 'good', 6);
+			news('trade', `${F.name}: ${costText(got)}${extra}.`, 'good', 6);
 			sfx('coin');
 		}
 	}
@@ -12551,7 +12585,7 @@ function hurt(o, a, t, base) {
 		if (G.t - G.alertT > 12) {
 			G.alertT = G.t;
 			if (o !== WILD) sfx('horn');
-			say(
+			news('war', 
 				o === WILD
 					? `${plural(UNIT[a ? a.kind : 'wolf'].name)} attack at ${coord(t.x, t.y)}`
 					: `Under attack at ${coord(t.x, t.y)}`,
@@ -12706,7 +12740,7 @@ function fall(p) {
 			q.capA = (q.capA || 0) + Math.floor((ARMYMAX * SHARE_FALLEN) / left.length);
 		}
 		if (left.some((q) => q.id === 0))
-			say(
+			news('realm', 
 				`Shared out: the ceiling rises by ${Math.floor((ARMYMAX * SHARE_FALLEN) / left.length)} soldiers.`,
 				'good',
 				7,
@@ -12717,7 +12751,7 @@ function fall(p) {
 		const q = G.P[p.ally];
 		if (q.ally === p.id) q.ally = null;
 	}
-	if (p.id) say(`${p.name} has fallen.`, 'good', 7);
+	if (p.id) news('war', `${p.name} has fallen.`, 'good', 7);
 	chron(`${p.id === 0 ? 'Your keep' : p.name} fell.`);
 }
 function scoreAll() {
@@ -12742,7 +12776,7 @@ function watchHome() {
 	const near = G.units.find((u) => atWar(0, u.owner) && u.owner !== WILD && isSoldier(u) && dist(u, k) < 340);
 	if (near && G.t - G.warnT > 20) {
 		G.warnT = G.t;
-		say('Enemies at your town!', 'warn', 7, near);
+		news('war', 'Enemies at your town!', 'warn', 7, near);
 	}
 }
 function finish(won, text, all) {
@@ -13223,7 +13257,7 @@ function throneRun(p, per) {
 		u.bid = T.id;
 	});
 	p.wave = { n: home.length, t: G.t };
-	say(`${p.name} march on the Throne.`, 'warn', 8, T);
+	news('war', `${p.name} march on the Throne.`, 'warn', 8, T);
 }
 function wallPlan(k) {
 	// an arc 190 out from the keep, facing the middle of the map; the two squares nearest the middle are the gate
@@ -13333,7 +13367,7 @@ function decideWar(p, per) {
 					u.bid = mark.id;
 				});
 		}
-		if (best === 0) say(`${p.name} march on you with ${go.length} soldiers.`, 'warn', 8, go[0]);
+		if (best === 0) news('realm', `${p.name} march on you with ${go.length} soldiers.`, 'warn', 8, go[0]);
 	}
 }
 
@@ -13352,7 +13386,7 @@ function leagueTick() {
 		G.league = lead.id;
 	} else if (G.league !== lead.id || ratio < LEAGUE.release) {
 		G.league = null;
-		say('The league against the leader breaks up.', '', 6);
+		news('realm', 'The league against the leader breaks up.', '', 6);
 		return;
 	}
 	const M = S.slice(1).filter((p) => p.id !== 0 && p.lord !== lead.id);
@@ -13363,7 +13397,7 @@ function leagueTick() {
 		for (const q of M) if (q !== p && G.rel[p.id][q.id] !== 'ally') G.rel[p.id][q.id] = 'ally';
 	}
 	G.navDirty = true;
-	if (fresh) say(`${M.map((p) => p.name).join(', ')} unite against ${lead.name}, the leader.`, 'warn', 8);
+	if (fresh) news('realm', `${M.map((p) => p.name).join(', ')} unite against ${lead.name}, the leader.`, 'warn', 8);
 }
 // ═════ 18-figures.js: people and beasts, drawn from data ═════
 // ───────────────────────── Figures: every unit drawn once per look, colour, pose and zoom, then stamped ─────────────────────────
@@ -21718,8 +21752,8 @@ function openCard(c) {
 		setPause(true);
 		G.cardPaused = true;
 	}
-	tick();
 	renderCard();
+	preview();
 } // a card pauses the game (Help: Pause on cards); closing it carries on
 const READ_CARDS = new Set(['research', 'troops', 'guide', 'help', 'score', 'stores', 'sound']); // the cards you sit and read pause the game; a building, a unit or a field to glance at does not (Albert, Build 41). The War Council is a building card that pauses (Build 48: 'council' here never matched a card)
 function closeCard() {
@@ -21730,10 +21764,10 @@ function closeCard() {
 			G.cardPaused = false;
 			if (!G.over) setPause(false);
 		}
-		tick();
 	}
 	$('card').hidden = true;
-} // the ticker steps aside or back at once, so the card gets its room on the first frame
+	if (G) preview();
+} // the preview steps back at once
 let cardSig = '';
 const sig = (x) =>
 	x.nodeType === 3
@@ -21778,7 +21812,7 @@ function patchHTML(el, html) {
 // ── the pieces every card is made of
 const cap1 = (t) => (t && t.indexOf('<') < 0 ? t.replace(/(^|· )([a-z])/g, (m, a, c) => a + c.toUpperCase()) : t); // sentence case: a capital opens every label and every part after a dot
 const btn = (act, title, sub, cls, fr) =>
-	`<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small${sub.startsWith('short ') ? ` class="need"${fr === undefined ? '' : ` style="--fr:${fr.toFixed(2)}"`}` : ''}>${cap1(sub)}</small>` : ''}</button>`; // a sub-line that says what is short reads in red ink that fades to white as you near the cost (fr: 0 to 1)
+	`<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small${fr === undefined ? '' : ` class="${fr < 1 ? 'need' : 'can'}" style="--gc:${costCol(fr)}"`}>${cap1(sub)}</small>` : ''}</button>`; // a cost line on the one gradient (fr: what you have of it, 0 to 1): red at nothing, white near, light green when you can pay
 const FOLD = new Set(); // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 // the book entry of a research step: the date, what it changed, and its weight, which is its cost
 const techBook = (t) =>
@@ -21855,7 +21889,7 @@ function trainButtons(kinds) {
 				stats(0, ck).name,
 				sub + (n ? ` ×${n}` : ''),
 				why ? 'dis' : '',
-				sub.startsWith('short ') && !full ? fillOf(cost) : undefined,
+				sub.startsWith('short ') && !full ? fillOf(cost) : sub === costText(cost) ? 1 : undefined,
 			);
 		})
 		.join('');
@@ -21888,7 +21922,7 @@ function techBtn(t, withAt) {
 		t.name,
 		sub + (withAt ? ` · ${BLD[t.at].name}` : ''),
 		`a${t.age} ` + (st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock'),
-		st === 'short' ? fillOf(c) : undefined,
+		st === 'short' ? fillOf(c) : st === 'ready' ? 1 : undefined,
 	); // a${age}: the top edge wears the age's colour
 }
 const trainsAt = (kind) =>
@@ -21906,7 +21940,7 @@ function keepAgeBtn() {
 		`${A.name} age`,
 		p.aging ? 'advancing' : !afford(p, A.cost) ? `short ${need(A.cost)}` : costText(A.cost),
 		p.aging || !afford(p, A.cost) ? 'dis' : 'go',
-		!p.aging && !afford(p, A.cost) ? fillOf(A.cost) : undefined,
+		p.aging ? undefined : afford(p, A.cost) ? 1 : fillOf(A.cost),
 	);
 }
 // what one of yours is doing, in words read from its state; and what it has done in its life
@@ -23300,9 +23334,8 @@ const CARDS = {
 		let h =
 			title('Stores', 'the last minute') +
 			`<table><tr><th></th><th>Have</th><th>In</th><th>Out</th><th>On it</th></tr>${RES.map((r) => {
-				const k = KEY[r],
-					net = Math.round(rt[k] || 0) - Math.round(ot[k] || 0);
-				return `<tr data-act="storesk:${k}" class="${G.storesK === k ? 'sel' : ''}"><td>${RESOURCES[r].name}</td><td class="${net > 0 ? 'up' : net < 0 ? (p.res[k] < -net * 2 ? 'low' : 'down') : ''}">${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${ot[k] ? '−' + Math.round(ot[k]) : ''}</td><td>${V.filter((u) => u.job === r).length}</td></tr>`;
+				const k = KEY[r];
+				return `<tr data-act="storesk:${k}" class="${G.storesK === k ? 'sel' : ''}"><td>${RESOURCES[r].name}</td><td style="color:${grad(velOf(p, k))}">${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${ot[k] ? '−' + Math.round(ot[k]) : ''}</td><td>${V.filter((u) => u.job === r).length}</td></tr>`;
 			}).join('')}</table>`;
 		if (G.storesK) {
 			// the drill-down (Albert, Build 63): a tapped row says why, both ways. By reason: where the minute's in and out came from and went.
@@ -23334,7 +23367,7 @@ const CARDS = {
 			h += `<p><i>Who:</i> ${V.filter((u) => u.job === r).length} villagers on it${makers.length ? `; made at ${who(makers)}` : ''}${takers.length ? `; taken by ${who(takers)}` : ''}.</p>`;
 		}
 		h += `<p><i>Goods:</i> ${GOODK.map((k) => `${GOODS[k].name} ${Math.floor(p.goods[k] || 0)}${rt[k] ? ` (+${Math.round(rt[k])})` : ''}`).join(' · ')}. Goods wait at your Market for caravans; wool for a Workshop.</p>`;
-		h += `<p>In and Out: the last minute. A count is green while it rises, gold while it falls, red when it falls with under two minutes left${p.hungry ? ' · <b>they are hungry</b>' : ''}.</p>`;
+		h += `<p>In and Out: the last minute. A count is green while it gains, deeper the faster; white while it holds; red as it loses, reddest with under two minutes left${p.hungry ? ' · <b>they are hungry</b>' : ''}.</p>`;
 		{
 			// the ledger: every resource that ever came in or went out, by where it came from and went (earn and spend, 08-core)
 			const L = p.ledger || { in: {}, out: {} },
@@ -23558,7 +23591,7 @@ const CARDS = {
 								? `short ${need(B.cost)}`
 								: (fits ? 'fits here · ' : '') + costText(B.cost),
 					lock ? 'dis' : full ? 'dis done' : !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
-					!lock && !full && !afford(p, B.cost) ? fillOf(B.cost) : undefined,
+					lock || full ? undefined : afford(p, B.cost) ? 1 : fillOf(B.cost),
 				)
 					.replace('<b>', `${lock ? '' : bldThumb(k)}<b>`)
 					.replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>') +
@@ -23590,6 +23623,35 @@ const CARDS = {
 		);
 	},
 	research: () => researchHTML(),
+	// the dashboard (Build 64): the five domains and the mail, one row on top of the row, each in the colour code with its word
+	dash() {
+		const D = domains(),
+			un = G.mailN || 0,
+			tile = (act, st, icon, word, name) =>
+				`<button class="dt ${st}" data-act="${act}"><span class="i">${icon}</span><b>${word}</b><small>${name}</small></button>`;
+		return (
+			title('The realm', D.top ? `${D.top.name}: ${D.top.word}${D.top.why ? ' · ' + D.top.why : ''}` : 'all is well') +
+			`<div class="dash">${D.list.map((d) => tile(d.go, d.st, domainIcon()[d.id], d.word, d.name)).join('')}${tile('mail', un ? 'blue' : 'white', ICON.mail, un ? `${un} new` : `${(G.mail || []).length} kept`, 'Mail')}</div>`
+		);
+	},
+	// the mail (Build 64): every line kept, newest first, by group; a group can hide its previews here or from the preview's ×
+	mail() {
+		const M = G.mail || [],
+			g = G.mailG,
+			show = M.filter((m) => !g || m.grp === g).slice(0, 6),
+			gs = Object.keys(GROUPS).filter((k) => k === g || M.some((m) => m.grp === k));
+		let h = title('Mail', g ? GROUPS[g] : `${M.length} kept`);
+		h += acts(
+			[btn('mailg:', 'All', '', g ? '' : 'on'), ...gs.map((k) => btn(`mailg:${k}`, GROUPS[k], hiddenG(k) ? 'hidden' : '', g === k ? 'on' : ''))].join(''),
+			'c5',
+		);
+		if (g && g !== 'reply')
+			h += acts(btn(`mailtog:${g}`, hiddenG(g) ? 'Show as it comes' : 'Hide the previews', hiddenG(g) ? 'now: quietly to the mail, red still shows' : 'now: a preview, then here'), 'c1');
+		h += show.length
+			? `<div class="mrows">${show.map((m) => `<button class="mr" data-act="${linkOf(m) || 'mail'}" style="--cc:${ccOf(m.cls)}"><b>${m.text}${m.n > 1 ? ` ×${m.n}` : ''}</b><small>${GROUPS[m.grp]} · ${clock(m.t)}${m.why ? ' · ' + m.why : ''}</small></button>`).join('')}</div>`
+			: '<p class="dim">Nothing here yet.</p>';
+		return h;
+	},
 	milestone(c) {
 		const id = c.page,
 			T = id && MS_TEXT[id],
@@ -23667,7 +23729,7 @@ const CARDS = {
 			row('fx', 'Effects', SET.mix.fx) +
 			row('amb', 'Ambience', SET.mix.amb) +
 			row('alert', 'Alerts', SET.mix.alert) +
-			`<p>Effects: work and battle. Ambience: birds, wind, crickets, thunder. Alerts: horn, ready, done, a new age. The silent switch of your phone mutes the game.</p>`
+			`<p>Effects: work and battle. Ambience: birds, wind, crickets, thunder. Alerts: horn, ready, done, a new age. The silent switch of your phone mutes the game.</p><p class="dim">There is no music in life. Life is the music. The rhythm you hear is your kingdom at work, its own song, composed by your decisions.</p>`
 		);
 	},
 	taps() {
@@ -23689,9 +23751,11 @@ const CARDS = {
 					btn('guide:rule', 'Rules', 'what triggers what'),
 			) +
 			`<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
-      <p><b>Build:</b> pick a menu, then a building. It waits above your finger: drag it, then tap Build. Villagers raise it.</p>
+      <p><b>The door:</b> under People, it shows the most important thing now: red something wrong, blue something you can do, white all is well. Tap it to go where it is fixed; tap it again, or when all is well, for the dashboard: the realm, people, work, stores, tech and the mail.</p>
+      <p><b>Build:</b> the chip above the row turns the pages: Jobs, Build, War, Squad, Train. The Build page shows what the town needs (blue: build it now; green: going up; red: what stands in the way) and All opens every building. It waits above your finger: drag it, then tap Build.</p>
+      <p><b>Messages</b> arrive at the top and fade; tap one to see where. × on a group of news asks to hide that group: it then goes quietly to the mail, and red still shows. Numbers wear one colour scale: green gaining, white steady, red losing.</p>
       <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Pause shows the speeds under the button.</p>
-      <p><b>Army:</b> tap open ground with nothing picked, then the sword: Idle, All or a squad goes there. The chip by the jobs turns the row into the Squad room and the War room.</p>
+      <p><b>Army:</b> tap open ground with nothing picked, then the sword: Idle, All or a squad goes there. The War, Squad and Train pages hold your squads, what they are made of, and what is being trained.</p>
       <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>
@@ -23712,8 +23776,8 @@ const CARDS = {
 					btn('card:taps', 'Tap counts', 'this phone only'),
 				'c3',
 			) +
-			(Object.keys(SET.hush).length
-				? acts(btn('unhush', 'Unmute all messages', Object.keys(SET.hush).length + ' kinds silenced'), 'c1')
+			(SET.hideG && Object.keys(SET.hideG).length
+				? acts(btn('mailall', 'Show every group again', Object.keys(SET.hideG).map((g) => GROUPS[g]).join(', ') + ' hidden'), 'c1')
 				: '') +
 			acts(
 				btn(
@@ -23730,7 +23794,7 @@ const CARDS = {
 const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'end', 'research', 'menu']); // the cards that take the whole height
 // three sizes, one mold each (Albert, Build 63): lg the whole height (the Build card, the Guide, Help, Setup); md a thing's card; sm a short one
 const SIZE_OF = (t) =>
-	FULL.has(t) ? 'lg' : t === 'squad' || t === 'stores' || t === 'emergency' || t === 'army' ? 'sm' : 'md';
+	FULL.has(t) ? 'lg' : t === 'squad' || t === 'stores' || t === 'emergency' || t === 'army' || t === 'dash' ? 'sm' : 'md';
 function renderCard() {
 	const c = G.card;
 	if (!c || !CARDS[c.type]) return;
@@ -24049,7 +24113,7 @@ function guideMd() {
 	for (const r of g2.rules) L.push(`| ${cell(r.when)} | ${cell(r.then)} | ${cell(r.why)} |`);
 	return L.join('\n');
 }
-// ═════ 32-frame.js: the frame: ticker, bars, the page ═════
+// ═════ 32-frame.js: the frame: the bars, the preview and the mail, the page ═════
 // ───────────────────────── The frame: the screen round the map, and its refresh ─────────────────────────
 // Every icon is drawn once, here. The markup reads from this table, so a resource looks the same in the tally and under the jobs.
 const SVG = (vb, body, cls = 'gl') => `<svg class="${cls}" viewBox="0 0 ${vb} ${vb}" aria-hidden="true">${body}</svg>`;
@@ -24191,6 +24255,10 @@ const ICON = {
 		16,
 		'<path d="M8 2.2c-2.3 0-3.9 1.8-3.9 4.1v2.6L2.8 11h10.4l-1.3-2.1V6.3C11.9 4 10.3 2.2 8 2.2z" fill="currentColor"/><path d="M6.6 12.6a1.5 1.5 0 0 0 2.8 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>',
 	),
+	mail: SVG(
+		20,
+		'<rect x="2.5" y="4.5" width="15" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3 5.5 L10 11 L17 5.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+	),
 	play: SVG(16, '<path d="M4.5 2.8 L13 8 L4.5 13.2 Z" fill="currentColor"/>'),
 	pause: SVG(16, '<path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/>'),
 	hush: SVG(
@@ -24207,7 +24275,17 @@ ICON.book = ICON.book.replace('class="gl"', 'width="18" height="18"');
 // One mold for every control: a cell is an icon spot and a word spot. The tally is a pill of cells; a tile is one cell in its own box.
 const cell = (attrs, icon, word, cls = '') => `<button class="cell ${cls}" ${attrs}>${icon}${word}</button>`;
 const wd = (t, id) => `<span class="wd"${id ? ` id="${id}"` : ''}>${t}</span>`;
-// The top: the tally (five counts, mute, pause, speed), then the strip (age, season, clock; idle; score). The bottom: People, then one column per job; Build swaps the row for the categories.
+// The top: the tally (five counts, mute, pause, the map), then the status pill under it, cell for cell. The bottom: People over the door, then one column per job.
+const STATUS = [
+	['stAge', '', 'The age'],
+	['stSea', '', 'The season and the sky'],
+	['stClk', '', 'The clock'],
+	['stPeo', 'card:troops', 'Everyone you have, of the room your homes give'],
+	['stIdl', 'idlego', 'Idle villagers: show one'],
+	['stRes', 'card:research', 'Research you can start now'],
+	['scoreP', 'card:score', 'Score and rank'],
+	['stArm', '', 'Soldiers'],
+];
 function buildPanel() {
 	$('tally').innerHTML =
 		[
@@ -24227,14 +24305,19 @@ function buildPanel() {
 	const st = (act, t, label, id) =>
 		`<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
 	$('jobs').innerHTML =
-		`<div class="col join">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}${st('buildrow', ICON.hammer, 'Build', 'buildT')}</div>` + // one tap makes a villager; Build under it (Albert, Build 41)
+		`<div class="col join">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}${doorHTML()}</div>` + // one tap makes a villager; the door under it (Build 64: it took the hammer's place; Build is a page now)
 		JOBS.map(
 			(r) =>
 				`<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`,
 		).join('');
+	// the status pill: the state of the world, one cell under each column of the tally (Albert, Build 64: "age under Food, season under
+	// Wood"); the cells never move, and a narrow tally shows the first ones (the age, the season, the clock, the people come first)
+	const sc = (id, act, label) =>
+		act
+			? `<button class="cell" id="${id}" data-act="${act}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></button>`
+			: `<span class="cell" id="${id}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></span>`;
+	$('status').innerHTML = STATUS.map(([id, act, label]) => sc(id, act, label)).join('');
 	$('emgB').innerHTML = ICON.def;
-	$('tkList').innerHTML = ICON.list;
-	$('tkMin').innerHTML = ICON.up;
 	$('homeB').innerHTML = ICON.home;
 	$('pX').innerHTML = ICON.close;
 }
@@ -24306,9 +24389,29 @@ function whoIs(u) {
 	if (u.back || u.find !== undefined) return `${nm} · outlaws from a camp`;
 	return `${nm} · ${UNIT[u.kind].tags && UNIT[u.kind].tags.includes('animal') ? 'a wild animal' : 'the wild'}`;
 }
-// ───────────────────────── Messages and tips ─────────────────────────
-// quiet kinds (news, the spectacle's 'coming' lines) never take the line: they wait in the list and count on the bell (Albert: too many alerts to keep up with)
-const QUIET = new Set(['news', 'soft']);
+// ───────────────────────── Messages (Build 64, Albert) ─────────────────────────
+// A line arrives as a preview, the way a phone shows a text, over the map, and fades after MSG.secs; every line is kept in the mail (the
+// dashboard's last tile). Two kinds: a reply, from say, answers your own tap and is never hidden; news, from news, comes from the world by group,
+// and a group can be hidden from the preview's ×: its lines then go quietly to the mail, unless urgent (red). A repeat in the same group
+// within MSG.merge seconds is a count on the first (Raid ×3), not a new flash. The best of the genre do the same: one alert a place, a
+// sound and a place to tap, the text short and gone, a list to read later.
+const MSG = { secs: 4, merge: 30, keep: 30 };
+const GROUPS = {
+	war: 'War',
+	home: 'Home',
+	land: 'Land',
+	trade: 'Trade',
+	realm: 'Realm',
+	chronicle: 'Chronicle',
+	lesson: 'Lessons',
+	advice: 'Advice',
+	reply: 'Replies',
+};
+const QUIET = new Set(['news', 'soft']); // quiet kinds never preview: they wait in the mail
+const urgentCls = (cls) => !!cls && cls.startsWith('warn');
+const ccOf = (cls) => (urgentCls(cls) ? '#ff6b5b' : cls === 'good' ? '#5fd08a' : cls === 'tip' ? '#4f9dff' : '#e9ecef'); // the colour code
+const hiddenG = (g) => !!(SET.hideG && SET.hideG[g]);
+const news = (grp, text, cls, secs, at, act, why) => say(text, cls, secs, at, act, why, grp);
 // ───────────────────────── How news reaches you (Build 59; TELL in 06, the Post line of research)
 // You know what you see, what your people hear, and what a messenger brings. A line with a place (at) out of your sight is heard if it is a
 // fight near your people (vague: which way), else carried by a messenger at a runner's or a rider's pace, if your post reaches that far;
@@ -24351,23 +24454,15 @@ function postTick() {
 	const due = G.post.filter((m) => m.t <= G.t);
 	if (!due.length) return;
 	G.post = G.post.filter((m) => m.t > G.t);
-	for (const m of due) say(m.text, m.cls, m.secs, m.at, m.act, m.why ? m.why + ' · by messenger' : 'by messenger');
+	for (const m of due) say(m.text, m.cls, m.secs, m.at, m.act, m.why ? m.why + ' · by messenger' : 'by messenger', m.grp);
 }
-function say(text, cls, secs, at, act, why) {
+function say(text, cls, secs, at, act, why, grp = 'reply') {
 	if (!G) return;
 	{
 		const N = tell(text, cls, at);
 		if (!N) return;
 		if (N.delay > 1) {
-			(G.post || (G.post = [])).push({
-				t: G.t + N.delay,
-				text,
-				cls,
-				secs,
-				at: { x: at.x, y: at.y, told: 1 },
-				act,
-				why,
-			});
+			(G.post || (G.post = [])).push({ t: G.t + N.delay, text, cls, secs, at: { x: at.x, y: at.y, told: 1 }, act, why, grp });
 			return;
 		}
 		if (N.text) {
@@ -24375,38 +24470,29 @@ function say(text, cls, secs, at, act, why) {
 			at = null;
 		}
 	}
-	if (SET.msgs === false && cls !== 'warn' && cls !== 'tip') return;
-	if (hushed(text)) return;
-	if (cls === 'news' && SET.news === false) return; // Messages off: warnings only; a silenced kind stays quiet
-	const same = G.log.find((m) => m.text === text && m.until > G.t);
+	const urg = urgentCls(cls);
+	if (SET.msgs === false && !urg && cls !== 'tip' && grp !== 'reply') return;
+	if (cls === 'news' && SET.news === false) return; // Messages off: warnings and replies only; a silenced kind stays quiet
+	const M = G.mail || (G.mail = []),
+		key = hushKey(text),
+		now = performance.now(),
+		show = Math.max(secs || 0, MSG.secs) * 1000,
+		pre = !QUIET.has(cls) && (urg || !hiddenG(grp)),
+		pt = at ? { x: Math.round(at.x), y: Math.round(at.y) } : null,
+		same = M.find((m) => m.grp === grp && m.key === key && G.t - m.t < MSG.merge);
 	if (same) {
-		same.until = G.t + (secs || 4);
+		same.n++;
+		same.t = G.t;
+		same.text = text;
+		if (pt) same.at = pt;
+		if (pre && same.ru > now - 500) same.ru = now + show; // still showing: it stays a little longer, with its count
 		return;
-	} // the same line never shows twice at once
-	const quiet = QUIET.has(cls);
-	G.log.unshift({
-		text,
-		cls,
-		act,
-		why, // a line under the message in the list: why it happened (Build 58)
-		quiet,
-		until: quiet ? G.t : G.t + (secs || 4),
-		at: at ? { x: Math.round(at.x), y: Math.round(at.y) } : null,
-	});
-	G.log = G.log.slice(0, 5);
-	if (SET.tkMin || G.card || quiet) {
-		G.tkN = (G.tkN || 0) + 1;
-		if (cls === 'warn') G.tkW = true;
-	}
-} // hidden: the bell in the strip counts what came
-// The next useful step, read from your situation. One line, shown for six seconds, then at most one more every 45; a warning (starts with !) stays until fixed. Tap × to hide one.
-// Silence: the bell on any message or tip mutes its kind (numbers ignored) until Unmute all; a warning comes back after 2 minutes, in case the danger is new
-const hushKey = (t) => t.replace(/[\d,.]+/g, '#');
-function hushed(t) {
-	const k = hushKey(t),
-		w = G.hushW && G.hushW[k];
-	return !!(SET.hush && SET.hush[k]) || (w !== undefined && G.t < w);
+	} // a repeat is a count on the first, not a new flash
+	M.unshift({ text, cls, grp, key, act, why, n: 1, t: G.t, ru: pre ? now + show : 0, at: pt });
+	if (M.length > MSG.keep) M.length = MSG.keep;
+	if (!pre) G.mailN = (G.mailN || 0) + 1; // what came quietly: the count on the mail
 }
+const hushKey = (t) => t.replace(/[\d,.]+/g, '#'); // a line's kind: its words, the numbers aside (Raid 3 and Raid 5 are one kind)
 // the milestones' tests (words in MS_TEXT): each is a moment; the first time it is true it fires, once a game. {pct} and {spd} are filled.
 const MS_TEST = {
 	house: () => bldsOf(0, 'house').some((b) => b.prog >= 1),
@@ -24440,7 +24526,7 @@ function milestoneTick() {
 		if (!on) continue;
 		M.push({ id, t: Math.round(G.t) });
 		const [line] = MS_TEXT[id];
-		say(msFill(line), 'good', 7, null, `card:milestone,${id}`);
+		news('lesson', msFill(line), 'good', 7, null, `card:milestone,${id}`);
 		sfx('coin');
 		return; // one a tick: they never pile up
 	}
@@ -24569,19 +24655,13 @@ function ui(force) {
 		R = p.res;
 	document.body.classList.toggle('night', G.night > 0.5);
 	showByAge();
+	const VC = {};
 	for (const k of ['f', 'w', 's', 'g', 'i']) {
 		txt('r' + k, fmt(R[k]));
-		const el = $('r' + k),
-			net = netOf(p, k),
-			cls = net > 0.5 ? 'up' : net < -0.5 ? (R[k] < -net * 2 ? 'low' : 'down') : '';
-		if (el.dataset.h !== cls) {
-			el.dataset.h = cls;
-			el.className = 'wd' + (cls ? ' ' + cls : '');
-		}
-	} // the word's colour is the net flow of the last minute: rising, steady, falling, falling with under two minutes left (Build 58)
-	const rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length;
-	txt('scoreN', `★${fmt(p.score.total)}`);
-	txt('scoreR', ['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th');
+		const c = (VC[k] = grad(velOf(p, k))),
+			el = $('r' + k);
+		if (el.style.color !== c) el.style.color = c;
+	} // the count's colour is its velocity on the one gradient (Build 64): deep green gaining fast, white steady, red losing badly
 	if (G.t - (G.rdyT ?? -9) > 1 || G.t < G.rdyT) {
 		G.rdyT = G.t;
 		G.rdy = new Map();
@@ -24601,53 +24681,54 @@ function ui(force) {
 		T.at = G.t;
 		if (tip) T.last = G.t;
 	}
-	const showTip = tip && T.text === tip && (urgent || G.t - T.at < 6) && !hushed(tip) && !G.card && !G.place && !G.over;
+	const showTip = tip && T.text === tip && (urgent || G.t - T.at < 6) && !G.card && !G.place && !G.over;
 	if (showTip && (urgent || T.said !== T.text)) {
 		T.said = T.text;
-		say(tip, urgent ? 'warn' : 'tip', urgent ? 3 : 6);
-	} // a warning is said again while it holds (the same line only stays up), a tip once   // a tip is a message like any other, in the ticker
+		news('advice', tip, urgent ? 'warn' : 'tip', urgent ? 3 : 6);
+	} // a warning is said again while it holds (a repeat is a count, not a flash), a tip once: a tip is a message like any other
 	{
 		const lim = MODES[G.mode].secs,
-			clk = G.wonder
-				? `wonder ${clock(Math.max(0, G.wonder.end - G.t))}`
-				: lim
-					? `${clock(Math.max(0, lim - G.t))}`
-					: clock(G.t);
+			clk = G.wonder ? clock(Math.max(0, G.wonder.end - G.t)) : lim ? clock(Math.max(0, lim - G.t)) : clock(G.t);
 		let ready = 0;
 		for (const v of G.rdy.values()) ready += v; // research you can start now (the age counts: it is research too)
 		const idleN = unitsOf(0, 'vil').filter(freeVil).length,
-			t1 = `${AGES[p.age].name} · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''} ${clk}`;
-		txt('sAgeT', t1);
-		if ($('sIdle').hidden === !!idleN) $('sIdle').hidden = !idleN;
-		const sol = armyOf(0).length,
-			stat = (id, icon, n, show) => {
+			sol = armyOf(0).length,
+			rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length,
+			sky = `${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''}`,
+			n = Math.min(STATUS.length, [...$('tally').children].filter((e) => !e.hidden).length),
+			put = (id, gl, word, cls, i) => {
 				const el = $(id),
-					h = show ? icon + n : '';
-				if (el.statH !== h) {
-					el.statH = h;
-					el.innerHTML = h;
-				}
-				if (el.hidden === !!show) el.hidden = !show;
-			}; // the People card in numbers (Albert, Build 41)
-		stat('sIdle', '<b>idle</b> ', idleN, idleN > 0);
-		stat(
-			'sStats',
-			'',
-			[
-				ready ? `<span>${ICON.book}${ready}</span>` : '',
-				`<span>${ICON.head}${popOf(0)}</span>`,
-				sol ? `<span>${ICON.mil}${sol}</span>` : '',
-			].join(''),
-			true,
-		);
-		$('sAge').classList.toggle('glow', ready > 0 && !G.card);
-	} // gold when the next age or any research is ready: tap it for everything you can research
+					sig = gl + '|' + word + '|' + cls + '|' + (i < n);
+				if (el.sig === sig) return;
+				el.sig = sig;
+				el.hidden = i >= n;
+				el.className = 'cell' + (cls ? ' ' + cls : '');
+				el.children[0].innerHTML = gl;
+				el.children[1].textContent = word;
+			};
+		const S = [
+			['', AGES[p.age].name, ''],
+			[sky, '', ''],
+			['', clk, ''],
+			[ICON.head, `${popOf(0)}/${capOf(0)}`, popOf(0) >= capOf(0) && capOf(0) < POPMAX ? 'lit-r' : ''],
+			['', `z ${idleN}`, idleN ? 'lit-r' : 'dim'],
+			[ICON.book, String(ready), ready ? 'lit-b' : 'dim'],
+			['', `★${fmt(p.score.total)} ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, ''],
+			[ICON.mil, String(sol), sol ? '' : 'dim'],
+		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
+		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2], i));
+	} // the colour code on the pill: blue research you can start, red the people at the roof or idle hands; dim is nothing to see
 	huddleUI();
 	const V = unitsOf(0, 'vil');
 	for (const r of JOBS) {
 		let n = 0;
 		for (const v of V) if (v.job === r) n++;
 		txt('tn_' + r, String(n));
+		{
+			const el = $('tn_' + r),
+				c = VC[KEY[r]] || '';
+			if (el.style.color !== c) el.style.color = c;
+		} // the job's number wears its store's colour: the row reads as one
 		$('tj_' + r).classList.toggle('sel', p.rally === r);
 	}
 	const nq = queuedOf(0, 'vil'),
@@ -24660,7 +24741,8 @@ function ui(force) {
 		if ($('homeB').hidden === away) $('homeB').hidden = !away;
 	} // home shows only when your Town Center is off the screen
 	$('stage').classList.toggle('busy', !!(G.card || G.place));
-	$('buildT').classList.toggle('sel', !!(G.card && G.card.type === 'menu')); // one look for on: the outline, as the default job wears it
+	if ($('buildT')) $('buildT').classList.toggle('sel', !!(G.card && G.card.type === 'menu')); // one look for on: the outline, as the default job wears it
+	doorUI();
 	{
 		const P = picked(),
 			n = P.length,
@@ -24736,125 +24818,37 @@ function ui(force) {
 		$('placeUndo').hidden = G.place.kind !== 'wall' || !G.place.pts.length;
 		$('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why);
 	}
-	tick();
+	preview();
 	if (G.card) renderCard();
 }
-// The ticker: the newest live message, or the last one faded; paused says so when nothing newer is live. Tap the line to see where it happened
-// (or, with nowhere to show, open the list); the list holds the last five, each with its bell to silence that kind; the arrow hides it all.
 const linkOf = (m) => m && (m.act || (m.at ? `jump:${m.at.x},${m.at.y}` : ''));
-// The alert bar, in SoRen's pattern: a sign, the name in bold, one line in italics, a ring and the seconds. It takes the ticker line while an event is coming
-// (EV_WARN seconds, with how long it lasts) or running (what it does); a warning from the game still wins. Tap it to see where. The horde joins for its last 45 s.
-function alertNow() {
-	const I = G.incoming;
-	if (I && !G.over)
-		return {
-			name: 'Attack',
-			line: `${I.n} coming`,
-			now: true,
-			secs: 0,
-			left: I.eta,
-			total: 60,
-			at: { x: I.x, y: I.y },
-			hot: true,
-		};
-	const V = G.ev;
-	if (!V || G.over) return null;
-	const e = V.cur,
-		k = e ? e.kind : V.warned,
-		E = k && EVENTS[k];
-	if (E) {
-		const A = { name: E.name, line: EV_LINE[k], now: !!e, secs: E.secs };
-		if (e)
-			return {
-				...A,
-				left: e.until - G.t,
-				total: E.secs,
-				at:
-					e.at || (e.units && e.units[0]) || (e.x !== undefined ? { x: e.x, y: e.y === undefined ? MID : e.y } : null),
-			};
-		return { ...A, left: V.next - G.t, total: EV_WARN, at: null };
+// The preview (Build 64): the newest live line, or the question that hides its group; paused says so when nothing is live. A full card
+// is a moment of reading: the preview steps aside, and the line waits in the mail.
+function preview() {
+	const el = $('pv'),
+		M = G.mail || [],
+		now = performance.now(),
+		paused = G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup')),
+		live = M.find((m) => m.ru > now),
+		big = !!G.card && $('card').classList.contains('full'),
+		ask = G.pvAsk;
+	let h = '',
+		cc = '#e9ecef';
+	if (!big && !G.over) {
+		if (ask)
+			h = `<div class="t"><small>${GROUPS[ask]}</small><span>Hide ${GROUPS[ask]} messages?</span></div><div class="ask"><button class="yes" data-act="pvhide:${ask}">Hide</button><button data-act="pvkeep">Keep</button></div>`;
+		else if (live) {
+			cc = ccOf(live.cls);
+			h = `<button class="t" data-act="${linkOf(live) || 'pvx'}"><small>${GROUPS[live.grp]}${live.n > 1 ? ' ×' + live.n : ''}</small><span>${live.text}</span></button><button class="x" data-act="pvx" aria-label="Close">${ICON.close}</button>`;
+		} else if (paused) h = `<button class="t" data-act="pause"><small>Paused</small><span>Tap to carry on</span></button>`;
 	}
-	const H = G.horde;
-	if (H && H !== 'done' && H.said && H.at - G.t <= 45)
-		return { name: 'Horde', line: EV_LINE.horde, now: false, secs: 0, left: H.at - G.t, total: 45, at: null };
-	return null;
-}
-const RING = 50.27; // the circumference of the countdown ring (radius 8)
-function alertHTML(A) {
-	const left = Math.max(0, A.left),
-		t = left < 60 ? `${Math.ceil(left)}s` : clock(left),
-		f = clamp(left / A.total, 0, 1),
-		line = A.now ? A.line : A.secs > 5 ? `coming, lasts ${A.secs}s` : 'is coming';
-	return `<span class="al"><svg class="tri" viewBox="0 0 16 16"><path d="M8 1.5 L15 14 H1 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 6 V9.6 M8 11.6 V12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><b>${A.name}</b><i>${line}</i><span class="cd"><svg class="ring" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><circle class="v" cx="10" cy="10" r="8" style="stroke-dashoffset:${(RING * (1 - f)).toFixed(1)}"/></svg>${t}</span></span>`;
-}
-function tick() {
-	const hide = !!SET.tkMin || !!G.card,
-		live = G.log.find((m) => m.until > G.t),
-		paused = G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup')); // a card open is a moment of reading: the ticker steps aside, the bell counts
-	$('stage').classList.toggle('tk', !hide);
-	$('ticker').hidden = hide;
-	$('tkBell').hidden = !hide;
-	{
-		const n = G.tkN || 0,
-			bs = n + (G.tkW ? 'w' : '');
-		if (!hide && tick.list !== bs) {
-			tick.list = bs;
-			$('tkList').innerHTML = ICON.list + (n ? `<span class="n">${n}</span>` : '');
-			$('tkList').classList.toggle('warn', !!G.tkW);
-		}
-	} // the list button counts what waits quietly
-	if (hide) {
-		const n = G.tkN || 0,
-			bs = n + (G.tkW ? 'w' : '');
-		if (tick.bell !== bs) {
-			tick.bell = bs;
-			$('tkBell').innerHTML = ICON.bell + (n ? `<span>${n}</span>` : '');
-			$('tkBell').classList.toggle('warn', !!G.tkW);
-		}
-		$('tkPop').hidden = true;
-		tick.sig = '';
-		return;
+	if (h !== preview.h) {
+		preview.h = h;
+		el.innerHTML = h;
+		el.hidden = !h;
 	}
-	if ((G.tkN || G.tkW) && G.tkOpen) {
-		G.tkN = 0;
-		G.tkW = false;
-		tick.bell = tick.list = '';
-	} // the list opened: what was counted has been seen
-	const A = !paused && !(live && live.cls === 'warn') ? alertNow() : null, // a live warning, or paused, comes before the alert bar
-		m =
-			paused && !(live && live.cls === 'warn')
-				? { text: 'Paused · ▶ to carry on', cls: '' }
-				: live || G.log.find((x) => !x.quiet),
-		el = $('tkT'); // paused says so, unless a warning is up; a quiet line never takes the line
-	if (A) {
-		const h = alertHTML(A);
-		if (tick.h !== h) {
-			tick.h = h;
-			el.innerHTML = h;
-		}
-		el.dataset.act = A.hot ? 'card:emergency' : A.at ? `jump:${Math.round(A.at.x)},${Math.round(A.at.y)}` : 'tklist';
-		$('ticker').className = 'tick alert ' + (A.now ? 'now' : 'soon') + (A.hot ? ' hot' : '');
-	} else {
-		tick.h = '';
-		txt('tkT', m ? m.text : '');
-		el.dataset.act = linkOf(live) || 'tklist';
-		$('ticker').className = 'tick ' + (m && m === live ? live.cls || '' : m && !G.log.includes(m) ? '' : 'old');
-	}
-	const pop =
-		G.tkOpen && G.log.length
-			? G.log
-					.map(
-						(x) =>
-							`<div class="row ${x.cls || ''}"><button class="t" data-act="${linkOf(x) || 'tklist'}">${x.text}${x.why ? `<small class="why">${x.why}</small>` : ''}</button><button class="h" data-act="hush:${encodeURIComponent(x.text)}" aria-label="Silence this kind of message">${ICON.hush}</button></div>`,
-					)
-					.join('') +
-				`<div class="row end"><button class="t" data-act="tkclear">Clear all</button><button class="h" data-act="tklist" aria-label="Close the list">✕</button></div>`
-			: '';
-	if (pop !== tick.sig) {
-		tick.sig = pop;
-		$('tkPop').innerHTML = pop;
-		$('tkPop').hidden = !pop;
-	}
+	if (el.style.getPropertyValue('--cc') !== cc) el.style.setProperty('--cc', cc);
+	el.classList.toggle('fade', !!live && !ask && live.ru - now < 400);
 }
 // ═════ 33-verbs.js: every button verb ═════
 // ───────────────────────── What every button does: one table ─────────────────────────
@@ -25104,45 +25098,58 @@ const ACT = {
 		saveSet();
 		refresh();
 	},
-	tkmin() {
-		SET.tkMin = !SET.tkMin;
-		saveSet();
-		G.tkN = 0;
-		G.tkW = false;
-		G.tkOpen = false;
-		ui(true);
-		fit();
-	}, // hide or show the ticker
 	qlock(id) {
 		const t = TECHBY[id];
 		say(`Research ${t.name} at the ${BLD[t.at].name} for more slots.`, '', 5);
 	},
-	tkclear() {
-		G.log = [];
-		G.tkOpen = false;
-		G.tkN = 0;
+	door() {
+		doorTap();
+	}, // the door: to the most important thing, else the dashboard (Build 64)
+	page(a) {
+		hudPage(a);
+		feel('tick');
+	},
+	pvx() {
+		const now = performance.now(),
+			m = (G.mail || []).find((x) => x.ru > now);
+		if (!m) return;
+		m.ru = 0;
+		if (m.grp !== 'reply' && !urgentCls(m.cls) && !hiddenG(m.grp)) G.pvAsk = m.grp; // × on news asks once: hide this group?
 		ui(true);
 	},
-	tklist() {
-		G.tkOpen = !G.tkOpen && G.log.length > 0;
-		ui(true);
-	}, // the last five
-	hush(a) {
-		const t = decodeURIComponent(a || ''),
-			k = hushKey(t),
-			m = G.log.find((x) => x.text === t);
-		if (m && m.cls === 'warn') (G.hushW = G.hushW || {})[k] = G.t + 120;
-		else {
-			(SET.hush = SET.hush || {})[k] = 1;
-			saveSet();
-		}
-		G.log = G.log.filter((x) => hushKey(x.text) !== k);
-		ui(true);
-	},
-	unhush() {
-		SET.hush = {};
-		G.hushW = {};
+	pvhide(g) {
+		(SET.hideG = SET.hideG || {})[g] = 1;
 		saveSet();
+		G.pvAsk = null;
+		say(`${GROUPS[g]} now goes quietly to the mail.`, '', 3);
+	}, // the group goes to the mail without a preview; red still comes through
+	pvkeep() {
+		G.pvAsk = null;
+		ui(true);
+	},
+	mail() {
+		G.mailN = 0;
+		openCard({ type: 'mail' });
+	},
+	mailg(g) {
+		G.mailG = g && G.mailG !== g ? g : null;
+		refresh();
+	},
+	mailtog(g) {
+		const H = (SET.hideG = SET.hideG || {});
+		if (H[g]) delete H[g];
+		else H[g] = 1;
+		saveSet();
+		refresh();
+	},
+	mailall() {
+		SET.hideG = {};
+		saveSet();
+		refresh();
+	},
+	mailclear() {
+		G.mail = [];
+		G.mailN = 0;
 		refresh();
 	},
 	sound() {
@@ -25246,14 +25253,6 @@ const PLAY = {
 	pagecycle() {
 		pageCycle();
 	}, // the chip at the row's left: Jobs, War, Build, Squad, Train (Build 63)
-	waim() {
-		const H = G.hud;
-		H.aim = true;
-		H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
-		H.moved = false;
-		H.etaKey = '';
-		feel('tick');
-	}, // the crosshair to the middle of the screen
 	sqdone() {
 		hudPage('war');
 		G.hud.sel = G.hud.sq.i;
@@ -25261,14 +25260,6 @@ const PLAY = {
 	}, // ✓ on the Squad page: to the War page with this squad picked
 	sqbest(a) {
 		sqBest(Number(a));
-	},
-	torders() {
-		const H = G.hud;
-		H.aim = true;
-		H.mode = 'rally';
-		if (G.rally0) H.h = { t: 'ground', e: { x: G.rally0.x, y: G.rally0.y } };
-		say('Tap where new soldiers should go, then ✓.', '', 4);
-		feel('tick');
 	},
 	tsq() {
 		const n = G.recruitSq;
@@ -25311,9 +25302,6 @@ const PLAY = {
 		u.post = null;
 		closeCard();
 	}, // the worker card: back to the work it had
-	sqnew() {
-		sqNew();
-	},
 	sqcycle() {
 		sqCycle();
 	},
@@ -25687,7 +25675,7 @@ const PLAY = {
 					n++;
 				}
 			}
-		G.log = G.log.filter((m) => m.act !== 'douse:' + a);
+		G.mail = (G.mail || []).filter((m) => m.act !== 'douse:' + a);
 		if (n) say(`${n} more run to the fire.`, '', 3);
 		else if (b && b.fire > 0) say('No villager is free.', '', 3);
 	},
@@ -26894,17 +26882,41 @@ function sfx(name, x, y) {
 	S[1](v);
 	panV = 0;
 }
-// how loud a sound at distance d (world units) reaches the ear over the screen's middle: ISO 9613-2 (SOUND), as a share of full
+// The ear is the camera, at a height (Albert, Build 64: "it should get quieter as I zoom out, with the real math"). The ground on screen
+// is cw/z wide; a lens of SOUND.fov sees that from h = (w/2)/tan(fov/2). A sound d away along the ground is √(d² + h²) from the ear,
+// and ISO 9613-2 gives its level: full within d0 (the height at the closest zoom), then the inverse-square law, less the air's take.
+// Zoom out twice as far and the height doubles: everything is about half as loud (−6 dB), the near falling more than the far.
+const camH = (z = cam.z) => cw / z / 2 / Math.tan((SOUND.fov * Math.PI) / 360);
 const hearing = (d) => {
-	const d0 = (hyp(cw, ch) / 2 / cam.z) * SOUND.d0;
-	return Math.min(1, d0 / Math.max(1, d)) * 10 ** ((-SOUND.alphaKm * d * SOUND.metre) / 1000 / 20);
+	const s = hyp(d, camH()),
+		d0 = camH(ZOOM_MAX);
+	return Math.min(1, d0 / Math.max(1, s)) * 10 ** ((-SOUND.alphaKm * s * SOUND.metre) / 1000 / 20);
 };
+// Ambience as events (Build 64, "the game plays only what happens"): a bird sings from a tree you can see, by day and not in winter; a
+// cricket from the open ground at night, not in winter; the wind as hard as the wind blows. Each comes from its place, so distance and
+// height hold for it too. When a song comes is a Poisson process, its rate by how many singers are in view (a bird a tree every ~40 s).
+const AMB = { bird: 1 / 40, cricket: 1 / 25, maxSingers: 12, wind: 0.35 };
 let ambT = 0;
 function ambience(dt) {
 	ambT -= dt;
-	if (ambT > 0 || !AC) return;
-	ambT = 2.5 + Math.random() * 4;
-	sfx(G.night > 0.5 ? 'cricket' : season().name === 'Winter' ? 'wind' : 'bird');
+	if (ambT > 0 || !AC || !G) return;
+	ambT = 1; // look once a second
+	const winter = season().name === 'Winter',
+		night = G.night > 0.5,
+		x0 = cam.x - cw / 2 / cam.z,
+		x1 = cam.x + cw / 2 / cam.z,
+		y0 = cam.y - ch / 2 / cam.z,
+		y1 = cam.y + ch / 2 / cam.z,
+		T = [];
+	if (!winter && !night)
+		for (const n of G.nodes) if (n.kind === 'tree' && n.amt > 0 && n.x > x0 && n.x < x1 && n.y > y0 && n.y < y1 && T.push(n) >= AMB.maxSingers) break;
+	if (T.length && Math.random() < 1 - Math.exp(-AMB.bird * T.length)) {
+		const t = T[(Math.random() * T.length) | 0];
+		return sfx('bird', t.x, t.y);
+	}
+	if (night && !winter && Math.random() < 1 - Math.exp(-AMB.cricket * AMB.maxSingers))
+		return sfx('cricket', cam.x + (Math.random() - 0.5) * (x1 - x0), cam.y + (Math.random() - 0.5) * (y1 - y0));
+	if (Math.abs(wind) > AMB.wind && Math.random() < Math.abs(wind) / 4) sfx('wind'); // the wind is everywhere: no place, its own strength
 }
 
 // Thunder comes after the flash by the real delay (SOUND.c over SOUND.metre), quieter by the same law as every sound; a strike is loud enough to carry the map
@@ -26985,6 +26997,14 @@ function netOf(p, k) {
 		inn = full ? p.rate[k] || 0 : ((p.flow[k] || 0) * 60) / Math.max(10, el),
 		out = full ? (p.orate && p.orate[k]) || 0 : ((p.spent1[k] || 0) * 60) / Math.max(10, el);
 	return inn - out;
+}
+// a store's velocity on the one gradient: its net flow a minute over VEL.ref (tanh: a gentle middle, a firm end); falling with under two
+// minutes left is the worst there is
+const VEL = { ref: 40 };
+function velOf(p, k) {
+	const net = netOf(p, k);
+	if (net < -0.5 && (p.res[k] || 0) < -net * 2) return -1;
+	return Math.tanh(net / VEL.ref);
 }
 function flowTick() {
 	for (const p of G.P)
@@ -27159,7 +27179,7 @@ function routeTick(u, dt, SP) {
 			}
 		}
 		if (o === 0 && (gold || u.goods.spice)) {
-			say(
+			news('trade', 
 				`A caravan ${sold.length ? `sold ${sold.join(', ')} for ${gold} gold` : 'reached the stop'}${u.goods.spice ? `, bought ${u.goods.spice} spice` : ''}.`,
 				'good',
 				4,
@@ -27205,7 +27225,7 @@ function robbed(u) {
 	for (const k in u.goods || {}) v += u.goods[k] * baseOf(k); // a raw load is robbed too (Build 48: it threw)
 	const f = nearest(G.finds, u, (f) => f.kind === 'camp' && !f.done);
 	if (f && v > 0) f.hoard = (f.hoard || 0) + Math.round(v);
-	if (u.owner === 0) say(`Caravan robbed${v ? ` (${Math.round(v)}g)` : ''}. Break their camp.`, 'warn', 7, u);
+	if (u.owner === 0) news('trade', `Caravan robbed${v ? ` (${Math.round(v)}g)` : ''}. Break their camp.`, 'warn', 7, u);
 }
 
 // ── the calendar: weather every minute, the seasons' work, the year's harvest
@@ -27256,7 +27276,7 @@ function seasonTurn() {
 				lost = Math.floor(p.res.f * (1 - Math.exp(-k)));
 			if (lost > 0) {
 				spend(p, 'f', lost, 'spoiled');
-				if (p.id === 0 && lost >= 20) say(`${lost} food spoiled in store this season.`, 'soft', 5);
+				if (p.id === 0 && lost >= 20) news('home', `${lost} food spoiled in store this season.`, 'soft', 5);
 			}
 		}
 	for (const b of G.blds)
@@ -27272,7 +27292,7 @@ function seasonTurn() {
 			if (wolf && b.sheep > 0) {
 				const lost = Math.min(b.sheep, 1 + Math.floor(rng() * 2));
 				b.sheep -= lost;
-				if (b.owner === 0) say(`Wolves took ${lost} sheep at ${coord(b.x, b.y)}.`, 'warn', 5, b);
+				if (b.owner === 0) news('land', `Wolves took ${lost} sheep at ${coord(b.x, b.y)}.`, 'warn', 5, b);
 			}
 		}
 	if (s === 'Spring') {
@@ -27284,7 +27304,7 @@ function seasonTurn() {
 				acc += H.p;
 				if (r < acc) {
 					G.harvest = H.m;
-					say(H.text, 'warn', 8);
+					news('land', H.text, 'warn', 8);
 					break;
 				}
 			}
@@ -27294,9 +27314,9 @@ function seasonTurn() {
 			hazard(HEALTH.plague * (hz('plague') ? 3 : 1))
 		) {
 			G.plague = { until: G.t + SEASON_LEN * 2 };
-			say('Plague on the roads: build a Hospital.', 'warn', 10);
+			news('home', 'Plague on the roads: build a Hospital.', 'warn', 10);
 		}
-		if (G.blds.some((b) => b.owner === 0 && b.kind === 'pasture')) say('Spring: sheep shorn, lambs born.', 'good', 5);
+		if (G.blds.some((b) => b.owner === 0 && b.kind === 'pasture')) news('land', 'Spring: sheep shorn, lambs born.', 'good', 5);
 	}
 	if (s !== 'Spring' && s !== 'Summer' && G.plague && G.plague.until <= G.t) G.plague = null;
 }
@@ -27326,7 +27346,7 @@ function ignite(b, why) {
 		v.fireman = true;
 	}
 	if (b.owner === 0)
-		say(
+		news('home', 
 			`Fire at the ${bldName(0, b.kind).toLowerCase()} (${why}). ${near.length ? (near.length > 1 ? 'Two neighbours' : 'A neighbour') + ' run with buckets.' : 'Nobody is near it.'}`,
 			'warn help',
 			9,
@@ -27366,7 +27386,7 @@ function fireTick(dt) {
 		b.hp -= maxHpB(b.owner, b.kind) * 0.02 * dt * b.fire;
 		if (b.hp <= 0) {
 			b.by = undefined;
-			if (b.owner === 0) say(`The ${bldName(0, b.kind).toLowerCase()} burned down.`, 'warn', 6, b);
+			if (b.owner === 0) news('home', `The ${bldName(0, b.kind).toLowerCase()} burned down.`, 'warn', 6, b);
 			continue;
 		}
 		if ((G.tick + b.id) % 90 === 0) {
@@ -27405,7 +27425,7 @@ function outbreak(o, share, plague, at) {
 	}
 	if (plague) p.plagueDead = 0;
 	if (o === 0)
-		say(plague ? 'Plague, brought by a caravan!' : `Sickness: ${n} ill. A Hospital cures them.`, 'warn', 9, at);
+		news('home', plague ? 'Plague, brought by a caravan!' : `Sickness: ${n} ill. A Hospital cures them.`, 'warn', 9, at);
 }
 function healthTick() {
 	// every 5 seconds
@@ -27491,13 +27511,13 @@ function upkeepTick() {
 				spend(p, 'f', eat, 'upkeep');
 				if (p.hungry && p.res.f > 20) {
 					p.hungry = false;
-					if (o === 0) say('Your people are fed again.', 'good', 4);
+					if (o === 0) news('home', 'Your people are fed again.', 'good', 4);
 				}
 			} else {
 				spend(p, 'f', p.res.f, 'upkeep'); // what is left is eaten
 				if (!p.hungry) {
 					p.hungry = true;
-					if (o === 0) say('No food. Work slows. Put villagers on Food.', 'warn', 8);
+					if (o === 0) news('home', 'No food. Work slows. Put villagers on Food.', 'warn', 8);
 				}
 			}
 		}
@@ -27594,7 +27614,7 @@ function debase(o) {
 	if (p.debased || !ready(o, 'mint').length) return false;
 	p.debased = true;
 	earn(p, 'g', MINT.debase, 'mint');
-	if (o === 0) say(`Debased: +${MINT.debase} gold, prices ×${MINT.price} for good.`, 'warn', 7);
+	if (o === 0) news('trade', `Debased: +${MINT.debase} gold, prices ×${MINT.price} for good.`, 'warn', 7);
 	return true;
 }
 function mktHit(k, q, dir) {
@@ -27624,7 +27644,7 @@ function venture(o, amt) {
 		return false;
 	spend(p, 'g', amt, 'venture');
 	p.ventures.push({ amt, due: G.t + YEAR });
-	if (o === 0) say(`${amt} gold sent out. Back in a year.`, '', 5);
+	if (o === 0) news('trade', `${amt} gold sent out. Back in a year.`, '', 5);
 	return true;
 }
 function ventureTick() {
@@ -27633,12 +27653,12 @@ function ventureTick() {
 			p.ventures = p.ventures.filter((v) => {
 				if (v.due > G.t) return true;
 				if (rng() < VENTURE.lost) {
-					if (p.id === 0) say(`Robbers took a venture of ${v.amt} gold.`, 'warn', 6);
+					if (p.id === 0) news('trade', `Robbers took a venture of ${v.amt} gold.`, 'warn', 6);
 				} else {
 					const back = Math.round(shareUp(p.id, v.amt * (VENTURE.back + fxv(p.id, 'venture').a)));
 					earn(p, 'g', back, 'venture');
 					p.gathered -= v.amt; // only the profit counts as gathered
-					if (p.id === 0) say(`A venture comes home: ${back} gold for ${v.amt}.`, 'good', 6);
+					if (p.id === 0) news('trade', `A venture comes home: ${back} gold for ${v.amt}.`, 'good', 6);
 				}
 				return false;
 			});
@@ -27696,7 +27716,7 @@ function makeVassal(q, L, tax) {
 		}
 	for (const u of G.units) if (u.owner === q && u.state === 'attack') u.state = 'home';
 	for (const u of G.units) if (u.owner === L && u.state === 'attack' && u.target === q) u.state = 'home';
-	say(
+	news('realm', 
 		L === 0 ? `${p.name} kneel: your vassal now.` : `${p.name} became a vassal of ${G.P[L].name}.`,
 		L === 0 ? 'good' : '',
 		8,
@@ -27717,7 +27737,7 @@ function surrenderWhy(o, q) {
 function demandSurrender(o, q) {
 	const why = surrenderWhy(o, q);
 	if (why) {
-		if (o === 0) say(why, '', 4);
+		if (o === 0) news('realm', why, '', 4);
 		return false;
 	}
 	makeVassal(q, o, 'fair');
@@ -27745,7 +27765,7 @@ function rebel(p, coalition) {
 		}
 	p.rebel = { t0: G.t, n0: Math.max(1, soldiersOf(p.id).length) }; // the new rebels are already soldiers: counted once
 	if (L === 0) {
-		say(
+		news('realm', 
 			coalition
 				? `Vassals rise: ${n} rebels march on you!`
 				: `${p.name} rebel! Crush them in ${VASSAL.freeAfter / 60} min.`,
@@ -27781,12 +27801,12 @@ function vassalTick() {
 							u.gone = true;
 						} else u.state = 'home';
 					}
-				if (L.id === 0) say(`Rebellion in the lands of ${p.name} crushed.`, 'good', 7);
+				if (L.id === 0) news('realm', `Rebellion in the lands of ${p.name} crushed.`, 'good', 7);
 			} else if (G.t - p.rebel.t0 > VASSAL.freeAfter) {
 				p.rebel = null;
 				p.lord = null;
 				levyOf(L.id, p.id).forEach(releaseLevy);
-				if (L.id === 0) say(`${p.name} have thrown off your rule.`, 'warn', 8);
+				if (L.id === 0) news('realm', `${p.name} have thrown off your rule.`, 'warn', 8);
 			}
 			continue;
 		}
@@ -27822,11 +27842,11 @@ function vassalTick() {
 					gift[r] = x;
 				}
 			}
-			if (L.id === 0 && Object.keys(gift).length) say(`${p.name} send a gift: ${costText(gift)}.`, 'good', 5);
+			if (L.id === 0 && Object.keys(gift).length) news('realm', `${p.name} send a gift: ${costText(gift)}.`, 'good', 5);
 		}
 		if (L.id === 0 && p.unrest > 70 && G.t - (p.warnT || -99) > 60) {
 			p.warnT = G.t;
-			say(`${p.name}: unrest ${Math.round(p.unrest)}%. Cut tax.`, 'warn', 7, keepOf(p.id));
+			news('realm', `${p.name}: unrest ${Math.round(p.unrest)}%. Cut tax.`, 'warn', 7, keepOf(p.id));
 		}
 		if (p.unrest >= 100) rebel(p);
 	}
@@ -27839,7 +27859,7 @@ function vassalTick() {
 			L.coalRisk = risk;
 			if (L.id === 0 && risk > 0.1 && G.t - (L.coalT || -99) > 120) {
 				L.coalT = G.t;
-				say('Talk of revolt spreads among your vassals.', 'warn', 7);
+				news('realm', 'Talk of revolt spreads among your vassals.', 'warn', 7);
 			}
 			if (rng() < risk) {
 				const R = V.filter((p) => p.unrest >= 50);
@@ -28030,7 +28050,7 @@ const EV = {
 				) {
 					b.hp -= maxHpB(b.owner, b.kind) * EVENTS.flood.hit;
 					if (b.owner === 0 && e.s % 10 === 1)
-						say(`Water at the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 5, b);
+						news('land', `Water at the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 5, b);
 				}
 		},
 		end() {
@@ -28068,7 +28088,7 @@ const EV = {
 			scarStrike(e.at.x + 6, e.at.y + 4);
 			sfx('boom', e.at.x, e.at.y);
 			G.whiteT = G.t;
-			say(EV_TEXT.meteor[1], 'good', 7, e.at);
+			news('land', EV_TEXT.meteor[1], 'good', 7, e.at);
 		},
 	},
 	wildfire: {
@@ -28147,7 +28167,7 @@ const EV = {
 			crackAt(b.x, b.y, 36);
 			sfx('rumble', b.x, b.y);
 			if (b.owner === 0)
-				say(`A sinkhole under the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 6, b);
+				news('land', `A sinkhole under the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 6, b);
 		},
 	},
 	quicksand: {
@@ -28165,11 +28185,11 @@ const EV = {
 			const k = keepOf(0);
 			e.at = k ? towardMid(k, 500) : { x: MID, y: MID };
 			G.mirage = { x: e.at.x, y: e.at.y, n: EVENTS.mirage.n, until: e.until };
-			say(`An army seen at ${coord(e.at.x, e.at.y)}.`, 'warn', 5, e.at);
+			news('war', `An army seen at ${coord(e.at.x, e.at.y)}.`, 'warn', 5, e.at);
 		},
 		end() {
 			G.mirage = null;
-			say('The army at that spot was a mirage.', '', 5);
+			news('war', 'The army at that spot was a mirage.', '', 5);
 		},
 	},
 	circus: {
@@ -28322,7 +28342,7 @@ function startEvent(kind) {
 	if (EV[kind].start) EV[kind].start(e);
 	evmSet();
 	if (EV_TEXT[kind] && kind !== 'meteor' && kind !== 'mirage')
-		say(
+		news('land', 
 			EV_TEXT[kind][1],
 			E.harm ? 'warn' : E.gift ? 'good' : 'soft',
 			6,
@@ -28350,7 +28370,7 @@ function eventsTick() {
 		if (G.t >= V.cur.until) endEvent();
 	} else if (!V.warned && G.t >= V.next - EV_WARN) {
 		V.warned = pickEvent();
-		say(EV_TEXT[V.warned][0], 'soft', EV_WARN);
+		news('land', EV_TEXT[V.warned][0], 'soft', EV_WARN);
 	} // the warning is quiet: in the list, not on the line
 	else if (V.warned && G.t >= V.next) {
 		if (canEv(V.warned)) startEvent(V.warned);
@@ -28374,11 +28394,11 @@ function hordeTick() {
 		left = H.at - G.t;
 	if (H.said < 1 && left <= HORDE.warn) {
 		H.said = 1;
-		say(EV_TEXT.horde[0], 'warn', 8);
+		news('war', EV_TEXT.horde[0], 'warn', 8);
 	}
 	if (H.said < 2 && left <= HORDE.warn / 2) {
 		H.said = 2;
-		say(EV_TEXT.horde[1], 'warn', 8);
+		news('war', EV_TEXT.horde[1], 'warn', 8);
 	}
 	if (left > 0) return;
 	const sides = G.P.filter((p) => p.id !== WILD && p.alive && keepOf(p.id)),
@@ -28398,7 +28418,7 @@ function hordeTick() {
 		u.hy = k.y;
 		u.horde = true;
 	}
-	say(EV_TEXT.horde[2], 'warn', 10, from);
+	news('war', EV_TEXT.horde[2], 'warn', 10, from);
 	sfx('horn');
 	G.horde = 'done';
 }
@@ -28436,7 +28456,7 @@ function skyTurn() {
 	c.wet = c.next ?? rng() < P[c.wet ? 1 : 0]; // the minute's sky was rolled a minute ahead, so weather signs can tell it
 	c.next = rng() < P[c.wet ? 1 : 0];
 	if (fxv(0, 'forecast').a && c.next !== c.wet)
-		say(c.next ? 'Signs of rain within the minute.' : 'Signs of a clearing sky.', 'soft', 6);
+		news('land', c.next ? 'Signs of rain within the minute.' : 'Signs of a clearing sky.', 'soft', 6);
 	c.dry = c.wet ? 0 : c.dry + 1;
 	G.wx = c.wet
 		? c.T <= CLIMATE.snowAt
@@ -28449,7 +28469,7 @@ function skyTurn() {
 			: c.dry >= CLIMATE.drought.dry && c.T > CLIMATE.drought.temp
 				? 'drought'
 				: 'clear';
-	if (G.wx !== was && G.t > 1 && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6, null, null, wxWhy(G.wx, was, P, c));
+	if (G.wx !== was && G.t > 1 && WEATHER[G.wx].text) news('land', WEATHER[G.wx].text, '', 6, null, null, wxWhy(G.wx, was, P, c));
 }
 function climateTick(dt) {
 	const c = G.clim;
@@ -28541,7 +28561,7 @@ function newsTick() {
 	G.ev.newsT = G.t;
 	const L = NEWS[Math.min(G.P[0].age, NEWS.length - 1)],
 		i = (G.ev.newsI = (G.ev.newsI || 0) + 1) % L.length;
-	say(L[i], 'news', 8);
+	news('chronicle', L[i], 'news', 8);
 }
 // a herd crosses: bison trample what they run over; performers only pass; a dragon flies (it is drawn above everything and walks through walls)
 function herdTick(u, dt, SP) {
@@ -28582,7 +28602,7 @@ function starveTick(p) {
 	}
 	p.hungryT = (p.hungryT || 0) + 1;
 	const o = p.id;
-	if (p.hungryT === STARVE.stop && o === 0) say('Starving: work has stopped. Food, now.', 'warn', 8);
+	if (p.hungryT === STARVE.stop && o === 0) news('home', 'Starving: work has stopped. Food, now.', 'warn', 8);
 	if (p.hungryT >= STARVE.leave && (p.hungryT - STARVE.leave) % STARVE.every === 0) {
 		const v = unitsOf(o, 'vil').sort((a, b) => a.carry - b.carry)[0],
 			s = soldiersOf(o).filter((u) => u.state === 'home')[0];
@@ -28592,7 +28612,7 @@ function starveTick(p) {
 				u.gone = true;
 			}
 		if (o === 0 && (v || s))
-			say(`Starving: ${v ? 'a villager left' : ''}${v && s ? ', ' : ''}${s ? 'a soldier deserted' : ''}.`, 'warn', 6);
+			news('home', `Starving: ${v ? 'a villager left' : ''}${v && s ? ', ' : ''}${s ? 'a soldier deserted' : ''}.`, 'warn', 6);
 	}
 }
 const starving = (o) => hz('starve') && (G.P[o].hungryT || 0) >= STARVE.stop; // nobody works
@@ -28617,7 +28637,7 @@ function natSync(o) {
 		rel = G.rel[o][WILD];
 	if (rel === 'ally' && r < NATIVE.allyAt - 10) {
 		makePeace(o, WILD);
-		if (o === 0) say('The Natives end the alliance: regard fell.', 'warn', 6);
+		if (o === 0) news('realm', 'The Natives end the alliance: regard fell.', 'warn', 6);
 	} else if (rel !== 'ally') {
 		const N = natState();
 		if (!N.warBy) N.warBy = {};
@@ -28627,7 +28647,7 @@ function natSync(o) {
 			G.rel[o][WILD] = G.rel[WILD][o] = want;
 			G.navDirty = true;
 			if (o === 0)
-				say(
+				news('realm', 
 					want === 'peace' ? 'The Natives leave you be: regard above 40.' : 'The Natives turn on you: regard under 40.',
 					want === 'peace' ? 'good' : 'warn',
 					6,
@@ -28650,7 +28670,7 @@ function giveGift(o, amt) {
 	natState().gifts[o].push(G.t);
 	natRegard(o, gain);
 	if (o === 0)
-		say(`Natives: ${amt} gold, regard +${gain}${giftsRecent(o) > 1 ? '. They expect more' : ''}.`, 'good', 6);
+		news('realm', `Natives: ${amt} gold, regard +${gain}${giftsRecent(o) > 1 ? '. They expect more' : ''}.`, 'good', 6);
 	return true;
 }
 function judgeNatives(from, envoy, ask) {
@@ -28713,7 +28733,7 @@ function takeThrone(o, sworn) {
 	G.throne = { owner: o, since: G.t };
 	G.navDirty = true;
 	qcDrop();
-	say(
+	news('realm', 
 		o === 0
 			? sworn
 				? 'The Natives swear: the Throne is yours.'
@@ -28776,7 +28796,7 @@ function trapsTick() {
 			if (v.kind === 'scout' && !b.seen[v.owner]) {
 				b.seen[v.owner] = 1;
 				if (v.owner === 0)
-					say(
+					news('war', 
 						`Your scout found ${kind === 'pit' ? 'a pit' : kind === 'net' ? 'a net' : 'stakes'} at ${coord(b.x, b.y)}.`,
 						'good',
 						5,
@@ -28792,15 +28812,15 @@ function trapsTick() {
 				v.hp -= v.max * NATIVE.pit;
 				v.hurtT = G.t;
 				v.stuck = G.t + NATIVE.stuck;
-				if (v.owner === 0) say(`A pit! Your ${UNIT[v.kind].name.toLowerCase()} is hurt and stuck.`, 'warn', 5, b);
+				if (v.owner === 0) news('war', `A pit! Your ${UNIT[v.kind].name.toLowerCase()} is hurt and stuck.`, 'warn', 5, b);
 				else if (b.owner === 0)
-					say(`Your pit took a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', 4, b);
+					news('war', `Your pit took a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', 4, b);
 			} else if (kind === 'stakes') {
 				v.hp -= v.max * (hasTag(v.kind, 'mounted') ? 0.45 : 0.25);
 				v.hurtT = G.t;
 				v.flashT = G.t;
 				if (b.owner === 0)
-					say(`Your stakes caught a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', 4, b);
+					news('war', `Your stakes caught a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', 4, b);
 			} else if ((isSoldier(v) && !hasTag(v.kind, 'siege')) || v.kind === 'vil') takePrisoner(b.owner, v);
 		});
 	}
@@ -28844,7 +28864,7 @@ function natRaid() {
 		u.back = G.t + NATIVE.raidSecs;
 	}
 	if (q.id === 0)
-		say(`Outlaws ride for your ${bldName(0, mark.kind).toLowerCase()} (${coord(mark.x, mark.y)}).`, 'warn', 7, mark);
+		news('war', `Outlaws ride for your ${bldName(0, mark.kind).toLowerCase()} (${coord(mark.x, mark.y)}).`, 'warn', 7, mark);
 }
 function nativesTick(dt) {
 	if (G.tick % 10 === 5) trapsTick();
@@ -28886,7 +28906,7 @@ function nativesTick(dt) {
 				if (n >= NATIVE.handoverMen) {
 					N.handT[p.id] = (N.handT[p.id] || 0) + 5;
 					if (p.id === 0 && N.handT[0] === 5)
-						say(`Hold ${NATIVE.handoverMen} inside ${NATIVE.handover} s: they swear to you.`, 'good', 6);
+						news('realm', `Hold ${NATIVE.handoverMen} inside ${NATIVE.handover} s: they swear to you.`, 'good', 6);
 					if (N.handT[p.id] >= NATIVE.handover) takeThrone(p.id, true);
 				} else N.handT[p.id] = 0;
 			}
@@ -28951,7 +28971,7 @@ function peaceTick() {
 		if (G.truce === null) {
 			G.truce = G.t;
 			if (G.t > 30) {
-				say('The whole board is at peace.', 'soft', 6);
+				news('realm', 'The whole board is at peace.', 'soft', 6);
 				chron('The whole board at peace.');
 			}
 		}
@@ -28961,7 +28981,7 @@ function peaceTick() {
 	}
 	if (!G.enlight && truceFor() >= PEACE.age.truce) {
 		G.enlight = true;
-		say(`A year of peace: the ${AGES[5].name} opens.`, 'good', 9);
+		news('realm', `A year of peace: the ${AGES[5].name} opens.`, 'good', 9);
 		chron(`A year of peace opened the ${AGES[5].name}.`);
 	}
 	if (G.truce !== null && !G.stood && truceFor() >= PEACE.stand.after) {
@@ -28994,8 +29014,8 @@ function standDown(o, quiet) {
 		}
 	}
 	if (n) {
-		if (o === 0) say(`${n} soldiers stood down to work.`, 'good', 6);
-		else if (!quiet) say(`${p.name} stood down ${n} soldiers.`, '', 4);
+		if (o === 0) news('chronicle', `${n} soldiers stood down to work.`, 'good', 6);
+		else if (!quiet) news('chronicle', `${p.name} stood down ${n} soldiers.`, '', 4);
 		chron(`${o === 0 ? 'You' : p.name} stood down ${n} soldiers.`);
 	}
 	return n;
@@ -29005,7 +29025,7 @@ function holdGames() {
 	const L = livingSides();
 	if (L.length < 2) return;
 	if (!truceAll()) {
-		say('No Games this year: war.', '', 5);
+		news('realm', 'No Games this year: war.', '', 5);
 		chron('The Games were not held: war.');
 		return;
 	}
@@ -29025,7 +29045,7 @@ function holdGames() {
 	G.gamesN = (G.gamesN || 0) + 1;
 	const mine = won.filter((w) => w.startsWith('you')).length;
 	chron(`The Games at the Throne: ${won.join(', ')}.`);
-	say(
+	news('realm', 
 		`The Games: ${mine ? mine + (mine === 1 ? ' laurel' : ' laurels') + ' for you' : 'no laurel for you'}.`,
 		mine ? 'good' : 'soft',
 		8,
@@ -29130,7 +29150,7 @@ const HUD = {
 	gap: 8, // reinforcements arriving within this many seconds of each other are one wave
 	waves: 3,
 };
-const PAGES = ['jobs', 'war', 'build', 'squad', 'train'];
+const PAGES = ['jobs', 'build', 'war', 'squad', 'train']; // Build 64: the order fixed for everyone (Jobs, Build, then the three military pages side by side)
 const pageName = { jobs: 'Jobs', war: 'War', build: 'Build', squad: 'Squad', train: 'Train' };
 const pageIcon = () => ({
 	jobs: ICON.list,
@@ -29211,14 +29231,6 @@ const sqUnit = (tile) => {
 		u = G.hud.sq.unit[tile];
 	return K.includes(u) ? u : K[0];
 };
-function sqNew() {
-	const j = BN.findIndex((_, i) => !Object.values(G.bnPlan[i]).some(Boolean) && !sqUnits(i).length);
-	if (j < 0) return say('All squads made: pick one to change.', '', 3);
-	G.hud.sq.i = j;
-	G.hud.sq.tile = null;
-	say(`${BN[j]}: set what it holds with − and +.`, '', 3);
-	feel('tick');
-}
 function sqCycle() {
 	const Q = G.hud.sq;
 	if (Q.tile !== null) {
@@ -29489,10 +29501,7 @@ function warPageHTML() {
 		sel = H.sel,
 		cmd = hasCmd(),
 		canGo = !!H.h && sqFree(cmd ? sel : null).length > 0;
-	let h = SPLIT(
-		stB('waim', ICON.aim, 'war', ' aria-label="Aim: the crosshair to the middle of the screen"'),
-		stB('whome', ICON.home, 'war', ' aria-label="Everyone home"'),
-	);
+	let h = SPLIT(stB('whome', ICON.home, 'war', ' aria-label="Everyone home"'), pageDoor()); // a tap on the map aims; the door under Home
 	BN.forEach((nm, i) => {
 		const S = cmd ? sqUnits(i) : [],
 			n = S.length,
@@ -29528,21 +29537,50 @@ function warPageHTML() {
 	return h;
 }
 const favKinds = () => (SET.fav && SET.fav.length ? SET.fav : FAV0).slice(0, 5);
-function buildPageHTML() {
-	let h = '';
-	for (const k of favKinds()) {
-		const B = BLD[k],
-			why = B ? capWhy(0, k) || (!afford(G.P[0], B.cost) ? 'short' : '') : 'gone',
-			img = B ? bldThumb(k) : '';
-		h += WHOLE(
-			`build:${k}`,
-			`<span class="top thumb">${img}</span>`,
-			B ? B.short || B.name : '—', // the short name where there is one: the slot is 56 wide
-			'build' + (why ? ' dis' : ''),
-			` aria-label="${B ? B.name : ''}"`,
+// The Build page (Build 64): what the town needs, in the colour code. Blue: wanted and you can build it now; green: going up; red: wanted
+// but blocked, with the reason (what it is short of, or what it needs first); then your pinned favourites, white. The sixth is the Build card.
+function buildWants() {
+	const p = G.P[0],
+		k = keepOf(0),
+		V = unitsOf(0, 'vil'),
+		on = (j) => V.filter((u) => u.job === j).length,
+		W = [];
+	if (popOf(0) >= capOf(0) - 1 && capOf(0) < POPMAX) W.push('house');
+	if (!bldsOf(0, 'barracks').length && G.t > 75) W.push('barracks');
+	if (on('wood') >= 3 && !bldsOf(0, 'lumber').length) W.push('lumber');
+	if (k && G.nodes.filter((n) => n.kind === 'bush' && dist(n, k) < 300).length < 3 && !bldsOf(0, 'farm').length) W.push('farm');
+	if (p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && !bldsOf(0, 'market').length) W.push('market');
+	if (G.units.some((u) => u.owner === 0 && u.sick > G.t) && !bldsOf(0, 'hospital').length && p.age >= 2) W.push('hospital');
+	return W; // the same reads the tips make: one source for what the town wants
+}
+function buildItems() {
+	const p = G.P[0],
+		out = [],
+		has = (k) => out.some((x) => x.k === k);
+	for (const b of G.blds)
+		if (out.length < 2 && b.owner === 0 && b.hp > 0 && b.prog < 1)
+			out.push({ k: b.kind, st: 'green', word: `${Math.floor(b.prog * 100)}%`, act: `card:bld,${b.id}` });
+	for (const k of buildWants()) {
+		if (out.length >= 4 || has(k) || !BLD[k]) continue;
+		const why = capWhy(0, k);
+		out.push(
+			why
+				? { k, st: 'red', word: BLD[k].age > p.age ? AGES[BLD[k].age].name : 'blocked', act: `build:${k}`, why }
+				: afford(p, BLD[k].cost)
+					? { k, st: 'blue', word: BLD[k].short || BLD[k].name, act: `build:${k}` }
+					: { k, st: 'red', word: `short ${costText(Object.fromEntries(Object.entries(BLD[k].cost).filter(([r, v]) => (p.res[r] || 0) < v).map(([r, v]) => [r, Math.ceil(v - (p.res[r] || 0))])))}`, act: `build:${k}` },
 		);
 	}
-	h += WHOLE('buildrow', topOf(ICON.hammer), 'All', 'build', ' aria-label="The Build card"');
+	for (const k of favKinds()) if (out.length < 4 && !has(k) && BLD[k]) out.push({ k, st: '', word: BLD[k].short || BLD[k].name, act: `build:${k}` });
+	return out;
+}
+function buildPageHTML() {
+	const V = unitsOf(0, 'vil').length,
+		room = Math.max(0, capOf(0) - popOf(0));
+	let h = SPLIT(cellB('train:vil', topOf(ICON.people), `${V}/${V + room}`, trainWhy(0, 'vil') ? 'dis' : '', ' aria-label="Train a villager"'), pageDoor());
+	for (const it of buildItems())
+		h += WHOLE(it.act, `<span class="top thumb">${bldThumb(it.k)}</span>`, it.word, `build st-${it.st || 'white'}`, ` aria-label="${BLD[it.k].name}${it.why ? ': ' + it.why : ''}"`);
+	h += WHOLE('buildrow', topOf(ICON.hammer), 'All', 'build', ' id="buildT" aria-label="The Build card"');
 	return h;
 }
 // a small picture of a building for the Build page: its sprite, drawn once per kind and colour
@@ -29597,10 +29635,7 @@ function squadPageHTML() {
 	const Q = G.hud.sq,
 		i = Q.i,
 		cmd = hasCmd();
-	let h = SPLIT(
-		stB('sqnew', `${ICON.squad}<b class="plus">＋</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="A new squad"'),
-		stB('sqcycle', `${ICON.cycle}<b class="plus">${BN[i][0]}</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="Cycle"'),
-	);
+	let h = SPLIT(stB('sqcycle', `${ICON.cycle}<b class="plus">${BN[i][0]}</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="The next squad: an empty one is a new squad"'), pageDoor());
 	CLS.forEach((c, t) => {
 		const k = sqUnit(t),
 			built = cmd && k && ready(0, c[2]).length,
@@ -29627,14 +29662,9 @@ function trainPageHTML() {
 	const H = G.hud,
 		rs = G.recruitSq;
 	let h = SPLIT(
-		stB('torders', ICON.aim, 'train' + (H.aim ? ' sel' : ''), ' aria-label="Orders: where new soldiers go"'),
-		stB(
-			'tsq',
-			`${ICON.squad}<b class="plus">${rs === undefined || rs === null ? '·' : BN[rs][0]}</b>`,
-			'train' + (hasCmd() ? '' : ' dis'),
-			' aria-label="Which squad new soldiers join"',
-		),
-	);
+		stB('tsq', `${ICON.squad}<b class="plus">${rs === undefined || rs === null ? '·' : BN[rs][0]}</b>`, 'train' + (hasCmd() ? '' : ' dis'), ' aria-label="Which squad new soldiers join"'),
+		pageDoor(),
+	); // the page opens aiming: a tap on the map is where new soldiers go, ✓ sets it
 	CLS.forEach((c, t) => {
 		const k = sqUnit(t),
 			at = k ? readyAt(0, UNIT[k]) : [],
@@ -29858,6 +29888,154 @@ CARDS.squad = (c) => {
 		acts(btn(`hdel:${i}`, 'Abort', 'they come home', 'warn'), 'c1')
 	);
 };
+
+// ═════ The door and its domains (Albert, Build 64) ═════
+// Five domains, each a verdict the game already computes, in the colour code: red something wrong, blue available (act on it now),
+// green active, white all is well. The door, under People in the row's first slot, shows the highest red, else the highest blue, in
+// this order of importance: the realm (what is coming at you), the people, the work, the stores, the tech. A tap goes where that is
+// fixed; from there, or when all is well, it opens the dashboard: the five and the mail, one row on top of the row. Colour is never
+// alone: each tile has its icon and its word.
+const DOMAIN_ORDER = ['realm', 'people', 'work', 'stores', 'tech'];
+const DOMAIN_NAME = { realm: 'Realm', people: 'People', work: 'Work', stores: 'Stores', tech: 'Tech' };
+const domainIcon = () => ({ realm: ICON.def, people: ICON.head, work: ICON.hammer, stores: ICON.gold, tech: ICON.book });
+function domains() {
+	const p = G.P[0],
+		V = unitsOf(0, 'vil'),
+		D = {},
+		at = (q) => (q ? `jump:${Math.round(q.x)},${Math.round(q.y)}` : '');
+	// the realm: what is coming at you, and your squads out
+	{
+		const I = G.incoming,
+			ev = G.ev || {},
+			ek = ev.cur ? ev.cur.kind : ev.warned,
+			E = ek && EVENTS[ek],
+			H = G.horde,
+			rout = soldiersOf(0).some((u) => u.state === 'rout'),
+			out = BN.some((_, i) => sqOut(i));
+		D.realm = I
+			? { st: 'red', word: `Raid ${Math.ceil(I.eta)}s`, why: `${I.n} ${I.what} coming`, go: 'page:war' }
+			: G.t - (G.warnT ?? -99) < 20
+				? { st: 'red', word: 'Foes here', go: 'page:war' }
+				: H && H !== 'done' && H.said && H.at - G.t <= 45
+					? { st: 'red', word: `Horde ${Math.max(0, Math.ceil(H.at - G.t))}s`, why: EV_LINE.horde, go: 'page:war' }
+					: E && E.harm
+						? { st: 'red', word: E.door || E.name, why: EV_LINE[ek], go: at(ev.cur && (ev.cur.at || (ev.cur.x !== undefined ? ev.cur : null))) || 'card:guide,rule' }
+						: rout
+							? { st: 'red', word: 'Rout', go: 'page:war' }
+							: E && E.gift
+								? { st: 'blue', word: E.door || E.name, why: EV_LINE[ek], go: at(ev.cur && ev.cur.at) || 'card:guide,rule' }
+								: out
+									? { st: 'green', word: 'Squads out', go: 'page:war' }
+									: { st: 'white', word: 'Quiet', go: 'page:war' };
+	}
+	// the people: room and food
+	{
+		const pop = popOf(0),
+			cap = capOf(0),
+			raising = G.blds.some((b) => b.owner === 0 && b.hp > 0 && b.prog < 1 && (b.kind === 'house' || b.kind === 'apartment')),
+			canHouse = afford(p, BLD.house.cost) && !capWhy(0, 'house'),
+			q = queuedOf(0, 'vil');
+		D.people = p.hungry
+			? { st: 'red', word: 'Hungry', go: 'job:food' }
+			: pop >= cap && cap < POPMAX && !raising && !canHouse
+				? { st: 'red', word: 'No room', go: 'page:build' }
+				: pop >= cap - 1 && cap < POPMAX && !raising && canHouse
+					? { st: 'blue', word: 'A house', go: 'build:house' }
+					: q || raising
+						? { st: 'green', word: 'Growing', go: 'page:build' }
+						: { st: 'white', word: `${pop}/${cap}`, go: 'page:build' };
+	}
+	// the work: idle hands, a site nobody builds, a field nobody works
+	{
+		const idle = V.filter(freeVil).length,
+			site = G.blds.find((b) => b.owner === 0 && b.hp > 0 && b.prog < 1 && !V.some((v) => v.rep === b && v.job === 'repair')),
+			field = bldsOf(0, 'farm').find((b) => b.prog >= 1 && b.node && !(b.node.wk > 0)),
+			busy = G.blds.some((b) => b.owner === 0 && b.hp > 0 && b.prog < 1);
+		D.work =
+			idle && G.t > 20
+				? { st: 'red', word: `${idle} idle`, go: 'idlego' }
+				: site
+					? { st: 'red', word: 'Site waits', go: `card:bld,${site.id}` }
+					: field
+						? { st: 'red', word: 'No farmer', go: 'job:food' }
+						: busy
+							? { st: 'green', word: 'Building', go: 'page:jobs' }
+							: { st: 'white', word: 'At work', go: 'page:jobs' };
+	}
+	// the stores: what runs out within two minutes, and what a market would turn into gold
+	{
+		const low = RES.map((r) => KEY[r]).find((k) => p.res[k] !== undefined && velOf(p, k) <= -1 && $('r' + k) && !$('r' + k).parentElement.hidden),
+			sell = p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && ready(0, 'market').length;
+		D.stores = low
+			? { st: 'red', word: `${RESOURCES[LONG[low]].name} low`, go: `job:${LONG[low]}` }
+			: sell
+				? { st: 'blue', word: 'Sell', go: `card:bld,${ready(0, 'market')[0].id}` }
+				: { st: 'white', word: 'Steady', go: 'card:stores' };
+	}
+	// the tech: research you can start, research under way
+	{
+		let n = 0;
+		for (const v of (G.rdy || new Map()).values()) n += v;
+		const learning = p.aging || G.blds.some((b) => b.owner === 0 && b.q.some((j) => j.tech));
+		D.tech = n
+			? { st: 'blue', word: `${n} ready`, go: 'card:research' }
+			: learning
+				? { st: 'green', word: 'Learning', go: 'card:research' }
+				: { st: 'white', word: 'Nothing new', go: 'card:research' };
+	}
+	const list = DOMAIN_ORDER.map((id) => ({ id, name: DOMAIN_NAME[id], ...D[id] })),
+		top = list.find((d) => d.st === 'red') || list.find((d) => d.st === 'blue') || null;
+	return { list, top, n: list.filter((d) => d.st === 'red' || d.st === 'blue').length };
+}
+// where a destination is: a page of the row, or a card
+const atGo = (go) =>
+	go.startsWith('page:') ? (G.hud.page || 'jobs') === go.slice(5) : go.startsWith('card:') ? !!G.card && go.slice(5).startsWith(G.card.type) : false;
+function doorTap() {
+	const T = domains().top;
+	if (T && !atGo(T.go) && !(G.card && G.card.type === 'dash')) {
+		closeCard();
+		act(T.go);
+	} else openCard({ type: 'dash' });
+	feel('tick');
+}
+const doorHTML = (id = 'doorB') =>
+	`<button class="cell st door"${id ? ` id="${id}"` : ''} data-act="door" aria-label="The door: the most important thing now"><span class="top"></span>${wd('')}</button>`;
+const pageDoor = () => doorHTML(''); // the same door on every page (one id, on the Jobs row)
+let DOOR = { sig: '', key: '' };
+function doorUI() {
+	if (!G || G.over) return;
+	const D = domains(),
+		T = D.top,
+		st = T ? T.st : 'white',
+		icon = T ? domainIcon()[T.id] : ICON.ok,
+		word = T ? T.word : 'All well',
+		sig = st + icon + word + D.n,
+		key = T ? T.id + T.st : '',
+		fresh = key !== DOOR.key;
+	for (const el of document.querySelectorAll('button.door')) {
+		if (el.sig !== sig) {
+			el.sig = sig;
+			el.className = 'cell st door ' + st;
+			el.children[0].innerHTML = icon;
+			const pl = el.querySelector(':scope > .pill');
+			if (pl) pl.remove();
+			if (D.n > 1) el.insertAdjacentHTML('beforeend', `<span class="pill">${D.n}</span>`);
+			el.children[1].textContent = word;
+			el.setAttribute('aria-label', T ? `${T.name}: ${word}` : 'All is well: the dashboard');
+		}
+		if (fresh && T) {
+			el.classList.remove('pulse');
+			void el.offsetWidth;
+			el.classList.add('pulse'); // a new red or blue pulses the door once and is heard: seen and heard, as every alert must be
+		}
+	}
+	if (fresh) {
+		DOOR.key = key;
+		if (T) {
+			if (T.id !== 'realm' && G.t > 5) sfx(T.st === 'red' ? 'err' : 'pick'); // the realm's alarms already sound (the horn, the bell)
+		}
+	}
+}
 // ═════ 40-emergency.js: Shelter, Battle stations, All hands on deck, Resume ═════
 // One ranking for everyone: buildings that shelter, the sturdiest first (current hit points, then room); each is filled to its room with the nearest units who can go there;
 // whoever is left over goes to a safe spot behind the Town Center. Villagers go in and stay until Resume (a note of each one's job and spot is kept).
@@ -30250,7 +30428,6 @@ window.__fk = {
 	hudAbort,
 	pageCycle,
 	hudPage,
-	sqNew,
 	sqPlan,
 	sqUnits,
 	hudReinforce,
@@ -30430,8 +30607,10 @@ window.__fk = {
 	EVM,
 	moonLight,
 	eventsTick,
-	alertNow,
-	alertHTML,
+	domains,
+	ZOOM_MAX,
+	camH,
+	news,
 	march,
 	armyStatus,
 	advise,

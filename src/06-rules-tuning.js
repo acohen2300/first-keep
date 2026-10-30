@@ -99,7 +99,7 @@ const FIREARMS = { chance: 0.12, blast: 0.3, splash: 40, splashHit: 0.3 }; // fi
 // Sound by distance (Build 62): ISO 9613-2, L = L0 − 20 log10(d / d0) − α d. Full within d0 (half the screen's radius: you hear what you look at),
 // then the inverse-square law, less the air's absorption α: 5 dB a kilometre at 1 kHz, 20 °C, 50% humidity (ISO 9613-1), over a world unit of 0.14 m.
 // Thunder reaches the ear after the flash at 340 m/s over the same metre. floor: below this share it is not played.
-const SOUND = { d0: 0.5, alphaKm: 5, metre: 0.14, floor: 0.03, c: 340 };
+const SOUND = { fov: 60, alphaKm: 5, metre: 0.14, floor: 0.03, c: 340 }; // fov: the camera's field of view, degrees, which turns the zoom into a height (Albert, Build 64)
 const GARRISON = { r: 70, heal: 0.6 }; // soldiers resting by their own Castle, Barracks or Town Center heal; Garrison wards double it
 const TEACH = { seats: 4, mul: 1.5, tuition: 40 }; // Teach: a soldier learns a newer kind at the School, four at a time; time ×1.5 per age climbed, tuition in gold per age; opened by Veterans
 const TEACH_TO = {
@@ -242,10 +242,10 @@ const EV_MEAN = 120, // the mean wait between events (an exponential wait, nextI
 	EV_WARN = 12;
 const EVENTS = {
 	eclipse: { name: 'Eclipse', secs: 20, dmg: 0.6, spd: 0.7, sight: 0.7, harm: 1 },
-	storm: { name: 'Thunderstorm', secs: 40, band: 260 },
+	storm: { name: 'Thunderstorm', door: 'Storm', secs: 40, band: 260 },
 	stampede: { name: 'Stampede', secs: 30, n: 10, harm: 1 },
 	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.004, harm: 1 },
-	meteor: { name: 'Falling star', secs: 3 },
+	meteor: { name: 'Falling star', door: 'Star', secs: 3 },
 	wildfire: {
 		name: 'Wildfire',
 		secs: 60,
@@ -258,12 +258,12 @@ const EVENTS = {
 	}, // most: trees alight at once; the dry seasons, drought or not
 	fog: { name: 'Fog', secs: 60, vis: 70 },
 	sinkhole: { name: 'Sinkhole', secs: 2, hit: 0.4 },
-	quicksand: { name: 'Quicksand', secs: 120, r: 60, slow: 0.3 },
+	quicksand: { name: 'Quicksand', door: 'Sand', secs: 120, r: 60, slow: 0.3 },
 	heatwave: { name: 'Heat', secs: 60, dmg: 0.85, spd: 0.9, need: 'drought', season: 'Summer' },
 	mirage: { name: 'Mirage', secs: 30, n: 12, season: 'Summer' },
 	circus: { name: 'Circus', secs: 60, n: 5, r: 150, cheer: 120, mul: 1.1, gift: 1 },
-	wagon: { name: 'Wagon train', secs: 90, gift: 1 },
-	mercs: { name: 'Mercenaries', secs: 180, gift: 1 },
+	wagon: { name: 'Wagon train', door: 'Wagons', secs: 90, gift: 1 },
+	mercs: { name: 'Mercenaries', door: 'Mercs', secs: 180, gift: 1 }, // door: the word on the row's door, which has room for eight letters
 	dragon: { name: 'Dragon', secs: 25, fantasy: true, harm: 1 },
 	troll: { name: 'Troll', secs: 90, fantasy: true },
 	aurora: { name: 'Aurora', secs: 45, fantasy: true, night: true },

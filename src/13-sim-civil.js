@@ -241,7 +241,7 @@ function vilTick(u, dt, SP) {
 			setJob(u, null);
 			u.post = dr ? { x: dr.x + halfOf(dr) + 6, y: dr.y + 6 } : null;
 			if (u.owner === 0)
-				say(
+				news('home', 
 					`No ${what === 'tree' ? 'trees' : what} in sight: one waits at the ${dr ? bldName(0, dr.kind).toLowerCase() : 'Town Center'}.`,
 					'',
 					4,
@@ -412,12 +412,12 @@ function repairTick(u, dt, SP) {
 		if (!b.smoke && (b.spread || b.hp < maxHpB(o, b.kind) / 2) && rng() < FIRE_SMOKE * dt) {
 			b.smoke = true;
 			u.hp = 0;
-			if (o === 0) say(`Smoke killed a villager at the ${bldName(0, b.kind).toLowerCase()}.`, 'warn', 6, b);
+			if (o === 0) news('home', `Smoke killed a villager at the ${bldName(0, b.kind).toLowerCase()}.`, 'warn', 6, b);
 			return;
 		} // a big fire can take one of its fighters
 		b.fire = Math.max(0, b.fire - 0.2 * dt);
 		u.work = G.t;
-		if (!b.fire && b.owner === 0) say(`The fire at the ${bldName(0, b.kind).toLowerCase()} is out.`, 'good', 4, b);
+		if (!b.fire && b.owner === 0) news('home', `The fire at the ${bldName(0, b.kind).toLowerCase()} is out.`, 'good', 4, b);
 		return;
 	}
 	if (b.prog < 1) {
@@ -565,7 +565,7 @@ function caravanTick(u, dt, SP) {
 		if (d.owner !== o) {
 			earn(G.P[o], 'g', u.cargo, 'trade');
 			if (o === 0 && u.cargo) {
-				say(`A caravan earns ${u.cargo} gold from your ally.`, 'good', 3, d);
+				news('trade', `A caravan earns ${u.cargo} gold from your ally.`, 'good', 3, d);
 				sfx('tribute');
 			}
 			u.dest = u.lastId;

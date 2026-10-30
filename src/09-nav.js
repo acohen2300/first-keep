@@ -616,7 +616,7 @@ function moveTo(u, x, y, dt, r, SP) {
 			u.stuck = G.t + CLIMATE.slipSecs;
 			if (u.owner === 0 && !(G.slipT > G.t - 20)) {
 				G.slipT = G.t;
-				say('Ice: your people slip and fall.', 'soft', 4, u);
+				news('land', 'Ice: your people slip and fall.', 'soft', 4, u);
 			}
 			return false;
 		}

@@ -52,8 +52,8 @@ function priestTick(u, dt, SP) {
 				u.cvCd = G.t + CONVERT.cd;
 				u.cvT = 0;
 				u.state = 'home';
-				if (u.owner === 0) say(`Converted: their ${UNIT[t.kind].name.toLowerCase()} is yours.`, 'good', 5, t);
-				else if (was === 0) say(`A priest turned your ${UNIT[t.kind].name.toLowerCase()}!`, 'warn', 5, t);
+				if (u.owner === 0) news('war', `Converted: their ${UNIT[t.kind].name.toLowerCase()} is yours.`, 'good', 5, t);
+				else if (was === 0) news('war', `A priest turned your ${UNIT[t.kind].name.toLowerCase()}!`, 'warn', 5, t);
 			}
 		} else {
 			u.cvT = Math.max(0, (u.cvT || 0) - dt);
@@ -236,7 +236,7 @@ function solTick(u, dt, SP) {
 			u.fleeFrom = null;
 			if (o === 0 && G.t - (G.routSay || -99) > 8) {
 				G.routSay = G.t;
-				say(`${u.bn !== undefined ? BN[u.bn] : 'Your soldiers'} break and run!`, 'warn', 5, u);
+				news('war', `${u.bn !== undefined ? BN[u.bn] : 'Your soldiers'} break and run!`, 'warn', 5, u);
 			}
 			return;
 		}
@@ -364,7 +364,7 @@ function solTick(u, dt, SP) {
 				if (hasTag(u.kind, 'siege') && G.clim.snow > 0 && rng() < CLIMATE.miss * G.clim.snow * (1 - fxv(o, 'snow').a)) {
 					u.hp -= u.max * CLIMATE.missHurt;
 					scarStrike(u.x + u.fx * 30, u.y + u.fy * 30);
-					if (o === 0 && (G.tick + u.id) % 90 < 3) say('Snow: the engine slid, shot short.', 'warn', 4, u);
+					if (o === 0 && (G.tick + u.id) % 90 < 3) news('war', 'Snow: the engine slid, shot short.', 'warn', 4, u);
 				} // an engine on snow
 				else {
 					hurt(o, u, tgt, dmgOf(u));
@@ -511,7 +511,7 @@ function wayfarers(dt) {
 	const w = addUnit(WILD, 'wayfarer', a[0], a[1]);
 	w.px = b[0];
 	w.py = b[1];
-	say('A wayfarer: reach him first to gain him.', '', 6, w);
+	news('realm', 'A wayfarer: reach him first to gain him.', '', 6, w);
 }
 function wayfarerTick(u, dt, SP) {
 	if ((G.tick + u.id) % 6 === 0) {
@@ -526,7 +526,7 @@ function wayfarerTick(u, dt, SP) {
 					v.job = o === 0 ? G.P[0].rally : null;
 				} else earn(G.P[o], 'f', 50, 'finds'); // no room: what it carried
 			if (o === 0)
-				say(UNIT[u.kind].joins > 1 ? 'The settlers join your people.' : 'A wayfarer joins your people.', 'good', 5);
+				news('realm', UNIT[u.kind].joins > 1 ? 'The settlers join your people.' : 'A wayfarer joins your people.', 'good', 5);
 			return;
 		}
 	}
@@ -553,8 +553,8 @@ function findsTick(dt) {
 					const was = f.owner;
 					f.owner = o;
 					f.cap = null;
-					if (o === 0) say('Your priest holds the shrine.', 'good', 5);
-					else if (was === 0) say(`${G.P[o].name} took your shrine.`, 'warn', 5, f);
+					if (o === 0) news('realm', 'Your priest holds the shrine.', 'good', 5);
+					else if (was === 0) news('realm', `${G.P[o].name} took your shrine.`, 'warn', 5, f);
 				}
 			} else if (!sides.length) f.cap = null;
 			if (f.owner !== null && G.P[f.owner].alive) {
@@ -596,7 +596,7 @@ function findsTick(dt) {
 			}
 		}
 		if (o === 0) {
-			say(`${F.name}: ${costText(got)}${extra}.`, 'good', 6);
+			news('trade', `${F.name}: ${costText(got)}${extra}.`, 'good', 6);
 			sfx('coin');
 		}
 	}

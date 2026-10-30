@@ -22,6 +22,7 @@ if not args: sys.exit('usage: python3 publish.py [--preview] "Build NN: what cha
 msg = args[0]
 if not run(sys.executable, 'build.py') or not run(sys.executable, 'wrap.py'): sys.exit('publish refused: the build failed')
 if not run(sys.executable, 'tests/gate.py'): sys.exit('publish refused: the gate failed. Nothing was copied, committed or pushed.')
+if not run(sys.executable, 'tests/lint.py'): sys.exit('publish refused: lint found an error (an undefined name, a duplicate key). Nothing was copied, committed or pushed.')   # Build 64: lint caught a crash the gate did not
 if not PREVIEW: open(STAMP, 'w').write(sha('first-keep.html') + '\n')   # a preview does not touch the stamp, so the hook keeps checking the live index.html
 for dst in (('preview/index.html',) if PREVIEW else ('index.html', 'preview/index.html')): open(dst, 'wb').write(open('first-keep.html', 'rb').read())
 trailer = os.environ.get('TRAILER', '')

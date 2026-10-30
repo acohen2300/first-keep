@@ -33,6 +33,14 @@ function netOf(p, k) {
 		out = full ? (p.orate && p.orate[k]) || 0 : ((p.spent1[k] || 0) * 60) / Math.max(10, el);
 	return inn - out;
 }
+// a store's velocity on the one gradient: its net flow a minute over VEL.ref (tanh: a gentle middle, a firm end); falling with under two
+// minutes left is the worst there is
+const VEL = { ref: 40 };
+function velOf(p, k) {
+	const net = netOf(p, k);
+	if (net < -0.5 && (p.res[k] || 0) < -net * 2) return -1;
+	return Math.tanh(net / VEL.ref);
+}
 function flowTick() {
 	for (const p of G.P)
 		if (p.id !== WILD) {
@@ -206,7 +214,7 @@ function routeTick(u, dt, SP) {
 			}
 		}
 		if (o === 0 && (gold || u.goods.spice)) {
-			say(
+			news('trade', 
 				`A caravan ${sold.length ? `sold ${sold.join(', ')} for ${gold} gold` : 'reached the stop'}${u.goods.spice ? `, bought ${u.goods.spice} spice` : ''}.`,
 				'good',
 				4,
@@ -252,7 +260,7 @@ function robbed(u) {
 	for (const k in u.goods || {}) v += u.goods[k] * baseOf(k); // a raw load is robbed too (Build 48: it threw)
 	const f = nearest(G.finds, u, (f) => f.kind === 'camp' && !f.done);
 	if (f && v > 0) f.hoard = (f.hoard || 0) + Math.round(v);
-	if (u.owner === 0) say(`Caravan robbed${v ? ` (${Math.round(v)}g)` : ''}. Break their camp.`, 'warn', 7, u);
+	if (u.owner === 0) news('trade', `Caravan robbed${v ? ` (${Math.round(v)}g)` : ''}. Break their camp.`, 'warn', 7, u);
 }
 
 // ── the calendar: weather every minute, the seasons' work, the year's harvest
@@ -303,7 +311,7 @@ function seasonTurn() {
 				lost = Math.floor(p.res.f * (1 - Math.exp(-k)));
 			if (lost > 0) {
 				spend(p, 'f', lost, 'spoiled');
-				if (p.id === 0 && lost >= 20) say(`${lost} food spoiled in store this season.`, 'soft', 5);
+				if (p.id === 0 && lost >= 20) news('home', `${lost} food spoiled in store this season.`, 'soft', 5);
 			}
 		}
 	for (const b of G.blds)
@@ -319,7 +327,7 @@ function seasonTurn() {
 			if (wolf && b.sheep > 0) {
 				const lost = Math.min(b.sheep, 1 + Math.floor(rng() * 2));
 				b.sheep -= lost;
-				if (b.owner === 0) say(`Wolves took ${lost} sheep at ${coord(b.x, b.y)}.`, 'warn', 5, b);
+				if (b.owner === 0) news('land', `Wolves took ${lost} sheep at ${coord(b.x, b.y)}.`, 'warn', 5, b);
 			}
 		}
 	if (s === 'Spring') {
@@ -331,7 +339,7 @@ function seasonTurn() {
 				acc += H.p;
 				if (r < acc) {
 					G.harvest = H.m;
-					say(H.text, 'warn', 8);
+					news('land', H.text, 'warn', 8);
 					break;
 				}
 			}
@@ -341,9 +349,9 @@ function seasonTurn() {
 			hazard(HEALTH.plague * (hz('plague') ? 3 : 1))
 		) {
 			G.plague = { until: G.t + SEASON_LEN * 2 };
-			say('Plague on the roads: build a Hospital.', 'warn', 10);
+			news('home', 'Plague on the roads: build a Hospital.', 'warn', 10);
 		}
-		if (G.blds.some((b) => b.owner === 0 && b.kind === 'pasture')) say('Spring: sheep shorn, lambs born.', 'good', 5);
+		if (G.blds.some((b) => b.owner === 0 && b.kind === 'pasture')) news('land', 'Spring: sheep shorn, lambs born.', 'good', 5);
 	}
 	if (s !== 'Spring' && s !== 'Summer' && G.plague && G.plague.until <= G.t) G.plague = null;
 }
@@ -373,7 +381,7 @@ function ignite(b, why) {
 		v.fireman = true;
 	}
 	if (b.owner === 0)
-		say(
+		news('home', 
 			`Fire at the ${bldName(0, b.kind).toLowerCase()} (${why}). ${near.length ? (near.length > 1 ? 'Two neighbours' : 'A neighbour') + ' run with buckets.' : 'Nobody is near it.'}`,
 			'warn help',
 			9,
@@ -413,7 +421,7 @@ function fireTick(dt) {
 		b.hp -= maxHpB(b.owner, b.kind) * 0.02 * dt * b.fire;
 		if (b.hp <= 0) {
 			b.by = undefined;
-			if (b.owner === 0) say(`The ${bldName(0, b.kind).toLowerCase()} burned down.`, 'warn', 6, b);
+			if (b.owner === 0) news('home', `The ${bldName(0, b.kind).toLowerCase()} burned down.`, 'warn', 6, b);
 			continue;
 		}
 		if ((G.tick + b.id) % 90 === 0) {
@@ -452,7 +460,7 @@ function outbreak(o, share, plague, at) {
 	}
 	if (plague) p.plagueDead = 0;
 	if (o === 0)
-		say(plague ? 'Plague, brought by a caravan!' : `Sickness: ${n} ill. A Hospital cures them.`, 'warn', 9, at);
+		news('home', plague ? 'Plague, brought by a caravan!' : `Sickness: ${n} ill. A Hospital cures them.`, 'warn', 9, at);
 }
 function healthTick() {
 	// every 5 seconds
@@ -538,13 +546,13 @@ function upkeepTick() {
 				spend(p, 'f', eat, 'upkeep');
 				if (p.hungry && p.res.f > 20) {
 					p.hungry = false;
-					if (o === 0) say('Your people are fed again.', 'good', 4);
+					if (o === 0) news('home', 'Your people are fed again.', 'good', 4);
 				}
 			} else {
 				spend(p, 'f', p.res.f, 'upkeep'); // what is left is eaten
 				if (!p.hungry) {
 					p.hungry = true;
-					if (o === 0) say('No food. Work slows. Put villagers on Food.', 'warn', 8);
+					if (o === 0) news('home', 'No food. Work slows. Put villagers on Food.', 'warn', 8);
 				}
 			}
 		}
@@ -641,7 +649,7 @@ function debase(o) {
 	if (p.debased || !ready(o, 'mint').length) return false;
 	p.debased = true;
 	earn(p, 'g', MINT.debase, 'mint');
-	if (o === 0) say(`Debased: +${MINT.debase} gold, prices ×${MINT.price} for good.`, 'warn', 7);
+	if (o === 0) news('trade', `Debased: +${MINT.debase} gold, prices ×${MINT.price} for good.`, 'warn', 7);
 	return true;
 }
 function mktHit(k, q, dir) {
@@ -671,7 +679,7 @@ function venture(o, amt) {
 		return false;
 	spend(p, 'g', amt, 'venture');
 	p.ventures.push({ amt, due: G.t + YEAR });
-	if (o === 0) say(`${amt} gold sent out. Back in a year.`, '', 5);
+	if (o === 0) news('trade', `${amt} gold sent out. Back in a year.`, '', 5);
 	return true;
 }
 function ventureTick() {
@@ -680,12 +688,12 @@ function ventureTick() {
 			p.ventures = p.ventures.filter((v) => {
 				if (v.due > G.t) return true;
 				if (rng() < VENTURE.lost) {
-					if (p.id === 0) say(`Robbers took a venture of ${v.amt} gold.`, 'warn', 6);
+					if (p.id === 0) news('trade', `Robbers took a venture of ${v.amt} gold.`, 'warn', 6);
 				} else {
 					const back = Math.round(shareUp(p.id, v.amt * (VENTURE.back + fxv(p.id, 'venture').a)));
 					earn(p, 'g', back, 'venture');
 					p.gathered -= v.amt; // only the profit counts as gathered
-					if (p.id === 0) say(`A venture comes home: ${back} gold for ${v.amt}.`, 'good', 6);
+					if (p.id === 0) news('trade', `A venture comes home: ${back} gold for ${v.amt}.`, 'good', 6);
 				}
 				return false;
 			});
@@ -743,7 +751,7 @@ function makeVassal(q, L, tax) {
 		}
 	for (const u of G.units) if (u.owner === q && u.state === 'attack') u.state = 'home';
 	for (const u of G.units) if (u.owner === L && u.state === 'attack' && u.target === q) u.state = 'home';
-	say(
+	news('realm', 
 		L === 0 ? `${p.name} kneel: your vassal now.` : `${p.name} became a vassal of ${G.P[L].name}.`,
 		L === 0 ? 'good' : '',
 		8,
@@ -764,7 +772,7 @@ function surrenderWhy(o, q) {
 function demandSurrender(o, q) {
 	const why = surrenderWhy(o, q);
 	if (why) {
-		if (o === 0) say(why, '', 4);
+		if (o === 0) news('realm', why, '', 4);
 		return false;
 	}
 	makeVassal(q, o, 'fair');
@@ -792,7 +800,7 @@ function rebel(p, coalition) {
 		}
 	p.rebel = { t0: G.t, n0: Math.max(1, soldiersOf(p.id).length) }; // the new rebels are already soldiers: counted once
 	if (L === 0) {
-		say(
+		news('realm', 
 			coalition
 				? `Vassals rise: ${n} rebels march on you!`
 				: `${p.name} rebel! Crush them in ${VASSAL.freeAfter / 60} min.`,
@@ -828,12 +836,12 @@ function vassalTick() {
 							u.gone = true;
 						} else u.state = 'home';
 					}
-				if (L.id === 0) say(`Rebellion in the lands of ${p.name} crushed.`, 'good', 7);
+				if (L.id === 0) news('realm', `Rebellion in the lands of ${p.name} crushed.`, 'good', 7);
 			} else if (G.t - p.rebel.t0 > VASSAL.freeAfter) {
 				p.rebel = null;
 				p.lord = null;
 				levyOf(L.id, p.id).forEach(releaseLevy);
-				if (L.id === 0) say(`${p.name} have thrown off your rule.`, 'warn', 8);
+				if (L.id === 0) news('realm', `${p.name} have thrown off your rule.`, 'warn', 8);
 			}
 			continue;
 		}
@@ -869,11 +877,11 @@ function vassalTick() {
 					gift[r] = x;
 				}
 			}
-			if (L.id === 0 && Object.keys(gift).length) say(`${p.name} send a gift: ${costText(gift)}.`, 'good', 5);
+			if (L.id === 0 && Object.keys(gift).length) news('realm', `${p.name} send a gift: ${costText(gift)}.`, 'good', 5);
 		}
 		if (L.id === 0 && p.unrest > 70 && G.t - (p.warnT || -99) > 60) {
 			p.warnT = G.t;
-			say(`${p.name}: unrest ${Math.round(p.unrest)}%. Cut tax.`, 'warn', 7, keepOf(p.id));
+			news('realm', `${p.name}: unrest ${Math.round(p.unrest)}%. Cut tax.`, 'warn', 7, keepOf(p.id));
 		}
 		if (p.unrest >= 100) rebel(p);
 	}
@@ -886,7 +894,7 @@ function vassalTick() {
 			L.coalRisk = risk;
 			if (L.id === 0 && risk > 0.1 && G.t - (L.coalT || -99) > 120) {
 				L.coalT = G.t;
-				say('Talk of revolt spreads among your vassals.', 'warn', 7);
+				news('realm', 'Talk of revolt spreads among your vassals.', 'warn', 7);
 			}
 			if (rng() < risk) {
 				const R = V.filter((p) => p.unrest >= 50);

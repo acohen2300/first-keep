@@ -125,7 +125,7 @@ function hurt(o, a, t, base) {
 		if (G.t - G.alertT > 12) {
 			G.alertT = G.t;
 			if (o !== WILD) sfx('horn');
-			say(
+			news('war', 
 				o === WILD
 					? `${plural(UNIT[a ? a.kind : 'wolf'].name)} attack at ${coord(t.x, t.y)}`
 					: `Under attack at ${coord(t.x, t.y)}`,
@@ -280,7 +280,7 @@ function fall(p) {
 			q.capA = (q.capA || 0) + Math.floor((ARMYMAX * SHARE_FALLEN) / left.length);
 		}
 		if (left.some((q) => q.id === 0))
-			say(
+			news('realm', 
 				`Shared out: the ceiling rises by ${Math.floor((ARMYMAX * SHARE_FALLEN) / left.length)} soldiers.`,
 				'good',
 				7,
@@ -291,7 +291,7 @@ function fall(p) {
 		const q = G.P[p.ally];
 		if (q.ally === p.id) q.ally = null;
 	}
-	if (p.id) say(`${p.name} has fallen.`, 'good', 7);
+	if (p.id) news('war', `${p.name} has fallen.`, 'good', 7);
 	chron(`${p.id === 0 ? 'Your keep' : p.name} fell.`);
 }
 function scoreAll() {
@@ -316,7 +316,7 @@ function watchHome() {
 	const near = G.units.find((u) => atWar(0, u.owner) && u.owner !== WILD && isSoldier(u) && dist(u, k) < 340);
 	if (near && G.t - G.warnT > 20) {
 		G.warnT = G.t;
-		say('Enemies at your town!', 'warn', 7, near);
+		news('war', 'Enemies at your town!', 'warn', 7, near);
 	}
 }
 function finish(won, text, all) {

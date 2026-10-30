@@ -56,7 +56,7 @@ function peaceTick() {
 		if (G.truce === null) {
 			G.truce = G.t;
 			if (G.t > 30) {
-				say('The whole board is at peace.', 'soft', 6);
+				news('realm', 'The whole board is at peace.', 'soft', 6);
 				chron('The whole board at peace.');
 			}
 		}
@@ -66,7 +66,7 @@ function peaceTick() {
 	}
 	if (!G.enlight && truceFor() >= PEACE.age.truce) {
 		G.enlight = true;
-		say(`A year of peace: the ${AGES[5].name} opens.`, 'good', 9);
+		news('realm', `A year of peace: the ${AGES[5].name} opens.`, 'good', 9);
 		chron(`A year of peace opened the ${AGES[5].name}.`);
 	}
 	if (G.truce !== null && !G.stood && truceFor() >= PEACE.stand.after) {
@@ -99,8 +99,8 @@ function standDown(o, quiet) {
 		}
 	}
 	if (n) {
-		if (o === 0) say(`${n} soldiers stood down to work.`, 'good', 6);
-		else if (!quiet) say(`${p.name} stood down ${n} soldiers.`, '', 4);
+		if (o === 0) news('chronicle', `${n} soldiers stood down to work.`, 'good', 6);
+		else if (!quiet) news('chronicle', `${p.name} stood down ${n} soldiers.`, '', 4);
 		chron(`${o === 0 ? 'You' : p.name} stood down ${n} soldiers.`);
 	}
 	return n;
@@ -110,7 +110,7 @@ function holdGames() {
 	const L = livingSides();
 	if (L.length < 2) return;
 	if (!truceAll()) {
-		say('No Games this year: war.', '', 5);
+		news('realm', 'No Games this year: war.', '', 5);
 		chron('The Games were not held: war.');
 		return;
 	}
@@ -130,7 +130,7 @@ function holdGames() {
 	G.gamesN = (G.gamesN || 0) + 1;
 	const mine = won.filter((w) => w.startsWith('you')).length;
 	chron(`The Games at the Throne: ${won.join(', ')}.`);
-	say(
+	news('realm', 
 		`The Games: ${mine ? mine + (mine === 1 ? ' laurel' : ' laurels') + ' for you' : 'no laurel for you'}.`,
 		mine ? 'good' : 'soft',
 		8,

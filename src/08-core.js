@@ -3,6 +3,25 @@
 const $ = (id) => document.getElementById(id);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const hyp = (x, y) => Math.sqrt(x * x + y * y);
+// The one gradient (Albert, Build 64): red, pink, white, light green, green, for every number that has a meaning. v runs from −1 (the
+// worst) to +1 (the best); a cost row reads how near you are to paying, a store and its job read their velocity. Colour is never alone:
+// the number is always there, and the two ends differ in brightness as well as hue.
+const GRAD = [
+	[255, 107, 91],
+	[246, 166, 160],
+	[233, 236, 239],
+	[168, 224, 176],
+	[95, 208, 138],
+];
+function grad(v) {
+	const x = (clamp(v, -1, 1) + 1) * 2,
+		i = Math.min(3, Math.floor(x)),
+		f = x - i,
+		a = GRAD[i],
+		b = GRAD[i + 1];
+	return `rgb(${a.map((c, j) => Math.round(c + (b[j] - c) * f)).join(',')})`;
+}
+const costCol = (fr) => grad(fr >= 1 ? 0.55 : fr - 1); // short: red at nothing, white near enough; enough: light green
 const dist = (a, b) => {
 	const dx = a.x - b.x,
 		dy = a.y - b.y;
@@ -148,7 +167,7 @@ const SET = {
 	sound: true,
 	vol: 0.6,
 	mix: {},
-	hush: {},
+	hideG: {}, // the message groups whose lines go quietly to the mail (Build 64; the old per-line hush folds into this)
 	mini: undefined,
 	mapSeen: false,
 	vibe: true,
