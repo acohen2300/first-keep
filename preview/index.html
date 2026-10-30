@@ -9,10 +9,10 @@
 <style>
 /* One screen, a war table at night: the map fills it, and the tally and the orders float on top as woad-indigo pills with a gold hairline. */
 :root{
-  --ink:#121715; --panel:#1b221f; --panel2:#232c28; --line:#34413b; --bone:#ece5d3; --mute:#a7b1aa; --dim:#909a93;
+  --ink:#160f09; --panel:#2a1d13; --panel2:#33241a; --line:#6b5230; --bone:#ece5d3; --mute:#c9bca2; --dim:#a89d86;   /* Build 64: one material, the cards' wood and cream, for the bars, the row and the cards alike (Albert) */
   --blue:#4f93e6; --red:#de5a44; --gold:#e6b947;
   --hb:calc(max(8px,env(safe-area-inset-top,0px)) + 78px); --ob:140px; --pad:8px;
-  --row:44px; --strip:28px; --t2:12px; --r:8px; --hair:var(--line); --sheet:rgba(27,34,31,.94);
+  --row:44px; --strip:28px; --t2:12px; --r:8px; --hair:var(--line); --sheet:rgba(42,29,19,.95);
   --display:"IM Fell English SC", Georgia, "Times New Roman", serif;
   --ui:"Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif;
   color-scheme:dark;
@@ -33,7 +33,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 .wd{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);text-align:center;font-size:var(--t2);font-weight:700;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
 #card td.low{color:var(--red)}
 .cell.one .gl,.cell.one .wd{top:50%}.cell.one .gl{width:18px;height:18px}
-.pill .cell.on{background:#2f3b36}
+.pill .cell.on{background:#3a2a1c}
 #muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--mute)}
 #card .lvl{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}#card .lvl small{color:var(--mute)}
 #tkT .al{display:flex;align-items:center;gap:6px;height:44px}#tkT .al b{flex:none;font-weight:700}#tkT .al i{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:500;opacity:.92}
@@ -41,7 +41,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 .ring{width:20px;height:20px;transform:rotate(-90deg)}.ring circle{fill:none;stroke:currentColor;stroke-width:2.6;opacity:.28}.ring .v{opacity:1;stroke-dasharray:50.27;stroke-linecap:round}
 #hud{z-index:4}
 /* The status pill (Build 64): the state of the world in the tally's mold, one cell under each store column, so the eye reads down a column. */
-#status{height:var(--strip);overflow:visible;align-items:flex-start}#status .cell{height:44px;display:flex;align-items:flex-start;justify-content:center;gap:2px;padding-top:0}#status button.cell{height:44px}#status .cell .gl,#status .cell .wd{position:static;transform:none;width:auto;height:26px;line-height:26px;font-size:12px;white-space:nowrap}#status .cell span.gl{display:inline-flex;align-items:center}#status .cell .gl svg{position:static;transform:none;width:13px;height:13px}#status .cell .gl:empty{display:none}#status.pill .cell+.cell::before{top:6px;bottom:auto;height:14px}   /* thin to look at (28 px), 44 px to tap: the buttons hang below it, as the strip did */#status .cell.lit .wd{color:var(--gold)}
+#status{height:var(--strip);overflow:visible;align-items:flex-start}#status .cell{height:44px;display:flex;align-items:flex-start;justify-content:center;gap:2px;padding:0 1px;overflow:hidden;min-width:0}#status button.cell{height:44px}#status .cell .gl,#status .cell .wd{position:static;transform:none;width:auto;height:26px;line-height:26px;font-size:12px;white-space:nowrap}#status .cell span.gl{display:inline-flex;align-items:center}#status .cell .gl svg{position:static;transform:none;width:13px;height:13px}#status .cell .gl:empty{display:none}#status.pill .cell+.cell::before{top:6px;bottom:auto;height:14px}   /* thin to look at (28 px), 44 px to tap: the buttons hang below it, as the strip did */#status .cell.lit .wd{color:var(--gold)}
 #status span.cell{display:block}#status .cell.dim{color:var(--mute)}#status .cell.dim .wd{color:var(--mute)}#status .cell.lit-r .wd{color:#ff6b5b}#status .cell.lit-b .wd{color:#7db8ff}#status .cell.lit-b{animation:glowb 1.8s ease-in-out infinite}@keyframes glowb{0%,100%{text-shadow:0 0 3px rgba(79,157,255,.35)}50%{text-shadow:0 0 12px rgba(79,157,255,1)}}
 /* The preview (Build 64): a message arrives the way a phone shows a text, over the map, and fades; nothing under it moves. The bar on its
    left is the colour code: red wrong, green done, blue act on it, white news. */
@@ -51,20 +51,20 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #pv .t small{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}#pv .t span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #pv .x{width:44px;display:flex;align-items:center;justify-content:center;color:var(--mute)}#pv .x .gl{position:static;transform:none}
 #pv .ask{display:flex;gap:4px;padding:4px}#pv .ask button{padding:0 12px;border:1px solid var(--hair);border-radius:6px;display:flex;align-items:center;font-weight:700}
-#pv .ask button.yes{background:#2f3b36}
+#pv .ask button.yes{background:#3a2a1c}
 .hi{width:16px;height:16px}
 #stage{position:absolute;inset:0;overflow:hidden;background:#20301c;touch-action:none}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 #vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse farthest-corner at 50% 50%,rgba(0,0,0,0) 42%,rgba(0,0,0,.3) 100%)}
 #mini{position:absolute;top:calc(var(--hb) + 8px);right:8px;width:86px;height:86px;border:1px solid rgba(236,229,211,.5);border-radius:4px;background:#000}
 #card.full{max-height:calc(100% - var(--ob) - var(--hb) - 14px)}
-#place{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:8px;padding:6px 6px 6px 10px;font-weight:700}
-#strip{position:absolute;display:flex;gap:4px;padding:4px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:10px;z-index:5;max-width:calc(100% - 8px);overflow-x:auto}
-#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:19px;font-weight:700}#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}#strip button.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#strip button.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:44px}#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--bone);font-size:14px}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:44px;padding:0}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:12px}#strip button small{font-size:12px}
+#place{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(36,25,16,.95);border:1px solid var(--gold);border-radius:8px;padding:6px 6px 6px 10px;font-weight:700}
+#strip{position:absolute;display:flex;gap:4px;padding:4px;background:rgba(36,25,16,.95);border:1px solid var(--gold);border-radius:10px;z-index:5;max-width:calc(100% - 8px);overflow-x:auto}
+#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:19px;font-weight:700}#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}#strip button.war{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}#strip button.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:44px}#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--bone);font-size:14px}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:44px;padding:0}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:12px}#strip button small{font-size:12px}
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
 #card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:6px 8px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
-#card h3{margin:0;font-family:var(--display);font-weight:400;font-size:20px;display:flex;align-items:center;gap:8px;padding-right:96px;min-height:44px;position:sticky;top:-6px;margin-top:-6px;padding-top:6px;z-index:2;background:linear-gradient(170deg,#3a2a1c,#34261a)}#card.hud h3{background:rgba(10,13,15,.96)}   /* the title stays at the top while the card scrolls, the book and the close over it (Build 60) */   /* as tall as the book and the close, so neither hangs over the first row */
+#card h3{margin:0;font-family:var(--display);font-weight:400;font-size:20px;display:flex;align-items:center;gap:8px;padding-right:96px;min-height:44px;position:sticky;top:-6px;margin-top:-6px;padding-top:6px;z-index:2;background:linear-gradient(170deg,#3a2a1c,#34261a)}#card.hud h3{background:rgba(30,21,13,.97)}   /* the title stays at the top while the card scrolls, the book and the close over it (Build 60) */   /* as tall as the book and the close, so neither hangs over the first row */
 #card .who{font-family:var(--ui);font-size:13px;color:var(--mute);font-weight:700}
 #card p{margin:0;color:var(--mute);line-height:1.35;font-size:16px}
 #card p i{color:var(--bone);font-style:normal;font-weight:700}
@@ -121,7 +121,7 @@ button.ghost{visibility:hidden}
 .col{display:flex;flex-direction:column;gap:3px;min-width:0}.col>button.cell{flex:none}
 .pm{display:grid;grid-template-columns:1fr 1fr;gap:3px}
 .tiles button.cell{background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.tiles button.cell.sel{background:#2f3b36;border-color:var(--mute)}
+.tiles button.cell.sel{background:#3a2a1c;border-color:var(--mute)}
 .tiles button.cell.dis{color:var(--dim)}
 .tiles .st{font-size:19px;font-weight:700;line-height:calc(var(--row) - 2px);text-align:center}
 .tiles .top{position:absolute;left:0;right:0;top:13px;transform:translateY(-50%);display:flex;justify-content:center;align-items:center;gap:4px}
@@ -133,24 +133,24 @@ button.ghost{visibility:hidden}
 /* three tints the thumb learns (Build 61, Albert): people green, build timber-brown, jobs black */
 .tiles button.cell#buildT{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}.tiles button.cell#buildT.sel{background:linear-gradient(#7a5a2e,#4e3618);border-color:#c9a46a}
 /* the attack cards: the same dark glass, hairlines and one amber accent as the huddle bar */
-#card.hud{background:rgba(10,13,15,.9);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.09);border-radius:14px;box-shadow:none}
+#card.hud{background:rgba(10,13,15,.9);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(201,164,106,.35);border-radius:14px;box-shadow:none}
 #card.hud h3{font-family:inherit;font-weight:700;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:#ffb23d}
 #card.hud .who{color:#98a2a6;letter-spacing:.08em}
-#card.hud p{color:#e6e9e6;font-variant-numeric:tabular-nums}#card.hud p b{display:inline-block;min-width:64px;color:#98a2a6;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
-#card.hud .acts button{background:#161b1f;border:1px solid rgba(255,255,255,.09);border-radius:10px;box-shadow:none;color:#e6e9e6}
+#card.hud p{color:#ece5d3;font-variant-numeric:tabular-nums}#card.hud p b{display:inline-block;min-width:64px;color:#98a2a6;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+#card.hud .acts button{background:#2a1d13;border:1px solid rgba(201,164,106,.35);border-radius:10px;box-shadow:none;color:#ece5d3}
 #card.hud .acts button.go{border-color:#ffb23d;color:#ffb23d}#card.hud .acts button.warn{border-color:#ff5a4a;color:#ff9a8c}#card.hud .acts button.dis{opacity:.5}
 #card.hud .acts small{color:#98a2a6}
 #jobs[hidden],#huddle[hidden]{display:none}
 /* the one row, three shapes (Build 63): join = two touching; whole = one tall button; the plain col is a tile over − and + */
 .col.join{gap:0}.col.join>button.cell:first-child{border-radius:var(--r) var(--r) 0 0}.col.join>button.cell:last-child{border-radius:0 0 var(--r) var(--r);border-top:0}
 #huddle .col.whole>button.cell.tall{height:calc(var(--row) * 2 + 3px)}#huddle .col.whole .top.thumb{top:30px}#huddle .col.whole .top.thumb img{width:40px;height:40px;display:block}#huddle .col.whole .wd{top:74px;font-size:10px;letter-spacing:.02em;white-space:normal;overflow-wrap:anywhere;line-height:1;padding:0 2px}#huddle .col.whole .top:not(.thumb){top:34px}#huddle .col.whole .top:not(.thumb) .gl{width:22px;height:22px}
-.tiles button.cell.no{background:#2f3b36;border-color:#4a5a52;color:var(--bone)}
+.tiles button.cell.no{background:#3a2a1c;border-color:#6b5230;color:var(--bone)}
 .tiles button.cell.build,.tiles button.cell.st.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}.tiles button.cell.build.dis{opacity:.5}
-.tiles button.cell.train,.tiles button.cell.st.train{background:linear-gradient(#323a44,#232a31);border-color:#56616e}.tiles button.cell.train.sel{border-color:#aab6c4}
-#orders.pg-build{background:rgba(26,18,10,.82)}#orders.pg-build,#orders.pg-squad{backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}#orders.pg-squad{background:rgba(16,19,23,.84)}
+.tiles button.cell.train,.tiles button.cell.st.train{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}.tiles button.cell.train.sel{border-color:#c9a46a}
+#orders.pg-build{background:rgba(26,18,10,.82)}#orders.pg-build,#orders.pg-squad{backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(201,164,106,.35)}#orders.pg-squad{background:rgba(26,18,10,.84)}
 /* the huddle: dark flat glass, hairlines, one amber accent; only while planning an attack. A lamp line on top of a button: red not set, green set */
-#orders.hud{background:rgba(10,13,15,.82);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
-#huddle button.cell{position:relative;overflow:hidden;background:#161b1f;border:1px solid rgba(255,255,255,.09);border-radius:10px;box-shadow:none;color:#e6e9e6}
+#orders.hud{background:rgba(10,13,15,.82);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(201,164,106,.35)}
+#huddle button.cell{position:relative;overflow:hidden;background:#2a1d13;border:1px solid rgba(201,164,106,.35);border-radius:10px;box-shadow:none;color:#ece5d3}
 #huddle .wd{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#98a2a6}#huddle .wd.mid{top:50%}
 #huddle .top .c{font-size:20px}
 #huddle .st.w{font-size:12px;letter-spacing:.08em;text-transform:uppercase;line-height:calc(var(--row) - 2px)}
@@ -159,7 +159,7 @@ button.ghost{visibility:hidden}
 #huddle button.cell[class*="lamp-"]{border-color:var(--mc)}#huddle [class*="lamp-"] .wd{color:inherit}#huddle .lamp-green::after,#huddle .lamp-blue::after{box-shadow:0 0 8px var(--mc)}
 #huddle .blink{animation:hudBlink 1s infinite}@keyframes hudBlink{50%{box-shadow:inset 0 0 0 1px var(--mc),0 0 12px var(--mc)}}
 #huddle .cell.sel{border-color:#ffb23d}
-#huddle button.cell.sq,#huddle button.cell.st.sq{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#huddle button.cell.sq.sel{background:linear-gradient(#46525f,#2f3842);border-color:#aab6c4}#huddle button.cell.war,#huddle button.cell.st.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#huddle button.cell.go .wd,#huddle button.cell.go .gl{color:#9cc8ff}#orders.sqr{background:rgba(16,19,23,.84);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
+#huddle button.cell.sq,#huddle button.cell.st.sq{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}#huddle button.cell.sq.sel{background:linear-gradient(#54402a,#3a2a1c);border-color:#c9a46a}#huddle button.cell.war,#huddle button.cell.st.war{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}#huddle button.cell.go .wd,#huddle button.cell.go .gl{color:#9cc8ff}#orders.sqr{background:rgba(26,18,10,.84);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(201,164,106,.35)}
 #huddle .msn{touch-action:none}#huddle .msn.empty{background:transparent;border-style:dashed}
 #huddle .msn.lose{--pc:#ff5a4a;animation:hudPulse 1s infinite}#huddle .msn.win{--pc:#43c06b;animation:hudPulse 1.2s infinite}
 @keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc),0 0 10px var(--pc)}}
@@ -167,14 +167,14 @@ button.ghost{visibility:hidden}
 .hudGhost{position:fixed;left:0;top:0;z-index:20;pointer-events:none;padding:8px 12px;border-radius:10px;background:rgba(12,16,20,.95);border:1px solid #43c06b;color:#43c06b;font:700 13px system-ui,sans-serif}
 /* on the map: the corners, one look (.fab). Map top right, Home bottom left (only when away), Build bottom right */
 #spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}#spdPop[hidden]{display:none}#spdPop button{min-width:52px;min-height:44px}#spdPop button.cur{box-shadow:inset 0 0 0 2px var(--mute);border-color:var(--mute)}
-#tally button.cell{isolation:isolate}#tally button.cell.sel::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:7px;background:#2f3b36;border:1px solid var(--mute)}   /* the on mark: a small tile inside the cell; ::before is the divider */
+#tally button.cell{isolation:isolate}#tally button.cell.sel::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:7px;background:#3a2a1c;border:1px solid var(--mute)}   /* the on mark: a small tile inside the cell; ::before is the divider */
 #pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}
-button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--c1x,var(--pad));bottom:calc(var(--ob) + 4px);width:var(--c1w,50px);height:44px;padding:0;border-radius:var(--r);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:3px;color:var(--bone)}   /* exactly one column wide, over the first slot: the chip, People and the door read as one stack (Albert, Build 64) */#hudB svg{position:static;transform:none;width:20px;height:20px}#hudB b{font-weight:700}#hudB.squad{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#hudB.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#hudB.train{background:linear-gradient(#323a44,#232a31);border-color:#56616e}
-.tiles button.cell.sq,.tiles button.cell.st.sq{background:linear-gradient(#323a44,#232a31);border-color:#56616e}.tiles button.cell.sq.sel{background:linear-gradient(#46525f,#2f3842);border-color:#aab6c4}.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}.tiles button.cell.go{color:#9cc8ff}.tiles button.cell.go .wd{color:#9cc8ff}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#emgB.on{border-color:#ff5a4a;color:#ff9a8c}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB,#stage.busy #emgB{display:none}
+button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--c1x,var(--pad));bottom:calc(var(--ob) + 4px);width:var(--c1w,50px);height:44px;padding:0;border-radius:var(--r);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:3px;color:var(--bone)}   /* exactly one column wide, over the first slot: the chip, People and the door read as one stack (Albert, Build 64) */#hudB svg{position:static;transform:none;width:20px;height:20px}#hudB b{font-weight:700}#hudB.squad{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}#hudB.war{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#hudB.train{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}
+.tiles button.cell.sq,.tiles button.cell.st.sq{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}.tiles button.cell.sq.sel{background:linear-gradient(#54402a,#3a2a1c);border-color:#c9a46a}.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}.tiles button.cell.go{color:#9cc8ff}.tiles button.cell.go .wd{color:#9cc8ff}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB{display:none}
 #stage.busy #homeB{display:none}
 #stage.picking #homeB{display:none}
 #card .lbl{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.1;min-height:44px}#card .lbl b{font-size:16px}#card .lbl small{color:var(--mute);font-size:13px}
-#pickbar{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid #5ad27a;border-radius:8px;padding:4px 4px 4px 10px;font-weight:700;z-index:3}
+#pickbar{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(36,25,16,.95);border:1px solid #5ad27a;border-radius:8px;padding:4px 4px 4px 10px;font-weight:700;z-index:3}
 #pickbar{flex-direction:column;align-items:stretch;gap:4px;padding:4px}#pickbar .pbTop,#pickbar .pbRow{display:flex;gap:4px;align-items:center}#pickbar .pbRow:empty{display:none}#pickbar span{flex:1;min-width:0;line-height:1.25;padding-left:6px}#pickbar button{min-height:44px;min-width:44px;padding:0 10px}#pickbar .pbRow button{flex:1;padding:0 4px}#pickbar .gl{position:static;transform:none;width:18px;height:18px;display:block}#pickbar button.on{border-color:var(--gold);color:var(--gold)}
 /* a building's line: one slot per order it can hold; a filled slot shows what is in it and how far along; tap one to cancel it */
 #card .slots{display:grid;grid-template-columns:repeat(var(--qn,5),minmax(0,1fr));gap:4px}
@@ -191,7 +191,7 @@ button small{font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums;
 #card button small{white-space:normal;text-align:center;line-height:1.15}
 button.dis{color:var(--dim)}
 button.dis small{color:var(--dim)}
-button.on{background:#2f3b36;border-color:var(--mute)}
+button.on{background:#3a2a1c;border-color:var(--mute)}
 button.go{border-color:var(--blue);color:#dbe9ff}
 button.warn{border-color:var(--red)}
 button.ok{border-color:#4fb06a;box-shadow:inset 0 0 0 1px #4fb06a;color:#dcf5e8}
@@ -200,7 +200,7 @@ button.ok small{color:#8fd4a4}
 #card{--bone:#ece5d3;--mute:#c9bca2;--dim:#a89d86;--panel:#2a1d13;--panel2:#2b1f15;--line:#6b5230;--brass:#8f7442;--lamp:#e6b947;--blue:#e6b947;--red:#c0392b;--gold:#e6b947;color:var(--bone);border:1px solid var(--brass);border-radius:10px;padding:6px 8px 8px;gap:4px;
   background:linear-gradient(170deg,#3a2a1c,#241911 60%,#1c130d);box-shadow:inset 0 0 0 2px #241911,inset 0 0 0 3px var(--line),0 -6px 24px rgba(0,0,0,.5)}
 .night #card{filter:brightness(.88)}
-#card h3{font-size:20px;letter-spacing:.05em;color:var(--lamp);min-height:44px;border-bottom:1px solid var(--brass);padding-bottom:2px;margin-bottom:0}#card.hud h3{border-bottom-color:rgba(255,255,255,.14)}
+#card h3{font-size:20px;letter-spacing:.05em;color:var(--lamp);min-height:44px;border-bottom:1px solid var(--brass);padding:0 96px 0 2px;margin:-6px 0 4px;align-items:center;line-height:1.1}   /* one line with the book and ×, level with them; the same left edge as the tiles under it (Albert: the padding was off) */#card.hud h3{border-bottom-color:rgba(255,255,255,.14)}
 #card button:not(#cardX):not(#cardI){position:relative;background-color:#312218;background-image:linear-gradient(#3b2b1d,#2a1d13);border:1px solid var(--brass);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,220,150,.18);color:var(--bone);min-height:44px;padding:3px 5px}
 #card button.dis{border-color:#4a3a28;background:transparent;box-shadow:none;color:#bfb49c}#card button.done:not(#cardX):not(#cardI){opacity:.55;border-style:solid;border-color:#5a4a30}#card .chipsrow button.done:not(.on):not(#cardX):not(#cardI){opacity:.5}#card button.dis b{color:#bfb49c}   /* what you cannot: flat on the table */
 #card button.nope:not(#cardX):not(#cardI){border-color:var(--red);box-shadow:0 0 12px rgba(220,70,50,.7),inset 0 0 8px rgba(220,70,50,.35)}
@@ -242,26 +242,20 @@ button.ok small{color:#8fd4a4}
 #card .tabs button:not(#cardX):not(#cardI){border-radius:8px 8px 0 0}
 #card button[class*=" a"]::before,#card button[class^="a"]::before{content:'';position:absolute;left:10px;right:10px;top:4px;height:3px;border-radius:2px;background:var(--age)}   /* a research step wears the colour of its age */
 #card button.a0{--age:#9a9890}#card button.a1{--age:#b5793a}#card button.a2{--age:#c9c2a6}#card button.a3{--age:#4d6b9e}#card button.a4{--age:#8e2f2a}
-#card button:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){background-color:#1c232c;background-image:linear-gradient(#222c38,#191f27),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3 2h8v10H3zM5 5h4M5 7h4M5 9h3' fill='none' stroke='%23a9c4e6' stroke-width='1.2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:0 0,5px 5px;border-color:#556a85;box-shadow:inset 0 1px 0 rgba(170,200,240,.1)}
-#card button.dis:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){background-color:transparent;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3 2h8v10H3zM5 5h4M5 7h4M5 9h3' fill='none' stroke='%237c8ea6' stroke-width='1.2'/%3E%3C/svg%3E");border-color:#3d4f66;box-shadow:none}
+#card button:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){background-color:transparent;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3 2h8v10H3zM5 5h4M5 7h4M5 9h3' fill='none' stroke='%23a9c4e6' stroke-width='1.2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:0 0,5px 5px;border-color:var(--line);box-shadow:inset 0 1px 0 rgba(170,200,240,.1)}
+#card button.dis:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){background-color:transparent;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3 2h8v10H3zM5 5h4M5 7h4M5 9h3' fill='none' stroke='%237c8ea6' stroke-width='1.2'/%3E%3C/svg%3E");border-color:var(--line);box-shadow:none}
 
 @media (max-width:400px){:root{--pad:6px}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important;scroll-behavior:auto!important} }
 /* The door (Build 64): the bottom of the row's first slot; its colour is the most important thing now, in the colour code */
-#orders button.cell.door{background:linear-gradient(#2a3330,#1f2724);border-color:#4a5a52}
+#orders button.cell.door{background:linear-gradient(#33241a,#2a1d13);border-color:#6b5230}
 #orders button.cell.door.red{color:#ff9a8c}#orders button.cell.door.red .wd{color:#ff9a8c}
 #orders button.cell.door.blue{color:#9cc8ff}#orders button.cell.door.blue .wd{color:#9cc8ff}   /* a ring and a glow, never a fill (Albert) */
-#orders button.cell.door{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px}#orders button.cell.door .top{position:static;display:inline-flex;transform:none;height:auto}#orders button.cell.door .top .gl{position:static;transform:none;width:15px;height:15px}#orders button.cell.door .wd{position:static;transform:none;font-size:12px;line-height:14px;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}#orders button.cell.door .pill{position:absolute;top:1px;right:2px;display:block;height:auto;min-width:12px;padding:0 3px;border:0;border-radius:8px;background:#1b2521;border:1.5px solid var(--ring-r);color:#ffb3a8;font-size:12px;line-height:13px;box-shadow:none;overflow:visible}
+#orders button.cell.door{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px}#orders button.cell.door .top{position:static;display:inline-flex;transform:none;height:auto}#orders button.cell.door .top .gl{position:static;transform:none;width:15px;height:15px}#orders button.cell.door .wd{position:static;transform:none;font-size:12px;line-height:14px;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}#orders button.cell.door .pill{position:absolute;top:1px;right:2px;display:block;height:auto;min-width:12px;padding:0 3px;border:0;border-radius:8px;background:#2a1d13;border:1.5px solid var(--ring-r);color:#ffb3a8;font-size:12px;line-height:13px;box-shadow:none;overflow:visible}
 #orders button.cell.door.pulse{animation:doorp 1.2s ease-out 1}@keyframes doorp{0%{box-shadow:0 0 0 0 rgba(255,255,255,.75)}100%{box-shadow:0 0 0 14px rgba(255,255,255,0)}}
 @media (prefers-reduced-motion:reduce){#orders button.cell.door.pulse{animation:none;outline:2px solid #fff}}
 #huddle button.cell.st-blue .wd{color:#bcd9ff}#huddle button.cell.st-green .wd{color:#a8e0b0}#huddle button.cell.st-red .wd{color:#ff9a8c}
-/* The dashboard: the five domains and the mail in one row on the row's six-column mold */
-#card .dash{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
-#card button.dt:not(#cardX):not(#cardI){min-height:84px;padding:4px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px solid var(--line);border-radius:8px;background:#241a12;box-shadow:none}
-#card button.dt .i svg{width:20px;height:20px;position:static;transform:none}#card button.dt b{font-size:12px;line-height:1.1;text-align:center}#card button.dt small{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
-#card button.dt.red b{color:#ff9a8c}
-#card button.dt.blue b{color:#9cc8ff}
-#card button.dt.green b{color:#a8e0b0}
+#card .acts .trow{display:flex;gap:3px;min-width:0}#card .trow>button:first-child{flex:1;min-width:0}#card .trow button.goto:not(#cardX):not(#cardI){flex:0 0 44px;width:44px;min-height:44px;padding:0;font-size:22px;font-weight:700;color:var(--lamp);border:1px solid var(--line);border-radius:8px;background:transparent;box-shadow:none}
 /* The mail: each line with its colour on its left edge */
 #card .mrows{display:flex;flex-direction:column;gap:4px}#card button.mr:not(#cardX):not(#cardI){min-height:44px;padding:4px 8px;align-items:flex-start;text-align:left;border-left:4px solid var(--cc)}#card button.mr b{font-size:13px;font-weight:600}#card button.mr small{font-size:12px;color:var(--mute)}
 /* The one ring (Build 64, Albert: "a ring and a glow, never a fill"; "one or two rings"): every state anywhere is this ring in its
@@ -288,7 +282,6 @@ button.ok small{color:#8fd4a4}
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
     <button class="fab chip" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, Squad room, War room"></button>
-    <button class="fab" id="emgB" data-act="card:emergency" aria-label="Emergency: shelter, battle stations"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
     
     <div id="strip" hidden></div>
@@ -22903,7 +22896,8 @@ function researchHTML() {
 		const s = techState(t);
 		if (s !== 'done') by[s].push(t);
 	}
-	const grid = (L) => acts(L.map((t) => techBtn(t, true)).join('')),
+	const grid = (L) =>
+		acts(L.map((t) => `<div class="trow">${techBtn(t, true)}<button class="goto" data-act="techgo:${t.id}" aria-label="Go to the ${BLD[t.at].name}">›</button></div>`).join('')), // › takes you to the building (Albert: a purist goes there; the row itself stays the shortcut)
 		ageR = ageA && !p.aging && afford(p, ageA.cost) && keepOf(0);
 	let h = title('Research', `${by.ready.length + (ageR ? 1 : 0)} ready now`);
 	if (ageR) h += sec('Next age') + acts(keepAgeBtn());
@@ -23630,17 +23624,6 @@ const CARDS = {
 		);
 	},
 	research: () => researchHTML(),
-	// the dashboard (Build 64): the five domains and the mail, one row on top of the row, each in the colour code with its word
-	dash() {
-		const D = domains(),
-			un = G.mailN || 0,
-			tile = (act, st, icon, word, name) =>
-				`<button class="dt ${st}" data-act="${act}"><span class="i">${icon}</span><b>${word}</b><small>${name}</small></button>`;
-		return (
-			title('The realm', D.top ? `${D.top.name}: ${D.top.word}${D.top.why ? ' · ' + D.top.why : ''}` : 'all is well') +
-			`<div class="dash">${D.list.map((d) => tile(d.go, d.st, domainIcon()[d.id], d.word, d.name)).join('')}${tile('mail', un ? 'blue' : 'white', ICON.mail, un ? `${un} new` : `${(G.mail || []).length} kept`, 'Mail')}</div>`
-		);
-	},
 	// the mail (Build 64): every line kept, newest first, by group; a group can hide its previews here or from the preview's ×
 	mail() {
 		const M = G.mail || [],
@@ -23801,7 +23784,7 @@ const CARDS = {
 const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'end', 'research', 'menu']); // the cards that take the whole height
 // three sizes, one mold each (Albert, Build 63): lg the whole height (the Build card, the Guide, Help, Setup); md a thing's card; sm a short one
 const SIZE_OF = (t) =>
-	FULL.has(t) ? 'lg' : t === 'squad' || t === 'stores' || t === 'emergency' || t === 'army' || t === 'dash' ? 'sm' : 'md';
+	FULL.has(t) ? 'lg' : t === 'squad' || t === 'stores' || t === 'emergency' || t === 'army' ? 'sm' : 'md';
 function renderCard() {
 	const c = G.card;
 	if (!c || !CARDS[c.type]) return;
@@ -24283,6 +24266,7 @@ ICON.book = ICON.book.replace('class="gl"', 'width="18" height="18"');
 const cell = (attrs, icon, word, cls = '') => `<button class="cell ${cls}" ${attrs}>${icon}${word}</button>`;
 const wd = (t, id) => `<span class="wd"${id ? ` id="${id}"` : ''}>${t}</span>`;
 // The top: the tally (five counts, mute, pause, the map), then the status pill under it, cell for cell. The bottom: People over the door, then one column per job.
+const AGE_SHORT = ['Stone', 'Bronze', 'Classical', 'Medieval', 'Powder', 'Peace']; // the age in the strip: its name where it fits the 45 pt cell (measured: Medieval 42), short for the two that do not (Gunpowder 55, Enlightenment 70)
 const STATUS = [
 	['stAge', '', 'The age'],
 	['stSea', '', 'The season and the sky'],
@@ -24324,7 +24308,6 @@ function buildPanel() {
 			? `<button class="cell" id="${id}" data-act="${act}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></button>`
 			: `<span class="cell" id="${id}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></span>`;
 	$('status').innerHTML = STATUS.map(([id, act, label]) => sc(id, act, label)).join('');
-	$('emgB').innerHTML = ICON.def;
 	$('homeB').innerHTML = ICON.home;
 	$('pX').innerHTML = ICON.close;
 }
@@ -24660,8 +24643,7 @@ function showByAge() {
 		if (on) n++;
 	});
 	$('jobs').style.setProperty('--n', n);
-	$('hudB').hidden = !soldiersOf(0).length && !hasCmd() && !(G.msn || []).some(Boolean); // the page chip: once there is an army to send or squads to make
-	$('emgB').hidden = p.age < 1 && !(G.warnT > 0);
+	$('hudB').hidden = false; // the page chip is the constant (Albert's notebook): there from the first second
 }
 function ui(force) {
 	const now = performance.now();
@@ -24723,13 +24705,13 @@ function ui(force) {
 				el.children[1].textContent = word;
 			};
 		const S = [
-			['', AGES[p.age].name, ''],
+			['', AGE_SHORT[p.age] || AGES[p.age].name, ''],
 			[sky, '', ''],
 			['', clk, ''],
 			[ICON.head, `${popOf(0)}/${capOf(0)}`, popOf(0) >= capOf(0) && capOf(0) < POPMAX ? 'lit-r' : ''],
 			['', `z ${idleN}`, idleN ? 'lit-r' : 'dim'],
 			[ICON.book, String(ready), ready ? 'lit-b' : 'dim'],
-			['', `★${fmt(p.score.total)} ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, ''],
+			['', `★ ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, ''], // the rank; the score itself is on the score card
 			[ICON.mil, String(sol), sol ? '' : 'dim'],
 		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
 		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2], i));
@@ -25203,6 +25185,15 @@ const ACT = {
 		G.follow = !G.follow;
 		ui(true);
 	}, // the camera follows what is picked, until you drag, pinch or tap the small map
+	techgo(id) {
+		const t = TECHBY[id],
+			k = keepOf(0),
+			B = t && G.blds.filter((b) => b.owner === 0 && b.kind === t.at && b.prog >= 1 && b.hp > 0).sort((a, b) => (k ? dist(a, k) - dist(b, k) : 0))[0];
+		if (!B) return say(`Build a ${BLD[t.at].name} first.`, '', 3);
+		closeCard();
+		camGo(B.x, B.y);
+		openCard({ type: 'bld', id: B.id });
+	}, // the research card's ›: to the building where it is learned, its card open
 	jump(a) {
 		const [x, y] = a.split(',').map(Number);
 		camGo(x, y);
@@ -25318,6 +25309,25 @@ const PLAY = {
 		u.post = null;
 		closeCard();
 	}, // the worker card: back to the work it had
+	sqnew() {
+		sqNew();
+	},
+	waim() {
+		const H = G.hud;
+		H.aim = true;
+		H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
+		H.moved = false;
+		H.etaKey = '';
+		feel('tick');
+	}, // the crosshair to the middle of the screen
+	torders() {
+		const H = G.hud;
+		H.aim = true;
+		H.mode = 'rally';
+		if (G.rally0) H.h = { t: 'ground', e: { x: G.rally0.x, y: G.rally0.y } };
+		say('Tap where new soldiers should go, then ✓.', '', 4);
+		feel('tick');
+	},
 	sqcycle() {
 		sqCycle();
 	},
@@ -29166,10 +29176,11 @@ const HUD = {
 	gap: 8, // reinforcements arriving within this many seconds of each other are one wave
 	waves: 3,
 };
-const PAGES = ['jobs', 'build', 'war', 'squad', 'train']; // Build 64: the order fixed for everyone (Jobs, Build, then the three military pages side by side)
-const pageName = { jobs: 'Jobs', war: 'War', build: 'Build', squad: 'Squad', train: 'Train' };
+const PAGES = ['jobs', 'realm', 'build', 'war', 'squad', 'train']; // Build 64: fixed for everyone. Jobs is home; the Realm is the dashboard; then Build and the three military pages side by side
+const pageName = { jobs: 'Jobs', realm: 'Realm', war: 'War', build: 'Build', squad: 'Squad', train: 'Train' };
 const pageIcon = () => ({
 	jobs: ICON.list,
+	realm: ICON.def,
 	war: ICON.sword,
 	build: ICON.hammer,
 	squad: ICON.squad,
@@ -29247,6 +29258,14 @@ const sqUnit = (tile) => {
 		u = G.hud.sq.unit[tile];
 	return K.includes(u) ? u : K[0];
 };
+function sqNew() {
+	const j = BN.findIndex((_, i) => !Object.values(G.bnPlan[i]).some(Boolean) && !sqUnits(i).length);
+	if (j < 0) return say('All squads made: pick one to change.', '', 3);
+	G.hud.sq.i = j;
+	G.hud.sq.tile = null;
+	say(`${BN[j]}: set what it holds with − and +.`, '', 3);
+	feel('tick');
+}
 function sqCycle() {
 	const Q = G.hud.sq;
 	if (Q.tile !== null) {
@@ -29517,7 +29536,10 @@ function warPageHTML() {
 		sel = H.sel,
 		cmd = hasCmd(),
 		canGo = !!H.h && sqFree(cmd ? sel : null).length > 0;
-	let h = SPLIT(stB('whome', ICON.home, 'war', ' aria-label="Everyone home"'), pageDoor()); // a tap on the map aims; the door under Home
+	let h = SPLIT(
+		stB('waim', ICON.aim, 'war', ' aria-label="Aim: the crosshair to the middle of the screen"'),
+		stB('whome', ICON.home, 'war', ' aria-label="Everyone home"'),
+	); // Albert's notebook (Oct 30): the War page is aim and home, four squads with − and +, Go over Abort
 	BN.forEach((nm, i) => {
 		const S = cmd ? sqUnits(i) : [],
 			n = S.length,
@@ -29593,7 +29615,7 @@ function buildItems() {
 function buildPageHTML() {
 	const V = unitsOf(0, 'vil').length,
 		room = Math.max(0, capOf(0) - popOf(0));
-	let h = SPLIT(cellB('train:vil', topOf(ICON.people), `${V}/${V + room}`, trainWhy(0, 'vil') ? 'dis' : '', ' aria-label="Train a villager"'), pageDoor());
+	let h = WHOLE('train:vil', topOf(ICON.people), `${V}/${V + room}`, trainWhy(0, 'vil') ? 'dis' : '', ' aria-label="Train a villager"'); // People, whole: the door lives on Jobs
 	for (const it of buildItems())
 		h += WHOLE(it.act, `<span class="top thumb">${bldThumb(it.k)}</span>`, it.word, `build st-${it.st || 'white'}`, ` aria-label="${BLD[it.k].name}${it.why ? ': ' + it.why : ''}"`);
 	h += WHOLE('buildrow', topOf(ICON.hammer), 'All', 'build', ' id="buildT" aria-label="The Build card"');
@@ -29651,7 +29673,10 @@ function squadPageHTML() {
 	const Q = G.hud.sq,
 		i = Q.i,
 		cmd = hasCmd();
-	let h = SPLIT(stB('sqcycle', `${ICON.cycle}<b class="plus">${BN[i][0]}</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="The next squad: an empty one is a new squad"'), pageDoor());
+	let h = SPLIT(
+		stB('sqnew', `${ICON.squad}<b class="plus">＋</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="A new squad"'),
+		stB('sqcycle', `${ICON.cycle}<b class="plus">${BN[i][0]}</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="Cycle the squads"'),
+	); // the notebook: 1A create, 1B cycle; 2 to 5 the buildings; 6 done over best
 	CLS.forEach((c, t) => {
 		const k = sqUnit(t),
 			built = cmd && k && ready(0, c[2]).length,
@@ -29678,9 +29703,9 @@ function trainPageHTML() {
 	const H = G.hud,
 		rs = G.recruitSq;
 	let h = SPLIT(
+		stB('torders', ICON.aim, 'train' + (H.aim ? ' sel' : ''), ' aria-label="Orders: where new soldiers go"'),
 		stB('tsq', `${ICON.squad}<b class="plus">${rs === undefined || rs === null ? '·' : BN[rs][0]}</b>`, 'train' + (hasCmd() ? '' : ' dis'), ' aria-label="Which squad new soldiers join"'),
-		pageDoor(),
-	); // the page opens aiming: a tap on the map is where new soldiers go, ✓ sets it
+	); // the notebook: "Army training: train reinforcements without going home… must contain an Orders button"
 	CLS.forEach((c, t) => {
 		const k = sqUnit(t),
 			at = k ? readyAt(0, UNIT[k]) : [],
@@ -29726,20 +29751,12 @@ function huddleUI() {
 	chip.className = 'fab chip ' + page;
 	chip.setAttribute('aria-label', `${pageName[page]}: the next page`);
 	if (page !== 'jobs') {
-		const h =
-			page === 'war'
-				? warPageHTML()
-				: page === 'build'
-					? buildPageHTML()
-					: page === 'squad'
-						? squadPageHTML()
-						: trainPageHTML();
+		const h = { war: warPageHTML, build: buildPageHTML, squad: squadPageHTML, train: trainPageHTML, realm: realmPageHTML }[page]();
 		if (el.sigH !== h) {
 			el.sigH = h;
 			el.innerHTML = h;
 		}
 	}
-	$('emgB').classList.toggle('on', !!G.emg);
 	if (flip) fit(); // the bar is whole again: the corner buttons sit on top of it
 }
 // the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; its colour says what is under it; green once fired
@@ -30003,20 +30020,29 @@ function domains() {
 		top = list.find((d) => d.st === 'red') || list.find((d) => d.st === 'blue') || null;
 	return { list, top, n: list.filter((d) => d.st === 'red' || d.st === 'blue').length };
 }
+// The Realm page: the mail, then the five domains, each a whole tile in the colour code; a tap goes where it is fixed. The realm's own
+// tile opens the emergency actions (the bell, shelter, battle stations): the button that sat on the map's right went into it.
+function realmPageHTML() {
+	const D = domains(),
+		un = G.mailN || 0;
+	let h = WHOLE('mail', topOf(ICON.mail), un ? `${un} new` : 'Mail', 'realm' + (un ? ' st-blue' : ''), ' aria-label="The mail"');
+	for (const d of D.list)
+		h += WHOLE(d.id === 'realm' ? 'card:emergency' : d.go, topOf(domainIcon()[d.id]), d.word, `realm st-${d.st}`, ` aria-label="${d.name}: ${d.word}${d.why ? ', ' + d.why : ''}"`);
+	return h;
+}
 // where a destination is: a page of the row, or a card
 const atGo = (go) =>
 	go.startsWith('page:') ? (G.hud.page || 'jobs') === go.slice(5) : go.startsWith('card:') ? !!G.card && go.slice(5).startsWith(G.card.type) : false;
 function doorTap() {
 	const T = domains().top;
-	if (T && !atGo(T.go) && !(G.card && G.card.type === 'dash')) {
+	if (T && !atGo(T.go)) {
 		closeCard();
 		act(T.go);
-	} else openCard({ type: 'dash' });
+	} else hudPage('realm'); // all is well, or already there: the Realm page
 	feel('tick');
 }
 const doorHTML = (id = 'doorB') =>
 	`<button class="cell st door"${id ? ` id="${id}"` : ''} data-act="door" aria-label="The door: the most important thing now"><span class="top"></span>${wd('')}</button>`;
-const pageDoor = () => doorHTML(''); // the same door on every page (one id, on the Jobs row)
 let DOOR = { sig: '', key: '' };
 function doorUI() {
 	if (!G || G.over) return;
