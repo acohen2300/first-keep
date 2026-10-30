@@ -905,6 +905,11 @@ const TRIGGERS = () => [
 		'Most real battles ended in a rout, not a last man: armies broke when losses reached a tenth to a third (Dupuy, Understanding War, 1987).',
 	],
 	[
+		'The song',
+		'There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, written by your decisions. Every stroke sounds when it lands, at the pace of the find it works; crews fall into step on their own; the birds, the wind and the thunder sit on top. Nothing is composed.',
+		'Work songs kept crews in time long before metronomes: sea shanties, the sowing songs of the fields, the smith striking on the beat. The game plays only what happens.',
+	],
+	[
 		'Hit from behind',
 		`A foot soldier or rider struck from behind the line it holds takes ${Math.round((FLANK - 1) * 100)}% more damage, and its nerve shakes more. It counts only when the man cannot turn to meet it (engaged with another, slipped, or broken) and no comrade stands in the way: a big group is turned only at its ends. Shooters do not get it. Splitting the army to catch a line from two sides pays.`,
 		'Armies lost most men when their line was turned: Cannae, 216 BC.',

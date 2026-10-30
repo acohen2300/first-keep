@@ -727,7 +727,7 @@ const CARDS = {
 			row('fx', 'Effects', SET.mix.fx) +
 			row('amb', 'Ambience', SET.mix.amb) +
 			row('alert', 'Alerts', SET.mix.alert) +
-			`<p>Effects: work and battle. Ambience: birds, wind, crickets, thunder. Alerts: horn, ready, done, a new age. The silent switch of your phone mutes the game.</p>`
+			`<p>Effects: work and battle. Ambience: birds, wind, crickets, thunder. Alerts: horn, ready, done, a new age. The silent switch of your phone mutes the game.</p><p class="dim">There is no music in life. Life is the music. The rhythm you hear is your kingdom at work, its own song, written by your decisions.</p>`
 		);
 	},
 	taps() {
