@@ -539,7 +539,7 @@ function hordeTick() {
 }
 // ── The climate (Build 54): one tick a second. The air's temperature from the year and the hour; the sky's run as a chain, a new minute
 // at a time; wetness closing on where the sky puts it; mud, snow and ice from those. `G.wx` stays the sky's name, which the rest reads.
-const blankClim = () => ({ T: CLIMATE.mean, W: CLIMATE.eq.clear, snow: 0, ice: 0, mud: 0, wet: false, dry: 0 });
+const blankClim = () => ({ T: CLIMATE.mean, W: CLIMATE.eq.clear, snow: 0, ice: 0, fdd: 0, mud: 0, wet: false, dry: 0 });
 const airTemp = (t = G.t) =>
 	CLIMATE.mean +
 	CLIMATE.year * Math.cos(2 * Math.PI * ((t % YEAR) / YEAR - CLIMATE.peakDay)) +
@@ -567,7 +567,7 @@ function skyTurn() {
 	if (fxv(0, 'forecast').a && c.next !== c.wet) say(c.next ? 'Signs of rain within the minute.' : 'Signs of a clearing sky.', 'soft', 6);
 	c.dry = c.wet ? 0 : c.dry + 1;
 	G.wx = c.wet
-		? c.T <= 0
+		? c.T <= CLIMATE.snowAt
 			? hz('winter') && rng() < CLIMATE.blizzard
 				? 'blizzard'
 				: 'snow'
@@ -588,19 +588,73 @@ function climateTick(dt) {
 		skyTurn();
 		lightning();
 	}
-	const eq = CLIMATE.eq[G.wx] ?? CLIMATE.eq.clear,
-		tau = eq > c.W ? CLIMATE.tau.wet : CLIMATE.tau.dry;
-	c.W = relax(c.W, eq, tau, dt); // M(t) = Me + (M0 − Me) e^(−t/τ), the timelag fuel-moisture model
-	c.snow = clamp(c.snow + (precip(G.wx) && c.T <= 0 ? CLIMATE.snow.fall * (G.wx === 'blizzard' ? 2 : 1) : -CLIMATE.snow.melt * Math.max(0, c.T)) * dt, 0, 1);
-	c.ice = clamp(c.ice + (c.T < 0 ? (c.W > CLIMATE.mud[0] * 0.5 ? CLIMATE.ice.freeze : 0) : -CLIMATE.ice.thaw * c.T) * dt, 0, 1);
-	c.mud = c.T < 0 ? 0 : clamp((c.W - CLIMATE.mud[0]) / (CLIMATE.mud[1] - CLIMATE.mud[0]), 0, 1); // frozen ground is hard ground
+	groundTick(c, G.wx, dt);
+	if (G.tick % 300 === 2) rutHeal(); // every 10 s the ruts dry back a little
 }
-// what the ground takes off a march for one side, at a place if given (mud pools by water): Pandolf's terrain factor over dirt, as 1 / η
-const groundSpd = (o, keys, at) => {
-	const c = G.clim,
-		mud = c.mud * (at && NAV.shore[gcell(at.x, at.y)] ? CLIMATE.shore : 1);
-	return 1 / (1 + CLIMATE.terrain.mud * Math.min(1, mud) * fxv(o, 'mud', keys).m + CLIMATE.terrain.snow * c.snow * (1 - fxv(o, 'snow', keys).a));
+// The ground's water, snow, ice and mud for one step, from the air's temperature c.T and the sky wx (pure in c, so the science test can drive it)
+function groundTick(c, wx, dt) {
+	const K = CLIMATE,
+		eq = K.eq[wx] ?? K.eq.clear,
+		tau = eq > c.W ? K.tau.wet : K.tau.dry,
+		warm = Math.max(0, c.T);
+	c.W = relax(c.W, eq, tau, dt); // M(t) = Me + (M0 − Me) e^(−t/τ), the timelag fuel-moisture model
+	// snow: falls below snowAt; melts by the degree-day method, faster under rain; the melt water goes into the ground
+	const falls = precip(wx) && c.T <= K.snowAt,
+		meltS = Math.min(c.snow, K.snow.melt * warm * (precip(wx) && !falls ? 1 + K.snow.rain : 1) * dt);
+	c.snow = clamp(c.snow + (falls ? K.snow.fall * (wx === 'blizzard' ? 2 : 1) * dt : -meltS), 0, 1);
+	// ice: below freezing, wet ground freezes by Stefan's law (thickness ∝ √ of the freezing degree-seconds); above, it melts by the degree-day
+	let meltI = 0;
+	if (c.T < 0) {
+		if (c.W > K.mud[0] * 0.5) {
+			const before = c.ice;
+			c.fdd += -c.T * dt;
+			c.ice = Math.min(1, Math.sqrt(c.fdd / K.ice.fdd));
+			c.W = Math.max(0, c.W - (c.ice - before) * K.ice.water); // the water that froze leaves the ground
+		}
+	} else {
+		meltI = Math.min(c.ice, K.ice.melt * warm * dt);
+		c.ice -= meltI;
+		c.fdd = c.ice * c.ice * K.ice.fdd; // so the next freeze grows from the ice that is left
+	}
+	c.W = Math.min(1, c.W + meltS * K.snow.water + meltI * K.ice.water); // the melt wets the ground (conservation: nothing vanishes)
+	c.mud = c.T < 0 ? 0 : clamp((c.W - K.mud[0]) / (K.mud[1] - K.mud[0]), 0, 1); // frozen ground is hard ground
+}
+// Traffic (Build 62): every unit-second on a square deepens its ruts. Ruts hold water, so mud is deeper where the feet go: rut depth grows as
+// passes^0.4 (USFS trafficability studies, Build 62) toward `deep` at n0 unit-seconds, and heals with the timelag. Roads (the mud research) count here too.
+const ruts = () => G.tread || (G.tread = new Uint16Array(FOGN * FOGN));
+const rutsAt = (x, y) => ruts()[clamp((y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((x / FOG) | 0, 0, FOGN - 1)];
+const rutsOn = (u) => {
+	const T = ruts(),
+		i = clamp((u.y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((u.x / FOG) | 0, 0, FOGN - 1);
+	if (T[i] < 65535) T[i]++;
 };
+function rutHeal() {
+	const T = ruts(),
+		k = Math.exp(-10 / CLIMATE.rut.tau);
+	for (let i = 0; i < T.length; i++) if (T[i]) T[i] = Math.floor(T[i] * k);
+}
+const rutOf = (x, y) => CLIMATE.rut.deep * Math.min(1, rutsAt(x, y) / CLIMATE.rut.n0) ** 0.4;
+// mud at a place: the ground's mud, deeper by water (pooling) and by traffic (ruts)
+const mudAt = (at) => (at ? G.clim.mud * (NAV.shore[gcell(at.x, at.y)] ? CLIMATE.shore : 1) * (1 + rutOf(at.x, at.y)) : G.clim.mud);
+// what the ground takes off a march for one side, at a place if given: Pandolf's terrain factor over dirt, as 1 / η, and the shorter stride on ice
+const groundSpd = (o, keys, at) => {
+	const c = G.clim;
+	return (
+		(1 / (1 + CLIMATE.terrain.mud * Math.min(1, mudAt(at)) * fxv(o, 'mud', keys).m + CLIMATE.terrain.snow * c.snow * (1 - fxv(o, 'snow', keys).a))) *
+		(1 - CLIMATE.mu.stride * c.ice * (1 - fxv(o, 'ice', keys).a))
+	);
+};
+// Traction: the friction the ground offers now, a blend by cover (ice over snow over mud over dry), ice slickest just below freezing
+const muOf = (at) => {
+	const c = G.clim,
+		M = CLIMATE.mu,
+		ice = c.T <= 0 ? M.ice0 + (M.iceCold - M.ice0) * Math.min(1, -c.T / M.coldAt) : M.ice0 * 0.6,
+		ground = Math.min(1, mudAt(at)) * M.mud + (1 - Math.min(1, mudAt(at))) * M.dry,
+		snow = c.snow * M.snow + (1 - c.snow) * ground;
+	return c.ice * ice + (1 - c.ice) * snow;
+};
+// the chance of a slip in a check: a logistic step on what the step needs less what the ground offers (Hanson et al. 1999), only where there is ice to slip on
+const slipChance = (u, need) => (G.clim.ice <= 0 ? 0 : G.clim.ice / (1 + Math.exp(-(need - muOf(u)) / CLIMATE.mu.soft)));
 // fire against the ground's wetness: Rothermel's damping η = 1 − 2.59r + 5.11r² − 3.52r³, r = M/Mx ≤ 1, as a share of a clear day's
 const rothermel = (r) => 1 - 2.59 * r + 5.11 * r * r - 3.52 * r * r * r;
 const fireMul = () => clamp(rothermel(Math.min(1, G.clim.W)) / rothermel(CLIMATE.eq.clear), 0, 2);

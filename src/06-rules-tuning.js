@@ -59,11 +59,18 @@ const CLIMATE = {
 	eq: { rain: 1, snow: 0.85, blizzard: 0.85, clear: 0.12, frost: 0.12, drought: 0.04 }, // where wetness settles under each sky
 	mud: [0.45, 0.95], // wetness where mud begins and is full
 	shore: 1.5, // mud within reach of water is this much deeper (pooling)
-	snow: { fall: 0.02, melt: 0.004 }, // depth a second of snowfall adds (a blizzard twice); melt a second per degree above 0
-	ice: { freeze: 0.01, thaw: 0.004 }, // a second below 0 on wet ground; thaw a second per degree above
+	// The ground (Build 62): one water balance. Rain wets the ground (the timelag above); snow and ice melt by the degree-day method, and
+	// what melts goes into the ground's water (nothing vanishes); water freezes into ice by Stefan's law, thickness ∝ √(freezing degree-seconds).
+	snowAt: 1, // °C and below, what falls is snow (Jennings, Winchell, Livneh & Molotch, Nature Comm. 9, 2018: the 50% rain–snow air temperature, 1.0 °C in humid air)
+	snow: { fall: 0.02, melt: 0.004, rain: 0.5, water: 0.5 }, // depth a second of snowfall (a blizzard twice); melt a second per °C above 0 (the degree-day factor; Hock 2003); rain on snow melts it this much faster per °C (the rain's heat, USACE 1956, scaled); full snow holds this much ground water
+	ice: { fdd: 500, melt: 0.0064, water: 0.3 }, // Stefan (1891): thickness = √(freezing degree-seconds / fdd), full at fdd; melt a second per °C above 0, 1.6 × snow (Hock 2003: ice is darker); full ice holds this much ground water
 	terrain: { mud: 0.8, snow: 0.6 }, // Pandolf's factors over dirt: swamp +0.8 at full mud, soft snow +0.6 at full depth
-	slip: 0.02,
-	slipSecs: 1.5, // ice: a chance a second of a slip that holds a man in place
+	rut: { n0: 300, deep: 1, tau: 600 }, // mud by traffic: a square trodden n0 unit-seconds has rut depth deep × full mud; depth ∝ passes^0.4 (USFS trafficability, Build 62); ruts heal with tau
+	// Traction (Build 62): the friction a surface offers against what a step needs. Measured coefficients, boot on surface: dry soil 0.7, wet soil 0.45,
+	// packed snow 0.3, ice 0.08 near 0 °C rising to 0.25 at −20 (Bowden & Hughes 1939: the melt film is what makes ice slick, and deep cold has none).
+	// A walker needs about 0.2 (Hanson, Redfern & Mazumdar, Ergonomics 42, 1999); the chance of a slip rises as what is on offer falls below it.
+	mu: { dry: 0.7, mud: 0.45, snow: 0.3, ice0: 0.08, iceCold: 0.25, coldAt: 20, need: { foot: 0.2, horse: 0.25, siege: 0.3 }, soft: 0.03, stride: 0.25 },
+	slipSecs: 1.5, // a slip holds a man in place this long
 	miss: 0.5,
 	missHurt: 0.08, // snow: an engine slides and its shot falls short, hurting its own crew
 	wear: 0.15, // frost makes blades brittle and rain rusts them: weapons do 15% less until tempered and oiled

@@ -29,6 +29,19 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   near('logistic small', F.logistic(1, 0.6, 12) - 1, 0.6 * (1 - 1 / 12), 1e-9); near('logistic full', F.logistic(12, 0.6, 12), 12, 1e-9);
   // the break point (Dupuy): a group of ten with breakAt 0.3 breaks a fresh soldier after three losses beside it
   near('break point', 3 * (1 / (F.MORALE.breakAt * 10)), 1, 1e-9);
+  // the ground (Build 62). Stefan: ice thickness goes with the square root of the freezing degree-seconds, so twice the cold-time gives √2 the ice.
+  { const K = F.CLIMATE, c = { T: -5, W: 1, snow: 0, ice: 0, fdd: 0, mud: 0 }; for (let i = 0; i < 20; i++) F.groundTick(c, 'frost', 1); const h1 = c.ice; for (let i = 0; i < 20; i++) F.groundTick(c, 'frost', 1); near('stefan sqrt', c.ice / h1, Math.SQRT2, 1e-6); if (!(c.mud === 0)) out.push('frozen ground is not hard'); }
+  // the degree-day method: melt goes with the degrees above zero; and nothing vanishes: the water that melts out of snow is in the ground
+  { const K = F.CLIMATE, m = (T) => { const c = { T, W: 0.5, snow: 1, ice: 0, fdd: 0, mud: 0 }; F.groundTick(c, 'clear', 1); return 1 - c.snow; }; near('melt per degree', m(10) / m(5), 2, 1e-6); if (!(m(-3) === 0)) out.push('snow melts below freezing');
+    const c = { T: 10, W: 0, snow: 0.5, ice: 0, fdd: 0, mud: 0 }; F.groundTick(c, 'clear', 1); const w = F.relax(0, K.eq.clear, K.tau.wet, 1); near('melt wets the ground', c.W - w, (0.5 - c.snow) * K.snow.water, 1e-9); }
+  // snow at the wet-bulb threshold: rain at 2 °C, snow at 1 (Jennings et al. 2018)
+  { const a = { T: 2, W: 0.5, snow: 0, ice: 0, fdd: 0, mud: 0 }, b = { T: 1, W: 0.5, snow: 0, ice: 0, fdd: 0, mud: 0 }; F.groundTick(a, 'snow', 1); F.groundTick(b, 'snow', 1); if (!(a.snow === 0 && b.snow > 0)) out.push('rain-snow threshold: ' + a.snow + ' ' + b.snow); }
+  // traction: dry ground offers more grip than mud, mud more than snow, snow more than ice; ice is slickest just below freezing and grips better in deep cold
+  { const G = F.G, c = G.clim, was = { ...c }; Object.assign(c, { T: -1, W: 0.2, snow: 0, ice: 0, mud: 0 }); const dry = F.muOf(null); Object.assign(c, { snow: 1 }); const snow = F.muOf(null); Object.assign(c, { snow: 0, ice: 1 }); const ice1 = F.muOf(null); c.T = -20; const ice20 = F.muOf(null);
+    if (!(dry > snow && snow > ice1 && ice20 > ice1)) out.push('traction order: ' + [dry, snow, ice1, ice20].map((v) => v.toFixed(2)).join(' '));
+    c.T = -1; near('slip on ice, a walker', F.slipChance({ x: 100, y: 100 }, F.CLIMATE.mu.need.foot), 1 / (1 + Math.exp(-(F.CLIMATE.mu.need.foot - ice1) / F.CLIMATE.mu.soft)), 1e-9); Object.assign(c, was); }
+  // ruts: depth grows as passes^0.4 toward full at n0 (USFS trafficability)
+  { const T = F.ruts(), i = 5 * 50 + 5; const was = T[i]; T[i] = F.CLIMATE.rut.n0 / 4; near('rut quarter', F.rutOf(5 * 40 + 1, 5 * 40 + 1), F.CLIMATE.rut.deep * 0.25 ** 0.4, 1e-9); T[i] = was; }
   // the sun (the sunrise equation): daylight at 45° N is half the day at the equinox, about 15.4 of 24 hours at midsummer (June 21, day 172) and 8.6 at midwinter (day 355)
   const light = (N) => { let up = 0; for (let k = 0; k < 2400; k++) if (F.sunAltAt(N, k / 2400) > 0) up++; return 24 * up / 2400; };
   near('daylight equinox', light(80), 12, 0.15); near('daylight midsummer', light(172), 15.4, 0.15); near('daylight midwinter', light(355), 8.6, 0.15);

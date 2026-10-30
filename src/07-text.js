@@ -923,8 +923,8 @@ const TRIGGERS = () => [
 	],
 	[
 		'The weather runs in spells',
-		`A wet minute is likelier after a wet one. Rain: the ground softens to mud, bows reach ${Math.round((1 - WEATHER.rain.rng) * 100)}% less, fire hardly catches. Snow below freezing: the ground deepens, sight shortens. Drought after dry warm days: fields give ${Math.round((1 - WEATHER.drought.crop) * 100)}% less, fire catches at a touch. Frost: stone buildings go up at ${WEATHER.frost.stone * 100}% speed, the ground hardens.`,
-		'Wet roads were mud, wet bowstrings sagged, dry thatch burned, and mortar does not set in frost. Gabriel and Neumann (1962) showed rain runs in spells: tomorrow depends on today.',
+		`A wet minute is likelier after a wet one. Rain: the ground softens to mud, deepest where the feet go (ruts hold water; Roads mend it), bows reach ${Math.round((1 - WEATHER.rain.rng) * 100)}% less, fire hardly catches. Snow at ${CLIMATE.snowAt} °C and below: the ground deepens, sight shortens. Below freezing wet ground turns to ice, thick as the square root of the cold-time; ice is slickest just under freezing and grips better in deep cold; a step that asks more grip than the ground gives slips. What melts wets the ground: a thaw makes mud. Drought after dry warm days: fields give ${Math.round((1 - WEATHER.drought.crop) * 100)}% less, fire catches at a touch. Frost: stone buildings go up at ${WEATHER.frost.stone * 100}% speed, the ground hardens.`,
+		'Wet roads were mud, wet bowstrings sagged, dry thatch burned, and mortar does not set in frost. Gabriel and Neumann (1962) showed rain runs in spells; Stefan (1891) gave the ice; Jennings (2018) the degree snow begins; Bowden and Hughes (1939) why ice is slick.',
 	],
 	[
 		'A wooden building catches fire',

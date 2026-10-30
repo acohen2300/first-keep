@@ -544,19 +544,19 @@ const paceOf = (u, SP) =>
 	(u.chg > G.t ? CHARGE.spd : u.tired > G.t ? CHARGE.tiredSpd : 1);
 function moveTo(u, x, y, dt, r, SP) {
 	if (u.stuck > G.t) return false; // in a pit, or slipped on ice
-	if (
-		G.clim.ice > 0 &&
-		!u.fly &&
-		u.owner !== WILD &&
-		(G.tick + u.id) % 30 === 0 &&
-		rng() < CLIMATE.slip * G.clim.ice * (1 - fxv(u.owner, 'ice', unitKeys(u.kind)).a)
-	) {
-		u.stuck = G.t + CLIMATE.slipSecs;
-		if (u.owner === 0 && !(G.slipT > G.t - 20)) {
-			G.slipT = G.t;
-			say('Ice: your people slip and fall.', 'soft', 4, u);
+	if ((G.tick + u.id) % 30 === 0 && !u.fly && u.owner !== WILD) {
+		rutsOn(u); // a unit-second of traffic on this square (ruts)
+		if (
+			G.clim.ice > 0 &&
+			rng() < slipChance(u, CLIMATE.mu.need[hasTag(u.kind, 'siege') ? 'siege' : hasTag(u.kind, 'mounted') ? 'horse' : 'foot'] * (1 - fxv(u.owner, 'ice', unitKeys(u.kind)).a))
+		) {
+			u.stuck = G.t + CLIMATE.slipSecs;
+			if (u.owner === 0 && !(G.slipT > G.t - 20)) {
+				G.slipT = G.t;
+				say('Ice: your people slip and fall.', 'soft', 4, u);
+			}
+			return false;
 		}
-		return false;
 	}
 	const o = u.owner,
 		gc = gcell(x, y),
@@ -600,7 +600,6 @@ function moveTo(u, x, y, dt, r, SP) {
 		}
 		u.mvT = G.t;
 		u.st.walk += m;
-		if (u.kind === 'vil') tread(u);
 	} // real steps only: a small nudge neither turns the figure round nor starts its walk
 	if (stand) return hyp(tx - u.x, ty - u.y) <= 7;
 	return hyp(x - u.x, y - u.y) <= r + 0.5;

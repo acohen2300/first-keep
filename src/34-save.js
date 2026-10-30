@@ -184,6 +184,7 @@ function saveGame(force) {
 			hz: G.hz || {},
 			ev: evSave(),
 			fog: btoa(String.fromCharCode(...G.fog)),
+			tread: G.tread && G.tread.some(Boolean) ? btoa(String.fromCharCode(...new Uint8Array(G.tread.buffer))) : undefined, // the ruts (Build 62)
 			seenB: Object.keys(G.seenB).map(Number),
 			horde: G.horde,
 			flood: G.flood,
@@ -355,6 +356,13 @@ function loadGame(S) {
 		try {
 			const s = atob(S.fog);
 			for (let i = 0; i < s.length && i < G.fog.length; i++) G.fog[i] = s.charCodeAt(i);
+		} catch (e) {}
+	}
+	if (S.tread) {
+		try {
+			const s = atob(S.tread),
+				b = new Uint8Array(ruts().buffer);
+			for (let i = 0; i < s.length && i < b.length; i++) b[i] = s.charCodeAt(i);
 		} catch (e) {}
 	}
 	G.seenB = {};

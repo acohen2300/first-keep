@@ -3,24 +3,32 @@
 // the ground after the weather: mud darkens the land, snow whitens it, ice gives it a sheen
 function drawGround() {
 	const g = G.clim;
-	if (!g || (g.mud < 0.02 && g.snow < 0.02 && g.ice < 0.02)) return;
+	if (!g) return;
 	const w = cw,
 		h = ch;
+	// the trodden squares: worn bare by feet when dry, pooling darker in mud; the picture reads the same map the feet write (Build 62: one home for traffic)
+	{
+		const T = ruts(),
+			z = cam.z,
+			x0 = Math.max(0, ((cam.x - w / 2 / z) / FOG) | 0),
+			y0 = Math.max(0, ((cam.y - h / 2 / z) / FOG) | 0),
+			x1 = Math.min(FOGN - 1, ((cam.x + w / 2 / z) / FOG) | 0),
+			y1 = Math.min(FOGN - 1, ((cam.y + h / 2 / z) / FOG) | 0);
+		for (let gy = y0; gy <= y1; gy++)
+			for (let gx = x0; gx <= x1; gx++) {
+				const r = T[gy * FOGN + gx];
+				if (!r) continue;
+				const d = Math.min(1, r / CLIMATE.rut.n0) ** 0.4;
+				ctx.fillStyle = g.mud >= 0.02 ? `rgba(50,32,14,${0.3 * g.mud * d})` : `rgba(120,92,58,${0.12 * d})`;
+				ctx.beginPath();
+				ctx.ellipse(SX(gx * FOG + FOG / 2), SY(gy * FOG + FOG / 2), FOG * 0.6 * z, FOG * 0.6 * z * TILT, 0, 0, 6.3);
+				ctx.fill();
+			}
+	}
+	if (g.mud < 0.02 && g.snow < 0.02 && g.ice < 0.02) return;
 	if (g.mud >= 0.02) {
 		ctx.fillStyle = `rgba(70,45,22,${0.22 * g.mud})`;
 		ctx.fillRect(0, 0, w, h);
-		ctx.fillStyle = `rgba(50,32,14,${0.3 * g.mud})`;
-		const z = cam.z,
-			s = 90 * z;
-		for (let i = 0; i < 60; i++) {
-			const sx = SX((i * 173) % MAP),
-				sy = SY((i * 311) % MAP);
-			if (sx > -s && sx < w + s && sy > -s && sy < h + s) {
-				ctx.beginPath();
-				ctx.ellipse(sx, sy, s * (0.5 + (i % 3) * 0.25), s * 0.3, 0, 0, 6.3);
-				ctx.fill();
-			}
-		}
 	}
 	if (g.snow >= 0.02) {
 		ctx.fillStyle = `rgba(235,240,245,${0.55 * g.snow})`;

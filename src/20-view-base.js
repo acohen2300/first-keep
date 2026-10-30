@@ -17,13 +17,11 @@ const grassM = new DOMMatrix();
 // the ground remembers: where people fell, where buildings burned, where villagers walk a lot. A layer over the ground, cleared with each new game.
 let scarCv = null,
 	scarX = null;
-const TRODE = new Uint16Array((MAP / 20) ** 2);
 function resetScars() {
 	scarCv = document.createElement('canvas');
 	scarCv.width = scarCv.height = MAP * bgK;
 	scarX = scarCv.getContext('2d');
 	scarX.scale(bgK, bgK);
-	TRODE.fill(0);
 }
 // the ground round a building is worn bare by feet (Build 52): painted once into the ground's memory when it is finished, so it costs nothing a frame and stays when the building is gone
 function wearGround(b) {
@@ -80,16 +78,6 @@ function scarBurn(b) {
 		const a = i * 1.3 + b.id,
 			r = h * 0.6 * (((i * 0.37) % 1) + 0.2);
 		scarX.fillRect(b.x + Math.cos(a) * r - 1.5, b.y + Math.sin(a) * r * 0.7 - 1, 3, 2);
-	}
-}
-function tread(u) {
-	// a villager's step: after enough of them on one patch the earth shows it
-	const c = ((u.y / 20) | 0) * (MAP / 20) + ((u.x / 20) | 0);
-	if (++TRODE[c] % 260 === 0 && TRODE[c] < 5000) {
-		scarX.fillStyle = 'rgba(120,92,58,.07)';
-		scarX.beginPath();
-		scarX.ellipse(u.x, u.y, 5.5, 3, 0, 0, 7);
-		scarX.fill();
 	}
 }
 // a small parchment tab with a book in red ink, and a count when more than one thing waits
