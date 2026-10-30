@@ -310,6 +310,44 @@ function hushed(t) {
 		w = G.hushW && G.hushW[k];
 	return !!(SET.hush && SET.hush[k]) || (w !== undefined && G.t < w);
 }
+// the milestones' tests (words in MS_TEXT): each is a moment; the first time it is true it fires, once a game. {pct} and {spd} are filled.
+const MS_TEST = {
+	house: () => bldsOf(0, 'house').some((b) => b.prog >= 1),
+	field: () => bldsOf(0, 'farm').some((b) => b.prog >= 1),
+	drop: () => G.blds.some((b) => b.owner === 0 && b.prog >= 1 && ['mill', 'lumber', 'mining'].includes(b.kind)),
+	soldier: () => soldiersOf(0).length > 0,
+	squad: () => hasCmd() && G.bnPlan.some((P) => Object.values(P).some(Boolean)),
+	age: () => G.P[0].age >= 1,
+	mud: () => G.clim.mud > 0.5 && soldiersOf(0).some((u) => armyStatus(u) === 'march') && !G.P[0].techs.has('roads'),
+	snow: () => G.clim.snow > 0.5 && !G.P[0].techs.has('snowclear'),
+	ice: () => G.clim.ice > 0.3 && G.t - (G.slipT || -99) < 20,
+	hungry: () => !!G.P[0].hungry,
+	fire: () => G.blds.some((b) => b.owner === 0 && b.fire > 0),
+	rout: () => soldiersOf(0).some((u) => u.state === 'rout'),
+	trade: () => unitsOf(0, 'caravan').length > 0,
+	winter: () => season().name === 'Winter',
+};
+function msFill(t) {
+	const spd = groundSpd(0, ['foot']);
+	return t.replace('{pct}', String(Math.round((1 - spd) * 100))).replace('{spd}', spd.toFixed(2));
+}
+function milestoneTick() {
+	if (G.over || !keepOf(0)) return;
+	const M = G.ms || (G.ms = []);
+	for (const id in MS_TEST) {
+		if (M.some((m) => m.id === id)) continue;
+		let on = false;
+		try {
+			on = MS_TEST[id]();
+		} catch (e) {}
+		if (!on) continue;
+		M.push({ id, t: Math.round(G.t) });
+		const [line] = MS_TEXT[id];
+		say(msFill(line), 'good', 7, null, `card:milestone,${id}`);
+		sfx('coin');
+		return; // one a tick: they never pile up
+	}
+}
 function advise() {
 	const p = G.P[0],
 		k = keepOf(0);
@@ -456,6 +494,7 @@ function ui(force) {
 			if (A && !p.aging && keepOf(0) && afford(p, A.cost)) G.rdy.set('keep', (G.rdy.get('keep') || 0) + 1);
 		}
 	} // building kind → how many researches you can start there now
+	if (G.tick % 90 === 7) milestoneTick();
 	let tip = SET.tips ? advise() : '';
 	const urgent = tip[0] === '!';
 	if (urgent) tip = tip.slice(1);

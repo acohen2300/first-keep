@@ -80,7 +80,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card .hp{height:5px;background:#0b0e0c;border-radius:3px;overflow:hidden}
 #card .hp i{display:block;height:100%}
 #card .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}#card .stats div{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:5px 4px;text-align:center;font-size:13px;line-height:1.15;min-height:44px}#card .stats small{display:block;color:var(--mute);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;margin-bottom:2px}
-#card .acts.menu .bk{position:relative}#card .acts.menu .bk>button:first-child{width:100%;min-height:92px;padding-top:6px;align-items:center}#card .acts.menu .bk img{display:block;width:40px;height:40px;margin:0 auto 2px}#card .acts.menu .bk button.pin:not(#cardX):not(#cardI){position:absolute;right:2px;top:2px;min-width:30px;min-height:30px;width:30px;height:30px;padding:0;border:0;background:none;box-shadow:none;color:var(--dim);display:grid;place-items:center}#card .acts.menu .bk button.pin svg{width:16px;height:16px}#card .acts.menu .bk button.pin.on:not(#cardX):not(#cardI){color:var(--lamp)}#card .acts.menu .bk.pinned>button:first-child{border-color:var(--lamp)}
+#card .acts.menu .bk{position:relative}#card .acts.menu .bk>button:first-child{width:100%;min-height:92px;padding-top:6px;align-items:center}#card .acts.menu .bk img{display:block;width:40px;height:40px;margin:0 auto 2px}#card .acts.menu .bk button.pin:not(#cardX):not(#cardI){position:absolute;right:-4px;top:-4px;min-width:44px;min-height:44px;width:44px;height:44px;padding:0;border:0;background:none;box-shadow:none;color:var(--dim);display:grid;place-items:center}#card .acts.menu .bk button.pin svg{width:16px;height:16px}#card .acts.menu .bk button.pin.on:not(#cardX):not(#cardI){color:var(--lamp)}#card .acts.menu .bk.pinned>button:first-child{border-color:var(--lamp)}
 #card .acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;min-height:44px}#card .acts:empty{display:none}
 #card.sm{max-height:min(46%,calc(100% - var(--ob) - var(--hb) - 14px))}
 /* a row of six in a card: the same element as the bar below the map (Build 63) */
@@ -100,14 +100,14 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card .chips{display:flex;flex-wrap:wrap;gap:5px}
 #card .chip{border:1px solid #4fb06a;box-shadow:inset 0 0 0 1px #4fb06a;color:#dcf5e8;border-radius:12px;padding:3px 9px;font-size:13px;font-weight:700}
 #card .dim{color:var(--mute)}
-#card .copy{text-align:center;font-size:13px;margin:6px 0 0}
+#card .copy{text-align:center;font-size:13px;margin:2px 0 0}
 #cardBar{position:sticky;top:6px;height:0;margin-bottom:-4px;z-index:3;flex:none}
 #cardI{position:absolute;top:0;right:44px;min-height:44px;min-width:44px;padding:0;background:none;border:0}
 #cardX{position:absolute;top:0;right:-4px;min-height:44px;min-width:44px;padding:0;background:none;border:0;display:grid;place-items:center}#cardX svg{width:26px;height:26px}#cardI svg{width:24px;height:24px}
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
 #end p{margin:0;color:var(--mute);font-size:15px}
-#tkPop .t .why{display:block;font-size:12px;color:var(--mute);font-weight:500}
+#card p.why{font-size:12px;line-height:1.25;margin:0}#tkPop .t .why{display:block;font-size:12px;color:var(--mute);font-weight:500}
 #endX .crowns{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:8px 0}
 #endX .crowns p{font-size:15px}#endX .crowns b{color:var(--bone)}
 #endX details{text-align:left}#endX summary{color:var(--mute);font-size:13px;min-height:44px;display:flex;align-items:center;cursor:pointer;list-style:none}#endX summary::-webkit-details-marker{display:none}#endX summary::before{content:'+';display:inline-block;width:18px;font-weight:700}#endX details[open] summary::before{content:'−'}
@@ -204,7 +204,7 @@ button.ok small{color:#8fd4a4}
 #card{--bone:#ece5d3;--mute:#c9bca2;--dim:#a89d86;--panel:#2a1d13;--panel2:#2b1f15;--line:#6b5230;--brass:#8f7442;--lamp:#e6b947;--blue:#e6b947;--red:#c0392b;--gold:#e6b947;color:var(--bone);border:1px solid var(--brass);border-radius:10px;padding:6px 8px 8px;gap:4px;
   background:linear-gradient(170deg,#3a2a1c,#241911 60%,#1c130d);box-shadow:inset 0 0 0 2px #241911,inset 0 0 0 3px var(--line),0 -6px 24px rgba(0,0,0,.5)}
 .night #card{filter:brightness(.88)}
-#card h3{font-size:20px;letter-spacing:.05em;color:var(--lamp);min-height:44px;border-bottom:1px solid var(--brass);padding-bottom:4px;margin-bottom:2px}#card.hud h3{border-bottom-color:rgba(255,255,255,.14)}
+#card h3{font-size:20px;letter-spacing:.05em;color:var(--lamp);min-height:44px;border-bottom:1px solid var(--brass);padding-bottom:2px;margin-bottom:0}#card.hud h3{border-bottom-color:rgba(255,255,255,.14)}
 #card button:not(#cardX):not(#cardI){position:relative;background-color:#312218;background-image:linear-gradient(#3b2b1d,#2a1d13);border:1px solid var(--brass);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,220,150,.18);color:var(--bone);min-height:44px;padding:3px 5px}
 #card button.dis{border-color:#4a3a28;background:transparent;box-shadow:none;color:#bfb49c}#card button.done:not(#cardX):not(#cardI){opacity:.55;border-style:solid;border-color:#5a4a30}#card .chipsrow button.done:not(.on):not(#cardX):not(#cardI){opacity:.5}#card button.dis b{color:#bfb49c}   /* what you cannot: flat on the table */
 #card button.nope:not(#cardX):not(#cardI){border-color:var(--red);box-shadow:0 0 12px rgba(220,70,50,.7),inset 0 0 8px rgba(220,70,50,.35)}

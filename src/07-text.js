@@ -564,6 +564,24 @@ const NEWS = [
 ];
 // What each spectacle says: the warning, then the event itself
 // why an event happened, under its line in the list (Build 58): the real cause, in a few words
+// Milestones that teach (Albert, Build 63): each fires once a game when its moment comes, says the mechanic in a line, why it is so, and the
+// one thing to do about it (a fix that opens the right card). Read back on the Milestones card. The words live here; the tests in 32-frame.
+const MS_TEXT = {
+	house: ['Your first house: five more may live here.', 'Only homes hold people; soldiers and workers alike. A town grows by its roofs.', 'A field feeds them', 'card:menu,land'],
+	field: ['Your first field: food that does not run out.', 'A find is finished one day; a field is worked every year. Soil wears and rests.', 'Put a villager on it', 'card:guide,bld'],
+	drop: ['A camp by the finds: the walk is half the rate.', 'What a villager brings home is its load over the time to fill it and carry it. A camp nearer doubles the take.', 'See the rate on a find', 'card:stores'],
+	soldier: ['Your first soldier: the row has a War page now.', 'The chip at the left of the jobs cycles the pages: Jobs, War, Build, Squad, Train.', 'Open the War page', 'pagecycle'],
+	squad: ['Your first squad: it fills itself from the soldiers at home.', 'A squad keeps a plan; soldiers at home step into it. Send it with Go; the crosshair tells the time.', 'The Squad page', 'pagecycle'],
+	age: ['A new age: the limits grow and the tree opens.', 'Each age raises what you may build and what you may learn. The bell rings for every side.', 'What the age allows', 'card:guide,age'],
+	mud: ['Your army is slow: mud, −{pct}%.', 'Rain softens the ground and feet deepen the ruts; a march in mud goes at {spd} of its pace (Pandolf). Roads mend it.', 'Research Roads', 'card:research'],
+	snow: ['Snow deepens the ground: walking −{pct}%.', 'Below 1 °C what falls is snow; soft snow costs a walker more than mud. Snow clearing halves it.', 'Research Snow clearing', 'card:research'],
+	ice: ['Ice: your people slip, worst just below freezing.', 'The melt film makes ice slick; deep cold grips better. Crampons halve the slips.', 'Research Crampons', 'card:research'],
+	hungry: ['Your people are hungry: work and damage at 75%.', 'Everyone eats a share a minute, a soldier more, a rider most. Food is the real limit on an army.', 'More on Food', 'job:food'],
+	fire: ['A fire: it spreads to wooden neighbours.', 'A fire grows as the square of its age and the heat falls with the gap between walls. Stone does not burn; rain damps it.', 'Who is on it', 'card:emergency'],
+	rout: ['Your soldiers broke and ran: nerve.', 'A group breaks when it has lost about 30% of its number (Dupuy). Shelter, a priest and quiet bring nerve back.', 'Nerve and the rout', 'card:guide,rule'],
+	trade: ['Your first caravan: gold from distance.', 'A caravan earns by how far it goes; routes and allies pay more. Bandits haunt the roads.', 'The Market', 'card:stores'],
+	winter: ['Winter: fields give less, marching slows.', 'The year turns every twelve minutes. Winter cuts the fields and the roads; spring brings lambs and the harvest roll.', 'The seasons', 'card:guide,rule'],
+};
 const EV_WHY = {
 	eclipse: 'the moon crosses the sun; Babylon could foretell it by 600 BC',
 	storm: 'warm wet air rising fast: thunder',

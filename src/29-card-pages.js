@@ -502,12 +502,12 @@ const seg = (label, opts, cur) => {
 // one line under the settings says what the current choices do (Build 63: "Fantasy" explained nothing)
 const SET_WHY = {
 	diff: { easy: 'Easy: the computers build and raid slowly.', normal: 'Normal: the computers play a fair game.', hard: 'Hard: the computers plan well and raid early.' },
-	fantasy: { 0: 'Real: wolves, boar and bandits; history only.', 1: 'Fantasy: dire wolves, goblins, skeletons and trolls guard the finds, which pay half again.' },
+	fantasy: { 0: 'Real: wolves, boar and bandits; nothing that is not history.', 1: 'Fantasy: trolls guard the finds, which pay half again.' },
 	fog: { 1: 'Fog on: you see what your people see.', 0: 'Fog off: the whole map, as the computers see it.' },
 	tension: { winner: 'Winner takes all: war until one stands.', diplomacy: 'Dynamic diplomacy: truces, tribute, allies and vassals.' },
 };
-const settingsWhy = () =>
-	`<p class="dim why">${SET_WHY.diff[SET.diff] || ''} ${(MODES[SET.mode] || {}).secs ? `${MODES[SET.mode].name}: the bell ends it.` : 'Conquest: no clock, no victory but the last side standing.'} ${SET_WHY.fantasy[SET.fantasy ? 1 : 0]} ${SET_WHY.fog[SET.fog !== false ? 1 : 0]} ${SET_WHY.tension[SET.tension] || ''}</p>`;
+// the one word a new player cannot guess is the World (Albert: "fantasy means I fly on a magic carpet?"); one line, so the card still fits a page
+const settingsWhy = () => `<p class="dim why">${SET_WHY.fantasy[SET.fantasy ? 1 : 0]}</p>`;
 const settingsHTML = () =>
 	seg(
 		'Difficulty',

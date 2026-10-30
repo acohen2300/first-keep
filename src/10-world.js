@@ -31,6 +31,7 @@ function blankGame(seed) {
 		temper: Array(BNS + 1).fill(T_GUARD),
 		bnPlan: BN.map(() => ({})),
 		bnIntent: BN.map(() => 0), // commander's intent per squad (INTENT in 39)
+		ms: [], // the milestones passed (MS_TEXT), read back on their card
 		recruitSq: null, // the squad new soldiers join (the Train page)
 		form: BN.map(() => 0),
 		bnEdit: 0,

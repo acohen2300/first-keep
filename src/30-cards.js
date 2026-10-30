@@ -615,6 +615,20 @@ const CARDS = {
 		);
 	},
 	research: () => researchHTML(),
+	milestone(c) {
+		const id = c.page,
+			T = id && MS_TEXT[id],
+			M = G.ms || [];
+		let h = title('Milestones', `${M.length} of ${Object.keys(MS_TEXT).length}`);
+		if (T) {
+			const [line, why, fix, act] = T;
+			h += `<p><b>${msFill(line)}</b></p><p>${msFill(why)}</p>` + acts(btn(act, fix, '', 'go'), 'c1');
+		}
+		h += M.length
+			? `<div class="chips">${M.map((m) => `<span class="chip" data-act="card:milestone,${m.id}">${clock(m.t)} · ${MS_TEXT[m.id][0].split(':')[0].replace(/\.$/, '')}</span>`).join('')}</div>`
+			: '<p class="dim">None yet. Each first (a house, a field, a soldier, a squad, an age) and each hard moment (mud, snow, ice, hunger, fire, a rout) is one, with its why and its fix.</p>';
+		return h;
+	},
 	score() {
 		scoreAll();
 		const rows = G.P.filter((q) => q.id !== WILD),
