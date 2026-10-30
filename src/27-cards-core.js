@@ -168,21 +168,22 @@ function techState(t) {
 				: 'locked';
 }
 function techBtn(t, withAt) {
-	const st = techState(t);
+	const st = techState(t),
+		c = techCost(0, t);
 	const sub =
 		st === 'busy'
 			? 'researching'
 			: st === 'short'
-				? `short ${need(t.cost)}`
+				? `short ${need(c)}`
 				: st === 'locked'
 					? researchWhy(0, t.id).replace(/\.$/, '')
-					: costText(t.cost);
+					: costText(c);
 	return btn(
 		`tech:${t.id}`,
 		t.name,
 		sub + (withAt ? ` · ${BLD[t.at].name}` : ''),
 		`a${t.age} ` + (st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock'),
-		st === 'short' ? fillOf(t.cost) : undefined,
+		st === 'short' ? fillOf(c) : undefined,
 	); // a${age}: the top edge wears the age's colour
 }
 const trainsAt = (kind) =>
@@ -232,9 +233,11 @@ function statusOf(u) {
 						? 'tending the coppice'
 						: n.type === 'wool'
 							? 'tending the flock'
-							: BLD[n.farm.kind].from
-								? `working the ${nm(n.farm)}`
-								: 'working the field'
+							: n.type === 'stone'
+								? 'quarrying'
+								: n.farm.kind === 'farm'
+									? 'working the field'
+									: `working the ${nm(n.farm)}` // a shop's own name (Build 60: it read a field key no building has, so every shop and the quarry said field)
 					: {
 							tree: 'chopping',
 							bush: 'picking berries',
@@ -342,9 +345,19 @@ function foeNearest() {
 	return t;
 }
 // the odds the computers use (17-ai.js): the square law on strength, bent by who counters whom, against their army, towers and Town Center
+// what you know of a side's strength: all of it with no fog, or a spy's report still fresh; else only the soldiers and towers you see
+function knownPower(t) {
+	const I = G.intel[t],
+		all = !G.fogOn || (I && G.t - I.t < TELL.spy);
+	if (all) return { pow: estPower(0, t), foes: soldiersOf(t), seen: false };
+	const foes = soldiersOf(t).filter(visibleTo0);
+	if (!foes.length) return null;
+	return { pow: powerFrom(foes, bldsOf(t, 'tower').filter(knownB).length), foes, seen: true };
+}
 function oddsText(S, t) {
 	if (t === null || t === undefined || !S.length) return '';
-	const r = (powerOf(S) / estPower(0, t)) * matchup(S, soldiersOf(t)),
-		p = lanchester(r);
-	return `odds ${p > 0.65 ? 'strong' : p > 0.4 ? 'even' : 'weak'}`;
+	const K = knownPower(t);
+	if (!K) return 'odds unknown';
+	const p = lanchester((powerOf(S) / K.pow) * matchup(S, K.foes));
+	return `odds ${p > 0.65 ? 'strong' : p > 0.4 ? 'even' : 'weak'}${K.seen ? ', seen' : ''}`;
 }

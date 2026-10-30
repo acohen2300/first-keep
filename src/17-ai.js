@@ -1,7 +1,9 @@
 // ═════ 17-ai.js: the computers' minds ═════
 // ───────────────────────── The computer brain: one brain, three personalities, the same rules as you ─────────────────────────
-// Nobody has fog: everyone sees the whole map, so the computers' estimates are the real numbers, as yours are.
-const estPower = (o, of) => powerOf(soldiersOf(of)) + bldsOf(of, 'tower').length * 120 + 250;
+// The computers have no fog: they see the whole map, so their estimates are the real numbers. Yours come from what you see and what your
+// spies report (knownPower, 27). An assumption of the game, said in the Guide (Build 60).
+const powerFrom = (sol, towers) => powerOf(sol) + towers * 120 + 250; // a side's strength: its soldiers, its towers, its people
+const estPower = (o, of) => powerFrom(soldiersOf(of), bldsOf(of, 'tower').length);
 const nearestType = (type, from, kind) =>
 	nearest(G.nodes, from, (n) => n.type === type && n.amt > 0 && n.kind !== 'farm' && (!kind || n.kind === kind));
 // the soldier that best answers what the enemies field, among those this side can train now
@@ -287,7 +289,7 @@ function think(p) {
 	if (idle) idle.job = short[0][0];
 	else if (short[0][1] >= 1) {
 		const over = short[short.length - 1][0],
-			v = vils.find((x) => x.job === over && x.carry < 3);
+			v = vils.find((x) => x.job === over && x.carry < 3 && !atShop(x)); // never a shop worker (Build 60: a Mint or Foundry was emptied each time gold or iron ran over)
 		if (v) setJob(v, short[0][0]);
 	}
 	// finds: a detachment clears the nearest guarded one when nothing else is going on; it hires vagabonds it walks past

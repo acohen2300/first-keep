@@ -44,7 +44,7 @@ function step(dt) {
 		climateTick(1);
 		peaceTick();
 	}
-	if (SET.fog && G.tick % 10 === 0) fogTick();
+	if (G.fogOn && G.tick % 10 === 0) fogTick();
 	{
 		const U = G.units,
 			n = U.length,
@@ -299,7 +299,7 @@ function died(u) {
 	if (u.kind === 'caravan' && u.by === WILD) robbed(u);
 	else if (u.kind === 'caravan' && u.by !== undefined && u.by !== WILD) {
 		if (u.cargo > 0) plunder(u.by, { g: u.cargo });
-		for (const k in u.goods || {}) giveTo(G.P[u.by], k, u.goods[k]);
+		for (const k in u.goods || {}) giveTo(G.P[u.by], k, u.goods[k], 'loot');
 	}
 	const U = UNIT[u.kind];
 	if (U.meat && !u.gone) {
@@ -418,7 +418,7 @@ function bldTick(b, dt) {
 			const keys = bldKeys(b.kind),
 				reach = rangeOf(o, b.kind);
 			const t = B.spyonly
-				? G.units.find((v) => v.kind === 'spy' && atWar(o, v.owner) && dist(v, b) < reach + fxv(o, 'spysight').a)
+				? G.units.find((v) => v.kind === 'spy' && atWar(o, v.owner) && dist(v, b) < Math.min(reach, spySeen(o, b))) // a spy it sees, within bowshot
 				: nearestFoe(o, b, reach);
 			if (t) {
 				const sheltered = BLD[b.kind].shelter
@@ -441,7 +441,7 @@ function built(b) {
 		B = BLD[b.kind];
 	b.mx = maxHpB(o, b.kind);
 	b.hp = Math.max(b.hp, b.mx * 0.999);
-	if (!SET.fog || friendly(0, b.owner)) wearGround(b); // another side's worn ground shows when you first see the building (fog)
+	if (!G.fogOn || friendly(0, b.owner)) wearGround(b); // another side's worn ground shows when you first see the building (fog)
 	G.bldV = (G.bldV || 0) + 1; // a new place to drop at: every villager picks again
 	if (b.kind === 'gate') G.navDirty = true;
 	if (B.trap) b.seen = b.seen || {};
@@ -510,7 +510,7 @@ function jobDone(b, j) {
 				k.doneT = G.t;
 				celebrate(3, k.x, k.y);
 			}
-		} else if (fxv(0, 'news').a >= 5 || !SET.fog) say(`${p.name} entered the ${AGES[p.age].name} age.`, '', 4); // another court's age: in the news sheets
+		} else if (fxv(0, 'news').a >= 5 || !G.fogOn) say(`${p.name} entered the ${AGES[p.age].name} age.`, '', 4); // another court's age: in the news sheets
 		chron(`${o === 0 ? 'You' : p.name} entered the ${AGES[p.age].name} age.`);
 	}
 }
@@ -576,7 +576,7 @@ const FORAGE = { move: 1.18, life: 20, room: { tree: 1, bush: 2, fish: 2, stone:
 function forage(u, n, drops) {
 	const o = u.owner,
 		c = carryOf(o),
-		v = stats(o, 'vil').spd * groundSpd(0, ['foot']),
+		v = stats(o, 'vil').spd * groundSpd(o, ['foot']),
 		others = n.hunt || n.kind === 'farm' ? 0 : Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0)),
 		g = ((n.hunt ? RATE_OF.meat : n.rate || RATE_OF[n.kind]) * gatherMul(o, n.hunt ? { type: 'food', kind: 'meat' } : n)) / (1 + others / (FORAGE.room[n.kind] || 2)),
 		A = n.hunt ? UNIT[n.hunt.kind].meat : n.kind === 'farm' ? c * FORAGE.life : Math.max(1, n.amt),
@@ -594,7 +594,7 @@ function bestNode(u, job) {
 		bR = 0,
 		drops = null;
 	for (const n of G.nodes) {
-		if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n, u.owner)) || (u.bad && u.bad[n.id] > G.t)) continue;
+		if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n, u.owner)) || (u.bad && u.bad[n.id] > G.t) || (u.owner === 0 && !known0(n))) continue; // your people work only what you have found (Build 60: under fog they set out for finds nobody had seen, into whatever stood there)
 		if (n.kind === 'farm') {
 			if (n.farm.owner !== u.owner || n.farm.prog < 1 || n.farm.hp <= 0 || (n.wk || 0) - (u.node === n ? 1 : 0) >= slotsOf(n)) continue;
 			if (BLD[n.farm.kind].makes || BLD[n.farm.kind].sheep) continue; // a workshop or a pasture is a post, not a find: it is staffed by its builder or by hand

@@ -183,6 +183,7 @@ const TELL = {
 	gun: 2, // gunfire is heard twice as far
 	foot: 27, // a runner's speed (the scout on foot)
 	ride: 49, // a rider's (the scout on a horse)
+	spy: 120, // a spy's report of an army holds this long (design): the odds you are shown use it, else only the soldiers you see
 };
 const UI_BUDGET = 33; // always-visible buttons on the play screen, at most (Build 59, from the Google audit): a new control must replace one (the gate counts them)
 const SAVE = { step: 0.02, stall: 90, spend: 45 }; // a computer saving for an age: progress counts in steps of 2%; 90 s without one and it spends for 45 s (17-ai)
@@ -241,6 +242,7 @@ const HEALTH = {
 	plague: 0.15,
 	plagueR0: 1.5, // plague: R0 × this, death × 4
 	plagueCap: 0.1,
+	plagueCart: 0.5, // the share of carts back from abroad in a plague year that bring cases home; the Plague hazard doubles it
 };
 const MKT_SELL = ['f', 'w', 's', 'i', ...WARES],
 	MKT_BUY = ['f', 'w', 's', 'i', 'spice']; // wool goes to a Workshop, not to market; spice is the only good not made here
@@ -272,7 +274,7 @@ const SCENARIOS = {
 		// The Siege: a Medieval town behind its walls, a full store, every rival at war with you, the horde a few minutes out
 		age: 3,
 		res: { f: 1200, w: 900, s: 900, g: 500, i: 150 },
-		techs: ['masonry', 'towers'],
+		techs: ['masonry', 'greattower'], // a step brings the steps it waits on
 		rel: 'war',
 		hz: { hard: 1, starve: 1, horde: 1 },
 		hordeAt: 420,

@@ -433,7 +433,7 @@ const EV = {
 // The ground splits: a star of jagged cracks and a puff of dust at (x, y), r wide. Cosmetic: the damage is done by the sinkhole.
 // The arms are worked out once from a seed; the view draws them for 45 s and the ground keeps a faint scar of them.
 function crackAt(x, y, r) {
-	let s = Math.floor(Math.random() * 4e9) || 1;
+	let s = ((Math.floor(x) * 73856093) ^ (Math.floor(y) * 19349663) ^ G.tick) >>> 0 || 1; // the seed from the place and the tick: no Math.random in the simulation (Build 60)
 	const rn = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296,
 		n = 5 + Math.floor(rn() * 3),
 		arms = [];
@@ -476,6 +476,7 @@ function endEvent() {
 }
 function eventsTick() {
 	// once a second
+	if (G.cracks && G.cracks.length) G.cracks = G.cracks.filter((c) => G.t - c.t0 < 45); // a sinkhole's cracks fade in 45 s
 	const V = G.ev;
 	if (!V.next) V.next = G.t + EV_MIN + nextIn(EV_MEAN - EV_MIN);
 	if (V.cur) {

@@ -1,11 +1,11 @@
-# First Keep: handoff (Oct 29, 2026, end of day; Build 59 on the preview)
+# First Keep: handoff (Oct 29, 2026, night; Build 60 on the preview)
 
 Read in this order: this file, then `RULES.md` (how the game is built and how to work with Albert), then `SCIENCE.md` (every real-world number and its source), then `CUTS.md` (every change, per build, with measurements). The handoff before Oct 29 is kept whole in `docs/HANDOFF-to-oct29.md`; its build notes (40 to 52) are history, this file is current.
 
 ## What it is
 Albert's single-file HTML mobile real-time strategy game, Age of Empires style, grounded in real history, science and math. Albert (Albert Labs) is not a coder; he designs, decides and tests on his phone.
 - **Live:** https://acohen2300.github.io/first-keep (`index.html`): untouched since the Build 44 era. Live changes only on Albert's word.
-- **Preview:** https://acohen2300.github.io/first-keep/preview/ : Build 59.
+- **Preview:** https://acohen2300.github.io/first-keep/preview/ : Build 60. It keeps its own save (`firstkeep.preview.*`), apart from the live game's.
 - **Repo:** https://github.com/acohen2300/first-keep, branch `main`, public. Pages deploys a minute or two after a push.
 - **Commits:** as `Albert <acohen2300@users.noreply.github.com>` (never his Gmail; the repo is public), with the session's `Co-Authored-By` and `Claude-Session` trailers (`publish.py` takes them from the `TRAILER` environment variable).
 
@@ -26,6 +26,7 @@ The game has three ways to end (conquest, holding the Throne, finishing the Enli
 | 56 | SIR sickness, logistic flocks, range from height, the hearth line (hearth, ice house, chimney, lanterns), Baths, Theatre, Tavern, sounds by material. |
 | 57 | Peace as a path (`39-games.js`): board truce, tribute, standing down, the Games, the hidden Enlightenment age, the crowns and the chronicle; random events as a Poisson process. |
 | 58 | One home for every coin (`earn`, `spend`, the ledger); net-flow colours; selection sounds; the scout on foot; why-lines; 15-minute mode; three scenarios; the square law in one place; the history batch with `tests/history.py`. |
+| 60 | The audit: refunds give back what was paid, limits in every age, the Anatomy loop, the shop trap, one shepherd a flock, stand down, spies, the Encyclopedie, the side doors, fog that holds (radar, alerts, odds, villagers), fog chosen at the start, the preview's own save, the card title pinned, `tests/tables.py`. |
 | 59 | The forager rule for villagers (with crowding); attack-value targeting; news by sight, hearing and messenger (the Post line); the market demand curve; spoilage; five computer fixes; controls by age; figures 0.66; tap counts; the button budget; save size and frame time measured. |
 
 Also on Oct 29, decided in talk: the three mockups (31 army merge, 32 controls by age, 36 bigger figures; pictures in `mockups/`); the pricing direction; merging the small research steps killed (Albert: "I like tech"); the talk list folded into the to-do list.
@@ -40,7 +41,7 @@ Also on Oct 29, decided in talk: the three mockups (31 army merge, 32 controls b
 | Blocked villager-seconds a game (median) | about 186 | 206 | 85 |
 | Sides that fell | | 6 of 48 | 0 of 48 |
 | Fortress seat wins | 12 of 20 | 7 of 12 | 7 of 12 |
-Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`. The Fortress winning most is accepted as fair (Albert: "mind your own business and do the right thing and likely win. Like life.").
+Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`, `-60.json`. Build 60 played every harness game identically to 59 (computers only, fog off): its fixes act on your side, the fog and later ages. The Fortress winning most is accepted as fair (Albert: "mind your own business and do the right thing and likely win. Like life.").
 
 ## Repo layout
 - `src/` joined in name order by `build.py` into `first-keep.html`; `wrap.py` writes `native/index.html` (the App Store wrapper); `publish.py [--preview] "message"` runs the gate, then commits and pushes. `preview/` is the preview copy.
@@ -73,7 +74,11 @@ Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`. The Fortress winni
 10. **The computers past Medieval**: 18 of 48 sides reach it by 40 minutes; probe what holds them next (`tests/probe.py`), one cause at a time.
 
 ## Up in the air (open, not yet on the to-do list)
-- **Albert's phone test** of Build 59 on his own phone (he ran the stranger test before; it looked fine).
+- **Albert's phone test** of Build 60 on his own phone: fog on, scouting, the odds lines, Send out, a scrolled card on a short screen.
+- **Score and transfers**: tribute, ransom, tax and loot count as wealth for the side that receives them, and nothing comes off the payer's. A question for Albert (from the audit).
+- **Your villagers under fog work only what you have found** (Build 60): measured a cost when nobody scouts (gathered at 10 minutes down on two of three seeds). Albert to judge in play; one line to undo.
+- **The catch-up cap** drops game time on a slow phone at top speed: measure on the phone before changing.
+- **The computers see the whole map**: kept as an assumption of the game, said in the Guide; fog for them would be a large job.
 - **The news system's feel**: early games are quieter by design; Albert should play one and say if it is too quiet.
 - **Frame time**: 7 to 14 ms a frame here across runs, not controlled; a measured run on the phone is the real number.
 - **Gunpowder balance** is still a first guess.
@@ -91,3 +96,5 @@ Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`. The Fortress winni
 - Peace is a real path: "I build to match life. They decide."
 - Pricing direction: free plus one or two unlocks, a subscription possible, never pay to win.
 - The move threshold for workers and soldiers: 18% (Albert).
+- Fog stays, and holds: what you know comes from sight, hearing, a messenger or a spy (Albert, Oct 29). Fog is chosen at the start of a game.
+- The first-person spy view: killed (Albert, Oct 29: "Bad idea. Kill it.").

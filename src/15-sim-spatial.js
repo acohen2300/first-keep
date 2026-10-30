@@ -30,8 +30,7 @@ const ignorable = (v) => {
 function nearestFoe(o, from, range, anchor) {
 	const a = anchor || from,
 		U = G.units,
-		isB = !!from.q,
-		sR = UNIT.spy.stealth[isB ? 1 : 0] + (isB ? fxv(o, 'spysight').a : 0);
+		sR = spySeen(o, from);
 	let best = null,
 		bd = range;
 	const grid = G.ugTick === G.tick,
@@ -74,8 +73,7 @@ const canBeat = (u, v) => lanchester((unitPower(u) * vsMul(u, v)) / Math.max(1e-
 function bestFoe(o, from, range, anchor) {
 	const a = anchor || from,
 		U = G.units,
-		isB = !!from.q,
-		sR = UNIT.spy.stealth[isB ? 1 : 0] + (isB ? fxv(o, 'spysight').a : 0);
+		sR = spySeen(o, from);
 	let best = null,
 		bV = -1,
 		bBeat = false;
@@ -104,7 +102,7 @@ function bestFoe(o, from, range, anchor) {
 }
 // the nearest unit within r that passes ok, looking only at the squares around (the grid is rebuilt each step)
 function nearU(from, r, ok) {
-	if (G.ugTick !== G.tick) return nearest(G.units, from, ok, r);
+	if (G.ugTick !== G.tick) return nearest(G.units, from, (v) => v !== from && v.hp > 0 && ok(v), r); // never itself nor the fallen, as the grid path
 	const U = G.units,
 		x0 = clamp(((from.x - r) / UG) | 0, 0, UGN - 1),
 		x1 = clamp(((from.x + r) / UG) | 0, 0, UGN - 1),

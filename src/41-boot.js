@@ -1,4 +1,4 @@
-// ═════ 39-boot.js: start-up, and closes the one scope ═════
+// ═════ 41-boot.js: start-up, and closes the one scope ═════
 // ───────────────────────── The loop and the start ─────────────────────────
 let last = performance.now(),
 	acc = 0,
@@ -14,8 +14,7 @@ function fault(e) {
 	try {
 		console.error(m);
 		if (seenErr.size >= 2 && G && !G.over) {
-			saveGame(true);
-			setPause(true);
+			setPause(true); // no save from here on (saveGame checks): the last good save stands, never one made after things broke (Build 60)
 			openCard({ type: 'fault' });
 		}
 	} catch (x) {}
@@ -157,6 +156,10 @@ window.__fk = {
 	capOf,
 	atCap,
 	capWhy,
+	SCENARIOS,
+	fxDirty,
+	techCost,
+	sendOut,
 	techState,
 	get G() {
 		return G;

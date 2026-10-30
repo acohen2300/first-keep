@@ -386,7 +386,7 @@ const BLD = {
 		dmg: 12,
 		bow: 106,
 		cd: 1.5,
-		desc: 'Written law and the watch. Trains spies, and its guards shoot enemy spies within 140. Nothing else.',
+		desc: 'Written law and the watch. Trains spies, and its guards shoot the enemy spies they see, within bowshot. Nothing else.',
 	},
 	apartment: {
 		nocap: 1,

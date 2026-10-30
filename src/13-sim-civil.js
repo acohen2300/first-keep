@@ -39,7 +39,10 @@ function makeNow(u, n, dt, room) {
 			u.wait = true;
 			return 0;
 		}
-		for (const k in from) box(k)[k] -= g * from[k];
+		for (const k in from) {
+			if (k in P.res) spend(P, k, g * from[k], 'shops'); // what a shop uses is spent like any coin, so the stores' colour tells the truth
+			else P.goods[k] -= g * from[k];
+		}
 	}
 	u.wait = false;
 	n.amt -= g;
@@ -177,7 +180,7 @@ function vilTick(u, dt, SP) {
 		huntTick(u, dt, SP);
 		return;
 	}
-	const flock = u.node && u.node.farm && BLD[u.node.farm.kind].sheep && u.node.farm.hp > 0; // a shepherd stays with the flock between shearings
+	const flock = u.node && u.node.farm && BLD[u.node.farm.kind].sheep && u.node.farm.hp > 0 && u.node.wk <= slotsOf(u.node); // a shepherd stays with the flock between shearings; one to a flock, as one to a field (Build 60: any number stacked, each milking the whole flock)
 	if (flock && u.node.farm.prog >= 1 && dist(u, u.node) < 40) {
 		const b = u.node.farm,
 			m = (b.sheep || 0) * BLD[b.kind].milk * dt * gatherMul(u.owner, u.node) * hungerOf(u.owner);
@@ -510,12 +513,11 @@ function spyTick(u, dt, SP) {
 		k = keepOf(o);
 	u.idle = false;
 	if ((G.tick + u.id) % 5 === 0) {
-		const [sR, bR] = UNIT.spy.stealth;
 		if (o !== 0)
 			u.exposed =
 				atWar(0, o) &&
-				(G.units.some((v) => v.owner === 0 && dist(v, u) < sR) ||
-					G.blds.some((b) => b.owner === 0 && watchtower(b) && dist(b, u) < bR));
+				(G.units.some((v) => v.owner === 0 && dist(v, u) < spySeen(0, v)) ||
+					G.blds.some((b) => b.owner === 0 && watchtower(b) && dist(b, u) < spySeen(0, b)));
 		for (const b of G.blds)
 			if (atWar(o, b.owner) && b.owner !== WILD && b.hp > 0 && edge(u, b) < 60) {
 				intel(o, b.owner);

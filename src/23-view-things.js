@@ -612,14 +612,14 @@ function drawFallen(f, s) {
 	ctx.drawImage(c, -c.ax * k, -c.ay * k, c.width * k, c.height * k);
 	ctx.restore();
 }
+const LEAN = new WeakMap(); // the view's own memory of each woodcutter's lean: the drawing never writes the game's units (Build 60)
 function drawUnit(u, s) {
 	// a woodcutter leans in to its tree while it chops: the tree's ground keeps it 20 away, so it is drawn up to 12 closer (drawing only; the game does not move it)
-	{
-		const n = u.node,
-			on = u.kind === 'vil' && n && n.kind === 'tree' && u.work && G.t - u.work < 0.25;
-		u.lean = clamp((u.lean || 0) + (on ? 0.08 : -0.08), 0, 1);
-	}
-	const ln = u.lean && u.node ? (Math.min(12, Math.max(0, dist(u, u.node) - 10)) * u.lean) / (dist(u, u.node) || 1) : 0,
+	const n = u.node,
+		on = u.kind === 'vil' && n && n.kind === 'tree' && u.work && G.t - u.work < 0.25,
+		lean = clamp((LEAN.get(u) || 0) + (on ? 0.08 : -0.08), 0, 1);
+	LEAN.set(u, lean);
+	const ln = lean && u.node ? (Math.min(12, Math.max(0, dist(u, u.node) - 10)) * lean) / (dist(u, u.node) || 1) : 0,
 		ux = u.node ? u.x + (u.node.x - u.x) * ln : u.x,
 		uy = u.node ? u.y + (u.node.y - u.y) * ln : u.y;
 	const z = cam.z,

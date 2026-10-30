@@ -213,7 +213,7 @@ const QUIET = new Set(['news', 'soft']);
 // a line with no place happens at your court, or in the sky, and is first hand.
 const DIR8 = ['east', 'south-east', 'south', 'south-west', 'west', 'north-west', 'north', 'north-east'];
 function tell(text, cls, at) {
-	if (!at || at.told || !SET.fog || fogAt(at.x, at.y) === 2) return { now: true };
+	if (!at || at.told || !G.fogOn || fogAt(at.x, at.y) === 2) return { now: true };
 	const lvl = fxv(0, 'news').a,
 		mine = (r) => G.blds.some((b) => b.owner === 0 && b.hp > 0 && Math.abs(b.x - at.x) < r && Math.abs(b.y - at.y) < r && dist(b, at) < r),
 		k = keepOf(0);
@@ -227,7 +227,7 @@ function tell(text, cls, at) {
 	}
 	const need = mine(TELL.near) ? 1 : mine(TELL.far) ? 2 : G.blds.some((b) => b.hp > 0 && b.owner !== 0 && G.rel[0][b.owner] === 'ally' && dist(b, at) < TELL.near) ? 3 : 4;
 	if (lvl < need || !k) return null; // no messenger serves that far: the court never hears of it
-	return { delay: dist(k, at) / (lvl >= 2 ? TELL.ride : TELL.foot) };
+	return { delay: wayLen(k, at, 0) / (lvl >= 2 ? TELL.ride : TELL.foot) }; // the messenger rides the road, not the crow's line (Build 60: measured 15% longer at the median, up to 40%)
 }
 function postTick() {
 	// the messengers arrive (once a second, from eventsTick)

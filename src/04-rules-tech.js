@@ -2188,7 +2188,7 @@ const TECH = [
 		when: '1751',
 		cost: { g: 700, s: 300 },
 		t: 100,
-		fx: [{ s: 'cost', m: 0.85 }],
+		fx: [{ s: 'cost', k: '#research', m: 0.85 }],
 		desc: 'Research costs 15% less.',
 	},
 	{
@@ -2215,7 +2215,7 @@ const TECH = [
 		cost: { g: 800, s: 400 },
 		t: 110,
 		fx: [{ s: 'trade', m: 1.25 }],
-		desc: 'Trade pays 25% more. The last step: the match ends and the crowns are given.',
+		desc: 'Trade pays 25% more.',
 	},
 	{
 		id: 'vaccine',
@@ -2228,7 +2228,7 @@ const TECH = [
 		cost: { g: 600, f: 400 },
 		t: 90,
 		fx: [{ s: 'sick', m: 0.5 }],
-		desc: 'Half as much sickness.',
+		desc: 'Half as much sickness. The last step: the match ends and the crowns are given.',
 	},
 	{
 		id: 'roads',
@@ -2408,7 +2408,6 @@ const TECH = [
 		cost: { f: 430, g: 290 },
 		t: 71,
 		fx: [{ s: 'heal', m: 1.2 }],
-		need: ['surgeons'],
 		desc: 'Healing is 20% faster.',
 	},
 	{

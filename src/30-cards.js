@@ -39,7 +39,7 @@ const CARDS = {
 			const back = refundOf(b),
 				hurtB = b.prog >= 1 && b.hp < M - 1,
 				menders = crew.filter((u) => !u.inside).length;
-			const row = `${b.prog < 1 ? btn(`sendbld:${b.id}`, 'Send a villager', crew.length ? `${crew.length} building` : 'nobody yet', crew.length ? '' : 'go') : ''}${hurtB ? btn(`repair:${b.id}`, 'Repair', menders ? `${menders} mending` : costText(repairCost(0, b)), 'go') : ''}${B.crop && b.prog >= 1 && b.node ? btn(`sendvil:${b.node.id}`, 'Send a villager', slotText(b.node), b.node.wk > 0 ? '' : 'go') : ''}`;
+			const row = `${b.prog < 1 ? btn(`sendbld:${b.id}`, 'Send a villager', crew.length ? `${crew.length} building` : 'nobody yet', crew.length ? '' : 'go') : ''}${hurtB ? btn(`repair:${b.id}`, 'Repair', menders ? `${menders} mending` : costText(repairCost(0, b)), 'go') : ''}${B.crop && b.prog >= 1 && b.node ? btn(`sendvil:${b.node.id}`, 'Send a villager', slotText(b.node), b.node.wk > 0 ? '' : 'go') : ''}${B.crop && b.prog >= 1 && b.node && b.node.wk > 0 ? btn(`sendout:${b.node.id}`, 'Send out', 'one goes home') : ''}`;
 			if (row) h += acts(row);
 			td = acts(
 				b.prog < 0.15
@@ -364,9 +364,9 @@ const CARDS = {
 		return h;
 	},
 	fault: () =>
-		title('Something went wrong', 'your game is saved') +
-		`<p>Restart to carry on from the save.</p>` +
-		acts(btn('reload', 'Restart', 'from the save', 'go') + btn('close', 'Carry on', 'as it is')),
+		title('Something went wrong', 'your last save is kept') +
+		`<p>Restart to carry on from the last save. Carry on and nothing more is saved.</p>` +
+		acts(btn('reload', 'Restart', 'from the last save', 'go') + btn('close', 'Carry on', 'not saved')),
 	resume: (c) =>
 		title('Welcome back', 'saved on this phone') +
 		`<p>Your game from ${clock(c.t)}: ${CIVS[c.civ] ? CIVS[c.civ].name + ', ' : ''}${AGES[c.age].name} age. Resume it, or start a new one.</p>` +
@@ -679,7 +679,6 @@ const CARDS = {
 				btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '') +
 					btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '') +
 					btn('news', 'World news', SET.news !== false ? 'on' : 'off', SET.news !== false ? 'on' : '') +
-					btn('fog', 'Fog of war', SET.fog ? 'on' : 'off', SET.fog ? 'on' : '') +
 					btn('lights', 'Lights', SET.lights !== false ? 'on' : 'off', SET.lights !== false ? 'on' : '') +
 					btn(
 						'cardpause',
@@ -729,11 +728,9 @@ function renderCard() {
 		cardSig = h;
 		patchHTML(
 			$('card'),
-			(info
-				? `<button id="cardI" class="${bookOn ? 'on' : ''}" data-act="info" aria-label="About this">${ICON.book}</button>`
-				: '') +
-				`<button id="cardX" data-act="close" aria-label="Close">×</button>` +
-				h,
+			`<div id="cardBar">${
+				info ? `<button id="cardI" class="${bookOn ? 'on' : ''}" data-act="info" aria-label="About this">${ICON.book}</button>` : ''
+			}<button id="cardX" data-act="close" aria-label="Close">×</button></div>` + h, // the book and the close ride a bar that stays at the top while the card scrolls (Build 60: they scrolled away on short phones)
 		);
 	}
 	const cc = G.card;

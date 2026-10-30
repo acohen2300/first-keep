@@ -220,7 +220,7 @@ function fall(p) {
 				b.by = undefined;
 			}
 		plunder(to, got);
-		for (const k of Object.keys(p.res)) p.res[k] = 0;
+		for (const k of Object.keys(p.res)) spend(p, k, p.res[k], 'loot'); // the fallen side's stores go with it
 	}
 	G.units.forEach((u) => {
 		if (u.owner === p.id) {
@@ -292,13 +292,13 @@ function finish(won, text, all) {
 	}
 	let best = null;
 	try {
-		best = Number(localStorage.getItem('firstkeep.best')) || null;
+		best = Number(localStorage.getItem(keyOf('best'))) || null;
 	} catch (e) {}
 	const sc = Math.round(G.P[0].score.total * levelMul()); // the level played multiplies the score
 	if (won && (!best || sc > best)) {
 		best = sc;
 		try {
-			localStorage.setItem('firstkeep.best', String(sc));
+			localStorage.setItem(keyOf('best'), String(sc));
 		} catch (e) {}
 	}
 	showEnd(won, `${text} Score ${fmt(sc)}${best ? ' · best ' + fmt(best) : ''}.`, all);

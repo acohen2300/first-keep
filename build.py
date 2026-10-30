@@ -36,6 +36,10 @@ for f in files:
         # Build 41: a comment that ends in an assignment is refused too (one swallowed the raid clock)
         if c and re.search(r'\w\(.*\)\s*;\s*(\},?)?\s*$', c): sys.exit(f'build refused: {f}:{n} a comment ends in code: ...{c[-60:]}')
         if c and (re.search(r'(;|\))\s*(if \(|for \(|while \(|[A-Za-z_$][\w$.\[\]]*\s*([*+/-]?=[^=]|\())', c) or re.search(r'\b[A-Za-z_$][\w$]*(\.[\w$]+)+\s*=\s*[^=\s][^;]*;\s*$', c)): sys.exit(f'build refused: {f}:{n} a comment holds statements (code swallowed?): ...{c[:70]}')   # Build 39: statements hid in a comment and every rank upgrade lost its numbers
+# the build number has one home, CUTS.md's latest "## Build NN" section; the game shows it (Build 60: the code said 41 for nineteen builds)
+BUILD_NO = max(int(n) for n in re.findall(r'^## Build (\d+)', open('CUTS.md').read(), re.M))
+js, nb = re.subn(r'const BUILD = \d+;', f'const BUILD = {BUILD_NO};', js, count=1)
+if not nb: sys.exit('build refused: const BUILD not found in src/01')
 os.makedirs('/tmp/fk-build', exist_ok=True)
 open('/tmp/fk-build/game.js', 'w').write(js)
 r = subprocess.run(['node', '--check', '/tmp/fk-build/game.js'], capture_output=True, text=True)

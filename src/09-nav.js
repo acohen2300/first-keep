@@ -274,6 +274,18 @@ const AS = {
 };
 const DX8 = [1, -1, 0, 0, 1, 1, -1, -1],
 	DY8 = [0, 0, 1, -1, 1, -1, 1, -1];
+// how far the way really is from one place to another: along the path, round water and walls (a straight line if none is found)
+function wayLen(from, to, o) {
+	const A = astar(from.x, from.y, to.x, to.y, o);
+	if (A.partial || !A.pts.length) return dist(from, to);
+	let L = 0,
+		p = from;
+	for (const q of A.pts) {
+		L += dist(p, q);
+		p = q;
+	}
+	return L;
+}
 // A*: the shortest way round, no cutting corners. If the goal cannot be reached it returns the way to the nearest point (partial).
 function astar(sx, sy, tx, ty, o, avoid) {
 	const scx = clamp(Math.floor(sx / NAVC), 0, NC - 1),

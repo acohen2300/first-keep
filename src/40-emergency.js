@@ -14,7 +14,7 @@ const shelterRank = () =>
 		.sort((a, b) => b.hp - a.hp || shelterOf(0, b.kind) - shelterOf(0, a.kind));
 const roomIn = (b) =>
 	shelterOf(b.owner, b.kind) -
-	G.units.filter((u) => (u.hid === b.id && u.inside) || (u.state === 'garrison' && u.gar === b.id)).length;
+	G.units.filter((u) => u.hid === b.id || (u.state === 'garrison' && u.gar === b.id)).length; // in, or on the way in (Build 60: a second Shelter counted only those in, and over-filled)
 // the way the danger lies from the Town Center: the attack coming, else the nearest threat, else across the map
 function threatDir(k) {
 	const t = G.incoming || nearest(G.threats, k, (v) => atWar(0, v.owner), 700) || { x: MID, y: MID },
@@ -37,11 +37,13 @@ function fillRank(units, pick) {
 // (Build 48: Battle Stations kept no picture, so its Hold stayed on every battalion for good)
 function emgSnap(kind) {
 	if (!G.emg) G.emg = { kind, snap: null, temper: G.temper.slice() };
-	if (!G.emg.snap && kind !== 'battle')
-		G.emg.snap = unitsOf(0, 'vil').map((u) => ({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post })); // villagers only when they are sent in: Battle Stations leaves their work alone
+	if (kind === 'battle') return; // villagers only when they are sent in: Battle Stations leaves their work alone
+	const S = G.emg.snap || (G.emg.snap = []);
+	for (const u of unitsOf(0, 'vil'))
+		if (!S.some((n) => n.id === u.id)) S.push({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post }); // one born since the last call is kept too (Build 60)
 }
 function villagersIn() {
-	const V = unitsOf(0, 'vil').filter((u) => !(u.inside && u.shop)), // those at work indoors are indoors already
+	const V = unitsOf(0, 'vil').filter((u) => !(u.inside && u.shop) && !u.hid), // those at work indoors are indoors already; those sent in stay sent
 		k = keepOf(0);
 	const left = fillRank(V, {
 		into: (u, b) => {

@@ -65,7 +65,8 @@ function drawWeather() {
 		}
 	}
 	// the storm's own lightning: far sheet flashes while it walks, a close bolt now and then (the strikes on buildings come from 36-economy)
-	if (stormy && !lessMotion && now - sheetT > 2.5 + 6 * Math.random() && flashOK(now)) {
+	if (stormy && !lessMotion && !G.paused && now - sheetT > 2.5 + 6 * Math.random() && flashOK(now)) {
+		// not while paused: a bolt ages on the game clock, so one made in a pause never faded and they piled up, each with its thunder (Build 60)
 		sheetT = now;
 		const close = Math.random();
 		if (close > 0.75) {

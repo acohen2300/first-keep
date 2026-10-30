@@ -67,7 +67,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
 #card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:6px 8px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
-#card h3{margin:0;font-family:var(--display);font-weight:400;font-size:20px;display:flex;align-items:center;gap:8px;padding-right:96px;min-height:40px}   /* as tall as the book and the close, so neither hangs over the first row */
+#card h3{margin:0;font-family:var(--display);font-weight:400;font-size:20px;display:flex;align-items:center;gap:8px;padding-right:96px;min-height:44px;position:sticky;top:-6px;margin-top:-6px;padding-top:6px;z-index:2;background:linear-gradient(170deg,#3a2a1c,#34261a)}#card.hud h3{background:rgba(10,13,15,.96)}   /* the title stays at the top while the card scrolls, the book and the close over it (Build 60) */   /* as tall as the book and the close, so neither hangs over the first row */
 #card .who{font-family:var(--ui);font-size:13px;color:var(--mute);font-weight:700}
 #card p{margin:0;color:var(--mute);line-height:1.35;font-size:16px}
 #card p i{color:var(--bone);font-style:normal;font-weight:700}
@@ -96,8 +96,9 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card .chip{border:1px solid #4fb06a;box-shadow:inset 0 0 0 1px #4fb06a;color:#dcf5e8;border-radius:12px;padding:3px 9px;font-size:13px;font-weight:700}
 #card .dim{color:var(--mute)}
 #card .copy{text-align:center;font-size:13px;margin:6px 0 0}
-#cardI{position:absolute;top:4px;right:52px;min-height:44px;min-width:44px;padding:0;background:none;border:0}
-#cardX{position:absolute;top:4px;right:4px;min-height:44px;min-width:44px;padding:0;font-size:20px;background:none;border:0}
+#cardBar{position:sticky;top:6px;height:0;margin-bottom:-4px;z-index:3;flex:none}
+#cardI{position:absolute;top:-2px;right:44px;min-height:44px;min-width:44px;padding:0;background:none;border:0}
+#cardX{position:absolute;top:-2px;right:-4px;min-height:44px;min-width:44px;padding:0;font-size:20px;background:none;border:0}
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
 #end p{margin:0;color:var(--mute);font-size:15px}
@@ -216,7 +217,7 @@ button.ok small{color:#8fd4a4}
 #card .chipsrow button.on:not(#cardX):not(#cardI){min-height:48px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);border-color:#f2d27a;box-shadow:0 0 12px rgba(242,210,122,.45)}#card .chipsrow button.on b{color:#2a1c10}
 #card .q{font:inherit;font-size:16px;color:var(--bone);background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:6px;min-height:44px;padding:4px 10px;width:100%;box-sizing:border-box}#card .row{display:flex;gap:12px;align-items:center}#card .look{color:var(--lamp);font-weight:700;min-height:44px;display:inline-flex;align-items:center}#card .row .lnk{width:auto}
 #card .acts.set{grid-template-columns:58px repeat(4,minmax(0,1fr));gap:4px}#card .acts.set .lbl b{font-size:13px}#card .acts.set .lbl{min-height:44px}#card .acts.set button:not(#cardX):not(#cardI){min-height:44px}
-#card .seg{display:flex;align-items:center;gap:6px;min-height:44px}#card .seg>b{flex:0 0 78px;font-size:13px}
+#card .seg{display:flex;align-items:center;gap:6px;min-height:44px}#card .seg>b{flex:0 0 78px;font-size:13px}#card .seg2{display:grid;grid-template-columns:1fr 1fr;gap:6px}#card .seg2 .seg>b{flex-basis:40px}
 #card .segT{flex:1;min-width:0;position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));border:1px solid var(--brass);border-radius:22px;background:rgba(0,0,0,.3);padding:0;box-sizing:border-box}
 #card .segT button:not(#cardX):not(#cardI){position:relative;min-height:44px;padding:0 2px;background:none;border:0;box-shadow:none;border-radius:20px;font-weight:700;font-size:13px;color:var(--bone)}
 #card .segT button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;box-shadow:0 0 10px rgba(242,210,122,.4);border:0;transition:background-color .15s}#card .segT button::after{content:none}

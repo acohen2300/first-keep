@@ -496,12 +496,10 @@ function wayfarerTick(u, dt, SP) {
 			u.hp = 0;
 			u.gone = true;
 			for (let i = 0; i < (UNIT[u.kind].joins || 1); i++)
-				if (clsCount(o, 'civ') < VILMAX) {
+				if (clsCount(o, 'civ') < clsMax('civ', o)) {
 					const v = addUnit(o, 'vil', u.x + i * 6, u.y);
 					v.job = o === 0 ? G.P[0].rally : null;
-				} else {
-					G.P[o].res.f += 50;
-				}
+				} else earn(G.P[o], 'f', 50, 'finds'); // no room: what it carried
 			if (o === 0)
 				say(UNIT[u.kind].joins > 1 ? 'The settlers join your people.' : 'A wayfarer joins your people.', 'good', 5);
 			return;
@@ -554,8 +552,7 @@ function findsTick(dt) {
 		for (const k in got) got[k] = Math.round(got[k]);
 		f.done = true;
 		f.owner = o;
-		addRes(G.P[o].res, got);
-		G.P[o].gathered += sumCost(got);
+		for (const k in got) earn(G.P[o], k, got[k], 'finds');
 		let extra = '';
 		if (F.tech) {
 			const T = TECH.find(

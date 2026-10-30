@@ -239,8 +239,8 @@ const ACT = {
 		saveSet();
 		refresh();
 	},
-	fog() {
-		SET.fog = !SET.fog;
+	fog(a) {
+		SET.fog = a === '1'; // for the next game; a game keeps the fog it started with
 		saveSet();
 		refresh();
 	},
@@ -535,6 +535,9 @@ const PLAY = {
 	},
 	sendvil(a) {
 		sendVil(0, Number(a));
+	},
+	sendout(a) {
+		sendOut(0, Number(a));
 	},
 	boxcut(a) {
 		if (G.card && G.card.type === 'box') boxCut(G.card.r, Number(a));
@@ -1035,16 +1038,15 @@ for (const ev of ['pointerup', 'pointercancel', 'pointermove'])
 // never sent anywhere; read on the Tap counts card (Help). A button nobody uses, or one tapped greyed out again and again, is a design question.
 let TAPS = {};
 try {
-	TAPS = JSON.parse(localStorage.getItem('firstkeep.taps') || '{}');
+	TAPS = JSON.parse(localStorage.getItem(keyOf('taps')) || '{}');
 } catch (e) {}
 function tapCount(act, dis) {
 	const k = String(act).split(':')[0],
 		t = TAPS[k] || (TAPS[k] = [0, 0]);
 	t[dis ? 1 : 0]++;
-	if ((t[0] + t[1]) % 10 === 1)
-		try {
-			localStorage.setItem('firstkeep.taps', JSON.stringify(TAPS));
-		} catch (e) {}
+	try {
+		localStorage.setItem(keyOf('taps'), JSON.stringify(TAPS)); // every tap (Build 60: one in ten were kept, so a reload lost most of them)
+	} catch (e) {}
 }
 document.addEventListener('click', (e) => {
 	const el = e.target.closest('[data-act]');

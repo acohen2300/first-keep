@@ -70,7 +70,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
 #card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:6px 8px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
-#card h3{margin:0;font-family:var(--display);font-weight:400;font-size:20px;display:flex;align-items:center;gap:8px;padding-right:96px;min-height:40px}   /* as tall as the book and the close, so neither hangs over the first row */
+#card h3{margin:0;font-family:var(--display);font-weight:400;font-size:20px;display:flex;align-items:center;gap:8px;padding-right:96px;min-height:44px;position:sticky;top:-6px;margin-top:-6px;padding-top:6px;z-index:2;background:linear-gradient(170deg,#3a2a1c,#34261a)}#card.hud h3{background:rgba(10,13,15,.96)}   /* the title stays at the top while the card scrolls, the book and the close over it (Build 60) */   /* as tall as the book and the close, so neither hangs over the first row */
 #card .who{font-family:var(--ui);font-size:13px;color:var(--mute);font-weight:700}
 #card p{margin:0;color:var(--mute);line-height:1.35;font-size:16px}
 #card p i{color:var(--bone);font-style:normal;font-weight:700}
@@ -99,8 +99,9 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card .chip{border:1px solid #4fb06a;box-shadow:inset 0 0 0 1px #4fb06a;color:#dcf5e8;border-radius:12px;padding:3px 9px;font-size:13px;font-weight:700}
 #card .dim{color:var(--mute)}
 #card .copy{text-align:center;font-size:13px;margin:6px 0 0}
-#cardI{position:absolute;top:4px;right:52px;min-height:44px;min-width:44px;padding:0;background:none;border:0}
-#cardX{position:absolute;top:4px;right:4px;min-height:44px;min-width:44px;padding:0;font-size:20px;background:none;border:0}
+#cardBar{position:sticky;top:6px;height:0;margin-bottom:-4px;z-index:3;flex:none}
+#cardI{position:absolute;top:-2px;right:44px;min-height:44px;min-width:44px;padding:0;background:none;border:0}
+#cardX{position:absolute;top:-2px;right:-4px;min-height:44px;min-width:44px;padding:0;font-size:20px;background:none;border:0}
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
 #end p{margin:0;color:var(--mute);font-size:15px}
@@ -219,7 +220,7 @@ button.ok small{color:#8fd4a4}
 #card .chipsrow button.on:not(#cardX):not(#cardI){min-height:48px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);border-color:#f2d27a;box-shadow:0 0 12px rgba(242,210,122,.45)}#card .chipsrow button.on b{color:#2a1c10}
 #card .q{font:inherit;font-size:16px;color:var(--bone);background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:6px;min-height:44px;padding:4px 10px;width:100%;box-sizing:border-box}#card .row{display:flex;gap:12px;align-items:center}#card .look{color:var(--lamp);font-weight:700;min-height:44px;display:inline-flex;align-items:center}#card .row .lnk{width:auto}
 #card .acts.set{grid-template-columns:58px repeat(4,minmax(0,1fr));gap:4px}#card .acts.set .lbl b{font-size:13px}#card .acts.set .lbl{min-height:44px}#card .acts.set button:not(#cardX):not(#cardI){min-height:44px}
-#card .seg{display:flex;align-items:center;gap:6px;min-height:44px}#card .seg>b{flex:0 0 78px;font-size:13px}
+#card .seg{display:flex;align-items:center;gap:6px;min-height:44px}#card .seg>b{flex:0 0 78px;font-size:13px}#card .seg2{display:grid;grid-template-columns:1fr 1fr;gap:6px}#card .seg2 .seg>b{flex-basis:40px}
 #card .segT{flex:1;min-width:0;position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));border:1px solid var(--brass);border-radius:22px;background:rgba(0,0,0,.3);padding:0;box-sizing:border-box}
 #card .segT button:not(#cardX):not(#cardI){position:relative;min-height:44px;padding:0 2px;background:none;border:0;box-shadow:none;border-radius:20px;font-weight:700;font-size:13px;color:var(--bone)}
 #card .segT button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;box-shadow:0 0 10px rgba(242,210,122,.4);border:0;transition:background-color .15s}#card .segT button::after{content:none}
@@ -284,7 +285,7 @@ button.ok small{color:#8fd4a4}
 'use strict';
 // ═════ 01-rules-basics.js: the map, speeds, difficulty, resources, jobs, players, ages, seasons ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 41;
+const BUILD = 60; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
 const MAP = 2000,
 	MID = MAP / 2,
 	DT = 1 / 30;
@@ -1448,7 +1449,7 @@ const BLD = {
 		dmg: 12,
 		bow: 106,
 		cd: 1.5,
-		desc: 'Written law and the watch. Trains spies, and its guards shoot enemy spies within 140. Nothing else.',
+		desc: 'Written law and the watch. Trains spies, and its guards shoot the enemy spies they see, within bowshot. Nothing else.',
 	},
 	apartment: {
 		nocap: 1,
@@ -3944,7 +3945,7 @@ const TECH = [
 		when: '1751',
 		cost: { g: 700, s: 300 },
 		t: 100,
-		fx: [{ s: 'cost', m: 0.85 }],
+		fx: [{ s: 'cost', k: '#research', m: 0.85 }],
 		desc: 'Research costs 15% less.',
 	},
 	{
@@ -3971,7 +3972,7 @@ const TECH = [
 		cost: { g: 800, s: 400 },
 		t: 110,
 		fx: [{ s: 'trade', m: 1.25 }],
-		desc: 'Trade pays 25% more. The last step: the match ends and the crowns are given.',
+		desc: 'Trade pays 25% more.',
 	},
 	{
 		id: 'vaccine',
@@ -3984,7 +3985,7 @@ const TECH = [
 		cost: { g: 600, f: 400 },
 		t: 90,
 		fx: [{ s: 'sick', m: 0.5 }],
-		desc: 'Half as much sickness.',
+		desc: 'Half as much sickness. The last step: the match ends and the crowns are given.',
 	},
 	{
 		id: 'roads',
@@ -4164,7 +4165,6 @@ const TECH = [
 		cost: { f: 430, g: 290 },
 		t: 71,
 		fx: [{ s: 'heal', m: 1.2 }],
-		need: ['surgeons'],
 		desc: 'Healing is 20% faster.',
 	},
 	{
@@ -5460,6 +5460,7 @@ const TELL = {
 	gun: 2, // gunfire is heard twice as far
 	foot: 27, // a runner's speed (the scout on foot)
 	ride: 49, // a rider's (the scout on a horse)
+	spy: 120, // a spy's report of an army holds this long (design): the odds you are shown use it, else only the soldiers you see
 };
 const UI_BUDGET = 33; // always-visible buttons on the play screen, at most (Build 59, from the Google audit): a new control must replace one (the gate counts them)
 const SAVE = { step: 0.02, stall: 90, spend: 45 }; // a computer saving for an age: progress counts in steps of 2%; 90 s without one and it spends for 45 s (17-ai)
@@ -5518,6 +5519,7 @@ const HEALTH = {
 	plague: 0.15,
 	plagueR0: 1.5, // plague: R0 × this, death × 4
 	plagueCap: 0.1,
+	plagueCart: 0.5, // the share of carts back from abroad in a plague year that bring cases home; the Plague hazard doubles it
 };
 const MKT_SELL = ['f', 'w', 's', 'i', ...WARES],
 	MKT_BUY = ['f', 'w', 's', 'i', 'spice']; // wool goes to a Workshop, not to market; spice is the only good not made here
@@ -5549,7 +5551,7 @@ const SCENARIOS = {
 		// The Siege: a Medieval town behind its walls, a full store, every rival at war with you, the horde a few minutes out
 		age: 3,
 		res: { f: 1200, w: 900, s: 900, g: 500, i: 150 },
-		techs: ['masonry', 'towers'],
+		techs: ['masonry', 'greattower'], // a step brings the steps it waits on
 		rel: 'war',
 		hz: { hard: 1, starve: 1, horde: 1 },
 		hordeAt: 420,
@@ -5583,6 +5585,7 @@ const SCENARIOS = {
 // the ledger's words (earn and spend, 08-core)
 const LEDGER_WORD = {
 	gather: 'gathered',
+	finds: 'finds',
 	trade: 'trade',
 	tithe: 'the Throne tithe',
 	tribute: 'tribute',
@@ -5596,6 +5599,7 @@ const LEDGER_WORD = {
 	buildings: 'buildings',
 	research: 'research and ages',
 	upkeep: 'eaten',
+	shops: 'used by shops',
 	spoiled: 'spoiled',
 	zeal: 'zeal',
 	repairs: 'repairs',
@@ -5614,11 +5618,11 @@ const WHY = {
 	age3: 'The Middle Ages (about AD 500 to 1500): castles, knights, crossbows and longbows, universities, and the heavy plough.',
 	age5: 'The Enlightenment (about 1650 to 1800): the Royal Society (1660), the Encyclopédie (1751), inoculation, the turnip and the clover, the school for every child. Game: an age that only a year of peace across the whole board opens, with no soldiers in it; its six steps are the match, and its last step ends it with the crowns.',
 	method: 'The Royal Society (1660) and its Philosophical Transactions (1665): experiment, record, publish, repeat. Knowledge compounded.',
-	vaccine: 'Jenner showed in 1796 that cowpox guards against smallpox; variolation had come to London from Constantinople in 1721 with Lady Mary Wortley Montagu, and was older still in the Ottoman lands, China and India.',
+	vaccine: 'Jenner showed in 1796 that cowpox guards against smallpox; variolation had come to London from Constantinople in 1721 with Lady Mary Wortley Montagu, and was older still in the Ottoman lands, China and India. Game: the last step, the latest date in the age; a board at peace that ends its oldest killer has finished what the truce began.',
 	fourcourse: 'The Norfolk four-course (wheat, turnips, barley, clover) spread through England in the 1730s: no fallow year, more fodder, more manure, more grain. The Low Countries had it a century earlier.',
 	encyclopedia: 'Diderot and his fellow editors published the Encyclopédie from 1751: 28 volumes, every trade drawn and described, so no craft had to be learned twice.',
 	schooling: 'Prussia ordered every child to school in 1763 (the Generallandschulreglement); Scotland had parish schools from 1696. A people that reads works smarter.',
-	freetrade: 'Adam Smith, The Wealth of Nations (1776): trade is not a war with a loser; both sides gain. Game: the last step, because a board that trades freely has finished what the truce began.',
+	freetrade: 'Adam Smith, The Wealth of Nations (1776): trade is not a war with a loser; both sides gain.',
 	age4: 'Gunpowder (about AD 1400 to 1600): matchlock guns and cannon. Great bombards broke the walls of Constantinople in 1453; Italian engineers answered with low angled star forts, and walls stopped being the end of a siege.',
 	arquebus:
 		'The matchlock arquebus (late 15th century) let a few weeks of drill make a soldier. Spanish arquebusiers won at Cerignola in 1503, and pike-and-shot formations ruled the next century.',
@@ -6335,7 +6339,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Courthouse and spies',
-		`The Courthouse trains spies; its guards shoot enemy spies within ${BLD.courthouse.rng}. A spy is seen by soldiers only within ${UNIT.spy.stealth[0]} and by towers, the Town Center and Courthouses within ${UNIT.spy.stealth[1]}. Near an enemy building it reads their stores, age, research and army.`,
+		`The Courthouse trains spies; its guards shoot the enemy spies they see, within bowshot (${Math.round(rangeOf(0, 'courthouse'))}). A spy is seen by soldiers only within ${UNIT.spy.stealth[0]} and by towers, the Town Center and Courthouses within ${UNIT.spy.stealth[1]}. Near an enemy building it reads their stores, age, research and army.`,
 		'States watched for spies as long as they have had secrets.',
 	],
 	[
@@ -6550,7 +6554,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Fog of war',
-		'You see what your people and your allies see; the rest of the map is as you last saw it, and the unseen is dark. Spies stay hidden until something of yours is close. Night shortens sight. Turn it off in Help for an open map.',
+		`You see what your people and your allies see; the rest of the map is as you last saw it, and the unseen is dark. An army out of sight reaches you by its noise or by a messenger, and the odds count only the soldiers you see, or the report of a spy under ${TELL.spy / 60} minutes old. Spies stay hidden until something of yours is close. Night shortens sight. The computers play without fog: an assumption of the game, the one way they are not like you. Choose it on or off when you start a game.`,
 		'Scouts earned their pay by what they saw first.',
 	],
 	[
@@ -6594,8 +6598,8 @@ const afford = (p, c) => Object.entries(c || {}).every(([k, v]) => p.res[k] >= v
 // Every resource in or out goes through earn and spend: one home for the stores, the flow of the last minute (p.flow, p.spent1), the
 // ledger of where it came from and went (p.ledger) and the gathered total. Build 58; before, 25 lines wrote p.res directly (Albert: one home).
 const LEDGER = {
-	in: ['gather', 'trade', 'tithe', 'tribute', 'ransom', 'market', 'loot', 'mint', 'venture', 'tax'],
-	out: ['units', 'buildings', 'research', 'upkeep', 'spoiled', 'trade', 'tribute', 'ransom', 'market', 'tax', 'venture', 'zeal', 'repairs'],
+	in: ['gather', 'finds', 'trade', 'tithe', 'tribute', 'ransom', 'market', 'loot', 'mint', 'venture', 'tax'],
+	out: ['units', 'buildings', 'research', 'upkeep', 'shops', 'spoiled', 'trade', 'tribute', 'ransom', 'market', 'tax', 'venture', 'zeal', 'repairs', 'loot'],
 };
 function earn(p, k, amt, why, counts = true) {
 	if (!(amt > 0)) return 0;
@@ -6617,6 +6621,17 @@ function spend(p, k, amt, why) {
 const pay = (p, c, why = 'units') => {
 	for (const [k, v] of Object.entries(c || {})) spend(p, k, v, why);
 };
+// what was paid comes back the way it went out (Build 60): the store, the minute's spending and the ledger all step back, so a cancel is
+// as if the order never was (before, the list price came back after a discounted one was paid, and the ledger still counted it spent)
+function payBack(p, c, why = 'units') {
+	const L = p.ledger || (p.ledger = { in: {}, out: {} });
+	for (const [k, v] of Object.entries(c || {}))
+		if (v > 0) {
+			p.res[k] += v;
+			p.spent1[k] = Math.max(0, (p.spent1[k] || 0) - v);
+			L.out[why] = Math.max(0, (L.out[why] || 0) - v);
+		}
+}
 const addRes = (a, c, f = 1) => {
 	for (const [k, v] of Object.entries(c || {})) a[k] = (a[k] || 0) + v * f;
 	return a;
@@ -6693,14 +6708,31 @@ const SET = {
 	vibe: true,
 	learned: {},
 };
+// One home for this phone's storage (Build 60): the preview keeps its own keys, so a preview save never moves the live game's aside, nor
+// the live game the preview's. The first time the preview runs it copies (never moves) what the live game kept.
+const STORE = 'firstkeep.' + (/\/preview\//.test(location.pathname) ? 'preview.' : ''),
+	keyOf = (k) => STORE + k;
 try {
-	Object.assign(SET, JSON.parse(localStorage.getItem('firstkeep.settings') || '{}'));
+	if (STORE !== 'firstkeep.' && localStorage.getItem(keyOf('settings')) === null) {
+		for (const k of ['settings', 'taps', 'best']) {
+			const v = localStorage.getItem('firstkeep.' + k);
+			if (v !== null) localStorage.setItem(keyOf(k), v);
+		}
+		const ver = (s) => (s ? JSON.parse(s).v || 0 : -1),
+			a = localStorage.getItem('firstkeep.save'),
+			b = localStorage.getItem('firstkeep.save.old'),
+			v = ver(a) >= ver(b) ? a : b; // of the two the live game may hold, the newer: the preview game it moved aside, not its own
+		if (v) localStorage.setItem(keyOf('save'), v);
+	}
+} catch (e) {}
+try {
+	Object.assign(SET, JSON.parse(localStorage.getItem(keyOf('settings')) || '{}'));
 } catch (e) {}
 if (!CIVS[SET.civ]) SET.civ = 'roman';
 if (!(SET.setV >= 38)) {
 	let old = false;
 	try {
-		old = !!localStorage.getItem('firstkeep.settings');
+		old = !!localStorage.getItem(keyOf('settings'));
 	} catch (e) {}
 	if (old && SET.diff === 'easy' && SET.mode === 't30') {
 		SET.diff = 'normal';
@@ -6711,7 +6743,7 @@ if (!(SET.setV >= 38)) {
 SET.mix = Object.assign({ fx: 1, amb: 1, alert: 1 }, SET.mix); // three volumes: effects, ambience, alerts
 function saveSet() {
 	try {
-		localStorage.setItem('firstkeep.settings', JSON.stringify(SET));
+		localStorage.setItem(keyOf('settings'), JSON.stringify(SET));
 	} catch (e) {}
 }
 // Research lines: the steps of one line at one building come in table order; a step waits on the one before it and on what it names in need
@@ -6807,8 +6839,11 @@ const armyFull = (o) => `Army full, ${clsCount(o, 'army')}/${armyRoom(o)}. ${ARM
 const qMax = (o) => QUEUE + fxv(o, 'queue').a; // orders one building's line holds (Written records, Guilds add to it)
 const lineFree = (o, kinds) => kinds.some((k) => ready(o, k).some((b) => b.q.length < qMax(o)));
 // how many of a building you may have now: by age, plus research
+// a cap table lists the ages it changes in; an age past its end keeps the last limit (Build 60: 19 tables stopped at Gunpowder, so the
+// Enlightenment read no limit at all)
+const capAt = (cp, age) => cp[Math.min(age, cp.length - 1)];
 const capFor = (o, kind) =>
-	BLD[kind].nocap ? Infinity : (BLD[kind].cap ? BLD[kind].cap[G.P[o].age] : 1) + fxv(o, 'limit', [kind]).a;
+	BLD[kind].nocap ? Infinity : (BLD[kind].cap ? capAt(BLD[kind].cap, G.P[o].age) : 1) + fxv(o, 'limit', [kind]).a;
 const atCap = (o, kind) => bldsOf(o, kind).length >= capFor(o, kind);
 function capWhy(o, kind) {
 	// why no more of this building, or null
@@ -6816,7 +6851,7 @@ function capWhy(o, kind) {
 	const c = capFor(o, kind),
 		A = G.P[o].age,
 		cp = BLD[kind].cap,
-		more = cp && A < 4 && cp[A + 1] > cp[A];
+		more = cp && A + 1 < cp.length && cp[A + 1] > cp[A];
 	return c ? `At the limit of ${c}` + (more ? '. A new age allows more' : '') : 'A later age allows it';
 }
 const clsCount = (o, c) =>
@@ -7062,6 +7097,9 @@ const rngOf = (u) => {
 // (the projectile range from a height, R = (v cos θ / g)(v sin θ + √(v² sin² θ + 2gh), with v² = g r0; air drag left out and said so in SCIENCE.md)
 const rangeFrom = (r0, h) => (r0 / 2) * (1 + Math.sqrt(1 + (4 * h) / r0));
 const rangeOf = (o, kind) => rangeFrom(BLD[kind].bow, BLD[kind].h) + (o === WILD ? 0 : fxv(o, 'rng', bldKeys(kind)).a);
+// how far a side's unit or building sees a hidden spy (research adds to a building's): one home for who may shoot it and when your screen
+// shows it (Build 60: towers aimed with the research added while the screen did not, so spies died unseen)
+const spySeen = (o, from) => UNIT.spy.stealth[from.q ? 1 : 0] + (from.q && o !== WILD ? fxv(o, 'spysight').a : 0);
 const lookout = (kind) => Math.round(LOOKOUT.base + LOOKOUT.k * Math.sqrt(BLD[kind].h || 0)); // how far a building sees, from its height
 const sightOf = (e) =>
 	((UNIT[e.kind] ? (e.owner !== undefined && e.owner !== WILD && e.owner !== null ? stats(e.owner, e.kind).sight : UNIT[e.kind].sight) || 100 : lookout(e.kind)) + // a tier can add sight (the mounted scout)
@@ -7388,6 +7426,18 @@ const AS = {
 };
 const DX8 = [1, -1, 0, 0, 1, 1, -1, -1],
 	DY8 = [0, 0, 1, -1, 1, -1, 1, -1];
+// how far the way really is from one place to another: along the path, round water and walls (a straight line if none is found)
+function wayLen(from, to, o) {
+	const A = astar(from.x, from.y, to.x, to.y, o);
+	if (A.partial || !A.pts.length) return dist(from, to);
+	let L = 0,
+		p = from;
+	for (const q of A.pts) {
+		L += dist(p, q);
+		p = q;
+	}
+	return L;
+}
 // A*: the shortest way round, no cutting corners. If the goal cannot be reached it returns the way to the nearest point (partial).
 function astar(sx, sy, tx, ty, o, avoid) {
 	const scx = clamp(Math.floor(sx / NAVC), 0, NC - 1),
@@ -7884,6 +7934,7 @@ function blankGame(seed) {
 		speed: G ? G.speed : 1,
 		over: null,
 		seed,
+		fogOn: SET.fog, // fog of war is chosen at the start and kept for the whole game (Build 60: it could be switched off mid-game from Help)
 		rs: seed,
 		units: [],
 		blds: [],
@@ -8017,7 +8068,7 @@ function newGame(seed, carry) {
 		if (!best || f.worst < best.worst) best = { tr, worst: f.worst };
 	}
 	makeBg();
-	for (const b of G.blds) if (!SET.fog || friendly(0, b.owner)) wearGround(b);
+	for (const b of G.blds) if (!G.fogOn || friendly(0, b.owner)) wearGround(b);
 	dangerMap(); // a fresh danger map: the last game's must not steer the first second of this one
 	evmSet();
 	const k = G.P[0].keep;
@@ -8040,9 +8091,14 @@ function applyScenario(id) {
 	G.scen = id;
 	const sides = S.all ? G.P.filter((p) => p.id !== WILD) : [G.P[0]];
 	for (const p of sides) {
+		const grant = (t) => {
+			if (p.techs.has(t)) return;
+			for (const n of needsOf(TECHBY[t])) grant(n);
+			p.techs.add(t);
+		}; // a research step comes with the steps it waits on, as if researched in order (the gate checks every name is a real step)
 		if (S.age) p.age = Math.max(p.age, S.age);
 		if (S.res) for (const k in S.res) p.res[k] = Math.max(p.res[k], S.res[k]);
-		if (S.techs) for (const t of S.techs) if (TECHBY[t]) p.techs.add(t);
+		if (S.techs) for (const t of S.techs) grant(t);
 		if (S.mode) G.mode = S.mode;
 	}
 	if (S.rel)
@@ -8062,8 +8118,8 @@ function applyScenario(id) {
 	for (const [kind, dx] of S.blds || []) {
 		const s = findSpot(0, kind, k.x + dx, k.y, 0, 120);
 		if (!s) continue;
-		const b = mkBld(0, kind, s.x, s.y, 1);
-		G.blds.push(b);
+		G.blds.push(mkBld(0, kind, s.x, s.y, 1));
+		navRebuild(); // the next one sees this one (Build 60: they were all placed on an empty grid, so they could overlap)
 	}
 	if (S.walls) {
 		for (const c of wallPlan(k)) if (!NAV.occ[c.gy * NC + c.gx] && !canPlace(0, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) G.blds.push(mkBld(0, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5, 1));
@@ -8668,14 +8724,15 @@ function addUnit(owner, kind, x, y) {
 }
 // ═════ 11-orders.js: what a side can do, and why not ═════
 // ───────────────────────── Orders anyone can give (the computers use the same ones) ─────────────────────────
-// what a unit costs this side now (Informers make spies cheaper)
-const unitCost = (o, k) => {
-	const m = fxv(o, 'cost', unitKeys(k)).m;
-	if (m === 1) return UNIT[k].cost;
+// what an order costs this side now: one scaling for units (Informers make spies cheaper) and research (the Encyclopedie, key #research)
+const scaled = (cost, m) => {
+	if (m === 1) return cost;
 	const c = {};
-	for (const r in UNIT[k].cost) c[r] = Math.round(UNIT[k].cost[r] * m);
+	for (const r in cost) c[r] = Math.round(cost[r] * m);
 	return c;
 };
+const unitCost = (o, k) => scaled(UNIT[k].cost, fxv(o, 'cost', unitKeys(k)).m);
+const techCost = (o, T) => scaled(T.cost, fxv(o, 'cost', ['#research']).m);
 function trainWhy(o, kind) {
 	// why a unit cannot be ordered right now, or null
 	const k = civKind(o, kind),
@@ -8696,29 +8753,22 @@ function train(o, kind) {
 		U = UNIT[k],
 		p = G.P[o],
 		at = readyAt(o, U).sort((a, b) => a.q.length - b.q.length)[0];
-	const t = U.t * stats(o, k).train;
-	pay(p, unitCost(o, k));
-	at.q.push({ kind: k, left: t, total: t });
+	const t = U.t * stats(o, k).train,
+		c = unitCost(o, k);
+	pay(p, c);
+	at.q.push({ kind: k, left: t, total: t, paid: c });
 	return true;
 }
-// cancel one order in a building's line: its cost comes back in full (a muster's too); research and the age give back what was paid
+// cancel one order in a building's line: what was paid for it comes back in full, the way it went out (every order keeps what it paid)
+const whyOf = (j) => (j.tech || j.age ? 'research' : 'units');
 function cancelOrder(o, b, i) {
 	const j = b.q[i],
 		p = G.P[o];
 	if (!j || b.owner !== o) return false;
 	b.q.splice(i, 1);
-	const back = {};
-	if (j.kind) addRes(back, UNIT[j.kind].cost);
-	else if (j.muster) addRes(back, musterCost(o, j.muster).cost);
-	else if (j.tech) {
-		addRes(back, TECHBY[j.tech].cost);
-		p.spent -= sumCost(TECHBY[j.tech].cost);
-	} else if (j.age) {
-		addRes(back, AGES[j.age].cost);
-		p.spent -= sumCost(AGES[j.age].cost);
-		p.aging = false;
-	}
-	addRes(p.res, back);
+	payBack(p, j.paid, whyOf(j));
+	if (j.tech || j.age) p.spent -= sumCost(j.paid);
+	if (j.age) p.aging = false;
 	return true;
 }
 function unTrain(o, kind) {
@@ -8766,7 +8816,7 @@ function muster(o, plan, bn) {
 	const { cost, t } = musterCost(o, plan),
 		at = ready(o, 'council').sort((a, b) => a.q.length - b.q.length)[0];
 	pay(G.P[o], cost, 'units');
-	at.q.push({ muster: plan, bn, left: t, total: t });
+	at.q.push({ muster: plan, bn, left: t, total: t, paid: cost });
 	return true;
 }
 function researchWhy(o, id) {
@@ -8780,7 +8830,8 @@ function researchWhy(o, id) {
 	const at = ready(o, T.at)[0];
 	if (!at) return `Needs a ${BLD[T.at].name.toLowerCase()}.`;
 	if (at.q.length >= qMax(o)) return 'That line is full.';
-	if (!afford(p, T.cost)) return `Not enough: ${costText(T.cost)}.`;
+	const c = techCost(o, T);
+	if (!afford(p, c)) return `Not enough: ${costText(c)}.`;
 	return null;
 }
 function research(o, id) {
@@ -8788,10 +8839,11 @@ function research(o, id) {
 	const T = TECHBY[id],
 		p = G.P[o],
 		at = ready(o, T.at)[0],
-		tt = T.t * fxv(o, 'research').m;
-	pay(p, T.cost, 'research');
-	p.spent += sumCost(T.cost);
-	at.q.push({ tech: id, left: tt, total: tt });
+		tt = T.t * fxv(o, 'research').m,
+		c = techCost(o, T);
+	pay(p, c, 'research');
+	p.spent += sumCost(c);
+	at.q.push({ tech: id, left: tt, total: tt, paid: c });
 	return true;
 }
 function ageUp(o) {
@@ -8801,7 +8853,7 @@ function ageUp(o) {
 	if (!A || p.aging || !k || !afford(p, A.cost) || k.q.length >= qMax(o)) return false;
 	pay(p, A.cost, 'research');
 	p.spent += sumCost(A.cost);
-	k.q.push({ age: p.age + 1, left: A.t, total: A.t });
+	k.q.push({ age: p.age + 1, left: A.t, total: A.t, paid: A.cost });
 	p.aging = true;
 	return true;
 }
@@ -8877,14 +8929,17 @@ function sendBuild(o, id, vid) {
 	if (o === 0) say(`A villager goes to raise the ${bldName(o, b.kind).toLowerCase()}.`, '', 3);
 	return true;
 }
-// Take a building down: half its cost back (all of it in the first 15% of the build); what was waiting inside comes back in full. Never the Town Center.
-function refundOf(b) {
-	const full = b.prog < 0.15,
-		back = {};
-	addRes(back, BLD[b.kind].cost, full ? 1 : 0.5);
-	for (const j of b.q)
-		addRes(back, j.kind ? UNIT[j.kind].cost : j.tech ? TECHBY[j.tech].cost : j.age ? AGES[j.age].cost : null);
+// Take a building down: half its cost back (all of it in the first 15% of the build); every order waiting inside is cancelled, so what
+// was paid for it comes back in full (a muster's too: before, a muster in the line was lost). Never the Town Center.
+function shellBack(b) {
+	const back = {};
+	addRes(back, BLD[b.kind].cost, b.prog < 0.15 ? 1 : 0.5);
 	for (const k in back) back[k] = Math.floor(back[k]);
+	return back;
+}
+function refundOf(b) {
+	const back = shellBack(b);
+	for (const j of b.q) addRes(back, j.paid);
 	return back;
 }
 function demolish(o, id) {
@@ -8893,9 +8948,8 @@ function demolish(o, id) {
 	const p = G.P[o],
 		back = refundOf(b),
 		full = b.prog < 0.15;
-	addRes(p.res, back);
-	if (b.q.some((j) => j.age)) p.aging = false;
-	for (const j of b.q) if (j.tech) p.spent -= sumCost(TECHBY[j.tech].cost);
+	while (b.q.length) cancelOrder(o, b, b.q.length - 1);
+	payBack(p, shellBack(b), 'buildings');
 	b.by = undefined;
 	b.hp = 0;
 	b.q = [];
@@ -9443,7 +9497,7 @@ function sabotage(u, b) {
 		b.stall = G.t + SAB.stall;
 		const j = b.q.shift();
 		if (j && j.age) G.P[b.owner].aging = false;
-		if (j && (j.tech || j.age)) G.P[b.owner].spent -= sumCost(j.tech ? TECHBY[j.tech].cost : AGES[j.age].cost);
+		if (j && (j.tech || j.age)) G.P[b.owner].spent -= sumCost(j.paid);
 	} // lost research is not counted as research paid
 	if (b.hp <= 0) b.by = undefined; // a fire pays nobody
 	u.hp = 0;
@@ -9497,21 +9551,35 @@ function setJob(u, job, n) {
 	if (n && n.farm) n.wk = (n.wk || 0) + 1;
 	if (job !== 'repair') u.rep = null;
 }
-// the + and − under a job: + takes an idle villager, else the one earning least on another job; − sends home the one earning least on this one
+// a villager at a workshop, a mint or a foundry, walking there or working inside: + and the computers leave it be; − and Send out free it
+const atShop = (u) => !!(u.node && u.node.farm && BLD[u.node.farm.kind].makes);
+// the + and − under a job: + takes an idle villager, else the one earning least on another job; − sends home the one earning least on this
+// one, a shop worker too (Build 60: one inside a Mint or a Foundry could never be called out)
 function moveVil(o, job, down) {
-	const V = unitsOf(o, 'vil').filter((u) => !u.inside),
+	const all = unitsOf(o, 'vil'),
+		V = all.filter((u) => !u.inside),
 		low = (L) => L.reduce((b, u) => (!b || forageNow(u) < forageNow(b) ? u : b), null);
 	if (down) {
-		const v = low(V.filter((u) => u.job === job));
+		const v = low(all.filter((u) => u.job === job && (!u.inside || u.shop)));
 		if (v) setJob(v, null);
 		return;
 	}
-	const v = V.find((u) => !u.job) || low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job) && !(u.node && u.node.farm && BLD[u.node.farm.kind].makes)));
+	const v = V.find((u) => !u.job) || low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job) && !atShop(u)));
 	if (v) setJob(v, job);
+}
+// Send out (a field, a pasture or a shop's card): the last villager sent there goes home; a shop worker steps out of the door
+function sendOut(o, id) {
+	const v = unitsOf(o, 'vil').filter((u) => u.node && u.node.id === id).pop();
+	if (v) setJob(v, null);
+	return !!v;
 }
 function sendVil(o, id) {
 	const n = G.nodes.find((x) => x.id === id);
 	if (!n || (n.amt <= 0 && n.kind !== 'farm')) return false;
+	if (n.farm && (n.wk || 0) >= slotsOf(n)) {
+		if (o === 0) say('Already worked: one to each.', '', 3);
+		return false;
+	}
 	const job = n.type,
 		v = pickVil(o, n, job);
 	if (!v) {
@@ -9713,8 +9781,8 @@ function incomingTick() {
 		return;
 	}
 	const n = G.units.filter(
-		(u) => u.hp > 0 && u.owner === best.owner && u.state === 'attack' && hyp(u.x - best.x, u.y - best.y) < 140,
-	).length;
+		(u) => u.hp > 0 && u.owner === best.owner && u.state === 'attack' && hyp(u.x - best.x, u.y - best.y) < 140 && seen0(u),
+	).length; // the ones you can see
 	G.incoming = {
 		x: best.x,
 		y: best.y,
@@ -9812,7 +9880,7 @@ function step(dt) {
 		climateTick(1);
 		peaceTick();
 	}
-	if (SET.fog && G.tick % 10 === 0) fogTick();
+	if (G.fogOn && G.tick % 10 === 0) fogTick();
 	{
 		const U = G.units,
 			n = U.length,
@@ -10067,7 +10135,7 @@ function died(u) {
 	if (u.kind === 'caravan' && u.by === WILD) robbed(u);
 	else if (u.kind === 'caravan' && u.by !== undefined && u.by !== WILD) {
 		if (u.cargo > 0) plunder(u.by, { g: u.cargo });
-		for (const k in u.goods || {}) giveTo(G.P[u.by], k, u.goods[k]);
+		for (const k in u.goods || {}) giveTo(G.P[u.by], k, u.goods[k], 'loot');
 	}
 	const U = UNIT[u.kind];
 	if (U.meat && !u.gone) {
@@ -10186,7 +10254,7 @@ function bldTick(b, dt) {
 			const keys = bldKeys(b.kind),
 				reach = rangeOf(o, b.kind);
 			const t = B.spyonly
-				? G.units.find((v) => v.kind === 'spy' && atWar(o, v.owner) && dist(v, b) < reach + fxv(o, 'spysight').a)
+				? G.units.find((v) => v.kind === 'spy' && atWar(o, v.owner) && dist(v, b) < Math.min(reach, spySeen(o, b))) // a spy it sees, within bowshot
 				: nearestFoe(o, b, reach);
 			if (t) {
 				const sheltered = BLD[b.kind].shelter
@@ -10209,7 +10277,7 @@ function built(b) {
 		B = BLD[b.kind];
 	b.mx = maxHpB(o, b.kind);
 	b.hp = Math.max(b.hp, b.mx * 0.999);
-	if (!SET.fog || friendly(0, b.owner)) wearGround(b); // another side's worn ground shows when you first see the building (fog)
+	if (!G.fogOn || friendly(0, b.owner)) wearGround(b); // another side's worn ground shows when you first see the building (fog)
 	G.bldV = (G.bldV || 0) + 1; // a new place to drop at: every villager picks again
 	if (b.kind === 'gate') G.navDirty = true;
 	if (B.trap) b.seen = b.seen || {};
@@ -10278,7 +10346,7 @@ function jobDone(b, j) {
 				k.doneT = G.t;
 				celebrate(3, k.x, k.y);
 			}
-		} else if (fxv(0, 'news').a >= 5 || !SET.fog) say(`${p.name} entered the ${AGES[p.age].name} age.`, '', 4); // another court's age: in the news sheets
+		} else if (fxv(0, 'news').a >= 5 || !G.fogOn) say(`${p.name} entered the ${AGES[p.age].name} age.`, '', 4); // another court's age: in the news sheets
 		chron(`${o === 0 ? 'You' : p.name} entered the ${AGES[p.age].name} age.`);
 	}
 }
@@ -10344,7 +10412,7 @@ const FORAGE = { move: 1.18, life: 20, room: { tree: 1, bush: 2, fish: 2, stone:
 function forage(u, n, drops) {
 	const o = u.owner,
 		c = carryOf(o),
-		v = stats(o, 'vil').spd * groundSpd(0, ['foot']),
+		v = stats(o, 'vil').spd * groundSpd(o, ['foot']),
 		others = n.hunt || n.kind === 'farm' ? 0 : Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0)),
 		g = ((n.hunt ? RATE_OF.meat : n.rate || RATE_OF[n.kind]) * gatherMul(o, n.hunt ? { type: 'food', kind: 'meat' } : n)) / (1 + others / (FORAGE.room[n.kind] || 2)),
 		A = n.hunt ? UNIT[n.hunt.kind].meat : n.kind === 'farm' ? c * FORAGE.life : Math.max(1, n.amt),
@@ -10362,7 +10430,7 @@ function bestNode(u, job) {
 		bR = 0,
 		drops = null;
 	for (const n of G.nodes) {
-		if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n, u.owner)) || (u.bad && u.bad[n.id] > G.t)) continue;
+		if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n, u.owner)) || (u.bad && u.bad[n.id] > G.t) || (u.owner === 0 && !known0(n))) continue; // your people work only what you have found (Build 60: under fog they set out for finds nobody had seen, into whatever stood there)
 		if (n.kind === 'farm') {
 			if (n.farm.owner !== u.owner || n.farm.prog < 1 || n.farm.hp <= 0 || (n.wk || 0) - (u.node === n ? 1 : 0) >= slotsOf(n)) continue;
 			if (BLD[n.farm.kind].makes || BLD[n.farm.kind].sheep) continue; // a workshop or a pasture is a post, not a find: it is staffed by its builder or by hand
@@ -10460,7 +10528,10 @@ function makeNow(u, n, dt, room) {
 			u.wait = true;
 			return 0;
 		}
-		for (const k in from) box(k)[k] -= g * from[k];
+		for (const k in from) {
+			if (k in P.res) spend(P, k, g * from[k], 'shops'); // what a shop uses is spent like any coin, so the stores' colour tells the truth
+			else P.goods[k] -= g * from[k];
+		}
 	}
 	u.wait = false;
 	n.amt -= g;
@@ -10598,7 +10669,7 @@ function vilTick(u, dt, SP) {
 		huntTick(u, dt, SP);
 		return;
 	}
-	const flock = u.node && u.node.farm && BLD[u.node.farm.kind].sheep && u.node.farm.hp > 0; // a shepherd stays with the flock between shearings
+	const flock = u.node && u.node.farm && BLD[u.node.farm.kind].sheep && u.node.farm.hp > 0 && u.node.wk <= slotsOf(u.node); // a shepherd stays with the flock between shearings; one to a flock, as one to a field (Build 60: any number stacked, each milking the whole flock)
 	if (flock && u.node.farm.prog >= 1 && dist(u, u.node) < 40) {
 		const b = u.node.farm,
 			m = (b.sheep || 0) * BLD[b.kind].milk * dt * gatherMul(u.owner, u.node) * hungerOf(u.owner);
@@ -10931,12 +11002,11 @@ function spyTick(u, dt, SP) {
 		k = keepOf(o);
 	u.idle = false;
 	if ((G.tick + u.id) % 5 === 0) {
-		const [sR, bR] = UNIT.spy.stealth;
 		if (o !== 0)
 			u.exposed =
 				atWar(0, o) &&
-				(G.units.some((v) => v.owner === 0 && dist(v, u) < sR) ||
-					G.blds.some((b) => b.owner === 0 && watchtower(b) && dist(b, u) < bR));
+				(G.units.some((v) => v.owner === 0 && dist(v, u) < spySeen(0, v)) ||
+					G.blds.some((b) => b.owner === 0 && watchtower(b) && dist(b, u) < spySeen(0, b)));
 		for (const b of G.blds)
 			if (atWar(o, b.owner) && b.owner !== WILD && b.hp > 0 && edge(u, b) < 60) {
 				intel(o, b.owner);
@@ -11498,12 +11568,10 @@ function wayfarerTick(u, dt, SP) {
 			u.hp = 0;
 			u.gone = true;
 			for (let i = 0; i < (UNIT[u.kind].joins || 1); i++)
-				if (clsCount(o, 'civ') < VILMAX) {
+				if (clsCount(o, 'civ') < clsMax('civ', o)) {
 					const v = addUnit(o, 'vil', u.x + i * 6, u.y);
 					v.job = o === 0 ? G.P[0].rally : null;
-				} else {
-					G.P[o].res.f += 50;
-				}
+				} else earn(G.P[o], 'f', 50, 'finds'); // no room: what it carried
 			if (o === 0)
 				say(UNIT[u.kind].joins > 1 ? 'The settlers join your people.' : 'A wayfarer joins your people.', 'good', 5);
 			return;
@@ -11556,8 +11624,7 @@ function findsTick(dt) {
 		for (const k in got) got[k] = Math.round(got[k]);
 		f.done = true;
 		f.owner = o;
-		addRes(G.P[o].res, got);
-		G.P[o].gathered += sumCost(got);
+		for (const k in got) earn(G.P[o], k, got[k], 'finds');
 		let extra = '';
 		if (F.tech) {
 			const T = TECH.find(
@@ -11613,8 +11680,7 @@ const ignorable = (v) => {
 function nearestFoe(o, from, range, anchor) {
 	const a = anchor || from,
 		U = G.units,
-		isB = !!from.q,
-		sR = UNIT.spy.stealth[isB ? 1 : 0] + (isB ? fxv(o, 'spysight').a : 0);
+		sR = spySeen(o, from);
 	let best = null,
 		bd = range;
 	const grid = G.ugTick === G.tick,
@@ -11657,8 +11723,7 @@ const canBeat = (u, v) => lanchester((unitPower(u) * vsMul(u, v)) / Math.max(1e-
 function bestFoe(o, from, range, anchor) {
 	const a = anchor || from,
 		U = G.units,
-		isB = !!from.q,
-		sR = UNIT.spy.stealth[isB ? 1 : 0] + (isB ? fxv(o, 'spysight').a : 0);
+		sR = spySeen(o, from);
 	let best = null,
 		bV = -1,
 		bBeat = false;
@@ -11687,7 +11752,7 @@ function bestFoe(o, from, range, anchor) {
 }
 // the nearest unit within r that passes ok, looking only at the squares around (the grid is rebuilt each step)
 function nearU(from, r, ok) {
-	if (G.ugTick !== G.tick) return nearest(G.units, from, ok, r);
+	if (G.ugTick !== G.tick) return nearest(G.units, from, (v) => v !== from && v.hp > 0 && ok(v), r); // never itself nor the fallen, as the grid path
 	const U = G.units,
 		x0 = clamp(((from.x - r) / UG) | 0, 0, UGN - 1),
 		x1 = clamp(((from.x + r) / UG) | 0, 0, UGN - 1),
@@ -12005,7 +12070,7 @@ function fall(p) {
 				b.by = undefined;
 			}
 		plunder(to, got);
-		for (const k of Object.keys(p.res)) p.res[k] = 0;
+		for (const k of Object.keys(p.res)) spend(p, k, p.res[k], 'loot'); // the fallen side's stores go with it
 	}
 	G.units.forEach((u) => {
 		if (u.owner === p.id) {
@@ -12077,13 +12142,13 @@ function finish(won, text, all) {
 	}
 	let best = null;
 	try {
-		best = Number(localStorage.getItem('firstkeep.best')) || null;
+		best = Number(localStorage.getItem(keyOf('best'))) || null;
 	} catch (e) {}
 	const sc = Math.round(G.P[0].score.total * levelMul()); // the level played multiplies the score
 	if (won && (!best || sc > best)) {
 		best = sc;
 		try {
-			localStorage.setItem('firstkeep.best', String(sc));
+			localStorage.setItem(keyOf('best'), String(sc));
 		} catch (e) {}
 	}
 	showEnd(won, `${text} Score ${fmt(sc)}${best ? ' · best ' + fmt(best) : ''}.`, all);
@@ -12129,8 +12194,10 @@ function startWork(u, b) {
 }
 // ═════ 17-ai.js: the computers' minds ═════
 // ───────────────────────── The computer brain: one brain, three personalities, the same rules as you ─────────────────────────
-// Nobody has fog: everyone sees the whole map, so the computers' estimates are the real numbers, as yours are.
-const estPower = (o, of) => powerOf(soldiersOf(of)) + bldsOf(of, 'tower').length * 120 + 250;
+// The computers have no fog: they see the whole map, so their estimates are the real numbers. Yours come from what you see and what your
+// spies report (knownPower, 27). An assumption of the game, said in the Guide (Build 60).
+const powerFrom = (sol, towers) => powerOf(sol) + towers * 120 + 250; // a side's strength: its soldiers, its towers, its people
+const estPower = (o, of) => powerFrom(soldiersOf(of), bldsOf(of, 'tower').length);
 const nearestType = (type, from, kind) =>
 	nearest(G.nodes, from, (n) => n.type === type && n.amt > 0 && n.kind !== 'farm' && (!kind || n.kind === kind));
 // the soldier that best answers what the enemies field, among those this side can train now
@@ -12416,7 +12483,7 @@ function think(p) {
 	if (idle) idle.job = short[0][0];
 	else if (short[0][1] >= 1) {
 		const over = short[short.length - 1][0],
-			v = vils.find((x) => x.job === over && x.carry < 3);
+			v = vils.find((x) => x.job === over && x.carry < 3 && !atShop(x)); // never a shop worker (Build 60: a Mint or Foundry was emptied each time gold or iron ran over)
 		if (v) setJob(v, short[0][0]);
 	}
 	// finds: a detachment clears the nearest guarded one when nothing else is going on; it hires vagabonds it walks past
@@ -17300,7 +17367,8 @@ function draw() {
 	} // the map corner needs no more than seven looks a second
 }
 // ═════ 22-view-fog.js: the minimap and the fog of war ═════
-// Enemy soldiers close to your Town Center but off screen: a red marker on the edge, pointing at them. Tap it to look.
+// Enemy soldiers close to your Town Center but off screen: a red marker on the edge, pointing at them. Tap it to look. Only what your people
+// see (Build 60: it showed armies in the fog, with their number; you cannot have alerts you cannot see or hear, Albert)
 let RADAR = null;
 function drawRadar(wv, wv2) {
 	RADAR = null;
@@ -17309,7 +17377,7 @@ function drawRadar(wv, wv2) {
 	let near = null,
 		nd = Infinity; // the nearest foe within 520 of your Town Center, or any army marching on you, however far
 	for (const u of G.sol || []) {
-		if (u.owner === 0 || u.owner === WILD || u.hp <= 0 || u.inside || !atWar(0, u.owner)) continue;
+		if (u.owner === 0 || u.owner === WILD || u.hp <= 0 || u.inside || !atWar(0, u.owner) || !visibleTo0(u)) continue;
 		const d = dist(u, k);
 		if (
 			(d < 520 || (u.state === 'attack' && u.target === 0)) &&
@@ -17322,7 +17390,7 @@ function drawRadar(wv, wv2) {
 	}
 	if (!near) return;
 	let n = 0;
-	for (const u of G.sol || []) if (u.owner === near.owner && u.hp > 0 && dist(u, near) < 150) n++;
+	for (const u of G.sol || []) if (u.owner === near.owner && u.hp > 0 && dist(u, near) < 150 && visibleTo0(u)) n++;
 	const px = SX(near.x),
 		py = SY(near.y),
 		dx = px - cw / 2,
@@ -17368,9 +17436,9 @@ const hg = [];
 // an enemy spy shows only when something of yours is close enough to see it
 // Fog of war, yours alone (the computers play without it, as the doc says): what your people and towers see now is lit; what they saw stays, dim; the rest is dark.
 const fogAt = (x, y) => G.fog[clamp((y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((x / FOG) | 0, 0, FOGN - 1)];
-const seen0 = (e) => !SET.fog || friendly(0, e.owner) || fogAt(e.x, e.y) === 2; // in your sight now, or yours
-const known0 = (e) => !SET.fog || friendly(0, e.owner) || fogAt(e.x, e.y) > 0; // ever seen: a find you found stays on the map
-const knownB = (b) => !SET.fog || friendly(0, b.owner) || fogAt(b.x, b.y) === 2 || !!G.seenB[b.id]; // a building shows where you see it now, or where you once saw it (Build 51: one put up in ground you had only explored showed without anyone seeing it)
+const seen0 = (e) => !G.fogOn || friendly(0, e.owner) || fogAt(e.x, e.y) === 2; // in your sight now, or yours
+const known0 = (e) => !G.fogOn || friendly(0, e.owner) || fogAt(e.x, e.y) > 0; // ever seen: a find you found stays on the map
+const knownB = (b) => !G.fogOn || friendly(0, b.owner) || fogAt(b.x, b.y) === 2 || !!G.seenB[b.id]; // a building shows where you see it now, or where you once saw it (Build 51: one put up in ground you had only explored showed without anyone seeing it)
 const visibleTo0 = (u) => (u.kind !== 'spy' || friendly(0, u.owner) || u.exposed) && seen0(u);
 let fogCv = null,
 	fogImg = null,
@@ -18041,14 +18109,14 @@ function drawFallen(f, s) {
 	ctx.drawImage(c, -c.ax * k, -c.ay * k, c.width * k, c.height * k);
 	ctx.restore();
 }
+const LEAN = new WeakMap(); // the view's own memory of each woodcutter's lean: the drawing never writes the game's units (Build 60)
 function drawUnit(u, s) {
 	// a woodcutter leans in to its tree while it chops: the tree's ground keeps it 20 away, so it is drawn up to 12 closer (drawing only; the game does not move it)
-	{
-		const n = u.node,
-			on = u.kind === 'vil' && n && n.kind === 'tree' && u.work && G.t - u.work < 0.25;
-		u.lean = clamp((u.lean || 0) + (on ? 0.08 : -0.08), 0, 1);
-	}
-	const ln = u.lean && u.node ? (Math.min(12, Math.max(0, dist(u, u.node) - 10)) * u.lean) / (dist(u, u.node) || 1) : 0,
+	const n = u.node,
+		on = u.kind === 'vil' && n && n.kind === 'tree' && u.work && G.t - u.work < 0.25,
+		lean = clamp((LEAN.get(u) || 0) + (on ? 0.08 : -0.08), 0, 1);
+	LEAN.set(u, lean);
+	const ln = lean && u.node ? (Math.min(12, Math.max(0, dist(u, u.node) - 10)) * lean) / (dist(u, u.node) || 1) : 0,
 		ux = u.node ? u.x + (u.node.x - u.x) * ln : u.x,
 		uy = u.node ? u.y + (u.node.y - u.y) * ln : u.y;
 	const z = cam.z,
@@ -18599,8 +18667,8 @@ function drawGround() {
 // the cracks of a sinkhole: dark jagged arms with a pale edge, and a puff of dust that rises and thins over four seconds; gone after forty-five
 function drawCracks(z) {
 	if (!G.cracks || !G.cracks.length) return;
-	G.cracks = G.cracks.filter((c) => G.t - c.t0 < 45);
 	for (const c of G.cracks) {
+		if (G.t - c.t0 >= 45) continue; // the events tick clears them; the drawing only reads
 		const age = G.t - c.t0,
 			fade = age < 30 ? 1 : (45 - age) / 15,
 			x = SX(c.x),
@@ -18796,7 +18864,7 @@ function drawMini() {
 	m.clearRect(0, 0, 172, 172);
 	m.drawImage(terrainMini, 0, 0);
 	m.drawImage(forestLayer(), 0, 0, 172, 172);
-	if (SET.fog) {
+	if (G.fogOn) {
 		m.imageSmoothingEnabled = false;
 		m.drawImage(fogLayer(), 0, 0, 172, 172);
 	}
@@ -18842,11 +18910,9 @@ function drawMini() {
 	if (G.wx === 'blizzard') {
 		m.fillStyle = 'rgba(235,240,245,.92)';
 		m.fillRect(0, 0, 172, 172);
-		miniIncoming(m, k);
-		return;
-	} // a whiteout: the small map shows nothing
+	} // a whiteout: the land is lost in white; what your people still see, and where you are looking, show on it (Build 60: it went blank)
 	for (const u of G.units)
-		if (u.owner !== WILD ? visibleTo0(u) : !UNIT[u.kind].flee && !UNIT[u.kind].passive && (!SET.fog || seen0(u))) {
+		if (u.owner !== WILD ? visibleTo0(u) : !UNIT[u.kind].flee && !UNIT[u.kind].passive && (!G.fogOn || seen0(u))) {
 			m.fillStyle = G.P[u.owner].color;
 			m.fillRect(u.x * k - 1, u.y * k - 1, 2, 2);
 		}
@@ -18958,7 +19024,7 @@ function drawFire(z, inView) {
 }
 // the fog, soft, over everything standing
 function drawFogLayer(z) {
-	if (SET.fog) {
+	if (G.fogOn) {
 		if (fogT < 0) fogTick();
 		const a1 = toWorld(0, 0),
 			b1 = toWorld(cw, ch),
@@ -19224,7 +19290,8 @@ function drawWeather() {
 		}
 	}
 	// the storm's own lightning: far sheet flashes while it walks, a close bolt now and then (the strikes on buildings come from 36-economy)
-	if (stormy && !lessMotion && now - sheetT > 2.5 + 6 * Math.random() && flashOK(now)) {
+	if (stormy && !lessMotion && !G.paused && now - sheetT > 2.5 + 6 * Math.random() && flashOK(now)) {
+		// not while paused: a bolt ages on the game clock, so one made in a pause never faded and they piled up, each with its thunder (Build 60)
 		sheetT = now;
 		const close = Math.random();
 		if (close > 0.75) {
@@ -20135,21 +20202,22 @@ function techState(t) {
 				: 'locked';
 }
 function techBtn(t, withAt) {
-	const st = techState(t);
+	const st = techState(t),
+		c = techCost(0, t);
 	const sub =
 		st === 'busy'
 			? 'researching'
 			: st === 'short'
-				? `short ${need(t.cost)}`
+				? `short ${need(c)}`
 				: st === 'locked'
 					? researchWhy(0, t.id).replace(/\.$/, '')
-					: costText(t.cost);
+					: costText(c);
 	return btn(
 		`tech:${t.id}`,
 		t.name,
 		sub + (withAt ? ` · ${BLD[t.at].name}` : ''),
 		`a${t.age} ` + (st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock'),
-		st === 'short' ? fillOf(t.cost) : undefined,
+		st === 'short' ? fillOf(c) : undefined,
 	); // a${age}: the top edge wears the age's colour
 }
 const trainsAt = (kind) =>
@@ -20199,9 +20267,11 @@ function statusOf(u) {
 						? 'tending the coppice'
 						: n.type === 'wool'
 							? 'tending the flock'
-							: BLD[n.farm.kind].from
-								? `working the ${nm(n.farm)}`
-								: 'working the field'
+							: n.type === 'stone'
+								? 'quarrying'
+								: n.farm.kind === 'farm'
+									? 'working the field'
+									: `working the ${nm(n.farm)}` // a shop's own name (Build 60: it read a field key no building has, so every shop and the quarry said field)
 					: {
 							tree: 'chopping',
 							bush: 'picking berries',
@@ -20309,11 +20379,21 @@ function foeNearest() {
 	return t;
 }
 // the odds the computers use (17-ai.js): the square law on strength, bent by who counters whom, against their army, towers and Town Center
+// what you know of a side's strength: all of it with no fog, or a spy's report still fresh; else only the soldiers and towers you see
+function knownPower(t) {
+	const I = G.intel[t],
+		all = !G.fogOn || (I && G.t - I.t < TELL.spy);
+	if (all) return { pow: estPower(0, t), foes: soldiersOf(t), seen: false };
+	const foes = soldiersOf(t).filter(visibleTo0);
+	if (!foes.length) return null;
+	return { pow: powerFrom(foes, bldsOf(t, 'tower').filter(knownB).length), foes, seen: true };
+}
 function oddsText(S, t) {
 	if (t === null || t === undefined || !S.length) return '';
-	const r = (powerOf(S) / estPower(0, t)) * matchup(S, soldiersOf(t)),
-		p = lanchester(r);
-	return `odds ${p > 0.65 ? 'strong' : p > 0.4 ? 'even' : 'weak'}`;
+	const K = knownPower(t);
+	if (!K) return 'odds unknown';
+	const p = lanchester((powerOf(S) / K.pow) * matchup(S, K.foes));
+	return `odds ${p > 0.65 ? 'strong' : p > 0.4 ? 'even' : 'weak'}${K.seen ? ', seen' : ''}`;
 }
 // ═════ 28-army-strip.js: the army strip: who can be sent, how many, and the sends ═════
 // ── Attack with: on an enemy or a find card, from the whole army or one battalion, how many of each type, then go. The nearest of each type go.
@@ -21126,14 +21206,21 @@ const settingsHTML = () =>
 		Object.keys(SCENARIOS).map((k) => [`scen:${k}`, SCEN_TEXT[k][0].replace('The ', ''), k]),
 		SET.scen || 'open',
 	) +
-	seg(
+	`<div class="seg2">${seg(
 		'World',
 		[
 			['fantasy:0', 'Real', false],
 			['fantasy:1', 'Fantasy', true],
 		],
 		!!SET.fantasy,
-	) +
+	)}${seg(
+		'Fog',
+		[
+			['fog:1', 'On', true],
+			['fog:0', 'Off', false],
+		],
+		SET.fog !== false,
+	)}</div>` + // two choices of two share a row, so the setup card still fits one page
 	seg(
 		'Tension',
 		[
@@ -21183,7 +21270,7 @@ const CARDS = {
 			const back = refundOf(b),
 				hurtB = b.prog >= 1 && b.hp < M - 1,
 				menders = crew.filter((u) => !u.inside).length;
-			const row = `${b.prog < 1 ? btn(`sendbld:${b.id}`, 'Send a villager', crew.length ? `${crew.length} building` : 'nobody yet', crew.length ? '' : 'go') : ''}${hurtB ? btn(`repair:${b.id}`, 'Repair', menders ? `${menders} mending` : costText(repairCost(0, b)), 'go') : ''}${B.crop && b.prog >= 1 && b.node ? btn(`sendvil:${b.node.id}`, 'Send a villager', slotText(b.node), b.node.wk > 0 ? '' : 'go') : ''}`;
+			const row = `${b.prog < 1 ? btn(`sendbld:${b.id}`, 'Send a villager', crew.length ? `${crew.length} building` : 'nobody yet', crew.length ? '' : 'go') : ''}${hurtB ? btn(`repair:${b.id}`, 'Repair', menders ? `${menders} mending` : costText(repairCost(0, b)), 'go') : ''}${B.crop && b.prog >= 1 && b.node ? btn(`sendvil:${b.node.id}`, 'Send a villager', slotText(b.node), b.node.wk > 0 ? '' : 'go') : ''}${B.crop && b.prog >= 1 && b.node && b.node.wk > 0 ? btn(`sendout:${b.node.id}`, 'Send out', 'one goes home') : ''}`;
 			if (row) h += acts(row);
 			td = acts(
 				b.prog < 0.15
@@ -21508,9 +21595,9 @@ const CARDS = {
 		return h;
 	},
 	fault: () =>
-		title('Something went wrong', 'your game is saved') +
-		`<p>Restart to carry on from the save.</p>` +
-		acts(btn('reload', 'Restart', 'from the save', 'go') + btn('close', 'Carry on', 'as it is')),
+		title('Something went wrong', 'your last save is kept') +
+		`<p>Restart to carry on from the last save. Carry on and nothing more is saved.</p>` +
+		acts(btn('reload', 'Restart', 'from the last save', 'go') + btn('close', 'Carry on', 'not saved')),
 	resume: (c) =>
 		title('Welcome back', 'saved on this phone') +
 		`<p>Your game from ${clock(c.t)}: ${CIVS[c.civ] ? CIVS[c.civ].name + ', ' : ''}${AGES[c.age].name} age. Resume it, or start a new one.</p>` +
@@ -21823,7 +21910,6 @@ const CARDS = {
 				btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '') +
 					btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '') +
 					btn('news', 'World news', SET.news !== false ? 'on' : 'off', SET.news !== false ? 'on' : '') +
-					btn('fog', 'Fog of war', SET.fog ? 'on' : 'off', SET.fog ? 'on' : '') +
 					btn('lights', 'Lights', SET.lights !== false ? 'on' : 'off', SET.lights !== false ? 'on' : '') +
 					btn(
 						'cardpause',
@@ -21873,11 +21959,9 @@ function renderCard() {
 		cardSig = h;
 		patchHTML(
 			$('card'),
-			(info
-				? `<button id="cardI" class="${bookOn ? 'on' : ''}" data-act="info" aria-label="About this">${ICON.book}</button>`
-				: '') +
-				`<button id="cardX" data-act="close" aria-label="Close">×</button>` +
-				h,
+			`<div id="cardBar">${
+				info ? `<button id="cardI" class="${bookOn ? 'on' : ''}" data-act="info" aria-label="About this">${ICON.book}</button>` : ''
+			}<button id="cardX" data-act="close" aria-label="Close">×</button></div>` + h, // the book and the close ride a bar that stays at the top while the card scrolls (Build 60: they scrolled away on short phones)
 		);
 	}
 	const cc = G.card;
@@ -22384,7 +22468,7 @@ const QUIET = new Set(['news', 'soft']);
 // a line with no place happens at your court, or in the sky, and is first hand.
 const DIR8 = ['east', 'south-east', 'south', 'south-west', 'west', 'north-west', 'north', 'north-east'];
 function tell(text, cls, at) {
-	if (!at || at.told || !SET.fog || fogAt(at.x, at.y) === 2) return { now: true };
+	if (!at || at.told || !G.fogOn || fogAt(at.x, at.y) === 2) return { now: true };
 	const lvl = fxv(0, 'news').a,
 		mine = (r) => G.blds.some((b) => b.owner === 0 && b.hp > 0 && Math.abs(b.x - at.x) < r && Math.abs(b.y - at.y) < r && dist(b, at) < r),
 		k = keepOf(0);
@@ -22398,7 +22482,7 @@ function tell(text, cls, at) {
 	}
 	const need = mine(TELL.near) ? 1 : mine(TELL.far) ? 2 : G.blds.some((b) => b.hp > 0 && b.owner !== 0 && G.rel[0][b.owner] === 'ally' && dist(b, at) < TELL.near) ? 3 : 4;
 	if (lvl < need || !k) return null; // no messenger serves that far: the court never hears of it
-	return { delay: dist(k, at) / (lvl >= 2 ? TELL.ride : TELL.foot) };
+	return { delay: wayLen(k, at, 0) / (lvl >= 2 ? TELL.ride : TELL.foot) }; // the messenger rides the road, not the crow's line (Build 60: measured 15% longer at the median, up to 40%)
 }
 function postTick() {
 	// the messengers arrive (once a second, from eventsTick)
@@ -23132,8 +23216,8 @@ const ACT = {
 		saveSet();
 		refresh();
 	},
-	fog() {
-		SET.fog = !SET.fog;
+	fog(a) {
+		SET.fog = a === '1'; // for the next game; a game keeps the fog it started with
 		saveSet();
 		refresh();
 	},
@@ -23428,6 +23512,9 @@ const PLAY = {
 	},
 	sendvil(a) {
 		sendVil(0, Number(a));
+	},
+	sendout(a) {
+		sendOut(0, Number(a));
 	},
 	boxcut(a) {
 		if (G.card && G.card.type === 'box') boxCut(G.card.r, Number(a));
@@ -23928,16 +24015,15 @@ for (const ev of ['pointerup', 'pointercancel', 'pointermove'])
 // never sent anywhere; read on the Tap counts card (Help). A button nobody uses, or one tapped greyed out again and again, is a design question.
 let TAPS = {};
 try {
-	TAPS = JSON.parse(localStorage.getItem('firstkeep.taps') || '{}');
+	TAPS = JSON.parse(localStorage.getItem(keyOf('taps')) || '{}');
 } catch (e) {}
 function tapCount(act, dis) {
 	const k = String(act).split(':')[0],
 		t = TAPS[k] || (TAPS[k] = [0, 0]);
 	t[dis ? 1 : 0]++;
-	if ((t[0] + t[1]) % 10 === 1)
-		try {
-			localStorage.setItem('firstkeep.taps', JSON.stringify(TAPS));
-		} catch (e) {}
+	try {
+		localStorage.setItem(keyOf('taps'), JSON.stringify(TAPS)); // every tap (Build 60: one in ten were kept, so a reload lost most of them)
+	} catch (e) {}
 }
 document.addEventListener('click', (e) => {
 	const el = e.target.closest('[data-act]');
@@ -23963,8 +24049,8 @@ document.addEventListener('click', (e) => {
 for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndInit, { passive: true }); // Safari unlocks audio on the finger lifting, not landing
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
-const SAVEKEY = 'firstkeep.save',
-	SAVEV = 35; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+const SAVEKEY = keyOf('save'),
+	SAVEV = 36; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -24027,6 +24113,13 @@ const MIGRATE = {
 		S.v = 35;
 		return S;
 	}, // Build 59: the market keeps its stock, not its price (P = P0 (Q/Q0)^(−1/ε)): a saved price p is the stock p^(−ε)
+	35: (S) => {
+		for (const b of S.blds || [])
+			for (const j of b.q || [])
+				if (!j.paid) j.paid = j.kind ? UNIT[j.kind].cost : j.tech ? TECHBY[j.tech].cost : j.age ? AGES[j.age].cost : j.muster ? Object.entries(j.muster).reduce((c, [k, n]) => addRes(c, UNIT[k].cost, 2 * n), {}) : {};
+		S.v = 36;
+		return S;
+	}, // Build 60: every order keeps what it paid, so a cancel gives back exactly that; an order saved before is taken at its list price
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -24072,7 +24165,7 @@ const inFight = () => G.units.some((u) => u.owner === 0 && u.tgt && u.tgt.hp > 0
 let fightHold = 0;
 let saveFailT;
 function saveGame(force) {
-	if (!G || G.over || (holdSave && !force)) return;
+	if (!G || G.over || seenErr.size >= 2 || (holdSave && !force)) return; // after a second error the last good save stands
 	if (!force && inFight() && (fightHold = fightHold || G.t) && G.t - fightHold < 60) return;
 	fightHold = 0; // the save stutters: not in the middle of a battle (at most a minute late)
 	try {
@@ -24112,6 +24205,7 @@ function saveGame(force) {
 			prisoners: G.prisoners || [],
 			nat: G.nat || null,
 			fantasy: G.fantasy,
+			fogOn: G.fogOn,
 			mode: G.mode,
 			diff: G.diff,
 			tension: G.tension,
@@ -24141,7 +24235,7 @@ function saveGame(force) {
 			gamesT: G.gamesT,
 			gamesN: G.gamesN,
 			chron: G.chron,
-			chargeT: G.chargeT || {} || 0,
+			chargeT: G.chargeT || {},
 			sand: G.sand || null,
 			mirage: G.mirage || null,
 			mkt: G.mkt || null,
@@ -24220,6 +24314,7 @@ function loadGame(S) {
 		emg: S.emg || null,
 		intel: S.intel || {},
 		fantasy: !!S.fantasy,
+		fogOn: S.fogOn ?? SET.fog,
 		mode: S.mode || 'conquest',
 		diff: S.diff || SET.diff,
 		tension: S.tension || 'winner',
@@ -24327,7 +24422,7 @@ function loadGame(S) {
 	} // an event with its own pieces on the map is dropped on load; the pieces finish on their own. An eclipse, a fog or a heat wave goes on.
 	evmSet();
 	for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined; // orders on the march come back with the game; a stray number is cleared (Build 38 review)
-	for (const b of G.blds) if (b.prog >= 1 && (!SET.fog || friendly(0, b.owner) || G.seenB[b.id])) wearGround(b); // the ground's memory is not saved: the worn ground round buildings you know is laid again
+	for (const b of G.blds) if (b.prog >= 1 && (!G.fogOn || friendly(0, b.owner) || G.seenB[b.id])) wearGround(b); // the ground's memory is not saved: the worn ground round buildings you know is laid again
 	fxDirty();
 	navRebuild();
 	recount();
@@ -24843,8 +24938,10 @@ const baseOf = (k) => (GOODS[k] ? GOODS[k].base : TRADE[k] / 100); // a made goo
 const nameOf = (k) => (GOODS[k] ? GOODS[k].name : RAW_NAME[k]).toLowerCase();
 const colOf = (k) => (GOODS[k] ? GOODS[k].col : RESOURCES[LONG[k]].col); // a cart's load shows its colour: a good's own, or the resource's
 const loadable = (p, k) => (TRADE[k] ? Math.max(0, (p.res[k] || 0) - CARAVAN.keep) : p.goods[k] || 0); // what a caravan may take: all of a made good, a raw find's surplus
-const takeFrom = (p, k, q) => (TRADE[k] ? (p.res[k] -= q) : (p.goods[k] -= q));
-const giveTo = (p, k, q) => (TRADE[k] ? (p.res[k] += q) : (p.goods[k] = (p.goods[k] || 0) + q)); // a load put down: raw into the stores, a good with the goods (Build 52: a raw load taken from a cart made the goods count NaN)
+// a load taken up or put down: raw through the money home (spent on, or back from, trade; a load is not gathered), a good with the goods
+// (Build 52: a raw load taken from a cart made the goods count NaN; Build 60: raw loads left and came back unlogged)
+const takeFrom = (p, k, q) => (TRADE[k] ? spend(p, k, q, 'trade') : (p.goods[k] -= q));
+const giveTo = (p, k, q, why = 'trade') => (TRADE[k] ? earn(p, k, q, why, false) : (p.goods[k] = (p.goods[k] || 0) + q));
 function priceAt(o, good, place, from) {
 	let m = 1;
 	if (place.kind === 'stop' && good === 'spice') return 0; // a stop sells spice; it does not buy it
@@ -24987,7 +25084,7 @@ function routeTick(u, dt, SP) {
 		// home
 		for (const k in u.goods || {}) giveTo(p, k, u.goods[k]);
 		u.goods = {};
-		if (u.foreign && G.plague && G.plague.until > G.t && rng() < 0.5) outbreak(o, 0.05, true, u); // a few cases come home with the cart; the spread does the rest (SIR)
+		if (u.foreign && G.plague && G.plague.until > G.t && rng() < HEALTH.plagueCart * (hz('plague') ? 2 : 1)) outbreak(o, 0.05, true, u); // a few cases come home with the cart; the spread does the rest (SIR). The hazard's "twice as fast along the roads" (Build 60: it was never doubled)
 		u.inspected = false;
 		u.inspT = 0; // plague came home with the carts
 		u.foreign = false;
@@ -25144,7 +25241,7 @@ function ignite(b, why) {
 // Summer storms: lightning strikes open ground now and then, and sometimes a wooden building; bakeries and smithies throw sparks.
 const storm = () => season().name === 'Summer' && (G.wx === 'rain' || G.wx === 'drought');
 function strike(x, y, b) {
-	(G.bolts = G.bolts || []).push({ x, y, t: G.t, seed: Math.random() });
+	(G.bolts = G.bolts || []).push({ x, y, t: G.t, seed: (((x * 12.9898 + y * 78.233) % 1) + 1) % 1 }); // the bolt's shape from where it fell: no Math.random in the simulation
 	scarStrike(x, y);
 	thunder(x, y);
 	if (b) ignite(b, 'lightning');
@@ -25299,7 +25396,7 @@ function upkeepTick() {
 					if (o === 0) say('Your people are fed again.', 'good', 4);
 				}
 			} else {
-				p.res.f = 0;
+				spend(p, 'f', p.res.f, 'upkeep'); // what is left is eaten
 				if (!p.hungry) {
 					p.hungry = true;
 					if (o === 0) say('No food. Work slows. Put villagers on Food.', 'warn', 8);
@@ -26090,7 +26187,7 @@ const EV = {
 // The ground splits: a star of jagged cracks and a puff of dust at (x, y), r wide. Cosmetic: the damage is done by the sinkhole.
 // The arms are worked out once from a seed; the view draws them for 45 s and the ground keeps a faint scar of them.
 function crackAt(x, y, r) {
-	let s = Math.floor(Math.random() * 4e9) || 1;
+	let s = ((Math.floor(x) * 73856093) ^ (Math.floor(y) * 19349663) ^ G.tick) >>> 0 || 1; // the seed from the place and the tick: no Math.random in the simulation (Build 60)
 	const rn = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296,
 		n = 5 + Math.floor(rn() * 3),
 		arms = [];
@@ -26133,6 +26230,7 @@ function endEvent() {
 }
 function eventsTick() {
 	// once a second
+	if (G.cracks && G.cracks.length) G.cracks = G.cracks.filter((c) => G.t - c.t0 < 45); // a sinkhole's cracks fade in 45 s
 	const V = G.ev;
 	if (!V.next) V.next = G.t + EV_MIN + nextIn(EV_MEAN - EV_MIN);
 	if (V.cur) {
@@ -26708,14 +26806,17 @@ function standDown(o, quiet) {
 	if (!k || !go.length) return 0;
 	let n = 0;
 	for (const u of go) {
-		if (popOf(o) >= capOf(o)) break;
+		if (clsCount(o, 'civ') >= clsMax('civ', o)) break; // one for one, so housing never stops it; the worker limit does (Build 60: it checked the houses and not the limit)
 		u.hp = 0;
 		u.gone = true;
 		const v = addUnit(o, 'vil', u.x, u.y);
-		if (v) n++;
+		if (v) {
+			v.job = o === 0 ? p.rally : null; // to your gathering job, as a new villager goes; a computer's think gives its own
+			n++;
+		}
 	}
 	if (n) {
-		if (o === 0) say(`${n} soldiers stood down to the fields.`, 'good', 6);
+		if (o === 0) say(`${n} soldiers stood down to work.`, 'good', 6);
 		else if (!quiet) say(`${p.name} stood down ${n} soldiers.`, '', 4);
 		chron(`${o === 0 ? 'You' : p.name} stood down ${n} soldiers.`);
 	}
@@ -26842,7 +26943,7 @@ const hostile = (v) =>
 	(isSoldier(v) || (v.owner === WILD && UNIT[v.kind].tick === 'wild'));
 function foesNear(c) {
 	const out = [];
-	unitsNear(c, HUD.near, (v) => hostile(v) && out.push(v));
+	unitsNear(c, HUD.near, (v) => hostile(v) && visibleTo0(v) && out.push(v)); // the foes your people see (Build 60)
 	return out;
 }
 const powerSum = (L) => L.reduce((s, u) => s + unitPower(u), 0);
@@ -27415,7 +27516,7 @@ const shelterRank = () =>
 		.sort((a, b) => b.hp - a.hp || shelterOf(0, b.kind) - shelterOf(0, a.kind));
 const roomIn = (b) =>
 	shelterOf(b.owner, b.kind) -
-	G.units.filter((u) => (u.hid === b.id && u.inside) || (u.state === 'garrison' && u.gar === b.id)).length;
+	G.units.filter((u) => u.hid === b.id || (u.state === 'garrison' && u.gar === b.id)).length; // in, or on the way in (Build 60: a second Shelter counted only those in, and over-filled)
 // the way the danger lies from the Town Center: the attack coming, else the nearest threat, else across the map
 function threatDir(k) {
 	const t = G.incoming || nearest(G.threats, k, (v) => atWar(0, v.owner), 700) || { x: MID, y: MID },
@@ -27438,11 +27539,13 @@ function fillRank(units, pick) {
 // (Build 48: Battle Stations kept no picture, so its Hold stayed on every battalion for good)
 function emgSnap(kind) {
 	if (!G.emg) G.emg = { kind, snap: null, temper: G.temper.slice() };
-	if (!G.emg.snap && kind !== 'battle')
-		G.emg.snap = unitsOf(0, 'vil').map((u) => ({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post })); // villagers only when they are sent in: Battle Stations leaves their work alone
+	if (kind === 'battle') return; // villagers only when they are sent in: Battle Stations leaves their work alone
+	const S = G.emg.snap || (G.emg.snap = []);
+	for (const u of unitsOf(0, 'vil'))
+		if (!S.some((n) => n.id === u.id)) S.push({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post }); // one born since the last call is kept too (Build 60)
 }
 function villagersIn() {
-	const V = unitsOf(0, 'vil').filter((u) => !(u.inside && u.shop)), // those at work indoors are indoors already
+	const V = unitsOf(0, 'vil').filter((u) => !(u.inside && u.shop) && !u.hid), // those at work indoors are indoors already; those sent in stay sent
 		k = keepOf(0);
 	const left = fillRank(V, {
 		into: (u, b) => {
@@ -27553,7 +27656,7 @@ CARDS.emergency = () => {
 		)
 	);
 };
-// ═════ 39-boot.js: start-up, and closes the one scope ═════
+// ═════ 41-boot.js: start-up, and closes the one scope ═════
 // ───────────────────────── The loop and the start ─────────────────────────
 let last = performance.now(),
 	acc = 0,
@@ -27569,8 +27672,7 @@ function fault(e) {
 	try {
 		console.error(m);
 		if (seenErr.size >= 2 && G && !G.over) {
-			saveGame(true);
-			setPause(true);
+			setPause(true); // no save from here on (saveGame checks): the last good save stands, never one made after things broke (Build 60)
 			openCard({ type: 'fault' });
 		}
 	} catch (x) {}
@@ -27712,6 +27814,10 @@ window.__fk = {
 	capOf,
 	atCap,
 	capWhy,
+	SCENARIOS,
+	fxDirty,
+	techCost,
+	sendOut,
 	techState,
 	get G() {
 		return G;

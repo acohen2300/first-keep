@@ -87,14 +87,17 @@ function standDown(o, quiet) {
 	if (!k || !go.length) return 0;
 	let n = 0;
 	for (const u of go) {
-		if (popOf(o) >= capOf(o)) break;
+		if (clsCount(o, 'civ') >= clsMax('civ', o)) break; // one for one, so housing never stops it; the worker limit does (Build 60: it checked the houses and not the limit)
 		u.hp = 0;
 		u.gone = true;
 		const v = addUnit(o, 'vil', u.x, u.y);
-		if (v) n++;
+		if (v) {
+			v.job = o === 0 ? p.rally : null; // to your gathering job, as a new villager goes; a computer's think gives its own
+			n++;
+		}
 	}
 	if (n) {
-		if (o === 0) say(`${n} soldiers stood down to the fields.`, 'good', 6);
+		if (o === 0) say(`${n} soldiers stood down to work.`, 'good', 6);
 		else if (!quiet) say(`${p.name} stood down ${n} soldiers.`, '', 4);
 		chron(`${o === 0 ? 'You' : p.name} stood down ${n} soldiers.`);
 	}

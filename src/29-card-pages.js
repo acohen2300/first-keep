@@ -548,14 +548,21 @@ const settingsHTML = () =>
 		Object.keys(SCENARIOS).map((k) => [`scen:${k}`, SCEN_TEXT[k][0].replace('The ', ''), k]),
 		SET.scen || 'open',
 	) +
-	seg(
+	`<div class="seg2">${seg(
 		'World',
 		[
 			['fantasy:0', 'Real', false],
 			['fantasy:1', 'Fantasy', true],
 		],
 		!!SET.fantasy,
-	) +
+	)}${seg(
+		'Fog',
+		[
+			['fog:1', 'On', true],
+			['fog:0', 'Off', false],
+		],
+		SET.fog !== false,
+	)}</div>` + // two choices of two share a row, so the setup card still fits one page
 	seg(
 		'Tension',
 		[

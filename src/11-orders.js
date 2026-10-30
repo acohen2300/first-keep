@@ -1,13 +1,14 @@
 // ═════ 11-orders.js: what a side can do, and why not ═════
 // ───────────────────────── Orders anyone can give (the computers use the same ones) ─────────────────────────
-// what a unit costs this side now (Informers make spies cheaper)
-const unitCost = (o, k) => {
-	const m = fxv(o, 'cost', unitKeys(k)).m;
-	if (m === 1) return UNIT[k].cost;
+// what an order costs this side now: one scaling for units (Informers make spies cheaper) and research (the Encyclopedie, key #research)
+const scaled = (cost, m) => {
+	if (m === 1) return cost;
 	const c = {};
-	for (const r in UNIT[k].cost) c[r] = Math.round(UNIT[k].cost[r] * m);
+	for (const r in cost) c[r] = Math.round(cost[r] * m);
 	return c;
 };
+const unitCost = (o, k) => scaled(UNIT[k].cost, fxv(o, 'cost', unitKeys(k)).m);
+const techCost = (o, T) => scaled(T.cost, fxv(o, 'cost', ['#research']).m);
 function trainWhy(o, kind) {
 	// why a unit cannot be ordered right now, or null
 	const k = civKind(o, kind),
@@ -28,29 +29,22 @@ function train(o, kind) {
 		U = UNIT[k],
 		p = G.P[o],
 		at = readyAt(o, U).sort((a, b) => a.q.length - b.q.length)[0];
-	const t = U.t * stats(o, k).train;
-	pay(p, unitCost(o, k));
-	at.q.push({ kind: k, left: t, total: t });
+	const t = U.t * stats(o, k).train,
+		c = unitCost(o, k);
+	pay(p, c);
+	at.q.push({ kind: k, left: t, total: t, paid: c });
 	return true;
 }
-// cancel one order in a building's line: its cost comes back in full (a muster's too); research and the age give back what was paid
+// cancel one order in a building's line: what was paid for it comes back in full, the way it went out (every order keeps what it paid)
+const whyOf = (j) => (j.tech || j.age ? 'research' : 'units');
 function cancelOrder(o, b, i) {
 	const j = b.q[i],
 		p = G.P[o];
 	if (!j || b.owner !== o) return false;
 	b.q.splice(i, 1);
-	const back = {};
-	if (j.kind) addRes(back, UNIT[j.kind].cost);
-	else if (j.muster) addRes(back, musterCost(o, j.muster).cost);
-	else if (j.tech) {
-		addRes(back, TECHBY[j.tech].cost);
-		p.spent -= sumCost(TECHBY[j.tech].cost);
-	} else if (j.age) {
-		addRes(back, AGES[j.age].cost);
-		p.spent -= sumCost(AGES[j.age].cost);
-		p.aging = false;
-	}
-	addRes(p.res, back);
+	payBack(p, j.paid, whyOf(j));
+	if (j.tech || j.age) p.spent -= sumCost(j.paid);
+	if (j.age) p.aging = false;
 	return true;
 }
 function unTrain(o, kind) {
@@ -98,7 +92,7 @@ function muster(o, plan, bn) {
 	const { cost, t } = musterCost(o, plan),
 		at = ready(o, 'council').sort((a, b) => a.q.length - b.q.length)[0];
 	pay(G.P[o], cost, 'units');
-	at.q.push({ muster: plan, bn, left: t, total: t });
+	at.q.push({ muster: plan, bn, left: t, total: t, paid: cost });
 	return true;
 }
 function researchWhy(o, id) {
@@ -112,7 +106,8 @@ function researchWhy(o, id) {
 	const at = ready(o, T.at)[0];
 	if (!at) return `Needs a ${BLD[T.at].name.toLowerCase()}.`;
 	if (at.q.length >= qMax(o)) return 'That line is full.';
-	if (!afford(p, T.cost)) return `Not enough: ${costText(T.cost)}.`;
+	const c = techCost(o, T);
+	if (!afford(p, c)) return `Not enough: ${costText(c)}.`;
 	return null;
 }
 function research(o, id) {
@@ -120,10 +115,11 @@ function research(o, id) {
 	const T = TECHBY[id],
 		p = G.P[o],
 		at = ready(o, T.at)[0],
-		tt = T.t * fxv(o, 'research').m;
-	pay(p, T.cost, 'research');
-	p.spent += sumCost(T.cost);
-	at.q.push({ tech: id, left: tt, total: tt });
+		tt = T.t * fxv(o, 'research').m,
+		c = techCost(o, T);
+	pay(p, c, 'research');
+	p.spent += sumCost(c);
+	at.q.push({ tech: id, left: tt, total: tt, paid: c });
 	return true;
 }
 function ageUp(o) {
@@ -133,7 +129,7 @@ function ageUp(o) {
 	if (!A || p.aging || !k || !afford(p, A.cost) || k.q.length >= qMax(o)) return false;
 	pay(p, A.cost, 'research');
 	p.spent += sumCost(A.cost);
-	k.q.push({ age: p.age + 1, left: A.t, total: A.t });
+	k.q.push({ age: p.age + 1, left: A.t, total: A.t, paid: A.cost });
 	p.aging = true;
 	return true;
 }
@@ -209,14 +205,17 @@ function sendBuild(o, id, vid) {
 	if (o === 0) say(`A villager goes to raise the ${bldName(o, b.kind).toLowerCase()}.`, '', 3);
 	return true;
 }
-// Take a building down: half its cost back (all of it in the first 15% of the build); what was waiting inside comes back in full. Never the Town Center.
-function refundOf(b) {
-	const full = b.prog < 0.15,
-		back = {};
-	addRes(back, BLD[b.kind].cost, full ? 1 : 0.5);
-	for (const j of b.q)
-		addRes(back, j.kind ? UNIT[j.kind].cost : j.tech ? TECHBY[j.tech].cost : j.age ? AGES[j.age].cost : null);
+// Take a building down: half its cost back (all of it in the first 15% of the build); every order waiting inside is cancelled, so what
+// was paid for it comes back in full (a muster's too: before, a muster in the line was lost). Never the Town Center.
+function shellBack(b) {
+	const back = {};
+	addRes(back, BLD[b.kind].cost, b.prog < 0.15 ? 1 : 0.5);
 	for (const k in back) back[k] = Math.floor(back[k]);
+	return back;
+}
+function refundOf(b) {
+	const back = shellBack(b);
+	for (const j of b.q) addRes(back, j.paid);
 	return back;
 }
 function demolish(o, id) {
@@ -225,9 +224,8 @@ function demolish(o, id) {
 	const p = G.P[o],
 		back = refundOf(b),
 		full = b.prog < 0.15;
-	addRes(p.res, back);
-	if (b.q.some((j) => j.age)) p.aging = false;
-	for (const j of b.q) if (j.tech) p.spent -= sumCost(TECHBY[j.tech].cost);
+	while (b.q.length) cancelOrder(o, b, b.q.length - 1);
+	payBack(p, shellBack(b), 'buildings');
 	b.by = undefined;
 	b.hp = 0;
 	b.q = [];
@@ -775,7 +773,7 @@ function sabotage(u, b) {
 		b.stall = G.t + SAB.stall;
 		const j = b.q.shift();
 		if (j && j.age) G.P[b.owner].aging = false;
-		if (j && (j.tech || j.age)) G.P[b.owner].spent -= sumCost(j.tech ? TECHBY[j.tech].cost : AGES[j.age].cost);
+		if (j && (j.tech || j.age)) G.P[b.owner].spent -= sumCost(j.paid);
 	} // lost research is not counted as research paid
 	if (b.hp <= 0) b.by = undefined; // a fire pays nobody
 	u.hp = 0;
@@ -829,21 +827,35 @@ function setJob(u, job, n) {
 	if (n && n.farm) n.wk = (n.wk || 0) + 1;
 	if (job !== 'repair') u.rep = null;
 }
-// the + and − under a job: + takes an idle villager, else the one earning least on another job; − sends home the one earning least on this one
+// a villager at a workshop, a mint or a foundry, walking there or working inside: + and the computers leave it be; − and Send out free it
+const atShop = (u) => !!(u.node && u.node.farm && BLD[u.node.farm.kind].makes);
+// the + and − under a job: + takes an idle villager, else the one earning least on another job; − sends home the one earning least on this
+// one, a shop worker too (Build 60: one inside a Mint or a Foundry could never be called out)
 function moveVil(o, job, down) {
-	const V = unitsOf(o, 'vil').filter((u) => !u.inside),
+	const all = unitsOf(o, 'vil'),
+		V = all.filter((u) => !u.inside),
 		low = (L) => L.reduce((b, u) => (!b || forageNow(u) < forageNow(b) ? u : b), null);
 	if (down) {
-		const v = low(V.filter((u) => u.job === job));
+		const v = low(all.filter((u) => u.job === job && (!u.inside || u.shop)));
 		if (v) setJob(v, null);
 		return;
 	}
-	const v = V.find((u) => !u.job) || low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job) && !(u.node && u.node.farm && BLD[u.node.farm.kind].makes)));
+	const v = V.find((u) => !u.job) || low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job) && !atShop(u)));
 	if (v) setJob(v, job);
+}
+// Send out (a field, a pasture or a shop's card): the last villager sent there goes home; a shop worker steps out of the door
+function sendOut(o, id) {
+	const v = unitsOf(o, 'vil').filter((u) => u.node && u.node.id === id).pop();
+	if (v) setJob(v, null);
+	return !!v;
 }
 function sendVil(o, id) {
 	const n = G.nodes.find((x) => x.id === id);
 	if (!n || (n.amt <= 0 && n.kind !== 'farm')) return false;
+	if (n.farm && (n.wk || 0) >= slotsOf(n)) {
+		if (o === 0) say('Already worked: one to each.', '', 3);
+		return false;
+	}
 	const job = n.type,
 		v = pickVil(o, n, job);
 	if (!v) {
@@ -1045,8 +1057,8 @@ function incomingTick() {
 		return;
 	}
 	const n = G.units.filter(
-		(u) => u.hp > 0 && u.owner === best.owner && u.state === 'attack' && hyp(u.x - best.x, u.y - best.y) < 140,
-	).length;
+		(u) => u.hp > 0 && u.owner === best.owner && u.state === 'attack' && hyp(u.x - best.x, u.y - best.y) < 140 && seen0(u),
+	).length; // the ones you can see
 	G.incoming = {
 		x: best.x,
 		y: best.y,

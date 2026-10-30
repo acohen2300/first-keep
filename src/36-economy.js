@@ -71,8 +71,10 @@ const baseOf = (k) => (GOODS[k] ? GOODS[k].base : TRADE[k] / 100); // a made goo
 const nameOf = (k) => (GOODS[k] ? GOODS[k].name : RAW_NAME[k]).toLowerCase();
 const colOf = (k) => (GOODS[k] ? GOODS[k].col : RESOURCES[LONG[k]].col); // a cart's load shows its colour: a good's own, or the resource's
 const loadable = (p, k) => (TRADE[k] ? Math.max(0, (p.res[k] || 0) - CARAVAN.keep) : p.goods[k] || 0); // what a caravan may take: all of a made good, a raw find's surplus
-const takeFrom = (p, k, q) => (TRADE[k] ? (p.res[k] -= q) : (p.goods[k] -= q));
-const giveTo = (p, k, q) => (TRADE[k] ? (p.res[k] += q) : (p.goods[k] = (p.goods[k] || 0) + q)); // a load put down: raw into the stores, a good with the goods (Build 52: a raw load taken from a cart made the goods count NaN)
+// a load taken up or put down: raw through the money home (spent on, or back from, trade; a load is not gathered), a good with the goods
+// (Build 52: a raw load taken from a cart made the goods count NaN; Build 60: raw loads left and came back unlogged)
+const takeFrom = (p, k, q) => (TRADE[k] ? spend(p, k, q, 'trade') : (p.goods[k] -= q));
+const giveTo = (p, k, q, why = 'trade') => (TRADE[k] ? earn(p, k, q, why, false) : (p.goods[k] = (p.goods[k] || 0) + q));
 function priceAt(o, good, place, from) {
 	let m = 1;
 	if (place.kind === 'stop' && good === 'spice') return 0; // a stop sells spice; it does not buy it
@@ -215,7 +217,7 @@ function routeTick(u, dt, SP) {
 		// home
 		for (const k in u.goods || {}) giveTo(p, k, u.goods[k]);
 		u.goods = {};
-		if (u.foreign && G.plague && G.plague.until > G.t && rng() < 0.5) outbreak(o, 0.05, true, u); // a few cases come home with the cart; the spread does the rest (SIR)
+		if (u.foreign && G.plague && G.plague.until > G.t && rng() < HEALTH.plagueCart * (hz('plague') ? 2 : 1)) outbreak(o, 0.05, true, u); // a few cases come home with the cart; the spread does the rest (SIR). The hazard's "twice as fast along the roads" (Build 60: it was never doubled)
 		u.inspected = false;
 		u.inspT = 0; // plague came home with the carts
 		u.foreign = false;
@@ -372,7 +374,7 @@ function ignite(b, why) {
 // Summer storms: lightning strikes open ground now and then, and sometimes a wooden building; bakeries and smithies throw sparks.
 const storm = () => season().name === 'Summer' && (G.wx === 'rain' || G.wx === 'drought');
 function strike(x, y, b) {
-	(G.bolts = G.bolts || []).push({ x, y, t: G.t, seed: Math.random() });
+	(G.bolts = G.bolts || []).push({ x, y, t: G.t, seed: (((x * 12.9898 + y * 78.233) % 1) + 1) % 1 }); // the bolt's shape from where it fell: no Math.random in the simulation
 	scarStrike(x, y);
 	thunder(x, y);
 	if (b) ignite(b, 'lightning');
@@ -527,7 +529,7 @@ function upkeepTick() {
 					if (o === 0) say('Your people are fed again.', 'good', 4);
 				}
 			} else {
-				p.res.f = 0;
+				spend(p, 'f', p.res.f, 'upkeep'); // what is left is eaten
 				if (!p.hungry) {
 					p.hungry = true;
 					if (o === 0) say('No food. Work slows. Put villagers on Food.', 'warn', 8);

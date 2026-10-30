@@ -1,5 +1,6 @@
 // ═════ 22-view-fog.js: the minimap and the fog of war ═════
-// Enemy soldiers close to your Town Center but off screen: a red marker on the edge, pointing at them. Tap it to look.
+// Enemy soldiers close to your Town Center but off screen: a red marker on the edge, pointing at them. Tap it to look. Only what your people
+// see (Build 60: it showed armies in the fog, with their number; you cannot have alerts you cannot see or hear, Albert)
 let RADAR = null;
 function drawRadar(wv, wv2) {
 	RADAR = null;
@@ -8,7 +9,7 @@ function drawRadar(wv, wv2) {
 	let near = null,
 		nd = Infinity; // the nearest foe within 520 of your Town Center, or any army marching on you, however far
 	for (const u of G.sol || []) {
-		if (u.owner === 0 || u.owner === WILD || u.hp <= 0 || u.inside || !atWar(0, u.owner)) continue;
+		if (u.owner === 0 || u.owner === WILD || u.hp <= 0 || u.inside || !atWar(0, u.owner) || !visibleTo0(u)) continue;
 		const d = dist(u, k);
 		if (
 			(d < 520 || (u.state === 'attack' && u.target === 0)) &&
@@ -21,7 +22,7 @@ function drawRadar(wv, wv2) {
 	}
 	if (!near) return;
 	let n = 0;
-	for (const u of G.sol || []) if (u.owner === near.owner && u.hp > 0 && dist(u, near) < 150) n++;
+	for (const u of G.sol || []) if (u.owner === near.owner && u.hp > 0 && dist(u, near) < 150 && visibleTo0(u)) n++;
 	const px = SX(near.x),
 		py = SY(near.y),
 		dx = px - cw / 2,
@@ -67,9 +68,9 @@ const hg = [];
 // an enemy spy shows only when something of yours is close enough to see it
 // Fog of war, yours alone (the computers play without it, as the doc says): what your people and towers see now is lit; what they saw stays, dim; the rest is dark.
 const fogAt = (x, y) => G.fog[clamp((y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((x / FOG) | 0, 0, FOGN - 1)];
-const seen0 = (e) => !SET.fog || friendly(0, e.owner) || fogAt(e.x, e.y) === 2; // in your sight now, or yours
-const known0 = (e) => !SET.fog || friendly(0, e.owner) || fogAt(e.x, e.y) > 0; // ever seen: a find you found stays on the map
-const knownB = (b) => !SET.fog || friendly(0, b.owner) || fogAt(b.x, b.y) === 2 || !!G.seenB[b.id]; // a building shows where you see it now, or where you once saw it (Build 51: one put up in ground you had only explored showed without anyone seeing it)
+const seen0 = (e) => !G.fogOn || friendly(0, e.owner) || fogAt(e.x, e.y) === 2; // in your sight now, or yours
+const known0 = (e) => !G.fogOn || friendly(0, e.owner) || fogAt(e.x, e.y) > 0; // ever seen: a find you found stays on the map
+const knownB = (b) => !G.fogOn || friendly(0, b.owner) || fogAt(b.x, b.y) === 2 || !!G.seenB[b.id]; // a building shows where you see it now, or where you once saw it (Build 51: one put up in ground you had only explored showed without anyone seeing it)
 const visibleTo0 = (u) => (u.kind !== 'spy' || friendly(0, u.owner) || u.exposed) && seen0(u);
 let fogCv = null,
 	fogImg = null,

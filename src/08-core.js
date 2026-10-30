@@ -18,8 +18,8 @@ const afford = (p, c) => Object.entries(c || {}).every(([k, v]) => p.res[k] >= v
 // Every resource in or out goes through earn and spend: one home for the stores, the flow of the last minute (p.flow, p.spent1), the
 // ledger of where it came from and went (p.ledger) and the gathered total. Build 58; before, 25 lines wrote p.res directly (Albert: one home).
 const LEDGER = {
-	in: ['gather', 'trade', 'tithe', 'tribute', 'ransom', 'market', 'loot', 'mint', 'venture', 'tax'],
-	out: ['units', 'buildings', 'research', 'upkeep', 'spoiled', 'trade', 'tribute', 'ransom', 'market', 'tax', 'venture', 'zeal', 'repairs'],
+	in: ['gather', 'finds', 'trade', 'tithe', 'tribute', 'ransom', 'market', 'loot', 'mint', 'venture', 'tax'],
+	out: ['units', 'buildings', 'research', 'upkeep', 'shops', 'spoiled', 'trade', 'tribute', 'ransom', 'market', 'tax', 'venture', 'zeal', 'repairs', 'loot'],
 };
 function earn(p, k, amt, why, counts = true) {
 	if (!(amt > 0)) return 0;
@@ -41,6 +41,17 @@ function spend(p, k, amt, why) {
 const pay = (p, c, why = 'units') => {
 	for (const [k, v] of Object.entries(c || {})) spend(p, k, v, why);
 };
+// what was paid comes back the way it went out (Build 60): the store, the minute's spending and the ledger all step back, so a cancel is
+// as if the order never was (before, the list price came back after a discounted one was paid, and the ledger still counted it spent)
+function payBack(p, c, why = 'units') {
+	const L = p.ledger || (p.ledger = { in: {}, out: {} });
+	for (const [k, v] of Object.entries(c || {}))
+		if (v > 0) {
+			p.res[k] += v;
+			p.spent1[k] = Math.max(0, (p.spent1[k] || 0) - v);
+			L.out[why] = Math.max(0, (L.out[why] || 0) - v);
+		}
+}
 const addRes = (a, c, f = 1) => {
 	for (const [k, v] of Object.entries(c || {})) a[k] = (a[k] || 0) + v * f;
 	return a;
@@ -117,14 +128,31 @@ const SET = {
 	vibe: true,
 	learned: {},
 };
+// One home for this phone's storage (Build 60): the preview keeps its own keys, so a preview save never moves the live game's aside, nor
+// the live game the preview's. The first time the preview runs it copies (never moves) what the live game kept.
+const STORE = 'firstkeep.' + (/\/preview\//.test(location.pathname) ? 'preview.' : ''),
+	keyOf = (k) => STORE + k;
 try {
-	Object.assign(SET, JSON.parse(localStorage.getItem('firstkeep.settings') || '{}'));
+	if (STORE !== 'firstkeep.' && localStorage.getItem(keyOf('settings')) === null) {
+		for (const k of ['settings', 'taps', 'best']) {
+			const v = localStorage.getItem('firstkeep.' + k);
+			if (v !== null) localStorage.setItem(keyOf(k), v);
+		}
+		const ver = (s) => (s ? JSON.parse(s).v || 0 : -1),
+			a = localStorage.getItem('firstkeep.save'),
+			b = localStorage.getItem('firstkeep.save.old'),
+			v = ver(a) >= ver(b) ? a : b; // of the two the live game may hold, the newer: the preview game it moved aside, not its own
+		if (v) localStorage.setItem(keyOf('save'), v);
+	}
+} catch (e) {}
+try {
+	Object.assign(SET, JSON.parse(localStorage.getItem(keyOf('settings')) || '{}'));
 } catch (e) {}
 if (!CIVS[SET.civ]) SET.civ = 'roman';
 if (!(SET.setV >= 38)) {
 	let old = false;
 	try {
-		old = !!localStorage.getItem('firstkeep.settings');
+		old = !!localStorage.getItem(keyOf('settings'));
 	} catch (e) {}
 	if (old && SET.diff === 'easy' && SET.mode === 't30') {
 		SET.diff = 'normal';
@@ -135,7 +163,7 @@ if (!(SET.setV >= 38)) {
 SET.mix = Object.assign({ fx: 1, amb: 1, alert: 1 }, SET.mix); // three volumes: effects, ambience, alerts
 function saveSet() {
 	try {
-		localStorage.setItem('firstkeep.settings', JSON.stringify(SET));
+		localStorage.setItem(keyOf('settings'), JSON.stringify(SET));
 	} catch (e) {}
 }
 // Research lines: the steps of one line at one building come in table order; a step waits on the one before it and on what it names in need
@@ -231,8 +259,11 @@ const armyFull = (o) => `Army full, ${clsCount(o, 'army')}/${armyRoom(o)}. ${ARM
 const qMax = (o) => QUEUE + fxv(o, 'queue').a; // orders one building's line holds (Written records, Guilds add to it)
 const lineFree = (o, kinds) => kinds.some((k) => ready(o, k).some((b) => b.q.length < qMax(o)));
 // how many of a building you may have now: by age, plus research
+// a cap table lists the ages it changes in; an age past its end keeps the last limit (Build 60: 19 tables stopped at Gunpowder, so the
+// Enlightenment read no limit at all)
+const capAt = (cp, age) => cp[Math.min(age, cp.length - 1)];
 const capFor = (o, kind) =>
-	BLD[kind].nocap ? Infinity : (BLD[kind].cap ? BLD[kind].cap[G.P[o].age] : 1) + fxv(o, 'limit', [kind]).a;
+	BLD[kind].nocap ? Infinity : (BLD[kind].cap ? capAt(BLD[kind].cap, G.P[o].age) : 1) + fxv(o, 'limit', [kind]).a;
 const atCap = (o, kind) => bldsOf(o, kind).length >= capFor(o, kind);
 function capWhy(o, kind) {
 	// why no more of this building, or null
@@ -240,7 +271,7 @@ function capWhy(o, kind) {
 	const c = capFor(o, kind),
 		A = G.P[o].age,
 		cp = BLD[kind].cap,
-		more = cp && A < 4 && cp[A + 1] > cp[A];
+		more = cp && A + 1 < cp.length && cp[A + 1] > cp[A];
 	return c ? `At the limit of ${c}` + (more ? '. A new age allows more' : '') : 'A later age allows it';
 }
 const clsCount = (o, c) =>
@@ -486,6 +517,9 @@ const rngOf = (u) => {
 // (the projectile range from a height, R = (v cos θ / g)(v sin θ + √(v² sin² θ + 2gh), with v² = g r0; air drag left out and said so in SCIENCE.md)
 const rangeFrom = (r0, h) => (r0 / 2) * (1 + Math.sqrt(1 + (4 * h) / r0));
 const rangeOf = (o, kind) => rangeFrom(BLD[kind].bow, BLD[kind].h) + (o === WILD ? 0 : fxv(o, 'rng', bldKeys(kind)).a);
+// how far a side's unit or building sees a hidden spy (research adds to a building's): one home for who may shoot it and when your screen
+// shows it (Build 60: towers aimed with the research added while the screen did not, so spies died unseen)
+const spySeen = (o, from) => UNIT.spy.stealth[from.q ? 1 : 0] + (from.q && o !== WILD ? fxv(o, 'spysight').a : 0);
 const lookout = (kind) => Math.round(LOOKOUT.base + LOOKOUT.k * Math.sqrt(BLD[kind].h || 0)); // how far a building sees, from its height
 const sightOf = (e) =>
 	((UNIT[e.kind] ? (e.owner !== undefined && e.owner !== WILD && e.owner !== null ? stats(e.owner, e.kind).sight : UNIT[e.kind].sight) || 100 : lookout(e.kind)) + // a tier can add sight (the mounted scout)

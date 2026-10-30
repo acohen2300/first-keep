@@ -8,6 +8,7 @@ function blankGame(seed) {
 		speed: G ? G.speed : 1,
 		over: null,
 		seed,
+		fogOn: SET.fog, // fog of war is chosen at the start and kept for the whole game (Build 60: it could be switched off mid-game from Help)
 		rs: seed,
 		units: [],
 		blds: [],
@@ -141,7 +142,7 @@ function newGame(seed, carry) {
 		if (!best || f.worst < best.worst) best = { tr, worst: f.worst };
 	}
 	makeBg();
-	for (const b of G.blds) if (!SET.fog || friendly(0, b.owner)) wearGround(b);
+	for (const b of G.blds) if (!G.fogOn || friendly(0, b.owner)) wearGround(b);
 	dangerMap(); // a fresh danger map: the last game's must not steer the first second of this one
 	evmSet();
 	const k = G.P[0].keep;
@@ -164,9 +165,14 @@ function applyScenario(id) {
 	G.scen = id;
 	const sides = S.all ? G.P.filter((p) => p.id !== WILD) : [G.P[0]];
 	for (const p of sides) {
+		const grant = (t) => {
+			if (p.techs.has(t)) return;
+			for (const n of needsOf(TECHBY[t])) grant(n);
+			p.techs.add(t);
+		}; // a research step comes with the steps it waits on, as if researched in order (the gate checks every name is a real step)
 		if (S.age) p.age = Math.max(p.age, S.age);
 		if (S.res) for (const k in S.res) p.res[k] = Math.max(p.res[k], S.res[k]);
-		if (S.techs) for (const t of S.techs) if (TECHBY[t]) p.techs.add(t);
+		if (S.techs) for (const t of S.techs) grant(t);
 		if (S.mode) G.mode = S.mode;
 	}
 	if (S.rel)
@@ -186,8 +192,8 @@ function applyScenario(id) {
 	for (const [kind, dx] of S.blds || []) {
 		const s = findSpot(0, kind, k.x + dx, k.y, 0, 120);
 		if (!s) continue;
-		const b = mkBld(0, kind, s.x, s.y, 1);
-		G.blds.push(b);
+		G.blds.push(mkBld(0, kind, s.x, s.y, 1));
+		navRebuild(); // the next one sees this one (Build 60: they were all placed on an empty grid, so they could overlap)
 	}
 	if (S.walls) {
 		for (const c of wallPlan(k)) if (!NAV.occ[c.gy * NC + c.gx] && !canPlace(0, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) G.blds.push(mkBld(0, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5, 1));

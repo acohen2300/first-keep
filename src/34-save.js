@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
-const SAVEKEY = 'firstkeep.save',
-	SAVEV = 35; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+const SAVEKEY = keyOf('save'),
+	SAVEV = 36; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -64,6 +64,13 @@ const MIGRATE = {
 		S.v = 35;
 		return S;
 	}, // Build 59: the market keeps its stock, not its price (P = P0 (Q/Q0)^(−1/ε)): a saved price p is the stock p^(−ε)
+	35: (S) => {
+		for (const b of S.blds || [])
+			for (const j of b.q || [])
+				if (!j.paid) j.paid = j.kind ? UNIT[j.kind].cost : j.tech ? TECHBY[j.tech].cost : j.age ? AGES[j.age].cost : j.muster ? Object.entries(j.muster).reduce((c, [k, n]) => addRes(c, UNIT[k].cost, 2 * n), {}) : {};
+		S.v = 36;
+		return S;
+	}, // Build 60: every order keeps what it paid, so a cancel gives back exactly that; an order saved before is taken at its list price
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -109,7 +116,7 @@ const inFight = () => G.units.some((u) => u.owner === 0 && u.tgt && u.tgt.hp > 0
 let fightHold = 0;
 let saveFailT;
 function saveGame(force) {
-	if (!G || G.over || (holdSave && !force)) return;
+	if (!G || G.over || seenErr.size >= 2 || (holdSave && !force)) return; // after a second error the last good save stands
 	if (!force && inFight() && (fightHold = fightHold || G.t) && G.t - fightHold < 60) return;
 	fightHold = 0; // the save stutters: not in the middle of a battle (at most a minute late)
 	try {
@@ -149,6 +156,7 @@ function saveGame(force) {
 			prisoners: G.prisoners || [],
 			nat: G.nat || null,
 			fantasy: G.fantasy,
+			fogOn: G.fogOn,
 			mode: G.mode,
 			diff: G.diff,
 			tension: G.tension,
@@ -178,7 +186,7 @@ function saveGame(force) {
 			gamesT: G.gamesT,
 			gamesN: G.gamesN,
 			chron: G.chron,
-			chargeT: G.chargeT || {} || 0,
+			chargeT: G.chargeT || {},
 			sand: G.sand || null,
 			mirage: G.mirage || null,
 			mkt: G.mkt || null,
@@ -257,6 +265,7 @@ function loadGame(S) {
 		emg: S.emg || null,
 		intel: S.intel || {},
 		fantasy: !!S.fantasy,
+		fogOn: S.fogOn ?? SET.fog,
 		mode: S.mode || 'conquest',
 		diff: S.diff || SET.diff,
 		tension: S.tension || 'winner',
@@ -364,7 +373,7 @@ function loadGame(S) {
 	} // an event with its own pieces on the map is dropped on load; the pieces finish on their own. An eclipse, a fog or a heat wave goes on.
 	evmSet();
 	for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined; // orders on the march come back with the game; a stray number is cleared (Build 38 review)
-	for (const b of G.blds) if (b.prog >= 1 && (!SET.fog || friendly(0, b.owner) || G.seenB[b.id])) wearGround(b); // the ground's memory is not saved: the worn ground round buildings you know is laid again
+	for (const b of G.blds) if (b.prog >= 1 && (!G.fogOn || friendly(0, b.owner) || G.seenB[b.id])) wearGround(b); // the ground's memory is not saved: the worn ground round buildings you know is laid again
 	fxDirty();
 	navRebuild();
 	recount();

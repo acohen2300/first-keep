@@ -34,8 +34,8 @@ function drawGround() {
 // the cracks of a sinkhole: dark jagged arms with a pale edge, and a puff of dust that rises and thins over four seconds; gone after forty-five
 function drawCracks(z) {
 	if (!G.cracks || !G.cracks.length) return;
-	G.cracks = G.cracks.filter((c) => G.t - c.t0 < 45);
 	for (const c of G.cracks) {
+		if (G.t - c.t0 >= 45) continue; // the events tick clears them; the drawing only reads
 		const age = G.t - c.t0,
 			fade = age < 30 ? 1 : (45 - age) / 15,
 			x = SX(c.x),
@@ -231,7 +231,7 @@ function drawMini() {
 	m.clearRect(0, 0, 172, 172);
 	m.drawImage(terrainMini, 0, 0);
 	m.drawImage(forestLayer(), 0, 0, 172, 172);
-	if (SET.fog) {
+	if (G.fogOn) {
 		m.imageSmoothingEnabled = false;
 		m.drawImage(fogLayer(), 0, 0, 172, 172);
 	}
@@ -277,11 +277,9 @@ function drawMini() {
 	if (G.wx === 'blizzard') {
 		m.fillStyle = 'rgba(235,240,245,.92)';
 		m.fillRect(0, 0, 172, 172);
-		miniIncoming(m, k);
-		return;
-	} // a whiteout: the small map shows nothing
+	} // a whiteout: the land is lost in white; what your people still see, and where you are looking, show on it (Build 60: it went blank)
 	for (const u of G.units)
-		if (u.owner !== WILD ? visibleTo0(u) : !UNIT[u.kind].flee && !UNIT[u.kind].passive && (!SET.fog || seen0(u))) {
+		if (u.owner !== WILD ? visibleTo0(u) : !UNIT[u.kind].flee && !UNIT[u.kind].passive && (!G.fogOn || seen0(u))) {
 			m.fillStyle = G.P[u.owner].color;
 			m.fillRect(u.x * k - 1, u.y * k - 1, 2, 2);
 		}
@@ -393,7 +391,7 @@ function drawFire(z, inView) {
 }
 // the fog, soft, over everything standing
 function drawFogLayer(z) {
-	if (SET.fog) {
+	if (G.fogOn) {
 		if (fogT < 0) fogTick();
 		const a1 = toWorld(0, 0),
 			b1 = toWorld(cw, ch),

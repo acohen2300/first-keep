@@ -29,7 +29,7 @@ const hostile = (v) =>
 	(isSoldier(v) || (v.owner === WILD && UNIT[v.kind].tick === 'wild'));
 function foesNear(c) {
 	const out = [];
-	unitsNear(c, HUD.near, (v) => hostile(v) && out.push(v));
+	unitsNear(c, HUD.near, (v) => hostile(v) && visibleTo0(v) && out.push(v)); // the foes your people see (Build 60)
 	return out;
 }
 const powerSum = (L) => L.reduce((s, u) => s + unitPower(u), 0);

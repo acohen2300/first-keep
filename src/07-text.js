@@ -4,6 +4,7 @@
 // the ledger's words (earn and spend, 08-core)
 const LEDGER_WORD = {
 	gather: 'gathered',
+	finds: 'finds',
 	trade: 'trade',
 	tithe: 'the Throne tithe',
 	tribute: 'tribute',
@@ -17,6 +18,7 @@ const LEDGER_WORD = {
 	buildings: 'buildings',
 	research: 'research and ages',
 	upkeep: 'eaten',
+	shops: 'used by shops',
 	spoiled: 'spoiled',
 	zeal: 'zeal',
 	repairs: 'repairs',
@@ -35,11 +37,11 @@ const WHY = {
 	age3: 'The Middle Ages (about AD 500 to 1500): castles, knights, crossbows and longbows, universities, and the heavy plough.',
 	age5: 'The Enlightenment (about 1650 to 1800): the Royal Society (1660), the Encyclopédie (1751), inoculation, the turnip and the clover, the school for every child. Game: an age that only a year of peace across the whole board opens, with no soldiers in it; its six steps are the match, and its last step ends it with the crowns.',
 	method: 'The Royal Society (1660) and its Philosophical Transactions (1665): experiment, record, publish, repeat. Knowledge compounded.',
-	vaccine: 'Jenner showed in 1796 that cowpox guards against smallpox; variolation had come to London from Constantinople in 1721 with Lady Mary Wortley Montagu, and was older still in the Ottoman lands, China and India.',
+	vaccine: 'Jenner showed in 1796 that cowpox guards against smallpox; variolation had come to London from Constantinople in 1721 with Lady Mary Wortley Montagu, and was older still in the Ottoman lands, China and India. Game: the last step, the latest date in the age; a board at peace that ends its oldest killer has finished what the truce began.',
 	fourcourse: 'The Norfolk four-course (wheat, turnips, barley, clover) spread through England in the 1730s: no fallow year, more fodder, more manure, more grain. The Low Countries had it a century earlier.',
 	encyclopedia: 'Diderot and his fellow editors published the Encyclopédie from 1751: 28 volumes, every trade drawn and described, so no craft had to be learned twice.',
 	schooling: 'Prussia ordered every child to school in 1763 (the Generallandschulreglement); Scotland had parish schools from 1696. A people that reads works smarter.',
-	freetrade: 'Adam Smith, The Wealth of Nations (1776): trade is not a war with a loser; both sides gain. Game: the last step, because a board that trades freely has finished what the truce began.',
+	freetrade: 'Adam Smith, The Wealth of Nations (1776): trade is not a war with a loser; both sides gain.',
 	age4: 'Gunpowder (about AD 1400 to 1600): matchlock guns and cannon. Great bombards broke the walls of Constantinople in 1453; Italian engineers answered with low angled star forts, and walls stopped being the end of a siege.',
 	arquebus:
 		'The matchlock arquebus (late 15th century) let a few weeks of drill make a soldier. Spanish arquebusiers won at Cerignola in 1503, and pike-and-shot formations ruled the next century.',
@@ -756,7 +758,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Courthouse and spies',
-		`The Courthouse trains spies; its guards shoot enemy spies within ${BLD.courthouse.rng}. A spy is seen by soldiers only within ${UNIT.spy.stealth[0]} and by towers, the Town Center and Courthouses within ${UNIT.spy.stealth[1]}. Near an enemy building it reads their stores, age, research and army.`,
+		`The Courthouse trains spies; its guards shoot the enemy spies they see, within bowshot (${Math.round(rangeOf(0, 'courthouse'))}). A spy is seen by soldiers only within ${UNIT.spy.stealth[0]} and by towers, the Town Center and Courthouses within ${UNIT.spy.stealth[1]}. Near an enemy building it reads their stores, age, research and army.`,
 		'States watched for spies as long as they have had secrets.',
 	],
 	[
@@ -971,7 +973,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Fog of war',
-		'You see what your people and your allies see; the rest of the map is as you last saw it, and the unseen is dark. Spies stay hidden until something of yours is close. Night shortens sight. Turn it off in Help for an open map.',
+		`You see what your people and your allies see; the rest of the map is as you last saw it, and the unseen is dark. An army out of sight reaches you by its noise or by a messenger, and the odds count only the soldiers you see, or the report of a spy under ${TELL.spy / 60} minutes old. Spies stay hidden until something of yours is close. Night shortens sight. The computers play without fog: an assumption of the game, the one way they are not like you. Choose it on or off when you start a game.`,
 		'Scouts earned their pay by what they saw first.',
 	],
 	[
