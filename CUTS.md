@@ -901,3 +901,28 @@ Albert's list of Oct 30 afternoon, talked through on his drive and agreed ("Gree
   - **The strip** centred in each cell, nothing spills: the age by name where it fits the 45 pt cell (Medieval measures 42), Powder and Peace for the two that do not (the strip only; the cards keep Gunpowder and Enlightenment, Albert's call); the rank in the strip (★ 4th), the score on its card.
   - **Card titles**: one line with the book and ×, the content's left edge.
   - **Research rows** carry a › (`techgo`): to the building where it is learned, its card open; the row itself still starts it (Albert: "a purist would go to the building", the shortcut kept as the exception).
+
+## Build 65 preview (not live): the audit's three bugs, and a fresh-eyes cleanup of Build 64
+Albert: "Yeah go for it. I'm worried about patches and fixes though… Is the code clean? Did you fresh eyes audit it?" It had not been: Build 64 went through four rounds after his looks on the phone. A separate reviewer read every change since Build 63 without my reasoning; every finding was checked before it was acted on (one was half wrong: `st-green` is used, by sites going up and squads out; only `button.green` was dead).
+
+**The outside audit's three bugs, each fixed as a rule**: the preview shows red first, then the newest (`shownMsg`, one choice the preview and × share: × had closed a different line than the one on show); the people cell is the number alone, so 180/180 fits the 45 pt cell (measured: 37 pt of text and a 13 pt icon did not); the door's tap follows what the door shows (`DOOR.top`), so a change inside the 150 ms between draws cannot send you elsewhere.
+
+**The review's logic errors, fixed**: a second tap on the same problem opens the Realm (`DOOR.went`): an action like Hungry (the food rally) or A house is never repeated or undone, where a second tap had toggled the rally back off; every page but Jobs sits on one brown backing whatever way you reached it (`#orders:not(.pg-jobs)`; the old `hud` and `sqr` classes only changed on the way out of Jobs); a line that comes while a full card is open waits in the mail and is counted (it had expired unseen); 22 lines of world news in `11-orders` (wars and alliances between others, hostility, your emissary killed, offers, help sent, prisoners, ransom, sabotage, the vagabonds) carry their groups, where they had fallen under Replies and could not be hidden.
+
+**One home where there were copies**:
+- The colour code lives in the style sheet's `--ring-r/-w/-g/-b`; the code reads it (`codeOf`) for the preview, the mail, the missions and the gradient. It had been written in four places with four blues. The gradient is now the straight line from the code's red through white to its green: the pink and the light green are where it passes.
+- What the town needs is one table (`NEEDS`, `goldTight` in `39-huddle`), read by the tips, the Build page and the Stores domain, where each had its own copy.
+- The shortfall words come from `need()`.
+- The song is one string (`SONG`, 07-text) for the Guide and the Sound page.
+- The military tint is one rule for its fourteen selectors.
+- The card title is one rule. Two had fought, one cancelling the other's padding.
+- The door's badge has its own class (`.dn`), no longer the tally's `.pill` undone property by property.
+
+**Cut** (each searched for in all of src/ and tests/ first): seven icons (`up`, `bell`, `hush` from the ticker; `go`, `shop`, `cult`, `less` from before), nine verbs (`mailclear`, `towncard`, `unvil`, `mtab`, `sqprev`, `sqnext`, `sqcard`, `wstance`, `habortall`), the old alert bar's styles, `.lamp-*`, `.blink`, `.hudGhost`, `#hudB.sel`, `#buildT .gl`, the black-glass look of the squad and emergency cards (one material now), the near-black left in `#card`, `#end` and the row's words, `VILMAX` (one population has no villager cap), `LEDGER` (its keys are `LEDGER_WORD`'s), `goodsOf`, two unused locals, and a line that set the chip visible every frame for nothing. 1.5 kB of dead style alone. Lint: no errors and, for the first time in several builds, no warnings.
+
+**Words brought up to date**: the page order in the Help, the Guide, the chip's label and three comments (Jobs, Realm, Build, War, Squad, Train); the sound note (the slant distance and the camera's height); the door's comment (the Realm is a page).
+
+**The card's book and ×** sit on the title's line, measured on four cards to the point: the × had sat 9 pt above the book.
+- **Gate**: 25 of 25 at four sizes; the play fingerprint unchanged (no rule of the simulation moved), so the harness stands as Build 63's. One catch on the way: the row's "words wear the ring's colour" rule reached the Setup card's Start and painted its words its own colour (contrast 1.1); it is the row's alone now. Lint: clean, no warnings.
+- **Soak, 3 seeds, 20 minutes, Hard, every hazard**: pass; save 240 to 241 kB; a frame drawn in 8.5, 13.2 and 15.2 ms here (headless).
+- **Size**: the built file 0 → 1191327 bytes.

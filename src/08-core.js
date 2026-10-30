@@ -3,22 +3,19 @@
 const $ = (id) => document.getElementById(id);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const hyp = (x, y) => Math.sqrt(x * x + y * y);
-// The one gradient (Albert, Build 64): red, pink, white, light green, green, for every number that has a meaning. v runs from −1 (the
-// worst) to +1 (the best); a cost row reads how near you are to paying, a store and its job read their velocity. Colour is never alone:
-// the number is always there, and the two ends differ in brightness as well as hue.
-const GRAD = [
-	[255, 107, 91],
-	[246, 166, 160],
-	[233, 236, 239],
-	[168, 224, 176],
-	[95, 208, 138],
-];
+// The colour code's one home is the style sheet (--ring-r, -w, -g, -b); the code reads it once (Build 65: it was written in four places).
+const CODE = {};
+const codeOf = (k) => CODE[k] || (CODE[k] = getComputedStyle(document.documentElement).getPropertyValue('--ring-' + k).trim() || '#e9ecef');
+const rgbOf = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+// The one gradient (Albert, Build 64): red, through pink, white, light green, to green, for every number that has a meaning. v runs
+// from −1 (the worst) to +1 (the best); a cost row reads how near you are to paying, a store and its job read their velocity. It is the
+// straight line between the code's red, white and green: the pink and the light green are where it passes. Colour is never alone: the
+// number is always there, and the two ends differ in brightness as well as hue.
 function grad(v) {
-	const x = (clamp(v, -1, 1) + 1) * 2,
-		i = Math.min(3, Math.floor(x)),
-		f = x - i,
-		a = GRAD[i],
-		b = GRAD[i + 1];
+	const x = clamp(v, -1, 1),
+		a = rgbOf(codeOf('w')),
+		b = rgbOf(codeOf(x < 0 ? 'r' : 'g')),
+		f = Math.abs(x);
 	return `rgb(${a.map((c, j) => Math.round(c + (b[j] - c) * f)).join(',')})`;
 }
 const costCol = (fr) => grad(fr >= 1 ? 0.55 : fr - 1); // short: red at nothing, white near enough; enough: light green
@@ -36,26 +33,7 @@ const costText = (c) =>
 const afford = (p, c) => Object.entries(c || {}).every(([k, v]) => p.res[k] >= v);
 // Every resource in or out goes through earn and spend: one home for the stores, the flow of the last minute (p.flow, p.spent1), the
 // ledger of where it came from and went (p.ledger) and the gathered total. Build 58; before, 25 lines wrote p.res directly (Albert: one home).
-const LEDGER = {
-	in: ['gather', 'finds', 'trade', 'tithe', 'tribute', 'ransom', 'market', 'loot', 'mint', 'venture', 'tax'],
-	out: [
-		'units',
-		'buildings',
-		'research',
-		'upkeep',
-		'shops',
-		'spoiled',
-		'trade',
-		'tribute',
-		'ransom',
-		'market',
-		'tax',
-		'venture',
-		'zeal',
-		'repairs',
-		'loot',
-	],
-};
+// the reasons are the keys of LEDGER_WORD (07-text), where each has its word
 function earn(p, k, amt, why, counts = true) {
 	if (!(amt > 0)) return 0;
 	p.res[k] += amt;

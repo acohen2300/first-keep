@@ -64,8 +64,7 @@ const CARDS = {
 				(trainsAt(b.kind).length || TECH.some((t) => t.at === b.kind) || b.kind === 'keep')
 			)
 				h += slotsHTML(b);
-			const mk = b.kind === 'market',
-				kp = b.kind === 'keep',
+			const kp = b.kind === 'keep',
 				trade = kp && G.ktab === 'rel'; // the Town Center's relations side shows no training or research; the Market keeps its research at the top like every card (Build 61)
 			const tr = trade ? [] : trainsAt(b.kind),
 				techs = trade ? [] : TECH.filter((t) => ownTech(t) && t.at === b.kind && isNext(0, t)),
@@ -744,7 +743,7 @@ const CARDS = {
 			row('fx', 'Effects', SET.mix.fx) +
 			row('amb', 'Ambience', SET.mix.amb) +
 			row('alert', 'Alerts', SET.mix.alert) +
-			`<p>Effects: work and battle. Ambience: birds, wind, crickets, thunder. Alerts: horn, ready, done, a new age. The silent switch of your phone mutes the game.</p><p class="dim">There is no music in life. Life is the music. The rhythm you hear is your kingdom at work, its own song, composed by your decisions.</p>`
+			`<p>Effects: work and battle. Ambience: birds, wind, crickets, thunder. Alerts: horn, ready, done, a new age. The silent switch of your phone mutes the game.</p><p class="dim">${SONG}</p>`
 		);
 	},
 	taps() {
@@ -767,7 +766,7 @@ const CARDS = {
 			) +
 			`<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
       <p><b>The door:</b> under People, it shows the most important thing now: red something wrong, blue something you can do, white all is well. Tap it to go where it is fixed; tap it again, or when all is well, for the dashboard: the realm, people, work, stores, tech and the mail.</p>
-      <p><b>Build:</b> the chip above the row turns the pages: Jobs, Build, War, Squad, Train. The Build page shows what the town needs (blue: build it now; green: going up; red: what stands in the way) and All opens every building. It waits above your finger: drag it, then tap Build.</p>
+      <p><b>Build:</b> the chip above the row turns the pages: Jobs, Realm, Build, War, Squad, Train. The Build page shows what the town needs (blue: build it now; green: going up; red: what stands in the way) and All opens every building. It waits above your finger: drag it, then tap Build.</p>
       <p><b>Messages</b> arrive at the top and fade; tap one to see where. × on a group of news asks to hide that group: it then goes quietly to the mail, and red still shows. Numbers wear one colour scale: green gaining, white steady, red losing.</p>
       <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Pause shows the speeds under the button.</p>
       <p><b>Army:</b> tap open ground with nothing picked, then the sword: Idle, All or a squad goes there. The War, Squad and Train pages hold your squads, what they are made of, and what is being trained.</p>
@@ -841,7 +840,6 @@ function renderCard() {
 	}
 	const cc = G.card;
 	$('card').classList.toggle('setup', cc.type === 'setup');
-	$('card').classList.toggle('hud', cc.type === 'squad' || cc.type === 'emergency'); // the covert look of the attack bar
 	const size =
 		cc.type === 'bld' && (G.blds.find((b) => b.id === cc.id) || {}).kind === 'market' ? 'lg' : SIZE_OF(cc.type);
 	$('card').classList.toggle('full', size === 'lg');

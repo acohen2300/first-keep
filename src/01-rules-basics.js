@@ -7,7 +7,6 @@ const MAP = 2000,
 const BN = ['Alpha', 'Beta', 'Gamma', 'Delta'], // four squads, the row's four middle tiles (Build 61; six before)
 	BNS = BN.length; // the battalions, once Command is researched
 const POPMAX = 180,
-	VILMAX = 60,
 	ARMYMAX = 120,
 	BNSIZE = 40,
 	SHARE_FALLEN = 0.5; // a fallen side's room: half of it is split among whoever is left   // six battalions, once Command is researched at a War Council; BNSIZE: the most one Zeal blesses

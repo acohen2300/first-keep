@@ -96,8 +96,8 @@ const CLIMATE = {
 // (Rothermel); grow: seconds to a full fire (design: a house burns down in 50); near: the gap, in units, at which the heat is a quarter; reach: beyond this none.
 const FIRE = { rate: 0.12, grow: 20, near: 10, reach: 40 };
 const FIREARMS = { chance: 0.12, blast: 0.3, splash: 40, splashHit: 0.3 }; // fire arrows and burning shot ignite a wooden building on a hit (rain halves it); a petard bombard ignites and shakes the neighbours too
-// Sound by distance (Build 62): ISO 9613-2, L = L0 − 20 log10(d / d0) − α d. Full within d0 (half the screen's radius: you hear what you look at),
-// then the inverse-square law, less the air's absorption α: 5 dB a kilometre at 1 kHz, 20 °C, 50% humidity (ISO 9613-1), over a world unit of 0.14 m.
+// Sound by distance (Build 62; the ear at the camera's height since Build 64): ISO 9613-2, L = L0 − 20 log10(s / d0) − α s, s the slant
+// distance from the camera, full within d0 (the camera's height at the closest zoom), then the inverse-square law, less the air's absorption α: 5 dB a kilometre at 1 kHz, 20 °C, 50% humidity (ISO 9613-1), over a world unit of 0.14 m.
 // Thunder reaches the ear after the flash at 340 m/s over the same metre. floor: below this share it is not played.
 const SOUND = { fov: 60, alphaKm: 5, metre: 0.14, floor: 0.03, c: 340 }; // fov: the camera's field of view, degrees, which turns the zoom into a height (Albert, Build 64)
 const GARRISON = { r: 70, heal: 0.6 }; // soldiers resting by their own Castle, Barracks or Town Center heal; Garrison wards double it

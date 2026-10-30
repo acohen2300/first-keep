@@ -8,7 +8,6 @@ const FLEECE = 7,
 const stopsAll = () => G.finds.filter((f) => f.kind === 'stop');
 const postAt = (f) => G.blds.find((b) => b.kind === 'tpost' && b.sid === f.id && b.hp > 0);
 const stopsHeld = (o, r) => stopsAll().filter((f) => f.route === r && f.owner === o).length; // of one route's four stops
-const goodsOf = (o) => G.P[o].goods;
 function stash(o, type, amt) {
 	const p = G.P[o],
 		k = KEY[type] || type;

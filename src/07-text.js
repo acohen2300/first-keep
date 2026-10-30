@@ -581,6 +581,8 @@ const NEWS = [
 // why an event happened, under its line in the list (Build 58): the real cause, in a few words
 // Milestones that teach (Albert, Build 63): each fires once a game when its moment comes, says the mechanic in a line, why it is so, and the
 // one thing to do about it (a fix that opens the right card). Read back on the Milestones card. The words live here; the tests in 32-frame.
+// the song (Albert, Build 64): the Guide's entry and the Sound page both say it, from here
+const SONG = 'There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, composed by your decisions.';
 const MS_TEXT = {
 	house: [
 		'Your first house: five more may live here.',
@@ -602,7 +604,7 @@ const MS_TEXT = {
 	],
 	soldier: [
 		'Your first soldier: the row has a War page now.',
-		'The chip at the left of the jobs cycles the pages: Jobs, War, Build, Squad, Train.',
+		'The chip over the first slot cycles the pages: Jobs, Realm, Build, War, Squad, Train.',
 		'Open the War page',
 		'pagecycle',
 	],
@@ -906,7 +908,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The song',
-		'There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, composed by your decisions. Every stroke sounds when it lands, at the pace of the find it works; crews fall into step on their own; the birds, the wind and the thunder sit on top. Nobody else writes a note of it.',
+		SONG + ' Every stroke sounds when it lands, at the pace of the find it works; crews fall into step on their own; the birds, the wind and the thunder sit on top. Nobody else writes a note of it.',
 		'Work songs kept crews in time long before metronomes: sea shanties, the sowing songs of the fields, the smith striking on the beat. The game plays only what happens.',
 	],
 	[

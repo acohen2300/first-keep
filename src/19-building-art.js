@@ -955,8 +955,7 @@ const ART = {
 	},
 	range(c) {
 		// the butts on a green (Build 61, Albert: open-air): three targets at the back, a shooting line, hay behind
-		const w = 40,
-			d = w * TILT;
+		const w = 40;
 		field(
 			w,
 			'#8cb860',

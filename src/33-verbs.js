@@ -84,13 +84,6 @@ const ACT = {
 		G.buildAt = hint ? { hint } : null;
 		openCard({ type: 'menu', id: M ? M.id : G.lastMenu || MENUS[0].id });
 	}, // Build opens on what fits the middle of the view   // Build opens the Build card on the menu last used; again, it closes
-	towncard() {
-		const k = keepOf(0);
-		if (k) openCard({ type: 'bld', id: k.id });
-	},
-	unvil() {
-		if (!unTrain(0, 'vil')) say('Nobody is waiting to train.', '', 3);
-	},
 	idlego() {
 		const u = unitsOf(0, 'vil').find(freeVil);
 		if (!u) return;
@@ -258,8 +251,7 @@ const ACT = {
 		feel('tick');
 	},
 	pvx() {
-		const now = performance.now(),
-			m = (G.mail || []).find((x) => x.ru > now);
+		const m = shownMsg();
 		if (!m) return;
 		m.ru = 0;
 		if (m.grp !== 'reply' && !urgentCls(m.cls) && !hiddenG(m.grp)) G.pvAsk = m.grp; // × on news asks once: hide this group?
@@ -293,11 +285,6 @@ const ACT = {
 	mailall() {
 		SET.hideG = {};
 		saveSet();
-		refresh();
-	},
-	mailclear() {
-		G.mail = [];
-		G.mailN = 0;
 		refresh();
 	},
 	sound() {
@@ -380,9 +367,6 @@ const PLAY = {
 	less(a) {
 		moveVil(0, a, true);
 	},
-	mtab(a) {
-		G.mtab = a;
-	},
 	ktab(a) {
 		G.ktab = a;
 	},
@@ -409,7 +393,7 @@ const PLAY = {
 	},
 	pagecycle() {
 		pageCycle();
-	}, // the chip at the row's left: Jobs, War, Build, Squad, Train (Build 63)
+	}, // the chip over the first slot: Jobs, Realm, Build, War, Squad, Train (Build 64)
 	sqdone() {
 		hudPage('war');
 		G.hud.sel = G.hud.sq.i;
@@ -481,14 +465,6 @@ const PLAY = {
 	sqcycle() {
 		sqCycle();
 	},
-	sqprev() {
-		G.hud.sq.i = (G.hud.sq.i + BNS - 1) % BNS;
-		G.hud.sq.tile = null;
-	},
-	sqnext() {
-		G.hud.sq.i = (G.hud.sq.i + 1) % BNS;
-		G.hud.sq.tile = null;
-	},
 	sqtile(a) {
 		const t = Number(a);
 		G.hud.sq.tile = G.hud.sq.tile === t ? null : t;
@@ -499,17 +475,9 @@ const PLAY = {
 			k = sqUnit(Number(t));
 		if (k) sqPlan(G.hud.sq.i, k, d === '+' ? 1 : -1);
 	},
-	sqcard(a) {
-		openCard({ type: 'squad', i: Number(a) });
-	},
 	sqpk(a) {
 		const [i, k, d] = a.split(',');
 		sqPlan(Number(i), k, d === '+' ? 1 : -1);
-	},
-	wstance() {
-		const s = G.hud.sel;
-		cycle('temper', s === null || s === undefined ? 'all' : s, TEMPER.length);
-		feel('tick');
 	},
 	whome() {
 		hudHome();
@@ -538,9 +506,6 @@ const PLAY = {
 		const s = G.hud.sel;
 		if (s !== null && s !== undefined && sqOut(s)) hudAbort(s);
 		else hudAbortAll();
-	},
-	habortall() {
-		hudAbortAll();
 	},
 	hdel(a) {
 		hudAbort(Number(a));

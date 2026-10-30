@@ -2,7 +2,7 @@
 // One row, six slots, three shapes, five pages. A slot is a fixed place the thumb learns; what fills it is one of three shapes: WHOLE (one
 // button the height of the slot), SPLIT (two buttons touching, top and bottom: people over build, create over cycle, ✓ over ✕) or PM (an icon
 // and a count above, − and + below with air between: the jobs). The chip at the row's left end is the one constant: it cycles the pages
-// Jobs → War → Build → Squad → Train, and every page is always there (dimmed until the game opens it), so the order never changes under
+// Jobs → Realm → Build → War → Squad → Train (Build 64), and every page is always there (dimmed until the game opens it), so the order never changes under
 // the hand. The sixth slot is ✓ over ✕ on every page that confirms. The same row is a card's action bar (the worker card), so there is one
 // element to learn. The Huddle's sequence (ready, aim, fire, abort) lives on in the War page's missions.
 const CLS = [
@@ -360,10 +360,10 @@ function hudReinforce(slot) {
 // ── the row: six slots, three shapes
 const odds2 = (p) => `hsl(${Math.round(Math.max(0, Math.min(1, p)) * 120)} 75% 58%)`;
 function mStatus(m) {
-	if (m.st === 'go') return [mmss(m.eta || 0), '#7db4ff'];
+	if (m.st === 'go') return [mmss(m.eta || 0), codeOf('b')];
 	if (m.st === 'act') return ['FIGHTING', odds2(m.odds)];
-	if (m.st === 'lost') return ['LOST', '#ff6a5a'];
-	return [m.late ? `LATE +${m.late}s` : '✓ DONE', m.late ? '#ffd35e' : '#5fd08a'];
+	if (m.st === 'lost') return ['LOST', codeOf('r')];
+	return [m.late ? `LATE +${m.late}s` : '✓ DONE', m.late ? 'var(--gold)' : codeOf('g')]; // on its way blue, lost red, done green, late gold: the code
 }
 const stB = (act, t, cls = '', extra = '') => `<button class="cell st ${cls}" data-act="${act}"${extra}>${t}</button>`;
 const cellB = (act, top, word, cls = '', extra = '') =>
@@ -419,22 +419,23 @@ function warPageHTML() {
 	return h;
 }
 const favKinds = () => (SET.fav && SET.fav.length ? SET.fav : FAV0).slice(0, 5);
+// What the town needs (Build 65: one table; the tips, the Build page and the Stores domain read it, where each had its own copy). Each test
+// is the reason; the tips add their words and the Build page its colour.
+const goldTight = (p) => p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300); // gold short while another store is full
+const NEEDS = {
+	house: () => popOf(0) >= capOf(0) - 1 && capOf(0) < POPMAX && !G.blds.some((b) => b.owner === 0 && b.kind === 'house' && b.prog < 1),
+	barracks: () => !bldsOf(0, 'barracks').length && G.t > 75,
+	lumber: () => unitsOf(0, 'vil').filter((u) => u.job === 'wood').length >= 3 && !bldsOf(0, 'lumber').length,
+	farm: () => {
+		const k = keepOf(0);
+		return !!k && G.nodes.filter((n) => n.kind === 'bush' && dist(n, k) < 300).length < 3 && !bldsOf(0, 'farm').length;
+	},
+	market: () => goldTight(G.P[0]) && !bldsOf(0, 'market').length,
+	hospital: () => G.units.some((u) => u.owner === 0 && u.sick > G.t) && !bldsOf(0, 'hospital').length && G.P[0].age >= 2,
+};
+const buildWants = () => Object.keys(NEEDS).filter((k) => NEEDS[k]());
 // The Build page (Build 64): what the town needs, in the colour code. Blue: wanted and you can build it now; green: going up; red: wanted
 // but blocked, with the reason (what it is short of, or what it needs first); then your pinned favourites, white. The sixth is the Build card.
-function buildWants() {
-	const p = G.P[0],
-		k = keepOf(0),
-		V = unitsOf(0, 'vil'),
-		on = (j) => V.filter((u) => u.job === j).length,
-		W = [];
-	if (popOf(0) >= capOf(0) - 1 && capOf(0) < POPMAX) W.push('house');
-	if (!bldsOf(0, 'barracks').length && G.t > 75) W.push('barracks');
-	if (on('wood') >= 3 && !bldsOf(0, 'lumber').length) W.push('lumber');
-	if (k && G.nodes.filter((n) => n.kind === 'bush' && dist(n, k) < 300).length < 3 && !bldsOf(0, 'farm').length) W.push('farm');
-	if (p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && !bldsOf(0, 'market').length) W.push('market');
-	if (G.units.some((u) => u.owner === 0 && u.sick > G.t) && !bldsOf(0, 'hospital').length && p.age >= 2) W.push('hospital');
-	return W; // the same reads the tips make: one source for what the town wants
-}
 function buildItems() {
 	const p = G.P[0],
 		out = [],
@@ -450,7 +451,7 @@ function buildItems() {
 				? { k, st: 'red', word: BLD[k].age > p.age ? AGES[BLD[k].age].name : 'blocked', act: `build:${k}`, why }
 				: afford(p, BLD[k].cost)
 					? { k, st: 'blue', word: BLD[k].short || BLD[k].name, act: `build:${k}` }
-					: { k, st: 'red', word: `short ${costText(Object.fromEntries(Object.entries(BLD[k].cost).filter(([r, v]) => (p.res[r] || 0) < v).map(([r, v]) => [r, Math.ceil(v - (p.res[r] || 0))])))}`, act: `build:${k}` },
+					: { k, st: 'red', word: `short ${need(BLD[k].cost)}`, act: `build:${k}` },
 		);
 	}
 	for (const k of favKinds()) if (out.length < 4 && !has(k) && BLD[k]) out.push({ k, st: '', word: BLD[k].short || BLD[k].name, act: `build:${k}` });
@@ -581,8 +582,6 @@ function huddleUI() {
 	if (flip) {
 		el.hidden = page === 'jobs';
 		$('jobs').hidden = page !== 'jobs';
-		$('orders').classList.toggle('hud', page === 'war' || page === 'train');
-		$('orders').classList.toggle('sqr', page === 'squad');
 	}
 	$('orders').className =
 		$('orders')
@@ -770,7 +769,7 @@ CARDS.squad = (c) => {
 // Five domains, each a verdict the game already computes, in the colour code: red something wrong, blue available (act on it now),
 // green active, white all is well. The door, under People in the row's first slot, shows the highest red, else the highest blue, in
 // this order of importance: the realm (what is coming at you), the people, the work, the stores, the tech. A tap goes where that is
-// fixed; from there, or when all is well, it opens the dashboard: the five and the mail, one row on top of the row. Colour is never
+// fixed; a second tap on the same problem, or when all is well, opens the Realm page: the mail and the five, in the row. Colour is never
 // alone: each tile has its icon and its word.
 const DOMAIN_ORDER = ['realm', 'people', 'work', 'stores', 'tech'];
 const DOMAIN_NAME = { realm: 'Realm', people: 'People', work: 'Work', stores: 'Stores', tech: 'Tech' };
@@ -842,7 +841,7 @@ function domains() {
 	// the stores: what runs out within two minutes, and what a market would turn into gold
 	{
 		const low = RES.map((r) => KEY[r]).find((k) => p.res[k] !== undefined && velOf(p, k) <= -1 && $('r' + k) && !$('r' + k).parentElement.hidden),
-			sell = p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && ready(0, 'market').length;
+			sell = goldTight(p) && ready(0, 'market').length;
 		D.stores = low
 			? { st: 'red', word: `${RESOURCES[LONG[low]].name} low`, go: `job:${LONG[low]}` }
 			: sell
@@ -879,15 +878,16 @@ const atGo = (go) =>
 	go.startsWith('page:') ? (G.hud.page || 'jobs') === go.slice(5) : go.startsWith('card:') ? !!G.card && go.slice(5).startsWith(G.card.type) : false;
 function doorTap() {
 	const T = DOOR.top; // what the door shows, not a fresh read: a change inside the 150 ms between draws cannot send you elsewhere (Build 65)
-	if (T && !atGo(T.go)) {
+	if (T && DOOR.went !== DOOR.key && !atGo(T.go)) {
+		DOOR.went = DOOR.key; // one tap a problem: the second opens the Realm, so an action (the food rally, a house) is never repeated or undone
 		closeCard();
 		act(T.go);
-	} else hudPage('realm'); // all is well, or already there: the Realm page
+	} else hudPage('realm'); // all is well, already there, or the second tap: the Realm page
 	feel('tick');
 }
-const doorHTML = (id = 'doorB') =>
-	`<button class="cell st door"${id ? ` id="${id}"` : ''} data-act="door" aria-label="The door: the most important thing now"><span class="top"></span>${wd('')}</button>`;
-let DOOR = { sig: '', key: '', top: null }; // top: what the door shows now, which its tap follows
+const doorHTML = () =>
+	`<button class="cell st door" id="doorB" data-act="door" aria-label="The door: the most important thing now"><span class="top"></span>${wd('')}</button>`;
+let DOOR = { sig: '', key: '', top: null, went: '' }; // top: what the door shows, which its tap follows; went: the problem it last took you to
 function doorUI() {
 	if (!G || G.over) return;
 	const D = domains(),
@@ -899,22 +899,21 @@ function doorUI() {
 		key = T ? T.id + T.st : '',
 		fresh = key !== DOOR.key;
 	DOOR.top = T;
-	for (const el of document.querySelectorAll('button.door')) {
-		if (el.sig !== sig) {
-			el.sig = sig;
-			el.className = 'cell st door ' + st;
-			el.children[0].innerHTML = icon;
-			const pl = el.querySelector(':scope > .pill');
-			if (pl) pl.remove();
-			if (D.n > 1) el.insertAdjacentHTML('beforeend', `<span class="pill">${D.n}</span>`);
-			el.children[1].textContent = word;
-			el.setAttribute('aria-label', T ? `${T.name}: ${word}` : 'All is well: the dashboard');
-		}
-		if (fresh && T) {
-			el.classList.remove('pulse');
-			void el.offsetWidth;
-			el.classList.add('pulse'); // a new red or blue pulses the door once and is heard: seen and heard, as every alert must be
-		}
+	const el = $('doorB');
+	if (el.sig !== sig) {
+		el.sig = sig;
+		el.className = 'cell st door ' + st;
+		el.children[0].innerHTML = icon;
+		el.children[1].textContent = word;
+		const pl = el.querySelector('.dn');
+		if (pl) pl.remove();
+		if (D.n > 1) el.insertAdjacentHTML('beforeend', `<span class="dn">${D.n}</span>`);
+		el.setAttribute('aria-label', T ? `${T.name}: ${word}` : 'All is well: the Realm');
+	}
+	if (fresh && T) {
+		el.classList.remove('pulse');
+		void el.offsetWidth;
+		el.classList.add('pulse'); // a new red or blue pulses the door once and is heard: seen and heard, as every alert must be
 	}
 	if (fresh) {
 		DOOR.key = key;

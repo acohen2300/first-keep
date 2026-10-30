@@ -56,7 +56,6 @@ const ICON = {
 		16,
 		'<path d="M8 1.5 L13.5 3.5 V8 Q13.5 12.5 8 14.5 Q2.5 12.5 2.5 8 V3.5 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>',
 	),
-	go: SVG(16, '<path d="M4 2.5 L13 8 L4 13.5 Z" fill="currentColor"/>'),
 	cls: {
 		foot: SVG(
 			16,
@@ -91,14 +90,6 @@ const ICON = {
 		20,
 		'<path d="M4 17 V6 H6.5 V8.2 H8.6 V6 H11.4 V8.2 H13.5 V6 H16 V17 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 17 V13 H11.4 V17" fill="currentColor"/>',
 	),
-	shop: SVG(
-		20,
-		'<path d="M3.5 7.5 H15.5 M12.5 4.5 L15.5 7.5 L12.5 10.5 M16.5 13 H4.5 M7.5 10 L4.5 13 L7.5 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>',
-	),
-	cult: SVG(
-		20,
-		'<path d="M3 8.2 L10 4 L17 8.2 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M5.2 9.5 V15 M8.4 9.5 V15 M11.6 9.5 V15 M14.8 9.5 V15 M3 16.5 H17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
-	),
 	sword: SVG(
 		16,
 		'<path d="M13.5 2.5 L13.5 4.6 L6.6 11.5 L4.5 9.4 L11.4 2.5 Z" fill="currentColor"/><path d="M3.2 8.6 L7.4 12.8 M2.4 13.6 L5 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
@@ -123,7 +114,6 @@ const ICON = {
 		20,
 		'<path d="M3 5.5 L7.5 4 L12.5 5.5 L17 4 V14.5 L12.5 16 L7.5 14.5 L3 16 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M7.5 4 V14.5 M12.5 5.5 V16" stroke="currentColor" stroke-width="1.5"/>',
 	),
-	less: SVG(20, '<path d="M4.5 10 H15.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'),
 	sound: SVG(
 		16,
 		'<path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor"/><path class="w" d="M11 5.5q2 2.5 0 5M12.8 3.8q3.4 4.2 0 8.4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/><path class="x" d="M11 6l4 4M15 6l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
@@ -132,25 +122,12 @@ const ICON = {
 		16,
 		'<path d="M3 4.5h10M3 8h10M3 11.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
 	),
-	up: SVG(
-		16,
-		'<path d="M3.5 10l4.5-4.5 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
-	),
-	bell: SVG(
-		16,
-		'<path d="M8 2.2c-2.3 0-3.9 1.8-3.9 4.1v2.6L2.8 11h10.4l-1.3-2.1V6.3C11.9 4 10.3 2.2 8 2.2z" fill="currentColor"/><path d="M6.6 12.6a1.5 1.5 0 0 0 2.8 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>',
-	),
 	mail: SVG(
 		20,
 		'<rect x="2.5" y="4.5" width="15" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3 5.5 L10 11 L17 5.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
 	),
 	play: SVG(16, '<path d="M4.5 2.8 L13 8 L4.5 13.2 Z" fill="currentColor"/>'),
 	pause: SVG(16, '<path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/>'),
-	hush: SVG(
-		16,
-		'<path d="M8 2.2c-2.3 0-3.9 1.8-3.9 4.1v2.6L2.8 11h10.4l-1.3-2.1V6.3C11.9 4 10.3 2.2 8 2.2z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6.6 12.6a1.5 1.5 0 0 0 2.8 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M2.5 2.5l11 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
-		'hi',
-	), // silence this kind
 };
 ICON.tab = {
 	train: ICON.hammer.replace('class="gl"', 'class="ti"'),
@@ -303,7 +280,7 @@ const GROUPS = {
 };
 const QUIET = new Set(['news', 'soft']); // quiet kinds never preview: they wait in the mail
 const urgentCls = (cls) => !!cls && cls.startsWith('warn');
-const ccOf = (cls) => (urgentCls(cls) ? '#ff6b5b' : cls === 'good' ? '#5fd08a' : cls === 'tip' ? '#4f9dff' : '#e9ecef'); // the colour code
+const ccOf = (cls) => codeOf(urgentCls(cls) ? 'r' : cls === 'good' ? 'g' : cls === 'tip' ? 'b' : 'w'); // the colour code, from its one home
 const hiddenG = (g) => !!(SET.hideG && SET.hideG[g]);
 const news = (grp, text, cls, secs, at, act, why) => say(text, cls, secs, at, act, why, grp);
 // ───────────────────────── How news reaches you (Build 59; TELL in 06, the Post line of research)
@@ -371,7 +348,8 @@ function say(text, cls, secs, at, act, why, grp = 'reply') {
 		key = hushKey(text),
 		now = performance.now(),
 		show = Math.max(secs || 0, MSG.secs) * 1000,
-		pre = !QUIET.has(cls) && (urg || !hiddenG(grp)),
+		reading = !!G.card && $('card').classList.contains('full'), // a full card: the line waits in the mail, counted, and red shows when it closes
+		pre = !QUIET.has(cls) && (urg || (!hiddenG(grp) && !reading)),
 		pt = at ? { x: Math.round(at.x), y: Math.round(at.y) } : null,
 		same = M.find((m) => m.grp === grp && m.key === key && G.t - m.t < MSG.merge);
 	if (same) {
@@ -384,7 +362,7 @@ function say(text, cls, secs, at, act, why, grp = 'reply') {
 	} // a repeat is a count on the first, not a new flash
 	M.unshift({ text, cls, grp, key, act, why, n: 1, t: G.t, ru: pre ? now + show : 0, at: pt });
 	if (M.length > MSG.keep) M.length = MSG.keep;
-	if (!pre) G.mailN = (G.mailN || 0) + 1; // what came quietly: the count on the mail
+	if (!pre || reading) G.mailN = (G.mailN || 0) + 1; // what came quietly or unseen: the count on the mail
 }
 const hushKey = (t) => t.replace(/[\d,.]+/g, '#'); // a line's kind: its words, the numbers aside (Raid 3 and Raid 5 are one kind)
 // the milestones' tests (words in MS_TEXT): each is a moment; the first time it is true it fires, once a game. {pct} and {spd} are filled.
@@ -433,10 +411,7 @@ function advise() {
 		on = (j) => V.filter((u) => u.job === j).length,
 		S = soldiersOf(0);
 	if (V.some((u) => u.noPath && G.t - (u.noPathT || -9) < 4) && !L('build:gate')) return 'Walled in: build a Gate.';
-	if (
-		(k.blocked || (popOf(0) >= capOf(0) && capOf(0) < POPMAX && !bldsOf(0, 'house').some((b) => b.prog < 1))) &&
-		!L('build:house')
-	)
+	if ((k.blocked || (NEEDS.house() && popOf(0) >= capOf(0))) && !L('build:house'))
 		return p.age >= 2
 			? 'You are full: Build → House, Apartment or Aqueduct.'
 			: `You are full: Build → House (${costText(BLD.house.cost)}).`;
@@ -455,18 +430,14 @@ function advise() {
 	}
 	if (bldsOf(0, 'farm').some((b) => b.prog >= 1 && b.node && !(b.node.wk > 0)) && !L('job:field'))
 		return 'A field has no workers. Tap + under Food.';
-	if (!bldsOf(0, 'barracks').length && G.t > 75 && !L('build:barracks'))
+	if (NEEDS.barracks() && !L('build:barracks'))
 		return G.diff === 'easy'
 			? 'Raiders come after minute 6 on Easy: Build → Barracks before then.'
 			: 'Raiders often come around minute 3 or 4: Build → Barracks.';
 	if (ready(0, 'barracks').length && S.length < 3 && G.t < 600 && !L('train:spear'))
 		return 'Train spearmen at your Barracks.';
-	if (on('wood') >= 3 && !bldsOf(0, 'lumber').length && !L('build:lumber')) return 'Wood is far: Build → Lumber camp.';
-	if (
-		G.nodes.filter((n) => n.kind === 'bush' && dist(n, k) < 300).length < 3 &&
-		!bldsOf(0, 'farm').length &&
-		!L('build:farm')
-	)
+	if (NEEDS.lumber() && !L('build:lumber')) return 'Wood is far: Build → Lumber camp.';
+	if (NEEDS.farm() && !L('build:farm'))
 		return 'Berries running low: build a Farm.';
 	if (p.age === 0 && !p.aging && V.length >= 10 && !L('age')) return 'Ready: Bronze age, at the Town Center.';
 	if (S.length >= 8 && G.finds.some((f) => !f.done && FINDS[f.kind].got && dist(f, k) < 600) && !L('goto'))
@@ -487,18 +458,13 @@ function advise() {
 			return `Food −${Math.round(out - inF)} a minute. Add farmers.`;
 	} // the stores' own arithmetic: what comes in against what is eaten
 	if (vassalsOf(0).some((q) => q.unrest > 70 && !q.rebel)) return '!A vassal is restless: cut tax.';
-	if (p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && !L('trade'))
+	if (goldTight(p) && !L('trade'))
 		return ready(0, 'market').length
 			? 'Gold is low: sell wood, food or stone at the Market.'
 			: 'Gold is low: Build → Market, then sell what you have too much of.';
 	if (G.blds.some((b) => b.owner === 0 && b.fire > 0 && !G.units.some((u) => u.rep === b && u.job === 'repair')))
 		return '!Fire! Tap it, send a villager.';
-	if (
-		G.units.some((u) => u.owner === 0 && u.sick > G.t) &&
-		!ready(0, 'hospital').length &&
-		p.age >= 2 &&
-		!L('build:hospital')
-	)
+	if (NEEDS.hospital() && !L('build:hospital'))
 		return 'Sickness: a Hospital cures it.';
 	if (on('gold') === 0 && p.age >= 1 && !L('job:gold')) return 'Put villagers on Gold: it buys riders.';
 	return '';
@@ -538,7 +504,6 @@ function showByAge() {
 		if (on) n++;
 	});
 	$('jobs').style.setProperty('--n', n);
-	$('hudB').hidden = false; // the page chip is the constant (Albert's notebook): there from the first second
 }
 function ui(force) {
 	const now = performance.now();
@@ -717,16 +682,17 @@ function ui(force) {
 const linkOf = (m) => m && (m.act || (m.at ? `jump:${m.at.x},${m.at.y}` : ''));
 // The preview (Build 64): the newest live line, or the question that hides its group; paused says so when nothing is live. A full card
 // is a moment of reading: the preview steps aside, and the line waits in the mail.
+// the line on show: red first, then the newest (Build 65); the preview draws it and × closes it, one choice for both
+const shownMsg = (now = performance.now()) => (G.mail || []).find((m) => m.ru > now && urgentCls(m.cls)) || (G.mail || []).find((m) => m.ru > now);
 function preview() {
 	const el = $('pv'),
-		M = G.mail || [],
 		now = performance.now(),
 		paused = G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup')),
-		live = M.find((m) => m.ru > now && urgentCls(m.cls)) || M.find((m) => m.ru > now), // red first: a routine line waits behind it (Build 65)
+		live = shownMsg(now),
 		big = !!G.card && $('card').classList.contains('full'),
 		ask = G.pvAsk;
 	let h = '',
-		cc = '#e9ecef';
+		cc = codeOf('w');
 	if (!big && !G.over) {
 		if (ask)
 			h = `<div class="t"><small>${GROUPS[ask]}</small><span>Hide ${GROUPS[ask]} messages?</span></div><div class="ask"><button class="yes" data-act="pvhide:${ask}">Hide</button><button data-act="pvkeep">Keep</button></div>`;

@@ -267,8 +267,8 @@ function declareWar(a, b, why) {
 	if (G.P[a].ally === b) G.P[a].ally = null;
 	if (G.P[b].ally === a) G.P[b].ally = null;
 	if (a === 0 || b === 0)
-		say(`${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken; ' : ''}war, ${why}.`, 'warn', 6);
-	else say(`${G.P[a].name} and ${G.P[b].name} are now at war.`, '', 5, keepOf(a)); // news between other courts comes by the post
+		news('realm', `${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken; ' : ''}war, ${why}.`, 'warn', 6);
+	else news('chronicle', `${G.P[a].name} and ${G.P[b].name} are now at war.`, '', 5, keepOf(a)); // news between other courts comes by the post
 	chron(`${a === 0 ? 'You' : G.P[a].name} and ${b === 0 ? 'you' : G.P[b].name}: war, ${why}.`);
 }
 function makePeace(a, b) {
@@ -290,7 +290,7 @@ function makeAlly(a, b) {
 	G.P[a].ally = b;
 	G.P[b].ally = a;
 	G.navDirty = true;
-	if (b !== 0 && a !== 0) say(`${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', 6, keepOf(a));
+	if (b !== 0 && a !== 0) news('realm', `${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', 6, keepOf(a));
 	chron(`${a === 0 ? 'You' : G.P[a].name} allied with ${b === 0 ? 'you' : G.P[b].name}.`);
 }
 const noticeLeft = (a, b) => {
@@ -336,13 +336,13 @@ function setRel(o, q, want) {
 		if (rel === 'ally') makePeace(o, q);
 		G.warAt[o + ',' + q] = G.t + NOTICE;
 		if (o === 0 || q === 0)
-			say(`${G.P[o === 0 ? q : o].name}: hostile in ${NOTICE} s${o === 0 ? ' (notice given)' : ''}.`, 'warn', 6);
+			news('realm', `${G.P[o === 0 ? q : o].name}: hostile in ${NOTICE} s${o === 0 ? ' (notice given)' : ''}.`, 'warn', 6);
 		return true;
 	}
 	delete G.warAt[o + ',' + q]; // a side that was giving notice has thought again
 	if (want === 'peace' && rel === 'ally') {
 		makePeace(o, q);
-		if (q === 0) say(`${G.P[o].name} ended the alliance.`, 'warn', 6);
+		if (q === 0) news('realm', `${G.P[o].name} ended the alliance.`, 'warn', 6);
 		return true;
 	}
 	return sendEnvoy(o, q, want); // peace from war, or an alliance: carried over, answered there
@@ -380,13 +380,13 @@ function judgeEnvoy(to, from, envoy) {
 		ask = envoy.ask || 'ally';
 	if (G.rel[to][from] === 'war' && ask !== 'peace') {
 		envoy.hp = 0;
-		if (from === 0) say(`The ${T.name} killed your emissary.`, 'warn', 6);
+		if (from === 0) news('realm', `The ${T.name} killed your emissary.`, 'warn', 6);
 		return;
 	}
 	if (to === WILD) return judgeNatives(from, envoy, ask);
 	if (to === 0) {
 		envoy.state = 'return';
-		say(`${G.P[from].name} offer ${ask === 'peace' ? 'peace' : 'an alliance'}: answer at your Town Center.`, 'soft', 8);
+		news('realm', `${G.P[from].name} offer ${ask === 'peace' ? 'peace' : 'an alliance'}: answer at your Town Center.`, 'soft', 8);
 		return;
 	} // the player answers for themselves, on the Relations side
 	const busy = G.P.some((q) => q.alive && q.id !== WILD && q.id !== from && atWar(to, q.id)); // another war on their hands
@@ -433,7 +433,7 @@ function judgeEnvoy(to, from, envoy) {
 }
 function reply(from, envoy, text) {
 	envoy.state = 'return';
-	if (from === 0) say(text, text.includes('accept') ? 'good' : '', 7);
+	if (from === 0) news('realm', text, text.includes('accept') ? 'good' : '', 7);
 }
 // an ally sends half of what stands at home to a friend's town under attack (every computer does this for its ally, the Fortress included)
 function sendHelp(f, pt, tell) {
@@ -447,7 +447,7 @@ function sendHelp(f, pt, tell) {
 		u.py = pt.y;
 		u.idleT = 0;
 	});
-	if (tell) say(`${G.P[f].name} send ${some(go.length, 'soldier')} to help.`, 'good', 5);
+	if (tell) news('war', `${G.P[f].name} send ${some(go.length, 'soldier')} to help.`, 'good', 5);
 	return true;
 }
 // an ally twice your strength may be offered overlordship: they become your vassal at a light tax
@@ -490,7 +490,7 @@ function demand(L, q, r) {
 	earn(G.P[L], r, x, 'tax');
 	Q.loyal = Math.max(0, (Q.loyal || 0) - cost);
 	(Q.demands = Q.demands || []).push(G.t);
-	if (L === 0) say(`${Q.name} hand over ${x} ${LONG[r]}: loyalty −${cost}.`, '', 4);
+	if (L === 0) news('realm', `${Q.name} hand over ${x} ${LONG[r]}: loyalty −${cost}.`, '', 4);
 	return true;
 }
 const menAt = (L, q) => {
@@ -509,7 +509,7 @@ function forceTribute(L, q) {
 	const Q = G.P[q];
 	Q.forced = G.t + DEMAND.tribute;
 	Q.unrest = clamp((Q.unrest || 0) + DEMAND.tributeUnrest, 0, 100);
-	if (L === 0) say(`${Q.name} pay double for ${DEMAND.tribute / 60} minutes.`, '', 4);
+	if (L === 0) news('realm', `${Q.name} pay double for ${DEMAND.tribute / 60} minutes.`, '', 4);
 	return true;
 }
 const levyOf = (L, q) => G.units.filter((u) => u.owner === L && u.levy === q && u.hp > 0);
@@ -544,7 +544,7 @@ function levy(L, q, n) {
 		u.bn = G.sel !== 'all' && L === 0 ? G.sel : undefined;
 	}
 	if (L === 0) {
-		say(`${home.length} soldiers of ${G.P[q].name} march to you.`, 'good', 5);
+		news('realm', `${home.length} soldiers of ${G.P[q].name} march to you.`, 'good', 5);
 		march(home, k || home[0], 'your town');
 	}
 	return true;
@@ -562,7 +562,7 @@ function releaseLevy(u) {
 function releaseAll(L, q) {
 	const S = levyOf(L, q);
 	S.forEach(releaseLevy);
-	if (L === 0 && S.length) say(`${S.length} soldiers go home to ${G.P[q].name}.`, '', 4);
+	if (L === 0 && S.length) news('realm', `${S.length} soldiers go home to ${G.P[q].name}.`, '', 4);
 	return S.length > 0;
 }
 
@@ -624,13 +624,13 @@ function takePrisoner(by, v) {
 	v.hp = 0;
 	v.gone = true;
 	if (v.owner === 0)
-		say(
+		news('war', 
 			`${by === WILD ? 'Netted' : G.P[by].name + ' took a prisoner'}: your ${UNIT[v.kind].name.toLowerCase()}. Ransom ${ransom}g.`,
 			'warn',
 			7,
 			v,
 		);
-	else if (by === 0) say(`A prisoner taken: their ${UNIT[v.kind].name.toLowerCase()}.`, 'good', 4, v);
+	else if (by === 0) news('war', `A prisoner taken: their ${UNIT[v.kind].name.toLowerCase()}.`, 'good', 4, v);
 }
 const prisonersOf = (o) => (G.prisoners || []).filter((x) => x.o === o);
 function payRansom(o, i) {
@@ -644,7 +644,7 @@ function payRansom(o, i) {
 		const u = addUnit(o, x.kind, k.x + 40, k.y + 40);
 		u.state = 'home';
 	}
-	if (o === 0) say(`Ransom paid: your ${UNIT[x.kind].name.toLowerCase()} walks home.`, 'good', 5);
+	if (o === 0) news('war', `Ransom paid: your ${UNIT[x.kind].name.toLowerCase()} walks home.`, 'good', 5);
 	return true;
 }
 // ── Teach: a soldier of an older kind learns a newer one at the School. It stands frozen for the lesson; tuition is paid up front.
@@ -700,7 +700,7 @@ function graduate(u) {
 	u.hp = Math.max(1, u.max * f);
 	u.state = 'home';
 	u.schoolT = 0;
-	if (o === 0) say(`Taught: a ${stats(0, to).name.toLowerCase()} joins the ranks.`, 'good', 4, u);
+	if (o === 0) news('war', `Taught: a ${stats(0, to).name.toLowerCase()} joins the ranks.`, 'good', 4, u);
 }
 function prisonersTick() {
 	// every five seconds: the unransomed change sides
@@ -716,7 +716,7 @@ function prisonersTick() {
 				u.state = 'home';
 			}
 			if (x.o === 0)
-				say(
+				news('war', 
 					`Unransomed: your ${UNIT[x.kind].name.toLowerCase()} serves ${x.by === WILD ? 'the Natives' : G.P[x.by].name} now.`,
 					'warn',
 					6,
@@ -800,9 +800,9 @@ function sabotage(u, b) {
 	const nm = bldName(b.owner, b.kind);
 	if (b.owner === 0) {
 		const what = how === 'burn' ? 'on fire' : `stopped ${SAB.stall} s`;
-		say(`Sabotage at ${coord(b.x, b.y)}: ${nm} ${what}.`, 'warn', 7, b);
+		news('war', `Sabotage at ${coord(b.x, b.y)}: ${nm} ${what}.`, 'warn', 7, b);
 	} else if (u.owner === 0)
-		say(`Your spy ${how === 'burn' ? 'set fire to' : 'stalled'} their ${nm.toLowerCase()}.`, 'good', 5);
+		news('war', `Your spy ${how === 'burn' ? 'set fire to' : 'stalled'} their ${nm.toLowerCase()}.`, 'good', 5);
 	return true;
 }
 function intel(o, owner) {
@@ -833,7 +833,7 @@ function hire(o, f) {
 			const s = addUnit(o, civKind(o, H.unit), v.x, v.y);
 			s.state = 'home';
 		}
-	if (o === 0) say(`${H.n} vagabonds join your army.`, 'good', 5);
+	if (o === 0) news('realm', `${H.n} vagabonds join your army.`, 'good', 5);
 	return true;
 }
 
@@ -1148,7 +1148,7 @@ function ordersTick() {
 		O.fight = fight > 0;
 		if (!O.arrived && !walk && !fight && !rout && G.t - O.t > 3) {
 			O.arrived = true;
-			say(`${S.length} arrived: ${O.label}.`, 'good', 4, O);
+			news('war', `${S.length} arrived: ${O.label}.`, 'good', 4, O);
 		} // every one has stopped: a straggler that never got there is counted as stopped too
 		O.eta = O.arrived ? 0 : Math.ceil(eta);
 	}

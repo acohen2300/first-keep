@@ -36,13 +36,13 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 .pill .cell.on{background:#3a2a1c}
 #muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--mute)}
 #card .lvl{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}#card .lvl small{color:var(--mute)}
-#tkT .al{display:flex;align-items:center;gap:6px;height:44px}#tkT .al b{flex:none;font-weight:700}#tkT .al i{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:500;opacity:.92}
-#tkT .tri{flex:none;width:16px;height:16px;color:#ffc24a}#tkT .cd{flex:none;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
-.ring{width:20px;height:20px;transform:rotate(-90deg)}.ring circle{fill:none;stroke:currentColor;stroke-width:2.6;opacity:.28}.ring .v{opacity:1;stroke-dasharray:50.27;stroke-linecap:round}
+
+
+
 #hud{z-index:4}
 /* The status pill (Build 64): the state of the world in the tally's mold, one cell under each store column, so the eye reads down a column. */
-#status{height:var(--strip);overflow:visible;align-items:flex-start}#status .cell{height:44px;display:flex;align-items:flex-start;justify-content:center;gap:2px;padding:0 1px;overflow:hidden;min-width:0}#status button.cell{height:44px}#status .cell .gl,#status .cell .wd{position:static;transform:none;width:auto;height:26px;line-height:26px;font-size:12px;white-space:nowrap}#status .cell span.gl{display:inline-flex;align-items:center}#status .cell .gl svg{position:static;transform:none;width:13px;height:13px}#status .cell .gl:empty{display:none}#status.pill .cell+.cell::before{top:6px;bottom:auto;height:14px}   /* thin to look at (28 px), 44 px to tap: the buttons hang below it, as the strip did */#status .cell.lit .wd{color:var(--gold)}
-#status span.cell{display:block}#status .cell.dim{color:var(--mute)}#status .cell.dim .wd{color:var(--mute)}#status .cell.lit-r .wd{color:#ff6b5b}#status .cell.lit-b .wd{color:#7db8ff}#status .cell.lit-b{animation:glowb 1.8s ease-in-out infinite}@keyframes glowb{0%,100%{text-shadow:0 0 3px rgba(79,157,255,.35)}50%{text-shadow:0 0 12px rgba(79,157,255,1)}}
+#status{height:var(--strip);overflow:visible;align-items:flex-start}#status .cell{height:44px;display:flex;align-items:flex-start;justify-content:center;gap:2px;padding:0 1px;overflow:hidden;min-width:0}#status .cell .gl,#status .cell .wd{position:static;transform:none;width:auto;height:26px;line-height:26px;font-size:12px;white-space:nowrap}#status .cell span.gl{display:inline-flex;align-items:center}#status .cell .gl svg{position:static;transform:none;width:13px;height:13px}#status .cell .gl:empty{display:none}#status.pill .cell+.cell::before{top:6px;bottom:auto;height:14px}   /* thin to look at (28 px), 44 px to tap: the buttons hang below it, as the strip did */
+#status .cell.dim{color:var(--mute)}#status .cell.dim .wd{color:var(--mute)}#status .cell.lit-r .wd{color:var(--ring-r)}#status .cell.lit-b .wd{color:var(--ring-b)}#status .cell.lit-b{animation:glowb 1.8s ease-in-out infinite}@keyframes glowb{0%,100%{text-shadow:0 0 3px rgba(79,157,255,.35)}50%{text-shadow:0 0 12px rgba(79,157,255,1)}}
 /* The preview (Build 64): a message arrives the way a phone shows a text, over the map, and fades; nothing under it moves. The bar on its
    left is the colour code: red wrong, green done, blue act on it, white news. */
 #pv{position:absolute;z-index:5;top:calc(var(--hb) + 6px);left:var(--pad);right:var(--pad);display:flex;align-items:stretch;min-height:44px;box-sizing:border-box;border:1px solid var(--hair);border-left:5px solid var(--cc,#e9ecef);border-radius:var(--r);background:var(--sheet);box-shadow:0 4px 14px rgba(0,0,0,.45);color:var(--bone);transition:opacity .4s}
@@ -60,11 +60,11 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card.full{max-height:calc(100% - var(--ob) - var(--hb) - 14px)}
 #place{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(36,25,16,.95);border:1px solid var(--gold);border-radius:8px;padding:6px 6px 6px 10px;font-weight:700}
 #strip{position:absolute;display:flex;gap:4px;padding:4px;background:rgba(36,25,16,.95);border:1px solid var(--gold);border-radius:10px;z-index:5;max-width:calc(100% - 8px);overflow-x:auto}
-#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:19px;font-weight:700}#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}#strip button.war{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}#strip button.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:44px}#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--bone);font-size:14px}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:44px;padding:0}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:12px}#strip button small{font-size:12px}
+#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:19px;font-weight:700}#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}#strip button.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:44px}#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--bone);font-size:14px}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:44px;padding:0}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:12px}#strip button small{font-size:12px}
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
-#card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:6px 8px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
-#card h3{margin:0;font-family:var(--display);font-weight:400;font-size:20px;display:flex;align-items:center;gap:8px;padding-right:96px;min-height:44px;position:sticky;top:-6px;margin-top:-6px;padding-top:6px;z-index:2;background:linear-gradient(170deg,#3a2a1c,#34261a)}#card.hud h3{background:rgba(30,21,13,.97)}   /* the title stays at the top while the card scrolls, the book and the close over it (Build 60) */   /* as tall as the book and the close, so neither hangs over the first row */
+#card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(42,29,19,.97);border:1px solid var(--line);border-radius:10px;padding:6px 8px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
+#card h3{font-family:var(--display);font-weight:400;font-size:20px;letter-spacing:.05em;color:var(--lamp);display:flex;align-items:center;gap:8px;line-height:1.1;min-height:44px;padding:0 96px 0 2px;margin:-6px 0 4px;border-bottom:1px solid var(--brass);position:sticky;top:-6px;z-index:2;background:linear-gradient(170deg,#3a2a1c,#34261a)}   /* the title stays at the top while the card scrolls, the book and the close over it (Build 60) */   /* as tall as the book and the close, so neither hangs over the first row */
 #card .who{font-family:var(--ui);font-size:13px;color:var(--mute);font-weight:700}
 #card p{margin:0;color:var(--mute);line-height:1.35;font-size:16px}
 #card p i{color:var(--bone);font-style:normal;font-weight:700}
@@ -99,9 +99,9 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card .dim{color:var(--mute)}
 #card .copy{text-align:center;font-size:13px;margin:2px 0 0}
 #cardBar{position:sticky;top:6px;height:0;margin-bottom:-4px;z-index:3;flex:none}
-#cardI{position:absolute;top:0;right:44px;min-height:44px;min-width:44px;padding:0;background:none;border:0}
-#cardX{position:absolute;top:0;right:-4px;min-height:44px;min-width:44px;padding:0;background:none;border:0;display:grid;place-items:center}#cardX svg{width:26px;height:26px}#cardI svg{width:24px;height:24px}
-#end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
+#cardI{position:absolute;top:-12px;right:40px;min-height:44px;min-width:44px;padding:0;background:none;border:0;display:grid;place-items:center}   /* the book centred on the × line, as the × is */
+#cardX{position:absolute;top:-12px;right:-4px;min-height:44px;min-width:44px;padding:0;background:none;border:0;display:grid;place-items:center}#cardX svg,#cardI svg{display:block;margin:auto;position:static;transform:none}#cardX svg{width:26px;height:26px}   /* the book and the × both centred on the title line */#cardI svg{width:24px;height:24px}
+#end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(26,18,10,.88);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
 #end p{margin:0;color:var(--mute);font-size:15px}
 #card p.why{font-size:12px;line-height:1.25;margin:0}
@@ -117,7 +117,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #orders .tiles{pointer-events:auto}
 button.ghost{visibility:hidden}
 .tr{display:grid;grid-template-columns:repeat(var(--n,6),minmax(0,1fr));gap:6px}.tr>[hidden],.pill>[hidden]{display:none}
-#buildT .gl{position:static;transform:none;width:18px;height:18px;display:block;margin:auto}
+
 .col{display:flex;flex-direction:column;gap:3px;min-width:0}.col>button.cell{flex:none}
 .pm{display:grid;grid-template-columns:1fr 1fr;gap:3px}
 .tiles button.cell{background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}
@@ -133,44 +133,37 @@ button.ghost{visibility:hidden}
 /* three tints the thumb learns (Build 61, Albert): people green, build timber-brown, jobs black */
 .tiles button.cell#buildT{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}.tiles button.cell#buildT.sel{background:linear-gradient(#7a5a2e,#4e3618);border-color:#c9a46a}
 /* the attack cards: the same dark glass, hairlines and one amber accent as the huddle bar */
-#card.hud{background:rgba(10,13,15,.9);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(201,164,106,.35);border-radius:14px;box-shadow:none}
-#card.hud h3{font-family:inherit;font-weight:700;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:#ffb23d}
-#card.hud .who{color:#98a2a6;letter-spacing:.08em}
-#card.hud p{color:#ece5d3;font-variant-numeric:tabular-nums}#card.hud p b{display:inline-block;min-width:64px;color:#98a2a6;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
-#card.hud .acts button{background:#2a1d13;border:1px solid rgba(201,164,106,.35);border-radius:10px;box-shadow:none;color:#ece5d3}
-#card.hud .acts button.go{border-color:#ffb23d;color:#ffb23d}#card.hud .acts button.warn{border-color:#ff5a4a;color:#ff9a8c}#card.hud .acts button.dis{opacity:.5}
-#card.hud .acts small{color:#98a2a6}
 #jobs[hidden],#huddle[hidden]{display:none}
 /* the one row, three shapes (Build 63): join = two touching; whole = one tall button; the plain col is a tile over − and + */
 .col.join{gap:0}.col.join>button.cell:first-child{border-radius:var(--r) var(--r) 0 0}.col.join>button.cell:last-child{border-radius:0 0 var(--r) var(--r);border-top:0}
 #huddle .col.whole>button.cell.tall{height:calc(var(--row) * 2 + 3px)}#huddle .col.whole .top.thumb{top:30px}#huddle .col.whole .top.thumb img{width:40px;height:40px;display:block}#huddle .col.whole .wd{top:74px;font-size:10px;letter-spacing:.02em;white-space:normal;overflow-wrap:anywhere;line-height:1;padding:0 2px}#huddle .col.whole .top:not(.thumb){top:34px}#huddle .col.whole .top:not(.thumb) .gl{width:22px;height:22px}
 .tiles button.cell.no{background:#3a2a1c;border-color:#6b5230;color:var(--bone)}
 .tiles button.cell.build,.tiles button.cell.st.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}.tiles button.cell.build.dis{opacity:.5}
-.tiles button.cell.train,.tiles button.cell.st.train{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}.tiles button.cell.train.sel{border-color:#c9a46a}
-#orders.pg-build{background:rgba(26,18,10,.82)}#orders.pg-build,#orders.pg-squad{backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(201,164,106,.35)}#orders.pg-squad{background:rgba(26,18,10,.84)}
+.tiles button.cell.train.sel{border-color:#c9a46a}
+#orders:not(.pg-jobs){background:rgba(26,18,10,.84);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(201,164,106,.35)}   /* every page but Jobs on one brown backing, however you got there (Build 65) */
 /* the huddle: dark flat glass, hairlines, one amber accent; only while planning an attack. A lamp line on top of a button: red not set, green set */
-#orders.hud{background:rgba(10,13,15,.82);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(201,164,106,.35)}
+
 #huddle button.cell{position:relative;overflow:hidden;background:#2a1d13;border:1px solid rgba(201,164,106,.35);border-radius:10px;box-shadow:none;color:#ece5d3}
-#huddle .wd{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#98a2a6}#huddle .wd.mid{top:50%}
+#huddle .wd{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}#huddle .wd.mid{top:50%}
 #huddle .top .c{font-size:20px}
 #huddle .st.w{font-size:12px;letter-spacing:.08em;text-transform:uppercase;line-height:calc(var(--row) - 2px)}
 #huddle .bar::after,#huddle .msn:not(.empty):first-child::after{content:'';position:absolute;left:10px;right:10px;top:0;height:3px;border-radius:0 0 3px 3px;background:var(--mc,#e0503f)}
-#huddle .lamp-red{--mc:#e0503f;color:#ff9a8c}#huddle .lamp-blue{--mc:#6fb1ff;color:#a9d0ff}#huddle .lamp-green{--mc:#4fe0a0;color:#8ff0c3}
-#huddle button.cell[class*="lamp-"]{border-color:var(--mc)}#huddle [class*="lamp-"] .wd{color:inherit}#huddle .lamp-green::after,#huddle .lamp-blue::after{box-shadow:0 0 8px var(--mc)}
-#huddle .blink{animation:hudBlink 1s infinite}@keyframes hudBlink{50%{box-shadow:inset 0 0 0 1px var(--mc),0 0 12px var(--mc)}}
+
+
+
 #huddle .cell.sel{border-color:#ffb23d}
-#huddle button.cell.sq,#huddle button.cell.st.sq{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}#huddle button.cell.sq.sel{background:linear-gradient(#54402a,#3a2a1c);border-color:#c9a46a}#huddle button.cell.war,#huddle button.cell.st.war{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}#huddle button.cell.go .wd,#huddle button.cell.go .gl{color:#9cc8ff}#orders.sqr{background:rgba(26,18,10,.84);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(201,164,106,.35)}
+#huddle button.cell.sq.sel{background:linear-gradient(#54402a,#3a2a1c);border-color:#c9a46a}#huddle button.cell.go .wd,#huddle button.cell.go .gl{color:#9cc8ff}
 #huddle .msn{touch-action:none}#huddle .msn.empty{background:transparent;border-style:dashed}
 #huddle .msn.lose{--pc:#ff5a4a;animation:hudPulse 1s infinite}#huddle .msn.win{--pc:#43c06b;animation:hudPulse 1.2s infinite}
 @keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc),0 0 10px var(--pc)}}
 @media (prefers-reduced-motion:reduce){#huddle .msn.lose,#huddle .msn.win{animation:none;border-color:var(--pc)}#huddle .blink{animation:none}}
-.hudGhost{position:fixed;left:0;top:0;z-index:20;pointer-events:none;padding:8px 12px;border-radius:10px;background:rgba(12,16,20,.95);border:1px solid #43c06b;color:#43c06b;font:700 13px system-ui,sans-serif}
+
 /* on the map: the corners, one look (.fab). Map top right, Home bottom left (only when away), Build bottom right */
 #spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}#spdPop[hidden]{display:none}#spdPop button{min-width:52px;min-height:44px}#spdPop button.cur{box-shadow:inset 0 0 0 2px var(--mute);border-color:var(--mute)}
 #tally button.cell{isolation:isolate}#tally button.cell.sel::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:7px;background:#3a2a1c;border:1px solid var(--mute)}   /* the on mark: a small tile inside the cell; ::before is the divider */
 #pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}
-button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--c1x,var(--pad));bottom:calc(var(--ob) + 4px);width:var(--c1w,50px);height:44px;padding:0;border-radius:var(--r);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:3px;color:var(--bone)}   /* exactly one column wide, over the first slot: the chip, People and the door read as one stack (Albert, Build 64) */#hudB svg{position:static;transform:none;width:20px;height:20px}#hudB b{font-weight:700}#hudB.squad{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}#hudB.war{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#hudB.train{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}
-.tiles button.cell.sq,.tiles button.cell.st.sq{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}.tiles button.cell.sq.sel{background:linear-gradient(#54402a,#3a2a1c);border-color:#c9a46a}.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}.tiles button.cell.go{color:#9cc8ff}.tiles button.cell.go .wd{color:#9cc8ff}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB{display:none}
+button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--c1x,var(--pad));bottom:calc(var(--ob) + 4px);width:var(--c1w,50px);height:44px;padding:0;border-radius:var(--r);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:3px;color:var(--bone)}   /* exactly one column wide, over the first slot: the chip, People and the door read as one stack (Albert, Build 64) */#hudB svg{position:static;transform:none;width:20px;height:20px}#hudB b{font-weight:700}#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}
+.tiles button.cell.sq.sel{background:linear-gradient(#54402a,#3a2a1c);border-color:#c9a46a}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#stage.busy #hudB{display:none}
 #stage.busy #homeB{display:none}
 #stage.picking #homeB{display:none}
 #card .lbl{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.1;min-height:44px}#card .lbl b{font-size:16px}#card .lbl small{color:var(--mute);font-size:13px}
@@ -200,7 +193,6 @@ button.ok small{color:#8fd4a4}
 #card{--bone:#ece5d3;--mute:#c9bca2;--dim:#a89d86;--panel:#2a1d13;--panel2:#2b1f15;--line:#6b5230;--brass:#8f7442;--lamp:#e6b947;--blue:#e6b947;--red:#c0392b;--gold:#e6b947;color:var(--bone);border:1px solid var(--brass);border-radius:10px;padding:6px 8px 8px;gap:4px;
   background:linear-gradient(170deg,#3a2a1c,#241911 60%,#1c130d);box-shadow:inset 0 0 0 2px #241911,inset 0 0 0 3px var(--line),0 -6px 24px rgba(0,0,0,.5)}
 .night #card{filter:brightness(.88)}
-#card h3{font-size:20px;letter-spacing:.05em;color:var(--lamp);min-height:44px;border-bottom:1px solid var(--brass);padding:0 96px 0 2px;margin:-6px 0 4px;align-items:center;line-height:1.1}   /* one line with the book and ×, level with them; the same left edge as the tiles under it (Albert: the padding was off) */#card.hud h3{border-bottom-color:rgba(255,255,255,.14)}
 #card button:not(#cardX):not(#cardI){position:relative;background-color:#312218;background-image:linear-gradient(#3b2b1d,#2a1d13);border:1px solid var(--brass);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,220,150,.18);color:var(--bone);min-height:44px;padding:3px 5px}
 #card button.dis{border-color:#4a3a28;background:transparent;box-shadow:none;color:#bfb49c}#card button.done:not(#cardX):not(#cardI){opacity:.55;border-style:solid;border-color:#5a4a30}#card .chipsrow button.done:not(.on):not(#cardX):not(#cardI){opacity:.5}#card button.dis b{color:#bfb49c}   /* what you cannot: flat on the table */
 #card button.nope:not(#cardX):not(#cardI){border-color:var(--red);box-shadow:0 0 12px rgba(220,70,50,.7),inset 0 0 8px rgba(220,70,50,.35)}
@@ -247,24 +239,25 @@ button.ok small{color:#8fd4a4}
 
 @media (max-width:400px){:root{--pad:6px}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important;scroll-behavior:auto!important} }
+/* The military pages' tint (War, Squad, Train): one mid-brown, one rule (Build 65) */
+#strip button.war,.tiles button.cell.train,.tiles button.cell.st.train,#huddle button.cell.sq,#huddle button.cell.st.sq,#huddle button.cell.war,#huddle button.cell.st.war,#hudB.squad,#hudB.war,#hudB.train,.tiles button.cell.sq,.tiles button.cell.st.sq,.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}
 /* The door (Build 64): the bottom of the row's first slot; its colour is the most important thing now, in the colour code */
 #orders button.cell.door{background:linear-gradient(#33241a,#2a1d13);border-color:#6b5230}
-#orders button.cell.door.red{color:#ff9a8c}#orders button.cell.door.red .wd{color:#ff9a8c}
-#orders button.cell.door.blue{color:#9cc8ff}#orders button.cell.door.blue .wd{color:#9cc8ff}   /* a ring and a glow, never a fill (Albert) */
-#orders button.cell.door{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px}#orders button.cell.door .top{position:static;display:inline-flex;transform:none;height:auto}#orders button.cell.door .top .gl{position:static;transform:none;width:15px;height:15px}#orders button.cell.door .wd{position:static;transform:none;font-size:12px;line-height:14px;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}#orders button.cell.door .pill{position:absolute;top:1px;right:2px;display:block;height:auto;min-width:12px;padding:0 3px;border:0;border-radius:8px;background:#2a1d13;border:1.5px solid var(--ring-r);color:#ffb3a8;font-size:12px;line-height:13px;box-shadow:none;overflow:visible}
+/* The door (Build 64): the bottom of the first slot on Jobs; its state is the colour code's ring (the one ring rule below) and the same colour in its words */
+#orders button.cell.door{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px}#orders button.cell.door .top{position:static;display:inline-flex;transform:none;height:auto}#orders button.cell.door .top .gl{position:static;transform:none;width:15px;height:15px}#orders button.cell.door .wd{position:static;transform:none;font-size:12px;line-height:14px;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}
+#orders button.cell.door .dn{position:absolute;top:1px;right:2px;min-width:12px;padding:0 3px;border:1.5px solid var(--ring-r);border-radius:8px;background:var(--panel);color:var(--ring-r);font-size:12px;line-height:13px}   /* how many need you: a ring round the number */
 #orders button.cell.door.pulse{animation:doorp 1.2s ease-out 1}@keyframes doorp{0%{box-shadow:0 0 0 0 rgba(255,255,255,.75)}100%{box-shadow:0 0 0 14px rgba(255,255,255,0)}}
-@media (prefers-reduced-motion:reduce){#orders button.cell.door.pulse{animation:none;outline:2px solid #fff}}
-#huddle button.cell.st-blue .wd{color:#bcd9ff}#huddle button.cell.st-green .wd{color:#a8e0b0}#huddle button.cell.st-red .wd{color:#ff9a8c}
+#orders :is(button.blue,button.st-blue,button.go) .wd,#orders button.blue,#orders button.go{color:var(--ring-b)}#orders button.st-green .wd{color:var(--ring-g)}#orders :is(button.red,button.st-red) .wd,#orders button.red{color:var(--ring-r)}   /* in the row a state's words wear its ring's colour; a card keeps its own words */
 #card .acts .trow{display:flex;gap:3px;min-width:0}#card .trow>button:first-child{flex:1;min-width:0}#card .trow button.goto:not(#cardX):not(#cardI){flex:0 0 44px;width:44px;min-height:44px;padding:0;font-size:22px;font-weight:700;color:var(--lamp);border:1px solid var(--line);border-radius:8px;background:transparent;box-shadow:none}
 /* The mail: each line with its colour on its left edge */
 #card .mrows{display:flex;flex-direction:column;gap:4px}#card button.mr:not(#cardX):not(#cardI){min-height:44px;padding:4px 8px;align-items:flex-start;text-align:left;border-left:4px solid var(--cc)}#card button.mr b{font-size:13px;font-weight:600}#card button.mr small{font-size:12px;color:var(--mute)}
 /* The one ring (Build 64, Albert: "a ring and a glow, never a fill"; "one or two rings"): every state anywhere is this ring in its
    colour, the colour code's three: blue available, green active or done, red wrong. One rule; a control only names its state. */
-:root{--ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b}
+:root{--ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b;--ring-w:#e9ecef}   /* the colour code's one home (Build 65): the code reads these too */
 :is(#orders,#card,#strip) :is(button.go,button.blue,button.st-blue):not(#cardX):not(#cardI){--rc:var(--ring-b)}
-:is(#orders,#card,#strip) :is(button.ok,button.green,button.st-green):not(#cardX):not(#cardI){--rc:var(--ring-g)}
+:is(#orders,#card,#strip) :is(button.ok,button.st-green):not(#cardX):not(#cardI){--rc:var(--ring-g)}
 :is(#orders,#card,#strip) :is(button.red,button.st-red):not(#cardX):not(#cardI){--rc:var(--ring-r)}
-:is(#orders,#card,#strip) :is(button.go,button.blue,button.st-blue,button.ok,button.green,button.st-green,button.red,button.st-red):not(#cardX):not(#cardI){border-color:var(--rc);box-shadow:inset 0 0 0 1px var(--rc),0 0 10px color-mix(in srgb,var(--rc) 50%,transparent)}
+:is(#orders,#card,#strip) :is(button.go,button.blue,button.st-blue,button.ok,button.st-green,button.red,button.st-red):not(#cardX):not(#cardI){border-color:var(--rc);box-shadow:inset 0 0 0 1px var(--rc),0 0 10px color-mix(in srgb,var(--rc) 50%,transparent)}
 </style>
 
 </head>
@@ -281,7 +274,7 @@ button.ok small{color:#8fd4a4}
   <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div><div class="tr" id="huddle" hidden></div></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
-    <button class="fab chip" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, Squad room, War room"></button>
+    <button class="fab chip" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, Realm, Build, War, Squad, Train"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
     
     <div id="strip" hidden></div>
@@ -303,14 +296,13 @@ button.ok small{color:#8fd4a4}
 'use strict';
 // ═════ 01-rules-basics.js: the map, speeds, difficulty, resources, jobs, players, ages, seasons ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 64; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
+const BUILD = 65; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
 const MAP = 2000,
 	MID = MAP / 2,
 	DT = 1 / 30;
 const BN = ['Alpha', 'Beta', 'Gamma', 'Delta'], // four squads, the row's four middle tiles (Build 61; six before)
 	BNS = BN.length; // the battalions, once Command is researched
 const POPMAX = 180,
-	VILMAX = 60,
 	ARMYMAX = 120,
 	BNSIZE = 40,
 	SHARE_FALLEN = 0.5; // a fallen side's room: half of it is split among whoever is left   // six battalions, once Command is researched at a War Council; BNSIZE: the most one Zeal blesses
@@ -5379,8 +5371,8 @@ const CLIMATE = {
 // (Rothermel); grow: seconds to a full fire (design: a house burns down in 50); near: the gap, in units, at which the heat is a quarter; reach: beyond this none.
 const FIRE = { rate: 0.12, grow: 20, near: 10, reach: 40 };
 const FIREARMS = { chance: 0.12, blast: 0.3, splash: 40, splashHit: 0.3 }; // fire arrows and burning shot ignite a wooden building on a hit (rain halves it); a petard bombard ignites and shakes the neighbours too
-// Sound by distance (Build 62): ISO 9613-2, L = L0 − 20 log10(d / d0) − α d. Full within d0 (half the screen's radius: you hear what you look at),
-// then the inverse-square law, less the air's absorption α: 5 dB a kilometre at 1 kHz, 20 °C, 50% humidity (ISO 9613-1), over a world unit of 0.14 m.
+// Sound by distance (Build 62; the ear at the camera's height since Build 64): ISO 9613-2, L = L0 − 20 log10(s / d0) − α s, s the slant
+// distance from the camera, full within d0 (the camera's height at the closest zoom), then the inverse-square law, less the air's absorption α: 5 dB a kilometre at 1 kHz, 20 °C, 50% humidity (ISO 9613-1), over a world unit of 0.14 m.
 // Thunder reaches the ear after the flash at 340 m/s over the same metre. floor: below this share it is not played.
 const SOUND = { fov: 60, alphaKm: 5, metre: 0.14, floor: 0.03, c: 340 }; // fov: the camera's field of view, degrees, which turns the zoom into a height (Albert, Build 64)
 const GARRISON = { r: 70, heal: 0.6 }; // soldiers resting by their own Castle, Barracks or Town Center heal; Garrison wards double it
@@ -6232,6 +6224,8 @@ const NEWS = [
 // why an event happened, under its line in the list (Build 58): the real cause, in a few words
 // Milestones that teach (Albert, Build 63): each fires once a game when its moment comes, says the mechanic in a line, why it is so, and the
 // one thing to do about it (a fix that opens the right card). Read back on the Milestones card. The words live here; the tests in 32-frame.
+// the song (Albert, Build 64): the Guide's entry and the Sound page both say it, from here
+const SONG = 'There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, composed by your decisions.';
 const MS_TEXT = {
 	house: [
 		'Your first house: five more may live here.',
@@ -6253,7 +6247,7 @@ const MS_TEXT = {
 	],
 	soldier: [
 		'Your first soldier: the row has a War page now.',
-		'The chip at the left of the jobs cycles the pages: Jobs, War, Build, Squad, Train.',
+		'The chip over the first slot cycles the pages: Jobs, Realm, Build, War, Squad, Train.',
 		'Open the War page',
 		'pagecycle',
 	],
@@ -6557,7 +6551,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The song',
-		'There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, composed by your decisions. Every stroke sounds when it lands, at the pace of the find it works; crews fall into step on their own; the birds, the wind and the thunder sit on top. Nobody else writes a note of it.',
+		SONG + ' Every stroke sounds when it lands, at the pace of the find it works; crews fall into step on their own; the birds, the wind and the thunder sit on top. Nobody else writes a note of it.',
 		'Work songs kept crews in time long before metronomes: sea shanties, the sowing songs of the fields, the smith striking on the beat. The game plays only what happens.',
 	],
 	[
@@ -6766,22 +6760,19 @@ const TRIGGERS = () => [
 const $ = (id) => document.getElementById(id);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const hyp = (x, y) => Math.sqrt(x * x + y * y);
-// The one gradient (Albert, Build 64): red, pink, white, light green, green, for every number that has a meaning. v runs from −1 (the
-// worst) to +1 (the best); a cost row reads how near you are to paying, a store and its job read their velocity. Colour is never alone:
-// the number is always there, and the two ends differ in brightness as well as hue.
-const GRAD = [
-	[255, 107, 91],
-	[246, 166, 160],
-	[233, 236, 239],
-	[168, 224, 176],
-	[95, 208, 138],
-];
+// The colour code's one home is the style sheet (--ring-r, -w, -g, -b); the code reads it once (Build 65: it was written in four places).
+const CODE = {};
+const codeOf = (k) => CODE[k] || (CODE[k] = getComputedStyle(document.documentElement).getPropertyValue('--ring-' + k).trim() || '#e9ecef');
+const rgbOf = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+// The one gradient (Albert, Build 64): red, through pink, white, light green, to green, for every number that has a meaning. v runs
+// from −1 (the worst) to +1 (the best); a cost row reads how near you are to paying, a store and its job read their velocity. It is the
+// straight line between the code's red, white and green: the pink and the light green are where it passes. Colour is never alone: the
+// number is always there, and the two ends differ in brightness as well as hue.
 function grad(v) {
-	const x = (clamp(v, -1, 1) + 1) * 2,
-		i = Math.min(3, Math.floor(x)),
-		f = x - i,
-		a = GRAD[i],
-		b = GRAD[i + 1];
+	const x = clamp(v, -1, 1),
+		a = rgbOf(codeOf('w')),
+		b = rgbOf(codeOf(x < 0 ? 'r' : 'g')),
+		f = Math.abs(x);
 	return `rgb(${a.map((c, j) => Math.round(c + (b[j] - c) * f)).join(',')})`;
 }
 const costCol = (fr) => grad(fr >= 1 ? 0.55 : fr - 1); // short: red at nothing, white near enough; enough: light green
@@ -6799,26 +6790,7 @@ const costText = (c) =>
 const afford = (p, c) => Object.entries(c || {}).every(([k, v]) => p.res[k] >= v);
 // Every resource in or out goes through earn and spend: one home for the stores, the flow of the last minute (p.flow, p.spent1), the
 // ledger of where it came from and went (p.ledger) and the gathered total. Build 58; before, 25 lines wrote p.res directly (Albert: one home).
-const LEDGER = {
-	in: ['gather', 'finds', 'trade', 'tithe', 'tribute', 'ransom', 'market', 'loot', 'mint', 'venture', 'tax'],
-	out: [
-		'units',
-		'buildings',
-		'research',
-		'upkeep',
-		'shops',
-		'spoiled',
-		'trade',
-		'tribute',
-		'ransom',
-		'market',
-		'tax',
-		'venture',
-		'zeal',
-		'repairs',
-		'loot',
-	],
-};
+// the reasons are the keys of LEDGER_WORD (07-text), where each has its word
 function earn(p, k, amt, why, counts = true) {
 	if (!(amt > 0)) return 0;
 	p.res[k] += amt;
@@ -9356,8 +9328,8 @@ function declareWar(a, b, why) {
 	if (G.P[a].ally === b) G.P[a].ally = null;
 	if (G.P[b].ally === a) G.P[b].ally = null;
 	if (a === 0 || b === 0)
-		say(`${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken; ' : ''}war, ${why}.`, 'warn', 6);
-	else say(`${G.P[a].name} and ${G.P[b].name} are now at war.`, '', 5, keepOf(a)); // news between other courts comes by the post
+		news('realm', `${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken; ' : ''}war, ${why}.`, 'warn', 6);
+	else news('chronicle', `${G.P[a].name} and ${G.P[b].name} are now at war.`, '', 5, keepOf(a)); // news between other courts comes by the post
 	chron(`${a === 0 ? 'You' : G.P[a].name} and ${b === 0 ? 'you' : G.P[b].name}: war, ${why}.`);
 }
 function makePeace(a, b) {
@@ -9379,7 +9351,7 @@ function makeAlly(a, b) {
 	G.P[a].ally = b;
 	G.P[b].ally = a;
 	G.navDirty = true;
-	if (b !== 0 && a !== 0) say(`${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', 6, keepOf(a));
+	if (b !== 0 && a !== 0) news('realm', `${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', 6, keepOf(a));
 	chron(`${a === 0 ? 'You' : G.P[a].name} allied with ${b === 0 ? 'you' : G.P[b].name}.`);
 }
 const noticeLeft = (a, b) => {
@@ -9425,13 +9397,13 @@ function setRel(o, q, want) {
 		if (rel === 'ally') makePeace(o, q);
 		G.warAt[o + ',' + q] = G.t + NOTICE;
 		if (o === 0 || q === 0)
-			say(`${G.P[o === 0 ? q : o].name}: hostile in ${NOTICE} s${o === 0 ? ' (notice given)' : ''}.`, 'warn', 6);
+			news('realm', `${G.P[o === 0 ? q : o].name}: hostile in ${NOTICE} s${o === 0 ? ' (notice given)' : ''}.`, 'warn', 6);
 		return true;
 	}
 	delete G.warAt[o + ',' + q]; // a side that was giving notice has thought again
 	if (want === 'peace' && rel === 'ally') {
 		makePeace(o, q);
-		if (q === 0) say(`${G.P[o].name} ended the alliance.`, 'warn', 6);
+		if (q === 0) news('realm', `${G.P[o].name} ended the alliance.`, 'warn', 6);
 		return true;
 	}
 	return sendEnvoy(o, q, want); // peace from war, or an alliance: carried over, answered there
@@ -9469,13 +9441,13 @@ function judgeEnvoy(to, from, envoy) {
 		ask = envoy.ask || 'ally';
 	if (G.rel[to][from] === 'war' && ask !== 'peace') {
 		envoy.hp = 0;
-		if (from === 0) say(`The ${T.name} killed your emissary.`, 'warn', 6);
+		if (from === 0) news('realm', `The ${T.name} killed your emissary.`, 'warn', 6);
 		return;
 	}
 	if (to === WILD) return judgeNatives(from, envoy, ask);
 	if (to === 0) {
 		envoy.state = 'return';
-		say(`${G.P[from].name} offer ${ask === 'peace' ? 'peace' : 'an alliance'}: answer at your Town Center.`, 'soft', 8);
+		news('realm', `${G.P[from].name} offer ${ask === 'peace' ? 'peace' : 'an alliance'}: answer at your Town Center.`, 'soft', 8);
 		return;
 	} // the player answers for themselves, on the Relations side
 	const busy = G.P.some((q) => q.alive && q.id !== WILD && q.id !== from && atWar(to, q.id)); // another war on their hands
@@ -9522,7 +9494,7 @@ function judgeEnvoy(to, from, envoy) {
 }
 function reply(from, envoy, text) {
 	envoy.state = 'return';
-	if (from === 0) say(text, text.includes('accept') ? 'good' : '', 7);
+	if (from === 0) news('realm', text, text.includes('accept') ? 'good' : '', 7);
 }
 // an ally sends half of what stands at home to a friend's town under attack (every computer does this for its ally, the Fortress included)
 function sendHelp(f, pt, tell) {
@@ -9536,7 +9508,7 @@ function sendHelp(f, pt, tell) {
 		u.py = pt.y;
 		u.idleT = 0;
 	});
-	if (tell) say(`${G.P[f].name} send ${some(go.length, 'soldier')} to help.`, 'good', 5);
+	if (tell) news('war', `${G.P[f].name} send ${some(go.length, 'soldier')} to help.`, 'good', 5);
 	return true;
 }
 // an ally twice your strength may be offered overlordship: they become your vassal at a light tax
@@ -9579,7 +9551,7 @@ function demand(L, q, r) {
 	earn(G.P[L], r, x, 'tax');
 	Q.loyal = Math.max(0, (Q.loyal || 0) - cost);
 	(Q.demands = Q.demands || []).push(G.t);
-	if (L === 0) say(`${Q.name} hand over ${x} ${LONG[r]}: loyalty −${cost}.`, '', 4);
+	if (L === 0) news('realm', `${Q.name} hand over ${x} ${LONG[r]}: loyalty −${cost}.`, '', 4);
 	return true;
 }
 const menAt = (L, q) => {
@@ -9598,7 +9570,7 @@ function forceTribute(L, q) {
 	const Q = G.P[q];
 	Q.forced = G.t + DEMAND.tribute;
 	Q.unrest = clamp((Q.unrest || 0) + DEMAND.tributeUnrest, 0, 100);
-	if (L === 0) say(`${Q.name} pay double for ${DEMAND.tribute / 60} minutes.`, '', 4);
+	if (L === 0) news('realm', `${Q.name} pay double for ${DEMAND.tribute / 60} minutes.`, '', 4);
 	return true;
 }
 const levyOf = (L, q) => G.units.filter((u) => u.owner === L && u.levy === q && u.hp > 0);
@@ -9633,7 +9605,7 @@ function levy(L, q, n) {
 		u.bn = G.sel !== 'all' && L === 0 ? G.sel : undefined;
 	}
 	if (L === 0) {
-		say(`${home.length} soldiers of ${G.P[q].name} march to you.`, 'good', 5);
+		news('realm', `${home.length} soldiers of ${G.P[q].name} march to you.`, 'good', 5);
 		march(home, k || home[0], 'your town');
 	}
 	return true;
@@ -9651,7 +9623,7 @@ function releaseLevy(u) {
 function releaseAll(L, q) {
 	const S = levyOf(L, q);
 	S.forEach(releaseLevy);
-	if (L === 0 && S.length) say(`${S.length} soldiers go home to ${G.P[q].name}.`, '', 4);
+	if (L === 0 && S.length) news('realm', `${S.length} soldiers go home to ${G.P[q].name}.`, '', 4);
 	return S.length > 0;
 }
 
@@ -9713,13 +9685,13 @@ function takePrisoner(by, v) {
 	v.hp = 0;
 	v.gone = true;
 	if (v.owner === 0)
-		say(
+		news('war', 
 			`${by === WILD ? 'Netted' : G.P[by].name + ' took a prisoner'}: your ${UNIT[v.kind].name.toLowerCase()}. Ransom ${ransom}g.`,
 			'warn',
 			7,
 			v,
 		);
-	else if (by === 0) say(`A prisoner taken: their ${UNIT[v.kind].name.toLowerCase()}.`, 'good', 4, v);
+	else if (by === 0) news('war', `A prisoner taken: their ${UNIT[v.kind].name.toLowerCase()}.`, 'good', 4, v);
 }
 const prisonersOf = (o) => (G.prisoners || []).filter((x) => x.o === o);
 function payRansom(o, i) {
@@ -9733,7 +9705,7 @@ function payRansom(o, i) {
 		const u = addUnit(o, x.kind, k.x + 40, k.y + 40);
 		u.state = 'home';
 	}
-	if (o === 0) say(`Ransom paid: your ${UNIT[x.kind].name.toLowerCase()} walks home.`, 'good', 5);
+	if (o === 0) news('war', `Ransom paid: your ${UNIT[x.kind].name.toLowerCase()} walks home.`, 'good', 5);
 	return true;
 }
 // ── Teach: a soldier of an older kind learns a newer one at the School. It stands frozen for the lesson; tuition is paid up front.
@@ -9789,7 +9761,7 @@ function graduate(u) {
 	u.hp = Math.max(1, u.max * f);
 	u.state = 'home';
 	u.schoolT = 0;
-	if (o === 0) say(`Taught: a ${stats(0, to).name.toLowerCase()} joins the ranks.`, 'good', 4, u);
+	if (o === 0) news('war', `Taught: a ${stats(0, to).name.toLowerCase()} joins the ranks.`, 'good', 4, u);
 }
 function prisonersTick() {
 	// every five seconds: the unransomed change sides
@@ -9805,7 +9777,7 @@ function prisonersTick() {
 				u.state = 'home';
 			}
 			if (x.o === 0)
-				say(
+				news('war', 
 					`Unransomed: your ${UNIT[x.kind].name.toLowerCase()} serves ${x.by === WILD ? 'the Natives' : G.P[x.by].name} now.`,
 					'warn',
 					6,
@@ -9889,9 +9861,9 @@ function sabotage(u, b) {
 	const nm = bldName(b.owner, b.kind);
 	if (b.owner === 0) {
 		const what = how === 'burn' ? 'on fire' : `stopped ${SAB.stall} s`;
-		say(`Sabotage at ${coord(b.x, b.y)}: ${nm} ${what}.`, 'warn', 7, b);
+		news('war', `Sabotage at ${coord(b.x, b.y)}: ${nm} ${what}.`, 'warn', 7, b);
 	} else if (u.owner === 0)
-		say(`Your spy ${how === 'burn' ? 'set fire to' : 'stalled'} their ${nm.toLowerCase()}.`, 'good', 5);
+		news('war', `Your spy ${how === 'burn' ? 'set fire to' : 'stalled'} their ${nm.toLowerCase()}.`, 'good', 5);
 	return true;
 }
 function intel(o, owner) {
@@ -9922,7 +9894,7 @@ function hire(o, f) {
 			const s = addUnit(o, civKind(o, H.unit), v.x, v.y);
 			s.state = 'home';
 		}
-	if (o === 0) say(`${H.n} vagabonds join your army.`, 'good', 5);
+	if (o === 0) news('realm', `${H.n} vagabonds join your army.`, 'good', 5);
 	return true;
 }
 
@@ -10237,7 +10209,7 @@ function ordersTick() {
 		O.fight = fight > 0;
 		if (!O.arrived && !walk && !fight && !rout && G.t - O.t > 3) {
 			O.arrived = true;
-			say(`${S.length} arrived: ${O.label}.`, 'good', 4, O);
+			news('war', `${S.length} arrived: ${O.label}.`, 'good', 4, O);
 		} // every one has stopped: a straggler that never got there is counted as stopped too
 		O.eta = O.arrived ? 0 : Math.ceil(eta);
 	}
@@ -16399,8 +16371,7 @@ const ART = {
 	},
 	range(c) {
 		// the butts on a green (Build 61, Albert: open-air): three targets at the back, a shooting line, hay behind
-		const w = 40,
-			d = w * TILT;
+		const w = 40;
 		field(
 			w,
 			'#8cb860',
@@ -23039,8 +23010,7 @@ const CARDS = {
 				(trainsAt(b.kind).length || TECH.some((t) => t.at === b.kind) || b.kind === 'keep')
 			)
 				h += slotsHTML(b);
-			const mk = b.kind === 'market',
-				kp = b.kind === 'keep',
+			const kp = b.kind === 'keep',
 				trade = kp && G.ktab === 'rel'; // the Town Center's relations side shows no training or research; the Market keeps its research at the top like every card (Build 61)
 			const tr = trade ? [] : trainsAt(b.kind),
 				techs = trade ? [] : TECH.filter((t) => ownTech(t) && t.at === b.kind && isNext(0, t)),
@@ -23719,7 +23689,7 @@ const CARDS = {
 			row('fx', 'Effects', SET.mix.fx) +
 			row('amb', 'Ambience', SET.mix.amb) +
 			row('alert', 'Alerts', SET.mix.alert) +
-			`<p>Effects: work and battle. Ambience: birds, wind, crickets, thunder. Alerts: horn, ready, done, a new age. The silent switch of your phone mutes the game.</p><p class="dim">There is no music in life. Life is the music. The rhythm you hear is your kingdom at work, its own song, composed by your decisions.</p>`
+			`<p>Effects: work and battle. Ambience: birds, wind, crickets, thunder. Alerts: horn, ready, done, a new age. The silent switch of your phone mutes the game.</p><p class="dim">${SONG}</p>`
 		);
 	},
 	taps() {
@@ -23742,7 +23712,7 @@ const CARDS = {
 			) +
 			`<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
       <p><b>The door:</b> under People, it shows the most important thing now: red something wrong, blue something you can do, white all is well. Tap it to go where it is fixed; tap it again, or when all is well, for the dashboard: the realm, people, work, stores, tech and the mail.</p>
-      <p><b>Build:</b> the chip above the row turns the pages: Jobs, Build, War, Squad, Train. The Build page shows what the town needs (blue: build it now; green: going up; red: what stands in the way) and All opens every building. It waits above your finger: drag it, then tap Build.</p>
+      <p><b>Build:</b> the chip above the row turns the pages: Jobs, Realm, Build, War, Squad, Train. The Build page shows what the town needs (blue: build it now; green: going up; red: what stands in the way) and All opens every building. It waits above your finger: drag it, then tap Build.</p>
       <p><b>Messages</b> arrive at the top and fade; tap one to see where. × on a group of news asks to hide that group: it then goes quietly to the mail, and red still shows. Numbers wear one colour scale: green gaining, white steady, red losing.</p>
       <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Pause shows the speeds under the button.</p>
       <p><b>Army:</b> tap open ground with nothing picked, then the sword: Idle, All or a squad goes there. The War, Squad and Train pages hold your squads, what they are made of, and what is being trained.</p>
@@ -23816,7 +23786,6 @@ function renderCard() {
 	}
 	const cc = G.card;
 	$('card').classList.toggle('setup', cc.type === 'setup');
-	$('card').classList.toggle('hud', cc.type === 'squad' || cc.type === 'emergency'); // the covert look of the attack bar
 	const size =
 		cc.type === 'bld' && (G.blds.find((b) => b.id === cc.id) || {}).kind === 'market' ? 'lg' : SIZE_OF(cc.type);
 	$('card').classList.toggle('full', size === 'lg');
@@ -24161,7 +24130,6 @@ const ICON = {
 		16,
 		'<path d="M8 1.5 L13.5 3.5 V8 Q13.5 12.5 8 14.5 Q2.5 12.5 2.5 8 V3.5 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>',
 	),
-	go: SVG(16, '<path d="M4 2.5 L13 8 L4 13.5 Z" fill="currentColor"/>'),
 	cls: {
 		foot: SVG(
 			16,
@@ -24196,14 +24164,6 @@ const ICON = {
 		20,
 		'<path d="M4 17 V6 H6.5 V8.2 H8.6 V6 H11.4 V8.2 H13.5 V6 H16 V17 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 17 V13 H11.4 V17" fill="currentColor"/>',
 	),
-	shop: SVG(
-		20,
-		'<path d="M3.5 7.5 H15.5 M12.5 4.5 L15.5 7.5 L12.5 10.5 M16.5 13 H4.5 M7.5 10 L4.5 13 L7.5 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>',
-	),
-	cult: SVG(
-		20,
-		'<path d="M3 8.2 L10 4 L17 8.2 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M5.2 9.5 V15 M8.4 9.5 V15 M11.6 9.5 V15 M14.8 9.5 V15 M3 16.5 H17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
-	),
 	sword: SVG(
 		16,
 		'<path d="M13.5 2.5 L13.5 4.6 L6.6 11.5 L4.5 9.4 L11.4 2.5 Z" fill="currentColor"/><path d="M3.2 8.6 L7.4 12.8 M2.4 13.6 L5 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
@@ -24228,7 +24188,6 @@ const ICON = {
 		20,
 		'<path d="M3 5.5 L7.5 4 L12.5 5.5 L17 4 V14.5 L12.5 16 L7.5 14.5 L3 16 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M7.5 4 V14.5 M12.5 5.5 V16" stroke="currentColor" stroke-width="1.5"/>',
 	),
-	less: SVG(20, '<path d="M4.5 10 H15.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'),
 	sound: SVG(
 		16,
 		'<path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor"/><path class="w" d="M11 5.5q2 2.5 0 5M12.8 3.8q3.4 4.2 0 8.4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/><path class="x" d="M11 6l4 4M15 6l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
@@ -24237,25 +24196,12 @@ const ICON = {
 		16,
 		'<path d="M3 4.5h10M3 8h10M3 11.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
 	),
-	up: SVG(
-		16,
-		'<path d="M3.5 10l4.5-4.5 4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
-	),
-	bell: SVG(
-		16,
-		'<path d="M8 2.2c-2.3 0-3.9 1.8-3.9 4.1v2.6L2.8 11h10.4l-1.3-2.1V6.3C11.9 4 10.3 2.2 8 2.2z" fill="currentColor"/><path d="M6.6 12.6a1.5 1.5 0 0 0 2.8 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>',
-	),
 	mail: SVG(
 		20,
 		'<rect x="2.5" y="4.5" width="15" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3 5.5 L10 11 L17 5.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
 	),
 	play: SVG(16, '<path d="M4.5 2.8 L13 8 L4.5 13.2 Z" fill="currentColor"/>'),
 	pause: SVG(16, '<path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/>'),
-	hush: SVG(
-		16,
-		'<path d="M8 2.2c-2.3 0-3.9 1.8-3.9 4.1v2.6L2.8 11h10.4l-1.3-2.1V6.3C11.9 4 10.3 2.2 8 2.2z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6.6 12.6a1.5 1.5 0 0 0 2.8 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M2.5 2.5l11 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
-		'hi',
-	), // silence this kind
 };
 ICON.tab = {
 	train: ICON.hammer.replace('class="gl"', 'class="ti"'),
@@ -24408,7 +24354,7 @@ const GROUPS = {
 };
 const QUIET = new Set(['news', 'soft']); // quiet kinds never preview: they wait in the mail
 const urgentCls = (cls) => !!cls && cls.startsWith('warn');
-const ccOf = (cls) => (urgentCls(cls) ? '#ff6b5b' : cls === 'good' ? '#5fd08a' : cls === 'tip' ? '#4f9dff' : '#e9ecef'); // the colour code
+const ccOf = (cls) => codeOf(urgentCls(cls) ? 'r' : cls === 'good' ? 'g' : cls === 'tip' ? 'b' : 'w'); // the colour code, from its one home
 const hiddenG = (g) => !!(SET.hideG && SET.hideG[g]);
 const news = (grp, text, cls, secs, at, act, why) => say(text, cls, secs, at, act, why, grp);
 // ───────────────────────── How news reaches you (Build 59; TELL in 06, the Post line of research)
@@ -24476,7 +24422,8 @@ function say(text, cls, secs, at, act, why, grp = 'reply') {
 		key = hushKey(text),
 		now = performance.now(),
 		show = Math.max(secs || 0, MSG.secs) * 1000,
-		pre = !QUIET.has(cls) && (urg || !hiddenG(grp)),
+		reading = !!G.card && $('card').classList.contains('full'), // a full card: the line waits in the mail, counted, and red shows when it closes
+		pre = !QUIET.has(cls) && (urg || (!hiddenG(grp) && !reading)),
 		pt = at ? { x: Math.round(at.x), y: Math.round(at.y) } : null,
 		same = M.find((m) => m.grp === grp && m.key === key && G.t - m.t < MSG.merge);
 	if (same) {
@@ -24489,7 +24436,7 @@ function say(text, cls, secs, at, act, why, grp = 'reply') {
 	} // a repeat is a count on the first, not a new flash
 	M.unshift({ text, cls, grp, key, act, why, n: 1, t: G.t, ru: pre ? now + show : 0, at: pt });
 	if (M.length > MSG.keep) M.length = MSG.keep;
-	if (!pre) G.mailN = (G.mailN || 0) + 1; // what came quietly: the count on the mail
+	if (!pre || reading) G.mailN = (G.mailN || 0) + 1; // what came quietly or unseen: the count on the mail
 }
 const hushKey = (t) => t.replace(/[\d,.]+/g, '#'); // a line's kind: its words, the numbers aside (Raid 3 and Raid 5 are one kind)
 // the milestones' tests (words in MS_TEXT): each is a moment; the first time it is true it fires, once a game. {pct} and {spd} are filled.
@@ -24538,10 +24485,7 @@ function advise() {
 		on = (j) => V.filter((u) => u.job === j).length,
 		S = soldiersOf(0);
 	if (V.some((u) => u.noPath && G.t - (u.noPathT || -9) < 4) && !L('build:gate')) return 'Walled in: build a Gate.';
-	if (
-		(k.blocked || (popOf(0) >= capOf(0) && capOf(0) < POPMAX && !bldsOf(0, 'house').some((b) => b.prog < 1))) &&
-		!L('build:house')
-	)
+	if ((k.blocked || (NEEDS.house() && popOf(0) >= capOf(0))) && !L('build:house'))
 		return p.age >= 2
 			? 'You are full: Build → House, Apartment or Aqueduct.'
 			: `You are full: Build → House (${costText(BLD.house.cost)}).`;
@@ -24560,18 +24504,14 @@ function advise() {
 	}
 	if (bldsOf(0, 'farm').some((b) => b.prog >= 1 && b.node && !(b.node.wk > 0)) && !L('job:field'))
 		return 'A field has no workers. Tap + under Food.';
-	if (!bldsOf(0, 'barracks').length && G.t > 75 && !L('build:barracks'))
+	if (NEEDS.barracks() && !L('build:barracks'))
 		return G.diff === 'easy'
 			? 'Raiders come after minute 6 on Easy: Build → Barracks before then.'
 			: 'Raiders often come around minute 3 or 4: Build → Barracks.';
 	if (ready(0, 'barracks').length && S.length < 3 && G.t < 600 && !L('train:spear'))
 		return 'Train spearmen at your Barracks.';
-	if (on('wood') >= 3 && !bldsOf(0, 'lumber').length && !L('build:lumber')) return 'Wood is far: Build → Lumber camp.';
-	if (
-		G.nodes.filter((n) => n.kind === 'bush' && dist(n, k) < 300).length < 3 &&
-		!bldsOf(0, 'farm').length &&
-		!L('build:farm')
-	)
+	if (NEEDS.lumber() && !L('build:lumber')) return 'Wood is far: Build → Lumber camp.';
+	if (NEEDS.farm() && !L('build:farm'))
 		return 'Berries running low: build a Farm.';
 	if (p.age === 0 && !p.aging && V.length >= 10 && !L('age')) return 'Ready: Bronze age, at the Town Center.';
 	if (S.length >= 8 && G.finds.some((f) => !f.done && FINDS[f.kind].got && dist(f, k) < 600) && !L('goto'))
@@ -24592,18 +24532,13 @@ function advise() {
 			return `Food −${Math.round(out - inF)} a minute. Add farmers.`;
 	} // the stores' own arithmetic: what comes in against what is eaten
 	if (vassalsOf(0).some((q) => q.unrest > 70 && !q.rebel)) return '!A vassal is restless: cut tax.';
-	if (p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && !L('trade'))
+	if (goldTight(p) && !L('trade'))
 		return ready(0, 'market').length
 			? 'Gold is low: sell wood, food or stone at the Market.'
 			: 'Gold is low: Build → Market, then sell what you have too much of.';
 	if (G.blds.some((b) => b.owner === 0 && b.fire > 0 && !G.units.some((u) => u.rep === b && u.job === 'repair')))
 		return '!Fire! Tap it, send a villager.';
-	if (
-		G.units.some((u) => u.owner === 0 && u.sick > G.t) &&
-		!ready(0, 'hospital').length &&
-		p.age >= 2 &&
-		!L('build:hospital')
-	)
+	if (NEEDS.hospital() && !L('build:hospital'))
 		return 'Sickness: a Hospital cures it.';
 	if (on('gold') === 0 && p.age >= 1 && !L('job:gold')) return 'Put villagers on Gold: it buys riders.';
 	return '';
@@ -24643,7 +24578,6 @@ function showByAge() {
 		if (on) n++;
 	});
 	$('jobs').style.setProperty('--n', n);
-	$('hudB').hidden = false; // the page chip is the constant (Albert's notebook): there from the first second
 }
 function ui(force) {
 	const now = performance.now();
@@ -24708,7 +24642,7 @@ function ui(force) {
 			['', AGE_SHORT[p.age] || AGES[p.age].name, ''],
 			[sky, '', ''],
 			['', clk, ''],
-			[ICON.head, `${popOf(0)}/${capOf(0)}`, popOf(0) >= capOf(0) && capOf(0) < POPMAX ? 'lit-r' : ''],
+			['', `${popOf(0)}/${capOf(0)}`, popOf(0) >= capOf(0) && capOf(0) < POPMAX ? 'lit-r' : ''], // the number alone: 180/180 fits the 45 pt cell
 			['', `z ${idleN}`, idleN ? 'lit-r' : 'dim'],
 			[ICON.book, String(ready), ready ? 'lit-b' : 'dim'],
 			['', `★ ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, ''], // the rank; the score itself is on the score card
@@ -24822,16 +24756,17 @@ function ui(force) {
 const linkOf = (m) => m && (m.act || (m.at ? `jump:${m.at.x},${m.at.y}` : ''));
 // The preview (Build 64): the newest live line, or the question that hides its group; paused says so when nothing is live. A full card
 // is a moment of reading: the preview steps aside, and the line waits in the mail.
+// the line on show: red first, then the newest (Build 65); the preview draws it and × closes it, one choice for both
+const shownMsg = (now = performance.now()) => (G.mail || []).find((m) => m.ru > now && urgentCls(m.cls)) || (G.mail || []).find((m) => m.ru > now);
 function preview() {
 	const el = $('pv'),
-		M = G.mail || [],
 		now = performance.now(),
 		paused = G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup')),
-		live = M.find((m) => m.ru > now),
+		live = shownMsg(now),
 		big = !!G.card && $('card').classList.contains('full'),
 		ask = G.pvAsk;
 	let h = '',
-		cc = '#e9ecef';
+		cc = codeOf('w');
 	if (!big && !G.over) {
 		if (ask)
 			h = `<div class="t"><small>${GROUPS[ask]}</small><span>Hide ${GROUPS[ask]} messages?</span></div><div class="ask"><button class="yes" data-act="pvhide:${ask}">Hide</button><button data-act="pvkeep">Keep</button></div>`;
@@ -24934,13 +24869,6 @@ const ACT = {
 		G.buildAt = hint ? { hint } : null;
 		openCard({ type: 'menu', id: M ? M.id : G.lastMenu || MENUS[0].id });
 	}, // Build opens on what fits the middle of the view   // Build opens the Build card on the menu last used; again, it closes
-	towncard() {
-		const k = keepOf(0);
-		if (k) openCard({ type: 'bld', id: k.id });
-	},
-	unvil() {
-		if (!unTrain(0, 'vil')) say('Nobody is waiting to train.', '', 3);
-	},
 	idlego() {
 		const u = unitsOf(0, 'vil').find(freeVil);
 		if (!u) return;
@@ -25108,8 +25036,7 @@ const ACT = {
 		feel('tick');
 	},
 	pvx() {
-		const now = performance.now(),
-			m = (G.mail || []).find((x) => x.ru > now);
+		const m = shownMsg();
 		if (!m) return;
 		m.ru = 0;
 		if (m.grp !== 'reply' && !urgentCls(m.cls) && !hiddenG(m.grp)) G.pvAsk = m.grp; // × on news asks once: hide this group?
@@ -25143,11 +25070,6 @@ const ACT = {
 	mailall() {
 		SET.hideG = {};
 		saveSet();
-		refresh();
-	},
-	mailclear() {
-		G.mail = [];
-		G.mailN = 0;
 		refresh();
 	},
 	sound() {
@@ -25230,9 +25152,6 @@ const PLAY = {
 	less(a) {
 		moveVil(0, a, true);
 	},
-	mtab(a) {
-		G.mtab = a;
-	},
 	ktab(a) {
 		G.ktab = a;
 	},
@@ -25259,7 +25178,7 @@ const PLAY = {
 	},
 	pagecycle() {
 		pageCycle();
-	}, // the chip at the row's left: Jobs, War, Build, Squad, Train (Build 63)
+	}, // the chip over the first slot: Jobs, Realm, Build, War, Squad, Train (Build 64)
 	sqdone() {
 		hudPage('war');
 		G.hud.sel = G.hud.sq.i;
@@ -25331,14 +25250,6 @@ const PLAY = {
 	sqcycle() {
 		sqCycle();
 	},
-	sqprev() {
-		G.hud.sq.i = (G.hud.sq.i + BNS - 1) % BNS;
-		G.hud.sq.tile = null;
-	},
-	sqnext() {
-		G.hud.sq.i = (G.hud.sq.i + 1) % BNS;
-		G.hud.sq.tile = null;
-	},
 	sqtile(a) {
 		const t = Number(a);
 		G.hud.sq.tile = G.hud.sq.tile === t ? null : t;
@@ -25349,17 +25260,9 @@ const PLAY = {
 			k = sqUnit(Number(t));
 		if (k) sqPlan(G.hud.sq.i, k, d === '+' ? 1 : -1);
 	},
-	sqcard(a) {
-		openCard({ type: 'squad', i: Number(a) });
-	},
 	sqpk(a) {
 		const [i, k, d] = a.split(',');
 		sqPlan(Number(i), k, d === '+' ? 1 : -1);
-	},
-	wstance() {
-		const s = G.hud.sel;
-		cycle('temper', s === null || s === undefined ? 'all' : s, TEMPER.length);
-		feel('tick');
 	},
 	whome() {
 		hudHome();
@@ -25388,9 +25291,6 @@ const PLAY = {
 		const s = G.hud.sel;
 		if (s !== null && s !== undefined && sqOut(s)) hudAbort(s);
 		else hudAbortAll();
-	},
-	habortall() {
-		hudAbortAll();
 	},
 	hdel(a) {
 		hudAbort(Number(a));
@@ -26999,7 +26899,6 @@ const FLEECE = 7,
 const stopsAll = () => G.finds.filter((f) => f.kind === 'stop');
 const postAt = (f) => G.blds.find((b) => b.kind === 'tpost' && b.sid === f.id && b.hp > 0);
 const stopsHeld = (o, r) => stopsAll().filter((f) => f.route === r && f.owner === o).length; // of one route's four stops
-const goodsOf = (o) => G.P[o].goods;
 function stash(o, type, amt) {
 	const p = G.P[o],
 		k = KEY[type] || type;
@@ -29158,7 +29057,7 @@ function chaseCrown(p, put) {
 // One row, six slots, three shapes, five pages. A slot is a fixed place the thumb learns; what fills it is one of three shapes: WHOLE (one
 // button the height of the slot), SPLIT (two buttons touching, top and bottom: people over build, create over cycle, ✓ over ✕) or PM (an icon
 // and a count above, − and + below with air between: the jobs). The chip at the row's left end is the one constant: it cycles the pages
-// Jobs → War → Build → Squad → Train, and every page is always there (dimmed until the game opens it), so the order never changes under
+// Jobs → Realm → Build → War → Squad → Train (Build 64), and every page is always there (dimmed until the game opens it), so the order never changes under
 // the hand. The sixth slot is ✓ over ✕ on every page that confirms. The same row is a card's action bar (the worker card), so there is one
 // element to learn. The Huddle's sequence (ready, aim, fire, abort) lives on in the War page's missions.
 const CLS = [
@@ -29516,10 +29415,10 @@ function hudReinforce(slot) {
 // ── the row: six slots, three shapes
 const odds2 = (p) => `hsl(${Math.round(Math.max(0, Math.min(1, p)) * 120)} 75% 58%)`;
 function mStatus(m) {
-	if (m.st === 'go') return [mmss(m.eta || 0), '#7db4ff'];
+	if (m.st === 'go') return [mmss(m.eta || 0), codeOf('b')];
 	if (m.st === 'act') return ['FIGHTING', odds2(m.odds)];
-	if (m.st === 'lost') return ['LOST', '#ff6a5a'];
-	return [m.late ? `LATE +${m.late}s` : '✓ DONE', m.late ? '#ffd35e' : '#5fd08a'];
+	if (m.st === 'lost') return ['LOST', codeOf('r')];
+	return [m.late ? `LATE +${m.late}s` : '✓ DONE', m.late ? 'var(--gold)' : codeOf('g')]; // on its way blue, lost red, done green, late gold: the code
 }
 const stB = (act, t, cls = '', extra = '') => `<button class="cell st ${cls}" data-act="${act}"${extra}>${t}</button>`;
 const cellB = (act, top, word, cls = '', extra = '') =>
@@ -29575,22 +29474,23 @@ function warPageHTML() {
 	return h;
 }
 const favKinds = () => (SET.fav && SET.fav.length ? SET.fav : FAV0).slice(0, 5);
+// What the town needs (Build 65: one table; the tips, the Build page and the Stores domain read it, where each had its own copy). Each test
+// is the reason; the tips add their words and the Build page its colour.
+const goldTight = (p) => p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300); // gold short while another store is full
+const NEEDS = {
+	house: () => popOf(0) >= capOf(0) - 1 && capOf(0) < POPMAX && !G.blds.some((b) => b.owner === 0 && b.kind === 'house' && b.prog < 1),
+	barracks: () => !bldsOf(0, 'barracks').length && G.t > 75,
+	lumber: () => unitsOf(0, 'vil').filter((u) => u.job === 'wood').length >= 3 && !bldsOf(0, 'lumber').length,
+	farm: () => {
+		const k = keepOf(0);
+		return !!k && G.nodes.filter((n) => n.kind === 'bush' && dist(n, k) < 300).length < 3 && !bldsOf(0, 'farm').length;
+	},
+	market: () => goldTight(G.P[0]) && !bldsOf(0, 'market').length,
+	hospital: () => G.units.some((u) => u.owner === 0 && u.sick > G.t) && !bldsOf(0, 'hospital').length && G.P[0].age >= 2,
+};
+const buildWants = () => Object.keys(NEEDS).filter((k) => NEEDS[k]());
 // The Build page (Build 64): what the town needs, in the colour code. Blue: wanted and you can build it now; green: going up; red: wanted
 // but blocked, with the reason (what it is short of, or what it needs first); then your pinned favourites, white. The sixth is the Build card.
-function buildWants() {
-	const p = G.P[0],
-		k = keepOf(0),
-		V = unitsOf(0, 'vil'),
-		on = (j) => V.filter((u) => u.job === j).length,
-		W = [];
-	if (popOf(0) >= capOf(0) - 1 && capOf(0) < POPMAX) W.push('house');
-	if (!bldsOf(0, 'barracks').length && G.t > 75) W.push('barracks');
-	if (on('wood') >= 3 && !bldsOf(0, 'lumber').length) W.push('lumber');
-	if (k && G.nodes.filter((n) => n.kind === 'bush' && dist(n, k) < 300).length < 3 && !bldsOf(0, 'farm').length) W.push('farm');
-	if (p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && !bldsOf(0, 'market').length) W.push('market');
-	if (G.units.some((u) => u.owner === 0 && u.sick > G.t) && !bldsOf(0, 'hospital').length && p.age >= 2) W.push('hospital');
-	return W; // the same reads the tips make: one source for what the town wants
-}
 function buildItems() {
 	const p = G.P[0],
 		out = [],
@@ -29606,7 +29506,7 @@ function buildItems() {
 				? { k, st: 'red', word: BLD[k].age > p.age ? AGES[BLD[k].age].name : 'blocked', act: `build:${k}`, why }
 				: afford(p, BLD[k].cost)
 					? { k, st: 'blue', word: BLD[k].short || BLD[k].name, act: `build:${k}` }
-					: { k, st: 'red', word: `short ${costText(Object.fromEntries(Object.entries(BLD[k].cost).filter(([r, v]) => (p.res[r] || 0) < v).map(([r, v]) => [r, Math.ceil(v - (p.res[r] || 0))])))}`, act: `build:${k}` },
+					: { k, st: 'red', word: `short ${need(BLD[k].cost)}`, act: `build:${k}` },
 		);
 	}
 	for (const k of favKinds()) if (out.length < 4 && !has(k) && BLD[k]) out.push({ k, st: '', word: BLD[k].short || BLD[k].name, act: `build:${k}` });
@@ -29737,8 +29637,6 @@ function huddleUI() {
 	if (flip) {
 		el.hidden = page === 'jobs';
 		$('jobs').hidden = page !== 'jobs';
-		$('orders').classList.toggle('hud', page === 'war' || page === 'train');
-		$('orders').classList.toggle('sqr', page === 'squad');
 	}
 	$('orders').className =
 		$('orders')
@@ -29926,7 +29824,7 @@ CARDS.squad = (c) => {
 // Five domains, each a verdict the game already computes, in the colour code: red something wrong, blue available (act on it now),
 // green active, white all is well. The door, under People in the row's first slot, shows the highest red, else the highest blue, in
 // this order of importance: the realm (what is coming at you), the people, the work, the stores, the tech. A tap goes where that is
-// fixed; from there, or when all is well, it opens the dashboard: the five and the mail, one row on top of the row. Colour is never
+// fixed; a second tap on the same problem, or when all is well, opens the Realm page: the mail and the five, in the row. Colour is never
 // alone: each tile has its icon and its word.
 const DOMAIN_ORDER = ['realm', 'people', 'work', 'stores', 'tech'];
 const DOMAIN_NAME = { realm: 'Realm', people: 'People', work: 'Work', stores: 'Stores', tech: 'Tech' };
@@ -29998,7 +29896,7 @@ function domains() {
 	// the stores: what runs out within two minutes, and what a market would turn into gold
 	{
 		const low = RES.map((r) => KEY[r]).find((k) => p.res[k] !== undefined && velOf(p, k) <= -1 && $('r' + k) && !$('r' + k).parentElement.hidden),
-			sell = p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300) && ready(0, 'market').length;
+			sell = goldTight(p) && ready(0, 'market').length;
 		D.stores = low
 			? { st: 'red', word: `${RESOURCES[LONG[low]].name} low`, go: `job:${LONG[low]}` }
 			: sell
@@ -30034,16 +29932,17 @@ function realmPageHTML() {
 const atGo = (go) =>
 	go.startsWith('page:') ? (G.hud.page || 'jobs') === go.slice(5) : go.startsWith('card:') ? !!G.card && go.slice(5).startsWith(G.card.type) : false;
 function doorTap() {
-	const T = domains().top;
-	if (T && !atGo(T.go)) {
+	const T = DOOR.top; // what the door shows, not a fresh read: a change inside the 150 ms between draws cannot send you elsewhere (Build 65)
+	if (T && DOOR.went !== DOOR.key && !atGo(T.go)) {
+		DOOR.went = DOOR.key; // one tap a problem: the second opens the Realm, so an action (the food rally, a house) is never repeated or undone
 		closeCard();
 		act(T.go);
-	} else hudPage('realm'); // all is well, or already there: the Realm page
+	} else hudPage('realm'); // all is well, already there, or the second tap: the Realm page
 	feel('tick');
 }
-const doorHTML = (id = 'doorB') =>
-	`<button class="cell st door"${id ? ` id="${id}"` : ''} data-act="door" aria-label="The door: the most important thing now"><span class="top"></span>${wd('')}</button>`;
-let DOOR = { sig: '', key: '' };
+const doorHTML = () =>
+	`<button class="cell st door" id="doorB" data-act="door" aria-label="The door: the most important thing now"><span class="top"></span>${wd('')}</button>`;
+let DOOR = { sig: '', key: '', top: null, went: '' }; // top: what the door shows, which its tap follows; went: the problem it last took you to
 function doorUI() {
 	if (!G || G.over) return;
 	const D = domains(),
@@ -30054,22 +29953,22 @@ function doorUI() {
 		sig = st + icon + word + D.n,
 		key = T ? T.id + T.st : '',
 		fresh = key !== DOOR.key;
-	for (const el of document.querySelectorAll('button.door')) {
-		if (el.sig !== sig) {
-			el.sig = sig;
-			el.className = 'cell st door ' + st;
-			el.children[0].innerHTML = icon;
-			const pl = el.querySelector(':scope > .pill');
-			if (pl) pl.remove();
-			if (D.n > 1) el.insertAdjacentHTML('beforeend', `<span class="pill">${D.n}</span>`);
-			el.children[1].textContent = word;
-			el.setAttribute('aria-label', T ? `${T.name}: ${word}` : 'All is well: the dashboard');
-		}
-		if (fresh && T) {
-			el.classList.remove('pulse');
-			void el.offsetWidth;
-			el.classList.add('pulse'); // a new red or blue pulses the door once and is heard: seen and heard, as every alert must be
-		}
+	DOOR.top = T;
+	const el = $('doorB');
+	if (el.sig !== sig) {
+		el.sig = sig;
+		el.className = 'cell st door ' + st;
+		el.children[0].innerHTML = icon;
+		el.children[1].textContent = word;
+		const pl = el.querySelector('.dn');
+		if (pl) pl.remove();
+		if (D.n > 1) el.insertAdjacentHTML('beforeend', `<span class="dn">${D.n}</span>`);
+		el.setAttribute('aria-label', T ? `${T.name}: ${word}` : 'All is well: the Realm');
+	}
+	if (fresh && T) {
+		el.classList.remove('pulse');
+		void el.offsetWidth;
+		el.classList.add('pulse'); // a new red or blue pulses the door once and is heard: seen and heard, as every alert must be
 	}
 	if (fresh) {
 		DOOR.key = key;
