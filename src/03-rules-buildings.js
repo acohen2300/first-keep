@@ -566,6 +566,7 @@ const BLD = {
 		drop: ['wool'],
 		sab: 'burn',
 		wood: true,
+		open: true,
 		desc: 'Spins and weaves wool into cloth (2 wool make 1), or brews ale from your grain (3 food make 1 beer): goods to trade. One villager works it; the card picks what it makes.',
 	},
 	mint: {
@@ -596,6 +597,7 @@ const BLD = {
 		crop: 'iron',
 		makes: { iron: { from: { w: 2 }, rate: 0.2 } },
 		sab: 'stall',
+		open: true,
 		desc: 'Smelts iron from bog ore with charcoal: 2 wood make 1 iron. One villager works it. Iron in-house, without a vein.',
 	},
 	quarry: {

@@ -196,6 +196,31 @@ function drawGhost() {
 		why = canPlace(0, kind, sp.x, sp.y),
 		ok = !why;
 	pl.why = why;
+	// the build grid shows while a ghost is held (Build 61, Albert: "other games lock buildings to grids better"): the squares the
+	// footprint snaps to, four out from it on every side, with the ones already taken filled darker
+	const g0x = Math.round(sp.x / NAVC) - B.fp / 2 - 4,
+		g0y = Math.round(sp.y / NAVC) - B.fp / 2 - 4,
+		gn = B.fp + 8;
+	ctx.strokeStyle = 'rgba(255,255,255,.28)';
+	ctx.lineWidth = 1;
+	ctx.beginPath();
+	for (let i = 0; i <= gn; i++) {
+		ctx.moveTo(SX((g0x + i) * NAVC), SY(g0y * NAVC));
+		ctx.lineTo(SX((g0x + i) * NAVC), SY((g0y + gn) * NAVC));
+		ctx.moveTo(SX(g0x * NAVC), SY((g0y + i) * NAVC));
+		ctx.lineTo(SX((g0x + gn) * NAVC), SY((g0y + i) * NAVC));
+	}
+	ctx.stroke();
+	ctx.fillStyle = 'rgba(40,30,20,.22)';
+	for (let i = 0; i < gn; i++)
+		for (let j = 0; j < gn; j++) {
+			const cx = (g0x + i) * NAVC + NAVC / 2,
+				cy = (g0y + j) * NAVC + NAVC / 2;
+			if (cx < 0 || cy < 0 || cx >= MAP || cy >= MAP) continue;
+			const ci = Math.floor(cy / NAVC) * NC + Math.floor(cx / NAVC);
+			if (!NAV.solid[ci] && !NAV.lake[ci]) continue;
+			ctx.fillRect(SX((g0x + i) * NAVC), SY((g0y + j) * NAVC), NAVC * z, NAVC * z * TILT);
+		}
 	ctx.fillStyle = ok ? 'rgba(110,210,110,.35)' : 'rgba(222,90,68,.38)';
 	ctx.fillRect(SX(sp.x - n / 2), SY(sp.y - n / 2), n * z, n * z * TILT);
 	ctx.strokeStyle = ok ? '#7ee07e' : '#de5a44';

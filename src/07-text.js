@@ -673,17 +673,17 @@ const TRIGGERS = () => [
 	],
 	[
 		'Villager jobs: Food, Wood, Stone, Gold, Iron',
-		`The − and + under each job move one villager off or on: + takes an idle villager, else the one earning least elsewhere; − sends home the one earning least. Each worker takes the find that brings home most a minute: its load over the time to fill it and carry it home and back (fish only within ${DOCKR} of a dock). It moves to a better find when the gain is ${Math.round((FORAGE.move - 1) * 100)}% or more. A new field or site takes the worker earning least on that resource.`,
-		'You decide who does what.',
+		`The − and + under each job move one villager off or on: + takes an idle villager, else the one earning least elsewhere; − sends home the one earning least. Each worker takes the find that brings home most a minute: its load over the time to fill it and carry it home and back (fish only within ${DOCKR} of a dock). A worker on a field, tree farm, pasture or quarry stays on it. A worker on a wild find that runs out looks only for the same kind of find within its own sight (gold rock to gold rock); when none is in sight it waits at the drop-off for your order. Tap the lit job tile again to turn the default job off: new villagers then wait at the Town Center. Stop and Dismiss sit on a villager card; Stop all and Idle to me on the Town Center card.`,
+		'You decide who does what, and nobody wanders off.',
 	],
 	[
 		'Hunting',
-		`Villagers on Food hunt deer and boar near home: they throw javelins, the animal falls, and they butcher it where it lies (a deer gives ${(UNIT.deer.meat * RICH) | 0}, a boar ${(UNIT.boar.meat * RICH) | 0}). Boar fight back.`,
-		'Meat came before fields everywhere.',
+		`Your villagers do not hunt unless you send them (Food on a deer or boar): they throw javelins, the animal falls, and they butcher it where it lies (a deer gives ${(UNIT.deer.meat * RICH) | 0}, a boar ${(UNIT.boar.meat * RICH) | 0}). An animal that attacks a villager is fought by that villager and the two nearest in sight. The computers hunt on their own: they have no finger to send a hunter.`,
+		'Meat came before fields everywhere; a wolf at the door was the fight of all.',
 	],
 	[
 		'You build',
-		'Press where it goes: the building waits above your finger and snaps flush beside your other buildings, side by side; buildings that train keep a walking lane around them. Green fits, red says why not. Let go, drag to adjust, then tap Build. Houses, fields and gates offer the next spot beside.',
+		'Press where it goes: the building waits above your finger over the build grid and snaps flush beside your other buildings, side by side; buildings that train keep a walking lane around them. Green fits, red says why not. Let go, drag to adjust, then tap Build. The ghost stays for the next of the same kind until the limit or the purse says no. A cut-out tree farm shows stumps: tap it to replant at half the cost. A kind at its limit dims with a check in the Build card.',
 		'Rows that line up, no hidden gaps, and you never cover what you are placing.',
 	],
 	[
@@ -892,13 +892,13 @@ const TRIGGERS = () => [
 		'The real tree: nobody built a blast furnace before a bellows, and the plough mattered more than the sickle.',
 	],
 	[
-		'The army dock and pausing',
-		'Once Battalions is researched a dock sits above the job bar: tap All or a battalion and it is picked; Charge, Fall back and Teach follow on the pick bar; the chevron folds it to a tab. Opening any card pauses the game and closing it carries on (Help: Pause on cards, off if you like).',
+		'The Squad room and pausing',
+		'The chip at the left of the job row turns the row into the Squad room (once Command is researched): + makes a squad (Alpha to Delta, four at most), the tile picks one, and − and + under each kind fill its plan from the soldiers at home. A squad card shows its plan at home and its health and standing out on a mission. Opening any card pauses the game and closing it carries on (Help: Pause on cards, off if you like).',
 		'Thumbs on the map, not in a menu: a phone is not a desk.',
 	],
 	[
-		'The huddle: four missions',
-		'The sword button above the bar plans an attack: Aim, tap the target, set how many Foot, Archers, Horse and Siege go, then Fire. Each mission (Alpha to Delta) shows its arrival time, then ACTIVE with its odds in colour. A flashing red tile is losing: open it to Reinforce from the idle reserve, or call it off. A flashing green tile has soldiers to spare: drag them to another mission or Ready.',
+		'The War room: four missions',
+		'The chip again turns the row into the War room: a crosshair goes where you tap; Go sends the picked squad (or every idle soldier) on it as a mission with a promised time, and the row shows each squad out: its time to arrive, then FIGHTING with its odds in colour, then done. A tile flashing red is losing: open it to Reinforce from the idle reserve, or Abort. A tap on the map offers the same in two buttons: the sword sends Idle, All or a squad there; the people button builds there, sends idle villagers there or sets workers there.',
 		'A plan you can read: time, odds and who is where. The weather on the screen is counted in the time; a storm that comes later is bad luck.',
 	],
 	[
@@ -923,8 +923,8 @@ const TRIGGERS = () => [
 	],
 	[
 		'A wooden building catches fire',
-		'Sabotage, summer lightning, sparks from a smithy, or fire arrows and burning shot. It burns down in about half a minute; two villagers run with buckets; it can spread to wooden buildings next to it. Stone does not burn.',
-		'Towns of timber and thatch burned often: London in 1212 and 1666.',
+		`Sabotage, summer lightning, sparks from a smithy, or fire arrows and burning shot. It burns down in about half a minute; two villagers run with buckets. A fire grows as the square of its age, and the heat a neighbour receives falls with the gap between the walls (a quarter at ${FIRE.near}, none past ${FIRE.reach}); so a young fire, or one a street away, rarely spreads. Stone does not burn.`,
+		'Towns of timber and thatch burned often: London in 1212 and 1666. The square of its age is the design fire of NFPA 72; the fall-off is the view factor of radiant heat in BR 187.',
 	],
 	[
 		'Sickness',

@@ -16,6 +16,34 @@ const STONE = '#a29d90',
 	THATCH = '#b8954a',
 	TILE = '#a8543a',
 	SLATE = '#5d6470';
+// ── the light (Build 61, after the best of the genre: one warm sun from the upper left, cool shadow, not grey) ──
+// lit(col, k): k > 0 warms a colour toward the sun, k < 0 cools it toward the shadow. ao(): the darkening where a wall meets the ground.
+// rim(): the pale line of light along a top edge that lifts a shape off the ground. Hard outlines are gone: a faint warm-dark edge only.
+const SUN = '#fff1c4',
+	SHADOW = '#1f3a46';
+const hexRGB = (h) => {
+	const n = parseInt(h.slice(1), 16);
+	return [n >> 16, (n >> 8) & 255, n & 255];
+};
+const mix = (a, b, t) => {
+	const A = hexRGB(a),
+		B = hexRGB(b);
+	return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')})`;
+};
+const lit = (col, k) => (col[0] !== '#' ? col : k >= 0 ? mix(col, SUN, k) : mix(col, SHADOW, -k));
+const LINE = 'rgba(30,22,16,.35)';
+const ao = (pts, y, h) => {
+	g.save();
+	g.beginPath();
+	pts.forEach((p, i) => (i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])));
+	g.closePath();
+	g.clip();
+	const xs = pts.map((p) => p[0]);
+	g.fillStyle = LG(0, y, 0, y - h, ['rgba(20,30,40,.42)', 'rgba(20,30,40,0)']);
+	g.fillRect(Math.min(...xs) - 2, y - h, Math.max(...xs) - Math.min(...xs) + 4, h + 2);
+	g.restore();
+};
+const rim = (x0, y0, x1, y1, a = 0.5) => L_(x0, y0, x1, y1, `rgba(255,245,210,${a})`, 0.45);
 // the east wall and the top of a box whose front runs x0..x1 at yf, h tall and d deep (d already squashed): drawn before its front
 function sides(x0, x1, yf, h, d, wall, top = true) {
 	const k = d * SIDE;
@@ -26,9 +54,9 @@ function sides(x0, x1, yf, h, d, wall, top = true) {
 			[x1 + k, yf - d - h],
 			[x1, yf - h],
 		],
-		shade(wall, 0.58),
-		INK,
-		0.5,
+		LG(x1, 0, x1 + k, 0, [lit(wall, -0.45), lit(wall, -0.6)]),
+		LINE,
+		0.4,
 	);
 	if (top)
 		P_(
@@ -38,9 +66,9 @@ function sides(x0, x1, yf, h, d, wall, top = true) {
 				[x1 + k, yf - d - h],
 				[x0 + k, yf - d - h],
 			],
-			shade(wall, 1.05),
-			INK,
-			0.5,
+			lit(wall, 0.12),
+			LINE,
+			0.4,
 		);
 	return k;
 }
@@ -65,25 +93,26 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 		k = d * SIDE,
 		m = k / 2,
 		ry = -h - roofH,
-		far = shade(roofCol || wall, 0.7);
+		over = roof && roof !== 'flat' ? Math.min(2.6, w * 0.08) : 0, // the eaves overhang
+		far = lit(roofCol || wall, -0.5);
 	if (roof && roof !== 'flat')
 		P_(
 			roof === 'hip'
 				? [
-						[x0 + k, yb - h],
-						[x1 + k, yb - h],
+						[x0 - over * 0.5 + k, yb - h + 0.6],
+						[x1 + over * 0.5 + k, yb - h + 0.6],
 						[x1 - w * 0.25 + m, ry],
 						[x0 + w * 0.25 + m, ry],
 					]
 				: [
-						[x0 - 1 + k, yb - h],
-						[x1 + 1 + k, yb - h],
-						[x1 + 1 + m, ry],
-						[x0 - 1 + m, ry],
+						[x0 - over * 0.5 + k, yb - h + 0.6],
+						[x1 + over * 0.5 + k, yb - h + 0.6],
+						[x1 + over * 0.5 + m, ry],
+						[x0 - over * 0.5 + m, ry],
 					],
 			far,
-			INK,
-			0.5,
+			LINE,
+			0.4,
 		); // the far slope, where it shows over the ridge
 	sides(x0, x1, yf, h, d, wall, roof === 'flat' || !roof);
 	P_(
@@ -93,11 +122,32 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 			[x1, yf - h],
 			[x0, yf - h],
 		],
-		LG(x0, 0, x1, 0, [shade(wall, 0.95), shade(wall, 0.82), shade(wall, 0.68)]),
-		INK,
-		0.6,
+		LG(x0, 0, x1, 0, [lit(wall, 0.18), wall, lit(wall, -0.12)]),
+		LINE,
+		0.45,
 	); // front
 	texture(tex, x0, yf - h, x1, yf, wall);
+	ao(
+		[
+			[x0, yf],
+			[x1, yf],
+			[x1, yf - h],
+			[x0, yf - h],
+		],
+		yf,
+		h * 0.45,
+	);
+	ao(
+		[
+			[x1, yf],
+			[x1 + k, yf - d],
+			[x1 + k, yf - d - h],
+			[x1, yf - h],
+		],
+		yf,
+		h * 0.45,
+	);
+	if (roof === 'flat' || !roof) rim(x0, yf - h, x1, yf - h, 0.45);
 	if (UP >= 1) {
 		P_(
 			[
@@ -107,7 +157,7 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 				[x0, yf - 3],
 			],
 			STONE,
-			INK,
+			LINE,
 			0.4,
 		);
 		P_(
@@ -117,8 +167,8 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 				[x1 + k, yf - d - 3],
 				[x1, yf - 3],
 			],
-			shade(STONE, 0.6),
-			INK,
+			lit(STONE, -0.45),
+			LINE,
 			0.4,
 		);
 	}
@@ -131,8 +181,8 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 					[x0 + 3.4, y - 3],
 					[x0, y - 3],
 				],
-				shade(STONE, 1.1),
-				INK,
+				lit(STONE, 0.15),
+				LINE,
 				0.3,
 			);
 			P_(
@@ -142,14 +192,16 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 					[x1, y - 3],
 					[x1 - 3.4, y - 3],
 				],
-				shade(STONE, 1.1),
-				INK,
+				lit(STONE, 0.15),
+				LINE,
 				0.3,
 			);
 		}
 	const r = { top: yb - h, d, h, k };
 	if (roof === 'flat' || !roof) return r;
-	const near = LG(0, ry, 0, yf - h, [shade(roofCol, 1.2), roofCol, shade(roofCol, 0.8)]);
+	const sag = Math.min(1.4, w * 0.045),
+		rc = roofCol || wall,
+		near = LG(0, yf - h, 0, ry, [lit(rc, -0.15), lit(rc, 0.25)]);
 	if (roof === 'gable') {
 		// ridge runs left to right: the near slope, and the gable end on the east wall
 		P_(
@@ -158,59 +210,96 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 				[x1 + k, yb - h],
 				[x1 + m, ry],
 			],
-			shade(wall, 0.66),
-			INK,
-			0.5,
+			lit(wall, -0.5),
+			LINE,
+			0.4,
 		);
-		P_(
-			[
-				[x0 - 1, yf - h + 1],
-				[x1 + 1, yf - h + 1],
-				[x1 + 1 + m, ry],
-				[x0 - 1 + m, ry],
-			],
-			near,
-			INK,
-			0.6,
-		);
-		g.strokeStyle = 'rgba(0,0,0,.18)';
-		g.lineWidth = 0.5;
-		for (let t = 0.25; t < 1; t += 0.25) {
-			const y = yf - h + 1 + (ry - (yf - h + 1)) * t;
-			g.beginPath();
-			g.moveTo(x0 - 1 + m * t, y);
-			g.lineTo(x1 + 1 + m * t, y);
-			g.stroke();
-		}
-		L_(x0 - 1 + m, ry, x1 + 1 + m, ry, UP >= 2 ? '#e6c75a' : shade(roofCol, 1.4), UP >= 2 ? 1.6 : 1);
+		const e0 = [x0 - over, yf - h + 0.8],
+			e1 = [x1 + over, yf - h + 0.8],
+			r0 = [x0 - over * 0.5 + m, ry],
+			r1 = [x1 + over * 0.5 + m, ry];
+		g.beginPath();
+		g.moveTo(e0[0], e0[1]);
+		g.quadraticCurveTo((e0[0] + e1[0]) / 2, e0[1] + sag, e1[0], e1[1]);
+		g.lineTo(r1[0], r1[1]);
+		g.quadraticCurveTo((r0[0] + r1[0]) / 2, ry + sag * 0.4, r0[0], r0[1]);
+		g.closePath();
+		g.fillStyle = near;
+		g.fill();
+		g.strokeStyle = LINE;
+		g.lineWidth = 0.45;
+		g.stroke();
+		roofGrain(rc, e0, e1, r0, r1, sag);
+		L_(r0[0], r0[1], r1[0], r1[1], UP >= 2 ? '#e6c75a' : lit(rc, -0.4), UP >= 2 ? 1.6 : 0.9);
+		rim(r0[0], r0[1], r1[0], r1[1], 0.5);
 		return { ...r, top: ry };
 	}
 	if (roof === 'hip') {
 		// the near slope, and the east hip in shade
 		P_(
 			[
-				[x1 + 1, yf - h + 1],
-				[x1 + 1 + k, yb - h + 1],
+				[x1 + over, yf - h + 0.8],
+				[x1 + over * 0.5 + k, yb - h + 0.6],
 				[x1 - w * 0.25 + m, ry],
 			],
-			shade(roofCol, 0.62),
-			INK,
-			0.5,
+			lit(rc, -0.55),
+			LINE,
+			0.4,
 		);
-		P_(
-			[
-				[x0 - 1, yf - h + 1],
-				[x1 + 1, yf - h + 1],
-				[x1 - w * 0.25 + m, ry],
-				[x0 + w * 0.25 + m, ry],
-			],
-			near,
-			INK,
-			0.6,
-		);
+		const e0 = [x0 - over, yf - h + 0.8],
+			e1 = [x1 + over, yf - h + 0.8],
+			r0 = [x0 + w * 0.25 + m, ry],
+			r1 = [x1 - w * 0.25 + m, ry];
+		g.beginPath();
+		g.moveTo(e0[0], e0[1]);
+		g.quadraticCurveTo((e0[0] + e1[0]) / 2, e0[1] + sag, e1[0], e1[1]);
+		g.lineTo(r1[0], r1[1]);
+		g.lineTo(r0[0], r0[1]);
+		g.closePath();
+		g.fillStyle = near;
+		g.fill();
+		g.strokeStyle = LINE;
+		g.lineWidth = 0.45;
+		g.stroke();
+		roofGrain(rc, e0, e1, r0, r1, sag);
+		rim(r0[0], r0[1], r1[0], r1[1], 0.5);
 		return { ...r, top: ry };
 	}
 	return r;
+}
+// the grain of a roof: thatch in layered scallops with loose strands, tile in curved rows, slate and the rest in straight courses
+function roofGrain(rc, e0, e1, r0, r1, sag) {
+	const thatch = rc === THATCH,
+		rows = Math.max(3, Math.round(Math.abs(e0[1] - r0[1]) / (thatch ? 1.7 : 1.3)));
+	g.lineWidth = 0.3;
+	for (let i = 1; i < rows; i++) {
+		const u = i / rows,
+			xa = e0[0] + (r0[0] - e0[0]) * u,
+			xb = e1[0] + (r1[0] - e1[0]) * u,
+			y = e0[1] + (r0[1] - e0[1]) * u + sag * (1 - u) * 0.5;
+		g.strokeStyle = thatch ? `rgba(90,60,20,${0.2 + 0.1 * u})` : 'rgba(40,20,10,.3)';
+		g.beginPath();
+		g.moveTo(xa, y);
+		const n = Math.max(2, Math.round((xb - xa) / (thatch ? 2.4 : 1.9)));
+		for (let j = 0; j < n; j++) {
+			const sx = xa + ((xb - xa) * j) / n,
+				ex = xa + ((xb - xa) * (j + 1)) / n;
+			g.quadraticCurveTo((sx + ex) / 2, y + (thatch ? 0.9 : 0.5) * (1 - u * 0.4), ex, y);
+		}
+		g.stroke();
+		if (!thatch) L_(xa, y - 0.25, xb, y - 0.25, 'rgba(255,220,180,.16)', 0.25);
+	}
+	if (thatch) {
+		let r = 5;
+		const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+		for (let i = 0; i < 40; i++) {
+			const t = R(),
+				u = R(),
+				x = e0[0] + (e1[0] - e0[0]) * t + (r0[0] - e0[0]) * u,
+				y = e0[1] + (r0[1] - e0[1]) * u;
+			L_(x, y, x + 0.2, y - 1.1 * (1 - u), R() > 0.5 ? 'rgba(255,240,180,.35)' : 'rgba(90,60,20,.3)', 0.22);
+		}
+	}
 }
 function texture(tex, x0, y0, x1, y1, wall) {
 	g.save();
@@ -375,17 +464,174 @@ const column = (x, yb, yt, col = '#efe6d4') => {
 		0.3,
 	);
 };
-const smallTree = (x, y, s = 1, col = '#2f6a2f') => {
-	L_(x, y, x, y - 3 * s, '#4c3a22', 0.8 * s);
-	E_(
-		x,
-		y - 5 * s,
-		3 * s,
-		3.2 * s,
-		LG(x - 3 * s, y - 8 * s, x + 3 * s, y - 2 * s, [shade(col, 1.25), col, shade(col, 0.75)]),
-		INK,
+const smallTree = (x, y, s = 1, col = '#3e8a3c') => {
+	P_(
+		[
+			[x - 0.8 * s, y],
+			[x + 0.8 * s, y],
+			[x + 0.5 * s, y - 3.6 * s],
+			[x - 0.5 * s, y - 3.6 * s],
+		],
+		LG(x - 0.8 * s, 0, x + 0.8 * s, 0, ['#7a5a3a', '#3a2412']),
+		LINE,
 		0.3,
 	);
+	for (const [dx, dy, r, kk] of [
+		[0, -6, 3.6, -0.15],
+		[-2.3, -4.9, 2.6, 0],
+		[2.3, -5.3, 2.6, -0.25],
+		[0, -8.2, 2.8, 0.12],
+		[-1.3, -7.4, 2, 0.28],
+	])
+		E_(x + dx * s, y + dy * s, r * s, r * 0.86 * s, RG(x + dx * s - r * 0.4 * s, y + dy * s - r * 0.4 * s, 0, r * 1.1 * s, [lit(col, kk + 0.3), lit(col, kk - 0.35)]));
+};
+// ── the props the yards share (Build 61) ──
+const stump = (x, y) => {
+	E_(x, y - 1, 1.5, 1.1, LG(x - 1.5, 0, x + 1.5, 0, ['#a07a4a', '#5a3c22']), LINE, 0.3);
+	E_(x, y - 2.1, 1.5, 0.6, '#c9a46a');
+	E_(x, y - 2.1, 0.8, 0.32, 'rgba(120,80,30,.5)');
+};
+const grassTufts = (w, col, n) => {
+	let r = 3;
+	const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+	for (let i = 0; i < n; i++) {
+		const [x, y] = gpt(w, 0.05 + R() * 0.9, 0.05 + R() * 0.9);
+		L_(x, y, x + 0.4, y - 1.3, col, 0.3);
+		L_(x + 0.6, y, x + 1.1, y - 1, lit(col, -0.2), 0.3);
+	}
+};
+const hay = (x, y, s = 1) => {
+	E_(x + 0.5, y + 0.2, 2.8 * s, 1.1 * s, 'rgba(20,30,40,.3)');
+	E_(x, y - 1.8 * s, 2.6 * s, 2.1 * s, RG(x - 0.8 * s, y - 2.6 * s, 0, 3 * s, ['#f0cf6e', '#b8882e']));
+	for (let i = 0; i < 10; i++) L_(x - 2 + i * 0.45, y - 0.5 * s, x - 1.7 + i * 0.45, y - 3 * s - (i % 3) * 0.4, 'rgba(120,70,10,.35)', 0.22);
+};
+const barrel = (x, y) => {
+	E_(x + 0.4, y + 0.2, 1.7, 0.75, 'rgba(20,30,40,.3)');
+	P_(
+		[
+			[x - 1.5, y],
+			[x + 1.5, y],
+			[x + 1.8, y - 1.7],
+			[x + 1.5, y - 3.4],
+			[x - 1.5, y - 3.4],
+			[x - 1.8, y - 1.7],
+		],
+		LG(x - 1.5, 0, x + 1.5, 0, ['#a67c48', '#6b4a2c', '#4a2e18']),
+		LINE,
+		0.3,
+	);
+	E_(x, y - 3.4, 1.5, 0.6, '#b08a52');
+	for (const yy of [-1, -2.5]) L_(x - 1.75, y + yy, x + 1.75, y + yy, '#2a1c10', 0.35);
+	rim(x - 1.4, y - 3.4, x + 1.4, y - 3.4, 0.4);
+};
+const crate = (x, y) => {
+	E_(x + 0.5, y + 0.2, 2.2, 0.9, 'rgba(20,30,40,.3)');
+	P_(
+		[
+			[x - 1.7, y],
+			[x + 1.7, y],
+			[x + 1.7, y - 2.6],
+			[x - 1.7, y - 2.6],
+		],
+		LG(x - 1.7, 0, x + 1.7, 0, ['#b08a52', '#8a6a3a']),
+	);
+	P_(
+		[
+			[x + 1.7, y],
+			[x + 2.6, y - 1.1],
+			[x + 2.6, y - 3.7],
+			[x + 1.7, y - 2.6],
+		],
+		'#5a3c22',
+	);
+	P_(
+		[
+			[x - 1.7, y - 2.6],
+			[x + 1.7, y - 2.6],
+			[x + 2.6, y - 3.7],
+			[x - 0.8, y - 3.7],
+		],
+		'#c9a46a',
+	);
+	L_(x - 1.4, y - 2.3, x + 1.4, y - 0.3, 'rgba(30,22,16,.35)', 0.3);
+	L_(x - 1.4, y - 0.3, x + 1.4, y - 2.3, 'rgba(30,22,16,.35)', 0.3);
+};
+const sack = (x, y, col = '#d2bb8e') => {
+	E_(x + 0.3, y + 0.1, 1.6, 0.65, 'rgba(20,30,40,.3)');
+	E_(x, y - 1.5, 1.55, 1.65, RG(x - 0.5, y - 2.2, 0, 2.2, [lit(col, 0.2), lit(col, -0.3)]));
+	L_(x - 1, y - 2.8, x + 1, y - 2.8, '#6b4a2c', 0.45);
+};
+const lantern = (x, y) => {
+	post(x, y, 7.5, '#3a2412', 0.3);
+	P_(
+		[
+			[x - 0.9, y - 7.5],
+			[x + 0.9, y - 7.5],
+			[x + 0.7, y - 9.3],
+			[x - 0.7, y - 9.3],
+		],
+		'#ffd27a',
+	);
+	E_(x, y - 8.3, 5.2, 4, RG(x, y - 8.3, 0, 5.2, ['rgba(255,196,90,.4)', 'rgba(255,196,90,0)']));
+};
+const sheep = (x, y) => {
+	E_(x + 0.6, y + 0.5, 2.6, 1, 'rgba(20,30,40,.25)');
+	for (const lx of [-1.5, -0.5, 0.8, 1.6]) L_(x + lx, y - 0.8, x + lx, y + 0.6, '#4a4540', 0.4);
+	E_(x, y - 1.7, 2.7, 1.8, RG(x - 0.8, y - 2.4, 0, 3.2, ['#fffdf5', '#c9c2b2']));
+	E_(x + 2.4, y - 2.6, 1.1, 1, '#3a3530');
+	E_(x + 2.9, y - 2.9, 0.32, 0.55, '#3a3530');
+};
+const pony = (x, y, col = '#7a4e2a') => {
+	E_(x + 0.8, y + 0.5, 3.8, 1.2, 'rgba(20,30,40,.28)');
+	for (const lx of [-2.2, -1.1, 1.3, 2.4]) L_(x + lx, y - 1.4, x + lx, y + 0.7, lit(col, -0.4), 0.5);
+	E_(x, y - 2.9, 3.5, 1.9, RG(x - 1, y - 3.8, 0, 4, [lit(col, 0.3), lit(col, -0.35)]));
+	P_(
+		[
+			[x + 2.6, y - 4],
+			[x + 3.4, y - 6.4],
+			[x + 4.8, y - 6.8],
+			[x + 5.2, y - 5.4],
+			[x + 4.2, y - 4.6],
+			[x + 3.4, y - 3],
+		],
+		lit(col, 0.05),
+	);
+	L_(x + 2.8, y - 4.6, x + 4, y - 6.6, lit(col, -0.5), 0.6);
+	P_(
+		[
+			[x - 3.2, y - 3.6],
+			[x - 4.6, y - 2.4],
+			[x - 4, y - 0.6],
+			[x - 3, y - 2.8],
+		],
+		lit(col, -0.45),
+	);
+};
+// a lean-to roof on posts over a yard: the front edge sags a little, the slats show, the back edge catches the light
+const leanto = (x0, x1, yf, h, dd, lift, col = THATCH, over = 2) => {
+	const d = dd * TILT,
+		k = d * SIDE;
+	g.beginPath();
+	g.moveTo(x0 - over, yf - h + 0.6);
+	g.quadraticCurveTo((x0 + x1) / 2, yf - h + 1.6, x1 + over, yf - h + 0.6);
+	g.lineTo(x1 + over + k, yf - d - h - lift);
+	g.lineTo(x0 - over + k, yf - d - h - lift);
+	g.closePath();
+	g.fillStyle = LG(0, yf - h, 0, yf - d - h - lift, [lit(col, -0.1), lit(col, 0.22)]);
+	g.fill();
+	g.strokeStyle = LINE;
+	g.lineWidth = 0.4;
+	g.stroke();
+	for (let i = 1; i < 6; i++) {
+		const u = i / 6;
+		g.beginPath();
+		g.moveTo(x0 - over + k * u, yf - h + 0.6 - (d + lift) * u);
+		g.quadraticCurveTo((x0 + x1) / 2 + k * u, yf - h + 1.4 - (d + lift) * u, x1 + over + k * u, yf - h + 0.6 - (d + lift) * u);
+		g.strokeStyle = 'rgba(90,60,20,.28)';
+		g.lineWidth = 0.3;
+		g.stroke();
+	}
+	rim(x0 - over + k, yf - d - h - lift, x1 + over + k, yf - d - h - lift, 0.5);
 };
 // the art for each building kind. c = side colour, o = owner (for civ and research), w = width in world units
 const ART = {
@@ -547,20 +793,20 @@ const ART = {
 		L_(-25, d / 2 - 1, 25, d / 2 - 1, c, 1.4);
 	},
 	house(c) {
-		const r = block(20, 13, PLASTER, 'timber', 'gable', THATCH, 8);
+		const r = block(20, 12, PLASTER, 'timber', 'gable', THATCH, 9);
 		door(-4, r.d / 2, 4, 7);
-		win(4, r.d / 2 - 5);
+		win(4.5, r.d / 2 - 4.6, 2, 2.4, true);
 		L_(-10, r.d / 2 - 0.5, 10, r.d / 2 - 0.5, c, 1.2);
 		const m = r.k / 2;
 		P_(
 			[
-				[5 + m, -21],
-				[7.4 + m, -21],
-				[7.4 + m, -26],
-				[5 + m, -26],
+				[5 + m, -20],
+				[7.4 + m, -20],
+				[7.4 + m, -25],
+				[5 + m, -25],
 			],
-			'#6a5a4a',
-			INK,
+			lit('#6a5a4a', -0.2),
+			LINE,
 			0.3,
 		);
 	},
@@ -647,50 +893,111 @@ const ART = {
 		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
 	},
 	barracks(c) {
-		const r = block(40, 18, PLANK, 'plank', 'gable', '#8a3a2a', 10);
-		door(0, r.d / 2, 6, 11);
-		for (const x of [-13, -9, 10, 14]) {
-			L_(x, r.d / 2, x + 1.5, r.d / 2 - 11, '#8a6a3a', 0.6);
+		// a drill yard with a long hut at the back (Build 61, Albert: open-air): a rack of spears, shields on the wall, a crate
+		const w = 40,
+			d = w * TILT,
+			k = d * SIDE,
+			hw = w * 0.44,
+			hd = w * 0.26;
+		field(w, '#ad9262', c, () => {
+			g.save();
+			g.translate(k * 0.72, d / 2 - d * 0.72 - (hd * TILT) / 2);
+			const r = block(hw * 2, 7.5, PLASTER, 'timber', 'gable', '#8e3a2a', 5.2, hd);
+			door(0, r.d / 2, 2.8, 4.8);
+			win(-hw + 4.2, r.d / 2 - 3.4, 1.7, 2.1, true);
+			win(hw - 4.2, r.d / 2 - 3.4, 1.7, 2.1, true);
+			g.restore();
+			banner(hw + k * 0.72 + 0.8, d / 2 - d * 0.72 - 6.5, c, 7);
+			const [rx, ry] = gpt(w, 0.9, 0.3);
 			P_(
 				[
-					[x + 1.5, r.d / 2 - 11],
-					[x + 2, r.d / 2 - 13],
-					[x + 1, r.d / 2 - 11],
+					[rx - 1.4, ry],
+					[rx + 1.8, ry],
+					[rx + 1.6, ry - 1.1],
+					[rx - 1.6, ry - 1.1],
 				],
-				'#ddd',
+				'#5a3a1e',
 			);
-		}
-		banner(-18, r.d / 2 - 18, c, 10);
-		L_(-20, r.d / 2 - 0.5, 20, r.d / 2 - 0.5, c, 1.2);
+			for (let i = 0; i < 6; i++) L_(rx - 0.8 + i * 0.35, ry - 0.5, rx - 1.4 + i * 0.55, ry - 7.5, '#d9c79a', 0.3);
+			for (let i = 0; i < 3; i++) {
+				const [sx, sy] = gpt(w, 0.5 + i * 0.12, 0.1);
+				E_(sx, sy - 2, 1.4, 1.6, RG(sx - 0.4, sy - 2.6, 0, 1.8, [lit('#c0392b', 0.2), lit('#c0392b', -0.35)]), LINE, 0.3);
+				E_(sx, sy - 2, 0.5, 0.5, '#e6b947');
+			}
+			crate(...gpt(w, 0.9, 0.08));
+		}, true);
 	},
 	range(c) {
-		const r = block(40, 16, PLANK, 'plank', 'gable', '#5d6e3e', 9);
-		door(-8, r.d / 2, 6, 10);
-		E_(12, r.d / 2 - 6, 4, 4, '#e8dcc0', INK, 0.4);
-		E_(12, r.d / 2 - 6, 2.6, 2.6, '#c33');
-		E_(12, r.d / 2 - 6, 1, 1, '#e8dcc0');
-		L_(12, r.d / 2 - 2, 12, r.d / 2, '#5a3a1c', 0.8);
-		banner(-18, r.d / 2 - 16, c, 9);
-		L_(-20, r.d / 2 - 0.5, 20, r.d / 2 - 0.5, c, 1.2);
+		// the butts on a green (Build 61, Albert: open-air): three targets at the back, a shooting line, hay behind
+		const w = 40,
+			d = w * TILT;
+		field(w, '#8cb860', c, () => {
+			grassTufts(w, '#5a8a3c', 60);
+			const [h0, h1] = [gpt(w, 0.03, 0.97), gpt(w, 0.97, 0.97)];
+			for (let i = 0; i < 7; i++) hay(h0[0] + ((h1[0] - h0[0]) * (i + 0.5)) / 7, h0[1] - 0.6, 0.85);
+			for (let i = 0; i < 3; i++) {
+				const [x, y] = gpt(w, 0.25 + i * 0.25, 0.84);
+				E_(x + 0.6, y + 0.2, 3, 1.1, 'rgba(20,30,40,.28)');
+				for (const dx of [-1.7, 1.7]) post(x + dx, y, 5, '#5a3a1e', 0.42);
+				E_(x, y - 2.6, 2.8, 2.8, RG(x - 0.7, y - 3.3, 0, 3.4, ['#f3e6c0', '#c9ad66']));
+				for (let rr = 0; rr < 6; rr++) E_(x, y - 2.6, 2.8 - rr * 0.42, 2.8 - rr * 0.42, null, 'rgba(120,90,40,.3)', 0.2);
+				E_(x, y - 2.6, 1.6, 1.6, '#fff');
+				E_(x, y - 2.6, 1, 1, '#d03a2a');
+				E_(x, y - 2.6, 0.42, 0.42, '#fff');
+				L_(x + 0.3, y - 2.5, x + 2.6, y - 1.2, '#9a7a4a', 0.3);
+			}
+			const [l0, l1] = [gpt(w, 0.05, 0.22), gpt(w, 0.95, 0.22)];
+			L_(l0[0], l0[1], l1[0], l1[1], 'rgba(255,255,255,.75)', 0.5);
+			const [rx, ry] = gpt(w, 0.92, 0.1);
+			for (let i = 0; i < 5; i++) L_(rx - 0.6 + i * 0.3, ry, rx - 1.3 + i * 0.55, ry - 6.5, '#d9c79a', 0.3);
+			banner(...gpt(w, 0.04, 0.96), c, 8);
+		}, true);
 	},
 	stable(c) {
-		const r = block(40, 16, PLANK, 'plank', 'gable', THATCH, 10);
-		for (let i = -2; i <= 2; i++) {
-			P_(
-				[
-					[i * 7 - 2.4, r.d / 2],
-					[i * 7 + 2.4, r.d / 2],
-					[i * 7 + 2.4, r.d / 2 - 7],
-					[i * 7 - 2.4, r.d / 2 - 7],
-				],
-				'#3a2614',
-				INK,
-				0.3,
-			);
-			E_(i * 7 + 0.6, r.d / 2 - 6.8, 1.2, 1.6, '#7a4e2c');
-		}
-		banner(-18, r.d / 2 - 16, c, 9);
-		L_(-20, r.d / 2 - 0.5, 20, r.d / 2 - 0.5, c, 1.2);
+		// a paddock with the stalls at the back (Build 61, Albert: open-air): thatch over the stalls, a rail round the yard, hay and a trough
+		const w = 40,
+			d = w * TILT,
+			k = d * SIDE,
+			hw = w * 0.46,
+			hd = w * 0.24;
+		field(w, '#9fae6e', c, () => {
+			grassTufts(w, '#5a8a3c', 40);
+			g.save();
+			g.translate(k * 0.74, d / 2 - d * 0.74 - (hd * TILT) / 2);
+			const r = block(hw * 2, 6, PLANK, 'plank', 'gable', THATCH, 3.6, hd);
+			for (let i = 0; i < 5; i++) {
+				const x = -hw + 3 + (i * (hw * 2 - 6)) / 4.6;
+				P_(
+					[
+						[x - 2.1, r.d / 2],
+						[x + 2.1, r.d / 2],
+						[x + 2.1, r.d / 2 - 3.9],
+						[x, r.d / 2 - 5],
+						[x - 2.1, r.d / 2 - 3.9],
+					],
+					'#2a2014',
+				);
+				if (i % 2) {
+					E_(x, r.d / 2 - 2.7, 1.3, 1.05, '#7a4e2a');
+					P_(
+						[
+							[x + 0.9, r.d / 2 - 3.5],
+							[x + 2, r.d / 2 - 4.8],
+							[x + 2.3, r.d / 2 - 3.7],
+						],
+						'#7a4e2a',
+					);
+				}
+			}
+			g.restore();
+			for (let i = 0; i < 3; i++) {
+				const [x, y] = gpt(w, 0.2 + i * 0.3, 0.3 + (i % 2) * 0.15);
+				pony(x, y, ['#7a4e2a', '#3e2e22', '#c0a884'][i]);
+			}
+			hay(...gpt(w, 0.9, 0.5), 1);
+			const [tx, ty] = gpt(w, 0.1, 0.5);
+			E_(tx, ty, 2.8, 1.2, RG(tx, ty, 0, 2.8, ['#5fa0c4', '#2f5f80']));
+		});
 	},
 	smith(c) {
 		const r = block(30, 14, STONE, 'stone', 'gable', SLATE, 7);
@@ -730,50 +1037,85 @@ const ART = {
 		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
 	},
 	market(c) {
-		const d = 30 * TILT;
-		P_(
-			[
-				[-15, d / 2],
-				[15, d / 2],
-				[15, -d / 2],
-				[-15, -d / 2],
-			],
-			'#b59a72',
-			INK,
-			0.4,
-		);
-		for (const [x, y, col] of [
-			[-8, -4, '#b2563a'],
-			[8, -4, c],
-			[-8, 6, c],
-			[8, 6, '#c9a227'],
-		]) {
-			L_(x - 6, y, x - 6, y - 9, WOOD, 0.7);
-			L_(x + 6, y, x + 6, y - 9, WOOD, 0.7);
-			for (let i = 0; i < 6; i++)
-				P_(
-					[
-						[x - 6.5 + i * 2.2, y - 9],
-						[x - 4.3 + i * 2.2, y - 9],
-						[x - 4.3 + i * 2.2, y - 12],
-						[x - 6.5 + i * 2.2, y - 12],
-					],
-					i % 2 ? '#f0e6d0' : col,
-					null,
-				);
+		// an open square (Build 61): paving, a well with its roof, four stalls with awnings in the side's colours, crates and a lantern
+		const w = 30,
+			d = w * TILT,
+			k = d * SIDE;
+		field(w, '#cdb990', c, () => {
+			let r = 9;
+			const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+			for (let i = 0; i < 70; i++) {
+				const [x, y] = gpt(w, 0.03 + R() * 0.94, 0.03 + R() * 0.94);
+				E_(x, y, 1.3 + R(), 0.6 + R() * 0.4, `rgba(${150 + ((R() * 40) | 0)},${125 + ((R() * 30) | 0)},${95 + ((R() * 30) | 0)},.6)`);
+			}
+			const wx = k * 0.5,
+				wy = 0;
+			g.save();
+			g.translate(wx, wy);
+			block(5.6, 2.4, '#8e8678', 'stone', 'flat', null, 0, 4.5);
+			g.restore();
+			E_(wx + 0.9, wy - 2.4 - 1.5 + 1.4, 2.4, 1, RG(wx, wy - 3, 0, 2.6, ['#5fa0c4', '#2f5f80']));
+			for (const dx of [-2.4, 2.4]) post(wx + dx, wy - 2.2, 5.4, '#5a3a1e', 0.4);
 			P_(
 				[
-					[x - 6, y],
-					[x + 6, y],
-					[x + 6, y - 2.4],
-					[x - 6, y - 2.4],
+					[wx - 3.4, wy - 7.4],
+					[wx + 3.4, wy - 7.4],
+					[wx + 2.2, wy - 9.4],
+					[wx - 2.2, wy - 9.4],
 				],
-				WOOD,
+				LG(0, wy - 7.4, 0, wy - 9.4, [lit('#7a3326', -0.15), lit('#7a3326', 0.25)]),
+				LINE,
+				0.3,
 			);
-			E_(x - 2.4, y - 3.2, 1.4, 1, '#e0708a');
-			E_(x + 1, y - 3.2, 1.4, 1, '#f2cf55');
-			E_(x + 3.6, y - 3.2, 1.2, 1, '#9acd5a');
-		}
+			const stalls = [
+				[0.2, 0.78, '#c0392b'],
+				[0.78, 0.78, '#2f6c8e'],
+				[0.2, 0.22, c],
+				[0.78, 0.22, '#3f7a34'],
+			].sort((a, b) => b[1] - a[1]);
+			for (const [t, u, col] of stalls) {
+				const [x, y] = gpt(w, t, u);
+				g.save();
+				g.translate(x, y);
+				block(8, 2.6, '#8a6a3a', 'plank', 'flat', null, 0, 4);
+				g.restore();
+				for (const [gx, gc] of [
+					[-2.6, '#d9607a'],
+					[-0.9, '#e6b947'],
+					[0.9, '#86a83e'],
+					[2.6, '#c9a46a'],
+				]) {
+					E_(x + gx, y - 2.6, 1, 0.55, lit(gc, -0.2));
+					E_(x + gx, y - 3.2, 0.8, 0.5, lit(gc, 0.2));
+				}
+				for (const dx of [-3.6, 3.6]) post(x + dx, y - 2.6, 4.8, '#5a3a1e', 0.4);
+				for (let sI = 0; sI < 4; sI++) {
+					const sx = x - 4.6 + sI * 2.3;
+					P_(
+						[
+							[sx, y - 7.2],
+							[sx + 2.3, y - 7.2],
+							[sx + 2.7, y - 8.8],
+							[sx + 0.4, y - 8.8],
+						],
+						sI % 2 ? '#f4efe2' : lit(col, 0.05),
+					);
+					P_(
+						[
+							[sx, y - 7.2],
+							[sx + 2.3, y - 7.2],
+							[sx + 1.15, y - 6.2],
+						],
+						sI % 2 ? '#e4dccb' : lit(col, -0.2),
+					);
+				}
+				rim(x - 4.6, y - 8.4, x + 4.6, y - 8.4, 0.4);
+			}
+			crate(...gpt(w, 0.5, 0.86));
+			sack(...gpt(w, 0.58, 0.9));
+			barrel(...gpt(w, 0.5, 0.1));
+			lantern(...gpt(w, 0.96, 0.5));
+		}, true);
 	},
 	school(c) {
 		const r = block(30, 16, PLASTER, null, 'gable', SLATE, 8);
@@ -895,51 +1237,103 @@ const ART = {
 		banner(13, d / 2 - 14, c, 7);
 	},
 	theatre(c) {
-		// a half-ring of stone seats open to the front, a stage wall at the back
-		const d = 40 * TILT,
-			k = d * SIDE;
-		for (let i = 3; i >= 0; i--) {
-			const rx = 20 - i * 3.6,
-				ry = rx * TILT * 0.9,
-				y = -2 - i * 2.2;
+		// the stage and the seats as one (Build 61): rising half-rings at the back, the stage with its columned wall in front
+		const w = 40,
+			d = w * TILT,
+			k = d * SIDE,
+			cx = k * 0.5,
+			cy = -d * 0.06;
+		field(w, '#c2b69a', c, () => {}, true);
+		for (let r = 0; r < 6; r++) {
+			const rr = w * 0.46 - r * 3,
+				h = 1.6 + r * 1.5,
+				col = r % 2 ? '#e3d9c0' : '#d2c6aa';
+			g.beginPath();
+			g.ellipse(cx, cy, rr, rr * TILT, 0, Math.PI, 2 * Math.PI);
+			g.lineTo(cx + rr, cy - h);
+			g.ellipse(cx, cy - h, rr, rr * TILT, 0, 0, Math.PI, true);
+			g.closePath();
+			g.fillStyle = LG(cx - rr, 0, cx + rr, 0, [lit(col, -0.05), lit(col, -0.3), lit(col, -0.55)]);
+			g.fill();
+			g.beginPath();
+			g.ellipse(cx, cy - h, rr, rr * TILT, 0, Math.PI, 2 * Math.PI);
+			g.lineTo(cx - rr, cy - h);
+			g.closePath();
+			g.fillStyle = LG(0, cy - h - rr * TILT, 0, cy - h, [lit(col, 0.22), lit(col, -0.08)]);
+			g.fill();
+			g.strokeStyle = 'rgba(255,245,210,.55)';
+			g.lineWidth = 0.35;
+			g.stroke();
+			for (let a = 0; a < 7; a++) {
+				const t = Math.PI + (Math.PI * (a + 0.5)) / 7;
+				L_(cx + rr * Math.cos(t), cy - h + rr * TILT * Math.sin(t), cx + (rr - 2.6) * Math.cos(t), cy - h + (rr - 2.6) * TILT * Math.sin(t), 'rgba(90,70,40,.3)', 0.25);
+			}
+		}
+		const ir = w * 0.46 - 18;
+		g.beginPath();
+		g.ellipse(cx, cy - 9.1, ir, ir * TILT, 0, Math.PI, 2 * Math.PI);
+		g.closePath();
+		g.fillStyle = RG(cx, cy - 9.1, 0, ir, ['#d9cba0', '#b9ad84']);
+		g.fill();
+		E_(cx, cy + 1, ir + 1, (ir + 1) * TILT, RG(cx, cy + 1, 0, ir + 1, ['#d4c6a0', '#b8ab86']));
+		const sx0 = -w * 0.3 + k * 0.1,
+			sx1 = w * 0.3 + k * 0.1,
+			sy = d * 0.3;
+		g.save();
+		g.translate((sx0 + sx1) / 2, sy - (4 * TILT) / 2);
+		block(sx1 - sx0, 2.2, '#e0d6bd', 'stone', 'flat', null, 0, 4);
+		g.restore();
+		for (let i = 0; i < 6; i++) {
+			const x = sx0 + 2 + (i * (sx1 - sx0 - 4)) / 5 + 1;
 			P_(
 				[
-					[-rx, y],
-					[rx, y],
-					[rx, y - 2.2],
-					[-rx, y - 2.2],
+					[x - 0.7, sy - 2.2],
+					[x + 0.7, sy - 2.2],
+					[x + 0.7, sy - 10.8],
+					[x - 0.7, sy - 10.8],
 				],
-				shade('#d9d0bc', 0.9 - i * 0.04),
-				INK,
-				0.3,
+				LG(x - 0.7, 0, x + 0.7, 0, ['#f8f2e0', '#e2d8c0', '#b3a68c']),
+				LINE,
+				0.25,
 			);
-			E_(0, y - 2.2, rx, ry, shade('#e6dcc6', 1 - i * 0.05), INK, 0.4);
+			P_(
+				[
+					[x - 1.1, sy - 10.8],
+					[x + 1.1, sy - 10.8],
+					[x + 1.1, sy - 11.6],
+					[x - 1.1, sy - 11.6],
+				],
+				'#ebe3cf',
+			);
 		}
-		E_(0, -4, 7, 7 * TILT, '#c9b98f', INK, 0.4);
 		P_(
 			[
-				[-14, -22],
-				[14, -22],
-				[14 + k * 0.5, -22 - 8],
-				[-14 + k * 0.5, -22 - 8],
+				[sx0 - 0.6, sy - 11.6],
+				[sx1 + 0.6, sy - 11.6],
+				[sx1 + 0.6, sy - 13.2],
+				[sx0 - 0.6, sy - 13.2],
 			],
-			shade('#d9d0bc', 0.8),
-			INK,
-			0.4,
+			LG(0, sy - 11.6, 0, sy - 13.2, ['#cfc3a6', '#f3ecd8']),
+			LINE,
+			0.3,
 		);
 		P_(
 			[
-				[-14, -22],
-				[14, -22],
-				[14, -36],
-				[-14, -36],
+				[sx0 - 1, sy - 13.2],
+				[sx1 + 1, sy - 13.2],
+				[k * 0.1, sy - 16.8],
 			],
-			LG(-14, 0, 14, 0, [shade('#e6dcc6', 1.0), shade('#e6dcc6', 0.72)]),
-			INK,
-			0.5,
+			LG(0, sy - 13.2, 0, sy - 16.8, ['#e4dbc4', '#faf5e6']),
+			LINE,
+			0.3,
 		);
-		for (const x of [-9, 0, 9]) column(x, -22, -35, '#efe6d4');
-		banner(16, -36, c, 8);
+		rim(sx0 - 1, sy - 13.2, k * 0.1, sy - 16.8, 0.6);
+		for (const [dx, col] of [
+			[-7, c],
+			[7, '#3b5fa6'],
+		])
+			banner(k * 0.1 + dx, sy - 2.2, col, 6);
+		L_(-w / 2, d / 2 - 0.5, w / 2, d / 2 - 0.5, c, 1.2);
 	},
 	tavern(c) {
 		// a timber house with a bright door, a lantern and a hanging sign
@@ -1044,37 +1438,81 @@ const ART = {
 		L_(-20, r.d / 2 - 0.5, 20, r.d / 2 - 0.5, c, 1.2);
 	},
 	dock(c) {
-		const d = 20 * TILT;
+		// a pier out over the water (Build 61): planks on piles, the crane, a moored boat
+		const w = 20,
+			d = w * TILT,
+			k = d * SIDE,
+			L = d + 16,
+			pw = w * 0.24,
+			kk = (L / d) * k;
+		E_(kk * 0.55, d / 2 - L * 0.55, w * 0.9, L * 0.5, RG(kk * 0.55, d / 2 - L * 0.55, 0, w * 0.9, ['rgba(60,130,175,.95)', 'rgba(60,130,175,.7)', 'rgba(60,130,175,0)'])); // the water it stands in
+		for (const [x, y] of [
+			[-pw + 1, d / 2 - 1],
+			[pw - 1, d / 2 - 1],
+			[-pw + 1 + kk * 0.5, d / 2 - 1 - L * 0.5],
+			[pw - 1 + kk * 0.5, d / 2 - 1 - L * 0.5],
+			[-pw + 1 + kk, d / 2 - 1 - L],
+			[pw - 1 + kk, d / 2 - 1 - L],
+		])
+			post(x, y + 1.6, 3.2, '#4a3220', 0.55);
 		P_(
 			[
-				[-10, d / 2],
-				[10, d / 2],
-				[10, -d / 2],
-				[-10, -d / 2],
+				[pw, d / 2],
+				[pw + 1.6, d / 2 + 1.2],
+				[pw + 1.6 + kk, d / 2 + 1.2 - L],
+				[pw + kk, d / 2 - L],
 			],
-			LG(-10, 0, 10, 0, ['#a07c54', '#7a5a36']),
-			INK,
-			0.5,
+			lit('#7f8d88', -0.45),
+			LINE,
+			0.3,
 		);
-		for (let x = -8; x < 10; x += 4) L_(x, -d / 2, x, d / 2, 'rgba(40,24,10,.5)', 0.4);
-		for (const [x, y] of [
-			[-9, d / 2],
-			[9, d / 2],
-			[-9, -d / 2],
-			[9, -d / 2],
-		])
-			P_(
-				[
-					[x - 1, y],
-					[x + 1, y],
-					[x + 1, y - 5],
-					[x - 1, y - 5],
-				],
-				'#5a3a1c',
-				INK,
-				0.3,
-			);
-		banner(9, -d / 2 - 5, c, 6);
+		P_(
+			[
+				[-pw, d / 2],
+				[pw, d / 2],
+				[pw + kk, d / 2 - L],
+				[-pw + kk, d / 2 - L],
+			],
+			LG(0, d / 2, 0, d / 2 - L, [lit('#a4b3ad', 0.1), lit('#a4b3ad', -0.25)]), // weathered planks: silver-grey, as pier wood goes
+			LINE,
+			0.35,
+		);
+		for (let i = 1; i < 9; i++) L_(-pw + (kk * i) / 9, d / 2 - (L * i) / 9, pw + (kk * i) / 9, d / 2 - (L * i) / 9, 'rgba(60,40,20,.42)', 0.3);
+		const cxp = pw - 1.6 + kk * 0.8,
+			cyp = d / 2 - L * 0.8;
+		post(cxp, cyp, 11, '#4a3220', 0.7);
+		L_(cxp, cyp - 11, cxp + 6.5, cyp - 8.4, '#4a3220', 0.8);
+		L_(cxp - 0.2, cyp - 8.2, cxp + 4.4, cyp - 9.3, '#4a3220', 0.5);
+		L_(cxp + 6.5, cyp - 8.4, cxp + 6.5, cyp - 3.6, '#ddd', 0.25);
+		crate(cxp + 6.5, cyp - 1.6);
+		const bx = -pw - 7.5,
+			by = d / 2 - L * 0.45;
+		E_(bx + 0.5, by + 1.6, 6.5, 1.6, 'rgba(10,30,50,.3)');
+		P_(
+			[
+				[bx - 6.5, by - 1.5],
+				[bx + 6, by - 1.5],
+				[bx + 7.2, by - 3.6],
+				[bx + 5, by + 1.2],
+				[bx - 4.5, by + 1.2],
+			],
+			LG(0, by - 3.6, 0, by + 1.2, [lit('#8a6a3a', 0.2), lit('#6b4a2c', -0.35)]),
+			LINE,
+			0.3,
+		);
+		L_(bx - 6, by - 1.5, bx + 6.8, by - 1.5, '#c9a46a', 0.5);
+		post(bx + 0.5, by - 0.8, 7.5, '#4a3220', 0.3);
+		P_(
+			[
+				[bx + 0.8, by - 8.1],
+				[bx + 5.2, by - 6.4],
+				[bx + 0.8, by - 2.4],
+			],
+			'#efe6cf',
+			LINE,
+			0.25,
+		);
+		banner(pw + 0.6, d / 2 - 1.8, c, 6);
 	},
 	tower(c, o, tier) {
 		// three steps, one shape (Build 51): the watchtower; the great tower, taller, wider, with a hoarding of timber on its corbels; the gun tower, low and thick on a sloped foot, with gun ports
@@ -1253,34 +1691,39 @@ const ART = {
 		);
 	},
 	farm(c, o, v) {
-		field(30, '#6b5434', c, () => {
-			const crop = { Spring: '#6f9a3a', Summer: '#86a83e', Autumn: '#cfa63e', Winter: '#8d8473' }[season().name];
-			const d = 30 * TILT;
-			for (let i = 0; i < 6; i++) {
-				const y = -d / 2 + 1 + (i * (d - 2)) / 6;
-				P_(
-					[
-						[-14, y + 0.6],
-						[14, y + 0.6],
-						[14, y + (d - 2) / 6 - 0.6],
-						[-14, y + (d - 2) / 6 - 0.6],
-					],
-					crop,
-				);
+		const w = 30,
+			crop = { Spring: '#8fb84a', Summer: '#e0c266', Autumn: '#d9a93e', Winter: '#a39a86' }[season().name],
+			dark = { Spring: '#5f8a2e', Summer: '#b8962e', Autumn: '#a67a22', Winter: '#7a7262' }[season().name];
+		field(w, '#7a5e36', c, () => {
+			for (let i = 0; i < 7; i++) {
+				const t0 = (i + 0.08) / 7,
+					t1 = (i + 0.92) / 7,
+					a = gpt(w, 0.03, t0),
+					b = gpt(w, 0.97, t0),
+					c2 = gpt(w, 0.97, t1),
+					d2 = gpt(w, 0.03, t1);
+				P_([a, b, c2, d2], LG(0, a[1], 0, d2[1], [i % 2 ? crop : lit(crop, 0.12), dark]));
+				for (let j = 0; j < 10; j++) {
+					const [x, y] = gpt(w, 0.05 + j * 0.095, (i + 0.5) / 7);
+					L_(x, y, x + 0.2, y - 1.5, 'rgba(255,240,170,.55)', 0.25);
+					L_(x + 0.6, y, x + 1, y - 1.2, 'rgba(120,80,20,.4)', 0.22);
+				}
 			}
 		});
+		hay(w * 0.36, (w * TILT) * 0.46, 1);
 	},
 	pasture(c, o, n) {
-		field(30, '#86a050', c, () => {
-			const d = 30 * TILT;
+		const w = 30;
+		field(w, '#86ae5c', c, () => {
+			grassTufts(w, '#5a8a3a', 40);
+			const [px, py] = gpt(w, 0.72, 0.7);
+			E_(px, py, 4.4, 1.8, RG(px - 1, py - 0.6, 0, 4.4, ['#5fa0c4', '#2f5f80']));
+			E_(px - 1, py - 0.6, 1.4, 0.5, 'rgba(255,255,255,.35)');
 			for (let i = 0; i < (n || 0); i++) {
-				const x = -11 + (i % 4) * 7 + ((i >> 2) % 2) * 2,
-					y = -d / 2 + 3 + (Math.floor(i / 4) * (d - 5)) / 3;
-				E_(x, y, 2.6, 1.7, '#ece5d3', '#8a8070', 0.3);
-				E_(x + 2.2, y - 0.6, 0.9, 0.8, '#3a3430');
+				const [x, y] = gpt(w, 0.14 + (i % 4) * 0.24 + ((i >> 2) % 2) * 0.08, 0.2 + Math.floor(i / 4) * 0.28);
+				sheep(x, y);
 			}
 		});
-		for (let x = -15; x <= 15; x += 5) L_(x, (30 * TILT) / 2, x, (30 * TILT) / 2 - 3, '#7a5a34', 0.7);
 	},
 	council(c) {
 		const r = block(30, 18, STONE, 'stone', 'hip', '#7a2e2a', 9);
@@ -1322,11 +1765,28 @@ const ART = {
 		door(0, d / 2, 5, 8);
 		banner(8, d / 2 - 18, c, 10);
 	},
-	treefarm(c) {
-		field(30, '#5a4a30', c, () => {
-			const d = 30 * TILT;
-			for (let j = 0; j < 3; j++)
-				for (let i = 0; i < 4; i++) smallTree(-11 + i * 7.3 + (j % 2) * 1.6, -d / 2 + 3 + (j * (d - 4)) / 2.4, 0.9);
+	treefarm(c, o, v) {
+		const w = 30,
+			spent = v === 'spent';
+		field(w, '#6a5636', c, () => {
+			for (let j = 2; j >= 0; j--)
+				for (let i = 0; i < 3; i++) {
+					const [x, y] = gpt(w, (i + 0.5) / 3, (j + 0.5) / 3);
+					E_(x, y, 3.4, 1.3, 'rgba(80,60,30,.45)');
+					if (spent) stump(x, y);
+					else smallTree(x, y, 1.05, j === 1 ? '#4a9a40' : '#3e8a3c');
+				}
+			const [lx, ly] = gpt(w, 0.07, 0.07);
+			for (let i = 0; i < 3; i++)
+				P_(
+					[
+						[lx + i * 0.4, ly - i * 1.2],
+						[lx + 5.5 + i * 0.4, ly - i * 1.2],
+						[lx + 5.5 + i * 0.4, ly - 1.1 - i * 1.2],
+						[lx + i * 0.4, ly - 1.1 - i * 1.2],
+					],
+					LG(0, ly - i * 1.2, 0, ly - 1.1 - i * 1.2, ['#8a6a3a', '#c9a46a']),
+				);
 		});
 	},
 	throne(c, o) {
@@ -1350,140 +1810,330 @@ const ART = {
 		E_(0, d / 2 - 60, 2.4, 2.4, '#8e1d14');
 	}, // the old citadel: a castle and a half, crowned in gold
 	workshop(c) {
-		const r = block(30, 14, PLASTER, 'timber', 'gable', THATCH, 8);
-		door(-6, r.d / 2, 5, 8);
-		P_(
-			[
-				[3, r.d / 2],
-				[12, r.d / 2],
-				[12, r.d / 2 - 8],
-				[3, r.d / 2 - 8],
-			],
-			'#3a2614',
-			INK,
-			0.4,
-		);
-		for (let i = 0; i < 4; i++)
-			L_(4 + i * 2.4, r.d / 2 - 7.6, 4 + i * 2.4, r.d / 2 - 0.6, ['#8fb0d8', '#c9a96a', '#b33a2e', '#ece5d3'][i], 0.8);
-		E_(-12, r.d / 2 + 1.4, 2.4, 1.6, '#ece5d3', INK, 0.3);
-		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
+		// an open yard under a shed roof (Build 61, Albert: open-air work): the loom, the dye rack, barrels, sacks; the weaver stands in it
+		const w = 30,
+			d = w * TILT,
+			k = d * SIDE;
+		field(w, '#b0945f', c, () => {
+			const x0 = -w * 0.46 + k * 0.55,
+				x1 = w * 0.46 + k * 0.55,
+				yf = d / 2 - d * 0.55,
+				hd = w * 0.42 * TILT;
+			for (const px of [x0 + 1.2 + hd * SIDE, x1 - 1.2 + hd * SIDE]) post(px, yf - hd, 8.5, '#5a3a1e', 0.6);
+			leanto(x0, x1, yf, 8, w * 0.42, 2.8, THATCH);
+			for (const px of [x0 + 1.2, x1 - 1.2]) post(px, yf, 8, '#5a3a1e', 0.6);
+			const lx = x0 + 6 + k * 0.15,
+				ly = yf - d * 0.15;
+			E_(lx, ly, 2.8, 1.9, RG(lx - 0.6, ly - 0.5, 0, 3, ['#c48a4a', '#7a4a22']));
+			for (let i = 0; i < 6; i++) L_(lx - 1.8, ly - 1.4 + i * 0.5, lx + 1.8, ly - 1.4 + i * 0.5, 'rgba(255,240,200,.5)', 0.22);
+			const rx = x0 + 15,
+				ry = yf - 2;
+			L_(rx - 1, ry - 4.6, rx + 8.5, ry - 4.6, '#5a3a1e', 0.45);
+			for (const [dx, col] of [
+				[0, '#8a4a7a'],
+				[3, '#2f6c8e'],
+				[6, '#c0392b'],
+			])
+				P_(
+					[
+						[rx + dx, ry - 4.6],
+						[rx + dx + 2.6, ry - 4.6],
+						[rx + dx + 1.6, ry - 0.6],
+						[rx + dx + 0.2, ry - 1],
+					],
+					LG(rx + dx, 0, rx + dx + 2.6, 0, [lit(col, 0.2), lit(col, -0.3)]),
+				);
+			barrel(w * 0.22, d * 0.3);
+			barrel(w * 0.33, d * 0.26);
+			sack(-w * 0.05, d * 0.38);
+		});
 	},
 	foundry(c) {
-		const r = block(30, 16, STONE, 'stone', 'gable', SLATE, 7);
-		P_(
-			[
-				[6 + r.k / 2, -20],
-				[12 + r.k / 2, -20],
-				[12 + r.k / 2, -34],
-				[6 + r.k / 2, -34],
-			],
-			'#4a4540',
-			INK,
-			0.4,
-		);
-		E_(9 + r.k / 2, -35, 3, 1.6, 'rgba(255,120,30,.8)');
-		P_(
-			[
-				[-6, r.d / 2],
-				[6, r.d / 2],
-				[6, r.d / 2 - 10],
-				[-6, r.d / 2 - 10],
-			],
-			'#1a120a',
-			INK,
-			0.4,
-		);
-		E_(0, r.d / 2 - 3, 4, 2.6, 'rgba(255,160,40,.9)');
-		for (let i = 0; i < 3; i++)
+		// a bloomery under a shed (Build 61): the furnace glows, smoke rises, the anvil waits; the smelter works in the open
+		const w = 30,
+			d = w * TILT,
+			k = d * SIDE;
+		field(w, '#5e5650', c, () => {
+			const x0 = -w * 0.46 + k * 0.55,
+				x1 = w * 0.46 + k * 0.55,
+				yf = d / 2 - d * 0.55,
+				hd = w * 0.42 * TILT;
+			for (const px of [x0 + 1.2 + hd * SIDE, x1 - 1.2 + hd * SIDE]) post(px, yf - hd, 9.5, '#3a3030', 0.65);
+			leanto(x0, x1, yf, 9, w * 0.42, 2.8, '#4e4e5c');
+			for (const px of [x0 + 1.2, x1 - 1.2]) post(px, yf, 9, '#3a3030', 0.65);
+			const fx = k * 0.25,
+				fy = d * 0.02;
+			g.save();
+			g.translate(fx, fy);
+			block(7.2, 7.8, '#8a6a52', 'stone', 'flat', null, 0, 6.5);
+			g.restore();
+			E_(fx + 1.2, fy - 7.8 - 2.1, 2.1, 0.85, '#1a1414');
 			P_(
 				[
-					[9 + i * 2.6, r.d / 2 + 2],
-					[11 + i * 2.6, r.d / 2 + 2],
-					[11 + i * 2.6, r.d / 2],
-					[9 + i * 2.6, r.d / 2],
+					[fx - 1.8, fy + 2.1],
+					[fx + 1.8, fy + 2.1],
+					[fx + 1.6, fy - 0.7],
+					[fx, fy - 1.9],
+					[fx - 1.6, fy - 0.7],
 				],
-				'#8fa3b5',
-				INK,
+				RG(fx, fy + 0.9, 0, 2.4, ['#fff7b0', '#ff8a2a', '#8a2a10']),
+				LINE,
 				0.3,
 			);
-		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
-	}, // a stone hall with a tall furnace stack and iron bars at the door
-	quarry(c) {
-		field(30, '#9a9088', c, () => {
-			const d = 30 * TILT;
-			for (let j = 0; j < 2; j++)
-				for (let i = 0; i < 3; i++) {
-					const x = -10 + i * 9 + j * 3,
-						y = -d / 2 + 5 + j * 8;
-					P_(
-						[
-							[x - 3, y + 2],
-							[x + 3, y + 2],
-							[x + 3, y - 2],
-							[x - 3, y - 2],
-						],
-						LG(x - 3, 0, x + 3, 0, ['#c4c9cc', '#8a9094']),
-						INK,
-						0.4,
-					);
-				}
+			E_(fx, fy + 1.1, 7, 4.6, RG(fx, fy + 1.1, 0, 7, ['rgba(255,150,60,.42)', 'rgba(255,150,60,0)']));
+			for (let i = 0; i < 5; i++) E_(fx + 1.2 + i * 1.3 + Math.sin(i * 1.7) * 0.8, fy - 11 - i * 3.2, 1.5 + i * 1.1, 1.1 + i * 0.8, `rgba(220,215,210,${0.4 - i * 0.07})`);
+			const [ax, ay] = gpt(w, 0.78, 0.3);
 			P_(
 				[
-					[6, d / 2 - 3],
-					[13, d / 2 - 3],
-					[13, d / 2 - 9],
-					[6, d / 2 - 9],
+					[ax - 1.9, ay],
+					[ax + 1.9, ay],
+					[ax + 1.9, ay - 1.6],
+					[ax - 1.9, ay - 1.6],
 				],
-				'#5a5550',
-				INK,
-				0.4,
+				'#4a3220',
+			);
+			P_(
+				[
+					[ax - 2.6, ay - 1.6],
+					[ax + 2.8, ay - 1.6],
+					[ax + 2.2, ay - 3],
+					[ax - 1.8, ay - 3],
+				],
+				LG(ax - 2.6, 0, ax + 2.8, 0, ['#9a9aa2', '#4a4a52']),
+				LINE,
+				0.3,
+			);
+			for (let i = 0; i < 4; i++)
+				P_(
+					[
+						[-w * 0.4 + i * 2.4, d * 0.4],
+						[-w * 0.4 + 2 + i * 2.4, d * 0.4],
+						[-w * 0.4 + 2.3 + i * 2.4, d * 0.4 - 1],
+						[-w * 0.4 + 0.3 + i * 2.4, d * 0.4 - 1],
+					],
+					'#5a4a42',
+				);
+		});
+	},
+	quarry(c) {
+		const w = 30,
+			d = w * TILT;
+		field(w, '#9a948a', c, () => {
+			P_([gpt(w, 0.08, 0.45), gpt(w, 0.6, 0.45), gpt(w, 0.6, 0.92), gpt(w, 0.08, 0.92)], LG(0, d / 2 - d * 0.45, 0, d / 2 - d * 0.92, ['#4a4640', '#6a665e']));
+			const [qx, qy] = gpt(w, 0.08, 0.45);
+			P_(
+				[
+					[qx, qy],
+					[qx + w * 0.52, qy],
+					[qx + w * 0.52, qy - 3.4],
+					[qx, qy - 3.4],
+				],
+				LG(qx, 0, qx + w * 0.52, 0, [lit('#c2bcb0', 0.1), lit('#c2bcb0', -0.25)]),
+				LINE,
+				0.35,
+			);
+			for (let i = 0; i < 7; i++) L_(qx + 1 + i * 2.2, qy - 0.3, qx + 1.6 + i * 2.2, qy - 3.1, 'rgba(40,36,30,.4)', 0.25);
+			rim(qx, qy - 3.4, qx + w * 0.52, qy - 3.4, 0.5);
+			for (let i = 0; i < 5; i++) {
+				const [bx, by] = gpt(w, 0.68 + (i % 3) * 0.11, 0.2 + Math.floor(i / 3) * 0.2);
+				P_(
+					[
+						[bx, by],
+						[bx + 2.8, by],
+						[bx + 3.3, by - 1],
+						[bx + 0.5, by - 1],
+					],
+					'#e2dcd0',
+				);
+				P_(
+					[
+						[bx, by],
+						[bx + 2.8, by],
+						[bx + 2.8, by - 1.9],
+						[bx, by - 1.9],
+					],
+					LG(bx, 0, bx + 2.8, 0, ['#d4cec2', '#a9a398']),
+					LINE,
+					0.25,
+				);
+				P_(
+					[
+						[bx + 2.8, by],
+						[bx + 3.3, by - 1],
+						[bx + 3.3, by - 2.9],
+						[bx + 2.8, by - 1.9],
+					],
+					'#8a847a',
+				);
+			}
+			const [cx, cy] = gpt(w, 0.3, 0.75);
+			post(cx, cy, 13, '#5a3a1e', 0.65);
+			L_(cx, cy - 13, cx + 7.5, cy - 10.6, '#5a3a1e', 0.9);
+			L_(cx, cy - 10.5, cx + 5.4, cy - 11.1, '#5a3a1e', 0.55);
+			L_(cx + 7.5, cy - 10.6, cx + 7.5, cy - 3.2, '#ddd', 0.25);
+			P_(
+				[
+					[cx + 6.4, cy - 3.2],
+					[cx + 8.6, cy - 3.2],
+					[cx + 8.6, cy - 4.8],
+					[cx + 6.4, cy - 4.8],
+				],
+				'#c2bcb0',
 			);
 		});
-	}, // cut blocks on grey ground
+	},
 	mint(c) {
-		const r = block(30, 18, STONE, 'stone', 'hip', SLATE, 8);
-		door(0, r.d / 2, 5, 9, '#2a1a0a');
-		for (const x of [-9, 9]) win(x, r.d / 2 - 8, 2, 3);
-		for (let i = 0; i < 3; i++) E_(-10 + i * 4, r.d / 2 + 1.4, 1.5, 1.1, '#f2cf55', '#b8902a', 0.3);
+		// a walled yard with a strongroom, the press and the coin bench, a guard at the gate (Build 61): the one shop that stays guarded
+		const w = 30,
+			d = w * TILT,
+			k = d * SIDE,
+			H = 7.5,
+			WALL = '#aca494';
+		field(w, '#c2b69a', c, () => {}, true);
 		P_(
 			[
-				[7 + r.k / 2, -22],
-				[10 + r.k / 2, -22],
-				[10 + r.k / 2, -29],
-				[7 + r.k / 2, -29],
+				[-w / 2 + k, -d / 2],
+				[w / 2 + k, -d / 2],
+				[w / 2 + k, -d / 2 - H],
+				[-w / 2 + k, -d / 2 - H],
 			],
-			'#5a5550',
-			INK,
+			LG(0, -d / 2, 0, -d / 2 - H, [lit(WALL, -0.2), lit(WALL, 0.05)]),
+			LINE,
 			0.4,
 		);
-		E_(8.5 + r.k / 2, -30, 2.4, 1.4, 'rgba(255,140,40,.7)');
-		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
-	}, // a stone house with a furnace chimney and coins at the door
+		for (let i = 1; i < 4; i++) L_(-w / 2 + k + 0.3, -d / 2 - (i * H) / 4, w / 2 + k - 0.3, -d / 2 - (i * H) / 4, 'rgba(30,22,16,.25)', 0.22);
+		P_(
+			[
+				[-w / 2, d / 2],
+				[-w / 2 + k, -d / 2],
+				[-w / 2 + k, -d / 2 - H],
+				[-w / 2, d / 2 - H],
+			],
+			lit(WALL, -0.25),
+			LINE,
+			0.4,
+		);
+		g.save();
+		g.translate(w * 0.2 + k * 0.55, d / 2 - d * 0.55 + 2);
+		block(9.6, 8.5, '#b0a898', 'stone', 'hip', SLATE, 4.2, 9.5);
+		door(-1.6, 9.5 * TILT / 2, 2.4, 4.4, '#2a2014');
+		win(2.6, 9.5 * TILT / 2 - 3.6, 1.3, 2, true);
+		g.restore();
+		const [ax, ay] = gpt(w, 0.25, 0.5);
+		E_(ax, ay, 2.8, 1.2, RG(ax, ay, 0, 2.8, ['#6a6a72', '#3a3a42']));
+		P_(
+			[
+				[ax - 0.9, ay],
+				[ax + 0.9, ay],
+				[ax + 0.9, ay - 4.4],
+				[ax - 0.9, ay - 4.4],
+			],
+			LG(ax - 0.9, 0, ax + 0.9, 0, ['#a0a0a8', '#4a4a52']),
+			LINE,
+			0.3,
+		);
+		E_(ax, ay - 4.4, 0.9, 0.38, '#b0b0b8');
+		for (let i = 0; i < 6; i++) E_(ax + 3 + (i % 3) * 1.2, ay + 1.2 - Math.floor(i / 3) * 0.7, 0.55, 0.25, '#f2d27a');
+		crate(-w * 0.3 + k * 0.3, d / 2 - d * 0.3);
+		g.save();
+		g.translate(0, d / 2 - (0.1 * TILT) / 2);
+		block(w, 3.8, WALL, 'stone', 'flat', null, 0, 0.1);
+		g.restore();
+		P_(
+			[
+				[w / 2, d / 2],
+				[w / 2 + k, -d / 2],
+				[w / 2 + k, -d / 2 - H],
+				[w / 2, d / 2 - H],
+			],
+			LG(w / 2, 0, w / 2 + k, 0, [lit(WALL, -0.45), lit(WALL, -0.6)]),
+			LINE,
+			0.4,
+		);
+		for (let i = 1; i < 3; i++) L_(w / 2 + 0.2, d / 2 - i * 2.4, w / 2 + k - 0.2, d / 2 - i * 2.4 - d, 'rgba(10,20,30,.25)', 0.25);
+		rim(-w / 2 + k, -d / 2 - H, w / 2 + k, -d / 2 - H, 0.4);
+		P_(
+			[
+				[-2.4, d / 2],
+				[2.4, d / 2],
+				[2.4, d / 2 - 2.8],
+				[0, d / 2 - 4],
+				[-2.4, d / 2 - 2.8],
+			],
+			'#2a2014',
+		);
+		banner(w / 2 + 0.5, d / 2 - 3.8, c, 7);
+		L_(-w / 2, d / 2 - 0.5, w / 2, d / 2 - 0.5, c, 1.2);
+	},
 	wonder(c, o) {
 		(WONDERART[G.P[o] && G.P[o].civ] || WONDERART.roman)(c);
 	},
 };
-function field(w, soil, c, rows) {
-	const d = w * TILT;
+// the ground every plot shares (Build 61): the tilted parallelogram a building stands on, a worn margin, posts at the corners, a low rail;
+// rows() draws what grows or lies on it. The side's colour runs along the front rail.
+const plotPts = (w) => {
+	const d = w * TILT,
+		k = d * SIDE;
+	return [
+		[-w / 2, d / 2],
+		[w / 2, d / 2],
+		[w / 2 + k, -d / 2],
+		[-w / 2 + k, -d / 2],
+	];
+};
+const gpt = (w, t, u) => {
+	const d = w * TILT,
+		k = d * SIDE;
+	return [-w / 2 + w * t + k * u, d / 2 - d * u];
+};
+const post = (x, y, h, col = '#5a3a1e', pw = 0.7) => {
+	E_(x + 0.4, y + 0.15, pw * 1.6, pw * 0.7, 'rgba(20,30,40,.3)');
 	P_(
 		[
-			[-w / 2, d / 2],
-			[w / 2, d / 2],
-			[w / 2, -d / 2],
-			[-w / 2, -d / 2],
+			[x - pw, y],
+			[x + pw, y],
+			[x + pw * 0.9, y - h],
+			[x - pw * 0.9, y - h],
 		],
-		soil,
-		INK,
-		0.4,
+		LG(x - pw, 0, x + pw, 0, [lit(col, 0.25), col, lit(col, -0.4)]),
+		LINE,
+		0.3,
 	);
+	E_(x, y - h, pw * 0.9, pw * 0.35, lit(col, 0.3));
+};
+const rail = (p0, p1, col = '#6b4a2c') => {
+	L_(p0[0], p0[1] - 2.6, p1[0], p1[1] - 2.6, lit(col, -0.3), 0.7);
+	L_(p0[0], p0[1] - 2.7, p1[0], p1[1] - 2.7, 'rgba(255,245,210,.35)', 0.25);
+	L_(p0[0], p0[1] - 1.3, p1[0], p1[1] - 1.3, lit(col, -0.2), 0.55);
+};
+function field(w, soil, c, rows, open) {
+	const C = plotPts(w),
+		d = w * TILT,
+		k = d * SIDE;
+	E_(k * 0.5 + 1.5, 1, w * 0.66, d * 0.68, RG(k * 0.5, 0, 0, w * 0.66, ['rgba(60,40,20,.26)', 'rgba(60,40,20,0)']));
+	P_(C, LG(-w / 2, d / 2, w / 2 + k, -d / 2, [lit(soil, 0.12), soil, lit(soil, -0.18)]), 'rgba(0,0,0,.28)', 0.35);
 	rows();
-	g.strokeStyle = '#7a5a34';
-	g.lineWidth = 0.6;
-	g.strokeRect(-w / 2, -d / 2, w, d);
-	for (let x = -w / 2; x <= w / 2; x += 5) L_(x, d / 2, x, d / 2 - 2.4, '#6b4a2c', 0.5);
-	L_(-w / 2, d / 2 - 1.6, w / 2, d / 2 - 1.6, '#8a6a44', 0.5);
+	if (!open) {
+		rail(C[3], C[2]);
+		rail(C[0], C[3]);
+		post(C[3][0], C[3][1], 3.8);
+		post(C[2][0], C[2][1], 3.8);
+		rail(C[1], C[2]);
+		rail(C[0], C[1]);
+		for (let i = 1; i < 3; i++) {
+			const [x, y] = gpt(w, i / 3, 0);
+			post(x, y, 2.8, '#5a3a1e', 0.5);
+		}
+		post(C[0][0], C[0][1], 3.8);
+		post(C[1][0], C[1][1], 3.8);
+	}
 	L_(-w / 2, d / 2, w / 2, d / 2, c, 1);
 }
+const RG = (x, y, r0, r1, stops) => {
+	const q = g.createRadialGradient(x, y, r0, x, y, r1);
+	stops.forEach((c, i) => q.addColorStop(i / (stops.length - 1), c));
+	return q;
+};
 const WONDERART = {
 	roman(c) {
 		E_(0, 0, 30, 30 * TILT, '#c8bca2', INK, 0.6);
@@ -1859,8 +2509,12 @@ function bldSprite(b, s) {
 							? G.P[o].civ
 							: b.kind === 'farm'
 								? season().name + (b.node ? b.node.type : '')
-								: b.kind === 'pasture'
-									? b.sheep || 0
+								: b.kind === 'treefarm'
+									? b.spent || (b.node && b.node.amt <= 0)
+										? 'spent'
+										: ''
+									: b.kind === 'pasture'
+										? b.sheep || 0
 									: b.kind === 'tower'
 										? btierOf(o, 'tower')
 										: '';

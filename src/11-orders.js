@@ -867,12 +867,12 @@ function stopVil(u, post) {
 	if (u.inside && u.shop) {
 		const b = G.blds.find((x) => x.id === u.shop);
 		u.inside = false;
-		u.shop = 0;
 		if (b) {
 			u.x = b.x;
 			u.y = b.y + halfOf(b) + 6;
 		}
 	}
+	u.shop = 0;
 	setJob(u, null);
 	u.hunt = null;
 	u.patch = null;

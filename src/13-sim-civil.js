@@ -8,10 +8,12 @@ function shopTick(u, dt) {
 		b = n && n.farm;
 	if (!b || b.id !== u.shop || b.hp <= 0 || u.job !== n.type || !makeOf(b)) {
 		const at = b || { x: u.x, y: u.y, kind: 'house' };
+		if (u.inside) {
+			u.x = at.x;
+			u.y = at.y + halfOf(at) + 6;
+		}
 		u.inside = false;
 		u.shop = 0;
-		u.x = at.x;
-		u.y = at.y + halfOf(at) + 6;
 		return;
 	}
 	const g = makeNow(u, n, dt, Infinity);
@@ -115,6 +117,7 @@ function vilTick(u, dt, SP) {
 		}
 		if (moveTo(u, rb.x, rb.y, dt, BLD[rb.kind].fp * 5 + 4, SP)) {
 			u.inside = true;
+			u.shop = 0;
 			setJob(u, u.job);
 			u.node = null;
 			u.hunt = null;
@@ -274,14 +277,24 @@ function vilTick(u, dt, SP) {
 		return;
 	}
 	if (n.farm && BLD[n.farm.kind].makes) {
-		// a shop: in at the door (once it stands), and the work goes on inside
-		const b = n.farm;
-		if (moveTo(u, b.x, b.y, dt, halfOf(b) + 4, SP) && b.prog >= 1) {
+		// a shop: in at the door (once it stands), and the work goes on inside. An open yard (BLD.open: the workshop, the foundry; Build 61,
+		// Albert: "anything where a worker works inside should be open air") keeps the worker standing at its front, in sight and in reach
+		const b = n.farm,
+			open = BLD[b.kind].open;
+		if (open && u.shop === b.id) {
+			shopTick(u, dt);
+			if (u.shop) {
+				u.fx = 1;
+				if ((G.tick + u.id) % 40 === 0) sfx(n.type === 'iron' ? 'mine' : 'pick', u.x, u.y);
+			}
+			return;
+		}
+		if (moveTo(u, b.x, open ? b.y + halfOf(b) + 3 : b.y, dt, open ? 3 : halfOf(b) + 4, SP) && b.prog >= 1) {
 			if (u.carry > 0) {
 				stash(u.owner, u.carryType, Math.round(u.carry));
 				u.carry = 0;
 			}
-			u.inside = true;
+			u.inside = !open;
 			u.shop = b.id;
 		} else if (u.noPathT === G.t) leaveWork(u, n);
 		return;

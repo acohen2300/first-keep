@@ -343,6 +343,9 @@ function seasonTurn() {
 }
 
 // ── fire: wood and thatch burn, catch from their neighbours, and villagers put it out
+// the heat a neighbour receives from a fire of this age across this gap, as a share of a full fire touching it: the t² design fire
+// (NFPA 72 / Heskestad) times the radiant view factor (near / (gap + near))² (BR 187). One home; tests/science.py checks it.
+const fireHeat = (age, gap) => Math.min(1, (age / FIRE.grow) ** 2) * (FIRE.near / (gap + FIRE.near)) ** 2;
 const FIRE_SMOKE = 0.008; // a second, for each villager fighting a big fire (spread, or the building below half): about one death in three big fires, never more than one
 function ignite(b, why) {
 	if (!BLD[b.kind].wood || b.fire > 0 || b.hp <= 0 || b.prog < 1) return;
@@ -408,11 +411,11 @@ function fireTick(dt) {
 			continue;
 		}
 		if ((G.tick + b.id) % 90 === 0) {
-			const grown = Math.min(1, ((G.t - (b.fireT ?? G.t)) / FIRE.grow) ** 2); // a young fire throws little heat: the t² design fire
+			const age = G.t - (b.fireT ?? G.t);
 			for (const c of G.blds)
 				if (c !== b && BLD[c.kind].wood && !(c.fire > 0) && c.prog >= 1) {
 					const gap = Math.max(0, dist(b, c) - halfOf(b) - halfOf(c));
-					if (gap < FIRE.reach && hazard(FIRE.rate * fm * grown * (FIRE.near / (gap + FIRE.near)) ** 2, 3)) ignite(c, 'it spread'); // every 3 s, with the heat a neighbour receives
+					if (gap < FIRE.reach && hazard(FIRE.rate * fm * fireHeat(age, gap), 3)) ignite(c, 'it spread'); // every 3 s, with the heat a neighbour receives
 				}
 		}
 	}

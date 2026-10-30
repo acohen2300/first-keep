@@ -1,11 +1,11 @@
-# First Keep: handoff (Oct 29, 2026, night; Build 60 on the preview)
+# First Keep: handoff (Oct 30, 2026; Build 61 on the preview)
 
 Read in this order: this file, then `RULES.md` (how the game is built and how to work with Albert), then `SCIENCE.md` (every real-world number and its source), then `CUTS.md` (every change, per build, with measurements). The handoff before Oct 29 is kept whole in `docs/HANDOFF-to-oct29.md`; its build notes (40 to 52) are history, this file is current.
 
 ## What it is
 Albert's single-file HTML mobile real-time strategy game, Age of Empires style, grounded in real history, science and math. Albert (Albert Labs) is not a coder; he designs, decides and tests on his phone.
 - **Live:** https://acohen2300.github.io/first-keep (`index.html`): untouched since the Build 44 era. Live changes only on Albert's word.
-- **Preview:** https://acohen2300.github.io/first-keep/preview/ : Build 60. It keeps its own save (`firstkeep.preview.*`), apart from the live game's.
+- **Preview:** https://acohen2300.github.io/first-keep/preview/ : Build 61. It keeps its own save (`firstkeep.preview.*`), apart from the live game's.
 - **Repo:** https://github.com/acohen2300/first-keep, branch `main`, public. Pages deploys a minute or two after a push.
 - **Commits:** as `Albert <acohen2300@users.noreply.github.com>` (never his Gmail; the repo is public), with the session's `Co-Authored-By` and `Claude-Session` trailers (`publish.py` takes them from the `TRAILER` environment variable).
 
@@ -28,30 +28,31 @@ The game has three ways to end (conquest, holding the Throne, finishing the Enli
 | 58 | One home for every coin (`earn`, `spend`, the ledger); net-flow colours; selection sounds; the scout on foot; why-lines; 15-minute mode; three scenarios; the square law in one place; the history batch with `tests/history.py`. |
 | 60 | The audit: refunds give back what was paid, limits in every age, the Anatomy loop, the shop trap, one shepherd a flock, stand down, spies, the Encyclopedie, the side doors, fog that holds (radar, alerts, odds, villagers), fog chosen at the start, the preview's own save, the card title pinned, `tests/tables.py`. |
 | 59 | The forager rule for villagers (with crowding); attack-value targeting; news by sight, hearing and messenger (the Post line); the market demand curve; spoilage; five computer fixes; controls by age; figures 0.66; tap counts; the button budget; save size and frame time measured. |
+| 61 (Oct 30) | Albert's second list after his first full games: land workers stay put and wild workers move only within sight; no auto-hunting on your side; Replant (half cost, stumps); keep placing; Stop, Dismiss, Stop all, Idle to me; open yards (Workshop, Foundry); the Jobs row's three pages (Jobs, Squad room, War room: four squads, missions with a promised time; the Huddle and the dock gone, half/quarter/nearest cut); the map tap's 👤 / ⚔; the Market card rebuilt; built-out kinds dim with ✓; tree shadows from the sun; fire as t² and the view factor; sight blocked by woods and capped by Koschmieder in fog and snow; more room at the start; the water blended; concept III art for fourteen buildings with one light and a plot family; the build grid; save v37. New rule: use the recognised real-world equation where one fits, flag it where it cannot. |
 
 Also on Oct 29, decided in talk: the three mockups (31 army merge, 32 controls by age, 36 bigger figures; pictures in `mockups/`); the pricing direction; merging the small research steps killed (Albert: "I like tech"); the talk list folded into the to-do list.
 
 ## The harness, before and after (12 seeds, 40 minutes, the computers in all four seats)
-| | Build 47 | Build 58 | Build 59 |
-|---|---|---|---|
-| Bronze age (median) | about 7 min | 7.2 min | 4.9 min |
-| Classical age | 19 min | 19.6 min, 28 of 48 sides | 10.0 min, 46 of 48 |
-| Medieval age | 2 of 80 sides (45 min) | 0 of 48 | 18 of 48, median 29.6 min |
-| Hidden age opened | | 0 of 12 games | 2 of 12 |
-| Blocked villager-seconds a game (median) | about 186 | 206 | 85 |
-| Sides that fell | | 6 of 48 | 0 of 48 |
-| Fortress seat wins | 12 of 20 | 7 of 12 | 7 of 12 |
-Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`, `-60.json`. Build 60 played every harness game identically to 59 (computers only, fog off): its fixes act on your side, the fog and later ages. The Fortress winning most is accepted as fair (Albert: "mind your own business and do the right thing and likely win. Like life.").
+| | Build 47 | Build 58 | Build 59 | Build 61 |
+|---|---|---|---|---|
+| Bronze age (median) | about 7 min | 7.2 min | 4.9 min | B61_BRONZE |
+| Classical age | 19 min | 19.6 min, 28 of 48 sides | 10.0 min, 46 of 48 | B61_CLASSICAL |
+| Medieval age | 2 of 80 sides (45 min) | 0 of 48 | 18 of 48, median 29.6 min | B61_MEDIEVAL |
+| Hidden age opened | | 0 of 12 games | 2 of 12 | B61_HIDDEN |
+| Blocked villager-seconds a game (median) | about 186 | 206 | 85 | B61_BLOCKED |
+| Sides that fell | | 6 of 48 | 0 of 48 | B61_FELL |
+| Fortress seat wins | 12 of 20 | 7 of 12 | 7 of 12 | B61_FORTRESS |
+Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`, `-60.json`, `-61.json`. Build 60 played every harness game identically to 59 (computers only, fog off): its fixes act on your side, the fog and later ages. The Fortress winning most is accepted as fair (Albert: "mind your own business and do the right thing and likely win. Like life.").
 
 ## Repo layout
 - `src/` joined in name order by `build.py` into `first-keep.html`; `wrap.py` writes `native/index.html` (the App Store wrapper); `publish.py [--preview] "message"` runs the gate, then commits and pushes. `preview/` is the preview copy.
 - Rules, numbers only: `01-rules-basics` (ages, players, seasons) · `02-rules-units` · `03-rules-buildings` (also `GOODS`, `PRICE`, `SPOIL`) · `04-rules-tech` (the research tree, 230 steps in lines) · `05-rules-wild` (finds, Natives, Throne, the personalities `PERS`) · `06-rules-tuning` (climate, health, events, `TELL`, `SAVE`, `SCENARIOS`, `UI_BUDGET`).
 - Words: `07-text` (every word: `WHY`, help, `EV_TEXT`, `EV_WHY`, `SCEN_TEXT`, `LEDGER_WORD`). No apostrophes in game words.
 - Core: `08-core` (state, helpers, the sun and moon, `earn`/`spend`/`LEDGER`, `lanchester`, `nextIn`/`hazard`, `rangeFrom`, `stats`, `sightOf`) · `09-nav` (paths, the danger map) · `10-world` (the map, `newGame`, `applyScenario`).
-- Simulation: `11-orders` (what a side can do; diplomacy; the market; `moveVil`) · `12-sim-core` (`step`; `forage`, `bestNode`, `pickVil`, `FORAGE`) · `13-sim-civil` (villagers) · `14-sim-troops` · `15-sim-spatial` (`bestFoe`, `foeValue`, `canBeat`) · `16-sim-fight` (`hurt`, `finish`, score) · `17-ai` (the computers, `think`) · `36-economy` (stores, trade, health, seasons, spoilage, the market price) · `37-events` (climate, sky, events, the horde) · `38-natives` · `39-games` (peace, Games, hidden age, crowns, chronicle) · `39-huddle` · `40-emergency`.
-- View: `18-figures` (cached sprites) · `19-building-art` · `20-view-base` (`FIG`) · `21-view-frame` · `22-view-fog` · `23-view-things` (fire, light, shadows) · `24-view-overlays` · `25-view-weather` (lightning: keep its 0.34 s gap).
+- Simulation: `11-orders` (what a side can do; diplomacy; the market; `moveVil`, `replant`, `stopVil`, `sendOut`) · `12-sim-core` (`step`; `forage`, `bestNode`, `pickVil`, `FORAGE`) · `13-sim-civil` (villagers) · `14-sim-troops` · `15-sim-spatial` (`bestFoe`, `foeValue`, `canBeat`) · `16-sim-fight` (`hurt`, `finish`, score) · `17-ai` (the computers, `think`) · `36-economy` (stores, trade, health, seasons, spoilage, the market price) · `37-events` (climate, sky, events, the horde) · `38-natives` · `39-games` (peace, Games, hidden age, crowns, chronicle) · `39-huddle` (the Jobs row's three pages: the Squad room's plans, the War room's missions) · `40-emergency`.
+- View: `18-figures` (cached sprites) · `19-building-art` (one light: `lit`, `ao`, `rim`; the plot family `field`; the yard props) · `20-view-base` (`FIG`) · `21-view-frame` · `22-view-fog` (woods block sight: `woodsGrid`, `openLine`) · `23-view-things` (fire, light, shadows; `nodeShadows` for trees) · `24-view-overlays` · `25-view-weather` (lightning: keep its 0.34 s gap).
 - Touch and cards: `26-input` · `27-cards-core` · `28-army-strip` · `29-card-pages` · `30-cards` (the `CARDS` table, including Tap counts) · `31-guide` · `32-frame` (top bar, `say`, `tell`, `postTick`, `showByAge`, end screen) · `33-verbs` (every button; `tapCount`).
-- The rest: `34-save` (save v35, `MIGRATE` steps) · `35-sound` (`MAT`, `knock`) · `41-boot` (`window.__fk`, the test hook) · `shell-head.html` (CSS and markup).
+- The rest: `34-save` (save v37, `MIGRATE` steps) · `35-sound` (`MAT`, `knock`) · `41-boot` (`window.__fk`, the test hook) · `shell-head.html` (CSS and markup).
 - Records: `RULES.md`, `SCIENCE.md`, `CUTS.md` (with the parked list), `GUIDE.md` (regenerated from the game), `APP-PREP.md` (the path to the App Store), `docs/` (history), `mockups/`, `mock/`.
 
 ## Tests (run from the repo root)
@@ -74,7 +75,9 @@ Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`, `-60.json`. Build 
 10. **The computers past Medieval**: 18 of 48 sides reach it by 40 minutes; probe what holds them next (`tests/probe.py`), one cause at a time.
 
 ## Up in the air (open, not yet on the to-do list)
-- **Albert's phone test** of Build 60 on his own phone: fog on, scouting, the odds lines, Send out, a scrolled card on a short screen.
+- **Albert's phone test** of Build 61 on his own phone: the three pages of the Jobs row and the squad flow, the map tap, Replant by tap, the new art at his zoom, and the frame rate with tree shadows (measured only headless here: 9.7–12.3 ms a frame either way, noise).
+- **Albert's calls from Build 61**: built-out kinds dim with ✓ rather than tint red (his words were red); the Warehouse / Stores view (27) parked; the computers still hunt on their own (they have no finger).
+- **Sight**: woods block the line of sight, buildings do not; the Koschmieder values are design (no metre in the game).
 - **Score and transfers**: tribute, ransom, tax and loot count as wealth for the side that receives them, and nothing comes off the payer's. A question for Albert (from the audit).
 - **Your villagers under fog work only what you have found** (Build 60): measured a cost when nobody scouts (gathered at 10 minutes down on two of three seeds). Albert to judge in play; one line to undo.
 - **The catch-up cap** drops game time on a slow phone at top speed: measure on the phone before changing.

@@ -20,6 +20,10 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   F.G.clim.snow = 0; near('dry factor', F.groundSpd(0, ['foot']), 1, 1e-9);
   // fire: a clear day is 1; soaked ground is 0; a drought is above 1
   F.G.clim.W = C.eq.clear; near('fire clear', F.fireMul(), 1, 1e-9); F.G.clim.W = 1; near('fire soaked', F.fireMul(), 0, 1e-9); F.G.clim.W = C.eq.drought; if (F.fireMul() <= 1) out.push('fire drought: not above a clear day');
+  // fire between buildings (Build 61): the t² design fire is a quarter grown at half its time, full after it; the view factor is a quarter at one `near` of gap
+  near('fire half grown', F.fireHeat(F.FIRE.grow / 2, 0), 0.25, 1e-9); near('fire full', F.fireHeat(F.FIRE.grow * 3, 0), 1, 1e-9); near('fire one near', F.fireHeat(F.FIRE.grow, F.FIRE.near), 0.25, 1e-9); near('fire three near', F.fireHeat(F.FIRE.grow, 3 * F.FIRE.near), 1 / 16, 1e-9);
+  // sight in fog (Koschmieder's cap): nothing sees past the fog's visibility, and a clear day leaves sight alone
+  { const G = F.G, u = F.G.units.find((x) => x.owner === 0); const clear = F.sightClear(u), was = G.ev.cur; G.ev.cur = { kind: 'fog' }; if (!(F.sightOf(u) <= 70 && F.sightOf(u) <= clear)) out.push('fog cap: sight ' + F.sightOf(u) + ' past 70'); G.ev.cur = was; near('clear sight', F.sightOf(u), clear, 1e-9); }
   // the sun (the sunrise equation): daylight at 45° N is half the day at the equinox, about 15.4 of 24 hours at midsummer (June 21, day 172) and 8.6 at midwinter (day 355)
   const light = (N) => { let up = 0; for (let k = 0; k < 2400; k++) if (F.sunAltAt(N, k / 2400) > 0) up++; return 24 * up / 2400; };
   near('daylight equinox', light(80), 12, 0.15); near('daylight midsummer', light(172), 15.4, 0.15); near('daylight midwinter', light(355), 8.6, 0.15);

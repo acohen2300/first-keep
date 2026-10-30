@@ -1,4 +1,4 @@
-# First Keep: the rule book (Oct 30, 2026; Build 60 on the preview)
+# First Keep: the rule book (Oct 30, 2026; Build 61 on the preview)
 
 One home for how this game is built and how the work is done. Every build is checked against it. Where an older note disagrees, this file wins; where Albert restates a rule in the moment, his words win.
 

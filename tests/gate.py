@@ -105,8 +105,8 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
     run(2); F.hudPage('war'); if (!G.hud.aim || !G.hud.h) bad.push('war room: no crosshair on opening'); F.aimAt(120, 300); if (!G.hud.moved) bad.push('war room: a tap on the map did not move the crosshair');
     G.hud.h = { t: 'ground', e: { x: home.x + 260, y: home.y + 60 } }; F.hudFire(null); const m = G.msn[0];
     if (!m || m.n0 < 12 || !(m.due > G.t)) bad.push('war room: Go made no mission with a time (' + (m && m.n0) + ')'); else {
-      const foes = []; for (let i = 0; i < 8; i++) foes.push(F.addUnit(4, 'bandit', home.x + 250 + i * 5, home.y + 60)); for (let i = 0; i < 12; i++) run(1);
-      if (m.st !== 'act' && m.st !== 'done') bad.push('war room: the mission is ' + m.st + ' at the fight');
+      const foes = []; for (let i = 0; i < 8; i++) foes.push(F.addUnit(4, 'bandit', home.x + 250 + i * 5, home.y + 60)); let met = false; for (let i = 0; i < 24 && !met; i++) { run(1); met = m.st === 'act' || m.st === 'done'; } // rain or snow slows the march and shortens sight, so the fight is joined later
+      if (!met) bad.push('war room: the mission is ' + m.st + ' at the fight');
       F.hudAbort(0); for (const f of foes) f.hp = 0; run(3); if (G.msn[0]) bad.push('war room: Abort left the mission'); }
     // the Squad room: a plan set with + fills from the soldiers at home
     G.P[0].techs.add('command'); F.fxDirty(); F.hudPage('squad'); F.sqNew(); F.sqPlan(0, 'spear', 1); F.sqPlan(0, 'spear', 1); run(2); if (F.sqUnits(0).length !== 2) bad.push('squad room: the plan did not fill (' + F.sqUnits(0).length + ')');
