@@ -36,13 +36,13 @@ Also on Oct 29, decided in talk: the three mockups (31 army merge, 32 controls b
 ## The harness, before and after (12 seeds, 40 minutes, the computers in all four seats)
 | | Build 47 | Build 58 | Build 59 | Build 61 | Build 62 |
 |---|---|---|---|---|---|
-| Bronze age (median) | about 7 min | 7.2 min | 4.9 min | 4.6 min | B62_Bronze_age_median |
-| Classical age | 19 min | 19.6 min, 28 of 48 sides | 10.0 min, 46 of 48 | 8.8 min, 48 of 48 | B62_Classical_age |
-| Medieval age | 2 of 80 sides (45 min) | 0 of 48 | 18 of 48, median 29.6 min | 30 of 48, median 21.1 min; Gunpowder 3 of 48 | B62_Medieval_age |
-| Hidden age opened | | 0 of 12 games | 2 of 12 | 1 of 12 | B62_Hidden_age_opened |
-| Blocked villager-seconds a game (median) | about 186 | 206 | 85 | 222 (seed 4 probed: lower than 60) | B62_Blocked_villager-seconds_a_game_median |
-| Sides that fell | | 6 of 48 | 0 of 48 | 0 of 48 | B62_Sides_that_fell |
-| Fortress seat wins | 12 of 20 | 7 of 12 | 7 of 12 | 4 of 12 | B62_Fortress_seat_wins |
+| Bronze age (median) | about 7 min | 7.2 min | 4.9 min | 4.6 min | 4.4 min |
+| Classical age | 19 min | 19.6 min, 28 of 48 sides | 10.0 min, 46 of 48 | 8.8 min, 48 of 48 | 8.6 min, 48 of 48 |
+| Medieval age | 2 of 80 sides (45 min) | 0 of 48 | 18 of 48, median 29.6 min | 30 of 48, median 21.1 min; Gunpowder 3 of 48 | 27 of 48, median 21.7 min; Gunpowder 3 of 48 |
+| Hidden age opened | | 0 of 12 games | 2 of 12 | 1 of 12 | 1 of 12 |
+| Blocked villager-seconds a game (median) | about 186 | 206 | 85 | 222 (seed 4 probed: lower than 60) | 134.5 |
+| Sides that fell | | 6 of 48 | 0 of 48 | 0 of 48 | 0 of 48 |
+| Fortress seat wins | 12 of 20 | 7 of 12 | 7 of 12 | 4 of 12 | 6 of 12 |
 Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`, `-60.json`, `-61.json`, `-62.json`. Build 61's villager rules moved the computers' play: more sides reach Medieval, three reach Gunpowder; the blocked count rose at the median and fell on the one seed probed (CUTS, Build 61). Build 60 played every harness game identically to 59 (computers only, fog off): its fixes act on your side, the fog and later ages. The Fortress winning most is accepted as fair (Albert: "mind your own business and do the right thing and likely win. Like life.").
 
 ## Repo layout
