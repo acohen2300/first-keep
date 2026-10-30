@@ -785,6 +785,8 @@ Albert's list after his first full games on Build 60 (Oct 30; 31 items, two park
 
 **Measured and tested**
 - Gate: pass at four sizes; the fingerprint accepted (the villager rules changed what the computers' villagers do). The War room test waits up to 24 s for the fight (rain slows the march and shortens sight).
-- `tests/gate.py`: the War room and Squad room replace the Huddle test.
+- `tests/gate.py`: the War room and Squad room replace the Huddle test. `tests/science.py`: the fire heat (a quarter grown at half time, a quarter at one `near` of gap, a sixteenth at three) and the fog cap.
+- **Harness, 12 seeds, 40 minutes, the computers in all four seats, fog off** (Build 60 → 61; raw in `tests/balance-61.json`): Bronze 4.9 → 4.6 min; Classical 10.1 min (47 of 48) → 8.8 min (48 of 48); Medieval 22.6 min, 17 of 48 → 21.1 min, 30 of 48; Gunpowder reached by 3 of 48 (none before); sides that fell 0 → 0; wins by seat Fortress 5 → 4, Balanced seat 0 1 → 4, Balanced seat 2 5 → 2, Aggressive 1 → 2; the hidden age opened in 1 of 12 both times. Villager-seconds blocked (work to reach, not moving), median a game: 107 → 222 (per seat [266, 272, 326, 951] → [982, 27, 531, 1486]); waiting for a shop's input 0 → 1520 (shop workers were inside before and not counted; now the open yards are seen). The blocked rise is measured, not explained: on seed 4 over 25 minutes the same count is 58 (Build 60) → 30 (Build 61), with one cluster of stone workers standing 180 from a quarry rock. Next session: `tests/probe.py` on the seats with the high totals.
+- **Soak, 3 seeds, 20 minutes, Hard, every hazard**: pass; save 237 to 249 kB; a frame drawn in 8.6, 11.5 and 25.4 ms here (headless; the 25 is one run of three, noise or the shadows: the phone is the measure).
 
 - **Play fingerprint accepted:** Build 61: villagers keep land work, wild workers move only within sight, no auto-hunting on the player side, open yards, farther home finds

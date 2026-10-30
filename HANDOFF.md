@@ -35,14 +35,14 @@ Also on Oct 29, decided in talk: the three mockups (31 army merge, 32 controls b
 ## The harness, before and after (12 seeds, 40 minutes, the computers in all four seats)
 | | Build 47 | Build 58 | Build 59 | Build 61 |
 |---|---|---|---|---|
-| Bronze age (median) | about 7 min | 7.2 min | 4.9 min | B61_BRONZE |
-| Classical age | 19 min | 19.6 min, 28 of 48 sides | 10.0 min, 46 of 48 | B61_CLASSICAL |
-| Medieval age | 2 of 80 sides (45 min) | 0 of 48 | 18 of 48, median 29.6 min | B61_MEDIEVAL |
-| Hidden age opened | | 0 of 12 games | 2 of 12 | B61_HIDDEN |
-| Blocked villager-seconds a game (median) | about 186 | 206 | 85 | B61_BLOCKED |
-| Sides that fell | | 6 of 48 | 0 of 48 | B61_FELL |
-| Fortress seat wins | 12 of 20 | 7 of 12 | 7 of 12 | B61_FORTRESS |
-Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`, `-60.json`, `-61.json`. Build 60 played every harness game identically to 59 (computers only, fog off): its fixes act on your side, the fog and later ages. The Fortress winning most is accepted as fair (Albert: "mind your own business and do the right thing and likely win. Like life.").
+| Bronze age (median) | about 7 min | 7.2 min | 4.9 min | 4.6 min |
+| Classical age | 19 min | 19.6 min, 28 of 48 sides | 10.0 min, 46 of 48 | 8.8 min, 48 of 48 |
+| Medieval age | 2 of 80 sides (45 min) | 0 of 48 | 18 of 48, median 29.6 min | 30 of 48, median 21.1 min; Gunpowder 3 of 48 |
+| Hidden age opened | | 0 of 12 games | 2 of 12 | 1 of 12 |
+| Blocked villager-seconds a game (median) | about 186 | 206 | 85 | 222 (seed 4 probed: lower than 60) |
+| Sides that fell | | 6 of 48 | 0 of 48 | 0 of 48 |
+| Fortress seat wins | 12 of 20 | 7 of 12 | 7 of 12 | 4 of 12 |
+Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`, `-60.json`, `-61.json`. Build 61's villager rules moved the computers' play: more sides reach Medieval, three reach Gunpowder; the blocked count rose at the median and fell on the one seed probed (CUTS, Build 61). Build 60 played every harness game identically to 59 (computers only, fog off): its fixes act on your side, the fog and later ages. The Fortress winning most is accepted as fair (Albert: "mind your own business and do the right thing and likely win. Like life.").
 
 ## Repo layout
 - `src/` joined in name order by `build.py` into `first-keep.html`; `wrap.py` writes `native/index.html` (the App Store wrapper); `publish.py [--preview] "message"` runs the gate, then commits and pushes. `preview/` is the preview copy.
@@ -72,7 +72,8 @@ Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`, `-60.json`, `-61.j
 7. **Pricing (decided direction)**: free, with one or two paid unlocks, a subscription possible, never pay to win. Build when the game goes native.
 8. **Core direction review**: after Build 59 (now).
 9. **Why the computers' caravans die so often**: one computer rebuilt 20 in fifteen minutes; find the cause before more trade work.
-10. **The computers past Medieval**: 18 of 48 sides reach it by 40 minutes; probe what holds them next (`tests/probe.py`), one cause at a time.
+10. **The computers past Medieval**: 30 of 48 sides reach it by 40 minutes (Build 61); probe what holds them next (`tests/probe.py`), one cause at a time.
+11. **Blocked villagers** (Build 61): the harness median doubled (107 → 222 villager-seconds) while seed 4 fell; probe the seats with the high totals before any rule moves.
 
 ## Up in the air (open, not yet on the to-do list)
 - **Albert's phone test** of Build 61 on his own phone: the three pages of the Jobs row and the squad flow, the map tap, Replant by tap, the new art at his zoom, and the frame rate with tree shadows (measured only headless here: 9.7–12.3 ms a frame either way, noise).
