@@ -1,4 +1,4 @@
-# First Keep: the rule book (Oct 29, 2026; Build 59 on the preview)
+# First Keep: the rule book (Oct 30, 2026; Build 60 on the preview)
 
 One home for how this game is built and how the work is done. Every build is checked against it. Where an older note disagrees, this file wins; where Albert restates a rule in the moment, his words win.
 
@@ -21,6 +21,7 @@ One home for how this game is built and how the work is done. Every build is che
 - "I build to match life. They decide." Whether a player chooses war, trade, the Games or growth is theirs, not ours: every path must work as well as the others under the same rules.
 - "You can't have alerts if you can't see or hear them." What a player knows comes from sight, hearing or a messenger.
 - "I like tech." The research tree stays deep; clutter is answered by showing things when their age comes, not by cutting.
+- Wherever code can be replaced with the established, recognized equation that matches the real world, use it (Oct 30). Where the equation does not fit the game (its scale, its clock), say so and flag it rather than fake it.
 
 ## 2. How a change happens
 1. Talk first. Bottom line up front. Lists when he has to scan. Neutral pushback, no flattery; say when unsure; ask when unclear; never act when unsure.
