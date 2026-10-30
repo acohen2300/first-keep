@@ -42,6 +42,10 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
     c.T = -1; near('slip on ice, a walker', F.slipChance({ x: 100, y: 100 }, F.CLIMATE.mu.need.foot), 1 / (1 + Math.exp(-(F.CLIMATE.mu.need.foot - ice1) / F.CLIMATE.mu.soft)), 1e-9); Object.assign(c, was); }
   // ruts: depth grows as passes^0.4 toward full at n0 (USFS trafficability)
   { const T = F.ruts(), i = 5 * 50 + 5; const was = T[i]; T[i] = F.CLIMATE.rut.n0 / 4; near('rut quarter', F.rutOf(5 * 40 + 1, 5 * 40 + 1), F.CLIMATE.rut.deep * 0.25 ** 0.4, 1e-9); T[i] = was; }
+  // sound (ISO 9613-2): full within d0, then the inverse-square law: twice the distance is half the amplitude (−6 dB), less the air's small take
+  { const d0 = (Math.hypot(innerWidth, innerHeight) / 2 / F.cam.z) * F.SOUND.d0; near('hearing near', F.hearing(d0 / 2), 10 ** ((-F.SOUND.alphaKm * (d0 / 2) * F.SOUND.metre) / 1000 / 20), 1e-6); const a = F.hearing(d0 * 4), b = F.hearing(d0 * 8); near('inverse square', a / b, 2 * 10 ** ((F.SOUND.alphaKm * d0 * 4 * F.SOUND.metre) / 1000 / 20), 1e-6); }
+  // a crew on a site: output ∝ n^0.7 (Thomas & Smith 1990: per-worker productivity falls about n^−0.3 with overmanning); two builders 1.6×, four 2.6×
+  near('crew of two', 2 ** F.BUILDER_POW, 1.62, 0.02); near('crew of four', 4 ** F.BUILDER_POW, 2.64, 0.02);
   // the sun (the sunrise equation): daylight at 45° N is half the day at the equinox, about 15.4 of 24 hours at midsummer (June 21, day 172) and 8.6 at midwinter (day 355)
   const light = (N) => { let up = 0; for (let k = 0; k < 2400; k++) if (F.sunAltAt(N, k / 2400) > 0) up++; return 24 * up / 2400; };
   near('daylight equinox', light(80), 12, 0.15); near('daylight midsummer', light(172), 15.4, 0.15); near('daylight midwinter', light(355), 8.6, 0.15);

@@ -356,16 +356,20 @@ function sfx(name, x, y) {
 	let v = chanVol(name);
 	if (!v) return;
 	if (x !== undefined) {
-		const R = hyp(cw, ch) / 2 / cam.z,
-			d = hyp(x - cam.x, y - cam.y);
-		if (d > R * 1.1) return;
-		v *= clamp(1.1 - d / (R * 1.1), 0.15, 1);
+		const h = hearing(hyp(x - cam.x, y - cam.y));
+		if (h < SOUND.floor) return;
+		v *= h;
 	}
 	panV = x === undefined ? 0 : clamp((x - cam.x) / (cw / 2 / cam.z), -1, 1) * 0.8;
 	sfxLast[name] = now;
 	S[1](v);
 	panV = 0;
 }
+// how loud a sound at distance d (world units) reaches the ear over the screen's middle: ISO 9613-2 (SOUND), as a share of full
+const hearing = (d) => {
+	const d0 = (hyp(cw, ch) / 2 / cam.z) * SOUND.d0;
+	return Math.min(1, d0 / Math.max(1, d)) * 10 ** ((-SOUND.alphaKm * d * SOUND.metre) / 1000 / 20);
+};
 let ambT = 0;
 function ambience(dt) {
 	ambT -= dt;
@@ -374,14 +378,14 @@ function ambience(dt) {
 	sfx(G.night > 0.5 ? 'cricket' : season().name === 'Winter' ? 'wind' : 'bird');
 }
 
-// Thunder comes after the flash by the real delay: sound covers about 340 m a second (a world unit is about 0.14 m), so it is quieter and later the farther away.
+// Thunder comes after the flash by the real delay (SOUND.c over SOUND.metre), quieter by the same law as every sound; a strike is loud enough to carry the map
 function thunder(x, y) {
 	if (!SND.on || !AC || AC.state !== 'running' || document.hidden) return;
 	const d = hyp(x - cam.x, y - cam.y),
-		v = clamp(1.1 - d / 1400, 0.12, 1) * chanVol('thunder');
+		v = Math.max(SOUND.floor * 4, hearing(d / 4)) * chanVol('thunder');
 	if (!v) return;
 	panV = clamp((x - cam.x) / (cw / 2 / cam.z), -1, 1) * 0.6;
-	SFX.thunder[1](v, (d * 0.14) / 340);
+	SFX.thunder[1](v, (d * SOUND.metre) / SOUND.c);
 	panV = 0;
 }
 // ── Touch you can feel: one table of felt events, three strengths, never more often than every 50 ms.

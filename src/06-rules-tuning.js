@@ -7,6 +7,11 @@ const TRADE = { f: 80, w: 80, s: 110, i: 120 },
 const ZEAL = { cost: { g: 60 }, secs: 45, cd: 120, mul: 1.2 };
 const SAB = { burn: 0.6, stall: 40 };
 const FLANK = 1.3; // a blow from behind lands 30% harder
+// Where a blow comes from (Build 62, Albert: "a big group's orientation is random; that is not a flank"): a blow counts as from the side or
+// behind only when the man cannot turn to meet it (engaged with another, slipped, or broken) and no comrade stands between him and it
+// within cover (the line covers its own); the facing is the group's line (the mean facing within line), not the one figure's. The unit-level
+// facing of wargaming (the ancient line was turned only at its ends) rather than per-figure chance.
+const FLANKING = { cover: 30, line: 40 };
 // ───────────────────────── Combat you steer: nerve, flanks, charge and fall back, prisoners, conversion ─────────────────────────
 // Every soldier has nerve (0..1). Blows drain it by the share of health they take, times hit (a flank blow 1.5 times, a rear blow twice); being
 // outnumbered drains it; a loss beside it drains it by its share of the group (Dupuy's break point, Build 62: a force breaks when its losses reach
@@ -81,6 +86,10 @@ const CLIMATE = {
 // (Rothermel); grow: seconds to a full fire (design: a house burns down in 50); near: the gap, in units, at which the heat is a quarter; reach: beyond this none.
 const FIRE = { rate: 0.12, grow: 20, near: 10, reach: 40 };
 const FIREARMS = { chance: 0.12, blast: 0.3, splash: 40, splashHit: 0.3 }; // fire arrows and burning shot ignite a wooden building on a hit (rain halves it); a petard bombard ignites and shakes the neighbours too
+// Sound by distance (Build 62): ISO 9613-2, L = L0 − 20 log10(d / d0) − α d. Full within d0 (half the screen's radius: you hear what you look at),
+// then the inverse-square law, less the air's absorption α: 5 dB a kilometre at 1 kHz, 20 °C, 50% humidity (ISO 9613-1), over a world unit of 0.14 m.
+// Thunder reaches the ear after the flash at 340 m/s over the same metre. floor: below this share it is not played.
+const SOUND = { d0: 0.5, alphaKm: 5, metre: 0.14, floor: 0.03, c: 340 };
 const GARRISON = { r: 70, heal: 0.6 }; // soldiers resting by their own Castle, Barracks or Town Center heal; Garrison wards double it
 const TEACH = { seats: 4, mul: 1.5, tuition: 40 }; // Teach: a soldier learns a newer kind at the School, four at a time; time ×1.5 per age climbed, tuition in gold per age; opened by Veterans
 const TEACH_TO = {
@@ -97,7 +106,7 @@ const TEACH_TO = {
 const FALLBACK = { secs: 6, back: 200, hit: 0.7 }; // withdraw in order: fewer losses than a rout
 const PRISON = { secs: 180, ransom: 1.0 }; // a prisoner unransomed in three minutes serves the captor
 const CONVERT = { r: 40, secs: 12, cd: 60 }; // a priest beside an enemy for a spell turns them; the counter is to kill the priest
-const BUILDER_POW = 0.7; // a crew of n builds n^0.7 times as fast as one: two builders ≈ 1.6×, three ≈ 2.1×
+const BUILDER_POW = 0.7; // a crew of n builds n^0.7 times as fast as one: two builders ≈ 1.6×, three ≈ 2.1×. Crowding on a site: output per worker falls as n^−0.25 to n^−0.3 (Thomas & Smith, *Loss of Construction Labor Productivity due to Inefficiencies and Disruptions*, 1990; the overmanning curves), so the crew does n^0.7 (Build 62: cited)
 // Shape (research Formations at the War Council): each battalion takes one, three in all. spd: march speed; hit: damage taken; dmg: damage dealt by its riders; vsMounted: damage taken from riders
 // An army marches in a column (COLUMN, never picked: armies did) and stands to its shape on contact: the Roman three lines, the medieval three battles.
 const FORM = [

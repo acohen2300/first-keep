@@ -803,7 +803,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Hit from behind',
-		`A foot soldier or rider struck from behind the way it faces takes ${Math.round((FLANK - 1) * 100)}% more damage. Shooters do not get it. Splitting the army to catch a line from two sides pays.`,
+		`A foot soldier or rider struck from behind the line it holds takes ${Math.round((FLANK - 1) * 100)}% more damage, and its nerve shakes more. It counts only when the man cannot turn to meet it (engaged with another, slipped, or broken) and no comrade stands in the way: a big group is turned only at its ends. Shooters do not get it. Splitting the army to catch a line from two sides pays.`,
 		'Armies lost most men when their line was turned: Cannae, 216 BC.',
 	],
 	[

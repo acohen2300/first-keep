@@ -196,7 +196,8 @@ function makeBg() {
 let SPARKS = [],
 	miniT = 0;
 function draw() {
-	followCam();
+	followCam(Math.min(0.1, (performance.now() - (draw.last || performance.now())) / 1000));
+	draw.last = performance.now();
 	shadeFrame();
 	ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 	const z = cam.z,

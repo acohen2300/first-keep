@@ -379,14 +379,18 @@ function pileAt(b, sx, sy, z) {
 			}
 	});
 }
+// a chimney's plume (Build 62): bent over by the wind, its height goes with the downwind distance to the two-thirds (Briggs 1969, Δh ∝ x^(2/3)),
+// so it climbs fast and then leans; it widens about as the distance (Pasquill–Gifford, σ ∝ x^0.9). The wind is the weather's.
 function smoke(x, y, seed, z) {
 	if (lessMotion) return;
+	const lean = 4 + Math.abs(wind) * 9,
+		side = wind < 0 ? -1 : 1;
 	for (let i = 0; i < 3; i++) {
 		const ph = (G.t * 0.35 + i / 3 + seed * 0.37) % 1,
-			r = (2 + ph * 5) * z;
+			r = (2 + 5 * ph ** 0.9) * z;
 		ctx.fillStyle = `rgba(215,215,210,${0.3 * (1 - ph)})`;
 		ctx.beginPath();
-		ctx.arc(x + ph * 7 * z, y - ph * 24 * z, r, 0, 7);
+		ctx.arc(x + side * ph * lean * z, y - 26 * ph ** (2 / 3) * z, r, 0, 7);
 		ctx.fill();
 	}
 }

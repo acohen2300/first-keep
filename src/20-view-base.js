@@ -130,23 +130,51 @@ function clampCam() {
 	cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID));
 	cam.y = clamp(cam.y, Math.min(half, MID), Math.max(MAP - half, MID));
 } // the map's edges can come up to the bars, never under them (Albert, Build 40)
-// Follow (the pick bar): the camera eases to the middle of what is picked, until you drag, pinch or tap the small map, or let go of them
-function followCam() {
-	if (!G.follow) return;
-	const P = picked();
-	if (!P.length) {
-		G.follow = false;
-		return;
+// The camera glides as a critically damped spring (ζ = 1, no overshoot; the standard smoothing of a value toward a target, one ω for every
+// phone whatever its frame rate). camGo sets the target; the frame moves the camera. One home for every glide: Follow, Home, the small map,
+// a card's "go there", an alert. A drag or a pinch is yours and stops it.
+const spring = (x, v, target, w, dt) => {
+	const e = Math.exp(-w * dt),
+		dx = x - target,
+		t = (v + w * dx) * dt;
+	return [target + (dx + t) * e, (v - w * t) * e];
+};
+const CAM_W = 9; // ω: the glide is over in about 4/ω s, half a second
+function camGo(x, y) {
+	cam.tx = x;
+	cam.ty = y;
+	if (lessMotion) {
+		cam.x = x;
+		cam.y = y;
+		camStop();
+		clampCam();
 	}
-	let x = 0,
-		y = 0;
-	for (const u of P) {
-		x += u.x;
-		y += u.y;
+}
+function camStop() {
+	cam.tx = cam.ty = undefined;
+	cam.vx = cam.vy = 0;
+}
+// Follow (the pick bar): the target is the middle of what is picked, until you drag, pinch or tap the small map, or let go of them
+function followCam(dt) {
+	if (G.follow) {
+		const P = picked();
+		if (!P.length) G.follow = false;
+		else {
+			let x = 0,
+				y = 0;
+			for (const u of P) {
+				x += u.x;
+				y += u.y;
+			}
+			cam.tx = x / P.length;
+			cam.ty = y / P.length;
+		}
 	}
-	cam.x += (x / P.length - cam.x) * 0.2;
-	cam.y += (y / P.length - cam.y) * 0.2;
+	if (cam.tx === undefined) return;
+	[cam.x, cam.vx] = spring(cam.x, cam.vx || 0, cam.tx, CAM_W, dt);
+	[cam.y, cam.vy] = spring(cam.y, cam.vy || 0, cam.ty, CAM_W, dt);
 	clampCam();
+	if (!G.follow && Math.abs(cam.x - cam.tx) < 0.3 && Math.abs(cam.y - cam.ty) < 0.3) camStop();
 }
 const SX = (x) => (x - cam.x) * cam.z + cw / 2;
 const SY = (y, h) => (y - cam.y) * cam.z * TILT + ch / 2 + vy - (h || 0) * cam.z;

@@ -1,4 +1,29 @@
 // ═════ 16-sim-fight.js: damage, pushing apart, plunder, falling, scoring, finishing ═════
+// where a blow comes from, as the cosine between the line's facing and the attacker: 1 from the front, 0 from the side, −1 from behind.
+// The front, whenever the man can turn to meet it or a comrade stands in the way (FLANKING).
+function fromWhere(t, a) {
+	if (t.fx === undefined) return 1;
+	if (!((t.tgt && t.tgt !== a) || t.stuck > G.t || t.state === 'rout')) return 1; // free to turn: no blow is from behind
+	const dx = a.x - t.x,
+		dy = a.y - t.y,
+		d = hyp(dx, dy) || 1;
+	let covered = false,
+		fx = 0,
+		fy = 0;
+	unitsNear(t, FLANKING.line, (v) => {
+		if (v.owner !== t.owner || !isSoldier(v) || v.hp <= 0 || v.inside) return;
+		fx += v.fx || 0;
+		fy += v.fy || 0;
+		if (covered || v === t) return;
+		const ex = v.x - t.x,
+			ey = v.y - t.y,
+			e = hyp(ex, ey) || 1;
+		if (e < FLANKING.cover && (ex * dx + ey * dy) / (e * d) > 0.5) covered = true;
+	});
+	if (covered) return 1;
+	const f = hyp(fx, fy) || 1;
+	return (dx * (fx / f) + dy * (fy / f)) / d;
+}
 function hurt(o, a, t, base) {
 	const A = a ? UNIT[a.kind] : {},
 		isB = !!t.q;
@@ -32,7 +57,7 @@ function hurt(o, a, t, base) {
 			if (o === WILD && t.owner !== WILD) d *= MORALE.wild;
 			if (t.state === 'rout') d *= MORALE.routHit;
 			else if (t.fb > G.t) d *= FALLBACK.hit;
-			const dot = a && t.fx !== undefined ? ((a.x - t.x) * t.fx + (a.y - t.y) * t.fy) / (dist(a, t) || 1) : 1;
+			const dot = a ? fromWhere(t, a) : 1;
 			if (o !== WILD)
 				t.mor -= ((MORALE.hit * d * (TEMPER[temperOf(t)].nerve || 1)) / t.max) * (dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
 		} // nerve: a blow from the side counts half again, from behind twice; animals do not shake it
@@ -45,8 +70,7 @@ function hurt(o, a, t, base) {
 				d *= F.hit || 1;
 				if (F.vsMounted && a && hasTag(a.kind, 'mounted')) d *= F.vsMounted;
 			} // the battalion's shape
-			if (a && A.rng <= 20 && t.fx !== undefined && (a.x - t.x) * t.fx + (a.y - t.y) * t.fy < -0.5 * (dist(a, t) || 1))
-				d *= FLANK; // from behind the way it faces
+			if (a && A.rng <= 20 && fromWhere(t, a) < -0.5) d *= FLANK; // from behind the line it holds
 		}
 		if (UNIT[t.kind].rarmor && (!a || A.rng > 20)) d *= UNIT[t.kind].rarmor; // roofed: arrows and bolts glance off
 	}

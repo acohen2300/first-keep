@@ -147,6 +147,7 @@ cv.addEventListener('pointermove', (e) => {
 			mx = (a.x + b.x) / 2,
 			my = (a.y + b.y) / 2;
 		if (G) G.follow = false; // a pinch is yours: the camera stops following
+		camStop();
 		zoomAt((cam.z * d) / pinch.d, mx, my);
 		cam.x -= (mx - pinch.mx) / cam.z;
 		cam.y -= (my - pinch.my) / (cam.z * TILT);
@@ -187,6 +188,7 @@ cv.addEventListener('pointermove', (e) => {
 	}
 	if (drag.moved) {
 		if (G) G.follow = false; // a drag is yours too
+		camStop();
 		cam.x = drag.cx - dx / cam.z;
 		cam.y = drag.cy - dy / (cam.z * TILT);
 		clampCam();
@@ -259,9 +261,7 @@ mini.addEventListener('pointerdown', (e) => {
 	e.stopPropagation();
 	if (G) G.follow = false;
 	const r = mini.getBoundingClientRect();
-	cam.x = ((e.clientX - r.left) / r.width) * MAP;
-	cam.y = ((e.clientY - r.top) / r.height) * MAP;
-	clampCam();
+	camGo(((e.clientX - r.left) / r.width) * MAP, ((e.clientY - r.top) / r.height) * MAP);
 });
 // what is under the finger: a building (they have height), a find, a unit, a resource, else the ground
 function hitAt(sx, sy) {
@@ -337,9 +337,7 @@ function tapAt(sx, sy) {
 	if (G.over) return;
 	if (RADAR && hyp(sx - RADAR.sx, sy - RADAR.sy) < 26) {
 		G.follow = false;
-		cam.x = RADAR.x;
-		cam.y = RADAR.y;
-		clampCam();
+		camGo(RADAR.x, RADAR.y);
 		return;
 	}
 	if (G.hud.aim) return aimAt(sx, sy); // Aim: the next tap is the target

@@ -94,9 +94,7 @@ const ACT = {
 	idlego() {
 		const u = unitsOf(0, 'vil').find((v) => !v.job);
 		if (!u) return;
-		cam.x = u.x;
-		cam.y = u.y;
-		clampCam();
+		camGo(u.x, u.y);
 		closeCard();
 	},
 	seek(a) {
@@ -106,9 +104,7 @@ const ACT = {
 			say('Nothing of theirs stands.', '', 3);
 			return;
 		}
-		cam.x = k.x;
-		cam.y = k.y;
-		clampCam();
+		camGo(k.x, k.y);
 		if (k.kind === 'keep') {
 			G.card = null;
 			openCard({ type: 'bld', id: k.id });
@@ -136,11 +132,7 @@ const ACT = {
 	},
 	home() {
 		const k = keepOf(0);
-		if (k) {
-			cam.x = k.x;
-			cam.y = k.y;
-			clampCam();
-		}
+		if (k) camGo(k.x, k.y);
 	},
 	resume() {
 		const S = readSave();
@@ -324,11 +316,7 @@ const ACT = {
 		if (!S.length) return;
 		closeCard();
 		setPick(S.map((u) => ({ t: 'unit', id: u.id })));
-		if (O && O.cx !== undefined) {
-			cam.x = O.cx;
-			cam.y = O.cy;
-			clampCam();
-		}
+		if (O && O.cx !== undefined) camGo(O.cx, O.cy);
 	}, // a group on the march: picked, and the camera goes to it (the Army card line, the ring on the map)
 	pfollow() {
 		G.follow = !G.follow;
@@ -336,9 +324,7 @@ const ACT = {
 	}, // the camera follows what is picked, until you drag, pinch or tap the small map
 	jump(a) {
 		const [x, y] = a.split(',').map(Number);
-		cam.x = x;
-		cam.y = y;
-		clampCam();
+		camGo(x, y);
 	},
 	card(a) {
 		openCard({ type: a });
