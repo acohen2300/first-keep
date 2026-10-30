@@ -272,7 +272,8 @@ function declareWar(a, b, why) {
 	chron(`${a === 0 ? 'You' : G.P[a].name} and ${b === 0 ? 'you' : G.P[b].name}: war, ${why}.`);
 }
 function makePeace(a, b) {
-	if (G.rel[a][b] === 'war') chron(`Peace between ${a === 0 ? 'you' : G.P[a].name} and ${b === 0 ? 'you' : G.P[b].name}.`);
+	if (G.rel[a][b] === 'war')
+		chron(`Peace between ${a === 0 ? 'you' : G.P[a].name} and ${b === 0 ? 'you' : G.P[b].name}.`);
 	G.rel[a][b] = G.rel[b][a] = 'peace';
 	G.navDirty = true;
 	if (G.P[a].ally === b) G.P[a].ally = null;
@@ -779,7 +780,8 @@ function zeal(o, list) {
 }
 // a spy stands unseen beyond 45 of soldiers and 140 of towers, the Town Center and Courthouses
 const watchtower = (b) => b.prog >= 1 && b.hp > 0 && (BLD[b.kind].dmg || BLD[b.kind].spyonly);
-const guarded = (b) => G.blds.some((d) => d.owner === b.owner && watchtower(d) && dist(d, b) < rangeOf(d.owner, d.kind));
+const guarded = (b) =>
+	G.blds.some((d) => d.owner === b.owner && watchtower(d) && dist(d, b) < rangeOf(d.owner, d.kind));
 function sabotage(u, b) {
 	const how = BLD[b.kind].sab;
 	if (!how) return false;
@@ -859,7 +861,9 @@ function moveVil(o, job, down) {
 		if (v) setJob(v, null);
 		return;
 	}
-	const v = V.find((u) => !u.job) || low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job) && !atShop(u)));
+	const v =
+		V.find((u) => !u.job) ||
+		low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job) && !atShop(u)));
 	if (v) setJob(v, job);
 }
 // Stop: a villager drops its job and stands where it is (or where it is sent), ready for a new order (Build 61)
@@ -881,7 +885,9 @@ function stopVil(u, post) {
 }
 // Send out (a field, a pasture or a shop's card): the last villager sent there goes home; a shop worker steps out of the door
 function sendOut(o, id) {
-	const v = unitsOf(o, 'vil').filter((u) => u.node && u.node.id === id).pop();
+	const v = unitsOf(o, 'vil')
+		.filter((u) => u.node && u.node.id === id)
+		.pop();
 	if (v) setJob(v, null);
 	return !!v;
 }
@@ -1095,7 +1101,8 @@ function incomingTick() {
 		return;
 	}
 	const n = G.units.filter(
-		(u) => u.hp > 0 && u.owner === best.owner && u.state === 'attack' && hyp(u.x - best.x, u.y - best.y) < 140 && seen0(u),
+		(u) =>
+			u.hp > 0 && u.owner === best.owner && u.state === 'attack' && hyp(u.x - best.x, u.y - best.y) < 140 && seen0(u),
 	).length; // the ones you can see
 	G.incoming = {
 		x: best.x,

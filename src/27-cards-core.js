@@ -17,7 +17,9 @@ function openCard(c) {
 		!G.over &&
 		(READ_CARDS.has(c.type) ||
 			(c.type === 'bld' &&
-				G.blds.some((b) => b.id === c.id && b.owner === 0 && (b.kind === 'council' || (b.kind === 'keep' && G.ktab === 'rel')))))
+				G.blds.some(
+					(b) => b.id === c.id && b.owner === 0 && (b.kind === 'council' || (b.kind === 'keep' && G.ktab === 'rel')),
+				)))
 	) {
 		setPause(true);
 		G.cardPaused = true;
@@ -103,7 +105,11 @@ const sec = (t) => `<div class="sec">${t}</div>`;
 // a row of six in a card: the same mold as the bar below the map (Build 63). Each slot: [act, icon, word, cls] or null for an empty slot
 const rowHTML = (slots) =>
 	`<div class="tiles"><div class="tr">${slots
-		.map((s) => (s ? `<div class="col whole"><button class="cell ${s[3] || ''}" data-act="${s[0]}">${s[1] ? `<span class="top">${s[1]}</span>` : ''}${wd(s[2])}</button></div>` : '<div class="col whole"></div>'))
+		.map((s) =>
+			s
+				? `<div class="col whole"><button class="cell ${s[3] || ''}" data-act="${s[0]}">${s[1] ? `<span class="top">${s[1]}</span>` : ''}${wd(s[2])}</button></div>`
+				: '<div class="col whole"></div>',
+		)
 		.join('')}</div></div>`;
 const acts = (h, cls) => `<div class="acts${cls ? ' ' + cls : ''}">${h}</div>`;
 const title = (t, who) => `<h3>${t}<span class="who">${who}</span></h3>`;
@@ -212,7 +218,12 @@ function keepAgeBtn() {
 // what one of yours is doing, in words read from its state; and what it has done in its life
 function statusOf(u) {
 	const nm = (b) => bldName(0, b.kind).toLowerCase();
-	if (u.inside) return u.shop && u.node ? `at work in the ${nm(u.node.farm)}` : u.state === 'garrison' ? 'DEFENDING inside' : 'sheltering inside';
+	if (u.inside)
+		return u.shop && u.node
+			? `at work in the ${nm(u.node.farm)}`
+			: u.state === 'garrison'
+				? 'DEFENDING inside'
+				: 'sheltering inside';
 	if (u.state === 'garrison') return 'DEFENDING: going in';
 	if (u.state === 'school') return `learning at the School, ${Math.ceil(u.schoolT - G.t)} s`;
 	if (u.kind === 'vil') {
@@ -310,7 +321,10 @@ function yieldText(n, o) {
 		wk = n.wk || 0,
 		fin = isFinite(n.amt),
 		carry = carryOf(o);
-	return `<p>${wk ? `<i>${wk} at work:</i> ` : ''}each takes ${Math.round(rate)} ${n.type} a minute and carries ${carry} a trip${wk ? `; together about ${Math.round(rate * wk)} a minute` : ''}${fin && wk ? `; gone in about ${clock((n.amt / (rate * wk)) * 60)}` : ''}.${fin && n.max > 0 ? ` Taken so far: ${Math.round(n.max - n.amt)} of ${Math.round(n.max)}.` : ''}</p>` + bonusText(n, o);
+	return (
+		`<p>${wk ? `<i>${wk} at work:</i> ` : ''}each takes ${Math.round(rate)} ${n.type} a minute and carries ${carry} a trip${wk ? `; together about ${Math.round(rate * wk)} a minute` : ''}${fin && wk ? `; gone in about ${clock((n.amt / (rate * wk)) * 60)}` : ''}.${fin && n.max > 0 ? ` Taken so far: ${Math.round(n.max - n.amt)} of ${Math.round(n.max)}.` : ''}</p>` +
+		bonusText(n, o)
+	);
 }
 // what lifts or lowers a find's take, named (Build 63, Albert: "show if something is getting a bonus"): the research and buildings whose
 // effect reaches it, the season and the sky, and how far its drop-off stands (the walk is the other half of the rate)
@@ -322,8 +336,7 @@ function bonusText(n, o) {
 		fits = (f) => !f.k || keys.includes(f.k) || (f.k[0] === '#' && false);
 	for (const stat of ['gather', n.kind === 'farm' ? 'crop' : null, n.farm && BLD[n.farm.kind].makes ? 'make' : null])
 		if (stat)
-			for (const f of c[stat] || [])
-				if (fits(f) && f.m && f.m !== 1) named.push(`${f.name || fxName(f)} ×${f.m}`);
+			for (const f of c[stat] || []) if (fits(f) && f.m && f.m !== 1) named.push(`${f.name || fxName(f)} ×${f.m}`);
 	if (n.kind === 'farm' && n.type === 'food') {
 		if (season().farm !== 1) named.push(`${season().name} ×${season().farm}`);
 		if ((G.harvest || 1) !== 1) named.push(`harvest ×${G.harvest}`);
@@ -344,7 +357,8 @@ function fxName(f) {
 	return cv ? CIVS[cv].name : 'a bonus';
 }
 const goodsText = (g) =>
-	[...GOODK, 'f', 'w', 's', 'i'].filter((k) => g[k] >= 1) // goods, and a cart's raw load
+	[...GOODK, 'f', 'w', 's', 'i']
+		.filter((k) => g[k] >= 1) // goods, and a cart's raw load
 		.map((k) => `${Math.floor(g[k])} ${nameOf(k)}`)
 		.join(', ');
 const ownTech = (t) => !t.civ || t.civ === G.P[0].civ; // research this people can do: the others' elite ranks stay out of sight

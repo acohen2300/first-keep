@@ -74,7 +74,17 @@ const CLIMATE = {
 	// Traction (Build 62): the friction a surface offers against what a step needs. Measured coefficients, boot on surface: dry soil 0.7, wet soil 0.45,
 	// packed snow 0.3, ice 0.08 near 0 °C rising to 0.25 at −20 (Bowden & Hughes 1939: the melt film is what makes ice slick, and deep cold has none).
 	// A walker needs about 0.2 (Hanson, Redfern & Mazumdar, Ergonomics 42, 1999); the chance of a slip rises as what is on offer falls below it.
-	mu: { dry: 0.7, mud: 0.45, snow: 0.3, ice0: 0.08, iceCold: 0.25, coldAt: 20, need: { foot: 0.2, horse: 0.25, siege: 0.3 }, soft: 0.03, stride: 0.25 },
+	mu: {
+		dry: 0.7,
+		mud: 0.45,
+		snow: 0.3,
+		ice0: 0.08,
+		iceCold: 0.25,
+		coldAt: 20,
+		need: { foot: 0.2, horse: 0.25, siege: 0.3 },
+		soft: 0.03,
+		stride: 0.25,
+	},
 	slipSecs: 1.5, // a slip holds a man in place this long
 	miss: 0.5,
 	missHurt: 0.08, // snow: an engine slides and its shot falls short, hurting its own crew
@@ -112,7 +122,14 @@ const BUILDER_POW = 0.7; // a crew of n builds n^0.7 times as fast as one: two b
 const FORM = [
 	{ name: 'Line', shape: 'line', note: 'as they stand' },
 	{ name: 'Wedge', shape: 'wedge', dmg: 1.15, hit: 1.1, note: 'riders hit 15% harder, take 10% more' },
-	{ name: 'Square', shape: 'square', spd: 0.8, hit: 0.9, vsMounted: 0.7, note: '10% less damage, 30% less from riders, 20% slower' },
+	{
+		name: 'Square',
+		shape: 'square',
+		spd: 0.8,
+		hit: 0.9,
+		vsMounted: 0.7,
+		note: '10% less damage, 30% less from riders, 20% slower',
+	},
 ];
 const COLUMN = { name: 'Column', shape: 'column', spd: 1.15, hit: 1.1 };
 const GRID = { gap: 15, rows: 2.0, fan: 90, share: 40 }; // an army stands in a grid: 15 apart, about twice as wide as deep; on the march it follows one way to the spot and opens into its shape in the last 90 (as real armies marched in column and deployed); a soldier within 40 of where a path began takes that path too
@@ -122,7 +139,13 @@ const KITE = 45; // a shooter steps back from a foe this close while it reloads
 const TEMPER = [
 	{ name: 'Hold', nerve: 0.8, note: 'fight only what comes within reach, no chase, steadier nerve' },
 	{ name: 'Guard', note: 'fight what comes; shooters step back from anyone who closes in' },
-	{ name: 'Press', nerve: 1.3, dmg: 1.1, chase: 1.3, note: 'chase and charge: blows 10% harder, nerve breaks 30% faster' },
+	{
+		name: 'Press',
+		nerve: 1.3,
+		dmg: 1.1,
+		chase: 1.3,
+		note: 'chase and charge: blows 10% harder, nerve breaks 30% faster',
+	},
 ];
 const T_HOLD = 0,
 	T_GUARD = 1,
@@ -223,7 +246,16 @@ const EVENTS = {
 	stampede: { name: 'Stampede', secs: 30, n: 10, harm: 1 },
 	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.004, harm: 1 },
 	meteor: { name: 'Falling star', secs: 3 },
-	wildfire: { name: 'Wildfire', secs: 60, spread: 0.2, r: 32, burn: 0.12, most: 20, season: ['Summer', 'Autumn'], harm: 1 }, // most: trees alight at once; the dry seasons, drought or not
+	wildfire: {
+		name: 'Wildfire',
+		secs: 60,
+		spread: 0.2,
+		r: 32,
+		burn: 0.12,
+		most: 20,
+		season: ['Summer', 'Autumn'],
+		harm: 1,
+	}, // most: trees alight at once; the dry seasons, drought or not
 	fog: { name: 'Fog', secs: 60, vis: 70 },
 	sinkhole: { name: 'Sinkhole', secs: 2, hit: 0.4 },
 	quicksand: { name: 'Quicksand', secs: 120, r: 60, slow: 0.3 },
@@ -306,7 +338,12 @@ const SCENARIOS = {
 		hz: { hard: 1, starve: 1, horde: 1 },
 		hordeAt: 420,
 		walls: true,
-		blds: [['tower', 150], ['tower', -150], ['barracks', 110], ['range', -110]],
+		blds: [
+			['tower', 150],
+			['tower', -150],
+			['barracks', 110],
+			['range', -110],
+		],
 		vils: 8,
 		mode: 't30',
 	},

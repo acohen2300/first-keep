@@ -52,7 +52,7 @@ const PRICE = {
 	tau: 100,
 	floor: 0.5,
 	cap: 2.5,
-};   // a caravan carries 20 goods
+}; // a caravan carries 20 goods
 // Buildings. fp = squares a side (10 units each). h = how tall it stands. room = people it shelters.
 // sab: what a spy does to it (burn: loses 60% health; stall: stops 40 s and loses the job in hand). No sab: too well guarded.
 const BLD = {
@@ -239,6 +239,7 @@ const BLD = {
 		invest: 6,
 		shelter: 5,
 		name: 'Watchtower',
+		short: 'Tower',
 		fp: 2,
 		hp: 500,
 		h: 44,
@@ -544,8 +545,8 @@ const BLD = {
 		desc: 'Built on a trade stop once its guards are gone. You own the stop: a cut of the sales of everyone else there, 20% for one stop of its route up to 40% for all four; all four of a route also pay gold every second. Up to 12 soldiers can garrison it.',
 	},
 	// A building that shoots has a bow (what its weapon reaches from the ground: a bow 106, the engines on a castle's or the Throne's walls 140)
-// and a height (h); its range is the two by projectile arithmetic (rangeOf in 08-core, Build 56): a tower shoots farther because it is tall.
-// Workshops turn what is in store into something else; one villager works each. makes: what it can make, from what, how fast; the card picks which.
+	// and a height (h); its range is the two by projectile arithmetic (rangeOf in 08-core, Build 56): a tower shoots farther because it is tall.
+	// Workshops turn what is in store into something else; one villager works each. makes: what it can make, from what, how fast; the card picks which.
 	workshop: {
 		name: 'Workshop',
 		fp: 3,

@@ -118,7 +118,8 @@ function navRebuild() {
 		for (let x = 1; x < NC - 1; x++) {
 			const c = y * NC + x;
 			if (was[c] || NAV.gate[c]) continue;
-			if ((was[c - 1] ? 1 : 0) + (was[c + 1] ? 1 : 0) + (was[c - NC] ? 1 : 0) + (was[c + NC] ? 1 : 0) >= 2) NAV.solid[c] = 1;
+			if ((was[c - 1] ? 1 : 0) + (was[c + 1] ? 1 : 0) + (was[c - NC] ? 1 : 0) + (was[c + NC] ? 1 : 0) >= 2)
+				NAV.solid[c] = 1;
 		}
 	// which squares are joined by open ground (gates counted open: the finest cut is made by the search itself)
 	const C = NAV.comp,
@@ -250,7 +251,8 @@ function freeNear(cx, cy, o, R, px, py, slack = 2, cm = 0) {
 				if (Math.max(Math.abs(dx), Math.abs(dy)) !== rad) continue;
 				const x = cx + dx,
 					y = cy + dy;
-				if (x < 0 || y < 0 || x >= NC || y >= NC || blockedCell(y * NC + x, o) || (cm && NAV.comp[y * NC + x] !== cm)) continue;
+				if (x < 0 || y < 0 || x >= NC || y >= NC || blockedCell(y * NC + x, o) || (cm && NAV.comp[y * NC + x] !== cm))
+					continue;
 				if (found < 0) found = rad;
 				const d = hyp(x * NAVC + 5 - px, y * NAVC + 5 - py);
 				if (d < bd) {
@@ -494,7 +496,8 @@ function standOff(u, x, y) {
 		cm = NAV.comp[gcell(u.x, u.y)],
 		f0 = freeNear(cx, cy, u.owner, 14, u.x, u.y, 0),
 		near = f0 && Math.max(Math.abs(f0.cx - cx), Math.abs(f0.cy - cy)) + 1, // no farther than one ring past the nearest open square: it works from beside the thing, not across a wood
-		f = (f0 && cm && NAV.comp[f0.cy * NC + f0.cx] !== cm && freeNear(cx, cy, u.owner, near, u.x, u.y, 0, cm)) || f0 || { x: u.x, y: u.y };
+		f = (f0 && cm && NAV.comp[f0.cy * NC + f0.cx] !== cm && freeNear(cx, cy, u.owner, near, u.x, u.y, 0, cm)) ||
+			f0 || { x: u.x, y: u.y };
 	return (u.so = { k, v: NAV.v, x: f.x, y: f.y });
 }
 // where to head next on the way to (tx, ty)
@@ -525,7 +528,12 @@ function route(u, tx, ty) {
 		const ck = `${o}|${avoid ? 1 : 0}|${key}|${NAV.v}`,
 			hit = NAV.share[ck];
 		let p;
-		if (hit && T - hit.t < 2 && hyp(hit.x - u.x, hit.y - u.y) < GRID.share && lineClear(u.x, u.y, hit.x, hit.y, o, avoid))
+		if (
+			hit &&
+			T - hit.t < 2 &&
+			hyp(hit.x - u.x, hit.y - u.y) < GRID.share &&
+			lineClear(u.x, u.y, hit.x, hit.y, o, avoid)
+		)
 			p = hit.p; // a big army leaves one spot for one place: it asks once and all of it follows (Build 42; Build 48: from nearby squares too, not only the same one)
 		else {
 			NAV.budget--;
@@ -598,7 +606,12 @@ function moveTo(u, x, y, dt, r, SP) {
 		rutsOn(u); // a unit-second of traffic on this square (ruts)
 		if (
 			G.clim.ice > 0 &&
-			rng() < slipChance(u, CLIMATE.mu.need[hasTag(u.kind, 'siege') ? 'siege' : hasTag(u.kind, 'mounted') ? 'horse' : 'foot'] * (1 - fxv(u.owner, 'ice', unitKeys(u.kind)).a))
+			rng() <
+				slipChance(
+					u,
+					CLIMATE.mu.need[hasTag(u.kind, 'siege') ? 'siege' : hasTag(u.kind, 'mounted') ? 'horse' : 'foot'] *
+						(1 - fxv(u.owner, 'ice', unitKeys(u.kind)).a),
+				)
 		) {
 			u.stuck = G.t + CLIMATE.slipSecs;
 			if (u.owner === 0 && !(G.slipT > G.t - 20)) {
@@ -677,7 +690,8 @@ function canPlace(o, kind, x, y) {
 				return 'Something is in the way';
 			}
 			// a lane on every side (Build 63: "buildings need buffers"); walls, gates and crops may touch anything
-			if (!B.wallish && !B.crop && !BLD[q.kind].wallish && !BLD[q.kind].crop) return 'Leave a gap: a lane round each building';
+			if (!B.wallish && !B.crop && !BLD[q.kind].wallish && !BLD[q.kind].crop)
+				return 'Leave a gap: a lane round each building';
 			if (!BLD[q.kind].wallish && (TRAINERS.has(kind) || TRAINERS.has(q.kind)))
 				return 'Leave a lane around buildings that train people';
 		}
@@ -789,7 +803,7 @@ let sealGen = 0;
 function sealPath(extra) {
 	const k = keepOf(0);
 	if (!k) return null;
-	const at = (c) => (c.gy * NC + c.gx),
+	const at = (c) => c.gy * NC + c.gx,
 		pend = new Set(extra.map(at)),
 		kc = toCell(k),
 		S = freeNear(kc.gx, kc.gy, 0, 8, k.x, k.y);
@@ -805,10 +819,16 @@ function sealPath(extra) {
 			y = (c - x) / NC;
 		if ((x - S.cx) ** 2 + (y - S.cy) ** 2 >= r2) {
 			const pts = [];
-			for (let i = c; i >= 0; i = sealFrom[i]) pts.push({ x: (i % NC) * NAVC + NAVC / 2, y: Math.floor(i / NC) * NAVC + NAVC / 2 });
+			for (let i = c; i >= 0; i = sealFrom[i])
+				pts.push({ x: (i % NC) * NAVC + NAVC / 2, y: Math.floor(i / NC) * NAVC + NAVC / 2 });
 			return pts; // a way out, so a way in: from the keep's side to the open ground
 		}
-		for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+		for (const [dx, dy] of [
+			[1, 0],
+			[-1, 0],
+			[0, 1],
+			[0, -1],
+		]) {
 			const nx = x + dx,
 				ny = y + dy;
 			if (nx < 0 || ny < 0 || nx >= NC || ny >= NC) continue;

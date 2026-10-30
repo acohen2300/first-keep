@@ -26,8 +26,14 @@ const LEDGER_WORD = {
 // the scenarios' words (SCENARIOS in 06)
 const SCEN_TEXT = {
 	open: ['Open', 'The ordinary start: a keep, five villagers, the land.'],
-	siege: ['The Siege', 'A Medieval town behind its walls with a full store; every rival at war with you and the horde seven minutes out. Hold for thirty.'],
-	road: ['The Silk Road', 'Every court Classical and at peace, a Market up, the board truce already running and sworn for ten minutes. Trade, the Games, and the age that only peace opens.'],
+	siege: [
+		'The Siege',
+		'A Medieval town behind its walls with a full store; every rival at war with you and the horde seven minutes out. Hold for thirty.',
+	],
+	road: [
+		'The Silk Road',
+		'Every court Classical and at peace, a Market up, the board truce already running and sworn for ten minutes. Trade, the Games, and the age that only peace opens.',
+	],
 	last: ['Last Keep', 'Three courts allied against you from the first minute, on the ordinary rules. Conquest.'],
 };
 const WHY = {
@@ -36,11 +42,16 @@ const WHY = {
 	age2: 'Classical antiquity (about 500 BC to AD 500): iron weapons, legions and phalanxes, libraries, roads and aqueducts, from Rome and Persia to Maurya India and Han China.',
 	age3: 'The Middle Ages (about AD 500 to 1500): castles, knights, crossbows and longbows, universities, and the heavy plough.',
 	age5: 'The Enlightenment (about 1650 to 1800): the Royal Society (1660), the Encyclopédie (1751), inoculation, the turnip and the clover, the school for every child. Game: an age that only a year of peace across the whole board opens, with no soldiers in it; its six steps are the match, and its last step ends it with the crowns.',
-	method: 'The Royal Society (1660) and its Philosophical Transactions (1665): experiment, record, publish, repeat. Knowledge compounded.',
-	vaccine: 'Jenner showed in 1796 that cowpox guards against smallpox; variolation had come to London from Constantinople in 1721 with Lady Mary Wortley Montagu, and was older still in the Ottoman lands, China and India. Game: the last step, the latest date in the age; a board at peace that ends its oldest killer has finished what the truce began.',
-	fourcourse: 'The Norfolk four-course (wheat, turnips, barley, clover) spread through England in the 1730s: no fallow year, more fodder, more manure, more grain. The Low Countries had it a century earlier.',
-	encyclopedia: 'Diderot and his fellow editors published the Encyclopédie from 1751: 28 volumes, every trade drawn and described, so no craft had to be learned twice.',
-	schooling: 'Prussia ordered every child to school in 1763 (the Generallandschulreglement); Scotland had parish schools from 1696. A people that reads works smarter.',
+	method:
+		'The Royal Society (1660) and its Philosophical Transactions (1665): experiment, record, publish, repeat. Knowledge compounded.',
+	vaccine:
+		'Jenner showed in 1796 that cowpox guards against smallpox; variolation had come to London from Constantinople in 1721 with Lady Mary Wortley Montagu, and was older still in the Ottoman lands, China and India. Game: the last step, the latest date in the age; a board at peace that ends its oldest killer has finished what the truce began.',
+	fourcourse:
+		'The Norfolk four-course (wheat, turnips, barley, clover) spread through England in the 1730s: no fallow year, more fodder, more manure, more grain. The Low Countries had it a century earlier.',
+	encyclopedia:
+		'Diderot and his fellow editors published the Encyclopédie from 1751: 28 volumes, every trade drawn and described, so no craft had to be learned twice.',
+	schooling:
+		'Prussia ordered every child to school in 1763 (the Generallandschulreglement); Scotland had parish schools from 1696. A people that reads works smarter.',
 	freetrade: 'Adam Smith, The Wealth of Nations (1776): trade is not a war with a loser; both sides gain.',
 	age4: 'Gunpowder (about AD 1400 to 1600): matchlock guns and cannon. Great bombards broke the walls of Constantinople in 1453; Italian engineers answered with low angled star forts, and walls stopped being the end of a siege.',
 	arquebus:
@@ -111,7 +122,8 @@ const WHY = {
 	chisels: 'Hardened chisels dressed ashlar for the cathedrals; the marks of the masons are still on the blocks.',
 	stonesaw:
 		'Water-driven saws cut marble at Hierapolis in the 200s and again in Renaissance Italy; sand under the blade did the cutting.',
-	rollers: 'Stone moved on sledges over wetted sand and rollers; a tomb painting shows 172 men pulling a colossus. Game: the Rollers and sledges is older than the Classical age it waits for here, because its building comes then.',
+	rollers:
+		'Stone moved on sledges over wetted sand and rollers; a tomb painting shows 172 men pulling a colossus. Game: the Rollers and sledges is older than the Classical age it waits for here, because its building comes then.',
 	cranes:
 		'Two men walking inside a wheel lifted a ton of stone; the cranes of Gothic cathedrals still stand in some towers.',
 	fishtraps:
@@ -154,8 +166,7 @@ const WHY = {
 		'The kings of Ur and Ebla kept runners on the roads by 2000 BC (Shulgi of Ur boasted of running from Nippur to Ur and back in a day); the Inca chasqui relays carried news 240 km a day. Game: news from your near lands at the pace of a runner.',
 	royalroad:
 		'Darius built the Royal Road from Sardis to Susa (about 500 BC): Herodotus says relays of riders, a fresh horse at every station, carried a message 2,700 km in seven days, and "neither snow nor rain" stopped them. Rome copied it as the cursus publicus.',
-	yam:
-		'The Mongol yam (from the 1230s): post stations a day apart across Asia, horses and riders always ready; Marco Polo counted 10,000 stations. A ruler heard from the edge of the empire in days, and from his allies too.',
+	yam: 'The Mongol yam (from the 1230s): post stations a day apart across Asia, horses and riders always ready; Marco Polo counted 10,000 stations. A ruler heard from the edge of the empire in days, and from his allies too.',
 	postal:
 		'Thurn und Taxis ran relays of riders from Innsbruck to Brussels in five days (1490), and opened the post to anyone who paid (1516): news from the whole of Europe, a court that hears first answers first.',
 	sheets:
@@ -184,7 +195,8 @@ const WHY = {
 	drillyard: 'The campus Martius was the drill ground of Rome; a town with a yard to drill in fielded more men.',
 	veterans: 'Marius kept his veterans with the standards; an old soldier retrained is worth two recruits. Opens Teach.',
 	feudal: 'The tenants of a lord owed him forty days a year in arms; the levy was cheap, if not always willing.',
-	slings: 'The Balearic slingers hired out to Carthage and Rome; a lead bullet broke bone through a shield. Game: the Slings is older than the Bronze age it waits for here, because its building comes then.',
+	slings:
+		'The Balearic slingers hired out to Carthage and Rome; a lead bullet broke bone through a shield. Game: the Slings is older than the Bronze age it waits for here, because its building comes then.',
 	composite: 'Horn, sinew and wood glued in layers: the bow of the steppe and Egypt shot farther from a shorter stave.',
 	bodkin: 'The bodkin, narrow and square, was made to punch mail; it was in the quivers at Crécy.',
 	firearrows:
@@ -195,7 +207,8 @@ const WHY = {
 		'The Spanish musket, heavier than the arquebus, put a ball through plate at a hundred paces; armour left the field after it.',
 	volley:
 		'Ranks that fired and countermarched kept a steady fire; Maurice of Nassau drilled it, Nagashino had shown it.',
-	horses: 'The horse was tamed on the steppe about 3500 BC; the people who bred it moved faster than anyone on earth. Game: the Horse breeding is older than the Bronze age it waits for here, because its building comes then.',
+	horses:
+		'The horse was tamed on the steppe about 3500 BC; the people who bred it moved faster than anyone on earth. Game: the Horse breeding is older than the Bronze age it waits for here, because its building comes then.',
 	bridles: 'A bronze bit turns a horse at a gallop; with it the chariot could be steered, and later the rider.',
 	saddles: 'The framed saddle, from the steppe, let a rider sit a shock without sliding off the back of the horse.',
 	stirrups: 'The stirrup let a rider stand to strike and brace a lance; it remade the cavalry charge.',
@@ -328,7 +341,8 @@ const WHY = {
 	postroads: 'Relay stations a day apart with fresh horses; goods and news moved at a gallop from Lisbon to Vienna.',
 	customs:
 		'Customs houses at every port and gate took a cut of all that passed; the keeper of the road grew rich on it.',
-	looms: 'Loom weights of clay are in every Neolithic village; the loom turned wool into the first trade good. Game: the Warp-weighted loom is older than the Bronze age it waits for here, because its building comes then.',
+	looms:
+		'Loom weights of clay are in every Neolithic village; the loom turned wool into the first trade good. Game: the Warp-weighted loom is older than the Bronze age it waits for here, because its building comes then.',
 	spinwheel:
 		'The spinning wheel reached Europe by the 1200s and spun thread several times faster than the drop spindle.',
 	fulling: 'Fulling mills pounded cloth with water-driven hammers from the 1000s, work that had been done by foot.',
@@ -343,7 +357,8 @@ const WHY = {
 	milled: 'The screw press struck a round coin with a milled edge that could not be clipped; Paris had one by 1551.',
 	bellows:
 		'The water-driven bellows blew Chinese furnaces in 31 AD; Europe had them by 1200. A hotter blast, more iron. Game: the Water bellows is older than the Medieval age it waits for here, because its building comes then.',
-	castiron: 'China poured iron into moulds from 500 BC; Europe only learned to from the 1400s. Game: the Cast iron is older than the Medieval age it waits for here, because its building comes then.',
+	castiron:
+		'China poured iron into moulds from 500 BC; Europe only learned to from the 1400s. Game: the Cast iron is older than the Medieval age it waits for here, because its building comes then.',
 	blast: 'The blast furnace, blown by water, reached Europe by the 1300s and made iron in a continuous stream.',
 	finery: 'The finery hammered cast iron into wrought bar that could be forged; the Walloon method spread from Liège.',
 	cleanwater: 'The Aqua Appia brought Rome clean water in 312 BC; by Trajan eleven aqueducts fed a million people.',
@@ -567,20 +582,90 @@ const NEWS = [
 // Milestones that teach (Albert, Build 63): each fires once a game when its moment comes, says the mechanic in a line, why it is so, and the
 // one thing to do about it (a fix that opens the right card). Read back on the Milestones card. The words live here; the tests in 32-frame.
 const MS_TEXT = {
-	house: ['Your first house: five more may live here.', 'Only homes hold people; soldiers and workers alike. A town grows by its roofs.', 'A field feeds them', 'card:menu,land'],
-	field: ['Your first field: food that does not run out.', 'A find is finished one day; a field is worked every year. Soil wears and rests.', 'Put a villager on it', 'card:guide,bld'],
-	drop: ['A camp by the finds: the walk is half the rate.', 'What a villager brings home is its load over the time to fill it and carry it. A camp nearer doubles the take.', 'See the rate on a find', 'card:stores'],
-	soldier: ['Your first soldier: the row has a War page now.', 'The chip at the left of the jobs cycles the pages: Jobs, War, Build, Squad, Train.', 'Open the War page', 'pagecycle'],
-	squad: ['Your first squad: it fills itself from the soldiers at home.', 'A squad keeps a plan; soldiers at home step into it. Send it with Go; the crosshair tells the time.', 'The Squad page', 'pagecycle'],
-	age: ['A new age: the limits grow and the tree opens.', 'Each age raises what you may build and what you may learn. The bell rings for every side.', 'What the age allows', 'card:guide,age'],
-	mud: ['Your army is slow: mud, −{pct}%.', 'Rain softens the ground and feet deepen the ruts; a march in mud goes at {spd} of its pace (Pandolf). Roads mend it.', 'Research Roads', 'card:research'],
-	snow: ['Snow deepens the ground: walking −{pct}%.', 'Below 1 °C what falls is snow; soft snow costs a walker more than mud. Snow clearing halves it.', 'Research Snow clearing', 'card:research'],
-	ice: ['Ice: your people slip, worst just below freezing.', 'The melt film makes ice slick; deep cold grips better. Crampons halve the slips.', 'Research Crampons', 'card:research'],
-	hungry: ['Your people are hungry: work and damage at 75%.', 'Everyone eats a share a minute, a soldier more, a rider most. Food is the real limit on an army.', 'More on Food', 'job:food'],
-	fire: ['A fire: it spreads to wooden neighbours.', 'A fire grows as the square of its age and the heat falls with the gap between walls. Stone does not burn; rain damps it.', 'Who is on it', 'card:emergency'],
-	rout: ['Your soldiers broke and ran: nerve.', 'A group breaks when it has lost about 30% of its number (Dupuy). Shelter, a priest and quiet bring nerve back.', 'Nerve and the rout', 'card:guide,rule'],
-	trade: ['Your first caravan: gold from distance.', 'A caravan earns by how far it goes; routes and allies pay more. Bandits haunt the roads.', 'The Market', 'card:stores'],
-	winter: ['Winter: fields give less, marching slows.', 'The year turns every twelve minutes. Winter cuts the fields and the roads; spring brings lambs and the harvest roll.', 'The seasons', 'card:guide,rule'],
+	house: [
+		'Your first house: five more may live here.',
+		'Only homes hold people; soldiers and workers alike. A town grows by its roofs.',
+		'A field feeds them',
+		'card:menu,land',
+	],
+	field: [
+		'Your first field: food that does not run out.',
+		'A find is finished one day; a field is worked every year. Soil wears and rests.',
+		'Put a villager on it',
+		'card:guide,bld',
+	],
+	drop: [
+		'A camp by the finds: the walk is half the rate.',
+		'What a villager brings home is its load over the time to fill it and carry it. A camp nearer doubles the take.',
+		'See the rate on a find',
+		'card:stores',
+	],
+	soldier: [
+		'Your first soldier: the row has a War page now.',
+		'The chip at the left of the jobs cycles the pages: Jobs, War, Build, Squad, Train.',
+		'Open the War page',
+		'pagecycle',
+	],
+	squad: [
+		'Your first squad: it fills itself from the soldiers at home.',
+		'A squad keeps a plan; soldiers at home step into it. Send it with Go; the crosshair tells the time.',
+		'The Squad page',
+		'pagecycle',
+	],
+	age: [
+		'A new age: the limits grow and the tree opens.',
+		'Each age raises what you may build and what you may learn. The bell rings for every side.',
+		'What the age allows',
+		'card:guide,age',
+	],
+	mud: [
+		'Your army is slow: mud, −{pct}%.',
+		'Rain softens the ground and feet deepen the ruts; a march in mud goes at {spd} of its pace (Pandolf). Roads mend it.',
+		'Research Roads',
+		'card:research',
+	],
+	snow: [
+		'Snow deepens the ground: walking −{pct}%.',
+		'Below 1 °C what falls is snow; soft snow costs a walker more than mud. Snow clearing halves it.',
+		'Research Snow clearing',
+		'card:research',
+	],
+	ice: [
+		'Ice: your people slip, worst just below freezing.',
+		'The melt film makes ice slick; deep cold grips better. Crampons halve the slips.',
+		'Research Crampons',
+		'card:research',
+	],
+	hungry: [
+		'Your people are hungry: work and damage at 75%.',
+		'Everyone eats a share a minute, a soldier more, a rider most. Food is the real limit on an army.',
+		'More on Food',
+		'job:food',
+	],
+	fire: [
+		'A fire: it spreads to wooden neighbours.',
+		'A fire grows as the square of its age and the heat falls with the gap between walls. Stone does not burn; rain damps it.',
+		'Who is on it',
+		'card:emergency',
+	],
+	rout: [
+		'Your soldiers broke and ran: nerve.',
+		'A group breaks when it has lost about 30% of its number (Dupuy). Shelter, a priest and quiet bring nerve back.',
+		'Nerve and the rout',
+		'card:guide,rule',
+	],
+	trade: [
+		'Your first caravan: gold from distance.',
+		'A caravan earns by how far it goes; routes and allies pay more. Bandits haunt the roads.',
+		'The Market',
+		'card:stores',
+	],
+	winter: [
+		'Winter: fields give less, marching slows.',
+		'The year turns every twelve minutes. Winter cuts the fields and the roads; spring brings lambs and the harvest roll.',
+		'The seasons',
+		'card:guide,rule',
+	],
 };
 const EV_WHY = {
 	eclipse: 'the moon crosses the sun; Babylon could foretell it by 600 BC',

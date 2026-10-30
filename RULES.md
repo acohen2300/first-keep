@@ -1,4 +1,4 @@
-# First Keep: the rule book (Oct 30, 2026; Build 61 on the preview)
+# First Keep: the rule book (Oct 30, 2026; Build 63 on the preview)
 
 One home for how this game is built and how the work is done. Every build is checked against it. Where an older note disagrees, this file wins; where Albert restates a rule in the moment, his words win.
 
@@ -22,6 +22,10 @@ One home for how this game is built and how the work is done. Every build is che
 - "You can't have alerts if you can't see or hear them." What a player knows comes from sight, hearing or a messenger.
 - "I like tech." The research tree stays deep; clutter is answered by showing things when their age comes, not by cutting.
 - Wherever code can be replaced with the established, recognized equation that matches the real world, use it (Oct 30). Where the equation does not fit the game (its scale, its clock), say so and flag it rather than fake it.
+- "One could always reason that life isn't fair because random isn't fair. But life isn't a choice. The game is. So it's correct to make it fair without sacrificing truth." (Oct 30.) Fair is not mirror: mirror is illusion, reality is random. Fair is the same constants and the same randomizer for every side, measured (the walks and the villager-minutes to the next age, `fairness()`), with everything else random.
+- When one change answers more than one question while being closer to reality, that is the goal of the build rules (Oct 30). Prefer it over several small answers.
+- The vocabulary (Oct 30): a **module** is a menu or a mold (the one row's slot, a card size); an **overlay** is the words laid on it; an **element** is the thing itself, made of modules and overlays. Element + random = output, with one randomizer for everything random.
+- Muscle memory (Oct 30): the same tap in the same place does the same thing. The map tap puts the sword, then All, under the thumb: tap one the screen, tap two the sword, tap three All.
 
 ## 2. How a change happens
 1. Talk first. Bottom line up front. Lists when he has to scan. Neutral pushback, no flattery; say when unsure; ask when unclear; never act when unsure.

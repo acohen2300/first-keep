@@ -448,7 +448,7 @@ const column = (x, yb, yt, col = '#efe6d4') => {
 			[x + 0.9, yt],
 			[x - 0.9, yt],
 		],
-		LG(x - 1, 0, x + 1, 0, [lit(col, 0.08), lit(col, -0.40)]),
+		LG(x - 1, 0, x + 1, 0, [lit(col, 0.08), lit(col, -0.4)]),
 		LINE,
 		0.3,
 	);
@@ -483,7 +483,13 @@ const smallTree = (x, y, s = 1, col = '#3e8a3c') => {
 		[0, -8.2, 2.8, 0.12],
 		[-1.3, -7.4, 2, 0.28],
 	])
-		E_(x + dx * s, y + dy * s, r * s, r * 0.86 * s, RG(x + dx * s - r * 0.4 * s, y + dy * s - r * 0.4 * s, 0, r * 1.1 * s, [lit(col, kk + 0.3), lit(col, kk - 0.35)]));
+		E_(
+			x + dx * s,
+			y + dy * s,
+			r * s,
+			r * 0.86 * s,
+			RG(x + dx * s - r * 0.4 * s, y + dy * s - r * 0.4 * s, 0, r * 1.1 * s, [lit(col, kk + 0.3), lit(col, kk - 0.35)]),
+		);
 };
 // ── the props the yards share (Build 61) ──
 const stump = (x, y) => {
@@ -503,7 +509,8 @@ const grassTufts = (w, col, n) => {
 const hay = (x, y, s = 1) => {
 	E_(x + 0.5, y + 0.2, 2.8 * s, 1.1 * s, 'rgba(20,30,40,.3)');
 	E_(x, y - 1.8 * s, 2.6 * s, 2.1 * s, RG(x - 0.8 * s, y - 2.6 * s, 0, 3 * s, ['#f0cf6e', '#b8882e']));
-	for (let i = 0; i < 10; i++) L_(x - 2 + i * 0.45, y - 0.5 * s, x - 1.7 + i * 0.45, y - 3 * s - (i % 3) * 0.4, 'rgba(120,70,10,.35)', 0.22);
+	for (let i = 0; i < 10; i++)
+		L_(x - 2 + i * 0.45, y - 0.5 * s, x - 1.7 + i * 0.45, y - 3 * s - (i % 3) * 0.4, 'rgba(120,70,10,.35)', 0.22);
 };
 const barrel = (x, y) => {
 	E_(x + 0.4, y + 0.2, 1.7, 0.75, 'rgba(20,30,40,.3)');
@@ -626,7 +633,12 @@ const leanto = (x0, x1, yf, h, dd, lift, col = THATCH, over = 2) => {
 		const u = i / 6;
 		g.beginPath();
 		g.moveTo(x0 - over + k * u, yf - h + 0.6 - (d + lift) * u);
-		g.quadraticCurveTo((x0 + x1) / 2 + k * u, yf - h + 1.4 - (d + lift) * u, x1 + over + k * u, yf - h + 0.6 - (d + lift) * u);
+		g.quadraticCurveTo(
+			(x0 + x1) / 2 + k * u,
+			yf - h + 1.4 - (d + lift) * u,
+			x1 + over + k * u,
+			yf - h + 0.6 - (d + lift) * u,
+		);
 		g.strokeStyle = 'rgba(90,60,20,.28)';
 		g.lineWidth = 0.3;
 		g.stroke();
@@ -682,7 +694,7 @@ const ART = {
 				[6.5 + tk, -40 - 10 * TILT],
 				[tk / 2, -52],
 			],
-			lit(TILE, -0.60),
+			lit(TILE, -0.6),
 			LINE,
 			0.5,
 		);
@@ -767,7 +779,7 @@ const ART = {
 						[7 + tk, -44 - 12 * TILT],
 						[tk / 2, -56],
 					],
-					lit(SLATE, -0.60),
+					lit(SLATE, -0.6),
 					LINE,
 					0.5,
 				);
@@ -899,59 +911,80 @@ const ART = {
 			k = d * SIDE,
 			hw = w * 0.44,
 			hd = w * 0.26;
-		field(w, '#ad9262', c, () => {
-			g.save();
-			g.translate(k * 0.72, d / 2 - d * 0.72 - (hd * TILT) / 2);
-			const r = block(hw * 2, 7.5, PLASTER, 'timber', 'gable', '#8e3a2a', 5.2, hd);
-			door(0, r.d / 2, 2.8, 4.8);
-			win(-hw + 4.2, r.d / 2 - 3.4, 1.7, 2.1, true);
-			win(hw - 4.2, r.d / 2 - 3.4, 1.7, 2.1, true);
-			g.restore();
-			banner(hw + k * 0.72 + 0.8, d / 2 - d * 0.72 - 6.5, c, 7);
-			const [rx, ry] = gpt(w, 0.9, 0.3);
-			P_(
-				[
-					[rx - 1.4, ry],
-					[rx + 1.8, ry],
-					[rx + 1.6, ry - 1.1],
-					[rx - 1.6, ry - 1.1],
-				],
-				'#5a3a1e',
-			);
-			for (let i = 0; i < 6; i++) L_(rx - 0.8 + i * 0.35, ry - 0.5, rx - 1.4 + i * 0.55, ry - 7.5, '#d9c79a', 0.3);
-			for (let i = 0; i < 3; i++) {
-				const [sx, sy] = gpt(w, 0.5 + i * 0.12, 0.1);
-				E_(sx, sy - 2, 1.4, 1.6, RG(sx - 0.4, sy - 2.6, 0, 1.8, [lit('#c0392b', 0.2), lit('#c0392b', -0.35)]), LINE, 0.3);
-				E_(sx, sy - 2, 0.5, 0.5, '#e6b947');
-			}
-			crate(...gpt(w, 0.9, 0.08));
-		}, true);
+		field(
+			w,
+			'#ad9262',
+			c,
+			() => {
+				g.save();
+				g.translate(k * 0.72, d / 2 - d * 0.72 - (hd * TILT) / 2);
+				const r = block(hw * 2, 7.5, PLASTER, 'timber', 'gable', '#8e3a2a', 5.2, hd);
+				door(0, r.d / 2, 2.8, 4.8);
+				win(-hw + 4.2, r.d / 2 - 3.4, 1.7, 2.1, true);
+				win(hw - 4.2, r.d / 2 - 3.4, 1.7, 2.1, true);
+				g.restore();
+				banner(hw + k * 0.72 + 0.8, d / 2 - d * 0.72 - 6.5, c, 7);
+				const [rx, ry] = gpt(w, 0.9, 0.3);
+				P_(
+					[
+						[rx - 1.4, ry],
+						[rx + 1.8, ry],
+						[rx + 1.6, ry - 1.1],
+						[rx - 1.6, ry - 1.1],
+					],
+					'#5a3a1e',
+				);
+				for (let i = 0; i < 6; i++) L_(rx - 0.8 + i * 0.35, ry - 0.5, rx - 1.4 + i * 0.55, ry - 7.5, '#d9c79a', 0.3);
+				for (let i = 0; i < 3; i++) {
+					const [sx, sy] = gpt(w, 0.5 + i * 0.12, 0.1);
+					E_(
+						sx,
+						sy - 2,
+						1.4,
+						1.6,
+						RG(sx - 0.4, sy - 2.6, 0, 1.8, [lit('#c0392b', 0.2), lit('#c0392b', -0.35)]),
+						LINE,
+						0.3,
+					);
+					E_(sx, sy - 2, 0.5, 0.5, '#e6b947');
+				}
+				crate(...gpt(w, 0.9, 0.08));
+			},
+			true,
+		);
 	},
 	range(c) {
 		// the butts on a green (Build 61, Albert: open-air): three targets at the back, a shooting line, hay behind
 		const w = 40,
 			d = w * TILT;
-		field(w, '#8cb860', c, () => {
-			grassTufts(w, '#5a8a3c', 60);
-			const [h0, h1] = [gpt(w, 0.03, 0.97), gpt(w, 0.97, 0.97)];
-			for (let i = 0; i < 7; i++) hay(h0[0] + ((h1[0] - h0[0]) * (i + 0.5)) / 7, h0[1] - 0.6, 0.85);
-			for (let i = 0; i < 3; i++) {
-				const [x, y] = gpt(w, 0.25 + i * 0.25, 0.84);
-				E_(x + 0.6, y + 0.2, 3, 1.1, 'rgba(20,30,40,.28)');
-				for (const dx of [-1.7, 1.7]) post(x + dx, y, 5, '#5a3a1e', 0.42);
-				E_(x, y - 2.6, 2.8, 2.8, RG(x - 0.7, y - 3.3, 0, 3.4, ['#f3e6c0', '#c9ad66']));
-				for (let rr = 0; rr < 6; rr++) E_(x, y - 2.6, 2.8 - rr * 0.42, 2.8 - rr * 0.42, null, 'rgba(120,90,40,.3)', 0.2);
-				E_(x, y - 2.6, 1.6, 1.6, '#fff');
-				E_(x, y - 2.6, 1, 1, '#d03a2a');
-				E_(x, y - 2.6, 0.42, 0.42, '#fff');
-				L_(x + 0.3, y - 2.5, x + 2.6, y - 1.2, '#9a7a4a', 0.3);
-			}
-			const [l0, l1] = [gpt(w, 0.05, 0.22), gpt(w, 0.95, 0.22)];
-			L_(l0[0], l0[1], l1[0], l1[1], 'rgba(255,255,255,.75)', 0.5);
-			const [rx, ry] = gpt(w, 0.92, 0.1);
-			for (let i = 0; i < 5; i++) L_(rx - 0.6 + i * 0.3, ry, rx - 1.3 + i * 0.55, ry - 6.5, '#d9c79a', 0.3);
-			banner(...gpt(w, 0.04, 0.96), c, 8);
-		}, true);
+		field(
+			w,
+			'#8cb860',
+			c,
+			() => {
+				grassTufts(w, '#5a8a3c', 60);
+				const [h0, h1] = [gpt(w, 0.03, 0.97), gpt(w, 0.97, 0.97)];
+				for (let i = 0; i < 7; i++) hay(h0[0] + ((h1[0] - h0[0]) * (i + 0.5)) / 7, h0[1] - 0.6, 0.85);
+				for (let i = 0; i < 3; i++) {
+					const [x, y] = gpt(w, 0.25 + i * 0.25, 0.84);
+					E_(x + 0.6, y + 0.2, 3, 1.1, 'rgba(20,30,40,.28)');
+					for (const dx of [-1.7, 1.7]) post(x + dx, y, 5, '#5a3a1e', 0.42);
+					E_(x, y - 2.6, 2.8, 2.8, RG(x - 0.7, y - 3.3, 0, 3.4, ['#f3e6c0', '#c9ad66']));
+					for (let rr = 0; rr < 6; rr++)
+						E_(x, y - 2.6, 2.8 - rr * 0.42, 2.8 - rr * 0.42, null, 'rgba(120,90,40,.3)', 0.2);
+					E_(x, y - 2.6, 1.6, 1.6, '#fff');
+					E_(x, y - 2.6, 1, 1, '#d03a2a');
+					E_(x, y - 2.6, 0.42, 0.42, '#fff');
+					L_(x + 0.3, y - 2.5, x + 2.6, y - 1.2, '#9a7a4a', 0.3);
+				}
+				const [l0, l1] = [gpt(w, 0.05, 0.22), gpt(w, 0.95, 0.22)];
+				L_(l0[0], l0[1], l1[0], l1[1], 'rgba(255,255,255,.75)', 0.5);
+				const [rx, ry] = gpt(w, 0.92, 0.1);
+				for (let i = 0; i < 5; i++) L_(rx - 0.6 + i * 0.3, ry, rx - 1.3 + i * 0.55, ry - 6.5, '#d9c79a', 0.3);
+				banner(...gpt(w, 0.04, 0.96), c, 8);
+			},
+			true,
+		);
 	},
 	stable(c) {
 		// a paddock with the stalls at the back (Build 61, Albert: open-air): thatch over the stalls, a rail round the yard, hay and a trough
@@ -1041,81 +1074,93 @@ const ART = {
 		const w = 30,
 			d = w * TILT,
 			k = d * SIDE;
-		field(w, '#cdb990', c, () => {
-			let r = 9;
-			const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
-			for (let i = 0; i < 70; i++) {
-				const [x, y] = gpt(w, 0.03 + R() * 0.94, 0.03 + R() * 0.94);
-				E_(x, y, 1.3 + R(), 0.6 + R() * 0.4, `rgba(${150 + ((R() * 40) | 0)},${125 + ((R() * 30) | 0)},${95 + ((R() * 30) | 0)},.6)`);
-			}
-			const wx = k * 0.5,
-				wy = 0;
-			g.save();
-			g.translate(wx, wy);
-			block(5.6, 2.4, '#8e8678', 'stone', 'flat', null, 0, 4.5);
-			g.restore();
-			E_(wx + 0.9, wy - 2.4 - 1.5 + 1.4, 2.4, 1, RG(wx, wy - 3, 0, 2.6, ['#5fa0c4', '#2f5f80']));
-			for (const dx of [-2.4, 2.4]) post(wx + dx, wy - 2.2, 5.4, '#5a3a1e', 0.4);
-			P_(
-				[
-					[wx - 3.4, wy - 7.4],
-					[wx + 3.4, wy - 7.4],
-					[wx + 2.2, wy - 9.4],
-					[wx - 2.2, wy - 9.4],
-				],
-				LG(0, wy - 7.4, 0, wy - 9.4, [lit('#7a3326', -0.15), lit('#7a3326', 0.25)]),
-				LINE,
-				0.3,
-			);
-			const stalls = [
-				[0.2, 0.78, '#c0392b'],
-				[0.78, 0.78, '#2f6c8e'],
-				[0.2, 0.22, c],
-				[0.78, 0.22, '#3f7a34'],
-			].sort((a, b) => b[1] - a[1]);
-			for (const [t, u, col] of stalls) {
-				const [x, y] = gpt(w, t, u);
+		field(
+			w,
+			'#cdb990',
+			c,
+			() => {
+				let r = 9;
+				const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+				for (let i = 0; i < 70; i++) {
+					const [x, y] = gpt(w, 0.03 + R() * 0.94, 0.03 + R() * 0.94);
+					E_(
+						x,
+						y,
+						1.3 + R(),
+						0.6 + R() * 0.4,
+						`rgba(${150 + ((R() * 40) | 0)},${125 + ((R() * 30) | 0)},${95 + ((R() * 30) | 0)},.6)`,
+					);
+				}
+				const wx = k * 0.5,
+					wy = 0;
 				g.save();
-				g.translate(x, y);
-				block(8, 2.6, '#8a6a3a', 'plank', 'flat', null, 0, 4);
+				g.translate(wx, wy);
+				block(5.6, 2.4, '#8e8678', 'stone', 'flat', null, 0, 4.5);
 				g.restore();
-				for (const [gx, gc] of [
-					[-2.6, '#d9607a'],
-					[-0.9, '#e6b947'],
-					[0.9, '#86a83e'],
-					[2.6, '#c9a46a'],
-				]) {
-					E_(x + gx, y - 2.6, 1, 0.55, lit(gc, -0.2));
-					E_(x + gx, y - 3.2, 0.8, 0.5, lit(gc, 0.2));
+				E_(wx + 0.9, wy - 2.4 - 1.5 + 1.4, 2.4, 1, RG(wx, wy - 3, 0, 2.6, ['#5fa0c4', '#2f5f80']));
+				for (const dx of [-2.4, 2.4]) post(wx + dx, wy - 2.2, 5.4, '#5a3a1e', 0.4);
+				P_(
+					[
+						[wx - 3.4, wy - 7.4],
+						[wx + 3.4, wy - 7.4],
+						[wx + 2.2, wy - 9.4],
+						[wx - 2.2, wy - 9.4],
+					],
+					LG(0, wy - 7.4, 0, wy - 9.4, [lit('#7a3326', -0.15), lit('#7a3326', 0.25)]),
+					LINE,
+					0.3,
+				);
+				const stalls = [
+					[0.2, 0.78, '#c0392b'],
+					[0.78, 0.78, '#2f6c8e'],
+					[0.2, 0.22, c],
+					[0.78, 0.22, '#3f7a34'],
+				].sort((a, b) => b[1] - a[1]);
+				for (const [t, u, col] of stalls) {
+					const [x, y] = gpt(w, t, u);
+					g.save();
+					g.translate(x, y);
+					block(8, 2.6, '#8a6a3a', 'plank', 'flat', null, 0, 4);
+					g.restore();
+					for (const [gx, gc] of [
+						[-2.6, '#d9607a'],
+						[-0.9, '#e6b947'],
+						[0.9, '#86a83e'],
+						[2.6, '#c9a46a'],
+					]) {
+						E_(x + gx, y - 2.6, 1, 0.55, lit(gc, -0.2));
+						E_(x + gx, y - 3.2, 0.8, 0.5, lit(gc, 0.2));
+					}
+					for (const dx of [-3.6, 3.6]) post(x + dx, y - 2.6, 4.8, '#5a3a1e', 0.4);
+					for (let sI = 0; sI < 4; sI++) {
+						const sx = x - 4.6 + sI * 2.3;
+						P_(
+							[
+								[sx, y - 7.2],
+								[sx + 2.3, y - 7.2],
+								[sx + 2.7, y - 8.8],
+								[sx + 0.4, y - 8.8],
+							],
+							sI % 2 ? '#f4efe2' : lit(col, 0.05),
+						);
+						P_(
+							[
+								[sx, y - 7.2],
+								[sx + 2.3, y - 7.2],
+								[sx + 1.15, y - 6.2],
+							],
+							sI % 2 ? '#e4dccb' : lit(col, -0.2),
+						);
+					}
+					rim(x - 4.6, y - 8.4, x + 4.6, y - 8.4, 0.4);
 				}
-				for (const dx of [-3.6, 3.6]) post(x + dx, y - 2.6, 4.8, '#5a3a1e', 0.4);
-				for (let sI = 0; sI < 4; sI++) {
-					const sx = x - 4.6 + sI * 2.3;
-					P_(
-						[
-							[sx, y - 7.2],
-							[sx + 2.3, y - 7.2],
-							[sx + 2.7, y - 8.8],
-							[sx + 0.4, y - 8.8],
-						],
-						sI % 2 ? '#f4efe2' : lit(col, 0.05),
-					);
-					P_(
-						[
-							[sx, y - 7.2],
-							[sx + 2.3, y - 7.2],
-							[sx + 1.15, y - 6.2],
-						],
-						sI % 2 ? '#e4dccb' : lit(col, -0.2),
-					);
-				}
-				rim(x - 4.6, y - 8.4, x + 4.6, y - 8.4, 0.4);
-			}
-			crate(...gpt(w, 0.5, 0.86));
-			sack(...gpt(w, 0.58, 0.9));
-			barrel(...gpt(w, 0.5, 0.1));
-			lantern(...gpt(w, 0.96, 0.5));
-		}, true);
+				crate(...gpt(w, 0.5, 0.86));
+				sack(...gpt(w, 0.58, 0.9));
+				barrel(...gpt(w, 0.5, 0.1));
+				lantern(...gpt(w, 0.96, 0.5));
+			},
+			true,
+		);
 	},
 	school(c) {
 		const r = block(30, 16, PLASTER, null, 'gable', SLATE, 8);
@@ -1158,7 +1203,7 @@ const ART = {
 					[20 + k, d / 2 - 22 - d],
 					[14 + k / 2, d / 2 - 34 - d / 2],
 				],
-				lit(SLATE, -0.60),
+				lit(SLATE, -0.6),
 				LINE,
 				0.5,
 			);
@@ -1266,7 +1311,14 @@ const ART = {
 			g.stroke();
 			for (let a = 0; a < 7; a++) {
 				const t = Math.PI + (Math.PI * (a + 0.5)) / 7;
-				L_(cx + rr * Math.cos(t), cy - h + rr * TILT * Math.sin(t), cx + (rr - 2.6) * Math.cos(t), cy - h + (rr - 2.6) * TILT * Math.sin(t), 'rgba(90,70,40,.3)', 0.25);
+				L_(
+					cx + rr * Math.cos(t),
+					cy - h + rr * TILT * Math.sin(t),
+					cx + (rr - 2.6) * Math.cos(t),
+					cy - h + (rr - 2.6) * TILT * Math.sin(t),
+					'rgba(90,70,40,.3)',
+					0.25,
+				);
 			}
 		}
 		const ir = w * 0.46 - 18;
@@ -1445,7 +1497,17 @@ const ART = {
 			L = d + 16,
 			pw = w * 0.24,
 			kk = (L / d) * k;
-		E_(kk * 0.55, d / 2 - L * 0.55, w * 0.9, L * 0.5, RG(kk * 0.55, d / 2 - L * 0.55, 0, w * 0.9, ['rgba(60,130,175,.95)', 'rgba(60,130,175,.7)', 'rgba(60,130,175,0)'])); // the water it stands in
+		E_(
+			kk * 0.55,
+			d / 2 - L * 0.55,
+			w * 0.9,
+			L * 0.5,
+			RG(kk * 0.55, d / 2 - L * 0.55, 0, w * 0.9, [
+				'rgba(60,130,175,.95)',
+				'rgba(60,130,175,.7)',
+				'rgba(60,130,175,0)',
+			]),
+		); // the water it stands in
 		for (const [x, y] of [
 			[-pw + 1, d / 2 - 1],
 			[pw - 1, d / 2 - 1],
@@ -1477,7 +1539,8 @@ const ART = {
 			LINE,
 			0.35,
 		);
-		for (let i = 1; i < 9; i++) L_(-pw + (kk * i) / 9, d / 2 - (L * i) / 9, pw + (kk * i) / 9, d / 2 - (L * i) / 9, 'rgba(60,40,20,.42)', 0.3);
+		for (let i = 1; i < 9; i++)
+			L_(-pw + (kk * i) / 9, d / 2 - (L * i) / 9, pw + (kk * i) / 9, d / 2 - (L * i) / 9, 'rgba(60,40,20,.42)', 0.3);
 		const cxp = pw - 1.6 + kk * 0.8,
 			cyp = d / 2 - L * 0.8;
 		post(cxp, cyp, 11, '#4a3220', 0.7);
@@ -1532,7 +1595,7 @@ const ART = {
 					[w + k, f - 10 - dk],
 					[w, f - 10],
 				],
-				lit(STONE, -0.60),
+				lit(STONE, -0.6),
 				LINE,
 				0.5,
 			); // its shaded east face
@@ -1543,7 +1606,7 @@ const ART = {
 					[w, f - 10],
 					[-w, f - 10],
 				],
-				LG(-b, 0, b, 0, [lit(STONE, -0.16), lit(STONE, -0.60)]),
+				LG(-b, 0, b, 0, [lit(STONE, -0.16), lit(STONE, -0.6)]),
 				LINE,
 				0.6,
 			);
@@ -1574,14 +1637,14 @@ const ART = {
 				LINE,
 				0.5,
 			);
-			for (let x = -w; x <= w; x += 4) L_(x, f - h, x, f - h - 7, lit(PLANK, -0.60), 0.6);
+			for (let x = -w; x <= w; x += 4) L_(x, f - h, x, f - h - 7, lit(PLANK, -0.6), 0.6);
 			P_(
 				[
 					[-w - 4, f - h - 7],
 					[w + 4, f - h - 7],
 					[0, f - h - 19],
 				],
-				LG(-w, 0, w, 0, [lit(SLATE, 0.16), lit(SLATE, -0.40)]),
+				LG(-w, 0, w, 0, [lit(SLATE, 0.16), lit(SLATE, -0.4)]),
 				LINE,
 				0.6,
 			); // the timber hoarding round the top, under a slate cap
@@ -1613,7 +1676,8 @@ const ART = {
 					0.3,
 				);
 				L_(x, f - h + 5.5, x + 1.5, f - h + 7, '#2e2a26', 1.6);
-			} // gun ports
+			}
+		// gun ports
 		else for (let y = f - h + 14; y < f - 8; y += 14) win(0, y, 1.2, 4, '#14100c');
 		banner(T.hoard ? 0 : w - 2, f - h - (T.hoard ? 19 : 3), c, T.flag); // on the cap's point, or the corner of the battlements
 	},
@@ -1710,7 +1774,7 @@ const ART = {
 				}
 			}
 		});
-		hay(w * 0.36, (w * TILT) * 0.46, 1);
+		hay(w * 0.36, w * TILT * 0.46, 1);
 	},
 	pasture(c, o, n) {
 		const w = 30;
@@ -1825,7 +1889,8 @@ const ART = {
 			const lx = x0 + 6 + k * 0.15,
 				ly = yf - d * 0.15;
 			E_(lx, ly, 2.8, 1.9, RG(lx - 0.6, ly - 0.5, 0, 3, ['#c48a4a', '#7a4a22']));
-			for (let i = 0; i < 6; i++) L_(lx - 1.8, ly - 1.4 + i * 0.5, lx + 1.8, ly - 1.4 + i * 0.5, 'rgba(255,240,200,.5)', 0.22);
+			for (let i = 0; i < 6; i++)
+				L_(lx - 1.8, ly - 1.4 + i * 0.5, lx + 1.8, ly - 1.4 + i * 0.5, 'rgba(255,240,200,.5)', 0.22);
 			const rx = x0 + 15,
 				ry = yf - 2;
 			L_(rx - 1, ry - 4.6, rx + 8.5, ry - 4.6, '#5a3a1e', 0.45);
@@ -1881,7 +1946,14 @@ const ART = {
 				0.3,
 			);
 			E_(fx, fy + 1.1, 7, 4.6, RG(fx, fy + 1.1, 0, 7, ['rgba(255,150,60,.42)', 'rgba(255,150,60,0)']));
-			for (let i = 0; i < 5; i++) E_(fx + 1.2 + i * 1.3 + Math.sin(i * 1.7) * 0.8, fy - 11 - i * 3.2, 1.5 + i * 1.1, 1.1 + i * 0.8, `rgba(220,215,210,${0.4 - i * 0.07})`);
+			for (let i = 0; i < 5; i++)
+				E_(
+					fx + 1.2 + i * 1.3 + Math.sin(i * 1.7) * 0.8,
+					fy - 11 - i * 3.2,
+					1.5 + i * 1.1,
+					1.1 + i * 0.8,
+					`rgba(220,215,210,${0.4 - i * 0.07})`,
+				);
 			const [ax, ay] = gpt(w, 0.78, 0.3);
 			P_(
 				[
@@ -1919,7 +1991,10 @@ const ART = {
 		const w = 30,
 			d = w * TILT;
 		field(w, '#9a948a', c, () => {
-			P_([gpt(w, 0.08, 0.45), gpt(w, 0.6, 0.45), gpt(w, 0.6, 0.92), gpt(w, 0.08, 0.92)], LG(0, d / 2 - d * 0.45, 0, d / 2 - d * 0.92, ['#4a4640', '#6a665e']));
+			P_(
+				[gpt(w, 0.08, 0.45), gpt(w, 0.6, 0.45), gpt(w, 0.6, 0.92), gpt(w, 0.08, 0.92)],
+				LG(0, d / 2 - d * 0.45, 0, d / 2 - d * 0.92, ['#4a4640', '#6a665e']),
+			);
 			const [qx, qy] = gpt(w, 0.08, 0.45);
 			P_(
 				[
@@ -1932,7 +2007,8 @@ const ART = {
 				LINE,
 				0.35,
 			);
-			for (let i = 0; i < 7; i++) L_(qx + 1 + i * 2.2, qy - 0.3, qx + 1.6 + i * 2.2, qy - 3.1, 'rgba(40,36,30,.4)', 0.25);
+			for (let i = 0; i < 7; i++)
+				L_(qx + 1 + i * 2.2, qy - 0.3, qx + 1.6 + i * 2.2, qy - 3.1, 'rgba(40,36,30,.4)', 0.25);
 			rim(qx, qy - 3.4, qx + w * 0.52, qy - 3.4, 0.5);
 			for (let i = 0; i < 5; i++) {
 				const [bx, by] = gpt(w, 0.68 + (i % 3) * 0.11, 0.2 + Math.floor(i / 3) * 0.2);
@@ -2001,7 +2077,8 @@ const ART = {
 			LINE,
 			0.4,
 		);
-		for (let i = 1; i < 4; i++) L_(-w / 2 + k + 0.3, -d / 2 - (i * H) / 4, w / 2 + k - 0.3, -d / 2 - (i * H) / 4, 'rgba(30,22,16,.25)', 0.22);
+		for (let i = 1; i < 4; i++)
+			L_(-w / 2 + k + 0.3, -d / 2 - (i * H) / 4, w / 2 + k - 0.3, -d / 2 - (i * H) / 4, 'rgba(30,22,16,.25)', 0.22);
 		P_(
 			[
 				[-w / 2, d / 2],
@@ -2016,8 +2093,8 @@ const ART = {
 		g.save();
 		g.translate(w * 0.2 + k * 0.55, d / 2 - d * 0.55 + 2);
 		block(9.6, 8.5, '#b0a898', 'stone', 'hip', SLATE, 4.2, 9.5);
-		door(-1.6, 9.5 * TILT / 2, 2.4, 4.4, '#2a2014');
-		win(2.6, 9.5 * TILT / 2 - 3.6, 1.3, 2, true);
+		door(-1.6, (9.5 * TILT) / 2, 2.4, 4.4, '#2a2014');
+		win(2.6, (9.5 * TILT) / 2 - 3.6, 1.3, 2, true);
 		g.restore();
 		const [ax, ay] = gpt(w, 0.25, 0.5);
 		E_(ax, ay, 2.8, 1.2, RG(ax, ay, 0, 2.8, ['#6a6a72', '#3a3a42']));
@@ -2050,7 +2127,8 @@ const ART = {
 			LINE,
 			0.4,
 		);
-		for (let i = 1; i < 3; i++) L_(w / 2 + 0.2, d / 2 - i * 2.4, w / 2 + k - 0.2, d / 2 - i * 2.4 - d, 'rgba(10,20,30,.25)', 0.25);
+		for (let i = 1; i < 3; i++)
+			L_(w / 2 + 0.2, d / 2 - i * 2.4, w / 2 + k - 0.2, d / 2 - i * 2.4 - d, 'rgba(10,20,30,.25)', 0.25);
 		rim(-w / 2 + k, -d / 2 - H, w / 2 + k, -d / 2 - H, 0.4);
 		P_(
 			[
@@ -2515,9 +2593,9 @@ function bldSprite(b, s) {
 										: ''
 									: b.kind === 'pasture'
 										? b.sheep || 0
-									: b.kind === 'tower'
-										? btierOf(o, 'tower')
-										: '';
+										: b.kind === 'tower'
+											? btierOf(o, 'tower')
+											: '';
 	const up = upTier(b.kind, G.P[o]),
 		key = b.kind + col + var_ + up + s;
 	let c = BSPR.get(key);

@@ -552,7 +552,8 @@ const PLAY = {
 	idleto(a) {
 		const [x, y] = a.split(',').map(Number);
 		let n = 0;
-		for (const u of unitsOf(0, 'vil')) if (freeVil(u) && !postedAt({ x, y }).includes(u)) (u.post = { x: x + u.ox, y: y + u.oy }), n++;
+		for (const u of unitsOf(0, 'vil'))
+			if (freeVil(u) && !postedAt({ x, y }).includes(u)) ((u.post = { x: x + u.ox, y: y + u.oy }), n++);
 		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 3);
 		hideStrip();
 	},
@@ -641,13 +642,14 @@ const PLAY = {
 	stopall() {
 		const k = keepOf(0);
 		let n = 0;
-		for (const u of unitsOf(0, 'vil')) if (u.job || u.post) stopVil(u, k ? { x: k.x + u.ox, y: k.y + halfOf(k) + 8 + u.oy } : null), n++;
+		for (const u of unitsOf(0, 'vil'))
+			if (u.job || u.post) (stopVil(u, k ? { x: k.x + u.ox, y: k.y + halfOf(k) + 8 + u.oy } : null), n++);
 		say(n ? `${n} villagers stop: to the Town Center.` : 'Nobody was working.', '', 4);
 	},
 	idlehere() {
 		const c = toWorld(cw / 2, ch / 2);
 		let n = 0;
-		for (const u of unitsOf(0, 'vil')) if (freeVil(u)) (u.post = { x: c.x + u.ox, y: c.y + u.oy }), n++;
+		for (const u of unitsOf(0, 'vil')) if (freeVil(u)) ((u.post = { x: c.x + u.ox, y: c.y + u.oy }), n++);
 		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 4);
 		closeCard();
 	},
@@ -774,8 +776,7 @@ const PLAY = {
 	},
 	levy(a) {
 		const [q, n] = a.split(',').map(Number);
-		if (!levy(0, q, n === 0 ? levyRoom(0, q) : n))
-			say(levyWhy(0, q, n || 1) || 'Not now.', '', 3);
+		if (!levy(0, q, n === 0 ? levyRoom(0, q) : n)) say(levyWhy(0, q, n || 1) || 'Not now.', '', 3);
 	},
 	release(a) {
 		releaseAll(0, Number(a));

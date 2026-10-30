@@ -491,7 +491,10 @@ function jobDone(b, j) {
 			if (G.recruitSq !== null && G.recruitSq !== undefined && hasCmd()) u.bn = G.recruitSq; // Orders: the squad new soldiers join (Build 63)
 			if (G.rally0) {
 				// sorted by kind at the rally (Albert, Build 63): each kind has its own stand, a step apart, so a new man finds his own
-				const ki = Math.max(0, CLS.findIndex((c) => c[2] === UNIT[j.kind].at));
+				const ki = Math.max(
+					0,
+					CLS.findIndex((c) => c[2] === UNIT[j.kind].at),
+				);
 				u.state = 'goto';
 				u.px = G.rally0.x + (ki - 1.5) * 22;
 				u.py = G.rally0.y;
@@ -592,13 +595,20 @@ function forage(u, n, drops) {
 		c = carryOf(o),
 		v = stats(o, 'vil').spd * groundSpd(o, ['foot']),
 		others = n.hunt || n.kind === 'farm' ? 0 : Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0)),
-		g = ((n.hunt ? RATE_OF.meat : n.rate || RATE_OF[n.kind]) * gatherMul(o, n.hunt ? { type: 'food', kind: 'meat' } : n)) / (1 + others / (FORAGE.room[n.kind] || 2)),
-		A = n.hunt ? UNIT[n.hunt.kind].meat : n.kind === 'farm' || (u.node === n && n.kind === 'tree') ? c * FORAGE.life : Math.max(1, n.amt), // a tree you started counts as worth finishing: its stump opens the way (Build 63; Charnov would leave it)
+		g =
+			((n.hunt ? RATE_OF.meat : n.rate || RATE_OF[n.kind]) *
+				gatherMul(o, n.hunt ? { type: 'food', kind: 'meat' } : n)) /
+			(1 + others / (FORAGE.room[n.kind] || 2)),
+		A = n.hunt
+			? UNIT[n.hunt.kind].meat
+			: n.kind === 'farm' || (u.node === n && n.kind === 'tree')
+				? c * FORAGE.life
+				: Math.max(1, n.amt), // a tree you started counts as worth finishing: its stump opens the way (Build 63; Charnov would leave it)
 		at = n.hunt || n,
 		dr = n.kind === 'fish' ? null : (drops ? nearest(drops, at) : dropFor(o, n.type || 'food', at)) || keepOf(o),
 		d = dr ? dist(dr, at) : 0,
 		w = dist(u, at);
-	return (c / (c / Math.max(1e-6, g) + (2 * d) / v + (w * c) / (Math.min(A, c * FORAGE.life) * v)));
+	return c / (c / Math.max(1e-6, g) + (2 * d) / v + (w * c) / (Math.min(A, c * FORAGE.life) * v));
 }
 // The turtle plan (Albert, Build 63): what the next age costs in villager-minutes from this Town Center, with the walk counted. For each
 // resource the best find the side knows from home gives a villager's rate there (the forager's rate, walk and all); the shortfall over that
@@ -616,27 +626,54 @@ function turtlePlan(o, A = nextAge(o), all = false) {
 		if (!need) continue;
 		const r = RES.find((x) => KEY[x] === key);
 		let best = 0;
-		for (const n of G.nodes) if (n.amt > 0 && n.type === r && (all || o !== 0 || !G.fogOn || known0(n)) && dist(n, k) < 400) best = Math.max(best, forage(probe, n));
-		for (const b of G.blds) if (b.owner === o && b.prog >= 1 && b.node && b.node.amt > 0 && b.node.type === r) best = Math.max(best, forage(probe, b.node));
+		for (const n of G.nodes)
+			if (n.amt > 0 && n.type === r && (all || o !== 0 || !G.fogOn || known0(n)) && dist(n, k) < 400)
+				best = Math.max(best, forage(probe, n));
+		for (const b of G.blds)
+			if (b.owner === o && b.prog >= 1 && b.node && b.node.amt > 0 && b.node.type === r)
+				best = Math.max(best, forage(probe, b.node));
 		const vm = best > 0 ? need / (best * 60) : Infinity;
 		rows.push({ key, r, need, vm, rate: best * 60 });
 		mins += vm;
 	}
 	const V = Math.max(1, unitsOf(o, 'vil').length),
-		split = rows.map((x) => ({ r: x.r, n: isFinite(x.vm) && mins > 0 ? Math.max(1, Math.round((V * x.vm) / mins)) : 0 }));
+		split = rows.map((x) => ({
+			r: x.r,
+			n: isFinite(x.vm) && mins > 0 ? Math.max(1, Math.round((V * x.vm) / mins)) : 0,
+		}));
 	return { age: A, rows, mins, villagers: V, time: isFinite(mins) ? mins / V : Infinity, split };
 }
 // the rate a worker earns where it is now: 0 idle or off gathering
-const forageNow = (u) => (!u.job || u.job === 'repair' ? 0 : u.hunt ? forage(u, { hunt: u.hunt }) : u.node && u.node.amt > 0 && !(u.node.farm && BLD[u.node.farm.kind].makes) ? forage(u, u.node) : 0);
+const forageNow = (u) =>
+	!u.job || u.job === 'repair'
+		? 0
+		: u.hunt
+			? forage(u, { hunt: u.hunt })
+			: u.node && u.node.amt > 0 && !(u.node.farm && BLD[u.node.farm.kind].makes)
+				? forage(u, u.node)
+				: 0;
 // the best find for this worker and its rate: fields, berries, trees, stone, gold, iron, fish, a carcass, or game within reach of home
 function bestNode(u, job) {
 	let best = null,
 		bR = 0,
 		drops = null;
 	for (const n of G.nodes) {
-		if ((n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) || !nodeFits(n, job) || (n.kind !== 'farm' && unsafe(n, u.owner)) || (u.bad && u.bad[n.id] > G.t) || (u.owner === 0 && !known0(n))) continue; // your people work only what you have found (Build 60: under fog they set out for finds nobody had seen, into whatever stood there)
+		if (
+			(n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) ||
+			!nodeFits(n, job) ||
+			(n.kind !== 'farm' && unsafe(n, u.owner)) ||
+			(u.bad && u.bad[n.id] > G.t) ||
+			(u.owner === 0 && !known0(n))
+		)
+			continue; // your people work only what you have found (Build 60: under fog they set out for finds nobody had seen, into whatever stood there)
 		if (n.kind === 'farm') {
-			if (n.farm.owner !== u.owner || n.farm.prog < 1 || n.farm.hp <= 0 || (n.wk || 0) - (u.node === n ? 1 : 0) >= slotsOf(n)) continue;
+			if (
+				n.farm.owner !== u.owner ||
+				n.farm.prog < 1 ||
+				n.farm.hp <= 0 ||
+				(n.wk || 0) - (u.node === n ? 1 : 0) >= slotsOf(n)
+			)
+				continue;
 			if (BLD[n.farm.kind].makes || BLD[n.farm.kind].sheep) continue; // a workshop or a pasture is a post, not a find: it is staffed by its builder or by hand
 			if (u.was && u.was !== 'farm') continue; // a worker from the wild never drifts onto a plot (Build 61: land work and wild work are two kinds)
 		} else {
@@ -645,7 +682,10 @@ function bestNode(u, job) {
 			if (n.kind === 'fish' && !dockNear(u.owner, n)) continue;
 			if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue;
 		}
-		if (!drops) drops = G.blds.filter((b) => b.owner === u.owner && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(job));
+		if (!drops)
+			drops = G.blds.filter(
+				(b) => b.owner === u.owner && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(job),
+			);
 		const R = forage(u, n, drops);
 		if (R > bR) {
 			bR = R;
@@ -656,7 +696,15 @@ function bestNode(u, job) {
 		// a computer's forager takes game on its own; yours hunts only when you send it (Build 61, Albert), or when an animal attacks
 		const k = keepOf(u.owner);
 		for (const a of G.units)
-			if (a.owner === WILD && a.hp > 0 && UNIT[a.kind].meat && UNIT[a.kind].tick === 'wild' && k && dist(a, k) < 420 && !unsafe(a, u.owner)) {
+			if (
+				a.owner === WILD &&
+				a.hp > 0 &&
+				UNIT[a.kind].meat &&
+				UNIT[a.kind].tick === 'wild' &&
+				k &&
+				dist(a, k) < 420 &&
+				!unsafe(a, u.owner)
+			) {
 				const R = forage(u, { hunt: a }, drops);
 				if (R > bR) {
 					bR = R;
@@ -675,7 +723,13 @@ function pickVil(o, to, types, site) {
 		idle = V.filter(freeVil);
 	if (idle.length) return nearest(idle, to);
 	const T = types ? [].concat(types) : null,
-		free = V.filter((u) => u.job && u.job !== 'repair' && !GOODK.includes(u.job) && !(u.node && u.node.farm && (BLD[u.node.farm.kind].makes || BLD[u.node.farm.kind].sheep))),
+		free = V.filter(
+			(u) =>
+				u.job &&
+				u.job !== 'repair' &&
+				!GOODK.includes(u.job) &&
+				!(u.node && u.node.farm && (BLD[u.node.farm.kind].makes || BLD[u.node.farm.kind].sheep)),
+		),
 		same = T ? free.filter((u) => T.includes(u.job)) : [],
 		pool = same.length ? same : free;
 	if (!pool.length) return null; // nobody is pulled off a site or a post: with all hands busy, the order waits

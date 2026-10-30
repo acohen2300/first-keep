@@ -82,7 +82,9 @@ function woodsGrid() {
 	if (WOODS.G === G && WOODS.v === G.treeV) return WOODS.grid;
 	const grid = new Uint8Array(FOGN * FOGN),
 		n = new Uint8Array(FOGN * FOGN);
-	for (const t of G.nodes) if (t.kind === 'tree' && t.amt > 0) n[clamp((t.y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((t.x / FOG) | 0, 0, FOGN - 1)]++;
+	for (const t of G.nodes)
+		if (t.kind === 'tree' && t.amt > 0)
+			n[clamp((t.y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((t.x / FOG) | 0, 0, FOGN - 1)]++;
 	for (let i = 0; i < n.length; i++) grid[i] = n[i] >= 3 ? 1 : 0;
 	WOODS = { v: G.treeV, G, grid };
 	return grid;

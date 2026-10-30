@@ -204,11 +204,17 @@ function solTick(u, dt, SP) {
 					u.x,
 					u.y,
 					60,
-					(b) => b.owner === o && b.prog >= 1 && b.hp > 0 && (BLD[b.kind].dmg || BLD[b.kind].wallish) && dist(b, u) < 60,
+					(b) =>
+						b.owner === o && b.prog >= 1 && b.hp > 0 && (BLD[b.kind].dmg || BLD[b.kind].wallish) && dist(b, u) < 60,
 				)
 			)
 				rate *= MORALE.shelter * fxv(o, 'shelter').m;
-			if (G.priests.some((p) => p.owner === o && Math.abs(p.x - u.x) < MORALE.priestR && Math.abs(p.y - u.y) < MORALE.priestR)) rate *= MORALE.priest;
+			if (
+				G.priests.some(
+					(p) => p.owner === o && Math.abs(p.x - u.x) < MORALE.priestR && Math.abs(p.y - u.y) < MORALE.priestR,
+				)
+			)
+				rate *= MORALE.priest;
 			m = relax(m, 1, MORALE.tau / rate, d4);
 		}
 		if (u.tgt) {
@@ -246,7 +252,8 @@ function solTick(u, dt, SP) {
 			tgt.hp > 0 &&
 			!tgt.inside &&
 			atWar(o, tgt.owner) &&
-			(edge(u, tgt) < sightOf(u) * 1.4 * (TEMPER[temperOf(u)].chase || 1) || (u.state === 'home' && nearHome(u, tgt, k)))
+			(edge(u, tgt) < sightOf(u) * 1.4 * (TEMPER[temperOf(u)].chase || 1) ||
+				(u.state === 'home' && nearHome(u, tgt, k)))
 		)
 	)
 		tgt = u.tgt = null; // the one it had is gone; a soldier at home keeps a foe it was sent after near the Town Center (Build 38: dropping it the next step made new soldiers spin)
@@ -261,7 +268,12 @@ function solTick(u, dt, SP) {
 			const c = bestFoe(o, u, look),
 				cur = u.tgt && !u.tgt.q ? u.tgt : null,
 				inReach = cur && edge(u, cur) <= rngOf(u) + 8, // a foe already at the blade is never dropped for one farther off (Build 63)
-				keep = cur && (!c || inReach || (canBeat(u, cur) >= canBeat(u, c) && foeValue(u, c, dist(u, c)) < FORAGE.move * foeValue(u, cur, dist(u, cur))));
+				keep =
+					cur &&
+					(!c ||
+						inReach ||
+						(canBeat(u, cur) >= canBeat(u, c) &&
+							foeValue(u, c, dist(u, c)) < FORAGE.move * foeValue(u, cur, dist(u, cur))));
 			tgt = keep ? cur : c;
 		}
 		if (u.state === 'home' && tgt && !nearHome(u, tgt, k)) tgt = null;
@@ -349,11 +361,7 @@ function solTick(u, dt, SP) {
 			if (u.cd <= 0) {
 				u.cd = U.cd;
 				u.hitT = G.t;
-				if (
-					hasTag(u.kind, 'siege') &&
-					G.clim.snow > 0 &&
-					rng() < CLIMATE.miss * G.clim.snow * (1 - fxv(o, 'snow').a)
-				) {
+				if (hasTag(u.kind, 'siege') && G.clim.snow > 0 && rng() < CLIMATE.miss * G.clim.snow * (1 - fxv(o, 'snow').a)) {
 					u.hp -= u.max * CLIMATE.missHurt;
 					scarStrike(u.x + u.fx * 30, u.y + u.fy * 30);
 					if (o === 0 && (G.tick + u.id) % 90 < 3) say('Snow: the engine slid, shot short.', 'warn', 4, u);
@@ -435,7 +443,9 @@ function wildTick(u, dt, SP) {
 			u.graze = G.t + rnd(3, 8);
 			const gx = u.hx + rnd(-40, 40),
 				gy = u.hy + rnd(-30, 30),
-				f = blockedCell(gcell(gx, gy), WILD) ? freeNear(Math.floor(gx / NAVC), Math.floor(gy / NAVC), WILD, 3, gx, gy) : { x: gx, y: gy };
+				f = blockedCell(gcell(gx, gy), WILD)
+					? freeNear(Math.floor(gx / NAVC), Math.floor(gy / NAVC), WILD, 3, gx, gy)
+					: { x: gx, y: gy };
 			if (f) {
 				u.gx = f.x; // graze only where it fits: a spot inside a building had it nosing the wall (Build 63)
 				u.gy = f.y;

@@ -35,10 +35,7 @@ function hurt(o, a, t, base) {
 		if (a && o !== WILD && t.prog >= 1 && BLD[t.kind].wood && !t.fire) {
 			const keys = unitKeys(a.kind),
 				blast = A.gun && fxv(o, 'blast', keys).a >= 1;
-			if (
-				(blast || fxv(o, 'fire', keys).a >= 1) &&
-				rng() < (blast ? FIREARMS.blast : FIREARMS.chance) * fireMul()
-			)
+			if ((blast || fxv(o, 'fire', keys).a >= 1) && rng() < (blast ? FIREARMS.blast : FIREARMS.chance) * fireMul())
 				ignite(t, 'a shot');
 		} // fire arrows, burning shot, petards
 		if (a && A.gun && fxv(o, 'blast', unitKeys(a.kind)).a >= 1)
@@ -48,7 +45,10 @@ function hurt(o, a, t, base) {
 		if (a) d *= vsMul(a, t);
 		if (a && o === WILD && t.kind === 'vil' && t.owner !== WILD && UNIT[a.kind].meat && !t.hunt) {
 			// an animal attacks a villager: it and the two nearest villagers who can see it turn on the beast, kill it and butcher it, then go back to work (Build 61)
-			const helpers = unitsOf(t.owner, 'vil').filter((v) => v !== t && !v.inside && !v.hunt && v.job !== 'repair' && dist(v, a) < sightOf(v)).sort((p, q) => dist(p, a) - dist(q, a)).slice(0, 2);
+			const helpers = unitsOf(t.owner, 'vil')
+				.filter((v) => v !== t && !v.inside && !v.hunt && v.job !== 'repair' && dist(v, a) < sightOf(v))
+				.sort((p, q) => dist(p, a) - dist(q, a))
+				.slice(0, 2);
 			for (const v of [t, ...helpers]) {
 				v.pj = v.job === 'food' ? null : v.job;
 				setJob(v, 'food');
@@ -61,7 +61,9 @@ function hurt(o, a, t, base) {
 			else if (t.fb > G.t) d *= FALLBACK.hit;
 			const dot = fromOf();
 			if (o !== WILD)
-				t.mor -= ((MORALE.hit * d * (TEMPER[temperOf(t)].nerve || 1)) / t.max) * (dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
+				t.mor -=
+					((MORALE.hit * d * (TEMPER[temperOf(t)].nerve || 1)) / t.max) *
+					(dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
 		} // nerve: a blow from the side counts half again, from behind twice; animals do not shake it
 		if (a && a.native && !isB && onLand(t.x, t.y) && hyp(t.x - MID, t.y - MID) > THRONE.isle - 10) d *= NATIVE.ambush; // the Natives at the causeways: the ground is theirs
 		if (a && A.gun && hasTag(t.kind, 'native')) d *= NATIVE.gunHit; // gunpowder against hide shields

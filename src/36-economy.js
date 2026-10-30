@@ -78,7 +78,8 @@ const loadable = (p, k) => (TRADE[k] ? Math.max(0, (p.res[k] || 0) - CARAVAN.kee
 // a load taken up or put down: raw through the money home (spent on, or back from, trade; a load is not gathered), a good with the goods
 // (Build 52: a raw load taken from a cart made the goods count NaN; Build 60: raw loads left and came back unlogged)
 const takeFrom = (p, k, q) => (TRADE[k] ? spend(p, k, q, 'trade') : (p.goods[k] -= q));
-const giveTo = (p, k, q, why = 'trade') => (TRADE[k] ? earn(p, k, q, why, false) : (p.goods[k] = (p.goods[k] || 0) + q));
+const giveTo = (p, k, q, why = 'trade') =>
+	TRADE[k] ? earn(p, k, q, why, false) : (p.goods[k] = (p.goods[k] || 0) + q);
 function priceAt(o, good, place, from) {
 	let m = 1;
 	if (place.kind === 'stop' && good === 'spice') return 0; // a stop sells spice; it does not buy it
@@ -221,7 +222,8 @@ function routeTick(u, dt, SP) {
 		// home
 		for (const k in u.goods || {}) giveTo(p, k, u.goods[k]);
 		u.goods = {};
-		if (u.foreign && G.plague && G.plague.until > G.t && rng() < HEALTH.plagueCart * (hz('plague') ? 2 : 1)) outbreak(o, 0.05, true, u); // a few cases come home with the cart; the spread does the rest (SIR). The hazard's "twice as fast along the roads" (Build 60: it was never doubled)
+		if (u.foreign && G.plague && G.plague.until > G.t && rng() < HEALTH.plagueCart * (hz('plague') ? 2 : 1))
+			outbreak(o, 0.05, true, u); // a few cases come home with the cart; the spread does the rest (SIR). The hazard's "twice as fast along the roads" (Build 60: it was never doubled)
 		u.inspected = false;
 		u.inspT = 0; // plague came home with the carts
 		u.foreign = false;
@@ -428,7 +430,12 @@ function fireTick(dt) {
 // ── sickness: a few fall ill now and then, more in summer and winter; Clean water halves it; medicine cures and saves lives
 function sickRisk(o) {
 	const s = season().name;
-	return HEALTH.risk * (s === 'Summer' || s === 'Winter' ? 1.2 : 1) * fxv(o, 'sick').m * (s === 'Winter' ? fxv(o, 'warm').m : 1); // warm homes: a milder winter
+	return (
+		HEALTH.risk *
+		(s === 'Summer' || s === 'Winter' ? 1.2 : 1) *
+		fxv(o, 'sick').m *
+		(s === 'Winter' ? fxv(o, 'warm').m : 1)
+	); // warm homes: a milder winter
 }
 function outbreak(o, share, plague, at) {
 	const p = G.P[o],

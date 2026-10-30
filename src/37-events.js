@@ -247,7 +247,13 @@ const EV = {
 					scarStrike(n.x, n.y);
 				}
 				nodesNear(n.x, n.y, E.r, (m) => {
-					if (m.kind === 'tree' && m.amt > 0 && !e.burn.includes(m) && !next.includes(m) && rng() < E.spread * fireMul())
+					if (
+						m.kind === 'tree' &&
+						m.amt > 0 &&
+						!e.burn.includes(m) &&
+						!next.includes(m) &&
+						rng() < E.spread * fireMul()
+					)
 						next.push(m);
 				});
 				bldsNear(n.x, n.y, 40, (b) => {
@@ -464,7 +470,14 @@ function startEvent(kind) {
 	if (EV[kind].start) EV[kind].start(e);
 	evmSet();
 	if (EV_TEXT[kind] && kind !== 'meteor' && kind !== 'mirage')
-		say(EV_TEXT[kind][1], E.harm ? 'warn' : E.gift ? 'good' : 'soft', 6, e.at || (e.units && e.units[0]) || null, null, EV_WHY[kind]); // only what can hurt you takes the line
+		say(
+			EV_TEXT[kind][1],
+			E.harm ? 'warn' : E.gift ? 'good' : 'soft',
+			6,
+			e.at || (e.units && e.units[0]) || null,
+			null,
+			EV_WHY[kind],
+		); // only what can hurt you takes the line
 }
 function endEvent() {
 	const e = G.ev.cur;
@@ -550,7 +563,8 @@ function wxWhy(wx, was, P, c) {
 		wet = precip(wx),
 		wasWet = precip(was);
 	if (wet && wasWet) return `the wet spell holds: ${pct(P[1])} each minute`;
-	if (wet) return `rain begins ${pct(P[0])} of dry minutes${wx === 'snow' ? '; below freezing it falls as snow' : wx === 'blizzard' ? '; a winter storm' : ''}`;
+	if (wet)
+		return `rain begins ${pct(P[0])} of dry minutes${wx === 'snow' ? '; below freezing it falls as snow' : wx === 'blizzard' ? '; a winter storm' : ''}`;
 	if (wx === 'frost') return `clear and the air at ${Math.round(c.T)} °C: frost`;
 	if (wx === 'drought') return `${c.dry} dry minutes in heat of ${Math.round(c.T)} °C`;
 	return wasWet ? `the rain stopped: ${pct(1 - P[1])} each wet minute` : 'a dry minute: the chain stays dry';
@@ -560,11 +574,17 @@ function skyTurn() {
 	// the next minute's sky from this one: the chain, then what falls from the air's temperature
 	const c = G.clim,
 		s = season().name,
-		P = hz('drought') && s === 'Summer' ? CLIMATE.hazard.drought : hz('winter') && s === 'Winter' ? CLIMATE.hazard.winter : CLIMATE.chain[s],
+		P =
+			hz('drought') && s === 'Summer'
+				? CLIMATE.hazard.drought
+				: hz('winter') && s === 'Winter'
+					? CLIMATE.hazard.winter
+					: CLIMATE.chain[s],
 		was = G.wx;
 	c.wet = c.next ?? rng() < P[c.wet ? 1 : 0]; // the minute's sky was rolled a minute ahead, so weather signs can tell it
 	c.next = rng() < P[c.wet ? 1 : 0];
-	if (fxv(0, 'forecast').a && c.next !== c.wet) say(c.next ? 'Signs of rain within the minute.' : 'Signs of a clearing sky.', 'soft', 6);
+	if (fxv(0, 'forecast').a && c.next !== c.wet)
+		say(c.next ? 'Signs of rain within the minute.' : 'Signs of a clearing sky.', 'soft', 6);
 	c.dry = c.wet ? 0 : c.dry + 1;
 	G.wx = c.wet
 		? c.T <= CLIMATE.snowAt
@@ -635,12 +655,16 @@ function rutHeal() {
 }
 const rutOf = (x, y) => CLIMATE.rut.deep * Math.min(1, rutsAt(x, y) / CLIMATE.rut.n0) ** 0.4;
 // mud at a place: the ground's mud, deeper by water (pooling) and by traffic (ruts)
-const mudAt = (at) => (at ? G.clim.mud * (NAV.shore[gcell(at.x, at.y)] ? CLIMATE.shore : 1) * (1 + rutOf(at.x, at.y)) : G.clim.mud);
+const mudAt = (at) =>
+	at ? G.clim.mud * (NAV.shore[gcell(at.x, at.y)] ? CLIMATE.shore : 1) * (1 + rutOf(at.x, at.y)) : G.clim.mud;
 // what the ground takes off a march for one side, at a place if given: Pandolf's terrain factor over dirt, as 1 / η, and the shorter stride on ice
 const groundSpd = (o, keys, at) => {
 	const c = G.clim;
 	return (
-		(1 / (1 + CLIMATE.terrain.mud * Math.min(1, mudAt(at)) * fxv(o, 'mud', keys).m + CLIMATE.terrain.snow * c.snow * (1 - fxv(o, 'snow', keys).a))) *
+		(1 /
+			(1 +
+				CLIMATE.terrain.mud * Math.min(1, mudAt(at)) * fxv(o, 'mud', keys).m +
+				CLIMATE.terrain.snow * c.snow * (1 - fxv(o, 'snow', keys).a))) *
 		(1 - CLIMATE.mu.stride * c.ice * (1 - fxv(o, 'ice', keys).a))
 	);
 };
@@ -654,12 +678,12 @@ const muOf = (at) => {
 	return c.ice * ice + (1 - c.ice) * snow;
 };
 // the chance of a slip in a check: a logistic step on what the step needs less what the ground offers (Hanson et al. 1999), only where there is ice to slip on
-const slipChance = (u, need) => (G.clim.ice <= 0 ? 0 : G.clim.ice / (1 + Math.exp(-(need - muOf(u)) / CLIMATE.mu.soft)));
+const slipChance = (u, need) =>
+	G.clim.ice <= 0 ? 0 : G.clim.ice / (1 + Math.exp(-(need - muOf(u)) / CLIMATE.mu.soft));
 // fire against the ground's wetness: Rothermel's damping η = 1 − 2.59r + 5.11r² − 3.52r³, r = M/Mx ≤ 1, as a share of a clear day's
 const rothermel = (r) => 1 - 2.59 * r + 5.11 * r * r - 3.52 * r * r * r;
 const fireMul = () => clamp(rothermel(Math.min(1, G.clim.W)) / rothermel(CLIMATE.eq.clear), 0, 2);
-const wearMul = (o) =>
-	G.wx === 'frost' || precip(G.wx) ? 1 - CLIMATE.wear * (1 - Math.min(1, fxv(o, 'wear').a)) : 1; // brittle in frost, rusted in rain
+const wearMul = (o) => (G.wx === 'frost' || precip(G.wx) ? 1 - CLIMATE.wear * (1 - Math.min(1, fxv(o, 'wear').a)) : 1); // brittle in frost, rusted in rain
 function newsTick() {
 	if (G.t - (G.ev.newsT || 0) < NEWS_EVERY || G.t < 60) return;
 	G.ev.newsT = G.t;

@@ -201,7 +201,8 @@ function deepTrees() {
 			const cx = Math.round(n.x / FOREST.step),
 				cy = Math.round(n.y / FOREST.step);
 			let m = 0;
-			for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if ((dx || dy) && cell.get(`${cx + dx},${cy + dy}`)) m++;
+			for (let dy = -1; dy <= 1; dy++)
+				for (let dx = -1; dx <= 1; dx++) if ((dx || dy) && cell.get(`${cx + dx},${cy + dy}`)) m++;
 			if (m >= 6) deep.add(n.id);
 		}
 	DEEP = { v: G.treeV, G, set: deep };
@@ -214,7 +215,15 @@ function shadowPath(sx, sy, h, r, z) {
 	ctx.moveTo(sx + r, sy);
 	if (SHADE.a < 0.02) return ctx.ellipse(sx, sy, r, r * TILT, 0, 0, 7);
 	const L = h * SHADE.len * z;
-	ctx.ellipse(sx + SHADE.x * L * 0.5, sy + SHADE.y * L * 0.5, L * 0.5 + r, Math.max(r * 0.55, r * TILT), SHADE.ang, 0, 7);
+	ctx.ellipse(
+		sx + SHADE.x * L * 0.5,
+		sy + SHADE.y * L * 0.5,
+		L * 0.5 + r,
+		Math.max(r * 0.55, r * TILT),
+		SHADE.ang,
+		0,
+		7,
+	);
 }
 function sunShadows(N, list, z, far) {
 	const lit = SHADE.a >= 0.02,
@@ -490,7 +499,12 @@ function sparkDraw() {
 	}
 }
 // Three translucent casts (warm dusk, blue night, the weather) laid one over another come to one colour: computed once a frame, painted once.
-const WX_TINT = { drought: [210, 160, 60, 0.1], rain: [20, 30, 50, 0.12], frost: [230, 240, 250, 0.14], snow: [230, 236, 246, 0.12] };
+const WX_TINT = {
+	drought: [210, 160, 60, 0.1],
+	rain: [20, 30, 50, 0.12],
+	frost: [230, 240, 250, 0.14],
+	snow: [230, 236, 246, 0.12],
+};
 const tintC = { k: '', s: '' };
 function tintOf(dusk, nt) {
 	let r = 0,
@@ -723,7 +737,8 @@ function drawUnit(u, s) {
 		),
 		k = (z * FIG) / s,
 		big = (LOOKBOX[U.look] || [26])[0];
-	for (const s of STANDARDS) flameShadow(sx, sy, (LOOKBOX[U.look] || [26, 30])[1] * FIG, big * 0.28 * z * FIG + 2, z, s.x, s.y, 'torch');
+	for (const s of STANDARDS)
+		flameShadow(sx, sy, (LOOKBOX[U.look] || [26, 30])[1] * FIG, big * 0.28 * z * FIG + 2, z, s.x, s.y, 'torch');
 	if (u.owner === 0 && G.sel !== 'all' && u.bn === G.sel) {
 		ctx.strokeStyle = '#ffd35e';
 		ctx.lineWidth = 1.4;
@@ -742,7 +757,14 @@ function drawUnit(u, s) {
 		ha = G.t - (u.hitT ?? -9),
 		near = (U.rng || 0) <= 20,
 		bob = moving && !still() ? Math.abs(Math.sin(pace * Math.PI)) * 1.2 * z : 0,
-		lunge = still() || ha > 0.3 ? 0 : near ? Math.sin((ha / 0.3) * Math.PI) * 2.6 * z : ha < 0.18 ? -1.3 * z * (1 - ha / 0.18) : 0,
+		lunge =
+			still() || ha > 0.3
+				? 0
+				: near
+					? Math.sin((ha / 0.3) * Math.PI) * 2.6 * z
+					: ha < 0.18
+						? -1.3 * z * (1 - ha / 0.18)
+						: 0,
 		bx = sx + face * lunge,
 		by = sy - bob;
 	stamp(c, bx, by, k * popC((G.t - (u.bornT ?? -9)) / 0.4), face < 0);

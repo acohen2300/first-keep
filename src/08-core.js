@@ -19,7 +19,23 @@ const afford = (p, c) => Object.entries(c || {}).every(([k, v]) => p.res[k] >= v
 // ledger of where it came from and went (p.ledger) and the gathered total. Build 58; before, 25 lines wrote p.res directly (Albert: one home).
 const LEDGER = {
 	in: ['gather', 'finds', 'trade', 'tithe', 'tribute', 'ransom', 'market', 'loot', 'mint', 'venture', 'tax'],
-	out: ['units', 'buildings', 'research', 'upkeep', 'shops', 'spoiled', 'trade', 'tribute', 'ransom', 'market', 'tax', 'venture', 'zeal', 'repairs', 'loot'],
+	out: [
+		'units',
+		'buildings',
+		'research',
+		'upkeep',
+		'shops',
+		'spoiled',
+		'trade',
+		'tribute',
+		'ransom',
+		'market',
+		'tax',
+		'venture',
+		'zeal',
+		'repairs',
+		'loot',
+	],
 };
 function earn(p, k, amt, why, counts = true) {
 	if (!(amt > 0)) return 0;
@@ -322,7 +338,10 @@ const cycle = (key, a, n) => {
 const temperOf = (u) => (u.owner === 0 ? (G.temper[u.bn ?? BNS] ?? T_GUARD) : T_GUARD);
 const kiteOf = (u) =>
 	!!UNIT[u.kind].kite ||
-	(!!G.P[u.owner] && G.P[u.owner].techs.has('engage') && (UNIT[u.kind].tags || []).includes('ranged') && temperOf(u) !== T_PRESS); // shooters step back unless they press
+	(!!G.P[u.owner] &&
+		G.P[u.owner].techs.has('engage') &&
+		(UNIT[u.kind].tags || []).includes('ranged') &&
+		temperOf(u) !== T_PRESS); // shooters step back unless they press
 // Battalions, once Command is researched: each holds what you set for it, by type; members stay put, gaps fill from the rest, the rest are the reserve
 function rebattalion() {
 	const S = armyOf(0).filter((u) => u.kind !== 'spy');
@@ -358,7 +377,11 @@ const season = () => SEASONS[Math.floor(G.t / SEASON_LEN) % 4];
 // Meeus 13.5, 13.6 in another form), at the land's latitude
 const skyVec = (d, H) => {
 	const p = (CLIMATE.lat * Math.PI) / 180;
-	return { e: -Math.cos(d) * Math.sin(H), n: Math.sin(d) * Math.cos(p) - Math.cos(d) * Math.cos(H) * Math.sin(p), z: Math.sin(p) * Math.sin(d) + Math.cos(p) * Math.cos(d) * Math.cos(H) };
+	return {
+		e: -Math.cos(d) * Math.sin(H),
+		n: Math.sin(d) * Math.cos(p) - Math.cos(d) * Math.cos(H) * Math.sin(p),
+		z: Math.sin(p) * Math.sin(d) + Math.cos(p) * Math.cos(d) * Math.cos(H),
+	};
 };
 const sunDecl = (N) => ((-23.44 * Math.PI) / 180) * Math.cos((2 * Math.PI * (N + 10)) / 365); // the sun's declination on day N (the standard approximation)
 const dayN = (t) => CLIMATE.equinox + (((Math.floor(t / DAY_LEN) * DAY_LEN) % YEAR) / YEAR) * 365; // the day of the real year, held through a game day (six a year: each spans two real months)
@@ -368,7 +391,11 @@ const sunAlt = (t = G.t) => sunAltAt(dayN(t), (t % DAY_LEN) / DAY_LEN);
 const sunVec = (t = G.t) => skyVec(sunDecl(dayN(t)), hourH((t % DAY_LEN) / DAY_LEN));
 // the moon's place, to first order (design, said in SCIENCE.md): it runs ahead of the sun by its phase (a full moon rises at sunset) on a
 // declination that swings from the sun's at new to its opposite at full
-const moonVec = (t = G.t) => skyVec(sunDecl(dayN(t)) * Math.cos(2 * Math.PI * moonPhase(t)), hourH((t % DAY_LEN) / DAY_LEN) + 2 * Math.PI * moonPhase(t));
+const moonVec = (t = G.t) =>
+	skyVec(
+		sunDecl(dayN(t)) * Math.cos(2 * Math.PI * moonPhase(t)),
+		hourH((t % DAY_LEN) / DAY_LEN) + 2 * Math.PI * moonPhase(t),
+	);
 const nightOf = (alt) => clamp(-alt / 12, 0, 1); // 0 with the sun up, 1 from nautical twilight on
 const nightness = () => nightOf(sunAlt());
 const moonPhase = (t = G.t) => (t / DAY_LEN / SYNODIC) % 1; // 0 new, 0.5 full
@@ -527,18 +554,33 @@ const rangeOf = (o, kind) => rangeFrom(BLD[kind].bow, BLD[kind].h) + (o === WILD
 const spySeen = (o, from) => UNIT.spy.stealth[from.q ? 1 : 0] + (from.q && o !== WILD ? fxv(o, 'spysight').a : 0);
 const lookout = (kind) => Math.round(LOOKOUT.base + LOOKOUT.k * Math.sqrt(BLD[kind].h || 0)); // how far a building sees, from its height
 const sightClear = (e) =>
-	((UNIT[e.kind] ? (e.owner !== undefined && e.owner !== WILD && e.owner !== null ? stats(e.owner, e.kind).sight : UNIT[e.kind].sight) || 100 : lookout(e.kind)) + // a tier can add sight (the mounted scout)
+	((UNIT[e.kind]
+		? (e.owner !== undefined && e.owner !== WILD && e.owner !== null
+				? stats(e.owner, e.kind).sight
+				: UNIT[e.kind].sight) || 100
+		: lookout(e.kind)) + // a tier can add sight (the mounted scout)
 		(e.owner !== undefined && e.owner !== WILD && e.owner !== null
 			? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]).a
 			: 0)) *
-	(1 - (1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) * G.night * (UNIT[e.kind] || e.owner === WILD ? 1 : 1 - fxv(e.owner, 'lamp', bldKeys(e.kind)).a)) * // lanterns give a building back part of its night sight
+	(1 -
+		(1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) *
+			G.night *
+			(UNIT[e.kind] || e.owner === WILD ? 1 : 1 - fxv(e.owner, 'lamp', bldKeys(e.kind)).a)) * // lanterns give a building back part of its night sight
 	EVM.sight; // night, the moon, an eclipse
 // in fog, snow or a blizzard nobody sees past the visibility, a tower no farther than a man (Build 61; before, a factor that let a tower see twice as far in fog as a man)
-const visCap = () => Math.min(WEATHER[G.wx].vis ?? Infinity, G.ev && G.ev.cur && EVENTS[G.ev.cur.kind].vis ? EVENTS[G.ev.cur.kind].vis : Infinity);
+const visCap = () =>
+	Math.min(
+		WEATHER[G.wx].vis ?? Infinity,
+		G.ev && G.ev.cur && EVENTS[G.ev.cur.kind].vis ? EVENTS[G.ev.cur.kind].vis : Infinity,
+	);
 const sightOf = (e) => Math.min(sightClear(e), visCap());
 const carryOf = (o) => CARRY + fxv(o, 'carry').a;
 function gatherMul(o, n) {
-	let m = fxv(o, 'gather', [n.type, n.kind]).m * EVM.gather * (WEATHER[G.wx].gather || 1) * (season().name === 'Winter' ? 1 + fxv(o, 'warm').a : 1); // warm homes: better winter work
+	let m =
+		fxv(o, 'gather', [n.type, n.kind]).m *
+		EVM.gather *
+		(WEATHER[G.wx].gather || 1) *
+		(season().name === 'Winter' ? 1 + fxv(o, 'warm').a : 1); // warm homes: better winter work
 	if (n.kind === 'farm') {
 		m *= fxv(o, 'crop', [n.type]).m;
 		if (n.type === 'food') {

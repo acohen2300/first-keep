@@ -50,7 +50,15 @@ const MIGRATE = {
 	}, // Build 45: Shape and Temper replace stance, formation and hold ground
 	32: (S) => {
 		const g = S.ground || {};
-		S.clim = { T: CLIMATE.mean, W: Math.max(CLIMATE.eq.clear, g.mud || 0), snow: g.snow || 0, ice: g.ice || 0, mud: g.mud || 0, wet: S.wx === 'rain', dry: 0 };
+		S.clim = {
+			T: CLIMATE.mean,
+			W: Math.max(CLIMATE.eq.clear, g.mud || 0),
+			snow: g.snow || 0,
+			ice: g.ice || 0,
+			mud: g.mud || 0,
+			wet: S.wx === 'rain',
+			dry: 0,
+		};
 		delete S.ground;
 		S.v = 33;
 		return S;
@@ -67,7 +75,16 @@ const MIGRATE = {
 	35: (S) => {
 		for (const b of S.blds || [])
 			for (const j of b.q || [])
-				if (!j.paid) j.paid = j.kind ? UNIT[j.kind].cost : j.tech ? TECHBY[j.tech].cost : j.age ? AGES[j.age].cost : j.muster ? Object.entries(j.muster).reduce((c, [k, n]) => addRes(c, UNIT[k].cost, 2 * n), {}) : {};
+				if (!j.paid)
+					j.paid = j.kind
+						? UNIT[j.kind].cost
+						: j.tech
+							? TECHBY[j.tech].cost
+							: j.age
+								? AGES[j.age].cost
+								: j.muster
+									? Object.entries(j.muster).reduce((c, [k, n]) => addRes(c, UNIT[k].cost, 2 * n), {})
+									: {};
 		S.v = 36;
 		return S;
 	}, // Build 60: every order keeps what it paid, so a cancel gives back exactly that; an order saved before is taken at its list price
@@ -192,7 +209,8 @@ function saveGame(force) {
 			hz: G.hz || {},
 			ev: evSave(),
 			fog: btoa(String.fromCharCode(...G.fog)),
-			tread: G.tread && G.tread.some(Boolean) ? btoa(String.fromCharCode(...new Uint8Array(G.tread.buffer))) : undefined, // the ruts (Build 62)
+			tread:
+				G.tread && G.tread.some(Boolean) ? btoa(String.fromCharCode(...new Uint8Array(G.tread.buffer))) : undefined, // the ruts (Build 62)
 			seenB: Object.keys(G.seenB).map(Number),
 			horde: G.horde,
 			flood: G.flood,

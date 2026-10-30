@@ -293,7 +293,15 @@ function draw() {
 			e = take ? N[i++] : list[j][2],
 			t = take ? 0 : list[j++][1];
 		try {
-			t === 0 ? drawNode(e, sB) : t === 1 ? drawBld(e, sB) : t === 2 ? drawUnit(e, sU) : t === 4 ? drawFallen(e, sU) : drawFind(e);
+			t === 0
+				? drawNode(e, sB)
+				: t === 1
+					? drawBld(e, sB)
+					: t === 2
+						? drawUnit(e, sU)
+						: t === 4
+							? drawFallen(e, sU)
+							: drawFind(e);
 		} catch (er) {
 			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 			ctx.globalAlpha = 1;

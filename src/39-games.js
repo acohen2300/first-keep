@@ -37,7 +37,9 @@ const livingSides = () => G.P.filter((p) => p.alive && p.id !== WILD);
 // a board truce: no two living courts at war, and no notice running
 function truceAll() {
 	const L = livingSides();
-	for (const a of L) for (const b of L) if (a.id < b.id && (atWar(a.id, b.id) || noticeLeft(a.id, b.id) || noticeLeft(b.id, a.id))) return false;
+	for (const a of L)
+		for (const b of L)
+			if (a.id < b.id && (atWar(a.id, b.id) || noticeLeft(a.id, b.id) || noticeLeft(b.id, a.id))) return false;
 	return true;
 }
 const truceFor = () => (G.truce === null ? 0 : G.t - G.truce); // seconds the whole board has been at peace
@@ -128,7 +130,12 @@ function holdGames() {
 	G.gamesN = (G.gamesN || 0) + 1;
 	const mine = won.filter((w) => w.startsWith('you')).length;
 	chron(`The Games at the Throne: ${won.join(', ')}.`);
-	say(`The Games: ${mine ? mine + (mine === 1 ? ' laurel' : ' laurels') + ' for you' : 'no laurel for you'}.`, mine ? 'good' : 'soft', 8, { x: MID, y: MID });
+	say(
+		`The Games: ${mine ? mine + (mine === 1 ? ' laurel' : ' laurels') + ' for you' : 'no laurel for you'}.`,
+		mine ? 'good' : 'soft',
+		8,
+		{ x: MID, y: MID },
+	);
 	celebrate(3, MID, MID);
 	if (mine) sfx('age');
 }
@@ -140,8 +147,15 @@ function crownsOf() {
 			war: (p) => p.kills || 0,
 			wellbeing: (p) =>
 				Math.round(
-					(p.alive ? G.units.filter((u) => u.owner === p.id && UNIT[u.kind].cls === 'civ').length * PEACE.crown.people * (p.health / 100) : 0) +
-						(p.alive ? G.blds.filter((b) => b.owner === p.id && b.hp > 0 && b.prog >= 1 && CARE.includes(b.kind)).length * PEACE.crown.bld : 0) +
+					(p.alive
+						? G.units.filter((u) => u.owner === p.id && UNIT[u.kind].cls === 'civ').length *
+							PEACE.crown.people *
+							(p.health / 100)
+						: 0) +
+						(p.alive
+							? G.blds.filter((b) => b.owner === p.id && b.hp > 0 && b.prog >= 1 && CARE.includes(b.kind)).length *
+								PEACE.crown.bld
+							: 0) +
 						(p.laurels || 0) * PEACE.crown.laurel,
 				),
 		},
@@ -153,7 +167,9 @@ function crownsOf() {
 		out[c] = R;
 	}
 	scoreAll();
-	out.overall = L.map((p) => ({ id: p.id, v: pts[p.id], tie: p.score.total })).sort((a, b) => b.v - a.v || b.tie - a.tie);
+	out.overall = L.map((p) => ({ id: p.id, v: pts[p.id], tie: p.score.total })).sort(
+		(a, b) => b.v - a.v || b.tie - a.tie,
+	);
 	return out;
 }
 const CROWN_NAME = { wealth: 'Wealth', war: 'War', wellbeing: 'Wellbeing' };
@@ -177,7 +193,11 @@ function enlightenTick(o) {
 	const last = TECH.filter((t) => t.age === 5 && !t.civ);
 	if (!last.every((t) => G.P[o].techs.has(t.id))) return;
 	chron(`${o === 0 ? 'You' : G.P[o].name} finished the ${AGES[5].name}.`);
-	finish(true, `${o === 0 ? 'You' : G.P[o].name} finished the ${AGES[5].name}. Everyone wins; the crowns say who won what.`, true);
+	finish(
+		true,
+		`${o === 0 ? 'You' : G.P[o].name} finished the ${AGES[5].name}. Everyone wins; the crowns say who won what.`,
+		true,
+	);
 }
 // a personality chases its crown: the war chaser breaks truces, the wealth chaser trades, the wellbeing chaser builds care; under a board truce only the war chaser declares
 function chaseCrown(p, put) {

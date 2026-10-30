@@ -1,16 +1,16 @@
-# First Keep: handoff (Oct 30, 2026, afternoon; Build 62 on the preview)
+# First Keep: handoff (Oct 30, 2026, afternoon; Build 63 on the preview)
 
 Read in this order: this file, then `RULES.md` (how the game is built and how to work with Albert), then `SCIENCE.md` (every real-world number and its source), then `CUTS.md` (every change, per build, with measurements), then `AUDIT-62.md` (the Oct 30 audit: measurements, the group tables, game theory, and the questions Albert should ask). The handoff before Oct 29 is kept whole in `docs/HANDOFF-to-oct29.md`; its build notes (40 to 52) are history, this file is current.
 
 ## What it is
 Albert's single-file HTML mobile real-time strategy game, Age of Empires style, grounded in real history, science and math. Albert (Albert Labs) is not a coder; he designs, decides and tests on his phone.
 - **Live:** https://acohen2300.github.io/first-keep (`index.html`): untouched since the Build 44 era. Live changes only on Albert's word.
-- **Preview:** https://acohen2300.github.io/first-keep/preview/ : Build 62. It keeps its own save (`firstkeep.preview.*`), apart from the live game's.
+- **Preview:** https://acohen2300.github.io/first-keep/preview/ : Build 63. It keeps its own save (`firstkeep.preview.*`), apart from the live game's.
 - **Repo:** https://github.com/acohen2300/first-keep, branch `main`, public. Pages deploys a minute or two after a push.
 - **Commits:** as `Albert <acohen2300@users.noreply.github.com>` (never his Gmail; the repo is public), with the session's `Co-Authored-By` and `Claude-Session` trailers (`publish.py` takes them from the `TRAILER` environment variable).
 
 ## Where things stand (one paragraph)
-The game has three ways to end (conquest, holding the Throne, finishing the Enlightenment) and three crowns that name a winner on each path (Wealth, War, Wellbeing), plus an overall. The world runs on established models: a real sun and moon, a Markov sky, a temperature and wetness climate, Rothermel fire, Pandolf walking, SIR sickness, logistic flocks, projectile range from height, the forager's rate for villagers, the attack-value rule for soldiers, a demand curve for the market, first-order spoilage, Poisson random events. Build 59 fixed the computers' stall in the Classical age (five logic errors, found by probing). The open problem: the computers reach Medieval in 18 of 48 sides by 40 minutes and do not yet reach the end of the peace path on their own.
+The game has three ways to end (conquest, holding the Throne, finishing the Enlightenment) and three crowns that name a winner on each path (Wealth, War, Wellbeing), plus an overall. The world runs on established models: a real sun and moon, a Markov sky, a temperature and wetness climate, Rothermel fire, Pandolf walking, SIR sickness, logistic flocks, projectile range from height, the forager's rate for villagers, the attack-value rule for soldiers, a demand curve for the market, first-order spoilage, Poisson random events. Build 59 fixed the computers' stall in the Classical age (five logic errors, found by probing). The open problem: the computers reach Medieval in 21 of 48 sides by 40 minutes (Build 63) and do not yet reach the end of the peace path on their own.
 
 ## Oct 29: what we did (Builds 48 to 59, all on the preview; CUTS.md has every detail and measurement)
 | Build | What |
@@ -28,22 +28,23 @@ The game has three ways to end (conquest, holding the Throne, finishing the Enli
 | 58 | One home for every coin (`earn`, `spend`, the ledger); net-flow colours; selection sounds; the scout on foot; why-lines; 15-minute mode; three scenarios; the square law in one place; the history batch with `tests/history.py`. |
 | 60 | The audit: refunds give back what was paid, limits in every age, the Anatomy loop, the shop trap, one shepherd a flock, stand down, spies, the Encyclopedie, the side doors, fog that holds (radar, alerts, odds, villagers), fog chosen at the start, the preview's own save, the card title pinned, `tests/tables.py`. |
 | 59 | The forager rule for villagers (with crowding); attack-value targeting; news by sight, hearing and messenger (the Post line); the market demand curve; spoilage; five computer fixes; controls by age; figures 0.66; tap counts; the button budget; save size and frame time measured. |
+| 63 (Oct 30) | Albert's third list and three outside audits: the one row (six slots, three shapes, five pages cycled by the one chip, tints by page, ✓/✕ in the sixth slot, ETA and pace before Go, the crosshair by colour, Orders for recruits, the Squad builder with ★ best, Build hot keys, intents); the map tap as muscle memory (sword, then All, under the thumb); cards in three sizes with the header line, rows that never jump, the Build menu as pictures with pins, the small worker card, the Stores drill-down both ways, the turtle plan, the bonuses named, Setup explained; one population (homes only; the aqueduct a water work; queues make what is asked); the audits' five bugs (group power, the tree finished, hostile gates as walls, stand down, stale plunder) and three small ones; milestones that teach; clearance on three sides, lanes round buildings, animals that slide along walls; frames drawn between steps; the save kept twice with a migration test; the map in five layers with the turtle measure of fairness; alignment guides with a light pull. |
 | 62 (Oct 30) | The equations: one home for the first-order lag and logistic growth; nerve on Dupuy's break point with exponential recovery; flanks by the line, not the figure; wounds as a lag; loyalty on the lag; the ground as one chain (snow at 1 °C, degree-day melt, Stefan ice, water conserved, traction by friction, ruts by traffic in one map); sound by ISO 9613-2; the camera on a critically damped spring; Briggs plume; the crew law cited. The lean pass: the old buildings on the one light, `freeVil`, one draw budget with a way back, the dock CSS and the second traffic map gone. Optimization: every sun shadow one path, the badge and the piles cached (measured). `AUDIT-62.md`. |
 | 61 (Oct 30) | Albert's second list after his first full games: land workers stay put and wild workers move only within sight; no auto-hunting on your side; Replant (half cost, stumps); keep placing; Stop, Dismiss, Stop all, Idle to me; open yards (Workshop, Foundry); the Jobs row's three pages (Jobs, Squad room, War room: four squads, missions with a promised time; the Huddle and the dock gone, half/quarter/nearest cut); the map tap's 👤 / ⚔; the Market card rebuilt; built-out kinds dim with ✓; tree shadows from the sun; fire as t² and the view factor; sight blocked by woods and capped by Koschmieder in fog and snow; more room at the start; the water blended; concept III art for fourteen buildings with one light and a plot family; the build grid; save v37. New rule: use the recognised real-world equation where one fits, flag it where it cannot. |
 
 Also on Oct 29, decided in talk: the three mockups (31 army merge, 32 controls by age, 36 bigger figures; pictures in `mockups/`); the pricing direction; merging the small research steps killed (Albert: "I like tech"); the talk list folded into the to-do list.
 
 ## The harness, before and after (12 seeds, 40 minutes, the computers in all four seats)
-| | Build 47 | Build 58 | Build 59 | Build 61 | Build 62 |
-|---|---|---|---|---|---|
-| Bronze age (median) | about 7 min | 7.2 min | 4.9 min | 4.6 min | 4.4 min |
-| Classical age | 19 min | 19.6 min, 28 of 48 sides | 10.0 min, 46 of 48 | 8.8 min, 48 of 48 | 8.6 min, 48 of 48 |
-| Medieval age | 2 of 80 sides (45 min) | 0 of 48 | 18 of 48, median 29.6 min | 30 of 48, median 21.1 min; Gunpowder 3 of 48 | 27 of 48, median 21.7 min; Gunpowder 3 of 48 |
-| Hidden age opened | | 0 of 12 games | 2 of 12 | 1 of 12 | 1 of 12 |
-| Blocked villager-seconds a game (median) | about 186 | 206 | 85 | 222 (seed 4 probed: lower than 60) | 134.5 |
-| Sides that fell | | 6 of 48 | 0 of 48 | 0 of 48 | 0 of 48 |
-| Fortress seat wins | 12 of 20 | 7 of 12 | 7 of 12 | 4 of 12 | 6 of 12 |
-Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`, `-60.json`, `-61.json`, `-62.json`. Build 61's villager rules moved the computers' play: more sides reach Medieval, three reach Gunpowder; the blocked count rose at the median and fell on the one seed probed (CUTS, Build 61). Build 60 played every harness game identically to 59 (computers only, fog off): its fixes act on your side, the fog and later ages. The Fortress winning most is accepted as fair (Albert: "mind your own business and do the right thing and likely win. Like life.").
+| | Build 47 | Build 58 | Build 59 | Build 61 | Build 62 | Build 63 |
+|---|---|---|---|---|---|---|
+| Bronze age (median) | about 7 min | 7.2 min | 4.9 min | 4.6 min | 4.4 min | 4.5 min |
+| Classical age | 19 min | 19.6 min, 28 of 48 sides | 10.0 min, 46 of 48 | 8.8 min, 48 of 48 | 8.6 min, 48 of 48 | 8.8 min, 46 of 48 |
+| Medieval age | 2 of 80 sides (45 min) | 0 of 48 | 18 of 48, median 29.6 min | 30 of 48, median 21.1 min; Gunpowder 3 of 48 | 27 of 48, median 21.7 min; Gunpowder 3 of 48 | 21 of 48, median 19.5 min; Gunpowder 2 of 48 |
+| Hidden age opened | | 0 of 12 games | 2 of 12 | 1 of 12 | 1 of 12 | 1 of 12 |
+| Blocked villager-seconds a game (median) | about 186 | 206 | 85 | 222 (seed 4 probed: lower than 60) | 134.5 | 178.5 |
+| Sides that fell | | 6 of 48 | 0 of 48 | 0 of 48 | 0 of 48 | 1 of 48 |
+| Fortress seat wins | 12 of 20 | 7 of 12 | 7 of 12 | 4 of 12 | 6 of 12 | 1 of 12 (Aggressive 4, Balanced 4 and 3) |
+Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`, `-60.json`, `-61.json`, `-62.json`, `-63.json`. Build 63's swing (the Fortress 6 → 1, the war crown to the Aggressive seat 11 of 12, two sides short of Classical) follows the rules Albert changed on purpose (one population, targets by the group, the lane round every building); flagged, not tuned (CUTS.md, Build 63). Build 61's villager rules moved the computers' play: more sides reach Medieval, three reach Gunpowder; the blocked count rose at the median and fell on the one seed probed (CUTS, Build 61). Build 60 played every harness game identically to 59 (computers only, fog off): its fixes act on your side, the fog and later ages. The Fortress winning most is accepted as fair (Albert: "mind your own business and do the right thing and likely win. Like life.").
 
 ## Repo layout
 - `src/` joined in name order by `build.py` into `first-keep.html`; `wrap.py` writes `native/index.html` (the App Store wrapper); `publish.py [--preview] "message"` runs the gate, then commits and pushes. `preview/` is the preview copy.
@@ -64,7 +65,7 @@ Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`, `-60.json`, `-61.j
 - `python3 tests/econ.py [--live]`: the economy alone.
 
 ## To do (agreed with Albert; each still gets a list and his double yes before building)
-1. **Milestones**: Albert's idea, to define with him. Remind him.
+1. **Milestones**: built (Build 63, fourteen moments). To extend with Albert: which moments, and whether a milestone should open the Guide page rather than the card.
 2. **Home Screen and end screen**: after a match, a page to see what happened: the crowns, timeline charts (score, army, gathering by the minute), the chronicle that jumps the map to each moment, comparison with past games on the phone; then best-moment ghost replays; full replays later (native). Mockup first.
 3. **The Games as a stadium**: the Throne island at night from above, floodlights from the light system, a green oval, four champions racing, a crowd in court colours. Albert: "a football stadium at night, from a helicopter". Mockup first.
 4. **Merge the two army systems** (mockup 31): one Army row, one set of names, the dock gone.
@@ -73,18 +74,24 @@ Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`, `-60.json`, `-61.j
 7. **Pricing (decided direction)**: free, with one or two paid unlocks, a subscription possible, never pay to win. Build when the game goes native.
 8. **Core direction review**: after Build 59 (now).
 9. **Why the computers' caravans die so often**: one computer rebuilt 20 in fifteen minutes; find the cause before more trade work.
-10. **The computers past Medieval**: 30 of 48 sides reach it by 40 minutes (Build 61); probe what holds them next (`tests/probe.py`), one cause at a time.
+10. **The computers past Medieval**: 21 of 48 sides reach it by 40 minutes (Build 63; 30 in Build 61); probe what holds them next (`tests/probe.py`), one cause at a time.
 11. **Blocked villagers** (Build 61): the harness median doubled (107 → 222 villager-seconds) while seed 4 fell; probe the seats with the high totals before any rule moves.
 12. **Game theory for the computers' decisions** (Albert, Oct 30; `AUDIT-62.md` §7): tit-for-tat diplomacy (Axelrod), the Nash bargain for the price of peace, Cournot selling at the Market, the truce as an equilibrium, tower placement as p-median. In that order. Needs its list and the double yes.
 13. **The group merges** (`AUDIT-62.md` §4): three text sizes (the CSS has seven; 13px, the most used, is not in the rule), every colour used twice a token (95 hand-written), three radii, one gap, one tracking for uppercase. A list of about 150 places; the gate measures contrast and taps, a screenshot judges sameness.
 14. **Minification and woff2**: a name-keeping minifier would take about 35% of the shipped file (comments and indentation are 20% of the source); woff2 a third of the fonts. Both need a decision (stack traces by column) and a network with the registries.
 15. **A frozen crossing**: the ice thickness exists (Stefan); letting people cross the lake in winter is a rule change for the Fortress's wall. Its own list.
 16. **From the audit, small and listed**: the two stray toast kinds; the War room's aim words off the map; the chip pulsing once when the row first has a soldier; the first card after Setup; the end screen worth the game (to-do 2).
+17. **The Build page as a Town Hall bar** (Albert, on the Build 63 mockup: "Build should maybe become like a Town Hall bar instead with just important stuff. We can review later"): the hot keys are built as agreed; the bar is his to define.
+18. **The Library's tech view** (Albert's item 24: "In library you can do the tech in a different format. We talk more later re this").
+19. **A civilian emergency / group-control page** (Albert: "not overkill though"): held until the row has been played.
+20. **The one row on his phone**: the five pages, the tints, the chip's icon, the ✓/✕ slot, the ETA line, the crosshair colours; the pin on the Build card; the frames between steps (smooth or not); the first sky (frost or snow at the start is the model's: day 80, night).
+21. **The map layers**: whether the first sky should stay or the game should open clear (a one-line change in `newGame`); whether the lane round every building is too strict for the computers' towns (the harness after Build 63 says).
 
 ## Up in the air (open, not yet on the to-do list)
 - **Albert's phone test** of Build 62 on his own phone: the camera glide (Follow, Home, the small map), ice on a thaw-freeze morning, ruts on the lanes in rain, the sound falling off by distance, the frame rate with the shadows in one path; then of Build 61: the three pages of the Jobs row and the squad flow, the map tap, Replant by tap, the new art at his zoom, and the frame rate with tree shadows (measured only headless here: 9.7–12.3 ms a frame either way, noise).
 - **Albert's calls from Build 61**: built-out kinds dim with ✓ rather than tint red (his words were red); the Warehouse / Stores view (27) parked; the computers still hunt on their own (they have no finger).
 - **Sight**: woods block the line of sight, buildings do not; the Koschmieder values are design (no metre in the game).
+- **Room**: the aqueduct lost its 15 room in Build 63 (apartments carry it); the computers' towns may feel it. The computers still hunt on their own.
 - **Score and transfers**: tribute, ransom, tax and loot count as wealth for the side that receives them, and nothing comes off the payer's. A question for Albert (from the audit).
 - **Your villagers under fog work only what you have found** (Build 60): measured a cost when nobody scouts (gathered at 10 minutes down on two of three seeds). Albert to judge in play; one line to undo.
 - **The catch-up cap** drops game time on a slow phone at top speed: measure on the phone before changing.
@@ -94,7 +101,7 @@ Raw results: `tests/balance-57.json`, `-58.json`, `-59.json`, `-60.json`, `-61.j
 - **Gunpowder balance** is still a first guess.
 - **The Maurya** won none of the harness games again (4 plays a run: small sample).
 - **Native only:** items 49 and 50 of the Oct 29 list.
-- **Idea backlog** (ask first): biomes, interpolation, optional Auto jobs, "Add another conquest" step-up, slower first raid; the parked list at the end of CUTS.md.
+- **Idea backlog** (ask first): biomes, optional Auto jobs, "Add another conquest" step-up, slower first raid; the parked list at the end of CUTS.md.
 - **Market elasticity numbers** are labelled "cited", not "verified": the source page could not be opened this session.
 
 ## Decisions on record (Oct 29)

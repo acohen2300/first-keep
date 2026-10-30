@@ -114,9 +114,29 @@ function hiss(dur, vol, fq, q, fq2, at) {
 // each mode of a struck bar dies with a time constant of tau / f seconds, so wood is gone in a blink, stone is short and dull, metal rings on.
 // The modes of a free bar sit at 1 : 2.756 : 5.404 (Rossing). One knock() makes every blow, chop, pick and clink from this table.
 const MAT = {
-	wood: { tau: 3.2, modes: [[1, 1], [2.756, 0.25]] },
-	stone: { tau: 12, modes: [[1, 1], [2.756, 0.35], [5.404, 0.12]] },
-	metal: { tau: 447, modes: [[1, 1], [2.756, 0.5], [5.404, 0.3]] },
+	wood: {
+		tau: 3.2,
+		modes: [
+			[1, 1],
+			[2.756, 0.25],
+		],
+	},
+	stone: {
+		tau: 12,
+		modes: [
+			[1, 1],
+			[2.756, 0.35],
+			[5.404, 0.12],
+		],
+	},
+	metal: {
+		tau: 447,
+		modes: [
+			[1, 1],
+			[2.756, 0.5],
+			[5.404, 0.3],
+		],
+	},
 };
 function knock(mat, f, vol, at = 0, snap = 1) {
 	const M = MAT[mat];
@@ -350,7 +370,14 @@ const chanVol = (name) => SET.mix[CHAN[name] || 'fx'];
 const VOICES = { max: 14, keep: { alert: 0, fx: 2, amb: 5 } };
 function sfx(name, x, y) {
 	if (HAPTIC[name] && (x === undefined || onScreen(x, y))) feel(HAPTIC[name]);
-	if (!SND.on || !AC || AC.state !== 'running' || document.hidden || voices > VOICES.max - VOICES.keep[CHAN[name] || 'fx']) return;
+	if (
+		!SND.on ||
+		!AC ||
+		AC.state !== 'running' ||
+		document.hidden ||
+		voices > VOICES.max - VOICES.keep[CHAN[name] || 'fx']
+	)
+		return;
 	const S = SFX[name];
 	if (!S) return;
 	const now = AC.currentTime;

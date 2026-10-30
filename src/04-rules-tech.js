@@ -1886,9 +1886,7 @@ const TECH = [
 		when: '1500s',
 		cost: { g: 390, i: 260 },
 		t: 66,
-		fx: [
-			{ s: 'garrison', m: 2 },
-		],
+		fx: [{ s: 'garrison', m: 2 }],
 		need: ['hospitals'],
 		desc: 'Soldiers resting by a Castle, Barracks or Town Center heal twice as fast.',
 	},

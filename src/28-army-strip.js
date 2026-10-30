@@ -116,7 +116,8 @@ function sendPick(from, to) {
 	return free();
 }
 // the villagers standing at a spot you sent them to
-const postedAt = (to) => unitsOf(0, 'vil').filter((u) => !u.job && u.post && hyp(u.post.x - to.x, u.post.y - to.y) < 40);
+const postedAt = (to) =>
+	unitsOf(0, 'vil').filter((u) => !u.job && u.post && hyp(u.post.x - to.x, u.post.y - to.y) < 40);
 // A tap on open ground (Build 61, Albert): two choices, people or sword. The sword: Idle, All, or a squad. The people: build here, send the idle
 // here, or dial how many workers stand here. One gesture, no half, no quarter. Three dots: more about the place. Cross: away.
 function showStrip(sx, sy, x, y, step) {
@@ -149,7 +150,6 @@ function showStrip(sx, sy, x, y, step) {
 	} else {
 		const idle = unitsOf(0, 'vil').filter((u) => freeVil(u) && !postedAt(to).includes(u)).length,
 			here = postedAt(to).length,
-			p = G.P[0],
 			pop = unitsOf(0, 'vil').length;
 		el.innerHTML =
 			btn('train:vil', `+ Villager`, `${pop}/${capOf(0)} · ${costText(unitCost(0, 'vil'))}`, 'people thumb') + // the People tile, pasted in (Albert, Build 63)
@@ -237,7 +237,9 @@ const dialBtns = (a) => {
 		sh = dialOf('form', a);
 	return (
 		btn(`temper:${a}`, 'Temper: ' + (tm < 0 ? 'mixed' : TEMPER[tm].name), '', tm >= 0 && tm !== T_GUARD ? 'on' : '') +
-		(G.P[0].techs.has('formations') ? btn(`shape:${a}`, 'Shape: ' + (sh < 0 ? 'mixed' : FORM[sh].name), '', sh > 0 ? 'on' : '') : '')
+		(G.P[0].techs.has('formations')
+			? btn(`shape:${a}`, 'Shape: ' + (sh < 0 ? 'mixed' : FORM[sh].name), '', sh > 0 ? 'on' : '')
+			: '')
 	);
 };
 // ── the War Council: six battalions, what each holds by type, its shape and temper

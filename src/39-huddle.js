@@ -22,9 +22,20 @@ const HUD = {
 };
 const PAGES = ['jobs', 'war', 'build', 'squad', 'train'];
 const pageName = { jobs: 'Jobs', war: 'War', build: 'Build', squad: 'Squad', train: 'Train' };
-const pageIcon = () => ({ jobs: ICON.list, war: ICON.sword, build: ICON.hammer, squad: ICON.squad, train: ICON.shield });
+const pageIcon = () => ({
+	jobs: ICON.list,
+	war: ICON.sword,
+	build: ICON.hammer,
+	squad: ICON.squad,
+	train: ICON.shield,
+});
 const FAV0 = ['house', 'farm', 'barracks', 'tower', 'wall']; // the Build page's five hot keys until you pin your own (★ on the Build card)
-const shortName = (k) => stats(0, k).name.replace(/^[A-Z][a-z]+ (?=[A-Z])/, '').split(' ')[0].replace(/m[ae]n$/, '').slice(0, 7); // one short word on a tile: Spear, Archer, Chariot
+const shortName = (k) =>
+	stats(0, k)
+		.name.replace(/^[A-Z][a-z]+ (?=[A-Z])/, '')
+		.split(' ')[0]
+		.replace(/m[ae]n$/, '')
+		.slice(0, 7); // one short word on a tile: Spear, Archer, Chariot
 const clsOf = (u) => CLS.findIndex((c) => c[2] === UNIT[u.kind].at);
 const mUnits = (m) => G.units.filter((u) => u.owner === 0 && u.ord === m.ord && u.hp > 0);
 const sqUnits = (i) => armyOf(0).filter((u) => u.bn === i && u.kind !== 'spy');
@@ -166,7 +177,7 @@ function aimColor() {
 		const o = h.e.owner;
 		if (o === 0) return '#4fe0a0';
 		if (o === WILD || atWar(0, o)) return '#ff5a4a';
-		if (relOf(0, o) === 'ally') return '#6fb1ff';
+		if (friendly(0, o)) return '#6fb1ff';
 		return '#ffffff';
 	}
 	const near = nearU(h.e, 60, (v) => v.owner !== 0 && v.hp > 0 && hostile(v) && visibleTo0(v));
@@ -174,7 +185,9 @@ function aimColor() {
 	return '#ffffff';
 }
 const hazardAt = (x, y) =>
-	(G.sand && hyp(x - G.sand.x, y - G.sand.y) < G.sand.r) || G.blds.some((b) => b.fire > 0 && dist(b, { x, y }) < 60) || (G.cracks || []).some((c) => hyp(x - c.x, y - c.y) < 40);
+	(G.sand && hyp(x - G.sand.x, y - G.sand.y) < G.sand.r) ||
+	G.blds.some((b) => b.fire > 0 && dist(b, { x, y }) < 60) ||
+	(G.cracks || []).some((c) => hyp(x - c.x, y - c.y) < 40);
 // who a squad sends: its idle members; with no squads yet, every idle soldier
 const sqFree = (i) => (i === null || i === undefined ? free() : free().filter((u) => u.bn === i));
 function hudEta(i = G.hud.sel) {
@@ -352,10 +365,13 @@ function mStatus(m) {
 	return [m.late ? `LATE +${m.late}s` : '✓ DONE', m.late ? '#ffd35e' : '#5fd08a'];
 }
 const stB = (act, t, cls = '', extra = '') => `<button class="cell st ${cls}" data-act="${act}"${extra}>${t}</button>`;
-const cellB = (act, top, word, cls = '', extra = '') => `<button class="cell ${cls}" data-act="${act}"${extra}>${top}${wd(word)}</button>`;
-const topOf = (icon, n) => `<span class="top">${icon}${n === undefined || n === null ? '' : `<span class="c">${n}</span>`}</span>`;
+const cellB = (act, top, word, cls = '', extra = '') =>
+	`<button class="cell ${cls}" data-act="${act}"${extra}>${top}${wd(word)}</button>`;
+const topOf = (icon, n) =>
+	`<span class="top">${icon}${n === undefined || n === null ? '' : `<span class="c">${n}</span>`}</span>`;
 // the three shapes. whole: one button the slot's height. split: two touching. pm: a tile over − and +.
-const WHOLE = (act, top, word, cls = '', extra = '') => `<div class="col whole">${cellB(act, top, word, cls + ' tall', extra)}</div>`;
+const WHOLE = (act, top, word, cls = '', extra = '') =>
+	`<div class="col whole">${cellB(act, top, word, cls + ' tall', extra)}</div>`;
 const SPLIT = (a, b) => `<div class="col join">${a}${b}</div>`;
 const PM = (tile, minus, plus) => `<div class="col">${tile}<div class="pm">${minus}${plus}</div></div>`;
 function warPageHTML() {
@@ -363,7 +379,10 @@ function warPageHTML() {
 		sel = H.sel,
 		cmd = hasCmd(),
 		canGo = !!H.h && sqFree(cmd ? sel : null).length > 0;
-	let h = SPLIT(stB('waim', ICON.aim, 'war', ' aria-label="Aim: the crosshair to the middle of the screen"'), stB('whome', ICON.home, 'war', ' aria-label="Everyone home"'));
+	let h = SPLIT(
+		stB('waim', ICON.aim, 'war', ' aria-label="Aim: the crosshair to the middle of the screen"'),
+		stB('whome', ICON.home, 'war', ' aria-label="Everyone home"'),
+	);
 	BN.forEach((nm, i) => {
 		const S = cmd ? sqUnits(i) : [],
 			n = S.length,
@@ -371,14 +390,31 @@ function warPageHTML() {
 			[t, color] = m ? mStatus(m) : ['', ''],
 			fl = m && m.flash ? ' ' + m.flash : '',
 			eta = !m && sel === i && n ? hudEta(i) : 0,
-			word = !cmd ? 'Command' : m ? `<span style="color:${color}">${t}</span>` : eta ? `${nm[0]} · ${mmss(eta)}` : n ? `${nm[0]} · ${paceWord(S)}` : nm;
+			word = !cmd
+				? 'Command'
+				: m
+					? `<span style="color:${color}">${t}</span>`
+					: eta
+						? `${nm[0]} · ${mmss(eta)}`
+						: n
+							? `${nm[0]} · ${paceWord(S)}`
+							: nm;
 		h += PM(
-			cellB(`wsq:${i}`, topOf(ICON.squad, cmd ? n : null), word, `msn${fl}${sel === i ? ' sel' : ''}${cmd ? '' : ' dis'}`, ` style="--mc:${color || 'transparent'}"`),
+			cellB(
+				`wsq:${i}`,
+				topOf(ICON.squad, cmd ? n : null),
+				word,
+				`msn${fl}${sel === i ? ' sel' : ''}${cmd ? '' : ' dis'}`,
+				` style="--mc:${color || 'transparent'}"`,
+			),
 			stB(`wback:${i}`, '−', m ? '' : 'dis', ' aria-label="Call back"'),
 			stB(`wgo:${i}`, '+', n ? '' : 'dis', ' aria-label="Send"'),
 		);
 	});
-	h += SPLIT(stB('wfire', ICON.ok, canGo ? 'go' : 'dis', ' aria-label="Go"'), stB('wabort', ICON.close, 'no', ' aria-label="Abort"'));
+	h += SPLIT(
+		stB('wfire', ICON.ok, canGo ? 'go' : 'dis', ' aria-label="Go"'),
+		stB('wabort', ICON.close, 'no', ' aria-label="Abort"'),
+	);
 	return h;
 }
 const favKinds = () => (SET.fav && SET.fav.length ? SET.fav : FAV0).slice(0, 5);
@@ -388,7 +424,13 @@ function buildPageHTML() {
 		const B = BLD[k],
 			why = B ? capWhy(0, k) || (!afford(G.P[0], B.cost) ? 'short' : '') : 'gone',
 			img = B ? bldThumb(k) : '';
-		h += WHOLE(`build:${k}`, `<span class="top thumb">${img}</span>`, B ? B.name : '—', 'build' + (why ? ' dis' : ''), ` aria-label="${B ? B.name : ''}"`);
+		h += WHOLE(
+			`build:${k}`,
+			`<span class="top thumb">${img}</span>`,
+			B ? B.short || B.name : '—', // the short name where there is one: the slot is 56 wide
+			'build' + (why ? ' dis' : ''),
+			` aria-label="${B ? B.name : ''}"`,
+		);
 	}
 	h += WHOLE('buildrow', topOf(ICON.hammer), 'All', 'build', ' aria-label="The Build card"');
 	return h;
@@ -445,26 +487,44 @@ function squadPageHTML() {
 	const Q = G.hud.sq,
 		i = Q.i,
 		cmd = hasCmd();
-	let h = SPLIT(stB('sqnew', `${ICON.squad}<b class="plus">＋</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="A new squad"'), stB('sqcycle', `${ICON.cycle}<b class="plus">${BN[i][0]}</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="Cycle"'));
+	let h = SPLIT(
+		stB('sqnew', `${ICON.squad}<b class="plus">＋</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="A new squad"'),
+		stB('sqcycle', `${ICON.cycle}<b class="plus">${BN[i][0]}</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="Cycle"'),
+	);
 	CLS.forEach((c, t) => {
 		const k = sqUnit(t),
 			built = cmd && k && ready(0, c[2]).length,
 			have = k ? sqUnits(i).filter((u) => u.kind === k).length : 0,
 			want = k ? G.bnPlan[i][k] || 0 : 0;
 		h += PM(
-			cellB(`sqtile:${t}`, topOf(ICON.cls[c[0]], k && cmd ? `${have}/${want}` : '–'), !cmd ? 'Command' : k ? shortName(k) : BLD[c[2]].name, 'sq' + (Q.tile === t ? ' sel' : '') + (built ? '' : ' dis')),
+			cellB(
+				`sqtile:${t}`,
+				topOf(ICON.cls[c[0]], k && cmd ? `${have}/${want}` : '–'),
+				!cmd ? 'Command' : k ? shortName(k) : BLD[c[2]].name,
+				'sq' + (Q.tile === t ? ' sel' : '') + (built ? '' : ' dis'),
+			),
 			stB(`sqn:${t},-`, '−', 'sq' + (built ? '' : ' dis')),
 			stB(`sqn:${t},+`, '+', 'sq' + (built ? '' : ' dis')),
 		);
 	});
-	h += SPLIT(stB('sqdone', ICON.ok, cmd ? 'go' : 'dis', ' aria-label="Done: to the War page"'), stB(`sqbest:${i}`, ICON.star, 'sq' + (cmd ? '' : ' dis'), ' aria-label="Best: fill from the soldiers at home"'));
+	h += SPLIT(
+		stB('sqdone', ICON.ok, cmd ? 'go' : 'dis', ' aria-label="Done: to the War page"'),
+		stB(`sqbest:${i}`, ICON.star, 'sq' + (cmd ? '' : ' dis'), ' aria-label="Best: fill from the soldiers at home"'),
+	);
 	return h;
 }
 function trainPageHTML() {
 	const H = G.hud,
-		p = G.P[0],
 		rs = G.recruitSq;
-	let h = SPLIT(stB('torders', ICON.aim, 'train' + (H.aim ? ' sel' : ''), ' aria-label="Orders: where new soldiers go"'), stB('tsq', `${ICON.squad}<b class="plus">${rs === undefined || rs === null ? '·' : BN[rs][0]}</b>`, 'train' + (hasCmd() ? '' : ' dis'), ' aria-label="Which squad new soldiers join"'));
+	let h = SPLIT(
+		stB('torders', ICON.aim, 'train' + (H.aim ? ' sel' : ''), ' aria-label="Orders: where new soldiers go"'),
+		stB(
+			'tsq',
+			`${ICON.squad}<b class="plus">${rs === undefined || rs === null ? '·' : BN[rs][0]}</b>`,
+			'train' + (hasCmd() ? '' : ' dis'),
+			' aria-label="Which squad new soldiers join"',
+		),
+	);
 	CLS.forEach((c, t) => {
 		const k = sqUnit(t),
 			at = k ? readyAt(0, UNIT[k]) : [],
@@ -472,12 +532,20 @@ function trainPageHTML() {
 			first = q.length ? Math.max(0, Math.ceil(q[0].left)) : 0,
 			why = k ? trainWhy(0, k) : 'none';
 		h += PM(
-			cellB(`sqtile:${t}`, topOf(ICON.cls[c[0]], at.length ? q.length : '–'), !at.length ? 'none' : q.length ? mmss(first) : shortName(k), 'train' + (H.sq.tile === t ? ' sel' : '') + (at.length ? '' : ' dis')),
+			cellB(
+				`sqtile:${t}`,
+				topOf(ICON.cls[c[0]], at.length ? q.length : '–'),
+				!at.length ? 'none' : q.length ? mmss(first) : shortName(k),
+				'train' + (H.sq.tile === t ? ' sel' : '') + (at.length ? '' : ' dis'),
+			),
 			stB(`tq:${t},-`, '−', 'train' + (q.length ? '' : ' dis')),
 			stB(`tq:${t},+`, '+', 'train' + (why ? ' dis' : ''), why ? ` title="${why}"` : ''),
 		);
 	});
-	h += SPLIT(stB('tok', ICON.ok, H.aim ? 'go' : 'dis', ' aria-label="Set the orders on the crosshair"'), stB('tcancel', ICON.close, 'no', ' aria-label="Cancel"'));
+	h += SPLIT(
+		stB('tok', ICON.ok, H.aim ? 'go' : 'dis', ' aria-label="Set the orders on the crosshair"'),
+		stB('tcancel', ICON.close, 'no', ' aria-label="Cancel"'),
+	);
 	return h;
 }
 function huddleUI() {
@@ -491,13 +559,25 @@ function huddleUI() {
 		$('orders').classList.toggle('hud', page === 'war' || page === 'train');
 		$('orders').classList.toggle('sqr', page === 'squad');
 	}
-	$('orders').className = $('orders').className.replace(/\bpg-\w+/g, '').trim() + ' pg-' + page;
+	$('orders').className =
+		$('orders')
+			.className.replace(/\bpg-\w+/g, '')
+			.trim() +
+		' pg-' +
+		page;
 	const chip = $('hudB');
 	chip.innerHTML = `${pageIcon()[page]}<b>▸</b>`;
 	chip.className = 'fab chip ' + page;
 	chip.setAttribute('aria-label', `${pageName[page]}: the next page`);
 	if (page !== 'jobs') {
-		const h = page === 'war' ? warPageHTML() : page === 'build' ? buildPageHTML() : page === 'squad' ? squadPageHTML() : trainPageHTML();
+		const h =
+			page === 'war'
+				? warPageHTML()
+				: page === 'build'
+					? buildPageHTML()
+					: page === 'squad'
+						? squadPageHTML()
+						: trainPageHTML();
 		if (el.sigH !== h) {
 			el.sigH = h;
 			el.innerHTML = h;
@@ -607,7 +687,15 @@ function squadEditHTML(i) {
 		const miss = musterGap(i),
 			why = musterWhy(0, miss),
 			mc = musterCost(0, miss);
-		h += acts(btn(`muster:${i}`, `Train new: +${musterN(miss)}`, why ? why.replace(/\.$/, '') : `${costText(mc.cost)} · ${mc.t} s`, why ? 'dis' : 'go'), 'c1');
+		h += acts(
+			btn(
+				`muster:${i}`,
+				`Train new: +${musterN(miss)}`,
+				why ? why.replace(/\.$/, '') : `${costText(mc.cost)} · ${mc.t} s`,
+				why ? 'dis' : 'go',
+			),
+			'c1',
+		);
 	} else h += `<p class="dim">Muster, at the War Council, trains what a squad lacks in one order.</p>`;
 	return h;
 }
@@ -619,7 +707,12 @@ CARDS.squad = (c) => {
 		[word] = mStatus(m),
 		plan = m.st === 'act' ? reinforcePlan(m) : null,
 		slow = sideSpd(0),
-		hp = S.reduce((s, u) => s + u.hp, 0) / Math.max(1, S.reduce((s, u) => s + u.max, 0)),
+		hp =
+			S.reduce((s, u) => s + u.hp, 0) /
+			Math.max(
+				1,
+				S.reduce((s, u) => s + u.max, 0),
+			),
 		rows = Object.entries(m.kinds || {})
 			.map(([k, n0]) => {
 				const alive = S.filter((u) => u.kind === k).length;
@@ -631,12 +724,20 @@ CARDS.squad = (c) => {
 		hpBar(hp, hp > 0.5 ? '#5fd08a' : hp > 0.25 ? '#e6b947' : '#c0392b') +
 		`<p><i>Health ${Math.round(hp * 100)}%</i> · ${S.length} of ${m.n0} standing · ${m.what.toLowerCase()} ${m.label}${m.st === 'go' ? `, ${mmss(m.eta || 0)} to arrive` : m.late ? `, ${m.late} s late` : ''} · ${paceWord(S)}</p>` +
 		`<table style="width:100%;border-collapse:collapse"><tr><th>Kind</th><th>Alive</th><th>Lost</th></tr>${rows}</table>` +
-		(slow < 0.98 ? `<p class="dim">${G.wx !== 'clear' ? 'Weather' : 'Season'}: ${wxWord()}, walking ×${slow.toFixed(2)}.</p>` : '') +
+		(slow < 0.98
+			? `<p class="dim">${G.wx !== 'clear' ? 'Weather' : 'Season'}: ${wxWord()}, walking ×${slow.toFixed(2)}.</p>`
+			: '') +
 		acts(
 			btn(
 				`hudrein:${i}`,
 				plan && plan.go.length ? `Send more +${plan.go.length}` : 'Send more',
-				plan && plan.go.length ? waveLine(plan) : plan && plan.even ? 'already even' : plan && plan.late ? 'too late' : 'no reserve',
+				plan && plan.go.length
+					? waveLine(plan)
+					: plan && plan.even
+						? 'already even'
+						: plan && plan.late
+							? 'too late'
+							: 'no reserve',
 				plan && plan.go.length ? 'go' : 'dis',
 			) +
 				btn(`shape:${i}`, 'Formation', FORM[dialOf('form', i)].name, G.P[0].techs.has('formations') ? '' : 'dis') +

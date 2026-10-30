@@ -26,7 +26,12 @@ function shopTick(u, dt) {
 function makeNow(u, n, dt, room) {
 	const rate = n.rate || RATE_OF[n.kind];
 	let g = Math.min(
-		rate * dt * gatherMul(u.owner, n) * (u.sick > G.t ? 0.5 : 1) * hungerOf(u.owner) * (u.cheer > G.t ? EVENTS.circus.mul : 1),
+		rate *
+			dt *
+			gatherMul(u.owner, n) *
+			(u.sick > G.t ? 0.5 : 1) *
+			hungerOf(u.owner) *
+			(u.cheer > G.t ? EVENTS.circus.mul : 1),
 		n.amt,
 		room,
 	);
@@ -42,7 +47,8 @@ function makeNow(u, n, dt, room) {
 			return 0;
 		}
 		for (const k in from) {
-			if (k in P.res) spend(P, k, g * from[k], 'shops'); // what a shop uses is spent like any coin, so the stores' colour tells the truth
+			if (k in P.res)
+				spend(P, k, g * from[k], 'shops'); // what a shop uses is spent like any coin, so the stores' colour tells the truth
 			else P.goods[k] -= g * from[k];
 		}
 	}
@@ -183,7 +189,8 @@ function vilTick(u, dt, SP) {
 		huntTick(u, dt, SP);
 		return;
 	}
-	const flock = u.node && u.node.farm && BLD[u.node.farm.kind].sheep && u.node.farm.hp > 0 && u.node.wk <= slotsOf(u.node); // a shepherd stays with the flock between shearings; one to a flock, as one to a field (Build 60: any number stacked, each milking the whole flock)
+	const flock =
+		u.node && u.node.farm && BLD[u.node.farm.kind].sheep && u.node.farm.hp > 0 && u.node.wk <= slotsOf(u.node); // a shepherd stays with the flock between shearings; one to a flock, as one to a field (Build 60: any number stacked, each milking the whole flock)
 	if (flock && u.node.farm.prog >= 1 && dist(u, u.node) < 40) {
 		const b = u.node.farm,
 			m = (b.sheep || 0) * BLD[b.kind].milk * dt * gatherMul(u.owner, u.node) * hungerOf(u.owner);
@@ -193,7 +200,15 @@ function vilTick(u, dt, SP) {
 			u.work = G.t;
 		}
 	} // milk and meat go straight to the stores
-	if (!flock && u.node && u.node.farm && u.node.amt <= 0 && u.node.farm.hp > 0 && nodeFits(u.node, u.job) && u.node.wk <= slotsOf(u.node)) {
+	if (
+		!flock &&
+		u.node &&
+		u.node.farm &&
+		u.node.amt <= 0 &&
+		u.node.farm.hp > 0 &&
+		nodeFits(u.node, u.job) &&
+		u.node.wk <= slotsOf(u.node)
+	) {
 		// a plot cut out or worked out: its worker stays with it, waiting for it to be replanted (Build 61: it used to walk off into the woods)
 		u.wait = true;
 		u.idle = true;
@@ -225,7 +240,13 @@ function vilTick(u, dt, SP) {
 				what = u.was;
 			setJob(u, null);
 			u.post = dr ? { x: dr.x + halfOf(dr) + 6, y: dr.y + 6 } : null;
-			if (u.owner === 0) say(`No ${what === 'tree' ? 'trees' : what} in sight: one waits at the ${dr ? bldName(0, dr.kind).toLowerCase() : 'Town Center'}.`, '', 4, u);
+			if (u.owner === 0)
+				say(
+					`No ${what === 'tree' ? 'trees' : what} in sight: one waits at the ${dr ? bldName(0, dr.kind).toLowerCase() : 'Town Center'}.`,
+					'',
+					4,
+					u,
+				);
 			return;
 		}
 		if (!n && !u.patch) u.nnT = G.t + 2 + rng();
@@ -252,7 +273,12 @@ function vilTick(u, dt, SP) {
 		}
 		u.node = n;
 		if (n) n.wk = (n.wk || 0) + 1; // counted at once, so the next worker this second sees the crowd (recount sets it true every second)
-	} else if (!flock && u.carry === 0 && (u.evalV !== G.bldV || G.t > (u.chk || 0)) && !(u.node.farm && BLD[u.node.farm.kind].makes)) {
+	} else if (
+		!flock &&
+		u.carry === 0 &&
+		(u.evalV !== G.bldV || G.t > (u.chk || 0)) &&
+		!(u.node.farm && BLD[u.node.farm.kind].makes)
+	) {
 		// look again, with an empty basket: after a new field or drop-off is built, and every so often (a field comes free, a find runs low).
 		// Move only when the rate there is FORAGE.move better: nobody churns between two finds that pay the same.
 		u.evalV = G.bldV;

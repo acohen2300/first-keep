@@ -150,7 +150,9 @@ function tag(text, x, y) {
 // the seal check while a wall or gate is being placed: a red line where a foe could walk in, or "Sealed" over the keep
 function drawSeal(pl) {
 	if (!pl.seal || G.t - pl.sealT > SEAL.every || pl.sealN !== (pl.cells || []).length) {
-		const extra = pl.at ? (pl.cells || [toCell(pl.at)]).filter((c) => !canPlace(0, pl.kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) : [];
+		const extra = pl.at
+			? (pl.cells || [toCell(pl.at)]).filter((c) => !canPlace(0, pl.kind, c.gx * NAVC + 5, c.gy * NAVC + 5))
+			: [];
 		pl.seal = sealPath(extra);
 		pl.sealT = G.t;
 		pl.sealN = (pl.cells || []).length;
@@ -178,7 +180,14 @@ function drawGuides(sp, h) {
 	ctx.setLineDash([4, 4]);
 	ctx.beginPath();
 	for (const b of G.blds) {
-		if (b.owner !== 0 || b.hp <= 0 || BLD[b.kind].wallish || Math.abs(b.x - sp.x) >= GUIDE_R || Math.abs(b.y - sp.y) >= GUIDE_R) continue;
+		if (
+			b.owner !== 0 ||
+			b.hp <= 0 ||
+			BLD[b.kind].wallish ||
+			Math.abs(b.x - sp.x) >= GUIDE_R ||
+			Math.abs(b.y - sp.y) >= GUIDE_R
+		)
+			continue;
 		const bh = halfOf(b);
 		for (const [gx, bx] of [
 			[sp.x, b.x],
@@ -581,7 +590,16 @@ function drawLight(z, inView) {
 		if (!inView(b) || !knownB(b)) continue;
 		const B = BLD[b.kind];
 		if (b.fire > 0 || b.hp < maxHpB(b.owner, b.kind) * 0.5) glow(SX(b.x), SY(b.y), 'blaze', z);
-		else if (b.prog >= 1 && HEARTH.has(b.kind)) glow(SX(b.x), SY(b.y) + halfOf(b) * TILT * 0.4, 'hearth', z, 1 + 0.5 * (b.owner === WILD ? 0 : upTier(b.kind === 'keep' || b.kind === 'town' ? 'house' : b.kind, G.P[b.owner]))); // the Home line lights the hearth more
+		else if (b.prog >= 1 && HEARTH.has(b.kind))
+			glow(
+				SX(b.x),
+				SY(b.y) + halfOf(b) * TILT * 0.4,
+				'hearth',
+				z,
+				1 +
+					0.5 *
+						(b.owner === WILD ? 0 : upTier(b.kind === 'keep' || b.kind === 'town' ? 'house' : b.kind, G.P[b.owner])),
+			); // the Home line lights the hearth more
 		else if (b.prog >= 1 && !B.wallish && !B.crop && b.owner !== WILD && fxv(b.owner, 'lamp', bldKeys(b.kind)).a > 0) {
 			const x = SX(b.x) - halfOf(b) * z * 0.6,
 				y = SY(b.y) + halfOf(b) * TILT * z * 0.5;
@@ -589,7 +607,8 @@ function drawLight(z, inView) {
 			flame(x, y - 3 * z, 'lantern', z * 0.7, b.id);
 		} // Lanterns: one at every door
 	}
-	for (const f of G.finds) if (f.kind === 'camp' && !f.done && inView(f) && known0(f)) glow(SX(f.x), SY(f.y), 'campfire', z);
+	for (const f of G.finds)
+		if (f.kind === 'camp' && !f.done && inView(f) && known0(f)) glow(SX(f.x), SY(f.y), 'campfire', z);
 	for (const u of G.units)
 		if (u.kind === 'caravan' && u.hp > 0 && !u.inside && inView(u) && visibleTo0(u)) {
 			const x = SX(u.x) + 5 * z,

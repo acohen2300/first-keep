@@ -3,11 +3,23 @@
 // Every icon is drawn once, here. The markup reads from this table, so a resource looks the same in the tally and under the jobs.
 const SVG = (vb, body, cls = 'gl') => `<svg class="${cls}" viewBox="0 0 ${vb} ${vb}" aria-hidden="true">${body}</svg>`;
 const ICON = {
-	aim: SVG(20, '<circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 1v4M10 15v4M1 10h4M15 10h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="10" cy="10" r="1.6" fill="currentColor"/>'),
-	back: SVG(20, '<path d="M9 5l-5 5 5 5M4 10h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'),
+	aim: SVG(
+		20,
+		'<circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 1v4M10 15v4M1 10h4M15 10h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="10" cy="10" r="1.6" fill="currentColor"/>',
+	),
+	back: SVG(
+		20,
+		'<path d="M9 5l-5 5 5 5M4 10h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+	),
 	stop: SVG(20, '<rect x="5" y="5" width="10" height="10" rx="1.5" fill="currentColor"/>'),
-	ok: SVG(20, '<path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>'),
-	star: SVG(20, '<path d="M10 2.2l2.4 5 5.4.7-3.9 3.8.9 5.4L10 14.5l-4.8 2.6.9-5.4L2.2 7.9l5.4-.7z" fill="currentColor"/>'),
+	ok: SVG(
+		20,
+		'<path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
+	),
+	star: SVG(
+		20,
+		'<path d="M10 2.2l2.4 5 5.4.7-3.9 3.8.9 5.4L10 14.5l-4.8 2.6.9-5.4L2.2 7.9l5.4-.7z" fill="currentColor"/>',
+	),
 	food: SVG(
 		16,
 		'<path d="M8 4.5 L10.5 1.5" stroke="#6aa04f" stroke-width="1.6" stroke-linecap="round"/><circle cx="5.2" cy="10" r="3.3" fill="#d9607a"/><circle cx="10.8" cy="10" r="3.3" fill="#d9607a"/><circle cx="8" cy="6.4" r="3.3" fill="#ec8ea3"/>',
@@ -46,10 +58,22 @@ const ICON = {
 	),
 	go: SVG(16, '<path d="M4 2.5 L13 8 L4 13.5 Z" fill="currentColor"/>'),
 	cls: {
-		foot: SVG(16, '<path d="M3 14 L12.5 3.5" stroke="#d9c79a" stroke-width="1.6" stroke-linecap="round"/><path d="M11 2 L14.5 1.5 L14 5 Z" fill="#e8eef2"/>'),
-		arch: SVG(16, '<path d="M5 1.5 Q14 8 5 14.5" fill="none" stroke="#c9a46a" stroke-width="1.6"/><path d="M5 1.5 V14.5" stroke="#eee" stroke-width=".8"/><path d="M2 8 H12" stroke="#ddd" stroke-width="1.2"/><path d="M12 6.5 L14.5 8 L12 9.5Z" fill="#eee"/>'),
-		horse: SVG(16, '<path d="M3 14 L4 9 Q4 6 7 6 L9 3 L10.5 4.5 L13.5 5 L13 7 L10.5 7 L10.5 10 L12 14" fill="none" stroke="#d9c79a" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>'),
-		siege: SVG(16, '<rect x="2" y="7" width="11" height="3.5" rx="1" fill="#a07a4a"/><path d="M13 8.7 H15" stroke="#ccc" stroke-width="2"/><circle cx="4.5" cy="12.5" r="1.6" fill="#ddd"/><circle cx="10.5" cy="12.5" r="1.6" fill="#ddd"/><path d="M3 7 L7.5 3 L12 7" fill="none" stroke="#d9c79a" stroke-width="1.3"/>'),
+		foot: SVG(
+			16,
+			'<path d="M3 14 L12.5 3.5" stroke="#d9c79a" stroke-width="1.6" stroke-linecap="round"/><path d="M11 2 L14.5 1.5 L14 5 Z" fill="#e8eef2"/>',
+		),
+		arch: SVG(
+			16,
+			'<path d="M5 1.5 Q14 8 5 14.5" fill="none" stroke="#c9a46a" stroke-width="1.6"/><path d="M5 1.5 V14.5" stroke="#eee" stroke-width=".8"/><path d="M2 8 H12" stroke="#ddd" stroke-width="1.2"/><path d="M12 6.5 L14.5 8 L12 9.5Z" fill="#eee"/>',
+		),
+		horse: SVG(
+			16,
+			'<path d="M3 14 L4 9 Q4 6 7 6 L9 3 L10.5 4.5 L13.5 5 L13 7 L10.5 7 L10.5 10 L12 14" fill="none" stroke="#d9c79a" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>',
+		),
+		siege: SVG(
+			16,
+			'<rect x="2" y="7" width="11" height="3.5" rx="1" fill="#a07a4a"/><path d="M13 8.7 H15" stroke="#ccc" stroke-width="2"/><circle cx="4.5" cy="12.5" r="1.6" fill="#ddd"/><circle cx="10.5" cy="12.5" r="1.6" fill="#ddd"/><path d="M3 7 L7.5 3 L12 7" fill="none" stroke="#d9c79a" stroke-width="1.3"/>',
+		),
 	},
 	head: SVG(
 		20,
@@ -242,17 +266,31 @@ const DIR8 = ['east', 'south-east', 'south', 'south-west', 'west', 'north-west',
 function tell(text, cls, at) {
 	if (!at || at.told || !G.fogOn || fogAt(at.x, at.y) === 2) return { now: true };
 	const lvl = fxv(0, 'news').a,
-		mine = (r) => G.blds.some((b) => b.owner === 0 && b.hp > 0 && Math.abs(b.x - at.x) < r && Math.abs(b.y - at.y) < r && dist(b, at) < r),
+		mine = (r) =>
+			G.blds.some(
+				(b) => b.owner === 0 && b.hp > 0 && Math.abs(b.x - at.x) < r && Math.abs(b.y - at.y) < r && dist(b, at) < r,
+			),
 		k = keepOf(0);
 	if (cls === 'warn') {
 		const r = TELL.hear * (G.P[0].age >= 4 ? TELL.gun : 1);
-		if (G.units.some((u) => u.owner === 0 && u.hp > 0 && Math.abs(u.x - at.x) < r && Math.abs(u.y - at.y) < r && dist(u, at) < r) || mine(r)) {
+		if (
+			G.units.some(
+				(u) => u.owner === 0 && u.hp > 0 && Math.abs(u.x - at.x) < r && Math.abs(u.y - at.y) < r && dist(u, at) < r,
+			) ||
+			mine(r)
+		) {
 			const from = k || at,
-				a = Math.round((Math.atan2(at.y - from.y, at.x - from.x) / (Math.PI / 4) + 8)) % 8;
+				a = Math.round(Math.atan2(at.y - from.y, at.x - from.x) / (Math.PI / 4) + 8) % 8;
 			return { now: true, text: `Sounds of fighting to the ${DIR8[a]}.` };
 		}
 	}
-	const need = mine(TELL.near) ? 1 : mine(TELL.far) ? 2 : G.blds.some((b) => b.hp > 0 && b.owner !== 0 && G.rel[0][b.owner] === 'ally' && dist(b, at) < TELL.near) ? 3 : 4;
+	const need = mine(TELL.near)
+		? 1
+		: mine(TELL.far)
+			? 2
+			: G.blds.some((b) => b.hp > 0 && b.owner !== 0 && G.rel[0][b.owner] === 'ally' && dist(b, at) < TELL.near)
+				? 3
+				: 4;
 	if (lvl < need || !k) return null; // no messenger serves that far: the court never hears of it
 	return { delay: wayLen(k, at, 0) / (lvl >= 2 ? TELL.ride : TELL.foot) }; // the messenger rides the road, not the crow's line (Build 60: measured 15% longer at the median, up to 40%)
 }
@@ -270,7 +308,15 @@ function say(text, cls, secs, at, act, why) {
 		const N = tell(text, cls, at);
 		if (!N) return;
 		if (N.delay > 1) {
-			(G.post || (G.post = [])).push({ t: G.t + N.delay, text, cls, secs, at: { x: at.x, y: at.y, told: 1 }, act, why });
+			(G.post || (G.post = [])).push({
+				t: G.t + N.delay,
+				text,
+				cls,
+				secs,
+				at: { x: at.x, y: at.y, told: 1 },
+				act,
+				why,
+			});
 			return;
 		}
 		if (N.text) {

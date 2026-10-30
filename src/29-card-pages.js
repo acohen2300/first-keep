@@ -134,10 +134,22 @@ function relHTML() {
 	{
 		// the board: at peace or not, the hidden age, the Games, standing down
 		const tf = truceFor(),
-			spare = Math.max(0, soldiersOf(0).filter((u) => u.state === 'home' && !u.inside).length - Math.ceil(soldiersOf(0).length * PEACE.stand.keep)),
+			spare = Math.max(
+				0,
+				soldiersOf(0).filter((u) => u.state === 'home' && !u.inside).length -
+					Math.ceil(soldiersOf(0).length * PEACE.stand.keep),
+			),
 			next = Math.max(0, PEACE.games.every - (G.t - (G.gamesT ?? 0)));
 		h += `<p><i>The board:</i> ${G.truce === null ? 'not at peace.' : `at peace for ${clock(tf)}.`} ${G.enlight ? `The ${AGES[5].name} is open.` : `A year of peace opens the ${AGES[5].name}${G.truce === null ? '' : ` (${clock(Math.max(0, PEACE.age.truce - tf))} to go)`}.`} Games in ${clock(next)}${G.truce === null ? ', if the board is at peace' : ''}. Laurels: ${G.P[0].laurels || 0}.</p>`;
-		h += acts(btn('stand', 'Stand down', spare ? `${spare} spare soldiers to the fields` : 'no spare soldiers at home', spare ? 'warn' : 'dis'), 'c2');
+		h += acts(
+			btn(
+				'stand',
+				'Stand down',
+				spare ? `${spare} spare soldiers to the fields` : 'no spare soldiers at home',
+				spare ? 'warn' : 'dis',
+			),
+			'c2',
+		);
 	}
 	for (const q of G.P) {
 		if (q.id === 0 || q.id === WILD || !q.alive) continue;
@@ -205,8 +217,10 @@ function workshopHTML(b) {
 				made = w ? Math.floor(w.st.got || 0) : 0,
 				fr = w ? (w.st.got || 0) % 1 : 0,
 				state = !w ? 'nobody yet' : w.wait ? `waiting for ${kn}` : w.inside ? 'making' : 'walking in';
-			return `<div class="slots" style="--qn:3"><button class="slot${w ? '' : ' empty'}" disabled style="--p:${Math.round(fr * 100)}%">${nm(cur)}<br>${state}<i></i></button><button class="slot empty" disabled>${made} made</button><button class="slot empty" disabled>${r} ${kn} each</button></div>` +
-				`<p>In store: ${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${kn} · ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} ${nm(cur).toLowerCase()} a minute when worked.</p>`;
+			return (
+				`<div class="slots" style="--qn:3"><button class="slot${w ? '' : ' empty'}" disabled style="--p:${Math.round(fr * 100)}%">${nm(cur)}<br>${state}<i></i></button><button class="slot empty" disabled>${made} made</button><button class="slot empty" disabled>${r} ${kn} each</button></div>` +
+				`<p>In store: ${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${kn} · ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} ${nm(cur).toLowerCase()} a minute when worked.</p>`
+			);
 		})()
 	);
 }
@@ -238,7 +252,11 @@ function marketHTML(b) {
 				'c3',
 			);
 	}
-	h += fold('caravans', `Caravans and ventures · ${unitsOf(0, 'caravan').length} caravans${V.length ? ', ' + V.length + ' ventures out' : ''}`, m);
+	h += fold(
+		'caravans',
+		`Caravans and ventures · ${unitsOf(0, 'caravan').length} caravans${V.length ? ', ' + V.length + ' ventures out' : ''}`,
+		m,
+	);
 	return h;
 }
 function councilHTML(b) {
@@ -501,10 +519,20 @@ const seg = (label, opts, cur) => {
 };
 // one line under the settings says what the current choices do (Build 63: "Fantasy" explained nothing)
 const SET_WHY = {
-	diff: { easy: 'Easy: the computers build and raid slowly.', normal: 'Normal: the computers play a fair game.', hard: 'Hard: the computers plan well and raid early.' },
-	fantasy: { 0: 'Real: wolves, boar and bandits; nothing that is not history.', 1: 'Fantasy: trolls guard the finds, which pay half again.' },
+	diff: {
+		easy: 'Easy: the computers build and raid slowly.',
+		normal: 'Normal: the computers play a fair game.',
+		hard: 'Hard: the computers plan well and raid early.',
+	},
+	fantasy: {
+		0: 'Real: wolves, boar and bandits; nothing that is not history.',
+		1: 'Fantasy: trolls guard the finds, which pay half again.',
+	},
 	fog: { 1: 'Fog on: you see what your people see.', 0: 'Fog off: the whole map, as the computers see it.' },
-	tension: { winner: 'Winner takes all: war until one stands.', diplomacy: 'Dynamic diplomacy: truces, tribute, allies and vassals.' },
+	tension: {
+		winner: 'Winner takes all: war until one stands.',
+		diplomacy: 'Dynamic diplomacy: truces, tribute, allies and vassals.',
+	},
 };
 // the one word a new player cannot guess is the World (Albert: "fantasy means I fly on a magic carpet?"); one line, so the card still fits a page
 const settingsWhy = () => `<p class="dim why">${SET_WHY.fantasy[SET.fantasy ? 1 : 0]}</p>`;
@@ -546,4 +574,5 @@ const settingsHTML = () =>
 			['tension:diplomacy', 'Dynamic Diplomacy', 'diplomacy'],
 		],
 		SET.tension,
-	) + settingsWhy();
+	) +
+	settingsWhy();

@@ -1,4 +1,4 @@
-# First Keep: the science (Build 62, Oct 30, 2026)
+# First Keep: the science (Build 63, Oct 30, 2026)
 
 Every number that stands for the real world, with its label and its source. Rule 4 of `RULES.md`.
 - **verified**: checked against the source in the session named.
@@ -63,6 +63,8 @@ Each equation has a test in `tests/science.py` against known values (from Build 
 | `20-view-base` `spring`, `camGo`, `followCam` | The camera glides as a critically damped spring (ζ = 1): no overshoot, the same feel at any frame rate | ω 9 (over in about half a second) | verified (form) | The damped harmonic oscillator at critical damping; the closed-form step is the standard smoothing of a value toward a target in real-time graphics. Before: a 0.2-a-frame lerp (faster at 120 Hz than at 60). Reduce motion: the jump is instant. |
 | `23-view-things` `smoke` | A plume bends over with the wind: height ∝ downwind distance^(2/3), width ∝ distance^0.9 | | cited (form) | Briggs (1969), plume rise Δh ∝ x^(2/3); Pasquill–Gifford dispersion, σ ∝ x^0.9. Drawing only. |
 | `06-rules-tuning` `BUILDER_POW` | A crew of n builds n^0.7 times as fast | 0.7 | cited | Thomas & Smith (1990), overmanning: productivity per worker falls about n^−0.3. Was in the game as a design number; now cited and tested (two builders 1.6×, four 2.6×). |
+| `15-sim-spatial` `groupPower`, `canBeat` | Whether a soldier can take a target is judged by its group, not itself: the power of everyone within 60 against the power of the foe's group, by the square law | `GROUP_R` 60 | verified (form) | Lanchester (1916): aimed fire concentrates, so a group's strength goes as the square of its number; the old test weighed one man against the elephant and every man turned away (the outside audits' finding). `tests/science.py`: twelve swords beat the elephant. |
+| `12-sim-core` `turtlePlan`; `10-world` `fairness` | The villager-minutes to the next age: each cost's shortfall over the best rate a villager earns it from home (the forager's rate with the walk), summed; the fairness measure across corners | | design on a measured rule | The rate is the forager's (Build 59, Charnov 1976); the sum in villager-minutes is Albert's turtle calculator ("rss calcs equal as per turtle play per segment of board"). On ten seeds the corners differ by 0 to 5%. |
 | `04-rules-tech` | Every research step's date and place | in `07-text` `WHY` | cited | Each line names a place and a date; "about" unless exact; Game: lines where compressed. `tests/history.py` (Build 58) holds every dated step inside its age (Stone to 3300 BC, Bronze to 800 BC, Classical to AD 500, Medieval to 1450, Gunpowder to 1700, the Enlightenment to 1800, 150 years of slack) or demands a Game: note. |
 
 ## To add, with their sources (checked Oct 29 against the sources named; see HANDOFF.md item 14)

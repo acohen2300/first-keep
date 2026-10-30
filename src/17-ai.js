@@ -74,11 +74,7 @@ function think(p) {
 	// food from the ground once the berries near home are gone; wood from tree farms once the forest thins
 	const bushes = G.nodes.filter((n) => n.kind === 'bush' && dist(n, k) < 300).length,
 		farms = has('farm');
-	if (
-		(bushes < 3 || jobsN('food') > bushes + 4) &&
-		farms < Math.ceil(jobsN('food') / slotsOf()) &&
-		R.w >= 60
-	)
+	if ((bushes < 3 || jobsN('food') > bushes + 4) && farms < Math.ceil(jobsN('food') / slotsOf()) && R.w >= 60)
 		put('farm', k.x, k.y, 60, 170); // a field for every food worker: a field holds slotsOf() (one) worker. Until Build 59 this counted three a field, so two in three food workers walked to far bushes
 	const trees = G.nodes.filter((n) => n.kind === 'tree' && dist(n, k) < 300).length;
 	if (trees < 6 && has('treefarm') < Math.min(4, Math.max(1, jobsN('wood') - 2)) && R.w >= 80)
@@ -87,7 +83,8 @@ function think(p) {
 	// the ages: once the town is big enough, save for the next one
 	// the ages: once the town is big enough, save for the next one. Every personality climbs every age it can reach (Build 59: Raiders stopped at
 	// Classical and the Fortress at Medieval by a number in PERS, so neither could reach the peace age; a personality is how a side plays, not where it stops)
-	const ageReady = !!nextAge(o) && !p.aging && vils.length >= Math.min(per.vils, 12 + p.age * 4) && armyN >= per.ageArmy;
+	const ageReady =
+		!!nextAge(o) && !p.aging && vils.length >= Math.min(per.vils, 12 + p.age * 4) && armyN >= per.ageArmy;
 	if (ageReady) ageUp(o);
 	// saving holds while it works: other spending waits as long as the store is still filling toward the age; only when it has not grown for
 	// SAVE.stall seconds (a resource out of reach) does the side spend freely for SAVE.spend seconds. Until Build 59 the window opened every 150 s
@@ -213,7 +210,8 @@ function think(p) {
 	// trade: a couple of caravans once there is somewhere to take them (an ally, or goods for the stops); swap a big surplus for gold
 	if (per.trade && p.age >= 1 && armyN >= 6) {
 		const m = ready(o, 'market')[0];
-		if (!saving && m && unitsOf(o, 'caravan').length + queuedOf(o, 'caravan') < 3 && R.w >= 150 && R.g >= 100) train(o, 'caravan'); // nor a lost caravan (Build 59: 20 in fifteen minutes, raided as fast as they were made)
+		if (!saving && m && unitsOf(o, 'caravan').length + queuedOf(o, 'caravan') < 3 && R.w >= 150 && R.g >= 100)
+			train(o, 'caravan'); // nor a lost caravan (Build 59: 20 in fifteen minutes, raided as fast as they were made)
 		if (ready(o, 'market').length)
 			for (const r of ['f', 'w', 's', 'i'])
 				if (R[r] > 1200 && R.g < 150) {
@@ -315,7 +313,13 @@ function aiDiplomacy(p, per) {
 		if (atWar(o, q.id) && oddsOf(o, q.id) < 0.3 && soldiersOf(o).length < per.waveMin) {
 			if (setRel(o, q.id, 'peace')) return;
 		}
-		if (!warOn && G.rel[o][q.id] === 'peace' && !noticeLeft(o, q.id) && oddsOf(o, q.id) > per.bold + 0.15 + D.bold && (per.crown === 'war' || G.truce === null)) {
+		if (
+			!warOn &&
+			G.rel[o][q.id] === 'peace' &&
+			!noticeLeft(o, q.id) &&
+			oddsOf(o, q.id) > per.bold + 0.15 + D.bold &&
+			(per.crown === 'war' || G.truce === null)
+		) {
 			if (setRel(o, q.id, 'war')) return;
 		}
 		if (

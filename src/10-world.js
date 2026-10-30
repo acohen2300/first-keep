@@ -201,7 +201,9 @@ function applyScenario(id) {
 		navRebuild(); // the next one sees this one (Build 60: they were all placed on an empty grid, so they could overlap)
 	}
 	if (S.walls) {
-		for (const c of wallPlan(k)) if (!NAV.occ[c.gy * NC + c.gx] && !canPlace(0, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) G.blds.push(mkBld(0, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5, 1));
+		for (const c of wallPlan(k))
+			if (!NAV.occ[c.gy * NC + c.gx] && !canPlace(0, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5))
+				G.blds.push(mkBld(0, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5, 1));
 	}
 	for (let i = 0; i < (S.vils || 0); i++) addUnit(0, 'vil', k.x + 30 + i * 8, k.y + 40);
 	navRebuild();
@@ -449,7 +451,11 @@ function makeRiver(L, w) {
 }
 // one corner's finds: each at the distance every corner shares (dist), at an angle of its own; the home pocket keeps to the corner behind the Town Center
 function laySpots(lay, dist, loc, spot = {}, turn = rnd(-TURN, TURN)) {
-	const taken = Object.entries(spot).map(([id, q]) => ({ x: q.x, y: q.y, r: (LAYOUT.find((l) => l[0] === id) || [0, 0, 0, 40])[3] })),
+	const taken = Object.entries(spot).map(([id, q]) => ({
+			x: q.x,
+			y: q.y,
+			r: (LAYOUT.find((l) => l[0] === id) || [0, 0, 0, 40])[3],
+		})),
 		sh = (hyp(700, 700) - LAKE0.r - 90) / Math.SQRT2,
 		room = [
 			{ x: 700, y: 700, r: LAKE0.r + 25 },
@@ -692,12 +698,24 @@ function fairness() {
 					(s, kind) =>
 						s +
 						G.nodes
-							.filter((n) => n.kind === kind && (kind !== 'tree' || n.open) && Math.abs(n.x - k.x) < 700 && Math.abs(n.y - k.y) < 700)
+							.filter(
+								(n) =>
+									n.kind === kind &&
+									(kind !== 'tree' || n.open) &&
+									Math.abs(n.x - k.x) < 700 &&
+									Math.abs(n.y - k.y) < 700,
+							)
 							.reduce((m, n) => Math.min(m, walkTo(D, n.x, n.y, 20)), 65535),
 					0,
 				);
 			const tp = turtlePlan(p.id, AGES[1], true); // the villager-minutes to the first age-up from this corner, fog ignored (Albert: the fairness measure)
-			return { k, D, work, throne: walkTo(D, MID, MID, THRONE.isle), turtle: tp && isFinite(tp.mins) ? tp.mins : 65535 };
+			return {
+				k,
+				D,
+				work,
+				throne: walkTo(D, MID, MID, THRONE.isle),
+				turtle: tp && isFinite(tp.mins) ? tp.mins : 65535,
+			};
 		}),
 		R = (BLD.keep.fp / 2 + 2) * NAVC;
 	for (const s of S) s.near = Math.min(...S.filter((q) => q !== s).map((q) => walkTo(s.D, q.k.x, q.k.y, R)));
@@ -707,7 +725,11 @@ function fairness() {
 			mean = v.reduce((a, b) => a + b, 0) / v.length;
 		spread[m] = Math.round(((Math.max(...v) - Math.min(...v)) / (mean || 1)) * 100) / 100;
 	}
-	return { spread, worst: Math.max(...Object.values(spread)), sides: S.map(({ work, throne, near, turtle }) => ({ work, throne, near, turtle })) };
+	return {
+		spread,
+		worst: Math.max(...Object.values(spread)),
+		sides: S.map(({ work, throne, near, turtle }) => ({ work, throne, near, turtle })),
+	};
 }
 // The Throne: a walled citadel on the great lake's island, four gates at the four causeways, a tower at each corner, the one shrine at its foot, the Natives' garrison in its yard
 function makeCitadel() {

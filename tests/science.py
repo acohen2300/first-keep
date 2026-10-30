@@ -58,6 +58,9 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   { const R0 = F.HEALTH.R0; let z = 0.5; for (let i = 0; i < 100; i++) z = 1 - Math.exp(-R0 * z); if (R0 === 2) near('SIR final size', z, 0.7968, 1e-3); }
   // Lanchester's square law as odds: even strength is a coin toss; twice the strength wins 4 in 5
   near('lanchester even', F.lanchester(1), 0.5, 1e-9); near('lanchester double', F.lanchester(2), 0.8, 1e-9);
+  // the square law by the group (Build 63): one sword cannot take an elephant; twelve together can, since aimed strength goes as the square
+  { F.newGame(3); const G = F.G, k = F.keepOf(0), e = F.addUnit(1, 'elephant', k.x + 120, k.y), one = F.addUnit(0, 'sword', k.x, k.y); G.rel[0][1] = G.rel[1][0] = 'war';
+    if (F.canBeat(one, e)) out.push('one sword thinks it beats the elephant'); for (let i = 0; i < 11; i++) F.addUnit(0, 'sword', k.x + (i % 4) * 8, k.y + 10 + Math.floor(i / 4) * 8); G.tick++; if (!F.canBeat(one, e)) out.push('twelve swords will not take the elephant'); }
   // the forager's rate (Charnov 1976): standing on a find beside its drop-off, the rate is the gathering rate itself; a find twice as far
   // from the drop-off pays less; a new field takes the worker earning least on food
   { F.SET.scen = 'open'; F.newGame(4); const G = F.G, k = F.keepOf(0), u = G.units.find((x) => x.owner === 0 && x.kind === 'vil');
