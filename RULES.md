@@ -25,6 +25,7 @@ One home for how this game is built and how the work is done. Every build is che
 - "One could always reason that life isn't fair because random isn't fair. But life isn't a choice. The game is. So it's correct to make it fair without sacrificing truth." (Oct 30.) Fair is not mirror: mirror is illusion, reality is random. Fair is the same constants and the same randomizer for every side, measured (the walks and the villager-minutes to the next age, `fairness()`), with everything else random.
 - When one change answers more than one question while being closer to reality, that is the goal of the build rules (Oct 30). Prefer it over several small answers.
 - The vocabulary (Oct 30): a **module** is a menu or a mold (the one row's slot, a card size); an **overlay** is the words laid on it; an **element** is the thing itself, made of modules and overlays. Element + random = output, with one randomizer for everything random.
+- "Real life is the beat." (Oct 30, on the preview of Build 63.) No music. The sounds are the work itself: a stroke sounds when a stroke lands, at the find's own rate, so crews fall into rhythm on their own, and the birds and wind sit on top at random. It plays like meditation; it stays that way.
 - Muscle memory (Oct 30): the same tap in the same place does the same thing. The map tap puts the sword, then All, under the thumb: tap one the screen, tap two the sword, tap three All.
 
 ## 2. How a change happens
