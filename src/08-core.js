@@ -5,7 +5,9 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const hyp = (x, y) => Math.sqrt(x * x + y * y);
 // The colour code's one home is the style sheet (--ring-r, -w, -g, -b); the code reads it once (Build 65: it was written in four places).
 const CODE = {};
-const codeOf = (k) => CODE[k] || (CODE[k] = getComputedStyle(document.documentElement).getPropertyValue('--ring-' + k).trim() || '#e9ecef');
+const codeOf = (k) => CODE[k] || (CODE[k] = getComputedStyle(document.documentElement).getPropertyValue('--ring-' + k).trim() || '#fff');
+const TIME = {};
+const timeOf = (k) => TIME[k] || (TIME[k] = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--t-' + k)) * 1000 || 400); // ms, from the style sheet's four (Build 66)
 const rgbOf = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 // The one gradient (Albert, Build 64): red, through pink, white, light green, to green, for every number that has a meaning. v runs
 // from −1 (the worst) to +1 (the best); a cost row reads how near you are to paying, a store and its job read their velocity. It is the

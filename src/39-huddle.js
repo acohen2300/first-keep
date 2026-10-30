@@ -608,7 +608,7 @@ function drawReticle() {
 	if (!H.on || !H.h) return;
 	const x = SX(H.h.e.x),
 		y = SY(H.h.e.y),
-		L = performance.now() - (H.firedT || -1e9) < 1200 ? 1 : 0,
+		L = performance.now() - (H.firedT || -1e9) < timeOf('settle') ? 1 : 0,
 		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
 		t = still() ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
 		eta = H.mode === 'rally' ? 0 : hudEta(),
@@ -737,7 +737,7 @@ CARDS.squad = (c) => {
 			.join('');
 	return (
 		title(m.name, m.st === 'act' ? `fighting · ${Math.round(m.odds * 100)}% to win` : word.toLowerCase()) +
-		hpBar(hp, hp > 0.5 ? '#5fd08a' : hp > 0.25 ? '#e6b947' : '#c0392b') +
+		hpBar(hp, hp > 0.5 ? codeOf('g') : hp > 0.25 ? 'var(--gold)' : codeOf('r')) +
 		`<p><i>Health ${Math.round(hp * 100)}%</i> · ${S.length} of ${m.n0} standing · ${m.what.toLowerCase()} ${m.label}${m.st === 'go' ? `, ${mmss(m.eta || 0)} to arrive` : m.late ? `, ${m.late} s late` : ''} · ${paceWord(S)}</p>` +
 		`<table style="width:100%;border-collapse:collapse"><tr><th>Kind</th><th>Alive</th><th>Lost</th></tr>${rows}</table>` +
 		(slow < 0.98

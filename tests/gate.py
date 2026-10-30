@@ -135,7 +135,7 @@ def verbs():
 async def main():
     fails = 0
     v = verbs(); print(('PASS ' if not v else 'FAIL ') + 'every button verb has a handler', '' if not v else v); fails += bool(v)
-    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
+    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/palette.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
         r = subprocess.run([sys.executable, t], capture_output=True, text=True); print(r.stdout.strip() or ('FAIL ' + t + ' ' + r.stderr[-300:])); fails += r.returncode != 0
     w = subprocess.run([sys.executable, 'tests/words.py'], capture_output=True, text=True); print(('PASS ' if w.returncode == 0 else 'FAIL ') + 'toasts and tips: 10 words at most', w.stdout.strip() if w.returncode else ''); fails += w.returncode != 0
     async with async_playwright() as p:

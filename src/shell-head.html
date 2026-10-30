@@ -39,10 +39,10 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #hud{z-index:4}
 /* The status pill (Build 64): the state of the world in the tally's mold, one cell under each store column, so the eye reads down a column. */
 #status{height:var(--strip);overflow:visible;align-items:flex-start}#status .cell{height:44px;display:flex;align-items:flex-start;justify-content:center;gap:2px;padding:0 1px;overflow:hidden;min-width:0}#status .cell .gl,#status .cell .wd{position:static;transform:none;width:auto;height:26px;line-height:26px;font-size:12px;white-space:nowrap}#status .cell span.gl{display:inline-flex;align-items:center}#status .cell .gl svg{position:static;transform:none;width:13px;height:13px}#status .cell .gl:empty{display:none}#status.pill .cell+.cell::before{top:6px;bottom:auto;height:14px}   /* thin to look at (28 px), 44 px to tap: the buttons hang below it, as the strip did */
-#status .cell.dim{color:var(--mute)}#status .cell.dim .wd{color:var(--mute)}#status .cell.lit-r .wd{color:var(--ring-r)}#status .cell.lit-b .wd{color:var(--ring-b)}#status .cell.lit-b{animation:glowb 1.8s ease-in-out infinite}@keyframes glowb{0%,100%{text-shadow:0 0 3px rgba(79,157,255,.35)}50%{text-shadow:0 0 12px rgba(79,157,255,1)}}
+#status .cell.dim{color:var(--mute)}#status .cell.dim .wd{color:var(--mute)}#status .cell.lit-r .wd{color:var(--ring-r)}#status .cell.lit-b .wd{color:var(--ring-b)}#status .cell.lit-b{animation:glowb var(--t-long) ease-in-out infinite}@keyframes glowb{0%,100%{text-shadow:0 0 3px rgba(79,157,255,.35)}50%{text-shadow:0 0 12px rgba(79,157,255,1)}}
 /* The preview (Build 64): a message arrives the way a phone shows a text, over the map, and fades; nothing under it moves. The bar on its
    left is the colour code: red wrong, green done, blue act on it, white news. */
-#pv{position:absolute;z-index:5;top:calc(var(--hb) + 6px);left:var(--pad);right:var(--pad);display:flex;align-items:stretch;min-height:44px;box-sizing:border-box;border:1px solid var(--hair);border-left:5px solid var(--cc,#e9ecef);border-radius:var(--r);background:var(--sheet);box-shadow:0 4px 14px rgba(0,0,0,.45);color:var(--bone);transition:opacity .4s}
+#pv{position:absolute;z-index:5;top:calc(var(--hb) + 6px);left:var(--pad);right:var(--pad);display:flex;align-items:stretch;min-height:44px;box-sizing:border-box;border:1px solid var(--hair);border-left:5px solid var(--cc,var(--ring-w));border-radius:var(--r);background:var(--sheet);box-shadow:0 4px 14px rgba(0,0,0,.45);color:var(--bone);transition:opacity var(--t-sweep)}
 #pv.fade{opacity:0}#pv button{all:unset;box-sizing:border-box;min-height:44px;cursor:pointer;touch-action:manipulation}
 #pv .t{flex:1;min-width:0;padding:4px 10px;display:flex;flex-direction:column;justify-content:center;font-size:15px;font-weight:600;line-height:1.2}
 #pv .t small{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}#pv .t span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -151,7 +151,7 @@ button.ghost{visibility:hidden}
 #huddle .cell.sel{border-color:#ffb23d}
 #huddle button.cell.sq.sel{background:linear-gradient(#54402a,#3a2a1c);border-color:#c9a46a}#huddle button.cell.go .wd,#huddle button.cell.go .gl{color:#9cc8ff}
 #huddle .msn{touch-action:none}#huddle .msn.empty{background:transparent;border-style:dashed}
-#huddle .msn.lose{--pc:#ff5a4a;animation:hudPulse 1s infinite}#huddle .msn.win{--pc:#43c06b;animation:hudPulse 1.2s infinite}
+#huddle .msn.lose{--pc:var(--ring-r);animation:hudPulse var(--t-settle) infinite}#huddle .msn.win{--pc:var(--ring-g);animation:hudPulse var(--t-settle) infinite}   /* losing and winning pulse alike; the colour says which */
 @keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc),0 0 10px var(--pc)}}
 @media (prefers-reduced-motion:reduce){#huddle .msn.lose,#huddle .msn.win{animation:none;border-color:var(--pc)}#huddle .blink{animation:none}}
 
@@ -214,7 +214,7 @@ button.ok small{color:#8fd4a4}
 #card .seg{display:flex;align-items:center;gap:6px;min-height:44px}#card .seg>b{flex:0 0 78px;font-size:13px}#card .seg2{display:grid;grid-template-columns:1fr 1fr;gap:6px}#card .seg2 .seg>b{flex-basis:40px}
 #card .segT{flex:1;min-width:0;position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));border:1px solid var(--brass);border-radius:22px;background:rgba(0,0,0,.3);padding:0;box-sizing:border-box}
 #card .segT button:not(#cardX):not(#cardI){position:relative;min-height:44px;padding:0 2px;background:none;border:0;box-shadow:none;border-radius:20px;font-weight:700;font-size:13px;color:var(--bone)}
-#card .segT button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;box-shadow:0 0 10px rgba(242,210,122,.4);border:0;transition:background-color .15s}#card .segT button::after{content:none}
+#card .segT button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;box-shadow:0 0 10px rgba(242,210,122,.4);border:0;transition:background-color var(--t-quick)}#card .segT button::after{content:none}
 @media (max-height:720px){#card.setup .civline{display:none}}   /* small phones: the people line and the challenge heading step aside, so the whole card fits on one page */
 #card .menu .cnt{font-size:13px;font-style:normal;font-weight:700;color:var(--mute)}
 #card.setup{gap:4px}#card.setup h3{min-height:36px}#card .acts.civs button:not(#cardX):not(#cardI){padding:0 1px}#card .acts.civs b{font-size:13px}
@@ -243,14 +243,14 @@ button.ok small{color:#8fd4a4}
 /* The door (Build 64): the bottom of the first slot on Jobs; its state is the colour code's ring (the one ring rule below) and the same colour in its words */
 #orders button.cell.door{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px}#orders button.cell.door .top{position:static;display:inline-flex;transform:none;height:auto}#orders button.cell.door .top .gl{position:static;transform:none;width:15px;height:15px}#orders button.cell.door .wd{position:static;transform:none;font-size:12px;line-height:14px;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}
 #orders button.cell.door .dn{position:absolute;top:1px;right:2px;min-width:12px;padding:0 3px;border:1.5px solid var(--ring-r);border-radius:8px;background:var(--panel);color:var(--ring-r);font-size:12px;line-height:13px}   /* how many need you: a ring round the number */
-#orders button.cell.door.pulse{animation:doorp 1.2s ease-out 1}@keyframes doorp{0%{box-shadow:0 0 0 0 rgba(255,255,255,.75)}100%{box-shadow:0 0 0 14px rgba(255,255,255,0)}}
+#orders button.cell.door.pulse{animation:doorp var(--t-settle) ease-out 1}@keyframes doorp{0%{box-shadow:0 0 0 0 rgba(255,255,255,.75)}100%{box-shadow:0 0 0 14px rgba(255,255,255,0)}}
 #orders :is(button.blue,button.st-blue,button.go) .wd,#orders button.blue,#orders button.go{color:var(--ring-b)}#orders button.st-green .wd{color:var(--ring-g)}#orders :is(button.red,button.st-red) .wd,#orders button.red{color:var(--ring-r)}   /* in the row a state's words wear its ring's colour; a card keeps its own words */
 #card .acts .trow{display:flex;gap:3px;min-width:0}#card .trow>button:first-child{flex:1;min-width:0}#card .trow button.goto:not(#cardX):not(#cardI){flex:0 0 44px;width:44px;min-height:44px;padding:0;font-size:22px;font-weight:700;color:var(--lamp);border:1px solid var(--line);border-radius:8px;background:transparent;box-shadow:none}
 /* The mail: each line with its colour on its left edge */
 #card .mrows{display:flex;flex-direction:column;gap:4px}#card button.mr:not(#cardX):not(#cardI){min-height:44px;padding:4px 8px;align-items:flex-start;text-align:left;border-left:4px solid var(--cc)}#card button.mr b{font-size:13px;font-weight:600}#card button.mr small{font-size:12px;color:var(--mute)}
 /* The one ring (Build 64, Albert: "a ring and a glow, never a fill"; "one or two rings"): every state anywhere is this ring in its
    colour, the colour code's three: blue available, green active or done, red wrong. One rule; a control only names its state. */
-:root{--ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b;--ring-w:#e9ecef}   /* the colour code's one home (Build 65): the code reads these too */
+:root{--ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b;--ring-w:#e9ecef;--t-quick:.15s;--t-sweep:.4s;--t-settle:1.2s;--t-long:2.4s}   /* the colour code's one home (Build 65), and the four timings, as SoRen names them (Build 66): quick, a state changes; sweep, a thing moves; settle, a thing comes to rest; long, two settles. The code reads these too */
 :is(#orders,#card,#strip) :is(button.go,button.blue,button.st-blue):not(#cardX):not(#cardI){--rc:var(--ring-b)}
 :is(#orders,#card,#strip) :is(button.ok,button.st-green):not(#cardX):not(#cardI){--rc:var(--ring-g)}
 :is(#orders,#card,#strip) :is(button.red,button.st-red):not(#cardX):not(#cardI){--rc:var(--ring-r)}

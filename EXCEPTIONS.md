@@ -1,0 +1,18 @@
+# First Keep: the exceptions (Build 66, Oct 30, 2026)
+
+Every place the game knowingly bends one of its own rules, with the rule it bends, why, who decided, and where it lives. Albert's rule: "An exception to the logic does not redefine the logic." An exception is kept small, named, and here; anything that bends a rule and is not on this list is a bug. Taken from SoRen's `EXCEPTIONS.md`, where the idea started.
+
+| # | The exception | The rule it bends | Why | Decided | Where |
+|---|---|---|---|---|---|
+| 1 | Research can be started from the Research card, away from the building | One door to one thing; the purist goes to the building | Convenient, and it is research you could start anyway. The › on each row goes to the building, so the purist path sits beside the shortcut | Albert, Oct 30 (Build 64) | `29-card-pages` `grid`, `techgo` in `33-verbs` |
+| 2 | The − and + tiles under each job are 26 to 29 pt wide | Every tap target at least 44 × 44 (Apple) | Six columns on a 375 pt phone leave no more; they are the most-used taps and sit where the thumb rests | Albert, Build 36 | `tests/gate.py` names the exception |
+| 3 | Help and the Guide may scroll; on the iPhone SE (375 × 667) the biggest cards may too | No card needs scrolling (from 390 × 844 up) | They are reading, not controls; the SE is too short for the biggest cards | Build 36 onward | `tests/gate.py` |
+| 4 | The status strip says "Powder" and "Peace" for the fifth and sixth ages | One name for one thing | The real names do not fit the 45 pt cell (measured: Gunpowder 55 pt, Enlightenment 70); the cards keep the full names | Albert, Oct 30 (Build 64) | `AGE_SHORT` in `32-frame` |
+| 5 | The computers see the whole map | You know only what you see, hear or are told | Fog for them would be a large job; said plainly in the Guide | Oct 29 decision | `17-ai`, the Guide |
+| 6 | The alarms (the horn, the bell) have no place: they are heard at full strength however far the camera is | Sound falls off with distance and with the camera's height | An alarm must be heard; only the fighting fades, which is the point of the height rule | Build 64 | `sfx` calls without x, y |
+| 7 | A red message cannot be hidden by hiding its group | A hidden group goes quietly to the mail | A warning you cannot see is no warning: red still shows, the rest of the group goes quiet | Build 64 | `say` in `32-frame` |
+| 8 | Sound, ambience and some drawing use `Math.random` | No `Math.random`: one seeded randomizer for everything random | They are not the simulation: a bird's song or a raindrop's place never changes what happens, and the play fingerprint proves it | Builds 54 onward | `35-sound`, `25-view-weather` |
+| 9 | A few numbers are design inside a measured range, not a law: the camera's 60° lens, the velocity scale (40 a minute), the group radius (60), the fog's sight values, the ambience rates | Use the recognised equation where one fits | The equation fits; its constant has no true value in the game's world (no metre, no real lens). Each is labelled "design" in SCIENCE.md | Builds 62 to 64 | `SCIENCE.md` |
+| 10 | The live game (`index.html`) is still the Build 44 era | Preview only until Albert says live; then one build goes live | By design: live changes only on Albert's word | Albert | `publish.py` |
+
+**Adding one**: a new exception is a row here in the same build that makes it, with Albert's yes. Removing one (the rule now holds) is a line in `CUTS.md`.

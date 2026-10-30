@@ -1,4 +1,4 @@
-# First Keep: the rule book (Oct 30, 2026; Build 64 on the preview)
+# First Keep: the rule book (Oct 30, 2026; Build 65 on the preview)
 
 One home for how this game is built and how the work is done. Every build is checked against it. Where an older note disagrees, this file wins; where Albert restates a rule in the moment, his words win.
 
@@ -84,6 +84,7 @@ The play fingerprint (`tests/baseline.json`) must match, or the change is accept
 
 ## 8. Records, every build
 `CUTS.md` (the build's section, with the harness before and after), `HANDOFF.md` (what stands, the to-do list, what is up in the air, decisions), `GUIDE.md` regenerated from the game (`F.guideMd()`), `SCIENCE.md` when a number rests on the science. Commits as Albert (`acohen2300@users.noreply.github.com`; the repo is public), with the session's trailers. If a session must stop mid-build, commit the source as "work in progress" without publishing.
+`EXCEPTIONS.md` (Build 66, from SoRen): every place the game knowingly bends a rule, with the rule, why, and who decided; a new exception is a row in the build that makes it. Anything that bends a rule and is not there is a bug. The colour code and the four timings live once in the style sheet's `:root`; `tests/palette.py` holds them there.
 
 ## 9. Things that went wrong before (don't repeat)
 - A caravan's raw load crashed the game for seven builds because the goods table was read for a raw key (Build 45 to 52): one home means one lookup (`baseOf`, `nameOf`, `colOf`, `giveTo`).

@@ -707,5 +707,5 @@ function preview() {
 		el.hidden = !h;
 	}
 	if (el.style.getPropertyValue('--cc') !== cc) el.style.setProperty('--cc', cc);
-	el.classList.toggle('fade', !!live && !ask && live.ru - now < 400);
+	el.classList.toggle('fade', !!live && !ask && live.ru - now < timeOf('sweep')); // the fade starts one sweep before the end
 }
