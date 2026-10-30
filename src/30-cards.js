@@ -524,7 +524,7 @@ const CARDS = {
 			fold(
 				'about',
 				'About orders',
-				`<p>Tap open ground: Send ¼, All, or a battalion by name. Tap an enemy to pick how many attack. The War Council opens battalions, shape and Muster; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
+				`<p>Tap open ground, then the sword: Idle, All, or a squad by name goes there. The Squad room (the chip at the left of the jobs) makes squads; the War room sends them with a time and odds; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
 			)
 		);
 	},
@@ -666,7 +666,7 @@ const CARDS = {
 			`<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
       <p><b>Build:</b> pick a menu, then a building. It waits above your finger: drag it, then tap Build. Villagers raise it.</p>
       <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Pause shows the speeds under the button.</p>
-      <p><b>Army:</b> tap open ground with nothing picked: Send ¼ or All. The War Council opens battalions, shape and Muster.</p>
+      <p><b>Army:</b> tap open ground with nothing picked, then the sword: Idle, All or a squad goes there. The chip by the jobs turns the row into the Squad room and the War room.</p>
       <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>

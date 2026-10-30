@@ -1,9 +1,9 @@
 // ═════ 20-view-base.js: canvas, camera, scars on the ground, tracks, zoom ═════
 // ───────────────────────── The view: a tilted table, seen from the south ─────────────────────────
 const cv = $('cv'),
-	ctx = cv.getContext('2d'),
 	mini = $('mini'),
 	mctx = mini.getContext('2d');
+let ctx = cv.getContext('2d'); // the glass; swapped for a cache's context while a badge or a pile is drawn once (Build 62)
 const cam = { x: 400, y: 1600, z: 0.9 };
 const FIG = 0.66; // figures are drawn at 0.66 world units per figure unit: a person stands about 14 tall (Build 59, Albert: from 0.55, after the mockup)
 let cw = 0,
@@ -81,12 +81,34 @@ function scarBurn(b) {
 	}
 }
 // a small parchment tab with a book in red ink, and a count when more than one thing waits
+// the badge is drawn once per count and zoom into BADGE and stamped (Build 62: measured at a tenth of a zoomed-out frame as vector work); the bob is in the stamp
+const BADGE = new Map();
 function researchBadge(x, y, s, n) {
+	const key = `${Math.min(n, 9)}:${s.toFixed(2)}`,
+		q = still() ? 0 : Math.sin(G.t * 4) * 0.8 * s;
+	let c = BADGE.get(key);
+	if (!c) {
+		const w = (n > 1 ? 31 : 23) * s + 4,
+			h = 17 * s + 4;
+		c = document.createElement('canvas');
+		c.width = Math.ceil(w * dpr);
+		c.height = Math.ceil(h * dpr);
+		const was = ctx;
+		ctx = c.getContext('2d');
+		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+		badgeArt(w / 2, h / 2, s, n);
+		ctx = was;
+		c.ax = w / 2;
+		c.ay = h / 2;
+		BADGE.set(key, c);
+		trim(BADGE, 40);
+	}
+	ctx.drawImage(c, x - c.ax, y + q - c.ay, c.width / dpr, c.height / dpr);
+}
+function badgeArt(x, by, s, n) {
 	const w = (n > 1 ? 31 : 23) * s,
 		h = 17 * s,
-		q = still() ? 0 : Math.sin(G.t * 4) * 0.8 * s,
-		bx = x - (n > 1 ? 6.5 : 0) * s,
-		by = y + q;
+		bx = x - (n > 1 ? 6.5 : 0) * s;
 	ctx.save();
 	ctx.beginPath();
 	if (ctx.roundRect) ctx.roundRect(x - w / 2, by - h / 2, w, h, h / 2);

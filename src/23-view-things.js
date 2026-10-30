@@ -50,7 +50,6 @@ function drawBld(b, s) {
 		B = BLD[b.kind],
 		c = bldSprite(b, s),
 		k = z / s;
-	if (!B.crop) shadowOf(sx, sy, B.h, B.fp * NAVC * 0.55 * z, z);
 	if (b.prog < 1) {
 		// a building site: the outline staked out, the walls rising with the work
 		const w = B.fp * NAVC * z,
@@ -208,43 +207,38 @@ function deepTrees() {
 	DEEP = { v: G.treeV, G, set: deep };
 	return deep;
 }
-function nodeShadows(N, z) {
+// Every sun shadow on the ground is one path and one fill (Build 62: trees, buildings and people together; measured, the per-thing fills were
+// the dearest pass of the frame, 28% at a normal zoom and 53% close in, headless). One path also means two shadows that overlap darken once, as real ones do.
+// The shadow of a thing h tall with a footprint r wide at (sx, sy): an ellipse laid along the shadow, from the foot outward; a soft pool under it with no light.
+function shadowPath(sx, sy, h, r, z) {
+	ctx.moveTo(sx + r, sy);
+	if (SHADE.a < 0.02) return ctx.ellipse(sx, sy, r, r * TILT, 0, 0, 7);
+	const L = h * SHADE.len * z;
+	ctx.ellipse(sx + SHADE.x * L * 0.5, sy + SHADE.y * L * 0.5, L * 0.5 + r, Math.max(r * 0.55, r * TILT), SHADE.ang, 0, 7);
+}
+function sunShadows(N, list, z, far) {
 	const lit = SHADE.a >= 0.02,
-		deep = deepTrees(),
-		L0 = lit ? SHADE.len * z : 0,
-		ang = lit ? Math.atan2(SHADE.y, SHADE.x) : 0;
+		deep = far ? null : deepTrees();
+	SHADE.ang = lit ? Math.atan2(SHADE.y, SHADE.x) : 0;
 	ctx.fillStyle = lit ? `rgba(0,0,0,${SHADE.a.toFixed(3)})` : 'rgba(0,0,0,.18)';
 	ctx.beginPath();
-	for (const n of N) {
-		const h = NODE_H[n.kind];
-		if (!h || n.amt <= 0 || deep.has(n.id) || (G.fogOn && fogAt(n.x, n.y) === 0)) continue;
-		const f = (0.6 + 0.4 * Math.min(1, n.amt / n.max)) * (n.kind === 'tree' ? 1.4 : 1),
-			r = (n.kind === 'tree' ? 7 : 5) * f * z,
-			sx = SX(n.x),
-			sy = SY(n.y),
-			L = h * f * L0;
-		ctx.moveTo(sx + r, sy);
-		if (lit) ctx.ellipse(sx + SHADE.x * L * 0.5, sy + SHADE.y * L * 0.5, L * 0.5 + r, Math.max(r * 0.55, r * TILT), ang, 0, 7);
-		else ctx.ellipse(sx, sy, r, r * TILT, 0, 0, 7);
+	if (!far && DRAW.lvl < 1)
+		for (const n of N) {
+			const h = NODE_H[n.kind];
+			if (!h || n.amt <= 0 || deep.has(n.id) || (G.fogOn && fogAt(n.x, n.y) === 0)) continue;
+			const f = (0.6 + 0.4 * Math.min(1, n.amt / n.max)) * (n.kind === 'tree' ? 1.4 : 1);
+			shadowPath(SX(n.x), SY(n.y), h * f, (n.kind === 'tree' ? 7 : 5) * f * z, z);
+		}
+	for (const [, t, e] of list) {
+		if (t === 1) {
+			const B = BLD[e.kind];
+			if (!B.crop) shadowPath(SX(e.x), SY(e.y), B.h, B.fp * NAVC * 0.55 * z, z);
+		} else if (t === 2) {
+			const U = UNIT[e.kind],
+				box = LOOKBOX[U.look] || [26, 30];
+			shadowPath(SX(e.x), SY(e.y), box[1] * FIG, box[0] * 0.28 * z * FIG + 2, z);
+		}
 	}
-	ctx.fill();
-}
-// the shadow of a thing h tall with a footprint r wide at (sx, sy) on the glass: an ellipse laid along the shadow, from the foot outward
-function shadowOf(sx, sy, h, r, z) {
-	if (SHADE.a < 0.02) {
-		ctx.fillStyle = 'rgba(0,0,0,.18)';
-		ctx.beginPath();
-		ctx.ellipse(sx, sy, r, r * TILT, 0, 0, 7);
-		ctx.fill();
-		return;
-	} // no light to cast one: the soft pool under a thing on an overcast day or a moonless night
-	const L = h * SHADE.len * z,
-		cx = sx + SHADE.x * L * 0.5,
-		cy = sy + SHADE.y * L * 0.5,
-		ang = Math.atan2(SHADE.y, SHADE.x);
-	ctx.fillStyle = `rgba(0,0,0,${SHADE.a.toFixed(3)})`;
-	ctx.beginPath();
-	ctx.ellipse(cx, cy, L * 0.5 + r, Math.max(r * 0.55, r * TILT), ang, 0, 7);
 	ctx.fill();
 }
 // a flame's shadow of a thing near it: away from the fire, long, fading as the light does (1/d²)
@@ -348,12 +342,34 @@ const PILE = {
 	],
 	mill: [['f', 'sack', '#cdb27a']],
 };
+// the piles are drawn once per kind, counts and zoom into PSPR and stamped (Build 62: measured at 29% of a frame at a normal zoom as vector work)
+const PSPR = new Map();
 function pileAt(b, sx, sy, z) {
 	if (b.prog < 1 || z < 0.45) return;
 	const w = BLD[b.kind].fp * NAVC * z,
-		R = G.P[b.owner].res;
-	PILE[b.kind].forEach(([r, shape, col], pi) => {
-		const n = clamp(Math.round(Math.log10((R[r] || 0) + 1) * 1.9), 0, 6); // a pyramid of 3, 2 and 1: full at about 1500
+		R = G.P[b.owner].res,
+		ns = PILE[b.kind].map(([r]) => clamp(Math.round(Math.log10((R[r] || 0) + 1) * 1.9), 0, 6)), // a pyramid of 3, 2 and 1: full at about 1500
+		key = `${b.kind}:${ns.join('')}:${z.toFixed(2)}`;
+	let c = PSPR.get(key);
+	if (!c) {
+		const W = w * 0.62 + 40 * z + 4,
+			H = w * TILT * 0.42 + 14 * z + 4;
+		c = document.createElement('canvas');
+		c.width = Math.ceil(W * dpr);
+		c.height = Math.ceil(H * dpr);
+		const was = ctx;
+		ctx = c.getContext('2d');
+		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+		pileArt(b.kind, ns, 0, 0, w, z);
+		ctx = was;
+		PSPR.set(key, c);
+		trim(PSPR, 60);
+	}
+	ctx.drawImage(c, sx, sy, c.width / dpr, c.height / dpr);
+}
+function pileArt(kind, ns, sx, sy, w, z) {
+	PILE[kind].forEach(([r, shape, col], pi) => {
+		const n = ns[pi];
 		let x0 = sx + w * 0.62 + pi * 10 * z,
 			y0 = sy + w * TILT * 0.42 - pi * 2 * z,
 			i = 0;
@@ -704,7 +720,6 @@ function drawUnit(u, s) {
 		),
 		k = (z * FIG) / s,
 		big = (LOOKBOX[U.look] || [26])[0];
-	shadowOf(sx, sy, (LOOKBOX[U.look] || [26, 30])[1] * FIG, big * 0.28 * z * FIG + 2, z);
 	for (const s of STANDARDS) flameShadow(sx, sy, (LOOKBOX[U.look] || [26, 30])[1] * FIG, big * 0.28 * z * FIG + 2, z, s.x, s.y, 'torch');
 	if (u.owner === 0 && G.sel !== 'all' && u.bn === G.sel) {
 		ctx.strokeStyle = '#ffd35e';

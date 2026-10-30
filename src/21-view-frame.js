@@ -286,7 +286,7 @@ function draw() {
 	const N = viewNodes(wv, wv2, far),
 		sB = quant(z * dpr),
 		sU = quant(z * dpr * FIG);
-	if (!far && DRAW.lvl < 1) nodeShadows(N, z); // the trees' shadows lie on the ground under everything standing (the first pass shed under load)
+	sunShadows(N, list, z, far); // every sun shadow, one path, on the ground under everything standing (the trees' are the first shed under load)
 	// the standing nodes (about 2,000 trees, bushes and rocks) are kept sorted until the view moves a step; the few moving things are merged in
 	for (let i = 0, j = 0; i < N.length || j < list.length; ) {
 		const take = j >= list.length || (i < N.length && N[i].y < list[j][0]),

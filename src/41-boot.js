@@ -260,7 +260,7 @@ window.__fk = {
 	sunAltAt,
 	sunVec,
 	moonVec,
-	shadowOf,
+	sunShadows,
 	rangeFrom,
 	rangeOf,
 	moonPhase,

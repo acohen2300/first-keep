@@ -790,3 +790,47 @@ Albert's list after his first full games on Build 60 (Oct 30; 31 items, two park
 - **Soak, 3 seeds, 20 minutes, Hard, every hazard**: pass; save 237 to 249 kB; a frame drawn in 8.6, 11.5 and 25.4 ms here (headless; the 25 is one run of three, noise or the shadows: the phone is the measure).
 
 - **Play fingerprint accepted:** Build 61: villagers keep land work, wild workers move only within sight, no auto-hunting on the player side, open yards, farther home finds
+
+## Build 62 preview (not live): the equations, the ground, the lean pass, the audit
+Albert's list of Oct 30 morning, agreed ("That works", then "go full on… precision and accuracy and immaculate code and logic"): every hand-made curve that a recognised equation describes replaced by that equation with its source at the line and a test; the ground as one water-and-energy chain; the lean pass; and `AUDIT-62.md` (optimization, logic, patterns, UI, UX, the group audit, game theory, and the questions). Two mid-build asks taken in because they fit the list: the flank rule, and the ring drawn through the end screen. Each change has one home; SCIENCE.md has every number.
+
+**One home for the lag and for growth** (`relax`, `logistic` in `08-core`): wetness and drying (`37-events`), the market's stock (`36-economy`), a soldier's nerve coming back, a wound closing (`14-sim-troops`), a vassal's loyalty (`36-economy`, `VASSAL.tau` 195 s: the old 5% a step, kept exactly) and the flocks all read the two helpers. Five hand-written copies gone.
+- **Nerve** (`MORALE`): a comrade's fall drains nerve by its share of the group, 1/(breakAt × n), so a group breaks at 30% losses (Dupuy's break point); recovery is the lag toward 1 with τ 15 s, shelter ×1.5 and a priest ×2 on the rate. Before: flat −0.03 a loss and +0.03 a second. The flank weights and the own-wound drain stay design. A new Guide entry says it ("Nerve and the rout").
+- **Flanks by the line** (`fromWhere`, `FLANKING` in `16-sim-fight`; Albert, mid-build): a blow is from the side or behind only when the man cannot turn (engaged with another, slipped, broken) and no comrade stands within 30 toward it; the facing is the group's. Before, each figure's own facing in a crowd made rear blows by chance.
+- **Wounds** close as the lag toward full, τ = max / heal (Cukjati 2001); a half-dead soldier heals in about the time it did, a nearly whole one faster.
+- **Unrest stays an integrator** of pressure: listed as a lag, found not to be one; no target invented. Flagged.
+
+**The ground** (`CLIMATE`, `groundTick`, `muOf`, `slipChance`, `ruts` in `37-events`; `moveTo` in `09-nav`; `drawGround` in `24-view-overlays`): one chain, pure in its state so the science test drives it.
+- Snow at 1 °C and below (Jennings 2018), not 0. Melt by the degree-day method, ice 1.6 × snow (Hock 2003), faster under rain (USACE 1956). Ice by Stefan's law, thickness ∝ √(freezing degree-seconds); it thaws by the degree and the next freeze grows from what is left. What melts wets the ground and what freezes leaves it (conservation); frozen ground is hard. Before: snow and ice vanished by the degree, ice grew linearly, and a thaw left the ground dry.
+- Traction: the ground's friction by cover (dry 0.7, mud 0.45, snow 0.3, ice 0.08 just below freezing rising to 0.25 at −20: Bowden & Hughes 1939); a step that needs more (foot 0.2, horse 0.25, siege 0.3: Hanson 1999) slips with a logistic chance; a shorter stride on ice. Before: a flat 2% a second times the ice. Ice is now worst on a thaw-freeze morning and better in a hard frost, as it is.
+- Ruts: every unit-second on a square deepens its ruts (`G.tread`, 50 × 50, saved); rut depth ∝ passes^0.4 (USFS trafficability) toward full at 300; mud is deeper there (`mudAt`), and the picture pools darker on the same squares (one home: the view's own `TRODE` paint map is gone, and the simulation no longer calls a drawing function from `moveTo`). Roads (the mud research) cut it as they cut mud. Measured on seed 3 over 30 minutes: ruts on 53 → 498 of 2,500 squares, the busiest (the Town Center's lanes) saturating; the first frost made ice 0.14 and the thaw wet the ground.
+- Ice is one thickness for all water (one air temperature). A frozen crossing is parked with its own list (it is a rule change: the Fortress's lake is its wall).
+
+**Sound, the camera, the plume, the crew**
+- Every sound falls off by ISO 9613-2 (`SOUND`, `hearing`): full within half the screen's radius, then the inverse-square law less the air's 5 dB/km over the world's 0.14 m unit; thunder by the same law and its real delay (one metre, `SOUND.metre`, where there were two). Before: a straight line to 1.1 screens with a floor.
+- The camera glides as a critically damped spring (`spring`, `camGo`, `camStop`; ω 9): Follow, Home, the small map, a card's "go there", a march ring, all one home; a drag or a pinch stops it; Reduce motion jumps. Before: a 0.2-a-frame lerp for Follow (faster on a 120 Hz phone) and hard jumps elsewhere. Cards have no motion to ease (static by the rule): nothing to do there.
+- Smoke bends over with the wind as Briggs's plume (height ∝ x^(2/3)), reading the weather's wind.
+- The crew law was already n^0.7 (`BUILDER_POW`): cited (Thomas & Smith 1990) and tested; no change.
+
+**The lean pass**
+- The older buildings (Town Center, Castle, Temple, Library, towers, the wonders and the rest) moved onto the one light: 77 hard outlines (`INK`) became the faint warm edge (`LINE`) and 32 `shade()` darkenings became `lit()` (warm toward the sun, cool toward the shadow). `texture()` stays: it is the wall's courses and planks, not an outline. Judged on the sprite sheet.
+- Props: the inventory found no second barrel, crate, post or rail outside `19`; `wheel` and `planks` are already shared with the figures. Nothing to merge.
+- `freeVil(u)` (`08-core`): one word for a villager with no job that can be given one; the tile's count, Send idle, Idle to me and the computers' hand read it (a sheltering villager was counted idle on the tile before). `u.idle` stays the word for standing with nothing to do this tick.
+- One draw budget (`DRAW`, `still()` in `18-figures`; `shed` in `41-boot`): three levels in one order (the trees' shadows and the rain rings; the moving extras; half the pixels) and a way back after ten quiet seconds. Before, the shedder set the person's Reduce-motion flag and never cleared it.
+- Dead rules swept: the army dock's CSS (seven lines), the half/quarter comments, the stale Help lines ("Send ¼ or All", "the War Council opens battalions"), the second traffic map.
+- Fonts: already subset (226 and 103 glyphs); woff2 would take about a third but needs brotli, not on this machine today. Parked.
+- Measured, not built: comments and indentation are 20% of the source (197 kB); a name-keeping minifier would take about 35% of the shipped file. Parked for Albert's word (stack traces would point at columns).
+
+**Optimization (measured with the profiler; `AUDIT-62.md` §1 has the table)**
+- Every sun shadow (trees, buildings, people) is one path and one fill (`sunShadows`): the per-thing fills were 28% of a frame at a normal zoom and 53% close in; now under 1%. Overlapping shadows darken once.
+- The research badge and the stores' piles are drawn once into caches and stamped (`BADGE`, `PSPR`): 10% and 29% of a frame as vector work, now a stamp each.
+- The simulation is under 1% of a frame at every zoom; the game is draw-bound, and what is left is sprites.
+
+**The end screen** no longer draws the march rings through it (Albert's screenshot: "156s" behind Victory).
+
+**Not changed, and why**: minification and woff2 (above); the group merges in the audit (150 places on the screen: a list, not a tidy); the two stray toast kinds; the bare numbers in the simulation; the Market card scrolling on the SE (the rule is 390 × 844 up). Buildings do not block sight. The computers still hunt on their own.
+
+**Records**: `AUDIT-62.md` (new), SCIENCE.md (18 rows added), `mockups/ui-62-375.png` and `-390.png` (the UI sheet), GUIDE.md regenerated, tests/science.py (the lag, logistic, the break point, Stefan, degree-day, conservation, the snow threshold, traction, ruts, ISO 9613, the crew).
+- **Gate**: pass at four sizes; the fingerprint accepted (the ground: snow at 1 °C, slips by traction, ruts in the mud; nerve on the break point).
+
+- **Play fingerprint accepted:** Build 62: the ground (snow at 1 C, slips by traction, ruts deepen the mud), nerve on the break point, flanks by the line, wounds as a lag

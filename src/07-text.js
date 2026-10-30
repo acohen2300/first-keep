@@ -813,7 +813,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The send strip',
-		'Tap open ground: a small strip at your finger. Send ¼ sends a quarter of each type, nearest first; All sends everyone; with Battalions, each one by name; ⋯ for the rally point, scout and spy; ✕ to cancel. Tap an enemy building or soldier: pick how many of each type, then Attack, with the odds.',
+		'Tap open ground: two buttons at your finger. The sword sends soldiers there: Idle, All, or a squad by name. The people button builds there, sends idle villagers there, or sets how many workers stand there. ⋯ for more about the place; ✕ to cancel. Tap an enemy building or soldier with soldiers picked: they attack.',
 		'Commands should cost one touch.',
 	],
 	[

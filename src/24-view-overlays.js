@@ -449,7 +449,7 @@ function drawFogLayer(z) {
 }
 // your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
 function drawOrders(z) {
-	if (!G.ords) return;
+	if (!G.ords || G.over) return; // the end screen is not drawn through (Albert, Oct 30: a ring's "156s" showed behind Victory)
 	// your groups: a dashed line from the group to where it is going, a ring to tap, the time left beside it.
 	// Once arrived the ring stays, faint, so the order can still be tapped (Build 42)
 	ctx.save();
