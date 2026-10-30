@@ -121,7 +121,11 @@ const SKIP_U = new Set([
 	'sk',
 	'sgx',
 	'sgy',
-]);
+	'px',
+	'py',
+	'gp',
+	'gpT',
+]); // px/py: where it stood last step (drawing); gp/gpT: the group power of the tick
 let holdSave = false; // while the Resume card waits, nothing may overwrite the save it offers
 const inFight = () => G.units.some((u) => u.owner === 0 && u.tgt && u.tgt.hp > 0);
 let fightHold = 0;
@@ -228,6 +232,8 @@ function saveGame(force) {
 			blds,
 			units,
 		}; // trees are most of the map: five numbers each
+		const prev = localStorage.getItem(SAVEKEY);
+		if (prev) localStorage.setItem(SAVEKEY + '.bak', prev); // the save before this one, kept: a save cut off mid-write still leaves a game (Build 63)
 		localStorage.setItem(
 			SAVEKEY,
 			JSON.stringify(S, (k, v) => (typeof v === 'number' && !Number.isInteger(v) ? Math.round(v * 100) / 100 : v)),
@@ -239,10 +245,10 @@ function saveGame(force) {
 		}
 	} // a save that did not happen says so, once a minute (Build 42: it used to fail silently)
 }
-function readSave() {
+function readSave(key = SAVEKEY) {
 	try {
-		let S = JSON.parse(localStorage.getItem(SAVEKEY) || 'null');
-		if (!S || !S.units || !S.P) return null;
+		let S = JSON.parse(localStorage.getItem(key) || 'null');
+		if (!S || !S.units || !S.P) return key === SAVEKEY ? readSave(SAVEKEY + '.bak') : null; // the last save failed: the one before it
 		while (S.v < SAVEV && MIGRATE[S.v]) S = MIGRATE[S.v](S);
 		if (S.v !== SAVEV) {
 			localStorage.setItem(SAVEKEY + '.old', JSON.stringify(S));
@@ -252,9 +258,15 @@ function readSave() {
 		} // kept aside, never lost
 		return S.P.length === 5 ? S : null;
 	} catch (e) {
-		return null;
+		return key === SAVEKEY ? readSave(SAVEKEY + '.bak') : null;
 	}
 }
+// every old shape has a step to the next: a save from any build since the chain began opens (the gate checks this)
+const migrateChain = () => {
+	const ks = Object.keys(MIGRATE).map(Number);
+	for (let v = Math.min(...ks); v < SAVEV; v++) if (!MIGRATE[v]) return `no step from save shape ${v}`;
+	return '';
+};
 function clearSave() {
 	try {
 		localStorage.removeItem(SAVEKEY);

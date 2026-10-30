@@ -415,21 +415,31 @@ function wildTick(u, dt, SP) {
 			const nx = clamp(u.run.x, 20, MAP - 20),
 				ny = clamp(u.run.y, 20, MAP - 20);
 			const sp = U.spd * (hurtNow ? 0.45 : 1);
-			u.x += clamp(nx - u.x, -1, 1) * sp * dt;
-			u.y += clamp(ny - u.y, -1, 1) * sp * dt;
-			u.fx = Math.sign(nx - u.x) || u.fx;
-			u.mvT = G.t;
-			if (blockedCell(gcell(u.x, u.y), WILD)) {
-				const f = freeNear(Math.floor(u.x / NAVC), Math.floor(u.y / NAVC), WILD, 6, u.x, u.y);
-				if (f) {
-					u.x = f.x;
-					u.y = f.y;
+			// a step that slides along a wall, as moveTo does (Build 63: the old step walked into the building and jumped out: the glitch)
+			let x1 = u.x + clamp(nx - u.x, -1, 1) * sp * dt,
+				y1 = u.y + clamp(ny - u.y, -1, 1) * sp * dt;
+			if (blockedCell(gcell(x1, y1), WILD)) {
+				if (!blockedCell(gcell(x1, u.y), WILD)) y1 = u.y;
+				else if (!blockedCell(gcell(u.x, y1), WILD)) x1 = u.x;
+				else {
+					x1 = u.x;
+					y1 = u.y;
+					u.run = null; // cornered: it stops, and picks a new way off next look
 				}
 			}
+			u.fx = Math.sign(nx - u.x) || u.fx;
+			u.x = x1;
+			u.y = y1;
+			u.mvT = G.t;
 		} else if (G.t > (u.graze || 0)) {
 			u.graze = G.t + rnd(3, 8);
-			u.gx = u.hx + rnd(-40, 40);
-			u.gy = u.hy + rnd(-30, 30);
+			const gx = u.hx + rnd(-40, 40),
+				gy = u.hy + rnd(-30, 30),
+				f = blockedCell(gcell(gx, gy), WILD) ? freeNear(Math.floor(gx / NAVC), Math.floor(gy / NAVC), WILD, 3, gx, gy) : { x: gx, y: gy };
+			if (f) {
+				u.gx = f.x; // graze only where it fits: a spot inside a building had it nosing the wall (Build 63)
+				u.gy = f.y;
+			}
 		} else if (u.gx !== undefined) moveTo(u, u.gx, u.gy, dt * 0.3, 3, 1);
 		return;
 	}

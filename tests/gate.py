@@ -51,6 +51,9 @@ PLAY = """async () => {
   tap('#scoreP'); if (!G.card || G.card.type !== 'score') out.push('Score card did not open'); F.act('close');
   tap('#pauseB'); if (!G.paused) out.push('Pause did not pause'); tap('#pauseB'); if (G.paused) out.push('Pause did not resume');
   for (let i = 0; i < 90; i++) F.step(1 / 30); const t = G.t; F.saveGame(true); const S = F.readSave(); if (!S) out.push('no save written'); else { F.loadGame(S); if (Math.abs(F.G.t - t) > 0.5) out.push('reload lost the clock'); }
+  // the save chain (Build 63): every old shape has a step; the oldest shape walks every step without throwing; a broken save falls back to the one before
+  { const c = F.migrateChain(); if (c) out.push(c); const v0 = Math.min(...Object.keys(F.MIGRATE).map(Number)); let S0 = JSON.parse(localStorage.getItem(F.SAVEKEY)); S0.v = v0; try { while (S0.v < F.SAVEV) S0 = F.MIGRATE[S0.v](S0); if (S0.v !== F.SAVEV) out.push('migration stopped at ' + S0.v); } catch (e) { out.push('migration threw: ' + e.message); }
+    F.saveGame(true); F.saveGame(true); const good = localStorage.getItem(F.SAVEKEY); localStorage.setItem(F.SAVEKEY, good.slice(0, 200)); if (!F.readSave()) out.push('a cut-off save did not fall back to the one before'); localStorage.setItem(F.SAVEKEY, good); }
   return out; }"""
 # Every verb a button can send must have a handler: the class of bug behind the dead Build menu
 # The play fingerprint: a fixed game on a fixed seed, scripted the same way every time, and every side's counts at each minute.

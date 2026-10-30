@@ -110,6 +110,16 @@ function navRebuild() {
 			};
 			if ((B(c - 1) && B(c + 1)) || (B(c - NC) && B(c + NC))) NAV.solid[c] = 1;
 		}
+	// clearance (Albert, Build 63: "units need to know where they fit"): a figure is nearly a square wide, so a square it may stand on keeps
+	// three of its four sides open. A square walled on two sides (a corner pocket, a slit by a tree or the lake) is shut; an erosion, not a
+	// flood, so it is judged on the grid as it was and never eats inward. Gates are the exception: a gate is walled on both sides by design.
+	const was = NAV.prev === NAV.solid ? NAV.solid : NAV.solid.slice();
+	for (let y = 1; y < NC - 1; y++)
+		for (let x = 1; x < NC - 1; x++) {
+			const c = y * NC + x;
+			if (was[c] || NAV.gate[c]) continue;
+			if ((was[c - 1] ? 1 : 0) + (was[c + 1] ? 1 : 0) + (was[c - NC] ? 1 : 0) + (was[c + NC] ? 1 : 0) >= 2) NAV.solid[c] = 1;
+		}
 	// which squares are joined by open ground (gates counted open: the finest cut is made by the search itself)
 	const C = NAV.comp,
 		Q = AS.q;
@@ -646,7 +656,7 @@ function moveTo(u, x, y, dt, r, SP) {
 }
 
 // ───────────────────────── Placement ─────────────────────────
-// Buildings that train people keep one free square around them so the new ones can walk out; everything else may touch (walls and gates too).
+// Every building keeps one free square around it (a lane, so a figure never stands in a wall); walls, gates and crops may touch.
 function canPlace(o, kind, x, y) {
 	const B = BLD[kind],
 		n = B.fp,
@@ -666,16 +676,8 @@ function canPlace(o, kind, x, y) {
 				if (kind === 'gate' && q.kind === 'wall' && q.owner === o) continue;
 				return 'Something is in the way';
 			}
-			if (
-				!B.wallish &&
-				!B.crop &&
-				j >= 0 &&
-				j < n &&
-				(i === -1 || i === n) &&
-				!BLD[q.kind].wallish &&
-				!BLD[q.kind].crop
-			)
-				return 'Leave a gap: a wall shows on each side';
+			// a lane on every side (Build 63: "buildings need buffers"); walls, gates and crops may touch anything
+			if (!B.wallish && !B.crop && !BLD[q.kind].wallish && !BLD[q.kind].crop) return 'Leave a gap: a lane round each building';
 			if (!BLD[q.kind].wallish && (TRAINERS.has(kind) || TRAINERS.has(q.kind)))
 				return 'Leave a lane around buildings that train people';
 		}
@@ -707,6 +709,7 @@ function canPlace(o, kind, x, y) {
 	return null;
 }
 // Where the ghost lands: the nearest spot that lines up with a building of yours, touching or with one lane between, else where the finger is.
+const GUIDE_R = 260; // how far a building reaches with its alignment lines
 function snapGhost(o, kind, x, y, tol) {
 	const B = BLD[kind],
 		h = (B.fp * NAVC) / 2,
@@ -716,19 +719,26 @@ function snapGhost(o, kind, x, y, tol) {
 		bd = tol;
 	for (const b of G.blds) {
 		if (b.owner !== o || b.hp <= 0 || BLD[b.kind].wallish) continue;
-		const bh = halfOf(b);
-		if (Math.abs(b.x - x) > bh + h + tol + 40 || Math.abs(b.y - y) > bh + h + tol + 40) continue;
-		const alignX = [b.x, b.x - bh + h, b.x + bh - h],
+		const bh = halfOf(b),
+			alignX = [b.x, b.x - bh + h, b.x + bh - h],
 			alignY = [b.y, b.y - bh + h, b.y + bh - h];
-		for (const gap of [bh + h, bh + NAVC + h]) {
-			// flush first, then with a lane between
-			for (const cx of [b.x - gap, b.x + gap]) for (const cy of alignY.concat([y])) consider(cx, cy);
-			for (const cy of [b.y - gap, b.y + gap]) for (const cx of alignX.concat([x])) consider(cx, cy);
+		if (Math.abs(b.x - x) <= bh + h + tol + 40 && Math.abs(b.y - y) <= bh + h + tol + 40)
+			for (const gap of [bh + h, bh + NAVC + h]) {
+				// beside it: flush first, then with a lane between
+				for (const cx of [b.x - gap, b.x + gap]) for (const cy of alignY.concat([y])) consider(cx, cy);
+				for (const cy of [b.y - gap, b.y + gap]) for (const cx of alignX.concat([x])) consider(cx, cy);
+			}
+		if (Math.abs(b.x - x) < GUIDE_R && Math.abs(b.y - y) < GUIDE_R) {
+			// in line with it, farther off: a centre or an edge on the same line, the other axis left where the finger is (Build 63, Albert:
+			// "when a PDF sees you moving an element it brings up alignment lines, with a light snap pull"); the guide is drawn by drawGhost
+			for (const cx of alignX) consider(cx, y, 'x');
+			for (const cy of alignY) consider(x, cy, 'y');
 		}
 	}
-	function consider(cx, cy) {
+	function consider(cx, cy, axis) {
 		const s = snapPos(kind, cx, cy),
 			d = hyp(s.x - x, s.y - y);
+		if (axis && Math.abs((axis === 'x' ? s.x : s.y) - (axis === 'x' ? cx : cy)) > 0.5) return; // the grid could not keep it on the line: no pull
 		if (d < bd && !canPlace(o, kind, s.x, s.y)) {
 			bd = d;
 			best = s;

@@ -577,7 +577,7 @@ function skyTurn() {
 			: c.dry >= CLIMATE.drought.dry && c.T > CLIMATE.drought.temp
 				? 'drought'
 				: 'clear';
-	if (G.wx !== was && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6, null, null, wxWhy(G.wx, was, P, c));
+	if (G.wx !== was && G.t > 1 && WEATHER[G.wx].text) say(WEATHER[G.wx].text, '', 6, null, null, wxWhy(G.wx, was, P, c));
 }
 function climateTick(dt) {
 	const c = G.clim;

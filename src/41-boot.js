@@ -59,6 +59,7 @@ function frame(now) {
 				n++;
 			}
 			if (n >= CATCHUP) acc = 0;
+			DRAW.alpha = clamp(acc / DT, 0, 1);
 			ambience(d);
 		}
 		if (now - lastSave > SAVE_EVERY * 1000) {
@@ -293,6 +294,10 @@ window.__fk = {
 	fireHeat,
 	relax,
 	turtlePlan,
+	migrateChain,
+	MIGRATE,
+	SAVEV,
+	SAVEKEY,
 	BUILDER_POW,
 	hearing,
 	SOUND,

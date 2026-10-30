@@ -138,6 +138,8 @@ function newGame(seed, carry) {
 		G.hz = seed === todaySeed() ? { ...TODAY_HZ } : { ...(SET.hz || HZ_DEFAULT) }; // today's challenge: the day's seed and the day's hazards
 		makeMap();
 		initEconomy();
+		G.clim.T = airTemp();
+		skyTurn(); // 5 weather: the first sky from the season's chain, not always clear
 		navRebuild();
 		const f = fairness();
 		G.fair = { roll, spread: f.spread };
@@ -251,14 +253,15 @@ const LAYOUT = [
 	['cemetery', 480, 640, 46],
 	['vagabonds', 480, 640, 46],
 ];
-function makeLakes(d, r) {
-	// a corner's own lake: the same size and the same distance from home in every corner, at its own angle
+function makeLakes(d, r, spot = {}) {
+	// a corner's own lake: the same size and the same distance from home in every corner, at its own angle; clear of the home pocket (layer 1)
 	for (let t = 0; t < 80; t++) {
 		const a = rnd(0.2, 1.37),
 			x = Math.cos(a) * d,
 			y = Math.sin(a) * d;
 		if (x + r + 70 > 700 || y + r + 70 > 700) continue; // a wide lane along the middle lines
 		if (hyp(x - 700, y - 700) < r + LAKE0.r + 110) continue; // and between it and the great lake
+		if (Object.values(spot).some((q) => hyp(q.x - x, q.y - y) < r + 60)) continue; // and off the home finds
 		return [{ x, y, r }];
 	}
 	return [{ x: 430, y: 330, r: 90 }];
@@ -445,28 +448,24 @@ function makeRiver(L, w) {
 	return C.filter((_, i) => !cut.has(i));
 }
 // one corner's finds: each at the distance every corner shares (dist), at an angle of its own; the home pocket keeps to the corner behind the Town Center
-function laySpots(lay, dist, loc) {
-	const taken = [],
-		spot = {},
+function laySpots(lay, dist, loc, spot = {}, turn = rnd(-TURN, TURN)) {
+	const taken = Object.entries(spot).map(([id, q]) => ({ x: q.x, y: q.y, r: (LAYOUT.find((l) => l[0] === id) || [0, 0, 0, 40])[3] })),
 		sh = (hyp(700, 700) - LAKE0.r - 90) / Math.SQRT2,
 		room = [
 			{ x: 700, y: 700, r: LAKE0.r + 25 },
 			{ x: sh, y: sh, r: 50 },
 			...loc.map((l) => ({ x: l.x, y: l.y, r: l.r + 25 })),
-		], // the great lake, this corner's shrine on its shore, the corner's lake
-		turn = rnd(-TURN, TURN);
-	lay.forEach(([id, r0, r1, clr, a0, a1], i) => {
-		if (a0 !== undefined) {
-			a0 += turn;
-			a1 += turn;
-		}
+		]; // the great lake, this corner's shrine on its shore, the corner's lake and river; and whatever was laid before (the home pocket)
+	for (const [id, r0, r1, clr, a0_, a1_] of lay) {
+		const a0 = a0_ === undefined ? undefined : a0_ + turn,
+			a1 = a1_ === undefined ? undefined : a1_ + turn;
 		let best = null;
 		for (let t = 0; t < 300 && !best; t++) {
 			// 150 tries at the shared distance; then 150 more with the ring widened and the room halved, before any fallback
 			const loose = t >= 150,
 				w = loose ? 0.25 : 0,
 				a = a0 === undefined ? rnd(-Math.PI, Math.PI) : rnd(a0 - w, a1 + w),
-				d = loose ? rnd(r0 * 0.85, r1 * 1.15) : dist[i],
+				d = loose ? rnd(r0 * 0.85, r1 * 1.15) : dist[id],
 				x = Math.cos(a) * d,
 				y = Math.sin(a) * d,
 				c = loose ? clr / 2 : clr;
@@ -479,9 +478,18 @@ function laySpots(lay, dist, loc) {
 			dm = ((r0 + r1) / 2) * 0.7; // the fallback: the middle of its own range, turned with the home pocket
 		spot[id] = best || { x: Math.cos(am) * dm, y: Math.sin(am) * dm };
 		taken.push({ x: spot[id].x, y: spot[id].y, r: clr });
-	});
+	}
 	return spot;
 }
+// The map in five layers (Albert, Build 63): every corner gets the same constants and its own rolls of the one randomizer, in this order:
+//   1 home: the pocket behind the Town Center, the same finds at the same distances (the two constants: the clear radius and what the pocket holds);
+//   2 ground: what never moves, the corner's lake and river, laid clear of the pocket;
+//   3 wild: the finds beyond the pocket, the forest, the deposits in it;
+//   4 movables: the game, the boar, the finds that walk or are carried off (chest, ruins, den, cemetery, vagabonds);
+//   5 weather: the first sky, rolled from the season's chain (in newGame, once the economy stands).
+// Fair is not mirror: each corner is its own roll of the same element. The measure is fairness(): the walks, and the villager-minutes to the next age.
+const HOME_IDS = new Set(['bushP', 'groveP', 'stoneP', 'goldP', 'ironP']),
+	MOVE_IDS = new Set(['deerA', 'deerB', 'boar', 'chest', 'ruins', 'den', 'cemetery', 'vagabonds']);
 function makeMap() {
 	const N = G.nodes;
 	// this game's land: its character, how far its rings stretch (Build 39: every map felt the same); what every corner shares: each find's distance from home, the lake's size and distance
@@ -497,27 +505,53 @@ function makeMap() {
 		a1,
 	]); // stretched, never past the old outer ring
 	if (Ld.extra) lay.push(['extra', 240, 380, 30]);
-	const dist = lay.map(([, r0, r1]) => rnd(r0, r1)),
+	const dist = Object.fromEntries(lay.map(([id, r0, r1]) => [id, rnd(r0, r1)])), // the constants: one distance an id, shared by every corner
+		layHome = lay.filter(([id]) => HOME_IDS.has(id)),
+		layWild = lay.filter(([id]) => !HOME_IDS.has(id) && !MOVE_IDS.has(id)),
+		layMove = lay.filter(([id]) => MOVE_IDS.has(id)),
 		lakeD = rnd(430, 580),
 		lakeR = rnd(85, 120),
 		riverW = rnd(RIVER.w[0], RIVER.w[1]);
 	G.lakes = [{ ...LAKE0 }];
 	for (const p of G.P) {
 		if (p.id === WILD) continue;
-		const lake = makeLakes(lakeD, lakeR),
-			loc = [...lake, ...makeRiver(lake[0], riverW)],
-			spot = laySpots(lay, dist, loc),
-			{ trees: forest, dep } = makeForest(spot, loc);
 		const [kx, ky] = p.keep,
 			sx = kx < MID ? 1 : -1,
 			sy = ky < MID ? 1 : -1,
-			at = (dx, dy) => [kx + dx * sx, ky + dy * sy];
+			at = (dx, dy) => [kx + dx * sx, ky + dy * sy],
+			turn = rnd(-TURN, TURN);
+		// 1 home
+		const spot = laySpots(layHome, dist, [], {}, turn),
+			c = (id) => at(spot[id].x, spot[id].y),
+			P = (id, [dx, dy]) => at(spot[id].x + dx, spot[id].y + dy);
+		for (const o of SHAPE.bushes.slice(0, 5)) N.push(node('bush', 'food', ...P('bushP', o), 180 * RICH)); // the home pocket: enough to start on, far from every neighbour
+		for (let i = 0; i < 12; i++)
+			N.push(
+				node(
+					'tree',
+					'wood',
+					...P('groveP', [((i % 4) - 1.5) * 22 + rnd(-4, 4), (Math.floor(i / 4) - 1) * 22 + rnd(-4, 4)]),
+					120 * RICH,
+				),
+			);
+		for (const [id, kind] of [
+			['stoneP', 'stone'],
+			['goldP', 'gold'],
+			['ironP', 'iron'],
+		])
+			for (const o of SHAPE.pair) N.push(node(kind, kind, ...P(id, o), 300 * RICH));
+		G.blds.push(mkBld(p.id, 'keep', kx, ky, 1));
+		// 2 ground
+		const lake = makeLakes(lakeD, lakeR, spot),
+			loc = [...lake, ...makeRiver(lake[0], riverW)];
 		for (const l of loc) {
 			const [x, y] = at(l.x, l.y);
 			G.lakes.push(l.river ? { x, y, r: l.r, river: true } : { x, y, r: l.r });
 		}
-		const c = (id) => at(spot[id].x, spot[id].y),
-			P = (id, [dx, dy]) => at(spot[id].x + dx, spot[id].y + dy);
+		// 3 wild (the movables' spots are rolled here too, before the forest, so it leaves them their clearings; they are placed in 4)
+		laySpots(layWild, dist, loc, spot, turn);
+		laySpots(layMove, dist, loc, spot, turn);
+		const { trees: forest, dep } = makeForest(spot, loc);
 		for (const id of ['bushA', 'bushB'])
 			for (const o of SHAPE.bushes) N.push(node('bush', 'food', ...P(id, o), 180 * RICH));
 		for (let i = 0; i < 20; i++)
@@ -538,22 +572,6 @@ function makeMap() {
 					120 * RICH,
 				),
 			);
-		for (const o of SHAPE.bushes.slice(0, 5)) N.push(node('bush', 'food', ...P('bushP', o), 180 * RICH)); // the home pocket: enough to start on, far from every neighbour
-		for (let i = 0; i < 12; i++)
-			N.push(
-				node(
-					'tree',
-					'wood',
-					...P('groveP', [((i % 4) - 1.5) * 22 + rnd(-4, 4), (Math.floor(i / 4) - 1) * 22 + rnd(-4, 4)]),
-					120 * RICH,
-				),
-			);
-		for (const [id, kind] of [
-			['stoneP', 'stone'],
-			['goldP', 'gold'],
-			['ironP', 'iron'],
-		])
-			for (const o of SHAPE.pair) N.push(node(kind, kind, ...P(id, o), 300 * RICH));
 		for (const o of SHAPE.pair) N.push(node('stone', 'stone', ...P('stone', o), 350 * RICH));
 		for (const o of SHAPE.pair) N.push(node('gold', 'gold', ...P('gold', o), 350 * RICH));
 		if (Ld.extra === 'bush') for (const o of SHAPE.bushes) N.push(node('bush', 'food', ...P('extra', o), 180 * RICH));
@@ -566,7 +584,7 @@ function makeMap() {
 					N.push(node('bush', 'food', ...at(d.x + ox, d.y + oy), 180 * RICH));
 			else for (const [ox, oy] of SHAPE.pair) N.push(node(d.kind, d.kind, ...at(d.x + ox, d.y + oy), 300 * RICH));
 		} // a forest tree: half a grove tree's wood, so a way can be cut through
-		G.blds.push(mkBld(p.id, 'keep', kx, ky, 1));
+		// 4 movables
 		const f = towardMid({ x: kx, y: ky }, 40);
 		for (let i = 0; i < 3; i++) {
 			const v = addUnit(p.id, 'vil', f.x + (i - 1) * 14, f.y + 6);
@@ -678,17 +696,18 @@ function fairness() {
 							.reduce((m, n) => Math.min(m, walkTo(D, n.x, n.y, 20)), 65535),
 					0,
 				);
-			return { k, D, work, throne: walkTo(D, MID, MID, THRONE.isle) };
+			const tp = turtlePlan(p.id, AGES[1], true); // the villager-minutes to the first age-up from this corner, fog ignored (Albert: the fairness measure)
+			return { k, D, work, throne: walkTo(D, MID, MID, THRONE.isle), turtle: tp && isFinite(tp.mins) ? tp.mins : 65535 };
 		}),
 		R = (BLD.keep.fp / 2 + 2) * NAVC;
 	for (const s of S) s.near = Math.min(...S.filter((q) => q !== s).map((q) => walkTo(s.D, q.k.x, q.k.y, R)));
 	const spread = {};
-	for (const m of ['work', 'throne', 'near']) {
+	for (const m of ['work', 'throne', 'near', 'turtle']) {
 		const v = S.map((s) => s[m]),
 			mean = v.reduce((a, b) => a + b, 0) / v.length;
 		spread[m] = Math.round(((Math.max(...v) - Math.min(...v)) / (mean || 1)) * 100) / 100;
 	}
-	return { spread, worst: Math.max(...Object.values(spread)), sides: S.map(({ work, throne, near }) => ({ work, throne, near })) };
+	return { spread, worst: Math.max(...Object.values(spread)), sides: S.map(({ work, throne, near, turtle }) => ({ work, throne, near, turtle })) };
 }
 // The Throne: a walled citadel on the great lake's island, four gates at the four causeways, a tower at each corner, the one shrine at its foot, the Natives' garrison in its yard
 function makeCitadel() {

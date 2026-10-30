@@ -169,6 +169,47 @@ function drawSeal(pl) {
 	const e = P[0];
 	tag('Open: a foe walks in', SX(e.x) - 50, SY(e.y) - 10);
 }
+// alignment guides (Build 63): a thin line from the ghost to every own building whose centre or edge sits on the same line, as a PDF
+// editor draws them while an element moves; the snap pull toward them is snapGhost's
+function drawGuides(sp, h) {
+	ctx.save();
+	ctx.strokeStyle = 'rgba(120,220,255,.8)';
+	ctx.lineWidth = 1;
+	ctx.setLineDash([4, 4]);
+	ctx.beginPath();
+	for (const b of G.blds) {
+		if (b.owner !== 0 || b.hp <= 0 || BLD[b.kind].wallish || Math.abs(b.x - sp.x) >= GUIDE_R || Math.abs(b.y - sp.y) >= GUIDE_R) continue;
+		const bh = halfOf(b);
+		for (const [gx, bx] of [
+			[sp.x, b.x],
+			[sp.x - h, b.x - bh],
+			[sp.x + h, b.x + bh],
+			[sp.x - h, b.x + bh],
+			[sp.x + h, b.x - bh],
+		])
+			if (Math.abs(gx - bx) < 0.5) {
+				const y0 = Math.min(sp.y - h, b.y - bh) - 12,
+					y1 = Math.max(sp.y + h, b.y + bh) + 12;
+				ctx.moveTo(SX(gx), SY(y0));
+				ctx.lineTo(SX(gx), SY(y1));
+			}
+		for (const [gy, by] of [
+			[sp.y, b.y],
+			[sp.y - h, b.y - bh],
+			[sp.y + h, b.y + bh],
+			[sp.y - h, b.y + bh],
+			[sp.y + h, b.y - bh],
+		])
+			if (Math.abs(gy - by) < 0.5) {
+				const x0 = Math.min(sp.x - h, b.x - bh) - 12,
+					x1 = Math.max(sp.x + h, b.x + bh) + 12;
+				ctx.moveTo(SX(x0), SY(gy));
+				ctx.lineTo(SX(x1), SY(gy));
+			}
+	}
+	ctx.stroke();
+	ctx.restore();
+}
 function drawGhost() {
 	const pl = G.place;
 	if (pl && BLD[pl.kind].wallish) drawSeal(pl);
@@ -239,6 +280,7 @@ function drawGhost() {
 	ctx.strokeStyle = ok ? '#7ee07e' : '#de5a44';
 	ctx.lineWidth = 2;
 	ctx.strokeRect(SX(sp.x - n / 2), SY(sp.y - n / 2), n * z, n * z * TILT);
+	drawGuides(sp, n / 2);
 	const s = quant(z * dpr),
 		c = bldSprite({ kind, owner: 0 }, s);
 	ctx.globalAlpha = 0.6;

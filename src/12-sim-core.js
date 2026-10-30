@@ -26,7 +26,11 @@ function step(dt) {
 	G.tick++;
 	G.night = evOn('eclipse') ? 1 : nightness();
 	G.threats = [];
-	for (const v of G.units) if ((v.thr = isThreat(v))) G.threats.push(v);
+	for (const v of G.units) {
+		if ((v.thr = isThreat(v))) G.threats.push(v);
+		v.px = v.x; // where it stood before this step: the frame between two steps is drawn between the two (Build 63)
+		v.py = v.y;
+	}
 	buildGrid();
 	if (G.navDirty) navRebuild();
 	NAV.budget = 4;
@@ -600,7 +604,7 @@ function forage(u, n, drops) {
 // resource the best find the side knows from home gives a villager's rate there (the forager's rate, walk and all); the shortfall over that
 // rate is the villager-minutes; split the villagers by those and the time to the bell follows. The same number, corner by corner, is the
 // map's fairness (Build 65): equal villager-minutes to the age is the deal every seat gets.
-function turtlePlan(o, A = nextAge(o)) {
+function turtlePlan(o, A = nextAge(o), all = false) {
 	const p = G.P[o],
 		k = keepOf(o);
 	if (!A || !k) return null;
@@ -612,7 +616,7 @@ function turtlePlan(o, A = nextAge(o)) {
 		if (!need) continue;
 		const r = RES.find((x) => KEY[x] === key);
 		let best = 0;
-		for (const n of G.nodes) if (n.amt > 0 && n.type === r && (o !== 0 || !G.fogOn || known0(n)) && dist(n, k) < 400) best = Math.max(best, forage(probe, n));
+		for (const n of G.nodes) if (n.amt > 0 && n.type === r && (all || o !== 0 || !G.fogOn || known0(n)) && dist(n, k) < 400) best = Math.max(best, forage(probe, n));
 		for (const b of G.blds) if (b.owner === o && b.prog >= 1 && b.node && b.node.amt > 0 && b.node.type === r) best = Math.max(best, forage(probe, b.node));
 		const vm = best > 0 ? need / (best * 60) : Infinity;
 		rows.push({ key, r, need, vm, rate: best * 60 });

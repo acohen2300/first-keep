@@ -8,7 +8,7 @@ try {
 // One draw budget (Build 62): a phone that falls behind sheds in one order, and climbs back when it catches up. DRAW.lvl: 0 everything;
 // 1 the trees' shadows and the rain's rings go (the two dearest cosmetic passes, measured); 2 the moving extras go (as Reduce motion);
 // 3 half the pixels. still(): is motion off, by the person's setting or by load.
-const DRAW = { lvl: 0, ema: 0, slow: 0, fast: 0 };
+const DRAW = { lvl: 0, ema: 0, slow: 0, fast: 0, alpha: 1 };
 const still = () => lessMotion || DRAW.lvl >= 2;
 const shade = (hex, k) => {
 	const n = parseInt(hex.slice(1), 16),
