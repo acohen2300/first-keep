@@ -169,15 +169,8 @@ button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44p
 #stage.busy #homeB{display:none}
 #stage.picking #homeB{display:none}
 #card .lbl{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.1;min-height:44px}#card .lbl b{font-size:16px}#card .lbl small{color:var(--mute);font-size:13px}
-/* the army dock (Build 40 reviews): once Battalions is researched, the battalions sit above the job bar, one tap each; the chevron folds it to a tab */
-#dock{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 60px);display:flex;align-items:center;gap:4px;z-index:3}
-#dock #dockRow{flex:1;min-width:0;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}#dock #dockRow::-webkit-scrollbar{display:none}
-#dock #dockRow button{flex:0 0 auto;min-height:44px;min-width:52px;padding:0 8px;background:rgba(18,23,21,.94)}#dock #dockRow button small{font-size:12px}
-#dock #dockMin{min-height:44px;min-width:44px;padding:0;background:rgba(18,23,21,.94)}#dock #dockMin::before{content:'⌄';font-size:19px;line-height:1}
-#dock.min #dockRow{display:none}#dock.min{left:auto}#dock.min #dockMin::before{content:'⚔'}
 #pickbar{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid #5ad27a;border-radius:8px;padding:4px 4px 4px 10px;font-weight:700;z-index:3}
 #pickbar{flex-direction:column;align-items:stretch;gap:4px;padding:4px}#pickbar .pbTop,#pickbar .pbRow{display:flex;gap:4px;align-items:center}#pickbar .pbRow:empty{display:none}#pickbar span{flex:1;min-width:0;line-height:1.25;padding-left:6px}#pickbar button{min-height:44px;min-width:44px;padding:0 10px}#pickbar .pbRow button{flex:1;padding:0 4px}#pickbar .gl{position:static;transform:none;width:18px;height:18px;display:block}#pickbar button.on{border-color:var(--gold);color:var(--gold)}
-#stage.picking #dock{bottom:calc(var(--ob) + 112px)}
 /* a building's line: one slot per order it can hold; a filled slot shows what is in it and how far along; tap one to cancel it */
 #card .slots{display:grid;grid-template-columns:repeat(var(--qn,5),minmax(0,1fr));gap:4px}
 #card .slot{position:relative;overflow:hidden;min-height:44px;padding:2px 3px;font-size:13px;line-height:1.1;text-align:center;border-radius:6px}
@@ -288,7 +281,7 @@ button.ok small{color:#8fd4a4}
 'use strict';
 // ═════ 01-rules-basics.js: the map, speeds, difficulty, resources, jobs, players, ages, seasons ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 61; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
+const BUILD = 62; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
 const MAP = 2000,
 	MID = MAP / 2,
 	DT = 1 / 30;
@@ -1089,6 +1082,7 @@ const TAX = {
 };
 const VASSAL = {
 	r: 450,
+	tau: 195, // seconds for loyalty to close 63% of the gap to its target (the first-order lag; the old 5% a 10 s step, kept exactly)
 	garrison: 0.5,
 	garrisonMax: 15,
 	kill: 1,
@@ -5285,20 +5279,29 @@ const TRADE = { f: 80, w: 80, s: 110, i: 120 },
 const ZEAL = { cost: { g: 60 }, secs: 45, cd: 120, mul: 1.2 };
 const SAB = { burn: 0.6, stall: 40 };
 const FLANK = 1.3; // a blow from behind lands 30% harder
+// Where a blow comes from (Build 62, Albert: "a big group's orientation is random; that is not a flank"): a blow counts as from the side or
+// behind only when the man cannot turn to meet it (engaged with another, slipped, or broken) and no comrade stands between him and it
+// within cover (the line covers its own); the facing is the group's line (the mean facing within line), not the one figure's. The unit-level
+// facing of wargaming (the ancient line was turned only at its ends) rather than per-figure chance.
+const FLANKING = { cover: 30, line: 40 };
 // ───────────────────────── Combat you steer: nerve, flanks, charge and fall back, prisoners, conversion ─────────────────────────
-// Every soldier has nerve (0..1). Blows drain it by the share of health they take, times hit (a flank blow 1.5 times, a rear blow twice), being outnumbered drains it, losses beside it drain it;
-// quiet restores it, as do a wall or tower of its own, its Town Center, a priest, and Engagement at the War Council (a shorter rout). At zero it routs:
-// runs for home for a spell, takes more harm, and can be taken prisoner by any foe who lays a hand on it. Most real battles ended in a rout.
+// Every soldier has nerve (0..1). Blows drain it by the share of health they take, times hit (a flank blow 1.5 times, a rear blow twice); being
+// outnumbered drains it; a loss beside it drains it by its share of the group (Dupuy's break point, Build 62: a force breaks when its losses reach
+// a share, breakAt, of its number; Dupuy, *Numbers, Predictions and War*, 1979, and *Understanding War*, 1987, ch. 8: historical breakpoints
+// 10% to 40%). Quiet restores it as the first-order lag toward 1 (tau seconds to 63%); a wall or tower of its own, its Town Center and a priest
+// shorten that time; Engagement at the War Council shortens the rout. At zero it routs: runs for home for a spell, takes more harm, and can be
+// taken prisoner by any foe who lays a hand on it. Most real battles ended in a rout.
 const MORALE = {
 	hit: 0.8,
 	side: 1.5,
 	rear: 2,
 	kill: 0.04,
-	loss: 0.03,
+	breakAt: 0.3,
+	lossR: 40,
 	odds: 0.02,
-	rest: 0.03,
-	shelter: 0.02,
-	priest: 0.03,
+	tau: 15,
+	shelter: 1.5,
+	priest: 2,
 	priestR: 120,
 	rout: 8,
 	routHit: 1.5,
@@ -5333,11 +5336,18 @@ const CLIMATE = {
 	eq: { rain: 1, snow: 0.85, blizzard: 0.85, clear: 0.12, frost: 0.12, drought: 0.04 }, // where wetness settles under each sky
 	mud: [0.45, 0.95], // wetness where mud begins and is full
 	shore: 1.5, // mud within reach of water is this much deeper (pooling)
-	snow: { fall: 0.02, melt: 0.004 }, // depth a second of snowfall adds (a blizzard twice); melt a second per degree above 0
-	ice: { freeze: 0.01, thaw: 0.004 }, // a second below 0 on wet ground; thaw a second per degree above
+	// The ground (Build 62): one water balance. Rain wets the ground (the timelag above); snow and ice melt by the degree-day method, and
+	// what melts goes into the ground's water (nothing vanishes); water freezes into ice by Stefan's law, thickness ∝ √(freezing degree-seconds).
+	snowAt: 1, // °C and below, what falls is snow (Jennings, Winchell, Livneh & Molotch, Nature Comm. 9, 2018: the 50% rain–snow air temperature, 1.0 °C in humid air)
+	snow: { fall: 0.02, melt: 0.004, rain: 0.5, water: 0.5 }, // depth a second of snowfall (a blizzard twice); melt a second per °C above 0 (the degree-day factor; Hock 2003); rain on snow melts it this much faster per °C (the rain's heat, USACE 1956, scaled); full snow holds this much ground water
+	ice: { fdd: 500, melt: 0.0064, water: 0.3 }, // Stefan (1891): thickness = √(freezing degree-seconds / fdd), full at fdd; melt a second per °C above 0, 1.6 × snow (Hock 2003: ice is darker); full ice holds this much ground water
 	terrain: { mud: 0.8, snow: 0.6 }, // Pandolf's factors over dirt: swamp +0.8 at full mud, soft snow +0.6 at full depth
-	slip: 0.02,
-	slipSecs: 1.5, // ice: a chance a second of a slip that holds a man in place
+	rut: { n0: 300, deep: 1, tau: 600 }, // mud by traffic: a square trodden n0 unit-seconds has rut depth deep × full mud; depth ∝ passes^0.4 (USFS trafficability, Build 62); ruts heal with tau
+	// Traction (Build 62): the friction a surface offers against what a step needs. Measured coefficients, boot on surface: dry soil 0.7, wet soil 0.45,
+	// packed snow 0.3, ice 0.08 near 0 °C rising to 0.25 at −20 (Bowden & Hughes 1939: the melt film is what makes ice slick, and deep cold has none).
+	// A walker needs about 0.2 (Hanson, Redfern & Mazumdar, Ergonomics 42, 1999); the chance of a slip rises as what is on offer falls below it.
+	mu: { dry: 0.7, mud: 0.45, snow: 0.3, ice0: 0.08, iceCold: 0.25, coldAt: 20, need: { foot: 0.2, horse: 0.25, siege: 0.3 }, soft: 0.03, stride: 0.25 },
+	slipSecs: 1.5, // a slip holds a man in place this long
 	miss: 0.5,
 	missHurt: 0.08, // snow: an engine slides and its shot falls short, hurting its own crew
 	wear: 0.15, // frost makes blades brittle and rain rusts them: weapons do 15% less until tempered and oiled
@@ -5348,6 +5358,10 @@ const CLIMATE = {
 // (Rothermel); grow: seconds to a full fire (design: a house burns down in 50); near: the gap, in units, at which the heat is a quarter; reach: beyond this none.
 const FIRE = { rate: 0.12, grow: 20, near: 10, reach: 40 };
 const FIREARMS = { chance: 0.12, blast: 0.3, splash: 40, splashHit: 0.3 }; // fire arrows and burning shot ignite a wooden building on a hit (rain halves it); a petard bombard ignites and shakes the neighbours too
+// Sound by distance (Build 62): ISO 9613-2, L = L0 − 20 log10(d / d0) − α d. Full within d0 (half the screen's radius: you hear what you look at),
+// then the inverse-square law, less the air's absorption α: 5 dB a kilometre at 1 kHz, 20 °C, 50% humidity (ISO 9613-1), over a world unit of 0.14 m.
+// Thunder reaches the ear after the flash at 340 m/s over the same metre. floor: below this share it is not played.
+const SOUND = { d0: 0.5, alphaKm: 5, metre: 0.14, floor: 0.03, c: 340 };
 const GARRISON = { r: 70, heal: 0.6 }; // soldiers resting by their own Castle, Barracks or Town Center heal; Garrison wards double it
 const TEACH = { seats: 4, mul: 1.5, tuition: 40 }; // Teach: a soldier learns a newer kind at the School, four at a time; time ×1.5 per age climbed, tuition in gold per age; opened by Veterans
 const TEACH_TO = {
@@ -5364,7 +5378,7 @@ const TEACH_TO = {
 const FALLBACK = { secs: 6, back: 200, hit: 0.7 }; // withdraw in order: fewer losses than a rout
 const PRISON = { secs: 180, ransom: 1.0 }; // a prisoner unransomed in three minutes serves the captor
 const CONVERT = { r: 40, secs: 12, cd: 60 }; // a priest beside an enemy for a spell turns them; the counter is to kill the priest
-const BUILDER_POW = 0.7; // a crew of n builds n^0.7 times as fast as one: two builders ≈ 1.6×, three ≈ 2.1×
+const BUILDER_POW = 0.7; // a crew of n builds n^0.7 times as fast as one: two builders ≈ 1.6×, three ≈ 2.1×. Crowding on a site: output per worker falls as n^−0.25 to n^−0.3 (Thomas & Smith, *Loss of Construction Labor Productivity due to Inefficiencies and Disruptions*, 1990; the overmanning curves), so the crew does n^0.7 (Build 62: cited)
 // Shape (research Formations at the War Council): each battalion takes one, three in all. spd: march speed; hit: damage taken; dmg: damage dealt by its riders; vsMounted: damage taken from riders
 // An army marches in a column (COLUMN, never picked: armies did) and stands to its shape on contact: the Roman three lines, the medieval three battles.
 const FORM = [
@@ -6386,8 +6400,13 @@ const TRIGGERS = () => [
 		'Armies marched in column and deployed into line to fight: the Roman three lines and the medieval three battles, van, main body and rear, were the same idea. Skirmishers and horse archers fought by not being caught (Carrhae, 53 BC).',
 	],
 	[
+		'Nerve and the rout',
+		`Every soldier has nerve. A blow drains it by the share of health it takes (half again from the side, twice from behind); a comrade falling beside it drains it by one share of the group, so a group breaks when it has lost ${Math.round(MORALE.breakAt * 100)}% of its number; being outnumbered three to two drains it slowly. Quiet lets it settle back, ${MORALE.tau} s to recover most of it, faster by a wall or tower of its own and by a priest. At nothing it routs: runs for home ${MORALE.rout} s, takes more harm, and can be taken prisoner.`,
+		'Most real battles ended in a rout, not a last man: armies broke when losses reached a tenth to a third (Dupuy, Understanding War, 1987).',
+	],
+	[
 		'Hit from behind',
-		`A foot soldier or rider struck from behind the way it faces takes ${Math.round((FLANK - 1) * 100)}% more damage. Shooters do not get it. Splitting the army to catch a line from two sides pays.`,
+		`A foot soldier or rider struck from behind the line it holds takes ${Math.round((FLANK - 1) * 100)}% more damage, and its nerve shakes more. It counts only when the man cannot turn to meet it (engaged with another, slipped, or broken) and no comrade stands in the way: a big group is turned only at its ends. Shooters do not get it. Splitting the army to catch a line from two sides pays.`,
 		'Armies lost most men when their line was turned: Cannae, 216 BC.',
 	],
 	[
@@ -6397,7 +6416,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The send strip',
-		'Tap open ground: a small strip at your finger. Send ¼ sends a quarter of each type, nearest first; All sends everyone; with Battalions, each one by name; ⋯ for the rally point, scout and spy; ✕ to cancel. Tap an enemy building or soldier: pick how many of each type, then Attack, with the odds.',
+		'Tap open ground: two buttons at your finger. The sword sends soldiers there: Idle, All, or a squad by name. The people button builds there, sends idle villagers there, or sets how many workers stand there. ⋯ for more about the place; ✕ to cancel. Tap an enemy building or soldier with soldiers picked: they attack.',
 		'Commands should cost one touch.',
 	],
 	[
@@ -6507,8 +6526,8 @@ const TRIGGERS = () => [
 	],
 	[
 		'The weather runs in spells',
-		`A wet minute is likelier after a wet one. Rain: the ground softens to mud, bows reach ${Math.round((1 - WEATHER.rain.rng) * 100)}% less, fire hardly catches. Snow below freezing: the ground deepens, sight shortens. Drought after dry warm days: fields give ${Math.round((1 - WEATHER.drought.crop) * 100)}% less, fire catches at a touch. Frost: stone buildings go up at ${WEATHER.frost.stone * 100}% speed, the ground hardens.`,
-		'Wet roads were mud, wet bowstrings sagged, dry thatch burned, and mortar does not set in frost. Gabriel and Neumann (1962) showed rain runs in spells: tomorrow depends on today.',
+		`A wet minute is likelier after a wet one. Rain: the ground softens to mud, deepest where the feet go (ruts hold water; Roads mend it), bows reach ${Math.round((1 - WEATHER.rain.rng) * 100)}% less, fire hardly catches. Snow at ${CLIMATE.snowAt} °C and below: the ground deepens, sight shortens. Below freezing wet ground turns to ice, thick as the square root of the cold-time; ice is slickest just under freezing and grips better in deep cold; a step that asks more grip than the ground gives slips. What melts wets the ground: a thaw makes mud. Drought after dry warm days: fields give ${Math.round((1 - WEATHER.drought.crop) * 100)}% less, fire catches at a touch. Frost: stone buildings go up at ${WEATHER.frost.stone * 100}% speed, the ground hardens.`,
+		'Wet roads were mud, wet bowstrings sagged, dry thatch burned, and mortar does not set in frost. Gabriel and Neumann (1962) showed rain runs in spells; Stefan (1891) gave the ice; Jennings (2018) the degree snow begins; Bowden and Hughes (1939) why ice is slick.',
 	],
 	[
 		'A wooden building catches fire',
@@ -6679,6 +6698,12 @@ const rnd = (a, b) => a + rng() * (b - a);
 // Every random "when" in the game draws from these two (Build 57, Albert: "the established and correct formula for random events").
 const nextIn = (mean) => -mean * Math.log(1 - rng());
 const hazard = (rate, dt = 1) => rng() < 1 - Math.exp(-rate * dt);
+// One home for a thing that settles toward a level, the first-order lag: x(t) = L + (x0 − L) e^(−dt/τ) (Build 62, Albert: one equation,
+// one home). τ is the time to close 63% of the gap. Wetness and drying (the timelag fuel-moisture model), the market's stock, a soldier's
+// nerve coming back, a wound closing (Cukjati, Reberšek & Miklavčič 2001: healing is a delayed exponential), a vassal's loyalty.
+const relax = (x, level, tau, dt) => level + (x - level) * Math.exp(-dt / tau);
+// One home for growth with room (Verhulst 1838): one step of ΔN = r N (1 − N/K), fast while there is room, slowing as it fills. Flocks.
+const logistic = (n, r, K) => n + r * n * (1 - n / K);
 let NID = 1;
 // one wolf, two wolves; one spearman, two spearmen; one man-at-arms, two men-at-arms
 const plural = (n) =>
@@ -7026,6 +7051,9 @@ function fxv(o, stat, keys) {
 const fxDirty = () => {
 	G.fxv++;
 };
+// Two words for two things (Build 62): a villager is FREE when it has no job and can be given one (the tile's count, Send idle, Idle to me,
+// the computers' hands); it is IDLE (u.idle) when it stands with nothing to do this tick, job or not (the mark over its head, the warning).
+const freeVil = (u) => !u.job && !u.inside;
 const unitKeys = (kind) => {
 	const U = UNIT[kind],
 		k = [kind, baseKind(kind)];
@@ -7706,19 +7734,19 @@ const paceOf = (u, SP) =>
 	(u.chg > G.t ? CHARGE.spd : u.tired > G.t ? CHARGE.tiredSpd : 1);
 function moveTo(u, x, y, dt, r, SP) {
 	if (u.stuck > G.t) return false; // in a pit, or slipped on ice
-	if (
-		G.clim.ice > 0 &&
-		!u.fly &&
-		u.owner !== WILD &&
-		(G.tick + u.id) % 30 === 0 &&
-		rng() < CLIMATE.slip * G.clim.ice * (1 - fxv(u.owner, 'ice', unitKeys(u.kind)).a)
-	) {
-		u.stuck = G.t + CLIMATE.slipSecs;
-		if (u.owner === 0 && !(G.slipT > G.t - 20)) {
-			G.slipT = G.t;
-			say('Ice: your people slip and fall.', 'soft', 4, u);
+	if ((G.tick + u.id) % 30 === 0 && !u.fly && u.owner !== WILD) {
+		rutsOn(u); // a unit-second of traffic on this square (ruts)
+		if (
+			G.clim.ice > 0 &&
+			rng() < slipChance(u, CLIMATE.mu.need[hasTag(u.kind, 'siege') ? 'siege' : hasTag(u.kind, 'mounted') ? 'horse' : 'foot'] * (1 - fxv(u.owner, 'ice', unitKeys(u.kind)).a))
+		) {
+			u.stuck = G.t + CLIMATE.slipSecs;
+			if (u.owner === 0 && !(G.slipT > G.t - 20)) {
+				G.slipT = G.t;
+				say('Ice: your people slip and fall.', 'soft', 4, u);
+			}
+			return false;
 		}
-		return false;
 	}
 	const o = u.owner,
 		gc = gcell(x, y),
@@ -7762,7 +7790,6 @@ function moveTo(u, x, y, dt, r, SP) {
 		}
 		u.mvT = G.t;
 		u.st.walk += m;
-		if (u.kind === 'vil') tread(u);
 	} // real steps only: a small nudge neither turns the figure round nor starts its walk
 	if (stand) return hyp(tx - u.x, ty - u.y) <= 7;
 	return hyp(x - u.x, y - u.y) <= r + 0.5;
@@ -10175,10 +10202,15 @@ function formUp() {
 const DF = () => DIFF[G.diff] || DIFF.normal;
 const react = () => DF().react; // seconds between computer decisions: human-like, no cheats
 function died(u) {
-	if (isSoldier(u) && !u.gone)
-		unitsNear(u, 40, (v) => {
-			if (v.owner === u.owner && isSoldier(v) && v.hp > 0) v.mor -= MORALE.loss;
-		}); // a loss beside you shakes the nerve
+	if (isSoldier(u) && !u.gone) {
+		// a loss beside you shakes the nerve by its share of the group: a group of n breaks after breakAt × n losses (Dupuy's break point)
+		const near = [];
+		unitsNear(u, MORALE.lossR, (v) => {
+			if (v.owner === u.owner && isSoldier(v) && v.hp > 0) near.push(v);
+		});
+		const share = 1 / (MORALE.breakAt * (near.length + 1));
+		for (const v of near) v.mor -= share;
+	}
 	if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 	if (u.kind === 'envoy') G.P[u.owner].envoyOut = false;
 	if (u.kind === 'caravan' && u.by === WILD) robbed(u);
@@ -10517,7 +10549,7 @@ const nearestNode = (u, job) => (bestNode(u, job) || { n: null }).n; // the one 
 // berry picker farthest from home, not a woodcutter)
 function pickVil(o, to, types, site) {
 	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !(site && u.rep === site)),
-		idle = V.filter((u) => !u.job);
+		idle = V.filter(freeVil);
 	if (idle.length) return nearest(idle, to);
 	const T = types ? [].concat(types) : null,
 		free = V.filter((u) => u.job && u.job !== 'repair' && !GOODK.includes(u.job) && !(u.node && u.node.farm && (BLD[u.node.farm.kind].makes || BLD[u.node.farm.kind].sheep))),
@@ -11250,7 +11282,9 @@ function medicTick(u, dt, SP) {
 	const h = homeSpot(u, 90);
 	if (h) moveTo(u, h.x, h.y, dt, 3, SP);
 }
-// Healing: a hospital or a medic heals your own soldiers within reach. The best one in reach counts; they do not add up.
+// Healing: a hospital or a medic heals your own soldiers within reach. The best one in reach counts; they do not add up. A wound closes
+// toward full as the first-order lag (the delayed exponential of Cukjati, Reberšek & Miklavčič 2001: fast while the wound is wide, slowing
+// as it closes); the healer's `heal` is the hit points a second a linear rate would give, so τ = max / heal and a half-dead soldier takes the time it did.
 function healTick(dt) {
 	if (G.tick % 3) return;
 	const H = [];
@@ -11268,7 +11302,7 @@ function healTick(dt) {
 		let best = 0;
 		for (let i = 0; i < H.length; i += 5)
 			if (H[i + 4] === u.owner && H[i + 3] > best && hyp(H[i] - u.x, H[i + 1] - u.y) < H[i + 2]) best = H[i + 3];
-		if (best) u.hp = Math.min(u.max, u.hp + best * fxv(u.owner, 'heal').m * dt * 3);
+		if (best) u.hp = relax(u.hp, u.max, u.max / (best * fxv(u.owner, 'heal').m), dt * 3);
 	}
 }
 
@@ -11329,7 +11363,7 @@ function solTick(u, dt, SP) {
 				dist(b, u) < GARRISON.r,
 		)
 	)
-		u.hp = Math.min(u.max, u.hp + GARRISON.heal * fxv(o, 'garrison').m); // garrisoned: it heals
+		u.hp = relax(u.hp, u.max, u.max / (GARRISON.heal * fxv(o, 'garrison').m), 1); // garrisoned: the wound closes, once a second
 	if (u.state === 'rout') {
 		// broken: it runs from the nearest foe toward home, then comes to itself
 		if (G.t > u.routT) {
@@ -11355,25 +11389,24 @@ function solTick(u, dt, SP) {
 		return;
 	}
 	if ((G.tick + u.id) % 4 === 0) {
-		// the nerve breathes, four times a second: quiet, shelter and a priest restore it; being outnumbered drains it
+		// the nerve breathes, four times a second: quiet lets it settle back toward 1 (the first-order lag, MORALE.tau), faster by a wall or
+		// tower of its own and by a priest; being outnumbered drains it
 		const d4 = dt * 4;
 		let m = u.mor;
-		if (!u.tgt) m += MORALE.rest * fxv(o, 'rest').m * d4;
-		if (
-			bldsNear(
-				u.x,
-				u.y,
-				60,
-				(b) => b.owner === o && b.prog >= 1 && b.hp > 0 && (BLD[b.kind].dmg || BLD[b.kind].wallish) && dist(b, u) < 60,
+		if (!u.tgt) {
+			let rate = fxv(o, 'rest').m;
+			if (
+				bldsNear(
+					u.x,
+					u.y,
+					60,
+					(b) => b.owner === o && b.prog >= 1 && b.hp > 0 && (BLD[b.kind].dmg || BLD[b.kind].wallish) && dist(b, u) < 60,
+				)
 			)
-		)
-			m += MORALE.shelter * fxv(o, 'shelter').m * d4;
-		if (
-			G.priests.some(
-				(p) => p.owner === o && Math.abs(p.x - u.x) < MORALE.priestR && Math.abs(p.y - u.y) < MORALE.priestR,
-			)
-		)
-			m += MORALE.priest * d4;
+				rate *= MORALE.shelter * fxv(o, 'shelter').m;
+			if (G.priests.some((p) => p.owner === o && Math.abs(p.x - u.x) < MORALE.priestR && Math.abs(p.y - u.y) < MORALE.priestR)) rate *= MORALE.priest;
+			m = relax(m, 1, MORALE.tau / rate, d4);
+		}
 		if (u.tgt) {
 			let us = 0,
 				them = 0;
@@ -11941,10 +11974,37 @@ function vsMul(a, t) {
 	return m;
 }
 // ═════ 16-sim-fight.js: damage, pushing apart, plunder, falling, scoring, finishing ═════
+// where a blow comes from, as the cosine between the line's facing and the attacker: 1 from the front, 0 from the side, −1 from behind.
+// The front, whenever the man can turn to meet it or a comrade stands in the way (FLANKING).
+function fromWhere(t, a) {
+	if (t.fx === undefined) return 1;
+	if (!((t.tgt && t.tgt !== a) || t.stuck > G.t || t.state === 'rout')) return 1; // free to turn: no blow is from behind
+	const dx = a.x - t.x,
+		dy = a.y - t.y,
+		d = hyp(dx, dy) || 1;
+	let covered = false,
+		fx = 0,
+		fy = 0;
+	unitsNear(t, FLANKING.line, (v) => {
+		if (v.owner !== t.owner || !isSoldier(v) || v.hp <= 0 || v.inside) return;
+		fx += v.fx || 0;
+		fy += v.fy || 0;
+		if (covered || v === t) return;
+		const ex = v.x - t.x,
+			ey = v.y - t.y,
+			e = hyp(ex, ey) || 1;
+		if (e < FLANKING.cover && (ex * dx + ey * dy) / (e * d) > 0.5) covered = true;
+	});
+	if (covered) return 1;
+	const f = hyp(fx, fy) || 1;
+	return (dx * (fx / f) + dy * (fy / f)) / d;
+}
 function hurt(o, a, t, base) {
 	const A = a ? UNIT[a.kind] : {},
 		isB = !!t.q;
-	let d = base;
+	let d = base,
+		from; // where the blow comes from, found once a blow (the damage and the nerve both read it)
+	const fromOf = () => (from ??= a ? fromWhere(t, a) : 1);
 	if (isB) {
 		d *= A.bld ?? 1;
 		if (a && o !== WILD && t.prog >= 1 && BLD[t.kind].wood && !t.fire) {
@@ -11974,7 +12034,7 @@ function hurt(o, a, t, base) {
 			if (o === WILD && t.owner !== WILD) d *= MORALE.wild;
 			if (t.state === 'rout') d *= MORALE.routHit;
 			else if (t.fb > G.t) d *= FALLBACK.hit;
-			const dot = a && t.fx !== undefined ? ((a.x - t.x) * t.fx + (a.y - t.y) * t.fy) / (dist(a, t) || 1) : 1;
+			const dot = fromOf();
 			if (o !== WILD)
 				t.mor -= ((MORALE.hit * d * (TEMPER[temperOf(t)].nerve || 1)) / t.max) * (dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
 		} // nerve: a blow from the side counts half again, from behind twice; animals do not shake it
@@ -11987,8 +12047,7 @@ function hurt(o, a, t, base) {
 				d *= F.hit || 1;
 				if (F.vsMounted && a && hasTag(a.kind, 'mounted')) d *= F.vsMounted;
 			} // the battalion's shape
-			if (a && A.rng <= 20 && t.fx !== undefined && (a.x - t.x) * t.fx + (a.y - t.y) * t.fy < -0.5 * (dist(a, t) || 1))
-				d *= FLANK; // from behind the way it faces
+			if (a && A.rng <= 20 && fromOf() < -0.5) d *= FLANK; // from behind the line it holds
 		}
 		if (UNIT[t.kind].rarmor && (!a || A.rng > 20)) d *= UNIT[t.kind].rarmor; // roofed: arrows and bolts glance off
 	}
@@ -12579,7 +12638,7 @@ function think(p) {
 	}
 	const tot = RES.reduce((s, r) => s + mix[r], 0) || 1;
 	for (const r of RES) mix[r] /= tot;
-	const idle = vils.find((v) => !v.job),
+	const idle = vils.find(freeVil),
 		short = RES.map((r) => [r, mix[r] * vils.length - jobsN(r)]).sort((a, b) => b[1] - a[1]);
 	if (idle) idle.job = short[0][0];
 	else if (short[0][1] >= 1) {
@@ -12848,10 +12907,15 @@ function leagueTick() {
 // ═════ 18-figures.js: people and beasts, drawn from data ═════
 // ───────────────────────── Figures: every unit drawn once per look, colour, pose and zoom, then stamped ─────────────────────────
 // Local units: 1 = one world unit; feet at (0, 0), facing right, up is negative. A person stands about 21 tall.
-let lessMotion = false;
+let lessMotion = false; // the person's own setting (Reduce motion): honoured everywhere, never set by the game
 try {
 	lessMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 } catch (e) {}
+// One draw budget (Build 62): a phone that falls behind sheds in one order, and climbs back when it catches up. DRAW.lvl: 0 everything;
+// 1 the trees' shadows and the rain's rings go (the two dearest cosmetic passes, measured); 2 the moving extras go (as Reduce motion);
+// 3 half the pixels. still(): is motion off, by the person's setting or by load.
+const DRAW = { lvl: 0, ema: 0, slow: 0, fast: 0 };
+const still = () => lessMotion || DRAW.lvl >= 2;
 const shade = (hex, k) => {
 	const n = parseInt(hex.slice(1), 16),
 		f = (c) => clamp(Math.round(c * k), 0, 255);
@@ -15248,8 +15312,8 @@ const ridgeRoof = (x1, ye, ya, d, col) => {
 			[k, ya - d],
 			[0, ya],
 		],
-		shade(col, 1.08),
-		INK,
+		lit(col, 0.13),
+		LINE,
 		0.5,
 	);
 	P_(
@@ -15259,8 +15323,8 @@ const ridgeRoof = (x1, ye, ya, d, col) => {
 			[k, ya - d],
 			[0, ya],
 		],
-		shade(col, 0.8),
-		INK,
+		lit(col, -0.32),
+		LINE,
 		0.5,
 	);
 }; // a roof whose ridge runs front to back: eaves at ye, apex at ya; the pediment is drawn after
@@ -15274,7 +15338,7 @@ const door = (x, yf, w, h, col = '#3a2614') => {
 			[x - w / 2, yf - h + w / 2],
 		],
 		col,
-		INK,
+		LINE,
 		0.4,
 	);
 };
@@ -15307,7 +15371,7 @@ const banner = (x, y, col, len = 9) => {
 			[x, y - len - 1],
 		],
 		col,
-		INK,
+		LINE,
 		0.3,
 	);
 };
@@ -15321,7 +15385,7 @@ const crenels = (x0, x1, y, col) => {
 				[x, y - 2],
 			],
 			col,
-			INK,
+			LINE,
 			0.3,
 		);
 };
@@ -15333,8 +15397,8 @@ const column = (x, yb, yt, col = '#efe6d4') => {
 			[x + 0.9, yt],
 			[x - 0.9, yt],
 		],
-		LG(x - 1, 0, x + 1, 0, [shade(col, 1.05), shade(col, 0.75)]),
-		INK,
+		LG(x - 1, 0, x + 1, 0, [lit(col, 0.08), lit(col, -0.40)]),
+		LINE,
 		0.3,
 	);
 	P_(
@@ -15345,7 +15409,7 @@ const column = (x, yb, yt, col = '#efe6d4') => {
 			[x - 1.4, yt - 0.8],
 		],
 		col,
-		INK,
+		LINE,
 		0.3,
 	);
 };
@@ -15532,7 +15596,7 @@ const ART = {
 				[-26, d / 2 - 4],
 			],
 			STONE,
-			INK,
+			LINE,
 			0.5,
 		);
 		texture('stone', -26, d / 2 - 4, 26, d / 2 + 1, STONE);
@@ -15546,8 +15610,8 @@ const ART = {
 				[5, -40],
 				[-5, -40],
 			],
-			LG(-5, 0, 5, 0, [shade(STONE, 0.95), shade(STONE, 0.72)]),
-			INK,
+			LG(-5, 0, 5, 0, [lit(STONE, -0.08), lit(STONE, -0.45)]),
+			LINE,
 			0.5,
 		);
 		texture('stone', -5, -40, 5, 0, STONE);
@@ -15567,8 +15631,8 @@ const ART = {
 				[6.5 + tk, -40 - 10 * TILT],
 				[tk / 2, -52],
 			],
-			shade(TILE, 0.6),
-			INK,
+			lit(TILE, -0.60),
+			LINE,
 			0.5,
 		);
 		P_(
@@ -15578,7 +15642,7 @@ const ART = {
 				[tk / 2, -52],
 			],
 			TILE,
-			INK,
+			LINE,
 			0.5,
 		);
 		g.restore();
@@ -15598,8 +15662,8 @@ const ART = {
 					[bx, by - 4],
 					[bx - 9, by - 10],
 				],
-				LG(bx - 9, 0, bx + 9, 0, [shade(STONE, 1.05), shade(STONE, 0.78)]),
-				INK,
+				LG(bx - 9, 0, bx + 9, 0, [lit(STONE, 0.08), lit(STONE, -0.35)]),
+				LINE,
 				0.5,
 			);
 			P_(
@@ -15609,8 +15673,8 @@ const ART = {
 					[bx + 9, by - 10],
 					[bx, by - 4],
 				],
-				shade(STONE, 1.18),
-				INK,
+				lit(STONE, 0.29),
+				LINE,
 				0.5,
 			);
 			L_(bx - 1, by - 10.5, bx + 7, by - 12.5, '#3a3a40', 2.2);
@@ -15639,8 +15703,8 @@ const ART = {
 					[6, -42],
 					[-6, -42],
 				],
-				LG(-6, 0, 6, 0, [shade(STONE, 0.95), shade(STONE, 0.7)]),
-				INK,
+				LG(-6, 0, 6, 0, [lit(STONE, -0.08), lit(STONE, -0.48)]),
+				LINE,
 				0.6,
 			);
 			texture('stone', -6, -42, 6, 0, STONE);
@@ -15652,8 +15716,8 @@ const ART = {
 						[7 + tk, -44 - 12 * TILT],
 						[tk / 2, -56],
 					],
-					shade(SLATE, 0.6),
-					INK,
+					lit(SLATE, -0.60),
+					LINE,
 					0.5,
 				);
 				P_(
@@ -15663,7 +15727,7 @@ const ART = {
 						[tk / 2, -56],
 					],
 					SLATE,
-					INK,
+					LINE,
 					0.5,
 				);
 			}
@@ -15712,8 +15776,8 @@ const ART = {
 				[17, d / 2 - 28],
 				[-17, d / 2 - 28],
 			],
-			LG(-17, 0, 17, 0, [shade(STONE, 0.95), shade(STONE, 0.72)]),
-			INK,
+			LG(-17, 0, 17, 0, [lit(STONE, -0.08), lit(STONE, -0.45)]),
+			LINE,
 			0.6,
 		);
 		texture('stone', -17, d / 2 - 28, 17, d / 2, STONE);
@@ -15741,7 +15805,7 @@ const ART = {
 				[-18, d / 2 - 31],
 			],
 			'#7aa6c8',
-			INK,
+			LINE,
 			0.4,
 		);
 		L_(-17, d / 2 - 0.5, 17, d / 2 - 0.5, c, 1.2);
@@ -15749,8 +15813,8 @@ const ART = {
 	mill(c) {
 		const r = block(30, 16, PLANK, 'plank', 'gable', THATCH, 9);
 		door(0, r.d / 2, 5, 9);
-		E_(-8, r.d / 2 - 3, 3, 2, '#d8c27a', INK, 0.3);
-		E_(9, r.d / 2 - 3, 3, 2, '#d8c27a', INK, 0.3);
+		E_(-8, r.d / 2 - 3, 3, 2, '#d8c27a', LINE, 0.3);
+		E_(9, r.d / 2 - 3, 3, 2, '#d8c27a', LINE, 0.3);
 		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
 	},
 	lumber(c) {
@@ -15769,7 +15833,7 @@ const ART = {
 				[7, r.d / 2 - 4],
 			],
 			'#5a3a1c',
-			INK,
+			LINE,
 			0.4,
 		);
 		E_(9, r.d / 2 - 4.6, 1.6, 1.2, '#f2cf55');
@@ -15894,7 +15958,7 @@ const ART = {
 				[7 + r.k / 2, -28],
 			],
 			'#5a5550',
-			INK,
+			LINE,
 			0.4,
 		);
 		P_(
@@ -15905,7 +15969,7 @@ const ART = {
 				[-4, r.d / 2 - 9],
 			],
 			'#1a120a',
-			INK,
+			LINE,
 			0.4,
 		);
 		E_(1, r.d / 2 - 3, 3.4, 2.4, 'rgba(255,140,40,.85)');
@@ -16030,7 +16094,7 @@ const ART = {
 				[-21, d / 2 - 2],
 			],
 			'#d8cdb4',
-			INK,
+			LINE,
 			0.5,
 		);
 		block(40, 22, PLASTER, null, 'flat');
@@ -16043,8 +16107,8 @@ const ART = {
 					[20 + k, d / 2 - 22 - d],
 					[14 + k / 2, d / 2 - 34 - d / 2],
 				],
-				shade(SLATE, 0.6),
-				INK,
+				lit(SLATE, -0.60),
+				LINE,
 				0.5,
 			);
 			P_(
@@ -16055,7 +16119,7 @@ const ART = {
 					[-14 + k / 2, d / 2 - 34 - d / 2],
 				],
 				SLATE,
-				INK,
+				LINE,
 				0.6,
 			);
 			P_(
@@ -16067,7 +16131,7 @@ const ART = {
 					[-3, d / 2 - 44],
 				],
 				STONE,
-				INK,
+				LINE,
 				0.5,
 			);
 		} else
@@ -16079,7 +16143,7 @@ const ART = {
 						[0, d / 2 - 31],
 					],
 					LG(0, -30, 0, -20, ['#efe6d4', '#c8bca2']),
-					INK,
+					LINE,
 					0.6,
 				));
 		L_(-20, d / 2 - 0.5, 20, d / 2 - 0.5, c, 1.2);
@@ -16112,9 +16176,9 @@ const ART = {
 		// a low hall of pale stone, a shallow dome, steam from a vent, a pool in front
 		const r = block(28, 14, '#e6dcc6', 'stone', 'flat', null, 0, 30);
 		const d = r.d;
-		E_(0, -14, 10, 4.5, LG(-10, 0, 10, 0, [shade(TILE, 1.1), shade(TILE, 0.72)]), INK, 0.5);
-		E_(0, -16.5, 6, 2.6, shade(TILE, 1.2), INK, 0.4);
-		E_(0, d / 2 + 2, 9, 3.2, '#4e93ad', INK, 0.5);
+		E_(0, -14, 10, 4.5, LG(-10, 0, 10, 0, [lit(TILE, 0.16), lit(TILE, -0.45)]), LINE, 0.5);
+		E_(0, -16.5, 6, 2.6, lit(TILE, 0.32), LINE, 0.4);
+		E_(0, d / 2 + 2, 9, 3.2, '#4e93ad', LINE, 0.5);
 		E_(-2, d / 2 + 1.4, 5, 1.6, 'rgba(230,245,255,.5)');
 		column(-10, d / 2 - 1, d / 2 - 13);
 		column(10, d / 2 - 1, d / 2 - 13);
@@ -16237,7 +16301,7 @@ const ART = {
 				[9, d / 2 - 7],
 			],
 			'#8a5a2a',
-			INK,
+			LINE,
 			0.4,
 		);
 		E_(11.5, d / 2 - 9, 1.6, 1.6, '#e8c860');
@@ -16254,7 +16318,7 @@ const ART = {
 					[-21 + i * 1.5, d / 2 - i * 1.6 - 1.6],
 				],
 				'#d8cdb4',
-				INK,
+				LINE,
 				0.4,
 			);
 		sides(-16, 16, d / 2 - 5, 22, d, '#c9bfa6');
@@ -16266,7 +16330,7 @@ const ART = {
 				[-16, d / 2 - 27],
 			],
 			'#c9bfa6',
-			INK,
+			LINE,
 			0.4,
 		);
 		for (let x = -15; x <= 15; x += 5) column(x, d / 2 - 5, d / 2 - 27);
@@ -16278,7 +16342,7 @@ const ART = {
 				[0, d / 2 - 38],
 			],
 			LG(0, -38, 0, -26, ['#f2d880', '#c9a227']),
-			INK,
+			LINE,
 			0.6,
 		);
 		E_(0, d / 2 - 31, 2, 2, c);
@@ -16295,7 +16359,7 @@ const ART = {
 				[0, d / 2 - 28],
 			],
 			'#e8e0cc',
-			INK,
+			LINE,
 			0.5,
 		);
 		L_(-3, d / 2 - 24, 3, d / 2 - 24, '#c9a227', 0.6);
@@ -16312,7 +16376,7 @@ const ART = {
 				[-3, r.d / 2 - 12],
 			],
 			'#2a1a0a',
-			INK,
+			LINE,
 			0.4,
 		);
 		wheel(4, r.d / 2 - 3, 3);
@@ -16417,8 +16481,8 @@ const ART = {
 					[w + k, f - 10 - dk],
 					[w, f - 10],
 				],
-				shade(STONE, 0.5),
-				INK,
+				lit(STONE, -0.60),
+				LINE,
 				0.5,
 			); // its shaded east face
 			P_(
@@ -16428,8 +16492,8 @@ const ART = {
 					[w, f - 10],
 					[-w, f - 10],
 				],
-				LG(-b, 0, b, 0, [shade(STONE, 0.9), shade(STONE, 0.62)]),
-				INK,
+				LG(-b, 0, b, 0, [lit(STONE, -0.16), lit(STONE, -0.60)]),
+				LINE,
 				0.6,
 			);
 			texture('stone', -b + 2, f - 10, b - 2, f + 2, STONE);
@@ -16442,8 +16506,8 @@ const ART = {
 				[w, f - h],
 				[-w, f - h],
 			],
-			LG(-w, 0, w, 0, [shade(T.wall, 0.95), shade(T.wall, 0.7)]),
-			INK,
+			LG(-w, 0, w, 0, [lit(T.wall, -0.08), lit(T.wall, -0.48)]),
+			LINE,
 			0.6,
 		);
 		texture('stone', -w, f - h, w, f - (T.batter ? 10 : 0), T.wall);
@@ -16455,19 +16519,19 @@ const ART = {
 					[w + 3, f - h - 7],
 					[-w - 3, f - h - 7],
 				],
-				LG(-w, 0, w, 0, [shade(PLANK, 1.05), shade(PLANK, 0.72)]),
-				INK,
+				LG(-w, 0, w, 0, [lit(PLANK, 0.08), lit(PLANK, -0.45)]),
+				LINE,
 				0.5,
 			);
-			for (let x = -w; x <= w; x += 4) L_(x, f - h, x, f - h - 7, shade(PLANK, 0.6), 0.6);
+			for (let x = -w; x <= w; x += 4) L_(x, f - h, x, f - h - 7, lit(PLANK, -0.60), 0.6);
 			P_(
 				[
 					[-w - 4, f - h - 7],
 					[w + 4, f - h - 7],
 					[0, f - h - 19],
 				],
-				LG(-w, 0, w, 0, [shade(SLATE, 1.1), shade(SLATE, 0.75)]),
-				INK,
+				LG(-w, 0, w, 0, [lit(SLATE, 0.16), lit(SLATE, -0.40)]),
+				LINE,
 				0.6,
 			); // the timber hoarding round the top, under a slate cap
 		} else {
@@ -16479,7 +16543,7 @@ const ART = {
 					[-w - 1, f - h - 3],
 				],
 				T.wall,
-				INK,
+				LINE,
 				0.4,
 			);
 			crenels(-w - 1, w + 1, f - h - 3, T.wall);
@@ -16494,7 +16558,7 @@ const ART = {
 						[x - 2.6, f - h + 3],
 					],
 					'#14100c',
-					INK,
+					LINE,
 					0.3,
 				);
 				L_(x, f - h + 5.5, x + 1.5, f - h + 7, '#2e2a26', 1.6);
@@ -16511,8 +16575,8 @@ const ART = {
 				[5, d / 2 - 18],
 				[-5, d / 2 - 18],
 			],
-			LG(-5, 0, 5, 0, [shade(STONE, 0.92), shade(STONE, 0.74)]),
-			INK,
+			LG(-5, 0, 5, 0, [lit(STONE, -0.13), lit(STONE, -0.42)]),
+			LINE,
 			0.5,
 		);
 		texture('stone', -5, d / 2 - 18, 5, d / 2, STONE);
@@ -16523,8 +16587,8 @@ const ART = {
 				[5, -d / 2 - 18],
 				[-5, -d / 2 - 18],
 			],
-			shade(STONE, 1.08),
-			INK,
+			lit(STONE, 0.13),
+			LINE,
 			0.4,
 		);
 		P_(
@@ -16535,7 +16599,7 @@ const ART = {
 				[-5, d / 2 - 20.5],
 			],
 			STONE,
-			INK,
+			LINE,
 			0.3,
 		);
 		P_(
@@ -16546,7 +16610,7 @@ const ART = {
 				[1, d / 2 - 20.5],
 			],
 			STONE,
-			INK,
+			LINE,
 			0.3,
 		);
 	},
@@ -16560,7 +16624,7 @@ const ART = {
 				[-5, d / 2 - 20],
 			],
 			LG(-5, 0, 5, 0, ['#8a6a44', '#5a3a1c']),
-			INK,
+			LINE,
 			0.5,
 		);
 		L_(-5, d / 2 - 6, 5, d / 2 - 6, '#2a1a0a', 0.7);
@@ -16634,7 +16698,7 @@ const ART = {
 				[-9, d / 2 - 18],
 			],
 			'#b2563a',
-			INK,
+			LINE,
 			0.4,
 		);
 		for (let i = 0; i < 5; i++)
@@ -16689,7 +16753,7 @@ const ART = {
 				[-8, d / 2 - 66],
 			],
 			LG(0, -74, 0, -52, ['#f2d880', '#b8902a']),
-			INK,
+			LINE,
 			0.6,
 		);
 		E_(0, d / 2 - 60, 2.4, 2.4, '#8e1d14');
@@ -17021,7 +17085,7 @@ const RG = (x, y, r0, r1, stops) => {
 };
 const WONDERART = {
 	roman(c) {
-		E_(0, 0, 30, 30 * TILT, '#c8bca2', INK, 0.6);
+		E_(0, 0, 30, 30 * TILT, '#c8bca2', LINE, 0.6);
 		for (let lv = 0; lv < 4; lv++) {
 			const y0 = -lv * 10;
 			g.save();
@@ -17032,7 +17096,7 @@ const WONDERART = {
 			g.closePath();
 			g.fillStyle = LG(-30, 0, 30, 0, ['#e6dcc2', '#c4b694', '#9a8e76']);
 			g.fill();
-			g.strokeStyle = INK;
+			g.strokeStyle = LINE;
 			g.lineWidth = 0.5;
 			g.stroke();
 			g.restore();
@@ -17049,8 +17113,8 @@ const WONDERART = {
 					g.fill();
 				}
 		}
-		E_(0, -40, 30, 30 * TILT, '#d8cdb4', INK, 0.5);
-		E_(0, -40, 19, 19 * TILT, '#c8a878', INK, 0.5);
+		E_(0, -40, 30, 30 * TILT, '#d8cdb4', LINE, 0.5);
+		E_(0, -40, 19, 19 * TILT, '#c8a878', LINE, 0.5);
 		banner(-24, -40, c, 8);
 		banner(24, -40, c, 8);
 	},
@@ -17065,7 +17129,7 @@ const WONDERART = {
 				[-30, d / 2 - 8],
 			],
 			'#9a8058',
-			INK,
+			LINE,
 			0.5,
 		);
 		g.save();
@@ -17079,7 +17143,7 @@ const WONDERART = {
 					[x - 1, -16],
 				],
 				'#a8302a',
-				INK,
+				LINE,
 				0.3,
 			);
 		P_(
@@ -17099,7 +17163,7 @@ const WONDERART = {
 		g.closePath();
 		g.fillStyle = LG(0, -32, 0, -15, ['#4a4a52', '#2f2f36']);
 		g.fill();
-		g.strokeStyle = INK;
+		g.strokeStyle = LINE;
 		g.lineWidth = 0.6;
 		g.stroke();
 		g.beginPath();
@@ -17125,7 +17189,7 @@ const WONDERART = {
 				[-31, d / 2 - 6],
 			],
 			'#bfae8a',
-			INK,
+			LINE,
 			0.5,
 		);
 		for (let i = 0; i < 3; i++)
@@ -17137,7 +17201,7 @@ const WONDERART = {
 					[-8 + i * 2, d / 2 - 2 - i * 2],
 				],
 				'#d8c8a2',
-				INK,
+				LINE,
 				0.3,
 			);
 		P_(
@@ -17148,7 +17212,7 @@ const WONDERART = {
 				[-28 + d * SIDE, -d / 2 - 6],
 			],
 			'#a89470',
-			INK,
+			LINE,
 			0.4,
 		);
 		for (let row = 0; row < 3; row++)
@@ -17173,7 +17237,7 @@ const WONDERART = {
 				[-30, d / 2 - 49],
 			],
 			'#7a6448',
-			INK,
+			LINE,
 			0.4,
 		);
 		banner(26, d / 2 - 49, c, 10);
@@ -17186,7 +17250,7 @@ const WONDERART = {
 			[-6, -8],
 			[10, -10],
 		]) {
-			E_(x, y, 9, 9 * TILT * 0.9, '#e8e0cc', INK, 0.5);
+			E_(x, y, 9, 9 * TILT * 0.9, '#e8e0cc', LINE, 0.5);
 			P_(
 				[
 					[x - 9, y],
@@ -17195,7 +17259,7 @@ const WONDERART = {
 					[x - 9, y - 7],
 				],
 				LG(x - 9, 0, x + 9, 0, ['#f2ead8', '#c8bca2']),
-				INK,
+				LINE,
 				0.5,
 			);
 			P_(
@@ -17205,7 +17269,7 @@ const WONDERART = {
 					[x, y - 13],
 				],
 				'#d8cdb4',
-				INK,
+				LINE,
 				0.5,
 			);
 			L_(x - 9, y - 4, x + 9, y - 4, c, 0.8);
@@ -17230,7 +17294,7 @@ const WONDERART = {
 				[-26, d / 2 - 6],
 			],
 			'#c8b48a',
-			INK,
+			LINE,
 			0.5,
 		);
 		g.beginPath();
@@ -17239,7 +17303,7 @@ const WONDERART = {
 		g.closePath();
 		g.fillStyle = LG(-22, -30, 22, 0, ['#efe4cc', '#c8b892', '#9a8a6a']);
 		g.fill();
-		g.strokeStyle = INK;
+		g.strokeStyle = LINE;
 		g.lineWidth = 0.6;
 		g.stroke();
 		P_(
@@ -17250,11 +17314,11 @@ const WONDERART = {
 				[-4, d / 2 - 31],
 			],
 			'#a89470',
-			INK,
+			LINE,
 			0.4,
 		);
 		L_(0, d / 2 - 31, 0, d / 2 - 42, '#6b5a40', 0.8);
-		for (let i = 0; i < 3; i++) E_(0, d / 2 - 35 - i * 3, 4 - i, 0.8, '#a89470', INK, 0.3);
+		for (let i = 0; i < 3; i++) E_(0, d / 2 - 35 - i * 3, 4 - i, 0.8, '#a89470', LINE, 0.3);
 		for (const x of [-27, 23]) {
 			P_(
 				[
@@ -17264,7 +17328,7 @@ const WONDERART = {
 					[x, d / 2 - 16],
 				],
 				'#b8a47a',
-				INK,
+				LINE,
 				0.3,
 			);
 			P_(
@@ -17275,7 +17339,7 @@ const WONDERART = {
 					[x + 2.4, d / 2 - 16],
 				],
 				'#b8a47a',
-				INK,
+				LINE,
 				0.3,
 			);
 			for (let k = 0; k < 3; k++)
@@ -17287,7 +17351,7 @@ const WONDERART = {
 						[x - 1, d / 2 - 13.4 - k * 2.4],
 					],
 					'#a8946a',
-					INK,
+					LINE,
 					0.3,
 				);
 		}
@@ -17304,7 +17368,7 @@ const WONDERART = {
 				[-28, d / 2 - 18],
 			],
 			LG(-28, 0, 28, 0, ['#d8a66c', '#c49060', '#9a6a40']),
-			INK,
+			LINE,
 			0.6,
 		);
 		texture('mud', -28, d / 2 - 18, 28, d / 2, MUD);
@@ -17316,7 +17380,7 @@ const WONDERART = {
 				[-28 + d * SIDE, -d / 2 - 18],
 			],
 			'#d4a470',
-			INK,
+			LINE,
 			0.4,
 		);
 		for (let x = -26; x <= 26; x += 6.5) {
@@ -17328,7 +17392,7 @@ const WONDERART = {
 					[x - 1.2, d / 2 - 22],
 				],
 				'#c89460',
-				INK,
+				LINE,
 				0.3,
 			);
 			L_(x - 2.4, d / 2 - 12, x + 2.4, d / 2 - 12, '#6b4a2c', 0.5);
@@ -17341,7 +17405,7 @@ const WONDERART = {
 				[11, -40],
 			],
 			LG(8, 0, 20, 0, ['#e0b078', '#a8784a']),
-			INK,
+			LINE,
 			0.6,
 		);
 		for (let y = -8; y > -40; y -= 6) L_(9, y, 19, y, '#6b4a2c', 0.6);
@@ -17352,7 +17416,7 @@ const WONDERART = {
 				[14, -46],
 			],
 			'#c89460',
-			INK,
+			LINE,
 			0.4,
 		);
 		door(-10, d / 2, 6, 9, '#4a2e16');
@@ -17630,9 +17694,9 @@ function nodeSprite(n, s) {
 // ═════ 20-view-base.js: canvas, camera, scars on the ground, tracks, zoom ═════
 // ───────────────────────── The view: a tilted table, seen from the south ─────────────────────────
 const cv = $('cv'),
-	ctx = cv.getContext('2d'),
 	mini = $('mini'),
 	mctx = mini.getContext('2d');
+let ctx = cv.getContext('2d'); // the glass; swapped for a cache's context while a badge or a pile is drawn once (Build 62)
 const cam = { x: 400, y: 1600, z: 0.9 };
 const FIG = 0.66; // figures are drawn at 0.66 world units per figure unit: a person stands about 14 tall (Build 59, Albert: from 0.55, after the mockup)
 let cw = 0,
@@ -17646,13 +17710,11 @@ const grassM = new DOMMatrix();
 // the ground remembers: where people fell, where buildings burned, where villagers walk a lot. A layer over the ground, cleared with each new game.
 let scarCv = null,
 	scarX = null;
-const TRODE = new Uint16Array((MAP / 20) ** 2);
 function resetScars() {
 	scarCv = document.createElement('canvas');
 	scarCv.width = scarCv.height = MAP * bgK;
 	scarX = scarCv.getContext('2d');
 	scarX.scale(bgK, bgK);
-	TRODE.fill(0);
 }
 // the ground round a building is worn bare by feet (Build 52): painted once into the ground's memory when it is finished, so it costs nothing a frame and stays when the building is gone
 function wearGround(b) {
@@ -17711,23 +17773,35 @@ function scarBurn(b) {
 		scarX.fillRect(b.x + Math.cos(a) * r - 1.5, b.y + Math.sin(a) * r * 0.7 - 1, 3, 2);
 	}
 }
-function tread(u) {
-	// a villager's step: after enough of them on one patch the earth shows it
-	const c = ((u.y / 20) | 0) * (MAP / 20) + ((u.x / 20) | 0);
-	if (++TRODE[c] % 260 === 0 && TRODE[c] < 5000) {
-		scarX.fillStyle = 'rgba(120,92,58,.07)';
-		scarX.beginPath();
-		scarX.ellipse(u.x, u.y, 5.5, 3, 0, 0, 7);
-		scarX.fill();
-	}
-}
 // a small parchment tab with a book in red ink, and a count when more than one thing waits
+// the badge is drawn once per count and zoom into BADGE and stamped (Build 62: measured at a tenth of a zoomed-out frame as vector work); the bob is in the stamp
+const BADGE = new Map();
 function researchBadge(x, y, s, n) {
+	const key = `${Math.min(n, 9)}:${s.toFixed(2)}`,
+		q = still() ? 0 : Math.sin(G.t * 4) * 0.8 * s;
+	let c = BADGE.get(key);
+	if (!c) {
+		const w = (n > 1 ? 31 : 23) * s + 4,
+			h = 17 * s + 4;
+		c = document.createElement('canvas');
+		c.width = Math.ceil(w * dpr);
+		c.height = Math.ceil(h * dpr);
+		const was = ctx;
+		ctx = c.getContext('2d');
+		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+		badgeArt(w / 2, h / 2, s, n);
+		ctx = was;
+		c.ax = w / 2;
+		c.ay = h / 2;
+		BADGE.set(key, c);
+		trim(BADGE, 40);
+	}
+	ctx.drawImage(c, x - c.ax, y + q - c.ay, c.width / dpr, c.height / dpr);
+}
+function badgeArt(x, by, s, n) {
 	const w = (n > 1 ? 31 : 23) * s,
 		h = 17 * s,
-		q = lessMotion ? 0 : Math.sin(G.t * 4) * 0.8 * s,
-		bx = x - (n > 1 ? 6.5 : 0) * s,
-		by = y + q;
+		bx = x - (n > 1 ? 6.5 : 0) * s;
 	ctx.save();
 	ctx.beginPath();
 	if (ctx.roundRect) ctx.roundRect(x - w / 2, by - h / 2, w, h, h / 2);
@@ -17771,23 +17845,51 @@ function clampCam() {
 	cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID));
 	cam.y = clamp(cam.y, Math.min(half, MID), Math.max(MAP - half, MID));
 } // the map's edges can come up to the bars, never under them (Albert, Build 40)
-// Follow (the pick bar): the camera eases to the middle of what is picked, until you drag, pinch or tap the small map, or let go of them
-function followCam() {
-	if (!G.follow) return;
-	const P = picked();
-	if (!P.length) {
-		G.follow = false;
-		return;
+// The camera glides as a critically damped spring (ζ = 1, no overshoot; the standard smoothing of a value toward a target, one ω for every
+// phone whatever its frame rate). camGo sets the target; the frame moves the camera. One home for every glide: Follow, Home, the small map,
+// a card's "go there", an alert. A drag or a pinch is yours and stops it.
+const spring = (x, v, target, w, dt) => {
+	const e = Math.exp(-w * dt),
+		dx = x - target,
+		t = (v + w * dx) * dt;
+	return [target + (dx + t) * e, (v - w * t) * e];
+};
+const CAM_W = 9; // ω: the glide is over in about 4/ω s, half a second
+function camGo(x, y) {
+	cam.tx = x;
+	cam.ty = y;
+	if (still()) {
+		cam.x = x;
+		cam.y = y;
+		camStop();
+		clampCam();
 	}
-	let x = 0,
-		y = 0;
-	for (const u of P) {
-		x += u.x;
-		y += u.y;
+}
+function camStop() {
+	cam.tx = cam.ty = undefined;
+	cam.vx = cam.vy = 0;
+}
+// Follow (the pick bar): the target is the middle of what is picked, until you drag, pinch or tap the small map, or let go of them
+function followCam(dt) {
+	if (G.follow) {
+		const P = picked();
+		if (!P.length) G.follow = false;
+		else {
+			let x = 0,
+				y = 0;
+			for (const u of P) {
+				x += u.x;
+				y += u.y;
+			}
+			cam.tx = x / P.length;
+			cam.ty = y / P.length;
+		}
 	}
-	cam.x += (x / P.length - cam.x) * 0.2;
-	cam.y += (y / P.length - cam.y) * 0.2;
+	if (cam.tx === undefined) return;
+	[cam.x, cam.vx] = spring(cam.x, cam.vx || 0, cam.tx, CAM_W, dt);
+	[cam.y, cam.vy] = spring(cam.y, cam.vy || 0, cam.ty, CAM_W, dt);
 	clampCam();
+	if (!G.follow && Math.abs(cam.x - cam.tx) < 0.3 && Math.abs(cam.y - cam.ty) < 0.3) camStop();
 }
 const SX = (x) => (x - cam.x) * cam.z + cw / 2;
 const SY = (y, h) => (y - cam.y) * cam.z * TILT + ch / 2 + vy - (h || 0) * cam.z;
@@ -18002,7 +18104,8 @@ function makeBg() {
 let SPARKS = [],
 	miniT = 0;
 function draw() {
-	followCam();
+	followCam(Math.min(0.1, (performance.now() - (draw.last || performance.now())) / 1000));
+	draw.last = performance.now();
 	shadeFrame();
 	ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 	const z = cam.z,
@@ -18052,7 +18155,7 @@ function draw() {
 		ctx.fillRect(Math.max(0, x0), Math.max(0, y0), Math.min(cw, MAP * z), Math.min(ch, MAP * z * TILT));
 		ctx.globalAlpha = 1;
 	}
-	if (G.shake > G.t && !lessMotion) {
+	if (G.shake > G.t && !still()) {
 		const k = (G.shake - G.t) * 3;
 		ctx.translate(rnd2() * k, rnd2() * k);
 	} // a sinkhole or a falling star: the whole view judders for a moment
@@ -18064,7 +18167,7 @@ function draw() {
 		ctx.fillStyle = sn.tint;
 		ctx.fillRect(x0, y0, MAP * z, MAP * z * TILT);
 	}
-	drawRainRings(z);
+	if (DRAW.lvl < 1) drawRainRings(z);
 	drawGround(); // the weather's mark on the land, under everything standing
 	drawPicks(z); // the pick rings lie on the ground, under the figure and the building (Albert, Build 40)
 	// everything standing, back to front
@@ -18091,7 +18194,7 @@ function draw() {
 	const N = viewNodes(wv, wv2, far),
 		sB = quant(z * dpr),
 		sU = quant(z * dpr * FIG);
-	if (!far) nodeShadows(N, z); // the trees' shadows lie on the ground under everything standing
+	sunShadows(N, list, z, far); // every sun shadow, one path, on the ground under everything standing (the trees' are the first shed under load)
 	// the standing nodes (about 2,000 trees, bushes and rocks) are kept sorted until the view moves a step; the few moving things are merged in
 	for (let i = 0, j = 0; i < N.length || j < list.length; ) {
 		const take = j >= list.length || (i < N.length && N[i].y < list[j][0]),
@@ -18170,7 +18273,7 @@ function drawRadar(wv, wv2) {
 		rx = cw / 2 + dx * sc,
 		ry = ch / 2 + dy * sc,
 		a = Math.atan2(dy, dx),
-		pulse = lessMotion ? 0 : Math.sin(G.t * 6) * 2;
+		pulse = still() ? 0 : Math.sin(G.t * 6) * 2;
 	RADAR = { sx: rx, sy: ry, x: near.x, y: near.y };
 	ctx.save();
 	ctx.translate(rx, ry);
@@ -18353,7 +18456,6 @@ function drawBld(b, s) {
 		B = BLD[b.kind],
 		c = bldSprite(b, s),
 		k = z / s;
-	if (!B.crop) shadowOf(sx, sy, B.h, B.fp * NAVC * 0.55 * z, z);
 	if (b.prog < 1) {
 		// a building site: the outline staked out, the walls rising with the work
 		const w = B.fp * NAVC * z,
@@ -18390,7 +18492,7 @@ function drawBld(b, s) {
 	stamp(c, sx, sy, k * popC(fa / 0.6));
 	flagsOn(c, sx, sy, z, G.P[b.owner].color, b.id);
 	if (PILE[b.kind] && friendly(0, b.owner)) pileAt(b, sx, sy, z);
-	if (fa < 8 && !lessMotion) {
+	if (fa < 8 && !still()) {
 		ctx.globalCompositeOperation = 'lighter';
 		ctx.globalAlpha = 0.32 * (1 - fa / 8);
 		stamp(c, sx, sy, k);
@@ -18423,7 +18525,7 @@ function drawBld(b, s) {
 			Math.max(0.9, z * 0.6),
 			G.rdy.get(b.kind),
 		); // a parchment tab with a book and how many researches wait here
-	if (b.kind === 'mill' && !lessMotion) {
+	if (b.kind === 'mill' && !still()) {
 		ctx.strokeStyle = '#efe6cf';
 		ctx.lineWidth = 1.6 * z;
 		const cx = sx,
@@ -18511,43 +18613,38 @@ function deepTrees() {
 	DEEP = { v: G.treeV, G, set: deep };
 	return deep;
 }
-function nodeShadows(N, z) {
+// Every sun shadow on the ground is one path and one fill (Build 62: trees, buildings and people together; measured, the per-thing fills were
+// the dearest pass of the frame, 28% at a normal zoom and 53% close in, headless). One path also means two shadows that overlap darken once, as real ones do.
+// The shadow of a thing h tall with a footprint r wide at (sx, sy): an ellipse laid along the shadow, from the foot outward; a soft pool under it with no light.
+function shadowPath(sx, sy, h, r, z) {
+	ctx.moveTo(sx + r, sy);
+	if (SHADE.a < 0.02) return ctx.ellipse(sx, sy, r, r * TILT, 0, 0, 7);
+	const L = h * SHADE.len * z;
+	ctx.ellipse(sx + SHADE.x * L * 0.5, sy + SHADE.y * L * 0.5, L * 0.5 + r, Math.max(r * 0.55, r * TILT), SHADE.ang, 0, 7);
+}
+function sunShadows(N, list, z, far) {
 	const lit = SHADE.a >= 0.02,
-		deep = deepTrees(),
-		L0 = lit ? SHADE.len * z : 0,
-		ang = lit ? Math.atan2(SHADE.y, SHADE.x) : 0;
+		deep = far ? null : deepTrees();
+	SHADE.ang = lit ? Math.atan2(SHADE.y, SHADE.x) : 0;
 	ctx.fillStyle = lit ? `rgba(0,0,0,${SHADE.a.toFixed(3)})` : 'rgba(0,0,0,.18)';
 	ctx.beginPath();
-	for (const n of N) {
-		const h = NODE_H[n.kind];
-		if (!h || n.amt <= 0 || deep.has(n.id) || (G.fogOn && fogAt(n.x, n.y) === 0)) continue;
-		const f = (0.6 + 0.4 * Math.min(1, n.amt / n.max)) * (n.kind === 'tree' ? 1.4 : 1),
-			r = (n.kind === 'tree' ? 7 : 5) * f * z,
-			sx = SX(n.x),
-			sy = SY(n.y),
-			L = h * f * L0;
-		ctx.moveTo(sx + r, sy);
-		if (lit) ctx.ellipse(sx + SHADE.x * L * 0.5, sy + SHADE.y * L * 0.5, L * 0.5 + r, Math.max(r * 0.55, r * TILT), ang, 0, 7);
-		else ctx.ellipse(sx, sy, r, r * TILT, 0, 0, 7);
+	if (!far && DRAW.lvl < 1)
+		for (const n of N) {
+			const h = NODE_H[n.kind];
+			if (!h || n.amt <= 0 || deep.has(n.id) || (G.fogOn && fogAt(n.x, n.y) === 0)) continue;
+			const f = (0.6 + 0.4 * Math.min(1, n.amt / n.max)) * (n.kind === 'tree' ? 1.4 : 1);
+			shadowPath(SX(n.x), SY(n.y), h * f, (n.kind === 'tree' ? 7 : 5) * f * z, z);
+		}
+	for (const [, t, e] of list) {
+		if (t === 1) {
+			const B = BLD[e.kind];
+			if (!B.crop) shadowPath(SX(e.x), SY(e.y), B.h, B.fp * NAVC * 0.55 * z, z);
+		} else if (t === 2) {
+			const U = UNIT[e.kind],
+				box = LOOKBOX[U.look] || [26, 30];
+			shadowPath(SX(e.x), SY(e.y), box[1] * FIG, box[0] * 0.28 * z * FIG + 2, z);
+		}
 	}
-	ctx.fill();
-}
-// the shadow of a thing h tall with a footprint r wide at (sx, sy) on the glass: an ellipse laid along the shadow, from the foot outward
-function shadowOf(sx, sy, h, r, z) {
-	if (SHADE.a < 0.02) {
-		ctx.fillStyle = 'rgba(0,0,0,.18)';
-		ctx.beginPath();
-		ctx.ellipse(sx, sy, r, r * TILT, 0, 0, 7);
-		ctx.fill();
-		return;
-	} // no light to cast one: the soft pool under a thing on an overcast day or a moonless night
-	const L = h * SHADE.len * z,
-		cx = sx + SHADE.x * L * 0.5,
-		cy = sy + SHADE.y * L * 0.5,
-		ang = Math.atan2(SHADE.y, SHADE.x);
-	ctx.fillStyle = `rgba(0,0,0,${SHADE.a.toFixed(3)})`;
-	ctx.beginPath();
-	ctx.ellipse(cx, cy, L * 0.5 + r, Math.max(r * 0.55, r * TILT), ang, 0, 7);
 	ctx.fill();
 }
 // a flame's shadow of a thing near it: away from the fire, long, fading as the light does (1/d²)
@@ -18582,7 +18679,7 @@ const flameLife = (kind) => (FLAME[kind].covered || !precip(G.wx) ? 1 : LIGHT.we
 // the flame itself: a teardrop that leans with the wind and flickers; its heart whiter than its edge
 function flame(x, y, kind, z, seed) {
 	const F = FLAME[kind];
-	if (!F.s || lessMotion) return;
+	if (!F.s || still()) return;
 	const t = performance.now() / 1000,
 		s = F.s * z * flameLife(kind),
 		fl = 0.85 + 0.15 * Math.sin(t * 11 + seed) * Math.sin(t * 7.3 + seed * 1.7),
@@ -18622,7 +18719,7 @@ function glow(x, y, kind, z, more = 1) {
 // a building's flags fly with the wind: a cloth from the pole top, its tip lifting and falling, longer in a strong wind (Build 52; they were painted on)
 function flagsOn(c, sx, sy, z, col, seed) {
 	if (!c.flags || !c.flags.length) return;
-	const t = lessMotion ? 0 : performance.now() / 1000,
+	const t = still() ? 0 : performance.now() / 1000,
 		wv = 0.85 + Math.min(0.6, Math.abs(wind) * 0.9);
 	ctx.fillStyle = col;
 	ctx.strokeStyle = 'rgba(16,12,8,.75)';
@@ -18651,12 +18748,34 @@ const PILE = {
 	],
 	mill: [['f', 'sack', '#cdb27a']],
 };
+// the piles are drawn once per kind, counts and zoom into PSPR and stamped (Build 62: measured at 29% of a frame at a normal zoom as vector work)
+const PSPR = new Map();
 function pileAt(b, sx, sy, z) {
 	if (b.prog < 1 || z < 0.45) return;
 	const w = BLD[b.kind].fp * NAVC * z,
-		R = G.P[b.owner].res;
-	PILE[b.kind].forEach(([r, shape, col], pi) => {
-		const n = clamp(Math.round(Math.log10((R[r] || 0) + 1) * 1.9), 0, 6); // a pyramid of 3, 2 and 1: full at about 1500
+		R = G.P[b.owner].res,
+		ns = PILE[b.kind].map(([r]) => clamp(Math.round(Math.log10((R[r] || 0) + 1) * 1.9), 0, 6)), // a pyramid of 3, 2 and 1: full at about 1500
+		key = `${b.kind}:${ns.join('')}:${z.toFixed(2)}`;
+	let c = PSPR.get(key);
+	if (!c) {
+		const W = w * 0.62 + 40 * z + 4,
+			H = w * TILT * 0.42 + 14 * z + 4;
+		c = document.createElement('canvas');
+		c.width = Math.ceil(W * dpr);
+		c.height = Math.ceil(H * dpr);
+		const was = ctx;
+		ctx = c.getContext('2d');
+		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+		pileArt(b.kind, ns, 0, 0, w, z);
+		ctx = was;
+		PSPR.set(key, c);
+		trim(PSPR, 60);
+	}
+	ctx.drawImage(c, sx, sy, c.width / dpr, c.height / dpr);
+}
+function pileArt(kind, ns, sx, sy, w, z) {
+	PILE[kind].forEach(([r, shape, col], pi) => {
+		const n = ns[pi];
 		let x0 = sx + w * 0.62 + pi * 10 * z,
 			y0 = sy + w * TILT * 0.42 - pi * 2 * z,
 			i = 0;
@@ -18682,20 +18801,24 @@ function pileAt(b, sx, sy, z) {
 			}
 	});
 }
+// a chimney's plume (Build 62): bent over by the wind, its height goes with the downwind distance to the two-thirds (Briggs 1969, Δh ∝ x^(2/3)),
+// so it climbs fast and then leans; it widens about as the distance (Pasquill–Gifford, σ ∝ x^0.9). The wind is the weather's.
 function smoke(x, y, seed, z) {
-	if (lessMotion) return;
+	if (still()) return;
+	const lean = 4 + Math.abs(wind) * 9,
+		side = wind < 0 ? -1 : 1;
 	for (let i = 0; i < 3; i++) {
 		const ph = (G.t * 0.35 + i / 3 + seed * 0.37) % 1,
-			r = (2 + ph * 5) * z;
+			r = (2 + 5 * ph ** 0.9) * z;
 		ctx.fillStyle = `rgba(215,215,210,${0.3 * (1 - ph)})`;
 		ctx.beginPath();
-		ctx.arc(x + ph * 7 * z, y - ph * 24 * z, r, 0, 7);
+		ctx.arc(x + side * ph * lean * z, y - 26 * ph ** (2 / 3) * z, r, 0, 7);
 		ctx.fill();
 	}
 }
 // fire when a building is badly hurt, dark smoke when sabotage has stalled it
 function blaze(b, x, y, z) {
-	if (lessMotion) return;
+	if (still()) return;
 	const low = b.hp < maxHpB(b.owner, b.kind) * 0.5 || b.fire > 0,
 		stalled = (b.stall || 0) > G.t,
 		w = BLD[b.kind].fp * NAVC * z;
@@ -18824,7 +18947,7 @@ function drawNode(n, s) {
 		sx = SX(n.x),
 		sy = SY(n.y);
 	if (n.kind === 'fish') {
-		if (lessMotion) return;
+		if (still()) return;
 		const ph = (G.t * 0.5 + n.id * 0.13) % 1;
 		ctx.strokeStyle = `rgba(225,242,255,${0.6 * (1 - ph)})`;
 		ctx.lineWidth = 1;
@@ -18883,7 +19006,7 @@ function drawStandards(z, inView) {
 		g.hp += u.hp;
 		g.mx += u.max;
 	}
-	const t = lessMotion ? 0 : performance.now() / 1000;
+	const t = still() ? 0 : performance.now() / 1000;
 	for (const g of grp.values()) {
 		if (g.n < 5) continue;
 		const c = { x: g.x / g.n, y: g.y / g.n };
@@ -18948,7 +19071,7 @@ function drawFallen(f, s) {
 	const z = cam.z,
 		c = sprite(f.look, f.col, f.tier, 0, s, f.kit),
 		k = (z * FIG) / s,
-		r = (lessMotion ? 1 : Math.min(1, a / 0.35)) * (Math.PI / 2) * -f.face; // falls back, away from the way it faced
+		r = (still() ? 1 : Math.min(1, a / 0.35)) * (Math.PI / 2) * -f.face; // falls back, away from the way it faced
 	ctx.save();
 	ctx.globalAlpha = a < 0.7 ? 1 : 1 - (a - 0.7) / 0.7;
 	ctx.translate(SX(f.x), SY(f.y));
@@ -19003,7 +19126,6 @@ function drawUnit(u, s) {
 		),
 		k = (z * FIG) / s,
 		big = (LOOKBOX[U.look] || [26])[0];
-	shadowOf(sx, sy, (LOOKBOX[U.look] || [26, 30])[1] * FIG, big * 0.28 * z * FIG + 2, z);
 	for (const s of STANDARDS) flameShadow(sx, sy, (LOOKBOX[U.look] || [26, 30])[1] * FIG, big * 0.28 * z * FIG + 2, z, s.x, s.y, 'torch');
 	if (u.owner === 0 && G.sel !== 'all' && u.bn === G.sel) {
 		ctx.strokeStyle = '#ffd35e';
@@ -19022,8 +19144,8 @@ function drawUnit(u, s) {
 	const face = (u.fx || 1) < 0 ? -1 : 1,
 		ha = G.t - (u.hitT ?? -9),
 		near = (U.rng || 0) <= 20,
-		bob = moving && !lessMotion ? Math.abs(Math.sin(pace * Math.PI)) * 1.2 * z : 0,
-		lunge = lessMotion || ha > 0.3 ? 0 : near ? Math.sin((ha / 0.3) * Math.PI) * 2.6 * z : ha < 0.18 ? -1.3 * z * (1 - ha / 0.18) : 0,
+		bob = moving && !still() ? Math.abs(Math.sin(pace * Math.PI)) * 1.2 * z : 0,
+		lunge = still() || ha > 0.3 ? 0 : near ? Math.sin((ha / 0.3) * Math.PI) * 2.6 * z : ha < 0.18 ? -1.3 * z * (1 - ha / 0.18) : 0,
 		bx = sx + face * lunge,
 		by = sy - bob;
 	stamp(c, bx, by, k * popC((G.t - (u.bornT ?? -9)) / 0.4), face < 0);
@@ -19298,7 +19420,7 @@ function drawFind(f) {
 		ctx.restore();
 		L_(0, -16.6, 0, -19.5, '#8a6a1a', 0.8);
 		E_(0, -20, 1.3, 1.3, oc, INK, 0.3);
-		if (!lessMotion) E_(0, -6, 1.6, 2.4 + Math.sin(G.t * 6) * 0.5, 'rgba(255,190,70,.9)');
+		if (!still()) E_(0, -6, 1.6, 2.4 + Math.sin(G.t * 6) * 0.5, 'rgba(255,190,70,.9)');
 		if (f.cap) {
 			const t = f.cap.t / F.capture;
 			ctx.strokeStyle = G.P[f.cap.o].color;
@@ -19440,7 +19562,7 @@ function drawFind(f) {
 				],
 				'#7d5a34',
 			);
-			const fl = lessMotion ? 0 : Math.sin(performance.now() / 110 + f.id) * 1.2;
+			const fl = still() ? 0 : Math.sin(performance.now() / 110 + f.id) * 1.2;
 			P_(
 				[
 					[-3, 3],
@@ -19484,24 +19606,37 @@ const rnd2 = () => Math.random() * 2 - 1;
 // the ground after the weather: mud darkens the land, snow whitens it, ice gives it a sheen
 function drawGround() {
 	const g = G.clim;
-	if (!g || (g.mud < 0.02 && g.snow < 0.02 && g.ice < 0.02)) return;
+	if (!g) return;
 	const w = cw,
 		h = ch;
+	// the trodden squares: worn bare by feet when dry, pooling darker in mud; the picture reads the same map the feet write (Build 62: one home for traffic)
+	{
+		const T = ruts(),
+			z = cam.z,
+			x0 = Math.max(0, ((cam.x - w / 2 / z) / FOG) | 0),
+			y0 = Math.max(0, ((cam.y - h / 2 / z) / FOG) | 0),
+			x1 = Math.min(FOGN - 1, ((cam.x + w / 2 / z) / FOG) | 0),
+			y1 = Math.min(FOGN - 1, ((cam.y + h / 2 / z) / FOG) | 0);
+		// four depths, four paths: one fill each, however many squares (measured: one fill a square was a tenth of a zoomed-out frame)
+		for (let q = 1; q <= 4; q++) {
+			ctx.fillStyle = g.mud >= 0.02 ? `rgba(50,32,14,${(0.3 * g.mud * q) / 4})` : `rgba(120,92,58,${(0.12 * q) / 4})`;
+			ctx.beginPath();
+			for (let gy = y0; gy <= y1; gy++)
+				for (let gx = x0; gx <= x1; gx++) {
+					const r = T[gy * FOGN + gx];
+					if (!r || Math.min(4, Math.ceil(4 * Math.min(1, r / CLIMATE.rut.n0) ** 0.4)) !== q) continue;
+					const sx = SX(gx * FOG + FOG / 2),
+						sy = SY(gy * FOG + FOG / 2);
+					ctx.moveTo(sx + FOG * 0.6 * z, sy);
+					ctx.ellipse(sx, sy, FOG * 0.6 * z, FOG * 0.6 * z * TILT, 0, 0, 6.3);
+				}
+			ctx.fill();
+		}
+	}
+	if (g.mud < 0.02 && g.snow < 0.02 && g.ice < 0.02) return;
 	if (g.mud >= 0.02) {
 		ctx.fillStyle = `rgba(70,45,22,${0.22 * g.mud})`;
 		ctx.fillRect(0, 0, w, h);
-		ctx.fillStyle = `rgba(50,32,14,${0.3 * g.mud})`;
-		const z = cam.z,
-			s = 90 * z;
-		for (let i = 0; i < 60; i++) {
-			const sx = SX((i * 173) % MAP),
-				sy = SY((i * 311) % MAP);
-			if (sx > -s && sx < w + s && sy > -s && sy < h + s) {
-				ctx.beginPath();
-				ctx.ellipse(sx, sy, s * (0.5 + (i % 3) * 0.25), s * 0.3, 0, 0, 6.3);
-				ctx.fill();
-			}
-		}
 	}
 	if (g.snow >= 0.02) {
 		ctx.fillStyle = `rgba(235,240,245,${0.55 * g.snow})`;
@@ -19537,7 +19672,7 @@ function drawCracks(z) {
 				});
 			ctx.stroke();
 		}
-		if (age < 4 && !lessMotion)
+		if (age < 4 && !still())
 			for (let i = 0; i < 9; i++) {
 				const a = i * 2.4,
 					d = (6 + age * 14 + (i % 3) * 5) * z;
@@ -19561,7 +19696,7 @@ function drawEvents(z) {
 		t = performance.now() / 1000;
 	drawCracks(z);
 	if (e && EV[e.kind].draw) EV[e.kind].draw(e, z, t); // each event draws itself: its block in 37-events
-	if ((G.wx === 'blizzard' || G.wx === 'snow') && !lessMotion) {
+	if ((G.wx === 'blizzard' || G.wx === 'snow') && !still()) {
 		ctx.fillStyle = 'rgba(245,248,252,.9)';
 		for (let i = 0; i < (G.wx === 'blizzard' ? 160 : 60); i++) {
 			const y = ((i * 71.9 + t * 90) % (ch + 20)) - 10,
@@ -19833,7 +19968,7 @@ function drawSand(z) {
 }
 // small ripples drift on the lakes
 function drawLakeRipples(z) {
-	if (!lessMotion) {
+	if (!still()) {
 		ctx.strokeStyle = 'rgba(220,240,255,.28)';
 		ctx.lineWidth = 1.2;
 		for (const L of G.lakes) {
@@ -19853,7 +19988,7 @@ function drawLakeRipples(z) {
 }
 // rain rings sit on the ground, fixed to the world, under buildings and people
 function drawRainRings(z) {
-	if (G.wx === 'rain' && z > 1.2 && !lessMotion) {
+	if (G.wx === 'rain' && z > 1.2 && !still()) {
 		// rain rings sit on the ground, fixed to the world, under buildings and people
 		const t = performance.now() / 1000,
 			C = 120,
@@ -19922,7 +20057,7 @@ function drawFogLayer(z) {
 }
 // your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
 function drawOrders(z) {
-	if (!G.ords) return;
+	if (!G.ords || G.over) return; // the end screen is not drawn through (Albert, Oct 30: a ring's "156s" showed behind Victory)
 	// your groups: a dashed line from the group to where it is going, a ring to tap, the time left beside it.
 	// Once arrived the ring stays, faint, so the order can still be tapped (Build 42)
 	ctx.save();
@@ -20126,7 +20261,7 @@ function drawWeather() {
 	const stormy = e && e.kind === 'storm',
 		raining = wx === 'rain' || stormy;
 	wind += ((stormy ? 0.8 : raining ? 0.3 : 0.1) * Math.sin(now * 0.07) - wind) * dt * 0.3; // the wind wanders; a storm leans it hard
-	if (raining && !lessMotion) {
+	if (raining && !still()) {
 		const n = stormy ? RAINP.n : wx === 'rain' ? 150 : 0,
 			slant = wind * 0.35,
 			fall = 420 * dt;
@@ -20151,7 +20286,7 @@ function drawWeather() {
 		}
 	}
 	if (wx === 'frost' || wx === 'blizzard') {
-		if (!lessMotion) {
+		if (!still()) {
 			const n = wx === 'blizzard' ? 160 : 80,
 				sp = wx === 'blizzard' ? 90 : 34;
 			ctx.fillStyle = 'rgba(245,248,252,.85)';
@@ -20163,7 +20298,7 @@ function drawWeather() {
 		}
 	}
 	// the storm's own lightning: far sheet flashes while it walks, a close bolt now and then (the strikes on buildings come from 36-economy)
-	if (stormy && !lessMotion && !G.paused && now - sheetT > 2.5 + 6 * Math.random() && flashOK(now)) {
+	if (stormy && !still() && !G.paused && now - sheetT > 2.5 + 6 * Math.random() && flashOK(now)) {
 		// not while paused: a bolt ages on the game clock, so one made in a pause never faded and they piled up, each with its thunder (Build 60)
 		sheetT = now;
 		const close = Math.random();
@@ -20267,7 +20402,7 @@ function drawSky() {
 	gr.addColorStop(1, `rgba(${col},0)`);
 	ctx.fillStyle = gr;
 	ctx.fillRect(0, top, cw, h);
-	if (lessMotion) return;
+	if (still()) return;
 	const now = performance.now() / 1000,
 		cloudy = stormy
 			? 1
@@ -20474,6 +20609,7 @@ cv.addEventListener('pointermove', (e) => {
 			mx = (a.x + b.x) / 2,
 			my = (a.y + b.y) / 2;
 		if (G) G.follow = false; // a pinch is yours: the camera stops following
+		camStop();
 		zoomAt((cam.z * d) / pinch.d, mx, my);
 		cam.x -= (mx - pinch.mx) / cam.z;
 		cam.y -= (my - pinch.my) / (cam.z * TILT);
@@ -20514,6 +20650,7 @@ cv.addEventListener('pointermove', (e) => {
 	}
 	if (drag.moved) {
 		if (G) G.follow = false; // a drag is yours too
+		camStop();
 		cam.x = drag.cx - dx / cam.z;
 		cam.y = drag.cy - dy / (cam.z * TILT);
 		clampCam();
@@ -20586,9 +20723,7 @@ mini.addEventListener('pointerdown', (e) => {
 	e.stopPropagation();
 	if (G) G.follow = false;
 	const r = mini.getBoundingClientRect();
-	cam.x = ((e.clientX - r.left) / r.width) * MAP;
-	cam.y = ((e.clientY - r.top) / r.height) * MAP;
-	clampCam();
+	camGo(((e.clientX - r.left) / r.width) * MAP, ((e.clientY - r.top) / r.height) * MAP);
 });
 // what is under the finger: a building (they have height), a find, a unit, a resource, else the ground
 function hitAt(sx, sy) {
@@ -20664,9 +20799,7 @@ function tapAt(sx, sy) {
 	if (G.over) return;
 	if (RADAR && hyp(sx - RADAR.sx, sy - RADAR.sy) < 26) {
 		G.follow = false;
-		cam.x = RADAR.x;
-		cam.y = RADAR.y;
-		clampCam();
+		camGo(RADAR.x, RADAR.y);
 		return;
 	}
 	if (G.hud.aim) return aimAt(sx, sy); // Aim: the next tap is the target
@@ -21334,8 +21467,7 @@ function qsHTML(verb, label, to) {
 		)
 	);
 }
-// ── The send strip: tap open ground and a small row of choices sits at your finger: a quarter, all, a battalion, more, cancel.
-// A quarter takes a quarter of each type, nearest first, so the mix of the army goes along.
+// ── The send strip: tap open ground and two choices sit at your finger: your people, or the sword (Idle, All, a squad); more about the place; cancel.
 const sendable = () => armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && u.state !== 'escort'); // guards keep to what they guard
 // What each soldier is doing, in one word (Albert, Build 42), worked out from the soldier alone:
 // rally (just trained or called home, walking to its place), march (on your order), fight, hold (stopped: at its place or at the spot you sent it), rout (nerve broke, running).
@@ -21357,7 +21489,7 @@ const idleSoldier = (u) => {
 	const s = armyStatus(u);
 	return s === 'hold' || s === 'rally';
 };
-// Rest, a half, a quarter, the nearest five, ten, twenty: idle soldiers only, so a group on the march is never pulled off its way. All is everyone but guards (Build 44)
+// Rest: idle soldiers only, so a group on the march is never pulled off its way. All is everyone but guards (Build 44)
 const free = () => sendable().filter(idleSoldier);
 // why nobody can be sent: nobody exists, or who is busy doing what
 function freeWhy() {
@@ -21422,7 +21554,7 @@ function showStrip(sx, sy, x, y, step) {
 			bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') +
 			ic('nostrip', ICON.close, 'Cancel');
 	} else {
-		const idle = unitsOf(0, 'vil').filter((u) => !u.job && !u.inside && !postedAt(to).includes(u)).length,
+		const idle = unitsOf(0, 'vil').filter((u) => freeVil(u) && !postedAt(to).includes(u)).length,
 			here = postedAt(to).length;
 		el.innerHTML =
 			btn(`buildhere:${at}`, 'Build here', 'the menu, aimed here', 'build thumb') +
@@ -22142,7 +22274,7 @@ const CARDS = {
 					trade ? 'rel' : 'town',
 				);
 			if (kp && !trade)
-				h += acts(btn('stopall', 'Stop all', 'everyone to the Town Center, idle') + btn('idlehere', 'Idle to me', `${unitsOf(0, 'vil').filter((u) => !u.job && !u.inside).length} come to the screen`)); // every villager at once (Build 61, Albert)
+				h += acts(btn('stopall', 'Stop all', 'everyone to the Town Center, idle') + btn('idlehere', 'Idle to me', `${unitsOf(0, 'vil').filter(freeVil).length} come to the screen`)); // every villager at once (Build 61, Albert)
 			if (tr.length) h += hd('Train') + acts(trainButtons(tr));
 			if (hasR)
 				h +=
@@ -22589,7 +22721,7 @@ const CARDS = {
 			fold(
 				'about',
 				'About orders',
-				`<p>Tap open ground: Send ¼, All, or a battalion by name. Tap an enemy to pick how many attack. The War Council opens battalions, shape and Muster; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
+				`<p>Tap open ground, then the sword: Idle, All, or a squad by name goes there. The Squad room (the chip at the left of the jobs) makes squads; the War room sends them with a time and odds; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
 			)
 		);
 	},
@@ -22731,7 +22863,7 @@ const CARDS = {
 			`<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
       <p><b>Build:</b> pick a menu, then a building. It waits above your finger: drag it, then tap Build. Villagers raise it.</p>
       <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Pause shows the speeds under the button.</p>
-      <p><b>Army:</b> tap open ground with nothing picked: Send ¼ or All. The War Council opens battalions, shape and Muster.</p>
+      <p><b>Army:</b> tap open ground with nothing picked, then the sword: Idle, All or a squad goes there. The chip by the jobs turns the row into the Squad room and the War room.</p>
       <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>
@@ -23281,7 +23413,7 @@ function showEnd(won, text, all) {
 // The page's own measures: how tall the orders are (the map's bottom edge) and where the map's middle sits between the bars
 function fit() {
 	const r = cv.getBoundingClientRect();
-	dpr = LOW.n >= 2 ? 1 : Math.min(2, window.devicePixelRatio || 1);
+	dpr = DRAW.lvl >= 3 ? 1 : Math.min(2, window.devicePixelRatio || 1);
 	cw = r.width;
 	ch = r.height;
 	{
@@ -23560,7 +23692,7 @@ function ui(force) {
 					: clock(G.t);
 		let ready = 0;
 		for (const v of G.rdy.values()) ready += v; // research you can start now (the age counts: it is research too)
-		const idleN = unitsOf(0, 'vil').filter((u) => !u.job).length,
+		const idleN = unitsOf(0, 'vil').filter(freeVil).length,
 			t1 = `${AGES[p.age].name} · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''} ${clk}`;
 		txt('sAgeT', t1);
 		if ($('sIdle').hidden === !!idleN) $('sIdle').hidden = !idleN;
@@ -23895,11 +24027,9 @@ const ACT = {
 		if (!unTrain(0, 'vil')) say('Nobody is waiting to train.', '', 3);
 	},
 	idlego() {
-		const u = unitsOf(0, 'vil').find((v) => !v.job);
+		const u = unitsOf(0, 'vil').find(freeVil);
 		if (!u) return;
-		cam.x = u.x;
-		cam.y = u.y;
-		clampCam();
+		camGo(u.x, u.y);
 		closeCard();
 	},
 	seek(a) {
@@ -23909,9 +24039,7 @@ const ACT = {
 			say('Nothing of theirs stands.', '', 3);
 			return;
 		}
-		cam.x = k.x;
-		cam.y = k.y;
-		clampCam();
+		camGo(k.x, k.y);
 		if (k.kind === 'keep') {
 			G.card = null;
 			openCard({ type: 'bld', id: k.id });
@@ -23939,11 +24067,7 @@ const ACT = {
 	},
 	home() {
 		const k = keepOf(0);
-		if (k) {
-			cam.x = k.x;
-			cam.y = k.y;
-			clampCam();
-		}
+		if (k) camGo(k.x, k.y);
 	},
 	resume() {
 		const S = readSave();
@@ -24127,11 +24251,7 @@ const ACT = {
 		if (!S.length) return;
 		closeCard();
 		setPick(S.map((u) => ({ t: 'unit', id: u.id })));
-		if (O && O.cx !== undefined) {
-			cam.x = O.cx;
-			cam.y = O.cy;
-			clampCam();
-		}
+		if (O && O.cx !== undefined) camGo(O.cx, O.cy);
 	}, // a group on the march: picked, and the camera goes to it (the Army card line, the ring on the map)
 	pfollow() {
 		G.follow = !G.follow;
@@ -24139,9 +24259,7 @@ const ACT = {
 	}, // the camera follows what is picked, until you drag, pinch or tap the small map
 	jump(a) {
 		const [x, y] = a.split(',').map(Number);
-		cam.x = x;
-		cam.y = y;
-		clampCam();
+		camGo(x, y);
 	},
 	card(a) {
 		openCard({ type: a });
@@ -24157,7 +24275,7 @@ const PLAY = {
 			});
 	},
 	move(a) {
-		if (!unitsOf(0, 'vil').some((u) => !u.job)) {
+		if (!unitsOf(0, 'vil').some(freeVil)) {
 			say('Nobody is idle. Use − on another job.', '', 3);
 			return;
 		}
@@ -24287,7 +24405,7 @@ const PLAY = {
 	idleto(a) {
 		const [x, y] = a.split(',').map(Number);
 		let n = 0;
-		for (const u of unitsOf(0, 'vil')) if (!u.job && !u.inside && !postedAt({ x, y }).includes(u)) (u.post = { x: x + u.ox, y: y + u.oy }), n++;
+		for (const u of unitsOf(0, 'vil')) if (freeVil(u) && !postedAt({ x, y }).includes(u)) (u.post = { x: x + u.ox, y: y + u.oy }), n++;
 		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 3);
 		hideStrip();
 	},
@@ -24376,7 +24494,7 @@ const PLAY = {
 	idlehere() {
 		const c = toWorld(cw / 2, ch / 2);
 		let n = 0;
-		for (const u of unitsOf(0, 'vil')) if (!u.job && !u.inside) (u.post = { x: c.x + u.ox, y: c.y + u.oy }), n++;
+		for (const u of unitsOf(0, 'vil')) if (freeVil(u)) (u.post = { x: c.x + u.ox, y: c.y + u.oy }), n++;
 		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 4);
 		closeCard();
 	},
@@ -25100,6 +25218,7 @@ function saveGame(force) {
 			hz: G.hz || {},
 			ev: evSave(),
 			fog: btoa(String.fromCharCode(...G.fog)),
+			tread: G.tread && G.tread.some(Boolean) ? btoa(String.fromCharCode(...new Uint8Array(G.tread.buffer))) : undefined, // the ruts (Build 62)
 			seenB: Object.keys(G.seenB).map(Number),
 			horde: G.horde,
 			flood: G.flood,
@@ -25271,6 +25390,13 @@ function loadGame(S) {
 		try {
 			const s = atob(S.fog);
 			for (let i = 0; i < s.length && i < G.fog.length; i++) G.fog[i] = s.charCodeAt(i);
+		} catch (e) {}
+	}
+	if (S.tread) {
+		try {
+			const s = atob(S.tread),
+				b = new Uint8Array(ruts().buffer);
+			for (let i = 0; i < s.length && i < b.length; i++) b[i] = s.charCodeAt(i);
 		} catch (e) {}
 	}
 	G.seenB = {};
@@ -25681,16 +25807,20 @@ function sfx(name, x, y) {
 	let v = chanVol(name);
 	if (!v) return;
 	if (x !== undefined) {
-		const R = hyp(cw, ch) / 2 / cam.z,
-			d = hyp(x - cam.x, y - cam.y);
-		if (d > R * 1.1) return;
-		v *= clamp(1.1 - d / (R * 1.1), 0.15, 1);
+		const h = hearing(hyp(x - cam.x, y - cam.y));
+		if (h < SOUND.floor) return;
+		v *= h;
 	}
 	panV = x === undefined ? 0 : clamp((x - cam.x) / (cw / 2 / cam.z), -1, 1) * 0.8;
 	sfxLast[name] = now;
 	S[1](v);
 	panV = 0;
 }
+// how loud a sound at distance d (world units) reaches the ear over the screen's middle: ISO 9613-2 (SOUND), as a share of full
+const hearing = (d) => {
+	const d0 = (hyp(cw, ch) / 2 / cam.z) * SOUND.d0;
+	return Math.min(1, d0 / Math.max(1, d)) * 10 ** ((-SOUND.alphaKm * d * SOUND.metre) / 1000 / 20);
+};
 let ambT = 0;
 function ambience(dt) {
 	ambT -= dt;
@@ -25699,14 +25829,14 @@ function ambience(dt) {
 	sfx(G.night > 0.5 ? 'cricket' : season().name === 'Winter' ? 'wind' : 'bird');
 }
 
-// Thunder comes after the flash by the real delay: sound covers about 340 m a second (a world unit is about 0.14 m), so it is quieter and later the farther away.
+// Thunder comes after the flash by the real delay (SOUND.c over SOUND.metre), quieter by the same law as every sound; a strike is loud enough to carry the map
 function thunder(x, y) {
 	if (!SND.on || !AC || AC.state !== 'running' || document.hidden) return;
 	const d = hyp(x - cam.x, y - cam.y),
-		v = clamp(1.1 - d / 1400, 0.12, 1) * chanVol('thunder');
+		v = Math.max(SOUND.floor * 4, hearing(d / 4)) * chanVol('thunder');
 	if (!v) return;
 	panV = clamp((x - cam.x) / (cw / 2 / cam.z), -1, 1) * 0.6;
-	SFX.thunder[1](v, (d * 0.14) / 340);
+	SFX.thunder[1](v, (d * SOUND.metre) / SOUND.c);
 	panV = 0;
 }
 // ── Touch you can feel: one table of felt events, three strengths, never more often than every 50 ms.
@@ -26049,7 +26179,7 @@ function seasonTurn() {
 		if (b.kind === 'pasture' && b.prog >= 1 && b.hp > 0) {
 			if (s === 'Spring') {
 				b.node.amt += (b.sheep || 0) * FLEECE;
-				b.sheep = Math.min(FLOCK, Math.round((b.sheep || 0) + LAMBS * (b.sheep || 0) * (1 - (b.sheep || 0) / FLOCK))); // ΔN = r N (1 − N/K): fast while the pasture is empty, slowing as it fills
+				b.sheep = Math.min(FLOCK, Math.round(logistic(b.sheep || 0, LAMBS, FLOCK))); // Verhulst: fast while the pasture is empty, slowing as it fills
 			}
 			const wolf = G.units.find(
 				(v) =>
@@ -26394,7 +26524,7 @@ function priceDrift() {
 	});
 	for (const k of MKTK) {
 		const aim = k === 'spice' ? (G.plague && G.plague.until > G.t ? 1.4 : 1) * (full ? 1.2 : 1) : 1;
-		G.mkt[k] += (aim ** -PRICE.eps[k] - G.mkt[k]) * (1 - Math.exp(-10 / PRICE.tau)); // every 10 s, toward the stock that gives the aimed price
+		G.mkt[k] = relax(G.mkt[k], aim ** -PRICE.eps[k], PRICE.tau, 10); // every 10 s, toward the stock that gives the aimed price
 	}
 }
 // ventures: gold put into a merchant voyage; a year later it comes back with 40% more, or not at all
@@ -26587,7 +26717,7 @@ function vassalTick() {
 		if (L.id === 0 && p.paid > 0) sfx('tribute');
 		p.protect = (p.protect || 0) * VASSAL.decay;
 		const parts = loyaltyParts(p);
-		p.loyal = (p.loyal || 0) + (parts.target - (p.loyal || 0)) * 0.05;
+		p.loyal = relax(p.loyal || 0, parts.target, VASSAL.tau, 10); // loyalty settles toward what you have earned, 63% of the way in VASSAL.tau
 		p.unrest = clamp(
 			(p.unrest || 0) + TAX[p.tax].push * fxv(L.id, 'push').m + (p.forced > G.t ? 1 : 0) - p.loyal / 25,
 			0,
@@ -26734,7 +26864,7 @@ const EV = {
 	},
 	storm: {
 		draw(e, z, t) {
-			if (lessMotion || !Number.isFinite(e.x)) return; // no place yet in the first second
+			if (still() || !Number.isFinite(e.x)) return; // no place yet in the first second
 			// a dark band of cloud walking east, rain under it
 			const x = SX(e.x),
 				w = EVENTS.storm.band * z;
@@ -26900,7 +27030,7 @@ const EV = {
 			const f = Math.min(1, (G.t - e.t0) / 4, (e.until - G.t) / 4);
 			ctx.fillStyle = `rgba(214,220,222,${0.55 * f})`;
 			ctx.fillRect(0, 0, cw, ch);
-			if (!lessMotion) {
+			if (!still()) {
 				ctx.fillStyle = `rgba(230,234,236,${0.25 * f})`;
 				for (let i = 0; i < 8; i++) {
 					ctx.beginPath();
@@ -27172,7 +27302,7 @@ function hordeTick() {
 }
 // ── The climate (Build 54): one tick a second. The air's temperature from the year and the hour; the sky's run as a chain, a new minute
 // at a time; wetness closing on where the sky puts it; mud, snow and ice from those. `G.wx` stays the sky's name, which the rest reads.
-const blankClim = () => ({ T: CLIMATE.mean, W: CLIMATE.eq.clear, snow: 0, ice: 0, mud: 0, wet: false, dry: 0 });
+const blankClim = () => ({ T: CLIMATE.mean, W: CLIMATE.eq.clear, snow: 0, ice: 0, fdd: 0, mud: 0, wet: false, dry: 0 });
 const airTemp = (t = G.t) =>
 	CLIMATE.mean +
 	CLIMATE.year * Math.cos(2 * Math.PI * ((t % YEAR) / YEAR - CLIMATE.peakDay)) +
@@ -27200,7 +27330,7 @@ function skyTurn() {
 	if (fxv(0, 'forecast').a && c.next !== c.wet) say(c.next ? 'Signs of rain within the minute.' : 'Signs of a clearing sky.', 'soft', 6);
 	c.dry = c.wet ? 0 : c.dry + 1;
 	G.wx = c.wet
-		? c.T <= 0
+		? c.T <= CLIMATE.snowAt
 			? hz('winter') && rng() < CLIMATE.blizzard
 				? 'blizzard'
 				: 'snow'
@@ -27221,19 +27351,73 @@ function climateTick(dt) {
 		skyTurn();
 		lightning();
 	}
-	const eq = CLIMATE.eq[G.wx] ?? CLIMATE.eq.clear,
-		tau = eq > c.W ? CLIMATE.tau.wet : CLIMATE.tau.dry;
-	c.W += (eq - c.W) * (1 - Math.exp(-dt / tau)); // M(t) = Me + (M0 − Me) e^(−t/τ)
-	c.snow = clamp(c.snow + (precip(G.wx) && c.T <= 0 ? CLIMATE.snow.fall * (G.wx === 'blizzard' ? 2 : 1) : -CLIMATE.snow.melt * Math.max(0, c.T)) * dt, 0, 1);
-	c.ice = clamp(c.ice + (c.T < 0 ? (c.W > CLIMATE.mud[0] * 0.5 ? CLIMATE.ice.freeze : 0) : -CLIMATE.ice.thaw * c.T) * dt, 0, 1);
-	c.mud = c.T < 0 ? 0 : clamp((c.W - CLIMATE.mud[0]) / (CLIMATE.mud[1] - CLIMATE.mud[0]), 0, 1); // frozen ground is hard ground
+	groundTick(c, G.wx, dt);
+	if (G.tick % 300 === 2) rutHeal(); // every 10 s the ruts dry back a little
 }
-// what the ground takes off a march for one side, at a place if given (mud pools by water): Pandolf's terrain factor over dirt, as 1 / η
-const groundSpd = (o, keys, at) => {
-	const c = G.clim,
-		mud = c.mud * (at && NAV.shore[gcell(at.x, at.y)] ? CLIMATE.shore : 1);
-	return 1 / (1 + CLIMATE.terrain.mud * Math.min(1, mud) * fxv(o, 'mud', keys).m + CLIMATE.terrain.snow * c.snow * (1 - fxv(o, 'snow', keys).a));
+// The ground's water, snow, ice and mud for one step, from the air's temperature c.T and the sky wx (pure in c, so the science test can drive it)
+function groundTick(c, wx, dt) {
+	const K = CLIMATE,
+		eq = K.eq[wx] ?? K.eq.clear,
+		tau = eq > c.W ? K.tau.wet : K.tau.dry,
+		warm = Math.max(0, c.T);
+	c.W = relax(c.W, eq, tau, dt); // M(t) = Me + (M0 − Me) e^(−t/τ), the timelag fuel-moisture model
+	// snow: falls below snowAt; melts by the degree-day method, faster under rain; the melt water goes into the ground
+	const falls = precip(wx) && c.T <= K.snowAt,
+		meltS = Math.min(c.snow, K.snow.melt * warm * (precip(wx) && !falls ? 1 + K.snow.rain : 1) * dt);
+	c.snow = clamp(c.snow + (falls ? K.snow.fall * (wx === 'blizzard' ? 2 : 1) * dt : -meltS), 0, 1);
+	// ice: below freezing, wet ground freezes by Stefan's law (thickness ∝ √ of the freezing degree-seconds); above, it melts by the degree-day
+	let meltI = 0;
+	if (c.T < 0) {
+		if (c.W > K.mud[0] * 0.5) {
+			const before = c.ice;
+			c.fdd += -c.T * dt;
+			c.ice = Math.min(1, Math.sqrt(c.fdd / K.ice.fdd));
+			c.W = Math.max(0, c.W - (c.ice - before) * K.ice.water); // the water that froze leaves the ground
+		}
+	} else {
+		meltI = Math.min(c.ice, K.ice.melt * warm * dt);
+		c.ice -= meltI;
+		c.fdd = c.ice * c.ice * K.ice.fdd; // so the next freeze grows from the ice that is left
+	}
+	c.W = Math.min(1, c.W + meltS * K.snow.water + meltI * K.ice.water); // the melt wets the ground (conservation: nothing vanishes)
+	c.mud = c.T < 0 ? 0 : clamp((c.W - K.mud[0]) / (K.mud[1] - K.mud[0]), 0, 1); // frozen ground is hard ground
+}
+// Traffic (Build 62): every unit-second on a square deepens its ruts. Ruts hold water, so mud is deeper where the feet go: rut depth grows as
+// passes^0.4 (USFS trafficability studies, Build 62) toward `deep` at n0 unit-seconds, and heals with the timelag. Roads (the mud research) count here too.
+const ruts = () => G.tread || (G.tread = new Uint16Array(FOGN * FOGN));
+const rutsAt = (x, y) => ruts()[clamp((y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((x / FOG) | 0, 0, FOGN - 1)];
+const rutsOn = (u) => {
+	const T = ruts(),
+		i = clamp((u.y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((u.x / FOG) | 0, 0, FOGN - 1);
+	if (T[i] < 65535) T[i]++;
 };
+function rutHeal() {
+	const T = ruts(),
+		k = Math.exp(-10 / CLIMATE.rut.tau);
+	for (let i = 0; i < T.length; i++) if (T[i]) T[i] = Math.floor(T[i] * k);
+}
+const rutOf = (x, y) => CLIMATE.rut.deep * Math.min(1, rutsAt(x, y) / CLIMATE.rut.n0) ** 0.4;
+// mud at a place: the ground's mud, deeper by water (pooling) and by traffic (ruts)
+const mudAt = (at) => (at ? G.clim.mud * (NAV.shore[gcell(at.x, at.y)] ? CLIMATE.shore : 1) * (1 + rutOf(at.x, at.y)) : G.clim.mud);
+// what the ground takes off a march for one side, at a place if given: Pandolf's terrain factor over dirt, as 1 / η, and the shorter stride on ice
+const groundSpd = (o, keys, at) => {
+	const c = G.clim;
+	return (
+		(1 / (1 + CLIMATE.terrain.mud * Math.min(1, mudAt(at)) * fxv(o, 'mud', keys).m + CLIMATE.terrain.snow * c.snow * (1 - fxv(o, 'snow', keys).a))) *
+		(1 - CLIMATE.mu.stride * c.ice * (1 - fxv(o, 'ice', keys).a))
+	);
+};
+// Traction: the friction the ground offers now, a blend by cover (ice over snow over mud over dry), ice slickest just below freezing
+const muOf = (at) => {
+	const c = G.clim,
+		M = CLIMATE.mu,
+		ice = c.T <= 0 ? M.ice0 + (M.iceCold - M.ice0) * Math.min(1, -c.T / M.coldAt) : M.ice0 * 0.6,
+		ground = Math.min(1, mudAt(at)) * M.mud + (1 - Math.min(1, mudAt(at))) * M.dry,
+		snow = c.snow * M.snow + (1 - c.snow) * ground;
+	return c.ice * ice + (1 - c.ice) * snow;
+};
+// the chance of a slip in a check: a logistic step on what the step needs less what the ground offers (Hanson et al. 1999), only where there is ice to slip on
+const slipChance = (u, need) => (G.clim.ice <= 0 ? 0 : G.clim.ice / (1 + Math.exp(-(need - muOf(u)) / CLIMATE.mu.soft)));
 // fire against the ground's wetness: Rothermel's damping η = 1 − 2.59r + 5.11r² − 3.52r³, r = M/Mx ≤ 1, as a share of a clear day's
 const rothermel = (r) => 1 - 2.59 * r + 5.11 * r * r - 3.52 * r * r * r;
 const fireMul = () => clamp(rothermel(Math.min(1, G.clim.W)) / rothermel(CLIMATE.eq.clear), 0, 2);
@@ -28158,7 +28342,7 @@ function drawReticle() {
 		y = SY(H.h.e.y),
 		L = performance.now() - (H.firedT || -1e9) < 1200 ? 1 : 0,
 		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
-		t = lessMotion ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
+		t = still() ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
 		eta = hudEta(),
 		line = (a, b, c, d) => (ctx.moveTo(x + a, y + b), ctx.lineTo(x + c, y + d));
 	ctx.save();
@@ -28463,21 +28647,26 @@ function fault(e) {
 }
 window.addEventListener('error', (e) => fault(e.error || e.message));
 window.addEventListener('unhandledrejection', (e) => fault(e.reason));
-// Load: a phone that keeps falling behind (over 12 ms of work a frame for two seconds) first drops the moving extras, then draws at half its pixels.
-const LOW = { ema: 0, slow: 0, n: 0 };
+// Load (DRAW in 18-figures): over 12 ms of work a frame for two seconds sheds one level; under 7 ms for ten seconds climbs one back.
 function shed(work) {
-	LOW.ema += (work - LOW.ema) * 0.05;
-	if (LOW.ema <= 12 || LOW.n >= 2) {
-		LOW.slow = 0;
-		return;
-	}
-	if (++LOW.slow > 120) {
-		LOW.n++;
-		LOW.slow = 0;
-		LOW.ema = 0;
-		if (LOW.n === 1) lessMotion = true;
-		else fit();
-	}
+	DRAW.ema += (work - DRAW.ema) * 0.05;
+	if (DRAW.ema > 12 && DRAW.lvl < 3) {
+		DRAW.fast = 0;
+		if (++DRAW.slow > 120) {
+			DRAW.lvl++;
+			DRAW.slow = 0;
+			DRAW.ema = 0;
+			if (DRAW.lvl === 3) fit();
+		}
+	} else if (DRAW.ema < 7 && DRAW.lvl > 0) {
+		DRAW.slow = 0;
+		if (++DRAW.fast > 600) {
+			DRAW.lvl--;
+			DRAW.fast = 0;
+			DRAW.ema = 0;
+			if (DRAW.lvl === 2) fit();
+		}
+	} else DRAW.slow = DRAW.fast = 0;
 }
 // One frame. When nothing moves (paused, over, hidden, no touch for a second) it waits: 15 frames a second instead of 60.
 function frame(now) {
@@ -28697,7 +28886,7 @@ window.__fk = {
 	sunAltAt,
 	sunVec,
 	moonVec,
-	shadowOf,
+	sunShadows,
 	rangeFrom,
 	rangeOf,
 	moonPhase,
@@ -28731,6 +28920,19 @@ window.__fk = {
 	sightClear,
 	visCap,
 	fireHeat,
+	relax,
+	BUILDER_POW,
+	hearing,
+	SOUND,
+	groundTick,
+	muOf,
+	slipChance,
+	rutOf,
+	ruts,
+	CLIMATE,
+	logistic,
+	MORALE,
+	VASSAL,
 	FIRE,
 	shelterOf,
 	bldName,
