@@ -28,7 +28,7 @@ function drawWeather() {
 	const stormy = e && e.kind === 'storm',
 		raining = wx === 'rain' || stormy;
 	wind += ((stormy ? 0.8 : raining ? 0.3 : 0.1) * Math.sin(now * 0.07) - wind) * dt * 0.3; // the wind wanders; a storm leans it hard
-	if (raining && !lessMotion) {
+	if (raining && !still()) {
 		const n = stormy ? RAINP.n : wx === 'rain' ? 150 : 0,
 			slant = wind * 0.35,
 			fall = 420 * dt;
@@ -53,7 +53,7 @@ function drawWeather() {
 		}
 	}
 	if (wx === 'frost' || wx === 'blizzard') {
-		if (!lessMotion) {
+		if (!still()) {
 			const n = wx === 'blizzard' ? 160 : 80,
 				sp = wx === 'blizzard' ? 90 : 34;
 			ctx.fillStyle = 'rgba(245,248,252,.85)';
@@ -65,7 +65,7 @@ function drawWeather() {
 		}
 	}
 	// the storm's own lightning: far sheet flashes while it walks, a close bolt now and then (the strikes on buildings come from 36-economy)
-	if (stormy && !lessMotion && !G.paused && now - sheetT > 2.5 + 6 * Math.random() && flashOK(now)) {
+	if (stormy && !still() && !G.paused && now - sheetT > 2.5 + 6 * Math.random() && flashOK(now)) {
 		// not while paused: a bolt ages on the game clock, so one made in a pause never faded and they piled up, each with its thunder (Build 60)
 		sheetT = now;
 		const close = Math.random();
@@ -169,7 +169,7 @@ function drawSky() {
 	gr.addColorStop(1, `rgba(${col},0)`);
 	ctx.fillStyle = gr;
 	ctx.fillRect(0, top, cw, h);
-	if (lessMotion) return;
+	if (still()) return;
 	const now = performance.now() / 1000,
 		cloudy = stormy
 			? 1

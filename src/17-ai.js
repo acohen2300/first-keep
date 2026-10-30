@@ -284,7 +284,7 @@ function think(p) {
 	}
 	const tot = RES.reduce((s, r) => s + mix[r], 0) || 1;
 	for (const r of RES) mix[r] /= tot;
-	const idle = vils.find((v) => !v.job),
+	const idle = vils.find(freeVil),
 		short = RES.map((r) => [r, mix[r] * vils.length - jobsN(r)]).sort((a, b) => b[1] - a[1]);
 	if (idle) idle.job = short[0][0];
 	else if (short[0][1] >= 1) {

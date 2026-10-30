@@ -35,7 +35,7 @@ function drawRadar(wv, wv2) {
 		rx = cw / 2 + dx * sc,
 		ry = ch / 2 + dy * sc,
 		a = Math.atan2(dy, dx),
-		pulse = lessMotion ? 0 : Math.sin(G.t * 6) * 2;
+		pulse = still() ? 0 : Math.sin(G.t * 6) * 2;
 	RADAR = { sx: rx, sy: ry, x: near.x, y: near.y };
 	ctx.save();
 	ctx.translate(rx, ry);

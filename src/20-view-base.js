@@ -84,7 +84,7 @@ function scarBurn(b) {
 function researchBadge(x, y, s, n) {
 	const w = (n > 1 ? 31 : 23) * s,
 		h = 17 * s,
-		q = lessMotion ? 0 : Math.sin(G.t * 4) * 0.8 * s,
+		q = still() ? 0 : Math.sin(G.t * 4) * 0.8 * s,
 		bx = x - (n > 1 ? 6.5 : 0) * s,
 		by = y + q;
 	ctx.save();
@@ -143,7 +143,7 @@ const CAM_W = 9; // ω: the glide is over in about 4/ω s, half a second
 function camGo(x, y) {
 	cam.tx = x;
 	cam.ty = y;
-	if (lessMotion) {
+	if (still()) {
 		cam.x = x;
 		cam.y = y;
 		camStop();

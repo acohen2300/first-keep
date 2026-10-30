@@ -637,7 +637,7 @@ const nearestNode = (u, job) => (bestNode(u, job) || { n: null }).n; // the one 
 // berry picker farthest from home, not a woodcutter)
 function pickVil(o, to, types, site) {
 	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !(site && u.rep === site)),
-		idle = V.filter((u) => !u.job);
+		idle = V.filter(freeVil);
 	if (idle.length) return nearest(idle, to);
 	const T = types ? [].concat(types) : null,
 		free = V.filter((u) => u.job && u.job !== 'repair' && !GOODK.includes(u.job) && !(u.node && u.node.farm && (BLD[u.node.farm.kind].makes || BLD[u.node.farm.kind].sheep))),

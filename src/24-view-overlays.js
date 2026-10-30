@@ -64,7 +64,7 @@ function drawCracks(z) {
 				});
 			ctx.stroke();
 		}
-		if (age < 4 && !lessMotion)
+		if (age < 4 && !still())
 			for (let i = 0; i < 9; i++) {
 				const a = i * 2.4,
 					d = (6 + age * 14 + (i % 3) * 5) * z;
@@ -88,7 +88,7 @@ function drawEvents(z) {
 		t = performance.now() / 1000;
 	drawCracks(z);
 	if (e && EV[e.kind].draw) EV[e.kind].draw(e, z, t); // each event draws itself: its block in 37-events
-	if ((G.wx === 'blizzard' || G.wx === 'snow') && !lessMotion) {
+	if ((G.wx === 'blizzard' || G.wx === 'snow') && !still()) {
 		ctx.fillStyle = 'rgba(245,248,252,.9)';
 		for (let i = 0; i < (G.wx === 'blizzard' ? 160 : 60); i++) {
 			const y = ((i * 71.9 + t * 90) % (ch + 20)) - 10,
@@ -360,7 +360,7 @@ function drawSand(z) {
 }
 // small ripples drift on the lakes
 function drawLakeRipples(z) {
-	if (!lessMotion) {
+	if (!still()) {
 		ctx.strokeStyle = 'rgba(220,240,255,.28)';
 		ctx.lineWidth = 1.2;
 		for (const L of G.lakes) {
@@ -380,7 +380,7 @@ function drawLakeRipples(z) {
 }
 // rain rings sit on the ground, fixed to the world, under buildings and people
 function drawRainRings(z) {
-	if (G.wx === 'rain' && z > 1.2 && !lessMotion) {
+	if (G.wx === 'rain' && z > 1.2 && !still()) {
 		// rain rings sit on the ground, fixed to the world, under buildings and people
 		const t = performance.now() / 1000,
 			C = 120,

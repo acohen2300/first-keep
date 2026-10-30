@@ -247,7 +247,7 @@ function draw() {
 		ctx.fillRect(Math.max(0, x0), Math.max(0, y0), Math.min(cw, MAP * z), Math.min(ch, MAP * z * TILT));
 		ctx.globalAlpha = 1;
 	}
-	if (G.shake > G.t && !lessMotion) {
+	if (G.shake > G.t && !still()) {
 		const k = (G.shake - G.t) * 3;
 		ctx.translate(rnd2() * k, rnd2() * k);
 	} // a sinkhole or a falling star: the whole view judders for a moment
@@ -259,7 +259,7 @@ function draw() {
 		ctx.fillStyle = sn.tint;
 		ctx.fillRect(x0, y0, MAP * z, MAP * z * TILT);
 	}
-	drawRainRings(z);
+	if (DRAW.lvl < 1) drawRainRings(z);
 	drawGround(); // the weather's mark on the land, under everything standing
 	drawPicks(z); // the pick rings lie on the ground, under the figure and the building (Albert, Build 40)
 	// everything standing, back to front
@@ -286,7 +286,7 @@ function draw() {
 	const N = viewNodes(wv, wv2, far),
 		sB = quant(z * dpr),
 		sU = quant(z * dpr * FIG);
-	if (!far) nodeShadows(N, z); // the trees' shadows lie on the ground under everything standing
+	if (!far && DRAW.lvl < 1) nodeShadows(N, z); // the trees' shadows lie on the ground under everything standing (the first pass shed under load)
 	// the standing nodes (about 2,000 trees, bushes and rocks) are kept sorted until the view moves a step; the few moving things are merged in
 	for (let i = 0, j = 0; i < N.length || j < list.length; ) {
 		const take = j >= list.length || (i < N.length && N[i].y < list[j][0]),

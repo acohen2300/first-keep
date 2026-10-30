@@ -92,7 +92,7 @@ const ACT = {
 		if (!unTrain(0, 'vil')) say('Nobody is waiting to train.', '', 3);
 	},
 	idlego() {
-		const u = unitsOf(0, 'vil').find((v) => !v.job);
+		const u = unitsOf(0, 'vil').find(freeVil);
 		if (!u) return;
 		camGo(u.x, u.y);
 		closeCard();
@@ -340,7 +340,7 @@ const PLAY = {
 			});
 	},
 	move(a) {
-		if (!unitsOf(0, 'vil').some((u) => !u.job)) {
+		if (!unitsOf(0, 'vil').some(freeVil)) {
 			say('Nobody is idle. Use − on another job.', '', 3);
 			return;
 		}
@@ -470,7 +470,7 @@ const PLAY = {
 	idleto(a) {
 		const [x, y] = a.split(',').map(Number);
 		let n = 0;
-		for (const u of unitsOf(0, 'vil')) if (!u.job && !u.inside && !postedAt({ x, y }).includes(u)) (u.post = { x: x + u.ox, y: y + u.oy }), n++;
+		for (const u of unitsOf(0, 'vil')) if (freeVil(u) && !postedAt({ x, y }).includes(u)) (u.post = { x: x + u.ox, y: y + u.oy }), n++;
 		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 3);
 		hideStrip();
 	},
@@ -559,7 +559,7 @@ const PLAY = {
 	idlehere() {
 		const c = toWorld(cw / 2, ch / 2);
 		let n = 0;
-		for (const u of unitsOf(0, 'vil')) if (!u.job && !u.inside) (u.post = { x: c.x + u.ox, y: c.y + u.oy }), n++;
+		for (const u of unitsOf(0, 'vil')) if (freeVil(u)) (u.post = { x: c.x + u.ox, y: c.y + u.oy }), n++;
 		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 4);
 		closeCard();
 	},

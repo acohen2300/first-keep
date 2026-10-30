@@ -166,15 +166,8 @@ button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44p
 #stage.busy #homeB{display:none}
 #stage.picking #homeB{display:none}
 #card .lbl{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.1;min-height:44px}#card .lbl b{font-size:16px}#card .lbl small{color:var(--mute);font-size:13px}
-/* the army dock (Build 40 reviews): once Battalions is researched, the battalions sit above the job bar, one tap each; the chevron folds it to a tab */
-#dock{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 60px);display:flex;align-items:center;gap:4px;z-index:3}
-#dock #dockRow{flex:1;min-width:0;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}#dock #dockRow::-webkit-scrollbar{display:none}
-#dock #dockRow button{flex:0 0 auto;min-height:44px;min-width:52px;padding:0 8px;background:rgba(18,23,21,.94)}#dock #dockRow button small{font-size:12px}
-#dock #dockMin{min-height:44px;min-width:44px;padding:0;background:rgba(18,23,21,.94)}#dock #dockMin::before{content:'⌄';font-size:19px;line-height:1}
-#dock.min #dockRow{display:none}#dock.min{left:auto}#dock.min #dockMin::before{content:'⚔'}
 #pickbar{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid #5ad27a;border-radius:8px;padding:4px 4px 4px 10px;font-weight:700;z-index:3}
 #pickbar{flex-direction:column;align-items:stretch;gap:4px;padding:4px}#pickbar .pbTop,#pickbar .pbRow{display:flex;gap:4px;align-items:center}#pickbar .pbRow:empty{display:none}#pickbar span{flex:1;min-width:0;line-height:1.25;padding-left:6px}#pickbar button{min-height:44px;min-width:44px;padding:0 10px}#pickbar .pbRow button{flex:1;padding:0 4px}#pickbar .gl{position:static;transform:none;width:18px;height:18px;display:block}#pickbar button.on{border-color:var(--gold);color:var(--gold)}
-#stage.picking #dock{bottom:calc(var(--ob) + 112px)}
 /* a building's line: one slot per order it can hold; a filled slot shows what is in it and how far along; tap one to cancel it */
 #card .slots{display:grid;grid-template-columns:repeat(var(--qn,5),minmax(0,1fr));gap:4px}
 #card .slot{position:relative;overflow:hidden;min-height:44px;padding:2px 3px;font-size:13px;line-height:1.1;text-align:center;border-radius:6px}

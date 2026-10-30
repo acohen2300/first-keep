@@ -1,10 +1,15 @@
 // ═════ 18-figures.js: people and beasts, drawn from data ═════
 // ───────────────────────── Figures: every unit drawn once per look, colour, pose and zoom, then stamped ─────────────────────────
 // Local units: 1 = one world unit; feet at (0, 0), facing right, up is negative. A person stands about 21 tall.
-let lessMotion = false;
+let lessMotion = false; // the person's own setting (Reduce motion): honoured everywhere, never set by the game
 try {
 	lessMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 } catch (e) {}
+// One draw budget (Build 62): a phone that falls behind sheds in one order, and climbs back when it catches up. DRAW.lvl: 0 everything;
+// 1 the trees' shadows and the rain's rings go (the two dearest cosmetic passes, measured); 2 the moving extras go (as Reduce motion);
+// 3 half the pixels. still(): is motion off, by the person's setting or by load.
+const DRAW = { lvl: 0, ema: 0, slow: 0, fast: 0 };
+const still = () => lessMotion || DRAW.lvl >= 2;
 const shade = (hex, k) => {
 	const n = parseInt(hex.slice(1), 16),
 		f = (c) => clamp(Math.round(c * k), 0, 255);

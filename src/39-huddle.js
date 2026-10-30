@@ -365,7 +365,7 @@ function drawReticle() {
 		y = SY(H.h.e.y),
 		L = performance.now() - (H.firedT || -1e9) < 1200 ? 1 : 0,
 		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
-		t = lessMotion ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
+		t = still() ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
 		eta = hudEta(),
 		line = (a, b, c, d) => (ctx.moveTo(x + a, y + b), ctx.lineTo(x + c, y + d));
 	ctx.save();

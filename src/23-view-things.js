@@ -87,7 +87,7 @@ function drawBld(b, s) {
 	stamp(c, sx, sy, k * popC(fa / 0.6));
 	flagsOn(c, sx, sy, z, G.P[b.owner].color, b.id);
 	if (PILE[b.kind] && friendly(0, b.owner)) pileAt(b, sx, sy, z);
-	if (fa < 8 && !lessMotion) {
+	if (fa < 8 && !still()) {
 		ctx.globalCompositeOperation = 'lighter';
 		ctx.globalAlpha = 0.32 * (1 - fa / 8);
 		stamp(c, sx, sy, k);
@@ -120,7 +120,7 @@ function drawBld(b, s) {
 			Math.max(0.9, z * 0.6),
 			G.rdy.get(b.kind),
 		); // a parchment tab with a book and how many researches wait here
-	if (b.kind === 'mill' && !lessMotion) {
+	if (b.kind === 'mill' && !still()) {
 		ctx.strokeStyle = '#efe6cf';
 		ctx.lineWidth = 1.6 * z;
 		const cx = sx,
@@ -279,7 +279,7 @@ const flameLife = (kind) => (FLAME[kind].covered || !precip(G.wx) ? 1 : LIGHT.we
 // the flame itself: a teardrop that leans with the wind and flickers; its heart whiter than its edge
 function flame(x, y, kind, z, seed) {
 	const F = FLAME[kind];
-	if (!F.s || lessMotion) return;
+	if (!F.s || still()) return;
 	const t = performance.now() / 1000,
 		s = F.s * z * flameLife(kind),
 		fl = 0.85 + 0.15 * Math.sin(t * 11 + seed) * Math.sin(t * 7.3 + seed * 1.7),
@@ -319,7 +319,7 @@ function glow(x, y, kind, z, more = 1) {
 // a building's flags fly with the wind: a cloth from the pole top, its tip lifting and falling, longer in a strong wind (Build 52; they were painted on)
 function flagsOn(c, sx, sy, z, col, seed) {
 	if (!c.flags || !c.flags.length) return;
-	const t = lessMotion ? 0 : performance.now() / 1000,
+	const t = still() ? 0 : performance.now() / 1000,
 		wv = 0.85 + Math.min(0.6, Math.abs(wind) * 0.9);
 	ctx.fillStyle = col;
 	ctx.strokeStyle = 'rgba(16,12,8,.75)';
@@ -382,7 +382,7 @@ function pileAt(b, sx, sy, z) {
 // a chimney's plume (Build 62): bent over by the wind, its height goes with the downwind distance to the two-thirds (Briggs 1969, Δh ∝ x^(2/3)),
 // so it climbs fast and then leans; it widens about as the distance (Pasquill–Gifford, σ ∝ x^0.9). The wind is the weather's.
 function smoke(x, y, seed, z) {
-	if (lessMotion) return;
+	if (still()) return;
 	const lean = 4 + Math.abs(wind) * 9,
 		side = wind < 0 ? -1 : 1;
 	for (let i = 0; i < 3; i++) {
@@ -396,7 +396,7 @@ function smoke(x, y, seed, z) {
 }
 // fire when a building is badly hurt, dark smoke when sabotage has stalled it
 function blaze(b, x, y, z) {
-	if (lessMotion) return;
+	if (still()) return;
 	const low = b.hp < maxHpB(b.owner, b.kind) * 0.5 || b.fire > 0,
 		stalled = (b.stall || 0) > G.t,
 		w = BLD[b.kind].fp * NAVC * z;
@@ -525,7 +525,7 @@ function drawNode(n, s) {
 		sx = SX(n.x),
 		sy = SY(n.y);
 	if (n.kind === 'fish') {
-		if (lessMotion) return;
+		if (still()) return;
 		const ph = (G.t * 0.5 + n.id * 0.13) % 1;
 		ctx.strokeStyle = `rgba(225,242,255,${0.6 * (1 - ph)})`;
 		ctx.lineWidth = 1;
@@ -584,7 +584,7 @@ function drawStandards(z, inView) {
 		g.hp += u.hp;
 		g.mx += u.max;
 	}
-	const t = lessMotion ? 0 : performance.now() / 1000;
+	const t = still() ? 0 : performance.now() / 1000;
 	for (const g of grp.values()) {
 		if (g.n < 5) continue;
 		const c = { x: g.x / g.n, y: g.y / g.n };
@@ -649,7 +649,7 @@ function drawFallen(f, s) {
 	const z = cam.z,
 		c = sprite(f.look, f.col, f.tier, 0, s, f.kit),
 		k = (z * FIG) / s,
-		r = (lessMotion ? 1 : Math.min(1, a / 0.35)) * (Math.PI / 2) * -f.face; // falls back, away from the way it faced
+		r = (still() ? 1 : Math.min(1, a / 0.35)) * (Math.PI / 2) * -f.face; // falls back, away from the way it faced
 	ctx.save();
 	ctx.globalAlpha = a < 0.7 ? 1 : 1 - (a - 0.7) / 0.7;
 	ctx.translate(SX(f.x), SY(f.y));
@@ -723,8 +723,8 @@ function drawUnit(u, s) {
 	const face = (u.fx || 1) < 0 ? -1 : 1,
 		ha = G.t - (u.hitT ?? -9),
 		near = (U.rng || 0) <= 20,
-		bob = moving && !lessMotion ? Math.abs(Math.sin(pace * Math.PI)) * 1.2 * z : 0,
-		lunge = lessMotion || ha > 0.3 ? 0 : near ? Math.sin((ha / 0.3) * Math.PI) * 2.6 * z : ha < 0.18 ? -1.3 * z * (1 - ha / 0.18) : 0,
+		bob = moving && !still() ? Math.abs(Math.sin(pace * Math.PI)) * 1.2 * z : 0,
+		lunge = still() || ha > 0.3 ? 0 : near ? Math.sin((ha / 0.3) * Math.PI) * 2.6 * z : ha < 0.18 ? -1.3 * z * (1 - ha / 0.18) : 0,
 		bx = sx + face * lunge,
 		by = sy - bob;
 	stamp(c, bx, by, k * popC((G.t - (u.bornT ?? -9)) / 0.4), face < 0);
@@ -999,7 +999,7 @@ function drawFind(f) {
 		ctx.restore();
 		L_(0, -16.6, 0, -19.5, '#8a6a1a', 0.8);
 		E_(0, -20, 1.3, 1.3, oc, INK, 0.3);
-		if (!lessMotion) E_(0, -6, 1.6, 2.4 + Math.sin(G.t * 6) * 0.5, 'rgba(255,190,70,.9)');
+		if (!still()) E_(0, -6, 1.6, 2.4 + Math.sin(G.t * 6) * 0.5, 'rgba(255,190,70,.9)');
 		if (f.cap) {
 			const t = f.cap.t / F.capture;
 			ctx.strokeStyle = G.P[f.cap.o].color;
@@ -1141,7 +1141,7 @@ function drawFind(f) {
 				],
 				'#7d5a34',
 			);
-			const fl = lessMotion ? 0 : Math.sin(performance.now() / 110 + f.id) * 1.2;
+			const fl = still() ? 0 : Math.sin(performance.now() / 110 + f.id) * 1.2;
 			P_(
 				[
 					[-3, 3],

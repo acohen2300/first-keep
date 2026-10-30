@@ -77,7 +77,7 @@ const CARDS = {
 					trade ? 'rel' : 'town',
 				);
 			if (kp && !trade)
-				h += acts(btn('stopall', 'Stop all', 'everyone to the Town Center, idle') + btn('idlehere', 'Idle to me', `${unitsOf(0, 'vil').filter((u) => !u.job && !u.inside).length} come to the screen`)); // every villager at once (Build 61, Albert)
+				h += acts(btn('stopall', 'Stop all', 'everyone to the Town Center, idle') + btn('idlehere', 'Idle to me', `${unitsOf(0, 'vil').filter(freeVil).length} come to the screen`)); // every villager at once (Build 61, Albert)
 			if (tr.length) h += hd('Train') + acts(trainButtons(tr));
 			if (hasR)
 				h +=

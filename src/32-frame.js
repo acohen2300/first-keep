@@ -195,7 +195,7 @@ function showEnd(won, text, all) {
 // The page's own measures: how tall the orders are (the map's bottom edge) and where the map's middle sits between the bars
 function fit() {
 	const r = cv.getBoundingClientRect();
-	dpr = LOW.n >= 2 ? 1 : Math.min(2, window.devicePixelRatio || 1);
+	dpr = DRAW.lvl >= 3 ? 1 : Math.min(2, window.devicePixelRatio || 1);
 	cw = r.width;
 	ch = r.height;
 	{
@@ -474,7 +474,7 @@ function ui(force) {
 					: clock(G.t);
 		let ready = 0;
 		for (const v of G.rdy.values()) ready += v; // research you can start now (the age counts: it is research too)
-		const idleN = unitsOf(0, 'vil').filter((u) => !u.job).length,
+		const idleN = unitsOf(0, 'vil').filter(freeVil).length,
 			t1 = `${AGES[p.age].name} · ${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''} ${clk}`;
 		txt('sAgeT', t1);
 		if ($('sIdle').hidden === !!idleN) $('sIdle').hidden = !idleN;

@@ -101,7 +101,7 @@ const EV = {
 	},
 	storm: {
 		draw(e, z, t) {
-			if (lessMotion || !Number.isFinite(e.x)) return; // no place yet in the first second
+			if (still() || !Number.isFinite(e.x)) return; // no place yet in the first second
 			// a dark band of cloud walking east, rain under it
 			const x = SX(e.x),
 				w = EVENTS.storm.band * z;
@@ -267,7 +267,7 @@ const EV = {
 			const f = Math.min(1, (G.t - e.t0) / 4, (e.until - G.t) / 4);
 			ctx.fillStyle = `rgba(214,220,222,${0.55 * f})`;
 			ctx.fillRect(0, 0, cw, ch);
-			if (!lessMotion) {
+			if (!still()) {
 				ctx.fillStyle = `rgba(230,234,236,${0.25 * f})`;
 				for (let i = 0; i < 8; i++) {
 					ctx.beginPath();

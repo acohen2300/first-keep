@@ -363,8 +363,8 @@ const ridgeRoof = (x1, ye, ya, d, col) => {
 			[k, ya - d],
 			[0, ya],
 		],
-		shade(col, 1.08),
-		INK,
+		lit(col, 0.13),
+		LINE,
 		0.5,
 	);
 	P_(
@@ -374,8 +374,8 @@ const ridgeRoof = (x1, ye, ya, d, col) => {
 			[k, ya - d],
 			[0, ya],
 		],
-		shade(col, 0.8),
-		INK,
+		lit(col, -0.32),
+		LINE,
 		0.5,
 	);
 }; // a roof whose ridge runs front to back: eaves at ye, apex at ya; the pediment is drawn after
@@ -389,7 +389,7 @@ const door = (x, yf, w, h, col = '#3a2614') => {
 			[x - w / 2, yf - h + w / 2],
 		],
 		col,
-		INK,
+		LINE,
 		0.4,
 	);
 };
@@ -422,7 +422,7 @@ const banner = (x, y, col, len = 9) => {
 			[x, y - len - 1],
 		],
 		col,
-		INK,
+		LINE,
 		0.3,
 	);
 };
@@ -436,7 +436,7 @@ const crenels = (x0, x1, y, col) => {
 				[x, y - 2],
 			],
 			col,
-			INK,
+			LINE,
 			0.3,
 		);
 };
@@ -448,8 +448,8 @@ const column = (x, yb, yt, col = '#efe6d4') => {
 			[x + 0.9, yt],
 			[x - 0.9, yt],
 		],
-		LG(x - 1, 0, x + 1, 0, [shade(col, 1.05), shade(col, 0.75)]),
-		INK,
+		LG(x - 1, 0, x + 1, 0, [lit(col, 0.08), lit(col, -0.40)]),
+		LINE,
 		0.3,
 	);
 	P_(
@@ -460,7 +460,7 @@ const column = (x, yb, yt, col = '#efe6d4') => {
 			[x - 1.4, yt - 0.8],
 		],
 		col,
-		INK,
+		LINE,
 		0.3,
 	);
 };
@@ -647,7 +647,7 @@ const ART = {
 				[-26, d / 2 - 4],
 			],
 			STONE,
-			INK,
+			LINE,
 			0.5,
 		);
 		texture('stone', -26, d / 2 - 4, 26, d / 2 + 1, STONE);
@@ -661,8 +661,8 @@ const ART = {
 				[5, -40],
 				[-5, -40],
 			],
-			LG(-5, 0, 5, 0, [shade(STONE, 0.95), shade(STONE, 0.72)]),
-			INK,
+			LG(-5, 0, 5, 0, [lit(STONE, -0.08), lit(STONE, -0.45)]),
+			LINE,
 			0.5,
 		);
 		texture('stone', -5, -40, 5, 0, STONE);
@@ -682,8 +682,8 @@ const ART = {
 				[6.5 + tk, -40 - 10 * TILT],
 				[tk / 2, -52],
 			],
-			shade(TILE, 0.6),
-			INK,
+			lit(TILE, -0.60),
+			LINE,
 			0.5,
 		);
 		P_(
@@ -693,7 +693,7 @@ const ART = {
 				[tk / 2, -52],
 			],
 			TILE,
-			INK,
+			LINE,
 			0.5,
 		);
 		g.restore();
@@ -713,8 +713,8 @@ const ART = {
 					[bx, by - 4],
 					[bx - 9, by - 10],
 				],
-				LG(bx - 9, 0, bx + 9, 0, [shade(STONE, 1.05), shade(STONE, 0.78)]),
-				INK,
+				LG(bx - 9, 0, bx + 9, 0, [lit(STONE, 0.08), lit(STONE, -0.35)]),
+				LINE,
 				0.5,
 			);
 			P_(
@@ -724,8 +724,8 @@ const ART = {
 					[bx + 9, by - 10],
 					[bx, by - 4],
 				],
-				shade(STONE, 1.18),
-				INK,
+				lit(STONE, 0.29),
+				LINE,
 				0.5,
 			);
 			L_(bx - 1, by - 10.5, bx + 7, by - 12.5, '#3a3a40', 2.2);
@@ -754,8 +754,8 @@ const ART = {
 					[6, -42],
 					[-6, -42],
 				],
-				LG(-6, 0, 6, 0, [shade(STONE, 0.95), shade(STONE, 0.7)]),
-				INK,
+				LG(-6, 0, 6, 0, [lit(STONE, -0.08), lit(STONE, -0.48)]),
+				LINE,
 				0.6,
 			);
 			texture('stone', -6, -42, 6, 0, STONE);
@@ -767,8 +767,8 @@ const ART = {
 						[7 + tk, -44 - 12 * TILT],
 						[tk / 2, -56],
 					],
-					shade(SLATE, 0.6),
-					INK,
+					lit(SLATE, -0.60),
+					LINE,
 					0.5,
 				);
 				P_(
@@ -778,7 +778,7 @@ const ART = {
 						[tk / 2, -56],
 					],
 					SLATE,
-					INK,
+					LINE,
 					0.5,
 				);
 			}
@@ -827,8 +827,8 @@ const ART = {
 				[17, d / 2 - 28],
 				[-17, d / 2 - 28],
 			],
-			LG(-17, 0, 17, 0, [shade(STONE, 0.95), shade(STONE, 0.72)]),
-			INK,
+			LG(-17, 0, 17, 0, [lit(STONE, -0.08), lit(STONE, -0.45)]),
+			LINE,
 			0.6,
 		);
 		texture('stone', -17, d / 2 - 28, 17, d / 2, STONE);
@@ -856,7 +856,7 @@ const ART = {
 				[-18, d / 2 - 31],
 			],
 			'#7aa6c8',
-			INK,
+			LINE,
 			0.4,
 		);
 		L_(-17, d / 2 - 0.5, 17, d / 2 - 0.5, c, 1.2);
@@ -864,8 +864,8 @@ const ART = {
 	mill(c) {
 		const r = block(30, 16, PLANK, 'plank', 'gable', THATCH, 9);
 		door(0, r.d / 2, 5, 9);
-		E_(-8, r.d / 2 - 3, 3, 2, '#d8c27a', INK, 0.3);
-		E_(9, r.d / 2 - 3, 3, 2, '#d8c27a', INK, 0.3);
+		E_(-8, r.d / 2 - 3, 3, 2, '#d8c27a', LINE, 0.3);
+		E_(9, r.d / 2 - 3, 3, 2, '#d8c27a', LINE, 0.3);
 		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
 	},
 	lumber(c) {
@@ -884,7 +884,7 @@ const ART = {
 				[7, r.d / 2 - 4],
 			],
 			'#5a3a1c',
-			INK,
+			LINE,
 			0.4,
 		);
 		E_(9, r.d / 2 - 4.6, 1.6, 1.2, '#f2cf55');
@@ -1009,7 +1009,7 @@ const ART = {
 				[7 + r.k / 2, -28],
 			],
 			'#5a5550',
-			INK,
+			LINE,
 			0.4,
 		);
 		P_(
@@ -1020,7 +1020,7 @@ const ART = {
 				[-4, r.d / 2 - 9],
 			],
 			'#1a120a',
-			INK,
+			LINE,
 			0.4,
 		);
 		E_(1, r.d / 2 - 3, 3.4, 2.4, 'rgba(255,140,40,.85)');
@@ -1145,7 +1145,7 @@ const ART = {
 				[-21, d / 2 - 2],
 			],
 			'#d8cdb4',
-			INK,
+			LINE,
 			0.5,
 		);
 		block(40, 22, PLASTER, null, 'flat');
@@ -1158,8 +1158,8 @@ const ART = {
 					[20 + k, d / 2 - 22 - d],
 					[14 + k / 2, d / 2 - 34 - d / 2],
 				],
-				shade(SLATE, 0.6),
-				INK,
+				lit(SLATE, -0.60),
+				LINE,
 				0.5,
 			);
 			P_(
@@ -1170,7 +1170,7 @@ const ART = {
 					[-14 + k / 2, d / 2 - 34 - d / 2],
 				],
 				SLATE,
-				INK,
+				LINE,
 				0.6,
 			);
 			P_(
@@ -1182,7 +1182,7 @@ const ART = {
 					[-3, d / 2 - 44],
 				],
 				STONE,
-				INK,
+				LINE,
 				0.5,
 			);
 		} else
@@ -1194,7 +1194,7 @@ const ART = {
 						[0, d / 2 - 31],
 					],
 					LG(0, -30, 0, -20, ['#efe6d4', '#c8bca2']),
-					INK,
+					LINE,
 					0.6,
 				));
 		L_(-20, d / 2 - 0.5, 20, d / 2 - 0.5, c, 1.2);
@@ -1227,9 +1227,9 @@ const ART = {
 		// a low hall of pale stone, a shallow dome, steam from a vent, a pool in front
 		const r = block(28, 14, '#e6dcc6', 'stone', 'flat', null, 0, 30);
 		const d = r.d;
-		E_(0, -14, 10, 4.5, LG(-10, 0, 10, 0, [shade(TILE, 1.1), shade(TILE, 0.72)]), INK, 0.5);
-		E_(0, -16.5, 6, 2.6, shade(TILE, 1.2), INK, 0.4);
-		E_(0, d / 2 + 2, 9, 3.2, '#4e93ad', INK, 0.5);
+		E_(0, -14, 10, 4.5, LG(-10, 0, 10, 0, [lit(TILE, 0.16), lit(TILE, -0.45)]), LINE, 0.5);
+		E_(0, -16.5, 6, 2.6, lit(TILE, 0.32), LINE, 0.4);
+		E_(0, d / 2 + 2, 9, 3.2, '#4e93ad', LINE, 0.5);
 		E_(-2, d / 2 + 1.4, 5, 1.6, 'rgba(230,245,255,.5)');
 		column(-10, d / 2 - 1, d / 2 - 13);
 		column(10, d / 2 - 1, d / 2 - 13);
@@ -1352,7 +1352,7 @@ const ART = {
 				[9, d / 2 - 7],
 			],
 			'#8a5a2a',
-			INK,
+			LINE,
 			0.4,
 		);
 		E_(11.5, d / 2 - 9, 1.6, 1.6, '#e8c860');
@@ -1369,7 +1369,7 @@ const ART = {
 					[-21 + i * 1.5, d / 2 - i * 1.6 - 1.6],
 				],
 				'#d8cdb4',
-				INK,
+				LINE,
 				0.4,
 			);
 		sides(-16, 16, d / 2 - 5, 22, d, '#c9bfa6');
@@ -1381,7 +1381,7 @@ const ART = {
 				[-16, d / 2 - 27],
 			],
 			'#c9bfa6',
-			INK,
+			LINE,
 			0.4,
 		);
 		for (let x = -15; x <= 15; x += 5) column(x, d / 2 - 5, d / 2 - 27);
@@ -1393,7 +1393,7 @@ const ART = {
 				[0, d / 2 - 38],
 			],
 			LG(0, -38, 0, -26, ['#f2d880', '#c9a227']),
-			INK,
+			LINE,
 			0.6,
 		);
 		E_(0, d / 2 - 31, 2, 2, c);
@@ -1410,7 +1410,7 @@ const ART = {
 				[0, d / 2 - 28],
 			],
 			'#e8e0cc',
-			INK,
+			LINE,
 			0.5,
 		);
 		L_(-3, d / 2 - 24, 3, d / 2 - 24, '#c9a227', 0.6);
@@ -1427,7 +1427,7 @@ const ART = {
 				[-3, r.d / 2 - 12],
 			],
 			'#2a1a0a',
-			INK,
+			LINE,
 			0.4,
 		);
 		wheel(4, r.d / 2 - 3, 3);
@@ -1532,8 +1532,8 @@ const ART = {
 					[w + k, f - 10 - dk],
 					[w, f - 10],
 				],
-				shade(STONE, 0.5),
-				INK,
+				lit(STONE, -0.60),
+				LINE,
 				0.5,
 			); // its shaded east face
 			P_(
@@ -1543,8 +1543,8 @@ const ART = {
 					[w, f - 10],
 					[-w, f - 10],
 				],
-				LG(-b, 0, b, 0, [shade(STONE, 0.9), shade(STONE, 0.62)]),
-				INK,
+				LG(-b, 0, b, 0, [lit(STONE, -0.16), lit(STONE, -0.60)]),
+				LINE,
 				0.6,
 			);
 			texture('stone', -b + 2, f - 10, b - 2, f + 2, STONE);
@@ -1557,8 +1557,8 @@ const ART = {
 				[w, f - h],
 				[-w, f - h],
 			],
-			LG(-w, 0, w, 0, [shade(T.wall, 0.95), shade(T.wall, 0.7)]),
-			INK,
+			LG(-w, 0, w, 0, [lit(T.wall, -0.08), lit(T.wall, -0.48)]),
+			LINE,
 			0.6,
 		);
 		texture('stone', -w, f - h, w, f - (T.batter ? 10 : 0), T.wall);
@@ -1570,19 +1570,19 @@ const ART = {
 					[w + 3, f - h - 7],
 					[-w - 3, f - h - 7],
 				],
-				LG(-w, 0, w, 0, [shade(PLANK, 1.05), shade(PLANK, 0.72)]),
-				INK,
+				LG(-w, 0, w, 0, [lit(PLANK, 0.08), lit(PLANK, -0.45)]),
+				LINE,
 				0.5,
 			);
-			for (let x = -w; x <= w; x += 4) L_(x, f - h, x, f - h - 7, shade(PLANK, 0.6), 0.6);
+			for (let x = -w; x <= w; x += 4) L_(x, f - h, x, f - h - 7, lit(PLANK, -0.60), 0.6);
 			P_(
 				[
 					[-w - 4, f - h - 7],
 					[w + 4, f - h - 7],
 					[0, f - h - 19],
 				],
-				LG(-w, 0, w, 0, [shade(SLATE, 1.1), shade(SLATE, 0.75)]),
-				INK,
+				LG(-w, 0, w, 0, [lit(SLATE, 0.16), lit(SLATE, -0.40)]),
+				LINE,
 				0.6,
 			); // the timber hoarding round the top, under a slate cap
 		} else {
@@ -1594,7 +1594,7 @@ const ART = {
 					[-w - 1, f - h - 3],
 				],
 				T.wall,
-				INK,
+				LINE,
 				0.4,
 			);
 			crenels(-w - 1, w + 1, f - h - 3, T.wall);
@@ -1609,7 +1609,7 @@ const ART = {
 						[x - 2.6, f - h + 3],
 					],
 					'#14100c',
-					INK,
+					LINE,
 					0.3,
 				);
 				L_(x, f - h + 5.5, x + 1.5, f - h + 7, '#2e2a26', 1.6);
@@ -1626,8 +1626,8 @@ const ART = {
 				[5, d / 2 - 18],
 				[-5, d / 2 - 18],
 			],
-			LG(-5, 0, 5, 0, [shade(STONE, 0.92), shade(STONE, 0.74)]),
-			INK,
+			LG(-5, 0, 5, 0, [lit(STONE, -0.13), lit(STONE, -0.42)]),
+			LINE,
 			0.5,
 		);
 		texture('stone', -5, d / 2 - 18, 5, d / 2, STONE);
@@ -1638,8 +1638,8 @@ const ART = {
 				[5, -d / 2 - 18],
 				[-5, -d / 2 - 18],
 			],
-			shade(STONE, 1.08),
-			INK,
+			lit(STONE, 0.13),
+			LINE,
 			0.4,
 		);
 		P_(
@@ -1650,7 +1650,7 @@ const ART = {
 				[-5, d / 2 - 20.5],
 			],
 			STONE,
-			INK,
+			LINE,
 			0.3,
 		);
 		P_(
@@ -1661,7 +1661,7 @@ const ART = {
 				[1, d / 2 - 20.5],
 			],
 			STONE,
-			INK,
+			LINE,
 			0.3,
 		);
 	},
@@ -1675,7 +1675,7 @@ const ART = {
 				[-5, d / 2 - 20],
 			],
 			LG(-5, 0, 5, 0, ['#8a6a44', '#5a3a1c']),
-			INK,
+			LINE,
 			0.5,
 		);
 		L_(-5, d / 2 - 6, 5, d / 2 - 6, '#2a1a0a', 0.7);
@@ -1749,7 +1749,7 @@ const ART = {
 				[-9, d / 2 - 18],
 			],
 			'#b2563a',
-			INK,
+			LINE,
 			0.4,
 		);
 		for (let i = 0; i < 5; i++)
@@ -1804,7 +1804,7 @@ const ART = {
 				[-8, d / 2 - 66],
 			],
 			LG(0, -74, 0, -52, ['#f2d880', '#b8902a']),
-			INK,
+			LINE,
 			0.6,
 		);
 		E_(0, d / 2 - 60, 2.4, 2.4, '#8e1d14');
@@ -2136,7 +2136,7 @@ const RG = (x, y, r0, r1, stops) => {
 };
 const WONDERART = {
 	roman(c) {
-		E_(0, 0, 30, 30 * TILT, '#c8bca2', INK, 0.6);
+		E_(0, 0, 30, 30 * TILT, '#c8bca2', LINE, 0.6);
 		for (let lv = 0; lv < 4; lv++) {
 			const y0 = -lv * 10;
 			g.save();
@@ -2147,7 +2147,7 @@ const WONDERART = {
 			g.closePath();
 			g.fillStyle = LG(-30, 0, 30, 0, ['#e6dcc2', '#c4b694', '#9a8e76']);
 			g.fill();
-			g.strokeStyle = INK;
+			g.strokeStyle = LINE;
 			g.lineWidth = 0.5;
 			g.stroke();
 			g.restore();
@@ -2164,8 +2164,8 @@ const WONDERART = {
 					g.fill();
 				}
 		}
-		E_(0, -40, 30, 30 * TILT, '#d8cdb4', INK, 0.5);
-		E_(0, -40, 19, 19 * TILT, '#c8a878', INK, 0.5);
+		E_(0, -40, 30, 30 * TILT, '#d8cdb4', LINE, 0.5);
+		E_(0, -40, 19, 19 * TILT, '#c8a878', LINE, 0.5);
 		banner(-24, -40, c, 8);
 		banner(24, -40, c, 8);
 	},
@@ -2180,7 +2180,7 @@ const WONDERART = {
 				[-30, d / 2 - 8],
 			],
 			'#9a8058',
-			INK,
+			LINE,
 			0.5,
 		);
 		g.save();
@@ -2194,7 +2194,7 @@ const WONDERART = {
 					[x - 1, -16],
 				],
 				'#a8302a',
-				INK,
+				LINE,
 				0.3,
 			);
 		P_(
@@ -2214,7 +2214,7 @@ const WONDERART = {
 		g.closePath();
 		g.fillStyle = LG(0, -32, 0, -15, ['#4a4a52', '#2f2f36']);
 		g.fill();
-		g.strokeStyle = INK;
+		g.strokeStyle = LINE;
 		g.lineWidth = 0.6;
 		g.stroke();
 		g.beginPath();
@@ -2240,7 +2240,7 @@ const WONDERART = {
 				[-31, d / 2 - 6],
 			],
 			'#bfae8a',
-			INK,
+			LINE,
 			0.5,
 		);
 		for (let i = 0; i < 3; i++)
@@ -2252,7 +2252,7 @@ const WONDERART = {
 					[-8 + i * 2, d / 2 - 2 - i * 2],
 				],
 				'#d8c8a2',
-				INK,
+				LINE,
 				0.3,
 			);
 		P_(
@@ -2263,7 +2263,7 @@ const WONDERART = {
 				[-28 + d * SIDE, -d / 2 - 6],
 			],
 			'#a89470',
-			INK,
+			LINE,
 			0.4,
 		);
 		for (let row = 0; row < 3; row++)
@@ -2288,7 +2288,7 @@ const WONDERART = {
 				[-30, d / 2 - 49],
 			],
 			'#7a6448',
-			INK,
+			LINE,
 			0.4,
 		);
 		banner(26, d / 2 - 49, c, 10);
@@ -2301,7 +2301,7 @@ const WONDERART = {
 			[-6, -8],
 			[10, -10],
 		]) {
-			E_(x, y, 9, 9 * TILT * 0.9, '#e8e0cc', INK, 0.5);
+			E_(x, y, 9, 9 * TILT * 0.9, '#e8e0cc', LINE, 0.5);
 			P_(
 				[
 					[x - 9, y],
@@ -2310,7 +2310,7 @@ const WONDERART = {
 					[x - 9, y - 7],
 				],
 				LG(x - 9, 0, x + 9, 0, ['#f2ead8', '#c8bca2']),
-				INK,
+				LINE,
 				0.5,
 			);
 			P_(
@@ -2320,7 +2320,7 @@ const WONDERART = {
 					[x, y - 13],
 				],
 				'#d8cdb4',
-				INK,
+				LINE,
 				0.5,
 			);
 			L_(x - 9, y - 4, x + 9, y - 4, c, 0.8);
@@ -2345,7 +2345,7 @@ const WONDERART = {
 				[-26, d / 2 - 6],
 			],
 			'#c8b48a',
-			INK,
+			LINE,
 			0.5,
 		);
 		g.beginPath();
@@ -2354,7 +2354,7 @@ const WONDERART = {
 		g.closePath();
 		g.fillStyle = LG(-22, -30, 22, 0, ['#efe4cc', '#c8b892', '#9a8a6a']);
 		g.fill();
-		g.strokeStyle = INK;
+		g.strokeStyle = LINE;
 		g.lineWidth = 0.6;
 		g.stroke();
 		P_(
@@ -2365,11 +2365,11 @@ const WONDERART = {
 				[-4, d / 2 - 31],
 			],
 			'#a89470',
-			INK,
+			LINE,
 			0.4,
 		);
 		L_(0, d / 2 - 31, 0, d / 2 - 42, '#6b5a40', 0.8);
-		for (let i = 0; i < 3; i++) E_(0, d / 2 - 35 - i * 3, 4 - i, 0.8, '#a89470', INK, 0.3);
+		for (let i = 0; i < 3; i++) E_(0, d / 2 - 35 - i * 3, 4 - i, 0.8, '#a89470', LINE, 0.3);
 		for (const x of [-27, 23]) {
 			P_(
 				[
@@ -2379,7 +2379,7 @@ const WONDERART = {
 					[x, d / 2 - 16],
 				],
 				'#b8a47a',
-				INK,
+				LINE,
 				0.3,
 			);
 			P_(
@@ -2390,7 +2390,7 @@ const WONDERART = {
 					[x + 2.4, d / 2 - 16],
 				],
 				'#b8a47a',
-				INK,
+				LINE,
 				0.3,
 			);
 			for (let k = 0; k < 3; k++)
@@ -2402,7 +2402,7 @@ const WONDERART = {
 						[x - 1, d / 2 - 13.4 - k * 2.4],
 					],
 					'#a8946a',
-					INK,
+					LINE,
 					0.3,
 				);
 		}
@@ -2419,7 +2419,7 @@ const WONDERART = {
 				[-28, d / 2 - 18],
 			],
 			LG(-28, 0, 28, 0, ['#d8a66c', '#c49060', '#9a6a40']),
-			INK,
+			LINE,
 			0.6,
 		);
 		texture('mud', -28, d / 2 - 18, 28, d / 2, MUD);
@@ -2431,7 +2431,7 @@ const WONDERART = {
 				[-28 + d * SIDE, -d / 2 - 18],
 			],
 			'#d4a470',
-			INK,
+			LINE,
 			0.4,
 		);
 		for (let x = -26; x <= 26; x += 6.5) {
@@ -2443,7 +2443,7 @@ const WONDERART = {
 					[x - 1.2, d / 2 - 22],
 				],
 				'#c89460',
-				INK,
+				LINE,
 				0.3,
 			);
 			L_(x - 2.4, d / 2 - 12, x + 2.4, d / 2 - 12, '#6b4a2c', 0.5);
@@ -2456,7 +2456,7 @@ const WONDERART = {
 				[11, -40],
 			],
 			LG(8, 0, 20, 0, ['#e0b078', '#a8784a']),
-			INK,
+			LINE,
 			0.6,
 		);
 		for (let y = -8; y > -40; y -= 6) L_(9, y, 19, y, '#6b4a2c', 0.6);
@@ -2467,7 +2467,7 @@ const WONDERART = {
 				[14, -46],
 			],
 			'#c89460',
-			INK,
+			LINE,
 			0.4,
 		);
 		door(-10, d / 2, 6, 9, '#4a2e16');

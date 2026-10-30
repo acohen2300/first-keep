@@ -444,6 +444,9 @@ function fxv(o, stat, keys) {
 const fxDirty = () => {
 	G.fxv++;
 };
+// Two words for two things (Build 62): a villager is FREE when it has no job and can be given one (the tile's count, Send idle, Idle to me,
+// the computers' hands); it is IDLE (u.idle) when it stands with nothing to do this tick, job or not (the mark over its head, the warning).
+const freeVil = (u) => !u.job && !u.inside;
 const unitKeys = (kind) => {
 	const U = UNIT[kind],
 		k = [kind, baseKind(kind)];

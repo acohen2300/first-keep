@@ -58,8 +58,7 @@ function qsHTML(verb, label, to) {
 		)
 	);
 }
-// ── The send strip: tap open ground and a small row of choices sits at your finger: a quarter, all, a battalion, more, cancel.
-// A quarter takes a quarter of each type, nearest first, so the mix of the army goes along.
+// ── The send strip: tap open ground and two choices sit at your finger: your people, or the sword (Idle, All, a squad); more about the place; cancel.
 const sendable = () => armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && u.state !== 'escort'); // guards keep to what they guard
 // What each soldier is doing, in one word (Albert, Build 42), worked out from the soldier alone:
 // rally (just trained or called home, walking to its place), march (on your order), fight, hold (stopped: at its place or at the spot you sent it), rout (nerve broke, running).
@@ -81,7 +80,7 @@ const idleSoldier = (u) => {
 	const s = armyStatus(u);
 	return s === 'hold' || s === 'rally';
 };
-// Rest, a half, a quarter, the nearest five, ten, twenty: idle soldiers only, so a group on the march is never pulled off its way. All is everyone but guards (Build 44)
+// Rest: idle soldiers only, so a group on the march is never pulled off its way. All is everyone but guards (Build 44)
 const free = () => sendable().filter(idleSoldier);
 // why nobody can be sent: nobody exists, or who is busy doing what
 function freeWhy() {
@@ -146,7 +145,7 @@ function showStrip(sx, sy, x, y, step) {
 			bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') +
 			ic('nostrip', ICON.close, 'Cancel');
 	} else {
-		const idle = unitsOf(0, 'vil').filter((u) => !u.job && !u.inside && !postedAt(to).includes(u)).length,
+		const idle = unitsOf(0, 'vil').filter((u) => freeVil(u) && !postedAt(to).includes(u)).length,
 			here = postedAt(to).length;
 		el.innerHTML =
 			btn(`buildhere:${at}`, 'Build here', 'the menu, aimed here', 'build thumb') +

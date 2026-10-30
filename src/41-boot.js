@@ -21,21 +21,26 @@ function fault(e) {
 }
 window.addEventListener('error', (e) => fault(e.error || e.message));
 window.addEventListener('unhandledrejection', (e) => fault(e.reason));
-// Load: a phone that keeps falling behind (over 12 ms of work a frame for two seconds) first drops the moving extras, then draws at half its pixels.
-const LOW = { ema: 0, slow: 0, n: 0 };
+// Load (DRAW in 18-figures): over 12 ms of work a frame for two seconds sheds one level; under 7 ms for ten seconds climbs one back.
 function shed(work) {
-	LOW.ema += (work - LOW.ema) * 0.05;
-	if (LOW.ema <= 12 || LOW.n >= 2) {
-		LOW.slow = 0;
-		return;
-	}
-	if (++LOW.slow > 120) {
-		LOW.n++;
-		LOW.slow = 0;
-		LOW.ema = 0;
-		if (LOW.n === 1) lessMotion = true;
-		else fit();
-	}
+	DRAW.ema += (work - DRAW.ema) * 0.05;
+	if (DRAW.ema > 12 && DRAW.lvl < 3) {
+		DRAW.fast = 0;
+		if (++DRAW.slow > 120) {
+			DRAW.lvl++;
+			DRAW.slow = 0;
+			DRAW.ema = 0;
+			if (DRAW.lvl === 3) fit();
+		}
+	} else if (DRAW.ema < 7 && DRAW.lvl > 0) {
+		DRAW.slow = 0;
+		if (++DRAW.fast > 600) {
+			DRAW.lvl--;
+			DRAW.fast = 0;
+			DRAW.ema = 0;
+			if (DRAW.lvl === 2) fit();
+		}
+	} else DRAW.slow = DRAW.fast = 0;
 }
 // One frame. When nothing moves (paused, over, hidden, no touch for a second) it waits: 15 frames a second instead of 60.
 function frame(now) {
