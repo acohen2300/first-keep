@@ -66,7 +66,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card.full{max-height:calc(100% - var(--ob) - var(--hb) - 14px)}
 #place{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:8px;padding:6px 6px 6px 10px;font-weight:700}
 #strip{position:absolute;display:flex;gap:4px;padding:4px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:10px;z-index:5;max-width:calc(100% - 8px);overflow-x:auto}
-#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:19px;font-weight:700}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:12px}#strip button small{font-size:12px}
+#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:19px;font-weight:700}#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}#strip button.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}#strip button.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:44px}#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--bone);font-size:14px}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:44px;padding:0}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:12px}#strip button small{font-size:12px}
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
 #card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:6px 8px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
@@ -101,7 +101,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card .copy{text-align:center;font-size:13px;margin:6px 0 0}
 #cardBar{position:sticky;top:6px;height:0;margin-bottom:-4px;z-index:3;flex:none}
 #cardI{position:absolute;top:-2px;right:44px;min-height:44px;min-width:44px;padding:0;background:none;border:0}
-#cardX{position:absolute;top:-2px;right:-4px;min-height:44px;min-width:44px;padding:0;font-size:20px;background:none;border:0}
+#cardX{position:absolute;top:-2px;right:-4px;min-height:44px;min-width:44px;padding:0;background:none;border:0;display:grid;place-items:center}#cardX svg{width:26px;height:26px}#cardI svg{width:24px;height:24px}
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
 #end p{margin:0;color:var(--mute);font-size:15px}
@@ -112,7 +112,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #endX details p{font-size:12px;margin:2px 0}#endX details small{font-size:12px;color:var(--mute);margin-right:6px}
 #card .qs{display:grid;grid-template-columns:1fr 44px 76px 44px;gap:4px;align-items:center;margin:2px 0}
 #card .qs span{text-align:center;font-variant-numeric:tabular-nums;font-size:13px}
-#card .qs button{padding:0;font-size:20px;font-weight:700;min-height:44px}
+#card .qs button{padding:0;font-size:20px;font-weight:700;min-height:44px}#card .qs.trade{grid-template-columns:1fr 104px 92px;margin:-1px 0;gap:2px}#card .qs.trade b{font-size:15px}#card .qs.trade b small{font-size:12px;color:var(--mute);font-weight:500}#card .qs.trade button:not(#cardX):not(#cardI){font-size:14px;min-height:44px;height:44px;padding:0 2px}#card .qs.trade button b{font-size:14px}
 #endActs{display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px}#endActs button small{white-space:normal}
 #orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--pad) max(8px,env(safe-area-inset-bottom,0px));pointer-events:none}
 #orders .tiles{pointer-events:auto}
@@ -129,8 +129,10 @@ button.ghost{visibility:hidden}
 .tiles .top .gl{position:static;transform:none;width:16px;height:16px}
 .tiles .top .c{font-size:15px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
 .tiles .wd{color:var(--mute)}.tiles .sel .wd{color:var(--bone)}
-#tPeople .gl{width:20px;height:20px}
+#tPeople .gl{width:22px;height:22px}
 #tPeople .wd{color:var(--bone)}
+/* three tints the thumb learns (Build 61, Albert): people green, build timber-brown, jobs black */
+.tiles button.cell#tPeople{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}.tiles button.cell#buildT{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}.tiles button.cell#buildT.sel{background:linear-gradient(#7a5a2e,#4e3618);border-color:#c9a46a}
 /* the attack cards: the same dark glass, hairlines and one amber accent as the huddle bar */
 #card.hud{background:rgba(10,13,15,.9);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.09);border-radius:14px;box-shadow:none}
 #card.hud h3{font-family:inherit;font-weight:700;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:#ffb23d}
@@ -151,6 +153,7 @@ button.ghost{visibility:hidden}
 #huddle button.cell[class*="lamp-"]{border-color:var(--mc)}#huddle [class*="lamp-"] .wd{color:inherit}#huddle .lamp-green::after,#huddle .lamp-blue::after{box-shadow:0 0 8px var(--mc)}
 #huddle .blink{animation:hudBlink 1s infinite}@keyframes hudBlink{50%{box-shadow:inset 0 0 0 1px var(--mc),0 0 12px var(--mc)}}
 #huddle .cell.sel{border-color:#ffb23d}
+#huddle button.cell.sq,#huddle button.cell.st.sq{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}#huddle button.cell.sq.sel{background:linear-gradient(#514a78,#332e52);border-color:#a89fe0}#huddle button.cell.war,#huddle button.cell.st.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}#huddle button.cell.go{background:linear-gradient(#b8862e,#8a5f18);border-color:#f2d27a}#huddle button.cell.go .wd{color:#2a1c10}#huddle button.cell.go .gl{color:#2a1c10}#orders.sqr{background:rgba(22,20,34,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
 #huddle .msn{touch-action:none}#huddle .msn.empty{background:transparent;border-style:dashed}
 #huddle .msn.lose{--pc:#ff5a4a;animation:hudPulse 1s infinite}#huddle .msn.win{--pc:#43c06b;animation:hudPulse 1.2s infinite}
 @keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc),0 0 10px var(--pc)}}
@@ -161,7 +164,8 @@ button.ghost{visibility:hidden}
 .strip #sStats,.strip #sIdle{padding:0 5px;min-width:44px;gap:9px}.strip #sStats span,.strip #tkBell>*,.strip #sAgeT,.strip #scoreN,.strip #scoreR{display:inline-flex;align-items:center;height:26px;gap:3px}.strip .gl{position:static;transform:none;width:15px;height:15px;display:block;margin:0;flex:none}   /* one line: icon and number share a centre */
 #tally button.cell{isolation:isolate}#tally button.cell.sel::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:7px;background:#2f3b36;border:1px solid var(--mute)}   /* the on mark: a small tile inside the cell; ::before is the divider */
 #pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}
-button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad)}#hudB{right:var(--pad)}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#emgB.on{border-color:#ff5a4a;color:#ff9a8c}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB,#stage.busy #emgB{display:none}
+button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--pad);bottom:calc(var(--ob) + 8px);width:auto;height:44px;padding:0 12px;border-radius:22px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:4px;color:var(--bone)}#hudB b{font-weight:700}#hudB.squad{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}#hudB.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}
+.tiles button.cell.sq,.tiles button.cell.st.sq{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}.tiles button.cell.sq.sel{background:linear-gradient(#514a78,#332e52);border-color:#a89fe0}.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}.tiles button.cell.go{background:linear-gradient(#b8862e,#8a5f18);color:#2a1c10;border-color:#f2d27a}.tiles button.cell.go .wd{color:#2a1c10}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#emgB.on{border-color:#ff5a4a;color:#ff9a8c}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB,#stage.busy #emgB{display:none}
 #stage.busy #homeB{display:none}
 #stage.picking #homeB{display:none}
 #card .lbl{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.1;min-height:44px}#card .lbl b{font-size:16px}#card .lbl small{color:var(--mute);font-size:13px}
@@ -200,7 +204,7 @@ button.ok small{color:#8fd4a4}
 .night #card{filter:brightness(.88)}
 #card h3{font-size:20px;letter-spacing:.05em;color:var(--lamp);min-height:36px}
 #card button:not(#cardX):not(#cardI){position:relative;background-color:#312218;background-image:linear-gradient(#3b2b1d,#2a1d13);border:1px solid var(--brass);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,220,150,.18);color:var(--bone);min-height:44px;padding:3px 5px}
-#card button.dis{border-color:#4a3a28;background:transparent;box-shadow:none;color:#bfb49c}#card button.dis b{color:#bfb49c}   /* what you cannot: flat on the table */
+#card button.dis{border-color:#4a3a28;background:transparent;box-shadow:none;color:#bfb49c}#card button.done:not(#cardX):not(#cardI){opacity:.55;border-style:solid;border-color:#5a4a30}#card .chipsrow button.done:not(.on):not(#cardX):not(#cardI){opacity:.5}#card button.dis b{color:#bfb49c}   /* what you cannot: flat on the table */
 #card button.nope:not(#cardX):not(#cardI){border-color:var(--red);box-shadow:0 0 12px rgba(220,70,50,.7),inset 0 0 8px rgba(220,70,50,.35)}
 #card small.need{color:color-mix(in srgb,#fff calc(var(--fr,0)*100%),#ff8a70);font-weight:700}   /* what it is short of */
 #card button.go{border-color:var(--lamp);box-shadow:inset 0 0 0 1px var(--lamp),0 0 10px rgba(230,185,71,.35)}   /* what you can do now: a brass rim */
@@ -261,13 +265,12 @@ button.ok small{color:#8fd4a4}
   <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div><div class="tr" id="huddle" hidden></div></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
-    <button class="fab" id="hudB" data-act="huddle" aria-label="Huddle: plan an attack"></button>
+    <button class="fab chip" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, Squad room, War room"></button>
     <button class="fab" id="emgB" data-act="card:emergency" aria-label="Emergency: shelter, battle stations"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
     
     <div id="strip" hidden></div>
-    <div id="dock" hidden><div id="dockRow"></div><button data-act="dockmin" id="dockMin" aria-label="Army dock"></button></div>
-    <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="pmore" id="pMore"><b>＋ More</b></button><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>
+    <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="wundo" id="placeUndo" hidden><b>Undo</b></button><button data-act="cancel"><b>Cancel</b></button></div>
     <div id="card" hidden></div>
     <div id="end" hidden>
@@ -285,11 +288,11 @@ button.ok small{color:#8fd4a4}
 'use strict';
 // ═════ 01-rules-basics.js: the map, speeds, difficulty, resources, jobs, players, ages, seasons ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 60; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
+const BUILD = 61; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
 const MAP = 2000,
 	MID = MAP / 2,
 	DT = 1 / 30;
-const BN = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'],
+const BN = ['Alpha', 'Beta', 'Gamma', 'Delta'], // four squads, the row's four middle tiles (Build 61; six before)
 	BNS = BN.length; // the battalions, once Command is researched
 const POPMAX = 180,
 	VILMAX = 60,
@@ -1142,7 +1145,6 @@ const BLD = {
 		t: 12,
 		age: 0,
 		room: 5,
-		repeat: true,
 		sab: 'burn',
 		wood: true,
 		desc: 'Shelter for five more people.',
@@ -1160,7 +1162,6 @@ const BLD = {
 		crop: 'food',
 		rate: 0.8,
 		walk: true,
-		repeat: true,
 		sab: 'burn',
 		desc: 'Wheat, for food. One villager works it. Barely grows in winter; best at harvest. Soil tires when worked year after year and recovers when the field rests.',
 	},
@@ -1177,9 +1178,8 @@ const BLD = {
 		reserve: 500,
 		rate: 0.55,
 		walk: true,
-		repeat: true,
 		sab: 'burn',
-		desc: 'A coppice plot: 500 wood, then it is cut out and must regrow, so you plant another. One villager tends it. Slower than a wild forest, but safe at home.',
+		desc: 'A coppice plot: 500 wood, then it is cut out; tap it to replant for half the cost and it regrows from the stumps. One villager tends it. Slower than a wild forest, but safe at home.',
 	},
 	mill: {
 		cap: [3, 3, 3, 3, 3],
@@ -1297,7 +1297,6 @@ const BLD = {
 		t: 12,
 		age: 0,
 		wallish: true,
-		repeat: true,
 		wood: true,
 		desc: 'A gap in your wall. Your people, your allies and anyone at peace with you walk through. Enemies have to break it.',
 	},
@@ -1633,6 +1632,7 @@ const BLD = {
 		drop: ['wool'],
 		sab: 'burn',
 		wood: true,
+		open: true,
 		desc: 'Spins and weaves wool into cloth (2 wool make 1), or brews ale from your grain (3 food make 1 beer): goods to trade. One villager works it; the card picks what it makes.',
 	},
 	mint: {
@@ -1663,6 +1663,7 @@ const BLD = {
 		crop: 'iron',
 		makes: { iron: { from: { w: 2 }, rate: 0.2 } },
 		sab: 'stall',
+		open: true,
 		desc: 'Smelts iron from bog ore with charcoal: 2 wood make 1 iron. One villager works it. Iron in-house, without a vein.',
 	},
 	quarry: {
@@ -5341,6 +5342,11 @@ const CLIMATE = {
 	missHurt: 0.08, // snow: an engine slides and its shot falls short, hurting its own crew
 	wear: 0.15, // frost makes blades brittle and rain rusts them: weapons do 15% less until tempered and oiled
 };
+// Fire between buildings (Build 61): a fire grows as the square of its age (the t² design fire, NFPA 72 / Heskestad 1984), and what a neighbour
+// receives falls with the configuration factor of radiant heat, about (near / (gap + near))² (the view-factor method of BR 187 / Approved
+// Document B, "space separation"). rate: the chance a second a full fire lights a touching wooden neighbour, times the ground's dryness
+// (Rothermel); grow: seconds to a full fire (design: a house burns down in 50); near: the gap, in units, at which the heat is a quarter; reach: beyond this none.
+const FIRE = { rate: 0.12, grow: 20, near: 10, reach: 40 };
 const FIREARMS = { chance: 0.12, blast: 0.3, splash: 40, splashHit: 0.3 }; // fire arrows and burning shot ignite a wooden building on a hit (rain halves it); a petard bombard ignites and shakes the neighbours too
 const GARRISON = { r: 70, heal: 0.6 }; // soldiers resting by their own Castle, Barracks or Town Center heal; Garrison wards double it
 const TEACH = { seats: 4, mul: 1.5, tuition: 40 }; // Teach: a soldier learns a newer kind at the School, four at a time; time ×1.5 per age climbed, tuition in gold per age; opened by Veterans
@@ -5390,17 +5396,19 @@ const HARVEST = [
 	{ p: 1 / 20, m: 0.5, text: 'A failed harvest this year: fields give half.' },
 	{ p: 1 / 6, m: 0.7, text: 'A poor harvest this year: fields give 30% less.' },
 ];
-// the skies and what each does beyond the ground (the ground, mud, snow, ice and fire come from the climate): bows in rain, fields in drought, mortar in frost, sight in a whiteout
+// the skies and what each does beyond the ground (the ground, mud, snow, ice and fire come from the climate): bows in rain, fields in drought, mortar in frost, sight in a whiteout.
+// vis: the visibility in haze, snow or fog, in game units: nothing sees farther than it, a tower no more than a man (Koschmieder 1924: V = 3.912 / β,
+// the distance at which contrast falls to 2%; the game has no metre, so the values are design, the form is his). An eclipse dims the light instead (sight ×).
 const WEATHER = {
 	clear: { name: 'Clear' },
 	rain: { name: 'Rain', rng: 0.85, text: 'Rain: the ground softens and bows reach less.' },
 	drought: { name: 'Drought', crop: 0.7, text: 'Drought: fields give 30% less and fire catches at a touch.' },
 	frost: { name: 'Frost', stone: 0.5, text: 'Frost: mortar will not set, stone builds at half speed.' },
-	snow: { name: 'Snow', sight: 0.7, text: 'Snow: the ground deepens and sight shortens.' },
+	snow: { name: 'Snow', vis: 160, text: 'Snow: the ground deepens and sight shortens.' },
 	blizzard: {
 		name: 'Blizzard',
 		spd: 0.6,
-		sight: 0.35,
+		vis: 60,
 		gather: 0.5,
 		text: 'Blizzard: a whiteout. Marches crawl, sight is gone, gathering halves.',
 	}, // Harsh winters only
@@ -5474,7 +5482,7 @@ const EVENTS = {
 	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.004, harm: 1 },
 	meteor: { name: 'Falling star', secs: 3 },
 	wildfire: { name: 'Wildfire', secs: 60, spread: 0.2, r: 32, burn: 0.12, most: 20, season: ['Summer', 'Autumn'], harm: 1 }, // most: trees alight at once; the dry seasons, drought or not
-	fog: { name: 'Fog', secs: 60, sight: 0.4 },
+	fog: { name: 'Fog', secs: 60, vis: 70 },
 	sinkhole: { name: 'Sinkhole', secs: 2, hit: 0.4 },
 	quicksand: { name: 'Quicksand', secs: 120, r: 60, slow: 0.3 },
 	heatwave: { name: 'Heat', secs: 60, dmg: 0.85, spd: 0.9, need: 'drought', season: 'Summer' },
@@ -6254,17 +6262,17 @@ const TRIGGERS = () => [
 	],
 	[
 		'Villager jobs: Food, Wood, Stone, Gold, Iron',
-		`The − and + under each job move one villager off or on: + takes an idle villager, else the one earning least elsewhere; − sends home the one earning least. Each worker takes the find that brings home most a minute: its load over the time to fill it and carry it home and back (fish only within ${DOCKR} of a dock). It moves to a better find when the gain is ${Math.round((FORAGE.move - 1) * 100)}% or more. A new field or site takes the worker earning least on that resource.`,
-		'You decide who does what.',
+		`The − and + under each job move one villager off or on: + takes an idle villager, else the one earning least elsewhere; − sends home the one earning least. Each worker takes the find that brings home most a minute: its load over the time to fill it and carry it home and back (fish only within ${DOCKR} of a dock). A worker on a field, tree farm, pasture or quarry stays on it. A worker on a wild find that runs out looks only for the same kind of find within its own sight (gold rock to gold rock); when none is in sight it waits at the drop-off for your order. Tap the lit job tile again to turn the default job off: new villagers then wait at the Town Center. Stop and Dismiss sit on a villager card; Stop all and Idle to me on the Town Center card.`,
+		'You decide who does what, and nobody wanders off.',
 	],
 	[
 		'Hunting',
-		`Villagers on Food hunt deer and boar near home: they throw javelins, the animal falls, and they butcher it where it lies (a deer gives ${(UNIT.deer.meat * RICH) | 0}, a boar ${(UNIT.boar.meat * RICH) | 0}). Boar fight back.`,
-		'Meat came before fields everywhere.',
+		`Your villagers do not hunt unless you send them (Food on a deer or boar): they throw javelins, the animal falls, and they butcher it where it lies (a deer gives ${(UNIT.deer.meat * RICH) | 0}, a boar ${(UNIT.boar.meat * RICH) | 0}). An animal that attacks a villager is fought by that villager and the two nearest in sight. The computers hunt on their own: they have no finger to send a hunter.`,
+		'Meat came before fields everywhere; a wolf at the door was the fight of all.',
 	],
 	[
 		'You build',
-		'Press where it goes: the building waits above your finger and snaps flush beside your other buildings, side by side; buildings that train keep a walking lane around them. Green fits, red says why not. Let go, drag to adjust, then tap Build. Houses, fields and gates offer the next spot beside.',
+		'Press where it goes: the building waits above your finger over the build grid and snaps flush beside your other buildings, side by side; buildings that train keep a walking lane around them. Green fits, red says why not. Let go, drag to adjust, then tap Build. The ghost stays for the next of the same kind until the limit or the purse says no. A cut-out tree farm shows stumps: tap it to replant at half the cost. A kind at its limit dims with a check in the Build card.',
 		'Rows that line up, no hidden gaps, and you never cover what you are placing.',
 	],
 	[
@@ -6473,13 +6481,13 @@ const TRIGGERS = () => [
 		'The real tree: nobody built a blast furnace before a bellows, and the plough mattered more than the sickle.',
 	],
 	[
-		'The army dock and pausing',
-		'Once Battalions is researched a dock sits above the job bar: tap All or a battalion and it is picked; Charge, Fall back and Teach follow on the pick bar; the chevron folds it to a tab. Opening any card pauses the game and closing it carries on (Help: Pause on cards, off if you like).',
+		'The Squad room and pausing',
+		'The chip at the left of the job row turns the row into the Squad room (once Command is researched): + makes a squad (Alpha to Delta, four at most), the tile picks one, and − and + under each kind fill its plan from the soldiers at home. A squad card shows its plan at home and its health and standing out on a mission. Opening any card pauses the game and closing it carries on (Help: Pause on cards, off if you like).',
 		'Thumbs on the map, not in a menu: a phone is not a desk.',
 	],
 	[
-		'The huddle: four missions',
-		'The sword button above the bar plans an attack: Aim, tap the target, set how many Foot, Archers, Horse and Siege go, then Fire. Each mission (Alpha to Delta) shows its arrival time, then ACTIVE with its odds in colour. A flashing red tile is losing: open it to Reinforce from the idle reserve, or call it off. A flashing green tile has soldiers to spare: drag them to another mission or Ready.',
+		'The War room: four missions',
+		'The chip again turns the row into the War room: a crosshair goes where you tap; Go sends the picked squad (or every idle soldier) on it as a mission with a promised time, and the row shows each squad out: its time to arrive, then FIGHTING with its odds in colour, then done. A tile flashing red is losing: open it to Reinforce from the idle reserve, or Abort. A tap on the map offers the same in two buttons: the sword sends Idle, All or a squad there; the people button builds there, sends idle villagers there or sets workers there.',
 		'A plan you can read: time, odds and who is where. The weather on the screen is counted in the time; a storm that comes later is bad luck.',
 	],
 	[
@@ -6504,8 +6512,8 @@ const TRIGGERS = () => [
 	],
 	[
 		'A wooden building catches fire',
-		'Sabotage, summer lightning, sparks from a smithy, or fire arrows and burning shot. It burns down in about half a minute; two villagers run with buckets; it can spread to wooden buildings next to it. Stone does not burn.',
-		'Towns of timber and thatch burned often: London in 1212 and 1666.',
+		`Sabotage, summer lightning, sparks from a smithy, or fire arrows and burning shot. It burns down in about half a minute; two villagers run with buckets. A fire grows as the square of its age, and the heat a neighbour receives falls with the gap between the walls (a quarter at ${FIRE.near}, none past ${FIRE.reach}); so a young fire, or one a street away, rarely spreads. Stone does not burn.`,
+		'Towns of timber and thatch burned often: London in 1212 and 1666. The square of its age is the design fire of NFPA 72; the fall-off is the view factor of radiant heat in BR 187.',
 	],
 	[
 		'Sickness',
@@ -6554,7 +6562,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Fog of war',
-		`You see what your people and your allies see; the rest of the map is as you last saw it, and the unseen is dark. An army out of sight reaches you by its noise or by a messenger, and the odds count only the soldiers you see, or the report of a spy under ${TELL.spy / 60} minutes old. Spies stay hidden until something of yours is close. Night shortens sight. The computers play without fog: an assumption of the game, the one way they are not like you. Choose it on or off when you start a game.`,
+		`You see what your people and your allies see; the rest of the map is as you last saw it, and the unseen is dark. An army out of sight reaches you by its noise or by a messenger, and the odds count only the soldiers you see, or the report of a spy under ${TELL.spy / 60} minutes old. Spies stay hidden until something of yours is close. Night shortens sight; a wood blocks it, so you see its edge and nothing behind; in fog, snow or a blizzard nobody sees past the visibility, a tower no farther than a man. The computers play without fog: an assumption of the game, the one way they are not like you. Choose it on or off when you start a game.`,
 		'Scouts earned their pay by what they saw first.',
 	],
 	[
@@ -7101,14 +7109,16 @@ const rangeOf = (o, kind) => rangeFrom(BLD[kind].bow, BLD[kind].h) + (o === WILD
 // shows it (Build 60: towers aimed with the research added while the screen did not, so spies died unseen)
 const spySeen = (o, from) => UNIT.spy.stealth[from.q ? 1 : 0] + (from.q && o !== WILD ? fxv(o, 'spysight').a : 0);
 const lookout = (kind) => Math.round(LOOKOUT.base + LOOKOUT.k * Math.sqrt(BLD[kind].h || 0)); // how far a building sees, from its height
-const sightOf = (e) =>
+const sightClear = (e) =>
 	((UNIT[e.kind] ? (e.owner !== undefined && e.owner !== WILD && e.owner !== null ? stats(e.owner, e.kind).sight : UNIT[e.kind].sight) || 100 : lookout(e.kind)) + // a tier can add sight (the mounted scout)
 		(e.owner !== undefined && e.owner !== WILD && e.owner !== null
 			? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]).a
 			: 0)) *
 	(1 - (1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) * G.night * (UNIT[e.kind] || e.owner === WILD ? 1 : 1 - fxv(e.owner, 'lamp', bldKeys(e.kind)).a)) * // lanterns give a building back part of its night sight
-	EVM.sight *
-	(WEATHER[G.wx].sight || 1); // night, the moon, an eclipse or fog, a blizzard
+	EVM.sight; // night, the moon, an eclipse
+// in fog, snow or a blizzard nobody sees past the visibility, a tower no farther than a man (Build 61; before, a factor that let a tower see twice as far in fog as a man)
+const visCap = () => Math.min(WEATHER[G.wx].vis ?? Infinity, G.ev && G.ev.cur && EVENTS[G.ev.cur.kind].vis ? EVENTS[G.ev.cur.kind].vis : Infinity);
+const sightOf = (e) => Math.min(sightClear(e), visCap());
 const carryOf = (o) => CARRY + fxv(o, 'carry').a;
 function gatherMul(o, n) {
 	let m = fxv(o, 'gather', [n.type, n.kind]).m * EVM.gather * (WEATHER[G.wx].gather || 1) * (season().name === 'Winter' ? 1 + fxv(o, 'warm').a : 1); // warm homes: better winter work
@@ -8152,14 +8162,15 @@ const SHAPE = {
 };
 const LAYOUT = [
 	// what, nearest, farthest from the keep, room it needs; the last two (an angle range) put the home pocket in the corner behind the Town Center, away from every neighbour
-	['bushP', 80, 140, 38, -2.9, -1.75],
-	['groveP', 110, 190, 56, -2.9, -1.75],
-	['stoneP', 120, 190, 24, -2.9, -1.75],
-	['goldP', 140, 200, 24, -2.9, -1.75],
-	['ironP', 150, 210, 24, -2.9, -1.75],
-	['bushA', 90, 125, 38],
-	['groveA', 150, 230, 72],
-	['bushB', 135, 190, 38],
+	// a clear ring of about 150 round the Town Center (Build 61, Albert: more room at the start); the home finds sit just outside it
+	['bushP', 150, 200, 38, -2.9, -1.75],
+	['groveP', 170, 240, 56, -2.9, -1.75],
+	['stoneP', 180, 240, 24, -2.9, -1.75],
+	['goldP', 200, 260, 24, -2.9, -1.75],
+	['ironP', 210, 270, 24, -2.9, -1.75],
+	['bushA', 150, 190, 38],
+	['groveA', 170, 250, 72],
+	['bushB', 180, 230, 38],
 	['stone', 170, 260, 24],
 	['gold', 190, 280, 24],
 	['groveB', 200, 290, 56],
@@ -8929,6 +8940,23 @@ function sendBuild(o, id, vid) {
 	if (o === 0) say(`A villager goes to raise the ${bldName(o, b.kind).toLowerCase()}.`, '', 3);
 	return true;
 }
+// Replant a plot that is cut out or worked out (Build 61, Albert): half its cost, and it is full again; a coppice regrows from its stumps
+function replantWhy(o, b) {
+	const B = BLD[b.kind];
+	if (!b.node || !B.reserve) return 'Nothing to replant.';
+	if (b.node.amt > 0) return 'Still growing.';
+	if (!afford(G.P[o], scaled(B.cost, 0.5))) return `Not enough: ${costText(scaled(B.cost, 0.5))}.`;
+	return null;
+}
+function replant(o, id) {
+	const b = G.blds.find((x) => x.id === id && x.owner === o && x.hp > 0);
+	if (!b || replantWhy(o, b)) return false;
+	pay(G.P[o], scaled(BLD[b.kind].cost, 0.5), 'buildings');
+	b.node.amt = b.node.max = BLD[b.kind].reserve;
+	G.treeV = (G.treeV || 0) + 1;
+	if (o === 0) say(`${bldName(0, b.kind)} replanted.`, 'good', 3);
+	return true;
+}
 // Take a building down: half its cost back (all of it in the first 15% of the build); every order waiting inside is cancelled, so what
 // was paid for it comes back in full (a muster's too: before, a muster in the line was lost). Never the Town Center.
 function shellBack(b) {
@@ -9547,6 +9575,8 @@ function setJob(u, job, n) {
 	if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 	u.job = job;
 	u.node = n || null;
+	u.was = n ? n.kind : null; // a fresh order: any find of the job until it has worked one
+	u.wait = false;
 	if (job) u.post = null;
 	if (n && n.farm) n.wk = (n.wk || 0) + 1;
 	if (job !== 'repair') u.rep = null;
@@ -9566,6 +9596,23 @@ function moveVil(o, job, down) {
 	}
 	const v = V.find((u) => !u.job) || low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job) && !atShop(u)));
 	if (v) setJob(v, job);
+}
+// Stop: a villager drops its job and stands where it is (or where it is sent), ready for a new order (Build 61)
+function stopVil(u, post) {
+	if (u.inside && u.shop) {
+		const b = G.blds.find((x) => x.id === u.shop);
+		u.inside = false;
+		if (b) {
+			u.x = b.x;
+			u.y = b.y + halfOf(b) + 6;
+		}
+	}
+	u.shop = 0;
+	setJob(u, null);
+	u.hunt = null;
+	u.patch = null;
+	u.rep = null;
+	u.post = post;
 }
 // Send out (a field, a pasture or a shop's card): the last villager sent there goes home; a shop worker steps out of the door
 function sendOut(o, id) {
@@ -9679,8 +9726,10 @@ function commitPlace() {
 		return;
 	}
 	const b = build(0, kind, pl.at.x, pl.at.y);
-	if (b && B.repeat) {
-		const n = B.fp * NAVC + NAVC,
+	if (b && !capWhy(0, kind) && afford(p, B.cost)) {
+		// keep placing (Build 61, Albert: anything you can make more of right now): the next spot beside it, until the limit or the purse says no;
+		// wooden buildings leave a cell between them, so a fire has a gap to cross (Build 61: measured, houses one cell apart caught in a third of fires)
+		const n = B.fp * NAVC + NAVC * (B.wood ? 2 : 1),
 			spots = [
 				[n, 0],
 				[0, n],
@@ -9922,10 +9971,10 @@ function reap() {
 	G.ugTick = -1;
 	let fxChange = false;
 	for (const b of G.blds)
-		if (b.node && b.node.amt <= 0 && b.hp > 0 && BLD[b.kind].reserve > 0) {
-			b.hp = 0;
-			if (b.owner === 0) say('A tree farm is cut out. Plant another.', '', 5);
-		} // a coppice plot, spent
+		if (b.node && b.node.amt <= 0 && b.hp > 0 && BLD[b.kind].reserve > 0 && !b.spent) {
+			b.spent = true;
+			if (b.owner === 0) say(`${bldName(0, b.kind)} cut out: tap it to replant.`, '', 5, b);
+		} else if (b.spent && b.node && b.node.amt > 0) b.spent = false; // a coppice plot, spent: it stands, stumps and all, until it is replanted (Build 61; it used to vanish)
 	for (const b of G.blds)
 		if (b.kind === 'throne' && b.hp <= 0 && !b.gone) {
 			if (b.by !== undefined && b.by !== WILD) takeThrone(b.by);
@@ -10434,7 +10483,10 @@ function bestNode(u, job) {
 		if (n.kind === 'farm') {
 			if (n.farm.owner !== u.owner || n.farm.prog < 1 || n.farm.hp <= 0 || (n.wk || 0) - (u.node === n ? 1 : 0) >= slotsOf(n)) continue;
 			if (BLD[n.farm.kind].makes || BLD[n.farm.kind].sheep) continue; // a workshop or a pasture is a post, not a find: it is staffed by its builder or by hand
+			if (u.was && u.was !== 'farm') continue; // a worker from the wild never drifts onto a plot (Build 61: land work and wild work are two kinds)
 		} else {
+			if (u.was === 'farm') continue; // nor a plot worker into the wild
+			if (u.was && (n.kind !== u.was || dist(u, n) > sightOf(u))) continue; // the same kind of find, and only one it can see from where it stands
 			if (n.kind === 'fish' && !dockNear(u.owner, n)) continue;
 			if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue;
 		}
@@ -10445,7 +10497,8 @@ function bestNode(u, job) {
 			best = n;
 		}
 	}
-	if (job === 'food') {
+	if (job === 'food' && u.owner !== 0) {
+		// a computer's forager takes game on its own; yours hunts only when you send it (Build 61, Albert), or when an animal attacks
 		const k = keepOf(u.owner);
 		for (const a of G.units)
 			if (a.owner === WILD && a.hp > 0 && UNIT[a.kind].meat && UNIT[a.kind].tick === 'wild' && k && dist(a, k) < 420 && !unsafe(a, u.owner)) {
@@ -10497,10 +10550,12 @@ function shopTick(u, dt) {
 		b = n && n.farm;
 	if (!b || b.id !== u.shop || b.hp <= 0 || u.job !== n.type || !makeOf(b)) {
 		const at = b || { x: u.x, y: u.y, kind: 'house' };
+		if (u.inside) {
+			u.x = at.x;
+			u.y = at.y + halfOf(at) + 6;
+		}
 		u.inside = false;
 		u.shop = 0;
-		u.x = at.x;
-		u.y = at.y + halfOf(at) + 6;
 		return;
 	}
 	const g = makeNow(u, n, dt, Infinity);
@@ -10604,6 +10659,7 @@ function vilTick(u, dt, SP) {
 		}
 		if (moveTo(u, rb.x, rb.y, dt, BLD[rb.kind].fp * 5 + 4, SP)) {
 			u.inside = true;
+			u.shop = 0;
 			setJob(u, u.job);
 			u.node = null;
 			u.hunt = null;
@@ -10679,17 +10735,41 @@ function vilTick(u, dt, SP) {
 			u.work = G.t;
 		}
 	} // milk and meat go straight to the stores
+	if (!flock && u.node && u.node.farm && u.node.amt <= 0 && u.node.farm.hp > 0 && nodeFits(u.node, u.job) && u.node.wk <= slotsOf(u.node)) {
+		// a plot cut out or worked out: its worker stays with it, waiting for it to be replanted (Build 61: it used to walk off into the woods)
+		u.wait = true;
+		u.idle = true;
+		if (u.owner !== 0 && G.P[u.owner].alive && (G.tick + u.id) % 150 === 0) replant(u.owner, u.node.farm.id); // a computer replants by itself: it has no finger
+		moveTo(u, u.node.x, u.node.y, dt, 4, SP);
+		return;
+	}
 	if (
 		!flock &&
 		(!u.node || u.node.amt <= 0 || !nodeFits(u.node, u.job) || (u.node.farm && u.node.wk > slotsOf(u.node)))
 	) {
 		if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+		if (u.node) u.was = u.node.kind; // what it worked last: the next find must be of the same kind, in sight
 		if (u.nnT > G.t) {
 			u.node = null;
 			u.idle = true;
 			return;
 		} // nothing was found a moment ago: wait, do not search every step
 		const n = nearestNode(u, u.job);
+		if (!n && u.was && u.was !== 'farm' && !u.patch) {
+			// no find of that kind in sight: to the nearest drop-off, and wait there for an order (Build 61, Albert: if they cannot see it they do not go)
+			if (u.pj && u.pj !== u.job) {
+				const pj = u.pj;
+				u.pj = null;
+				setJob(u, pj); // a hunt or a chore is over: back to what it was doing
+				return;
+			}
+			const dr = dropFor(u.owner, u.job, u),
+				what = u.was;
+			setJob(u, null);
+			u.post = dr ? { x: dr.x + halfOf(dr) + 6, y: dr.y + 6 } : null;
+			if (u.owner === 0) say(`No ${what === 'tree' ? 'trees' : what} in sight: one waits at the ${dr ? bldName(0, dr.kind).toLowerCase() : 'Town Center'}.`, '', 4, u);
+			return;
+		}
 		if (!n && !u.patch) u.nnT = G.t + 2 + rng();
 		if (!n && u.patch) {
 			// nothing open inside the box: cut in from the nearest open tree outside it; when the box is clear, back to work
@@ -10719,7 +10799,8 @@ function vilTick(u, dt, SP) {
 		// Move only when the rate there is FORAGE.move better: nobody churns between two finds that pay the same.
 		u.evalV = G.bldV;
 		u.chk = G.t + 8 + rng() * 4;
-		const b = bestNode(u, u.job);
+		if (!u.node.farm) u.was = u.node.kind;
+		const b = u.node.farm ? null : bestNode(u, u.job); // a plot worker stays put; a wild worker may step to a better find of the same kind in sight
 		if (b && b.n !== u.node && b.R > FORAGE.move * forageNow(u)) {
 			if (u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 			if (b.n.hunt) {
@@ -10738,14 +10819,24 @@ function vilTick(u, dt, SP) {
 		return;
 	}
 	if (n.farm && BLD[n.farm.kind].makes) {
-		// a shop: in at the door (once it stands), and the work goes on inside
-		const b = n.farm;
-		if (moveTo(u, b.x, b.y, dt, halfOf(b) + 4, SP) && b.prog >= 1) {
+		// a shop: in at the door (once it stands), and the work goes on inside. An open yard (BLD.open: the workshop, the foundry; Build 61,
+		// Albert: "anything where a worker works inside should be open air") keeps the worker standing at its front, in sight and in reach
+		const b = n.farm,
+			open = BLD[b.kind].open;
+		if (open && u.shop === b.id) {
+			shopTick(u, dt);
+			if (u.shop) {
+				u.fx = 1;
+				if ((G.tick + u.id) % 40 === 0) sfx(n.type === 'iron' ? 'mine' : 'pick', u.x, u.y);
+			}
+			return;
+		}
+		if (moveTo(u, b.x, open ? b.y + halfOf(b) + 3 : b.y, dt, open ? 3 : halfOf(b) + 4, SP) && b.prog >= 1) {
 			if (u.carry > 0) {
 				stash(u.owner, u.carryType, Math.round(u.carry));
 				u.carry = 0;
 			}
-			u.inside = true;
+			u.inside = !open;
 			u.shop = b.id;
 		} else if (u.noPathT === G.t) leaveWork(u, n);
 		return;
@@ -10781,6 +10872,7 @@ function huntTick(u, dt, SP) {
 	const a = u.hunt;
 	if (!a || a.hp <= 0) {
 		u.hunt = null;
+		u.was = null; // the kill is butchered next, whatever it worked before
 		return;
 	}
 	u.cd = Math.max(0, u.cd - dt);
@@ -11869,6 +11961,15 @@ function hurt(o, a, t, base) {
 				if (n !== t && n.hp > 0 && n.owner === t.owner && dist(n, t) < FIREARMS.splash) n.hp -= d * FIREARMS.splashHit; // the blast shakes the neighbours
 	} else {
 		if (a) d *= vsMul(a, t);
+		if (a && o === WILD && t.kind === 'vil' && t.owner !== WILD && UNIT[a.kind].meat && !t.hunt) {
+			// an animal attacks a villager: it and the two nearest villagers who can see it turn on the beast, kill it and butcher it, then go back to work (Build 61)
+			const helpers = unitsOf(t.owner, 'vil').filter((v) => v !== t && !v.inside && !v.hunt && v.job !== 'repair' && dist(v, a) < sightOf(v)).sort((p, q) => dist(p, a) - dist(q, a)).slice(0, 2);
+			for (const v of [t, ...helpers]) {
+				v.pj = v.job === 'food' ? null : v.job;
+				setJob(v, 'food');
+				v.hunt = a;
+			}
+		}
 		if (isSoldier(t)) {
 			if (o === WILD && t.owner !== WILD) d *= MORALE.wild;
 			if (t.state === 'rout') d *= MORALE.routHit;
@@ -14800,6 +14901,34 @@ const STONE = '#a29d90',
 	THATCH = '#b8954a',
 	TILE = '#a8543a',
 	SLATE = '#5d6470';
+// ── the light (Build 61, after the best of the genre: one warm sun from the upper left, cool shadow, not grey) ──
+// lit(col, k): k > 0 warms a colour toward the sun, k < 0 cools it toward the shadow. ao(): the darkening where a wall meets the ground.
+// rim(): the pale line of light along a top edge that lifts a shape off the ground. Hard outlines are gone: a faint warm-dark edge only.
+const SUN = '#fff1c4',
+	SHADOW = '#1f3a46';
+const hexRGB = (h) => {
+	const n = parseInt(h.slice(1), 16);
+	return [n >> 16, (n >> 8) & 255, n & 255];
+};
+const mix = (a, b, t) => {
+	const A = hexRGB(a),
+		B = hexRGB(b);
+	return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')})`;
+};
+const lit = (col, k) => (col[0] !== '#' ? col : k >= 0 ? mix(col, SUN, k) : mix(col, SHADOW, -k));
+const LINE = 'rgba(30,22,16,.35)';
+const ao = (pts, y, h) => {
+	g.save();
+	g.beginPath();
+	pts.forEach((p, i) => (i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])));
+	g.closePath();
+	g.clip();
+	const xs = pts.map((p) => p[0]);
+	g.fillStyle = LG(0, y, 0, y - h, ['rgba(20,30,40,.42)', 'rgba(20,30,40,0)']);
+	g.fillRect(Math.min(...xs) - 2, y - h, Math.max(...xs) - Math.min(...xs) + 4, h + 2);
+	g.restore();
+};
+const rim = (x0, y0, x1, y1, a = 0.5) => L_(x0, y0, x1, y1, `rgba(255,245,210,${a})`, 0.45);
 // the east wall and the top of a box whose front runs x0..x1 at yf, h tall and d deep (d already squashed): drawn before its front
 function sides(x0, x1, yf, h, d, wall, top = true) {
 	const k = d * SIDE;
@@ -14810,9 +14939,9 @@ function sides(x0, x1, yf, h, d, wall, top = true) {
 			[x1 + k, yf - d - h],
 			[x1, yf - h],
 		],
-		shade(wall, 0.58),
-		INK,
-		0.5,
+		LG(x1, 0, x1 + k, 0, [lit(wall, -0.45), lit(wall, -0.6)]),
+		LINE,
+		0.4,
 	);
 	if (top)
 		P_(
@@ -14822,9 +14951,9 @@ function sides(x0, x1, yf, h, d, wall, top = true) {
 				[x1 + k, yf - d - h],
 				[x0 + k, yf - d - h],
 			],
-			shade(wall, 1.05),
-			INK,
-			0.5,
+			lit(wall, 0.12),
+			LINE,
+			0.4,
 		);
 	return k;
 }
@@ -14849,25 +14978,26 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 		k = d * SIDE,
 		m = k / 2,
 		ry = -h - roofH,
-		far = shade(roofCol || wall, 0.7);
+		over = roof && roof !== 'flat' ? Math.min(2.6, w * 0.08) : 0, // the eaves overhang
+		far = lit(roofCol || wall, -0.5);
 	if (roof && roof !== 'flat')
 		P_(
 			roof === 'hip'
 				? [
-						[x0 + k, yb - h],
-						[x1 + k, yb - h],
+						[x0 - over * 0.5 + k, yb - h + 0.6],
+						[x1 + over * 0.5 + k, yb - h + 0.6],
 						[x1 - w * 0.25 + m, ry],
 						[x0 + w * 0.25 + m, ry],
 					]
 				: [
-						[x0 - 1 + k, yb - h],
-						[x1 + 1 + k, yb - h],
-						[x1 + 1 + m, ry],
-						[x0 - 1 + m, ry],
+						[x0 - over * 0.5 + k, yb - h + 0.6],
+						[x1 + over * 0.5 + k, yb - h + 0.6],
+						[x1 + over * 0.5 + m, ry],
+						[x0 - over * 0.5 + m, ry],
 					],
 			far,
-			INK,
-			0.5,
+			LINE,
+			0.4,
 		); // the far slope, where it shows over the ridge
 	sides(x0, x1, yf, h, d, wall, roof === 'flat' || !roof);
 	P_(
@@ -14877,11 +15007,32 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 			[x1, yf - h],
 			[x0, yf - h],
 		],
-		LG(x0, 0, x1, 0, [shade(wall, 0.95), shade(wall, 0.82), shade(wall, 0.68)]),
-		INK,
-		0.6,
+		LG(x0, 0, x1, 0, [lit(wall, 0.18), wall, lit(wall, -0.12)]),
+		LINE,
+		0.45,
 	); // front
 	texture(tex, x0, yf - h, x1, yf, wall);
+	ao(
+		[
+			[x0, yf],
+			[x1, yf],
+			[x1, yf - h],
+			[x0, yf - h],
+		],
+		yf,
+		h * 0.45,
+	);
+	ao(
+		[
+			[x1, yf],
+			[x1 + k, yf - d],
+			[x1 + k, yf - d - h],
+			[x1, yf - h],
+		],
+		yf,
+		h * 0.45,
+	);
+	if (roof === 'flat' || !roof) rim(x0, yf - h, x1, yf - h, 0.45);
 	if (UP >= 1) {
 		P_(
 			[
@@ -14891,7 +15042,7 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 				[x0, yf - 3],
 			],
 			STONE,
-			INK,
+			LINE,
 			0.4,
 		);
 		P_(
@@ -14901,8 +15052,8 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 				[x1 + k, yf - d - 3],
 				[x1, yf - 3],
 			],
-			shade(STONE, 0.6),
-			INK,
+			lit(STONE, -0.45),
+			LINE,
 			0.4,
 		);
 	}
@@ -14915,8 +15066,8 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 					[x0 + 3.4, y - 3],
 					[x0, y - 3],
 				],
-				shade(STONE, 1.1),
-				INK,
+				lit(STONE, 0.15),
+				LINE,
 				0.3,
 			);
 			P_(
@@ -14926,14 +15077,16 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 					[x1, y - 3],
 					[x1 - 3.4, y - 3],
 				],
-				shade(STONE, 1.1),
-				INK,
+				lit(STONE, 0.15),
+				LINE,
 				0.3,
 			);
 		}
 	const r = { top: yb - h, d, h, k };
 	if (roof === 'flat' || !roof) return r;
-	const near = LG(0, ry, 0, yf - h, [shade(roofCol, 1.2), roofCol, shade(roofCol, 0.8)]);
+	const sag = Math.min(1.4, w * 0.045),
+		rc = roofCol || wall,
+		near = LG(0, yf - h, 0, ry, [lit(rc, -0.15), lit(rc, 0.25)]);
 	if (roof === 'gable') {
 		// ridge runs left to right: the near slope, and the gable end on the east wall
 		P_(
@@ -14942,59 +15095,96 @@ function block(w, h, wall, tex, roof, roofCol, roofH = w * 0.35, dd) {
 				[x1 + k, yb - h],
 				[x1 + m, ry],
 			],
-			shade(wall, 0.66),
-			INK,
-			0.5,
+			lit(wall, -0.5),
+			LINE,
+			0.4,
 		);
-		P_(
-			[
-				[x0 - 1, yf - h + 1],
-				[x1 + 1, yf - h + 1],
-				[x1 + 1 + m, ry],
-				[x0 - 1 + m, ry],
-			],
-			near,
-			INK,
-			0.6,
-		);
-		g.strokeStyle = 'rgba(0,0,0,.18)';
-		g.lineWidth = 0.5;
-		for (let t = 0.25; t < 1; t += 0.25) {
-			const y = yf - h + 1 + (ry - (yf - h + 1)) * t;
-			g.beginPath();
-			g.moveTo(x0 - 1 + m * t, y);
-			g.lineTo(x1 + 1 + m * t, y);
-			g.stroke();
-		}
-		L_(x0 - 1 + m, ry, x1 + 1 + m, ry, UP >= 2 ? '#e6c75a' : shade(roofCol, 1.4), UP >= 2 ? 1.6 : 1);
+		const e0 = [x0 - over, yf - h + 0.8],
+			e1 = [x1 + over, yf - h + 0.8],
+			r0 = [x0 - over * 0.5 + m, ry],
+			r1 = [x1 + over * 0.5 + m, ry];
+		g.beginPath();
+		g.moveTo(e0[0], e0[1]);
+		g.quadraticCurveTo((e0[0] + e1[0]) / 2, e0[1] + sag, e1[0], e1[1]);
+		g.lineTo(r1[0], r1[1]);
+		g.quadraticCurveTo((r0[0] + r1[0]) / 2, ry + sag * 0.4, r0[0], r0[1]);
+		g.closePath();
+		g.fillStyle = near;
+		g.fill();
+		g.strokeStyle = LINE;
+		g.lineWidth = 0.45;
+		g.stroke();
+		roofGrain(rc, e0, e1, r0, r1, sag);
+		L_(r0[0], r0[1], r1[0], r1[1], UP >= 2 ? '#e6c75a' : lit(rc, -0.4), UP >= 2 ? 1.6 : 0.9);
+		rim(r0[0], r0[1], r1[0], r1[1], 0.5);
 		return { ...r, top: ry };
 	}
 	if (roof === 'hip') {
 		// the near slope, and the east hip in shade
 		P_(
 			[
-				[x1 + 1, yf - h + 1],
-				[x1 + 1 + k, yb - h + 1],
+				[x1 + over, yf - h + 0.8],
+				[x1 + over * 0.5 + k, yb - h + 0.6],
 				[x1 - w * 0.25 + m, ry],
 			],
-			shade(roofCol, 0.62),
-			INK,
-			0.5,
+			lit(rc, -0.55),
+			LINE,
+			0.4,
 		);
-		P_(
-			[
-				[x0 - 1, yf - h + 1],
-				[x1 + 1, yf - h + 1],
-				[x1 - w * 0.25 + m, ry],
-				[x0 + w * 0.25 + m, ry],
-			],
-			near,
-			INK,
-			0.6,
-		);
+		const e0 = [x0 - over, yf - h + 0.8],
+			e1 = [x1 + over, yf - h + 0.8],
+			r0 = [x0 + w * 0.25 + m, ry],
+			r1 = [x1 - w * 0.25 + m, ry];
+		g.beginPath();
+		g.moveTo(e0[0], e0[1]);
+		g.quadraticCurveTo((e0[0] + e1[0]) / 2, e0[1] + sag, e1[0], e1[1]);
+		g.lineTo(r1[0], r1[1]);
+		g.lineTo(r0[0], r0[1]);
+		g.closePath();
+		g.fillStyle = near;
+		g.fill();
+		g.strokeStyle = LINE;
+		g.lineWidth = 0.45;
+		g.stroke();
+		roofGrain(rc, e0, e1, r0, r1, sag);
+		rim(r0[0], r0[1], r1[0], r1[1], 0.5);
 		return { ...r, top: ry };
 	}
 	return r;
+}
+// the grain of a roof: thatch in layered scallops with loose strands, tile in curved rows, slate and the rest in straight courses
+function roofGrain(rc, e0, e1, r0, r1, sag) {
+	const thatch = rc === THATCH,
+		rows = Math.max(3, Math.round(Math.abs(e0[1] - r0[1]) / (thatch ? 1.7 : 1.3)));
+	g.lineWidth = 0.3;
+	for (let i = 1; i < rows; i++) {
+		const u = i / rows,
+			xa = e0[0] + (r0[0] - e0[0]) * u,
+			xb = e1[0] + (r1[0] - e1[0]) * u,
+			y = e0[1] + (r0[1] - e0[1]) * u + sag * (1 - u) * 0.5;
+		g.strokeStyle = thatch ? `rgba(90,60,20,${0.2 + 0.1 * u})` : 'rgba(40,20,10,.3)';
+		g.beginPath();
+		g.moveTo(xa, y);
+		const n = Math.max(2, Math.round((xb - xa) / (thatch ? 2.4 : 1.9)));
+		for (let j = 0; j < n; j++) {
+			const sx = xa + ((xb - xa) * j) / n,
+				ex = xa + ((xb - xa) * (j + 1)) / n;
+			g.quadraticCurveTo((sx + ex) / 2, y + (thatch ? 0.9 : 0.5) * (1 - u * 0.4), ex, y);
+		}
+		g.stroke();
+		if (!thatch) L_(xa, y - 0.25, xb, y - 0.25, 'rgba(255,220,180,.16)', 0.25);
+	}
+	if (thatch) {
+		let r = 5;
+		const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+		for (let i = 0; i < 40; i++) {
+			const t = R(),
+				u = R(),
+				x = e0[0] + (e1[0] - e0[0]) * t + (r0[0] - e0[0]) * u,
+				y = e0[1] + (r0[1] - e0[1]) * u;
+			L_(x, y, x + 0.2, y - 1.1 * (1 - u), R() > 0.5 ? 'rgba(255,240,180,.35)' : 'rgba(90,60,20,.3)', 0.22);
+		}
+	}
 }
 function texture(tex, x0, y0, x1, y1, wall) {
 	g.save();
@@ -15159,17 +15349,174 @@ const column = (x, yb, yt, col = '#efe6d4') => {
 		0.3,
 	);
 };
-const smallTree = (x, y, s = 1, col = '#2f6a2f') => {
-	L_(x, y, x, y - 3 * s, '#4c3a22', 0.8 * s);
-	E_(
-		x,
-		y - 5 * s,
-		3 * s,
-		3.2 * s,
-		LG(x - 3 * s, y - 8 * s, x + 3 * s, y - 2 * s, [shade(col, 1.25), col, shade(col, 0.75)]),
-		INK,
+const smallTree = (x, y, s = 1, col = '#3e8a3c') => {
+	P_(
+		[
+			[x - 0.8 * s, y],
+			[x + 0.8 * s, y],
+			[x + 0.5 * s, y - 3.6 * s],
+			[x - 0.5 * s, y - 3.6 * s],
+		],
+		LG(x - 0.8 * s, 0, x + 0.8 * s, 0, ['#7a5a3a', '#3a2412']),
+		LINE,
 		0.3,
 	);
+	for (const [dx, dy, r, kk] of [
+		[0, -6, 3.6, -0.15],
+		[-2.3, -4.9, 2.6, 0],
+		[2.3, -5.3, 2.6, -0.25],
+		[0, -8.2, 2.8, 0.12],
+		[-1.3, -7.4, 2, 0.28],
+	])
+		E_(x + dx * s, y + dy * s, r * s, r * 0.86 * s, RG(x + dx * s - r * 0.4 * s, y + dy * s - r * 0.4 * s, 0, r * 1.1 * s, [lit(col, kk + 0.3), lit(col, kk - 0.35)]));
+};
+// ── the props the yards share (Build 61) ──
+const stump = (x, y) => {
+	E_(x, y - 1, 1.5, 1.1, LG(x - 1.5, 0, x + 1.5, 0, ['#a07a4a', '#5a3c22']), LINE, 0.3);
+	E_(x, y - 2.1, 1.5, 0.6, '#c9a46a');
+	E_(x, y - 2.1, 0.8, 0.32, 'rgba(120,80,30,.5)');
+};
+const grassTufts = (w, col, n) => {
+	let r = 3;
+	const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+	for (let i = 0; i < n; i++) {
+		const [x, y] = gpt(w, 0.05 + R() * 0.9, 0.05 + R() * 0.9);
+		L_(x, y, x + 0.4, y - 1.3, col, 0.3);
+		L_(x + 0.6, y, x + 1.1, y - 1, lit(col, -0.2), 0.3);
+	}
+};
+const hay = (x, y, s = 1) => {
+	E_(x + 0.5, y + 0.2, 2.8 * s, 1.1 * s, 'rgba(20,30,40,.3)');
+	E_(x, y - 1.8 * s, 2.6 * s, 2.1 * s, RG(x - 0.8 * s, y - 2.6 * s, 0, 3 * s, ['#f0cf6e', '#b8882e']));
+	for (let i = 0; i < 10; i++) L_(x - 2 + i * 0.45, y - 0.5 * s, x - 1.7 + i * 0.45, y - 3 * s - (i % 3) * 0.4, 'rgba(120,70,10,.35)', 0.22);
+};
+const barrel = (x, y) => {
+	E_(x + 0.4, y + 0.2, 1.7, 0.75, 'rgba(20,30,40,.3)');
+	P_(
+		[
+			[x - 1.5, y],
+			[x + 1.5, y],
+			[x + 1.8, y - 1.7],
+			[x + 1.5, y - 3.4],
+			[x - 1.5, y - 3.4],
+			[x - 1.8, y - 1.7],
+		],
+		LG(x - 1.5, 0, x + 1.5, 0, ['#a67c48', '#6b4a2c', '#4a2e18']),
+		LINE,
+		0.3,
+	);
+	E_(x, y - 3.4, 1.5, 0.6, '#b08a52');
+	for (const yy of [-1, -2.5]) L_(x - 1.75, y + yy, x + 1.75, y + yy, '#2a1c10', 0.35);
+	rim(x - 1.4, y - 3.4, x + 1.4, y - 3.4, 0.4);
+};
+const crate = (x, y) => {
+	E_(x + 0.5, y + 0.2, 2.2, 0.9, 'rgba(20,30,40,.3)');
+	P_(
+		[
+			[x - 1.7, y],
+			[x + 1.7, y],
+			[x + 1.7, y - 2.6],
+			[x - 1.7, y - 2.6],
+		],
+		LG(x - 1.7, 0, x + 1.7, 0, ['#b08a52', '#8a6a3a']),
+	);
+	P_(
+		[
+			[x + 1.7, y],
+			[x + 2.6, y - 1.1],
+			[x + 2.6, y - 3.7],
+			[x + 1.7, y - 2.6],
+		],
+		'#5a3c22',
+	);
+	P_(
+		[
+			[x - 1.7, y - 2.6],
+			[x + 1.7, y - 2.6],
+			[x + 2.6, y - 3.7],
+			[x - 0.8, y - 3.7],
+		],
+		'#c9a46a',
+	);
+	L_(x - 1.4, y - 2.3, x + 1.4, y - 0.3, 'rgba(30,22,16,.35)', 0.3);
+	L_(x - 1.4, y - 0.3, x + 1.4, y - 2.3, 'rgba(30,22,16,.35)', 0.3);
+};
+const sack = (x, y, col = '#d2bb8e') => {
+	E_(x + 0.3, y + 0.1, 1.6, 0.65, 'rgba(20,30,40,.3)');
+	E_(x, y - 1.5, 1.55, 1.65, RG(x - 0.5, y - 2.2, 0, 2.2, [lit(col, 0.2), lit(col, -0.3)]));
+	L_(x - 1, y - 2.8, x + 1, y - 2.8, '#6b4a2c', 0.45);
+};
+const lantern = (x, y) => {
+	post(x, y, 7.5, '#3a2412', 0.3);
+	P_(
+		[
+			[x - 0.9, y - 7.5],
+			[x + 0.9, y - 7.5],
+			[x + 0.7, y - 9.3],
+			[x - 0.7, y - 9.3],
+		],
+		'#ffd27a',
+	);
+	E_(x, y - 8.3, 5.2, 4, RG(x, y - 8.3, 0, 5.2, ['rgba(255,196,90,.4)', 'rgba(255,196,90,0)']));
+};
+const sheep = (x, y) => {
+	E_(x + 0.6, y + 0.5, 2.6, 1, 'rgba(20,30,40,.25)');
+	for (const lx of [-1.5, -0.5, 0.8, 1.6]) L_(x + lx, y - 0.8, x + lx, y + 0.6, '#4a4540', 0.4);
+	E_(x, y - 1.7, 2.7, 1.8, RG(x - 0.8, y - 2.4, 0, 3.2, ['#fffdf5', '#c9c2b2']));
+	E_(x + 2.4, y - 2.6, 1.1, 1, '#3a3530');
+	E_(x + 2.9, y - 2.9, 0.32, 0.55, '#3a3530');
+};
+const pony = (x, y, col = '#7a4e2a') => {
+	E_(x + 0.8, y + 0.5, 3.8, 1.2, 'rgba(20,30,40,.28)');
+	for (const lx of [-2.2, -1.1, 1.3, 2.4]) L_(x + lx, y - 1.4, x + lx, y + 0.7, lit(col, -0.4), 0.5);
+	E_(x, y - 2.9, 3.5, 1.9, RG(x - 1, y - 3.8, 0, 4, [lit(col, 0.3), lit(col, -0.35)]));
+	P_(
+		[
+			[x + 2.6, y - 4],
+			[x + 3.4, y - 6.4],
+			[x + 4.8, y - 6.8],
+			[x + 5.2, y - 5.4],
+			[x + 4.2, y - 4.6],
+			[x + 3.4, y - 3],
+		],
+		lit(col, 0.05),
+	);
+	L_(x + 2.8, y - 4.6, x + 4, y - 6.6, lit(col, -0.5), 0.6);
+	P_(
+		[
+			[x - 3.2, y - 3.6],
+			[x - 4.6, y - 2.4],
+			[x - 4, y - 0.6],
+			[x - 3, y - 2.8],
+		],
+		lit(col, -0.45),
+	);
+};
+// a lean-to roof on posts over a yard: the front edge sags a little, the slats show, the back edge catches the light
+const leanto = (x0, x1, yf, h, dd, lift, col = THATCH, over = 2) => {
+	const d = dd * TILT,
+		k = d * SIDE;
+	g.beginPath();
+	g.moveTo(x0 - over, yf - h + 0.6);
+	g.quadraticCurveTo((x0 + x1) / 2, yf - h + 1.6, x1 + over, yf - h + 0.6);
+	g.lineTo(x1 + over + k, yf - d - h - lift);
+	g.lineTo(x0 - over + k, yf - d - h - lift);
+	g.closePath();
+	g.fillStyle = LG(0, yf - h, 0, yf - d - h - lift, [lit(col, -0.1), lit(col, 0.22)]);
+	g.fill();
+	g.strokeStyle = LINE;
+	g.lineWidth = 0.4;
+	g.stroke();
+	for (let i = 1; i < 6; i++) {
+		const u = i / 6;
+		g.beginPath();
+		g.moveTo(x0 - over + k * u, yf - h + 0.6 - (d + lift) * u);
+		g.quadraticCurveTo((x0 + x1) / 2 + k * u, yf - h + 1.4 - (d + lift) * u, x1 + over + k * u, yf - h + 0.6 - (d + lift) * u);
+		g.strokeStyle = 'rgba(90,60,20,.28)';
+		g.lineWidth = 0.3;
+		g.stroke();
+	}
+	rim(x0 - over + k, yf - d - h - lift, x1 + over + k, yf - d - h - lift, 0.5);
 };
 // the art for each building kind. c = side colour, o = owner (for civ and research), w = width in world units
 const ART = {
@@ -15331,20 +15678,20 @@ const ART = {
 		L_(-25, d / 2 - 1, 25, d / 2 - 1, c, 1.4);
 	},
 	house(c) {
-		const r = block(20, 13, PLASTER, 'timber', 'gable', THATCH, 8);
+		const r = block(20, 12, PLASTER, 'timber', 'gable', THATCH, 9);
 		door(-4, r.d / 2, 4, 7);
-		win(4, r.d / 2 - 5);
+		win(4.5, r.d / 2 - 4.6, 2, 2.4, true);
 		L_(-10, r.d / 2 - 0.5, 10, r.d / 2 - 0.5, c, 1.2);
 		const m = r.k / 2;
 		P_(
 			[
-				[5 + m, -21],
-				[7.4 + m, -21],
-				[7.4 + m, -26],
-				[5 + m, -26],
+				[5 + m, -20],
+				[7.4 + m, -20],
+				[7.4 + m, -25],
+				[5 + m, -25],
 			],
-			'#6a5a4a',
-			INK,
+			lit('#6a5a4a', -0.2),
+			LINE,
 			0.3,
 		);
 	},
@@ -15431,50 +15778,111 @@ const ART = {
 		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
 	},
 	barracks(c) {
-		const r = block(40, 18, PLANK, 'plank', 'gable', '#8a3a2a', 10);
-		door(0, r.d / 2, 6, 11);
-		for (const x of [-13, -9, 10, 14]) {
-			L_(x, r.d / 2, x + 1.5, r.d / 2 - 11, '#8a6a3a', 0.6);
+		// a drill yard with a long hut at the back (Build 61, Albert: open-air): a rack of spears, shields on the wall, a crate
+		const w = 40,
+			d = w * TILT,
+			k = d * SIDE,
+			hw = w * 0.44,
+			hd = w * 0.26;
+		field(w, '#ad9262', c, () => {
+			g.save();
+			g.translate(k * 0.72, d / 2 - d * 0.72 - (hd * TILT) / 2);
+			const r = block(hw * 2, 7.5, PLASTER, 'timber', 'gable', '#8e3a2a', 5.2, hd);
+			door(0, r.d / 2, 2.8, 4.8);
+			win(-hw + 4.2, r.d / 2 - 3.4, 1.7, 2.1, true);
+			win(hw - 4.2, r.d / 2 - 3.4, 1.7, 2.1, true);
+			g.restore();
+			banner(hw + k * 0.72 + 0.8, d / 2 - d * 0.72 - 6.5, c, 7);
+			const [rx, ry] = gpt(w, 0.9, 0.3);
 			P_(
 				[
-					[x + 1.5, r.d / 2 - 11],
-					[x + 2, r.d / 2 - 13],
-					[x + 1, r.d / 2 - 11],
+					[rx - 1.4, ry],
+					[rx + 1.8, ry],
+					[rx + 1.6, ry - 1.1],
+					[rx - 1.6, ry - 1.1],
 				],
-				'#ddd',
+				'#5a3a1e',
 			);
-		}
-		banner(-18, r.d / 2 - 18, c, 10);
-		L_(-20, r.d / 2 - 0.5, 20, r.d / 2 - 0.5, c, 1.2);
+			for (let i = 0; i < 6; i++) L_(rx - 0.8 + i * 0.35, ry - 0.5, rx - 1.4 + i * 0.55, ry - 7.5, '#d9c79a', 0.3);
+			for (let i = 0; i < 3; i++) {
+				const [sx, sy] = gpt(w, 0.5 + i * 0.12, 0.1);
+				E_(sx, sy - 2, 1.4, 1.6, RG(sx - 0.4, sy - 2.6, 0, 1.8, [lit('#c0392b', 0.2), lit('#c0392b', -0.35)]), LINE, 0.3);
+				E_(sx, sy - 2, 0.5, 0.5, '#e6b947');
+			}
+			crate(...gpt(w, 0.9, 0.08));
+		}, true);
 	},
 	range(c) {
-		const r = block(40, 16, PLANK, 'plank', 'gable', '#5d6e3e', 9);
-		door(-8, r.d / 2, 6, 10);
-		E_(12, r.d / 2 - 6, 4, 4, '#e8dcc0', INK, 0.4);
-		E_(12, r.d / 2 - 6, 2.6, 2.6, '#c33');
-		E_(12, r.d / 2 - 6, 1, 1, '#e8dcc0');
-		L_(12, r.d / 2 - 2, 12, r.d / 2, '#5a3a1c', 0.8);
-		banner(-18, r.d / 2 - 16, c, 9);
-		L_(-20, r.d / 2 - 0.5, 20, r.d / 2 - 0.5, c, 1.2);
+		// the butts on a green (Build 61, Albert: open-air): three targets at the back, a shooting line, hay behind
+		const w = 40,
+			d = w * TILT;
+		field(w, '#8cb860', c, () => {
+			grassTufts(w, '#5a8a3c', 60);
+			const [h0, h1] = [gpt(w, 0.03, 0.97), gpt(w, 0.97, 0.97)];
+			for (let i = 0; i < 7; i++) hay(h0[0] + ((h1[0] - h0[0]) * (i + 0.5)) / 7, h0[1] - 0.6, 0.85);
+			for (let i = 0; i < 3; i++) {
+				const [x, y] = gpt(w, 0.25 + i * 0.25, 0.84);
+				E_(x + 0.6, y + 0.2, 3, 1.1, 'rgba(20,30,40,.28)');
+				for (const dx of [-1.7, 1.7]) post(x + dx, y, 5, '#5a3a1e', 0.42);
+				E_(x, y - 2.6, 2.8, 2.8, RG(x - 0.7, y - 3.3, 0, 3.4, ['#f3e6c0', '#c9ad66']));
+				for (let rr = 0; rr < 6; rr++) E_(x, y - 2.6, 2.8 - rr * 0.42, 2.8 - rr * 0.42, null, 'rgba(120,90,40,.3)', 0.2);
+				E_(x, y - 2.6, 1.6, 1.6, '#fff');
+				E_(x, y - 2.6, 1, 1, '#d03a2a');
+				E_(x, y - 2.6, 0.42, 0.42, '#fff');
+				L_(x + 0.3, y - 2.5, x + 2.6, y - 1.2, '#9a7a4a', 0.3);
+			}
+			const [l0, l1] = [gpt(w, 0.05, 0.22), gpt(w, 0.95, 0.22)];
+			L_(l0[0], l0[1], l1[0], l1[1], 'rgba(255,255,255,.75)', 0.5);
+			const [rx, ry] = gpt(w, 0.92, 0.1);
+			for (let i = 0; i < 5; i++) L_(rx - 0.6 + i * 0.3, ry, rx - 1.3 + i * 0.55, ry - 6.5, '#d9c79a', 0.3);
+			banner(...gpt(w, 0.04, 0.96), c, 8);
+		}, true);
 	},
 	stable(c) {
-		const r = block(40, 16, PLANK, 'plank', 'gable', THATCH, 10);
-		for (let i = -2; i <= 2; i++) {
-			P_(
-				[
-					[i * 7 - 2.4, r.d / 2],
-					[i * 7 + 2.4, r.d / 2],
-					[i * 7 + 2.4, r.d / 2 - 7],
-					[i * 7 - 2.4, r.d / 2 - 7],
-				],
-				'#3a2614',
-				INK,
-				0.3,
-			);
-			E_(i * 7 + 0.6, r.d / 2 - 6.8, 1.2, 1.6, '#7a4e2c');
-		}
-		banner(-18, r.d / 2 - 16, c, 9);
-		L_(-20, r.d / 2 - 0.5, 20, r.d / 2 - 0.5, c, 1.2);
+		// a paddock with the stalls at the back (Build 61, Albert: open-air): thatch over the stalls, a rail round the yard, hay and a trough
+		const w = 40,
+			d = w * TILT,
+			k = d * SIDE,
+			hw = w * 0.46,
+			hd = w * 0.24;
+		field(w, '#9fae6e', c, () => {
+			grassTufts(w, '#5a8a3c', 40);
+			g.save();
+			g.translate(k * 0.74, d / 2 - d * 0.74 - (hd * TILT) / 2);
+			const r = block(hw * 2, 6, PLANK, 'plank', 'gable', THATCH, 3.6, hd);
+			for (let i = 0; i < 5; i++) {
+				const x = -hw + 3 + (i * (hw * 2 - 6)) / 4.6;
+				P_(
+					[
+						[x - 2.1, r.d / 2],
+						[x + 2.1, r.d / 2],
+						[x + 2.1, r.d / 2 - 3.9],
+						[x, r.d / 2 - 5],
+						[x - 2.1, r.d / 2 - 3.9],
+					],
+					'#2a2014',
+				);
+				if (i % 2) {
+					E_(x, r.d / 2 - 2.7, 1.3, 1.05, '#7a4e2a');
+					P_(
+						[
+							[x + 0.9, r.d / 2 - 3.5],
+							[x + 2, r.d / 2 - 4.8],
+							[x + 2.3, r.d / 2 - 3.7],
+						],
+						'#7a4e2a',
+					);
+				}
+			}
+			g.restore();
+			for (let i = 0; i < 3; i++) {
+				const [x, y] = gpt(w, 0.2 + i * 0.3, 0.3 + (i % 2) * 0.15);
+				pony(x, y, ['#7a4e2a', '#3e2e22', '#c0a884'][i]);
+			}
+			hay(...gpt(w, 0.9, 0.5), 1);
+			const [tx, ty] = gpt(w, 0.1, 0.5);
+			E_(tx, ty, 2.8, 1.2, RG(tx, ty, 0, 2.8, ['#5fa0c4', '#2f5f80']));
+		});
 	},
 	smith(c) {
 		const r = block(30, 14, STONE, 'stone', 'gable', SLATE, 7);
@@ -15514,50 +15922,85 @@ const ART = {
 		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
 	},
 	market(c) {
-		const d = 30 * TILT;
-		P_(
-			[
-				[-15, d / 2],
-				[15, d / 2],
-				[15, -d / 2],
-				[-15, -d / 2],
-			],
-			'#b59a72',
-			INK,
-			0.4,
-		);
-		for (const [x, y, col] of [
-			[-8, -4, '#b2563a'],
-			[8, -4, c],
-			[-8, 6, c],
-			[8, 6, '#c9a227'],
-		]) {
-			L_(x - 6, y, x - 6, y - 9, WOOD, 0.7);
-			L_(x + 6, y, x + 6, y - 9, WOOD, 0.7);
-			for (let i = 0; i < 6; i++)
-				P_(
-					[
-						[x - 6.5 + i * 2.2, y - 9],
-						[x - 4.3 + i * 2.2, y - 9],
-						[x - 4.3 + i * 2.2, y - 12],
-						[x - 6.5 + i * 2.2, y - 12],
-					],
-					i % 2 ? '#f0e6d0' : col,
-					null,
-				);
+		// an open square (Build 61): paving, a well with its roof, four stalls with awnings in the side's colours, crates and a lantern
+		const w = 30,
+			d = w * TILT,
+			k = d * SIDE;
+		field(w, '#cdb990', c, () => {
+			let r = 9;
+			const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+			for (let i = 0; i < 70; i++) {
+				const [x, y] = gpt(w, 0.03 + R() * 0.94, 0.03 + R() * 0.94);
+				E_(x, y, 1.3 + R(), 0.6 + R() * 0.4, `rgba(${150 + ((R() * 40) | 0)},${125 + ((R() * 30) | 0)},${95 + ((R() * 30) | 0)},.6)`);
+			}
+			const wx = k * 0.5,
+				wy = 0;
+			g.save();
+			g.translate(wx, wy);
+			block(5.6, 2.4, '#8e8678', 'stone', 'flat', null, 0, 4.5);
+			g.restore();
+			E_(wx + 0.9, wy - 2.4 - 1.5 + 1.4, 2.4, 1, RG(wx, wy - 3, 0, 2.6, ['#5fa0c4', '#2f5f80']));
+			for (const dx of [-2.4, 2.4]) post(wx + dx, wy - 2.2, 5.4, '#5a3a1e', 0.4);
 			P_(
 				[
-					[x - 6, y],
-					[x + 6, y],
-					[x + 6, y - 2.4],
-					[x - 6, y - 2.4],
+					[wx - 3.4, wy - 7.4],
+					[wx + 3.4, wy - 7.4],
+					[wx + 2.2, wy - 9.4],
+					[wx - 2.2, wy - 9.4],
 				],
-				WOOD,
+				LG(0, wy - 7.4, 0, wy - 9.4, [lit('#7a3326', -0.15), lit('#7a3326', 0.25)]),
+				LINE,
+				0.3,
 			);
-			E_(x - 2.4, y - 3.2, 1.4, 1, '#e0708a');
-			E_(x + 1, y - 3.2, 1.4, 1, '#f2cf55');
-			E_(x + 3.6, y - 3.2, 1.2, 1, '#9acd5a');
-		}
+			const stalls = [
+				[0.2, 0.78, '#c0392b'],
+				[0.78, 0.78, '#2f6c8e'],
+				[0.2, 0.22, c],
+				[0.78, 0.22, '#3f7a34'],
+			].sort((a, b) => b[1] - a[1]);
+			for (const [t, u, col] of stalls) {
+				const [x, y] = gpt(w, t, u);
+				g.save();
+				g.translate(x, y);
+				block(8, 2.6, '#8a6a3a', 'plank', 'flat', null, 0, 4);
+				g.restore();
+				for (const [gx, gc] of [
+					[-2.6, '#d9607a'],
+					[-0.9, '#e6b947'],
+					[0.9, '#86a83e'],
+					[2.6, '#c9a46a'],
+				]) {
+					E_(x + gx, y - 2.6, 1, 0.55, lit(gc, -0.2));
+					E_(x + gx, y - 3.2, 0.8, 0.5, lit(gc, 0.2));
+				}
+				for (const dx of [-3.6, 3.6]) post(x + dx, y - 2.6, 4.8, '#5a3a1e', 0.4);
+				for (let sI = 0; sI < 4; sI++) {
+					const sx = x - 4.6 + sI * 2.3;
+					P_(
+						[
+							[sx, y - 7.2],
+							[sx + 2.3, y - 7.2],
+							[sx + 2.7, y - 8.8],
+							[sx + 0.4, y - 8.8],
+						],
+						sI % 2 ? '#f4efe2' : lit(col, 0.05),
+					);
+					P_(
+						[
+							[sx, y - 7.2],
+							[sx + 2.3, y - 7.2],
+							[sx + 1.15, y - 6.2],
+						],
+						sI % 2 ? '#e4dccb' : lit(col, -0.2),
+					);
+				}
+				rim(x - 4.6, y - 8.4, x + 4.6, y - 8.4, 0.4);
+			}
+			crate(...gpt(w, 0.5, 0.86));
+			sack(...gpt(w, 0.58, 0.9));
+			barrel(...gpt(w, 0.5, 0.1));
+			lantern(...gpt(w, 0.96, 0.5));
+		}, true);
 	},
 	school(c) {
 		const r = block(30, 16, PLASTER, null, 'gable', SLATE, 8);
@@ -15679,51 +16122,103 @@ const ART = {
 		banner(13, d / 2 - 14, c, 7);
 	},
 	theatre(c) {
-		// a half-ring of stone seats open to the front, a stage wall at the back
-		const d = 40 * TILT,
-			k = d * SIDE;
-		for (let i = 3; i >= 0; i--) {
-			const rx = 20 - i * 3.6,
-				ry = rx * TILT * 0.9,
-				y = -2 - i * 2.2;
+		// the stage and the seats as one (Build 61): rising half-rings at the back, the stage with its columned wall in front
+		const w = 40,
+			d = w * TILT,
+			k = d * SIDE,
+			cx = k * 0.5,
+			cy = -d * 0.06;
+		field(w, '#c2b69a', c, () => {}, true);
+		for (let r = 0; r < 6; r++) {
+			const rr = w * 0.46 - r * 3,
+				h = 1.6 + r * 1.5,
+				col = r % 2 ? '#e3d9c0' : '#d2c6aa';
+			g.beginPath();
+			g.ellipse(cx, cy, rr, rr * TILT, 0, Math.PI, 2 * Math.PI);
+			g.lineTo(cx + rr, cy - h);
+			g.ellipse(cx, cy - h, rr, rr * TILT, 0, 0, Math.PI, true);
+			g.closePath();
+			g.fillStyle = LG(cx - rr, 0, cx + rr, 0, [lit(col, -0.05), lit(col, -0.3), lit(col, -0.55)]);
+			g.fill();
+			g.beginPath();
+			g.ellipse(cx, cy - h, rr, rr * TILT, 0, Math.PI, 2 * Math.PI);
+			g.lineTo(cx - rr, cy - h);
+			g.closePath();
+			g.fillStyle = LG(0, cy - h - rr * TILT, 0, cy - h, [lit(col, 0.22), lit(col, -0.08)]);
+			g.fill();
+			g.strokeStyle = 'rgba(255,245,210,.55)';
+			g.lineWidth = 0.35;
+			g.stroke();
+			for (let a = 0; a < 7; a++) {
+				const t = Math.PI + (Math.PI * (a + 0.5)) / 7;
+				L_(cx + rr * Math.cos(t), cy - h + rr * TILT * Math.sin(t), cx + (rr - 2.6) * Math.cos(t), cy - h + (rr - 2.6) * TILT * Math.sin(t), 'rgba(90,70,40,.3)', 0.25);
+			}
+		}
+		const ir = w * 0.46 - 18;
+		g.beginPath();
+		g.ellipse(cx, cy - 9.1, ir, ir * TILT, 0, Math.PI, 2 * Math.PI);
+		g.closePath();
+		g.fillStyle = RG(cx, cy - 9.1, 0, ir, ['#d9cba0', '#b9ad84']);
+		g.fill();
+		E_(cx, cy + 1, ir + 1, (ir + 1) * TILT, RG(cx, cy + 1, 0, ir + 1, ['#d4c6a0', '#b8ab86']));
+		const sx0 = -w * 0.3 + k * 0.1,
+			sx1 = w * 0.3 + k * 0.1,
+			sy = d * 0.3;
+		g.save();
+		g.translate((sx0 + sx1) / 2, sy - (4 * TILT) / 2);
+		block(sx1 - sx0, 2.2, '#e0d6bd', 'stone', 'flat', null, 0, 4);
+		g.restore();
+		for (let i = 0; i < 6; i++) {
+			const x = sx0 + 2 + (i * (sx1 - sx0 - 4)) / 5 + 1;
 			P_(
 				[
-					[-rx, y],
-					[rx, y],
-					[rx, y - 2.2],
-					[-rx, y - 2.2],
+					[x - 0.7, sy - 2.2],
+					[x + 0.7, sy - 2.2],
+					[x + 0.7, sy - 10.8],
+					[x - 0.7, sy - 10.8],
 				],
-				shade('#d9d0bc', 0.9 - i * 0.04),
-				INK,
-				0.3,
+				LG(x - 0.7, 0, x + 0.7, 0, ['#f8f2e0', '#e2d8c0', '#b3a68c']),
+				LINE,
+				0.25,
 			);
-			E_(0, y - 2.2, rx, ry, shade('#e6dcc6', 1 - i * 0.05), INK, 0.4);
+			P_(
+				[
+					[x - 1.1, sy - 10.8],
+					[x + 1.1, sy - 10.8],
+					[x + 1.1, sy - 11.6],
+					[x - 1.1, sy - 11.6],
+				],
+				'#ebe3cf',
+			);
 		}
-		E_(0, -4, 7, 7 * TILT, '#c9b98f', INK, 0.4);
 		P_(
 			[
-				[-14, -22],
-				[14, -22],
-				[14 + k * 0.5, -22 - 8],
-				[-14 + k * 0.5, -22 - 8],
+				[sx0 - 0.6, sy - 11.6],
+				[sx1 + 0.6, sy - 11.6],
+				[sx1 + 0.6, sy - 13.2],
+				[sx0 - 0.6, sy - 13.2],
 			],
-			shade('#d9d0bc', 0.8),
-			INK,
-			0.4,
+			LG(0, sy - 11.6, 0, sy - 13.2, ['#cfc3a6', '#f3ecd8']),
+			LINE,
+			0.3,
 		);
 		P_(
 			[
-				[-14, -22],
-				[14, -22],
-				[14, -36],
-				[-14, -36],
+				[sx0 - 1, sy - 13.2],
+				[sx1 + 1, sy - 13.2],
+				[k * 0.1, sy - 16.8],
 			],
-			LG(-14, 0, 14, 0, [shade('#e6dcc6', 1.0), shade('#e6dcc6', 0.72)]),
-			INK,
-			0.5,
+			LG(0, sy - 13.2, 0, sy - 16.8, ['#e4dbc4', '#faf5e6']),
+			LINE,
+			0.3,
 		);
-		for (const x of [-9, 0, 9]) column(x, -22, -35, '#efe6d4');
-		banner(16, -36, c, 8);
+		rim(sx0 - 1, sy - 13.2, k * 0.1, sy - 16.8, 0.6);
+		for (const [dx, col] of [
+			[-7, c],
+			[7, '#3b5fa6'],
+		])
+			banner(k * 0.1 + dx, sy - 2.2, col, 6);
+		L_(-w / 2, d / 2 - 0.5, w / 2, d / 2 - 0.5, c, 1.2);
 	},
 	tavern(c) {
 		// a timber house with a bright door, a lantern and a hanging sign
@@ -15828,37 +16323,81 @@ const ART = {
 		L_(-20, r.d / 2 - 0.5, 20, r.d / 2 - 0.5, c, 1.2);
 	},
 	dock(c) {
-		const d = 20 * TILT;
+		// a pier out over the water (Build 61): planks on piles, the crane, a moored boat
+		const w = 20,
+			d = w * TILT,
+			k = d * SIDE,
+			L = d + 16,
+			pw = w * 0.24,
+			kk = (L / d) * k;
+		E_(kk * 0.55, d / 2 - L * 0.55, w * 0.9, L * 0.5, RG(kk * 0.55, d / 2 - L * 0.55, 0, w * 0.9, ['rgba(60,130,175,.95)', 'rgba(60,130,175,.7)', 'rgba(60,130,175,0)'])); // the water it stands in
+		for (const [x, y] of [
+			[-pw + 1, d / 2 - 1],
+			[pw - 1, d / 2 - 1],
+			[-pw + 1 + kk * 0.5, d / 2 - 1 - L * 0.5],
+			[pw - 1 + kk * 0.5, d / 2 - 1 - L * 0.5],
+			[-pw + 1 + kk, d / 2 - 1 - L],
+			[pw - 1 + kk, d / 2 - 1 - L],
+		])
+			post(x, y + 1.6, 3.2, '#4a3220', 0.55);
 		P_(
 			[
-				[-10, d / 2],
-				[10, d / 2],
-				[10, -d / 2],
-				[-10, -d / 2],
+				[pw, d / 2],
+				[pw + 1.6, d / 2 + 1.2],
+				[pw + 1.6 + kk, d / 2 + 1.2 - L],
+				[pw + kk, d / 2 - L],
 			],
-			LG(-10, 0, 10, 0, ['#a07c54', '#7a5a36']),
-			INK,
-			0.5,
+			lit('#7f8d88', -0.45),
+			LINE,
+			0.3,
 		);
-		for (let x = -8; x < 10; x += 4) L_(x, -d / 2, x, d / 2, 'rgba(40,24,10,.5)', 0.4);
-		for (const [x, y] of [
-			[-9, d / 2],
-			[9, d / 2],
-			[-9, -d / 2],
-			[9, -d / 2],
-		])
-			P_(
-				[
-					[x - 1, y],
-					[x + 1, y],
-					[x + 1, y - 5],
-					[x - 1, y - 5],
-				],
-				'#5a3a1c',
-				INK,
-				0.3,
-			);
-		banner(9, -d / 2 - 5, c, 6);
+		P_(
+			[
+				[-pw, d / 2],
+				[pw, d / 2],
+				[pw + kk, d / 2 - L],
+				[-pw + kk, d / 2 - L],
+			],
+			LG(0, d / 2, 0, d / 2 - L, [lit('#a4b3ad', 0.1), lit('#a4b3ad', -0.25)]), // weathered planks: silver-grey, as pier wood goes
+			LINE,
+			0.35,
+		);
+		for (let i = 1; i < 9; i++) L_(-pw + (kk * i) / 9, d / 2 - (L * i) / 9, pw + (kk * i) / 9, d / 2 - (L * i) / 9, 'rgba(60,40,20,.42)', 0.3);
+		const cxp = pw - 1.6 + kk * 0.8,
+			cyp = d / 2 - L * 0.8;
+		post(cxp, cyp, 11, '#4a3220', 0.7);
+		L_(cxp, cyp - 11, cxp + 6.5, cyp - 8.4, '#4a3220', 0.8);
+		L_(cxp - 0.2, cyp - 8.2, cxp + 4.4, cyp - 9.3, '#4a3220', 0.5);
+		L_(cxp + 6.5, cyp - 8.4, cxp + 6.5, cyp - 3.6, '#ddd', 0.25);
+		crate(cxp + 6.5, cyp - 1.6);
+		const bx = -pw - 7.5,
+			by = d / 2 - L * 0.45;
+		E_(bx + 0.5, by + 1.6, 6.5, 1.6, 'rgba(10,30,50,.3)');
+		P_(
+			[
+				[bx - 6.5, by - 1.5],
+				[bx + 6, by - 1.5],
+				[bx + 7.2, by - 3.6],
+				[bx + 5, by + 1.2],
+				[bx - 4.5, by + 1.2],
+			],
+			LG(0, by - 3.6, 0, by + 1.2, [lit('#8a6a3a', 0.2), lit('#6b4a2c', -0.35)]),
+			LINE,
+			0.3,
+		);
+		L_(bx - 6, by - 1.5, bx + 6.8, by - 1.5, '#c9a46a', 0.5);
+		post(bx + 0.5, by - 0.8, 7.5, '#4a3220', 0.3);
+		P_(
+			[
+				[bx + 0.8, by - 8.1],
+				[bx + 5.2, by - 6.4],
+				[bx + 0.8, by - 2.4],
+			],
+			'#efe6cf',
+			LINE,
+			0.25,
+		);
+		banner(pw + 0.6, d / 2 - 1.8, c, 6);
 	},
 	tower(c, o, tier) {
 		// three steps, one shape (Build 51): the watchtower; the great tower, taller, wider, with a hoarding of timber on its corbels; the gun tower, low and thick on a sloped foot, with gun ports
@@ -16037,34 +16576,39 @@ const ART = {
 		);
 	},
 	farm(c, o, v) {
-		field(30, '#6b5434', c, () => {
-			const crop = { Spring: '#6f9a3a', Summer: '#86a83e', Autumn: '#cfa63e', Winter: '#8d8473' }[season().name];
-			const d = 30 * TILT;
-			for (let i = 0; i < 6; i++) {
-				const y = -d / 2 + 1 + (i * (d - 2)) / 6;
-				P_(
-					[
-						[-14, y + 0.6],
-						[14, y + 0.6],
-						[14, y + (d - 2) / 6 - 0.6],
-						[-14, y + (d - 2) / 6 - 0.6],
-					],
-					crop,
-				);
+		const w = 30,
+			crop = { Spring: '#8fb84a', Summer: '#e0c266', Autumn: '#d9a93e', Winter: '#a39a86' }[season().name],
+			dark = { Spring: '#5f8a2e', Summer: '#b8962e', Autumn: '#a67a22', Winter: '#7a7262' }[season().name];
+		field(w, '#7a5e36', c, () => {
+			for (let i = 0; i < 7; i++) {
+				const t0 = (i + 0.08) / 7,
+					t1 = (i + 0.92) / 7,
+					a = gpt(w, 0.03, t0),
+					b = gpt(w, 0.97, t0),
+					c2 = gpt(w, 0.97, t1),
+					d2 = gpt(w, 0.03, t1);
+				P_([a, b, c2, d2], LG(0, a[1], 0, d2[1], [i % 2 ? crop : lit(crop, 0.12), dark]));
+				for (let j = 0; j < 10; j++) {
+					const [x, y] = gpt(w, 0.05 + j * 0.095, (i + 0.5) / 7);
+					L_(x, y, x + 0.2, y - 1.5, 'rgba(255,240,170,.55)', 0.25);
+					L_(x + 0.6, y, x + 1, y - 1.2, 'rgba(120,80,20,.4)', 0.22);
+				}
 			}
 		});
+		hay(w * 0.36, (w * TILT) * 0.46, 1);
 	},
 	pasture(c, o, n) {
-		field(30, '#86a050', c, () => {
-			const d = 30 * TILT;
+		const w = 30;
+		field(w, '#86ae5c', c, () => {
+			grassTufts(w, '#5a8a3a', 40);
+			const [px, py] = gpt(w, 0.72, 0.7);
+			E_(px, py, 4.4, 1.8, RG(px - 1, py - 0.6, 0, 4.4, ['#5fa0c4', '#2f5f80']));
+			E_(px - 1, py - 0.6, 1.4, 0.5, 'rgba(255,255,255,.35)');
 			for (let i = 0; i < (n || 0); i++) {
-				const x = -11 + (i % 4) * 7 + ((i >> 2) % 2) * 2,
-					y = -d / 2 + 3 + (Math.floor(i / 4) * (d - 5)) / 3;
-				E_(x, y, 2.6, 1.7, '#ece5d3', '#8a8070', 0.3);
-				E_(x + 2.2, y - 0.6, 0.9, 0.8, '#3a3430');
+				const [x, y] = gpt(w, 0.14 + (i % 4) * 0.24 + ((i >> 2) % 2) * 0.08, 0.2 + Math.floor(i / 4) * 0.28);
+				sheep(x, y);
 			}
 		});
-		for (let x = -15; x <= 15; x += 5) L_(x, (30 * TILT) / 2, x, (30 * TILT) / 2 - 3, '#7a5a34', 0.7);
 	},
 	council(c) {
 		const r = block(30, 18, STONE, 'stone', 'hip', '#7a2e2a', 9);
@@ -16106,11 +16650,28 @@ const ART = {
 		door(0, d / 2, 5, 8);
 		banner(8, d / 2 - 18, c, 10);
 	},
-	treefarm(c) {
-		field(30, '#5a4a30', c, () => {
-			const d = 30 * TILT;
-			for (let j = 0; j < 3; j++)
-				for (let i = 0; i < 4; i++) smallTree(-11 + i * 7.3 + (j % 2) * 1.6, -d / 2 + 3 + (j * (d - 4)) / 2.4, 0.9);
+	treefarm(c, o, v) {
+		const w = 30,
+			spent = v === 'spent';
+		field(w, '#6a5636', c, () => {
+			for (let j = 2; j >= 0; j--)
+				for (let i = 0; i < 3; i++) {
+					const [x, y] = gpt(w, (i + 0.5) / 3, (j + 0.5) / 3);
+					E_(x, y, 3.4, 1.3, 'rgba(80,60,30,.45)');
+					if (spent) stump(x, y);
+					else smallTree(x, y, 1.05, j === 1 ? '#4a9a40' : '#3e8a3c');
+				}
+			const [lx, ly] = gpt(w, 0.07, 0.07);
+			for (let i = 0; i < 3; i++)
+				P_(
+					[
+						[lx + i * 0.4, ly - i * 1.2],
+						[lx + 5.5 + i * 0.4, ly - i * 1.2],
+						[lx + 5.5 + i * 0.4, ly - 1.1 - i * 1.2],
+						[lx + i * 0.4, ly - 1.1 - i * 1.2],
+					],
+					LG(0, ly - i * 1.2, 0, ly - 1.1 - i * 1.2, ['#8a6a3a', '#c9a46a']),
+				);
 		});
 	},
 	throne(c, o) {
@@ -16134,140 +16695,330 @@ const ART = {
 		E_(0, d / 2 - 60, 2.4, 2.4, '#8e1d14');
 	}, // the old citadel: a castle and a half, crowned in gold
 	workshop(c) {
-		const r = block(30, 14, PLASTER, 'timber', 'gable', THATCH, 8);
-		door(-6, r.d / 2, 5, 8);
-		P_(
-			[
-				[3, r.d / 2],
-				[12, r.d / 2],
-				[12, r.d / 2 - 8],
-				[3, r.d / 2 - 8],
-			],
-			'#3a2614',
-			INK,
-			0.4,
-		);
-		for (let i = 0; i < 4; i++)
-			L_(4 + i * 2.4, r.d / 2 - 7.6, 4 + i * 2.4, r.d / 2 - 0.6, ['#8fb0d8', '#c9a96a', '#b33a2e', '#ece5d3'][i], 0.8);
-		E_(-12, r.d / 2 + 1.4, 2.4, 1.6, '#ece5d3', INK, 0.3);
-		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
+		// an open yard under a shed roof (Build 61, Albert: open-air work): the loom, the dye rack, barrels, sacks; the weaver stands in it
+		const w = 30,
+			d = w * TILT,
+			k = d * SIDE;
+		field(w, '#b0945f', c, () => {
+			const x0 = -w * 0.46 + k * 0.55,
+				x1 = w * 0.46 + k * 0.55,
+				yf = d / 2 - d * 0.55,
+				hd = w * 0.42 * TILT;
+			for (const px of [x0 + 1.2 + hd * SIDE, x1 - 1.2 + hd * SIDE]) post(px, yf - hd, 8.5, '#5a3a1e', 0.6);
+			leanto(x0, x1, yf, 8, w * 0.42, 2.8, THATCH);
+			for (const px of [x0 + 1.2, x1 - 1.2]) post(px, yf, 8, '#5a3a1e', 0.6);
+			const lx = x0 + 6 + k * 0.15,
+				ly = yf - d * 0.15;
+			E_(lx, ly, 2.8, 1.9, RG(lx - 0.6, ly - 0.5, 0, 3, ['#c48a4a', '#7a4a22']));
+			for (let i = 0; i < 6; i++) L_(lx - 1.8, ly - 1.4 + i * 0.5, lx + 1.8, ly - 1.4 + i * 0.5, 'rgba(255,240,200,.5)', 0.22);
+			const rx = x0 + 15,
+				ry = yf - 2;
+			L_(rx - 1, ry - 4.6, rx + 8.5, ry - 4.6, '#5a3a1e', 0.45);
+			for (const [dx, col] of [
+				[0, '#8a4a7a'],
+				[3, '#2f6c8e'],
+				[6, '#c0392b'],
+			])
+				P_(
+					[
+						[rx + dx, ry - 4.6],
+						[rx + dx + 2.6, ry - 4.6],
+						[rx + dx + 1.6, ry - 0.6],
+						[rx + dx + 0.2, ry - 1],
+					],
+					LG(rx + dx, 0, rx + dx + 2.6, 0, [lit(col, 0.2), lit(col, -0.3)]),
+				);
+			barrel(w * 0.22, d * 0.3);
+			barrel(w * 0.33, d * 0.26);
+			sack(-w * 0.05, d * 0.38);
+		});
 	},
 	foundry(c) {
-		const r = block(30, 16, STONE, 'stone', 'gable', SLATE, 7);
-		P_(
-			[
-				[6 + r.k / 2, -20],
-				[12 + r.k / 2, -20],
-				[12 + r.k / 2, -34],
-				[6 + r.k / 2, -34],
-			],
-			'#4a4540',
-			INK,
-			0.4,
-		);
-		E_(9 + r.k / 2, -35, 3, 1.6, 'rgba(255,120,30,.8)');
-		P_(
-			[
-				[-6, r.d / 2],
-				[6, r.d / 2],
-				[6, r.d / 2 - 10],
-				[-6, r.d / 2 - 10],
-			],
-			'#1a120a',
-			INK,
-			0.4,
-		);
-		E_(0, r.d / 2 - 3, 4, 2.6, 'rgba(255,160,40,.9)');
-		for (let i = 0; i < 3; i++)
+		// a bloomery under a shed (Build 61): the furnace glows, smoke rises, the anvil waits; the smelter works in the open
+		const w = 30,
+			d = w * TILT,
+			k = d * SIDE;
+		field(w, '#5e5650', c, () => {
+			const x0 = -w * 0.46 + k * 0.55,
+				x1 = w * 0.46 + k * 0.55,
+				yf = d / 2 - d * 0.55,
+				hd = w * 0.42 * TILT;
+			for (const px of [x0 + 1.2 + hd * SIDE, x1 - 1.2 + hd * SIDE]) post(px, yf - hd, 9.5, '#3a3030', 0.65);
+			leanto(x0, x1, yf, 9, w * 0.42, 2.8, '#4e4e5c');
+			for (const px of [x0 + 1.2, x1 - 1.2]) post(px, yf, 9, '#3a3030', 0.65);
+			const fx = k * 0.25,
+				fy = d * 0.02;
+			g.save();
+			g.translate(fx, fy);
+			block(7.2, 7.8, '#8a6a52', 'stone', 'flat', null, 0, 6.5);
+			g.restore();
+			E_(fx + 1.2, fy - 7.8 - 2.1, 2.1, 0.85, '#1a1414');
 			P_(
 				[
-					[9 + i * 2.6, r.d / 2 + 2],
-					[11 + i * 2.6, r.d / 2 + 2],
-					[11 + i * 2.6, r.d / 2],
-					[9 + i * 2.6, r.d / 2],
+					[fx - 1.8, fy + 2.1],
+					[fx + 1.8, fy + 2.1],
+					[fx + 1.6, fy - 0.7],
+					[fx, fy - 1.9],
+					[fx - 1.6, fy - 0.7],
 				],
-				'#8fa3b5',
-				INK,
+				RG(fx, fy + 0.9, 0, 2.4, ['#fff7b0', '#ff8a2a', '#8a2a10']),
+				LINE,
 				0.3,
 			);
-		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
-	}, // a stone hall with a tall furnace stack and iron bars at the door
-	quarry(c) {
-		field(30, '#9a9088', c, () => {
-			const d = 30 * TILT;
-			for (let j = 0; j < 2; j++)
-				for (let i = 0; i < 3; i++) {
-					const x = -10 + i * 9 + j * 3,
-						y = -d / 2 + 5 + j * 8;
-					P_(
-						[
-							[x - 3, y + 2],
-							[x + 3, y + 2],
-							[x + 3, y - 2],
-							[x - 3, y - 2],
-						],
-						LG(x - 3, 0, x + 3, 0, ['#c4c9cc', '#8a9094']),
-						INK,
-						0.4,
-					);
-				}
+			E_(fx, fy + 1.1, 7, 4.6, RG(fx, fy + 1.1, 0, 7, ['rgba(255,150,60,.42)', 'rgba(255,150,60,0)']));
+			for (let i = 0; i < 5; i++) E_(fx + 1.2 + i * 1.3 + Math.sin(i * 1.7) * 0.8, fy - 11 - i * 3.2, 1.5 + i * 1.1, 1.1 + i * 0.8, `rgba(220,215,210,${0.4 - i * 0.07})`);
+			const [ax, ay] = gpt(w, 0.78, 0.3);
 			P_(
 				[
-					[6, d / 2 - 3],
-					[13, d / 2 - 3],
-					[13, d / 2 - 9],
-					[6, d / 2 - 9],
+					[ax - 1.9, ay],
+					[ax + 1.9, ay],
+					[ax + 1.9, ay - 1.6],
+					[ax - 1.9, ay - 1.6],
 				],
-				'#5a5550',
-				INK,
-				0.4,
+				'#4a3220',
+			);
+			P_(
+				[
+					[ax - 2.6, ay - 1.6],
+					[ax + 2.8, ay - 1.6],
+					[ax + 2.2, ay - 3],
+					[ax - 1.8, ay - 3],
+				],
+				LG(ax - 2.6, 0, ax + 2.8, 0, ['#9a9aa2', '#4a4a52']),
+				LINE,
+				0.3,
+			);
+			for (let i = 0; i < 4; i++)
+				P_(
+					[
+						[-w * 0.4 + i * 2.4, d * 0.4],
+						[-w * 0.4 + 2 + i * 2.4, d * 0.4],
+						[-w * 0.4 + 2.3 + i * 2.4, d * 0.4 - 1],
+						[-w * 0.4 + 0.3 + i * 2.4, d * 0.4 - 1],
+					],
+					'#5a4a42',
+				);
+		});
+	},
+	quarry(c) {
+		const w = 30,
+			d = w * TILT;
+		field(w, '#9a948a', c, () => {
+			P_([gpt(w, 0.08, 0.45), gpt(w, 0.6, 0.45), gpt(w, 0.6, 0.92), gpt(w, 0.08, 0.92)], LG(0, d / 2 - d * 0.45, 0, d / 2 - d * 0.92, ['#4a4640', '#6a665e']));
+			const [qx, qy] = gpt(w, 0.08, 0.45);
+			P_(
+				[
+					[qx, qy],
+					[qx + w * 0.52, qy],
+					[qx + w * 0.52, qy - 3.4],
+					[qx, qy - 3.4],
+				],
+				LG(qx, 0, qx + w * 0.52, 0, [lit('#c2bcb0', 0.1), lit('#c2bcb0', -0.25)]),
+				LINE,
+				0.35,
+			);
+			for (let i = 0; i < 7; i++) L_(qx + 1 + i * 2.2, qy - 0.3, qx + 1.6 + i * 2.2, qy - 3.1, 'rgba(40,36,30,.4)', 0.25);
+			rim(qx, qy - 3.4, qx + w * 0.52, qy - 3.4, 0.5);
+			for (let i = 0; i < 5; i++) {
+				const [bx, by] = gpt(w, 0.68 + (i % 3) * 0.11, 0.2 + Math.floor(i / 3) * 0.2);
+				P_(
+					[
+						[bx, by],
+						[bx + 2.8, by],
+						[bx + 3.3, by - 1],
+						[bx + 0.5, by - 1],
+					],
+					'#e2dcd0',
+				);
+				P_(
+					[
+						[bx, by],
+						[bx + 2.8, by],
+						[bx + 2.8, by - 1.9],
+						[bx, by - 1.9],
+					],
+					LG(bx, 0, bx + 2.8, 0, ['#d4cec2', '#a9a398']),
+					LINE,
+					0.25,
+				);
+				P_(
+					[
+						[bx + 2.8, by],
+						[bx + 3.3, by - 1],
+						[bx + 3.3, by - 2.9],
+						[bx + 2.8, by - 1.9],
+					],
+					'#8a847a',
+				);
+			}
+			const [cx, cy] = gpt(w, 0.3, 0.75);
+			post(cx, cy, 13, '#5a3a1e', 0.65);
+			L_(cx, cy - 13, cx + 7.5, cy - 10.6, '#5a3a1e', 0.9);
+			L_(cx, cy - 10.5, cx + 5.4, cy - 11.1, '#5a3a1e', 0.55);
+			L_(cx + 7.5, cy - 10.6, cx + 7.5, cy - 3.2, '#ddd', 0.25);
+			P_(
+				[
+					[cx + 6.4, cy - 3.2],
+					[cx + 8.6, cy - 3.2],
+					[cx + 8.6, cy - 4.8],
+					[cx + 6.4, cy - 4.8],
+				],
+				'#c2bcb0',
 			);
 		});
-	}, // cut blocks on grey ground
+	},
 	mint(c) {
-		const r = block(30, 18, STONE, 'stone', 'hip', SLATE, 8);
-		door(0, r.d / 2, 5, 9, '#2a1a0a');
-		for (const x of [-9, 9]) win(x, r.d / 2 - 8, 2, 3);
-		for (let i = 0; i < 3; i++) E_(-10 + i * 4, r.d / 2 + 1.4, 1.5, 1.1, '#f2cf55', '#b8902a', 0.3);
+		// a walled yard with a strongroom, the press and the coin bench, a guard at the gate (Build 61): the one shop that stays guarded
+		const w = 30,
+			d = w * TILT,
+			k = d * SIDE,
+			H = 7.5,
+			WALL = '#aca494';
+		field(w, '#c2b69a', c, () => {}, true);
 		P_(
 			[
-				[7 + r.k / 2, -22],
-				[10 + r.k / 2, -22],
-				[10 + r.k / 2, -29],
-				[7 + r.k / 2, -29],
+				[-w / 2 + k, -d / 2],
+				[w / 2 + k, -d / 2],
+				[w / 2 + k, -d / 2 - H],
+				[-w / 2 + k, -d / 2 - H],
 			],
-			'#5a5550',
-			INK,
+			LG(0, -d / 2, 0, -d / 2 - H, [lit(WALL, -0.2), lit(WALL, 0.05)]),
+			LINE,
 			0.4,
 		);
-		E_(8.5 + r.k / 2, -30, 2.4, 1.4, 'rgba(255,140,40,.7)');
-		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
-	}, // a stone house with a furnace chimney and coins at the door
+		for (let i = 1; i < 4; i++) L_(-w / 2 + k + 0.3, -d / 2 - (i * H) / 4, w / 2 + k - 0.3, -d / 2 - (i * H) / 4, 'rgba(30,22,16,.25)', 0.22);
+		P_(
+			[
+				[-w / 2, d / 2],
+				[-w / 2 + k, -d / 2],
+				[-w / 2 + k, -d / 2 - H],
+				[-w / 2, d / 2 - H],
+			],
+			lit(WALL, -0.25),
+			LINE,
+			0.4,
+		);
+		g.save();
+		g.translate(w * 0.2 + k * 0.55, d / 2 - d * 0.55 + 2);
+		block(9.6, 8.5, '#b0a898', 'stone', 'hip', SLATE, 4.2, 9.5);
+		door(-1.6, 9.5 * TILT / 2, 2.4, 4.4, '#2a2014');
+		win(2.6, 9.5 * TILT / 2 - 3.6, 1.3, 2, true);
+		g.restore();
+		const [ax, ay] = gpt(w, 0.25, 0.5);
+		E_(ax, ay, 2.8, 1.2, RG(ax, ay, 0, 2.8, ['#6a6a72', '#3a3a42']));
+		P_(
+			[
+				[ax - 0.9, ay],
+				[ax + 0.9, ay],
+				[ax + 0.9, ay - 4.4],
+				[ax - 0.9, ay - 4.4],
+			],
+			LG(ax - 0.9, 0, ax + 0.9, 0, ['#a0a0a8', '#4a4a52']),
+			LINE,
+			0.3,
+		);
+		E_(ax, ay - 4.4, 0.9, 0.38, '#b0b0b8');
+		for (let i = 0; i < 6; i++) E_(ax + 3 + (i % 3) * 1.2, ay + 1.2 - Math.floor(i / 3) * 0.7, 0.55, 0.25, '#f2d27a');
+		crate(-w * 0.3 + k * 0.3, d / 2 - d * 0.3);
+		g.save();
+		g.translate(0, d / 2 - (0.1 * TILT) / 2);
+		block(w, 3.8, WALL, 'stone', 'flat', null, 0, 0.1);
+		g.restore();
+		P_(
+			[
+				[w / 2, d / 2],
+				[w / 2 + k, -d / 2],
+				[w / 2 + k, -d / 2 - H],
+				[w / 2, d / 2 - H],
+			],
+			LG(w / 2, 0, w / 2 + k, 0, [lit(WALL, -0.45), lit(WALL, -0.6)]),
+			LINE,
+			0.4,
+		);
+		for (let i = 1; i < 3; i++) L_(w / 2 + 0.2, d / 2 - i * 2.4, w / 2 + k - 0.2, d / 2 - i * 2.4 - d, 'rgba(10,20,30,.25)', 0.25);
+		rim(-w / 2 + k, -d / 2 - H, w / 2 + k, -d / 2 - H, 0.4);
+		P_(
+			[
+				[-2.4, d / 2],
+				[2.4, d / 2],
+				[2.4, d / 2 - 2.8],
+				[0, d / 2 - 4],
+				[-2.4, d / 2 - 2.8],
+			],
+			'#2a2014',
+		);
+		banner(w / 2 + 0.5, d / 2 - 3.8, c, 7);
+		L_(-w / 2, d / 2 - 0.5, w / 2, d / 2 - 0.5, c, 1.2);
+	},
 	wonder(c, o) {
 		(WONDERART[G.P[o] && G.P[o].civ] || WONDERART.roman)(c);
 	},
 };
-function field(w, soil, c, rows) {
-	const d = w * TILT;
+// the ground every plot shares (Build 61): the tilted parallelogram a building stands on, a worn margin, posts at the corners, a low rail;
+// rows() draws what grows or lies on it. The side's colour runs along the front rail.
+const plotPts = (w) => {
+	const d = w * TILT,
+		k = d * SIDE;
+	return [
+		[-w / 2, d / 2],
+		[w / 2, d / 2],
+		[w / 2 + k, -d / 2],
+		[-w / 2 + k, -d / 2],
+	];
+};
+const gpt = (w, t, u) => {
+	const d = w * TILT,
+		k = d * SIDE;
+	return [-w / 2 + w * t + k * u, d / 2 - d * u];
+};
+const post = (x, y, h, col = '#5a3a1e', pw = 0.7) => {
+	E_(x + 0.4, y + 0.15, pw * 1.6, pw * 0.7, 'rgba(20,30,40,.3)');
 	P_(
 		[
-			[-w / 2, d / 2],
-			[w / 2, d / 2],
-			[w / 2, -d / 2],
-			[-w / 2, -d / 2],
+			[x - pw, y],
+			[x + pw, y],
+			[x + pw * 0.9, y - h],
+			[x - pw * 0.9, y - h],
 		],
-		soil,
-		INK,
-		0.4,
+		LG(x - pw, 0, x + pw, 0, [lit(col, 0.25), col, lit(col, -0.4)]),
+		LINE,
+		0.3,
 	);
+	E_(x, y - h, pw * 0.9, pw * 0.35, lit(col, 0.3));
+};
+const rail = (p0, p1, col = '#6b4a2c') => {
+	L_(p0[0], p0[1] - 2.6, p1[0], p1[1] - 2.6, lit(col, -0.3), 0.7);
+	L_(p0[0], p0[1] - 2.7, p1[0], p1[1] - 2.7, 'rgba(255,245,210,.35)', 0.25);
+	L_(p0[0], p0[1] - 1.3, p1[0], p1[1] - 1.3, lit(col, -0.2), 0.55);
+};
+function field(w, soil, c, rows, open) {
+	const C = plotPts(w),
+		d = w * TILT,
+		k = d * SIDE;
+	E_(k * 0.5 + 1.5, 1, w * 0.66, d * 0.68, RG(k * 0.5, 0, 0, w * 0.66, ['rgba(60,40,20,.26)', 'rgba(60,40,20,0)']));
+	P_(C, LG(-w / 2, d / 2, w / 2 + k, -d / 2, [lit(soil, 0.12), soil, lit(soil, -0.18)]), 'rgba(0,0,0,.28)', 0.35);
 	rows();
-	g.strokeStyle = '#7a5a34';
-	g.lineWidth = 0.6;
-	g.strokeRect(-w / 2, -d / 2, w, d);
-	for (let x = -w / 2; x <= w / 2; x += 5) L_(x, d / 2, x, d / 2 - 2.4, '#6b4a2c', 0.5);
-	L_(-w / 2, d / 2 - 1.6, w / 2, d / 2 - 1.6, '#8a6a44', 0.5);
+	if (!open) {
+		rail(C[3], C[2]);
+		rail(C[0], C[3]);
+		post(C[3][0], C[3][1], 3.8);
+		post(C[2][0], C[2][1], 3.8);
+		rail(C[1], C[2]);
+		rail(C[0], C[1]);
+		for (let i = 1; i < 3; i++) {
+			const [x, y] = gpt(w, i / 3, 0);
+			post(x, y, 2.8, '#5a3a1e', 0.5);
+		}
+		post(C[0][0], C[0][1], 3.8);
+		post(C[1][0], C[1][1], 3.8);
+	}
 	L_(-w / 2, d / 2, w / 2, d / 2, c, 1);
 }
+const RG = (x, y, r0, r1, stops) => {
+	const q = g.createRadialGradient(x, y, r0, x, y, r1);
+	stops.forEach((c, i) => q.addColorStop(i / (stops.length - 1), c));
+	return q;
+};
 const WONDERART = {
 	roman(c) {
 		E_(0, 0, 30, 30 * TILT, '#c8bca2', INK, 0.6);
@@ -16643,8 +17394,12 @@ function bldSprite(b, s) {
 							? G.P[o].civ
 							: b.kind === 'farm'
 								? season().name + (b.node ? b.node.type : '')
-								: b.kind === 'pasture'
-									? b.sheep || 0
+								: b.kind === 'treefarm'
+									? b.spent || (b.node && b.node.amt <= 0)
+										? 'spent'
+										: ''
+									: b.kind === 'pasture'
+										? b.sheep || 0
 									: b.kind === 'tower'
 										? btierOf(o, 'tower')
 										: '';
@@ -16710,12 +17465,8 @@ const NS_blob = (cx, cy, rx, ry, n, jit, r) =>
 		return [cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k];
 	});
 const NS_INK = 'rgba(14,20,12,.34)';
-const NS_shadow = (len) => {
-	g.fillStyle = 'rgba(0,0,0,.22)';
-	g.beginPath();
-	g.ellipse(len * 0.45, 1, len, 3, 0, 0, 7);
-	g.fill();
-};
+// (Build 61: the shadow baked into every tree, bush and rock is gone; drawNode casts it from the sun, as a building or a person does)
+const NODE_H = { tree: 22, bush: 8, stone: 7, gold: 7, iron: 7, fish: 0, meat: 2 }; // how tall each kind stands, for its shadow
 function nodeSprite(n, s) {
 	const sn = season().name,
 		v = n.kind === 'tree' ? n.id % 6 : n.id % 3,
@@ -16739,7 +17490,6 @@ function nodeSprite(n, s) {
 	if (n.kind === 'tree') {
 		const TC = ['#2f5a2a', '#3c6c32', '#2a5428', '#3a6a38', '#2f6048', '#4a7430'][v],
 			col = sn === 'Autumn' && v === 0 ? '#9a6224' : sn === 'Autumn' && v === 2 ? '#7a6a24' : TC;
-		NS_shadow(13);
 		NS_poly(
 			[
 				[-2.4, 0],
@@ -16793,7 +17543,6 @@ function nodeSprite(n, s) {
 			NS_poly(NS_blob(3.4, -17.6, 3, 1.1, 8, 0.2, r), '#e8eef0');
 		}
 	} else if (n.kind === 'bush') {
-		NS_shadow(9);
 		[
 			[-4, -3.5, 4.8, 3.4, 0.8],
 			[4, -3.5, 4.6, 3.2, 0.85],
@@ -16835,7 +17584,6 @@ function nodeSprite(n, s) {
 				[10 * k(), -1],
 				[4, 1],
 			];
-		NS_shadow(12);
 		NS_poly(P, NS_c(base, 0.8), 'rgba(14,16,18,.6)', 0.5);
 		NS_poly([P[1], P[2], P[3], P[4], [3, -6.5], [-3, -5]], top, 'rgba(0,0,0,.25)', 0.3);
 		NS_poly(
@@ -17129,7 +17877,11 @@ function makeBg() {
 		stream(run, 14, 'rgba(196,180,128,.55)');
 		stream(run, 7, 'rgba(201,185,133,.9)');
 	}
-	for (const run of runs) stream(run, 2, '#2f6c8e'); // the river: one even colour, shallow running water
+	// the water, lake and river alike (Build 61: the river was one flat blue and met the lake's shaded edge in a hard line): the shallows pale
+	// at the bank, the deep dark in the middle; a river is drawn as three strokes, bank, shallow, channel, in the lake's own colours
+	for (const run of runs) stream(run, 2, '#79b2bf');
+	for (const run of runs) stream(run, -2, '#4e93ad');
+	for (const run of runs) stream(run, -5, '#2a6488');
 	for (const L of G.lakes) {
 		if (L.river) continue;
 		const lg = b.createRadialGradient(L.x - L.r * 0.2, L.y - L.r * 0.2, 10, L.x, L.y, L.r + 2);
@@ -17140,6 +17892,20 @@ function makeBg() {
 		b.fillStyle = lg;
 		b.beginPath();
 		b.arc(L.x, L.y, L.r + 2, 0, 7);
+		b.fill();
+	}
+	for (const run of runs) {
+		// where a river leaves its lake, the lake's shade covers the join
+		const L = run[0];
+		if (!L.river) continue;
+		const src = G.lakes.find((q) => !q.river && hyp(q.x - L.x, q.y - L.y) < q.r + L.r + 20);
+		if (!src) continue;
+		const lg = b.createRadialGradient(src.x, src.y, src.r - 6, src.x, src.y, src.r + 14);
+		lg.addColorStop(0, '#2a6488');
+		lg.addColorStop(1, 'rgba(42,100,136,0)');
+		b.fillStyle = lg;
+		b.beginPath();
+		b.arc(src.x, src.y, src.r + 14, 0, 7);
 		b.fill();
 	}
 	{
@@ -17325,6 +18091,7 @@ function draw() {
 	const N = viewNodes(wv, wv2, far),
 		sB = quant(z * dpr),
 		sU = quant(z * dpr * FIG);
+	if (!far) nodeShadows(N, z); // the trees' shadows lie on the ground under everything standing
 	// the standing nodes (about 2,000 trees, bushes and rocks) are kept sorted until the view moves a step; the few moving things are merged in
 	for (let i = 0, j = 0; i < N.length || j < list.length; ) {
 		const take = j >= list.length || (i < N.length && N[i].y < list[j][0]),
@@ -17443,20 +18210,59 @@ const visibleTo0 = (u) => (u.kind !== 'spy' || friendly(0, u.owner) || u.exposed
 let fogCv = null,
 	fogImg = null,
 	fogT = -1;
+// the woods block sight (Build 61, Albert: lifelike lines of sight): a fog square holding three or more standing trees is a wall of canopy;
+// you see the square itself, the edge of the wood, and nothing behind it on that line. Rebuilt when a tree falls or grows.
+let WOODS = { v: -1, G: null, grid: null };
+function woodsGrid() {
+	if (WOODS.G === G && WOODS.v === G.treeV) return WOODS.grid;
+	const grid = new Uint8Array(FOGN * FOGN),
+		n = new Uint8Array(FOGN * FOGN);
+	for (const t of G.nodes) if (t.kind === 'tree' && t.amt > 0) n[clamp((t.y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((t.x / FOG) | 0, 0, FOGN - 1)]++;
+	for (let i = 0; i < n.length; i++) grid[i] = n[i] >= 3 ? 1 : 0;
+	WOODS = { v: G.treeV, G, grid };
+	return grid;
+}
+// is the square (gx, gy) in open sight of the square (sx, sy)? a line on the grid (Bresenham); the first wood on the way is seen, the rest is not
+function openLine(W, sx, sy, gx, gy) {
+	let x = sx,
+		y = sy;
+	const dx = Math.abs(gx - sx),
+		dy = -Math.abs(gy - sy),
+		ix = sx < gx ? 1 : -1,
+		iy = sy < gy ? 1 : -1;
+	let err = dx + dy;
+	for (;;) {
+		if (x === gx && y === gy) return true;
+		if ((x !== sx || y !== sy) && W[y * FOGN + x]) return false; // a wood between: the viewer's own square never blocks
+		const e2 = 2 * err;
+		if (e2 >= dy) {
+			err += dy;
+			x += ix;
+		}
+		if (e2 <= dx) {
+			err += dx;
+			y += iy;
+		}
+	}
+}
 function fogTick() {
 	// every ten ticks: what is lit now
-	const F = G.fog;
+	const F = G.fog,
+		W = woodsGrid();
 	for (let i = 0; i < F.length; i++) if (F[i] === 2) F[i] = 1;
 	const light = (x, y, r) => {
 		const c = r / FOG + 0.5,
 			cx = x / FOG,
 			cy = y / FOG,
+			sx = clamp(cx | 0, 0, FOGN - 1),
+			sy = clamp(cy | 0, 0, FOGN - 1),
 			x0 = clamp((cx - c) | 0, 0, FOGN - 1),
 			x1 = clamp((cx + c) | 0, 0, FOGN - 1),
 			y0 = clamp((cy - c) | 0, 0, FOGN - 1),
 			y1 = clamp((cy + c) | 0, 0, FOGN - 1);
 		for (let gy = y0; gy <= y1; gy++)
-			for (let gx = x0; gx <= x1; gx++) if (hyp(gx + 0.5 - cx, gy + 0.5 - cy) <= c) F[gy * FOGN + gx] = 2;
+			for (let gx = x0; gx <= x1; gx++)
+				if (hyp(gx + 0.5 - cx, gy + 0.5 - cy) <= c && openLine(W, sx, sy, gx, gy)) F[gy * FOGN + gx] = 2;
 	};
 	for (const u of G.units) if (u.hp > 0 && friendly(0, u.owner) && !u.inside) light(u.x, u.y, sightOf(u));
 	for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && friendly(0, b.owner)) light(b.x, b.y, sightOf(b)); // from its height, after research, by day or night (Build 51: a flat 90 for most)
@@ -17683,6 +18489,48 @@ function shadeFrame() {
 	SHADE.y = (v.n / horiz) * TILT;
 	SHADE.len = Math.min(CAST.max, horiz / v.z); // cot(altitude), capped
 	SHADE.a = a;
+}
+// the shadows of the trees, bushes and rocks you can see, cast from the sun like everything else (Build 61, Albert: only the trees you can see,
+// not the deep woods). A tree with six or more standing neighbours on the forest lattice is deep: its shadow would lie under the canopy, so
+// none is drawn; the fog's dark hides the rest. All of them go into one path, filled once.
+let DEEP = { v: -1, G: null, set: null };
+function deepTrees() {
+	if (DEEP.G === G && DEEP.v === G.treeV) return DEEP.set;
+	const cell = new Map(),
+		k = (x, y) => `${Math.round(x / FOREST.step)},${Math.round(y / FOREST.step)}`;
+	for (const n of G.nodes) if (n.kind === 'tree' && n.amt > 0) cell.set(k(n.x, n.y), (cell.get(k(n.x, n.y)) || 0) + 1);
+	const deep = new Set();
+	for (const n of G.nodes)
+		if (n.kind === 'tree' && n.amt > 0) {
+			const cx = Math.round(n.x / FOREST.step),
+				cy = Math.round(n.y / FOREST.step);
+			let m = 0;
+			for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if ((dx || dy) && cell.get(`${cx + dx},${cy + dy}`)) m++;
+			if (m >= 6) deep.add(n.id);
+		}
+	DEEP = { v: G.treeV, G, set: deep };
+	return deep;
+}
+function nodeShadows(N, z) {
+	const lit = SHADE.a >= 0.02,
+		deep = deepTrees(),
+		L0 = lit ? SHADE.len * z : 0,
+		ang = lit ? Math.atan2(SHADE.y, SHADE.x) : 0;
+	ctx.fillStyle = lit ? `rgba(0,0,0,${SHADE.a.toFixed(3)})` : 'rgba(0,0,0,.18)';
+	ctx.beginPath();
+	for (const n of N) {
+		const h = NODE_H[n.kind];
+		if (!h || n.amt <= 0 || deep.has(n.id) || (G.fogOn && fogAt(n.x, n.y) === 0)) continue;
+		const f = (0.6 + 0.4 * Math.min(1, n.amt / n.max)) * (n.kind === 'tree' ? 1.4 : 1),
+			r = (n.kind === 'tree' ? 7 : 5) * f * z,
+			sx = SX(n.x),
+			sy = SY(n.y),
+			L = h * f * L0;
+		ctx.moveTo(sx + r, sy);
+		if (lit) ctx.ellipse(sx + SHADE.x * L * 0.5, sy + SHADE.y * L * 0.5, L * 0.5 + r, Math.max(r * 0.55, r * TILT), ang, 0, 7);
+		else ctx.ellipse(sx, sy, r, r * TILT, 0, 0, 7);
+	}
+	ctx.fill();
 }
 // the shadow of a thing h tall with a footprint r wide at (sx, sy) on the glass: an ellipse laid along the shadow, from the foot outward
 function shadowOf(sx, sy, h, r, z) {
@@ -18829,6 +19677,31 @@ function drawGhost() {
 		why = canPlace(0, kind, sp.x, sp.y),
 		ok = !why;
 	pl.why = why;
+	// the build grid shows while a ghost is held (Build 61, Albert: "other games lock buildings to grids better"): the squares the
+	// footprint snaps to, four out from it on every side, with the ones already taken filled darker
+	const g0x = Math.round(sp.x / NAVC) - B.fp / 2 - 4,
+		g0y = Math.round(sp.y / NAVC) - B.fp / 2 - 4,
+		gn = B.fp + 8;
+	ctx.strokeStyle = 'rgba(255,255,255,.28)';
+	ctx.lineWidth = 1;
+	ctx.beginPath();
+	for (let i = 0; i <= gn; i++) {
+		ctx.moveTo(SX((g0x + i) * NAVC), SY(g0y * NAVC));
+		ctx.lineTo(SX((g0x + i) * NAVC), SY((g0y + gn) * NAVC));
+		ctx.moveTo(SX(g0x * NAVC), SY((g0y + i) * NAVC));
+		ctx.lineTo(SX((g0x + gn) * NAVC), SY((g0y + i) * NAVC));
+	}
+	ctx.stroke();
+	ctx.fillStyle = 'rgba(40,30,20,.22)';
+	for (let i = 0; i < gn; i++)
+		for (let j = 0; j < gn; j++) {
+			const cx = (g0x + i) * NAVC + NAVC / 2,
+				cy = (g0y + j) * NAVC + NAVC / 2;
+			if (cx < 0 || cy < 0 || cx >= MAP || cy >= MAP) continue;
+			const ci = Math.floor(cy / NAVC) * NC + Math.floor(cx / NAVC);
+			if (!NAV.solid[ci] && !NAV.lake[ci]) continue;
+			ctx.fillRect(SX((g0x + i) * NAVC), SY((g0y + j) * NAVC), NAVC * z, NAVC * z * TILT);
+		}
 	ctx.fillStyle = ok ? 'rgba(110,210,110,.35)' : 'rgba(222,90,68,.38)';
 	ctx.fillRect(SX(sp.x - n / 2), SY(sp.y - n / 2), n * z, n * z * TILT);
 	ctx.strokeStyle = ok ? '#7ee07e' : '#de5a44';
@@ -19814,6 +20687,7 @@ function tapAt(sx, sy) {
 	const mine = picked();
 	if (mine.length) {
 		order(mine, h);
+		if (!mine.some(isSoldier)) setPick([]); // villagers given work are let go of; soldiers keep their orders coming (Build 61, Albert)
 		refresh();
 		return;
 	}
@@ -19827,6 +20701,11 @@ function tapAt(sx, sy) {
 		showStrip(sx, sy, h.e.x, h.e.y);
 		return;
 	} // nothing picked: the send strip, as before
+	if (h.t === 'bld' && h.e.owner === 0 && h.e.node && BLD[h.e.kind].reserve && h.e.node.amt <= 0 && !replantWhy(0, h.e)) {
+		replant(0, h.e.id);
+		sfx('place');
+		return;
+	} // a plot cut out: one tap replants it (Build 61, Albert); if it cannot be, the tap opens its card, which says why
 	if (h.t !== 'unit') {
 		setPick([]);
 		openCard(cardFor(h));
@@ -20508,25 +21387,15 @@ function guardRow(t, id) {
 	);
 }
 function sendPick(from, to) {
-	// 'all' everyone but guards, 'rest' the idle ones, 'h' half and 'q' a quarter of each idle type, 'n8' the nearest eight idle, or a battalion by its number
+	// 'all' everyone but guards, 'rest' the idle ones, or a squad by its number (Build 61: half, a quarter and the nearest few are gone, Albert: confusing)
 	if (from === 'all') return sendable();
 	if (typeof from === 'number') return sendable().filter((u) => u.bn === from);
-	if (from === 'rest') return free();
-	if (from[0] === 'n')
-		return free()
-			.sort((p, q) => dist(p, to) - dist(q, to))
-			.slice(0, Number(from.slice(1)));
-	const by = {},
-		out = [];
-	for (const u of free()) (by[u.kind] = by[u.kind] || []).push(u);
-	for (const k in by) {
-		const a = by[k].sort((p, q) => dist(p, to) - dist(q, to));
-		out.push(...a.slice(0, Math.ceil(a.length / (from === 'h' ? 2 : 4))));
-	}
-	return out;
+	return free();
 }
-// A tap on open ground (Albert, Build 40): a small row of icons. Hammer: build here (the menu opens on what fits the spot). Sword: the army, in place:
-// All, half, and more (a quarter, the nearest few, a battalion). Three dots: more about the place. Cross: away.
+// the villagers standing at a spot you sent them to
+const postedAt = (to) => unitsOf(0, 'vil').filter((u) => !u.job && u.post && hyp(u.post.x - to.x, u.post.y - to.y) < 40);
+// A tap on open ground (Build 61, Albert): two choices, people or sword. The sword: Idle, All, or a squad. The people: build here, send the idle
+// here, or dial how many workers stand here. One gesture, no half, no quarter. Three dots: more about the place. Cross: away.
 function showStrip(sx, sy, x, y, step) {
 	if (step === undefined) closeCard();
 	const el = $('strip'),
@@ -20540,33 +21409,31 @@ function showStrip(sx, sy, x, y, step) {
 	G.stripAt = sh;
 	if (!step)
 		el.innerHTML =
-			ic(`buildhere:${at}`, ICON.hammer, 'Build here') +
-			ic(nAll ? 'striparmy' : 'nofree', ICON.sword, 'Send soldiers here', nAll ? 'go thumb' : 'dis thumb') +
+			ic('strippeople', ICON.head, 'Your people here', 'people thumb') +
+			ic(nAll ? 'striparmy' : 'nofree', ICON.sword, 'Send soldiers here', nAll ? 'war' : 'dis') +
 			ic(`more:${at}`, '⋯', 'More about this place') +
 			ic('nostrip', ICON.close, 'Cancel');
-	else if (step === 1)
-		el.innerHTML =
-			btn(`sendto:h,${at}`, '½', String(n('h')), 'ic') +
-			btn(`sendto:all,${at}`, 'All', String(nAll), 'ic go thumb') +
-			ic('stripmore', '⋯', 'More ways to send') +
-			ic('nostrip', ICON.close, 'Cancel');
-	// three taps in one spot: open, sword, All (Albert: a fast dispatch)
-	else {
+	else if (step === 1) {
 		const nRest = n('rest'),
 			bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
 		el.innerHTML =
-			btn(`sendto:q,${at}`, '¼', String(n('q'))) +
-			btn(`sendto:rest,${at}`, 'Rest', `${nRest} idle`) +
-			[5, 10, 20]
-				.filter((k) => nRest > k)
-				.map((k) => btn(`sendto:n${k},${at}`, String(k), 'nearest'))
-				.join('') +
+			btn(`sendto:rest,${at}`, 'Idle', `${nRest} soldiers`, 'war thumb') +
+			btn(`sendto:all,${at}`, 'All', String(nAll)) +
 			bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') +
 			ic('nostrip', ICON.close, 'Cancel');
+	} else {
+		const idle = unitsOf(0, 'vil').filter((u) => !u.job && !u.inside && !postedAt(to).includes(u)).length,
+			here = postedAt(to).length;
+		el.innerHTML =
+			btn(`buildhere:${at}`, 'Build here', 'the menu, aimed here', 'build thumb') +
+			btn(`idleto:${at}`, 'Send idle here', `${idle} idle villager${idle === 1 ? '' : 's'}`, idle ? 'people' : 'dis') +
+			`<div class="dial"><b>Workers here</b>${btn(`wkhere:-,${at}`, '−', '', here ? '' : 'dis')}<span>${here}</span>${btn(`wkhere:+,${at}`, '+', '')}</div>` +
+			ic('nostrip', ICON.close, 'Cancel');
 	}
+	el.classList.toggle('panel', step === 2); // the people side is a small panel, not a strip
 	el.hidden = false;
 	G.strip = to;
-	if (step === 1 || step === 2) return; // the next step stays exactly where it was: the thumb does not move
+	if (step === 1) return; // the next step stays exactly where it was: the thumb does not move
 	const r = $('stage').getBoundingClientRect(),
 		w = el.offsetWidth,
 		h = el.offsetHeight,
@@ -20713,7 +21580,7 @@ function slotsHTML(b) {
 			`<button class="slot lock" data-act="qlock:${more.id}" aria-label="A locked slot">🔒 Slot ${n + 1}</button>`,
 		);
 	return (
-		`<div class="slots" style="--qn:${cells.length}">${cells.join('')}</div>` +
+		(b.q.length ? `<div class="slots" style="--qn:${cells.length}">${cells.join('')}</div>` : '') + // the line shows while something is in it (Build 61: six empty "Slot" buttons took the top of every card)
 		(b.blocked
 			? '<p><b>Needs room: House, Apartment or Aqueduct.</b></p>'
 			: b.stall > G.t
@@ -20857,50 +21724,46 @@ function workshopHTML(b) {
 					'c2',
 				)
 			: '') +
-		`<p>In store: ${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${kn} (${r} make 1 ${nm(cur).toLowerCase()}, ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} a minute). Worked by ${n && n.wk > 0 ? (G.units.some((u) => u.node === n && u.wait) ? 'a villager, waiting for ' + kn : 'a villager') : 'nobody yet: tap Send a villager'}.</p>`
+		(() => {
+			// the making, as a slot like training (Build 61): the next one fills, the count made so far beside it
+			const w = G.units.find((u) => u.node === n),
+				made = w ? Math.floor(w.st.got || 0) : 0,
+				fr = w ? (w.st.got || 0) % 1 : 0,
+				state = !w ? 'nobody yet' : w.wait ? `waiting for ${kn}` : w.inside ? 'making' : 'walking in';
+			return `<div class="slots" style="--qn:3"><button class="slot${w ? '' : ' empty'}" disabled style="--p:${Math.round(fr * 100)}%">${nm(cur)}<br>${state}<i></i></button><button class="slot empty" disabled>${made} made</button><button class="slot empty" disabled>${r} ${kn} each</button></div>` +
+				`<p>In store: ${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${kn} · ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} ${nm(cur).toLowerCase()} a minute when worked.</p>`;
+		})()
 	);
 }
 function marketHTML(b) {
-	// the Market's two sides: trade, and caravans and ventures
+	// the Market: trade as one row a good, and caravans and ventures behind one fold (Build 61: the two tabs and the two grids are gone)
 	const p = G.P[0],
-		more = G.mtab === 'more',
 		V = p.ventures || [],
 		nm = (k) => (GOODS[k] ? GOODS[k].name : RESOURCES[LONG[k]].name);
 	let h = '';
-	if (!more) {
-		h +=
-			sec('Sell · 100 of a resource, 10 of a good') +
-			acts(
-				MKT_SELL.map((k) =>
-					btn(`trade:sell:${k}`, nm(k), `+${sellPrice(0, k)}g`, haveOf(p, k) < LOT(k) ? 'dis' : ''),
-				).join(''),
-				'c4',
-			) +
-			sec('Buy') +
-			acts(
-				MKT_BUY.map((k) =>
-					btn(`trade:buy:${k}`, nm(k), `${buyPrice(0, k)}g`, p.res.g < buyPrice(0, k) ? 'dis' : ''),
-				).join(''),
-				'c4',
-			);
-		h += fold(
-			'prices',
-			'Going prices',
-			`<p>${MKTK.map((k) => `${nm(k)} ×${mkt(k).toFixed(2)}`).join(' · ')} (1 = normal)</p>`,
-		);
-	} else {
-		h += `<p>Two lanes. One: a caravan with a route takes goods from here to a trade stop and sells them. Two: a caravan with no route runs to an ally's Market or Town Center and earns distance² ÷ ${TRADE_DIV}, at most ${TRADE_CAP} gold. ${unitsOf(0, 'caravan').length} caravans; ${allyMarket(0, b) ? 'an ally to trade with' : 'no ally yet'}.</p>`;
-		h +=
+	{
+		// one row a good: what you hold, sell a lot, buy a lot; the going price shows in the row (Build 61: two grids of the same goods were a mess)
+		h += `<div class="sec" style="margin-bottom:-2px">Trade · a lot is 100 of a resource, 10 of a good</div>`;
+		for (const k of MKT_SELL) {
+			const canBuy = MKT_BUY.includes(k);
+			h += `<div class="qs trade"><b>${nm(k)} <small>${Math.floor(haveOf(p, k))} · ×${mkt(k).toFixed(2)}</small></b>${btn(`trade:sell:${k}`, `Sell +${sellPrice(0, k)}g`, '', haveOf(p, k) < LOT(k) ? 'dis' : '')}${canBuy ? btn(`trade:buy:${k}`, `Buy ${buyPrice(0, k)}g`, '', p.res.g < buyPrice(0, k) ? 'dis' : '') : '<span></span>'}</div>`;
+		}
+	}
+	let m = '';
+	{
+		m += `<p>Two lanes. One: a caravan with a route takes goods from here to a trade stop and sells them. Two: a caravan with no route runs to an ally's Market or Town Center and earns distance² ÷ ${TRADE_DIV}, at most ${TRADE_CAP} gold. ${unitsOf(0, 'caravan').length} caravans; ${allyMarket(0, b) ? 'an ally to trade with' : 'no ally yet'}.</p>`;
+		m +=
 			sec('Ventures') +
 			`<p>${p.age < VENTURE.age ? 'From the Medieval age: put gold into a merchant venture.' : `Back in a year with ${Math.round((VENTURE.back - 1) * 100)}% more; about 1 in ${Math.round(1 / VENTURE.lost)} is lost.`} ${V.length ? 'Out: ' + V.map((v) => `${v.amt}g (${clock(Math.max(0, v.due - G.t))})`).join(', ') + '.' : ''}</p>`;
 		if (p.age >= VENTURE.age)
-			h += acts(
+			m += acts(
 				VENTURE.sizes
 					.map((a) => btn(`venture:${a}`, `${a} gold`, '', p.res.g < a || V.length >= VENTURE.max ? 'dis' : ''))
 					.join(''),
 				'c3',
 			);
 	}
+	h += fold('caravans', `Caravans and ventures · ${unitsOf(0, 'caravan').length} caravans${V.length ? ', ' + V.length + ' ventures out' : ''}`, m);
 	return h;
 }
 function councilHTML(b) {
@@ -20908,45 +21771,16 @@ function councilHTML(b) {
 	if (!hasCmd())
 		return `<p>${p.techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, six of them, Alpha to Zeta.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`;
 	const i = G.bnEdit,
-		plan = G.bnPlan[i],
 		S = armyOf(0).filter((u) => u.kind !== 'spy');
 	let h =
-		sec('Battalions') +
+		sec('Squads') +
 		acts(
 			BN.map((n, j) => btn(`bned:${j}`, n, `${S.filter((u) => u.bn === j).length} in it`, j === i ? 'on' : '')).join(
 				'',
 			),
-			'c3',
+			'c4',
 		);
-	const can = ARMYK.filter((k) => !UNIT[k].civ && UNIT[k].cost && k !== 'spy')
-		.map((k) => civKind(0, k))
-		.filter((k) => UNIT[k].age <= p.age && readyAt(0, UNIT[k]).length); // every soldier you can train now, not only those you have (Build 48: a kind you had lost could not be planned or mustered)
-	const kinds = [...new Set([...S.map((u) => u.kind), ...Object.keys(plan), ...can])];
-	h +=
-		sec(`${BN[i]} holds`) +
-		(kinds.length
-			? kinds
-					.map(
-						(k) =>
-							`<div class="qs"><b>${stats(0, k).name}</b>${btn(`bnn:${k},-`, '−')}<span>${plan[k] || 0} · has ${S.filter((u) => u.bn === i && u.kind === k).length}</span>${btn(`bnn:${k},+`, '+')}</div>`,
-					)
-					.join('')
-			: '<p>Train soldiers first.</p>');
-	h += acts(dialBtns(i));
-	if (p.techs.has('muster')) {
-		const miss = musterGap(i),
-			why = musterWhy(0, miss),
-			mc = musterCost(0, miss);
-		h += acts(
-			btn(
-				`muster:${i}`,
-				`Muster ${BN[i]}: +${musterN(miss)}`,
-				why ? why.replace(/\.$/, '') : `${costText(mc.cost)} · ${mc.t} s`,
-				why ? 'dis' : 'go',
-			),
-			'c1',
-		);
-	}
+	h += sec(`${BN[i]} holds`) + squadEditHTML(i); // the one squad editor (39-huddle): the War Council and the Squad room share it
 	return (
 		h +
 		fold(
@@ -21270,7 +22104,7 @@ const CARDS = {
 			const back = refundOf(b),
 				hurtB = b.prog >= 1 && b.hp < M - 1,
 				menders = crew.filter((u) => !u.inside).length;
-			const row = `${b.prog < 1 ? btn(`sendbld:${b.id}`, 'Send a villager', crew.length ? `${crew.length} building` : 'nobody yet', crew.length ? '' : 'go') : ''}${hurtB ? btn(`repair:${b.id}`, 'Repair', menders ? `${menders} mending` : costText(repairCost(0, b)), 'go') : ''}${B.crop && b.prog >= 1 && b.node ? btn(`sendvil:${b.node.id}`, 'Send a villager', slotText(b.node), b.node.wk > 0 ? '' : 'go') : ''}${B.crop && b.prog >= 1 && b.node && b.node.wk > 0 ? btn(`sendout:${b.node.id}`, 'Send out', 'one goes home') : ''}`;
+			const row = `${b.prog >= 1 && B.reserve && b.node && b.node.amt <= 0 ? btn(`replant:${b.id}`, 'Replant', replantWhy(0, b) ? replantWhy(0, b).replace(/\.$/, '') : `${costText(scaled(B.cost, 0.5))} · half the cost`, replantWhy(0, b) ? 'dis' : 'go') : ''}${b.prog < 1 ? btn(`sendbld:${b.id}`, 'Send a villager', crew.length ? `${crew.length} building` : 'nobody yet', crew.length ? '' : 'go') : ''}${hurtB ? btn(`repair:${b.id}`, 'Repair', menders ? `${menders} mending` : costText(repairCost(0, b)), 'go') : ''}${B.crop && b.prog >= 1 && b.node ? btn(`sendvil:${b.node.id}`, 'Send a villager', slotText(b.node), b.node.wk > 0 ? '' : 'go') : ''}${B.crop && b.prog >= 1 && b.node && b.node.wk > 0 ? btn(`sendout:${b.node.id}`, 'Send out', 'one goes home') : ''}`;
 			if (row) h += acts(row);
 			td = acts(
 				b.prog < 0.15
@@ -21291,22 +22125,13 @@ const CARDS = {
 				h += slotsHTML(b);
 			const mk = b.kind === 'market',
 				kp = b.kind === 'keep',
-				trade = (mk && G.mtab !== 'more') || (kp && G.ktab === 'rel'); // the Market's trade side and the Town Center's relations side show no training or research
+				trade = kp && G.ktab === 'rel'; // the Town Center's relations side shows no training or research; the Market keeps its research at the top like every card (Build 61)
 			const tr = trade ? [] : trainsAt(b.kind),
 				techs = trade ? [] : TECH.filter((t) => ownTech(t) && t.at === b.kind && isNext(0, t)),
 				done = trade ? [] : TECH.filter((t) => t.at === b.kind && p.techs.has(t.id)); // one step per line: the next
 			const ageB = kp && !trade ? keepAgeBtn() : '',
 				hasR = techs.length || done.length || ageB,
 				hd = (t) => (tr.length && hasR ? sec(t) : ''); // one page: Train, then Research; the next age is research like any other
-			if (mk)
-				h += twoTabs(
-					'mtab',
-					[
-						['trade', 'Trade', 'sell and buy'],
-						['more', 'Caravans', 'and ventures'],
-					],
-					trade ? 'trade' : 'more',
-				);
 			if (kp)
 				h += twoTabs(
 					'ktab',
@@ -21316,6 +22141,8 @@ const CARDS = {
 					],
 					trade ? 'rel' : 'town',
 				);
+			if (kp && !trade)
+				h += acts(btn('stopall', 'Stop all', 'everyone to the Town Center, idle') + btn('idlehere', 'Idle to me', `${unitsOf(0, 'vil').filter((u) => !u.job && !u.inside).length} come to the screen`)); // every villager at once (Build 61, Albert)
 			if (tr.length) h += hd('Train') + acts(trainButtons(tr));
 			if (hasR)
 				h +=
@@ -21333,6 +22160,7 @@ const CARDS = {
 			if (BLD_PAGE[b.kind]) h += BLD_PAGE[b.kind](b);
 			if (kp && trade) h += relHTML();
 			if (B.makes) h += workshopHTML(b);
+
 		}
 		if (!mine && b.kind === 'keep' && P.lord === 0) h += vassalHTML(P);
 		else if (!mine && b.kind === 'keep' && G.rel[0][b.owner] === 'ally') {
@@ -21457,20 +22285,16 @@ const CARDS = {
 			h += acts(btn(`hunt:${u.id}`, 'Send a hunter', who ? `${who} hunting` : 'nobody yet', 'go'), 'c1');
 		}
 		if (mine) {
-			// this villager's work, sending them home, and the unfinished buildings they could raise
-			h +=
-				sec(`Work${u.job ? ': ' + (u.job === 'repair' ? 'building' : u.job) : ': idle'}`) +
-				acts(
-					JOBS.map((j) =>
-						btn(`vjob:${u.id},${j}`, cap1(j), u.job === j ? 'tap to rest' : '', u.job === j ? 'on' : ''),
-					).join(''),
-					'c3',
-				);
+			// the villager's card, in one order (Build 61, Albert): what it is doing; Stop and Dismiss; the jobs; the sites it could raise
 			h += acts(
-				G.confirm === 'v' + u.id
-					? btn(`vgo:${u.id}`, 'Tap again', 'to send them home for good', 'warn')
-					: btn(`vgo:${u.id}`, 'Dismiss', 'frees a place'),
-				'c1',
+				btn(`vstop:${u.id}`, 'Stop', u.job || u.post ? 'drops the work, stands here' : 'nothing to stop', u.job || u.post ? '' : 'dis') +
+					(G.confirm === 'v' + u.id
+						? btn(`vgo:${u.id}`, 'Tap again', 'gone for good', 'warn')
+						: btn(`vgo:${u.id}`, 'Dismiss', 'leaves the game, frees a place')),
+			);
+			h += acts(
+				JOBS.map((j) => btn(`vjob:${u.id},${j}`, cap1(j), '', u.job === j ? 'on' : '')).join(''),
+				'c3',
 			);
 			const sites = G.blds
 				.filter((s) => s.owner === 0 && s.hp > 0 && s.prog < 1 && u.rep !== s)
@@ -21792,11 +22616,11 @@ const CARDS = {
 				lock
 					? AGES[B.age].name
 					: full
-						? `limit ${cp}`
+						? `✓ all ${cp} built`
 						: !afford(p, B.cost)
 							? `short ${need(B.cost)}`
 							: (fits ? 'fits here · ' : '') + costText(B.cost),
-				lock || full || !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
+				lock ? 'dis' : full ? 'dis done' : !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
 				!lock && !full && !afford(p, B.cost) ? fillOf(B.cost) : undefined,
 			).replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>');
 		}; // how many of how many beside the name, dimmed: every cost stays on one line
@@ -21807,7 +22631,14 @@ const CARDS = {
 				); // blank places keep every menu as tall as the biggest (two rows), so the page never changes height
 		return (
 			title('Build', G.buildAt && G.buildAt.x !== undefined ? 'here' : '') +
-			acts(MENUS.map((m) => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join(''), 'c6 chipsrow') +
+			acts(
+				MENUS.map((m) => {
+					const open = m.items.filter((k) => BLD[k].age <= p.age),
+						allBuilt = open.length > 0 && open.every((k) => bldsOf(0, k).length >= capFor(0, k)); // every building the age allows is at its limit: the tab dims with a check (Build 61)
+					return btn(`menu:${m.id}`, (allBuilt ? '✓ ' : '') + m.name, '', (m.id === c.id ? 'on' : '') + (allBuilt ? ' done' : ''));
+				}).join(''),
+				'c6 chipsrow',
+			) +
 			acts(M.items.map(item).join('') + ghosts, 'c4 menu') +
 			fold('menu', 'What each one does', M.items.map((k) => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''))
 		);
@@ -21961,12 +22792,12 @@ function renderCard() {
 			$('card'),
 			`<div id="cardBar">${
 				info ? `<button id="cardI" class="${bookOn ? 'on' : ''}" data-act="info" aria-label="About this">${ICON.book}</button>` : ''
-			}<button id="cardX" data-act="close" aria-label="Close">×</button></div>` + h, // the book and the close ride a bar that stays at the top while the card scrolls (Build 60: they scrolled away on short phones)
+			}<button id="cardX" data-act="close" aria-label="Close">${ICON.close}</button></div>` + h, // the close as an icon, the book's size and weight (Build 61: a 20 px × read tiny) // the book and the close ride a bar that stays at the top while the card scrolls (Build 60: they scrolled away on short phones)
 		);
 	}
 	const cc = G.card;
 	$('card').classList.toggle('setup', cc.type === 'setup');
-	$('card').classList.toggle('hud', cc.type === 'mission' || cc.type === 'emergency'); // the covert look of the attack bar
+	$('card').classList.toggle('hud', cc.type === 'squad' || cc.type === 'emergency'); // the covert look of the attack bar
 	$('card').classList.toggle(
 		'full',
 		FULL.has(cc.type) || (cc.type === 'bld' && (G.blds.find((b) => b.id === cc.id) || {}).kind === 'market'),
@@ -22280,6 +23111,29 @@ const ICON = {
 	),
 	people: SVG(
 		20,
+		'<path d="M1.6 9.2h5.2M4.2 6.6v5.2" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/><circle cx="12.4" cy="6.2" r="3.2" fill="currentColor"/><path d="M6.4 16.5 C6.4 12.6 9.1 10.8 12.4 10.8 C15.7 10.8 18.4 12.6 18.4 16.5 Z" fill="currentColor"/>',
+	), // a plus and a head: the tile makes a villager (Build 61, Albert: muscle memory went to the hammer)
+	squad: SVG(
+		22,
+		'<circle cx="5" cy="6" r="2.4" fill="currentColor"/><circle cx="11" cy="5.2" r="2.7" fill="currentColor"/><circle cx="17" cy="6" r="2.4" fill="currentColor"/><path d="M1.2 15.5c0-3 1.7-4.6 3.8-4.6s3.8 1.6 3.8 4.6ZM6.8 15.5c0-3.5 1.9-5.3 4.2-5.3s4.2 1.8 4.2 5.3ZM13.2 15.5c0-3 1.7-4.6 3.8-4.6s3.8 1.6 3.8 4.6Z" fill="currentColor"/>',
+	),
+	cycle: SVG(
+		16,
+		'<path d="M3 8a5 5 0 0 1 8.6-3.5M13 8a5 5 0 0 1-8.6 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M11.8 1.6v3.2H8.6M4.2 14.4v-3.2h3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+	),
+	shield: SVG(
+		16,
+		'<path d="M8 1.5 L13.5 3.5 V8 Q13.5 12.5 8 14.5 Q2.5 12.5 2.5 8 V3.5 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>',
+	),
+	go: SVG(16, '<path d="M4 2.5 L13 8 L4 13.5 Z" fill="currentColor"/>'),
+	cls: {
+		foot: SVG(16, '<path d="M3 14 L12.5 3.5" stroke="#d9c79a" stroke-width="1.6" stroke-linecap="round"/><path d="M11 2 L14.5 1.5 L14 5 Z" fill="#e8eef2"/>'),
+		arch: SVG(16, '<path d="M5 1.5 Q14 8 5 14.5" fill="none" stroke="#c9a46a" stroke-width="1.6"/><path d="M5 1.5 V14.5" stroke="#eee" stroke-width=".8"/><path d="M2 8 H12" stroke="#ddd" stroke-width="1.2"/><path d="M12 6.5 L14.5 8 L12 9.5Z" fill="#eee"/>'),
+		horse: SVG(16, '<path d="M3 14 L4 9 Q4 6 7 6 L9 3 L10.5 4.5 L13.5 5 L13 7 L10.5 7 L10.5 10 L12 14" fill="none" stroke="#d9c79a" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>'),
+		siege: SVG(16, '<rect x="2" y="7" width="11" height="3.5" rx="1" fill="#a07a4a"/><path d="M13 8.7 H15" stroke="#ccc" stroke-width="2"/><circle cx="4.5" cy="12.5" r="1.6" fill="#ddd"/><circle cx="10.5" cy="12.5" r="1.6" fill="#ddd"/><path d="M3 7 L7.5 3 L12 7" fill="none" stroke="#d9c79a" stroke-width="1.3"/>'),
+	},
+	head: SVG(
+		20,
 		'<circle cx="10" cy="6.2" r="3.2" fill="currentColor"/><path d="M3.8 16.5 C3.8 12.6 6.6 10.8 10 10.8 C13.4 10.8 16.2 12.6 16.2 16.5 Z" fill="currentColor"/>',
 	),
 	home: SVG(
@@ -22384,7 +23238,6 @@ function buildPanel() {
 			(r) =>
 				`<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`,
 		).join('');
-	$('hudB').innerHTML = ICON.sword;
 	$('emgB').innerHTML = ICON.def;
 	$('tkList').innerHTML = ICON.list;
 	$('tkMin').innerHTML = ICON.up;
@@ -22651,7 +23504,7 @@ function showByAge() {
 		if (on) n++;
 	});
 	$('jobs').style.setProperty('--n', n);
-	$('hudB').hidden = !soldiersOf(0).length && !(G.msn || []).some(Boolean);
+	$('hudB').hidden = !soldiersOf(0).length && !hasCmd() && !(G.msn || []).some(Boolean); // the page chip: once there is an army to send or squads to make
 	$('emgB').hidden = p.age < 1 && !(G.warnT > 0);
 }
 function ui(force) {
@@ -22727,7 +23580,7 @@ function ui(force) {
 			'',
 			[
 				ready ? `<span>${ICON.book}${ready}</span>` : '',
-				`<span>${ICON.people}${popOf(0)}</span>`,
+				`<span>${ICON.head}${popOf(0)}</span>`,
 				sol ? `<span>${ICON.mil}${sol}</span>` : '',
 			].join(''),
 			true,
@@ -22768,7 +23621,6 @@ function ui(force) {
 		$('stage').classList.toggle('picking', show); // the action bar (Albert, Build 41)
 		if (show && prey) {
 			txt('pickT', UNIT[prey.kind].name);
-			$('pMore').hidden = true;
 			const hunters = unitsOf(0, 'vil').filter((v) => v.hunt === prey).length,
 				row = `<button data-act="hunt:${prey.id}" class="go"><b>Hunt</b><small>${hunters ? hunters + ' on it' : 'nearest villager'}</small></button><button data-act="hunt3:${prey.id}"><b>Hunt ×3</b></button>`;
 			if (el.rowH !== row) {
@@ -22778,7 +23630,6 @@ function ui(force) {
 		} // a deer, a boar: hunt it from the bar
 		else if (show && foe) {
 			txt('pickT', whoIs(foe));
-			$('pMore').hidden = true;
 			const sol = armyOf(0).filter(isSoldier).length,
 				war = foe.owner === WILD ? !foe.native || atWar(0, WILD) : atWar(0, foe.owner),
 				row = `<button data-act="pattack:${foe.id}" class="${war && sol ? 'warn' : 'dis'}"><b>Attack</b><small>${!sol ? 'no soldiers' : war ? 'all soldiers' : 'not at war'}</small></button><button data-act="look:${foe.id}"><b>More</b></button>`;
@@ -22788,10 +23639,7 @@ function ui(force) {
 			}
 		} // who is this? the bar says, and offers the fight (Albert, Build 41)
 		else if (show) {
-			$('pMore').hidden = false;
-			txt('pickT', `${n} picked`);
-			$('pMore').innerHTML = G.pickMore ? '<b>Done</b>' : '<b>＋ More</b>';
-			$('pMore').classList.toggle('on', !!G.pickMore);
+			txt('pickT', `${n} picked${G.pickMore ? ' · tap to add' : ''}`); // ＋ More is gone (Build 61): drag a box, or hold one and tap more
 			const sol = P.some(isSoldier),
 				vil = P.some((u) => u.kind === 'vil'),
 				ic = (act, icon, label) => `<button data-act="${act}" aria-label="${label}">${icon}</button>`,
@@ -22805,7 +23653,7 @@ function ui(force) {
 					tx('phold', 'Hold') +
 					(away ? tx('precall', 'Recall') : '') +
 					(tch ? tx('pteach', 'Teach') : '') +
-					(vil ? ic('pvil', ICON.people, 'Keep only the villagers') : '') +
+					(vil ? ic('pvil', ICON.head, 'Keep only the villagers') : '') +
 					follow
 				: vil
 					? JOBS.map((j) => ic(`pjob:${j}`, ICON[j], `All to ${j}`)).join('') +
@@ -22815,28 +23663,6 @@ function ui(force) {
 			if (el.rowH !== row) {
 				el.rowH = row;
 				$('pickRow').innerHTML = row;
-			}
-		}
-	}
-	{
-		const S = armyOf(0),
-			show = hasCmd() && S.length > 0 && !G.card && !G.place,
-			el = $('dock');
-		if (el.hidden === show) el.hidden = !show; // the army dock
-		if (show) {
-			el.classList.toggle('min', !!SET.dockMin);
-			if (!SET.dockMin) {
-				const used = BN.map((n, i) => [i, n, S.filter((u) => u.bn === i).length]).filter((x) => x[2]);
-				const h = [['all', 'All', S.length], ...used]
-					.map(
-						([k, n, c]) =>
-							`<button data-act="dock:${k}" class="${G.sel === k ? 'on' : ''}"><b>${n}</b><small>${c}</small></button>`,
-					)
-					.join('');
-				if (el.dockH !== h) {
-					el.dockH = h;
-					$('dockRow').innerHTML = h;
-				}
 			}
 		}
 	}
@@ -23231,16 +24057,6 @@ const ACT = {
 		saveSet();
 		refresh();
 	},
-	dockmin() {
-		SET.dockMin = !SET.dockMin;
-		saveSet();
-		ui(true);
-	},
-	dock(a) {
-		G.sel = a === 'all' ? 'all' : Number(a);
-		setPick(orderSet().map((u) => ({ t: 'unit', id: u.id })));
-		feel('tick');
-	}, // the dock: a battalion picked in one tap; the pick bar then carries Charge, Fall back and Teach
 	tkmin() {
 		SET.tkMin = !SET.tkMin;
 		saveSet();
@@ -23334,10 +24150,11 @@ const ACT = {
 // orders that change the game: refused once it is over
 const PLAY = {
 	job(a) {
-		G.P[0].rally = a;
-		unitsOf(0, 'vil').forEach((u) => {
-			if (!u.job) u.job = a;
-		});
+		G.P[0].rally = G.P[0].rally === a ? null : a; // tap the lit tile again and no job is the default: new villagers wait at the Town Center (Build 61)
+		if (G.P[0].rally)
+			unitsOf(0, 'vil').forEach((u) => {
+				if (!u.job) u.job = a;
+			});
 	},
 	move(a) {
 		if (!unitsOf(0, 'vil').some((u) => !u.job)) {
@@ -23361,7 +24178,7 @@ const PLAY = {
 	sendto(a) {
 		const [f, x, y] = a.split(','),
 			e = { x: Number(x), y: Number(y) },
-			S = sendPick(/^(q|h|all|rest|n\d+)$/.test(f) ? f : Number(f), e);
+			S = sendPick(/^(all|rest)$/.test(f) ? f : Number(f), e);
 		if (S.length) order(S, { t: 'ground', e });
 		else say(freeWhy(), '', 4);
 		hideStrip();
@@ -23376,39 +24193,72 @@ const PLAY = {
 		emgResume();
 		closeCard();
 	},
-	huddle() {
-		hudOpen(!G.hud.on);
+	pagecycle() {
+		pageCycle();
+	}, // the chip at the row's left: Jobs, the Squad room, the War room
+	sqnew() {
+		sqNew();
 	},
-	hready() {
-		hudReady();
+	sqcycle() {
+		sqCycle();
 	},
-	haim() {
-		hudAim();
+	sqprev() {
+		G.hud.sq.i = (G.hud.sq.i + BNS - 1) % BNS;
+		G.hud.sq.tile = null;
 	},
-	hset() {
-		hudSet();
+	sqnext() {
+		G.hud.sq.i = (G.hud.sq.i + 1) % BNS;
+		G.hud.sq.tile = null;
 	},
-	hudc(a) {
-		if (hudStage() >= 4) {
-			delete G.hud.n[a]; // a tap on the class: all the idle ones again
-			G.hud.set = false;
+	sqtile(a) {
+		const t = Number(a);
+		G.hud.sq.tile = G.hud.sq.tile === t ? null : t;
+		feel('tick');
+	},
+	sqn(a) {
+		const [t, d] = a.split(','),
+			k = sqUnit(Number(t));
+		if (k) sqPlan(G.hud.sq.i, k, d === '+' ? 1 : -1);
+	},
+	sqcard(a) {
+		openCard({ type: 'squad', i: Number(a) });
+	},
+	sqpk(a) {
+		const [i, k, d] = a.split(',');
+		sqPlan(Number(i), k, d === '+' ? 1 : -1);
+	},
+	wstance() {
+		const s = G.hud.sel;
+		cycle('temper', s === null || s === undefined ? 'all' : s, TEMPER.length);
+		feel('tick');
+	},
+	whome() {
+		hudHome();
+	},
+	wsq(a) {
+		const i = Number(a);
+		if (G.hud.sel === i) openCard({ type: 'squad', i });
+		else {
+			G.hud.sel = i;
+			G.hud.etaKey = '';
+			feel('tick');
 		}
+	}, // one tap picks the squad for Go; a second opens its card
+	wgo(a) {
+		hudFire(Number(a));
 	},
-	hudn(a) {
-		if (hudStage() < 4) return;
-		const [c, d] = a.split(','),
-			i = Number(c),
-			pool = hudPool(),
-			N = hudCounts(pool),
-			give = hudRoom(pool) > 0 || N.some((x, j) => j !== i && G.hud.n[j] === undefined && x > 0); // a + takes a free place, or one from a kind you have not set
-		G.hud.n[c] = clamp(N[i] + (d === '+' ? (give ? 1 : 0) : -1), 0, hudHave(pool, i));
-		G.hud.set = false; // changing a count opens Set again
+	wback(a) {
+		const i = Number(a);
+		if (sqOut(i)) hudAbort(i);
+		else sendHome(sqUnits(i));
 	},
-	hfire() {
-		if (hudStage() === 5) hudFire();
+	wfire() {
+		hudFire(hasCmd() ? G.hud.sel : null);
 	},
-	habort() {
-		hudCancel();
+	wabort() {
+		const s = G.hud.sel;
+		if (s !== null && s !== undefined && sqOut(s)) hudAbort(s);
+		else hudAbortAll();
 	},
 	habortall() {
 		hudAbortAll();
@@ -23416,23 +24266,8 @@ const PLAY = {
 	hdel(a) {
 		hudAbort(Number(a));
 	},
-	mcard(a) {
-		if (performance.now() - (G.hud.dragged || -1e9) > 400) hudTile(Number(a));
-	},
-	hslot(a) {
-		if (performance.now() - (G.hud.dragged || -1e9) > 400) hudTile(Number(a));
-	},
 	hudrein(a) {
 		hudReinforce(Number(a));
-	},
-	hspare(a) {
-		const m = G.msn[Number(a)];
-		if (m && m.spare && m.spare.length) {
-			G.hud.carry = Number(a);
-			G.hud.view = true;
-			closeCard();
-			say('Tap a tile, or Ready to send them home.', '', 4);
-		}
 	},
 	nostrip() {
 		hideStrip();
@@ -23445,8 +24280,30 @@ const PLAY = {
 		const s = G.stripAt;
 		if (s) showStrip(s.sx, s.sy, s.x, s.y, 1);
 	},
-	stripmore() {
+	strippeople() {
 		const s = G.stripAt;
+		if (s) showStrip(s.sx, s.sy, s.x, s.y, 2);
+	},
+	idleto(a) {
+		const [x, y] = a.split(',').map(Number);
+		let n = 0;
+		for (const u of unitsOf(0, 'vil')) if (!u.job && !u.inside && !postedAt({ x, y }).includes(u)) (u.post = { x: x + u.ox, y: y + u.oy }), n++;
+		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 3);
+		hideStrip();
+	},
+	wkhere(a) {
+		// dial the villagers standing at a spot: + brings one more (an idle one, else the one earning least), − sends one home
+		const [d, x, y] = a.split(','),
+			to = { x: Number(x), y: Number(y) },
+			s = G.stripAt;
+		if (d === '+') {
+			const v = pickVil(0, to);
+			if (!v) say('No villager is free.', '', 3);
+			else stopVil(v, { x: to.x + v.ox, y: to.y + v.oy });
+		} else {
+			const v = postedAt(to).pop();
+			if (v) v.post = null;
+		}
 		if (s) showStrip(s.sx, s.sy, s.x, s.y, 2);
 	},
 	buildhere(a) {
@@ -23494,16 +24351,6 @@ const PLAY = {
 		if (muster(0, musterGap(i), i)) sfx('place');
 		else sfx('err');
 	},
-	bnn(a) {
-		const [k, d] = a.split(','),
-			P = G.bnPlan[G.bnEdit],
-			cur = P[k] || 0,
-			st = d === '+' ? (cur < 10 ? 1 : 5) : cur <= 10 ? 1 : 5;
-		const others = Object.entries(P).reduce((n, [q, v]) => n + (q === k ? 0 : v), 0);
-		P[k] = clamp(cur + (d === '+' ? st : -st), 0, Math.max(cur, BNSIZE - others));
-		if (!P[k]) delete P[k];
-		rebattalion();
-	}, // a battalion holds BNSIZE at most, every kind together
 	shape(a) {
 		cycle('form', a, FORM.length);
 	},
@@ -23515,6 +24362,30 @@ const PLAY = {
 	},
 	sendout(a) {
 		sendOut(0, Number(a));
+	},
+	vstop(a) {
+		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a));
+		if (u) stopVil(u, null);
+	},
+	stopall() {
+		const k = keepOf(0);
+		let n = 0;
+		for (const u of unitsOf(0, 'vil')) if (u.job || u.post) stopVil(u, k ? { x: k.x + u.ox, y: k.y + halfOf(k) + 8 + u.oy } : null), n++;
+		say(n ? `${n} villagers stop: to the Town Center.` : 'Nobody was working.', '', 4);
+	},
+	idlehere() {
+		const c = toWorld(cw / 2, ch / 2);
+		let n = 0;
+		for (const u of unitsOf(0, 'vil')) if (!u.job && !u.inside) (u.post = { x: c.x + u.ox, y: c.y + u.oy }), n++;
+		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 4);
+		closeCard();
+	},
+	replant(a) {
+		const b = G.blds.find((x) => x.id === Number(a) && x.owner === 0);
+		if (!b) return;
+		const why = replantWhy(0, b);
+		if (why) say(why, '', 3);
+		else replant(0, b.id);
 	},
 	boxcut(a) {
 		if (G.card && G.card.type === 'box') boxCut(G.card.r, Number(a));
@@ -23538,10 +24409,6 @@ const PLAY = {
 			openCard({ type: 'unit', id: e.id });
 		}
 	},
-	pmore() {
-		G.pickMore = !G.pickMore;
-		ui(true);
-	}, // + More: each tap on your people adds or drops one; Done stops
 	pjob(j) {
 		for (const u of picked())
 			if (u.kind === 'vil') {
@@ -24050,7 +24917,7 @@ for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndIni
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 36; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 37; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -24120,6 +24987,17 @@ const MIGRATE = {
 		S.v = 36;
 		return S;
 	}, // Build 60: every order keeps what it paid, so a cancel gives back exactly that; an order saved before is taken at its list price
+	36: (S) => {
+		if (S.bnPlan) S.bnPlan = S.bnPlan.slice(0, BNS);
+		if (S.form) S.form = S.form.slice(0, BNS);
+		if (S.temper) S.temper = S.temper.slice(0, BNS).concat([S.temper[S.temper.length - 1] ?? T_GUARD]);
+		for (const u of S.units || []) if (u.bn !== undefined && u.bn >= BNS) u.bn = undefined;
+		for (const b of S.blds || []) for (const j of b.q || []) if (j.muster && j.bn >= BNS) j.bn = undefined;
+		S.msn = (S.msn || []).slice(0, BNS);
+		if (typeof S.sel === 'number' && S.sel >= BNS) S.sel = 'all';
+		S.v = 37;
+		return S;
+	}, // Build 61: four squads (Alpha to Delta), the row's four middle tiles; Epsilon and Zeta fold into the reserve
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -25210,10 +26088,14 @@ function seasonTurn() {
 }
 
 // ── fire: wood and thatch burn, catch from their neighbours, and villagers put it out
+// the heat a neighbour receives from a fire of this age across this gap, as a share of a full fire touching it: the t² design fire
+// (NFPA 72 / Heskestad) times the radiant view factor (near / (gap + near))² (BR 187). One home; tests/science.py checks it.
+const fireHeat = (age, gap) => Math.min(1, (age / FIRE.grow) ** 2) * (FIRE.near / (gap + FIRE.near)) ** 2;
 const FIRE_SMOKE = 0.008; // a second, for each villager fighting a big fire (spread, or the building below half): about one death in three big fires, never more than one
 function ignite(b, why) {
 	if (!BLD[b.kind].wood || b.fire > 0 || b.hp <= 0 || b.prog < 1) return;
 	b.fire = 1;
+	b.fireT = G.t;
 	b.spread = why === 'it spread';
 	b.smoke = false;
 	// the neighbours run with buckets: at most two, and only those working right by it
@@ -25273,17 +26155,14 @@ function fireTick(dt) {
 			if (b.owner === 0) say(`The ${bldName(0, b.kind).toLowerCase()} burned down.`, 'warn', 6, b);
 			continue;
 		}
-		if ((G.tick + b.id) % 90 === 0)
+		if ((G.tick + b.id) % 90 === 0) {
+			const age = G.t - (b.fireT ?? G.t);
 			for (const c of G.blds)
-				if (
-					c !== b &&
-					BLD[c.kind].wood &&
-					!(c.fire > 0) &&
-					c.prog >= 1 &&
-					dist(b, c) < halfOf(b) + halfOf(c) + 20 &&
-					hazard(0.12 * fm)
-				)
-					ignite(c, 'it spread');
+				if (c !== b && BLD[c.kind].wood && !(c.fire > 0) && c.prog >= 1) {
+					const gap = Math.max(0, dist(b, c) - halfOf(b) - halfOf(c));
+					if (gap < FIRE.reach && hazard(FIRE.rate * fm * fireHeat(age, gap), 3)) ignite(c, 'it spread'); // every 3 s, with the heat a neighbour receives
+				}
+		}
 	}
 }
 
@@ -25758,7 +26637,7 @@ function vassalTick() {
 // Random when, never random whether: the next event is picked when the last ends (an exponential wait, the Poisson process: nextIn in 08-core), announced EV_WARN seconds ahead, then run for its seconds.
 const EVM = { dmg: 1, spd: 1, sight: 1, gather: 1 };
 // the knobs follow the event now running and nothing else; set when one starts or ends, and on a new game or a load (Build 48: a game begun or loaded in an eclipse kept its dark)
-const KNOBS = { eclipse: ['dmg', 'spd', 'sight'], fog: ['sight'], heatwave: ['dmg', 'spd'] };
+const KNOBS = { eclipse: ['dmg', 'spd', 'sight'], heatwave: ['dmg', 'spd'] }; // fog caps sight by visibility instead (visCap, 08)
 function evmSet() {
 	EVM.dmg = EVM.spd = EVM.sight = EVM.gather = 1;
 	const e = G && G.ev && G.ev.cur;
@@ -26912,29 +27791,35 @@ function chaseCrown(p, put) {
 		else for (const t of TECH) if (t.age === 5 && !t.civ && isNext(o, t) && research(o, t.id)) break;
 	}
 }
-// ═════ 39-huddle.js: the huddle: four missions you plan, fire, watch and call off, over the same bar the jobs use ═════
-// The sword button swaps the job bar for the attack bar. Column 1: Ready over Aim, each with a light (red: not set, green: set).
-// Columns 2-5: while drafting, how many Foot, Archers, Horse and Siege go (the idle ones); while viewing, the four missions (Alpha to Delta).
-// Column 6: Fire over Abort. A mission is a march order (G.ords) with a slot (G.msn) that keeps its promise: when it should arrive, how the fight goes, how it ended.
-const MSN = ['Alpha', 'Bravo', 'Charlie', 'Delta'];
+// ═════ 39-huddle.js: the three-page row: Jobs, the Squad room, the War room (Build 61, Albert's layout) ═════
+// One row, one mold, three pages; the chip at its left end cycles them. Jobs is the row as it was. The Squad room makes squads (the four
+// battalions): Squad ＋, Cycle, the squad tile, then a tile for each army building, its unit chosen with Cycle and its count set with − / +.
+// The War room sends them: Stance and Home on the left, the four squads in the middle (+ sends one to the crosshair, − calls it back),
+// Go and Abort on the right. A tap on the map while the War room is open moves the crosshair. Ready, aim, fire, abort: the Huddle's sequence
+// lives on here (Build 42's four drafted missions, with the draft by kind and the spare-soldier drag, are gone: a squad is the draft).
 const CLS = [
 	['foot', 'Foot', 'barracks', 'foot'],
-	['arch', 'Arch', 'range', 'archers'],
-	['horse', 'Horse', 'stable', 'riders'],
+	['arch', 'Archers', 'range', 'archers'],
+	['horse', 'Riders', 'stable', 'riders'],
 	['siege', 'Siege', 'siege', 'siege'],
 ];
 const HUD = {
 	near: 140, // a fight is what hostile soldiers within this reach of the group make
 	lose: 0.4, // a tile flashes red below this chance, and stops above clear
 	clear: 0.5,
-	win: 0.75, // green above this: the extra soldiers can be spared
-	keep: 0.65, // sparing never takes the chance below this
+	win: 0.75, // green above this
 	smooth: 0.3, // the chance moves a third of the way each second: about three seconds to settle
 	gap: 8, // reinforcements arriving within this many seconds of each other are one wave
 	waves: 3,
 };
+const PAGES = ['jobs', 'squad', 'war'];
+const pagesOpen = () => (hasCmd() ? PAGES : ['jobs', 'war']); // the Squad room needs Battalions
+const pageName = { jobs: 'Jobs', squad: 'Squad room', war: 'War room' };
+const shortName = (k) => stats(0, k).name.replace(/^[A-Z][a-z]+ (?=[A-Z])/, '').split(' ')[0].replace(/m[ae]n$/, '').slice(0, 7); // one short word on a tile: Spear, Archer, Chariot
 const clsOf = (u) => CLS.findIndex((c) => c[2] === UNIT[u.kind].at);
 const mUnits = (m) => G.units.filter((u) => u.owner === 0 && u.ord === m.ord && u.hp > 0);
+const sqUnits = (i) => armyOf(0).filter((u) => u.bn === i && u.kind !== 'spy');
+const sqOut = (i) => G.msn[i] && !G.msn[i].end; // the squad is out on a mission
 const hostile = (v) =>
 	v.owner !== 0 &&
 	v.hp > 0 &&
@@ -26956,106 +27841,66 @@ const dpsOf = (L) => L.reduce((s, v) => s + dmgOf(v) / (UNIT[v.kind].cd || 1.5),
 const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const wxWord = () => (G.wx !== 'clear' && WEATHER[G.wx] ? WEATHER[G.wx].name : season().name);
 
-// ── the draft: who goes, and where
-const hudPool = () =>
-	(G.hud.pre ? G.hud.pre.map((id) => G.units.find((u) => u.id === id)).filter((u) => u && u.hp > 0) : free()).filter(
-		(u) => clsOf(u) >= 0,
-	);
-const hudHave = (pool, c) => pool.filter((u) => clsOf(u) === c).length;
-// the draft, at most one battalion: a count you set stands; the room left is shared among the other kinds by how many of each are free
-// (Build 48: Foot took all 40 places in order and Archers, Horse and Siege showed 0)
-function hudCounts(pool) {
-	const have = CLS.map((_, i) => hudHave(pool, i)),
-		out = CLS.map(() => 0),
-		free = [];
-	let room = BNSIZE;
-	CLS.forEach((_, i) => {
-		if (G.hud.n[i] === undefined) {
-			if (have[i]) free.push(i);
-		} else room -= out[i] = Math.min(have[i], G.hud.n[i], room);
-	});
-	const tot = free.reduce((s, i) => s + have[i], 0);
-	if (tot <= room) for (const i of free) out[i] = have[i];
-	else {
-		const part = free.map((i) => [(room * have[i]) / tot, i]);
-		for (const [x, i] of part) room -= out[i] = Math.floor(x);
-		part.sort((a, b) => b[0] % 1 - a[0] % 1 || a[1] - b[1]);
-		for (let k = 0; k < room; k++) out[part[k][1]]++;
-	} // largest share left over first, so the counts add up to the room exactly
-	return out;
-}
-const hudN = (pool, c) => hudCounts(pool)[c];
-const hudRoom = (pool) => BNSIZE - hudCounts(pool).reduce((a, b) => a + b, 0);
-function hudPick() {
-	const pool = hudPool(),
-		to = G.hud.h && G.hud.h.e;
-	return CLS.flatMap((_, c) => {
-		const a = pool.filter((u) => clsOf(u) === c);
-		if (to) a.sort((p, q) => dist(p, to) - dist(q, to));
-		return a.slice(0, hudN(pool, c));
-	});
-}
-const hudSlot = () => G.hud.slot ?? G.msn.findIndex((m) => !m);
-// the time the draft would take to arrive, worked out again when the target, the numbers or (every few seconds) the weather change
-function hudEta() {
-	const H = G.hud,
-		S = hudPick();
-	if (!H.h || !S.length) return 0;
-	const key = `${H.h.e.x | 0},${H.h.e.y | 0},${S.length},${G.wx},${(G.t / 3) | 0}`;
-	if (H.etaKey !== key) {
-		H.etaKey = key;
-		H.eta = etaOf(S, H.h.e, routeK(centreOf(S), H.h.e));
-	}
-	return H.eta;
-}
-// The steps of one plan, one button at a time (red: next and blinking, blue: in hand, green: done):
-// 0 Ready, 1 Armed (Aim next), 2 aiming (the crosshair is up), 3 aiming with a tap made (Lock), 4 Locked (set the counts, Set next), 5 Set (Fire next)
-const hudStage = () => {
+// ── the pages
+function hudPage(page) {
 	const H = G.hud;
-	return !H.armed ? 0 : H.set ? 5 : H.locked ? 4 : H.aim ? (H.moved ? 3 : 2) : 1;
+	H.page = page;
+	H.on = page === 'war';
+	if (H.on) {
+		H.aim = true;
+		H.aimT = performance.now();
+		if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
+		H.etaKey = '';
+	} else H.aim = false;
+	if (page !== 'jobs') closeCard();
+	if (!H.sq) H.sq = { i: 0, tile: null, unit: {} };
+}
+function hudOpen(on) {
+	hudPage(on ? 'war' : 'jobs');
+}
+function pageCycle() {
+	const P = pagesOpen(),
+		i = P.indexOf(G.hud.page || 'jobs');
+	hudPage(P[(i + 1) % P.length]);
+	feel('tick');
+}
+// ── the Squad room
+const sqKinds = (tile) =>
+	ARMYK.filter((k) => !UNIT[k].civ && UNIT[k].cost && k !== 'spy')
+		.map((k) => civKind(0, k))
+		.filter((k, i, a) => a.indexOf(k) === i && UNIT[k].at === CLS[tile][2] && UNIT[k].age <= G.P[0].age); // what that building can train now
+const sqUnit = (tile) => {
+	const K = sqKinds(tile),
+		u = G.hud.sq.unit[tile];
+	return K.includes(u) ? u : K[0];
 };
-function hudReset() {
-	const H = G.hud;
-	H.armed = H.aim = H.moved = H.locked = H.set = false;
-	H.h = H.pre = H.slot = null;
-	H.n = {};
+function sqNew() {
+	const j = BN.findIndex((_, i) => !Object.values(G.bnPlan[i]).some(Boolean) && !sqUnits(i).length);
+	if (j < 0) return say('All squads made: pick one to change.', '', 3);
+	G.hud.sq.i = j;
+	G.hud.sq.tile = null;
+	say(`${BN[j]}: set what it holds with − and +.`, '', 3);
+	feel('tick');
 }
-// Ready arms the plan; tapped again, Armed puts it down
-function hudReady() {
-	const H = G.hud;
-	H.carry = null;
-	if (H.armed) {
-		hudReset();
-		H.view = G.msn.some(Boolean);
-	} else {
-		H.armed = true;
-		H.view = false;
-	}
+function sqCycle() {
+	const Q = G.hud.sq;
+	if (Q.tile !== null) {
+		const K = sqKinds(Q.tile);
+		if (K.length) Q.unit[Q.tile] = K[(K.indexOf(sqUnit(Q.tile)) + 1) % K.length];
+	} else Q.i = (Q.i + 1) % BNS;
+	feel('tick');
 }
-// Aim shows the crosshair at the middle of the view (a tap on the map moves it); Lock sets it; Locked opens it again
-function hudAim() {
-	const H = G.hud;
-	if (!H.armed) return;
-	if (H.aim) return hudLock();
-	H.aim = true;
-	H.aimT = performance.now();
-	H.moved = H.locked = H.set = false;
-	if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
-	H.etaKey = '';
+function sqPlan(i, k, d) {
+	// a squad holds BNSIZE at most, every kind together; the step is 1 under ten, 5 above
+	const P = G.bnPlan[i],
+		cur = P[k] || 0,
+		st = d > 0 ? (cur < 10 ? 1 : 5) : cur <= 10 ? 1 : 5,
+		others = Object.entries(P).reduce((n, [q, v]) => n + (q === k ? 0 : v), 0);
+	P[k] = clamp(cur + d * st, 0, Math.max(cur, BNSIZE - others));
+	if (!P[k]) delete P[k];
+	rebattalion();
 }
-function hudLock() {
-	const H = G.hud;
-	H.aim = false;
-	H.locked = true;
-	feel('snap');
-}
-function hudSet() {
-	if (hudStage() === 4 && hudPick().length) {
-		G.hud.set = true;
-		feel('tick');
-	}
-}
-// the spot under a finger while aiming: a mission goes to the ground, a find or a foe
+// ── aiming: the crosshair, moved by a tap on the map while the War room is open
 function aimSpot(sx, sy) {
 	const H = G.hud;
 	let h = hitAt(sx, sy);
@@ -27065,44 +27910,50 @@ function aimSpot(sx, sy) {
 	H.moved = true;
 	H.etaKey = '';
 }
-// hold the crosshair and drag it
 const aimNear = (sx, sy) => {
 	const H = G.hud;
 	return H.aim && H.h && hyp(sx - SX(H.h.e.x), sy - SY(H.h.e.y)) < 56;
 };
-// a tap on the map while aiming moves the crosshair; two quick taps in one place lock it
 function aimAt(sx, sy) {
-	const H = G.hud,
-		now = performance.now();
+	const H = G.hud;
 	aimSpot(sx, sy);
 	ripple(H.h.e.x, H.h.e.y, '#ffb23d');
 	feel('tick');
-	if (H.tapAt && now - H.tapAt.t < 350 && hyp(sx - H.tapAt.x, sy - H.tapAt.y) < 28) hudLock();
-	H.tapAt = { t: now, x: sx, y: sy };
 }
-function hudOpen(on) {
-	const H = G.hud;
-	H.on = on;
-	hudReset();
-	H.view = false;
-	H.carry = H.sel = null;
-	if (on) closeCard();
-}
-// Fire: the draft marches as one order and takes the slot
-function hudFire() {
+// who a squad sends: its idle members; with no squads yet, every idle soldier
+const sqFree = (i) => (i === null || i === undefined ? free() : free().filter((u) => u.bn === i));
+function hudEta() {
 	const H = G.hud,
-		slot = hudSlot(),
-		S = hudPick();
-	if (slot < 0 || G.msn[slot]) return say('All four missions are out.', '', 3);
-	if (!H.h || !S.length) return;
+		S = sqFree(H.sel);
+	if (!H.h || !S.length) return 0;
+	const key = `${H.h.e.x | 0},${H.h.e.y | 0},${S.length},${G.wx},${(G.t / 3) | 0}`;
+	if (H.etaKey !== key) {
+		H.etaKey = key;
+		H.eta = etaOf(S, H.h.e, routeK(centreOf(S), H.h.e));
+	}
+	return H.eta;
+}
+// Go: a squad marches on the crosshair as one order and takes its slot (with no squads yet, every idle soldier takes the first free slot)
+function hudFire(i) {
+	const H = G.hud,
+		S = sqFree(i),
+		slot = i ?? G.msn.findIndex((m) => !m || m.end);
+	if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
+	if (slot < 0) return say('Every slot is out.', '', 3);
+	if (!S.length) return say(i === null || i === undefined ? freeWhy() : `${BN[i]}: nobody idle in it.`, '', 3);
+	if (sqOut(slot)) hudAbort(slot, true);
 	const before = G.ordN || 0;
 	order(S, H.h);
 	if ((G.ordN || 0) === before) return; // refused: the reason was said
-	const O = G.ords[G.ordN];
+	const O = G.ords[G.ordN],
+		kinds = {};
+	for (const u of S) kinds[u.kind] = (kinds[u.kind] || 0) + 1;
 	G.msn[slot] = {
-		name: MSN[slot],
+		name: i === null || i === undefined ? 'The army' : BN[i],
+		sq: i ?? null,
 		ord: G.ordN,
 		n0: S.length,
+		kinds,
 		what: H.h.t === 'unit' || (H.h.t === 'bld' && H.h.e.owner !== 0) ? 'Attack' : 'Go to',
 		label: O.label,
 		x: O.x,
@@ -27112,33 +27963,27 @@ function hudFire() {
 		st: 'go',
 		odds: 0.5,
 	};
-	hudReset();
-	H.view = true;
 	H.sel = slot;
 	H.firedT = performance.now();
 	feel('thock');
 }
 // a mission leaves: the soldiers go home, the slot is free
-function hudAbort(slot) {
+function hudAbort(slot, quiet) {
 	const m = G.msn[slot];
 	if (!m) return;
 	sendHome(mUnits(m));
 	G.msn[slot] = null;
-	if (G.hud.sel === slot) G.hud.sel = null;
-	if (G.card && G.card.type === 'mission') closeCard();
-	say(`${m.name} called home.`, '', 3);
+	if (G.card && G.card.type === 'squad' && G.card.i === slot) refresh();
+	if (!quiet) say(`${m.name} called home.`, '', 3);
 }
 function hudAbortAll() {
 	G.msn.forEach((_, i) => hudAbort(i));
 }
-// the draft's Abort: clears the draft, or (viewing) the picked mission
-function hudCancel() {
-	const H = G.hud;
-	if (H.view && H.sel !== null && G.msn[H.sel]) hudAbort(H.sel);
-	else {
-		hudReset();
-		H.view = G.msn.some(Boolean);
-	}
+// Home: everyone back, every mission off
+function hudHome() {
+	hudAbortAll();
+	sendHome(sendable());
+	say('Everyone home.', '', 3);
 }
 
 // ── each second: where a mission is, how it goes, what to say
@@ -27173,17 +28018,8 @@ function missionsTick() {
 			m.flash = 'lose';
 			say(`${m.name} is losing.`, 'warn', 4);
 		} else if (m.flash === 'lose' && m.odds > HUD.clear) m.flash = null;
-		m.spare = [];
-		if (m.odds > HUD.win) {
-			m.flash = 'win';
-			let rest = S.slice();
-			for (const u of S.slice().sort((p, q) => unitPower(p) - unitPower(q))) {
-				const next = rest.filter((v) => v !== u);
-				if (!next.length || chance(next, foes) < HUD.keep) break;
-				rest = next;
-				m.spare.push(u.id);
-			}
-		} else if (m.flash === 'win') m.flash = null;
+		if (m.odds > HUD.win) m.flash = 'win';
+		else if (m.flash === 'win') m.flash = null;
 	});
 }
 // who can still reach a fight in time, fastest first, and how many it takes to even it: waves by arrival
@@ -27224,7 +28060,7 @@ function waveLine(plan) {
 		.map((w, i) => `${w.list.length} ${i ? 'more' : word(w.list)} ${i ? 'by' : 'in'} ${mmss(w.t)}`)
 		.join(', ');
 }
-// units moved into a mission (a reinforcement, a spare soldier from another): they march to its middle and join its order
+// units moved into a mission (a reinforcement): they march to its middle and join its order
 function hudJoin(S, m) {
 	if (!S.length) return;
 	const c = centreOf(mUnits(m)),
@@ -27242,104 +28078,70 @@ function hudReinforce(slot) {
 	hudJoin(plan.go, m);
 	say(`${plan.go.length} reinforce ${m.name}.`, 'good', 3);
 }
-const spareOf = (m) => (m.spare || []).map((id) => G.units.find((u) => u.id === id)).filter((u) => u && u.hp > 0);
-// spare soldiers go: to another mission (reinforce), an empty slot (a new draft of just them), or Ready (home)
-function hudDrop(from, to) {
-	const m = G.msn[from],
-		S = m ? spareOf(m) : [];
-	G.hud.carry = null;
-	if (!S.length) return;
-	if (to === 'home') {
-		sendHome(S);
-		say(`${S.length} home from ${m.name}.`, '', 3);
-	} else if (G.msn[to] && to !== from) {
-		hudJoin(S, G.msn[to]);
-		say(`${S.length} from ${m.name} to ${G.msn[to].name}.`, 'good', 3);
-	} else if (!G.msn[to]) {
-		const H = G.hud;
-		H.pre = S.map((u) => u.id);
-		H.n = {};
-		H.h = null;
-		H.slot = to;
-		H.armed = true;
-		H.view = false;
-		hudAim();
-		say(`Tap where ${MSN[to]} goes.`, '', 3);
-	}
-	m.spare = [];
-	m.flash = null;
-}
-function hudTile(slot) {
-	const m = G.msn[slot];
-	if (G.hud.carry !== null && G.hud.carry !== undefined) return hudDrop(G.hud.carry, slot);
-	if (m) openCard({ type: 'mission', slot });
-	G.hud.sel = m ? slot : null;
-}
 
-// ── the bar
+// ── the row's pages
 const odds2 = (p) => `hsl(${Math.round(Math.max(0, Math.min(1, p)) * 120)} 75% 58%)`;
 function mStatus(m) {
 	if (m.st === 'go') return [mmss(m.eta || 0), '#7db4ff'];
-	if (m.st === 'act') return ['ACTIVE', odds2(m.odds)];
+	if (m.st === 'act') return ['FIGHTING', odds2(m.odds)];
 	if (m.st === 'lost') return ['LOST', '#ff6a5a'];
 	return [m.late ? `LATE +${m.late}s` : '✓ DONE', m.late ? '#ffd35e' : '#5fd08a'];
 }
-function huddleHTML() {
+const stB = (act, t, cls = '', extra = '') => `<button class="cell st ${cls}" data-act="${act}"${extra}>${t}</button>`;
+const cellB = (act, top, word, cls = '', extra = '') => `<button class="cell ${cls}" data-act="${act}"${extra}>${top}${wd(word)}</button>`;
+function squadRoomHTML() {
+	const Q = G.hud.sq,
+		i = Q.i,
+		p = G.P[0],
+		members = sqUnits(i).length;
+	let h = `<div class="col">${cellB('sqnew', `<span class="top">${ICON.squad}<b class="plus">＋</b></span>`, 'Squad', 'sq')}${stB('sqcycle', ICON.cycle, 'sq', ' aria-label="Cycle"')}</div>`;
+	h += `<div class="col">${cellB(`sqcard:${i}`, `<span class="top">${ICON.squad}<span class="c">${members}</span></span>`, BN[i], 'sq sel')}<div class="pm">${stB('sqprev', '‹', 'sq')}${stB('sqnext', '›', 'sq')}</div></div>`;
+	CLS.forEach((c, t) => {
+		const k = sqUnit(t),
+			built = k && ready(0, c[2]).length,
+			have = k ? sqUnits(i).filter((u) => u.kind === k).length : 0,
+			want = k ? G.bnPlan[i][k] || 0 : 0,
+			icon = ICON.cls[c[0]];
+		h += `<div class="col">${cellB(`sqtile:${t}`, `<span class="top">${icon}<span class="c">${k ? `${have}/${want}` : '–'}</span></span>`, k ? shortName(k) : BLD[c[2]].name, (Q.tile === t ? 'sel' : '') + (built ? '' : ' dis'))}<div class="pm">${stB(`sqn:${t},-`, '−', built ? '' : 'dis')}${stB(`sqn:${t},+`, '+', built ? '' : 'dis')}</div></div>`;
+	});
+	return h;
+}
+function warRoomHTML() {
 	const H = G.hud,
-		stage = hudStage(),
-		pool = hudPool(),
-		lamp = (c, blink) => ` bar lamp-${c}${blink ? ' blink' : ''}`,
-		st = (act, t, cls, extra = '') => `<button class="cell st w ${cls || ''}" data-act="${act}"${extra}>${t}</button>`,
-		draft = !H.view,
-		fired = performance.now() - (H.firedT || -1e9) < 1500,
-		ready = H.armed
-			? `<button class="cell${lamp('green')}" data-act="hready" aria-label="Armed: put the plan down"><span class="wd mid">Armed</span></button>`
-			: `<button class="cell${lamp('red', 1)}" data-act="hready" aria-label="Ready"><span class="wd mid">Ready</span></button>`,
-		aim = [
-			st('haim', 'Aim', 'dis'),
-			st('haim', 'Aim', lamp('red', 1)),
-			st('haim', 'Aim', lamp('blue')),
-			st('haim', 'Lock', lamp('blue')),
-			st('haim', 'Locked', lamp('green')),
-			st('haim', 'Locked', lamp('green')),
-		][stage],
-		counts = stage < 4 ? ' dis' : stage === 4 ? lamp('blue') : lamp('green'),
-		mid = (draft ? CLS : MSN)
-			.map((x, i) => {
-				if (draft) {
-					return `<div class="col"><button class="cell${counts}" data-act="hudc:${i}"><span class="top"><span class="c">${hudN(pool, i)}</span></span>${wd(x[1])}</button><div class="pm">${st(`hudn:${i},-`, '−')}${st(`hudn:${i},+`, '+')}</div></div>`;
-				}
-				const m = G.msn[i];
-				if (!m)
-					return `<div class="col"><button class="cell msn empty" data-slot="${i}" data-act="hslot:${i}"><span class="wd mid">${x}</span></button>${st(`hslot:${i}`, '', 'msn empty', ` data-slot="${i}"`)}</div>`;
-				const [t, color] = mStatus(m),
-					n = mUnits(m).length,
-					fl = m.flash ? ' ' + m.flash : '';
-				return `<div class="col"><button class="cell msn${fl}${H.sel === i ? ' sel' : ''}" data-slot="${i}" data-act="mcard:${i}" style="--mc:${color}"><span class="top"><span class="c">${n}</span></span>${wd(m.name)}</button><button class="cell st w msn${fl}" data-slot="${i}" data-act="mcard:${i}" style="color:${color}">${t}</button></div>`;
-			})
-			.join(''),
-		set = `<button class="cell${stage === 4 && hudPick().length ? lamp('red', 1) : stage > 4 ? lamp('green') : ' dis'}" data-act="hset" aria-label="Set the counts"><span class="wd mid">Set</span></button>`,
-		last = !draft
-			? st('habort', 'Abort')
-			: stage === 5
-				? `<button class="cell${lamp('red', 1)}" data-act="hfire" aria-label="Fire"><span class="wd mid">Fire</span></button>`
-				: `<button class="cell${fired ? lamp('green') : ' dis'}" data-act="hfire" aria-label="Fire"><span class="wd mid">Fire</span></button>`;
-	return `<div class="col">${ready}${aim}</div>${mid}<div class="col">${set}${last}</div>`;
+		sel = H.sel,
+		cmd = hasCmd(),
+		tm = sel !== null && sel !== undefined ? dialOf('temper', sel) : dialOf('temper', 'all'),
+		canGo = !!H.h && sqFree(cmd ? sel : null).length > 0;
+	let h = `<div class="col">${cellB('wstance', `<span class="top">${ICON.shield}</span>`, tm < 0 ? 'Mixed' : TEMPER[tm].name, 'war')}${stB('whome', ICON.home, 'war', ' aria-label="Everyone home"')}</div>`;
+	BN.forEach((nm, i) => {
+		const n = cmd ? sqUnits(i).length : 0,
+			m = sqOut(i) ? G.msn[i] : null,
+			[t, color] = m ? mStatus(m) : ['', ''],
+			fl = m && m.flash ? ' ' + m.flash : '';
+		if (!cmd)
+			h += `<div class="col">${cellB(`wsq:${i}`, `<span class="top">${ICON.squad}</span>`, 'Needs Battalions', 'dis')}<div class="pm">${stB(`wback:${i}`, '−', 'dis')}${stB(`wgo:${i}`, '+', 'dis')}</div></div>`;
+		else
+			h += `<div class="col">${cellB(`wsq:${i}`, `<span class="top">${ICON.squad}<span class="c">${n}</span></span>`, m ? `<span style="color:${color}">${t}</span>` : nm, `msn${fl}${sel === i ? ' sel' : ''}`, ` style="--mc:${color || 'transparent'}"`)}<div class="pm">${stB(`wback:${i}`, '−', m ? '' : 'dis', ' aria-label="Call back"')}${stB(`wgo:${i}`, '+', n ? '' : 'dis', ' aria-label="Send"')}</div></div>`;
+	});
+	h += `<div class="col">${cellB('wfire', `<span class="top">${ICON.go}</span>`, 'Go', canGo ? 'go' : 'dis')}${stB('wabort', 'Abort', 'war')}</div>`;
+	return h;
 }
 function huddleUI() {
 	const H = G.hud,
+		page = H.page || 'jobs',
 		el = $('huddle'),
-		flip = el.hidden === H.on;
+		flip = el.hidden === (page !== 'jobs');
 	if (flip) {
-		el.hidden = !H.on;
-		$('jobs').hidden = H.on;
-		$('orders').classList.toggle('hud', H.on);
-		$('hudB').classList.toggle('sel', H.on);
-		$('hudB').innerHTML = H.on ? ICON.close : ICON.sword;
-		$('hudB').setAttribute('aria-label', H.on ? 'Leave the huddle' : 'Huddle: plan an attack');
+		el.hidden = page === 'jobs';
+		$('jobs').hidden = page !== 'jobs';
+		$('orders').classList.toggle('hud', page === 'war');
+		$('orders').classList.toggle('sqr', page === 'squad');
 	}
-	if (H.on) {
-		const h = huddleHTML();
+	const chip = $('hudB');
+	chip.innerHTML = `<b>${pageName[page]}</b> ▸`;
+	chip.className = 'fab chip ' + page;
+	if (page !== 'jobs') {
+		const h = page === 'squad' ? squadRoomHTML() : warRoomHTML();
 		if (el.sigH !== h) {
 			el.sigH = h;
 			el.innerHTML = h;
@@ -27348,14 +28150,14 @@ function huddleUI() {
 	$('emgB').classList.toggle('on', !!G.emg);
 	if (flip) fit(); // the bar is whole again: the corner buttons sit on top of it
 }
-// the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; amber while aiming, green once locked
+// the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; amber while aiming, green once fired
 function drawReticle() {
 	const H = G.hud;
 	if (!H.on || !H.h) return;
 	const x = SX(H.h.e.x),
 		y = SY(H.h.e.y),
-		L = H.aim ? 0 : 1,
-		R = Math.max(30, 16 * cam.z + 6) * (H.aim ? 1 : 0.8),
+		L = performance.now() - (H.firedT || -1e9) < 1200 ? 1 : 0,
+		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
 		t = lessMotion ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
 		eta = hudEta(),
 		line = (a, b, c, d) => (ctx.moveTo(x + a, y + b), ctx.lineTo(x + c, y + d));
@@ -27414,92 +28216,74 @@ function drawReticle() {
 	ctx.stroke();
 	ctx.font = '700 12px system-ui, sans-serif';
 	ctx.textAlign = 'center';
-	if (H.aim) ctx.fillText(H.moved ? 'Hold and drag, or tap' : 'Tap the map to move it', x, y + R + 30);
+	ctx.fillText(H.moved ? 'Hold and drag, or tap · Go sends' : 'Tap the map to aim', x, y + R + 30);
 	ctx.fillText(eta ? `${mmss(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - R - 8);
 	ctx.restore();
 }
-// the details card for one mission: who, what, where, when, status, and what you can do
-CARDS.mission = (c) => {
-	const m = G.msn[c.slot];
-	if (!m) return null;
+// ── the squad card: the editor while it is home, the live view while it is out (Build 61, one card, two states)
+function squadEditHTML(i) {
+	const p = G.P[0],
+		plan = G.bnPlan[i],
+		S = sqUnits(i),
+		can = ARMYK.filter((k) => !UNIT[k].civ && UNIT[k].cost && k !== 'spy')
+			.map((k) => civKind(0, k))
+			.filter((k) => UNIT[k].age <= p.age && readyAt(0, UNIT[k]).length),
+		kinds = [...new Set([...S.map((u) => u.kind), ...Object.keys(plan), ...can])];
+	let h = kinds.length
+		? `<div class="qs hdr"><b>Kind</b><span>have</span><span>want</span><span></span></div>` +
+			kinds
+				.map(
+					(k) =>
+						`<div class="qs"><b>${stats(0, k).name}</b>${btn(`sqpk:${i},${k},-`, '−')}<span>${S.filter((u) => u.kind === k).length} · ${plan[k] || 0}</span>${btn(`sqpk:${i},${k},+`, '+')}</div>`,
+				)
+				.join('')
+		: '<p>Train soldiers first.</p>';
+	h += `<p class="dim">Soldiers at home fill the plan by themselves. The rest are the reserve.</p>`;
+	h += acts(dialBtns(i));
+	if (p.techs.has('muster')) {
+		const miss = musterGap(i),
+			why = musterWhy(0, miss),
+			mc = musterCost(0, miss);
+		h += acts(btn(`muster:${i}`, `Train new: +${musterN(miss)}`, why ? why.replace(/\.$/, '') : `${costText(mc.cost)} · ${mc.t} s`, why ? 'dis' : 'go'), 'c1');
+	} else h += `<p class="dim">Muster, at the War Council, trains what a squad lacks in one order.</p>`;
+	return h;
+}
+CARDS.squad = (c) => {
+	const i = c.i,
+		m = sqOut(i) ? G.msn[i] : null;
+	if (!m) return title(BN[i], `at home · ${sqUnits(i).length} in it`) + squadEditHTML(i);
 	const S = mUnits(m),
-		cls = CLS.map((k, i) => [k[1], S.filter((u) => clsOf(u) === i).length])
-			.filter((r) => r[1])
-			.map((r) => `${r[1]} ${r[0]}`)
-			.join(', '),
 		[word] = mStatus(m),
 		plan = m.st === 'act' ? reinforcePlan(m) : null,
-		spare = spareOf(m),
 		slow = sideSpd(0),
-		row = (k, v) => `<p><b>${k}</b> ${v}</p>`;
+		hp = S.reduce((s, u) => s + u.hp, 0) / Math.max(1, S.reduce((s, u) => s + u.max, 0)),
+		rows = Object.entries(m.kinds || {})
+			.map(([k, n0]) => {
+				const alive = S.filter((u) => u.kind === k).length;
+				return `<tr><td>${stats(0, k).name}</td><td>${alive} / ${n0}</td><td class="${n0 - alive ? 'low' : ''}">${n0 - alive ? n0 - alive + ' fell' : '—'}</td></tr>`;
+			})
+			.join('');
 	return (
-		title(m.name, m.st === 'act' ? `${Math.round(m.odds * 100)}%` : word) +
-		row('Who', `${S.length} of ${m.n0}${cls ? ' · ' + cls : ''}`) +
-		row('What', `${m.what} ${m.label}`) +
-		`<p data-act="jump:${m.x},${m.y}"><b>Where</b> ${coord(m.x, m.y)} · tap to go</p>` +
-		row('When', m.st === 'go' ? `Due in ${mmss(m.eta || 0)}` : m.late ? `${m.late} s late` : 'On time') +
-		row('Status', m.st === 'act' ? `Active · ${Math.round(m.odds * 100)}% to win` : word) +
-		(slow < 0.98
-			? row(G.wx !== 'clear' ? 'Weather' : 'Season', `${wxWord()}, walking ×${slow.toFixed(2)}, included`)
-			: '') +
-		(m.st === 'act' || spare.length
-			? acts(
-					(m.st === 'act'
-						? btn(
-								`hudrein:${c.slot}`,
-								plan && plan.go.length ? `Reinforce +${plan.go.length}` : 'Reinforce',
-								plan && plan.go.length
-									? waveLine(plan)
-									: plan && plan.even
-										? 'Already even'
-										: plan && plan.late
-											? 'Too late'
-											: 'No reserve',
-								plan && plan.go.length ? 'go' : 'dis',
-							)
-						: '') + (spare.length ? btn(`hspare:${c.slot}`, `Spare ${spare.length}`, 'then tap a tile', 'go') : ''),
-				)
-			: '') +
-		acts(btn(`hdel:${c.slot}`, 'Abort', 'soldiers go home', 'warn') + btn('habortall', 'Abort all', '', 'warn'))
+		title(m.name, m.st === 'act' ? `fighting · ${Math.round(m.odds * 100)}% to win` : word.toLowerCase()) +
+		hpBar(hp, hp > 0.5 ? '#5fd08a' : hp > 0.25 ? '#e6b947' : '#c0392b') +
+		`<p><i>Health ${Math.round(hp * 100)}%</i> · ${S.length} of ${m.n0} standing · ${m.what.toLowerCase()} ${m.label}${m.st === 'go' ? `, ${mmss(m.eta || 0)} to arrive` : m.late ? `, ${m.late} s late` : ''}</p>` +
+		`<table style="width:100%;border-collapse:collapse"><tr><th>Kind</th><th>Alive</th><th>Lost</th></tr>${rows}</table>` +
+		(slow < 0.98 ? `<p class="dim">${G.wx !== 'clear' ? 'Weather' : 'Season'}: ${wxWord()}, walking ×${slow.toFixed(2)}.</p>` : '') +
+		acts(
+			btn(
+				`hudrein:${i}`,
+				plan && plan.go.length ? `Send more +${plan.go.length}` : 'Send more',
+				plan && plan.go.length ? waveLine(plan) : plan && plan.even ? 'already even' : plan && plan.late ? 'too late' : 'no reserve',
+				plan && plan.go.length ? 'go' : 'dis',
+			) +
+				btn(`shape:${i}`, 'Formation', FORM[dialOf('form', i)].name, G.P[0].techs.has('formations') ? '' : 'dis') +
+				btn(`temper:${i}`, 'Temper', TEMPER[dialOf('temper', i)].name),
+			'c3',
+		) +
+		`<p data-act="jump:${m.x},${m.y}" class="dim"><b>Where</b> ${coord(m.x, m.y)} · tap to go</p>` +
+		acts(btn(`hdel:${i}`, 'Abort', 'they come home', 'warn'), 'c1')
 	);
 };
-// drag a green tile's spare soldiers: onto a mission, an empty slot, or Ready
-function hudDrag(ev) {
-	const t = ev.target.closest && ev.target.closest('#huddle [data-slot]'),
-		m = t && G.msn[t.dataset.slot];
-	if (!m || !m.spare || !m.spare.length) return;
-	const from = Number(t.dataset.slot),
-		x0 = ev.clientX,
-		y0 = ev.clientY;
-	let ghost = null;
-	const move = (e) => {
-			if (!ghost && Math.hypot(e.clientX - x0, e.clientY - y0) > 10) {
-				ghost = document.createElement('div');
-				ghost.className = 'hudGhost';
-				ghost.textContent = `Spare ${m.spare.length}`;
-				document.body.appendChild(ghost);
-			}
-			if (ghost) ghost.style.transform = `translate(${e.clientX - 40}px,${e.clientY - 60}px)`;
-		},
-		end = (e) => {
-			window.removeEventListener('pointermove', move);
-			window.removeEventListener('pointerup', end);
-			window.removeEventListener('pointercancel', end);
-			if (!ghost) return;
-			ghost.remove();
-			G.hud.dragged = performance.now();
-			const d = document.elementFromPoint(e.clientX, e.clientY),
-				slot = d && d.closest('[data-slot]'),
-				ready = d && d.closest('[data-act="hready"]');
-			if (ready) hudDrop(from, 'home');
-			else if (slot) hudDrop(from, Number(slot.dataset.slot));
-			refresh();
-		};
-	window.addEventListener('pointermove', move);
-	window.addEventListener('pointerup', end);
-	window.addEventListener('pointercancel', end);
-}
-document.addEventListener('pointerdown', hudDrag);
 // ═════ 40-emergency.js: Shelter, Battle stations, All hands on deck, Resume ═════
 // One ranking for everyone: buildings that shelter, the sturdiest first (current hit points, then room); each is filled to its room with the nearest units who can go there;
 // whoever is left over goes to a safe spot behind the Town Center. Villagers go in and stay until Resume (a note of each one's job and spot is kept).
@@ -27818,6 +28602,10 @@ window.__fk = {
 	fxDirty,
 	techCost,
 	sendOut,
+	replant,
+	replantWhy,
+	stopVil,
+	wayLen,
 	techState,
 	get G() {
 		return G;
@@ -27877,8 +28665,13 @@ window.__fk = {
 	emgStart,
 	emgResume,
 	hudFire,
-	hudPick,
-	hudDrop,
+	hudFire,
+	hudAbort,
+	pageCycle,
+	hudPage,
+	sqNew,
+	sqPlan,
+	sqUnits,
 	hudReinforce,
 	reinforcePlan,
 	missionsTick,
@@ -27935,6 +28728,10 @@ window.__fk = {
 	holdGames,
 	standDown,
 	sightOf,
+	sightClear,
+	visCap,
+	fireHeat,
+	FIRE,
 	shelterOf,
 	bldName,
 	statusOf,
@@ -28061,7 +28858,7 @@ window.__fk = {
 		return holdSave;
 	},
 	get caches() {
-		return { SPR, BSPR, NSPR };
+		return { SPR, BSPR, NSPR, deepTrees };
 	},
 };
 
