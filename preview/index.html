@@ -131,7 +131,7 @@ button.ghost{visibility:hidden}
 #tPeople .gl{width:22px;height:22px}
 #tPeople .wd{color:var(--bone)}
 /* three tints the thumb learns (Build 61, Albert): people green, build timber-brown, jobs black */
-.tiles button.cell#tPeople{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}.tiles button.cell#buildT{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}.tiles button.cell#buildT.sel{background:linear-gradient(#7a5a2e,#4e3618);border-color:#c9a46a}
+.tiles button.cell#buildT{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}.tiles button.cell#buildT.sel{background:linear-gradient(#7a5a2e,#4e3618);border-color:#c9a46a}
 /* the attack cards: the same dark glass, hairlines and one amber accent as the huddle bar */
 #card.hud{background:rgba(10,13,15,.9);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.09);border-radius:14px;box-shadow:none}
 #card.hud h3{font-family:inherit;font-weight:700;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:#ffb23d}
@@ -159,7 +159,7 @@ button.ghost{visibility:hidden}
 #huddle button.cell[class*="lamp-"]{border-color:var(--mc)}#huddle [class*="lamp-"] .wd{color:inherit}#huddle .lamp-green::after,#huddle .lamp-blue::after{box-shadow:0 0 8px var(--mc)}
 #huddle .blink{animation:hudBlink 1s infinite}@keyframes hudBlink{50%{box-shadow:inset 0 0 0 1px var(--mc),0 0 12px var(--mc)}}
 #huddle .cell.sel{border-color:#ffb23d}
-#huddle button.cell.sq,#huddle button.cell.st.sq{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#huddle button.cell.sq.sel{background:linear-gradient(#46525f,#2f3842);border-color:#aab6c4}#huddle button.cell.war,#huddle button.cell.st.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#huddle button.cell.go{background:linear-gradient(#2f6fc4,#1d4f94);border-color:#8cc0ff}#huddle button.cell.go .wd,#huddle button.cell.go .gl{color:#fff}#orders.sqr{background:rgba(16,19,23,.84);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
+#huddle button.cell.sq,#huddle button.cell.st.sq{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#huddle button.cell.sq.sel{background:linear-gradient(#46525f,#2f3842);border-color:#aab6c4}#huddle button.cell.war,#huddle button.cell.st.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#huddle button.cell.go .wd,#huddle button.cell.go .gl{color:#9cc8ff}#orders.sqr{background:rgba(16,19,23,.84);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
 #huddle .msn{touch-action:none}#huddle .msn.empty{background:transparent;border-style:dashed}
 #huddle .msn.lose{--pc:#ff5a4a;animation:hudPulse 1s infinite}#huddle .msn.win{--pc:#43c06b;animation:hudPulse 1.2s infinite}
 @keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc),0 0 10px var(--pc)}}
@@ -170,7 +170,7 @@ button.ghost{visibility:hidden}
 #tally button.cell{isolation:isolate}#tally button.cell.sel::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:7px;background:#2f3b36;border:1px solid var(--mute)}   /* the on mark: a small tile inside the cell; ::before is the divider */
 #pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}
 button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--pad);bottom:calc(var(--ob) + 8px);width:auto;height:44px;padding:0 10px 0 8px;border-radius:22px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:3px;color:var(--bone)}#hudB svg{position:static;transform:none;width:20px;height:20px}#hudB b{font-weight:700}#hudB.squad{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#hudB.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#hudB.train{background:linear-gradient(#1f3d33,#14302a);border-color:#2f7a5a}
-.tiles button.cell.sq,.tiles button.cell.st.sq{background:linear-gradient(#323a44,#232a31);border-color:#56616e}.tiles button.cell.sq.sel{background:linear-gradient(#46525f,#2f3842);border-color:#aab6c4}.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}.tiles button.cell.go{background:linear-gradient(#2f6fc4,#1d4f94);color:#fff;border-color:#8cc0ff}.tiles button.cell.go .wd{color:#fff}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#emgB.on{border-color:#ff5a4a;color:#ff9a8c}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB,#stage.busy #emgB{display:none}
+.tiles button.cell.sq,.tiles button.cell.st.sq{background:linear-gradient(#323a44,#232a31);border-color:#56616e}.tiles button.cell.sq.sel{background:linear-gradient(#46525f,#2f3842);border-color:#aab6c4}.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#323a44,#232a31);border-color:#56616e}.tiles button.cell.go{color:#9cc8ff}.tiles button.cell.go .wd{color:#9cc8ff}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#emgB.on{border-color:#ff5a4a;color:#ff9a8c}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB,#stage.busy #emgB{display:none}
 #stage.busy #homeB{display:none}
 #stage.picking #homeB{display:none}
 #card .lbl{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.1;min-height:44px}#card .lbl b{font-size:16px}#card .lbl small{color:var(--mute);font-size:13px}
@@ -205,10 +205,10 @@ button.ok small{color:#8fd4a4}
 #card button.dis{border-color:#4a3a28;background:transparent;box-shadow:none;color:#bfb49c}#card button.done:not(#cardX):not(#cardI){opacity:.55;border-style:solid;border-color:#5a4a30}#card .chipsrow button.done:not(.on):not(#cardX):not(#cardI){opacity:.5}#card button.dis b{color:#bfb49c}   /* what you cannot: flat on the table */
 #card button.nope:not(#cardX):not(#cardI){border-color:var(--red);box-shadow:0 0 12px rgba(220,70,50,.7),inset 0 0 8px rgba(220,70,50,.35)}
 #card small.need,#card small.can{color:var(--gc);font-weight:700}#card button.go small.can{color:inherit}   /* a cost on the one gradient; a go button already says it */
-#card button.go{border-color:#6aaeff;box-shadow:inset 0 0 0 1px #6aaeff,0 0 10px rgba(79,157,255,.35)}   /* what you can do now: blue, the colour code (Build 64; it was a brass rim) */
+
 #card button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;box-shadow:0 0 14px rgba(242,210,122,.5)}#card button.on small{color:#4a3518}
 #card button.warn{border-color:var(--red);color:#ffb3a7}
-#card button.ok{border-color:#4fb06a;box-shadow:inset 0 0 0 1px #4fb06a;color:#dcf5e8}#card button.ok small{color:#8fd4a4}
+#card button.ok{color:#dcf5e8}#card button.ok small{color:#8fd4a4}
 #card .done{color:#9fd8b5}
 #card .chip{border-color:#4fb06a;box-shadow:none;background:rgba(79,176,106,.14);color:#dcf5e8}
 #card .fold{border-top-color:#4a3a28}
@@ -244,26 +244,33 @@ button.ok small{color:#8fd4a4}
 #card button.a0{--age:#9a9890}#card button.a1{--age:#b5793a}#card button.a2{--age:#c9c2a6}#card button.a3{--age:#4d6b9e}#card button.a4{--age:#8e2f2a}
 #card button:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){background-color:#1c232c;background-image:linear-gradient(#222c38,#191f27),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3 2h8v10H3zM5 5h4M5 7h4M5 9h3' fill='none' stroke='%23a9c4e6' stroke-width='1.2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:0 0,5px 5px;border-color:#556a85;box-shadow:inset 0 1px 0 rgba(170,200,240,.1)}
 #card button.dis:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){background-color:transparent;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3 2h8v10H3zM5 5h4M5 7h4M5 9h3' fill='none' stroke='%237c8ea6' stroke-width='1.2'/%3E%3C/svg%3E");border-color:#3d4f66;box-shadow:none}
-#card button.go:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){border-color:#7d9bc4;box-shadow:inset 0 0 0 1px #7d9bc4,0 0 10px rgba(130,170,230,.2)}   /* research reads blue: cool tint, a small scroll, a blue rim when ready */
+
 @media (max-width:400px){:root{--pad:6px}}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important;scroll-behavior:auto!important} }
 /* The door (Build 64): the bottom of the row's first slot; its colour is the most important thing now, in the colour code */
 #orders button.cell.door{background:linear-gradient(#2a3330,#1f2724);border-color:#4a5a52}
-#orders button.cell.door.red{background:linear-gradient(#5c1a14,#3a1110);border-color:#ff6b5b;color:#ffd9d2}#orders button.cell.door.red .wd{color:#ffd9d2}
-#orders button.cell.door.blue{background:linear-gradient(#1d4f94,#143766);border-color:#8cc0ff;color:#e4f0ff}#orders button.cell.door.blue .wd{color:#e4f0ff}
-#orders button.cell.door{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px}#orders button.cell.door .top{position:static;display:inline-flex;transform:none;height:auto}#orders button.cell.door .top .gl{position:static;transform:none;width:15px;height:15px}#orders button.cell.door .wd{position:static;transform:none;font-size:12px;line-height:14px;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}#orders button.cell.door .pill{position:absolute;top:1px;right:2px;display:block;height:auto;min-width:12px;padding:0 3px;border:0;border-radius:8px;background:#b3261e;color:#fff;font-size:12px;line-height:15px;box-shadow:none;overflow:visible}
+#orders button.cell.door.red{color:#ff9a8c}#orders button.cell.door.red .wd{color:#ff9a8c}
+#orders button.cell.door.blue{color:#9cc8ff}#orders button.cell.door.blue .wd{color:#9cc8ff}   /* a ring and a glow, never a fill (Albert) */
+#orders button.cell.door{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px}#orders button.cell.door .top{position:static;display:inline-flex;transform:none;height:auto}#orders button.cell.door .top .gl{position:static;transform:none;width:15px;height:15px}#orders button.cell.door .wd{position:static;transform:none;font-size:12px;line-height:14px;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}#orders button.cell.door .pill{position:absolute;top:1px;right:2px;display:block;height:auto;min-width:12px;padding:0 3px;border:0;border-radius:8px;background:#1b2521;border:1.5px solid var(--ring-r);color:#ffb3a8;font-size:12px;line-height:13px;box-shadow:none;overflow:visible}
 #orders button.cell.door.pulse{animation:doorp 1.2s ease-out 1}@keyframes doorp{0%{box-shadow:0 0 0 0 rgba(255,255,255,.75)}100%{box-shadow:0 0 0 14px rgba(255,255,255,0)}}
 @media (prefers-reduced-motion:reduce){#orders button.cell.door.pulse{animation:none;outline:2px solid #fff}}
-#huddle button.cell.st-blue{border-color:#8cc0ff;box-shadow:inset 0 0 0 1px #8cc0ff}#huddle button.cell.st-blue .wd{color:#bcd9ff}#huddle button.cell.st-green{border-color:#5fd08a}#huddle button.cell.st-green .wd{color:#a8e0b0}#huddle button.cell.st-red{border-color:#ff6b5b;box-shadow:inset 0 0 0 1px #ff6b5b}#huddle button.cell.st-red .wd{color:#ff9a8c}
+#huddle button.cell.st-blue .wd{color:#bcd9ff}#huddle button.cell.st-green .wd{color:#a8e0b0}#huddle button.cell.st-red .wd{color:#ff9a8c}
 /* The dashboard: the five domains and the mail in one row on the row's six-column mold */
 #card .dash{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
 #card button.dt:not(#cardX):not(#cardI){min-height:84px;padding:4px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px solid var(--line);border-radius:8px;background:#241a12;box-shadow:none}
 #card button.dt .i svg{width:20px;height:20px;position:static;transform:none}#card button.dt b{font-size:12px;line-height:1.1;text-align:center}#card button.dt small{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
-#card button.dt.red:not(#cardX):not(#cardI){border-color:#ff6b5b;box-shadow:inset 0 0 0 1px #ff6b5b}#card button.dt.red b{color:#ff9a8c}
-#card button.dt.blue:not(#cardX):not(#cardI){border-color:#6aaeff;box-shadow:inset 0 0 0 1px #6aaeff}#card button.dt.blue b{color:#9cc8ff}
-#card button.dt.green:not(#cardX):not(#cardI){border-color:#5fd08a}#card button.dt.green b{color:#a8e0b0}
+#card button.dt.red b{color:#ff9a8c}
+#card button.dt.blue b{color:#9cc8ff}
+#card button.dt.green b{color:#a8e0b0}
 /* The mail: each line with its colour on its left edge */
 #card .mrows{display:flex;flex-direction:column;gap:4px}#card button.mr:not(#cardX):not(#cardI){min-height:44px;padding:4px 8px;align-items:flex-start;text-align:left;border-left:4px solid var(--cc)}#card button.mr b{font-size:13px;font-weight:600}#card button.mr small{font-size:12px;color:var(--mute)}
+/* The one ring (Build 64, Albert: "a ring and a glow, never a fill"; "one or two rings"): every state anywhere is this ring in its
+   colour, the colour code's three: blue available, green active or done, red wrong. One rule; a control only names its state. */
+:root{--ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b}
+:is(#orders,#card,#strip) :is(button.go,button.blue,button.st-blue):not(#cardX):not(#cardI){--rc:var(--ring-b)}
+:is(#orders,#card,#strip) :is(button.ok,button.green,button.st-green):not(#cardX):not(#cardI){--rc:var(--ring-g)}
+:is(#orders,#card,#strip) :is(button.red,button.st-red):not(#cardX):not(#cardI){--rc:var(--ring-r)}
+:is(#orders,#card,#strip) :is(button.go,button.blue,button.st-blue,button.ok,button.green,button.st-green,button.red,button.st-red):not(#cardX):not(#cardI){border-color:var(--rc);box-shadow:inset 0 0 0 1px var(--rc),0 0 10px color-mix(in srgb,var(--rc) 50%,transparent)}
 </style>
 
 </head>
