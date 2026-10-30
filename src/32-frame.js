@@ -251,6 +251,15 @@ function fit() {
 			o = $('orders').getBoundingClientRect(),
 			t = r.top;
 		document.documentElement.style.setProperty('--ob', Math.round(r.bottom - o.top) + 'px');
+		{
+			const c1 = document.querySelector('#orders .tr:not([hidden]) > .col'); // the first column of the row on show: the chip sits on it, its width
+			if (c1) {
+				const q = c1.getBoundingClientRect(),
+					a = $('app').getBoundingClientRect();
+				document.documentElement.style.setProperty('--c1x', (q.left - a.left).toFixed(1) + 'px');
+				document.documentElement.style.setProperty('--c1w', q.width.toFixed(1) + 'px');
+			}
+		}
 		vy = Math.round((h.bottom - t + (o.top - t)) / 2 - ch / 2);
 		bandH = Math.max(100, o.top - h.bottom);
 	}
