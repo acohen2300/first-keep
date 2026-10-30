@@ -290,10 +290,15 @@ function formUp() {
 const DF = () => DIFF[G.diff] || DIFF.normal;
 const react = () => DF().react; // seconds between computer decisions: human-like, no cheats
 function died(u) {
-	if (isSoldier(u) && !u.gone)
-		unitsNear(u, 40, (v) => {
-			if (v.owner === u.owner && isSoldier(v) && v.hp > 0) v.mor -= MORALE.loss;
-		}); // a loss beside you shakes the nerve
+	if (isSoldier(u) && !u.gone) {
+		// a loss beside you shakes the nerve by its share of the group: a group of n breaks after breakAt × n losses (Dupuy's break point)
+		const near = [];
+		unitsNear(u, MORALE.lossR, (v) => {
+			if (v.owner === u.owner && isSoldier(v) && v.hp > 0) near.push(v);
+		});
+		const share = 1 / (MORALE.breakAt * (near.length + 1));
+		for (const v of near) v.mor -= share;
+	}
 	if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 	if (u.kind === 'envoy') G.P[u.owner].envoyOut = false;
 	if (u.kind === 'caravan' && u.by === WILD) robbed(u);

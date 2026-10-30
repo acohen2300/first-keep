@@ -8,19 +8,23 @@ const ZEAL = { cost: { g: 60 }, secs: 45, cd: 120, mul: 1.2 };
 const SAB = { burn: 0.6, stall: 40 };
 const FLANK = 1.3; // a blow from behind lands 30% harder
 // ───────────────────────── Combat you steer: nerve, flanks, charge and fall back, prisoners, conversion ─────────────────────────
-// Every soldier has nerve (0..1). Blows drain it by the share of health they take, times hit (a flank blow 1.5 times, a rear blow twice), being outnumbered drains it, losses beside it drain it;
-// quiet restores it, as do a wall or tower of its own, its Town Center, a priest, and Engagement at the War Council (a shorter rout). At zero it routs:
-// runs for home for a spell, takes more harm, and can be taken prisoner by any foe who lays a hand on it. Most real battles ended in a rout.
+// Every soldier has nerve (0..1). Blows drain it by the share of health they take, times hit (a flank blow 1.5 times, a rear blow twice); being
+// outnumbered drains it; a loss beside it drains it by its share of the group (Dupuy's break point, Build 62: a force breaks when its losses reach
+// a share, breakAt, of its number; Dupuy, *Numbers, Predictions and War*, 1979, and *Understanding War*, 1987, ch. 8: historical breakpoints
+// 10% to 40%). Quiet restores it as the first-order lag toward 1 (tau seconds to 63%); a wall or tower of its own, its Town Center and a priest
+// shorten that time; Engagement at the War Council shortens the rout. At zero it routs: runs for home for a spell, takes more harm, and can be
+// taken prisoner by any foe who lays a hand on it. Most real battles ended in a rout.
 const MORALE = {
 	hit: 0.8,
 	side: 1.5,
 	rear: 2,
 	kill: 0.04,
-	loss: 0.03,
+	breakAt: 0.3,
+	lossR: 40,
 	odds: 0.02,
-	rest: 0.03,
-	shelter: 0.02,
-	priest: 0.03,
+	tau: 15,
+	shelter: 1.5,
+	priest: 2,
 	priestR: 120,
 	rout: 8,
 	routHit: 1.5,

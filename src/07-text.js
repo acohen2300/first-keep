@@ -797,6 +797,11 @@ const TRIGGERS = () => [
 		'Armies marched in column and deployed into line to fight: the Roman three lines and the medieval three battles, van, main body and rear, were the same idea. Skirmishers and horse archers fought by not being caught (Carrhae, 53 BC).',
 	],
 	[
+		'Nerve and the rout',
+		`Every soldier has nerve. A blow drains it by the share of health it takes (half again from the side, twice from behind); a comrade falling beside it drains it by one share of the group, so a group breaks when it has lost ${Math.round(MORALE.breakAt * 100)}% of its number; being outnumbered three to two drains it slowly. Quiet lets it settle back, ${MORALE.tau} s to recover most of it, faster by a wall or tower of its own and by a priest. At nothing it routs: runs for home ${MORALE.rout} s, takes more harm, and can be taken prisoner.`,
+		'Most real battles ended in a rout, not a last man: armies broke when losses reached a tenth to a third (Dupuy, Understanding War, 1987).',
+	],
+	[
 		'Hit from behind',
 		`A foot soldier or rider struck from behind the way it faces takes ${Math.round((FLANK - 1) * 100)}% more damage. Shooters do not get it. Splitting the army to catch a line from two sides pays.`,
 		'Armies lost most men when their line was turned: Cannae, 216 BC.',

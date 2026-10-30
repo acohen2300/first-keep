@@ -304,7 +304,7 @@ function seasonTurn() {
 		if (b.kind === 'pasture' && b.prog >= 1 && b.hp > 0) {
 			if (s === 'Spring') {
 				b.node.amt += (b.sheep || 0) * FLEECE;
-				b.sheep = Math.min(FLOCK, Math.round((b.sheep || 0) + LAMBS * (b.sheep || 0) * (1 - (b.sheep || 0) / FLOCK))); // ΔN = r N (1 − N/K): fast while the pasture is empty, slowing as it fills
+				b.sheep = Math.min(FLOCK, Math.round(logistic(b.sheep || 0, LAMBS, FLOCK))); // Verhulst: fast while the pasture is empty, slowing as it fills
 			}
 			const wolf = G.units.find(
 				(v) =>
@@ -649,7 +649,7 @@ function priceDrift() {
 	});
 	for (const k of MKTK) {
 		const aim = k === 'spice' ? (G.plague && G.plague.until > G.t ? 1.4 : 1) * (full ? 1.2 : 1) : 1;
-		G.mkt[k] += (aim ** -PRICE.eps[k] - G.mkt[k]) * (1 - Math.exp(-10 / PRICE.tau)); // every 10 s, toward the stock that gives the aimed price
+		G.mkt[k] = relax(G.mkt[k], aim ** -PRICE.eps[k], PRICE.tau, 10); // every 10 s, toward the stock that gives the aimed price
 	}
 }
 // ventures: gold put into a merchant voyage; a year later it comes back with 40% more, or not at all
@@ -842,7 +842,7 @@ function vassalTick() {
 		if (L.id === 0 && p.paid > 0) sfx('tribute');
 		p.protect = (p.protect || 0) * VASSAL.decay;
 		const parts = loyaltyParts(p);
-		p.loyal = (p.loyal || 0) + (parts.target - (p.loyal || 0)) * 0.05;
+		p.loyal = relax(p.loyal || 0, parts.target, VASSAL.tau, 10); // loyalty settles toward what you have earned, 63% of the way in VASSAL.tau
 		p.unrest = clamp(
 			(p.unrest || 0) + TAX[p.tax].push * fxv(L.id, 'push').m + (p.forced > G.t ? 1 : 0) - p.loyal / 25,
 			0,

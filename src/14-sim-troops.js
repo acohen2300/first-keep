@@ -86,7 +86,9 @@ function medicTick(u, dt, SP) {
 	const h = homeSpot(u, 90);
 	if (h) moveTo(u, h.x, h.y, dt, 3, SP);
 }
-// Healing: a hospital or a medic heals your own soldiers within reach. The best one in reach counts; they do not add up.
+// Healing: a hospital or a medic heals your own soldiers within reach. The best one in reach counts; they do not add up. A wound closes
+// toward full as the first-order lag (the delayed exponential of Cukjati, Reberšek & Miklavčič 2001: fast while the wound is wide, slowing
+// as it closes); the healer's `heal` is the hit points a second a linear rate would give, so τ = max / heal and a half-dead soldier takes the time it did.
 function healTick(dt) {
 	if (G.tick % 3) return;
 	const H = [];
@@ -104,7 +106,7 @@ function healTick(dt) {
 		let best = 0;
 		for (let i = 0; i < H.length; i += 5)
 			if (H[i + 4] === u.owner && H[i + 3] > best && hyp(H[i] - u.x, H[i + 1] - u.y) < H[i + 2]) best = H[i + 3];
-		if (best) u.hp = Math.min(u.max, u.hp + best * fxv(u.owner, 'heal').m * dt * 3);
+		if (best) u.hp = relax(u.hp, u.max, u.max / (best * fxv(u.owner, 'heal').m), dt * 3);
 	}
 }
 
@@ -165,7 +167,7 @@ function solTick(u, dt, SP) {
 				dist(b, u) < GARRISON.r,
 		)
 	)
-		u.hp = Math.min(u.max, u.hp + GARRISON.heal * fxv(o, 'garrison').m); // garrisoned: it heals
+		u.hp = relax(u.hp, u.max, u.max / (GARRISON.heal * fxv(o, 'garrison').m), 1); // garrisoned: the wound closes, once a second
 	if (u.state === 'rout') {
 		// broken: it runs from the nearest foe toward home, then comes to itself
 		if (G.t > u.routT) {
@@ -191,25 +193,24 @@ function solTick(u, dt, SP) {
 		return;
 	}
 	if ((G.tick + u.id) % 4 === 0) {
-		// the nerve breathes, four times a second: quiet, shelter and a priest restore it; being outnumbered drains it
+		// the nerve breathes, four times a second: quiet lets it settle back toward 1 (the first-order lag, MORALE.tau), faster by a wall or
+		// tower of its own and by a priest; being outnumbered drains it
 		const d4 = dt * 4;
 		let m = u.mor;
-		if (!u.tgt) m += MORALE.rest * fxv(o, 'rest').m * d4;
-		if (
-			bldsNear(
-				u.x,
-				u.y,
-				60,
-				(b) => b.owner === o && b.prog >= 1 && b.hp > 0 && (BLD[b.kind].dmg || BLD[b.kind].wallish) && dist(b, u) < 60,
+		if (!u.tgt) {
+			let rate = fxv(o, 'rest').m;
+			if (
+				bldsNear(
+					u.x,
+					u.y,
+					60,
+					(b) => b.owner === o && b.prog >= 1 && b.hp > 0 && (BLD[b.kind].dmg || BLD[b.kind].wallish) && dist(b, u) < 60,
+				)
 			)
-		)
-			m += MORALE.shelter * fxv(o, 'shelter').m * d4;
-		if (
-			G.priests.some(
-				(p) => p.owner === o && Math.abs(p.x - u.x) < MORALE.priestR && Math.abs(p.y - u.y) < MORALE.priestR,
-			)
-		)
-			m += MORALE.priest * d4;
+				rate *= MORALE.shelter * fxv(o, 'shelter').m;
+			if (G.priests.some((p) => p.owner === o && Math.abs(p.x - u.x) < MORALE.priestR && Math.abs(p.y - u.y) < MORALE.priestR)) rate *= MORALE.priest;
+			m = relax(m, 1, MORALE.tau / rate, d4);
+		}
 		if (u.tgt) {
 			let us = 0,
 				them = 0;

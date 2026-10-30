@@ -23,6 +23,7 @@ const TAX = {
 };
 const VASSAL = {
 	r: 450,
+	tau: 195, // seconds for loyalty to close 63% of the gap to its target (the first-order lag; the old 5% a 10 s step, kept exactly)
 	garrison: 0.5,
 	garrisonMax: 15,
 	kill: 1,

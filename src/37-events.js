@@ -590,7 +590,7 @@ function climateTick(dt) {
 	}
 	const eq = CLIMATE.eq[G.wx] ?? CLIMATE.eq.clear,
 		tau = eq > c.W ? CLIMATE.tau.wet : CLIMATE.tau.dry;
-	c.W += (eq - c.W) * (1 - Math.exp(-dt / tau)); // M(t) = Me + (M0 − Me) e^(−t/τ)
+	c.W = relax(c.W, eq, tau, dt); // M(t) = Me + (M0 − Me) e^(−t/τ), the timelag fuel-moisture model
 	c.snow = clamp(c.snow + (precip(G.wx) && c.T <= 0 ? CLIMATE.snow.fall * (G.wx === 'blizzard' ? 2 : 1) : -CLIMATE.snow.melt * Math.max(0, c.T)) * dt, 0, 1);
 	c.ice = clamp(c.ice + (c.T < 0 ? (c.W > CLIMATE.mud[0] * 0.5 ? CLIMATE.ice.freeze : 0) : -CLIMATE.ice.thaw * c.T) * dt, 0, 1);
 	c.mud = c.T < 0 ? 0 : clamp((c.W - CLIMATE.mud[0]) / (CLIMATE.mud[1] - CLIMATE.mud[0]), 0, 1); // frozen ground is hard ground

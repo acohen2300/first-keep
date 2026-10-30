@@ -91,6 +91,12 @@ const rnd = (a, b) => a + rng() * (b - a);
 // Every random "when" in the game draws from these two (Build 57, Albert: "the established and correct formula for random events").
 const nextIn = (mean) => -mean * Math.log(1 - rng());
 const hazard = (rate, dt = 1) => rng() < 1 - Math.exp(-rate * dt);
+// One home for a thing that settles toward a level, the first-order lag: x(t) = L + (x0 − L) e^(−dt/τ) (Build 62, Albert: one equation,
+// one home). τ is the time to close 63% of the gap. Wetness and drying (the timelag fuel-moisture model), the market's stock, a soldier's
+// nerve coming back, a wound closing (Cukjati, Reberšek & Miklavčič 2001: healing is a delayed exponential), a vassal's loyalty.
+const relax = (x, level, tau, dt) => level + (x - level) * Math.exp(-dt / tau);
+// One home for growth with room (Verhulst 1838): one step of ΔN = r N (1 − N/K), fast while there is room, slowing as it fills. Flocks.
+const logistic = (n, r, K) => n + r * n * (1 - n / K);
 let NID = 1;
 // one wolf, two wolves; one spearman, two spearmen; one man-at-arms, two men-at-arms
 const plural = (n) =>
