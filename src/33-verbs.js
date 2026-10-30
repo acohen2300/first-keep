@@ -254,16 +254,6 @@ const ACT = {
 		saveSet();
 		refresh();
 	},
-	dockmin() {
-		SET.dockMin = !SET.dockMin;
-		saveSet();
-		ui(true);
-	},
-	dock(a) {
-		G.sel = a === 'all' ? 'all' : Number(a);
-		setPick(orderSet().map((u) => ({ t: 'unit', id: u.id })));
-		feel('tick');
-	}, // the dock: a battalion picked in one tap; the pick bar then carries Charge, Fall back and Teach
 	tkmin() {
 		SET.tkMin = !SET.tkMin;
 		saveSet();
@@ -357,10 +347,11 @@ const ACT = {
 // orders that change the game: refused once it is over
 const PLAY = {
 	job(a) {
-		G.P[0].rally = a;
-		unitsOf(0, 'vil').forEach((u) => {
-			if (!u.job) u.job = a;
-		});
+		G.P[0].rally = G.P[0].rally === a ? null : a; // tap the lit tile again and no job is the default: new villagers wait at the Town Center (Build 61)
+		if (G.P[0].rally)
+			unitsOf(0, 'vil').forEach((u) => {
+				if (!u.job) u.job = a;
+			});
 	},
 	move(a) {
 		if (!unitsOf(0, 'vil').some((u) => !u.job)) {
@@ -384,7 +375,7 @@ const PLAY = {
 	sendto(a) {
 		const [f, x, y] = a.split(','),
 			e = { x: Number(x), y: Number(y) },
-			S = sendPick(/^(q|h|all|rest|n\d+)$/.test(f) ? f : Number(f), e);
+			S = sendPick(/^(all|rest)$/.test(f) ? f : Number(f), e);
 		if (S.length) order(S, { t: 'ground', e });
 		else say(freeWhy(), '', 4);
 		hideStrip();
@@ -399,39 +390,72 @@ const PLAY = {
 		emgResume();
 		closeCard();
 	},
-	huddle() {
-		hudOpen(!G.hud.on);
+	pagecycle() {
+		pageCycle();
+	}, // the chip at the row's left: Jobs, the Squad room, the War room
+	sqnew() {
+		sqNew();
 	},
-	hready() {
-		hudReady();
+	sqcycle() {
+		sqCycle();
 	},
-	haim() {
-		hudAim();
+	sqprev() {
+		G.hud.sq.i = (G.hud.sq.i + BNS - 1) % BNS;
+		G.hud.sq.tile = null;
 	},
-	hset() {
-		hudSet();
+	sqnext() {
+		G.hud.sq.i = (G.hud.sq.i + 1) % BNS;
+		G.hud.sq.tile = null;
 	},
-	hudc(a) {
-		if (hudStage() >= 4) {
-			delete G.hud.n[a]; // a tap on the class: all the idle ones again
-			G.hud.set = false;
+	sqtile(a) {
+		const t = Number(a);
+		G.hud.sq.tile = G.hud.sq.tile === t ? null : t;
+		feel('tick');
+	},
+	sqn(a) {
+		const [t, d] = a.split(','),
+			k = sqUnit(Number(t));
+		if (k) sqPlan(G.hud.sq.i, k, d === '+' ? 1 : -1);
+	},
+	sqcard(a) {
+		openCard({ type: 'squad', i: Number(a) });
+	},
+	sqpk(a) {
+		const [i, k, d] = a.split(',');
+		sqPlan(Number(i), k, d === '+' ? 1 : -1);
+	},
+	wstance() {
+		const s = G.hud.sel;
+		cycle('temper', s === null || s === undefined ? 'all' : s, TEMPER.length);
+		feel('tick');
+	},
+	whome() {
+		hudHome();
+	},
+	wsq(a) {
+		const i = Number(a);
+		if (G.hud.sel === i) openCard({ type: 'squad', i });
+		else {
+			G.hud.sel = i;
+			G.hud.etaKey = '';
+			feel('tick');
 		}
+	}, // one tap picks the squad for Go; a second opens its card
+	wgo(a) {
+		hudFire(Number(a));
 	},
-	hudn(a) {
-		if (hudStage() < 4) return;
-		const [c, d] = a.split(','),
-			i = Number(c),
-			pool = hudPool(),
-			N = hudCounts(pool),
-			give = hudRoom(pool) > 0 || N.some((x, j) => j !== i && G.hud.n[j] === undefined && x > 0); // a + takes a free place, or one from a kind you have not set
-		G.hud.n[c] = clamp(N[i] + (d === '+' ? (give ? 1 : 0) : -1), 0, hudHave(pool, i));
-		G.hud.set = false; // changing a count opens Set again
+	wback(a) {
+		const i = Number(a);
+		if (sqOut(i)) hudAbort(i);
+		else sendHome(sqUnits(i));
 	},
-	hfire() {
-		if (hudStage() === 5) hudFire();
+	wfire() {
+		hudFire(hasCmd() ? G.hud.sel : null);
 	},
-	habort() {
-		hudCancel();
+	wabort() {
+		const s = G.hud.sel;
+		if (s !== null && s !== undefined && sqOut(s)) hudAbort(s);
+		else hudAbortAll();
 	},
 	habortall() {
 		hudAbortAll();
@@ -439,23 +463,8 @@ const PLAY = {
 	hdel(a) {
 		hudAbort(Number(a));
 	},
-	mcard(a) {
-		if (performance.now() - (G.hud.dragged || -1e9) > 400) hudTile(Number(a));
-	},
-	hslot(a) {
-		if (performance.now() - (G.hud.dragged || -1e9) > 400) hudTile(Number(a));
-	},
 	hudrein(a) {
 		hudReinforce(Number(a));
-	},
-	hspare(a) {
-		const m = G.msn[Number(a)];
-		if (m && m.spare && m.spare.length) {
-			G.hud.carry = Number(a);
-			G.hud.view = true;
-			closeCard();
-			say('Tap a tile, or Ready to send them home.', '', 4);
-		}
 	},
 	nostrip() {
 		hideStrip();
@@ -468,8 +477,30 @@ const PLAY = {
 		const s = G.stripAt;
 		if (s) showStrip(s.sx, s.sy, s.x, s.y, 1);
 	},
-	stripmore() {
+	strippeople() {
 		const s = G.stripAt;
+		if (s) showStrip(s.sx, s.sy, s.x, s.y, 2);
+	},
+	idleto(a) {
+		const [x, y] = a.split(',').map(Number);
+		let n = 0;
+		for (const u of unitsOf(0, 'vil')) if (!u.job && !u.inside && !postedAt({ x, y }).includes(u)) (u.post = { x: x + u.ox, y: y + u.oy }), n++;
+		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 3);
+		hideStrip();
+	},
+	wkhere(a) {
+		// dial the villagers standing at a spot: + brings one more (an idle one, else the one earning least), − sends one home
+		const [d, x, y] = a.split(','),
+			to = { x: Number(x), y: Number(y) },
+			s = G.stripAt;
+		if (d === '+') {
+			const v = pickVil(0, to);
+			if (!v) say('No villager is free.', '', 3);
+			else stopVil(v, { x: to.x + v.ox, y: to.y + v.oy });
+		} else {
+			const v = postedAt(to).pop();
+			if (v) v.post = null;
+		}
 		if (s) showStrip(s.sx, s.sy, s.x, s.y, 2);
 	},
 	buildhere(a) {
@@ -517,16 +548,6 @@ const PLAY = {
 		if (muster(0, musterGap(i), i)) sfx('place');
 		else sfx('err');
 	},
-	bnn(a) {
-		const [k, d] = a.split(','),
-			P = G.bnPlan[G.bnEdit],
-			cur = P[k] || 0,
-			st = d === '+' ? (cur < 10 ? 1 : 5) : cur <= 10 ? 1 : 5;
-		const others = Object.entries(P).reduce((n, [q, v]) => n + (q === k ? 0 : v), 0);
-		P[k] = clamp(cur + (d === '+' ? st : -st), 0, Math.max(cur, BNSIZE - others));
-		if (!P[k]) delete P[k];
-		rebattalion();
-	}, // a battalion holds BNSIZE at most, every kind together
 	shape(a) {
 		cycle('form', a, FORM.length);
 	},
@@ -538,6 +559,30 @@ const PLAY = {
 	},
 	sendout(a) {
 		sendOut(0, Number(a));
+	},
+	vstop(a) {
+		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a));
+		if (u) stopVil(u, null);
+	},
+	stopall() {
+		const k = keepOf(0);
+		let n = 0;
+		for (const u of unitsOf(0, 'vil')) if (u.job || u.post) stopVil(u, k ? { x: k.x + u.ox, y: k.y + halfOf(k) + 8 + u.oy } : null), n++;
+		say(n ? `${n} villagers stop: to the Town Center.` : 'Nobody was working.', '', 4);
+	},
+	idlehere() {
+		const c = toWorld(cw / 2, ch / 2);
+		let n = 0;
+		for (const u of unitsOf(0, 'vil')) if (!u.job && !u.inside) (u.post = { x: c.x + u.ox, y: c.y + u.oy }), n++;
+		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 4);
+		closeCard();
+	},
+	replant(a) {
+		const b = G.blds.find((x) => x.id === Number(a) && x.owner === 0);
+		if (!b) return;
+		const why = replantWhy(0, b);
+		if (why) say(why, '', 3);
+		else replant(0, b.id);
 	},
 	boxcut(a) {
 		if (G.card && G.card.type === 'box') boxCut(G.card.r, Number(a));
@@ -561,10 +606,6 @@ const PLAY = {
 			openCard({ type: 'unit', id: e.id });
 		}
 	},
-	pmore() {
-		G.pickMore = !G.pickMore;
-		ui(true);
-	}, // + More: each tap on your people adds or drops one; Done stops
 	pjob(j) {
 		for (const u of picked())
 			if (u.kind === 'vil') {

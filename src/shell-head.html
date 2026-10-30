@@ -63,7 +63,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card.full{max-height:calc(100% - var(--ob) - var(--hb) - 14px)}
 #place{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:8px;padding:6px 6px 6px 10px;font-weight:700}
 #strip{position:absolute;display:flex;gap:4px;padding:4px;background:rgba(18,23,21,.94);border:1px solid var(--gold);border-radius:10px;z-index:5;max-width:calc(100% - 8px);overflow-x:auto}
-#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:19px;font-weight:700}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:12px}#strip button small{font-size:12px}
+#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:19px;font-weight:700}#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}#strip button.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}#strip button.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:44px}#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--bone);font-size:14px}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:44px;padding:0}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:12px}#strip button small{font-size:12px}
 #place span{flex:1;min-width:0;line-height:1.25}
 #place button{min-height:44px;padding:0 12px}
 #card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(24,30,27,.97);border:1px solid var(--line);border-radius:10px;padding:6px 8px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
@@ -98,7 +98,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #card .copy{text-align:center;font-size:13px;margin:6px 0 0}
 #cardBar{position:sticky;top:6px;height:0;margin-bottom:-4px;z-index:3;flex:none}
 #cardI{position:absolute;top:-2px;right:44px;min-height:44px;min-width:44px;padding:0;background:none;border:0}
-#cardX{position:absolute;top:-2px;right:-4px;min-height:44px;min-width:44px;padding:0;font-size:20px;background:none;border:0}
+#cardX{position:absolute;top:-2px;right:-4px;min-height:44px;min-width:44px;padding:0;background:none;border:0;display:grid;place-items:center}#cardX svg{width:26px;height:26px}#cardI svg{width:24px;height:24px}
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,23,21,.86);text-align:center;padding:0 16px}
 #end h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
 #end p{margin:0;color:var(--mute);font-size:15px}
@@ -109,7 +109,7 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #endX details p{font-size:12px;margin:2px 0}#endX details small{font-size:12px;color:var(--mute);margin-right:6px}
 #card .qs{display:grid;grid-template-columns:1fr 44px 76px 44px;gap:4px;align-items:center;margin:2px 0}
 #card .qs span{text-align:center;font-variant-numeric:tabular-nums;font-size:13px}
-#card .qs button{padding:0;font-size:20px;font-weight:700;min-height:44px}
+#card .qs button{padding:0;font-size:20px;font-weight:700;min-height:44px}#card .qs.trade{grid-template-columns:1fr 104px 92px;margin:-1px 0;gap:2px}#card .qs.trade b{font-size:15px}#card .qs.trade b small{font-size:12px;color:var(--mute);font-weight:500}#card .qs.trade button:not(#cardX):not(#cardI){font-size:14px;min-height:44px;height:44px;padding:0 2px}#card .qs.trade button b{font-size:14px}
 #endActs{display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px}#endActs button small{white-space:normal}
 #orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--pad) max(8px,env(safe-area-inset-bottom,0px));pointer-events:none}
 #orders .tiles{pointer-events:auto}
@@ -126,8 +126,10 @@ button.ghost{visibility:hidden}
 .tiles .top .gl{position:static;transform:none;width:16px;height:16px}
 .tiles .top .c{font-size:15px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
 .tiles .wd{color:var(--mute)}.tiles .sel .wd{color:var(--bone)}
-#tPeople .gl{width:20px;height:20px}
+#tPeople .gl{width:22px;height:22px}
 #tPeople .wd{color:var(--bone)}
+/* three tints the thumb learns (Build 61, Albert): people green, build timber-brown, jobs black */
+.tiles button.cell#tPeople{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}.tiles button.cell#buildT{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}.tiles button.cell#buildT.sel{background:linear-gradient(#7a5a2e,#4e3618);border-color:#c9a46a}
 /* the attack cards: the same dark glass, hairlines and one amber accent as the huddle bar */
 #card.hud{background:rgba(10,13,15,.9);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.09);border-radius:14px;box-shadow:none}
 #card.hud h3{font-family:inherit;font-weight:700;font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:#ffb23d}
@@ -148,6 +150,7 @@ button.ghost{visibility:hidden}
 #huddle button.cell[class*="lamp-"]{border-color:var(--mc)}#huddle [class*="lamp-"] .wd{color:inherit}#huddle .lamp-green::after,#huddle .lamp-blue::after{box-shadow:0 0 8px var(--mc)}
 #huddle .blink{animation:hudBlink 1s infinite}@keyframes hudBlink{50%{box-shadow:inset 0 0 0 1px var(--mc),0 0 12px var(--mc)}}
 #huddle .cell.sel{border-color:#ffb23d}
+#huddle button.cell.sq,#huddle button.cell.st.sq{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}#huddle button.cell.sq.sel{background:linear-gradient(#514a78,#332e52);border-color:#a89fe0}#huddle button.cell.war,#huddle button.cell.st.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}#huddle button.cell.go{background:linear-gradient(#b8862e,#8a5f18);border-color:#f2d27a}#huddle button.cell.go .wd{color:#2a1c10}#huddle button.cell.go .gl{color:#2a1c10}#orders.sqr{background:rgba(22,20,34,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.09)}
 #huddle .msn{touch-action:none}#huddle .msn.empty{background:transparent;border-style:dashed}
 #huddle .msn.lose{--pc:#ff5a4a;animation:hudPulse 1s infinite}#huddle .msn.win{--pc:#43c06b;animation:hudPulse 1.2s infinite}
 @keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc),0 0 10px var(--pc)}}
@@ -158,7 +161,8 @@ button.ghost{visibility:hidden}
 .strip #sStats,.strip #sIdle{padding:0 5px;min-width:44px;gap:9px}.strip #sStats span,.strip #tkBell>*,.strip #sAgeT,.strip #scoreN,.strip #scoreR{display:inline-flex;align-items:center;height:26px;gap:3px}.strip .gl{position:static;transform:none;width:15px;height:15px;display:block;margin:0;flex:none}   /* one line: icon and number share a centre */
 #tally button.cell{isolation:isolate}#tally button.cell.sel::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:7px;background:#2f3b36;border:1px solid var(--mute)}   /* the on mark: a small tile inside the cell; ::before is the divider */
 #pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}
-button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad)}#hudB{right:var(--pad)}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#emgB.on{border-color:#ff5a4a;color:#ff9a8c}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB,#stage.busy #emgB{display:none}
+button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--pad);bottom:calc(var(--ob) + 8px);width:auto;height:44px;padding:0 12px;border-radius:22px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:4px;color:var(--bone)}#hudB b{font-weight:700}#hudB.squad{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}#hudB.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}
+.tiles button.cell.sq,.tiles button.cell.st.sq{background:linear-gradient(#3a3550,#25223a);border-color:#6e66a0}.tiles button.cell.sq.sel{background:linear-gradient(#514a78,#332e52);border-color:#a89fe0}.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#5a2420,#3a1714);border-color:#9a4a3c}.tiles button.cell.go{background:linear-gradient(#b8862e,#8a5f18);color:#2a1c10;border-color:#f2d27a}.tiles button.cell.go .wd{color:#2a1c10}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#emgB.on{border-color:#ff5a4a;color:#ff9a8c}#hudB.sel{border-color:#ffb23d;color:#ffb23d}#stage.busy #hudB,#stage.busy #emgB{display:none}
 #stage.busy #homeB{display:none}
 #stage.picking #homeB{display:none}
 #card .lbl{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.1;min-height:44px}#card .lbl b{font-size:16px}#card .lbl small{color:var(--mute);font-size:13px}
@@ -197,7 +201,7 @@ button.ok small{color:#8fd4a4}
 .night #card{filter:brightness(.88)}
 #card h3{font-size:20px;letter-spacing:.05em;color:var(--lamp);min-height:36px}
 #card button:not(#cardX):not(#cardI){position:relative;background-color:#312218;background-image:linear-gradient(#3b2b1d,#2a1d13);border:1px solid var(--brass);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,220,150,.18);color:var(--bone);min-height:44px;padding:3px 5px}
-#card button.dis{border-color:#4a3a28;background:transparent;box-shadow:none;color:#bfb49c}#card button.dis b{color:#bfb49c}   /* what you cannot: flat on the table */
+#card button.dis{border-color:#4a3a28;background:transparent;box-shadow:none;color:#bfb49c}#card button.done:not(#cardX):not(#cardI){opacity:.55;border-style:solid;border-color:#5a4a30}#card .chipsrow button.done:not(.on):not(#cardX):not(#cardI){opacity:.5}#card button.dis b{color:#bfb49c}   /* what you cannot: flat on the table */
 #card button.nope:not(#cardX):not(#cardI){border-color:var(--red);box-shadow:0 0 12px rgba(220,70,50,.7),inset 0 0 8px rgba(220,70,50,.35)}
 #card small.need{color:color-mix(in srgb,#fff calc(var(--fr,0)*100%),#ff8a70);font-weight:700}   /* what it is short of */
 #card button.go{border-color:var(--lamp);box-shadow:inset 0 0 0 1px var(--lamp),0 0 10px rgba(230,185,71,.35)}   /* what you can do now: a brass rim */
@@ -256,13 +260,12 @@ button.ok small{color:#8fd4a4}
   <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div><div class="tr" id="huddle" hidden></div></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
-    <button class="fab" id="hudB" data-act="huddle" aria-label="Huddle: plan an attack"></button>
+    <button class="fab chip" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, Squad room, War room"></button>
     <button class="fab" id="emgB" data-act="card:emergency" aria-label="Emergency: shelter, battle stations"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
     
     <div id="strip" hidden></div>
-    <div id="dock" hidden><div id="dockRow"></div><button data-act="dockmin" id="dockMin" aria-label="Army dock"></button></div>
-    <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="pmore" id="pMore"><b>＋ More</b></button><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>
+    <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="wundo" id="placeUndo" hidden><b>Undo</b></button><button data-act="cancel"><b>Cancel</b></button></div>
     <div id="card" hidden></div>
     <div id="end" hidden>

@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 36; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 37; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -71,6 +71,17 @@ const MIGRATE = {
 		S.v = 36;
 		return S;
 	}, // Build 60: every order keeps what it paid, so a cancel gives back exactly that; an order saved before is taken at its list price
+	36: (S) => {
+		if (S.bnPlan) S.bnPlan = S.bnPlan.slice(0, BNS);
+		if (S.form) S.form = S.form.slice(0, BNS);
+		if (S.temper) S.temper = S.temper.slice(0, BNS).concat([S.temper[S.temper.length - 1] ?? T_GUARD]);
+		for (const u of S.units || []) if (u.bn !== undefined && u.bn >= BNS) u.bn = undefined;
+		for (const b of S.blds || []) for (const j of b.q || []) if (j.muster && j.bn >= BNS) j.bn = undefined;
+		S.msn = (S.msn || []).slice(0, BNS);
+		if (typeof S.sel === 'number' && S.sel >= BNS) S.sel = 'all';
+		S.v = 37;
+		return S;
+	}, // Build 61: four squads (Alpha to Delta), the row's four middle tiles; Epsilon and Zeta fold into the reserve
 };
 const evSave = () => {
 	const V = G.ev || {},

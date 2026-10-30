@@ -100,16 +100,17 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
     if (!O || !(O.eta > 0)) bad.push('army: no time left on the order'); if (F.armyStatus(a) !== 'march') bad.push('army: ' + F.armyStatus(a) + ', not marching');
     const e = F.addUnit(1, 'spear', home.x + 300, home.y + 100); e.state = 'attack'; run(1); if (!G.incoming || G.incoming.n < 1) bad.push('army: no attack named'); else { const t = F.alertNow(); if (!t || t.name !== 'Attack') bad.push('army: the bar does not show it'); }
     e.hp = 0; run(2); if (G.incoming) bad.push('army: the attack is still named after it died'); }
-  // the huddle: a drafted group fires as a mission with a promised time, a fight gives it odds, a call-off frees the slot
+  // the War room (Build 61): Go sends a squad on the crosshair as a mission with a promised time; a fight gives it odds; Abort frees the slot
   { const home = G.blds.find((b) => b.owner === 0), sp = []; for (let i = 0; i < 6; i++) sp.push(F.addUnit(0, 'spear', home.x + 40 + i * 6, home.y + 60)); for (let i = 0; i < 6; i++) F.addUnit(0, 'chariot', home.x + 40 + i * 6, home.y + 90);
-    run(2); F.hudOpen(true); G.hud.h = { t: 'ground', e: { x: home.x + 260, y: home.y + 60 } }; G.hud.n = { 0: 6, 1: 0, 2: 0, 3: 0 }; F.hudFire(); const m = G.msn[0];
-    if (!m || m.n0 !== 6 || !(m.due > G.t)) bad.push('huddle: Fire made no mission with a time'); else {
-      if (F.hudPick().length < 6) bad.push('huddle: the draft lost the idle riders');
+    run(2); F.hudPage('war'); if (!G.hud.aim || !G.hud.h) bad.push('war room: no crosshair on opening'); F.aimAt(120, 300); if (!G.hud.moved) bad.push('war room: a tap on the map did not move the crosshair');
+    G.hud.h = { t: 'ground', e: { x: home.x + 260, y: home.y + 60 } }; F.hudFire(null); const m = G.msn[0];
+    if (!m || m.n0 < 12 || !(m.due > G.t)) bad.push('war room: Go made no mission with a time (' + (m && m.n0) + ')'); else {
       const foes = []; for (let i = 0; i < 8; i++) foes.push(F.addUnit(4, 'bandit', home.x + 250 + i * 5, home.y + 60)); for (let i = 0; i < 12; i++) run(1);
-      if (m.st !== 'act' && m.st !== 'done') bad.push('huddle: the mission is ' + m.st + ' at the fight');
-      F.hudDrop(0, 'home'); for (const f of foes) f.hp = 0; run(3); if (!G.msn[0]) bad.push('huddle: a mission vanished on its own'); }
-    F.hudOpen(true); F.act('hready'); F.act('haim'); if (!G.hud.aim || !G.hud.h) bad.push('huddle: Aim shows no reticle'); F.aimAt(120, 300); if (!G.hud.aim) bad.push('huddle: a tap on the map ended the aim'); F.act('haim'); if (G.hud.aim || !G.hud.locked) bad.push('huddle: Lock did not set the target'); F.act('hset'); if (!G.hud.set) bad.push('huddle: Set did not take'); F.hudOpen(false);
-    G.hud.carry = null; F.hudOpen(false); for (let i = 0; i < 4; i++) if (G.msn[i]) { G.msn[i] = null; } }
+      if (m.st !== 'act' && m.st !== 'done') bad.push('war room: the mission is ' + m.st + ' at the fight');
+      F.hudAbort(0); for (const f of foes) f.hp = 0; run(3); if (G.msn[0]) bad.push('war room: Abort left the mission'); }
+    // the Squad room: a plan set with + fills from the soldiers at home
+    G.P[0].techs.add('command'); F.fxDirty(); F.hudPage('squad'); F.sqNew(); F.sqPlan(0, 'spear', 1); F.sqPlan(0, 'spear', 1); run(2); if (F.sqUnits(0).length !== 2) bad.push('squad room: the plan did not fill (' + F.sqUnits(0).length + ')');
+    F.hudPage('jobs'); G.P[0].techs.delete('command'); F.fxDirty(); for (let i = 0; i < 4; i++) G.msn[i] = null; G.bnPlan[0] = {}; }
   // emergencies: villagers take cover in the sturdiest building first and Resume sends them back; soldiers garrison and stay
   { const home = G.blds.find((b) => b.owner === 0); for (let i = 0; i < 4; i++) F.addUnit(0, 'spear', home.x + 70 + i * 6, home.y + 40); const jobs = G.units.filter((u) => u.owner === 0 && u.kind === 'vil').map((u) => u.job).join(',');
     F.emgStart('hands'); run(15); const v = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), s2 = G.units.filter((u) => u.owner === 0 && u.state === 'garrison');

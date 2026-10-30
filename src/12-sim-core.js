@@ -86,10 +86,10 @@ function reap() {
 	G.ugTick = -1;
 	let fxChange = false;
 	for (const b of G.blds)
-		if (b.node && b.node.amt <= 0 && b.hp > 0 && BLD[b.kind].reserve > 0) {
-			b.hp = 0;
-			if (b.owner === 0) say('A tree farm is cut out. Plant another.', '', 5);
-		} // a coppice plot, spent
+		if (b.node && b.node.amt <= 0 && b.hp > 0 && BLD[b.kind].reserve > 0 && !b.spent) {
+			b.spent = true;
+			if (b.owner === 0) say(`${bldName(0, b.kind)} cut out: tap it to replant.`, '', 5, b);
+		} else if (b.spent && b.node && b.node.amt > 0) b.spent = false; // a coppice plot, spent: it stands, stumps and all, until it is replanted (Build 61; it used to vanish)
 	for (const b of G.blds)
 		if (b.kind === 'throne' && b.hp <= 0 && !b.gone) {
 			if (b.by !== undefined && b.by !== WILD) takeThrone(b.by);
@@ -598,7 +598,10 @@ function bestNode(u, job) {
 		if (n.kind === 'farm') {
 			if (n.farm.owner !== u.owner || n.farm.prog < 1 || n.farm.hp <= 0 || (n.wk || 0) - (u.node === n ? 1 : 0) >= slotsOf(n)) continue;
 			if (BLD[n.farm.kind].makes || BLD[n.farm.kind].sheep) continue; // a workshop or a pasture is a post, not a find: it is staffed by its builder or by hand
+			if (u.was && u.was !== 'farm') continue; // a worker from the wild never drifts onto a plot (Build 61: land work and wild work are two kinds)
 		} else {
+			if (u.was === 'farm') continue; // nor a plot worker into the wild
+			if (u.was && (n.kind !== u.was || dist(u, n) > sightOf(u))) continue; // the same kind of find, and only one it can see from where it stands
 			if (n.kind === 'fish' && !dockNear(u.owner, n)) continue;
 			if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue;
 		}
@@ -609,7 +612,8 @@ function bestNode(u, job) {
 			best = n;
 		}
 	}
-	if (job === 'food') {
+	if (job === 'food' && u.owner !== 0) {
+		// a computer's forager takes game on its own; yours hunts only when you send it (Build 61, Albert), or when an animal attacks
 		const k = keepOf(u.owner);
 		for (const a of G.units)
 			if (a.owner === WILD && a.hp > 0 && UNIT[a.kind].meat && UNIT[a.kind].tick === 'wild' && k && dist(a, k) < 420 && !unsafe(a, u.owner)) {

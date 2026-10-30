@@ -39,7 +39,7 @@ const CARDS = {
 			const back = refundOf(b),
 				hurtB = b.prog >= 1 && b.hp < M - 1,
 				menders = crew.filter((u) => !u.inside).length;
-			const row = `${b.prog < 1 ? btn(`sendbld:${b.id}`, 'Send a villager', crew.length ? `${crew.length} building` : 'nobody yet', crew.length ? '' : 'go') : ''}${hurtB ? btn(`repair:${b.id}`, 'Repair', menders ? `${menders} mending` : costText(repairCost(0, b)), 'go') : ''}${B.crop && b.prog >= 1 && b.node ? btn(`sendvil:${b.node.id}`, 'Send a villager', slotText(b.node), b.node.wk > 0 ? '' : 'go') : ''}${B.crop && b.prog >= 1 && b.node && b.node.wk > 0 ? btn(`sendout:${b.node.id}`, 'Send out', 'one goes home') : ''}`;
+			const row = `${b.prog >= 1 && B.reserve && b.node && b.node.amt <= 0 ? btn(`replant:${b.id}`, 'Replant', replantWhy(0, b) ? replantWhy(0, b).replace(/\.$/, '') : `${costText(scaled(B.cost, 0.5))} · half the cost`, replantWhy(0, b) ? 'dis' : 'go') : ''}${b.prog < 1 ? btn(`sendbld:${b.id}`, 'Send a villager', crew.length ? `${crew.length} building` : 'nobody yet', crew.length ? '' : 'go') : ''}${hurtB ? btn(`repair:${b.id}`, 'Repair', menders ? `${menders} mending` : costText(repairCost(0, b)), 'go') : ''}${B.crop && b.prog >= 1 && b.node ? btn(`sendvil:${b.node.id}`, 'Send a villager', slotText(b.node), b.node.wk > 0 ? '' : 'go') : ''}${B.crop && b.prog >= 1 && b.node && b.node.wk > 0 ? btn(`sendout:${b.node.id}`, 'Send out', 'one goes home') : ''}`;
 			if (row) h += acts(row);
 			td = acts(
 				b.prog < 0.15
@@ -60,22 +60,13 @@ const CARDS = {
 				h += slotsHTML(b);
 			const mk = b.kind === 'market',
 				kp = b.kind === 'keep',
-				trade = (mk && G.mtab !== 'more') || (kp && G.ktab === 'rel'); // the Market's trade side and the Town Center's relations side show no training or research
+				trade = kp && G.ktab === 'rel'; // the Town Center's relations side shows no training or research; the Market keeps its research at the top like every card (Build 61)
 			const tr = trade ? [] : trainsAt(b.kind),
 				techs = trade ? [] : TECH.filter((t) => ownTech(t) && t.at === b.kind && isNext(0, t)),
 				done = trade ? [] : TECH.filter((t) => t.at === b.kind && p.techs.has(t.id)); // one step per line: the next
 			const ageB = kp && !trade ? keepAgeBtn() : '',
 				hasR = techs.length || done.length || ageB,
 				hd = (t) => (tr.length && hasR ? sec(t) : ''); // one page: Train, then Research; the next age is research like any other
-			if (mk)
-				h += twoTabs(
-					'mtab',
-					[
-						['trade', 'Trade', 'sell and buy'],
-						['more', 'Caravans', 'and ventures'],
-					],
-					trade ? 'trade' : 'more',
-				);
 			if (kp)
 				h += twoTabs(
 					'ktab',
@@ -85,6 +76,8 @@ const CARDS = {
 					],
 					trade ? 'rel' : 'town',
 				);
+			if (kp && !trade)
+				h += acts(btn('stopall', 'Stop all', 'everyone to the Town Center, idle') + btn('idlehere', 'Idle to me', `${unitsOf(0, 'vil').filter((u) => !u.job && !u.inside).length} come to the screen`)); // every villager at once (Build 61, Albert)
 			if (tr.length) h += hd('Train') + acts(trainButtons(tr));
 			if (hasR)
 				h +=
@@ -102,6 +95,7 @@ const CARDS = {
 			if (BLD_PAGE[b.kind]) h += BLD_PAGE[b.kind](b);
 			if (kp && trade) h += relHTML();
 			if (B.makes) h += workshopHTML(b);
+
 		}
 		if (!mine && b.kind === 'keep' && P.lord === 0) h += vassalHTML(P);
 		else if (!mine && b.kind === 'keep' && G.rel[0][b.owner] === 'ally') {
@@ -226,20 +220,16 @@ const CARDS = {
 			h += acts(btn(`hunt:${u.id}`, 'Send a hunter', who ? `${who} hunting` : 'nobody yet', 'go'), 'c1');
 		}
 		if (mine) {
-			// this villager's work, sending them home, and the unfinished buildings they could raise
-			h +=
-				sec(`Work${u.job ? ': ' + (u.job === 'repair' ? 'building' : u.job) : ': idle'}`) +
-				acts(
-					JOBS.map((j) =>
-						btn(`vjob:${u.id},${j}`, cap1(j), u.job === j ? 'tap to rest' : '', u.job === j ? 'on' : ''),
-					).join(''),
-					'c3',
-				);
+			// the villager's card, in one order (Build 61, Albert): what it is doing; Stop and Dismiss; the jobs; the sites it could raise
 			h += acts(
-				G.confirm === 'v' + u.id
-					? btn(`vgo:${u.id}`, 'Tap again', 'to send them home for good', 'warn')
-					: btn(`vgo:${u.id}`, 'Dismiss', 'frees a place'),
-				'c1',
+				btn(`vstop:${u.id}`, 'Stop', u.job || u.post ? 'drops the work, stands here' : 'nothing to stop', u.job || u.post ? '' : 'dis') +
+					(G.confirm === 'v' + u.id
+						? btn(`vgo:${u.id}`, 'Tap again', 'gone for good', 'warn')
+						: btn(`vgo:${u.id}`, 'Dismiss', 'leaves the game, frees a place')),
+			);
+			h += acts(
+				JOBS.map((j) => btn(`vjob:${u.id},${j}`, cap1(j), '', u.job === j ? 'on' : '')).join(''),
+				'c3',
 			);
 			const sites = G.blds
 				.filter((s) => s.owner === 0 && s.hp > 0 && s.prog < 1 && u.rep !== s)
@@ -561,11 +551,11 @@ const CARDS = {
 				lock
 					? AGES[B.age].name
 					: full
-						? `limit ${cp}`
+						? `✓ all ${cp} built`
 						: !afford(p, B.cost)
 							? `short ${need(B.cost)}`
 							: (fits ? 'fits here · ' : '') + costText(B.cost),
-				lock || full || !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
+				lock ? 'dis' : full ? 'dis done' : !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
 				!lock && !full && !afford(p, B.cost) ? fillOf(B.cost) : undefined,
 			).replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>');
 		}; // how many of how many beside the name, dimmed: every cost stays on one line
@@ -576,7 +566,14 @@ const CARDS = {
 				); // blank places keep every menu as tall as the biggest (two rows), so the page never changes height
 		return (
 			title('Build', G.buildAt && G.buildAt.x !== undefined ? 'here' : '') +
-			acts(MENUS.map((m) => btn(`menu:${m.id}`, m.name, '', m.id === c.id ? 'on' : '')).join(''), 'c6 chipsrow') +
+			acts(
+				MENUS.map((m) => {
+					const open = m.items.filter((k) => BLD[k].age <= p.age),
+						allBuilt = open.length > 0 && open.every((k) => bldsOf(0, k).length >= capFor(0, k)); // every building the age allows is at its limit: the tab dims with a check (Build 61)
+					return btn(`menu:${m.id}`, (allBuilt ? '✓ ' : '') + m.name, '', (m.id === c.id ? 'on' : '') + (allBuilt ? ' done' : ''));
+				}).join(''),
+				'c6 chipsrow',
+			) +
 			acts(M.items.map(item).join('') + ghosts, 'c4 menu') +
 			fold('menu', 'What each one does', M.items.map((k) => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''))
 		);
@@ -730,12 +727,12 @@ function renderCard() {
 			$('card'),
 			`<div id="cardBar">${
 				info ? `<button id="cardI" class="${bookOn ? 'on' : ''}" data-act="info" aria-label="About this">${ICON.book}</button>` : ''
-			}<button id="cardX" data-act="close" aria-label="Close">×</button></div>` + h, // the book and the close ride a bar that stays at the top while the card scrolls (Build 60: they scrolled away on short phones)
+			}<button id="cardX" data-act="close" aria-label="Close">${ICON.close}</button></div>` + h, // the close as an icon, the book's size and weight (Build 61: a 20 px × read tiny) // the book and the close ride a bar that stays at the top while the card scrolls (Build 60: they scrolled away on short phones)
 		);
 	}
 	const cc = G.card;
 	$('card').classList.toggle('setup', cc.type === 'setup');
-	$('card').classList.toggle('hud', cc.type === 'mission' || cc.type === 'emergency'); // the covert look of the attack bar
+	$('card').classList.toggle('hud', cc.type === 'squad' || cc.type === 'emergency'); // the covert look of the attack bar
 	$('card').classList.toggle(
 		'full',
 		FULL.has(cc.type) || (cc.type === 'bld' && (G.blds.find((b) => b.id === cc.id) || {}).kind === 'market'),

@@ -19,6 +19,15 @@ function hurt(o, a, t, base) {
 				if (n !== t && n.hp > 0 && n.owner === t.owner && dist(n, t) < FIREARMS.splash) n.hp -= d * FIREARMS.splashHit; // the blast shakes the neighbours
 	} else {
 		if (a) d *= vsMul(a, t);
+		if (a && o === WILD && t.kind === 'vil' && t.owner !== WILD && UNIT[a.kind].meat && !t.hunt) {
+			// an animal attacks a villager: it and the two nearest villagers who can see it turn on the beast, kill it and butcher it, then go back to work (Build 61)
+			const helpers = unitsOf(t.owner, 'vil').filter((v) => v !== t && !v.inside && !v.hunt && v.job !== 'repair' && dist(v, a) < sightOf(v)).sort((p, q) => dist(p, a) - dist(q, a)).slice(0, 2);
+			for (const v of [t, ...helpers]) {
+				v.pj = v.job === 'food' ? null : v.job;
+				setJob(v, 'food');
+				v.hunt = a;
+			}
+		}
 		if (isSoldier(t)) {
 			if (o === WILD && t.owner !== WILD) d *= MORALE.wild;
 			if (t.state === 'rout') d *= MORALE.routHit;

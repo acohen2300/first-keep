@@ -111,25 +111,15 @@ function guardRow(t, id) {
 	);
 }
 function sendPick(from, to) {
-	// 'all' everyone but guards, 'rest' the idle ones, 'h' half and 'q' a quarter of each idle type, 'n8' the nearest eight idle, or a battalion by its number
+	// 'all' everyone but guards, 'rest' the idle ones, or a squad by its number (Build 61: half, a quarter and the nearest few are gone, Albert: confusing)
 	if (from === 'all') return sendable();
 	if (typeof from === 'number') return sendable().filter((u) => u.bn === from);
-	if (from === 'rest') return free();
-	if (from[0] === 'n')
-		return free()
-			.sort((p, q) => dist(p, to) - dist(q, to))
-			.slice(0, Number(from.slice(1)));
-	const by = {},
-		out = [];
-	for (const u of free()) (by[u.kind] = by[u.kind] || []).push(u);
-	for (const k in by) {
-		const a = by[k].sort((p, q) => dist(p, to) - dist(q, to));
-		out.push(...a.slice(0, Math.ceil(a.length / (from === 'h' ? 2 : 4))));
-	}
-	return out;
+	return free();
 }
-// A tap on open ground (Albert, Build 40): a small row of icons. Hammer: build here (the menu opens on what fits the spot). Sword: the army, in place:
-// All, half, and more (a quarter, the nearest few, a battalion). Three dots: more about the place. Cross: away.
+// the villagers standing at a spot you sent them to
+const postedAt = (to) => unitsOf(0, 'vil').filter((u) => !u.job && u.post && hyp(u.post.x - to.x, u.post.y - to.y) < 40);
+// A tap on open ground (Build 61, Albert): two choices, people or sword. The sword: Idle, All, or a squad. The people: build here, send the idle
+// here, or dial how many workers stand here. One gesture, no half, no quarter. Three dots: more about the place. Cross: away.
 function showStrip(sx, sy, x, y, step) {
 	if (step === undefined) closeCard();
 	const el = $('strip'),
@@ -143,33 +133,31 @@ function showStrip(sx, sy, x, y, step) {
 	G.stripAt = sh;
 	if (!step)
 		el.innerHTML =
-			ic(`buildhere:${at}`, ICON.hammer, 'Build here') +
-			ic(nAll ? 'striparmy' : 'nofree', ICON.sword, 'Send soldiers here', nAll ? 'go thumb' : 'dis thumb') +
+			ic('strippeople', ICON.head, 'Your people here', 'people thumb') +
+			ic(nAll ? 'striparmy' : 'nofree', ICON.sword, 'Send soldiers here', nAll ? 'war' : 'dis') +
 			ic(`more:${at}`, '⋯', 'More about this place') +
 			ic('nostrip', ICON.close, 'Cancel');
-	else if (step === 1)
-		el.innerHTML =
-			btn(`sendto:h,${at}`, '½', String(n('h')), 'ic') +
-			btn(`sendto:all,${at}`, 'All', String(nAll), 'ic go thumb') +
-			ic('stripmore', '⋯', 'More ways to send') +
-			ic('nostrip', ICON.close, 'Cancel');
-	// three taps in one spot: open, sword, All (Albert: a fast dispatch)
-	else {
+	else if (step === 1) {
 		const nRest = n('rest'),
 			bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
 		el.innerHTML =
-			btn(`sendto:q,${at}`, '¼', String(n('q'))) +
-			btn(`sendto:rest,${at}`, 'Rest', `${nRest} idle`) +
-			[5, 10, 20]
-				.filter((k) => nRest > k)
-				.map((k) => btn(`sendto:n${k},${at}`, String(k), 'nearest'))
-				.join('') +
+			btn(`sendto:rest,${at}`, 'Idle', `${nRest} soldiers`, 'war thumb') +
+			btn(`sendto:all,${at}`, 'All', String(nAll)) +
 			bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') +
 			ic('nostrip', ICON.close, 'Cancel');
+	} else {
+		const idle = unitsOf(0, 'vil').filter((u) => !u.job && !u.inside && !postedAt(to).includes(u)).length,
+			here = postedAt(to).length;
+		el.innerHTML =
+			btn(`buildhere:${at}`, 'Build here', 'the menu, aimed here', 'build thumb') +
+			btn(`idleto:${at}`, 'Send idle here', `${idle} idle villager${idle === 1 ? '' : 's'}`, idle ? 'people' : 'dis') +
+			`<div class="dial"><b>Workers here</b>${btn(`wkhere:-,${at}`, '−', '', here ? '' : 'dis')}<span>${here}</span>${btn(`wkhere:+,${at}`, '+', '')}</div>` +
+			ic('nostrip', ICON.close, 'Cancel');
 	}
+	el.classList.toggle('panel', step === 2); // the people side is a small panel, not a strip
 	el.hidden = false;
 	G.strip = to;
-	if (step === 1 || step === 2) return; // the next step stays exactly where it was: the thumb does not move
+	if (step === 1) return; // the next step stays exactly where it was: the thumb does not move
 	const r = $('stage').getBoundingClientRect(),
 		w = el.offsetWidth,
 		h = el.offsetHeight,

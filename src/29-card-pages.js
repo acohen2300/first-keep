@@ -55,7 +55,7 @@ function slotsHTML(b) {
 			`<button class="slot lock" data-act="qlock:${more.id}" aria-label="A locked slot">🔒 Slot ${n + 1}</button>`,
 		);
 	return (
-		`<div class="slots" style="--qn:${cells.length}">${cells.join('')}</div>` +
+		(b.q.length ? `<div class="slots" style="--qn:${cells.length}">${cells.join('')}</div>` : '') + // the line shows while something is in it (Build 61: six empty "Slot" buttons took the top of every card)
 		(b.blocked
 			? '<p><b>Needs room: House, Apartment or Aqueduct.</b></p>'
 			: b.stall > G.t
@@ -199,50 +199,46 @@ function workshopHTML(b) {
 					'c2',
 				)
 			: '') +
-		`<p>In store: ${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${kn} (${r} make 1 ${nm(cur).toLowerCase()}, ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} a minute). Worked by ${n && n.wk > 0 ? (G.units.some((u) => u.node === n && u.wait) ? 'a villager, waiting for ' + kn : 'a villager') : 'nobody yet: tap Send a villager'}.</p>`
+		(() => {
+			// the making, as a slot like training (Build 61): the next one fills, the count made so far beside it
+			const w = G.units.find((u) => u.node === n),
+				made = w ? Math.floor(w.st.got || 0) : 0,
+				fr = w ? (w.st.got || 0) % 1 : 0,
+				state = !w ? 'nobody yet' : w.wait ? `waiting for ${kn}` : w.inside ? 'making' : 'walking in';
+			return `<div class="slots" style="--qn:3"><button class="slot${w ? '' : ' empty'}" disabled style="--p:${Math.round(fr * 100)}%">${nm(cur)}<br>${state}<i></i></button><button class="slot empty" disabled>${made} made</button><button class="slot empty" disabled>${r} ${kn} each</button></div>` +
+				`<p>In store: ${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${kn} · ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} ${nm(cur).toLowerCase()} a minute when worked.</p>`;
+		})()
 	);
 }
 function marketHTML(b) {
-	// the Market's two sides: trade, and caravans and ventures
+	// the Market: trade as one row a good, and caravans and ventures behind one fold (Build 61: the two tabs and the two grids are gone)
 	const p = G.P[0],
-		more = G.mtab === 'more',
 		V = p.ventures || [],
 		nm = (k) => (GOODS[k] ? GOODS[k].name : RESOURCES[LONG[k]].name);
 	let h = '';
-	if (!more) {
-		h +=
-			sec('Sell · 100 of a resource, 10 of a good') +
-			acts(
-				MKT_SELL.map((k) =>
-					btn(`trade:sell:${k}`, nm(k), `+${sellPrice(0, k)}g`, haveOf(p, k) < LOT(k) ? 'dis' : ''),
-				).join(''),
-				'c4',
-			) +
-			sec('Buy') +
-			acts(
-				MKT_BUY.map((k) =>
-					btn(`trade:buy:${k}`, nm(k), `${buyPrice(0, k)}g`, p.res.g < buyPrice(0, k) ? 'dis' : ''),
-				).join(''),
-				'c4',
-			);
-		h += fold(
-			'prices',
-			'Going prices',
-			`<p>${MKTK.map((k) => `${nm(k)} ×${mkt(k).toFixed(2)}`).join(' · ')} (1 = normal)</p>`,
-		);
-	} else {
-		h += `<p>Two lanes. One: a caravan with a route takes goods from here to a trade stop and sells them. Two: a caravan with no route runs to an ally's Market or Town Center and earns distance² ÷ ${TRADE_DIV}, at most ${TRADE_CAP} gold. ${unitsOf(0, 'caravan').length} caravans; ${allyMarket(0, b) ? 'an ally to trade with' : 'no ally yet'}.</p>`;
-		h +=
+	{
+		// one row a good: what you hold, sell a lot, buy a lot; the going price shows in the row (Build 61: two grids of the same goods were a mess)
+		h += `<div class="sec" style="margin-bottom:-2px">Trade · a lot is 100 of a resource, 10 of a good</div>`;
+		for (const k of MKT_SELL) {
+			const canBuy = MKT_BUY.includes(k);
+			h += `<div class="qs trade"><b>${nm(k)} <small>${Math.floor(haveOf(p, k))} · ×${mkt(k).toFixed(2)}</small></b>${btn(`trade:sell:${k}`, `Sell +${sellPrice(0, k)}g`, '', haveOf(p, k) < LOT(k) ? 'dis' : '')}${canBuy ? btn(`trade:buy:${k}`, `Buy ${buyPrice(0, k)}g`, '', p.res.g < buyPrice(0, k) ? 'dis' : '') : '<span></span>'}</div>`;
+		}
+	}
+	let m = '';
+	{
+		m += `<p>Two lanes. One: a caravan with a route takes goods from here to a trade stop and sells them. Two: a caravan with no route runs to an ally's Market or Town Center and earns distance² ÷ ${TRADE_DIV}, at most ${TRADE_CAP} gold. ${unitsOf(0, 'caravan').length} caravans; ${allyMarket(0, b) ? 'an ally to trade with' : 'no ally yet'}.</p>`;
+		m +=
 			sec('Ventures') +
 			`<p>${p.age < VENTURE.age ? 'From the Medieval age: put gold into a merchant venture.' : `Back in a year with ${Math.round((VENTURE.back - 1) * 100)}% more; about 1 in ${Math.round(1 / VENTURE.lost)} is lost.`} ${V.length ? 'Out: ' + V.map((v) => `${v.amt}g (${clock(Math.max(0, v.due - G.t))})`).join(', ') + '.' : ''}</p>`;
 		if (p.age >= VENTURE.age)
-			h += acts(
+			m += acts(
 				VENTURE.sizes
 					.map((a) => btn(`venture:${a}`, `${a} gold`, '', p.res.g < a || V.length >= VENTURE.max ? 'dis' : ''))
 					.join(''),
 				'c3',
 			);
 	}
+	h += fold('caravans', `Caravans and ventures · ${unitsOf(0, 'caravan').length} caravans${V.length ? ', ' + V.length + ' ventures out' : ''}`, m);
 	return h;
 }
 function councilHTML(b) {
@@ -250,45 +246,16 @@ function councilHTML(b) {
 	if (!hasCmd())
 		return `<p>${p.techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, six of them, Alpha to Zeta.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`;
 	const i = G.bnEdit,
-		plan = G.bnPlan[i],
 		S = armyOf(0).filter((u) => u.kind !== 'spy');
 	let h =
-		sec('Battalions') +
+		sec('Squads') +
 		acts(
 			BN.map((n, j) => btn(`bned:${j}`, n, `${S.filter((u) => u.bn === j).length} in it`, j === i ? 'on' : '')).join(
 				'',
 			),
-			'c3',
+			'c4',
 		);
-	const can = ARMYK.filter((k) => !UNIT[k].civ && UNIT[k].cost && k !== 'spy')
-		.map((k) => civKind(0, k))
-		.filter((k) => UNIT[k].age <= p.age && readyAt(0, UNIT[k]).length); // every soldier you can train now, not only those you have (Build 48: a kind you had lost could not be planned or mustered)
-	const kinds = [...new Set([...S.map((u) => u.kind), ...Object.keys(plan), ...can])];
-	h +=
-		sec(`${BN[i]} holds`) +
-		(kinds.length
-			? kinds
-					.map(
-						(k) =>
-							`<div class="qs"><b>${stats(0, k).name}</b>${btn(`bnn:${k},-`, '−')}<span>${plan[k] || 0} · has ${S.filter((u) => u.bn === i && u.kind === k).length}</span>${btn(`bnn:${k},+`, '+')}</div>`,
-					)
-					.join('')
-			: '<p>Train soldiers first.</p>');
-	h += acts(dialBtns(i));
-	if (p.techs.has('muster')) {
-		const miss = musterGap(i),
-			why = musterWhy(0, miss),
-			mc = musterCost(0, miss);
-		h += acts(
-			btn(
-				`muster:${i}`,
-				`Muster ${BN[i]}: +${musterN(miss)}`,
-				why ? why.replace(/\.$/, '') : `${costText(mc.cost)} · ${mc.t} s`,
-				why ? 'dis' : 'go',
-			),
-			'c1',
-		);
-	}
+	h += sec(`${BN[i]} holds`) + squadEditHTML(i); // the one squad editor (39-huddle): the War Council and the Squad room share it
 	return (
 		h +
 		fold(

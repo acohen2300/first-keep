@@ -190,17 +190,41 @@ function vilTick(u, dt, SP) {
 			u.work = G.t;
 		}
 	} // milk and meat go straight to the stores
+	if (!flock && u.node && u.node.farm && u.node.amt <= 0 && u.node.farm.hp > 0 && nodeFits(u.node, u.job) && u.node.wk <= slotsOf(u.node)) {
+		// a plot cut out or worked out: its worker stays with it, waiting for it to be replanted (Build 61: it used to walk off into the woods)
+		u.wait = true;
+		u.idle = true;
+		if (u.owner !== 0 && G.P[u.owner].alive && (G.tick + u.id) % 150 === 0) replant(u.owner, u.node.farm.id); // a computer replants by itself: it has no finger
+		moveTo(u, u.node.x, u.node.y, dt, 4, SP);
+		return;
+	}
 	if (
 		!flock &&
 		(!u.node || u.node.amt <= 0 || !nodeFits(u.node, u.job) || (u.node.farm && u.node.wk > slotsOf(u.node)))
 	) {
 		if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+		if (u.node) u.was = u.node.kind; // what it worked last: the next find must be of the same kind, in sight
 		if (u.nnT > G.t) {
 			u.node = null;
 			u.idle = true;
 			return;
 		} // nothing was found a moment ago: wait, do not search every step
 		const n = nearestNode(u, u.job);
+		if (!n && u.was && u.was !== 'farm' && !u.patch) {
+			// no find of that kind in sight: to the nearest drop-off, and wait there for an order (Build 61, Albert: if they cannot see it they do not go)
+			if (u.pj && u.pj !== u.job) {
+				const pj = u.pj;
+				u.pj = null;
+				setJob(u, pj); // a hunt or a chore is over: back to what it was doing
+				return;
+			}
+			const dr = dropFor(u.owner, u.job, u),
+				what = u.was;
+			setJob(u, null);
+			u.post = dr ? { x: dr.x + halfOf(dr) + 6, y: dr.y + 6 } : null;
+			if (u.owner === 0) say(`No ${what === 'tree' ? 'trees' : what} in sight: one waits at the ${dr ? bldName(0, dr.kind).toLowerCase() : 'Town Center'}.`, '', 4, u);
+			return;
+		}
 		if (!n && !u.patch) u.nnT = G.t + 2 + rng();
 		if (!n && u.patch) {
 			// nothing open inside the box: cut in from the nearest open tree outside it; when the box is clear, back to work
@@ -230,7 +254,8 @@ function vilTick(u, dt, SP) {
 		// Move only when the rate there is FORAGE.move better: nobody churns between two finds that pay the same.
 		u.evalV = G.bldV;
 		u.chk = G.t + 8 + rng() * 4;
-		const b = bestNode(u, u.job);
+		if (!u.node.farm) u.was = u.node.kind;
+		const b = u.node.farm ? null : bestNode(u, u.job); // a plot worker stays put; a wild worker may step to a better find of the same kind in sight
 		if (b && b.n !== u.node && b.R > FORAGE.move * forageNow(u)) {
 			if (u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 			if (b.n.hunt) {
@@ -292,6 +317,7 @@ function huntTick(u, dt, SP) {
 	const a = u.hunt;
 	if (!a || a.hp <= 0) {
 		u.hunt = null;
+		u.was = null; // the kill is butchered next, whatever it worked before
 		return;
 	}
 	u.cd = Math.max(0, u.cd - dt);

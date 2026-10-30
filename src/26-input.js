@@ -360,6 +360,7 @@ function tapAt(sx, sy) {
 	const mine = picked();
 	if (mine.length) {
 		order(mine, h);
+		if (!mine.some(isSoldier)) setPick([]); // villagers given work are let go of; soldiers keep their orders coming (Build 61, Albert)
 		refresh();
 		return;
 	}
@@ -373,6 +374,11 @@ function tapAt(sx, sy) {
 		showStrip(sx, sy, h.e.x, h.e.y);
 		return;
 	} // nothing picked: the send strip, as before
+	if (h.t === 'bld' && h.e.owner === 0 && h.e.node && BLD[h.e.kind].reserve && h.e.node.amt <= 0 && !replantWhy(0, h.e)) {
+		replant(0, h.e.id);
+		sfx('place');
+		return;
+	} // a plot cut out: one tap replants it (Build 61, Albert); if it cannot be, the tap opens its card, which says why
 	if (h.t !== 'unit') {
 		setPick([]);
 		openCard(cardFor(h));

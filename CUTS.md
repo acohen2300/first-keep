@@ -745,3 +745,5 @@ From Albert's audit (one reader, the whole codebase) and two Google audits, chec
 - **Soak, 3 seeds, 20 minutes, Hard, every hazard**: pass; save 237 to 244 kB.
 
 - **Play fingerprint accepted:** Build 60: under fog your villagers work only finds you have found (known0 in bestNode); measured: reverting that one line restores the old fingerprint exactly
+
+## Build 61 preview (not live): the second list

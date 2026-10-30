@@ -205,6 +205,23 @@ function sendBuild(o, id, vid) {
 	if (o === 0) say(`A villager goes to raise the ${bldName(o, b.kind).toLowerCase()}.`, '', 3);
 	return true;
 }
+// Replant a plot that is cut out or worked out (Build 61, Albert): half its cost, and it is full again; a coppice regrows from its stumps
+function replantWhy(o, b) {
+	const B = BLD[b.kind];
+	if (!b.node || !B.reserve) return 'Nothing to replant.';
+	if (b.node.amt > 0) return 'Still growing.';
+	if (!afford(G.P[o], scaled(B.cost, 0.5))) return `Not enough: ${costText(scaled(B.cost, 0.5))}.`;
+	return null;
+}
+function replant(o, id) {
+	const b = G.blds.find((x) => x.id === id && x.owner === o && x.hp > 0);
+	if (!b || replantWhy(o, b)) return false;
+	pay(G.P[o], scaled(BLD[b.kind].cost, 0.5), 'buildings');
+	b.node.amt = b.node.max = BLD[b.kind].reserve;
+	G.treeV = (G.treeV || 0) + 1;
+	if (o === 0) say(`${bldName(0, b.kind)} replanted.`, 'good', 3);
+	return true;
+}
 // Take a building down: half its cost back (all of it in the first 15% of the build); every order waiting inside is cancelled, so what
 // was paid for it comes back in full (a muster's too: before, a muster in the line was lost). Never the Town Center.
 function shellBack(b) {
@@ -823,6 +840,8 @@ function setJob(u, job, n) {
 	if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 	u.job = job;
 	u.node = n || null;
+	u.was = n ? n.kind : null; // a fresh order: any find of the job until it has worked one
+	u.wait = false;
 	if (job) u.post = null;
 	if (n && n.farm) n.wk = (n.wk || 0) + 1;
 	if (job !== 'repair') u.rep = null;
@@ -842,6 +861,23 @@ function moveVil(o, job, down) {
 	}
 	const v = V.find((u) => !u.job) || low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job) && !atShop(u)));
 	if (v) setJob(v, job);
+}
+// Stop: a villager drops its job and stands where it is (or where it is sent), ready for a new order (Build 61)
+function stopVil(u, post) {
+	if (u.inside && u.shop) {
+		const b = G.blds.find((x) => x.id === u.shop);
+		u.inside = false;
+		u.shop = 0;
+		if (b) {
+			u.x = b.x;
+			u.y = b.y + halfOf(b) + 6;
+		}
+	}
+	setJob(u, null);
+	u.hunt = null;
+	u.patch = null;
+	u.rep = null;
+	u.post = post;
 }
 // Send out (a field, a pasture or a shop's card): the last villager sent there goes home; a shop worker steps out of the door
 function sendOut(o, id) {
@@ -955,7 +991,8 @@ function commitPlace() {
 		return;
 	}
 	const b = build(0, kind, pl.at.x, pl.at.y);
-	if (b && B.repeat) {
+	if (b && !capWhy(0, kind) && afford(p, B.cost)) {
+		// keep placing (Build 61, Albert: anything you can make more of right now): the next spot beside it, until the limit or the purse says no
 		const n = B.fp * NAVC + NAVC,
 			spots = [
 				[n, 0],
