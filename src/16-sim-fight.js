@@ -27,7 +27,9 @@ function fromWhere(t, a) {
 function hurt(o, a, t, base) {
 	const A = a ? UNIT[a.kind] : {},
 		isB = !!t.q;
-	let d = base;
+	let d = base,
+		from; // where the blow comes from, found once a blow (the damage and the nerve both read it)
+	const fromOf = () => (from ??= a ? fromWhere(t, a) : 1);
 	if (isB) {
 		d *= A.bld ?? 1;
 		if (a && o !== WILD && t.prog >= 1 && BLD[t.kind].wood && !t.fire) {
@@ -57,7 +59,7 @@ function hurt(o, a, t, base) {
 			if (o === WILD && t.owner !== WILD) d *= MORALE.wild;
 			if (t.state === 'rout') d *= MORALE.routHit;
 			else if (t.fb > G.t) d *= FALLBACK.hit;
-			const dot = a ? fromWhere(t, a) : 1;
+			const dot = fromOf();
 			if (o !== WILD)
 				t.mor -= ((MORALE.hit * d * (TEMPER[temperOf(t)].nerve || 1)) / t.max) * (dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
 		} // nerve: a blow from the side counts half again, from behind twice; animals do not shake it
@@ -70,7 +72,7 @@ function hurt(o, a, t, base) {
 				d *= F.hit || 1;
 				if (F.vsMounted && a && hasTag(a.kind, 'mounted')) d *= F.vsMounted;
 			} // the battalion's shape
-			if (a && A.rng <= 20 && fromWhere(t, a) < -0.5) d *= FLANK; // from behind the line it holds
+			if (a && A.rng <= 20 && fromOf() < -0.5) d *= FLANK; // from behind the line it holds
 		}
 		if (UNIT[t.kind].rarmor && (!a || A.rng > 20)) d *= UNIT[t.kind].rarmor; // roofed: arrows and bolts glance off
 	}

@@ -12,7 +12,7 @@ One reader, one method: by element, not by interaction (Albert's way). Each sect
 | The research badge (`researchBadge`, vector each frame) | 10% at z0.6 | 0.1% | Drawn once per count and zoom into a cache (`BADGE`), stamped; the bob stays in the stamp. |
 | The stores' piles by the camps (`pileAt`, up to 18 small shapes a building a frame) | 29% at z1.2 | 0.1% | One picture per kind, counts and zoom (`PSPR`), trimmed to 60. |
 | Sprites stamped (`stamp`, `drawImage`) | 50–60% | 50–60% | The cost of a sprite game: the number of things on screen. Nothing to take without drawing less. |
-| The ruts (`drawGround`, new) | — | 0.3–11% at z0.6 | At the smallest zoom every rut cell is an ellipse. Below: quantise to four depths, four paths. Not built: it is one line, and a measurement on the phone decides. |
+| The ruts (`drawGround`, new) | — | 0.3–11% at z0.6, then four fills | At the smallest zoom every rut square was an ellipse fill (up to 450). Now four depths, four paths, four fills. |
 
 **The draw budget** (`DRAW` in `18-figures`, `shed` in `41-boot`): one order now, with a way back. Level 1 drops the trees' shadows and the rain rings (the dearest cosmetic passes), level 2 the moving extras, level 3 half the pixels; ten seconds under 7 ms climbs one level back. Before, `lessMotion` (the person's accessibility setting) was set by the load shedder and never unset: a slow spell turned Reduce motion on for the rest of the session. Now `still()` reads the setting or the load, and the setting is never written.
 

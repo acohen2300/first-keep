@@ -14,16 +14,21 @@ function drawGround() {
 			y0 = Math.max(0, ((cam.y - h / 2 / z) / FOG) | 0),
 			x1 = Math.min(FOGN - 1, ((cam.x + w / 2 / z) / FOG) | 0),
 			y1 = Math.min(FOGN - 1, ((cam.y + h / 2 / z) / FOG) | 0);
-		for (let gy = y0; gy <= y1; gy++)
-			for (let gx = x0; gx <= x1; gx++) {
-				const r = T[gy * FOGN + gx];
-				if (!r) continue;
-				const d = Math.min(1, r / CLIMATE.rut.n0) ** 0.4;
-				ctx.fillStyle = g.mud >= 0.02 ? `rgba(50,32,14,${0.3 * g.mud * d})` : `rgba(120,92,58,${0.12 * d})`;
-				ctx.beginPath();
-				ctx.ellipse(SX(gx * FOG + FOG / 2), SY(gy * FOG + FOG / 2), FOG * 0.6 * z, FOG * 0.6 * z * TILT, 0, 0, 6.3);
-				ctx.fill();
-			}
+		// four depths, four paths: one fill each, however many squares (measured: one fill a square was a tenth of a zoomed-out frame)
+		for (let q = 1; q <= 4; q++) {
+			ctx.fillStyle = g.mud >= 0.02 ? `rgba(50,32,14,${(0.3 * g.mud * q) / 4})` : `rgba(120,92,58,${(0.12 * q) / 4})`;
+			ctx.beginPath();
+			for (let gy = y0; gy <= y1; gy++)
+				for (let gx = x0; gx <= x1; gx++) {
+					const r = T[gy * FOGN + gx];
+					if (!r || Math.min(4, Math.ceil(4 * Math.min(1, r / CLIMATE.rut.n0) ** 0.4)) !== q) continue;
+					const sx = SX(gx * FOG + FOG / 2),
+						sy = SY(gy * FOG + FOG / 2);
+					ctx.moveTo(sx + FOG * 0.6 * z, sy);
+					ctx.ellipse(sx, sy, FOG * 0.6 * z, FOG * 0.6 * z * TILT, 0, 0, 6.3);
+				}
+			ctx.fill();
+		}
 	}
 	if (g.mud < 0.02 && g.snow < 0.02 && g.ice < 0.02) return;
 	if (g.mud >= 0.02) {
