@@ -1,4 +1,4 @@
-# First Keep: handoff (Oct 30, 2026, afternoon; Build 65 on the preview)
+# First Keep: handoff (Oct 30, 2026, evening; Build 65 on the preview, Build 66 in progress)
 
 Read in this order: this file, then `RULES.md` (how the game is built and how to work with Albert), then `SCIENCE.md` (every real-world number and its source), then `CUTS.md` (every change, per build, with measurements), then `AUDIT-62.md` (the Oct 30 audit: measurements, the group tables, game theory, and the questions Albert should ask). The handoff before Oct 29 is kept whole in `docs/HANDOFF-to-oct29.md`; its build notes (40 to 52) are history, this file is current.
 
@@ -11,6 +11,33 @@ Albert's single-file HTML mobile real-time strategy game, Age of Empires style, 
 
 ## Where things stand (one paragraph)
 The game has three ways to end (conquest, holding the Throne, finishing the Enlightenment) and three crowns that name a winner on each path (Wealth, War, Wellbeing), plus an overall. The world runs on established models: a real sun and moon, a Markov sky, a temperature and wetness climate, Rothermel fire, Pandolf walking, SIR sickness, logistic flocks, projectile range from height, the forager's rate for villagers, the attack-value rule for soldiers, a demand curve for the market, first-order spoilage, Poisson random events. Build 59 fixed the computers' stall in the Classical age (five logic errors, found by probing). The open problem: the computers reach Medieval in 21 of 48 sides by 40 minutes (Build 63) and do not yet reach the end of the peace path on their own.
+
+## Oct 30 evening: start here (the computers, the map; nothing built yet)
+Build 66 is work in progress (commit e212c89: the SoRen three: `tests/palette.py`, four named timings, `EXCEPTIONS.md`), not yet published. Everything below is findings and decisions in talk; the next step on each is Albert's.
+
+**What the measurements found (scratch probes, no game change):**
+- **The population runs** (8 seeds × 40 min against Build 63's same seeds). Lane round buildings off: Medieval 15 → 19 of 32 sides, blocked villager-seconds 260 → 121, wins move to the balanced style. Harsher army upkeep (foot 2, mounted 5): Medieval 18 of 32, blocked 103. Neither moved the time to Medieval (about 22 min) nor the war crown (aggressive 6–7 of 8).
+- **The cost report** (the ledger, 15 sides in Classical, 263 side-minutes; `docs/trials/ledger_probe.py`). A side earns food 304, gold 134 and stone 53 a minute, and spends all of it: food on upkeep 121, units 119 and research 74; gold on research 50, trade 51 and units 32; stone on buildings 32 and research 17. About nothing is left toward Medieval (f1000 g500 s200). Saving only, the age would take about 6 minutes; it takes 20 or more, or never. **The cause is spending that does not wait for the save**, not too few villagers (an earlier guess, wrong). Not yet split by saving state; the suspects are the 90 s stall valve (`SAVE`) and the purchases with no `!saving` check (towers, priests, medics, siege, zeal, hiring at finds).
+- **No age cap, but the playbook stops at Medieval:** the three personalities' build lists have 3 / 18 / 12 / 4 / 0 / 0 entries from Stone to Enlightenment. The ages after Medieval came later and the lists never followed.
+- **The four starts on one map are within about 10%** (the fairness check); between maps they differ two- to threefold (wood 57–135, gold 13–44 in a 450 reach).
+
+**Agreed in talk (Albert, point by point):**
+- Personalities are taken out for now: level all sides first, measure, then add personality back as weights.
+- The computers' logic: a random goal (a crown) from the side's own seeded stream; the goal picks a group of research (war: barracks, range, stable, smith, siege; wealth: mill, lumber, mining, market, dock, trading post; wellbeing: hospital, temple, school, courthouse); the layout, graded A/B/C per resource, sets the cost of each step; the cheapest path through the group (A*-style search; uniform-cost, since a group has no single end) with seeded mix-up; re-planned at every age change. The door's problem list (feed, house, defend) keeps the town alive on the way.
+- Game theory (a mixed strategy from the harness's payoff table) comes after the economy works, not before.
+- **The trial** (`docs/trials/planner-66.patch` on `src/05-rules-wild.js` and `src/17-ai.js`; `docs/trials/bal_lvl.py`, all four seats on the leveled `lvl`, all at war). Albert's test: 80 games should split evenly if the logic holds. A 40-game control with the old logic, leveled the same way, is needed, because leveled sides on fair maps may split evenly anyway. Results so far: the first 10 games, winners by seat 2, 1, 1, 1, 1, 0, 3, 1, 2, 2. The full 80 + 40 were left running in the Oct 30 session; rerun with `LV=lvl python3 docs/trials/bal_lvl.py --seeds 80 --minutes 30 --jobs 2 --html <built trial copy> --out lvl-80.json`, then `LV=bal` for the control.
+
+**Map: a list waiting for Albert's double yes** (it goes in Build 66 with the SoRen three):
+1. Cut the re-roll: one seed, one layout.
+2. The Throne is a base rule: the centre, the same distance from every keep (Albert: "Fine. You're right").
+3. Lakes and rivers random: count, size, place (today every corner gets one river of one width, for fairness).
+4. Wild resources, finds and animals: random, as now.
+5. Cut `fairness()`, `FAIR` and the gate test "maps fair on ten seeds"; keep the turtle measure (the computers use it).
+6. RULES.md in Albert's words: base rules (flat page, four corners, clearance, home resources, the Throne central); random everything else; no reshuffle.
+7. CUTS.md log with measurements, and the fingerprint's reason.
+- **Open:** hazards. (a) random when none are picked, or (b) always random with the Setup choice removed?
+
+**Open decisions for Albert:** War counts kills only (kills minus losses?); Wealth counts what is held (gathered only?); the score and the crowns measure doing well two ways (should the score be the crowns?); the lane round buildings (off?).
 
 ## Oct 29: what we did (Builds 48 to 59, all on the preview; CUTS.md has every detail and measurement)
 | Build | What |
