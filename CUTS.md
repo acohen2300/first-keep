@@ -925,4 +925,4 @@ Albert: "Yeah go for it. I'm worried about patches and fixes though… Is the co
 **The card's book and ×** sit on the title's line, measured on four cards to the point: the × had sat 9 pt above the book.
 - **Gate**: 25 of 25 at four sizes; the play fingerprint unchanged (no rule of the simulation moved), so the harness stands as Build 63's. One catch on the way: the row's "words wear the ring's colour" rule reached the Setup card's Start and painted its words its own colour (contrast 1.1); it is the row's alone now. Lint: clean, no warnings.
 - **Soak, 3 seeds, 20 minutes, Hard, every hazard**: pass; save 240 to 241 kB; a frame drawn in 8.5, 13.2 and 15.2 ms here (headless).
-- **Size**: the built file 0 → 1191327 bytes.
+- **Size**: the shipped file 1,196,176 → 1,191,327 bytes (-4,849): the cleanup more than paid for the fixes.
