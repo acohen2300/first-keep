@@ -906,7 +906,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The song',
-		'There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, written by your decisions. Every stroke sounds when it lands, at the pace of the find it works; crews fall into step on their own; the birds, the wind and the thunder sit on top. Nothing is composed.',
+		'There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, composed by your decisions. Every stroke sounds when it lands, at the pace of the find it works; crews fall into step on their own; the birds, the wind and the thunder sit on top. Nobody else writes a note of it.',
 		'Work songs kept crews in time long before metronomes: sea shanties, the sowing songs of the fields, the smith striking on the beat. The game plays only what happens.',
 	],
 	[
