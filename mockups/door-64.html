@@ -1,0 +1,154 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+:root{--bg:#141917;--tile:#1b2521;--line:rgba(255,255,255,.12);--txt:#e6e9e6;--mute:#98a2a6;
+--blue:#4f9dff;--white:#e9ecef;--green:#4fb06a;--red:#e0503f;--gold:#e6b947;--pink:#f0a3a0;--lgreen:#9fd8a8}
+body{margin:0;background:var(--bg);color:var(--txt);font:700 13px/1.2 system-ui,sans-serif;padding:16px;display:grid;grid-template-columns:repeat(3,374px);gap:28px}
+h2{grid-column:1/-1;font:700 13px/1.2 sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:14px 0 -14px}
+.col>h4{font:700 11px sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:0 0 6px}
+.note{font:500 12px/1.35 sans-serif;color:var(--mute);margin:8px 0 0}
+.phone{position:relative;width:374px;height:300px;border-radius:14px;background:linear-gradient(#2b3a2c,#223024);overflow:hidden;border:1px solid var(--line)}
+.phone.tall{height:520px}
+.row{position:absolute;left:6px;right:6px;bottom:6px;display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.slot{height:92px;display:flex;flex-direction:column;gap:4px}
+.b{flex:1;background:var(--tile);border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;min-height:0;font-size:16px}
+.b small{font-weight:600;font-size:10px;color:var(--mute);letter-spacing:.03em;text-transform:uppercase}
+.split{gap:0}.split .b{border-radius:0}.split .b:first-child{border-radius:8px 8px 0 0}.split .b:last-child{border-radius:0 0 8px 8px;border-top:0}
+.pm{display:flex;gap:4px;flex:0 0 40px}.pm .b{font-size:18px}
+.n.green{color:var(--green)}.n.lgreen{color:var(--lgreen)}.n.white{color:var(--white)}.n.pink{color:var(--pink)}.n.red{color:var(--red)}
+.door{position:relative}
+.door.white{background:#2a3330}
+.door.blue{background:#173250;border-color:var(--blue);box-shadow:0 0 10px rgba(79,157,255,.55)}
+.door.red{background:#3a1714;border-color:var(--red);box-shadow:0 0 10px rgba(224,80,63,.6)}
+.door.green{background:#14301f;border-color:var(--green)}
+.door small{color:var(--txt)}
+.cyc{font-size:15px}
+.pill{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;font-size:10px;border-radius:8px;padding:1px 5px}
+.dim{opacity:.4}
+.go{background:var(--green)!important;color:#0f2416;border-color:var(--green)!important;font-size:20px}
+.mil .b{background:#2a1512;border-color:#5a2420}
+.bld .b{background:#2b2113;border-color:#5a4420}
+.st-blue{border-color:var(--blue)!important;box-shadow:inset 0 0 0 1px var(--blue)}
+.st-red{border-color:var(--red)!important;box-shadow:inset 0 0 0 1px var(--red)}
+.st-green{border-color:var(--green)!important}
+.why{font-size:9.5px!important;text-transform:none!important;letter-spacing:0!important;text-align:center;line-height:1.15}
+.why.r{color:#ff9a8c!important}.why.bl{color:#9cc8ff!important}.why.g{color:#9fd8a8!important}
+.card{position:absolute;left:6px;right:6px;bottom:104px;background:#2d2117;border:1px solid #8f7442;border-radius:10px;padding:6px 8px 8px;box-sizing:border-box}
+.card h3{margin:0 0 6px;font:400 17px Georgia,serif;color:var(--gold);display:flex;justify-content:space-between;border-bottom:1px solid #8f7442;padding-bottom:4px}
+.card h3 span:last-child{font:700 14px sans-serif;color:var(--txt)}
+.card .row6{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.card .r{height:44px}.card .r .b{height:44px;flex:none}
+.card .r2{height:92px}
+.card .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:6px}
+.card .stats div{background:#241a12;border-radius:6px;padding:4px;text-align:center;font-size:11px}.card .stats small{display:block;color:var(--mute);font-weight:500;font-size:9.5px;text-transform:uppercase}
+.card p{font:500 12px/1.35 sans-serif;margin:4px 0;color:#d9cfb8}
+.tag{position:absolute;top:8px;left:8px;font:700 10px sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);background:rgba(0,0,0,.35);padding:3px 6px;border-radius:5px}
+.legend{grid-column:1/-1;display:flex;gap:18px;font:600 12px sans-serif;color:var(--mute);margin-top:-8px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-2px}
+.grad{width:220px;height:12px;border-radius:6px;background:linear-gradient(90deg,var(--red),var(--pink),var(--white),var(--lgreen),var(--green));display:inline-block;vertical-align:-2px;margin:0 6px}
+</style></head><body>
+
+<h2>1 · The door: the first slot's top half, in the colour code (the row never moves)</h2>
+<div class="legend"><span><i style="background:var(--blue)"></i>blue: available, act now</span><span><i style="background:var(--white)"></i>white: all is well</span><span><i style="background:var(--green)"></i>green: active or done</span><span><i style="background:var(--red)"></i>red: something wrong</span><span><i style="background:var(--gold)"></i>gold: chosen</span><span>numbers: red<span class="grad"></span>green</span></div>
+
+<div class="col"><h4>White: all is well (a tap opens the cycle)</h4><div class="phone"><span class="tag">quiet</span>
+<div class="row">
+<div class="slot split"><div class="b door white">✓<small>all well</small></div><div class="b cyc">☰ ▸<small>pages</small></div></div>
+<div class="slot"><div class="b"><span class="n white">4</span><small>Food</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n lgreen">3</span><small>Wood</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">0</span><small>Stone</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">1</span><small>Gold</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">0</span><small>Iron</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+</div></div><p class="note">Nothing needs you. The job numbers carry the velocity of their store: wood gaining (light green), the rest steady (white).</p></div>
+
+<div class="col"><h4>Blue: something available (Build)</h4><div class="phone"><span class="tag">available</span>
+<div class="row">
+<div class="slot split"><div class="b door blue">⌂<small>a house</small></div><div class="b cyc">☰ ▸<small>pages</small></div></div>
+<div class="slot"><div class="b"><span class="n green">6</span><small>Food</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n lgreen">5</span><small>Wood</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">2</span><small>Stone</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n pink">1</span><small>Gold</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">0</span><small>Iron</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+</div></div><p class="note">The town is one short of room and you can afford a house. One tap opens the Build page with the house first. Gold is slipping (pink).</p></div>
+
+<div class="col"><h4>Red: something wrong (Military)</h4><div class="phone"><span class="tag">wrong</span>
+<div class="row">
+<div class="slot split"><div class="b door red">⚔<small>raid · 0:40</small><span class="pill">3</span></div><div class="b cyc">☰ ▸<small>pages</small></div></div>
+<div class="slot"><div class="b"><span class="n red">2</span><small>Food</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">4</span><small>Wood</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">2</span><small>Stone</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">1</span><small>Gold</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">0</span><small>Iron</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+</div></div><p class="note">A raid arrives in 40 s, and 3 problems are waiting (the pill). The highest red wins the door; one tap opens Military. Food is losing badly (red).</p></div>
+
+<h2>2 · The pages the door opens (Jobs above is home; the door always gets back to it)</h2>
+
+<div class="col"><h4>Military: squads, building a squad, training</h4><div class="phone"><span class="tag">military</span>
+<div class="row mil">
+<div class="slot split"><div class="b door red">⚔<small>raid · 0:40</small></div><div class="b cyc">↩<small>jobs</small></div></div>
+<div class="slot"><div class="b st-green">α 12<small class="why g">out · 0:19</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b st-blue">β 6<small class="why bl">home · send</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b st-red">γ 4<small class="why r">nerve 30%</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b">⚒ 3<small>train</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot split"><div class="b go">✓</div><div class="b">✕</div></div>
+</div></div><p class="note">Each squad tile in the code: green out on orders, blue at home and ready, red breaking. The fifth tile is training (the queues, with − and +); tapping a squad opens the squad builder on top, one row tall.</p></div>
+
+<div class="col"><h4>Build: what the town needs, and why not</h4><div class="phone"><span class="tag">build</span>
+<div class="row bld">
+<div class="slot split"><div class="b door blue">⌂<small>a house</small></div><div class="b cyc">↩<small>jobs</small></div></div>
+<div class="slot"><div class="b st-blue">⌂<small class="why bl">House · room +5</small></div></div>
+<div class="slot"><div class="b st-green">⚙<small class="why g">Mill · 60%</small></div></div>
+<div class="slot"><div class="b st-red">⛪<small class="why r">School first</small></div></div>
+<div class="slot"><div class="b st-red">▦<small class="why r">short 40 w</small></div></div>
+<div class="slot"><div class="b">⋯<small>all</small></div></div>
+</div></div><p class="note">Blue you can build now; green building; red wanted but blocked, with the reason (a building first, or what it is short of). The sixth opens the Build card with its pins. People and Tech problems land here too: a house for room, a building a research step needs.</p></div>
+
+<div class="col"><h4>Variant for the first slot (your call)</h4><div class="phone"><span class="tag">variant</span>
+<div class="row">
+<div class="slot split"><div class="b">+👤<small>3/12</small></div><div class="b door blue">⌂<small>a house</small></div></div>
+<div class="slot"><div class="b"><span class="n white">4</span><small>Food</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n lgreen">3</span><small>Wood</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">0</span><small>Stone</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">1</span><small>Gold</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">0</span><small>Iron</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+</div></div><p class="note">Above, the door takes the top and the cycle the bottom, so "+ villager" leaves the row (it lives on the Build page and the map tap). Here, "+ villager" keeps the top (one tap, as today), the door replaces the hammer, and the cycle stays the chip above the row.</p></div>
+
+<h2>3 · Cards grow upward from the row on its mold: one row, two rows, full</h2>
+
+<div class="col"><h4>One row (a villager)</h4><div class="phone tall"><span class="tag">one row</span>
+<div class="card"><h3><span>Villager</span><span>📖 ✕</span></h3>
+<div class="stats"><div><small>Status</small>wood</div><div><small>Age</small>4:12</div><div><small>Stats</small>3 · 30</div><div><small>Health</small>25/25</div></div>
+<div class="row6 r"><div class="slot r"><div class="b">↩<small>back</small></div></div><div class="slot r"><div class="b">■<small>stop</small></div></div><div class="slot r"><div class="b">🏠<small>home</small></div></div><div class="slot r"><div class="b">✕<small>dismiss</small></div></div><div class="slot r"><div class="b">?<small>why</small></div></div><div class="slot r"><div class="b dim">·</div></div></div></div>
+<div class="row">
+<div class="slot split"><div class="b door white">✓<small>all well</small></div><div class="b cyc">☰ ▸<small>pages</small></div></div>
+<div class="slot"><div class="b"><span class="n white">4</span><small>Food</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n lgreen">3</span><small>Wood</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">0</span><small>Stone</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">1</span><small>Gold</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">0</span><small>Iron</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+</div></div></div>
+
+<div class="col"><h4>Two rows (a building)</h4><div class="phone tall"><span class="tag">two rows</span>
+<div class="card"><h3><span>Barracks</span><span>📖 ✕</span></h3>
+<div class="row6 r2"><div class="slot"><div class="b st-blue">⟋ 2<small class="why bl">Spear · 0:20</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div><div class="slot"><div class="b">⚔ 0<small>Sword</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div><div class="slot"><div class="b st-red">⚔<small class="why r">Legion: age</small></div><div class="pm"><div class="b dim">−</div><div class="b dim">+</div></div></div><div class="slot"><div class="b">⌖<small>orders</small></div></div><div class="slot"><div class="b">⚒<small>repair</small></div></div><div class="slot"><div class="b">✕<small>take down</small></div></div></div></div>
+<div class="row">
+<div class="slot split"><div class="b door white">✓<small>all well</small></div><div class="b cyc">☰ ▸<small>pages</small></div></div>
+<div class="slot"><div class="b"><span class="n white">4</span><small>Food</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n lgreen">3</span><small>Wood</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">0</span><small>Stone</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">1</span><small>Gold</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">0</span><small>Iron</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+</div></div></div>
+
+<div class="col"><h4>Full (the Guide, research: text)</h4><div class="phone tall"><span class="tag">full</span>
+<div class="card" style="top:8px"><h3><span>The song</span><span>📖 ✕</span></h3>
+<p>There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, composed by your decisions.</p>
+<p>Every stroke sounds when it lands, at the pace of the find it works; crews fall into step on their own; the birds, the wind and the thunder sit on top.</p>
+<p style="color:#a89d86">Work songs kept crews in time long before metronomes.</p></div>
+<div class="row">
+<div class="slot split"><div class="b door white">✓<small>all well</small></div><div class="b cyc">☰ ▸<small>pages</small></div></div>
+<div class="slot"><div class="b"><span class="n white">4</span><small>Food</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n lgreen">3</span><small>Wood</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">0</span><small>Stone</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">1</span><small>Gold</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+<div class="slot"><div class="b"><span class="n white">0</span><small>Iron</small></div><div class="pm"><div class="b">−</div><div class="b">+</div></div></div>
+</div></div></div>
+</body></html>
