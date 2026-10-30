@@ -683,8 +683,8 @@ function drawUnit(u, s) {
 	LEAN.set(u, lean);
 	const ln = lean && u.node ? (Math.min(12, Math.max(0, dist(u, u.node) - 10)) * lean) / (dist(u, u.node) || 1) : 0,
 		al = DRAW.alpha, // the frame falls between two steps (30 a second); the figure is drawn that fraction of the way (a jump of 30+ is a teleport, not a step)
-		ix = u.px !== undefined && Math.abs(u.x - u.px) < 30 ? u.px + (u.x - u.px) * al : u.x,
-		iy = u.py !== undefined && Math.abs(u.y - u.py) < 30 ? u.py + (u.y - u.py) * al : u.y,
+		ix = u.lx !== undefined && Math.abs(u.x - u.lx) < 30 ? u.lx + (u.x - u.lx) * al : u.x,
+		iy = u.ly !== undefined && Math.abs(u.y - u.ly) < 30 ? u.ly + (u.y - u.ly) * al : u.y,
 		ux = u.node ? ix + (u.node.x - ix) * ln : ix,
 		uy = u.node ? iy + (u.node.y - iy) * ln : iy;
 	const z = cam.z,

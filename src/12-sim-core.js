@@ -28,8 +28,8 @@ function step(dt) {
 	G.threats = [];
 	for (const v of G.units) {
 		if ((v.thr = isThreat(v))) G.threats.push(v);
-		v.px = v.x; // where it stood before this step: the frame between two steps is drawn between the two (Build 63)
-		v.py = v.y;
+		v.lx = v.x; // where it stood before this step: the frame between two steps is drawn between the two (Build 63)
+		v.ly = v.y;
 	}
 	buildGrid();
 	if (G.navDirty) navRebuild();

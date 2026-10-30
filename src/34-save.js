@@ -121,11 +121,11 @@ const SKIP_U = new Set([
 	'sk',
 	'sgx',
 	'sgy',
-	'px',
-	'py',
+	'lx',
+	'ly',
 	'gp',
 	'gpT',
-]); // px/py: where it stood last step (drawing); gp/gpT: the group power of the tick
+]); // lx/ly: where it stood last step (drawing only); gp/gpT: the group power of the tick
 let holdSave = false; // while the Resume card waits, nothing may overwrite the save it offers
 const inFight = () => G.units.some((u) => u.owner === 0 && u.tgt && u.tgt.hp > 0);
 let fightHold = 0;
