@@ -878,7 +878,7 @@ function realmPageHTML() {
 const atGo = (go) =>
 	go.startsWith('page:') ? (G.hud.page || 'jobs') === go.slice(5) : go.startsWith('card:') ? !!G.card && go.slice(5).startsWith(G.card.type) : false;
 function doorTap() {
-	const T = domains().top;
+	const T = DOOR.top; // what the door shows, not a fresh read: a change inside the 150 ms between draws cannot send you elsewhere (Build 65)
 	if (T && !atGo(T.go)) {
 		closeCard();
 		act(T.go);
@@ -887,7 +887,7 @@ function doorTap() {
 }
 const doorHTML = (id = 'doorB') =>
 	`<button class="cell st door"${id ? ` id="${id}"` : ''} data-act="door" aria-label="The door: the most important thing now"><span class="top"></span>${wd('')}</button>`;
-let DOOR = { sig: '', key: '' };
+let DOOR = { sig: '', key: '', top: null }; // top: what the door shows now, which its tap follows
 function doorUI() {
 	if (!G || G.over) return;
 	const D = domains(),
@@ -898,6 +898,7 @@ function doorUI() {
 		sig = st + icon + word + D.n,
 		key = T ? T.id + T.st : '',
 		fresh = key !== DOOR.key;
+	DOOR.top = T;
 	for (const el of document.querySelectorAll('button.door')) {
 		if (el.sig !== sig) {
 			el.sig = sig;

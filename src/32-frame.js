@@ -603,7 +603,7 @@ function ui(force) {
 			['', AGE_SHORT[p.age] || AGES[p.age].name, ''],
 			[sky, '', ''],
 			['', clk, ''],
-			[ICON.head, `${popOf(0)}/${capOf(0)}`, popOf(0) >= capOf(0) && capOf(0) < POPMAX ? 'lit-r' : ''],
+			['', `${popOf(0)}/${capOf(0)}`, popOf(0) >= capOf(0) && capOf(0) < POPMAX ? 'lit-r' : ''], // the number alone: 180/180 fits the 45 pt cell
 			['', `z ${idleN}`, idleN ? 'lit-r' : 'dim'],
 			[ICON.book, String(ready), ready ? 'lit-b' : 'dim'],
 			['', `★ ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, ''], // the rank; the score itself is on the score card
@@ -722,7 +722,7 @@ function preview() {
 		M = G.mail || [],
 		now = performance.now(),
 		paused = G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup')),
-		live = M.find((m) => m.ru > now),
+		live = M.find((m) => m.ru > now && urgentCls(m.cls)) || M.find((m) => m.ru > now), // red first: a routine line waits behind it (Build 65)
 		big = !!G.card && $('card').classList.contains('full'),
 		ask = G.pvAsk;
 	let h = '',
