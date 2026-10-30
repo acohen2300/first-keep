@@ -973,7 +973,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Fog of war',
-		`You see what your people and your allies see; the rest of the map is as you last saw it, and the unseen is dark. An army out of sight reaches you by its noise or by a messenger, and the odds count only the soldiers you see, or the report of a spy under ${TELL.spy / 60} minutes old. Spies stay hidden until something of yours is close. Night shortens sight. The computers play without fog: an assumption of the game, the one way they are not like you. Choose it on or off when you start a game.`,
+		`You see what your people and your allies see; the rest of the map is as you last saw it, and the unseen is dark. An army out of sight reaches you by its noise or by a messenger, and the odds count only the soldiers you see, or the report of a spy under ${TELL.spy / 60} minutes old. Spies stay hidden until something of yours is close. Night shortens sight; a wood blocks it, so you see its edge and nothing behind; in fog, snow or a blizzard nobody sees past the visibility, a tower no farther than a man. The computers play without fog: an assumption of the game, the one way they are not like you. Choose it on or off when you start a game.`,
 		'Scouts earned their pay by what they saw first.',
 	],
 	[

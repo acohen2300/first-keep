@@ -71,7 +71,11 @@ function makeBg() {
 		stream(run, 14, 'rgba(196,180,128,.55)');
 		stream(run, 7, 'rgba(201,185,133,.9)');
 	}
-	for (const run of runs) stream(run, 2, '#2f6c8e'); // the river: one even colour, shallow running water
+	// the water, lake and river alike (Build 61: the river was one flat blue and met the lake's shaded edge in a hard line): the shallows pale
+	// at the bank, the deep dark in the middle; a river is drawn as three strokes, bank, shallow, channel, in the lake's own colours
+	for (const run of runs) stream(run, 2, '#79b2bf');
+	for (const run of runs) stream(run, -2, '#4e93ad');
+	for (const run of runs) stream(run, -5, '#2a6488');
 	for (const L of G.lakes) {
 		if (L.river) continue;
 		const lg = b.createRadialGradient(L.x - L.r * 0.2, L.y - L.r * 0.2, 10, L.x, L.y, L.r + 2);
@@ -82,6 +86,20 @@ function makeBg() {
 		b.fillStyle = lg;
 		b.beginPath();
 		b.arc(L.x, L.y, L.r + 2, 0, 7);
+		b.fill();
+	}
+	for (const run of runs) {
+		// where a river leaves its lake, the lake's shade covers the join
+		const L = run[0];
+		if (!L.river) continue;
+		const src = G.lakes.find((q) => !q.river && hyp(q.x - L.x, q.y - L.y) < q.r + L.r + 20);
+		if (!src) continue;
+		const lg = b.createRadialGradient(src.x, src.y, src.r - 6, src.x, src.y, src.r + 14);
+		lg.addColorStop(0, '#2a6488');
+		lg.addColorStop(1, 'rgba(42,100,136,0)');
+		b.fillStyle = lg;
+		b.beginPath();
+		b.arc(src.x, src.y, src.r + 14, 0, 7);
 		b.fill();
 	}
 	{
@@ -267,6 +285,7 @@ function draw() {
 	const N = viewNodes(wv, wv2, far),
 		sB = quant(z * dpr),
 		sU = quant(z * dpr * FIG);
+	if (!far) nodeShadows(N, z); // the trees' shadows lie on the ground under everything standing
 	// the standing nodes (about 2,000 trees, bushes and rocks) are kept sorted until the view moves a step; the few moving things are merged in
 	for (let i = 0, j = 0; i < N.length || j < list.length; ) {
 		const take = j >= list.length || (i < N.length && N[i].y < list[j][0]),

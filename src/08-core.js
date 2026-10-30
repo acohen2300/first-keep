@@ -521,14 +521,16 @@ const rangeOf = (o, kind) => rangeFrom(BLD[kind].bow, BLD[kind].h) + (o === WILD
 // shows it (Build 60: towers aimed with the research added while the screen did not, so spies died unseen)
 const spySeen = (o, from) => UNIT.spy.stealth[from.q ? 1 : 0] + (from.q && o !== WILD ? fxv(o, 'spysight').a : 0);
 const lookout = (kind) => Math.round(LOOKOUT.base + LOOKOUT.k * Math.sqrt(BLD[kind].h || 0)); // how far a building sees, from its height
-const sightOf = (e) =>
+const sightClear = (e) =>
 	((UNIT[e.kind] ? (e.owner !== undefined && e.owner !== WILD && e.owner !== null ? stats(e.owner, e.kind).sight : UNIT[e.kind].sight) || 100 : lookout(e.kind)) + // a tier can add sight (the mounted scout)
 		(e.owner !== undefined && e.owner !== WILD && e.owner !== null
 			? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]).a
 			: 0)) *
 	(1 - (1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) * G.night * (UNIT[e.kind] || e.owner === WILD ? 1 : 1 - fxv(e.owner, 'lamp', bldKeys(e.kind)).a)) * // lanterns give a building back part of its night sight
-	EVM.sight *
-	(WEATHER[G.wx].sight || 1); // night, the moon, an eclipse or fog, a blizzard
+	EVM.sight; // night, the moon, an eclipse
+// in fog, snow or a blizzard nobody sees past the visibility, a tower no farther than a man (Build 61; before, a factor that let a tower see twice as far in fog as a man)
+const visCap = () => Math.min(WEATHER[G.wx].vis ?? Infinity, G.ev && G.ev.cur && EVENTS[G.ev.cur.kind].vis ? EVENTS[G.ev.cur.kind].vis : Infinity);
+const sightOf = (e) => Math.min(sightClear(e), visCap());
 const carryOf = (o) => CARRY + fxv(o, 'carry').a;
 function gatherMul(o, n) {
 	let m = fxv(o, 'gather', [n.type, n.kind]).m * EVM.gather * (WEATHER[G.wx].gather || 1) * (season().name === 'Winter' ? 1 + fxv(o, 'warm').a : 1); // warm homes: better winter work

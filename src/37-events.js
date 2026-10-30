@@ -4,7 +4,7 @@
 // Random when, never random whether: the next event is picked when the last ends (an exponential wait, the Poisson process: nextIn in 08-core), announced EV_WARN seconds ahead, then run for its seconds.
 const EVM = { dmg: 1, spd: 1, sight: 1, gather: 1 };
 // the knobs follow the event now running and nothing else; set when one starts or ends, and on a new game or a load (Build 48: a game begun or loaded in an eclipse kept its dark)
-const KNOBS = { eclipse: ['dmg', 'spd', 'sight'], fog: ['sight'], heatwave: ['dmg', 'spd'] };
+const KNOBS = { eclipse: ['dmg', 'spd', 'sight'], heatwave: ['dmg', 'spd'] }; // fog caps sight by visibility instead (visCap, 08)
 function evmSet() {
 	EVM.dmg = EVM.spd = EVM.sight = EVM.gather = 1;
 	const e = G && G.ev && G.ev.cur;

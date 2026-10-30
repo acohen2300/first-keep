@@ -75,20 +75,59 @@ const visibleTo0 = (u) => (u.kind !== 'spy' || friendly(0, u.owner) || u.exposed
 let fogCv = null,
 	fogImg = null,
 	fogT = -1;
+// the woods block sight (Build 61, Albert: lifelike lines of sight): a fog square holding three or more standing trees is a wall of canopy;
+// you see the square itself, the edge of the wood, and nothing behind it on that line. Rebuilt when a tree falls or grows.
+let WOODS = { v: -1, G: null, grid: null };
+function woodsGrid() {
+	if (WOODS.G === G && WOODS.v === G.treeV) return WOODS.grid;
+	const grid = new Uint8Array(FOGN * FOGN),
+		n = new Uint8Array(FOGN * FOGN);
+	for (const t of G.nodes) if (t.kind === 'tree' && t.amt > 0) n[clamp((t.y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((t.x / FOG) | 0, 0, FOGN - 1)]++;
+	for (let i = 0; i < n.length; i++) grid[i] = n[i] >= 3 ? 1 : 0;
+	WOODS = { v: G.treeV, G, grid };
+	return grid;
+}
+// is the square (gx, gy) in open sight of the square (sx, sy)? a line on the grid (Bresenham); the first wood on the way is seen, the rest is not
+function openLine(W, sx, sy, gx, gy) {
+	let x = sx,
+		y = sy;
+	const dx = Math.abs(gx - sx),
+		dy = -Math.abs(gy - sy),
+		ix = sx < gx ? 1 : -1,
+		iy = sy < gy ? 1 : -1;
+	let err = dx + dy;
+	for (;;) {
+		if (x === gx && y === gy) return true;
+		if ((x !== sx || y !== sy) && W[y * FOGN + x]) return false; // a wood between: the viewer's own square never blocks
+		const e2 = 2 * err;
+		if (e2 >= dy) {
+			err += dy;
+			x += ix;
+		}
+		if (e2 <= dx) {
+			err += dx;
+			y += iy;
+		}
+	}
+}
 function fogTick() {
 	// every ten ticks: what is lit now
-	const F = G.fog;
+	const F = G.fog,
+		W = woodsGrid();
 	for (let i = 0; i < F.length; i++) if (F[i] === 2) F[i] = 1;
 	const light = (x, y, r) => {
 		const c = r / FOG + 0.5,
 			cx = x / FOG,
 			cy = y / FOG,
+			sx = clamp(cx | 0, 0, FOGN - 1),
+			sy = clamp(cy | 0, 0, FOGN - 1),
 			x0 = clamp((cx - c) | 0, 0, FOGN - 1),
 			x1 = clamp((cx + c) | 0, 0, FOGN - 1),
 			y0 = clamp((cy - c) | 0, 0, FOGN - 1),
 			y1 = clamp((cy + c) | 0, 0, FOGN - 1);
 		for (let gy = y0; gy <= y1; gy++)
-			for (let gx = x0; gx <= x1; gx++) if (hyp(gx + 0.5 - cx, gy + 0.5 - cy) <= c) F[gy * FOGN + gx] = 2;
+			for (let gx = x0; gx <= x1; gx++)
+				if (hyp(gx + 0.5 - cx, gy + 0.5 - cy) <= c && openLine(W, sx, sy, gx, gy)) F[gy * FOGN + gx] = 2;
 	};
 	for (const u of G.units) if (u.hp > 0 && friendly(0, u.owner) && !u.inside) light(u.x, u.y, sightOf(u));
 	for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && friendly(0, b.owner)) light(b.x, b.y, sightOf(b)); // from its height, after research, by day or night (Build 51: a flat 90 for most)

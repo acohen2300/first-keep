@@ -1926,12 +1926,8 @@ const NS_blob = (cx, cy, rx, ry, n, jit, r) =>
 		return [cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k];
 	});
 const NS_INK = 'rgba(14,20,12,.34)';
-const NS_shadow = (len) => {
-	g.fillStyle = 'rgba(0,0,0,.22)';
-	g.beginPath();
-	g.ellipse(len * 0.45, 1, len, 3, 0, 0, 7);
-	g.fill();
-};
+// (Build 61: the shadow baked into every tree, bush and rock is gone; drawNode casts it from the sun, as a building or a person does)
+const NODE_H = { tree: 22, bush: 8, stone: 7, gold: 7, iron: 7, fish: 0, meat: 2 }; // how tall each kind stands, for its shadow
 function nodeSprite(n, s) {
 	const sn = season().name,
 		v = n.kind === 'tree' ? n.id % 6 : n.id % 3,
@@ -1955,7 +1951,6 @@ function nodeSprite(n, s) {
 	if (n.kind === 'tree') {
 		const TC = ['#2f5a2a', '#3c6c32', '#2a5428', '#3a6a38', '#2f6048', '#4a7430'][v],
 			col = sn === 'Autumn' && v === 0 ? '#9a6224' : sn === 'Autumn' && v === 2 ? '#7a6a24' : TC;
-		NS_shadow(13);
 		NS_poly(
 			[
 				[-2.4, 0],
@@ -2009,7 +2004,6 @@ function nodeSprite(n, s) {
 			NS_poly(NS_blob(3.4, -17.6, 3, 1.1, 8, 0.2, r), '#e8eef0');
 		}
 	} else if (n.kind === 'bush') {
-		NS_shadow(9);
 		[
 			[-4, -3.5, 4.8, 3.4, 0.8],
 			[4, -3.5, 4.6, 3.2, 0.85],
@@ -2051,7 +2045,6 @@ function nodeSprite(n, s) {
 				[10 * k(), -1],
 				[4, 1],
 			];
-		NS_shadow(12);
 		NS_poly(P, NS_c(base, 0.8), 'rgba(14,16,18,.6)', 0.5);
 		NS_poly([P[1], P[2], P[3], P[4], [3, -6.5], [-3, -5]], top, 'rgba(0,0,0,.25)', 0.3);
 		NS_poly(

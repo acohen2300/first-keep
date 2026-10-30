@@ -226,14 +226,15 @@ const SHAPE = {
 };
 const LAYOUT = [
 	// what, nearest, farthest from the keep, room it needs; the last two (an angle range) put the home pocket in the corner behind the Town Center, away from every neighbour
-	['bushP', 80, 140, 38, -2.9, -1.75],
-	['groveP', 110, 190, 56, -2.9, -1.75],
-	['stoneP', 120, 190, 24, -2.9, -1.75],
-	['goldP', 140, 200, 24, -2.9, -1.75],
-	['ironP', 150, 210, 24, -2.9, -1.75],
-	['bushA', 90, 125, 38],
-	['groveA', 150, 230, 72],
-	['bushB', 135, 190, 38],
+	// a clear ring of about 150 round the Town Center (Build 61, Albert: more room at the start); the home finds sit just outside it
+	['bushP', 150, 200, 38, -2.9, -1.75],
+	['groveP', 170, 240, 56, -2.9, -1.75],
+	['stoneP', 180, 240, 24, -2.9, -1.75],
+	['goldP', 200, 260, 24, -2.9, -1.75],
+	['ironP', 210, 270, 24, -2.9, -1.75],
+	['bushA', 150, 190, 38],
+	['groveA', 170, 250, 72],
+	['bushB', 180, 230, 38],
 	['stone', 170, 260, 24],
 	['gold', 190, 280, 24],
 	['groveB', 200, 290, 56],

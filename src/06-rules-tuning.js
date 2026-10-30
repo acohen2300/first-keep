@@ -64,6 +64,11 @@ const CLIMATE = {
 	missHurt: 0.08, // snow: an engine slides and its shot falls short, hurting its own crew
 	wear: 0.15, // frost makes blades brittle and rain rusts them: weapons do 15% less until tempered and oiled
 };
+// Fire between buildings (Build 61): a fire grows as the square of its age (the t² design fire, NFPA 72 / Heskestad 1984), and what a neighbour
+// receives falls with the configuration factor of radiant heat, about (near / (gap + near))² (the view-factor method of BR 187 / Approved
+// Document B, "space separation"). rate: the chance a second a full fire lights a touching wooden neighbour, times the ground's dryness
+// (Rothermel); grow: seconds to a full fire (design: a house burns down in 50); near: the gap, in units, at which the heat is a quarter; reach: beyond this none.
+const FIRE = { rate: 0.12, grow: 20, near: 10, reach: 40 };
 const FIREARMS = { chance: 0.12, blast: 0.3, splash: 40, splashHit: 0.3 }; // fire arrows and burning shot ignite a wooden building on a hit (rain halves it); a petard bombard ignites and shakes the neighbours too
 const GARRISON = { r: 70, heal: 0.6 }; // soldiers resting by their own Castle, Barracks or Town Center heal; Garrison wards double it
 const TEACH = { seats: 4, mul: 1.5, tuition: 40 }; // Teach: a soldier learns a newer kind at the School, four at a time; time ×1.5 per age climbed, tuition in gold per age; opened by Veterans
@@ -113,17 +118,19 @@ const HARVEST = [
 	{ p: 1 / 20, m: 0.5, text: 'A failed harvest this year: fields give half.' },
 	{ p: 1 / 6, m: 0.7, text: 'A poor harvest this year: fields give 30% less.' },
 ];
-// the skies and what each does beyond the ground (the ground, mud, snow, ice and fire come from the climate): bows in rain, fields in drought, mortar in frost, sight in a whiteout
+// the skies and what each does beyond the ground (the ground, mud, snow, ice and fire come from the climate): bows in rain, fields in drought, mortar in frost, sight in a whiteout.
+// vis: the visibility in haze, snow or fog, in game units: nothing sees farther than it, a tower no more than a man (Koschmieder 1924: V = 3.912 / β,
+// the distance at which contrast falls to 2%; the game has no metre, so the values are design, the form is his). An eclipse dims the light instead (sight ×).
 const WEATHER = {
 	clear: { name: 'Clear' },
 	rain: { name: 'Rain', rng: 0.85, text: 'Rain: the ground softens and bows reach less.' },
 	drought: { name: 'Drought', crop: 0.7, text: 'Drought: fields give 30% less and fire catches at a touch.' },
 	frost: { name: 'Frost', stone: 0.5, text: 'Frost: mortar will not set, stone builds at half speed.' },
-	snow: { name: 'Snow', sight: 0.7, text: 'Snow: the ground deepens and sight shortens.' },
+	snow: { name: 'Snow', vis: 160, text: 'Snow: the ground deepens and sight shortens.' },
 	blizzard: {
 		name: 'Blizzard',
 		spd: 0.6,
-		sight: 0.35,
+		vis: 60,
 		gather: 0.5,
 		text: 'Blizzard: a whiteout. Marches crawl, sight is gone, gathering halves.',
 	}, // Harsh winters only
@@ -197,7 +204,7 @@ const EVENTS = {
 	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.004, harm: 1 },
 	meteor: { name: 'Falling star', secs: 3 },
 	wildfire: { name: 'Wildfire', secs: 60, spread: 0.2, r: 32, burn: 0.12, most: 20, season: ['Summer', 'Autumn'], harm: 1 }, // most: trees alight at once; the dry seasons, drought or not
-	fog: { name: 'Fog', secs: 60, sight: 0.4 },
+	fog: { name: 'Fog', secs: 60, vis: 70 },
 	sinkhole: { name: 'Sinkhole', secs: 2, hit: 0.4 },
 	quicksand: { name: 'Quicksand', secs: 120, r: 60, slow: 0.3 },
 	heatwave: { name: 'Heat', secs: 60, dmg: 0.85, spd: 0.9, need: 'drought', season: 'Summer' },

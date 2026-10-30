@@ -412,7 +412,7 @@ window.__fk = {
 		return holdSave;
 	},
 	get caches() {
-		return { SPR, BSPR, NSPR };
+		return { SPR, BSPR, NSPR, deepTrees };
 	},
 };
 

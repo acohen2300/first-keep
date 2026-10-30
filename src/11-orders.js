@@ -992,8 +992,9 @@ function commitPlace() {
 	}
 	const b = build(0, kind, pl.at.x, pl.at.y);
 	if (b && !capWhy(0, kind) && afford(p, B.cost)) {
-		// keep placing (Build 61, Albert: anything you can make more of right now): the next spot beside it, until the limit or the purse says no
-		const n = B.fp * NAVC + NAVC,
+		// keep placing (Build 61, Albert: anything you can make more of right now): the next spot beside it, until the limit or the purse says no;
+		// wooden buildings leave a cell between them, so a fire has a gap to cross (Build 61: measured, houses one cell apart caught in a third of fires)
+		const n = B.fp * NAVC + NAVC * (B.wood ? 2 : 1),
 			spots = [
 				[n, 0],
 				[0, n],
