@@ -17,7 +17,7 @@ function trainWhy(o, kind) {
 	if (U.age > p.age) return `${plural(U.name)} need the ${AGES[U.age].name} age.`;
 	if (!readyAt(o, U).length) return `Build a ${BLD[U.at].name.toLowerCase()} first.`;
 	if (U.cls && clsCount(o, U.cls) >= clsMax(U.cls, o))
-		return U.cls === 'civ' ? `Worker limit: ${VILMAX}.` : armyFull(o);
+		return U.cls === 'civ' ? `People at the ceiling: ${POPMAX}.` : armyFull(o);
 	if (p.hungry) return 'Your people are hungry: put villagers on Food.';
 	if (!afford(p, unitCost(o, k))) return `Not enough: ${costText(unitCost(o, k))}.`;
 	if (!readyAt(o, U).some((b) => b.q.length < qMax(o))) return `That line is full (${qMax(o)} waiting).`;

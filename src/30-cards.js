@@ -77,8 +77,15 @@ const CARDS = {
 					],
 					trade ? 'rel' : 'town',
 				);
-			if (kp && !trade)
+			if (kp && !trade) {
 				h += acts(btn('stopall', 'Stop all', 'everyone to the Town Center, idle') + btn('idlehere', 'Idle to me', `${unitsOf(0, 'vil').filter(freeVil).length} come to the screen`)); // every villager at once (Build 61, Albert)
+				const T = turtlePlan(0);
+				if (T && T.rows.length)
+					h += `<p class="dim"><i>To ${T.age.name} by the fields:</i> ${T.rows.map((x) => `${Math.round(x.need)} ${x.r}${isFinite(x.vm) ? ` (${x.vm.toFixed(1)} villager-min)` : ' (none known)'}`).join(', ')}. With ${T.villagers} villagers about ${isFinite(T.time) ? clock(T.time * 60) : '—'}: ${T.split
+						.filter((s) => s.n)
+						.map((s) => `${s.n} on ${cap1(s.r)}`)
+						.join(', ')}.</p>`;
+			}
 			if (tr.length) h += hd('Train') + acts(trainButtons(tr));
 			if (hasR)
 				h +=
@@ -339,8 +346,27 @@ const CARDS = {
 			`<table><tr><th></th><th>Have</th><th>In</th><th>Out</th><th>On it</th></tr>${RES.map((r) => {
 				const k = KEY[r],
 					net = Math.round(rt[k] || 0) - Math.round(ot[k] || 0);
-				return `<tr><td>${RESOURCES[r].name}</td><td class="${net > 0 ? 'up' : net < 0 ? (p.res[k] < -net * 2 ? 'low' : 'down') : ''}">${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${ot[k] ? '−' + Math.round(ot[k]) : ''}</td><td>${V.filter((u) => u.job === r).length}</td></tr>`;
+				return `<tr data-act="storesk:${k}" class="${G.storesK === k ? 'sel' : ''}"><td>${RESOURCES[r].name}</td><td class="${net > 0 ? 'up' : net < 0 ? (p.res[k] < -net * 2 ? 'low' : 'down') : ''}">${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${ot[k] ? '−' + Math.round(ot[k]) : ''}</td><td>${V.filter((u) => u.job === r).length}</td></tr>`;
 			}).join('')}</table>`;
+		if (G.storesK) {
+			// the drill-down (Albert, Build 63): a tapped row says why, both ways. By reason: where the minute's in and out came from and went.
+			// By who: the villagers on it, and the buildings that make it or take it (shops, the mint, the foundry)
+			const k = G.storesK,
+				r = RES.find((x) => KEY[x] === k),
+				line = (o) =>
+					Object.entries(o || {})
+						.filter(([, v]) => v >= 0.5)
+						.sort((a, b) => b[1] - a[1])
+						.map(([w, v]) => `${LEDGER_WORD[w] || w} ${Math.round(v)}`)
+						.join(' · ') || 'nothing',
+				inBy = (p.rateBy || {})[k] || (p.flowBy || {})[k],
+				outBy = (p.orateBy || {})[k] || (p.spentBy || {})[k],
+				makers = G.blds.filter((b) => b.owner === 0 && b.prog >= 1 && b.hp > 0 && BLD[b.kind].makes && Object.keys(BLD[b.kind].makes).includes(k)),
+				takers = G.blds.filter((b) => b.owner === 0 && b.prog >= 1 && b.hp > 0 && BLD[b.kind].makes && Object.values(BLD[b.kind].makes).some((m) => m.from && k in m.from)),
+				who = (L) => L.map((b) => `<span data-act="open:bld,${b.id}">${bldName(0, b.kind)}</span>`).join(', ');
+			h += `<p><b>${RESOURCES[r].name}, the last minute.</b> <i>In:</i> ${line(inBy)}. <i>Out:</i> ${line(outBy)}.</p>`;
+			h += `<p><i>Who:</i> ${V.filter((u) => u.job === r).length} villagers on it${makers.length ? `; made at ${who(makers)}` : ''}${takers.length ? `; taken by ${who(takers)}` : ''}.</p>`;
+		}
 		h += `<p><i>Goods:</i> ${GOODK.map((k) => `${GOODS[k].name} ${Math.floor(p.goods[k] || 0)}${rt[k] ? ` (+${Math.round(rt[k])})` : ''}`).join(' · ')}. Goods wait at your Market for caravans; wool for a Workshop.</p>`;
 		h += `<p>In and Out: the last minute. A count is green while it rises, gold while it falls, red when it falls with under two minutes left${p.hungry ? ' · <b>they are hungry</b>' : ''}.</p>`;
 		{

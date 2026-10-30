@@ -101,7 +101,10 @@ function hurt(o, a, t, base) {
 		t.flashT = G.t;
 	}
 	if (isB || t.kind === 'caravan') {
-		if (o !== t.owner) t.by = o;
+		if (o !== t.owner) {
+			t.by = o;
+			t.byT = G.t;
+		}
 	} else if (t.owner === WILD) {
 		t.aggro = a;
 		t.by = o;
@@ -272,12 +275,11 @@ function fall(p) {
 	{
 		const left = G.P.filter((q) => q.alive && q.id !== WILD);
 		for (const q of left) {
-			q.capV = (q.capV || 0) + Math.floor((VILMAX * SHARE_FALLEN) / left.length);
 			q.capA = (q.capA || 0) + Math.floor((ARMYMAX * SHARE_FALLEN) / left.length);
 		}
 		if (left.some((q) => q.id === 0))
 			say(
-				`Shared out: +${Math.floor((VILMAX * SHARE_FALLEN) / left.length)} villagers, +${Math.floor((ARMYMAX * SHARE_FALLEN) / left.length)} soldiers.`,
+				`Shared out: the ceiling rises by ${Math.floor((ARMYMAX * SHARE_FALLEN) / left.length)} soldiers.`,
 				'good',
 				7,
 			);

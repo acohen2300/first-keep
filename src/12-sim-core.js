@@ -92,14 +92,14 @@ function reap() {
 		} else if (b.spent && b.node && b.node.amt > 0) b.spent = false; // a coppice plot, spent: it stands, stumps and all, until it is replanted (Build 61; it used to vanish)
 	for (const b of G.blds)
 		if (b.kind === 'throne' && b.hp <= 0 && !b.gone) {
-			if (b.by !== undefined && b.by !== WILD) takeThrone(b.by);
+			if (b.by !== undefined && b.by !== WILD && G.t - (b.byT || 0) < 20) takeThrone(b.by);
 			else b.hp = 1;
 		} // the Throne is taken, never broken
 	for (const b of G.blds)
 		if (b.hp <= 0) {
 			if (!b.gone && b.prog >= 1 && !BLD[b.kind].wallish) scarBurn(b);
 			if (b.node) b.node.amt = 0;
-			if (b.by !== undefined) plunderBld(b);
+			if (b.by !== undefined && G.t - (b.byT || 0) < 20) plunderBld(b); // a flood twenty minutes after a scratch is nobody's kill (Build 63)
 			if (BLD[b.kind].fx) fxChange = true;
 			if (G.wonder && G.wonder.id === b.id) {
 				say(
@@ -589,12 +589,38 @@ function forage(u, n, drops) {
 		v = stats(o, 'vil').spd * groundSpd(o, ['foot']),
 		others = n.hunt || n.kind === 'farm' ? 0 : Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0)),
 		g = ((n.hunt ? RATE_OF.meat : n.rate || RATE_OF[n.kind]) * gatherMul(o, n.hunt ? { type: 'food', kind: 'meat' } : n)) / (1 + others / (FORAGE.room[n.kind] || 2)),
-		A = n.hunt ? UNIT[n.hunt.kind].meat : n.kind === 'farm' ? c * FORAGE.life : Math.max(1, n.amt),
+		A = n.hunt ? UNIT[n.hunt.kind].meat : n.kind === 'farm' || (u.node === n && n.kind === 'tree') ? c * FORAGE.life : Math.max(1, n.amt), // a tree you started counts as worth finishing: its stump opens the way (Build 63; Charnov would leave it)
 		at = n.hunt || n,
 		dr = n.kind === 'fish' ? null : (drops ? nearest(drops, at) : dropFor(o, n.type || 'food', at)) || keepOf(o),
 		d = dr ? dist(dr, at) : 0,
 		w = dist(u, at);
 	return (c / (c / Math.max(1e-6, g) + (2 * d) / v + (w * c) / (Math.min(A, c * FORAGE.life) * v)));
+}
+// The turtle plan (Albert, Build 63): what the next age costs in villager-minutes from this Town Center, with the walk counted. For each
+// resource the best find the side knows from home gives a villager's rate there (the forager's rate, walk and all); the shortfall over that
+// rate is the villager-minutes; split the villagers by those and the time to the bell follows. The same number, corner by corner, is the
+// map's fairness (Build 65): equal villager-minutes to the age is the deal every seat gets.
+function turtlePlan(o, A = nextAge(o)) {
+	const p = G.P[o],
+		k = keepOf(o);
+	if (!A || !k) return null;
+	const probe = { x: k.x, y: k.y, owner: o, node: null, carry: 0 },
+		rows = [];
+	let mins = 0;
+	for (const [key, cost] of Object.entries(A.cost)) {
+		const need = Math.max(0, cost - (p.res[key] || 0));
+		if (!need) continue;
+		const r = RES.find((x) => KEY[x] === key);
+		let best = 0;
+		for (const n of G.nodes) if (n.amt > 0 && n.type === r && (o !== 0 || !G.fogOn || known0(n)) && dist(n, k) < 400) best = Math.max(best, forage(probe, n));
+		for (const b of G.blds) if (b.owner === o && b.prog >= 1 && b.node && b.node.amt > 0 && b.node.type === r) best = Math.max(best, forage(probe, b.node));
+		const vm = best > 0 ? need / (best * 60) : Infinity;
+		rows.push({ key, r, need, vm, rate: best * 60 });
+		mins += vm;
+	}
+	const V = Math.max(1, unitsOf(o, 'vil').length),
+		split = rows.map((x) => ({ r: x.r, n: isFinite(x.vm) && mins > 0 ? Math.max(1, Math.round((V * x.vm) / mins)) : 0 }));
+	return { age: A, rows, mins, villagers: V, time: isFinite(mins) ? mins / V : Infinity, split };
 }
 // the rate a worker earns where it is now: 0 idle or off gathering
 const forageNow = (u) => (!u.job || u.job === 'repair' ? 0 : u.hunt ? forage(u, { hunt: u.hunt }) : u.node && u.node.amt > 0 && !(u.node.farm && BLD[u.node.farm.kind].makes) ? forage(u, u.node) : 0);

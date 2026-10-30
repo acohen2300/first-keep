@@ -330,6 +330,14 @@ const ACT = {
 		const [type, page] = a.split(',');
 		openCard(page ? { type, page } : { type });
 	},
+	storesk(a) {
+		G.storesK = G.storesK === a ? null : a;
+		refresh();
+	}, // the Stores card: tap a row for its why
+	open(a) {
+		const [type, id] = a.split(',');
+		openCard({ type, id: Number(id) });
+	},
 };
 // orders that change the game: refused once it is over
 const PLAY = {

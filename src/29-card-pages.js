@@ -134,7 +134,7 @@ function relHTML() {
 	{
 		// the board: at peace or not, the hidden age, the Games, standing down
 		const tf = truceFor(),
-			spare = Math.max(0, soldiersOf(0).filter((u) => u.state === 'home' && !u.inside).length - Math.ceil(ARMYMAX * PEACE.stand.keep)),
+			spare = Math.max(0, soldiersOf(0).filter((u) => u.state === 'home' && !u.inside).length - Math.ceil(soldiersOf(0).length * PEACE.stand.keep)),
 			next = Math.max(0, PEACE.games.every - (G.t - (G.gamesT ?? 0)));
 		h += `<p><i>The board:</i> ${G.truce === null ? 'not at peace.' : `at peace for ${clock(tf)}.`} ${G.enlight ? `The ${AGES[5].name} is open.` : `A year of peace opens the ${AGES[5].name}${G.truce === null ? '' : ` (${clock(Math.max(0, PEACE.age.truce - tf))} to go)`}.`} Games in ${clock(next)}${G.truce === null ? ', if the board is at peace' : ''}. Laurels: ${G.P[0].laurels || 0}.</p>`;
 		h += acts(btn('stand', 'Stand down', spare ? `${spare} spare soldiers to the fields` : 'no spare soldiers at home', spare ? 'warn' : 'dis'), 'c2');
@@ -499,6 +499,15 @@ const seg = (label, opts, cur) => {
 	const n = opts.length;
 	return `<div class="seg"><b>${label}</b><div class="segT" style="--n:${n}">${opts.map(([act, name, v]) => `<button data-act="${act}" class="${v === cur ? 'on' : ''}" aria-pressed="${v === cur}">${name}</button>`).join('')}</div></div>`;
 };
+// one line under the settings says what the current choices do (Build 63: "Fantasy" explained nothing)
+const SET_WHY = {
+	diff: { easy: 'Easy: the computers build and raid slowly.', normal: 'Normal: the computers play a fair game.', hard: 'Hard: the computers plan well and raid early.' },
+	fantasy: { 0: 'Real: wolves, boar and bandits; history only.', 1: 'Fantasy: dire wolves, goblins, skeletons and trolls guard the finds, which pay half again.' },
+	fog: { 1: 'Fog on: you see what your people see.', 0: 'Fog off: the whole map, as the computers see it.' },
+	tension: { winner: 'Winner takes all: war until one stands.', diplomacy: 'Dynamic diplomacy: truces, tribute, allies and vassals.' },
+};
+const settingsWhy = () =>
+	`<p class="dim why">${SET_WHY.diff[SET.diff] || ''} ${(MODES[SET.mode] || {}).secs ? `${MODES[SET.mode].name}: the bell ends it.` : 'Conquest: no clock, no victory but the last side standing.'} ${SET_WHY.fantasy[SET.fantasy ? 1 : 0]} ${SET_WHY.fog[SET.fog !== false ? 1 : 0]} ${SET_WHY.tension[SET.tension] || ''}</p>`;
 const settingsHTML = () =>
 	seg(
 		'Difficulty',
@@ -537,4 +546,4 @@ const settingsHTML = () =>
 			['tension:diplomacy', 'Dynamic Diplomacy', 'diplomacy'],
 		],
 		SET.tension,
-	);
+	) + settingsWhy();

@@ -516,7 +516,7 @@ function ui(force) {
 	}
 	const nq = queuedOf(0, 'vil'),
 		room = Math.max(0, capOf(0) - popOf(0));
-	txt('tPeopleN', nq ? `${V.length}+${nq}` : `${V.length}/${Math.min(VILMAX, V.length + room)}`); // have / can have now; with villagers waiting, have + waiting
+	txt('tPeopleN', nq ? `${V.length}+${nq}` : `${V.length}/${V.length + room}`); // have / can have now (one population: homes cap everyone); with villagers waiting, have + waiting
 	$('tPeople').classList.toggle('dis', !!trainWhy(0, 'vil'));
 	{
 		const k = keepOf(0),

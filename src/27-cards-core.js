@@ -310,7 +310,38 @@ function yieldText(n, o) {
 		wk = n.wk || 0,
 		fin = isFinite(n.amt),
 		carry = carryOf(o);
-	return `<p>${wk ? `<i>${wk} at work:</i> ` : ''}each takes ${Math.round(rate)} ${n.type} a minute and carries ${carry} a trip${wk ? `; together about ${Math.round(rate * wk)} a minute` : ''}${fin && wk ? `; gone in about ${clock((n.amt / (rate * wk)) * 60)}` : ''}.${fin && n.max > 0 ? ` Taken so far: ${Math.round(n.max - n.amt)} of ${Math.round(n.max)}.` : ''}</p>`;
+	return `<p>${wk ? `<i>${wk} at work:</i> ` : ''}each takes ${Math.round(rate)} ${n.type} a minute and carries ${carry} a trip${wk ? `; together about ${Math.round(rate * wk)} a minute` : ''}${fin && wk ? `; gone in about ${clock((n.amt / (rate * wk)) * 60)}` : ''}.${fin && n.max > 0 ? ` Taken so far: ${Math.round(n.max - n.amt)} of ${Math.round(n.max)}.` : ''}</p>` + bonusText(n, o);
+}
+// what lifts or lowers a find's take, named (Build 63, Albert: "show if something is getting a bonus"): the research and buildings whose
+// effect reaches it, the season and the sky, and how far its drop-off stands (the walk is the other half of the rate)
+function bonusText(n, o) {
+	if (n.kind === 'fish' && n.type !== 'food') return '';
+	const c = fxList(o),
+		keys = [n.type, n.kind],
+		named = [],
+		fits = (f) => !f.k || keys.includes(f.k) || (f.k[0] === '#' && false);
+	for (const stat of ['gather', n.kind === 'farm' ? 'crop' : null, n.farm && BLD[n.farm.kind].makes ? 'make' : null])
+		if (stat)
+			for (const f of c[stat] || [])
+				if (fits(f) && f.m && f.m !== 1) named.push(`${f.name || fxName(f)} ×${f.m}`);
+	if (n.kind === 'farm' && n.type === 'food') {
+		if (season().farm !== 1) named.push(`${season().name} ×${season().farm}`);
+		if ((G.harvest || 1) !== 1) named.push(`harvest ×${G.harvest}`);
+		if (WEATHER[G.wx].crop) named.push(`${WEATHER[G.wx].name.toLowerCase()} ×${WEATHER[G.wx].crop}`);
+	}
+	const dr = n.kind === 'fish' ? null : dropFor(o, n.type || 'food', n) || keepOf(o),
+		d = dr ? Math.round(dist(dr, n)) : 0,
+		near = d <= 60;
+	return `<p class="dim"><i>Bonus:</i> ${named.length ? named.join(' · ') : 'none yet'}. <i>Drop-off:</i> ${dr ? `${bldName(o, dr.kind)} ${d} away${near ? '' : ' · far: a camp nearer pays more'}` : 'none'}.</p>`;
+}
+// the name of the research or building an effect came from (the effects carry no name of their own)
+function fxName(f) {
+	const t = TECH.find((x) => (x.fx || []).includes(f));
+	if (t) return t.name;
+	const b = Object.keys(BLD).find((k) => (BLD[k].fx || []).includes(f));
+	if (b) return BLD[b].name;
+	const cv = Object.keys(CIVS).find((k) => (CIVS[k].fx || []).includes(f));
+	return cv ? CIVS[cv].name : 'a bonus';
 }
 const goodsText = (g) =>
 	[...GOODK, 'f', 'w', 's', 'i'].filter((k) => g[k] >= 1) // goods, and a cart's raw load

@@ -136,8 +136,10 @@ function think(p) {
 		}
 	if (per.extraBarracks && ready(o, 'barracks').length && has('barracks') < 1 + per.extraBarracks && R.w > 250)
 		put('barracks', k.x, k.y, 90, 220);
-	// army room: when the army fills it, raise another place to train, the kind it has fewest of
-	if (!saving && clsCount(o, 'army') >= armyRoom(o) - 2 && armyRoom(o) < armyCap(p) && R.w >= 250) {
+	// a second place to train when the lines are long (one population, Build 63: no army room to fill), the kind it has fewest of
+	const lines = G.blds.filter((b) => b.owner === o && b.prog >= 1 && ['barracks', 'range', 'stable'].includes(b.kind)),
+		busy = lines.length && lines.every((b) => b.q.length >= 2);
+	if (!saving && busy && clsCount(o, 'army') < armyCap(p) && R.w >= 250) {
 		const kind = ['barracks', 'range', 'stable']
 			.filter((x) => p.age >= BLD[x].age && !building(x) && !atCap(o, x))
 			.sort((a, b) => has(a) - has(b))[0];

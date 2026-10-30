@@ -40,6 +40,10 @@ function flowTick() {
 			p.flow = {};
 			p.orate = p.spent1;
 			p.spent1 = {};
+			p.rateBy = p.flowBy || {};
+			p.flowBy = {};
+			p.orateBy = p.spentBy || {};
+			p.spentBy = {};
 		}
 }
 

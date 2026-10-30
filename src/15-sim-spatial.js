@@ -69,7 +69,19 @@ function foeValue(u, v, d) {
 		reach = Math.max(0, d - (su.rng || 0)) / Math.max(1, su.spd);
 	return mine > 0 ? theirs / (v.hp / mine + reach) : 0;
 }
-const canBeat = (u, v) => lanchester((unitPower(u) * vsMul(u, v)) / Math.max(1e-6, unitPower(v) * vsMul(v, u))) > 0.5;
+// can we beat it: the soldier's own group (its side within GROUP_R of it, itself in) against that one foe, by the square law. A line of
+// twelve swordsmen can beat an elephant though no one of them can (Build 63: judged one on one, they left the elephant for a villager)
+const GROUP_R = 60;
+function groupPower(u) {
+	if (u.gpT === G.tick) return u.gp;
+	let p = 0;
+	unitsNear(u, GROUP_R, (v) => {
+		if (v.owner === u.owner && isSoldier(v) && v.hp > 0 && !v.inside) p += unitPower(v);
+	});
+	u.gpT = G.tick;
+	return (u.gp = Math.max(p, unitPower(u)));
+}
+const canBeat = (u, v) => lanchester((groupPower(u) * vsMul(u, v)) / Math.max(1e-6, unitPower(v) * vsMul(v, u))) > 0.5;
 function bestFoe(o, from, range, anchor) {
 	const a = anchor || from,
 		U = G.units,

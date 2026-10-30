@@ -1205,8 +1205,8 @@ const TECH = [
 		when: '300 BC',
 		cost: { f: 150, g: 100 },
 		t: 35,
-		fx: [{ s: 'armyroom', a: 2 }],
-		desc: 'Room for 2 more soldiers.',
+		fx: [{ s: 'train', m: 0.9 }],
+		desc: 'Soldiers train 10% faster. Game: it gave room before Build 63; one population now.',
 	},
 	{
 		id: 'veterans',
@@ -1871,10 +1871,10 @@ const TECH = [
 		cost: { g: 290, i: 190 },
 		t: 56,
 		fx: [
-			{ s: 'armyroom', a: 2 },
-			{ s: 'armyroom', k: 'castle', a: 2 },
+			{ s: 'rest', m: 1.3 },
+			{ s: 'train', m: 0.9 },
 		],
-		desc: 'Room for 4 more soldiers.',
+		desc: 'Soldiers that drill between wars: nerve returns 30% faster, training 10% faster.',
 	},
 	{
 		id: 'garrison',
@@ -1887,11 +1887,10 @@ const TECH = [
 		cost: { g: 390, i: 260 },
 		t: 66,
 		fx: [
-			{ s: 'armyroom', k: 'castle', a: 4 },
 			{ s: 'garrison', m: 2 },
 		],
 		need: ['hospitals'],
-		desc: 'Castles hold 4 more; soldiers inside heal twice as fast.',
+		desc: 'Soldiers resting by a Castle, Barracks or Town Center heal twice as fast.',
 	},
 	{
 		id: 'bastion',

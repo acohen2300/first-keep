@@ -189,6 +189,35 @@ function blockedCell(c, o) {
 	const g = NAV.gate[c];
 	return g !== 0 && atWar(o, g - 1);
 }
+// the joined regions as one side sees them: a hostile gate is a wall (Build 63: the open-gate map put a walled enemy town in reach,
+// and every attacker's search ran its whole budget before failing). One flood a side, kept until the grid or a war changes.
+const COMPS = {};
+function compOf(o) {
+	const key = `${G.rs}:${NAV.v}:${(G.rel[o] || []).join('')}`, // the grid, and who this side is at war with (a hostile gate is a wall)
+		C0 = COMPS[o];
+	if (C0 && C0.key === key) return C0.comp;
+	const C = new Int32Array(NC * NC),
+		Q = AS.q;
+	let id = 0;
+	for (let s = 0; s < NC * NC; s++) {
+		if (C[s] || blockedCell(s, o)) continue;
+		C[s] = ++id;
+		let h = 0,
+			t = 0;
+		Q[t++] = s;
+		while (h < t) {
+			const i = Q[h++],
+				x = i % NC;
+			for (const j of [x > 0 ? i - 1 : -1, x < NC - 1 ? i + 1 : -1, i - NC, i + NC])
+				if (j >= 0 && j < NC * NC && !C[j] && !blockedCell(j, o)) {
+					C[j] = id;
+					Q[t++] = j;
+				}
+		}
+	}
+	COMPS[o] = { key, comp: C };
+	return C;
+}
 function lineClear(x1, y1, x2, y2, o, avoid) {
 	const dx = x2 - x1,
 		dy = y2 - y1,
@@ -303,8 +332,9 @@ function astar(sx, sy, tx, ty, o, avoid) {
 		hi = AS.hi;
 	let gi = T.cy * NC + T.cx,
 		hn = 0;
-	if (NAV.comp[gi] !== NAV.comp[si]) {
-		// the goal is cut off by solid ground: go to the nearest square on this side, no search of the whole world
+	const CM = compOf(o);
+	if (CM[gi] !== CM[si]) {
+		// the goal is cut off, by solid ground or a hostile gate: go to the nearest square on this side, no search of the whole world
 		let bd = 1e9;
 		cut = true;
 		for (let r = 1; r <= 60; r++) {
@@ -313,7 +343,7 @@ function astar(sx, sy, tx, ty, o, avoid) {
 					if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
 					const x = T.cx + dx,
 						y = T.cy + dy;
-					if (x < 0 || y < 0 || x >= NC || y >= NC || NAV.comp[y * NC + x] !== NAV.comp[si]) continue;
+					if (x < 0 || y < 0 || x >= NC || y >= NC || CM[y * NC + x] !== CM[si]) continue;
 					const d = dx * dx + dy * dy;
 					if (d < bd) {
 						bd = d;
@@ -507,6 +537,13 @@ function route(u, tx, ty) {
 			u.pfK = key;
 			u.pfV = NAV.v;
 			u.pfT = T;
+			if (p.partial) {
+				const b = findBlocker(u); // already at the wall: name it, so a soldier attacks it (Build 63: it stood there)
+				if (b) {
+					u.blocker = b;
+					u.blockT = T;
+				}
+			}
 			return { x: tx, y: ty, direct: true };
 		}
 		u.path = p.pts;
@@ -543,7 +580,10 @@ const paceOf = (u, SP) =>
 	(G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1) *
 	(u.chg > G.t ? CHARGE.spd : u.tired > G.t ? CHARGE.tiredSpd : 1);
 function moveTo(u, x, y, dt, r, SP) {
-	if (u.stuck > G.t) return false; // in a pit, or slipped on ice
+	if (u.stuck > G.t) {
+		u.mvT = G.t; // in a pit, or slipped on ice: still on its way, not holding (Build 63)
+		return false;
+	}
 	if ((G.tick + u.id) % 30 === 0 && !u.fly && u.owner !== WILD) {
 		rutsOn(u); // a unit-second of traffic on this square (ruts)
 		if (

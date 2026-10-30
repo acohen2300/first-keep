@@ -346,9 +346,11 @@ const CHAN = {
 	tribute: 'alert',
 };
 const chanVol = (name) => SET.mix[CHAN[name] || 'fx'];
+// the voices are few (14): an alert always has one; ambience and effects give way when the air is full (Build 63: a bird could take the horn's voice)
+const VOICES = { max: 14, keep: { alert: 0, fx: 2, amb: 5 } };
 function sfx(name, x, y) {
 	if (HAPTIC[name] && (x === undefined || onScreen(x, y))) feel(HAPTIC[name]);
-	if (!SND.on || !AC || AC.state !== 'running' || document.hidden || voices > 14) return;
+	if (!SND.on || !AC || AC.state !== 'running' || document.hidden || voices > VOICES.max - VOICES.keep[CHAN[name] || 'fx']) return;
 	const S = SFX[name];
 	if (!S) return;
 	const now = AC.currentTime;

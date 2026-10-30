@@ -658,13 +658,13 @@ const TRIGGERS = () => [
 	],
 	[
 		'Room',
-		`You start with room for ${BLD.keep.room}. A House adds ${BLD.house.room}, an Apartment ${BLD.apartment.room}, an Aqueduct ${BLD.aqueduct.room}; Timber framing, Fired brick, Town charter, Plumbing and Waterworks add more. At most ${POPMAX} people: ${VILMAX} villagers and workers, ${ARMYMAX} soldiers.`,
+		`One population: your people are your people, worker or soldier, any mix. Only homes hold them: you start with room for ${BLD.keep.room}; a House adds ${BLD.house.room}, an Apartment ${BLD.apartment.room} (it needs an Aqueduct); Timber framing, Fired brick, Town charter, Plumbing and Waterworks add more. The phone sets a ceiling: ${POPMAX} people, ${ARMYMAX} of them soldiers. An army eats: that is its real limit.`,
 		'Keeps the game readable on a phone, and every side has the same limits.',
 	],
 	[
 		'Limits',
-		`Each building has a limit that grows with the age: farms ${BLD.farm.cap[0]} at first, up to ${BLD.farm.cap[4]}; one Barracks, up to ${BLD.barracks.cap[4]}; most other buildings one. Soldiers need room: a Barracks, Archery range, Stable or Siege workshop holds ${BLD.barracks.armyRoom}, a Castle ${BLD.castle.armyRoom}, a Temple, Courthouse or Hospital ${BLD.temple.armyRoom}. Drill yard and Standing army add more. Every side has the same limits.`,
-		'A real army needs barracks, stables and stores, not just men, and a town can only feed so many fields.',
+		`Each building has a limit that grows with the age: farms ${BLD.farm.cap[0]} at first, up to ${BLD.farm.cap[4]}; one Barracks, up to ${BLD.barracks.cap[4]}; most other buildings one. A training building makes what its line asks: two of them are two lines. Every side has the same limits.`,
+		'A town can only feed so many fields, and a barracks never housed an army: it trained one.',
 	],
 	[
 		'The War Council ladder',

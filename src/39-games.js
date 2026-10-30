@@ -82,7 +82,7 @@ function standDown(o, quiet) {
 	const p = G.P[o],
 		k = keepOf(o),
 		S = soldiersOf(o).filter((u) => u.state === 'home' && !u.inside),
-		keep = Math.ceil((o === 0 ? ARMYMAX : armyCap(p)) * PEACE.stand.keep),
+		keep = Math.ceil((o === 0 ? soldiersOf(0).length : armyCap(p)) * PEACE.stand.keep), // yours: half of what you have (Build 63: it was half the ceiling, 60, so nothing stood down)
 		go = S.slice(keep);
 	if (!k || !go.length) return 0;
 	let n = 0;

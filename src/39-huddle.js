@@ -577,11 +577,12 @@ function drawReticle() {
 }
 // ── the squad card: the editor while it is home, the live view while it is out (Build 61, one card, two states)
 // Commander's intent (Build 63): what the squad is for, in the words the doctrine uses. The row and the card show it; the soldiers read it in solTick.
+// three intents (the doctrine's words): Engage fights what it meets, soldiers before buildings; No pursuit walks to the spot and fights only
+// what comes within reach; Buildings first takes the nearest building and leaves the soldiers to the rest
 const INTENT = [
 	{ name: 'Engage', note: 'fight what you meet' },
-	{ name: 'No pursuit', note: 'go to the spot, fight only what blocks' },
-	{ name: 'Priority: soldiers', note: 'soldiers before buildings' },
-	{ name: 'Priority: buildings', note: 'buildings before soldiers' },
+	{ name: 'No pursuit', note: 'to the spot, fight only what blocks' },
+	{ name: 'Buildings first', note: 'the nearest building, then the rest' },
 ];
 function squadEditHTML(i) {
 	const p = G.P[0],

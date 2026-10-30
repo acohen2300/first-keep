@@ -28,6 +28,8 @@ function earn(p, k, amt, why, counts = true) {
 	p.flow[k] = (p.flow[k] || 0) + amt;
 	const L = p.ledger || (p.ledger = { in: {}, out: {} });
 	L.in[why] = (L.in[why] || 0) + amt;
+	const B = p.flowBy || (p.flowBy = {}); // the minute's in by resource and reason: the Stores card's drill-down (Build 63)
+	(B[k] || (B[k] = {}))[why] = ((B[k] || {})[why] || 0) + amt;
 	return amt;
 }
 function spend(p, k, amt, why) {
@@ -36,6 +38,8 @@ function spend(p, k, amt, why) {
 	p.spent1[k] = (p.spent1[k] || 0) + amt;
 	const L = p.ledger || (p.ledger = { in: {}, out: {} });
 	L.out[why] = (L.out[why] || 0) + amt;
+	const B = p.spentBy || (p.spentBy = {});
+	(B[k] || (B[k] = {}))[why] = ((B[k] || {})[why] || 0) + amt;
 	return amt;
 }
 const pay = (p, c, why = 'units') => {
@@ -247,21 +251,12 @@ const capOf = (o) => {
 		);
 	return C.cap[o];
 };
-// soldiers you may keep: each finished training place, castle, temple, courthouse or hospital makes room; at most ARMYMAX
-const armyRoom = (o) =>
-	Math.min(
-		ARMYMAX + (G.P[o].capA || 0),
-		G.blds.reduce(
-			(n, b) =>
-				n +
-				(b.owner === o && b.prog >= 1 && b.hp > 0 && BLD[b.kind].armyRoom
-					? BLD[b.kind].armyRoom + fxv(o, 'armyroom', [b.kind]).a
-					: 0),
-			0,
-		),
-	);
-const clsMax = (c, o) => (c === 'civ' ? VILMAX + (G.P[o].capV || 0) : armyRoom(o));
-const armyFull = (o) => `Army full, ${clsCount(o, 'army')}/${armyRoom(o)}. ${ARMY_ADDS}.`; // the limit, and what lifts it, wherever it bites
+// One population (Albert, Build 63): only homes cap it (capOf), and any mix is yours, all workers or all soldiers. A training building
+// makes what its line asks and nothing more; two buildings are two lines. The only limits past the homes are the phone's ceilings
+// (ARMYMAX soldiers, POPMAX people, so the drawing keeps up) and food: an army eats (UPKEEP), and a hungry town works and fights at 60%.
+const armyRoom = (o) => ARMYMAX + (G.P[o].capA || 0);
+const clsMax = (c, o) => (c === 'civ' ? POPMAX + (G.P[o].capV || 0) : armyRoom(o));
+const armyFull = (o) => `Army at the ceiling: ${armyRoom(o)}.`; // the phone's limit, wherever it bites
 const qMax = (o) => QUEUE + fxv(o, 'queue').a; // orders one building's line holds (Written records, Guilds add to it)
 const lineFree = (o, kinds) => kinds.some((k) => ready(o, k).some((b) => b.q.length < qMax(o)));
 // how many of a building you may have now: by age, plus research
@@ -273,6 +268,7 @@ const capFor = (o, kind) =>
 const atCap = (o, kind) => bldsOf(o, kind).length >= capFor(o, kind);
 function capWhy(o, kind) {
 	// why no more of this building, or null
+	if (kind === 'apartment' && !ready(o, 'aqueduct').length) return 'Needs an Aqueduct standing';
 	if (!atCap(o, kind)) return null;
 	const c = capFor(o, kind),
 		A = G.P[o].age,

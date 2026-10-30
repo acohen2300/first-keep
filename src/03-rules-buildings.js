@@ -160,7 +160,6 @@ const BLD = {
 	},
 	barracks: {
 		cap: [1, 2, 2, 3, 3],
-		armyRoom: 8,
 		name: 'Barracks',
 		fp: 4,
 		hp: 450,
@@ -253,7 +252,6 @@ const BLD = {
 	},
 	range: {
 		cap: [1, 2, 2, 3, 3],
-		armyRoom: 8,
 		short: 'Range',
 		name: 'Archery range',
 		fp: 4,
@@ -268,7 +266,6 @@ const BLD = {
 	},
 	stable: {
 		cap: [1, 2, 2, 3, 3],
-		armyRoom: 8,
 		name: 'Stable',
 		fp: 4,
 		hp: 450,
@@ -317,7 +314,6 @@ const BLD = {
 		desc: 'Reading, writing and numbers. Researches Writing and Mathematics.',
 	},
 	temple: {
-		armyRoom: 3,
 		name: 'Temple',
 		fp: 4,
 		hp: 600,
@@ -371,7 +367,6 @@ const BLD = {
 		desc: 'An alehouse: a people with somewhere to drink grumbles 30% less at your tax. Counts as care for a vassal town.',
 	},
 	courthouse: {
-		armyRoom: 3,
 		name: 'Courthouse',
 		fp: 3,
 		hp: 450,
@@ -399,7 +394,6 @@ const BLD = {
 		desc: 'A tall block with room for twenty more people. Costs stone, and a bigger target than a house.',
 	},
 	hospital: {
-		armyRoom: 3,
 		name: 'Hospital',
 		fp: 3,
 		hp: 400,
@@ -426,7 +420,6 @@ const BLD = {
 	},
 	siege: {
 		cap: [1, 2, 2, 3, 3],
-		armyRoom: 8,
 		short: 'Siege',
 		name: 'Siege workshop',
 		fp: 4,
@@ -447,9 +440,9 @@ const BLD = {
 		cost: { s: 250, w: 150 },
 		t: 40,
 		age: 2,
-		room: 15,
+		fx: [{ s: 'sick', m: 0.8 }],
 		sab: 'burn',
-		desc: 'Water for a city: room for fifteen more people.',
+		desc: 'Water for a city: clean water, and a people that falls sick a fifth less. An Apartment needs one. Houses nobody: it is a water work (Build 63).',
 	},
 	dock: {
 		cap: [2, 2, 2, 2, 2],
@@ -487,7 +480,6 @@ const BLD = {
 	},
 	castle: {
 		cap: [0, 0, 0, 1, 2],
-		armyRoom: 10,
 		invest: 20,
 		shelter: 10,
 		name: 'Castle',
@@ -658,8 +650,7 @@ const DEMAND = {
 	levyMax: 0.5,
 };
 // Each building's limits sit on the building itself: cap (how many in each age, Stone … Gunpowder; not listed: one), nocap (room and stone bound it),
-// armyRoom (soldiers it makes room for, once built; research adds more), invest (loyalty for a vassal within 450 of it; others: 3), shelter (arrows villagers add inside it).
-const ARMY_ADDS = 'A barracks, range or stable adds 8'; // what to do about a full army, said wherever the limit bites
+// invest (loyalty for a vassal within 450 of it; others: 3), shelter (arrows villagers add inside it).
 const TRAINERS = new Set(['keep', ...Object.values(UNIT).flatMap((U) => (U.at ? [U.at, ...(U.also || [])] : []))]); // buildings that send people out keep a free square round them; the rest may touch
 
 // The build menus. "soon" is on the list but not built: it stays visible until built or deliberately dropped (and logged).
