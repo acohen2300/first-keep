@@ -87,11 +87,7 @@ const BLD_PAGE = {
 // the first cell of a building's info rank: going up, burning, a wonder's clock, or what its kind says; else the room it gives
 function factOf(b, X, crew) {
 	const B = BLD[b.kind];
-	if (b.prog < 1)
-		return [
-			`Building ${Math.round(b.prog * 100)}%`,
-			b.owner !== 0 ? '' : crew.length ? `${crew.length} building` : 'nobody on it',
-		];
+	if (b.prog < 1) return [`Building ${Math.round(b.prog * 100)}%`, '']; // who works it, Send a villager says
 	if (b.owner === 0 && b.fire > 0) return ['On fire', `${crew.length} with buckets`];
 	if (G.wonder && G.wonder.id === b.id)
 		return [`${clock(Math.max(0, G.wonder.end - G.t))} to ${b.owner === 0 ? 'win' : 'their win'}`, 'the wonder stands'];
