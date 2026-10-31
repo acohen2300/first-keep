@@ -1,4 +1,6 @@
-# Build 70: the agreed list (Albert's double yes, Oct 31, 06:35: "Yes. Go go.")
+# Build Plan - v70 - Clean Up Session
+*Made in v70 - Clean Up Session, Oct 30–31, 2026. Changed only with Albert's word: a later session edits this file and its title, and does not start a copy.*
+**the agreed list (Albert's double yes, Oct 31, 06:35: "Yes. Go go.")**
 What was agreed, word for word as listed to Albert, so nothing drifts. The drawings are `MENU-SPEC.md` and `COLORS.md`; the pictures are in `mockups/70/`. Every part is checked against `RULES.md` §0 (the Build Rules) before and after.
 
 ## The list
@@ -44,3 +46,14 @@ What was agreed, word for word as listed to Albert, so nothing drifts. The drawi
 - The rebuild method (RULES.md §3): find every home, write it once, delete the old completely, migrate the save, log the cut.
 - Size and line count before and after, reported. Before: 30,580 source lines, 1,192,288 bytes built (main at 768b9c0).
 - At the end: a cold review of the diff by a reviewer who has not seen the work; the gate at four sizes; lint; the soak; the 12-seed harness for the map change and the fingerprint accepted with its reason; CUTS, HANDOFF, GUIDE, EXCEPTIONS; one publish to the preview.
+
+## Added Oct 31 morning (Albert's yes yes, 08:06)
+1. The ring is the slot's edge, for words and icons alike; one ring at a time, danger beats working.
+2. Working is a green ring on the edge that recedes as the time runs out (SoRen's timer ring); the green bar goes.
+3. Words under picture icons (18 icon, its number beside it, the word at 12 under it); symbols and the quick action stay bare; a gate test for slot words at 375 pt.
+4. Danger breathes; with Reduce Motion it stays still and is drawn 3 wide.
+5. Chosen stays gold. Locked stays as the foundation built it (flat, quiet words, nothing faded).
+6. The five resource colours are named in the colour index; EXCEPTIONS #11 holds for the land, the art, the players' colours and the shadows.
+7. The session's documents and pictures carry "- v70 - Clean Up Session"; the menu spec and the colour index keep their file names and carry it in their titles; "LOCKED" reads "locked in v70".
+8. Every build gets a version stamp (a git tag): v60 to v66 stamped Oct 31 (v66 never published); v70 when it publishes; the stamps go up with it.
+9. Previews as the work lands (Albert: "Let's get a preview going so we can make more changes"): preview 1, the foundation and the map, published Oct 31 morning.

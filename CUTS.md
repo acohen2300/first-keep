@@ -934,7 +934,7 @@ Albert's ballot of Oct 30 after the drift review (Builds 63–66 kept almost who
 - **Cut, review for later:** the door under People (Albert: no); the Realm page (no); pictures and ★ pins on the Build menu (no; the Build page keeps its pictures).
 
 ## Build 70 preview 1 (not live, Oct 31 morning): the foundation and the map
-The agreed list (`docs/BUILD-70-PLAN.md`, Albert's double yes, Oct 31 06:35), items 2, 3, 4 and 9, built by two builders side by side and joined. The row, the quick action, Emergency and the cards come next, with Albert's ring and word decisions of this morning.
+The agreed list (`docs/Build Plan - v70 - Clean Up Session.md`, Albert's double yes, Oct 31 06:35), items 2, 3, 4 and 9, built by two builders side by side and joined. The row, the quick action, Emergency and the cards come next, with Albert's ring and word decisions of this morning.
 
 ### The foundation: the grid, the colours, the states, the title bar, back
 - **The mold** (`27-cards-core`, `shell-head`): every card lays its cells on the Formation (12 half slots, ranks 44, gap 6) through `acts`; `btn`, `info`, `empty` and `rowHTML` are the cells; `title(name, sub)` the title bar on every card; `openCard(c, back)` remembers the card it came from and the title bar's back returns there (on the first card it closes).

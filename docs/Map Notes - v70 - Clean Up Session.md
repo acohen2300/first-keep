@@ -1,4 +1,5 @@
-# Build 70, the map: notes for CUTS.md and the coordinator
+# Map Notes - v70 - Clean Up Session
+*Made in v70 - Clean Up Session, Oct 30–31, 2026. Changed only with Albert's word: a later session edits this file and its title, and does not start a copy.*
 
 Written on the `map70` branch (worktree `/home/claude/fk-map`). The first part is a draft for CUTS.md in the house style; the second is what could not be done cleanly.
 
