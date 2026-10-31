@@ -47,7 +47,7 @@ JS = """() => {
   F.newGame(7); G = F.G; const tc = F.keepOf(0); G.P[0].techs.add('masonry'); F.fxDirty();
   if (Math.abs(tc.hp - F.maxHpB(0, tc.kind)) > 1) bad.push('Masonry left the Town Center at ' + Math.round((100 * tc.hp) / F.maxHpB(0, tc.kind)) + '% health');
   for (const n of G.nodes) if (n.kind === 'fish' && F.onLand(n.x, n.y)) { bad.push('a fish sits on land at ' + Math.round(n.x) + ',' + Math.round(n.y)); break; }
-  G.diff = 'easy'; G.hz = { fire: 1 }; if (F.levelMul() !== 1) bad.push('Easy keeps a score bonus for hazards that are off');
+  G.diff = 'easy'; G.hz = { [Object.keys(F.HAZARDS)[0]]: 1 }; if (F.levelMul() !== 1) bad.push('Easy keeps a score bonus for hazards that are off');
   G.diff = 'normal'; F.takeThrone(1, true); const T = G.blds.find((b) => b.kind === 'throne'); F.fall(G.P[1]);
   if (!T || T.gone || T.owner === 1 || (G.throne && G.throne.owner === 1)) bad.push('the Throne was deleted or still held by a fallen side');
   return bad;

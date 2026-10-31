@@ -1,0 +1,1068 @@
+{"verdict": "allow", "rev": 52, "data": {"rev": 52, "xml": "
+First Keep v70: audit master list and plan
+ \u00b7 
+How to read this
+Fifteen reviewers read all of v70 (about 31,000 lines); I also ran the build, gate, lint, soak, balance, probe and a planted-bug test. About 120 findings follow, sorted into eight groups, then a plan in batches. Nothing in the repo has changed.
+Every line carries a status, because I have personally confirmed only a few and the rest rest on a reviewer's word:
+Status
+Meaning
+C
+Confirmed by me against the code
+R
+A reviewer reproduced it by running the game or a script
+K
+Known from reading the code only; not run
+S
+Suspected; needs a repro before anyone acts on it
+Step one of the plan is to turn every R, K and S on the serious items into a C, or drop it. Where a reviewer's numbers are used (percentages, seconds, counts), they are the reviewer's measurements, not mine.
+Your six bugs
+I read the code behind each; none is reproduced yet. Four have a specific likely cause. Two need a repro or a screenshot first.
+#
+Bug you saw
+Likely cause
+Where
+Status
+Proposed fix
+1
+Villagers go idle on resources
+Build 61 rule: when a find runs out and none of that kind is in sight, the villager drops its job and waits at the drop-off. Also: a builder keeps a stale old job after its site is destroyed; fish are rated as needing no walk home
+13-sim-civil 231, 405; 12-sim-core 608
+K, R for the last two
+Your call: keep the rule, or look for the next-nearest kind before going idle. Fix the stale job and the fish rating either way
+2
+Villagers bunch up and glitch
+Every worker is pulled to the same point while a shove pushes anything within 8 px apart, so they fight each other. Units at exactly the same point never separate
+16-sim-fight 147, 172
+K, S
+Give each worker its own spot round the find; test in the harness first
+3
+Animals slide round buildings like ice
+A fleeing animal moves at full speed on each axis separately, so when a building blocks one axis it keeps gliding along the wall at full speed
+14-sim-troops 427-437
+K
+Slide at the speed actually made good; pick a flee direction that turns away from the wall
+4
+New soldiers chase things that make no sense
+A soldier at home with no target searches 320 px (16% of the map) from the Town Center, ignoring its own sight. Wild guard camps, wolves and robbers all count as foes
+14-sim-troops 280-284
+K
+Limit to what it can see, and leave guarded camps alone unless ordered
+5
+Units walk under buildings
+Not confirmed. Walkable by design: farms, tree farms, pits, nets, stakes, pastures, quarries. Otherwise the blocked square is flat while the art is tall; units leaving a building are placed 30 px south with no free-square check
+09-nav 89; 14-sim-troops 153
+S
+Log every unit that ends a step inside a blocked footprint, then decide
+Group A: save and data loss
+The worst group: a player can lose a game with an ordinary phone action. The Resume card, which is meant to protect the save, is where it gets destroyed.
+#
+Problem
+Where
+Status
+Fix
+A1
+Switching away from the app or closing the page forces a save that skips the Resume lock. A game saved at 2:00 was overwritten by the empty 0:00 start-up game; Resume then loaded the empty game. Closing the tab also overwrote the backup
+34-save 171, 469
+R
+Forced saves respect the lock
+A2
+Tapping \u2715 or Back on Welcome back starts a random game that never autosaves; the first switch-away then writes it over the real save
+33-verbs 35-45
+R
+The card cannot be closed into play
+A3
+A finished game comes back as Welcome back: only the main save is deleted, the backup survives
+34-save
+R
+Delete the backup too (2 lines)
+A4
+The .old shelf is overwritten on every start, so the comment about it being kept aside, never lost, is false
+34-save 290-295
+R
+Do not overwrite .old
+A5
+A migration or load that throws leaves the save unreadable, then deleted by the next new game; the player is told nothing. Migration step 35 breaks on any queued unit or research that has since been cut
+34-save
+R
+One try around migrate and load; on failure move the save to .old and say so
+A6
+A reloaded game is not the same game: random state and unit targets and paths are not saved, so every soldier loses its target after a mid-battle load
+34-save
+R (mechanism)
+Decide what must survive; the gate currently compares only the clock
+A7
+An event cut off by a load keeps its effects: quicksand slows for good, mercenaries never leave, the troll outlives its 90 s, the mirage never resolves, the falling star never lands
+34-save 443-446
+R
+Run the event's end when dropping it; reset the next-event timer
+A8
+After two errors the game never saves again in that session, new games included
+41-boot 9
+R
+Clear the error count in newGame
+A9
+The message mail is not saved
+34-save
+K
+Save it or say it is not kept
+A10
+Some save timers and the older-version notice carry from one game to the next
+34-save
+K
+Reset in newGame
+A11
+The House milestone fix button (card:menu,land) opens the menu card with no id and throws, dropping the game to the Something went wrong card. It fires on the first house in every game
+07-text 605; 33-verbs 338
+C (from the code; not run in a browser)
+Change the button to menu:land
+Group B: fairness, determinism, map and game-end rules
+These break promises in your base rules: same seed, same game; same home resources in every corner; a fair end.
+#
+Problem
+Where
+Status
+Fix
+B1
+The first screen draw runs the fog step, which the simulation reads. Seed 7 for 6 minutes ended differently with and without one frame drawn first. So the first game in every page session differs from the same seed played later. The gate cannot see it because its game starts after boot
+24-view-overlays 484; 22-view-fog 115
+R (re-run it myself)
+Light the fog in newGame and after a load; delete the view call
+B2
+newGame uses today's date to pick daily versus Setup hazards, so replaying the daily seed tomorrow gives a different game
+10-world 137; 08-core 215
+K
+The caller passes a daily flag; no date inside
+B3
+Home resources are at different distances in different corners in all 100 seeds tested (up to 101 units off). Home iron fell back to a per-corner roll 357 times out of 400
+10-world 494-511
+R
+Roll home angles once and share them across corners
+B4
+The forest can cut finds off from home: 4 clusters (24 bushes) in 40 seeds could not be reached from their own Town Center
+10-world 397-444
+R; cause suspected
+Check against the real walking grid
+B5
+The Throne is deleted when its holder's keep falls, yet the game still names the dead side as holder; at time-out the game ends lost and nobody can retake it
+16-sim-fight 271; 12-sim-core 97, 344
+R
+Hand the Throne back to the Natives; judge checks alive
+B6
+A second wonder overwrites the first wonder's win clock; if the player's falls, the computer's standing wonder can never win
+12-sim-core 466
+R
+Keep the clock on each wonder
+B7
+Buildings made already finished never record full health. If Masonry is a side's first research its Town Center stays at 77%. The Siege scenario starts the Town Center at 77% and both towers at 55%
+10-world 721; 08-core 621
+R
+Set the maximum when the building is made
+B8
+Easy turns hazards off but keeps their score multiplier, and that score goes into the shared best. Changing difficulty mid-game changes the running game
+37-events 13; 33-verbs 171
+R
+Multiplier is zero on Easy; difficulty applies next game
+B9
+Computers get 3 bucket villagers for fires and the player gets 2; the comment says at most two
+36-economy 375
+K
+Two for all
+B10
+The road scenario gives every side the same age and store but only you the Market and six villagers
+10-world
+S
+Confirm whether intended
+B11
+A lane round each building is promised at placement, but another rule shuts any one-square slit between buildings; two houses one cell apart left both lane cells solid
+09-nav 103-112 against 692
+R
+Decision for you: which rule stays
+B12
+The pathfinding region cache almost never hits (122 rebuilds in 148 calls, each a 160 KB flood fill) because its key contains the random state
+09-nav 207
+R
+Key on the seed and levee state
+B13
+Committing a 40-piece wall stalls a frame for 131 ms
+11-orders
+R
+Rebuild the grid once
+B14
+A spy decides a target is unguarded using shot range (126-139), but towers see spies at 140 and up
+11-orders 778; 08-core 562
+R (numbers)
+Use the tower sight
+B15
+Three fish per game sit on land, on the great lake's causeways
+10-world
+R
+Place fish on water only
+Group C: combat, villagers and orders
+The combat rules often do not do what their comments, help text and SCIENCE.md say. Fixing these changes balance, so each needs a balance run.
+#
+Problem
+Where
+Status
+Fix
+C1
+A side at peace or allied with the Natives cannot fight wolves, bandits, robbers or the horde: they all belong to the same wild side. A wolf took a swordsman from 70 to 47.5 and he never struck back
+15-sim-spatial 46, 102; 14-sim-troops 463
+R
+One hostility test: Natives follow relations; animals and outlaws always hostile
+C2
+Group strength leaves out the soldier itself: one sword scored 79.3, two swords also 79.3 (should be 158.7). This feeds the can-we-beat-it check that picks targets
+15-sim-spatial 82
+R
+Add the soldier's own power
+C3
+A lone soldier counts every blow as from the side
+16-sim-fight 13-25
+R
+Start the facing sum with its own facing
+C4
+Native warriors and citadel towers hit soldiers at half strength and never shake nerve; the rule is meant for animals but tests the owner
+16-sim-fight 59, 63
+R
+Test for an animal attacker
+C5
+Nerve is drained from the raw blow, before armour, formation and flank
+16-sim-fight 62-77
+K
+Work out final damage first
+C6
+Engagement removes the 2 s window before a fleeing soldier can be taken prisoner
+14-sim-troops 233, 329
+K
+Record when the rout began
+C7
+Healing: a half-dead swordsman takes about 83 s to nearly heal, against 11.7 s in the comment; a second garrison heal runs on top of the first
+14-sim-troops 89, 156
+K
+One heal path with values in BLD
+C8
+A converted unit keeps its Native flag and ignores the army ceiling
+14-sim-troops 41-51
+K
+Clear the flag; respect the ceiling
+C9
+Wild attackers measure reach to a building twice; petard splash records no attacker so no plunder is paid
+14 485; 16 41
+K
+Fix both
+C10
+Town square, All hands and Home pull soldiers out of the School and lose the tuition
+40-emergency 22; 28-army-quick 62
+R
+Leave school soldiers out
+C11
+A carry of 0.45 delivers 0 and 2.5 delivers 3: resources are made and lost at the drop-off
+13-sim-civil 162, 320
+R
+Stash without rounding
+C12
+A computer's spy keeps walking home instead of watching its target
+13-sim-civil 611
+R
+Return from the look branch
+C13
+Foraging rates fish as needing no walk home (fish 0.40 against a bush 0.295 with the drop-off 140 away)
+12-sim-core 608
+R
+Remove the fish exception
+C14
+A builder whose site is destroyed goes idle and keeps an old job that later pulls it off what you assign; three repair exits do three different things
+13-sim-civil 233, 405
+R
+One back-to-work helper
+C15
+Shepherds milk while the side starves; fishers keep fishing after the dock is destroyed; the morale radius is a square not a circle
+13; 12
+K
+Individual fixes
+C16
+Muster ignores research discounts; hiring uses the wrong army limit; research always queues at the first building even if another is free
+11-orders 68, 106, 814
+K
+Use the shared helpers
+C17
+threatDir throws before the first simulation step
+40-emergency 37
+R
+Set threats in blankGame
+C18
+All hands never shows it is on and breathes red all the time
+40-emergency 201
+R
+Use the on state
+C19
+The sound cap can refuse the horde's horn: one stampede starts 16 voices
+35-sound 369
+R
+Alerts skip the cap
+C20
+Units at exactly the same point never separate
+16-sim-fight 152
+S
+Test in the harness
+Group D: computers, research and crowns
+The computers play badly mostly because of code flaws, not their personalities. The reviewer's 3-seed, 30-minute measurement: of 55 attack waves, only 6 (11%) got within 300 px of the target's Town Center, and 32 were recalled by a 45-second stalled rule. Only 5 of 12 sides reached Medieval; only 1 of 48 reached Gunpowder in the earlier probe. The crown plan below depends on D1 and D6 being fixed first.
+#
+Problem
+Where
+Status
+Fix
+D1
+A wave that hits nothing in 45 s is recalled and relaunched a second later with no memory of failing. Seed 3: the Raiders sent 24 waves, 22 recalled, none closer than 791 px
+17-ai 471, 478
+R
+Judge a wave by progress; give failed targets a cool-down
+D2
+The computers' research lists mostly cannot be followed because they omit prerequisite steps: aggressive can research 4 of 12 listed, balanced 12 of 34, fortress 8 of 25. The fallback then researches in table order, so personality barely decides research
+05-rules-wild 137-291; 17-ai 238
+K (confirmed from the code; effect on play not measured)
+Research the first missing step of each wanted item
+D3
+aiEconomy ignores saving (about a dozen purchases do); ventures send 250 gold whenever gold is over 900, which is exactly the Gunpowder price; every caravan route buys spice that is never sold
+36-economy 570-617; 17-ai 213
+R
+Pass saving in; stop the spice routes
+D4
+The job mix adds the saving gap instead of replacing the mix, and cuts any resource over 600 by 60% even when the age needs it
+17-ai 267-286
+R
+Rebuild the mix from the age's cost
+D5
+The save timer resets on any dip: 3 to 14 resets per side per game against 2 to 3 age-ups
+17-ai 94
+R
+Reset only on real loss of the goal
+D6
+The crowns do not measure what they say: wellbeing health is always 100; war counts animals killed by hunters; wealth counts held stores twice, plus Throne score and vassal tax outside earn
+39-games 145-160; 38-natives 296
+K
+Fix before any computer chases a crown
+D7
+Computers are always at war with the Natives (only the player's command gives gifts; regard starts at 20 against a peace line of 40), and the Fortress can never declare war
+17-ai 175, 320
+K
+Decision: should computers court the Natives
+D8
+The league against the leader writes alliances directly and skips the normal calls
+17-ai 554
+S
+Use the normal ally call
+D9
+Villager ceilings are flat for the whole game (16, 26, 28)
+17-ai 121
+K
+Scale with age and economy
+D10
+Standing down is undone: think() has no peace mode and retrains the soldiers just stood down. Muster pays double
+17-ai
+S
+Add a peace mode
+D11
+Farm research (Sickles to Horse collar) also speeds fishing and hunting: by Gunpowder fish are x6.80 and fields x4.44. Mining research boosts the Mint, Foundry and Quarry
+04-rules-tech; 08-core 588
+R
+Key to fields and mines only
+D12
+Climate steps add to full immunity while the text says half (Wool cloaks plus Weather glass: winter slows nothing; Horseshoes plus Crampons: riders never slip)
+04-rules-tech; 37-events 686
+R
+Make them multiply, or fix the text
+D13
+Elite ranks are unequal between peoples: Roman elite ends at health x1.625 and +6 damage, Han gets +2 damage and no health
+04-rules-tech
+R
+Equalise (your fairness rule)
+D14
+The research card tells players cost and time follow x(0.5+0.1w); only 109 of 224 steps fit and 34 are off by over 15%
+04-rules-tech 4
+R
+Fix the text or the numbers
+D15
+Armed caravans have a hidden 4-damage attack; Charcoal burning researches a Foundry two ages away; Printing and Printing press are the same invention twice
+04-rules-tech; 13
+R
+Table or text; merge duplicates
+D16
+Two teach entries can never be used (horse archer to cataphract, ram to catapult: same age)
+06-rules-tuning 111
+K
+Delete or retarget
+Working back from a crown (your idea).
+ It is partly there: per.crown exists and is read in two places only. The wealth crown changes nothing. The closest prototype is docs/trials/planner-66.patch. To plug in: score each choice as crown gained over cost and time, replacing the four hand lists in think() (build order, research order, job mix, war gate), run once per age. Needs D1, D2 and D6 first, or a war plan cannot win and a wealth plan only hoards.
+Group E: cards, layout, fog and view
+The card engine itself is sound. About a third of the card code bypasses list() and the Formation grid, which produces holes, half-slot widths and duplicated pickers, and the gate only measures a fixed set of cards in one setup.
+#
+Problem
+Where
+Status
+Fix
+E1
+Army card: acts() receives an array, so 18 comma text nodes sit in the grid and every rank of Train soldiers is half empty
+30-cards 593
+R
+Use list()
+E2
+Workshop N made shows the worker's lifetime gathering (512 gathered shows 512 made)
+29-card-pages 268
+R
+Count on the building
+E3
+Mail keeps 30 lines but shows 6
+30-cards 650
+R
+Show all under the filter
+E4
+Tapping a fogged resource opens its card
+26-input 310
+R
+Same fog test as drawing
+E5
+The hold-box and crosshair glow stick after a pinch
+26-input 83, 200
+R
+One dropDrag()
+E6
+A dim Train button shows its cost as payable, no reason given
+27-cards-core 192
+R
+Show the reason
+E7
+Pause on cards depends on how you got there
+27-cards-core 19
+R
+Decide on each render
+E8
+Army card scrolls at 390x844 with Battalions; Research cells grow to 49 px; Relations tab at 375 has 49 px cells; milestone chips are 124x22 tap targets. The gate never opens these
+30-cards; gate.py
+R
+Gate covers every card in every state
+E9
+About 12 places use acts() with fixed columns, 1.5-slot cells in the building info rank, council and levy row, raw buttons in 10 places, hand-laid grids
+27-30
+K
+Move to list() and Formation
+E10
+CORRECTED Oct 31 after reading both files: no contradiction. MENU-SPEC has the Relations layout AGREED; EXCEPTIONS 12 only says it is not redrawn in v70 and will be built in v80 (the vassal Demand rank is taller than its slot until then). The reviewer's claim was a misread
+30-cards; MENU-SPEC 8
+R
+Decision: which document is right
+E11
+The Market skips the shared building page: a burning Market has no Send help and no health cell
+30-cards 64
+K
+Use the shared page
+E12
+Fog leaks: arrows and sparks over black ground, live HP, progress and smoke on remembered enemy buildings, fire glow through the fog, a picked enemy stays ringed, scars painted everywhere
+21-view-frame 316; 23; 24; 20
+R
+Draw remembered buildings from a snapshot
+E13
+The build grid is half a square off for odd footprints (26 of 41 buildings)
+24-view-overlays 264
+R
+Round with the half-footprint
+E14
+Ruts and mud missing in about 130 px at the top of the screen at 390x844
+24-view-overlays 13
+R
+Use toWorld
+E15
+Pile and badge caches make a new canvas every pinch frame; drawSky reads computed style every frame; the far lightning re-rolls its gap every frame; the shake drifts the radar marker from its tap target
+23; 20; 25
+R
+Key on quantised zoom; read once
+E16
+The view writes game state (bolts using Math.random, the Place verdict) and makeBg uses Math.random, so the ground differs each load of the same save
+25; 24; 20
+K
+Move out of the view
+E17
+Colour #c9b48a typed in; five age-edge colours are not tokens
+30-cards 295; shell-head 156
+K
+Name them or remove
+Group F: text, history and the Guide
+The parts generated from tables render cleanly. The hand-written parts of 07-text have drifted from the code, and the comments claiming they cannot drift are false.
+#
+Problem
+Where
+Status
+Fix
+F1
+Text the code contradicts: Open scenario says five villagers (code gives 3); snow said to cost more than mud (tables say the opposite); Room opens when Aqueduct finishes (it houses nobody); the plague line says clean water, sewers and quarantine halve spread (only quarantine does); the ground marks line says not saved (ruts are saved); the any-card-pauses line (only reading cards do)
+07-text 42, 645, 761, 1056, 951, 1021
+R
+Generate from tables or correct
+F2
+The screen help is stale throughout: no age, season, clock or speed button in the top bar; Build is the hammer bottom left
+07-text 766
+R
+Rewrite from the design page
+F3
+The hand-written upgrade list omits Halberdier, Rider scout and six elite ranks
+07-text 896
+R
+Generate it
+F4
+One WHY.legion key serves both the Legion research and the Roman Legionary, so every people's research card shows a Roman line
+07-text 195
+R
+Split the key
+F5
+Seven toasts and milestone lines run 11 to 13 words, so the Guide's every message is 10 words or fewer is false; tests/words.py reads only the event table
+07-text 564-626
+R
+Trim; extend the test
+F6
+Provable history errors: Sawmill (sawed timber, not stone), Torsion (399 BC contradicts the catapult line), Pike square (Morgarten was the halberd), Cast iron (1400s against 1300s), Clean water (ten aqueducts by Trajan, not eleven), Han crossbow count, Royal Road seven days, manipular legion, Jomon pottery age, Tercio and Pavia, Hittite iron secret, New Orleans
+07-text; 04-rules-tech
+R
+Check against sources before changing
+F7
+About a dozen further history claims are suspected only, from memory (for example Tempering dated 1200s)
+07-text
+S
+Look each up
+F8
+The elite text template makes Elite crossbowmans and Elite horsemans; the six elites are dated Medieval though their text gives 27 BC to 1352, so tests/history.py skips them
+04-rules-tech 3121
+R
+Fix the template and dates
+F9
+Many hand-copied numbers in TRIGGERS (75%, 30%, twelve minutes, the vassal numbers) despite a comment saying they come from the tables
+07-text 742
+R
+Read from tables
+F10
+Text for the troll, shrine, Net and other items contradicts nearby lines or the code
+07-text; 31-guide
+R
+Correct in one pass
+Group G: bloat and cleanup
+These match your smaller-is-better and one-home rules. They are the lowest risk to the player and the highest risk to the code, so they come after the tests are strong. Line counts are the reviewers' estimates.
+#
+Item
+Saves
+Risk
+Status
+G1
+Research table: one row per step with cost and time worked out by one helper (3,234 lines to about 450-550); 23 prerequisites already implied by the line; 67 descriptions generated
+about 2,700 lines
+High: touches every unit and balance
+R
+G2
+Art files: 1,116 sprites with no crashes, but 18-figures and 19-building-art could be roughly halved
+about half of two files
+Medium
+R
+G3
+drawFind (339 lines) redraws static art with 7 gradients per frame; cache as an image with shapes in a table
+about 220 lines
+Medium
+R
+G4
+Test hook exports 289 names; about 200 appear in no test
+about 200 lines
+Low
+R
+G5
+Cards: merge three squad pickers, two relation maps, repeated button patterns
+about 115 lines
+Low
+K
+G6
+Save and load each list about 70 fields by hand
+about 120 lines
+Medium
+K
+G7
+Duplicate code: leaving a building (4 copies), search grids (4), off-order loops (3), snow, flames, banners
+about 100 lines
+Low to medium
+K
+G8
+Long functions: vilTick 286 (split into ten steps), solTick 273, think 271, person 263, formUp 127, ui 150, CARDS.bld 192
+net 10 to 30 lines each, but clearer and easier to test
+Medium
+K
+G9
+Dead fields and code: menu blurb, mercenary gone, performer cheer, fantasy flag, QC.bak, capV, FORAGE carcass, G.lost, unused CSS rules, SET_WHY entries, dead branches
+about 100 lines
+Low
+R
+G10
+Hand copies of table values: hazard strengths, the map centre 1000 typed eight times, affordability costs in the AI, 320 and 260 in troops
+about 60 lines
+Low
+R
+G11
+Repository: 7.9 MB of old pictures, a .pyc, a patch, eight balance json files, an unused font, old handoffs, a duplicate mock folder; CUTS.md (217 KB) and GUIDE.md (119 KB) should be split or untracked. Every cut is logged in CUTS.md
+about 7.9 MB
+Low
+R
+Group H: tests, QC, lock, CSP and repository
+This is why none of the above was caught. I planted 21 bugs; 15 escaped every test, including the gate. You also told me that three Google reviews, including Google 4 Argon, did not find these either. That fits: most of the serious findings were visible only by running the game (saves, first-frame fog, map fairness, attack waves), which a read-only review cannot do.
+#
+Problem
+Where
+Status
+Fix
+H1
+15 of 21 planted bugs escaped, including save-field omissions, an earn() bypass and a wrong milestone text key
+scratchpad/mut; 34-save 206, 249; 36-economy 650; 07-text 601
+R
+Keep the planted-bug suite as a meta-test
+H2
+Tests that pass whatever the game does: the apostrophe rule (words.py passes a wrong apostrophe), four science checks that test constants, the soak save check (cleared save falls back to the backup), the tables age-cap test, the duplicate-name check in build.py (misses later multi-line const names), contrast (ignores gradients and the map), the tap-size exemption wider than EXCEPTIONS 2, the fingerprint (any session can re-baseline it)
+tests/*.py; build.py
+R
+Each gets a planted bug that proves it can fail
+H3
+The Checks document claims Shelter, the Emergency tap, four corners and home resources are tested; the gate runs none of them. The gate never measures the Research, ground, sound, node, find, box or resume cards, nor other states such as Battalions
+Checks document; gate.py 204-246
+R
+Generate the card list from CARDS; test every state
+H4
+The live lock is a local hook that this clone does not have; it can be skipped with --no-verify, another clone or the web editor, and guards index.html only
+publish.py 21
+R
+GitHub Action that rebuilds and checks hashes, plus branch protection
+H5
+Proposed lock, modelled on SoRen's PHYSICS_ID: mark settled blocks with LOCK begin and end comments; store each block's short sha256 in tests/locks.json; build.py refuses a changed block; a new hash is accepted only with an Unlocked line in CUTS.md in your words; show the lock IDs in Help. It is a tripwire with a paper trail, not security, unless the Action in H4 recomputes the hashes. Candidates: seeded dice and helpers (08-core 100-118), the ledger (36-61), storage keys (156-176), the save read and migrate chain (34-save 285-306), the colour and timing tokens (shell-head 9-22), climate and ground physics (37-events 553-686), the sky (08-core 380-409), the market curve (36-economy 644-672)
+build.py; tests/locks.json
+K (proposal)
+Decision for you
+H6
+Proposed CSP, from the native build that already ships almost this and showed 0 violations: default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; font-src data:; img-src data: blob:; media-src data: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'. Stronger: a sha256 of the one script computed by build.py, after moving the one inline oninput handler to addEventListener. A meta tag cannot set frame-ancestors
+shell-head.html
+R
+Decision for you
+H7
+Tooling drift: palette.py hard-codes sizes 12/15/19 while the rule is now 12 and 18; lint.py hard-codes a path; fixed /tmp/fk-build and /tmp/fk-lint folders collide when builds run in parallel; the build number is read from the 217 KB CUTS.md; publish.py uses git add -A (how the .pyc got committed) and writes the stamp before the push succeeds
+tests/palette.py; publish.py
+R
+Fix with the design page
+H8
+Document drift: HANDOFF says six named colours (there are 16); RULES 6 says one font (two ship), files 01-06 hold numbers only (they hold hundreds of names) and counts 39-huddle as simulation; RULES 7 omits tables, palette, words and lint; EXCEPTIONS 10 says live is Build 44 era, the file says 41; STAMPS lists tags that do not exist in this clone
+RULES.md; HANDOFF.md
+R
+Correct in one pass
+H9
+Privacy is clean: all 70 commits use the noreply address, no emails, tokens or keys in tracked files. Earlier history was not checked
+repo
+R
+None
+New QC, in one line each
+Every check must be able to fail: a check is accepted only with a planted bug that it catches.
+The gate builds its card list from CARDS and visits every state at all four phone sizes.
+Determinism: same seed gives the same game on the first and second play, and the daily with the date changed.
+Fairness: map symmetry over 200 seeds.
+Rules against text: numbers in text come from the tables, and a test fails on a typed number.
+Saves: round trip mid-battle and mid-event, resume after switching away, a finished game, and a broken save.
+Computers: attack arrival rate, age-up times and crown spread across seeds, tracked with thresholds.
+Player flows: the first ten minutes, with every milestone fix button tapped.
+Lock and CI as in H4 and H5.
+Each batch gets a fresh-eyes reviewer who has not seen the fix, limited to the changed files, to keep usage down.
+Plan: batches in order
+The order is damage to the player first, tests before fixes, big rewrites last. Each batch is a list for your double yes before any change, then built as a preview only. Live changes only on your word.
+Batch
+Contents
+Why this order
+Tests first
+0
+No code. I re-run the serious claims myself (B1 fog first-frame, B5 Throne, A1 save loss, D2 research lists, B3 map fairness) and reproduce your six bugs in the harness. A
+ claim that does not reproduce gets a better test; a bug Albert saw himself is never
+ dropped
+Turns R, K and S into C or removes it
+Repro scripts become the new tests
+1
+Tests that can fail: H1, H2, H3, H4 (Action), and the new QC items 2, 3, 4 and 6
+Every later fix needs a net
+Planted-bug meta-test
+2
+Player safety: A1-A8, A11, C17, C18, C19
+A player can lose a game today
+Save round trips
+3
+Your six bugs: C14, C13, C1, C10, bugs 2-4, plus 1 after your decision
+What you see when you play
+Harness scripts from batch 0
+4
+Fairness and determinism: B1-B9, B12, B15
+Base-rule promises
+Fairness over 200 seeds
+5
+Combat rules: C2-C9, C11, C12, C15, C16
+Changes balance; needs a balance run
+Balance baseline compared before and after
+6
+Computers: D1-D6, D9-D10, then D7-D8; then the crown design with you
+Plays badly mostly from D1 and D2
+Arrival rate and age-up benchmarks
+7
+Research effects and text: D11-D16 and group F
+Fairness and honesty of the cards
+Rules-against-text test
+8
+Cards, fog and view: group E, together with the one design page and the palette and gate updates
+One mold
+The gate over every card
+9
+Bloat and cleanup: group G in order of low risk first; research table rewrite last
+Largest surface; only safe with a strong net
+Fingerprint plus balance
+10
+Lock, CSP and repository: H5, H6, H7, H8, G11, plus design page and the CUTS.md log
+Locks go on once things are right
+Lock hashes in CI
+Decisions I need from you
+Villagers going idle:
+ 
+DECIDED (Albert, Oct 31): when a find runs out, look from that spot before going home; if one is seen, deliver then go straight to it. If none, deliver, then search from the anchor (the spot you placed it, else its nearest drop-off) with a radius that grows from x to x+y over a time tau (x about 90, y about 90, tau about 10 s, all in the rules table). Candidates: same-kind finds your side has seen, plus finds friends are working. Skip the danger map. Leash: 200 (DANGER_R.far) from the nearest drop-off for unplaced villagers. Choose by the existing forage rate R. If nothing is found, or a placed villager is outside the cap, wait at the drop-off, shown as idle, and re-look every few seconds.
+Lane versus slit rule (B11):
+ which one stays?
+Relations card (E10):
+ is MENU-SPEC (AGREED) right, or EXCEPTIONS 12 (open)?
+Computers and the Natives (D7):
+ should computers be able to court them?
+Fairness (B3, D13):
+ exact equality in every corner, or best effort with a stated tolerance? Equal elite ranks for every people?
+Research table rewrite (G1):
+ do it, and when, given it touches every balance number?
+Lock (H5) and CSP (H6):
+ tripwire only, or with a GitHub Action? Hash-based CSP or the simple one?
+Wild hostility (C1):
+ Natives follow relations, animals and outlaws always hostile: agreed?
+Spend:
+ how much compute and usage to put on batches 0 and 1 tonight versus spreading it?
+Parked from earlier and still waiting after the audit: the one design page (replacing COLORS.md and MENU-SPEC.md, text rule 12 and 18 at one weight), the stale-clutter cut list logged in CUTS.md, and the crown math rule for RULES.md.
+Decision record: equation, logic, source, code home
+Standing rule (Albert, Oct 31): every decision is recorded with its equation, its logic, where we found it, and where it lives in the code. The same entry goes into SCIENCE.md when the change is built.
+1. Where a villager looks for work. DECIDED.
+Logic: leave a find when its marginal rate falls to the long-run average including travel (Charnov, marginal value theorem). Search tightly near the last find, then widen with time since the last find (area-restricted search). Followers are scored with the crowding term.
+Equations: g'(t*) = g(t*) / (T + t*). The game's rate: R = c(1 - d) / (c/g + 2d/v + w
+c/(A
+v)), with g divided by (1 + others/room). Search radius: r(t) = x + y * min(1, t/tau).
+Numbers to set in the rules table: x about 90, y about 90, tau about 10 s (to tune); leash 200 (DANGER_R.far) from the nearest drop-off.
+Code home today: forage() and bestNode() in 12-sim-core 593-715; the dropoff-then-search order in 13-sim-civil 134-275.
+Sources: 
+Charnov marginal value theorem, PMC
+; 
+A random walk on Area Restricted Search, arXiv
+. The producer-scrounger point rests on general knowledge; I did not open those sources.
+2. Gap between buildings. 
+DECIDED (Albert, Oct 31): 2 squares minimum between non-wall buildings; slit rule stay
+s.
+Logic: widen every obstacle by the walker's radius; a gap is passable only if it is wider than 2r. Placement must then never leave a gap the pathing will shut.
+Equations: CO = O + R = {a + b : a in O, norm(b) &lt;= r}; passable if gap w &gt; 2r.
+Honest note: the collision push radius is 8 units, so a 10-unit one-square gap passes physically. The slit rule shuts it because the drawn figure looks wider (Albert, Build 41). So 2r here is the drawn width, a visual choice, not a physical one.
+Proposal: non-wall buildings leave 2 or more squares between them; walls, gates and crops may touch.
+Construction analogue: ADA accessible route 36 in clear, reducible to 32 in for no more than 24 in of length. A short pinch is allowed; a long run needs the full width.
+Code home: slit rule 09-nav 103-112; lane rule canPlace 09-nav 673 onward and 692-696.
+Sources: 
+ECE276B configuration space lecture
+ (the 2r gap condition is not stated there; it follows from the inflation); 
+ADA chapter 4, 403.5.1
+.
+3. Relations card. DECIDED (Albert, Oct 31): no change now.
+Build it in v80 to the MENU-SPEC row (AGREED). Albert wants a check mark per row instead of one for the card; width and the vassal Demand rank height (a separate problem) are settled in the design area.
+No equation applies. Nearest principle: error prevention for hard-to-undo actions (general knowledge, not looked up).
+Code home: CARDS relations in 30-cards; vassalHTML in 29-card-pages; EXCEPTIONS 12.
+4b. Natives and computers. DECIDED (Albert, Oct 31), FLAGGED: LIVE TEST IN PROCESS.
+Rule: Natives and hazard people never start a fight with a computer. They fight only the unit or units that struck a Native or its camp, do not switch to a unit that did not, and chase no farther than the camp's own radius, then return home. An instigator that escapes escapes. Raids also skip computers. Player rules are unchanged.
+Logic: leash-and-reset, as neutral camps work in Warcraft-style games; territorial animals stop pursuing at their border (general knowledge, not looked up). It makes the computers' gold and fights easier to read; it is a deliberate one-sided rule bend.
+Needs: a short list of instigator ids on each camp, remembered for about a minute (the code stores only the last attacker); the C1 fix so animals stay hostile; an EXCEPTIONS.md entry as an experiment with an end condition (removed when computers can buy peace themselves, decision 4).
+Measure before and after: camp-to-base distances over 100 seeds; 3 seeds x 30 minutes with and without: computers' gold, age-up times, attack arrival.
+Parked: regard scaled inverse to score, B = 45 + 20 x (1 - score / leader's score), as a later test.
+Code home: wildTick 14-sim-troops 413-497; hurt aggro 16-sim-fight 111; natRaid 38-natives 210; NATIVE in 05-rules-wild 71.
+5a. Map fairness: home zones. DECIDED in outline (Albert, Oct 31); one choice open.
+Rule (replaces equal distances with equal content): two zones, home and not home. Each home zone is defined by three numbers: X resources, X clearing, X radius. The map lays the four zones first, with a clearing larger than today (today about 150), then drops each corner's finds at random inside its zone. Once the zones are done, everything else is random. Suggested starting values: clearing 200, radius 360 (CLEAR = 360 already exists, and lakes never come within it).
+X resources: today's home pocket, plus 18% (Albert). Per corner: berries 5 x 531 = 2,655 food; grove 12 x 354 = 4,248 wood; stone 2 x 885 = 1,770; gold 2 x 885 = 1,770; iron 2 x 885 = 1,770. Implement as one number, HOME_RICH 1.18, on the pocket finds only, on top of RICH 2.5.
+Math: gather rate R = c / (c/g + 2d/v + w
+c/(A
+v)), with c 10, v 24, gold g 0.6. Gold at 150 from the drop-off gives 0.34/s, at 270 gives 0.25/s (26% less) before a mining camp. A distance band of about 50 units per find gives about 14%; about 35 gives 10%. OPEN: band limit, or fully random inside the zone.
+Logic: AoE-style map scripts give each player the same starting objects at random spots (general knowledge, not looked up).
+Needs: update the fairness rule text in RULES.md, and the fairness test to check content, clearing and radius, not distances.
+Code home: LAYOUT and laySpots in 10-world 239, 525-611; CLEAR in 06-rules-tuning 324; RICH in 01-rules-basics 21.
+5a. FINAL (Albert, Oct 31): home zones and map size. DECIDED.
+All five home-pocket finds sit inside one 60-unit band just outside the clearing (clearing 200, band 200 to 260), at random positions in it. Everything outside the zones is random. Amounts are today's pocket plus 18% (HOME_RICH 1.18): food 2,655, wood 4,248, stone 1,770, gold 1,770, iron 1,770 per corner.
+Map: the space between camps grows 10% (CORNER 695 to about 765; neighbours 1,390 to about 1,530 apart, a walk of about 58 s to about 64 s) and the margin behind each Town Center grows to about 405, so MAP goes from 2000 to about 2340 (area +37%, walking grid 200 to 234 cells a side). The exact size is settled by test.
+Needs, in order: (1) replace the hand-typed map coordinates (the centre 1000 typed eight times, the lake and trade stops) with values derived from MAP, MID and CORNER, tested at today's size; (2) the D1 fix (waves recalled at 45 s); (3) change the three constants behind a test; (4) 100-seed placement test (every corner places every find in the band), the fairness test on content, the soak on a phone-sized setup, the gate at four sizes, and a balance comparison of age-up times and wave arrival against today.
+Logic and math: gather rate R = c / (c/g + 2d/v + w
+c/(A
+v)): berries at 200 give 0.38/s and at 260 give 0.34/s (about 11% less before a mill). Area per player is the usual RTS map-size rule (general knowledge, not looked up).
+Needs the Fairness rule in RULES.md rewritten from equal distances to equal content.
+5a. LOCKED at +8% (Albert, Oct 31), replacing the earlier size figures.
+Map 2000 to 2160 (middle 1080); keep spacing 695 to about 751 (neighbours about 1,502 apart, about 62.5 s walk); margin behind each Town Center about 329 (area +16.6%, walking grid 216 cells a side). Zone: clearing 200, band 200 to 260 for all five finds at random, amounts +18% (food 2,655, wood 4,248, stone 1,770, gold 1,770, iron 1,770).
+The zone needs about 316 behind the Town Center; the buffer of about 13 is, in Albert's reading, mostly there so the player can see and play in the corner (to be checked against the camera bounds in the test). Fallback if the 100-seed placement test fails: clearing 190, band 190 to 250.
+Order: derive the hand-typed coordinates from MAP, MID and CORNER (tested at today's size); the D1 fix; change the constants; then the 100-seed placement test, camera and corner visibility check, soak, gate at four sizes, balance comparison.
+5b. Elite ranks. CLOSED, no change (Albert, Oct 31).
+Each people's elite is shaped by history on purpose (04-rules-tech 3100-3107): Roman and Maurya health x1.25 and +3 damage; Han +2 damage and +15 range; Persian health x1.25 and +2 damage; Mongol and Mali health x1.2, +2 damage and speed x1.08. Fair is not mirror (RULES: the base rules are the same for every side; the peoples differ by design).
+The reviewer's claim of unfairness (Roman health x1.625 and +6 damage against Han +2 and no health) comes from the common upgrade ranks reaching infantry, archers and riders differently, which is class design, not a difference between peoples. Withdrawn as a defect.
+Left to check, not to change: that the shared ranks reach every unique unit of the same class alike.
+6, 7a, 7b. PARKED (Albert, Oct 31).
+6 (research table rewrite): skipped for now.
+7a (locks): none yet; the game is not stable enough. SoRen locks only its Physics block (PHYSICS_ID 12627fd9, shown in Help); the check is not in its public file. Revisit when First Keep's core is settled; if locked, only the core (seeded dice, ledger, climate and ground physics), after their fixes, plus a GitHub Action and branch rule.
+7b (CSP): wait until the native build; the native copy already ships near-identical text with 0 violations.
+8. Wild hostility. DECIDED (Albert, Oct 31).
+People hazards that are not Natives (bandits, robbers, camp guards) are always enemies to everyone. Only the Natives follow relations. Treaty logic: 
+pacta tertiis nec nocent nec prosunt
+ (a treaty binds only its signers); Olson 1993, roving vs stationary bandit. Code home: 05-rules-wild.js, 38-natives.js, the shared hostility test.
+Animals get a temperament field, not a name check. Flee (deer): Ydenberg &amp; Dill 1986, flee when cost of staying exceeds cost of fleeing; wildTick flee step and DANGER_R. Defend (boar, bear, den): Hawk-Dove game, Maynard Smith &amp; Price 1973, Nature 246, fight with probability V/C. Hunt (wolf): prey-choice model, Charnov 1976, attack only if gain / handling time beats the average rate; the existing canBeat and groupPower test. Use the math when the code is written.
+Soldiers do not touch animals unless the player orders it, or a civilian is targeted and the animal is within a soldier's line of sight. Touches the spawn-pursuit bug (4) and the ignorable test in 15-sim-spatial.js.
+Open consequence: raids no longer follow Natives' regard, so the outlaw raid target needs its own rule at 4b.
+8b. Group sight. 
+DECIDED
+ (Albert, Oct 31).
+ 
+Equation used in the game: a threat t is seen by a side if for any member i, dist(m_i, t) &lt;= sightOf(m_i), so the group's view is the union of the members' sight discs. Basis: the many-eyes effect, Pulliam 1973, 
+On the advantages of flocking
+, J. Theor. Biol. 38, P(detect) = 1 - (1 - p)^N; Lima 1995, 
+Back to the basics of anti-predatory vigilance: the group-size effect
+, Animal Behaviour 49. The probability form is the biology only; the game uses the deterministic union (static, no dice). Fog, night and weather still shrink each member's own disc through sightOf. Code home: 08-core.js beside sightOf (lines 566-584). Open: a cap on how much a big army reveals, to decide at build. The Pulliam and Lima citations are from memory; the papers were not opened
+.
+9. Spend. ON THE TO-DO LIST (Albert, Oct 31).
+ Batch 0 (reproduce the six bugs) and batch 1 (re-check about eight audit claims) go on the to-do list. Nothing runs until the sheet is finished. Amount of usage to spend: not decided.
+10. Villagers grouping and glitching (bug 2). DECIDED (Albert, Oct 31); jitter cause to be confirmed in batch 0.
+Fact read in the code: pushApart (16-sim-fight.js 147-171) separates two units only if 0 &lt; d &lt; 8, so units at exactly the same point (d = 0) never separate. Suspected, not reproduced: each tick moveTo pulls a unit back to its exact target while pushApart shoves it away, so it trembles.
+Rule: (a) arrive and stop: within an arrival radius of its target a unit stops steering to the exact point and stands where it was pushed; the radius must be larger than the 8-unit push. (b) tie-break: units at the same point are pushed apart along a direction fixed by their ids.
+Math: arrival steering, desired speed = max speed x min(1, distance / slowing radius) (Reynolds 1999, 
+Steering Behaviors for Autonomous Characters
+); separation steering, a push that falls off with distance (Reynolds 1987, 
+Flocks, Herds, and Schools
+, SIGGRAPH). Both citations are from memory; the papers were not opened.
+Code home: pushApart and collide in 16-sim-fight.js 147-224; moveTo in 09-nav.js 600-669; heft weights 16-sim-fight.js 146. Add to SCIENCE.md when built. Saved for the build layer.
+10. Villagers grouping and glitching (bug 2). DECIDED (Albert, Oct 31).
+Rule: (a) arrive and stop: within an arrival radius of its target a unit stops steering to the exact point and stands where it was pushed; (b) tie-break: two units at exactly the same point are pushed apart along a fixed direction from their ids.
+Logic: pushApart only separates units when 0 &lt; distance &lt; 8, so units on one spot never separate (read in code, 16-sim-fight.js line 152). The jitter (target pull against push) is suspected, not yet reproduced; confirm in batch 0 before building. The arrival radius must be larger than the 8-unit push or units tremble at its edge.
+Math: arrival steering, Reynolds 1999, 
+Steering Behaviors For Autonomous Characters
+ (speed falls to zero inside a slowing radius); separation steering, Reynolds 1987, 
+Flocks, Herds, and Schools: A Distributed Behavioral Model
+, SIGGRAPH (push away from neighbours, weaker with distance). Both citations are from memory; the papers were not opened.
+Code home: pushApart and collide, 16-sim-fight.js 147-224; moveTo, 09-nav.js 600-669.
+Build to-do: add arrival radius and tie-break; reproduce the jitter first (batch 0).
+11. Buffer around buildings (bug 5, walking under buildings). DECIDED (Albert, Oct 31), FLAGGED: LIVE TEST IN PROCESS.
+Rule: no buffer ring for now. Reproduce first (batch 0): log where units stand against walls, draw their bodies on the building shapes, and log units found inside a footprint. Decide on a fix after.
+Logic: footprints are solid, a one-square slit is shut, and a square walled on two sides is shut (09-nav.js 89-123), but a square beside one wall stays open, so a figure can overlap a building's picture. Not reproduced. Other suspects: units leaving a building are placed about 30 units below it unchecked; collide (16-sim-fight.js 215) teleports units found in a solid square to the nearest free one; draw order of building art over the squares behind it
+.
+If confirmed: keep unit centres at least half a figure's width from a wall, the same inflation as decision 2 (CO = O + R).
+Code home: navRebuild and blockedCell, 09-nav.js; collide, 16-sim-fight.js.
+12. Animals sliding like ice (bug 3). DECIDED (Albert, Oct 31).
+Rule: sliding collision response, three changes in the flee step: (1) move along one unit direction so diagonal speed is correct (today each axis moves at full speed, about 41% too fast on a diagonal); (2) slide along a wall keeping only the tangential part of the motion, so speed falls to |v| cos(theta) against it; (3) stop the run if the slide speed falls below half.
+Equation: v' = v - (v . n) n, with n the wall normal (sliding collision response, standard in character controllers; general knowledge, not looked up). Rejected: a flee map over the nav grid (Brian Walker's Dijkstra safety maps, Brogue), too much code for deer.
+Watch: deer get slower on diagonals than today; villager speed is 24. Check hunting ease in the balance run.
+Code home: flee step of wildTick, 14-sim-troops.js 427-437. Wolf and bear branches not yet read.
+Build to-do: all three changes; balance run for the deer speed effect.
+13. Army units pursuing odd things on spawn (bug 4). DECIDED (Albert, Oct 31).
+Rule: covered by decision 8 (soldiers leave animals alone unless ordered, or a civilian is under attack in sight). The 320 home sweep stays only for hostile people (enemy soldiers, siege). Confirm in batch 0: spawn soldiers beside animals and log their targets.
+Logic: in home state a soldier sweeps 320 from its yard and from the Town Center (14-sim-troops.js 279-284), wider than the clearing (200) and the home band (200 to 260), so in the home area it can only reach animals and the like. Not reproduced; the cause may also be a leftover target from an earlier state, which decision 8 would not fix.
+Principle: territorial defence, respond to what threatens what you hold (no specific source looked up).
+Code home: solTick 279-284 and nearHome 121 in 14-sim-troops.js; ignorable in 15-sim-spatial.js.
+Build to-do: after decision 8's animal rule is built, re-run the spawn test.
+14. Double shadows (bug 6). CLOSED, no change (Albert, Oct 31).
+ The shadow problem is no longer there. Concern deleted from the list. Nothing to build or test.
+Final build list: what I do alone and what I need from Albert (Oct 31)
+Nothing is built until the list is agreed and Albert gives the double yes. Preview builds only; live only on his word.
+Plain fixes I take on alone
+ (the code contradicts its own comment, help text or rules; the table or rule is the truth; each is reproduced first and gets a test that can fail):
+Batch 2: A1-A5, A7-A10, A11, C17, C18, C19.
+Batch 3: C13, C14, C10, C1 as decided (8), bugs 2, 3, 4 as decided (10, 12, 13), bug 1 as decided (1); bug 5 only after batch 0 (11).
+Batch 4: B1-B7, B9, B12-B15 (B2 passes a daily flag; B5 hands the Throne back to the Natives; B7 sets full health when a building is made).
+Batch 5: C2, C3, C5, C6, C8, C9, C11, C12, C15, C16, each with a balance run.
+Batch 6: D1-D5, D8; D6 after the crown question below.
+Batch 7: D16, F2-F5, F8-F10; F6 and F7 checked against sources by me before any text changes.
+Batch 8: E1, E2, E4-E9, E11-E17, with the one design page.
+Batch 9 low-risk cuts: G3-G10, each logged in CUTS.md and PARKED.md.
+Batch 10: H7, H8; H5, H6 and G1 stay parked.
+What I need from Albert
+ (three lines each, in order, with my default):
+#
+Question
+My default
+N1
+A6: must a reloaded game be exactly the same game (random state saved; soldiers re-pick targets)?
+Save the random state; targets and paths are re-picked after a load
+N2
+B8: Easy turns hazards off, so zero the score multiplier on Easy and apply a difficulty change from the next game?
+Yes
+N3
+B10: road scenario gives only you the Market and six villagers: intended?
+Intended, keep, state it in the scenario text
+N4
+C4: Native warriors and citadel towers hit soldiers at half strength and never shake nerve (a rule meant for animals): make Natives full strength?
+Yes, full strength; this makes the Natives harder, so a balance run
+N5
+C7: healing takes about 83 s against 11.7 s in the comment: which is intended?
+Your number; I fix the other to match
+N6
+D6: what must each crown measure (wellbeing, war, wealth)? Today wellbeing health is always 100, war counts animals killed, wealth counts stores twice
+You define each in one line; I make the code match
+N7
+D9: computers' villager ceilings are flat (16, 26, 28): scale with age and economy?
+Yes, scale with age
+N8
+D10: add a peace mode so standing down is not undone?
+Yes
+N9
+D11: farm research also speeds fishing and hunting (fish x6.80 by Gunpowder): intended?
+No, fields and mines only
+N10
+D12: climate steps add to full immunity while the text says half: multiply, or fix the text?
+Multiply (matches the text)
+N11
+D14: research card says cost and time follow x(0.5+0.1w) but 115 of 224 steps do not fit: fix the text or the numbers?
+Fix the text; the numbers are balance
+N12
+D15: armed caravans have a hidden 4-damage attack; Charcoal burning researches a Foundry two ages away; Printing and Printing press are one invention twice
+Show the attack in the text; fix Charcoal; merge the duplicate
+N13
+E3: Mail keeps 30 lines but shows 6: show all under the filter?
+Yes
+N14
+F1: where text and code disagree (Open scenario villagers, snow versus mud, Aqueduct room, plague, ground marks, pausing), the code and tables are the truth and the text is corrected?
+Yes, the text follows the tables
+N15
+G2 art halving and the G11 repository cut list (7.9 MB): approve the list when I show it?
+Yes, listed first
+N16
+Outlaw raid target rule and the sight cap for big armies (from 8 and 8b)
+Raids hit the weakest in reach; no cap until tested
+N17
+Usage spend for batches 0 and 1 (decision 9)
+On the list, decided when the sheet is done
+Answers to the 17 questions (Albert, Oct 31)
+N1. A6 reload. DECIDED, my default (practical).
+ Save the random state; targets and paths are re-picked after a load. Basis: deterministic simulation, same state plus same inputs gives the same result (Bettner &amp; Terrano, 
+1500 Archers on a 28.8
+, GDC 2001, from memory). Exact sameness would need every unit's target saved; not done. Code home: 08-core seeded dice, 34-save.
+N2. B8 Easy. DECIDED, my default.
+ Score multiplier zero on Easy; a difficulty change applies from the next game. Alternative noted: handicap scaling, net = gross - handicap (World Handicap System, from memory), or a best per difficulty. Code home: 37-events 13, 33-verbs 171.
+N3. B10 road scenario. DECIDED, my default (changed from the earlier note).
+ Every court gets the same Market and six villagers (confirmed in applyScenario, 10-world.js 173-218: age, stores and techs go to every court, the Market and villagers only to the player). Fairness rule: base rules equal for every side. Code home: applyScenario; SCENARIOS.road in 06-rules-tuning.
+N4. C4 wild strength. DECIDED (Albert, Oct 31).
+ The half-strength, no-nerve rule applies to animals only (test the kind, not the owner). Natives and outlaws hit at full strength and shake nerve. Balance run before and after. Code home: 16-sim-fight 59 and 63; MORALE.wild in 06-rules-tuning line 38 (its comment already says animals).
+N5. C7 healing. DECIDED (Albert, Oct 31): no change to behaviour.
+ Keep the first-order lag (Cukjati, Rebersek &amp; Miklavcic 2001, already in the code comment): HP(t) = max - (max - HP0) e^(-t/tau), tau = max/heal; time to heal a fraction f of the gap = -tau ln(1-f). Keep the garrison heal running on top of the hospital heal. Only the comment is corrected (the comment promised the linear time; the lag takes about 2.3 tau to 95%). The reviewer's 83 s is not reproduced. Code home: healTick 14-sim-troops 92-111 and line 170.
+N6. D6 crowns. DECIDED by delegation (Albert, Oct 31): use best accepted practice across the top games of the genre.
+ Finding: there is no single standard. Two families: flow scores (resources gathered, value of enemies destroyed: Age of Empires II and StarCraft II style, from memory) and stock scores (value of what is alive divided by 5: Age of Empires 4, read from a forum write-up of the author's testing). Age of Empires I (read from the openage reverse-engineering notes): 0.5 point a kill, 1 per building destroyed, economy from gold gathered and traded. Chosen for the crowns: Wealth = everything gathered, counted once (stores no longer added on top); War = cost value of enemy people and buildings destroyed, animals excluded; Wellbeing = people x (1 - sick share) + care buildings + laurels, with health taken from the existing sickness model (today p.health stays 100). Each is one measure per crown, ranked as now. Open: confirm the Age of Empires II and StarCraft II formulas from a source before building. Code home: crownsOf 39-games 143-170; PEACE.crown.
+N7. D9 villager ceiling. DECIDED (Albert, Oct 31): remove it; same rules for all players.
+ The flat per.vils ceiling (16, 26, 28) goes. Housing (roomOf, 08-core 264) is the hard limit for every side, as in other games. Crowding stays as designed: g/(1 + others/room) makes a villager see the lower return at a crowded bush or rock and default to another one instead of crowding for no reason (applies to bundle and rock finds, not trees, room 1). Open (mine, to confirm when built): when a computer trains a villager, use the payback test, extra income over the time left must exceed the 50 food cost: dR x T_left &gt; c_vil, with dR from the forager rate R at the best free find (Charnov marginal value, as decision 1); balance run needed because computers will build larger economies. Code home: 17-ai.js 121; per.vils in 05-rules-wild PERS.
+N8. D10 computer peace mode. DECIDED (Albert, Oct 31).
+ Add a peace mode: while at peace with everyone, a computer's army target is PEACE.stand.keep times the ceiling, so it does not retrain the soldiers it stood down. Reproduce first in batch 0 (the reviewer's finding is suspected, not run); build only if it holds. Principle: peacetime demobilisation (no equation). Code home: standDown 39-games 83-104; think() 17-ai.
+N9. D11 research keyed too widely. DECIDED (Albert, Oct 31).
+ Key each research step to the finds its text names: the harvest line (Sickles to Horse collar) to fields and bushes (tags farm, bush), mining research to the stone, gold and iron finds, not to the Mint, Foundry or Quarry. Fishing and hunting get slower than today; check whether they have their own research, and run the balance comparison. Code home: gatherMul 08-core 586-604; fx rows in 04-rules-tech (Sickles line 200, Horse collar line 252).
+N10. D12 climate steps. DECIDED (Albert, Oct 31), replacing my first suggestion.
+ Cold and wet steps are layers of thermal resistance: heat loss Q = dT / R_total, series layers add, R_total = R_body + sum(R_i), so the slowdown scales with 1 / (1 + sum(a_i)), each a_i being the layer's resistance as a multiple of what the soldier already wears. Wool cloaks a = 1 gives exactly half, a second layer gives a third, never zero. The fx data already adds; only the formula that reads it changes. Unit: 1 clo = 0.155 m2 K/W (ISO 9920, ASHRAE 55; from memory, not looked up). Weather glass is a barometer, not insulation: its cold and wet slowdown cut has no physical basis; drop it and give it a forecast or lead-time effect, or a small abstraction (to settle at build; Albert said yes to all). Ice steps (Horseshoes, Crampons) are friction, not insulation: the ice code already uses a friction coefficient and slip chance (Hanson et al. 1999, 37-events about line 680); check at build how they enter muOf. Code home: fx rows in 04-rules-tech (Wool cloaks 1183, Oiled cloaks 1197, Weather glass about 2316, Horseshoes 1414, Crampons 2302); readers in 37-events and 08-core. Balance run.
+N11. D14 research card formula. DECIDED (Albert, Oct 31).
+ Delete the sentence 'Cost and time x(0.5 + 0.1w) for its age' from the research card (27-cards-core.js 128); only 109 of 224 steps fit it. The cost and time numbers stay as hand-set balance values. Fix the w comment in 04-rules-tech line 4.
+N12. D15 research oddities. DECIDED (Albert, Oct 31).
+ (a) Armed caravans text names the hidden attack of 4 (confirm the 4 in the caravan row of 02-rules-units at build); (b) Charcoal burning moves to the age where the Foundry exists; (c) Printing merges into Printing press, keeping the combined effect 0.8 x 0.85 = 0.68 (about 32% faster research). Balance run. Code home: 04-rules-tech Charcoal 152, Printing 811, Printing press 2130, Armed caravans 2758.
+N13. E3 Mail. DECIDED (Albert, Oct 31): a page system, nothing more.
+ The Mail shows 6 lines a page with Previous and Next; the 30 lines kept are 5 pages. No More row, no scrolling. Principle: paging (general knowledge). Code home: 30-cards 650.
+N14. F1 text against code. DECIDED (Albert, Oct 31): OK.
+ Code and tables are the truth; the six text lines are corrected or generated from tables. Aqueduct room and the plague line: I bring the call to Albert before touching either. Principle: single source of truth (Hunt &amp; Thomas, The Pragmatic Programmer, 1999, from memory).
+N15. G2 art halving and G11 repository cuts. DECIDED (Albert, Oct 31): OK.
+ Late (batches 9 and 10). Art: before and after screenshots at four phone sizes, diffed; stop at any visible change. Repository: Albert approves the exact cut list first; every cut logged in CUTS.md.
+N16a. Outlaw raid target. DECIDED (Albert, Oct 31), replacing my profitability rule.
+ A randomizer picks the target, weighted toward villagers carrying resources in transport. Rule (mine, to confirm at build): among eligible targets, probability p_i = w_i / sum(w_j), with w_i = 1 + beta x load_i / CARRY (CARRY = 10), beta starting at 2; carts and caravans count as in transport. Weighted random choice (roulette-wheel selection; Goldberg 1989, from memory). Must use the game's seeded dice, never Math.random, or the same seed stops giving the same game (B1, E16). While decision 4b is live, computers are not eligible. Villagers carry at most 10, so the incentive per villager is bounded; carts and caravans carry more. Code home: natRaid 38-natives about line 210; seeded dice 08-core 100-118.
+N16b. Sight cap. OPEN.
+ My proposal: no cap, the union of sight circles saturates when units bunch. Not yet answered.
+N17. Usage spend. ON THE TO-DO LIST, not decided.
+N16a addendum. Outlaw raid disincentive (Albert, Oct 31).
+ An army nearby puts the outlaws off, as in real life. Rule (mine, to confirm at build): w_i = (1 + beta x load_i / CARRY) / (1 + gamma x guard_i), guard_i = the armed strength within escort range of target i, taken from the existing groupPower; and the outlaws only attack a target they can beat, the same canBeat test the hunters use in decision 8. Basis: risk-sensitive foraging, the landscape of fear (Brown 1988; Laundre 2010, from memory). Fix C2 (group strength leaves out the soldier itself) first, since this reads groupPower. Starting values beta 2, gamma 1; tune in the balance run.
+N16b. Sight cap. DECIDED (Albert, Oct 31): no cap.
+ The union of sight circles saturates when units bunch; the union decides who reacts, not what is drawn. Use the spatial grid for the check.
+All 17 questions answered; N17 (usage spend) stays on the to-do list.
+Final build sheet (for the double yes)
+Nothing is built until Albert says yes twice. Preview builds only; live only on his word. Every decision above carries its equation, source and code home; each is added to SCIENCE.md when built.
+Batch 0, no code:
+ reproduce the six bugs (jitter, walking under buildings, animal slide, spawn chase), B1 fog first frame, B5 Throne, A1 save loss, D2 research lists, B3 map fairness, healing time, the computer retraining after stand down, the caravan attack of 4; confirm the Age of Empires II and StarCraft II score formulas and the citations marked from memory. A
+ claim that does not reproduce gets a better test; a bug Albert saw himself is never
+ dropped.
+Batch 1, tests that can fail:
+ H1, H2, H3, QC items 2, 3, 4, 6. The GitHub Action (H4) and locks are parked.
+Batch 2, player safety:
+ A1-A5, A7-A11, C17-C19; A6 per N1 (save the random state, re-pick targets).
+Batch 3, what you see:
+ decision 1 (villager search), 10 (arrive and stop, tie-break), 12 (sliding collision response), 13 (spawn chase, after 8), 8 (hostility split, animal temperaments), 8b (group sight, no cap), 4b (live test), C10, C13, C14; bug 5 (11) only after batch 0.
+Batch 4, fairness and determinism:
+ B1-B7, B9, B12-B15; B8 per N2; B10 per N3; the map per 5a (+8%, home zones, in its stated order).
+Batch 5, combat:
+ C2, C3, C5, C6, C8, C9, C11, C12, C15, C16; C4 per N4; C7 comment only per N5.
+Batch 6, computers:
+ D1-D5, D8; N6 crowns; N7 ceiling removed with the payback test; N8 peace mode; N16a raids.
+Batch 7, research and text:
+ D11 per N9, D12 per N10, D14 per N11, D15 per N12, D16, group F per N14; F6 and F7 history checked against sources first.
+Batch 8, cards, fog, view:
+ group E with N13 paging and the one design page.
+Batch 9, cleanup:
+ G3-G10 and N15 art halving with screenshot diffs.
+Batch 10, repository:
+ G11 cut list (Albert approves the list), H7, H8. Parked: G1 research table rewrite, locks (H4, H5), CSP (H6).
+Open at build:
+ Weather glass replacement effect; payback test and raid weights (beta, gamma); Aqueduct and plague text calls; crown formulas confirmed from a source; usage spend (N17).
+Batch 0 results (Oct 31): run by me on a scratch copy of v70, no repo change
+Confirmed (status C):
+B1 fog first frame.
+ Seed 7, fog on, 6 minutes: with the first fog draw the game ends with 203 units, without it 206, and stores and positions differ.
+B5 Throne.
+ After side 1 takes the Throne and falls, the Throne building is at 0 health, gone and off the list, while the game still names dead side 1 as holder.
+A1 save loss.
+ A 2:00 save (180,747 characters) was overwritten by the empty 0:00 game (156,696 characters) when the page was hidden while the Welcome back card was up.
+D2 research lists.
+ Followable in order, counting direct prerequisites only: aggressive 5 of 12, balanced 14 of 34, fortress 10 of 25 (reviewer: 4, 12, 8). Examples: Bronze axes needs Hafted axes, Plough needs Threshing, Leather needs Helmets.
+B3 map fairness.
+ In 100 of 100 seeds the nearest find of the same kind is at a different distance in different corners; largest spread berries 12, gold 84, stone 92, iron 100 units.
+Bug 4 spawn chase.
+ 12 seeds, one new swordsman at home for 40 s: in 8 seeds it picked a boar or bandit for 400 to 870 ticks; in 6 it lost health (70 down to 30 to 53); it wandered up to 286 units from the keep. Not yet proven to come from the 320 sweep.
+C7 healing.
+ Pinned half-dead swordsman at a hospital: 95% healed in 53.8 s, 99% in 91.3 s. Theory (tau = max/heal = 23.3 s; t = tau ln 10 and tau ln 50): 53.7 s and 91.3 s. The equation is exact; the reviewer's 83 s sits between; the comment's 11.7 s is the linear figure. Decision N5 stands (comment fixed only).
+D10 retrain.
+ At full peace (no court can declare war), standing 4 of 9 soldiers down left 5; the computer was back to 7 within 40 s. Decision N8 stands.
+My test did not reproduce these; they stay open because Albert saw them
+:
+Bug 2 jitter.
+ Ten villagers sent from one point: no stacking (0 pairs closer than 3 units), 1 to 3 direction reversals per 20 s while walking 160 to 270 units. Not reproduced. The code gap (units at exactly the same point never separate) is read from the code but caused no stacking here.
+Bug 5 walking under buildings.
+ Three seeds, 8 minutes each (about 270,000 unit-seconds): no unit's centre was ever inside a building footprint (2 unit-seconds, wayfarers in trees). So it is not a walking or footprint fault; the likely cause is how it is drawn (tall building art over the squares behind it). Decision 11 stays a live test; the next step is a look, not a buffer.
+Armed caravan attack of 4.
+ The caravan row in 02-rules-units has no attack field. The hidden attack is not found there; look in the fight defaults at build, or drop it.
+Not yet run:
+ bug 3 (animal slide, code read only), A2-A5, A7, A8, B2, the Aqueduct and plague text calls, the Age of Empires II and StarCraft II score formulas.
+14. Double shadows (bug 6). REOPENED (Albert, Oct 31, 16:03): 'Found the shadow.'
+ Screenshot from his phone at 48:38 left, Classical, snow: dark ovals under every building and tree extending up and to the right behind it, much longer than the object (the tower's oval about twice its height), plus faint round pools. This is the shape the code draws (shadowPath, 23-view-things.js 214-227: one ellipse from one footprint behind the foot to the full shadow length past it). In my render at the same clock the shadow is far fainter, so the strength depends on the sun and sky state of his game. The earlier 'closed, no change' is withdrawn. Next: render clear-sky frames to match his strength, then the swept-footprint fix from my earlier proposal.
+Correction to batch 0 (Albert, Oct 31, 16:04).
+ 'Not reproduced' meant my test did not produce it, not that the bug is unreal. Bugs 2 (grouping) and 5 (walking under buildings) stay open on his sighting; they need better tests, not dropping.
+Clarification (Albert, Oct 31, 16:05).
+ The villagers and the animal he saw himself, so decisions 10 (arrive and stop, tie-break) and 12 (sliding collision response) are built as planned, with no reproduction gate. The reproduction step in decision 10 is withdrawn. Decision 1 (villager search) is also built as decided. Bug 5 (walking under buildings) stays the live test of decision 11. The shadow (14) is a separate new sighting, reopened, and waits for his yes or no on the swept-footprint shape.
+14. Shadows under and behind (bug 6). DECIDED (Albert, Oct 31, 16:09), in his words: 'For round keep round. For static things we invented, like houses, the shape is fixed and a shadow is just a manipulation of a fixed object we know the measurements of.'
+Rule: round things (trees, bushes, people) keep the oval. Buildings get their own fixed shadow shape, made once per building kind from the table (footprint fp and height h in BLD) and then only moved and stretched to the sun each frame. No per-frame shadow maths for buildings.
+Equation: a planar projected shadow, a shear of the fixed outline onto the ground: ground point = (x - z cot(alpha) dx, y - z cot(alpha) dy), so a box's shadow is its footprint plus the footprint slid by L = h cot(alpha) away from the sun, capped at CAST.max heights as now. Source: Blinn 1988, Me and my (fake) shadow, IEEE Computer Graphics and Applications 8(3), from memory, not opened.
+Keeps the speed: add each building's cached shape to the same single path with a transform (Path2D addPath), so the whole frame still has one fill (Build 62 measured the per-thing fills at 28% of a frame at normal zoom and 53% close in).
+Start with the box from fp and h; towers, domes and spires can get their own profile later.
+Check at build: the frame cost before and after at normal and close zoom; screenshots at several sun heights.
+Code home: shadowPath and sunShadows, 23-view-things.js 214-252; BLD fp and h; the baked small ellipses (fence posts) and ao() in 19-building-art.js stay.
+Build list: batch 3.
+14, scope (Albert, Oct 31, 16:11).
+ The fixed building shadow applies to houses, walls and the resource buildings (static things we invented). Units and other moving things keep the shadow they have now. Trees, bushes and rocks keep theirs. Chimney smoke needs no shadow (it has none today, so nothing to do). Crops stay as now (no shadow, per the existing crop test in sunShadows).
+14, scope simplified (Albert, Oct 31, 16:13).
+ One rule: every building gets the fixed shadow; everything else keeps what it has now. The existing exemption for crops stays (they are flat and have none today). Replaces the list in the entry above.
+Batch 0, second run (Oct 31, 16:20): save bugs, run by me on the scratch copy
+Confirmed (C):
+A2.
+ Saved a 2:00 game, reopened (Welcome back card up), tapped the close button, played 60 s: the save stayed at 2:00 (the new game never autosaves). Switching away then overwrote it with the 1:00 game. The backup still held 2:00 until the next save.
+A3.
+ After the game ended, the main save was removed but the backup (2:00) survived; reopening showed Welcome back for a finished game.
+A8.
+ After two different errors, a new game played for 90 s and a forced save did not save (the save stayed at the old game's 2:00).
+Partly confirmed from the code (K):
+A4.
+ The .old shelf is written only when a save's version cannot be migrated (34-save 289-295), so a second incompatible save overwrites the first; the reviewer's 'every start' is wrong, the 'never lost' comment is still false. Also, after the incompatible main save is moved aside, the backup is not tried.
+Not run:
+ A5, A7, A9, A10, B2, the Age of Empires II and StarCraft II score formulas (the searches found only Age of Empires I and 4 pages), the animal slide (Albert saw it; built as decided), the Aqueduct and plague text calls.
+", "complete": true}, "frame": {"slug": "9283e225-1470-4138-bf0d-e3d2f85dc9fb", "url": "https://claude.ai/artifact/K6MZJTe5mjRi1BEHUWvbHU", "artifactUrl": "https://claude.ai/artifact/K6MZJTe5mjRi1BEHUWvbHU"}}

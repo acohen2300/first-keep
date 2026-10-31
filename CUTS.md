@@ -1096,3 +1096,8 @@ Build Plan items 6 and 7. Open points for Albert are in `docs/Quick Action Notes
 - Nothing cut. B1 fog is lit in newGame and after a load, the draw no longer does it (same seed, same game). B2 the daily flag is passed in, no date read inside newGame. B5 a fallen holder hands the Throne back to the Natives. B6 each wonder keeps its own win clock. B7 a finished building keeps its share of full health when research moves it. B8 Easy has no hazard bonus, and a difficulty change applies from the next game. B9 two bucket villagers for every side. B12 the pathfinding cache keys on the grid, flood and game, not the random state. B13 a wall line rebuilds the grid once. B14 a spy is judged against the tower's sight, not its shot range. B15 no fish on the great lake's causeways.
 - Tests: moves.py (B5, B7, B8, B15; B7 shown failing on a planted bug). Fingerprint accepted: the first minutes move.
 - Not yet: B3, B4, B10, B11 (your call), and the map (home zones, +8%).
+
+## Build 80 preview 7 (the start QC)
+- Nothing cut. Added `tests/handoff.py` (the start QC: state, build, lint, the gate, 13 planted-bug checks, what is owed), the "START QC" section at the top of `HANDOFF.md`, a pointer in `CLAUDE.md`, and `docs/v80 Audit/` (15 reviewer reports, the mutation test, the decision record).
+- The first run of the planted-bug check found a test that could not fail (Easy kept a hazard bonus): the test used a hazard name that is not in the game. Fixed; all 13 now fail when their bug is planted.
+- Found: preview 1 to 6 commits were authored as "Claude <noreply@anthropic.com>", not Albert. The repo's git identity is now Albert's noreply address for new commits. The earlier seven stay as they are unless Albert says to rewrite them.

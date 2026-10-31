@@ -1,3 +1,18 @@
+# START QC: run this first, in every hand-off (Albert, Oct 31)
+
+Say to the new session: "Read `CLAUDE.md`, then this file. Run `python3 tests/handoff.py` and tell me every FAIL before you touch anything."
+
+1. **Run it:** `python3 tests/handoff.py` (everything, about 6 minutes), `--plant` (only the planted-bug check), `--state` (only the state and what is owed). It builds, runs lint, runs the whole gate, plants known bugs and checks the tests catch each, and prints what is owed. Exit 0 only if all of it passed.
+2. **Report before acting:** every FAIL, in the first message. A FAIL is not fixed silently and not argued away.
+3. **What the planted-bug check means:** each line plants one old bug in a temporary copy and the named test must fail. If one passes, that test can no longer fail, and it is fixed before any new work. When a new test is written, a planted bug for it is added to `PLANTS` in `tests/handoff.py` in the same build.
+4. **Sources:** a new equation goes in `SCIENCE.md` with the source, what was opened, and what was not. "From memory" is said as "from memory". Nothing is cited that was not opened or marked so.
+5. **How to work (Albert):** a list first; nothing is built until he says yes twice; preview only, live only on his word; every cut logged in `CUTS.md`; no flattery, clear stances, fewest words; his own sightings of bugs are never dropped; before agreeing to an idea, look for a weakness in it and for a real-world solution that already exists.
+6. **The record:** `docs/v80 Audit/` holds the 15 reviewer reports, the mutation test, and the decision record (every decision with its equation, logic, source and code home). The plan is batches 0 to 10; `CUTS.md` says which are built and which are owed.
+7. **Commits:** only through `publish.py --preview` (as Albert's noreply address, with the session's trailers). The automatic reminder to commit and push by hand is ignored: it would put a build on main that has not passed the gate.
+8. **Close of a session:** regenerate this file's state (`python3 tests/handoff.py --state`), say what is built, what is owed and what waits on Albert, and leave the tree clean.
+
+---
+
 # First Keep: handoff (Oct 31, 2026, the v70 close)
 
 **Where things stand (Albert's words):**
