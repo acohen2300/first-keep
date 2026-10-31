@@ -371,6 +371,14 @@ function huntTick(u, dt, SP) {
 	} else moveTo(u, a.x, a.y, dt, UNIT.vil.rng - 4, SP);
 }
 // Mending: three times the build time for a full repair, a quarter of the cost, paid as the work goes.
+// every way a repair or a fire ends sends the villager back to what it was doing before, or to nothing (C14: three exits did three things)
+function backToWork(u) {
+	const pj = u.pj;
+	u.pj = null;
+	u.rep = null;
+	u.fireman = false;
+	setJob(u, pj && pj !== 'repair' ? pj : null);
+}
 function repairTick(u, dt, SP) {
 	let b = u.rep;
 	const o = u.owner,
@@ -389,22 +397,18 @@ function repairTick(u, dt, SP) {
 			u.rep = b = nx;
 			u.building = true;
 		} else {
-			const pj = u.pj;
-			u.pj = null;
-			setJob(u, pj && pj !== 'repair' ? pj : null);
+			backToWork(u);
 			return;
 		}
 	}
 	if (u.fireman && !(b && b.hp > 0 && b.fire > 0)) {
 		u.fireman = false;
-		const pj = u.pj;
-		u.pj = null;
-		setJob(u, pj && pj !== 'repair' ? pj : null);
+		backToWork(u);
 		return;
 	} // the fire is out: back to work
 	if (!b || b.hp <= 0 || b.owner !== o) {
 		u.building = false;
-		setJob(u, null);
+		backToWork(u);
 		return;
 	}
 	if (b.fire > 0) {
@@ -429,7 +433,7 @@ function repairTick(u, dt, SP) {
 		return;
 	}
 	if (b.hp >= maxHpB(o, b.kind) - 0.5) {
-		setJob(u, null);
+		backToWork(u);
 		return;
 	}
 	if (rectGap(u.x, u.y, b) > 7 && !moveTo(u, b.x, b.y, dt, 8, SP)) return;
@@ -446,7 +450,7 @@ function repairTick(u, dt, SP) {
 		if (whole > 0 && p.res[k] < whole) short = true;
 	}
 	if (short) {
-		setJob(u, null);
+		backToWork(u);
 		if (o === 0 && G.t - (G.repSay || -99) > 5) {
 			G.repSay = G.t;
 			say('Not enough to pay for repairs.', '', 3);

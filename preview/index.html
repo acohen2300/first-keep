@@ -10775,7 +10775,7 @@ function forage(u, n, drops) {
 				? c * FORAGE.life
 				: Math.max(1, n.amt), // a tree you started counts as worth finishing: its stump opens the way (Build 63; Charnov would leave it)
 		at = n.hunt || n,
-		dr = n.kind === 'fish' ? null : (drops ? nearest(drops, at) : dropFor(o, n.type || 'food', at)) || keepOf(o),
+		dr = (drops ? nearest(drops, at) : dropFor(o, n.type || 'food', at)) || keepOf(o), // fish too: the walk home counts (C13)
 		d = dr ? dist(dr, at) : 0,
 		w = dist(u, at);
 	return c / (c / Math.max(1e-6, g) + (2 * d) / v + (w * c) / (Math.min(A, c * FORAGE.life) * v));
@@ -11291,6 +11291,14 @@ function huntTick(u, dt, SP) {
 	} else moveTo(u, a.x, a.y, dt, UNIT.vil.rng - 4, SP);
 }
 // Mending: three times the build time for a full repair, a quarter of the cost, paid as the work goes.
+// every way a repair or a fire ends sends the villager back to what it was doing before, or to nothing (C14: three exits did three things)
+function backToWork(u) {
+	const pj = u.pj;
+	u.pj = null;
+	u.rep = null;
+	u.fireman = false;
+	setJob(u, pj && pj !== 'repair' ? pj : null);
+}
 function repairTick(u, dt, SP) {
 	let b = u.rep;
 	const o = u.owner,
@@ -11309,22 +11317,18 @@ function repairTick(u, dt, SP) {
 			u.rep = b = nx;
 			u.building = true;
 		} else {
-			const pj = u.pj;
-			u.pj = null;
-			setJob(u, pj && pj !== 'repair' ? pj : null);
+			backToWork(u);
 			return;
 		}
 	}
 	if (u.fireman && !(b && b.hp > 0 && b.fire > 0)) {
 		u.fireman = false;
-		const pj = u.pj;
-		u.pj = null;
-		setJob(u, pj && pj !== 'repair' ? pj : null);
+		backToWork(u);
 		return;
 	} // the fire is out: back to work
 	if (!b || b.hp <= 0 || b.owner !== o) {
 		u.building = false;
-		setJob(u, null);
+		backToWork(u);
 		return;
 	}
 	if (b.fire > 0) {
@@ -11349,7 +11353,7 @@ function repairTick(u, dt, SP) {
 		return;
 	}
 	if (b.hp >= maxHpB(o, b.kind) - 0.5) {
-		setJob(u, null);
+		backToWork(u);
 		return;
 	}
 	if (rectGap(u.x, u.y, b) > 7 && !moveTo(u, b.x, b.y, dt, 8, SP)) return;
@@ -11366,7 +11370,7 @@ function repairTick(u, dt, SP) {
 		if (whole > 0 && p.res[k] < whole) short = true;
 	}
 	if (short) {
-		setJob(u, null);
+		backToWork(u);
 		if (o === 0 && G.t - (G.repSay || -99) > 5) {
 			G.repSay = G.t;
 			say('Not enough to pay for repairs.', '', 3);
@@ -11992,12 +11996,21 @@ function wildTick(u, dt, SP) {
 				ny = clamp(u.run.y, 20, MAP - 20);
 			const sp = U.spd * (hurtNow ? 0.45 : 1);
 			// a step that slides along a wall, as moveTo does (Build 63: the old step walked into the building and jumped out: the glitch)
-			let x1 = u.x + clamp(nx - u.x, -1, 1) * sp * dt,
-				y1 = u.y + clamp(ny - u.y, -1, 1) * sp * dt;
+			// one unit direction, so a diagonal is no faster than a straight run; against a wall it keeps only the part along it, v' = v - (v.n)n,
+			// and a run that slows below half its speed is given up (decision 12)
+			const rd = hyp(nx - u.x, ny - u.y) || 1,
+				sx = ((nx - u.x) / rd) * sp * dt,
+				sy = ((ny - u.y) / rd) * sp * dt;
+			let x1 = u.x + sx,
+				y1 = u.y + sy;
 			if (blockedCell(gcell(x1, y1), WILD)) {
-				if (!blockedCell(gcell(x1, u.y), WILD)) y1 = u.y;
-				else if (!blockedCell(gcell(u.x, y1), WILD)) x1 = u.x;
-				else {
+				if (!blockedCell(gcell(x1, u.y), WILD)) {
+					y1 = u.y;
+					if (Math.abs(sx) < 0.5 * hyp(sx, sy)) u.run = null;
+				} else if (!blockedCell(gcell(u.x, y1), WILD)) {
+					x1 = u.x;
+					if (Math.abs(sy) < 0.5 * hyp(sx, sy)) u.run = null;
+				} else {
 					x1 = u.x;
 					y1 = u.y;
 					u.run = null; // cornered: it stops, and picks a new way off next look
@@ -12528,9 +12541,15 @@ let CHNEXT = new Int32Array(1024);
 // one standing gives way. Nobody is pushed into a tree, a wall or water.
 const heft = (u) => (u.tgt || G.t - (u.work ?? -9) < 0.5 ? 9 : G.t - (u.mvT ?? -9) < 0.25 ? 3 : 1);
 function pushApart(a, b) {
-	const dx = b.x - a.x,
+	let dx = b.x - a.x,
 		dy = b.y - a.y;
 	if (dx > 8 || dx < -8 || dy > 8 || dy < -8) return;
+	if (dx === 0 && dy === 0) {
+		// two on one spot part along a direction fixed by their ids, the same every time (decision 10, Reynolds separation)
+		const g = ((a.id * 31 + b.id * 17) % 360) * (Math.PI / 180);
+		dx = Math.cos(g) * 0.01;
+		dy = Math.sin(g) * 0.01;
+	}
 	const d = hyp(dx, dy);
 	if (d > 0 && d < 8) {
 		const ha = heft(a),
@@ -22191,7 +22210,7 @@ function qsHTML(verb, label, to) {
 	);
 }
 // ── who can be sent
-const sendable = () => armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && u.state !== 'escort'); // guards keep to what they guard
+const sendable = () => armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && u.state !== 'escort' && u.state !== 'school'); // guards keep to what they guard
 // What each soldier is doing, in one word (Albert, Build 42), worked out from the soldier alone:
 // rally (just trained or called home, walking to its place), march (on your order), fight, hold (stopped: at its place or at the spot you sent it), rout (nerve broke, running).
 // 'other' is a guard, a priest at a shrine, a student, a spy. A soldier that has not moved for two and a half seconds is holding, even if it never got there.
@@ -29614,7 +29633,7 @@ const roomIn = (b) =>
 	shelterOf(b.owner, b.kind) -
 	G.units.filter((u) => u.hid === b.id || (u.state === 'garrison' && u.gar === b.id)).length; // in, or on the way in (Build 60: a second Shelter counted only those in, and over-filled)
 // the soldiers an emergency moves: every one but the guards (they keep to what they guard) and the routed (they run for home)
-const troops = () => armyOf(0).filter((u) => isSoldier(u) && u.state !== 'escort' && u.state !== 'rout');
+const troops = () => armyOf(0).filter((u) => isSoldier(u) && u.state !== 'escort' && u.state !== 'rout' && u.state !== 'school'); // a student keeps its lesson (C10)
 // a soldier off its order, to stand at a spot and fight what comes
 const stand = (u, x, y) =>
 	Object.assign(u, {
@@ -30042,6 +30061,11 @@ window.__fk = {
 	openCard,
 	blankGame,
 	clearSave,
+	pushApart,
+	troops,
+	backToWork,
+	wildTick,
+	sendable,
 	MIGRATE,
 	renderCard,
 	demolish,

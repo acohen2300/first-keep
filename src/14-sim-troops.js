@@ -424,12 +424,21 @@ function wildTick(u, dt, SP) {
 				ny = clamp(u.run.y, 20, MAP - 20);
 			const sp = U.spd * (hurtNow ? 0.45 : 1);
 			// a step that slides along a wall, as moveTo does (Build 63: the old step walked into the building and jumped out: the glitch)
-			let x1 = u.x + clamp(nx - u.x, -1, 1) * sp * dt,
-				y1 = u.y + clamp(ny - u.y, -1, 1) * sp * dt;
+			// one unit direction, so a diagonal is no faster than a straight run; against a wall it keeps only the part along it, v' = v - (v.n)n,
+			// and a run that slows below half its speed is given up (decision 12)
+			const rd = hyp(nx - u.x, ny - u.y) || 1,
+				sx = ((nx - u.x) / rd) * sp * dt,
+				sy = ((ny - u.y) / rd) * sp * dt;
+			let x1 = u.x + sx,
+				y1 = u.y + sy;
 			if (blockedCell(gcell(x1, y1), WILD)) {
-				if (!blockedCell(gcell(x1, u.y), WILD)) y1 = u.y;
-				else if (!blockedCell(gcell(u.x, y1), WILD)) x1 = u.x;
-				else {
+				if (!blockedCell(gcell(x1, u.y), WILD)) {
+					y1 = u.y;
+					if (Math.abs(sx) < 0.5 * hyp(sx, sy)) u.run = null;
+				} else if (!blockedCell(gcell(u.x, y1), WILD)) {
+					x1 = u.x;
+					if (Math.abs(sy) < 0.5 * hyp(sx, sy)) u.run = null;
+				} else {
 					x1 = u.x;
 					y1 = u.y;
 					u.run = null; // cornered: it stops, and picks a new way off next look

@@ -145,9 +145,15 @@ let CHNEXT = new Int32Array(1024);
 // one standing gives way. Nobody is pushed into a tree, a wall or water.
 const heft = (u) => (u.tgt || G.t - (u.work ?? -9) < 0.5 ? 9 : G.t - (u.mvT ?? -9) < 0.25 ? 3 : 1);
 function pushApart(a, b) {
-	const dx = b.x - a.x,
+	let dx = b.x - a.x,
 		dy = b.y - a.y;
 	if (dx > 8 || dx < -8 || dy > 8 || dy < -8) return;
+	if (dx === 0 && dy === 0) {
+		// two on one spot part along a direction fixed by their ids, the same every time (decision 10, Reynolds separation)
+		const g = ((a.id * 31 + b.id * 17) % 360) * (Math.PI / 180);
+		dx = Math.cos(g) * 0.01;
+		dy = Math.sin(g) * 0.01;
+	}
 	const d = hyp(dx, dy);
 	if (d > 0 && d < 8) {
 		const ha = heft(a),

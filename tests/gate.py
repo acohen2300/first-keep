@@ -203,14 +203,14 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
     F.hudPage('jobs'); G.P[0].techs.delete('command'); F.fxDirty(); for (let i = 0; i < 4; i++) G.msn[i] = null; G.bnPlan[0] = {}; }
   // emergencies (Build 70, four orders): Town square gathers everyone round the Town Center and Stop sends the villagers back to their work;
   // All hands: villagers take cover in the sturdiest building first, soldiers garrison; Stop sends the villagers back and the soldiers stay
-  { const home = G.blds.find((b) => b.owner === 0), k = F.keepOf(0); for (let i = 0; i < 4; i++) F.addUnit(0, 'spear', home.x + 70 + i * 6, home.y + 40); const jobs = G.units.filter((u) => u.owner === 0 && u.kind === 'vil').map((u) => u.job).join(',');
+  { const home = G.blds.find((b) => b.owner === 0), k = F.keepOf(0); for (let i = 0; i < 4; i++) F.addUnit(0, 'spear', home.x + 70 + i * 6, home.y + 40); const vil0 = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), ids = new Set(vil0.map((u) => u.id)), jobs = vil0.map((u) => u.job).join(',');   // the villagers there at the start: one trained meanwhile is not a job to restore
     { const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil' && u.hp > 0), near = (u, r) => Math.hypot(u.x - k.x, u.y - k.y) < r, V3 = V.filter((u) => near(u, 300));
       F.emgStart('square'); run(30); const S = G.units.filter((u) => u.owner === 0 && u.hp > 0 && F.UNIT[u.kind].tick === 'sol' && u.state !== 'escort');
       if (!V.every((u) => u.post && near(u.post, 70) && !u.job)) bad.push('town square: villagers not sent round the Town Center');
       if (!V3.length || !V3.every((u) => near(u, 90))) bad.push('town square: ' + V3.filter((u) => !near(u, 90)).length + ' villagers from near by not round the Town Center in 30 s');   // the circus test's villager starts across the map
       if (!S.length || !S.every((u) => near(u, 140))) bad.push('town square: ' + S.filter((u) => !near(u, 140)).length + ' soldiers not round the Town Center');
       F.emgStop(); run(5); if (V.map((u) => u.job).join(',') !== jobs) bad.push('town square: Stop did not restore the jobs'); }
-    F.emgStart('hands'); run(15); const v = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), s2 = G.units.filter((u) => u.owner === 0 && u.state === 'garrison');
+    F.emgStart('hands'); run(15); const v = G.units.filter((u) => ids.has(u.id)), s2 = G.units.filter((u) => u.owner === 0 && u.state === 'garrison');
     if (!s2.length || !s2.every((u) => u.inside)) bad.push('emergency: soldiers did not garrison'); if (!v.every((u) => u.inside || u.safe)) bad.push('emergency: villagers are not under cover');
     F.emgStop(); run(10); if (v.some((u) => u.inside || u.emg)) bad.push('emergency: Stop left villagers inside'); if (v.map((u) => u.job).join(',') !== jobs) bad.push('emergency: Stop did not restore the jobs'); if (!s2.every((u) => u.inside)) bad.push('emergency: Stop moved the soldiers'); }
   return bad; }"""
@@ -226,7 +226,7 @@ def verbs():
 async def main():
     fails = 0
     v = verbs(); print(('PASS ' if not v else 'FAIL ') + 'every button verb has a handler', '' if not v else v); fails += bool(v)
-    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/saves.py', 'tests/palette.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
+    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/saves.py', 'tests/moves.py', 'tests/palette.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
         r = subprocess.run([sys.executable, t], capture_output=True, text=True); print(r.stdout.strip() or ('FAIL ' + t + ' ' + r.stderr[-300:])); fails += r.returncode != 0
     w = subprocess.run([sys.executable, 'tests/words.py'], capture_output=True, text=True); print(('PASS ' if w.returncode == 0 else 'FAIL ') + 'toasts and tips: 10 words at most', w.stdout.strip() if w.returncode else ''); fails += w.returncode != 0
     async with async_playwright() as p:

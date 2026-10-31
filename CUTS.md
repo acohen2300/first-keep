@@ -1064,3 +1064,10 @@ Build Plan items 6 and 7. Open points for Albert are in `docs/Quick Action Notes
 - Nothing cut. A cut unit kind no longer stops an old save opening; a damaged save is kept aside (`.lost`) with a note, never written over.
 - Tests added to `tests/saves.py`: no Math.random in sim files, no purse change outside earn/spend/payBack, both shown failing on a planted bug.
 - Not done: A6 (random state is already saved), A9 (mail left unsaved on purpose: a log, not state), planted-bug meta-test.
+
+- **Play fingerprint accepted:** Build 80 batch 3 part 1: fish pay their walk home (C13), units on one spot part by id (decision 10), deer run one unit direction (decision 12), back-to-work helper (C14): the first minutes move a little
+
+## Build 80 preview 3 (batch 3, part 1)
+- Nothing cut. Fish now pay their walk home like any find (C13). School students are left alone by Home, Town square and All hands (C10). One back-to-work helper ends repairs and fires alike (C14). Two units on one spot part along a direction fixed by their ids (decision 10b). Deer run one unit direction, slide along walls, give up a run below half speed (decision 12).
+- Tests: `tests/moves.py` (each shown failing on the planted old code). Gate's emergency test now compares only villagers present at the start. Fingerprint accepted: the first minutes move a little.
+- Not yet built from batch 3: arrive-and-stop (10a), villager search (1), hostility split and animal temperaments (8), group sight (8b), spawn chase (13), live test 4b, building shadows (14).

@@ -605,7 +605,7 @@ function forage(u, n, drops) {
 				? c * FORAGE.life
 				: Math.max(1, n.amt), // a tree you started counts as worth finishing: its stump opens the way (Build 63; Charnov would leave it)
 		at = n.hunt || n,
-		dr = n.kind === 'fish' ? null : (drops ? nearest(drops, at) : dropFor(o, n.type || 'food', at)) || keepOf(o),
+		dr = (drops ? nearest(drops, at) : dropFor(o, n.type || 'food', at)) || keepOf(o), // fish too: the walk home counts (C13)
 		d = dr ? dist(dr, at) : 0,
 		w = dist(u, at);
 	return c / (c / Math.max(1e-6, g) + (2 * d) / v + (w * c) / (Math.min(A, c * FORAGE.life) * v));

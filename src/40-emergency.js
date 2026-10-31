@@ -19,7 +19,7 @@ const roomIn = (b) =>
 	shelterOf(b.owner, b.kind) -
 	G.units.filter((u) => u.hid === b.id || (u.state === 'garrison' && u.gar === b.id)).length; // in, or on the way in (Build 60: a second Shelter counted only those in, and over-filled)
 // the soldiers an emergency moves: every one but the guards (they keep to what they guard) and the routed (they run for home)
-const troops = () => armyOf(0).filter((u) => isSoldier(u) && u.state !== 'escort' && u.state !== 'rout');
+const troops = () => armyOf(0).filter((u) => isSoldier(u) && u.state !== 'escort' && u.state !== 'rout' && u.state !== 'school'); // a student keeps its lesson (C10)
 // a soldier off its order, to stand at a spot and fight what comes
 const stand = (u, x, y) =>
 	Object.assign(u, {
