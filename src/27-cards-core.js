@@ -105,8 +105,19 @@ const btn = (act, title, sub, cls, fr) =>
 // the Formation, the one helper that lays cells: twelve half slots across, ranks 44 tall, 6 between. cls says how many cells a rank holds
 // (c1 one, c2 two (the default), c3 three, c4 four, c6 six; c5 lays five singles and leaves the sixth place); a cell's span class overrides it
 const acts = (h, cls = 'c2') => `<div class="fm ${cls}">${h}</div>`;
-// the info cell: no frame; the value in Cream 1 at 15, its label in Cream 2 at 12 under it. cls: its span, and left for a sentence; act: where
-// a tap on it goes (what is coming: tap to look)
+// a list collapses (MENU-SPEC §3): its things three a rank, as even as they go, so no rank has a hole: two are two triples, four two and two,
+// five three and two. Things you do are double-wide; a list of one is the whole rank
+const list = (cells) => {
+	let h = '',
+		i = 0;
+	for (let r = 0, k = Math.ceil(cells.length / 3); r < k; r++) {
+		const m = Math.ceil((cells.length - i) / (k - r));
+		h += acts(cells.slice(i, (i += m)).join(''), 'c' + m);
+	}
+	return h;
+};
+// the info cell: no frame; the value in Cream 1 at 15, its label in Cream 2 at 12 under it. cls: its span, left for a sentence, line for a
+// line of a card (inset, on one line); act: where a tap on it goes (what is coming: tap to look)
 const info = (value, label, cls = '', act) =>
 	`<div class="info ${cls}"${act ? ` data-act="${act}"` : ''}><b>${value}</b>${label ? `<small>${label}</small>` : ''}</div>`;
 // a fixed place with nothing in it: a faint plain outline (never dashed)
@@ -115,8 +126,10 @@ const FOLD = new Set(); // explanations live behind a small fold, closed unless 
 // the book entry of a research step: the date, what it changed, and its weight, which is its cost
 const techBook = (t) =>
 	`<p><b>${t.name}</b>${t.when ? ` · ${t.when}` : ''}${t.w ? ` · weight ${t.w} of 10` : ''}: ${t.desc}${WHY[t.id] ? ` ${WHY[t.id]}` : ''}${t.w ? ` Cost and time ×${(0.5 + 0.1 * t.w).toFixed(1)} for its age.` : ''}</p>`;
-const twoTabs = (key, opts, cur) =>
-	acts(opts.map(([k, t, sub]) => btn(`${key}:${k}`, (ICON.tab[k] || '') + t, sub, cur === k ? 'on' : '')).join('')); // two-sided cards, one mold: two tabs; the open one rings gold
+// tabs are a file folder (MENU-SPEC §1): one rank of tabs; the open one joins one Gold 1 outline round its whole page, the outline down
+// the middle of the 6 gap. opts: [key, name, sub]; page: the page under the tabs
+const folder = (key, opts, cur, page, cls = 'c2') =>
+	`<div class="fo">${acts(opts.map(([k, t, sub]) => btn(`${key}:${k}`, t, sub, cur === k ? 'on' : '')).join(''), cls)}<div class="pg">${page}</div></div>`;
 const INFO = new Set(['why', 'bmore', 'about', 'menu', 'bnabout']);
 let infoBuf = []; // the explaining text of a card waits behind the book icon
 const fold = (id, title, html) =>
@@ -170,33 +183,31 @@ function beatsText(o, k) {
 }
 function trainButtons(kinds) {
 	const p = G.P[0];
-	return kinds
-		.map((k) => {
-			const ck = civKind(0, k),
-				U = UNIT[ck],
-				why = trainWhy(0, k),
-				n = queuedOf(0, k);
-			const full = U.cls && clsCount(0, U.cls) >= clsMax(U.cls, 0);
-			const cost = unitCost(0, ck),
-				sub =
-					U.age > p.age
-						? `${AGES[U.age].name} age`
-						: !ready(0, U.at).length
-							? `needs a ${BLD[U.at].name.toLowerCase()}`
-							: full
-								? `short of room ${clsCount(0, U.cls)}/${clsMax(U.cls, 0)}`
-								: !afford(p, cost)
-									? `short ${need(cost)}`
-									: costText(cost);
-			return btn(
-				`train:${k}`,
-				stats(0, ck).name,
-				sub + (n ? ` ×${n}` : ''),
-				why ? 'dis' : '',
-				sub.startsWith('short ') && !full ? fillOf(cost) : sub === costText(cost) ? 1 : undefined,
-			);
-		})
-		.join('');
+	return kinds.map((k) => {
+		const ck = civKind(0, k),
+			U = UNIT[ck],
+			why = trainWhy(0, k),
+			n = queuedOf(0, k);
+		const full = U.cls && clsCount(0, U.cls) >= clsMax(U.cls, 0);
+		const cost = unitCost(0, ck),
+			sub =
+				U.age > p.age
+					? `${AGES[U.age].name} age`
+					: !ready(0, U.at).length
+						? `needs a ${BLD[U.at].name.toLowerCase()}`
+						: full
+							? `short of room ${clsCount(0, U.cls)}/${clsMax(U.cls, 0)}`
+							: !afford(p, cost)
+								? `short ${need(cost)}`
+								: costText(cost);
+		return btn(
+			`train:${k}`,
+			TITLE_SHORT[stats(0, ck).name] || stats(0, ck).name, // a name too long for its slot shows its short one
+			sub + (n ? ` ×${n}` : ''),
+			why ? 'dis' : '',
+			sub.startsWith('short ') && !full ? fillOf(cost) : sub === costText(cost) ? 1 : undefined,
+		);
+	}); // the cells, for a list
 }
 // Research, in four looks you can tell without reading: ready (wax seal), short of something (red ink, what is missing), busy, locked (faded)
 function techState(t) {
@@ -210,20 +221,31 @@ function techState(t) {
 				? 'short'
 				: 'locked';
 }
+// why a step is locked, in a slot's few words: its age (as the Build menu says it), the step it needs (by its short name), or the building
+const lockedWhy = (t) => {
+	const nd = needsOf(t).find((n) => !G.P[0].techs.has(n));
+	return t.age > G.P[0].age
+		? `${AGES[t.age].name} age`
+		: nd
+			? `needs ${TECHBY[nd].short || TECHBY[nd].name}`
+			: researchWhy(0, t.id).replace(/\.$/, '');
+};
 function techBtn(t, withAt) {
 	const st = techState(t),
 		c = techCost(0, t);
 	const sub =
 		st === 'busy'
-			? 'researching'
+			? researchWhy(0, t.id) === 'Being researched.'
+				? 'researching'
+				: 'line full'
 			: st === 'short'
 				? `short ${need(c)}`
 				: st === 'locked'
-					? researchWhy(0, t.id).replace(/\.$/, '')
+					? lockedWhy(t)
 					: costText(c);
 	return btn(
 		`tech:${t.id}`,
-		t.name,
+		TITLE_SHORT[t.short] || t.short || t.name, // its short name on a double-wide slot (an elite rank's, the soldier's short one)
 		sub + (withAt ? ` · ${BLD[t.at].name}` : ''),
 		`a${t.age} ` + (st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock'),
 		st === 'short' ? fillOf(c) : st === 'ready' ? 1 : undefined,
@@ -297,7 +319,7 @@ function statusOf(u) {
 						}[n.kind];
 		return at
 			? `${verb} · ${Math.round(u.carry)} of ${carryOf(0)} ${n.type} in hand`
-			: `walking to the ${nodeName(n).toLowerCase()}`;
+			: `walking to the ${n.farm ? nm(n.farm) : nodeName(n).toLowerCase()}`; // a plot or a shop by its building's name (a workshop's worker said field)
 	}
 	if (u.kind === 'caravan')
 		return u.route
@@ -408,7 +430,7 @@ const qName = (j) =>
 		: j.muster
 			? `muster ${j.bn !== undefined ? BN[j.bn] : ''}`
 			: j.tech
-				? TECHBY[j.tech].name
+				? TECHBY[j.tech].short || TECHBY[j.tech].name
 				: AGES[j.age].name + ' age';
 // the side at war with you whose Town Center is nearest yours
 function foeNearest() {

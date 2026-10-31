@@ -340,9 +340,10 @@ const ACT = {
 		openCard(page ? { type, page } : { type });
 	},
 	storesk(a) {
-		G.storesK = G.storesK === a ? null : a;
+		G.storesK = G.storesK === a && G.infoOpen ? null : a;
+		G.infoOpen = !!G.storesK;
 		refresh();
-	}, // the Stores card: tap a row for its why
+	}, // the Stores card: › opens the book on a resource's why; again, it closes
 	open(a) {
 		const [type, id] = a.split(',');
 		openCard({ type, id: Number(id) });
@@ -374,6 +375,9 @@ const PLAY = {
 	ktab(a) {
 		G.ktab = a;
 	},
+	mpick(a) {
+		G.mktK = a;
+	}, // the Market: the good that Sell and Buy act on
 	sel(a) {
 		G.sel = a === 'all' ? 'all' : Number(a);
 	},
@@ -417,15 +421,6 @@ const PLAY = {
 		G.bnIntent[i] = k;
 		feel('tick');
 	}, // a squad's intent: one of three, chosen
-	back(a) {
-		const u = G.units.find((v) => v.id === Number(a));
-		if (!u) return;
-		if (u.pj || u.was) setJob(u, u.pj || u.was);
-		else if (G.P[0].rally) setJob(u, G.P[0].rally);
-		else return say('No work to go back to.', '', 3);
-		u.post = null;
-		closeCard();
-	}, // the worker card: back to the work it had
 	waim() {
 		const H = G.hud;
 		H.aim = true;
@@ -599,13 +594,15 @@ const PLAY = {
 		say(`To ${j}.`, '', 2);
 		setPick([]);
 	},
-	pbuild() {
-		G.buildBy = picked()
-			.filter((u) => u.kind === 'vil')
-			.map((u) => u.id);
-		setPick([]);
+	pbuild(a) {
+		G.buildBy = a
+			? [Number(a)]
+			: picked()
+					.filter((u) => u.kind === 'vil')
+					.map((u) => u.id);
+		if (!a) setPick([]);
 		openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id });
-	}, // whatever you place next, the picked villagers raise it
+	}, // whatever you place next, the picked villagers raise it (or the villager whose card asked: its job picker's Build)
 	phold() {
 		for (const u of picked())
 			if (isSoldier(u)) {
@@ -813,10 +810,6 @@ const PLAY = {
 	},
 	sendbld(a) {
 		sendBuild(0, Number(a));
-	},
-	buildat(a) {
-		const [v, s] = a.split(',').map(Number);
-		sendBuild(0, s, v);
 	},
 	hunt3(a) {
 		for (let i = 0; i < 3; i++) sendHunt(0, Number(a));
@@ -1037,7 +1030,7 @@ function learnAct(verb, arg) {
 		learn('job');
 		const n = G.nodes.find((x) => x.id === Number(arg));
 		if (n) learn('job:' + (n.kind === 'farm' && n.type === 'food' ? 'field' : n.type));
-	} else if (['sendbld', 'buildat', 'age', 'trade'].includes(verb)) learn(verb === 'buildat' ? 'sendbld' : verb);
+	} else if (['sendbld', 'age', 'trade'].includes(verb)) learn(verb);
 }
 let lpT = 0,
 	lpDone = false;

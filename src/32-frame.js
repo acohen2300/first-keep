@@ -136,10 +136,6 @@ const ICON = {
 	play: SVG(16, '<path d="M4.5 2.8 L13 8 L4.5 13.2 Z" fill="currentColor"/>'),
 	pause: SVG(16, '<path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/>'),
 };
-ICON.tab = {
-	train: ICON.hammer.replace('class="gl"', 'class="ti"'),
-	research: ICON.book.replace('class="gl"', 'class="ti"'),
-}; // a hammer for making things, a book for learning them, on a card's two tabs
 ICON.book = ICON.book.replace('class="gl"', 'width="18" height="18"');
 // One mold for every control: a cell is an icon spot and a word spot. The tally is a pill of cells; a slot of the row or of a card is one
 // cell in its own box (MENU-SPEC §6): a picture icon at 18 with its number beside it and its word at 12 under it (pic), or a symbol alone
@@ -277,6 +273,7 @@ const GROUPS = {
 	advice: 'Advice',
 	reply: 'Replies',
 };
+const MAIL_FILTERS = ['war', 'home', 'land', 'trade', 'realm']; // the Mail card's filters after All (MENU-SPEC §8: six, one rank); the other groups show under All
 const QUIET = new Set(['news', 'soft']); // quiet kinds never preview: they wait in the mail
 const urgentCls = (cls) => !!cls && cls.startsWith('warn');
 const ccOf = (cls) => codeOf(urgentCls(cls) ? 'r' : cls === 'good' ? 'g' : cls === 'tip' ? 'b' : 'w'); // the colour code, from its one home

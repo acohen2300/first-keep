@@ -192,11 +192,11 @@ function sendBuilder(v, b) {
 	v.rep = b;
 	v.building = true;
 }
-// Send one more to a site (or the one you picked)
-function sendBuild(o, id, vid) {
+// Send one more to a site
+function sendBuild(o, id) {
 	const b = G.blds.find((x) => x.id === id && x.owner === o && x.hp > 0 && x.prog < 1);
 	if (!b) return false;
-	const v = vid ? unitsOf(o, 'vil').find((x) => x.id === vid) : pickVil(o, b, typesOf(b.kind), b);
+	const v = pickVil(o, b, typesOf(b.kind), b);
 	if (!v) {
 		if (o === 0) say('No villager is free.', '', 3);
 		return false;

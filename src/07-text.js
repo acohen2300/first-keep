@@ -2,7 +2,8 @@
 // ───────────────────────── Why it is so: the history behind each row ─────────────────────────
 // Dates are "about" unless exact; where historians disagree the text says so. Each line credits more than one place where the record allows.
 // A card's title where the full name does not fit slots 2 to 4 of the title bar at 375 pt (MENU-SPEC §4; the gate measures every title the
-// game can show). The full name stays on the card, on the line under the bar.
+// game can show). The full name stays on the card, on the line under the bar. A soldier's name on a double-wide slot (a Train button) reads
+// the same short one (the gate measures those too); research keeps its own short name in its record (TECH short), as a building does (BLD).
 const TITLE_SHORT = {
 	'Karakorum and the Silver Tree': 'Karakorum',
 	'Great Stupa at Sanchi': 'Great Stupa',

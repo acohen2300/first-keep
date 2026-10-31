@@ -595,6 +595,7 @@ const TECH = [
 	{
 		id: 'rollers',
 		name: 'Rollers and sledges',
+		short: 'Rollers', // the name a double-wide slot shows at 375 pt (the gate measures it); the book keeps the full one
 		at: 'quarry',
 		line: 'Hauling',
 		age: 2,
@@ -608,6 +609,7 @@ const TECH = [
 	{
 		id: 'cranes',
 		name: 'Treadwheel crane',
+		short: 'Treadwheel',
 		at: 'quarry',
 		line: 'Hauling',
 		age: 3,
@@ -853,6 +855,7 @@ const TECH = [
 	{
 		id: 'chimney',
 		name: 'Chimney and fireplace',
+		short: 'Chimney',
 		at: 'house',
 		line: 'Home',
 		age: 3,
@@ -1972,6 +1975,7 @@ const TECH = [
 	{
 		id: 'science',
 		name: 'Natural philosophy',
+		short: 'Philosophy',
 		at: 'school',
 		line: 'Letters',
 		age: 4,
@@ -2152,6 +2156,7 @@ const TECH = [
 	{
 		id: 'method',
 		name: 'Scientific method',
+		short: 'Method',
 		at: 'library',
 		line: 'Enlightenment',
 		age: 5,
@@ -2165,6 +2170,7 @@ const TECH = [
 	{
 		id: 'fourcourse',
 		name: 'Four-course rotation',
+		short: 'Four-course',
 		at: 'library',
 		line: 'Enlightenment',
 		age: 5,
@@ -2682,6 +2688,7 @@ const TECH = [
 	{
 		id: 'weights',
 		name: 'Weights and measures',
+		short: 'Weights',
 		at: 'market',
 		line: 'Trade',
 		age: 1,
@@ -2846,6 +2853,7 @@ const TECH = [
 	{
 		id: 'looms',
 		name: 'Warp-weighted loom',
+		short: 'Loom',
 		at: 'workshop',
 		line: 'Cloth',
 		age: 1,
@@ -2912,6 +2920,7 @@ const TECH = [
 	{
 		id: 'brewhouse',
 		name: 'Common brewhouse',
+		short: 'Brewhouse',
 		at: 'workshop',
 		line: 'Drink',
 		age: 3,
@@ -3100,6 +3109,7 @@ for (const [civ, uu, name, fx] of [
 		id: 'elite_' + civ,
 		civ,
 		name: `Elite: ${name}`,
+		short: name,
 		at: 'castle',
 		age: 3,
 		cost: { f: 400, g: 400, i: 150 },

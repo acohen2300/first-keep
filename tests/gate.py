@@ -1,5 +1,5 @@
 # The gate: what must hold before a build goes live, measured at four iPhone sizes, not judged by eye.
-# No page errors; no two buildings alike at half zoom; nothing wider than the screen; every word inside its button; text at least 12 px; contrast at least 4.5:1 (target 7:1); no card but Help and the Guide needs scrolling from 390 × 844 up (the iPhone SE at 375 × 667 is too short for the biggest cards); every tap target at least 44 × 44 points (Apple's rule), except half slots: the − and + under each job and any half slot of the Formation (`.h`), 26 to 29 points wide (EXCEPTIONS.md #2); every card title fits its slots, and every word a slot of the row can show fits its slot (Build 70); the quick action's cells are slots, and its first icon opens under the finger, flipped near an edge (Build 70).
+# No page errors; no two buildings alike at half zoom; nothing wider than the screen; every word inside its button; text at least 12 px; contrast at least 4.5:1 (target 7:1); no card but Help and the Guide needs scrolling from 390 × 844 up (the iPhone SE at 375 × 667 is too short for the biggest cards); every tap target at least 44 × 44 points (Apple's rule), except half slots: the − and + under each job and any half slot of the Formation (`.h`), 26 to 29 points wide (EXCEPTIONS.md #2); every card title fits its slots, and every word a slot of the row can show fits its slot, and every name a double-wide slot of a card can show fits it on one line (measured in the first slot of the Land tab, three a rank), and no cell of a card grows past its rank (Build 70; the vassal's page is not measured for that: it is Relations, Albert's open decision); the quick action's cells are slots, and its first icon opens under the finger, flipped near an edge (Build 70).
 # Run from first-keep/:  python3 build.py && python3 wrap.py && python3 tests/gate.py   (add --soak for the long games, tests/soak.py)
 import asyncio, json, os, subprocess, sys
 from playwright.async_api import async_playwright
@@ -7,10 +7,12 @@ SIZES = [(375, 667), (390, 844), (393, 852), (430, 932)]
 SETUP = """() => { const F = window.__fk; F.newGame(5); F.act('close'); const G = F.G, P = G.P[0], k = F.keepOf(0); F.setPause(true);
   P.age = 3; for (const r of ['f', 'w', 's', 'g', 'i']) P.res[r] = 9999; P.goods.cloth = 30; for (let i = 0; i < 12; i++) F.addUnit(0, 'spear', k.x + 60, k.y - 60);
   const put = kind => { const s = F.findSpot(0, kind, k.x, k.y, 70, 320); const b = F.build(0, kind, s.x, s.y); b.prog = 1; b.hp = F.BLD[kind].hp; F.built(b); return b.id; };
-  window.IDS = { workshop: put('workshop'), farm: put('farm'), market: put('market'), keep: k.id }; F.navRebuild(); F.makeVassal(1, 0, 'fair'); window.IDS.vassal = F.keepOf(1).id; }"""
+  window.IDS = { workshop: put('workshop'), farm: put('farm'), market: put('market'), house: put('house'), keep: k.id, vil: G.units.find((u) => u.owner === 0 && u.kind === 'vil').id }; F.navRebuild(); F.makeVassal(1, 0, 'fair'); window.IDS.vassal = F.keepOf(1).id;
+  for (let i = 0; i < 7; i++) F.train(0, 'vil'); }"""
 CARDS = [('help', "{type:'help'}"), ('setup', "{type:'setup'}"), ('army', "{type:'troops'}"), ('home', "{type:'menu',id:'home'}"), ('guide', "{type:'guide',page:'bld'}"),
          ('keep', "{type:'bld',id:IDS.keep}"), ('workshop', "{type:'bld',id:IDS.workshop}"), ('farm', "{type:'bld',id:IDS.farm}"),
-         ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}"), ('mail', "{type:'mail'}"), ('squad', "{type:'squad',i:0}"), ('emergency', "{type:'emergency'}")]
+         ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}"), ('mail', "{type:'mail'}"), ('squad', "{type:'squad',i:0}"), ('emergency', "{type:'emergency'}"),
+         ('villager', "{type:'unit',id:IDS.vil}"), ('stores', "{type:'stores'}"), ('house', "{type:'bld',id:IDS.house}")]
 MEASURE = """() => {
   const lum = c => { const f = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); };
   const parse = s => { const m = s.match(/[\\d.]+/g), k = s.startsWith('color(') ? 255 : 1; return m ? [m[0] * k, m[1] * k, m[2] * k, m[3] == null ? 1 : +m[3]] : [0, 0, 0, 0]; };   // rgb(), and color(srgb …) as color-mix gives it
@@ -25,6 +27,7 @@ MEASURE = """() => {
   }
   for (const b of document.querySelectorAll('button')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden]')) continue; for (const e of b.querySelectorAll('b,small')) if (e.scrollWidth > e.clientWidth + 1 && getComputedStyle(e).overflow !== 'visible') out.clip.push(e.textContent.slice(0, 24)); if (r.right > innerWidth + 1) out.clip.push('off screen: ' + b.textContent.slice(0, 20)); }
   for (const b of document.querySelectorAll('button,[data-act],summary')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden],.h') || r.bottom < 0 || r.top > innerHeight) continue; if (r.width < 44 || r.height < 44) out.tap.push((b.id || b.textContent.trim().slice(0, 14) || b.className) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height)); }
+  out.grown = [...document.querySelectorAll('#card:not([hidden]) .fm>:not(.r2)')].filter((e) => e.getBoundingClientRect().height > 44.5).map((e) => e.textContent.trim().slice(0, 20) + ' ' + Math.round(e.getBoundingClientRect().height));   // a card is whole ranks: no cell taller than its slot (Build 70)
   { const c = document.getElementById('card'); out.scroll = c && !c.hidden && c.scrollHeight > c.clientHeight + 1 ? c.scrollHeight + '>' + c.clientHeight : ''; }
   for (const e of document.querySelectorAll('.wd,.top .c')) { if (e.closest('[hidden]') || !e.getBoundingClientRect().width) continue; if (e.scrollWidth > e.clientWidth + 1) out.clip.push('tile: ' + e.textContent.slice(0, 16)); }
   return out; }"""
@@ -56,6 +59,16 @@ SLOT_WORDS = """async (extra) => { await document.fonts.ready; const F = window.
   for (const t of ['59:59', '—', ...extra]) if (!fits(put(b, t), info)) out.push(`${t} under a squad`);
   for (const t of [...F.ROW_WORD.pace, F.ROW_WORD.fight, ...extra]) if (!fits(put(sm, t), info)) out.push(`${t} under a squad`);
   F.act('close'); return [words.length + 3, out]; }"""
+# Every name a double-wide slot of a card can show fits it on one line at 375 x 667, in the real font (MENU-SPEC §3, §8, Build 70): every research
+# step (its short name where it has one), every building (the Build menu), every soldier of every people at every rank (a Train button, its short
+# name from TITLE_SHORT). A name that wraps grows its rank off the grid, so it fails: its short form goes in its record (TECH short, BLD short) or TITLE_SHORT.
+DOUBLES = """async (extra) => { await document.fonts.ready; const F = window.__fk, P = F.G.P[0], civ = P.civ, had = P.techs, names = new Set(extra);
+  for (const t of F.TECH) names.add(F.TITLE_SHORT[t.short] || t.short || t.name); for (const k in F.BLD) names.add(F.BLD[k].short || F.BLD[k].name);
+  for (const c in F.CIVS) { P.civ = c; P.techs = new Set(); F.fxDirty(); const read = () => { for (const k in F.UNIT) if (!F.UNIT[k].civ) { const n = F.stats(0, F.civKind(0, k)).name; names.add(F.TITLE_SHORT[n] || n); } };
+    read(); for (const t of F.TECH) if (t.tier) { P.techs.add(t.id); F.fxDirty(); read(); } }
+  P.civ = civ; P.techs = had; F.fxDirty(); F.openCard({ type: 'menu', id: 'land' }); const b = document.querySelector('#card .hold button b'), out = [], one = b.getBoundingClientRect().height;
+  for (const n of names) { b.textContent = n; if (b.scrollWidth > b.clientWidth + 0.5 || b.getBoundingClientRect().height > one + 1) out.push(n); }
+  F.act('close'); return [names.size, out]; }"""
 # The quick action (MENU-SPEC §7, Build 70), at every size: each of its four cells is the screen's slot (W − 42) ÷ 6 by 44; opened in the middle,
 # at the right edge, above the row and in that corner, its first icon (the sword) is right under the finger (its column on it, half a slot
 # below it; above it when flipped at the row); the sword turns it to All in the same place. Left open in the middle for the page's measures.
@@ -113,6 +126,15 @@ PLAY = """async () => {
     F.tapAt(F.SX(e.x), F.SY(e.y) - 6 * F.cam.z); if (!G.qa || !G.qa.red || G.qa.h.e !== e || !document.querySelector('#qa [data-act=qall]')) out.push('a tap on an enemy did not open the quick action at All, ringed red');
     tap('#qa [data-act=qall]'); if (!S.every((u) => u.focus === e)) out.push('All on an enemy did not send every soldier at it');
     e.hp = 0; for (const u of S) u.hp = 0; G.rel[0][1] = G.rel[1][0] = 'neutral'; G.fogOn = true; }
+  // the cards (Build 70): Villager on the Town Center queues one in its line, and a tap on the queued one gives it back; the Market sells the
+  // good picked; › on the Stores opens the book on its why; Build on a villager's job picker names it the builder of what is placed next
+  { const k = F.keepOf(0), q0 = k.q.length; F.openCard({ type: 'bld', id: k.id }); tap('#card [data-act="train:vil"]'); if (k.q.length !== q0 + 1) out.push('Villager on the Town Center did not queue one');
+    F.ui(true); tap(`#card [data-act="qcancel:${k.id},${q0}"]`); if (k.q.length !== q0) out.push('a tap on a queued villager did not cancel it');
+    const s = F.findSpot(0, 'market', k.x, k.y, 70, 320), m = F.build(0, 'market', s.x, s.y); m.prog = 1; m.hp = F.BLD.market.hp; F.built(m); F.openCard({ type: 'bld', id: m.id });
+    tap('#card [data-act="mpick:s"]'); F.ui(true); const st = G.P[0].res.s; if (!document.querySelector('#card [data-act="mpick:s"]').classList.contains('on')) out.push('a picked good did not ring gold');
+    tap('#card [data-act="trade:sell:s"]'); if (G.P[0].res.s !== st - 100) out.push('Sell did not sell the picked good'); F.demolish(0, m.id);
+    F.openCard({ type: 'stores' }); tap('#card [data-act="storesk:w"]'); if (!G.infoOpen || !document.querySelector('#card .infoP') || !document.querySelector('#card .infoP').textContent.includes('Wood, the last minute')) out.push('› on the Stores did not open the why of wood');
+    const v = G.units.find((u) => u.owner === 0 && u.kind === 'vil'); F.openCard({ type: 'unit', id: v.id }); tap(`#card [data-act="pbuild:${v.id}"]`); if (!G.card || G.card.type !== 'menu' || String(G.buildBy) !== String(v.id)) out.push('Build on the villager card did not name it the builder'); G.buildBy = null; F.act('close'); }
   tap('#scoreP'); if (!G.card || G.card.type !== 'score') out.push('Score card did not open'); F.act('close');
   // back (Build 70): a card opened by a tap inside another remembers it; back returns to it; on the first card back closes, and closing forgets the way
   F.openCard({ type: 'help' }); tap('#card [data-act="guide:bld"]'); if (!G.card || G.card.type !== 'guide' || !G.card.from || G.card.from.type !== 'help') out.push('a card opened from Help did not remember Help');
@@ -221,7 +243,7 @@ async def main():
                     elif c == 'END': await pg.evaluate("() => { const F = window.__fk; F.closeCard && F.closeCard(); F.setPause(false); F.G.t = F.G.mode === 'conquest' ? F.G.t : 1799.9; F.G.mode = 't30'; for (let i = 0; i < 10; i++) F.step(1 / 30); }")
                     elif c: await pg.evaluate(f"window.__fk.openCard({c})")
                     await pg.wait_for_timeout(120); m = await pg.evaluate(MEASURE)
-                    issues = q + [k for k in ('wide', 'tall') if m[k]] + ([f"scroll:{m['scroll']}"] if m['scroll'] and W >= 390 and name not in ('help', 'guide', 'research') else []) + [f'{k}:{v[:3] if k != "tap" else v}' for k, v in (('small', m['small']), ('low', m['low']), ('clip', m['clip']), ('tap', sorted(set(m['tap'])))) if v]
+                    issues = q + [k for k in ('wide', 'tall') if m[k]] + ([f"scroll:{m['scroll']}"] if m['scroll'] and W >= 390 and name not in ('help', 'guide', 'research') else []) + [f'{k}:{v[:3] if k != "tap" else v}' for k, v in (('small', m['small']), ('low', m['low']), ('clip', m['clip']), ('tap', sorted(set(m['tap']))), ('grown', m['grown'] if name != 'vassal' else [])) if v]
                     if issues: bad[name] = issues
                 if errs: bad['errors'] = errs[:2]
                 print(('PASS ' if not bad else 'FAIL ') + f'{page_file} {W}x{H}', '' if not bad else json.dumps(bad)[:2500]); fails += bool(bad); await pg.close()
@@ -254,6 +276,9 @@ async def main():
         pg = await br.new_page(viewport={'width': 375, 'height': 667}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
         n, wide = await pg.evaluate(SLOT_WORDS, sys.argv[sys.argv.index('--word') + 1:sys.argv.index('--word') + 2] if '--word' in sys.argv else []); await pg.close()   # --word "a long word": see it fail
         print(('PASS ' if not wide else 'FAIL ') + f'{n} slot words fit their slots at 375 px', '' if not wide else wide); fails += bool(wide)
+        pg = await br.new_page(viewport={'width': 375, 'height': 667}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
+        n, wide = await pg.evaluate(DOUBLES, sys.argv[sys.argv.index('--double') + 1:sys.argv.index('--double') + 2] if '--double' in sys.argv else []); await pg.close()   # --double "a long name": see it fail
+        print(('PASS ' if not wide else 'FAIL ') + f'{n} names fit a double-wide slot at 375 px', '' if not wide else wide); fails += bool(wide)
         # the map's base rules hold on ten seeds (Build 70: the fairness measure and its re-roll cut): the Throne the same distance from every Town Center,
         # no water within the clear radius of one, and the four joined to each other and to the causeways on the walking grid (fords and gaps keep them so)
         pg = await br.new_page(); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(400)
