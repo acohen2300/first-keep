@@ -227,7 +227,7 @@ function shadowPath(sx, sy, h, r, z) {
 }
 // A building's shadow is its own shape, not an oval (Albert, Oct 31: we invented the shape, so the shadow is that fixed shape thrown away from the
 // light). Its footprint on the ground is a square half a side from the middle; the shadow is the hull of that square and the same square moved
-// along the light's line by h·cot(altitude), a planar projection (Foley and van Dam, shadow of a box on a plane). One path, one fill, like the rest.
+// along the light's line by h·cot(altitude), a planar projection of the box onto the ground (no source opened). One path, one fill, like the rest.
 function hull(P) {
 	P.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
 	const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]),

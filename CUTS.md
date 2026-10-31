@@ -1080,3 +1080,4 @@ Build Plan items 6 and 7. Open points for Albert are in `docs/Quick Action Notes
 - Animals get a temper (deer flee, boar and bear defend, wolf hunt). Soldiers leave animals alone unless one is on a civilian of theirs that their side can see (decisions 8, 8b, 13). Defenders take on only what comes within 45 or has hurt them (Hawk-Dove).
 - Fingerprint accepted: the computers' early economy moved. Needs a balance run (age-up times, 3 seeds x 30 minutes) before this goes live.
 - Not built from batch 3: the live test 4b (natives and computers).
+- Honest note: preview 4 uses simplified forms. Not yet built: Charnov's leave rule, Reynolds arrival speed and separation falloff, the general wall normal, Hawk-Dove V/C. Sources from memory, unopened: Pulliam, Lima, Reynolds, Ydenberg and Dill, Maynard Smith and Price. No SCIENCE.md entries yet.
