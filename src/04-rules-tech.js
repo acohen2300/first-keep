@@ -2610,7 +2610,7 @@ const TECH = [
 		t: 41,
 		fx: [],
 		need: ['engage'],
-		desc: 'Six battalions, Alpha to Zeta.',
+		desc: 'Four squads, A to D.',
 	},
 	{
 		id: 'formations',

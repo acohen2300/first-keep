@@ -1,5 +1,5 @@
 # The gate: what must hold before a build goes live, measured at four iPhone sizes, not judged by eye.
-# No page errors; no two buildings alike at half zoom; nothing wider than the screen; every word inside its button; text at least 12 px; contrast at least 4.5:1 (target 7:1); no card but Help and the Guide needs scrolling from 390 × 844 up (the iPhone SE at 375 × 667 is too short for the biggest cards); every tap target at least 44 × 44 points (Apple's rule), except half slots: the − and + under each job and any half slot of the Formation (`.h`), 26 to 29 points wide (EXCEPTIONS.md #2); every card title fits its slots (Build 70).
+# No page errors; no two buildings alike at half zoom; nothing wider than the screen; every word inside its button; text at least 12 px; contrast at least 4.5:1 (target 7:1); no card but Help and the Guide needs scrolling from 390 × 844 up (the iPhone SE at 375 × 667 is too short for the biggest cards); every tap target at least 44 × 44 points (Apple's rule), except half slots: the − and + under each job and any half slot of the Formation (`.h`), 26 to 29 points wide (EXCEPTIONS.md #2); every card title fits its slots, and every word a slot of the row can show fits its slot (Build 70).
 # Run from first-keep/:  python3 build.py && python3 wrap.py && python3 tests/gate.py   (add --soak for the long games, tests/soak.py)
 import asyncio, json, os, subprocess, sys
 from playwright.async_api import async_playwright
@@ -10,7 +10,7 @@ SETUP = """() => { const F = window.__fk; F.newGame(5); F.act('close'); const G 
   window.IDS = { workshop: put('workshop'), farm: put('farm'), market: put('market'), keep: k.id }; F.navRebuild(); F.makeVassal(1, 0, 'fair'); window.IDS.vassal = F.keepOf(1).id; }"""
 CARDS = [('help', "{type:'help'}"), ('setup', "{type:'setup'}"), ('army', "{type:'troops'}"), ('home', "{type:'menu',id:'home'}"), ('guide', "{type:'guide',page:'bld'}"),
          ('keep', "{type:'bld',id:IDS.keep}"), ('workshop', "{type:'bld',id:IDS.workshop}"), ('farm', "{type:'bld',id:IDS.farm}"),
-         ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}"), ('mail', "{type:'mail'}")]
+         ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}"), ('mail', "{type:'mail'}"), ('squad', "{type:'squad',i:0}")]
 MEASURE = """() => {
   const lum = c => { const f = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); };
   const parse = s => { const m = s.match(/[\\d.]+/g), k = s.startsWith('color(') ? 255 : 1; return m ? [m[0] * k, m[1] * k, m[2] * k, m[3] == null ? 1 : +m[3]] : [0, 0, 0, 0]; };   // rgb(), and color(srgb …) as color-mix gives it
@@ -42,6 +42,20 @@ TITLES = """async (fixed) => { await document.fonts.ready; const F = window.__fk
   F.openCard({ type: 'stores' }); const h = document.querySelector('#card .tb h3'), out = [];
   for (const n of names) { h.textContent = F.TITLE_SHORT[n] || n; if (h.scrollWidth > h.clientWidth) out.push(`${n} ${h.scrollWidth}>${h.clientWidth}`); }
   F.act('close'); return [names.size, out]; }"""
+# Every word a slot of the row can show fits its slot at 375 x 667, in the real font (MENU-SPEC §6, Build 70): the row's own words and the page names
+# (ROW_WORD, the paces with them), the jobs, the squads, the four kinds; under a squad the longest time; beside an icon the widest count. Measured in a
+# real slot of the War page, the cycle button and an info cell. A word that does not fit fails the gate:  --word "a long word"  shows it failing.
+SLOT_WORDS = """async (extra) => { await document.fonts.ready; const F = window.__fk, out = [];
+  F.newGame(5); F.act('close'); const G = F.G; G.P[0].techs.add('command'); F.fxDirty(); F.sqPlan(0, 'foot', 1); F.hudPage('war'); F.ui(true);
+  const words = [...Object.values(F.ROW_WORD).flat(), ...F.RES.map((r) => F.RESOURCES[r].name), ...F.BN, ...F.CLS.map((c) => c[1]), ...extra],
+    slot = document.querySelector('#row [data-act="wsq:0"]'), top = slot.querySelector('.top'), info = document.querySelector('#row .info'),
+    fits = (e, box) => e.getBoundingClientRect().width <= box.clientWidth, put = (e, t) => { e.textContent = t; return e; };
+  for (const t of words) for (const e of [slot.querySelector('.wd'), document.querySelector('#hudB .wd')]) if (put(e, t).scrollWidth > e.clientWidth) out.push(`${t} ${e.scrollWidth}>${e.clientWidth}`);
+  if (put(top.querySelector('.c'), String(F.POPMAX)) && top.scrollWidth > top.clientWidth) out.push(`the count ${F.POPMAX} beside an icon`);
+  info.innerHTML = '<b></b><small></small>'; const [b, sm] = info.children;
+  for (const t of ['59:59', '—', ...extra]) if (!fits(put(b, t), info)) out.push(`${t} under a squad`);
+  for (const t of [...F.ROW_WORD.pace, F.ROW_WORD.fight, ...extra]) if (!fits(put(sm, t), info)) out.push(`${t} under a squad`);
+  F.act('close'); return [words.length + 3, out]; }"""
 def fixed_titles():
     import re, glob
     return sorted(set(re.findall(r"\btitle\(\s*'([^']+)'", ''.join(open(f).read() for f in sorted(glob.glob('src/*.js'))))))
@@ -57,14 +71,17 @@ LOOK = """() => { const F=window.__fk; F.newGame(5); const G=F.G; const s=1;   /
 PLAY = """async () => {
   const F = window.__fk, out = [], tap = sel => { const el = document.querySelector(sel); if (!el) { out.push('missing ' + sel); return; } el.click(); };
   F.setPause(false); F.newGame(5); F.act('close'); const G = F.G; G.P[0].res = { f: 9999, w: 9999, s: 9999, g: 9999, i: 9999 };
-  F.hudPage('build'); F.ui(true); tap('#buildT'); if (!G.card || G.card.type !== 'menu') out.push('All on the Build page did not open the Build card');
+  F.ui(true); tap('#row [data-act=buildrow]'); if (!G.card || G.card.type !== 'menu') out.push('the hammer under People did not open the Build menu');
   tap('[data-act="menu:home"]'); if (!G.card || G.card.id !== 'home') out.push('the Home tab did not open');
   tap('[data-act="build:house"]'); if (!G.place || G.place.kind !== 'house') out.push('tapping House did not start placing');
-  F.act('cancel'); if (G.place) out.push('Cancel left a placement'); F.hudPage('jobs'); F.ui(true);
-  tap('#jobs [data-act=buildrow]'); if (!G.card) out.push('the hammer opened no Build menu'); F.act('close'); F.act('cancel'); F.hudPage('jobs');
-  F.hudPage('realm'); F.ui(true); if (document.querySelectorAll('#huddle button.realm').length !== 6) out.push('the Realm page does not hold six tiles'); F.hudPage('jobs'); F.ui(true);
+  F.act('cancel'); if (G.place) out.push('Cancel left a placement'); F.ui(true);
+  // the row (Build 70): one button turns Jobs, War, Train and says the page; a squad opens its card, where + adds and Cancel puts back what it held
+  for (const pg of ['war', 'train', 'jobs']) { tap('#hudB'); F.ui(true); if (G.hud.page !== pg || document.querySelector('#hudB .wd').textContent !== F.ROW_WORD[pg]) out.push('the cycle button did not turn to ' + pg); }
+  G.P[0].techs.add('command'); F.fxDirty(); F.hudPage('war'); F.ui(true); tap('#row [data-act="wsq:1"]'); if (!G.card || G.card.type !== 'squad' || G.card.i !== 1) out.push('a squad did not open its card');
+  tap('#card [data-act="sqpk:1,0,+"]'); if (G.bnPlan[1].foot !== 1) out.push('+ under Foot on the squad card added none'); tap('#card [data-act="sqcancel"]'); if (G.bnPlan[1].foot || G.card) out.push('Cancel did not put the squad back and close');
+  G.P[0].techs.delete('command'); F.fxDirty(); F.hudPage('jobs'); F.ui(true);
   F.news('trade', 'A test line for the mail.', '', 4); F.act('pvx'); if (G.pvAsk !== 'trade') out.push('× on news did not ask to hide its group'); F.act('pvhide:trade'); F.news('trade', 'Another quiet line.', '', 4); if ((G.mail[0] || {}).ru) out.push('a hidden group still previewed'); F.news('trade', 'Raiders took the caravan.', 'warn', 4); if (!(G.mail[0] || {}).ru) out.push('a red line from a hidden group did not show'); F.act('mailall');
-  const q0 = F.keepOf(0).q.length; tap('#tPeople'); if (F.keepOf(0).q.length !== q0 + 1) out.push('People did not queue a villager');
+  const q0 = F.keepOf(0).q.length; tap('#row [data-act="train:vil"]'); if (F.keepOf(0).q.length !== q0 + 1) out.push('People did not queue a villager');
   F.act('qcancel:' + F.keepOf(0).id + ',' + q0); if (F.keepOf(0).q.length !== q0) out.push('a slot tap did not cancel the villager');
   tap('[data-act="move:wood"]'); if (!F.G.units.some(u => u.owner === 0 && u.kind === 'vil' && u.job === 'wood')) out.push('+ under Wood put nobody on wood');
   
@@ -116,16 +133,11 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
   { F.startEvent('dragon'); run(2); const d = G.ev.cur.units[0], u = F.addUnit(0, 'spear', d.x, d.y); const hp = u.hp; run(2); if (!(u.hp < hp) && u.hp > 0) bad.push('dragon: nobody burned'); clear(); }
   // the travelling show: a villager beside the performers cheers
   { F.startEvent('circus'); run(3); const p = G.ev.cur.units[0], v = F.addUnit(0, 'vil', p.x + 10, p.y); run(3); if (!(v.cheer > G.t)) bad.push('circus: nobody cheered'); clear(); }
-  // the alert bar: named while an event is coming and while it runs
-  { G.ev.cur = null; G.ev.warned = 'eclipse'; G.ev.next = G.t + 9; const realm = () => F.domains().list.find((d) => d.id === 'realm'); let a = realm(); if (a.st !== 'red' || a.word !== 'Eclipse') bad.push('the door: not red before the eclipse');
-    G.ev.warned = null; F.startEvent('eclipse'); a = realm(); if (a.st !== 'red' || a.word !== 'Eclipse') bad.push('the door: not red during the eclipse'); clear(); }
-  // the horde: named for its last 45 seconds
-  { G.horde = { at: G.t + 30, said: 1 }; const a = F.domains().list.find((d) => d.id === 'realm'); if (a.st !== 'red' || !a.word.startsWith('Horde')) bad.push('the door: the horde is not named'); G.horde = null; }
   // the army: a marched group has an order and a time, a hostile group heading in is named, a recall ends the order
   { G.fogOn = false; for (const u of G.units) if (u.owner !== 0) u.hp = 0; run(1); const home = G.blds.find((b) => b.owner === 0), a = F.addUnit(0, 'spear', home.x + 60, home.y), c = F.addUnit(0, 'spear', home.x + 70, home.y);
     const to = { x: home.x + 400, y: home.y }; for (const u of [a, c]) { u.state = 'goto'; u.px = to.x; u.py = to.y; u.idleT = 0; } F.march([a, c], to, 'test'); run(2); const O = Object.values(G.ords)[0];
     if (!O || !(O.eta > 0)) bad.push('army: no time left on the order'); if (F.armyStatus(a) !== 'march') bad.push('army: ' + F.armyStatus(a) + ', not marching');
-    const e = F.addUnit(1, 'spear', home.x + 300, home.y + 100); e.state = 'attack'; run(1); if (!G.incoming || G.incoming.n < 1) bad.push('army: no attack named'); else { const t = F.domains().list.find((d) => d.id === 'realm'); if (t.st !== 'red' || !t.word.startsWith('Raid')) bad.push('army: the door does not show it'); }
+    const e = F.addUnit(1, 'spear', home.x + 300, home.y + 100); e.state = 'attack'; run(1); if (!G.incoming || G.incoming.n < 1) bad.push('army: no attack named');
     e.hp = 0; run(2); if (G.incoming) bad.push('army: the attack is still named after it died'); }
   // the War room (Build 61): Go sends a squad on the crosshair as a mission with a promised time; a fight gives it odds; Abort frees the slot
   { const home = G.blds.find((b) => b.owner === 0), sp = []; for (let i = 0; i < 6; i++) sp.push(F.addUnit(0, 'spear', home.x + 40 + i * 6, home.y + 60)); for (let i = 0; i < 6; i++) F.addUnit(0, 'chariot', home.x + 40 + i * 6, home.y + 90);
@@ -135,8 +147,9 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
       const foes = []; for (let i = 0; i < 8; i++) foes.push(F.addUnit(4, 'bandit', home.x + 250 + i * 5, home.y + 60)); let met = false; for (let i = 0; i < 24 && !met; i++) { run(1); met = m.st === 'act' || m.st === 'done'; } // rain or snow slows the march and shortens sight, so the fight is joined later
       if (!met) bad.push('war room: the mission is ' + m.st + ' at the fight');
       F.hudAbort(0); for (const f of foes) f.hp = 0; run(3); if (G.msn[0]) bad.push('war room: Abort left the mission'); }
-    // the Squad room: a plan set with + fills from the soldiers at home
-    G.P[0].techs.add('command'); F.fxDirty(); F.hudPage('squad'); F.G.hud.sq.i = 0; F.sqPlan(0, 'spear', 1); F.sqPlan(0, 'spear', 1); run(2); if (F.sqUnits(0).length !== 2) bad.push('squad room: the plan did not fill (' + F.sqUnits(0).length + ')');
+    // a squad (Build 70: built on its card, by kind): two Riders set with + fill from the chariots at home; Go sends it, the squad at home and ready, and Abort calls it back
+    G.P[0].techs.add('command'); F.fxDirty(); F.sqPlan(0, 'horse', 1); F.sqPlan(0, 'horse', 1); run(2); if (F.sqUnits(0).length !== 2) bad.push('squad: the plan did not fill (' + F.sqUnits(0).length + ')');
+    G.hud.h = { t: 'ground', e: { x: home.x + 200, y: home.y + 60 } }; F.act('wfire'); if (!G.msn[0] || G.msn[0].name !== F.BN[0] || G.msn[0].n0 !== 2) bad.push('squad: Go did not send the squad that was ready'); F.act('wabort'); if (G.msn[0]) bad.push('squad: Abort left its mission');
     F.hudPage('jobs'); G.P[0].techs.delete('command'); F.fxDirty(); for (let i = 0; i < 4; i++) G.msn[i] = null; G.bnPlan[0] = {}; }
   // emergencies: villagers take cover in the sturdiest building first and Resume sends them back; soldiers garrison and stay
   { const home = G.blds.find((b) => b.owner === 0); for (let i = 0; i < 4; i++) F.addUnit(0, 'spear', home.x + 70 + i * 6, home.y + 40); const jobs = G.units.filter((u) => u.owner === 0 && u.kind === 'vil').map((u) => u.job).join(',');
@@ -201,6 +214,9 @@ async def main():
         pg = await br.new_page(viewport={'width': 375, 'height': 667}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
         n, wide = await pg.evaluate(TITLES, fixed_titles() + sys.argv[sys.argv.index('--title') + 1:sys.argv.index('--title') + 2] if '--title' in sys.argv else fixed_titles()); await pg.close()   # --title "a long name": see it fail
         print(('PASS ' if not wide else 'FAIL ') + f'{n} card titles fit slots 2 to 4 at 375 px', '' if not wide else wide); fails += bool(wide)
+        pg = await br.new_page(viewport={'width': 375, 'height': 667}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
+        n, wide = await pg.evaluate(SLOT_WORDS, sys.argv[sys.argv.index('--word') + 1:sys.argv.index('--word') + 2] if '--word' in sys.argv else []); await pg.close()   # --word "a long word": see it fail
+        print(('PASS ' if not wide else 'FAIL ') + f'{n} slot words fit their slots at 375 px', '' if not wide else wide); fails += bool(wide)
         # the map's base rules hold on ten seeds (Build 70: the fairness measure and its re-roll cut): the Throne the same distance from every Town Center,
         # no water within the clear radius of one, and the four joined to each other and to the causeways on the walking grid (fords and gaps keep them so)
         pg = await br.new_page(); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(400)

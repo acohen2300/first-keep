@@ -245,13 +245,10 @@ const ACT = {
 		const t = TECHBY[id];
 		say(`Research ${t.name} at the ${BLD[t.at].name} for more slots.`, '', 5);
 	},
-	door() {
-		doorTap();
-	}, // the door: to the most important thing, else the dashboard (Build 64)
 	page(a) {
 		hudPage(a);
 		feel('tick');
-	},
+	}, // a page of the row by name (a milestone's button)
 	pvx() {
 		const m = shownMsg();
 		if (!m) return;
@@ -325,13 +322,15 @@ const ACT = {
 		ui(true);
 	}, // the camera follows what is picked, until you drag, pinch or tap the small map
 	techgo(id) {
-		const t = TECHBY[id],
-			k = keepOf(0),
-			B = t && G.blds.filter((b) => b.owner === 0 && b.kind === t.at && b.prog >= 1 && b.hp > 0).sort((a, b) => (k ? dist(a, k) - dist(b, k) : 0))[0];
-		if (!B) return say(`Build a ${BLD[t.at].name} first.`, '', 3);
+		ACT.bldgo(TECHBY[id].at);
+	}, // the research card's ›: to the building where it is learned, its card open
+	bldgo(kind) {
+		const k = keepOf(0),
+			B = G.blds.filter((b) => b.owner === 0 && b.kind === kind && b.prog >= 1 && b.hp > 0).sort((a, b) => (k ? dist(a, k) - dist(b, k) : 0))[0];
+		if (!B) return say(`Build a ${BLD[kind].name} first.`, '', 3);
 		camGo(B.x, B.y);
 		openCard({ type: 'bld', id: B.id });
-	}, // the research card's ›: to the building where it is learned, its card open
+	}, // to your nearest finished building of a kind, its card open: a kind of soldier on the Train page or a squad's card goes to where it is trained
 	jump(a) {
 		const [x, y] = a.split(',').map(Number);
 		camGo(x, y);
@@ -349,9 +348,12 @@ const ACT = {
 		openCard({ type, id: Number(id) });
 	},
 };
+// a job is locked until its age (32-frame, resOn): a tap on it says when it opens
+const shut = (r) => !resOn(KEY[r]) && (say(`${RESOURCES[r].name} opens in the ${AGES[resAge(KEY[r])].name} age.`, '', 3), true);
 // orders that change the game: refused once it is over
 const PLAY = {
 	job(a) {
+		if (shut(a)) return;
 		G.P[0].rally = G.P[0].rally === a ? null : a; // tap the lit tile again and no job is the default: new villagers wait at the Town Center (Build 61)
 		if (G.P[0].rally)
 			unitsOf(0, 'vil').forEach((u) => {
@@ -359,6 +361,7 @@ const PLAY = {
 			});
 	},
 	move(a) {
+		if (shut(a)) return;
 		if (!unitsOf(0, 'vil').some(freeVil)) {
 			say('Nobody is idle. Use − on another job.', '', 3);
 			return;
@@ -384,7 +387,7 @@ const PLAY = {
 	},
 	emg(a) {
 		emgStart(a);
-		hudOpen(false);
+		hudPage('jobs');
 		ACT.home();
 		closeCard();
 	},
@@ -394,15 +397,7 @@ const PLAY = {
 	},
 	pagecycle() {
 		pageCycle();
-	}, // the chip over the first slot: Jobs, Realm, Build, War, Squad, Train (Build 64)
-	sqdone() {
-		hudPage('war');
-		G.hud.sel = G.hud.sq.i;
-		feel('tick');
-	}, // ✓ on the Squad page: to the War page with this squad picked
-	sqbest(a) {
-		sqBest(Number(a));
-	},
+	}, // the cycle button above slot 1: Jobs, War, Train (Build 70)
 	tsq() {
 		const n = G.recruitSq;
 		G.recruitSq = n === null || n === undefined ? 0 : n + 1 >= BNS ? null : n + 1;
@@ -410,8 +405,8 @@ const PLAY = {
 	}, // which squad new soldiers join: none, Alpha … Delta
 	tq(a) {
 		const [t, d] = a.split(','),
-			k = sqUnit(Number(t));
-		if (!k) return;
+			k = kindOf(Number(t));
+		if (!k) return say(`Build a ${BLD[CLS[t][2]].name} first.`, '', 3);
 		if (d === '+') {
 			const why = trainWhy(0, k);
 			if (why) say(why, '', 3);
@@ -425,16 +420,11 @@ const PLAY = {
 		G.hud.aim = false;
 		hudPage('jobs');
 	},
-	fav(a) {
-		favToggle(a);
-		refresh();
-	}, // ★ on the Build card: pin a building to the Build page
 	intent(a) {
-		const i = Number(a);
-		G.bnIntent[i] = ((G.bnIntent[i] || 0) + 1) % INTENT.length;
+		const [i, k] = a.split(',').map(Number);
+		G.bnIntent[i] = k;
 		feel('tick');
-		refresh();
-	},
+	}, // a squad's intent: one of three, chosen
 	back(a) {
 		const u = G.units.find((v) => v.id === Number(a));
 		if (!u) return;
@@ -444,15 +434,11 @@ const PLAY = {
 		u.post = null;
 		closeCard();
 	}, // the worker card: back to the work it had
-	sqnew() {
-		sqNew();
-	},
 	waim() {
 		const H = G.hud;
 		H.aim = true;
 		H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
 		H.moved = false;
-		H.etaKey = '';
 		feel('tick');
 	}, // the crosshair to the middle of the screen
 	torders() {
@@ -463,51 +449,34 @@ const PLAY = {
 		say('Tap where new soldiers should go, then ✓.', '', 4);
 		feel('tick');
 	},
-	sqcycle() {
-		sqCycle();
-	},
-	sqtile(a) {
-		const t = Number(a);
-		G.hud.sq.tile = G.hud.sq.tile === t ? null : t;
-		feel('tick');
-	},
-	sqn(a) {
-		const [t, d] = a.split(','),
-			k = sqUnit(Number(t));
-		if (k) sqPlan(G.hud.sq.i, k, d === '+' ? 1 : -1);
-	},
 	sqpk(a) {
-		const [i, k, d] = a.split(',');
-		sqPlan(Number(i), k, d === '+' ? 1 : -1);
-	},
+		const [i, t, d] = a.split(',');
+		sqPlan(Number(i), CLS[t][0], d === '+' ? 1 : -1);
+	}, // a squad card's − and + under a kind
+	sqcancel() {
+		const c = G.card;
+		G.bnPlan[c.i] = { ...c.was.plan };
+		G.bnIntent[c.i] = c.was.intent;
+		rebattalion();
+		ACT.cardback();
+	}, // Cancel: the squad as the card found it, and back
+	sqsave() {
+		ACT.cardback();
+	}, // Save ✓: the changes stand (they took at once), and back
 	whome() {
 		hudHome();
 	},
 	wsq(a) {
 		const i = Number(a);
-		if (G.hud.sel === i) openCard({ type: 'squad', i });
-		else {
-			G.hud.sel = i;
-			G.hud.etaKey = '';
-			feel('tick');
-		}
-	}, // one tap picks the squad for Go; a second opens its card
-	wgo(a) {
-		hudFire(Number(a));
-	},
-	wback(a) {
-		const i = Number(a);
-		if (sqOut(i)) hudAbort(i);
-		else sendHome(sqUnits(i));
-	},
+		if (!hasCmd() && !sqOut(i)) return say('Squads come with Battalions.', '', 3);
+		openCard({ type: 'squad', i });
+	}, // a squad's card: built at home, watched on its mission; an empty squad opens as a new one
 	wfire() {
-		hudFire(hasCmd() ? G.hud.sel : null);
+		hudGo();
 	},
 	wabort() {
-		const s = G.hud.sel;
-		if (s !== null && s !== undefined && sqOut(s)) hudAbort(s);
-		else hudAbortAll();
-	},
+		hudAbortAll();
+	}, // Abort: every mission out comes home
 	hdel(a) {
 		hudAbort(Number(a));
 	},
@@ -523,7 +492,6 @@ const PLAY = {
 		hudPage('war');
 		if (s) G.hud.h = { t: 'ground', e: { x: s.x, y: s.y } };
 		G.hud.moved = true;
-		G.hud.etaKey = '';
 	}, // the strip's third answer: the War page, its crosshair already on the spot
 	nofree() {
 		say(freeWhy(), '', 4);
@@ -596,9 +564,6 @@ const PLAY = {
 		const e = G.units.find((x) => x.id === Number(a) && x.hp > 0);
 		if (e) order(qsPick(e), { t: 'unit', e });
 		closeCard();
-	},
-	bned(a) {
-		G.bnEdit = Number(a);
 	},
 	muster(a) {
 		const i = Number(a);

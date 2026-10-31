@@ -98,6 +98,8 @@ const ICON = {
 		20,
 		'<path d="M5.5 5.5 L14.5 14.5 M14.5 5.5 L5.5 14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
 	),
+	minus: SVG(20, '<path d="M4.5 10 H15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'),
+	plus: SVG(20, '<path d="M4.5 10 H15.5 M10 4.5 V15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'), // − and + drawn as the symbols they are, at 24 like ✓ and ✕ (MENU-SPEC §6)
 	hammer: SVG(
 		16,
 		'<path d="M3 13 L9 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 3.5 L10 2 L13.5 5.5 L12 8.5 Z" fill="currentColor"/>',
@@ -134,10 +136,17 @@ ICON.tab = {
 	research: ICON.book.replace('class="gl"', 'class="ti"'),
 }; // a hammer for making things, a book for learning them, on a card's two tabs
 ICON.book = ICON.book.replace('class="gl"', 'width="18" height="18"');
-// One mold for every control: a cell is an icon spot and a word spot. The tally is a pill of cells; a tile is one cell in its own box.
+// One mold for every control: a cell is an icon spot and a word spot. The tally is a pill of cells; a slot of the row or of a card is one
+// cell in its own box (MENU-SPEC §6): a picture icon at 18 with its number beside it and its word at 12 under it (pic), or a symbol alone
+// at 24: ✓ ✕ − + (sym). Its state is a class, drawn as a ring (shell-head's states).
 const cell = (attrs, icon, word, cls = '') => `<button class="cell ${cls}" ${attrs}>${icon}${word}</button>`;
 const wd = (t, id) => `<span class="wd"${id ? ` id="${id}"` : ''}>${t}</span>`;
-// The top: the tally (five counts, mute, pause, the map), then the status pill under it, cell for cell. The bottom: People over the door, then one column per job.
+const topOf = (icon, n) =>
+	`<span class="top">${icon}${n === undefined || n === null ? '' : `<span class="c">${n}</span>`}</span>`;
+const pic = (act, icon, word, cls = '', n, attrs = '') => cell(`data-act="${act}"${attrs}`, topOf(icon, n), wd(word), cls);
+const sym = (act, icon, cls = '', label = '') => cell(`data-act="${act}" aria-label="${label}"`, icon, '', 'sym ' + cls);
+const toGo = (f) => `--p:${Math.round(clamp(f, 0, 1) * 100)}%`; // the working ring: the share still to go, 1 when the work starts (MENU-SPEC §9)
+// The top: the tally (five counts, mute, pause, the map), then the status pill under it, cell for cell. The bottom: the row (39-huddle).
 const AGE_SHORT = ['Stone', 'Bronze', 'Classical', 'Medieval', 'Powder', 'Peace']; // the age in the strip: its name where it fits the 45 pt cell (measured: Medieval 42), short for the two that do not (Gunpowder 55, Enlightenment 70)
 const STATUS = [
 	['stAge', '', 'The age'],
@@ -165,14 +174,6 @@ function buildPanel() {
 		cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') +
 		cell('id="pauseB" data-act="pause" aria-label="Pause"', ICON.pause, '', 'one') +
 		cell('id="mapT" data-act="map" aria-label="The small map"', ICON.map, '', 'one'); // one button for play, pause and speed (hold it); the freed cell is the map (Albert, Build 40)
-	const st = (act, t, label, id) =>
-		`<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
-	$('jobs').innerHTML =
-		`<div class="col join">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}<button class="cell build" data-act="buildrow" aria-label="The Build menu"><span class="top">${ICON.hammer}</span></button></div>` + // one tap makes a villager; the door under it (Build 64: it took the hammer's place; Build is a page now)
-		JOBS.map(
-			(r) =>
-				`<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`,
-		).join('');
 	// the status pill: the state of the world, one cell under each column of the tally (Albert, Build 64: "age under Food, season under
 	// Wood"); the cells never move, and a narrow tally shows the first ones (the age, the season, the clock, the people come first)
 	const sc = (id, act, label) =>
@@ -181,6 +182,7 @@ function buildPanel() {
 			: `<span class="cell" id="${id}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></span>`;
 	$('status').innerHTML = STATUS.map(([id, act, label]) => sc(id, act, label)).join('');
 	$('homeB').innerHTML = ICON.home;
+	$('emgB').innerHTML = ICON.def;
 	$('pX').innerHTML = ICON.close;
 }
 const refresh = () => {
@@ -228,16 +230,7 @@ function fit() {
 			o = $('orders').getBoundingClientRect(),
 			t = r.top;
 		document.documentElement.style.setProperty('--ob', Math.round(r.bottom - o.top) + 'px');
-		{
-			const c1 = document.querySelector('#orders .tr:not([hidden]) > .col'); // the first column of the row on show: the chip sits on it, its width
-			if (c1) {
-				const q = c1.getBoundingClientRect(),
-					a = $('app').getBoundingClientRect();
-				document.documentElement.style.setProperty('--c1x', (q.left - a.left).toFixed(1) + 'px');
-				document.documentElement.style.setProperty('--c1w', q.width.toFixed(1) + 'px');
-			}
-		}
-		vy = Math.round((h.bottom - t + (o.top - t)) / 2 - ch / 2);
+		vy =Math.round((h.bottom - t + (o.top - t)) / 2 - ch / 2);
 		bandH = Math.max(100, o.top - h.bottom);
 	}
 	const W = Math.round(cw * dpr),
@@ -403,6 +396,20 @@ function milestoneTick() {
 		return; // one a tick: they never pile up
 	}
 }
+// What the town needs (Build 65: one table, where the tips, the Build page and the Stores domain each had their own copy; Build 70: the tips
+// read it alone). Each test is the reason; the tips add their words.
+const goldTight = (p) => p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300); // gold short while another store is full
+const NEEDS = {
+	house: () => popOf(0) >= capOf(0) - 1 && capOf(0) < POPMAX && !G.blds.some((b) => b.owner === 0 && b.kind === 'house' && b.prog < 1),
+	barracks: () => !bldsOf(0, 'barracks').length && G.t > 75,
+	lumber: () => unitsOf(0, 'vil').filter((u) => u.job === 'wood').length >= 3 && !bldsOf(0, 'lumber').length,
+	farm: () => {
+		const k = keepOf(0);
+		return !!k && G.nodes.filter((n) => n.kind === 'bush' && dist(n, k) < 300).length < 3 && !bldsOf(0, 'farm').length;
+	},
+	market: () => goldTight(G.P[0]) && !bldsOf(0, 'market').length,
+	hospital: () => G.units.some((u) => u.owner === 0 && u.sick > G.t) && !bldsOf(0, 'hospital').length && G.P[0].age >= 2,
+};
 function advise() {
 	const p = G.P[0],
 		k = keepOf(0);
@@ -476,9 +483,9 @@ const txt = (id, s) => {
 	const el = $(id);
 	if (el.textContent !== s) el.textContent = s;
 }; // a word is written only when it changed: the page is not touched seven times a second for nothing
-// Controls appear when their age comes (Build 59, Albert: hide by age). One rule, read from the rules tables: a resource shows from the first
-// age anything costs it (iron from the Bronze age); the Huddle shows with your first soldier; Emergency with the first enemy at your town or
-// the Bronze age, whichever is first.
+// Controls appear when their age comes (Build 59, Albert: hide by age). One rule, read from the rules tables: a resource opens from the first
+// age anything costs it (iron from the Bronze age), or once you hold some. Until then its count waits off the tally and its job in the row is
+// locked (Build 70: the row keeps its six slots, MENU-SPEC §6).
 let FIRST = null;
 function firstAge() {
 	const F = Object.fromEntries(RES.map((r) => [KEY[r], 9])),
@@ -491,20 +498,8 @@ function firstAge() {
 	AGES.forEach((A, i) => see(A.cost, i - 1));
 	return F;
 }
-function showByAge() {
-	const p = G.P[0],
-		F = FIRST || (FIRST = firstAge());
-	let n = 1;
-	RES.forEach((r, i) => {
-		const k = KEY[r],
-			on = p.age >= F[k] || p.res[k] >= 1;
-		$('r' + k).parentElement.hidden = !on;
-		const col = $('jobs').children[i + 1];
-		if (col) col.hidden = !on;
-		if (on) n++;
-	});
-	$('jobs').style.setProperty('--n', n);
-}
+const resAge = (k) => (FIRST || (FIRST = firstAge()))[k],
+	resOn = (k) => G.P[0].age >= resAge(k) || G.P[0].res[k] >= 1;
 function ui(force) {
 	const now = performance.now();
 	if (!force && now - uiAt < 150) return;
@@ -512,11 +507,10 @@ function ui(force) {
 	const p = G.P[0],
 		R = p.res;
 	document.body.classList.toggle('night', G.night > 0.5);
-	showByAge();
-	const VC = {};
+	for (const r of RES) $('r' + KEY[r]).parentElement.hidden = !resOn(KEY[r]);
 	for (const k of ['f', 'w', 's', 'g', 'i']) {
 		txt('r' + k, fmt(R[k]));
-		const c = (VC[k] = grad(velOf(p, k))),
+		const c = grad(velOf(p, k)),
 			el = $('r' + k);
 		if (el.style.color !== c) el.style.color = c;
 	} // the count's colour is its velocity on the one gradient (Build 64): deep green gaining fast, white steady, red losing badly
@@ -576,31 +570,13 @@ function ui(force) {
 		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
 		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2], i));
 	} // the colour code on the pill: blue research you can start, red the people at the roof or idle hands; dim is nothing to see
-	huddleUI();
-	const V = unitsOf(0, 'vil');
-	for (const r of JOBS) {
-		let n = 0;
-		for (const v of V) if (v.job === r) n++;
-		txt('tn_' + r, String(n));
-		{
-			const el = $('tn_' + r),
-				c = VC[KEY[r]] || '';
-			if (el.style.color !== c) el.style.color = c;
-		} // the job's number wears its store's colour: the row reads as one
-		$('tj_' + r).classList.toggle('on', p.rally === r);
-	}
-	const nq = queuedOf(0, 'vil'),
-		room = Math.max(0, capOf(0) - popOf(0));
-	txt('tPeopleN', nq ? `${V.length}+${nq}` : `${V.length}/${V.length + room}`); // have / can have now (one population: homes cap everyone); with villagers waiting, have + waiting
-	$('tPeople').classList.toggle('dis', !!trainWhy(0, 'vil'));
+	rowUI();
 	{
 		const k = keepOf(0),
 			away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20;
 		if ($('homeB').hidden === away) $('homeB').hidden = !away;
 	} // home shows only when your Town Center is off the screen
 	$('stage').classList.toggle('busy', !!(G.card || G.place));
-	if ($('buildT')) $('buildT').classList.toggle('on', !!(G.card && G.card.type === 'menu')); // one look for chosen: the gold ring, as the default job wears it
-	doorUI();
 	{
 		const P = picked(),
 			n = P.length,

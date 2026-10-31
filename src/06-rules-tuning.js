@@ -242,10 +242,10 @@ const EV_MEAN = 120, // the mean wait between events (an exponential wait, nextI
 	EV_WARN = 12;
 const EVENTS = {
 	eclipse: { name: 'Eclipse', secs: 20, dmg: 0.6, spd: 0.7, sight: 0.7, harm: 1 },
-	storm: { name: 'Thunderstorm', door: 'Storm', secs: 40, band: 260 },
+	storm: { name: 'Thunderstorm', secs: 40, band: 260 },
 	stampede: { name: 'Stampede', secs: 30, n: 10, harm: 1 },
 	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.004, harm: 1 },
-	meteor: { name: 'Falling star', door: 'Star', secs: 3 },
+	meteor: { name: 'Falling star', secs: 3 },
 	wildfire: {
 		name: 'Wildfire',
 		secs: 60,
@@ -258,12 +258,12 @@ const EVENTS = {
 	}, // most: trees alight at once; the dry seasons, drought or not
 	fog: { name: 'Fog', secs: 60, vis: 70 },
 	sinkhole: { name: 'Sinkhole', secs: 2, hit: 0.4 },
-	quicksand: { name: 'Quicksand', door: 'Sand', secs: 120, r: 60, slow: 0.3 },
+	quicksand: { name: 'Quicksand', secs: 120, r: 60, slow: 0.3 },
 	heatwave: { name: 'Heat', secs: 60, dmg: 0.85, spd: 0.9, need: 'drought', season: 'Summer' },
 	mirage: { name: 'Mirage', secs: 30, n: 12, season: 'Summer' },
 	circus: { name: 'Circus', secs: 60, n: 5, r: 150, cheer: 120, mul: 1.1, gift: 1 },
-	wagon: { name: 'Wagon train', door: 'Wagons', secs: 90, gift: 1 },
-	mercs: { name: 'Mercenaries', door: 'Mercs', secs: 180, gift: 1 }, // door: the word on the row's door, which has room for eight letters
+	wagon: { name: 'Wagon train', secs: 90, gift: 1 },
+	mercs: { name: 'Mercenaries', secs: 180, gift: 1 },
 	dragon: { name: 'Dragon', secs: 25, fantasy: true, harm: 1 },
 	troll: { name: 'Troll', secs: 90, fantasy: true },
 	aurora: { name: 'Aurora', secs: 45, fantasy: true, night: true },

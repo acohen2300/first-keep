@@ -185,6 +185,10 @@ if (!(SET.setV >= 38)) {
 	}
 	SET.setV = 38;
 } // Build 38: Normal and an hour by default; a phone that kept Easy and 30 minutes from the old default moves once, and a choice made after stays
+if (SET.setV < 70) {
+	delete SET.fav;
+	SET.setV = 70;
+} // Build 70: the Build page and its pins are cut
 SET.mix = Object.assign({ fx: 1, amb: 1, alert: 1 }, SET.mix); // three volumes: effects, ambience, alerts
 function saveSet() {
 	try {
@@ -341,7 +345,9 @@ const kiteOf = (u) =>
 		G.P[u.owner].techs.has('engage') &&
 		(UNIT[u.kind].tags || []).includes('ranged') &&
 		temperOf(u) !== T_PRESS); // shooters step back unless they press
-// Battalions, once Command is researched: each holds what you set for it, by type; members stay put, gaps fill from the rest, the rest are the reserve
+// Battalions, once Command is researched: each holds what you set for it, by kind (Foot, Archers, Riders, Siege: CLS); members stay put,
+// gaps fill from the rest, the rest are the reserve. Build 70: by kind, not by one soldier, as the squad card draws it (a swordsman fills Foot)
+const clsOf = (k) => CLS.findIndex((c) => c[2] === UNIT[k].at); // a soldier's kind, from the building that trains it; −1 for none of the four
 function rebattalion() {
 	const S = armyOf(0).filter((u) => u.kind !== 'spy');
 	if (!hasCmd()) {
@@ -349,19 +355,21 @@ function rebattalion() {
 		return;
 	}
 	const have = BN.map(() => ({})),
+		c = (u) => (CLS[clsOf(u.kind)] || [])[0],
+		room = (u, i) => (have[i][c(u)] || 0) < (G.bnPlan[i][c(u)] || 0),
 		take = (u, i) => {
-			have[i][u.kind] = (have[i][u.kind] || 0) + 1;
+			have[i][c(u)] = (have[i][c(u)] || 0) + 1;
 			u.bn = i;
 		};
 	for (const u of S)
 		if (u.bn !== undefined) {
-			if ((have[u.bn][u.kind] || 0) < (G.bnPlan[u.bn][u.kind] || 0)) take(u, u.bn);
+			if (room(u, u.bn)) take(u, u.bn);
 			else u.bn = undefined;
 		}
 	for (const u of S)
 		if (u.bn === undefined)
 			for (let i = 0; i < BNS; i++)
-				if ((have[i][u.kind] || 0) < (G.bnPlan[i][u.kind] || 0)) {
+				if (room(u, i)) {
 					take(u, i);
 					break;
 				}

@@ -617,15 +617,15 @@ const MS_TEXT = {
 	],
 	soldier: [
 		'Your first soldier: the row has a War page now.',
-		'The chip over the first slot cycles the pages: Jobs, Realm, Build, War, Squad, Train.',
+		'The cycle button above the first slot turns the row: Jobs, War, Train.',
 		'Open the War page',
-		'pagecycle',
+		'page:war',
 	],
 	squad: [
 		'Your first squad: it fills itself from the soldiers at home.',
 		'A squad keeps a plan; soldiers at home step into it. Send it with Go; the crosshair tells the time.',
-		'The Squad page',
-		'pagecycle',
+		'The War page',
+		'page:war',
 	],
 	age: [
 		'A new age: the limits grow and the tree opens.',
@@ -721,26 +721,22 @@ const EV_TEXT = {
 	aurora: ['The sky is stirring in the north.', 'Northern lights.'],
 	horde: ['A horde is coming: two seasons.', 'A horde is coming: one season.', 'The horde is here!'],
 };
-// The alert bar: what each event does, in a few words (the name is EVENTS[kind].name).
-const EV_LINE = {
-	eclipse: 'armies falter',
-	storm: 'lightning strikes',
-	stampede: 'fields trampled',
-	flood: 'shores flooded',
-	meteor: 'iron falls',
-	wildfire: 'forest burns',
-	fog: 'short sight',
-	sinkhole: 'a building hit',
-	quicksand: 'a trap patch',
-	heatwave: 'armies tire',
-	mirage: 'an army, maybe',
-	circus: 'work lighter',
-	wagon: 'settlers join',
-	mercs: 'hire them',
-	dragon: 'burns all below',
-	troll: 'a troll roams',
-	aurora: 'a quiet glow',
-	horde: 'raiders attack',
+// The row's words (MENU-SPEC §6): the word under each picture icon that is not a name from a table (RESOURCES, BN, CLS) or a pace (paceWord),
+// and the cycle button's page names. The gate measures every word a slot can show in its slot at 375 pt.
+const ROW_WORD = {
+	jobs: 'Jobs',
+	war: 'War',
+	train: 'Train',
+	people: 'People',
+	build: 'Build',
+	target: 'Target',
+	home: 'Home',
+	orders: 'Orders',
+	nosq: 'No squad',
+	new: 'New',
+	army: 'The army',
+	fight: 'fighting',
+	pace: ['slow', 'medium', 'fast'], // a squad's pace under it, from its slowest member (paceWord)
 };
 // What triggers what: when, then, why. Numbers come from the tables, so the text cannot drift from the game.
 const TRIGGERS = () => [
@@ -786,7 +782,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The War Council ladder',
-		'Four researches, each opening the next. Engagement: shooters step back from a foe on top of them. Battalions: six, Alpha to Zeta; set what each holds, by type; new soldiers fill them, the rest are the reserve. Formations: Line, Wedge, Square, and your armies march in column. Muster (Gunpowder): the missing soldiers of a battalion in one order, twice the cost, a quarter longer, the time shared by every building that trains them. The computers climb it too.',
+		'Four researches, each opening the next. Engagement: shooters step back from a foe on top of them. Battalions: four squads, A to D; set what each holds of Foot, Archers, Riders and Siege; new soldiers fill them, the rest are the reserve. Formations: Line, Wedge, Square, and your armies march in column. Muster (Gunpowder): the missing soldiers of a battalion in one order, twice the cost, a quarter longer, the time shared by every building that trains them. The computers climb it too.',
 		'Rome levied whole legions at once; the drill of Maurice of Nassau (1590s) made trained formations, and armies like the New Model Army (1645) were raised as one force.',
 	],
 	[
@@ -1020,13 +1016,13 @@ const TRIGGERS = () => [
 		'The real tree: nobody built a blast furnace before a bellows, and the plough mattered more than the sickle.',
 	],
 	[
-		'The Squad room and pausing',
-		'The chip at the left of the job row turns the row into the Squad room (once Command is researched): + makes a squad (Alpha to Delta, four at most), the tile picks one, and − and + under each kind fill its plan from the soldiers at home. A squad card shows its plan at home and its health and standing out on a mission. Opening any card pauses the game and closing it carries on (Help: Pause on cards, off if you like).',
+		'The row, the squads and pausing',
+		'The cycle button above the first slot turns the row: Jobs, War, Train. On War sit the four squads (once Battalions is researched): tap one for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Out on a mission its card shows its health and standing. Opening any card pauses the game and closing it carries on (Help: Pause on cards, off if you like).',
 		'Thumbs on the map, not in a menu: a phone is not a desk.',
 	],
 	[
-		'The War room: four missions',
-		'The chip again turns the row into the War room: a crosshair goes where you tap; Go sends the picked squad (or every idle soldier) on it as a mission with a promised time, and the row shows each squad out: its time to arrive, then FIGHTING with its odds in colour, then done. A tile flashing red is losing: open it to Reinforce from the idle reserve, or Abort. A tap on the map offers the same in two buttons: the sword sends Idle, All or a squad there; the people button builds there, sends idle villagers there or sets workers there.',
+		'War: four missions',
+		'On War a crosshair goes where you tap; Go sends every squad at home and ready (its blue ring), or every idle soldier, on it as a mission with a promised time. Under each squad its time to arrive and its pace; its green ring is the march still to go, and it turns red while it fights: open it to send more from the idle reserve, or Abort. A tap on the map offers the same in two buttons: the sword sends Idle, All or a squad there; the people button builds there, sends idle villagers there or sets workers there.',
 		'A plan you can read: time, odds and who is where. The weather on the screen is counted in the time; a storm that comes later is bad luck.',
 	],
 	[

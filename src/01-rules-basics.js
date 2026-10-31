@@ -4,8 +4,15 @@ const BUILD = 0; // written by build.py from the latest "## Build NN" in CUTS.md
 const MAP = 2000,
 	MID = MAP / 2,
 	DT = 1 / 30;
-const BN = ['Alpha', 'Beta', 'Gamma', 'Delta'], // four squads, the row's four middle tiles (Build 61; six before)
+const BN = ['Squad A', 'Squad B', 'Squad C', 'Squad D'], // four squads, slots 2 to 5 of the War page (Build 61; six before; named as drawn, Build 70)
 	BNS = BN.length; // the battalions, once Command is researched
+// The four kinds of soldier, by the building that trains them: [id, name, building, the word in a line]. A squad holds so many of each (Build 70)
+const CLS = [
+	['foot', 'Foot', 'barracks', 'foot'],
+	['arch', 'Archers', 'range', 'archers'],
+	['horse', 'Riders', 'stable', 'riders'],
+	['siege', 'Siege', 'siege', 'siege'],
+];
 const POPMAX = 180,
 	ARMYMAX = 120,
 	BNSIZE = 40,
