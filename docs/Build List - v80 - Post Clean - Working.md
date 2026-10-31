@@ -8,6 +8,9 @@
 - Fonts (Albert, Oct 31, 09:10–09:16): two fonts only: IM Fell English SC for titles, Barlow Semi Condensed for everything else, the map included (the phone's own font on three map labels goes).
 - MAYBE (Albert: "I suppose. Let's do and flag it as maybe"): one weight, 600, for all of Barlow, 12 and 18 alike (Start at 900 was "too fat"; 300 was too thin at 12). Quiet lines are told apart by colour (Cream 2), not weight. One packed Barlow file instead of two; the unused 600 file today and the 500 and 700 go. Pictures: the weights A and B, the pick, Start at 900 against 600.
 
+- Setup (Albert, 09:21–09:23): each setting its own row, its choices right-justified, the setting's name in slot 1 (quiet, 12). Open: the civ and hazard rows are full (no slot 1 for a name); Fog and Daily say their word twice. Pictures: Setup Singles, Setup New Rules, Setup Stacked, Setup Stacked with Names.
+- Controls kept (Albert, 09:28), each two or three slots wide, corners 6 (the round pill is killed): the check box (ticked: a gold tick and the slot's gold ring; three slots add a quiet line), the toggle (word left, switch right; on: the switch slides and turns gold, the slot rings), the slider (word and value over the track, gold to the knob, no ring), the slider with a toggle (off: the track goes quiet and keeps its value), the selector (two or three words in one shape, a gold selector slides 0.4 s to rest over the choice; three words need three slots). Pictures: Check Box Toggle Slider, Slider with Toggle, Selector (its grid half).
+
 ## Needs Albert's call now (it touches v70)
 1. Mail has no door once the Realm page goes: the Realm page's Mail tile was its only way in. Where does Mail open from?
 2. The status strip: Gunpowder does not fit the age cell. The ballot's change (the People icon back, age and people three cells each) was refused by the tap-size check: the other cells fell to 40 pt at 375.
