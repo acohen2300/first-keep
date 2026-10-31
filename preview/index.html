@@ -14,7 +14,6 @@
   --steel-1:#1e2329;--steel-2:#2a3038;--steel-3:#4d5a68;   /* the War and Train pages: the page, slot fill, slot edge */
   --ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b;--ring-w:#e9ecef;   /* the colour code: blue ready, green working or done right, red wrong, white all is well */
   --fill-1:#f2d27a;--fill-2:#b8862e;--ink:#2a1c10;   /* the gold fill of a card's one main action, and its words */
-  --work:color-mix(in srgb,var(--ring-g) 40%,var(--brown-2));   /* the working bar: the code's green on a slot, the strongest that keeps Cream 1 words readable (4.9:1) */
   --shade:0 2px 8px rgba(0,0,0,.4);   /* the one shadow, under what floats over the map */
   --gap:6px;--slot:44px;--rad:6px;   /* the grid (MENU-SPEC §1): one number, 6; every slot 44 tall; corners 6 */
   --rank:calc(var(--slot) + var(--gap));--half:calc((var(--slot) - var(--gap)) / 2);--rad-o:calc(var(--rad) + var(--gap) / 2);   /* a rank 50; a half rank 19; an outline round slots 9, so the curves nest */
@@ -86,7 +85,7 @@ button.ghost{visibility:hidden}
 .fab{position:absolute;z-index:3;width:var(--slot);height:var(--slot);padding:0;bottom:calc(var(--ob) + var(--gap));box-shadow:var(--shade)}
 .fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}
 #emgB{right:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}#homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}
-#hudB{left:var(--c1x,var(--gap));width:var(--c1w,58px);flex-direction:row;gap:3px;font-weight:700}#hudB svg{position:static;transform:none}
+#hudB{left:var(--gap);width:calc((100% - 7 * var(--gap)) / 6)}   /* the cycle button: one slot wide, on its own rank above slot 1 (MENU-SPEC §6) */
 #stage.busy :is(#hudB,#homeB),#stage.picking #homeB{display:none}
 #place,#pickbar{position:absolute;z-index:3;left:var(--gap);right:var(--gap);bottom:calc(var(--ob) + var(--gap));box-sizing:border-box;display:flex;gap:var(--gap);padding:var(--gap);background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o);font-weight:700}
 #place{justify-content:space-between;align-items:center;padding-left:10px}#place span{flex:1;min-width:0;line-height:1.25}#place button{padding:0 12px}
@@ -97,36 +96,20 @@ button.ghost{visibility:hidden}
 #strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:var(--slot)}
 #strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--cream-1);font-size:var(--fs-m)}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:var(--slot);padding:0}
 #spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--brown-1);border:1px solid var(--brown-3);border-radius:var(--rad-o);box-shadow:var(--shade)}#spdPop button{min-width:52px}
-/* The row below the map (redrawn in its own part of Build 70): six slots on the grid, 6 to the screen edge, the − and + under a job half slots */
+/* The row below the map (MENU-SPEC §6): one Formation two ranks tall on the screen's grid, 6 to the edge; the − and + under a job, and any
+   a / b pair, are half slots. Jobs stands over the map; War and Train lie on steel, and so does the cycle button on them (COLORS.md) */
 #orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--gap) calc(env(safe-area-inset-bottom,0px) + var(--gap));pointer-events:none}
-#orders .tiles{pointer-events:auto}
-#orders:not(.pg-jobs){background:color-mix(in srgb,var(--brown-1) 84%,transparent);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--brown-3)}
-#orders:is(.pg-war,.pg-train){background:color-mix(in srgb,var(--steel-1) 84%,transparent)}
-.tr{display:grid;grid-template-columns:repeat(var(--n,6),minmax(0,1fr));gap:var(--gap)}
-.col{display:flex;flex-direction:column;gap:var(--gap);min-width:0}.col>button.cell{flex:none}
-.pm{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
-.tiles button.cell{box-shadow:var(--shade)}
-.tiles .st{font-size:var(--fs-l);font-weight:700;line-height:calc(var(--slot) - 2px);text-align:center}
+#orders:not(.pg-jobs){background:color-mix(in srgb,var(--steel-1) 84%,transparent);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 var(--steel-3)}
+#row{pointer-events:auto}#row .info :is(b,small){white-space:nowrap}
+.pg-jobs #row button{box-shadow:var(--shade)}
+.pg-war #row button,.pg-train #row button,#hudB:is(.war,.train),#strip button.war{background:var(--steel-2);border-color:var(--steel-3)}
+/* a slot of icon and word (the row, the cycle button, a card's rank): the picture at 18 with its number at 15 beside it, the word at 12 in
+   Cream 2 under it; a symbol alone at 24 */
 .cell .top{position:absolute;left:0;right:0;top:13px;transform:translateY(-50%);display:flex;justify-content:center;align-items:center;gap:4px}
-.cell .top :is(.gl,svg){position:static;transform:none;width:16px;height:16px}
-.cell .top .c{font-size:var(--fs-m);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}.cell .top b.plus{font-size:var(--fs-m);font-weight:700;margin-left:2px}
-.tiles .wd{color:var(--cream-2)}
-#tPeople .gl{width:22px;height:22px}#tPeople .wd{color:var(--cream-1)}
-.col.join{gap:0}.col.join>button.cell:first-child{border-radius:var(--rad) var(--rad) 0 0}.col.join>button.cell:last-child{border-radius:0 0 var(--rad) var(--rad);border-top:0}
-#huddle .col.whole>button.cell.tall{height:calc(var(--slot) * 2 + var(--gap))}#huddle .col.whole .top.thumb{top:30px}#huddle .col.whole .top.thumb img{width:40px;height:40px;display:block}#huddle .col.whole .wd{top:74px;letter-spacing:.02em;white-space:normal;overflow-wrap:anywhere;line-height:1;padding:0 2px}#huddle .col.whole .top:not(.thumb){top:34px}#huddle .col.whole .top:not(.thumb) .gl{width:22px;height:22px}
-#huddle button.cell{overflow:hidden;box-shadow:none}
-#huddle .wd{font-size:var(--fs-s);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-2)}#huddle .wd.mid{top:50%}
-#huddle .top .c{font-size:var(--fs-l)}
-#huddle .st.w{font-size:var(--fs-s);letter-spacing:.08em;text-transform:uppercase;line-height:calc(var(--slot) - 2px)}
-#huddle .bar::after,#huddle .msn:not(.empty):first-child::after{content:'';position:absolute;left:10px;right:10px;top:0;height:3px;border-radius:0 0 3px 3px;background:var(--mc,var(--ring-r))}
-#huddle .msn{touch-action:none}
-#huddle .msn.lose{--pc:var(--ring-r);animation:hudPulse var(--t-settle) infinite}#huddle .msn.win{--pc:var(--ring-g);animation:hudPulse var(--t-settle) infinite}   /* losing and winning pulse alike; the colour says which */
-@keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc)}}
-@media (prefers-reduced-motion:reduce){#huddle .msn:is(.lose,.win){border-color:var(--pc)}}
-/* the row's tints: Jobs plain; War and Train in steel (COLORS.md). The hammer's timber and the people's green are the row's own until it is redrawn */
-:is(.tiles,#huddle) button.cell:is(.train,.war,.sq),#hudB:is(.war,.squad,.train),#strip button.war{background:var(--steel-2);border-color:var(--steel-3)}
-.tiles button.cell.build,#strip button.build,#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}
-#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}
+.cell .top :is(.gl,svg){position:static;transform:none;width:18px;height:18px}
+.cell .top .c{font-size:var(--fs-m);font-weight:700;line-height:1;font-variant-numeric:tabular-nums;color:var(--nc,inherit)}
+.cell .top~.wd{color:var(--cream-2)}
+.cell.sym .gl{top:50%;width:24px;height:24px}
 /* The card (MENU-SPEC §1, §4): its slots on the screen's own grid, 6 from the edge and 6 from the row, its frame an outline down the middle
    of that 6 (9, so the curves nest): a card of n ranks stands exactly n ranks tall. It rises from the row in whole ranks: its content
    rounded up to the next rank (--rk, renderCard), at most every rank that fits above the row: a large card all of them (the preview steps
@@ -141,7 +124,7 @@ button.ghost{visibility:hidden}
    It stays at the top while a long card scrolls under it */
 .tb{position:sticky;top:0;z-index:2;background:var(--brown-1);box-shadow:0 calc(var(--gap) / -2) 0 var(--brown-1),0 calc(var(--gap) / 2) 0 var(--brown-1)}
 .tb h3{margin:0;display:flex;align-items:center;padding:0 10px;background:var(--brown-2);border:1px solid var(--brown-3);border-radius:var(--rad);font:400 var(--fs-l)/1 var(--display);letter-spacing:.05em;color:var(--gold-1);white-space:nowrap;overflow:hidden}
-.tb svg{width:20px;height:20px}
+.tb svg{width:24px;height:24px}
 .sub{padding:0 8px;font-size:var(--fs-s);line-height:16px;color:var(--cream-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cin p{margin:0;color:var(--cream-2);line-height:1.35;font-size:var(--fs-m)}
 .cin p i{color:var(--cream-1);font-style:normal;font-weight:700}
@@ -207,16 +190,20 @@ button.ghost{visibility:hidden}
 #endActs{display:flex;flex-direction:column;gap:var(--gap);width:100%;max-width:340px}#endActs button small{white-space:normal}
 }
 @layer states{
-/* The states (MENU-SPEC §9): one set for every slot anywhere, drawn over every part. A ring is the edge and one pixel more inside it.
-   go: blue ring, ready · on: gold ring, chosen · warn: red ring, danger (nope: a tap it cannot do, for a moment) · work: the green bar,
-   working, --p long · dis: dim, locked · empty: a fixed place with nothing in it · plain: nothing to say. One gold fill a card at most,
-   its main action: main. The chosen and the wrong say it in their words too */
+/* The states (MENU-SPEC §9): one set for every slot anywhere, drawn over every part. The ring is the slot's edge and one pixel more inside it.
+   go: blue ring, ready · on: gold ring, chosen · warn: red ring, danger, and its glow breathes (nope: a tap it cannot do, for a moment) ·
+   work: a green ring on the edge that recedes, clockwise from 12 o'clock over the share still to go (--p, toGo), SoRen's timer ring ·
+   dis: dim, locked · empty: a fixed place with nothing in it · plain: nothing to say. One ring at a time: danger beats working. One gold
+   fill a card at most, its main action: main. The chosen and the wrong say it in their words too */
 .go{--rc:var(--ring-b)}.on{--rc:var(--gold-1)}:is(.warn,.nope){--rc:var(--ring-r)}
 :is(.go,.on,.warn,.nope):not(.pill>*){border-color:var(--rc);box-shadow:inset 0 0 0 1px var(--rc)}
 :is(.on,.warn,.nope):not(.pill>*) :is(b,.wd),.segT .on{color:var(--rc)}
-.work{background-image:linear-gradient(90deg,var(--work) var(--p,100%),transparent 0)}
+.warn:not(.pill>*){animation:breathe var(--t-long) ease-in-out infinite}
+@keyframes breathe{50%{box-shadow:inset 0 0 0 1px var(--rc),0 0 8px 1px var(--rc)}}
+@media (prefers-reduced-motion:reduce){.warn:not(.pill>*){box-shadow:inset 0 0 0 2px var(--rc)}}   /* still, and 3 wide: never colour alone */
+.work:not(.warn,.nope)::after{content:'';position:absolute;inset:-1px;padding:2px;border-radius:var(--rad);background:conic-gradient(var(--ring-g) var(--p,100%),transparent 0);mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);pointer-events:none}
 .dis:not(.pill>*){background:var(--brown-1);border-color:var(--brown-2)}.dis,.dis :is(b,.wd){color:var(--cream-2)}
-.empty{background:var(--brown-1);border:1px solid var(--brown-2);border-radius:var(--rad)}
+.empty{background:var(--brown-1);border:1px solid var(--brown-2);border-radius:var(--rad);color:var(--cream-2)}
 .main{background:linear-gradient(var(--fill-1),var(--fill-2)) var(--fill-1);border-color:var(--fill-1);color:var(--ink)}.main :is(b,small){color:var(--ink)}.main b{font-size:var(--fs-l)}
 /* the bar and the strip draw no frame round a cell: a chosen cell of the bar wears its ring inside, a cell of the strip says its state in its word */
 .pill>.on::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:var(--rad);box-shadow:inset 0 0 0 2px var(--rc)}
@@ -235,11 +222,11 @@ button.ghost{visibility:hidden}
     <div class="pill" id="status"></div>
   </header>
   <div id="pv" hidden></div>
-  <section id="orders" class="pg-jobs"><div class="tiles"><div class="tr" id="jobs"></div><div class="tr" id="huddle" hidden></div></div></section>
+  <section id="orders" class="pg-jobs"><div class="fm" id="row"></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
     <button class="fab" id="emgB" data-act="card:emergency" aria-label="Emergency"></button>
-    <button class="fab chip" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, Realm, Build, War, Squad, Train"></button>
+    <button class="fab cell jobs" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, War, Train"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
 
     <div id="strip" hidden></div>
@@ -265,8 +252,15 @@ const BUILD = 70; // written by build.py from the latest "## Build NN" in CUTS.m
 const MAP = 2000,
 	MID = MAP / 2,
 	DT = 1 / 30;
-const BN = ['Alpha', 'Beta', 'Gamma', 'Delta'], // four squads, the row's four middle tiles (Build 61; six before)
+const BN = ['Squad A', 'Squad B', 'Squad C', 'Squad D'], // four squads, slots 2 to 5 of the War page (Build 61; six before; named as drawn, Build 70)
 	BNS = BN.length; // the battalions, once Command is researched
+// The four kinds of soldier, by the building that trains them: [id, name, building, the word in a line]. A squad holds so many of each (Build 70)
+const CLS = [
+	['foot', 'Foot', 'barracks', 'foot'],
+	['arch', 'Archers', 'range', 'archers'],
+	['horse', 'Riders', 'stable', 'riders'],
+	['siege', 'Siege', 'siege', 'siege'],
+];
 const POPMAX = 180,
 	ARMYMAX = 120,
 	BNSIZE = 40,
@@ -4336,7 +4330,7 @@ const TECH = [
 		t: 41,
 		fx: [],
 		need: ['engage'],
-		desc: 'Six battalions, Alpha to Zeta.',
+		desc: 'Four squads, A to D.',
 	},
 	{
 		id: 'formations',
@@ -5485,10 +5479,10 @@ const EV_MEAN = 120, // the mean wait between events (an exponential wait, nextI
 	EV_WARN = 12;
 const EVENTS = {
 	eclipse: { name: 'Eclipse', secs: 20, dmg: 0.6, spd: 0.7, sight: 0.7, harm: 1 },
-	storm: { name: 'Thunderstorm', door: 'Storm', secs: 40, band: 260 },
+	storm: { name: 'Thunderstorm', secs: 40, band: 260 },
 	stampede: { name: 'Stampede', secs: 30, n: 10, harm: 1 },
 	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.004, harm: 1 },
-	meteor: { name: 'Falling star', door: 'Star', secs: 3 },
+	meteor: { name: 'Falling star', secs: 3 },
 	wildfire: {
 		name: 'Wildfire',
 		secs: 60,
@@ -5501,12 +5495,12 @@ const EVENTS = {
 	}, // most: trees alight at once; the dry seasons, drought or not
 	fog: { name: 'Fog', secs: 60, vis: 70 },
 	sinkhole: { name: 'Sinkhole', secs: 2, hit: 0.4 },
-	quicksand: { name: 'Quicksand', door: 'Sand', secs: 120, r: 60, slow: 0.3 },
+	quicksand: { name: 'Quicksand', secs: 120, r: 60, slow: 0.3 },
 	heatwave: { name: 'Heat', secs: 60, dmg: 0.85, spd: 0.9, need: 'drought', season: 'Summer' },
 	mirage: { name: 'Mirage', secs: 30, n: 12, season: 'Summer' },
 	circus: { name: 'Circus', secs: 60, n: 5, r: 150, cheer: 120, mul: 1.1, gift: 1 },
-	wagon: { name: 'Wagon train', door: 'Wagons', secs: 90, gift: 1 },
-	mercs: { name: 'Mercenaries', door: 'Mercs', secs: 180, gift: 1 }, // door: the word on the row's door, which has room for eight letters
+	wagon: { name: 'Wagon train', secs: 90, gift: 1 },
+	mercs: { name: 'Mercenaries', secs: 180, gift: 1 },
 	dragon: { name: 'Dragon', secs: 25, fantasy: true, harm: 1 },
 	troll: { name: 'Troll', secs: 90, fantasy: true },
 	aurora: { name: 'Aurora', secs: 45, fantasy: true, night: true },
@@ -6248,15 +6242,15 @@ const MS_TEXT = {
 	],
 	soldier: [
 		'Your first soldier: the row has a War page now.',
-		'The chip over the first slot cycles the pages: Jobs, Realm, Build, War, Squad, Train.',
+		'The cycle button above the first slot turns the row: Jobs, War, Train.',
 		'Open the War page',
-		'pagecycle',
+		'page:war',
 	],
 	squad: [
 		'Your first squad: it fills itself from the soldiers at home.',
 		'A squad keeps a plan; soldiers at home step into it. Send it with Go; the crosshair tells the time.',
-		'The Squad page',
-		'pagecycle',
+		'The War page',
+		'page:war',
 	],
 	age: [
 		'A new age: the limits grow and the tree opens.',
@@ -6352,26 +6346,22 @@ const EV_TEXT = {
 	aurora: ['The sky is stirring in the north.', 'Northern lights.'],
 	horde: ['A horde is coming: two seasons.', 'A horde is coming: one season.', 'The horde is here!'],
 };
-// The alert bar: what each event does, in a few words (the name is EVENTS[kind].name).
-const EV_LINE = {
-	eclipse: 'armies falter',
-	storm: 'lightning strikes',
-	stampede: 'fields trampled',
-	flood: 'shores flooded',
-	meteor: 'iron falls',
-	wildfire: 'forest burns',
-	fog: 'short sight',
-	sinkhole: 'a building hit',
-	quicksand: 'a trap patch',
-	heatwave: 'armies tire',
-	mirage: 'an army, maybe',
-	circus: 'work lighter',
-	wagon: 'settlers join',
-	mercs: 'hire them',
-	dragon: 'burns all below',
-	troll: 'a troll roams',
-	aurora: 'a quiet glow',
-	horde: 'raiders attack',
+// The row's words (MENU-SPEC §6): the word under each picture icon that is not a name from a table (RESOURCES, BN, CLS) or a pace (paceWord),
+// and the cycle button's page names. The gate measures every word a slot can show in its slot at 375 pt.
+const ROW_WORD = {
+	jobs: 'Jobs',
+	war: 'War',
+	train: 'Train',
+	people: 'People',
+	build: 'Build',
+	target: 'Target',
+	home: 'Home',
+	orders: 'Orders',
+	nosq: 'No squad',
+	new: 'New',
+	army: 'The army',
+	fight: 'fighting',
+	pace: ['slow', 'medium', 'fast'], // a squad's pace under it, from its slowest member (paceWord)
 };
 // What triggers what: when, then, why. Numbers come from the tables, so the text cannot drift from the game.
 const TRIGGERS = () => [
@@ -6417,7 +6407,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The War Council ladder',
-		'Four researches, each opening the next. Engagement: shooters step back from a foe on top of them. Battalions: six, Alpha to Zeta; set what each holds, by type; new soldiers fill them, the rest are the reserve. Formations: Line, Wedge, Square, and your armies march in column. Muster (Gunpowder): the missing soldiers of a battalion in one order, twice the cost, a quarter longer, the time shared by every building that trains them. The computers climb it too.',
+		'Four researches, each opening the next. Engagement: shooters step back from a foe on top of them. Battalions: four squads, A to D; set what each holds of Foot, Archers, Riders and Siege; new soldiers fill them, the rest are the reserve. Formations: Line, Wedge, Square, and your armies march in column. Muster (Gunpowder): the missing soldiers of a battalion in one order, twice the cost, a quarter longer, the time shared by every building that trains them. The computers climb it too.',
 		'Rome levied whole legions at once; the drill of Maurice of Nassau (1590s) made trained formations, and armies like the New Model Army (1645) were raised as one force.',
 	],
 	[
@@ -6651,13 +6641,13 @@ const TRIGGERS = () => [
 		'The real tree: nobody built a blast furnace before a bellows, and the plough mattered more than the sickle.',
 	],
 	[
-		'The Squad room and pausing',
-		'The chip at the left of the job row turns the row into the Squad room (once Command is researched): + makes a squad (Alpha to Delta, four at most), the tile picks one, and − and + under each kind fill its plan from the soldiers at home. A squad card shows its plan at home and its health and standing out on a mission. Opening any card pauses the game and closing it carries on (Help: Pause on cards, off if you like).',
+		'The row, the squads and pausing',
+		'The cycle button above the first slot turns the row: Jobs, War, Train. On War sit the four squads (once Battalions is researched): tap one for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Out on a mission its card shows its health and standing. Opening any card pauses the game and closing it carries on (Help: Pause on cards, off if you like).',
 		'Thumbs on the map, not in a menu: a phone is not a desk.',
 	],
 	[
-		'The War room: four missions',
-		'The chip again turns the row into the War room: a crosshair goes where you tap; Go sends the picked squad (or every idle soldier) on it as a mission with a promised time, and the row shows each squad out: its time to arrive, then FIGHTING with its odds in colour, then done. A tile flashing red is losing: open it to Reinforce from the idle reserve, or Abort. A tap on the map offers the same in two buttons: the sword sends Idle, All or a squad there; the people button builds there, sends idle villagers there or sets workers there.',
+		'War: four missions',
+		'On War a crosshair goes where you tap; Go sends every squad at home and ready (its blue ring), or every idle soldier, on it as a mission with a promised time. Under each squad its time to arrive and its pace; its green ring is the march still to go, and it turns red while it fights: open it to send more from the idle reserve, or Abort. A tap on the map offers the same in two buttons: the sword sends Idle, All or a squad there; the people button builds there, sends idle villagers there or sets workers there.',
 		'A plan you can read: time, odds and who is where. The weather on the screen is counted in the time; a storm that comes later is bad luck.',
 	],
 	[
@@ -6943,6 +6933,10 @@ if (!(SET.setV >= 38)) {
 	}
 	SET.setV = 38;
 } // Build 38: Normal and an hour by default; a phone that kept Easy and 30 minutes from the old default moves once, and a choice made after stays
+if (SET.setV < 70) {
+	delete SET.fav;
+	SET.setV = 70;
+} // Build 70: the Build page and its pins are cut
 SET.mix = Object.assign({ fx: 1, amb: 1, alert: 1 }, SET.mix); // three volumes: effects, ambience, alerts
 function saveSet() {
 	try {
@@ -7099,7 +7093,9 @@ const kiteOf = (u) =>
 		G.P[u.owner].techs.has('engage') &&
 		(UNIT[u.kind].tags || []).includes('ranged') &&
 		temperOf(u) !== T_PRESS); // shooters step back unless they press
-// Battalions, once Command is researched: each holds what you set for it, by type; members stay put, gaps fill from the rest, the rest are the reserve
+// Battalions, once Command is researched: each holds what you set for it, by kind (Foot, Archers, Riders, Siege: CLS); members stay put,
+// gaps fill from the rest, the rest are the reserve. Build 70: by kind, not by one soldier, as the squad card draws it (a swordsman fills Foot)
+const clsOf = (k) => CLS.findIndex((c) => c[2] === UNIT[k].at); // a soldier's kind, from the building that trains it; −1 for none of the four
 function rebattalion() {
 	const S = armyOf(0).filter((u) => u.kind !== 'spy');
 	if (!hasCmd()) {
@@ -7107,19 +7103,21 @@ function rebattalion() {
 		return;
 	}
 	const have = BN.map(() => ({})),
+		c = (u) => (CLS[clsOf(u.kind)] || [])[0],
+		room = (u, i) => (have[i][c(u)] || 0) < (G.bnPlan[i][c(u)] || 0),
 		take = (u, i) => {
-			have[i][u.kind] = (have[i][u.kind] || 0) + 1;
+			have[i][c(u)] = (have[i][c(u)] || 0) + 1;
 			u.bn = i;
 		};
 	for (const u of S)
 		if (u.bn !== undefined) {
-			if ((have[u.bn][u.kind] || 0) < (G.bnPlan[u.bn][u.kind] || 0)) take(u, u.bn);
+			if (room(u, u.bn)) take(u, u.bn);
 			else u.bn = undefined;
 		}
 	for (const u of S)
 		if (u.bn === undefined)
 			for (let i = 0; i < BNS; i++)
-				if ((have[i][u.kind] || 0) < (G.bnPlan[i][u.kind] || 0)) {
+				if (room(u, i)) {
 					take(u, i);
 					break;
 				}
@@ -8255,9 +8253,8 @@ function blankGame(seed) {
 		ms: [], // the milestones passed (MS_TEXT), read back on their card
 		recruitSq: null, // the squad new soldiers join (the Train page)
 		form: BN.map(() => 0),
-		bnEdit: 0,
 		qs: { from: 'all', n: {} },
-		hud: { on: false, n: {} },
+		hud: { page: 'jobs' }, // the row's page and the crosshair (39-huddle); never saved: a game opens on Jobs
 		msn: [null, null, null, null],
 		emg: null,
 		intel: {},
@@ -9688,13 +9685,8 @@ function teach(o, u) {
 function graduate(u) {
 	const o = u.owner,
 		to = civKind(o, teachTo(u)),
-		f = u.hp / u.max,
-		plan = o === 0 && u.bn !== undefined && G.bnPlan[u.bn];
-	if (plan && plan[u.kind] > 0) {
-		plan[u.kind]--;
-		plan[to] = (plan[to] || 0) + 1;
-	} // its place in the battalion goes with it (Build 48: a graduate fell out to the reserve)
-	u.kind = to;
+		f = u.hp / u.max;
+	u.kind = to; // its place in its squad stays: a squad holds a kind, and a lesson keeps to the kind (TEACH_TO; Build 70)
 	u.max = maxHpU(o, to);
 	u.hp = Math.max(1, u.max * f);
 	u.state = 'home';
@@ -21732,8 +21724,9 @@ new ResizeObserver(([e]) => {
 	$('card').style.setProperty('--rk', Math.max(1, Math.ceil((e.contentRect.height + gap) / rank)));
 }).observe(cardIn);
 // ── the pieces every card is made of. The slot is a button; the Formation lays them (MENU-SPEC §2, §3); the states are classes (§9):
-// go ready (blue ring), on chosen (gold ring), warn danger (red ring), work in progress (the green bar, --p long), dis locked (dim),
-// main the card's one main action (the gold fill). A cell's span is a class too: h, s15, s2, s3, s6, and r2 for a pillar.
+// go ready (blue ring), on chosen (gold ring), warn danger (red ring, breathing), work in progress (the green ring that recedes, --p the
+// share still to go: toGo), dis locked (dim), main the card's one main action (the gold fill). A cell's span is a class too: h, s15, s2,
+// s3, s6, and r2 for a pillar.
 const cap1 = (t) => (t && t.indexOf('<') < 0 ? t.replace(/(^|· )([a-z])/g, (m, a, c) => a + c.toUpperCase()) : t); // sentence case: a capital opens every label and every part after a dot
 const btn = (act, title, sub, cls, fr) =>
 	`<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small${fr === undefined ? '' : ` class="${fr < 1 ? 'need' : 'can'}" style="--gc:${costCol(fr)}"`}>${cap1(sub)}</small>` : ''}</button>`; // a cost line on the one gradient (fr: what you have of it, 0 to 1): red at nothing, white near, light green when you can pay
@@ -21761,14 +21754,8 @@ const fold = (id, title, html) =>
 const hpBar = (f, col) =>
 	`<div class="hp"><i style="width:${Math.round(100 * clamp(f, 0, 1))}%;background:${col}"></i></div>`;
 const sec = (t) => `<div class="sec">${t}</div>`;
-// a rank of six icon cells in a card, the bar below the map's mold (Build 63): an icon over a word. Each [act, icon, word, cls], or null for an empty place
-const rowHTML = (slots) =>
-	acts(
-		slots
-			.map((s) => (s ? `<button class="cell ${s[3] || ''}" data-act="${s[0]}"><span class="top">${s[1]}</span>${wd(s[2])}</button>` : empty()))
-			.join(''),
-		'c6',
-	);
+// a rank of six slots in a card, on the row's mold (pic): an icon over its word. Each [act, icon, word, cls], or null for an empty place
+const rowHTML = (slots) => acts(slots.map((s) => (s ? pic(s[0], s[1], s[2], s[3]) : empty())).join(''), 'c6');
 // a card's name and subtitle: kept here and laid by renderCard as the title bar, which knows the book and the way back
 let cardHead = ['', ''];
 const title = (name, sub) => ((cardHead = [name, sub || '']), '');
@@ -22219,7 +22206,7 @@ function showStrip(sx, sy, x, y, step) {
 	if (!step)
 		el.innerHTML =
 			ic(nAll ? 'striparmy' : 'nofree', ICON.sword, 'Send soldiers here', (nAll ? 'war' : 'dis') + ' thumb') +
-			ic('strippeople', ICON.head, 'Your people here', 'people') +
+			ic('strippeople', ICON.head, 'Your people here') +
 			ic(`more:${at}`, '⋯', 'More about this place') +
 			ic('nostrip', ICON.close, 'Cancel');
 	else if (step === 1) {
@@ -22236,9 +22223,9 @@ function showStrip(sx, sy, x, y, step) {
 			here = postedAt(to).length,
 			pop = unitsOf(0, 'vil').length;
 		el.innerHTML =
-			btn('train:vil', `+ Villager`, `${pop}/${capOf(0)} · ${costText(unitCost(0, 'vil'))}`, 'people thumb') + // the People tile, pasted in (Albert, Build 63)
-			btn(`buildhere:${at}`, 'Build here', 'the menu, aimed here', 'build') +
-			btn(`idleto:${at}`, 'Send idle here', `${idle} idle villager${idle === 1 ? '' : 's'}`, idle ? 'people' : 'dis') +
+			btn('train:vil', `+ Villager`, `${pop}/${capOf(0)} · ${costText(unitCost(0, 'vil'))}`, 'thumb') + // the People tile, pasted in (Albert, Build 63)
+			btn(`buildhere:${at}`, 'Build here', 'the menu, aimed here') +
+			btn(`idleto:${at}`, 'Send idle here', `${idle} idle villager${idle === 1 ? '' : 's'}`, idle ? '' : 'dis') +
 			`<div class="dial"><b>Workers here</b>${btn(`wkhere:-,${at}`, '−', '', here ? '' : 'dis')}<span>${here}</span>${btn(`wkhere:+,${at}`, '+', '')}</div>` +
 			ic('nostrip', ICON.close, 'Cancel');
 	}
@@ -22326,16 +22313,23 @@ const dialBtns = (a) => {
 			: '')
 	);
 };
-// ── the War Council: six battalions, what each holds by type, its shape and temper
+// ── Muster for a squad: what it still lacks, by soldier kind to train
 function musterGap(i) {
-	// what a battalion still lacks: its plan, less the members it has and the soldiers already mustering for it
-	const gap = { ...G.bnPlan[i] };
-	for (const u of armyOf(0)) if (u.bn === i && gap[u.kind]) gap[u.kind]--;
-	for (const b of G.blds)
-		if (b.owner === 0)
-			for (const j of b.q) if (j.muster && j.bn === i) for (const k in j.muster) gap[k] = (gap[k] || 0) - j.muster[k];
-	for (const k in gap) if (gap[k] <= 0) delete gap[k];
-	return gap;
+	// its plan by kind (Foot, Archers, Riders, Siege), less the members it has and the soldiers already mustering for it, trained as each
+	// kind's soldier of this age (kindOf, 39-huddle)
+	const gap = { ...G.bnPlan[i] },
+		less = (k, n) => {
+			const c = CLS[clsOf(k)];
+			if (c && gap[c[0]]) gap[c[0]] -= n;
+		};
+	for (const u of armyOf(0)) if (u.bn === i) less(u.kind, 1);
+	for (const b of G.blds) if (b.owner === 0) for (const j of b.q) if (j.muster && j.bn === i) for (const k in j.muster) less(k, j.muster[k]);
+	const out = {};
+	CLS.forEach((c, t) => {
+		const k = kindOf(t);
+		if (gap[c[0]] > 0 && k) out[k] = gap[c[0]];
+	});
+	return out;
 }
 // ═════ 29-card-pages.js: what a building adds to its card: market, council, workshop and the rest ═════
 // ───────────────────────── What a building's page says, by kind ─────────────────────────
@@ -22376,8 +22370,8 @@ const BLD_PAGE = {
 				),
 	market: (b) => marketHTML(b),
 };
-// A building's line: one slot per order it can hold, singles on the Formation. The first is working: its green bar is how far along it
-// is. Tap a filled one and the order is cancelled, its cost back; an empty place is a faint outline.
+// A building's line: one slot per order it can hold, singles on the Formation. The first is working: its green ring is what is left of
+// it. Tap a filled one and the order is cancelled, its cost back; an empty place is a faint outline.
 function slotsHTML(b) {
 	const n = qMax(0),
 		cells = [];
@@ -22385,7 +22379,7 @@ function slotsHTML(b) {
 		const j = b.q[i];
 		cells.push(
 			j
-				? `<button class="slot${i === 0 ? ' work' : ''}" data-act="qcancel:${b.id},${i}"${i === 0 ? ` style="--p:${Math.round(100 * (1 - j.left / j.total))}%"` : ''} aria-label="Cancel ${qName(j)}">${qName(j)}${i === 0 ? `<br>${Math.ceil(j.left)} s` : ''}</button>`
+				? `<button class="slot${i === 0 ? ' work' : ''}" data-act="qcancel:${b.id},${i}"${i === 0 ? ` style="${toGo(j.left / j.total)}"` : ''} aria-label="Cancel ${qName(j)}">${qName(j)}${i === 0 ? `<br>${Math.ceil(j.left)} s` : ''}</button>`
 				: empty(),
 		);
 	}
@@ -22556,7 +22550,7 @@ function workshopHTML(b) {
 				fr = w ? (w.st.got || 0) % 1 : 0,
 				state = !w ? 'nobody yet' : w.wait ? `waiting for ${kn}` : w.inside ? 'making' : 'walking in';
 			return (
-				acts(`<button class="slot ${w ? 'work' : 'dis'}" disabled style="--p:${Math.round(fr * 100)}%">${nm(cur)}<br>${state}</button>` + info(made, 'made') + info(`${r} ${kn}`, 'each'), 'c3') +
+				acts(`<button class="slot ${w ? 'work' : 'dis'}" disabled style="${toGo(1 - fr)}">${nm(cur)}<br>${state}</button>` + info(made, 'made') + info(`${r} ${kn}`, 'each'), 'c3') +
 				`<p>In store: ${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${kn} · ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} ${nm(cur).toLowerCase()} a minute when worked.</p>`
 			);
 		})()
@@ -22600,24 +22594,15 @@ function marketHTML(b) {
 function councilHTML(b) {
 	const p = G.P[0];
 	if (!hasCmd())
-		return `<p>${p.techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, six of them, Alpha to Zeta.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`;
-	const i = G.bnEdit,
-		S = armyOf(0).filter((u) => u.kind !== 'spy');
-	let h =
-		sec('Squads') +
-		acts(
-			BN.map((n, j) => btn(`bned:${j}`, n, `${S.filter((u) => u.bn === j).length} in it`, j === i ? 'on' : '')).join(
-				'',
-			),
-			'c4',
-		);
-	h += sec(`${BN[i]} holds`) + squadEditHTML(i); // the one squad editor (39-huddle): the War Council and the Squad room share it
+		return `<p>${p.techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, four squads.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`;
+	const S = armyOf(0).filter((u) => u.kind !== 'spy');
 	return (
-		h +
+		sec('Squads') +
+		acts(BN.map((n, j) => btn(`wsq:${j}`, n, `${S.filter((u) => u.bn === j).length} in it`)).join(''), 'c4') + // each opens its card, where it is built (39-huddle)
 		fold(
 			'bnabout',
 			'About battalions',
-			`<p>New soldiers fill each battalion up to what you set; the rest are the reserve. Send a battalion from the strip: tap open ground, then its name.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
+			`<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve. Send a squad from the strip: tap open ground, then its name.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
 		)
 	);
 }
@@ -23502,7 +23487,7 @@ const CARDS = {
 			fold(
 				'about',
 				'About orders',
-				`<p>Tap open ground, then the sword: Idle, All, or a squad by name goes there. The Squad room (the chip at the left of the jobs) makes squads; the War room sends them with a time and odds; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
+				`<p>Tap open ground, then the sword: Idle, All, or a squad by name goes there. A squad is built on its card (tap it on the War page); War sends squads with a time and odds; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
 			)
 		);
 	},
@@ -23671,11 +23656,10 @@ const CARDS = {
 					btn('guide:rule', 'Rules', 'what triggers what'),
 			) +
 			`<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
-      <p><b>The door:</b> under People, it shows the most important thing now: red something wrong, blue something you can do, white all is well. Tap it to go where it is fixed; tap it again, or when all is well, for the dashboard: the realm, people, work, stores, tech and the mail.</p>
-      <p><b>Build:</b> the chip above the row turns the pages: Jobs, Realm, Build, War, Squad, Train. The Build page shows what the town needs (blue: build it now; green: going up; red: what stands in the way) and All opens every building. It waits above your finger: drag it, then tap Build.</p>
+      <p><b>Build:</b> the hammer under People opens every building; it wears a green ring while one goes up. A building waits above your finger: drag it, then tap Build. The cycle button above People turns the row: Jobs, War, Train.</p>
       <p><b>Messages</b> arrive at the top and fade; tap one to see where. × on a group of news asks to hide that group: it then goes quietly to the mail, and red still shows. Numbers wear one colour scale: green gaining, white steady, red losing.</p>
       <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Pause shows the speeds under the button.</p>
-      <p><b>Army:</b> tap open ground with nothing picked, then the sword: Idle, All or a squad goes there. The War, Squad and Train pages hold your squads, what they are made of, and what is being trained.</p>
+      <p><b>Army:</b> tap open ground with nothing picked, then the sword: Idle, All or a squad goes there. The War page holds your squads (tap one for what it is made of) and the Train page what is being trained.</p>
       <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>
@@ -24083,21 +24067,22 @@ const ICON = {
 		'<path d="M8 1.5 L13.5 3.5 V8 Q13.5 12.5 8 14.5 Q2.5 12.5 2.5 8 V3.5 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>',
 	),
 	cls: {
+		// the four kinds of soldier: Cream 1 like every icon but the five resources (MENU-SPEC §6; Build 70: their own pigments went)
 		foot: SVG(
 			16,
-			'<path d="M3 14 L12.5 3.5" stroke="#d9c79a" stroke-width="1.6" stroke-linecap="round"/><path d="M11 2 L14.5 1.5 L14 5 Z" fill="#e8eef2"/>',
+			'<path d="M3 14 L12.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M11 2 L14.5 1.5 L14 5 Z" fill="currentColor"/>',
 		),
 		arch: SVG(
 			16,
-			'<path d="M5 1.5 Q14 8 5 14.5" fill="none" stroke="#c9a46a" stroke-width="1.6"/><path d="M5 1.5 V14.5" stroke="#eee" stroke-width=".8"/><path d="M2 8 H12" stroke="#ddd" stroke-width="1.2"/><path d="M12 6.5 L14.5 8 L12 9.5Z" fill="#eee"/>',
+			'<path d="M5 1.5 Q14 8 5 14.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 1.5 V14.5" stroke="currentColor" stroke-width=".8"/><path d="M2 8 H12" stroke="currentColor" stroke-width="1.2"/><path d="M12 6.5 L14.5 8 L12 9.5Z" fill="currentColor"/>',
 		),
 		horse: SVG(
 			16,
-			'<path d="M3 14 L4 9 Q4 6 7 6 L9 3 L10.5 4.5 L13.5 5 L13 7 L10.5 7 L10.5 10 L12 14" fill="none" stroke="#d9c79a" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>',
+			'<path d="M3 14 L4 9 Q4 6 7 6 L9 3 L10.5 4.5 L13.5 5 L13 7 L10.5 7 L10.5 10 L12 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>',
 		),
 		siege: SVG(
 			16,
-			'<rect x="2" y="7" width="11" height="3.5" rx="1" fill="#a07a4a"/><path d="M13 8.7 H15" stroke="#ccc" stroke-width="2"/><circle cx="4.5" cy="12.5" r="1.6" fill="#ddd"/><circle cx="10.5" cy="12.5" r="1.6" fill="#ddd"/><path d="M3 7 L7.5 3 L12 7" fill="none" stroke="#d9c79a" stroke-width="1.3"/>',
+			'<rect x="2" y="7" width="11" height="3.5" rx="1" fill="currentColor"/><path d="M13 8.7 H15" stroke="currentColor" stroke-width="2"/><circle cx="4.5" cy="12.5" r="1.6" fill="currentColor"/><circle cx="10.5" cy="12.5" r="1.6" fill="currentColor"/><path d="M3 7 L7.5 3 L12 7" fill="none" stroke="currentColor" stroke-width="1.3"/>',
 		),
 	},
 	head: SVG(
@@ -24124,6 +24109,8 @@ const ICON = {
 		20,
 		'<path d="M5.5 5.5 L14.5 14.5 M14.5 5.5 L5.5 14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
 	),
+	minus: SVG(20, '<path d="M4.5 10 H15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'),
+	plus: SVG(20, '<path d="M4.5 10 H15.5 M10 4.5 V15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'), // − and + drawn as the symbols they are, at 24 like ✓ and ✕ (MENU-SPEC §6)
 	hammer: SVG(
 		16,
 		'<path d="M3 13 L9 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 3.5 L10 2 L13.5 5.5 L12 8.5 Z" fill="currentColor"/>',
@@ -24160,10 +24147,17 @@ ICON.tab = {
 	research: ICON.book.replace('class="gl"', 'class="ti"'),
 }; // a hammer for making things, a book for learning them, on a card's two tabs
 ICON.book = ICON.book.replace('class="gl"', 'width="18" height="18"');
-// One mold for every control: a cell is an icon spot and a word spot. The tally is a pill of cells; a tile is one cell in its own box.
+// One mold for every control: a cell is an icon spot and a word spot. The tally is a pill of cells; a slot of the row or of a card is one
+// cell in its own box (MENU-SPEC §6): a picture icon at 18 with its number beside it and its word at 12 under it (pic), or a symbol alone
+// at 24: ✓ ✕ − + (sym). Its state is a class, drawn as a ring (shell-head's states).
 const cell = (attrs, icon, word, cls = '') => `<button class="cell ${cls}" ${attrs}>${icon}${word}</button>`;
 const wd = (t, id) => `<span class="wd"${id ? ` id="${id}"` : ''}>${t}</span>`;
-// The top: the tally (five counts, mute, pause, the map), then the status pill under it, cell for cell. The bottom: People over the door, then one column per job.
+const topOf = (icon, n) =>
+	`<span class="top">${icon}${n === undefined || n === null ? '' : `<span class="c">${n}</span>`}</span>`;
+const pic = (act, icon, word, cls = '', n, attrs = '') => cell(`data-act="${act}"${attrs}`, topOf(icon, n), wd(word), cls);
+const sym = (act, icon, cls = '', label = '') => cell(`data-act="${act}" aria-label="${label}"`, icon, '', 'sym ' + cls);
+const toGo = (f) => `--p:${Math.round(clamp(f, 0, 1) * 100)}%`; // the working ring: the share still to go, 1 when the work starts (MENU-SPEC §9)
+// The top: the tally (five counts, mute, pause, the map), then the status pill under it, cell for cell. The bottom: the row (39-huddle).
 const AGE_SHORT = ['Stone', 'Bronze', 'Classical', 'Medieval', 'Powder', 'Peace']; // the age in the strip: its name where it fits the 45 pt cell (measured: Medieval 42), short for the two that do not (Gunpowder 55, Enlightenment 70)
 const STATUS = [
 	['stAge', '', 'The age'],
@@ -24191,14 +24185,6 @@ function buildPanel() {
 		cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') +
 		cell('id="pauseB" data-act="pause" aria-label="Pause"', ICON.pause, '', 'one') +
 		cell('id="mapT" data-act="map" aria-label="The small map"', ICON.map, '', 'one'); // one button for play, pause and speed (hold it); the freed cell is the map (Albert, Build 40)
-	const st = (act, t, label, id) =>
-		`<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
-	$('jobs').innerHTML =
-		`<div class="col join">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}<button class="cell build" data-act="buildrow" aria-label="The Build menu"><span class="top">${ICON.hammer}</span></button></div>` + // one tap makes a villager; the door under it (Build 64: it took the hammer's place; Build is a page now)
-		JOBS.map(
-			(r) =>
-				`<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`,
-		).join('');
 	// the status pill: the state of the world, one cell under each column of the tally (Albert, Build 64: "age under Food, season under
 	// Wood"); the cells never move, and a narrow tally shows the first ones (the age, the season, the clock, the people come first)
 	const sc = (id, act, label) =>
@@ -24207,6 +24193,7 @@ function buildPanel() {
 			: `<span class="cell" id="${id}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></span>`;
 	$('status').innerHTML = STATUS.map(([id, act, label]) => sc(id, act, label)).join('');
 	$('homeB').innerHTML = ICON.home;
+	$('emgB').innerHTML = ICON.def;
 	$('pX').innerHTML = ICON.close;
 }
 const refresh = () => {
@@ -24254,16 +24241,7 @@ function fit() {
 			o = $('orders').getBoundingClientRect(),
 			t = r.top;
 		document.documentElement.style.setProperty('--ob', Math.round(r.bottom - o.top) + 'px');
-		{
-			const c1 = document.querySelector('#orders .tr:not([hidden]) > .col'); // the first column of the row on show: the chip sits on it, its width
-			if (c1) {
-				const q = c1.getBoundingClientRect(),
-					a = $('app').getBoundingClientRect();
-				document.documentElement.style.setProperty('--c1x', (q.left - a.left).toFixed(1) + 'px');
-				document.documentElement.style.setProperty('--c1w', q.width.toFixed(1) + 'px');
-			}
-		}
-		vy = Math.round((h.bottom - t + (o.top - t)) / 2 - ch / 2);
+		vy =Math.round((h.bottom - t + (o.top - t)) / 2 - ch / 2);
 		bandH = Math.max(100, o.top - h.bottom);
 	}
 	const W = Math.round(cw * dpr),
@@ -24429,6 +24407,20 @@ function milestoneTick() {
 		return; // one a tick: they never pile up
 	}
 }
+// What the town needs (Build 65: one table, where the tips, the Build page and the Stores domain each had their own copy; Build 70: the tips
+// read it alone). Each test is the reason; the tips add their words.
+const goldTight = (p) => p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300); // gold short while another store is full
+const NEEDS = {
+	house: () => popOf(0) >= capOf(0) - 1 && capOf(0) < POPMAX && !G.blds.some((b) => b.owner === 0 && b.kind === 'house' && b.prog < 1),
+	barracks: () => !bldsOf(0, 'barracks').length && G.t > 75,
+	lumber: () => unitsOf(0, 'vil').filter((u) => u.job === 'wood').length >= 3 && !bldsOf(0, 'lumber').length,
+	farm: () => {
+		const k = keepOf(0);
+		return !!k && G.nodes.filter((n) => n.kind === 'bush' && dist(n, k) < 300).length < 3 && !bldsOf(0, 'farm').length;
+	},
+	market: () => goldTight(G.P[0]) && !bldsOf(0, 'market').length,
+	hospital: () => G.units.some((u) => u.owner === 0 && u.sick > G.t) && !bldsOf(0, 'hospital').length && G.P[0].age >= 2,
+};
 function advise() {
 	const p = G.P[0],
 		k = keepOf(0);
@@ -24502,9 +24494,9 @@ const txt = (id, s) => {
 	const el = $(id);
 	if (el.textContent !== s) el.textContent = s;
 }; // a word is written only when it changed: the page is not touched seven times a second for nothing
-// Controls appear when their age comes (Build 59, Albert: hide by age). One rule, read from the rules tables: a resource shows from the first
-// age anything costs it (iron from the Bronze age); the Huddle shows with your first soldier; Emergency with the first enemy at your town or
-// the Bronze age, whichever is first.
+// Controls appear when their age comes (Build 59, Albert: hide by age). One rule, read from the rules tables: a resource opens from the first
+// age anything costs it (iron from the Bronze age), or once you hold some. Until then its count waits off the tally and its job in the row is
+// locked (Build 70: the row keeps its six slots, MENU-SPEC §6).
 let FIRST = null;
 function firstAge() {
 	const F = Object.fromEntries(RES.map((r) => [KEY[r], 9])),
@@ -24517,20 +24509,8 @@ function firstAge() {
 	AGES.forEach((A, i) => see(A.cost, i - 1));
 	return F;
 }
-function showByAge() {
-	const p = G.P[0],
-		F = FIRST || (FIRST = firstAge());
-	let n = 1;
-	RES.forEach((r, i) => {
-		const k = KEY[r],
-			on = p.age >= F[k] || p.res[k] >= 1;
-		$('r' + k).parentElement.hidden = !on;
-		const col = $('jobs').children[i + 1];
-		if (col) col.hidden = !on;
-		if (on) n++;
-	});
-	$('jobs').style.setProperty('--n', n);
-}
+const resAge = (k) => (FIRST || (FIRST = firstAge()))[k],
+	resOn = (k) => G.P[0].age >= resAge(k) || G.P[0].res[k] >= 1;
 function ui(force) {
 	const now = performance.now();
 	if (!force && now - uiAt < 150) return;
@@ -24538,11 +24518,10 @@ function ui(force) {
 	const p = G.P[0],
 		R = p.res;
 	document.body.classList.toggle('night', G.night > 0.5);
-	showByAge();
-	const VC = {};
+	for (const r of RES) $('r' + KEY[r]).parentElement.hidden = !resOn(KEY[r]);
 	for (const k of ['f', 'w', 's', 'g', 'i']) {
 		txt('r' + k, fmt(R[k]));
-		const c = (VC[k] = grad(velOf(p, k))),
+		const c = grad(velOf(p, k)),
 			el = $('r' + k);
 		if (el.style.color !== c) el.style.color = c;
 	} // the count's colour is its velocity on the one gradient (Build 64): deep green gaining fast, white steady, red losing badly
@@ -24602,31 +24581,13 @@ function ui(force) {
 		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
 		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2], i));
 	} // the colour code on the pill: blue research you can start, red the people at the roof or idle hands; dim is nothing to see
-	huddleUI();
-	const V = unitsOf(0, 'vil');
-	for (const r of JOBS) {
-		let n = 0;
-		for (const v of V) if (v.job === r) n++;
-		txt('tn_' + r, String(n));
-		{
-			const el = $('tn_' + r),
-				c = VC[KEY[r]] || '';
-			if (el.style.color !== c) el.style.color = c;
-		} // the job's number wears its store's colour: the row reads as one
-		$('tj_' + r).classList.toggle('on', p.rally === r);
-	}
-	const nq = queuedOf(0, 'vil'),
-		room = Math.max(0, capOf(0) - popOf(0));
-	txt('tPeopleN', nq ? `${V.length}+${nq}` : `${V.length}/${V.length + room}`); // have / can have now (one population: homes cap everyone); with villagers waiting, have + waiting
-	$('tPeople').classList.toggle('dis', !!trainWhy(0, 'vil'));
+	rowUI();
 	{
 		const k = keepOf(0),
 			away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20;
 		if ($('homeB').hidden === away) $('homeB').hidden = !away;
 	} // home shows only when your Town Center is off the screen
 	$('stage').classList.toggle('busy', !!(G.card || G.place));
-	if ($('buildT')) $('buildT').classList.toggle('on', !!(G.card && G.card.type === 'menu')); // one look for chosen: the gold ring, as the default job wears it
-	doorUI();
 	{
 		const P = picked(),
 			n = P.length,
@@ -24982,13 +24943,10 @@ const ACT = {
 		const t = TECHBY[id];
 		say(`Research ${t.name} at the ${BLD[t.at].name} for more slots.`, '', 5);
 	},
-	door() {
-		doorTap();
-	}, // the door: to the most important thing, else the dashboard (Build 64)
 	page(a) {
 		hudPage(a);
 		feel('tick');
-	},
+	}, // a page of the row by name (a milestone's button)
 	pvx() {
 		const m = shownMsg();
 		if (!m) return;
@@ -25062,13 +25020,15 @@ const ACT = {
 		ui(true);
 	}, // the camera follows what is picked, until you drag, pinch or tap the small map
 	techgo(id) {
-		const t = TECHBY[id],
-			k = keepOf(0),
-			B = t && G.blds.filter((b) => b.owner === 0 && b.kind === t.at && b.prog >= 1 && b.hp > 0).sort((a, b) => (k ? dist(a, k) - dist(b, k) : 0))[0];
-		if (!B) return say(`Build a ${BLD[t.at].name} first.`, '', 3);
+		ACT.bldgo(TECHBY[id].at);
+	}, // the research card's ›: to the building where it is learned, its card open
+	bldgo(kind) {
+		const k = keepOf(0),
+			B = G.blds.filter((b) => b.owner === 0 && b.kind === kind && b.prog >= 1 && b.hp > 0).sort((a, b) => (k ? dist(a, k) - dist(b, k) : 0))[0];
+		if (!B) return say(`Build a ${BLD[kind].name} first.`, '', 3);
 		camGo(B.x, B.y);
 		openCard({ type: 'bld', id: B.id });
-	}, // the research card's ›: to the building where it is learned, its card open
+	}, // to your nearest finished building of a kind, its card open: a kind of soldier on the Train page or a squad's card goes to where it is trained
 	jump(a) {
 		const [x, y] = a.split(',').map(Number);
 		camGo(x, y);
@@ -25086,9 +25046,12 @@ const ACT = {
 		openCard({ type, id: Number(id) });
 	},
 };
+// a job is locked until its age (32-frame, resOn): a tap on it says when it opens
+const shut = (r) => !resOn(KEY[r]) && (say(`${RESOURCES[r].name} opens in the ${AGES[resAge(KEY[r])].name} age.`, '', 3), true);
 // orders that change the game: refused once it is over
 const PLAY = {
 	job(a) {
+		if (shut(a)) return;
 		G.P[0].rally = G.P[0].rally === a ? null : a; // tap the lit tile again and no job is the default: new villagers wait at the Town Center (Build 61)
 		if (G.P[0].rally)
 			unitsOf(0, 'vil').forEach((u) => {
@@ -25096,6 +25059,7 @@ const PLAY = {
 			});
 	},
 	move(a) {
+		if (shut(a)) return;
 		if (!unitsOf(0, 'vil').some(freeVil)) {
 			say('Nobody is idle. Use − on another job.', '', 3);
 			return;
@@ -25121,7 +25085,7 @@ const PLAY = {
 	},
 	emg(a) {
 		emgStart(a);
-		hudOpen(false);
+		hudPage('jobs');
 		ACT.home();
 		closeCard();
 	},
@@ -25131,24 +25095,16 @@ const PLAY = {
 	},
 	pagecycle() {
 		pageCycle();
-	}, // the chip over the first slot: Jobs, Realm, Build, War, Squad, Train (Build 64)
-	sqdone() {
-		hudPage('war');
-		G.hud.sel = G.hud.sq.i;
-		feel('tick');
-	}, // ✓ on the Squad page: to the War page with this squad picked
-	sqbest(a) {
-		sqBest(Number(a));
-	},
+	}, // the cycle button above slot 1: Jobs, War, Train (Build 70)
 	tsq() {
 		const n = G.recruitSq;
 		G.recruitSq = n === null || n === undefined ? 0 : n + 1 >= BNS ? null : n + 1;
 		feel('tick');
-	}, // which squad new soldiers join: none, Alpha … Delta
+	}, // which squad new soldiers join: none, Squad A … Squad D
 	tq(a) {
 		const [t, d] = a.split(','),
-			k = sqUnit(Number(t));
-		if (!k) return;
+			k = kindOf(Number(t));
+		if (!k) return say(`Build a ${BLD[CLS[t][2]].name} first.`, '', 3);
 		if (d === '+') {
 			const why = trainWhy(0, k);
 			if (why) say(why, '', 3);
@@ -25162,16 +25118,11 @@ const PLAY = {
 		G.hud.aim = false;
 		hudPage('jobs');
 	},
-	fav(a) {
-		favToggle(a);
-		refresh();
-	}, // ★ on the Build card: pin a building to the Build page
 	intent(a) {
-		const i = Number(a);
-		G.bnIntent[i] = ((G.bnIntent[i] || 0) + 1) % INTENT.length;
+		const [i, k] = a.split(',').map(Number);
+		G.bnIntent[i] = k;
 		feel('tick');
-		refresh();
-	},
+	}, // a squad's intent: one of three, chosen
 	back(a) {
 		const u = G.units.find((v) => v.id === Number(a));
 		if (!u) return;
@@ -25181,15 +25132,11 @@ const PLAY = {
 		u.post = null;
 		closeCard();
 	}, // the worker card: back to the work it had
-	sqnew() {
-		sqNew();
-	},
 	waim() {
 		const H = G.hud;
 		H.aim = true;
 		H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
 		H.moved = false;
-		H.etaKey = '';
 		feel('tick');
 	}, // the crosshair to the middle of the screen
 	torders() {
@@ -25200,51 +25147,34 @@ const PLAY = {
 		say('Tap where new soldiers should go, then ✓.', '', 4);
 		feel('tick');
 	},
-	sqcycle() {
-		sqCycle();
-	},
-	sqtile(a) {
-		const t = Number(a);
-		G.hud.sq.tile = G.hud.sq.tile === t ? null : t;
-		feel('tick');
-	},
-	sqn(a) {
-		const [t, d] = a.split(','),
-			k = sqUnit(Number(t));
-		if (k) sqPlan(G.hud.sq.i, k, d === '+' ? 1 : -1);
-	},
 	sqpk(a) {
-		const [i, k, d] = a.split(',');
-		sqPlan(Number(i), k, d === '+' ? 1 : -1);
-	},
+		const [i, t, d] = a.split(',');
+		sqPlan(Number(i), CLS[t][0], d === '+' ? 1 : -1);
+	}, // a squad card's − and + under a kind
+	sqcancel() {
+		const c = G.card;
+		G.bnPlan[c.i] = { ...c.was.plan };
+		G.bnIntent[c.i] = c.was.intent;
+		rebattalion();
+		ACT.cardback();
+	}, // Cancel: the squad as the card found it, and back
+	sqsave() {
+		ACT.cardback();
+	}, // Save ✓: the changes stand (they took at once), and back
 	whome() {
 		hudHome();
 	},
 	wsq(a) {
 		const i = Number(a);
-		if (G.hud.sel === i) openCard({ type: 'squad', i });
-		else {
-			G.hud.sel = i;
-			G.hud.etaKey = '';
-			feel('tick');
-		}
-	}, // one tap picks the squad for Go; a second opens its card
-	wgo(a) {
-		hudFire(Number(a));
-	},
-	wback(a) {
-		const i = Number(a);
-		if (sqOut(i)) hudAbort(i);
-		else sendHome(sqUnits(i));
-	},
+		if (!hasCmd() && !sqOut(i)) return say('Squads come with Battalions.', '', 3);
+		openCard({ type: 'squad', i });
+	}, // a squad's card: built at home, watched on its mission; an empty squad opens as a new one
 	wfire() {
-		hudFire(hasCmd() ? G.hud.sel : null);
+		hudGo();
 	},
 	wabort() {
-		const s = G.hud.sel;
-		if (s !== null && s !== undefined && sqOut(s)) hudAbort(s);
-		else hudAbortAll();
-	},
+		hudAbortAll();
+	}, // Abort: every mission out comes home
 	hdel(a) {
 		hudAbort(Number(a));
 	},
@@ -25260,7 +25190,6 @@ const PLAY = {
 		hudPage('war');
 		if (s) G.hud.h = { t: 'ground', e: { x: s.x, y: s.y } };
 		G.hud.moved = true;
-		G.hud.etaKey = '';
 	}, // the strip's third answer: the War page, its crosshair already on the spot
 	nofree() {
 		say(freeWhy(), '', 4);
@@ -25333,9 +25262,6 @@ const PLAY = {
 		const e = G.units.find((x) => x.id === Number(a) && x.hp > 0);
 		if (e) order(qsPick(e), { t: 'unit', e });
 		closeCard();
-	},
-	bned(a) {
-		G.bnEdit = Number(a);
 	},
 	muster(a) {
 		const i = Number(a);
@@ -25919,7 +25845,7 @@ for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndIni
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 37; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 38; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -26017,6 +25943,18 @@ const MIGRATE = {
 		S.v = 37;
 		return S;
 	}, // Build 61: four squads (Alpha to Delta), the row's four middle tiles; Epsilon and Zeta fold into the reserve
+	37: (S) => {
+		S.bnPlan = (S.bnPlan || []).map((P) => {
+			const Q = {};
+			for (const k in P) {
+				const c = UNIT[k] && CLS[clsOf(k)];
+				if (c && P[k] > 0) Q[c[0]] = (Q[c[0]] || 0) + P[k];
+			}
+			return Q;
+		});
+		S.v = 38;
+		return S;
+	}, // Build 70: a squad holds so many of a kind (Foot, Archers, Riders, Siege), not of one soldier; the cut pages kept nothing in the save (the row's page was never saved, a game opens on Jobs)
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -26103,7 +26041,6 @@ function saveGame(force) {
 			bnIntent: G.bnIntent,
 			ms: G.ms || [],
 			recruitSq: G.recruitSq,
-			fav: undefined,
 			form: G.form,
 			intel: G.intel,
 			throne: G.throne || null,
@@ -26225,9 +26162,8 @@ function loadGame(S) {
 		ms: S.ms || [],
 		recruitSq: S.recruitSq ?? null,
 		form: S.form || BN.map(() => 0),
-		bnEdit: 0,
 		qs: { from: 'all', n: {} },
-		hud: { on: false, n: {} },
+		hud: { page: 'jobs' },
 		msn: S.msn || [null, null, null, null],
 		emg: S.emg || null,
 		intel: S.intel || {},
@@ -29011,46 +28947,22 @@ function chaseCrown(p, put) {
 		else for (const t of TECH) if (t.age === 5 && !t.civ && isNext(o, t) && research(o, t.id)) break;
 	}
 }
-// ═════ 39-huddle.js: the one row and its pages (Build 63, Albert's "unicorn layout") ═════
-// One row, six slots, three shapes, five pages. A slot is a fixed place the thumb learns; what fills it is one of three shapes: WHOLE (one
-// button the height of the slot), SPLIT (two buttons touching, top and bottom: people over build, create over cycle, ✓ over ✕) or PM (an icon
-// and a count above, − and + below with air between: the jobs). The chip at the row's left end is the one constant: it cycles the pages
-// Jobs → Realm → Build → War → Squad → Train (Build 64), and every page is always there (dimmed until the game opens it), so the order never changes under
-// the hand. The sixth slot is ✓ over ✕ on every page that confirms. The same row is a card's action bar (the worker card), so there is one
-// element to learn. The Huddle's sequence (ready, aim, fire, abort) lives on in the War page's missions.
-const CLS = [
-	['foot', 'Foot', 'barracks', 'foot'],
-	['arch', 'Archers', 'range', 'archers'],
-	['horse', 'Riders', 'stable', 'riders'],
-	['siege', 'Siege', 'siege', 'siege'],
-];
+// ═════ 39-huddle.js: the row below the map and its three pages, the War HUD's missions, the squad card ═════
+// The row (MENU-SPEC §6, Albert's drawings of Oct 30 and 31): one Formation two ranks tall, the same six columns on every page, turned by one
+// button that sits on its own rank above slot 1 and says the page's name: Jobs → War → Train. Slot 1 is two whole slots with the 6 gap
+// between; slots 2 to 5 (to 6 on Jobs) are the page's things, each with − and + under it or, on War, its time and pace; slot 6 is ✓ over ✕.
+// Building is a job: the hammer under People is the one way to the Build menu. War is the HUD: the target over Home, the four squads, Go over
+// Abort; a squad is built on its card. Every slot is a picture icon with its number and its word, or a symbol alone (pic, sym in 32-frame);
+// its state is a ring (the states in the style sheet). The Huddle's sequence (ready, aim, fire, abort) lives on in the War page's missions.
 const HUD = {
 	near: 140, // a fight is what hostile soldiers within this reach of the group make
-	lose: 0.4, // a tile flashes red below this chance, and stops above clear
+	lose: 0.4, // a mission below this chance says it is losing, once until it climbs above clear
 	clear: 0.5,
-	win: 0.75, // green above this
 	smooth: 0.3, // the chance moves a third of the way each second: about three seconds to settle
 	gap: 8, // reinforcements arriving within this many seconds of each other are one wave
 	waves: 3,
 };
-const PAGES = ['jobs', 'build', 'war', 'squad', 'train']; // Build 64: fixed for everyone. Jobs is home; the Realm is the dashboard; then Build and the three military pages side by side
-const pageName = { jobs: 'Jobs', realm: 'Realm', war: 'War', build: 'Build', squad: 'Squad', train: 'Train' };
-const pageIcon = () => ({
-	jobs: ICON.list,
-	realm: ICON.def,
-	war: ICON.sword,
-	build: ICON.hammer,
-	squad: ICON.squad,
-	train: ICON.shield,
-});
-const FAV0 = ['house', 'farm', 'barracks', 'tower', 'wall']; // the Build page's five hot keys until you pin your own (★ on the Build card)
-const shortName = (k) =>
-	stats(0, k)
-		.name.replace(/^[A-Z][a-z]+ (?=[A-Z])/, '')
-		.split(' ')[0]
-		.replace(/m[ae]n$/, '')
-		.slice(0, 7); // one short word on a tile: Spear, Archer, Chariot
-const clsOf = (u) => CLS.findIndex((c) => c[2] === UNIT[u.kind].at);
+const PAGES = ['jobs', 'war', 'train']; // one button turns them, the same for everyone (Build 64; Albert, Oct 31: Jobs, War, Train)
 const mUnits = (m) => G.units.filter((u) => u.owner === 0 && u.ord === m.ord && u.hp > 0);
 const sqUnits = (i) => armyOf(0).filter((u) => u.bn === i && u.kind !== 'spy');
 const sqOut = (i) => G.msn[i] && !G.msn[i].end; // the squad is out on a mission
@@ -29078,89 +28990,39 @@ const wxWord = () => (G.wx !== 'clear' && WEATHER[G.wx] ? WEATHER[G.wx].name : s
 function paceWord(S) {
 	if (!S.length) return '';
 	const v = Math.min(...S.map((u) => paceOf(u, 1)));
-	return v < 14 ? 'slow' : v < 22 ? 'medium' : 'fast';
+	return ROW_WORD.pace[v < 14 ? 0 : v < 22 ? 1 : 2];
 }
-
 // ── the pages
 function hudPage(page) {
 	const H = G.hud;
 	H.page = page;
-	H.on = page === 'war' || page === 'train';
-	if (H.on) {
-		H.aim = true;
+	H.aim = page !== 'jobs'; // War and Train put the crosshair up: a tap on the map moves it
+	if (H.aim) {
 		H.mode = page === 'train' ? 'rally' : 'war';
 		H.aimT = performance.now();
 		if (page === 'train' && G.rally0) H.h = { t: 'ground', e: { x: G.rally0.x, y: G.rally0.y } };
 		if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
-		H.etaKey = '';
-	} else H.aim = false;
-	if (page !== 'jobs') closeCard();
-	if (!H.sq) H.sq = { i: 0, tile: null, unit: {} };
-}
-function hudOpen(on) {
-	hudPage(on ? 'war' : 'jobs');
+		closeCard();
+	}
 }
 function pageCycle() {
-	const i = PAGES.indexOf(G.hud.page || 'jobs');
-	hudPage(PAGES[(i + 1) % PAGES.length]);
+	hudPage(PAGES[(PAGES.indexOf(G.hud.page) + 1) % PAGES.length]);
 	feel('tick');
 }
-// ── the Squad page
-const sqKinds = (tile) =>
+// the kind a class trains from the Train page, and fills a muster with: the first its building trains in this age (a people's own unit in its place)
+const kindOf = (t) =>
 	ARMYK.filter((k) => !UNIT[k].civ && UNIT[k].cost && k !== 'spy')
 		.map((k) => civKind(0, k))
-		.filter((k, i, a) => a.indexOf(k) === i && UNIT[k].at === CLS[tile][2] && UNIT[k].age <= G.P[0].age); // what that building can train now
-const sqUnit = (tile) => {
-	const K = sqKinds(tile),
-		u = G.hud.sq.unit[tile];
-	return K.includes(u) ? u : K[0];
-};
-function sqNew() {
-	const j = BN.findIndex((_, i) => !Object.values(G.bnPlan[i]).some(Boolean) && !sqUnits(i).length);
-	if (j < 0) return say('All squads made: pick one to change.', '', 3);
-	G.hud.sq.i = j;
-	G.hud.sq.tile = null;
-	say(`${BN[j]}: set what it holds with − and +.`, '', 3);
-	feel('tick');
-}
-function sqCycle() {
-	const Q = G.hud.sq;
-	if (Q.tile !== null) {
-		const K = sqKinds(Q.tile);
-		if (K.length) Q.unit[Q.tile] = K[(K.indexOf(sqUnit(Q.tile)) + 1) % K.length];
-	} else Q.i = (Q.i + 1) % BNS;
-	feel('tick');
-}
-function sqPlan(i, k, d) {
-	// a squad holds BNSIZE at most, every kind together; the step is 1 under ten, 5 above
+		.find((k) => UNIT[k].at === CLS[t][2] && UNIT[k].age <= G.P[0].age);
+function sqPlan(i, c, d) {
+	// a squad holds BNSIZE at most, every kind together; the step is 1 under ten, 5 above. c: the kind's id in CLS (foot, arch, horse, siege)
 	const P = G.bnPlan[i],
-		cur = P[k] || 0,
+		cur = P[c] || 0,
 		st = d > 0 ? (cur < 10 ? 1 : 5) : cur <= 10 ? 1 : 5,
-		others = Object.entries(P).reduce((n, [q, v]) => n + (q === k ? 0 : v), 0);
-	P[k] = clamp(cur + d * st, 0, Math.max(cur, BNSIZE - others));
-	if (!P[k]) delete P[k];
+		others = Object.entries(P).reduce((n, [q, v]) => n + (q === c ? 0 : v), 0);
+	P[c] = clamp(cur + d * st, 0, Math.max(cur, BNSIZE - others));
+	if (!P[c]) delete P[c];
 	rebattalion();
-}
-// ★ Best: a helper, not a cheat (Albert, Build 63). It fills the squad's plan from the soldiers at home by the same odds the War page shows:
-// against the foes seen near the crosshair it takes the kinds the matchup favours first; with no foe in sight it takes the strongest first,
-// two foot to one shooter. It never picks for you: the plan is yours to change with − and +.
-function sqBest(i) {
-	const H = G.hud,
-		home = free().filter((u) => u.bn === undefined || u.bn === i || !sqUnits(u.bn).length),
-		foes = H.h ? foesNear(H.h.e) : [],
-		score = (u) => unitPower(u) * (foes.length ? matchup([u], foes) : 1) * (foes.length || clsOf(u) === 0 ? 1 : 0.6);
-	if (!home.length) return say('Nobody at home to put in it.', '', 3);
-	const P = {};
-	let n = 0;
-	for (const u of home.sort((a, b) => score(b) - score(a))) {
-		if (n >= BNSIZE) break;
-		P[u.kind] = (P[u.kind] || 0) + 1;
-		n++;
-	}
-	G.bnPlan[i] = P;
-	rebattalion();
-	say(`${BN[i]}: ${n} picked${foes.length ? ' for the foe in sight' : ''}.`, 'good', 3);
-	feel('thock');
 }
 // ── aiming: the crosshair, moved by a tap on the map while the War or Train page is open
 function aimSpot(sx, sy) {
@@ -29170,7 +29032,6 @@ function aimSpot(sx, sy) {
 	if (!(h.t === 'ground' || h.t === 'find' || foe)) h = { t: 'ground', e: { x: h.e.x, y: h.e.y } };
 	H.h = h;
 	H.moved = true;
-	H.etaKey = '';
 }
 const aimNear = (sx, sy) => {
 	const H = G.hud;
@@ -29204,16 +29065,19 @@ const hazardAt = (x, y) =>
 	(G.cracks || []).some((c) => hyp(x - c.x, y - c.y) < 40);
 // who a squad sends: its idle members; with no squads yet, every idle soldier
 const sqFree = (i) => (i === null || i === undefined ? free() : free().filter((u) => u.bn === i));
-function hudEta(i = G.hud.sel) {
+// a squad's time to the crosshair (null: every idle soldier), kept for each squad until the target, the squad, the sky or three seconds change
+function hudEta(i = null) {
 	const H = G.hud,
 		S = sqFree(i);
 	if (!H.h || !S.length) return 0;
-	const key = `${i}:${H.h.e.x | 0},${H.h.e.y | 0},${S.length},${G.wx},${(G.t / 3) | 0}`;
-	if (H.etaKey !== key) {
-		H.etaKey = key;
-		H.eta = etaOf(S, H.h.e, routeK(centreOf(S), H.h.e));
+	const key = `${H.h.e.x | 0},${H.h.e.y | 0},${S.length},${G.wx},${(G.t / 3) | 0}`,
+		E = (H.eta = H.eta || {}),
+		e = (E[i] = E[i] || {});
+	if (e.key !== key) {
+		e.key = key;
+		e.v = etaOf(S, H.h.e, routeK(centreOf(S), H.h.e));
 	}
-	return H.eta;
+	return e.v;
 }
 // Go: a squad marches on the crosshair as one order and takes its slot (with no squads yet, every idle soldier takes the first free slot)
 function hudFire(i) {
@@ -29231,7 +29095,7 @@ function hudFire(i) {
 		kinds = {};
 	for (const u of S) kinds[u.kind] = (kinds[u.kind] || 0) + 1;
 	G.msn[slot] = {
-		name: i === null || i === undefined ? 'The army' : BN[i],
+		name: i === null || i === undefined ? ROW_WORD.army : BN[i],
 		sq: i ?? null,
 		ord: G.ordN,
 		n0: S.length,
@@ -29246,9 +29110,15 @@ function hudFire(i) {
 		st: 'go',
 		odds: 0.5,
 	};
-	H.sel = slot;
 	H.firedT = performance.now();
 	feel('thock');
+}
+// Go (✓ on War): every squad at home and ready (its blue ring) marches on the crosshair, each its own mission; with none ready, or before
+// Battalions, every idle soldier goes as one
+function hudGo() {
+	const ready = hasCmd() ? BN.map((_, i) => i).filter((i) => !sqOut(i) && sqFree(i).length) : [];
+	if (ready.length) ready.forEach((i) => hudFire(i));
+	else hudFire(null);
 }
 // a mission leaves: the soldiers go home, the slot is free
 function hudAbort(slot, quiet) {
@@ -29309,8 +29179,6 @@ function missionsTick() {
 			m.flash = 'lose';
 			say(`${m.name} is losing.`, 'warn', 4);
 		} else if (m.flash === 'lose' && m.odds > HUD.clear) m.flash = null;
-		if (m.odds > HUD.win) m.flash = 'win';
-		else if (m.flash === 'win') m.flash = null;
 	});
 }
 // who can still reach a fight in time, fastest first, and how many it takes to even it: waves by arrival
@@ -29344,7 +29212,7 @@ function reinforcePlan(m) {
 }
 function waveLine(plan) {
 	const word = (list) => {
-		const k = new Set(list.map((r) => clsOf(r.u)));
+		const k = new Set(list.map((r) => clsOf(r.u.kind)));
 		return k.size === 1 ? CLS[[...k][0]][3] : 'soldiers';
 	};
 	return plan.waves
@@ -29369,259 +29237,93 @@ function hudReinforce(slot) {
 	hudJoin(plan.go, m);
 	say(`${plan.go.length} reinforce ${m.name}.`, 'good', 3);
 }
-
-// ── the row: six slots, three shapes
-const odds2 = (p) => `hsl(${Math.round(Math.max(0, Math.min(1, p)) * 120)} 75% 58%)`;
-function mStatus(m) {
-	if (m.st === 'go') return [mmss(m.eta || 0), codeOf('b')];
-	if (m.st === 'act') return ['FIGHTING', odds2(m.odds)];
-	if (m.st === 'lost') return ['LOST', codeOf('r')];
-	return [m.late ? `LATE +${m.late}s` : '✓ DONE', m.late ? 'var(--gold-1)' : codeOf('g')]; // on its way blue, lost red, done green, late gold: the code
-}
-const stB = (act, t, cls = '', extra = '') => `<button class="cell st ${cls}" data-act="${act}"${extra}>${t}</button>`;
-const cellB = (act, top, word, cls = '', extra = '') =>
-	`<button class="cell ${cls}" data-act="${act}"${extra}>${top}${wd(word)}</button>`;
-const topOf = (icon, n) =>
-	`<span class="top">${icon}${n === undefined || n === null ? '' : `<span class="c">${n}</span>`}</span>`;
-// the three shapes. whole: one button the slot's height. split: two touching. pm: a tile over − and +.
-const WHOLE = (act, top, word, cls = '', extra = '') =>
-	`<div class="col whole">${cellB(act, top, word, cls + ' tall', extra)}</div>`;
-const SPLIT = (a, b) => `<div class="col join">${a}${b}</div>`;
-const PM = (tile, minus, plus) => `<div class="col">${tile}<div class="pm">${minus}${plus}</div></div>`;
-function warPageHTML() {
-	const H = G.hud,
-		sel = H.sel,
-		cmd = hasCmd(),
-		canGo = !!H.h && sqFree(cmd ? sel : null).length > 0;
-	let h = SPLIT(
-		stB('waim', ICON.aim, 'war', ' aria-label="Aim: the crosshair to the middle of the screen"'),
-		stB('whome', ICON.home, 'war', ' aria-label="Everyone home"'),
-	); // Albert's notebook (Oct 30): the War page is aim and home, four squads with − and +, Go over Abort
-	BN.forEach((nm, i) => {
-		const S = cmd ? sqUnits(i) : [],
-			n = S.length,
-			m = sqOut(i) ? G.msn[i] : null,
-			[t, color] = m ? mStatus(m) : ['', ''],
-			fl = m && m.flash ? ' ' + m.flash : '',
-			eta = !m && sel === i && n ? hudEta(i) : 0,
-			word = !cmd
-				? 'Command'
-				: m
-					? `<span style="color:${color}">${t}</span>`
-					: eta
-						? `${nm[0]} · ${mmss(eta)}`
-						: n
-							? `${nm[0]} · ${paceWord(S)}`
-							: nm;
-		h += PM(
-			cellB(
-				`wsq:${i}`,
-				topOf(ICON.squad, cmd ? n : null),
-				word,
-				`msn${fl}${sel === i ? ' on' : ''}${cmd ? '' : ' dis'}`,
-				` style="--mc:${color || 'transparent'}"`,
-			),
-			stB(`wback:${i}`, '−', m ? '' : 'dis', ' aria-label="Call back"'),
-			stB(`wgo:${i}`, '+', n ? '' : 'dis', ' aria-label="Send"'),
-		);
-	});
-	h += SPLIT(
-		stB('wfire', ICON.ok, canGo ? 'go' : 'dis', ' aria-label="Go"'),
-		stB('wabort', ICON.close, '', ' aria-label="Abort"'),
-	);
-	return h;
-}
-const favKinds = () => (SET.fav && SET.fav.length ? SET.fav : FAV0).slice(0, 5);
-// What the town needs (Build 65: one table; the tips, the Build page and the Stores domain read it, where each had its own copy). Each test
-// is the reason; the tips add their words and the Build page its colour.
-const goldTight = (p) => p.res.g < 50 && (p.res.w > 300 || p.res.s > 300 || p.res.f > 300); // gold short while another store is full
-const NEEDS = {
-	house: () => popOf(0) >= capOf(0) - 1 && capOf(0) < POPMAX && !G.blds.some((b) => b.owner === 0 && b.kind === 'house' && b.prog < 1),
-	barracks: () => !bldsOf(0, 'barracks').length && G.t > 75,
-	lumber: () => unitsOf(0, 'vil').filter((u) => u.job === 'wood').length >= 3 && !bldsOf(0, 'lumber').length,
-	farm: () => {
-		const k = keepOf(0);
-		return !!k && G.nodes.filter((n) => n.kind === 'bush' && dist(n, k) < 300).length < 3 && !bldsOf(0, 'farm').length;
-	},
-	market: () => goldTight(G.P[0]) && !bldsOf(0, 'market').length,
-	hospital: () => G.units.some((u) => u.owner === 0 && u.sick > G.t) && !bldsOf(0, 'hospital').length && G.P[0].age >= 2,
-};
-const buildWants = () => Object.keys(NEEDS).filter((k) => NEEDS[k]());
-const stCls = (st) => ({ red: 'warn', blue: 'go', green: 'work' })[st] || ''; // the colour code's word, as its state (MENU-SPEC §9)
-// The Build page (Build 64): what the town needs, in the colour code. Blue: wanted and you can build it now; green: going up; red: wanted
-// but blocked, with the reason (what it is short of, or what it needs first); then your pinned favourites, white. The sixth is the Build card.
-function buildItems() {
+// ── the row: three pages on one mold. Rank one is the page's six things, rank two what each is under it; grid order lays them
+// Jobs: People over the hammer; each job with its count (in its store's colour) and − + under it. People rings blue while people stand idle;
+// the hammer wears the working ring while a building goes up (the first site still going up: what is left of it); a job opens with its age.
+function jobsPage() {
 	const p = G.P[0],
-		out = [],
-		has = (k) => out.some((x) => x.k === k);
-	for (const b of G.blds)
-		if (out.length < 2 && b.owner === 0 && b.hp > 0 && b.prog < 1)
-			out.push({ k: b.kind, st: 'green', word: `${Math.floor(b.prog * 100)}%`, act: `card:bld,${b.id}` });
-	for (const k of buildWants()) {
-		if (out.length >= 4 || has(k) || !BLD[k]) continue;
-		const why = capWhy(0, k);
-		out.push(
-			why
-				? { k, st: 'red', word: BLD[k].age > p.age ? AGES[BLD[k].age].name : 'blocked', act: `build:${k}`, why }
-				: afford(p, BLD[k].cost)
-					? { k, st: 'blue', word: BLD[k].short || BLD[k].name, act: `build:${k}` }
-					: { k, st: 'red', word: `short ${need(BLD[k].cost)}`, act: `build:${k}` },
-		);
+		V = unitsOf(0, 'vil'),
+		site = G.blds.find((b) => b.owner === 0 && b.hp > 0 && b.prog < 1);
+	let top = pic('train:vil', ICON.people, ROW_WORD.people, V.some(freeVil) ? 'go' : trainWhy(0, 'vil') ? 'dis' : '', null, ' aria-label="People: train a villager"'),
+		low = pic('buildrow', ICON.hammer, ROW_WORD.build, site ? 'work' : '', null, ` aria-label="The Build menu"${site ? ` style="${toGo(1 - site.prog)}"` : ''}`);
+	for (const r of JOBS) {
+		const k = KEY[r],
+			on = resOn(k), // a job not open yet is locked, with no count (32-frame, resOn)
+			n = V.filter((v) => v.job === r).length;
+		top += on ? pic(`job:${r}`, ICON[r], RESOURCES[r].name, p.rally === r ? 'on' : '', n, ` style="--nc:${grad(velOf(p, k))}"`) : pic(`job:${r}`, ICON[r], RESOURCES[r].name, 'dis');
+		low += sym(`less:${r}`, ICON.minus, on ? 'h' : 'h dis', `One fewer on ${r}`) + sym(`move:${r}`, ICON.plus, on ? 'h' : 'h dis', `One more on ${r}`);
 	}
-	for (const k of favKinds()) if (out.length < 4 && !has(k) && BLD[k]) out.push({ k, st: '', word: BLD[k].short || BLD[k].name, act: `build:${k}` });
-	return out;
+	return top + low;
 }
-function buildPageHTML() {
-	const V = unitsOf(0, 'vil').length,
-		room = Math.max(0, capOf(0) - popOf(0));
-	let h = WHOLE('train:vil', topOf(ICON.people), `${V}/${V + room}`, trainWhy(0, 'vil') ? 'dis' : '', ' aria-label="Train a villager"'); // People, whole: the door lives on Jobs
-	for (const it of buildItems())
-		h += WHOLE(it.act, `<span class="top thumb">${bldThumb(it.k)}</span>`, it.word, `build ${stCls(it.st)}`, ` aria-label="${BLD[it.k].name}${it.why ? ': ' + it.why : ''}"`);
-	h += WHOLE('buildrow', topOf(ICON.hammer), 'All', 'build', ' id="buildT" aria-label="The Build card"');
-	return h;
-}
-// a small picture of a building for the Build page: its sprite, drawn once per kind and colour
-const THUMB = new Map();
-function bldThumb(kind) {
-	const key = kind + G.P[0].color;
-	let u = THUMB.get(key);
-	if (!u) {
-		const sp = bldSprite({ kind, owner: 0, prog: 1, hp: 1, id: 0, x: 0, y: 0 }, 2),
-			c = document.createElement('canvas'),
-			S = 80;
-		c.width = c.height = S;
-		// the picture is the sprite's own box, not its canvas (a sprite's canvas has air for the flags and the shadow)
-		const px = sp.getContext('2d').getImageData(0, 0, sp.width, sp.height).data;
-		let x0 = sp.width,
-			y0 = sp.height,
-			x1 = 0,
-			y1 = 0;
-		for (let i = 3; i < px.length; i += 4)
-			if (px[i] > 40) {
-				const q = (i - 3) / 4,
-					x = q % sp.width,
-					y = (q / sp.width) | 0;
-				if (x < x0) x0 = x;
-				if (x > x1) x1 = x;
-				if (y < y0) y0 = y;
-				if (y > y1) y1 = y;
-			}
-		const w = Math.max(1, x1 - x0 + 1),
-			hh = Math.max(1, y1 - y0 + 1),
-			g2 = c.getContext('2d'),
-			k = Math.min(S / w, S / hh) * 0.94;
-		g2.drawImage(sp, x0, y0, w, hh, (S - w * k) / 2, (S - hh * k) / 2, w * k, hh * k);
-		u = `<img src="${c.toDataURL()}" width="40" height="40" alt="">`;
-		THUMB.set(key, u);
-	}
-	return u;
-}
-function favToggle(kind) {
-	const F = (SET.fav && SET.fav.length ? SET.fav : FAV0).slice(0, 5),
-		i = F.indexOf(kind);
-	if (i >= 0) F.splice(i, 1);
-	else {
-		if (F.length >= 5) F.shift(); // the oldest pin goes
-		F.push(kind);
-	}
-	SET.fav = F;
-	saveSet();
-	say(i >= 0 ? `${BLD[kind].name} off the Build page.` : `${BLD[kind].name} pinned to the Build page.`, '', 3);
-}
-function squadPageHTML() {
-	const Q = G.hud.sq,
-		i = Q.i,
+// War, the HUD: the target over Home; each squad with its size and its word, its time to the target and its pace under it; Go over Abort.
+// A squad marching wears the working ring (the share of its march still to go), fighting the red one, at home and ready the blue; an empty
+// squad is a faint New; before Battalions the squads are locked, and the army's one mission shows in the first slot.
+function warPage() {
+	const H = G.hud,
 		cmd = hasCmd();
-	let h = SPLIT(
-		stB('sqnew', `${ICON.squad}<b class="plus">＋</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="A new squad"'),
-		stB('sqcycle', `${ICON.cycle}<b class="plus">${BN[i][0]}</b>`, 'sq' + (cmd ? '' : ' dis'), ' aria-label="Cycle the squads"'),
-	); // the notebook: 1A create, 1B cycle; 2 to 5 the buildings; 6 done over best
-	CLS.forEach((c, t) => {
-		const k = sqUnit(t),
-			built = cmd && k && ready(0, c[2]).length,
-			have = k ? sqUnits(i).filter((u) => u.kind === k).length : 0,
-			want = k ? G.bnPlan[i][k] || 0 : 0;
-		h += PM(
-			cellB(
-				`sqtile:${t}`,
-				topOf(ICON.cls[c[0]], k && cmd ? `${have}/${want}` : '–'),
-				!cmd ? 'Command' : k ? shortName(k) : BLD[c[2]].name,
-				'sq' + (Q.tile === t ? ' on' : '') + (built ? '' : ' dis'),
-			),
-			stB(`sqn:${t},-`, '−', 'sq' + (built ? '' : ' dis')),
-			stB(`sqn:${t},+`, '+', 'sq' + (built ? '' : ' dis')),
-		);
+	let top = pic('waim', ICON.aim, ROW_WORD.target, H.moved ? 'on' : '', null, ' aria-label="Target: the crosshair to the middle of the screen"'),
+		low = pic('whome', ICON.home, ROW_WORD.home, '', null, ' aria-label="Everyone home"');
+	BN.forEach((nm, i) => {
+		const m = sqOut(i) ? G.msn[i] : null,
+			S = m ? mUnits(m) : cmd ? sqUnits(i) : [],
+			fight = !!m && m.st === 'act',
+			ready = !m && sqFree(i).length > 0;
+		if (!m && !cmd) {
+			top += pic(`wsq:${i}`, ICON.squad, nm, 'dis');
+			low += info('', '');
+		} else if (!m && !S.length && !Object.keys(G.bnPlan[i]).length) {
+			top += pic(`wsq:${i}`, ICON.plus, ROW_WORD.new, 'empty', null, ` aria-label="${nm}: a new squad"`);
+			low += info('', '');
+		} else {
+			top += pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, fight ? 'warn' : m ? 'work' : ready ? 'go' : '', S.length, m && !fight ? ` style="${toGo((m.eta ?? m.due - G.t) / Math.max(1, m.due - m.t))}"` : '');
+			low += info(fight ? '—' : m ? mmss(m.eta ?? m.due - G.t) : ready ? mmss(hudEta(i)) : '—', fight ? ROW_WORD.fight : paceWord(S));
+		}
 	});
-	h += SPLIT(
-		stB('sqdone', ICON.ok, cmd ? 'go' : 'dis', ' aria-label="Done: to the War page"'),
-		stB(`sqbest:${i}`, ICON.star, 'sq' + (cmd ? '' : ' dis'), ' aria-label="Best: fill from the soldiers at home"'),
-	);
-	return h;
+	return top + sym('wfire', ICON.ok, H.h && free().length ? 'go' : 'dis', 'Go') + low + sym('wabort', ICON.close, '', 'Abort');
 }
-function trainPageHTML() {
+// Train: the orders (where new soldiers go) over the squad they join; the four kinds, each with how many wait in line (the working ring on
+// the one in training) and − + under it; ✓ sets the orders on the crosshair, ✕ leaves
+function trainPage() {
 	const H = G.hud,
 		rs = G.recruitSq;
-	let h = SPLIT(
-		stB('torders', ICON.aim, 'train' + (H.aim ? ' on' : ''), ' aria-label="Orders: where new soldiers go"'),
-		stB('tsq', `${ICON.squad}<b class="plus">${rs === undefined || rs === null ? '·' : BN[rs][0]}</b>`, 'train' + (hasCmd() ? '' : ' dis'), ' aria-label="Which squad new soldiers join"'),
-	); // the notebook: "Army training: train reinforcements without going home… must contain an Orders button"
+	let top = pic('torders', ICON.aim, ROW_WORD.orders, H.aim ? 'on' : '', null, ' aria-label="Orders: where new soldiers go"'),
+		low = pic('tsq', ICON.squad, rs === null || rs === undefined ? ROW_WORD.nosq : BN[rs], hasCmd() ? '' : 'dis', null, ' aria-label="Which squad new soldiers join"');
 	CLS.forEach((c, t) => {
-		const k = sqUnit(t),
+		const k = kindOf(t),
 			at = k ? readyAt(0, UNIT[k]) : [],
-			q = at.flatMap((b) => b.q.filter((j) => j.kind === k)),
-			first = q.length ? Math.max(0, Math.ceil(q[0].left)) : 0,
-			why = k ? trainWhy(0, k) : 'none';
-		h += PM(
-			cellB(
-				`sqtile:${t}`,
-				topOf(ICON.cls[c[0]], at.length ? q.length : '–'),
-				!at.length ? 'none' : q.length ? mmss(first) : shortName(k),
-				'train' + (H.sq.tile === t ? ' on' : '') + (at.length ? '' : ' dis'),
-			),
-			stB(`tq:${t},-`, '−', 'train' + (q.length ? '' : ' dis')),
-			stB(`tq:${t},+`, '+', 'train' + (why ? ' dis' : ''), why ? ` title="${why}"` : ''),
-		);
+			n = at.reduce((s, b) => s + b.q.filter((j) => j.kind === k).length, 0),
+			now = at.map((b) => b.q[0]).find((j) => j && j.kind === k);
+		top += pic(`bldgo:${c[2]}`, ICON.cls[c[0]], c[1], !at.length ? 'dis' : now ? 'work' : '', at.length ? n : null, now ? ` style="${toGo(now.left / now.total)}"` : '');
+		low += sym(`tq:${t},-`, ICON.minus, n ? 'h' : 'h dis', `One fewer ${c[3]}`) + sym(`tq:${t},+`, ICON.plus, k && !trainWhy(0, k) ? 'h' : 'h dis', `One more ${c[3]}`);
 	});
-	h += SPLIT(
-		stB('tok', ICON.ok, H.aim ? 'go' : 'dis', ' aria-label="Set the orders on the crosshair"'),
-		stB('tcancel', ICON.close, '', ' aria-label="Cancel"'),
-	);
-	return h;
+	return top + sym('tok', ICON.ok, H.aim ? 'go' : 'dis', 'Set the orders on the crosshair') + low + sym('tcancel', ICON.close, '', 'Cancel');
 }
-function huddleUI() {
-	const H = G.hud,
-		page = H.page || 'jobs',
-		el = $('huddle'),
-		flip = el.hidden === (page !== 'jobs');
-	if (flip) {
-		el.hidden = page === 'jobs';
-		$('jobs').hidden = page !== 'jobs';
+const ROWS = { jobs: jobsPage, war: warPage, train: trainPage };
+// the row on show, patched in place (a button under a finger stays the same button); the cycle button above slot 1 wears the page's name
+// and its tint; Emergency's button steps aside under a card, where it would sit over the card's buttons
+function rowUI() {
+	const page = G.hud.page,
+		el = $('row'),
+		h = ROWS[page](),
+		chip = $('hudB');
+	if (el.sigH !== h) {
+		el.sigH = h;
+		patchHTML(el, h);
 	}
-	$('orders').className =
-		$('orders')
-			.className.replace(/\bpg-\w+/g, '')
-			.trim() +
-		' pg-' +
-		page;
-	const chip = $('hudB');
-	if ($('emgB') && !$('emgB').innerHTML) $('emgB').innerHTML = ICON.def;
-	if ($('emgB')) $('emgB').hidden = !!G.card; // under a card it would sit over the card's buttons
-	chip.innerHTML = ICON.cycle; // one constant: the cycle (Albert, Build 70); the page shows in the row's tint
-	chip.className = 'fab chip ' + page;
-	chip.setAttribute('aria-label', `${pageName[page]}: the next page`);
-	if (page !== 'jobs') {
-		const h = { war: warPageHTML, build: buildPageHTML, squad: squadPageHTML, train: trainPageHTML, realm: realmPageHTML }[page]();
-		if (el.sigH !== h) {
-			el.sigH = h;
-			el.innerHTML = h;
-		}
+	if (chip.pg !== page) {
+		chip.pg = page;
+		$('orders').className = 'pg-' + page;
+		chip.className = 'fab cell ' + page;
+		chip.innerHTML = topOf(ICON.cycle) + wd(ROW_WORD[page]);
+		chip.setAttribute('aria-label', `${ROW_WORD[page]}: the next page`);
+		fit(); // the row is drawn anew: the map's bottom edge is measured again
 	}
-	if (flip) fit(); // the bar is whole again: the corner buttons sit on top of it
+	$('emgB').hidden = !!G.card;
 }
 // the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; its colour says what is under it; green once fired
 function drawReticle() {
 	const H = G.hud;
-	if (!H.on || !H.h) return;
+	if (!H.aim || !H.h) return;
 	const x = SX(H.h.e.x),
 		y = SY(H.h.e.y),
 		L = performance.now() - (H.firedT || -1e9) < timeOf('settle') ? 1 : 0,
@@ -29687,56 +29389,51 @@ function drawReticle() {
 	ctx.fillText(eta ? `${mmss(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - R - 8);
 	ctx.restore();
 }
-// ── the squad card: the editor while it is home, the live view while it is out (Build 61, one card, two states)
-// Commander's intent (Build 63): what the squad is for, in the words the doctrine uses. The row and the card show it; the soldiers read it in solTick.
+// ── the squad card (MENU-SPEC §8, picture Mission Flow): the squad builder while it is home, the live view while it is out (Build 61, one card, two states)
+// Commander's intent (Build 63): what the squad is for, in the words the doctrine uses. The card shows it; the soldiers read it in solTick.
 // three intents (the doctrine's words): Engage fights what it meets, soldiers before buildings; No pursuit walks to the spot and fights only
 // what comes within reach; Buildings first takes the nearest building and leaves the soldiers to the rest
 const INTENT = [
 	{ name: 'Engage', note: 'fight what you meet' },
-	{ name: 'No pursuit', note: 'to the spot, fight only what blocks' },
-	{ name: 'Buildings first', note: 'the nearest building, then the rest' },
-];
-function squadEditHTML(i) {
-	const p = G.P[0],
-		plan = G.bnPlan[i],
-		S = sqUnits(i),
-		can = ARMYK.filter((k) => !UNIT[k].civ && UNIT[k].cost && k !== 'spy')
-			.map((k) => civKind(0, k))
-			.filter((k) => UNIT[k].age <= p.age && readyAt(0, UNIT[k]).length),
-		kinds = [...new Set([...S.map((u) => u.kind), ...Object.keys(plan), ...can])];
-	let h = kinds.length
-		? `<div class="qs hdr"><b>Kind</b><span>have</span><span>want</span><span></span></div>` +
-			kinds
-				.map(
-					(k) =>
-						`<div class="qs"><b>${stats(0, k).name}</b>${btn(`sqpk:${i},${k},-`, '−')}<span>${S.filter((u) => u.kind === k).length} · ${plan[k] || 0}</span>${btn(`sqpk:${i},${k},+`, '+')}</div>`,
-				)
-				.join('')
-		: '<p>Train soldiers first.</p>';
-	h += `<p class="dim">Soldiers at home fill the plan by themselves. The rest are the reserve.${S.length ? ` Pace: ${paceWord(S)}.` : ''}</p>`;
-	h += acts(dialBtns(i) + btn(`intent:${i}`, 'Intent', INTENT[G.bnIntent[i] || 0].name), 'c3');
-	if (p.techs.has('muster')) {
+	{ name: 'No pursuit', note: 'fight what blocks' },
+	{ name: 'Buildings first', note: 'then the soldiers' },
+]; // each note one line under its name, so the rank keeps its 44 (MENU-SPEC §1)
+// the three intents, one chosen (its gold ring); it can change on the way
+const intentsHTML = (i) =>
+	acts(INTENT.map((t, k) => btn(`intent:${i},${k}`, t.name, t.note, (G.bnIntent[i] || 0) === k ? 'on' : '')).join(''), 'c3');
+// At home: the four kinds, each with how many the squad holds and − + under it (soldiers at home step in by themselves); the intents; Muster
+// once researched; then Cancel, back to what it held when the card opened, and Save ✓, the card's one gold fill. A kind goes to its building.
+function squadHomeHTML(c) {
+	const i = c.i,
+		P = G.bnPlan[i],
+		n = Object.values(P).reduce((s, v) => s + v, 0),
+		H = G.hud,
+		eta = H.h && sqFree(i).length ? hudEta(i) : 0;
+	title(BN[i], `${sqUnits(i).length} at home${eta ? ` · ${mmss(eta)} to ${coord(H.h.e.x, H.h.e.y)}` : ''}`);
+	fold('about', 'About squads', '<p>Soldiers at home fill what a squad holds by themselves; the rest are the reserve. Send it from the War page with Go.</p>');
+	let h =
+		acts(CLS.map((k, t) => pic(`bldgo:${k[2]}`, ICON.cls[k[0]], k[1], '', P[k[0]] || 0)).join(''), 'c4') +
+		acts(
+			CLS.map(
+				(k, t) =>
+					sym(`sqpk:${i},${t},-`, ICON.minus, P[k[0]] ? 'h' : 'h dis', `One fewer ${k[3]}`) +
+					sym(`sqpk:${i},${t},+`, ICON.plus, n < BNSIZE ? 'h' : 'h dis', `One more ${k[3]}`) +
+					'<i class="h"></i>',
+			).join(''),
+			'c4',
+		) +
+		intentsHTML(i);
+	if (G.P[0].techs.has('muster')) {
 		const miss = musterGap(i),
 			why = musterWhy(0, miss),
 			mc = musterCost(0, miss);
-		h += acts(
-			btn(
-				`muster:${i}`,
-				`Train new: +${musterN(miss)}`,
-				why ? why.replace(/\.$/, '') : `${costText(mc.cost)} · ${mc.t} s`,
-				why ? 'dis' : 'go',
-			),
-			'c1',
-		);
-	} else h += `<p class="dim">Muster, at the War Council, trains what a squad lacks in one order.</p>`;
-	return h;
+		h += acts(btn(`muster:${i}`, `Train new: +${musterN(miss)}`, why ? why.replace(/\.$/, '') : `${costText(mc.cost)} · ${mc.t} s`, why ? 'dis' : 'go'), 'c1');
+	}
+	return h + acts('<i></i>' + btn('sqcancel', 'Cancel') + btn('sqsave', 'Save', '', 'main'), 'c3');
 }
-CARDS.squad = (c) => {
-	const i = c.i,
-		m = sqOut(i) ? G.msn[i] : null;
-	if (!m) return title(BN[i], `at home · ${sqUnits(i).length} in it`) + squadEditHTML(i);
+// Out: how it stands, what it lost, send more from the idle reserve, its shape and intent, where it is, Abort
+function squadOutHTML(i, m) {
 	const S = mUnits(m),
-		[word] = mStatus(m),
 		plan = m.st === 'act' ? reinforcePlan(m) : null,
 		slow = sideSpd(0),
 		hp =
@@ -29751,10 +29448,10 @@ CARDS.squad = (c) => {
 				return `<tr><td>${stats(0, k).name}</td><td>${alive} / ${n0}</td><td class="${n0 - alive ? 'low' : ''}">${n0 - alive ? n0 - alive + ' fell' : '—'}</td></tr>`;
 			})
 			.join('');
+	title(m.name, m.st === 'act' ? `fighting · ${Math.round(m.odds * 100)}% to win` : `${mmss(m.eta || 0)} to arrive`);
 	return (
-		title(m.name, m.st === 'act' ? `fighting · ${Math.round(m.odds * 100)}% to win` : word.toLowerCase()) +
 		hpBar(hp, hp > 0.5 ? codeOf('g') : hp > 0.25 ? 'var(--gold-1)' : codeOf('r')) +
-		`<p><i>Health ${Math.round(hp * 100)}%</i> · ${S.length} of ${m.n0} standing · ${m.what.toLowerCase()} ${m.label}${m.st === 'go' ? `, ${mmss(m.eta || 0)} to arrive` : m.late ? `, ${m.late} s late` : ''} · ${paceWord(S)}</p>` +
+		`<p><i>Health ${Math.round(hp * 100)}%</i> · ${S.length} of ${m.n0} standing · ${m.what.toLowerCase()} ${m.label}${m.st === 'go' ? `, ${mmss(m.eta || 0)} to arrive` : ''} · ${paceWord(S)}</p>` +
 		`<table style="width:100%;border-collapse:collapse"><tr><th>Kind</th><th>Alive</th><th>Lost</th></tr>${rows}</table>` +
 		(slow < 0.98
 			? `<p class="dim">${G.wx !== 'clear' ? 'Weather' : 'Season'}: ${wxWord()}, walking ×${slow.toFixed(2)}.</p>`
@@ -29771,174 +29468,17 @@ CARDS.squad = (c) => {
 							? 'too late'
 							: 'no reserve',
 				plan && plan.go.length ? 'go' : 'dis',
-			) +
-				btn(`shape:${i}`, 'Formation', FORM[dialOf('form', i)].name, G.P[0].techs.has('formations') ? '' : 'dis') +
-				btn(`intent:${i}`, 'Intent', INTENT[G.bnIntent[i] || 0].name),
-			'c3',
+			) + btn(`shape:${i}`, 'Formation', FORM[dialOf('form', i)].name, G.P[0].techs.has('formations') ? '' : 'dis'),
 		) +
+		intentsHTML(i) +
 		`<p data-act="jump:${m.x},${m.y}" class="dim"><b>Where</b> ${coord(m.x, m.y)} · tap to go</p>` +
 		acts(btn(`hdel:${i}`, 'Abort', 'they come home', 'warn'), 'c1')
 	);
+}
+CARDS.squad = (c) => {
+	c.was = c.was || { plan: { ...G.bnPlan[c.i] }, intent: G.bnIntent[c.i] || 0 }; // what Cancel goes back to: the squad as the card found it
+	return sqOut(c.i) ? squadOutHTML(c.i, G.msn[c.i]) : squadHomeHTML(c);
 };
-
-// ═════ The door and its domains (Albert, Build 64) ═════
-// Five domains, each a verdict the game already computes, in the colour code: red something wrong, blue available (act on it now),
-// green active, white all is well. The door, under People in the row's first slot, shows the highest red, else the highest blue, in
-// this order of importance: the realm (what is coming at you), the people, the work, the stores, the tech. A tap goes where that is
-// fixed; a second tap on the same problem, or when all is well, opens the Realm page: the mail and the five, in the row. Colour is never
-// alone: each tile has its icon and its word.
-const DOMAIN_ORDER = ['realm', 'people', 'work', 'stores', 'tech'];
-const DOMAIN_NAME = { realm: 'Realm', people: 'People', work: 'Work', stores: 'Stores', tech: 'Tech' };
-const domainIcon = () => ({ realm: ICON.def, people: ICON.head, work: ICON.hammer, stores: ICON.gold, tech: ICON.book });
-function domains() {
-	const p = G.P[0],
-		V = unitsOf(0, 'vil'),
-		D = {},
-		at = (q) => (q ? `jump:${Math.round(q.x)},${Math.round(q.y)}` : '');
-	// the realm: what is coming at you, and your squads out
-	{
-		const I = G.incoming,
-			ev = G.ev || {},
-			ek = ev.cur ? ev.cur.kind : ev.warned,
-			E = ek && EVENTS[ek],
-			H = G.horde,
-			rout = soldiersOf(0).some((u) => u.state === 'rout'),
-			out = BN.some((_, i) => sqOut(i));
-		D.realm = I
-			? { st: 'red', word: `Raid ${Math.ceil(I.eta)}s`, why: `${I.n} ${I.what} coming`, go: 'page:war' }
-			: G.t - (G.warnT ?? -99) < 20
-				? { st: 'red', word: 'Foes here', go: 'page:war' }
-				: H && H !== 'done' && H.said && H.at - G.t <= 45
-					? { st: 'red', word: `Horde ${Math.max(0, Math.ceil(H.at - G.t))}s`, why: EV_LINE.horde, go: 'page:war' }
-					: E && E.harm
-						? { st: 'red', word: E.door || E.name, why: EV_LINE[ek], go: at(ev.cur && (ev.cur.at || (ev.cur.x !== undefined ? ev.cur : null))) || 'card:guide,rule' }
-						: rout
-							? { st: 'red', word: 'Rout', go: 'page:war' }
-							: E && E.gift
-								? { st: 'blue', word: E.door || E.name, why: EV_LINE[ek], go: at(ev.cur && ev.cur.at) || 'card:guide,rule' }
-								: out
-									? { st: 'green', word: 'Squads out', go: 'page:war' }
-									: { st: 'white', word: 'Quiet', go: 'page:war' };
-	}
-	// the people: room and food
-	{
-		const pop = popOf(0),
-			cap = capOf(0),
-			raising = G.blds.some((b) => b.owner === 0 && b.hp > 0 && b.prog < 1 && (b.kind === 'house' || b.kind === 'apartment')),
-			canHouse = afford(p, BLD.house.cost) && !capWhy(0, 'house'),
-			q = queuedOf(0, 'vil');
-		D.people = p.hungry
-			? { st: 'red', word: 'Hungry', go: 'job:food' }
-			: pop >= cap && cap < POPMAX && !raising && !canHouse
-				? { st: 'red', word: 'No room', go: 'page:build' }
-				: pop >= cap - 1 && cap < POPMAX && !raising && canHouse
-					? { st: 'blue', word: 'A house', go: 'build:house' }
-					: q || raising
-						? { st: 'green', word: 'Growing', go: 'page:build' }
-						: { st: 'white', word: `${pop}/${cap}`, go: 'page:build' };
-	}
-	// the work: idle hands, a site nobody builds, a field nobody works
-	{
-		const idle = V.filter(freeVil).length,
-			site = G.blds.find((b) => b.owner === 0 && b.hp > 0 && b.prog < 1 && !V.some((v) => v.rep === b && v.job === 'repair')),
-			field = bldsOf(0, 'farm').find((b) => b.prog >= 1 && b.node && !(b.node.wk > 0)),
-			busy = G.blds.some((b) => b.owner === 0 && b.hp > 0 && b.prog < 1);
-		D.work =
-			idle && G.t > 20
-				? { st: 'red', word: `${idle} idle`, go: 'idlego' }
-				: site
-					? { st: 'red', word: 'Site waits', go: `card:bld,${site.id}` }
-					: field
-						? { st: 'red', word: 'No farmer', go: 'job:food' }
-						: busy
-							? { st: 'green', word: 'Building', go: 'page:jobs' }
-							: { st: 'white', word: 'At work', go: 'page:jobs' };
-	}
-	// the stores: what runs out within two minutes, and what a market would turn into gold
-	{
-		const low = RES.map((r) => KEY[r]).find((k) => p.res[k] !== undefined && velOf(p, k) <= -1 && $('r' + k) && !$('r' + k).parentElement.hidden),
-			sell = goldTight(p) && ready(0, 'market').length;
-		D.stores = low
-			? { st: 'red', word: `${RESOURCES[LONG[low]].name} low`, go: `job:${LONG[low]}` }
-			: sell
-				? { st: 'blue', word: 'Sell', go: `card:bld,${ready(0, 'market')[0].id}` }
-				: { st: 'white', word: 'Steady', go: 'card:stores' };
-	}
-	// the tech: research you can start, research under way
-	{
-		let n = 0;
-		for (const v of (G.rdy || new Map()).values()) n += v;
-		const learning = p.aging || G.blds.some((b) => b.owner === 0 && b.q.some((j) => j.tech));
-		D.tech = n
-			? { st: 'blue', word: `${n} ready`, go: 'card:research' }
-			: learning
-				? { st: 'green', word: 'Learning', go: 'card:research' }
-				: { st: 'white', word: 'Nothing new', go: 'card:research' };
-	}
-	const list = DOMAIN_ORDER.map((id) => ({ id, name: DOMAIN_NAME[id], ...D[id] })),
-		top = list.find((d) => d.st === 'red') || list.find((d) => d.st === 'blue') || null;
-	return { list, top, n: list.filter((d) => d.st === 'red' || d.st === 'blue').length };
-}
-// The Realm page: the mail, then the five domains, each a whole tile in the colour code; a tap goes where it is fixed. The realm's own
-// tile opens the emergency actions (the bell, shelter, battle stations): the button that sat on the map's right went into it.
-function realmPageHTML() {
-	const D = domains(),
-		un = G.mailN || 0;
-	let h = WHOLE('mail', topOf(ICON.mail), un ? `${un} new` : 'Mail', 'realm' + (un ? ' go' : ''), ' aria-label="The mail"');
-	for (const d of D.list)
-		h += WHOLE(d.id === 'realm' ? 'card:emergency' : d.go, topOf(domainIcon()[d.id]), d.word, `realm ${stCls(d.st)}`, ` aria-label="${d.name}: ${d.word}${d.why ? ', ' + d.why : ''}"`);
-	return h;
-}
-// where a destination is: a page of the row, or a card
-const atGo = (go) =>
-	go.startsWith('page:') ? (G.hud.page || 'jobs') === go.slice(5) : go.startsWith('card:') ? !!G.card && go.slice(5).startsWith(G.card.type) : false;
-function doorTap() {
-	const T = DOOR.top; // what the door shows, not a fresh read: a change inside the 150 ms between draws cannot send you elsewhere (Build 65)
-	if (T && DOOR.went !== DOOR.key && !atGo(T.go)) {
-		DOOR.went = DOOR.key; // one tap a problem: the second opens the Realm, so an action (the food rally, a house) is never repeated or undone
-		closeCard();
-		act(T.go);
-	} else hudPage('realm'); // all is well, already there, or the second tap: the Realm page
-	feel('tick');
-}
-const doorHTML = () =>
-	`<button class="cell st door" id="doorB" data-act="door" aria-label="The door: the most important thing now"><span class="top"></span>${wd('')}</button>`;
-let DOOR = { sig: '', key: '', top: null, went: '' }; // top: what the door shows, which its tap follows; went: the problem it last took you to
-function doorUI() {
-	if (!G || G.over) return;
-	const D = domains(),
-		T = D.top,
-		st = T ? T.st : 'white',
-		icon = T ? domainIcon()[T.id] : ICON.ok,
-		word = T ? T.word : 'All well',
-		sig = st + icon + word + D.n,
-		key = T ? T.id + T.st : '',
-		fresh = key !== DOOR.key;
-	DOOR.top = T;
-	const el = $('doorB');
-	if (!el) return;
-	if (el.sig !== sig) {
-		el.sig = sig;
-		el.className = 'cell st door ' + stCls(st);
-		el.children[0].innerHTML = icon;
-		el.children[1].textContent = word;
-		const pl = el.querySelector('.dn');
-		if (pl) pl.remove();
-		if (D.n > 1) el.insertAdjacentHTML('beforeend', `<span class="dn">${D.n}</span>`);
-		el.setAttribute('aria-label', T ? `${T.name}: ${word}` : 'All is well: the Realm');
-	}
-	if (fresh && T) {
-		el.classList.remove('pulse');
-		void el.offsetWidth;
-		el.classList.add('pulse'); // a new red or blue pulses the door once and is heard: seen and heard, as every alert must be
-	}
-	if (fresh) {
-		DOOR.key = key;
-		if (T) {
-			if (T.id !== 'realm' && G.t > 5) sfx(T.st === 'red' ? 'err' : 'pick'); // the realm's alarms already sound (the horn, the bell)
-		}
-	}
-}
 // ═════ 40-emergency.js: Shelter, Battle stations, All hands on deck, Resume ═════
 // One ranking for everyone: buildings that shelter, the sturdiest first (current hit points, then room); each is filled to its room with the nearest units who can go there;
 // whoever is left over goes to a safe spot behind the Town Center. Villagers go in and stay until Resume (a note of each one's job and spot is kept).
@@ -30324,7 +29864,6 @@ window.__fk = {
 	coord,
 	minZ,
 	tapAt,
-	hudOpen,
 	emgStart,
 	emgResume,
 	hudFire,
@@ -30511,7 +30050,6 @@ window.__fk = {
 	EVM,
 	moonLight,
 	eventsTick,
-	domains,
 	ZOOM_MAX,
 	camH,
 	news,
@@ -30532,6 +30070,11 @@ window.__fk = {
 	TAX,
 	BTIER,
 	BN,
+	CLS,
+	RES,
+	RESOURCES,
+	ROW_WORD,
+	POPMAX,
 	nodeName,
 	TITLE_SHORT,
 	get holdSave() {
