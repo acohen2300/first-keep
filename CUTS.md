@@ -1059,3 +1059,8 @@ Build Plan items 6 and 7. Open points for Albert are in `docs/Quick Action Notes
 - Nothing cut. `.old` is now one slot per save shape (`.old39`); a finished game's `.bak` is removed with it.
 - Changed: forced save no longer overwrites a waiting Resume save; Resume cannot be closed into play; dropped event on load now ends properly; New land/New game/Today reset fight hold, save-failure clock, stale note, error count; House fix points to the Land menu; All hands shows on; alerts skip the voice cap; threats list exists from the first frame.
 - Added `tests/saves.py` (in the gate). Lines: +32 / -9 in src, +40 test.
+
+## Build 80 preview 2 (save safety, rest)
+- Nothing cut. A cut unit kind no longer stops an old save opening; a damaged save is kept aside (`.lost`) with a note, never written over.
+- Tests added to `tests/saves.py`: no Math.random in sim files, no purse change outside earn/spend/payBack, both shown failing on a planted bug.
+- Not done: A6 (random state is already saved), A9 (mail left unsaved on purpose: a log, not state), planted-bug meta-test.

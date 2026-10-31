@@ -19,6 +19,11 @@ JS = """(raw) => {
   if (localStorage.getItem(F.SAVEKEY) || localStorage.getItem(F.SAVEKEY + '.bak')) bad.push('clearSave left a save or a backup');
   // the blank game has its threats
   if (!Array.isArray(F.blankGame(1).threats)) bad.push('blankGame has no threats list');
+  // an old save naming a cut unit kind still migrates; a damaged save is kept aside, not overwritten
+  const o = JSON.parse(raw); o.v = 35; o.blds = o.blds || []; if (o.blds[0]) o.blds[0].q = [{ kind: 'cutkind' }];
+  try { F.MIGRATE[35](o); } catch (e) { bad.push('a cut unit kind stops an old save from opening'); }
+  localStorage.setItem(F.SAVEKEY, '{"units":1,"P":[],"v":39,"blds":null,"x":'); F.readSave();
+  if (!localStorage.getItem(F.SAVEKEY + '.lost')) bad.push('a damaged save was not kept aside');
   return bad;
 }"""
 def static():
@@ -29,6 +34,11 @@ def static():
     if not re.search(r"CHAN\[name\] !== 'alert' &&", all_): bad.append('an alert still waits for a voice')
     if not re.search(r"on\('hands'\)", all_): bad.append('All hands never shows on')
     if '.old\' + S.v' not in all_: bad.append('stale saves share one .old slot')
+    # one home for the dice and the purse (batch 1): no Math.random in the sim files; no res += / -= outside earn, spend and payBack
+    for f, t in src.items():
+        n = os.path.basename(f)
+        if re.match(r'1[0-7]-', n) and n != '10-world.js' and 'Math.random' in t.replace('Math.random() * 2 ** 31', ''): bad.append(n + ' rolls Math.random in the sim')
+        if n not in ('08-core.js',) and re.search(r'\.res\[[^\]]+\]\s*[-+]=|\.res\.[a-z]+\s*[-+]=', t): bad.append(n + ' changes a purse outside earn, spend and payBack')
     return bad
 async def main():
     async with async_playwright() as p:

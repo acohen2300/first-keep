@@ -134,8 +134,17 @@ const ACT = {
 	},
 	resume() {
 		const S = readSave();
-		if (S) loadGame(S);
-		else {
+		let ok = false;
+		if (S)
+			try {
+				loadGame(S);
+				ok = true;
+			} catch (e) {
+				keepAside('damaged'); // it would not load: kept aside, and a new game offered (A5)
+				newGame();
+				openCard({ type: 'setup' });
+			}
+		if (!ok && !S) {
 			closeCard();
 			setPause(false);
 		}

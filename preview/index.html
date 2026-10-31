@@ -23474,7 +23474,7 @@ const CARDS = {
 					`<p><b>Daily challenge:</b> the same map and the same hazards for everyone, all day. Tick a hazard yourself and it becomes your own game again.</p><p><b>None ticked:</b> each hazard is drawn by lot, even odds, for every side alike; the first message says the level.</p>`,
 			);
 		if (staleSave)
-			h += `<p class="dim">Your last game came from an older version (${staleSave}) and cannot be opened. It is kept aside, not deleted.</p>`;
+			h += `<p class="dim">Your last game ${staleSave === 'damaged' ? 'could not be read' : `came from an older version (${staleSave}) and cannot be opened`}. It is kept aside, not deleted.</p>`;
 		return (
 			h +
 			acts(
@@ -24960,8 +24960,17 @@ const ACT = {
 	},
 	resume() {
 		const S = readSave();
-		if (S) loadGame(S);
-		else {
+		let ok = false;
+		if (S)
+			try {
+				loadGame(S);
+				ok = true;
+			} catch (e) {
+				keepAside('damaged'); // it would not load: kept aside, and a new game offered (A5)
+				newGame();
+				openCard({ type: 'setup' });
+			}
+		if (!ok && !S) {
 			closeCard();
 			setPause(false);
 		}
@@ -26000,13 +26009,13 @@ const MIGRATE = {
 			for (const j of b.q || [])
 				if (!j.paid)
 					j.paid = j.kind
-						? UNIT[j.kind].cost
+						? UNIT[j.kind]?.cost || {} // a kind since cut costs nothing: an old save still opens (A5)
 						: j.tech
-							? TECHBY[j.tech].cost
+							? TECHBY[j.tech]?.cost || {}
 							: j.age
-								? AGES[j.age].cost
+								? AGES[j.age]?.cost || {}
 								: j.muster
-									? Object.entries(j.muster).reduce((c, [k, n]) => addRes(c, UNIT[k].cost, 2 * n), {})
+									? Object.entries(j.muster).reduce((c, [k, n]) => addRes(c, UNIT[k]?.cost || {}, 2 * n), {})
 									: {};
 		S.v = 36;
 		return S;
@@ -26227,8 +26236,17 @@ function readSave(key = SAVEKEY) {
 		} // kept aside, never lost
 		return S.P.length === 5 ? S : null;
 	} catch (e) {
+		if (key === SAVEKEY) keepAside('damaged'); // a save that will not open is kept, never written over (A5)
 		return key === SAVEKEY ? readSave(SAVEKEY + '.bak') : null;
 	}
+}
+function keepAside(why) {
+	try {
+		const raw = localStorage.getItem(SAVEKEY);
+		if (raw) localStorage.setItem(SAVEKEY + '.lost', raw);
+		localStorage.removeItem(SAVEKEY);
+		staleSave = why;
+	} catch (e) {}
 }
 // every old shape has a step to the next: a save from any build since the chain began opens (the gate checks this)
 const migrateChain = () => {
@@ -30024,6 +30042,7 @@ window.__fk = {
 	openCard,
 	blankGame,
 	clearSave,
+	MIGRATE,
 	renderCard,
 	demolish,
 	sendRepair,
@@ -30079,7 +30098,6 @@ window.__fk = {
 	relax,
 	turtlePlan,
 	migrateChain,
-	MIGRATE,
 	SAVEV,
 	BUILDER_POW,
 	hearing,

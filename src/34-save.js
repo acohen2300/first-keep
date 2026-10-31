@@ -77,13 +77,13 @@ const MIGRATE = {
 			for (const j of b.q || [])
 				if (!j.paid)
 					j.paid = j.kind
-						? UNIT[j.kind].cost
+						? UNIT[j.kind]?.cost || {} // a kind since cut costs nothing: an old save still opens (A5)
 						: j.tech
-							? TECHBY[j.tech].cost
+							? TECHBY[j.tech]?.cost || {}
 							: j.age
-								? AGES[j.age].cost
+								? AGES[j.age]?.cost || {}
 								: j.muster
-									? Object.entries(j.muster).reduce((c, [k, n]) => addRes(c, UNIT[k].cost, 2 * n), {})
+									? Object.entries(j.muster).reduce((c, [k, n]) => addRes(c, UNIT[k]?.cost || {}, 2 * n), {})
 									: {};
 		S.v = 36;
 		return S;
@@ -304,8 +304,17 @@ function readSave(key = SAVEKEY) {
 		} // kept aside, never lost
 		return S.P.length === 5 ? S : null;
 	} catch (e) {
+		if (key === SAVEKEY) keepAside('damaged'); // a save that will not open is kept, never written over (A5)
 		return key === SAVEKEY ? readSave(SAVEKEY + '.bak') : null;
 	}
+}
+function keepAside(why) {
+	try {
+		const raw = localStorage.getItem(SAVEKEY);
+		if (raw) localStorage.setItem(SAVEKEY + '.lost', raw);
+		localStorage.removeItem(SAVEKEY);
+		staleSave = why;
+	} catch (e) {}
 }
 // every old shape has a step to the next: a save from any build since the chain began opens (the gate checks this)
 const migrateChain = () => {

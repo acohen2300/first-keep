@@ -454,7 +454,7 @@ const CARDS = {
 					`<p><b>Daily challenge:</b> the same map and the same hazards for everyone, all day. Tick a hazard yourself and it becomes your own game again.</p><p><b>None ticked:</b> each hazard is drawn by lot, even odds, for every side alike; the first message says the level.</p>`,
 			);
 		if (staleSave)
-			h += `<p class="dim">Your last game came from an older version (${staleSave}) and cannot be opened. It is kept aside, not deleted.</p>`;
+			h += `<p class="dim">Your last game ${staleSave === 'damaged' ? 'could not be read' : `came from an older version (${staleSave}) and cannot be opened`}. It is kept aside, not deleted.</p>`;
 		return (
 			h +
 			acts(
