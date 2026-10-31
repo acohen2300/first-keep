@@ -402,7 +402,7 @@ const PLAY = {
 		const n = G.recruitSq;
 		G.recruitSq = n === null || n === undefined ? 0 : n + 1 >= BNS ? null : n + 1;
 		feel('tick');
-	}, // which squad new soldiers join: none, Alpha … Delta
+	}, // which squad new soldiers join: none, Squad A … Squad D
 	tq(a) {
 		const [t, d] = a.split(','),
 			k = kindOf(Number(t));

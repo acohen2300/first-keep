@@ -57,21 +57,22 @@ const ICON = {
 		'<path d="M8 1.5 L13.5 3.5 V8 Q13.5 12.5 8 14.5 Q2.5 12.5 2.5 8 V3.5 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>',
 	),
 	cls: {
+		// the four kinds of soldier: Cream 1 like every icon but the five resources (MENU-SPEC §6; Build 70: their own pigments went)
 		foot: SVG(
 			16,
-			'<path d="M3 14 L12.5 3.5" stroke="#d9c79a" stroke-width="1.6" stroke-linecap="round"/><path d="M11 2 L14.5 1.5 L14 5 Z" fill="#e8eef2"/>',
+			'<path d="M3 14 L12.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M11 2 L14.5 1.5 L14 5 Z" fill="currentColor"/>',
 		),
 		arch: SVG(
 			16,
-			'<path d="M5 1.5 Q14 8 5 14.5" fill="none" stroke="#c9a46a" stroke-width="1.6"/><path d="M5 1.5 V14.5" stroke="#eee" stroke-width=".8"/><path d="M2 8 H12" stroke="#ddd" stroke-width="1.2"/><path d="M12 6.5 L14.5 8 L12 9.5Z" fill="#eee"/>',
+			'<path d="M5 1.5 Q14 8 5 14.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 1.5 V14.5" stroke="currentColor" stroke-width=".8"/><path d="M2 8 H12" stroke="currentColor" stroke-width="1.2"/><path d="M12 6.5 L14.5 8 L12 9.5Z" fill="currentColor"/>',
 		),
 		horse: SVG(
 			16,
-			'<path d="M3 14 L4 9 Q4 6 7 6 L9 3 L10.5 4.5 L13.5 5 L13 7 L10.5 7 L10.5 10 L12 14" fill="none" stroke="#d9c79a" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>',
+			'<path d="M3 14 L4 9 Q4 6 7 6 L9 3 L10.5 4.5 L13.5 5 L13 7 L10.5 7 L10.5 10 L12 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>',
 		),
 		siege: SVG(
 			16,
-			'<rect x="2" y="7" width="11" height="3.5" rx="1" fill="#a07a4a"/><path d="M13 8.7 H15" stroke="#ccc" stroke-width="2"/><circle cx="4.5" cy="12.5" r="1.6" fill="#ddd"/><circle cx="10.5" cy="12.5" r="1.6" fill="#ddd"/><path d="M3 7 L7.5 3 L12 7" fill="none" stroke="#d9c79a" stroke-width="1.3"/>',
+			'<rect x="2" y="7" width="11" height="3.5" rx="1" fill="currentColor"/><path d="M13 8.7 H15" stroke="currentColor" stroke-width="2"/><circle cx="4.5" cy="12.5" r="1.6" fill="currentColor"/><circle cx="10.5" cy="12.5" r="1.6" fill="currentColor"/><path d="M3 7 L7.5 3 L12 7" fill="none" stroke="currentColor" stroke-width="1.3"/>',
 		),
 	},
 	head: SVG(
