@@ -852,7 +852,7 @@ const TRIGGERS = () => [
 	[
 		'Finds in the wild',
 		'Each corner has the same: deer, a boar, a treasure chest under wolves, ruins held by bandits (a free research of your age), an old cemetery with grave robbers, a bear den, vagabonds to hire. The camps of the robbers sit at the four map edges; the shrine stands inside the Throne. Guards stay near what they guard and attack whoever comes close. Kill them, then touch the find with any unit.',
-		'Taking what is far means fighting for it. The map is the same from every corner.',
+		'Taking what is far means fighting for it. Every corner starts with the same; the lakes and rivers fall at random.',
 	],
 	[
 		'Robbers',

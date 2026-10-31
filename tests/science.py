@@ -58,6 +58,10 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   // random events are a Poisson process: the exponential wait has mean = mean and standard deviation = mean; the chance over a step is 1 − e^(−rate·dt)
   { let s = 0, s2 = 0; const N = 20000, m = 120; for (let i = 0; i < N; i++) { const t = F.nextIn(m); s += t; s2 += t * t; } const mu = s / N, sd = Math.sqrt(s2 / N - mu * mu); near('exponential mean', mu, m, 3); near('exponential sd', sd, m, 4); }
   { let k = 0; const N = 20000; for (let i = 0; i < N; i++) if (F.hazard(0.05, 1)) k++; near('hazard 0.05', k / N, 1 - Math.exp(-0.05), 0.006); }
+  // the power law of lake sizes (Downing et al. 2006: N(area > a) ∝ a^−c, so N(radius > r) ∝ r^−2c), cut to WATER.r: the ends are the bounds, and the
+  // share of lakes wider than twice the smallest is (2^−2c − f) / (1 − f), f = (r0/r1)^2c (16% at c 1.06 and 50 to 160)
+  { const W = F.WATER, e = 2 * W.c, f = (W.r[0] / W.r[1]) ** e, N = 20000; near('lake smallest', F.lakeSize(0), W.r[0], 1e-9); near('lake largest', F.lakeSize(1), W.r[1], 1e-6);
+    let k = 0; for (let i = 0; i < N; i++) if (F.lakeSize((i + 0.5) / N) > 2 * W.r[0]) k++; near('lakes past twice the smallest', k / N, (2 ** -e - f) / (1 - f), 1e-3); }
   // the SIR chain: with R0 = 2 the final size solves z = 1 − e^(−R0 z): 0.7968 (Kermack & McKendrick)
   { const R0 = F.HEALTH.R0; let z = 0.5; for (let i = 0; i < 100; i++) z = 1 - Math.exp(-R0 * z); if (R0 === 2) near('SIR final size', z, 0.7968, 1e-3); }
   // Lanchester's square law as odds: even strength is a coin toss; twice the strength wins 4 in 5

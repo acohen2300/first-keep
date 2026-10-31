@@ -181,7 +181,7 @@ const WEATHER = {
 const WX_EVERY = 60;
 
 // ───────────────────────── The Challenge: hazards you switch on. Their points are your level; the level multiplies your score ─────────────────────────
-// Random when, never random whether: everything a hazard sends is announced first. Easy keeps the old polite game whatever is switched on.
+// Random when, never random whether: everything a hazard sends is announced first, and hazards drawn by lot are told in the first line (Build 70). Easy keeps the old polite game whatever is switched on.
 const HAZARDS = {
 	// six, in two columns (Albert, Build 41)
 	hard: {
@@ -216,8 +216,8 @@ const HAZARDS = {
 	},
 };
 const HZK = Object.keys(HAZARDS),
-	HZ_DEFAULT = { hard: 1, starve: 1 },
-	TODAY_HZ = { hard: 1, starve: 1, horde: 1, winter: 1 }; // a new game starts at level 5; The challenge today is level 10 on the day's seed
+	HZ_ODDS = 0.5, // none picked (Build 70, Albert's A): each hazard is on at even odds, drawn by lot for the game (design: a coin, the plainest random)
+	TODAY_HZ = { hard: 1, starve: 1, horde: 1, winter: 1 }; // the challenge today is level 10 on the day's seed
 const STARVE = { stop: 60, leave: 120, every: 30 },
 	HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 },
 	HORDE = { min: 1200, mean: 1800, warn: SEASON_LEN * 2, n: 16, perAge: 6 }; // the horde comes after min seconds, at an exponential wait about mean (nextIn)
@@ -319,11 +319,31 @@ const LAND = {
 const LANDK = Object.keys(LAND),
 	SPREAD = [0.85, 1.25],
 	TURN = 0.5;
-// Fair, not copied (Build 49): every corner gets the same finds at the same distances from home, each at its own angle, with its own lake and its own forest.
-// Then the map is measured: from each Town Center, the walk to its nearest food, wood, stone, gold and iron, to the Throne's island and to its nearest neighbour.
-// If the sides differ by more than a tenth in any of the three, the map is laid out again (up to 20 times) and the fairest is kept.
-const FAIR = { tries: 20, spread: 0.1 };
-const RIVER = { w: [20, 26], step: 0.9, bend: 45, waves: 1.6, ford1: [0.28, 0.4], ford2: [0.6, 0.72], fish: 3 }; // a corner's river: pools 20 to 26 across in radius, one every 0.9 of that (smooth banks), bending up to 45 aside; fords at about a third and two thirds; a fish in every third pool
+// The map's base rules (Albert, Build 70): a flat page, four corners (CORNER), the same clear radius and home finds in every corner, the
+// Throne at the middle. All else is random from the one randomizer, laid once: no measure, no reshuffle. CLEAR: no forest or water within it.
+const CLEAR = 360;
+// Lakes and rivers (Build 70: random; it was one lake and one river of one width a corner). lakes: how many beside the great lake; r: from a
+// pond five houses across to a lake short of the great lake's 170, on the power law of lake sizes (lakeSize; Downing et al. 2006: the number
+// of lakes larger than an area falls as area^−c, c 1.06). On 60 seeds about nine tenths of the old water and fish (fish 31 to 105, median 58;
+// it was 50 to 73, median 64). gap: open ground from the middle lines (roads, trade routes) and between waters; shore: from the great lake.
+// A lake drains to its nearer map edge (else the other), as most lakes in a wet climate do, by a river w × its radius wide (Leopold & Maddock
+// 1953: width ∝ √flow, the flow taken ∝ the lake's area): pools every step × the width, bending up to bend; fords at about a third and two
+// thirds, each at least ford of dry ground; a fish every third pool.
+const WATER = {
+	lakes: [4, 9],
+	r: [50, 160],
+	c: 1.06,
+	gap: 70,
+	shore: 110,
+	w: 0.25,
+	step: 0.9,
+	bend: 45,
+	waves: 1.6,
+	ford1: [0.28, 0.4],
+	ford2: [0.6, 0.72],
+	ford: 32,
+	fish: 3,
+};
 
 // Scenarios (Build 58, item 41): three set starts on the same rules, each a table of what differs, read by applyScenario in 10-world.
 // Nothing here is a new rule: an age, a store, relations, hazards, buildings already in the game, and the mode.

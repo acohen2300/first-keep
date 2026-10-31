@@ -196,7 +196,7 @@ const ACT = {
 		if (SET.daily) {
 			SET.daily = false;
 			SET.hz = { ...TODAY_HZ };
-		} else SET.hz = { ...(SET.hz || HZ_DEFAULT) };
+		} else SET.hz = { ...SET.hz };
 		SET.hz[a] = SET.hz[a] ? 0 : 1;
 		saveSet();
 		refresh();

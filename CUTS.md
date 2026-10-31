@@ -932,3 +932,5 @@ Albert's ballot of Oct 30 after the drift review (Builds 63–66 kept almost who
 - **Back:** the hammer under People opens the Build menu in one tap (Build 62/63's way). The Emergency button (bottom right, hidden under a card) with four: Stop, Town square, All hands on deck, Shelter (Town square is a label only so far; it still runs Battle stations). The status strip stays as Build 65 for now: widening the age and people cells left the other cells 40 pt at 375 px, under the 44 pt tap rule, so the gate refused it. How Gunpowder fits is Albert's call.
 - **The chip is one constant 🔄** at the row's top left, the same on every page (Albert: "a cycle button at the top left for now").
 - **Cut, review for later:** the door under People (Albert: no); the Realm page (no); pictures and ★ pins on the Build menu (no; the Build page keeps its pictures).
+
+- **Play fingerprint accepted:** Build 70: one seed, one map; lakes and rivers random; the Throne central; the fairness re-roll cut
