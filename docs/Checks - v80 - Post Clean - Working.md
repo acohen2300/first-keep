@@ -7,7 +7,7 @@
 3. **A double yes.** Nothing is built until Albert says yes twice ("yes yes").
 4. **Builders in separate copies.** Each part is built in its own copy (a git worktree and branch). The builder leaves notes, a draft for the cuts log, and its open decisions. Nothing joins the main copy until it passes every check below.
 5. **Preview, then live.** A build goes to the preview link only. It goes live only on Albert's word.
-6. **Stamps.** Every published build gets a version stamp (a git tag), so any build can be reopened exactly.
+6. **Stamps.** Every published build gets a version stamp, listed with its commit in `STAMPS.md`, so any build can be reopened exactly.
 
 ## Before every preview (all automatic; any failure stops the publish)
 `publish.py --preview` runs these in order and stops at the first failure: nothing is copied, committed or pushed.

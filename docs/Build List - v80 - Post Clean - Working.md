@@ -49,6 +49,7 @@
 
 ## Housekeeping
 23. The automatic check that asks for commits in Claude's name and a push: removing it needs a permission Claude does not have.
+24b. The stamps (git tags) cannot be pushed from Claude's session (refused); `STAMPS.md` lists each stamp's commit instead. Albert can push the tags from a computer, or leave it.
 
 ## From the notebook (Oct 30, on no list until Oct 31; `docs/v70 Record/Notebook`)
 24. "Isolate the slow Problems. We should have similar code from the Probability Reinforcement math." (page 13)
