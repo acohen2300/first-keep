@@ -17,6 +17,8 @@
 - One border (Albert, 09:41, kept): any control may sit in one outline (corners 9, down the middle of the gap) with nothing inside but its content; a chosen part keeps its ring; the big one is 3 x 4. Picture: One Border per Control.
 - The control sheet (Albert, 09:41): every kept control in seven groups: 1 check boxes, 2 toggles, 3 sliders, 4 toggles + sliders, 5 selectors, 6 pairs (the job grammar), 7 one border. Pictures: Control Sheet 1 and 2.
 
+- Relations, final (Albert, 10:16–10:18, "we are locking into the final"): Town | Relations tabs with the folder outline round the open tab's section; one rank a player in three doubles: the name with its stance in its colour on the quiet line, the gift as a slider with its toggle (a friend's gift locked: a bribe is a step for anyone not a friend, which changes v70's Natives only), the stance as three icons in two slots (sword red, scales white, handshake green; colour named as an exception to Cream 1 icons); the bottom line says what ✓ will do; the slider snaps (50g). Picture: Relations Final.
+
 ## Needs Albert's call now (it touches v70)
 1. Mail has no door once the Realm page goes: the Realm page's Mail tile was its only way in. Where does Mail open from?
 2. The status strip: Gunpowder does not fit the age cell. The ballot's change (the People icon back, age and people three cells each) was refused by the tap-size check: the other cells fell to 40 pt at 375.
