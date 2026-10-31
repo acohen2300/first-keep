@@ -1054,3 +1054,8 @@ Build Plan items 6 and 7. Open points for Albert are in `docs/Quick Action Notes
 - **Frozen** at `/v70-restoration/` and stamped `v70`, with the stamps v60 to v66. The preview link moves on to v80.
 - **The records:** `docs/v70 Record/` (the 63–66 review, the picks, the ballot and answers, the computers' fairness test, the notebook typed out, the cold review), a new HANDOFF, `CLAUDE.md`, the README's four lines, GUIDE written by Build 70, EXCEPTIONS #2 and #12. The cold review found nothing that breaks play; its seven findings and the notebook's six are on the v80 list.
 - **Cut:** nothing.
+
+## Build 80 preview 1 (save safety)
+- Nothing cut. `.old` is now one slot per save shape (`.old39`); a finished game's `.bak` is removed with it.
+- Changed: forced save no longer overwrites a waiting Resume save; Resume cannot be closed into play; dropped event on load now ends properly; New land/New game/Today reset fight hold, save-failure clock, stale note, error count; House fix points to the Land menu; All hands shows on; alerts skip the voice cap; threats list exists from the first frame.
+- Added `tests/saves.py` (in the gate). Lines: +32 / -9 in src, +40 test.

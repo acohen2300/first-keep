@@ -256,7 +256,7 @@ button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tab
 'use strict';
 // ═════ 01-rules-basics.js: the map, speeds, difficulty, resources, jobs, players, ages, seasons ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 70; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
+const BUILD = 80; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
 const BUILD_NAME = 'Restoration'; // the version's name, shown as "v70 · Restoration" (Albert, Oct 31)
 const MAP = 2000,
 	MID = MAP / 2,
@@ -6246,7 +6246,7 @@ const MS_TEXT = {
 		'Your first house: five more may live here.',
 		'Only homes hold people; soldiers and workers alike. A town grows by its roofs.',
 		'A field feeds them',
-		'card:menu,land',
+		'menu:land',
 	],
 	field: [
 		'Your first field: food that does not run out.',
@@ -8245,6 +8245,7 @@ function blankGame(seed) {
 	return {
 		t: 0,
 		tick: 0,
+		threats: [], // read by the emergency card and the nav before the first step (C17)
 		speed: G ? G.speed : 1,
 		over: null,
 		seed,
@@ -21814,10 +21815,12 @@ const title = (name, sub) => ((cardHead = [name, sub || '']), '');
 function titleBar([name, sub], book, bookOn) {
 	const t = TITLE_SHORT[name] || name,
 		s = t === name ? sub : [sub, name].filter(Boolean).join(' · ');
+	const lock = cardLocked() ? ' class="dis"' : '', // a card that must be answered: close is dim (back too on Resume, which has nowhere to go back to)
+		lockB = G.card && G.card.type === 'resume' ? lock : '';
 	return (
-		`<div class="tb fm"><button data-act="cardback" aria-label="Back">${ICON.back}</button><h3 class="s3">${t}</h3>` +
+		`<div class="tb fm"><button data-act="cardback"${lockB} aria-label="Back">${ICON.back}</button><h3 class="s3">${t}</h3>` +
 		`<button data-act="info" class="${book ? (bookOn ? 'on' : '') : 'dis'}" aria-label="About this">${ICON.book}</button>` +
-		`<button data-act="close" aria-label="Close">${ICON.close}</button></div>${s ? `<div class="sub">${s}</div>` : ''}`
+		`<button data-act="close"${lock} aria-label="Close">${ICON.close}</button></div>${s ? `<div class="sub">${s}</div>` : ''}`
 	);
 }
 const unitLine = (o, k) => {
@@ -24850,12 +24853,14 @@ const ACT = {
 		const p = G.P[0],
 			keep = { age: p.age, techs: [...p.techs] };
 		$('end').hidden = true;
+		freshSlate();
 		newGame(undefined, keep);
 		setPause(false);
 		say('New land. Your age and research stay.', 'good', 8);
 		saveGame(true);
 	},
 	close() {
+		if (cardLocked()) return;
 		if (G.card && (G.card.type === 'resume' || G.card.type === 'setup') && G.paused) {
 			setPause(false);
 		}
@@ -24863,6 +24868,7 @@ const ACT = {
 		if (G.over) $('end').hidden = false;
 	}, // backing out of New game brings the end screen back
 	cardback() {
+		if (G.card && G.card.type === 'resume') return;
 		if (G.card && G.card.from) openCard(G.card.from, true);
 		else ACT.close();
 	}, // the title bar's back (MENU-SPEC §4): to the card this one was opened from; on the first card it closes
@@ -24964,6 +24970,7 @@ const ACT = {
 	fresh() {
 		clearSave();
 		holdSave = false;
+		freshSlate();
 		newGame();
 		closeCard();
 		setPause(false);
@@ -25027,6 +25034,7 @@ const ACT = {
 	today() {
 		clearSave();
 		holdSave = false;
+		freshSlate();
 		newGame(todaySeed());
 		closeCard();
 		setPause(false);
@@ -26078,12 +26086,21 @@ const SKIP_U = new Set([
 	'gp',
 	'gpT',
 ]); // lx/ly: where it stood last step (drawing only); gp/gpT: the group power of the tick
+// the Resume card, and the setup card while a save waits behind it, must be answered: closing either would start a game that never saves
+const cardLocked = () => !!(G && G.card && (G.card.type === 'resume' || (G.card.type === 'setup' && holdSave)));
+// a deliberate new game starts clean: no leftover fight hold, save-failure clock, stale note or error count from the game before
+function freshSlate() {
+	fightHold = 0;
+	saveFailT = undefined;
+	staleSave = 0;
+	seenErr.clear();
+}
 let holdSave = false; // while the Resume card waits, nothing may overwrite the save it offers
 const inFight = () => G.units.some((u) => u.owner === 0 && u.tgt && u.tgt.hp > 0);
 let fightHold = 0;
 let saveFailT;
 function saveGame(force) {
-	if (!G || G.over || seenErr.size >= 2 || (holdSave && !force)) return; // after a second error the last good save stands
+	if (!G || G.over || seenErr.size >= 2 || holdSave) return; // after a second error the last good save stands; while the Resume card waits, nothing overwrites it (force too)
 	if (!force && inFight() && (fightHold = fightHold || G.t) && G.t - fightHold < 60) return;
 	fightHold = 0; // the save stutters: not in the middle of a battle (at most a minute late)
 	try {
@@ -26203,7 +26220,7 @@ function readSave(key = SAVEKEY) {
 		if (!S || !S.units || !S.P) return key === SAVEKEY ? readSave(SAVEKEY + '.bak') : null; // the last save failed: the one before it
 		while (S.v < SAVEV && MIGRATE[S.v]) S = MIGRATE[S.v](S);
 		if (S.v !== SAVEV) {
-			localStorage.setItem(SAVEKEY + '.old', JSON.stringify(S));
+			localStorage.setItem(SAVEKEY + '.old' + S.v, JSON.stringify(S)); // one slot per shape: a second stale save never overwrites the first
 			localStorage.removeItem(SAVEKEY);
 			staleSave = S.v;
 			return null;
@@ -26222,6 +26239,7 @@ const migrateChain = () => {
 function clearSave() {
 	try {
 		localStorage.removeItem(SAVEKEY);
+		localStorage.removeItem(SAVEKEY + '.bak'); // the backup goes too, or a finished game comes back from it
 	} catch (e) {}
 }
 function loadGame(S) {
@@ -26358,7 +26376,7 @@ function loadGame(S) {
 	if (G.ev.cur) {
 		const e = G.ev.cur;
 		e.units = G.units.filter((u) => u.herd);
-		if ((!EV[e.kind].tick && !KNOBS[e.kind]) || e.kind === 'wildfire') G.ev.cur = null;
+		if ((!EV[e.kind].tick && !KNOBS[e.kind]) || e.kind === 'wildfire') endEvent();
 	} // an event with its own pieces on the map is dropped on load; the pieces finish on their own. An eclipse, a fog or a heat wave goes on.
 	evmSet();
 	for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined; // orders on the march come back with the game; a stray number is cleared (Build 38 review)
@@ -26762,7 +26780,7 @@ function sfx(name, x, y) {
 		!AC ||
 		AC.state !== 'running' ||
 		document.hidden ||
-		voices > VOICES.max - VOICES.keep[CHAN[name] || 'fx']
+		(CHAN[name] !== 'alert' && voices > VOICES.max - VOICES.keep[CHAN[name] || 'fx']) // an alert never waits for a voice (C19)
 	)
 		return;
 	const S = SFX[name];
@@ -29757,7 +29775,7 @@ CARDS.emergency = () => {
 				btn('emg:square', EMERGENCY[0][1], EMERGENCY[0][2], on('square')),
 		) +
 		acts(
-			btn('emg:hands', EMERGENCY[1][1], EMERGENCY[1][2], 'warn') +
+			btn('emg:hands', EMERGENCY[1][1], EMERGENCY[1][2], on('hands') || 'warn') +
 				btn('emg:shelter', EMERGENCY[2][1], `${V} ${EMERGENCY[2][2]}`, V ? on('shelter') : 'dis'),
 		)
 	);
@@ -30004,6 +30022,8 @@ window.__fk = {
 	missionsTick,
 	aimAt,
 	openCard,
+	blankGame,
+	clearSave,
 	renderCard,
 	demolish,
 	sendRepair,
@@ -30206,6 +30226,9 @@ window.__fk = {
 	TITLE_SHORT,
 	get holdSave() {
 		return holdSave;
+	},
+	setHold(v) {
+		holdSave = v;
 	},
 	get caches() {
 		return { SPR, BSPR, NSPR, deepTrees };

@@ -152,10 +152,12 @@ const title = (name, sub) => ((cardHead = [name, sub || '']), '');
 function titleBar([name, sub], book, bookOn) {
 	const t = TITLE_SHORT[name] || name,
 		s = t === name ? sub : [sub, name].filter(Boolean).join(' · ');
+	const lock = cardLocked() ? ' class="dis"' : '', // a card that must be answered: close is dim (back too on Resume, which has nowhere to go back to)
+		lockB = G.card && G.card.type === 'resume' ? lock : '';
 	return (
-		`<div class="tb fm"><button data-act="cardback" aria-label="Back">${ICON.back}</button><h3 class="s3">${t}</h3>` +
+		`<div class="tb fm"><button data-act="cardback"${lockB} aria-label="Back">${ICON.back}</button><h3 class="s3">${t}</h3>` +
 		`<button data-act="info" class="${book ? (bookOn ? 'on' : '') : 'dis'}" aria-label="About this">${ICON.book}</button>` +
-		`<button data-act="close" aria-label="Close">${ICON.close}</button></div>${s ? `<div class="sub">${s}</div>` : ''}`
+		`<button data-act="close"${lock} aria-label="Close">${ICON.close}</button></div>${s ? `<div class="sub">${s}</div>` : ''}`
 	);
 }
 const unitLine = (o, k) => {

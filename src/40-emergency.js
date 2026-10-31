@@ -198,7 +198,7 @@ CARDS.emergency = () => {
 				btn('emg:square', EMERGENCY[0][1], EMERGENCY[0][2], on('square')),
 		) +
 		acts(
-			btn('emg:hands', EMERGENCY[1][1], EMERGENCY[1][2], 'warn') +
+			btn('emg:hands', EMERGENCY[1][1], EMERGENCY[1][2], on('hands') || 'warn') +
 				btn('emg:shelter', EMERGENCY[2][1], `${V} ${EMERGENCY[2][2]}`, V ? on('shelter') : 'dis'),
 		)
 	);

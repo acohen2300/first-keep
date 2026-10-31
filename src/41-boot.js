@@ -240,6 +240,8 @@ window.__fk = {
 	missionsTick,
 	aimAt,
 	openCard,
+	blankGame,
+	clearSave,
 	renderCard,
 	demolish,
 	sendRepair,
@@ -442,6 +444,9 @@ window.__fk = {
 	TITLE_SHORT,
 	get holdSave() {
 		return holdSave;
+	},
+	setHold(v) {
+		holdSave = v;
 	},
 	get caches() {
 		return { SPR, BSPR, NSPR, deepTrees };

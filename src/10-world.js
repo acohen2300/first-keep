@@ -5,6 +5,7 @@ function blankGame(seed) {
 	return {
 		t: 0,
 		tick: 0,
+		threats: [], // read by the emergency card and the nav before the first step (C17)
 		speed: G ? G.speed : 1,
 		over: null,
 		seed,

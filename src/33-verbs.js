@@ -27,12 +27,14 @@ const ACT = {
 		const p = G.P[0],
 			keep = { age: p.age, techs: [...p.techs] };
 		$('end').hidden = true;
+		freshSlate();
 		newGame(undefined, keep);
 		setPause(false);
 		say('New land. Your age and research stay.', 'good', 8);
 		saveGame(true);
 	},
 	close() {
+		if (cardLocked()) return;
 		if (G.card && (G.card.type === 'resume' || G.card.type === 'setup') && G.paused) {
 			setPause(false);
 		}
@@ -40,6 +42,7 @@ const ACT = {
 		if (G.over) $('end').hidden = false;
 	}, // backing out of New game brings the end screen back
 	cardback() {
+		if (G.card && G.card.type === 'resume') return;
 		if (G.card && G.card.from) openCard(G.card.from, true);
 		else ACT.close();
 	}, // the title bar's back (MENU-SPEC §4): to the card this one was opened from; on the first card it closes
@@ -141,6 +144,7 @@ const ACT = {
 	fresh() {
 		clearSave();
 		holdSave = false;
+		freshSlate();
 		newGame();
 		closeCard();
 		setPause(false);
@@ -204,6 +208,7 @@ const ACT = {
 	today() {
 		clearSave();
 		holdSave = false;
+		freshSlate();
 		newGame(todaySeed());
 		closeCard();
 		setPause(false);

@@ -163,12 +163,21 @@ const SKIP_U = new Set([
 	'gp',
 	'gpT',
 ]); // lx/ly: where it stood last step (drawing only); gp/gpT: the group power of the tick
+// the Resume card, and the setup card while a save waits behind it, must be answered: closing either would start a game that never saves
+const cardLocked = () => !!(G && G.card && (G.card.type === 'resume' || (G.card.type === 'setup' && holdSave)));
+// a deliberate new game starts clean: no leftover fight hold, save-failure clock, stale note or error count from the game before
+function freshSlate() {
+	fightHold = 0;
+	saveFailT = undefined;
+	staleSave = 0;
+	seenErr.clear();
+}
 let holdSave = false; // while the Resume card waits, nothing may overwrite the save it offers
 const inFight = () => G.units.some((u) => u.owner === 0 && u.tgt && u.tgt.hp > 0);
 let fightHold = 0;
 let saveFailT;
 function saveGame(force) {
-	if (!G || G.over || seenErr.size >= 2 || (holdSave && !force)) return; // after a second error the last good save stands
+	if (!G || G.over || seenErr.size >= 2 || holdSave) return; // after a second error the last good save stands; while the Resume card waits, nothing overwrites it (force too)
 	if (!force && inFight() && (fightHold = fightHold || G.t) && G.t - fightHold < 60) return;
 	fightHold = 0; // the save stutters: not in the middle of a battle (at most a minute late)
 	try {
@@ -288,7 +297,7 @@ function readSave(key = SAVEKEY) {
 		if (!S || !S.units || !S.P) return key === SAVEKEY ? readSave(SAVEKEY + '.bak') : null; // the last save failed: the one before it
 		while (S.v < SAVEV && MIGRATE[S.v]) S = MIGRATE[S.v](S);
 		if (S.v !== SAVEV) {
-			localStorage.setItem(SAVEKEY + '.old', JSON.stringify(S));
+			localStorage.setItem(SAVEKEY + '.old' + S.v, JSON.stringify(S)); // one slot per shape: a second stale save never overwrites the first
 			localStorage.removeItem(SAVEKEY);
 			staleSave = S.v;
 			return null;
@@ -307,6 +316,7 @@ const migrateChain = () => {
 function clearSave() {
 	try {
 		localStorage.removeItem(SAVEKEY);
+		localStorage.removeItem(SAVEKEY + '.bak'); // the backup goes too, or a finished game comes back from it
 	} catch (e) {}
 }
 function loadGame(S) {
@@ -443,7 +453,7 @@ function loadGame(S) {
 	if (G.ev.cur) {
 		const e = G.ev.cur;
 		e.units = G.units.filter((u) => u.herd);
-		if ((!EV[e.kind].tick && !KNOBS[e.kind]) || e.kind === 'wildfire') G.ev.cur = null;
+		if ((!EV[e.kind].tick && !KNOBS[e.kind]) || e.kind === 'wildfire') endEvent();
 	} // an event with its own pieces on the map is dropped on load; the pieces finish on their own. An eclipse, a fog or a heat wave goes on.
 	evmSet();
 	for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined; // orders on the march come back with the game; a stray number is cleared (Build 38 review)

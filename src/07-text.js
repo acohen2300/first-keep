@@ -602,7 +602,7 @@ const MS_TEXT = {
 		'Your first house: five more may live here.',
 		'Only homes hold people; soldiers and workers alike. A town grows by its roofs.',
 		'A field feeds them',
-		'card:menu,land',
+		'menu:land',
 	],
 	field: [
 		'Your first field: food that does not run out.',

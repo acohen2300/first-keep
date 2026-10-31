@@ -375,7 +375,7 @@ function sfx(name, x, y) {
 		!AC ||
 		AC.state !== 'running' ||
 		document.hidden ||
-		voices > VOICES.max - VOICES.keep[CHAN[name] || 'fx']
+		(CHAN[name] !== 'alert' && voices > VOICES.max - VOICES.keep[CHAN[name] || 'fx']) // an alert never waits for a voice (C19)
 	)
 		return;
 	const S = SFX[name];
