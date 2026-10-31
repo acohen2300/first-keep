@@ -153,9 +153,10 @@ const SET = {
 	vibe: true,
 	learned: {},
 };
-// One home for this phone's storage (Build 60): the preview keeps its own keys, so a preview save never moves the live game's aside, nor
-// the live game the preview's. The first time the preview runs it copies (never moves) what the live game kept.
-const STORE = 'firstkeep.' + (/\/preview\//.test(location.pathname) ? 'preview.' : ''),
+// One home for this phone's storage (Build 60): the preview and each frozen version (/v70-restoration/) keep their own keys, so their saves
+// never move the live game's aside, nor the live game theirs. The first time one runs it copies (never moves) what the live game kept.
+const PLACE = location.pathname.match(/\/(preview|v\d+-[a-z-]+)\//),
+	STORE = 'firstkeep.' + (PLACE ? PLACE[1] + '.' : ''),
 	keyOf = (k) => STORE + k;
 try {
 	if (STORE !== 'firstkeep.' && localStorage.getItem(keyOf('settings')) === null) {

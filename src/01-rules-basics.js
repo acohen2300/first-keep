@@ -1,6 +1,7 @@
 // ═════ 01-rules-basics.js: the map, speeds, difficulty, resources, jobs, players, ages, seasons ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
 const BUILD = 0; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
+const BUILD_NAME = 'Restoration'; // the version's name, shown as "v70 · Restoration" (Albert, Oct 31)
 const MAP = 2000,
 	MID = MAP / 2,
 	DT = 1 / 30;

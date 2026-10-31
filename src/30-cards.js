@@ -759,7 +759,7 @@ const CARDS = {
 	},
 	help() {
 		return (
-			title('How to play', `build ${BUILD}`) +
+			title('How to play', `v${BUILD} · ${BUILD_NAME}`) +
 			acts(
 				btn('guide:bld', 'Guide', 'what leads to what, and why', 'go') +
 					btn('guide:rule', 'Rules', 'what triggers what'),
