@@ -51,3 +51,4 @@
 23. The automatic check that asks for commits in Claude's name and a push: removing it needs a permission Claude does not have.
 
 ## Albert's comments on v70
+- Preview 3 (Oct 31, 10:35): "It plays clean. It feels tight."
