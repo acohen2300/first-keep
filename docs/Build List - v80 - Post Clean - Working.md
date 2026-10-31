@@ -14,6 +14,9 @@
 - Toggles kept (Albert, 09:36): the one-slot toggle (switch over its word, 58 x 44); two ranks tall in the job footprint, B (the word over its switch) and C (the word over Off | On, the a / b pair). Pictures: Toggle One Slot, Toggle Two Ranks.
 - Kept (Albert, 09:39, "Save these"): the slider two ranks tall (A one tall slot, B the word over a track, C the word over − +) and the variants (2 x 2 word | switch over a slider; 2 x 2 four boxes; 3 x 2; columns like the jobs; a settings row). Picture: Slider Two Ranks and Variants.
 
+- One border (Albert, 09:41, kept): any control may sit in one outline (corners 9, down the middle of the gap) with nothing inside but its content; a chosen part keeps its ring; the big one is 3 x 4. Picture: One Border per Control.
+- The control sheet (Albert, 09:41): every kept control in seven groups: 1 check boxes, 2 toggles, 3 sliders, 4 toggles + sliders, 5 selectors, 6 pairs (the job grammar), 7 one border. Pictures: Control Sheet 1 and 2.
+
 ## Needs Albert's call now (it touches v70)
 1. Mail has no door once the Realm page goes: the Realm page's Mail tile was its only way in. Where does Mail open from?
 2. The status strip: Gunpowder does not fit the age cell. The ballot's change (the People icon back, age and people three cells each) was refused by the tap-size check: the other cells fell to 40 pt at 375.
