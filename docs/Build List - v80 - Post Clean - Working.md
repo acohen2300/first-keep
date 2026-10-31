@@ -1,5 +1,5 @@
-# Build List - v80
-*Started Oct 31, 2026, 08:20, at the v70 line. Nothing here is agreed yet: each item waits for Albert's yes. The session's name, for this file's title, comes from Albert.*
+# Build List - v80 - Post Clean - Working
+*Started Oct 31, 2026, 08:20, at the v70 line. Nothing here is agreed yet: each item waits for Albert's yes.*
 
 ## Waiting from the v70 session
 1. The computers' economy fix (tested on Build 62, parked: villagers by age, training while saving, an army floor, the spending leaks).
