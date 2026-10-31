@@ -1081,3 +1081,11 @@ Build Plan items 6 and 7. Open points for Albert are in `docs/Quick Action Notes
 - Fingerprint accepted: the computers' early economy moved. Needs a balance run (age-up times, 3 seeds x 30 minutes) before this goes live.
 - Not built from batch 3: the live test 4b (natives and computers).
 - Honest note: preview 4 uses simplified forms. Not yet built: Charnov's leave rule, Reynolds arrival speed and separation falloff, the general wall normal, Hawk-Dove V/C. Sources from memory, unopened: Pulliam, Lima, Reynolds, Ydenberg and Dill, Maynard Smith and Price. No SCIENCE.md entries yet.
+
+- **Play fingerprint accepted:** Build 80 batch 3 part 3: Hawk-Dove V/C for boar and bear, villagers ease in to their spot (arrival ramp): early economy moves a little
+
+## Build 80 preview 5 (the real math, batch 3 part 3)
+- Nothing cut. Boar and bear now fight an intruder with probability V/C (Hawk-Dove), weighed once in ten seconds; hurt ones always fight. Villagers at work ease in to their spot (speed × distance/24, not under a quarter).
+- SCIENCE.md has a row for each equation built so far, with its source and what was and was not opened. `tests/science.py` checks Hawk-Dove and the search radius; each new test was shown failing on a planted bug.
+- Wall slide: the grid's walls are axis-aligned, so sliding along an axis is v − (v·n)n exactly. Wolf and deer: unchanged. Parting on one spot: ids fix the direction, the push stays linear (not Reynolds' falloff).
+- Fingerprint accepted: the early economy moves a little. Balance run still owed.

@@ -484,6 +484,11 @@ function wildTick(u, dt, SP) {
 			const b = nearestFoeBld(WILD, u, undefined, 200);
 			if (b) t = b;
 		} // the horde breaks buildings too
+		if (t && U.temper === 'defend' && !(u.aggro && u.aggro.id === t.id)) {
+			// a defender weighs a stranger once in ten seconds: fight with probability V/C, V the stake (1), C the intruder's strength over its own
+			if (!u.hd || u.hd.id !== t.id || G.t > u.hd.t) u.hd = { id: t.id, t: G.t + 10, fight: rng() < hawkP(1, unitPower(t) / Math.max(1e-6, unitPower(u))) };
+			if (!u.hd.fight) t = null;
+		}
 		u.tgt = t;
 	}
 	if (t && dist(t, home) > leash) {

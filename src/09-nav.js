@@ -643,7 +643,9 @@ function moveTo(u, x, y, dt, r, SP) {
 		dy = wp.y - u.y,
 		dd = hyp(dx, dy) || 1e-6;
 	const lim = wp.direct ? (stand ? dd : Math.max(0, dd - r)) : dd;
-	const m = Math.min(paceOf(u, SP) * dt, lim);
+	// a villager at work slows as it comes to its spot, speed in proportion to the distance left inside the slowing radius (arrival steering, as in Reynolds 1999)
+	const ease = wp.direct && u.kind === 'vil' && !u.hunt && !u.tgt ? Math.min(1, Math.max(0.25, dd / SLOWR)) : 1,
+		m = Math.min(paceOf(u, SP) * dt * ease, lim);
 	let nx = u.x + (dx / dd) * m,
 		ny = u.y + (dy / dd) * m;
 	if (blockedCell(gcell(nx, ny), o)) {

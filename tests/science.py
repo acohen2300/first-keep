@@ -65,6 +65,10 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   // the SIR chain: with R0 = 2 the final size solves z = 1 − e^(−R0 z): 0.7968 (Kermack & McKendrick)
   { const R0 = F.HEALTH.R0; let z = 0.5; for (let i = 0; i < 100; i++) z = 1 - Math.exp(-R0 * z); if (R0 === 2) near('SIR final size', z, 0.7968, 1e-3); }
   // Lanchester's square law as odds: even strength is a coin toss; twice the strength wins 4 in 5
+  // Hawk-Dove (Maynard Smith and Price 1973; the V/C form checked on a course page, ESS p = V/C when V < C)
+  near('hawk V<C', F.hawkP(1, 4), 0.25, 1e-9); near('hawk V=C', F.hawkP(2, 2), 1, 1e-9); near('hawk V>C', F.hawkP(3, 1), 1, 1e-9);
+  // Reynolds-style arrival: search radius from 90 to 180
+  near('search start', F.searchR({}), 90, 1e-9); near('search full', F.searchR({ lostT: F.G.t - 99 }), 180, 1e-9);
   near('lanchester even', F.lanchester(1), 0.5, 1e-9); near('lanchester double', F.lanchester(2), 0.8, 1e-9);
   // the square law by the group (Build 63): one sword cannot take an elephant; twelve together can, since aimed strength goes as the square
   { F.newGame(3); const G = F.G, k = F.keepOf(0), e = F.addUnit(1, 'elephant', k.x + 120, k.y), one = F.addUnit(0, 'sword', k.x, k.y); G.rel[0][1] = G.rel[1][0] = 'war';

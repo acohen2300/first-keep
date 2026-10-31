@@ -627,6 +627,8 @@ function rehealth(o) {
 			b.mx = M;
 		}
 }
+// Hawk-Dove (Maynard Smith and Price 1973): with the prize V under the cost of injury C, the stable mix plays Hawk with probability V/C (all Hawk when V >= C).
+const hawkP = (V, C) => (C <= V ? 1 : V / C);
 const unitPower = (u) => ((u.hp * Math.max(1, dmgOf(u))) / 6) * (UNIT[u.kind].bonly ? 0.3 : 1);
 const powerOf = (list) => list.reduce((s, u) => s + (isSoldier(u) ? unitPower(u) : 0), 0);
 // the square law as odds: with a power ratio r, the chance is r² / (1 + r²) (Lanchester, Aircraft in Warfare, 1916). One home; it was written

@@ -5416,6 +5416,7 @@ const SHELTER = { flee: 70, clear: 150, raid: 3, hurt: 6 }; // villagers run int
 const LOOKOUT = { base: 60, k: 24 }; // a building sees 60 + 24 × the square root of its height: the horizon from a height grows with its square root, so a 44 tower sees 220, a 16 house 156, a field 84 (Build 51: every building but six saw a flat 90, and no research reached them)
 // Where a villager looks for the next find (decision 1; area-restricted search, tight near the last find and wider with time since it was lost):
 // r(t) = x + y min(1, t/tau). Until a full radius has been tried for 'give' seconds it keeps its job and waits; then it waits for an order.
+const SLOWR = 24; // a villager at work eases off inside this distance of its spot
 const ARRIVE = 9; // a villager at work counts as there within this of its spot: more than the 8-unit push, so it stands still and does not tremble
 const SEARCH = { x: 90, y: 90, tau: 10, give: 25 };
 const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
@@ -7406,6 +7407,8 @@ function rehealth(o) {
 			b.mx = M;
 		}
 }
+// Hawk-Dove (Maynard Smith and Price 1973): with the prize V under the cost of injury C, the stable mix plays Hawk with probability V/C (all Hawk when V >= C).
+const hawkP = (V, C) => (C <= V ? 1 : V / C);
 const unitPower = (u) => ((u.hp * Math.max(1, dmgOf(u))) / 6) * (UNIT[u.kind].bonly ? 0.3 : 1);
 const powerOf = (list) => list.reduce((s, u) => s + (isSoldier(u) ? unitPower(u) : 0), 0);
 // the square law as odds: with a power ratio r, the chance is r² / (1 + r²) (Lanchester, Aircraft in Warfare, 1916). One home; it was written
@@ -8056,7 +8059,9 @@ function moveTo(u, x, y, dt, r, SP) {
 		dy = wp.y - u.y,
 		dd = hyp(dx, dy) || 1e-6;
 	const lim = wp.direct ? (stand ? dd : Math.max(0, dd - r)) : dd;
-	const m = Math.min(paceOf(u, SP) * dt, lim);
+	// a villager at work slows as it comes to its spot, speed in proportion to the distance left inside the slowing radius (arrival steering, as in Reynolds 1999)
+	const ease = wp.direct && u.kind === 'vil' && !u.hunt && !u.tgt ? Math.min(1, Math.max(0.25, dd / SLOWR)) : 1,
+		m = Math.min(paceOf(u, SP) * dt * ease, lim);
 	let nx = u.x + (dx / dd) * m,
 		ny = u.y + (dy / dd) * m;
 	if (blockedCell(gcell(nx, ny), o)) {
@@ -12078,6 +12083,11 @@ function wildTick(u, dt, SP) {
 			const b = nearestFoeBld(WILD, u, undefined, 200);
 			if (b) t = b;
 		} // the horde breaks buildings too
+		if (t && U.temper === 'defend' && !(u.aggro && u.aggro.id === t.id)) {
+			// a defender weighs a stranger once in ten seconds: fight with probability V/C, V the stake (1), C the intruder's strength over its own
+			if (!u.hd || u.hd.id !== t.id || G.t > u.hd.t) u.hd = { id: t.id, t: G.t + 10, fight: rng() < hawkP(1, unitPower(t) / Math.max(1e-6, unitPower(u))) };
+			if (!u.hd.fight) t = null;
+		}
 		u.tgt = t;
 	}
 	if (t && dist(t, home) > leash) {
@@ -30124,6 +30134,7 @@ window.__fk = {
 	openCard,
 	blankGame,
 	clearSave,
+	hawkP,
 	groupSees,
 	nearestFoe,
 	searchR,

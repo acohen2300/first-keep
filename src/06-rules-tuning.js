@@ -154,6 +154,7 @@ const SHELTER = { flee: 70, clear: 150, raid: 3, hurt: 6 }; // villagers run int
 const LOOKOUT = { base: 60, k: 24 }; // a building sees 60 + 24 × the square root of its height: the horizon from a height grows with its square root, so a 44 tower sees 220, a 16 house 156, a field 84 (Build 51: every building but six saw a flat 90, and no research reached them)
 // Where a villager looks for the next find (decision 1; area-restricted search, tight near the last find and wider with time since it was lost):
 // r(t) = x + y min(1, t/tau). Until a full radius has been tried for 'give' seconds it keeps its job and waits; then it waits for an order.
+const SLOWR = 24; // a villager at work eases off inside this distance of its spot
 const ARRIVE = 9; // a villager at work counts as there within this of its spot: more than the 8-unit push, so it stands still and does not tremble
 const SEARCH = { x: 90, y: 90, tau: 10, give: 25 };
 const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
