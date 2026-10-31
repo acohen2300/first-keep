@@ -84,17 +84,18 @@ button.ghost{visibility:hidden}
 #mini{position:absolute;top:calc(var(--hb) + var(--gap));right:var(--gap);width:86px;height:86px;border:1px solid color-mix(in srgb,var(--cream-1) 50%,transparent);border-radius:var(--rad);background:var(--brown-1)}
 .fab{position:absolute;z-index:3;width:var(--slot);height:var(--slot);padding:0;bottom:calc(var(--ob) + var(--gap));box-shadow:var(--shade)}
 .fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}
-#emgB{right:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}#homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}
+#homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}
+/* Emergency's button, bottom right a rank above the row: it opens the Emergency card, and steps aside while any card is open, where it would sit over the card's buttons */
+#emgB{right:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}#stage:has(#card:not([hidden])) #emgB{display:none}
 #hudB{left:var(--gap);width:calc((100% - 7 * var(--gap)) / 6)}   /* the cycle button: one slot wide, on its own rank above slot 1 (MENU-SPEC §6) */
 #stage.busy :is(#hudB,#homeB),#stage.picking #homeB{display:none}
 #place,#pickbar{position:absolute;z-index:3;left:var(--gap);right:var(--gap);bottom:calc(var(--ob) + var(--gap));box-sizing:border-box;display:flex;gap:var(--gap);padding:var(--gap);background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o);font-weight:700}
 #place{justify-content:space-between;align-items:center;padding-left:10px}#place span{flex:1;min-width:0;line-height:1.25}#place button{padding:0 12px}
 #pickbar{flex-direction:column;border-color:var(--ring-g)}#pickbar .pbTop,#pickbar .pbRow{display:flex;gap:var(--gap);align-items:center}#pickbar .pbRow:empty{display:none}#pickbar span{flex:1;min-width:0;line-height:1.25;padding-left:6px}#pickbar button{min-width:var(--slot);padding:0 10px}#pickbar .pbRow button{flex:1;padding:0 4px}#pickbar .gl{width:18px;height:18px}
-#strip{position:absolute;z-index:5;display:flex;flex-wrap:wrap;gap:4px;padding:4px;max-width:calc(100% - 8px);overflow-x:auto;background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o)}
-#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:var(--fs-s);color:var(--cream-2);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}
-#strip button{min-width:var(--slot);padding:2px 8px;flex:0 0 auto}#strip button.ic{width:var(--slot);padding:0;font-size:var(--fs-l);font-weight:700}#strip button :is(b,small){font-size:var(--fs-s)}#strip .gl{width:18px;height:18px}
-#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:var(--slot)}
-#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--cream-1);font-size:var(--fs-m)}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:var(--slot);padding:0}
+/* the quick action (MENU-SPEC §7): a 2 × 2 of slots, icons only, one tight block: no gaps inside, one outer border at 9, thin dividers (the
+   slot edge, showing through a one-pixel gap). Two slots wide: the screen's slot width, whatever the phone */
+#qa{position:absolute;z-index:5;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:var(--slot) var(--slot);gap:1px;width:calc((100% - 7 * var(--gap)) / 3 + 1px);background:var(--brown-3);border:1px solid var(--brown-3);border-radius:var(--rad-o);box-shadow:var(--shade);overflow:hidden}
+#qa .cell{border:0;border-radius:0}
 #spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--brown-1);border:1px solid var(--brown-3);border-radius:var(--rad-o);box-shadow:var(--shade)}#spdPop button{min-width:52px}
 /* The row below the map (MENU-SPEC §6): one Formation two ranks tall on the screen's grid, 6 to the edge; the − and + under a job, and any
    a / b pair, are half slots. Jobs stands over the map; War and Train lie on steel, and so does the cycle button on them (COLORS.md) */
@@ -102,7 +103,7 @@ button.ghost{visibility:hidden}
 #orders:not(.pg-jobs){background:color-mix(in srgb,var(--steel-1) 84%,transparent);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 var(--steel-3)}
 #row{pointer-events:auto}#row .info :is(b,small){white-space:nowrap}
 .pg-jobs #row button{box-shadow:var(--shade)}
-.pg-war #row button,.pg-train #row button,#hudB:is(.war,.train),#strip button.war{background:var(--steel-2);border-color:var(--steel-3)}
+.pg-war #row button,.pg-train #row button,#hudB:is(.war,.train){background:var(--steel-2);border-color:var(--steel-3)}
 /* a slot of icon and word (the row, the cycle button, a card's rank): the picture at 18 with its number at 15 beside it, the word at 12 in
    Cream 2 under it; a symbol alone at 24 */
 .cell .top{position:absolute;left:0;right:0;top:13px;transform:translateY(-50%);display:flex;justify-content:center;align-items:center;gap:4px}
@@ -229,7 +230,7 @@ button.ghost{visibility:hidden}
     <button class="fab cell jobs" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, War, Train"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
 
-    <div id="strip" hidden></div>
+    <div id="qa" hidden></div>
     <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="wundo" id="placeUndo" hidden><b>Undo</b></button><button data-act="cancel"><b>Cancel</b></button></div>
     <div id="card" hidden><div class="cin"></div></div>
@@ -6412,7 +6413,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Villager jobs: Food, Wood, Stone, Gold, Iron',
-		`The − and + under each job move one villager off or on: + takes an idle villager, else the one earning least elsewhere; − sends home the one earning least. Each worker takes the find that brings home most a minute: its load over the time to fill it and carry it home and back (fish only within ${DOCKR} of a dock). A worker on a field, tree farm, pasture or quarry stays on it. A worker on a wild find that runs out looks only for the same kind of find within its own sight (gold rock to gold rock); when none is in sight it waits at the drop-off for your order. Tap the lit job tile again to turn the default job off: new villagers then wait at the Town Center. Stop and Dismiss sit on a villager card; Stop all and Idle to me on the Town Center card.`,
+		`The − and + under each job move one villager off or on: + takes an idle villager, else the one earning least elsewhere; − sends home the one earning least. Each worker takes the find that brings home most a minute: its load over the time to fill it and carry it home and back (fish only within ${DOCKR} of a dock). A worker on a field, tree farm, pasture or quarry stays on it. A worker on a wild find that runs out looks only for the same kind of find within its own sight (gold rock to gold rock); when none is in sight it waits at the drop-off for your order. Tap the lit job tile again to turn the default job off: new villagers then wait at the Town Center. Stop and Dismiss sit on a villager card; Town square (Emergency) stops everyone, and idle on the quick action sends the idle ones to a spot.`,
 		'You decide who does what, and nobody wanders off.',
 	],
 	[
@@ -6556,8 +6557,8 @@ const TRIGGERS = () => [
 		'Elephants and armoured charges broke formations by weight.',
 	],
 	[
-		'The send strip',
-		'Tap open ground: two buttons at your finger. The sword sends soldiers there: Idle, All, or a squad by name. The people button builds there, sends idle villagers there, or sets how many workers stand there. ⋯ for more about the place; ✕ to cancel. Tap an enemy building or soldier with soldiers picked: they attack.',
+		'The quick action',
+		'Tap open ground: four buttons at your finger. The sword, under your thumb, turns them to All, idle and + in the same place: All sends every soldier there, idle the idle soldiers and villagers, + opens War aimed there for a mission. The hammer builds there; ☰ tells about the place; ✕ closes. Tap an enemy or a hazard: a red ring under it and the sword answers at once. With soldiers picked, a tap on an enemy is their attack.',
 		'Commands should cost one touch.',
 	],
 	[
@@ -6647,12 +6648,12 @@ const TRIGGERS = () => [
 	],
 	[
 		'War: four missions',
-		'On War a crosshair goes where you tap; Go sends every squad at home and ready (its blue ring), or every idle soldier, on it as a mission with a promised time. Under each squad its time to arrive and its pace; its green ring is the march still to go, and it turns red while it fights: open it to send more from the idle reserve, or Abort. A tap on the map offers the same in two buttons: the sword sends Idle, All or a squad there; the people button builds there, sends idle villagers there or sets workers there.',
+		'On War a crosshair goes where you tap; Go sends every squad at home and ready (its blue ring), or every idle soldier, on it as a mission with a promised time. Under each squad its time to arrive and its pace; its green ring is the march still to go, and it turns red while it fights: open it to send more from the idle reserve, or Abort. A tap on the map offers the same at your finger: the sword, then All, idle or + for a mission aimed there.',
 		'A plan you can read: time, odds and who is where. The weather on the screen is counted in the time; a storm that comes later is bad luck.',
 	],
 	[
-		'Emergency: shelter and battle stations',
-		'The Army card and the red attack bar open it. Shelter puts villagers in the sturdiest shelter first, Battle stations sends soldiers into buildings (they add arrows) and a line toward the danger, All hands does both. Resume sends villagers back to work; soldiers stay until you give them an order.',
+		'Emergency: four orders',
+		'The button at the bottom right and the Army card open it, with what is coming. Town square gathers everyone round the Town Center, the soldiers outside the villagers. All hands sends soldiers into the sturdiest buildings (they add arrows) and a line toward the danger, and villagers into the room left. Shelter puts the villagers alone in the sturdiest shelter first. Stop sends villagers back to the work they had; soldiers stay until you give them an order.',
 		'One rule for everyone: the strongest walls first, the nearest hands first.',
 	],
 	[
@@ -7222,7 +7223,7 @@ function fxv(o, stat, keys) {
 const fxDirty = () => {
 	G.fxv++;
 };
-// Two words for two things (Build 62): a villager is FREE when it has no job and can be given one (the tile's count, Send idle, Idle to me,
+// Two words for two things (Build 62): a villager is FREE when it has no job and can be given one (the tile's count, the quick action's idle,
 // the computers' hands); it is IDLE (u.idle) when it stands with nothing to do this tick, job or not (the mark over its head, the warning).
 const freeVil = (u) => !u.job && !u.inside;
 const unitKeys = (kind) => {
@@ -11677,7 +11678,7 @@ function solTick(u, dt, SP) {
 		return;
 	} // at the School: it stands, learns, and comes out a newer soldier
 	if (u.state === 'garrison') {
-		// Battle stations: it walks to its building, goes inside and adds an arrow, and stays until given a new order
+		// All hands (Emergency): it walks to its building, goes inside and adds an arrow, and stays until given a new order
 		const b = G.blds.find((x) => x.id === u.gar && x.hp > 0 && x.prog >= 1);
 		if (!b) u.state = 'home';
 		else {
@@ -20092,17 +20093,27 @@ function drawFind(f) {
 	ctx.restore();
 	g = null;
 }
-// what the finger holds: a ring on the ground under each, green for yours, red for a foe's, gold for the wild and the land
+// what the finger holds: a ring on the ground under each, green for yours, red for a foe's, gold for the wild and the land; and red under
+// the enemy or the hazard the quick action is open on (Build 70; a hazard is a spot on the ground, ringed as wide as a find)
 function drawPicks(z) {
-	if (!G.pickE || !G.pickE.length) return;
+	const red = G.qa && G.qa.red ? G.qa.h.e : null,
+		E = red ? [...(G.pickE || []), red] : G.pickE;
+	if (!E || !E.length) return;
 	ctx.lineWidth = 2;
 	ctx.setLineDash([]);
-	for (const e of G.pickE) {
+	for (const e of E) {
 		if (e.hp !== undefined && e.hp <= 0) continue;
 		if (e.amt !== undefined && e.amt <= 0 && !e.farm) continue;
 		const own = e.owner,
-			r = e.q ? halfOf(e) + 6 : e.kind && FINDS[e.kind] ? 18 : 9;
-		ctx.strokeStyle = own === 0 ? '#5ad27a' : own === undefined || own === null || own === WILD ? '#ffd35e' : '#ff6a52';
+			r = e.q ? halfOf(e) + 6 : !e.kind || FINDS[e.kind] ? 18 : 9;
+		ctx.strokeStyle =
+			e === red
+				? '#ff6a52'
+				: own === 0
+					? '#5ad27a'
+					: own === undefined || own === null || own === WILD
+						? '#ffd35e'
+						: '#ff6a52';
 		ctx.beginPath();
 		ctx.ellipse(SX(e.x), SY(e.y), r * z + 3, r * z * TILT + 2, 0, 0, 7);
 		ctx.stroke();
@@ -21104,7 +21115,7 @@ function wallDrag(d, p) {
 	wallSet(pl);
 }
 cv.addEventListener('pointerdown', (e) => {
-	hideStrip();
+	hideQuick();
 	holdStop();
 	try {
 		cv.setPointerCapture(e.pointerId);
@@ -21364,7 +21375,7 @@ const cardFor = (h) =>
 // The order goes at once (Build 40 reviews: a waiting order reads as lag); a second tap on the same thing within a blink opens its card, the order already given.
 let lastTap = { key: '', t: 0 };
 function tapAt(sx, sy) {
-	hideStrip();
+	hideQuick();
 	if (G.over) return;
 	if (RADAR && hyp(sx - RADAR.sx, sy - RADAR.sy) < 26) {
 		G.follow = false;
@@ -21399,10 +21410,13 @@ function tapAt(sx, sy) {
 			ACT.ordpick(String(O.id));
 			return;
 		} // the ring of a group on the march: tap it to pick the group
-
-		showStrip(sx, sy, h.e.x, h.e.y);
+		showQuick(sx, sy, h, hazardAt(h.e.x, h.e.y) ? 2 : 1);
 		return;
-	} // nothing picked: the send strip, as before
+	} // nothing picked: the quick action; on a hazard, straight at its second step
+	if ((h.t === 'unit' || h.t === 'bld') && foeOf(h.e)) {
+		showQuick(sx, sy, h, 2);
+		return;
+	} // an enemy: a red ring under it, and the quick action at its second step (MENU-SPEC §7)
 	if (
 		h.t === 'bld' &&
 		h.e.owner === 0 &&
@@ -21636,7 +21650,7 @@ function boxPick(d) {
 let cardTap = false; // the tap being handled was inside a card (the click handler, 33-verbs)
 function openCard(c, back) {
 	if (!back) c.from = cardTap && G.card ? (G.card.type === c.type ? G.card.from : G.card) : null;
-	hideStrip();
+	hideQuick();
 	G.techTip = null;
 	G.qs = { from: 'all', n: {} }; // the Attack-with counts start fresh on every card
 	G.card = c;
@@ -21733,8 +21747,10 @@ const btn = (act, title, sub, cls, fr) =>
 // the Formation, the one helper that lays cells: twelve half slots across, ranks 44 tall, 6 between. cls says how many cells a rank holds
 // (c1 one, c2 two (the default), c3 three, c4 four, c6 six; c5 lays five singles and leaves the sixth place); a cell's span class overrides it
 const acts = (h, cls = 'c2') => `<div class="fm ${cls}">${h}</div>`;
-// the info cell: no frame; the value in Cream 1 at 15, its label in Cream 2 at 12 under it. cls: its span, and left for a sentence
-const info = (value, label, cls = '') => `<div class="info ${cls}"><b>${value}</b>${label ? `<small>${label}</small>` : ''}</div>`;
+// the info cell: no frame; the value in Cream 1 at 15, its label in Cream 2 at 12 under it. cls: its span, and left for a sentence; act: where
+// a tap on it goes (what is coming: tap to look)
+const info = (value, label, cls = '', act) =>
+	`<div class="info ${cls}"${act ? ` data-act="${act}"` : ''}><b>${value}</b>${label ? `<small>${label}</small>` : ''}</div>`;
 // a fixed place with nothing in it: a faint plain outline (never dashed)
 const empty = (cls = '') => `<div class="empty ${cls}"></div>`;
 const FOLD = new Set(); // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
@@ -22069,7 +22085,7 @@ function oddsText(S, t) {
 	const p = lanchester((powerOf(S) / K.pow) * matchup(S, K.foes));
 	return `odds ${p > 0.65 ? 'strong' : p > 0.4 ? 'even' : 'weak'}${K.seen ? ', seen' : ''}`;
 }
-// ═════ 28-army-strip.js: the army strip: who can be sent, how many, and the sends ═════
+// ═════ 28-army-quick.js: the army: who can be sent, how many, and the sends; the quick action ═════
 // ── Attack with: on an enemy or a find card, from the whole army or one battalion, how many of each type, then go. The nearest of each type go.
 const qsPool = () =>
 	armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && (G.qs.from === 'all' || u.bn === G.qs.from));
@@ -22129,7 +22145,7 @@ function qsHTML(verb, label, to) {
 		)
 	);
 }
-// ── The send strip: tap open ground and two choices sit at your finger: your people, or the sword (Idle, All, a squad); more about the place; cancel.
+// ── who can be sent
 const sendable = () => armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && u.state !== 'escort'); // guards keep to what they guard
 // What each soldier is doing, in one word (Albert, Build 42), worked out from the soldier alone:
 // rally (just trained or called home, walking to its place), march (on your order), fight, hold (stopped: at its place or at the spot you sent it), rout (nerve broke, running).
@@ -22180,67 +22196,59 @@ function guardRow(t, id) {
 		) + btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis'),
 	);
 }
-function sendPick(from, to) {
-	// 'all' everyone but guards, 'rest' the idle ones, or a squad by its number (Build 61: half, a quarter and the nearest few are gone, Albert: confusing)
-	if (from === 'all') return sendable();
-	if (typeof from === 'number') return sendable().filter((u) => u.bn === from);
-	return free();
-}
-// the villagers standing at a spot you sent them to
-const postedAt = (to) =>
-	unitsOf(0, 'vil').filter((u) => !u.job && u.post && hyp(u.post.x - to.x, u.post.y - to.y) < 40);
-// A tap on open ground (Build 61, Albert): two choices, people or sword. The sword: Idle, All, or a squad. The people: build here, send the idle
-// here, or dial how many workers stand here. One gesture, no half, no quarter. Three dots: more about the place. Cross: away.
-function showStrip(sx, sy, x, y, step) {
-	if (step === undefined) closeCard();
-	const el = $('strip'),
-		at = `${Math.round(x)},${Math.round(y)}`,
-		to = { x, y },
-		n = (from) => sendPick(from, to).length,
-		nAll = n('all'),
-		ic = (act, icon, label, cls) =>
-			`<button data-act="${act}" class="ic ${cls || ''}" aria-label="${label}">${icon}</button>`;
-	const sh = { sx, sy, x, y };
-	G.stripAt = sh;
-	// muscle memory (Albert, Build 63): the sword opens under the finger; the next tap's answer, All, sits exactly where the sword was
-	if (!step)
-		el.innerHTML =
-			ic(nAll ? 'striparmy' : 'nofree', ICON.sword, 'Send soldiers here', (nAll ? 'war' : 'dis') + ' thumb') +
-			ic('strippeople', ICON.head, 'Your people here') +
-			ic(`more:${at}`, '⋯', 'More about this place') +
-			ic('nostrip', ICON.close, 'Cancel');
-	else if (step === 1) {
-		const nRest = n('rest'),
-			bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
-		el.innerHTML =
-			btn(`sendto:all,${at}`, 'All', String(nAll), 'war thumb') +
-			btn(`sendto:rest,${at}`, 'Idle', String(nRest), nRest ? '' : 'dis') +
-			bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') +
-			ic('commander', ICON.aim, 'The War page, aimed here', 'war') +
-			ic('nostrip', ICON.close, 'Cancel');
-	} else {
-		const idle = unitsOf(0, 'vil').filter((u) => freeVil(u) && !postedAt(to).includes(u)).length,
-			here = postedAt(to).length,
-			pop = unitsOf(0, 'vil').length;
-		el.innerHTML =
-			btn('train:vil', `+ Villager`, `${pop}/${capOf(0)} · ${costText(unitCost(0, 'vil'))}`, 'thumb') + // the People tile, pasted in (Albert, Build 63)
-			btn(`buildhere:${at}`, 'Build here', 'the menu, aimed here') +
-			btn(`idleto:${at}`, 'Send idle here', `${idle} idle villager${idle === 1 ? '' : 's'}`, idle ? '' : 'dis') +
-			`<div class="dial"><b>Workers here</b>${btn(`wkhere:-,${at}`, '−', '', here ? '' : 'dis')}<span>${here}</span>${btn(`wkhere:+,${at}`, '+', '')}</div>` +
-			ic('nostrip', ICON.close, 'Cancel');
-	}
-	el.classList.toggle('panel', step === 2); // the people side is a small panel, not a strip
+// ── The quick action (MENU-SPEC §7, picture Quick Action): a 2 × 2 of slots, icons only, one tight block opened right under the tap: its
+// first column on the finger, its top half a slot below it, so the finger covers nothing of it and the red ring stays in sight. Open ground:
+// the sword (under the thumb) · the hammer / ☰ · ✕. The sword: All · idle / + · ✕, swapped in place so the thumb never moves. An enemy or a
+// hazard: a red ring under it (drawPicks) and the block opens straight at the sword's answers. Near the right edge or the row the block
+// flips, so the first icon stays the one nearest the thumb. G.qa holds what was tapped (h, as hitAt gives it) for the verbs (33-verbs).
+const QA = [
+	[
+		['qsword', 'sword', 'Send soldiers here'],
+		['qbuild', 'hammer', 'Build here'],
+		['qhere', 'list', 'About this place'],
+	],
+	[
+		['qall', 'squad', 'Send every soldier'],
+		['qidle', 'idle', 'Send the idle ones'],
+		['qwar', 'plus', 'A mission: the War page, aimed here'],
+	],
+];
+// an enemy the finger can send soldiers at: a beast that is not game (game is hunted from the bar) always; anyone else, the Natives and
+// their Throne too, while you are at war
+const foeOf = (e) =>
+	e.owner !== 0 && e.hp > 0 && (e.owner === WILD && !e.q && !e.native ? !UNIT[e.kind].meat : atWar(0, e.owner));
+// the idle ones: the idle soldiers (S), and on open ground the idle villagers too (V; never sent at an enemy or a hazard)
+const qaIdle = () => ({ S: free(), V: G.qa.red ? [] : unitsOf(0, 'vil').filter(freeVil) });
+function showQuick(sx, sy, h, step) {
+	closeCard();
+	const el = $('qa');
 	el.hidden = false;
-	G.strip = to;
-	if (step === 1) return; // the next step stays exactly where it was: the thumb does not move
 	const r = $('stage').getBoundingClientRect(),
-		w = el.offsetWidth,
-		h = el.offsetHeight,
-		th = el.querySelector('.thumb'),
-		tx = th ? th.offsetLeft + th.offsetWidth / 2 : w / 2,
-		ty = th ? th.offsetTop + th.offsetHeight / 2 : h / 2;
-	el.style.left = clamp(sx - tx, 4, r.width - w - 4) + 'px';
-	el.style.top = clamp(sy - ty, 4, r.height - h - 4) + 'px'; // the sword opens under the finger
+		up = $('hud').getBoundingClientRect().bottom - r.top,
+		down = $('orders').getBoundingClientRect().top - r.top,
+		css = getComputedStyle(el),
+		gap = parseFloat(css.getPropertyValue('--gap')),
+		off = parseFloat(css.getPropertyValue('--slot')) / 2, // half a slot from the finger
+		w = el.offsetWidth, // two slots and their divider, two ranks tall: the style sheet sets it
+		ht = el.offsetHeight,
+		fx = sx + (w * 3) / 4 > r.width - gap, // too near the right edge: the first icon goes right
+		fy = sy + off + ht > down - gap; // too near the row: the block goes above the finger, the first icon below
+	G.qa = { h, red: step === 2, fx, fy };
+	el.style.left = clamp(sx - (fx ? 3 : 1) * (w / 4), gap, r.width - w - gap) + 'px';
+	el.style.top = clamp(fy ? sy - off - ht : sy + off, up + gap, down - ht - gap) + 'px';
+	quickStep(step);
+}
+// a step's four slots, in the flip's order: the first icon, the second beside it, the third under it, ✕ across
+function quickStep(step) {
+	const I = qaIdle(),
+		on = [step === 1 || sendable().length > 0, step === 1 || I.S.length + I.V.length > 0, true],
+		c = [
+			...QA[step - 1].map(([act, icon, label], i) => sym(act, ICON[icon], on[i] ? '' : 'dis', label)),
+			sym('qclose', ICON.close, '', 'Close'),
+		],
+		{ fx, fy } = G.qa,
+		at = [0, 1, 2, 3].map((i) => c[i ^ (fx ? 1 : 0) ^ (fy ? 2 : 0)]);
+	patchHTML($('qa'), at.join(''));
 }
 // what the game thinks fits a spot (Albert, Build 41): each reason scores a kind, the best one is marked and its menu opens.
 // A drop-off for what grows there with none near; more of what stands around you (houses: a house; fields: a mill, then a field; army buildings: the one you lack);
@@ -22295,12 +22303,9 @@ function suggestAt(x, y) {
 	const best = Object.entries(sc).sort((a, b) => b[1] - a[1])[0];
 	return best ? best[0] : null;
 }
-function hideStrip() {
-	const el = $('strip');
-	if (el && !el.hidden) {
-		el.hidden = true;
-		if (G) G.strip = null;
-	}
+function hideQuick() {
+	$('qa').hidden = true;
+	G.qa = null;
 }
 // The two dials of an army or one battalion (a: 'all' or its number): temper, and shape once Formations is researched. One button each, a tap steps round; a gold ring marks what is not the plain setting.
 const dialBtns = (a) => {
@@ -22323,7 +22328,8 @@ function musterGap(i) {
 			if (c && gap[c[0]]) gap[c[0]] -= n;
 		};
 	for (const u of armyOf(0)) if (u.bn === i) less(u.kind, 1);
-	for (const b of G.blds) if (b.owner === 0) for (const j of b.q) if (j.muster && j.bn === i) for (const k in j.muster) less(k, j.muster[k]);
+	for (const b of G.blds)
+		if (b.owner === 0) for (const j of b.q) if (j.muster && j.bn === i) for (const k in j.muster) less(k, j.muster[k]);
 	const out = {};
 	CLS.forEach((c, t) => {
 		const k = kindOf(t);
@@ -22602,7 +22608,7 @@ function councilHTML(b) {
 		fold(
 			'bnabout',
 			'About battalions',
-			`<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve. Send a squad from the strip: tap open ground, then its name.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
+			`<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve. Send them from the War page with Go.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
 		)
 	);
 }
@@ -22983,10 +22989,6 @@ const CARDS = {
 					trade ? 'rel' : 'town',
 				);
 			if (kp && !trade) {
-				h += acts(
-					btn('stopall', 'Stop all', 'everyone to the Town Center, idle') +
-						btn('idlehere', 'Idle to me', `${unitsOf(0, 'vil').filter(freeVil).length} come to the screen`),
-				); // every villager at once (Build 61, Albert)
 				const T = turtlePlan(0);
 				if (T && T.rows.length)
 					h += `<p class="dim"><i>To ${T.age.name} by the fields:</i> ${T.rows.map((x) => `${Math.round(x.need)} ${x.r}${isFinite(x.vm) ? ` (${x.vm.toFixed(1)} villager-min)` : ' (none known)'}`).join(', ')}. With ${T.villagers} villagers about ${isFinite(T.time) ? clock(T.time * 60) : '—'}: ${T.split
@@ -23220,7 +23222,7 @@ const CARDS = {
 		);
 	},
 	ground(c) {
-		// ⋯ on the send strip: the rally point, the scout, the spy
+		// ☰ on the quick action: the rally point, the scout, the spy
 		const at = `${Math.round(c.x)},${Math.round(c.y)}`;
 		return (
 			title('Here', coord(c.x, c.y)) +
@@ -23422,7 +23424,7 @@ const CARDS = {
 							`<p data-act="ordpick:${O.id}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`,
 					)
 					.join(''); // tap a line: that group is picked, and the camera goes to it
-		h += acts(btn('card:emergency', 'Emergency', 'shelter · battle stations · all hands', G.emg ? 'warn' : ''));
+		h += acts(btn('card:emergency', 'Emergency', 'town square · all hands · shelter', G.emg ? 'warn' : ''));
 		if (S.length && hasCmd())
 			h +=
 				sec('Orders go to') +
@@ -23487,7 +23489,7 @@ const CARDS = {
 			fold(
 				'about',
 				'About orders',
-				`<p>Tap open ground, then the sword: Idle, All, or a squad by name goes there. A squad is built on its card (tap it on the War page); War sends squads with a time and odds; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
+				`<p>Tap open ground, then the sword: All or the idle ones go there, or + aims a mission there. A squad is built on its card (tap it on the War page); War sends squads with a time and odds; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
 			)
 		);
 	},
@@ -23658,8 +23660,8 @@ const CARDS = {
 			`<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
       <p><b>Build:</b> the hammer under People opens every building; it wears a green ring while one goes up. A building waits above your finger: drag it, then tap Build. The cycle button above People turns the row: Jobs, War, Train.</p>
       <p><b>Messages</b> arrive at the top and fade; tap one to see where. × on a group of news asks to hide that group: it then goes quietly to the mail, and red still shows. Numbers wear one colour scale: green gaining, white steady, red losing.</p>
-      <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Pause shows the speeds under the button.</p>
-      <p><b>Army:</b> tap open ground with nothing picked, then the sword: Idle, All or a squad goes there. The War page holds your squads (tap one for what it is made of) and the Train page what is being trained.</p>
+      <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: the quick action at your finger, to send soldiers, build or read about the place. Pause shows the speeds under the button.</p>
+      <p><b>Army:</b> tap open ground with nothing picked, then the sword: All or the idle ones go there; tap an enemy and the same answers come at once. The War page holds your squads (tap one for what it is made of) and the Train page what is being trained.</p>
       <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>
@@ -24089,6 +24091,10 @@ const ICON = {
 		20,
 		'<circle cx="10" cy="6.2" r="3.2" fill="currentColor"/><path d="M3.8 16.5 C3.8 12.6 6.6 10.8 10 10.8 C13.4 10.8 16.2 12.6 16.2 16.5 Z" fill="currentColor"/>',
 	),
+	idle: SVG(
+		20,
+		'<circle cx="8" cy="7.2" r="3.2" fill="currentColor"/><path d="M1.8 17.5 C1.8 13.6 4.6 11.8 8 11.8 C11.4 11.8 14.2 13.6 14.2 17.5 Z" fill="currentColor"/><path d="M13 2.5h4.5L13 8h4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+	), // a head and a z, the strip's idle mark: the quick action's idle ones (Build 70)
 	home: SVG(
 		20,
 		'<path d="M3.5 10 L10 4 L16.5 10" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round"/><path d="M5.5 9 V16 H14.5 V9" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 16 V12 H11.4 V16" fill="currentColor"/>',
@@ -24229,6 +24235,7 @@ function showEnd(won, text, all) {
 	$('endNext').hidden = $('endFree').hidden = !won;
 	$('end').hidden = false;
 	closeCard();
+	hideQuick(); // the next game starts with nothing of this one open
 }
 // The page's own measures: how tall the orders are (the map's bottom edge) and where the map's middle sits between the bars
 function fit() {
@@ -24291,7 +24298,8 @@ const news = (grp, text, cls, secs, at, act, why) => say(text, cls, secs, at, ac
 // You know what you see, what your people hear, and what a messenger brings. A line with a place (at) out of your sight is heard if it is a
 // fight near your people (vague: which way), else carried by a messenger at a runner's or a rider's pace, if your post reaches that far;
 // a line with no place happens at your court, or in the sky, and is first hand.
-const DIR8 = ['east', 'south-east', 'south', 'south-west', 'west', 'north-west', 'north', 'north-east'];
+const DIR8 = ['east', 'south-east', 'south', 'south-west', 'west', 'north-west', 'north', 'north-east'],
+	dirOf = (from, to) => DIR8[Math.round(Math.atan2(to.y - from.y, to.x - from.x) / (Math.PI / 4) + 8) % 8]; // which way a place lies, of eight
 function tell(text, cls, at) {
 	if (!at || at.told || !G.fogOn || fogAt(at.x, at.y) === 2) return { now: true };
 	const lvl = fxv(0, 'news').a,
@@ -24308,9 +24316,7 @@ function tell(text, cls, at) {
 			) ||
 			mine(r)
 		) {
-			const from = k || at,
-				a = Math.round(Math.atan2(at.y - from.y, at.x - from.x) / (Math.PI / 4) + 8) % 8;
-			return { now: true, text: `Sounds of fighting to the ${DIR8[a]}.` };
+			return { now: true, text: `Sounds of fighting to the ${dirOf(k || at, at)}.` };
 		}
 	}
 	const need = mine(TELL.near)
@@ -24612,14 +24618,12 @@ function ui(force) {
 		} // a deer, a boar: hunt it from the bar
 		else if (show && foe) {
 			txt('pickT', whoIs(foe));
-			const sol = armyOf(0).filter(isSoldier).length,
-				war = foe.owner === WILD ? !foe.native || atWar(0, WILD) : atWar(0, foe.owner),
-				row = `<button data-act="pattack:${foe.id}" class="${war && sol ? 'warn' : 'dis'}"><b>Attack</b><small>${!sol ? 'no soldiers' : war ? 'all soldiers' : 'not at war'}</small></button><button data-act="look:${foe.id}"><b>More</b></button>`;
+			const row = `<button data-act="look:${foe.id}"><b>More</b></button>`;
 			if (el.rowH !== row) {
 				el.rowH = row;
 				$('pickRow').innerHTML = row;
 			}
-		} // who is this? the bar says, and offers the fight (Albert, Build 41)
+		} // who is this? the bar says (Albert, Build 41); an enemy opens the quick action instead, whose All is the fight (Build 70)
 		else if (show) {
 			txt('pickT', `${n} picked${G.pickMore ? ' · tap to add' : ''}`); // ＋ More is gone (Build 61): drag a box, or hold one and tap more
 			const sol = P.some(isSoldier),
@@ -25075,22 +25079,14 @@ const PLAY = {
 	sel(a) {
 		G.sel = a === 'all' ? 'all' : Number(a);
 	},
-	sendto(a) {
-		const [f, x, y] = a.split(','),
-			e = { x: Number(x), y: Number(y) },
-			S = sendPick(/^(all|rest)$/.test(f) ? f : Number(f), e);
-		if (S.length) order(S, { t: 'ground', e });
-		else say(freeWhy(), '', 4);
-		hideStrip();
-	},
 	emg(a) {
 		emgStart(a);
 		hudPage('jobs');
 		ACT.home();
 		closeCard();
 	},
-	emgresume() {
-		emgResume();
+	emgstop() {
+		emgStop();
 		closeCard();
 	},
 	pagecycle() {
@@ -25181,62 +25177,45 @@ const PLAY = {
 	hudrein(a) {
 		hudReinforce(Number(a));
 	},
-	nostrip() {
-		hideStrip();
+	// the quick action (28-army-quick): each reads what was tapped, G.qa, and closes the block (a card it opens closes it too)
+	qsword() {
+		quickStep(2);
+	}, // swapped in place: All where the sword was
+	qall() {
+		const S = sendable();
+		if (S.length) order(S, G.qa.h);
+		else say(freeWhy(), '', 4);
+		hideQuick();
 	},
-	commander() {
-		const s = G.stripAt;
-		hideStrip();
+	qidle() {
+		const { S, V } = qaIdle(),
+			h = G.qa.h;
+		if (S.length) order(S, h);
+		for (const u of V) u.post = { x: h.e.x + u.ox, y: h.e.y + u.oy };
+		if (V.length) say(`${V.length} idle villagers come here.`, '', 3);
+		else if (!S.length) say(freeWhy(), '', 4);
+		hideQuick();
+	}, // the idle soldiers, and on open ground the idle villagers (the Town Center's Idle to me, cut in Build 70, lives on here)
+	qwar() {
+		const h = G.qa.h;
 		hudPage('war');
-		if (s) G.hud.h = { t: 'ground', e: { x: s.x, y: s.y } };
+		G.hud.h = h;
 		G.hud.moved = true;
-	}, // the strip's third answer: the War page, its crosshair already on the spot
-	nofree() {
-		say(freeWhy(), '', 4);
-		hideStrip();
-	}, // the sword with nobody to send says why
-	striparmy() {
-		const s = G.stripAt;
-		if (s) showStrip(s.sx, s.sy, s.x, s.y, 1);
-	},
-	strippeople() {
-		const s = G.stripAt;
-		if (s) showStrip(s.sx, s.sy, s.x, s.y, 2);
-	},
-	idleto(a) {
-		const [x, y] = a.split(',').map(Number);
-		let n = 0;
-		for (const u of unitsOf(0, 'vil'))
-			if (freeVil(u) && !postedAt({ x, y }).includes(u)) ((u.post = { x: x + u.ox, y: y + u.oy }), n++);
-		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 3);
-		hideStrip();
-	},
-	wkhere(a) {
-		// dial the villagers standing at a spot: + brings one more (an idle one, else the one earning least), − sends one home
-		const [d, x, y] = a.split(','),
-			to = { x: Number(x), y: Number(y) },
-			s = G.stripAt;
-		if (d === '+') {
-			const v = pickVil(0, to);
-			if (!v) say('No villager is free.', '', 3);
-			else stopVil(v, { x: to.x + v.ox, y: to.y + v.oy });
-		} else {
-			const v = postedAt(to).pop();
-			if (v) v.post = null;
-		}
-		if (s) showStrip(s.sx, s.sy, s.x, s.y, 2);
-	},
-	buildhere(a) {
-		const [x, y] = a.split(',').map(Number),
+		hideQuick();
+	}, // +: a mission, the War page with its target set on the spot or the enemy
+	qbuild() {
+		const { x, y } = G.qa.h.e,
 			hint = suggestAt(x, y),
 			M = hint && MENUS.find((m) => m.items.includes(hint));
-		hideStrip();
 		G.buildAt = { x, y, hint };
 		openCard({ type: 'menu', id: M ? M.id : G.lastMenu || MENUS[0].id });
-	}, // the hammer on open ground: the menu, on what fits there
-	more(a) {
-		const [x, y] = a.split(',').map(Number);
+	}, // the hammer: the Build menu for that spot, on what fits there
+	qhere() {
+		const { x, y } = G.qa.h.e;
 		openCard({ type: 'ground', x, y });
+	}, // ☰: the Here card for that spot
+	qclose() {
+		hideQuick();
 	},
 	qsfrom(a) {
 		G.qs.from = a === 'all' ? 'all' : Number(a);
@@ -25290,20 +25269,6 @@ const PLAY = {
 		if (u) stopVil(u, k ? { x: k.x + u.ox, y: k.y + halfOf(k) + 8 + u.oy } : null);
 		closeCard();
 	}, // the worker card: Home, to the Town Center and idle
-	stopall() {
-		const k = keepOf(0);
-		let n = 0;
-		for (const u of unitsOf(0, 'vil'))
-			if (u.job || u.post) (stopVil(u, k ? { x: k.x + u.ox, y: k.y + halfOf(k) + 8 + u.oy } : null), n++);
-		say(n ? `${n} villagers stop: to the Town Center.` : 'Nobody was working.', '', 4);
-	},
-	idlehere() {
-		const c = toWorld(cw / 2, ch / 2);
-		let n = 0;
-		for (const u of unitsOf(0, 'vil')) if (freeVil(u)) ((u.post = { x: c.x + u.ox, y: c.y + u.oy }), n++);
-		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 4);
-		closeCard();
-	},
 	replant(a) {
 		const b = G.blds.find((x) => x.id === Number(a) && x.owner === 0);
 		if (!b) return;
@@ -25317,14 +25282,6 @@ const PLAY = {
 	},
 	unpick() {
 		setPick([]);
-	},
-	pattack(id) {
-		const e = G.units.find((u) => u.id === Number(id));
-		const S = armyOf(0).filter(isSoldier);
-		if (e && S.length) {
-			order(S, { t: 'unit', e });
-			setPick([]);
-		}
 	},
 	look(id) {
 		const e = G.units.find((u) => u.id === Number(id));
@@ -25845,7 +25802,7 @@ for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndIni
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 38; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 39; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -25955,6 +25912,14 @@ const MIGRATE = {
 		S.v = 38;
 		return S;
 	}, // Build 70: a squad holds so many of a kind (Foot, Archers, Riders, Siege), not of one soldier; the cut pages kept nothing in the save (the row's page was never saved, a game opens on Jobs)
+	38: (S) => {
+		if (S.emg) {
+			S.emg.snap = S.emg.snap || [];
+			if (S.emg.kind === 'battle') S.emg.kind = 'hands';
+		}
+		S.v = 39;
+		return S;
+	}, // Build 70: Battle stations is cut; a game saved in it is in All hands (its soldiers' half), with no villager's work noted (it moved none)
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -29300,7 +29265,7 @@ function trainPage() {
 }
 const ROWS = { jobs: jobsPage, war: warPage, train: trainPage };
 // the row on show, patched in place (a button under a finger stays the same button); the cycle button above slot 1 wears the page's name
-// and its tint; Emergency's button steps aside under a card, where it would sit over the card's buttons
+// and its tint
 function rowUI() {
 	const page = G.hud.page,
 		el = $('row'),
@@ -29318,7 +29283,6 @@ function rowUI() {
 		chip.setAttribute('aria-label', `${ROW_WORD[page]}: the next page`);
 		fit(); // the row is drawn anew: the map's bottom edge is measured again
 	}
-	$('emgB').hidden = !!G.card;
 }
 // the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; its colour says what is under it; green once fired
 function drawReticle() {
@@ -29479,16 +29443,19 @@ CARDS.squad = (c) => {
 	c.was = c.was || { plan: { ...G.bnPlan[c.i] }, intent: G.bnIntent[c.i] || 0 }; // what Cancel goes back to: the squad as the card found it
 	return sqOut(c.i) ? squadOutHTML(c.i, G.msn[c.i]) : squadHomeHTML(c);
 };
-// ═════ 40-emergency.js: Shelter, Battle stations, All hands on deck, Resume ═════
-// One ranking for everyone: buildings that shelter, the sturdiest first (current hit points, then room); each is filled to its room with the nearest units who can go there;
-// whoever is left over goes to a safe spot behind the Town Center. Villagers go in and stay until Resume (a note of each one's job and spot is kept).
-// Soldiers who garrison a building add an arrow like villagers do and stay in the plan (DEFENDING) until you give them a new order; Resume does not touch them.
+// ═════ 40-emergency.js: Emergency: Stop, Town square, All hands, Shelter ═════
+// Four orders (MENU-SPEC §8, picture Easy Cards). At the first of them the game notes the picture Stop goes back to: every villager's work
+// and spot, and the squads' tempers. Town square: everyone, villagers and soldiers, gathers round the Town Center, each on its own side of
+// it. All hands: villagers and soldiers fight from the buildings: one ranking for everyone, the buildings that shelter, the sturdiest first
+// (current hit points, then room), each filled to its room with the nearest; soldiers first, shooters before them, and the soldiers left
+// over hold a line toward the danger. Shelter: the villagers alone, the same way. Villagers left over wait behind the Town Center. Stop:
+// every villager back to its work; soldiers stay where the order put them (a garrison adds arrows, DEFENDING) until you send them.
 const EMERGENCY = [
-	['shelter', 'Shelter', 'villagers take cover'],
-	['battle', 'Battle stations', 'soldiers to the walls and the line'],
-	['hands', 'All hands on deck', 'villagers and soldiers'],
+	['square', 'Town square', 'everyone to the Town Center'],
+	['hands', 'All hands', 'villagers and soldiers fight'],
+	['shelter', 'Shelter', 'villagers inside'],
 ];
-const EMG = { line: 110, row: 12, perRow: 12, behind: 60 };
+const EMG = { line: 110, row: 12, perRow: 12, behind: 60, square: 20 }; // square: the villagers stand this far out from the Town Center's walls, the soldiers three times as far
 const shelterRank = () =>
 	G.blds
 		.filter((b) => b.owner === 0 && b.hp > 0 && b.prog >= 1 && BLD[b.kind].shelter)
@@ -29496,6 +29463,20 @@ const shelterRank = () =>
 const roomIn = (b) =>
 	shelterOf(b.owner, b.kind) -
 	G.units.filter((u) => u.hid === b.id || (u.state === 'garrison' && u.gar === b.id)).length; // in, or on the way in (Build 60: a second Shelter counted only those in, and over-filled)
+// the soldiers an emergency moves: every one but the guards (they keep to what they guard) and the routed (they run for home)
+const troops = () => armyOf(0).filter((u) => isSoldier(u) && u.state !== 'escort' && u.state !== 'rout');
+// a soldier off its order, to stand at a spot and fight what comes
+const stand = (u, x, y) =>
+	Object.assign(u, {
+		ord: undefined,
+		focus: null,
+		tgt: null,
+		fid: null,
+		state: 'goto',
+		px: clamp(x, 20, MAP - 20),
+		py: clamp(y, 20, MAP - 20),
+		idleT: 0,
+	});
 // the way the danger lies from the Town Center: the attack coming, else the nearest threat, else across the map
 function threatDir(k) {
 	const t = G.incoming || nearest(G.threats, k, (v) => atWar(0, v.owner), 700) || { x: MID, y: MID },
@@ -29514,14 +29495,28 @@ function fillRank(units, pick) {
 	}
 	return rest;
 }
-// once, at the first call: the picture Resume goes back to, every villager's work and every battalion's temper
-// (Build 48: Battle Stations kept no picture, so its Hold stayed on every battalion for good)
+// once, at the first order: the picture Stop goes back to, every villager's work and every squad's temper; a villager born since is noted at the next
 function emgSnap(kind) {
-	if (!G.emg) G.emg = { kind, snap: null, temper: G.temper.slice() };
-	if (kind === 'battle') return; // villagers only when they are sent in: Battle Stations leaves their work alone
-	const S = G.emg.snap || (G.emg.snap = []);
+	if (!G.emg) G.emg = { kind, snap: [], temper: G.temper.slice() };
+	G.emg.kind = kind;
 	for (const u of unitsOf(0, 'vil'))
-		if (!S.some((n) => n.id === u.id)) S.push({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post }); // one born since the last call is kept too (Build 60)
+		if (!G.emg.snap.some((n) => n.id === u.id))
+			G.emg.snap.push({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post });
+}
+// a villager let go by the emergency: not frightened, out of the building it went into
+function release(u) {
+	u.emg = false;
+	u.scared = false;
+	u.safe = null;
+	if (u.inside) {
+		const b = G.blds.find((x) => x.id === u.hid);
+		u.inside = false;
+		if (b) {
+			u.x = b.x + u.ox * 0.8;
+			u.y = b.y + 30;
+		}
+	}
+	u.hid = 0;
 }
 function villagersIn() {
 	const V = unitsOf(0, 'vil').filter((u) => !(u.inside && u.shop) && !u.hid), // those at work indoors are indoors already; those sent in stay sent
@@ -29549,7 +29544,7 @@ function villagersIn() {
 function soldiersIn() {
 	hudAbortAll();
 	const k = keepOf(0),
-		S = armyOf(0).filter((u) => isSoldier(u) && u.state !== 'escort' && u.state !== 'rout');
+		S = troops();
 	if (!k || !S.length) return;
 	for (const u of S) {
 		u.ord = undefined;
@@ -29570,68 +29565,86 @@ function soldiersIn() {
 	left.forEach((u, i) => {
 		const row = Math.floor(i / EMG.perRow),
 			col = (i % EMG.perRow) - (Math.min(left.length, EMG.perRow) - 1) / 2;
-		u.state = 'goto';
-		u.px = clamp(cx - d.x * row * EMG.row - d.y * col * EMG.row, 20, MAP - 20);
-		u.py = clamp(cy - d.y * row * EMG.row + d.x * col * EMG.row, 20, MAP - 20);
-		u.idleT = 0;
+		stand(u, cx - d.x * row * EMG.row - d.y * col * EMG.row, cy - d.y * row * EMG.row + d.x * col * EMG.row);
 	});
+}
+// Town square: everyone round the Town Center, each on its own side: the villagers just out from its walls, the soldiers beyond them; every
+// mission comes home. A villager inside a shelter comes out to it
+function townSquare() {
+	const k = keepOf(0);
+	if (!k) return;
+	hudAbortAll();
+	const at = (u, r) => {
+		const d = hyp(u.x - k.x, u.y - k.y) || 1;
+		return {
+			x: clamp(k.x + ((u.x - k.x) / d) * r + u.ox * 0.5, 20, MAP - 20),
+			y: clamp(k.y + ((u.y - k.y) / d) * r + u.oy * 0.5, 20, MAP - 20),
+		};
+	};
+	for (const u of unitsOf(0, 'vil')) {
+		release(u);
+		stopVil(u, at(u, halfOf(k) + EMG.square));
+	}
+	for (const u of troops()) {
+		const p = at(u, halfOf(k) + EMG.square * 3);
+		stand(u, p.x, p.y);
+	}
 }
 function emgStart(kind) {
 	emgSnap(kind);
-	if (kind === 'battle' || kind === 'hands') soldiersIn(); // soldiers first: the strongest places are theirs
+	if (kind === 'square') townSquare();
+	if (kind === 'hands') soldiersIn(); // soldiers first: the strongest places are theirs
 	if (kind === 'shelter' || kind === 'hands') villagersIn();
-	if (G.emg) G.emg.kind = kind;
 	say(`${EMERGENCY.find((e) => e[0] === kind)[1]}.`, 'warn', 4);
 	feel('crack');
 }
-// Resume: every villager back to what it was doing; soldiers stay where the plan put them
-function emgResume() {
+// Stop: every villager back to what it was doing; soldiers stay where the order put them
+function emgStop() {
 	if (!G.emg) return;
-	for (const n of G.emg.snap || []) {
+	for (const n of G.emg.snap) {
 		const u = G.units.find((v) => v.id === n.id && v.hp > 0),
 			node = n.nid && G.nodes.find((x) => x.id === n.nid && x.amt > 0);
 		if (!u) continue;
-		u.emg = false;
-		u.scared = false;
-		u.safe = null;
-		if (u.inside) {
-			const b = G.blds.find((x) => x.id === u.hid);
-			u.inside = false;
-			if (b) {
-				u.x = b.x + u.ox * 0.8;
-				u.y = b.y + 30;
-			}
-		}
-		u.hid = 0;
+		release(u);
 		setJob(u, n.job, node && node.farm ? node : null);
 		if (node && !node.farm) u.node = node;
 		u.post = n.post;
 	}
-	if (G.emg.temper) G.temper = G.emg.temper;
+	G.temper = G.emg.temper;
 	G.emg = null;
 	say('Back to work.', 'good', 3);
 }
+// the card: what is coming (tap it to look), then the four orders, two a rank; the order on is gold, All hands is red
 CARDS.emergency = () => {
 	const I = G.incoming,
-		kids = unitsOf(0, 'vil').length,
-		def = armyOf(0).filter((u) => u.state === 'garrison').length;
+		k = keepOf(0),
+		V = unitsOf(0, 'vil').length,
+		on = (kind) => (G.emg && G.emg.kind === kind ? 'on' : '');
+	title('Emergency'); // no subtitle: what is coming says the rest, and the order on wears its ring
+	fold(
+		'why',
+		'How it works',
+		`<p>Town square: everyone gathers round the Town Center, the soldiers outside the villagers. All hands: soldiers fill the sturdiest buildings first, shooters first (they add arrows), and the rest hold a line toward the danger; villagers fill what room is left. Shelter: the villagers alone. Whoever finds no room waits behind the Town Center. Stop sends every villager back to the work it had; soldiers stay until you send them.</p>`,
+	);
 	return (
-		title('Emergency', G.emg ? EMERGENCY.find((e) => e[0] === G.emg.kind)[1] : 'calm') +
-		(I
-			? `<p data-act="jump:${Math.round(I.x)},${Math.round(I.y)}"><b>${I.n}</b> ${I.what} · ${I.eta} s away · tap to go</p>`
-			: '') +
 		acts(
-			btn('emgresume', 'Stop', 'everyone back to work', G.emg ? 'go' : 'dis') +
-				btn('emg:battle', 'Town square', 'everyone to the Town Center', 'warn'),
+			I
+				? info(
+						`${I.n} ${I.what}`,
+						`${k ? `coming from the ${dirOf(k, I)} · ` : ''}${mmss(I.eta)} · tap to look`,
+						's6',
+						`jump:${Math.round(I.x)},${Math.round(I.y)}`,
+					)
+				: info('Nothing coming', 'no attack in sight', 's6'),
+			'c1',
 		) +
 		acts(
-			btn('emg:hands', 'All hands on deck', 'villagers and soldiers', 'warn') +
-				btn('emg:shelter', 'Shelter', `${kids} villagers inside`, kids ? 'warn' : 'dis'),
+			btn('emgstop', 'Stop', 'everyone back to work', G.emg ? 'go' : 'dis') +
+				btn('emg:square', EMERGENCY[0][1], EMERGENCY[0][2], on('square')),
 		) +
-		fold(
-			'why',
-			'How it works',
-			`<p>Buildings that shelter are filled sturdiest first, each with the nearest units; any left over wait behind the Town Center. Soldiers inside add arrows and stay defending until you send them somewhere. Resume sends the villagers back to their jobs.</p>`,
+		acts(
+			btn('emg:hands', EMERGENCY[1][1], EMERGENCY[1][2], 'warn') +
+				btn('emg:shelter', EMERGENCY[2][1], `${V} ${EMERGENCY[2][2]}`, V ? on('shelter') : 'dis'),
 		)
 	);
 };
@@ -29793,7 +29806,7 @@ window.__fk = {
 	groundSpd,
 	wearMul,
 	say,
-	showStrip,
+	showQuick,
 	capFor,
 	armyRoom,
 	capOf,
@@ -29865,7 +29878,7 @@ window.__fk = {
 	minZ,
 	tapAt,
 	emgStart,
-	emgResume,
+	emgStop,
 	hudFire,
 	hudAbort,
 	pageCycle,
