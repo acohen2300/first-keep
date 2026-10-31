@@ -3,7 +3,7 @@
 
 ## Agreed for v80
 - Two text sizes in the whole game, 12 and 18 (Albert, Oct 31, 09:00): "19 moves to 18. Anything 15 and under is 12. We have 12. We have 18. That's it." Words and numbers in tiles are 12 (08:55; picture: Setup and the War row at 12 against 15; every word fits a single at 375 pt). Today's 19s (card titles, Start, the row's − +, the War and Train symbols, the › arrows, the old map strip) become 18 or, inside tiles, 12; today's 15s and the map's 11 and 13 become 12. Replaces the three sizes (12, 15, 19) in RULES.md and MENU-SPEC §9 when v80 is built.
-- On the map: "If you can zoom it, it needs to scale" (Albert, Oct 31, 09:06). Labels on the map grow with the zoom as today, but start from 12 at the smallest zoom: the research badge's count (10 today at the start), the idle "z" (11), the wonder's clock (12). Picture: the badge three ways.
+- On the map: "If you can zoom it, it needs to scale" (Albert, Oct 31, 09:06): a map label scales whole with its pill and icon, never on its own. 12 at the starting zoom, growing as you zoom in, shrinking as you zoom out to a floor of 9 ("I'd zoom down to 9 as it's base 3", 09:09): the research badge's count (10 today at the start), the idle "z" (11), the wonder's clock (12), an overlay tag (13), an arrival countdown (11). The one place text goes under 12, and only zoomed out. What is pinned to the screen (the edge arrows, the crosshair's map reference) stays 12. Picture: the badge three ways.
 
 ## Needs Albert's call now (it touches v70)
 1. Mail has no door once the Realm page goes: the Realm page's Mail tile was its only way in. Where does Mail open from?
