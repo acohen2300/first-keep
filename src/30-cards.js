@@ -421,8 +421,8 @@ const CARDS = {
 	setup() {
 		// the annoying part before the fun part (Albert): the settings first, then your people, the challenge as ticks, and Start at the foot
 		const C = CIVS[SET.civ],
-			H = SET.daily ? TODAY_HZ : SET.hz || HZ_DEFAULT,
-			lv = levelOf(H),
+			H = SET.daily ? TODAY_HZ : SET.hz || {},
+			lv = levelOf(H), // none ticked: the hazards are drawn by lot when the game starts (Build 70)
 			short = (k) => cap1(UNIT[CIVS[k].uu].name.replace(new RegExp('^' + CIVS[k].name + ' ', 'i'), ''));
 		let h =
 			title('A new game', '') +
@@ -436,7 +436,7 @@ const CARDS = {
 				'about',
 				'What each hazard does',
 				HZK.map((k) => `<p><b>${HAZARDS[k].name}:</b> ${HAZARDS[k].desc}</p>`).join('') +
-					`<p><b>Daily challenge:</b> the same map and the same hazards for everyone, all day. Tick a hazard yourself and it becomes your own game again.</p>`,
+					`<p><b>Daily challenge:</b> the same map and the same hazards for everyone, all day. Tick a hazard yourself and it becomes your own game again.</p><p><b>None ticked:</b> each hazard is drawn by lot, even odds, for every side alike; the first message says the level.</p>`,
 			);
 		if (staleSave)
 			h += `<p class="dim">Your last game came from an older version (${staleSave}) and cannot be opened. It is kept aside, not deleted.</p>`;
@@ -446,7 +446,7 @@ const CARDS = {
 				btn(
 					SET.daily ? 'today' : 'fresh',
 					'Start',
-					`${C.name} · ${SET.daily ? 'daily challenge' : MODES[SET.mode].name} · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}`,
+					`${C.name} · ${SET.daily ? 'daily challenge' : MODES[SET.mode].name} · ${lv ? `level ${lv} · score ×${(1 + lv / 10).toFixed(1)}` : 'hazards at random'}`,
 					'go big',
 				),
 				'c1',

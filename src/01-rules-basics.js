@@ -14,7 +14,7 @@ const RICH = 2.5,
 	PLUNDER = 0.25,
 	CARRY = 10,
 	NAVC = 10; // NAVC: the walking grid, 10 units a square (never shown)
-const LAKE0 = { x: MID, y: MID, r: 170 }; // the great lake in the middle; each corner also gets a lake of its own (G.lakes)
+const LAKE0 = { x: MID, y: MID, r: 170 }; // the great lake in the middle, round the Throne's island; the other lakes and the rivers fall at random (G.lakes)
 const SEASON_LEN = 180, // seconds a season
 	YEAR = SEASON_LEN * 4,
 	DAY_LEN = 120, // seconds a day: six days a year
@@ -52,11 +52,14 @@ const JOBS = RES; // a job for each resource
 
 // Relations: ally | peace (neutral) | war (hostile). Peace holds until a side gives NOTICE; alliance needs the other side's yes.
 const REL_WORD = { ally: 'Ally', peace: 'Neutral', war: 'Hostile' };
+// The four corners (a base rule): each Town Center CORNER from the middle on both axes, so the Throne is the same distance from all four.
+// 695, not 700: a 5-square Town Center centres on a half square; 300 and 1700 snapped to 305 and 1705 (the Raiders 14 nearer, to Build 70).
+const CORNER = 695;
 const PLAYERS = [
-	{ name: 'You', pers: 'human', color: '#4f93e6', keep: [300, 1700] },
-	{ name: 'Raiders', pers: 'aggr', color: '#de5a44', keep: [300, 300] },
-	{ name: 'Rivals', pers: 'bal', color: '#b07ae6', keep: [1700, 300] },
-	{ name: 'Fortress', pers: 'fort', color: '#5fb08a', keep: [1700, 1700] },
+	{ name: 'You', pers: 'human', color: '#4f93e6', keep: [MID - CORNER, MID + CORNER] },
+	{ name: 'Raiders', pers: 'aggr', color: '#de5a44', keep: [MID - CORNER, MID - CORNER] },
+	{ name: 'Rivals', pers: 'bal', color: '#b07ae6', keep: [MID + CORNER, MID - CORNER] },
+	{ name: 'Fortress', pers: 'fort', color: '#5fb08a', keep: [MID + CORNER, MID + CORNER] },
 	{ name: 'Natives', pers: 'wild', color: '#9b8b72', keep: [MID, MID] },
 ];
 const FORT = 3; // a player like the others since Build 40: it defends first, and strikes whoever is weak or busy

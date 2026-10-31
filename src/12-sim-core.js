@@ -612,9 +612,8 @@ function forage(u, n, drops) {
 }
 // The turtle plan (Albert, Build 63): what the next age costs in villager-minutes from this Town Center, with the walk counted. For each
 // resource the best find the side knows from home gives a villager's rate there (the forager's rate, walk and all); the shortfall over that
-// rate is the villager-minutes; split the villagers by those and the time to the bell follows. The same number, corner by corner, is the
-// map's fairness (Build 65): equal villager-minutes to the age is the deal every seat gets.
-function turtlePlan(o, A = nextAge(o), all = false) {
+// rate is the villager-minutes; split the villagers by those and the time to the bell follows. The Town Center's card shows it.
+function turtlePlan(o, A = nextAge(o)) {
 	const p = G.P[o],
 		k = keepOf(o);
 	if (!A || !k) return null;
@@ -627,7 +626,7 @@ function turtlePlan(o, A = nextAge(o), all = false) {
 		const r = RES.find((x) => KEY[x] === key);
 		let best = 0;
 		for (const n of G.nodes)
-			if (n.amt > 0 && n.type === r && (all || o !== 0 || !G.fogOn || known0(n)) && dist(n, k) < 400)
+			if (n.amt > 0 && n.type === r && (o !== 0 || !G.fogOn || known0(n)) && dist(n, k) < 400)
 				best = Math.max(best, forage(probe, n));
 		for (const b of G.blds)
 			if (b.owner === o && b.prog >= 1 && b.node && b.node.amt > 0 && b.node.type === r)

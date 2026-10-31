@@ -177,10 +177,16 @@ async def main():
         wraps = await pg.evaluate("""(L) => { const F = window.__fk; F.newGame(5); F.act('close'); F.setPause(false); F.say('x', '', 60); F.ui(true); const e = document.querySelector('#pv .t span'), out = [];
           if (!e) return ['no preview']; for (const t of L) { e.textContent = t; if (e.scrollWidth > e.clientWidth + 1) out.push(t); } return out; }""", L); await pg.close()
         print(('PASS ' if not wraps else 'FAIL ') + f'{len(L)} messages fit the preview at 375 px', '' if not wraps else wraps[:6]); fails += bool(wraps)
-        # every map is fair (Build 49: corners are no longer copies): on ten seeds, the sides' walks to work, the Throne and a neighbour within FAIR.spread
+        # the map's base rules hold on ten seeds (Build 70: the fairness measure and its re-roll cut): the Throne the same distance from every Town Center,
+        # no water within the clear radius of one, and the four joined to each other and to the causeways on the walking grid (fords and gaps keep them so)
         pg = await br.new_page(); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(400)
-        unfair = await pg.evaluate("() => { const F = window.__fk, out = []; for (let s = 1; s <= 10; s++) { F.newGame(s); const f = F.fairness(); if (f.worst > F.FAIR.spread) out.push(s + ': ' + JSON.stringify(f.spread)); } return out; }"); await pg.close()
-        print(('PASS ' if not unfair else 'FAIL ') + 'maps are fair on ten seeds', '' if not unfair else unfair); fails += bool(unfair)
+        base = await pg.evaluate("""() => { const F = window.__fk, N = F.NAV, out = [], comp = (x, y) => { let b = 0; for (let j = -5; j <= 5; j++) for (let i = -5; i <= 5; i++) { const c = N.comp[(Math.floor(y / 10) + j) * 200 + Math.floor(x / 10) + i]; if (c && N.size[c] > N.size[b]) b = c; } return b; };
+          for (let s = 1; s <= 10; s++) { F.newGame(s); const G = F.G, K = [0, 1, 2, 3].map((o) => F.keepOf(o)), T = G.blds.find((b) => b.kind === 'throne'), d = K.map((k) => Math.hypot(k.x - T.x, k.y - T.y));
+            if (Math.max(...d) - Math.min(...d) > 0.01) out.push(s + ': the Throne at ' + d.map(Math.round));
+            if (G.lakes.slice(1).some((L) => K.some((k) => Math.hypot(L.x - k.x, L.y - k.y) < F.CLEAR + L.r))) out.push(s + ': water in a clear radius');
+            const c = [...K.map((k) => comp(k.x, k.y)), ...[[1000, 770], [1000, 1230], [770, 1000], [1230, 1000]].map(([x, y]) => comp(x, y))]; if (c.some((x) => x !== c[0])) out.push(s + ': not joined ' + c); }
+          return out; }"""); await pg.close()
+        print(('PASS ' if not base else 'FAIL ') + "the map's base rules hold on ten seeds", '' if not base else base); fails += bool(base)
         pg = await br.new_page(viewport={'width': 390, 'height': 844}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(400)
         ui = await pg.evaluate("""() => { const F = window.__fk; F.SET.fog = false; F.SET.scen = 'open'; F.newGame(3); F.act('close'); const G = F.G; G.P[0].age = 4; const k = F.keepOf(0);
           for (let i = 0; i < 5; i++) F.addUnit(0, 'spear', k.x + 30, k.y + 30); for (let i = 0; i < 10; i++) F.step(1 / 30); F.ui(true);
