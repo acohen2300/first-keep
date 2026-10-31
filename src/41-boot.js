@@ -242,6 +242,7 @@ window.__fk = {
 	openCard,
 	blankGame,
 	clearSave,
+	maxHpB,
 	hawkP,
 	groupSees,
 	nearestFoe,

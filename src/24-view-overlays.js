@@ -481,7 +481,6 @@ function drawFire(z, inView) {
 // the fog, soft, over everything standing
 function drawFogLayer(z) {
 	if (G.fogOn) {
-		if (fogT < 0) fogTick();
 		const a1 = toWorld(0, 0),
 			b1 = toWorld(cw, ch),
 			sx0 = clamp(a1.x, 0, MAP),

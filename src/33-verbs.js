@@ -181,8 +181,7 @@ const ACT = {
 	diff(a) {
 		SET.diff = a;
 		SET.tension = a === 'easy' ? 'winner' : 'diplomacy'; // the difficulty sets the tension; the toggle below can change it
-		G.diff = a;
-		saveSet();
+		saveSet(); // the game under way keeps the difficulty it began with; the new one applies from the next game (B8)
 		refresh();
 	},
 	mode(a) {
@@ -218,7 +217,7 @@ const ACT = {
 		clearSave();
 		holdSave = false;
 		freshSlate();
-		newGame(todaySeed());
+		newGame(todaySeed(), undefined, true);
 		closeCard();
 		setPause(false);
 		saveGame(true);

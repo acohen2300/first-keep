@@ -7254,7 +7254,17 @@ function fxv(o, stat, keys) {
 }
 const fxDirty = () => {
 	G.fxv++;
+	if (G.blds) keepHealth();
 };
+// a finished building keeps its share of full health when research moves the full health (B7: Masonry left a Town Center at 77%)
+function keepHealth() {
+	for (const b of G.blds) {
+		if (b.prog < 1 || b.hp <= 0) continue;
+		const M = maxHpB(b.owner, b.kind);
+		if (b.mx && b.mx !== M) b.hp = Math.min(M, (b.hp * M) / b.mx);
+		b.mx = M;
+	}
+}
 // Two words for two things (Build 62): a villager is FREE when it has no job and can be given one (the tile's count, the quick action's idle,
 // the computers' hands); it is IDLE (u.idle) when it stands with nothing to do this tick, job or not (the mark over its head, the warning).
 const freeVil = (u) => !u.job && !u.inside;
@@ -7620,9 +7630,9 @@ function blockedCell(c, o) {
 // and every attacker's search ran its whole budget before failing). One flood a side, kept until the grid or a war changes.
 const COMPS = {};
 function compOf(o) {
-	const key = `${G.rs}:${NAV.v}:${(G.rel[o] || []).join('')}`, // the grid, and who this side is at war with (a hostile gate is a wall)
+	const key = `${NAV.v}:${G.flood > G.t ? 1 : 0}:${(G.rel[o] || []).join('')}`, // the grid, and who this side is at war with (a hostile gate is a wall)
 		C0 = COMPS[o];
-	if (C0 && C0.key === key) return C0.comp;
+	if (C0 && C0.key === key && C0.g === G) return C0.comp; // keyed on the grid, the flood and the game, not the random state, which moves every step (B12)
 	const C = new Int32Array(NC * NC),
 		Q = AS.q;
 	let id = 0;
@@ -7642,7 +7652,7 @@ function compOf(o) {
 				}
 		}
 	}
-	COMPS[o] = { key, comp: C };
+	COMPS[o] = { key, comp: C, g: G };
 	return C;
 }
 function lineClear(x1, y1, x2, y2, o, avoid) {
@@ -8374,7 +8384,7 @@ function mkPlayer(i, civ) {
 		uc: {},
 	};
 }
-function newGame(seed, carry) {
+function newGame(seed, carry, daily) {
 	seed = seed === undefined ? (Math.random() * 2 ** 31) | 0 : seed;
 	// one seed, one layout (Build 70): the world is laid out once, never measured and laid again
 	NID = 1;
@@ -8396,8 +8406,8 @@ function newGame(seed, carry) {
 	initEconomy();
 	// the hazards, chosen here once for every side (Build 70, Albert's A): a pick decides (the day's challenge, a scenario's, the Setup
 	// ticks); with none picked each is drawn by lot. Drawn after the map, so the map is the same whatever was picked.
-	const scen = !carry && seed !== todaySeed() ? SCENARIOS[SET.scen] : null,
-		pick = seed === todaySeed() ? TODAY_HZ : (scen && scen.hz) || SET.hz || {},
+	const scen = !carry && !daily ? SCENARIOS[SET.scen] : null, // the caller says it is the day's challenge: no date is read in here (B2)
+		pick = daily ? TODAY_HZ : (scen && scen.hz) || SET.hz || {},
 		lot = !HZK.some((k) => pick[k]);
 	G.hz = lot ? Object.fromEntries(HZK.map((k) => [k, rng() < HZ_ODDS ? 1 : 0])) : { ...pick };
 	G.clim.T = airTemp();
@@ -8430,6 +8440,7 @@ function newGame(seed, carry) {
 		); // which ones in its why: the mail shows it
 	} else news('land', `${LAND[G.land].name}. Gather, grow, explore.`, '', 8);
 	if (scen) applyScenario(SET.scen);
+	if (G.fogOn) fogTick(); // lit here, not by the first frame drawn: the same seed plays the same whether or not a frame came first (B1)
 }
 // a scenario is the ordinary game with some things set (SCENARIOS in 06): an age, a store, relations, a few buildings already up (its hazards are chosen with every game's, in newGame)
 function applyScenario(id) {
@@ -8914,7 +8925,9 @@ function makeMap() {
 		const n = Math.round(L.r / 10);
 		for (let a = 0; a < n; a++) {
 			const ang = (a / n) * Math.PI * 2;
-			N.push(node('fish', 'food', L.x + Math.cos(ang) * (L.r - 8), L.y + Math.sin(ang) * (L.r - 8), 350 * RICH));
+			const fx = L.x + Math.cos(ang) * (L.r - 8),
+				fy = L.y + Math.sin(ang) * (L.r - 8);
+			if (!onLand(fx, fy)) N.push(node('fish', 'food', fx, fy, 350 * RICH)); // fish swim in water: none on the great lake's causeways (B15)
 		}
 	});
 	for (const n of N) {
@@ -8985,6 +8998,7 @@ function mkBld(owner, kind, x, y, prog) {
 		B = BLD[kind];
 	const b = { id: NID++, owner, kind, x: sp.x, y: sp.y, gx: sp.gx, gy: sp.gy, prog, hp: 0, cd: 0, q: [] };
 	b.hp = prog >= 1 ? maxHpB(owner, kind) : maxHpB(owner, kind) * 0.1;
+	if (prog >= 1) b.mx = b.hp; // the full health it was made with: research that moves it moves the health with it (B7)
 	if (B.sheep) b.sheep = B.sheep;
 	if (B.crop) {
 		const r = 'reserve' in B ? B.reserve : Infinity,
@@ -9172,6 +9186,8 @@ function ageUp(o) {
 	p.aging = true;
 	return true;
 }
+let navHold = false,
+	navLate = false;
 function build(o, kind, x, y) {
 	const B = BLD[kind],
 		p = G.P[o];
@@ -9187,7 +9203,8 @@ function build(o, kind, x, y) {
 	pay(p, B.cost, 'buildings');
 	const b = mkBld(o, kind, x, y, 0);
 	G.blds.push(b);
-	navRebuild();
+	if (navHold) navLate = true;
+	else navRebuild(); // a line of wall is laid in one go and the grid built once after it (B13: forty pieces stalled a frame 131 ms)
 	qcDrop();
 	if (o === 0) learn('build:' + kind);
 	if (B.atStop) {
@@ -9815,7 +9832,7 @@ function zeal(o, list) {
 // a spy stands unseen beyond 45 of soldiers and 140 of towers, the Town Center and Courthouses
 const watchtower = (b) => b.prog >= 1 && b.hp > 0 && (BLD[b.kind].dmg || BLD[b.kind].spyonly);
 const guarded = (b) =>
-	G.blds.some((d) => d.owner === b.owner && watchtower(d) && dist(d, b) < rangeOf(d.owner, d.kind));
+	G.blds.some((d) => d.owner === b.owner && watchtower(d) && dist(d, b) < spySeen(d.owner, d)); // the distance a tower sees a spy, not its shot range (B14)
 function sabotage(u, b) {
 	const how = BLD[b.kind].sab;
 	if (!how) return false;
@@ -9996,6 +10013,8 @@ function commitPlace() {
 		let built = 0,
 			blocked = 0,
 			broke = false;
+		navHold = true;
+		navLate = false;
 		for (const c of cells) {
 			if (!afford(p, B.cost)) {
 				broke = true;
@@ -10004,6 +10023,8 @@ function commitPlace() {
 			if (build(0, 'wall', c.gx * NAVC + 5, c.gy * NAVC + 5)) built++;
 			else blocked++;
 		}
+		navHold = false;
+		if (navLate) navRebuild();
 		say(
 			built
 				? `${built} wall piece${built > 1 ? 's' : ''} going up${blocked ? `; ${blocked} blocked` : ''}${broke ? '; out of stone' : ''}.`
@@ -10302,7 +10323,8 @@ function reap() {
 					b.owner === 0 ? 'warn' : 'good',
 					7,
 				);
-				G.wonder = null;
+				const w2 = G.blds.find((x) => x !== b && x.kind === 'wonder' && x.prog >= 1 && x.hp > 0 && x.wend);
+				G.wonder = w2 ? { owner: w2.owner, id: w2.id, end: w2.wend } : null; // another wonder still stands: its own clock goes on (B6)
 			}
 		}
 	if (fxChange) fxDirty();
@@ -10647,6 +10669,7 @@ function built(b) {
 	if (B.trap) b.seen = b.seen || {};
 	if (B.fx) fxDirty();
 	b.doneT = G.t;
+	b.mx = maxHpB(o, b.kind);
 	if (o === 0) {
 		sfx(B.armyRoom || (B.dmg && !B.spyonly) || B.wallish ? 'doneWar' : 'done', b.x, b.y);
 		celebrate(b.kind === 'wonder' ? 3 : 1, b.x, b.y);
@@ -10654,7 +10677,8 @@ function built(b) {
 	for (const u of G.units) if (u.rep === b && u.job === 'repair') u.st.built++;
 	if (B.sheep && b.node) b.node.amt = (b.sheep || 0) * FLEECE * 0.5; // a new flock comes with half a year's wool on its back
 	if (b.kind === 'wonder') {
-		G.wonder = { owner: o, id: b.id, end: G.t + WONDER_HOLD };
+		b.wend = G.t + WONDER_HOLD; // each wonder keeps its own clock; the one standing longest is the one the game shows
+		if (!G.wonder) G.wonder = { owner: o, id: b.id, end: b.wend };
 		news('realm', 
 			o === 0
 				? `Your wonder stands. Hold it ${WONDER_HOLD / 60} min to win.`
@@ -12697,6 +12721,20 @@ function fall(p) {
 			}
 		plunder(to, got);
 		for (const k of Object.keys(p.res)) spend(p, k, p.res[k], 'loot'); // the fallen side's stores go with it
+	}
+	{
+		// a fallen holder hands the Throne back to the Natives: it is not deleted with the rest, and the game does not name a dead side its holder (B5)
+		const T = G.blds.find((b) => b.kind === 'throne' && b.owner === p.id && !b.gone);
+		if (T) {
+			for (const b of G.blds)
+				if (b.owner === p.id && (b === T || b.citadel)) {
+					b.owner = WILD;
+					b.by = undefined;
+				}
+			T.hp = Math.max(T.hp, maxHpB(WILD, 'throne') / 3);
+			G.throne = { owner: WILD, since: G.t };
+			G.navDirty = true;
+		}
 	}
 	G.units.forEach((u) => {
 		if (u.owner === p.id) {
@@ -18867,8 +18905,7 @@ const known0 = (e) => !G.fogOn || friendly(0, e.owner) || fogAt(e.x, e.y) > 0; /
 const knownB = (b) => !G.fogOn || friendly(0, b.owner) || fogAt(b.x, b.y) === 2 || !!G.seenB[b.id]; // a building shows where you see it now, or where you once saw it (Build 51: one put up in ground you had only explored showed without anyone seeing it)
 const visibleTo0 = (u) => (u.kind !== 'spy' || friendly(0, u.owner) || u.exposed) && seen0(u);
 let fogCv = null,
-	fogImg = null,
-	fogT = -1;
+	fogImg = null;
 // the woods block sight (Build 61, Albert: lifelike lines of sight): a fog square holding three or more standing trees is a wall of canopy;
 // you see the square itself, the edge of the wood, and nothing behind it on that line. Rebuilt when a tree falls or grows.
 let WOODS = { v: -1, G: null, grid: null };
@@ -18932,7 +18969,6 @@ function fogTick() {
 			G.seenB[b.id] = 1;
 			if (b.prog >= 1) wearGround(b);
 		} // what your people and towers have seen, remembered, and the ground round it
-	fogT = G.tick;
 }
 function fogLayer() {
 	// the fog as one small picture, drawn soft over the world
@@ -20716,7 +20752,6 @@ function drawFire(z, inView) {
 // the fog, soft, over everything standing
 function drawFogLayer(z) {
 	if (G.fogOn) {
-		if (fogT < 0) fogTick();
 		const a1 = toWorld(0, 0),
 			b1 = toWorld(cw, ch),
 			sx0 = clamp(a1.x, 0, MAP),
@@ -25099,8 +25134,7 @@ const ACT = {
 	diff(a) {
 		SET.diff = a;
 		SET.tension = a === 'easy' ? 'winner' : 'diplomacy'; // the difficulty sets the tension; the toggle below can change it
-		G.diff = a;
-		saveSet();
+		saveSet(); // the game under way keeps the difficulty it began with; the new one applies from the next game (B8)
 		refresh();
 	},
 	mode(a) {
@@ -25136,7 +25170,7 @@ const ACT = {
 		clearSave();
 		holdSave = false;
 		freshSlate();
-		newGame(todaySeed());
+		newGame(todaySeed(), undefined, true);
 		closeCard();
 		setPause(false);
 		saveGame(true);
@@ -26492,6 +26526,7 @@ function loadGame(S) {
 	for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined; // orders on the march come back with the game; a stray number is cleared (Build 38 review)
 	for (const b of G.blds) if (b.prog >= 1 && (!G.fogOn || friendly(0, b.owner) || G.seenB[b.id])) wearGround(b); // the ground's memory is not saved: the worn ground round buildings you know is laid again
 	fxDirty();
+	if (G.fogOn) fogTick(); // the same light after a load as at the start (B1)
 	navRebuild();
 	recount();
 	scoreAll();
@@ -27364,7 +27399,7 @@ function ignite(b, why) {
 			(u) => u.owner === b.owner && u.kind === 'vil' && !u.inside && u.job !== 'repair' && rectGap(u.x, u.y, b) < 60,
 		)
 		.sort((a, c) => dist(a, b) - dist(c, b))
-		.slice(0, b.owner === 0 ? 2 : 3);
+		.slice(0, 2); // two buckets for every side (B9: the comment said two, the computers got three)
 	for (const v of near) {
 		v.pj = v.job;
 		setJob(v, 'repair');
@@ -27910,7 +27945,7 @@ function evmSet() {
 }
 const hz = (id) => !!(G.hz && G.hz[id]) && G.diff !== 'easy'; // Easy keeps the polite game whatever is switched on
 const levelOf = (h) => HZK.reduce((s, k) => s + (h && h[k] ? HAZARDS[k].pts : 0), 0);
-const levelMul = () => 1 + levelOf(G.hz) / 10; // the score's multiplier for the level played
+const levelMul = () => (G.diff === 'easy' ? 1 : 1 + levelOf(G.hz) / 10); // the score's multiplier for the level played; Easy has no hazards, so no bonus (B8)
 const evOn = (kind) => !!(G.ev.cur && G.ev.cur.kind === kind);
 const edgeSpot = () => {
 	const e = Math.floor(rng() * 4),
@@ -30134,6 +30169,7 @@ window.__fk = {
 	openCard,
 	blankGame,
 	clearSave,
+	maxHpB,
 	hawkP,
 	groupSees,
 	nearestFoe,

@@ -474,7 +474,17 @@ function fxv(o, stat, keys) {
 }
 const fxDirty = () => {
 	G.fxv++;
+	if (G.blds) keepHealth();
 };
+// a finished building keeps its share of full health when research moves the full health (B7: Masonry left a Town Center at 77%)
+function keepHealth() {
+	for (const b of G.blds) {
+		if (b.prog < 1 || b.hp <= 0) continue;
+		const M = maxHpB(b.owner, b.kind);
+		if (b.mx && b.mx !== M) b.hp = Math.min(M, (b.hp * M) / b.mx);
+		b.mx = M;
+	}
+}
 // Two words for two things (Build 62): a villager is FREE when it has no job and can be given one (the tile's count, the quick action's idle,
 // the computers' hands); it is IDLE (u.idle) when it stands with nothing to do this tick, job or not (the mark over its head, the warning).
 const freeVil = (u) => !u.job && !u.inside;

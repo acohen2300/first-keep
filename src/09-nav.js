@@ -204,9 +204,9 @@ function blockedCell(c, o) {
 // and every attacker's search ran its whole budget before failing). One flood a side, kept until the grid or a war changes.
 const COMPS = {};
 function compOf(o) {
-	const key = `${G.rs}:${NAV.v}:${(G.rel[o] || []).join('')}`, // the grid, and who this side is at war with (a hostile gate is a wall)
+	const key = `${NAV.v}:${G.flood > G.t ? 1 : 0}:${(G.rel[o] || []).join('')}`, // the grid, and who this side is at war with (a hostile gate is a wall)
 		C0 = COMPS[o];
-	if (C0 && C0.key === key) return C0.comp;
+	if (C0 && C0.key === key && C0.g === G) return C0.comp; // keyed on the grid, the flood and the game, not the random state, which moves every step (B12)
 	const C = new Int32Array(NC * NC),
 		Q = AS.q;
 	let id = 0;
@@ -226,7 +226,7 @@ function compOf(o) {
 				}
 		}
 	}
-	COMPS[o] = { key, comp: C };
+	COMPS[o] = { key, comp: C, g: G };
 	return C;
 }
 function lineClear(x1, y1, x2, y2, o, avoid) {

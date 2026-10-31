@@ -372,7 +372,7 @@ function ignite(b, why) {
 			(u) => u.owner === b.owner && u.kind === 'vil' && !u.inside && u.job !== 'repair' && rectGap(u.x, u.y, b) < 60,
 		)
 		.sort((a, c) => dist(a, b) - dist(c, b))
-		.slice(0, b.owner === 0 ? 2 : 3);
+		.slice(0, 2); // two buckets for every side (B9: the comment said two, the computers got three)
 	for (const v of near) {
 		v.pj = v.job;
 		setJob(v, 'repair');

@@ -12,7 +12,7 @@ function evmSet() {
 }
 const hz = (id) => !!(G.hz && G.hz[id]) && G.diff !== 'easy'; // Easy keeps the polite game whatever is switched on
 const levelOf = (h) => HZK.reduce((s, k) => s + (h && h[k] ? HAZARDS[k].pts : 0), 0);
-const levelMul = () => 1 + levelOf(G.hz) / 10; // the score's multiplier for the level played
+const levelMul = () => (G.diff === 'easy' ? 1 : 1 + levelOf(G.hz) / 10); // the score's multiplier for the level played; Easy has no hazards, so no bonus (B8)
 const evOn = (kind) => !!(G.ev.cur && G.ev.cur.kind === kind);
 const edgeSpot = () => {
 	const e = Math.floor(rng() * 4),

@@ -113,7 +113,7 @@ function mkPlayer(i, civ) {
 		uc: {},
 	};
 }
-function newGame(seed, carry) {
+function newGame(seed, carry, daily) {
 	seed = seed === undefined ? (Math.random() * 2 ** 31) | 0 : seed;
 	// one seed, one layout (Build 70): the world is laid out once, never measured and laid again
 	NID = 1;
@@ -135,8 +135,8 @@ function newGame(seed, carry) {
 	initEconomy();
 	// the hazards, chosen here once for every side (Build 70, Albert's A): a pick decides (the day's challenge, a scenario's, the Setup
 	// ticks); with none picked each is drawn by lot. Drawn after the map, so the map is the same whatever was picked.
-	const scen = !carry && seed !== todaySeed() ? SCENARIOS[SET.scen] : null,
-		pick = seed === todaySeed() ? TODAY_HZ : (scen && scen.hz) || SET.hz || {},
+	const scen = !carry && !daily ? SCENARIOS[SET.scen] : null, // the caller says it is the day's challenge: no date is read in here (B2)
+		pick = daily ? TODAY_HZ : (scen && scen.hz) || SET.hz || {},
 		lot = !HZK.some((k) => pick[k]);
 	G.hz = lot ? Object.fromEntries(HZK.map((k) => [k, rng() < HZ_ODDS ? 1 : 0])) : { ...pick };
 	G.clim.T = airTemp();
@@ -169,6 +169,7 @@ function newGame(seed, carry) {
 		); // which ones in its why: the mail shows it
 	} else news('land', `${LAND[G.land].name}. Gather, grow, explore.`, '', 8);
 	if (scen) applyScenario(SET.scen);
+	if (G.fogOn) fogTick(); // lit here, not by the first frame drawn: the same seed plays the same whether or not a frame came first (B1)
 }
 // a scenario is the ordinary game with some things set (SCENARIOS in 06): an age, a store, relations, a few buildings already up (its hazards are chosen with every game's, in newGame)
 function applyScenario(id) {
@@ -653,7 +654,9 @@ function makeMap() {
 		const n = Math.round(L.r / 10);
 		for (let a = 0; a < n; a++) {
 			const ang = (a / n) * Math.PI * 2;
-			N.push(node('fish', 'food', L.x + Math.cos(ang) * (L.r - 8), L.y + Math.sin(ang) * (L.r - 8), 350 * RICH));
+			const fx = L.x + Math.cos(ang) * (L.r - 8),
+				fy = L.y + Math.sin(ang) * (L.r - 8);
+			if (!onLand(fx, fy)) N.push(node('fish', 'food', fx, fy, 350 * RICH)); // fish swim in water: none on the great lake's causeways (B15)
 		}
 	});
 	for (const n of N) {
@@ -724,6 +727,7 @@ function mkBld(owner, kind, x, y, prog) {
 		B = BLD[kind];
 	const b = { id: NID++, owner, kind, x: sp.x, y: sp.y, gx: sp.gx, gy: sp.gy, prog, hp: 0, cd: 0, q: [] };
 	b.hp = prog >= 1 ? maxHpB(owner, kind) : maxHpB(owner, kind) * 0.1;
+	if (prog >= 1) b.mx = b.hp; // the full health it was made with: research that moves it moves the health with it (B7)
 	if (B.sheep) b.sheep = B.sheep;
 	if (B.crop) {
 		const r = 'reserve' in B ? B.reserve : Infinity,

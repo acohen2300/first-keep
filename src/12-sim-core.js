@@ -111,7 +111,8 @@ function reap() {
 					b.owner === 0 ? 'warn' : 'good',
 					7,
 				);
-				G.wonder = null;
+				const w2 = G.blds.find((x) => x !== b && x.kind === 'wonder' && x.prog >= 1 && x.hp > 0 && x.wend);
+				G.wonder = w2 ? { owner: w2.owner, id: w2.id, end: w2.wend } : null; // another wonder still stands: its own clock goes on (B6)
 			}
 		}
 	if (fxChange) fxDirty();
@@ -456,6 +457,7 @@ function built(b) {
 	if (B.trap) b.seen = b.seen || {};
 	if (B.fx) fxDirty();
 	b.doneT = G.t;
+	b.mx = maxHpB(o, b.kind);
 	if (o === 0) {
 		sfx(B.armyRoom || (B.dmg && !B.spyonly) || B.wallish ? 'doneWar' : 'done', b.x, b.y);
 		celebrate(b.kind === 'wonder' ? 3 : 1, b.x, b.y);
@@ -463,7 +465,8 @@ function built(b) {
 	for (const u of G.units) if (u.rep === b && u.job === 'repair') u.st.built++;
 	if (B.sheep && b.node) b.node.amt = (b.sheep || 0) * FLEECE * 0.5; // a new flock comes with half a year's wool on its back
 	if (b.kind === 'wonder') {
-		G.wonder = { owner: o, id: b.id, end: G.t + WONDER_HOLD };
+		b.wend = G.t + WONDER_HOLD; // each wonder keeps its own clock; the one standing longest is the one the game shows
+		if (!G.wonder) G.wonder = { owner: o, id: b.id, end: b.wend };
 		news('realm', 
 			o === 0
 				? `Your wonder stands. Hold it ${WONDER_HOLD / 60} min to win.`

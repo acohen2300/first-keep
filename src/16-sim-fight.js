@@ -268,6 +268,20 @@ function fall(p) {
 		plunder(to, got);
 		for (const k of Object.keys(p.res)) spend(p, k, p.res[k], 'loot'); // the fallen side's stores go with it
 	}
+	{
+		// a fallen holder hands the Throne back to the Natives: it is not deleted with the rest, and the game does not name a dead side its holder (B5)
+		const T = G.blds.find((b) => b.kind === 'throne' && b.owner === p.id && !b.gone);
+		if (T) {
+			for (const b of G.blds)
+				if (b.owner === p.id && (b === T || b.citadel)) {
+					b.owner = WILD;
+					b.by = undefined;
+				}
+			T.hp = Math.max(T.hp, maxHpB(WILD, 'throne') / 3);
+			G.throne = { owner: WILD, since: G.t };
+			G.navDirty = true;
+		}
+	}
 	G.units.forEach((u) => {
 		if (u.owner === p.id) {
 			u.hp = 0;

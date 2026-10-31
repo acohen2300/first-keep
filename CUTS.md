@@ -1089,3 +1089,10 @@ Build Plan items 6 and 7. Open points for Albert are in `docs/Quick Action Notes
 - SCIENCE.md has a row for each equation built so far, with its source and what was and was not opened. `tests/science.py` checks Hawk-Dove and the search radius; each new test was shown failing on a planted bug.
 - Wall slide: the grid's walls are axis-aligned, so sliding along an axis is v − (v·n)n exactly. Wolf and deer: unchanged. Parting on one spot: ids fix the direction, the push stays linear (not Reynolds' falloff).
 - Fingerprint accepted: the early economy moves a little. Balance run still owed.
+
+- **Play fingerprint accepted:** Build 80 batch 4 part 1: fog lit in newGame (B1), full health follows research (B7), two buckets for all (B9), no fish on land (B15), pathfinding cache hits (B12): the first minutes move
+
+## Build 80 preview 6 (batch 4, part 1: fairness and determinism)
+- Nothing cut. B1 fog is lit in newGame and after a load, the draw no longer does it (same seed, same game). B2 the daily flag is passed in, no date read inside newGame. B5 a fallen holder hands the Throne back to the Natives. B6 each wonder keeps its own win clock. B7 a finished building keeps its share of full health when research moves it. B8 Easy has no hazard bonus, and a difficulty change applies from the next game. B9 two bucket villagers for every side. B12 the pathfinding cache keys on the grid, flood and game, not the random state. B13 a wall line rebuilds the grid once. B14 a spy is judged against the tower's sight, not its shot range. B15 no fish on the great lake's causeways.
+- Tests: moves.py (B5, B7, B8, B15; B7 shown failing on a planted bug). Fingerprint accepted: the first minutes move.
+- Not yet: B3, B4, B10, B11 (your call), and the map (home zones, +8%).

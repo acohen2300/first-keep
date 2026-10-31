@@ -133,6 +133,8 @@ function ageUp(o) {
 	p.aging = true;
 	return true;
 }
+let navHold = false,
+	navLate = false;
 function build(o, kind, x, y) {
 	const B = BLD[kind],
 		p = G.P[o];
@@ -148,7 +150,8 @@ function build(o, kind, x, y) {
 	pay(p, B.cost, 'buildings');
 	const b = mkBld(o, kind, x, y, 0);
 	G.blds.push(b);
-	navRebuild();
+	if (navHold) navLate = true;
+	else navRebuild(); // a line of wall is laid in one go and the grid built once after it (B13: forty pieces stalled a frame 131 ms)
 	qcDrop();
 	if (o === 0) learn('build:' + kind);
 	if (B.atStop) {
@@ -776,7 +779,7 @@ function zeal(o, list) {
 // a spy stands unseen beyond 45 of soldiers and 140 of towers, the Town Center and Courthouses
 const watchtower = (b) => b.prog >= 1 && b.hp > 0 && (BLD[b.kind].dmg || BLD[b.kind].spyonly);
 const guarded = (b) =>
-	G.blds.some((d) => d.owner === b.owner && watchtower(d) && dist(d, b) < rangeOf(d.owner, d.kind));
+	G.blds.some((d) => d.owner === b.owner && watchtower(d) && dist(d, b) < spySeen(d.owner, d)); // the distance a tower sees a spy, not its shot range (B14)
 function sabotage(u, b) {
 	const how = BLD[b.kind].sab;
 	if (!how) return false;
@@ -957,6 +960,8 @@ function commitPlace() {
 		let built = 0,
 			blocked = 0,
 			broke = false;
+		navHold = true;
+		navLate = false;
 		for (const c of cells) {
 			if (!afford(p, B.cost)) {
 				broke = true;
@@ -965,6 +970,8 @@ function commitPlace() {
 			if (build(0, 'wall', c.gx * NAVC + 5, c.gy * NAVC + 5)) built++;
 			else blocked++;
 		}
+		navHold = false;
+		if (navLate) navRebuild();
 		say(
 			built
 				? `${built} wall piece${built > 1 ? 's' : ''} going up${blocked ? `; ${blocked} blocked` : ''}${broke ? '; out of stone' : ''}.`

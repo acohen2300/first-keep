@@ -73,8 +73,7 @@ const known0 = (e) => !G.fogOn || friendly(0, e.owner) || fogAt(e.x, e.y) > 0; /
 const knownB = (b) => !G.fogOn || friendly(0, b.owner) || fogAt(b.x, b.y) === 2 || !!G.seenB[b.id]; // a building shows where you see it now, or where you once saw it (Build 51: one put up in ground you had only explored showed without anyone seeing it)
 const visibleTo0 = (u) => (u.kind !== 'spy' || friendly(0, u.owner) || u.exposed) && seen0(u);
 let fogCv = null,
-	fogImg = null,
-	fogT = -1;
+	fogImg = null;
 // the woods block sight (Build 61, Albert: lifelike lines of sight): a fog square holding three or more standing trees is a wall of canopy;
 // you see the square itself, the edge of the wood, and nothing behind it on that line. Rebuilt when a tree falls or grows.
 let WOODS = { v: -1, G: null, grid: null };
@@ -138,7 +137,6 @@ function fogTick() {
 			G.seenB[b.id] = 1;
 			if (b.prog >= 1) wearGround(b);
 		} // what your people and towers have seen, remembered, and the ground round it
-	fogT = G.tick;
 }
 function fogLayer() {
 	// the fog as one small picture, drawn soft over the world

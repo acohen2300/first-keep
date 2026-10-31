@@ -468,6 +468,7 @@ function loadGame(S) {
 	for (const u of G.units) if (u.ord && !G.ords[u.ord]) u.ord = undefined; // orders on the march come back with the game; a stray number is cleared (Build 38 review)
 	for (const b of G.blds) if (b.prog >= 1 && (!G.fogOn || friendly(0, b.owner) || G.seenB[b.id])) wearGround(b); // the ground's memory is not saved: the worn ground round buildings you know is laid again
 	fxDirty();
+	if (G.fogOn) fogTick(); // the same light after a load as at the start (B1)
 	navRebuild();
 	recount();
 	scoreAll();
