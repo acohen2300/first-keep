@@ -1,6 +1,9 @@
 # Build List - v80 - Post Clean - Working
 *Started Oct 31, 2026, 08:20, at the v70 line. Nothing here is agreed yet: each item waits for Albert's yes.*
 
+## Agreed for v80
+- Words in tiles: one size, 12, everywhere (Albert, Oct 31, 08:55; picture: Setup and the War row at 12 against 15). Every word fits a single at 375 pt at 12.
+
 ## Needs Albert's call now (it touches v70)
 1. Mail has no door once the Realm page goes: the Realm page's Mail tile was its only way in. Where does Mail open from?
 2. The status strip: Gunpowder does not fit the age cell. The ballot's change (the People icon back, age and people three cells each) was refused by the tap-size check: the other cells fell to 40 pt at 375.
