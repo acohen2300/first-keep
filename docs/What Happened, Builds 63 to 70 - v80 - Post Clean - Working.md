@@ -1,6 +1,8 @@
 # What Happened, Builds 63 to 70 - v80 - Post Clean - Working
 *Made Oct 31, 2026, for whoever opens this repo next: read this before anything else. Changed only with Albert's word.*
 
+**In Albert's words:** up to 62 was great; 63 to 69 was a mess; 70 is restored; 80 is current.
+
 ## In one paragraph
 On Oct 30, Builds 63 to 66 were built in one long chat whose context had drifted and been compressed. Changes Albert had not clearly agreed to went in, and the decisions behind them were lost. By the afternoon the preview (Build 65) had no way to open the Build menu, the live site still showed a build from Oct 28, and there was no marked baseline to go back to. That evening and through the night, a new chat traced what went wrong, restored what worked, wrote down every rule and drawing, and rebuilt the game as Build 70, "Restoration": four parts, three previews, every change agreed first. Everything after that is v80.
 
