@@ -1,7 +1,8 @@
 # The colours, the text sizes and the timings hold (Build 66, after SoRen's palette law; Build 70, the colour index). Every colour COLORS.md
 # names is defined once, in the style sheet's :root, with the value the index gives; the retired names are gone; nothing else in the style
 # sheet, and nothing in the interface's code, writes a named colour by hand (the code colours not even the map's art); the words are readable
-# on the wood and the steel, and the ink on the gold fill (WCAG 2.1 contrast, 4.5:1); the style sheet uses the three text sizes only; every
+# on the wood and the steel, and the ink on the gold fill (WCAG 2.1 contrast, 4.5:1; working is a ring on the edge since Build 70, so no fill
+# lies behind the words); the style sheet uses the three text sizes only; every
 # transition and animation names one of the four timings.
 import re, glob, os, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); os.chdir(ROOT)
@@ -33,17 +34,12 @@ def lum(c):
     return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
 def ratio(a, b): return (max(lum(a), lum(b)) + 0.05) / (min(lum(a), lum(b)) + 0.05)
 mix = lambda a, b, t: [x * t + y * (1 - t) for x, y in zip(rgb(named[a]), rgb(named[b]))]
-work = re.search(r'--work:color-mix\(in srgb,var\(--([\w-]+)\) (\d+)%,var\(--([\w-]+)\)\)', css)
 pairs = [(w, g) for w in ['cream-1', 'cream-2', 'gold-1', 'ring-b', 'ring-g', 'ring-r', 'ring-w'] for g in ['brown-1', 'brown-2']] + [(w, 'steel-2') for w in ['cream-1', 'cream-2']]
 for w, g in pairs:
     r = ratio(rgb(named[w]), rgb(named[g]))
     if r < 4.5: bad.append(f'--{w} on --{g}: {r:.1f}:1, under 4.5')
 r = ratio(rgb(named['ink']), mix('fill-1', 'fill-2', 0.5))
 if r < 4.5: bad.append(f'the ink on the gold fill: {r:.1f}:1, under 4.5')
-if not work: bad.append('--work is not a mix of two named colours')
-else:
-    r = ratio(rgb(named['cream-1']), mix(work.group(1), work.group(3), int(work.group(2)) / 100))
-    if r < 4.5: bad.append(f'Cream 1 on the working bar: {r:.1f}:1, under 4.5')
 sizes = {k: V.get(k, '').strip() for k in ['fs-s', 'fs-m', 'fs-l']}
 if sizes != {'fs-s': '12px', 'fs-m': '15px', 'fs-l': '19px'}: bad.append(f'the three text sizes are {sizes}, not 12, 15, 19')
 for m in re.finditer(r'font-size:([^;}]+)|font:([^;}]+)', rest):

@@ -135,7 +135,7 @@ function showStrip(sx, sy, x, y, step) {
 	if (!step)
 		el.innerHTML =
 			ic(nAll ? 'striparmy' : 'nofree', ICON.sword, 'Send soldiers here', (nAll ? 'war' : 'dis') + ' thumb') +
-			ic('strippeople', ICON.head, 'Your people here', 'people') +
+			ic('strippeople', ICON.head, 'Your people here') +
 			ic(`more:${at}`, '⋯', 'More about this place') +
 			ic('nostrip', ICON.close, 'Cancel');
 	else if (step === 1) {
@@ -152,9 +152,9 @@ function showStrip(sx, sy, x, y, step) {
 			here = postedAt(to).length,
 			pop = unitsOf(0, 'vil').length;
 		el.innerHTML =
-			btn('train:vil', `+ Villager`, `${pop}/${capOf(0)} · ${costText(unitCost(0, 'vil'))}`, 'people thumb') + // the People tile, pasted in (Albert, Build 63)
-			btn(`buildhere:${at}`, 'Build here', 'the menu, aimed here', 'build') +
-			btn(`idleto:${at}`, 'Send idle here', `${idle} idle villager${idle === 1 ? '' : 's'}`, idle ? 'people' : 'dis') +
+			btn('train:vil', `+ Villager`, `${pop}/${capOf(0)} · ${costText(unitCost(0, 'vil'))}`, 'thumb') + // the People tile, pasted in (Albert, Build 63)
+			btn(`buildhere:${at}`, 'Build here', 'the menu, aimed here') +
+			btn(`idleto:${at}`, 'Send idle here', `${idle} idle villager${idle === 1 ? '' : 's'}`, idle ? '' : 'dis') +
 			`<div class="dial"><b>Workers here</b>${btn(`wkhere:-,${at}`, '−', '', here ? '' : 'dis')}<span>${here}</span>${btn(`wkhere:+,${at}`, '+', '')}</div>` +
 			ic('nostrip', ICON.close, 'Cancel');
 	}
@@ -242,14 +242,21 @@ const dialBtns = (a) => {
 			: '')
 	);
 };
-// ── the War Council: six battalions, what each holds by type, its shape and temper
+// ── Muster for a squad: what it still lacks, by soldier kind to train
 function musterGap(i) {
-	// what a battalion still lacks: its plan, less the members it has and the soldiers already mustering for it
-	const gap = { ...G.bnPlan[i] };
-	for (const u of armyOf(0)) if (u.bn === i && gap[u.kind]) gap[u.kind]--;
-	for (const b of G.blds)
-		if (b.owner === 0)
-			for (const j of b.q) if (j.muster && j.bn === i) for (const k in j.muster) gap[k] = (gap[k] || 0) - j.muster[k];
-	for (const k in gap) if (gap[k] <= 0) delete gap[k];
-	return gap;
+	// its plan by kind (Foot, Archers, Riders, Siege), less the members it has and the soldiers already mustering for it, trained as each
+	// kind's soldier of this age (kindOf, 39-huddle)
+	const gap = { ...G.bnPlan[i] },
+		less = (k, n) => {
+			const c = CLS[clsOf(k)];
+			if (c && gap[c[0]]) gap[c[0]] -= n;
+		};
+	for (const u of armyOf(0)) if (u.bn === i) less(u.kind, 1);
+	for (const b of G.blds) if (b.owner === 0) for (const j of b.q) if (j.muster && j.bn === i) for (const k in j.muster) less(k, j.muster[k]);
+	const out = {};
+	CLS.forEach((c, t) => {
+		const k = kindOf(t);
+		if (gap[c[0]] > 0 && k) out[k] = gap[c[0]];
+	});
+	return out;
 }

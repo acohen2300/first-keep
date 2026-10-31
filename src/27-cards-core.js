@@ -96,8 +96,9 @@ new ResizeObserver(([e]) => {
 	$('card').style.setProperty('--rk', Math.max(1, Math.ceil((e.contentRect.height + gap) / rank)));
 }).observe(cardIn);
 // ── the pieces every card is made of. The slot is a button; the Formation lays them (MENU-SPEC §2, §3); the states are classes (§9):
-// go ready (blue ring), on chosen (gold ring), warn danger (red ring), work in progress (the green bar, --p long), dis locked (dim),
-// main the card's one main action (the gold fill). A cell's span is a class too: h, s15, s2, s3, s6, and r2 for a pillar.
+// go ready (blue ring), on chosen (gold ring), warn danger (red ring, breathing), work in progress (the green ring that recedes, --p the
+// share still to go: toGo), dis locked (dim), main the card's one main action (the gold fill). A cell's span is a class too: h, s15, s2,
+// s3, s6, and r2 for a pillar.
 const cap1 = (t) => (t && t.indexOf('<') < 0 ? t.replace(/(^|· )([a-z])/g, (m, a, c) => a + c.toUpperCase()) : t); // sentence case: a capital opens every label and every part after a dot
 const btn = (act, title, sub, cls, fr) =>
 	`<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small${fr === undefined ? '' : ` class="${fr < 1 ? 'need' : 'can'}" style="--gc:${costCol(fr)}"`}>${cap1(sub)}</small>` : ''}</button>`; // a cost line on the one gradient (fr: what you have of it, 0 to 1): red at nothing, white near, light green when you can pay
@@ -125,14 +126,8 @@ const fold = (id, title, html) =>
 const hpBar = (f, col) =>
 	`<div class="hp"><i style="width:${Math.round(100 * clamp(f, 0, 1))}%;background:${col}"></i></div>`;
 const sec = (t) => `<div class="sec">${t}</div>`;
-// a rank of six icon cells in a card, the bar below the map's mold (Build 63): an icon over a word. Each [act, icon, word, cls], or null for an empty place
-const rowHTML = (slots) =>
-	acts(
-		slots
-			.map((s) => (s ? `<button class="cell ${s[3] || ''}" data-act="${s[0]}"><span class="top">${s[1]}</span>${wd(s[2])}</button>` : empty()))
-			.join(''),
-		'c6',
-	);
+// a rank of six slots in a card, on the row's mold (pic): an icon over its word. Each [act, icon, word, cls], or null for an empty place
+const rowHTML = (slots) => acts(slots.map((s) => (s ? pic(s[0], s[1], s[2], s[3]) : empty())).join(''), 'c6');
 // a card's name and subtitle: kept here and laid by renderCard as the title bar, which knows the book and the way back
 let cardHead = ['', ''];
 const title = (name, sub) => ((cardHead = [name, sub || '']), '');

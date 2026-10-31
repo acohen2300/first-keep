@@ -37,8 +37,8 @@ const BLD_PAGE = {
 				),
 	market: (b) => marketHTML(b),
 };
-// A building's line: one slot per order it can hold, singles on the Formation. The first is working: its green bar is how far along it
-// is. Tap a filled one and the order is cancelled, its cost back; an empty place is a faint outline.
+// A building's line: one slot per order it can hold, singles on the Formation. The first is working: its green ring is what is left of
+// it. Tap a filled one and the order is cancelled, its cost back; an empty place is a faint outline.
 function slotsHTML(b) {
 	const n = qMax(0),
 		cells = [];
@@ -46,7 +46,7 @@ function slotsHTML(b) {
 		const j = b.q[i];
 		cells.push(
 			j
-				? `<button class="slot${i === 0 ? ' work' : ''}" data-act="qcancel:${b.id},${i}"${i === 0 ? ` style="--p:${Math.round(100 * (1 - j.left / j.total))}%"` : ''} aria-label="Cancel ${qName(j)}">${qName(j)}${i === 0 ? `<br>${Math.ceil(j.left)} s` : ''}</button>`
+				? `<button class="slot${i === 0 ? ' work' : ''}" data-act="qcancel:${b.id},${i}"${i === 0 ? ` style="${toGo(j.left / j.total)}"` : ''} aria-label="Cancel ${qName(j)}">${qName(j)}${i === 0 ? `<br>${Math.ceil(j.left)} s` : ''}</button>`
 				: empty(),
 		);
 	}
@@ -217,7 +217,7 @@ function workshopHTML(b) {
 				fr = w ? (w.st.got || 0) % 1 : 0,
 				state = !w ? 'nobody yet' : w.wait ? `waiting for ${kn}` : w.inside ? 'making' : 'walking in';
 			return (
-				acts(`<button class="slot ${w ? 'work' : 'dis'}" disabled style="--p:${Math.round(fr * 100)}%">${nm(cur)}<br>${state}</button>` + info(made, 'made') + info(`${r} ${kn}`, 'each'), 'c3') +
+				acts(`<button class="slot ${w ? 'work' : 'dis'}" disabled style="${toGo(1 - fr)}">${nm(cur)}<br>${state}</button>` + info(made, 'made') + info(`${r} ${kn}`, 'each'), 'c3') +
 				`<p>In store: ${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${kn} · ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} ${nm(cur).toLowerCase()} a minute when worked.</p>`
 			);
 		})()
@@ -261,24 +261,15 @@ function marketHTML(b) {
 function councilHTML(b) {
 	const p = G.P[0];
 	if (!hasCmd())
-		return `<p>${p.techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, six of them, Alpha to Zeta.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`;
-	const i = G.bnEdit,
-		S = armyOf(0).filter((u) => u.kind !== 'spy');
-	let h =
-		sec('Squads') +
-		acts(
-			BN.map((n, j) => btn(`bned:${j}`, n, `${S.filter((u) => u.bn === j).length} in it`, j === i ? 'on' : '')).join(
-				'',
-			),
-			'c4',
-		);
-	h += sec(`${BN[i]} holds`) + squadEditHTML(i); // the one squad editor (39-huddle): the War Council and the Squad room share it
+		return `<p>${p.techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, four squads.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`;
+	const S = armyOf(0).filter((u) => u.kind !== 'spy');
 	return (
-		h +
+		sec('Squads') +
+		acts(BN.map((n, j) => btn(`wsq:${j}`, n, `${S.filter((u) => u.bn === j).length} in it`)).join(''), 'c4') + // each opens its card, where it is built (39-huddle)
 		fold(
 			'bnabout',
 			'About battalions',
-			`<p>New soldiers fill each battalion up to what you set; the rest are the reserve. Send a battalion from the strip: tap open ground, then its name.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
+			`<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve. Send a squad from the strip: tap open ground, then its name.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
 		)
 	);
 }

@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 37; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 38; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -99,6 +99,18 @@ const MIGRATE = {
 		S.v = 37;
 		return S;
 	}, // Build 61: four squads (Alpha to Delta), the row's four middle tiles; Epsilon and Zeta fold into the reserve
+	37: (S) => {
+		S.bnPlan = (S.bnPlan || []).map((P) => {
+			const Q = {};
+			for (const k in P) {
+				const c = UNIT[k] && CLS[clsOf(k)];
+				if (c && P[k] > 0) Q[c[0]] = (Q[c[0]] || 0) + P[k];
+			}
+			return Q;
+		});
+		S.v = 38;
+		return S;
+	}, // Build 70: a squad holds so many of a kind (Foot, Archers, Riders, Siege), not of one soldier; the cut pages kept nothing in the save (the row's page was never saved, a game opens on Jobs)
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -185,7 +197,6 @@ function saveGame(force) {
 			bnIntent: G.bnIntent,
 			ms: G.ms || [],
 			recruitSq: G.recruitSq,
-			fav: undefined,
 			form: G.form,
 			intel: G.intel,
 			throne: G.throne || null,
@@ -307,9 +318,8 @@ function loadGame(S) {
 		ms: S.ms || [],
 		recruitSq: S.recruitSq ?? null,
 		form: S.form || BN.map(() => 0),
-		bnEdit: 0,
 		qs: { from: 'all', n: {} },
-		hud: { on: false, n: {} },
+		hud: { page: 'jobs' },
 		msn: S.msn || [null, null, null, null],
 		emg: S.emg || null,
 		intel: S.intel || {},

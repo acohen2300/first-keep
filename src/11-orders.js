@@ -689,13 +689,8 @@ function teach(o, u) {
 function graduate(u) {
 	const o = u.owner,
 		to = civKind(o, teachTo(u)),
-		f = u.hp / u.max,
-		plan = o === 0 && u.bn !== undefined && G.bnPlan[u.bn];
-	if (plan && plan[u.kind] > 0) {
-		plan[u.kind]--;
-		plan[to] = (plan[to] || 0) + 1;
-	} // its place in the battalion goes with it (Build 48: a graduate fell out to the reserve)
-	u.kind = to;
+		f = u.hp / u.max;
+	u.kind = to; // its place in its squad stays: a squad holds a kind, and a lesson keeps to the kind (TEACH_TO; Build 70)
 	u.max = maxHpU(o, to);
 	u.hp = Math.max(1, u.max * f);
 	u.state = 'home';

@@ -83,9 +83,9 @@ def messages():
             body = src[a:src.find('\n}', a)]
             for m in re.finditer(r"return (`(?:[^`\\]|\\.)*`|'(?:[^'\\]|\\.)*')", body):
                 for t in literals(m.group(1)): found.append((f, src[:a].count('\n') + body[:m.start()].count('\n') + 1, t))
-    # the spectacle's lines are said through variables (say(EV_TEXT[k][1])), so read the table itself; EV_LINE is what the dashboard says of an event
+    # the spectacle's lines are said through variables (say(EV_TEXT[k][1])), so read the table itself
     t = open('src/07-text.js').read()
-    for name in ('EV_TEXT', 'EV_LINE'):
+    for name in ('EV_TEXT',):
         a = t.find(f'const {name} = {{'); b = t.find('\n}', a)
         for m in re.finditer(r"'((?:[^'\\]|\\.)*)'", t[a:b]):
             if len(m.group(1).split()) >= 2: found.append(('src/07-text.js', t[:a + m.start()].count('\n') + 1, m.group(1).replace("\\'", "'")))

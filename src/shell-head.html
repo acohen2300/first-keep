@@ -11,7 +11,6 @@
   --steel-1:#1e2329;--steel-2:#2a3038;--steel-3:#4d5a68;   /* the War and Train pages: the page, slot fill, slot edge */
   --ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b;--ring-w:#e9ecef;   /* the colour code: blue ready, green working or done right, red wrong, white all is well */
   --fill-1:#f2d27a;--fill-2:#b8862e;--ink:#2a1c10;   /* the gold fill of a card's one main action, and its words */
-  --work:color-mix(in srgb,var(--ring-g) 40%,var(--brown-2));   /* the working bar: the code's green on a slot, the strongest that keeps Cream 1 words readable (4.9:1) */
   --shade:0 2px 8px rgba(0,0,0,.4);   /* the one shadow, under what floats over the map */
   --gap:6px;--slot:44px;--rad:6px;   /* the grid (MENU-SPEC §1): one number, 6; every slot 44 tall; corners 6 */
   --rank:calc(var(--slot) + var(--gap));--half:calc((var(--slot) - var(--gap)) / 2);--rad-o:calc(var(--rad) + var(--gap) / 2);   /* a rank 50; a half rank 19; an outline round slots 9, so the curves nest */
@@ -83,7 +82,7 @@ button.ghost{visibility:hidden}
 .fab{position:absolute;z-index:3;width:var(--slot);height:var(--slot);padding:0;bottom:calc(var(--ob) + var(--gap));box-shadow:var(--shade)}
 .fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}
 #emgB{right:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}#homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}
-#hudB{left:var(--c1x,var(--gap));width:var(--c1w,58px);flex-direction:row;gap:3px;font-weight:700}#hudB svg{position:static;transform:none}
+#hudB{left:var(--gap);width:calc((100% - 7 * var(--gap)) / 6)}   /* the cycle button: one slot wide, on its own rank above slot 1 (MENU-SPEC §6) */
 #stage.busy :is(#hudB,#homeB),#stage.picking #homeB{display:none}
 #place,#pickbar{position:absolute;z-index:3;left:var(--gap);right:var(--gap);bottom:calc(var(--ob) + var(--gap));box-sizing:border-box;display:flex;gap:var(--gap);padding:var(--gap);background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o);font-weight:700}
 #place{justify-content:space-between;align-items:center;padding-left:10px}#place span{flex:1;min-width:0;line-height:1.25}#place button{padding:0 12px}
@@ -94,36 +93,20 @@ button.ghost{visibility:hidden}
 #strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:var(--slot)}
 #strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--cream-1);font-size:var(--fs-m)}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:var(--slot);padding:0}
 #spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--brown-1);border:1px solid var(--brown-3);border-radius:var(--rad-o);box-shadow:var(--shade)}#spdPop button{min-width:52px}
-/* The row below the map (redrawn in its own part of Build 70): six slots on the grid, 6 to the screen edge, the − and + under a job half slots */
+/* The row below the map (MENU-SPEC §6): one Formation two ranks tall on the screen's grid, 6 to the edge; the − and + under a job, and any
+   a / b pair, are half slots. Jobs stands over the map; War and Train lie on steel, and so does the cycle button on them (COLORS.md) */
 #orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--gap) calc(env(safe-area-inset-bottom,0px) + var(--gap));pointer-events:none}
-#orders .tiles{pointer-events:auto}
-#orders:not(.pg-jobs){background:color-mix(in srgb,var(--brown-1) 84%,transparent);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--brown-3)}
-#orders:is(.pg-war,.pg-train){background:color-mix(in srgb,var(--steel-1) 84%,transparent)}
-.tr{display:grid;grid-template-columns:repeat(var(--n,6),minmax(0,1fr));gap:var(--gap)}
-.col{display:flex;flex-direction:column;gap:var(--gap);min-width:0}.col>button.cell{flex:none}
-.pm{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
-.tiles button.cell{box-shadow:var(--shade)}
-.tiles .st{font-size:var(--fs-l);font-weight:700;line-height:calc(var(--slot) - 2px);text-align:center}
+#orders:not(.pg-jobs){background:color-mix(in srgb,var(--steel-1) 84%,transparent);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 var(--steel-3)}
+#row{pointer-events:auto}#row .info :is(b,small){white-space:nowrap}
+.pg-jobs #row button{box-shadow:var(--shade)}
+.pg-war #row button,.pg-train #row button,#hudB:is(.war,.train),#strip button.war{background:var(--steel-2);border-color:var(--steel-3)}
+/* a slot of icon and word (the row, the cycle button, a card's rank): the picture at 18 with its number at 15 beside it, the word at 12 in
+   Cream 2 under it; a symbol alone at 24 */
 .cell .top{position:absolute;left:0;right:0;top:13px;transform:translateY(-50%);display:flex;justify-content:center;align-items:center;gap:4px}
-.cell .top :is(.gl,svg){position:static;transform:none;width:16px;height:16px}
-.cell .top .c{font-size:var(--fs-m);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}.cell .top b.plus{font-size:var(--fs-m);font-weight:700;margin-left:2px}
-.tiles .wd{color:var(--cream-2)}
-#tPeople .gl{width:22px;height:22px}#tPeople .wd{color:var(--cream-1)}
-.col.join{gap:0}.col.join>button.cell:first-child{border-radius:var(--rad) var(--rad) 0 0}.col.join>button.cell:last-child{border-radius:0 0 var(--rad) var(--rad);border-top:0}
-#huddle .col.whole>button.cell.tall{height:calc(var(--slot) * 2 + var(--gap))}#huddle .col.whole .top.thumb{top:30px}#huddle .col.whole .top.thumb img{width:40px;height:40px;display:block}#huddle .col.whole .wd{top:74px;letter-spacing:.02em;white-space:normal;overflow-wrap:anywhere;line-height:1;padding:0 2px}#huddle .col.whole .top:not(.thumb){top:34px}#huddle .col.whole .top:not(.thumb) .gl{width:22px;height:22px}
-#huddle button.cell{overflow:hidden;box-shadow:none}
-#huddle .wd{font-size:var(--fs-s);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-2)}#huddle .wd.mid{top:50%}
-#huddle .top .c{font-size:var(--fs-l)}
-#huddle .st.w{font-size:var(--fs-s);letter-spacing:.08em;text-transform:uppercase;line-height:calc(var(--slot) - 2px)}
-#huddle .bar::after,#huddle .msn:not(.empty):first-child::after{content:'';position:absolute;left:10px;right:10px;top:0;height:3px;border-radius:0 0 3px 3px;background:var(--mc,var(--ring-r))}
-#huddle .msn{touch-action:none}
-#huddle .msn.lose{--pc:var(--ring-r);animation:hudPulse var(--t-settle) infinite}#huddle .msn.win{--pc:var(--ring-g);animation:hudPulse var(--t-settle) infinite}   /* losing and winning pulse alike; the colour says which */
-@keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc)}}
-@media (prefers-reduced-motion:reduce){#huddle .msn:is(.lose,.win){border-color:var(--pc)}}
-/* the row's tints: Jobs plain; War and Train in steel (COLORS.md). The hammer's timber and the people's green are the row's own until it is redrawn */
-:is(.tiles,#huddle) button.cell:is(.train,.war,.sq),#hudB:is(.war,.squad,.train),#strip button.war{background:var(--steel-2);border-color:var(--steel-3)}
-.tiles button.cell.build,#strip button.build,#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}
-#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}
+.cell .top :is(.gl,svg){position:static;transform:none;width:18px;height:18px}
+.cell .top .c{font-size:var(--fs-m);font-weight:700;line-height:1;font-variant-numeric:tabular-nums;color:var(--nc,inherit)}
+.cell .top~.wd{color:var(--cream-2)}
+.cell.sym .gl{top:50%;width:24px;height:24px}
 /* The card (MENU-SPEC §1, §4): its slots on the screen's own grid, 6 from the edge and 6 from the row, its frame an outline down the middle
    of that 6 (9, so the curves nest): a card of n ranks stands exactly n ranks tall. It rises from the row in whole ranks: its content
    rounded up to the next rank (--rk, renderCard), at most every rank that fits above the row: a large card all of them (the preview steps
@@ -138,7 +121,7 @@ button.ghost{visibility:hidden}
    It stays at the top while a long card scrolls under it */
 .tb{position:sticky;top:0;z-index:2;background:var(--brown-1);box-shadow:0 calc(var(--gap) / -2) 0 var(--brown-1),0 calc(var(--gap) / 2) 0 var(--brown-1)}
 .tb h3{margin:0;display:flex;align-items:center;padding:0 10px;background:var(--brown-2);border:1px solid var(--brown-3);border-radius:var(--rad);font:400 var(--fs-l)/1 var(--display);letter-spacing:.05em;color:var(--gold-1);white-space:nowrap;overflow:hidden}
-.tb svg{width:20px;height:20px}
+.tb svg{width:24px;height:24px}
 .sub{padding:0 8px;font-size:var(--fs-s);line-height:16px;color:var(--cream-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cin p{margin:0;color:var(--cream-2);line-height:1.35;font-size:var(--fs-m)}
 .cin p i{color:var(--cream-1);font-style:normal;font-weight:700}
@@ -204,16 +187,20 @@ button.ghost{visibility:hidden}
 #endActs{display:flex;flex-direction:column;gap:var(--gap);width:100%;max-width:340px}#endActs button small{white-space:normal}
 }
 @layer states{
-/* The states (MENU-SPEC §9): one set for every slot anywhere, drawn over every part. A ring is the edge and one pixel more inside it.
-   go: blue ring, ready · on: gold ring, chosen · warn: red ring, danger (nope: a tap it cannot do, for a moment) · work: the green bar,
-   working, --p long · dis: dim, locked · empty: a fixed place with nothing in it · plain: nothing to say. One gold fill a card at most,
-   its main action: main. The chosen and the wrong say it in their words too */
+/* The states (MENU-SPEC §9): one set for every slot anywhere, drawn over every part. The ring is the slot's edge and one pixel more inside it.
+   go: blue ring, ready · on: gold ring, chosen · warn: red ring, danger, and its glow breathes (nope: a tap it cannot do, for a moment) ·
+   work: a green ring on the edge that recedes, clockwise from 12 o'clock over the share still to go (--p, toGo), SoRen's timer ring ·
+   dis: dim, locked · empty: a fixed place with nothing in it · plain: nothing to say. One ring at a time: danger beats working. One gold
+   fill a card at most, its main action: main. The chosen and the wrong say it in their words too */
 .go{--rc:var(--ring-b)}.on{--rc:var(--gold-1)}:is(.warn,.nope){--rc:var(--ring-r)}
 :is(.go,.on,.warn,.nope):not(.pill>*){border-color:var(--rc);box-shadow:inset 0 0 0 1px var(--rc)}
 :is(.on,.warn,.nope):not(.pill>*) :is(b,.wd),.segT .on{color:var(--rc)}
-.work{background-image:linear-gradient(90deg,var(--work) var(--p,100%),transparent 0)}
+.warn:not(.pill>*){animation:breathe var(--t-long) ease-in-out infinite}
+@keyframes breathe{50%{box-shadow:inset 0 0 0 1px var(--rc),0 0 8px 1px var(--rc)}}
+@media (prefers-reduced-motion:reduce){.warn:not(.pill>*){box-shadow:inset 0 0 0 2px var(--rc)}}   /* still, and 3 wide: never colour alone */
+.work:not(.warn,.nope)::after{content:'';position:absolute;inset:-1px;padding:2px;border-radius:var(--rad);background:conic-gradient(var(--ring-g) var(--p,100%),transparent 0);mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);pointer-events:none}
 .dis:not(.pill>*){background:var(--brown-1);border-color:var(--brown-2)}.dis,.dis :is(b,.wd){color:var(--cream-2)}
-.empty{background:var(--brown-1);border:1px solid var(--brown-2);border-radius:var(--rad)}
+.empty{background:var(--brown-1);border:1px solid var(--brown-2);border-radius:var(--rad);color:var(--cream-2)}
 .main{background:linear-gradient(var(--fill-1),var(--fill-2)) var(--fill-1);border-color:var(--fill-1);color:var(--ink)}.main :is(b,small){color:var(--ink)}.main b{font-size:var(--fs-l)}
 /* the bar and the strip draw no frame round a cell: a chosen cell of the bar wears its ring inside, a cell of the strip says its state in its word */
 .pill>.on::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:var(--rad);box-shadow:inset 0 0 0 2px var(--rc)}
@@ -230,11 +217,11 @@ button.ghost{visibility:hidden}
     <div class="pill" id="status"></div>
   </header>
   <div id="pv" hidden></div>
-  <section id="orders" class="pg-jobs"><div class="tiles"><div class="tr" id="jobs"></div><div class="tr" id="huddle" hidden></div></div></section>
+  <section id="orders" class="pg-jobs"><div class="fm" id="row"></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
     <button class="fab" id="emgB" data-act="card:emergency" aria-label="Emergency"></button>
-    <button class="fab chip" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, Realm, Build, War, Squad, Train"></button>
+    <button class="fab cell jobs" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, War, Train"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
 
     <div id="strip" hidden></div>

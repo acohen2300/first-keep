@@ -34,9 +34,8 @@ function blankGame(seed) {
 		ms: [], // the milestones passed (MS_TEXT), read back on their card
 		recruitSq: null, // the squad new soldiers join (the Train page)
 		form: BN.map(() => 0),
-		bnEdit: 0,
 		qs: { from: 'all', n: {} },
-		hud: { on: false, n: {} },
+		hud: { page: 'jobs' }, // the row's page and the crosshair (39-huddle); never saved: a game opens on Jobs
 		msn: [null, null, null, null],
 		emg: null,
 		intel: {},
