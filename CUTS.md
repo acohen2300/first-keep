@@ -1071,3 +1071,12 @@ Build Plan items 6 and 7. Open points for Albert are in `docs/Quick Action Notes
 - Nothing cut. Fish now pay their walk home like any find (C13). School students are left alone by Home, Town square and All hands (C10). One back-to-work helper ends repairs and fires alike (C14). Two units on one spot part along a direction fixed by their ids (decision 10b). Deer run one unit direction, slide along walls, give up a run below half speed (decision 12).
 - Tests: `tests/moves.py` (each shown failing on the planted old code). Gate's emergency test now compares only villagers present at the start. Fingerprint accepted: the first minutes move a little.
 - Not yet built from batch 3: arrive-and-stop (10a), villager search (1), hostility split and animal temperaments (8), group sight (8b), spawn chase (13), live test 4b, building shadows (14).
+
+- **Play fingerprint accepted:** Build 80 batch 3 part 2: villager search widens with time (decision 1), arrival radius 9 for villagers at work (10a), soldiers leave animals alone (8, 13), group sight (8b): the computers' early economy moves; balance run still to do
+
+## Build 80 preview 4 (batch 3, part 2)
+- Nothing cut. Building shadows are now each building's own footprint thrown away from the light (hull of the footprint and itself moved by h·cot(altitude)), not an oval; trees, rocks and people keep ovals (decision 14).
+- Villager search widens r = 90 + 90·min(1, t/10 s) after a find is lost, and the villager keeps its job for 25 s more before it waits for an order (decision 1). A villager at work counts as there within 9 (decision 10a).
+- Animals get a temper (deer flee, boar and bear defend, wolf hunt). Soldiers leave animals alone unless one is on a civilian of theirs that their side can see (decisions 8, 8b, 13). Defenders take on only what comes within 45 or has hurt them (Hawk-Dove).
+- Fingerprint accepted: the computers' early economy moved. Needs a balance run (age-up times, 3 seeds x 30 minutes) before this goes live.
+- Not built from batch 3: the live test 4b (natives and computers).

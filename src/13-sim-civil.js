@@ -228,6 +228,11 @@ function vilTick(u, dt, SP) {
 			return;
 		} // nothing was found a moment ago: wait, do not search every step
 		const n = nearestNode(u, u.job);
+		if (!n && u.was && u.was !== 'farm' && !u.patch && G.t - (u.lostT ?? (u.lostT = G.t)) < SEARCH.tau + SEARCH.give) {
+			u.nnT = G.t + 2 + rng();
+			u.idle = true; // keeps its job and looks again in a couple of seconds, wider each time
+			return;
+		}
 		if (!n && u.was && u.was !== 'farm' && !u.patch) {
 			// no find of that kind in sight: to the nearest drop-off, and wait there for an order (Build 61, Albert: if they cannot see it they do not go)
 			if (u.pj && u.pj !== u.job) {
@@ -272,6 +277,7 @@ function vilTick(u, dt, SP) {
 			return;
 		}
 		u.node = n;
+		u.lostT = undefined;
 		if (n) n.wk = (n.wk || 0) + 1; // counted at once, so the next worker this second sees the crowd (recount sets it true every second)
 	} else if (
 		!flock &&

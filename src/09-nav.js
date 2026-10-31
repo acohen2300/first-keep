@@ -631,7 +631,7 @@ function moveTo(u, x, y, dt, r, SP) {
 		if (rectGap(u.x, u.y, gb) <= Math.max(6, r - halfOf(gb))) return true;
 		stand = true;
 	} else if (blockedCell(gc, o)) stand = true;
-	else if (hyp(x - u.x, y - u.y) <= r + 0.5) return true;
+	else if (hyp(x - u.x, y - u.y) <= (u.kind === 'vil' && !u.hunt && !u.tgt ? Math.max(r, ARRIVE) : r) + 0.5) return true; // a villager at work stops within the push radius and stands where it was pushed (decision 10a; Reynolds arrival)
 	if (stand) {
 		const so = standOff(u, x, y);
 		tx = so.x;

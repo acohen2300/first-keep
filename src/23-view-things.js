@@ -225,6 +225,45 @@ function shadowPath(sx, sy, h, r, z) {
 		7,
 	);
 }
+// A building's shadow is its own shape, not an oval (Albert, Oct 31: we invented the shape, so the shadow is that fixed shape thrown away from the
+// light). Its footprint on the ground is a square half a side from the middle; the shadow is the hull of that square and the same square moved
+// along the light's line by h·cot(altitude), a planar projection (Foley and van Dam, shadow of a box on a plane). One path, one fill, like the rest.
+function hull(P) {
+	P.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+	const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]),
+		lo = [],
+		up = [];
+	for (const p of P) {
+		while (lo.length > 1 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop();
+		lo.push(p);
+	}
+	for (let i = P.length - 1; i >= 0; i--) {
+		const p = P[i];
+		while (up.length > 1 && cr(up[up.length - 2], up[up.length - 1], p) <= 0) up.pop();
+		up.push(p);
+	}
+	return lo.slice(0, -1).concat(up.slice(0, -1));
+}
+function boxShadowPath(sx, sy, h, half, z) {
+	const w = half,
+		d = half * TILT,
+		L = SHADE.a < 0.02 ? 0 : h * SHADE.len * z,
+		dx = SHADE.x * L,
+		dy = SHADE.y * L,
+		P = [];
+	for (const [cx, cy] of [
+		[-w, -d],
+		[w, -d],
+		[w, d],
+		[-w, d],
+	]) {
+		P.push([sx + cx, sy + cy], [sx + cx + dx, sy + cy + dy]);
+	}
+	const H = hull(P);
+	ctx.moveTo(H[0][0], H[0][1]);
+	for (let i = 1; i < H.length; i++) ctx.lineTo(H[i][0], H[i][1]);
+	ctx.closePath();
+}
 function sunShadows(N, list, z, far) {
 	const lit = SHADE.a >= 0.02,
 		deep = far ? null : deepTrees();
@@ -241,7 +280,7 @@ function sunShadows(N, list, z, far) {
 	for (const [, t, e] of list) {
 		if (t === 1) {
 			const B = BLD[e.kind];
-			if (!B.crop) shadowPath(SX(e.x), SY(e.y), B.h, B.fp * NAVC * 0.55 * z, z);
+			if (!B.crop) boxShadowPath(SX(e.x), SY(e.y), B.h, B.fp * NAVC * 0.5 * z, z);
 		} else if (t === 2) {
 			const U = UNIT[e.kind],
 				box = LOOKBOX[U.look] || [26, 30];

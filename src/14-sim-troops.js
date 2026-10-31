@@ -472,7 +472,7 @@ function wildTick(u, dt, SP) {
 		if (!t)
 			t = nearU(
 				u,
-				U.raid ? U.raid + 40 : 140,
+				U.temper === 'defend' ? STARTLE : U.raid ? U.raid + 40 : 140,
 				(v) =>
 					v.owner !== WILD &&
 					!v.inside &&

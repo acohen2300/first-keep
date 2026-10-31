@@ -63,6 +63,8 @@ const FINDS = {
 	},
 };
 const WAYFARER_EVERY = 240;
+const STARTLE = 45; // a defender (boar, bear) takes on only what comes this close, or what has hurt it: Hawk-Dove, it fights when it is provoked
+
 // the Fortress posts a job: break one guarded find, first side to take it is paid
 // ───────────────────────── The Natives: the fifth side, with one brain ─────────────────────────
 // They hold the Throne, a citadel on the great lake's island, reached by four causeways (the choke points). Their regard for each side moves

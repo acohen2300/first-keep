@@ -459,6 +459,7 @@ const UNIT = {
 		name: 'Deer',
 		tick: 'wild',
 		tags: ['animal'],
+		temper: 'flee', // runs when staying costs more than running (Ydenberg and Dill 1986)
 		hp: 30,
 		spd: 40,
 		sight: 90,
@@ -471,6 +472,7 @@ const UNIT = {
 		name: 'Boar',
 		tick: 'wild',
 		tags: ['animal'],
+		temper: 'defend', // fights what provokes or startles it (Hawk-Dove, Maynard Smith and Price 1973)
 		hp: 70,
 		spd: 30,
 		sight: 70,
@@ -485,6 +487,7 @@ const UNIT = {
 		name: 'Wolf',
 		tick: 'wild',
 		tags: ['animal'],
+		temper: 'hunt', // attacks what it can beat (prey choice, Charnov 1976)
 		hp: 45,
 		spd: 40,
 		sight: 110,
@@ -498,6 +501,7 @@ const UNIT = {
 		name: 'Bear',
 		tick: 'wild',
 		tags: ['animal'],
+		temper: 'defend', // fights what provokes or startles it (Hawk-Dove, Maynard Smith and Price 1973)
 		hp: 150,
 		spd: 30,
 		sight: 90,

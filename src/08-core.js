@@ -582,6 +582,11 @@ const visCap = () =>
 		G.ev && G.ev.cur && EVENTS[G.ev.cur.kind].vis ? EVENTS[G.ev.cur.kind].vis : Infinity,
 	);
 const sightOf = (e) => Math.min(sightClear(e), visCap());
+// the many eyes (decision 8b; Pulliam 1973, Lima 1995): a side sees a thing if any of its members does, so its view is the union of their sight discs.
+// No dice, no cap: night, fog and weather already shrink each member's own disc through sightOf.
+const groupSees = (o, t) =>
+	G.units.some((m) => m.owner === o && m.hp > 0 && !m.inside && dist(m, t) <= sightOf(m)) ||
+	G.blds.some((b) => b.owner === o && b.hp > 0 && b.prog >= 1 && dist(b, t) <= sightOf(b));
 const carryOf = (o) => CARRY + fxv(o, 'carry').a;
 function gatherMul(o, n) {
 	let m =

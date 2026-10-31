@@ -677,7 +677,7 @@ function bestNode(u, job) {
 			if (u.was && u.was !== 'farm') continue; // a worker from the wild never drifts onto a plot (Build 61: land work and wild work are two kinds)
 		} else {
 			if (u.was === 'farm') continue; // nor a plot worker into the wild
-			if (u.was && (n.kind !== u.was || dist(u, n) > sightOf(u))) continue; // the same kind of find, and only one it can see from where it stands
+			if (u.was && (n.kind !== u.was || dist(u, n) > searchR(u))) continue; // the same kind of find, within the search radius (decision 1)
 			if (n.kind === 'fish' && !dockNear(u.owner, n)) continue;
 			if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue;
 		}

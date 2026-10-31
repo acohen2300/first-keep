@@ -804,6 +804,7 @@ const UNIT = {
 		name: 'Deer',
 		tick: 'wild',
 		tags: ['animal'],
+		temper: 'flee', // runs when staying costs more than running (Ydenberg and Dill 1986)
 		hp: 30,
 		spd: 40,
 		sight: 90,
@@ -816,6 +817,7 @@ const UNIT = {
 		name: 'Boar',
 		tick: 'wild',
 		tags: ['animal'],
+		temper: 'defend', // fights what provokes or startles it (Hawk-Dove, Maynard Smith and Price 1973)
 		hp: 70,
 		spd: 30,
 		sight: 70,
@@ -830,6 +832,7 @@ const UNIT = {
 		name: 'Wolf',
 		tick: 'wild',
 		tags: ['animal'],
+		temper: 'hunt', // attacks what it can beat (prey choice, Charnov 1976)
 		hp: 45,
 		spd: 40,
 		sight: 110,
@@ -843,6 +846,7 @@ const UNIT = {
 		name: 'Bear',
 		tick: 'wild',
 		tags: ['animal'],
+		temper: 'defend', // fights what provokes or startles it (Hawk-Dove, Maynard Smith and Price 1973)
 		hp: 150,
 		spd: 30,
 		sight: 90,
@@ -5026,6 +5030,8 @@ const FINDS = {
 	},
 };
 const WAYFARER_EVERY = 240;
+const STARTLE = 45; // a defender (boar, bear) takes on only what comes this close, or what has hurt it: Hawk-Dove, it fights when it is provoked
+
 // the Fortress posts a job: break one guarded find, first side to take it is paid
 // ───────────────────────── The Natives: the fifth side, with one brain ─────────────────────────
 // They hold the Throne, a citadel on the great lake's island, reached by four causeways (the choke points). Their regard for each side moves
@@ -5408,6 +5414,11 @@ const T_HOLD = 0,
 	T_PRESS = 2;
 const SHELTER = { flee: 70, clear: 150, raid: 3, hurt: 6 }; // villagers run into the nearest Town Center or tower when an enemy soldier comes within 70, when three or more beasts or robbers do, or when a lone beast or robber hits them (it scares only the one it hits); out when none within 150 of it; each adds an arrow up to the limit (the room is the same)
 const LOOKOUT = { base: 60, k: 24 }; // a building sees 60 + 24 × the square root of its height: the horizon from a height grows with its square root, so a 44 tower sees 220, a 16 house 156, a field 84 (Build 51: every building but six saw a flat 90, and no research reached them)
+// Where a villager looks for the next find (decision 1; area-restricted search, tight near the last find and wider with time since it was lost):
+// r(t) = x + y min(1, t/tau). Until a full radius has been tried for 'give' seconds it keeps its job and waits; then it waits for an order.
+const ARRIVE = 9; // a villager at work counts as there within this of its spot: more than the 8-unit push, so it stands still and does not tremble
+const SEARCH = { x: 90, y: 90, tau: 10, give: 25 };
+const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
 const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, keep: 8 }; // a gatherer will not work within 110 of an enemy or a hunting beast, inside an enemy tower's reach plus 30, within 60 of a fire, or for 45 s within 80 of where one of its side was frightened more than 200 from home (the last 8 such places are kept)
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
@@ -7350,6 +7361,11 @@ const visCap = () =>
 		G.ev && G.ev.cur && EVENTS[G.ev.cur.kind].vis ? EVENTS[G.ev.cur.kind].vis : Infinity,
 	);
 const sightOf = (e) => Math.min(sightClear(e), visCap());
+// the many eyes (decision 8b; Pulliam 1973, Lima 1995): a side sees a thing if any of its members does, so its view is the union of their sight discs.
+// No dice, no cap: night, fog and weather already shrink each member's own disc through sightOf.
+const groupSees = (o, t) =>
+	G.units.some((m) => m.owner === o && m.hp > 0 && !m.inside && dist(m, t) <= sightOf(m)) ||
+	G.blds.some((b) => b.owner === o && b.hp > 0 && b.prog >= 1 && dist(b, t) <= sightOf(b));
 const carryOf = (o) => CARRY + fxv(o, 'carry').a;
 function gatherMul(o, n) {
 	let m =
@@ -8028,7 +8044,7 @@ function moveTo(u, x, y, dt, r, SP) {
 		if (rectGap(u.x, u.y, gb) <= Math.max(6, r - halfOf(gb))) return true;
 		stand = true;
 	} else if (blockedCell(gc, o)) stand = true;
-	else if (hyp(x - u.x, y - u.y) <= r + 0.5) return true;
+	else if (hyp(x - u.x, y - u.y) <= (u.kind === 'vil' && !u.hunt && !u.tgt ? Math.max(r, ARRIVE) : r) + 0.5) return true; // a villager at work stops within the push radius and stands where it was pushed (decision 10a; Reynolds arrival)
 	if (stand) {
 		const so = standOff(u, x, y);
 		tx = so.x;
@@ -10847,7 +10863,7 @@ function bestNode(u, job) {
 			if (u.was && u.was !== 'farm') continue; // a worker from the wild never drifts onto a plot (Build 61: land work and wild work are two kinds)
 		} else {
 			if (u.was === 'farm') continue; // nor a plot worker into the wild
-			if (u.was && (n.kind !== u.was || dist(u, n) > sightOf(u))) continue; // the same kind of find, and only one it can see from where it stands
+			if (u.was && (n.kind !== u.was || dist(u, n) > searchR(u))) continue; // the same kind of find, within the search radius (decision 1)
 			if (n.kind === 'fish' && !dockNear(u.owner, n)) continue;
 			if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue;
 		}
@@ -11148,6 +11164,11 @@ function vilTick(u, dt, SP) {
 			return;
 		} // nothing was found a moment ago: wait, do not search every step
 		const n = nearestNode(u, u.job);
+		if (!n && u.was && u.was !== 'farm' && !u.patch && G.t - (u.lostT ?? (u.lostT = G.t)) < SEARCH.tau + SEARCH.give) {
+			u.nnT = G.t + 2 + rng();
+			u.idle = true; // keeps its job and looks again in a couple of seconds, wider each time
+			return;
+		}
 		if (!n && u.was && u.was !== 'farm' && !u.patch) {
 			// no find of that kind in sight: to the nearest drop-off, and wait there for an order (Build 61, Albert: if they cannot see it they do not go)
 			if (u.pj && u.pj !== u.job) {
@@ -11192,6 +11213,7 @@ function vilTick(u, dt, SP) {
 			return;
 		}
 		u.node = n;
+		u.lostT = undefined;
 		if (n) n.wk = (n.wk || 0) + 1; // counted at once, so the next worker this second sees the crowd (recount sets it true every second)
 	} else if (
 		!flock &&
@@ -12044,7 +12066,7 @@ function wildTick(u, dt, SP) {
 		if (!t)
 			t = nearU(
 				u,
-				U.raid ? U.raid + 40 : 140,
+				U.temper === 'defend' ? STARTLE : U.raid ? U.raid + 40 : 140,
 				(v) =>
 					v.owner !== WILD &&
 					!v.inside &&
@@ -12207,8 +12229,10 @@ function buildGrid() {
 	G.ugTick = G.tick;
 }
 // soldiers ignore grazing deer, drifters and wayfarers; spies are seen only up close
-const ignorable = (v) => {
+// An animal (it has a temper) is left alone unless it is on one of your civilians and your side can see it do it (decisions 8, 8b, 13).
+const ignorable = (v, o) => {
 	const U = UNIT[v.kind];
+	if (U.temper) return !(o !== undefined && v.tgt && v.tgt.hp > 0 && v.tgt.owner === o && hasTag(v.tgt.kind, 'civ') && groupSees(o, v));
 	return U.flee || U.passive || U.tick === 'wayfarer' || U.tick === 'envoy';
 }; // a herald is sacred: nobody shoots at an emissary on its way (it dies only by a side's own order)
 function nearestFoe(o, from, range, anchor) {
@@ -12227,7 +12251,7 @@ function nearestFoe(o, from, range, anchor) {
 		for (let cx = x0; cx <= x1; cx++)
 			for (let i = grid ? UGH[cy * UGN + cx] : U.length - 1; i >= 0; i = grid ? UGX[i] : i - 1) {
 				const v = U[i];
-				if (v.inside || v.hp <= 0 || !atWar(o, v.owner) || ignorable(v)) continue;
+				if (v.inside || v.hp <= 0 || !atWar(o, v.owner) || ignorable(v, o)) continue;
 				const dx = a.x - v.x,
 					dy = a.y - v.y,
 					d = Math.sqrt(dx * dx + dy * dy);
@@ -12283,7 +12307,7 @@ function bestFoe(o, from, range, anchor) {
 		for (let cx = x0; cx <= x1; cx++)
 			for (let i = grid ? UGH[cy * UGN + cx] : U.length - 1; i >= 0; i = grid ? UGX[i] : i - 1) {
 				const v = U[i];
-				if (v.inside || v.hp <= 0 || !atWar(o, v.owner) || ignorable(v)) continue;
+				if (v.inside || v.hp <= 0 || !atWar(o, v.owner) || ignorable(v, o)) continue;
 				const d = hyp(a.x - v.x, a.y - v.y);
 				if (d > range || (v.kind === 'spy' && d > sR)) continue;
 				const beat = canBeat(from, v),
@@ -19155,6 +19179,45 @@ function shadowPath(sx, sy, h, r, z) {
 		7,
 	);
 }
+// A building's shadow is its own shape, not an oval (Albert, Oct 31: we invented the shape, so the shadow is that fixed shape thrown away from the
+// light). Its footprint on the ground is a square half a side from the middle; the shadow is the hull of that square and the same square moved
+// along the light's line by h·cot(altitude), a planar projection (Foley and van Dam, shadow of a box on a plane). One path, one fill, like the rest.
+function hull(P) {
+	P.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+	const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]),
+		lo = [],
+		up = [];
+	for (const p of P) {
+		while (lo.length > 1 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop();
+		lo.push(p);
+	}
+	for (let i = P.length - 1; i >= 0; i--) {
+		const p = P[i];
+		while (up.length > 1 && cr(up[up.length - 2], up[up.length - 1], p) <= 0) up.pop();
+		up.push(p);
+	}
+	return lo.slice(0, -1).concat(up.slice(0, -1));
+}
+function boxShadowPath(sx, sy, h, half, z) {
+	const w = half,
+		d = half * TILT,
+		L = SHADE.a < 0.02 ? 0 : h * SHADE.len * z,
+		dx = SHADE.x * L,
+		dy = SHADE.y * L,
+		P = [];
+	for (const [cx, cy] of [
+		[-w, -d],
+		[w, -d],
+		[w, d],
+		[-w, d],
+	]) {
+		P.push([sx + cx, sy + cy], [sx + cx + dx, sy + cy + dy]);
+	}
+	const H = hull(P);
+	ctx.moveTo(H[0][0], H[0][1]);
+	for (let i = 1; i < H.length; i++) ctx.lineTo(H[i][0], H[i][1]);
+	ctx.closePath();
+}
 function sunShadows(N, list, z, far) {
 	const lit = SHADE.a >= 0.02,
 		deep = far ? null : deepTrees();
@@ -19171,7 +19234,7 @@ function sunShadows(N, list, z, far) {
 	for (const [, t, e] of list) {
 		if (t === 1) {
 			const B = BLD[e.kind];
-			if (!B.crop) shadowPath(SX(e.x), SY(e.y), B.h, B.fp * NAVC * 0.55 * z, z);
+			if (!B.crop) boxShadowPath(SX(e.x), SY(e.y), B.h, B.fp * NAVC * 0.5 * z, z);
 		} else if (t === 2) {
 			const U = UNIT[e.kind],
 				box = LOOKBOX[U.look] || [26, 30];
@@ -30061,6 +30124,9 @@ window.__fk = {
 	openCard,
 	blankGame,
 	clearSave,
+	groupSees,
+	nearestFoe,
+	searchR,
 	pushApart,
 	troops,
 	backToWork,

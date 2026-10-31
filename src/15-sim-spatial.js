@@ -23,8 +23,10 @@ function buildGrid() {
 	G.ugTick = G.tick;
 }
 // soldiers ignore grazing deer, drifters and wayfarers; spies are seen only up close
-const ignorable = (v) => {
+// An animal (it has a temper) is left alone unless it is on one of your civilians and your side can see it do it (decisions 8, 8b, 13).
+const ignorable = (v, o) => {
 	const U = UNIT[v.kind];
+	if (U.temper) return !(o !== undefined && v.tgt && v.tgt.hp > 0 && v.tgt.owner === o && hasTag(v.tgt.kind, 'civ') && groupSees(o, v));
 	return U.flee || U.passive || U.tick === 'wayfarer' || U.tick === 'envoy';
 }; // a herald is sacred: nobody shoots at an emissary on its way (it dies only by a side's own order)
 function nearestFoe(o, from, range, anchor) {
@@ -43,7 +45,7 @@ function nearestFoe(o, from, range, anchor) {
 		for (let cx = x0; cx <= x1; cx++)
 			for (let i = grid ? UGH[cy * UGN + cx] : U.length - 1; i >= 0; i = grid ? UGX[i] : i - 1) {
 				const v = U[i];
-				if (v.inside || v.hp <= 0 || !atWar(o, v.owner) || ignorable(v)) continue;
+				if (v.inside || v.hp <= 0 || !atWar(o, v.owner) || ignorable(v, o)) continue;
 				const dx = a.x - v.x,
 					dy = a.y - v.y,
 					d = Math.sqrt(dx * dx + dy * dy);
@@ -99,7 +101,7 @@ function bestFoe(o, from, range, anchor) {
 		for (let cx = x0; cx <= x1; cx++)
 			for (let i = grid ? UGH[cy * UGN + cx] : U.length - 1; i >= 0; i = grid ? UGX[i] : i - 1) {
 				const v = U[i];
-				if (v.inside || v.hp <= 0 || !atWar(o, v.owner) || ignorable(v)) continue;
+				if (v.inside || v.hp <= 0 || !atWar(o, v.owner) || ignorable(v, o)) continue;
 				const d = hyp(a.x - v.x, a.y - v.y);
 				if (d > range || (v.kind === 'spy' && d > sR)) continue;
 				const beat = canBeat(from, v),
