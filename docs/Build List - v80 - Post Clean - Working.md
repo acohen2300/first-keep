@@ -2,7 +2,7 @@
 *Started Oct 31, 2026, 08:20, at the v70 line. Nothing here is agreed yet: each item waits for Albert's yes.*
 
 ## Agreed for v80
-- Words in tiles: one size, 12, everywhere (Albert, Oct 31, 08:55; picture: Setup and the War row at 12 against 15). Every word fits a single at 375 pt at 12.
+- Two text sizes in the whole game, 12 and 18 (Albert, Oct 31, 09:00): "19 moves to 18. Anything 15 and under is 12. We have 12. We have 18. That's it." Words and numbers in tiles are 12 (08:55; picture: Setup and the War row at 12 against 15; every word fits a single at 375 pt). Today's 19s (card titles, Start, the row's − +, the War and Train symbols, the › arrows, the old map strip) become 18 or, inside tiles, 12; today's 15s and the map's 11 and 13 become 12. Replaces the three sizes (12, 15, 19) in RULES.md and MENU-SPEC §9 when v80 is built.
 
 ## Needs Albert's call now (it touches v70)
 1. Mail has no door once the Realm page goes: the Realm page's Mail tile was its only way in. Where does Mail open from?
