@@ -73,7 +73,7 @@ function wallDrag(d, p) {
 	wallSet(pl);
 }
 cv.addEventListener('pointerdown', (e) => {
-	hideStrip();
+	hideQuick();
 	holdStop();
 	try {
 		cv.setPointerCapture(e.pointerId);
@@ -333,7 +333,7 @@ const cardFor = (h) =>
 // The order goes at once (Build 40 reviews: a waiting order reads as lag); a second tap on the same thing within a blink opens its card, the order already given.
 let lastTap = { key: '', t: 0 };
 function tapAt(sx, sy) {
-	hideStrip();
+	hideQuick();
 	if (G.over) return;
 	if (RADAR && hyp(sx - RADAR.sx, sy - RADAR.sy) < 26) {
 		G.follow = false;
@@ -368,10 +368,13 @@ function tapAt(sx, sy) {
 			ACT.ordpick(String(O.id));
 			return;
 		} // the ring of a group on the march: tap it to pick the group
-
-		showStrip(sx, sy, h.e.x, h.e.y);
+		showQuick(sx, sy, h, hazardAt(h.e.x, h.e.y) ? 2 : 1);
 		return;
-	} // nothing picked: the send strip, as before
+	} // nothing picked: the quick action; on a hazard, straight at its second step
+	if ((h.t === 'unit' || h.t === 'bld') && foeOf(h.e)) {
+		showQuick(sx, sy, h, 2);
+		return;
+	} // an enemy: a red ring under it, and the quick action at its second step (MENU-SPEC §7)
 	if (
 		h.t === 'bld' &&
 		h.e.owner === 0 &&

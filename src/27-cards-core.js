@@ -8,7 +8,7 @@
 let cardTap = false; // the tap being handled was inside a card (the click handler, 33-verbs)
 function openCard(c, back) {
 	if (!back) c.from = cardTap && G.card ? (G.card.type === c.type ? G.card.from : G.card) : null;
-	hideStrip();
+	hideQuick();
 	G.techTip = null;
 	G.qs = { from: 'all', n: {} }; // the Attack-with counts start fresh on every card
 	G.card = c;
@@ -105,8 +105,10 @@ const btn = (act, title, sub, cls, fr) =>
 // the Formation, the one helper that lays cells: twelve half slots across, ranks 44 tall, 6 between. cls says how many cells a rank holds
 // (c1 one, c2 two (the default), c3 three, c4 four, c6 six; c5 lays five singles and leaves the sixth place); a cell's span class overrides it
 const acts = (h, cls = 'c2') => `<div class="fm ${cls}">${h}</div>`;
-// the info cell: no frame; the value in Cream 1 at 15, its label in Cream 2 at 12 under it. cls: its span, and left for a sentence
-const info = (value, label, cls = '') => `<div class="info ${cls}"><b>${value}</b>${label ? `<small>${label}</small>` : ''}</div>`;
+// the info cell: no frame; the value in Cream 1 at 15, its label in Cream 2 at 12 under it. cls: its span, and left for a sentence; act: where
+// a tap on it goes (what is coming: tap to look)
+const info = (value, label, cls = '', act) =>
+	`<div class="info ${cls}"${act ? ` data-act="${act}"` : ''}><b>${value}</b>${label ? `<small>${label}</small>` : ''}</div>`;
 // a fixed place with nothing in it: a faint plain outline (never dashed)
 const empty = (cls = '') => `<div class="empty ${cls}"></div>`;
 const FOLD = new Set(); // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws

@@ -131,7 +131,7 @@ function solTick(u, dt, SP) {
 		return;
 	} // at the School: it stands, learns, and comes out a newer soldier
 	if (u.state === 'garrison') {
-		// Battle stations: it walks to its building, goes inside and adds an arrow, and stays until given a new order
+		// All hands (Emergency): it walks to its building, goes inside and adds an arrow, and stays until given a new order
 		const b = G.blds.find((x) => x.id === u.gar && x.hp > 0 && x.prog >= 1);
 		if (!b) u.state = 'home';
 		else {

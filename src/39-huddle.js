@@ -351,7 +351,7 @@ function trainPage() {
 }
 const ROWS = { jobs: jobsPage, war: warPage, train: trainPage };
 // the row on show, patched in place (a button under a finger stays the same button); the cycle button above slot 1 wears the page's name
-// and its tint; Emergency's button steps aside under a card, where it would sit over the card's buttons
+// and its tint
 function rowUI() {
 	const page = G.hud.page,
 		el = $('row'),
@@ -369,7 +369,6 @@ function rowUI() {
 		chip.setAttribute('aria-label', `${ROW_WORD[page]}: the next page`);
 		fit(); // the row is drawn anew: the map's bottom edge is measured again
 	}
-	$('emgB').hidden = !!G.card;
 }
 // the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; its colour says what is under it; green once fired
 function drawReticle() {

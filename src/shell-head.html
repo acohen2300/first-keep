@@ -81,17 +81,18 @@ button.ghost{visibility:hidden}
 #mini{position:absolute;top:calc(var(--hb) + var(--gap));right:var(--gap);width:86px;height:86px;border:1px solid color-mix(in srgb,var(--cream-1) 50%,transparent);border-radius:var(--rad);background:var(--brown-1)}
 .fab{position:absolute;z-index:3;width:var(--slot);height:var(--slot);padding:0;bottom:calc(var(--ob) + var(--gap));box-shadow:var(--shade)}
 .fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}
-#emgB{right:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}#homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}
+#homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}
+/* Emergency's button, bottom right a rank above the row: it opens the Emergency card, and steps aside while any card is open, where it would sit over the card's buttons */
+#emgB{right:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}#stage:has(#card:not([hidden])) #emgB{display:none}
 #hudB{left:var(--gap);width:calc((100% - 7 * var(--gap)) / 6)}   /* the cycle button: one slot wide, on its own rank above slot 1 (MENU-SPEC §6) */
 #stage.busy :is(#hudB,#homeB),#stage.picking #homeB{display:none}
 #place,#pickbar{position:absolute;z-index:3;left:var(--gap);right:var(--gap);bottom:calc(var(--ob) + var(--gap));box-sizing:border-box;display:flex;gap:var(--gap);padding:var(--gap);background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o);font-weight:700}
 #place{justify-content:space-between;align-items:center;padding-left:10px}#place span{flex:1;min-width:0;line-height:1.25}#place button{padding:0 12px}
 #pickbar{flex-direction:column;border-color:var(--ring-g)}#pickbar .pbTop,#pickbar .pbRow{display:flex;gap:var(--gap);align-items:center}#pickbar .pbRow:empty{display:none}#pickbar span{flex:1;min-width:0;line-height:1.25;padding-left:6px}#pickbar button{min-width:var(--slot);padding:0 10px}#pickbar .pbRow button{flex:1;padding:0 4px}#pickbar .gl{width:18px;height:18px}
-#strip{position:absolute;z-index:5;display:flex;flex-wrap:wrap;gap:4px;padding:4px;max-width:calc(100% - 8px);overflow-x:auto;background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o)}
-#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:var(--fs-s);color:var(--cream-2);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}
-#strip button{min-width:var(--slot);padding:2px 8px;flex:0 0 auto}#strip button.ic{width:var(--slot);padding:0;font-size:var(--fs-l);font-weight:700}#strip button :is(b,small){font-size:var(--fs-s)}#strip .gl{width:18px;height:18px}
-#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:var(--slot)}
-#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--cream-1);font-size:var(--fs-m)}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:var(--slot);padding:0}
+/* the quick action (MENU-SPEC §7): a 2 × 2 of slots, icons only, one tight block: no gaps inside, one outer border at 9, thin dividers (the
+   slot edge, showing through a one-pixel gap). Two slots wide: the screen's slot width, whatever the phone */
+#qa{position:absolute;z-index:5;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:var(--slot) var(--slot);gap:1px;width:calc((100% - 7 * var(--gap)) / 3 + 1px);background:var(--brown-3);border:1px solid var(--brown-3);border-radius:var(--rad-o);box-shadow:var(--shade);overflow:hidden}
+#qa .cell{border:0;border-radius:0}
 #spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--brown-1);border:1px solid var(--brown-3);border-radius:var(--rad-o);box-shadow:var(--shade)}#spdPop button{min-width:52px}
 /* The row below the map (MENU-SPEC §6): one Formation two ranks tall on the screen's grid, 6 to the edge; the − and + under a job, and any
    a / b pair, are half slots. Jobs stands over the map; War and Train lie on steel, and so does the cycle button on them (COLORS.md) */
@@ -99,7 +100,7 @@ button.ghost{visibility:hidden}
 #orders:not(.pg-jobs){background:color-mix(in srgb,var(--steel-1) 84%,transparent);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 var(--steel-3)}
 #row{pointer-events:auto}#row .info :is(b,small){white-space:nowrap}
 .pg-jobs #row button{box-shadow:var(--shade)}
-.pg-war #row button,.pg-train #row button,#hudB:is(.war,.train),#strip button.war{background:var(--steel-2);border-color:var(--steel-3)}
+.pg-war #row button,.pg-train #row button,#hudB:is(.war,.train){background:var(--steel-2);border-color:var(--steel-3)}
 /* a slot of icon and word (the row, the cycle button, a card's rank): the picture at 18 with its number at 15 beside it, the word at 12 in
    Cream 2 under it; a symbol alone at 24 */
 .cell .top{position:absolute;left:0;right:0;top:13px;transform:translateY(-50%);display:flex;justify-content:center;align-items:center;gap:4px}
@@ -224,7 +225,7 @@ button.ghost{visibility:hidden}
     <button class="fab cell jobs" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, War, Train"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
 
-    <div id="strip" hidden></div>
+    <div id="qa" hidden></div>
     <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="wundo" id="placeUndo" hidden><b>Undo</b></button><button data-act="cancel"><b>Cancel</b></button></div>
     <div id="card" hidden><div class="cin"></div></div>

@@ -79,6 +79,10 @@ const ICON = {
 		20,
 		'<circle cx="10" cy="6.2" r="3.2" fill="currentColor"/><path d="M3.8 16.5 C3.8 12.6 6.6 10.8 10 10.8 C13.4 10.8 16.2 12.6 16.2 16.5 Z" fill="currentColor"/>',
 	),
+	idle: SVG(
+		20,
+		'<circle cx="8" cy="7.2" r="3.2" fill="currentColor"/><path d="M1.8 17.5 C1.8 13.6 4.6 11.8 8 11.8 C11.4 11.8 14.2 13.6 14.2 17.5 Z" fill="currentColor"/><path d="M13 2.5h4.5L13 8h4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+	), // a head and a z, the strip's idle mark: the quick action's idle ones (Build 70)
 	home: SVG(
 		20,
 		'<path d="M3.5 10 L10 4 L16.5 10" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round"/><path d="M5.5 9 V16 H14.5 V9" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 16 V12 H11.4 V16" fill="currentColor"/>',
@@ -281,7 +285,8 @@ const news = (grp, text, cls, secs, at, act, why) => say(text, cls, secs, at, ac
 // You know what you see, what your people hear, and what a messenger brings. A line with a place (at) out of your sight is heard if it is a
 // fight near your people (vague: which way), else carried by a messenger at a runner's or a rider's pace, if your post reaches that far;
 // a line with no place happens at your court, or in the sky, and is first hand.
-const DIR8 = ['east', 'south-east', 'south', 'south-west', 'west', 'north-west', 'north', 'north-east'];
+const DIR8 = ['east', 'south-east', 'south', 'south-west', 'west', 'north-west', 'north', 'north-east'],
+	dirOf = (from, to) => DIR8[Math.round(Math.atan2(to.y - from.y, to.x - from.x) / (Math.PI / 4) + 8) % 8]; // which way a place lies, of eight
 function tell(text, cls, at) {
 	if (!at || at.told || !G.fogOn || fogAt(at.x, at.y) === 2) return { now: true };
 	const lvl = fxv(0, 'news').a,
@@ -298,9 +303,7 @@ function tell(text, cls, at) {
 			) ||
 			mine(r)
 		) {
-			const from = k || at,
-				a = Math.round(Math.atan2(at.y - from.y, at.x - from.x) / (Math.PI / 4) + 8) % 8;
-			return { now: true, text: `Sounds of fighting to the ${DIR8[a]}.` };
+			return { now: true, text: `Sounds of fighting to the ${dirOf(k || at, at)}.` };
 		}
 	}
 	const need = mine(TELL.near)
@@ -602,14 +605,12 @@ function ui(force) {
 		} // a deer, a boar: hunt it from the bar
 		else if (show && foe) {
 			txt('pickT', whoIs(foe));
-			const sol = armyOf(0).filter(isSoldier).length,
-				war = foe.owner === WILD ? !foe.native || atWar(0, WILD) : atWar(0, foe.owner),
-				row = `<button data-act="pattack:${foe.id}" class="${war && sol ? 'warn' : 'dis'}"><b>Attack</b><small>${!sol ? 'no soldiers' : war ? 'all soldiers' : 'not at war'}</small></button><button data-act="look:${foe.id}"><b>More</b></button>`;
+			const row = `<button data-act="look:${foe.id}"><b>More</b></button>`;
 			if (el.rowH !== row) {
 				el.rowH = row;
 				$('pickRow').innerHTML = row;
 			}
-		} // who is this? the bar says, and offers the fight (Albert, Build 41)
+		} // who is this? the bar says (Albert, Build 41); an enemy opens the quick action instead, whose All is the fight (Build 70)
 		else if (show) {
 			txt('pickT', `${n} picked${G.pickMore ? ' · tap to add' : ''}`); // ＋ More is gone (Build 61): drag a box, or hold one and tap more
 			const sol = P.some(isSoldier),

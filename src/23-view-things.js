@@ -1203,17 +1203,20 @@ function drawFind(f) {
 	ctx.restore();
 	g = null;
 }
-// what the finger holds: a ring on the ground under each, green for yours, red for a foe's, gold for the wild and the land
+// what the finger holds: a ring on the ground under each, green for yours, red for a foe's, gold for the wild and the land; and red under
+// the enemy or the hazard the quick action is open on (Build 70; a hazard is a spot on the ground, ringed as wide as a find)
 function drawPicks(z) {
-	if (!G.pickE || !G.pickE.length) return;
+	const red = G.qa && G.qa.red ? G.qa.h.e : null,
+		E = red ? [...(G.pickE || []), red] : G.pickE;
+	if (!E || !E.length) return;
 	ctx.lineWidth = 2;
 	ctx.setLineDash([]);
-	for (const e of G.pickE) {
+	for (const e of E) {
 		if (e.hp !== undefined && e.hp <= 0) continue;
 		if (e.amt !== undefined && e.amt <= 0 && !e.farm) continue;
 		const own = e.owner,
-			r = e.q ? halfOf(e) + 6 : e.kind && FINDS[e.kind] ? 18 : 9;
-		ctx.strokeStyle = own === 0 ? '#5ad27a' : own === undefined || own === null || own === WILD ? '#ffd35e' : '#ff6a52';
+			r = e.q ? halfOf(e) + 6 : !e.kind || FINDS[e.kind] ? 18 : 9;
+		ctx.strokeStyle = e === red ? '#ff6a52' : own === 0 ? '#5ad27a' : own === undefined || own === null || own === WILD ? '#ffd35e' : '#ff6a52';
 		ctx.beginPath();
 		ctx.ellipse(SX(e.x), SY(e.y), r * z + 3, r * z * TILT + 2, 0, 0, 7);
 		ctx.stroke();
