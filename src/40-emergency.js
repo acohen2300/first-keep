@@ -22,7 +22,16 @@ const roomIn = (b) =>
 const troops = () => armyOf(0).filter((u) => isSoldier(u) && u.state !== 'escort' && u.state !== 'rout');
 // a soldier off its order, to stand at a spot and fight what comes
 const stand = (u, x, y) =>
-	Object.assign(u, { ord: undefined, focus: null, tgt: null, fid: null, state: 'goto', px: clamp(x, 20, MAP - 20), py: clamp(y, 20, MAP - 20), idleT: 0 });
+	Object.assign(u, {
+		ord: undefined,
+		focus: null,
+		tgt: null,
+		fid: null,
+		state: 'goto',
+		px: clamp(x, 20, MAP - 20),
+		py: clamp(y, 20, MAP - 20),
+		idleT: 0,
+	});
 // the way the danger lies from the Town Center: the attack coming, else the nearest threat, else across the map
 function threatDir(k) {
 	const t = G.incoming || nearest(G.threats, k, (v) => atWar(0, v.owner), 700) || { x: MID, y: MID },
@@ -46,7 +55,8 @@ function emgSnap(kind) {
 	if (!G.emg) G.emg = { kind, snap: [], temper: G.temper.slice() };
 	G.emg.kind = kind;
 	for (const u of unitsOf(0, 'vil'))
-		if (!G.emg.snap.some((n) => n.id === u.id)) G.emg.snap.push({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post });
+		if (!G.emg.snap.some((n) => n.id === u.id))
+			G.emg.snap.push({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post });
 }
 // a villager let go by the emergency: not frightened, out of the building it went into
 function release(u) {
@@ -121,7 +131,10 @@ function townSquare() {
 	hudAbortAll();
 	const at = (u, r) => {
 		const d = hyp(u.x - k.x, u.y - k.y) || 1;
-		return { x: clamp(k.x + ((u.x - k.x) / d) * r + u.ox * 0.5, 20, MAP - 20), y: clamp(k.y + ((u.y - k.y) / d) * r + u.oy * 0.5, 20, MAP - 20) };
+		return {
+			x: clamp(k.x + ((u.x - k.x) / d) * r + u.ox * 0.5, 20, MAP - 20),
+			y: clamp(k.y + ((u.y - k.y) / d) * r + u.oy * 0.5, 20, MAP - 20),
+		};
 	};
 	for (const u of unitsOf(0, 'vil')) {
 		release(u);
@@ -161,9 +174,8 @@ CARDS.emergency = () => {
 	const I = G.incoming,
 		k = keepOf(0),
 		V = unitsOf(0, 'vil').length,
-		on = (kind) => (G.emg && G.emg.kind === kind ? 'on' : ''),
-		E = G.emg && EMERGENCY.find((e) => e[0] === G.emg.kind);
-	title('Emergency', E ? E[1] : 'calm');
+		on = (kind) => (G.emg && G.emg.kind === kind ? 'on' : '');
+	title('Emergency'); // no subtitle: what is coming says the rest, and the order on wears its ring
 	fold(
 		'why',
 		'How it works',
@@ -172,11 +184,22 @@ CARDS.emergency = () => {
 	return (
 		acts(
 			I
-				? info(`${I.n} ${I.what}`, `${k ? `coming from the ${dirOf(k, I)} · ` : ''}${mmss(I.eta)} · tap to look`, 's6', `jump:${Math.round(I.x)},${Math.round(I.y)}`)
-				: info('Nothing coming', 'all quiet', 's6'),
+				? info(
+						`${I.n} ${I.what}`,
+						`${k ? `coming from the ${dirOf(k, I)} · ` : ''}${mmss(I.eta)} · tap to look`,
+						's6',
+						`jump:${Math.round(I.x)},${Math.round(I.y)}`,
+					)
+				: info('Nothing coming', 'no attack in sight', 's6'),
 			'c1',
 		) +
-		acts(btn('emgstop', 'Stop', 'everyone back to work', G.emg ? 'go' : 'dis') + btn('emg:square', EMERGENCY[0][1], EMERGENCY[0][2], on('square'))) +
-		acts(btn('emg:hands', EMERGENCY[1][1], EMERGENCY[1][2], 'warn') + btn('emg:shelter', EMERGENCY[2][1], `${V} ${EMERGENCY[2][2]}`, V ? on('shelter') : 'dis'))
+		acts(
+			btn('emgstop', 'Stop', 'everyone back to work', G.emg ? 'go' : 'dis') +
+				btn('emg:square', EMERGENCY[0][1], EMERGENCY[0][2], on('square')),
+		) +
+		acts(
+			btn('emg:hands', EMERGENCY[1][1], EMERGENCY[1][2], 'warn') +
+				btn('emg:shelter', EMERGENCY[2][1], `${V} ${EMERGENCY[2][2]}`, V ? on('shelter') : 'dis'),
+		)
 	);
 };

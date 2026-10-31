@@ -1216,7 +1216,14 @@ function drawPicks(z) {
 		if (e.amt !== undefined && e.amt <= 0 && !e.farm) continue;
 		const own = e.owner,
 			r = e.q ? halfOf(e) + 6 : !e.kind || FINDS[e.kind] ? 18 : 9;
-		ctx.strokeStyle = e === red ? '#ff6a52' : own === 0 ? '#5ad27a' : own === undefined || own === null || own === WILD ? '#ffd35e' : '#ff6a52';
+		ctx.strokeStyle =
+			e === red
+				? '#ff6a52'
+				: own === 0
+					? '#5ad27a'
+					: own === undefined || own === null || own === WILD
+						? '#ffd35e'
+						: '#ff6a52';
 		ctx.beginPath();
 		ctx.ellipse(SX(e.x), SY(e.y), r * z + 3, r * z * TILT + 2, 0, 0, 7);
 		ctx.stroke();

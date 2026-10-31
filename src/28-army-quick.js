@@ -109,10 +109,11 @@ function guardRow(t, id) {
 		) + btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis'),
 	);
 }
-// ── The quick action (MENU-SPEC §7, picture Quick Action): a 2 × 2 of slots, icons only, one tight block opened right under the tap.
-// Open ground: the sword (under the thumb) · the hammer / ☰ · ✕. The sword: All · idle / + · ✕, swapped in place so the thumb never moves.
-// An enemy or a hazard: a red ring under it (drawPicks) and the block opens straight at the sword's answers. Near a screen edge the block
-// flips, so the first icon stays under the thumb. G.qa holds what was tapped (h, as hitAt gives it) for the verbs (33-verbs).
+// ── The quick action (MENU-SPEC §7, picture Quick Action): a 2 × 2 of slots, icons only, one tight block opened right under the tap: its
+// first column on the finger, its top half a slot below it, so the finger covers nothing of it and the red ring stays in sight. Open ground:
+// the sword (under the thumb) · the hammer / ☰ · ✕. The sword: All · idle / + · ✕, swapped in place so the thumb never moves. An enemy or a
+// hazard: a red ring under it (drawPicks) and the block opens straight at the sword's answers. Near the right edge or the row the block
+// flips, so the first icon stays the one nearest the thumb. G.qa holds what was tapped (h, as hitAt gives it) for the verbs (33-verbs).
 const QA = [
 	[
 		['qsword', 'sword', 'Send soldiers here'],
@@ -127,9 +128,10 @@ const QA = [
 ];
 // an enemy the finger can send soldiers at: a beast that is not game (game is hunted from the bar) always; anyone else, the Natives and
 // their Throne too, while you are at war
-const foeOf = (e) => e.owner !== 0 && e.hp > 0 && (e.owner === WILD && !e.q && !e.native ? !UNIT[e.kind].meat : atWar(0, e.owner));
-// the idle ones: the idle soldiers, and on open ground the idle villagers too (never sent at an enemy or a hazard)
-const qaIdle = () => [...free(), ...(G.qa.red ? [] : unitsOf(0, 'vil').filter(freeVil))];
+const foeOf = (e) =>
+	e.owner !== 0 && e.hp > 0 && (e.owner === WILD && !e.q && !e.native ? !UNIT[e.kind].meat : atWar(0, e.owner));
+// the idle ones: the idle soldiers (S), and on open ground the idle villagers too (V; never sent at an enemy or a hazard)
+const qaIdle = () => ({ S: free(), V: G.qa.red ? [] : unitsOf(0, 'vil').filter(freeVil) });
 function showQuick(sx, sy, h, step) {
 	closeCard();
 	const el = $('qa');
@@ -137,20 +139,26 @@ function showQuick(sx, sy, h, step) {
 	const r = $('stage').getBoundingClientRect(),
 		up = $('hud').getBoundingClientRect().bottom - r.top,
 		down = $('orders').getBoundingClientRect().top - r.top,
-		gap = parseFloat(getComputedStyle(el).getPropertyValue('--gap')),
+		css = getComputedStyle(el),
+		gap = parseFloat(css.getPropertyValue('--gap')),
+		off = parseFloat(css.getPropertyValue('--slot')) / 2, // half a slot from the finger
 		w = el.offsetWidth, // two slots and their divider, two ranks tall: the style sheet sets it
 		ht = el.offsetHeight,
 		fx = sx + (w * 3) / 4 > r.width - gap, // too near the right edge: the first icon goes right
-		fy = sy + (ht * 3) / 4 > down - gap; // too near the row: the first icon goes below
-	G.qa = { sx, sy, h, red: step === 2, fx, fy };
+		fy = sy + off + ht > down - gap; // too near the row: the block goes above the finger, the first icon below
+	G.qa = { h, red: step === 2, fx, fy };
 	el.style.left = clamp(sx - (fx ? 3 : 1) * (w / 4), gap, r.width - w - gap) + 'px';
-	el.style.top = clamp(sy - (fy ? 3 : 1) * (ht / 4), up + gap, down - ht - gap) + 'px';
+	el.style.top = clamp(fy ? sy - off - ht : sy + off, up + gap, down - ht - gap) + 'px';
 	quickStep(step);
 }
 // a step's four slots, in the flip's order: the first icon, the second beside it, the third under it, ✕ across
 function quickStep(step) {
-	const on = [step === 1 || sendable().length > 0, step === 1 || qaIdle().length > 0, true],
-		c = [...QA[step - 1].map(([act, icon, label], i) => sym(act, ICON[icon], on[i] ? '' : 'dis', label)), sym('qclose', ICON.close, '', 'Close')],
+	const I = qaIdle(),
+		on = [step === 1 || sendable().length > 0, step === 1 || I.S.length + I.V.length > 0, true],
+		c = [
+			...QA[step - 1].map(([act, icon, label], i) => sym(act, ICON[icon], on[i] ? '' : 'dis', label)),
+			sym('qclose', ICON.close, '', 'Close'),
+		],
 		{ fx, fy } = G.qa,
 		at = [0, 1, 2, 3].map((i) => c[i ^ (fx ? 1 : 0) ^ (fy ? 2 : 0)]);
 	patchHTML($('qa'), at.join(''));
@@ -233,7 +241,8 @@ function musterGap(i) {
 			if (c && gap[c[0]]) gap[c[0]] -= n;
 		};
 	for (const u of armyOf(0)) if (u.bn === i) less(u.kind, 1);
-	for (const b of G.blds) if (b.owner === 0) for (const j of b.q) if (j.muster && j.bn === i) for (const k in j.muster) less(k, j.muster[k]);
+	for (const b of G.blds)
+		if (b.owner === 0) for (const j of b.q) if (j.muster && j.bn === i) for (const k in j.muster) less(k, j.muster[k]);
 	const out = {};
 	CLS.forEach((c, t) => {
 		const k = kindOf(t);

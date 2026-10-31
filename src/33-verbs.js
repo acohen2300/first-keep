@@ -486,9 +486,8 @@ const PLAY = {
 		hideQuick();
 	},
 	qidle() {
-		const S = free(),
-			{ h, red } = G.qa,
-			V = red ? [] : unitsOf(0, 'vil').filter(freeVil);
+		const { S, V } = qaIdle(),
+			h = G.qa.h;
 		if (S.length) order(S, h);
 		for (const u of V) u.post = { x: h.e.x + u.ox, y: h.e.y + u.oy };
 		if (V.length) say(`${V.length} idle villagers come here.`, '', 3);
