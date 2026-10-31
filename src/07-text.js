@@ -787,7 +787,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Villager jobs: Food, Wood, Stone, Gold, Iron',
-		`The − and + under each job move one villager off or on: + takes an idle villager, else the one earning least elsewhere; − sends home the one earning least. Each worker takes the find that brings home most a minute: its load over the time to fill it and carry it home and back (fish only within ${DOCKR} of a dock). A worker on a field, tree farm, pasture or quarry stays on it. A worker on a wild find that runs out looks only for the same kind of find within its own sight (gold rock to gold rock); when none is in sight it waits at the drop-off for your order. Tap the lit job tile again to turn the default job off: new villagers then wait at the Town Center. Stop and Dismiss sit on a villager card; Stop all and Idle to me on the Town Center card.`,
+		`The − and + under each job move one villager off or on: + takes an idle villager, else the one earning least elsewhere; − sends home the one earning least. Each worker takes the find that brings home most a minute: its load over the time to fill it and carry it home and back (fish only within ${DOCKR} of a dock). A worker on a field, tree farm, pasture or quarry stays on it. A worker on a wild find that runs out looks only for the same kind of find within its own sight (gold rock to gold rock); when none is in sight it waits at the drop-off for your order. Tap the lit job tile again to turn the default job off: new villagers then wait at the Town Center. Stop and Dismiss sit on a villager card; Town square (Emergency) stops everyone, and idle on the quick action sends the idle ones to a spot.`,
 		'You decide who does what, and nobody wanders off.',
 	],
 	[
@@ -931,8 +931,8 @@ const TRIGGERS = () => [
 		'Elephants and armoured charges broke formations by weight.',
 	],
 	[
-		'The send strip',
-		'Tap open ground: two buttons at your finger. The sword sends soldiers there: Idle, All, or a squad by name. The people button builds there, sends idle villagers there, or sets how many workers stand there. ⋯ for more about the place; ✕ to cancel. Tap an enemy building or soldier with soldiers picked: they attack.',
+		'The quick action',
+		'Tap open ground: four buttons at your finger. The sword, under your thumb, turns them to All, idle and + in the same place: All sends every soldier there, idle the idle soldiers and villagers, + opens War aimed there for a mission. The hammer builds there; ☰ tells about the place; ✕ closes. Tap an enemy or a hazard: a red ring under it and the sword answers at once. With soldiers picked, a tap on an enemy is their attack.',
 		'Commands should cost one touch.',
 	],
 	[
@@ -1022,12 +1022,12 @@ const TRIGGERS = () => [
 	],
 	[
 		'War: four missions',
-		'On War a crosshair goes where you tap; Go sends every squad at home and ready (its blue ring), or every idle soldier, on it as a mission with a promised time. Under each squad its time to arrive and its pace; its green ring is the march still to go, and it turns red while it fights: open it to send more from the idle reserve, or Abort. A tap on the map offers the same in two buttons: the sword sends Idle, All or a squad there; the people button builds there, sends idle villagers there or sets workers there.',
+		'On War a crosshair goes where you tap; Go sends every squad at home and ready (its blue ring), or every idle soldier, on it as a mission with a promised time. Under each squad its time to arrive and its pace; its green ring is the march still to go, and it turns red while it fights: open it to send more from the idle reserve, or Abort. A tap on the map offers the same at your finger: the sword, then All, idle or + for a mission aimed there.',
 		'A plan you can read: time, odds and who is where. The weather on the screen is counted in the time; a storm that comes later is bad luck.',
 	],
 	[
-		'Emergency: shelter and battle stations',
-		'The Army card and the red attack bar open it. Shelter puts villagers in the sturdiest shelter first, Battle stations sends soldiers into buildings (they add arrows) and a line toward the danger, All hands does both. Resume sends villagers back to work; soldiers stay until you give them an order.',
+		'Emergency: four orders',
+		'The button at the bottom right and the Army card open it, with what is coming. Town square gathers everyone round the Town Center, the soldiers outside the villagers. All hands sends soldiers into the sturdiest buildings (they add arrows) and a line toward the danger, and villagers into the room left. Shelter puts the villagers alone in the sturdiest shelter first. Stop sends villagers back to the work they had; soldiers stay until you give them an order.',
 		'One rule for everyone: the strongest walls first, the nearest hands first.',
 	],
 	[

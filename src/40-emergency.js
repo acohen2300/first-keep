@@ -1,13 +1,16 @@
-// ═════ 40-emergency.js: Shelter, Battle stations, All hands on deck, Resume ═════
-// One ranking for everyone: buildings that shelter, the sturdiest first (current hit points, then room); each is filled to its room with the nearest units who can go there;
-// whoever is left over goes to a safe spot behind the Town Center. Villagers go in and stay until Resume (a note of each one's job and spot is kept).
-// Soldiers who garrison a building add an arrow like villagers do and stay in the plan (DEFENDING) until you give them a new order; Resume does not touch them.
+// ═════ 40-emergency.js: Emergency: Stop, Town square, All hands, Shelter ═════
+// Four orders (MENU-SPEC §8, picture Easy Cards). At the first of them the game notes the picture Stop goes back to: every villager's work
+// and spot, and the squads' tempers. Town square: everyone, villagers and soldiers, gathers round the Town Center, each on its own side of
+// it. All hands: villagers and soldiers fight from the buildings: one ranking for everyone, the buildings that shelter, the sturdiest first
+// (current hit points, then room), each filled to its room with the nearest; soldiers first, shooters before them, and the soldiers left
+// over hold a line toward the danger. Shelter: the villagers alone, the same way. Villagers left over wait behind the Town Center. Stop:
+// every villager back to its work; soldiers stay where the order put them (a garrison adds arrows, DEFENDING) until you send them.
 const EMERGENCY = [
-	['shelter', 'Shelter', 'villagers take cover'],
-	['battle', 'Battle stations', 'soldiers to the walls and the line'],
-	['hands', 'All hands on deck', 'villagers and soldiers'],
+	['square', 'Town square', 'everyone to the Town Center'],
+	['hands', 'All hands', 'villagers and soldiers fight'],
+	['shelter', 'Shelter', 'villagers inside'],
 ];
-const EMG = { line: 110, row: 12, perRow: 12, behind: 60 };
+const EMG = { line: 110, row: 12, perRow: 12, behind: 60, square: 20 }; // square: the villagers stand this far out from the Town Center's walls, the soldiers three times as far
 const shelterRank = () =>
 	G.blds
 		.filter((b) => b.owner === 0 && b.hp > 0 && b.prog >= 1 && BLD[b.kind].shelter)
@@ -15,6 +18,20 @@ const shelterRank = () =>
 const roomIn = (b) =>
 	shelterOf(b.owner, b.kind) -
 	G.units.filter((u) => u.hid === b.id || (u.state === 'garrison' && u.gar === b.id)).length; // in, or on the way in (Build 60: a second Shelter counted only those in, and over-filled)
+// the soldiers an emergency moves: every one but the guards (they keep to what they guard) and the routed (they run for home)
+const troops = () => armyOf(0).filter((u) => isSoldier(u) && u.state !== 'escort' && u.state !== 'rout');
+// a soldier off its order, to stand at a spot and fight what comes
+const stand = (u, x, y) =>
+	Object.assign(u, {
+		ord: undefined,
+		focus: null,
+		tgt: null,
+		fid: null,
+		state: 'goto',
+		px: clamp(x, 20, MAP - 20),
+		py: clamp(y, 20, MAP - 20),
+		idleT: 0,
+	});
 // the way the danger lies from the Town Center: the attack coming, else the nearest threat, else across the map
 function threatDir(k) {
 	const t = G.incoming || nearest(G.threats, k, (v) => atWar(0, v.owner), 700) || { x: MID, y: MID },
@@ -33,14 +50,28 @@ function fillRank(units, pick) {
 	}
 	return rest;
 }
-// once, at the first call: the picture Resume goes back to, every villager's work and every battalion's temper
-// (Build 48: Battle Stations kept no picture, so its Hold stayed on every battalion for good)
+// once, at the first order: the picture Stop goes back to, every villager's work and every squad's temper; a villager born since is noted at the next
 function emgSnap(kind) {
-	if (!G.emg) G.emg = { kind, snap: null, temper: G.temper.slice() };
-	if (kind === 'battle') return; // villagers only when they are sent in: Battle Stations leaves their work alone
-	const S = G.emg.snap || (G.emg.snap = []);
+	if (!G.emg) G.emg = { kind, snap: [], temper: G.temper.slice() };
+	G.emg.kind = kind;
 	for (const u of unitsOf(0, 'vil'))
-		if (!S.some((n) => n.id === u.id)) S.push({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post }); // one born since the last call is kept too (Build 60)
+		if (!G.emg.snap.some((n) => n.id === u.id))
+			G.emg.snap.push({ id: u.id, job: u.job, nid: u.node ? u.node.id : null, post: u.post });
+}
+// a villager let go by the emergency: not frightened, out of the building it went into
+function release(u) {
+	u.emg = false;
+	u.scared = false;
+	u.safe = null;
+	if (u.inside) {
+		const b = G.blds.find((x) => x.id === u.hid);
+		u.inside = false;
+		if (b) {
+			u.x = b.x + u.ox * 0.8;
+			u.y = b.y + 30;
+		}
+	}
+	u.hid = 0;
 }
 function villagersIn() {
 	const V = unitsOf(0, 'vil').filter((u) => !(u.inside && u.shop) && !u.hid), // those at work indoors are indoors already; those sent in stay sent
@@ -68,7 +99,7 @@ function villagersIn() {
 function soldiersIn() {
 	hudAbortAll();
 	const k = keepOf(0),
-		S = armyOf(0).filter((u) => isSoldier(u) && u.state !== 'escort' && u.state !== 'rout');
+		S = troops();
 	if (!k || !S.length) return;
 	for (const u of S) {
 		u.ord = undefined;
@@ -89,68 +120,86 @@ function soldiersIn() {
 	left.forEach((u, i) => {
 		const row = Math.floor(i / EMG.perRow),
 			col = (i % EMG.perRow) - (Math.min(left.length, EMG.perRow) - 1) / 2;
-		u.state = 'goto';
-		u.px = clamp(cx - d.x * row * EMG.row - d.y * col * EMG.row, 20, MAP - 20);
-		u.py = clamp(cy - d.y * row * EMG.row + d.x * col * EMG.row, 20, MAP - 20);
-		u.idleT = 0;
+		stand(u, cx - d.x * row * EMG.row - d.y * col * EMG.row, cy - d.y * row * EMG.row + d.x * col * EMG.row);
 	});
+}
+// Town square: everyone round the Town Center, each on its own side: the villagers just out from its walls, the soldiers beyond them; every
+// mission comes home. A villager inside a shelter comes out to it
+function townSquare() {
+	const k = keepOf(0);
+	if (!k) return;
+	hudAbortAll();
+	const at = (u, r) => {
+		const d = hyp(u.x - k.x, u.y - k.y) || 1;
+		return {
+			x: clamp(k.x + ((u.x - k.x) / d) * r + u.ox * 0.5, 20, MAP - 20),
+			y: clamp(k.y + ((u.y - k.y) / d) * r + u.oy * 0.5, 20, MAP - 20),
+		};
+	};
+	for (const u of unitsOf(0, 'vil')) {
+		release(u);
+		stopVil(u, at(u, halfOf(k) + EMG.square));
+	}
+	for (const u of troops()) {
+		const p = at(u, halfOf(k) + EMG.square * 3);
+		stand(u, p.x, p.y);
+	}
 }
 function emgStart(kind) {
 	emgSnap(kind);
-	if (kind === 'battle' || kind === 'hands') soldiersIn(); // soldiers first: the strongest places are theirs
+	if (kind === 'square') townSquare();
+	if (kind === 'hands') soldiersIn(); // soldiers first: the strongest places are theirs
 	if (kind === 'shelter' || kind === 'hands') villagersIn();
-	if (G.emg) G.emg.kind = kind;
 	say(`${EMERGENCY.find((e) => e[0] === kind)[1]}.`, 'warn', 4);
 	feel('crack');
 }
-// Resume: every villager back to what it was doing; soldiers stay where the plan put them
-function emgResume() {
+// Stop: every villager back to what it was doing; soldiers stay where the order put them
+function emgStop() {
 	if (!G.emg) return;
-	for (const n of G.emg.snap || []) {
+	for (const n of G.emg.snap) {
 		const u = G.units.find((v) => v.id === n.id && v.hp > 0),
 			node = n.nid && G.nodes.find((x) => x.id === n.nid && x.amt > 0);
 		if (!u) continue;
-		u.emg = false;
-		u.scared = false;
-		u.safe = null;
-		if (u.inside) {
-			const b = G.blds.find((x) => x.id === u.hid);
-			u.inside = false;
-			if (b) {
-				u.x = b.x + u.ox * 0.8;
-				u.y = b.y + 30;
-			}
-		}
-		u.hid = 0;
+		release(u);
 		setJob(u, n.job, node && node.farm ? node : null);
 		if (node && !node.farm) u.node = node;
 		u.post = n.post;
 	}
-	if (G.emg.temper) G.temper = G.emg.temper;
+	G.temper = G.emg.temper;
 	G.emg = null;
 	say('Back to work.', 'good', 3);
 }
+// the card: what is coming (tap it to look), then the four orders, two a rank; the order on is gold, All hands is red
 CARDS.emergency = () => {
 	const I = G.incoming,
-		kids = unitsOf(0, 'vil').length,
-		def = armyOf(0).filter((u) => u.state === 'garrison').length;
+		k = keepOf(0),
+		V = unitsOf(0, 'vil').length,
+		on = (kind) => (G.emg && G.emg.kind === kind ? 'on' : '');
+	title('Emergency'); // no subtitle: what is coming says the rest, and the order on wears its ring
+	fold(
+		'why',
+		'How it works',
+		`<p>Town square: everyone gathers round the Town Center, the soldiers outside the villagers. All hands: soldiers fill the sturdiest buildings first, shooters first (they add arrows), and the rest hold a line toward the danger; villagers fill what room is left. Shelter: the villagers alone. Whoever finds no room waits behind the Town Center. Stop sends every villager back to the work it had; soldiers stay until you send them.</p>`,
+	);
 	return (
-		title('Emergency', G.emg ? EMERGENCY.find((e) => e[0] === G.emg.kind)[1] : 'calm') +
-		(I
-			? `<p data-act="jump:${Math.round(I.x)},${Math.round(I.y)}"><b>${I.n}</b> ${I.what} · ${I.eta} s away · tap to go</p>`
-			: '') +
 		acts(
-			btn('emgresume', 'Stop', 'everyone back to work', G.emg ? 'go' : 'dis') +
-				btn('emg:battle', 'Town square', 'everyone to the Town Center', 'warn'),
+			I
+				? info(
+						`${I.n} ${I.what}`,
+						`${k ? `coming from the ${dirOf(k, I)} · ` : ''}${mmss(I.eta)} · tap to look`,
+						's6',
+						`jump:${Math.round(I.x)},${Math.round(I.y)}`,
+					)
+				: info('Nothing coming', 'no attack in sight', 's6'),
+			'c1',
 		) +
 		acts(
-			btn('emg:hands', 'All hands on deck', 'villagers and soldiers', 'warn') +
-				btn('emg:shelter', 'Shelter', `${kids} villagers inside`, kids ? 'warn' : 'dis'),
+			btn('emgstop', 'Stop', 'everyone back to work', G.emg ? 'go' : 'dis') +
+				btn('emg:square', EMERGENCY[0][1], EMERGENCY[0][2], on('square')),
 		) +
-		fold(
-			'why',
-			'How it works',
-			`<p>Buildings that shelter are filled sturdiest first, each with the nearest units; any left over wait behind the Town Center. Soldiers inside add arrows and stay defending until you send them somewhere. Resume sends the villagers back to their jobs.</p>`,
+		acts(
+			btn('emg:hands', EMERGENCY[1][1], EMERGENCY[1][2], 'warn') +
+				btn('emg:shelter', EMERGENCY[2][1], `${V} ${EMERGENCY[2][2]}`, V ? on('shelter') : 'dis'),
 		)
 	);
 };

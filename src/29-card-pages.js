@@ -269,7 +269,7 @@ function councilHTML(b) {
 		fold(
 			'bnabout',
 			'About battalions',
-			`<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve. Send a squad from the strip: tap open ground, then its name.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
+			`<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve. Send them from the War page with Go.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
 		)
 	);
 }

@@ -377,22 +377,14 @@ const PLAY = {
 	sel(a) {
 		G.sel = a === 'all' ? 'all' : Number(a);
 	},
-	sendto(a) {
-		const [f, x, y] = a.split(','),
-			e = { x: Number(x), y: Number(y) },
-			S = sendPick(/^(all|rest)$/.test(f) ? f : Number(f), e);
-		if (S.length) order(S, { t: 'ground', e });
-		else say(freeWhy(), '', 4);
-		hideStrip();
-	},
 	emg(a) {
 		emgStart(a);
 		hudPage('jobs');
 		ACT.home();
 		closeCard();
 	},
-	emgresume() {
-		emgResume();
+	emgstop() {
+		emgStop();
 		closeCard();
 	},
 	pagecycle() {
@@ -483,62 +475,45 @@ const PLAY = {
 	hudrein(a) {
 		hudReinforce(Number(a));
 	},
-	nostrip() {
-		hideStrip();
+	// the quick action (28-army-quick): each reads what was tapped, G.qa, and closes the block (a card it opens closes it too)
+	qsword() {
+		quickStep(2);
+	}, // swapped in place: All where the sword was
+	qall() {
+		const S = sendable();
+		if (S.length) order(S, G.qa.h);
+		else say(freeWhy(), '', 4);
+		hideQuick();
 	},
-	commander() {
-		const s = G.stripAt;
-		hideStrip();
+	qidle() {
+		const { S, V } = qaIdle(),
+			h = G.qa.h;
+		if (S.length) order(S, h);
+		for (const u of V) u.post = { x: h.e.x + u.ox, y: h.e.y + u.oy };
+		if (V.length) say(`${V.length} idle villagers come here.`, '', 3);
+		else if (!S.length) say(freeWhy(), '', 4);
+		hideQuick();
+	}, // the idle soldiers, and on open ground the idle villagers (the Town Center's Idle to me, cut in Build 70, lives on here)
+	qwar() {
+		const h = G.qa.h;
 		hudPage('war');
-		if (s) G.hud.h = { t: 'ground', e: { x: s.x, y: s.y } };
+		G.hud.h = h;
 		G.hud.moved = true;
-	}, // the strip's third answer: the War page, its crosshair already on the spot
-	nofree() {
-		say(freeWhy(), '', 4);
-		hideStrip();
-	}, // the sword with nobody to send says why
-	striparmy() {
-		const s = G.stripAt;
-		if (s) showStrip(s.sx, s.sy, s.x, s.y, 1);
-	},
-	strippeople() {
-		const s = G.stripAt;
-		if (s) showStrip(s.sx, s.sy, s.x, s.y, 2);
-	},
-	idleto(a) {
-		const [x, y] = a.split(',').map(Number);
-		let n = 0;
-		for (const u of unitsOf(0, 'vil'))
-			if (freeVil(u) && !postedAt({ x, y }).includes(u)) ((u.post = { x: x + u.ox, y: y + u.oy }), n++);
-		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 3);
-		hideStrip();
-	},
-	wkhere(a) {
-		// dial the villagers standing at a spot: + brings one more (an idle one, else the one earning least), − sends one home
-		const [d, x, y] = a.split(','),
-			to = { x: Number(x), y: Number(y) },
-			s = G.stripAt;
-		if (d === '+') {
-			const v = pickVil(0, to);
-			if (!v) say('No villager is free.', '', 3);
-			else stopVil(v, { x: to.x + v.ox, y: to.y + v.oy });
-		} else {
-			const v = postedAt(to).pop();
-			if (v) v.post = null;
-		}
-		if (s) showStrip(s.sx, s.sy, s.x, s.y, 2);
-	},
-	buildhere(a) {
-		const [x, y] = a.split(',').map(Number),
+		hideQuick();
+	}, // +: a mission, the War page with its target set on the spot or the enemy
+	qbuild() {
+		const { x, y } = G.qa.h.e,
 			hint = suggestAt(x, y),
 			M = hint && MENUS.find((m) => m.items.includes(hint));
-		hideStrip();
 		G.buildAt = { x, y, hint };
 		openCard({ type: 'menu', id: M ? M.id : G.lastMenu || MENUS[0].id });
-	}, // the hammer on open ground: the menu, on what fits there
-	more(a) {
-		const [x, y] = a.split(',').map(Number);
+	}, // the hammer: the Build menu for that spot, on what fits there
+	qhere() {
+		const { x, y } = G.qa.h.e;
 		openCard({ type: 'ground', x, y });
+	}, // ☰: the Here card for that spot
+	qclose() {
+		hideQuick();
 	},
 	qsfrom(a) {
 		G.qs.from = a === 'all' ? 'all' : Number(a);
@@ -592,20 +567,6 @@ const PLAY = {
 		if (u) stopVil(u, k ? { x: k.x + u.ox, y: k.y + halfOf(k) + 8 + u.oy } : null);
 		closeCard();
 	}, // the worker card: Home, to the Town Center and idle
-	stopall() {
-		const k = keepOf(0);
-		let n = 0;
-		for (const u of unitsOf(0, 'vil'))
-			if (u.job || u.post) (stopVil(u, k ? { x: k.x + u.ox, y: k.y + halfOf(k) + 8 + u.oy } : null), n++);
-		say(n ? `${n} villagers stop: to the Town Center.` : 'Nobody was working.', '', 4);
-	},
-	idlehere() {
-		const c = toWorld(cw / 2, ch / 2);
-		let n = 0;
-		for (const u of unitsOf(0, 'vil')) if (freeVil(u)) ((u.post = { x: c.x + u.ox, y: c.y + u.oy }), n++);
-		say(n ? `${n} idle villagers come here.` : 'No villager is idle.', '', 4);
-		closeCard();
-	},
 	replant(a) {
 		const b = G.blds.find((x) => x.id === Number(a) && x.owner === 0);
 		if (!b) return;
@@ -619,14 +580,6 @@ const PLAY = {
 	},
 	unpick() {
 		setPick([]);
-	},
-	pattack(id) {
-		const e = G.units.find((u) => u.id === Number(id));
-		const S = armyOf(0).filter(isSoldier);
-		if (e && S.length) {
-			order(S, { t: 'unit', e });
-			setPick([]);
-		}
 	},
 	look(id) {
 		const e = G.units.find((u) => u.id === Number(id));

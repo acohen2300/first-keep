@@ -1,5 +1,5 @@
 # The gate: what must hold before a build goes live, measured at four iPhone sizes, not judged by eye.
-# No page errors; no two buildings alike at half zoom; nothing wider than the screen; every word inside its button; text at least 12 px; contrast at least 4.5:1 (target 7:1); no card but Help and the Guide needs scrolling from 390 × 844 up (the iPhone SE at 375 × 667 is too short for the biggest cards); every tap target at least 44 × 44 points (Apple's rule), except half slots: the − and + under each job and any half slot of the Formation (`.h`), 26 to 29 points wide (EXCEPTIONS.md #2); every card title fits its slots, and every word a slot of the row can show fits its slot (Build 70).
+# No page errors; no two buildings alike at half zoom; nothing wider than the screen; every word inside its button; text at least 12 px; contrast at least 4.5:1 (target 7:1); no card but Help and the Guide needs scrolling from 390 × 844 up (the iPhone SE at 375 × 667 is too short for the biggest cards); every tap target at least 44 × 44 points (Apple's rule), except half slots: the − and + under each job and any half slot of the Formation (`.h`), 26 to 29 points wide (EXCEPTIONS.md #2); every card title fits its slots, and every word a slot of the row can show fits its slot (Build 70); the quick action's cells are slots, and its first icon opens under the finger, flipped near an edge (Build 70).
 # Run from first-keep/:  python3 build.py && python3 wrap.py && python3 tests/gate.py   (add --soak for the long games, tests/soak.py)
 import asyncio, json, os, subprocess, sys
 from playwright.async_api import async_playwright
@@ -10,7 +10,7 @@ SETUP = """() => { const F = window.__fk; F.newGame(5); F.act('close'); const G 
   window.IDS = { workshop: put('workshop'), farm: put('farm'), market: put('market'), keep: k.id }; F.navRebuild(); F.makeVassal(1, 0, 'fair'); window.IDS.vassal = F.keepOf(1).id; }"""
 CARDS = [('help', "{type:'help'}"), ('setup', "{type:'setup'}"), ('army', "{type:'troops'}"), ('home', "{type:'menu',id:'home'}"), ('guide', "{type:'guide',page:'bld'}"),
          ('keep', "{type:'bld',id:IDS.keep}"), ('workshop', "{type:'bld',id:IDS.workshop}"), ('farm', "{type:'bld',id:IDS.farm}"),
-         ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}"), ('mail', "{type:'mail'}"), ('squad', "{type:'squad',i:0}")]
+         ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}"), ('mail', "{type:'mail'}"), ('squad', "{type:'squad',i:0}"), ('emergency', "{type:'emergency'}")]
 MEASURE = """() => {
   const lum = c => { const f = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); };
   const parse = s => { const m = s.match(/[\\d.]+/g), k = s.startsWith('color(') ? 255 : 1; return m ? [m[0] * k, m[1] * k, m[2] * k, m[3] == null ? 1 : +m[3]] : [0, 0, 0, 0]; };   // rgb(), and color(srgb …) as color-mix gives it
@@ -26,7 +26,7 @@ MEASURE = """() => {
   for (const b of document.querySelectorAll('button')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden]')) continue; for (const e of b.querySelectorAll('b,small')) if (e.scrollWidth > e.clientWidth + 1 && getComputedStyle(e).overflow !== 'visible') out.clip.push(e.textContent.slice(0, 24)); if (r.right > innerWidth + 1) out.clip.push('off screen: ' + b.textContent.slice(0, 20)); }
   for (const b of document.querySelectorAll('button,[data-act],summary')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden],.h') || r.bottom < 0 || r.top > innerHeight) continue; if (r.width < 44 || r.height < 44) out.tap.push((b.id || b.textContent.trim().slice(0, 14) || b.className) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height)); }
   { const c = document.getElementById('card'); out.scroll = c && !c.hidden && c.scrollHeight > c.clientHeight + 1 ? c.scrollHeight + '>' + c.clientHeight : ''; }
-  for (const e of document.querySelectorAll('.wd,.top .c,.strip button span')) { if (e.closest('[hidden]') || !e.getBoundingClientRect().width) continue; if (e.scrollWidth > e.clientWidth + 1) out.clip.push('tile: ' + e.textContent.slice(0, 16)); }
+  for (const e of document.querySelectorAll('.wd,.top .c')) { if (e.closest('[hidden]') || !e.getBoundingClientRect().width) continue; if (e.scrollWidth > e.clientWidth + 1) out.clip.push('tile: ' + e.textContent.slice(0, 16)); }
   return out; }"""
 # Every title the game can show fits slots 2 to 4 of the title bar at 375 x 667, in the real font (MENU-SPEC §4, Build 70): the fixed titles (read
 # from the source), every building name with its Medieval name and its research tiers, every unit of every people through stats at every rank, the
@@ -56,6 +56,19 @@ SLOT_WORDS = """async (extra) => { await document.fonts.ready; const F = window.
   for (const t of ['59:59', '—', ...extra]) if (!fits(put(b, t), info)) out.push(`${t} under a squad`);
   for (const t of [...F.ROW_WORD.pace, F.ROW_WORD.fight, ...extra]) if (!fits(put(sm, t), info)) out.push(`${t} under a squad`);
   F.act('close'); return [words.length + 3, out]; }"""
+# The quick action (MENU-SPEC §7, Build 70), at every size: each of its four cells is the screen's slot (W − 42) ÷ 6 by 44; opened in the middle,
+# at the right edge, above the row and in that corner, its first icon (the sword) is right under the finger (its column on it, half a slot
+# below it; above it when flipped at the row); the sword turns it to All in the same place. Left open in the middle for the page's measures.
+QUICK = """() => { const F = window.__fk, out = [], el = document.getElementById('qa'), W = innerWidth, slot = (W - 42) / 6;
+  F.act('close'); const row = document.getElementById('orders').getBoundingClientRect().top, under = (r, x, y) => x >= r.left && x <= r.right && (Math.abs(r.top - y - 22) < 1.5 || Math.abs(y - r.bottom - 22) < 1.5);
+  const open = (x, y) => { F.showQuick(x, y, F.hitAt(x, y), 1); return el.querySelector('[data-act=qsword]').getBoundingClientRect(); };
+  for (const [x, y] of [[W / 2, 300], [W - 12, 300], [W / 2, row - 40], [W - 12, row - 40]]) {
+    const first = open(x, y);
+    for (const b of el.children) { const r = b.getBoundingClientRect(); if (Math.abs(r.width - slot) > 0.6 || Math.abs(r.height - 44) > 0.6) out.push(`quick: a cell ${r.width.toFixed(1)}x${r.height.toFixed(1)}, the slot ${slot.toFixed(1)}x44`); }
+    if (!under(first, x, y)) out.push(`quick: the sword is not under a tap at ${Math.round(x)},${Math.round(y)}`);
+    el.querySelector('[data-act=qsword]').click(); const all = el.querySelector('[data-act=qall]').getBoundingClientRect();
+    if (Math.abs(all.left - first.left) > 0.5 || Math.abs(all.top - first.top) > 0.5) out.push('quick: All is not where the sword was'); }
+  open(W / 2, 300); return out; }"""
 def fixed_titles():
     import re, glob
     return sorted(set(re.findall(r"\btitle\(\s*'([^']+)'", ''.join(open(f).read() for f in sorted(glob.glob('src/*.js'))))))
@@ -85,6 +98,21 @@ PLAY = """async () => {
   F.act('qcancel:' + F.keepOf(0).id + ',' + q0); if (F.keepOf(0).q.length !== q0) out.push('a slot tap did not cancel the villager');
   tap('[data-act="move:wood"]'); if (!F.G.units.some(u => u.owner === 0 && u.kind === 'vil' && u.job === 'wood')) out.push('+ under Wood put nobody on wood');
   
+  // the quick action (Build 70): a tap on open ground opens it; the sword turns it to All in place; + opens War aimed at the spot; the hammer opens the
+  // Build menu for the spot, the menu its Here card; idle sends an idle villager there; a tap on an enemy opens it at All with the red ring, and All
+  // sends every soldier at the enemy
+  { F.act('close'); G.fogOn = false; let p = null; for (let y = 260; y < 500 && !p; y += 23) for (let x = 60; x < 330 && !p; x += 23) if (F.hitAt(x, y).t === 'ground') p = [x, y];
+    F.tapAt(...p); const spot = G.qa && G.qa.h.e; if (!spot || document.getElementById('qa').hidden) out.push('a tap on open ground did not open the quick action');
+    tap('#qa [data-act=qsword]'); if (!document.querySelector('#qa [data-act=qall]')) out.push('the sword did not turn the quick action to All');
+    tap('#qa [data-act=qwar]'); if (G.hud.page !== 'war' || !G.hud.h || G.hud.h.e !== spot || !document.getElementById('qa').hidden) out.push('+ did not open War aimed at the spot');
+    F.hudPage('jobs'); F.ui(true); F.tapAt(...p); tap('#qa [data-act=qbuild]'); if (!G.card || G.card.type !== 'menu' || !G.buildAt || G.buildAt.x !== spot.x) out.push('the hammer did not open the Build menu for the spot'); F.act('close');
+    F.tapAt(...p); tap('#qa [data-act=qhere]'); if (!G.card || G.card.type !== 'ground' || G.card.x !== spot.x) out.push('the menu did not open the Here card for the spot'); F.act('close');
+    const v = G.units.find((u) => u.owner === 0 && u.kind === 'vil' && !u.inside); F.setJob(v, null); F.tapAt(...p); tap('#qa [data-act=qsword]'); tap('#qa [data-act=qidle]');
+    if (!v.post || Math.hypot(v.post.x - spot.x, v.post.y - spot.y) > 45) out.push('idle did not send an idle villager to the spot');
+    const k = F.keepOf(0), S = [0, 1, 2].map((i) => F.addUnit(0, 'spear', k.x + 40 + i * 8, k.y + 40)), e = F.addUnit(1, 'spear', spot.x, spot.y); G.rel[0][1] = G.rel[1][0] = 'war';
+    F.tapAt(F.SX(e.x), F.SY(e.y) - 6 * F.cam.z); if (!G.qa || !G.qa.red || G.qa.h.e !== e || !document.querySelector('#qa [data-act=qall]')) out.push('a tap on an enemy did not open the quick action at All, ringed red');
+    tap('#qa [data-act=qall]'); if (!S.every((u) => u.focus === e)) out.push('All on an enemy did not send every soldier at it');
+    e.hp = 0; for (const u of S) u.hp = 0; G.rel[0][1] = G.rel[1][0] = 'neutral'; G.fogOn = true; }
   tap('#scoreP'); if (!G.card || G.card.type !== 'score') out.push('Score card did not open'); F.act('close');
   // back (Build 70): a card opened by a tap inside another remembers it; back returns to it; on the first card back closes, and closing forgets the way
   F.openCard({ type: 'help' }); tap('#card [data-act="guide:bld"]'); if (!G.card || G.card.type !== 'guide' || !G.card.from || G.card.from.type !== 'help') out.push('a card opened from Help did not remember Help');
@@ -151,11 +179,18 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
     G.P[0].techs.add('command'); F.fxDirty(); F.sqPlan(0, 'horse', 1); F.sqPlan(0, 'horse', 1); run(2); if (F.sqUnits(0).length !== 2) bad.push('squad: the plan did not fill (' + F.sqUnits(0).length + ')');
     G.hud.h = { t: 'ground', e: { x: home.x + 200, y: home.y + 60 } }; F.act('wfire'); if (!G.msn[0] || G.msn[0].name !== F.BN[0] || G.msn[0].n0 !== 2) bad.push('squad: Go did not send the squad that was ready'); F.act('wabort'); if (G.msn[0]) bad.push('squad: Abort left its mission');
     F.hudPage('jobs'); G.P[0].techs.delete('command'); F.fxDirty(); for (let i = 0; i < 4; i++) G.msn[i] = null; G.bnPlan[0] = {}; }
-  // emergencies: villagers take cover in the sturdiest building first and Resume sends them back; soldiers garrison and stay
-  { const home = G.blds.find((b) => b.owner === 0); for (let i = 0; i < 4; i++) F.addUnit(0, 'spear', home.x + 70 + i * 6, home.y + 40); const jobs = G.units.filter((u) => u.owner === 0 && u.kind === 'vil').map((u) => u.job).join(',');
+  // emergencies (Build 70, four orders): Town square gathers everyone round the Town Center and Stop sends the villagers back to their work;
+  // All hands: villagers take cover in the sturdiest building first, soldiers garrison; Stop sends the villagers back and the soldiers stay
+  { const home = G.blds.find((b) => b.owner === 0), k = F.keepOf(0); for (let i = 0; i < 4; i++) F.addUnit(0, 'spear', home.x + 70 + i * 6, home.y + 40); const jobs = G.units.filter((u) => u.owner === 0 && u.kind === 'vil').map((u) => u.job).join(',');
+    { const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil' && u.hp > 0), near = (u, r) => Math.hypot(u.x - k.x, u.y - k.y) < r, V3 = V.filter((u) => near(u, 300));
+      F.emgStart('square'); run(30); const S = G.units.filter((u) => u.owner === 0 && u.hp > 0 && F.UNIT[u.kind].tick === 'sol' && u.state !== 'escort');
+      if (!V.every((u) => u.post && near(u.post, 70) && !u.job)) bad.push('town square: villagers not sent round the Town Center');
+      if (!V3.length || !V3.every((u) => near(u, 90))) bad.push('town square: ' + V3.filter((u) => !near(u, 90)).length + ' villagers from near by not round the Town Center in 30 s');   // the circus test's villager starts across the map
+      if (!S.length || !S.every((u) => near(u, 140))) bad.push('town square: ' + S.filter((u) => !near(u, 140)).length + ' soldiers not round the Town Center');
+      F.emgStop(); run(5); if (V.map((u) => u.job).join(',') !== jobs) bad.push('town square: Stop did not restore the jobs'); }
     F.emgStart('hands'); run(15); const v = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), s2 = G.units.filter((u) => u.owner === 0 && u.state === 'garrison');
     if (!s2.length || !s2.every((u) => u.inside)) bad.push('emergency: soldiers did not garrison'); if (!v.every((u) => u.inside || u.safe)) bad.push('emergency: villagers are not under cover');
-    F.emgResume(); run(10); if (v.some((u) => u.inside || u.emg)) bad.push('emergency: Resume left villagers inside'); if (v.map((u) => u.job).join(',') !== jobs) bad.push('emergency: Resume did not restore the jobs'); if (!s2.every((u) => u.inside)) bad.push('emergency: Resume moved the soldiers'); }
+    F.emgStop(); run(10); if (v.some((u) => u.inside || u.emg)) bad.push('emergency: Stop left villagers inside'); if (v.map((u) => u.job).join(',') !== jobs) bad.push('emergency: Stop did not restore the jobs'); if (!s2.every((u) => u.inside)) bad.push('emergency: Stop moved the soldiers'); }
   return bad; }"""
 def verbs():
     import re, glob
@@ -180,11 +215,13 @@ async def main():
                 pg.on('pageerror', lambda e: errs.append(str(e)))
                 await pg.goto('file://' + os.path.abspath(page_file)); await pg.wait_for_timeout(600); await pg.evaluate(SETUP)
                 bad = {}
-                for name, c in [('map', None)] + CARDS + [('end', 'END')]:
-                    if c == 'END': await pg.evaluate("() => { const F = window.__fk; F.closeCard && F.closeCard(); F.setPause(false); F.G.t = F.G.mode === 'conquest' ? F.G.t : 1799.9; F.G.mode = 't30'; for (let i = 0; i < 10; i++) F.step(1 / 30); }")
+                for name, c in [('map', None), ('quick', 'QUICK')] + CARDS + [('end', 'END')]:
+                    q = []
+                    if c == 'QUICK': q = await pg.evaluate(QUICK)
+                    elif c == 'END': await pg.evaluate("() => { const F = window.__fk; F.closeCard && F.closeCard(); F.setPause(false); F.G.t = F.G.mode === 'conquest' ? F.G.t : 1799.9; F.G.mode = 't30'; for (let i = 0; i < 10; i++) F.step(1 / 30); }")
                     elif c: await pg.evaluate(f"window.__fk.openCard({c})")
                     await pg.wait_for_timeout(120); m = await pg.evaluate(MEASURE)
-                    issues = [k for k in ('wide', 'tall') if m[k]] + ([f"scroll:{m['scroll']}"] if m['scroll'] and W >= 390 and name not in ('help', 'guide', 'research') else []) + [f'{k}:{v[:3] if k != "tap" else v}' for k, v in (('small', m['small']), ('low', m['low']), ('clip', m['clip']), ('tap', sorted(set(m['tap'])))) if v]
+                    issues = q + [k for k in ('wide', 'tall') if m[k]] + ([f"scroll:{m['scroll']}"] if m['scroll'] and W >= 390 and name not in ('help', 'guide', 'research') else []) + [f'{k}:{v[:3] if k != "tap" else v}' for k, v in (('small', m['small']), ('low', m['low']), ('clip', m['clip']), ('tap', sorted(set(m['tap'])))) if v]
                     if issues: bad[name] = issues
                 if errs: bad['errors'] = errs[:2]
                 print(('PASS ' if not bad else 'FAIL ') + f'{page_file} {W}x{H}', '' if not bad else json.dumps(bad)[:2500]); fails += bool(bad); await pg.close()

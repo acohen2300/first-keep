@@ -81,10 +81,6 @@ const CARDS = {
 					trade ? 'rel' : 'town',
 				);
 			if (kp && !trade) {
-				h += acts(
-					btn('stopall', 'Stop all', 'everyone to the Town Center, idle') +
-						btn('idlehere', 'Idle to me', `${unitsOf(0, 'vil').filter(freeVil).length} come to the screen`),
-				); // every villager at once (Build 61, Albert)
 				const T = turtlePlan(0);
 				if (T && T.rows.length)
 					h += `<p class="dim"><i>To ${T.age.name} by the fields:</i> ${T.rows.map((x) => `${Math.round(x.need)} ${x.r}${isFinite(x.vm) ? ` (${x.vm.toFixed(1)} villager-min)` : ' (none known)'}`).join(', ')}. With ${T.villagers} villagers about ${isFinite(T.time) ? clock(T.time * 60) : '—'}: ${T.split
@@ -318,7 +314,7 @@ const CARDS = {
 		);
 	},
 	ground(c) {
-		// ⋯ on the send strip: the rally point, the scout, the spy
+		// ☰ on the quick action: the rally point, the scout, the spy
 		const at = `${Math.round(c.x)},${Math.round(c.y)}`;
 		return (
 			title('Here', coord(c.x, c.y)) +
@@ -520,7 +516,7 @@ const CARDS = {
 							`<p data-act="ordpick:${O.id}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`,
 					)
 					.join(''); // tap a line: that group is picked, and the camera goes to it
-		h += acts(btn('card:emergency', 'Emergency', 'shelter · battle stations · all hands', G.emg ? 'warn' : ''));
+		h += acts(btn('card:emergency', 'Emergency', 'town square · all hands · shelter', G.emg ? 'warn' : ''));
 		if (S.length && hasCmd())
 			h +=
 				sec('Orders go to') +
@@ -585,7 +581,7 @@ const CARDS = {
 			fold(
 				'about',
 				'About orders',
-				`<p>Tap open ground, then the sword: Idle, All, or a squad by name goes there. A squad is built on its card (tap it on the War page); War sends squads with a time and odds; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
+				`<p>Tap open ground, then the sword: All or the idle ones go there, or + aims a mission there. A squad is built on its card (tap it on the War page); War sends squads with a time and odds; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
 			)
 		);
 	},
@@ -756,8 +752,8 @@ const CARDS = {
 			`<p><b>Grow:</b> train villagers at the Town Center; + and − under each job move one on or off. Houses give room.</p>
       <p><b>Build:</b> the hammer under People opens every building; it wears a green ring while one goes up. A building waits above your finger: drag it, then tap Build. The cycle button above People turns the row: Jobs, War, Train.</p>
       <p><b>Messages</b> arrive at the top and fade; tap one to see where. × on a group of news asks to hide that group: it then goes quietly to the mail, and red still shows. Numbers wear one colour scale: green gaining, white steady, red losing.</p>
-      <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: build here, send soldiers here, or more. Pause shows the speeds under the button.</p>
-      <p><b>Army:</b> tap open ground with nothing picked, then the sword: Idle, All or a squad goes there. The War page holds your squads (tap one for what it is made of) and the Train page what is being trained.</p>
+      <p><b>The finger:</b> tap a building or a place and its page opens; tap one of your people to pick them, twice for their page; hold to pick more, or hold and drag on open ground to box a group. With yours picked, tap a target: they attack, hunt, gather, build, mend or walk there. Tap open ground: the quick action at your finger, to send soldiers, build or read about the place. Pause shows the speeds under the button.</p>
+      <p><b>Army:</b> tap open ground with nothing picked, then the sword: All or the idle ones go there; tap an enemy and the same answers come at once. The War page holds your squads (tap one for what it is made of) and the Train page what is being trained.</p>
       <p><b>Forest:</b> trees are a wall until cut. Hold, then drag a box over trees to cut a road.</p>
       <p><b>Trade:</b> caravans sell goods at the four trade stops, or trade with an ally. A Trade post holds a stop.</p>
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>

@@ -1,4 +1,4 @@
-// ═════ 28-army-strip.js: the army strip: who can be sent, how many, and the sends ═════
+// ═════ 28-army-quick.js: the army: who can be sent, how many, and the sends; the quick action ═════
 // ── Attack with: on an enemy or a find card, from the whole army or one battalion, how many of each type, then go. The nearest of each type go.
 const qsPool = () =>
 	armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && (G.qs.from === 'all' || u.bn === G.qs.from));
@@ -58,7 +58,7 @@ function qsHTML(verb, label, to) {
 		)
 	);
 }
-// ── The send strip: tap open ground and two choices sit at your finger: your people, or the sword (Idle, All, a squad); more about the place; cancel.
+// ── who can be sent
 const sendable = () => armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && u.state !== 'escort'); // guards keep to what they guard
 // What each soldier is doing, in one word (Albert, Build 42), worked out from the soldier alone:
 // rally (just trained or called home, walking to its place), march (on your order), fight, hold (stopped: at its place or at the spot you sent it), rout (nerve broke, running).
@@ -109,67 +109,59 @@ function guardRow(t, id) {
 		) + btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis'),
 	);
 }
-function sendPick(from, to) {
-	// 'all' everyone but guards, 'rest' the idle ones, or a squad by its number (Build 61: half, a quarter and the nearest few are gone, Albert: confusing)
-	if (from === 'all') return sendable();
-	if (typeof from === 'number') return sendable().filter((u) => u.bn === from);
-	return free();
-}
-// the villagers standing at a spot you sent them to
-const postedAt = (to) =>
-	unitsOf(0, 'vil').filter((u) => !u.job && u.post && hyp(u.post.x - to.x, u.post.y - to.y) < 40);
-// A tap on open ground (Build 61, Albert): two choices, people or sword. The sword: Idle, All, or a squad. The people: build here, send the idle
-// here, or dial how many workers stand here. One gesture, no half, no quarter. Three dots: more about the place. Cross: away.
-function showStrip(sx, sy, x, y, step) {
-	if (step === undefined) closeCard();
-	const el = $('strip'),
-		at = `${Math.round(x)},${Math.round(y)}`,
-		to = { x, y },
-		n = (from) => sendPick(from, to).length,
-		nAll = n('all'),
-		ic = (act, icon, label, cls) =>
-			`<button data-act="${act}" class="ic ${cls || ''}" aria-label="${label}">${icon}</button>`;
-	const sh = { sx, sy, x, y };
-	G.stripAt = sh;
-	// muscle memory (Albert, Build 63): the sword opens under the finger; the next tap's answer, All, sits exactly where the sword was
-	if (!step)
-		el.innerHTML =
-			ic(nAll ? 'striparmy' : 'nofree', ICON.sword, 'Send soldiers here', (nAll ? 'war' : 'dis') + ' thumb') +
-			ic('strippeople', ICON.head, 'Your people here') +
-			ic(`more:${at}`, '⋯', 'More about this place') +
-			ic('nostrip', ICON.close, 'Cancel');
-	else if (step === 1) {
-		const nRest = n('rest'),
-			bns = hasCmd() ? BN.map((nm, i) => [i, nm]).filter(([i]) => n(i)) : [];
-		el.innerHTML =
-			btn(`sendto:all,${at}`, 'All', String(nAll), 'war thumb') +
-			btn(`sendto:rest,${at}`, 'Idle', String(nRest), nRest ? '' : 'dis') +
-			bns.map(([i, nm]) => btn(`sendto:${i},${at}`, nm, String(n(i)))).join('') +
-			ic('commander', ICON.aim, 'The War page, aimed here', 'war') +
-			ic('nostrip', ICON.close, 'Cancel');
-	} else {
-		const idle = unitsOf(0, 'vil').filter((u) => freeVil(u) && !postedAt(to).includes(u)).length,
-			here = postedAt(to).length,
-			pop = unitsOf(0, 'vil').length;
-		el.innerHTML =
-			btn('train:vil', `+ Villager`, `${pop}/${capOf(0)} · ${costText(unitCost(0, 'vil'))}`, 'thumb') + // the People tile, pasted in (Albert, Build 63)
-			btn(`buildhere:${at}`, 'Build here', 'the menu, aimed here') +
-			btn(`idleto:${at}`, 'Send idle here', `${idle} idle villager${idle === 1 ? '' : 's'}`, idle ? '' : 'dis') +
-			`<div class="dial"><b>Workers here</b>${btn(`wkhere:-,${at}`, '−', '', here ? '' : 'dis')}<span>${here}</span>${btn(`wkhere:+,${at}`, '+', '')}</div>` +
-			ic('nostrip', ICON.close, 'Cancel');
-	}
-	el.classList.toggle('panel', step === 2); // the people side is a small panel, not a strip
+// ── The quick action (MENU-SPEC §7, picture Quick Action): a 2 × 2 of slots, icons only, one tight block opened right under the tap: its
+// first column on the finger, its top half a slot below it, so the finger covers nothing of it and the red ring stays in sight. Open ground:
+// the sword (under the thumb) · the hammer / ☰ · ✕. The sword: All · idle / + · ✕, swapped in place so the thumb never moves. An enemy or a
+// hazard: a red ring under it (drawPicks) and the block opens straight at the sword's answers. Near the right edge or the row the block
+// flips, so the first icon stays the one nearest the thumb. G.qa holds what was tapped (h, as hitAt gives it) for the verbs (33-verbs).
+const QA = [
+	[
+		['qsword', 'sword', 'Send soldiers here'],
+		['qbuild', 'hammer', 'Build here'],
+		['qhere', 'list', 'About this place'],
+	],
+	[
+		['qall', 'squad', 'Send every soldier'],
+		['qidle', 'idle', 'Send the idle ones'],
+		['qwar', 'plus', 'A mission: the War page, aimed here'],
+	],
+];
+// an enemy the finger can send soldiers at: a beast that is not game (game is hunted from the bar) always; anyone else, the Natives and
+// their Throne too, while you are at war
+const foeOf = (e) =>
+	e.owner !== 0 && e.hp > 0 && (e.owner === WILD && !e.q && !e.native ? !UNIT[e.kind].meat : atWar(0, e.owner));
+// the idle ones: the idle soldiers (S), and on open ground the idle villagers too (V; never sent at an enemy or a hazard)
+const qaIdle = () => ({ S: free(), V: G.qa.red ? [] : unitsOf(0, 'vil').filter(freeVil) });
+function showQuick(sx, sy, h, step) {
+	closeCard();
+	const el = $('qa');
 	el.hidden = false;
-	G.strip = to;
-	if (step === 1) return; // the next step stays exactly where it was: the thumb does not move
 	const r = $('stage').getBoundingClientRect(),
-		w = el.offsetWidth,
-		h = el.offsetHeight,
-		th = el.querySelector('.thumb'),
-		tx = th ? th.offsetLeft + th.offsetWidth / 2 : w / 2,
-		ty = th ? th.offsetTop + th.offsetHeight / 2 : h / 2;
-	el.style.left = clamp(sx - tx, 4, r.width - w - 4) + 'px';
-	el.style.top = clamp(sy - ty, 4, r.height - h - 4) + 'px'; // the sword opens under the finger
+		up = $('hud').getBoundingClientRect().bottom - r.top,
+		down = $('orders').getBoundingClientRect().top - r.top,
+		css = getComputedStyle(el),
+		gap = parseFloat(css.getPropertyValue('--gap')),
+		off = parseFloat(css.getPropertyValue('--slot')) / 2, // half a slot from the finger
+		w = el.offsetWidth, // two slots and their divider, two ranks tall: the style sheet sets it
+		ht = el.offsetHeight,
+		fx = sx + (w * 3) / 4 > r.width - gap, // too near the right edge: the first icon goes right
+		fy = sy + off + ht > down - gap; // too near the row: the block goes above the finger, the first icon below
+	G.qa = { h, red: step === 2, fx, fy };
+	el.style.left = clamp(sx - (fx ? 3 : 1) * (w / 4), gap, r.width - w - gap) + 'px';
+	el.style.top = clamp(fy ? sy - off - ht : sy + off, up + gap, down - ht - gap) + 'px';
+	quickStep(step);
+}
+// a step's four slots, in the flip's order: the first icon, the second beside it, the third under it, ✕ across
+function quickStep(step) {
+	const I = qaIdle(),
+		on = [step === 1 || sendable().length > 0, step === 1 || I.S.length + I.V.length > 0, true],
+		c = [
+			...QA[step - 1].map(([act, icon, label], i) => sym(act, ICON[icon], on[i] ? '' : 'dis', label)),
+			sym('qclose', ICON.close, '', 'Close'),
+		],
+		{ fx, fy } = G.qa,
+		at = [0, 1, 2, 3].map((i) => c[i ^ (fx ? 1 : 0) ^ (fy ? 2 : 0)]);
+	patchHTML($('qa'), at.join(''));
 }
 // what the game thinks fits a spot (Albert, Build 41): each reason scores a kind, the best one is marked and its menu opens.
 // A drop-off for what grows there with none near; more of what stands around you (houses: a house; fields: a mill, then a field; army buildings: the one you lack);
@@ -224,12 +216,9 @@ function suggestAt(x, y) {
 	const best = Object.entries(sc).sort((a, b) => b[1] - a[1])[0];
 	return best ? best[0] : null;
 }
-function hideStrip() {
-	const el = $('strip');
-	if (el && !el.hidden) {
-		el.hidden = true;
-		if (G) G.strip = null;
-	}
+function hideQuick() {
+	$('qa').hidden = true;
+	G.qa = null;
 }
 // The two dials of an army or one battalion (a: 'all' or its number): temper, and shape once Formations is researched. One button each, a tap steps round; a gold ring marks what is not the plain setting.
 const dialBtns = (a) => {
@@ -252,7 +241,8 @@ function musterGap(i) {
 			if (c && gap[c[0]]) gap[c[0]] -= n;
 		};
 	for (const u of armyOf(0)) if (u.bn === i) less(u.kind, 1);
-	for (const b of G.blds) if (b.owner === 0) for (const j of b.q) if (j.muster && j.bn === i) for (const k in j.muster) less(k, j.muster[k]);
+	for (const b of G.blds)
+		if (b.owner === 0) for (const j of b.q) if (j.muster && j.bn === i) for (const k in j.muster) less(k, j.muster[k]);
 	const out = {};
 	CLS.forEach((c, t) => {
 		const k = kindOf(t);
