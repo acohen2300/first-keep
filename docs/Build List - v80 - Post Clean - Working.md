@@ -58,5 +58,14 @@
 28. Marks with no words, for Albert to say what they mean: screenshots 1, 4, 11, 12 and 15; page 3's "Is that the job file? Moved?" and "Function in control →".
 29. Page 8: the job icon "shouldnt be a word"; v70 puts a word under the cycle button.
 
+## From the cold review of v70 (Oct 31; nothing breaks play; `docs/v70 Record/Cold Review`)
+30. The steel War and Train panel stops under the cycle button; the pictures draw one panel holding the button and both ranks.
+31. The Emergency button is off the grid: 44 wide where a slot is 58, a rank above the cycle button, no word under it.
+32. The Town Center's Relations tab says "ally, neutral, hostile"; agreed: "friend, neutral, foe".
+33. A locked place in the line says "+1 research"; the picture names it ("+2 Guilds").
+34. The squad card's four soldier kinds are quarter-width boxes, as its picture draws them, against the six-slot grid: Albert to choose. Cancel and Save lack their ✕ and ✓.
+35. A "ready" cell in the status strip breathes; only danger moves.
+36. The quick action's sword is solid (the outline was chosen); the War squads use three figures, not a shield: the icon pass.
+
 ## Albert's comments on v70
 - Preview 3 (Oct 31, 10:35): "It plays clean. It feels tight."
