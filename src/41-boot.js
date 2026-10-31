@@ -104,7 +104,7 @@ function spdPop(open) {
 		pop.hidden = true;
 		return;
 	}
-	for (const b of pop.children) b.classList.toggle('cur', b.dataset.act === 'spd:' + G.speed);
+	for (const b of pop.children) b.classList.toggle('on', b.dataset.act === 'spd:' + G.speed);
 	pop.hidden = false;
 	const r = pb.getBoundingClientRect(),
 		st = $('stage').getBoundingClientRect();
@@ -432,6 +432,10 @@ window.__fk = {
 	UPKEEP,
 	POST,
 	TAX,
+	BTIER,
+	BN,
+	nodeName,
+	TITLE_SHORT,
 	get holdSave() {
 		return holdSave;
 	},

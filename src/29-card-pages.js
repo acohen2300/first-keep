@@ -37,7 +37,8 @@ const BLD_PAGE = {
 				),
 	market: (b) => marketHTML(b),
 };
-// A building's line: one slot per order it can hold. A filled slot shows the order and how far along it is; tap it and the order is cancelled, its cost back.
+// A building's line: one slot per order it can hold, singles on the Formation. The first is working: its green bar is how far along it
+// is. Tap a filled one and the order is cancelled, its cost back; an empty place is a faint outline.
 function slotsHTML(b) {
 	const n = qMax(0),
 		cells = [];
@@ -45,17 +46,15 @@ function slotsHTML(b) {
 		const j = b.q[i];
 		cells.push(
 			j
-				? `<button class="slot" data-act="qcancel:${b.id},${i}" style="--p:${i === 0 ? Math.round(100 * (1 - j.left / j.total)) : 0}%" aria-label="Cancel ${qName(j)}">${qName(j)}${i === 0 ? `<br>${Math.ceil(j.left)} s` : ''}<i></i></button>`
-				: `<button class="slot empty" disabled>Slot ${i + 1}</button>`,
+				? `<button class="slot${i === 0 ? ' work' : ''}" data-act="qcancel:${b.id},${i}"${i === 0 ? ` style="--p:${Math.round(100 * (1 - j.left / j.total))}%"` : ''} aria-label="Cancel ${qName(j)}">${qName(j)}${i === 0 ? `<br>${Math.ceil(j.left)} s` : ''}</button>`
+				: empty(),
 		);
 	}
 	const more = TECH.find((t) => (t.fx || []).some((f) => f.s === 'queue') && !G.P[0].techs.has(t.id)); // the next slot, locked: a tap says how to open it
 	if (more)
-		cells.push(
-			`<button class="slot lock" data-act="qlock:${more.id}" aria-label="A locked slot">🔒 Slot ${n + 1}</button>`,
-		);
+		cells.push(`<button class="slot dis" data-act="qlock:${more.id}" aria-label="A locked slot">🔒 Slot ${n + 1}</button>`);
 	return (
-		(b.q.length ? `<div class="slots" style="--qn:${cells.length}">${cells.join('')}</div>` : '') + // the line shows while something is in it (Build 61: six empty "Slot" buttons took the top of every card)
+		(b.q.length ? acts(cells.join(''), 'c6') : '') + // the line shows while something is in it (Build 61: six empty "Slot" buttons took the top of every card)
 		(b.blocked
 			? '<p><b>Needs room: House, Apartment or Aqueduct.</b></p>'
 			: b.stall > G.t
@@ -70,7 +69,7 @@ function nativesHTML() {
 		rel = G.rel[0][WILD],
 		P = (G.prisoners || []).filter((x) => x.o === 0);
 	let h = acts(
-		`<div class="lbl"><b>Natives</b><small>regard ${r} · ${REL_WORD[rel].toLowerCase()}</small></div>` +
+		info('Natives', `regard ${r} · ${REL_WORD[rel].toLowerCase()}`, 'left') +
 			NATIVE.gifts
 				.map((a) =>
 					btn(
@@ -165,7 +164,7 @@ function relHTML() {
 			continue;
 		}
 		h += acts(
-			`<div class="lbl"><b>${q.name}</b><small>${nl ? `hostile in ${nl} s` : q.ally !== null && q.ally !== 0 ? `with ${G.P[q.ally].name}` : q.civ ? CIVS[q.civ].name : ''}</small></div>` +
+			info(q.name, nl ? `hostile in ${nl} s` : q.ally !== null && q.ally !== 0 ? `with ${G.P[q.ally].name}` : q.civ ? CIVS[q.civ].name : '', 'left') +
 				['ally', 'peace', 'war']
 					.map((w) => {
 						const why = relWhy(0, q.id, w);
@@ -218,7 +217,7 @@ function workshopHTML(b) {
 				fr = w ? (w.st.got || 0) % 1 : 0,
 				state = !w ? 'nobody yet' : w.wait ? `waiting for ${kn}` : w.inside ? 'making' : 'walking in';
 			return (
-				`<div class="slots" style="--qn:3"><button class="slot${w ? '' : ' empty'}" disabled style="--p:${Math.round(fr * 100)}%">${nm(cur)}<br>${state}<i></i></button><button class="slot empty" disabled>${made} made</button><button class="slot empty" disabled>${r} ${kn} each</button></div>` +
+				acts(`<button class="slot ${w ? 'work' : 'dis'}" disabled style="--p:${Math.round(fr * 100)}%">${nm(cur)}<br>${state}</button>` + info(made, 'made') + info(`${r} ${kn}`, 'each'), 'c3') +
 				`<p>In store: ${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${kn} · ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} ${nm(cur).toLowerCase()} a minute when worked.</p>`
 			);
 		})()
@@ -232,7 +231,7 @@ function marketHTML(b) {
 	let h = '';
 	{
 		// one row a good: what you hold, sell a lot, buy a lot; the going price shows in the row (Build 61: two grids of the same goods were a mess)
-		h += `<div class="sec" style="margin-bottom:-2px">Trade · a lot is 100 of a resource, 10 of a good</div>`;
+		h += sec('Trade · a lot is 100 of a resource, 10 of a good');
 		for (const k of MKT_SELL) {
 			const canBuy = MKT_BUY.includes(k);
 			h += `<div class="qs trade"><b>${nm(k)} <small>${Math.floor(haveOf(p, k))} · ×${mkt(k).toFixed(2)}</small></b>${btn(`trade:sell:${k}`, `Sell +${sellPrice(0, k)}g`, '', haveOf(p, k) < LOT(k) ? 'dis' : '')}${canBuy ? btn(`trade:buy:${k}`, `Buy ${buyPrice(0, k)}g`, '', p.res.g < buyPrice(0, k) ? 'dis' : '') : '<span></span>'}</div>`;

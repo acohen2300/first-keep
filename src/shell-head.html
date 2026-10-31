@@ -4,257 +4,221 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <!--FONTS-->
 <style>
-/* One screen, a war table at night: the map fills it, and the tally and the orders float on top as woad-indigo pills with a gold hairline. */
+/* The one style sheet. The colours, the grid, the three text sizes and the four timings each live once, here in :root (COLORS.md names the
+   colours, MENU-SPEC.md draws the grid); every rule below reads them. Two layers: the parts, then the states on top, so a state always shows. */
 :root{
-  --ink:#160f09; --panel:#2a1d13; --panel2:#33241a; --line:#6b5230; --bone:#ece5d3; --mute:#c9bca2; --dim:#a89d86;   /* Build 64: one material, the cards' wood and cream, for the bars, the row and the cards alike (Albert) */
-  --blue:#4f93e6; --red:#de5a44; --gold:#e6b947;
-  --hb:calc(max(8px,env(safe-area-inset-top,0px)) + 78px); --ob:140px; --pad:8px;
-  --row:44px; --strip:28px; --t2:12px; --r:8px; --hair:var(--line); --sheet:rgba(42,29,19,.95);
-  --display:"IM Fell English SC", Georgia, "Times New Roman", serif;
-  --ui:"Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif;
-  color-scheme:dark;
-}
+  --brown-1:#2a1d13;--brown-2:#33241a;--brown-3:#6b5230;--cream-1:#ece5d3;--cream-2:#c9bca2;--gold-1:#e6b947;   /* the materials: card, slot fill, slot edge; words; quiet words; titles and the chosen ring */
+  --steel-1:#1e2329;--steel-2:#2a3038;--steel-3:#4d5a68;   /* the War and Train pages: the page, slot fill, slot edge */
+  --ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b;--ring-w:#e9ecef;   /* the colour code: blue ready, green working or done right, red wrong, white all is well */
+  --fill-1:#f2d27a;--fill-2:#b8862e;--ink:#2a1c10;   /* the gold fill of a card's one main action, and its words */
+  --work:color-mix(in srgb,var(--ring-g) 40%,var(--brown-2));   /* the working bar: the code's green on a slot, the strongest that keeps Cream 1 words readable (4.9:1) */
+  --shade:0 2px 8px rgba(0,0,0,.4);   /* the one shadow, under what floats over the map */
+  --gap:6px;--slot:44px;--rad:6px;   /* the grid (MENU-SPEC §1): one number, 6; every slot 44 tall; corners 6 */
+  --rank:calc(var(--slot) + var(--gap));--half:calc((var(--slot) - var(--gap)) / 2);--rad-o:calc(var(--rad) + var(--gap) / 2);   /* a rank 50; a half rank 19; an outline round slots 9, so the curves nest */
+  --fs-s:12px;--fs-m:15px;--fs-l:19px;   /* three text sizes: labels and subtitles; buttons and values; titles and the big moments */
+  --t-quick:.15s;--t-sweep:.4s;--t-settle:1.2s;--t-long:2.4s;   /* the four timings (Build 66, SoRen's names): a state changes, a thing moves, a thing comes to rest, two rests. The code reads these too */
+  --hb:calc(env(safe-area-inset-top,0px) + var(--gap) * 2 + var(--slot) + var(--half));   /* the top: the bar at 6, gap 6, the strip */
+  --ob:100px;   /* the row's height, measured by fit() */
+  --display:"IM Fell English SC",Georgia,"Times New Roman",serif;--ui:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  color-scheme:dark}
 html,body{height:100%}
 [hidden]{display:none!important}
-body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--ui);font-size:15px;overflow:hidden;
-  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@layer parts,states;
+@layer parts{
+body{margin:0;background:var(--brown-1);color:var(--cream-1);font-family:var(--ui);font-size:var(--fs-m);overflow:hidden;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 #app{height:100%;position:relative;max-width:560px;margin:0 auto}
-/* One mold for every control: .cell. A pill is a row of cells touching; a tile is one cell in its own box. Icon on the top line, word on the second, the same two spots everywhere. */
-#hud{position:absolute;top:max(8px,env(safe-area-inset-top,0px));left:0;right:0;box-sizing:border-box;padding:0 var(--pad);display:flex;flex-direction:column;gap:4px;pointer-events:none}#hud>*{pointer-events:auto}
-.pill{display:flex;box-sizing:border-box;height:calc(var(--row) + 2px);border:1px solid var(--hair);border-radius:var(--r);background:var(--sheet);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.cell{position:relative;flex:1 1 0;min-width:0;height:var(--row);box-sizing:border-box;color:var(--bone)}
-button.cell{all:unset;box-sizing:border-box;position:relative;flex:1 1 0;min-width:0;height:var(--row);color:var(--bone);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
-.pill .cell+.cell::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--hair)}
-.gl{position:absolute;left:50%;top:13px;width:20px;height:20px;transform:translate(-50%,-50%);display:block}
-.wd{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);text-align:center;font-size:var(--t2);font-weight:700;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
-#card td.low{color:var(--red)}
+/* The slot: every button is one, Brown 2 with a Brown 3 edge, 44 tall, corners 6; a bold word, and its quiet line under it */
+button{font:inherit;color:var(--cream-1);background:var(--brown-2);border:1px solid var(--brown-3);border-radius:var(--rad);min-height:var(--slot);padding:2px 4px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;touch-action:manipulation;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color var(--t-quick),box-shadow var(--t-quick)}
+button:focus-visible{outline:2px solid var(--gold-1);outline-offset:1px}
+button b{font-weight:700;font-size:var(--fs-m);text-wrap:balance}
+button b .ti{width:14px;height:14px;vertical-align:-2px;margin-right:5px}
+button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+button.ghost{visibility:hidden}
+.gl{display:block;width:20px;height:20px}
+/* The Formation (MENU-SPEC §2, §3): twelve half slots across, ranks 44 tall, 6 between everything. A cell is one slot, unless its block lays
+   fewer a rank (c1 a banner, c2 halves, c3 thirds, c4 one and a half each) or the cell names its own span (h a half slot, s15, s2, s3, s6;
+   r2 a pillar two ranks tall). A rank whose words cannot fit grows instead of spilling over: a card to redraw, never a rule to bend. */
+.fm{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-rows:minmax(var(--slot),auto);gap:var(--gap)}
+.fm:empty{display:none}
+.fm>*{grid-column:span 2;min-width:0}
+.fm.c1>*{grid-column:span 12}.fm.c2>*{grid-column:span 6}.fm.c3>*{grid-column:span 4}.fm.c4>*{grid-column:span 3}
+.fm>.h{grid-column:span 1}.fm>.s1{grid-column:span 2}.fm>.s15{grid-column:span 3}.fm>.s2{grid-column:span 4}.fm>.s3{grid-column:span 6}.fm>.s6{grid-column:span 12}.fm>.r2{grid-row:span 2}
+/* the info cell: no frame; the value in Cream 1 at 15, its label in Cream 2 at 12 under it. Numbers centre; a sentence (left) aligns left */
+.info{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.2;min-width:0}
+.info b{font-size:var(--fs-m);font-weight:700;color:var(--cream-1)}.info small{font-size:var(--fs-s);color:var(--cream-2)}
+.info.left{align-items:flex-start;text-align:left}
+/* The top (MENU-SPEC §5): one framed bar 44 tall at 6 from the top (and the safe area), gap 6, the strip a half rank. Each edge is drawn
+   inside its bar, so a cell of the bar is a whole 44 to tap, and a cell of the strip hangs 44 under its thin line */
+#hud{position:absolute;z-index:4;top:calc(env(safe-area-inset-top,0px) + var(--gap));left:0;right:0;box-sizing:border-box;padding:0 var(--gap);display:flex;flex-direction:column;gap:var(--gap);pointer-events:none}
+#hud>*{pointer-events:auto}
+.pill{display:flex;height:var(--slot);border-radius:var(--rad);background:var(--brown-1);box-shadow:inset 0 0 0 1px var(--brown-3),var(--shade);overflow:hidden}
+.cell{position:relative;min-width:0;height:var(--slot);box-sizing:border-box;padding:0;color:var(--cream-1)}
+.pill .cell{flex:1 1 0;background:none;border:0;border-radius:0;isolation:isolate}
+.pill .cell+.cell::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--brown-3)}
+.cell .gl{position:absolute;left:50%;top:13px;transform:translate(-50%,-50%)}
+.cell .wd{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);text-align:center;font-size:var(--fs-s);font-weight:700;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
 .cell.one .gl,.cell.one .wd{top:50%}.cell.one .gl{width:18px;height:18px}
-.pill .cell.on{background:#3a2a1c}
-#muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--mute)}
-#card .lvl{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}#card .lvl small{color:var(--mute)}
-
-
-
-#hud{z-index:4}
-/* The status pill (Build 64): the state of the world in the tally's mold, one cell under each store column, so the eye reads down a column. */
-#status{height:var(--strip);overflow:visible;align-items:flex-start}#status .cell{height:44px;display:flex;align-items:flex-start;justify-content:center;gap:2px;padding:0 1px;overflow:hidden;min-width:0}#status .cell .gl,#status .cell .wd{position:static;transform:none;width:auto;height:26px;line-height:26px;font-size:12px;white-space:nowrap}#status .cell span.gl{display:inline-flex;align-items:center}#status .cell .gl svg{position:static;transform:none;width:13px;height:13px}#status .cell .gl:empty{display:none}#status.pill .cell+.cell::before{top:6px;bottom:auto;height:14px}   /* thin to look at (28 px), 44 px to tap: the buttons hang below it, as the strip did */
-#status .cell.dim{color:var(--mute)}#status .cell.dim .wd{color:var(--mute)}#status .cell.lit-r .wd{color:var(--ring-r)}#status .cell.lit-b .wd{color:var(--ring-b)}#status .cell.lit-b{animation:glowb var(--t-long) ease-in-out infinite}@keyframes glowb{0%,100%{text-shadow:0 0 3px rgba(79,157,255,.35)}50%{text-shadow:0 0 12px rgba(79,157,255,1)}}
-/* The preview (Build 64): a message arrives the way a phone shows a text, over the map, and fades; nothing under it moves. The bar on its
-   left is the colour code: red wrong, green done, blue act on it, white news. */
-#pv{position:absolute;z-index:5;top:calc(var(--hb) + 6px);left:var(--pad);right:var(--pad);display:flex;align-items:stretch;min-height:44px;box-sizing:border-box;border:1px solid var(--hair);border-left:5px solid var(--cc,var(--ring-w));border-radius:var(--r);background:var(--sheet);box-shadow:0 4px 14px rgba(0,0,0,.45);color:var(--bone);transition:opacity var(--t-sweep)}
-#pv.fade{opacity:0}#pv button{all:unset;box-sizing:border-box;min-height:44px;cursor:pointer;touch-action:manipulation}
-#pv .t{flex:1;min-width:0;padding:4px 10px;display:flex;flex-direction:column;justify-content:center;font-size:15px;font-weight:600;line-height:1.2}
-#pv .t small{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}#pv .t span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#pv .x{width:44px;display:flex;align-items:center;justify-content:center;color:var(--mute)}#pv .x .gl{position:static;transform:none}
-#pv .ask{display:flex;gap:4px;padding:4px}#pv .ask button{padding:0 12px;border:1px solid var(--hair);border-radius:6px;display:flex;align-items:center;font-weight:700}
-#pv .ask button.yes{background:#3a2a1c}
-.hi{width:16px;height:16px}
+#muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--cream-2)}
+#pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:var(--fs-s);font-weight:700;color:var(--gold-1)}
+#status{height:var(--half);overflow:visible;align-items:flex-start}
+#status .cell{height:var(--slot);display:flex;flex-direction:row;align-items:flex-start;justify-content:center;gap:2px;padding:0 1px;overflow:hidden}
+#status .cell .gl,#status .cell .wd{position:static;transform:none;width:auto;height:var(--half);line-height:var(--half);font-size:var(--fs-s);white-space:nowrap}
+#status .cell span.gl{display:inline-flex;align-items:center}#status .cell .gl svg{width:12px;height:12px}#status .cell .gl:empty{display:none}
+#status .cell+.cell::before{top:4px;bottom:auto;height:11px}
+@keyframes glowb{0%,100%{text-shadow:0 0 3px color-mix(in srgb,var(--ring-b) 35%,transparent)}50%{text-shadow:0 0 12px var(--ring-b)}}
+/* The preview (Build 64): a message arrives over the map the way a phone shows a text, and fades; its left edge is the colour code */
+#pv{position:absolute;z-index:5;top:calc(var(--hb) + var(--gap));left:var(--gap);right:var(--gap);display:flex;align-items:stretch;min-height:var(--slot);box-sizing:border-box;border:1px solid var(--brown-3);border-left:5px solid var(--cc,var(--ring-w));border-radius:var(--rad);background:var(--brown-1);box-shadow:var(--shade);color:var(--cream-1);transition:opacity var(--t-sweep)}
+#pv.fade{opacity:0}
+#pv button{all:unset;box-sizing:border-box;min-height:var(--slot);cursor:pointer;touch-action:manipulation}
+#pv .t{flex:1;min-width:0;padding:4px 10px;display:flex;flex-direction:column;justify-content:center;font-size:var(--fs-m);font-weight:600;line-height:1.2}
+#pv .t small{font-size:var(--fs-s);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cream-2)}#pv .t span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pv .x{width:var(--slot);display:flex;align-items:center;justify-content:center;color:var(--cream-2)}
+#pv .ask{display:flex;gap:4px;padding:4px}#pv .ask button{padding:0 12px;border:1px solid var(--brown-3);border-radius:var(--rad);display:flex;align-items:center;font-weight:700}
+/* The map, and what sits on it: the small map, the corner buttons, the bars that act on a pick or a placing, the quick action */
 #stage{position:absolute;inset:0;overflow:hidden;background:#20301c;touch-action:none}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 #vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse farthest-corner at 50% 50%,rgba(0,0,0,0) 42%,rgba(0,0,0,.3) 100%)}
-#mini{position:absolute;top:calc(var(--hb) + 8px);right:8px;width:86px;height:86px;border:1px solid rgba(236,229,211,.5);border-radius:4px;background:#000}
-#card.full{max-height:calc(100% - var(--ob) - var(--hb) - 14px)}
-#place{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(36,25,16,.95);border:1px solid var(--gold);border-radius:8px;padding:6px 6px 6px 10px;font-weight:700}
-#strip{position:absolute;display:flex;gap:4px;padding:4px;background:rgba(36,25,16,.95);border:1px solid var(--gold);border-radius:10px;z-index:5;max-width:calc(100% - 8px);overflow-x:auto}
-#strip[hidden]{display:none}#strip{flex-wrap:wrap}#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:12px;color:var(--mute);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}#strip button{min-height:44px;min-width:44px;padding:2px 8px;flex:0 0 auto}#strip button.ic{width:44px;padding:0;font-size:19px;font-weight:700}#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}#strip button.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:44px}#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--bone);font-size:14px}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:44px;padding:0}#strip .gl{position:static;transform:none;width:18px;height:18px;display:block}#strip{gap:4px;padding:4px}#strip button b{font-size:12px}#strip button small{font-size:12px}
-#place span{flex:1;min-width:0;line-height:1.25}
-#place button{min-height:44px;padding:0 12px}
-#card{box-sizing:border-box;position:absolute;left:6px;right:6px;bottom:calc(var(--ob) + 6px);max-height:min(62%,calc(100% - var(--ob) - var(--hb) - 14px));overflow-y:auto;background:rgba(42,29,19,.97);border:1px solid var(--line);border-radius:10px;padding:6px 8px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
-#card h3{font-family:var(--display);font-weight:400;font-size:20px;letter-spacing:.05em;color:var(--lamp);display:flex;align-items:center;gap:8px;line-height:1.1;min-height:44px;padding:0 96px 0 2px;margin:-6px 0 4px;border-bottom:1px solid var(--brass);position:sticky;top:-6px;z-index:2;background:linear-gradient(170deg,#3a2a1c,#34261a)}   /* the title stays at the top while the card scrolls, the book and the close over it (Build 60) */   /* as tall as the book and the close, so neither hangs over the first row */
-#card .who{font-family:var(--ui);font-size:13px;color:var(--mute);font-weight:700}
-#card p{margin:0;color:var(--mute);line-height:1.35;font-size:16px}
-#card p i{color:var(--bone);font-style:normal;font-weight:700}
-#card .fold{border-top:1px solid #2a332e;padding-top:2px}
-#card .fold summary{color:var(--mute);font-size:13px;min-height:44px;display:flex;align-items:center;cursor:pointer;list-style:none}
-#card .fold summary::-webkit-details-marker{display:none}
-#card .fold summary::before{content:'+';display:inline-block;width:18px;font-weight:700}
-#card .fold[open] summary::before{content:'−'}
-#card .fold p{margin-top:4px}
-#card .hp{height:5px;background:#0b0e0c;border-radius:3px;overflow:hidden}
-#card .hp i{display:block;height:100%}
-#card .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}#card .stats div{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:5px 4px;text-align:center;font-size:13px;line-height:1.15;min-height:44px}#card .stats small{display:block;color:var(--mute);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;margin-bottom:2px}
-#card .acts.menu .bk{position:relative}#card .acts.menu .bk>button:first-child{width:100%;min-height:92px;padding-top:6px;align-items:center}#card .acts.menu .bk img{display:block;width:40px;height:40px;margin:0 auto 2px}#card .acts.menu .bk button.pin:not(#cardX):not(#cardI){position:absolute;right:-4px;top:-4px;min-width:44px;min-height:44px;width:44px;height:44px;padding:0;border:0;background:none;box-shadow:none;color:var(--dim);display:grid;place-items:center}#card .acts.menu .bk button.pin svg{width:16px;height:16px}#card .acts.menu .bk button.pin.on:not(#cardX):not(#cardI){color:var(--lamp)}#card .acts.menu .bk.pinned>button:first-child{border-color:var(--lamp)}
-#card .acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;min-height:44px}#card .acts:empty{display:none}
-#card.sm{max-height:min(46%,calc(100% - var(--ob) - var(--hb) - 14px))}
-/* a row of six in a card: the same element as the bar below the map (Build 63) */
-#card .tiles{margin:2px 0}#card .tiles .tr{gap:4px}#card .tiles button.cell{background:var(--panel2);border:1px solid var(--line);box-shadow:none}#card .tiles button.cell.sel{border-color:var(--lamp)}#card .tiles .wd{color:var(--mute)}#card .tiles button.cell.dis{opacity:.45}
-#card .acts.c1{grid-template-columns:1fr}
-#card .acts.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
-#card .acts.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
-#card .sec{font-size:13px;color:var(--mute);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
-#card .g{border-top:1px solid var(--line);padding-top:5px;display:flex;flex-direction:column;gap:3px}
-#card .g b{font-size:16px;font-weight:700}
-#card .g small{color:var(--dim);font-size:13px;white-space:normal}
-#card table{color:var(--bone);border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13px;width:100%}
-#card td,#card th{padding:3px 4px;text-align:right;border-bottom:1px solid var(--line)}
-#card td:first-child,#card th:first-child{text-align:left}
-#card th{color:var(--mute);font-weight:700}
-#card .done{color:#9fd8b5}
-#card .chips{display:flex;flex-wrap:wrap;gap:5px}
-#card .chip{border:1px solid #4fb06a;box-shadow:inset 0 0 0 1px #4fb06a;color:#dcf5e8;border-radius:12px;padding:3px 9px;font-size:13px;font-weight:700}
-#card .dim{color:var(--mute)}
-#card .copy{text-align:center;font-size:13px;margin:2px 0 0}
-#cardBar{position:sticky;top:6px;height:0;margin-bottom:-4px;z-index:3;flex:none}
-#cardI{position:absolute;top:-12px;right:40px;min-height:44px;min-width:44px;padding:0;background:none;border:0;display:grid;place-items:center}   /* the book centred on the × line, as the × is */
-#cardX{position:absolute;top:-12px;right:-4px;min-height:44px;min-width:44px;padding:0;background:none;border:0;display:grid;place-items:center}#cardX svg,#cardI svg{display:block;margin:auto;position:static;transform:none}#cardX svg{width:26px;height:26px}   /* the book and the × both centred on the title line */#cardI svg{width:24px;height:24px}
-#end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(26,18,10,.88);text-align:center;padding:0 16px}
-#end h2{font-family:var(--display);font-weight:400;font-size:19px;margin:0}
-#end p{margin:0;color:var(--mute);font-size:15px}
-#card p.why{font-size:12px;line-height:1.25;margin:0}
-#endX .crowns{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:8px 0}
-#endX .crowns p{font-size:15px}#endX .crowns b{color:var(--bone)}
-#endX details{text-align:left}#endX summary{color:var(--mute);font-size:13px;min-height:44px;display:flex;align-items:center;cursor:pointer;list-style:none}#endX summary::-webkit-details-marker{display:none}#endX summary::before{content:'+';display:inline-block;width:18px;font-weight:700}#endX details[open] summary::before{content:'−'}
-#endX details p{font-size:12px;margin:2px 0}#endX details small{font-size:12px;color:var(--mute);margin-right:6px}
-#card .qs{display:grid;grid-template-columns:1fr 44px 76px 44px;gap:4px;align-items:center;margin:2px 0}
-#card .qs span{text-align:center;font-variant-numeric:tabular-nums;font-size:13px}
-#card .qs button{padding:0;font-size:20px;font-weight:700;min-height:44px}#card .qs.trade{grid-template-columns:1fr 104px 92px;margin:-1px 0;gap:2px}#card .qs.trade b{font-size:15px}#card .qs.trade b small{font-size:12px;color:var(--mute);font-weight:500}#card .qs.trade button:not(#cardX):not(#cardI){font-size:14px;min-height:44px;height:44px;padding:0 2px}#card .qs.trade button b{font-size:14px}
-#endActs{display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px}#endActs button small{white-space:normal}
-#orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--pad) max(8px,env(safe-area-inset-bottom,0px));pointer-events:none}
+#mini{position:absolute;top:calc(var(--hb) + var(--gap));right:var(--gap);width:86px;height:86px;border:1px solid color-mix(in srgb,var(--cream-1) 50%,transparent);border-radius:var(--rad);background:var(--brown-1)}
+.fab{position:absolute;z-index:3;width:var(--slot);height:var(--slot);padding:0;bottom:calc(var(--ob) + var(--gap));box-shadow:var(--shade)}
+.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}
+#emgB{right:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}#homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}
+#hudB{left:var(--c1x,var(--gap));width:var(--c1w,58px);flex-direction:row;gap:3px;font-weight:700}#hudB svg{position:static;transform:none}
+#stage.busy :is(#hudB,#homeB),#stage.picking #homeB{display:none}
+#place,#pickbar{position:absolute;z-index:3;left:var(--gap);right:var(--gap);bottom:calc(var(--ob) + var(--gap));box-sizing:border-box;display:flex;gap:var(--gap);padding:var(--gap);background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o);font-weight:700}
+#place{justify-content:space-between;align-items:center;padding-left:10px}#place span{flex:1;min-width:0;line-height:1.25}#place button{padding:0 12px}
+#pickbar{flex-direction:column;border-color:var(--ring-g)}#pickbar .pbTop,#pickbar .pbRow{display:flex;gap:var(--gap);align-items:center}#pickbar .pbRow:empty{display:none}#pickbar span{flex:1;min-width:0;line-height:1.25;padding-left:6px}#pickbar button{min-width:var(--slot);padding:0 10px}#pickbar .pbRow button{flex:1;padding:0 4px}#pickbar .gl{width:18px;height:18px}
+#strip{position:absolute;z-index:5;display:flex;flex-wrap:wrap;gap:4px;padding:4px;max-width:calc(100% - 8px);overflow-x:auto;background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o)}
+#strip .sn{flex:0 0 100%;width:0;min-width:100%;font-size:var(--fs-s);color:var(--cream-2);text-align:center;padding:0 4px 2px;white-space:normal;line-height:1.2}
+#strip button{min-width:var(--slot);padding:2px 8px;flex:0 0 auto}#strip button.ic{width:var(--slot);padding:0;font-size:var(--fs-l);font-weight:700}#strip button :is(b,small){font-size:var(--fs-s)}#strip .gl{width:18px;height:18px}
+#strip.panel{flex-direction:column;width:250px;align-items:stretch}#strip.panel button{width:auto;text-align:left}#strip.panel button.ic{align-self:flex-end;width:var(--slot)}
+#strip .dial{flex:0 0 100%;display:grid;grid-template-columns:1fr 44px 36px 44px;align-items:center;gap:4px;color:var(--cream-1);font-size:var(--fs-m)}#strip .dial span{text-align:center;font-weight:700}#strip .dial button{min-width:var(--slot);padding:0}
+#spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--brown-1);border:1px solid var(--brown-3);border-radius:var(--rad-o);box-shadow:var(--shade)}#spdPop button{min-width:52px}
+/* The row below the map (redrawn in its own part of Build 70): six slots on the grid, 6 to the screen edge, the − and + under a job half slots */
+#orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--gap) calc(env(safe-area-inset-bottom,0px) + var(--gap));pointer-events:none}
 #orders .tiles{pointer-events:auto}
-button.ghost{visibility:hidden}
-.tr{display:grid;grid-template-columns:repeat(var(--n,6),minmax(0,1fr));gap:6px}.tr>[hidden],.pill>[hidden]{display:none}
-
-.col{display:flex;flex-direction:column;gap:3px;min-width:0}.col>button.cell{flex:none}
-.pm{display:grid;grid-template-columns:1fr 1fr;gap:3px}
-.tiles button.cell{background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.tiles button.cell.sel{background:#3a2a1c;border-color:var(--mute)}
-.tiles button.cell.dis{color:var(--dim)}
-.tiles .st{font-size:19px;font-weight:700;line-height:calc(var(--row) - 2px);text-align:center}
-.tiles .top{position:absolute;left:0;right:0;top:13px;transform:translateY(-50%);display:flex;justify-content:center;align-items:center;gap:4px}
-.tiles .top .gl{position:static;transform:none;width:16px;height:16px}
-.tiles .top .c{font-size:15px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
-.tiles .wd{color:var(--mute)}.tiles .sel .wd{color:var(--bone)}
-#tPeople .gl{width:22px;height:22px}
-#tPeople .wd{color:var(--bone)}
-/* three tints the thumb learns (Build 61, Albert): people green, build timber-brown, jobs black */
-.tiles button.cell#buildT{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}.tiles button.cell#buildT.sel{background:linear-gradient(#7a5a2e,#4e3618);border-color:#c9a46a}
-/* the attack cards: the same dark glass, hairlines and one amber accent as the huddle bar */
-#jobs[hidden],#huddle[hidden]{display:none}
-/* the one row, three shapes (Build 63): join = two touching; whole = one tall button; the plain col is a tile over − and + */
-.col.join{gap:0}.col.join>button.cell:first-child{border-radius:var(--r) var(--r) 0 0}.col.join>button.cell:last-child{border-radius:0 0 var(--r) var(--r);border-top:0}
-#huddle .col.whole>button.cell.tall{height:calc(var(--row) * 2 + 3px)}#huddle .col.whole .top.thumb{top:30px}#huddle .col.whole .top.thumb img{width:40px;height:40px;display:block}#huddle .col.whole .wd{top:74px;font-size:10px;letter-spacing:.02em;white-space:normal;overflow-wrap:anywhere;line-height:1;padding:0 2px}#huddle .col.whole .top:not(.thumb){top:34px}#huddle .col.whole .top:not(.thumb) .gl{width:22px;height:22px}
-.tiles button.cell.no{background:#3a2a1c;border-color:#6b5230;color:var(--bone)}
-.tiles button.cell.build,.tiles button.cell.st.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}.tiles button.cell.build.dis{opacity:.5}
-.tiles button.cell.train.sel{border-color:#c9a46a}
-#orders:not(.pg-jobs){background:rgba(26,18,10,.84);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(201,164,106,.35)}   /* every page but Jobs on one brown backing, however you got there (Build 65) */
-/* the huddle: dark flat glass, hairlines, one amber accent; only while planning an attack. A lamp line on top of a button: red not set, green set */
-
-#huddle button.cell{position:relative;overflow:hidden;background:#2a1d13;border:1px solid rgba(201,164,106,.35);border-radius:10px;box-shadow:none;color:#ece5d3}
-#huddle .wd{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}#huddle .wd.mid{top:50%}
-#huddle .top .c{font-size:20px}
-#huddle .st.w{font-size:12px;letter-spacing:.08em;text-transform:uppercase;line-height:calc(var(--row) - 2px)}
-#huddle .bar::after,#huddle .msn:not(.empty):first-child::after{content:'';position:absolute;left:10px;right:10px;top:0;height:3px;border-radius:0 0 3px 3px;background:var(--mc,#e0503f)}
-
-
-
-#huddle .cell.sel{border-color:#ffb23d}
-#huddle button.cell.sq.sel{background:linear-gradient(#54402a,#3a2a1c);border-color:#c9a46a}#huddle button.cell.go .wd,#huddle button.cell.go .gl{color:#9cc8ff}
-#huddle .msn{touch-action:none}#huddle .msn.empty{background:transparent;border-style:dashed}
+#orders:not(.pg-jobs){background:color-mix(in srgb,var(--brown-1) 84%,transparent);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--brown-3)}
+#orders:is(.pg-war,.pg-train){background:color-mix(in srgb,var(--steel-1) 84%,transparent)}
+.tr{display:grid;grid-template-columns:repeat(var(--n,6),minmax(0,1fr));gap:var(--gap)}
+.col{display:flex;flex-direction:column;gap:var(--gap);min-width:0}.col>button.cell{flex:none}
+.pm{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+.tiles button.cell{box-shadow:var(--shade)}
+.tiles .st{font-size:var(--fs-l);font-weight:700;line-height:calc(var(--slot) - 2px);text-align:center}
+.cell .top{position:absolute;left:0;right:0;top:13px;transform:translateY(-50%);display:flex;justify-content:center;align-items:center;gap:4px}
+.cell .top :is(.gl,svg){position:static;transform:none;width:16px;height:16px}
+.cell .top .c{font-size:var(--fs-m);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}.cell .top b.plus{font-size:var(--fs-m);font-weight:700;margin-left:2px}
+.tiles .wd{color:var(--cream-2)}
+#tPeople .gl{width:22px;height:22px}#tPeople .wd{color:var(--cream-1)}
+.col.join{gap:0}.col.join>button.cell:first-child{border-radius:var(--rad) var(--rad) 0 0}.col.join>button.cell:last-child{border-radius:0 0 var(--rad) var(--rad);border-top:0}
+#huddle .col.whole>button.cell.tall{height:calc(var(--slot) * 2 + var(--gap))}#huddle .col.whole .top.thumb{top:30px}#huddle .col.whole .top.thumb img{width:40px;height:40px;display:block}#huddle .col.whole .wd{top:74px;letter-spacing:.02em;white-space:normal;overflow-wrap:anywhere;line-height:1;padding:0 2px}#huddle .col.whole .top:not(.thumb){top:34px}#huddle .col.whole .top:not(.thumb) .gl{width:22px;height:22px}
+#huddle button.cell{overflow:hidden;box-shadow:none}
+#huddle .wd{font-size:var(--fs-s);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cream-2)}#huddle .wd.mid{top:50%}
+#huddle .top .c{font-size:var(--fs-l)}
+#huddle .st.w{font-size:var(--fs-s);letter-spacing:.08em;text-transform:uppercase;line-height:calc(var(--slot) - 2px)}
+#huddle .bar::after,#huddle .msn:not(.empty):first-child::after{content:'';position:absolute;left:10px;right:10px;top:0;height:3px;border-radius:0 0 3px 3px;background:var(--mc,var(--ring-r))}
+#huddle .msn{touch-action:none}
 #huddle .msn.lose{--pc:var(--ring-r);animation:hudPulse var(--t-settle) infinite}#huddle .msn.win{--pc:var(--ring-g);animation:hudPulse var(--t-settle) infinite}   /* losing and winning pulse alike; the colour says which */
-@keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc),0 0 10px var(--pc)}}
-@media (prefers-reduced-motion:reduce){#huddle .msn.lose,#huddle .msn.win{animation:none;border-color:var(--pc)}#huddle .blink{animation:none}}
-
-/* on the map: the corners, one look (.fab). Map top right, Home bottom left (only when away), Build bottom right */
-#spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}#spdPop[hidden]{display:none}#spdPop button{min-width:52px;min-height:44px}#spdPop button.cur{box-shadow:inset 0 0 0 2px var(--mute);border-color:var(--mute)}
-#tally button.cell{isolation:isolate}#tally button.cell.sel::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:7px;background:#3a2a1c;border:1px solid var(--mute)}   /* the on mark: a small tile inside the cell; ::before is the divider */
-#pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}
-button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--c1x,var(--pad));bottom:calc(var(--ob) + 4px);width:var(--c1w,50px);height:44px;padding:0;border-radius:var(--r);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:3px;color:var(--bone)}   /* exactly one column wide, over the first slot: the chip, People and the door read as one stack (Albert, Build 64) */#hudB svg{position:static;transform:none;width:20px;height:20px}#hudB b{font-weight:700}#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}
-.tiles button.cell.sq.sel{background:linear-gradient(#54402a,#3a2a1c);border-color:#c9a46a}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#stage.busy #hudB{display:none}
-#stage.busy #homeB{display:none}
-#stage.picking #homeB{display:none}
-#card .lbl{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.1;min-height:44px}#card .lbl b{font-size:16px}#card .lbl small{color:var(--mute);font-size:13px}
-#pickbar{position:absolute;left:8px;right:8px;bottom:calc(var(--ob) + 8px);display:flex;justify-content:space-between;align-items:center;gap:6px;background:rgba(36,25,16,.95);border:1px solid #5ad27a;border-radius:8px;padding:4px 4px 4px 10px;font-weight:700;z-index:3}
-#pickbar{flex-direction:column;align-items:stretch;gap:4px;padding:4px}#pickbar .pbTop,#pickbar .pbRow{display:flex;gap:4px;align-items:center}#pickbar .pbRow:empty{display:none}#pickbar span{flex:1;min-width:0;line-height:1.25;padding-left:6px}#pickbar button{min-height:44px;min-width:44px;padding:0 10px}#pickbar .pbRow button{flex:1;padding:0 4px}#pickbar .gl{position:static;transform:none;width:18px;height:18px;display:block}#pickbar button.on{border-color:var(--gold);color:var(--gold)}
-/* a building's line: one slot per order it can hold; a filled slot shows what is in it and how far along; tap one to cancel it */
-#card .slots{display:grid;grid-template-columns:repeat(var(--qn,5),minmax(0,1fr));gap:4px}
-#card .slot{position:relative;overflow:hidden;min-height:44px;padding:2px 3px;font-size:13px;line-height:1.1;text-align:center;border-radius:6px}
-#card button.slot.lock:not(#cardX):not(#cardI){border-style:dashed;background:transparent;box-shadow:none;color:var(--mute);font-size:13px}
-#card button.slot.empty{border-style:dashed;background:transparent;box-shadow:none;color:var(--dim)}
-#card .slot i{position:absolute;left:0;bottom:0;height:3px;background:#8e1d14;width:var(--p)}
-button{font:inherit;color:var(--bone);background:var(--panel);border:1px solid var(--line);border-radius:8px;min-height:46px;padding:4px 6px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;touch-action:manipulation;cursor:pointer}
-button:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
-button b{font-weight:700;font-size:15px;white-space:nowrap}
-button b .ti{width:14px;height:14px;vertical-align:-2px;margin-right:5px}
-button small{font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
-#card button small{white-space:normal;text-align:center;line-height:1.15}
-button.dis{color:var(--dim)}
-button.dis small{color:var(--dim)}
-button.on{background:#3a2a1c;border-color:var(--mute)}
-button.go{border-color:var(--blue);color:#dbe9ff}
-button.warn{border-color:var(--red)}
-button.ok{border-color:#4fb06a;box-shadow:inset 0 0 0 1px #4fb06a;color:#dcf5e8}
-button.ok small{color:#8fd4a4}
-/* The card is the war table: lacquered wood and brass, one material with the tally and the strip; the chosen tab is the lit lantern, what you can do now wears a brass rim. Colours set once here; every rule inside the card reads them. */
-#card{--bone:#ece5d3;--mute:#c9bca2;--dim:#a89d86;--panel:#2a1d13;--panel2:#2b1f15;--line:#6b5230;--brass:#8f7442;--lamp:#e6b947;--blue:#e6b947;--red:#c0392b;--gold:#e6b947;color:var(--bone);border:1px solid var(--brass);border-radius:10px;padding:6px 8px 8px;gap:4px;
-  background:linear-gradient(170deg,#3a2a1c,#241911 60%,#1c130d);box-shadow:inset 0 0 0 2px #241911,inset 0 0 0 3px var(--line),0 -6px 24px rgba(0,0,0,.5)}
+@keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc)}}
+@media (prefers-reduced-motion:reduce){#huddle .msn:is(.lose,.win){border-color:var(--pc)}}
+/* the row's tints: Jobs plain; War and Train in steel (COLORS.md). The hammer's timber and the people's green are the row's own until it is redrawn */
+:is(.tiles,#huddle) button.cell:is(.train,.war,.sq),#hudB:is(.war,.squad,.train),#strip button.war{background:var(--steel-2);border-color:var(--steel-3)}
+.tiles button.cell.build,#strip button.build,#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}
+#strip button.people{background:linear-gradient(#2b4a33,#1c3222);border-color:#4f7a56}
+/* The card (MENU-SPEC §1, §4): its slots on the screen's own grid, 6 from the edge and 6 from the row, its frame an outline down the middle
+   of that 6 (9, so the curves nest): a card of n ranks stands exactly n ranks tall. It rises from the row in whole ranks: its content
+   rounded up to the next rank (--rk, renderCard), at most every rank that fits above the row: a large card all of them (the preview steps
+   aside), a middle one 10 and a small one 8, each below the preview's rank under the strip */
+#card{position:absolute;left:calc(var(--gap) / 2);right:calc(var(--gap) / 2);bottom:calc(var(--ob) + var(--gap) / 2);box-sizing:border-box;padding:calc(var(--gap) / 2);
+  --capH:min(var(--cap) * var(--rank),round(down,100% - var(--ob) - var(--hb) - var(--gap) - var(--pv),var(--rank)));height:min(var(--capH),var(--rk,99) * var(--rank));
+  overflow-y:auto;scrollbar-width:none;background:var(--brown-1);border-radius:var(--rad-o);outline:1px solid var(--brown-3);outline-offset:-1px;box-shadow:var(--shade);color:var(--cream-1)}   /* the edge an outline, drawn over what scrolls */
+#card.lg{--cap:99;--pv:0px}#card.md{--cap:10;--pv:var(--rank)}#card.sm{--cap:8;--pv:var(--rank)}
 .night #card{filter:brightness(.88)}
-#card button:not(#cardX):not(#cardI){position:relative;background-color:#312218;background-image:linear-gradient(#3b2b1d,#2a1d13);border:1px solid var(--brass);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,220,150,.18);color:var(--bone);min-height:44px;padding:3px 5px}
-#card button.dis{border-color:#4a3a28;background:transparent;box-shadow:none;color:#bfb49c}#card button.done:not(#cardX):not(#cardI){opacity:.55;border-style:solid;border-color:#5a4a30}#card .chipsrow button.done:not(.on):not(#cardX):not(#cardI){opacity:.5}#card button.dis b{color:#bfb49c}   /* what you cannot: flat on the table */
-#card button.nope:not(#cardX):not(#cardI){border-color:var(--red);box-shadow:0 0 12px rgba(220,70,50,.7),inset 0 0 8px rgba(220,70,50,.35)}
-#card small.need,#card small.can{color:var(--gc);font-weight:700}#card button.go small.can{color:inherit}   /* a cost on the one gradient; a go button already says it */
-
-#card button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;box-shadow:0 0 14px rgba(242,210,122,.5)}#card button.on small{color:#4a3518}
-#card button.warn{border-color:var(--red);color:#ffb3a7}
-#card button.ok{color:#dcf5e8}#card button.ok small{color:#8fd4a4}
-#card .done{color:#9fd8b5}
-#card .chip{border-color:#4fb06a;box-shadow:none;background:rgba(79,176,106,.14);color:#dcf5e8}
-#card .fold{border-top-color:#4a3a28}
-#card .infoP{background:rgba(0,0,0,.28);border:1px solid #4a3a28;border-radius:6px;padding:5px 8px;display:flex;flex-direction:column;gap:4px}
-#card .acts.c5{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}#card .acts.c6{grid-template-columns:repeat(6,minmax(0,1fr));gap:3px}#card .menu button b{font-size:13px}
-/* the menu's categories: file tabs standing on a brass rule; the open one is lit and runs into the page */
-#card .chipsrow{gap:3px;border:0;border-bottom:1px solid var(--brass);border-radius:0;overflow:visible;background:none;align-items:end;padding-top:4px}
-#card .chipsrow button:not(#cardX):not(#cardI){min-height:44px;padding:2px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;box-shadow:none;background:#2b1f15;margin-bottom:-1px}
-#card .chipsrow button+button::before{content:none}
-#card .chipsrow b{font-size:13px}
-#card .chipsrow button.on:not(#cardX):not(#cardI){min-height:48px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);border-color:#f2d27a;box-shadow:0 0 12px rgba(242,210,122,.45)}#card .chipsrow button.on b{color:#2a1c10}
-#card .q{font:inherit;font-size:16px;color:var(--bone);background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:6px;min-height:44px;padding:4px 10px;width:100%;box-sizing:border-box}#card .row{display:flex;gap:12px;align-items:center}#card .look{color:var(--lamp);font-weight:700;min-height:44px;display:inline-flex;align-items:center}#card .row .lnk{width:auto}
-#card .acts.set{grid-template-columns:58px repeat(4,minmax(0,1fr));gap:4px}#card .acts.set .lbl b{font-size:13px}#card .acts.set .lbl{min-height:44px}#card .acts.set button:not(#cardX):not(#cardI){min-height:44px}
-#card .seg{display:flex;align-items:center;gap:6px;min-height:44px}#card .seg>b{flex:0 0 78px;font-size:13px}#card .seg2{display:grid;grid-template-columns:1fr 1fr;gap:6px}#card .seg2 .seg>b{flex-basis:40px}
-#card .segT{flex:1;min-width:0;position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));border:1px solid var(--brass);border-radius:22px;background:rgba(0,0,0,.3);padding:0;box-sizing:border-box}
-#card .segT button:not(#cardX):not(#cardI){position:relative;min-height:44px;padding:0 2px;background:none;border:0;box-shadow:none;border-radius:20px;font-weight:700;font-size:13px;color:var(--bone)}
-#card .segT button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;box-shadow:0 0 10px rgba(242,210,122,.4);border:0;transition:background-color var(--t-quick)}#card .segT button::after{content:none}
-@media (max-height:720px){#card.setup .civline{display:none}}   /* small phones: the people line and the challenge heading step aside, so the whole card fits on one page */
-#card .menu .cnt{font-size:13px;font-style:normal;font-weight:700;color:var(--mute)}
-#card.setup{gap:4px}#card.setup h3{min-height:36px}#card .acts.civs button:not(#cardX):not(#cardI){padding:0 1px}#card .acts.civs b{font-size:13px}
-#card .hzl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}#card button.tick.daily:not(#cardX):not(#cardI){width:100%;padding:0 10px;gap:8px}#card button.tick.daily b{flex:0 0 auto;text-transform:uppercase;letter-spacing:.05em;font-size:13px}#card button.tick.daily small{flex:1;min-width:0;text-align:left;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#card button.tick:not(#cardX):not(#cardI){flex:1;min-width:0;flex-direction:row;justify-content:flex-start;gap:5px;min-height:44px;padding:0 5px;background:transparent;box-shadow:none;border-color:#4a3a28}
-#card button.tick::before{content:'';flex:0 0 16px;height:16px;border:1.5px solid var(--brass);border-radius:3px;box-sizing:border-box}
-#card button.tick.on::before{content:'✓';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#2a1c10;background:var(--lamp);border-color:var(--lamp)}
-#card button.tick.on:not(#cardX):not(#cardI){background:transparent;color:var(--bone);border-color:var(--brass);box-shadow:none}#card button.tick.on small{color:var(--mute)}
-#card button.tick b{flex:1;text-align:left;font-size:13px;white-space:normal;line-height:1.1}#card button.tick small{flex:0 0 auto}
-
-#card button.big:not(#cardX):not(#cardI){min-height:52px;background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;border-color:#f2d27a;box-shadow:0 0 14px rgba(242,210,122,.45)}#card button.big small{color:#4a3518}#card button.big::after{content:none}#card button.big b{font-size:20px;letter-spacing:.04em}
-#card button.lnk:not(#cardX):not(#cardI){min-height:44px;width:100%;padding:0;background:none;border:0;box-shadow:none;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;text-align:left}
-#card .tabs{gap:3px;margin-bottom:0}
-#card .tabs button:not(#cardX):not(#cardI){border-radius:8px 8px 0 0}
-#card button[class*=" a"]::before,#card button[class^="a"]::before{content:'';position:absolute;left:10px;right:10px;top:4px;height:3px;border-radius:2px;background:var(--age)}   /* a research step wears the colour of its age */
-#card button.a0{--age:#9a9890}#card button.a1{--age:#b5793a}#card button.a2{--age:#c9c2a6}#card button.a3{--age:#4d6b9e}#card button.a4{--age:#8e2f2a}
-#card button:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){background-color:transparent;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3 2h8v10H3zM5 5h4M5 7h4M5 9h3' fill='none' stroke='%23a9c4e6' stroke-width='1.2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:0 0,5px 5px;border-color:var(--line);box-shadow:inset 0 1px 0 rgba(170,200,240,.1)}
-#card button.dis:is([data-act^="tech:"],[data-act="age"]):not(#cardX):not(#cardI){background-color:transparent;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3 2h8v10H3zM5 5h4M5 7h4M5 9h3' fill='none' stroke='%237c8ea6' stroke-width='1.2'/%3E%3C/svg%3E");border-color:var(--line);box-shadow:none}
-
-@media (max-width:400px){:root{--pad:6px}}
-@media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important;scroll-behavior:auto!important} }
-/* The military pages' tint (War, Squad, Train): one mid-brown, one rule (Build 65) */
-#strip button.war,.tiles button.cell.train,.tiles button.cell.st.train,#huddle button.cell.sq,#huddle button.cell.st.sq,#huddle button.cell.war,#huddle button.cell.st.war,#hudB.squad,#hudB.war,#hudB.train,.tiles button.cell.sq,.tiles button.cell.st.sq,.tiles button.cell.war,.tiles button.cell.st.war{background:linear-gradient(#3d2c1d,#2b1f15);border-color:#7a5f3a}
-/* The door (Build 64): the bottom of the row's first slot; its colour is the most important thing now, in the colour code */
-#orders button.cell.door{background:linear-gradient(#33241a,#2a1d13);border-color:#6b5230}
-/* The door (Build 64): the bottom of the first slot on Jobs; its state is the colour code's ring (the one ring rule below) and the same colour in its words */
-#orders button.cell.door{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px}#orders button.cell.door .top{position:static;display:inline-flex;transform:none;height:auto}#orders button.cell.door .top .gl{position:static;transform:none;width:15px;height:15px}#orders button.cell.door .wd{position:static;transform:none;font-size:12px;line-height:14px;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}
-#orders button.cell.door .dn{position:absolute;top:1px;right:2px;min-width:12px;padding:0 3px;border:1.5px solid var(--ring-r);border-radius:8px;background:var(--panel);color:var(--ring-r);font-size:12px;line-height:13px}   /* how many need you: a ring round the number */
-#orders button.cell.door.pulse{animation:doorp var(--t-settle) ease-out 1}@keyframes doorp{0%{box-shadow:0 0 0 0 rgba(255,255,255,.75)}100%{box-shadow:0 0 0 14px rgba(255,255,255,0)}}
-#orders :is(button.blue,button.st-blue,button.go) .wd,#orders button.blue,#orders button.go{color:var(--ring-b)}#orders button.st-green .wd{color:var(--ring-g)}#orders :is(button.red,button.st-red) .wd,#orders button.red{color:var(--ring-r)}   /* in the row a state's words wear its ring's colour; a card keeps its own words */
-#card .acts .trow{display:flex;gap:3px;min-width:0}#card .trow>button:first-child{flex:1;min-width:0}#card .trow button.goto:not(#cardX):not(#cardI){flex:0 0 44px;width:44px;min-height:44px;padding:0;font-size:22px;font-weight:700;color:var(--lamp);border:1px solid var(--line);border-radius:8px;background:transparent;box-shadow:none}
-/* The mail: each line with its colour on its left edge */
-#card .mrows{display:flex;flex-direction:column;gap:4px}#card button.mr:not(#cardX):not(#cardI){min-height:44px;padding:4px 8px;align-items:flex-start;text-align:left;border-left:4px solid var(--cc)}#card button.mr b{font-size:13px;font-weight:600}#card button.mr small{font-size:12px;color:var(--mute)}
-/* The one ring (Build 64, Albert: "a ring and a glow, never a fill"; "one or two rings"): every state anywhere is this ring in its
-   colour, the colour code's three: blue available, green active or done, red wrong. One rule; a control only names its state. */
-:root{--ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b;--ring-w:#e9ecef;--t-quick:.15s;--t-sweep:.4s;--t-settle:1.2s;--t-long:2.4s}   /* the colour code's one home (Build 65), and the four timings, as SoRen names them (Build 66): quick, a state changes; sweep, a thing moves; settle, a thing comes to rest; long, two settles. The code reads these too */
-:is(#orders,#card,#strip) :is(button.go,button.blue,button.st-blue):not(#cardX):not(#cardI){--rc:var(--ring-b)}
-:is(#orders,#card,#strip) :is(button.ok,button.st-green):not(#cardX):not(#cardI){--rc:var(--ring-g)}
-:is(#orders,#card,#strip) :is(button.red,button.st-red):not(#cardX):not(#cardI){--rc:var(--ring-r)}
-:is(#orders,#card,#strip) :is(button.go,button.blue,button.st-blue,button.ok,button.st-green,button.red,button.st-red):not(#cardX):not(#cardI){border-color:var(--rc);box-shadow:inset 0 0 0 1px var(--rc),0 0 10px color-mix(in srgb,var(--rc) 50%,transparent)}
+.cin{display:flex;flex-direction:column;gap:var(--gap)}
+/* the title bar (MENU-SPEC §4), one rank on every card: back · the name, slots 2 to 4 · the book · ×; the subtitle on the line under it.
+   It stays at the top while a long card scrolls under it */
+.tb{position:sticky;top:0;z-index:2;background:var(--brown-1);box-shadow:0 calc(var(--gap) / -2) 0 var(--brown-1),0 calc(var(--gap) / 2) 0 var(--brown-1)}
+.tb h3{margin:0;display:flex;align-items:center;padding:0 10px;background:var(--brown-2);border:1px solid var(--brown-3);border-radius:var(--rad);font:400 var(--fs-l)/1 var(--display);letter-spacing:.05em;color:var(--gold-1);white-space:nowrap;overflow:hidden}
+.tb svg{width:20px;height:20px}
+.sub{padding:0 8px;font-size:var(--fs-s);line-height:16px;color:var(--cream-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cin p{margin:0;color:var(--cream-2);line-height:1.35;font-size:var(--fs-m)}
+.cin p i{color:var(--cream-1);font-style:normal;font-weight:700}
+.cin p.why{font-size:var(--fs-s);line-height:1.25}
+.cin .dim{color:var(--cream-2)}.cin .done{color:var(--ring-g)}.cin .copy{text-align:center;font-size:var(--fs-s)}
+.cin .sec{font-size:var(--fs-s);color:var(--cream-2);letter-spacing:.06em;text-transform:uppercase}
+.cin .infoP{background:var(--brown-2);border:1px solid var(--brown-3);border-radius:var(--rad);padding:var(--gap) 8px;display:flex;flex-direction:column;gap:4px}
+.cin .hp{height:5px;background:var(--brown-2);border-radius:3px;overflow:hidden}.cin .hp i{display:block;height:100%}
+.cin .fold{border-top:1px solid var(--brown-2)}
+.cin .fold summary,#endX summary{color:var(--cream-2);font-size:var(--fs-m);min-height:var(--slot);display:flex;align-items:center;cursor:pointer;list-style:none}
+.cin .fold summary::-webkit-details-marker,#endX summary::-webkit-details-marker{display:none}
+.cin .fold summary::before,#endX summary::before{content:'+';display:inline-block;width:18px;font-weight:700}.cin .fold[open] summary::before,#endX details[open] summary::before{content:'−'}
+.cin .fold p{margin-top:4px}
+.cin button small{white-space:normal;text-wrap:balance}   /* in a card a long line wraps and its rank grows, never spills */
+.cin small.need,.cin small.can{color:var(--gc);font-weight:700}.cin button.go small.can{color:inherit}   /* a cost on the one gradient; a ready slot already says it */
+.cin table{color:var(--cream-1);border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:var(--fs-m);width:100%}
+.cin :is(td,th){padding:3px 4px;text-align:right;border-bottom:1px solid var(--brown-3)}.cin :is(td,th):first-child{text-align:left}
+.cin th{color:var(--cream-2);font-weight:700;font-size:var(--fs-s)}.cin td.low{color:var(--ring-r)}
+.cin .chips{display:flex;flex-wrap:wrap;gap:var(--gap)}
+.cin .chip{border:1px solid var(--ring-g);color:var(--cream-1);border-radius:var(--rad);padding:3px 9px;font-size:var(--fs-s);font-weight:700}
+/* a kind and its count (Attack with, a squad's plan): the name three slots · − · the count · +. A trade row: the good · Sell · Buy, two each */
+.qs{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--gap);align-items:center}
+.qs>*{grid-column:span 2;min-width:0}.qs>b{grid-column:span 6}.qs>span{text-align:center;font-variant-numeric:tabular-nums}
+.qs.hdr>*{font-size:var(--fs-s);color:var(--cream-2);font-weight:500}
+.qs.trade>*{grid-column:span 4}.qs.trade b small{font-size:var(--fs-s);color:var(--cream-2);font-weight:500}
+.cin .slot{font-size:var(--fs-s);line-height:1.1;padding:2px 3px}   /* a place in a building's line */
+/* a research step and its › to the building: two slots and one */
+.trow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--gap)}.trow>button{grid-column:span 4}.trow>.goto{grid-column:span 2;font-size:var(--fs-l);font-weight:700}
+/* a research step wears its age on its top edge */
+.cin button:is(.a0,.a1,.a2,.a3,.a4)::before{content:'';position:absolute;left:10px;right:10px;top:4px;height:3px;border-radius:2px;background:var(--age)}
+.cin .a0{--age:#9a9890}.cin .a1{--age:#b5793a}.cin .a2{--age:#c9c2a6}.cin .a3{--age:#4d6b9e}.cin .a4{--age:#8e2f2a}
+/* the Build menu (the cards' part of Build 70 redraws it): its tabs, then the buildings four a rank, with how many of how many */
+.cin .chipsrow button{padding:2px}.cin :is(.chipsrow,.menu) b{font-size:var(--fs-s)}
+.cin .menu .bk>button{width:100%;height:100%}.cin .menu .cnt{font-style:normal;color:var(--cream-2)}
+.cin .civs button{padding:0 1px}
+/* the mail: each line with its group's colour on its left edge */
+.cin .mrows{display:flex;flex-direction:column;gap:var(--gap)}
+.cin button.mr{align-items:flex-start;text-align:left;padding:4px 8px;border-left:4px solid var(--cc)}.cin .mr b{font-weight:600;white-space:normal}
+/* the guide and the history */
+.cin .g{border-top:1px solid var(--brown-3);padding-top:5px;display:flex;flex-direction:column;gap:3px}.cin .g b{font-size:var(--fs-m);font-weight:700}.cin .g small{color:var(--cream-2);font-size:var(--fs-s);white-space:normal}
+.cin .q{font:inherit;font-size:var(--fs-m);color:var(--cream-1);background:var(--brown-2);border:1px solid var(--brown-3);border-radius:var(--rad);min-height:var(--slot);padding:4px 10px;width:100%;box-sizing:border-box}
+.cin .row{display:flex;gap:12px;align-items:center}.cin .look{color:var(--gold-1);font-weight:700;min-height:var(--slot);display:inline-flex;align-items:center}.cin .row .lnk{width:auto}
+.cin button.lnk{width:100%;padding:0;background:none;border:0;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;align-items:flex-start;text-align:left}
+/* Setup's settings (only its title bar is new in Build 70): a label of one and a half slots, its choices one bar split by thin lines */
+.seg{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--gap);align-items:center}
+.seg>b{grid-column:span 3;font-size:var(--fs-s)}
+.segT{grid-column:span 9;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));border-radius:var(--rad);background:var(--brown-2);box-shadow:inset 0 0 0 1px var(--brown-3)}
+.segT button{padding:0 2px;background:none;border-color:transparent;font-weight:700}
+.segT button+button::before{content:'';position:absolute;left:-1px;top:8px;bottom:8px;width:1px;background:var(--brown-3)}
+.seg2{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}.seg2 .seg{grid-template-columns:repeat(6,minmax(0,1fr))}.seg2 .seg>b{grid-column:span 2}.seg2 .segT{grid-column:span 4}
+.tick{flex-direction:row;justify-content:flex-start;gap:6px;padding:0 6px}
+.tick::before{content:'';flex:0 0 16px;height:16px;box-sizing:border-box;border:1.5px solid var(--brown-3);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:var(--fs-s);font-weight:700;color:var(--gold-1)}
+.tick.on::before{content:'✓';border-color:var(--gold-1)}
+.tick b{flex:1;text-align:left;white-space:normal;line-height:1.1}.tick small{flex:0 0 auto}
+.tick.daily b{flex:0 0 auto;text-transform:uppercase;letter-spacing:.05em;font-size:var(--fs-s)}.tick.daily small{flex:1;min-width:0;text-align:left;overflow:hidden;text-overflow:ellipsis}
+@media (max-height:720px){#card.setup .civline{display:none}}   /* small phones: the people line steps aside, so Setup stays one page */
+/* The end of a game */
+#end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--gap);background:color-mix(in srgb,var(--brown-1) 90%,transparent);text-align:center;padding:0 var(--gap)}
+#end h2{font-family:var(--display);font-weight:400;font-size:var(--fs-l);margin:0}
+#end p{margin:0;color:var(--cream-2);font-size:var(--fs-m)}
+#endX .crowns{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:8px 0}#endX .crowns b{color:var(--cream-1)}
+#endX details{text-align:left}#endX details p{font-size:var(--fs-s);margin:2px 0}#endX details small{font-size:var(--fs-s);color:var(--cream-2);margin-right:6px}
+#endActs{display:flex;flex-direction:column;gap:var(--gap);width:100%;max-width:340px}#endActs button small{white-space:normal}
+}
+@layer states{
+/* The states (MENU-SPEC §9): one set for every slot anywhere, drawn over every part. A ring is the edge and one pixel more inside it.
+   go: blue ring, ready · on: gold ring, chosen · warn: red ring, danger (nope: a tap it cannot do, for a moment) · work: the green bar,
+   working, --p long · dis: dim, locked · empty: a fixed place with nothing in it · plain: nothing to say. One gold fill a card at most,
+   its main action: main. The chosen and the wrong say it in their words too */
+.go{--rc:var(--ring-b)}.on{--rc:var(--gold-1)}:is(.warn,.nope){--rc:var(--ring-r)}
+:is(.go,.on,.warn,.nope):not(.pill>*){border-color:var(--rc);box-shadow:inset 0 0 0 1px var(--rc)}
+:is(.on,.warn,.nope):not(.pill>*) :is(b,.wd),.segT .on{color:var(--rc)}
+.work{background-image:linear-gradient(90deg,var(--work) var(--p,100%),transparent 0)}
+.dis:not(.pill>*){background:var(--brown-1);border-color:var(--brown-2)}.dis,.dis :is(b,.wd){color:var(--cream-2)}
+.empty{background:var(--brown-1);border:1px solid var(--brown-2);border-radius:var(--rad)}
+.main{background:linear-gradient(var(--fill-1),var(--fill-2)) var(--fill-1);border-color:var(--fill-1);color:var(--ink)}.main :is(b,small){color:var(--ink)}.main b{font-size:var(--fs-l)}
+/* the bar and the strip draw no frame round a cell: a chosen cell of the bar wears its ring inside, a cell of the strip says its state in its word */
+.pill>.on::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:var(--rad);box-shadow:inset 0 0 0 2px var(--rc)}
+#status>:is(.go,.warn) .wd{color:var(--rc)}#status>.go{animation:glowb var(--t-long) ease-in-out infinite}
+}
 </style>
 
 <div id="app">
@@ -266,22 +230,22 @@ button.ok small{color:#8fd4a4}
     <div class="pill" id="status"></div>
   </header>
   <div id="pv" hidden></div>
-  <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div><div class="tr" id="huddle" hidden></div></div></section>
+  <section id="orders" class="pg-jobs"><div class="tiles"><div class="tr" id="jobs"></div><div class="tr" id="huddle" hidden></div></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
     <button class="fab" id="emgB" data-act="card:emergency" aria-label="Emergency"></button>
     <button class="fab chip" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, Realm, Build, War, Squad, Train"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
-    
+
     <div id="strip" hidden></div>
     <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="wundo" id="placeUndo" hidden><b>Undo</b></button><button data-act="cancel"><b>Cancel</b></button></div>
-    <div id="card" hidden></div>
+    <div id="card" hidden><div class="cin"></div></div>
     <div id="end" hidden>
       <h2 id="endT">Victory</h2>
       <p id="endP"></p>
       <div id="endX"></div>
-      <div class="acts c1" id="endActs"><button data-act="next" id="endNext" class="go"><b>Add another conquest</b><small>new map · keeps your age and research</small></button><button data-act="free" id="endFree"><b>Continue as free play</b><small>no clock, no victory</small></button><button data-act="again"><b>New game</b></button></div>
+      <div id="endActs"><button data-act="next" id="endNext" class="go"><b>Add another conquest</b><small>new map · keeps your age and research</small></button><button data-act="free" id="endFree"><b>Continue as free play</b><small>no clock, no victory</small></button><button data-act="again"><b>New game</b></button></div>
     </div>
   </div>
 

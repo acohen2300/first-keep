@@ -1,6 +1,19 @@
 // ═════ 07-text.js: every line of wording the game says ═════
 // ───────────────────────── Why it is so: the history behind each row ─────────────────────────
 // Dates are "about" unless exact; where historians disagree the text says so. Each line credits more than one place where the record allows.
+// A card's title where the full name does not fit slots 2 to 4 of the title bar at 375 pt (MENU-SPEC §4; the gate measures every title the
+// game can show). The full name stays on the card, on the line under the bar.
+const TITLE_SHORT = {
+	'Karakorum and the Silver Tree': 'Karakorum',
+	'Great Stupa at Sanchi': 'Great Stupa',
+	'Djinguereber Mosque': 'Djinguereber',
+	'Apadana of Persepolis': 'Apadana',
+	'Mongol horse archer': 'Horse archer',
+	'Maurya war elephant': 'War elephant',
+	'Han crossbowman': 'Crossbowman',
+	'Elite crossbowman': 'Crossbowman', // the Han crossbowman's elite rank
+	'Something went wrong': 'Error',
+};
 // the ledger's words (earn and spend, 08-core)
 const LEDGER_WORD = {
 	gather: 'gathered',

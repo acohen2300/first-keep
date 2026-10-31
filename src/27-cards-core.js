@@ -2,7 +2,12 @@
 // ───────────────────────── The cards: one engine, one table ─────────────────────────
 // A card is a page of the book. CARDS[type] writes its page from the game's tables; the engine lays the new page over the old one
 // node by node, so only the words and numbers that changed are touched and a button under a finger stays the same button.
-function openCard(c) {
+// Back (MENU-SPEC §4): a card opened by a tap inside another card remembers the card it came from (c.from); back returns to it, and on
+// the first card it closes. The chain lives on the card itself, so closing it, or a new game, clears it. Another kind of card is another
+// page; the same kind is the same page turning (a tab, a guide page), which keeps where it came from.
+let cardTap = false; // the tap being handled was inside a card (the click handler, 33-verbs)
+function openCard(c, back) {
+	if (!back) c.from = cardTap && G.card ? (G.card.type === c.type ? G.card.from : G.card) : null;
 	hideStrip();
 	G.techTip = null;
 	G.qs = { from: 'all', n: {} }; // the Attack-with counts start fresh on every card
@@ -81,16 +86,34 @@ function patchHTML(el, html) {
 	tpl.innerHTML = html;
 	patchKids(el, tpl);
 }
-// ── the pieces every card is made of
+// A card rises from the row in whole ranks (MENU-SPEC §1): its height is its content rounded up to the next rank, never more than its size
+// allows (the style sheet's --capH). One observer sees every change of the content: a new page, a fold opened, the font arriving.
+const cardIn = $('card').firstElementChild;
+new ResizeObserver(([e]) => {
+	const s = getComputedStyle(document.documentElement),
+		gap = parseFloat(s.getPropertyValue('--gap')),
+		rank = parseFloat(s.getPropertyValue('--slot')) + gap;
+	$('card').style.setProperty('--rk', Math.max(1, Math.ceil((e.contentRect.height + gap) / rank)));
+}).observe(cardIn);
+// ── the pieces every card is made of. The slot is a button; the Formation lays them (MENU-SPEC §2, §3); the states are classes (§9):
+// go ready (blue ring), on chosen (gold ring), warn danger (red ring), work in progress (the green bar, --p long), dis locked (dim),
+// main the card's one main action (the gold fill). A cell's span is a class too: h, s15, s2, s3, s6, and r2 for a pillar.
 const cap1 = (t) => (t && t.indexOf('<') < 0 ? t.replace(/(^|· )([a-z])/g, (m, a, c) => a + c.toUpperCase()) : t); // sentence case: a capital opens every label and every part after a dot
 const btn = (act, title, sub, cls, fr) =>
 	`<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small${fr === undefined ? '' : ` class="${fr < 1 ? 'need' : 'can'}" style="--gc:${costCol(fr)}"`}>${cap1(sub)}</small>` : ''}</button>`; // a cost line on the one gradient (fr: what you have of it, 0 to 1): red at nothing, white near, light green when you can pay
+// the Formation, the one helper that lays cells: twelve half slots across, ranks 44 tall, 6 between. cls says how many cells a rank holds
+// (c1 one, c2 two (the default), c3 three, c4 four, c6 six; c5 lays five singles and leaves the sixth place); a cell's span class overrides it
+const acts = (h, cls = 'c2') => `<div class="fm ${cls}">${h}</div>`;
+// the info cell: no frame; the value in Cream 1 at 15, its label in Cream 2 at 12 under it. cls: its span, and left for a sentence
+const info = (value, label, cls = '') => `<div class="info ${cls}"><b>${value}</b>${label ? `<small>${label}</small>` : ''}</div>`;
+// a fixed place with nothing in it: a faint plain outline (never dashed)
+const empty = (cls = '') => `<div class="empty ${cls}"></div>`;
 const FOLD = new Set(); // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 // the book entry of a research step: the date, what it changed, and its weight, which is its cost
 const techBook = (t) =>
 	`<p><b>${t.name}</b>${t.when ? ` · ${t.when}` : ''}${t.w ? ` · weight ${t.w} of 10` : ''}: ${t.desc}${WHY[t.id] ? ` ${WHY[t.id]}` : ''}${t.w ? ` Cost and time ×${(0.5 + 0.1 * t.w).toFixed(1)} for its age.` : ''}</p>`;
 const twoTabs = (key, opts, cur) =>
-	`<div class="acts tabs">${opts.map(([k, t, sub]) => btn(`${key}:${k}`, (ICON.tab[k] || '') + t, sub, cur === k ? 'on' : '')).join('')}</div>`; // two-sided cards, one mold: two tabs; the chosen one is lit
+	acts(opts.map(([k, t, sub]) => btn(`${key}:${k}`, (ICON.tab[k] || '') + t, sub, cur === k ? 'on' : '')).join('')); // two-sided cards, one mold: two tabs; the open one rings gold
 const INFO = new Set(['why', 'bmore', 'about', 'menu', 'bnabout']);
 let infoBuf = []; // the explaining text of a card waits behind the book icon
 const fold = (id, title, html) =>
@@ -102,17 +125,29 @@ const fold = (id, title, html) =>
 const hpBar = (f, col) =>
 	`<div class="hp"><i style="width:${Math.round(100 * clamp(f, 0, 1))}%;background:${col}"></i></div>`;
 const sec = (t) => `<div class="sec">${t}</div>`;
-// a row of six in a card: the same mold as the bar below the map (Build 63). Each slot: [act, icon, word, cls] or null for an empty slot
+// a rank of six icon cells in a card, the bar below the map's mold (Build 63): an icon over a word. Each [act, icon, word, cls], or null for an empty place
 const rowHTML = (slots) =>
-	`<div class="tiles"><div class="tr">${slots
-		.map((s) =>
-			s
-				? `<div class="col whole"><button class="cell ${s[3] || ''}" data-act="${s[0]}">${s[1] ? `<span class="top">${s[1]}</span>` : ''}${wd(s[2])}</button></div>`
-				: '<div class="col whole"></div>',
-		)
-		.join('')}</div></div>`;
-const acts = (h, cls) => `<div class="acts${cls ? ' ' + cls : ''}">${h}</div>`;
-const title = (t, who) => `<h3>${t}<span class="who">${who}</span></h3>`;
+	acts(
+		slots
+			.map((s) => (s ? `<button class="cell ${s[3] || ''}" data-act="${s[0]}"><span class="top">${s[1]}</span>${wd(s[2])}</button>` : empty()))
+			.join(''),
+		'c6',
+	);
+// a card's name and subtitle: kept here and laid by renderCard as the title bar, which knows the book and the way back
+let cardHead = ['', ''];
+const title = (name, sub) => ((cardHead = [name, sub || '']), '');
+// The title bar (MENU-SPEC §4), one rank on every card: back · the name, slots 2 to 4 · the book · ×; the subtitle on the line under it.
+// A name too long for slots 2 to 4 shows its short one (TITLE_SHORT), its full name going to the subtitle. The book is dim on a card
+// without one, so nothing moves.
+function titleBar([name, sub], book, bookOn) {
+	const t = TITLE_SHORT[name] || name,
+		s = t === name ? sub : [sub, name].filter(Boolean).join(' · ');
+	return (
+		`<div class="tb fm"><button data-act="cardback" aria-label="Back">${ICON.back}</button><h3 class="s3">${t}</h3>` +
+		`<button data-act="info" class="${book ? (bookOn ? 'on' : '') : 'dis'}" aria-label="About this">${ICON.book}</button>` +
+		`<button data-act="close" aria-label="Close">${ICON.close}</button></div>${s ? `<div class="sub">${s}</div>` : ''}`
+	);
+}
 const unitLine = (o, k) => {
 	const S = stats(o, k),
 		U = UNIT[k];

@@ -173,17 +173,17 @@ function aimAt(sx, sy) {
 function aimColor() {
 	const H = G.hud,
 		h = H.h;
-	if (!h) return '#ffffff';
+	if (!h) return codeOf('w');
 	if (h.t === 'unit' || h.t === 'bld') {
 		const o = h.e.owner;
-		if (o === 0) return '#4fe0a0';
-		if (o === WILD || atWar(0, o)) return '#ff5a4a';
-		if (friendly(0, o)) return '#6fb1ff';
-		return '#ffffff';
+		if (o === 0) return codeOf('g');
+		if (o === WILD || atWar(0, o)) return codeOf('r');
+		if (friendly(0, o)) return codeOf('b');
+		return codeOf('w');
 	}
 	const near = nearU(h.e, 60, (v) => v.owner !== 0 && v.hp > 0 && hostile(v) && visibleTo0(v));
-	if (near || hazardAt(h.e.x, h.e.y)) return '#ff5a4a';
-	return '#ffffff';
+	if (near || hazardAt(h.e.x, h.e.y)) return codeOf('r');
+	return codeOf('w');
 }
 const hazardAt = (x, y) =>
 	(G.sand && hyp(x - G.sand.x, y - G.sand.y) < G.sand.r) ||
@@ -363,7 +363,7 @@ function mStatus(m) {
 	if (m.st === 'go') return [mmss(m.eta || 0), codeOf('b')];
 	if (m.st === 'act') return ['FIGHTING', odds2(m.odds)];
 	if (m.st === 'lost') return ['LOST', codeOf('r')];
-	return [m.late ? `LATE +${m.late}s` : '✓ DONE', m.late ? 'var(--gold)' : codeOf('g')]; // on its way blue, lost red, done green, late gold: the code
+	return [m.late ? `LATE +${m.late}s` : '✓ DONE', m.late ? 'var(--gold-1)' : codeOf('g')]; // on its way blue, lost red, done green, late gold: the code
 }
 const stB = (act, t, cls = '', extra = '') => `<button class="cell st ${cls}" data-act="${act}"${extra}>${t}</button>`;
 const cellB = (act, top, word, cls = '', extra = '') =>
@@ -405,7 +405,7 @@ function warPageHTML() {
 				`wsq:${i}`,
 				topOf(ICON.squad, cmd ? n : null),
 				word,
-				`msn${fl}${sel === i ? ' sel' : ''}${cmd ? '' : ' dis'}`,
+				`msn${fl}${sel === i ? ' on' : ''}${cmd ? '' : ' dis'}`,
 				` style="--mc:${color || 'transparent'}"`,
 			),
 			stB(`wback:${i}`, '−', m ? '' : 'dis', ' aria-label="Call back"'),
@@ -414,7 +414,7 @@ function warPageHTML() {
 	});
 	h += SPLIT(
 		stB('wfire', ICON.ok, canGo ? 'go' : 'dis', ' aria-label="Go"'),
-		stB('wabort', ICON.close, 'no', ' aria-label="Abort"'),
+		stB('wabort', ICON.close, '', ' aria-label="Abort"'),
 	);
 	return h;
 }
@@ -434,6 +434,7 @@ const NEEDS = {
 	hospital: () => G.units.some((u) => u.owner === 0 && u.sick > G.t) && !bldsOf(0, 'hospital').length && G.P[0].age >= 2,
 };
 const buildWants = () => Object.keys(NEEDS).filter((k) => NEEDS[k]());
+const stCls = (st) => ({ red: 'warn', blue: 'go', green: 'work' })[st] || ''; // the colour code's word, as its state (MENU-SPEC §9)
 // The Build page (Build 64): what the town needs, in the colour code. Blue: wanted and you can build it now; green: going up; red: wanted
 // but blocked, with the reason (what it is short of, or what it needs first); then your pinned favourites, white. The sixth is the Build card.
 function buildItems() {
@@ -462,7 +463,7 @@ function buildPageHTML() {
 		room = Math.max(0, capOf(0) - popOf(0));
 	let h = WHOLE('train:vil', topOf(ICON.people), `${V}/${V + room}`, trainWhy(0, 'vil') ? 'dis' : '', ' aria-label="Train a villager"'); // People, whole: the door lives on Jobs
 	for (const it of buildItems())
-		h += WHOLE(it.act, `<span class="top thumb">${bldThumb(it.k)}</span>`, it.word, `build st-${it.st || 'white'}`, ` aria-label="${BLD[it.k].name}${it.why ? ': ' + it.why : ''}"`);
+		h += WHOLE(it.act, `<span class="top thumb">${bldThumb(it.k)}</span>`, it.word, `build ${stCls(it.st)}`, ` aria-label="${BLD[it.k].name}${it.why ? ': ' + it.why : ''}"`);
 	h += WHOLE('buildrow', topOf(ICON.hammer), 'All', 'build', ' id="buildT" aria-label="The Build card"');
 	return h;
 }
@@ -532,7 +533,7 @@ function squadPageHTML() {
 				`sqtile:${t}`,
 				topOf(ICON.cls[c[0]], k && cmd ? `${have}/${want}` : '–'),
 				!cmd ? 'Command' : k ? shortName(k) : BLD[c[2]].name,
-				'sq' + (Q.tile === t ? ' sel' : '') + (built ? '' : ' dis'),
+				'sq' + (Q.tile === t ? ' on' : '') + (built ? '' : ' dis'),
 			),
 			stB(`sqn:${t},-`, '−', 'sq' + (built ? '' : ' dis')),
 			stB(`sqn:${t},+`, '+', 'sq' + (built ? '' : ' dis')),
@@ -548,7 +549,7 @@ function trainPageHTML() {
 	const H = G.hud,
 		rs = G.recruitSq;
 	let h = SPLIT(
-		stB('torders', ICON.aim, 'train' + (H.aim ? ' sel' : ''), ' aria-label="Orders: where new soldiers go"'),
+		stB('torders', ICON.aim, 'train' + (H.aim ? ' on' : ''), ' aria-label="Orders: where new soldiers go"'),
 		stB('tsq', `${ICON.squad}<b class="plus">${rs === undefined || rs === null ? '·' : BN[rs][0]}</b>`, 'train' + (hasCmd() ? '' : ' dis'), ' aria-label="Which squad new soldiers join"'),
 	); // the notebook: "Army training: train reinforcements without going home… must contain an Orders button"
 	CLS.forEach((c, t) => {
@@ -562,7 +563,7 @@ function trainPageHTML() {
 				`sqtile:${t}`,
 				topOf(ICON.cls[c[0]], at.length ? q.length : '–'),
 				!at.length ? 'none' : q.length ? mmss(first) : shortName(k),
-				'train' + (H.sq.tile === t ? ' sel' : '') + (at.length ? '' : ' dis'),
+				'train' + (H.sq.tile === t ? ' on' : '') + (at.length ? '' : ' dis'),
 			),
 			stB(`tq:${t},-`, '−', 'train' + (q.length ? '' : ' dis')),
 			stB(`tq:${t},+`, '+', 'train' + (why ? ' dis' : ''), why ? ` title="${why}"` : ''),
@@ -570,7 +571,7 @@ function trainPageHTML() {
 	});
 	h += SPLIT(
 		stB('tok', ICON.ok, H.aim ? 'go' : 'dis', ' aria-label="Set the orders on the crosshair"'),
-		stB('tcancel', ICON.close, 'no', ' aria-label="Cancel"'),
+		stB('tcancel', ICON.close, '', ' aria-label="Cancel"'),
 	);
 	return h;
 }
@@ -616,7 +617,7 @@ function drawReticle() {
 		eta = H.mode === 'rally' ? 0 : hudEta(),
 		line = (a, b, c, d) => (ctx.moveTo(x + a, y + b), ctx.lineTo(x + c, y + d));
 	ctx.save();
-	ctx.strokeStyle = ctx.fillStyle = L ? '#4fe0a0' : aimColor();
+	ctx.strokeStyle = ctx.fillStyle = L ? codeOf('g') : aimColor();
 	ctx.lineWidth = 1.5;
 	if (H.drag) {
 		ctx.globalAlpha = 0.14;
@@ -739,7 +740,7 @@ CARDS.squad = (c) => {
 			.join('');
 	return (
 		title(m.name, m.st === 'act' ? `fighting · ${Math.round(m.odds * 100)}% to win` : word.toLowerCase()) +
-		hpBar(hp, hp > 0.5 ? codeOf('g') : hp > 0.25 ? 'var(--gold)' : codeOf('r')) +
+		hpBar(hp, hp > 0.5 ? codeOf('g') : hp > 0.25 ? 'var(--gold-1)' : codeOf('r')) +
 		`<p><i>Health ${Math.round(hp * 100)}%</i> · ${S.length} of ${m.n0} standing · ${m.what.toLowerCase()} ${m.label}${m.st === 'go' ? `, ${mmss(m.eta || 0)} to arrive` : m.late ? `, ${m.late} s late` : ''} · ${paceWord(S)}</p>` +
 		`<table style="width:100%;border-collapse:collapse"><tr><th>Kind</th><th>Alive</th><th>Lost</th></tr>${rows}</table>` +
 		(slow < 0.98
@@ -870,9 +871,9 @@ function domains() {
 function realmPageHTML() {
 	const D = domains(),
 		un = G.mailN || 0;
-	let h = WHOLE('mail', topOf(ICON.mail), un ? `${un} new` : 'Mail', 'realm' + (un ? ' st-blue' : ''), ' aria-label="The mail"');
+	let h = WHOLE('mail', topOf(ICON.mail), un ? `${un} new` : 'Mail', 'realm' + (un ? ' go' : ''), ' aria-label="The mail"');
 	for (const d of D.list)
-		h += WHOLE(d.id === 'realm' ? 'card:emergency' : d.go, topOf(domainIcon()[d.id]), d.word, `realm st-${d.st}`, ` aria-label="${d.name}: ${d.word}${d.why ? ', ' + d.why : ''}"`);
+		h += WHOLE(d.id === 'realm' ? 'card:emergency' : d.go, topOf(domainIcon()[d.id]), d.word, `realm ${stCls(d.st)}`, ` aria-label="${d.name}: ${d.word}${d.why ? ', ' + d.why : ''}"`);
 	return h;
 }
 // where a destination is: a page of the row, or a card
@@ -905,7 +906,7 @@ function doorUI() {
 	if (!el) return;
 	if (el.sig !== sig) {
 		el.sig = sig;
-		el.className = 'cell st door ' + st;
+		el.className = 'cell st door ' + stCls(st);
 		el.children[0].innerHTML = icon;
 		el.children[1].textContent = word;
 		const pl = el.querySelector('.dn');

@@ -23,7 +23,7 @@ const CARDS = {
 							' · ' +
 							(P.lord === 0 ? (P.rebel ? 'in revolt' : 'your vassal') : REL_WORD[G.rel[0][b.owner]].toLowerCase()),
 			) +
-			(b.hp < M - 1 ? hpBar(b.hp / M, '#b3261a') : '') +
+			(b.hp < M - 1 ? hpBar(b.hp / M, 'var(--ring-r)') : '') +
 			((mine && b.prog >= 1) || (!mine && b.kind === 'keep') ? '' : `<p>${B.desc}</p>`); // their Town Center needs no blurb about yours
 		if (b.kind === 'wonder' && P.civ) h += `<p><i>${CIVS[P.civ].wonder}:</i> ${WHY['wonder:' + P.civ]}</p>`;
 		if (b.kind === 'throne' && !mine) h += BLD_PAGE.throne(b);
@@ -70,8 +70,7 @@ const CARDS = {
 				techs = trade ? [] : TECH.filter((t) => ownTech(t) && t.at === b.kind && isNext(0, t)),
 				done = trade ? [] : TECH.filter((t) => t.at === b.kind && p.techs.has(t.id)); // one step per line: the next
 			const ageB = kp && !trade ? keepAgeBtn() : '',
-				hasR = techs.length || done.length || ageB,
-				hd = (t) => (tr.length && hasR ? sec(t) : ''); // one page: Train, then Research; the next age is research like any other
+				hasR = techs.length || done.length || ageB; // one page: what it trains, then its research, no labels (MENU-SPEC §8); the next age is research like any other
 			if (kp)
 				h += twoTabs(
 					'ktab',
@@ -93,10 +92,9 @@ const CARDS = {
 						.map((s) => `${s.n} on ${cap1(s.r)}`)
 						.join(', ')}.</p>`;
 			}
-			if (tr.length) h += hd('Train') + acts(trainButtons(tr));
+			if (tr.length) h += acts(trainButtons(tr));
 			if (hasR)
 				h +=
-					hd('Research') +
 					acts(ageB + techs.map((t) => techBtn(t)).join('')) +
 					(done.length
 						? `<div class="chips">${done.map((t) => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>`
@@ -236,7 +234,13 @@ const CARDS = {
 		if (mine) {
 			// the villager's card, small and simple (Albert, Build 63): four stats, then the one row (Back, Stop, Home, Dismiss, Why), then the jobs as a row
 			h = title(S.name, 'yours') + hpBar(u.hp / u.max, P.color);
-			h += `<div class="stats"><div><small>Status</small>${statusOf(u)}</div><div><small>Age</small>${clock(G.t - (u.bornT || 0))}</div><div><small>Stats</small>hits ${Math.round(S.dmg * 10) / 10} · reach ${Math.round(S.rng)} · speed ${Math.round(S.spd)}</div><div><small>Health</small>${Math.round(u.hp)}/${Math.round(u.max)}</div></div>`;
+			h += acts(
+				info(statusOf(u), 'status', 'left') +
+					info(clock(G.t - (u.bornT || 0)), 'age') +
+					info(`hits ${Math.round(S.dmg * 10) / 10} · reach ${Math.round(S.rng)} · speed ${Math.round(S.spd)}`, 'stats') +
+					info(`${Math.round(u.hp)}/${Math.round(u.max)}`, 'health'),
+				'c4',
+			);
 			const can = !!(u.pj || u.was || G.P[0].rally);
 			h += rowHTML([
 				[`back:${u.id}`, ICON.back, 'Back', can ? '' : 'dis'],
@@ -252,7 +256,7 @@ const CARDS = {
 				null,
 			]);
 			h += rowHTML(
-				JOBS.map((j) => [`vjob:${u.id},${j}`, ICON[j], cap1(j), u.job === j ? 'sel' : '']).concat([
+				JOBS.map((j) => [`vjob:${u.id},${j}`, ICON[j], cap1(j), u.job === j ? 'on' : '']).concat([
 					[`buildrow`, ICON.hammer, 'Build', ''],
 				]),
 			);
@@ -360,7 +364,7 @@ const CARDS = {
 			title('Stores', 'the last minute') +
 			`<table><tr><th></th><th>Have</th><th>In</th><th>Out</th><th>On it</th></tr>${RES.map((r) => {
 				const k = KEY[r];
-				return `<tr data-act="storesk:${k}" class="${G.storesK === k ? 'sel' : ''}"><td>${RESOURCES[r].name}</td><td style="color:${grad(velOf(p, k))}">${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${ot[k] ? '−' + Math.round(ot[k]) : ''}</td><td>${V.filter((u) => u.job === r).length}</td></tr>`;
+				return `<tr data-act="storesk:${k}" class="${G.storesK === k ? 'on' : ''}"><td>${RESOURCES[r].name}</td><td style="color:${grad(velOf(p, k))}">${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${ot[k] ? '−' + Math.round(ot[k]) : ''}</td><td>${V.filter((u) => u.job === r).length}</td></tr>`;
 			}).join('')}</table>`;
 		if (G.storesK) {
 			// the drill-down (Albert, Build 63): a tapped row says why, both ways. By reason: where the minute's in and out came from and went.
@@ -431,7 +435,7 @@ const CARDS = {
 			// the people line opens on its history: tap it for why (Albert, Oct 29: put the Why back; one line, so the card still fits one page)
 			`<details class="fold civline" data-f="civwhy"${FOLD.has('civwhy') ? ' open' : ''}><summary><b>${short(SET.civ)}</b> · ${C.bonus}</summary>${`<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`}</details>` +
 			`<button class="tick daily${SET.daily ? ' on' : ''}" data-act="daily"><b>Daily challenge: level ${levelOf(TODAY_HZ)}</b><small>one map for all, today</small></button>` + // one tick, written out (Albert)
-			`<div class="hzl">${HZK.map((k) => `<button class="tick${H[k] ? ' on' : ''}" data-act="hz:${k}"><b>${HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small></button>`).join('')}</div>` +
+			acts(HZK.map((k) => `<button class="tick${H[k] ? ' on' : ''}" data-act="hz:${k}"><b>${HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small></button>`).join(''), 'c3') +
 			fold(
 				'about',
 				'What each hazard does',
@@ -447,7 +451,7 @@ const CARDS = {
 					SET.daily ? 'today' : 'fresh',
 					'Start',
 					`${C.name} · ${SET.daily ? 'daily challenge' : MODES[SET.mode].name} · level ${lv} · score ×${(1 + lv / 10).toFixed(1)}`,
-					'go big',
+					'main',
 				),
 				'c1',
 			) +
@@ -585,12 +589,6 @@ const CARDS = {
 			)
 		);
 	},
-	keep() {
-		const k = keepOf(0);
-		if (!k) return null;
-		G.card = { type: 'bld', id: k.id };
-		return CARDS.bld(G.card);
-	},
 	menu(c) {
 		const p = G.P[0],
 			M = MENUS.find((m) => m.id === c.id);
@@ -602,9 +600,8 @@ const CARDS = {
 				n = bldsOf(0, k).length,
 				full = !lock && n >= cp,
 				fits = G.buildAt && G.buildAt.hint === k;
-			const pinned = favKinds().includes(k);
 			return (
-				`<div class="bk${pinned ? ' pinned' : ''}">` +
+				`<div class="bk">` +
 				btn(
 					`build:${k}`,
 					B.short || bldName(0, k),
@@ -615,14 +612,12 @@ const CARDS = {
 							: !afford(p, B.cost)
 								? `short ${need(B.cost)}`
 								: (fits ? 'fits here · ' : '') + costText(B.cost),
-					lock ? 'dis' : full ? 'dis done' : !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
+					lock || full || !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
 					lock || full ? undefined : afford(p, B.cost) ? 1 : fillOf(B.cost),
-				)
-					.replace('<b>', '<b>')
-					.replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>') +
+				).replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>') +
 				'</div>'
 			);
-		}; // a picture, the name, how many of how many, the cost on one line; the star pins it to the Build page (Build 63)
+		}; // the name, how many of how many, the cost on one line
 		const most = Math.max(...MENUS.map((m) => m.items.length)),
 			ghosts =
 				'<div class="bk"><button class="ghost" disabled aria-hidden="true" tabindex="-1"><b>.</b><small>.</small></button></div>'.repeat(
@@ -638,7 +633,7 @@ const CARDS = {
 						`menu:${m.id}`,
 						(allBuilt ? '✓ ' : '') + m.name,
 						'',
-						(m.id === c.id ? 'on' : '') + (allBuilt ? ' done' : ''),
+						m.id === c.id ? 'on' : '',
 					);
 				}).join(''),
 				'c6 chipsrow',
@@ -726,15 +721,9 @@ const CARDS = {
 		);
 	},
 	sound() {
-		const row = (k, name, v) =>
-			acts(
-				btn(`vol:${k},-`, '−', '') +
-					`<div class="lvl"><b>${name}</b><small>${Math.round(v * 100)}%</small></div>` +
-					btn(`vol:${k},+`, '+', ''),
-				'c3',
-			);
+		const row = (k, name, v) => acts(btn(`vol:${k},-`, '−', '') + info(name, `${Math.round(v * 100)}%`) + btn(`vol:${k},+`, '+', ''), 'c3');
 		return (
-			`<h3>Sound</h3>` +
+			title('Sound', '') +
 			acts(
 				btn('sound', 'Sound', SND.on ? 'on' : 'off', SND.on ? 'on' : '') +
 					btn('vibe', 'Vibration', SET.vibe ? 'on' : 'off', SET.vibe ? 'on' : ''),
@@ -806,43 +795,35 @@ const CARDS = {
 	},
 };
 const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'end', 'research', 'menu']); // the cards that take the whole height
-// three sizes, one mold each (Albert, Build 63): lg the whole height (the Build card, the Guide, Help, Setup); md a thing's card; sm a short one
-const SIZE_OF = (t) =>
-	FULL.has(t) ? 'lg' : t === 'squad' || t === 'stores' || t === 'emergency' || t === 'army' ? 'sm' : 'md';
+// three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet: lg every rank that fits above the row (the Build
+// card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most
+const SIZE_OF = (t) => (FULL.has(t) ? 'lg' : t === 'squad' || t === 'stores' || t === 'emergency' ? 'sm' : 'md');
 function renderCard() {
 	const c = G.card;
 	if (!c || !CARDS[c.type]) return;
 	infoBuf = [];
+	cardHead = ['', ''];
 	let h = CARDS[c.type](c);
 	if (h === null) {
 		closeCard();
 		return;
 	}
-	const info = infoBuf.join(''),
-		bookOn = !!info && G.infoOpen;
-	if (bookOn) h = h.replace('</h3>', `</h3><div class="infoP">${info}</div>`);
-	const tip = G.techTip && TECHBY[G.techTip];
-	if (tip)
-		h = h.replace(
-			'</h3>',
-			`</h3><div class="infoP">${techBook(tip)}<p>Cost ${costText(tip.cost)} · ${tip.t} s to research.</p></div>`,
-		);
+	const book = infoBuf.join(''),
+		bookOn = !!book && G.infoOpen,
+		tip = G.techTip && TECHBY[G.techTip];
+	h =
+		titleBar(cardHead, !!book, bookOn) +
+		(bookOn ? `<div class="infoP">${book}</div>` : '') +
+		(tip ? `<div class="infoP">${techBook(tip)}<p>Cost ${costText(tip.cost)} · ${tip.t} s to research.</p></div>` : '') +
+		h;
 	if (h !== cardSig) {
 		cardSig = h;
-		patchHTML(
-			$('card'),
-			`<div id="cardBar">${
-				info
-					? `<button id="cardI" class="${bookOn ? 'on' : ''}" data-act="info" aria-label="About this">${ICON.book}</button>`
-					: ''
-			}<button id="cardX" data-act="close" aria-label="Close">${ICON.close}</button></div>` + h, // the close as an icon, the book's size and weight (Build 61: a 20 px × read tiny) // the book and the close ride a bar that stays at the top while the card scrolls (Build 60: they scrolled away on short phones)
-		);
+		patchHTML(cardIn, h);
 	}
 	const cc = G.card;
 	$('card').classList.toggle('setup', cc.type === 'setup');
 	const size =
 		cc.type === 'bld' && (G.blds.find((b) => b.id === cc.id) || {}).kind === 'market' ? 'lg' : SIZE_OF(cc.type);
-	$('card').classList.toggle('full', size === 'lg');
 	for (const s of ['lg', 'md', 'sm']) $('card').classList.toggle(s, size === s);
 	$('card').hidden = false;
 }

@@ -189,14 +189,14 @@ const refresh = () => {
 };
 function muteBtn() {
 	$('muteB').classList.toggle('off', !SND.on);
-	$('muteB').classList.toggle('sel', !SND.on);
+	$('muteB').classList.toggle('on', !SND.on);
 	$('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on');
 }
 function paceBtn() {
 	const pb = $('pauseB');
 	pb.innerHTML = (G.paused ? ICON.play : ICON.pause) + (G.speed > 1 ? `<span class="spd">×${G.speed}</span>` : '');
 	pb.setAttribute('aria-label', G.paused ? 'Play' : 'Pause');
-	pb.classList.toggle('sel', !!G.paused);
+	pb.classList.toggle('on', !!G.paused);
 }
 function setPause(v) {
 	G.paused = v;
@@ -205,7 +205,7 @@ function setPause(v) {
 }
 function applyMini() {
 	mini.hidden = !SET.mini;
-	$('mapT').classList.toggle('sel', !!SET.mini);
+	$('mapT').classList.toggle('on', !!SET.mini);
 	$('stage').classList.toggle('mapOn', !!SET.mini);
 }
 // the end of a game: the sim says who won and why; the screen shows it
@@ -348,7 +348,7 @@ function say(text, cls, secs, at, act, why, grp = 'reply') {
 		key = hushKey(text),
 		now = performance.now(),
 		show = Math.max(secs || 0, MSG.secs) * 1000,
-		reading = !!G.card && $('card').classList.contains('full'), // a full card: the line waits in the mail, counted, and red shows when it closes
+		reading = !!G.card && $('card').classList.contains('lg'), // a full card: the line waits in the mail, counted, and red shows when it closes
 		pre = !QUIET.has(cls) && (urg || (!hiddenG(grp) && !reading)),
 		pt = at ? { x: Math.round(at.x), y: Math.round(at.y) } : null,
 		same = M.find((m) => m.grp === grp && m.key === key && G.t - m.t < MSG.merge);
@@ -568,11 +568,11 @@ function ui(force) {
 			['', AGE_SHORT[p.age] || AGES[p.age].name, ''],
 			[sky, '', ''],
 			['', clk, ''],
-			['', `${popOf(0)}/${capOf(0)}`, popOf(0) >= capOf(0) && capOf(0) < POPMAX ? 'lit-r' : ''], // the number alone: 180/180 fits the 45 pt cell
-			['', `z ${idleN}`, idleN ? 'lit-r' : 'dim'],
-			[ICON.book, String(ready), ready ? 'lit-b' : 'dim'],
+			['', `${popOf(0)}/${capOf(0)}`, popOf(0) >= capOf(0) && capOf(0) < POPMAX ? 'warn' : ''], // the number alone: 180/180 fits the 45 pt cell
+			['', `z ${idleN}`, idleN ? 'warn' : 'dis'],
+			[ICON.book, String(ready), ready ? 'go' : 'dis'],
 			['', `★ ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, ''], // the rank; the score itself is on the score card
-			[ICON.mil, String(sol), sol ? '' : 'dim'],
+			[ICON.mil, String(sol), sol ? '' : 'dis'],
 		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
 		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2], i));
 	} // the colour code on the pill: blue research you can start, red the people at the roof or idle hands; dim is nothing to see
@@ -587,7 +587,7 @@ function ui(force) {
 				c = VC[KEY[r]] || '';
 			if (el.style.color !== c) el.style.color = c;
 		} // the job's number wears its store's colour: the row reads as one
-		$('tj_' + r).classList.toggle('sel', p.rally === r);
+		$('tj_' + r).classList.toggle('on', p.rally === r);
 	}
 	const nq = queuedOf(0, 'vil'),
 		room = Math.max(0, capOf(0) - popOf(0));
@@ -599,7 +599,7 @@ function ui(force) {
 		if ($('homeB').hidden === away) $('homeB').hidden = !away;
 	} // home shows only when your Town Center is off the screen
 	$('stage').classList.toggle('busy', !!(G.card || G.place));
-	if ($('buildT')) $('buildT').classList.toggle('sel', !!(G.card && G.card.type === 'menu')); // one look for on: the outline, as the default job wears it
+	if ($('buildT')) $('buildT').classList.toggle('on', !!(G.card && G.card.type === 'menu')); // one look for chosen: the gold ring, as the default job wears it
 	doorUI();
 	{
 		const P = picked(),
@@ -689,7 +689,7 @@ function preview() {
 		now = performance.now(),
 		paused = G.paused && !(G.card && (G.card.type === 'resume' || G.card.type === 'setup')),
 		live = shownMsg(now),
-		big = !!G.card && $('card').classList.contains('full'),
+		big = !!G.card && $('card').classList.contains('lg'),
 		ask = G.pvAsk;
 	let h = '',
 		cc = codeOf('w');

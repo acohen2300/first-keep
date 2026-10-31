@@ -39,6 +39,10 @@ const ACT = {
 		closeCard();
 		if (G.over) $('end').hidden = false;
 	}, // backing out of New game brings the end screen back
+	cardback() {
+		if (G.card && G.card.from) openCard(G.card.from, true);
+		else ACT.close();
+	}, // the title bar's back (MENU-SPEC §4): to the card this one was opened from; on the first card it closes
 	cancel() {
 		cancelPlace();
 	},
@@ -98,10 +102,8 @@ const ACT = {
 			return;
 		}
 		camGo(k.x, k.y);
-		if (k.kind === 'keep') {
-			G.card = null;
-			openCard({ type: 'bld', id: k.id });
-		} else closeCard();
+		if (k.kind === 'keep') openCard({ type: 'bld', id: k.id });
+		else closeCard();
 	},
 	guide(a) {
 		openCard({ type: 'guide', page: a });
@@ -327,7 +329,6 @@ const ACT = {
 			k = keepOf(0),
 			B = t && G.blds.filter((b) => b.owner === 0 && b.kind === t.at && b.prog >= 1 && b.hp > 0).sort((a, b) => (k ? dist(a, k) - dist(b, k) : 0))[0];
 		if (!B) return say(`Build a ${BLD[t.at].name} first.`, '', 3);
-		closeCard();
 		camGo(B.x, B.y);
 		openCard({ type: 'bld', id: B.id });
 	}, // the research card's ›: to the building where it is learned, its card open
@@ -1170,6 +1171,11 @@ document.addEventListener('click', (e) => {
 		el.classList.add('nope');
 		setTimeout(() => el.classList.remove('nope'), 450);
 	} // a tap it cannot do glows red a moment
-	act(el.dataset.act);
+	cardTap = !!el.closest('#card'); // what it opens remembers this card (back)
+	try {
+		act(el.dataset.act);
+	} finally {
+		cardTap = false;
+	}
 });
 for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndInit, { passive: true }); // Safari unlocks audio on the finger lifting, not landing

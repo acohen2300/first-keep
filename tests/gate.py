@@ -1,5 +1,5 @@
 # The gate: what must hold before a build goes live, measured at four iPhone sizes, not judged by eye.
-# No page errors; no two buildings alike at half zoom; nothing wider than the screen; every word inside its button; text at least 12 px; contrast at least 4.5:1 (target 7:1); no card but Help and the Guide needs scrolling from 390 × 844 up (the iPhone SE at 375 × 667 is too short for the biggest cards); every tap target at least 44 × 44 points (Apple's rule), except the − and + tiles under each job (six columns leave them 26 to 29 points wide; kept by choice, Build 36).
+# No page errors; no two buildings alike at half zoom; nothing wider than the screen; every word inside its button; text at least 12 px; contrast at least 4.5:1 (target 7:1); no card but Help and the Guide needs scrolling from 390 × 844 up (the iPhone SE at 375 × 667 is too short for the biggest cards); every tap target at least 44 × 44 points (Apple's rule), except half slots: the − and + under each job and any half slot of the Formation (`.h`), 26 to 29 points wide (EXCEPTIONS.md #2); every card title fits its slots (Build 70).
 # Run from first-keep/:  python3 build.py && python3 wrap.py && python3 tests/gate.py   (add --soak for the long games, tests/soak.py)
 import asyncio, json, os, subprocess, sys
 from playwright.async_api import async_playwright
@@ -13,7 +13,7 @@ CARDS = [('help', "{type:'help'}"), ('setup', "{type:'setup'}"), ('army', "{type
          ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}"), ('mail', "{type:'mail'}")]
 MEASURE = """() => {
   const lum = c => { const f = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); };
-  const parse = s => { const m = s.match(/[\\d.]+/g); return m ? [+m[0], +m[1], +m[2], m[3] == null ? 1 : +m[3]] : [0, 0, 0, 0]; };
+  const parse = s => { const m = s.match(/[\\d.]+/g), k = s.startsWith('color(') ? 255 : 1; return m ? [m[0] * k, m[1] * k, m[2] * k, m[3] == null ? 1 : +m[3]] : [0, 0, 0, 0]; };   // rgb(), and color(srgb …) as color-mix gives it
   const bg = el => { const st = []; for (let e = el; e; e = e.parentElement) { const c = parse(getComputedStyle(e).backgroundColor); if (c[3] > 0) st.push(c); if (c[3] >= 1) break; } let col = [18, 23, 21]; for (let i = st.length - 1; i >= 0; i--) col = [0, 1, 2].map(j => st[i][j] * st[i][3] + col[j] * (1 - st[i][3])); return col; };
   const out = { wide: document.documentElement.scrollWidth > innerWidth + 1, tall: document.documentElement.scrollHeight > innerHeight + 1, small: [], low: [], clip: [], tap: [], scroll: '' };
   const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
@@ -24,10 +24,27 @@ MEASURE = """() => {
     const fg = parse(cs.color), b = bg(el), L1 = lum(fg), L2 = lum(b), c = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05); if (c < 4.5) out.low.push(t.slice(0, 20) + ' ' + c.toFixed(1));
   }
   for (const b of document.querySelectorAll('button')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden]')) continue; for (const e of b.querySelectorAll('b,small')) if (e.scrollWidth > e.clientWidth + 1 && getComputedStyle(e).overflow !== 'visible') out.clip.push(e.textContent.slice(0, 24)); if (r.right > innerWidth + 1) out.clip.push('off screen: ' + b.textContent.slice(0, 20)); }
-  for (const b of document.querySelectorAll('button,[data-act],summary')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden],.pm') || r.bottom < 0 || r.top > innerHeight) continue; if (r.width < 44 || r.height < 44) out.tap.push((b.id || b.textContent.trim().slice(0, 14) || b.className) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height)); }
+  for (const b of document.querySelectorAll('button,[data-act],summary')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden],.pm,.h') || r.bottom < 0 || r.top > innerHeight) continue; if (r.width < 44 || r.height < 44) out.tap.push((b.id || b.textContent.trim().slice(0, 14) || b.className) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height)); }
   { const c = document.getElementById('card'); out.scroll = c && !c.hidden && c.scrollHeight > c.clientHeight + 1 ? c.scrollHeight + '>' + c.clientHeight : ''; }
   for (const e of document.querySelectorAll('.wd,.top .c,.strip button span')) { if (e.closest('[hidden]') || !e.getBoundingClientRect().width) continue; if (e.scrollWidth > e.clientWidth + 1) out.clip.push('tile: ' + e.textContent.slice(0, 16)); }
   return out; }"""
+# Every title the game can show fits slots 2 to 4 of the title bar at 375 x 667, in the real font (MENU-SPEC §4, Build 70): the fixed titles (read
+# from the source), every building name with its Medieval name and its research tiers, every unit of every people through stats at every rank, the
+# wonders, the finds, the places, the squads. A name that does not fit fails the gate; its short form goes in TITLE_SHORT (src/07-text.js).
+TITLES = """async (fixed) => { await document.fonts.ready; const F = window.__fk, P = F.G.P[0], names = new Set(fixed), civ = P.civ, had = P.techs;
+  for (const k in F.BLD) { names.add(F.BLD[k].name); if (F.BLD[k].name3) names.add(F.BLD[k].name3); }
+  for (const k in F.BTIER) for (const t of F.BTIER[k]) names.add(t.btier.name);
+  for (const c in F.CIVS) { names.add(F.CIVS[c].wonder); P.civ = c; P.techs = new Set(); F.fxDirty(); const read = () => { for (const k in F.UNIT) if (!F.UNIT[k].civ) names.add(F.stats(0, F.civKind(0, k)).name); };
+    read(); for (const t of F.TECH) if (t.tier) { P.techs.add(t.id); F.fxDirty(); read(); } }
+  P.civ = civ; P.techs = had; F.fxDirty();
+  for (const k in F.UNIT) names.add(F.UNIT[k].name); for (const k in F.FINDS) names.add(F.FINDS[k].name); for (const n of F.BN) names.add(n);
+  for (const n of [{ kind: 'farm', type: 'food' }, { kind: 'farm', type: 'wood' }, ...['tree', 'bush', 'fish', 'stone', 'gold', 'iron', 'meat'].map((kind) => ({ kind }))]) names.add(F.nodeName(n));
+  F.openCard({ type: 'stores' }); const h = document.querySelector('#card .tb h3'), out = [];
+  for (const n of names) { h.textContent = F.TITLE_SHORT[n] || n; if (h.scrollWidth > h.clientWidth) out.push(`${n} ${h.scrollWidth}>${h.clientWidth}`); }
+  F.act('close'); return [names.size, out]; }"""
+def fixed_titles():
+    import re, glob
+    return sorted(set(re.findall(r"\btitle\(\s*'([^']+)'", ''.join(open(f).read() for f in sorted(glob.glob('src/*.js'))))))
 # Readability: at half zoom, no two buildings may share both their average colour (within 18) and their size (within 5 px)
 LOOK = """() => { const F=window.__fk; F.newGame(5); const G=F.G; const s=1;   // zoom 0.5 at dpr 2
  const kinds=Object.keys(F.BLD).filter(k=>!['wall','gate','wonder'].includes(k)&&!F.BLD[k].trap), D={};
@@ -52,6 +69,10 @@ PLAY = """async () => {
   tap('[data-act="move:wood"]'); if (!F.G.units.some(u => u.owner === 0 && u.kind === 'vil' && u.job === 'wood')) out.push('+ under Wood put nobody on wood');
   
   tap('#scoreP'); if (!G.card || G.card.type !== 'score') out.push('Score card did not open'); F.act('close');
+  // back (Build 70): a card opened by a tap inside another remembers it; back returns to it; on the first card back closes, and closing forgets the way
+  F.openCard({ type: 'help' }); tap('#card [data-act="guide:bld"]'); if (!G.card || G.card.type !== 'guide' || !G.card.from || G.card.from.type !== 'help') out.push('a card opened from Help did not remember Help');
+  tap('#card [data-act="guide:unit"]'); tap('#card [data-act="cardback"]'); if (!G.card || G.card.type !== 'help') out.push('back did not return to Help (a page turned in the Guide is the same card)');
+  tap('#card [data-act="cardback"]'); if (G.card) out.push('back on the first card did not close it');
   tap('#pauseB'); if (!G.paused) out.push('Pause did not pause'); tap('#pauseB'); if (G.paused) out.push('Pause did not resume');
   for (let i = 0; i < 90; i++) F.step(1 / 30); const t = G.t; F.saveGame(true); const S = F.readSave(); if (!S) out.push('no save written'); else { F.loadGame(S); if (Math.abs(F.G.t - t) > 0.5) out.push('reload lost the clock'); }
   // the save chain (Build 63): every old shape has a step; the oldest shape walks every step without throwing; a broken save falls back to the one before
@@ -177,6 +198,9 @@ async def main():
         wraps = await pg.evaluate("""(L) => { const F = window.__fk; F.newGame(5); F.act('close'); F.setPause(false); F.say('x', '', 60); F.ui(true); const e = document.querySelector('#pv .t span'), out = [];
           if (!e) return ['no preview']; for (const t of L) { e.textContent = t; if (e.scrollWidth > e.clientWidth + 1) out.push(t); } return out; }""", L); await pg.close()
         print(('PASS ' if not wraps else 'FAIL ') + f'{len(L)} messages fit the preview at 375 px', '' if not wraps else wraps[:6]); fails += bool(wraps)
+        pg = await br.new_page(viewport={'width': 375, 'height': 667}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
+        n, wide = await pg.evaluate(TITLES, fixed_titles() + sys.argv[sys.argv.index('--title') + 1:sys.argv.index('--title') + 2] if '--title' in sys.argv else fixed_titles()); await pg.close()   # --title "a long name": see it fail
+        print(('PASS ' if not wide else 'FAIL ') + f'{n} card titles fit slots 2 to 4 at 375 px', '' if not wide else wide); fails += bool(wide)
         # every map is fair (Build 49: corners are no longer copies): on ten seeds, the sides' walks to work, the Throne and a neighbour within FAIR.spread
         pg = await br.new_page(); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(400)
         unfair = await pg.evaluate("() => { const F = window.__fk, out = []; for (let s = 1; s <= 10; s++) { F.newGame(s); const f = F.fairness(); if (f.worst > F.FAIR.spread) out.push(s + ': ' + JSON.stringify(f.spread)); } return out; }"); await pg.close()
