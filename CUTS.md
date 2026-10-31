@@ -1047,3 +1047,10 @@ Build Plan items 6 and 7. Open points for Albert are in `docs/Quick Action Notes
 - **Button budget:** 33 of 33 (no card is open on the play screen).
 - **Size:** 30,097 → 30,209 source lines; 1,169,447 → 1,173,851 bytes built. The cards' facts and their books (every paragraph that left a face is kept, behind the book), the line, the folder and the Market's picker outweigh the cuts; the gate grew by its two checks and four taps.
 
+
+## Build 70, the close (Oct 31, 11:00): v70 · Restoration
+- **The version's name** on How to play: "v70 · Restoration" (`BUILD_NAME`), where it said "build 70".
+- **Each frozen version keeps its own save** (`/v70-restoration/` saves under its own name, as the preview does), so playing it never touches the live game's save or the preview's.
+- **Frozen** at `/v70-restoration/` and stamped `v70`, with the stamps v60 to v66. The preview link moves on to v80.
+- **The records:** `docs/v70 Record/` (the 63–66 review, the picks, the ballot and answers, the computers' fairness test, the notebook typed out, the cold review), a new HANDOFF, `CLAUDE.md`, the README's four lines, GUIDE written by Build 70, EXCEPTIONS #2 and #12. The cold review found nothing that breaks play; its seven findings and the notebook's six are on the v80 list.
+- **Cut:** nothing.

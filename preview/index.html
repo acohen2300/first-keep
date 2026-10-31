@@ -257,6 +257,7 @@ button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tab
 // ═════ 01-rules-basics.js: the map, speeds, difficulty, resources, jobs, players, ages, seasons ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
 const BUILD = 70; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
+const BUILD_NAME = 'Restoration'; // the version's name, shown as "v70 · Restoration" (Albert, Oct 31)
 const MAP = 2000,
 	MID = MAP / 2,
 	DT = 1 / 30;
@@ -6920,9 +6921,10 @@ const SET = {
 	vibe: true,
 	learned: {},
 };
-// One home for this phone's storage (Build 60): the preview keeps its own keys, so a preview save never moves the live game's aside, nor
-// the live game the preview's. The first time the preview runs it copies (never moves) what the live game kept.
-const STORE = 'firstkeep.' + (/\/preview\//.test(location.pathname) ? 'preview.' : ''),
+// One home for this phone's storage (Build 60): the preview and each frozen version (/v70-restoration/) keep their own keys, so their saves
+// never move the live game's aside, nor the live game theirs. The first time one runs it copies (never moves) what the live game kept.
+const PLACE = location.pathname.match(/\/(preview|v\d+-[a-z-]+)\//),
+	STORE = 'firstkeep.' + (PLACE ? PLACE[1] + '.' : ''),
 	keyOf = (k) => STORE + k;
 try {
 	if (STORE !== 'firstkeep.' && localStorage.getItem(keyOf('settings')) === null) {
@@ -23774,7 +23776,7 @@ const CARDS = {
 	},
 	help() {
 		return (
-			title('How to play', `build ${BUILD}`) +
+			title('How to play', `v${BUILD} · ${BUILD_NAME}`) +
 			acts(
 				btn('guide:bld', 'Guide', 'what leads to what, and why', 'go') +
 					btn('guide:rule', 'Rules', 'what triggers what'),
