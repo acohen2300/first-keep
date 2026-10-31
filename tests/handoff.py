@@ -27,7 +27,6 @@ PLANTS = [
   ('14-sim-troops.js', 'sx = ((nx - u.x) / rd) * sp * dt,', 'sx = clamp(nx - u.x, -1, 1) * sp * dt,', 'tests/moves.py', 'a deer runs faster on a diagonal'),
   ('13-sim-civil.js', '< SEARCH.tau + SEARCH.give) {', '< -1) {', 'tests/moves.py', 'a villager drops its job the moment it loses its find'),
   ('08-core.js', '(C <= V ? 1 : V / C)', '(C <= V ? 1 : 1)', 'tests/science.py', 'Hawk-Dove always fights'),
-  ('09-nav.js', 'Math.min(1, Math.max(0.25, dd / SLOWR))', '1', 'tests/moves.py', 'villagers never ease in'),
   ('08-core.js', 'if (b.mx && b.mx !== M) b.hp =', 'if (false) b.hp =', 'tests/moves.py', 'Masonry leaves a Town Center at 77%'),
   ('10-world.js', 'if (!onLand(fx, fy))', 'if (true)', 'tests/moves.py', 'fish sit on land'),
   ('37-events.js', "(G.diff === 'easy' ? 1 : 1 + levelOf(G.hz) / 10)", '(1 + levelOf(G.hz) / 10)', 'tests/moves.py', 'Easy keeps a hazard bonus'),

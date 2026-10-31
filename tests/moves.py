@@ -39,10 +39,6 @@ JS = """() => {
   bo.tgt = null; if (F.nearestFoe(0, sp, 200) === bo) bad.push('a soldier goes after a boar that has done nothing');
   vv.x = bo.x + 5; vv.y = bo.y; bo.tgt = vv; if (F.nearestFoe(0, sp, 200) !== bo) bad.push('a soldier ignores a boar on one of your villagers');
   const far = F.addUnit(0, 'spear', k.x + 100, k.y + 100); if (!F.groupSees(0, bo)) bad.push('the group does not see what one member sees');
-  // a villager at work eases in: the nearer its spot, the slower its step
-  const ew = G.units.find((u) => u.owner === 0 && u.kind === 'vil'), sx = ew.x; ew.carry = 0; ew.hunt = null; ew.tgt = null; ew.stuck = 0;
-  F.moveTo(ew, sx + 200, ew.y, 0.25, 4, 1); const stepFar = Math.abs(ew.x - sx); ew.x = sx; F.moveTo(ew, sx + 20, ew.y, 0.25, 4, 1); const stepNear = Math.abs(ew.x - sx);
-  if (!(stepNear < stepFar)) bad.push('a villager does not ease in near its spot (' + stepNear.toFixed(2) + ' vs ' + stepFar.toFixed(2) + ')');
   // batch 4: B7 full health follows research; B15 no fish on land; B8 Easy has no bonus; B5 a fallen holder hands the Throne back
   F.newGame(7); G = F.G; const tc = F.keepOf(0); G.P[0].techs.add('masonry'); F.fxDirty();
   if (Math.abs(tc.hp - F.maxHpB(0, tc.kind)) > 1) bad.push('Masonry left the Town Center at ' + Math.round((100 * tc.hp) / F.maxHpB(0, tc.kind)) + '% health');

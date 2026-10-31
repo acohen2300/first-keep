@@ -1101,3 +1101,11 @@ Build Plan items 6 and 7. Open points for Albert are in `docs/Quick Action Notes
 - Nothing cut. Added `tests/handoff.py` (the start QC: state, build, lint, the gate, 13 planted-bug checks, what is owed), the "START QC" section at the top of `HANDOFF.md`, a pointer in `CLAUDE.md`, and `docs/v80 Audit/` (15 reviewer reports, the mutation test, the decision record).
 - The first run of the planted-bug check found a test that could not fail (Easy kept a hazard bonus): the test used a hazard name that is not in the game. Fixed; all 13 now fail when their bug is planted.
 - Found: preview 1 to 6 commits were authored as "Claude <noreply@anthropic.com>", not Albert. The repo's git identity is now Albert's noreply address for new commits. The earlier seven stay as they are unless Albert says to rewrite them.
+
+## Build 80 preview 8 (the arrival ramp is out)
+- Cut: the arrival ramp (villagers easing in to their spot, speed × distance/24) and its SCIENCE.md row, test and planted bug. Reason: with a mill or a lumber depot and 12 villagers it cost 5 to 16% of gathering against v70, and the jitter it was meant to cure was never seen. Without it, wood and berry yields match v70 (wood 31.8 against 31.5, 15.2 against 16, 33.8 against 34.3; berries 46.3 against 45.7, 22.2 against 22.2, 45 against 45 a villager-minute). Test made with Albert: a mill and a lumber depot beside the finds, 4 and 12 villagers, three seeds, old and new side by side.
+- The arrival radius of 9 stays (it costs nothing in that test).
+
+- **Play fingerprint accepted:** Build 80 preview 8: the arrival ramp is cut (it cost 5 to 16 percent of gathering)
+
+- **Play fingerprint accepted:** Build 80 preview 8: arrival ramp cut, gathering back to v70
