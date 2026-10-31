@@ -12,7 +12,7 @@
 - Controls kept (Albert, 09:28), each two or three slots wide, corners 6 (the round pill is killed): the check box (ticked: a gold tick and the slot's gold ring; three slots add a quiet line), the toggle (word left, switch right; on: the switch slides and turns gold, the slot rings), the slider (word and value over the track, gold to the knob, no ring), the slider with a toggle (off: the track goes quiet and keeps its value), the selector (two or three words in one shape, a gold selector slides 0.4 s to rest over the choice; three words need three slots). Pictures: Check Box Toggle Slider, Slider with Toggle, Selector (its grid half).
 
 - Toggles kept (Albert, 09:36): the one-slot toggle (switch over its word, 58 x 44); two ranks tall in the job footprint, B (the word over its switch) and C (the word over Off | On, the a / b pair). Pictures: Toggle One Slot, Toggle Two Ranks.
-- In play (not yet chosen): the slider two ranks tall (A one tall slot, B the word over a track, C the word over − +) and the variants (2 x 2 word | switch over a slider; 2 x 2 four boxes; 3 x 2; columns like the jobs; a settings row). Picture: Slider Two Ranks and Variants.
+- Kept (Albert, 09:39, "Save these"): the slider two ranks tall (A one tall slot, B the word over a track, C the word over − +) and the variants (2 x 2 word | switch over a slider; 2 x 2 four boxes; 3 x 2; columns like the jobs; a settings row). Picture: Slider Two Ranks and Variants.
 
 ## Needs Albert's call now (it touches v70)
 1. Mail has no door once the Realm page goes: the Realm page's Mail tile was its only way in. Where does Mail open from?
