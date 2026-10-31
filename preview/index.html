@@ -34,9 +34,7 @@ body{margin:0;background:var(--brown-1);color:var(--cream-1);font-family:var(--u
 button{font:inherit;color:var(--cream-1);background:var(--brown-2);border:1px solid var(--brown-3);border-radius:var(--rad);min-height:var(--slot);padding:2px 4px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;touch-action:manipulation;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color var(--t-quick),box-shadow var(--t-quick)}
 button:focus-visible{outline:2px solid var(--gold-1);outline-offset:1px}
 button b{font-weight:700;font-size:var(--fs-m);text-wrap:balance}
-button b .ti{width:14px;height:14px;vertical-align:-2px;margin-right:5px}
 button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tabular-nums;white-space:nowrap}
-button.ghost{visibility:hidden}
 .gl{display:block;width:20px;height:20px}
 /* The Formation (MENU-SPEC §2, §3): twelve half slots across, ranks 44 tall, 6 between everything. A cell is one slot, unless its block lays
    fewer a rank (c1 a banner, c2 halves, c3 thirds, c4 one and a half each) or the cell names its own span (h a half slot, s15, s2, s3, s6;
@@ -50,6 +48,8 @@ button.ghost{visibility:hidden}
 .info{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.2;min-width:0}
 .info b{font-size:var(--fs-m);font-weight:700;color:var(--cream-1)}.info small{font-size:var(--fs-s);color:var(--cream-2)}
 .info.left{align-items:flex-start;text-align:left}
+.info.line{padding:0 8px}.info.line :is(b,small){max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* a line of a card (line): inset from the edge, and it keeps to its rank */
+.info.gain b{color:var(--ring-g)}.info.loss b{color:var(--ring-r)}   /* in and out on the stores: green came in, red went out; the sign says it too */
 /* The top (MENU-SPEC §5): one framed bar 44 tall at 6 from the top (and the safe area), gap 6, the strip a half rank. Each edge is drawn
    inside its bar, so a cell of the bar is a whole 44 to tap, and a cell of the strip hangs 44 under its thin line */
 #hud{position:absolute;z-index:4;top:calc(env(safe-area-inset-top,0px) + var(--gap));left:0;right:0;box-sizing:border-box;padding:0 var(--gap);display:flex;flex-direction:column;gap:var(--gap);pointer-events:none}
@@ -150,16 +150,18 @@ button.ghost{visibility:hidden}
 .qs{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--gap);align-items:center}
 .qs>*{grid-column:span 2;min-width:0}.qs>b{grid-column:span 6}.qs>span{text-align:center;font-variant-numeric:tabular-nums}
 .qs.hdr>*{font-size:var(--fs-s);color:var(--cream-2);font-weight:500}
-.qs.trade>*{grid-column:span 4}.qs.trade b small{font-size:var(--fs-s);color:var(--cream-2);font-weight:500}
-.cin .slot{font-size:var(--fs-s);line-height:1.1;padding:2px 3px}   /* a place in a building's line */
+/* a place in a building's line, a single: the order at 12, two lines at most, and its time under it */
+.cin .slot{padding:2px 3px}.cin .slot b{font-size:var(--fs-s);line-height:1.1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
 /* a research step and its › to the building: two slots and one */
 .trow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--gap)}.trow>button{grid-column:span 4}.trow>.goto{grid-column:span 2;font-size:var(--fs-l);font-weight:700}
 /* a research step wears its age on its top edge */
 .cin button:is(.a0,.a1,.a2,.a3,.a4)::before{content:'';position:absolute;left:10px;right:10px;top:4px;height:3px;border-radius:2px;background:var(--age)}
 .cin .a0{--age:#9a9890}.cin .a1{--age:#b5793a}.cin .a2{--age:#c9c2a6}.cin .a3{--age:#4d6b9e}.cin .a4{--age:#8e2f2a}
-/* the Build menu (the cards' part of Build 70 redraws it): its tabs, then the buildings four a rank, with how many of how many */
-.cin .chipsrow button{padding:2px}.cin :is(.chipsrow,.menu) b{font-size:var(--fs-s)}
-.cin .menu .bk>button{width:100%;height:100%}.cin .menu .cnt{font-style:normal;color:var(--cream-2)}
+/* tabs are a file folder (MENU-SPEC §1): the page under the tabs wears one Gold 1 outline down the middle of the 6 gap, radius 9 (the open
+   tab joins it, in the states). A page that holds its height (the Build menu) keeps --n ranks, so the tabs never move */
+.fo,.fo>.pg,.hold{display:flex;flex-direction:column;gap:var(--gap)}
+.fo>.pg{position:relative}.fo>.pg::before{content:'';position:absolute;inset:calc(var(--gap) / -2);border:1px solid var(--gold-1);border-radius:var(--rad-o);pointer-events:none}
+.hold{min-height:calc(var(--n) * var(--rank) - var(--gap))}
 .cin .civs button{padding:0 1px}
 /* the mail: each line with its group's colour on its left edge */
 .cin .mrows{display:flex;flex-direction:column;gap:var(--gap)}
@@ -205,6 +207,11 @@ button.ghost{visibility:hidden}
 .work:not(.warn,.nope)::after{content:'';position:absolute;inset:-1px;padding:2px;border-radius:var(--rad);background:conic-gradient(var(--ring-g) var(--p,100%),transparent 0);mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);pointer-events:none}
 .dis:not(.pill>*){background:var(--brown-1);border-color:var(--brown-2)}.dis,.dis :is(b,.wd){color:var(--cream-2)}
 .empty{background:var(--brown-1);border:1px solid var(--brown-2);border-radius:var(--rad);color:var(--cream-2)}
+/* the open tab of a folder: no slot of its own; the folder's outline round it, open at the foot into its page (MENU-SPEC §1) */
+.fo>.fm>.on{background:var(--brown-1);border-color:transparent;box-shadow:none}
+.fo>.fm>.on::before,.fo>.fm>.on::after{content:'';position:absolute;pointer-events:none}
+.fo>.fm>.on::before{inset:-4px -4px -5px;border:1px solid var(--gold-1);border-bottom:0;border-radius:var(--rad-o) var(--rad-o) 0 0}
+.fo>.fm>.on::after{left:-3px;right:-3px;bottom:-5px;height:2px;background:var(--brown-1);z-index:1}
 .main{background:linear-gradient(var(--fill-1),var(--fill-2)) var(--fill-1);border-color:var(--fill-1);color:var(--ink)}.main :is(b,small){color:var(--ink)}.main b{font-size:var(--fs-l)}
 /* the bar and the strip draw no frame round a cell: a chosen cell of the bar wears its ring inside, a cell of the strip says its state in its word */
 .pill>.on::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:var(--rad);box-shadow:inset 0 0 0 2px var(--rc)}
@@ -2316,6 +2323,7 @@ const TECH = [
 	{
 		id: 'rollers',
 		name: 'Rollers and sledges',
+		short: 'Rollers', // the name a double-wide slot shows at 375 pt (the gate measures it); the book keeps the full one
 		at: 'quarry',
 		line: 'Hauling',
 		age: 2,
@@ -2329,6 +2337,7 @@ const TECH = [
 	{
 		id: 'cranes',
 		name: 'Treadwheel crane',
+		short: 'Treadwheel',
 		at: 'quarry',
 		line: 'Hauling',
 		age: 3,
@@ -2574,6 +2583,7 @@ const TECH = [
 	{
 		id: 'chimney',
 		name: 'Chimney and fireplace',
+		short: 'Chimney',
 		at: 'house',
 		line: 'Home',
 		age: 3,
@@ -3693,6 +3703,7 @@ const TECH = [
 	{
 		id: 'science',
 		name: 'Natural philosophy',
+		short: 'Philosophy',
 		at: 'school',
 		line: 'Letters',
 		age: 4,
@@ -3873,6 +3884,7 @@ const TECH = [
 	{
 		id: 'method',
 		name: 'Scientific method',
+		short: 'Method',
 		at: 'library',
 		line: 'Enlightenment',
 		age: 5,
@@ -3886,6 +3898,7 @@ const TECH = [
 	{
 		id: 'fourcourse',
 		name: 'Four-course rotation',
+		short: 'Four-course',
 		at: 'library',
 		line: 'Enlightenment',
 		age: 5,
@@ -4403,6 +4416,7 @@ const TECH = [
 	{
 		id: 'weights',
 		name: 'Weights and measures',
+		short: 'Weights',
 		at: 'market',
 		line: 'Trade',
 		age: 1,
@@ -4567,6 +4581,7 @@ const TECH = [
 	{
 		id: 'looms',
 		name: 'Warp-weighted loom',
+		short: 'Loom',
 		at: 'workshop',
 		line: 'Cloth',
 		age: 1,
@@ -4633,6 +4648,7 @@ const TECH = [
 	{
 		id: 'brewhouse',
 		name: 'Common brewhouse',
+		short: 'Brewhouse',
 		at: 'workshop',
 		line: 'Drink',
 		age: 3,
@@ -4821,6 +4837,7 @@ for (const [civ, uu, name, fx] of [
 		id: 'elite_' + civ,
 		civ,
 		name: `Elite: ${name}`,
+		short: name,
 		at: 'castle',
 		age: 3,
 		cost: { f: 400, g: 400, i: 150 },
@@ -5628,7 +5645,8 @@ const SCENARIOS = {
 // ───────────────────────── Why it is so: the history behind each row ─────────────────────────
 // Dates are "about" unless exact; where historians disagree the text says so. Each line credits more than one place where the record allows.
 // A card's title where the full name does not fit slots 2 to 4 of the title bar at 375 pt (MENU-SPEC §4; the gate measures every title the
-// game can show). The full name stays on the card, on the line under the bar.
+// game can show). The full name stays on the card, on the line under the bar. A soldier's name on a double-wide slot (a Train button) reads
+// the same short one (the gate measures those too); research keeps its own short name in its record (TECH short), as a building does (BLD).
 const TITLE_SHORT = {
 	'Karakorum and the Silver Tree': 'Karakorum',
 	'Great Stupa at Sanchi': 'Great Stupa',
@@ -9189,11 +9207,11 @@ function sendBuilder(v, b) {
 	v.rep = b;
 	v.building = true;
 }
-// Send one more to a site (or the one you picked)
-function sendBuild(o, id, vid) {
+// Send one more to a site
+function sendBuild(o, id) {
 	const b = G.blds.find((x) => x.id === id && x.owner === o && x.hp > 0 && x.prog < 1);
 	if (!b) return false;
-	const v = vid ? unitsOf(o, 'vil').find((x) => x.id === vid) : pickVil(o, b, typesOf(b.kind), b);
+	const v = pickVil(o, b, typesOf(b.kind), b);
 	if (!v) {
 		if (o === 0) say('No villager is free.', '', 3);
 		return false;
@@ -21747,8 +21765,19 @@ const btn = (act, title, sub, cls, fr) =>
 // the Formation, the one helper that lays cells: twelve half slots across, ranks 44 tall, 6 between. cls says how many cells a rank holds
 // (c1 one, c2 two (the default), c3 three, c4 four, c6 six; c5 lays five singles and leaves the sixth place); a cell's span class overrides it
 const acts = (h, cls = 'c2') => `<div class="fm ${cls}">${h}</div>`;
-// the info cell: no frame; the value in Cream 1 at 15, its label in Cream 2 at 12 under it. cls: its span, and left for a sentence; act: where
-// a tap on it goes (what is coming: tap to look)
+// a list collapses (MENU-SPEC §3): its things three a rank, as even as they go, so no rank has a hole: two are two triples, four two and two,
+// five three and two. Things you do are double-wide; a list of one is the whole rank
+const list = (cells) => {
+	let h = '',
+		i = 0;
+	for (let r = 0, k = Math.ceil(cells.length / 3); r < k; r++) {
+		const m = Math.ceil((cells.length - i) / (k - r));
+		h += acts(cells.slice(i, (i += m)).join(''), 'c' + m);
+	}
+	return h;
+};
+// the info cell: no frame; the value in Cream 1 at 15, its label in Cream 2 at 12 under it. cls: its span, left for a sentence, line for a
+// line of a card (inset, on one line); act: where a tap on it goes (what is coming: tap to look)
 const info = (value, label, cls = '', act) =>
 	`<div class="info ${cls}"${act ? ` data-act="${act}"` : ''}><b>${value}</b>${label ? `<small>${label}</small>` : ''}</div>`;
 // a fixed place with nothing in it: a faint plain outline (never dashed)
@@ -21757,8 +21786,10 @@ const FOLD = new Set(); // explanations live behind a small fold, closed unless 
 // the book entry of a research step: the date, what it changed, and its weight, which is its cost
 const techBook = (t) =>
 	`<p><b>${t.name}</b>${t.when ? ` · ${t.when}` : ''}${t.w ? ` · weight ${t.w} of 10` : ''}: ${t.desc}${WHY[t.id] ? ` ${WHY[t.id]}` : ''}${t.w ? ` Cost and time ×${(0.5 + 0.1 * t.w).toFixed(1)} for its age.` : ''}</p>`;
-const twoTabs = (key, opts, cur) =>
-	acts(opts.map(([k, t, sub]) => btn(`${key}:${k}`, (ICON.tab[k] || '') + t, sub, cur === k ? 'on' : '')).join('')); // two-sided cards, one mold: two tabs; the open one rings gold
+// tabs are a file folder (MENU-SPEC §1): one rank of tabs; the open one joins one Gold 1 outline round its whole page, the outline down
+// the middle of the 6 gap. opts: [key, name, sub]; page: the page under the tabs
+const folder = (key, opts, cur, page, cls = 'c2') =>
+	`<div class="fo">${acts(opts.map(([k, t, sub]) => btn(`${key}:${k}`, t, sub, cur === k ? 'on' : '')).join(''), cls)}<div class="pg">${page}</div></div>`;
 const INFO = new Set(['why', 'bmore', 'about', 'menu', 'bnabout']);
 let infoBuf = []; // the explaining text of a card waits behind the book icon
 const fold = (id, title, html) =>
@@ -21812,33 +21843,31 @@ function beatsText(o, k) {
 }
 function trainButtons(kinds) {
 	const p = G.P[0];
-	return kinds
-		.map((k) => {
-			const ck = civKind(0, k),
-				U = UNIT[ck],
-				why = trainWhy(0, k),
-				n = queuedOf(0, k);
-			const full = U.cls && clsCount(0, U.cls) >= clsMax(U.cls, 0);
-			const cost = unitCost(0, ck),
-				sub =
-					U.age > p.age
-						? `${AGES[U.age].name} age`
-						: !ready(0, U.at).length
-							? `needs a ${BLD[U.at].name.toLowerCase()}`
-							: full
-								? `short of room ${clsCount(0, U.cls)}/${clsMax(U.cls, 0)}`
-								: !afford(p, cost)
-									? `short ${need(cost)}`
-									: costText(cost);
-			return btn(
-				`train:${k}`,
-				stats(0, ck).name,
-				sub + (n ? ` ×${n}` : ''),
-				why ? 'dis' : '',
-				sub.startsWith('short ') && !full ? fillOf(cost) : sub === costText(cost) ? 1 : undefined,
-			);
-		})
-		.join('');
+	return kinds.map((k) => {
+		const ck = civKind(0, k),
+			U = UNIT[ck],
+			why = trainWhy(0, k),
+			n = queuedOf(0, k);
+		const full = U.cls && clsCount(0, U.cls) >= clsMax(U.cls, 0);
+		const cost = unitCost(0, ck),
+			sub =
+				U.age > p.age
+					? `${AGES[U.age].name} age`
+					: !ready(0, U.at).length
+						? `needs a ${BLD[U.at].name.toLowerCase()}`
+						: full
+							? `short of room ${clsCount(0, U.cls)}/${clsMax(U.cls, 0)}`
+							: !afford(p, cost)
+								? `short ${need(cost)}`
+								: costText(cost);
+		return btn(
+			`train:${k}`,
+			TITLE_SHORT[stats(0, ck).name] || stats(0, ck).name, // a name too long for its slot shows its short one
+			sub + (n ? ` ×${n}` : ''),
+			why ? 'dis' : '',
+			sub.startsWith('short ') && !full ? fillOf(cost) : sub === costText(cost) ? 1 : undefined,
+		);
+	}); // the cells, for a list
 }
 // Research, in four looks you can tell without reading: ready (wax seal), short of something (red ink, what is missing), busy, locked (faded)
 function techState(t) {
@@ -21852,20 +21881,31 @@ function techState(t) {
 				? 'short'
 				: 'locked';
 }
+// why a step is locked, in a slot's few words: its age (as the Build menu says it), the step it needs (by its short name), or the building
+const lockedWhy = (t) => {
+	const nd = needsOf(t).find((n) => !G.P[0].techs.has(n));
+	return t.age > G.P[0].age
+		? `${AGES[t.age].name} age`
+		: nd
+			? `needs ${TECHBY[nd].short || TECHBY[nd].name}`
+			: researchWhy(0, t.id).replace(/\.$/, '');
+};
 function techBtn(t, withAt) {
 	const st = techState(t),
 		c = techCost(0, t);
 	const sub =
 		st === 'busy'
-			? 'researching'
+			? researchWhy(0, t.id) === 'Being researched.'
+				? 'researching'
+				: 'line full'
 			: st === 'short'
 				? `short ${need(c)}`
 				: st === 'locked'
-					? researchWhy(0, t.id).replace(/\.$/, '')
+					? lockedWhy(t)
 					: costText(c);
 	return btn(
 		`tech:${t.id}`,
-		t.name,
+		TITLE_SHORT[t.short] || t.short || t.name, // its short name on a double-wide slot (an elite rank's, the soldier's short one)
 		sub + (withAt ? ` · ${BLD[t.at].name}` : ''),
 		`a${t.age} ` + (st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock'),
 		st === 'short' ? fillOf(c) : st === 'ready' ? 1 : undefined,
@@ -21939,7 +21979,7 @@ function statusOf(u) {
 						}[n.kind];
 		return at
 			? `${verb} · ${Math.round(u.carry)} of ${carryOf(0)} ${n.type} in hand`
-			: `walking to the ${nodeName(n).toLowerCase()}`;
+			: `walking to the ${n.farm ? nm(n.farm) : nodeName(n).toLowerCase()}`; // a plot or a shop by its building's name (a workshop's worker said field)
 	}
 	if (u.kind === 'caravan')
 		return u.route
@@ -22050,7 +22090,7 @@ const qName = (j) =>
 		: j.muster
 			? `muster ${j.bn !== undefined ? BN[j.bn] : ''}`
 			: j.tech
-				? TECHBY[j.tech].name
+				? TECHBY[j.tech].short || TECHBY[j.tech].name
 				: AGES[j.age].name + ' age';
 // the side at war with you whose Town Center is nearest yours
 function foeNearest() {
@@ -22339,67 +22379,140 @@ function musterGap(i) {
 }
 // ═════ 29-card-pages.js: what a building adds to its card: market, council, workshop and the rest ═════
 // ───────────────────────── What a building's page says, by kind ─────────────────────────
-// The generic page (health, crew, train, research, more) is one function; what a kind adds to it is one line here, never a branch in the page.
+// A building's card (MENU-SPEC §8): an info rank (what it holds or does, health, age), its line, its techs, Repair · Take down. What a kind
+// adds is one entry here, never a branch in the page: fact, the first cell of the info rank ([value, label]); book, its explaining text,
+// behind the book icon; page, the slots it adds. Every number on the face is a value in a cell; every sentence goes to the book.
 const BLD_PAGE = {
 	castle: (b) => {
 		const n = G.units.filter((u) => u.owner === 0 && isSoldier(u) && u.hp < u.max && dist(u, b) < GARRISON.r).length;
-		return `<p>Soldiers resting here heal ${GARRISON.heal * fxv(0, 'garrison').m} a second${n ? `: ${n} mending now` : ''}.</p>`;
+		return { fact: [`${n} mending`, `heals ${GARRISON.heal * fxv(0, 'garrison').m} a second`] };
 	},
-	school: (b) => {
-		const n = schooling(0),
-			S = ready(0, 'school').length;
-		return `<p>Teaching ${n} of ${TEACH.seats * S} seats${fxv(0, 'teach').a < 1 ? ' · research Veterans at the Barracks to send soldiers' : ' · tap a soldier, then Teach'}.</p>`;
-	},
-	farm: (b) =>
-		`<p>Worked by ${b.node && b.node.wk > 0 ? slotText(b.node) : 'nobody yet: tap Send a villager' + (b.node && b.node.type === 'food' ? ', or + under Food' : '')}. This season: ${season().name}, ×${season().farm}${G.harvest !== 1 ? ` · the harvest this year ×${G.harvest}` : ''}${WEATHER[G.wx].crop ? ` · ${WEATHER[G.wx].name.toLowerCase()} ×${WEATHER[G.wx].crop}` : ''} · soil ${Math.round((b.fert ?? 1) * 100)}%.</p>` +
-		(b.node ? yieldText(b.node, 0) : ''),
-	treefarm: (b) =>
-		`<p>Tended by ${b.node && b.node.wk > 0 ? slotText(b.node) : 'nobody yet: tap Send a villager, or + under Wood'}. ${Math.round(b.node ? b.node.amt : 0)} wood left, then the plot is cut out.</p>`,
-	pasture: (b) =>
-		`<p>${b.sheep || 0} sheep: ${b.node && b.node.wk > 0 ? `milk and meat, about ${Math.round((b.sheep || 0) * BLD.pasture.milk * 60 * gatherMul(0, b.node))} food a minute` : 'nobody tends them: tap Send a villager'}. ${Math.floor(b.node ? b.node.amt : 0)} wool to bring in${ready(0, 'workshop').length ? '' : ' · <b>wool waits for a Workshop</b>'}. Shorn each spring, when lambs come too.</p>`,
-	throne: (b) => {
-		const T = G.throne,
-			mine = b.owner === 0;
-		return `<p>${!T ? 'The Natives hold it. Regard opens its gate; siege breaks it.' : `${mine ? 'Yours' : G.P[T.owner].name + ' hold it'} since ${clock(T.since)}: ${clock(Math.max(0, throneHold() - (G.t - T.since)))} to ${mine ? 'win' : 'their win'}. A tithe of ${THRONE.tithe * 100}% of the gathering of everyone else, ${THRONE.score} score a minute.`}</p>`;
+	school: () => ({
+		fact: [
+			`${schooling(0)} of ${TEACH.seats * ready(0, 'school').length} seats`,
+			fxv(0, 'teach').a < 1 ? 'research Veterans first' : 'tap a soldier, then Teach',
+		],
+		book: '<p>Research Veterans at the Barracks to send soldiers here; then tap a soldier and Teach.</p>',
+	}),
+	farm: (b) => ({
+		fact: [
+			b.node && b.node.wk > 0 ? `${slotText(b.node)} at work` : 'Nobody at work',
+			`${season().name} ×${season().farm} · soil ${Math.round((b.fert ?? 1) * 100)}%`,
+		],
+		book:
+			`<p>This season: ${season().name}, ×${season().farm}${G.harvest !== 1 ? ` · the harvest this year ×${G.harvest}` : ''}${WEATHER[G.wx].crop ? ` · ${WEATHER[G.wx].name.toLowerCase()} ×${WEATHER[G.wx].crop}` : ''}. Tap Send a villager${b.node && b.node.type === 'food' ? ', or + under Food' : ''}.</p>` +
+			(b.node ? yieldText(b.node, 0) : ''),
+	}),
+	treefarm: (b) => ({
+		fact: [
+			`${Math.round(b.node ? b.node.amt : 0)} wood left`,
+			b.node && b.node.wk > 0 ? `${slotText(b.node)} tending` : 'nobody tending',
+		],
+		book: '<p>Tended by the villagers you send, or + under Wood. When its wood is gone the plot is cut out: replant it at half the cost.</p>',
+	}),
+	pasture: (b) => ({
+		fact: [
+			`${b.sheep || 0} sheep`,
+			`${b.node && b.node.wk > 0 ? `${Math.round((b.sheep || 0) * BLD.pasture.milk * 60 * gatherMul(0, b.node))} food a minute` : 'nobody tends them'} · ${Math.floor(b.node ? b.node.amt : 0)} wool`,
+		],
+		book: `<p>Milk and meat while tended; wool to bring in${ready(0, 'workshop').length ? '' : ', which waits for a Workshop'}. Shorn each spring, when lambs come too.</p>`,
+	}),
+	throne: () => {
+		const T = G.throne;
+		return {
+			fact: T
+				? [
+						`${clock(Math.max(0, throneHold() - (G.t - T.since)))} to ${T.owner === 0 ? 'win' : 'their win'}`,
+						`${T.owner === 0 ? 'yours' : G.P[T.owner].name} since ${clock(T.since)}`,
+					]
+				: ['The Natives hold it', 'regard opens its gate'],
+			book: `<p>Regard opens its gate; siege breaks it. Who holds it takes a tithe of ${THRONE.tithe * 100}% of the gathering of everyone else, and ${THRONE.score} score a minute.</p>`,
+		};
 	},
 	tpost: (b) => {
 		const f = G.finds.find((x) => x.id === b.sid);
-		return f ? `<p>Holds the stop at ${coord(f.x, f.y)}: tap the stop for prices and what it wants.</p>` : '';
+		return f ? { fact: [`Holds ${coord(f.x, f.y)}`, 'tap the stop for prices'] } : {};
 	},
-	council: (b) => councilHTML(b),
+	council: () =>
+		hasCmd()
+			? {
+					page: acts(
+						BN.map((n, j) =>
+							btn(`wsq:${j}`, n, `${armyOf(0).filter((u) => u.kind !== 'spy' && u.bn === j).length} in it`),
+						).join(''),
+						'c4',
+					), // each opens its card, where it is built (39-huddle)
+					book: `<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve. Send them from the War page with Go.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
+				}
+			: {
+					fact: ['No squads yet', G.P[0].techs.has('engage') ? 'next: Battalions' : 'first: Engagement'],
+					book: `<p>${G.P[0].techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, four squads.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`,
+				},
 	mint: () =>
 		G.P[0].debased
-			? `<p>The coin is debased: prices at your Market are ×${MINT.price}.</p>`
-			: acts(
-					btn('debase', 'Debase the coin', `+${MINT.debase} gold now · Market prices ×${MINT.price} for good`, 'warn'),
-					'c1',
-				),
-	market: (b) => marketHTML(b),
+			? { fact: ['Coin debased', `Market prices ×${MINT.price}`] }
+			: {
+					page: acts(
+						btn(
+							'debase',
+							'Debase the coin',
+							`+${MINT.debase} gold now · Market prices ×${MINT.price} for good`,
+							'warn',
+						),
+						'c1',
+					),
+				},
 };
-// A building's line: one slot per order it can hold, singles on the Formation. The first is working: its green ring is what is left of
-// it. Tap a filled one and the order is cancelled, its cost back; an empty place is a faint outline.
+// the first cell of a building's info rank: going up, burning, a wonder's clock, or what its kind says; else the room it gives
+function factOf(b, X, crew) {
+	const B = BLD[b.kind];
+	if (b.prog < 1) return [`Building ${Math.round(b.prog * 100)}%`, '']; // who works it, Send a villager says
+	if (b.owner === 0 && b.fire > 0) return ['On fire', `${crew.length} with buckets`];
+	if (G.wonder && G.wonder.id === b.id)
+		return [`${clock(Math.max(0, G.wonder.end - G.t))} to ${b.owner === 0 ? 'win' : 'their win'}`, 'the wonder stands'];
+	return X.fact || (B.room ? [`Room for ${B.room}`, ''] : null);
+}
+// the info rank: the fact as a sentence (three slots), then health and age; with no fact, health and age take two triples (no holes)
+function infoRank(b, f) {
+	const s = f ? 's15' : 's3';
+	return acts(
+		(f ? info(f[0], f[1], 'left line s3') : '') +
+			info(`${Math.round(b.hp)}/${Math.round(maxHpB(b.owner, b.kind))}`, 'health', s) +
+			info(AGES[BLD[b.kind].age || 0].name, 'age', s),
+	);
+}
+// A building's line (MENU-SPEC §3, §8): a fixed capacity, one single a place, the first working (its green ring what is left of it, red when
+// it cannot go on: no room, or sabotage). Tap a filled one and its order is cancelled, its cost back; an empty place is a faint outline.
+// Six singles a rank: past six the last reads +n (a tap cancels the last order); short of six, the place a research would add reads +n, locked.
 function slotsHTML(b) {
 	const n = qMax(0),
-		cells = [];
-	for (let i = 0; i < n; i++) {
-		const j = b.q[i];
+		q = b.q,
+		cells = [],
+		stop = b.blocked ? 'needs room' : b.stall > G.t ? `sabotage ${Math.ceil(b.stall - G.t)} s` : '';
+	let t = 0;
+	for (let i = 0; i < Math.min(n, 6); i++) {
+		const j = q[i];
+		if (i === 5 && q.length > 6) {
+			cells.push(
+				`<button class="slot" data-act="qcancel:${b.id},${q.length - 1}" aria-label="Cancel the last order"><b>+${q.length - 5}</b><small>more</small></button>`,
+			);
+			break;
+		}
+		if (!j) {
+			cells.push(empty());
+			continue;
+		}
+		t += i ? j.total : j.left;
 		cells.push(
-			j
-				? `<button class="slot${i === 0 ? ' work' : ''}" data-act="qcancel:${b.id},${i}"${i === 0 ? ` style="${toGo(j.left / j.total)}"` : ''} aria-label="Cancel ${qName(j)}">${qName(j)}${i === 0 ? `<br>${Math.ceil(j.left)} s` : ''}</button>`
-				: empty(),
+			`<button class="slot${i ? '' : stop ? ' warn' : ' work'}" data-act="qcancel:${b.id},${i}"${i ? '' : ` style="${toGo(j.left / j.total)}"`} aria-label="Cancel ${qName(j)}"><b>${qName(j)}</b><small>${i || !stop ? clock(t) : stop}</small></button>`,
 		);
 	}
-	const more = TECH.find((t) => (t.fx || []).some((f) => f.s === 'queue') && !G.P[0].techs.has(t.id)); // the next slot, locked: a tap says how to open it
+	const more = n < 6 && TECH.find((t) => (t.fx || []).some((f) => f.s === 'queue') && !G.P[0].techs.has(t.id)); // the next places, locked: a tap says how to open them
 	if (more)
-		cells.push(`<button class="slot dis" data-act="qlock:${more.id}" aria-label="A locked slot">🔒 Slot ${n + 1}</button>`);
-	return (
-		(b.q.length ? acts(cells.join(''), 'c6') : '') + // the line shows while something is in it (Build 61: six empty "Slot" buttons took the top of every card)
-		(b.blocked
-			? '<p><b>Needs room: House, Apartment or Aqueduct.</b></p>'
-			: b.stall > G.t
-				? `<p><b>Stopped by sabotage: ${Math.ceil(b.stall - G.t)} s.</b></p>`
-				: '')
-	);
+		cells.push(
+			`<button class="slot dis" data-act="qlock:${more.id}" aria-label="More places: ${more.name}"><b>+${more.fx.find((f) => f.s === 'queue').a}</b><small>research</small></button>`,
+		);
+	return acts(cells.join(''), 'c6');
 }
 // Relations, at the Town Center: one row per side, the stance you take toward them. Neutral keeps both swords sheathed; Hostile takes effect after notice; Ally needs their yes.
 function nativesHTML() {
@@ -22520,95 +22633,89 @@ function relHTML() {
 	}
 	return h;
 }
-// a workshop turns what is in store into goods: the same line for every one of them
-function workshopHTML(b) {
+// a workshop turns what is in store into goods: the same page for every one of them. The making is a slot of its own, its green ring the
+// share of the next one still to go; what it makes is a picker, the chosen one gold. The count made and the store are the fact
+function workshopPage(b) {
 	const p = G.P[0],
-		n = b.node,
 		B = BLD[b.kind],
 		cur = b.cropT || B.crop,
 		mk = B.makes[cur],
 		[k, r] = Object.entries(mk.from)[0],
-		kn = GOODS[k] ? GOODS[k].name.toLowerCase() : LONG[k],
+		low = (a) => (GOODS[a] ? GOODS[a].name.toLowerCase() : LONG[a]),
 		nm = (t) => (GOODS[t] ? GOODS[t].name : (RESOURCES[t] || RESOURCES[LONG[t]]).name),
-		keys = Object.keys(B.makes);
-	return (
-		(keys.length > 1
-			? acts(
-					keys
-						.map((t) =>
-							btn(
-								`make:${b.id},${t}`,
-								nm(t),
-								`${Object.entries(B.makes[t].from)
-									.map(([a, q]) => q + ' ' + (GOODS[a] ? GOODS[a].name.toLowerCase() : LONG[a]))
-									.join(', ')} make 1`,
-								t === cur ? 'on' : '',
-							),
-						)
-						.join(''),
-					'c2',
-				)
-			: '') +
-		(() => {
-			// the making, as a slot like training (Build 61): the next one fills, the count made so far beside it
-			const w = G.units.find((u) => u.node === n),
-				made = w ? Math.floor(w.st.got || 0) : 0,
-				fr = w ? (w.st.got || 0) % 1 : 0,
-				state = !w ? 'nobody yet' : w.wait ? `waiting for ${kn}` : w.inside ? 'making' : 'walking in';
-			return (
-				acts(`<button class="slot ${w ? 'work' : 'dis'}" disabled style="${toGo(1 - fr)}">${nm(cur)}<br>${state}</button>` + info(made, 'made') + info(`${r} ${kn}`, 'each'), 'c3') +
-				`<p>In store: ${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${kn} · ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} ${nm(cur).toLowerCase()} a minute when worked.</p>`
-			);
-		})()
-	);
+		keys = Object.keys(B.makes),
+		w = G.units.find((u) => u.node === b.node),
+		fr = w ? (w.st.got || 0) % 1 : 0;
+	return {
+		fact: [
+			`${w ? Math.floor(w.st.got || 0) : 0} made`,
+			`${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${low(k)} in store`,
+		],
+		book: `<p>${r} ${low(k)} make one ${nm(cur).toLowerCase()}; ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} a minute when worked.</p>`,
+		page: list([
+			`<button class="${w ? 'work' : 'dis'}" disabled style="${toGo(1 - fr)}"><b>${nm(cur)}</b><small>${!w ? 'nobody yet' : w.wait ? `waiting for ${low(k)}` : w.inside ? 'making' : 'walking in'}</small></button>`,
+			...(keys.length > 1
+				? keys.map((t) =>
+						btn(
+							`make:${b.id},${t}`,
+							nm(t),
+							`${Object.entries(B.makes[t].from)
+								.map(([a, q]) => q + ' ' + low(a))
+								.join(', ')} make 1`,
+							t === cur ? 'on' : '',
+						),
+					)
+				: []),
+		]),
+	};
 }
-function marketHTML(b) {
-	// the Market: trade as one row a good, and caravans and ventures behind one fold (Build 61: the two tabs and the two grids are gone)
+// the Market (MENU-SPEC §8, picture Market Card): Caravan and its techs; the goods as singles with what you have, one picked (gold); one
+// Sell and one Buy for the picked good with its price; ventures from their age; the caravans, Repair, Take down
+function marketHTML(b, end) {
 	const p = G.P[0],
 		V = p.ventures || [],
-		nm = (k) => (GOODS[k] ? GOODS[k].name : RESOURCES[LONG[k]].name);
-	let h = '';
-	{
-		// one row a good: what you hold, sell a lot, buy a lot; the going price shows in the row (Build 61: two grids of the same goods were a mess)
-		h += sec('Trade · a lot is 100 of a resource, 10 of a good');
-		for (const k of MKT_SELL) {
-			const canBuy = MKT_BUY.includes(k);
-			h += `<div class="qs trade"><b>${nm(k)} <small>${Math.floor(haveOf(p, k))} · ×${mkt(k).toFixed(2)}</small></b>${btn(`trade:sell:${k}`, `Sell +${sellPrice(0, k)}g`, '', haveOf(p, k) < LOT(k) ? 'dis' : '')}${canBuy ? btn(`trade:buy:${k}`, `Buy ${buyPrice(0, k)}g`, '', p.res.g < buyPrice(0, k) ? 'dis' : '') : '<span></span>'}</div>`;
-		}
-	}
-	let m = '';
-	{
-		m += `<p>Two lanes. One: a caravan with a route takes goods from here to a trade stop and sells them. Two: a caravan with no route runs to an ally's Market or Town Center and earns distance² ÷ ${TRADE_DIV}, at most ${TRADE_CAP} gold. ${unitsOf(0, 'caravan').length} caravans; ${allyMarket(0, b) ? 'an ally to trade with' : 'no ally yet'}.</p>`;
-		m +=
-			sec('Ventures') +
-			`<p>${p.age < VENTURE.age ? 'From the Medieval age: put gold into a merchant venture.' : `Back in a year with ${Math.round((VENTURE.back - 1) * 100)}% more; about 1 in ${Math.round(1 / VENTURE.lost)} is lost.`} ${V.length ? 'Out: ' + V.map((v) => `${v.amt}g (${clock(Math.max(0, v.due - G.t))})`).join(', ') + '.' : ''}</p>`;
-		if (p.age >= VENTURE.age)
-			m += acts(
-				VENTURE.sizes
-					.map((a) => btn(`venture:${a}`, `${a} gold`, '', p.res.g < a || V.length >= VENTURE.max ? 'dis' : ''))
-					.join(''),
-				'c3',
-			);
-	}
-	h += fold(
-		'caravans',
-		`Caravans and ventures · ${unitsOf(0, 'caravan').length} caravans${V.length ? ', ' + V.length + ' ventures out' : ''}`,
-		m,
+		k = MKT_SELL.includes(G.mktK) ? G.mktK : MKT_SELL[0],
+		nm = (g) => (GOODS[g] ? GOODS[g].name : RESOURCES[LONG[g]].name),
+		cv = unitsOf(0, 'caravan').length,
+		buy = MKT_BUY.includes(k);
+	fold(
+		'bmore',
+		'More',
+		`<p>Sell or buy a lot at a time: 100 of a resource, 10 of a good. Prices rise and fall with what everyone buys and sells.</p><p>Two lanes. One: a caravan with a route takes goods from here to a trade stop and sells them. Two: a caravan with no route runs to an ally's Market or Town Center and earns distance² ÷ ${TRADE_DIV}, at most ${TRADE_CAP} gold. ${allyMarket(0, b) ? 'An ally to trade with.' : 'No ally yet.'}</p><p>${p.age < VENTURE.age ? `From the ${AGES[VENTURE.age].name} age: put gold into a merchant venture.` : `A venture comes back in a year with ${Math.round((VENTURE.back - 1) * 100)}% more; about 1 in ${Math.round(1 / VENTURE.lost)} is lost.`}${V.length ? ' Out: ' + V.map((v) => `${v.amt}g (${clock(Math.max(0, v.due - G.t))})`).join(', ') + '.' : ''}</p>`,
 	);
-	return h;
-}
-function councilHTML(b) {
-	const p = G.P[0];
-	if (!hasCmd())
-		return `<p>${p.techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, four squads.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`;
-	const S = armyOf(0).filter((u) => u.kind !== 'spy');
 	return (
-		sec('Squads') +
-		acts(BN.map((n, j) => btn(`wsq:${j}`, n, `${S.filter((u) => u.bn === j).length} in it`)).join(''), 'c4') + // each opens its card, where it is built (39-huddle)
-		fold(
-			'bnabout',
-			'About battalions',
-			`<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve. Send them from the War page with Go.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
+		list([
+			...trainButtons(trainsAt('market')),
+			...TECH.filter((t) => ownTech(t) && t.at === 'market' && isNext(0, t)).map((t) => techBtn(t)),
+		]) +
+		slotsHTML(b) +
+		acts(
+			MKT_SELL.map((g) => btn(`mpick:${g}`, nm(g), fmt(Math.floor(haveOf(p, g))), g === k ? 'on' : '')).join('') +
+				info(`×${mkt(k).toFixed(2)}`, 'price') +
+				btn(`trade:sell:${k}`, 'Sell', `${LOT(k)} for +${sellPrice(0, k)}g`, haveOf(p, k) < LOT(k) ? 'dis s2' : 's2') +
+				btn(
+					`trade:buy:${k}`,
+					'Buy',
+					buy ? `${LOT(k)} for ${buyPrice(0, k)}g` : 'not sold here',
+					!buy || p.res.g < buyPrice(0, k) ? 'dis s2' : 's2',
+				),
+			'c6',
+		) +
+		(p.age >= VENTURE.age
+			? list(
+					VENTURE.sizes.map((a) =>
+						btn(
+							`venture:${a}`,
+							`Venture ${a}g`,
+							`back ×${VENTURE.back} in a year`,
+							p.res.g < a || V.length >= VENTURE.max ? 'dis' : '',
+						),
+					),
+				)
+			: '') +
+		acts(
+			info(`${cv} ${some(cv, 'caravan')}`, V.length ? `${V.length} ${some(V.length, 'venture')} out` : '') + end,
+			'c3',
 		)
 	);
 }
@@ -22917,101 +23024,137 @@ const CARDS = {
 			B = BLD[b.kind],
 			mine = b.owner === 0,
 			P = G.P[b.owner],
+			done = b.prog >= 1,
+			kp = b.kind === 'keep',
+			rel = kp && G.ktab === 'rel',
 			M = maxHpB(b.owner, b.kind),
-			crew = unitsOf(0, 'vil').filter((u) => u.rep === b && u.job === 'repair');
-		let h = '',
-			td = '',
-			moreH = '';
-		h +=
-			title(
+			hurt = done && b.hp < M - 1,
+			crew = unitsOf(0, 'vil').filter((u) => u.rep === b && u.job === 'repair'),
+			X =
+				(mine || b.kind === 'throne') && done
+					? BLD_PAGE[b.kind]
+						? BLD_PAGE[b.kind](b)
+						: B.makes
+							? workshopPage(b)
+							: {}
+					: {};
+		let h = title(
 				bldName(b.owner, b.kind),
 				mine
 					? 'yours'
 					: P.name +
 							' · ' +
 							(P.lord === 0 ? (P.rebel ? 'in revolt' : 'your vassal') : REL_WORD[G.rel[0][b.owner]].toLowerCase()),
-			) +
-			(b.hp < M - 1 ? hpBar(b.hp / M, 'var(--ring-r)') : '') +
-			((mine && b.prog >= 1) || (!mine && b.kind === 'keep') ? '' : `<p>${B.desc}</p>`); // their Town Center needs no blurb about yours
-		if (b.kind === 'wonder' && P.civ) h += `<p><i>${CIVS[P.civ].wonder}:</i> ${WHY['wonder:' + P.civ]}</p>`;
-		if (b.kind === 'throne' && !mine) h += BLD_PAGE.throne(b);
-		if (G.wonder && G.wonder.id === b.id)
-			h += `<p><b>${clock(Math.max(0, G.wonder.end - G.t))} until ${mine ? 'you win' : 'they win'}.</b></p>`;
-		if (b.prog < 1)
-			h += `<p>Being built: ${Math.round(b.prog * 100)}%.${mine && !crew.length ? ' <b>Nobody is working it.</b>' : ''}</p>`;
-		if (mine && b.fire > 0)
-			h +=
-				`<p><b>On fire.</b> ${crew.length} villagers with buckets.</p>` +
-				acts(btn(`douse:${b.id}`, 'Send help', 'two more with buckets', 'warn'), 'c1');
-		if (mine && b.kind !== 'keep') {
+			),
+			end = '', // the last rank: Repair and Take down
+			book = X.book || ''; // the book: what its kind explains, then what was researched here, then what it is and why
+		const more = () =>
+			fold(
+				'bmore',
+				'More',
+				book +
+					(b.kind === 'wonder' && P.civ ? `<p><i>${CIVS[P.civ].wonder}:</i> ${WHY['wonder:' + P.civ]}</p>` : '') +
+					`<p>${B.desc}</p>` +
+					(WHY[b.kind] ? `<p><i>Why:</i> ${WHY[b.kind]}</p>` : ''),
+			);
+		if (mine && kp) {
+			if (hurt) end = btn(`repair:${b.id}`, 'Repair', costText(repairCost(0, b)), 'go');
+		} else if (mine) {
 			const back = refundOf(b),
-				hurtB = b.prog >= 1 && b.hp < M - 1,
 				menders = crew.filter((u) => !u.inside).length;
-			const row = `${b.prog >= 1 && B.reserve && b.node && b.node.amt <= 0 ? btn(`replant:${b.id}`, 'Replant', replantWhy(0, b) ? replantWhy(0, b).replace(/\.$/, '') : `${costText(scaled(B.cost, 0.5))} · half the cost`, replantWhy(0, b) ? 'dis' : 'go') : ''}${b.prog < 1 ? btn(`sendbld:${b.id}`, 'Send a villager', crew.length ? `${crew.length} building` : 'nobody yet', crew.length ? '' : 'go') : ''}${B.crop && b.prog >= 1 && b.node ? btn(`sendvil:${b.node.id}`, 'Send a villager', slotText(b.node), b.node.wk > 0 ? '' : 'go') : ''}${B.crop && b.prog >= 1 && b.node ? btn(`sendout:${b.node.id}`, 'Send out', b.node.wk > 0 ? 'one goes home' : 'nobody on it', b.node.wk > 0 ? '' : 'dis') : ''}`;
-			if (row) h += acts(row);
-			// Repair and Take down share the last row, both always there so nothing jumps (Albert, Build 63): Repair dim while the building is whole
-			td = acts(
+			// Repair and Take down share the last rank, both always there so nothing jumps (Albert, Build 63): Repair dim while the building is whole
+			end =
 				btn(
 					`repair:${b.id}`,
 					'Repair',
-					hurtB ? (menders ? `${menders} mending` : costText(repairCost(0, b))) : 'whole',
-					hurtB ? 'go' : 'dis',
+					hurt ? (menders ? `${menders} mending` : costText(repairCost(0, b))) : 'whole',
+					hurt ? 'go' : 'dis',
 				) +
-					(b.prog < 0.15
-						? btn(`takedown:${b.id}`, 'Cancel', 'all back')
-						: G.confirm === b.id
-							? btn(`takedown:${b.id}`, 'Tap again', 'to take down · ' + costText(back), 'warn')
-							: btn(`takedown:${b.id}`, 'Take down', costText(back) + ' back')),
-			); // last on the card: it is the one you rarely want
+				(b.prog < 0.15
+					? btn(`takedown:${b.id}`, 'Cancel', 'all back')
+					: G.confirm === b.id
+						? btn(`takedown:${b.id}`, 'Tap again', 'to take down · ' + costText(back), 'warn')
+						: btn(`takedown:${b.id}`, 'Take down', costText(back) + ' back')); // last on the card: it is the one you rarely want
 		}
-		if (mine && b.kind === 'keep')
-			h += acts(b.hp < M - 1 ? btn(`repair:${b.id}`, 'Repair', costText(repairCost(0, b)), 'go') : '');
-		if (mine && b.prog >= 1) {
-			if (
-				!(b.kind === 'keep' && G.ktab === 'rel') &&
-				(trainsAt(b.kind).length || TECH.some((t) => t.at === b.kind) || b.kind === 'keep')
-			)
-				h += slotsHTML(b);
-			const kp = b.kind === 'keep',
-				trade = kp && G.ktab === 'rel'; // the Town Center's relations side shows no training or research; the Market keeps its research at the top like every card (Build 61)
-			const tr = trade ? [] : trainsAt(b.kind),
-				techs = trade ? [] : TECH.filter((t) => ownTech(t) && t.at === b.kind && isNext(0, t)),
-				done = trade ? [] : TECH.filter((t) => t.at === b.kind && p.techs.has(t.id)); // one step per line: the next
-			const ageB = kp && !trade ? keepAgeBtn() : '',
-				hasR = techs.length || done.length || ageB; // one page: what it trains, then its research, no labels (MENU-SPEC §8); the next age is research like any other
+		if (mine && done && b.kind === 'market') return h + marketHTML(b, end) + more();
+		if (!(mine && kp)) h += infoRank(b, factOf(b, X, crew));
+		if (mine) {
+			const tr = done && !rel ? trainsAt(b.kind) : [],
+				techs = done && !rel ? TECH.filter((t) => ownTech(t) && t.at === b.kind && isNext(0, t)) : [], // one step a line: the next
+				did = TECH.filter((t) => t.at === b.kind && p.techs.has(t.id));
+			// things you do here now, double-wide, a list: help with a fire, replant, send a builder, send a worker or one out
+			h += list(
+				[
+					b.fire > 0 ? btn(`douse:${b.id}`, 'Send help', 'two more with buckets', 'warn') : '',
+					done && B.reserve && b.node && b.node.amt <= 0
+						? btn(
+								`replant:${b.id}`,
+								'Replant',
+								replantWhy(0, b)
+									? replantWhy(0, b).replace(/\.$/, '')
+									: `${costText(scaled(B.cost, 0.5))} · half the cost`,
+								replantWhy(0, b) ? 'dis' : 'go',
+							)
+						: '',
+					!done
+						? btn(
+								`sendbld:${b.id}`,
+								'Send a villager',
+								crew.length ? `${crew.length} building` : 'nobody yet',
+								crew.length ? '' : 'go',
+							)
+						: '',
+					B.crop && done && b.node
+						? btn(`sendvil:${b.node.id}`, 'Send a villager', slotText(b.node), b.node.wk > 0 ? '' : 'go')
+						: '',
+					B.crop && done && b.node
+						? btn(
+								`sendout:${b.node.id}`,
+								'Send out',
+								b.node.wk > 0 ? 'one goes home' : 'nobody on it',
+								b.node.wk > 0 ? '' : 'dis',
+							)
+						: '',
+				].filter(Boolean),
+			);
+			// the page (MENU-SPEC §8): what it trains, double-wide, add only; its line directly under; its techs, three a rank (the Town Center's
+			// next age first and All tech last); what its kind adds. No labels
+			const page =
+				list(trainButtons(tr)) +
+				(tr.length || b.q.length ? slotsHTML(b) : '') +
+				list(
+					[
+						kp && !rel ? keepAgeBtn() : '',
+						...techs.map((t) => techBtn(t)),
+						kp && !rel ? btn('card:research', 'All tech', '›') : '',
+					].filter(Boolean),
+				) +
+				(X.page || '');
 			if (kp)
-				h += twoTabs(
+				h += folder(
 					'ktab',
 					[
-						['town', 'Town', 'train and research'],
+						['town', 'Town', 'train and tech'],
 						['rel', 'Relations', 'ally, neutral, hostile'],
 					],
-					trade ? 'rel' : 'town',
+					rel ? 'rel' : 'town',
+					rel ? relHTML() : page + list(end ? [end] : []),
 				);
-			if (kp && !trade) {
-				const T = turtlePlan(0);
-				if (T && T.rows.length)
-					h += `<p class="dim"><i>To ${T.age.name} by the fields:</i> ${T.rows.map((x) => `${Math.round(x.need)} ${x.r}${isFinite(x.vm) ? ` (${x.vm.toFixed(1)} villager-min)` : ' (none known)'}`).join(', ')}. With ${T.villagers} villagers about ${isFinite(T.time) ? clock(T.time * 60) : '—'}: ${T.split
-						.filter((s) => s.n)
-						.map((s) => `${s.n} on ${cap1(s.r)}`)
-						.join(', ')}.</p>`;
+			else h += page;
+			if (done) {
+				const T = kp && turtlePlan(0);
+				book +=
+					(did.length ? `<p><i>Researched here:</i> ${did.map((t) => t.name).join(' · ')}.</p>` : '') +
+					(tr.length && !kp && b.kind !== 'town' ? tr.map((k) => unitLine(0, civKind(0, k))).join('') : '') +
+					techs.map(techBook).join('') +
+					(T && T.rows.length
+						? `<p><i>To ${T.age.name} by the fields:</i> ${T.rows.map((x) => `${Math.round(x.need)} ${x.r}${isFinite(x.vm) ? ` (${x.vm.toFixed(1)} villager-min)` : ' (none known)'}`).join(', ')}. With ${T.villagers} villagers about ${isFinite(T.time) ? clock(T.time * 60) : '—'}: ${T.split
+								.filter((s) => s.n)
+								.map((s) => `${s.n} on ${cap1(s.r)}`)
+								.join(', ')}.</p>`
+						: '') +
+					(kp ? keepMoreHTML() : '');
 			}
-			if (tr.length) h += acts(trainButtons(tr));
-			if (hasR)
-				h +=
-					acts(ageB + techs.map((t) => techBtn(t)).join('')) +
-					(done.length
-						? `<div class="chips">${done.map((t) => `<span class="chip">✓ ${t.name}</span>`).join('')}</div>`
-						: '');
-			moreH =
-				(tr.length && b.kind !== 'keep' && b.kind !== 'town'
-					? tr.map((k) => unitLine(0, civKind(0, k))).join('')
-					: '') +
-				techs.map(techBook).join('') +
-				(b.kind === 'keep' ? keepMoreHTML() : '');
-			if (BLD_PAGE[b.kind]) h += BLD_PAGE[b.kind](b);
-			if (kp && trade) h += relHTML();
-			if (B.makes) h += workshopHTML(b);
 		}
 		if (!mine && b.kind === 'keep' && P.lord === 0) h += vassalHTML(P);
 		else if (!mine && b.kind === 'keep' && G.rel[0][b.owner] === 'ally') {
@@ -23063,9 +23206,7 @@ const CARDS = {
 					'c1',
 				) + qsHTML(`qatk:${b.id}`, 'Attack with', b);
 		}
-		if (mine && b.prog >= 1)
-			h += fold('bmore', 'More', moreH + `<p>${B.desc}</p>` + (WHY[b.kind] ? `<p><i>Why:</i> ${WHY[b.kind]}</p>` : ''));
-		return h + td;
+		return h + (kp || !end ? '' : acts(end)) + more();
 	},
 	find(c) {
 		const f = G.finds.find((x) => x.id === c.id);
@@ -23120,6 +23261,44 @@ const CARDS = {
 			S = o === WILD ? U : stats(o, u.kind),
 			P = G.P[o],
 			mine = o === 0 && u.kind === 'vil';
+		if (mine) {
+			// the villager's card (MENU-SPEC §8, picture Easy Cards): what they are doing, then health, age and speed, as info cells; Stop · Send
+			// home · Dismiss; the job picker, the job ribbon reskinned (Build: whatever is placed next, this one raises it). The rest is in the book
+			const [now, more] = statusOf(u).split(' · '),
+				sick = u.sick > G.t,
+				sure = G.confirm === 'v' + u.id;
+			return (
+				title(S.name, 'yours') +
+				acts(
+					info(cap1(now), more || '', 'left line s3') +
+						info(`${Math.round(u.hp)}/${Math.round(u.max)}`, sick ? (u.plague ? 'plague' : 'sick') : 'health') +
+						info(clock(G.t - (u.bornT || 0)), 'age') +
+						info(Math.round(S.spd), 'speed'),
+					'c6',
+				) +
+				acts(
+					btn(`vstop:${u.id}`, 'Stop', '', u.job || u.post ? '' : 'dis') +
+						btn(`vhome:${u.id}`, 'Send home') +
+						btn(`vgo:${u.id}`, sure ? 'Sure?' : 'Dismiss', sure ? 'tap again' : '', sure ? 'warn' : ''),
+					'c3',
+				) +
+				rowHTML(
+					JOBS.map((j) => [`vjob:${u.id},${j}`, ICON[j], cap1(j), u.job === j ? 'on' : '']).concat([
+						[`pbuild:${u.id}`, ICON.hammer, 'Build', u.job === 'repair' ? 'on' : ''],
+					]),
+				) +
+				fold(
+					'about',
+					'About',
+					`<p><i>Life:</i> ${lifeText(u)}. Hits ${Math.round(S.dmg * 10) / 10}, reach ${Math.round(S.rng)}.</p>` +
+						(sick
+							? `<p><b>${u.plague ? 'Plague' : 'Sick'}:</b> works and fights at half strength. A Hospital or a medic nearby cures it.</p>`
+							: '') +
+						`<p>${U.desc}</p>` +
+						(WHY[u.kind] ? `<p><i>Why:</i> ${WHY[u.kind]}</p>` : ''),
+				)
+			);
+		}
 		let h =
 			title(
 				S.name,
@@ -23134,56 +23313,6 @@ const CARDS = {
 		if (o === WILD && U.meat && U.tick === 'wild') {
 			const who = unitsOf(0, 'vil').filter((v) => v.hunt === u).length;
 			h += acts(btn(`hunt:${u.id}`, 'Send a hunter', who ? `${who} hunting` : 'nobody yet', 'go'), 'c1');
-		}
-		if (mine) {
-			// the villager's card, small and simple (Albert, Build 63): four stats, then the one row (Back, Stop, Home, Dismiss, Why), then the jobs as a row
-			h = title(S.name, 'yours') + hpBar(u.hp / u.max, P.color);
-			h += acts(
-				info(statusOf(u), 'status', 'left') +
-					info(clock(G.t - (u.bornT || 0)), 'age') +
-					info(`hits ${Math.round(S.dmg * 10) / 10} · reach ${Math.round(S.rng)} · speed ${Math.round(S.spd)}`, 'stats') +
-					info(`${Math.round(u.hp)}/${Math.round(u.max)}`, 'health'),
-				'c4',
-			);
-			const can = !!(u.pj || u.was || G.P[0].rally);
-			h += rowHTML([
-				[`back:${u.id}`, ICON.back, 'Back', can ? '' : 'dis'],
-				[`vstop:${u.id}`, ICON.stop, 'Stop', u.job || u.post ? '' : 'dis'],
-				[`vhome:${u.id}`, ICON.home, 'Home', ''],
-				[
-					`vgo:${u.id}`,
-					ICON.close,
-					G.confirm === 'v' + u.id ? 'Sure?' : 'Dismiss',
-					G.confirm === 'v' + u.id ? 'warn' : '',
-				],
-				[`card:guide,unit`, ICON.book, 'Why', ''],
-				null,
-			]);
-			h += rowHTML(
-				JOBS.map((j) => [`vjob:${u.id},${j}`, ICON[j], cap1(j), u.job === j ? 'on' : '']).concat([
-					[`buildrow`, ICON.hammer, 'Build', ''],
-				]),
-			);
-			const sites = G.blds
-				.filter((s) => s.owner === 0 && s.hp > 0 && s.prog < 1 && u.rep !== s)
-				.sort((a, b) => dist(a, u) - dist(b, u))
-				.slice(0, 3);
-			if (sites.length)
-				h +=
-					sec('Build') +
-					acts(
-						sites
-							.map((s) =>
-								btn(
-									`buildat:${u.id},${s.id}`,
-									bldName(0, s.kind),
-									`${Math.round(s.prog * 100)}% · ${Math.round(dist(s, u))} away`,
-									'go',
-								),
-							)
-							.join(''),
-						'c1',
-					);
 		}
 		if (o === 0 && u.kind === 'caravan') h += caravanHTML(u);
 		if (o === 0 && isSoldier(u) && teachTo(u)) {
@@ -23252,71 +23381,64 @@ const CARDS = {
 		);
 	},
 	stores() {
-		// what you hold, what came in over the last minute, and who is on it
+		// one rank a resource (MENU-SPEC §8, picture States and Text): its name, what you have, what came in and went out over the last minute,
+		// who is on it, and ›, which opens the book on its why. No header rank: each number carries its own label
 		const p = G.P[0],
 			V = unitsOf(0, 'vil'),
 			el = (G.tick % 1800) / 30,
-			rt =
-				p.rate && Object.keys(p.rate).length
-					? p.rate
-					: Object.fromEntries(Object.entries(p.flow || {}).map(([k, v]) => [k, (v * 60) / Math.max(10, el)])); // the last full minute; before there is one, the pace so far
-		const ot =
-			p.rate && Object.keys(p.rate).length
-				? p.orate || {}
-				: Object.fromEntries(Object.entries(p.spent1 || {}).map(([k, v]) => [k, (v * 60) / Math.max(10, el)]));
-		let h =
-			title('Stores', 'the last minute') +
-			`<table><tr><th></th><th>Have</th><th>In</th><th>Out</th><th>On it</th></tr>${RES.map((r) => {
-				const k = KEY[r];
-				return `<tr data-act="storesk:${k}" class="${G.storesK === k ? 'on' : ''}"><td>${RESOURCES[r].name}</td><td style="color:${grad(velOf(p, k))}">${fmt(p.res[k])}</td><td>+${Math.round(rt[k] || 0)}</td><td>${ot[k] ? '−' + Math.round(ot[k]) : ''}</td><td>${V.filter((u) => u.job === r).length}</td></tr>`;
-			}).join('')}</table>`;
-		if (G.storesK) {
-			// the drill-down (Albert, Build 63): a tapped row says why, both ways. By reason: where the minute's in and out came from and went.
-			// By who: the villagers on it, and the buildings that make it or take it (shops, the mint, the foundry)
-			const k = G.storesK,
-				r = RES.find((x) => KEY[x] === k),
-				line = (o) =>
-					Object.entries(o || {})
-						.filter(([, v]) => v >= 0.5)
-						.sort((a, b) => b[1] - a[1])
-						.map(([w, v]) => `${LEDGER_WORD[w] || w} ${Math.round(v)}`)
-						.join(' · ') || 'nothing',
-				inBy = (p.rateBy || {})[k] || (p.flowBy || {})[k],
-				outBy = (p.orateBy || {})[k] || (p.spentBy || {})[k],
-				makers = G.blds.filter(
-					(b) =>
-						b.owner === 0 && b.prog >= 1 && b.hp > 0 && BLD[b.kind].makes && Object.keys(BLD[b.kind].makes).includes(k),
-				),
-				takers = G.blds.filter(
-					(b) =>
-						b.owner === 0 &&
-						b.prog >= 1 &&
-						b.hp > 0 &&
-						BLD[b.kind].makes &&
-						Object.values(BLD[b.kind].makes).some((m) => m.from && k in m.from),
-				),
-				who = (L) => L.map((b) => `<span data-act="open:bld,${b.id}">${bldName(0, b.kind)}</span>`).join(', ');
-			h += `<p><b>${RESOURCES[r].name}, the last minute.</b> <i>In:</i> ${line(inBy)}. <i>Out:</i> ${line(outBy)}.</p>`;
-			h += `<p><i>Who:</i> ${V.filter((u) => u.job === r).length} villagers on it${makers.length ? `; made at ${who(makers)}` : ''}${takers.length ? `; taken by ${who(takers)}` : ''}.</p>`;
-		}
-		h += `<p><i>Goods:</i> ${GOODK.map((k) => `${GOODS[k].name} ${Math.floor(p.goods[k] || 0)}${rt[k] ? ` (+${Math.round(rt[k])})` : ''}`).join(' · ')}. Goods wait at your Market for caravans; wool for a Workshop.</p>`;
-		h += `<p>In and Out: the last minute. A count is green while it gains, deeper the faster; white while it holds; red as it loses, reddest with under two minutes left${p.hungry ? ' · <b>they are hungry</b>' : ''}.</p>`;
-		{
-			// the ledger: every resource that ever came in or went out, by where it came from and went (earn and spend, 08-core)
-			const L = p.ledger || { in: {}, out: {} },
-				row = (o) =>
-					Object.entries(o)
-						.filter(([, v]) => v >= 1)
-						.sort((a, b) => b[1] - a[1])
-						.map(([k, v]) => `${LEDGER_WORD[k] || k} ${fmt(v)}`)
-						.join(' · ') || 'nothing yet';
-			h += fold(
-				'ledger',
-				`Ledger · the whole game`,
-				`<p><i>In:</i> ${row(L.in)}.</p><p><i>Out:</i> ${row(L.out)}.</p><p>Trade is caravans, routes held and the cut of other caravans at your stops; the Market is sales and buys; tax is what vassals send; tribute is gifts and peace bought.</p>`,
+			full = p.rate && Object.keys(p.rate).length,
+			pace = (o) => Object.fromEntries(Object.entries(o || {}).map(([k, v]) => [k, (v * 60) / Math.max(10, el)])), // the last full minute; before there is one, the pace so far
+			rt = full ? p.rate : pace(p.flow),
+			ot = full ? p.orate || {} : pace(p.spent1),
+			K = G.storesK,
+			line = (o) =>
+				Object.entries(o || {})
+					.filter(([, v]) => v >= 0.5)
+					.sort((a, b) => b[1] - a[1])
+					.map(([w, v]) => `${LEDGER_WORD[w] || w} ${fmt(v)}`)
+					.join(' · ') || 'nothing yet';
+		let h = title('Stores', 'the last minute');
+		for (const r of RES) {
+			const k = KEY[r],
+				i = Math.round(rt[k] || 0),
+				o = Math.round(ot[k] || 0);
+			h += acts(
+				info(RESOURCES[r].name, '', 'left line') +
+					info(`<span style="color:${grad(velOf(p, k))}">${fmt(p.res[k])}</span>`, 'have') +
+					info(i ? '+' + i : 0, 'in', i ? 'gain' : '') +
+					info(o ? '−' + o : 0, 'out', o ? 'loss' : '') +
+					info(V.filter((u) => u.job === r).length, 'on it') +
+					btn(`storesk:${k}`, '›', '', K === k && G.infoOpen ? 'on' : ''),
+				'c6',
 			);
 		}
-		return h;
+		if (K) {
+			// the why of one resource (Albert, Build 63), both ways. By reason: where the minute's in and out came from and went. By who: the
+			// villagers on it, and the buildings that make it or take it (shops, the mint, the foundry)
+			const r = RES.find((x) => KEY[x] === K),
+				own = (f) =>
+					G.blds.filter((b) => b.owner === 0 && b.prog >= 1 && b.hp > 0 && BLD[b.kind].makes && f(BLD[b.kind].makes)),
+				makers = own((m) => K in m),
+				takers = own((m) => Object.values(m).some((x) => x.from && K in x.from)),
+				who = (L) => L.map((b) => `<span data-act="open:bld,${b.id}">${bldName(0, b.kind)}</span>`).join(', ');
+			fold(
+				'about',
+				'About',
+				`<p><b>${RESOURCES[r].name}, the last minute.</b> <i>In:</i> ${line((p.rateBy || {})[K] || (p.flowBy || {})[K])}. <i>Out:</i> ${line((p.orateBy || {})[K] || (p.spentBy || {})[K])}.</p>` +
+					`<p><i>Who:</i> ${V.filter((u) => u.job === r).length} villagers on it${makers.length ? `; made at ${who(makers)}` : ''}${takers.length ? `; taken by ${who(takers)}` : ''}.</p>`,
+			);
+		}
+		const L = p.ledger || { in: {}, out: {} }; // the ledger: every resource that ever came in or went out, by where it came from and went (earn and spend, 08-core)
+		return (
+			h +
+			fold(
+				'about',
+				'About',
+				`<p><i>Goods:</i> ${GOODK.map((k) => `${GOODS[k].name} ${Math.floor(p.goods[k] || 0)}${rt[k] ? ` (+${Math.round(rt[k])})` : ''}`).join(' · ')}. Goods wait at your Market for caravans; wool for a Workshop.</p>` +
+					`<p>In and Out: the last minute. What you have is green while it gains, deeper the faster; white while it holds; red as it loses, reddest with under two minutes left${p.hungry ? ' · <b>they are hungry</b>' : ''}.</p>` +
+					`<p><b>Ledger, the whole game.</b> <i>In:</i> ${line(L.in)}. <i>Out:</i> ${line(L.out)}.</p><p>Trade is caravans, routes held and the cut of other caravans at your stops; the Market is sales and buys; tax is what vassals send; tribute is gifts and peace bought.</p>`,
+			)
+		);
 	},
 	fault: () =>
 		title('Something went wrong', 'your last save is kept') +
@@ -23494,6 +23616,9 @@ const CARDS = {
 		);
 	},
 	menu(c) {
+		// the Build menu (MENU-SPEC §8, picture Build Menu): six tabs, a folder; the buildings double-wide, three a rank, words only: the name,
+		// how many of how many, the cost. Blue: it fits where you tapped; dim: a later age, or all built. The page holds the height of the
+		// biggest tab, so the tabs never move under the finger
 		const p = G.P[0],
 			M = MENUS.find((m) => m.id === c.id);
 		G.lastMenu = c.id;
@@ -23503,46 +23628,32 @@ const CARDS = {
 				cp = capFor(0, k),
 				n = bldsOf(0, k).length,
 				full = !lock && n >= cp,
-				fits = G.buildAt && G.buildAt.hint === k;
-			return (
-				`<div class="bk">` +
-				btn(
-					`build:${k}`,
-					B.short || bldName(0, k),
-					lock
-						? AGES[B.age].name
-						: full
-							? `✓ all ${cp} built`
-							: !afford(p, B.cost)
-								? `short ${need(B.cost)}`
-								: (fits ? 'fits here · ' : '') + costText(B.cost),
-					lock || full || !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
-					lock || full ? undefined : afford(p, B.cost) ? 1 : fillOf(B.cost),
-				).replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>') +
-				'</div>'
+				fits = G.buildAt && G.buildAt.hint === k,
+				can = afford(p, B.cost);
+			return btn(
+				`build:${k}`,
+				B.short || bldName(0, k),
+				lock
+					? `${AGES[B.age].name} age`
+					: (cp < 99 ? `${n}/${cp} · ` : '') +
+							(full ? 'all built' : can ? costText(B.cost) : `short ${need(B.cost)}`) +
+							(fits ? ' · fits here' : ''),
+				lock || full ? 'dis' : fits ? 'go' : '',
+				lock || full ? undefined : can ? 1 : fillOf(B.cost),
 			);
-		}; // the name, how many of how many, the cost on one line
-		const most = Math.max(...MENUS.map((m) => m.items.length)),
-			ghosts =
-				'<div class="bk"><button class="ghost" disabled aria-hidden="true" tabindex="-1"><b>.</b><small>.</small></button></div>'.repeat(
-					most - M.items.length,
-				); // blank places keep every menu as tall as the biggest (two rows), so the page never changes height
+		};
 		return (
 			title('Build', G.buildAt && G.buildAt.x !== undefined ? 'here' : '') +
-			acts(
+			folder(
+				'menu',
 				MENUS.map((m) => {
-					const open = m.items.filter((k) => BLD[k].age <= p.age),
-						allBuilt = open.length > 0 && open.every((k) => bldsOf(0, k).length >= capFor(0, k)); // every building the age allows is at its limit: the tab dims with a check (Build 61)
-					return btn(
-						`menu:${m.id}`,
-						(allBuilt ? '✓ ' : '') + m.name,
-						'',
-						m.id === c.id ? 'on' : '',
-					);
-				}).join(''),
-				'c6 chipsrow',
+					const open = m.items.filter((k) => BLD[k].age <= p.age); // every building the age allows at its limit: the tab says so with a check (Build 61)
+					return [m.id, m.name, open.length && open.every((k) => bldsOf(0, k).length >= capFor(0, k)) ? '✓' : ''];
+				}),
+				c.id,
+				`<div class="hold" style="--n:${Math.ceil(Math.max(...MENUS.map((m) => m.items.length)) / 3)}">${list(M.items.map(item))}</div>`,
+				'c6',
 			) +
-			acts(M.items.map(item).join('') + ghosts, 'c4 menu') +
 			fold('menu', 'What each one does', M.items.map((k) => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''))
 		);
 	},
@@ -23551,19 +23662,30 @@ const CARDS = {
 	mail() {
 		const M = G.mail || [],
 			g = G.mailG,
-			show = M.filter((m) => !g || m.grp === g).slice(0, 6),
-			gs = Object.keys(GROUPS).filter((k) => k === g || M.some((m) => m.grp === k));
+			show = M.filter((m) => !g || m.grp === g).slice(0, 6);
 		let h = title('Mail', g ? GROUPS[g] : `${M.length} kept`);
 		h += acts(
-			[btn('mailg:', 'All', '', g ? '' : 'on'), ...gs.map((k) => btn(`mailg:${k}`, GROUPS[k], hiddenG(k) ? 'hidden' : '', g === k ? 'on' : ''))].join(''),
-			'c5',
-		);
+			[
+				btn('mailg:', 'All', '', g ? '' : 'on'),
+				...MAIL_FILTERS.map((k) => btn(`mailg:${k}`, GROUPS[k], hiddenG(k) ? 'hidden' : '', g === k ? 'on' : '')),
+			].join(''),
+			'c6',
+		); // the six filters, one rank, always the same six in the same places
 		if (g && g !== 'reply')
-			h += acts(btn(`mailtog:${g}`, hiddenG(g) ? 'Show as it comes' : 'Hide the previews', hiddenG(g) ? 'now: quietly to the mail, red still shows' : 'now: a preview, then here'), 'c1');
-		h += show.length
-			? `<div class="mrows">${show.map((m) => `<button class="mr" data-act="${linkOf(m) || 'mail'}" style="--cc:${ccOf(m.cls)}"><b>${m.text}${m.n > 1 ? ` ×${m.n}` : ''}</b><small>${GROUPS[m.grp]} · ${clock(m.t)}${m.why ? ' · ' + m.why : ''}</small></button>`).join('')}</div>`
-			: '<p class="dim">Nothing here yet.</p>';
-		return h;
+			h += acts(
+				btn(
+					`mailtog:${g}`,
+					hiddenG(g) ? 'Show as it comes' : 'Hide the previews',
+					hiddenG(g) ? 'now: quietly to the mail, red still shows' : 'now: a preview, then here',
+				),
+				'c1',
+			);
+		return (
+			h +
+			(show.length
+				? `<div class="mrows">${show.map((m) => `<button class="mr" data-act="${linkOf(m) || 'mail'}" style="--cc:${ccOf(m.cls)}"><b>${m.text}${m.n > 1 ? ` ×${m.n}` : ''}</b><small>${GROUPS[m.grp]} · ${clock(m.t)}${m.why ? ' · ' + m.why : ''}</small></button>`).join('')}</div>`
+				: acts(info('Nothing here yet', 'each message is kept here as it comes', 'left line'), 'c1'))
+		);
 	},
 	milestone(c) {
 		const id = c.page,
@@ -23700,7 +23822,7 @@ const CARDS = {
 const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'end', 'research', 'menu']); // the cards that take the whole height
 // three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet: lg every rank that fits above the row (the Build
 // card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most
-const SIZE_OF = (t) => (FULL.has(t) ? 'lg' : t === 'squad' || t === 'stores' || t === 'emergency' ? 'sm' : 'md');
+const SIZE_OF = (t) => (FULL.has(t) ? 'lg' : t === 'squad' || t === 'emergency' ? 'sm' : 'md');
 function renderCard() {
 	const c = G.card;
 	if (!c || !CARDS[c.type]) return;
@@ -24148,10 +24270,6 @@ const ICON = {
 	play: SVG(16, '<path d="M4.5 2.8 L13 8 L4.5 13.2 Z" fill="currentColor"/>'),
 	pause: SVG(16, '<path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/>'),
 };
-ICON.tab = {
-	train: ICON.hammer.replace('class="gl"', 'class="ti"'),
-	research: ICON.book.replace('class="gl"', 'class="ti"'),
-}; // a hammer for making things, a book for learning them, on a card's two tabs
 ICON.book = ICON.book.replace('class="gl"', 'width="18" height="18"');
 // One mold for every control: a cell is an icon spot and a word spot. The tally is a pill of cells; a slot of the row or of a card is one
 // cell in its own box (MENU-SPEC §6): a picture icon at 18 with its number beside it and its word at 12 under it (pic), or a symbol alone
@@ -24289,6 +24407,7 @@ const GROUPS = {
 	advice: 'Advice',
 	reply: 'Replies',
 };
+const MAIL_FILTERS = ['war', 'home', 'land', 'trade', 'realm']; // the Mail card's filters after All (MENU-SPEC §8: six, one rank); the other groups show under All
 const QUIET = new Set(['news', 'soft']); // quiet kinds never preview: they wait in the mail
 const urgentCls = (cls) => !!cls && cls.startsWith('warn');
 const ccOf = (cls) => codeOf(urgentCls(cls) ? 'r' : cls === 'good' ? 'g' : cls === 'tip' ? 'b' : 'w'); // the colour code, from its one home
@@ -25042,9 +25161,10 @@ const ACT = {
 		openCard(page ? { type, page } : { type });
 	},
 	storesk(a) {
-		G.storesK = G.storesK === a ? null : a;
+		G.storesK = G.storesK === a && G.infoOpen ? null : a;
+		G.infoOpen = !!G.storesK;
 		refresh();
-	}, // the Stores card: tap a row for its why
+	}, // the Stores card: › opens the book on a resource's why; again, it closes
 	open(a) {
 		const [type, id] = a.split(',');
 		openCard({ type, id: Number(id) });
@@ -25076,6 +25196,9 @@ const PLAY = {
 	ktab(a) {
 		G.ktab = a;
 	},
+	mpick(a) {
+		G.mktK = a;
+	}, // the Market: the good that Sell and Buy act on
 	sel(a) {
 		G.sel = a === 'all' ? 'all' : Number(a);
 	},
@@ -25119,15 +25242,6 @@ const PLAY = {
 		G.bnIntent[i] = k;
 		feel('tick');
 	}, // a squad's intent: one of three, chosen
-	back(a) {
-		const u = G.units.find((v) => v.id === Number(a));
-		if (!u) return;
-		if (u.pj || u.was) setJob(u, u.pj || u.was);
-		else if (G.P[0].rally) setJob(u, G.P[0].rally);
-		else return say('No work to go back to.', '', 3);
-		u.post = null;
-		closeCard();
-	}, // the worker card: back to the work it had
 	waim() {
 		const H = G.hud;
 		H.aim = true;
@@ -25301,13 +25415,15 @@ const PLAY = {
 		say(`To ${j}.`, '', 2);
 		setPick([]);
 	},
-	pbuild() {
-		G.buildBy = picked()
-			.filter((u) => u.kind === 'vil')
-			.map((u) => u.id);
-		setPick([]);
+	pbuild(a) {
+		G.buildBy = a
+			? [Number(a)]
+			: picked()
+					.filter((u) => u.kind === 'vil')
+					.map((u) => u.id);
+		if (!a) setPick([]);
 		openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id });
-	}, // whatever you place next, the picked villagers raise it
+	}, // whatever you place next, the picked villagers raise it (or the villager whose card asked: its job picker's Build)
 	phold() {
 		for (const u of picked())
 			if (isSoldier(u)) {
@@ -25515,10 +25631,6 @@ const PLAY = {
 	},
 	sendbld(a) {
 		sendBuild(0, Number(a));
-	},
-	buildat(a) {
-		const [v, s] = a.split(',').map(Number);
-		sendBuild(0, s, v);
 	},
 	hunt3(a) {
 		for (let i = 0; i < 3; i++) sendHunt(0, Number(a));
@@ -25739,7 +25851,7 @@ function learnAct(verb, arg) {
 		learn('job');
 		const n = G.nodes.find((x) => x.id === Number(arg));
 		if (n) learn('job:' + (n.kind === 'farm' && n.type === 'food' ? 'field' : n.type));
-	} else if (['sendbld', 'buildat', 'age', 'trade'].includes(verb)) learn(verb === 'buildat' ? 'sendbld' : verb);
+	} else if (['sendbld', 'age', 'trade'].includes(verb)) learn(verb);
 }
 let lpT = 0,
 	lpDone = false;
