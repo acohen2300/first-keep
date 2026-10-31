@@ -9,7 +9,8 @@
 ## The links
 - **Live:** https://acohen2300.github.io/first-keep (`index.html`): an older build, untouched. Live changes only on Albert's word.
 - **v70 · Restoration (frozen):** https://acohen2300.github.io/first-keep/v70-restoration/ and the stamp `v70`. Never edited.
-- **Preview:** https://acohen2300.github.io/first-keep/preview/ : v80 work from here on.
+- **Preview:** https://acohen2300.github.io/first-keep/preview/ : v80's home. It holds exactly the v70 build until the first v80 change is published; there is no v80 build, stamp or tag yet.
+- **Parked ideas** live in `CUTS.md` (cuts, "review for later") and the v80 Build List, until the Parked list is made.
 - **Repo:** branch `main`, public. Commits as `Albert <acohen2300@users.noreply.github.com>` with the session's trailers (`publish.py` takes them from `TRAILER`).
 
 ## Read in this order

@@ -13,5 +13,5 @@ Then read, in order:
 4. `RULES.md` §0: the Build Rules, in Albert's words.
 
 How to work with Albert: a list first; nothing is built until he says yes twice ("yes yes"); pictures before code; preview only, live only on his word; every cut logged in `CUTS.md`; no flattery, clear stances, fewest words.
-Commits as `Albert <acohen2300@users.noreply.github.com>`, never a personal email; the repo is public.
+Commits as `Albert <acohen2300@users.noreply.github.com>`, never a personal email; the repo is public. Keep the session's `Co-Authored-By` and `Claude-Session` trailers (`publish.py` takes them from `TRAILER`).
 v70 documents and `docs/v70 Record/` are a closed record: read them, do not edit them.

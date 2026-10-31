@@ -4,7 +4,7 @@
 **In Albert's words:** up to 62 was great; 63 to 69 was a mess; 70 is restored; 80 is current.
 
 ## In one paragraph
-On Oct 30, Builds 63 to 66 were built in one long chat whose context had drifted and been compressed. Changes Albert had not clearly agreed to went in, and the decisions behind them were lost. By the afternoon the preview (Build 65) had no way to open the Build menu, the live site still showed a build from Oct 28, and there was no marked baseline to go back to. That evening and through the night, a new chat traced what went wrong, restored what worked, wrote down every rule and drawing, and rebuilt the game as Build 70, "Restoration": four parts, three previews, every change agreed first. Everything after that is v80.
+On Oct 30, Builds 63 to 66 were built in one long chat whose context had drifted and been compressed. Changes Albert had not clearly agreed to went in, and the decisions behind them were lost. By the afternoon the preview (Build 65) had no way to open the Build menu, the live site still showed a build from Oct 28, and there was no marked baseline to go back to. That evening and through the night, a new chat traced what went wrong, restored what worked, wrote down every rule and drawing, and rebuilt the game as Build 70, "Restoration": four parts, four previews, every change agreed first. Everything after that is v80.
 
 ## Timeline
 | When | What |
@@ -22,6 +22,8 @@ On Oct 30, Builds 63 to 66 were built in one long chat whose context had drifted
 | Oct 31, 09:44 | **Preview 2**: the row (Jobs, War, Train), the rings, words under the icons, the squad card. |
 | Oct 31, 10:19 | **Preview 3**: the quick action, Emergency with four. Albert: "It plays clean. It feels tight." |
 | Oct 31, 10:39 | v70 to be frozen as **"v70 · Restoration"** at its own link; everything open rolls to v80. |
+| Oct 31, 10:52 | **Preview 4**: every card (Town Center, Market, Build menu, Villager, Stores, a building, Mail) on the mold. |
+| Oct 31, 11:01 | **v70 · Restoration** frozen at `/v70-restoration/`; the records written. (Decided at 10:39: everything open rolls to v80.) |
 
 ## What went wrong, and why
 1. **Changes shipped without a clear yes.** The door took the hammer's place and with it the only way to build. Nobody asked Albert first.

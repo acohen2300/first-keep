@@ -1,4 +1,4 @@
-# First Keep: the rule book (Oct 30, 2026; Build 65 on the preview)
+# First Keep: the rule book (Oct 30, 2026; updated Oct 31 for v70 · Restoration)
 
 One home for how this game is built and how the work is done. Every build is checked against it. Where an older note disagrees, this file wins; where Albert restates a rule in the moment, his words win.
 
@@ -96,7 +96,7 @@ Albert's words, given Oct 28 as the go on Build 40, kept verbatim (two typos cor
 - One record per thing (`BLD`, `UNIT`, `TECH`, `CIVS`, `EVENTS`, `WEATHER`, `FINDS`, `PEACE`, `SCENARIOS`, `TELL`, `FORAGE`, `PRICE`, the dial tables, the verbs). New words go in the tables, never inline twice.
 - One home for every coin: every resource in or out goes through `earn` or `spend` with a reason (the ledger).
 - What the screen shows is read from the rules tables (`showByAge` reads the first age anything costs a resource), never a hand list.
-- One font, three text sizes (12, 15, 19): the title moves from 20 to 19. Dark, flat, every button with air around it on the grid; a floating menu is one tight block. Taps 44 px and up. Text 12 px and up. Contrast 4.5:1 and up (7:1 the target). No apostrophes in game words. Toasts and tips ten words at most. A card fits one page at 390 × 844.
+- One font, three text sizes (12, 15, 19; v80 has agreed two, 12 and 18, and one more font, not yet built): the title moves from 20 to 19. Dark, flat, every button with air around it on the grid; a floating menu is one tight block. Taps 44 px and up. Text 12 px and up. Contrast 4.5:1 and up (7:1 the target). No apostrophes in game words. Toasts and tips ten words at most. A card fits one page at 390 × 844.
 - One home for layout and one for colour: `MENU-SPEC.md` (the grid, the parts, every page and card) and `COLORS.md` (every colour by its name). The style sheet's `:root` holds their numbers and names; nothing is drawn or coloured that is not on those two pages.
 - The screen grammar (Build 41): every new control goes in one of the four places (the top pill, the strip, the bottom row, a corner button) or it does not go in. The play screen keeps to `UI_BUDGET` (33) always-visible buttons; a new one replaces one.
 
