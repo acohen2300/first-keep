@@ -60,3 +60,6 @@ What was agreed, word for word as listed to Albert, so nothing drifts. The drawi
 
 ## The v70 line (Albert, Oct 31, 08:20)
 "Everything agreed on, from the time you read this, is v70. Anything that isn't yet agreed on will move to 80, which will include my comments on 70." v70 is built to the end of what was agreed (the row and the rings, the quick action and Emergency, the cards), then stamped and retired as the fix and clean-up set ("I'm going to retire the 70 set as a fix and clean up set. The next list is 80"). Everything else goes on `docs/Build List - v80 - Post Clean - Working.md`.
+
+## The close (Albert, Oct 31, 10:39)
+"Yes yes": v70 is frozen at its own link, `/v70-restoration/`, labelled "v70 · Restoration", once the cards are in and reviewed; the preview link moves on to v80. "Everything open is now going to roll to 80. I don't want anything else tied to 70." Relations stays as it is in v70; its final is v80's. For v80, the rules, the drawings, the colours, the type and the handoff start as new v80 documents.
