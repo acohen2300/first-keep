@@ -168,7 +168,7 @@ function buildPanel() {
 	const st = (act, t, label, id) =>
 		`<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
 	$('jobs').innerHTML =
-		`<div class="col join">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}${doorHTML()}</div>` + // one tap makes a villager; the door under it (Build 64: it took the hammer's place; Build is a page now)
+		`<div class="col join">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}<button class="cell build" data-act="buildrow" aria-label="The Build menu"><span class="top">${ICON.hammer}</span></button></div>` + // one tap makes a villager; the door under it (Build 64: it took the hammer's place; Build is a page now)
 		JOBS.map(
 			(r) =>
 				`<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`,

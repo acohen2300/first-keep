@@ -926,3 +926,9 @@ Albert: "Yeah go for it. I'm worried about patches and fixes though… Is the co
 - **Gate**: 25 of 25 at four sizes; the play fingerprint unchanged (no rule of the simulation moved), so the harness stands as Build 63's. One catch on the way: the row's "words wear the ring's colour" rule reached the Setup card's Start and painted its words its own colour (contrast 1.1); it is the row's alone now. Lint: clean, no warnings.
 - **Soak, 3 seeds, 20 minutes, Hard, every hazard**: pass; save 240 to 241 kB; a frame drawn in 8.5, 13.2 and 15.2 ms here (headless).
 - **Size**: the shipped file 1,196,176 → 1,191,327 bytes (-4,849): the cleanup more than paid for the fixes.
+
+## Build 70 mockup (preview, Oct 30 evening): Build 62's controls back on Build 66
+Albert's ballot of Oct 30 after the drift review (Builds 63–66 kept almost whole). A mockup on the preview to play, not the finished Build 70.
+- **Back:** the hammer under People opens the Build menu in one tap (Build 62/63's way). The Emergency button (bottom right, hidden under a card) with four: Stop, Town square, All hands on deck, Shelter (Town square is a label only so far; it still runs Battle stations). The status strip stays as Build 65 for now: widening the age and people cells left the other cells 40 pt at 375 px, under the 44 pt tap rule, so the gate refused it. How Gunpowder fits is Albert's call.
+- **The chip is one constant 🔄** at the row's top left, the same on every page (Albert: "a cycle button at the top left for now").
+- **Cut, review for later:** the door under People (Albert: no); the Realm page (no); pictures and ★ pins on the Build menu (no; the Build page keeps its pictures).

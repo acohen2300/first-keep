@@ -44,7 +44,7 @@ PLAY = """async () => {
   tap('[data-act="menu:home"]'); if (!G.card || G.card.id !== 'home') out.push('the Home tab did not open');
   tap('[data-act="build:house"]'); if (!G.place || G.place.kind !== 'house') out.push('tapping House did not start placing');
   F.act('cancel'); if (G.place) out.push('Cancel left a placement'); F.hudPage('jobs'); F.ui(true);
-  tap('#doorB'); if (!G.card && !G.place && (G.hud.page || 'jobs') === 'jobs') out.push('the door went nowhere'); F.act('close'); F.act('cancel'); F.hudPage('jobs');
+  tap('#jobs [data-act=buildrow]'); if (!G.card) out.push('the hammer opened no Build menu'); F.act('close'); F.act('cancel'); F.hudPage('jobs');
   F.hudPage('realm'); F.ui(true); if (document.querySelectorAll('#huddle button.realm').length !== 6) out.push('the Realm page does not hold six tiles'); F.hudPage('jobs'); F.ui(true);
   F.news('trade', 'A test line for the mail.', '', 4); F.act('pvx'); if (G.pvAsk !== 'trade') out.push('× on news did not ask to hide its group'); F.act('pvhide:trade'); F.news('trade', 'Another quiet line.', '', 4); if ((G.mail[0] || {}).ru) out.push('a hidden group still previewed'); F.news('trade', 'Raiders took the caravan.', 'warn', 4); if (!(G.mail[0] || {}).ru) out.push('a red line from a hidden group did not show'); F.act('mailall');
   const q0 = F.keepOf(0).q.length; tap('#tPeople'); if (F.keepOf(0).q.length !== q0 + 1) out.push('People did not queue a villager');
@@ -177,12 +177,6 @@ async def main():
         wraps = await pg.evaluate("""(L) => { const F = window.__fk; F.newGame(5); F.act('close'); F.setPause(false); F.say('x', '', 60); F.ui(true); const e = document.querySelector('#pv .t span'), out = [];
           if (!e) return ['no preview']; for (const t of L) { e.textContent = t; if (e.scrollWidth > e.clientWidth + 1) out.push(t); } return out; }""", L); await pg.close()
         print(('PASS ' if not wraps else 'FAIL ') + f'{len(L)} messages fit the preview at 375 px', '' if not wraps else wraps[:6]); fails += bool(wraps)
-        # the door's word whole at 375 px, for every event, coming and running (Build 64: the alert bar folded into the door)
-        pg = await br.new_page(viewport={'width': 375, 'height': 667}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(500)
-        cut = await pg.evaluate("""() => { const F = window.__fk; F.newGame(5); F.act('close'); F.setPause(true); const G = F.G, out = [];
-          const test = (k, ph) => { F.ui(true); const e = document.querySelector('#doorB .wd'); if (!e) { out.push('no door'); return; } if (e.scrollWidth > e.clientWidth + 1) out.push(k + ' ' + ph + ': ' + e.textContent); };
-          for (const k of Object.keys(F.EVENTS)) { G.ev.cur = null; G.ev.warned = k; G.ev.next = G.t + 12; test(k, 'coming'); G.ev.warned = null; F.startEvent(k); test(k, 'running'); F.endEvent(); } return out; }"""); await pg.close()
-        print(('PASS ' if not cut else 'FAIL ') + 'the door says every event whole at 375 px', '' if not cut else cut[:6]); fails += bool(cut)
         # every map is fair (Build 49: corners are no longer copies): on ten seeds, the sides' walks to work, the Throne and a neighbour within FAIR.spread
         pg = await br.new_page(); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(400)
         unfair = await pg.evaluate("() => { const F = window.__fk, out = []; for (let s = 1; s <= 10; s++) { F.newGame(s); const f = F.fairness(); if (f.worst > F.FAIR.spread) out.push(s + ': ' + JSON.stringify(f.spread)); } return out; }"); await pg.close()

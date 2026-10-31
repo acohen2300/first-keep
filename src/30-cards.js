@@ -618,9 +618,9 @@ const CARDS = {
 					lock ? 'dis' : full ? 'dis done' : !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
 					lock || full ? undefined : afford(p, B.cost) ? 1 : fillOf(B.cost),
 				)
-					.replace('<b>', `${lock ? '' : bldThumb(k)}<b>`)
+					.replace('<b>', '<b>')
 					.replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>') +
-				`<button class="pin${pinned ? ' on' : ''}" data-act="fav:${k}" aria-label="${pinned ? 'Unpin from' : 'Pin to'} the Build page">${ICON.star}</button></div>`
+				'</div>'
 			);
 		}; // a picture, the name, how many of how many, the cost on one line; the star pins it to the Build page (Build 63)
 		const most = Math.max(...MENUS.map((m) => m.items.length)),

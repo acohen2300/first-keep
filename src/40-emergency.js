@@ -140,12 +140,12 @@ CARDS.emergency = () => {
 			? `<p data-act="jump:${Math.round(I.x)},${Math.round(I.y)}"><b>${I.n}</b> ${I.what} · ${I.eta} s away · tap to go</p>`
 			: '') +
 		acts(
-			btn('emg:shelter', 'Shelter', `${kids} villagers`, kids ? 'warn' : 'dis') +
-				btn('emg:battle', 'Battle stations', def ? `${def} defending` : 'soldiers', 'warn'),
+			btn('emgresume', 'Stop', 'everyone back to work', G.emg ? 'go' : 'dis') +
+				btn('emg:battle', 'Town square', 'everyone to the Town Center', 'warn'),
 		) +
 		acts(
-			btn('emg:hands', 'All hands on deck', 'everyone', 'warn') +
-				btn('emgresume', 'Resume', 'villagers back to work', G.emg ? 'go' : 'dis'),
+			btn('emg:hands', 'All hands on deck', 'villagers and soldiers', 'warn') +
+				btn('emg:shelter', 'Shelter', `${kids} villagers inside`, kids ? 'warn' : 'dis'),
 		) +
 		fold(
 			'why',

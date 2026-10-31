@@ -20,7 +20,7 @@ const HUD = {
 	gap: 8, // reinforcements arriving within this many seconds of each other are one wave
 	waves: 3,
 };
-const PAGES = ['jobs', 'realm', 'build', 'war', 'squad', 'train']; // Build 64: fixed for everyone. Jobs is home; the Realm is the dashboard; then Build and the three military pages side by side
+const PAGES = ['jobs', 'build', 'war', 'squad', 'train']; // Build 64: fixed for everyone. Jobs is home; the Realm is the dashboard; then Build and the three military pages side by side
 const pageName = { jobs: 'Jobs', realm: 'Realm', war: 'War', build: 'Build', squad: 'Squad', train: 'Train' };
 const pageIcon = () => ({
 	jobs: ICON.list,
@@ -590,7 +590,9 @@ function huddleUI() {
 		' pg-' +
 		page;
 	const chip = $('hudB');
-	chip.innerHTML = `${pageIcon()[page]}<b>▸</b>`;
+	if ($('emgB') && !$('emgB').innerHTML) $('emgB').innerHTML = ICON.def;
+	if ($('emgB')) $('emgB').hidden = !!G.card; // under a card it would sit over the card's buttons
+	chip.innerHTML = ICON.cycle; // one constant: the cycle (Albert, Build 70); the page shows in the row's tint
 	chip.className = 'fab chip ' + page;
 	chip.setAttribute('aria-label', `${pageName[page]}: the next page`);
 	if (page !== 'jobs') {
@@ -900,6 +902,7 @@ function doorUI() {
 		fresh = key !== DOOR.key;
 	DOOR.top = T;
 	const el = $('doorB');
+	if (!el) return;
 	if (el.sig !== sig) {
 		el.sig = sig;
 		el.className = 'cell st door ' + st;

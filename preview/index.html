@@ -42,10 +42,10 @@ button.cell:focus-visible,.strip button:focus-visible,button.fab:focus-visible{o
 #hud{z-index:4}
 /* The status pill (Build 64): the state of the world in the tally's mold, one cell under each store column, so the eye reads down a column. */
 #status{height:var(--strip);overflow:visible;align-items:flex-start}#status .cell{height:44px;display:flex;align-items:flex-start;justify-content:center;gap:2px;padding:0 1px;overflow:hidden;min-width:0}#status .cell .gl,#status .cell .wd{position:static;transform:none;width:auto;height:26px;line-height:26px;font-size:12px;white-space:nowrap}#status .cell span.gl{display:inline-flex;align-items:center}#status .cell .gl svg{position:static;transform:none;width:13px;height:13px}#status .cell .gl:empty{display:none}#status.pill .cell+.cell::before{top:6px;bottom:auto;height:14px}   /* thin to look at (28 px), 44 px to tap: the buttons hang below it, as the strip did */
-#status .cell.dim{color:var(--mute)}#status .cell.dim .wd{color:var(--mute)}#status .cell.lit-r .wd{color:var(--ring-r)}#status .cell.lit-b .wd{color:var(--ring-b)}#status .cell.lit-b{animation:glowb 1.8s ease-in-out infinite}@keyframes glowb{0%,100%{text-shadow:0 0 3px rgba(79,157,255,.35)}50%{text-shadow:0 0 12px rgba(79,157,255,1)}}
+#status .cell.dim{color:var(--mute)}#status .cell.dim .wd{color:var(--mute)}#status .cell.lit-r .wd{color:var(--ring-r)}#status .cell.lit-b .wd{color:var(--ring-b)}#status .cell.lit-b{animation:glowb var(--t-long) ease-in-out infinite}@keyframes glowb{0%,100%{text-shadow:0 0 3px rgba(79,157,255,.35)}50%{text-shadow:0 0 12px rgba(79,157,255,1)}}
 /* The preview (Build 64): a message arrives the way a phone shows a text, over the map, and fades; nothing under it moves. The bar on its
    left is the colour code: red wrong, green done, blue act on it, white news. */
-#pv{position:absolute;z-index:5;top:calc(var(--hb) + 6px);left:var(--pad);right:var(--pad);display:flex;align-items:stretch;min-height:44px;box-sizing:border-box;border:1px solid var(--hair);border-left:5px solid var(--cc,#e9ecef);border-radius:var(--r);background:var(--sheet);box-shadow:0 4px 14px rgba(0,0,0,.45);color:var(--bone);transition:opacity .4s}
+#pv{position:absolute;z-index:5;top:calc(var(--hb) + 6px);left:var(--pad);right:var(--pad);display:flex;align-items:stretch;min-height:44px;box-sizing:border-box;border:1px solid var(--hair);border-left:5px solid var(--cc,var(--ring-w));border-radius:var(--r);background:var(--sheet);box-shadow:0 4px 14px rgba(0,0,0,.45);color:var(--bone);transition:opacity var(--t-sweep)}
 #pv.fade{opacity:0}#pv button{all:unset;box-sizing:border-box;min-height:44px;cursor:pointer;touch-action:manipulation}
 #pv .t{flex:1;min-width:0;padding:4px 10px;display:flex;flex-direction:column;justify-content:center;font-size:15px;font-weight:600;line-height:1.2}
 #pv .t small{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}#pv .t span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -154,7 +154,7 @@ button.ghost{visibility:hidden}
 #huddle .cell.sel{border-color:#ffb23d}
 #huddle button.cell.sq.sel{background:linear-gradient(#54402a,#3a2a1c);border-color:#c9a46a}#huddle button.cell.go .wd,#huddle button.cell.go .gl{color:#9cc8ff}
 #huddle .msn{touch-action:none}#huddle .msn.empty{background:transparent;border-style:dashed}
-#huddle .msn.lose{--pc:#ff5a4a;animation:hudPulse 1s infinite}#huddle .msn.win{--pc:#43c06b;animation:hudPulse 1.2s infinite}
+#huddle .msn.lose{--pc:var(--ring-r);animation:hudPulse var(--t-settle) infinite}#huddle .msn.win{--pc:var(--ring-g);animation:hudPulse var(--t-settle) infinite}   /* losing and winning pulse alike; the colour says which */
 @keyframes hudPulse{50%{border-color:var(--pc);box-shadow:inset 0 0 0 1px var(--pc),0 0 10px var(--pc)}}
 @media (prefers-reduced-motion:reduce){#huddle .msn.lose,#huddle .msn.win{animation:none;border-color:var(--pc)}#huddle .blink{animation:none}}
 
@@ -162,7 +162,7 @@ button.ghost{visibility:hidden}
 #spdPop{position:absolute;z-index:7;display:flex;gap:4px;padding:4px;background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35)}#spdPop[hidden]{display:none}#spdPop button{min-width:52px;min-height:44px}#spdPop button.cur{box-shadow:inset 0 0 0 2px var(--mute);border-color:var(--mute)}
 #tally button.cell{isolation:isolate}#tally button.cell.sel::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:7px;background:#3a2a1c;border:1px solid var(--mute)}   /* the on mark: a small tile inside the cell; ::before is the divider */
 #pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:12px;font-weight:700;color:var(--gold)}
-button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--c1x,var(--pad));bottom:calc(var(--ob) + 4px);width:var(--c1w,50px);height:44px;padding:0;border-radius:var(--r);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:3px;color:var(--bone)}   /* exactly one column wide, over the first slot: the chip, People and the door read as one stack (Albert, Build 64) */#hudB svg{position:static;transform:none;width:20px;height:20px}#hudB b{font-weight:700}#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}
+button.fab{all:unset;box-sizing:border-box;position:absolute;z-index:3;width:44px;height:44px;bottom:calc(var(--ob) + 8px);background:var(--sheet);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.35);color:var(--bone);cursor:pointer;touch-action:manipulation}.fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}#emgB{right:var(--pad);bottom:calc(var(--ob) + 60px)}#homeB{left:var(--pad);bottom:calc(var(--ob) + 60px)}#hudB{left:var(--c1x,var(--pad));bottom:calc(var(--ob) + 4px);width:var(--c1w,50px);height:44px;padding:0;border-radius:var(--r);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:3px;color:var(--bone)}   /* exactly one column wide, over the first slot: the chip, People and the door read as one stack (Albert, Build 64) */#hudB svg{position:static;transform:none;width:20px;height:20px}#hudB b{font-weight:700}#hudB.build{background:linear-gradient(#56391f,#3a2716);border-color:#8c6a3d}
 .tiles button.cell.sq.sel{background:linear-gradient(#54402a,#3a2a1c);border-color:#c9a46a}.tiles .top b.plus{font-size:16px;font-weight:700;margin-left:2px}#card .qs.hdr span{font-size:12px;color:var(--mute)}#card .qs.hdr b{font-size:12px;color:var(--mute);font-weight:500}#stage.busy #hudB{display:none}
 #stage.busy #homeB{display:none}
 #stage.picking #homeB{display:none}
@@ -217,7 +217,7 @@ button.ok small{color:#8fd4a4}
 #card .seg{display:flex;align-items:center;gap:6px;min-height:44px}#card .seg>b{flex:0 0 78px;font-size:13px}#card .seg2{display:grid;grid-template-columns:1fr 1fr;gap:6px}#card .seg2 .seg>b{flex-basis:40px}
 #card .segT{flex:1;min-width:0;position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));border:1px solid var(--brass);border-radius:22px;background:rgba(0,0,0,.3);padding:0;box-sizing:border-box}
 #card .segT button:not(#cardX):not(#cardI){position:relative;min-height:44px;padding:0 2px;background:none;border:0;box-shadow:none;border-radius:20px;font-weight:700;font-size:13px;color:var(--bone)}
-#card .segT button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;box-shadow:0 0 10px rgba(242,210,122,.4);border:0;transition:background-color .15s}#card .segT button::after{content:none}
+#card .segT button.on:not(#cardX):not(#cardI){background-color:#d9ae55;background-image:radial-gradient(circle at 50% 30%,#f2d27a,#b8862e);color:#2a1c10;box-shadow:0 0 10px rgba(242,210,122,.4);border:0;transition:background-color var(--t-quick)}#card .segT button::after{content:none}
 @media (max-height:720px){#card.setup .civline{display:none}}   /* small phones: the people line and the challenge heading step aside, so the whole card fits on one page */
 #card .menu .cnt{font-size:13px;font-style:normal;font-weight:700;color:var(--mute)}
 #card.setup{gap:4px}#card.setup h3{min-height:36px}#card .acts.civs button:not(#cardX):not(#cardI){padding:0 1px}#card .acts.civs b{font-size:13px}
@@ -246,14 +246,14 @@ button.ok small{color:#8fd4a4}
 /* The door (Build 64): the bottom of the first slot on Jobs; its state is the colour code's ring (the one ring rule below) and the same colour in its words */
 #orders button.cell.door{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px}#orders button.cell.door .top{position:static;display:inline-flex;transform:none;height:auto}#orders button.cell.door .top .gl{position:static;transform:none;width:15px;height:15px}#orders button.cell.door .wd{position:static;transform:none;font-size:12px;line-height:14px;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}
 #orders button.cell.door .dn{position:absolute;top:1px;right:2px;min-width:12px;padding:0 3px;border:1.5px solid var(--ring-r);border-radius:8px;background:var(--panel);color:var(--ring-r);font-size:12px;line-height:13px}   /* how many need you: a ring round the number */
-#orders button.cell.door.pulse{animation:doorp 1.2s ease-out 1}@keyframes doorp{0%{box-shadow:0 0 0 0 rgba(255,255,255,.75)}100%{box-shadow:0 0 0 14px rgba(255,255,255,0)}}
+#orders button.cell.door.pulse{animation:doorp var(--t-settle) ease-out 1}@keyframes doorp{0%{box-shadow:0 0 0 0 rgba(255,255,255,.75)}100%{box-shadow:0 0 0 14px rgba(255,255,255,0)}}
 #orders :is(button.blue,button.st-blue,button.go) .wd,#orders button.blue,#orders button.go{color:var(--ring-b)}#orders button.st-green .wd{color:var(--ring-g)}#orders :is(button.red,button.st-red) .wd,#orders button.red{color:var(--ring-r)}   /* in the row a state's words wear its ring's colour; a card keeps its own words */
 #card .acts .trow{display:flex;gap:3px;min-width:0}#card .trow>button:first-child{flex:1;min-width:0}#card .trow button.goto:not(#cardX):not(#cardI){flex:0 0 44px;width:44px;min-height:44px;padding:0;font-size:22px;font-weight:700;color:var(--lamp);border:1px solid var(--line);border-radius:8px;background:transparent;box-shadow:none}
 /* The mail: each line with its colour on its left edge */
 #card .mrows{display:flex;flex-direction:column;gap:4px}#card button.mr:not(#cardX):not(#cardI){min-height:44px;padding:4px 8px;align-items:flex-start;text-align:left;border-left:4px solid var(--cc)}#card button.mr b{font-size:13px;font-weight:600}#card button.mr small{font-size:12px;color:var(--mute)}
 /* The one ring (Build 64, Albert: "a ring and a glow, never a fill"; "one or two rings"): every state anywhere is this ring in its
    colour, the colour code's three: blue available, green active or done, red wrong. One rule; a control only names its state. */
-:root{--ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b;--ring-w:#e9ecef}   /* the colour code's one home (Build 65): the code reads these too */
+:root{--ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b;--ring-w:#e9ecef;--t-quick:.15s;--t-sweep:.4s;--t-settle:1.2s;--t-long:2.4s}   /* the colour code's one home (Build 65), and the four timings, as SoRen names them (Build 66): quick, a state changes; sweep, a thing moves; settle, a thing comes to rest; long, two settles. The code reads these too */
 :is(#orders,#card,#strip) :is(button.go,button.blue,button.st-blue):not(#cardX):not(#cardI){--rc:var(--ring-b)}
 :is(#orders,#card,#strip) :is(button.ok,button.st-green):not(#cardX):not(#cardI){--rc:var(--ring-g)}
 :is(#orders,#card,#strip) :is(button.red,button.st-red):not(#cardX):not(#cardI){--rc:var(--ring-r)}
@@ -274,6 +274,7 @@ button.ok small{color:#8fd4a4}
   <section id="orders"><div class="tiles"><div class="tr" id="jobs"></div><div class="tr" id="huddle" hidden></div></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
+    <button class="fab" id="emgB" data-act="card:emergency" aria-label="Emergency"></button>
     <button class="fab chip" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, Realm, Build, War, Squad, Train"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
     
@@ -296,7 +297,7 @@ button.ok small{color:#8fd4a4}
 'use strict';
 // ═════ 01-rules-basics.js: the map, speeds, difficulty, resources, jobs, players, ages, seasons ═════
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
-const BUILD = 65; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
+const BUILD = 70; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
 const MAP = 2000,
 	MID = MAP / 2,
 	DT = 1 / 30;
@@ -6762,7 +6763,9 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const hyp = (x, y) => Math.sqrt(x * x + y * y);
 // The colour code's one home is the style sheet (--ring-r, -w, -g, -b); the code reads it once (Build 65: it was written in four places).
 const CODE = {};
-const codeOf = (k) => CODE[k] || (CODE[k] = getComputedStyle(document.documentElement).getPropertyValue('--ring-' + k).trim() || '#e9ecef');
+const codeOf = (k) => CODE[k] || (CODE[k] = getComputedStyle(document.documentElement).getPropertyValue('--ring-' + k).trim() || '#fff');
+const TIME = {};
+const timeOf = (k) => TIME[k] || (TIME[k] = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--t-' + k)) * 1000 || 400); // ms, from the style sheet's four (Build 66)
 const rgbOf = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 // The one gradient (Albert, Build 64): red, through pink, white, light green, to green, for every number that has a meaning. v runs
 // from −1 (the worst) to +1 (the best); a cost row reads how near you are to paying, a store and its job read their velocity. It is the
@@ -23564,9 +23567,9 @@ const CARDS = {
 					lock ? 'dis' : full ? 'dis done' : !afford(p, B.cost) ? 'dis' : fits ? 'go' : '',
 					lock || full ? undefined : afford(p, B.cost) ? 1 : fillOf(B.cost),
 				)
-					.replace('<b>', `${lock ? '' : bldThumb(k)}<b>`)
+					.replace('<b>', '<b>')
 					.replace('</b>', cp > 1 && cp < 99 && !lock ? ` <i class="cnt">${n}/${cp}</i></b>` : '</b>') +
-				`<button class="pin${pinned ? ' on' : ''}" data-act="fav:${k}" aria-label="${pinned ? 'Unpin from' : 'Pin to'} the Build page">${ICON.star}</button></div>`
+				'</div>'
 			);
 		}; // a picture, the name, how many of how many, the cost on one line; the star pins it to the Build page (Build 63)
 		const most = Math.max(...MENUS.map((m) => m.items.length)),
@@ -24242,7 +24245,7 @@ function buildPanel() {
 	const st = (act, t, label, id) =>
 		`<button class="cell st"${id ? ` id="${id}"` : ''} data-act="${act}" aria-label="${label}">${t}</button>`;
 	$('jobs').innerHTML =
-		`<div class="col join">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}${doorHTML()}</div>` + // one tap makes a villager; the door under it (Build 64: it took the hammer's place; Build is a page now)
+		`<div class="col join">${cell('id="tPeople" data-act="train:vil" aria-label="Train a villager"', ICON.people, wd('0/0', 'tPeopleN'))}<button class="cell build" data-act="buildrow" aria-label="The Build menu"><span class="top">${ICON.hammer}</span></button></div>` + // one tap makes a villager; the door under it (Build 64: it took the hammer's place; Build is a page now)
 		JOBS.map(
 			(r) =>
 				`<div class="col">${cell(`id="tj_${r}" data-act="job:${r}"`, `<span class="top">${ICON[r]}<span class="c" id="tn_${r}">0</span></span>`, wd(cap1(r)))}<div class="pm">${st('less:' + r, '−', 'One fewer on ' + r)}${st('move:' + r, '+', 'One more on ' + r)}</div></div>`,
@@ -24781,7 +24784,7 @@ function preview() {
 		el.hidden = !h;
 	}
 	if (el.style.getPropertyValue('--cc') !== cc) el.style.setProperty('--cc', cc);
-	el.classList.toggle('fade', !!live && !ask && live.ru - now < 400);
+	el.classList.toggle('fade', !!live && !ask && live.ru - now < timeOf('sweep')); // the fade starts one sweep before the end
 }
 // ═════ 33-verbs.js: every button verb ═════
 // ───────────────────────── What every button does: one table ─────────────────────────
@@ -29075,7 +29078,7 @@ const HUD = {
 	gap: 8, // reinforcements arriving within this many seconds of each other are one wave
 	waves: 3,
 };
-const PAGES = ['jobs', 'realm', 'build', 'war', 'squad', 'train']; // Build 64: fixed for everyone. Jobs is home; the Realm is the dashboard; then Build and the three military pages side by side
+const PAGES = ['jobs', 'build', 'war', 'squad', 'train']; // Build 64: fixed for everyone. Jobs is home; the Realm is the dashboard; then Build and the three military pages side by side
 const pageName = { jobs: 'Jobs', realm: 'Realm', war: 'War', build: 'Build', squad: 'Squad', train: 'Train' };
 const pageIcon = () => ({
 	jobs: ICON.list,
@@ -29645,7 +29648,9 @@ function huddleUI() {
 		' pg-' +
 		page;
 	const chip = $('hudB');
-	chip.innerHTML = `${pageIcon()[page]}<b>▸</b>`;
+	if ($('emgB') && !$('emgB').innerHTML) $('emgB').innerHTML = ICON.def;
+	if ($('emgB')) $('emgB').hidden = !!G.card; // under a card it would sit over the card's buttons
+	chip.innerHTML = ICON.cycle; // one constant: the cycle (Albert, Build 70); the page shows in the row's tint
 	chip.className = 'fab chip ' + page;
 	chip.setAttribute('aria-label', `${pageName[page]}: the next page`);
 	if (page !== 'jobs') {
@@ -29663,7 +29668,7 @@ function drawReticle() {
 	if (!H.on || !H.h) return;
 	const x = SX(H.h.e.x),
 		y = SY(H.h.e.y),
-		L = performance.now() - (H.firedT || -1e9) < 1200 ? 1 : 0,
+		L = performance.now() - (H.firedT || -1e9) < timeOf('settle') ? 1 : 0,
 		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
 		t = still() ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
 		eta = H.mode === 'rally' ? 0 : hudEta(),
@@ -29792,7 +29797,7 @@ CARDS.squad = (c) => {
 			.join('');
 	return (
 		title(m.name, m.st === 'act' ? `fighting · ${Math.round(m.odds * 100)}% to win` : word.toLowerCase()) +
-		hpBar(hp, hp > 0.5 ? '#5fd08a' : hp > 0.25 ? '#e6b947' : '#c0392b') +
+		hpBar(hp, hp > 0.5 ? codeOf('g') : hp > 0.25 ? 'var(--gold)' : codeOf('r')) +
 		`<p><i>Health ${Math.round(hp * 100)}%</i> · ${S.length} of ${m.n0} standing · ${m.what.toLowerCase()} ${m.label}${m.st === 'go' ? `, ${mmss(m.eta || 0)} to arrive` : m.late ? `, ${m.late} s late` : ''} · ${paceWord(S)}</p>` +
 		`<table style="width:100%;border-collapse:collapse"><tr><th>Kind</th><th>Alive</th><th>Lost</th></tr>${rows}</table>` +
 		(slow < 0.98
@@ -29955,6 +29960,7 @@ function doorUI() {
 		fresh = key !== DOOR.key;
 	DOOR.top = T;
 	const el = $('doorB');
+	if (!el) return;
 	if (el.sig !== sig) {
 		el.sig = sig;
 		el.className = 'cell st door ' + st;
@@ -30119,12 +30125,12 @@ CARDS.emergency = () => {
 			? `<p data-act="jump:${Math.round(I.x)},${Math.round(I.y)}"><b>${I.n}</b> ${I.what} · ${I.eta} s away · tap to go</p>`
 			: '') +
 		acts(
-			btn('emg:shelter', 'Shelter', `${kids} villagers`, kids ? 'warn' : 'dis') +
-				btn('emg:battle', 'Battle stations', def ? `${def} defending` : 'soldiers', 'warn'),
+			btn('emgresume', 'Stop', 'everyone back to work', G.emg ? 'go' : 'dis') +
+				btn('emg:battle', 'Town square', 'everyone to the Town Center', 'warn'),
 		) +
 		acts(
-			btn('emg:hands', 'All hands on deck', 'everyone', 'warn') +
-				btn('emgresume', 'Resume', 'villagers back to work', G.emg ? 'go' : 'dis'),
+			btn('emg:hands', 'All hands on deck', 'villagers and soldiers', 'warn') +
+				btn('emg:shelter', 'Shelter', `${kids} villagers inside`, kids ? 'warn' : 'dis'),
 		) +
 		fold(
 			'why',
