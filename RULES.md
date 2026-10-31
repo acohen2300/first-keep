@@ -2,6 +2,32 @@
 
 One home for how this game is built and how the work is done. Every build is checked against it. Where an older note disagrees, this file wins; where Albert restates a rule in the moment, his words win.
 
+## 0. Build Rules for Previews and Live (LOCKED, Albert, Oct 31, 2026)
+Albert's words, given Oct 28 as the go on Build 40, kept verbatim (two typos corrected: "wire" to "write", "though be" to "should be"). Every preview and every live build is checked against them, before the build and again before the push.
+
+> Check to see if you can make anything static or modular. If there are things we can build once and not move, that's great. Maybe the menus are all the same at static and just words change. Whatever you can streamline do it. Whatever doesn't make sense in the code fix it. Where ever you can streamline or optimize do it. Anything that shares the same logic or engine build it once, add modifiers or conditions or variables and apply it to many things at once. Whatever you can borrow from Soren, only where it is superior you can do it.
+>
+> Always take a step back and review it as a whole, then in parts, then see if you can overlay things, modulate things, or elementize things.
+>
+> Never fix on fix or patches - fix it right the first time.
+>
+> If something is messy - straighten it out
+> If something is bloated for no reason fix it
+> If something is dead or stale cut it.
+>
+> Don't write more than you have to.
+> Don't write less than you have to.
+>
+> Simplicity and simplifying things should be a core focus during all builds.
+>
+> Common threads link.
+> Common art or render logic link.
+> Make a core and then have things point there or overlay.
+>
+> Keep the code honest and lean.
+> Clear and concise.
+> Elegant
+
 ## 1. Albert's build values (his words, gathered Oct 24 to Oct 29)
 - Simple is better. Elegant. Honest. Transparent. Simplicity sells. Logic above all.
 - Don't use more words than you need. Don't use fewer words than you need.
