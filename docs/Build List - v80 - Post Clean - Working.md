@@ -50,5 +50,13 @@
 ## Housekeeping
 23. The automatic check that asks for commits in Claude's name and a push: removing it needs a permission Claude does not have.
 
+## From the notebook (Oct 30, on no list until Oct 31; `docs/v70 Record/Notebook`)
+24. "Isolate the slow Problems. We should have similar code from the Probability Reinforcement math." (page 13)
+25. A kind of foe as a squad's priority: "or Take down Buildings or Knights". (page 13)
+26. "RSS ↓ Corner & Map. Talked abot." What was talked about is not written anywhere: Albert to say. (page 14)
+27. "Bonus thing. Visual tie in to the Milestones." (page 14)
+28. Marks with no words, for Albert to say what they mean: screenshots 1, 4, 11, 12 and 15; page 3's "Is that the job file? Moved?" and "Function in control →".
+29. Page 8: the job icon "shouldnt be a word"; v70 puts a word under the cycle button.
+
 ## Albert's comments on v70
 - Preview 3 (Oct 31, 10:35): "It plays clean. It feels tight."
