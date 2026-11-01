@@ -343,7 +343,7 @@ function setRel(o, q, want) {
 		if (rel === 'ally') makePeace(o, q);
 		G.warAt[o + ',' + q] = G.t + NOTICE;
 		if (o === 0 || q === 0)
-			news('realm', `${G.P[o === 0 ? q : o].name}: hostile in ${NOTICE} s${o === 0 ? ' (notice given)' : ''}.`, 'warn', 6);
+			news('realm', `${G.P[o === 0 ? q : o].name}: ${REL_WORD.war.toLowerCase()} in ${NOTICE} s${o === 0 ? ' (notice given)' : ''}.`, 'warn', 6);
 		return true;
 	}
 	delete G.warAt[o + ',' + q]; // a side that was giving notice has thought again

@@ -117,6 +117,7 @@ MIGRATE = """(O) => {
   const F = window.__fk, bad = [], D = F.MID - 1000, n0 = 2000 / 40, FN = Math.ceil(F.MAP / 40), near = (a, b) => Math.abs(a - b) < 0.02;
   const M = F.MIGRATE[39](JSON.parse(JSON.stringify(O)));
   if (M.v !== 40) bad.push('the step leaves shape ' + M.v);
+  if (M.P.some((p) => p.ai && p.ai.wallPlan)) bad.push("a computer keeps its wall plan's old squares");
   if (!M.units.every((u, i) => near(u.x, O.units[i].x + D) && near(u.y, O.units[i].y + D) && (u.px === undefined || near(u.px, O.units[i].px + D)))) bad.push('a unit is not moved');
   const an = M.units.filter((u, i) => O.units[i].graze !== undefined && O.units[i].gx !== undefined);
   if (!an.length || !an.every((u) => { const o = O.units[M.units.indexOf(u)]; return u.grazeAt && near(u.grazeAt.x, o.gx + D) && near(u.grazeAt.y, o.gy + D) && u.gx === undefined; })) bad.push('an animal grazes where it did on the old map');

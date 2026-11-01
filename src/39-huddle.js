@@ -102,7 +102,7 @@ function aimColor() {
 	if (h.t === 'unit' || h.t === 'bld') {
 		const o = h.e.owner;
 		if (o === 0) return codeOf('g');
-		if (o === WILD || atWar(0, o)) return codeOf('r');
+		if (isFoe(0, h.e)) return codeOf('r');
 		if (friendly(0, o)) return codeOf('b');
 		return codeOf('w');
 	}

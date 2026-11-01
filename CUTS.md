@@ -1259,3 +1259,31 @@ Tests:
 - Balance before and after: see `docs/Combat Notes - v80 - Post Clean - Working.md`.
 - Merge with research: both raised the save shape to 41; research is step 40 → 41, combat (C6, `routAt`) step 41 → 42 (`SAVEV` 42).
 - Combat review fixes (f3d741b): wild foes tested by kind (animals and an `outlaw` tag always foes; the Natives' warriors, walls, towers, pits and nets follow relations); personal space one number `SPACE` (3 ft), arrival at one's own spot `SPACE/4`, at work `SPACE`; battalion places through `spotFree`; item 6 ranks by the crowded rate g/(1+others/room), hunts counting their hunters, reachable finds only; save step 41 → 42 tested. Fingerprint accepted once: combat item 6 with research N9/N12 tables (each alone matched its baseline) plus these fixes. Blocked villager-seconds (median, 4 seeds): 6.5 (e4d0c82), 37 now; a carrier jam that predates the batch; a 20-seed run owed. START QC passed, 129 planted bugs caught.
+
+## Build 80 preview 10 (Nov 1): cards, map, research and text, combat with spots and the computers' waiting villagers
+Cuts the per-build drafts above left out (from the final fresh review):
+- Combat review fixes: the formation's own `freeNear` search (its places now go through `spotFree`); `ARRIVE` 9, `SEARCH.gap` and the push's typed 8 (all now `SPACE`, 3 ft); `wildFoe`'s `!native && !citadel` list (now tested by kind).
+- The Mail fix: the preview switch's own rank.
+
+Final fresh review fixes:
+- An old save's computers kept their wall plan on the 2000 map's squares and built 80 units off centre: map step 39 drops the plan, so it is drawn again round the moved keep (test in `tests/map.py`, one planted bug).
+- The notice toast said "hostile in 30 s": it reads `REL_WORD` ("foe in 30 s"). No test yet (owed).
+- The crosshair was red on every wild thing, Native warriors at Friend included: it asks `isFoe`, so the Natives follow your stance. No test yet (owed).
+
+Records: the Build List's Owed section rewritten (built items struck, the night's put-offs added); the hunt's report is `docs/v80 Audit/Hunt - Nov 1.md`.
+
+Checks on main before publishing:
+- Soak, 6 seeds × 30 min, Hard, every hazard: pass. Saves 222 to 265 kB.
+- Balance, 4 seeds × 30 min, against v70 (88b2cb2, the run of Oct 31):
+
+| Measure | v70 | Preview 10 |
+|---|---|---|
+| Bronze | 4.4 min | 5.7 min |
+| Classical | 8.2 min | 9.4 min |
+| Medieval | 20.0 min | 24.8 min (7 of 16 sides) |
+| Blocked (villager-seconds) | 75.5 | 37.0 |
+| Idle (villager-seconds) | 615.5 | 0.5 |
+| Sides that fell | 0 | 0 |
+
+  Mali won all 3 of its games, and the balanced seat won 3 of 4. Four seeds only.
+- `tests/handoff.py`: see the publish commit.

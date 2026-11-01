@@ -138,6 +138,7 @@ PLANTS = [
   ('34-save.js', 'for (const b of S.blds || []) (b.gx += D / NAVC), (b.gy += D / NAVC);', ';', 'tests/map.py', 'an old save leaves buildings on their old squares', 'opens in the middle'),
   ('34-save.js', "if (S.tread) S.tread = grid(S.tread, 2);", ';', 'tests/map.py', 'an old save leaves its ruts where they were', 'opens in the middle'),
   ('34-save.js', 'u.grazeAt = { x: u.gx, y: u.gy };', 'u.grazeAt = { x: u.gx - D, y: u.gy - D };', 'tests/map.py', 'an old animal grazes on the old map', 'opens in the middle'),
+  ('34-save.js', '\t\t\tdelete p.ai.wallPlan;', '\t\t\t;', 'tests/map.py', 'an old save keeps the wall plan on the old squares', 'wall plan'),
   ('20-view-base.js', 'cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID));', 'cam.x = clamp(cam.x, Math.min(hw * 2, MID), Math.max(MAP - hw * 2, MID));', 'tests/map.py', 'the camera stops short of the map edge', 'seen and tapped'),
   # the research and text batch (N9 to N12, N14; Albert, Nov 1): research keyed to its finds, layers in series, the barometer, the card's formula, the oddities, the text from the tables
   ('08-core.js', "const nodeKey = (n) => [n.kind === 'farm' ? n.farm.kind : n.kind];", 'const nodeKey = (n) => [n.type, n.kind];', 'tests/tables.py', 'research keyed by the resource reaches the Mint', 'N9:'),

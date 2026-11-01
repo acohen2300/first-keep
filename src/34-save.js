@@ -155,6 +155,7 @@ const MIGRATE = {
 		for (const p of S.P || []) {
 			if (p.keep) p.keep = p.keep.map((v) => v + D);
 			p.ai = { ...p.ai, cool: {} };
+			delete p.ai.wallPlan; // the wall plan is squares on the old map: it is drawn again round the moved keep
 			if (p.wave) {
 				const u = (S.units || []).find((u) => u.owner === p.id && u.state === 'attack');
 				p.wave = { ...p.wave, to: u ? u.target : null, bid: u ? u.bid || null : null, d: 1e9, pt: S.t };

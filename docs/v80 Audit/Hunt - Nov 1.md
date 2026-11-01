@@ -1,0 +1,142 @@
+# Hunt - Nov 1 (report only; every fix waits for Albert's yes)
+
+Two hunters read all of src on main 52f41b7, one on the rules and simulation, one on the view, cards, input and saves. Each item is marked NEW or KNOWN against the QC audit of preview 8, docs/v80 Audit and the fresh reviews.
+
+## Albert's sightings (preview 9, Victory screen, Nov 1 03:09)
+1. The Victory card grows when the Chronicle opens. The buttons are pushed down under the castle and Jobs buttons, and the card's text runs behind them. This breaks the rules that a card never scrolls or grows and rows never jump.
+2. The floating buttons (castle bottom-right, Jobs bottom-left) draw above the end card; they should be covered or hidden.
+3. "The Games were not held: war" appears 5 times, every 24 min: noise in a 23-line chronicle.
+4. At 126:00 "The whole board at peace", then at 127:02 "You and Fortress: war, the notice ran out". The peace should have cancelled the notice.
+5. Pace: Bronze 7:01, Classical 24:18, Medieval 66:30, Gunpowder 129:32 (the player). Fortress reached Medieval at 57:23.
+6. Build: preview 9 (Albert, 03:12, "from 2 hours ago").
+Item 4 closed (03:13): Albert killed every side but Fortress, so the board was at peace, and then he set Fortress hostile. The chronicle is right; not a bug.
+
+## A: rules and simulation
+
+Report only: nothing in the repo was edited. Scripts and logs are in `scratchpad/huntA/`.
+How I ran things: `huntA/load2.js` loads `src/01..41` in node inside one closure (as the build does), with the DOM stubbed out. I ran no browser, gate, soak or balance.
+**Timings caveat:** the machine was loaded (load average about 4), so absolute milliseconds are inflated. The shares between parts hold.
+
+Tags:
+- **Proved:** a node script shows it.
+- **Read:** traced in the code only.
+- **NEW:** no earlier audit has it.
+- **KNOWN:** an earlier audit has it. The source is given: `qc/NN` is the QC audit of preview 8, `v80/x` is `docs/v80 Audit/x.md`.
+
+I left out anything the two other builders are doing: combat C1 to C9, spots and exits, the computer re-tasking its waiting villagers, research N9 to N12, and text against code.
+
+## Top 10
+
+| # | file:line | what is wrong | how I know | severity | status |
+|---|---|---|---|---|---|
+| 1 | 39-games.js:76-79, 109-116 | **Albert's sighting.** The Games run on a fixed clock: `G.t - gamesT >= 2*YEAR` fires every 24:00 whatever the board is doing. `holdGames` then finds a war, writes "The Games were not held: war." and resets `gamesT`. The computers are at war from the first second (10-world.js:129-132), and the board truce needs every pair of living courts at peace. So every Olympiad is cancelled: at 24, 48, 72, 96 and 120 minutes, which is 5 lines in a 143-minute game. A second fault comes with it: a truce held between two marks never brings the Games, because only the second the mark falls on is checked. **Simplest fix (about 4 lines fewer):** in peaceTick make the test `if (G.truce !== null && G.t - G.gamesT >= PEACE.games.every)`, then delete holdGames' war branch (112-116) and the dead `PEACE.games.first`. The Games then wait for the truce (the ekecheiria) and are held at the first peace after they fall due. Nothing is said while there is war. The Peace card's "Games in" (29-card-pages.js:186) would read 0:00 during a war; that card is the other hunter's. | Proved. `huntA/games.js` gives exactly 5 lines at 24:00 to 120:00. The 25-minute play run (`huntA/long-2.log`) logged "1440 The Games were not held: war." `huntA/gamesfix.js` with the fix: no cancel lines, and the Games are held at 60:00 when peace comes, then every 24 minutes. | should fix | NEW (the dead `first` is KNOWN, v80/ai #17) |
+| 2 | 09-nav.js:273-312 (`dangerMap`, `stampDanger`), called from 12-sim-core.js:10 once a second | **The once-a-second hitch.** Every threat is stamped as a disc into the map of every side at war with it, cell by cell, with `**` in the inner loop. At 0:40 that is 506 stamps and 407,114 cell visits per call. At minute 10 it is the largest cost in the simulation: 20% of all sim CPU in the profile; at minute 10 `dangerMap` alone averaged 63 ms a call, 242 ms at most, and it is the step that takes longest every second. Guards are stamped twice: once as the guarded find (radius raid+40) and again each as a threat (radius 110). The 24 Natives on the island are stamped for all four sides every second. **Fix:** a disc table of row half-widths built once, filling each row with `D.fill(1, a, b)`. Skip threats with `v.find` (their find is already stamped). That should give 10× or more. | Proved: `huntA/dm2.js`, `dm3.js`, `prof2.js` and `worst.js` (`worst.out`: recount 3796 of about 8700 ms measured, max 242.7 ms). | should fix | NEW (v80/simcivil left "recount's dangerMap cost" unchecked) |
+| 3 | 16-sim-fight.js:46-56 | **A builder bitten by a boar or bear abandons the site and loses its own job.** The bitten villager is turned to the hunt even when its job is `repair`: `v.pj = 'repair'`, and setJob('food') clears `u.rep`. Its real previous job (`pj = 'wood'`) is overwritten. When the hunt ends, setJob('repair') has no site, repairTick → backToWork → job null. The player's site stands unworked. The helpers already skip repairers (`v.job !== 'repair'`), but the victim does not. **Fix:** leave a repairer's `pj`/`rep` alone (or skip the victim when `job === 'repair'`, as the helpers do). | Proved: `huntA/bwolf.js`. Before: repair, pj wood, rep set. After the bite: food, pj repair, rep gone. 60 s later the barracks site is at 0.00 with no worker. | should fix | NEW |
+| 4 | 14-sim-troops.js:467 | **The wild look runs every tick, not every fifth.** The condition is `(G.tick + u.id) % 5 === 0 \|\| !(t && t.hp > 0 && !t.inside)`. A guard or beast with no target (nearly all of them, nearly always) passes the second half, so `nearU(…, WILD_LOOK 140)` runs every tick. The intent is "look again at once only when a held target is lost". **Fix:** `\|\| (t && !(t.hp > 0 && !t.inside))`. This removes about 80% of the wild look. nearU was 10% of sim CPU at 0:40. | Proved: `huntA/wl.js` gives 76 wild hunters and 74.5 nearU calls a tick (about 15 expected). | should fix | NEW |
+| 5 | 09-nav.js:571-576 (`route` look-ahead) | **Path look-ahead on every tick.** A unit on a path tests up to 4 `lineClear` lines every tick, each sampling every 4 units through `gcell`/`clamp`/`blockedCell`. At minute 10 (108 walls, 12 gates) `lineClear` → `gcell` → `clamp` is about 13% of sim CPU. **Fix:** do the look-ahead only when `u.pi` advances, or on the same 0.25 s clock as the direct-line check above it. Inline the clamp in `gcell`. | Proved by profile: `huntA/prof2.out` and the caller tree (2.05 s + 0.9 s of 23 s). | should fix (optimisation) | NEW |
+| 6 | 09-nav.js:209-235 (`compOf`) | Each rebuild allocates a fresh `Int32Array(46,656)`. It also allocates a 4-element array for every square it visits (`for (const j of [...])`), about 46k small arrays per flood, per side, after every grid change or relation change. It is a second flood next to `navRebuild`'s own `NAV.comp` flood: two homes for "joined regions". **Fix:** reuse one buffer per side, unroll the four neighbours as `navRebuild` does, and build the key without a template string each call. | Measured: 1.8 ms per side per rebuild (`huntA/comp.js`); `worst.out` compOf max 13 ms. Read for the duplicate. | tidy (optimisation) | NEW |
+| 7 | 12-sim-core.js:137-147 | `reap` sets `G.navDirty` when any node is spent: a carcass, a bush, fish, stone or gold. Only trees block the grid (09-nav.js:81). Every butchered deer or picked bush costs a full `navRebuild` (4 to 10 ms measured, 30 ms at most at minute 10). **Fix:** set it only when a spent node is a tree. | Read; the navRebuild cost is measured (`comp.js`, `worst.out`). | should fix (optimisation) | NEW |
+| 8 | 17-ai.js:150-157 → 11-orders.js:151-154 | The computers' wall plan lays up to 3 pieces a think. Each `build` runs a whole `navRebuild` at once, because `navHold` is used only for the player's wall line (B13). That is three rebuilds in one tick, about 12 to 30 ms. **Fix:** wrap the computers' wall loop in `navHold`/`navLate` as the player's line is. That gives one home for "a wall line rebuilds once". | Read (the navRebuild cost is measured). | should fix (optimisation) | NEW |
+| 9 | dead fields: 36-economy.js:64 `G.yearN`; 39-games.js:130 `G.gamesN` (saved 34:309, loaded 34:513, never read); 12-sim-core.js:325 `G.lost` (written, never read, not saved); 36-economy.js:893 `L.coalRisk` (written, never read); 10-world.js:90-91 `p.ration`, `p.rations` (never read or written); 39-games.js:96 `if (v)` (addUnit never returns null, 10-world.js:777-807) | Fields nothing reads, carried in every save. | Read (grep counts in my notes). | tidy | NEW (`p.health` is KNOWN, v80/ai #10) |
+| 10 | 36-economy.js:297 + 670 + 863; 38-natives.js:263 + 269, 289, 296; 36-economy.js:565 + 471 | **A number with two homes: the cadence.** Each periodic tick is called on a hand-typed tick modulo, and its body hand-types the same period again: `% 300` with `relax(..., 10)` twice; `% 150` with `* 5` regard decay, `+ 5` handover and `/ 12` throne beats; `% 150 === 75` with `sickT - 5`. Change one and the other is silently wrong. The vassal gift (36:869, `% (30*VASSAL.gift) === 150` inside a `% 300 === 150` tick) only fires because 1800 happens to be a multiple of 300. **Fix:** one `every(secs, phase)` helper that returns the dt, and every body reads that dt. | Read. | tidy | NEW |
+
+## The rest, ranked
+
+| # | file:line | what is wrong | how I know | severity | status |
+|---|---|---|---|---|---|
+| 11 | 39-games.js:112-116 | After fix 1 the war branch of holdGames can never run (peaceTick already checks the truce). Delete it with the fix. | Read | tidy | NEW |
+| 12 | 39-games.js:10 `first: YEAR` | Never binds: gamesT starts at 0 and `every` is greater than `first`. | Read | tidy | KNOWN v80/ai #17 |
+| 13 | 12-sim-core.js:661-735 `bestNode` | bestNode loops over every node on the map (about 1,900, nearly all trees) for each pick, with `forage` (and `nearest(drops)`) for each one that passes, though the search has a radius. The static node grid (`nodesNear`, 15-sim-spatial.js:193) is not used. bestNode is 0.4% at minute 10, so this is low. | Read + profile | tidy (optimisation) | NEW |
+| 14 | 08-core.js:491-505, 551, 574-587; 09-nav.js:600 | Hot paths allocate on every call: `unitKeys(kind)` builds a new array (paceOf, for every moving unit on every tick); `maxHpB` and `sightClear` build `['*', ...keys]`; `fxv` then builds `stat + '\|' + keys.join()` for its memo key. The keys depend only on the kind. **Fix:** cache `unitKeys`/`bldKeys` per kind once; memo `fxv` per keys-array identity. GC is 2% of sim CPU, so this is low. | Read + profile | tidy (optimisation) | NEW |
+| 15 | 12-sim-core.js:67 | `(last.life <= 0) \|\| some(life <= 0)`: the first half is inside the second. It looks like a patch on a patch. One `filter` when any has expired does the same. | Read | tidy | NEW |
+| 16 | 12-sim-core.js:99, 106 | The 20 s kill-credit window is typed twice (Throne capture and plunder). The comment at :106 says "twenty minutes"; it is 20 seconds. It belongs in a rules table. | Read | tidy | NEW |
+| 17 | 36-economy.js:394; prune only in 25-view-weather.js:83 | `G.bolts` is pushed by the simulation and pruned only by the weather draw. With no frame drawn (a hidden tab, the soak, the harness) it only grows: 50 entries by 25:00 in my run. It is small, but simulation state should not depend on the view. Prune it in `eventsTick` beside `G.cracks`. | Proved (`long-2.log`, bolts 0 → 50) | tidy | NEW |
+| 18 | 13-sim-civil.js:585-587 | Armed caravans: reach `24`, damage `4` and cadence `% 30` are hand-typed. They should be in UNIT.caravan or the research row. | Read | tidy | NEW |
+| 19 | 36-economy.js:322-327 | Wolves at the pasture: radius `260` and loss `1 + floor(rng*2)` are hand-typed, and the wolf kinds are a hand list. | Read | tidy | NEW |
+| 20 | 17-ai.js:565-567 | While a league stands, `leagueTick` sets `G.navDirty = true` every 10 s even when nothing changed, which is a full navRebuild each time. (The league writing `G.rel` directly is KNOWN.) | Read | tidy | NEW (the cost); KNOWN v80/ai #8, qc/09 P8 (the direct write) |
+| 21 | 17-ai.js:289 | `idle.job = …` writes the job directly instead of through setJob (the one home). It does no harm today, because `was`/`lostT` are cleared when a job goes null. This is next to the "waiting villagers" builder's work, so I am only flagging it for them. | Read | tidy | NEW (overlaps a builder) |
+| 22 | 12-sim-core.js:452 + 460 | `b.mx` is written twice in `built()`. | Read | tidy | KNOWN qc/07 P15 |
+| 23 | 08-core.js:624-640 | rehealth's building loop can never change anything once `keepHealth` has run in `fxDirty`. | Read | tidy | KNOWN qc/04 P10, fresh80 #5 |
+| 24 | 09-nav.js:119 | `NAV.prev === NAV.solid` is never true (they are separate arrays), so the solid grid is always copied. | Read | tidy | KNOWN qc/04 P5, v80/core |
+| 25 | 39-games.js:148-153 | `p.health` is never written, so the Wellbeing "× health" term is dead. | Read | tidy | KNOWN v80/ai #10, qc/09 P6 |
+| 26 | 08-core.js:598-600 | `groupSees` scans every unit and building. | Read | tidy | KNOWN qc/02 V2, qc/08 V4 (and in the combat builder's C1 area) |
+| 27 | 38-natives.js:296 | The Throne adds `gathered` outside `earn`. | Read | tidy | KNOWN v80/ai #20 |
+
+## Checked and clean
+- **Determinism:** no `Math.random`, `Date.now` or `performance.now` in my files' simulation paths. `todaySeed` (08:215) is KNOWN qc/04 P9. `newGame` draws `Math.random` only when no seed is given (UI). The lightning and crack seeds come from position and tick. `for…in` over `G.warAt` and `p.goods` uses string keys in insertion order, which is stable across a save.
+- **NaN and growth:** 25 game minutes, seed 2. Every minute I checked unit positions, health and stores for NaN, and the sizes of the units, buildings, nodes, tracers, mail, post, chronicle, warAt, cracks and ms lists. No NaN at any minute. Nothing grew without bound except `G.bolts` (#17). The chronicle is capped at 80 and the mail at 30.
+- **Save:** every simulation field in my files that is written to the save is also read back (34-save.js:257-330 against 397-532). Object references on units are either in SKIP_U or turned into ids. The only fields written but never read are the dead ones in #9.
+- **Crash paths:** `addUnit` always returns a unit. `pickEvent` always has a candidate. `troll.start` and `hordeTick` cannot run with no side alive (the game has ended first).
+
+## Where the simulation's time goes (minute 10 to 11, seed 2; `huntA/worst.out`)
+- **`dangerMap`:** 3,768 ms in 60 calls (max 243 ms).
+- **`collide`:** 2,047 ms in 1,800 calls (max 172 ms, likely GC).
+- **`sidesTick`:** 811 ms (think max 67 ms).
+- **`astar`:** 399 ms in 215 calls.
+- **`navRebuild`:** 135 ms in 20 calls (max 30 ms).
+- **Everything else:** under 300 ms each.
+
+Fixes #2, #4 and #5 together take about a third of all simulation CPU off. #2 removes the once-a-second spike.
+
+## B: view, cards, input, saves
+
+This hunt was report only. Nothing was edited, committed or pushed. I built with `python3 build.py` and did not run the gate, the soak or the balance run.
+
+**How things were proved.** Six small headless probes ran against the built `first-keep.html`, one page at a time. The scripts are in `/tmp/claude-0/-home-claude/5e78bdae-23e5-5268-bffd-9d2ee20ad0d1/scratchpad/huntB/`:
+- `probe.py` and `probe80.py`: the end card
+- `mail.py`: the Mail card
+- `cards.py`: card heights
+- `save.py` and `save2.py`: save and load round trips
+- `cost.py`: render cost
+
+**The "how you know" column.** "Proved" means a probe measured it. "Read" means I traced it in the code.
+
+**Where KNOWN items come from:**
+- QC10/11/12 = `qc/10-view.md`, `11-cards.md`, `12-frame-save.md`
+- view.md, infra.md, misc.md = `docs/v80 Audit/`
+- c80 = `fresh-cards80.md`
+
+The combat code and the tap and exit spots were skipped, as asked.
+
+## Top 10
+
+| # | file:line | what is wrong | how you know | severity | NEW / KNOWN |
+|---|---|---|---|---|---|
+| 1 | `shell-head.html:190` (`#end` is a flex column, centred, with no height limit); `39-games.js:187` (every chronicle line inside a `<details>`) | **Albert's sighting (a).** Opening the Chronicle grows the end card in both directions.<br>• At 375×667 with his 23 lines, the buttons move from 335–479 to 520–664. "Add another conquest" lands at 520, under the castle and Jobs buttons (517–561), and New game sits at the very bottom edge (620–664).<br>• At the full chronicle (`chron: 80`, 39-games:21), the title sits 453 px above the screen and all three buttons 309–453 px below it, at 375×667 and at 430×932. The Chronicle's own summary is off the top too, so it cannot be closed, and nothing scrolls (`#stage` has `overflow:hidden; touch-action:none`). **The player is stuck on Victory until they reload.**<br>• Any line that wraps adds height too.<br>**Fix, keeping the never-grows rule:**<br>• Drop the fold and show the chronicle always, paged like the Mail: newest first, `MSG.page` (6) lines a page, each line one text line (`white-space:nowrap`, ellipsis). Pad a short page with empty lines.<br>• Add a Previous and Next pair under it: `G.chronP` and one ACT verb, `chronp`, that redraws `#endX`.<br>• Fit: 6 lines × 16 + the pager 44 + gaps 12 = about 152 px on top of today's closed card (291 px), about 443 px in all. That fits 375×667.<br>• Build the pager once and use it for both the Mail and the Chronicle (one home). | proved (`probe.py`, `probe80.py`) | blocker | NEW |
+| 2 | `shell-head.html:105` (`.fab{z-index:3}`) against `:190` (`#end`, no z-index); `32-frame.js:594` (`busy` = card or place, never `G.over`) | **Albert's sighting (b).**<br>• `#end` paints at z auto, so every positioned layer with a z-index draws over it: the castle and Jobs buttons (`.fab` 3), the top bar (`#hud` 4), the pick bar and place bar (3), the quick action (5) and the speed drop-down (7). Measured at 375 and 430: emgB, hudB and the tally all hit-test above the end card.<br>• `showEnd` (32-frame:228) also leaves the pick bar and the place bar alone.<br>• **Simplest fix: `#end{z-index:8}`, one line.** It covers every floater at once, and the card it opens ("New game") already hides `#end` first.<br>• The other way is to add `|| G.over` to the `busy` toggle. That hides only the three fabs. | proved (`probe.py`: `elementFromPoint`) | blocker | NEW |
+| 3 | `30-cards.js:662-679`; `shell-head.html:141` (md cap 10 ranks) | **The Mail card scrolls, and Previous and Next are cut off, whenever a group filter is on.**<br>• The "Hide the previews" rank makes 10 ranks plus the subtitle line, which comes to 11 against the md cap of 10. It scrolls 22 px at 390×844 and at 430×932 (122 px at 375×667), and the pager rank sits below the card's edge.<br>• On a short last page the card drops from 500 to 350, so Next moves 50 px under the finger.<br>• MENU-SPEC §8 says "nothing scrolls". The gate only measures the Mail unfiltered.<br>• Fix:<br>&nbsp;&nbsp;– Put the toggle in the pager rank: Previous · Hide/Show · Next, as c3.<br>&nbsp;&nbsp;– Pad a short page to 6 with `empty()`.<br>The card is then the same height on every page and every filter. | proved (`mail.py`) | blocker (rule: never scrolls) | NEW |
+| 4 | `29-card-pages.js:524` (the `lockedR` fold); `30-cards.js:592` (the `armytrain` fold); `27-cards-core.js:167-172`; `tests/gate.py:244` | **A fold inside a card grows it, the same fault as #1.**<br>• Research with "Locked" open goes from 300 to 650 px and scrolls 807 px at 390×844 (857 at 375×812).<br>• The Army card with "Train soldiers" open goes from 200 to 500.<br>• `FOLD` keeps a fold open across cards and games, so a Research card opened later starts already grown.<br>• The gate exempts `research` from the scroll check, and EXCEPTIONS #3 names only Help and the Guide.<br>• Fix: page the locked list (same pager as #1 and #3) or make it a tab of a folder. Train soldiers can be a fixed list. Remove `research` from the gate's skip. | proved (`cards.py`) | should fix | KNOWN in part (infra.md:24, the gate skip). The growth is NEW |
+| 5 | `26-input.js:580,586` (the only two writes to `#place.hidden`); `33-verbs.js:26-35` (`next`), `:152-162` (`fresh`), `:216-226` (`today`); `32-frame.js:228-236` (`showEnd`) | **The place bar outlives its game.**<br>• `#place` is shown by `startPlace` and hidden only by `cancelPlace`. A new game made while placing (Add another conquest, or Setup → Start) replaces `G` without calling `cancelPlace`. A dead "Press where it goes · Build · Cancel" bar then stays over the new game.<br>• Victory shows with the bar still up.<br>• `loadGame` gets this right (34-save:541).<br>• Fix (one home): derive it in `ui()` with `$('place').hidden = !G.place`, as the pick bar already is. | read | should fix | NEW |
+| 6 | `30-cards.js:70-103`; `30-cards.js:504-534` | **Rows jump on live cards.**<br>• On a finished building that is not a field, the "things you do" list is empty, so there is no rank. When the building catches fire, "Send help" adds a rank above the Train buttons and techs. The page moves 50 px just as you are tapping, and that is exactly when you are tapping.<br>• The Army card's live `<p>` lines come and go above its buttons: the status counts, Coming at you, and Out on orders.<br>• Albert's own Repair and Take down rank is held still for this reason (30:50).<br>• Fix: hold the rank (an empty slot when nothing applies), and put the live lines under the buttons or in fixed info ranks. | read | should fix | NEW |
+| 7 | `34-save.js:257-336` against `:387-544` | **The save round trip after 10 minutes of play (seed 3) is clean**, apart from known gaps and three view timers.<br>• With no event running, `rs` and every player field are identical after the load.<br>• Not restored: `alertT`/`warnT` (start again at −99, so the "under attack" horn can sound again right after Resume); the unit fields `aggro` and `bt`; `mailN`.<br>• A running event changes `rs` on load: `endEvent` draws the next event's time, so a resumed game is not the game that would have gone on (the design from A7). | proved (`save.py`, `save2.py`) | tidy | NEW (`alertT`/`warnT`, `aggro`). KNOWN: `mailN` (QC12 P13), mercs and troll on load (QC12 P10) |
+| 8 | `30-cards.js:816-842` (`renderCard` runs on every `ui()`, 150 ms) | **The Guide rebuilds its whole page 7 times a second**, though nothing on it changes while it is open (it pauses the game).<br>• Measured headless on desktop: about 4.5 ms (Research tab), 2.8 ms (Buildings) and 2.3 ms (History) each time. On a phone, plan for about 3 to 5 times that: 7 to 20 ms spikes, 7 a second.<br>• Research costs 1.1 ms each time.<br>• Fix: key the render on a version (age, techs, page) for the reading cards, or build the Guide once a page. | proved (`cost.py`) | optimisation | NEW |
+| 9 | `shell-head.html:105,75,93,112,117,119` (z 3, 4, 5, 3, 5, 7) and `:146` (z 2); `:193-195` | **Hand-typed numbers with no home.**<br>• Layer order is six bare z-index numbers. That is why #2 happened: nobody could see that `#end` sits under them. Use one token set, for example `--z-map`, `--z-float`, `--z-bar`, `--z-modal`.<br>• The end card's spacing is typed in by hand: `gap:4px 12px`, `margin:8px 0`, `margin:2px 0`, `margin-right:6px`, `max-width:340px`. It should come from `--gap` and `--slot`.<br>• `41-boot.js:111-113` has `+ 4` and `Math.max(4, …)` for the speed drop-down. | read | tidy | NEW |
+| 10 | `20-view-base.js:96-100` (`researchBadge` swaps the global `ctx`) | **A throw inside `badgeArt` leaves `ctx` pointing at the badge canvas.** Every later draw in every frame then lands off screen, and the map goes blank. There is no try/finally.<br>• Same class as QC10 V9 (`drawFind`), at a new site.<br>• Fix: `try { badgeArt(…) } finally { ctx = was; }`, or pass the context in. | read | should fix | KNOWN class (QC10 V9), new site |
+
+## The rest, ranked
+
+| # | file:line | what is wrong | how you know | severity | NEW / KNOWN |
+|---|---|---|---|---|---|
+| 11 | `30-cards.js:735` and `41-boot.js:129` | The History search uses an inline `oninput="window.__fkq(…)"` and writes `#gres.innerHTML` itself, while `renderCard` patches the same node 150 ms later. That is two homes for one list. | read | tidy | NEW |
+| 12 | `23-view-things.js:346-363` (`glow`), `21-view-frame.js:273-285` (`[y,t,e]` per thing on screen), `23:646` (a Map and a string per soldier for the standards), `25:166` (`getComputedStyle` every frame), `22:141-157` (the fog layer rebuilt every frame) | **Per-frame allocations.**<br>• A night scene with about 40 lights makes about 40 gradients and 120 colour strings a frame, about 2,400 gradients a second.<br>• The `[y,t,e]` triples come to about 300 small arrays a frame in a busy view.<br>• The fog layer is rebuilt at 60 fps and changes about 3 times a second. | read | optimisation | KNOWN (view.md:66; QC10 E15b, V11) |
+| 13 | `23-view-things.js:270-294` | **Shadows: one path and one fill a frame.** Up to about 2,000 ellipses with nodes (in view only, deep trees skipped), the buildings' fixed hexagons and the units' ellipses.<br>• Build 62 measured the fill as the dearest pass (28% of a frame, 53% close in). fresh80 found no visible difference, v70 against v80.<br>• Still open: the dark pop at dusk (S4) and the flame shadows that use last frame's STANDARDS (V8). | read | optimisation | KNOWN (QC10 S1-S6, V8; fresh80 §5) |
+| 14 | `23-view-things.js:735-916` (`drawUnit`) | **Figures cost little:** a cached sprite stamp and up to about 6 small paths a figure.<br>• At night each unit runs one `flameShadow` per standard, without culling, so cost grows as units × standards.<br>• `stats()` and `UNIT[]` lookups run per figure.<br>• No allocations except `[r,g,b]` destructuring in `flame`. | read | optimisation | KNOWN (QC10 V8) |
+| 15 | `28-army-quick.js:4` | `qsPool` still sends students and guards: "Attack with" pulls them out of school or off escort. | read | should fix | KNOWN (QC11 V2) |
+| 16 | `27-cards-core.js:160` | The Research book still says "Cost and time ×(0.5+0.1w)". N11 decided to delete it. | read | should fix | KNOWN (QC11 N4) |
+| 17 | `27-cards-core.js:425` (`&& false`), `:165` (`'bnabout'`), `28-army-quick.js:17` (writes `G.qs.from` during render) | Dead code, and a write made during render. | read | tidy | KNOWN (QC11 N13) |
+| 18 | `30-cards.js:294`, `23-view-things.js:775,854` (`#c9b48a`); `26-input.js:553`, `23:793,878,1145`, `20:116-138` (`#ffd35e`, `#e6d6ad`, `#8e1d14`, `#2a1c10` = `--ink`); `23:80` (`#e6b947` = `--gold-1`) | Colours typed by hand. Two of them repeat tokens that already exist (`--ink`, `--gold-1`). | read | tidy | KNOWN (QC11 N12, QC10 E17; misc.md:54) |
+| 19 | `12-sim-core.js:325` (`G.lost`), `36-economy.js:64` (`G.yearN`) | Written, never read. Found by the save diff. These are sim files and are passed on. | proved (`save.py`) | tidy | NEW |
+| 20 | `30-cards.js:807` | `troops` sits in FULL with two `//` comments run together. | read | tidy | KNOWN (c80 #17) |
+| 21 | `32-frame.js:249` | `vy =Math.round(` is unformatted, so the formatter was not run on this line. | read | tidy | NEW |
+| 22 | `33-verbs.js:1101-1106` | `tapCount` writes all of `TAPS` to localStorage on every tap: a stringify and a write on the click path. Small, but per tap. | read | optimisation | NEW |
+
+## Checked and clean
+
+- **Listeners:** every `addEventListener` and the one `ResizeObserver` are added once, at the top level. None is added again per card, frame or game.
+- **Arrays trimmed:** RIPS, SPARKS, FALL (capped at 80), `G.bolts`, `G.tracers`, `G.cracks`.
+- **`Math.random` in my files:** used only in the view and sound (rain, sheet lightning, the screen shake, `makeBg` (KNOWN E16), bird calls). Nothing the simulation reads.
+- **Saves:** the save shape is 40. `MIGRATE` covers 27 → 40. A newer or unknown shape is moved aside (KNOWN QC12 P5, P25).
+- **Measured card heights:** the cards measured do not scroll at 390×844 and 430×932: Setup, Stores, Score, Sound, the Town Center's Town and Relations tabs, and Army with its folds closed. Help scrolls (469 px), which EXCEPTIONS #3 allows.
+
+## Since fixed (Nov 1)
+- B3, the Mail card scrolling with a group filter on: fixed in the cards build (the switch moved into the pager rank, short pages padded).
