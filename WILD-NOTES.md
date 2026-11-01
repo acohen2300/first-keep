@@ -73,16 +73,28 @@ Each change was turned off in turn (node runs the gate's own FINGERPRINT script;
 ## Balance (4 seeds × 30 min, jobs 1)
 | | main 66a68a5 | wild81 |
 |---|---|---|
-| Bronze (median) | 5.7 min | AFTER_BRONZE |
-| Classical | 9.4 min | AFTER_CLASSICAL |
-| Medieval | 24.8 min, 7 of 16 | AFTER_MEDIEVAL |
-| Sides that fell | 0 of 16 | AFTER_FELL |
-| Wins by seat | aggr 1, bal 3 | AFTER_WINS |
-| Blocked villager-seconds (median) | 37.0 | AFTER_BLOCKED |
-| Games held per game | 0 (always at war) | AFTER_GAMES |
+| Bronze (median) | 5.7 min | 6.1 min (15 of 16) |
+| Classical | 9.4 min | 10.6 min |
+| Medieval | 24.8 min, 7 of 16 | 23.2 min, 9 of 16 |
+| Sides that fell | 0 of 16 | 0 of 16 |
+| Wins by seat | aggr 1, bal 3 | bal 3, fort 1 |
+| Blocked villager-seconds (median) | 37.0 | 59.5 (max 143) |
+| Games held per game | 0 (always at war) | 0 (still always at war) |
+
+**What the balance shows:**
+- **Seed 3, seat 1 (aggr) never left the Stone age.** It was the slowest on main too (Bronze at 14.4). Traced in node: its food reached 0 at about 2:30. In that game the starvation hazard is on (`starveTick`): after 60 s hungry nobody works (`starving` sets the gather to 0), so food can never come back, and the villagers leave one every 30 s.
+  - **This trap is on main too:** a hungry side under that hazard can never recover. The batch's changes only tipped this one game into it. Turning 4b, the guards' filter or A #5 off in turn each avoids it in this seed, which is chaos, not a cause.
+  - **For Albert:** let gathering of food go on while starving.
+- **Blocked villager-seconds rose 37 → 59.5 (median).** Node runs of seed 1 vary from 39 to 69 between variants (A #5 off 39, 4b off 69, all on 67), so this is noise at 4 seeds. A 20-seed run is owed (already on the Owed list for the carrier jam).
+- **Raw results:** `scratchpad/wild/bal-before.json`, `bal-after.json`.
 
 ## Checks run
-AFTER_CHECKS
+- **START QC on the first commit (2116080):** 181 PASS, exit 0.
+- **The final commit:** see below.
+- **`tests/wild.py`:** passes, and fails on main (run against main with only the exports added).
+- **Every new plant is caught**, including the 5 review plants and the 6 Relations plants (scratch runner over `PLANTS`).
+- **Soak** (`tests/soak.py 1,2,3 20`): 3 of 3 PASS, frames 7.5 to 17.8 ms.
+- **Lint and build:** clean.
 
 ## Size
 - `first-keep.html`: 1,195,604 → 1,208,586 bytes (+13.0 KB).
