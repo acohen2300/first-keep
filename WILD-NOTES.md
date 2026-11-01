@@ -102,10 +102,28 @@ Each change was turned off in turn, with node running the gate's FINGERPRINT scr
 - A #3, A #7, A #8, the raids by the robbers and D10: 0.
 
 ## Balance (4 seeds × 30 min, jobs 1)
-BALANCE_TABLE
+| | main 66a68a5 | wild81 (first) | wild81 now |
+|---|---|---|---|
+| Bronze (median) | 5.7 min, 16 of 16 | 6.1 min, 15 of 16 | **5.3 min, 16 of 16** |
+| Classical | 9.4 min | 10.6 min | 10.0 min |
+| Medieval | 24.8 min, 7 of 16 | 23.2 min, 9 of 16 | 23.6 min, 8 of 16 (one side to Gunpowder at 29.2) |
+| Sides that fell | 0 | 0 | 0 |
+| Wins by seat | aggr 1, bal 3 | bal 3, fort 1 | bal 2, fort 2 |
+| Blocked villager-seconds (median) | 37.0 | 59.5 | **39.0** (max 93) |
+| Idle, no work found (median) | 0.5 | 0.5 | **41.0** |
+| Games held | 0 | 0 | 0 |
+
+- **Seed 3's computer now recovers:** Bronze at 9.2 in the browser run (main 14.4; the first wild81 run never left Stone). The bitten-builder fix, the famine floor and food eaten where it is gathered are what changed for it.
+- **The blocked rise is gone (59.5 → 39.0).** It came from A #5's cadence, as the fresh review said; A #5 is reverted.
+- **Idle rose from 0.5 to 41 villager-seconds a game.** These are the villagers a full find turns away while they search, which is what the caps should do (they stand instead of crowding a find). Worth a look on the 20-seed run that is owed.
+- **Raw results:** `scratchpad/wild/bal-before.json`, `bal-after.json`, `bal-after2.json`.
 
 ## Checks run
-CHECKS
+- **START QC on the merge with main (c56d93d):** 210 PASS, exit 0 (all plants caught, `tests/docs.py`, the gate at four sizes, the fingerprint).
+- **START QC on the last commit:** FINAL_QC.
+- **Every new plant is caught** (scratch runner over `PLANTS`, then START QC).
+- **Soak** (`tests/soak.py 1,2,3 20`): 3 of 3 PASS.
+- **Lint and build:** clean.
 
 ## Decisions for Albert (open)
 1. **The weakening number.** Grip strength −28% (×0.72, used) or the Harvard work test −72% (×0.28)?
