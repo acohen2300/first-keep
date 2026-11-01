@@ -277,7 +277,8 @@ const POPMAX = 180,
 const RICH = 2.5,
 	PLUNDER = 0.25,
 	CARRY = 10,
-	NAVC = 10; // NAVC: the walking grid, 10 units a square (never shown)
+	NAVC = 10, // NAVC: the walking grid, 10 units a square (never shown)
+	FOOT = 2.65; // world units a foot: a villager is drawn 22.1 figure units tall × FIG 0.66 = 14.6 units, taken as an adult of 5.5 ft (SCIENCE.md; tests/science.py holds it to the drawing)
 const LAKE0 = { x: MID, y: MID, r: 170 }; // the great lake in the middle, round the Throne's island; the other lakes and the rivers fall at random (G.lakes)
 const SEASON_LEN = 180, // seconds a season
 	YEAR = SEASON_LEN * 4,
@@ -5030,7 +5031,7 @@ const FINDS = {
 	},
 };
 const WAYFARER_EVERY = 240;
-const STARTLE = 45; // a defender (boar, bear) takes on only what comes this close, or what has hurt it: Hawk-Dove, it fights when it is provoked
+const WILD_LOOK = 140; // how far a beast or a guard looks for a stranger near its home (v70's distance, restored in Build 80 preview 9); a defender (boar, bear) then weighs it by Hawk-Dove V/C
 
 // the Fortress posts a job: break one guarded find, first side to take it is paid
 // ───────────────────────── The Natives: the fifth side, with one brain ─────────────────────────
@@ -5415,9 +5416,11 @@ const T_HOLD = 0,
 const SHELTER = { flee: 70, clear: 150, raid: 3, hurt: 6 }; // villagers run into the nearest Town Center or tower when an enemy soldier comes within 70, when three or more beasts or robbers do, or when a lone beast or robber hits them (it scares only the one it hits); out when none within 150 of it; each adds an arrow up to the limit (the room is the same)
 const LOOKOUT = { base: 60, k: 24 }; // a building sees 60 + 24 × the square root of its height: the horizon from a height grows with its square root, so a 44 tower sees 220, a 16 house 156, a field 84 (Build 51: every building but six saw a flat 90, and no research reached them)
 // Where a villager looks for the next find (decision 1; area-restricted search, tight near the last find and wider with time since it was lost):
-// r(t) = x + y min(1, t/tau). Until a full radius has been tried for 'give' seconds it keeps its job and waits; then it waits for an order.
+// r(t) = x + y min(1, t/tau), from where it was placed, else from its nearest drop-off; x + y is a placed villager's cap. Nothing found: it keeps
+// its job and waits at the drop-off, looking again every 'again' seconds (plus up to one of dice), with no end. Waiters stand 'gap' feet apart
+// round the building (Albert: Hall's personal distance, 2.5 to 4 ft; OSHA 1910.142(b)(3), 36 inches between beds).
 const ARRIVE = 9; // a villager at work counts as there within this of its spot: more than the 8-unit push, so it stands still and does not tremble
-const SEARCH = { x: 90, y: 90, tau: 10, give: 25 };
+const SEARCH = { x: 90, y: 90, tau: 10, again: 2, gap: 3 };
 const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
 const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, keep: 8 }; // a gatherer will not work within 110 of an enemy or a hunting beast, inside an enemy tower's reach plus 30, within 60 of a fire, or for 45 s within 80 of where one of its side was frightened more than 200 from home (the last 8 such places are kept)
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
@@ -7371,10 +7374,11 @@ const visCap = () =>
 		G.ev && G.ev.cur && EVENTS[G.ev.cur.kind].vis ? EVENTS[G.ev.cur.kind].vis : Infinity,
 	);
 const sightOf = (e) => Math.min(sightClear(e), visCap());
-// the many eyes (decision 8b; Pulliam 1973, Lima 1995): a side sees a thing if any of its members does, so its view is the union of their sight discs.
-// No dice, no cap: night, fog and weather already shrink each member's own disc through sightOf.
+// the many eyes (decision 8b; Pulliam 1973, Lima 1995): a side sees a thing if any of its eyes does, so its view is the union of their sight discs.
+// The eyes are its soldiers and its finished buildings, never the civilian being attacked (decision 8: "within a soldier's line of sight").
+// No dice, no cap: night, fog and weather already shrink each eye's own disc through sightOf.
 const groupSees = (o, t) =>
-	G.units.some((m) => m.owner === o && m.hp > 0 && !m.inside && dist(m, t) <= sightOf(m)) ||
+	G.units.some((m) => m.owner === o && isSoldier(m) && m.hp > 0 && !m.inside && dist(m, t) <= sightOf(m)) ||
 	G.blds.some((b) => b.owner === o && b.hp > 0 && b.prog >= 1 && dist(b, t) <= sightOf(b));
 const carryOf = (o) => CARRY + fxv(o, 'carry').a;
 function gatherMul(o, n) {
@@ -8022,6 +8026,15 @@ const paceOf = (u, SP) =>
 	(u.owner === WILD ? 1 : groundSpd(u.owner, unitKeys(u.kind), u)) *
 	(G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1) *
 	(u.chg > G.t ? CHARGE.spd : u.tired > G.t ? CHARGE.tiredSpd : 1);
+// One home for "a unit moved" (Build 80 preview 9): every change of place, a walk, a run, a push, a knock, a rescue from water or a wall, adds
+// its length to the walk, and the view's legs follow the walk (STRIDE), so nothing glides. Who meant to move (mvT, the facing) stays the mover's.
+function stepTo(u, x, y) {
+	const d = hyp(x - u.x, y - u.y);
+	u.x = x;
+	u.y = y;
+	if (d > 0 && u.st) u.st.walk += d;
+	return d;
+}
 function moveTo(u, x, y, dt, r, SP) {
 	if (u.stuck > G.t) {
 		u.mvT = G.t; // in a pit, or slipped on ice: still on its way, not holding (Build 63)
@@ -8079,16 +8092,14 @@ function moveTo(u, x, y, dt, r, SP) {
 			ny = u.y;
 		}
 	}
-	u.x = nx;
-	u.y = ny;
+	stepTo(u, nx, ny); // the walk counts the ground really covered: a unit against a wall does not walk in place
 	if (m > 0.3) {
 		if (!(u.kT > G.t - 0.5)) {
 			u.fx = dx / dd;
 			u.fy = dy / dd;
 		}
 		u.mvT = G.t;
-		u.st.walk += m;
-	} // real steps only: a small nudge neither turns the figure round nor starts its walk
+	} // a small nudge neither turns the figure round nor counts as meaning to move (heft, marching); its legs still follow it
 	if (stand) return hyp(tx - u.x, ty - u.y) <= 7;
 	return hyp(x - u.x, y - u.y) <= r + 0.5;
 }
@@ -9886,11 +9897,12 @@ function hire(o, f) {
 }
 
 // ───────────────────────── Villager orders ─────────────────────────
-function setJob(u, job, n) {
+function setJob(u, job, n, at) {
 	if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 	u.job = job;
 	u.node = n || null;
 	u.was = n ? n.kind : null; // a fresh order: any find of the job until it has worked one
+	u.anchor = at ? { x: at.x, y: at.y } : null; // the spot it was placed: its search starts there and stays within the cap (decision 1)
 	u.wait = false;
 	if (job) u.post = null;
 	if (n && n.farm) n.wk = (n.wk || 0) + 1;
@@ -9952,7 +9964,7 @@ function sendVil(o, id) {
 		if (o === 0) say('No villager is free.', '', 3);
 		return false;
 	}
-	setJob(v, job, n);
+	setJob(v, job, n, n);
 	if (o === 0) say(`A villager heads for the ${nodeName(n).toLowerCase()}.`, '', 3);
 	return true;
 }
@@ -10863,11 +10875,15 @@ const forageNow = (u) =>
 			: u.node && u.node.amt > 0 && !(u.node.farm && BLD[u.node.farm.kind].makes)
 				? forage(u, u.node)
 				: 0;
-// the best find for this worker and its rate: fields, berries, trees, stone, gold, iron, fish, a carcass, or game within reach of home
-function bestNode(u, job) {
+// the best find for this worker and its rate: fields, berries, trees, stone, gold, iron, fish, a carcass, or game within reach of home.
+// seek (decision 1, a lost find): the point the search is measured from. Then it may take a find of the same kind its side has seen within
+// the search radius of that point, or one a friend (its own side) is working; a placed villager none past the cap (x + y) from where it was
+// placed, the rest none past the leash (DANGER_R.far) from the find's nearest drop-off. Of those, the best by the forager's rate R.
+function bestNode(u, job, seek) {
 	let best = null,
 		bR = 0,
-		drops = null;
+		drops = null,
+		mates = null;
 	for (const n of G.nodes) {
 		if (
 			(n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) ||
@@ -10889,7 +10905,7 @@ function bestNode(u, job) {
 			if (u.was && u.was !== 'farm') continue; // a worker from the wild never drifts onto a plot (Build 61: land work and wild work are two kinds)
 		} else {
 			if (u.was === 'farm') continue; // nor a plot worker into the wild
-			if (u.was && (n.kind !== u.was || dist(u, n) > searchR(u))) continue; // the same kind of find, within the search radius (decision 1)
+			if (u.was && n.kind !== u.was) continue; // the same kind of find (decision 1)
 			if (n.kind === 'fish' && !dockNear(u.owner, n)) continue;
 			if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue;
 		}
@@ -10897,6 +10913,19 @@ function bestNode(u, job) {
 			drops = G.blds.filter(
 				(b) => b.owner === u.owner && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(job),
 			);
+		if (u.was && n.kind !== 'farm') {
+			const from = seek || u;
+			if (dist(from, n) > searchR(u)) {
+				if (!seek) continue; // looking round its own find: only within the radius
+				if (!mates) {
+					mates = new Set();
+					for (const v of G.units) if (v.owner === u.owner && v !== u && v.node) mates.add(v.node);
+				}
+				if (!mates.has(n)) continue; // past the radius only a find a friend is working
+			}
+			if (seek && (u.anchor ? dist(u.anchor, n) > SEARCH.x + SEARCH.y : dist(nearest(drops, n) || keepOf(u.owner) || n, n) > DANGER_R.far))
+				continue; // the cap from where it was placed; else the leash from a drop-off
+		}
 		const R = forage(u, n, drops);
 		if (R > bR) {
 			bR = R;
@@ -10925,7 +10954,7 @@ function bestNode(u, job) {
 	}
 	return best && { n: best, R: bR };
 }
-const nearestNode = (u, job) => (bestNode(u, job) || { n: null }).n; // the one find a worker should take now
+const nearestNode = (u, job, seek) => (bestNode(u, job, seek) || { n: null }).n; // the one find a worker should take now
 // who to send: an idle villager first, the nearest; then, of the workers on the same resource (types), the one earning least; then the one
 // earning least on any gathering job. Weavers, brewers, shepherds and builders keep their posts. (Albert, Oct 29: a new field takes the
 // berry picker farthest from home, not a woodcutter)
@@ -11020,6 +11049,45 @@ function makeNow(u, n, dt, room) {
 	u.work = G.t;
 	return g;
 }
+// Where a villager waits (decision 1; Build 80 preview 9): at its drop-off, each on its own spot round the building's outline, all four sides,
+// SEARCH.gap feet apart (Albert: Hall's personal distance, 2.5 to 4 ft; OSHA 1910.142(b)(3), 36 inches), on the free lane square's middle.
+// The outline is cut into the same whole number of parts, k, on every side, each at least SEARCH.gap feet, with a spot on every corner: then no two
+// spots are closer than the gap, the corners too (a turn puts its two neighbours √2 parts apart). Spot i of N = 4k walks it clockwise from the
+// top-left corner. A waiter takes the free spot nearest to it (ties: the lower number), once, and keeps it until it has a find again; the order
+// of the step decides between two on one tick, so the same seed stands them the same way.
+function spotAt(b, i) {
+	const R = halfOf(b) + NAVC / 2,
+		k = Math.max(1, Math.floor((2 * R) / (SEARCH.gap * FOOT))),
+		N = 4 * k,
+		e = Math.floor((i % N) / k),
+		t = ((i % k) * 2 * R) / k - R;
+	return { N, ...[{ x: b.x + t, y: b.y - R }, { x: b.x + R, y: b.y + t }, { x: b.x - t, y: b.y + R }, { x: b.x - R, y: b.y - t }][e] };
+}
+function waitAt(u, dt, SP) {
+	let b = u.spot && G.blds.find((x) => x.id === u.spot.b && x.hp > 0);
+	if (!b) {
+		b = dropFor(u.owner, u.job, u);
+		if (!b) return;
+		const taken = new Set();
+		for (const v of G.units) if (v !== u && v.spot && v.spot.b === b.id) taken.add(v.spot.i);
+		let bi = -1,
+			bd = Infinity;
+		for (let i = 0, N = spotAt(b, 0).N; i < N; i++) {
+			const p = spotAt(b, i),
+				d = hyp(p.x - u.x, p.y - u.y);
+			if (!taken.has(i) && d < bd && !blockedCell(gcell(p.x, p.y), u.owner)) {
+				bd = d;
+				bi = i;
+			}
+		}
+		if (bi < 0) return; // every spot is taken: it stands where it is and asks again
+		u.spot = { b: b.id, i: bi };
+		if (u.owner === 0)
+			news('home', `No ${u.was === 'tree' ? 'trees' : u.was} in sight: one waits at the ${bldName(0, b.kind).toLowerCase()}.`, '', 4, u);
+	}
+	const p = spotAt(b, u.spot.i);
+	moveTo(u, p.x, p.y, dt, 2, SP);
+}
 function vilTick(u, dt, SP) {
 	u.idle = false;
 	if (u.inside && u.shop) {
@@ -11091,6 +11159,19 @@ function vilTick(u, dt, SP) {
 			u.hunt = null;
 		}
 		return;
+	}
+	// decision 1, the lost find. The search clock (lostT), the waiting spot and the find seen on the way live only while a villager has no find:
+	// any find, by any path (the player's order too), clears them here, the one home. The moment a wild find runs out, it looks from that spot
+	// and remembers the best it sees; it delivers what it carries first, then goes straight there.
+	if (!u.job || u.hunt || (u.node && u.node.amt > 0)) {
+		u.lostT = undefined;
+		u.spot = null;
+		u.next = null;
+	} else if (u.lostT === undefined && u.node && !u.node.farm) {
+		u.was = u.node.kind;
+		u.lostT = G.t;
+		const n = nearestNode(u, u.job, u);
+		u.next = n && !n.hunt ? n.id : null;
 	}
 	const cap = carryOf(u.owner);
 	if (
@@ -11184,39 +11265,26 @@ function vilTick(u, dt, SP) {
 	) {
 		if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 		if (u.node) u.was = u.node.kind; // what it worked last: the next find must be of the same kind, in sight
+		const lost = u.was && u.was !== 'farm' && !u.patch;
 		if (u.nnT > G.t) {
 			u.node = null;
 			u.idle = true;
+			if (lost) waitAt(u, dt, SP);
 			return;
 		} // nothing was found a moment ago: wait, do not search every step
-		const n = nearestNode(u, u.job);
-		if (!n && u.was && u.was !== 'farm' && !u.patch && G.t - (u.lostT ?? (u.lostT = G.t)) < SEARCH.tau + SEARCH.give) {
-			u.nnT = G.t + 2 + rng();
-			u.idle = true; // keeps its job and looks again in a couple of seconds, wider each time
+		const seen = lost && u.next != null ? G.nodes.find((x) => x.id === u.next && x.amt > 0) : null;
+		u.next = null;
+		const n = seen || nearestNode(u, u.job, lost ? u.anchor || dropFor(u.owner, u.job, u) || u : undefined); // from the anchor: where it was placed, else its nearest drop-off
+		if (!n && lost && u.pj && u.pj !== u.job) {
+			const pj = u.pj;
+			u.pj = null;
+			setJob(u, pj); // a hunt or a chore is over: back to what it was doing
 			return;
 		}
-		if (!n && u.was && u.was !== 'farm' && !u.patch) {
-			// no find of that kind in sight: to the nearest drop-off, and wait there for an order (Build 61, Albert: if they cannot see it they do not go)
-			if (u.pj && u.pj !== u.job) {
-				const pj = u.pj;
-				u.pj = null;
-				setJob(u, pj); // a hunt or a chore is over: back to what it was doing
-				return;
-			}
-			const dr = dropFor(u.owner, u.job, u),
-				what = u.was;
-			setJob(u, null);
-			u.post = dr ? { x: dr.x + halfOf(dr) + 6, y: dr.y + 6 } : null;
-			if (u.owner === 0)
-				news('home', 
-					`No ${what === 'tree' ? 'trees' : what} in sight: one waits at the ${dr ? bldName(0, dr.kind).toLowerCase() : 'Town Center'}.`,
-					'',
-					4,
-					u,
-				);
-			return;
+		if (!n && !u.patch) {
+			u.node = null;
+			u.nnT = G.t + SEARCH.again + rng(); // nothing in reach: it keeps its job, waits (at the drop-off when its find was lost), and looks again, with no end
 		}
-		if (!n && !u.patch) u.nnT = G.t + 2 + rng();
 		if (!n && u.patch) {
 			// nothing open inside the box: cut in from the nearest open tree outside it; when the box is clear, back to work
 			const r = u.patch,
@@ -11239,7 +11307,6 @@ function vilTick(u, dt, SP) {
 			return;
 		}
 		u.node = n;
-		u.lostT = undefined;
 		if (n) n.wk = (n.wk || 0) + 1; // counted at once, so the next worker this second sees the crowd (recount sets it true every second)
 	} else if (
 		!flock &&
@@ -11871,7 +11938,7 @@ function solTick(u, dt, SP) {
 		!(
 			tgt.hp > 0 &&
 			!tgt.inside &&
-			atWar(o, tgt.owner) &&
+			(atWar(o, tgt.owner) || onMe(tgt, u)) &&
 			(edge(u, tgt) < sightOf(u) * 1.4 * (TEMPER[temperOf(u)].chase || 1) ||
 				(u.state === 'home' && nearHome(u, tgt, k)))
 		)
@@ -11896,7 +11963,7 @@ function solTick(u, dt, SP) {
 							foeValue(u, c, dist(u, c)) < FORAGE.move * foeValue(u, cur, dist(u, cur))));
 			tgt = keep ? cur : c;
 		}
-		if (u.state === 'home' && tgt && !nearHome(u, tgt, k)) tgt = null;
+		if (u.state === 'home' && tgt && !nearHome(u, tgt, k) && !onMe(tgt, u)) tgt = null; // one on it is fought wherever it stands
 		if (!tgt && u.state === 'home' && !U.bonly)
 			tgt =
 				(u.hax !== undefined && nearestFoe(o, u, 320, { x: u.hax, y: u.hay })) ||
@@ -12065,8 +12132,7 @@ function wildTick(u, dt, SP) {
 				}
 			}
 			u.fx = Math.sign(nx - u.x) || u.fx;
-			u.x = x1;
-			u.y = y1;
+			stepTo(u, x1, y1);
 			u.mvT = G.t;
 		} else if (G.t > (u.graze || 0)) {
 			u.graze = G.t + rnd(3, 8);
@@ -12092,7 +12158,7 @@ function wildTick(u, dt, SP) {
 		if (!t)
 			t = nearU(
 				u,
-				U.temper === 'defend' ? STARTLE : U.raid ? U.raid + 40 : 140,
+				U.raid ? U.raid + 40 : WILD_LOOK,
 				(v) =>
 					v.owner !== WILD &&
 					!v.inside &&
@@ -12260,12 +12326,16 @@ function buildGrid() {
 	G.ugTick = G.tick;
 }
 // soldiers ignore grazing deer, drifters and wayfarers; spies are seen only up close
-// An animal (it has a temper) is left alone unless it is on one of your civilians and your side can see it do it (decisions 8, 8b, 13).
-const ignorable = (v, o) => {
+// An animal (it has a temper) is left alone unless it is on one of your civilians and your side's eyes see it (decisions 8, 8b, 13), or it
+// is on the soldier looking: whatever attacks a soldier, animal included, is fought back (self-defence; decision 8 as Albert amended it, Oct 31)
+const onMe = (v, me) => !!me && v.tgt === me && !!UNIT[me.kind] && isSoldier(me); // soldiers only: a tower or a cart keeps v70's rule
+const ignorable = (v, o, me) => {
 	const U = UNIT[v.kind];
-	if (U.temper) return !(o !== undefined && v.tgt && v.tgt.hp > 0 && v.tgt.owner === o && hasTag(v.tgt.kind, 'civ') && groupSees(o, v));
+	if (U.temper) return !(onMe(v, me) || (v.tgt && v.tgt.hp > 0 && v.tgt.owner === o && hasTag(v.tgt.kind, 'civ') && groupSees(o, v)));
 	return U.flee || U.passive || U.tick === 'wayfarer' || U.tick === 'envoy';
 }; // a herald is sacred: nobody shoots at an emissary on its way (it dies only by a side's own order)
+// who a side strikes: a foe it is at war with, or anything attacking the one looking (at peace too), less what it leaves alone
+const strikes = (o, v, me) => !v.inside && v.hp > 0 && v.owner !== o && (atWar(o, v.owner) || onMe(v, me)) && !ignorable(v, o, me);
 function nearestFoe(o, from, range, anchor) {
 	const a = anchor || from,
 		U = G.units,
@@ -12282,7 +12352,7 @@ function nearestFoe(o, from, range, anchor) {
 		for (let cx = x0; cx <= x1; cx++)
 			for (let i = grid ? UGH[cy * UGN + cx] : U.length - 1; i >= 0; i = grid ? UGX[i] : i - 1) {
 				const v = U[i];
-				if (v.inside || v.hp <= 0 || !atWar(o, v.owner) || ignorable(v, o)) continue;
+				if (!strikes(o, v, from)) continue;
 				const dx = a.x - v.x,
 					dy = a.y - v.y,
 					d = Math.sqrt(dx * dx + dy * dy);
@@ -12338,7 +12408,7 @@ function bestFoe(o, from, range, anchor) {
 		for (let cx = x0; cx <= x1; cx++)
 			for (let i = grid ? UGH[cy * UGN + cx] : U.length - 1; i >= 0; i = grid ? UGX[i] : i - 1) {
 				const v = U[i];
-				if (v.inside || v.hp <= 0 || !atWar(o, v.owner) || ignorable(v, o)) continue;
+				if (!strikes(o, v, from)) continue;
 				const d = hyp(a.x - v.x, a.y - v.y);
 				if (d > range || (v.kind === 'spy' && d > sR)) continue;
 				const beat = canBeat(from, v),
@@ -12547,10 +12617,7 @@ function hurt(o, a, t, base) {
 			dd = hyp(dx, dy) || 1,
 			nx = t.x + (dx / dd) * A.knock,
 			ny = t.y + (dy / dd) * A.knock;
-		if (!blockedCell(gcell(nx, ny), t.owner)) {
-			t.x = clamp(nx, 8, MAP - 8);
-			t.y = clamp(ny, 8, MAP - 8);
-		}
+		if (!blockedCell(gcell(nx, ny), t.owner)) stepTo(t, clamp(nx, 8, MAP - 8), clamp(ny, 8, MAP - 8));
 		t.flashT = G.t;
 	}
 	if (isB || t.kind === 'caravan') {
@@ -12616,14 +12683,8 @@ function pushApart(a, b) {
 			ay = a.y - dy * pa,
 			bx = b.x + dx * pb,
 			by = b.y + dy * pb;
-		if (!blockedCell(gcell(ax, ay), a.owner)) {
-			a.x = ax;
-			a.y = ay;
-		}
-		if (!blockedCell(gcell(bx, by), b.owner)) {
-			b.x = bx;
-			b.y = by;
-		}
+		if (!blockedCell(gcell(ax, ay), a.owner)) stepTo(a, ax, ay);
+		if (!blockedCell(gcell(bx, by), b.owner)) stepTo(b, bx, by);
 	}
 }
 function collide() {
@@ -12663,17 +12724,14 @@ function collide() {
 				lr = lakeR(L);
 			if (dl < lr + 6 && !u.fly && !onLand(u.x, u.y)) {
 				const s = (lr + 6) / (dl || 1);
-				u.x = L.x + (u.x - L.x) * s;
-				u.y = L.y + (u.y - L.y) * s;
+				stepTo(u, L.x + (u.x - L.x) * s, L.y + (u.y - L.y) * s);
 			}
 		}
-		u.x = clamp(u.x, 6, MAP - 6);
-		u.y = clamp(u.y, 6, MAP - 6);
+		stepTo(u, clamp(u.x, 6, MAP - 6), clamp(u.y, 6, MAP - 6));
 		if (blockedCell(gcell(u.x, u.y), u.owner)) {
 			const f = freeNear(Math.floor(u.x / NAVC), Math.floor(u.y / NAVC), u.owner, 8, u.x, u.y);
 			if (f) {
-				u.x = f.x;
-				u.y = f.y;
+				stepTo(u, f.x, f.y);
 				u.path = null;
 			}
 		}
@@ -19222,43 +19280,46 @@ function shadowPath(sx, sy, h, r, z) {
 		7,
 	);
 }
-// A building's shadow is its own shape, not an oval (Albert, Oct 31: we invented the shape, so the shadow is that fixed shape thrown away from the
-// light). Its footprint on the ground is a square half a side from the middle; the shadow is the hull of that square and the same square moved
-// along the light's line by h·cot(altitude), a planar projection of the box onto the ground (no source opened). One path, one fill, like the rest.
-function hull(P) {
-	P.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-	const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]),
-		lo = [],
-		up = [];
-	for (const p of P) {
-		while (lo.length > 1 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop();
-		lo.push(p);
-	}
-	for (let i = P.length - 1; i >= 0; i--) {
-		const p = P[i];
-		while (up.length > 1 && cr(up[up.length - 2], up[up.length - 1], p) <= 0) up.pop();
-		up.push(p);
-	}
-	return lo.slice(0, -1).concat(up.slice(0, -1));
+// A building's shadow is its own shape, not an oval (decision 14, Albert, Oct 31: we invented the shape, so the shadow is that fixed shape
+// thrown away from the light). A box of footprint half-side w (BLD fp) and height h casts its footprint swept by L = h cot(altitude) along the
+// light (a planar projection; Blinn 1988, from memory): a hexagon whose corners are the footprint's, each kept, moved by L, or both. Which
+// corners lead is fixed by the way the light falls, so the shape is made once for that (HEX) and every building only moves and stretches it
+// by its w and L: no hull, no sorting, no arrays per building. Same turning as the ovals, so the frame keeps one path and one fill.
+const BOX = [
+	[-1, -1],
+	[1, -1],
+	[1, 1],
+	[-1, 1],
+]; // the footprint's corners, clockwise on the glass
+let HEX = { k: '', pts: null };
+function hexOf(gx, gy) {
+	const k = gx + ',' + gy;
+	if (HEX.k === k) return HEX.pts;
+	const lead = (c) => gx * c[0] + gy * c[1], // ahead of the light (> 0: moved), behind it (< 0: kept), across it (0: both, in turn)
+		pts = [];
+	BOX.forEach((c, i) => {
+		const f = lead(c);
+		if (f < 0) pts.push([c[0], c[1], 0]);
+		else if (f > 0) pts.push([c[0], c[1], 1]);
+		else if (lead(BOX[(i + 1) % 4]) > 0) pts.push([c[0], c[1], 0], [c[0], c[1], 1]);
+		else pts.push([c[0], c[1], 1], [c[0], c[1], 0]);
+	});
+	HEX = { k, pts };
+	return pts;
 }
-function boxShadowPath(sx, sy, h, half, z) {
-	const w = half,
-		d = half * TILT,
-		L = SHADE.a < 0.02 ? 0 : h * SHADE.len * z,
-		dx = SHADE.x * L,
-		dy = SHADE.y * L,
-		P = [];
-	for (const [cx, cy] of [
-		[-w, -d],
-		[w, -d],
-		[w, d],
-		[-w, d],
-	]) {
-		P.push([sx + cx, sy + cy], [sx + cx + dx, sy + cy + dy]);
+function boxShadow(sx, sy, h, w, z) {
+	const L = SHADE.a < 0.02 ? 0 : h * SHADE.len * z,
+		vx = SHADE.x * L,
+		vy = SHADE.y * L,
+		d = w * TILT,
+		H = hexOf(Math.sign(vx), Math.sign(vy));
+	for (let i = 0; i < H.length; i++) {
+		const [cx, cy, m] = H[i],
+			x = sx + cx * w + m * vx,
+			y = sy + cy * d + m * vy;
+		if (i) ctx.lineTo(x, y);
+		else ctx.moveTo(x, y);
 	}
-	const H = hull(P);
-	ctx.moveTo(H[0][0], H[0][1]);
-	for (let i = 1; i < H.length; i++) ctx.lineTo(H[i][0], H[i][1]);
 	ctx.closePath();
 }
 function sunShadows(N, list, z, far) {
@@ -19277,7 +19338,7 @@ function sunShadows(N, list, z, far) {
 	for (const [, t, e] of list) {
 		if (t === 1) {
 			const B = BLD[e.kind];
-			if (!B.crop) boxShadowPath(SX(e.x), SY(e.y), B.h, B.fp * NAVC * 0.5 * z, z);
+			if (!B.crop) boxShadow(SX(e.x), SY(e.y), B.h * Math.min(1, e.prog), B.fp * NAVC * 0.5 * z, z);
 		} else if (t === 2) {
 			const U = UNIT[e.kind],
 				box = LOOKBOX[U.look] || [26, 30];
@@ -19725,6 +19786,7 @@ function drawFallen(f, s) {
 	ctx.restore();
 }
 const LEAN = new WeakMap(); // the view's own memory of each woodcutter's lean: the drawing never writes the game's units (Build 60)
+const PACED = new WeakMap(); // the view's memory of each unit's walk: when it last grew. A figure whose walk grew in the last 0.15 s is stepping
 function drawUnit(u, s) {
 	// a woodcutter leans in to its tree while it chops: the tree's ground keeps it 20 away, so it is drawn up to 12 closer (drawing only; the game does not move it)
 	const n = u.node,
@@ -19743,9 +19805,16 @@ function drawUnit(u, s) {
 		U = UNIT[u.kind],
 		col = G.P[u.owner].color,
 		st = u.owner === WILD ? null : stats(u.owner, u.kind);
-	const moving = G.t - (u.mvT || -9) < 0.15,
+	const w = u.st ? u.st.walk : 0;
+	let pw = PACED.get(u);
+	if (!pw) PACED.set(u, (pw = { w, t: -9 }));
+	else if (pw.w !== w) {
+		pw.w = w;
+		pw.t = G.t;
+	}
+	const moving = G.t - pw.t < 0.15, // any real change of place moves its legs (stepTo, Build 80 preview 9): nothing glides
 		working = u.work && G.t - u.work < 0.25,
-		pace = (u.st ? u.st.walk : G.t * 30) / STRIDE; // steps follow the ground covered, not the clock (Build 52): feet no longer slide
+		pace = w / STRIDE; // steps follow the ground covered, not the clock (Build 52): feet no longer slide
 	const fr =
 		G.t - (u.hitT || -9) < 0.25
 			? 3
@@ -21707,8 +21776,7 @@ function order(S, h) {
 		go(sol, e.x, e.y + halfOf(e) + 16);
 	} else if (h.t === 'node') {
 		vil.forEach((v) => {
-			if (v.job !== e.type || v.node !== e) setJob(v, e.type, e.kind === 'farm' ? e : null);
-			if (e.kind !== 'farm') v.node = e;
+			setJob(v, e.type, e, e); // placed: the find is its anchor (decision 1)
 			v.post = null;
 		});
 		go(sol, e.x, e.y + 14);
@@ -26218,8 +26286,18 @@ const SKIP_U = new Set([
 	'gp',
 	'gpT',
 ]); // lx/ly: where it stood last step (drawing only); gp/gpT: the group power of the tick
-// the Resume card, and the setup card while a save waits behind it, must be answered: closing either would start a game that never saves
+// the Resume card, and the setup card while a save waits behind it, must be answered: closing either would start a game that never saves.
+// It holds the whole screen (A2): while it is up, a tap, drag or wheel anywhere but on the card itself goes no further (the top bar's
+// counts, the map, the minimap, the row), so nothing can open another card over it and play on unsaved.
 const cardLocked = () => !!(G && G.card && (G.card.type === 'resume' || (G.card.type === 'setup' && holdSave)));
+for (const ev of ['pointerdown', 'pointermove', 'pointerup', 'click', 'wheel'])
+	$('stage').addEventListener(
+		ev,
+		(e) => {
+			if (cardLocked() && !e.target.closest('#card')) e.stopPropagation();
+		},
+		{ capture: true },
+	);
 // a deliberate new game starts clean: no leftover fight hold, save-failure clock, stale note or error count from the game before
 function freshSlate() {
 	fightHold = 0;
@@ -26915,16 +26993,10 @@ const CHAN = {
 const chanVol = (name) => SET.mix[CHAN[name] || 'fx'];
 // the voices are few (14): an alert always has one; ambience and effects give way when the air is full (Build 63: a bird could take the horn's voice)
 const VOICES = { max: 14, keep: { alert: 0, fx: 2, amb: 5 } };
+const voiceFree = (name, n = voices) => CHAN[name] === 'alert' || n <= VOICES.max - VOICES.keep[CHAN[name] || 'fx']; // an alert never waits for a voice (C19)
 function sfx(name, x, y) {
 	if (HAPTIC[name] && (x === undefined || onScreen(x, y))) feel(HAPTIC[name]);
-	if (
-		!SND.on ||
-		!AC ||
-		AC.state !== 'running' ||
-		document.hidden ||
-		(CHAN[name] !== 'alert' && voices > VOICES.max - VOICES.keep[CHAN[name] || 'fx']) // an alert never waits for a voice (C19)
-	)
-		return;
+	if (!SND.on || !AC || AC.state !== 'running' || document.hidden || !voiceFree(name)) return;
 	const S = SFX[name];
 	if (!S) return;
 	const now = AC.currentTime;
@@ -28626,8 +28698,7 @@ function herdTick(u, dt, SP) {
 	const U = UNIT[u.kind];
 	if (U.look === 'dragon') {
 		const d = hyp(u.px - u.x, u.py - u.y) || 1;
-		u.x += ((u.px - u.x) / d) * U.spd * dt;
-		u.y += ((u.py - u.y) / d) * U.spd * dt;
+		stepTo(u, u.x + ((u.px - u.x) / d) * U.spd * dt, u.y + ((u.py - u.y) / d) * U.spd * dt);
 		u.fx = Math.sign(u.px - u.x) || u.fx;
 		u.mvT = G.t;
 		u.fly = 34;
@@ -28644,8 +28715,7 @@ function herdTick(u, dt, SP) {
 				v.hp -= U.trample;
 				v.hurtT = G.t;
 				v.flashT = G.t;
-				v.x += (v.x - u.x) * 0.6;
-				v.y += (v.y - u.y) * 0.6;
+				stepTo(v, v.x + (v.x - u.x) * 0.6, v.y + (v.y - u.y) * 0.6);
 			}
 		});
 		const n = G.nodes.find((m) => m.kind === 'farm' && m.farm && m.type === 'food' && dist(m, u) < 20);
@@ -30171,6 +30241,29 @@ window.__fk = {
 	groupSees,
 	nearestFoe,
 	searchR,
+	SEARCH,
+	FOOT,
+	WILD_LOOK,
+	DANGER_R,
+	spotAt,
+	stepTo,
+	boxShadow,
+	hexOf,
+	SHADE,
+	cardLocked,
+	get ctx() {
+		return ctx;
+	},
+	vilTick,
+	blockedCell,
+	gcell,
+	ARRIVE,
+	halfOf,
+	recount,
+	voiceFree,
+	VOICES,
+	TILT,
+	FIG,
 	pushApart,
 	troops,
 	backToWork,
