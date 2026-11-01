@@ -16,9 +16,10 @@ JS = """(raw) => {
 }"""
 REST = """(raw) => {
   const F = window.__fk, bad = [];
+  if (F.holdSave || localStorage.getItem(F.SAVEKEY)) bad.push('the second page did not start clean: a save was left waiting');
   // an event with its own pieces on the map is ended on load (its end runs and the next is scheduled), not just dropped (first: the
   // damaged-save checks below count as errors, and after two the game stops saving)
-  F.newGame(5); F.act('close'); F.step(0.25); F.startEvent('wildfire'); const t0 = F.G.t; F.saveGame(true); const sv = F.readSave();
+  F.newGame(5); F.act('close'); F.step(0.25); F.G.ev.next = F.G.t; /* as when an event starts on time: its next is now */ F.startEvent('wildfire'); const t0 = F.G.t; F.saveGame(true); const sv = F.readSave();
   if (!sv) bad.push('the event check could not save its game'); else { F.loadGame(sv);
   if (F.G.ev.cur) bad.push('an event with its own pieces carried on after a load');
   else if (!(F.G.ev.next > t0)) bad.push('an event dropped on load was not ended: the next event was never scheduled'); }
@@ -71,7 +72,7 @@ async def main():
         st = await pg.evaluate("() => [window.__fk.G.card && window.__fk.G.card.type, window.__fk.holdSave]")
         if st[0] == 'resume' or st[1]: bad.append('the Welcome back card does not answer its own choice (' + str(st) + ')')
         # the rest in a clean page, so a failure above cannot spill into it
-        await pg.evaluate("() => localStorage.clear()"); await pg.reload(); await pg.wait_for_timeout(300)
+        await pg.evaluate("() => { window.__fk.setHold(true); localStorage.clear(); }"); await pg.reload(); await pg.wait_for_timeout(300)  # held, so leaving the page saves nothing
         bad += await pg.evaluate(REST, raw); await br.close()
     bad = bad + static() + errs
     print(('PASS ' if not bad else 'FAIL ') + 'save safety (Welcome back holds the screen, force cannot overwrite, clear removes backup, stale slots, event ends on load, alerts, All hands)', '' if not bad else bad)
