@@ -564,8 +564,8 @@ function makeMap() {
 		}
 		// 4 movables
 		const f = towardMid({ x: kx, y: ky }, PLACES.start);
-		for (let i = 0; i < 3; i++) {
-			const v = addUnit(p.id, 'vil', f.x + (i - 1) * 14, f.y + 6);
+		for (let i = 0; i < START_VILS; i++) {
+			const v = addUnit(p.id, 'vil', f.x + (i - (START_VILS - 1) / 2) * 14, f.y + 6);
 			v.job = i === 1 ? 'wood' : 'food';
 		}
 		const sc = towardMid({ x: kx, y: ky }, 60);

@@ -68,6 +68,7 @@ const UNIT = {
 		at: 'market',
 		age: 1,
 		look: 'caravan',
+		armed: { dmg: 4, rng: 24 }, // with Armed caravans its guards strike the nearest foe in reach, once a second (the research card reads this)
 		desc: 'An ox cart: about two thirds of walking pace. With no route it runs between your Markets for gold, the farther the more. Give it a route on its card and it carries goods from your Market to a trade stop. Robbers come for it near their camps.',
 	},
 	spy: {

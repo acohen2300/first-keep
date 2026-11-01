@@ -1,7 +1,8 @@
 // ═════ 04-rules-tech.js: the research tree from history, and the civilizations ═════
 // Research. fx: what it changes, by stat; k narrows it (a resource, a unit kind or #tag, a building kind or #wallish).
 // m multiplies, a adds, min keeps the lowest (armour does not stack). tier: upgrades a unit in place and renames it.
-// Research, from history. line: the steps of a line come one after another, only the next shows; w: how much the step changed the world, 1-10, which sets its cost and time; when: the date, in the book; need: other steps it waits on.
+// Research, from history. line: the steps of a line come one after another, only the next shows; w: how much the step changed the world, 1-10
+// (shown on its card; cost and t are set by hand for balance, not from w: decision N11); when: the date, in the book; need: other steps it waits on.
 const TECH = [
 	{
 		id: 'hafting',
@@ -13,7 +14,7 @@ const TECH = [
 		when: '6000 BC',
 		cost: { f: 50, w: 40 },
 		t: 18,
-		fx: [{ s: 'gather', k: 'wood', m: 1.1 }],
+		fx: [{ s: 'gather', k: ['tree', 'treefarm'], m: 1.1 }],
 		desc: 'Wood comes in 10% faster.',
 	},
 	{
@@ -26,7 +27,7 @@ const TECH = [
 		when: '3000 BC',
 		cost: { f: 100, w: 70 },
 		t: 28,
-		fx: [{ s: 'gather', k: 'wood', m: 1.15 }],
+		fx: [{ s: 'gather', k: ['tree', 'treefarm'], m: 1.15 }],
 		desc: 'Wood comes in 15% faster.',
 	},
 	{
@@ -39,7 +40,7 @@ const TECH = [
 		when: '1000 BC',
 		cost: { f: 180, w: 120 },
 		t: 41,
-		fx: [{ s: 'gather', k: 'wood', m: 1.15 }],
+		fx: [{ s: 'gather', k: ['tree', 'treefarm'], m: 1.15 }],
 		need: ['iron'],
 		desc: 'Wood comes in 15% faster.',
 	},
@@ -53,7 +54,7 @@ const TECH = [
 		when: 'Roman',
 		cost: { f: 130, w: 90 },
 		t: 32,
-		fx: [{ s: 'gather', k: 'wood', m: 1.1 }],
+		fx: [{ s: 'gather', k: ['tree', 'treefarm'], m: 1.1 }],
 		desc: 'Wood comes in 10% faster.',
 	},
 	{
@@ -66,7 +67,7 @@ const TECH = [
 		when: '1400s',
 		cost: { f: 240, w: 160 },
 		t: 48,
-		fx: [{ s: 'gather', k: 'wood', m: 1.15 }],
+		fx: [{ s: 'gather', k: ['tree', 'treefarm'], m: 1.15 }],
 		desc: 'Wood comes in 15% faster.',
 	},
 	{
@@ -153,7 +154,7 @@ const TECH = [
 		name: 'Charcoal burning',
 		at: 'lumber',
 		line: 'Carpentry',
-		age: 1,
+		age: BLD.foundry.age, // with the Foundry it serves (decision N12)
 		w: 5,
 		when: '1000 BC',
 		cost: { f: 170, w: 110 },
@@ -197,8 +198,8 @@ const TECH = [
 		when: '9000 BC',
 		cost: { f: 50, w: 40 },
 		t: 18,
-		fx: [{ s: 'gather', k: 'food', m: 1.1 }],
-		desc: 'Fields and bushes yield 10% faster.',
+		fx: [{ s: 'gather', k: 'farm', m: 1.1 }],
+		desc: 'Fields yield 10% faster.',
 	},
 	{
 		id: 'threshing',
@@ -210,7 +211,7 @@ const TECH = [
 		when: '6000 BC',
 		cost: { f: 80, w: 50 },
 		t: 24,
-		fx: [{ s: 'gather', k: 'food', m: 1.1 }],
+		fx: [{ s: 'gather', k: 'farm', m: 1.1 }],
 		desc: 'Fields yield 10% faster.',
 	},
 	{
@@ -223,7 +224,7 @@ const TECH = [
 		when: '3500 BC',
 		cost: { f: 140, w: 100 },
 		t: 37,
-		fx: [{ s: 'gather', k: 'food', m: 1.2 }],
+		fx: [{ s: 'gather', k: 'farm', m: 1.2 }],
 		desc: 'Fields yield 20% faster.',
 	},
 	{
@@ -249,7 +250,7 @@ const TECH = [
 		when: '900s',
 		cost: { f: 320, w: 210 },
 		t: 60,
-		fx: [{ s: 'gather', k: 'food', m: 1.15 }],
+		fx: [{ s: 'gather', k: 'farm', m: 1.15 }],
 		need: ['horses'],
 		desc: 'Fields yield 15% faster.',
 	},
@@ -807,20 +808,6 @@ const TECH = [
 		fx: [{ s: 'room', k: 'house', a: 1 }],
 		desc: 'Houses hold one more.',
 	},
-	{
-		id: 'printing',
-		name: 'Printing',
-		at: 'keep',
-		line: 'Household',
-		age: 4,
-		w: 9,
-		when: '1450s',
-		cost: { f: 550, g: 360 },
-		t: 87,
-		fx: [{ s: 'research', m: 0.85 }],
-		need: ['press'],
-		desc: 'Research is 15% faster.',
-	},
 	// the home (Build 56, Albert's hearth line): three steps at the House, each from the record, each with a real effect, and each lights the home more
 	{
 		id: 'hearth',
@@ -1180,7 +1167,7 @@ const TECH = [
 		when: '1000s',
 		cost: { f: 240, g: 160 },
 		t: 48,
-		fx: [{ s: 'cold', a: 0.5 }],
+		fx: [{ s: 'cold', a: 1 }],
 		need: ['spinwheel'],
 		desc: 'Winter slows soldiers half as much.',
 	},
@@ -1194,9 +1181,9 @@ const TECH = [
 		when: '1500s',
 		cost: { f: 310, g: 210 },
 		t: 55,
-		fx: [{ s: 'wet', a: 0.5 }],
+		fx: [{ s: 'wet', a: 1 }],
 		need: ['warmclothes'],
-		desc: 'Rain slows soldiers half as much.',
+		desc: 'Blizzards slow soldiers half as much.', // the only wet sky that slows a march (WEATHER spd); rain slows it through the mud
 	},
 	{
 		id: 'drillyard',
@@ -2136,8 +2123,8 @@ const TECH = [
 		when: '1450s',
 		cost: { g: 550, s: 360 },
 		t: 87,
-		fx: [{ s: 'research', m: 0.8 }],
-		desc: 'Research is 20% faster.',
+		fx: [{ s: 'research', m: 0.68 }], // Printing (×0.85) folded in, one invention once: 0.8 × 0.85 (decision N12)
+		desc: 'Research is 32% faster.',
 	},
 	{
 		id: 'optics',
@@ -2314,12 +2301,9 @@ const TECH = [
 		when: '1643',
 		cost: { g: 430, s: 290 },
 		t: 71,
-		fx: [
-			{ s: 'wet', a: 0.5 },
-			{ s: 'cold', a: 0.5 },
-		],
-		need: ['science'],
-		desc: 'Rain and winter slow half as much more.',
+		fx: [{ s: 'forecast', a: 1 }],
+		need: ['science', 'weathersigns'],
+		desc: 'The next sky is told a minute further ahead.',
 	},
 	{
 		id: 'bandages',
@@ -2766,7 +2750,7 @@ const TECH = [
 		cost: { g: 150, s: 100 },
 		t: 35,
 		fx: [{ s: 'uhp', k: 'caravan', m: 2 }],
-		desc: 'Caravans are twice as tough.',
+		desc: `Caravans are twice as tough, and their guards strike any foe within ${UNIT.caravan.armed.rng} for ${UNIT.caravan.armed.dmg}, once a second.`,
 	},
 	{
 		id: 'convoys',
@@ -3163,7 +3147,7 @@ const CIVS = {
 	mali: {
 		name: 'Mali',
 		uu: 'malihorse',
-		fx: [{ s: 'gather', k: 'gold', m: 1.15 }],
+		fx: [{ s: 'gather', k: ['gold', 'mint'], m: 1.15 }],
 		bonus: 'The gold fields: gold gathered 15% faster.',
 		wonder: 'Djinguereber Mosque',
 	},

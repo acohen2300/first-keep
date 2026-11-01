@@ -364,6 +364,8 @@ const WATER = {
 
 // Scenarios (Build 58, item 41): three set starts on the same rules, each a table of what differs, read by applyScenario in 10-world.
 // Nothing here is a new rule: an age, a store, relations, hazards, buildings already in the game, and the mode.
+// the villagers every side starts with, beside its keep and scout; a scenario's vils come on top (F1: the Open text said five)
+const START_VILS = 3;
 const SCENARIOS = {
 	open: {}, // the ordinary start
 	siege: {

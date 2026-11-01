@@ -86,6 +86,13 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   { F.G.mkt.f = 1; F.mktHit('f', 100, -1); near('elastic price', F.mkt('f'), Math.pow(1.1, -1 / F.PRICE.eps.f), 1e-9); near('elastic value', F.mkt('f'), 0.8264, 1e-3); }
   // spoilage on first-order decay: a year of seasons at 5% a year keeps 95%
   { let q = 1000; const k = -Math.log(1 - F.SPOIL.year) / 4; for (let i = 0; i < 4; i++) q *= Math.exp(-k); near('spoil a year', q, 950, 1e-6); }
+  // layers in series (decision N10; ISO 9920, ASHRAE 55, from memory): R_total = R_body + Σ R_i, so the cold's toll on a march goes as
+  // 1 / (1 + Σ a_i): Wool cloaks (a = 1) halve the winter toll, a second such layer leaves a third, and every step together never ends it
+  near('one layer', F.insulate(1), 0.5, 1e-9); near('two layers', F.insulate(2), 1 / 3, 1e-9);
+  { F.newGame(2); const G = F.G, P = G.P[0], toll = () => 1 - F.sideSpd(0), set = (ids) => { P.techs = new Set(ids); F.fxDirty(); };
+    G.t = 3.5 * F.SEASON_LEN; G.wx = 'clear'; set([]); const w0 = toll(); set(['warmclothes']); near('one cloak halves the winter toll', toll() / w0, 0.5, 1e-9);
+    G.t = 1.5 * F.SEASON_LEN; G.wx = 'blizzard'; set([]); const b0 = toll(); set(['waterproof']); near('one oiled cloak halves the storm toll', toll() / b0, 0.5, 1e-9);
+    set(F.TECH.filter((t) => !t.civ).map((t) => t.id)); if (!(toll() > 0)) out.push('every step together ends the storm toll'); G.t = 3.5 * F.SEASON_LEN; G.wx = 'clear'; if (!(toll() > 0)) out.push('every step together ends the winter toll'); }
   return out; }"""
 async def main():
     async with async_playwright() as p:

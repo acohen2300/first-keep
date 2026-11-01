@@ -21,7 +21,7 @@ function openCard(c, back) {
 	renderCard();
 	preview();
 } // a card pauses the game (Help: Pause on cards); closing it carries on
-const READ_CARDS = new Set(['research', 'troops', 'guide', 'help', 'score', 'stores', 'sound']); // the cards you sit and read pause the game; a building, a unit or a field to glance at does not (Albert, Build 41). The War Council is a building card that pauses (Build 48: 'council' here never matched a card)
+const READ_CARDS = { research: 'Research', troops: 'the Army', guide: 'the Guide', help: 'Help', score: 'Score', stores: 'Stores', sound: 'Sound' }; // the cards you sit and read pause the game (named for the Rules page); a building, a unit or a field to glance at does not (Albert, Build 41). The War Council is a building card that pauses (Build 48: 'council' here never matched a card)
 // whether the card on show pauses the game, decided each time what it shows changes (a card opened, back, a tab turned), never once at
 // open (E7: Relations paused when opened on its tab, not when the tab was turned; a building after Research stayed paused). Between
 // changes the player's own pause and play stand
@@ -33,7 +33,7 @@ function cardPause(c) {
 	const want =
 		SET.cardPause !== false &&
 		!G.over &&
-		(READ_CARDS.has(c.type) ||
+		(c.type in READ_CARDS ||
 			(c.type === 'bld' &&
 				G.blds.some((b) => b.id === c.id && b.owner === 0 && (b.kind === 'council' || (b.kind === 'keep' && G.ktab === 'rel')))));
 	if (want && !G.paused) {
@@ -155,9 +155,9 @@ const slt = (tog, inp, word, val, v, max, step, on, dis, span = 's2') =>
 	`<div class="slt ${span}${on && !dis ? ' on' : ''}${dis ? ' dis' : ''}" data-f="slt-${inp}"><button class="hr" data-act="${tog}"><b>${word}</b><small>${val}</small><i class="sw"></i></button>` +
 	`<input class="hr" type="range" data-in="${inp}" min="0" max="${max}" step="${step}" value="${v}" style="--v:${Math.round((100 * v) / max)}%" aria-label="${word}"${dis ? ' disabled' : ''}></div>`;
 const FOLD = new Set(); // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
-// the book entry of a research step: the date, what it changed, and its weight, which is its cost
+// the book entry of a research step: the date, what it changed, and its weight (how much it changed the world, not its cost: N11)
 const techBook = (t) =>
-	`<p><b>${t.name}</b>${t.when ? ` · ${t.when}` : ''}${t.w ? ` · weight ${t.w} of 10` : ''}: ${t.desc}${WHY[t.id] ? ` ${WHY[t.id]}` : ''}${t.w ? ` Cost and time ×${(0.5 + 0.1 * t.w).toFixed(1)} for its age.` : ''}</p>`;
+	`<p><b>${t.name}</b>${t.when ? ` · ${t.when}` : ''}${t.w ? ` · weight ${t.w} of 10` : ''}: ${t.desc}${WHY[t.id] ? ` ${WHY[t.id]}` : ''}</p>`;
 // tabs are a file folder (MENU-SPEC §1): one rank of tabs; the open one joins one Gold 1 outline round its whole page, the outline down
 // the middle of the 6 gap. opts: [key, name, sub]; page: the page under the tabs
 const folder = (key, opts, cur, page, cls = 'c2') =>
@@ -420,12 +420,14 @@ function yieldText(n, o) {
 function bonusText(n, o) {
 	if (n.kind === 'fish' && n.type !== 'food') return '';
 	const c = fxList(o),
-		keys = [n.type, n.kind],
-		named = [],
-		fits = (f) => !f.k || keys.includes(f.k) || (f.k[0] === '#' && false);
-	for (const stat of ['gather', n.kind === 'farm' ? 'crop' : null, n.farm && BLD[n.farm.kind].makes ? 'make' : null])
+		named = [];
+	for (const [stat, keys] of [
+		['gather', nodeKey(n)],
+		[n.kind === 'farm' ? 'crop' : null, [n.type]],
+		[n.farm && BLD[n.farm.kind].makes ? 'make' : null, [n.type]],
+	]) // the keys gatherMul asks each stat with
 		if (stat)
-			for (const f of c[stat] || []) if (fits(f) && f.m && f.m !== 1) named.push(`${f.name || fxName(f)} ×${f.m}`);
+			for (const f of c[stat] || []) if (fxFits(f, keys) && f.m && f.m !== 1) named.push(`${f.name || fxName(f)} ×${f.m}`);
 	if (n.kind === 'farm' && n.type === 'food') {
 		if (season().farm !== 1) named.push(`${season().name} ×${season().farm}`);
 		if ((G.harvest || 1) !== 1) named.push(`harvest ×${G.harvest}`);

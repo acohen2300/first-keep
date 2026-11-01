@@ -36,6 +36,7 @@ const VASSAL = {
 	crushed: 0.25,
 	freeAfter: 240,
 	reign: 300,
+	invest: 3, // the loyalty a building of the lord's buys near the vassal when its own table names none (BLD invest)
 };
 const VENTURE = { age: 3, back: 1.4, lost: 0.2, max: 3, sizes: [100, 250, 500] };
 // Prices answer the market's stock on the constant-elasticity demand curve, P = P0 (Q/Q0)^(−1/ε) (Marshall's price elasticity; the standard
@@ -576,7 +577,7 @@ const BLD = {
 		age: 3,
 		crop: 'gold',
 		makes: { gold: { from: { s: 1 }, rate: 0.2 } },
-		fx: [{ s: 'gather', k: 'gold', m: 1.15 }],
+		fx: [{ s: 'gather', k: ['gold', 'mint'], m: 1.15 }],
 		sab: 'stall',
 		desc: 'Strikes coin from the silver in your stone: 1 stone makes 1 gold, and gold gathered pays 15% more. Or debase the coin, once: a heap of gold now, and dearer prices at your Market for the rest of the game.',
 	},

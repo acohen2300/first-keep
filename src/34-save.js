@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 40; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 41; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -165,6 +165,18 @@ const MIGRATE = {
 		S.v = 40;
 		return S;
 	}, // decision 5a: the map from 2000 to 2160; a wave is judged by its progress (D1)
+	40: (S) => {
+		for (const p of S.P) if (p.techs) p.techs = [...new Set(p.techs.map((id) => (id === 'printing' ? 'press' : id)))];
+		for (const b of S.blds || [])
+			if (b.q)
+				b.q = b.q.filter((j) => j.tech !== 'printing' || (S.P[b.owner] && refund(S.P[b.owner], j), false)); // Printing waited on the press: the order is given back
+		if (S.clim && 'next' in S.clim) {
+			S.clim.ahead = S.clim.next == null ? [] : [S.clim.next];
+			delete S.clim.next;
+		}
+		S.v = 41;
+		return S;
+	}, // Build 80: Printing is folded into Printing press (N12); the sky rolled ahead is a list, a minute for each forecast step (N10)
 };
 const evSave = () => {
 	const V = G.ev || {},

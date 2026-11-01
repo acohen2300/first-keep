@@ -1,4 +1,17 @@
 // ═════ 07-text.js: every line of wording the game says ═════
+// how much slower a full cover of mud or snow makes a march, in percent: Pandolf's terrain factor over dirt, as 1 / (1 + f)
+const slowPct = (f) => Math.round((1 - 1 / (1 + f)) * 100);
+// 'a, b or c'
+const orList = (L) => (L.length > 1 ? L.slice(0, -1).join(', ') + ' or ' + L[L.length - 1] : L[0]);
+// the loyalty each of the lord's buildings buys near a vassal, by value, read from the table (F10: the hand list named a building that is none)
+const investText = () => {
+	const by = {};
+	for (const k in BLD) if (BLD[k].invest) (by[BLD[k].invest] ||= []).push(BLD[k].name.toLowerCase());
+	return `${Object.keys(by)
+		.sort((a, b) => a - b)
+		.map((v) => `${by[v].join(', ')} ${v}`)
+		.join('; ')}; any other ${VASSAL.invest}`;
+};
 // ───────────────────────── Why it is so: the history behind each row ─────────────────────────
 // Dates are "about" unless exact; where historians disagree the text says so. Each line credits more than one place where the record allows.
 // A card's title where the full name does not fit slots 2 to 4 of the title bar at 375 pt (MENU-SPEC §4; the gate measures every title the
@@ -39,7 +52,7 @@ const LEDGER_WORD = {
 };
 // the scenarios' words (SCENARIOS in 06)
 const SCEN_TEXT = {
-	open: ['Open', 'The ordinary start: a keep, five villagers, the land.'],
+	open: ['Open', `The ordinary start: a keep, ${START_VILS} villagers, a scout, the land.`],
 	siege: [
 		'The Siege',
 		'A Medieval town behind its walls with a full store; every rival at war with you and the horde seven minutes out. Hold for thirty.',
@@ -88,7 +101,8 @@ const WHY = {
 		'Navies planted oak by the thousand; the Colbert ordinance of 1669 sowed the forests of France for ships a century off.',
 	timber:
 		'Jointed frames of oak carried the weight; the walls between were only wattle, and a house could grow a storey.',
-	charcoal: 'Smelting iron took charcoal, not wood; a charcoal clamp burned for a week, watched day and night.',
+	charcoal:
+		'Smelting iron took charcoal, not wood; a charcoal clamp burned for a week, watched day and night. Game: far older than the age it sits in here, because the Foundry it feeds comes then.',
 	carts: 'The pivoting front axle let a four-wheeled wagon turn; a wagon carried what six pack animals had.',
 	logdrive:
 		'Rivers floated timber to the mills in spring; the Black Forest sent rafts to Holland a thousand logs long.',
@@ -162,7 +176,6 @@ const WHY = {
 		'Rome counted its people every five years to tax and to levy; a state that knows its numbers can feed and house more.',
 	charter:
 		'A charter made a town free of its lord: its own market, its own court, its own walls. People came to be free.',
-	printing: 'The Gutenberg press put twenty million books in Europe by 1500; what one man knew, all men could read.',
 	townwatch:
 		'Towns kept a night watch of citizens by turns; a stranger at the gate was noticed before he reached the square.',
 	calendar:
@@ -297,7 +310,7 @@ const WHY = {
 	architecture: 'Vitruvius wrote the ten books every builder read for 1500 years: firmness, commodity and delight.',
 	guilds: 'Guilds set the standard, kept the secret and trained the next man; a guild town made more and made it well.',
 	medschool: 'Salerno taught Greek and Arabic medicine to Europe; its doctors were licensed from 1140.',
-	press: 'The Gutenberg press spread learning across Europe in a generation; a scholar with books learns faster.',
+	press: 'The Gutenberg press spread learning across Europe in a generation, some twenty million books by 1500; a scholar with books learns faster.',
 	optics: 'The telescope of Lippershey, then of Galileo: a watchman on a tower saw sails a day before they came.',
 	roads: 'Rome paved fifty thousand miles; a legion on the Via Appia marched in the rain as on a dry day.',
 	drainage: 'Roman farmers laid stone-filled trenches under wet fields; drained ground carries a cart after rain.',
@@ -642,7 +655,7 @@ const MS_TEXT = {
 	],
 	snow: [
 		'Snow deepens the ground: walking −{pct}%.',
-		'Below 1 °C what falls is snow; soft snow costs a walker more than mud. Snow clearing halves it.',
+		`At ${CLIMATE.snowAt} °C and below what falls is snow; deep snow slows a walker ${slowPct(CLIMATE.terrain.snow)}%, deep mud ${slowPct(CLIMATE.terrain.mud)}%. Snow clearing halves it.`,
 		'Research Snow clearing',
 		'card:research',
 	],
@@ -718,7 +731,7 @@ const EV_TEXT = {
 	wagon: ['A wagon train is crossing the land.', 'Settlers: reach the wagon, three join.'],
 	mercs: ['A free company has camped by the road.', 'Mercenaries for hire, for three minutes.'],
 	dragon: ['Something large is flying this way.', 'A dragon passes. What it flies over, burns.'],
-	troll: ['A troll has left its bridge.', 'A troll is out. It goes home at dusk.'],
+	troll: ['A troll has left its bridge.', 'A troll is out. It goes home soon.'],
 	aurora: ['The sky is stirring in the north.', 'Northern lights.'],
 	horde: ['A horde is coming: two seasons.', 'A horde is coming: one season.', 'The horde is here!'],
 };
@@ -809,7 +822,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'You hold a vassal',
-		`Beat their army and stand at their Town Center, then Demand surrender; or, as the ally of a side and twice its strength, offer to be its overlord. Every 10 s you take the tax (light ${TAX.light.take * 100}%, fair ${TAX.fair.take * 100}%, heavy ${TAX.heavy.take * 100}% of what they gathered). Loyalty heads for 20 + your buildings near them (castle ${BLD.castle.invest}, town ${BLD.town.invest}, market ${BLD.market.invest}, tower, post, business center ${BLD.tower.invest}, field ${BLD.farm.invest}, others 3) + your soldiers there (0.5 each, up to 15) + enemies you killed near them (1 each, up to 20, fading) − the resentment of the tax (0, 10, 30). Unrest moves by the tax push (0.3, 1.5, 4) minus loyalty/25. At 60 loyalty they send gifts; at 50 you get a quarter of their trade profit.`,
+		`Beat their army and stand at their Town Center, then Demand surrender; or, as the ally of a side and twice its strength, offer to be its overlord. Every 10 s you take the tax (light ${TAX.light.take * 100}%, fair ${TAX.fair.take * 100}%, heavy ${TAX.heavy.take * 100}% of what they gathered). Loyalty heads for 20 + your buildings near them (${investText()}) + your soldiers there (0.5 each, up to 15) + enemies you killed near them (1 each, up to 20, fading) − the resentment of the tax (0, 10, 30). Unrest moves by the tax push (0.3, 1.5, 4) minus loyalty/25. At 60 loyalty they send gifts; at 50 you get a quarter of their trade profit.`,
 		'Rulers who protected and built up their subjects were paid more and kept them; those who only squeezed them faced revolt.',
 	],
 	[
@@ -849,7 +862,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Finds in the wild',
-		'Each corner has the same: deer, a boar, a treasure chest under wolves, ruins held by bandits (a free research of your age), an old cemetery with grave robbers, a bear den, vagabonds to hire. The camps of the robbers sit at the four map edges; the shrine stands inside the Throne. Guards stay near what they guard and attack whoever comes close. Kill them, then touch the find with any unit.',
+		'Each corner has the same: deer, a boar, a treasure chest under wolves, ruins held by bandits (a free research of your age), an old cemetery with grave robbers, a bear den, vagabonds to hire. The camps of the robbers sit at the four map edges; the shrine stands at the foot of the Throne. Guards stay near what they guard and attack whoever comes close. Kill them, then touch the find with any unit.',
 		'Taking what is far means fighting for it. Every corner starts with the same; the lakes and rivers fall at random.',
 	],
 	[
@@ -884,7 +897,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Market',
-		`Sell 100 of a resource or 10 of a good for ${SELL * 100}% of its worth (Coinage ${(SELL + 0.1) * 100}%), or buy for ${BUY * 100}%, at the going price. The going price answers the stock: what is sold piles up and the price falls, what is bought runs short and it rises, by the demand curve (bread and wood move little, cloth and spice a lot); a glut or a shortage wears off over a couple of minutes. Spice is the only good it sells. The same prices for every side; a round trip always loses, and a trade stop pays more.`,
+		`Sell 100 of a resource or 10 of a good for ${SELL * 100}% of its worth (research raises it to ${Math.round((SELL + TECH.reduce((a, t) => a + (t.fx || []).reduce((b, f) => b + (f.s === 'sell' ? f.a : 0), 0), 0)) * 100)}%), or buy for ${BUY * 100}%, at the going price. The going price answers the stock: what is sold piles up and the price falls, what is bought runs short and it rises, by the demand curve (bread and wood move little, cloth and spice a lot); a glut or a shortage wears off over a couple of minutes. Spice is the only good it sells. The same prices for every side; a round trip always loses, and a trade stop pays more.`,
 		'The margin is the cut of the merchant.',
 	],
 	[
@@ -929,7 +942,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Heavy blows',
-		'Elephants, cataphracts and trebuchets drive what they hit back a few steps, and it flashes white.',
+		`A blow from a ${orList(Object.values(UNIT).filter((U) => U.knock && !U.civ).map((U) => U.name.toLowerCase()))} drives what it hits back a few steps, and it flashes white.`,
 		'Elephants and armoured charges broke formations by weight.',
 	],
 	[
@@ -949,13 +962,8 @@ const TRIGGERS = () => [
 	],
 	[
 		'The ground remembers',
-		'Where people fell, where buildings burned and where villagers walk a lot, the ground shows it. It is for looks only and is not saved.',
+		'Where people fell and buildings burned the ground shows it, for looks only and not kept in the save. Where feet pass a lot it wears into ruts: real mud that slows a march, kept in the save.',
 		'Battlefields and trodden roads stayed visible for years.',
-	],
-	[
-		'Hold ground',
-		'In the Army card, Hold ground makes the picked battalion fight only what comes within reach and not chase.',
-		'A line that chases a lone rider breaks itself.',
 	],
 	[
 		'Temple: Zeal',
@@ -1009,17 +1017,17 @@ const TRIGGERS = () => [
 	],
 	[
 		'The ground remembers the weather',
-		`The air has a temperature, by the season and the hour, and the sky runs in spells: a wet minute is likelier after a wet one. Rain soaks the ground and it dries over minutes; wet ground is mud (marching up to ${Math.round((1 - 1 / (1 + CLIMATE.terrain.mud)) * 100)}% slower, deeper by water), snow falls below freezing and melts by the degree (marching up to ${Math.round((1 - 1 / (1 + CLIMATE.terrain.snow)) * 100)}% slower; engines slide and shoot short), wet ground freezes to ice (men slip). Fire follows the wetness: it hardly catches after rain and races in a drought. Frost and rain take ${Math.round(CLIMATE.wear * 100)}% off blades. Each fades over days. The Library (Weather line), Stable, Barracks and Smithy research the answers: roads and drains, horseshoes and crampons, cloaks, tempering and oiling, levees against floods.`,
+		`The air has a temperature, by the season and the hour, and the sky runs in spells: a wet minute is likelier after a wet one. Rain soaks the ground and it dries over minutes; wet ground is mud (marching up to ${slowPct(CLIMATE.terrain.mud)}% slower, deeper by water), snow falls at ${CLIMATE.snowAt} °C and below and melts by the degree (marching up to ${slowPct(CLIMATE.terrain.snow)}% slower; engines slide and shoot short), wet ground freezes to ice (men slip). Fire follows the wetness: it hardly catches after rain and races in a drought. Frost and rain take ${Math.round(CLIMATE.wear * 100)}% off blades. Each fades over days. The Library (Weather line), Stable, Barracks and Smithy research the answers: roads and drains, horseshoes and crampons, cloaks, tempering and oiling, levees against floods.`,
 		'Napoleon lost more to mud and cold than to armies; Agincourt was won in a ploughed field after a week of rain.',
 	],
 	[
 		'Research comes in lines',
-		`Each building teaches a few lines; only the next step of a line shows, and it needs the step before, sometimes one elsewhere (Plate needs Bellows). Cost and time follow the weight of the step in history, 1 to 10. The book on each step gives the date and what it changed.`,
+		`Each building teaches a few lines; only the next step of a line shows, and it needs the step before, sometimes one elsewhere (Plate needs Bellows). The book on each step gives the date, what it changed, and its weight in history, 1 to 10.`,
 		'The real tree: nobody built a blast furnace before a bellows, and the plough mattered more than the sickle.',
 	],
 	[
 		'The row, the squads and pausing',
-		'The cycle button above the first slot turns the row: Jobs, War, Train. On War sit the four squads (once Battalions is researched): tap one for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Out on a mission its card shows its health and standing. Opening any card pauses the game and closing it carries on (Help: Pause on cards, off if you like).',
+		`The cycle button above the first slot turns the row: Jobs, War, Train. On War sit the four squads (once Battalions is researched): tap one for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Out on a mission its card shows its health and standing. Opening a card you sit and read (${orList([...Object.values(READ_CARDS), 'the War Council', 'Relations'])}) pauses the game; a building, a unit or a field to glance at does not; closing it carries on (Help: Pause on cards, off if you like).`,
 		'Thumbs on the map, not in a menu: a phone is not a desk.',
 	],
 	[

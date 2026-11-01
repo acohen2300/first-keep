@@ -723,7 +723,7 @@ function loyaltyParts(p) {
 			Math.abs(b.y - k.y) < r &&
 			dist(b, k) < r
 		)
-			invest += BLD[b.kind].invest ?? 3;
+			invest += BLD[b.kind].invest ?? VASSAL.invest;
 	const n = G.units.filter((u) => u.owner === L && isSoldier(u) && dist(u, k) < r).length,
 		garrison = Math.min(VASSAL.garrisonMax, n * VASSAL.garrison);
 	const protect = Math.round(p.protect || 0),
