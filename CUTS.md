@@ -1199,3 +1199,31 @@ Tests
 
 **Play fingerprint accepted:** step 1 exact; 1b, decision 2, 5a and the review's layout fixes each move it; D1 and its exceptions do not.
 - Merge check (main e4d0c82, cards and map together): tests/handoff.py START QC PASSED; 86 planted bugs caught; the gate passes at four sizes.
+
+## Build 80, research and text (merged Nov 1, before preview 10)
+**Research and text (N9, N10, N11, N12, N14; Albert, Nov 1, yes yes). Branch `research80`.**
+
+Changes:
+- N9: gather research keyed to the find (`nodeKey`, one home in `08-core`); `fxFits` one home for whether an effect reaches a thing (fxv and the find card); fx `k` may name a list. Fields and mines only: the harvest line on fields (Sickles' card corrected), mining on the stone, gold and iron finds. Bushes, fish and game lose the harvest line (they keep the Dock's steps and Ice house). Felling, the Mint's own bonus and Mali kept as they played.
+- N10: cold and wet as layers in series, 1/(1 + Σa) (`insulate`, `12-sim-core`); Wool cloaks and Oiled cloaks a 1 (still half). Weather glass: forecast lead time, the sky rolled a minute ahead per forecast step (`G.clim.ahead`); it needs Weather signs. Ice steps unchanged (friction). SCIENCE.md: two rows.
+- N11: the research card's cost formula sentence and the Rules page's twin cut; the w comment fixed.
+- N12: the caravan's guards in the caravan row (`armed: { dmg: 4, rng: 24 }`), the Armed caravans card generated from it (reach and hit); Charcoal burning in the Foundry's age (`BLD.foundry.age`); Printing folded into Printing press (×0.68), save shape 40 maps it, a queued order refunded as a cancel (`refund`, one home in `11-orders`).
+- N14: Open villagers (`START_VILS`), snow against mud and `snowAt`, ground marks, pausing (generated from `READ_CARDS`), the shrine, the troll, the heavy blows list, the Market's sell rate, the vassal investment list (`VASSAL.invest`), the Net's menu, Oiled cloaks (blizzards). Held for Albert: the Aqueduct room line, the plague line.
+
+Cut:
+- The research step Printing (folded into Printing press; its effect kept, its WHY fact kept in the press's line).
+- The research card sentence "Cost and time ×(0.5 + 0.1w) for its age" and the Rules page's "Cost and time follow the weight of the step in history".
+- Weather glass's cold and wet cut (a barometer is not insulation).
+- The Rules entry "Hold ground" (a control that exists nowhere; the Temper dial's Hold replaced it).
+- `bonusText`'s own copy of the key rule (and its dead `&& false` branch).
+- The typed 4 and 24 in `caravanTick`, the typed 3 in the start's villager loop and in the vassal's investment.
+- Sickles on bushes (bushes take no harvest research: fields and mines only).
+
+Tests:
+- `tests/tables.py`: fields and mines only (N9), Weather glass's need and its warning two minutes early (N10), no formula on the card (N11), the caravan row and its card, Charcoal, Printing (N12), the Open start, snow, ground marks against the save, pausing against play (F1).
+- `tests/science.py`: layers in series.
+- `tests/saves.py`: Printing and the rolled sky migrate; the refund reaches the ledger and research spent.
+- `tests/handoff.py`: 17 planted bugs (83 in all).
+- Play fingerprint: unchanged (each change turned off in turn: all equal the baseline; the five-minute script reaches none of them).
+- Balance (4 seeds, 30 min): main and research80 in `docs/Research Notes - v80 - Post Clean - Working.md`.
+- Merge with the map: both builds raised the save shape to 40; now the map is step 39 → 40 and research step 40 → 41 (`SAVEV` 41); the saves test runs the research step from 40. The starting villagers keep the map's `PLACES.start` and research's `START_VILS` centring.
