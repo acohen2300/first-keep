@@ -155,10 +155,13 @@ const SHELTER = { flee: 70, clear: 150, raid: 3, hurt: 6 }; // villagers run int
 const LOOKOUT = { base: 60, k: 24 }; // a building sees 60 + 24 × the square root of its height: the horizon from a height grows with its square root, so a 44 tower sees 220, a 16 house 156, a field 84 (Build 51: every building but six saw a flat 90, and no research reached them)
 // Where a villager looks for the next find (decision 1; area-restricted search, tight near the last find and wider with time since it was lost):
 // r(t) = x + y min(1, t/tau), from where it was placed, else from its nearest drop-off; x + y is a placed villager's cap. Nothing found: it keeps
-// its job and waits at the drop-off, looking again every 'again' seconds (plus up to one of dice), with no end. Waiters stand 'gap' feet apart
-// round the building (Albert: Hall's personal distance, 2.5 to 4 ft; OSHA 1910.142(b)(3), 36 inches between beds).
-const ARRIVE = 9; // a villager at work counts as there within this of its spot: more than the 8-unit push, so it stands still and does not tremble
-const SEARCH = { x: 90, y: 90, tau: 10, again: 2, gap: 3 };
+// its job and waits at the drop-off, looking again every 'again' seconds (plus up to one of dice), with no end.
+// Personal space, one number (Albert: Hall's personal distance, 2.5 to 4 ft; OSHA 1910.142(b)(3), 36 inches between beds): 3 ft. Spots are laid
+// SPACE apart, two bodies nearer than SPACE are pushed apart, a villager at work arrives within SPACE (the push's reach: decision 10a), and
+// one at its own spot within ARRIVE, a quarter of it: under half the spacing, so it always stands nearer its own spot than any other's (item 5).
+const SPACE = 3 * FOOT,
+	ARRIVE = SPACE / 4;
+const SEARCH = { x: 90, y: 90, tau: 10, again: 2 };
 const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
 const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, keep: 8 }; // a gatherer will not work within 110 of an enemy or a hunting beast, inside an enemy tower's reach plus 30, within 60 of a fire, or for 45 s within 80 of where one of its side was frightened more than 200 from home (the last 8 such places are kept)
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10

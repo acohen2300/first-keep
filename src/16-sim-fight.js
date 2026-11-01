@@ -139,8 +139,10 @@ function hurt(o, a, t, base) {
 		}
 	}
 }
-// Crowd spacing, neighbours only: units are sorted into squares of 8 and each is compared with the units in its own and the next squares.
-const CHW = Math.ceil(MAP / 8) + 1,
+// Crowd spacing, neighbours only: units are sorted into squares as wide as personal space (no push reaches past the next square) and each is
+// compared with the units in its own and the next squares.
+const CHS = Math.ceil(SPACE),
+	CHW = Math.ceil(MAP / CHS) + 1,
 	CHEAD = new Int32Array(CHW * CHW),
 	CHCELL = [];
 let CHNEXT = new Int32Array(1024);
@@ -150,7 +152,7 @@ const heft = (u) => (u.tgt || G.t - (u.work ?? -9) < 0.5 ? 9 : G.t - (u.mvT ?? -
 function pushApart(a, b) {
 	let dx = b.x - a.x,
 		dy = b.y - a.y;
-	if (dx > 8 || dx < -8 || dy > 8 || dy < -8) return;
+	if (dx > SPACE || dx < -SPACE || dy > SPACE || dy < -SPACE) return;
 	if (dx === 0 && dy === 0) {
 		// two on one spot part along a direction fixed by their ids, the same every time (decision 10, Reynolds separation)
 		const g = ((a.id * 31 + b.id * 17) % 360) * (Math.PI / 180);
@@ -158,10 +160,10 @@ function pushApart(a, b) {
 		dy = Math.sin(g) * 0.01;
 	}
 	const d = hyp(dx, dy);
-	if (d > 0 && d < 8) {
+	if (d > 0 && d < SPACE) {
 		const ha = heft(a),
 			hb = heft(b),
-			k = (8 - d) / d,
+			k = (SPACE - d) / d,
 			pa = (k * hb) / (ha + hb),
 			pb = (k * ha) / (ha + hb),
 			ax = a.x - dx * pa,
@@ -183,7 +185,7 @@ function collide() {
 			CHCELL[i] = -1;
 			continue;
 		}
-		const c = clamp((u.y / 8) | 0, 0, CHW - 1) * CHW + clamp((u.x / 8) | 0, 0, CHW - 1);
+		const c = clamp((u.y / CHS) | 0, 0, CHW - 1) * CHW + clamp((u.x / CHS) | 0, 0, CHW - 1);
 		CHCELL[i] = c;
 		CHNEXT[i] = CHEAD[c];
 		CHEAD[c] = i;

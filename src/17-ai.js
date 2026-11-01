@@ -293,19 +293,23 @@ function think(p) {
 		if (v) setJob(v, short[0][0]);
 	}
 	// a villager waiting with no find in reach (its Zs) is put to the job whose best free find pays most: the forager's rate R at that find,
-	// its walk out counted (Charnov 1976, the marginal value theorem; the rate of decision 1). Yours wait for your word (item 6)
+	// its walk out counted and the crowd already there (g ÷ (1 + others ÷ room), a hunt too), and only a find it can walk to (Charnov 1976, the
+	// marginal value theorem; the rate of decision 1). Each one sent counts in the crowd at once, so the next waiter sees it. Yours wait for your word (item 6)
 	for (const v of vils)
 		if (RES.includes(v.job) && v.idle && !v.node && !v.hunt && !v.inside) {
-			const probe = { x: v.x, y: v.y, owner: o, node: null, carry: 0 }; // a fresh order: any find of the job, not only the kind it lost
+			const probe = { x: v.x, y: v.y, owner: o, node: null, carry: 0 }, // a fresh order: any find of the job, not only the kind it lost
+				cm = regionAt(v, o);
 			let best = null;
 			for (const r of RES) {
-				const b = bestNode(probe, r);
+				const b = bestNode(probe, r, undefined, cm);
 				if (b && (!best || b.R > best.R)) best = { ...b, r };
 			}
 			if (!best) continue;
 			setJob(v, best.r, best.n.hunt ? null : best.n);
-			if (best.n.hunt) v.hunt = best.n.hunt;
-			else if (!best.n.farm) best.n.wk = (best.n.wk || 0) + 1; // counted at once, so the next waiter sees the crowd (setJob counts a field)
+			if (best.n.hunt) {
+				v.hunt = best.n.hunt;
+				v.hunt.wk = (v.hunt.wk || 0) + 1;
+			} else if (!best.n.farm) best.n.wk = (best.n.wk || 0) + 1; // setJob counts a field
 		}
 	// finds: a detachment clears the nearest guarded one when nothing else is going on; it hires vagabonds it walks past
 	if (per.loot && armyN >= 10 && !p.wave) lootRun(p);

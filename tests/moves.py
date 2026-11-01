@@ -120,7 +120,7 @@ JS2 = """() => {
     for (const u of V) { F.setJob(u, 'food'); u.was = 'bush'; u.lostT = G.t; u.node = null; only(u, []); }
     run(25); return V.map((u) => ({ u, s: u.spot }));
   };
-  { const A = spots(), k = F.keepOf(0), gap = F.SEARCH.gap * F.FOOT;
+  { const A = spots(), k = F.keepOf(0), gap = F.SPACE;
     if (A.some((a) => !a.s)) bad.push('a waiting villager has no spot of its own');
     else {
       const ids = A.map((a) => a.s.i); if (new Set(ids).size !== ids.length) bad.push('two waiting villagers share one spot');
@@ -130,7 +130,7 @@ JS2 = """() => {
       for (const kind of Object.keys(F.BLD)) { const b = { kind, x: 500, y: 500 }, N = F.spotAt(b, 0).N, Q = [], sd = new Set(); let near = Infinity;
         for (let i = 0; i < N; i++) { const p = F.spotAt(b, i); Q.push(p); const dx = p.x - 500, dy = p.y - 500; if (Math.abs(dx) > Math.abs(dy) + 0.01) sd.add(dx > 0 ? 'e' : 'w'); else if (Math.abs(dy) > Math.abs(dx) + 0.01) sd.add(dy > 0 ? 's' : 'n'); }
         for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) near = Math.min(near, Math.hypot(Q[i].x - Q[j].x, Q[i].y - Q[j].y));
-        if (near < gap - 0.01) { bad.push('two waiting spots at a ' + kind + ' are ' + (near / F.FOOT).toFixed(2) + ' ft apart, under ' + F.SEARCH.gap + ' ft'); break; }
+        if (near < gap - 0.01) { bad.push('two waiting spots at a ' + kind + ' are ' + (near / F.FOOT).toFixed(2) + ' ft apart, under ' + (F.SPACE / F.FOOT) + ' ft'); break; }
         if (sd.size < 4) { bad.push('the waiting spots at a ' + kind + ' do not go round all four sides'); break; } }
       if (sides.size < 2) bad.push('the waiters stand on one side of the building only');
       const far = A.filter((a, i) => Math.hypot(a.u.x - P[i].x, a.u.y - P[i].y) > F.ARRIVE + 3).length;

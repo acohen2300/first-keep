@@ -612,7 +612,7 @@ function stepTo(u, x, y) {
 	if (d > 0 && u.st) u.st.walk += d;
 	return d;
 }
-function moveTo(u, x, y, dt, r, SP) {
+function moveTo(u, x, y, dt, r, SP, spot) {
 	if (u.stuck > G.t) {
 		u.mvT = G.t; // in a pit, or slipped on ice: still on its way, not holding (Build 63)
 		return false;
@@ -646,7 +646,9 @@ function moveTo(u, x, y, dt, r, SP) {
 		if (rectGap(u.x, u.y, gb) <= Math.max(6, r - halfOf(gb))) return true;
 		stand = true;
 	} else if (blockedCell(gc, o)) stand = true;
-	else if (hyp(x - u.x, y - u.y) <= (u.kind === 'vil' && !u.hunt && !u.tgt ? Math.max(r, ARRIVE) : r) + 0.5) return true; // a villager at work stops within the push radius and stands where it was pushed (decision 10a; Reynolds arrival)
+	else if (hyp(x - u.x, y - u.y) <= (u.kind === 'vil' && !u.hunt && !u.tgt ? (spot ? ARRIVE : Math.max(r, SPACE)) : r) + 0.5) return true;
+	// a villager at work stops within personal space of where it goes, the push's reach, and stands where it was pushed (decision 10a: no
+	// trembling in a crowd at a bush); at its own spot (a post, a wait) within ARRIVE, nearer its own than any other's (item 5; Reynolds arrival)
 	if (stand) {
 		const so = standOff(u, x, y);
 		tx = so.x;
