@@ -66,10 +66,10 @@ Approved by Albert, Nov 1, 07:33 ("yes yes yes"), batch D-074 items D and E. Bui
 | idle, no work found (median) | 42 | 181.5 |
 | waiting at a workshop (median) | 236.5 | 73.5 |
 
-Read with care: four seeds. Two signals for Albert before live: fewer sides reach Medieval (7 → 4), and villagers stand idle or blocked far more (42 → 181, 16 → 70). Suspects, untested: the fisher who leaves when no dock is in reach (C15) and the shepherd who stops while the side starves (C15); Charcoal's higher price is a Medieval step and cannot explain Classical. Owed: a 20-seed run, and the same run with C15's fisher rule reverted. Raw: the session scratchpad, `text81/before.json`, `after.json`. [2026-11-01 15:30]
+Read with care: four seeds. Two signals for Albert before live: fewer sides reach Medieval (7 → 4), and villagers stand idle or blocked far more (42 → 181, 16 → 70). The fisher rule (C15) is cleared: the same 4 seeds with it reverted give the identical result. Cause not found; C11 (no free resources from rounding up at the drop-off) changes every economy and is the likeliest, but four seeds cannot separate a real shift from chaos. Owed: a 20-seed run, then a bisect if it holds. Raw: the session scratchpad, `text81/before.json`, `after.json`. [2026-11-01 15:30]
 
 ## Final QC [2026-11-01 15:30]
-QCRESULT
+Full START QC on commit 2b4df58 (`python3 tests/handoff.py`): exit 0, START QC PASSED; the gate whole, lint, docs, and all 157 planted bugs caught (133 old, 24 new). Soak (`tests/soak.py 1,2,3 20`): seeds 1, 2, 3 PASS. [2026-11-01 17:50]
 
 ## Draft for CUTS.md [2026-11-01 15:30]
 - Aqueduct (D-060): the text says it houses no one; the room line and the full hint no longer name it. [2026-11-01 15:30]
