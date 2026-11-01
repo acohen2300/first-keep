@@ -194,6 +194,12 @@ PLANTS = [
   ('29-card-pages.js', 'const relOf = (q) => (gangKey(q) ? gangRel(0, gangKey(q)) : G.rel[0][q]);', 'const relOf = (q) => G.rel[0][q];', 'tests/cards.py', "a group's row reads the fifth side's stance", 'Misfits:'),
   ('29-card-pages.js', '\t\t\twant && !lord && !war\n', '\t\t\tfalse && want\n', 'tests/cards.py', 'a picked stance shows no change', 'Foe → Neutral'),
   ('29-card-pages.js', "\t\t\t\t\t? `<small class=\"chg\">${sw(rel)} →</small><small class=\"chg\">${sw(want)}</small>`\n", "\t\t\t\t\t? `<small class=\"chg\">${sw(rel)} → ${sw(want)}</small>`\n", 'tests/wild.py', 'the change on one line in a one-slot name', 'cut in its slot at 375'),
+  # the outside review's four (Nov 1): tests/wild.py R1 to R4
+  ('32-frame.js', "const STATUS_CUT = ['stSea'];", 'const STATUS_CUT = [];', 'tests/wild.py', 'the strip lets no cell go when Iron is hidden', 'R1:'),
+  ('32-frame.js', '\t\t\t\tel.hidden = off;', '\t\t\t\tel.hidden = off || id === STATUS[STATUS.length - 1][0] && n < STATUS.length;', 'tests/wild.py', 'the strip drops the soldier count', 'R1:'),
+  ('39-huddle.js', '`<div class="duo">${sym(`sqpk', '`<div>${sym(`sqpk', 'tests/wild.py', "the squad's − and + do not split their tile", 'R2:'),
+  ('33-verbs.js', '\t\tcloseCard(); // the map behind a paused card', '\t\t// the map behind a paused card', 'tests/wild.py', 'a jump leaves the card open', 'R3:'),
+  ('33-verbs.js', "\tconst off = el.closest('.dis, .lock');", "\tconst off = /(^|\\s)(dis|lock)(\\s|$)/.test(el.className) ? el : null;", 'tests/wild.py', "a locked slider's switch counts as used", 'R4:'),
 ]
 
 def plant_check():

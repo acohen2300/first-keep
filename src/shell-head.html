@@ -43,6 +43,7 @@ button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tab
 .fm:empty{display:none}
 .fm>*{grid-column:span 2;min-width:0}
 .fm.c1>*{grid-column:span 12}.fm.c2>*{grid-column:span 6}.fm.c3>*{grid-column:span 4}.fm.c4>*{grid-column:span 3}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}   /* a cell split in two even halves (the squad's − and + under its tile): one grid piece, whatever the span */
 .fm>.h{grid-column:span 1}.fm>.s1{grid-column:span 2}.fm>.s2{grid-column:span 4}.fm>.s3{grid-column:span 6}.fm>.s4{grid-column:span 8}.fm>.s5{grid-column:span 10}.fm>.s6{grid-column:span 12}.fm>.r2{grid-row:span 2}
 /* the info cell: no frame; the value in Cream 1, its label in Cream 2 under it, both at 12. Numbers centre; a sentence (left) aligns left */
 .info{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.2;min-width:0}

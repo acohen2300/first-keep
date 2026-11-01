@@ -172,6 +172,8 @@ const STATUS = [
 	['scoreP', 'card:score', 'Score and rank'],
 	['stArm', '', 'Soldiers'],
 ];
+const STATUS_CUT = ['stSea']; // the strip has a cell for each of the tally's (Iron hidden in the Stone age: 7): the cells it lets go first, the sky first (it is on the map itself); the soldiers stay
+
 function buildPanel() {
 	$('tally').innerHTML =
 		[
@@ -564,12 +566,14 @@ function ui(force) {
 			rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length,
 			sky = `${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''}`,
 			n = Math.min(STATUS.length, [...$('tally').children].filter((e) => !e.hidden).length),
-			put = (id, gl, word, cls, i) => {
+			cut = new Set(STATUS_CUT.slice(0, STATUS.length - n)),
+			put = (id, gl, word, cls) => {
 				const el = $(id),
-					sig = gl + '|' + word + '|' + cls + '|' + (i < n);
+					off = cut.has(id),
+					sig = gl + '|' + word + '|' + cls + '|' + off;
 				if (el.sig === sig) return;
 				el.sig = sig;
-				el.hidden = i >= n;
+				el.hidden = off;
 				el.className = 'cell' + (cls ? ' ' + cls : '');
 				el.children[0].innerHTML = gl;
 				el.children[1].textContent = word;
@@ -584,7 +588,7 @@ function ui(force) {
 			['', `★ ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, ''], // the rank; the score itself is on the score card
 			[ICON.mil, String(sol), sol ? '' : 'dis'],
 		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
-		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2], i));
+		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2]));
 	} // the colour code on the pill: blue research you can start, red the people at the roof or idle hands; dim is nothing to see
 	rowUI();
 	{

@@ -163,6 +163,20 @@ JS = """() => {
   // ── hunt B #10: art drawn into its own canvas gives the screen's ctx back, even when it throws ──
   T_('B10', () => { if (typeof F.drawOnce !== 'function') return bad.push('B10: no one home for art drawn into its own canvas'); const c0 = F.ctxNow; try { F.drawOnce(4, 4, () => { throw new Error('art'); }); } catch (e) {}
     if (F.ctxNow !== c0) bad.push('B10: a throw in sprite art left the screen drawing off screen'); });
+  // ── review fixes (Nov 1): the status strip keeps the soldiers; the squad's − and + split the tile; a jump closes the card; a locked control's switch is dim ──
+  T_('R1', () => { const G = fresh(); F.ui(true); const vis = (id) => [...document.getElementById(id).children].filter((e) => !e.hidden).length;
+    if (document.getElementById('stArm').hidden) bad.push('R1: the status strip drops the soldier count in the ' + G.P[0].age + ' age');
+    if (vis('status') !== vis('tally')) bad.push(`R1: the strip shows ${vis('status')} cells under ${vis('tally')}`); });
+  T_('R2', () => { fresh(); F.openCard({ type: 'squad', i: 0 }); F.ui(true);
+    const tile = document.querySelector('#card [data-act^="bldgo:"]'), m = document.querySelector('#card [data-act="sqpk:0,0,-"]'), p = document.querySelector('#card [data-act="sqpk:0,0,+"]');
+    if (!tile || !m || !p) bad.push('R2: the squad card has no tile with − and + under it'); else { const t = tile.getBoundingClientRect(), a = m.getBoundingClientRect(), b = p.getBoundingClientRect();
+      if (Math.abs(a.width - b.width) > 0.5 || Math.abs(a.left - t.left) > 0.5 || Math.abs(b.right - t.right) > 0.5) bad.push(`R2: − and + do not split their tile (${Math.round(a.left)}–${Math.round(a.right)}, ${Math.round(b.left)}–${Math.round(b.right)} under ${Math.round(t.left)}–${Math.round(t.right)})`); }
+    F.act('close'); });
+  T_('R3', () => { fresh(); F.openCard({ type: 'mail' }); F.ui(true); F.act('jump:500,500'); if (F.G.card) bad.push('R3: a jump from a card left the card open over the map it moved'); });
+  T_('R4', () => { const G = fresh(), k = F.keepOf(0); G.rel[0][W()] = G.rel[W()][0] = 'ally'; G.ktab = 'mis'; F.openCard({ type: 'bld', id: k.id }); F.ui(true);
+    const sw = document.querySelector(`#card .slt.dis [data-act="relon:${W()}"]`);
+    if (!sw) bad.push('R4: the check found no locked bribe'); else { sw.click(); const c = sw.closest('.slt'); if (!c.classList.contains('nope') && !sw.classList.contains('nope')) bad.push('R4: a tap on a locked slider\\'s switch does not glow red'); }
+    F.act('close'); G.ktab = 'town'; });
   return bad;
 }"""
 # The end card at Albert's phone (375 x 667), 23 lines of chronicle: Victory sightings 1 and 2 (hunt B #1, #2)

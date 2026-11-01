@@ -356,6 +356,7 @@ const ACT = {
 	}, // to your nearest finished building of a kind, its card open: a kind of soldier on the Train page or a squad's card goes to where it is trained
 	jump(a) {
 		const [x, y] = a.split(',').map(Number);
+		closeCard(); // the map behind a paused card is not where you look (as idlego and seek)
 		camGo(x, y);
 	},
 	card(a) {
@@ -1128,16 +1129,17 @@ document.addEventListener('click', (e) => {
 	}
 	sndInit();
 	sfx('tap');
-	tapCount(el.dataset.act, /(^|\s)(dis|lock)(\s|$)/.test(el.className));
-	if (/(^|\s)(dis|lock)(\s|$)/.test(el.className)) {
-		el.classList.add('nope');
-		setTimeout(() => el.classList.remove('nope'), 450);
-	} // a tap it cannot do glows red a moment
+	const off = el.closest('.dis, .lock'); // the button, or the control it is part of (the slider's switch inside a locked slider)
+	tapCount(el.dataset.act, !!off);
 	cardTap = !!el.closest('#card'); // what it opens remembers this card (back)
 	try {
 		act(el.dataset.act);
 	} finally {
 		cardTap = false;
+		if (off) {
+			off.classList.add('nope');
+			setTimeout(() => off.classList.remove('nope'), 450);
+		} // a tap it cannot do glows red a moment (after the verb, so the card's redraw does not wipe it)
 	}
 });
 // a slider (data-in) sends its verb with its value as it moves, and the card shows it at once
