@@ -220,11 +220,15 @@ PLANTS = [
   ('36-economy.js', '\t\t\t\t\tif (n && (n.amt > 0 || n.hp > 0)) {', '\t\t\t\t\tif (false) {', 'tests/wild.py', 'those working food eat from the store', 'H4:'),
   # Albert's sighting of Nov 1 (QC D10): the idle count
   ('08-core.js', "const freeVil = (u) => u.kind === 'vil' && !u.inside && (!u.job || !!u.idle);", "const freeVil = (u) => !u.job && !u.inside;", 'tests/wild.py', 'a waiting villager is not idle to the strip and the idle button', 'D10:'),
+  # the docs (Build 80 preview 11, Albert, Nov 1): tests/docs.py
+  ('docs/4 Now/Owed.md', '# Owed: the one open list [2026-11-01 07:45]', '# Owed: the one open list', 'tests/docs.py', 'a living line edited with no stamp', 'ends with a stamp'),
+  ('docs/6 Records/v70 Record/Picks - v70 - Clean Up Session.md', 'Picks', 'Pick', 'tests/docs.py', 'a closed record edited', 'closed records'),
+  ('./START-HERE.md', '`docs/4 Now/Owed.md`', '`docs/4 Now/Owe.md`', 'tests/docs.py', 'a file in the reading order is missing', 'reading order exists'),
 ]
 
 def plant_check():
     print(f'planted bugs: {len(PLANTS)}')
-    os.environ['FK_PLANT'] = '1'   # tests/map.py runs 25 seeds and one phone size for each plant (the gate runs it whole)
+    os.environ['FK_PLANT'] = '1'; os.environ['FK_REPO'] = ROOT   # tests/docs.py reads the last commit from the real repository   # tests/map.py runs 25 seeds and one phone size for each plant (the gate runs it whole)
     tmp = tempfile.mkdtemp(prefix='fk-plant-')
     try:
         for name in os.listdir(ROOT):
@@ -240,7 +244,7 @@ def plant_check():
             say(c == 0, f'{test} passes on the clean copy (the control run)', out[-300:])
         clean = {}
         for f, old, new, test, why, expect in PLANTS:
-            p = os.path.join(tmp, 'src', f)
+            p = os.path.join(tmp, f if '/' in f else os.path.join('src', f))   # a path with a folder is from the root (the docs plants)
             if f not in clean: clean[f] = open(p).read()
             src = clean[f]
             if old not in src:
@@ -272,16 +276,20 @@ def state():
 
 def owed():
     # one maintained list: the "Owed" section of the Build List (Build 80 preview 9; before, old CUTS lines were grepped, and built items printed as owed)
-    print('\nOWED (docs/Build List - v80 - Post Clean - Working.md, section "Owed"; read these before building anything):')
-    lines = open(os.path.join(ROOT, 'docs', 'Build List - v80 - Post Clean - Working.md')).read().split('\n## Owed', 1)
-    if len(lines) < 2: say(False, 'the Build List has an "Owed" section'); return
+    print('\nOWED (docs/4 Now/Owed.md, section "Owed"; read these before building anything):')
+    lines = open(os.path.join(ROOT, 'docs', '4 Now', 'Owed.md')).read().split('\n## Owed', 1)
+    if len(lines) < 2: say(False, 'docs/4 Now/Owed.md has an "Owed" section'); return
     for line in lines[1].split('\n## ', 1)[0].splitlines()[1:]:
         if line.startswith('- '): print('  ' + line)
-    print('  the decision record and the audit are in docs/v80 Audit/')
+    print('  the locked decisions are in docs/3 Locks/; the decision record and the audit in docs/6 Records/v80 Audit/')
 
 if __name__ == '__main__':
     only = sys.argv[1] if len(sys.argv) > 1 else ''
     state()
+    if only != '--plant':
+        c, out = run([PY, 'tests/docs.py'])
+        for l in out.splitlines(): print(l[:300])
+        say(c == 0, 'the docs check passes (stamps, closed records, the reading order)')
     if only != '--state':
         if only != '--plant':
             for a, name in (([PY, 'build.py'], 'build.py'), ([PY, 'wrap.py'], 'wrap.py'), ([PY, 'tests/lint.py'], 'lint')):

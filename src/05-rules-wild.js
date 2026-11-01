@@ -113,7 +113,7 @@ const NATIVE = {
 };
 const THRONE = { hold: 900, tithe: 0.1, score: 50, r: 80, isle: 100, cause: 30 }; // hold: seconds to win in a 60-minute game (scaled to the game's length); tithe of every other side's gathering; score a minute
 
-// A wave is judged by its progress (D1, docs/v80 Audit/ai.md): it goes home when beaten (under broke of the soldiers it set out with), or
+// A wave is judged by its progress (D1, docs/6 Records/v80 Audit/ai.md): it goes home when beaten (under broke of the soldiers it set out with), or
 // when for stall seconds it has neither come step nearer its goal (the mean of its soldiers' distances) nor fought (a blow within fight
 // seconds). A side it stalled against is left alone for cool seconds, unless that side holds a wonder or the Throne (a win at stake). It was recalled at 45 s without a blow, so a walk of 58 s to a
 // neighbour failed unless something fought it on the way, and the same soldiers went straight back at the same target.
