@@ -614,7 +614,7 @@ function makeMap() {
 		} // a forest tree: half a grove tree's wood, so a way can be cut through
 		// 4 movables
 		const f = towardMid({ x: kx, y: ky }, 40);
-		for (let i = 0; i < 3; i++) {
+		for (let i = 0; i < START_VILS; i++) {
 			const v = addUnit(p.id, 'vil', f.x + (i - 1) * 14, f.y + 6);
 			v.job = i === 1 ? 'wood' : 'food';
 		}

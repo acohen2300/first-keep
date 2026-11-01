@@ -452,6 +452,9 @@ function fxList(o) {
 }
 // the combined effect on one stat for something with these keys: m multiplies, a adds, min keeps the lowest
 const FX1 = { m: 1, a: 0, min: 1 };
+// whether an effect reaches something with these keys: no k or '*' reaches all; k names one key, or a list of them (decision N9)
+const fxFits = (f, keys) =>
+	!f.k || f.k === '*' || (!!keys && (Array.isArray(f.k) ? f.k.some((k) => keys.includes(k)) : keys.includes(f.k)));
 function fxv(o, stat, keys) {
 	// answered once per side, stat and keys until the effects change: no new object on the hot paths
 	if (o === WILD) return FX1;
@@ -465,7 +468,7 @@ function fxv(o, stat, keys) {
 		a = 0,
 		mn = 1;
 	for (const f of L)
-		if (!f.k || f.k === '*' || (keys && keys.includes(f.k))) {
+		if (fxFits(f, keys)) {
 			if (f.m) m *= f.m;
 			if (f.a) a += f.a;
 			if (f.min) mn = Math.min(mn, f.min);
@@ -599,9 +602,13 @@ const groupSees = (o, t) =>
 	G.units.some((m) => m.owner === o && isSoldier(m) && m.hp > 0 && !m.inside && dist(m, t) <= sightOf(m)) ||
 	G.blds.some((b) => b.owner === o && b.hp > 0 && b.prog >= 1 && dist(b, t) <= sightOf(b));
 const carryOf = (o) => CARRY + fxv(o, 'carry').a;
+// what gather research is keyed to: the find itself (tree, bush, fish, meat, stone, gold, iron), or the building a worked plot belongs to
+// (farm, treefarm, quarry, mint, foundry, pasture). Decision N9: a step reaches the finds its text names, never by the resource alone
+// (Sickles on fish, Antler picks on the Mint).
+const nodeKey = (n) => [n.kind === 'farm' ? n.farm.kind : n.kind];
 function gatherMul(o, n) {
 	let m =
-		fxv(o, 'gather', [n.type, n.kind]).m *
+		fxv(o, 'gather', nodeKey(n)).m *
 		EVM.gather *
 		(WEATHER[G.wx].gather || 1) *
 		(season().name === 'Winter' ? 1 + fxv(o, 'warm').a : 1); // warm homes: better winter work

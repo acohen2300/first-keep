@@ -21,7 +21,7 @@ function guideModel() {
 					(id === 'tpost'
 						? 'on a trade stop'
 						: B.trap
-							? 'laid by the Natives, or a Walls trap'
+							? 'laid by the Natives' // a trap in no menu (a Walls trap has its menu above)
 							: 'the Natives build it'),
 		age: AGES[B.age || 0].name,
 		cost: costText(B.cost) || 'free',

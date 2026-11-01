@@ -11,14 +11,17 @@ function recount() {
 	for (const n of G.nodes) n.wk = 0;
 	for (const u of G.units) if (u.node && u.kind === 'vil') u.node.wk++;
 }
+// layers worn in series (decision N10): heat loss Q = ΔT / R_total and R_total = R_body + Σ R_i, so the cold's or the rain's toll on a march
+// goes as 1 / (1 + Σ a_i), each a_i a layer's resistance as a multiple of what the soldier already wears: a = 1 halves it, two such a third, never none
+const insulate = (a) => 1 / (1 + a);
 // what the season and the weather take off a march, for one side: moveTo and the mission clocks read the same number
 function sideSpd(o) {
 	const sp = season().spd * (hz('winter') && season().name === 'Winter' ? 0.8 : 1),
 		wsp = WEATHER[G.wx].spd || 1;
 	return o === WILD
 		? sp * wsp
-		: (1 - (1 - sp) * fxv(o, 'mud').m * (season().name === 'Winter' ? 1 - Math.min(1, fxv(o, 'cold').a) : 1)) *
-				(1 - (1 - wsp) * (precip(G.wx) ? 1 - Math.min(1, fxv(o, 'wet').a) : 1));
+		: (1 - (1 - sp) * fxv(o, 'mud').m * (season().name === 'Winter' ? insulate(fxv(o, 'cold').a) : 1)) *
+				(1 - (1 - wsp) * (precip(G.wx) ? insulate(fxv(o, 'wet').a) : 1));
 }
 function step(dt) {
 	if (G.over) return;

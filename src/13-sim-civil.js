@@ -584,8 +584,9 @@ function caravanTick(u, dt, SP) {
 	const o = u.owner;
 	u.idle = false;
 	if (G.P[o].techs.has('armedcart') && (G.tick + u.id) % 30 === 0) {
-		const f = nearestFoe(o, u, 24);
-		if (f) hurt(o, u, f, 4);
+		const A = UNIT.caravan.armed,
+			f = nearestFoe(o, u, A.rng);
+		if (f) hurt(o, u, f, A.dmg);
 	} // armed caravans strike back
 	if (u.route) {
 		routeTick(u, dt, SP);

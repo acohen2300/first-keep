@@ -91,6 +91,19 @@ PLANTS = [
   ('29-card-pages.js', 'slt(`relon:${q}`, `relgift:${q}`,', 'slt(`relon:${q}`, `relgif:${q}`,', 'tests/verbs.py', "the slider's verb with no handler", 'no handler'),
   ('24-view-overlays.js', '${FONTW || (FONTW = getComputedStyle(document.body).fontWeight)}', '600', 'tests/palette.py', 'mapFont writes its own weight', 'mapFont does not read'),
   ('39-huddle.js', '\tctx.font = mapFont(); // pinned to the screen', "\tctx.font = '700 12px system-ui, sans-serif';", 'tests/palette.py', "the phone's own font on a map label", 'not through mapFont'),
+  # the research and text batch (N9 to N12, N14; Albert, Nov 1): research keyed to its finds, layers in series, the barometer, the card's formula, the oddities, the text from the tables
+  ('08-core.js', "const nodeKey = (n) => [n.kind === 'farm' ? n.farm.kind : n.kind];", 'const nodeKey = (n) => [n.type, n.kind];', 'tests/tables.py', 'research keyed by the resource reaches the Mint', 'N9:'),
+  ('04-rules-tech.js', "fx: [{ s: 'gather', k: ['farm', 'bush'], m: 1.1 }],", "fx: [{ s: 'gather', k: 'food', m: 1.1 }],", 'tests/tables.py', 'Sickles keyed to all food', 'Sickles misses the field'),
+  ('12-sim-core.js', "? insulate(fxv(o, 'cold').a) : 1", "? 1 - Math.min(1, fxv(o, 'cold').a) : 1", 'tests/science.py', 'climate steps add up to immunity', 'one cloak halves'),
+  ('37-events.js', 'while (A.length < Math.max(1, lead))', 'while (A.length < 1)', 'tests/tables.py', 'Weather glass tells nothing more', 'N10: Weather glass and'),
+  ('27-cards-core.js', "${t.w ? ` · weight ${t.w} of 10` : ''}: ${t.desc}", "${t.w ? ` · weight ${t.w} of 10` : ''}: ${t.desc} Cost and time ×${(0.5 + 0.1 * t.w).toFixed(1)} for its age.", 'tests/tables.py', 'the research card claims a cost formula', 'N11:'),
+  ('13-sim-civil.js', 'if (f) hurt(o, u, f, A.dmg);', 'if (f) hurt(o, u, f, 4);', 'tests/tables.py', 'the caravan strike is typed, not read from its row', "N12: the caravan's strike"),
+  ('04-rules-tech.js', 'age: BLD.foundry.age, // with the Foundry', 'age: 1, // with the Foundry', 'tests/tables.py', 'Charcoal burning two ages before the Foundry', 'N12: Charcoal'),
+  ('34-save.js', "id === 'printing' ? 'press' : id", 'id', 'tests/saves.py', 'an old save keeps Printing', 'N12: an old save keeps'),
+  ('10-world.js', 'for (let i = 0; i < START_VILS; i++) {', 'for (let i = 0; i < 5; i++) {', 'tests/tables.py', 'the Open start gives other than its text says', 'F1: the Open start'),
+  ('07-text.js', 'deep snow slows a walker ${slowPct(CLIMATE.terrain.snow)}%, deep mud ${slowPct(CLIMATE.terrain.mud)}%', 'soft snow costs a walker more than mud', 'tests/tables.py', 'the snow line says snow costs more than mud', 'F1: the snow line'),
+  ('07-text.js', 'for looks only and not kept in the save. Where feet pass a lot it wears into ruts: real mud that slows a march, kept in the save.', 'It is for looks only and is not saved.', 'tests/tables.py', 'the ground marks line says ruts are not saved', 'F1: the ground marks'),
+  ('07-text.js', 'Opening a card you sit and read pauses the game (a building, a unit or a field to glance at does not)', 'Opening any card pauses the game', 'tests/tables.py', 'the rules say every card pauses', 'F1: the rules say any card'),
 ]
 
 def plant_check():

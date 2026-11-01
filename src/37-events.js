@@ -552,7 +552,7 @@ function hordeTick() {
 }
 // ── The climate (Build 54): one tick a second. The air's temperature from the year and the hour; the sky's run as a chain, a new minute
 // at a time; wetness closing on where the sky puts it; mud, snow and ice from those. `G.wx` stays the sky's name, which the rest reads.
-const blankClim = () => ({ T: CLIMATE.mean, W: CLIMATE.eq.clear, snow: 0, ice: 0, fdd: 0, mud: 0, wet: false, dry: 0 });
+const blankClim = () => ({ T: CLIMATE.mean, W: CLIMATE.eq.clear, snow: 0, ice: 0, fdd: 0, mud: 0, wet: false, dry: 0, ahead: [] });
 const airTemp = (t = G.t) =>
 	CLIMATE.mean +
 	CLIMATE.year * Math.cos(2 * Math.PI * ((t % YEAR) / YEAR - CLIMATE.peakDay)) +
@@ -581,10 +581,13 @@ function skyTurn() {
 					? CLIMATE.hazard.winter
 					: CLIMATE.chain[s],
 		was = G.wx;
-	c.wet = c.next ?? rng() < P[c.wet ? 1 : 0]; // the minute's sky was rolled a minute ahead, so weather signs can tell it
-	c.next = rng() < P[c.wet ? 1 : 0];
-	if (fxv(0, 'forecast').a && c.next !== c.wet)
-		news('land', c.next ? 'Signs of rain within the minute.' : 'Signs of a clearing sky.', 'soft', 6);
+	// the sky is rolled ahead, a minute for each step of forecast (Weather signs, Weather glass) and never less than one, so they can tell it
+	const lead = fxv(0, 'forecast').a,
+		A = c.ahead;
+	c.wet = A.length ? A.shift() : rng() < P[c.wet ? 1 : 0];
+	while (A.length < Math.max(1, lead)) A.push(rng() < P[(A.length ? A[A.length - 1] : c.wet) ? 1 : 0]);
+	if (lead && A[lead - 1] !== (lead > 1 ? A[lead - 2] : c.wet))
+		news('land', `${A[lead - 1] ? 'Signs of rain' : 'Signs of a clearing sky'} in ${lead > 1 ? lead + ' minutes' : 'a minute'}.`, 'soft', 6);
 	c.dry = c.wet ? 0 : c.dry + 1;
 	G.wx = c.wet
 		? c.T <= CLIMATE.snowAt

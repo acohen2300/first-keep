@@ -31,6 +31,14 @@ REST = """(raw) => {
   // an old save naming a cut unit kind still migrates; a damaged save is kept aside, not overwritten
   const o = JSON.parse(raw); o.v = 35; o.blds = o.blds || []; if (o.blds[0]) o.blds[0].q = [{ kind: 'cutkind' }];
   try { F.MIGRATE[35](o); } catch (e) { bad.push('a cut unit kind stops an old save from opening'); }
+  // a save from before the merge holding Printing opens with Printing press, and a queued Printing order is given back (N12); the sky
+  // it rolled ahead becomes the list a forecast reads (N10)
+  { const o = JSON.parse(raw); o.v = 39; o.P[0].techs = ['press', 'printing']; o.clim = { ...(o.clim || {}), next: true }; delete o.clim.ahead;
+    const k = o.blds.find((b) => b.owner === 0 && b.kind === 'keep'), g0 = o.P[0].res.g || 0; k.q = [{ tech: 'printing', left: 10, total: 87, paid: { g: 360 } }];
+    const S = F.MIGRATE[39] ? F.MIGRATE[39](o) : o;
+    if (S.P[0].techs.includes('printing') || !S.P[0].techs.includes('press')) bad.push('N12: an old save keeps Printing (' + S.P[0].techs.filter((t) => /pr/.test(t)) + ')');
+    if (k.q.length || S.P[0].res.g !== g0 + 360) bad.push('N12: a queued Printing order was not given back');
+    if (!(Array.isArray(S.clim.ahead) && S.clim.ahead[0] === true && !('next' in S.clim))) bad.push('N10: an old save loses the sky it rolled ahead'); }
   localStorage.setItem(F.SAVEKEY, '{"units":1,"P":[],"v":39,"blds":null,"x":'); F.readSave();
   if (!localStorage.getItem(F.SAVEKEY + '.lost')) bad.push('a damaged save was not kept aside');
   // two stale saves of different shapes each keep their own slot: the second never overwrites the first
@@ -81,6 +89,6 @@ async def main():
         await pg.evaluate("() => { window.__fk.setHold(true); localStorage.clear(); }"); await pg.reload(); await pg.wait_for_timeout(300)  # held, so leaving the page saves nothing
         bad += await pg.evaluate(REST, raw); await br.close()
     bad = bad + static() + errs
-    print(('PASS ' if not bad else 'FAIL ') + 'save safety (Welcome back holds the screen, force cannot overwrite, clear removes backup, stale slots, event ends on load, alerts, All hands)', '' if not bad else bad)
+    print(('PASS ' if not bad else 'FAIL ') + 'save safety (Welcome back holds the screen, force cannot overwrite, clear removes backup, stale slots, event ends on load, alerts, All hands, Printing and the rolled sky migrate)', '' if not bad else bad)
     sys.exit(1 if bad else 0)
 asyncio.run(main())
