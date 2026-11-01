@@ -70,7 +70,7 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   // area-restricted search (decision 1): r(t) = x + y min(1, t/tau), 90 at the loss, halfway at tau/2, 180 from tau on
   near('search start', F.searchR({}), 90, 1e-9); near('search half', F.searchR({ lostT: F.G.t - F.SEARCH.tau / 2 }), 135, 1e-9); near('search full', F.searchR({ lostT: F.G.t - 99 }), 180, 1e-9);
   // the game's scale (Build 80 preview 9): a villager's body is drawn 22.1 figure units tall (hip 9, shoulders 7.5 above, the head's middle 2.9
-  // above those, its half-height 2.7), at FIG world units each, taken as an adult of 5.5 ft; the waiting spots are SEARCH.gap feet apart
+  // above those, its half-height 2.7), at FIG world units each, taken as an adult of 5.5 ft; the waiting spots are SPACE (3 ft) apart
   near('a foot in world units', F.FOOT, (22.1 * F.FIG) / 5.5, 0.01);
   near('lanchester even', F.lanchester(1), 0.5, 1e-9); near('lanchester double', F.lanchester(2), 0.8, 1e-9);
   // the square law by the group (Build 63): one sword cannot take an elephant; twelve together can, since aimed strength goes as the square

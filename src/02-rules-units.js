@@ -516,7 +516,7 @@ const UNIT = {
 	bandit: {
 		name: 'Bandit',
 		tick: 'wild',
-		tags: ['infantry'],
+		tags: ['infantry', 'outlaw'],
 		hp: 55,
 		spd: 26,
 		sight: 120,
@@ -529,7 +529,7 @@ const UNIT = {
 	robber: {
 		name: 'Robber',
 		tick: 'wild',
-		tags: ['infantry'],
+		tags: ['infantry', 'outlaw'],
 		hp: 60,
 		spd: 32,
 		sight: 140,
@@ -615,7 +615,7 @@ const UNIT = {
 	goblin: {
 		name: 'Goblin',
 		tick: 'wild',
-		tags: ['infantry'],
+		tags: ['infantry', 'outlaw'],
 		hp: 40,
 		spd: 30,
 		sight: 120,
@@ -629,7 +629,7 @@ const UNIT = {
 	skeleton: {
 		name: 'Skeleton',
 		tick: 'wild',
-		tags: ['infantry'],
+		tags: ['infantry', 'outlaw'],
 		hp: 50,
 		spd: 22,
 		sight: 110,
@@ -644,7 +644,7 @@ const UNIT = {
 	troll: {
 		name: 'Troll',
 		tick: 'wild',
-		tags: ['infantry', 'heavy'],
+		tags: ['infantry', 'heavy', 'outlaw'],
 		hp: 320,
 		spd: 22,
 		sight: 130,

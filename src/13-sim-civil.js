@@ -54,17 +54,17 @@ function makeNow(u, n, dt, room) {
 	u.work = G.t;
 	return g;
 }
-// Where each one stands: one home for every spot (decision 1; item 5). The waiters at a drop-off, the villagers sent to a tapped point and
-// anyone stepping out of a building each stand on a spot of their own, SEARCH.gap feet apart (Albert: Hall's personal distance, 2.5 to 4 ft;
-// OSHA 1910.142(b)(3), 36 inches).
+// Where each one stands: one home for every spot (decision 1; item 5). The waiters at a drop-off, the villagers sent to a tapped point, anyone
+// stepping out of a building and the places of a battalion's shape each stand on a spot of their own, SPACE (3 ft) apart.
 // A building's spots run round its outline, all four sides, on the free lane square's middle. The outline is cut into the same whole number
-// of parts, k, on every side, each at least SEARCH.gap feet, with a spot on every corner: then no two spots are closer than the gap, the
-// corners too (a turn puts its two neighbours √2 parts apart). Spot i of N = 4k walks it clockwise from the top-left corner.
+// of parts, k, on every side, each at least SPACE, with a spot on every corner: then no two spots are closer than SPACE, the corners too (a
+// turn puts its two neighbours √2 parts apart). Spot i of N = 4k walks it clockwise from the top-left corner.
 // A point's spots lie on the hex lattice round it, nearest first: n of them fill a disc of radius R ≈ 0.525·d·√n (hex packing: n circles of
-// diameter d cover π/(2√3) = 0.9069 of the disc, so πR²·0.9069 = n·π(d/2)², R = (d/2)·√(n/0.9069)).
+// diameter d cover π/(2√3) = 0.9069 of the disc, so πR²·0.9069 = n·π(d/2)², R = (d/2)·√(n/0.9069)). Rings enough for everyone (POPMAX + ARMYMAX),
+// two to spare for spots that are not free.
 const LATTICE = (() => {
 	const P = [],
-		R = 12; // twelve rings: about 520 spots
+		R = Math.ceil(0.525 * Math.sqrt(POPMAX + ARMYMAX)) + 2;
 	for (let r = -R; r <= R; r++)
 		for (let q = -R; q <= R; q++) {
 			const x = q + r / 2,
@@ -76,40 +76,53 @@ const LATTICE = (() => {
 })();
 function spotAt(b, i) {
 	if (!BLD[b.kind]) {
-		const h = LATTICE[i % LATTICE.length],
-			d = SEARCH.gap * FOOT;
-		return { N: LATTICE.length, x: b.x + h.x * d, y: b.y + h.y * d };
+		const h = LATTICE[i];
+		return { N: LATTICE.length, x: b.x + h.x * SPACE, y: b.y + h.y * SPACE };
 	}
 	const R = halfOf(b) + NAVC / 2,
-		k = Math.max(1, Math.floor((2 * R) / (SEARCH.gap * FOOT))),
+		k = Math.max(1, Math.floor((2 * R) / SPACE)),
 		N = 4 * k,
 		e = Math.floor((i % N) / k),
 		t = ((i % k) * 2 * R) / k - R;
 	return { N, ...[{ x: b.x + t, y: b.y - R }, { x: b.x + R, y: b.y + t }, { x: b.x - t, y: b.y + R }, { x: b.x - R, y: b.y - t }][e] };
 }
-// The free spots at a (a building or a point; key names it in a claim) for the units in list: on open ground, on a's side of any water or
-// wall (a point), claimed by no one else (a waiter's spot, a post), and no one else standing within half a gap. A building offers its whole
-// outline, a point its nearest list.length free spots. Then the pairs, the cheapest walk first (greedy assignment): each unit its own spot,
-// and one whose nearest is taken takes the next free one. Ties go to the lower spot, then the earlier unit, so one seed stands them one way.
-function takeSpots(list, a, key) {
-	const g = (SEARCH.gap * FOOT) / 2,
-		N = spotAt(a, 0).N,
+// the walking region a point belongs to: its own square's, else the nearest open square's (a tap on a tree or a wall)
+const regionAt = (p, o) => {
+	const c = gcell(p.x, p.y);
+	if (!blockedCell(c, o)) return NAV.comp[c];
+	const f = freeNear(Math.floor(p.x / NAVC), Math.floor(p.y / NAVC), o, 3, p.x, p.y);
+	return f ? NAV.comp[f.cy * NC + f.cx] : 0;
+};
+// A spot is free for o when it keeps personal space from the map's edge, its square is open, it lies in the region cm (when given: the same
+// side of water and walls), and nobody but the units in skip stands within half of SPACE.
+function spotFree(p, o, cm, skip) {
+	const c = gcell(p.x, p.y);
+	if (p.x < SPACE || p.y < SPACE || p.x > MAP - SPACE || p.y > MAP - SPACE || blockedCell(c, o) || (cm && NAV.comp[c] !== cm)) return false;
+	let stood = false;
+	unitsNear(p, SPACE / 2, (v) => {
+		if (!stood && !skip.has(v) && v.hp > 0 && !v.inside) stood = true;
+	});
+	return !stood;
+}
+// The spots at a (a building's outline or a point's lattice; key names it in a claim) for the units in list: free (spotFree) and claimed by
+// no one else (a waiter's spot, a post). A building offers its whole outline, a point its nearest list.length free spots. Then the pairs, the
+// cheapest walk first (greedy assignment): each unit its own spot, and one whose nearest is taken takes the next free one. The sort is stable
+// and the pairs are laid unit by unit, so a tie goes to the earlier unit, then the lower spot: one seed stands them one way.
+function takeSpots(list, a, key, cm = BLD[a.kind] ? 0 : regionAt(a, list[0].owner)) {
+	const N = spotAt(a, 0).N,
 		want = BLD[a.kind] ? N : list.length,
-		cm = BLD[a.kind] ? 0 : NAV.comp[gcell(a.x, a.y)],
 		o = list[0].owner,
 		mine = new Set(list),
 		claimed = new Set(),
 		free = [];
-	for (const v of G.units) {
-		const s = !mine.has(v) && (v.spot || v.post);
-		if (s && s.b === key) claimed.add(s.i);
-	}
+	if (key != null)
+		for (const v of G.units) {
+			const s = !mine.has(v) && (v.spot || v.post);
+			if (s && s.b === key) claimed.add(s.i);
+		}
 	for (let i = 0; i < N && free.length < want; i++) {
-		const p = spotAt(a, i),
-			c = gcell(p.x, p.y);
-		if (claimed.has(i) || p.x < 8 || p.y < 8 || p.x > MAP - 8 || p.y > MAP - 8 || blockedCell(c, o) || (cm && NAV.comp[c] !== cm)) continue;
-		if (G.units.some((v) => !mine.has(v) && v.hp > 0 && !v.inside && Math.abs(v.x - p.x) < g && Math.abs(v.y - p.y) < g)) continue;
-		free.push({ i, x: p.x, y: p.y });
+		const p = spotAt(a, i);
+		if (!claimed.has(i) && spotFree(p, o, cm, mine)) free.push({ i, x: p.x, y: p.y });
 	}
 	const pairs = [];
 	for (const u of list) for (const p of free) pairs.push({ u, p, c: hyp(p.x - u.x, p.y - u.y) });
@@ -133,10 +146,11 @@ function postTo(list, at) {
 		u.post = p ? { x: p.x, y: p.y, b: key, i: p.i } : { x: at.x, y: at.y };
 	}
 }
-// out of a building: onto the nearest free spot of its outline (item 5; it was set down 30 below the middle, whatever stood there)
+// out of a building: onto the nearest free spot of its outline (item 5; it was set down 30 below the middle, whatever stood there); with the
+// whole outline taken, onto the nearest free spot of the lattice round it, the next ring out (its inner rings fall on the building's squares)
 function stepOut(u, b) {
 	u.inside = false;
-	const p = b && takeSpots([u], b, b.id).get(u);
+	const p = b && (takeSpots([u], b, b.id).get(u) || takeSpots([u], { x: b.x, y: b.y }, null).get(u));
 	if (p) {
 		u.x = p.x;
 		u.y = p.y;
@@ -155,7 +169,7 @@ function waitAt(u, dt, SP) {
 			news('home', `No ${u.was === 'tree' ? 'trees' : u.was} in sight: one waits at the ${bldName(0, b.kind).toLowerCase()}.`, '', 4, u);
 	}
 	const p = spotAt(b, u.spot.i);
-	moveTo(u, p.x, p.y, dt, 2, SP);
+	moveTo(u, p.x, p.y, dt, 2, SP, true);
 }
 function vilTick(u, dt, SP) {
 	u.idle = false;
@@ -283,7 +297,7 @@ function vilTick(u, dt, SP) {
 	}
 	if (!u.job) {
 		u.idle = true;
-		if (u.post) moveTo(u, u.post.x, u.post.y, dt, 2, SP);
+		if (u.post) moveTo(u, u.post.x, u.post.y, dt, 2, SP, true);
 		else if (kk) moveTo(u, kk.x + u.ox, kk.y + u.oy, dt, 2, SP);
 		return;
 	} // sent somewhere by the finger, it stands there; else it waits by the Town Center
@@ -370,6 +384,7 @@ function vilTick(u, dt, SP) {
 		}
 		if (n && n.hunt) {
 			u.hunt = n.hunt;
+			u.hunt.wk = (u.hunt.wk || 0) + 1; // counted at once, as a find (recount sets it true every second)
 			u.node = null;
 			return;
 		}

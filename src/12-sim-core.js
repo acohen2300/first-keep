@@ -9,7 +9,12 @@ function recount() {
 	G.guarded = G.finds.filter((f) => !f.done && guardsLeft(f));
 	dangerMap();
 	for (const n of G.nodes) n.wk = 0;
-	for (const u of G.units) if (u.node && u.kind === 'vil') u.node.wk++;
+	for (const u of G.units) if (u.owner === WILD) u.wk = 0;
+	for (const u of G.units)
+		if (u.kind === 'vil') {
+			if (u.node) u.node.wk++;
+			else if (u.hunt) u.hunt.wk = (u.hunt.wk || 0) + 1;
+		} // a hunted animal counts its hunters, as a find its workers: the crowd is the same rule (item 6)
 }
 // layers worn in series (decision N10): heat loss Q = ΔT / R_total and R_total = R_body + Σ R_i, so the cold's or the rain's toll on a march
 // goes as 1 / (1 + Σ a_i), each a_i a layer's resistance as a multiple of what the soldier already wears: a = 1 halves it, two such a third, never none
@@ -243,7 +248,8 @@ function formUp() {
 			fl = hyp(fx0, fy0) || 1,
 			fx = fx0 / fl,
 			fy = fy0 / fl;
-		const cm = NAV.comp[gcell(t.x, t.y)];
+		const cm = regionAt(t, a[0].owner),
+			mates = new Set(a); // the battalion's own stand in its shape: only others take a place
 		for (let i = 0; i < n; i++) {
 			const ri = shape === 'wedge' ? wr(i) : Math.floor(i / cols),
 				c = (shape === 'wedge' ? i - (ri * (ri + 1)) / 2 - ri / 2 : (i % cols) - (cols - 1) / 2) * GRID.gap,
@@ -251,12 +257,13 @@ function formUp() {
 				u = a[i],
 				sk = t.x + ',' + t.y + ',' + i + ',' + n + ',' + shape + ',' + NAV.v;
 			if (u.sk !== sk) {
-				// a place in the shape that falls in a tree, a lake or a building, or across a wall, moves to the nearest open ground on the spot's side (Build 48)
+				// a place in the shape goes through the one spot check (item 5): one that falls in a tree, a lake or a building, across a wall,
+				// off the map or on someone else moves to the nearest free spot round it, on the spot's side (Build 48)
 				let gx = -fy * c + fx * r,
 					gy = fx * c + fy * r;
-				const cell = gcell(t.x + gx, t.y + gy);
-				if (blockedCell(cell, u.owner) || (cm && NAV.comp[cell] !== cm)) {
-					const f = freeNear(cell % NC, Math.floor(cell / NC), u.owner, 6, t.x + gx, t.y + gy, 1, cm);
+				const p = { x: t.x + gx, y: t.y + gy };
+				if (!spotFree(p, u.owner, cm, mates)) {
+					const f = takeSpots([u], p, null, cm).get(u);
 					if (f) {
 						gx = f.x - t.x;
 						gy = f.y - t.y;
@@ -600,11 +607,12 @@ function forage(u, n, drops) {
 	const o = u.owner,
 		c = carryOf(o),
 		v = stats(o, 'vil').spd * groundSpd(o, ['foot']),
-		others = n.hunt || n.kind === 'farm' ? 0 : Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0)),
+		others =
+			n.kind === 'farm' ? 0 : n.hunt ? Math.max(0, (n.hunt.wk || 0) - (u.hunt === n.hunt ? 1 : 0)) : Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0)),
 		g =
 			((n.hunt ? RATE_OF.meat : n.rate || RATE_OF[n.kind]) *
 				gatherMul(o, n.hunt ? { type: 'food', kind: 'meat' } : n)) /
-			(1 + others / (FORAGE.room[n.kind] || 2)),
+			(1 + others / (FORAGE.room[n.hunt ? 'carcass' : n.kind] || 2)),
 		A = n.hunt
 			? UNIT[n.hunt.kind].meat
 			: n.kind === 'farm' || (u.node === n && n.kind === 'tree')
@@ -661,7 +669,7 @@ const forageNow = (u) =>
 // seek (decision 1, a lost find): the point the search is measured from. Then it may take a find of the same kind its side has seen within
 // the search radius of that point, or one a friend (its own side) is working; a placed villager none past the cap (x + y) from where it was
 // placed, the rest none past the leash (DANGER_R.far) from the find's nearest drop-off. Of those, the best by the forager's rate R.
-function bestNode(u, job, seek) {
+function bestNode(u, job, seek, cm) {
 	let best = null,
 		bR = 0,
 		drops = null,
@@ -709,7 +717,7 @@ function bestNode(u, job, seek) {
 				continue; // the cap from where it was placed; else the leash from a drop-off
 		}
 		const R = forage(u, n, drops);
-		if (R > bR) {
+		if (R > bR && (!cm || reachFrom(n, cm, u.owner))) {
 			bR = R;
 			best = n;
 		}
@@ -728,7 +736,7 @@ function bestNode(u, job, seek) {
 				!unsafe(a, u.owner)
 			) {
 				const R = forage(u, { hunt: a }, drops);
-				if (R > bR) {
+				if (R > bR && (!cm || reachFrom(a, cm, u.owner))) {
 					bR = R;
 					best = { hunt: a };
 				}
@@ -736,6 +744,8 @@ function bestNode(u, job, seek) {
 	}
 	return best && { n: best, R: bR };
 }
+// cm: when given, only a find whose foot (an open square within two of it) lies in that walking region counts: a find out of reach is no find
+const reachFrom = (n, cm, o) => !!freeNear(Math.floor(n.x / NAVC), Math.floor(n.y / NAVC), o, 2, n.x, n.y, 1, cm);
 const nearestNode = (u, job, seek) => (bestNode(u, job, seek) || { n: null }).n; // the one find a worker should take now
 // who to send: an idle villager first, the nearest; then, of the workers on the same resource (types), the one earning least; then the one
 // earning least on any gathering job. Weavers, brewers, shepherds and builders keep their posts. (Albert, Oct 29: a new field takes the

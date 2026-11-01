@@ -41,6 +41,12 @@ REST = """(raw) => {
     if (k.q.length || S.P[0].res.g !== g0 + 360) bad.push('N12: a queued Printing order was not given back');
     if (S.P[0].spent !== 2000 - 910 || S.P[0].ledger.out.research !== 1000 - 910) bad.push(`N12: the Printing refund is not a cancel: research spent ${S.P[0].spent} (want 1090), the ledger ${S.P[0].ledger.out.research} (want 90)`);
     if (!(Array.isArray(S.clim.ahead) && S.clim.ahead[0] === true && !('next' in S.clim))) bad.push('N10: an old save loses the sky it rolled ahead'); }
+  // C6: a save from before the combat batch keeps a rout's end (routT); step 41 turns it into when the rout began, Engagement's halved run counted
+  { const o = JSON.parse(raw); o.v = 41; o.P[0].techs = ['engage']; o.P[1].techs = [];
+    const a = { ...o.units[0], owner: 0, state: 'rout', routT: 100 }, b = { ...o.units[0], owner: 1, state: 'rout', routT: 100 }; delete a.routAt; delete b.routAt; o.units.push(a, b);
+    const S = F.MIGRATE[41](o), R = F.MORALE.rout;
+    if (S.v !== 42) bad.push('C6: save step 41 does not lead to shape 42');
+    if (a.routAt !== 100 - R / 2 || b.routAt !== 100 - R || 'routT' in a || 'routT' in b) bad.push('C6: an old rout opens with the wrong start (' + a.routAt + ', ' + b.routAt + '; want ' + (100 - R / 2) + ', ' + (100 - R) + ')'); }
   localStorage.setItem(F.SAVEKEY, '{"units":1,"P":[],"v":39,"blds":null,"x":'); F.readSave();
   if (!localStorage.getItem(F.SAVEKEY + '.lost')) bad.push('a damaged save was not kept aside');
   // two stale saves of different shapes each keep their own slot: the second never overwrites the first

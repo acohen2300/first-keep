@@ -378,8 +378,9 @@ function rebattalion() {
 const atWar = (a, b) => a !== b && G.rel[a][b] === 'war';
 // The one hostility test (decision 8, C1): sides by their relations, and the Natives (their warriors, the citadel) by theirs with each side;
 // the rest of the wild (animals, bandits, robbers, outlaws, the horde, guards) is a foe to everyone, always. A treaty binds only its signers
-// (pacta tertiis nec nocent nec prosunt). me: the one looking, when it is of that wild itself (the horde at a building).
-const wildFoe = (x) => !!x && x.owner === WILD && !x.native && !x.citadel;
+// (pacta tertiis nec nocent nec prosunt). me: the one looking, when it is of that wild itself (the horde at a building). The kind decides,
+// not a list of exceptions on the owner (as N4): an animal or an outlaw; the Natives' warriors, walls, pits and nets go by relations.
+const wildFoe = (x) => !!x && x.owner === WILD && !!UNIT[x.kind] && (hasTag(x.kind, 'animal') || hasTag(x.kind, 'outlaw'));
 const isFoe = (o, x, me) => x.owner !== o && (atWar(o, x.owner) || wildFoe(x) || wildFoe(me));
 const friendly = (a, b) => a === b || G.rel[a][b] === 'ally';
 const season = () => SEASONS[Math.floor(G.t / SEASON_LEN) % 4];
