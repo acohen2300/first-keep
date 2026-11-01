@@ -30,3 +30,5 @@ Adapted from SoRen's prep (`soren-archive/p16/APP-PREP.md`). The same path, the 
 - **4.2 (minimum functionality):** a full strategy game; everything is generated on the device; works offline once the typefaces are bundled.
 - **5.1.1:** nothing is collected; saves stay on the phone.
 - **Purchases (when added):** variety, looks and convenience only. Never power (CUTS.md, design rule).
+
+The App Store path from the outside reviews of Nov 1 (native storage, Safari view for links, audio in the background, the harness out of production, Game Center, guideline 4.2, pricing) is parked: `docs/4 Now/Parked.md`. [2026-11-01 09:10]
