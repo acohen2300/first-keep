@@ -153,6 +153,16 @@ JS = r"""() => {
 }"""
 DRAG = r"""() => { const F = window.__fk; F.newGame(5); F.act('close'); const G = F.G; G.P[0].res.g = 9999; G.ktab = 'rel'; F.openCard({ type: 'bld', id: F.keepOf(0).id }); F.ui(true);
 }"""
+# the Mail with a group's filter on, at four sizes: every page is the same height, nothing scrolls, Next stays where the finger is
+MAILPAGES = r"""() => { const F = window.__fk; F.newGame(5); F.act('close'); const G = F.G; G.mail = [];
+  for (let i = 0; i < 26; i++) F.news(i % 2 ? 'realm' : 'trade', 'A line of the mail, letter ' + 'abcdefghijklmnopqrstuvwxyz'[i] + '.', '', 4);
+  F.act('mail'); F.act('mailg:realm'); F.ui(true); const out = [], at = [];
+  for (let p = 0; p < 3; p++) { const c = document.getElementById('card'), n = document.querySelector('#card [data-act="mailp:1"]').getBoundingClientRect();
+    if (c.scrollHeight > c.clientHeight + 1) out.push(`page ${p + 1} scrolls ${c.scrollHeight - c.clientHeight} px`); at.push(Math.round(n.top) + ',' + Math.round(n.left));
+    document.querySelector('#card [data-act="mailp:1"]').click(); F.ui(true); }
+  if (new Set(at).size > 1) out.push(`Next moves between pages: ${at.join(' / ')}`);
+  if (!document.querySelector('#card [data-act^="mailtog:"]')) out.push('the preview switch is not on the card');
+  return out; }"""
 async def main():
     async with async_playwright() as p:
         br = await p.chromium.launch(); pg = await br.new_page(viewport={'width': 390, 'height': 844}); errs = []
@@ -170,6 +180,14 @@ async def main():
             if got[0] < 250 or not got[2]: bad.append(f'Relations: a drag across the gift slider stopped at {got[0]}g (switch on: {got[2]}): the slider was rebuilt under the finger')
             elif not got[1]: bad.append('Relations: the gift slider is a new node after the drag: a class change rebuilt it')
         except Exception as e: bad.append('the slider drag could not run: ' + str(e)[:200])
+        try:
+            for W, H in [(375, 667), (390, 844), (393, 852), (430, 932)]:
+                await pg.set_viewport_size({'width': W, 'height': H}); await pg.wait_for_timeout(150)
+                await pg.evaluate("() => { window.__fk.newGame(5); window.__fk.act('close'); }"); await pg.wait_for_timeout(50)
+                r = await pg.evaluate(MAILPAGES); await pg.wait_for_timeout(300); r = await pg.evaluate(MAILPAGES)   # the second run: the card has risen to its ranks
+                if W >= 390: bad += [f'Mail with a filter at {W}x{H}: {x}' for x in r]
+                elif any(x.startswith('Next moves') or 'switch' in x for x in r): bad += [f'Mail with a filter at {W}x{H}: {x}' for x in r if not x.startswith('page')]
+        except Exception as e: bad.append('the mail pages could not run: ' + str(e)[:200])
         await br.close()
     bad = bad + errs
     print(('PASS ' if not bad else 'FAIL ') + 'the cards of v80 (Setup stacked, Relations final, Mail pages, Market selector, E1 to E11, Emergency and the steel panel, map labels)', '' if not bad else bad)

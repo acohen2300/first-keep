@@ -60,6 +60,9 @@
 7. Small: the dead `.cin p.why` rule; one refresh a slider move; no unpause after a game ends (`cardPause`); the `FULL` comment.
 Run: build, wrap, lint, palette, verbs, words, cards pass; `handoff.py --plant` 66 of 66 caught. The full gate was not run (the map builder had the browser); the coordinator runs it at the merge.
 
+## Mail with a filter (third commit, after the merge of main)
+The hunt measured the Mail scrolling 22 px with a group's filter on: "Hide the previews" took a rank of its own, 11 against the cap of 10, and Previous and Next fell below the card's edge at 390 and 430. And a short last page shrank the card (500 to 350), moving Next under the finger. Now the switch sits between Previous and Next (Previous · Hide previews · Next; an empty place with no group on), and a short page keeps its six places with empty ones, so every page is the same height. Test: a filter on, every page, four sizes: nothing scrolls from 390 up, and Next stays in one place at every size. Two plants.
+
 ## Not done, and why
 - E9's raw markup: the line's places (`slotsHTML`), the workshop's making slot, the mail rows, the research › rows (`.trow`, a nested grid), the score table and two text links are still written by hand: each needs a piece the mold does not have (a two-line clamp single, a disabled working slot, a coloured edge). The squad kind grid (`.qs`) too.
 - Loose lines on the Army, caravan, stop and research cards (section labels, sentences): not in this list.
@@ -81,6 +84,7 @@ Changes
 - Market on the shared page (`BLD_PAGE.market`, `marketPage`); its size in `SIZE_OF` (one home).
 - E1, E2 (`b.made`), E3/N13 (`MSG.page`, `mailp`), E4, E5 (`dropDrag`), E6, E7 (`cardPause`), E8, E9, E11 as above.
 - Emergency a slot with its word on the cycle button's rank (`ROW_WORD.emg`); one steel panel for the row and that rank; "+1 Records" (`TECH` short), "+2 Guilds".
+- Mail with a filter: the preview switch in the pager rank (Previous · Hide previews · Next), a short page padded to six places, so the card never scrolls or shrinks (the hunt's 22 px); its own rank cut.
 - Review fixes: the slider's key (drag kept across the switch); `foeFirst`; `REL_WORD` the one home of the stance words, icons keyed by it, "foe in 30 s"; `mailp:0` on a line with no link; `LABEL` and `--weight` one home each; `.thin` passed by the stance icons only.
 - Short names: Bad weather "Weather" (Setup), Record keeping "Records", the Town Center "Town".
 
@@ -102,4 +106,5 @@ Tests
 - New `tests/verbs.py` (in the gate, replacing its inline verb check): every control verb has a handler, `choice()`, `offOn()` and `slt` verbs included.
 - 31 new planted bugs in `tests/handoff.py` (66 in all), each caught.
 - Results (first commit): build, wrap, lint clean; the gate passes (31 of 31; four sizes, both pages); `tests/handoff.py`: every check passes but "the working tree is clean" before this commit; the play fingerprint matches the baseline (the cards change no simulation; `b.made` is a count nothing reads in play); soak seeds 1, 2, 3 for 20 minutes pass (saves 250 to 258 kB; a frame 8.7 to 52 ms with another builder on the same two CPUs).
+- Mail pages with a filter: a test at four sizes (no scroll from 390 up, Next fixed at all four) and two plants (88 in all after the merge of main).
 - Results (review fixes): build, wrap, lint, palette, verbs, words, cards pass; 66 of 66 plants caught. The full gate waits for the merge.
