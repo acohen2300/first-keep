@@ -90,7 +90,7 @@ Each change was turned off in turn (node runs the gate's own FINGERPRINT script;
 
 ## Checks run
 - **START QC on the first commit (2116080):** 181 PASS, exit 0.
-- **The final commit:** see below.
+- **START QC on the final commit (467cd4b): 186 PASS, exit 0** (all 164 + 5 plants caught, the gate at four sizes, the fingerprint against the accepted baseline).
 - **`tests/wild.py`:** passes, and fails on main (run against main with only the exports added).
 - **Every new plant is caught**, including the 5 review plants and the 6 Relations plants (scratch runner over `PLANTS`).
 - **Soak** (`tests/soak.py 1,2,3 20`): 3 of 3 PASS, frames 7.5 to 17.8 ms.
