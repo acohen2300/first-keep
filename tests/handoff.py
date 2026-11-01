@@ -224,6 +224,11 @@ PLANTS = [
   ('docs/4 Now/Owed.md', '# Owed: the one open list [2026-11-01 07:45]', '# Owed: the one open list', 'tests/docs.py', 'a living line edited with no stamp', 'ends with a stamp'),
   ('docs/6 Records/v70 Record/Picks - v70 - Clean Up Session.md', 'Picks', 'Pick', 'tests/docs.py', 'a closed record edited', 'closed records'),
   ('./START-HERE.md', '`docs/4 Now/Owed.md`', '`docs/4 Now/Owe.md`', 'tests/docs.py', 'a file in the reading order is missing', 'reading order exists'),
+  # gatherer caps (Albert, Nov 1, 12:57)
+  ('13-sim-civil.js', "const findCap = (n) => (n.kind === 'tree' ? 1 :", "const findCap = (n) => (n.kind === 'tree' ? 3 :", 'tests/wild.py', 'a tree takes three fellers', 'K2:'),
+  ('13-sim-civil.js', '\t\tif (held >= findCap(n)) {', '\t\tif (false) {', 'tests/wild.py', 'a full find lets newcomers crowd in', 'K1:'),
+  ('12-sim-core.js', '\t\t\tif ((n.wk || 0) - (u.node === n ? 1 : 0) >= findCap(n)) continue; // full', '\t\t\t; // full', 'tests/wild.py', 'the search sends to a full find', 'K3:'),
+  ('13-sim-civil.js', "Math.max(1, Math.floor((2 * Math.PI * (WORK_R[n.kind] ?? WORK_R.other)) / SPACE))", "Math.max(1, 3)", 'tests/wild.py', 'a find holds a typed number', 'K1:'),
 ]
 
 def plant_check():

@@ -542,6 +542,8 @@ window.__fk = {
 	hordeTick,
 	starveTick,
 	hungerOf,
+	findCap,
+	WORK_R,
 	STARVE,
 	todaySeed,
 	gatherMul,

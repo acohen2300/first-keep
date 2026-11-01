@@ -220,6 +220,27 @@ JS = """() => {
     if (z !== 'z ' + vs.filter((u) => !u.inside && (u.idle || !u.job)).length) bad.push(`D10: the strip reads "${z}" while ${waiting.length} villagers wait with Zs`);
     F.act('idlego'); const c = F.cam; if (!waiting.some((u) => Math.abs(c.tx - u.x) < 1 && Math.abs(c.ty - u.y) < 1)) bad.push('D10: the idle button does not go to a waiting villager'); });
 
+  // ── gatherer caps (Albert, Nov 1, 12:57): a find holds as many as its working spots (a tree one feller); the next goes elsewhere ──
+  T_('K1', () => { const G = fresh(), k = F.keepOf(0); Object.assign(G.P[0].res, { f: 9999 });
+    const b = G.nodes.filter((n) => n.kind === 'bush' && n.amt > 0).sort((a, c) => Math.hypot(a.x - k.x, a.y - k.y) - Math.hypot(c.x - k.x, c.y - k.y))[0], cap = F.findCap(b);
+    if (cap !== Math.floor((2 * Math.PI * F.WORK_R.other) / F.SPACE)) bad.push('K1: a bush holds ' + cap + ', not its working spots');
+    const V = []; for (let i = 0; i < cap + 5; i++) { const v = F.addUnit(0, 'vil', b.x + 30 + (i % 5) * 6, b.y + 30 + Math.floor(i / 5) * 6); F.setJob(v, 'food', b); V.push(v); }
+    let most = 0; for (let s = 0; s < 20; s++) { run(1); most = Math.max(most, V.filter((v) => v.node === b && v.at === b.id).length); }
+    if (most > cap) bad.push(`K1: ${most} worked one bush of ${cap} spots`);
+    const wk = V.filter((v) => v.node === b).length; if (wk > cap) bad.push(`K1: ${wk} still hold one bush of ${cap} spots`);
+    }); // (the ones turned away search as decision 1 says: within its radius, then from the drop-off)
+  T_('K3', () => { const G = fresh(), k = F.keepOf(0); const b = G.nodes.filter((n) => n.kind === 'bush' && n.amt > 0).sort((a, c) => Math.hypot(a.x - k.x, a.y - k.y) - Math.hypot(c.x - k.x, c.y - k.y))[0], cap = F.findCap(b);
+    const b2 = { id: 9e6 + 1, kind: 'bush', type: 'food', x: b.x + 45, y: b.y, amt: 500, max: 500 }; G.nodes.push(b2);
+    for (let i = 0; i < cap; i++) { const v = F.addUnit(0, 'vil', b.x + 9, b.y); F.setJob(v, 'food', b); v.at = b.id; } run(1);
+    const n = F.addUnit(0, 'vil', b.x - 30, b.y); F.setJob(n, 'food', b); run(6);
+    { const p = { x: b.x + 3, y: b.y, owner: 0, node: null, carry: 0 }; b.wk = cap; const all = G.nodes; G.nodes = [b]; const got = F.nearestNode(p, 'food'); G.nodes = all; if (got === b) bad.push('K3: the search offers a full bush'); }
+    if (n.node === b || n.at === b.id) bad.push('K3: the next villager crowded into a full bush');
+    else if (!n.node || n.node.type !== 'food' || (n.node.wk || 0) > F.findCap(n.node)) bad.push('K3: the next villager did not go to another food find with a free spot (' + (n.node ? n.node.kind + ' ' + Math.round(Math.hypot(n.node.x - b.x, n.node.y - b.y)) : 'none') + ')'); });
+  T_('K2', () => { const G = fresh(), k = F.keepOf(0); const t = G.nodes.find((n) => n.kind === 'tree' && n.amt > 0 && n.open && Math.hypot(n.x - k.x, n.y - k.y) < 400);
+    if (F.findCap(t) !== 1) bad.push('K2: a tree holds ' + F.findCap(t) + ' fellers, not one');
+    const V = [0, 1, 2].map((i) => { const v = F.addUnit(0, 'vil', t.x + 20 + i * 6, t.y + 20); F.setJob(v, 'wood', t); return v; });
+    let most = 0; for (let s = 0; s < 15; s++) { run(1); most = Math.max(most, V.filter((v) => v.node === t && v.at === t.id).length); }
+    if (most > 1) bad.push(`K2: ${most} fellers worked one tree`); });
   // ── hunt B #5: the place bar goes with its game ──
   T_('B5', () => { fresh(); F.startPlace('house'); F.ui(true); if (document.getElementById('place').hidden) bad.push('B5: the place bar does not show while placing'); fresh(); F.ui(true); if (!document.getElementById('place').hidden) bad.push('B5: the place bar outlived its game'); });
 

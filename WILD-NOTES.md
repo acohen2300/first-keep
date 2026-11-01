@@ -74,7 +74,17 @@
     - #9: the ambush is gone.
     - #10: a computer striking a wayfarer no longer writes into the Natives' memory.
     - #11, partly: only the Natives' stance rebuilds the grid; `groundOf` is worked out only when a camp remembers; `laT` is gone with A #5.
-11. **Tests.** `tests/wild.py` runs in the gate. Every check failed on main when first written; the later ones (A3b, D1, S1, G1, G2, the 4b extras, H1 to H4, D10) fail by plant.
+11. **Gatherer caps (Albert, 12:57).**
+    - **How many a find holds** (`findCap`, `13-sim-civil`): the working spots on the ring it is worked from, SPACE (3 ft) apart: ⌊2π·WORK_R / SPACE⌋. `WORK_R` is now the one home of the working reach, which was typed as 9 and 13 in the walk.
+      - bush, stone, gold, iron, meat: 7;
+      - fish: 10;
+      - a tree: 1 feller;
+      - fields keep their own 1 (`slotsOf`).
+    - **Why a ring, not `spotAt`:** a find has no square footprint like a building, so its spots sit on the ring its gatherers stand on. `spotAt`'s square ring gives 8 at the same reach.
+    - **The tree** follows OSHA 29 CFR 1910.266(d)(6)(ii): "The distance between adjacent occupied work areas shall be at least two tree lengths of the trees being felled". Opened on govinfo.gov (CFR 2018 edition); ecfr.gov was not reachable from here.
+    - **A full find:** the search skips it (`bestNode`). A newcomer reaching it finds every spot held and looks again; one that holds a spot (`u.at`) keeps it. Players and computers alike.
+    - **Fingerprint:** unchanged by the caps. The five scripted minutes never put more than a find holds on one.
+12. **Tests.** `tests/wild.py` runs in the gate. Every check failed on main when first written; the later ones (A3b, D1, S1, G1, G2, the 4b extras, H1 to H4, D10) fail by plant.
     - The plants (`tests/handoff.py`): see Checks. Coarse 4b plants now name their own message.
 
 ## Measured (node, seed 2, minute 10; before → after)
@@ -123,6 +133,7 @@ CHECKS
 | Where | What | Value or form | Label | Source |
 |---|---|---|---|---|
 | `03-rules-buildings` `UPKEEP.hunger`; `36-economy` `hungerOf` | Work and blows after two days of famine | ×0.72 | cited (secondary, opened) | Keys et al., *The Biology of Human Starvation* (1950): hand dynamometer 58.2 → 41.8 kg over 24 weeks of semistarvation (−28%); Harvard work test 64.1 → 18.1 (−72%). Via Hargrove, Heinz & Heinz, "Modeling transitions in body composition…", *Dynamic Medicine* 7:16 (2008), Table 1 (opened Nov 1). The book itself was not opened. |
+| `13-sim-civil` `findCap`; `06-rules-tuning` `WORK_R` | Gatherers a find holds | ⌊2π·WORK_R / SPACE⌋: 7 at a bush or a rock, 10 at fish; a tree 1 | design (geometry); cited (the tree) | Working spots SPACE (3 ft) apart on the ring worked from. One feller a tree: OSHA 29 CFR 1910.266(d)(6)(ii), "the distance between adjacent occupied work areas shall be at least two tree lengths" (govinfo.gov, CFR 2018, opened Nov 1). |
 | `06-rules-tuning` `STARVE.grace` | Full strength for two game days without food | 240 s | general knowledge (from memory) | The rule of threes (about three weeks without food, with water). The game's two days are design inside it. |
 | `06-rules-tuning` `BEAT`; `08-core` `every` | The slow ticks: one period, read by the tick and by its body | slow 10 s, health 5 s, Natives 5 s | design | The result does not depend on the beat (`tests/wild.py` A10). |
 | The SCIENCE.md row on `isFoe` (line 76) | The whole wild as a foe | | correct it | Animals always; the four groups by their own regard (`gangOf`, `gangRel`). |
@@ -136,7 +147,7 @@ CHECKS
   - answer 11; no ambush (decision 5);
   - hunger and famine (decision 6);
   - hunt A #1–#4, #6–#10 and B #1, #2, #5–#8, #10;
-  - the review's four; Albert's D10 idle count;
+  - the review's four; Albert's D10 idle count; gatherer caps per find;
   - save shape 43.
 - **Cut:**
   - `wildFoe`; `holdGames`' war branch and its line; `PEACE.games.first`; the Chronicle's fold;

@@ -85,6 +85,9 @@ function spotAt(b, i) {
 		t = ((i % k) * 2 * R) / k - R;
 	return { N, ...[{ x: b.x + t, y: b.y - R }, { x: b.x + R, y: b.y + t }, { x: b.x - t, y: b.y + R }, { x: b.x - R, y: b.y - t }][e] };
 }
+// How many can work a find at once (Albert, Nov 1, 12:57): the working spots on the ring it is worked from (WORK_R), SPACE apart; a tree
+// takes one feller (OSHA 29 CFR 1910.266(d)(6)(ii): fellers at least two tree lengths apart). Fields keep their own one (slotsOf)
+const findCap = (n) => (n.kind === 'tree' ? 1 : Math.max(1, Math.floor((2 * Math.PI * (WORK_R[n.kind] ?? WORK_R.other)) / SPACE)));
 // the walking region a point belongs to: its own square's, else the nearest open square's (a tap on a tree or a wall)
 const regionAt = (p, o) => {
 	const c = gcell(p.x, p.y);
@@ -443,6 +446,16 @@ function vilTick(u, dt, SP) {
 		} else if (u.noPathT === G.t) leaveWork(u, n);
 		return;
 	}
+	if (n.kind !== 'farm' && u.at !== n.id && dist(u, n) < (WORK_R[n.kind] ?? WORK_R.other) + 8) {
+		let held = 0;
+		for (const v of G.units) if (v !== u && v.node === n && v.at === n.id) held++;
+		if (held >= findCap(n)) {
+			n.wk = Math.max(0, (n.wk || 0) - 1);
+			u.node = null;
+			return;
+		} // a full find: a newcomer looks again (the search skips full finds); one that holds a spot keeps it
+		u.at = n.id; // its spot is taken on arrival
+	}
 	// a worker already at work keeps its place a little further out (4 more), so crowd spacing and walking in no longer fight
 	if (
 		moveTo(
@@ -450,7 +463,7 @@ function vilTick(u, dt, SP) {
 			n.x,
 			n.y,
 			dt,
-			(n.kind === 'fish' ? 13 : n.kind === 'farm' ? 4 : 9) + (G.t - (u.work || -9) < 0.5 ? 4 : 0),
+			(n.kind === 'farm' ? 4 : (WORK_R[n.kind] ?? WORK_R.other)) + (G.t - (u.work || -9) < 0.5 ? 4 : 0),
 			SP,
 		)
 	) {

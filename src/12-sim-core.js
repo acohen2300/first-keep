@@ -700,6 +700,7 @@ function bestNode(u, job, seek, cm) {
 			if (u.was && n.kind !== u.was) continue; // the same kind of find (decision 1)
 			if (n.kind === 'fish' && !dockNear(u.owner, n)) continue;
 			if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue;
+			if ((n.wk || 0) - (u.node === n ? 1 : 0) >= findCap(n)) continue; // full: every working spot taken (findCap)
 		}
 		if (!drops)
 			drops = G.blds.filter(

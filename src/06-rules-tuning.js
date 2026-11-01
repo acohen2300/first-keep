@@ -163,6 +163,8 @@ const LOOKOUT = { base: 60, k: 24 }; // a building sees 60 + 24 × the square ro
 // Personal space, one number (Albert: Hall's personal distance, 2.5 to 4 ft; OSHA 1910.142(b)(3), 36 inches between beds): 3 ft. Spots are laid
 // SPACE apart, two bodies nearer than SPACE are pushed apart, a villager at work arrives within SPACE (the push's reach: decision 10a), and
 // one at its own spot within ARRIVE, a quarter of it: under half the spacing, so it always stands nearer its own spot than any other's (item 5).
+// where a gatherer stands to work a find: within this of its middle (fish from the shore, further out); the ring its working spots sit on
+const WORK_R = { fish: 13, other: 9 };
 const SPACE = 3 * FOOT,
 	ARRIVE = SPACE / 4;
 const SEARCH = { x: 90, y: 90, tau: 10, again: 2 };
