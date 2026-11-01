@@ -91,7 +91,7 @@
 ## 6. The records every build keeps
 - **`CUTS.md`:** every change and every cut, per build, with the checks' results, the balance table and sizes.
 - **`EXCEPTIONS.md`:** every place the game knowingly bends its own rules, with Albert's yes.
-- **`PARKED.md`:** every idea cut or parked.
+- **Parked ideas:** every idea cut or parked. Today they sit in `CUTS.md` ("review for later") and the Build List. `PARKED.md`, one list, is to be made in the next batch.
 - **`SCIENCE.md`:** every equation, its source (opened, or marked "from memory" until it is) and its code home.
 - **The Build List's Owed section:** the one list of what is owed. Strike a line when it is built; add one when something is put off.
 - **`docs/v80 Audit/`:** the decision record, the QC audit of preview 8, every fresh-eyes report, and the hunt.
