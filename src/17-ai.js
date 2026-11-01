@@ -427,7 +427,7 @@ function think(p) {
 		}
 	}
 	// a villager waiting with no find in reach (its Zs) goes to the bottleneck's best free find it can walk to, then the next in need (answer 10;
-	// it was the best rate of any job, item 6); with nothing short, the job whose best free find pays most: the forager's rate R at that find,
+	// it was the best rate of any job, item 6); with nothing short, or no find for anything short, the job whose best free find pays most: the forager's rate R at that find,
 	// its walk out counted and the crowd already there (g ÷ (1 + others ÷ room), a hunt too; Charnov 1976). Each one sent counts in the crowd
 	// at once, so the next waiter sees it. Yours wait for your word (item 6)
 	for (const v of vils)
@@ -435,11 +435,18 @@ function think(p) {
 			const probe = { x: v.x, y: v.y, owner: o, node: null, carry: 0 }, // a fresh order: any find of the job, not only the kind it lost
 				cm = regionAt(v, o);
 			let best = null;
-			for (const r of order.length ? order : RES) {
+			for (const r of order) {
 				const b = bestNode(probe, r, undefined, cm);
-				if (b && (!best || b.R > best.R)) best = { ...b, r };
-				if (best && order.length) break; // by need: the first in need that has a find
+				if (b) {
+					best = { ...b, r }; // by need: the first in need that has a find
+					break;
+				}
 			}
+			if (!best)
+				for (const r of RES) {
+					const b = bestNode(probe, r, undefined, cm);
+					if (b && (!best || b.R > best.R)) best = { ...b, r };
+				}
 			if (!best) continue;
 			setJob(v, best.r, best.n.hunt ? null : best.n);
 			if (best.n.hunt) {
