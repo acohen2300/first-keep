@@ -542,18 +542,21 @@ function scoutTick(u, dt, SP) {
 		return;
 	}
 	if (!u.route) {
-		const c = [
-			[MID, MAP - 420],
-			[MAP - 420, MID],
-			[MID, 420],
-			[420, MID],
-			[520, 520],
-			[MAP - 520, 520],
-			[MAP - 520, MAP - 520],
-			[520, MAP - 520],
-			[MID - 300, MID - 300],
-			[MID + 300, MID + 300],
-		];
+		const S = PLACES.scout,
+			e = S.edge,
+			k = MID - CORNER + S.keep,
+			c = [
+				[MID, MAP - e],
+				[MAP - e, MID],
+				[MID, e],
+				[e, MID],
+				[k, k],
+				[MAP - k, k],
+				[MAP - k, MAP - k],
+				[k, MAP - k],
+				[MID - S.mid, MID - S.mid],
+				[MID + S.mid, MID + S.mid],
+			];
 		u.route = c
 			.map(([x, y]) => ({ x: x + rnd(-40, 40), y: y + rnd(-40, 40) }))
 			.sort((a, b) => Math.atan2(a.y - MID, a.x - MID) - Math.atan2(b.y - MID, b.x - MID));

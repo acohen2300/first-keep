@@ -309,8 +309,8 @@ const AS = {
 	seen: new Uint32Array(NC * NC),
 	done: new Uint32Array(NC * NC),
 	q: new Int32Array(NC * NC),
-	hf: new Float32Array(40000),
-	hi: new Int32Array(40000),
+	hf: new Float32Array(NC * NC),
+	hi: new Int32Array(NC * NC),
 	gen: 0,
 };
 const DX8 = [1, -1, 0, 0, 1, 1, -1, -1],

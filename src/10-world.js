@@ -627,19 +627,8 @@ function makeMap() {
 		for (const id of ['chest', 'ruins', 'den', 'cemetery', 'vagabonds']) addFind(id, ...c(id));
 	}
 	// shared ground: a robbers' camp at the middle of each map edge, at the end of a trade route; gold and stone near the great lake
-	for (const [x, y] of [
-		[MID, 160],
-		[MID, MAP - 160],
-		[160, MID],
-		[MAP - 160, MID],
-	])
-		addFind('camp', x, y);
-	for (const [x, y] of [
-		[MID, MID - 270],
-		[MID, MID + 270],
-		[MID - 270, MID],
-		[MID + 270, MID],
-	])
+	for (const [x, y] of cross(MID - PLACES.camp)) addFind('camp', x, y);
+	for (const [x, y] of cross(PLACES.lode))
 		N.push(
 			node('gold', 'gold', x - 12, y, 500 * RICH),
 			node('gold', 'gold', x + 12, y + 6, 500 * RICH),

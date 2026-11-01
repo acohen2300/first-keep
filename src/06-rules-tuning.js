@@ -277,21 +277,21 @@ const EVENTS = {
 };
 const EVK = Object.keys(EVENTS),
 	NEWS_EVERY = 150;
+// Where the shared places stand, each from what it belongs to (5a step 1: no map coordinate typed by hand). From the middle: stop, the
+// trade stops' two distances along each middle line; lode, the gold and stone by the great lake; scout, the inner corners of a scout's loop.
+// From the edge: camp, the robbers' camp at the end of each trade route; scout, its loop's points on the middle lines. From a Town Center,
+// toward the middle on both axes: scout, its loop's corner points.
+const PLACES = { stop: [490, 320], lode: 270, camp: 160, scout: { mid: 300, edge: 420, keep: 215 } };
+const cross = (d) => [
+	[MID, MID - d],
+	[MID, MID + d],
+	[MID - d, MID],
+	[MID + d, MID],
+]; // the four points d from the middle on the middle lines: north, south, west, east
 // two old trade routes, west to east and north to south, each with four stops; they bend around the great lake
-const ROUTES = [
-	[
-		[510, 1000],
-		[680, 1000],
-		[1320, 1000],
-		[1490, 1000],
-	],
-	[
-		[1000, 510],
-		[1000, 680],
-		[1000, 1320],
-		[1000, 1490],
-	],
-];
+const ROUTES = [0, 1].map((ax) =>
+	[-PLACES.stop[0], -PLACES.stop[1], PLACES.stop[1], PLACES.stop[0]].map((d) => (ax ? [MID, MID + d] : [MID + d, MID])),
+);
 const POST = { all: 2, cut: [0, 0.2, 0.25, 0.3, 0.4], safe: 120, guard: 12, far: 2.5, want: 1.5 }; // each route has four stops. all: gold a second to whoever holds all four of a route; cut: of other sides' sales at a stop, by how many of its route you hold; guard: soldiers per stop or caravan
 // Sickness as the SIR model (Kermack & McKendrick 1927; Build 56): among a side's people, those who are well (S), sick (I) and over it (R, well
 // again after the course, as the game has no lasting immunity). New cases a tick = β S I / N, the mass-action law; the course lasts sickFor

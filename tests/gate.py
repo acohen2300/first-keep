@@ -177,7 +177,7 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
   // the storm: a bolt every two seconds
   F.startEvent('storm'); run(42); if ((G.bolts || []).length < 15) bad.push('storm: ' + (G.bolts || []).length + ' bolts in 40 s'); clear();
   // the flood: a house at the shore loses health
-  { const L = G.lakes.filter((l) => Math.hypot(l.x - 1000, l.y - 1000) > 400).sort((a, b) => a.r - b.r)[0], dx = L.x > 1000 ? 1 : -1;
+  { const L = G.lakes.filter((l) => Math.hypot(l.x - F.MID, l.y - F.MID) > 400).sort((a, b) => a.r - b.r)[0], dx = L.x > F.MID ? 1 : -1;
     const b = F.mkBld(0, 'house', L.x + dx * (L.r + 30), L.y, 1); G.blds.push(b); F.navRebuild(); run(1); const hp = b.hp; F.startEvent('flood'); run(30); if (!(b.hp < hp)) bad.push('flood: the shore house lost nothing'); clear(); run(2); }
   // the dragon: a soldier under it is burned
   { F.startEvent('dragon'); run(2); const d = G.ev.cur.units[0], u = F.addUnit(0, 'spear', d.x, d.y); const hp = u.hp; run(2); if (!(u.hp < hp) && u.hp > 0) bad.push('dragon: nobody burned'); clear(); }
@@ -282,11 +282,11 @@ async def main():
         # the map's base rules hold on ten seeds (Build 70: the fairness measure and its re-roll cut): the Throne the same distance from every Town Center,
         # no water within the clear radius of one, and the four joined to each other and to the causeways on the walking grid (fords and gaps keep them so)
         pg = await br.new_page(); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(400)
-        base = await pg.evaluate("""() => { const F = window.__fk, N = F.NAV, out = [], comp = (x, y) => { let b = 0; for (let j = -5; j <= 5; j++) for (let i = -5; i <= 5; i++) { const c = N.comp[(Math.floor(y / 10) + j) * 200 + Math.floor(x / 10) + i]; if (c && N.size[c] > N.size[b]) b = c; } return b; };
+        base = await pg.evaluate("""() => { const F = window.__fk, N = F.NAV, out = [], comp = (x, y) => { let b = 0; for (let j = -5; j <= 5; j++) for (let i = -5; i <= 5; i++) { const c = N.comp[(Math.floor(y / F.NAVC) + j) * F.NC + Math.floor(x / F.NAVC) + i]; if (c && N.size[c] > N.size[b]) b = c; } return b; };
           for (let s = 1; s <= 10; s++) { F.newGame(s); const G = F.G, K = [0, 1, 2, 3].map((o) => F.keepOf(o)), T = G.blds.find((b) => b.kind === 'throne'), d = K.map((k) => Math.hypot(k.x - T.x, k.y - T.y));
             if (Math.max(...d) - Math.min(...d) > 0.01) out.push(s + ': the Throne at ' + d.map(Math.round));
             if (G.lakes.slice(1).some((L) => K.some((k) => Math.hypot(L.x - k.x, L.y - k.y) < F.CLEAR + L.r))) out.push(s + ': water in a clear radius');
-            const c = [...K.map((k) => comp(k.x, k.y)), ...[[1000, 770], [1000, 1230], [770, 1000], [1230, 1000]].map(([x, y]) => comp(x, y))]; if (c.some((x) => x !== c[0])) out.push(s + ': not joined ' + c); }
+            const c = [...K.map((k) => comp(k.x, k.y)), ...F.cross(F.LAKE0.r + 60).map(([x, y]) => comp(x, y))]; if (c.some((x) => x !== c[0])) out.push(s + ': not joined ' + c); }
           return out; }"""); await pg.close()
         print(('PASS ' if not base else 'FAIL ') + "the map's base rules hold on ten seeds", '' if not base else base); fails += bool(base)
         pg = await br.new_page(viewport={'width': 390, 'height': 844}); await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(400)
