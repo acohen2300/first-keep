@@ -57,3 +57,6 @@ Build 80 preview 11 split the v80 Build List: its agreed and amended items are l
 
 # Build List - v80 - Post Clean - Working
 *Started Oct 31, 2026, 08:20, at the v70 line. Nothing here is agreed yet: each item waits for Albert's yes.*
+
+## Gatherer caps: AoE2 comparison [2026-11-01 17:06]
+Albert asked how AoE2 DE handles gatherers per resource. No opened source states a cap (Villager wiki, Berry Bush wiki, forgottenempires.net, aoe2-guide checked). From memory, unopened: no fixed cap, the limit is the room round the node; farms one farmer; depleted node sends the villager to the nearest same type. Open for the research-truth audit; Albert said to wait and see how the preview plays first.
