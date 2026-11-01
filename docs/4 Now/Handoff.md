@@ -33,3 +33,6 @@ All of them are in `docs/6 Records/v80 Audit/Answers - Nov 1 full day.md`. W1–
 ## Not First Keep [2026-11-01 14:40]
 - First Term (Albert Labs' next game) is parked; its mockup is a Design artifact, "First Term Pool". [2026-11-01 14:40]
 - SoRen design talk (the tappable State bar) happened in the same session. SoRen's newest public preview is p16 (Oct 25). [2026-11-01 14:40]
+
+## Long games moved after the preview [2026-11-01 18:02]
+Albert, 18:01: "you should just do your normal one bc I'm going to play anyway". The nine long games (120, 180, 240 minutes, 3 each) are NOT run before preview 11. Normal checks stay: START QC on merged main, soak 6 seeds x 30, balance 4 seeds x 30 against v70, the fresh-eyes review of the seams. The nine long games run overnight after the preview and go into the QC standard then. Logged in CUTS.md.
