@@ -126,7 +126,7 @@ Each change was turned off in turn, with node running the gate's FINGERPRINT scr
 
 ## Checks run
 - **START QC on the merge with main (c56d93d):** 210 PASS, exit 0 (all plants caught, `tests/docs.py`, the gate at four sizes, the fingerprint).
-- **START QC on the last commit:** FINAL_QC.
+- **START QC on the last code commit (199e078): 216 PASS, exit 0.** The run overlapped other builders' balance runs; two earlier attempts were killed from outside (exit 144) and restarted.
 - **Every new plant is caught** (scratch runner over `PLANTS`, then START QC).
 - **Soak** (`tests/soak.py 1,2,3 20`): 3 of 3 PASS.
 - **Lint and build:** clean.
