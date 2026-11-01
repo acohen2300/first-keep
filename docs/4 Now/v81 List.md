@@ -17,4 +17,6 @@ Albert, Nov 1, 07:36 (D-075), in his words: "we were to finish all the menus and
 11. **Quick start mode** (Albert, Nov 1, 13:01: "Quick start mode"): what it starts with is to be settled with Albert. [2026-11-01 13:03]
 12. **Race mode** (Albert, Nov 1, 13:01: "race mode"): the race's goal (an age, a wonder, a sum) is to be settled with Albert. [2026-11-01 13:03]
 
+13. **Simple mode** (Albert, Nov 1, 13:02: "Also a simple mode"): which systems it turns off or hides is to be settled with Albert. [2026-11-01 13:04]
+
 Nothing on it is built until the list is drawn up item by item and Albert says yes yes. [2026-11-01 07:45]
