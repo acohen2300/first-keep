@@ -78,7 +78,7 @@ function mkPlayer(i, civ) {
 		color: d.color,
 		keep: d.keep.slice(),
 		civ,
-		res: { f: 200, w: 200, s: 100, g: 50, i: 0 },
+		res: { ...START_RES },
 		goods: Object.fromEntries(GOODK.map((k) => [k, 0])),
 		ventures: [],
 		hungry: false,
@@ -142,6 +142,15 @@ function newGame(seed, carry, daily) {
 	G.clim.T = airTemp();
 	skyTurn(); // 5 weather: the first sky from the season's chain, not always clear
 	navRebuild();
+	// EXCEPTIONS #16 (LIVE TEST IN PROCESS): each computer's handicap, built beside its Town Center by the placing rules (HANDICAP in 06)
+	for (let o = 1; o < WILD; o++)
+		for (const kind of HANDICAP.blds) {
+			const k = keepOf(o),
+				s = k && findSpot(o, kind, k.x, k.y, HANDICAP.r[0], HANDICAP.r[1]);
+			if (!s) continue;
+			G.blds.push(mkBld(o, kind, s.x, s.y, 1));
+			navRebuild();
+		}
 	makeBg();
 	for (const b of G.blds) if (!G.fogOn || friendly(0, b.owner)) wearGround(b);
 	dangerMap(); // a fresh danger map: the last game's must not steer the first second of this one
@@ -503,7 +512,7 @@ function makeMap() {
 			up = Math.max(0, out - lo);
 		return [id, lo + up, hi + up, clr];
 	}); // stretched, never past the old outer ring, then moved out to start at the band's edge (laySpots keeps every node past it)
-	const layHome = lay.filter(([id]) => BACK_IDS.has(id) || HOME_IDS.has(id)), // zone 1 first, then zone 2
+	const layHome = lay.filter(([id]) => (BACK.on && BACK_IDS.has(id)) || HOME_IDS.has(id)), // zone 1 first (when on), then zone 2
 		layWild = lay.filter(([id]) => !BACK_IDS.has(id) && !HOME_IDS.has(id) && !MOVE_IDS.has(id)),
 		layMove = lay.filter(([id]) => MOVE_IDS.has(id));
 	G.lakes = [{ ...LAKE0 }, ...makeWater()]; // 2 ground

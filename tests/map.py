@@ -71,6 +71,11 @@ ZONE = """(seeds) => {
     need = B && { bush: F.AGES[1].cost.f + F.BACK_MARGIN.vils * F.UNIT.vil.cost.f, tree: F.AGES[1].cost.w + F.BACK_MARGIN.houses * F.BLD.house.cost.w },
     count = B ? { bush: B.bushes, tree: B.trees } : {}, isBack = (n) => count[n.kind] && Math.abs(n.max - need[n.kind] / count[n.kind]) < 1e-6;
   if (!B) return [['no zone 1 (BACK) to lay'], W];
+  const on0 = B.on; B.on = false; F.SET.scen = 'open'; F.newGame(1);   // held out (BACK.on false): nothing laid in zone 1, the keep-out kept
+  for (let o = 0; o < 4; o++) { const k = F.keepOf(o), sx = k.x < F.MID ? 1 : -1, sy = k.y < F.MID ? 1 : -1;
+    if (!on0 && F.G.nodes.some((n) => !n.farm && isBack(n))) bad.push('zone 1 is laid though it is held out');
+    if (F.G.nodes.some((n) => !n.farm && (n.x - k.x) * sx <= 0 && (n.y - k.y) * sy <= 0 && Math.hypot(n.x - k.x, n.y - k.y) <= deep)) bad.push('1/' + o + ': a find in zone 1 while it is held out'); }
+  B.on = true;   // the rest lays zone 1 to check it, whether or not it is in play
   for (let s = 1; s <= seeds; s++) {
     F.SET.scen = 'open'; F.newGame(s); const G = F.G, N = F.NAV, NC = F.NC, amt = F.LAND[G.land].amt, sig = [];
     const isHome = (n) => base[n.kind] && Math.abs(n.max - base[n.kind] * F.RICH * H.rich * (amt[type[n.kind] || n.kind] || 1)) < 1e-6;
@@ -91,7 +96,7 @@ ZONE = """(seeds) => {
       for (const n of other) if (inBack(n)) { bad.push(s + '/' + o + ': a ' + n.kind + ' not of zone 1 in zone 1, at ' + Math.round(d(n))); break; }
       for (const f of G.finds) if (mine(f) && f.kind !== 'shrine' && inBack(f)) bad.push(s + '/' + o + ': the ' + f.kind + ' in zone 1');
       if (!back.some((n) => n.kind === 'tree' && comp(n.x, n.y, comp(k.x + ((F.MID - k.x) / Math.hypot(F.MID - k.x, F.MID - k.y)) * F.PLACES.start, k.y + ((F.MID - k.y) / Math.hypot(F.MID - k.x, F.MID - k.y)) * F.PLACES.start)))) bad.push(s + '/' + o + ': the zone 1 grove cannot be reached');
-      const home = G.nodes.filter((n) => !n.farm && d(n) < F.CLEAR && isHome(n)), by = {};
+      const home = G.nodes.filter((n) => !n.farm && mine(n) && isHome(n)), by = {};
       for (const n of home) (by[n.kind] = by[n.kind] || []).push(n);
       for (const kd in want) if ((by[kd] || []).length !== want[kd]) bad.push(s + '/' + o + ': ' + kd + ' ' + (by[kd] || []).length + ' of ' + want[kd] + ' in the home zone');
       for (const kd in by) { const r = Math.min(...by[kd].map(d)); W.near = [Math.min(W.near[0], r), Math.max(W.near[1], r)]; W.far = Math.max(W.far, ...by[kd].map(d)); if (r < b0 || r > b1) bad.push(s + '/' + o + ': the home ' + kd + "'s nearest node at " + Math.round(r) + ', outside the band'); }
@@ -111,6 +116,7 @@ ZONE = """(seeds) => {
     }
     if (new Set(sig).size > 1) bad.push(s + ': the corners hold different finds: ' + sig.map((x, o) => o + ' ' + x).filter((x, o) => sig[o] !== sig[0] || o === 0).join(' | ').slice(0, 400));
   }
+  B.on = on0;
   for (const key in W) W[key] = Array.isArray(W[key]) ? W[key].map(Math.round) : Math.round(W[key]);
   return [bad, W]; }"""
 
@@ -155,22 +161,46 @@ MIGRATE = """(O) => {
   const off = G.units.filter((u) => !(u.x >= 0 && u.y >= 0 && u.x <= F.MAP && u.y <= F.MAP)).length; if (off) bad.push(off + ' units off the map after 90 s');
   return bad; }"""
 
-# Every building LANE squares from every find (Albert, Nov 1 13:00), the same gap as between buildings: a tree, a bush or a rock one hair
-# inside LANE squares of the footprint refuses a house, a mine camp and a field; at LANE squares they stand. And the computers still find
-# room at the start on SEEDS/5 seeds: a house round the Town Center, a mill, a lumber camp and a mine camp by the nearest find of each.
+# Every building LANE squares from every find (Albert, Nov 1 13:00; walls too, 14:16), the same gap as between buildings: a tree, a bush or
+# a rock one hair inside LANE squares of the footprint refuses a house, a mine camp, a field and a wall; at LANE squares they stand. And the
+# computers still find room at the start on SEEDS/5 seeds: a house round the Town Center, a mill, a lumber camp and a mine camp by the
+# nearest find of each; and on SEEDS seeds every square of every corner's wall ring (WALL_R; the clearing is set past it so no find makes
+# a hole).
 FINDGAP = """(seeds) => {
   const F = window.__fk, bad = []; F.SET.scen = 'open'; F.newGame(7); F.act('close'); const G = F.G, k = F.keepOf(0), gap = F.LANE * F.NAVC;
-  for (const kind of ['house', 'mining', 'farm']) {
+  for (const kind of ['house', 'mining', 'farm', 'wall']) {
     const n = F.BLD[kind].fp * F.NAVC, s = F.findSpot(0, kind, k.x, k.y, 90, 300); if (!s) { bad.push('no ground for the ' + kind); continue; }
     const p = F.snapPos(kind, s.x, s.y), t = { id: -1, kind: 'tree', type: 'wood', x: p.x + n / 2 + gap - 0.5, y: p.y, amt: 1, max: 1 }; G.nodes.push(t);
     if (!F.canPlace(0, kind, p.x, p.y)) bad.push('a ' + kind + ' is allowed with a tree inside two squares of it');
     t.x = p.x + n / 2 + gap; t.y = p.y; const w = F.canPlace(0, kind, p.x, p.y); if (w) bad.push('a ' + kind + ' is refused with a tree two squares off: ' + w);
     t.x = p.x; t.y = p.y - n / 2 - gap + 0.5; if (!F.canPlace(0, kind, p.x, p.y)) bad.push('a ' + kind + ' is allowed with a tree inside two squares above it');
+    const c = gap / Math.SQRT2; t.x = p.x + n / 2 + c - 0.5; t.y = p.y + n / 2 + c - 0.5; if (!F.canPlace(0, kind, p.x, p.y)) bad.push('a ' + kind + ' is allowed with a tree inside two squares of its corner');
+    t.x = p.x + n / 2 + c + 0.5; t.y = p.y + n / 2 + c + 0.5; const wc = F.canPlace(0, kind, p.x, p.y); if (wc) bad.push('a ' + kind + ' is refused with a tree two squares off its corner: ' + wc);
     G.nodes.splice(G.nodes.indexOf(t), 1); }
   for (let sd = 1; sd <= seeds; sd++) { F.newGame(sd); F.act('close'); const G = F.G;
-    for (let o = 1; o < 4; o++) { const k = F.keepOf(o), near = (ty) => G.nodes.filter((q) => q.type === ty && !q.farm).sort((a, b) => Math.hypot(a.x - k.x, a.y - k.y) - Math.hypot(b.x - k.x, b.y - k.y))[0];
+    for (let o = 0; o < 4; o++) { const k = F.keepOf(o), near = (ty) => G.nodes.filter((q) => q.type === ty && !q.farm).sort((a, b) => Math.hypot(a.x - k.x, a.y - k.y) - Math.hypot(b.x - k.x, b.y - k.y))[0];
+      const holes = F.wallPlan(k).filter((c) => F.canPlace(o, c.kind, c.gx * F.NAVC + 5, c.gy * F.NAVC + 5)).length; if (holes) bad.push(sd + '/' + o + ': ' + holes + ' holes in its wall ring');
+      if (sd > seeds / 5) continue; // the ring on every seed, the drop-offs on a fifth
       if (!F.findSpot(o, 'house', k.x, k.y, 60, 190)) bad.push(sd + '/' + o + ': no room for a house');
       for (const [ty, kind] of [['food', 'mill'], ['wood', 'lumber'], ['stone', 'mining'], ['gold', 'mining']]) { const q = near(ty); if (q && !F.findSpot(o, kind, q.x, q.y, 30, 70)) bad.push(sd + '/' + o + ': no room for a ' + kind + ' by its ' + ty); } } }
+  return bad; }"""
+
+# The start (Albert, Nov 1 14:18, 14:23): every side, player and computers, starts with 200 food, wood, stone and gold and no iron, from
+# START_RES; and EXCEPTIONS #16 (LIVE TEST IN PROCESS): each computer, never the player, starts with HANDICAP's buildings finished beside its
+# Town Center, the same in every computer's corner on SEEDS seeds, each where the placing rules (canPlace: lanes, the gap from finds) allow.
+START = """(seeds) => {
+  const F = window.__fk, bad = [], want = { f: 200, w: 200, s: 200, g: 200, i: 0 }, H = F.HANDICAP;
+  for (let sd = 1; sd <= seeds; sd++) { F.SET.scen = 'open'; F.newGame(sd); const G = F.G;
+    for (const p of G.P) if (p.id !== G.P.length - 1) for (const r in want) if (p.res[r] !== want[r]) { bad.push(sd + ': ' + p.name + ' starts with ' + p.res[r] + ' ' + r + ', not ' + want[r]); break; }
+    const sig = [];
+    for (let o = 0; o < 4; o++) { const k = F.keepOf(o), mine = G.blds.filter((b) => b.owner === o && b.kind !== 'keep');
+      const kinds = mine.map((b) => b.kind + (b.prog >= 1 ? '' : ' unfinished')).sort().join(',');
+      if (o === 0) { if (mine.length) bad.push(sd + ': the player starts with ' + kinds); continue; }
+      sig.push(kinds); if (kinds !== H.blds.slice().sort().join(',')) bad.push(sd + '/' + o + ': the computer starts with ' + (kinds || 'nothing') + ', not ' + H.blds.join(','));
+      for (const b of mine) { const d = Math.hypot(b.x - k.x, b.y - k.y); if (d > H.r[1] + 3 * F.NAVC) bad.push(sd + '/' + o + ': its ' + b.kind + ' ' + Math.round(d) + ' from its Town Center');
+        const i = G.blds.indexOf(b); G.blds.splice(i, 1); if (b.node) G.nodes.splice(G.nodes.indexOf(b.node), 1); F.navRebuild(); const why = F.canPlace(o, b.kind, b.x, b.y); G.blds.splice(i, 0, b); if (b.node) G.nodes.push(b.node); F.navRebuild();
+        if (why) { bad.push(sd + '/' + o + ': its ' + b.kind + ' stands where the rules refuse: ' + why); } } }
+    if (new Set(sig).size > 1) bad.push(sd + ': the computers start unequal: ' + sig.join(' | ')); }
   return bad; }"""
 
 # The ghost (Albert, Nov 1): while a building is placed no build grid and no footprint box is drawn (no line, no rectangle besides its
@@ -202,14 +232,15 @@ CAMERA = """async (seeds) => {
   const F = window.__fk, bad = []; let worst = 1e9; F.SET.scen = 'open';
   const base = { bush: 180, tree: 120, stone: 300, gold: 300, iron: 300 }, type = { bush: 'food', tree: 'wood' }, BK = F.BACK || {}, count = { bush: BK.bushes, tree: BK.trees },
     isBack = (n) => count[n.kind] && Math.abs(n.max - (n.kind === 'bush' ? BK.food : BK.wood) / count[n.kind]) < 1e-6;
+  const on0 = BK.on; BK.on = true;   // zone 1 is checked whether or not it is in play
   for (let s = 1; s <= seeds; s++) { F.newGame(s); F.act('close'); F.ui(true); const G = F.G, z = F.cam.z, H = F.HOME, amt = F.LAND[G.land].amt;
     const isHome = (n) => base[n.kind] && Math.abs(n.max - base[n.kind] * F.RICH * H.rich * (amt[type[n.kind] || n.kind] || 1)) < 1e-6;
     for (let o = 0; o < 4; o++) { const k = F.keepOf(o);
-      for (const n of G.nodes) { if (n.farm || Math.hypot(n.x - k.x, n.y - k.y) > F.CLEAR || !(isHome(n) || isBack(n))) continue;
+      for (const n of G.nodes) { if (n.farm || Math.hypot(n.x - k.x, n.y - k.y) > F.CLEAR + F.HOME.band || !(isHome(n) || isBack(n))) continue;
         F.cam.z = z; F.cam.x = n.x; F.cam.y = n.y; F.clampCam(); const V = F.view, top = V.ch / 2 + V.vy - V.bandH / 2, bot = top + V.bandH;
         const x = F.SX(n.x), y = F.SY(n.y), m = Math.min(x, V.cw - x, y - top, bot - y); worst = Math.min(worst, m);
         if (m < 22) { bad.push(s + '/' + o + ': a ' + n.kind + ' ' + Math.round(m) + ' px from the edge of the view'); break; } } } }
-  return [bad, Math.round(worst)]; }"""
+  BK.on = on0; return [bad, Math.round(worst)]; }"""
 
 async def main():
     async with async_playwright() as p:
@@ -225,8 +256,10 @@ async def main():
         print(('PASS ' if not bad else 'FAIL ') + 'two squares between buildings (decision 2)', '' if not bad else bad); fails += bool(bad)
         bad, errs = await run(WAVE); bad += errs
         print(('PASS ' if not bad else 'FAIL ') + 'a wave is judged by its progress (D1); the map labels reach its edge', '' if not bad else bad); fails += bool(bad)
-        bad, errs = await run(FINDGAP, max(5, SEEDS // 5)); bad += errs
+        bad, errs = await run(FINDGAP, SEEDS); bad += errs
         print(('PASS ' if not bad else 'FAIL ') + 'two squares between a building and any find; the computers find room', '' if not bad else bad[:6]); fails += bool(bad)
+        bad, errs = await run(START, SEEDS); bad += errs
+        print(('PASS ' if not bad else 'FAIL ') + 'the start: 200 of each but iron for all; the computers\' handicap (EXCEPTIONS #16) equal and by the rules', '' if not bad else bad[:6]); fails += bool(bad)
         bad, errs = await run(GHOST); bad += errs
         print(('PASS ' if not bad else 'FAIL ') + 'the ghost: no grid or footprint box, its art green where it fits and red where not', '' if not bad else bad[:4]); fails += bool(bad)
         bad, errs = await run(CITADEL); bad += errs
