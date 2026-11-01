@@ -90,6 +90,8 @@ PLANTS = [
   ('29-card-pages.js', '[`relwant:${q},${k}`', '[`relwnt:${q},${k}`', 'tests/verbs.py', 'a choice verb with no handler', 'no handler'),
   ('29-card-pages.js', 'slt(`relon:${q}`, `relgift:${q}`,', 'slt(`relon:${q}`, `relgif:${q}`,', 'tests/verbs.py', "the slider's verb with no handler", 'no handler'),
   ('24-view-overlays.js', '${FONTW || (FONTW = getComputedStyle(document.body).fontWeight)}', '600', 'tests/palette.py', 'mapFont writes its own weight', 'mapFont does not read'),
+  ('30-cards.js', '\t\twhile (rows.length < MSG.page) rows.push(empty());\n', '', 'tests/cards.py', 'a short mail page shrinks the card', 'Next moves between pages'),
+  ('30-cards.js', "\t\t\tacts(rows.join(''), 'c1') +\n", "\t\t\t(g && g !== 'reply' ? acts(btn(`mailtog:${g}`, 'Hide the previews', 'now: a preview, then here'), 'c1') : '') +\n\t\t\tacts(rows.join(''), 'c1') +\n", 'tests/cards.py', 'the preview switch takes a rank of its own', 'scrolls'),
   ('39-huddle.js', '\tctx.font = mapFont(); // pinned to the screen', "\tctx.font = '700 12px system-ui, sans-serif';", 'tests/palette.py', "the phone's own font on a map label", 'not through mapFont'),
   # the map (decisions 2 and 5a, D1, B4; tests/map.py, at 25 seeds and one phone size here: FK_PLANT)
   ('09-nav.js', 'm = B.wallish ? 0 : LANE;', 'm = B.wallish ? 0 : 1;', 'tests/map.py', 'a one-square gap between buildings is allowed', 'two squares between buildings'),

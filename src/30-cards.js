@@ -659,23 +659,22 @@ const CARDS = {
 			].join(''),
 			'c6',
 		); // the six filters, one rank, always the same six in the same places
-		if (g && g !== 'reply')
-			h += acts(
-				btn(
-					`mailtog:${g}`,
-					hiddenG(g) ? 'Show as it comes' : 'Hide the previews',
-					hiddenG(g) ? 'now: quietly to the mail, red still shows' : 'now: a preview, then here',
-				),
-				'c1',
-			);
+		// six places a page, always: a short page keeps its height with empty places, so the card never shrinks and Next stays under the finger;
+		// a group's preview switch sits between Previous and Next (it had a rank of its own: 11 ranks, and the pager fell below the card)
+		const rows = show.length
+			? show.map((m) => `<button class="mr" data-act="${linkOf(m) || 'mailp:0'}" style="--cc:${ccOf(m.cls)}"><b>${m.text}${m.n > 1 ? ` ×${m.n}` : ''}</b><small>${GROUPS[m.grp]} · ${clock(m.t)}${m.why ? ' · ' + m.why : ''}</small></button>`)
+			: [info('Nothing here yet', 'each message is kept here as it comes', 'left line')];
+		while (rows.length < MSG.page) rows.push(empty());
 		return (
 			h +
-			(show.length
-				? acts(show.map((m) => `<button class="mr" data-act="${linkOf(m) || 'mailp:0'}" style="--cc:${ccOf(m.cls)}"><b>${m.text}${m.n > 1 ? ` ×${m.n}` : ''}</b><small>${GROUPS[m.grp]} · ${clock(m.t)}${m.why ? ' · ' + m.why : ''}</small></button>`).join(''), 'c1')
-				: acts(info('Nothing here yet', 'each message is kept here as it comes', 'left line'), 'c1')) +
+			acts(rows.join(''), 'c1') +
 			acts(
 				btn('mailp:-1', 'Previous', `page ${pg + 1} of ${pages}`, pg ? '' : 'dis') +
+					(g && g !== 'reply'
+						? btn(`mailtog:${g}`, hiddenG(g) ? 'Show previews' : 'Hide previews', hiddenG(g) ? 'red still shows' : 'a preview, then here')
+						: empty()) +
 					btn('mailp:1', 'Next', all.length ? `${all.length} ${some(all.length, 'line')}` : '', pg < pages - 1 ? '' : 'dis'),
+				'c3',
 			)
 		);
 	},
