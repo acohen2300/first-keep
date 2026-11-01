@@ -558,7 +558,7 @@ function upkeepTick() {
 				spend(p, 'f', p.res.f, 'upkeep'); // what is left is eaten
 				if (!p.hungry) {
 					p.hungry = true;
-					if (o === 0) news('home', 'Food stores empty: put villagers on food.', 'warn', 8);
+					if (o === 0 && foodInReach(0)) news('home', 'Food stores empty: put villagers on food.', 'warn', 8); // with none in reach the famine toast speaks
 				}
 			}
 		}

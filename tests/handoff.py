@@ -202,7 +202,7 @@ PLANTS = [
   ('11-orders.js', '\telse u.hunt = null; // sent to build', '\t; // sent to build', 'tests/wild.py', 'a hunter sent to build hunts first', 'A3: a hunter sent to build'),
   ('09-nav.js', '\t\t\tif (!gk || isFoe(WILD, { owner: o, id: -1, x: f.x, y: f.y }, { owner: WILD, kind: gk, find: f.id, hx: f.x, hy: f.y }))\n', '\t\t\tif (true)\n', 'tests/wild.py', 'a guarded find is danger whatever the stance', 'D1:'),
   ('09-nav.js', 'if (v.owner === WILD ? isFoe(WILD, { owner: o, id: -1, x: v.x, y: v.y }, v) : isFoe(o, v))', 'if (isFoe(o, v))', 'tests/wild.py', 'the wild is danger by the side\'s view, not its own', 'D1:'),
-  ('37-events.js', "p.id !== WILD && !calm4b(p.id) && p.alive && keepOf(p.id)), // 4b", "p.id !== WILD && p.alive && keepOf(p.id)), // 4b", 'tests/wild.py', 'the horde goes for a computer', '4b horde:'),
+  ('37-events.js', "p.id !== WILD && !calm4b(p.id) && p.alive && keepOf(p.id) && gangRel(p.id, 'out') === 'war'), // 4b", "p.id !== WILD && p.alive && keepOf(p.id) && gangRel(p.id, 'out') === 'war'), // 4b", 'tests/wild.py', 'the horde goes for a computer', '4b horde:'),
   ('38-natives.js', ' ||\n\t\t\t\t(b.owner === WILD && calm4b(v.owner)) // 4b', ' // 4b', 'tests/wild.py', "the Natives' pits take computers", '4b pits:'),
   ('08-core.js', '? { ...(throneB() || me || { x: MID, y: MID }), r: YARD }', '? { ...(throneB() || me || { x: MID, y: MID }), r: 1e9 }', 'tests/wild.py', 'the Natives chase past their yard', '4b leash:'),
   # Albert's answers of Nov 1, 11:12 to 11:14: every group can be a friend; raids follow the robbers alone
@@ -213,7 +213,7 @@ PLANTS = [
   # decision 5 (no ambush) and decision 6 (hunger) of Nov 1
   ('16-sim-fight.js', "\t\tif (a && A.gun && hasTag(t.kind, 'native')) d *= NATIVE.gunHit;", "\t\tif (a && a.native && !isB && !onLand(a.x, a.y)) d *= 1.3;\n\t\tif (a && A.gun && hasTag(t.kind, 'native')) d *= NATIVE.gunHit;", 'tests/wild.py', 'an ambush bonus comes back', '12:'),
   ('37-events.js', '\tp.famT = p.hungry && !foodInReach(o) ? (p.famT || 0) + 1 : 0;', '\tp.famT = p.hungry ? (p.famT || 0) + 1 : 0;', 'tests/wild.py', 'an empty store with food in reach is a famine', 'H1:'),
-  ('36-economy.js', "\t\t\t\t\tif (o === 0) news('home', 'Food stores empty: put villagers on food.', 'warn', 8);", '', 'tests/wild.py', 'no toast for an empty store', 'H1:'),
+  ('36-economy.js', "\t\t\t\t\tif (o === 0 && foodInReach(0)) news('home', 'Food stores empty: put villagers on food.', 'warn', 8); // with none in reach the famine toast speaks", '', 'tests/wild.py', 'no toast for an empty store', 'H1:'),
   ('37-events.js', "\tif (o === 0 && p.famT === 1) news('home', 'Famine: no food in reach. Two days to recover.', 'warn', 8);", '', 'tests/wild.py', 'no toast when a famine starts', 'H2:'),
   ('36-economy.js', '(G.P[o].famT || 0) >= STARVE.grace ? UPKEEP.hunger : 1);', '(G.P[o].famT || 0) >= 0 ? UPKEEP.hunger : 1);', 'tests/wild.py', 'a famine weakens the work at once', 'H2:'),
   ('37-events.js', "if (!hz('starve') || p.famT < STARVE.grace || (p.famT", "if (!hz('starve') || (p.famT", 'tests/wild.py', 'people leave before the famine weakens them', 'H3:'),
@@ -232,6 +232,17 @@ PLANTS = [
   # item 5 on six seeds (the map-zones builder's find, Nov 1)
   ('16-sim-fight.js', '\tif (a.post && b.post && a.post.b != null && a.post.b === b.post.b && !a.job && !b.job) return;', '\tif (false) return;', 'tests/combat.py', 'villagers on their way to their own spots shove each other off', 'item 5 (seed'),
   ('13-sim-civil.js', '\tif (!BLD[a.kind]) {\n\t\t// a group sent to a point (item 5)', '\tif (false) {\n\t\t// a group sent to a point (item 5)', 'tests/combat.py', 'the last to arrive is sent across the crowd', 'item 5 (seed'),
+  # fresh review of wild81 (Nov 1): spots let go, trees capped, one toast per case, the horde and the raids by stance, the migration's content
+  ('11-orders.js', '\tu.at = null; // a spot held at the old find is let go', '\t// ', 'tests/wild.py', 'an order leaves the old spot held', 'K4:'),
+  ('13-sim-civil.js', '\tu.node = null;\n\tu.at = null;\n}', '\tu.node = null;\n}', 'tests/wild.py', 'leaving a find leaves its spot held', 'K4:'),
+  ('13-sim-civil.js', "(n.kind === 'tree' || dist(u, n) <", "(dist(u, n) <", 'tests/wild.py', 'a tree is never cap-checked: its feller stands short of it', 'K2:'),
+  ('37-events.js', " && keepOf(p.id) && gangRel(p.id, 'out') === 'war'), // 4b", " && keepOf(p.id)), // 4b", 'tests/wild.py', 'the horde rides for a side at peace with the outlaws', 'horde at peace:'),
+  ('38-natives.js', " && keepOf(p.id) && gangRel(p.id, 'rob') === 'war'); // the raiders", " && keepOf(p.id)); // the raiders", 'tests/wild.py', 'raids ride for a side at peace with the robbers', 'G2 reverse:'),
+  ('34-save.js', 'warBy: N.warBy || {}, hitT: N.hitT || {} },', 'warBy: {}, hitT: {} },', 'tests/wild.py', 'the migration drops the Natives warBy and hitT', 'M42:'),
+  ('36-economy.js', "if (o === 0 && foodInReach(0)) news('home', 'Food stores empty", "if (o === 0) news('home', 'Food stores empty", 'tests/wild.py', 'both toasts speak in a true famine', 'H2:'),
+  ('06-rules-tuning.js', 'grace: 2 * DAY_LEN', 'grace: 3 * DAY_LEN', 'tests/wild.py', 'the grace changed', 'H2:'),
+  ('06-rules-tuning.js', 'every: 30 }', 'every: 20 }', 'tests/wild.py', 'the leaving pace changed', 'H3:'),
+  ('03-rules-buildings.js', 'hunger: 0.72', 'hunger: 0.75', 'tests/wild.py', 'the weakening changed', 'H2:'),
 ]
 
 def plant_check():

@@ -177,8 +177,18 @@ function waitAt(u, dt, SP) {
 		const p = takeSpots([u], b, b.id).get(u);
 		if (!p) return; // every spot is taken: it stands where it is and asks again
 		u.spot = { b: b.id, i: p.i };
-		if (u.owner === 0)
-			news('home', `No ${u.was === 'tree' ? 'trees' : u.was} in sight: one waits at the ${bldName(0, b.kind).toLowerCase()}.`, '', 4, u);
+		if (u.owner === 0) {
+			const full = G.nodes.some((n) => n.kind === u.was && n.amt > 0 && (n.wk || 0) >= findCap(n)); // some stand, every spot on them taken
+			news(
+				'home',
+				full
+					? `Every ${u.was} is full: one waits at the ${bldName(0, b.kind).toLowerCase()}.`
+					: `No ${u.was === 'tree' ? 'trees' : u.was} in sight: one waits at the ${bldName(0, b.kind).toLowerCase()}.`,
+				'',
+				4,
+				u,
+			);
+		}
 	}
 	const p = spotAt(b, u.spot.i);
 	moveTo(u, p.x, p.y, dt, 2, SP, true);
@@ -456,7 +466,7 @@ function vilTick(u, dt, SP) {
 		} else if (u.noPathT === G.t) leaveWork(u, n);
 		return;
 	}
-	if (n.kind !== 'farm' && u.at !== n.id && dist(u, n) < (WORK_R[n.kind] ?? WORK_R.other) + 8) {
+	if (n.kind !== 'farm' && u.at !== n.id && (n.kind === 'tree' || dist(u, n) < (WORK_R[n.kind] ?? WORK_R.other) + 8)) {
 		let held = 0;
 		for (const v of G.units) if (v !== u && v.node === n && v.at === n.id) held++;
 		if (held >= findCap(n)) {
@@ -464,7 +474,7 @@ function vilTick(u, dt, SP) {
 			u.node = null;
 			return;
 		} // a full find: a newcomer looks again (the search skips full finds); one that holds a spot keeps it
-		u.at = n.id; // its spot is taken on arrival
+		u.at = n.id; // its spot is taken on arrival (a tree's at once: its feller stands short of it, in the clump)
 	}
 	// a worker already at work keeps its place a little further out (4 more), so crowd spacing and walking in no longer fight
 	if (
@@ -492,6 +502,7 @@ function leaveWork(u, n) {
 	B[n.id] = G.t + DANGER_R.secs;
 	if (n.farm) n.wk = Math.max(0, (n.wk || 0) - 1);
 	u.node = null;
+	u.at = null;
 }
 function huntTick(u, dt, SP) {
 	const a = u.hunt;

@@ -89,17 +89,19 @@ JS = """() => {
   T_('H1', () => { const G = fresh(), p = G.P[0]; G.hz = { starve: 1 }; G.diff = 'normal'; p.res.f = 0; run(5);
     if (!p.hungry) bad.push('H1: no food in store did not make your side hungry');
     if (p.famT || F.hungerOf(0) !== 1) bad.push('H1: an empty store with food in reach counts as a famine (' + p.famT + ', work ' + F.hungerOf(0) + ')');
-    if (!(G.mail || []).some((m) => m.text === 'Food stores empty: put villagers on food.')) bad.push('H1: no toast for an empty store'); });
+    if (!(G.mail || []).some((m) => m.text === 'Food stores empty: put villagers on food.')) bad.push('H1: no toast for an empty store');
+    if ((G.mail || []).some((m) => m.text === 'Famine: no food in reach. Two days to recover.')) bad.push('H1: the famine toast spoke with food in reach'); });
   T_('H2', () => { const G = fresh(), p = G.P[0]; G.hz = {}; G.diff = 'normal'; p.res.f = 0; noFood(G); run(5);
     if (!(p.famT >= 3)) bad.push('H2: no food in store or in reach is not a famine (' + p.famT + ')');
     if (!(G.mail || []).some((m) => m.text === 'Famine: no food in reach. Two days to recover.')) bad.push('H2: no toast at the start of a famine');
-    p.famT = F.STARVE.grace - 2; if (F.hungerOf(0) !== 1) bad.push('H2: a famine under two days already weakens the work: ' + F.hungerOf(0));
-    run(3); if (Math.abs(F.hungerOf(0) - F.UPKEEP.hunger) > 1e-9) bad.push('H2: after two days of famine work is ' + F.hungerOf(0) + ', not ' + F.UPKEEP.hunger); });
+    if ((G.mail || []).some((m) => m.text === 'Food stores empty: put villagers on food.')) bad.push('H2: both toasts spoke in a true famine');
+    p.famT = 238; if (F.hungerOf(0) !== 1) bad.push('H2: a famine under two days already weakens the work: ' + F.hungerOf(0));
+    run(3); if (Math.abs(F.hungerOf(0) - 0.72) > 1e-9) bad.push('H2: after two days (240 s) of famine work is ' + F.hungerOf(0) + ', not 0.72'); });
   T_('H3', () => { const G = fresh(), p = G.P[0]; G.hz = { starve: 1 }; G.diff = 'normal'; p.res.f = 0; noFood(G);
     const starve = (secs) => { for (let i = 0; i < secs; i++) { p.res.f = 0; run(1); } }; // nothing comes in: trade and tribute kept a little food arriving
     const n0 = F.unitsOf(0, 'vil').length; starve(130); if (F.unitsOf(0, 'vil').length < n0) bad.push('H3: people left before the famine weakened them');
     if (!(p.famT >= 60)) bad.push('H3: the check could not hold a famine (' + p.famT + ')');
-    p.famT = F.STARVE.grace + F.STARVE.every - 2; starve(4); if (!(F.unitsOf(0, 'vil').length < n0)) bad.push('H3: under Famine nobody left once the famine weakened them'); });
+    p.famT = 240 + 30 - 2; starve(4); if (!(F.unitsOf(0, 'vil').length < n0)) bad.push('H3: under Famine nobody left once the famine weakened them'); });
   T_('H4', () => { const G = fresh(), p = G.P[0], vs = F.unitsOf(0, 'vil'); p.res.f = 500;
     for (const v of vs) { v.job = 'wood'; v.node = null; v.hunt = null; } run(2); const all = p.eats;
     const bush = G.nodes.find((n) => n.type === 'food' && n.amt > 0 && isFinite(n.amt)), v = vs[0]; v.job = 'food'; v.node = bush; v.x = bush.x + 200; v.y = bush.y; v.carry = 0; const a0 = bush.amt; run(2);
@@ -108,9 +110,9 @@ JS = """() => {
 
     // ── hunt A #1, Victory sighting 3: the Games wait for the board's peace; no line for a war ──
   T_('A1', () => { const G = fresh(); G.gamesT = 0; G.t = 1500; const c0 = (G.chron || []).length, L0 = () => G.P.reduce((s, p) => s + (p.laurels || 0), 0);
-    F.peaceTick();
+    for (let i = 0; i < 24 * 6; i++) { G.t += 10; F.peaceTick(); } // 24 minutes at war: the Games never come, and no line says so
     if ((G.chron || []).slice(c0).some((c) => /not held/.test(c.text))) bad.push('A1 (Victory sighting 3): the chronicle says the Games were not held: war');
-    if (L0()) bad.push('A1: the Games were held at war');
+    if (L0()) bad.push('A1: the Games were held at war (' + L0() + ' laurels after 24 minutes)');
     const S = G.P.filter((p) => p.id !== W()).map((p) => p.id); for (const a of S) for (const b of S) if (a !== b) G.rel[a][b] = 'peace';
     G.warAt = {}; F.peaceTick(); if (L0() !== 4) bad.push('A1: the Games due were not held at the first peace (' + L0() + ' laurels)');
     const n = L0(); G.t += 60; F.peaceTick(); if (L0() !== n) bad.push('A1: the Games were held again before they were due'); });
@@ -122,7 +124,7 @@ JS = """() => {
       const R = Math.ceil(rr / F.NAVC), cx = Math.floor(px / F.NAVC), cy = Math.floor(py / F.NAVC);
       for (let y = Math.max(0, cy - R); y <= Math.min(N - 1, cy + R); y++) for (let x = Math.max(0, cx - R); x <= Math.min(N - 1, cx + R); x++) if ((x - cx) ** 2 + (y - cy) ** 2 <= R * R) B[y * N + x] = 1;
       for (let i = 0; i < A.length; i++) if (A[i] !== B[i]) diff++; }
-    if (diff) bad.push(`A2: the row-stamped danger disc differs from the disc in ${diff} squares`); });
+    if (diff) bad.push(`A2 (an equivalence test: it passes on main too, and guards the speed-up): the row-stamped danger disc differs from the disc in ${diff} squares`); });
 
   // ── hunt A #3: a builder bitten by a boar fights back, then goes back to its site with its jobs kept ──
   T_('A3', () => { const G = fresh(3), k = F.keepOf(0), P = open(G); Object.assign(G.P[0].res, { f: 999, w: 999, s: 999, g: 999 });
@@ -163,7 +165,7 @@ JS = """() => {
   T_('A5', () => { const G = fresh(), N = F.NC, M = F.MAP; let r = 7, diff = 0; const rnd = () => (r = (r * 16807) % 2147483647) / 2147483647;
     const ref = (x1, y1, x2, y2, o) => { const dx = x2 - x1, dy = y2 - y1, n = Math.ceil(Math.hypot(dx, dy) / 4); for (let i = 1; i <= n; i++) { const c = F.gcell(x1 + (dx * i) / n, y1 + (dy * i) / n); if (F.blockedCell(c, o)) return false; } return true; };
     for (let k = 0; k < 400; k++) { const x1 = rnd() * (M + 40) - 20, y1 = rnd() * (M + 40) - 20, x2 = x1 + (rnd() - 0.5) * 300, y2 = y1 + (rnd() - 0.5) * 300; if (F.lineClear(x1, y1, x2, y2, 0, false) !== ref(x1, y1, x2, y2, 0)) diff++; }
-    if (diff) bad.push(`A5: the inlined line test disagrees with gcell's in ${diff} of 400 lines (edges included)`); });
+    if (diff) bad.push(`A5 (an equivalence test: it passes on main too, and guards the speed-up): the inlined line test disagrees with gcell's in ${diff} of 400 lines (edges included)`); });
 
   // ── hunt A #6: one flood a side, its buffer made once and reused ──
   T_('A6', () => { const G = fresh(), a = F.compOf(1), keep = a.slice(); G.rel[1][2] = G.rel[1][2] === 'war' ? 'peace' : 'war'; const b = F.compOf(1);
@@ -212,6 +214,26 @@ JS = """() => {
     F.natState().raidAt = 0.001; G.t = Math.max(G.t, 1200); F.natRaid();
     if (!G.units.some((u) => u.back && u.hx !== undefined)) bad.push('G2: at war with the robbers and at peace with the Natives, no raid rode for you (the robbers alone decide)'); });
 
+  T_('G2 reverse', () => { const G = fresh(), w = W(); G.rel[0][w] = G.rel[w][0] = 'war'; F.gangState('rob').rel[0] = 'peace';
+    F.natState().raidAt = 0.001; G.t = Math.max(G.t, 1200); F.natRaid();
+    if (G.units.some((u) => u.back && u.hx !== undefined)) bad.push('G2 reverse: at peace with the robbers and at war with the Natives, a raid rode for you (the robbers alone decide)'); });
+  // ── fresh review #7: a side at peace with the outlaws is not ridden for by the horde ──
+  T_('horde at peace', () => { const G = fresh(); G.hz = { ...(G.hz || {}), horde: 1 }; G.diff = 'normal'; F.gangState('out').rel[0] = 'peace';
+    G.horde = { at: G.t, said: 2 }; const n0 = G.units.length; F.hordeTick();
+    if (G.units.slice(n0).some((u) => u.horde)) bad.push('horde at peace: the horde rode for a side at peace with the outlaws');
+    if (G.horde !== 'done') bad.push('horde at peace: the horde stayed due with nobody at war to ride for');
+    const G2 = fresh(); G2.hz = { ...(G2.hz || {}), horde: 1 }; G2.diff = 'normal'; F.gangState('out').rel[0] = 'war'; G2.horde = { at: G2.t, said: 2 }; const m0 = G2.units.length; F.hordeTick();
+    if (!G2.units.slice(m0).some((u) => u.horde)) bad.push('horde at peace: at war with the outlaws, no horde rode (the check is blind)'); });
+  // ── fresh review #8: the save's 42 to 43 step keeps the content, not only the positions ──
+  T_('M42', () => { const S = { v: 42, gamesN: 3, P: [{ id: 0, ration: 1, rations: 2, res: { f: 5 } }], nat: { regard: [11, 22, 33, 44, 55], gifts: [[1], [], [], [], []], warBy: { a: 1 }, hitT: { b: 2 }, raidAt: 77 } };
+    const O = F.MIGRATE[42](JSON.parse(JSON.stringify(S))), N = O.gang && O.gang.nat;
+    if (O.v !== 43) bad.push('M42: the step did not reach shape 43');
+    if (!N || JSON.stringify(N.regard) !== '[11,22,33,44,55]' || JSON.stringify(N.gifts) !== '[[1],[],[],[],[]]' || JSON.stringify(N.warBy) !== '{"a":1}' || JSON.stringify(N.hitT) !== '{"b":2}') bad.push('M42: the regard, gifts, warBy or hitT of the Natives did not move to gang.nat intact: ' + JSON.stringify(N));
+    for (const k of ['regard', 'gifts', 'warBy', 'hitT']) if (k in O.nat) bad.push('M42: nat still holds ' + k);
+    if (O.nat.raidAt !== 77) bad.push('M42: other fields of the Natives were lost');
+    if ('gamesN' in O || 'ration' in O.P[0] || 'rations' in O.P[0]) bad.push('M42: a dead field stayed');
+    if (O.P[0].res.f !== 5 || O.P[0].id !== 0) bad.push('M42: a live field of a side was lost'); });
+
   // ── Albert's sighting (Nov 1, 08:13 and 08:18; QC D10): "z 0" while villagers showed Zs. One predicate (freeVil) for the Zs, the strip and idlego ──
   T_('D10', () => { const G = fresh(); G.nodes = G.nodes.filter((n) => n.type !== 'food'); for (const u of G.units) if (u.owner === W() && F.UNIT[u.kind].meat) u.hp = 0; G.units = G.units.filter((u) => u.hp > 0);
     const vs = F.unitsOf(0, 'vil'); for (const u of vs) F.setJob(u, 'food'); run(6); F.ui(true);
@@ -236,11 +258,20 @@ JS = """() => {
     { const p = { x: b.x + 3, y: b.y, owner: 0, node: null, carry: 0 }; b.wk = cap; const all = G.nodes; G.nodes = [b]; const got = F.nearestNode(p, 'food'); G.nodes = all; if (got === b) bad.push('K3: the search offers a full bush'); }
     if (n.node === b || n.at === b.id) bad.push('K3: the next villager crowded into a full bush');
     else if (!n.node || n.node.type !== 'food' || (n.node.wk || 0) > F.findCap(n.node)) bad.push('K3: the next villager did not go to another food find with a free spot (' + (n.node ? n.node.kind + ' ' + Math.round(Math.hypot(n.node.x - b.x, n.node.y - b.y)) : 'none') + ')'); });
-  T_('K2', () => { const G = fresh(), k = F.keepOf(0); const t = G.nodes.find((n) => n.kind === 'tree' && n.amt > 0 && n.open && Math.hypot(n.x - k.x, n.y - k.y) < 400);
+  T_('K2', () => { const G = fresh(), k = F.keepOf(0); const t = G.nodes.find((n) => n.kind === 'tree' && n.amt > 0 && n.open && !n.wk && Math.hypot(n.x - k.x, n.y - k.y) < 400), ux = (k.x - t.x) / Math.hypot(k.x - t.x, k.y - t.y), uy = (k.y - t.y) / Math.hypot(k.x - t.x, k.y - t.y);
     if (F.findCap(t) !== 1) bad.push('K2: a tree holds ' + F.findCap(t) + ' fellers, not one');
-    const V = [0, 1, 2].map((i) => { const v = F.addUnit(0, 'vil', t.x + 20 + i * 6, t.y + 20); F.setJob(v, 'wood', t); return v; });
+    const V = [0, 1, 2].map((i) => { const v = F.addUnit(0, 'vil', t.x + ux * (30 + i * 6), t.y + uy * (30 + i * 6)); F.setJob(v, 'wood', t); return v; });
     let most = 0; for (let s = 0; s < 15; s++) { run(1); most = Math.max(most, V.filter((v) => v.node === t && v.at === t.id).length); }
-    if (most > 1) bad.push(`K2: ${most} fellers worked one tree`); });
+    if (most < 1) bad.push('K2: no feller took the tree'); if (most > 1) bad.push(`K2: ${most} fellers worked one tree`);
+    const on = V.filter((v) => v.node === t).length; if (on !== 1) bad.push(`K2: ${on} of 3 villagers still hold the one tree (one feller, the rest look again)`); });
+  // ── fresh review #1: a spot held at one find is let go with the order, so a return to a full find is checked again ──
+  T_('K4', () => { const G = fresh(), k = F.keepOf(0); Object.assign(G.P[0].res, { f: 9999 });
+    const b = G.nodes.filter((n) => n.kind === 'bush' && n.amt > 0).sort((a, c) => Math.hypot(a.x - k.x, a.y - k.y) - Math.hypot(c.x - k.x, c.y - k.y))[0], cap = F.findCap(b);
+    const v = F.addUnit(0, 'vil', b.x + 9, b.y); F.setJob(v, 'food', b); v.at = b.id; F.setJob(v, 'wood'); if (v.at) bad.push('K4: an order left the old spot held (setJob)');
+    v.at = b.id; F.leaveWork(v, b); if (v.at) bad.push('K4: leaving a find left its spot held (leaveWork)');
+    for (let i = 0; i < cap; i++) { const h = F.addUnit(0, 'vil', b.x + 9, b.y); F.setJob(h, 'food', b); h.at = b.id; } run(1);
+    v.x = b.x - 30; v.y = b.y; F.setJob(v, 'food', b); run(6);
+    if (v.node === b && v.at === b.id) bad.push('K4: a villager returned to a full bush and took a spot over the cap'); });
   // ── hunt B #5: the place bar goes with its game ──
   T_('B5', () => { fresh(); F.startPlace('house'); F.ui(true); if (document.getElementById('place').hidden) bad.push('B5: the place bar does not show while placing'); fresh(); F.ui(true); if (!document.getElementById('place').hidden) bad.push('B5: the place bar outlived its game'); });
 

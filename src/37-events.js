@@ -529,7 +529,7 @@ function hordeTick() {
 		news('war', EV_TEXT.horde[1], 'warn', 8);
 	}
 	if (left > 0) return;
-	const sides = G.P.filter((p) => p.id !== WILD && !calm4b(p.id) && p.alive && keepOf(p.id)), // 4b: the horde starts nothing with a computer
+	const sides = G.P.filter((p) => p.id !== WILD && !calm4b(p.id) && p.alive && keepOf(p.id) && gangRel(p.id, 'out') === 'war'), // 4b: the horde starts nothing with a computer, nor with a side at peace with the outlaws
 		weak = sides.sort((a, b) => estPower(WILD, a.id) - estPower(WILD, b.id))[0];
 	if (!weak) {
 		G.horde = 'done';
@@ -729,7 +729,6 @@ function starveTick(p) {
 	const o = p.id;
 	p.famT = p.hungry && !foodInReach(o) ? (p.famT || 0) + 1 : 0;
 	if (o === 0 && p.famT === 1) news('home', 'Famine: no food in reach. Two days to recover.', 'warn', 8);
-	if (o === 0 && p.famT === STARVE.grace) news('home', 'Two days of famine: work and blows weaken.', 'warn', 8);
 	if (!hz('starve') || p.famT < STARVE.grace || (p.famT - STARVE.grace) % STARVE.every) return;
 	const v = unitsOf(o, 'vil').sort((a, b) => a.carry - b.carry)[0],
 		s = soldiersOf(o).filter((u) => u.state === 'home')[0];
@@ -746,7 +745,7 @@ function foodInReach(o) {
 	if (!k) return false;
 	const cm = regionAt(k, o);
 	return (
-		G.nodes.some((n) => n.type === 'food' && n.amt > 0 && (!n.farm || n.farm.owner === o) && reachFrom(n, cm, o)) || // a field only if it is your own
+		G.nodes.some((n) => n.type === 'food' && n.amt > 0 && (!n.farm || n.farm.owner === o) && (n.kind !== 'fish' || dockNear(o, n)) && reachFrom(n, cm, o)) || // a field only if it is your own
 		G.units.some((u) => u.owner === WILD && u.hp > 0 && UNIT[u.kind].meat && regionAt(u, o) === cm)
 	);
 }

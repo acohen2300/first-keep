@@ -90,7 +90,23 @@
       - two of one group sent to their own spots round one point do not shove each other (`pushApart`), since the spots already keep them SPACE apart. Any other pair still parts (the steps check in `tests/moves.py` holds).
     - **What did not work:** walking all the way onto the spot and a tighter arrival were tried and did not settle it.
     - **The test:** `tests/combat.py` item 5 runs on seeds 1, 3, 4, 6, 7 and 9, with 2 plants. The fingerprint is unchanged.
-13. **Tests.** `tests/wild.py` runs in the gate. Every check failed on main when first written; the later ones (A3b, D1, S1, G1, G2, the 4b extras, H1 to H4, D10) fail by plant.
+13. **The second fresh review (nine fixes).**
+    - **1. A spot is let go:** `setJob` and `leaveWork` clear `u.at`, so a villager returning to a find is cap-checked again. Test K4, 2 plants.
+    - **A tree was never capped (found while writing K2):** a feller stands 23 to 30 short of the tree, so the arrival test (`dist < reach + 8`) never fired for trees and `u.at` was never set. Three villagers sent to one tree all worked it. A tree's spot is now taken at once. K2 now counts who holds the tree and fails without the fix (plant).
+    - **2. The turned-away toast:** when the finds of that kind stand but are full, it says "Every bush is full: one waits at the mill." and only says "No bush in sight" when none stands. A find's card reads "3 of 7 at work".
+    - **3.** `foodInReach` counts fish only where a dock stands near (`dockNear`), as `bestNode` does.
+    - **4.** The advisor's idle tip counts by `freeVil`. `17-ai` keeps its own test (it also needs no find and no hunt, since it sends the waiter to a find); the reason is written beside it.
+    - **5. Toasts:** "Food stores empty: put villagers on food." only with food in reach; "Famine: no food in reach. Two days to recover." only in a true famine. "Two days of famine: work and blows weaken." is gone. H1 and H2 check that the other one stays silent.
+    - **6.** The raid line reads "Robbers ride for your ...".
+    - **7. The horde at peace with the outlaws:** it rode for you and never fought. Now a side at peace with the outlaws is not ridden for (`hordeTick`); with nobody at war the horde is done. Test "horde at peace" (both directions), plant.
+    - **8.** Test M42: the 42 to 43 step keeps the regard, gifts, warBy, hitT and other fields of the Natives, and drops only the dead ones. Plant.
+    - **9. Tests that could not fail:**
+      - K2: see above.
+      - A2 and A5 are equivalence tests (they pass on main too, and guard the speed-up). The earlier line "every check failed on main" did not hold for them; their messages now say so.
+      - H2 and H3 hard-code 240, 30 and 0.72 (three plants change each constant).
+      - G2 has its reverse (at peace with the robbers, at war with the Natives: no raid).
+      - A1 runs 24 minutes at war and shows no Games and no "not held" line.
+14. **Tests.** `tests/wild.py` runs in the gate. Every check failed on main when first written; the later ones (A3b, D1, S1, G1, G2, the 4b extras, H1 to H4, D10) fail by plant.
     - The plants (`tests/handoff.py`): see Checks. Coarse 4b plants now name their own message.
 
 ## Measured (node, seed 2, minute 10; before → after)
@@ -187,3 +203,4 @@ Each change was turned off in turn, with node running the gate's FINGERPRINT scr
   - conversion past the cap: Albert's up to 2% over, against crowding raising sickness by density (answer 11);
   - surprise and home ground (v81);
   - water and famine (v81).
+- **Play fingerprint accepted again (second fresh review):** a tree now takes one feller at once (the cap never reached trees, since a feller stands short of the tree); this moves 4 of 5 minutes. The other eight fixes move none.

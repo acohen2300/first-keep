@@ -284,6 +284,7 @@ window.__fk = {
 	sendBuilder,
 	chron,
 	natRaid,
+	leaveWork,
 	NATIVE,
 	YARD,
 	REGARD,

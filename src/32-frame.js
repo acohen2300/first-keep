@@ -450,7 +450,7 @@ function advise() {
 	)
 		return 'Nobody is building: tap the site.';
 	{
-		const idle = V.filter((u) => u.idle).length;
+		const idle = V.filter(freeVil).length;
 		if (idle && G.t > 20 && !L('job')) return `${idle} villager${idle > 1 ? 's' : ''} idle (z). Tap + under a job.`;
 	}
 	if (bldsOf(0, 'farm').some((b) => b.prog >= 1 && b.node && !(b.node.wk > 0)) && !L('job:field'))
