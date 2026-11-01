@@ -10,4 +10,8 @@ Albert, Nov 1, 07:36 (D-075), in his words: "we were to finish all the menus and
 6. **The HUD pages** (Albert, Nov 1, 08:19: "the HUD pages"): the Jobs, War and Train pages of the bottom row, redrawn on the v80 mold with mockups first. From his screenshots of that time: War leaves its second rank empty except Home and ×; Train shows "No squad" with dim − and + buttons; the squads are A to D (D-079). [2026-11-01 08:19]
 7. **Mail's door** (Albert, Nov 1, 09:10): nothing on screen opens the Mail card, and Milestones open only by tapping their toast while it shows (an outside review, confirmed in the code). The options: tap the status strip's clock (an inert cell today), or Mail and Milestones rows on Help or Score. Albert decides after playing the coming preview (D-080). [2026-11-01 09:10]
 
+8. **Water, shore and terrain** (Albert, Nov 1, 13:00: "add boats. Larger rivers and lake - beach and shore lines - cliffs and terrain"): boats; larger rivers and lakes; beaches and shorelines; cliffs and terrain. Terrain is also what D-085 waits on (Dupuy's terrain factors, home-ground movement). [2026-11-01 13:02]
+9. **Surprise and home ground** (D-085): surprise ×1.1 to ×2.2 fading, and home-ground movement at road against cross-country speed, for every side. [2026-11-01 13:02]
+10. **Clean water lengthens famine survival** (D-086), from a cited source. [2026-11-01 13:02]
+
 Nothing on it is built until the list is drawn up item by item and Albert says yes yes. [2026-11-01 07:45]
