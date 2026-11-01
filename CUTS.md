@@ -1159,3 +1159,43 @@ Tests
 - Results (first commit): build, wrap, lint clean; the gate passes (31 of 31; four sizes, both pages); `tests/handoff.py`: every check passes but "the working tree is clean" before this commit; the play fingerprint matches the baseline (the cards change no simulation; `b.made` is a count nothing reads in play); soak seeds 1, 2, 3 for 20 minutes pass (saves 250 to 258 kB; a frame 8.7 to 52 ms with another builder on the same two CPUs).
 - Results (review fixes): build, wrap, lint, palette, verbs, words, cards pass; 66 of 66 plants caught. The full gate waits for the merge.
 - Merge check (main after the merge): tests/handoff.py START QC PASSED; 66 planted bugs caught; the gate passes at four sizes; fingerprint unchanged.
+
+## Build 80, map (merged Nov 1, before preview 10)
+### Map 80 (decisions 2 and 5a, D1, B4; Albert's citadel decision of Nov 1), branch `map80`, not published
+
+**What changed**
+- `MAP` 2160; `CORNER` snapped from 751 to 755 in one home.
+- The home zone on nodes (`HOME`: clear 200, band 60, rich 1.18; radius `CLEAR` 360).
+- Every map coordinate from `MAP`, `MID` and `CORNER` (`PLACES`, `cross`, `COORD`).
+- Two squares between buildings (`LANE`).
+- Waves judged by progress, with a cool-down that never waits out a win (`WAVE`).
+- Every find and deposit in every corner, searched outward (`SEEK`).
+- Shared places for both corners; lodes symmetric.
+- B4 on the walking grid, cut home round water (`openWays`, `wayHome`).
+- Four towers, the shrine on the Throne, the ring symmetric with gates two squares wide.
+- Save shape 40.
+- `RULES.md` fairness: equal content on nodes.
+
+**Cut**
+- The hand `ROUTES` table and the forest's hand clearings (210, 380, −140, 430, 516).
+- The shore-shrine leftovers.
+- The shared distance per find (`dist`) and laySpots' loose pass and fallback. These were the cause of B3.
+- The home pocket's arc and `TURN`.
+- `makeForest`'s own reach grid and its straight cuts.
+- The camera's typed first spot.
+- The A* heap's typed 40000.
+- `coord()`'s 2000 grid.
+- The animals' `gx`/`gy` graze point (renamed `grazeAt`).
+- Two towers on one diagonal and the shrine in the SW yard (Albert, Nov 1).
+- The scout loop's corner points from `CORNER` (now from the real Town Centers).
+- The dropping of a find or deposit with no room.
+
+**Tests**
+- `tests/map.py` in the gate. Worst case on 100 seeds: nearest home node 200 to 260, farthest 340; nearest node of any find 200; nearest node not of the zone 260; edge 21; camera 29 px.
+- 55 planted bugs, 55 caught.
+- Gate PASS; `handoff.py` PASS.
+- Soak 5 of 6 (an ended game; the base fails the same way).
+- Balance as above.
+
+**Play fingerprint accepted:** step 1 exact; 1b, decision 2, 5a and the review's layout fixes each move it; D1 and its exceptions do not.
+- Merge check (main e4d0c82, cards and map together): tests/handoff.py START QC PASSED; 86 planted bugs caught; the gate passes at four sizes.
