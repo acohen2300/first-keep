@@ -14,4 +14,7 @@ Albert, Nov 1, 07:36 (D-075), in his words: "we were to finish all the menus and
 9. **Surprise and home ground** (D-085): surprise ×1.1 to ×2.2 fading, and home-ground movement at road against cross-country speed, for every side. [2026-11-01 13:02]
 10. **Clean water lengthens famine survival** (D-086), from a cited source. [2026-11-01 13:02]
 
+11. **Quick start mode** (Albert, Nov 1, 13:01: "Quick start mode"): what it starts with is to be settled with Albert. [2026-11-01 13:03]
+12. **Race mode** (Albert, Nov 1, 13:01: "race mode"): the race's goal (an age, a wonder, a sum) is to be settled with Albert. [2026-11-01 13:03]
+
 Nothing on it is built until the list is drawn up item by item and Albert says yes yes. [2026-11-01 07:45]
