@@ -1,0 +1,7 @@
+# Design: the type rules [2026-11-01 07:45]
+
+- Status: locked and built in Build 80; the one weight is MAYBE (D-047). [2026-11-01 07:45]
+- The rule: two text sizes, 12 and 18 (D-044); two fonts, IM Fell English SC for titles and Barlow Semi Condensed for the rest, the map included (D-046); Barlow at one weight, 600 (D-047); a map label scales whole with its pill and icon, 12 at the starting zoom, 9 the floor (D-045). The full rule: `docs/2 Rules/MENU-SPEC.md` §9 and `docs/2 Rules/RULES.md` §6. [2026-11-01 07:45]
+- Decisions: D-044, D-045, D-046, D-047. [2026-11-01 07:45]
+- Pictures: [Words 12 Against 15](../../../mockups/80/Words%2012%20Against%2015%20-%20v80%20-%20Post%20Clean%20-%20Working.png), [The 19s, Play War Setup Research](../../../mockups/80/The%2019s,%20Play%20War%20Setup%20Research%20-%20v80%20-%20Post%20Clean%20-%20Working.png), [The 19s, Train and Map Strip](../../../mockups/80/The%2019s,%20Train%20and%20Map%20Strip%20-%20v80%20-%20Post%20Clean%20-%20Working.png), [Research Badge Three Ways](../../../mockups/80/Research%20Badge%20Three%20Ways%20-%20v80%20-%20Post%20Clean%20-%20Working.png), [Weights A and B](../../../mockups/80/Weights%20A%20and%20B%20-%20v80%20-%20Post%20Clean%20-%20Working.png), [Weights Pick](../../../mockups/80/Weights%20Pick%20-%20v80%20-%20Post%20Clean%20-%20Working.png), [Start 900 Against 600](../../../mockups/80/Start%20900%20Against%20600%20-%20v80%20-%20Post%20Clean%20-%20Working.png). [2026-11-01 07:45]
+- Test: `tests/palette.py` (two sizes, one weight, mapFont). [2026-11-01 07:45]
