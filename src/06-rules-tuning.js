@@ -75,6 +75,9 @@ const CLIMATE = {
 	// Traction (Build 62): the friction a surface offers against what a step needs. Measured coefficients, boot on surface: dry soil 0.7, wet soil 0.45,
 	// packed snow 0.3, ice 0.08 near 0 °C rising to 0.25 at −20 (Bowden & Hughes 1939: the melt film is what makes ice slick, and deep cold has none).
 	// A walker needs about 0.2 (Hanson, Redfern & Mazumdar, Ergonomics 42, 1999); the chance of a slip rises as what is on offer falls below it.
+	// Bare boots on wet ice measure 0.08, on cold dry ice 0.20 (Hsu et al., Ergonomics 59, 2016). Iron studs bite the ice: studded tyres on ice
+	// and snow 0.28 at −5 °C and below, more nearer 0 (Ichihara & Mizoguchi, HRB Special Report 115, Table 2; the lowest bin taken). Horseshoes
+	// (hooves) and Crampons (boots) give the ice term at least `studs`; each is on its own contact, so they never add (D-064).
 	mu: {
 		dry: 0.7,
 		mud: 0.45,
@@ -83,6 +86,7 @@ const CLIMATE = {
 		iceCold: 0.25,
 		coldAt: 20,
 		need: { foot: 0.2, horse: 0.25, siege: 0.3 },
+		studs: 0.28,
 		soft: 0.03,
 		stride: 0.25,
 	},
@@ -109,11 +113,9 @@ const TEACH_TO = {
 	jav: 'arquebus',
 	crossbow: 'arquebus',
 	chariot: 'cata',
-	harcher: 'cata',
-	ram: 'catapult',
 	catapult: 'treb',
 	ballista: 'bombard',
-}; // what a soldier can be taught to become
+}; // what a soldier can be taught to become: always a later age (D16: horse archer to cataphract and ram to catapult were one age, never usable)
 const FALLBACK = { secs: 6, back: 200, hit: 0.7 }; // withdraw in order: fewer losses than a rout
 const PRISON = { secs: 180, ransom: 1.0 }; // a prisoner unransomed in three minutes serves the captor
 const CONVERT = { r: 40, secs: 12, cd: 60 }; // a priest beside an enemy for a spell turns them; the counter is to kill the priest

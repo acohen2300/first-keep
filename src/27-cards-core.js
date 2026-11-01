@@ -157,7 +157,7 @@ const slt = (tog, inp, word, val, v, max, step, on, dis, span = 's2') =>
 const FOLD = new Set(); // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 // the book entry of a research step: the date, what it changed, and its weight (how much it changed the world, not its cost: N11)
 const techBook = (t) =>
-	`<p><b>${t.name}</b>${t.when ? ` · ${t.when}` : ''}${t.w ? ` · weight ${t.w} of 10` : ''}: ${t.desc}${WHY[t.id] ? ` ${WHY[t.id]}` : ''}</p>`;
+	`<p><b>${t.name}</b>${t.when ? ` · ${t.when}` : ''}${t.w ? ` · weight ${t.w} of 10` : ''}: ${t.desc}${techWhy(t.id) ? ` ${techWhy(t.id)}` : ''}</p>`;
 // tabs are a file folder (MENU-SPEC §1): one rank of tabs; the open one joins one Gold 1 outline round its whole page, the outline down
 // the middle of the 6 gap. opts: [key, name, sub]; page: the page under the tabs
 const folder = (key, opts, cur, page, cls = 'c2') =>

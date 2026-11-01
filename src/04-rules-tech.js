@@ -3,6 +3,19 @@
 // m multiplies, a adds, min keeps the lowest (armour does not stack). tier: upgrades a unit in place and renames it.
 // Research, from history. line: the steps of a line come one after another, only the next shows; w: how much the step changed the world, 1-10
 // (shown on its card; cost and t are set by hand for balance, not from w: decision N11); when: the date, in the book; need: other steps it waits on.
+// The measured real-world differences the research steps use (D-061, D-062, D-064; Albert, Nov 1: every effect the real difference, from an
+// opened study). Each is in SCIENCE.md with its source and how it maps to the game; nothing here is a design number.
+const MEASURED = {
+	// sickness and plague (D-061): each defence multiplies the spread β of the SIR model; together they multiply (one β, three factors).
+	// Water and sewers: Alsan & Goldin 2019 (JPE 127(2), p. 603), each alone lowered log child mortality 12.6 and 12.3 log points; deaths
+	// per case unchanged, so cases, and so β in a town where most are well (S ≈ N), fall by the same factor e^(−b).
+	water: Math.exp(-0.126),
+	sewer: Math.exp(-0.123),
+	// quarantine and isolation: Bootsma & Ferguson 2007 (PNAS 104(18), abstract): the most effective 1918 cities cut transmission 30–50%; the middle, 40%
+	isolate: 0.6,
+	// a forecast (D-062): Rosenzweig & Udry 2013 (NBER w19334, p. 21): farmers who plan by the monsoon forecast earn R46,625 against R42,300
+	forecast: 46625 / 42300,
+};
 const TECH = [
 	{
 		id: 'hafting',
@@ -157,8 +170,8 @@ const TECH = [
 		age: BLD.foundry.age, // with the Foundry it serves (decision N12)
 		w: 5,
 		when: '1000 BC',
-		cost: { f: 170, w: 110 },
-		t: 38,
+		cost: { f: 260, w: 180 }, // the price of a weight-5 step of the Medieval age, where the Foundry is (D-063)
+		t: 52,
 		fx: [{ s: 'make', k: 'iron', m: 1.15 }],
 		desc: 'Foundries make 15% more iron.',
 	},
@@ -400,7 +413,7 @@ const TECH = [
 		t: 30,
 		fx: [{ s: 'plague', m: 0.5 }],
 		need: ['masonry'],
-		desc: 'Plague spreads half as fast.',
+		desc: 'Plague brings half as many cases.',
 	},
 	{
 		id: 'wheelbarrow',
@@ -1057,7 +1070,7 @@ const TECH = [
 		line: 'Ranks',
 		age: 3,
 		w: 7,
-		when: '1300s',
+		when: '1400s',
 		cost: { f: 320, g: 210 },
 		t: 60,
 		tier: { unit: 'spear', name: 'Pikeman', hp: 1.15, dmg: 1, vs: { mounted: 4 } },
@@ -1398,10 +1411,10 @@ const TECH = [
 		cost: { f: 260, g: 180 },
 		t: 52,
 		fx: [
-			{ s: 'ice', k: '#mounted', a: 0.5 },
+			{ s: 'studs', k: '#mounted', a: 1 },
 			{ s: 'mud', k: '#mounted', m: 0.8 },
 		],
-		desc: 'Horses slip and bog down less.',
+		desc: 'Shod hooves bite the ice; horses bog down less.',
 	},
 	{
 		id: 'remounts',
@@ -1747,7 +1760,7 @@ const TECH = [
 		line: 'Engines',
 		age: 2,
 		w: 6,
-		when: '399 BC',
+		when: '332 BC',
 		cost: { w: 180, g: 120 },
 		t: 41,
 		fx: [
@@ -2287,9 +2300,9 @@ const TECH = [
 		when: '1500s',
 		cost: { g: 240, s: 160 },
 		t: 48,
-		fx: [{ s: 'ice', a: 0.5 }],
+		fx: [{ s: 'studs', k: ['#infantry', '#civ', '#siege'], a: 1 }],
 		need: ['horseshoes'],
-		desc: 'Men slip half as often on ice.',
+		desc: 'Iron spikes on the boot bite the ice: men on foot slip less.',
 	},
 	{
 		id: 'meteorology',
@@ -2301,9 +2314,9 @@ const TECH = [
 		when: '1643',
 		cost: { g: 430, s: 290 },
 		t: 71,
-		fx: [{ s: 'forecast', a: 1 }],
+		fx: [{ s: 'crop', k: 'food', m: MEASURED.forecast }],
 		need: ['science', 'weathersigns'],
-		desc: 'The next sky is told a minute further ahead.',
+		desc: `Fields give ${Math.round((MEASURED.forecast - 1) * 100)}% more: farmers who plan by the forecast earn more.`,
 	},
 	{
 		id: 'bandages',
@@ -2368,8 +2381,8 @@ const TECH = [
 		when: '1377',
 		cost: { f: 320, g: 210 },
 		t: 60,
-		fx: [{ s: 'spread', m: 0.5 }],
-		desc: 'Plague spreads half as fast.',
+		fx: [{ s: 'spread', m: MEASURED.isolate }],
+		desc: `Sickness and plague spread ${Math.round((1 - MEASURED.isolate) * 100)}% slower.`,
 	},
 	{
 		id: 'inoculation',
@@ -3033,8 +3046,8 @@ const TECH = [
 		when: '600 BC',
 		cost: { s: 320, g: 210 },
 		t: 60,
-		fx: [{ s: 'plague', m: 0.6 }],
-		desc: 'Plague strikes 40% less.',
+		fx: [{ s: 'spread', m: MEASURED.sewer }],
+		desc: `Sickness and plague spread ${Math.round((1 - MEASURED.sewer) * 100)}% slower.`,
 	},
 	{
 		id: 'cleanwater',
@@ -3046,8 +3059,8 @@ const TECH = [
 		when: '312 BC',
 		cost: { s: 200, g: 130 },
 		t: 44,
-		fx: [{ s: 'sick', m: 0.5 }],
-		desc: 'Sickness strikes half as often.',
+		fx: [{ s: 'spread', m: MEASURED.water }],
+		desc: `Sickness and plague spread ${Math.round((1 - MEASURED.water) * 100)}% slower.`,
 	},
 	{
 		id: 'plumbing',
@@ -3082,13 +3095,14 @@ const TECH = [
 ];
 // Elite ranks (Build 39): each people's unique soldier gains a top rank at the Castle in the Medieval age, as Age of Empires' Paladin crowns its cavalry.
 // Only that people can research it. Numbers first; the art (armour, a banner, a richer colour) comes in the look-and-sound build.
-for (const [civ, uu, name, fx] of [
-	['roman', 'legion', 'Praetorian', { hp: 1.25, dmg: 3 }],
-	['han', 'hanxbow', 'Elite crossbowman', { dmg: 2, rng: 15 }],
-	['persian', 'immortal', 'Apple-bearer', { hp: 1.25, dmg: 2 }],
-	['mongol', 'mongolha', 'Keshig', { hp: 1.2, dmg: 2, spd: 1.08 }],
-	['maurya', 'mauryael', 'Royal elephant', { hp: 1.25, dmg: 3 }],
-	['mali', 'malihorse', 'Elite horseman', { hp: 1.2, dmg: 2, spd: 1.08 }],
+// Each row: the people, its soldier, the rank, its plural (written, never made: F8), the date its WHY line gives, the rank's numbers.
+for (const [civ, uu, name, many, when, fx] of [
+	['roman', 'legion', 'Praetorian', 'Praetorians', '27 BC', { hp: 1.25, dmg: 3 }],
+	['han', 'hanxbow', 'Elite crossbowman', 'Elite crossbowmen', '13 BC', { dmg: 2, rng: 15 }],
+	['persian', 'immortal', 'Apple-bearer', 'Apple-bearers', 'about 480 BC', { hp: 1.25, dmg: 2 }],
+	['mongol', 'mongolha', 'Keshig', 'Keshig guards', '1203', { hp: 1.2, dmg: 2, spd: 1.08 }],
+	['maurya', 'mauryael', 'Royal elephant', 'Royal elephants', 'about 300 BC', { hp: 1.25, dmg: 3 }],
+	['mali', 'malihorse', 'Elite horseman', 'Elite horsemen', '1352', { hp: 1.2, dmg: 2, spd: 1.08 }],
 ])
 	TECH.push({
 		id: 'elite_' + civ,
@@ -3102,8 +3116,8 @@ for (const [civ, uu, name, fx] of [
 		tier: { unit: uu, name, ...fx },
 		line: 'Elite',
 		w: 6,
-		when: 'Medieval',
-		desc: `The soldiers of your people become ${name}s, their finest: tougher, harder hitting.`,
+		when,
+		desc: `The soldiers of your people become ${many}, their finest: tougher, harder hitting.`,
 	});
 const TECHBY = Object.fromEntries(TECH.map((t) => [t.id, t]));
 

@@ -309,7 +309,7 @@ function died(u) {
 		// a loss beside you shakes the nerve by its share of the group: a group of n breaks after breakAt × n losses (Dupuy's break point)
 		const near = [];
 		unitsNear(u, MORALE.lossR, (v) => {
-			if (v.owner === u.owner && isSoldier(v) && v.hp > 0) near.push(v);
+			if (v.owner === u.owner && isSoldier(v) && v.hp > 0 && dist(u, v) < MORALE.lossR) near.push(v); // a circle, not the grid's box (C15)
 		});
 		const share = 1 / (MORALE.breakAt * (near.length + 1));
 		for (const v of near) v.mor -= share;
@@ -606,7 +606,7 @@ const FORAGE = { move: 1.18, life: 20, room: { tree: 1, bush: 2, fish: 2, stone:
 function forage(u, n, drops) {
 	const o = u.owner,
 		c = carryOf(o),
-		v = stats(o, 'vil').spd * groundSpd(o, ['foot']),
+		v = stats(o, 'vil').spd * groundSpd(o, unitKeys('vil')),
 		others =
 			n.kind === 'farm' ? 0 : n.hunt ? Math.max(0, (n.hunt.wk || 0) - (u.hunt === n.hunt ? 1 : 0)) : Math.max(0, (n.wk || 0) - (u.node === n ? 1 : 0)),
 		g =

@@ -621,12 +621,7 @@ function moveTo(u, x, y, dt, r, SP, spot) {
 		rutsOn(u); // a unit-second of traffic on this square (ruts)
 		if (
 			G.clim.ice > 0 &&
-			rng() <
-				slipChance(
-					u,
-					CLIMATE.mu.need[hasTag(u.kind, 'siege') ? 'siege' : hasTag(u.kind, 'mounted') ? 'horse' : 'foot'] *
-						(1 - fxv(u.owner, 'ice', unitKeys(u.kind)).a),
-				)
+			rng() < slipChance(u, needOf(unitKeys(u.kind)), studded(u.owner, unitKeys(u.kind)))
 		) {
 			u.stuck = G.t + CLIMATE.slipSecs;
 			if (u.owner === 0 && !(G.slipT > G.t - 20)) {

@@ -40,6 +40,18 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   { const G = F.G, c = G.clim, was = { ...c }; Object.assign(c, { T: -1, W: 0.2, snow: 0, ice: 0, mud: 0 }); const dry = F.muOf(null); Object.assign(c, { snow: 1 }); const snow = F.muOf(null); Object.assign(c, { snow: 0, ice: 1 }); const ice1 = F.muOf(null); c.T = -20; const ice20 = F.muOf(null);
     if (!(dry > snow && snow > ice1 && ice20 > ice1)) out.push('traction order: ' + [dry, snow, ice1, ice20].map((v) => v.toFixed(2)).join(' '));
     c.T = -1; near('slip on ice, a walker', F.slipChance({ x: 100, y: 100 }, F.CLIMATE.mu.need.foot), 1 / (1 + Math.exp(-(F.CLIMATE.mu.need.foot - ice1) / F.CLIMATE.mu.soft)), 1e-9); Object.assign(c, was); }
+  // studs on ice (D-064): Horseshoes on hooves and Crampons on boots each give the ice term at least the measured μ of iron studs (0.28,
+  // Ichihara & Mizoguchi; bare boots 0.08 on wet ice, Hsu et al. 2016); each is on its own contact, so a horse with both is a horse with
+  // Horseshoes; a slip stays possible (no immunity unless the measured μ says so)
+  { const G = F.G, c = G.clim, was = { ...c }, P = G.P[0], M = F.CLIMATE.mu, set = (ids) => { P.techs = new Set(ids); F.fxDirty(); };
+    near('studs μ (Ichihara & Mizoguchi)', M.studs, 0.28, 1e-12); near('bare wet ice μ (Hsu et al. 2016)', M.ice0, 0.08, 1e-12);
+    Object.assign(c, { T: -1, W: 0.2, snow: 0, ice: 1, mud: 0 }); const at = { x: 100, y: 100 }, foot = F.unitKeys('spear'), horse = F.unitKeys('chariot');
+    const want = (need, mu) => 1 / (1 + Math.exp(-(need - mu) / M.soft)), bare = F.iceMu(false), slip = (keys) => F.slipChance(at, F.needOf(keys), F.studded(0, keys));
+    set([]); near('a walker, bare boots', slip(foot), want(M.need.foot, bare), 1e-9);
+    set(['crampons']); near('a walker with Crampons', slip(foot), want(M.need.foot, Math.max(bare, M.studs)), 1e-9); near('a horse with Crampons only', slip(horse), want(M.need.horse, bare), 1e-9);
+    set(['horseshoes']); const h1 = slip(horse); near('a horse with Horseshoes', h1, want(M.need.horse, Math.max(bare, M.studs)), 1e-9);
+    set(['horseshoes', 'crampons']); near('a horse with both is a horse with Horseshoes', slip(horse), h1, 1e-12);
+    if (!(slip(horse) > 0 && slip(foot) > 0)) out.push('studs on ice: a slip is no longer possible'); set([]); Object.assign(c, was); }
   // ruts: depth grows as passes^0.4 toward full at n0 (USFS trafficability)
   { const T = F.ruts(), i = 5 * Math.ceil(F.MAP / 40) + 5; const was = T[i]; T[i] = F.CLIMATE.rut.n0 / 4; near('rut quarter', F.rutOf(5 * 40 + 1, 5 * 40 + 1), F.CLIMATE.rut.deep * 0.25 ** 0.4, 1e-9); T[i] = was; }
   // sound (ISO 9613-2): full within d0, then the inverse-square law: twice the distance is half the amplitude (−6 dB), less the air's small take

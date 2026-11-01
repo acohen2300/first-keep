@@ -87,8 +87,13 @@ def messages():
     t = open('src/07-text.js').read()
     for name in ('EV_TEXT',):
         a = t.find(f'const {name} = {{'); b = t.find('\n}', a)
-        for m in re.finditer(r"'((?:[^'\\]|\\.)*)'", t[a:b]):
-            if len(m.group(1).split()) >= 2: found.append(('src/07-text.js', t[:a + m.start()].count('\n') + 1, m.group(1).replace("\\'", "'")))
+        for s in literals(t[a:b]): found.append(('src/07-text.js', t[:a].count('\n') + 1, s))   # templates too (F9 made some lines read their tables)
+    # F5: the chronicle (NEWS, said through news('chronicle', L[i])) and each milestone's first line (said through news('lesson', …))
+    a = t.find('const NEWS = ['); b = t.find('\n];', a)
+    for m in re.finditer(r"'((?:[^'\\]|\\.)*)'", t[a:b]): found.append(('src/07-text.js', t[:a + m.start()].count('\n') + 1, m.group(1)))
+    a = t.find('const MS_TEXT = {'); b = t.find('\n};', a)
+    for m in re.finditer(r"\n\t\w+: \[\s*(['`])((?:(?!\1)[^\\]|\\.)*)\1", t[a:b]):
+        for s in literals(m.group(1) + m.group(2) + m.group(1)): found.append(('src/07-text.js', t[:a + m.start()].count('\n') + 2, s))
     return found
 
 if __name__ == '__main__':

@@ -581,7 +581,7 @@ function skyTurn() {
 					? CLIMATE.hazard.winter
 					: CLIMATE.chain[s],
 		was = G.wx;
-	// the sky is rolled ahead, a minute for each step of forecast (Weather signs, Weather glass) and never less than one, so they can tell it
+	// the sky is rolled ahead, a minute for each step of forecast (Weather signs) and never less than one, so they can tell it
 	const lead = fxv(0, 'forecast').a,
 		A = c.ahead;
 	c.wet = A.length ? A.shift() : rng() < P[c.wet ? 1 : 0];
@@ -660,29 +660,42 @@ const rutOf = (x, y) => CLIMATE.rut.deep * Math.min(1, rutsAt(x, y) / CLIMATE.ru
 // mud at a place: the ground's mud, deeper by water (pooling) and by traffic (ruts)
 const mudAt = (at) =>
 	at ? G.clim.mud * (NAV.shore[gcell(at.x, at.y)] ? CLIMATE.shore : 1) * (1 + rutOf(at.x, at.y)) : G.clim.mud;
-// what the ground takes off a march for one side, at a place if given: Pandolf's terrain factor over dirt, as 1 / η, and the shorter stride on ice
+// what a step needs of the ground (Hanson et al. 1999), by what is stepping: an engine's haulers, a horse, a man (keys: unitKeys)
+const needOf = (keys) =>
+	CLIMATE.mu.need[keys && keys.includes('#siege') ? 'siege' : keys && keys.includes('#mounted') ? 'horse' : 'foot'];
+// whether iron bites the ice for this contact (D-064): Horseshoes on hooves, Crampons on boots, each keyed to its own
+const studded = (o, keys) => o !== WILD && fxv(o, 'studs', keys).a > 0;
+// the ice's friction now: slickest just below freezing (the melt film), better in deep cold; iron studs give at least theirs
+const iceMu = (studs) => {
+	const M = CLIMATE.mu,
+		ice = G.clim.T <= 0 ? M.ice0 + (M.iceCold - M.ice0) * Math.min(1, -G.clim.T / M.coldAt) : M.ice0 * 0.6;
+	return studs ? Math.max(ice, M.studs) : ice;
+};
+// what the ground takes off a march for one side, at a place if given: Pandolf's terrain factor over dirt, as 1 / η, and the shorter stride on
+// ice, by the share of the grip a step lacks there (none when what the ice offers meets the need: design, inside the measured μ)
+const strideShare = (need, mu) => clamp((need - mu) / (need - iceMu(false)), 0, 1);
 const groundSpd = (o, keys, at) => {
-	const c = G.clim;
+	const c = G.clim,
+		need = needOf(keys);
 	return (
 		(1 /
 			(1 +
 				CLIMATE.terrain.mud * Math.min(1, mudAt(at)) * fxv(o, 'mud', keys).m +
 				CLIMATE.terrain.snow * c.snow * (1 - fxv(o, 'snow', keys).a))) *
-		(1 - CLIMATE.mu.stride * c.ice * (1 - fxv(o, 'ice', keys).a))
+		(1 - CLIMATE.mu.stride * c.ice * (studded(o, keys) ? strideShare(need, iceMu(true)) : 1))
 	);
 };
-// Traction: the friction the ground offers now, a blend by cover (ice over snow over mud over dry), ice slickest just below freezing
-const muOf = (at) => {
+// Traction: the friction the ground offers now, a blend by cover (ice over snow over mud over dry); studs change only the ice's part
+const muOf = (at, studs) => {
 	const c = G.clim,
 		M = CLIMATE.mu,
-		ice = c.T <= 0 ? M.ice0 + (M.iceCold - M.ice0) * Math.min(1, -c.T / M.coldAt) : M.ice0 * 0.6,
 		ground = Math.min(1, mudAt(at)) * M.mud + (1 - Math.min(1, mudAt(at))) * M.dry,
 		snow = c.snow * M.snow + (1 - c.snow) * ground;
-	return c.ice * ice + (1 - c.ice) * snow;
+	return c.ice * iceMu(studs) + (1 - c.ice) * snow;
 };
 // the chance of a slip in a check: a logistic step on what the step needs less what the ground offers (Hanson et al. 1999), only where there is ice to slip on
-const slipChance = (u, need) =>
-	G.clim.ice <= 0 ? 0 : G.clim.ice / (1 + Math.exp(-(need - muOf(u)) / CLIMATE.mu.soft));
+const slipChance = (u, need, studs) =>
+	G.clim.ice <= 0 ? 0 : G.clim.ice / (1 + Math.exp(-(need - muOf(u, studs)) / CLIMATE.mu.soft));
 // fire against the ground's wetness: Rothermel's damping η = 1 − 2.59r + 5.11r² − 3.52r³, r = M/Mx ≤ 1, as a share of a clear day's
 const rothermel = (r) => 1 - 2.59 * r + 5.11 * r * r - 3.52 * r * r * r;
 const fireMul = () => clamp(rothermel(Math.min(1, G.clim.W)) / rothermel(CLIMATE.eq.clear), 0, 2);

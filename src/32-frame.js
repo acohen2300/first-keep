@@ -435,7 +435,7 @@ function advise() {
 	if (V.some((u) => u.noPath && G.t - (u.noPathT || -9) < 4) && !L('build:gate')) return 'Walled in: build a Gate.';
 	if ((k.blocked || (NEEDS.house() && popOf(0) >= capOf(0))) && !L('build:house'))
 		return p.age >= 2
-			? 'You are full: Build → House, Apartment or Aqueduct.'
+			? 'You are full: Build → House or Apartment.'
 			: `You are full: Build → House (${costText(BLD.house.cost)}).`;
 	if (V.length < 6 && !k.q.length && afford(p, UNIT.vil.cost) && !L('train:vil'))
 		return 'More villagers, more of everything.';

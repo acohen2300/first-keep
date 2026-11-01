@@ -230,3 +230,5 @@ Checks on main before publishing:
 
   Mali won all 3 of its games, and the balanced seat won 3 of 4. Four seeds only.
 - `tests/handoff.py`: see the publish commit.
+
+- **Play fingerprint accepted:** text81 (Nov 1 batch): C11 stashes the load unrounded, so a partial load of 0.5 no longer becomes 1 at the drop-off; it is the whole of the change (each other change reverted alone leaves the fingerprint as it was; C11 reverted alone restores the baseline exactly). [2026-11-01 15:20]

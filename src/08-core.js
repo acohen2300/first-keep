@@ -278,6 +278,8 @@ const armyRoom = (o) => ARMYMAX + (G.P[o].capA || 0);
 const clsMax = (c, o) => (c === 'civ' ? POPMAX + (G.P[o].capV || 0) : armyRoom(o));
 const armyFull = (o) => `Army at the ceiling: ${armyRoom(o)}.`; // the phone's limit, wherever it bites
 const qMax = (o) => QUEUE + fxv(o, 'queue').a; // orders one building's line holds (Written records, Guilds add to it)
+// of the buildings that can take an order, the one with the shortest line (training, research and muster alike: C16)
+const shortest = (L) => L.reduce((a, b) => (!a || b.q.length < a.q.length ? b : a), null);
 const lineFree = (o, kinds) => kinds.some((k) => ready(o, k).some((b) => b.q.length < qMax(o)));
 // how many of a building you may have now: by age, plus research
 // a cap table lists the ages it changes in; an age past its end keeps the last limit (Build 60: 19 tables stopped at Gunpowder, so the

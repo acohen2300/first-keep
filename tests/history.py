@@ -16,7 +16,7 @@ async def main():
     async with async_playwright() as p:
         br = await p.chromium.launch(); pg = await br.new_page()
         await pg.goto('file://' + os.path.join(ROOT, 'first-keep.html')); await pg.wait_for_timeout(300)
-        T = await pg.evaluate("() => window.__fk.TECH.map(t => ({ id: t.id, name: t.name, age: t.age, when: t.when || '', why: (window.__fk.WHY[t.id] || '') }))")
+        T = await pg.evaluate("() => window.__fk.TECH.map(t => ({ id: t.id, name: t.name, age: t.age, when: t.when || '', why: (window.__fk.techWhy(t.id) || '') }))")
         await br.close()
     bad, nodate = [], []
     for t in T:
@@ -25,6 +25,10 @@ async def main():
         lo, hi = SPAN[t['age']]
         if (y < lo - SLACK or y > hi + SLACK) and 'Game:' not in t['why']:
             bad.append(f"{t['id']} ({t['name']}, {t['when']}) sits in the {['Stone','Bronze','Classical','Medieval','Gunpowder','Enlightenment'][t['age']]} age with no Game: note")
+    ERA = {'stone age': 0, 'bronze age': 1, 'roman': 2, 'classical': 2, 'medieval': 3, 'gunpowder': 4}   # a step dated by its era names its own age
+    when = {t['id']: (t['when'].strip().lower(), t['age']) for t in T}
+    bad += [f'{i} has no date the check can read (F8)' for i in nodate if ERA.get(when[i][0]) is None]
+    bad += [f'{i} is dated "{when[i][0]}" and sits in another age (F8)' for i in nodate if ERA.get(when[i][0]) not in (None, when[i][1])]
     print(('PASS ' if not bad else 'FAIL ') + f'every research step sits in its age or says why ({len(T)} steps, {len(nodate)} without a date)', '' if not bad else bad)
     if nodate: print('  no date:', nodate)
     sys.exit(1 if bad else 0)
