@@ -19,6 +19,20 @@
 
 - Relations, final (Albert, 10:16–10:18, "we are locking into the final"): Town | Relations tabs with the folder outline round the open tab's section; one rank a player in three doubles: the name with its stance in its colour on the quiet line, the gift as a slider with its toggle (a friend's gift locked: a bribe is a step for anyone not a friend, which changes v70's Natives only), the stance as three icons in two slots (sword red, scales white, handshake green; colour named as an exception to Cream 1 icons); the bottom line says what ✓ will do; the slider snaps (50g). Picture: Relations Final.
 
+## Decision 8, amended (Albert, Oct 31, 20:38)
+- "It should fight back": a soldier attacked by anything, an animal included, fights back, at peace with the wild too. The rest of decision 8 stands: otherwise soldiers leave animals alone unless the player orders it, or a civilian is attacked and the animal is within the line of sight of a soldier or a finished building of that side (decision 8b: the eyes are soldiers and buildings, not the civilian). Built in Build 80 preview 9 (`15-sim-spatial` `ignorable`, `strikes`; `14-sim-troops` `solTick`); in `SCIENCE.md`.
+
+## Owed
+The one maintained list of what is owed (Build 80 preview 9). `tests/handoff.py` prints this section; nothing else. Strike a line when it is built, add one when something is put off.
+- Balance: preview 9's balance run against v70 is in `CUTS.md`; read it before live. Every later rule change needs its own.
+- Batch 3, not built: the live test 4b (Natives and computers); the C1 hostility split (Natives by relations, the rest of the wild always hostile: today a side at peace with the Natives does not defend a villager from a wolf, though a soldier now fights back what bites it); the wolf's prey choice (canBeat; the tempers 'flee' and 'hunt' are labels nothing reads, and the deer carries both `flee` and `temper`); the arrival radius for soldiers and animals (10a says every unit); bug 4's leftovers (a held target is not re-tested by `ignorable`; the 320 home sweep is not gated by sight); the spawn-chase re-test after decision 8; bug 5 (walking under buildings) stays a live test.
+- Decision 1, to settle with Albert: "skip the danger map" is read as "leave finds on the danger map out" (as before); computers see every find, only the player is held to sight (QC D9); a villager waiting for a find shows Zs but is not counted idle by the idle counter or the idle button (QC D10); a computer's villager waiting with no end keeps its job, so its brain does not move it (see the balance run).
+- Batch 4, not built: B3, B4, B10, B11 (Albert's call), the map (home zones, +8%).
+- Batches 5 to 10: all of it (combat C2 to C16 with N4 and N5's comment; computers D1 to D8, N6 crowns, N7 ceiling, N8 peace mode, N16a raids; research and text; cards, fog and view group E; cleanup; repository).
+- Tests the audit found escaping: 13 of the 15 mutation escapes (M1 to M12) are not planted; the science tautologies (H2); the gate's fixed card list (H3); a field-by-field save round trip (M9); the House fix check is still a text check.
+- Sources marked "from memory" in `SCIENCE.md` are opened and checked before live: Pulliam, Lima, Reynolds (1987, 1999), Ydenberg and Dill, Blinn, the producer-scrounger idea, the Maynard Smith and Price paper itself.
+- Records: previews 1 to 6 were committed as "Claude <noreply@anthropic.com>"; Albert to say whether to rewrite them. The QC audit of preview 8 (13 reports, the fresh review) is in the session's scratchpad, not in the repo: Albert to say whether it goes into `docs/v80 Audit/`.
+
 ## Needs Albert's call now (it touches v70)
 1. Mail has no door once the Realm page goes: the Realm page's Mail tile was its only way in. Where does Mail open from?
 2. The status strip: Gunpowder does not fit the age cell. The ballot's change (the People icon back, age and people three cells each) was refused by the tap-size check: the other cells fell to 40 pt at 375.

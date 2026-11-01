@@ -597,6 +597,15 @@ const paceOf = (u, SP) =>
 	(u.owner === WILD ? 1 : groundSpd(u.owner, unitKeys(u.kind), u)) *
 	(G.sand && hyp(u.x - G.sand.x, u.y - G.sand.y) < G.sand.r ? EVENTS.quicksand.slow : 1) *
 	(u.chg > G.t ? CHARGE.spd : u.tired > G.t ? CHARGE.tiredSpd : 1);
+// One home for "a unit moved" (Build 80 preview 9): every change of place, a walk, a run, a push, a knock, a rescue from water or a wall, adds
+// its length to the walk, and the view's legs follow the walk (STRIDE), so nothing glides. Who meant to move (mvT, the facing) stays the mover's.
+function stepTo(u, x, y) {
+	const d = hyp(x - u.x, y - u.y);
+	u.x = x;
+	u.y = y;
+	if (d > 0 && u.st) u.st.walk += d;
+	return d;
+}
 function moveTo(u, x, y, dt, r, SP) {
 	if (u.stuck > G.t) {
 		u.mvT = G.t; // in a pit, or slipped on ice: still on its way, not holding (Build 63)
@@ -654,16 +663,14 @@ function moveTo(u, x, y, dt, r, SP) {
 			ny = u.y;
 		}
 	}
-	u.x = nx;
-	u.y = ny;
+	stepTo(u, nx, ny); // the walk counts the ground really covered: a unit against a wall does not walk in place
 	if (m > 0.3) {
 		if (!(u.kT > G.t - 0.5)) {
 			u.fx = dx / dd;
 			u.fy = dy / dd;
 		}
 		u.mvT = G.t;
-		u.st.walk += m;
-	} // real steps only: a small nudge neither turns the figure round nor starts its walk
+	} // a small nudge neither turns the figure round nor counts as meaning to move (heft, marching); its legs still follow it
 	if (stand) return hyp(tx - u.x, ty - u.y) <= 7;
 	return hyp(x - u.x, y - u.y) <= r + 0.5;
 }

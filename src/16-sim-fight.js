@@ -96,10 +96,7 @@ function hurt(o, a, t, base) {
 			dd = hyp(dx, dy) || 1,
 			nx = t.x + (dx / dd) * A.knock,
 			ny = t.y + (dy / dd) * A.knock;
-		if (!blockedCell(gcell(nx, ny), t.owner)) {
-			t.x = clamp(nx, 8, MAP - 8);
-			t.y = clamp(ny, 8, MAP - 8);
-		}
+		if (!blockedCell(gcell(nx, ny), t.owner)) stepTo(t, clamp(nx, 8, MAP - 8), clamp(ny, 8, MAP - 8));
 		t.flashT = G.t;
 	}
 	if (isB || t.kind === 'caravan') {
@@ -165,14 +162,8 @@ function pushApart(a, b) {
 			ay = a.y - dy * pa,
 			bx = b.x + dx * pb,
 			by = b.y + dy * pb;
-		if (!blockedCell(gcell(ax, ay), a.owner)) {
-			a.x = ax;
-			a.y = ay;
-		}
-		if (!blockedCell(gcell(bx, by), b.owner)) {
-			b.x = bx;
-			b.y = by;
-		}
+		if (!blockedCell(gcell(ax, ay), a.owner)) stepTo(a, ax, ay);
+		if (!blockedCell(gcell(bx, by), b.owner)) stepTo(b, bx, by);
 	}
 }
 function collide() {
@@ -212,17 +203,14 @@ function collide() {
 				lr = lakeR(L);
 			if (dl < lr + 6 && !u.fly && !onLand(u.x, u.y)) {
 				const s = (lr + 6) / (dl || 1);
-				u.x = L.x + (u.x - L.x) * s;
-				u.y = L.y + (u.y - L.y) * s;
+				stepTo(u, L.x + (u.x - L.x) * s, L.y + (u.y - L.y) * s);
 			}
 		}
-		u.x = clamp(u.x, 6, MAP - 6);
-		u.y = clamp(u.y, 6, MAP - 6);
+		stepTo(u, clamp(u.x, 6, MAP - 6), clamp(u.y, 6, MAP - 6));
 		if (blockedCell(gcell(u.x, u.y), u.owner)) {
 			const f = freeNear(Math.floor(u.x / NAVC), Math.floor(u.y / NAVC), u.owner, 8, u.x, u.y);
 			if (f) {
-				u.x = f.x;
-				u.y = f.y;
+				stepTo(u, f.x, f.y);
 				u.path = null;
 			}
 		}

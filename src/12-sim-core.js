@@ -654,11 +654,15 @@ const forageNow = (u) =>
 			: u.node && u.node.amt > 0 && !(u.node.farm && BLD[u.node.farm.kind].makes)
 				? forage(u, u.node)
 				: 0;
-// the best find for this worker and its rate: fields, berries, trees, stone, gold, iron, fish, a carcass, or game within reach of home
-function bestNode(u, job) {
+// the best find for this worker and its rate: fields, berries, trees, stone, gold, iron, fish, a carcass, or game within reach of home.
+// seek (decision 1, a lost find): the point the search is measured from. Then it may take a find of the same kind its side has seen within
+// the search radius of that point, or one a friend (its own side) is working; a placed villager none past the cap (x + y) from where it was
+// placed, the rest none past the leash (DANGER_R.far) from the find's nearest drop-off. Of those, the best by the forager's rate R.
+function bestNode(u, job, seek) {
 	let best = null,
 		bR = 0,
-		drops = null;
+		drops = null,
+		mates = null;
 	for (const n of G.nodes) {
 		if (
 			(n.amt <= 0 && !(n.farm && BLD[n.farm.kind].sheep)) ||
@@ -680,7 +684,7 @@ function bestNode(u, job) {
 			if (u.was && u.was !== 'farm') continue; // a worker from the wild never drifts onto a plot (Build 61: land work and wild work are two kinds)
 		} else {
 			if (u.was === 'farm') continue; // nor a plot worker into the wild
-			if (u.was && (n.kind !== u.was || dist(u, n) > searchR(u))) continue; // the same kind of find, within the search radius (decision 1)
+			if (u.was && n.kind !== u.was) continue; // the same kind of find (decision 1)
 			if (n.kind === 'fish' && !dockNear(u.owner, n)) continue;
 			if (n.kind === 'tree' && (!n.open || (u.patch && !inBox(n, u.patch)))) continue;
 		}
@@ -688,6 +692,19 @@ function bestNode(u, job) {
 			drops = G.blds.filter(
 				(b) => b.owner === u.owner && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(job),
 			);
+		if (u.was && n.kind !== 'farm') {
+			const from = seek || u;
+			if (dist(from, n) > searchR(u)) {
+				if (!seek) continue; // looking round its own find: only within the radius
+				if (!mates) {
+					mates = new Set();
+					for (const v of G.units) if (v.owner === u.owner && v !== u && v.node) mates.add(v.node);
+				}
+				if (!mates.has(n)) continue; // past the radius only a find a friend is working
+			}
+			if (seek && (u.anchor ? dist(u.anchor, n) > SEARCH.x + SEARCH.y : dist(nearest(drops, n) || keepOf(u.owner) || n, n) > DANGER_R.far))
+				continue; // the cap from where it was placed; else the leash from a drop-off
+		}
 		const R = forage(u, n, drops);
 		if (R > bR) {
 			bR = R;
@@ -716,7 +733,7 @@ function bestNode(u, job) {
 	}
 	return best && { n: best, R: bR };
 }
-const nearestNode = (u, job) => (bestNode(u, job) || { n: null }).n; // the one find a worker should take now
+const nearestNode = (u, job, seek) => (bestNode(u, job, seek) || { n: null }).n; // the one find a worker should take now
 // who to send: an idle villager first, the nearest; then, of the workers on the same resource (types), the one earning least; then the one
 // earning least on any gathering job. Weavers, brewers, shepherds and builders keep their posts. (Albert, Oct 29: a new field takes the
 // berry picker farthest from home, not a woodcutter)

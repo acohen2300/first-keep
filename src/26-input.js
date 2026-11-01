@@ -520,8 +520,7 @@ function order(S, h) {
 		go(sol, e.x, e.y + halfOf(e) + 16);
 	} else if (h.t === 'node') {
 		vil.forEach((v) => {
-			if (v.job !== e.type || v.node !== e) setJob(v, e.type, e.kind === 'farm' ? e : null);
-			if (e.kind !== 'farm') v.node = e;
+			setJob(v, e.type, e, e); // placed: the find is its anchor (decision 1)
 			v.post = null;
 		});
 		go(sol, e.x, e.y + 14);

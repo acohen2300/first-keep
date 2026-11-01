@@ -1109,3 +1109,5 @@ Build Plan items 6 and 7. Open points for Albert are in `docs/Quick Action Notes
 - **Play fingerprint accepted:** Build 80 preview 8: the arrival ramp is cut (it cost 5 to 16 percent of gathering)
 
 - **Play fingerprint accepted:** Build 80 preview 8: arrival ramp cut, gathering back to v70
+
+- **Play fingerprint accepted:** Build 80 preview 9: boar and bear look out to 140 again (v70's distance; preview 4's 45 was never decided), which moves minutes 2 to 5; and a soldier fights back what bites it (decision 8 amended), which moves side 1 at minute 5. Found by taking each change out alone: with those two out the fingerprint is preview 8's exactly; the villager search, group sight's eyes, the waiting spots and the steps do not move it

@@ -21,7 +21,8 @@ const POPMAX = 180,
 const RICH = 2.5,
 	PLUNDER = 0.25,
 	CARRY = 10,
-	NAVC = 10; // NAVC: the walking grid, 10 units a square (never shown)
+	NAVC = 10, // NAVC: the walking grid, 10 units a square (never shown)
+	FOOT = 2.65; // world units a foot: a villager is drawn 22.1 figure units tall × FIG 0.66 = 14.6 units, taken as an adult of 5.5 ft (SCIENCE.md; tests/science.py holds it to the drawing)
 const LAKE0 = { x: MID, y: MID, r: 170 }; // the great lake in the middle, round the Throne's island; the other lakes and the rivers fall at random (G.lakes)
 const SEASON_LEN = 180, // seconds a season
 	YEAR = SEASON_LEN * 4,

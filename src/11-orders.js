@@ -836,11 +836,12 @@ function hire(o, f) {
 }
 
 // ───────────────────────── Villager orders ─────────────────────────
-function setJob(u, job, n) {
+function setJob(u, job, n, at) {
 	if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 	u.job = job;
 	u.node = n || null;
 	u.was = n ? n.kind : null; // a fresh order: any find of the job until it has worked one
+	u.anchor = at ? { x: at.x, y: at.y } : null; // the spot it was placed: its search starts there and stays within the cap (decision 1)
 	u.wait = false;
 	if (job) u.post = null;
 	if (n && n.farm) n.wk = (n.wk || 0) + 1;
@@ -902,7 +903,7 @@ function sendVil(o, id) {
 		if (o === 0) say('No villager is free.', '', 3);
 		return false;
 	}
-	setJob(v, job, n);
+	setJob(v, job, n, n);
 	if (o === 0) say(`A villager heads for the ${nodeName(n).toLowerCase()}.`, '', 3);
 	return true;
 }

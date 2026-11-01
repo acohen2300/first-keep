@@ -225,43 +225,46 @@ function shadowPath(sx, sy, h, r, z) {
 		7,
 	);
 }
-// A building's shadow is its own shape, not an oval (Albert, Oct 31: we invented the shape, so the shadow is that fixed shape thrown away from the
-// light). Its footprint on the ground is a square half a side from the middle; the shadow is the hull of that square and the same square moved
-// along the light's line by h·cot(altitude), a planar projection of the box onto the ground (no source opened). One path, one fill, like the rest.
-function hull(P) {
-	P.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-	const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]),
-		lo = [],
-		up = [];
-	for (const p of P) {
-		while (lo.length > 1 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop();
-		lo.push(p);
-	}
-	for (let i = P.length - 1; i >= 0; i--) {
-		const p = P[i];
-		while (up.length > 1 && cr(up[up.length - 2], up[up.length - 1], p) <= 0) up.pop();
-		up.push(p);
-	}
-	return lo.slice(0, -1).concat(up.slice(0, -1));
+// A building's shadow is its own shape, not an oval (decision 14, Albert, Oct 31: we invented the shape, so the shadow is that fixed shape
+// thrown away from the light). A box of footprint half-side w (BLD fp) and height h casts its footprint swept by L = h cot(altitude) along the
+// light (a planar projection; Blinn 1988, from memory): a hexagon whose corners are the footprint's, each kept, moved by L, or both. Which
+// corners lead is fixed by the way the light falls, so the shape is made once for that (HEX) and every building only moves and stretches it
+// by its w and L: no hull, no sorting, no arrays per building. Same turning as the ovals, so the frame keeps one path and one fill.
+const BOX = [
+	[-1, -1],
+	[1, -1],
+	[1, 1],
+	[-1, 1],
+]; // the footprint's corners, clockwise on the glass
+let HEX = { k: '', pts: null };
+function hexOf(gx, gy) {
+	const k = gx + ',' + gy;
+	if (HEX.k === k) return HEX.pts;
+	const lead = (c) => gx * c[0] + gy * c[1], // ahead of the light (> 0: moved), behind it (< 0: kept), across it (0: both, in turn)
+		pts = [];
+	BOX.forEach((c, i) => {
+		const f = lead(c);
+		if (f < 0) pts.push([c[0], c[1], 0]);
+		else if (f > 0) pts.push([c[0], c[1], 1]);
+		else if (lead(BOX[(i + 1) % 4]) > 0) pts.push([c[0], c[1], 0], [c[0], c[1], 1]);
+		else pts.push([c[0], c[1], 1], [c[0], c[1], 0]);
+	});
+	HEX = { k, pts };
+	return pts;
 }
-function boxShadowPath(sx, sy, h, half, z) {
-	const w = half,
-		d = half * TILT,
-		L = SHADE.a < 0.02 ? 0 : h * SHADE.len * z,
-		dx = SHADE.x * L,
-		dy = SHADE.y * L,
-		P = [];
-	for (const [cx, cy] of [
-		[-w, -d],
-		[w, -d],
-		[w, d],
-		[-w, d],
-	]) {
-		P.push([sx + cx, sy + cy], [sx + cx + dx, sy + cy + dy]);
+function boxShadow(sx, sy, h, w, z) {
+	const L = SHADE.a < 0.02 ? 0 : h * SHADE.len * z,
+		vx = SHADE.x * L,
+		vy = SHADE.y * L,
+		d = w * TILT,
+		H = hexOf(Math.sign(vx), Math.sign(vy));
+	for (let i = 0; i < H.length; i++) {
+		const [cx, cy, m] = H[i],
+			x = sx + cx * w + m * vx,
+			y = sy + cy * d + m * vy;
+		if (i) ctx.lineTo(x, y);
+		else ctx.moveTo(x, y);
 	}
-	const H = hull(P);
-	ctx.moveTo(H[0][0], H[0][1]);
-	for (let i = 1; i < H.length; i++) ctx.lineTo(H[i][0], H[i][1]);
 	ctx.closePath();
 }
 function sunShadows(N, list, z, far) {
@@ -280,7 +283,7 @@ function sunShadows(N, list, z, far) {
 	for (const [, t, e] of list) {
 		if (t === 1) {
 			const B = BLD[e.kind];
-			if (!B.crop) boxShadowPath(SX(e.x), SY(e.y), B.h, B.fp * NAVC * 0.5 * z, z);
+			if (!B.crop) boxShadow(SX(e.x), SY(e.y), B.h * Math.min(1, e.prog), B.fp * NAVC * 0.5 * z, z);
 		} else if (t === 2) {
 			const U = UNIT[e.kind],
 				box = LOOKBOX[U.look] || [26, 30];
@@ -728,6 +731,7 @@ function drawFallen(f, s) {
 	ctx.restore();
 }
 const LEAN = new WeakMap(); // the view's own memory of each woodcutter's lean: the drawing never writes the game's units (Build 60)
+const PACED = new WeakMap(); // the view's memory of each unit's walk: when it last grew. A figure whose walk grew in the last 0.15 s is stepping
 function drawUnit(u, s) {
 	// a woodcutter leans in to its tree while it chops: the tree's ground keeps it 20 away, so it is drawn up to 12 closer (drawing only; the game does not move it)
 	const n = u.node,
@@ -746,9 +750,16 @@ function drawUnit(u, s) {
 		U = UNIT[u.kind],
 		col = G.P[u.owner].color,
 		st = u.owner === WILD ? null : stats(u.owner, u.kind);
-	const moving = G.t - (u.mvT || -9) < 0.15,
+	const w = u.st ? u.st.walk : 0;
+	let pw = PACED.get(u);
+	if (!pw) PACED.set(u, (pw = { w, t: -9 }));
+	else if (pw.w !== w) {
+		pw.w = w;
+		pw.t = G.t;
+	}
+	const moving = G.t - pw.t < 0.15, // any real change of place moves its legs (stepTo, Build 80 preview 9): nothing glides
 		working = u.work && G.t - u.work < 0.25,
-		pace = (u.st ? u.st.walk : G.t * 30) / STRIDE; // steps follow the ground covered, not the clock (Build 52): feet no longer slide
+		pace = w / STRIDE; // steps follow the ground covered, not the clock (Build 52): feet no longer slide
 	const fr =
 		G.t - (u.hitT || -9) < 0.25
 			? 3

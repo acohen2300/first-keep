@@ -63,7 +63,7 @@ const FINDS = {
 	},
 };
 const WAYFARER_EVERY = 240;
-const STARTLE = 45; // a defender (boar, bear) takes on only what comes this close, or what has hurt it: Hawk-Dove, it fights when it is provoked
+const WILD_LOOK = 140; // how far a beast or a guard looks for a stranger near its home (v70's distance, restored in Build 80 preview 9); a defender (boar, bear) then weighs it by Hawk-Dove V/C
 
 // the Fortress posts a job: break one guarded find, first side to take it is paid
 // ───────────────────────── The Natives: the fifth side, with one brain ─────────────────────────

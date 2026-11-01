@@ -696,8 +696,7 @@ function herdTick(u, dt, SP) {
 	const U = UNIT[u.kind];
 	if (U.look === 'dragon') {
 		const d = hyp(u.px - u.x, u.py - u.y) || 1;
-		u.x += ((u.px - u.x) / d) * U.spd * dt;
-		u.y += ((u.py - u.y) / d) * U.spd * dt;
+		stepTo(u, u.x + ((u.px - u.x) / d) * U.spd * dt, u.y + ((u.py - u.y) / d) * U.spd * dt);
 		u.fx = Math.sign(u.px - u.x) || u.fx;
 		u.mvT = G.t;
 		u.fly = 34;
@@ -714,8 +713,7 @@ function herdTick(u, dt, SP) {
 				v.hp -= U.trample;
 				v.hurtT = G.t;
 				v.flashT = G.t;
-				v.x += (v.x - u.x) * 0.6;
-				v.y += (v.y - u.y) * 0.6;
+				stepTo(v, v.x + (v.x - u.x) * 0.6, v.y + (v.y - u.y) * 0.6);
 			}
 		});
 		const n = G.nodes.find((m) => m.kind === 'farm' && m.farm && m.type === 'food' && dist(m, u) < 20);

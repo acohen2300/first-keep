@@ -2,18 +2,26 @@
 import asyncio, os, re, sys, glob
 from playwright.async_api import async_playwright
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SEED = """() => { const F = window.__fk; F.newGame(5); F.act('close'); F.setPause(false); for (let i = 0; i < 80; i++) F.step(0.25); F.saveGame(true); return localStorage.getItem(F.SAVEKEY); }"""
+SEED = """() => { const F = window.__fk; F.newGame(5); F.act('close'); F.setPause(false); for (let i = 0; i < 120; i++) F.step(0.25); F.saveGame(true); return localStorage.getItem(F.SAVEKEY); }"""
 JS = """(raw) => {
-  const F = window.__fk, bad = [];
-  // a waiting Resume card: force-save, close and back do not touch the save or start a game
-  F.newGame(9); localStorage.setItem(F.SAVEKEY, raw); const before = raw;
-  F.openCard({ type: 'resume', t: 30, age: 0, civ: 'roman' }); F.setPause(true);
-  const hs = F.holdSave; if (!hs) { /* boot sets it; set it as boot does */ }
-  F.setHold && F.setHold(true);
+  // run after a reload with a save waiting: the Resume card and the hold come from boot itself (not set by hand)
+  const F = window.__fk, bad = [], before = localStorage.getItem(F.SAVEKEY);
+  if (!F.G.card || F.G.card.type !== 'resume') bad.push('boot did not show the Resume card for a waiting save');
+  if (!F.holdSave) bad.push('boot did not hold the save while the Resume card waits');
   F.saveGame(true); if (localStorage.getItem(F.SAVEKEY) !== before) bad.push('a forced save overwrote the save the Resume card offers');
   F.act('close'); if (!F.G.card || F.G.card.type !== 'resume') bad.push('the Resume card closed into play');
   F.act('cardback'); if (!F.G.card || F.G.card.type !== 'resume') bad.push('back closed the Resume card');
-  F.refresh&&F.refresh(); if (!/data-act="close"[^>]*class="dis"/.test(document.body.innerHTML)) bad.push('close is not dim on the Resume card');
+  F.ui(true); const cl = document.querySelector('#card [data-act="close"]'); if (cl && !cl.classList.contains('dis')) bad.push('close is not dim on the Resume card');
+  return bad;
+}"""
+REST = """(raw) => {
+  const F = window.__fk, bad = [];
+  // an event with its own pieces on the map is ended on load (its end runs and the next is scheduled), not just dropped (first: the
+  // damaged-save checks below count as errors, and after two the game stops saving)
+  F.newGame(5); F.act('close'); F.step(0.25); F.startEvent('wildfire'); const t0 = F.G.t; F.saveGame(true); const sv = F.readSave();
+  if (!sv) bad.push('the event check could not save its game'); else { F.loadGame(sv);
+  if (F.G.ev.cur) bad.push('an event with its own pieces carried on after a load');
+  else if (!(F.G.ev.next > t0)) bad.push('an event dropped on load was not ended: the next event was never scheduled'); }
   // a finished game leaves no backup to bring it back
   localStorage.setItem(F.SAVEKEY + '.bak', raw); F.clearSave();
   if (localStorage.getItem(F.SAVEKEY) || localStorage.getItem(F.SAVEKEY + '.bak')) bad.push('clearSave left a save or a backup');
@@ -24,16 +32,22 @@ JS = """(raw) => {
   try { F.MIGRATE[35](o); } catch (e) { bad.push('a cut unit kind stops an old save from opening'); }
   localStorage.setItem(F.SAVEKEY, '{"units":1,"P":[],"v":39,"blds":null,"x":'); F.readSave();
   if (!localStorage.getItem(F.SAVEKEY + '.lost')) bad.push('a damaged save was not kept aside');
+  // two stale saves of different shapes each keep their own slot: the second never overwrites the first
+  const S = JSON.parse(raw), v1 = S.v + 1, v2 = S.v + 2;
+  for (const v of [v1, v2]) { localStorage.removeItem(F.SAVEKEY + '.old' + v); localStorage.setItem(F.SAVEKEY, JSON.stringify({ ...S, v })); F.readSave(); }
+  if (!localStorage.getItem(F.SAVEKEY + '.old' + v1) || !localStorage.getItem(F.SAVEKEY + '.old' + v2)) bad.push('stale saves share one slot: the second overwrote the first');
+  // an alert never waits for a voice; an effect does when the air is full
+  if (!F.voiceFree('horn', F.VOICES.max + 5)) bad.push('an alert waits for a voice when the air is full');
+  if (F.voiceFree('hit', F.VOICES.max)) bad.push('an effect takes a voice the alerts keep');
+  // All hands, when on, wears its ring on the Emergency card
+  F.emgStart('hands'); F.openCard({ type: 'emergency' }); const h = document.querySelector('#card [data-act="emg:hands"]');
+  if (!h || !h.classList.contains('on')) bad.push('All hands is on but its button does not show it');
   return bad;
 }"""
 def static():
     bad = []; src = {f: open(f).read() for f in glob.glob(os.path.join(ROOT, 'src', '*.js'))}
     all_ = ''.join(src.values())
     if "'card:menu,land'" in all_: bad.append("House fix still points at 'card:menu,land'")
-    if 'G.ev.cur = null;\n\t} // an event' in all_: bad.append('a dropped event on load is not ended')
-    if not re.search(r"CHAN\[name\] !== 'alert' &&", all_): bad.append('an alert still waits for a voice')
-    if not re.search(r"on\('hands'\)", all_): bad.append('All hands never shows on')
-    if '.old\' + S.v' not in all_: bad.append('stale saves share one .old slot')
     # one home for the dice and the purse (batch 1): no Math.random in the sim files; no res += / -= outside earn, spend and payBack
     for f, t in src.items():
         n = os.path.basename(f)
@@ -44,8 +58,22 @@ async def main():
     async with async_playwright() as p:
         br = await p.chromium.launch(); pg = await br.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)[:200]))
         await pg.goto('file://' + os.path.join(ROOT, 'first-keep.html')); await pg.wait_for_timeout(300)
-        raw = await pg.evaluate(SEED); bad = await pg.evaluate(JS, raw); await br.close()
+        raw = await pg.evaluate(SEED); bad = []
+        # the Welcome back card holds the whole screen: reload with the save waiting, then tap round it with a real finger
+        await pg.reload(); await pg.wait_for_timeout(500)
+        bad += await pg.evaluate(JS, raw)
+        await pg.locator('#tally [data-act="card:stores"]').first.click(force=True); await pg.wait_for_timeout(100)
+        box = await pg.locator('#cv').bounding_box(); await pg.mouse.click(box['x'] + box['width'] / 2, box['y'] + 140); await pg.wait_for_timeout(100)
+        await pg.mouse.wheel(0, 300); await pg.wait_for_timeout(100)
+        card = await pg.evaluate("() => window.__fk.G.card && window.__fk.G.card.type")
+        if card != 'resume': bad.append('a tap outside the Welcome back card got through: another card (' + str(card) + ') opened over it')
+        if await pg.locator('#card [data-act="resume"]').count(): await pg.locator('#card [data-act="resume"]').first.click(); await pg.wait_for_timeout(200)
+        st = await pg.evaluate("() => [window.__fk.G.card && window.__fk.G.card.type, window.__fk.holdSave]")
+        if st[0] == 'resume' or st[1]: bad.append('the Welcome back card does not answer its own choice (' + str(st) + ')')
+        # the rest in a clean page, so a failure above cannot spill into it
+        await pg.evaluate("() => localStorage.clear()"); await pg.reload(); await pg.wait_for_timeout(300)
+        bad += await pg.evaluate(REST, raw); await br.close()
     bad = bad + static() + errs
-    print(('PASS ' if not bad else 'FAIL ') + 'save safety (Resume locked, force cannot overwrite, clear removes backup, event ends on load)', '' if not bad else bad)
+    print(('PASS ' if not bad else 'FAIL ') + 'save safety (Welcome back holds the screen, force cannot overwrite, clear removes backup, stale slots, event ends on load, alerts, All hands)', '' if not bad else bad)
     sys.exit(1 if bad else 0)
 asyncio.run(main())
