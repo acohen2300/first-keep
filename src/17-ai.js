@@ -292,6 +292,21 @@ function think(p) {
 			v = vils.find((x) => x.job === over && x.carry < 3 && !atShop(x)); // never a shop worker (Build 60: a Mint or Foundry was emptied each time gold or iron ran over)
 		if (v) setJob(v, short[0][0]);
 	}
+	// a villager waiting with no find in reach (its Zs) is put to the job whose best free find pays most: the forager's rate R at that find,
+	// its walk out counted (Charnov 1976, the marginal value theorem; the rate of decision 1). Yours wait for your word (item 6)
+	for (const v of vils)
+		if (RES.includes(v.job) && v.idle && !v.node && !v.hunt && !v.inside) {
+			const probe = { x: v.x, y: v.y, owner: o, node: null, carry: 0 }; // a fresh order: any find of the job, not only the kind it lost
+			let best = null;
+			for (const r of RES) {
+				const b = bestNode(probe, r);
+				if (b && (!best || b.R > best.R)) best = { ...b, r };
+			}
+			if (!best) continue;
+			setJob(v, best.r, best.n.hunt ? null : best.n);
+			if (best.n.hunt) v.hunt = best.n.hunt;
+			else if (!best.n.farm) best.n.wk = (best.n.wk || 0) + 1; // counted at once, so the next waiter sees the crowd (setJob counts a field)
+		}
 	// finds: a detachment clears the nearest guarded one when nothing else is going on; it hires vagabonds it walks past
 	if (per.loot && armyN >= 10 && !p.wave) lootRun(p);
 	throneRun(p, per);

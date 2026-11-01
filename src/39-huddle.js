@@ -21,7 +21,7 @@ const hostile = (v) =>
 	v.owner !== 0 &&
 	v.hp > 0 &&
 	!v.inside &&
-	atWar(0, v.owner) &&
+	isFoe(0, v) &&
 	(isSoldier(v) || (v.owner === WILD && UNIT[v.kind].tick === 'wild'));
 function foesNear(c) {
 	const out = [];

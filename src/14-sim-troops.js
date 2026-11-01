@@ -27,8 +27,14 @@ function priestTick(u, dt, SP) {
 	if (u.state === 'convert') {
 		// beside an enemy for a spell, the priest turns them; the counter is to kill the priest
 		const t = G.units.find(
-			(v) => v.id === u.cv && v.hp > 0 && !v.inside && atWar(u.owner, v.owner) && UNIT[v.kind].cls,
-		);
+			(v) =>
+				v.id === u.cv &&
+				v.hp > 0 &&
+				!v.inside &&
+				atWar(u.owner, v.owner) &&
+				UNIT[v.kind].cls &&
+				clsCount(u.owner, UNIT[v.kind].cls) < clsMax(UNIT[v.kind].cls, u.owner),
+		); // the ceiling holds for a convert as for a recruit (C8): with no room the spell stops
 		if (!t || u.cvCd > G.t) {
 			u.state = 'home';
 			u.cv = null;
@@ -47,6 +53,7 @@ function priestTick(u, dt, SP) {
 				t.hb = undefined;
 				setJob(t, t.kind === 'vil' ? G.P[u.owner].rally : null);
 				t.levy = undefined;
+				t.native = false; // a Native turned is the side's own now: no ground of theirs, no regard for a blow on it (C8)
 				t.max = maxHpU(u.owner, t.kind);
 				t.hp = Math.min(t.hp, t.max);
 				u.cvCd = G.t + CONVERT.cd;
@@ -90,7 +97,9 @@ function medicTick(u, dt, SP) {
 }
 // Healing: a hospital or a medic heals your own soldiers within reach. The best one in reach counts; they do not add up. A wound closes
 // toward full as the first-order lag (the delayed exponential of Cukjati, Reberšek & Miklavčič 2001: fast while the wound is wide, slowing
-// as it closes); the healer's `heal` is the hit points a second a linear rate would give, so τ = max / heal and a half-dead soldier takes the time it did.
+// as it closes): HP(t) = max − (max − HP0)·e^(−t/τ), τ = max / heal, `heal` the hit points a second at the start. Closing a share f of the
+// gap takes −τ ln(1 − f): 95% takes 2.996 τ. A half-dead swordsman (70, heal 3: τ 23.3 s) is at 95% of full in τ ln 10 = 53.7 s, 99% in
+// τ ln 50 = 91.3 s (N5: the old note's 11.7 s was the linear time, 35 / 3). The garrison's heal (solTick) runs on top, as decided.
 function healTick(dt) {
 	if (G.tick % 3) return;
 	const H = [];
@@ -120,6 +129,7 @@ function shot(x1, y1, h1, x2, y2, fire) {
 	G.tracers.push({ x1, y1, h1, x2, y2, life: dur, dur, arc: 4 + d * 0.16, fire: !!fire });
 }
 // a soldier at home guards the ground round its own yard and round the Town Center (Build 39 review: a yard far from the Town Center was left undefended)
+const routSecs = (o) => MORALE.rout * (G.P[o].techs.has('engage') ? 0.5 : 1); // Engagement halves the run (C6: the grace no longer shrinks with it)
 const nearHome = (u, t, k) => (u.hax !== undefined && hyp(t.x - u.hax, t.y - u.hay) < 320) || (!!k && dist(t, k) < 320);
 function solTick(u, dt, SP) {
 	const U = UNIT[u.kind],
@@ -147,13 +157,8 @@ function solTick(u, dt, SP) {
 	}
 	if (u.inside) {
 		// a new order: out of the building
-		const b = G.blds.find((x) => x.id === u.hid);
-		u.inside = false;
+		stepOut(u, G.blds.find((x) => x.id === u.hid));
 		u.hid = 0;
-		if (b) {
-			u.x = b.x + u.ox * 0.8;
-			u.y = b.y + 30;
-		}
 	}
 	if (
 		u.hp < u.max &&
@@ -172,7 +177,7 @@ function solTick(u, dt, SP) {
 		u.hp = relax(u.hp, u.max, u.max / (GARRISON.heal * fxv(o, 'garrison').m), 1); // garrisoned: the wound closes, once a second
 	if (u.state === 'rout') {
 		// broken: it runs from the nearest foe toward home, then comes to itself
-		if (G.t > u.routT) {
+		if (G.t > u.routAt + routSecs(o)) {
 			u.state = 'home';
 			u.mor = MORALE.after;
 			u.fleeFrom = null;
@@ -232,7 +237,7 @@ function solTick(u, dt, SP) {
 		u.mor = clamp(m, 0, 1);
 		if (u.mor <= 0 && !(u.fb > G.t) && !U.bonly) {
 			u.state = 'rout';
-			u.routT = G.t + MORALE.rout * (G.P[o].techs.has('engage') ? 0.5 : 1);
+			u.routAt = G.t; // when it broke: the run's end and the grace before a hand may take it both count from here (C6)
 			u.tgt = null;
 			u.focus = null;
 			u.fleeFrom = null;
@@ -253,7 +258,7 @@ function solTick(u, dt, SP) {
 		!(
 			tgt.hp > 0 &&
 			!tgt.inside &&
-			(atWar(o, tgt.owner) || onMe(tgt, u)) &&
+			(isFoe(o, tgt, u) || onMe(tgt, u)) &&
 			(edge(u, tgt) < sightOf(u) * 1.4 * (TEMPER[temperOf(u)].chase || 1) ||
 				(u.state === 'home' && nearHome(u, tgt, k)))
 		)
@@ -287,7 +292,7 @@ function solTick(u, dt, SP) {
 		u.tgt = tgt;
 	}
 	if (u.focus) {
-		if (u.focus.hp > 0 && !u.focus.inside && atWar(o, u.focus.owner)) {
+		if (u.focus.hp > 0 && !u.focus.inside && isFoe(o, u.focus, u)) {
 			tgt = u.focus;
 			u.tgt = tgt;
 		} else u.focus = null;
@@ -298,7 +303,7 @@ function solTick(u, dt, SP) {
 		u.state !== 'attack' &&
 		!u.focus &&
 		temperOf(u) === T_HOLD &&
-		edge(u, tgt) > rngOf(u) + (tgt.q ? 2 : 5)
+		edge(u, tgt) > reachOf(rngOf(u), tgt)
 	)
 		tgt = null; // hold ground: fight only what comes within reach
 	if (u.state === 'escort') {
@@ -324,11 +329,11 @@ function solTick(u, dt, SP) {
 		}
 	}
 	if (tgt) {
-		const reach = rngOf(u) + (tgt.q ? 2 : 5);
+		const reach = reachOf(rngOf(u), tgt);
 		if (
 			!tgt.q &&
 			tgt.state === 'rout' &&
-			tgt.routT - G.t < MORALE.rout - 2 &&
+			G.t - tgt.routAt > MORALE.capAfter &&
 			dist(u, tgt) <= MORALE.capR &&
 			!U.bonly
 		) {
@@ -373,7 +378,7 @@ function solTick(u, dt, SP) {
 					if (U.rng > 20) shot(u.x, u.y, 9, tgt.x, tgt.y, fxv(o, 'fire', unitKeys(u.kind)).a >= 1); // fire arrows burn on the way
 				}
 			}
-		} else moveTo(u, tgt.x, tgt.y, dt, Math.max(2, reach - 2 + (tgt.q ? halfOf(tgt) : 0)), SP);
+		} else closeIn(u, tgt, reach, dt, SP);
 		u.idleT = 0;
 		return;
 	}
@@ -494,7 +499,7 @@ function wildTick(u, dt, SP) {
 		u.aggro = null;
 	}
 	if (t) {
-		const reach = U.rng + 5 + (t.q ? halfOf(t) : 0);
+		const reach = reachOf(U.rng, t);
 		if (edge(u, t) <= reach) {
 			u.fx = Math.sign(t.x - u.x) || u.fx;
 			if (u.cd <= 0) {
@@ -502,7 +507,7 @@ function wildTick(u, dt, SP) {
 				u.cd = U.cd;
 				u.hitT = G.t;
 			}
-		} else moveTo(u, t.x, t.y, dt, reach - 2, SP);
+		} else closeIn(u, t, reach, dt, SP);
 		return;
 	}
 	if (dist(u, home) > 30) moveTo(u, u.hx + u.ox * 0.5, u.hy + u.oy * 0.5, dt, 6, SP);

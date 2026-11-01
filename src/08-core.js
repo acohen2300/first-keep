@@ -376,6 +376,11 @@ function rebattalion() {
 				}
 }
 const atWar = (a, b) => a !== b && G.rel[a][b] === 'war';
+// The one hostility test (decision 8, C1): sides by their relations, and the Natives (their warriors, the citadel) by theirs with each side;
+// the rest of the wild (animals, bandits, robbers, outlaws, the horde, guards) is a foe to everyone, always. A treaty binds only its signers
+// (pacta tertiis nec nocent nec prosunt). me: the one looking, when it is of that wild itself (the horde at a building).
+const wildFoe = (x) => !!x && x.owner === WILD && !x.native && !x.citadel;
+const isFoe = (o, x, me) => x.owner !== o && (atWar(o, x.owner) || wildFoe(x) || wildFoe(me));
 const friendly = (a, b) => a === b || G.rel[a][b] === 'ally';
 const season = () => SEASONS[Math.floor(G.t / SEASON_LEN) % 4];
 // ── The sky (Build 55): the sun's height from the calendar and the land's latitude, by the standard sunrise arithmetic; the moon's lit

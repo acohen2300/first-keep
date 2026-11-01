@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 40; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 41; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -165,6 +165,16 @@ const MIGRATE = {
 		S.v = 40;
 		return S;
 	}, // decision 5a: the map from 2000 to 2160; a wave is judged by its progress (D1)
+	40: (S) => {
+		for (const u of S.units || [])
+			if (u.routT !== undefined) {
+				const p = (S.P || [])[u.owner];
+				u.routAt = u.routT - MORALE.rout * (p && (p.techs || []).includes('engage') ? 0.5 : 1);
+				delete u.routT;
+			}
+		S.v = 41;
+		return S;
+	}, // C6: a rout keeps when it began, not when it ends
 };
 const evSave = () => {
 	const V = G.ev || {},

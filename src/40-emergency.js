@@ -34,7 +34,7 @@ const stand = (u, x, y) =>
 	});
 // the way the danger lies from the Town Center: the attack coming, else the nearest threat, else across the map
 function threatDir(k) {
-	const t = G.incoming || nearest(G.threats, k, (v) => atWar(0, v.owner), 700) || { x: MID, y: MID },
+	const t = G.incoming || nearest(G.threats, k, (v) => isFoe(0, v), 700) || { x: MID, y: MID },
 		d = hyp(t.x - k.x, t.y - k.y) || 1;
 	return { x: (t.x - k.x) / d, y: (t.y - k.y) / d };
 }
@@ -63,14 +63,7 @@ function release(u) {
 	u.emg = false;
 	u.scared = false;
 	u.safe = null;
-	if (u.inside) {
-		const b = G.blds.find((x) => x.id === u.hid);
-		u.inside = false;
-		if (b) {
-			u.x = b.x + u.ox * 0.8;
-			u.y = b.y + 30;
-		}
-	}
+	if (u.inside) stepOut(u, G.blds.find((x) => x.id === u.hid));
 	u.hid = 0;
 }
 function villagersIn() {

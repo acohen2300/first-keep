@@ -1,10 +1,10 @@
 {
- "why": "Map 80 review fixes: the board is laid anew from minute 1 by the layout changes alone (four towers and the shrine on the Throne, every find laid by its nodes with its shape rolled first, the lodes symmetric about their lines, runway deposits searched outward, cuts home round water). Measured: with the D1 cool-down exemptions and the scout loop from the real Town Centers taken out the fingerprint is the same, so they do not move it; the graze point's new name and the map labels change no play",
+ "why": "Combat batch (Nov 1): C1 one hostility test, C2-C9, N4 animal by kind, item 5 own spots, item 6 computers move waiting villagers; shares by turning each off: item 6 moves all 5 minutes (1539 of the count difference), C4 3 minutes (244); C1, C2, C3, C5, C6, C8, C9, item 5 none in these 5 minutes",
  "minutes": [
-  "104/190/100/50/5/2/0 | 30/40/100/20/7/4/0 | 0/30/100/20/6/4/0 | 0/30/100/20/6/4/0 | 200/200/100/50/144/69/0",
-  "143/220/100/50/5/3/0 | 39/88/100/20/11/5/0 | 13/67/100/20/9/5/0 | 33/63/100/20/8/5/0 | 200/200/100/50/144/69/0",
-  "271/200/110/50/7/3/0 | 82/18/100/0/16/7/0 | 141/27/100/30/12/6/0 | 188/13/100/30/12/6/0 | 200/200/100/50/142/69/0",
-  "414/260/130/150/6/4/0 | 128/21/100/15/18/8/0 | 20/59/100/10/12/7/0 | 38/35/100/30/12/7/0 | 200/200/100/50/139/69/0",
-  "459/290/150/150/6/4/1 | 149/38/100/28/23/9/0 | 32/48/45/16/17/17/1 | 4/75/57/0/15/16/1 | 200/200/100/50/136/69/0"
+  "114/190/100/50/5/2/0 | 30/60/100/20/6/3/0 | 20/60/100/20/6/3/0 | 19/100/100/20/6/3/0 | 200/200/100/50/143/69/0",
+  "143/220/100/50/5/3/0 | 52/70/100/20/11/4/0 | 15/60/100/20/10/4/0 | 31/21/100/20/10/5/0 | 200/200/100/50/143/69/0",
+  "272/200/110/50/6/3/0 | 69/22/100/20/15/6/0 | 248/90/100/20/12/5/0 | 249/131/100/20/12/5/0 | 200/200/100/50/141/69/0",
+  "399/260/130/150/5/4/0 | 128/54/100/20/16/6/0 | 30/20/45/20/12/16/1 | 14/62/100/20/13/7/0 | 200/200/100/50/140/69/0",
+  "451/280/140/150/5/4/1 | 279/62/100/10/17/7/0 | 194/52/45/22/16/17/1 | 108/37/45/20/16/17/1 | 200/200/100/50/142/69/0"
  ]
 }

@@ -525,7 +525,7 @@ const PLAY = {
 		const { S, V } = qaIdle(),
 			h = G.qa.h;
 		if (S.length) order(S, h);
-		for (const u of V) u.post = { x: h.e.x + u.ox, y: h.e.y + u.oy };
+		postTo(V, h.e);
 		if (V.length) say(`${V.length} idle villagers come here.`, '', 3);
 		else if (!S.length) say(freeWhy(), '', 4);
 		hideQuick();
@@ -600,7 +600,10 @@ const PLAY = {
 	vhome(a) {
 		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a)),
 			k = keepOf(0);
-		if (u) stopVil(u, k ? { x: k.x + u.ox, y: k.y + halfOf(k) + 8 + u.oy } : null);
+		if (u) {
+			stopVil(u, null);
+			if (k) postTo([u], { x: k.x, y: k.y + halfOf(k) + 8 });
+		}
 		closeCard();
 	}, // the worker card: Home, to the Town Center and idle
 	replant(a) {

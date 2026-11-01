@@ -867,14 +867,7 @@ function moveVil(o, job, down) {
 }
 // Stop: a villager drops its job and stands where it is (or where it is sent), ready for a new order (Build 61)
 function stopVil(u, post) {
-	if (u.inside && u.shop) {
-		const b = G.blds.find((x) => x.id === u.shop);
-		u.inside = false;
-		if (b) {
-			u.x = b.x;
-			u.y = b.y + halfOf(b) + 6;
-		}
-	}
+	if (u.inside && u.shop) stepOut(u, G.blds.find((x) => x.id === u.shop));
 	u.shop = 0;
 	setJob(u, null);
 	u.hunt = null;
