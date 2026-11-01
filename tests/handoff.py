@@ -180,6 +180,7 @@ PLANTS = [
   ('07-text.js', '${TEACH.seats} learn at a time per School.', 'Four learn at a time per School.', 'tests/text81.py', 'a hand-copied number in the rules (F9)', 'F9'),
   ('06-rules-tuning.js', "\tchariot: 'cata',\n\tcatapult: 'treb',", "\tchariot: 'cata',\n\tharcher: 'cata',\n\tcatapult: 'treb',", 'tests/text81.py', 'a lesson to the same age (D16)', 'D16'),
   ('13-sim-civil.js', 'const got = u.carry; // the load', 'const got = Math.round(u.carry); // the load', 'tests/text81.py', 'a load rounded at the drop-off (C11)', 'C11'),
+  ('13-sim-civil.js', "stash(u.owner, u.carryType, u.carry);\n\t\t\t\tu.st.got += u.carry;", "stash(u.owner, u.carryType, Math.round(u.carry));\n\t\t\t\tu.st.got += u.carry;", 'tests/text81.py', 'a load rounded at the workshop door (C11)', 'C11 shop'),
   ('13-sim-civil.js', "if (u.state === 'look') {\n\t\t\tif ((G.tick + u.id) % 15) return;", "if (u.state === 'look' && (G.tick + u.id) % 15 === 0) {\n\t\t\tif (false) return;", 'tests/text81.py', 'a spy on the look-out walks home (C12)', 'C12'),
   ('13-sim-civil.js', '* gatherMul(u.owner, u.node) * workMul(u);', '* gatherMul(u.owner, u.node) * hungerOf(u.owner);', 'tests/text81.py', 'a sick shepherd milks at full (C15)', 'C15 a sick shepherd'),
   ('13-sim-civil.js', "(u.node && u.node.kind === 'fish' && !dockNear(u.owner, u.node)))", 'false)', 'tests/text81.py', 'a fisher keeps fishing with no dock (C15)', 'C15: a fisher'),

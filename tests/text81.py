@@ -54,6 +54,12 @@ JS = """() => {
   // C11: a load of 0.45 delivers 0.45, not 0
   { const u = G.units.find((x) => x.owner === 0 && x.kind === 'vil'); Object.assign(u, { x: k.x + 30, y: k.y, job: 'wood', node: null, hunt: null, carry: 0.45, carryType: 'wood', scared: false, inside: false });
     const w0 = P.res.w; for (let i = 0; i < 60 && u.carry > 0; i++) F.vilTick(u, 1 / 30, 1); near('C11: a load of 0.45 delivers', P.res.w - w0, 0.45, 1e-9); }
+  // C11, the shop: a load carried to a foundry's door is stashed whole and counted whole
+  { const fd = F.mkBld(0, 'foundry', k.x - 160, k.y + 160, 1); G.blds.push(fd); F.fxDirty(); const n = G.nodes.find((q) => q.farm === fd);
+    if (!n) bad.push('C11 shop: no node for a foundry'); else {
+      const u = F.addUnit(0, 'vil', fd.x, fd.y + F.halfOf(fd) + 3); Object.assign(u, { job: n.type, node: n, hunt: null, carry: 0.45, carryType: n.type, scared: false, inside: false, shop: null }); n.wk = 1;
+      const tot = () => Object.values(P.res).reduce((a, b) => a + b, 0), w0 = tot(), g0 = u.st.got; F.vilTick(u, 0.001, 1);
+      near('C11 shop: the load stashed', tot() - w0, 0.45, 1e-9); near('C11 shop: the load counted', u.st.got - g0, 0.45, 1e-9); } }
   // C12: a computer's spy on the look-out stays where it is between its checks
   { const s = F.addUnit(1, 'spy', 1000, 1000); s.state = 'look'; s.tk = 0; s.lookT = G.t; s.mvT = -9; const x = s.x, y = s.y;
     for (let i = 0; i < 40; i++) { G.tick++; if ((G.tick + s.id) % 15 === 0) G.tick++; F.spyTick(s, 0.1, 1); }

@@ -673,7 +673,7 @@ const iceMu = (studs) => {
 };
 // what the ground takes off a march for one side, at a place if given: Pandolf's terrain factor over dirt, as 1 / η, and the shorter stride on
 // ice, by the share of the grip a step lacks there (none when what the ice offers meets the need: design, inside the measured μ)
-const strideShare = (need, mu) => clamp((need - mu) / (need - iceMu(false)), 0, 1);
+const strideShare = (need, mu) => (need <= mu ? 0 : clamp((need - mu) / (need - iceMu(false)), 0, 1)); // no stride lost when the studs hold the need
 const groundSpd = (o, keys, at) => {
 	const c = G.clim,
 		need = needOf(keys);
