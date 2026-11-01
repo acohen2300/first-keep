@@ -141,6 +141,7 @@ JS2 = """() => {
   // ── any real move is a step ──
   { const G = fresh(), k = F.keepOf(0), V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), a = V[0], b = V[1];
     const walk = (u) => u.st.walk;
+    a.post = b.post = null; // not bound for their own spots (those do not shove each other, item 5)
     b.x = a.x + 3; b.y = a.y; let wa = walk(a), wb = walk(b); F.pushApart(a, b);
     if (!(walk(a) > wa && walk(b) > wb)) bad.push('a push moves a villager without a step');
     const c = F.addUnit(1, 'cata', a.x - 20, a.y); wa = walk(a); const x0 = a.x; F.hurt(1, c, a, 1);
