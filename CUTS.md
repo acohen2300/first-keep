@@ -1227,3 +1227,5 @@ Tests:
 - Play fingerprint: unchanged (each change turned off in turn: all equal the baseline; the five-minute script reaches none of them).
 - Balance (4 seeds, 30 min): main and research80 in `docs/Research Notes - v80 - Post Clean - Working.md`.
 - Merge with the map: both builds raised the save shape to 40; now the map is step 39 → 40 and research step 40 → 41 (`SAVEV` 41); the saves test runs the research step from 40. The starting villagers keep the map's `PLACES.start` and research's `START_VILS` centring.
+
+- Merge fix (Nov 1, from the hunt): the Mail card scrolled 22 px with a group filter on (11 ranks). The preview switch moved into the pager rank (Previous · Hide previews · Next), and short pages are padded so Next stays put. Test plus 2 planted bugs in tests/cards.py.
