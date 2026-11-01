@@ -671,7 +671,7 @@ const CARDS = {
 		return (
 			h +
 			(show.length
-				? acts(show.map((m) => `<button class="mr" data-act="${linkOf(m) || 'mail'}" style="--cc:${ccOf(m.cls)}"><b>${m.text}${m.n > 1 ? ` ×${m.n}` : ''}</b><small>${GROUPS[m.grp]} · ${clock(m.t)}${m.why ? ' · ' + m.why : ''}</small></button>`).join(''), 'c1')
+				? acts(show.map((m) => `<button class="mr" data-act="${linkOf(m) || 'mailp:0'}" style="--cc:${ccOf(m.cls)}"><b>${m.text}${m.n > 1 ? ` ×${m.n}` : ''}</b><small>${GROUPS[m.grp]} · ${clock(m.t)}${m.why ? ' · ' + m.why : ''}</small></button>`).join(''), 'c1')
 				: acts(info('Nothing here yet', 'each message is kept here as it comes', 'left line'), 'c1')) +
 			acts(
 				btn('mailp:-1', 'Previous', `page ${pg + 1} of ${pages}`, pg ? '' : 'dis') +
@@ -804,7 +804,7 @@ const CARDS = {
 		);
 	},
 };
-const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'research', 'menu', 'troops']); // the Army card with Battalions needs 11 ranks (E8) // the cards that take the whole height
+const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'research', 'menu', 'troops']); // the cards that take the whole height; the Army card with Battalions needs 11 ranks (E8)
 // three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet: lg every rank that fits above the row (the Build
 // card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most
 const SIZE_OF = (c) =>

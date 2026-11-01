@@ -127,15 +127,17 @@ function flagAt(x, y, col, z) {
 	ctx.closePath();
 	ctx.fill();
 }
-let FONTF = null;
+let FONTF = null,
+	FONTW = null;
 const fontF = () => FONTF || (FONTF = getComputedStyle(document.body).fontFamily);
-// every word on the map, one home (v80, Albert): the game's one font at its one weight. A label on the map scales whole with its pill and its
-// icon ("If you can zoom it, it needs to scale"): 12 at the starting zoom, larger zoomed in, smaller zoomed out to a floor of 9 ("base 3").
-// What is pinned to the screen (the edge arrows, the crosshair's reference) stays 12
-const labelK = () => Math.max(9 / 12, cam.z / ZOOM_START);
-const mapFont = (px) => `600 ${Math.round(px)}px ${fontF()}`;
+// every word on the map, one home (v80, Albert): the game's one font at its one weight, read from the page (the style sheet's --weight). A
+// label on the map scales whole with its pill and its icon ("If you can zoom it, it needs to scale"): LABEL.px at the starting zoom, larger
+// zoomed in, smaller zoomed out to LABEL.floor. k: the label's scale, labelK() on the map; what is pinned to the screen (the edge arrows,
+// the crosshair's reference) takes 1
+const labelK = () => Math.max(LABEL.floor / LABEL.px, cam.z / ZOOM_START);
+const mapFont = (k = 1) => `${FONTW || (FONTW = getComputedStyle(document.body).fontWeight)} ${Math.round(LABEL.px * k)}px ${fontF()}`;
 function idleMark(x, y, z) {
-	ctx.font = mapFont(12 * labelK());
+	ctx.font = mapFont(labelK());
 	ctx.fillStyle = '#ffd35e';
 	ctx.strokeStyle = 'rgba(0,0,0,.7)';
 	ctx.lineWidth = 2.5;
@@ -144,7 +146,7 @@ function idleMark(x, y, z) {
 }
 function tag(text, x, y) {
 	const k = labelK();
-	ctx.font = mapFont(12 * k);
+	ctx.font = mapFont(k);
 	const w = ctx.measureText(text).width + 10 * k;
 	x = clamp(x, 4, cw - w - 4);
 	ctx.fillStyle = 'rgba(18,23,21,.92)';
@@ -516,7 +518,7 @@ function drawOrders(z) {
 	ctx.save();
 	ctx.strokeStyle = G.P[0].color;
 	ctx.fillStyle = G.P[0].color;
-	ctx.font = mapFont(12 * labelK());
+	ctx.font = mapFont(labelK());
 	ctx.textAlign = 'center';
 	for (const id in G.ords) {
 		const O = G.ords[id];

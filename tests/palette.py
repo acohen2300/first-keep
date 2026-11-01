@@ -50,9 +50,9 @@ for m in re.finditer(r'font-size:([^;}]+)|font:([^;}]+)', rest):
 if not V.get('display', '').strip().startswith('"IM Fell English SC"') or not V.get('ui', '').strip().startswith('"Barlow Semi Condensed"'): bad.append('the two fonts are not --display (IM Fell English SC) and --ui (Barlow Semi Condensed)')
 for m in re.finditer(r'font-family:([^;}]+)', rest):
     if m.group(1).strip() not in ('var(--ui)', 'var(--display)', 'inherit'): bad.append(f'a font outside the two: {m.group(0)[:60]}')
-# one weight: 600 once, on the body; the display face keeps its 400; no other weight anywhere
+# one weight: --weight (600) in :root, read once by the body (and by mapFont from the page); the display face keeps its 400; no other weight
 w = re.findall(r'font-weight:([^;}]+)', rest)
-if w.count('600') != 1 or any(x not in ('600', '400', 'inherit') for x in w): bad.append(f'Barlow at one weight, 600, set once: the style sheet writes {w}')
+if V.get('weight', '').strip() != '600' or w.count('var(--weight)') != 1 or any(x not in ('var(--weight)', '400', 'inherit') for x in w): bad.append(f'Barlow at one weight, 600, set once: --weight is {V.get("weight")}, the style sheet writes {w}')
 for m in re.finditer(r'font:(\d+)', rest):
     if m.group(1) != '400' or 'var(--display)' not in rest[m.start():m.start() + 60]: bad.append(f'a weight in a font shorthand: {m.group(0)}')
 # one Barlow file, at 600; the fonts the build puts in the file are the two
@@ -65,8 +65,13 @@ for f in files:
     for n, line in enumerate(open(f), 1):
         if re.search(r'\.font\s*=', line) and not re.search(r'\.font\s*=\s*mapFont\(', line): bad.append(f'{f}:{n} a map label not through mapFont: {line.strip()[:60]}')
         if re.search(r"system-ui|'sans-serif'|\bsans-serif\b", line) and 'shell' not in f: bad.append(f'{f}:{n} the phone\'s own font: {line.strip()[:60]}')
-if not re.search(r'const labelK = \(\) => Math\.max\(9 / 12, cam\.z / ZOOM_START\);', js): bad.append('labelK is not 12 at the starting zoom with a floor of 9')
-if not re.search(r'const mapFont = \(px\) => `600 \$\{Math\.round\(px\)\}px \$\{fontF\(\)\}`;', js): bad.append('mapFont does not draw the one font at 600')
+# the label sizes have one home (LABEL, 12 and 9) and the weight one (--weight): no call site writes a size, mapFont writes no weight
+if not re.search(r'LABEL = \{ px: 12, floor: 9 \}', js): bad.append('the map labels are not LABEL = { px: 12, floor: 9 }')
+for m in re.finditer(r'mapFont\(([^)]*)\)', js):
+    if re.search(r'\d', m.group(1)): bad.append(f'a map label writes its own size: {m.group(0)}')
+mf = re.search(r'const mapFont = .*', js); lk = re.search(r'const labelK = .*', js)
+if not mf or 'LABEL.px' not in mf.group(0) or 'fontWeight' not in mf.group(0) or re.search(r'`\d{3} ', mf.group(0)): bad.append('mapFont does not read LABEL.px and the page\'s one weight')
+if not lk or 'LABEL.floor' not in lk.group(0) or 'ZOOM_START' not in lk.group(0): bad.append('labelK does not read LABEL.floor and ZOOM_START')
 for k in ['t-quick', 't-sweep', 't-settle', 't-long']:
     if len(re.findall(r'--' + k + r':', css)) != 1: bad.append(f'{k} is not defined once')
 for m in re.finditer(r'(transition|animation):([^;}]*)', css):

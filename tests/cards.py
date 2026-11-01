@@ -47,6 +47,13 @@ JS = r"""() => {
     ok && ok.click(); F.ui(true);
     if (P.res.g !== g0 - 100 || !(F.regardOf(0) > r0)) bad.push("Relations: the Natives' check mark did not send their gift");
     if (!(G.relPick || {})[1] || G.relPick[1].want !== 'peace') bad.push("Relations: the Natives' check mark sent another row's pick");
+    // a side under notice reads "foe in 30 s" in the foe's colour, whole in its slot
+    G.warAt['0,3'] = G.t + 30; F.ui(true); const n3 = $('#card [data-act="relok:3"]').parentElement.querySelector('.info small');
+    if (!n3 || !/^foe in 30 s$/i.test(n3.textContent) || !n3.classList.contains('stance-war')) bad.push(`Relations: a side under notice reads "${n3 && n3.textContent}", not "foe in 30 s" in red`);
+    else if (n3.scrollWidth > n3.clientWidth + 1) bad.push('Relations: "foe in 30 s" is cut in its slot');
+    delete G.warAt['0,3'];
+    // the parts under 44 are the ones EXCEPTIONS #13 names: the stance icons, a set a row
+    if ($$('#card .thin').length !== oks.length || $$('#card .thin').some((t) => !t.querySelector('[data-act^="relwant:"]'))) bad.push(`Relations: ${$$('#card .thin').length} controls are marked thin, not the ${oks.length} stance sets (EXCEPTIONS #13)`);
     G.ktab = 'town'; }
   // the vassal's Demand rank keeps its 44 (EXCEPTIONS #12 gone; the gate measures every card at every size, the vassal now included)
   try {
@@ -63,12 +70,15 @@ JS = r"""() => {
     if (pages.slice(0, 5).join() !== '6,6,6,6,6' || G.mailP !== 4) bad.push(`Mail: pages of ${pages.join(', ')} lines, last page ${G.mailP + 1}: six lines a page, five pages`);
     if (!$('#card [data-act="mailp:1"]').classList.contains('dis')) bad.push('Mail: Next is not dim on the last page');
     F.act('mail'); F.ui(true); if (!$('#card [data-act="mailp:-1"]').classList.contains('dis')) bad.push('Mail: Previous is not dim on the first page');
+    $('#card [data-act="mailp:1"]').click(); $('#card [data-act="mailp:1"]').click(); F.ui(true); const line = $$('#card .mr').find((b) => !/:\d/.test(b.dataset.act) || b.dataset.act === 'mailp:0');
+    if (line) { line.click(); F.ui(true); if (G.mailP !== 2 || !G.card || G.card.type !== 'mail') bad.push(`Mail: a tap on a line on page 3 went to page ${G.mailP + 1}`); }
     const c = $('#card'); if (c.scrollHeight > c.clientHeight + 1) bad.push('Mail: the card scrolls'); }
   } catch (e) { bad.push('Mail: the check could not run: ' + e.message); }
   // the Market: its goods one selector; burning, it has Send help and its health (E11)
   try {
   { const m = put('market'); m.fire = 5; F.openCard({ type: 'bld', id: m.id }); F.ui(true);
     if (!$('#card .bar.sel [data-act^="mpick:"]')) bad.push('Market: the goods are not one selector');
+    if ($('#card .thin')) bad.push('Market: the goods selector is marked thin, which EXCEPTIONS #13 does not name');
     if (!$(`#card [data-act="douse:${m.id}"]`) || !/health/.test($('#card').innerText)) bad.push('Market: a burning Market has no Send help or no health (it skips the shared page)');
     m.fire = 0; }
   } catch (e) { bad.push('the Market: the check could not run: ' + e.message); }
@@ -78,16 +88,28 @@ JS = r"""() => {
     const commas = $$('#card .fm').reduce((n, e) => n + [...e.childNodes].filter((x) => x.nodeType === 3 && x.textContent.trim() === ',').length, 0);
     if (commas) bad.push(`E1: ${commas} commas between the Army card's Train buttons`); P.techs.delete('command'); F.fxDirty(); }
   } catch (e) { bad.push('E1: the check could not run: ' + e.message); }
-  // E2: a workshop's "made" counts what it made, not its worker's life of gathering
+  // E2: a workshop counts what it makes, on the building: a worker sent to it for 90 s makes some, and the card says that many (not its
+  // worker's life of gathering)
   try {
-  { const w = put('workshop'), v = G.units.find((u) => u.owner === 0 && u.kind === 'vil'); v.st.got = 512; v.node = w.node; F.openCard({ type: 'bld', id: w.id }); F.ui(true);
-    if (/512 made/.test($('#card').innerText)) bad.push("E2: the workshop says 512 made: its worker's gathering"); v.node = null; }
+  { const w = put('workshop'); for (const g in P.goods) P.goods[g] = 200;
+    F.sendVil(0, w.node.id); for (let i = 0; i < 30 * 90; i++) F.step(1 / 30);
+    const wk = G.units.find((u) => u.owner === 0 && u.node === w.node); if (wk) wk.st.got += 512; // its worker's life of gathering, which the card must not show
+    F.openCard({ type: 'bld', id: w.id }); F.ui(true);
+    const made = Math.floor(w.made || 0), said = ($('#card').innerText.match(/(\d+) made/) || [])[1];
+    if (!(made >= 1)) bad.push(`E2: the workshop made nothing in 90 s: its counter does not count (${w.made})`);
+    else if (String(made) !== said) bad.push(`E2: the workshop says ${said} made, its counter ${made}`);
+    if (wk) F.setJob(wk, null); F.act('close'); }
   } catch (e) { bad.push('E2: the check could not run: ' + e.message); }
-  // E4: a find under the fog cannot be tapped open
+  // E4: a find under the fog cannot be tapped open; the same find, once explored, can (the control: the test can fail)
   try {
-  { F.act('close'); G.fogOn = true; const n = G.nodes.find((x) => x.kind === 'gold' && F.fogAt(x.x, x.y) === 0);
-    if (n) { const h = F.hitAt(F.SX(n.x), F.SY(n.y) - 6 * F.cam.z); if (h.t === 'node' && h.e === n) bad.push('E4: a gold mine under the fog was tapped open'); }
-    G.fogOn = false; }
+  { F.act('close'); G.fogOn = true; const cell = (n) => Math.min(Math.max((n.y / 40) | 0, 0), Math.sqrt(G.fog.length) - 1) * Math.sqrt(G.fog.length) + Math.min(Math.max((n.x / 40) | 0, 0), Math.sqrt(G.fog.length) - 1);
+    let done = false;
+    for (const n of G.nodes.filter((x) => x.kind !== 'farm' && x.amt > 0 && F.fogAt(x.x, x.y) === 0)) {
+      const c = cell(n), was = G.fog[c]; F.cam.x = n.x; F.cam.y = n.y; const at = [F.SX(n.x), F.SY(n.y) - 6 * F.cam.z];
+      G.fog[c] = 1; const seen = F.hitAt(...at); G.fog[c] = 0; const hid = F.hitAt(...at); G.fog[c] = was;
+      if (seen.t !== 'node' || seen.e !== n) continue; // something else is under the finger there: try another
+      done = true; if (hid.t === 'node' && hid.e === n) bad.push(`E4: a ${n.kind} under the fog was tapped open`); break; }
+    if (!done) bad.push('E4: no find under the fog to test'); G.fogOn = false; F.cam.x = k.x; F.cam.y = k.y; }
   } catch (e) { bad.push('E4: the check could not run: ' + e.message); }
   // E5: a second finger lets go of the box and the crosshair's glow
   try {
@@ -124,10 +146,12 @@ JS = r"""() => {
   } catch (e) { bad.push('the row: the check could not run: ' + e.message); }
   // the map: a label is 12 at the starting zoom, larger zoomed in, 9 at the floor zoomed out
   try {
-  { const z = F.cam.z; F.cam.z = F.ZOOM_START; const a = 12 * F.labelK(); F.cam.z = 0.2; const b = 12 * F.labelK(); F.cam.z = 3; const c = 12 * F.labelK(); F.cam.z = z;
+  { const z = F.cam.z, px = () => F.LABEL.px * F.labelK(); F.cam.z = F.ZOOM_START; const a = px(); F.cam.z = 0.2; const b = px(); F.cam.z = 3; const c = px(); F.cam.z = z;
     if (Math.abs(a - 12) > 0.01 || Math.abs(b - 9) > 0.01 || !(c > 12)) bad.push(`the map's labels are ${a.toFixed(1)} at the start, ${b.toFixed(1)} zoomed out, ${c.toFixed(1)} zoomed in: not 12, 9 and larger`); }
   } catch (e) { bad.push('the map: the check could not run: ' + e.message); }
   return bad;
+}"""
+DRAG = r"""() => { const F = window.__fk; F.newGame(5); F.act('close'); const G = F.G; G.P[0].res.g = 9999; G.ktab = 'rel'; F.openCard({ type: 'bld', id: F.keepOf(0).id }); F.ui(true);
 }"""
 async def main():
     async with async_playwright() as p:
@@ -136,6 +160,16 @@ async def main():
         await pg.goto('file://' + os.path.join(ROOT, 'first-keep.html')); await pg.wait_for_timeout(500)
         try: bad = await pg.evaluate(JS)
         except Exception as e: bad = ['the card checks could not run: ' + str(e)[:300]]
+        # the gift slider dragged with a finger from 0 to the far end: the switch turns on at the first step, and the drag goes on to the end
+        try:
+            await pg.evaluate(DRAG); await pg.wait_for_timeout(400)   # the card rises to its ranks first
+            r = await pg.evaluate("() => { const el = document.querySelector(`#card input[data-in='relgift:${window.__fk.WILD}']`), r = el.getBoundingClientRect(); el.__dragged = true; return { x0: r.left + 8, x1: r.right - 2, y: r.top + r.height / 2 }; }")
+            await pg.mouse.move(r['x0'], r['y']); await pg.mouse.down()
+            for i in range(1, 13): await pg.mouse.move(r['x0'] + (r['x1'] - r['x0']) * i / 12, r['y']); await pg.wait_for_timeout(30)
+            await pg.mouse.up(); got = await pg.evaluate("() => { const F = window.__fk, el = document.querySelector(`#card input[data-in='relgift:${F.WILD}']`); return [((F.G.relPick || {})[F.WILD] || {}).gift || 0, !!(el && el.__dragged), !!((F.G.relPick || {})[F.WILD] || {}).on]; }")
+            if got[0] < 250 or not got[2]: bad.append(f'Relations: a drag across the gift slider stopped at {got[0]}g (switch on: {got[2]}): the slider was rebuilt under the finger')
+            elif not got[1]: bad.append('Relations: the gift slider is a new node after the drag: a class change rebuilt it')
+        except Exception as e: bad.append('the slider drag could not run: ' + str(e)[:200])
         await br.close()
     bad = bad + errs
     print(('PASS ' if not bad else 'FAIL ') + 'the cards of v80 (Setup stacked, Relations final, Mail pages, Market selector, E1 to E11, Emergency and the steel panel, map labels)', '' if not bad else bad)

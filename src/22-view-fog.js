@@ -56,7 +56,7 @@ function drawRadar(wv, wv2) {
 	ctx.fill();
 	ctx.rotate(-a);
 	ctx.fillStyle = '#fff';
-	ctx.font = mapFont(12); // pinned to the screen: 12
+	ctx.font = mapFont(); // pinned to the screen
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillText(String(n), 0, 0);

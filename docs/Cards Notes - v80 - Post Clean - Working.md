@@ -32,7 +32,7 @@
 1. **Relations, a ✓ per row (decision 3) against the picture's one ✓.** The row is name (1 slot) · gift (2) · stance (2) · ✓ (1). The name's slot holds the name and its stance word; the civ moved to the book. The ✓ is a blue ring when its row can be sent (several rows may be ready, and a card has one gold fill at most).
 2. **Setup's open items (Build List).** Fog and Daily are two-choice settings like the rest (Off · On), so each says its word once, in its name; Daily's name carries its level ("Daily · level 10"). The peoples and the hazards stay full rows with no name, as drawn: what they are is plain.
 3. **A stance picked but not sent (Needs Albert's call #3):** the gold ring moves to the picked icon; the word under the name keeps the stance held now, in its colour; the row's ✓ turns blue; the last rank says what it will do.
-4. **Gifts to rivals: not built.** The picture shows 100g to the Raiders, but the game has no gift to a computer side (a sim rule, not a card), so a rival's gift is dim "—" ("Gifts go to the Natives only"), as v70 had it. A friend's gift is locked (the Natives as friends). Say if a bribe to rivals should be a rule.
+4. **Gifts to rivals: dim, waiting on N8.** The picture shows 100g to the Raiders, and the Build List says a bribe is a step for anyone not a friend. What a gift does to a computer side is part of the computers batch (N8, peace mode), held tonight, so a rival's gift stays dim "—" ("Gifts go to the Natives only") until that rule is built. A friend's gift is locked (the Natives as friends).
 5. **The gift slider runs 0 to 300, snapping to 50** (`NATIVE.giftMax`, `giftStep`; v70's two gifts were 100 and 300).
 6. **Kept on Relations though not in the picture:** Stand down and the ransoms, under the last rank, only when they apply. The board paragraph and the prisoners you hold went to the book.
 7. **Setup's whys, the people's history and the copyright line** are in the book now (the picture has none of them on the face).
@@ -49,6 +49,16 @@
 - **EXCEPTIONS #14 (new; Albert named it in the Relations line):** the stance icons and the stance word wear red, white and green, not Cream 1.
 - **EXCEPTIONS #12 removed:** the vassal's Demand rank fits its 44; the gate measures the vassal page like every other.
 - Map text keeps its own pigments (EXCEPTIONS #11): the wonder clock's gold and the tag's white are map paint.
+
+## After the fresh-eyes review (second commit)
+1. The gift slider kept its node when it turned on: `slt` has a key (`data-f`), so a class change patches it in place and the drag goes on (it stopped at 50). A test drags it with a mouse across the switch.
+2. "set Hostile at your Town Center first" is gone: one toast, `foeFirst` (26-input), "Neutral: make them a foe at your Town Center first."
+3. The stance words have one home, `REL_WORD`, in the card's order (foe, neutral, friend); the stance icons are keyed by it (`ICON.war`, `peace`, `ally`); the last rank reads it ("Raiders: send 100g · neutral"). A side under notice reads "foe in 30 s" in red. A one-slot line's inset is the one gap, 6, so it fits at 375.
+4. A mail line with nowhere to go keeps its page (`mailp:0`).
+5. The map label sizes have one home, `LABEL = { px: 12, floor: 9 }` in 01-rules-basics; `mapFont(k)` takes a scale (labelK() on the map, none when pinned) and no call site writes a size. The weight has one home, `--weight: 600` in `:root`, read by the body and by `mapFont` from the page.
+6. Tests that can fail: E2 runs a worker 90 s and checks the counter and the card agree (deleting the counter fails); E4 finds a find under the fog with a control (the same find, explored, is tappable); `.thin` is set only by the stance icons (`relRow` passes it), and the test fails if the Market's selector or anything else wears it; the verb check is its own fast test, `tests/verbs.py`, reading `choice()` and `offOn()` choices and both of `slt`'s verbs. Eight new plants (66 in all), each caught.
+7. Small: the dead `.cin p.why` rule; one refresh a slider move; no unpause after a game ends (`cardPause`); the `FULL` comment.
+Run: build, wrap, lint, palette, verbs, words, cards pass; `handoff.py --plant` 66 of 66 caught. The full gate was not run (the map builder had the browser); the coordinator runs it at the merge.
 
 ## Not done, and why
 - E9's raw markup: the line's places (`slotsHTML`), the workshop's making slot, the mail rows, the research › rows (`.trow`, a nested grid), the score table and two text links are still written by hand: each needs a piece the mold does not have (a two-line clamp single, a disabled working slot, a coloured edge). The squad kind grid (`.qs`) too.
@@ -71,6 +81,7 @@ Changes
 - Market on the shared page (`BLD_PAGE.market`, `marketPage`); its size in `SIZE_OF` (one home).
 - E1, E2 (`b.made`), E3/N13 (`MSG.page`, `mailp`), E4, E5 (`dropDrag`), E6, E7 (`cardPause`), E8, E9, E11 as above.
 - Emergency a slot with its word on the cycle button's rank (`ROW_WORD.emg`); one steel panel for the row and that rank; "+1 Records" (`TECH` short), "+2 Guilds".
+- Review fixes: the slider's key (drag kept across the switch); `foeFirst`; `REL_WORD` the one home of the stance words, icons keyed by it, "foe in 30 s"; `mailp:0` on a line with no link; `LABEL` and `--weight` one home each; `.thin` passed by the stance icons only.
 - Short names: Bad weather "Weather" (Setup), Record keeping "Records", the Town Center "Town".
 
 Cut
@@ -81,11 +92,14 @@ Cut
 - `marketHTML` and the Market's early return in `CARDS.bld`; the Market size case in `renderCard`.
 - `.mrows`, `.chips`, `.chip`; the `s15` span; `'end'` in `FULL` (no card); the pause decided in `openCard`.
 - EXCEPTIONS #12 and the gate's `name != 'vassal'` skip.
-- The words "Hostile", "ally, neutral, hostile", "+1 research".
+- The words "Hostile" (the card and the two toasts), "ally, neutral, hostile", "+1 research".
+- `STANCE` and the stance phrases in `relStatus` (to `REL_WORD`); `ICON.foe`, `neutral`, `friend` renamed `war`, `peace`, `ally`; the gate's inline `verbs()` (to `tests/verbs.py`); `.cin p.why`; the count rule for `.thin`.
 
 Tests
 - New `tests/cards.py` (in the gate): Setup stacked, Relations final (a ✓ a row, the friend's gift locked, a ✓ sends its row only, the words), Mail pages, the Market selector, E1, E2, E4, E5, E6, E7, E11, the locked place's name, Emergency on the grid, the steel panel, the map label scale, the vassal's Demand rank. Every check fails on main 38001b9 (run with the same exports added to a scratch copy): 24 failures (the vassal check came after that run; its planted bug is caught).
 - `tests/palette.py`: 12 and 18 only; two fonts; one weight, 600, once; two font files packed; every map label through `mapFont`; no phone font. Fails on 38001b9.
 - `tests/gate.py`: opens Relations, Research, the milestones and the Army card with Battalions (E8); measures every text's size (12 or 18), font and weight on every card at four sizes; a card's line cut short fails; parts of a control (`.hr`, `.thin`) named; the vassal no longer skipped; `data-in`, `slt` and `sym` verbs checked.
-- 23 new planted bugs in `tests/handoff.py` (58 in all), each caught.
-- Results: build, wrap, lint clean; the gate passes (31 of 31; four sizes, both pages); `tests/handoff.py`: every check passes but "the working tree is clean" before this commit; the play fingerprint matches the baseline (the cards change no simulation; `b.made` is a count nothing reads in play); soak seeds 1, 2, 3 for 20 minutes pass (saves 250 to 258 kB; a frame 8.7 to 52 ms with another builder on the same two CPUs).
+- New `tests/verbs.py` (in the gate, replacing its inline verb check): every control verb has a handler, `choice()`, `offOn()` and `slt` verbs included.
+- 31 new planted bugs in `tests/handoff.py` (66 in all), each caught.
+- Results (first commit): build, wrap, lint clean; the gate passes (31 of 31; four sizes, both pages); `tests/handoff.py`: every check passes but "the working tree is clean" before this commit; the play fingerprint matches the baseline (the cards change no simulation; `b.made` is a count nothing reads in play); soak seeds 1, 2, 3 for 20 minutes pass (saves 250 to 258 kB; a frame 8.7 to 52 ms with another builder on the same two CPUs).
+- Results (review fixes): build, wrap, lint, palette, verbs, words, cards pass; 66 of 66 plants caught. The full gate waits for the merge.

@@ -139,11 +139,6 @@ function slotsHTML(b) {
 // anyone not a friend, so a friend's gift is locked; only the Natives take a gift in the game today); the stance, three icons in two slots;
 // the row's ✓. What is picked waits on the card (G.relPick) until that row's ✓ sends it: the picked icon wears the gold ring, the stance
 // held now stays in the name's colour, and the ✓ turns blue. The last rank says what the last ✓ touched will do, and the board
-const STANCE = [
-	['war', 'foe'],
-	['peace', 'neutral'],
-	['ally', 'friend'],
-];
 const relSides = () => [WILD, ...G.P.filter((q) => q.id !== 0 && q.id !== WILD && q.alive).map((q) => q.id)];
 // a side whose stance is not yours to pick here: your vassal (their own page) or your overlord
 const relLord = (q) => q !== WILD && ((G.P[q].lord === 0 && !G.P[q].rebel) || (G.P[0].lord === q && !G.P[0].rebel));
@@ -169,14 +164,16 @@ function relRow(q) {
 		lock = giftLock(q),
 		[gift, want, why] = relDraft(q),
 		nl = q === WILD ? 0 : noticeLeft(0, q) || noticeLeft(q, 0),
-		word = lord ? (G.P[q].lord === 0 ? 'vassal' : 'overlord') : REL_WORD[rel] + (nl ? ` · ${nl} s` : '');
+		war = !lord && nl, // under notice: the stance it is becoming, and when
+		word = lord ? (G.P[q].lord === 0 ? 'vassal' : 'overlord') : war ? `${REL_WORD.war.toLowerCase()} in ${nl} s` : REL_WORD[rel];
 	return acts(
-		`<div class="info left line s1"><b>${relName(q)}</b><small class="${lord ? '' : 'stance-' + rel}">${word}</small></div>` +
+		`<div class="info left line s1"><b>${relName(q)}</b><small class="${lord ? '' : 'stance-' + (war ? 'war' : rel)}">${word}</small></div>` +
 			slt(`relon:${q}`, `relgift:${q}`, 'Gift', lock ? '—' : `${d.gift || 0}g`, lock ? 0 : d.gift || 0, NATIVE.giftMax, NATIVE.giftStep, d.on, !!lock || lord) +
 			choice(
-				STANCE.map(([k, w]) => [`relwant:${q},${k}`, ICON[w], (d.want || rel) === k, `stance-${k}${lord ? ' dis' : ''}`, cap1(w)]),
+				Object.keys(REL_WORD).map((k) => [`relwant:${q},${k}`, ICON[k], (d.want || rel) === k, `stance-${k}${lord ? ' dis' : ''}`, REL_WORD[k]]),
 				's2',
 				true,
+				'thin', // three icons in two slots: under 44 each (EXCEPTIONS #13)
 			) +
 			sym(`relok:${q}`, ICON.ok, gift || want ? (why ? 'dis' : 'go') : 'dis', `Send to the ${relName(q)}`),
 		'c6',
@@ -190,14 +187,10 @@ function relStatus() {
 		board = `${G.truce === null ? 'not at peace' : `at peace ${clock(tf)}`} · Games in ${clock(next)} · Natives regard ${Math.round(regardOf(0))}`;
 	let line = 'Pick a gift or a stance, then its ✓';
 	if (q !== undefined) {
-		const [gift, want, why] = relDraft(q),
-			to = `the ${relName(q)}`,
-			W = { war: 'a foe of', peace: 'at peace with', ally: 'a friend of' };
+		const [gift, want, why] = relDraft(q);
 		if (why) line = `${relName(q)}: ${why.replace(/\.$/, '')}`;
 		else if (gift || want)
-			line = cap1(
-				[gift ? `send ${gift}g to ${to}` : '', want ? `${gift ? 'and become' : 'become'} ${W[want]} ${to}` : ''].filter(Boolean).join(' '),
-			);
+			line = `${relName(q)}: ${[gift ? `send ${gift}g` : '', want ? REL_WORD[want].toLowerCase() : ''].filter(Boolean).join(' · ')}`; // the stance in its one word (REL_WORD)
 	}
 	return acts(info(line, board, 'left line'), 'c1');
 }

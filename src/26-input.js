@@ -237,6 +237,8 @@ cv.addEventListener('pointerup', (e) => {
 	}
 	tapAt(p.x, p.y);
 });
+// a side you are not at war with: the toast says what to do first, in the stance words (REL_WORD)
+const foeFirst = (o) => `${REL_WORD[G.rel[0][o]]}: make them a ${REL_WORD.war.toLowerCase()} at your Town Center first.`;
 // letting go of a drag, one home (E5: a pinch dropped the drag but left the box drawn and the crosshair glowing): the box, the crosshair's
 // glow, the edge and the drag itself, from a pinch's start and end and a cancel
 function dropDrag() {
@@ -472,7 +474,7 @@ function order(S, h) {
 		};
 	if (h.t === 'unit' && e.owner !== 0) {
 		if (e.owner !== WILD && !atWar(0, e.owner)) {
-			say(`${REL_WORD[G.rel[0][e.owner]]}: set Hostile at your Town Center first.`, '', 4);
+			say(foeFirst(e.owner), '', 4);
 			return;
 		}
 		if (UNIT[e.kind].meat && vil.length)
@@ -497,7 +499,7 @@ function order(S, h) {
 		if (sol.length) march(sol, e, e.owner === WILD ? UNIT[e.kind].name : G.P[e.owner].name);
 	} else if (h.t === 'bld' && e.owner !== 0) {
 		if (!atWar(0, e.owner)) {
-			say(`${REL_WORD[G.rel[0][e.owner]]}: set Hostile at your Town Center first.`, '', 4);
+			say(foeFirst(e.owner), '', 4);
 			return;
 		}
 		sol.forEach((u) => {

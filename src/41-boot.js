@@ -450,6 +450,7 @@ window.__fk = {
 	eventsTick,
 	ZOOM_MAX,
 	ZOOM_START,
+	LABEL,
 	MS_TEXT,
 	labelK,
 	MSG,

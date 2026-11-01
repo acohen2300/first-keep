@@ -154,7 +154,7 @@ PLAY = """async () => {
   { const c = F.migrateChain(); if (c) out.push(c); const v0 = Math.min(...Object.keys(F.MIGRATE).map(Number)); let S0 = JSON.parse(localStorage.getItem(F.SAVEKEY)); S0.v = v0; try { while (S0.v < F.SAVEV) S0 = F.MIGRATE[S0.v](S0); if (S0.v !== F.SAVEV) out.push('migration stopped at ' + S0.v); } catch (e) { out.push('migration threw: ' + e.message); }
     F.saveGame(true); F.saveGame(true); const good = localStorage.getItem(F.SAVEKEY); localStorage.setItem(F.SAVEKEY, good.slice(0, 200)); if (!F.readSave()) out.push('a cut-off save did not fall back to the one before'); localStorage.setItem(F.SAVEKEY, good); }
   return out; }"""
-# Every verb a button can send must have a handler: the class of bug behind the dead Build menu
+# Every verb a control can send must have a handler: tests/verbs.py (run below with the other tests)
 # The play fingerprint: a fixed game on a fixed seed, scripted the same way every time, and every side's counts at each minute.
 # The game may not play differently by accident. A deliberate change to the rules is accepted with:  python3 tests/gate.py --accept "why"
 # (the baseline is rewritten and the reason logged in CUTS.md). The simulation's dice are seeded, so this is exact, like SoRen's locked physics block.
@@ -222,19 +222,9 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
     if (!s2.length || !s2.every((u) => u.inside)) bad.push('emergency: soldiers did not garrison'); if (!v.every((u) => u.inside || u.safe)) bad.push('emergency: villagers are not under cover');
     F.emgStop(); run(10); if (v.some((u) => u.inside || u.emg)) bad.push('emergency: Stop left villagers inside'); if (v.map((u) => u.job).join(',') !== jobs) bad.push('emergency: Stop did not restore the jobs'); if (!s2.every((u) => u.inside)) bad.push('emergency: Stop moved the soldiers'); }
   return bad; }"""
-def verbs():
-    import re, glob
-    s = open('src/33-verbs.js').read()
-    def keys(name):
-        i = s.index(f'const {name} = {{'); j = s.index('\n};', i); return set(re.findall(r'(?:^|[{;,]\s*|\n(?:\t| {2}))([a-z][a-zA-Z0-9]*)\(\w*\)\s*\{', s[i:j]))
-    have = keys('ACT') | keys('PLAY')
-    src = ''.join(open(f).read() for f in ['src/shell-head.html'] + sorted(glob.glob('src/*.js')))
-    used = set(re.findall(r'data-(?:act|in)="([a-z]+)', src)) | set(re.findall(r"btn\([`']([a-z]+)", src)) | set(re.findall(r"(?:slt|sym)\([`']([a-z]+)", src))
-    return sorted(used - have)
 async def main():
     fails = 0
-    v = verbs(); print(('PASS ' if not v else 'FAIL ') + 'every button verb has a handler', '' if not v else v); fails += bool(v)
-    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/saves.py', 'tests/moves.py', 'tests/palette.py', 'tests/cards.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
+    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/saves.py', 'tests/moves.py', 'tests/palette.py', 'tests/cards.py', 'tests/verbs.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
         r = subprocess.run([sys.executable, t], capture_output=True, text=True); print(r.stdout.strip() or ('FAIL ' + t + ' ' + r.stderr[-300:])); fails += r.returncode != 0
     w = subprocess.run([sys.executable, 'tests/words.py'], capture_output=True, text=True); print(('PASS ' if w.returncode == 0 else 'FAIL ') + 'toasts and tips: 10 words at most', w.stdout.strip() if w.returncode else ''); fails += w.returncode != 0
     async with async_playwright() as p:

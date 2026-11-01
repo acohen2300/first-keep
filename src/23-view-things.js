@@ -141,7 +141,7 @@ function drawBld(b, s) {
 	const M = maxHpB(b.owner, b.kind);
 	if (b.hp < M - 1) bar(sx, sy - c.ay * k - 4, Math.min(60 * z, B.fp * NAVC * z), b.hp / M, G.P[b.owner].color);
 	if (G.wonder && G.wonder.id === b.id) {
-		ctx.font = mapFont(12 * labelK());
+		ctx.font = mapFont(labelK());
 		ctx.fillStyle = '#ffd35e';
 		ctx.textAlign = 'center';
 		ctx.fillText(clock(Math.max(0, G.wonder.end - G.t)), sx, sy - c.ay * k - 10);

@@ -39,7 +39,7 @@ function cardPause(c) {
 	if (want && !G.paused) {
 		setPause(true);
 		G.cardPaused = true;
-	} else if (!want && G.cardPaused) {
+	} else if (!want && G.cardPaused && !G.over) {
 		G.cardPaused = false;
 		setPause(false);
 	}
@@ -139,8 +139,8 @@ const empty = (cls = '') => `<div class="empty ${cls}"></div>`;
 // a card uses are built: the bar (choice), the selector, the slider with its switch.
 // choice: one shape (a bar) holding one set's choices (a box is one decision), each [act, words or an icon, chosen, cls, label]; a chosen part wears the
 // gold ring inside the shape. one: a selector, a single choice, its gold ring sliding 0.4 s to rest over it
-const choice = (opts, span, one) =>
-	`<div class="bar${one ? ' sel' : ''}${opts.length > +span.slice(1) ? ' thin' : ''} ${span}" style="--n:${opts.length}${one ? `;--i:${Math.max(0, opts.findIndex((o) => o[2]))}` : ''}">${opts
+const choice = (opts, span, one, cls = '') =>
+	`<div class="bar${one ? ' sel' : ''}${cls ? ' ' + cls : ''} ${span}" style="--n:${opts.length}${one ? `;--i:${Math.max(0, opts.findIndex((o) => o[2]))}` : ''}">${opts
 		.map(
 			([act, w, on, cls, label]) =>
 				`<button data-act="${act}" class="${on ? 'on' : ''}${cls ? ' ' + cls : ''}"${label ? ` aria-label="${label}"` : ''}>${w.indexOf('<') < 0 ? `<b>${cap1(w)}</b>` : w}</button>`,
@@ -149,9 +149,10 @@ const choice = (opts, span, one) =>
 // a setting's name, quiet at 12, in the slots its control leaves on the left (Setup, MENU-SPEC §8)
 const lab = (name, span) => `<div class="info left line quiet ${span}"><b>${name}</b></div>`;
 // the slider with its switch: the word, the value and the switch over the track, gold to the knob. The switch (tog, a verb) turns it on or
-// off and off keeps the value; the track (inp, a verb given ",value") snaps to step. dis: locked, quiet, and the track does not move
+// off and off keeps the value; the track (inp, a verb given ",value") snaps to step. dis: locked, quiet, and the track does not move.
+// Its key (data-f) holds it when on or dis changes, so the patch keeps the node and the drag under the finger (a class change rebuilt it)
 const slt = (tog, inp, word, val, v, max, step, on, dis, span = 's2') =>
-	`<div class="slt ${span}${on && !dis ? ' on' : ''}${dis ? ' dis' : ''}"><button class="hr" data-act="${tog}"><b>${word}</b><small>${val}</small><i class="sw"></i></button>` +
+	`<div class="slt ${span}${on && !dis ? ' on' : ''}${dis ? ' dis' : ''}" data-f="slt-${inp}"><button class="hr" data-act="${tog}"><b>${word}</b><small>${val}</small><i class="sw"></i></button>` +
 	`<input class="hr" type="range" data-in="${inp}" min="0" max="${max}" step="${step}" value="${v}" style="--v:${Math.round((100 * v) / max)}%" aria-label="${word}"${dis ? ' disabled' : ''}></div>`;
 const FOLD = new Set(); // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 // the book entry of a research step: the date, what it changed, and its weight, which is its cost

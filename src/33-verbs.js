@@ -1135,7 +1135,6 @@ document.addEventListener('click', (e) => {
 document.addEventListener('input', (e) => {
 	const el = e.target.closest('[data-in]');
 	if (!el) return;
-	act(`${el.dataset.in},${el.value}`);
-	refresh();
+	act(`${el.dataset.in},${el.value}`); // a PLAY verb: act() refreshes once
 });
 for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndInit, { passive: true }); // Safari unlocks audio on the finger lifting, not landing
