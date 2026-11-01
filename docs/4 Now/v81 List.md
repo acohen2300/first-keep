@@ -7,5 +7,6 @@ Albert, Nov 1, 07:36 (D-075), in his words: "we were to finish all the menus and
 3. **Albert's play-test notes** on the coming v80 preview. [2026-11-01 07:45]
 4. **The conversion logic:** conversion past the army cap is parked. The options are Albert's up-to-2% idea or crowding raising sickness (D-069, answer 11; `docs/4 Now/Parked.md`). [2026-11-01 07:45]
 5. **One 3:2 proportion for the small controls on cards** (Albert, Nov 1, 08:16: "a 3:2 ratio, like the slider's width, for the book, the check, the × and the line checks"): the book, the ✓ and × buttons and the row checks, with the slider with its switch as the model. A design study with mockups first (D-078). [2026-11-01 08:17]
+6. **The HUD pages** (Albert, Nov 1, 08:19: "the HUD pages"): the Jobs, War and Train pages of the bottom row, redrawn on the v80 mold with mockups first. From his screenshots of that time: War leaves its second rank empty except Home and ×; Train shows "No squad" with dim − and + buttons; the squads are A to D (D-079). [2026-11-01 08:19]
 
 Nothing on it is built until the list is drawn up item by item and Albert says yes yes. [2026-11-01 07:45]
