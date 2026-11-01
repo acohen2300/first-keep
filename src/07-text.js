@@ -798,7 +798,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'You build',
-		'Press where it goes: the building waits above your finger over the build grid and snaps flush beside your other buildings, side by side; buildings that train keep a walking lane around them. Green fits, red says why not. Let go, drag to adjust, then tap Build. The ghost stays for the next of the same kind until the limit or the purse says no. A cut-out tree farm shows stumps: tap it to replant at half the cost. A kind at its limit dims with a check in the Build card.',
+		'Press where it goes: the building waits above your finger over the build grid and snaps in line with your other buildings, two squares apart: a lane wide enough to walk. Walls, gates and fields may touch; a field keeps clear of a building that trains. Green fits, red says why not. Let go, drag to adjust, then tap Build. The ghost stays for the next of the same kind until the limit or the purse says no. A cut-out tree farm shows stumps: tap it to replant at half the cost. A kind at its limit dims with a check in the Build card.',
 		'Rows that line up, no hidden gaps, and you never cover what you are placing.',
 	],
 	[
@@ -858,7 +858,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The shrine',
-		`One shrine, at the foot of the Throne. A priest that stands by it for ${FINDS.shrine.capture} s takes it, and it pays its keeper ${FINDS.shrine.pay * 60} gold a minute. A priest of another side can take it back.`,
+		`One shrine, in the Throne itself. A priest that stands at the foot of the Throne for ${FINDS.shrine.capture} s takes it, and it pays its keeper ${FINDS.shrine.pay * 60} gold a minute. A priest of another side can take it back.`,
 		'Rulers fought to hold holy sites; pilgrims brought gifts.',
 	],
 	[

@@ -143,6 +143,12 @@ const MIGRATE = {
 					for (let i = 0; i < n0 * w; i++) o[((j + k) * FOGN + k) * w + i] = s.charCodeAt(j * n0 * w + i) || 0;
 				return btoa(String.fromCharCode(...o));
 			}; // the fog and the ruts, square for square
+		for (const u of S.units || [])
+			if (u.graze !== undefined && u.gx !== undefined) {
+				u.grazeAt = { x: u.gx, y: u.gy };
+				delete u.gx;
+				delete u.gy;
+			} // an animal's graze point had the name soldiers use for a place in the line: it has its own now, and moves with the map
 		walk(S);
 		for (const n of S.nodes || []) if (Array.isArray(n)) (n[1] += D), (n[2] += D); // a tree: [id, x, y, amt, max]
 		for (const b of S.blds || []) (b.gx += D / NAVC), (b.gy += D / NAVC);

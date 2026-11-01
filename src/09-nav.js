@@ -1,6 +1,6 @@
 // ═════ 09-nav.js: paths ═════
 // ───────────────────────── The walking grid: where things stand, and how people get around ─────────────────────────
-// Squares of 10, never shown. Buildings fill whole squares and leave one free around them. Walls are one square each.
+// Squares of 10, never shown. Buildings fill whole squares and leave LANE (two) free between them. Walls are one square each.
 const NC = MAP / NAVC;
 const SHORE = 5; // squares from water that count as its shore
 const POCKET = 300; // a joined region smaller than this many squares is a pocket: closed in by trees, buildings or water
@@ -58,8 +58,11 @@ function lakeGrid() {
 }
 const gcell = (x, y) => clamp(Math.floor(y / NAVC), 0, NC - 1) * NC + clamp(Math.floor(x / NAVC), 0, NC - 1);
 const toCell = (w) => ({ gx: clamp(Math.floor(w.x / NAVC), 0, NC - 1), gy: clamp(Math.floor(w.y / NAVC), 0, NC - 1) });
+// a place as the map's lettered squares: COORD units a square, letters across and numbers down (A1 to V22 on the 2160 map)
+const COORD = 100,
+	COORDN = Math.ceil(MAP / COORD);
 const coord = (x, y) =>
-	String.fromCharCode(65 + clamp(Math.floor(x / 100), 0, 19)) + (clamp(Math.floor(y / 100), 0, 19) + 1);
+	String.fromCharCode(65 + clamp(Math.floor(x / COORD), 0, COORDN - 1)) + (clamp(Math.floor(y / COORD), 0, COORDN - 1) + 1);
 function snapPos(kind, x, y) {
 	// the squares a building would cover if centred near (x, y)
 	const n = BLD[kind].fp,

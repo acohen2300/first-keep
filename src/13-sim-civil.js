@@ -544,16 +544,12 @@ function scoutTick(u, dt, SP) {
 	if (!u.route) {
 		const S = PLACES.scout,
 			e = S.edge,
-			k = MID - CORNER + S.keep,
 			c = [
 				[MID, MAP - e],
 				[MAP - e, MID],
 				[MID, e],
 				[e, MID],
-				[k, k],
-				[MAP - k, k],
-				[MAP - k, MAP - k],
-				[k, MAP - k],
+				...[1, 2, 3, 0].map((o) => G.P[o].keep.map((v) => v + Math.sign(MID - v) * S.keep)), // in front of each Town Center, where it stands
 				[MID - S.mid, MID - S.mid],
 				[MID + S.mid, MID + S.mid],
 			];

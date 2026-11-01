@@ -3,7 +3,10 @@
 import asyncio, json, os, sys
 from playwright.async_api import async_playwright
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SEEDS = int(sys.argv[sys.argv.index('--seeds') + 1]) if '--seeds' in sys.argv else 100
+QUICK = bool(os.environ.get('FK_PLANT'))   # the planted-bug check (tests/handoff.py): fewer seeds and one phone size, each plant still caught
+SEEDS = int(sys.argv[sys.argv.index('--seeds') + 1]) if '--seeds' in sys.argv else 25 if QUICK else 100
+SIZES = ((375, 667),) if QUICK else ((375, 667), (390, 844), (393, 852), (430, 932))
+CAM_SEEDS = 3 if QUICK else 10
 
 # decision 2: two squares between non-wall buildings; a one-square gap is refused; the two-square lane is open ground; a crop may touch
 GAP = """() => {
@@ -21,7 +24,8 @@ GAP = """() => {
       const gx = ax ? (ax > 0 ? a.gx + n - 1 + g : a.gx - g) : a.gx + i, gy = ay ? (ay > 0 ? a.gy + n - 1 + g : a.gy - g) : a.gy + i;
       if (F.NAV.solid[gy * N + gx]) { bad.push('the two-square lane between two buildings is shut at ' + gx + ',' + gy); i = n; break; }
     }
-    if (F.canPlace(0, 'farm', a.x + ax * (n + F.BLD.farm.fp) * F.NAVC / 2, a.y + ay * (n + F.BLD.farm.fp) * F.NAVC / 2) === 'Leave a gap: two squares round each building') bad.push('a crop may not touch a house');
+    const why = [[-ax, -ay], [ay, ax], [-ay, -ax]].map(([fx, fy]) => F.canPlace(0, 'farm', a.x + fx * (n + F.BLD.farm.fp) * F.NAVC / 2, a.y + fy * (n + F.BLD.farm.fp) * F.NAVC / 2));   // a field flush against the house, on its three other sides
+    if (!why.includes(null)) bad.push('a crop may not touch a house: ' + why.join('; '));
     break;
   }
   if (!done) bad.push('no clear ground for the gap test');
@@ -41,70 +45,93 @@ WAVE = """() => {
   if (p.wave) bad.push('a wave that neither neared nor fought for ' + (G.t - t0) + ' s was not recalled');
   else if (!((p.ai.cool[0] || 0) > G.t)) bad.push('a stalled target is not left alone');
   else { for (const u of sq) u.state = 'home'; F.decideWar(p, per); if (p.wave && p.wave.to === 0) bad.push('the stalled wave went straight back at the same target'); }
+  // a win at stake is never waited out: a stalled wave on the Throne leaves no cool-down, and a side holding a wonder is attacked though cooled
+  p.wave = null; p.ai.cool = {}; for (const u of sq) { u.state = 'attack'; u.target = 0; } const T = G.blds.find((b) => b.kind === 'throne');
+  p.wave = { n: 12, t: G.t, to: 0, bid: T.id, d: 1e9, pt: G.t }; for (let i = 0; i < 6 && p.wave; i++) { G.t += 10; F.decideWar(p, per); }
+  if (p.ai.cool[0] > G.t) bad.push('a stalled wave on the Throne put its holder on a cool-down');
+  p.wave = null; for (const u of sq) u.state = 'home'; p.ai.cool[0] = G.t + 999; G.wonder = { owner: 0, id: k0.id }; F.decideWar(p, per);
+  if (!(p.wave && p.wave.to === 0)) bad.push('a side building a wonder is waited out on a cool-down');
+  G.wonder = null;
+  // the map's lettered squares reach its far edge
+  if (F.coord(F.MAP - 1, F.MAP - 1) === F.coord(F.MAP - 150, F.MAP - 150)) bad.push('the last squares of the map share a label: ' + F.coord(F.MAP - 1, F.MAP - 1));
   return bad; }"""
 
-# Decision 5a, the home zone, on SEEDS seeds: in every corner the same content (the five home finds at HOME.rich, each find's centre in the
-# band), nothing else within the band, no find's centre within the clearing, no forest or water within CLEAR, every find of the corner and
-# every home node reached from its Town Center on the walking grid (B4). Reports the worst case.
+# Decision 5a, the home zone, on SEEDS seeds, measured on nodes (each bush, tree, rock): no node of any find within HOME.clear of a Town
+# Center; each of the five home finds (at HOME.rich) with its nearest node in the band; no other node within the band; no forest or water
+# within CLEAR. Equal content: every corner holds the same finds and deposits (every node but trees and fish, by kind and amount, and the
+# carried-off finds), its two camps and four stops, all reached from its Town Center on the walking grid (B4), the shared places on the
+# middle lines by both corners beside them. Reports the worst case.
 ZONE = """(seeds) => {
   const F = window.__fk, bad = [], H = F.HOME, b0 = H.clear, b1 = H.clear + H.band, want = { bush: 5, tree: 12, stone: 2, gold: 2, iron: 2 },
-    carried = ['chest', 'ruins', 'den', 'cemetery', 'vagabonds'], base = { bush: 180, tree: 120, stone: 300, gold: 300, iron: 300 }, type = { bush: 'food', tree: 'wood' }, W = { band: [1e9, 0], wild: 1e9, edge: 1e9, clear: 1e9, dropped: 0 };
+    carried = ['chest', 'ruins', 'den', 'cemetery', 'vagabonds'], base = { bush: 180, tree: 120, stone: 300, gold: 300, iron: 300 }, type = { bush: 'food', tree: 'wood' },
+    W = { near: [1e9, 0], far: 0, any: 1e9, wild: 1e9, edge: 1e9 };
   for (let s = 1; s <= seeds; s++) {
-    F.SET.scen = 'open'; F.newGame(s); const G = F.G, N = F.NAV, NC = F.NC, amt = F.LAND[G.land].amt;
+    F.SET.scen = 'open'; F.newGame(s); const G = F.G, N = F.NAV, NC = F.NC, amt = F.LAND[G.land].amt, sig = [];
     const isHome = (n) => base[n.kind] && Math.abs(n.max - base[n.kind] * F.RICH * H.rich * (amt[type[n.kind] || n.kind] || 1)) < 1e-6;
     const comp = (x, y, id) => { const cx = Math.floor(x / F.NAVC), cy = Math.floor(y / F.NAVC); let best = 0; for (let j = -2; j <= 2; j++) for (let i = -2; i <= 2; i++) { const a = cx + i, b = cy + j; if (a < 0 || b < 0 || a >= NC || b >= NC) continue; const c = N.comp[b * NC + a]; if (c && (id ? c === id : N.size[c] > N.size[best])) best = c; } return best; };
-    let finds = 0;
     for (let o = 0; o < 4; o++) {
-      const k = F.keepOf(o), d = (q) => Math.hypot(q.x - k.x, q.y - k.y), mine = (q) => (q.x < F.MID) === (k.x < F.MID) && (q.y < F.MID) === (k.y < F.MID);
+      const k = F.keepOf(o), d = (q) => Math.hypot(q.x - k.x, q.y - k.y), mine = (q) => (k.x < F.MID ? q.x <= F.MID : q.x >= F.MID) && (k.y < F.MID ? q.y <= F.MID : q.y >= F.MID);
       const home = G.nodes.filter((n) => !n.farm && d(n) < F.CLEAR && isHome(n)), by = {};
       for (const n of home) (by[n.kind] = by[n.kind] || []).push(n);
       for (const kd in want) if ((by[kd] || []).length !== want[kd]) bad.push(s + '/' + o + ': ' + kd + ' ' + (by[kd] || []).length + ' of ' + want[kd] + ' in the home zone');
-      const cen = Object.entries(by).flatMap(([kd, L]) => kd === 'bush' || kd === 'tree' ? [{ kd, L }] : [{ kd, L }]).map(({ kd, L }) => ({ kd, x: L.reduce((a, n) => a + n.x, 0) / L.length, y: L.reduce((a, n) => a + n.y, 0) / L.length }));
-      for (const c of cen) { const r = d(c); W.band = [Math.min(W.band[0], r), Math.max(W.band[1], r)]; if (r < b0 - 6 || r > b1 + 6) bad.push(s + '/' + o + ': the home ' + c.kd + ' at ' + Math.round(r) + ', outside the band'); }   // 6: a grove's trees sit ±4 off their lattice
-      for (const n of G.nodes) if (!n.farm && !isHome(n) && mine(n)) { const r = d(n); W.wild = Math.min(W.wild, r); if (r < b1) { bad.push(s + '/' + o + ': a ' + n.kind + ' not of the home zone at ' + Math.round(r)); break; } if (n.kind === 'tree' && n.max < 100 * F.RICH && r < F.CLEAR) { bad.push(s + '/' + o + ': forest within CLEAR'); break; } }
-      for (const f of G.finds) if (mine(f) && carried.includes(f.kind)) { finds++; W.clear = Math.min(W.clear, d(f)); if (d(f) < b1) bad.push(s + '/' + o + ': the ' + f.kind + ' at ' + Math.round(d(f))); }
+      for (const kd in by) { const r = Math.min(...by[kd].map(d)); W.near = [Math.min(W.near[0], r), Math.max(W.near[1], r)]; W.far = Math.max(W.far, ...by[kd].map(d)); if (r < b0 || r > b1) bad.push(s + '/' + o + ': the home ' + kd + "'s nearest node at " + Math.round(r) + ', outside the band'); }
+      for (const n of G.nodes) if (!n.farm && mine(n)) { const r = d(n); W.any = Math.min(W.any, r); if (r < b0) { bad.push(s + '/' + o + ': a ' + n.kind + ' within the clearing, at ' + Math.round(r)); break; }
+        if (!isHome(n)) { W.wild = Math.min(W.wild, r); if (r < b1) { bad.push(s + '/' + o + ': a ' + n.kind + ' not of the home zone at ' + Math.round(r)); break; } if (n.kind === 'tree' && n.max < 100 * F.RICH && r < F.CLEAR) { bad.push(s + '/' + o + ': forest within CLEAR'); break; } } }
+      for (const f of G.finds) if (mine(f) && f.kind !== 'shrine' && d(f) < b1) bad.push(s + '/' + o + ': the ' + f.kind + ' at ' + Math.round(d(f)));
       if (G.lakes.slice(1).some((L) => d(L) < F.CLEAR + L.r)) bad.push(s + '/' + o + ': water within CLEAR');
       for (const n of home) W.edge = Math.min(W.edge, n.x, n.y, F.MAP - n.x, F.MAP - n.y);
-      const l = Math.hypot(F.MID - k.x, F.MID - k.y), hc = comp(k.x + ((F.MID - k.x) / l) * 40, k.y + ((F.MID - k.y) / l) * 40);   // where the first villagers stand
-      for (const n of home) if (n.kind !== 'tree' && !comp(n.x, n.y, hc)) bad.push(s + '/' + o + ': the home ' + n.kind + ' at ' + Math.round(n.x) + ',' + Math.round(n.y) + ' cannot be reached');
+      const content = {}; for (const n of G.nodes) if (mine(n) && !n.farm && n.kind !== 'tree' && n.kind !== 'fish') { const key = n.kind + ' ' + Math.round(n.max); content[key] = (content[key] || 0) + 1; }
+      for (const f of G.finds) if (mine(f) && f.kind !== 'shrine') content[f.kind] = (content[f.kind] || 0) + 1;
+      sig.push(JSON.stringify(Object.keys(content).sort().map((key) => [key, content[key]])));
+      if (content.camp !== 2 || content.stop !== 4) bad.push(s + '/' + o + ': ' + (content.camp || 0) + ' camps and ' + (content.stop || 0) + ' stops of its own, not 2 and 4');
+      const l = Math.hypot(F.MID - k.x, F.MID - k.y), hc = comp(k.x + ((F.MID - k.x) / l) * F.PLACES.start, k.y + ((F.MID - k.y) / l) * F.PLACES.start);   // where the first villagers stand
       if (!(by.tree || []).some((n) => comp(n.x, n.y, hc))) bad.push(s + '/' + o + ': the home grove cannot be reached');
       for (const n of G.nodes) if (mine(n) && !n.farm && n.kind !== 'tree' && n.kind !== 'fish' && !comp(n.x, n.y, hc)) bad.push(s + '/' + o + ': a ' + n.kind + ' at ' + Math.round(n.x) + ',' + Math.round(n.y) + ' cannot be reached');
-      for (const f of G.finds) if (mine(f) && !comp(f.x, f.y, hc)) bad.push(s + '/' + o + ': the ' + f.kind + ' at ' + Math.round(f.x) + ',' + Math.round(f.y) + ' cannot be reached');
+      for (const f of G.finds) if (mine(f) && f.kind !== 'shrine' && !comp(f.x, f.y, hc)) bad.push(s + '/' + o + ': the ' + f.kind + ' at ' + Math.round(f.x) + ',' + Math.round(f.y) + ' cannot be reached');
     }
-    W.dropped += 4 * carried.length - finds;   // the carried-off finds that found no room
+    if (new Set(sig).size > 1) bad.push(s + ': the corners hold different finds: ' + sig.map((x, o) => o + ' ' + x).filter((x, o) => sig[o] !== sig[0] || o === 0).join(' | ').slice(0, 400));
   }
-  W.band = W.band.map(Math.round); W.wild = Math.round(W.wild); W.edge = Math.round(W.edge); W.clear = Math.round(W.clear);
+  for (const key in W) W[key] = Array.isArray(W[key]) ? W[key].map(Math.round) : Math.round(W[key]);
   return [bad, W]; }"""
 
-# The Throne's walls and gates symmetric about the Throne (QC 05 N1): each turned a quarter about it lands on another; every Town Center's
-# nearest gate equally far. The Throne at the middle, the same distance from every Town Center.
+# The citadel the same seen from every corner (QC 05 N1-N3; Albert, Nov 1: four towers, the shrine on the Throne's square): the Throne and
+# the shrine at the middle; every wall, gate and tower turned a quarter about the Throne lands on its twin; from every Town Center the same
+# distances to each kind of structure, sorted; no tower on a wall or gate square.
 CITADEL = """() => {
-  const F = window.__fk, bad = []; F.SET.scen = 'open'; F.newGame(3); const G = F.G, T = G.blds.find((b) => b.kind === 'throne'), C = G.blds.filter((b) => b.citadel && (b.kind === 'wall' || b.kind === 'gate'));
+  const F = window.__fk, bad = []; F.SET.scen = 'open'; F.newGame(3); const G = F.G, T = G.blds.find((b) => b.kind === 'throne'), C = G.blds.filter((b) => b.citadel && b !== T), sh = G.finds.find((f) => f.kind === 'shrine');
   if (T.x !== F.MID || T.y !== F.MID) bad.push('the Throne at ' + T.x + ',' + T.y);
+  if (!sh || sh.x !== T.x || sh.y !== T.y) bad.push('the shrine is not on the Throne: ' + (sh && sh.x + ',' + sh.y));
   for (const b of C) { const x = T.x - (b.y - T.y), y = T.y + (b.x - T.x); if (!C.some((c) => c.kind === b.kind && Math.abs(c.x - x) < 0.01 && Math.abs(c.y - y) < 0.01)) { bad.push('the ' + b.kind + ' at ' + b.x + ',' + b.y + ' has no twin a quarter turn round'); break; } }
-  const g = [0, 1, 2, 3].map((o) => { const k = F.keepOf(o); return Math.min(...C.filter((b) => b.kind === 'gate').map((b) => Math.hypot(b.x - k.x, b.y - k.y))); });
-  if (Math.max(...g) - Math.min(...g) > 0.01) bad.push('the nearest gate from each Town Center: ' + g.map(Math.round));
-  const d = [0, 1, 2, 3].map((o) => { const k = F.keepOf(o); return Math.hypot(k.x - T.x, k.y - T.y); });
-  if (Math.max(...d) - Math.min(...d) > 0.01) bad.push('the Throne from each Town Center: ' + d.map(Math.round));
+  const seen = [0, 1, 2, 3].map((o) => { const k = F.keepOf(o); return JSON.stringify([...new Set(C.map((b) => b.kind))].sort().map((kd) => [kd, C.filter((b) => b.kind === kd).map((b) => Math.round(Math.hypot(b.x - k.x, b.y - k.y) * 100) / 100).sort((a, b) => a - b)]).concat([['throne', Math.hypot(T.x - k.x, T.y - k.y)], ['shrine', sh ? Math.round(Math.hypot(sh.x - k.x, sh.y - k.y) * 100) / 100 : 0]])); });
+  if (new Set(seen).size > 1) bad.push('the citadel is not the same from every Town Center: ' + seen.map((x) => x.slice(0, 120)).join(' | '));
+  const sq = (b) => { const n = F.BLD[b.kind].fp, out = []; for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) out.push((b.gy + j) * F.NC + b.gx + i); return out; }, ring = new Set(C.filter((b) => b.kind !== 'tower').flatMap(sq));
+  for (const b of C.filter((b) => b.kind === 'tower')) if (sq(b).some((c) => ring.has(c))) { bad.push('a tower stands on a wall square at ' + b.x + ',' + b.y); break; }
+  if (C.filter((b) => b.kind === 'tower').length !== 4) bad.push(C.filter((b) => b.kind === 'tower').length + ' towers, not four');
   return bad; }"""
 
-# A game saved on the 2000 map (save shape 39) opens set down in the middle of the 2160 map: every place moved by MID − 1000, the fog square
-# for square, a wave given its progress fields. The old save is made here by moving a new one back.
-MIGRATE = """() => {
-  const F = window.__fk, bad = []; F.SET.scen = 'open'; F.newGame(3); F.act('close'); F.saveGame(true); const S = JSON.parse(localStorage.getItem(F.SAVEKEY)), D = F.MID - 1000, n0 = 50, FN = Math.ceil(F.MAP / 40);
-  const O = JSON.parse(JSON.stringify(S)); O.v = 39;
-  for (const u of O.units) { u.x -= D; u.y -= D; } for (const b of O.blds) { b.x -= D; b.y -= D; b.gx -= D / F.NAVC; b.gy -= D / F.NAVC; }
-  for (const n of O.nodes) if (Array.isArray(n)) { n[1] -= D; n[2] -= D; } else { n.x -= D; n.y -= D; }
-  for (const f of O.finds) { f.x -= D; f.y -= D; } for (const L of O.lakes) { L.x -= D; L.y -= D; } for (const p of O.P) { p.keep = p.keep.map((v) => v - D); delete p.ai.cool; }
-  O.P[1].wave = { n: 5, t: 10 }; const old = new Uint8Array(n0 * n0); old[20 * n0 + 10] = 3; O.fog = btoa(String.fromCharCode(...old)); delete O.tread;
-  const M = F.MIGRATE[39](O), near = (a, b) => Math.abs(a - b) < 0.02;
+# A game saved on the 2000 map (save shape 39) opens set down in the middle of the 2160 map. The save is real: made by build 38001b9 (main
+# before this branch), seed 3, four minutes and a Raiders' wave (tests/fixtures/save-v39.json). Every place moves by MID − 1000: units,
+# buildings and their squares, trees, finds, lakes, Town Centers, an animal's graze point, a scout's loop; the fog and the ruts square for
+# square; an old wave gets its progress fields. Then the game loads and plays 90 s with nothing off the map and no error.
+MIGRATE = """(O) => {
+  const F = window.__fk, bad = [], D = F.MID - 1000, n0 = 2000 / 40, FN = Math.ceil(F.MAP / 40), near = (a, b) => Math.abs(a - b) < 0.02;
+  const M = F.MIGRATE[39](JSON.parse(JSON.stringify(O)));
   if (M.v !== 40) bad.push('the step leaves shape ' + M.v);
-  if (!M.units.every((u, i) => near(u.x, S.units[i].x) && near(u.y, S.units[i].y))) bad.push('a unit is not where the same game puts it');
-  if (!M.blds.every((b, i) => near(b.x, S.blds[i].x) && b.gx === S.blds[i].gx && b.gy === S.blds[i].gy)) bad.push('a building is not on its squares');
-  if (!M.nodes.every((n, i) => (Array.isArray(n) ? near(n[1], S.nodes[i][1]) : near(n.x, S.nodes[i].x)))) bad.push('a find is not where it was');
-  if (!M.P.every((p, i) => near(p.keep[0], S.P[i].keep[0]) && p.ai.cool)) bad.push('a side has no Town Center place or no cool-downs');
-  if (!(M.P[1].wave.pt === S.t && M.P[1].wave.d > 1e8)) bad.push('an old wave has no progress fields');
-  const f = atob(M.fog); if (f.length !== FN * FN || f.charCodeAt((20 + D / 40) * FN + 10 + D / 40) !== 3) bad.push('the fog is not moved square for square');
+  if (!M.units.every((u, i) => near(u.x, O.units[i].x + D) && near(u.y, O.units[i].y + D) && (u.px === undefined || near(u.px, O.units[i].px + D)))) bad.push('a unit is not moved');
+  const an = M.units.filter((u, i) => O.units[i].graze !== undefined && O.units[i].gx !== undefined);
+  if (!an.length || !an.every((u) => { const o = O.units[M.units.indexOf(u)]; return u.grazeAt && near(u.grazeAt.x, o.gx + D) && near(u.grazeAt.y, o.gy + D) && u.gx === undefined; })) bad.push('an animal grazes where it did on the old map');
+  const sc = M.units.filter((u) => u.route); if (!sc.length || !sc.every((u) => { const o = O.units[M.units.indexOf(u)]; return u.route.every((w, i) => near(w.x, o.route[i].x + D) && near(w.y, o.route[i].y + D)); })) bad.push("a scout's loop is not moved");
+  if (!M.blds.every((b, i) => near(b.x, O.blds[i].x + D) && b.gx === O.blds[i].gx + D / F.NAVC && b.gy === O.blds[i].gy + D / F.NAVC)) bad.push('a building is not on its squares');
+  if (!M.nodes.every((n, i) => (Array.isArray(n) ? near(n[1], O.nodes[i][1] + D) && near(n[2], O.nodes[i][2] + D) : near(n.x, O.nodes[i].x + D)))) bad.push('a find is not moved');
+  if (!M.finds.every((f, i) => near(f.x, O.finds[i].x + D)) || !M.lakes.every((L, i) => near(L.x, O.lakes[i].x + D))) bad.push('a find or a lake is not moved');
+  if (!M.P.every((p, i) => near(p.keep[0], O.P[i].keep[0] + D) && p.ai.cool)) bad.push('a side has no Town Center place or no cool-downs');
+  if (!(M.P[1].wave && M.P[1].wave.pt === O.t && M.P[1].wave.d > 1e8 && M.P[1].wave.to === 0)) bad.push('an old wave has no progress fields');
+  const sq = (b64, w) => { const s = atob(b64), out = []; for (let i = 0; i < s.length; i++) out.push(s.charCodeAt(i)); return out; }, k = D / 40;
+  for (const [key, w] of [['fog', 1], ['tread', 2]]) { const a = sq(O[key], w), b = sq(M[key], w); let ok = b.length === FN * FN * w && a.some(Boolean);
+    for (let j = 0; j < n0 && ok; j++) for (let i = 0; i < n0 * w && ok; i++) ok = b[((j + k) * FN + k) * w + i] === a[j * n0 * w + i];
+    if (!ok) bad.push('the ' + (key === 'fog' ? 'fog' : 'ruts') + ' are not moved square for square'); }
+  F.loadGame(M); F.act('close'); F.setPause(true); const G = F.G; for (let i = 0; i < 30 * 90; i++) F.step(1 / 30);
+  const off = G.units.filter((u) => !(u.x >= 0 && u.y >= 0 && u.x <= F.MAP && u.y <= F.MAP)).length; if (off) bad.push(off + ' units off the map after 90 s');
   return bad; }"""
 
 # Decision 5a: the corner can be seen and played. At each phone size, at the zoom a game opens on, with the camera sent to each home node
@@ -134,18 +161,18 @@ async def main():
         bad, errs = await run(GAP); bad += errs
         print(('PASS ' if not bad else 'FAIL ') + 'two squares between buildings (decision 2)', '' if not bad else bad); fails += bool(bad)
         bad, errs = await run(WAVE); bad += errs
-        print(('PASS ' if not bad else 'FAIL ') + 'a wave is judged by its progress (D1)', '' if not bad else bad); fails += bool(bad)
+        print(('PASS ' if not bad else 'FAIL ') + 'a wave is judged by its progress (D1); the map labels reach its edge', '' if not bad else bad); fails += bool(bad)
         bad, errs = await run(CITADEL); bad += errs
-        print(('PASS ' if not bad else 'FAIL ') + "the Throne's walls and gates symmetric about it", '' if not bad else bad); fails += bool(bad)
-        bad, errs = await run(MIGRATE); bad += errs
+        print(('PASS ' if not bad else 'FAIL ') + 'the citadel the same seen from every corner: four towers, the shrine on the Throne', '' if not bad else bad); fails += bool(bad)
+        bad, errs = await run(MIGRATE, json.load(open(os.path.join(ROOT, 'tests', 'fixtures', 'save-v39.json')))); bad += errs
         print(('PASS ' if not bad else 'FAIL ') + 'a game saved on the 2000 map opens in the middle of this one', '' if not bad else bad); fails += bool(bad)
-        for w, h in ((375, 667), (390, 844), (393, 852), (430, 932)):
+        for w, h in SIZES:
             pg = await br.new_page(viewport={'width': w, 'height': h}); await pg.goto('file://' + os.path.join(ROOT, 'first-keep.html')); await pg.wait_for_timeout(400)
-            bad, worst = await pg.evaluate(CAMERA, 10); await pg.close()
+            bad, worst = await pg.evaluate(CAMERA, CAM_SEEDS); await pg.close()
             print(('PASS ' if not bad else 'FAIL ') + f'every home node can be seen and tapped in its corner at {w} x {h} (nearest {worst} px from the view\'s edge)', '' if not bad else bad[:6]); fails += bool(bad)
-        res, errs = await run(ZONE, SEEDS); bad, W = res if len(res) == 2 and isinstance(res[1], dict) else (res, {'band': [0, 0], 'wild': 0, 'clear': 0, 'edge': 0, 'dropped': 0}); bad += errs
-        print(('PASS ' if not bad else 'FAIL ') + f'the home zone on {SEEDS} seeds: the same content in the band, the clearing clear, all reached (5a, B4)', '' if not bad else bad[:int(os.environ.get("SHOW", 8))] + [f'... {len(bad)} in all'])
-        print(f'  worst case: home find centres {W["band"][0]} to {W["band"][1]} from their Town Center nearest other node {W["wild"]}; nearest find {W["clear"]}; nearest home node to the map edge {W["edge"]}; carried-off finds with no room {W["dropped"]}'); fails += bool(bad)
+        res, errs = await run(ZONE, SEEDS); bad, W = res if len(res) == 2 and isinstance(res[1], dict) else (res, {'near': [0, 0], 'far': 0, 'any': 0, 'wild': 0, 'edge': 0}); bad += errs
+        print(('PASS ' if not bad else 'FAIL ') + f'the home zone on {SEEDS} seeds: nothing in the clearing, the home finds in the band, the same content in every corner, all reached (5a, B4)', '' if not bad else bad[:int(os.environ.get("SHOW", 8))] + [f'... {len(bad)} in all'])
+        print(f'  worst case: a home find\'s nearest node {W["near"][0]} to {W["near"][1]} from its Town Center (its farthest {W["far"]}); nearest node of any find {W["any"]}; nearest node not of the zone {W["wild"]}; nearest home node to the map edge {W["edge"]}'); fails += bool(bad)
         await br.close()
     sys.exit(1 if fails else 0)
 asyncio.run(main())

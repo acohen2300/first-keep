@@ -62,9 +62,10 @@ const JOBS = RES; // a job for each resource
 // Relations: ally | peace (neutral) | war (hostile). Peace holds until a side gives NOTICE; alliance needs the other side's yes.
 const REL_WORD = { ally: 'Ally', peace: 'Neutral', war: 'Hostile' };
 // The four corners (a base rule): each Town Center CORNER from the middle on both axes, so the Throne is the same distance from all four.
-// Decision 5a: 695 to about 751 (+8%). 755, not 751: a 5-square Town Center centres on a half square, and 751 snaps to 755 at every corner
-// (MID − 751 = 329 snaps to 325); typed as what it is. Neighbours 1,510 apart; behind each Town Center MID − CORNER = 325 to the edge.
-const CORNER = 755;
+// Decision 5a: 695 to about 751 (+8%), the agreed figure, snapped here, in its one home: a 5-square Town Center centres on a half square,
+// so MID − CORNER must be one (751 gives 755: 329 snaps to 325). Every place laid from CORNER (the forest's frame, the trade stops' local
+// coordinates) is then on the grid. Neighbours 1,510 apart; 325 behind each Town Center.
+const CORNER = MID - (Math.round((MID - 751) / NAVC - 0.5) + 0.5) * NAVC;
 const PLAYERS = [
 	{ name: 'You', pers: 'human', color: '#4f93e6', keep: [MID - CORNER, MID + CORNER] },
 	{ name: 'Raiders', pers: 'aggr', color: '#de5a44', keep: [MID - CORNER, MID - CORNER] },

@@ -398,7 +398,6 @@ function throneRun(p, per) {
 		T = G.blds.find((b) => b.kind === 'throne' && b.hp > 0);
 	if (!T || p.wave || p.age < 3 || (G.throne && G.throne.owner === o)) return;
 	const holder = G.throne ? G.throne.owner : WILD;
-	if ((p.ai.cool[holder] || 0) > G.t) return;
 	const home = soldiersOf(o).filter((u) => u.state === 'home'),
 		sg = home.filter((u) => hasTag(u.kind, 'siege')).length;
 	const odds = powerOf(home) / (powerOf(soldiersOf(holder).filter((u) => dist(u, T) < 300)) + 800);
@@ -480,9 +479,9 @@ function decideWar(p, per) {
 		const stalled = G.t - w.pt > WAVE.stall;
 		if (out.length < w.n * WAVE.broke || stalled) {
 			out.forEach((u) => (u.state = 'home'));
-			if (stalled) p.ai.cool[w.to] = G.t + WAVE.cool;
+			if (stalled && !w.bid) p.ai.cool[w.to] = G.t + WAVE.cool;
 			p.wave = null;
-		} // beaten, or stalled: go home, and a stalled target waits
+		} // beaten, or stalled: go home, and a stalled side waits; a wonder or the Throne (w.bid, a win at stake) never does
 		return;
 	}
 	const W = G.wonder && G.wonder.owner !== o && atWar(o, G.wonder.owner) ? G.wonder : null;
@@ -496,15 +495,16 @@ function decideWar(p, per) {
 	let best = null,
 		bp = 0;
 	for (const q of G.P)
-		if (q.alive && q.id !== WILD && atWar(o, q.id) && !((p.ai.cool[q.id] || 0) > G.t)) {
+		if (q.alive && q.id !== WILD && atWar(o, q.id)) {
+			const threat = (W && W.owner === q.id) || (G.throne && G.throne.owner === q.id); // a win at stake: never waited out
+			if (!threat && (p.ai.cool[q.id] || 0) > G.t) continue;
 			if (q.id === 0 && G.diff === 'easy' && G.t < EASY_SAFE && !W) continue; // Easy: nobody comes for you in the first six minutes
 			const r = (mine / estPower(o, q.id)) * matchup(go, soldiersOf(q.id)),
 				prob = lanchester(r); // the square law, as odds, bent by who counters whom
 			const busy =
 				per.opportunist &&
 				G.P.some((x) => x.alive && x.id !== WILD && x.id !== o && x.id !== q.id && atWar(q.id, x.id)); // the opportunist: a side with another war on its hands
-			const T = G.throne && G.throne.owner === q.id;
-			const pr = (W && W.owner === q.id) || T ? Math.max(prob, 0.75) : prob * (busy ? per.opportunist * DF().opp : 1);
+			const pr = threat ? Math.max(prob, 0.75) : prob * (busy ? per.opportunist * DF().opp : 1);
 			if (pr > bp) {
 				bp = pr;
 				best = q.id;

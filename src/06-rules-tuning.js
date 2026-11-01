@@ -281,7 +281,8 @@ const EVK = Object.keys(EVENTS),
 // trade stops' two distances along each middle line; lode, the gold and stone by the great lake; scout, the inner corners of a scout's loop.
 // From the edge: camp, the robbers' camp at the end of each trade route; scout, its loop's points on the middle lines. From a Town Center,
 // toward the middle on both axes: scout, its loop's corner points.
-const PLACES = { stop: [490, 320], lode: 270, camp: 160, scout: { mid: 300, edge: 420, keep: 215 } };
+// start: the first villagers stand this far from their Town Center toward the middle.
+const PLACES = { stop: [490, 320], lode: 270, camp: 160, scout: { mid: 300, edge: 420, keep: 215 }, start: 40 };
 const cross = (d) => [
 	[MID, MID - d],
 	[MID, MID + d],
@@ -328,10 +329,11 @@ const LANDK = Object.keys(LAND),
 // The map's base rules (Albert, Build 70): a flat page, four corners (CORNER), the same clear radius and home finds in every corner, the
 // Throne at the middle. All else is random from the one randomizer, laid once: no measure, no reshuffle. CLEAR: no forest or water within it.
 const CLEAR = 360;
-// The home zone (decision 5a, Albert, Oct 31; the same three numbers in every corner): clear, no find within it of the Town Center; the five
-// home finds (HOME_IDS in 10) each at random in the band from clear to clear + band, in the pocket behind the Town Center; rich, their
-// amounts over today's pocket (HOME_RICH 1.18, on top of RICH); and the radius CLEAR above, no forest or water within it. Everything else
-// is random, outside the band. Fallback if the 100-seed placement test fails (decision 5a): clear 190.
+// The home zone (decision 5a, Albert, Oct 31; the same three numbers in every corner), measured on the finds' own nodes (each bush, tree,
+// rock): clear, no node of any find within it of the Town Center; the five home finds (HOME_IDS in 10) each at a random place round the
+// Town Center with its nearest node in the band from clear to clear + band; rich, their amounts over today's pocket (HOME_RICH 1.18, on top
+// of RICH); and the radius CLEAR above, no forest or water within it. Everything else is random, outside the band. Fallback if the 100-seed
+// placement test fails (decision 5a): clear 190.
 const HOME = { clear: 200, band: 60, rich: 1.18 };
 // Between two buildings (decision 2, Albert, Oct 31): LANE squares at least. A gap is passable only if wider than a figure (2r); the slit rule
 // shuts a one-square gap because the drawn figure is wider than it (Build 41), so two. Walls, gates and crops may touch.

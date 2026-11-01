@@ -59,19 +59,32 @@ PLANTS = [
   ('13-sim-civil.js', 'lost ? u.anchor || dropFor(u.owner, u.job, u) || u : undefined', 'lost ? dropFor(u.owner, u.job, u) || u : undefined', 'tests/moves.py', 'a placed villager searches from the drop-off', 'search from where it was placed'),
   ('34-save.js', "['pointerdown', 'pointermove', 'pointerup', 'click', 'wheel']", "['pointerdown', 'pointermove', 'pointerup', 'click']", 'tests/saves.py', 'the wheel zooms behind the Welcome back card', 'the wheel zoomed'),
   ('08-core.js', '(C <= V ? 1 : V / C)', '(C <= V ? 1 : 1)', 'tests/science.py', 'Hawk-Dove always fights', 'hawk V<C'),
-  # the map (decisions 2 and 5a, D1, B4; tests/map.py)
+  # the map (decisions 2 and 5a, D1, B4; tests/map.py, at 25 seeds and one phone size here: FK_PLANT)
   ('09-nav.js', 'm = B.wallish ? 0 : LANE;', 'm = B.wallish ? 0 : 1;', 'tests/map.py', 'a one-square gap between buildings is allowed', 'two squares between buildings'),
   ('17-ai.js', 'const stalled = G.t - w.pt > WAVE.stall;', 'const stalled = !out.some((u) => G.t - (u.hitT || -99) < 30) && G.t - w.t > 45;', 'tests/map.py', 'a wave walking nearer is recalled at 45 s', 'judged by its progress'),
-  ('17-ai.js', 'if (stalled) p.ai.cool[w.to] = G.t + WAVE.cool;', ';', 'tests/map.py', 'a stalled wave goes straight back at the same target', 'judged by its progress'),
+  ('17-ai.js', 'if (stalled && !w.bid) p.ai.cool[w.to] = G.t + WAVE.cool;', ';', 'tests/map.py', 'a stalled wave goes straight back at the same target', 'judged by its progress'),
+  ('17-ai.js', 'if (stalled && !w.bid) p.ai.cool[w.to]', 'if (stalled) p.ai.cool[w.to]', 'tests/map.py', 'a stalled wave on the Throne cools its holder', 'judged by its progress'),
+  ('17-ai.js', 'if (!threat && (p.ai.cool[q.id] || 0) > G.t) continue;', 'if ((p.ai.cool[q.id] || 0) > G.t) continue;', 'tests/map.py', 'a side building a wonder is waited out', 'judged by its progress'),
+  ('09-nav.js', 'COORDN = Math.ceil(MAP / COORD);', 'COORDN = 20;', 'tests/map.py', 'the map labels stop at the old 2000', 'labels reach its edge'),
   ('10-world.js', "180 * RICH * HOME.rich", "180 * RICH", 'tests/map.py', 'the home berries without HOME_RICH', 'the home zone'),
-  ('10-world.js', 'up = Math.max(0, out + clr - lo);', 'up = 0;', 'tests/map.py', 'a wild find inside the home band', 'the home zone'),
+  ('10-world.js', 'if (home ? near < b0 || near > b1 : near < b1) continue;', 'if (home ? near < b0 || near > b1 : false) continue;', 'tests/map.py', 'a wild find with nodes inside the home band', 'the home zone'),
+  ('10-world.js', 'if (home ? near < b0 || near > b1 : near < b1) continue;', 'if (home ? false : near < b1) continue;', 'tests/map.py', 'home finds laid by their middles, not their nodes', 'the home zone'),
+  ('10-world.js', 'for (let t = 0; t < SEEK.most; t++) {', 'for (let t = 0; t < 30; t++) {', 'tests/map.py', 'a find with no room is dropped, not searched outward', 'the home zone'),
+  ('10-world.js', 'for (let r = SEEK.step; wet(p) && r < MID; r += SEEK.step)', 'for (let r = SEEK.step; false; r += SEEK.step)', 'tests/map.py', 'a runway deposit left where it clashes', 'the home zone'),
+  ('10-world.js', '...at(12, 0), 500 * RICH)', '...at(-10, 0), 500 * RICH)', 'tests/map.py', 'a lode nearer one corner than the other', 'the home zone'),
   ('10-world.js', '\topenWays(woods);', '', 'tests/map.py', 'finds walled in by forest (B4)', 'the home zone'),
-  ('10-world.js', '(c + i) * NAVC, (c + j) * NAVC)', '(c + i + 0.5) * NAVC, (c + j + 0.5) * NAVC)', 'tests/map.py', "the Throne's ring half a square off", 'symmetric about it'),
+  ('10-world.js', '(c + i) * NAVC, (c + j) * NAVC)', '(c + i + 0.5) * NAVC, (c + j + 0.5) * NAVC)', 'tests/map.py', "the Throne's ring half a square off", 'the citadel the same'),
+  ('10-world.js', "addFind('shrine', MID, MID);", "addFind('shrine', MID - 52, MID + 46);", 'tests/map.py', 'the shrine in one yard', 'the citadel the same'),
+  ('10-world.js', '\t\t[1, 1],\n\t\t[-1, 1],\n', '\t\t[1, 1],\n', 'tests/map.py', 'three towers', 'the citadel the same'),
   ('34-save.js', 'for (const b of S.blds || []) (b.gx += D / NAVC), (b.gy += D / NAVC);', ';', 'tests/map.py', 'an old save leaves buildings on their old squares', 'opens in the middle'),
+  ('34-save.js', "if (S.tread) S.tread = grid(S.tread, 2);", ';', 'tests/map.py', 'an old save leaves its ruts where they were', 'opens in the middle'),
+  ('34-save.js', 'u.grazeAt = { x: u.gx, y: u.gy };', 'u.grazeAt = { x: u.gx - D, y: u.gy - D };', 'tests/map.py', 'an old animal grazes on the old map', 'opens in the middle'),
+  ('20-view-base.js', 'cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID));', 'cam.x = clamp(cam.x, Math.min(hw * 2, MID), Math.max(MAP - hw * 2, MID));', 'tests/map.py', 'the camera stops short of the map edge', 'seen and tapped'),
 ]
 
 def plant_check():
     print(f'planted bugs: {len(PLANTS)}')
+    os.environ['FK_PLANT'] = '1'   # tests/map.py runs 25 seeds and one phone size for each plant (the gate runs it whole)
     tmp = tempfile.mkdtemp(prefix='fk-plant-')
     try:
         for name in os.listdir(ROOT):
