@@ -163,8 +163,18 @@ const SKIP_U = new Set([
 	'gp',
 	'gpT',
 ]); // lx/ly: where it stood last step (drawing only); gp/gpT: the group power of the tick
-// the Resume card, and the setup card while a save waits behind it, must be answered: closing either would start a game that never saves
+// the Resume card, and the setup card while a save waits behind it, must be answered: closing either would start a game that never saves.
+// It holds the whole screen (A2): while it is up, a tap, drag or wheel anywhere but on the card itself goes no further (the top bar's
+// counts, the map, the minimap, the row), so nothing can open another card over it and play on unsaved.
 const cardLocked = () => !!(G && G.card && (G.card.type === 'resume' || (G.card.type === 'setup' && holdSave)));
+for (const ev of ['pointerdown', 'pointermove', 'pointerup', 'click', 'wheel'])
+	$('stage').addEventListener(
+		ev,
+		(e) => {
+			if (cardLocked() && !e.target.closest('#card')) e.stopPropagation();
+		},
+		{ capture: true },
+	);
 // a deliberate new game starts clean: no leftover fight hold, save-failure clock, stale note or error count from the game before
 function freshSlate() {
 	fightHold = 0;

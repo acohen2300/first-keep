@@ -251,7 +251,7 @@ function solTick(u, dt, SP) {
 		!(
 			tgt.hp > 0 &&
 			!tgt.inside &&
-			atWar(o, tgt.owner) &&
+			(atWar(o, tgt.owner) || onMe(tgt, u)) &&
 			(edge(u, tgt) < sightOf(u) * 1.4 * (TEMPER[temperOf(u)].chase || 1) ||
 				(u.state === 'home' && nearHome(u, tgt, k)))
 		)
@@ -276,7 +276,7 @@ function solTick(u, dt, SP) {
 							foeValue(u, c, dist(u, c)) < FORAGE.move * foeValue(u, cur, dist(u, cur))));
 			tgt = keep ? cur : c;
 		}
-		if (u.state === 'home' && tgt && !nearHome(u, tgt, k)) tgt = null;
+		if (u.state === 'home' && tgt && !nearHome(u, tgt, k) && !onMe(tgt, u)) tgt = null; // one on it is fought wherever it stands
 		if (!tgt && u.state === 'home' && !U.bonly)
 			tgt =
 				(u.hax !== undefined && nearestFoe(o, u, 320, { x: u.hax, y: u.hay })) ||
@@ -445,8 +445,7 @@ function wildTick(u, dt, SP) {
 				}
 			}
 			u.fx = Math.sign(nx - u.x) || u.fx;
-			u.x = x1;
-			u.y = y1;
+			stepTo(u, x1, y1);
 			u.mvT = G.t;
 		} else if (G.t > (u.graze || 0)) {
 			u.graze = G.t + rnd(3, 8);
@@ -472,7 +471,7 @@ function wildTick(u, dt, SP) {
 		if (!t)
 			t = nearU(
 				u,
-				U.temper === 'defend' ? STARTLE : U.raid ? U.raid + 40 : 140,
+				U.raid ? U.raid + 40 : WILD_LOOK,
 				(v) =>
 					v.owner !== WILD &&
 					!v.inside &&

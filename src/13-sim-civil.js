@@ -58,6 +58,45 @@ function makeNow(u, n, dt, room) {
 	u.work = G.t;
 	return g;
 }
+// Where a villager waits (decision 1; Build 80 preview 9): at its drop-off, each on its own spot round the building's outline, all four sides,
+// SEARCH.gap feet apart (Albert: Hall's personal distance, 2.5 to 4 ft; OSHA 1910.142(b)(3), 36 inches), on the free lane square's middle.
+// The outline is cut into the same whole number of parts, k, on every side, each at least SEARCH.gap feet, with a spot on every corner: then no two
+// spots are closer than the gap, the corners too (a turn puts its two neighbours √2 parts apart). Spot i of N = 4k walks it clockwise from the
+// top-left corner. A waiter takes the free spot nearest to it (ties: the lower number), once, and keeps it until it has a find again; the order
+// of the step decides between two on one tick, so the same seed stands them the same way.
+function spotAt(b, i) {
+	const R = halfOf(b) + NAVC / 2,
+		k = Math.max(1, Math.floor((2 * R) / (SEARCH.gap * FOOT))),
+		N = 4 * k,
+		e = Math.floor((i % N) / k),
+		t = ((i % k) * 2 * R) / k - R;
+	return { N, ...[{ x: b.x + t, y: b.y - R }, { x: b.x + R, y: b.y + t }, { x: b.x - t, y: b.y + R }, { x: b.x - R, y: b.y - t }][e] };
+}
+function waitAt(u, dt, SP) {
+	let b = u.spot && G.blds.find((x) => x.id === u.spot.b && x.hp > 0);
+	if (!b) {
+		b = dropFor(u.owner, u.job, u);
+		if (!b) return;
+		const taken = new Set();
+		for (const v of G.units) if (v !== u && v.spot && v.spot.b === b.id) taken.add(v.spot.i);
+		let bi = -1,
+			bd = Infinity;
+		for (let i = 0, N = spotAt(b, 0).N; i < N; i++) {
+			const p = spotAt(b, i),
+				d = hyp(p.x - u.x, p.y - u.y);
+			if (!taken.has(i) && d < bd && !blockedCell(gcell(p.x, p.y), u.owner)) {
+				bd = d;
+				bi = i;
+			}
+		}
+		if (bi < 0) return; // every spot is taken: it stands where it is and asks again
+		u.spot = { b: b.id, i: bi };
+		if (u.owner === 0)
+			news('home', `No ${u.was === 'tree' ? 'trees' : u.was} in sight: one waits at the ${bldName(0, b.kind).toLowerCase()}.`, '', 4, u);
+	}
+	const p = spotAt(b, u.spot.i);
+	moveTo(u, p.x, p.y, dt, 2, SP);
+}
 function vilTick(u, dt, SP) {
 	u.idle = false;
 	if (u.inside && u.shop) {
@@ -129,6 +168,19 @@ function vilTick(u, dt, SP) {
 			u.hunt = null;
 		}
 		return;
+	}
+	// decision 1, the lost find. The search clock (lostT), the waiting spot and the find seen on the way live only while a villager has no find:
+	// any find, by any path (the player's order too), clears them here, the one home. The moment a wild find runs out, it looks from that spot
+	// and remembers the best it sees; it delivers what it carries first, then goes straight there.
+	if (!u.job || u.hunt || (u.node && u.node.amt > 0)) {
+		u.lostT = undefined;
+		u.spot = null;
+		u.next = null;
+	} else if (u.lostT === undefined && u.node && !u.node.farm) {
+		u.was = u.node.kind;
+		u.lostT = G.t;
+		const n = nearestNode(u, u.job, u);
+		u.next = n && !n.hunt ? n.id : null;
 	}
 	const cap = carryOf(u.owner);
 	if (
@@ -222,39 +274,26 @@ function vilTick(u, dt, SP) {
 	) {
 		if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 		if (u.node) u.was = u.node.kind; // what it worked last: the next find must be of the same kind, in sight
+		const lost = u.was && u.was !== 'farm' && !u.patch;
 		if (u.nnT > G.t) {
 			u.node = null;
 			u.idle = true;
+			if (lost) waitAt(u, dt, SP);
 			return;
 		} // nothing was found a moment ago: wait, do not search every step
-		const n = nearestNode(u, u.job);
-		if (!n && u.was && u.was !== 'farm' && !u.patch && G.t - (u.lostT ?? (u.lostT = G.t)) < SEARCH.tau + SEARCH.give) {
-			u.nnT = G.t + 2 + rng();
-			u.idle = true; // keeps its job and looks again in a couple of seconds, wider each time
+		const seen = lost && u.next != null ? G.nodes.find((x) => x.id === u.next && x.amt > 0) : null;
+		u.next = null;
+		const n = seen || nearestNode(u, u.job, lost ? u.anchor || dropFor(u.owner, u.job, u) || u : undefined); // from the anchor: where it was placed, else its nearest drop-off
+		if (!n && lost && u.pj && u.pj !== u.job) {
+			const pj = u.pj;
+			u.pj = null;
+			setJob(u, pj); // a hunt or a chore is over: back to what it was doing
 			return;
 		}
-		if (!n && u.was && u.was !== 'farm' && !u.patch) {
-			// no find of that kind in sight: to the nearest drop-off, and wait there for an order (Build 61, Albert: if they cannot see it they do not go)
-			if (u.pj && u.pj !== u.job) {
-				const pj = u.pj;
-				u.pj = null;
-				setJob(u, pj); // a hunt or a chore is over: back to what it was doing
-				return;
-			}
-			const dr = dropFor(u.owner, u.job, u),
-				what = u.was;
-			setJob(u, null);
-			u.post = dr ? { x: dr.x + halfOf(dr) + 6, y: dr.y + 6 } : null;
-			if (u.owner === 0)
-				news('home', 
-					`No ${what === 'tree' ? 'trees' : what} in sight: one waits at the ${dr ? bldName(0, dr.kind).toLowerCase() : 'Town Center'}.`,
-					'',
-					4,
-					u,
-				);
-			return;
+		if (!n && !u.patch) {
+			u.node = null;
+			u.nnT = G.t + SEARCH.again + rng(); // nothing in reach: it keeps its job, waits (at the drop-off when its find was lost), and looks again, with no end
 		}
-		if (!n && !u.patch) u.nnT = G.t + 2 + rng();
 		if (!n && u.patch) {
 			// nothing open inside the box: cut in from the nearest open tree outside it; when the box is clear, back to work
 			const r = u.patch,
@@ -277,7 +316,6 @@ function vilTick(u, dt, SP) {
 			return;
 		}
 		u.node = n;
-		u.lostT = undefined;
 		if (n) n.wk = (n.wk || 0) + 1; // counted at once, so the next worker this second sees the crowd (recount sets it true every second)
 	} else if (
 		!flock &&
