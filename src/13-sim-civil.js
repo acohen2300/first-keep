@@ -543,18 +543,17 @@ function scoutTick(u, dt, SP) {
 		return;
 	}
 	if (!u.route) {
-		const c = [
-			[MID, MAP - 420],
-			[MAP - 420, MID],
-			[MID, 420],
-			[420, MID],
-			[520, 520],
-			[MAP - 520, 520],
-			[MAP - 520, MAP - 520],
-			[520, MAP - 520],
-			[MID - 300, MID - 300],
-			[MID + 300, MID + 300],
-		];
+		const S = PLACES.scout,
+			e = S.edge,
+			c = [
+				[MID, MAP - e],
+				[MAP - e, MID],
+				[MID, e],
+				[e, MID],
+				...[1, 2, 3, 0].map((o) => G.P[o].keep.map((v) => v + Math.sign(MID - v) * S.keep)), // in front of each Town Center, where it stands
+				[MID - S.mid, MID - S.mid],
+				[MID + S.mid, MID + S.mid],
+			];
 		u.route = c
 			.map(([x, y]) => ({ x: x + rnd(-40, 40), y: y + rnd(-40, 40) }))
 			.sort((a, b) => Math.atan2(a.y - MID, a.x - MID) - Math.atan2(b.y - MID, b.x - MID));

@@ -1,6 +1,6 @@
 // ═════ 09-nav.js: paths ═════
 // ───────────────────────── The walking grid: where things stand, and how people get around ─────────────────────────
-// Squares of 10, never shown. Buildings fill whole squares and leave one free around them. Walls are one square each.
+// Squares of 10, never shown. Buildings fill whole squares and leave LANE (two) free between them. Walls are one square each.
 const NC = MAP / NAVC;
 const SHORE = 5; // squares from water that count as its shore
 const POCKET = 300; // a joined region smaller than this many squares is a pocket: closed in by trees, buildings or water
@@ -58,8 +58,11 @@ function lakeGrid() {
 }
 const gcell = (x, y) => clamp(Math.floor(y / NAVC), 0, NC - 1) * NC + clamp(Math.floor(x / NAVC), 0, NC - 1);
 const toCell = (w) => ({ gx: clamp(Math.floor(w.x / NAVC), 0, NC - 1), gy: clamp(Math.floor(w.y / NAVC), 0, NC - 1) });
+// a place as the map's lettered squares: COORD units a square, letters across and numbers down (A1 to V22 on the 2160 map)
+const COORD = 100,
+	COORDN = Math.ceil(MAP / COORD);
 const coord = (x, y) =>
-	String.fromCharCode(65 + clamp(Math.floor(x / 100), 0, 19)) + (clamp(Math.floor(y / 100), 0, 19) + 1);
+	String.fromCharCode(65 + clamp(Math.floor(x / COORD), 0, COORDN - 1)) + (clamp(Math.floor(y / COORD), 0, COORDN - 1) + 1);
 function snapPos(kind, x, y) {
 	// the squares a building would cover if centred near (x, y)
 	const n = BLD[kind].fp,
@@ -309,8 +312,8 @@ const AS = {
 	seen: new Uint32Array(NC * NC),
 	done: new Uint32Array(NC * NC),
 	q: new Int32Array(NC * NC),
-	hf: new Float32Array(40000),
-	hi: new Int32Array(40000),
+	hf: new Float32Array(NC * NC),
+	hi: new Int32Array(NC * NC),
 	gen: 0,
 };
 const DX8 = [1, -1, 0, 0, 1, 1, -1, -1],
@@ -676,12 +679,13 @@ function moveTo(u, x, y, dt, r, SP) {
 }
 
 // ───────────────────────── Placement ─────────────────────────
-// Every building keeps one free square around it (a lane, so a figure never stands in a wall); walls, gates and crops may touch.
+// Every building keeps LANE free squares from the next (decision 2: a one-square lane is shut by the slit rule, so it was a wall nobody
+// built); walls, gates and crops may touch anything, but not a building that trains people.
 function canPlace(o, kind, x, y) {
 	const B = BLD[kind],
 		n = B.fp,
 		sp = snapPos(kind, x, y),
-		m = B.wallish ? 0 : 1;
+		m = B.wallish ? 0 : LANE;
 	if (sp.gx < 1 || sp.gy < 1 || sp.gx + n > NC - 1 || sp.gy + n > NC - 1) return 'Too close to the edge';
 	const cw_ = capWhy(o, kind);
 	if (cw_) return cw_;
@@ -698,8 +702,9 @@ function canPlace(o, kind, x, y) {
 			}
 			// a lane on every side (Build 63: "buildings need buffers"); walls, gates and crops may touch anything
 			if (!B.wallish && !B.crop && !BLD[q.kind].wallish && !BLD[q.kind].crop)
-				return 'Leave a gap: a lane round each building';
-			if (!BLD[q.kind].wallish && (TRAINERS.has(kind) || TRAINERS.has(q.kind)))
+				return 'Leave a gap: two squares round each building';
+			const touch = i === -1 || j === -1 || i === n || j === n; // the ring next to the footprint
+			if (touch && !BLD[q.kind].wallish && (TRAINERS.has(kind) || TRAINERS.has(q.kind)))
 				return 'Leave a lane around buildings that train people';
 		}
 	if (!B.wallish) {
@@ -744,8 +749,8 @@ function snapGhost(o, kind, x, y, tol) {
 			alignX = [b.x, b.x - bh + h, b.x + bh - h],
 			alignY = [b.y, b.y - bh + h, b.y + bh - h];
 		if (Math.abs(b.x - x) <= bh + h + tol + 40 && Math.abs(b.y - y) <= bh + h + tol + 40)
-			for (const gap of [bh + h, bh + NAVC + h]) {
-				// beside it: flush first, then with a lane between
+			for (const gap of [bh + h, bh + LANE * NAVC + h]) {
+				// beside it: flush first (a crop), then with the lane between
 				for (const cx of [b.x - gap, b.x + gap]) for (const cy of alignY.concat([y])) consider(cx, cy);
 				for (const cy of [b.y - gap, b.y + gap]) for (const cx of alignX.concat([x])) consider(cx, cy);
 			}

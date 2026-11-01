@@ -64,7 +64,9 @@ function priestTick(u, dt, SP) {
 	if (u.state === 'shrine') {
 		const f = G.finds.find((x) => x.id === u.fid);
 		if (f) {
-			moveTo(u, f.x + u.ox * 0.2, f.y + 22, dt, 4, SP);
+			const d = dist(u, f) || 1,
+				r = FINDS[f.kind].r - 10; // the foot of the Throne on the priest's own side
+			moveTo(u, f.x + ((u.x - f.x) / d) * r, f.y + ((u.y - f.y) / d) * r, dt, 4, SP);
 			return;
 		}
 		u.state = 'home';
@@ -454,11 +456,8 @@ function wildTick(u, dt, SP) {
 				f = blockedCell(gcell(gx, gy), WILD)
 					? freeNear(Math.floor(gx / NAVC), Math.floor(gy / NAVC), WILD, 3, gx, gy)
 					: { x: gx, y: gy };
-			if (f) {
-				u.gx = f.x; // graze only where it fits: a spot inside a building had it nosing the wall (Build 63)
-				u.gy = f.y;
-			}
-		} else if (u.gx !== undefined) moveTo(u, u.gx, u.gy, dt * 0.3, 3, 1);
+			if (f) u.grazeAt = { x: f.x, y: f.y }; // graze only where it fits: a spot inside a building had it nosing the wall (Build 63)
+		} else if (u.grazeAt) moveTo(u, u.grazeAt.x, u.grazeAt.y, dt * 0.3, 3, 1);
 		return;
 	}
 	u.cd = Math.max(0, u.cd - dt);
@@ -556,7 +555,7 @@ function findsTick(dt) {
 		const F = FINDS[f.kind];
 		if (F.capture) {
 			// a holy site: priests take it, it pays its keeper
-			const here = G.units.filter((u) => u.kind === 'priest' && dist(u, f) < 30),
+			const here = G.units.filter((u) => u.kind === 'priest' && dist(u, f) < F.r),
 				sides = [...new Set(here.map((u) => u.owner))];
 			if (sides.length === 1 && sides[0] !== f.owner) {
 				const o = sides[0];

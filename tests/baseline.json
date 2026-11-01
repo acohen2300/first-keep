@@ -1,10 +1,10 @@
 {
- "why": "Build 80 preview 9: boar and bear look out to 140 again (v70's distance; preview 4's 45 was never decided), which moves minutes 2 to 5; and a soldier fights back what bites it (decision 8 amended), which moves side 1 at minute 5. Found by taking each change out alone: with those two out the fingerprint is preview 8's exactly; the villager search, group sight's eyes, the waiting spots and the steps do not move it",
+ "why": "Map 80 review fixes: the board is laid anew from minute 1 by the layout changes alone (four towers and the shrine on the Throne, every find laid by its nodes with its shape rolled first, the lodes symmetric about their lines, runway deposits searched outward, cuts home round water). Measured: with the D1 cool-down exemptions and the scout loop from the real Town Centers taken out the fingerprint is the same, so they do not move it; the graze point's new name and the map labels change no play",
  "minutes": [
-  "129/190/100/50/5/2/0 | 39/40/100/20/7/4/0 | 28/50/100/20/7/4/0 | 30/50/100/20/7/4/0 | 200/200/100/50/144/79/0",
-  "200/225/100/50/5/3/0 | 13/57/100/20/10/5/0 | 9/69/100/20/10/5/0 | 31/101/100/20/9/5/0 | 200/200/100/50/144/79/0",
-  "348/195/110/50/7/3/0 | 39/34/100/20/15/7/0 | 240/39/100/37/12/6/0 | 190/53/100/20/12/6/0 | 200/200/100/50/145/79/0",
-  "484/265/130/150/7/4/0 | 56/23/100/20/19/8/0 | 39/60/100/37/12/6/0 | 48/43/100/20/12/7/0 | 200/200/100/50/145/79/0",
-  "524/285/140/150/7/4/1 | 183/108/100/20/23/9/0 | 84/40/45/6/17/17/1 | 50/53/40/20/18/20/1 | 200/200/100/50/145/79/0"
+  "104/190/100/50/5/2/0 | 30/40/100/20/7/4/0 | 0/30/100/20/6/4/0 | 0/30/100/20/6/4/0 | 200/200/100/50/144/69/0",
+  "143/220/100/50/5/3/0 | 39/88/100/20/11/5/0 | 13/67/100/20/9/5/0 | 33/63/100/20/8/5/0 | 200/200/100/50/144/69/0",
+  "271/200/110/50/7/3/0 | 82/18/100/0/16/7/0 | 141/27/100/30/12/6/0 | 188/13/100/30/12/6/0 | 200/200/100/50/142/69/0",
+  "414/260/130/150/6/4/0 | 128/21/100/15/18/8/0 | 20/59/100/10/12/7/0 | 38/35/100/30/12/7/0 | 200/200/100/50/139/69/0",
+  "459/290/150/150/6/4/1 | 149/38/100/28/23/9/0 | 32/48/45/16/17/17/1 | 4/75/57/0/15/16/1 | 200/200/100/50/136/69/0"
  ]
 }

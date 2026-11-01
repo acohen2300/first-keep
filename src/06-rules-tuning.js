@@ -278,21 +278,22 @@ const EVENTS = {
 };
 const EVK = Object.keys(EVENTS),
 	NEWS_EVERY = 150;
+// Where the shared places stand, each from what it belongs to (5a step 1: no map coordinate typed by hand). From the middle: stop, the
+// trade stops' two distances along each middle line; lode, the gold and stone by the great lake; scout, the inner corners of a scout's loop.
+// From the edge: camp, the robbers' camp at the end of each trade route; scout, its loop's points on the middle lines. From a Town Center,
+// toward the middle on both axes: scout, its loop's corner points.
+// start: the first villagers stand this far from their Town Center toward the middle.
+const PLACES = { stop: [490, 320], lode: 270, camp: 160, scout: { mid: 300, edge: 420, keep: 215 }, start: 40 };
+const cross = (d) => [
+	[MID, MID - d],
+	[MID, MID + d],
+	[MID - d, MID],
+	[MID + d, MID],
+]; // the four points d from the middle on the middle lines: north, south, west, east
 // two old trade routes, west to east and north to south, each with four stops; they bend around the great lake
-const ROUTES = [
-	[
-		[510, 1000],
-		[680, 1000],
-		[1320, 1000],
-		[1490, 1000],
-	],
-	[
-		[1000, 510],
-		[1000, 680],
-		[1000, 1320],
-		[1000, 1490],
-	],
-];
+const ROUTES = [0, 1].map((ax) =>
+	[-PLACES.stop[0], -PLACES.stop[1], PLACES.stop[1], PLACES.stop[0]].map((d) => (ax ? [MID, MID + d] : [MID + d, MID])),
+);
 const POST = { all: 2, cut: [0, 0.2, 0.25, 0.3, 0.4], safe: 120, guard: 12, far: 2.5, want: 1.5 }; // each route has four stops. all: gold a second to whoever holds all four of a route; cut: of other sides' sales at a stop, by how many of its route you hold; guard: soldiers per stop or caravan
 // Sickness as the SIR model (Kermack & McKendrick 1927; Build 56): among a side's people, those who are well (S), sick (I) and over it (R, well
 // again after the course, as the game has no lasting immunity). New cases a tick = β S I / N, the mass-action law; the course lasts sickFor
@@ -317,7 +318,7 @@ const MKTK = [...GOODK, 'f', 'w', 's', 'i'];
 const RATE_OF = { bush: 0.9, fish: 0.8, tree: 0.75, stone: 0.55, gold: 0.6, iron: 0.5, meat: 1.2 }; // what a villager gathers a second from each kind of find (fields carry their own rate)
 
 // The land's character: each game rolls one, the same for all four corners (fair), so no two games share a map. amt: what each resource
-// is worth there; extra: one more deposit of its specialty, farther out; spread: how far the rings may stretch; turn: how far the home pocket may swing.
+// is worth there; extra: one more deposit of its specialty, farther out; spread: how far the rings may stretch.
 const LAND = {
 	fertile: { name: 'Fertile land', amt: { food: 1.4, wood: 1, stone: 0.8, gold: 1, iron: 1 }, extra: 'bush' },
 	timber: { name: 'Timberland', amt: { food: 1, wood: 1.35, stone: 1, gold: 0.8, iron: 1 }, extra: null },
@@ -325,11 +326,19 @@ const LAND = {
 	golden: { name: 'Gold country', amt: { food: 1, wood: 0.85, stone: 1, gold: 1.5, iron: 1 }, extra: 'gold' },
 };
 const LANDK = Object.keys(LAND),
-	SPREAD = [0.85, 1.25],
-	TURN = 0.5;
+	SPREAD = [0.85, 1.25];
 // The map's base rules (Albert, Build 70): a flat page, four corners (CORNER), the same clear radius and home finds in every corner, the
 // Throne at the middle. All else is random from the one randomizer, laid once: no measure, no reshuffle. CLEAR: no forest or water within it.
 const CLEAR = 360;
+// The home zone (decision 5a, Albert, Oct 31; the same three numbers in every corner), measured on the finds' own nodes (each bush, tree,
+// rock): clear, no node of any find within it of the Town Center; the five home finds (HOME_IDS in 10) each at a random place round the
+// Town Center with its nearest node in the band from clear to clear + band; rich, their amounts over today's pocket (HOME_RICH 1.18, on top
+// of RICH); and the radius CLEAR above, no forest or water within it. Everything else is random, outside the band. Fallback if the 100-seed
+// placement test fails (decision 5a): clear 190.
+const HOME = { clear: 200, band: 60, rich: 1.18 };
+// Between two buildings (decision 2, Albert, Oct 31): LANE squares at least. A gap is passable only if wider than a figure (2r); the slit rule
+// shuts a one-square gap because the drawn figure is wider than it (Build 41), so two. Walls, gates and crops may touch.
+const LANE = 2;
 // Lakes and rivers (Build 70: random; it was one lake and one river of one width a corner). lakes: how many beside the great lake; r: from a
 // pond five houses across to a lake short of the great lake's 170, on the power law of lake sizes (lakeSize; Downing et al. 2006: the number
 // of lakes larger than an area falls as area^−c, c 1.06). On 60 seeds about nine tenths of the old water and fish (fish 31 to 105, median 58;

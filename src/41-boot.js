@@ -177,6 +177,10 @@ window.__fk = {
 	get cam() {
 		return cam;
 	},
+	get view() {
+		return { cw, ch, vy, bandH };
+	},
+	clampCam,
 	set G(v) {
 		G = v;
 	},
@@ -349,6 +353,22 @@ window.__fk = {
 	statusOf,
 	WATER,
 	CLEAR,
+	MAP,
+	MID,
+	CORNER,
+	NC,
+	NAVC,
+	LAKE0,
+	THRONE,
+	PLACES,
+	cross,
+	compOf,
+	decideWar,
+	HOME,
+	LAND,
+	RICH,
+	LAYOUT,
+	WAVE,
 	scoreAll,
 	hurt,
 	sabotage,

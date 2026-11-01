@@ -6,6 +6,7 @@ JS = """() => {
   const F = window.__fk, bad = []; F.newGame(7); F.act('close'); F.setPause(false); let G = F.G;
   // decision 10: two on one spot part, the same way every time
   const v = G.units.filter((u) => u.owner === 0 && u.kind === 'vil').slice(0, 2);
+  v[0].x = F.keepOf(0).x + 60; v[0].y = F.keepOf(0).y - 60;   // on open ground: the first villagers can start on the Town Center's own squares
   const run = () => { v[1].x = v[0].x; v[1].y = v[0].y; F.pushApart(v[0], v[1]); return [v[0].x - v[1].x, v[0].y - v[1].y]; };
   const a = run(), b = run();
   if (Math.hypot(a[0], a[1]) < 1) bad.push('two villagers on one spot did not part');
@@ -158,7 +159,7 @@ JS2 = """() => {
     if (F.nearestFoe(0, sp, 200) !== wf) bad.push('a soldier does not count a wolf biting it as a foe (at peace with the wild)');
     const h0 = wf.hp; run(8); if (!(wf.hp < h0)) bad.push('a soldier bitten by a wolf never struck back (wolf ' + Math.round(wf.hp) + ' of ' + Math.round(h0) + ', soldier ' + Math.round(sp.hp) + ')'); }
   { const G = fresh(), k = F.keepOf(0), P = { x: 0, y: 0 };
-    let best = 0; for (let x = 200; x < 2000; x += 100) for (let y = 200; y < 2000; y += 100) { const m = Math.min(...G.blds.filter((b) => b.owner === 0).map((b) => Math.hypot(b.x - x, b.y - y))); if (m > best && !F.blockedCell(F.gcell(x, y), 0)) { best = m; P.x = x; P.y = y; } }
+    let best = 0; for (let x = 200; x < F.MAP; x += 100) for (let y = 200; y < F.MAP; y += 100) { const m = Math.min(...G.blds.filter((b) => b.owner === 0).map((b) => Math.hypot(b.x - x, b.y - y))); if (m > best && !F.blockedCell(F.gcell(x, y), 0)) { best = m; P.x = x; P.y = y; } }
     const vv = vil(G), bo = F.addUnit(W(), 'boar', P.x + 5, P.y); vv.x = P.x; vv.y = P.y; bo.tgt = vv;
     const far = F.addUnit(0, 'spear', P.x + F.sightOf(vv) + 150, P.y);
     if (F.groupSees(0, bo)) bad.push('the villager being attacked counts as one of its side\\'s eyes');
