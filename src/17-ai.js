@@ -397,10 +397,11 @@ function throneRun(p, per) {
 	const o = p.id,
 		T = G.blds.find((b) => b.kind === 'throne' && b.hp > 0);
 	if (!T || p.wave || p.age < 3 || (G.throne && G.throne.owner === o)) return;
+	const holder = G.throne ? G.throne.owner : WILD;
+	if ((p.ai.cool[holder] || 0) > G.t) return;
 	const home = soldiersOf(o).filter((u) => u.state === 'home'),
 		sg = home.filter((u) => hasTag(u.kind, 'siege')).length;
-	const holder = G.throne ? G.throne.owner : WILD,
-		odds = powerOf(home) / (powerOf(soldiersOf(holder).filter((u) => dist(u, T) < 300)) + 800);
+	const odds = powerOf(home) / (powerOf(soldiersOf(holder).filter((u) => dist(u, T) < 300)) + 800);
 	if (
 		home.length < 20 ||
 		(holder === WILD && sg < 2 && G.rel[o][WILD] !== 'ally') ||
@@ -413,7 +414,7 @@ function throneRun(p, per) {
 		u.target = holder;
 		u.bid = T.id;
 	});
-	p.wave = { n: home.length, t: G.t };
+	p.wave = newWave(home.length, holder, T.id);
 	news('war', `${p.name} march on the Throne.`, 'warn', 8, T);
 }
 function wallPlan(k) {
@@ -458,20 +459,30 @@ function matchup(A, B) {
 		}
 	return clamp(x / y, 0.6, 1.6);
 }
+// a wave: how many set out, at whom, its mark (a building id or null: the Town Center), its best distance so far and when it last made progress
+const newWave = (n, to, bid) => ({ n, t: G.t, to, bid, d: 1e9, pt: G.t });
 function decideWar(p, per) {
 	const o = p.id,
 		home = soldiersOf(o).filter((u) => u.state === 'home' && !UNIT[u.kind].heal),
 		out = soldiersOf(o).filter((u) => u.state === 'attack');
 	if (p.wave) {
-		const hit = out.some((u) => G.t - (u.hitT || -99) < 30);
-		if (!p.wave.charged && out.some((u) => u.tgt && !u.tgt.q)) {
-			p.wave.charged = true;
+		const w = p.wave,
+			goal = (w.bid && G.blds.find((b) => b.id === w.bid && b.hp > 0)) || keepOf(w.to),
+			d = goal && out.length ? out.reduce((s, u) => s + dist(u, goal), 0) / out.length : w.d;
+		if (out.some((u) => G.t - (u.hitT || -99) < WAVE.fight) || d < w.d - WAVE.step) {
+			w.d = Math.min(w.d, d);
+			w.pt = G.t;
+		} // progress: a blow, or a step nearer
+		if (!w.charged && out.some((u) => u.tgt && !u.tgt.q)) {
+			w.charged = true;
 			charge(o, out);
 		} // on contact, once a wave
-		if (out.length < p.wave.n * 0.35 || (!hit && G.t - p.wave.t > 45)) {
+		const stalled = G.t - w.pt > WAVE.stall;
+		if (out.length < w.n * WAVE.broke || stalled) {
 			out.forEach((u) => (u.state = 'home'));
+			if (stalled) p.ai.cool[w.to] = G.t + WAVE.cool;
 			p.wave = null;
-		} // beaten, or stalled: go home
+		} // beaten, or stalled: go home, and a stalled target waits
 		return;
 	}
 	const W = G.wonder && G.wonder.owner !== o && atWar(o, G.wonder.owner) ? G.wonder : null;
@@ -485,7 +496,7 @@ function decideWar(p, per) {
 	let best = null,
 		bp = 0;
 	for (const q of G.P)
-		if (q.alive && q.id !== WILD && atWar(o, q.id)) {
+		if (q.alive && q.id !== WILD && atWar(o, q.id) && !((p.ai.cool[q.id] || 0) > G.t)) {
 			if (q.id === 0 && G.diff === 'easy' && G.t < EASY_SAFE && !W) continue; // Easy: nobody comes for you in the first six minutes
 			const r = (mine / estPower(o, q.id)) * matchup(go, soldiersOf(q.id)),
 				prob = lanchester(r); // the square law, as odds, bent by who counters whom
@@ -509,7 +520,7 @@ function decideWar(p, per) {
 			u.bid = W && W.owner === best ? W.id : TB ? TB.id : null;
 			u.loot = null;
 		});
-		p.wave = { n: go.length, t: G.t };
+		p.wave = newWave(go.length, best, W && W.owner === best ? W.id : TB ? TB.id : null);
 		if (per.raid) {
 			// a few riders go for the foe's lumber camps and mines instead of the Town Center: it draws the defence apart
 			const fast = go

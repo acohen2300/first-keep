@@ -100,7 +100,7 @@ function mkPlayer(i, civ) {
 		zealT: 0,
 		wave: null,
 		killer: undefined,
-		ai: { t: 1 + i * 0.3, lastHelp: 0, cyc: 0 },
+		ai: { t: 1 + i * 0.3, lastHelp: 0, cyc: 0, cool: {} }, // cool: side → until when a stalled wave leaves it alone (WAVE)
 		gathered: 0,
 		spent: 0,
 		flow: {},

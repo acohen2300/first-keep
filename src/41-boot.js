@@ -359,6 +359,8 @@ window.__fk = {
 	PLACES,
 	cross,
 	compOf,
+	decideWar,
+	WAVE,
 	scoreAll,
 	hurt,
 	sabotage,
