@@ -20,6 +20,7 @@ function shopTick(u, dt) {
 	if (g > 0) {
 		stash(u.owner, n.type, g);
 		u.st.got += g;
+		b.made = (b.made || 0) + g; // what this workshop has made, counted on the building (E2: its card read the worker's lifetime gathering)
 	}
 }
 // what a worker makes in this moment from a field, a find or a workshop's inputs (which it takes from the stores), at most `room`

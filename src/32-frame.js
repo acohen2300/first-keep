@@ -134,6 +134,19 @@ const ICON = {
 		'<rect x="2.5" y="4.5" width="15" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3 5.5 L10 11 L17 5.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
 	),
 	play: SVG(16, '<path d="M4.5 2.8 L13 8 L4.5 13.2 Z" fill="currentColor"/>'),
+	// the three stances (v80, Relations final), keyed as REL_WORD: a sword, the scales, a handshake; from Lucide (ISC licence, src/fonts/ISC-lucide.txt), line only
+	war: SVG(
+		24,
+		'<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></g>',
+	),
+	peace: SVG(
+		24,
+		'<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></g>',
+	),
+	ally: SVG(
+		24,
+		'<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></g>',
+	),
 	pause: SVG(16, '<path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/>'),
 };
 ICON.book = ICON.book.replace('class="gl"', 'width="18" height="18"');
@@ -183,7 +196,7 @@ function buildPanel() {
 			: `<span class="cell" id="${id}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></span>`;
 	$('status').innerHTML = STATUS.map(([id, act, label]) => sc(id, act, label)).join('');
 	$('homeB').innerHTML = ICON.home;
-	$('emgB').innerHTML = ICON.def;
+	$('emgB').innerHTML = topOf(ICON.def) + wd(ROW_WORD.emg); // a slot with its word under its icon, on the cycle button's rank (cold review of v70)
 	$('pX').innerHTML = ICON.close;
 }
 const refresh = () => {
@@ -261,7 +274,7 @@ function whoIs(u) {
 // and a group can be hidden from the preview's ×: its lines then go quietly to the mail, unless urgent (red). A repeat in the same group
 // within MSG.merge seconds is a count on the first (Raid ×3), not a new flash. The best of the genre do the same: one alert a place, a
 // sound and a place to tap, the text short and gone, a list to read later.
-const MSG = { secs: 4, merge: 30, keep: 30 };
+const MSG = { secs: 4, merge: 30, keep: 30, page: 6 }; // the mail keeps 30 lines, six a page (N13)
 const GROUPS = {
 	war: 'War',
 	home: 'Home',

@@ -4,7 +4,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <!--FONTS-->
 <style>
-/* The one style sheet. The colours, the grid, the three text sizes and the four timings each live once, here in :root (COLORS.md names the
+/* The one style sheet. The colours, the grid, the two text sizes and the four timings each live once, here in :root (COLORS.md names the
    colours, MENU-SPEC.md draws the grid); every rule below reads them. Two layers: the parts, then the states on top, so a state always shows. */
 :root{
   --brown-1:#2a1d13;--brown-2:#33241a;--brown-3:#6b5230;--cream-1:#ece5d3;--cream-2:#c9bca2;--gold-1:#e6b947;   /* the materials: card, slot fill, slot edge; words; quiet words; titles and the chosen ring */
@@ -14,39 +14,62 @@
   --shade:0 2px 8px rgba(0,0,0,.4);   /* the one shadow, under what floats over the map */
   --gap:6px;--slot:44px;--rad:6px;   /* the grid (MENU-SPEC §1): one number, 6; every slot 44 tall; corners 6 */
   --rank:calc(var(--slot) + var(--gap));--half:calc((var(--slot) - var(--gap)) / 2);--rad-o:calc(var(--rad) + var(--gap) / 2);   /* a rank 50; a half rank 19; an outline round slots 9, so the curves nest */
-  --fs-s:12px;--fs-m:15px;--fs-l:19px;   /* three text sizes: labels and subtitles; buttons and values; titles and the big moments */
+  --weight:600;   /* Barlow's one weight (MAYBE); the body and the map's words (mapFont) read it */
+  --fs-s:12px;--fs-l:18px;   /* two text sizes (v80, Albert): 12 for every word and number in a tile, 18 for titles and the big moments */
   --t-quick:.15s;--t-sweep:.4s;--t-settle:1.2s;--t-long:2.4s;   /* the four timings (Build 66, SoRen's names): a state changes, a thing moves, a thing comes to rest, two rests. The code reads these too */
   --hb:calc(env(safe-area-inset-top,0px) + var(--gap) * 2 + var(--slot) + var(--half));   /* the top: the bar at 6, gap 6, the strip */
   --ob:100px;   /* the row's height, measured by fit() */
   --display:"IM Fell English SC",Georgia,"Times New Roman",serif;--ui:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
   color-scheme:dark}
 html,body{height:100%}
+:is(b,strong,th,h1,h2,h3,small,input,button){font-weight:inherit}   /* one weight for Barlow, --weight (600), set once on the body (v80, Albert: MAYBE); quiet lines are told apart by colour, not weight */
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 @layer parts,states;
 @layer parts{
-body{margin:0;background:var(--brown-1);color:var(--cream-1);font-family:var(--ui);font-size:var(--fs-m);overflow:hidden;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--brown-1);color:var(--cream-1);font-family:var(--ui);font-size:var(--fs-s);font-weight:var(--weight);font-synthesis:none;overflow:hidden;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 #app{height:100%;position:relative;max-width:560px;margin:0 auto}
 /* The slot: every button is one, Brown 2 with a Brown 3 edge, 44 tall, corners 6; a bold word, and its quiet line under it */
 button{font:inherit;color:var(--cream-1);background:var(--brown-2);border:1px solid var(--brown-3);border-radius:var(--rad);min-height:var(--slot);padding:2px 4px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;touch-action:manipulation;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color var(--t-quick),box-shadow var(--t-quick)}
 button:focus-visible{outline:2px solid var(--gold-1);outline-offset:1px}
-button b{font-weight:700;font-size:var(--fs-m);text-wrap:balance}
+button b{font-size:var(--fs-s);text-wrap:balance}
 button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tabular-nums;white-space:nowrap}
 .gl{display:block;width:20px;height:20px}
 /* The Formation (MENU-SPEC §2, §3): twelve half slots across, ranks 44 tall, 6 between everything. A cell is one slot, unless its block lays
-   fewer a rank (c1 a banner, c2 halves, c3 thirds, c4 one and a half each) or the cell names its own span (h a half slot, s15, s2, s3, s6;
+   fewer a rank (c1 a banner, c2 halves, c3 thirds, c6 singles) or the cell names its own span (h a half slot, s1 to s6 whole slots;
    r2 a pillar two ranks tall). A rank whose words cannot fit grows instead of spilling over: a card to redraw, never a rule to bend. */
 .fm{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-rows:minmax(var(--slot),auto);gap:var(--gap)}
 .fm:empty{display:none}
 .fm>*{grid-column:span 2;min-width:0}
 .fm.c1>*{grid-column:span 12}.fm.c2>*{grid-column:span 6}.fm.c3>*{grid-column:span 4}.fm.c4>*{grid-column:span 3}
-.fm>.h{grid-column:span 1}.fm>.s1{grid-column:span 2}.fm>.s15{grid-column:span 3}.fm>.s2{grid-column:span 4}.fm>.s3{grid-column:span 6}.fm>.s6{grid-column:span 12}.fm>.r2{grid-row:span 2}
-/* the info cell: no frame; the value in Cream 1 at 15, its label in Cream 2 at 12 under it. Numbers centre; a sentence (left) aligns left */
+.fm>.h{grid-column:span 1}.fm>.s1{grid-column:span 2}.fm>.s2{grid-column:span 4}.fm>.s3{grid-column:span 6}.fm>.s4{grid-column:span 8}.fm>.s5{grid-column:span 10}.fm>.s6{grid-column:span 12}.fm>.r2{grid-row:span 2}
+/* the info cell: no frame; the value in Cream 1, its label in Cream 2 under it, both at 12. Numbers centre; a sentence (left) aligns left */
 .info{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.2;min-width:0}
-.info b{font-size:var(--fs-m);font-weight:700;color:var(--cream-1)}.info small{font-size:var(--fs-s);color:var(--cream-2)}
+.info b{font-size:var(--fs-s);color:var(--cream-1)}.info small{font-size:var(--fs-s);color:var(--cream-2)}
 .info.left{align-items:flex-start;text-align:left}
-.info.line{padding:0 8px}.info.line :is(b,small){max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* a line of a card (line): inset from the edge, and it keeps to its rank */
+.info.line{padding:0 8px}.info.line.s1{padding:0 0 0 var(--gap)}.info.line :is(b,small){max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* a line of a card (line): inset from the edge, and it keeps to its rank */
 .info.gain b{color:var(--ring-g)}.info.loss b{color:var(--ring-r)}   /* in and out on the stores: green came in, red went out; the sign says it too */
+.info.quiet b{color:var(--cream-2)}   /* a setting's name: quiet */
+.stance-war{color:var(--ring-r)}.stance-peace{color:var(--ring-w)}.stance-ally{color:var(--ring-g)}   /* the three stances wear their colour on their icon and their word (EXCEPTIONS #14) */
+.info .stance-war{color:var(--ring-r)}.info .stance-peace{color:var(--ring-w)}.info .stance-ally{color:var(--ring-g)}
+/* The controls (v80, the control sheet; 27-cards-core bar, slt): each built once, whole slots wide, corners 6. A bar is one shape holding one
+   set's choices, a chosen part ringed gold inside it; the selector's ring slides 0.4 s to rest over its one choice (--i of --n). The slider
+   with its switch: the word, the value and the switch over the track, gold to the knob; off, the track goes quiet and keeps its value.
+   A part inside a control may be under 44 (EXCEPTIONS #13): the whole control is the slot */
+.bar{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));position:relative;border-radius:var(--rad);background:var(--brown-2);box-shadow:inset 0 0 0 1px var(--brown-3)}
+.bar>button{background:none;border-color:transparent;padding:0 2px;min-width:0}
+.bar svg{width:18px;height:18px}
+.sel::before{content:'';position:absolute;top:4px;bottom:4px;left:calc(4px + var(--i) * (100% - 8px) / var(--n));width:calc((100% - 8px) / var(--n));box-sizing:border-box;border:2px solid var(--gold-1);border-radius:var(--rad);transition:left var(--t-sweep);pointer-events:none}
+.sw{flex:none;position:relative;width:34px;height:20px;box-sizing:border-box;border:2px solid var(--brown-3);border-radius:10px;transition:border-color var(--t-quick)}
+.sw::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:var(--cream-2);transition:left var(--t-sweep)}
+.slt{display:flex;flex-direction:column;justify-content:center;gap:2px;padding:0 8px;box-sizing:border-box;min-height:var(--slot);min-width:0;border:1px solid var(--brown-3);border-radius:var(--rad);background:var(--brown-2);--tk:var(--brown-3)}
+.slt>button{all:unset;display:flex;align-items:center;gap:6px;height:22px;cursor:pointer;color:var(--cream-1)}
+.slt>button b{flex:1;text-align:left}.slt>button small{color:var(--cream-2);font-variant-numeric:tabular-nums}
+.slt input{-webkit-appearance:none;appearance:none;display:block;width:100%;height:16px;margin:0;background:none;cursor:pointer}
+.slt input::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:linear-gradient(90deg,var(--tk) var(--v),var(--brown-3) 0)}
+.slt input::-moz-range-track{height:3px;border-radius:2px;background:linear-gradient(90deg,var(--tk) var(--v),var(--brown-3) 0)}
+.slt input::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;margin-top:-6.5px;border:0;border-radius:50%;background:var(--tk)}
+.slt input::-moz-range-thumb{width:16px;height:16px;border:0;border-radius:50%;background:var(--tk)}
 /* The top (MENU-SPEC §5): one framed bar 44 tall at 6 from the top (and the safe area), gap 6, the strip a half rank. Each edge is drawn
    inside its bar, so a cell of the bar is a whole 44 to tap, and a cell of the strip hangs 44 under its thin line */
 #hud{position:absolute;z-index:4;top:calc(env(safe-area-inset-top,0px) + var(--gap));left:0;right:0;box-sizing:border-box;padding:0 var(--gap);display:flex;flex-direction:column;gap:var(--gap);pointer-events:none}
@@ -56,10 +79,10 @@ button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tab
 .pill .cell{flex:1 1 0;background:none;border:0;border-radius:0;isolation:isolate}
 .pill .cell+.cell::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--brown-3)}
 .cell .gl{position:absolute;left:50%;top:13px;transform:translate(-50%,-50%)}
-.cell .wd{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);text-align:center;font-size:var(--fs-s);font-weight:700;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.cell .wd{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);text-align:center;font-size:var(--fs-s);line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
 .cell.one .gl,.cell.one .wd{top:50%}.cell.one .gl{width:18px;height:18px}
 #muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--cream-2)}
-#pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:var(--fs-s);font-weight:700;color:var(--gold-1)}
+#pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:var(--fs-s);color:var(--gold-1)}
 #status{height:var(--half);overflow:visible;align-items:flex-start}
 #status .cell{height:var(--slot);display:flex;flex-direction:row;align-items:flex-start;justify-content:center;gap:2px;padding:0 1px;overflow:hidden}
 #status .cell .gl,#status .cell .wd{position:static;transform:none;width:auto;height:var(--half);line-height:var(--half);font-size:var(--fs-s);white-space:nowrap}
@@ -70,10 +93,10 @@ button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tab
 #pv{position:absolute;z-index:5;top:calc(var(--hb) + var(--gap));left:var(--gap);right:var(--gap);display:flex;align-items:stretch;min-height:var(--slot);box-sizing:border-box;border:1px solid var(--brown-3);border-left:5px solid var(--cc,var(--ring-w));border-radius:var(--rad);background:var(--brown-1);box-shadow:var(--shade);color:var(--cream-1);transition:opacity var(--t-sweep)}
 #pv.fade{opacity:0}
 #pv button{all:unset;box-sizing:border-box;min-height:var(--slot);cursor:pointer;touch-action:manipulation}
-#pv .t{flex:1;min-width:0;padding:4px 10px;display:flex;flex-direction:column;justify-content:center;font-size:var(--fs-m);font-weight:600;line-height:1.2}
-#pv .t small{font-size:var(--fs-s);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cream-2)}#pv .t span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pv .t{flex:1;min-width:0;padding:4px 10px;display:flex;flex-direction:column;justify-content:center;font-size:var(--fs-s);line-height:1.2}
+#pv .t small{font-size:var(--fs-s);letter-spacing:.08em;text-transform:uppercase;color:var(--cream-2)}#pv .t span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #pv .x{width:var(--slot);display:flex;align-items:center;justify-content:center;color:var(--cream-2)}
-#pv .ask{display:flex;gap:4px;padding:4px}#pv .ask button{padding:0 12px;border:1px solid var(--brown-3);border-radius:var(--rad);display:flex;align-items:center;font-weight:700}
+#pv .ask{display:flex;gap:4px;padding:4px}#pv .ask button{padding:0 12px;border:1px solid var(--brown-3);border-radius:var(--rad);display:flex;align-items:center}
 /* The map, and what sits on it: the small map, the corner buttons, the bars that act on a pick or a placing, the quick action */
 #stage{position:absolute;inset:0;overflow:hidden;background:#20301c;touch-action:none}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -82,11 +105,11 @@ button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tab
 .fab{position:absolute;z-index:3;width:var(--slot);height:var(--slot);padding:0;bottom:calc(var(--ob) + var(--gap));box-shadow:var(--shade)}
 .fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}
 #homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}
-/* Emergency's button, bottom right a rank above the row: it opens the Emergency card, and steps aside while any card is open, where it would sit over the card's buttons */
-#emgB{right:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}#stage:has(#card:not([hidden])) #emgB{display:none}
-#hudB{left:var(--gap);width:calc((100% - 7 * var(--gap)) / 6)}   /* the cycle button: one slot wide, on its own rank above slot 1 (MENU-SPEC §6) */
-#stage.busy :is(#hudB,#homeB),#stage.picking #homeB{display:none}
-#place,#pickbar{position:absolute;z-index:3;left:var(--gap);right:var(--gap);bottom:calc(var(--ob) + var(--gap));box-sizing:border-box;display:flex;gap:var(--gap);padding:var(--gap);background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o);font-weight:700}
+/* the cycle button and Emergency: a slot each, on their own rank above the row, slot 1 and slot 6 (MENU-SPEC §6; cold review of v70: Emergency
+   was 44 wide a rank higher, with no word). Emergency steps aside while any card is open, where it would sit over the card's buttons */
+#hudB,#emgB{width:calc((100% - 7 * var(--gap)) / 6)}#hudB{left:var(--gap)}#emgB{right:var(--gap)}#stage:has(#card:not([hidden])) #emgB{display:none}
+#stage.busy :is(#hudB,#homeB,#emgB),#stage.picking #homeB{display:none}
+#place,#pickbar{position:absolute;z-index:3;left:var(--gap);right:var(--gap);bottom:calc(var(--ob) + var(--gap));box-sizing:border-box;display:flex;gap:var(--gap);padding:var(--gap);background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o)}
 #place{justify-content:space-between;align-items:center;padding-left:10px}#place span{flex:1;min-width:0;line-height:1.25}#place button{padding:0 12px}
 #pickbar{flex-direction:column;border-color:var(--ring-g)}#pickbar .pbTop,#pickbar .pbRow{display:flex;gap:var(--gap);align-items:center}#pickbar .pbRow:empty{display:none}#pickbar span{flex:1;min-width:0;line-height:1.25;padding-left:6px}#pickbar button{min-width:var(--slot);padding:0 10px}#pickbar .pbRow button{flex:1;padding:0 4px}#pickbar .gl{width:18px;height:18px}
 /* the quick action (MENU-SPEC §7): a 2 × 2 of slots, icons only, one tight block: no gaps inside, one outer border at 9, thin dividers (the
@@ -97,15 +120,15 @@ button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tab
 /* The row below the map (MENU-SPEC §6): one Formation two ranks tall on the screen's grid, 6 to the edge; the − and + under a job, and any
    a / b pair, are half slots. Jobs stands over the map; War and Train lie on steel, and so does the cycle button on them (COLORS.md) */
 #orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--gap) calc(env(safe-area-inset-bottom,0px) + var(--gap));pointer-events:none}
-#orders:not(.pg-jobs){background:color-mix(in srgb,var(--steel-1) 84%,transparent);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 var(--steel-3)}
+#orders{isolation:isolate}#orders:not(.pg-jobs)::before{content:'';position:absolute;z-index:-1;left:0;right:0;bottom:0;top:calc(-1 * var(--rank) - var(--gap));background:color-mix(in srgb,var(--steel-1) 84%,transparent);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 var(--steel-3)}   /* one steel panel holds the row and the cycle button's rank (cold review of v70) */
 #row{pointer-events:auto}#row .info :is(b,small){white-space:nowrap}
 .pg-jobs #row button{box-shadow:var(--shade)}
-.pg-war #row button,.pg-train #row button,#hudB:is(.war,.train){background:var(--steel-2);border-color:var(--steel-3)}
-/* a slot of icon and word (the row, the cycle button, a card's rank): the picture at 18 with its number at 15 beside it, the word at 12 in
+.pg-war #row button,.pg-train #row button,#orders:not(.pg-jobs)~:is(#hudB,#emgB){background:var(--steel-2);border-color:var(--steel-3)}
+/* a slot of icon and word (the row, the cycle button, a card's rank): the picture at 18 with its number at 12 beside it, the word at 12 in
    Cream 2 under it; a symbol alone at 24 */
 .cell .top{position:absolute;left:0;right:0;top:13px;transform:translateY(-50%);display:flex;justify-content:center;align-items:center;gap:4px}
 .cell .top :is(.gl,svg){position:static;transform:none;width:18px;height:18px}
-.cell .top .c{font-size:var(--fs-m);font-weight:700;line-height:1;font-variant-numeric:tabular-nums;color:var(--nc,inherit)}
+.cell .top .c{font-size:var(--fs-s);line-height:1;font-variant-numeric:tabular-nums;color:var(--nc,inherit)}
 .cell .top~.wd{color:var(--cream-2)}
 .cell.sym .gl{top:50%;width:24px;height:24px}
 /* The card (MENU-SPEC §1, §4): its slots on the screen's own grid, 6 from the edge and 6 from the row, its frame an outline down the middle
@@ -124,33 +147,30 @@ button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tab
 .tb h3{margin:0;display:flex;align-items:center;padding:0 10px;background:var(--brown-2);border:1px solid var(--brown-3);border-radius:var(--rad);font:400 var(--fs-l)/1 var(--display);letter-spacing:.05em;color:var(--gold-1);white-space:nowrap;overflow:hidden}
 .tb svg{width:24px;height:24px}
 .sub{padding:0 8px;font-size:var(--fs-s);line-height:16px;color:var(--cream-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cin p{margin:0;color:var(--cream-2);line-height:1.35;font-size:var(--fs-m)}
-.cin p i{color:var(--cream-1);font-style:normal;font-weight:700}
-.cin p.why{font-size:var(--fs-s);line-height:1.25}
+.cin p{margin:0;color:var(--cream-2);line-height:1.35;font-size:var(--fs-s)}
+.cin p i{color:var(--cream-1);font-style:normal}
 .cin .dim{color:var(--cream-2)}.cin .done{color:var(--ring-g)}.cin .copy{text-align:center;font-size:var(--fs-s)}
 .cin .sec{font-size:var(--fs-s);color:var(--cream-2);letter-spacing:.06em;text-transform:uppercase}
 .cin .infoP{background:var(--brown-2);border:1px solid var(--brown-3);border-radius:var(--rad);padding:var(--gap) 8px;display:flex;flex-direction:column;gap:4px}
 .cin .hp{height:5px;background:var(--brown-2);border-radius:3px;overflow:hidden}.cin .hp i{display:block;height:100%}
 .cin .fold{border-top:1px solid var(--brown-2)}
-.cin .fold summary,#endX summary{color:var(--cream-2);font-size:var(--fs-m);min-height:var(--slot);display:flex;align-items:center;cursor:pointer;list-style:none}
+.cin .fold summary,#endX summary{color:var(--cream-2);font-size:var(--fs-s);min-height:var(--slot);display:flex;align-items:center;cursor:pointer;list-style:none}
 .cin .fold summary::-webkit-details-marker,#endX summary::-webkit-details-marker{display:none}
-.cin .fold summary::before,#endX summary::before{content:'+';display:inline-block;width:18px;font-weight:700}.cin .fold[open] summary::before,#endX details[open] summary::before{content:'−'}
+.cin .fold summary::before,#endX summary::before{content:'+';display:inline-block;width:18px}.cin .fold[open] summary::before,#endX details[open] summary::before{content:'−'}
 .cin .fold p{margin-top:4px}
 .cin button small{white-space:normal;text-wrap:balance}   /* in a card a long line wraps and its rank grows, never spills */
-.cin small.need,.cin small.can{color:var(--gc);font-weight:700}.cin button.go small.can{color:inherit}   /* a cost on the one gradient; a ready slot already says it */
-.cin table{color:var(--cream-1);border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:var(--fs-m);width:100%}
+.cin small.need,.cin small.can{color:var(--gc)}.cin button.go small.can{color:inherit}   /* a cost on the one gradient; a ready slot already says it */
+.cin table{color:var(--cream-1);border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:var(--fs-s);width:100%}
 .cin :is(td,th){padding:3px 4px;text-align:right;border-bottom:1px solid var(--brown-3)}.cin :is(td,th):first-child{text-align:left}
-.cin th{color:var(--cream-2);font-weight:700;font-size:var(--fs-s)}.cin td.low{color:var(--ring-r)}
-.cin .chips{display:flex;flex-wrap:wrap;gap:var(--gap)}
-.cin .chip{border:1px solid var(--ring-g);color:var(--cream-1);border-radius:var(--rad);padding:3px 9px;font-size:var(--fs-s);font-weight:700}
+.cin th{color:var(--cream-2);font-size:var(--fs-s)}.cin td.low{color:var(--ring-r)}
 /* a kind and its count (Attack with, a squad's plan): the name three slots · − · the count · +. A trade row: the good · Sell · Buy, two each */
 .qs{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--gap);align-items:center}
 .qs>*{grid-column:span 2;min-width:0}.qs>b{grid-column:span 6}.qs>span{text-align:center;font-variant-numeric:tabular-nums}
-.qs.hdr>*{font-size:var(--fs-s);color:var(--cream-2);font-weight:500}
+.qs.hdr>*{font-size:var(--fs-s);color:var(--cream-2)}
 /* a place in a building's line, a single: the order at 12, two lines at most, and its time under it */
 .cin .slot{padding:2px 3px}.cin .slot b{font-size:var(--fs-s);line-height:1.1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
 /* a research step and its › to the building: two slots and one */
-.trow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--gap)}.trow>button{grid-column:span 4}.trow>.goto{grid-column:span 2;font-size:var(--fs-l);font-weight:700}
+.trow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--gap)}.trow>button{grid-column:span 4}.trow>.goto{grid-column:span 2;font-size:var(--fs-l)}
 /* a research step wears its age on its top edge */
 .cin button:is(.a0,.a1,.a2,.a3,.a4)::before{content:'';position:absolute;left:10px;right:10px;top:4px;height:3px;border-radius:2px;background:var(--age)}
 .cin .a0{--age:#9a9890}.cin .a1{--age:#b5793a}.cin .a2{--age:#c9c2a6}.cin .a3{--age:#4d6b9e}.cin .a4{--age:#8e2f2a}
@@ -159,32 +179,17 @@ button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tab
 .fo,.fo>.pg,.hold{display:flex;flex-direction:column;gap:var(--gap)}
 .fo>.pg{position:relative}.fo>.pg::before{content:'';position:absolute;inset:calc(var(--gap) / -2);border:1px solid var(--gold-1);border-radius:var(--rad-o);pointer-events:none}
 .hold{min-height:calc(var(--n) * var(--rank) - var(--gap))}
-.cin .civs button{padding:0 1px}
-/* the mail: each line with its group's colour on its left edge */
-.cin .mrows{display:flex;flex-direction:column;gap:var(--gap)}
-.cin button.mr{align-items:flex-start;text-align:left;padding:4px 8px;border-left:4px solid var(--cc)}.cin .mr b{font-weight:600;white-space:normal}
+/* the mail: a line a rank, its colour on its left edge; a line keeps to its rank */
+.cin button.mr{align-items:flex-start;text-align:left;padding:4px 8px;border-left:4px solid var(--cc)}.cin .mr :is(b,small){max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* the guide and the history */
-.cin .g{border-top:1px solid var(--brown-3);padding-top:5px;display:flex;flex-direction:column;gap:3px}.cin .g b{font-size:var(--fs-m);font-weight:700}.cin .g small{color:var(--cream-2);font-size:var(--fs-s);white-space:normal}
-.cin .q{font:inherit;font-size:var(--fs-m);color:var(--cream-1);background:var(--brown-2);border:1px solid var(--brown-3);border-radius:var(--rad);min-height:var(--slot);padding:4px 10px;width:100%;box-sizing:border-box}
-.cin .row{display:flex;gap:12px;align-items:center}.cin .look{color:var(--gold-1);font-weight:700;min-height:var(--slot);display:inline-flex;align-items:center}.cin .row .lnk{width:auto}
-.cin button.lnk{width:100%;padding:0;background:none;border:0;color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;align-items:flex-start;text-align:left}
-/* Setup's settings (only its title bar is new in Build 70): a label of one and a half slots, its choices one bar split by thin lines */
-.seg{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--gap);align-items:center}
-.seg>b{grid-column:span 3;font-size:var(--fs-s)}
-.segT{grid-column:span 9;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));border-radius:var(--rad);background:var(--brown-2);box-shadow:inset 0 0 0 1px var(--brown-3)}
-.segT button{padding:0 2px;background:none;border-color:transparent;font-weight:700}
-.segT button+button::before{content:'';position:absolute;left:-1px;top:8px;bottom:8px;width:1px;background:var(--brown-3)}
-.seg2{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}.seg2 .seg{grid-template-columns:repeat(6,minmax(0,1fr))}.seg2 .seg>b{grid-column:span 2}.seg2 .segT{grid-column:span 4}
-.tick{flex-direction:row;justify-content:flex-start;gap:6px;padding:0 6px}
-.tick::before{content:'';flex:0 0 16px;height:16px;box-sizing:border-box;border:1.5px solid var(--brown-3);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:var(--fs-s);font-weight:700;color:var(--gold-1)}
-.tick.on::before{content:'✓';border-color:var(--gold-1)}
-.tick b{flex:1;text-align:left;white-space:normal;line-height:1.1}.tick small{flex:0 0 auto}
-.tick.daily b{flex:0 0 auto;text-transform:uppercase;letter-spacing:.05em;font-size:var(--fs-s)}.tick.daily small{flex:1;min-width:0;text-align:left;overflow:hidden;text-overflow:ellipsis}
-@media (max-height:720px){#card.setup .civline{display:none}}   /* small phones: the people line steps aside, so Setup stays one page */
+.cin .g{border-top:1px solid var(--brown-3);padding-top:5px;display:flex;flex-direction:column;gap:3px}.cin .g b{font-size:var(--fs-s)}.cin .g small{color:var(--cream-2);font-size:var(--fs-s);white-space:normal}
+.cin .q{font:inherit;font-size:var(--fs-s);color:var(--cream-1);background:var(--brown-2);border:1px solid var(--brown-3);border-radius:var(--rad);min-height:var(--slot);padding:4px 10px;width:100%;box-sizing:border-box}
+.cin .row{display:flex;gap:12px;align-items:center}.cin .look{color:var(--gold-1);min-height:var(--slot);display:inline-flex;align-items:center}.cin .row .lnk{width:auto}
+.cin button.lnk{width:100%;padding:0;background:none;border:0;color:inherit;text-decoration:underline;text-underline-offset:3px;align-items:flex-start;text-align:left}
 /* The end of a game */
 #end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--gap);background:color-mix(in srgb,var(--brown-1) 90%,transparent);text-align:center;padding:0 var(--gap)}
 #end h2{font-family:var(--display);font-weight:400;font-size:var(--fs-l);margin:0}
-#end p{margin:0;color:var(--cream-2);font-size:var(--fs-m)}
+#end p{margin:0;color:var(--cream-2);font-size:var(--fs-s)}
 #endX .crowns{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:8px 0}#endX .crowns b{color:var(--cream-1)}
 #endX details{text-align:left}#endX details p{font-size:var(--fs-s);margin:2px 0}#endX details small{font-size:var(--fs-s);color:var(--cream-2);margin-right:6px}
 #endActs{display:flex;flex-direction:column;gap:var(--gap);width:100%;max-width:340px}#endActs button small{white-space:normal}
@@ -204,6 +209,11 @@ button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tab
 .work:not(.warn,.nope)::after{content:'';position:absolute;inset:-1px;padding:2px;border-radius:var(--rad);background:conic-gradient(var(--ring-g) var(--p,100%),transparent 0);mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);pointer-events:none}
 .dis:not(.pill>*){background:var(--brown-1);border-color:var(--brown-2)}.dis,.dis :is(b,.wd){color:var(--cream-2)}
 .empty{background:var(--brown-1);border:1px solid var(--brown-2);border-radius:var(--rad);color:var(--cream-2)}
+/* inside a bar a chosen part is ringed inside the shape, and a selector's ring is the one that slides; the switch and the slider on are gold */
+.bar>.on{border-color:transparent;box-shadow:inset 0 0 0 4px var(--brown-2),inset 0 0 0 6px var(--gold-1)}.sel>.on{box-shadow:none}
+.bar>.dis{background:none;border-color:transparent}
+.on>.hr .sw{border-color:var(--gold-1)}.on>.hr .sw::after{left:16px;background:var(--gold-1)}
+.slt.on{--tk:var(--gold-1)}.slt.on>button small{color:var(--gold-1)}.slt.on>button b{color:var(--cream-1)}
 /* the open tab of a folder: no slot of its own; the folder's outline round it, open at the foot into its page (MENU-SPEC §1) */
 .fo>.fm>.on{background:var(--brown-1);border-color:transparent;box-shadow:none}
 .fo>.fm>.on::before,.fo>.fm>.on::after{content:'';position:absolute;pointer-events:none}
@@ -228,7 +238,7 @@ button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tab
   <section id="orders" class="pg-jobs"><div class="fm" id="row"></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
-    <button class="fab" id="emgB" data-act="card:emergency" aria-label="Emergency"></button>
+    <button class="fab cell" id="emgB" data-act="card:emergency" aria-label="Emergency"></button>
     <button class="fab cell jobs" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, War, Train"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
 

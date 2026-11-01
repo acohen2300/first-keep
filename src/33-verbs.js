@@ -199,8 +199,8 @@ const ACT = {
 		saveSet();
 		refresh();
 	},
-	daily() {
-		SET.daily = !SET.daily;
+	daily(a) {
+		SET.daily = a === '1';
 		saveSet();
 		refresh();
 	}, // the challenge of the day: its map and its hazards
@@ -281,12 +281,18 @@ const ACT = {
 	},
 	mail() {
 		G.mailN = 0;
+		G.mailP = 0;
 		openCard({ type: 'mail' });
 	},
 	mailg(g) {
 		G.mailG = g && G.mailG !== g ? g : null;
+		G.mailP = 0;
 		refresh();
 	},
+	mailp(a) {
+		G.mailP = (G.mailP || 0) + Number(a); // the card holds it inside its pages
+		refresh();
+	}, // the mail's pages (N13, Albert Oct 31): Previous and Next
 	mailtog(g) {
 		const H = (SET.hideG = SET.hideG || {});
 		if (H[g]) delete H[g];
@@ -387,6 +393,28 @@ const PLAY = {
 	},
 	ktab(a) {
 		G.ktab = a;
+	},
+	// Relations (v80): what is picked on a row waits there until its ✓; the slider snaps, its switch turns the gift on or off and keeps the amount
+	relwant(a) {
+		const [q, w] = a.split(','),
+			n = Number(q);
+		if (relLord(n)) return say(relWhy(0, n, w) || 'Not now.', '', 3);
+		const d = relPickOf(n);
+		d.want = w;
+	},
+	relgift(a) {
+		const [q, v] = a.split(',').map(Number),
+			d = relPickOf(q);
+		if (giftLock(q)) return say(giftLock(q), '', 3);
+		d.gift = v;
+		d.on = v > 0;
+	},
+	relon(a) {
+		const q = Number(a),
+			d = relPickOf(q);
+		if (giftLock(q) || relLord(q)) return say(giftLock(q) || relWhy(0, q, 'peace') || 'Not now.', '', 3);
+		d.on = !d.on;
+		if (d.on && !d.gift) d.gift = NATIVE.giftStep;
 	},
 	mpick(a) {
 		G.mktK = a;
@@ -670,10 +698,15 @@ const PLAY = {
 		fallBack(0, orderSet(), G.sel === 'all' ? undefined : G.sel);
 		closeCard();
 	},
-	// relations and a lord's hand: one verb each, the reason on the card when it cannot be done
-	rel(a) {
-		const [q, want] = a.split(',');
-		if (!setRel(0, Number(q), want)) say(relWhy(0, Number(q), want) || 'Not now.', '', 3);
+	// relations and a lord's hand: one verb each, the reason on the card when it cannot be done. Relations (v80): the row's ✓ sends what
+	// was picked on it, the gift then the stance
+	relok(a) {
+		const q = Number(a),
+			[gift, want, why] = relDraft(q);
+		if (why || !(gift || want)) return say(why || 'Pick a gift or a stance first.', '', 3);
+		if (gift) giveGift(0, gift);
+		if (want) setRel(0, q, want);
+		delete G.relPick[q];
 	},
 	breakties(a) {
 		if (G.confirm !== 'bt' + a) {
@@ -887,10 +920,6 @@ const PLAY = {
 		}
 		closeCard();
 	},
-	gift(a) {
-		const [, amt] = a.split(',').map(Number);
-		if (!giveGift(0, amt)) say(giftWhy(0, amt) || 'Not now.', '', 3);
-	},
 	ransom(a) {
 		if (!payRansom(0, Number(a))) say('Not enough gold.', '', 3);
 	},
@@ -1101,5 +1130,11 @@ document.addEventListener('click', (e) => {
 	} finally {
 		cardTap = false;
 	}
+});
+// a slider (data-in) sends its verb with its value as it moves, and the card shows it at once
+document.addEventListener('input', (e) => {
+	const el = e.target.closest('[data-in]');
+	if (!el) return;
+	act(`${el.dataset.in},${el.value}`); // a PLAY verb: act() refreshes once
 });
 for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndInit, { passive: true }); // Safari unlocks audio on the finger lifting, not landing

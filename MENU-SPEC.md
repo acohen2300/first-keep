@@ -32,7 +32,7 @@ The architectural drawings for every menu, page and card: one home for layout. C
 
 The empty Formation is the **module**; words, icons and colours laid over it are the **overlay**; each finished use is an **element**.
 
-**The info cell** (a fourth piece): no frame; value in Cream 1 at 15, its label in Cream 2 at 12 under it. Sentences align left; numbers in columns centre.
+**The info cell** (a fourth piece): no frame; value in Cream 1, its label in Cream 2 under it, both at 12 (v80). Sentences align left; numbers in columns centre.
 
 ## 3. Templates and moves (locked in v70; picture `Formation Templates`, `Slot Kit`)
 Ten templates: the Formation · two whole ranks · all half slots · inverted · pillar (slot 1 spans two ranks) · wide pair (5 + 6 merged) · banner (one bar over six) · thirds (three doubles) · halves (two triples) · three ranks (a card).
@@ -43,7 +43,7 @@ Three moves: **split** (a | b), **merge across**, **merge down**. Never split a 
 
 ## 4. The title bar (locked in v70; picture `Title Bar`): the title for the entire game
 - One Rank Ribbon: slot 1 **back** · slots 2–4 merged, **the name only** · slot 5 **the book** · slot 6 **×**. Each a full slot.
-- Name in IM Fell English SC, **19** (Gold 1). Icons Cream 1. Slots Brown 2 with a Brown 3 edge, on a Brown 1 card.
+- Name in IM Fell English SC, **18** (Gold 1; v80). Icons Cream 1. Slots Brown 2 with a Brown 3 edge, on a Brown 1 card.
 - The subtitle ("yours", "Fortress · hostile", a full name) sits on the line under the bar in Cream 2, never in it.
 - **Back** returns to the card you came from; on the first card it closes the card.
 - Short title names where the full one does not fit slots 2–4 at 375 pt: Karakorum, Great Stupa, Djinguereber, Apadana, Horse archer, War elephant, Crossbowman, Error (for "Something went wrong"). Full names stay in the card's text.
@@ -73,19 +73,20 @@ Three moves: **split** (a | b), **merge across**, **merge down**. Never split a 
 ## 8. Cards (pictures in `mockups/70/`)
 | Card | Layout | Picture |
 |---|---|---|
-| Relations (Town Center, tab 2) | AGREED. 7 ranks: title · tabs (folder) · one rank per player: Player · Gift · − + · Friend · Neutral · Foe · last rank: status (slots 1–5) + ✓ (slot 6). One ✓ commits the card's changes. Stance = gold ring. A friend's gift dims. Gifts stay with the Natives for now (rivals' gift dim). Bribe is a step, not a state. | `Relations Card` |
+| Relations (Town Center, tab 2) | BUILT v80 (Relations final, Albert Oct 31; decision 3). Title · tabs (folder) · one rank a side: the name over its stance in its colour (1 slot) · the gift, a slider with its switch, snapping to 50 (2) · the stance, three icons in two slots, gold on the one picked (2) · its ✓, blue when what was picked can be sent (1) · last rank: what the last ✓ touched will do, and the board. A friend's gift is locked; only the Natives take gifts (rivals' gift dim). Bribe is a step, not a state. | `Relations Final` (mockups/80) |
 | Town Center (tab 1) | DRAFT, in use. No labels. Train: units double-wide, add only (no −) · the queue directly under (singles, the first filling green; past 6 the last reads "+n"; the line holds 5, up to 8 with Written records and Guilds; tap a queued unit to cancel it and get its cost back) · Tech: three double-wide a rank (blue ring ready, dim locked) · All tech ›. | `Town Center Card` |
-| Market | DRAFT. Caravan and the market's techs, double-wide · the goods as singles with what you have (tap to pick; gold ring) · one Sell and one Buy for the picked good, with its price rate · caravans · Repair · Take down. | `Market Card` |
+| Market | DRAFT. Caravan and the market's techs, double-wide · the goods one selector with what you have (tap to pick; the gold ring slides; v80) · one Sell and one Buy for the picked good, with its price rate · caravans · Repair · Take down. | `Market Card` |
 | Build menu | DRAFT. Six tabs = six slots (folder) · buildings double-wide, three a rank, words only (no pictures, no pins): name, how many of how many, cost · blue ring fits here, dim a later age. | `Build Menu` |
 | Squad (from the War HUD) | DRAFT. Title · the four kinds (Foot, Archers, Riders, Siege) with − + · the three intents (Engage, No pursuit, Buildings first; one chosen) · Cancel and Save (✓, the card's gold fill). | `Mission Flow` |
 | Emergency | DRAFT. What is coming (an info rank) · four orders as two doubles a rank: **Stop** (everyone back to work) · **Town square** (everyone to the Town Center) / **All hands** (villagers and soldiers fight, red ring) · **Shelter** (villagers inside). | `Easy Cards` |
 | Villager | DRAFT. What they are doing + health, age, speed as info cells · Stop · Send home · Dismiss · the job picker (the job ribbon reskinned). | `Easy Cards` |
 | Stores | DRAFT. One rank per resource: name · have · in (green) · out (red) · on it · ›. No header rank. | `States and Text` |
 | A building (House and the rest) | DRAFT. An info rank (room, health, age) · its techs, collapsing (no holes) · Repair · Take down. | `States and Text` |
-| Mail | DRAFT. The six groups as one rank of filters · the messages, a coloured edge for the group. | `Easy Cards` |
-| Setup, Research (full list) | Not redrawn yet: only the title bar changes in Build 70. | |
+| Mail | The six groups as one rank of filters · six messages a page, a rank each, a coloured edge · Previous and Next (the 30 kept are five pages; nothing scrolls; N13, Albert Oct 31). | `Easy Cards` |
+| Setup | BUILT v80. Each setting its own rank: its name quiet on the left, its choices one selector right-justified (Difficulty, Length, Scenario, World, Fog Off · On, Tension) · the peoples, one selector · the people's soldier and bonus · Daily, Off · On · the hazards, one bar · Start. The whys in the book. | `Setup Stacked with Names` (mockups/80) |
+| Research (full list) | Not redrawn yet. | |
 
 ## 9. States and text (AGREED Oct 30, 23:40; revised Oct 31 morning; pictures `States and Text`, `Rings Round the Icon`, `Ring Round Icon and Word`, `Receding Ring`)
 - **The ring is the slot's edge**, for a slot of words and a slot of icon and word alike (Oct 31: Albert tried the ring round the icon only, SoRen's way, and round the icon and its word, and chose the edge). One ring at a time: danger beats working.
 - **States:** blue ring = ready, can do · gold ring = chosen, on · **green ring that recedes = working**: whole when the work starts, shrinking back to 12 o'clock as the time runs out (SoRen's timer ring; it replaced the green bar, Oct 31) · red ring = danger, wrong, and it **breathes** (its glow rises and falls); with the phone's Reduce Motion it stays still and is drawn 3 wide, so it never rests on colour alone · dim = locked: flat, quiet words, nothing faded · plain = nothing to say. **One gold fill per card at most**, for its main action (Start, Save ✓).
-- **Text: three sizes only:** 19 big moments (titles, Start, a question) · 15 buttons and values · 12 subtitles and labels. Nothing smaller.
+- **Text: two sizes only (v80, Albert Oct 31):** 18 titles and the big moments (Start) · 12 everything else, every word and number in a tile included. Two fonts: IM Fell English SC for titles, Barlow Semi Condensed for the rest, the map included; Barlow at one weight, 600 (MAYBE). On the map a label scales whole with its pill and icon: 12 at the starting zoom, 9 the floor zoomed out; what is pinned to the screen stays 12.

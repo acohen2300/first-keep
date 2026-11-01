@@ -11,29 +11,41 @@ function openCard(c, back) {
 	hideQuick();
 	G.techTip = null;
 	G.qs = { from: 'all', n: {} }; // the Attack-with counts start fresh on every card
+	G.relPick = {}; // and what was picked on Relations and not sent
 	G.card = c;
 	G.infoOpen = false;
 	G.confirm = null;
 	cardSig = '';
+	cardPK = null;
 	$('card').scrollTop = 0;
-	if (
-		SET.cardPause !== false &&
-		!G.paused &&
-		!G.over &&
-		(READ_CARDS.has(c.type) ||
-			(c.type === 'bld' &&
-				G.blds.some(
-					(b) => b.id === c.id && b.owner === 0 && (b.kind === 'council' || (b.kind === 'keep' && G.ktab === 'rel')),
-				)))
-	) {
-		setPause(true);
-		G.cardPaused = true;
-	}
 	renderCard();
 	preview();
 } // a card pauses the game (Help: Pause on cards); closing it carries on
 const READ_CARDS = new Set(['research', 'troops', 'guide', 'help', 'score', 'stores', 'sound']); // the cards you sit and read pause the game; a building, a unit or a field to glance at does not (Albert, Build 41). The War Council is a building card that pauses (Build 48: 'council' here never matched a card)
+// whether the card on show pauses the game, decided each time what it shows changes (a card opened, back, a tab turned), never once at
+// open (E7: Relations paused when opened on its tab, not when the tab was turned; a building after Research stayed paused). Between
+// changes the player's own pause and play stand
+let cardPK = null;
+function cardPause(c) {
+	const k = `${c.type}:${c.id ?? ''}:${c.type === 'bld' ? G.ktab : ''}`;
+	if (k === cardPK) return;
+	cardPK = k;
+	const want =
+		SET.cardPause !== false &&
+		!G.over &&
+		(READ_CARDS.has(c.type) ||
+			(c.type === 'bld' &&
+				G.blds.some((b) => b.id === c.id && b.owner === 0 && (b.kind === 'council' || (b.kind === 'keep' && G.ktab === 'rel')))));
+	if (want && !G.paused) {
+		setPause(true);
+		G.cardPaused = true;
+	} else if (!want && G.cardPaused && !G.over) {
+		G.cardPaused = false;
+		setPause(false);
+	}
+}
 function closeCard() {
+	cardPK = null;
 	if (G) {
 		G.techTip = null;
 		G.card = null;
@@ -79,6 +91,7 @@ function patch(a, b) {
 		if (!(own && name === 'open') && a.getAttribute(name) !== value) a.setAttribute(name, value);
 	for (const { name } of [...a.attributes])
 		if (!(own && name === 'open') && !b.hasAttribute(name)) a.removeAttribute(name);
+	if (a.nodeName === 'INPUT' && a.type === 'range' && a.value !== b.getAttribute('value')) a.value = b.getAttribute('value'); // a slider shows what the game holds, once moved too
 	patchKids(a, b);
 }
 const tpl = document.createElement('div');
@@ -97,8 +110,8 @@ new ResizeObserver(([e]) => {
 }).observe(cardIn);
 // ── the pieces every card is made of. The slot is a button; the Formation lays them (MENU-SPEC §2, §3); the states are classes (§9):
 // go ready (blue ring), on chosen (gold ring), warn danger (red ring, breathing), work in progress (the green ring that recedes, --p the
-// share still to go: toGo), dis locked (dim), main the card's one main action (the gold fill). A cell's span is a class too: h, s15, s2,
-// s3, s6, and r2 for a pillar.
+// share still to go: toGo), dis locked (dim), main the card's one main action (the gold fill). A cell's span is a class too: h (a half slot), s1 to s6
+// (whole slots), and r2 for a pillar.
 const cap1 = (t) => (t && t.indexOf('<') < 0 ? t.replace(/(^|· )([a-z])/g, (m, a, c) => a + c.toUpperCase()) : t); // sentence case: a capital opens every label and every part after a dot
 const btn = (act, title, sub, cls, fr) =>
 	`<button data-act="${act}" class="${cls || ''}"><b>${cap1(title)}</b>${sub ? `<small${fr === undefined ? '' : ` class="${fr < 1 ? 'need' : 'can'}" style="--gc:${costCol(fr)}"`}>${cap1(sub)}</small>` : ''}</button>`; // a cost line on the one gradient (fr: what you have of it, 0 to 1): red at nothing, white near, light green when you can pay
@@ -106,22 +119,41 @@ const btn = (act, title, sub, cls, fr) =>
 // (c1 one, c2 two (the default), c3 three, c4 four, c6 six; c5 lays five singles and leaves the sixth place); a cell's span class overrides it
 const acts = (h, cls = 'c2') => `<div class="fm ${cls}">${h}</div>`;
 // a list collapses (MENU-SPEC §3): its things three a rank, as even as they go, so no rank has a hole: two are two triples, four two and two,
-// five three and two. Things you do are double-wide; a list of one is the whole rank
-const list = (cells) => {
+// five three and two. Things you do are double-wide; a list of one is the whole rank. per: at most two a rank, for words that need three slots
+const list = (cells, per = 3) => {
 	let h = '',
 		i = 0;
-	for (let r = 0, k = Math.ceil(cells.length / 3); r < k; r++) {
+	for (let r = 0, k = Math.ceil(cells.length / per); r < k; r++) {
 		const m = Math.ceil((cells.length - i) / (k - r));
 		h += acts(cells.slice(i, (i += m)).join(''), 'c' + m);
 	}
 	return h;
 };
-// the info cell: no frame; the value in Cream 1 at 15, its label in Cream 2 at 12 under it. cls: its span, left for a sentence, line for a
+// the info cell: no frame; the value in Cream 1, its label in Cream 2 under it, both at 12. cls: its span, left for a sentence, line for a
 // line of a card (inset, on one line); act: where a tap on it goes (what is coming: tap to look)
 const info = (value, label, cls = '', act) =>
 	`<div class="info ${cls}"${act ? ` data-act="${act}"` : ''}><b>${value}</b>${label ? `<small>${label}</small>` : ''}</div>`;
 // a fixed place with nothing in it: a faint plain outline (never dashed)
 const empty = (cls = '') => `<div class="empty ${cls}"></div>`;
+// ── the controls (v80, the control sheet, Albert Oct 31), each built once and whole slots wide (span: s1 to s6), corners 6. Only the pieces
+// a card uses are built: the bar (choice), the selector, the slider with its switch.
+// choice: one shape (a bar) holding one set's choices (a box is one decision), each [act, words or an icon, chosen, cls, label]; a chosen part wears the
+// gold ring inside the shape. one: a selector, a single choice, its gold ring sliding 0.4 s to rest over it
+const choice = (opts, span, one, cls = '') =>
+	`<div class="bar${one ? ' sel' : ''}${cls ? ' ' + cls : ''} ${span}" style="--n:${opts.length}${one ? `;--i:${Math.max(0, opts.findIndex((o) => o[2]))}` : ''}">${opts
+		.map(
+			([act, w, on, cls, label]) =>
+				`<button data-act="${act}" class="${on ? 'on' : ''}${cls ? ' ' + cls : ''}"${label ? ` aria-label="${label}"` : ''}>${w.indexOf('<') < 0 ? `<b>${cap1(w)}</b>` : w}</button>`,
+		)
+		.join('')}</div>`;
+// a setting's name, quiet at 12, in the slots its control leaves on the left (Setup, MENU-SPEC §8)
+const lab = (name, span) => `<div class="info left line quiet ${span}"><b>${name}</b></div>`;
+// the slider with its switch: the word, the value and the switch over the track, gold to the knob. The switch (tog, a verb) turns it on or
+// off and off keeps the value; the track (inp, a verb given ",value") snaps to step. dis: locked, quiet, and the track does not move.
+// Its key (data-f) holds it when on or dis changes, so the patch keeps the node and the drag under the finger (a class change rebuilt it)
+const slt = (tog, inp, word, val, v, max, step, on, dis, span = 's2') =>
+	`<div class="slt ${span}${on && !dis ? ' on' : ''}${dis ? ' dis' : ''}" data-f="slt-${inp}"><button class="hr" data-act="${tog}"><b>${word}</b><small>${val}</small><i class="sw"></i></button>` +
+	`<input class="hr" type="range" data-in="${inp}" min="0" max="${max}" step="${step}" value="${v}" style="--v:${Math.round((100 * v) / max)}%" aria-label="${word}"${dis ? ' disabled' : ''}></div>`;
 const FOLD = new Set(); // explanations live behind a small fold, closed unless you opened it; it stays as you left it while the card redraws
 // the book entry of a research step: the date, what it changed, and its weight, which is its cost
 const techBook = (t) =>
@@ -192,16 +224,17 @@ function trainButtons(kinds) {
 			n = queuedOf(0, k);
 		const full = U.cls && clsCount(0, U.cls) >= clsMax(U.cls, 0);
 		const cost = unitCost(0, ck),
-			sub =
+			told =
 				U.age > p.age
 					? `${AGES[U.age].name} age`
 					: !ready(0, U.at).length
-						? `needs a ${BLD[U.at].name.toLowerCase()}`
+						? `no ${BLD[U.at].name.toLowerCase()}` // the building it needs, short enough for its slot (E8: "needs a siege workshop" grew the rank)
 						: full
 							? `short of room ${clsCount(0, U.cls)}/${clsMax(U.cls, 0)}`
 							: !afford(p, cost)
 								? `short ${need(cost)}`
-								: costText(cost);
+								: costText(cost),
+			sub = why && told === costText(cost) ? why.replace(/\.$/, '') : told; // refused for a reason none of the above says (hunger, a full line): the reason, never the cost as if payable (E6)
 		return btn(
 			`train:${k}`,
 			TITLE_SHORT[stats(0, ck).name] || stats(0, ck).name, // a name too long for its slot shows its short one
@@ -230,7 +263,7 @@ const lockedWhy = (t) => {
 		? `${AGES[t.age].name} age`
 		: nd
 			? `needs ${TECHBY[nd].short || TECHBY[nd].name}`
-			: researchWhy(0, t.id).replace(/\.$/, '');
+			: researchWhy(0, t.id).replace(/\.$/, '').replace(/^Needs an? /, 'no '); // a building it needs: no lumber camp
 };
 function techBtn(t, withAt) {
 	const st = techState(t),
@@ -248,7 +281,7 @@ function techBtn(t, withAt) {
 	return btn(
 		`tech:${t.id}`,
 		TITLE_SHORT[t.short] || t.short || t.name, // its short name on a double-wide slot (an elite rank's, the soldier's short one)
-		sub + (withAt ? ` · ${BLD[t.at].name}` : ''),
+		sub + (withAt && st !== 'locked' ? ` · ${BLD[t.at].short || BLD[t.at].name}` : ''), // a locked step says what it lacks; its › goes to the building
 		`a${t.age} ` + (st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock'),
 		st === 'short' ? fillOf(c) : st === 'ready' ? 1 : undefined,
 	); // a${age}: the top edge wears the age's colour

@@ -127,10 +127,17 @@ function flagAt(x, y, col, z) {
 	ctx.closePath();
 	ctx.fill();
 }
-let FONTF = null;
+let FONTF = null,
+	FONTW = null;
 const fontF = () => FONTF || (FONTF = getComputedStyle(document.body).fontFamily);
+// every word on the map, one home (v80, Albert): the game's one font at its one weight, read from the page (the style sheet's --weight). A
+// label on the map scales whole with its pill and its icon ("If you can zoom it, it needs to scale"): LABEL.px at the starting zoom, larger
+// zoomed in, smaller zoomed out to LABEL.floor. k: the label's scale, labelK() on the map; what is pinned to the screen (the edge arrows,
+// the crosshair's reference) takes 1
+const labelK = () => Math.max(LABEL.floor / LABEL.px, cam.z / ZOOM_START);
+const mapFont = (k = 1) => `${FONTW || (FONTW = getComputedStyle(document.body).fontWeight)} ${Math.round(LABEL.px * k)}px ${fontF()}`;
 function idleMark(x, y, z) {
-	ctx.font = '700 ' + Math.max(11, 9 * z) + 'px ' + fontF();
+	ctx.font = mapFont(labelK());
 	ctx.fillStyle = '#ffd35e';
 	ctx.strokeStyle = 'rgba(0,0,0,.7)';
 	ctx.lineWidth = 2.5;
@@ -138,13 +145,14 @@ function idleMark(x, y, z) {
 	ctx.fillText('z', x + 4 * z, y);
 }
 function tag(text, x, y) {
-	ctx.font = '600 13px ' + fontF();
-	const w = ctx.measureText(text).width + 10;
+	const k = labelK();
+	ctx.font = mapFont(k);
+	const w = ctx.measureText(text).width + 10 * k;
 	x = clamp(x, 4, cw - w - 4);
 	ctx.fillStyle = 'rgba(18,23,21,.92)';
-	ctx.fillRect(x, y - 13, w, 19);
+	ctx.fillRect(x, y - 13 * k, w, 19 * k);
 	ctx.fillStyle = '#fff';
-	ctx.fillText(text, x + 5, y + 1);
+	ctx.fillText(text, x + 5 * k, y + k);
 }
 // the building you are placing: its footprint green where it fits and red where it does not, and the reason
 // the seal check while a wall or gate is being placed: a red line where a foe could walk in, or "Sealed" over the keep
@@ -510,7 +518,7 @@ function drawOrders(z) {
 	ctx.save();
 	ctx.strokeStyle = G.P[0].color;
 	ctx.fillStyle = G.P[0].color;
-	ctx.font = '700 11px system-ui, sans-serif';
+	ctx.font = mapFont(labelK());
 	ctx.textAlign = 'center';
 	for (const id in G.ords) {
 		const O = G.ords[id];

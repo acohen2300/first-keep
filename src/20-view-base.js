@@ -136,7 +136,7 @@ function badgeArt(x, by, s, n) {
 	ctx.stroke();
 	if (n > 1) {
 		ctx.fillStyle = '#2a1c10';
-		ctx.font = `700 ${Math.round(11 * s)}px sans-serif`;
+		ctx.font = mapFont(s); // the count scales whole with its tab
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
 		ctx.fillText(String(n), x + 8 * s, by + 0.5 * s);
