@@ -198,8 +198,8 @@ const TECH = [
 		when: '9000 BC',
 		cost: { f: 50, w: 40 },
 		t: 18,
-		fx: [{ s: 'gather', k: ['farm', 'bush'], m: 1.1 }],
-		desc: 'Fields and bushes yield 10% faster.',
+		fx: [{ s: 'gather', k: 'farm', m: 1.1 }],
+		desc: 'Fields yield 10% faster.',
 	},
 	{
 		id: 'threshing',
@@ -2302,7 +2302,7 @@ const TECH = [
 		cost: { g: 430, s: 290 },
 		t: 71,
 		fx: [{ s: 'forecast', a: 1 }],
-		need: ['science'],
+		need: ['science', 'weathersigns'],
 		desc: 'The next sky is told a minute further ahead.',
 	},
 	{
@@ -2750,7 +2750,7 @@ const TECH = [
 		cost: { g: 150, s: 100 },
 		t: 35,
 		fx: [{ s: 'uhp', k: 'caravan', m: 2 }],
-		desc: `Caravans are twice as tough, and their guards hit back for ${UNIT.caravan.armed.dmg}.`,
+		desc: `Caravans are twice as tough, and their guards strike any foe within ${UNIT.caravan.armed.rng} for ${UNIT.caravan.armed.dmg}, once a second.`,
 	},
 	{
 		id: 'convoys',

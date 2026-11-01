@@ -37,13 +37,17 @@ function train(o, kind) {
 }
 // cancel one order in a building's line: what was paid for it comes back in full, the way it went out (every order keeps what it paid)
 const whyOf = (j) => (j.tech || j.age ? 'research' : 'units');
+// what an order gives back when it goes: the purse, the ledger and the research spent, one home for a cancel and for an order an old save cannot keep
+function refund(p, j) {
+	payBack(p, j.paid, whyOf(j));
+	if (j.tech || j.age) p.spent -= sumCost(j.paid);
+}
 function cancelOrder(o, b, i) {
 	const j = b.q[i],
 		p = G.P[o];
 	if (!j || b.owner !== o) return false;
 	b.q.splice(i, 1);
-	payBack(p, j.paid, whyOf(j));
-	if (j.tech || j.age) p.spent -= sumCost(j.paid);
+	refund(p, j);
 	if (j.age) p.aging = false;
 	return true;
 }

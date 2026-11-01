@@ -1027,7 +1027,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The row, the squads and pausing',
-		'The cycle button above the first slot turns the row: Jobs, War, Train. On War sit the four squads (once Battalions is researched): tap one for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Out on a mission its card shows its health and standing. Opening a card you sit and read pauses the game (a building, a unit or a field to glance at does not) and closing it carries on (Help: Pause on cards, off if you like).',
+		`The cycle button above the first slot turns the row: Jobs, War, Train. On War sit the four squads (once Battalions is researched): tap one for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Out on a mission its card shows its health and standing. Opening a card you sit and read (${orList([...Object.values(READ_CARDS), 'the War Council', 'Relations'])}) pauses the game; a building, a unit or a field to glance at does not; closing it carries on (Help: Pause on cards, off if you like).`,
 		'Thumbs on the map, not in a menu: a phone is not a desk.',
 	],
 	[

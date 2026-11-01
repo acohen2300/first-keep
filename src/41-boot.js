@@ -346,6 +346,7 @@ window.__fk = {
 	SCEN_TEXT,
 	TRIGGERS,
 	techBook,
+	READ_CARDS,
 	slipChance,
 	rutOf,
 	ruts,

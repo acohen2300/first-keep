@@ -34,10 +34,12 @@ REST = """(raw) => {
   // a save from before the merge holding Printing opens with Printing press, and a queued Printing order is given back (N12); the sky
   // it rolled ahead becomes the list a forecast reads (N10)
   { const o = JSON.parse(raw); o.v = 39; o.P[0].techs = ['press', 'printing']; o.clim = { ...(o.clim || {}), next: true }; delete o.clim.ahead;
-    const k = o.blds.find((b) => b.owner === 0 && b.kind === 'keep'), g0 = o.P[0].res.g || 0; k.q = [{ tech: 'printing', left: 10, total: 87, paid: { g: 360 } }];
+    const k = o.blds.find((b) => b.owner === 0 && b.kind === 'keep'), g0 = o.P[0].res.g || 0; k.q = [{ tech: 'printing', left: 10, total: 87, paid: { f: 550, g: 360 } }];
+    o.P[0].spent = 2000; o.P[0].ledger = { in: {}, out: { research: 1000 } }; o.P[0].spent1 = { f: 550, g: 360 };
     const S = F.MIGRATE[39] ? F.MIGRATE[39](o) : o;
     if (S.P[0].techs.includes('printing') || !S.P[0].techs.includes('press')) bad.push('N12: an old save keeps Printing (' + S.P[0].techs.filter((t) => /pr/.test(t)) + ')');
     if (k.q.length || S.P[0].res.g !== g0 + 360) bad.push('N12: a queued Printing order was not given back');
+    if (S.P[0].spent !== 2000 - 910 || S.P[0].ledger.out.research !== 1000 - 910) bad.push(`N12: the Printing refund is not a cancel: research spent ${S.P[0].spent} (want 1090), the ledger ${S.P[0].ledger.out.research} (want 90)`);
     if (!(Array.isArray(S.clim.ahead) && S.clim.ahead[0] === true && !('next' in S.clim))) bad.push('N10: an old save loses the sky it rolled ahead'); }
   localStorage.setItem(F.SAVEKEY, '{"units":1,"P":[],"v":39,"blds":null,"x":'); F.readSave();
   if (!localStorage.getItem(F.SAVEKEY + '.lost')) bad.push('a damaged save was not kept aside');

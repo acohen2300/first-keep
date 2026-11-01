@@ -123,7 +123,7 @@ const MIGRATE = {
 		for (const p of S.P) if (p.techs) p.techs = [...new Set(p.techs.map((id) => (id === 'printing' ? 'press' : id)))];
 		for (const b of S.blds || [])
 			if (b.q)
-				b.q = b.q.filter((j) => j.tech !== 'printing' || (S.P[b.owner] && addRes(S.P[b.owner].res, j.paid || {}), false)); // Printing waited on the press: the order is given back
+				b.q = b.q.filter((j) => j.tech !== 'printing' || (S.P[b.owner] && refund(S.P[b.owner], j), false)); // Printing waited on the press: the order is given back
 		if (S.clim && 'next' in S.clim) {
 			S.clim.ahead = S.clim.next == null ? [] : [S.clim.next];
 			delete S.clim.next;
