@@ -1,30 +1,35 @@
-# First Keep: handoff (Oct 31, 2026, Build 80 preview 9)
+# First Keep: handoff (Nov 1, 2026, 14:40; Build 80 preview 11 in progress) [2026-11-01 14:40]
 
-**Where things stand (Albert's words):**
-- Up to 62 was great.
-- 63 to 69 was a mess.
-- 70 is restored.
-- 80 is current.
+**Read START-HERE.md first.** This file is the live state of the coordinating session, so any agent can pick up if the chat is compacted or lost. [2026-11-01 14:40]
 
-## The links
-- **Live:** https://acohen2300.github.io/first-keep (`index.html`): an older build, untouched. Live changes only on Albert's word.
-- **v70 · Restoration (frozen):** https://acohen2300.github.io/first-keep/v70-restoration/ and the stamp `v70`. Never edited.
-- **Preview:** https://acohen2300.github.io/first-keep/preview/ : v80's home. It holds Build 80 (`BUILD = 80`), preview 8 as published. Preview 9 (below) is built and committed on the branch `fix80`, not yet on `main` or the preview: it waits for Albert's look. No v80 stamp or tag yet.
-- **Parked ideas** live in `docs/4 Now/Parked.md`; what is owed in `docs/4 Now/Owed.md`; the v81 list in `docs/4 Now/v81 List.md`. [2026-11-01 07:45]
-- **Repo:** branch `main`, public. Commits as `Albert <acohen2300@users.noreply.github.com>` with the session's trailers (`publish.py` takes them from `TRAILER`).
+## Where things stand [2026-11-01 14:40]
+- Up to 62 was great. 63 to 69 was a mess. 70 is restored (frozen at `/v70-restoration/`). 80 is current. [2026-11-01 14:40]
+- **Live:** an older build, untouched. Live changes only on Albert's word. [2026-11-01 14:40]
+- **Preview on GitHub:** still preview 9 (`main` on the remote is 38001b9). Nothing since has been pushed. [2026-11-01 14:40]
+- **Local main** holds, merged and checked: the cards, the map (+8%), research and text (N9–N12, N14), combat (C1–C9, items 5 and 6), the docs system, the hunt report, and the v81 list. [2026-11-01 14:40]
 
-## Read in this order
-1. `START-HERE.md` (the reading order) and `docs/5 Builds/v80/What Happened, Builds 63 to 70 - v80 - Post Clean - Working.md`. [2026-11-01 07:45]
-2. `docs/4 Now/Owed.md`: everything open. [2026-11-01 07:45]
-3. `docs/1 How we work/06 QC standard.md`: what is checked, what stops a build, the lock. [2026-11-01 07:45]
-   What is owed is one list: the "Owed" section of `docs/4 Now/Owed.md`, which `tests/handoff.py` prints. [2026-11-01 07:45]
-4. `docs/2 Rules/` (`RULES.md` §0, the Build Rules; `MENU-SPEC.md`, `COLORS.md`, `SCIENCE.md`, `EXCEPTIONS.md`), the locks in `docs/3 Locks/`, the version's `CUTS.md` in `docs/5 Builds/v80/`, `GUIDE.md` (written by the game). [2026-11-01 07:45]
-5. The record: the v70 documents in `docs/6 Records/v70/` and `docs/6 Records/v70 Record/` (the 63–66 review, the picks, the ballot, the computers' fairness test, the notebook typed out). Closed: read, do not edit. [2026-11-01 07:45]
-6. Older handoffs: `docs/6 Records/Old hand-offs/HANDOFF-to-oct29.md`, `docs/6 Records/Old hand-offs/HANDOFF-to-oct30.md` (the measurements of Oct 30: the population runs, the cost report). [2026-11-01 07:45]
+## Builders running now, each in its own worktree (merge each into main with --no-ff, append its CUTS draft, run START QC) [2026-11-01 14:40]
+1. **wild81** (`/home/claude/fk-wild`): the wild by kind (D-058), 4b (D-083), Relations with a third Misfits tab and "Foe → Neutral" (D-077), the hunt fixes, Argon's four bugs, the idle meter, the famine floor (D-086), gatherer caps per find, and item 5's spots on six seeds. Notes: `WILD-NOTES.md`. Last seen passing START QC. [2026-11-01 14:40]
+2. **zones81** (`/home/claude/fk-zones`): three home zones; placement as the ghost only, tinted, with line-up guides; every building 2 squares from every find; finds moved to 220–280 so the walls clear them; zone 1 bigger finds (2 bushes × 300, 2 trees × 125; hold zone 1 out if Classical by 10 min doesn't come back to within ~10% of main); starting stores 200 each of food, wood, stone and gold, iron 0, in the rules table; EXCEPTIONS #16 (LIVE TEST IN PROCESS): computers start with a mill and a farm. Notes: `ZONES-NOTES.md`. Its START QC failed only on combat item 5, which is fixed on wild81 and arrives through main. [2026-11-01 14:40]
+3. **ai81** (`/home/claude/fk-ai`, from wild81 d6bbc07): the computers batch: answer 10 by need (theory of constraints), the famine runway, shifting to plots (marginal value plus payback), N7 (no ceiling, payback test), N8 peace mode, N6 crowns, N16a raids (robbers'), D2–D5. Notes: `AI-NOTES.md`. [2026-11-01 14:40]
+4. **text81** (`/home/claude/fk-text`): the Aqueduct text, plague from cited studies, Weather glass (work and health), Charcoal priced to its age, ice friction for Horseshoes and Crampons, text F2–F9 and D16, combat C11, C12, C15, C16. Notes: `TEXT-NOTES.md`. [2026-11-01 14:40]
 
-## What the preview is (Build 80)
-v70 with the v80 audit's fixes, nine previews on Oct 31, each in `CUTS.md`: save safety (1, 2); fish pay their walk, units on one spot part, deer run straight and slide on walls, students stay at school, one back-to-work (3); the villager search, soldiers and animals, group sight, building shadows (4, 5); fairness and determinism B1, B2, B5 to B9, B12, B15 (6); the start QC (7); the arrival ramp cut (8).
-Preview 9 (fixes from the QC audit): a soldier fights back whatever bites it; a side's eyes are its soldiers and buildings; the villager search exactly as decision 1 (no give-up, from the anchor, a leash, friends' finds); waiting villagers stand round the drop-off 3 ft apart (1 ft = 2.65 world units); every move is a step, so nothing glides; boar and bear look out to 140 again; building shadows one fixed shape per light, a site by its progress; Welcome back holds the whole screen. Tests for each, 31 planted bugs each caught by a named failure, and a balance run against v70. Notes: `docs/5 Builds/v80/p9/Fix Notes - v80 - Post Clean - Working.md`. [2026-11-01 07:45]
+## Each builder gets a fresh-eyes review before merge (a cold agent reads the diff against the agreement) [2026-11-01 14:40]
 
-## What v70 is
-Build 66's game with Build 62's controls back, rebuilt on one mold: the grid (6 gap, 44 slots), six named colours, the states as rings, three text sizes, the title bar, the row (Jobs, War, Train), the quick action, Emergency with four, every card, and the map as base rules plus random. Four previews on Oct 31; each passed the full gate at four sizes, lint, the soak, and the play fingerprint. Details per part: `CUTS.md` (Build 70 previews 1 to 4) and the builders' notes in `docs/`.
+## Final checks before publishing preview 11 (Albert, Nov 1) [2026-11-01 14:40]
+- Full START QC on the merged main. [2026-11-01 14:40]
+- Soak and balance, 3 games each at 120, 180 and 240 minutes (Albert, 14:25), all before the preview; plus the usual soak 6 × 30 and balance 4 × 30 against v70. Add these long runs to the QC standard (`docs/1 How we work/06 QC standard.md`). [2026-11-01 14:40]
+- A last fresh-eyes review of the seams, then `python3 publish.py --preview "…"` with TRAILER set. [2026-11-01 14:40]
+- Albert wants everything in one preview, as soon as possible. [2026-11-01 14:40]
+
+## Albert's answers today [2026-11-01 14:40]
+All of them are in `docs/6 Records/v80 Audit/Answers - Nov 1 full day.md`. W1–W6 are locked as D-081 to D-086. Still to lock as D-files at the merge: Z1–Z4 (zones), P1–P3 (placement, caps, the find gap), S1 (stores and EXCEPTIONS #16), and the long tests. [2026-11-01 14:40]
+
+## Open, waiting for Albert [2026-11-01 14:40]
+- Mail's door (v81). [2026-11-01 14:40]
+- The v81 list (13 items in `docs/4 Now/v81 List.md`). [2026-11-01 14:40]
+- 6 rivals and a giant map: Albert asked; the answer was measure first. Not on the v81 list yet. [2026-11-01 14:40]
+
+## Not First Keep [2026-11-01 14:40]
+- First Term (Albert Labs' next game) is parked; its mockup is a Design artifact, "First Term Pool". [2026-11-01 14:40]
+- SoRen design talk (the tappable State bar) happened in the same session. SoRen's newest public preview is p16 (Oct 25). [2026-11-01 14:40]
