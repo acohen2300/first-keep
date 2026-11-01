@@ -302,8 +302,8 @@ function makeWater() {
 // Trees on a 26-unit lattice where an organic field runs high, thicker away from home; clear round the Town Center, the lakes, every find,
 // stop and camp, along the trade lanes, and along three winding paths: to each neighbour's nearest stop and to the great lake. Anything left
 // cut off is joined to home by a straight cut. About 375 trees a corner.
-const FOREST = { step: 26, trees: 375, path: 18, lane: 45 }; // clear round the Town Center: CLEAR (06)
-function makeForest(spot, loc) {
+const FOREST = { step: 26, trees: 375, path: 18, lane: 45, edge: 15, clear: { stop: 80, camp: 90, lode: 60 } }; // clear round the Town Center: CLEAR (06); edge: no tree nearer the map's edge; clear: round each shared place
+function makeForest(spot, loc, near) {
 	const ph = [0, 1, 2, 3].map(() => rnd(0, 6.28)),
 		field = (x, y) =>
 			Math.sin(x * 0.011 + ph[0]) +
@@ -320,20 +320,13 @@ function makeForest(spot, loc) {
 			y: s.y,
 			r: id.startsWith('grove') ? 0 : id.startsWith('bush') ? 45 : 70,
 		})),
-		...[
-			[210, CORNER],
-			[380, CORNER],
-			[CORNER, 210],
-			[CORNER, 380],
-		].map(([x, y]) => ({ x, y, r: 80 })),
-		{ x: -140, y: CORNER, r: 90 },
-		{ x: CORNER, y: -140, r: 90 },
-		{ x: CORNER, y: 430, r: 60 },
-		{ x: 430, y: CORNER, r: 60 },
-		{ x: 516, y: 516, r: 60 },
+		...Object.entries(near).flatMap(([k, L]) => L.map((l) => ({ ...l, r: FOREST.clear[k] }))), // the shared places on this corner's two middle lines
 	];
-	const lane = (x, y) =>
-		(y > CORNER - FOREST.lane && x > -160 && x < 560) || (x > CORNER - FOREST.lane && y > -160 && y < 560);
+	const out = [0, 1].map((ax) =>
+		near.stop.filter((l) => (ax ? l.x : l.y) === CORNER).reduce((a, l) => (hyp(l.x, l.y) < hyp(a.x, a.y) ? l : a)),
+	); // the stop nearest home on each middle line: a neighbour's way
+	const camp = PLACES.camp - (MID - CORNER), // the trade lanes run in from the robbers' camp
+		lane = (x, y) => (y > CORNER - FOREST.lane && x > camp) || (x > CORNER - FOREST.lane && y > camp);
 	const segGap = (x, y, a, b) => {
 		const dx = b.x - a.x,
 			dy = b.y - a.y,
@@ -354,9 +347,9 @@ function makeForest(spot, loc) {
 		return pts;
 	};
 	const paths = [
-		wind({ x: 0, y: 0 }, { x: CORNER, y: 210 }),
-		wind({ x: 0, y: 0 }, { x: 210, y: CORNER }),
-		wind({ x: 0, y: 0 }, { x: 570, y: 570 }),
+		wind({ x: 0, y: 0 }, out[1]),
+		wind({ x: 0, y: 0 }, out[0]),
+		wind({ x: 0, y: 0 }, { x: CORNER - LAKE0.r / Math.SQRT2, y: CORNER - LAKE0.r / Math.SQRT2 }), // to the great lake's shore
 	];
 	const onPath = (x, y, P, r) => P.some((pts) => pts.some((p, i) => i && segGap(x, y, pts[i - 1], p) < r));
 	// the runway: finds along each path, beside it, so going out pays as you go (berries and stone toward one neighbour, gold and iron toward the other, berries and iron toward the lake)
@@ -386,8 +379,9 @@ function makeForest(spot, loc) {
 	});
 	keepOut.push(...dep.map((d) => ({ x: d.x, y: d.y, r: 45 })));
 	let T = [];
-	for (let y = -290; y < 690; y += FOREST.step)
-		for (let x = -290; x < 690; x += FOREST.step) {
+	const x0 = CORNER - MID + FOREST.edge;
+	for (let y = x0; y < CORNER; y += FOREST.step)
+		for (let x = x0; x < CORNER; x += FOREST.step) {
 			const tx = x + rnd(-6, 6),
 				ty = y + rnd(-6, 6);
 			if (keepOut.some((q) => hyp(q.x - tx, q.y - ty) < q.r) || lane(tx, ty) || onPath(tx, ty, paths, FOREST.path))
@@ -426,17 +420,7 @@ function makeForest(spot, loc) {
 	const goals = [
 		...Object.values(spot),
 		...dep,
-		...[
-			[210, CORNER],
-			[380, CORNER],
-			[CORNER, 210],
-			[CORNER, 380],
-			[-140, CORNER],
-			[CORNER, -140],
-			[CORNER, 430],
-			[430, CORNER],
-			[516, 516],
-		].map(([x, y]) => ({ x, y })),
+		...Object.values(near).flat(),
 	];
 	for (let pass = 0; pass < 12; pass++) {
 		const seen = reach(),
@@ -484,12 +468,7 @@ function laySpots(lay, dist, loc, spot = {}, turn = rnd(-TURN, TURN)) {
 			y: q.y,
 			r: (LAYOUT.find((l) => l[0] === id) || [0, 0, 0, 40])[3],
 		})),
-		sh = (hyp(CORNER, CORNER) - LAKE0.r - 90) / Math.SQRT2,
-		room = [
-			{ x: CORNER, y: CORNER, r: LAKE0.r + 25 },
-			{ x: sh, y: sh, r: 50 },
-			...loc.map((l) => ({ x: l.x, y: l.y, r: l.r + 25 })),
-		]; // the great lake, this corner's shrine on its shore, the water in this corner; and whatever was laid before (the home pocket)
+		room = [{ x: CORNER, y: CORNER, r: LAKE0.r + 25 }, ...loc.map((l) => ({ x: l.x, y: l.y, r: l.r + 25 }))]; // the great lake, the water in this corner; and whatever was laid before (the home pocket)
 	for (const [id, r0, r1, clr, a0_, a1_] of lay) {
 		const a0 = a0_ === undefined ? undefined : a0_ + turn,
 			a1 = a1_ === undefined ? undefined : a1_ + turn;
@@ -579,7 +558,10 @@ function makeMap() {
 		// 3 wild (the movables' spots are rolled here too, before the forest, so it leaves them their clearings; they are placed in 4)
 		laySpots(layWild, dist, loc, spot, turn);
 		laySpots(layMove, dist, loc, spot, turn);
-		const { trees: forest, dep } = makeForest(spot, loc);
+		const toLoc = ([X, Y]) => ({ x: (X - kx) * sx, y: (Y - ky) * sy }),
+			mine = (L) => L.map(toLoc).filter((l) => l.x <= CORNER && l.y <= CORNER),
+			near = { stop: mine(ROUTES.flat()), camp: mine(cross(MID - PLACES.camp)), lode: mine(cross(PLACES.lode)) };
+		const { trees: forest, dep } = makeForest(spot, loc, near);
 		for (const id of ['bushA', 'bushB'])
 			for (const o of SHAPE.bushes) N.push(node('bush', 'food', ...P(id, o), 180 * RICH));
 		for (let i = 0; i < 20; i++)
