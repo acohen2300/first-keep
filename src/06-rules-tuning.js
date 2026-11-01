@@ -334,12 +334,27 @@ const LANDK = Object.keys(LAND),
 // The map's base rules (Albert, Build 70): a flat page, four corners (CORNER), the same clear radius and home finds in every corner, the
 // Throne at the middle. All else is random from the one randomizer, laid once: no measure, no reshuffle. CLEAR: no forest or water within it.
 const CLEAR = 360;
-// The home zone (decision 5a, Albert, Oct 31; the same three numbers in every corner), measured on the finds' own nodes (each bush, tree,
-// rock): clear, no node of any find within it of the Town Center; the five home finds (HOME_IDS in 10) each at a random place round the
-// Town Center with its nearest node in the band from clear to clear + band; rich, their amounts over today's pocket (HOME_RICH 1.18, on top
-// of RICH); and the radius CLEAR above, no forest or water within it. Everything else is random, outside the band. Fallback if the 100-seed
-// placement test fails (decision 5a): clear 190.
+// The home zones (decision 5a, Albert, Oct 31; three zones, Nov 1, answer 2; the same in every corner), measured on the finds' own nodes
+// (each bush, tree, rock): clear, no node of any find within it of the Town Center; the radius CLEAR above, no forest or water within it.
+//   zone 1, behind: between the Town Center and its corner (BACK below), from clear to the map's edge (MID − CORNER deep);
+//   zone 2, the band: the five home finds (HOME_IDS in 10) each at a random place round the front, its nearest node from clear to
+//     clear + band and no node in zone 1; rich, their amounts over today's pocket (HOME_RICH 1.18, on top of RICH);
+//   zone 3, the wild: everything else, at random, outside zones 1 and 2.
+// Fallback if the 100-seed placement test fails (decision 5a): clear 190.
 const HOME = { clear: 200, band: 60, rich: 1.18 };
+// Zone 1 (Albert, Nov 1): a berry patch and a small grove that hold Bronze's cost with a margin for the villagers and houses on the way
+// (600 food, 250 wood), worked out from the costs, not typed; on every land the same (no land's amt). Each node behind the Town Center
+// (on the corner's side of both its axes), LANE squares or more from any other find's, and edge or more from the map's edge: whole squares
+// enough for half a tap (22 px) at the opening zoom on the tilted axis, so the corner's finds can be seen and tapped (tests/map.py's camera
+// check; LANE squares gave 19 px). Laid first and never moved out front: a corner it does not fit fails tests/map.py.
+const BACK_MARGIN = { vils: 6, houses: 5 },
+	BACK = {
+		bushes: 4,
+		trees: 4,
+		edge: Math.ceil(22 / (ZOOM_START * TILT) / NAVC) * NAVC,
+		food: AGES[1].cost.f + BACK_MARGIN.vils * UNIT.vil.cost.f,
+		wood: AGES[1].cost.w + BACK_MARGIN.houses * BLD.house.cost.w,
+	};
 // Between two buildings (decision 2, Albert, Oct 31): LANE squares at least. A gap is passable only if wider than a figure (2r); the slit rule
 // shuts a one-square gap because the drawn figure is wider than it (Build 41), so two. Walls, gates and crops may touch.
 const LANE = 2;

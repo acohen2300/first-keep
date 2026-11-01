@@ -22,8 +22,9 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   F.G.clim.W = C.eq.clear; near('fire clear', F.fireMul(), 1, 1e-9); F.G.clim.W = 1; near('fire soaked', F.fireMul(), 0, 1e-9); F.G.clim.W = C.eq.drought; if (F.fireMul() <= 1) out.push('fire drought: not above a clear day');
   // fire between buildings (Build 61): the t² design fire is a quarter grown at half its time, full after it; the view factor is a quarter at one `near` of gap
   near('fire half grown', F.fireHeat(F.FIRE.grow / 2, 0), 0.25, 1e-9); near('fire full', F.fireHeat(F.FIRE.grow * 3, 0), 1, 1e-9); near('fire one near', F.fireHeat(F.FIRE.grow, F.FIRE.near), 0.25, 1e-9); near('fire three near', F.fireHeat(F.FIRE.grow, 3 * F.FIRE.near), 1 / 16, 1e-9);
-  // sight in fog (Koschmieder's cap): nothing sees past the fog's visibility, and a clear day leaves sight alone
-  { const G = F.G, u = F.G.units.find((x) => x.owner === 0); const clear = F.sightClear(u), was = G.ev.cur; G.ev.cur = { kind: 'fog' }; if (!(F.sightOf(u) <= 70 && F.sightOf(u) <= clear)) out.push('fog cap: sight ' + F.sightOf(u) + ' past 70'); G.ev.cur = was; near('clear sight', F.sightOf(u), clear, 1e-9); }
+  // sight in fog (Koschmieder's cap): nothing sees past the fog's visibility, and a clear day leaves sight alone (set clear here: the seed's
+  // opening sky is rolled, so it was a clear day only by luck of the map's dice)
+  { const G = F.G, u = F.G.units.find((x) => x.owner === 0); const clear = F.sightClear(u), was = G.ev.cur; G.ev.cur = { kind: 'fog' }; if (!(F.sightOf(u) <= 70 && F.sightOf(u) <= clear)) out.push('fog cap: sight ' + F.sightOf(u) + ' past 70'); G.ev.cur = was; const wx = G.wx; G.wx = 'clear'; near('clear sight', F.sightOf(u), clear, 1e-9); G.wx = wx; }
   // one home for the first-order lag (Build 62): 63.2% of the gap closes in one tau, 95% in three; and for logistic growth: empty room grows by r, a full room by nothing
   near('relax one tau', F.relax(0, 1, 10, 10), 1 - Math.exp(-1), 1e-9); near('relax three tau', F.relax(0, 1, 10, 30), 1 - Math.exp(-3), 1e-9); near('relax holds', F.relax(0.4, 0.4, 10, 99), 0.4, 1e-9);
   near('logistic small', F.logistic(1, 0.6, 12) - 1, 0.6 * (1 - 1 / 12), 1e-9); near('logistic full', F.logistic(12, 0.6, 12), 12, 1e-9);

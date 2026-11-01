@@ -56,27 +56,47 @@ WAVE = """() => {
   if (F.coord(F.MAP - 1, F.MAP - 1) === F.coord(F.MAP - 150, F.MAP - 150)) bad.push('the last squares of the map share a label: ' + F.coord(F.MAP - 1, F.MAP - 1));
   return bad; }"""
 
-# Decision 5a, the home zone, on SEEDS seeds, measured on nodes (each bush, tree, rock): no node of any find within HOME.clear of a Town
-# Center; each of the five home finds (at HOME.rich) with its nearest node in the band; no other node within the band; no forest or water
-# within CLEAR. Equal content: every corner holds the same finds and deposits (every node but trees and fish, by kind and amount, and the
+# Decision 5a and the three zones (Albert, Nov 1, answer 2), on SEEDS seeds, measured on nodes (each bush, tree, rock): no node of any find
+# within HOME.clear of a Town Center. Zone 1: BACK.bushes bushes and BACK.trees trees holding Bronze's cost and its margin (worked out here
+# from AGES, the villager and the house), every node behind the Town Center from the clearing to MID − CORNER, BACK.edge or more from the
+# map's edge and LANE squares from any other find's node; a corner it does not fit fails. Zone 2: each of the five home finds (at HOME.rich) with its
+# nearest node in the band. No other node within the band or in zone 1; no forest or water within CLEAR. Equal content: every corner holds the same finds and deposits (every node but trees and fish, by kind and amount, and the
 # carried-off finds), its two camps and four stops, all reached from its Town Center on the walking grid (B4), the shared places on the
 # middle lines by both corners beside them. Reports the worst case.
 ZONE = """(seeds) => {
   const F = window.__fk, bad = [], H = F.HOME, b0 = H.clear, b1 = H.clear + H.band, want = { bush: 5, tree: 12, stone: 2, gold: 2, iron: 2 },
     carried = ['chest', 'ruins', 'den', 'cemetery', 'vagabonds'], base = { bush: 180, tree: 120, stone: 300, gold: 300, iron: 300 }, type = { bush: 'food', tree: 'wood' },
-    W = { near: [1e9, 0], far: 0, any: 1e9, wild: 1e9, edge: 1e9 };
+    W = { near: [1e9, 0], far: 0, any: 1e9, wild: 1e9, edge: 1e9, fit: 0, corners: 0, back: [1e9, 0], bedge: 1e9, bgap: 1e9 },
+    B = F.BACK, gap = F.LANE * F.NAVC, deep = F.MID - F.CORNER,
+    need = B && { bush: F.AGES[1].cost.f + F.BACK_MARGIN.vils * F.UNIT.vil.cost.f, tree: F.AGES[1].cost.w + F.BACK_MARGIN.houses * F.BLD.house.cost.w },
+    count = B ? { bush: B.bushes, tree: B.trees } : {}, isBack = (n) => count[n.kind] && Math.abs(n.max - need[n.kind] / count[n.kind]) < 1e-6;
+  if (!B) return [['no zone 1 (BACK) to lay'], W];
   for (let s = 1; s <= seeds; s++) {
     F.SET.scen = 'open'; F.newGame(s); const G = F.G, N = F.NAV, NC = F.NC, amt = F.LAND[G.land].amt, sig = [];
     const isHome = (n) => base[n.kind] && Math.abs(n.max - base[n.kind] * F.RICH * H.rich * (amt[type[n.kind] || n.kind] || 1)) < 1e-6;
     const comp = (x, y, id) => { const cx = Math.floor(x / F.NAVC), cy = Math.floor(y / F.NAVC); let best = 0; for (let j = -2; j <= 2; j++) for (let i = -2; i <= 2; i++) { const a = cx + i, b = cy + j; if (a < 0 || b < 0 || a >= NC || b >= NC) continue; const c = N.comp[b * NC + a]; if (c && (id ? c === id : N.size[c] > N.size[best])) best = c; } return best; };
     for (let o = 0; o < 4; o++) {
       const k = F.keepOf(o), d = (q) => Math.hypot(q.x - k.x, q.y - k.y), mine = (q) => (k.x < F.MID ? q.x <= F.MID : q.x >= F.MID) && (k.y < F.MID ? q.y <= F.MID : q.y >= F.MID);
+      const sx = k.x < F.MID ? 1 : -1, sy = k.y < F.MID ? 1 : -1, inBack = (q) => (q.x - k.x) * sx <= 0 && (q.y - k.y) * sy <= 0 && d(q) <= deep;
+      const back = G.nodes.filter((n) => !n.farm && mine(n) && d(n) < F.CLEAR && isBack(n)), other = G.nodes.filter((n) => !n.farm && mine(n) && d(n) < F.CLEAR + 100 && !isBack(n)), tot = {};
+      W.corners++;
+      for (const kd in count) { const L = back.filter((n) => n.kind === kd); tot[kd] = L.reduce((a, n) => a + n.max, 0); if (L.length !== count[kd]) bad.push(s + '/' + o + ': zone 1 holds ' + L.length + ' of ' + count[kd] + ' ' + kd + (kd === 'bush' ? 'es' : 's') + ': it does not fit'); }
+      if (back.length === B.bushes + B.trees) W.fit++;
+      if (Math.abs(tot.bush - need.bush) > 1e-6 || Math.abs(tot.tree - need.tree) > 1e-6 || need.bush < F.AGES[1].cost.f || need.tree < F.AGES[1].cost.w) bad.push(s + '/' + o + ': zone 1 holds ' + Math.round(tot.bush) + ' food and ' + Math.round(tot.tree) + " wood, not Bronze's cost and its margin (" + need.bush + ', ' + need.tree + ')');
+      for (const n of back) { const r = d(n), e = Math.min(n.x, n.y, F.MAP - n.x, F.MAP - n.y), g = Math.min(...other.map((q) => Math.hypot(q.x - n.x, q.y - n.y)), ...back.filter((q) => q.kind !== n.kind).map((q) => Math.hypot(q.x - n.x, q.y - n.y)));
+        W.back = [Math.min(W.back[0], r), Math.max(W.back[1], r)]; W.bedge = Math.min(W.bedge, e); W.bgap = Math.min(W.bgap, g);
+        if (!inBack(n) || r < b0) { bad.push(s + '/' + o + ': a zone 1 ' + n.kind + ' out of zone 1, at ' + Math.round(r) + ' and ' + Math.round((n.x - k.x) * sx) + ',' + Math.round((n.y - k.y) * sy) + ' from its Town Center'); break; }
+        if (e < B.edge) { bad.push(s + '/' + o + ': a zone 1 ' + n.kind + ' ' + Math.round(e) + ' from the map edge'); break; }
+        if (g < gap) { bad.push(s + '/' + o + ': a zone 1 ' + n.kind + ' ' + Math.round(g) + ' from another find'); break; } }
+      for (const n of other) if (inBack(n)) { bad.push(s + '/' + o + ': a ' + n.kind + ' not of zone 1 in zone 1, at ' + Math.round(d(n))); break; }
+      for (const f of G.finds) if (mine(f) && f.kind !== 'shrine' && inBack(f)) bad.push(s + '/' + o + ': the ' + f.kind + ' in zone 1');
+      if (!back.some((n) => n.kind === 'tree' && comp(n.x, n.y, comp(k.x + ((F.MID - k.x) / Math.hypot(F.MID - k.x, F.MID - k.y)) * F.PLACES.start, k.y + ((F.MID - k.y) / Math.hypot(F.MID - k.x, F.MID - k.y)) * F.PLACES.start)))) bad.push(s + '/' + o + ': the zone 1 grove cannot be reached');
       const home = G.nodes.filter((n) => !n.farm && d(n) < F.CLEAR && isHome(n)), by = {};
       for (const n of home) (by[n.kind] = by[n.kind] || []).push(n);
       for (const kd in want) if ((by[kd] || []).length !== want[kd]) bad.push(s + '/' + o + ': ' + kd + ' ' + (by[kd] || []).length + ' of ' + want[kd] + ' in the home zone');
       for (const kd in by) { const r = Math.min(...by[kd].map(d)); W.near = [Math.min(W.near[0], r), Math.max(W.near[1], r)]; W.far = Math.max(W.far, ...by[kd].map(d)); if (r < b0 || r > b1) bad.push(s + '/' + o + ': the home ' + kd + "'s nearest node at " + Math.round(r) + ', outside the band'); }
       for (const n of G.nodes) if (!n.farm && mine(n)) { const r = d(n); W.any = Math.min(W.any, r); if (r < b0) { bad.push(s + '/' + o + ': a ' + n.kind + ' within the clearing, at ' + Math.round(r)); break; }
-        if (!isHome(n)) { W.wild = Math.min(W.wild, r); if (r < b1) { bad.push(s + '/' + o + ': a ' + n.kind + ' not of the home zone at ' + Math.round(r)); break; } if (n.kind === 'tree' && n.max < 100 * F.RICH && r < F.CLEAR) { bad.push(s + '/' + o + ': forest within CLEAR'); break; } } }
+        if (!isHome(n) && !isBack(n)) { W.wild = Math.min(W.wild, r); if (r < b1) { bad.push(s + '/' + o + ': a ' + n.kind + ' not of the home zone at ' + Math.round(r)); break; } if (n.kind === 'tree' && n.max < 100 * F.RICH && r < F.CLEAR) { bad.push(s + '/' + o + ': forest within CLEAR'); break; } } }
       for (const f of G.finds) if (mine(f) && f.kind !== 'shrine' && d(f) < b1) bad.push(s + '/' + o + ': the ' + f.kind + ' at ' + Math.round(d(f)));
       if (G.lakes.slice(1).some((L) => d(L) < F.CLEAR + L.r)) bad.push(s + '/' + o + ': water within CLEAR');
       for (const n of home) W.edge = Math.min(W.edge, n.x, n.y, F.MAP - n.x, F.MAP - n.y);
@@ -139,11 +159,12 @@ MIGRATE = """(O) => {
 # (and held by the map's edges, clampCam), the node stands inside the clear band between the bars, half a tap (22 px) or more from its edges.
 CAMERA = """async (seeds) => {
   const F = window.__fk, bad = []; let worst = 1e9; F.SET.scen = 'open';
-  const base = { bush: 180, tree: 120, stone: 300, gold: 300, iron: 300 }, type = { bush: 'food', tree: 'wood' };
+  const base = { bush: 180, tree: 120, stone: 300, gold: 300, iron: 300 }, type = { bush: 'food', tree: 'wood' }, BK = F.BACK || {}, count = { bush: BK.bushes, tree: BK.trees },
+    isBack = (n) => count[n.kind] && Math.abs(n.max - (n.kind === 'bush' ? BK.food : BK.wood) / count[n.kind]) < 1e-6;
   for (let s = 1; s <= seeds; s++) { F.newGame(s); F.act('close'); F.ui(true); const G = F.G, z = F.cam.z, H = F.HOME, amt = F.LAND[G.land].amt;
     const isHome = (n) => base[n.kind] && Math.abs(n.max - base[n.kind] * F.RICH * H.rich * (amt[type[n.kind] || n.kind] || 1)) < 1e-6;
     for (let o = 0; o < 4; o++) { const k = F.keepOf(o);
-      for (const n of G.nodes) { if (n.farm || Math.hypot(n.x - k.x, n.y - k.y) > F.CLEAR || !isHome(n)) continue;
+      for (const n of G.nodes) { if (n.farm || Math.hypot(n.x - k.x, n.y - k.y) > F.CLEAR || !(isHome(n) || isBack(n))) continue;
         F.cam.z = z; F.cam.x = n.x; F.cam.y = n.y; F.clampCam(); const V = F.view, top = V.ch / 2 + V.vy - V.bandH / 2, bot = top + V.bandH;
         const x = F.SX(n.x), y = F.SY(n.y), m = Math.min(x, V.cw - x, y - top, bot - y); worst = Math.min(worst, m);
         if (m < 22) { bad.push(s + '/' + o + ': a ' + n.kind + ' ' + Math.round(m) + ' px from the edge of the view'); break; } } } }
@@ -171,9 +192,9 @@ async def main():
             pg = await br.new_page(viewport={'width': w, 'height': h}); await pg.goto('file://' + os.path.join(ROOT, 'first-keep.html')); await pg.wait_for_timeout(400)
             bad, worst = await pg.evaluate(CAMERA, CAM_SEEDS); await pg.close()
             print(('PASS ' if not bad else 'FAIL ') + f'every home node can be seen and tapped in its corner at {w} x {h} (nearest {worst} px from the view\'s edge)', '' if not bad else bad[:6]); fails += bool(bad)
-        res, errs = await run(ZONE, SEEDS); bad, W = res if len(res) == 2 and isinstance(res[1], dict) else (res, {'near': [0, 0], 'far': 0, 'any': 0, 'wild': 0, 'edge': 0}); bad += errs
-        print(('PASS ' if not bad else 'FAIL ') + f'the home zone on {SEEDS} seeds: nothing in the clearing, the home finds in the band, the same content in every corner, all reached (5a, B4)', '' if not bad else bad[:int(os.environ.get("SHOW", 8))] + [f'... {len(bad)} in all'])
-        print(f'  worst case: a home find\'s nearest node {W["near"][0]} to {W["near"][1]} from its Town Center (its farthest {W["far"]}); nearest node of any find {W["any"]}; nearest node not of the zone {W["wild"]}; nearest home node to the map edge {W["edge"]}'); fails += bool(bad)
+        res, errs = await run(ZONE, SEEDS); bad, W = res if len(res) == 2 and isinstance(res[1], dict) else (res, {'near': [0, 0], 'far': 0, 'any': 0, 'wild': 0, 'edge': 0, 'fit': 0, 'corners': 0, 'back': [0, 0], 'bedge': 0, 'bgap': 0}); bad += errs
+        print(('PASS ' if not bad else 'FAIL ') + f'the home zones on {SEEDS} seeds: nothing in the clearing, zone 1 behind with Bronze\'s cost (fits {W["fit"]} of {W["corners"]} corners), the home finds in the band, the same content in every corner, all reached (5a, B4)', '' if not bad else bad[:int(os.environ.get("SHOW", 8))] + [f'... {len(bad)} in all'])
+        print(f'  worst case: a home find\'s nearest node {W["near"][0]} to {W["near"][1]} from its Town Center (its farthest {W["far"]}); nearest node of any find {W["any"]}; nearest node not of the zone {W["wild"]}; nearest home node to the map edge {W["edge"]}; zone 1 nodes {W["back"][0]} to {W["back"][1]} from the Town Center, {W["bedge"]} from the edge, {W["bgap"]} from another find'); fails += bool(bad)
         await br.close()
     sys.exit(1 if fails else 0)
 asyncio.run(main())
