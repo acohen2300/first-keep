@@ -8,13 +8,13 @@ function fromWhere(t, a) {
 		dy = a.y - t.y,
 		d = hyp(dx, dy) || 1;
 	let covered = false,
-		fx = 0,
-		fy = 0;
+		fx = t.fx, // its own facing first, then its group's (C3: a lone man summed nothing and took every blow from the side)
+		fy = t.fy || 0;
 	unitsNear(t, FLANKING.line, (v) => {
 		if (v.owner !== t.owner || !isSoldier(v) || v.hp <= 0 || v.inside) return;
 		fx += v.fx || 0;
 		fy += v.fy || 0;
-		if (covered || v === t) return;
+		if (covered) return;
 		const ex = v.x - t.x,
 			ey = v.y - t.y,
 			e = hyp(ex, ey) || 1;
@@ -26,7 +26,8 @@ function fromWhere(t, a) {
 }
 function hurt(o, a, t, base) {
 	const A = a ? UNIT[a.kind] : {},
-		isB = !!t.q;
+		isB = !!t.q,
+		beast = !!a && hasTag(a.kind, 'animal'); // the kind, not the owner (N4): a Native, an outlaw or a citadel tower hits full and shakes the nerve
 	let d = base,
 		from; // where the blow comes from, found once a blow (the damage and the nerve both read it)
 	const fromOf = () => (from ??= a ? fromWhere(t, a) : 1);
@@ -40,7 +41,11 @@ function hurt(o, a, t, base) {
 		} // fire arrows, burning shot, petards
 		if (a && A.gun && fxv(o, 'blast', unitKeys(a.kind)).a >= 1)
 			for (const n of G.blds)
-				if (n !== t && n.hp > 0 && n.owner === t.owner && dist(n, t) < FIREARMS.splash) n.hp -= d * FIREARMS.splashHit; // the blast shakes the neighbours
+				if (n !== t && n.hp > 0 && n.owner === t.owner && dist(n, t) < FIREARMS.splash) {
+					n.hp -= d * FIREARMS.splashHit;
+					n.by = o;
+					n.byT = G.t;
+				} // the blast shakes the neighbours, and a neighbour it brings down pays its plunder (C9)
 	} else {
 		if (a) d *= vsMul(a, t);
 		if (a && o === WILD && t.kind === 'vil' && t.owner !== WILD && UNIT[a.kind].meat && !t.hunt) {
@@ -56,15 +61,10 @@ function hurt(o, a, t, base) {
 			}
 		}
 		if (isSoldier(t)) {
-			if (o === WILD && t.owner !== WILD) d *= MORALE.wild;
+			if (beast) d *= MORALE.wild;
 			if (t.state === 'rout') d *= MORALE.routHit;
 			else if (t.fb > G.t) d *= FALLBACK.hit;
-			const dot = fromOf();
-			if (o !== WILD)
-				t.mor -=
-					((MORALE.hit * d * (TEMPER[temperOf(t)].nerve || 1)) / t.max) *
-					(dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
-		} // nerve: a blow from the side counts half again, from behind twice; animals do not shake it
+		}
 		if (a && a.native && !isB && onLand(t.x, t.y) && hyp(t.x - MID, t.y - MID) > THRONE.isle - 10) d *= NATIVE.ambush; // the Natives at the causeways: the ground is theirs
 		if (a && A.gun && hasTag(t.kind, 'native')) d *= NATIVE.gunHit; // gunpowder against hide shields
 		if (isSoldier(t) && t.owner !== WILD) {
@@ -77,6 +77,12 @@ function hurt(o, a, t, base) {
 			if (a && A.rng <= 20 && fromOf() < -0.5) d *= FLANK; // from behind the line it holds
 		}
 		if (UNIT[t.kind].rarmor && (!a || A.rng > 20)) d *= UNIT[t.kind].rarmor; // roofed: arrows and bolts glance off
+		if (isSoldier(t) && !beast) {
+			const dot = fromOf();
+			t.mor -=
+				((MORALE.hit * d * (TEMPER[temperOf(t)].nerve || 1)) / t.max) *
+				(dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
+		} // nerve, from the blow that lands (C5: after armour, the shape and the flank); from the side half again, from behind twice; an animal does not shake it
 	}
 	t.hp -= d;
 	t.hurtT = G.t;

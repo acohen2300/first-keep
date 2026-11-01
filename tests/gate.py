@@ -224,7 +224,7 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
   return bad; }"""
 async def main():
     fails = 0
-    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/saves.py', 'tests/moves.py', 'tests/map.py', 'tests/palette.py', 'tests/cards.py', 'tests/verbs.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
+    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/saves.py', 'tests/moves.py', 'tests/combat.py', 'tests/map.py', 'tests/palette.py', 'tests/cards.py', 'tests/verbs.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
         r = subprocess.run([sys.executable, t], capture_output=True, text=True); print(r.stdout.strip() or ('FAIL ' + t + ' ' + r.stderr[-300:])); fails += r.returncode != 0
     w = subprocess.run([sys.executable, 'tests/words.py'], capture_output=True, text=True); print(('PASS ' if w.returncode == 0 else 'FAIL ') + 'toasts and tips: 10 words at most', w.stdout.strip() if w.returncode else ''); fails += w.returncode != 0
     async with async_playwright() as p:

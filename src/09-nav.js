@@ -289,7 +289,7 @@ function dangerMap() {
 	}
 	for (const v of G.threats || []) {
 		if (UNIT[v.kind].meat) continue;
-		for (const o of sides) if (atWar(o, v.owner)) stampDanger(DANGER[o], v.x, v.y, DANGER_R.near);
+		for (const o of sides) if (isFoe(o, v)) stampDanger(DANGER[o], v.x, v.y, DANGER_R.near);
 	}
 	for (const b of G.blds) {
 		if (b.hp <= 0) continue;
@@ -468,6 +468,9 @@ function rectGap(px, py, b) {
 	return hyp(Math.max(Math.abs(px - b.x) - h, 0), Math.max(Math.abs(py - b.y) - h, 0));
 }
 const edge = (u, t) => (BLD[t.kind] && t.q ? rectGap(u.x, u.y, t) : dist(u, t));
+// a blow's reach, measured once against edge (C9: the wild added a building's half on top of the gap to its wall), and the walk into it
+const reachOf = (r, t) => r + (t.q ? 2 : 5);
+const closeIn = (u, t, reach, dt, SP) => moveTo(u, t.x, t.y, dt, Math.max(2, reach - 2 + (t.q ? halfOf(t) : 0)), SP);
 function findBlocker(u) {
 	// an enemy building right beside u: what is in the way
 	const cx = Math.floor(u.x / NAVC),

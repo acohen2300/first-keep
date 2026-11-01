@@ -31,8 +31,8 @@ const ignorable = (v, o, me) => {
 	if (U.temper) return !(onMe(v, me) || (v.tgt && v.tgt.hp > 0 && v.tgt.owner === o && hasTag(v.tgt.kind, 'civ') && groupSees(o, v)));
 	return U.flee || U.passive || U.tick === 'wayfarer' || U.tick === 'envoy';
 }; // a herald is sacred: nobody shoots at an emissary on its way (it dies only by a side's own order)
-// who a side strikes: a foe it is at war with, or anything attacking the one looking (at peace too), less what it leaves alone
-const strikes = (o, v, me) => !v.inside && v.hp > 0 && v.owner !== o && (atWar(o, v.owner) || onMe(v, me)) && !ignorable(v, o, me);
+// who a side strikes: a foe (isFoe), or anything attacking the one looking (at peace too), less what it leaves alone
+const strikes = (o, v, me) => !v.inside && v.hp > 0 && v.owner !== o && (isFoe(o, v, me) || onMe(v, me)) && !ignorable(v, o, me);
 function nearestFoe(o, from, range, anchor) {
 	const a = anchor || from,
 		U = G.units,
@@ -80,12 +80,12 @@ function foeValue(u, v, d) {
 const GROUP_R = 60;
 function groupPower(u) {
 	if (u.gpT === G.tick) return u.gp;
-	let p = 0;
+	let p = unitPower(u); // itself, then its side within GROUP_R (C2: it was left out, so two swords scored as one)
 	unitsNear(u, GROUP_R, (v) => {
 		if (v.owner === u.owner && isSoldier(v) && v.hp > 0 && !v.inside) p += unitPower(v);
 	});
 	u.gpT = G.tick;
-	return (u.gp = Math.max(p, unitPower(u)));
+	return (u.gp = p);
 }
 const canBeat = (u, v) => lanchester((groupPower(u) * vsMul(u, v)) / Math.max(1e-6, unitPower(v) * vsMul(v, u))) > 0.5;
 function bestFoe(o, from, range, anchor) {
@@ -145,7 +145,7 @@ function nearestFoeBld(o, from, owner, range) {
 	let best = null,
 		bd = range || 1e9;
 	const ok = (b) => {
-		if (b.hp > 0 && atWar(o, b.owner) && (owner === undefined || b.owner === owner)) {
+		if (b.hp > 0 && isFoe(o, b, from) && (owner === undefined || b.owner === owner)) {
 			const d = rectGap(from.x, from.y, b);
 			if (d < bd) {
 				bd = d;

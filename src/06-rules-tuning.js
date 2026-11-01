@@ -35,8 +35,9 @@ const MORALE = {
 	routHit: 1.5,
 	routSpd: 1.3,
 	after: 0.6,
-	wild: 0.5, // animals hit soldiers at half strength and do not shake their nerve (Build 44)
+	wild: 0.5, // an animal (its kind, not its owner: N4) hits a soldier at half strength and does not shake its nerve (Build 44)
 	capR: 10,
+	capAfter: 2, // seconds a runner has to get away before a hand may take it prisoner
 };
 const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }; // a burst, then tired
 // ───────────────────────── The climate (Build 54): the whole game reads three numbers, the air's temperature, the ground's wetness and the sky's run ─────────────────────────

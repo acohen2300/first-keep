@@ -459,11 +459,13 @@ function order(S, h) {
 		vil = S.filter((u) => u.kind === 'vil'),
 		e = h.e,
 		go = (list, x, y) => {
+			postTo(
+				list.filter((u) => u.kind === 'vil'),
+				{ x, y },
+			); // each villager to its own spot round the point (item 5)
 			list.forEach((u) => {
-				if (u.kind === 'vil') {
-					setJob(u, null);
-					u.post = { x, y };
-				} else {
+				if (u.kind === 'vil') setJob(u, null);
+				else {
 					u.state = 'goto';
 					u.px = x;
 					u.py = y;

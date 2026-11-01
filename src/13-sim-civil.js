@@ -7,12 +7,7 @@ function shopTick(u, dt) {
 	const n = u.node,
 		b = n && n.farm;
 	if (!b || b.id !== u.shop || b.hp <= 0 || u.job !== n.type || !makeOf(b)) {
-		const at = b || { x: u.x, y: u.y, kind: 'house' };
-		if (u.inside) {
-			u.x = at.x;
-			u.y = at.y + halfOf(at) + 6;
-		}
-		u.inside = false;
+		if (u.inside) stepOut(u, b);
 		u.shop = 0;
 		return;
 	}
@@ -59,13 +54,32 @@ function makeNow(u, n, dt, room) {
 	u.work = G.t;
 	return g;
 }
-// Where a villager waits (decision 1; Build 80 preview 9): at its drop-off, each on its own spot round the building's outline, all four sides,
-// SEARCH.gap feet apart (Albert: Hall's personal distance, 2.5 to 4 ft; OSHA 1910.142(b)(3), 36 inches), on the free lane square's middle.
-// The outline is cut into the same whole number of parts, k, on every side, each at least SEARCH.gap feet, with a spot on every corner: then no two
-// spots are closer than the gap, the corners too (a turn puts its two neighbours √2 parts apart). Spot i of N = 4k walks it clockwise from the
-// top-left corner. A waiter takes the free spot nearest to it (ties: the lower number), once, and keeps it until it has a find again; the order
-// of the step decides between two on one tick, so the same seed stands them the same way.
+// Where each one stands: one home for every spot (decision 1; item 5). The waiters at a drop-off, the villagers sent to a tapped point and
+// anyone stepping out of a building each stand on a spot of their own, SEARCH.gap feet apart (Albert: Hall's personal distance, 2.5 to 4 ft;
+// OSHA 1910.142(b)(3), 36 inches).
+// A building's spots run round its outline, all four sides, on the free lane square's middle. The outline is cut into the same whole number
+// of parts, k, on every side, each at least SEARCH.gap feet, with a spot on every corner: then no two spots are closer than the gap, the
+// corners too (a turn puts its two neighbours √2 parts apart). Spot i of N = 4k walks it clockwise from the top-left corner.
+// A point's spots lie on the hex lattice round it, nearest first: n of them fill a disc of radius R ≈ 0.525·d·√n (hex packing: n circles of
+// diameter d cover π/(2√3) = 0.9069 of the disc, so πR²·0.9069 = n·π(d/2)², R = (d/2)·√(n/0.9069)).
+const LATTICE = (() => {
+	const P = [],
+		R = 12; // twelve rings: about 520 spots
+	for (let r = -R; r <= R; r++)
+		for (let q = -R; q <= R; q++) {
+			const x = q + r / 2,
+				y = (r * Math.sqrt(3)) / 2,
+				d = hyp(x, y);
+			if (d <= R + 1e-9) P.push({ x, y, d: Math.round(d * 1e6), a: Math.atan2(y, x) });
+		}
+	return P.sort((p, q) => p.d - q.d || p.a - q.a);
+})();
 function spotAt(b, i) {
+	if (!BLD[b.kind]) {
+		const h = LATTICE[i % LATTICE.length],
+			d = SEARCH.gap * FOOT;
+		return { N: LATTICE.length, x: b.x + h.x * d, y: b.y + h.y * d };
+	}
 	const R = halfOf(b) + NAVC / 2,
 		k = Math.max(1, Math.floor((2 * R) / (SEARCH.gap * FOOT))),
 		N = 4 * k,
@@ -73,25 +87,70 @@ function spotAt(b, i) {
 		t = ((i % k) * 2 * R) / k - R;
 	return { N, ...[{ x: b.x + t, y: b.y - R }, { x: b.x + R, y: b.y + t }, { x: b.x - t, y: b.y + R }, { x: b.x - R, y: b.y - t }][e] };
 }
+// The free spots at a (a building or a point; key names it in a claim) for the units in list: on open ground, on a's side of any water or
+// wall (a point), claimed by no one else (a waiter's spot, a post), and no one else standing within half a gap. A building offers its whole
+// outline, a point its nearest list.length free spots. Then the pairs, the cheapest walk first (greedy assignment): each unit its own spot,
+// and one whose nearest is taken takes the next free one. Ties go to the lower spot, then the earlier unit, so one seed stands them one way.
+function takeSpots(list, a, key) {
+	const g = (SEARCH.gap * FOOT) / 2,
+		N = spotAt(a, 0).N,
+		want = BLD[a.kind] ? N : list.length,
+		cm = BLD[a.kind] ? 0 : NAV.comp[gcell(a.x, a.y)],
+		o = list[0].owner,
+		mine = new Set(list),
+		claimed = new Set(),
+		free = [];
+	for (const v of G.units) {
+		const s = !mine.has(v) && (v.spot || v.post);
+		if (s && s.b === key) claimed.add(s.i);
+	}
+	for (let i = 0; i < N && free.length < want; i++) {
+		const p = spotAt(a, i),
+			c = gcell(p.x, p.y);
+		if (claimed.has(i) || p.x < 8 || p.y < 8 || p.x > MAP - 8 || p.y > MAP - 8 || blockedCell(c, o) || (cm && NAV.comp[c] !== cm)) continue;
+		if (G.units.some((v) => !mine.has(v) && v.hp > 0 && !v.inside && Math.abs(v.x - p.x) < g && Math.abs(v.y - p.y) < g)) continue;
+		free.push({ i, x: p.x, y: p.y });
+	}
+	const pairs = [];
+	for (const u of list) for (const p of free) pairs.push({ u, p, c: hyp(p.x - u.x, p.y - u.y) });
+	pairs.sort((x, y) => x.c - y.c);
+	const got = new Map(),
+		used = new Set();
+	for (const { u, p } of pairs)
+		if (!got.has(u) && !used.has(p.i)) {
+			got.set(u, p);
+			used.add(p.i);
+		}
+	return got;
+}
+// villagers sent to a tapped point: each walks to its own spot round it and stops there (item 5; they all made for the one point)
+function postTo(list, at) {
+	if (!list.length) return;
+	const key = `${Math.round(at.x)},${Math.round(at.y)}`,
+		got = takeSpots(list, at, key);
+	for (const u of list) {
+		const p = got.get(u);
+		u.post = p ? { x: p.x, y: p.y, b: key, i: p.i } : { x: at.x, y: at.y };
+	}
+}
+// out of a building: onto the nearest free spot of its outline (item 5; it was set down 30 below the middle, whatever stood there)
+function stepOut(u, b) {
+	u.inside = false;
+	const p = b && takeSpots([u], b, b.id).get(u);
+	if (p) {
+		u.x = p.x;
+		u.y = p.y;
+	}
+}
+// A waiter takes the free spot nearest it at its drop-off, once, and keeps it until it has a find again.
 function waitAt(u, dt, SP) {
 	let b = u.spot && G.blds.find((x) => x.id === u.spot.b && x.hp > 0);
 	if (!b) {
 		b = dropFor(u.owner, u.job, u);
 		if (!b) return;
-		const taken = new Set();
-		for (const v of G.units) if (v !== u && v.spot && v.spot.b === b.id) taken.add(v.spot.i);
-		let bi = -1,
-			bd = Infinity;
-		for (let i = 0, N = spotAt(b, 0).N; i < N; i++) {
-			const p = spotAt(b, i),
-				d = hyp(p.x - u.x, p.y - u.y);
-			if (!taken.has(i) && d < bd && !blockedCell(gcell(p.x, p.y), u.owner)) {
-				bd = d;
-				bi = i;
-			}
-		}
-		if (bi < 0) return; // every spot is taken: it stands where it is and asks again
-		u.spot = { b: b.id, i: bi };
+		const p = takeSpots([u], b, b.id).get(u);
+		if (!p) return; // every spot is taken: it stands where it is and asks again
+		u.spot = { b: b.id, i: p.i };
 		if (u.owner === 0)
 			news('home', `No ${u.was === 'tree' ? 'trees' : u.was} in sight: one waits at the ${bldName(0, b.kind).toLowerCase()}.`, '', 4, u);
 	}
@@ -112,12 +171,10 @@ function vilTick(u, dt, SP) {
 			u.inside = false;
 			return;
 		}
-		if (!u.emg && (G.tick + u.id) % 10 === 0 && !nearU(rb, SHELTER.clear, (v) => v.thr && atWar(u.owner, v.owner))) {
-			u.inside = false;
+		if (!u.emg && (G.tick + u.id) % 10 === 0 && !nearU(rb, SHELTER.clear, (v) => v.thr && isFoe(u.owner, v))) {
+			stepOut(u, rb);
 			u.scared = false;
 			u.hid = 0;
-			u.x = rb.x + u.ox * 0.8;
-			u.y = rb.y + 30;
 		}
 		return;
 	}
@@ -127,7 +184,7 @@ function vilTick(u, dt, SP) {
 		let wild = 0,
 			foe = 0; // enemy soldiers scare everyone near; a lone beast or robber scares only the one it hits, three or more (a pack) scare all; once running, keeps running until well clear
 		unitsNear(u, r, (v) => {
-			if (v.thr && v !== u.hunt && atWar(u.owner, v.owner) && dist(u, v) < r) {
+			if (v.thr && v !== u.hunt && isFoe(u.owner, v) && dist(u, v) < r) {
 				if (v.owner === WILD) wild++;
 				else foe++;
 			}

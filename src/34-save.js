@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 41; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 42; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -177,6 +177,16 @@ const MIGRATE = {
 		S.v = 41;
 		return S;
 	}, // Build 80: Printing is folded into Printing press (N12); the sky rolled ahead is a list, a minute for each forecast step (N10)
+	41: (S) => {
+		for (const u of S.units || [])
+			if (u.routT !== undefined) {
+				const p = (S.P || [])[u.owner];
+				u.routAt = u.routT - MORALE.rout * (p && (p.techs || []).includes('engage') ? 0.5 : 1);
+				delete u.routT;
+			}
+		S.v = 42;
+		return S;
+	}, // C6: a rout keeps when it began, not when it ends
 };
 const evSave = () => {
 	const V = G.ev || {},
