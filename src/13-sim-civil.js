@@ -292,7 +292,9 @@ function vilTick(u, dt, SP) {
 		if (u.carry > 0 || u.hunt || !u.node || u.node.amt > 0) return;
 	}
 	if (u.job === 'repair') {
-		repairTick(u, dt, SP);
+		if (u.hunt)
+			huntTick(u, dt, SP); // bitten at its site: the beast first (hunt A #3)
+		else repairTick(u, dt, SP);
 		return;
 	}
 	if (!u.job) {

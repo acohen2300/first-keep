@@ -289,6 +289,10 @@ const ACT = {
 		G.mailP = 0;
 		refresh();
 	},
+	chronp(a) {
+		G.chronP = (G.chronP || 0) + Number(a);
+		$('endX').innerHTML = crownsHTML();
+	}, // the chronicle's pages on the end card
 	mailp(a) {
 		G.mailP = (G.mailP || 0) + Number(a); // the card holds it inside its pages
 		refresh();
@@ -397,24 +401,26 @@ const PLAY = {
 	// Relations (v80): what is picked on a row waits there until its ✓; the slider snaps, its switch turns the gift on or off and keeps the amount
 	relwant(a) {
 		const [q, w] = a.split(','),
-			n = Number(q);
+			n = relKey(q);
 		if (relLord(n)) return say(relWhy(0, n, w) || 'Not now.', '', 3);
 		const d = relPickOf(n);
 		d.want = w;
 	},
 	relgift(a) {
-		const [q, v] = a.split(',').map(Number),
+		const [k, x] = a.split(','),
+			q = relKey(k),
+			v = Number(x),
 			d = relPickOf(q);
 		if (giftLock(q)) return say(giftLock(q), '', 3);
 		d.gift = v;
 		d.on = v > 0;
 	},
 	relon(a) {
-		const q = Number(a),
+		const q = relKey(a),
 			d = relPickOf(q);
 		if (giftLock(q) || relLord(q)) return say(giftLock(q) || relWhy(0, q, 'peace') || 'Not now.', '', 3);
 		d.on = !d.on;
-		if (d.on && !d.gift) d.gift = NATIVE.giftStep;
+		if (d.on && !d.gift) d.gift = REGARD.giftStep;
 	},
 	mpick(a) {
 		G.mktK = a;
@@ -704,10 +710,10 @@ const PLAY = {
 	// relations and a lord's hand: one verb each, the reason on the card when it cannot be done. Relations (v80): the row's ✓ sends what
 	// was picked on it, the gift then the stance
 	relok(a) {
-		const q = Number(a),
+		const q = relKey(a),
 			[gift, want, why] = relDraft(q);
 		if (why || !(gift || want)) return say(why || 'Pick a gift or a stance first.', '', 3);
-		if (gift) giveGift(0, gift);
+		if (gift) giveGift(0, gift, gangKey(q));
 		if (want) setRel(0, q, want);
 		delete G.relPick[q];
 	},

@@ -45,7 +45,7 @@ GAME = """([seed, minutes]) => {
   const units = {}; for (const r of seen.values()) { const k = r.kind, u = units[k] || (units[k] = { n: 0, spent: 0, kills: 0 }); u.n++; u.spent += cost(k); u.kills += r.kills; }
   const caravans = sides.map((s) => G.units.filter((u) => u.owner === s && u.kind === 'caravan').length);
   const C = F.crownsOf(), crowns = { wealth: C.wealth[0].id, war: C.war[0].id, wellbeing: C.wellbeing[0].id, overall: C.overall[0].id };
-  const peace = { truceNow: F.truceAll(), truceSecs: Math.round(F.truceFor()), games: G.gamesN || 0, enlight: !!G.enlight, age5: sides.filter((s) => G.P[s].age >= 5).length, laurels: sides.map((s) => G.P[s].laurels || 0) };
+  const peace = { truceNow: F.truceAll(), truceSecs: Math.round(F.truceFor()), games: G.P.reduce((s, p) => s + (p.laurels || 0), 0) / 4, enlight: !!G.enlight, age5: sides.filter((s) => G.P[s].age >= 5).length, laurels: sides.map((s) => G.P[s].laurels || 0) };
   return { seed, t: Math.round(G.t), winner, lostAt, civ: sides.map((s) => G.P[s].civ), pers: sides.map((s) => G.P[s].pers), ages, fell,
     score: sides.map((s) => G.P[s].score.total), stuck, why, units, caravans, crowns, peace, errs: errs.slice(0, 3) }; }"""
 async def worker(br, q, out):

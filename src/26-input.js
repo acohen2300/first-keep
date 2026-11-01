@@ -579,13 +579,11 @@ function startPlace(kind) {
 	const w = G.buildAt && G.buildAt.x !== undefined ? G.buildAt : toWorld(cw / 2, ch / 2);
 	G.buildAt = null;
 	if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200); // from the hammer on open ground: there; otherwise the middle of the screen
-	$('place').hidden = false;
 	ui(true);
 }
 // you tapped Build: build what the ghost shows; houses, fields and gates offer the next spot beside it
 function cancelPlace() {
-	if (G) G.place = null;
-	$('place').hidden = true;
+	if (G) G.place = null; // the bar follows in ui()
 }
 
 // The box: your people inside it are picked; a box of trees and nobody is a road to cut

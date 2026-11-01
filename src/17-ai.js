@@ -150,11 +150,13 @@ function think(p) {
 	if (per.walls && p.age >= 1 && R.s >= 60) {
 		const plan = p.ai.wallPlan || (p.ai.wallPlan = wallPlan(k));
 		let nb = 0;
-		for (const c of plan) {
-			if (nb >= 3 || p.res.s < 40) break;
-			if (NAV.occ[c.gy * NC + c.gx]) continue;
-			if (build(o, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) nb++;
-		}
+		navOnce(() => {
+			for (const c of plan) {
+				if (nb >= 3 || p.res.s < 40) break;
+				if (NAV.occ[c.gy * NC + c.gx]) continue;
+				if (build(o, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) nb++;
+			}
+		});
 	}
 	if (
 		per.wonder &&

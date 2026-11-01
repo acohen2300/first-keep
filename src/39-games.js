@@ -6,8 +6,7 @@ const PEACE = {
 	truce: { gold: 120, odds: 2 }, // tribute buys peace from a side that wants more war: gold × (1 + odds × their odds), rounded to 10 (Danegeld, 991)
 	stand: { after: 90, keep: 0.5 }, // after 90 s of board truce a computer sends the soldiers above half its army cap home to the fields
 	games: {
-		every: 2 * YEAR, // the Olympiad: every second year (776 BC on, every four; the game's year is 12 minutes)
-		first: YEAR, // none in the first year: nobody has anyone to send
+		every: 2 * YEAR, // the Olympiad: every second year (776 BC on, every four; the game's year is 12 minutes); held at the first board peace after it falls due
 		events: [
 			// each event asks one number of a side, the best it has in the field; the winner is rolled on the square of it (the square law, as battle)
 			{ id: 'stadion', name: 'the footrace', of: (o) => bestOf(o, (s) => s.spd) },
@@ -73,7 +72,7 @@ function peaceTick() {
 		G.stood = true;
 		for (const p of livingSides()) if (p.id !== 0) standDown(p.id, true);
 	}
-	if (G.t >= PEACE.games.first && G.t - (G.gamesT ?? 0) >= PEACE.games.every) {
+	if (G.truce !== null && G.t - (G.gamesT ?? 0) >= PEACE.games.every) {
 		G.gamesT = G.t;
 		holdGames();
 	}
@@ -92,11 +91,8 @@ function standDown(o, quiet) {
 		if (clsCount(o, 'civ') >= clsMax('civ', o)) break; // one for one, so housing never stops it; the worker limit does (Build 60: it checked the houses and not the limit)
 		u.hp = 0;
 		u.gone = true;
-		const v = addUnit(o, 'vil', u.x, u.y);
-		if (v) {
-			v.job = o === 0 ? p.rally : null; // to your gathering job, as a new villager goes; a computer's think gives its own
-			n++;
-		}
+		addUnit(o, 'vil', u.x, u.y).job = o === 0 ? p.rally : null; // to your gathering job, as a new villager goes; a computer's think gives its own
+		n++;
 	}
 	if (n) {
 		if (o === 0) news('chronicle', `${n} soldiers stood down to work.`, 'good', 6);
@@ -105,15 +101,10 @@ function standDown(o, quiet) {
 	}
 	return n;
 }
-// the Games: held on the Throne island under the truce of the whole board, as the ekecheiria held Olympia; war cancels them
+// the Games: held on the Throne island under the truce of the whole board, as the ekecheiria held Olympia; they wait for it (hunt A #1)
 function holdGames() {
 	const L = livingSides();
 	if (L.length < 2) return;
-	if (!truceAll()) {
-		news('realm', 'No Games this year: war.', '', 5);
-		chron('The Games were not held: war.');
-		return;
-	}
 	const won = [];
 	for (const ev of PEACE.games.events) {
 		const w = L.map((p) => {
@@ -127,7 +118,6 @@ function holdGames() {
 		p.laurels = (p.laurels || 0) + 1;
 		won.push(`${p.id === 0 ? 'you' : p.name} ${ev.name}`);
 	}
-	G.gamesN = (G.gamesN || 0) + 1;
 	const mine = won.filter((w) => w.startsWith('you')).length;
 	chron(`The Games at the Throne: ${won.join(', ')}.`);
 	news('realm', 
@@ -183,9 +173,18 @@ function crownsHTML() {
 		h += `<p><b>${CROWN_NAME[c]}</b> ${r.v > 0 ? `${nm(r.id)} · ${fmt(r.v)}${unit[c]}` : 'no one'}</p>`;
 	}
 	h += `<p><b>Overall</b> ${nm(C.overall[0].id)}</p></div>`;
-	if (G.chron && G.chron.length)
-		h += `<details><summary>Chronicle · ${G.chron.length}</summary>${G.chron.map((c) => `<p><small>${clock(c.t)}</small> ${c.text}</p>`).join('')}</details>`;
-	return h;
+	// the chronicle, newest first, paged as the Mail: six lines a page, each one text line, a short page padded; no fold, so the card never
+	// grows (hunt B #1, Albert's sighting: the fold pushed the buttons under the floating ones and off the screen)
+	const L = (G.chron || []).slice().reverse(),
+		[pg, rows, nav] = pager(
+			L.map((c) => `<p class="chl"><small>${clock(c.t)}</small>${c.text}</p>`),
+			G.chronP,
+			'chronp',
+			'<p class="chl"></p>',
+			`${L.length} ${some(L.length, 'line')}`,
+		);
+	G.chronP = pg;
+	return h + rows + nav;
 }
 // the last step of the hidden age ends the match for everyone: the crowns are pointed to, and play can carry on
 function enlightenTick(o) {

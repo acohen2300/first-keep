@@ -169,7 +169,7 @@ JS2 = """() => {
     if (F.nearestFoe(0, far, 2000) !== bo) bad.push('the group does not see what one soldier sees: a far soldier ignores a boar on a villager'); }
   for (const kind of ['boar', 'bear']) {
     const G = fresh(), bo = F.addUnit(W(), kind, 700, 700); bo.hx = bo.x; bo.hy = bo.y; bo.tgt = null; bo.aggro = null; bo.hd = null;
-    const v = vil(G); v.x = bo.x + 70; v.y = bo.y; v.inside = false; F.wildTick(bo, T, 1);
+    const v = vil(G); v.x = bo.x + 70; v.y = bo.y; v.inside = false; while ((G.tick + bo.id) % 5) G.tick++; F.wildTick(bo, T, 1); // on its look (hunt A #4: every fifth tick)
     if (bo.tgt !== v) bad.push('a ' + kind + ' does not react to a villager 70 away near its home (it should look out to ' + F.WILD_LOOK + ')'); }
 
   // ── the back-to-work test, through the repair exits themselves (not the helper) ──

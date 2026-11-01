@@ -125,43 +125,9 @@ function navRebuild() {
 				NAV.solid[c] = 1;
 		}
 	// which squares are joined by open ground (gates counted open: the finest cut is made by the search itself)
-	const C = NAV.comp,
-		Q = AS.q;
-	C.fill(0);
+	const C = NAV.comp;
 	NAV.size.length = 1;
-	let id = 0;
-	for (let s = 0; s < NC * NC; s++) {
-		if (C[s] || NAV.solid[s]) continue;
-		C[s] = ++id;
-		let h = 0,
-			t = 0;
-		Q[t++] = s;
-		while (h < t) {
-			const i = Q[h++],
-				x = i % NC,
-				j1 = x > 0 ? i - 1 : -1,
-				j2 = x < NC - 1 ? i + 1 : -1,
-				j3 = i - NC,
-				j4 = i + NC;
-			if (j1 >= 0 && !C[j1] && !NAV.solid[j1]) {
-				C[j1] = id;
-				Q[t++] = j1;
-			}
-			if (j2 >= 0 && !C[j2] && !NAV.solid[j2]) {
-				C[j2] = id;
-				Q[t++] = j2;
-			}
-			if (j3 >= 0 && !C[j3] && !NAV.solid[j3]) {
-				C[j3] = id;
-				Q[t++] = j3;
-			}
-			if (j4 < NC * NC && !C[j4] && !NAV.solid[j4]) {
-				C[j4] = id;
-				Q[t++] = j4;
-			}
-		}
-		NAV.size[id] = t;
-	}
+	flood(C, (j) => !NAV.solid[j], NAV.size);
 	// a tree can be cut only from open ground beside it: the forest is worked from its edge inward,
 	// and the ground must be open land, not a sealed pocket inside the wood (Build 48: workers walked to pocket trees they could never reach)
 	for (const n of T) {
@@ -206,15 +172,15 @@ function blockedCell(c, o) {
 // the joined regions as one side sees them: a hostile gate is a wall (Build 63: the open-gate map put a walled enemy town in reach,
 // and every attacker's search ran its whole budget before failing). One flood a side, kept until the grid or a war changes.
 const COMPS = {};
-function compOf(o) {
-	const key = `${NAV.v}:${G.flood > G.t ? 1 : 0}:${(G.rel[o] || []).join('')}`, // the grid, and who this side is at war with (a hostile gate is a wall)
-		C0 = COMPS[o];
-	if (C0 && C0.key === key && C0.g === G) return C0.comp; // keyed on the grid, the flood and the game, not the random state, which moves every step (B12)
-	const C = new Int32Array(NC * NC),
-		Q = AS.q;
+// One flood for "joined regions" (hunt A #6: two copies): C gets a region number for every free square, four ways; size, if given, the
+// squares in each region. C is filled in place, so a side's buffer is made once and reused.
+function flood(C, free, size) {
+	const Q = AS.q,
+		N = NC * NC;
+	C.fill(0);
 	let id = 0;
-	for (let s = 0; s < NC * NC; s++) {
-		if (C[s] || blockedCell(s, o)) continue;
+	for (let s = 0; s < N; s++) {
+		if (C[s] || !free(s)) continue;
 		C[s] = ++id;
 		let h = 0,
 			t = 0;
@@ -222,22 +188,31 @@ function compOf(o) {
 		while (h < t) {
 			const i = Q[h++],
 				x = i % NC;
-			for (const j of [x > 0 ? i - 1 : -1, x < NC - 1 ? i + 1 : -1, i - NC, i + NC])
-				if (j >= 0 && j < NC * NC && !C[j] && !blockedCell(j, o)) {
-					C[j] = id;
-					Q[t++] = j;
-				}
+			if (x > 0 && !C[i - 1] && free(i - 1)) ((C[i - 1] = id), (Q[t++] = i - 1));
+			if (x < NC - 1 && !C[i + 1] && free(i + 1)) ((C[i + 1] = id), (Q[t++] = i + 1));
+			if (i >= NC && !C[i - NC] && free(i - NC)) ((C[i - NC] = id), (Q[t++] = i - NC));
+			if (i + NC < N && !C[i + NC] && free(i + NC)) ((C[i + NC] = id), (Q[t++] = i + NC));
 		}
+		if (size) size[id] = t;
 	}
-	COMPS[o] = { key, comp: C, g: G };
-	return C;
+}
+function compOf(o) {
+	const key = `${NAV.v}:${G.flood > G.t ? 1 : 0}:${(G.rel[o] || []).join('')}`, // the grid, and who this side is at war with (a hostile gate is a wall)
+		C0 = COMPS[o] || (COMPS[o] = { comp: new Int32Array(NC * NC) });
+	if (C0.key === key && C0.g === G) return C0.comp; // keyed on the grid, the flood and the game, not the random state, which moves every step (B12)
+	flood(C0.comp, (j) => !blockedCell(j, o));
+	C0.key = key;
+	C0.g = G;
+	return C0.comp;
 }
 function lineClear(x1, y1, x2, y2, o, avoid) {
 	const dx = x2 - x1,
 		dy = y2 - y1,
 		n = Math.ceil(hyp(dx, dy) / 4);
 	for (let i = 1; i <= n; i++) {
-		const c = gcell(x1 + (dx * i) / n, y1 + (dy * i) / n);
+		const gx = Math.floor((x1 + (dx * i) / n) / NAVC),
+			gy = Math.floor((y1 + (dy * i) / n) / NAVC),
+			c = (gy < 0 ? 0 : gy > NC - 1 ? NC - 1 : gy) * NC + (gx < 0 ? 0 : gx > NC - 1 ? NC - 1 : gx); // gcell, inlined: the hottest loop (hunt A #5)
 		if (blockedCell(c, o) || (avoid && DANGER[o][c])) return false;
 	}
 	return true;
@@ -270,13 +245,21 @@ function freeNear(cx, cy, o, R, px, py, slack = 2, cm = 0) {
 // Beside a find still guarded; near a live enemy or a beast that hunts (game that is hunted on purpose is not danger); inside an enemy tower's reach;
 // beside a fire; and, for a while, where one of the side's own was frightened out in the open. Gatherers pick their work off it; workers and carts walk round it (a soft cost, not a wall).
 const DANGER = [0, 1, 2, 3, 4].map(() => new Uint8Array(NC * NC));
+// a disc of radius R squares, as the half-width of each row (dy from -R to R), worked out once per R (hunt A #2: 400,000 cell tests a second)
+const DISC = [];
+const discRows = (R) =>
+	DISC[R] || (DISC[R] = Array.from({ length: 2 * R + 1 }, (_, i) => Math.floor(Math.sqrt(R * R - (i - R) ** 2))));
 function stampDanger(D, px, py, r) {
 	const R = Math.ceil(r / NAVC),
 		cx = Math.floor(px / NAVC),
-		cy = Math.floor(py / NAVC);
-	for (let y = Math.max(0, cy - R); y <= Math.min(NC - 1, cy + R); y++)
-		for (let x = Math.max(0, cx - R); x <= Math.min(NC - 1, cx + R); x++)
-			if ((x - cx) ** 2 + (y - cy) ** 2 <= R * R) D[y * NC + x] = 1;
+		cy = Math.floor(py / NAVC),
+		W = discRows(R);
+	for (let y = Math.max(0, cy - R); y <= Math.min(NC - 1, cy + R); y++) {
+		const w = W[y - cy + R],
+			a = Math.max(0, cx - w),
+			b = Math.min(NC - 1, cx + w);
+		if (a <= b) D.fill(1, y * NC + a, y * NC + b + 1);
+	}
 }
 function dangerMap() {
 	for (const D of DANGER) D.fill(0);
@@ -572,13 +555,17 @@ function route(u, tx, ty) {
 		}
 		u.path = p.pts;
 	}
-	const P = u.path;
+	const P = u.path,
+		pi0 = u.pi;
 	while (u.pi < P.length - 1 && hyp(P[u.pi].x - u.x, P[u.pi].y - u.y) < 7) u.pi++;
-	for (let k = Math.min(P.length - 1, u.pi + 4); k > u.pi; k--)
-		if (lineClear(u.x, u.y, P[k].x, P[k].y, o, avoid)) {
-			u.pi = k;
-			break;
-		}
+	if (u.pi !== pi0 || T - (u.laT ?? -9) >= 0.25) {
+		u.laT = T; // the look-ahead (skip to a later corner in plain sight) when a corner is passed, or four times a second (hunt A #5: every tick)
+		for (let k = Math.min(P.length - 1, u.pi + 4); k > u.pi; k--)
+			if (lineClear(u.x, u.y, P[k].x, P[k].y, o, avoid)) {
+				u.pi = k;
+				break;
+			}
+	}
 	const last = u.pi === P.length - 1;
 	if (last && u.partial && hyp(P[u.pi].x - u.x, P[u.pi].y - u.y) < 9) {
 		u.noPath = true;

@@ -139,6 +139,17 @@ function ageUp(o) {
 }
 let navHold = false,
 	navLate = false;
+// pieces laid in one go rebuild the grid once, after them (B13: forty pieces stalled a frame 131 ms; hunt A #8: the computers' wall plan too)
+function navOnce(fn) {
+	navHold = true;
+	navLate = false;
+	try {
+		fn();
+	} finally {
+		navHold = false;
+		if (navLate) navRebuild();
+	}
+}
 function build(o, kind, x, y) {
 	const B = BLD[kind],
 		p = G.P[o];
@@ -155,7 +166,7 @@ function build(o, kind, x, y) {
 	const b = mkBld(o, kind, x, y, 0);
 	G.blds.push(b);
 	if (navHold) navLate = true;
-	else navRebuild(); // a line of wall is laid in one go and the grid built once after it (B13: forty pieces stalled a frame 131 ms)
+	else navRebuild(); // a line laid in one go builds the grid once after it (navOnce)
 	qcDrop();
 	if (o === 0) learn('build:' + kind);
 	if (B.atStop) {
@@ -305,7 +316,15 @@ const noticeLeft = (a, b) => {
 	return t === undefined ? 0 : Math.max(0, Math.ceil(t - G.t));
 };
 // why a side cannot take this stance toward another right now, or null
+// a misfit group (GANG) on a Relations row, by its key; the Natives are also the fifth side (WILD)
+const gangKey = (q) => (q === WILD ? 'nat' : typeof q === 'string' && GANG[q] ? q : null);
 function relWhy(o, q, want) {
+	const g = gangKey(q);
+	if (g && g !== 'nat') {
+		if (want === gangRel(o, g)) return 'Already.';
+		if (want === 'ally') return 'They take gold, not oaths.'; // only the Natives have a gate to open (answer 1b: special rules later)
+		return want === 'peace' && regardOf(o, g) < REGARD.peaceAt ? `Needs regard ${REGARD.peaceAt}.` : null;
+	}
 	const p = G.P[o],
 		Q = G.P[q],
 		rel = G.rel[o][q];
@@ -313,8 +332,8 @@ function relWhy(o, q, want) {
 	if (Q.lord === o && !Q.rebel) return 'Your vassal: see their card.';
 	if (p.lord === q && !p.rebel) return 'Your overlord.';
 	if (want === rel) return 'Already.';
-	if (q === WILD && want === 'peace') return regardOf(o) < NATIVE.peaceAt ? `Needs regard ${NATIVE.peaceAt}.` : null; // the Natives: peace needs regard; alliance by emissary when regard is high; war is yours to declare
-	if (q === WILD && want === 'ally' && regardOf(o) < NATIVE.allyAt) return `Needs regard ${NATIVE.allyAt}.`;
+	if (q === WILD && want === 'peace') return regardOf(o) < REGARD.peaceAt ? `Needs regard ${REGARD.peaceAt}.` : null; // the Natives: peace needs regard; alliance by emissary when regard is high; war is yours to declare
+	if (q === WILD && want === 'ally' && regardOf(o) < REGARD.allyAt) return `Needs regard ${REGARD.allyAt}.`;
 	if (want === 'war' && q !== WILD && G.sworn > G.t) return `A sworn peace holds ${clock(G.sworn - G.t)} more.`; // a scenario's term of peace (the Olympic truce was sworn for the festival)
 	if (want === 'war') return noticeLeft(o, q) ? `Notice given: ${noticeLeft(o, q)} s.` : null;
 	if (want === 'ally' && rel === 'war') return 'Make peace first.';
@@ -325,18 +344,19 @@ function relWhy(o, q, want) {
 }
 function setRel(o, q, want) {
 	if (relWhy(o, q, want)) return false;
-	const rel = G.rel[o][q];
-	if (q === WILD && want === 'war') {
-		makePeace(o, q);
-		G.rel[o][q] = G.rel[q][o] = 'war';
-		natState().warBy[o] = true;
-		G.navDirty = true;
-		natRegard(o, -20);
+	const g = gangKey(q),
+		rel = G.rel[o][q];
+	if (g && want === 'war') {
+		if (g === 'nat') makePeace(o, WILD);
+		gangSet(o, g, 'war');
+		gangState(g).warBy[o] = true;
+		addRegard(o, g, -REGARD.warCost);
 		return true;
-	} // turning on the Natives costs regard, and needs no notice: they are not a court; it holds until you make peace
-	if (q === WILD && want === 'peace') {
-		natState().warBy[o] = false;
-		makePeace(o, q);
+	} // turning on a group costs regard, and needs no notice: they are not a court; it holds until you make peace
+	if (g && want === 'peace') {
+		gangState(g).warBy[o] = false;
+		if (g === 'nat') makePeace(o, WILD);
+		else gangSet(o, g, 'peace');
 		return true;
 	}
 	if (want === 'war') {
@@ -958,18 +978,16 @@ function commitPlace() {
 		let built = 0,
 			blocked = 0,
 			broke = false;
-		navHold = true;
-		navLate = false;
-		for (const c of cells) {
-			if (!afford(p, B.cost)) {
-				broke = true;
-				break;
+		navOnce(() => {
+			for (const c of cells) {
+				if (!afford(p, B.cost)) {
+					broke = true;
+					break;
+				}
+				if (build(0, 'wall', c.gx * NAVC + 5, c.gy * NAVC + 5)) built++;
+				else blocked++;
 			}
-			if (build(0, 'wall', c.gx * NAVC + 5, c.gy * NAVC + 5)) built++;
-			else blocked++;
-		}
-		navHold = false;
-		if (navLate) navRebuild();
+		});
 		say(
 			built
 				? `${built} wall piece${built > 1 ? 's' : ''} going up${blocked ? `; ${blocked} blocked` : ''}${broke ? '; out of stone' : ''}.`

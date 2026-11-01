@@ -405,14 +405,7 @@ function pileAt(b, sx, sy, z) {
 	if (!c) {
 		const W = w * 0.62 + 40 * z + 4,
 			H = w * TILT * 0.42 + 14 * z + 4;
-		c = document.createElement('canvas');
-		c.width = Math.ceil(W * dpr);
-		c.height = Math.ceil(H * dpr);
-		const was = ctx;
-		ctx = c.getContext('2d');
-		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-		pileArt(b.kind, ns, 0, 0, w, z);
-		ctx = was;
+		c = drawOnce(W, H, () => pileArt(b.kind, ns, 0, 0, w, z));
 		PSPR.set(key, c);
 		trim(PSPR, 60);
 	}

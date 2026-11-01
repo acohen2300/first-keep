@@ -139,18 +139,23 @@ function slotsHTML(b) {
 // anyone not a friend, so a friend's gift is locked; only the Natives take a gift in the game today); the stance, three icons in two slots;
 // the row's ✓. What is picked waits on the card (G.relPick) until that row's ✓ sends it: the picked icon wears the gold ring, the stance
 // held now stays in the name's colour, and the ✓ turns blue. The last rank says what the last ✓ touched will do, and the board
-const relSides = () => [WILD, ...G.P.filter((q) => q.id !== 0 && q.id !== WILD && q.alive).map((q) => q.id)];
+// Two pages (answers 1 and 1b, Albert Nov 1; picture Relations Misfits): Relations, the computers, a stance only (no gifts to rivals); Misfits,
+// the Natives (WILD) and the outlaws, bandits and robbers (by their GANG key), each a bribe and a stance
+const relSides = () => G.P.filter((q) => q.id !== 0 && q.id !== WILD && q.alive).map((q) => q.id);
+const MISFITS = [WILD, 'out', 'ban', 'rob'];
+const relKey = (a) => (GANG[a] ? a : Number(a)); // a row's key from a verb: a group's key, or a side's number
 // a side whose stance is not yours to pick here: your vassal (their own page) or your overlord
-const relLord = (q) => q !== WILD && ((G.P[q].lord === 0 && !G.P[q].rebel) || (G.P[0].lord === q && !G.P[0].rebel));
-const relName = (q) => (q === WILD ? 'Natives' : G.P[q].name);
-const giftLock = (q) => (q !== WILD ? 'Gifts go to the Natives only.' : G.rel[0][q] === 'ally' ? 'A gift to a friend is locked.' : null);
+const relLord = (q) => !gangKey(q) && ((G.P[q].lord === 0 && !G.P[q].rebel) || (G.P[0].lord === q && !G.P[0].rebel));
+const relName = (q) => (gangKey(q) ? GANG[gangKey(q)] : G.P[q].name);
+const relOf = (q) => (gangKey(q) ? gangRel(0, gangKey(q)) : G.rel[0][q]); // the stance held now
+const giftLock = (q) => (!gangKey(q) ? 'No gifts to rivals.' : relOf(q) === 'ally' ? 'A gift to a friend is locked.' : null);
 // what the row's ✓ would send: [gift or 0, stance or null], and why it cannot, or null
 function relDraft(q) {
 	const d = (G.relPick || {})[q] || {},
-		rel = G.rel[0][q],
+		rel = relOf(q),
 		gift = d.on && d.gift > 0 && !giftLock(q) ? d.gift : 0,
 		want = d.want && d.want !== rel ? d.want : null;
-	return [gift, want, (gift && giftWhy(0, gift)) || (want && relWhy(0, q, want)) || null];
+	return [gift, want, (gift && giftWhy(0, gift, gangKey(q))) || (want && relWhy(0, q, want)) || null];
 }
 const relPickOf = (q) => {
 	G.relPick = G.relPick || {};
@@ -158,19 +163,37 @@ const relPickOf = (q) => {
 	return G.relPick[q] || (G.relPick[q] = {});
 };
 function relRow(q) {
-	const rel = G.rel[0][q],
+	const g = gangKey(q),
+		rel = relOf(q),
 		d = (G.relPick || {})[q] || {},
 		lord = relLord(q),
 		lock = giftLock(q),
 		[gift, want, why] = relDraft(q),
-		nl = q === WILD ? 0 : noticeLeft(0, q) || noticeLeft(q, 0),
+		nl = g ? 0 : noticeLeft(0, q) || noticeLeft(q, 0),
 		war = !lord && nl, // under notice: the stance it is becoming, and when
-		word = lord ? (G.P[q].lord === 0 ? 'vassal' : 'overlord') : war ? `${REL_WORD.war.toLowerCase()} in ${nl} s` : REL_WORD[rel];
+		word = lord ? (G.P[q].lord === 0 ? 'vassal' : 'overlord') : war ? `${REL_WORD.war.toLowerCase()} in ${nl} s` : REL_WORD[rel],
+		sw = (k) => `<span class="stance-${k}">${REL_WORD[k]}</span>`,
+		// a stance picked and not yet sent: the change, each word in its stance's colour (Albert, Nov 1); once sent, the new stance alone
+		// (a Misfits row's name is one slot: the change takes two lines there, "Foe →" over "Neutral", so it fits at 375)
+		line =
+			want && !lord && !war
+				? g
+					? `<small class="chg">${sw(rel)} →</small><small class="chg">${sw(want)}</small>`
+					: `<small class="chg">${sw(rel)} → ${sw(want)}</small>`
+				: `<small class="${lord ? '' : 'stance-' + (war ? 'war' : rel)}">${word}</small>`;
 	return acts(
-		`<div class="info left line s1"><b>${relName(q)}</b><small class="${lord ? '' : 'stance-' + (war ? 'war' : rel)}">${word}</small></div>` +
-			slt(`relon:${q}`, `relgift:${q}`, 'Gift', lock ? '—' : `${d.gift || 0}g`, lock ? 0 : d.gift || 0, NATIVE.giftMax, NATIVE.giftStep, d.on, !!lock || lord) +
+		`<div class="info left line ${g ? 's1' : 's3'}"><b>${relName(q)}</b>${line}</div>` +
+			(g
+				? slt(`relon:${q}`, `relgift:${q}`, 'Bribe', lock ? '—' : `${d.gift || 0}g`, lock ? 0 : d.gift || 0, REGARD.giftMax, REGARD.giftStep, d.on, !!lock)
+				: '') +
 			choice(
-				Object.keys(REL_WORD).map((k) => [`relwant:${q},${k}`, ICON[k], (d.want || rel) === k, `stance-${k}${lord ? ' dis' : ''}`, REL_WORD[k]]),
+				Object.keys(REL_WORD).map((k) => [
+					`relwant:${q},${k}`,
+					ICON[k],
+					(d.want || rel) === k,
+					`stance-${k}${lord || (g && g !== 'nat' && k === 'ally') ? ' dis' : ''}`, // only the Natives take an alliance (relWhy)
+					REL_WORD[k],
+				]),
 				's2',
 				true,
 				'thin', // three icons in two slots: under 44 each (EXCEPTIONS #13)
@@ -180,13 +203,15 @@ function relRow(q) {
 	);
 }
 // what the last ✓ touched will do, in a line; and the board: at peace or not, the Games, the Natives' regard
-function relStatus() {
+function relStatus(mis) {
 	const q = (G.relPick || {}).last,
 		tf = truceFor(),
 		next = Math.max(0, PEACE.games.every - (G.t - (G.gamesT ?? 0))),
-		board = `${G.truce === null ? 'not at peace' : `at peace ${clock(tf)}`} · Games in ${clock(next)} · Natives regard ${Math.round(regardOf(0))}`;
-	let line = 'Pick a gift or a stance, then its ✓';
-	if (q !== undefined) {
+		board = mis
+			? `regard ${MISFITS.map((k) => Math.round(regardOf(0, gangKey(k)))).join(' · ')}, peace at ${REGARD.peaceAt}` // the rows' order
+			: `${G.truce === null ? 'not at peace' : `at peace ${clock(tf)}`} · ${next > 0 ? `Games in ${clock(next)}` : 'Games at the next peace'}`;
+	let line = mis ? 'Pick a bribe or a stance, then its ✓' : 'Pick a stance, then its ✓';
+	if (q !== undefined && (mis ? MISFITS.includes(q) : !gangKey(q))) {
 		const [gift, want, why] = relDraft(q);
 		if (why) line = `${relName(q)}: ${why.replace(/\.$/, '')}`;
 		else if (gift || want)
@@ -194,7 +219,7 @@ function relStatus() {
 	}
 	return acts(info(line, board, 'left line'), 'c1');
 }
-function relHTML() {
+function relHTML(mis) {
 	const spare = Math.max(
 			0,
 			soldiersOf(0).filter((u) => u.state === 'home' && !u.inside).length - Math.ceil(soldiersOf(0).length * PEACE.stand.keep),
@@ -205,19 +230,18 @@ function relHTML() {
 		'about',
 		'About',
 		`<p><b>The sides:</b> ${relSides()
-			.filter((q) => q !== WILD)
 			.map((q) => `${G.P[q].name}, ${G.P[q].civ ? CIVS[G.P[q].civ].name : 'no people'}${G.P[q].ally !== null && G.P[q].ally !== undefined && G.P[q].ally !== 0 ? `, with ${G.P[G.P[q].ally].name}` : ''}`)
 			.join('; ')}.</p>` +
-			`<p><b>Gift:</b> only the Natives take one; each buys less regard than the last for ${NATIVE.giftWindow / 60} minutes. Their regard: ${NATIVE.peaceAt} for peace, ${NATIVE.allyAt} to be a friend. A gift to a friend is locked.</p>` +
-			`<p><b>Stance:</b> neutral keeps both swords sheathed; a foe after ${NOTICE} s of notice (the Natives at once, for 20 regard); a friend needs their yes, carried by an emissary.</p>` +
+			`<p><b>Misfits:</b> the Natives, the outlaws (the horde), the bandits and the robbers each keep their own regard for you. A bribe raises it, each buying less than the last for ${REGARD.giftWindow / 60} minutes; blows on them lower it. At ${REGARD.peaceAt} they leave you be; under it they are foes. Only the Natives become friends, at ${REGARD.allyAt}, by an emissary; a bribe to a friend is locked. Animals are foes to all. No gifts to rivals.</p>` +
+			`<p><b>Stance:</b> neutral keeps both swords sheathed; a foe after ${NOTICE} s of notice (a misfit group at once, for ${REGARD.warCost} regard); a friend needs their yes, carried by an emissary.</p>` +
 			`<p><b>The board:</b> ${G.enlight ? `the ${AGES[5].name} is open.` : `a year of peace opens the ${AGES[5].name}${G.truce === null ? '' : ` (${clock(Math.max(0, PEACE.age.truce - truceFor()))} to go)`}.`} Laurels: ${G.P[0].laurels || 0}.</p>` +
 			(H.length
 				? `<p><b>You hold ${H.length}:</b> ${H.map((x) => `a ${UNIT[x.kind].name.toLowerCase()} of ${G.P[x.o].name}`).join(', ')}. Unransomed in ${PRISON.secs / 60} minutes, they serve you.</p>`
 				: ''),
 	);
 	return (
-		relSides().map(relRow).join('') +
-		relStatus() +
+		(mis ? MISFITS : relSides()).map(relRow).join('') +
+		relStatus(mis) +
 		list([
 			...P.map((x, i) =>
 				btn(

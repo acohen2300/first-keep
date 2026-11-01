@@ -375,13 +375,49 @@ function rebattalion() {
 					break;
 				}
 }
+const every = ([secs, phase]) => G.tick % Math.round(secs / DT) === phase; // a slow tick's turn (BEAT)
 const atWar = (a, b) => a !== b && G.rel[a][b] === 'war';
-// The one hostility test (decision 8, C1): sides by their relations, and the Natives (their warriors, the citadel) by theirs with each side;
-// the rest of the wild (animals, bandits, robbers, outlaws, the horde, guards) is a foe to everyone, always. A treaty binds only its signers
-// (pacta tertiis nec nocent nec prosunt). me: the one looking, when it is of that wild itself (the horde at a building). The kind decides,
-// not a list of exceptions on the owner (as N4): an animal or an outlaw; the Natives' warriors, walls, pits and nets go by relations.
-const wildFoe = (x) => !!x && x.owner === WILD && !!UNIT[x.kind] && (hasTag(x.kind, 'animal') || hasTag(x.kind, 'outlaw'));
-const isFoe = (o, x, me) => x.owner !== o && (atWar(o, x.owner) || wildFoe(x) || wildFoe(me));
+// The one hostility test (decision 8, C1; answer 1b): sides by their relations; animals are everyone's foe, always; the four misfit groups
+// (GANG: the Natives, the outlaws, the bandits, the robbers) each by their own stance with each side, which follows that group's regard.
+// A treaty binds only its signers (pacta tertiis nec nocent nec prosunt). me: the one looking, when it is of the wild itself.
+// Who belongs (the kind decides, as N4): an animal by its tag; a thing of the wild with no kind of its own (the Natives' walls, towers, pits
+// and nets) is the Natives'; the horde, until it goes home, the outlaws; bandits and robbers by their kind (UNIT.gang); the rest the Natives'.
+const gangOf = (x) =>
+	!x || x.owner !== WILD
+		? null
+		: !UNIT[x.kind]
+			? 'nat'
+			: hasTag(x.kind, 'animal')
+				? 'beast'
+				: x.horde && !x.back
+					? 'out'
+					: UNIT[x.kind].gang || 'nat';
+// a side's stance with a group: the Natives' is the fifth side's place in G.rel; the other groups' live with their regard (38-natives)
+const gangRel = (o, g) => (g === 'nat' ? G.rel[o][WILD] : gangState(g).rel[o]);
+// Decision 4b (an experiment, EXCEPTIONS #15, until the computers can buy peace): the wild's people start nothing with a computer. A camp
+// fights only the units that struck it in the last NATIVE.struck seconds, and only on its own ground (the Natives: YARD of the Throne; a
+// guard: its leash), then goes home. The player's rules are unchanged. Animals are not people: they follow no regard.
+const calm4b = (o) => o !== 0 && o !== WILD;
+const campOf = (me) => (me && me.find !== undefined ? 'f' + me.find : gangOf(me) || 'nat');
+const groundOf = (me) =>
+	!me || me.native || !UNIT[me.kind]
+		? { ...(throneB() || me || { x: MID, y: MID }), r: YARD }
+		: { x: me.hx ?? me.x, y: me.hy ?? me.y, r: wildLeash(me) };
+const struckBy = (me, x) => {
+	const L = (G.struck || {})[campOf(me)],
+		h = groundOf(me);
+	return !!L && G.t - (L[x.id] ?? -1e9) < NATIVE.struck && hyp(x.x - h.x, x.y - h.y) < h.r;
+};
+const isFoe = (o, x, me) => {
+	if (x.owner === o) return false;
+	if (x.owner === WILD) {
+		const g = gangOf(x);
+		return g === 'beast' || gangRel(o, g) === 'war';
+	}
+	if (o !== WILD) return atWar(o, x.owner);
+	const g = gangOf(me) || 'nat';
+	return g === 'beast' || (gangRel(x.owner, g) === 'war' && (!calm4b(x.owner) || struckBy(me, x)));
+};
 const friendly = (a, b) => a === b || G.rel[a][b] === 'ally';
 const season = () => SEASONS[Math.floor(G.t / SEASON_LEN) % 4];
 // ── The sky (Build 55): the sun's height from the calendar and the land's latitude, by the standard sunrise arithmetic; the moon's lit

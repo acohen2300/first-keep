@@ -143,17 +143,20 @@ function reap() {
 		}
 	}
 	{
-		let spent = false;
+		let spent = false,
+			tree = false;
 		for (const n of G.nodes)
 			if (!(n.amt > 0 || (n.farm && n.farm.hp > 0))) {
 				spent = true;
-				break;
+				if (n.kind === 'tree') {
+					tree = true;
+					break;
+				}
 			}
-		if (spent) {
-			G.nodes = G.nodes.filter((n) => n.amt > 0 || (n.farm && n.farm.hp > 0));
-			G.navDirty = true;
-		}
-	} // a tree felled opens its ground the same step (held longer, cutters beside it stall); the list is copied only when something is spent
+		if (spent) G.nodes = G.nodes.filter((n) => n.amt > 0 || (n.farm && n.farm.hp > 0));
+		if (tree) G.navDirty = true;
+	} // a tree felled opens its ground the same step (held longer, cutters beside it stall); only a tree blocks the grid, so only a tree
+	// rebuilds it (hunt A #7: a picked bush or a butchered deer cost a whole rebuild); the list is copied only when something is spent
 }
 // the computers think, the Natives act, a side without a keep falls, scores and battalions refresh
 function sidesTick(dt) {
@@ -329,10 +332,9 @@ function died(u) {
 		for (const v of G.units)
 			if (v.hunt === u) {
 				v.hunt = null;
-				v.node = m;
+				if (v.job !== 'repair') v.node = m; // a builder leaves the meat to the others and goes back to its site
 			}
 	}
-	if (u.owner === 0 && isSoldier(u) && !u.gone) G.lost = (G.lost || 0) + 1;
 	if (u.levy !== undefined && G.P[u.levy]) G.P[u.levy].loyal = Math.max(0, (G.P[u.levy].loyal || 0) - DEMAND.levyLoyal); // a vassal's soldier lost under your colours
 	if (u.by !== undefined && isSoldier(u))
 		for (const p of G.P)

@@ -529,7 +529,7 @@ function hordeTick() {
 		news('war', EV_TEXT.horde[1], 'warn', 8);
 	}
 	if (left > 0) return;
-	const sides = G.P.filter((p) => p.id !== WILD && p.alive && keepOf(p.id)),
+	const sides = G.P.filter((p) => p.id !== WILD && !calm4b(p.id) && p.alive && keepOf(p.id)), // 4b: the horde starts nothing with a computer
 		weak = sides.sort((a, b) => estPower(WILD, a.id) - estPower(WILD, b.id))[0];
 	if (!weak) {
 		G.horde = 'done';

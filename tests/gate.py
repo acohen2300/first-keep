@@ -14,7 +14,7 @@ CARDS = [('help', "{type:'help'}"), ('setup', "{type:'setup'}"), ('army', "{type
          ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}"), ('mail', "{type:'mail'}"), ('squad', "{type:'squad',i:0}"), ('emergency', "{type:'emergency'}"),
          ('villager', "{type:'unit',id:IDS.vil}"), ('stores', "{type:'stores'}"), ('house', "{type:'bld',id:IDS.house}"),
          # E8 (v80): the cards the gate never opened: Relations on its tab, Research, every milestone, and the Army card with Battalions (last: it researches)
-         ('relations', "(window.__fk.G.ktab = 'rel', {type:'bld',id:IDS.keep})"), ('research', "(window.__fk.G.ktab = 'town', {type:'research'})"),
+         ('relations', "(window.__fk.G.ktab = 'rel', {type:'bld',id:IDS.keep})"), ('misfits', "(window.__fk.G.ktab = 'mis', {type:'bld',id:IDS.keep})"), ('research', "(window.__fk.G.ktab = 'town', {type:'research'})"),
          ('milestones', "(window.__fk.G.ms = Object.keys(window.__fk.MS_TEXT).map((id, i) => ({ id, t: 60 * i })), {type:'milestone'})"),
          ('army-squads', "(window.__fk.G.P[0].techs.add('command'), window.__fk.fxDirty(), {type:'troops'})")]
 MEASURE = """() => {
@@ -224,7 +224,7 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
   return bad; }"""
 async def main():
     fails = 0
-    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/saves.py', 'tests/moves.py', 'tests/combat.py', 'tests/map.py', 'tests/palette.py', 'tests/cards.py', 'tests/verbs.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
+    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/saves.py', 'tests/moves.py', 'tests/combat.py', 'tests/wild.py', 'tests/map.py', 'tests/palette.py', 'tests/cards.py', 'tests/verbs.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
         r = subprocess.run([sys.executable, t], capture_output=True, text=True); print(r.stdout.strip() or ('FAIL ' + t + ' ' + r.stderr[-300:])); fails += r.returncode != 0
     w = subprocess.run([sys.executable, 'tests/words.py'], capture_output=True, text=True); print(('PASS ' if w.returncode == 0 else 'FAIL ') + 'toasts and tips: 10 words at most', w.stdout.strip() if w.returncode else ''); fails += w.returncode != 0
     async with async_playwright() as p:

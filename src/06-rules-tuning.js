@@ -101,6 +101,10 @@ const FIREARMS = { chance: 0.12, blast: 0.3, splash: 40, splashHit: 0.3 }; // fi
 // distance from the camera, full within d0 (the camera's height at the closest zoom), then the inverse-square law, less the air's absorption α: 5 dB a kilometre at 1 kHz, 20 °C, 50% humidity (ISO 9613-1), over a world unit of 0.14 m.
 // Thunder reaches the ear after the flash at 340 m/s over the same metre. floor: below this share it is not played.
 const SOUND = { fov: 60, alphaKm: 5, metre: 0.14, floor: 0.03, c: 340 }; // fov: the camera's field of view, degrees, which turns the zoom into a height (Albert, Build 64)
+// The slow ticks (hunt A #10): each runs every so many seconds (at its own phase in ticks, so they do not land on one step), and its body
+// reads the same seconds (every, 08-core): one home for the period. slow: prices, ventures, vassals, the league; health: sickness; natives: regard, the garrison, raids
+const BEAT = { slow: [10, 150], health: [5, 75], natives: [5, 7] };
+const YARD = 320; // a soldier at home fights within this of its post or its Town Center (the Natives: of the Throne, their camp's radius in 4b)
 const GARRISON = { r: 70, heal: 0.6 }; // soldiers resting by their own Castle, Barracks or Town Center heal; Garrison wards double it
 const TEACH = { seats: 4, mul: 1.5, tuition: 40 }; // Teach: a soldier learns a newer kind at the School, four at a time; time ×1.5 per age climbed, tuition in gold per age; opened by Veterans
 const TEACH_TO = {

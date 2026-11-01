@@ -228,7 +228,8 @@ function applyMini() {
 function showEnd(won, text, all) {
 	$('endT').textContent = all ? 'Everyone wins' : won ? 'Victory' : 'Defeat';
 	$('endP').textContent = text;
-	$('endX').innerHTML = crownsHTML(); // the three crowns and the overall, then the chronicle
+	G.chronP = 0;
+	$('endX').innerHTML = crownsHTML(); // the three crowns and the overall, then the chronicle, its newest page
 	$('endNext').hidden = $('endFree').hidden = !won;
 	$('end').hidden = false;
 	closeCard();
@@ -256,7 +257,7 @@ function fit() {
 	clampCam();
 }
 
-// who a unit not yours belongs to, in a few words: a rival and how you stand, the Natives, the horde, outlaws, the wild
+// who a unit not yours belongs to, in a few words: a rival and how you stand, a misfit group and how you stand (answer 1b), the wild
 function whoIs(u) {
 	const nm = UNIT[u.kind].name;
 	if (u.owner !== WILD) {
@@ -264,9 +265,9 @@ function whoIs(u) {
 		return `${nm} · ${P.name}${P.civ ? ', ' + CIVS[P.civ].name : ''} · ${REL_WORD[G.rel[0][u.owner]].toLowerCase()}`;
 	}
 	if (u.native) return `${nm} · the Natives · ${REL_WORD[G.rel[0][WILD]].toLowerCase()}`;
-	if (u.horde && !u.back) return `${nm} · the horde`;
-	if (u.back || u.find !== undefined) return `${nm} · outlaws from a camp`;
-	return `${nm} · ${UNIT[u.kind].tags && UNIT[u.kind].tags.includes('animal') ? 'a wild animal' : 'the wild'}`;
+	const g = gangOf(u);
+	if (g !== 'nat' && g !== 'beast') return `${nm} · the ${GANG[g]} · ${REL_WORD[gangRel(0, g)].toLowerCase()}`;
+	return `${nm} · ${g === 'beast' ? 'a wild animal' : 'the wild'}`;
 }
 // ───────────────────────── Messages (Build 64, Albert) ─────────────────────────
 // A line arrives as a preview, the way a phone shows a text, over the map, and fades after MSG.secs; every line is kept in the mail (the
@@ -592,6 +593,7 @@ function ui(force) {
 		if ($('homeB').hidden === away) $('homeB').hidden = !away;
 	} // home shows only when your Town Center is off the screen
 	$('stage').classList.toggle('busy', !!(G.card || G.place));
+	if ($('place').hidden === !!G.place) $('place').hidden = !G.place; // the place bar follows G.place, the one home (hunt B #5: a new game left it up)
 	{
 		const P = picked(),
 			n = P.length,

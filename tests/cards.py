@@ -27,33 +27,53 @@ JS = r"""() => {
     for (const w of ['Fog', 'Daily']) if (words.filter((x) => x === w).length !== 1) bad.push(`Setup: ${w} says its word ${words.filter((x) => x === w).length} times`);
     if ($$('#card .tick').length) bad.push('Setup: the old tick boxes are still there'); }
   } catch (e) { bad.push('Setup: the check could not run: ' + e.message); }
-  // Relations: a rank a side; three stance icons in two slots; a slider with its switch; a ✓ a row
+  // Relations in two pages (answers 1 and 1b; picture Relations Misfits): Relations, a rank a computer, the stance only (no gifts to rivals);
+  // Misfits, a rank each for the Natives, outlaws, bandits and robbers, a bribe (the slider with its switch) and a stance; three stance icons
+  // in two slots; a ✓ a row. A stance picked and not sent reads "Foe → Neutral" under the name, each word in its colour
   try {
   G.rel[0][2] = G.rel[2][0] = 'ally'; G.ktab = 'rel'; F.openCard({ type: 'bld', id: k.id }); F.ui(true);
-  { const sides = 1 + G.P.filter((q) => q.id !== 0 && q.id !== F.WILD && q.alive).length, oks = $$('#card [data-act^="relok:"]');
-    if (oks.length !== sides) bad.push(`Relations: ${oks.length} check marks for ${sides} sides: a check mark per row`);
-    const rows = oks.map((o) => o.parentElement);
-    for (const r of rows) { const sel = r.querySelector('.bar.sel'), slt = r.querySelector('.slt'); if (!sel || sel.querySelectorAll('svg').length !== 3 || !sel.classList.contains('s2') || !slt || !slt.querySelector('input[type=range]')) bad.push('Relations: a row is not the gift slider and the three stance icons in two slots'); }
+  { if ($$('#card .fo > .fm > button').map((b) => b.dataset.act).join() !== 'ktab:town,ktab:rel,ktab:mis') bad.push('Relations: the tabs are not Town, Relations, Misfits');
+    const sides = G.P.filter((q) => q.id !== 0 && q.id !== F.WILD && q.alive).length, oks = $$('#card [data-act^="relok:"]');
+    if (oks.length !== sides) bad.push(`Relations: ${oks.length} check marks for ${sides} computers: a check mark per row, the computers only`);
+    for (const r of oks.map((o) => o.parentElement)) { const sel = r.querySelector('.bar.sel'); if (!sel || sel.querySelectorAll('svg').length !== 3 || !sel.classList.contains('s2')) bad.push('Relations: a row is not the three stance icons in two slots'); if (r.querySelector('.slt')) bad.push('Relations: a computer\'s row has a gift slot'); }
     if (F.REL_WORD.ally !== 'Friend' || F.REL_WORD.peace !== 'Neutral' || F.REL_WORD.war !== 'Foe') bad.push('Relations: the words are not friend, neutral, foe: ' + Object.values(F.REL_WORD).join(', '));
     if (/hostile|ally,/i.test($('#card').innerText)) bad.push('Relations: the card still says hostile or ally');
-    const was = G.rel[0][F.WILD]; G.rel[0][F.WILD] = G.rel[F.WILD][0] = 'ally'; F.ui(true);   // the Natives, the one side that takes a gift, as a friend
-    const nat = $(`#card [data-act="relok:${F.WILD}"]`), fr = nat && nat.parentElement.querySelector('.slt');
-    if (!fr || !fr.classList.contains('dis')) bad.push("Relations: a friend's gift is not locked");
-    G.rel[0][F.WILD] = G.rel[F.WILD][0] = was; F.ui(true);
-    // a gift to the Natives and a stance for the Raiders, each waiting on its row; the Natives' ✓ sends the gift only
-    const g0 = P.res.g, r0 = F.regardOf(0); F.act(`relgift:${F.WILD},100`); F.act('relwant:1,peace'); F.ui(true);
-    if (P.res.g !== g0) bad.push('Relations: the gift went before its check mark');
-    const ok = $(`#card [data-act="relok:${F.WILD}"]`); if (!ok || !ok.classList.contains('go')) bad.push("Relations: the Natives' check mark is not ready after a gift was picked");
-    ok && ok.click(); F.ui(true);
-    if (P.res.g !== g0 - 100 || !(F.regardOf(0) > r0)) bad.push("Relations: the Natives' check mark did not send their gift");
-    if (!(G.relPick || {})[1] || G.relPick[1].want !== 'peace') bad.push("Relations: the Natives' check mark sent another row's pick");
+    // a stance picked and not sent: the change with an arrow, in the stances' colours
+    G.rel[0][1] = G.rel[1][0] = 'war'; F.act('relwant:1,peace'); F.ui(true);
+    { const c = $('#card [data-act="relok:1"]').parentElement.querySelector('.info small'), sp = c ? [...c.querySelectorAll('span')] : [];
+      if (!c || !/^Foe → Neutral$/.test(c.textContent) || sp.length !== 2 || !sp[0].classList.contains('stance-war') || !sp[1].classList.contains('stance-peace')) bad.push(`Relations: a picked stance reads "${c && c.textContent}", not "Foe → Neutral" in red and white`); }
     // a side under notice reads "foe in 30 s" in the foe's colour, whole in its slot
     G.warAt['0,3'] = G.t + 30; F.ui(true); const n3 = $('#card [data-act="relok:3"]').parentElement.querySelector('.info small');
     if (!n3 || !/^foe in 30 s$/i.test(n3.textContent) || !n3.classList.contains('stance-war')) bad.push(`Relations: a side under notice reads "${n3 && n3.textContent}", not "foe in 30 s" in red`);
     else if (n3.scrollWidth > n3.clientWidth + 1) bad.push('Relations: "foe in 30 s" is cut in its slot');
     delete G.warAt['0,3'];
-    // the parts under 44 are the ones EXCEPTIONS #13 names: the stance icons, a set a row
     if ($$('#card .thin').length !== oks.length || $$('#card .thin').some((t) => !t.querySelector('[data-act^="relwant:"]'))) bad.push(`Relations: ${$$('#card .thin').length} controls are marked thin, not the ${oks.length} stance sets (EXCEPTIONS #13)`);
+    // Misfits
+    F.act('ktab:mis'); F.ui(true);
+    const mo = $$('#card [data-act^="relok:"]').map((o) => o.dataset.act.slice(6));
+    if (mo.join() !== [F.WILD, 'out', 'ban', 'rob'].join()) bad.push('Misfits: the rows are ' + mo.join() + ', not the Natives, outlaws, bandits, robbers');
+    for (const r of $$('#card [data-act^="relok:"]').map((o) => o.parentElement)) { const sel = r.querySelector('.bar.sel'), slt = r.querySelector('.slt');
+      if (!sel || sel.querySelectorAll('svg').length !== 3 || !slt || !slt.querySelector('input[type=range]') || !/Bribe/.test(slt.innerText)) bad.push('Misfits: a row is not the bribe slider and the three stance icons in two slots'); }
+    const was = G.rel[0][F.WILD]; G.rel[0][F.WILD] = G.rel[F.WILD][0] = 'ally'; F.ui(true);
+    const nat = $(`#card [data-act="relok:${F.WILD}"]`), fr = nat && nat.parentElement.querySelector('.slt');
+    if (!fr || !fr.classList.contains('dis')) bad.push("Misfits: a friend's bribe is not locked");
+    G.rel[0][F.WILD] = G.rel[F.WILD][0] = was; F.ui(true);
+    // a bribe to the Natives and a stance for the bandits, each waiting on its row; the Natives' ✓ sends the bribe only
+    const g0 = P.res.g, r0 = F.regardOf(0); F.act(`relgift:${F.WILD},100`); F.act('relwant:ban,peace'); F.ui(true);
+    if (P.res.g !== g0) bad.push('Misfits: the bribe went before its check mark');
+    const ok = $(`#card [data-act="relok:${F.WILD}"]`); if (!ok || !ok.classList.contains('go')) bad.push("Misfits: the Natives' check mark is not ready after a bribe was picked");
+    ok && ok.click(); F.ui(true);
+    if (P.res.g !== g0 - 100 || !(F.regardOf(0) > r0)) bad.push("Misfits: the Natives' check mark did not send their bribe");
+    if (!(G.relPick || {}).ban || G.relPick.ban.want !== 'peace') bad.push("Misfits: the Natives' check mark sent another row's pick");
+    // a bribe to the robbers raises the robbers' regard alone
+    const rr = F.regardOf(0, 'rob'), rb = F.regardOf(0, 'ban'); F.act('relgift:rob,100'); F.ui(true); $('#card [data-act="relok:rob"]').click(); F.ui(true);
+    if (!(F.regardOf(0, 'rob') > rr) || F.regardOf(0, 'ban') !== rb) bad.push("Misfits: the robbers' bribe did not raise the robbers' regard alone");
+    // sent: the line shows the new stance alone (turning on the outlaws needs no notice)
+    F.gangState('out').regard[0] = 60; F.gangState('out').rel[0] = 'peace'; F.act('relwant:out,war'); F.ui(true);
+    { const row = $('#card [data-act="relok:out"]').parentElement; if (!/Neutral\s*→\s*Foe/.test(row.querySelector('.info').innerText)) bad.push('Misfits: a picked stance does not show the change'); }
+    $('#card [data-act="relok:out"]').click(); F.ui(true);
+    { const sm = [...$('#card [data-act="relok:out"]').parentElement.querySelectorAll('.info small')]; if (sm.length !== 1 || sm[0].textContent !== 'Foe' || !sm[0].classList.contains('stance-war')) bad.push('Misfits: once sent, the line does not show the new stance alone: ' + sm.map((x) => x.textContent).join(' | ')); }
+    if ($$('#card .thin').length !== 4) bad.push(`Misfits: ${$$('#card .thin').length} controls are marked thin, not the 4 stance sets (EXCEPTIONS #13)`);
     G.ktab = 'town'; }
   // the vassal's Demand rank keeps its 44 (EXCEPTIONS #12 gone; the gate measures every card at every size, the vassal now included)
   try {
@@ -151,7 +171,7 @@ JS = r"""() => {
   } catch (e) { bad.push('the map: the check could not run: ' + e.message); }
   return bad;
 }"""
-DRAG = r"""() => { const F = window.__fk; F.newGame(5); F.act('close'); const G = F.G; G.P[0].res.g = 9999; G.ktab = 'rel'; F.openCard({ type: 'bld', id: F.keepOf(0).id }); F.ui(true);
+DRAG = r"""() => { const F = window.__fk; F.newGame(5); F.act('close'); const G = F.G; G.P[0].res.g = 9999; G.ktab = 'mis'; F.openCard({ type: 'bld', id: F.keepOf(0).id }); F.ui(true);
 }"""
 # the Mail with a group's filter on, at four sizes: every page is the same height, nothing scrolls, Next stays where the finger is
 MAILPAGES = r"""() => { const F = window.__fk; F.newGame(5); F.act('close'); const G = F.G; G.mail = [];

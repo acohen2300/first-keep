@@ -3,56 +3,76 @@
 // Regard is what they think of each side (0..100). It is the one number behind peace, alliance, raids and the gate.
 const throneB = () => G.blds.find((b) => b.kind === 'throne' && b.hp > 0) || null;
 const homeOf = (o) => (o === WILD ? throneB() : keepOf(o));
-const natState = () =>
-	G.nat ||
-	(G.nat = { regard: G.P.map(() => NATIVE.regard0), gifts: G.P.map(() => []), handT: {}, said: {}, warBy: {} });
-const regardOf = (o) => natState().regard[o];
-function natRegard(o, d) {
-	const N = natState();
+const natState = () => G.nat || (G.nat = { handT: {}, said: {} }); // what is the Natives' own: the handover, the raids, the garrison's regrowth
+// Regard (answer 1b): each misfit group (GANG) keeps its own regard for each side, and its own stance with it (the Natives': G.rel).
+const gangState = (g) =>
+	(G.gang ??= {})[g] ||
+	(G.gang[g] = {
+		regard: G.P.map(() => REGARD.regard0),
+		gifts: G.P.map(() => []),
+		warBy: {},
+		hitT: {},
+		...(g === 'nat' ? {} : { rel: G.P.map(() => 'war') }),
+	});
+const regardOf = (o, g = 'nat') => gangState(g).regard[o];
+function addRegard(o, g, d) {
+	const N = gangState(g);
 	N.regard[o] = clamp(N.regard[o] + d, 0, 100);
-	natSync(o);
+	gangSync(o, g);
 }
-// peace and war follow regard; an alliance needs an emissary and ends the moment regard falls under the line
-function natSync(o) {
+// a side's stance with a group is set: the Natives through the fifth side's relations, the others in their own list
+function gangSet(o, g, want) {
+	if (g === 'nat') G.rel[o][WILD] = G.rel[WILD][o] = want;
+	else gangState(g).rel[o] = want;
+	G.navDirty = true;
+}
+// peace and war follow regard; an alliance (the Natives only) needs an emissary and ends the moment regard falls under the line
+function gangSync(o, g) {
 	if (o === WILD || !G.P[o].alive) return;
-	const r = regardOf(o),
-		rel = G.rel[o][WILD];
-	if (rel === 'ally' && r < NATIVE.allyAt - 10) {
+	const r = regardOf(o, g),
+		rel = gangRel(o, g),
+		N = gangState(g);
+	if (rel === 'ally' && r < REGARD.allyAt - 10) {
 		makePeace(o, WILD);
 		if (o === 0) news('realm', 'The Natives end the alliance: regard fell.', 'warn', 6);
 	} else if (rel !== 'ally') {
-		const N = natState();
-		if (!N.warBy) N.warBy = {};
-		if (N.warBy[o] && r >= NATIVE.allyAt) N.warBy[o] = false;
-		const want = N.warBy[o] ? 'war' : r >= NATIVE.peaceAt ? 'peace' : 'war';
+		if (N.warBy[o] && r >= REGARD.allyAt) N.warBy[o] = false;
+		const want = N.warBy[o] ? 'war' : r >= REGARD.peaceAt ? 'peace' : 'war';
 		if (want !== rel) {
-			G.rel[o][WILD] = G.rel[WILD][o] = want;
-			G.navDirty = true;
+			gangSet(o, g, want);
 			if (o === 0)
-				news('realm', 
-					want === 'peace' ? 'The Natives leave you be: regard above 40.' : 'The Natives turn on you: regard under 40.',
+				news(
+					'realm',
+					want === 'peace'
+						? `The ${GANG[g]} leave you be: regard above ${REGARD.peaceAt}.`
+						: `The ${GANG[g]} turn on you: regard under ${REGARD.peaceAt}.`,
 					want === 'peace' ? 'good' : 'warn',
 					6,
 				);
 		}
 	}
 }
-// gifts: the Danegeld rule, each buys less than the last within the window
-const giftsRecent = (o) => natState().gifts[o].filter((t) => G.t - t < NATIVE.giftWindow).length;
-const giftGain = (o, amt) => Math.max(1, Math.round(amt / 10 / (1 + NATIVE.danegeld * giftsRecent(o))));
-function giftWhy(o, amt) {
-	if (!throneB()) return 'The Throne is taken.';
+// gifts (bribes): the Danegeld rule, each buys less than the last within the window
+const giftsRecent = (o, g) => gangState(g).gifts[o].filter((t) => G.t - t < REGARD.giftWindow).length;
+const giftGain = (o, amt, g) => Math.max(1, Math.round(amt / 10 / (1 + REGARD.danegeld * giftsRecent(o, g))));
+function giftWhy(o, amt, g) {
+	if (g === 'nat' && !throneB()) return 'The Throne is taken.';
 	if (G.P[o].res.g < amt) return `Not enough gold: ${amt}.`;
 	return null;
 }
-function giveGift(o, amt) {
-	if (giftWhy(o, amt)) return false;
-	const gain = giftGain(o, amt);
+function giveGift(o, amt, g) {
+	if (giftWhy(o, amt, g)) return false;
+	const gain = giftGain(o, amt, g);
 	spend(G.P[o], 'g', amt, 'tribute');
-	natState().gifts[o].push(G.t);
-	natRegard(o, gain);
+	gangState(g).gifts[o].push(G.t);
+	addRegard(o, g, gain);
 	if (o === 0)
-		news('realm', `Natives: ${amt} gold, regard +${gain}${giftsRecent(o) > 1 ? '. They expect more' : ''}.`, 'good', 6);
+		news(
+			'realm',
+			`${GANG[g]}: ${amt} gold, regard +${gain}${giftsRecent(o, g) > 1 ? '. They expect more' : ''}.`,
+			'good',
+			6,
+		);
 	return true;
 }
 function judgeNatives(from, envoy, ask) {
@@ -60,11 +80,11 @@ function judgeNatives(from, envoy, ask) {
 		reply(from, envoy, 'The Natives answer only to regard, not to words.');
 		return;
 	}
-	if (regardOf(from) < NATIVE.allyAt) {
+	if (regardOf(from) < REGARD.allyAt) {
 		reply(
 			from,
 			envoy,
-			`The Natives send your emissary back: regard ${Math.round(regardOf(from))} of ${NATIVE.allyAt}.`,
+			`The Natives send your emissary back: regard ${Math.round(regardOf(from))} of ${REGARD.allyAt}.`,
 		);
 		return;
 	}
@@ -172,7 +192,8 @@ function trapsTick() {
 				v.inside ||
 				v.owner === b.owner ||
 				friendly(v.owner, b.owner) ||
-				(v.owner === WILD && !v.horde)
+				(v.owner === WILD && !v.horde) ||
+				(b.owner === WILD && calm4b(v.owner)) // 4b: the Natives' pits and nets start nothing with a computer
 			)
 				return;
 			if (v.kind === 'scout' && !b.seen[v.owner]) {
@@ -217,7 +238,15 @@ function natRaid() {
 	if (!N.raidAt) N.raidAt = from + gap() / 2;
 	if (G.t < N.raidAt) return;
 	N.raidAt = G.t + gap();
-	let sides = G.P.filter((p) => p.id !== WILD && p.alive && keepOf(p.id) && G.rel[p.id][WILD] === 'war');
+	let sides = G.P.filter(
+		(p) =>
+			p.id !== WILD &&
+			!calm4b(p.id) &&
+			p.alive &&
+			keepOf(p.id) &&
+			G.rel[p.id][WILD] === 'war' &&
+			gangRel(p.id, 'rob') === 'war',
+	); // 4b: raids skip the computers; the raiders are robbers, so a side at peace with them is not raided
 	if (sides.length > 1) sides = sides.filter((p) => p.id !== N.raidLast);
 	if (!sides.length) return;
 	const w = sides.map((p) => 1 + (100 - regardOf(p.id)) / 25),
@@ -260,15 +289,22 @@ function nativesTick(dt) {
 				u.hy = u.camp.y;
 			}
 		} // raiders go home
-	if (G.tick % 150 !== 7) return; // the rest every five seconds
+	if (!every(BEAT.natives)) return; // the rest on the slow beat
 	const N = natState(),
 		T = throneB(),
 		held = G.throne && G.throne.owner !== WILD;
-	for (const p of G.P)
-		if (p.id !== WILD && p.alive) {
-			N.regard[p.id] += (((NATIVE.regard0 - N.regard[p.id]) * NATIVE.decay) / 100) * 5;
-			natSync(p.id);
-		}
+	for (const g in GANG) {
+		const R = gangState(g);
+		for (const p of G.P)
+			if (p.id !== WILD && p.alive) {
+				R.regard[p.id] += (((REGARD.regard0 - R.regard[p.id]) * REGARD.decay) / 100) * BEAT.natives[0];
+				gangSync(p.id, g);
+			}
+	}
+	for (const c in G.struck || {}) {
+		for (const id in G.struck[c]) if (G.t - G.struck[c][id] >= NATIVE.struck) delete G.struck[c][id];
+		if (!Object.keys(G.struck[c]).length) delete G.struck[c];
+	} // 4b: a camp forgets who struck it after a minute
 	if (
 		T &&
 		!held &&
@@ -286,12 +322,13 @@ function nativesTick(dt) {
 			if (p.id !== WILD && p.alive && G.rel[p.id][WILD] === 'ally') {
 				const n = G.units.filter((u) => u.owner === p.id && isSoldier(u) && dist(u, T) < THRONE.r).length;
 				if (n >= NATIVE.handoverMen) {
-					N.handT[p.id] = (N.handT[p.id] || 0) + 5;
-					if (p.id === 0 && N.handT[0] === 5)
+					N.handT[p.id] = (N.handT[p.id] || 0) + BEAT.natives[0];
+					if (p.id === 0 && N.handT[0] === BEAT.natives[0])
 						news('realm', `Hold ${NATIVE.handoverMen} inside ${NATIVE.handover} s: they swear to you.`, 'good', 6);
 					if (N.handT[p.id] >= NATIVE.handover) takeThrone(p.id, true);
 				} else N.handT[p.id] = 0;
 			}
 	// the holder's score and the clock
-	if (held && G.P[G.throne.owner].alive) G.P[G.throne.owner].gathered += (THRONE.score * SCORE.wealth) / 12; // 50 score a minute, as wealth, in twelve beats
+	if (held && G.P[G.throne.owner].alive)
+		G.P[G.throne.owner].gathered += (THRONE.score * SCORE.wealth * BEAT.natives[0]) / 60; // THRONE.score a minute, as wealth, a beat's share
 }
