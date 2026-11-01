@@ -1124,3 +1124,38 @@ Build Plan items 6 and 7. Open points for Albert are in `docs/Quick Action Notes
 - Notes: `docs/Fix Notes - v80 - Post Clean - Working.md`.
 - After a fresh review (same preview): waiting spots now put one on every corner and cut each side into equal parts of at least 3 ft, so no two spots of any building are closer than 3 ft (the Town Center's corners were 2.1 ft); self-defence is for soldiers only (a tower or a cart keeps the rule it had); new tests for a placed villager's anchor and its 180 cap, for spot spacing on every building kind, and for the wheel and a drag behind the Welcome back card; 35 planted bugs, all caught. Gate, lint, START QC pass; the fingerprint did not move.
 - Unapproved assumptions, for Albert: FOOT = 2.65 world units rests on taking a villager as an adult of 5.5 ft; waiting spots stand 5 units (about 1.9 ft) out from the wall, the middle of the free lane square, at least four to a building.
+
+## Build 80, cards (merged Nov 1, before preview 10)
+**Cards v80 (branch `cards80`): the type rules, Setup stacked, the controls, Relations final, the Market's picker, the audit's E1 to E11 with N13, the cold review of v70.**
+
+Changes
+- Two text sizes, 12 and 18; two fonts; Barlow at one weight, 600 (MAYBE), one file; map labels through `mapFont`, scaled by `labelK` (12 at `ZOOM_START`, floor 9).
+- Setup: a rank a setting, name quiet on the left, one selector right-justified; peoples, Daily (Off · On), hazards as bars.
+- The controls: `choice` (bar and selector), `lab`, `slt` in `27-cards-core`; a slider's `data-in` verb (33-verbs); the patch keeps a slider's value (27).
+- Relations final: `relRow`, `relStatus`, `relHTML` (29); verbs `relwant`, `relgift`, `relon`, `relok`; `REL_WORD` friend, neutral, foe; stance icons from Lucide (`ICON.foe`, `neutral`, `friend`).
+- Market on the shared page (`BLD_PAGE.market`, `marketPage`); its size in `SIZE_OF` (one home).
+- E1, E2 (`b.made`), E3/N13 (`MSG.page`, `mailp`), E4, E5 (`dropDrag`), E6, E7 (`cardPause`), E8, E9, E11 as above.
+- Emergency a slot with its word on the cycle button's rank (`ROW_WORD.emg`); one steel panel for the row and that rank; "+1 Records" (`TECH` short), "+2 Guilds".
+- Review fixes: the slider's key (drag kept across the switch); `foeFirst`; `REL_WORD` the one home of the stance words, icons keyed by it, "foe in 30 s"; `mailp:0` on a line with no link; `LABEL` and `--weight` one home each; `.thin` passed by the stance icons only.
+- Short names: Bad weather "Weather" (Setup), Record keeping "Records", the Town Center "Town".
+
+Cut
+- `src/fonts/barlow-500.woff`, `barlow-700.woff` (the 600 file renamed `barlow.woff`): one weight.
+- `--fs-m` and every `font-weight` but the body's 600 and Fell's 400.
+- The Setup tick boxes and their CSS (`.tick`, `.tick.daily`), the segmented rows (`seg`, `.seg`, `.segT`, `.seg2`), `.civs`, the civ fold on the face (`civline` and its small-phone rule), the `setup` class on the card, the copyright line on the face (to the book), the one-line `settingsWhy` under the settings (to the book).
+- `nativesHTML`, the old `relHTML` rows (Ally/Neutral/Hostile acting at once), the verbs `rel` and `gift`, `NATIVE.gifts` ([100, 300] → `giftMax` 300, `giftStep` 50), the board paragraph on the face (to the book), the tab sub-lines.
+- `marketHTML` and the Market's early return in `CARDS.bld`; the Market size case in `renderCard`.
+- `.mrows`, `.chips`, `.chip`; the `s15` span; `'end'` in `FULL` (no card); the pause decided in `openCard`.
+- EXCEPTIONS #12 and the gate's `name != 'vassal'` skip.
+- The words "Hostile" (the card and the two toasts), "ally, neutral, hostile", "+1 research".
+- `STANCE` and the stance phrases in `relStatus` (to `REL_WORD`); `ICON.foe`, `neutral`, `friend` renamed `war`, `peace`, `ally`; the gate's inline `verbs()` (to `tests/verbs.py`); `.cin p.why`; the count rule for `.thin`.
+
+Tests
+- New `tests/cards.py` (in the gate): Setup stacked, Relations final (a ✓ a row, the friend's gift locked, a ✓ sends its row only, the words), Mail pages, the Market selector, E1, E2, E4, E5, E6, E7, E11, the locked place's name, Emergency on the grid, the steel panel, the map label scale, the vassal's Demand rank. Every check fails on main 38001b9 (run with the same exports added to a scratch copy): 24 failures (the vassal check came after that run; its planted bug is caught).
+- `tests/palette.py`: 12 and 18 only; two fonts; one weight, 600, once; two font files packed; every map label through `mapFont`; no phone font. Fails on 38001b9.
+- `tests/gate.py`: opens Relations, Research, the milestones and the Army card with Battalions (E8); measures every text's size (12 or 18), font and weight on every card at four sizes; a card's line cut short fails; parts of a control (`.hr`, `.thin`) named; the vassal no longer skipped; `data-in`, `slt` and `sym` verbs checked.
+- New `tests/verbs.py` (in the gate, replacing its inline verb check): every control verb has a handler, `choice()`, `offOn()` and `slt` verbs included.
+- 31 new planted bugs in `tests/handoff.py` (66 in all), each caught.
+- Results (first commit): build, wrap, lint clean; the gate passes (31 of 31; four sizes, both pages); `tests/handoff.py`: every check passes but "the working tree is clean" before this commit; the play fingerprint matches the baseline (the cards change no simulation; `b.made` is a count nothing reads in play); soak seeds 1, 2, 3 for 20 minutes pass (saves 250 to 258 kB; a frame 8.7 to 52 ms with another builder on the same two CPUs).
+- Results (review fixes): build, wrap, lint, palette, verbs, words, cards pass; 66 of 66 plants caught. The full gate waits for the merge.
+- Merge check (main after the merge): tests/handoff.py START QC PASSED; 66 planted bugs caught; the gate passes at four sizes; fingerprint unchanged.
