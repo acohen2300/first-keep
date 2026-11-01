@@ -25,13 +25,10 @@ function stash(o, type, amt) {
 }
 // what came in over the last minute, by resource and good: kept for the stores card (the flow is counted as it is stashed, read once a minute)
 // a resource's net flow a minute: what came in over the last full minute less what went out (the minute so far, scaled, before there is one)
-function netOf(p, k) {
-	const el = (G.tick % 1800) / 30,
-		full = p.rate && Object.keys(p.rate).length,
-		inn = full ? p.rate[k] || 0 : ((p.flow[k] || 0) * 60) / Math.max(10, el),
-		out = full ? (p.orate && p.orate[k]) || 0 : ((p.spent1[k] || 0) * 60) / Math.max(10, el);
-	return inn - out;
-}
+const flowOf = (p, k, last, now) =>
+	p.rate && Object.keys(p.rate).length ? (last && last[k]) || 0 : (((now && now[k]) || 0) * 60) / Math.max(10, (G.tick % 1800) / 30);
+const outOf = (p, k) => flowOf(p, k, p.orate, p.spent1); // what went out a minute (a computer's crew per resource reads it, 17-ai)
+const netOf = (p, k) => flowOf(p, k, p.rate, p.flow) - outOf(p, k);
 // a store's velocity on the one gradient: its net flow a minute over VEL.ref (tanh: a gentle middle, a firm end); falling with under two
 // minutes left is the worst there is
 const VEL = { ref: 40 };
@@ -573,12 +570,28 @@ function econTick(dt) {
 	fireTick(dt);
 }
 
-// ── the computers: a Market, one workshop each, caravans with routes, posts on the free stops near them
-function aiEconomy(p, k, R, put, has) {
+// ── the computers: a Market, one workshop each, caravans with routes, posts on the free stops near them. Saving for an age, it buys none of
+// it (D3: about a dozen purchases ignored the saving); a plot's post is staffed only while the plot beats the wild (the plot test, 17-ai)
+function aiEconomy(p, k, R, put, has, saving) {
 	const o = p.id,
 		per = PERS[p.pers];
 	if (p.age < 1 || G.t < 200) return;
-	if (p.age >= VENTURE.age && p.res.g > 900 && (p.ventures || []).length < 2) venture(o, 250);
+	for (const b of G.blds)
+		if (
+			b.owner === o &&
+			b.prog >= 1 &&
+			b.node &&
+			b.node.type !== 'food' &&
+			b.node.type !== 'wood' &&
+			!(b.node.wk > 0) &&
+			(!PLOTS[b.kind] || plotPays(o, b.kind, k))
+		) {
+			sendVil(o, b.node.id);
+			break;
+		}
+	if (saving) return;
+	const A = nextAge(o);
+	if (p.age >= VENTURE.age && p.res.g - ((A && A.cost.g) || 0) > 900 && (p.ventures || []).length < 2) venture(o, 250); // a surplus over the next age's gold (D3: 900 was the Gunpowder price itself)
 	if (R.w >= 140 && R.s >= 40) {
 		const f = nearest(stopsAll(), k, (f) => !guardsLeft(f) && !postAt(f), 1100);
 		if (f && !canPlace(o, 'tpost', f.x, f.y)) {
@@ -601,25 +614,13 @@ function aiEconomy(p, k, R, put, has) {
 		if (b && brew) setMake(b, 'beer');
 		return;
 	}
-	for (const b of G.blds)
-		if (
-			b.owner === o &&
-			b.prog >= 1 &&
-			b.node &&
-			b.node.type !== 'food' &&
-			b.node.type !== 'wood' &&
-			!(b.node.wk > 0)
-		) {
-			sendVil(o, b.node.id);
-			break;
-		}
 	const cs = unitsOf(o, 'caravan');
 	if (cs.length + queuedOf(o, 'caravan') < 2 && ready(o, 'market').length && afford(p, UNIT.caravan.cost))
 		train(o, 'caravan');
 	for (const c of cs)
 		if (!c.route && (G.tick + c.id) % 300 < 30) {
 			const t = bestTarget(o, c);
-			if (t) setRoute(c, t, true, true);
+			if (t) setRoute(c, t, true, false); // no spice: a computer never sells it, so it bought what it never used (D3)
 		}
 }
 

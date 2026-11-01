@@ -30,6 +30,102 @@ function bestCounter(o) {
 	sc.sort((a, b) => b[1] - a[1]);
 	return sc[p.ai.cyc++ % Math.min(2, sc.length)][0]; // the best, mixed with the next best so an army is never one kind
 }
+// ───────────────────────── By need (answer 10, D-068; D4; W6; N7; the shift to plots): one plan, read by every choice of work
+// T_left, the seconds to the bell. A conquest has no bell: its horizon is open, so there only the rate tests bind
+const timeLeft = () => (MODES[G.mode].secs ? Math.max(0, MODES[G.mode].secs - G.t) : Infinity);
+// what one more worker earns on r from home: the forager's rate R at the best free find it can walk to, walk and crowd counted (decision 1);
+// wild: natural finds only, no plot
+function rateFrom(o, r, k, wild) {
+	const b = bestNode({ x: k.x, y: k.y, owner: o, node: null, carry: 0, wild }, r, undefined, regionAt(k, o));
+	return b ? b.R : 0;
+}
+// the goal: the first the personality wants of the next age, a building, an army (PERS.goals); its cost is what the hands work toward.
+// The next age is a goal from the start; once the town is big enough to save for it (ageReady, below), it is the goal for every personality
+function goalOf(p, per, A, saving) {
+	const o = p.id,
+		armyN = soldiersOf(o).length + queuedOf(o) - queuedOf(o, 'vil');
+	if (saving) return { what: 'age', cost: A.cost }; // once the town saves for the age, every personality works toward it
+	for (const g of per.goals) {
+		if (g === 'age' && A && !p.aging) return { what: 'age', cost: A.cost };
+		if (g === 'army' && armyN < armyAim(p)) {
+			const want = civKind(o, p.ai.want || 'spear'),
+				at = UNIT[want].at;
+			if (!bldsOf(o, at).length) return { what: at, cost: BLD[at].cost }; // an army starts with the place that trains it
+			return { what: 'army', cost: scaled(unitCost(o, want), Math.min(per.waveMin, armyAim(p) - armyN)) }; // the next wave
+		}
+		if (g === 'build') {
+			const b = per.build.find(([kind, age, n, army]) => p.age >= age && bldsOf(o, kind).length < n && armyN >= army);
+			if (b) return { what: b[0], cost: BLD[b[0]].cost };
+		}
+	}
+	return null;
+}
+// For each resource: the hands on it (n), what one earns there now (rho, a second), the income (less its steady draw: what the store
+// feeds, and a growing town's villagers), the
+// shortfall against the goal and the time to afford it (shortfall ÷ income, Albert's rule)
+function needOf(p, vils, cost, k, draw = {}) {
+	const o = p.id,
+		plan = {};
+	for (const r of RES) {
+		const key = KEY[r];
+		let n = 0,
+			sum = 0,
+			m = 0;
+		for (const v of vils)
+			if (v.job === r) {
+				n++;
+				const x = forageNow(v);
+				if (x > 0) {
+					sum += x;
+					m++;
+				}
+			}
+		const rho = m ? sum / m : rateFrom(o, r, k),
+			inc = n * rho - (draw[r] || 0),
+			short = Math.max(0, (cost[key] || 0) - (p.res[key] || 0));
+		plan[r] = { n, rho, inc, short, t: short ? (inc > 0 ? short / inc : Infinity) : 0 };
+	}
+	return plan;
+}
+// The reorder point (W6, the famine runway; and any resource a worker would leave): runway = (store − what the goal holds of it) ÷
+// (demand − gathered). Under the lead time to rebuild the income (the hands it takes, moved one a beat, plus the first load at the find,
+// c ÷ rho), or under the time until the goal is afforded, the store runs out first (reorder point = demand over the lead time). For food
+// the demand is what the store feeds
+function runsOut(p, r, P, n, demand, hold = 0, until = 0) {
+	const gap = demand - n * P.rho;
+	if (gap <= 0) return false;
+	const hands = P.rho > 0 ? Math.ceil(gap / P.rho) : Infinity,
+		lead = hands * react() + carryOf(p.id) / Math.max(1e-6, P.rho);
+	return ((p.res[KEY[r]] || 0) - hold) / gap < Math.max(lead, until);
+}
+const famineNear = (p, plan) => runsOut(p, 'food', plan.food, plan.food.n, (p.eats || 0) / 60);
+// The shift to plots (Albert, answer 10): a field, a tree farm, a quarry, the Mint or a foundry is built, or a free one staffed, when its rate
+// beats the best natural find's (the forager's rate, walk counted: the marginal value test) and the gain pays its cost in the time left, or
+// in the plot's own life if shorter (payback: (R_plot − R_wild) × T > cost)
+const PLOTS = { farm: 'food', treefarm: 'wood', quarry: 'stone', mint: 'gold', foundry: 'iron' },
+	PLOT_AT = [60, 170]; // a plot goes 60 to 170 from the Town Center; judged at the middle of that band
+function plotPays(o, kind, k) {
+	const B = BLD[kind],
+		r = B.crop,
+		mk = B.makes && B.makes[r],
+		n = { kind: 'farm', type: r, rate: mk ? mk.rate : B.rate, x: k.x, y: k.y + (PLOT_AT[0] + PLOT_AT[1]) / 2, amt: Infinity, farm: { kind, owner: o } },
+		plot = forage({ x: n.x, y: n.y, owner: o, node: n, carry: 0 }, n),
+		wild = rateFrom(o, r, k, true),
+		T = Math.min(timeLeft(), B.reserve ? B.reserve / Math.max(1e-6, plot) : Infinity);
+	return plot > wild && (plot - wild) * T > sumCost(B.cost);
+}
+// the army a side keeps: its ceiling, and at peace with every court the share it keeps when it stands down (N8: it retrained them at once)
+const peaceAll = (o) =>
+	!G.P.some((q) => q.alive && q.id !== WILD && q.id !== o && (atWar(o, q.id) || noticeLeft(o, q.id) || noticeLeft(q.id, o)));
+const armyAim = (p) => Math.ceil(armyCap(p) * (peaceAll(p.id) ? PEACE.stand.keep : 1));
+// the first step a wanted research waits on (D2: the lists name what they want; the steps before it are found, not typed)
+function firstNeed(o, id) {
+	const p = G.P[o],
+		T = TECHBY[id];
+	if (!T || p.techs.has(id) || (T.civ && T.civ !== p.civ)) return null;
+	for (const n of needsOf(T)) if (!p.techs.has(n)) return firstNeed(o, n);
+	return id;
+}
 function think(p) {
 	const o = p.id,
 		per = PERS[p.pers],
@@ -37,7 +133,6 @@ function think(p) {
 	if (!k) return;
 	const R = p.res,
 		vils = unitsOf(o, 'vil'),
-		nV = vils.length + queuedOf(o, 'vil'),
 		building = (kind) => bldsOf(o, kind).some((b) => b.prog < 1);
 	const has = (kind) => bldsOf(o, kind).length,
 		armyN = soldiersOf(o).length,
@@ -53,9 +148,17 @@ function think(p) {
 			if (b.owner === o && b.hp > 0 && b.prog < 1 && !vils.some((v) => v.rep === b && v.job === 'repair'))
 				autoBuilder(o, b);
 	}
-	// shelter before it is needed
-	if (!building('house') && !building('apartment') && popOf(o) + queuedOf(o) >= capOf(o) - 2 && capOf(o) < POPMAX)
-		put(p.age >= 2 && R.s >= 60 && R.w >= 120 ? 'apartment' : 'house', k.x, k.y, 60, 190);
+	// shelter before it is needed; a house it cannot yet afford is due, and the hands work toward it (by need, below)
+	const due = {};
+	if (
+		!building('house') &&
+		!building('apartment') &&
+		popOf(o) + queuedOf(o) >= capOf(o) - 2 &&
+		capOf(o) < POPMAX &&
+		!put(p.age >= 2 && R.s >= 60 && R.w >= 120 ? 'apartment' : 'house', k.x, k.y, 60, 190) &&
+		!afford(p, BLD.house.cost)
+	)
+		addRes(due, BLD.house.cost);
 	// drop-offs where the work is
 	for (const [type, kind] of [
 		['food', 'mill'],
@@ -71,29 +174,32 @@ function think(p) {
 		if (d && dist(d, n) < 110) continue;
 		put(kind, n.x, n.y, 30, 70);
 	}
-	// food from the ground once the berries near home are gone; wood from tree farms once the forest thins
-	const bushes = G.nodes.filter((n) => n.kind === 'bush' && dist(n, k) < 300).length,
-		farms = has('farm');
-	if ((bushes < 3 || jobsN('food') > bushes + 4) && farms < Math.ceil(jobsN('food') / slotsOf()) && R.w >= 60)
-		put('farm', k.x, k.y, 60, 170); // a field for every food worker: a field holds slotsOf() (one) worker. Until Build 59 this counted three a field, so two in three food workers walked to far bushes
-	const trees = G.nodes.filter((n) => n.kind === 'tree' && dist(n, k) < 300).length;
-	if (trees < 6 && has('treefarm') < Math.min(4, Math.max(1, jobsN('wood') - 2)) && R.w >= 80)
-		put('treefarm', k.x, k.y, 60, 170);
-	if (farms >= 3 && !has('mill')) put('mill', k.x, k.y, 90, 170);
-	// the ages: once the town is big enough, save for the next one
+	// plots (the shift to plots): one at a time, no more than the hands on its resource, while the plot beats the wild and pays its cost back;
+	// one it wants and cannot yet afford is due, as a house is
+	for (const [kind, r] of Object.entries(PLOTS))
+		if (p.age >= BLD[kind].age && !building(kind) && has(kind) * slotsOf() < jobsN(r) && plotPays(o, kind, k)) {
+			if (put(kind, k.x, k.y, PLOT_AT[0], PLOT_AT[1])) break;
+			if (!afford(p, BLD[kind].cost)) addRes(due, BLD[kind].cost);
+			break;
+		}
+	if (has('farm') >= 3 && !has('mill')) put('mill', k.x, k.y, 90, 170);
 	// the ages: once the town is big enough, save for the next one. Every personality climbs every age it can reach (Build 59: Raiders stopped at
-	// Classical and the Fortress at Medieval by a number in PERS, so neither could reach the peace age; a personality is how a side plays, not where it stops)
-	const ageReady =
-		!!nextAge(o) && !p.aging && vils.length >= Math.min(per.vils, 12 + p.age * 4) && armyN >= per.ageArmy;
+	// Classical and the Fortress at Medieval by a number in PERS, so neither could reach the peace age; a personality is how a side plays, not where it stops).
+	// A save once begun holds until the age is bought or out of reach (D5: it was dropped whenever a death took the town under the mark, 3 to 14 times a game)
+	const nx = nextAge(o),
+		ageReady =
+			!!nx &&
+			!p.aging &&
+			((p.ai.save && p.ai.save.age === p.age + 1) || (vils.length >= 12 + p.age * 4 && armyN >= per.ageArmy));
 	if (ageReady) ageUp(o);
 	// saving holds while it works: other spending waits as long as the store is still filling toward the age; only when it has not grown for
 	// SAVE.stall seconds (a resource out of reach) does the side spend freely for SAVE.spend seconds. Until Build 59 the window opened every 150 s
 	// whatever happened, and a minute of spending emptied what 90 s had saved, so a side could "save" for twenty minutes and never arrive.
-	const A = ageReady && !p.aging ? nextAge(o) : null,
+	const A = ageReady && !p.aging ? nx : null,
 		have = A ? Object.entries(A.cost).reduce((s, [r, c]) => s + Math.min(R[r] || 0, c), 0) / sumCost(A.cost) : 0;
 	if (!A) p.ai.save = null;
 	else {
-		const S = p.ai.save || (p.ai.save = { best: have, at: G.t, until: 0 });
+		const S = p.ai.save || (p.ai.save = { age: p.age + 1, best: have, at: G.t, until: 0 });
 		if (have > S.best + SAVE.step) {
 			S.best = have;
 			S.at = G.t;
@@ -108,8 +214,7 @@ function think(p) {
 	const saving = !!A && !threat && !(p.ai.save && G.t < p.ai.save.until),
 		need = saving ? A.cost : {};
 	p.ai.saving = saving ? 1 : threat && A ? 2 : 0; // for the harness: 1 saving, 2 not saving because of a threat at home
-	const foodShort = saving && (need.f || 0) > R.f;
-	if (foodShort && ready(o, 'market').length) {
+	if (saving && (need.f || 0) > R.f && ready(o, 'market').length) {
 		// saving for an age and short of food: sell a surplus for gold, then buy food with the gold above the age cost (Build 42)
 		for (const r of ['w', 's', 'i'])
 			if (R[r] > (need[r] || 0) + 600) {
@@ -118,7 +223,21 @@ function think(p) {
 			}
 		if (R.g > (need.g || 0) + 150) marketTrade(o, 'f', 'buy');
 	}
-	if (nV < per.vils && k.q.length < 2 && (!saving || R.f >= (need.f || 0) + 50)) train(o, 'vil');
+	// villagers: housing is the only ceiling, as for every side (N7). The town grows while one more villager pays its cost in the time left:
+	// ΔR × T_left > c, ΔR the rate at the best free find from home (the payback test on Charnov's marginal value). Growing is a steady draw:
+	// one villager's cost and its share of a house over its training time, the Town Center kept busy (by need, below)
+	const grow =
+			clsCount(o, 'civ') < clsMax('civ', o) &&
+			Math.max(...RES.map((r) => rateFrom(o, r, k))) * timeLeft() > sumCost(unitCost(o, 'vil')),
+		draw = { food: (p.eats || 0) / 60 };
+	if (grow) {
+		if (k.q.length < 2 && (!saving || R.f >= (need.f || 0) + 50)) train(o, 'vil');
+		const each = addRes(addRes({}, unitCost(o, 'vil')), BLD.house.cost, 1 / Math.max(1, roomOf(o, 'house'))); // a villager and its share of a house
+		for (const [key, c] of Object.entries(each)) {
+			const r = RES.find((x) => KEY[x] === key);
+			draw[r] = (draw[r] || 0) + c / (UNIT.vil.t * stats(o, 'vil').train);
+		}
+	}
 	if (!saving && !unitsOf(o, 'scout').length && G.t > 60 && R.f > 200 && !queuedOf(o, 'scout')) train(o, 'scout'); // a lost scout is not replaced while saving for an age (Build 59: up to 13 a game were, 80 food each)
 	// what to build, in this personality's order
 	for (const [kind, age, n, army, stock] of per.build)
@@ -221,7 +340,7 @@ function think(p) {
 					break;
 				}
 	}
-	aiEconomy(p, k, R, put, has);
+	aiEconomy(p, k, R, put, has, saving);
 	if (
 		per.spy &&
 		ready(o, 'courthouse').length &&
@@ -233,7 +352,7 @@ function think(p) {
 	if (!saving) {
 		let did = false;
 		for (const id of p.civ ? [...per.techs, 'elite_' + p.civ] : per.techs)
-			if (research(o, id)) {
+			if (research(o, firstNeed(o, id) || id)) {
 				did = true;
 				break;
 			} // their own elite rank last
@@ -241,70 +360,85 @@ function think(p) {
 			for (const t of TECH) if ((!t.civ || t.civ === p.civ) && isNext(o, t) && research(o, t.id)) break;
 	} // then whatever line is open: the tree is deep now
 	// the army: the counter to what the enemies field; with Muster and gold to spare, eight at once from the War Council
-	if (!saving && p.techs.has('muster') && armyN + queuedOf(o) - queuedOf(o, 'vil') + 8 <= armyCap(p)) {
-		const want = bestCounter(o);
+	// the army it keeps (armyAim: at peace with every court, the share it stood down to, N8)
+	if (!saving && p.techs.has('muster') && armyN + queuedOf(o) - queuedOf(o, 'vil') + 8 <= armyAim(p)) {
+		const want = (p.ai.want = bestCounter(o));
 		if (want) muster(o, { [civKind(o, want)]: 8 });
 	}
-	if (
-		!saving &&
-		armyN + queuedOf(o) - queuedOf(o, 'vil') < armyCap(p) &&
-		vils.length >= Math.min(per.vils, per.early)
-	) {
-		const want = bestCounter(o);
+	if (!saving && armyN + queuedOf(o) - queuedOf(o, 'vil') < armyAim(p) && vils.length >= per.early) {
+		const want = (p.ai.want = bestCounter(o));
 		if (want) train(o, want);
 	}
-	// jobs: move one villager a beat toward the personality's mix
-	const mix = { ...per.mix };
-	if (p.age === 0) {
-		mix.food += mix.stone * 0.5 + mix.gold * 0.3;
-		mix.wood += mix.stone * 0.5 + mix.gold * 0.2;
-		mix.stone = 0;
-		mix.gold *= 0.5;
+	// jobs, by need (answer 10, D4): the goal plus what the town must buy now (a house when it is due, a plot it wants and cannot afford) is
+	// the cost; the bottleneck is the resource with the longest time to afford it (food first when the famine runway is short). A new villager
+	// goes there; one worker a beat moves there from a resource the goal does not need whose store does not then run out (the reorder point),
+	// or from one whose time stays under the bottleneck's after the move (minimax). With nothing short, the personality's mix as before.
+	const goal = goalOf(p, per, nx, saving),
+		cost = addRes({ ...(goal ? goal.cost : {}) }, due),
+		plan = needOf(p, vils, cost, k, draw),
+		famine = famineNear(p, plan),
+		order = RES.filter((r) => plan[r].t > 0 || (famine && r === 'food')).sort(
+			(a, b) => (famine ? (b === 'food') - (a === 'food') : 0) || plan[b].t - plan[a].t,
+		);
+	p.ai.goal = goal && goal.what; // for the harness
+	p.ai.need = order[0] || null;
+	const idle = vils.find((v) => !v.job && !v.inside); // a villager with no job yet (a waiting one is placed by need below)
+	if (order.length) {
+		const b = order[0],
+			tb = famine && b === 'food' ? Infinity : plan[b].t;
+		if (idle) idle.job = b;
+		else {
+			let d = null,
+				dv = -Infinity;
+			for (const r of RES) {
+				const P = plan[r];
+				if (r === b || P.n < 1 || (famine && r === 'food')) continue;
+				const after = P.short ? (P.inc - P.rho > 0 ? P.short / (P.inc - P.rho) : Infinity) : 0;
+				if (P.short ? after >= tb : runsOut(p, r, P, P.n - 1, outOf(p, KEY[r]) / 60, cost[KEY[r]] || 0, isFinite(tb) ? tb : 0))
+					continue;
+				const v = P.short ? tb - after : Infinity; // a resource the goal does not need gives first
+				if (v > dv) {
+					dv = v;
+					d = r;
+				}
+			}
+			const v = d && vils.find((x) => x.job === d && x.carry < 3 && !atShop(x)); // never a shop worker (Build 60: a Mint or Foundry was emptied each time gold or iron ran over)
+			if (v) setJob(v, b);
+		}
+	} else {
+		const mix = { ...per.mix };
+		if (p.age === 0) {
+			mix.food += mix.stone * 0.5 + mix.gold * 0.3;
+			mix.wood += mix.stone * 0.5 + mix.gold * 0.2;
+			mix.stone = 0;
+			mix.gold *= 0.5;
+		}
+		if (p.age < 2) {
+			mix.wood += mix.iron;
+			mix.iron = 0;
+		} // iron is wanted from the Classical age
+		if (per.wonder && p.age >= 2) for (const r of RES) mix[r] += 0.1;
+		const tot = RES.reduce((s, r) => s + mix[r], 0) || 1,
+			short = RES.map((r) => [r, (mix[r] / tot) * vils.length - plan[r].n]).sort((a, b) => b[1] - a[1]);
+		if (idle) idle.job = short[0][0];
+		else if (short[0][1] >= 1) {
+			const v = vils.find((x) => x.job === short[short.length - 1][0] && x.carry < 3 && !atShop(x));
+			if (v) setJob(v, short[0][0]);
+		}
 	}
-	if (p.age < 2) {
-		mix.wood += mix.iron;
-		mix.iron = 0;
-	} // iron is wanted from the Classical age
-	if (per.wonder && p.age >= 2) for (const r of RES) mix[r] += 0.1;
-	if (saving) {
-		// saving for an age: hands go to what is still short of its cost, in proportion (Build 59: the mix was the personality's alone, so a side
-		// saving 500 gold for the Medieval age could keep no one on gold for twenty minutes)
-		const gap = RES.map((r) => Math.max(0, (need[KEY[r]] || 0) - R[KEY[r]])),
-			sum = gap.reduce((a, b) => a + b, 0);
-		if (sum > 0) RES.forEach((r, i) => (mix[r] += gap[i] / sum));
-	}
-	mix.food += (p.eats || 0) / 30 / Math.max(1, vils.length); // enough hands on food to feed everyone (one feeds about 8)
-	{
-		const sn = season().name,
-			keep = (p.eats || 0) * (sn === 'Autumn' || sn === 'Winter' ? 4 : 2);
-		if (p.hungry || R.f < keep || foodShort) mix.food += 0.3;
-	} // fields barely grow in winter: lay in food for it, as farmers did   // hungry, or food for less than two minutes: more on food
-	for (const r of RES) {
-		const have = R[KEY[r]];
-		if (have > 600) mix[r] *= 0.4;
-		else if (have < 100 && mix[r] > 0) mix[r] *= 1.6;
-	}
-	const tot = RES.reduce((s, r) => s + mix[r], 0) || 1;
-	for (const r of RES) mix[r] /= tot;
-	const idle = vils.find((v) => !v.job && !v.inside), // a villager with no job yet (a waiting one is placed by need below)
-		short = RES.map((r) => [r, mix[r] * vils.length - jobsN(r)]).sort((a, b) => b[1] - a[1]);
-	if (idle) idle.job = short[0][0];
-	else if (short[0][1] >= 1) {
-		const over = short[short.length - 1][0],
-			v = vils.find((x) => x.job === over && x.carry < 3 && !atShop(x)); // never a shop worker (Build 60: a Mint or Foundry was emptied each time gold or iron ran over)
-		if (v) setJob(v, short[0][0]);
-	}
-	// a villager waiting with no find in reach (its Zs) is put to the job whose best free find pays most: the forager's rate R at that find,
-	// its walk out counted and the crowd already there (g ÷ (1 + others ÷ room), a hunt too), and only a find it can walk to (Charnov 1976, the
-	// marginal value theorem; the rate of decision 1). Each one sent counts in the crowd at once, so the next waiter sees it. Yours wait for your word (item 6)
+	// a villager waiting with no find in reach (its Zs) goes to the bottleneck's best free find it can walk to, then the next in need (answer 10;
+	// it was the best rate of any job, item 6); with nothing short, the job whose best free find pays most: the forager's rate R at that find,
+	// its walk out counted and the crowd already there (g ÷ (1 + others ÷ room), a hunt too; Charnov 1976). Each one sent counts in the crowd
+	// at once, so the next waiter sees it. Yours wait for your word (item 6)
 	for (const v of vils)
 		if (RES.includes(v.job) && v.idle && !v.node && !v.hunt && !v.inside) {
 			const probe = { x: v.x, y: v.y, owner: o, node: null, carry: 0 }, // a fresh order: any find of the job, not only the kind it lost
 				cm = regionAt(v, o);
 			let best = null;
-			for (const r of RES) {
+			for (const r of order.length ? order : RES) {
 				const b = bestNode(probe, r, undefined, cm);
 				if (b && (!best || b.R > best.R)) best = { ...b, r };
+				if (best && order.length) break; // by need: the first in need that has a find
 			}
 			if (!best) continue;
 			setJob(v, best.r, best.n.hunt ? null : best.n);

@@ -233,7 +233,7 @@ function trapsTick() {
 		});
 	}
 }
-// Outlaw raids: every few minutes the camp nearest the side they regard least sends robbers at its drop-offs, who come back after a spell
+// Outlaw raids: every few minutes the camp nearest the side they regard least sends robbers at one of its people, who come back after a spell
 function natRaid() {
 	// random and fair (Albert, Build 41): none before minute 10 (Easy: 16); then a random wait of 3 to 8 minutes (Hordes and gangs: half that); the band goes to a side at war with the Natives,
 	// the less regarded more likely, never the one raided last when another is open; it grows with that side's age
@@ -246,12 +246,7 @@ function natRaid() {
 	let sides = G.P.filter((p) => p.id !== WILD && !calm4b(p.id) && p.alive && keepOf(p.id) && gangRel(p.id, 'rob') === 'war'); // the raiders are robbers: their stance alone decides (Albert, Nov 1); 4b: never a computer
 	if (sides.length > 1) sides = sides.filter((p) => p.id !== N.raidLast);
 	if (!sides.length) return;
-	const w = sides.map((p) => 1 + (100 - regardOf(p.id, 'rob')) / 25),
-		tot = w.reduce((a, b) => a + b, 0);
-	let r = rng() * tot,
-		qi = 0;
-	while (qi < sides.length - 1 && (r -= w[qi]) > 0) qi++;
-	const q = sides[qi];
+	const q = sides[roulette(sides.map((p) => 1 + (100 - regardOf(p.id, 'rob')) / 25))];
 	N.raidLast = q.id;
 	const k = keepOf(q.id),
 		camps = G.finds
@@ -261,18 +256,35 @@ function natRaid() {
 	const f = camps[0],
 		R = G.units.filter((u) => u.find === f.id && u.hp > 0 && UNIT[u.kind].dmg).slice(0, NATIVE.raidN + q.age);
 	if (!R.length) return;
-	const mark =
-		nearest(G.blds, f, (b) => b.owner === q.id && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && b.kind !== 'keep') ||
-		k;
+	// the mark (N16a, Albert: chance weighted toward a load in transport, an army near puts them off, only what they can beat): of the side's
+	// villagers and caravans the band beats with their guard by the square law (the canBeat form), each is drawn with p_i = w_i / Σw,
+	// w_i = (1 + β·load_i / CARRY) / (1 + γ·guard_i), guard_i the armed strength within GROUP_R of it over the band's (roulette wheel, seeded dice)
+	const band = R.reduce((s, u) => s + unitPower(u), 0),
+		T = [],
+		W = [];
+	for (const v of G.units) {
+		if (v.owner !== q.id || v.hp <= 0 || v.inside || (v.kind !== 'vil' && v.kind !== 'caravan')) continue;
+		let guard = 0;
+		unitsNear(v, GROUP_R, (s) => {
+			if (s.owner === v.owner && isSoldier(s) && s.hp > 0 && !s.inside) guard += unitPower(s);
+		});
+		if (lanchester(band / Math.max(1e-6, unitPower(v) + guard)) <= 0.5) continue;
+		const load = (v.carry || 0) + Object.values(v.goods || {}).reduce((a, b) => a + b, 0);
+		T.push(v);
+		W.push((1 + (NATIVE.raidLoad * load) / CARRY) / (1 + (NATIVE.raidGuard * guard) / band));
+	}
+	if (!T.length) return;
+	const mark = T[roulette(W)];
 	for (const u of R) {
 		u.camp = { x: u.hx, y: u.hy };
 		u.hx = mark.x;
 		u.hy = mark.y;
+		u.aggro = mark;
 		u.horde = true;
 		u.back = G.t + NATIVE.raidSecs;
 	}
 	if (q.id === 0)
-		news('war', `Outlaws ride for your ${bldName(0, mark.kind).toLowerCase()} (${coord(mark.x, mark.y)}).`, 'warn', 7, mark);
+		news('war', `Outlaws ride for your ${UNIT[mark.kind].name.toLowerCase()} (${coord(mark.x, mark.y)}).`, 'warn', 7, mark);
 }
 function nativesTick(dt) {
 	if (G.tick % 10 === 5) trapsTick();

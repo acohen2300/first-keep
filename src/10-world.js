@@ -85,7 +85,7 @@ function mkPlayer(i, civ) {
 		tax: 'fair',
 		unrest: 0,
 		loyal: 0,
-		health: 100,
+		war: 0, // the War crown: the cost value of enemy people and buildings destroyed (N6)
 		age: 0,
 		aging: false,
 		techs: new Set(),
