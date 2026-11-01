@@ -63,9 +63,15 @@ async def main():
         # the Welcome back card holds the whole screen: reload with the save waiting, then tap round it with a real finger
         await pg.reload(); await pg.wait_for_timeout(500)
         bad += await pg.evaluate(JS, raw)
+        cam0 = await pg.evaluate("() => { const c = window.__fk.cam; window.__fk.G.follow = false; return [c.x, c.y, c.z]; }")
         await pg.locator('#tally [data-act="card:stores"]').first.click(force=True); await pg.wait_for_timeout(100)
-        box = await pg.locator('#cv').bounding_box(); await pg.mouse.click(box['x'] + box['width'] / 2, box['y'] + 140); await pg.wait_for_timeout(100)
-        await pg.mouse.wheel(0, 300); await pg.wait_for_timeout(100)
+        box = await pg.locator('#cv').bounding_box(); cx, cy = box['x'] + box['width'] / 2, box['y'] + 140
+        await pg.mouse.click(cx, cy); await pg.wait_for_timeout(100)
+        await pg.mouse.move(cx, cy); await pg.mouse.wheel(0, 400); await pg.wait_for_timeout(150)
+        await pg.mouse.move(cx, cy); await pg.mouse.down(); await pg.mouse.move(cx + 80, cy + 60, steps=6); await pg.mouse.up(); await pg.wait_for_timeout(150)
+        cam1 = await pg.evaluate("() => { const c = window.__fk.cam; return [c.x, c.y, c.z]; }")
+        if abs(cam1[2] - cam0[2]) > 1e-6: bad.append('the wheel zoomed the map behind the Welcome back card (' + str(round(cam0[2], 2)) + ' to ' + str(round(cam1[2], 2)) + ')')
+        if abs(cam1[0] - cam0[0]) > 1e-6 or abs(cam1[1] - cam0[1]) > 1e-6: bad.append('a drag moved the map behind the Welcome back card')
         card = await pg.evaluate("() => window.__fk.G.card && window.__fk.G.card.type")
         if card != 'resume': bad.append('a tap outside the Welcome back card got through: another card (' + str(card) + ') opened over it')
         if await pg.locator('#card [data-act="resume"]').count(): await pg.locator('#card [data-act="resume"]').first.click(); await pg.wait_for_timeout(200)

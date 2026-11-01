@@ -60,14 +60,16 @@ function makeNow(u, n, dt, room) {
 }
 // Where a villager waits (decision 1; Build 80 preview 9): at its drop-off, each on its own spot round the building's outline, all four sides,
 // SEARCH.gap feet apart (Albert: Hall's personal distance, 2.5 to 4 ft; OSHA 1910.142(b)(3), 36 inches), on the free lane square's middle.
-// Spot i of N walks the outline clockwise from the top-left corner. A waiter takes the free spot nearest to it (ties: the lower number), once,
-// and keeps it until it has a find again; the order of the step decides between two on one tick, so the same seed stands them the same way.
+// The outline is cut into the same whole number of parts, k, on every side, each at least SEARCH.gap feet, with a spot on every corner: then no two
+// spots are closer than the gap, the corners too (a turn puts its two neighbours √2 parts apart). Spot i of N = 4k walks it clockwise from the
+// top-left corner. A waiter takes the free spot nearest to it (ties: the lower number), once, and keeps it until it has a find again; the order
+// of the step decides between two on one tick, so the same seed stands them the same way.
 function spotAt(b, i) {
 	const R = halfOf(b) + NAVC / 2,
-		N = Math.max(4, Math.floor((8 * R) / (SEARCH.gap * FOOT))),
-		s = (((i % N) * 8 * R) / N) % (8 * R),
-		e = Math.floor(s / (2 * R)),
-		t = s - e * 2 * R - R;
+		k = Math.max(1, Math.floor((2 * R) / (SEARCH.gap * FOOT))),
+		N = 4 * k,
+		e = Math.floor((i % N) / k),
+		t = ((i % k) * 2 * R) / k - R;
 	return { N, ...[{ x: b.x + t, y: b.y - R }, { x: b.x + R, y: b.y + t }, { x: b.x - t, y: b.y + R }, { x: b.x - R, y: b.y - t }][e] };
 }
 function waitAt(u, dt, SP) {

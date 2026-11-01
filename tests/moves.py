@@ -75,6 +75,20 @@ JS2 = """() => {
       const took = run(30, () => u.node === C);
       if (!placed && took) bad.push('an unplaced villager took a find 232 from the drop-off, past the leash of ' + F.DANGER_R.far);
       if (placed && !took) bad.push('a placed villager did not take a find 72 from the spot it was placed'); } }
+  { // the anchor: a placed villager searches from where it was placed. Its find 130 from that spot (past the first look's 90) and 198 from the
+    // drop-off (past the full radius from there) is taken in time
+    const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 160); if (d) {
+    const S = bush(G, k, d, 150, 0), C = bush(G, k, d, 150, 300, 130), u = vil(G); only(u, [S, C]);
+    if (F.blockedCell(F.gcell(C.x, C.y), 0)) bad.push('the anchor test find stands on a wall: move it'); else {
+    u.x = S.x; u.y = S.y; F.setJob(u, 'food', S, S); u.carry = 0;
+    if (!run(20, () => u.node === C)) bad.push('a placed villager did not search from where it was placed: a find 130 from that spot was never taken'); } } }
+  { // the cap: a placed villager takes nothing past x + y from where it was placed, not even a friend's find (200 from it)
+    const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 110); if (d) {
+    const S = bush(G, k, d, 100, 0), D = bush(G, k, { cx: -d.cx, cy: -d.cy }, 100, 3000), u = vil(G), m = vil(G, 1); only(u, [S, D]);
+    if (F.blockedCell(F.gcell(D.x, D.y), 0)) bad.push('the cap test find stands on a wall: move it'); else {
+    m.x = D.x + 6; m.y = D.y; F.setJob(m, 'food', D); only(m, [D]);
+    u.x = S.x; u.y = S.y; F.setJob(u, 'food', S, S); u.carry = 0;
+    if (run(15, () => u.node === D)) bad.push('a placed villager took a find 200 from where it was placed, past the cap of ' + (F.SEARCH.x + F.SEARCH.y)); } } }
   { // a find a friend is working counts past the radius: 195 from the drop-off, past 180, inside the leash
     for (const friend of [false, true]) {
       const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 220); if (!d) continue;
@@ -111,7 +125,12 @@ JS2 = """() => {
       const ids = A.map((a) => a.s.i); if (new Set(ids).size !== ids.length) bad.push('two waiting villagers share one spot');
       const P = A.map((a) => F.spotAt(k, a.s.i)), R = F.halfOf(k) + 5, sides = new Set();
       for (const p of P) { const dx = p.x - k.x, dy = p.y - k.y; if (Math.abs(Math.max(Math.abs(dx), Math.abs(dy)) - R) > 0.01) bad.push('a spot is off the building outline'); sides.add(Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? 'e' : 'w') : (dy > 0 ? 's' : 'n')); }
-      for (let i = 0; i < P.length; i++) for (let j = i + 1; j < P.length; j++) if (Math.hypot(P[i].x - P[j].x, P[i].y - P[j].y) < gap - 0.01) { bad.push('two spots are closer than ' + F.SEARCH.gap + ' ft'); i = P.length; break; }
+      // every spot of every building kind, corners too, at least the gap apart, on all four sides
+      for (const kind of Object.keys(F.BLD)) { const b = { kind, x: 500, y: 500 }, N = F.spotAt(b, 0).N, Q = [], sd = new Set(); let near = Infinity;
+        for (let i = 0; i < N; i++) { const p = F.spotAt(b, i); Q.push(p); const dx = p.x - 500, dy = p.y - 500; if (Math.abs(dx) > Math.abs(dy) + 0.01) sd.add(dx > 0 ? 'e' : 'w'); else if (Math.abs(dy) > Math.abs(dx) + 0.01) sd.add(dy > 0 ? 's' : 'n'); }
+        for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) near = Math.min(near, Math.hypot(Q[i].x - Q[j].x, Q[i].y - Q[j].y));
+        if (near < gap - 0.01) { bad.push('two waiting spots at a ' + kind + ' are ' + (near / F.FOOT).toFixed(2) + ' ft apart, under ' + F.SEARCH.gap + ' ft'); break; }
+        if (sd.size < 4) { bad.push('the waiting spots at a ' + kind + ' do not go round all four sides'); break; } }
       if (sides.size < 2) bad.push('the waiters stand on one side of the building only');
       const far = A.filter((a, i) => Math.hypot(a.u.x - P[i].x, a.u.y - P[i].y) > F.ARRIVE + 3).length;
       if (far) bad.push(far + ' waiting villagers are not at their own spots (they pile up)');

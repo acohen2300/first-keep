@@ -54,6 +54,10 @@ PLANTS = [
   ('14-sim-troops.js', 'U.raid ? U.raid + 40 : WILD_LOOK,', "U.temper === 'defend' ? 45 : U.raid ? U.raid + 40 : WILD_LOOK,", 'tests/moves.py', 'boar and bear react only at 45', 'does not react'),
   ('23-view-things.js', 'B.h * Math.min(1, e.prog)', 'B.h', 'tests/moves.py', 'a site casts a full building\'s shadow', 'quarter raised'),
   ('23-view-things.js', 'if (HEX.k === k) return HEX.pts;', '', 'tests/moves.py', 'the shadow shape is made again every time', 'made again'),
+  ('13-sim-civil.js', 't = ((i % k) * 2 * R) / k - R;', 't = ((i % k) * 2 * R) / k - R + R / k / 2;', 'tests/moves.py', 'waiting spots crowd at the corners', 'ft apart, under'),
+  ('12-sim-core.js', 'u.anchor ? dist(u.anchor, n) > SEARCH.x + SEARCH.y :', 'u.anchor ? false :', 'tests/moves.py', 'no cap for a placed villager', 'past the cap'),
+  ('13-sim-civil.js', 'lost ? u.anchor || dropFor(u.owner, u.job, u) || u : undefined', 'lost ? dropFor(u.owner, u.job, u) || u : undefined', 'tests/moves.py', 'a placed villager searches from the drop-off', 'search from where it was placed'),
+  ('34-save.js', "['pointerdown', 'pointermove', 'pointerup', 'click', 'wheel']", "['pointerdown', 'pointermove', 'pointerup', 'click']", 'tests/saves.py', 'the wheel zooms behind the Welcome back card', 'the wheel zoomed'),
   ('08-core.js', '(C <= V ? 1 : V / C)', '(C <= V ? 1 : 1)', 'tests/science.py', 'Hawk-Dove always fights', 'hawk V<C'),
 ]
 

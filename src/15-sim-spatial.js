@@ -24,8 +24,8 @@ function buildGrid() {
 }
 // soldiers ignore grazing deer, drifters and wayfarers; spies are seen only up close
 // An animal (it has a temper) is left alone unless it is on one of your civilians and your side's eyes see it (decisions 8, 8b, 13), or it
-// is on the one looking: whatever attacks a soldier, animal included, is fought back (self-defence; decision 8 as Albert amended it, Oct 31)
-const onMe = (v, me) => !!me && v.tgt === me;
+// is on the soldier looking: whatever attacks a soldier, animal included, is fought back (self-defence; decision 8 as Albert amended it, Oct 31)
+const onMe = (v, me) => !!me && v.tgt === me && !!UNIT[me.kind] && isSoldier(me); // soldiers only: a tower or a cart keeps v70's rule
 const ignorable = (v, o, me) => {
 	const U = UNIT[v.kind];
 	if (U.temper) return !(onMe(v, me) || (v.tgt && v.tgt.hp > 0 && v.tgt.owner === o && hasTag(v.tgt.kind, 'civ') && groupSees(o, v)));

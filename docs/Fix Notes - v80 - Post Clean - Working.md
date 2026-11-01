@@ -44,11 +44,13 @@ One home for who a side strikes: `strikes(o, v, me)` in `15-sim-spatial` (a foe 
   - the shadow pass alone, 105 buildings: before 142 and 143 µs (zoom 0.9 and 2), after 115 and 135 µs.
 - Not done (not asked): the shadow is still cast at the roof's top height, and the art's eastward shear is not followed (QC S2, S5).
 
+**After the fresh review (same preview).** Spots: one on every corner, each side cut into k equal parts of at least 3 ft (N = 4k), so no two spots of any building are closer than 3 ft (before, the corners of the Town Center, town, dock and throne were 2.1 ft). Self-defence now for soldiers only (`onMe` checks the one looking is a soldier); towers and carts keep their previous rule. New tests: a placed villager searches from its anchor (a find 130 from it, 198 from the drop-off), its 180 cap holds even for a friend's find, every spot of every building kind is 3 ft apart on four sides, and the wheel and a drag do not move the map behind Welcome back. 35 plants, all caught.
+
 **8. Welcome back holds the whole screen.** Built. One listener on the stage, beside `cardLocked` in `34-save`: while the Resume card (or the setup card it opened, while the save is held) is up, a tap, drag or wheel anywhere but on the card goes no further. Test: with a real save waiting, boot shows the card; real taps on the stores count, the map and a wheel leave it up; its own Resume answers.
 
 ## Step 2: tests and records
 
-**9. The planted-bug check.** Rebuilt in `tests/handoff.py`: the clean copy builds, each named test passes on it (the control run), and a planted bug counts as caught only when the test fails with a FAIL line carrying the words named for that plant; a crash, a page error or a broken build catches nothing. 31 plants (was 12; the records said 13). The first run caught two tests that could not fail (the anchor test, and the event-on-load test), both fixed. Now all 31 caught.
+**9. The planted-bug check.** Rebuilt in `tests/handoff.py`: the clean copy builds, each named test passes on it (the control run), and a planted bug counts as caught only when the test fails with a FAIL line carrying the words named for that plant; a crash, a page error or a broken build catches nothing. 31 plants then, 35 after the fresh review (was 12; the records said 13). The first run caught two tests that could not fail (the anchor test, and the event-on-load test), both fixed. Now all 31 caught.
 
 **10. Tests that could pass while the behaviour was wrong.** Fixed:
 - group sight: the old test put both soldiers on one spot; now a far soldier, a blind side and the attacked villager as a non-eye.
@@ -62,7 +64,11 @@ One home for who a side strikes: `strikes(o, v, me)` in `15-sim-spatial` (a foe 
 **12. Records.** HANDOFF.md says the preview is Build 80 and what is in it. The owed list is one section of the Build List, printed by `tests/handoff.py` (no CUTS grep, no SCIENCE grep), brought up to date. SCIENCE.md has rows for the scale, the spacing, the search, the walk, the eyes, the self-defence rule, 140, the wall slide, the tie-break and arrival, and the shadow, each source marked opened or from memory; the deer and Hawk-Dove rows corrected (R4, R6). Decision 8's amendment is in the Build List and SCIENCE.md.
 
 ## Results
-Gate (four sizes), lint, START QC (31 of 31 plants caught), soak 1 to 3 × 20 min: all pass. Fingerprint accepted with the true cause (140 and self-defence, each found by taking it out alone).
+Gate (four sizes), lint, START QC (31 of 31 plants caught; 35 of 35 after the fresh review), soak 1 to 3 × 20 min: all pass. Fingerprint accepted with the true cause: the whole difference is boar and bear at 140 (self-defence out alone changes nothing), checked by taking changes out.
+
+## Unapproved assumptions, for Albert
+- `FOOT` = 2.65 world units rests on taking a villager as an adult of 5.5 ft (my number, not yours).
+- Waiting spots stand 5 units (about 1.9 ft) out from the wall, the middle of the free lane square, at least four to a building.
 
 ## Rules bent
 - RULES §0 "one home": `voiceFree` adds a small predicate to make the alert rule testable; it is the rule's one home now, `sfx` reads it.
