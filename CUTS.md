@@ -1229,3 +1229,32 @@ Tests:
 - Merge with the map: both builds raised the save shape to 40; now the map is step 39 → 40 and research step 40 → 41 (`SAVEV` 41); the saves test runs the research step from 40. The starting villagers keep the map's `PLACES.start` and research's `START_VILS` centring.
 
 - Merge fix (Nov 1, from the hunt): the Mail card scrolled 22 px with a group filter on (11 ranks). The preview switch moved into the pager rank (Previous · Hide previews · Next), and short pages are padded so Next stays put. Test plus 2 planted bugs in tests/cards.py.
+
+## Build 80, combat, spots and the computers' waiting villagers (merged Nov 1, before preview 10)
+### Combat batch (Build 80, Nov 1; Albert yes yes 01:17)
+
+**Changes**
+- C1: one hostility test, `isFoe` (08-core). Only the Natives follow relations; the rest of the wild is hostile to all, always.
+- N4/C4: half strength and no nerve for animals only, tested by kind. C2: the group includes itself. C3: own facing first. C5: nerve drained from the final damage.
+- C6: `routAt` replaces `routT`; `MORALE.capAfter` 2 s; save shape 41.
+- C7: the healing comment corrected (2.996 τ to 95% of the gap; 53.7 s for the half-dead swordsman).
+- C8: converts lose the Native flag and respect the ceiling.
+- C9: one reach (`reachOf`, `closeIn`); the petard splash records its attacker.
+- Item 5: `takeSpots`, `postTo`, `stepOut`, with the hex `LATTICE`, in one home in 13-sim-civil.
+- Item 6: the computer's brain moves waiting villagers by the forager's rate.
+- **Play fingerprint accepted:** Combat batch (Nov 1): C1 one hostility test, C2–C9, N4 animal by kind, item 5 own spots, item 6 computers move waiting villagers. Shares by turning each off: item 6 moves all 5 minutes (1539 of the count difference), C4 3 minutes (244); C1, C2, C3, C5, C6, C8, C9 and item 5 none in these 5 minutes.
+
+**Cut**
+- `routT` (the end of a rout), replaced by `routAt` + `routSecs`.
+- Five hand-written building exits (`b.y + 30`, `halfOf + 6`), replaced by `stepOut`.
+- The waiter's own spot search, replaced by `takeSpots`.
+- The wild's `U.rng + 5 + halfOf` reach, replaced by `reachOf`.
+- `Math.max(p, unitPower(u))` in `groupPower`.
+- The `v === t` test in `fromWhere`: `unitsNear` never yields the soldier itself.
+- The random `ox`/`oy` offsets at a tapped point (`qidle`, Home), replaced by `postTo`.
+
+**Tests**
+- `tests/combat.py` (new, in the gate): every item, each failing on `e4d0c82` except C7 (comment only; it holds the real heal to τ ln 10).
+- 14 planted bugs in `tests/handoff.py`.
+- Balance before and after: see `docs/Combat Notes - v80 - Post Clean - Working.md`.
+- Merge with research: both raised the save shape to 41; research is step 40 → 41, combat (C6, `routAt`) step 41 → 42 (`SAVEV` 42).
