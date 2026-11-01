@@ -12,7 +12,7 @@ files = sorted(glob.glob('src/[0-9][0-9]-*.js'))
 js = ''.join(open(f).read() for f in files)
 ui = ''.join(open(f).read() for f in files if 26 <= int(os.path.basename(f)[:2]) <= 33 or int(os.path.basename(f)[:2]) >= 39)   # touch, cards, the frame, the verbs, the row, Emergency, boot
 bad = []
-index = open('COLORS.md').read()
+index = open('docs/2 Rules/COLORS.md').read()
 named = {}   # token -> colour, read from the index's tables (the gold fill's row names two of each)
 for row in re.findall(r'^\|[^|]+\|([^|]*`--[^|]+)\|([^|]+)\|', index.split('## Retired')[0], re.M):
     for tok, hexv in zip(re.findall(r'`--([\w-]+)`', row[0]), re.findall(r'#[0-9a-fA-F]{6}', row[1])): named[tok] = hexv.lower()
