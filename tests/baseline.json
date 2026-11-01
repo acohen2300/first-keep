@@ -1,10 +1,10 @@
 {
- "why": "Build 80 preview 9: boar and bear look out to 140 again (v70's distance; preview 4's 45 was never decided), which moves minutes 2 to 5; and a soldier fights back what bites it (decision 8 amended), which moves side 1 at minute 5. Found by taking each change out alone: with those two out the fingerprint is preview 8's exactly; the villager search, group sight's eyes, the waiting spots and the steps do not move it",
+ "why": "Map 80 (decisions 2 and 5a, D1): each step measured alone against the one before. Step 1 (coordinates derived) leaves it exact; 1b (forest clearings from the real stops, camps and lodes, 5 units off before; shore-shrine leftovers cut) moves minute 2 on; decision 2 (two squares between buildings) moves minute 2 on; D1 (waves judged by progress) moves nothing in 5 minutes; 5a (map 2160, CORNER 755, the home zone, HOME_RICH, B4 cuts on the walking grid, the Throne's ring symmetric) moves minute 1 on: a new map",
  "minutes": [
-  "129/190/100/50/5/2/0 | 39/40/100/20/7/4/0 | 28/50/100/20/7/4/0 | 30/50/100/20/7/4/0 | 200/200/100/50/144/79/0",
-  "200/225/100/50/5/3/0 | 13/57/100/20/10/5/0 | 9/69/100/20/10/5/0 | 31/101/100/20/9/5/0 | 200/200/100/50/144/79/0",
-  "348/195/110/50/7/3/0 | 39/34/100/20/15/7/0 | 240/39/100/37/12/6/0 | 190/53/100/20/12/6/0 | 200/200/100/50/145/79/0",
-  "484/265/130/150/7/4/0 | 56/23/100/20/19/8/0 | 39/60/100/37/12/6/0 | 48/43/100/20/12/7/0 | 200/200/100/50/145/79/0",
-  "524/285/140/150/7/4/1 | 183/108/100/20/23/9/0 | 84/40/45/6/17/17/1 | 50/53/40/20/18/20/1 | 200/200/100/50/145/79/0"
+  "124/190/100/50/5/2/0 | 28/30/100/20/7/3/0 | 10/40/100/20/7/4/0 | 28/40/100/20/7/3/0 | 200/200/100/50/144/75/0",
+  "135/220/100/50/5/3/0 | 36/30/100/20/6/3/0 | 53/68/100/20/9/5/0 | 36/30/100/20/6/3/0 | 200/200/100/50/149/75/0",
+  "234/200/110/50/7/3/0 | 25/70/100/20/7/3/0 | 117/48/100/30/12/6/0 | 19/70/100/20/7/3/0 | 200/200/100/50/145/75/0",
+  "332/280/120/150/7/4/0 | 15/0/100/20/9/5/0 | 15/9/100/40/12/7/0 | 38/30/100/0/7/4/0 | 200/200/100/50/144/75/0",
+  "342/310/130/150/7/4/1 | 40/30/100/20/13/6/0 | 88/16/45/0/18/17/1 | 31/47/100/0/11/5/0 | 200/200/100/50/145/75/0"
  ]
 }

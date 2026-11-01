@@ -2,7 +2,7 @@
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
 const BUILD = 0; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
 const BUILD_NAME = 'Restoration'; // the version's name, shown as "v70 · Restoration" (Albert, Oct 31)
-const MAP = 2000,
+const MAP = 2160, // decision 5a (Albert, Oct 31: LOCKED at +8%): 2000 to 2160, the walking grid 216 squares a side
 	MID = MAP / 2,
 	DT = 1 / 30;
 const BN = ['Squad A', 'Squad B', 'Squad C', 'Squad D'], // four squads, slots 2 to 5 of the War page (Build 61; six before; named as drawn, Build 70)
@@ -62,8 +62,9 @@ const JOBS = RES; // a job for each resource
 // Relations: ally | peace (neutral) | war (hostile). Peace holds until a side gives NOTICE; alliance needs the other side's yes.
 const REL_WORD = { ally: 'Ally', peace: 'Neutral', war: 'Hostile' };
 // The four corners (a base rule): each Town Center CORNER from the middle on both axes, so the Throne is the same distance from all four.
-// 695, not 700: a 5-square Town Center centres on a half square; 300 and 1700 snapped to 305 and 1705 (the Raiders 14 nearer, to Build 70).
-const CORNER = 695;
+// Decision 5a: 695 to about 751 (+8%). 755, not 751: a 5-square Town Center centres on a half square, and 751 snaps to 755 at every corner
+// (MID − 751 = 329 snaps to 325); typed as what it is. Neighbours 1,510 apart; behind each Town Center MID − CORNER = 325 to the edge.
+const CORNER = 755;
 const PLAYERS = [
 	{ name: 'You', pers: 'human', color: '#4f93e6', keep: [MID - CORNER, MID + CORNER] },
 	{ name: 'Raiders', pers: 'aggr', color: '#de5a44', keep: [MID - CORNER, MID - CORNER] },

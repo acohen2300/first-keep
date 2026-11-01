@@ -6,6 +6,7 @@ JS = """() => {
   const F = window.__fk, bad = []; F.newGame(7); F.act('close'); F.setPause(false); let G = F.G;
   // decision 10: two on one spot part, the same way every time
   const v = G.units.filter((u) => u.owner === 0 && u.kind === 'vil').slice(0, 2);
+  v[0].x = F.keepOf(0).x + 60; v[0].y = F.keepOf(0).y - 60;   // on open ground: the first villagers can start on the Town Center's own squares
   const run = () => { v[1].x = v[0].x; v[1].y = v[0].y; F.pushApart(v[0], v[1]); return [v[0].x - v[1].x, v[0].y - v[1].y]; };
   const a = run(), b = run();
   if (Math.hypot(a[0], a[1]) < 1) bad.push('two villagers on one spot did not part');

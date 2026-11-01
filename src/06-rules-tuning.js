@@ -316,7 +316,7 @@ const MKTK = [...GOODK, 'f', 'w', 's', 'i'];
 const RATE_OF = { bush: 0.9, fish: 0.8, tree: 0.75, stone: 0.55, gold: 0.6, iron: 0.5, meat: 1.2 }; // what a villager gathers a second from each kind of find (fields carry their own rate)
 
 // The land's character: each game rolls one, the same for all four corners (fair), so no two games share a map. amt: what each resource
-// is worth there; extra: one more deposit of its specialty, farther out; spread: how far the rings may stretch; turn: how far the home pocket may swing.
+// is worth there; extra: one more deposit of its specialty, farther out; spread: how far the rings may stretch.
 const LAND = {
 	fertile: { name: 'Fertile land', amt: { food: 1.4, wood: 1, stone: 0.8, gold: 1, iron: 1 }, extra: 'bush' },
 	timber: { name: 'Timberland', amt: { food: 1, wood: 1.35, stone: 1, gold: 0.8, iron: 1 }, extra: null },
@@ -324,11 +324,15 @@ const LAND = {
 	golden: { name: 'Gold country', amt: { food: 1, wood: 0.85, stone: 1, gold: 1.5, iron: 1 }, extra: 'gold' },
 };
 const LANDK = Object.keys(LAND),
-	SPREAD = [0.85, 1.25],
-	TURN = 0.5;
+	SPREAD = [0.85, 1.25];
 // The map's base rules (Albert, Build 70): a flat page, four corners (CORNER), the same clear radius and home finds in every corner, the
 // Throne at the middle. All else is random from the one randomizer, laid once: no measure, no reshuffle. CLEAR: no forest or water within it.
 const CLEAR = 360;
+// The home zone (decision 5a, Albert, Oct 31; the same three numbers in every corner): clear, no find within it of the Town Center; the five
+// home finds (HOME_IDS in 10) each at random in the band from clear to clear + band, in the pocket behind the Town Center; rich, their
+// amounts over today's pocket (HOME_RICH 1.18, on top of RICH); and the radius CLEAR above, no forest or water within it. Everything else
+// is random, outside the band. Fallback if the 100-seed placement test fails (decision 5a): clear 190.
+const HOME = { clear: 200, band: 60, rich: 1.18 };
 // Between two buildings (decision 2, Albert, Oct 31): LANE squares at least. A gap is passable only if wider than a figure (2r); the slit rule
 // shuts a one-square gap because the drawn figure is wider than it (Build 41), so two. Walls, gates and crops may touch.
 const LANE = 2;

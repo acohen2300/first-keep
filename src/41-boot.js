@@ -177,6 +177,10 @@ window.__fk = {
 	get cam() {
 		return cam;
 	},
+	get view() {
+		return { cw, ch, vy, bandH };
+	},
+	clampCam,
 	set G(v) {
 		G = v;
 	},
@@ -360,6 +364,10 @@ window.__fk = {
 	cross,
 	compOf,
 	decideWar,
+	HOME,
+	LAND,
+	RICH,
+	LAYOUT,
 	WAVE,
 	scoreAll,
 	hurt,

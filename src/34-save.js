@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 39; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 40; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -119,6 +119,46 @@ const MIGRATE = {
 		S.v = 39;
 		return S;
 	}, // Build 70: Battle stations is cut; a game saved in it is in All hands (its soldiers' half), with no villager's work noted (it moved none)
+	39: (S) => {
+		const D = MID - 1000, // shape 39 was laid on the 2000 map (MID 1000): the old game is set down in the middle of the new one
+			k = Math.round(D / FOG),
+			n0 = 2000 / FOG,
+			PAIRS = [
+				['x', 'y'],
+				['px', 'py'],
+				['hx', 'hy'],
+				['hax', 'hay'],
+				['kx', 'ky'],
+			],
+			walk = (o) => {
+				if (!o || typeof o !== 'object') return;
+				if (Array.isArray(o)) return o.forEach(walk);
+				for (const [a, b] of PAIRS) if (typeof o[a] === 'number' && typeof o[b] === 'number') (o[a] += D), (o[b] += D);
+				for (const key in o) if (key !== 'fog' && key !== 'tread') walk(o[key]);
+			},
+			grid = (b64, w) => {
+				const s = atob(b64),
+					o = new Uint8Array(FOGN * FOGN * w);
+				for (let j = 0; j < n0; j++)
+					for (let i = 0; i < n0 * w; i++) o[((j + k) * FOGN + k) * w + i] = s.charCodeAt(j * n0 * w + i) || 0;
+				return btoa(String.fromCharCode(...o));
+			}; // the fog and the ruts, square for square
+		walk(S);
+		for (const n of S.nodes || []) if (Array.isArray(n)) (n[1] += D), (n[2] += D); // a tree: [id, x, y, amt, max]
+		for (const b of S.blds || []) (b.gx += D / NAVC), (b.gy += D / NAVC);
+		for (const p of S.P || []) {
+			if (p.keep) p.keep = p.keep.map((v) => v + D);
+			p.ai = { ...p.ai, cool: {} };
+			if (p.wave) {
+				const u = (S.units || []).find((u) => u.owner === p.id && u.state === 'attack');
+				p.wave = { ...p.wave, to: u ? u.target : null, bid: u ? u.bid || null : null, d: 1e9, pt: S.t };
+			}
+		}
+		if (S.fog) S.fog = grid(S.fog, 1);
+		if (S.tread) S.tread = grid(S.tread, 2);
+		S.v = 40;
+		return S;
+	}, // decision 5a: the map from 2000 to 2160; a wave is judged by its progress (D1)
 };
 const evSave = () => {
 	const V = G.ev || {},

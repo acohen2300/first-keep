@@ -59,6 +59,15 @@ PLANTS = [
   ('13-sim-civil.js', 'lost ? u.anchor || dropFor(u.owner, u.job, u) || u : undefined', 'lost ? dropFor(u.owner, u.job, u) || u : undefined', 'tests/moves.py', 'a placed villager searches from the drop-off', 'search from where it was placed'),
   ('34-save.js', "['pointerdown', 'pointermove', 'pointerup', 'click', 'wheel']", "['pointerdown', 'pointermove', 'pointerup', 'click']", 'tests/saves.py', 'the wheel zooms behind the Welcome back card', 'the wheel zoomed'),
   ('08-core.js', '(C <= V ? 1 : V / C)', '(C <= V ? 1 : 1)', 'tests/science.py', 'Hawk-Dove always fights', 'hawk V<C'),
+  # the map (decisions 2 and 5a, D1, B4; tests/map.py)
+  ('09-nav.js', 'm = B.wallish ? 0 : LANE;', 'm = B.wallish ? 0 : 1;', 'tests/map.py', 'a one-square gap between buildings is allowed', 'two squares between buildings'),
+  ('17-ai.js', 'const stalled = G.t - w.pt > WAVE.stall;', 'const stalled = !out.some((u) => G.t - (u.hitT || -99) < 30) && G.t - w.t > 45;', 'tests/map.py', 'a wave walking nearer is recalled at 45 s', 'judged by its progress'),
+  ('17-ai.js', 'if (stalled) p.ai.cool[w.to] = G.t + WAVE.cool;', ';', 'tests/map.py', 'a stalled wave goes straight back at the same target', 'judged by its progress'),
+  ('10-world.js', "180 * RICH * HOME.rich", "180 * RICH", 'tests/map.py', 'the home berries without HOME_RICH', 'the home zone'),
+  ('10-world.js', 'up = Math.max(0, out + clr - lo);', 'up = 0;', 'tests/map.py', 'a wild find inside the home band', 'the home zone'),
+  ('10-world.js', '\topenWays(woods);', '', 'tests/map.py', 'finds walled in by forest (B4)', 'the home zone'),
+  ('10-world.js', '(c + i) * NAVC, (c + j) * NAVC)', '(c + i + 0.5) * NAVC, (c + j + 0.5) * NAVC)', 'tests/map.py', "the Throne's ring half a square off", 'symmetric about it'),
+  ('34-save.js', 'for (const b of S.blds || []) (b.gx += D / NAVC), (b.gy += D / NAVC);', ';', 'tests/map.py', 'an old save leaves buildings on their old squares', 'opens in the middle'),
 ]
 
 def plant_check():

@@ -41,7 +41,7 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
     if (!(dry > snow && snow > ice1 && ice20 > ice1)) out.push('traction order: ' + [dry, snow, ice1, ice20].map((v) => v.toFixed(2)).join(' '));
     c.T = -1; near('slip on ice, a walker', F.slipChance({ x: 100, y: 100 }, F.CLIMATE.mu.need.foot), 1 / (1 + Math.exp(-(F.CLIMATE.mu.need.foot - ice1) / F.CLIMATE.mu.soft)), 1e-9); Object.assign(c, was); }
   // ruts: depth grows as passes^0.4 toward full at n0 (USFS trafficability)
-  { const T = F.ruts(), i = 5 * 50 + 5; const was = T[i]; T[i] = F.CLIMATE.rut.n0 / 4; near('rut quarter', F.rutOf(5 * 40 + 1, 5 * 40 + 1), F.CLIMATE.rut.deep * 0.25 ** 0.4, 1e-9); T[i] = was; }
+  { const T = F.ruts(), i = 5 * Math.ceil(F.MAP / 40) + 5; const was = T[i]; T[i] = F.CLIMATE.rut.n0 / 4; near('rut quarter', F.rutOf(5 * 40 + 1, 5 * 40 + 1), F.CLIMATE.rut.deep * 0.25 ** 0.4, 1e-9); T[i] = was; }
   // sound (ISO 9613-2): full within d0, then the inverse-square law: twice the distance is half the amplitude (−6 dB), less the air's small take
   // the ear at a height (Build 64): at the closest zoom a sound under the camera is full; zoom out twice as far, half the amplitude (−6 dB); along the ground, twice the slant distance is half
   { const z0 = F.cam.z, H = (z) => F.camH(z), air = (s) => 10 ** ((-F.SOUND.alphaKm * s * F.SOUND.metre) / 1000 / 20);
