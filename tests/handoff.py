@@ -135,6 +135,11 @@ PLANTS = [
   ('10-world.js', ' || N.some(([nx, ny]) => inBack(nx, ny))) continue;', ') continue;', 'tests/map.py', 'zone 2 and the wild laid in zone 1', 'the home zones'),
   ('10-world.js', 'Math.min(nx, ny) >= lo + BACK.edge))', 'Math.min(nx, ny) >= lo + gap))', 'tests/map.py', 'zone 1 two squares from the map edge, under half a tap', 'the home zones'),
   ('10-world.js', 'clr = back ? ext + gap / 2 : c0;', 'clr = back ? ext : c0;', 'tests/map.py', 'zone 1 without its two-square gaps', 'the home zones'),
+  # the ghost (Albert, Nov 1 12:48): no build grid, no footprint box; the art tinted by canPlace
+  ('24-view-overlays.js', '\tdrawGuides(sp, n / 2);\n\tconst s = quant', '\tctx.beginPath();\n\tfor (let i = 0; i <= B.fp; i++) ctx.lineTo(SX(sp.x + i * NAVC), SY(sp.y));\n\tctx.stroke();\n\tdrawGuides(sp, n / 2);\n\tconst s = quant', 'tests/map.py', 'the build grid drawn under the ghost', 'the ghost:'),
+  ('24-view-overlays.js', '\tdrawGuides(sp, n / 2);\n\tconst s = quant', '\tctx.strokeRect(SX(sp.x - n / 2), SY(sp.y - n / 2), n * z, n * z * TILT);\n\tdrawGuides(sp, n / 2);\n\tconst s = quant', 'tests/map.py', 'the footprint box drawn round the ghost', 'the ghost:'),
+  ('24-view-overlays.js', 'stamp(ghostTint(c, ok),', 'stamp(ghostTint(c, !ok),', 'tests/map.py', 'the ghost tinted against canPlace', 'the ghost:'),
+  ('24-view-overlays.js', 'stamp(ghostTint(c, ok),', 'stamp(c,', 'tests/map.py', 'the ghost not tinted', 'the ghost:'),
   ('10-world.js', 'for (let t = 0; t < SEEK.most; t++) {', 'for (let t = 0; t < 30; t++) {', 'tests/map.py', 'a find with no room is dropped, not searched outward', 'the home zone'),
   ('10-world.js', 'for (let r = SEEK.step; wet(p) && r < MID; r += SEEK.step)', 'for (let r = SEEK.step; false; r += SEEK.step)', 'tests/map.py', 'a runway deposit left where it clashes', 'the home zone'),
   ('10-world.js', '...at(12, 0), 500 * RICH)', '...at(-10, 0), 500 * RICH)', 'tests/map.py', 'a lode nearer one corner than the other', 'the home zone'),

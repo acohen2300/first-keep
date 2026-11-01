@@ -155,6 +155,29 @@ MIGRATE = """(O) => {
   const off = G.units.filter((u) => !(u.x >= 0 && u.y >= 0 && u.x <= F.MAP && u.y <= F.MAP)).length; if (off) bad.push(off + ' units off the map after 90 s');
   return bad; }"""
 
+# The ghost (Albert, Nov 1): while a building is placed no build grid and no footprint box is drawn (no line, no rectangle besides its
+# label's), and the ghost's own art is tinted green where canPlace says it fits and red where it does not. Driven through the real
+# drawGhost, away from your buildings so no line-up guide is due, with the glass's drawing calls counted.
+GHOST = """() => {
+  const F = window.__fk, bad = []; F.SET.scen = 'open'; F.newGame(5); F.act('close'); F.ui(true); const G = F.G, k = F.keepOf(0), ctx = F.ctx, calls = { line: 0, rect: 0, img: [] };
+  const spy = (m, f) => { const o = ctx[m]; ctx[m] = function (...a) { f(a); return o.apply(this, a); }; return () => { ctx[m] = o; }; };
+  const shade = (c) => { const g = c.getContext('2d'), d = g.getImageData(0, 0, c.width, c.height).data; let r = 0, gr = 0; for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 200) { r += d[i]; gr += d[i + 1]; } return gr - r; };
+  const look = (x, y) => { G.place = { kind: 'house', at: { x, y }, pts: [], cells: null }; F.cam.x = x; F.cam.y = y; F.clampCam(); calls.line = 0; calls.rect = 0; calls.img = [];
+    const un = [spy('lineTo', () => calls.line++), spy('strokeRect', () => calls.rect++), spy('fillRect', () => calls.rect++), spy('drawImage', (a) => calls.img.push(a[0]))];
+    try { F.drawGhost(); } finally { un.forEach((f) => f()); }
+    const art = calls.img.find((c) => c && c.ax !== undefined && c.width > 8); return { why: F.canPlace(0, 'house', x, y), art }; };
+  let fit = null, no = null;
+  for (let r = 200; r < 600 && !(fit && no); r += 10) for (let a = 0; a < 6.28 && !(fit && no); a += 0.3) { const x = k.x + Math.cos(a) * r, y = k.y + Math.sin(a) * r;
+    if (x < 30 || y < 30 || x > F.MAP - 30 || y > F.MAP - 30 || G.blds.some((b) => Math.hypot(b.x - x, b.y - y) < F.GUIDE_R + 40)) continue;
+    const s = F.snapPos('house', x, y), w = F.canPlace(0, 'house', s.x, s.y); if (!w && !fit) fit = s; if (w && !no) no = s; }
+  if (!fit || !no) return ['no open and no shut spot found for the ghost test'];
+  for (const [s, want] of [[fit, 1], [no, -1]]) { const { why, art } = look(s.x, s.y);
+    if (calls.line) bad.push('the build grid is drawn while placing (' + calls.line + ' lines)');
+    if (calls.rect > 1) bad.push('a footprint box is drawn while placing (' + calls.rect + ' rectangles)');
+    if (!art) { bad.push('the ghost is not drawn'); continue; }
+    const t = shade(art); if (Math.sign(t) !== want) bad.push('the ghost is tinted ' + (t > 0 ? 'green' : 'red') + ' where canPlace says ' + (why || 'it fits')); }
+  G.place = null; return bad; }"""
+
 # Decision 5a: the corner can be seen and played. At each phone size, at the zoom a game opens on, with the camera sent to each home node
 # (and held by the map's edges, clampCam), the node stands inside the clear band between the bars, half a tap (22 px) or more from its edges.
 CAMERA = """async (seeds) => {
@@ -184,6 +207,8 @@ async def main():
         print(('PASS ' if not bad else 'FAIL ') + 'two squares between buildings (decision 2)', '' if not bad else bad); fails += bool(bad)
         bad, errs = await run(WAVE); bad += errs
         print(('PASS ' if not bad else 'FAIL ') + 'a wave is judged by its progress (D1); the map labels reach its edge', '' if not bad else bad); fails += bool(bad)
+        bad, errs = await run(GHOST); bad += errs
+        print(('PASS ' if not bad else 'FAIL ') + 'the ghost: no grid or footprint box, its art green where it fits and red where not', '' if not bad else bad[:4]); fails += bool(bad)
         bad, errs = await run(CITADEL); bad += errs
         print(('PASS ' if not bad else 'FAIL ') + 'the citadel the same seen from every corner: four towers, the shrine on the Throne', '' if not bad else bad); fails += bool(bad)
         bad, errs = await run(MIGRATE, json.load(open(os.path.join(ROOT, 'tests', 'fixtures', 'save-v39.json')))); bad += errs
