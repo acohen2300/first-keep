@@ -676,12 +676,13 @@ function moveTo(u, x, y, dt, r, SP) {
 }
 
 // ───────────────────────── Placement ─────────────────────────
-// Every building keeps one free square around it (a lane, so a figure never stands in a wall); walls, gates and crops may touch.
+// Every building keeps LANE free squares from the next (decision 2: a one-square lane is shut by the slit rule, so it was a wall nobody
+// built); walls, gates and crops may touch anything, but not a building that trains people.
 function canPlace(o, kind, x, y) {
 	const B = BLD[kind],
 		n = B.fp,
 		sp = snapPos(kind, x, y),
-		m = B.wallish ? 0 : 1;
+		m = B.wallish ? 0 : LANE;
 	if (sp.gx < 1 || sp.gy < 1 || sp.gx + n > NC - 1 || sp.gy + n > NC - 1) return 'Too close to the edge';
 	const cw_ = capWhy(o, kind);
 	if (cw_) return cw_;
@@ -698,8 +699,9 @@ function canPlace(o, kind, x, y) {
 			}
 			// a lane on every side (Build 63: "buildings need buffers"); walls, gates and crops may touch anything
 			if (!B.wallish && !B.crop && !BLD[q.kind].wallish && !BLD[q.kind].crop)
-				return 'Leave a gap: a lane round each building';
-			if (!BLD[q.kind].wallish && (TRAINERS.has(kind) || TRAINERS.has(q.kind)))
+				return 'Leave a gap: two squares round each building';
+			const touch = i === -1 || j === -1 || i === n || j === n; // the ring next to the footprint
+			if (touch && !BLD[q.kind].wallish && (TRAINERS.has(kind) || TRAINERS.has(q.kind)))
 				return 'Leave a lane around buildings that train people';
 		}
 	if (!B.wallish) {
@@ -744,8 +746,8 @@ function snapGhost(o, kind, x, y, tol) {
 			alignX = [b.x, b.x - bh + h, b.x + bh - h],
 			alignY = [b.y, b.y - bh + h, b.y + bh - h];
 		if (Math.abs(b.x - x) <= bh + h + tol + 40 && Math.abs(b.y - y) <= bh + h + tol + 40)
-			for (const gap of [bh + h, bh + NAVC + h]) {
-				// beside it: flush first, then with a lane between
+			for (const gap of [bh + h, bh + LANE * NAVC + h]) {
+				// beside it: flush first (a crop), then with the lane between
 				for (const cx of [b.x - gap, b.x + gap]) for (const cy of alignY.concat([y])) consider(cx, cy);
 				for (const cy of [b.y - gap, b.y + gap]) for (const cx of alignX.concat([x])) consider(cx, cy);
 			}
