@@ -535,9 +535,17 @@ function upkeepTick() {
 		if (p.alive && p.id !== WILD) {
 			const o = p.id;
 			// everyone eats: a share a person, more for soldiers and far more for horses
+			// a villager working a bush, a field, fish or game eats from it, not from the store (Albert, Nov 1)
+			const per = UPKEEP.share * fxv(o, 'eat').m; // cooked food feeds better (hearth)
 			let sh = 0;
-			for (const u of G.units) if (u.owner === o) sh += shareOf(u);
-			const eat = sh * UPKEEP.share * fxv(o, 'eat').m; // cooked food feeds better (hearth)
+			for (const u of G.units)
+				if (u.owner === o) {
+					const n = u.kind === 'vil' && u.job === 'food' && !u.inside ? u.node || u.hunt : null;
+					if (n && (n.amt > 0 || n.hp > 0)) {
+						if (n.amt > 0 && isFinite(n.amt)) n.amt = Math.max(0, n.amt - shareOf(u) * per);
+					} else sh += shareOf(u);
+				}
+			const eat = sh * per;
 			p.eats = eat * 60;
 			starveTick(p);
 			if (p.res.f >= eat) {
@@ -550,7 +558,7 @@ function upkeepTick() {
 				spend(p, 'f', p.res.f, 'upkeep'); // what is left is eaten
 				if (!p.hungry) {
 					p.hungry = true;
-					if (o === 0) news('home', 'No food. Work slows. Put villagers on Food.', 'warn', 8);
+					if (o === 0) news('home', 'Food stores empty: put villagers on food.', 'warn', 8);
 				}
 			}
 		}
@@ -623,7 +631,7 @@ function shareOf(u) {
 	if (hasTag(u.kind, 'mounted') || hasTag(u.kind, 'elephant')) return UPKEEP.mounted;
 	return U.tick === 'sol' ? UPKEEP.foot : 1;
 }
-const hungerOf = (o) => (G.P[o] && G.P[o].hungry ? UPKEEP.hunger : 1);
+const hungerOf = (o) => (G.P[o] && (G.P[o].famT || 0) >= STARVE.grace ? UPKEEP.hunger : 1); // full strength for the first two days of a famine
 
 // ── prices float with what is sold and bought, and drift back
 // a workshop's choice: what it makes now (the node's type and rate follow)

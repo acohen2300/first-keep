@@ -404,9 +404,10 @@ const groundOf = (me) =>
 		? { ...(throneB() || me || { x: MID, y: MID }), r: YARD }
 		: { x: me.hx ?? me.x, y: me.hy ?? me.y, r: wildLeash(me) };
 const struckBy = (me, x) => {
-	const L = (G.struck || {})[campOf(me)],
-		h = groundOf(me);
-	return !!L && G.t - (L[x.id] ?? -1e9) < NATIVE.struck && hyp(x.x - h.x, x.y - h.y) < h.r;
+	const L = (G.struck || {})[campOf(me)];
+	if (!L || !(G.t - (L[x.id] ?? -1e9) < NATIVE.struck)) return false;
+	const h = groundOf(me);
+	return hyp(x.x - h.x, x.y - h.y) < h.r;
 };
 const isFoe = (o, x, me) => {
 	if (x.owner === o) return false;
@@ -532,7 +533,9 @@ function keepHealth() {
 }
 // Two words for two things (Build 62): a villager is FREE when it has no job and can be given one (the tile's count, the quick action's idle,
 // the computers' hands); it is IDLE (u.idle) when it stands with nothing to do this tick, job or not (the mark over its head, the warning).
-const freeVil = (u) => !u.job && !u.inside;
+// who is idle (Albert's sighting, Nov 1, QC D10): a villager with no job, or with one and nothing it can do (waiting, no find in reach,
+// no drop-off: u.idle, set by its tick). The one home: its Zs, the strip's count, the idle button and the quick action all read it
+const freeVil = (u) => u.kind === 'vil' && !u.inside && (!u.job || !!u.idle);
 const unitKeys = (kind) => {
 	const U = UNIT[kind],
 		k = [kind, baseKind(kind)];

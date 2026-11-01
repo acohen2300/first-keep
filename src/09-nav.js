@@ -268,11 +268,14 @@ function dangerMap() {
 		const F = FINDS[f.kind],
 			gk = F.guard && F.guard[G.fantasy ? 1 : 0],
 			r = ((gk && UNIT[gk].raid) || 90) + 40;
-		for (const o of sides) stampDanger(DANGER[o], f.x, f.y, r);
+		for (const o of sides)
+			if (!gk || isFoe(WILD, { owner: o, id: -1, x: f.x, y: f.y }, { owner: WILD, kind: gk, find: f.id, hx: f.x, hy: f.y }))
+				stampDanger(DANGER[o], f.x, f.y, r); // only where its guards would fight that side: the same test the guards use (a group at peace, 4b)
 	}
 	for (const v of G.threats || []) {
 		if (UNIT[v.kind].meat) continue;
-		for (const o of sides) if (isFoe(o, v)) stampDanger(DANGER[o], v.x, v.y, DANGER_R.near);
+		for (const o of sides)
+			if (v.owner === WILD ? isFoe(WILD, { owner: o, id: -1, x: v.x, y: v.y }, v) : isFoe(o, v)) stampDanger(DANGER[o], v.x, v.y, DANGER_R.near); // the wild is danger where it would fight that side (its regard, 4b)
 	}
 	for (const b of G.blds) {
 		if (b.hp <= 0) continue;
@@ -555,17 +558,13 @@ function route(u, tx, ty) {
 		}
 		u.path = p.pts;
 	}
-	const P = u.path,
-		pi0 = u.pi;
+	const P = u.path;
 	while (u.pi < P.length - 1 && hyp(P[u.pi].x - u.x, P[u.pi].y - u.y) < 7) u.pi++;
-	if (u.pi !== pi0 || T - (u.laT ?? -9) >= 0.25) {
-		u.laT = T; // the look-ahead (skip to a later corner in plain sight) when a corner is passed, or four times a second (hunt A #5: every tick)
-		for (let k = Math.min(P.length - 1, u.pi + 4); k > u.pi; k--)
-			if (lineClear(u.x, u.y, P[k].x, P[k].y, o, avoid)) {
-				u.pi = k;
-				break;
-			}
-	}
+	for (let k = Math.min(P.length - 1, u.pi + 4); k > u.pi; k--)
+		if (lineClear(u.x, u.y, P[k].x, P[k].y, o, avoid)) {
+			u.pi = k;
+			break;
+		}
 	const last = u.pi === P.length - 1;
 	if (last && u.partial && hyp(P[u.pi].x - u.x, P[u.pi].y - u.y) < 9) {
 		u.noPath = true;

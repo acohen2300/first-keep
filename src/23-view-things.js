@@ -892,7 +892,7 @@ function drawUnit(u, s) {
 		);
 		ctx.stroke();
 	} // the conversion, filling
-	if (u.owner === 0 && u.idle) idleMark(sx, top, z);
+	if (u.owner === 0 && (u.kind === 'vil' ? freeVil(u) : u.idle)) idleMark(sx, top, z); // a villager by freeVil, the one home; a cart by its own flag
 	if (u.sick > G.t) {
 		ctx.fillStyle = u.plague ? '#7a3a8a' : '#7aa04a';
 		ctx.beginPath();

@@ -157,33 +157,6 @@ function nearestFoeBld(o, from, owner, range) {
 	else for (const b of G.blds) ok(b);
 	return best;
 }
-// The woods (Build 61, Albert: lifelike lines of sight): a fog square holding three or more standing trees is a wall of canopy; you see the
-// square itself, the edge of the wood, and nothing behind it on that line (22-view-fog openLine). It is cover too: the Natives' ambush (answer 12).
-// Rebuilt when a tree falls or grows.
-let WOODS = { v: -1, G: null, grid: null };
-function woodsGrid() {
-	if (WOODS.G === G && WOODS.v === G.treeV) return WOODS.grid;
-	const grid = new Uint8Array(FOGN * FOGN),
-		n = new Uint8Array(FOGN * FOGN);
-	for (const t of G.nodes)
-		if (t.kind === 'tree' && t.amt > 0)
-			n[clamp((t.y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((t.x / FOG) | 0, 0, FOGN - 1)]++;
-	for (let i = 0; i < n.length; i++) grid[i] = n[i] >= 3 ? 1 : 0;
-	WOODS = { v: G.treeV, G, grid };
-	return grid;
-}
-const inWood = (x, y) =>
-	woodsGrid()[clamp((y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((x / FOG) | 0, 0, FOGN - 1)] === 1;
-// The Natives' ground (answer 12): chokepoints and cover, where an ambush pays. The causeways (onto the island across the great lake), a wood,
-// and their camp's edge (the island's rim between the wall ring and the shore). In the open a Native fights at plain strength.
-const natGround = (x, y) => {
-	const r = hyp(x - MID, y - MID),
-		cause =
-			(Math.abs(x - MID) < THRONE.cause / 2 || Math.abs(y - MID) < THRONE.cause / 2) &&
-			r >= THRONE.isle &&
-			r < LAKE0.r + 60;
-	return cause || (r >= THRONE.r && r < THRONE.isle) || inWood(x, y);
-};
 // Buildings and nodes stand still, so each is sorted into squares of 100 once, and redone only when one comes or goes.
 const SGC = 100,
 	SGN = Math.ceil(MAP / SGC);

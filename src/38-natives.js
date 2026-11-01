@@ -2,7 +2,8 @@
 // ───────────────────────── The Natives: the fifth side's one brain, and the Throne ─────────────────────────
 // Regard is what they think of each side (0..100). It is the one number behind peace, alliance, raids and the gate.
 const throneB = () => G.blds.find((b) => b.kind === 'throne' && b.hp > 0) || null;
-const homeOf = (o) => (o === WILD ? throneB() : keepOf(o));
+// where a side or a group is found: the Natives at the Throne; a misfit group at its nearest camp (or its horde) to at
+const homeOf = (o, at) => (o === WILD ? throneB() : GANG[o] ? nearest(G.units, at || { x: MID, y: MID }, (v) => v.hp > 0 && gangOf(v) === o) : keepOf(o));
 const natState = () => G.nat || (G.nat = { handT: {}, said: {} }); // what is the Natives' own: the handover, the raids, the garrison's regrowth
 // Regard (answer 1b): each misfit group (GANG) keeps its own regard for each side, and its own stance with it (the Natives': G.rel).
 const gangState = (g) =>
@@ -22,19 +23,21 @@ function addRegard(o, g, d) {
 }
 // a side's stance with a group is set: the Natives through the fifth side's relations, the others in their own list
 function gangSet(o, g, want) {
-	if (g === 'nat') G.rel[o][WILD] = G.rel[WILD][o] = want;
-	else gangState(g).rel[o] = want;
-	G.navDirty = true;
+	if (g === 'nat') {
+		G.rel[o][WILD] = G.rel[WILD][o] = want;
+		G.navDirty = true; // the Natives' gates open to a friend
+	} else gangState(g).rel[o] = want;
 }
-// peace and war follow regard; an alliance (the Natives only) needs an emissary and ends the moment regard falls under the line
+// peace and war follow regard; an alliance needs an emissary and ends the moment regard falls under the line
 function gangSync(o, g) {
 	if (o === WILD || !G.P[o].alive) return;
 	const r = regardOf(o, g),
 		rel = gangRel(o, g),
 		N = gangState(g);
 	if (rel === 'ally' && r < REGARD.allyAt - 10) {
-		makePeace(o, WILD);
-		if (o === 0) news('realm', 'The Natives end the alliance: regard fell.', 'warn', 6);
+		if (g === 'nat') makePeace(o, WILD);
+		else gangSet(o, g, 'peace');
+		if (o === 0) news('realm', `The ${GANG[g]} end the alliance: regard fell.`, 'warn', 6);
 	} else if (rel !== 'ally') {
 		if (N.warBy[o] && r >= REGARD.allyAt) N.warBy[o] = false;
 		const want = N.warBy[o] ? 'war' : r >= REGARD.peaceAt ? 'peace' : 'war';
@@ -75,21 +78,23 @@ function giveGift(o, amt, g) {
 		);
 	return true;
 }
-function judgeNatives(from, envoy, ask) {
+// an emissary to a group: the Natives' answer, copied for every misfit group (Albert, Nov 1; their own logic is v81's)
+function judgeGang(g, from, envoy, ask) {
 	if (ask !== 'ally') {
-		reply(from, envoy, 'The Natives answer only to regard, not to words.');
+		reply(from, envoy, `The ${GANG[g]} answer only to regard, not to words.`);
 		return;
 	}
-	if (regardOf(from) < REGARD.allyAt) {
-		reply(
-			from,
-			envoy,
-			`The Natives send your emissary back: regard ${Math.round(regardOf(from))} of ${REGARD.allyAt}.`,
-		);
+	if (regardOf(from, g) < REGARD.allyAt) {
+		reply(from, envoy, `The ${GANG[g]} send your emissary back: regard ${Math.round(regardOf(from, g))} of ${REGARD.allyAt}.`);
 		return;
 	}
-	makeAlly(WILD, from);
-	reply(from, envoy, 'The Natives accept you. Their gate opens to you.');
+	if (g === 'nat') {
+		makeAlly(WILD, from);
+		reply(from, envoy, 'The Natives accept you. Their gate opens to you.');
+	} else {
+		gangSet(from, g, 'ally');
+		reply(from, envoy, `The ${GANG[g]} accept you as a friend.`);
+	}
 }
 // the citadel's garrison: warriors in the yard, bowmen on the walls; it grows back while the Natives hold the Throne
 // Albert's rule: skilled, swift, light and many, with the ground on their side; not brawny, not advanced. Gunpowder is the game-changer: once a side has it, the garrison thins and guns tell
@@ -238,18 +243,10 @@ function natRaid() {
 	if (!N.raidAt) N.raidAt = from + gap() / 2;
 	if (G.t < N.raidAt) return;
 	N.raidAt = G.t + gap();
-	let sides = G.P.filter(
-		(p) =>
-			p.id !== WILD &&
-			!calm4b(p.id) &&
-			p.alive &&
-			keepOf(p.id) &&
-			G.rel[p.id][WILD] === 'war' &&
-			gangRel(p.id, 'rob') === 'war',
-	); // 4b: raids skip the computers; the raiders are robbers, so a side at peace with them is not raided
+	let sides = G.P.filter((p) => p.id !== WILD && !calm4b(p.id) && p.alive && keepOf(p.id) && gangRel(p.id, 'rob') === 'war'); // the raiders are robbers: their stance alone decides (Albert, Nov 1); 4b: never a computer
 	if (sides.length > 1) sides = sides.filter((p) => p.id !== N.raidLast);
 	if (!sides.length) return;
-	const w = sides.map((p) => 1 + (100 - regardOf(p.id)) / 25),
+	const w = sides.map((p) => 1 + (100 - regardOf(p.id, 'rob')) / 25),
 		tot = w.reduce((a, b) => a + b, 0);
 	let r = rng() * tot,
 		qi = 0;

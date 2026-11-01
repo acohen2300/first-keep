@@ -73,7 +73,7 @@ const WILD_LOOK = 140; // how far a beast or a guard looks for a stranger near i
 // the last. Pits and nets on the causeways; prisoners for ransom; outlaw raids on whoever they regard least. They command the camps.
 // Regard (answer 1b, Albert Nov 1): the Natives' flow, one for each of the four misfit groups. What a group thinks of each side (0..100): gifts
 // raise it (the Danegeld rule, each buys less than the last), blows on the group lower it, it drifts back to regard0; at peaceAt the group
-// leaves the side be, under it the group is a foe. Only the Natives take an alliance (their gate). Special rules per group come later.
+// leaves the side be, under it the group is a foe. At allyAt an emissary makes a friend of any group, as of the Natives (Albert, Nov 1). Special rules per group come later (v81).
 const REGARD = {
 	regard0: 20,
 	peaceAt: 40,
@@ -93,7 +93,6 @@ const NATIVE = {
 	garrison: 24,
 	perAge: 8,
 	regrow: 20,
-	ambush: 1.3, // a Native's blow from its ground (natGround): Dupuy's factor for rolling, mixed ground and for a hasty defence, both 1.3 (SCIENCE.md)
 	gunAge: 4,
 	gunMax: 0.6,
 	gunRegrow: 2,

@@ -207,7 +207,7 @@ const HAZARDS = {
 	starve: {
 		pts: 2,
 		name: 'Famine',
-		desc: 'No food for a minute: work stops. After two, a villager leaves and a soldier deserts every half minute.',
+		desc: 'Two days of famine (no food in store or in reach): a villager leaves and a soldier deserts every half minute.',
 	},
 	winter: {
 		pts: 2,
@@ -234,7 +234,10 @@ const HAZARDS = {
 const HZK = Object.keys(HAZARDS),
 	HZ_ODDS = 0.5, // none picked (Build 70, Albert's A): each hazard is on at even odds, drawn by lot for the game (design: a coin, the plainest random)
 	TODAY_HZ = { hard: 1, starve: 1, horde: 1, winter: 1 }; // the challenge today is level 10 on the day's seed
-const STARVE = { stop: 60, leave: 120, every: 30 },
+// Hunger (Albert, Nov 1). An empty store is not a famine: people working food eat from it, and the rest work on. A famine is an empty store
+// with no bush, field, fish or game in reach: full strength for grace (two days: with water, hunger takes weeks, the rule of threes), then
+// work and blows at UPKEEP.hunger; then, under the Famine hazard, one leaves every every seconds
+const STARVE = { grace: 2 * DAY_LEN, every: 30 },
 	HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 },
 	HORDE = { min: 1200, mean: 1800, warn: SEASON_LEN * 2, n: 16, perAge: 6 }; // the horde comes after min seconds, at an exponential wait about mean (nextIn)
 // Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 37-events.

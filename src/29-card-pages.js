@@ -136,7 +136,7 @@ function slotsHTML(b) {
 }
 // Relations, at the Town Center (v80, Albert Oct 31: "we are locking into the final"; picture Relations Final; decision 3: a ✓ for each
 // row): one rank a side. The name, its stance under it in the stance's colour; the gift, a slider with its switch (a bribe is a step for
-// anyone not a friend, so a friend's gift is locked; only the Natives take a gift in the game today); the stance, three icons in two slots;
+// anyone not a friend, so a friend's gift is locked; the misfit groups take one, the computers none); the stance, three icons in two slots;
 // the row's ✓. What is picked waits on the card (G.relPick) until that row's ✓ sends it: the picked icon wears the gold ring, the stance
 // held now stays in the name's colour, and the ✓ turns blue. The last rank says what the last ✓ touched will do, and the board
 // Two pages (answers 1 and 1b, Albert Nov 1; picture Relations Misfits): Relations, the computers, a stance only (no gifts to rivals); Misfits,
@@ -147,6 +147,9 @@ const relKey = (a) => (GANG[a] ? a : Number(a)); // a row's key from a verb: a g
 // a side whose stance is not yours to pick here: your vassal (their own page) or your overlord
 const relLord = (q) => !gangKey(q) && ((G.P[q].lord === 0 && !G.P[q].rebel) || (G.P[0].lord === q && !G.P[0].rebel));
 const relName = (q) => (gangKey(q) ? GANG[gangKey(q)] : G.P[q].name);
+// a stance this row cannot take, so its icon is dim and a tap on it picks nothing: your vassal or overlord (their own page). Every misfit
+// group can be pushed to friend, as the Natives (Albert, Nov 1), so none of theirs is dim
+const stanceOff = (q) => relLord(q);
 const relOf = (q) => (gangKey(q) ? gangRel(0, gangKey(q)) : G.rel[0][q]); // the stance held now
 const giftLock = (q) => (!gangKey(q) ? 'No gifts to rivals.' : relOf(q) === 'ally' ? 'A gift to a friend is locked.' : null);
 // what the row's ✓ would send: [gift or 0, stance or null], and why it cannot, or null
@@ -191,7 +194,7 @@ function relRow(q) {
 					`relwant:${q},${k}`,
 					ICON[k],
 					(d.want || rel) === k,
-					`stance-${k}${lord || (g && g !== 'nat' && k === 'ally') ? ' dis' : ''}`, // only the Natives take an alliance (relWhy)
+					`stance-${k}${stanceOff(q, k) ? ' dis' : ''}`,
 					REL_WORD[k],
 				]),
 				's2',
@@ -232,7 +235,7 @@ function relHTML(mis) {
 		`<p><b>The sides:</b> ${relSides()
 			.map((q) => `${G.P[q].name}, ${G.P[q].civ ? CIVS[G.P[q].civ].name : 'no people'}${G.P[q].ally !== null && G.P[q].ally !== undefined && G.P[q].ally !== 0 ? `, with ${G.P[G.P[q].ally].name}` : ''}`)
 			.join('; ')}.</p>` +
-			`<p><b>Misfits:</b> the Natives, the outlaws (the horde), the bandits and the robbers each keep their own regard for you. A bribe raises it, each buying less than the last for ${REGARD.giftWindow / 60} minutes; blows on them lower it. At ${REGARD.peaceAt} they leave you be; under it they are foes. Only the Natives become friends, at ${REGARD.allyAt}, by an emissary; a bribe to a friend is locked. Animals are foes to all. No gifts to rivals.</p>` +
+			`<p><b>Misfits:</b> the Natives, the outlaws (the horde), the bandits and the robbers each keep their own regard for you. A bribe raises it, each buying less than the last for ${REGARD.giftWindow / 60} minutes; blows on them lower it. At ${REGARD.peaceAt} they leave you be; under it they are foes. At ${REGARD.allyAt} an emissary can make any of them a friend; a bribe to a friend is locked. Animals are foes to all. No gifts to rivals.</p>` +
 			`<p><b>Stance:</b> neutral keeps both swords sheathed; a foe after ${NOTICE} s of notice (a misfit group at once, for ${REGARD.warCost} regard); a friend needs their yes, carried by an emissary.</p>` +
 			`<p><b>The board:</b> ${G.enlight ? `the ${AGES[5].name} is open.` : `a year of peace opens the ${AGES[5].name}${G.truce === null ? '' : ` (${clock(Math.max(0, PEACE.age.truce - truceFor()))} to go)`}.`} Laurels: ${G.P[0].laurels || 0}.</p>` +
 			(H.length

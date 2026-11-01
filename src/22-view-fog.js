@@ -74,6 +74,20 @@ const knownB = (b) => !G.fogOn || friendly(0, b.owner) || fogAt(b.x, b.y) === 2 
 const visibleTo0 = (u) => (u.kind !== 'spy' || friendly(0, u.owner) || u.exposed) && seen0(u);
 let fogCv = null,
 	fogImg = null;
+// the woods block sight (Build 61, Albert: lifelike lines of sight): a fog square holding three or more standing trees is a wall of canopy;
+// you see the square itself, the edge of the wood, and nothing behind it on that line. Rebuilt when a tree falls or grows.
+let WOODS = { v: -1, G: null, grid: null };
+function woodsGrid() {
+	if (WOODS.G === G && WOODS.v === G.treeV) return WOODS.grid;
+	const grid = new Uint8Array(FOGN * FOGN),
+		n = new Uint8Array(FOGN * FOGN);
+	for (const t of G.nodes)
+		if (t.kind === 'tree' && t.amt > 0)
+			n[clamp((t.y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((t.x / FOG) | 0, 0, FOGN - 1)]++;
+	for (let i = 0; i < n.length; i++) grid[i] = n[i] >= 3 ? 1 : 0;
+	WOODS = { v: G.treeV, G, grid };
+	return grid;
+}
 // is the square (gx, gy) in open sight of the square (sx, sy)? a line on the grid (Bresenham); the first wood on the way is seen, the rest is not
 function openLine(W, sx, sy, gx, gy) {
 	let x = sx,

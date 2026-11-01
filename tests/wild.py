@@ -9,7 +9,7 @@ JS = """() => {
   const run = (secs) => { for (let i = 0; i < secs * 30; i++) F.step(T); };
   const fresh = (seed = 7) => { F.newGame(seed); F.act('close'); F.setPause(false); const G = F.G; G.fogOn = false; G.ev.next = 1e9; G.ev.cur = null; F.step(T); return G; };
   const open = (G) => { const k = F.keepOf(0); let best = 0, P = null; for (let x = 100; x < F.MAP - 100; x += 20) for (let y = 100; y < F.MAP - 100; y += 20) {
-      const dk = Math.hypot(x - k.x, y - k.y); if (dk < 150 || dk > 400 || F.blockedCell(F.gcell(x, y), 0) || F.natGround(x, y) || G.lakes.some((L) => Math.hypot(L.x - x, L.y - y) < L.r + 40)) continue; const m = Math.min(...G.blds.map((b) => Math.hypot(b.x - x, b.y - y)), ...G.units.map((u) => Math.hypot(u.x - x, u.y - y)));
+      const dk = Math.hypot(x - k.x, y - k.y); if (dk < 150 || dk > 400 || F.blockedCell(F.gcell(x, y), 0) || G.lakes.some((L) => Math.hypot(L.x - x, L.y - y) < L.r + 40)) continue; const m = Math.min(...G.blds.map((b) => Math.hypot(b.x - x, b.y - y)), ...G.units.map((u) => Math.hypot(u.x - x, u.y - y)));
       if (m > best) { best = m; P = { x, y }; } } return P; };
   const clear = (G, P, r) => { for (const u of G.units) if (Math.hypot(u.x - P.x, u.y - P.y) < r) { u.hp = 0; u.gone = true; } G.units = G.units.filter((u) => u.hp > 0); };
   const gone = (G, ...us) => { for (const u of us) u.hp = 0; G.units = G.units.filter((u) => u.hp > 0); };
@@ -50,7 +50,23 @@ JS = """() => {
     if (F.isFoe(w, s3, n)) bad.push('4b: a Native takes a computer soldier at war with them, which never struck, for a foe');
     F.hurt(1, s3, n, 1); if (!F.isFoe(w, s3, n)) bad.push('4b: a Native does not fight the computer soldier that struck it');
     for (const p of G.P) if (p.id !== w) G.rel[p.id][w] = G.rel[w][p.id] = p.id === 0 ? 'peace' : 'war';
+    F.gangState('rob').rel[0] = 'peace'; // only the computers are at war with the robbers
     F.natState().raidAt = 0.001; G.t = Math.max(G.t, 1200); F.natRaid(); if (G.units.some((u) => u.back)) bad.push('4b: a raid rode for a computer'); });
+
+  T_('4b horde', () => { const G = fresh(); G.hz = { ...(G.hz || {}), horde: 1 }; G.diff = 'normal';
+    { const k = F.keepOf(0); for (let i = 0; i < 30; i++) F.addUnit(0, 'sword', k.x + 30, k.y + 30); } // you are the strongest: the horde would go for a computer
+    G.horde = { at: G.t, said: 2 }; const n0 = G.units.length; F.hordeTick(); const H = G.units.slice(n0).filter((u) => u.horde);
+    const k0 = F.keepOf(0); if (!H.length) bad.push('4b horde: the check raised no horde'); else if (H.some((u) => u.hx !== k0.x || u.hy !== k0.y)) bad.push('4b horde: the horde went for a computer'); });
+  T_('4b pits', () => { const G = fresh(), w = W(), M = F.MID, R = F.THRONE, x = M + R.isle + 40, y = M;
+    const pit = F.mkBld(w, 'pit', x, y, 1); G.blds.push(pit); const cu = F.addUnit(1, 'spear', x + 2, y); F.step(T); for (let i = 0; i < 12; i++) F.step(T);
+    if (!(pit.hp > 0) || cu.hp < cu.max) bad.push("4b pits: the Natives' pit took a computer's soldier");
+    const pu = F.addUnit(0, 'spear', x + 2, y); for (let i = 0; i < 12; i++) F.step(T); if (pit.hp > 0 && pu.hp >= pu.max) bad.push("4b pits: the Natives' pit let your soldier through (the player's rules changed)"); });
+  T_('4b leash', () => { const G = fresh(), w = W(), n = G.units.find((u) => u.native && u.hp > 0), T0 = G.blds.find((b) => b.kind === 'throne');
+    G.rel[1][w] = G.rel[w][1] = 'war'; const s = F.addUnit(1, 'spear', n.x + 20, n.y); F.hurt(1, s, n, 1);
+    if (!F.isFoe(w, s, n)) bad.push('4b leash: a Native does not fight the one that struck it in its yard');
+    const a = Math.atan2(s.y - T0.y, s.x - T0.x); s.x = T0.x + Math.cos(a) * (F.YARD + 30); s.y = T0.y + Math.sin(a) * (F.YARD + 30);
+    if (F.isFoe(w, s, n)) bad.push('4b leash: a Native chases its instigator past its yard');
+    s.x = T0.x + Math.cos(a) * (F.YARD - 30); s.y = T0.y + Math.sin(a) * (F.YARD - 30); if (!F.isFoe(w, s, n)) bad.push('4b leash: a Native lets its instigator go inside its yard'); });
 
   // ── answer 11: a conversion refused at the army ceiling says so, in Albert's words ──
   T_('11', () => { const G = fresh(), P = open(G); clear(G, P, 300); G.rel[0][1] = G.rel[1][0] = 'war';
@@ -60,18 +76,37 @@ JS = """() => {
     if (!(G.mail || []).some((m) => m.text === 'At Maximum Occupancy Capacity')) bad.push('11: a conversion refused at the ceiling says nothing (' + ((G.mail || [])[0] || {}).text + ')');
     if (e.owner !== 1) bad.push('11: a soldier was converted past the ceiling'); });
 
-  // ── answer 12: the Natives' ambush only from their ground (causeway, wood, camp's edge); plain strength in the open ──
+  // ── answer 12, then Albert's decision 5 (Nov 1, 11:22): no ambush bonus for anyone, on any ground (v81 brings surprise and home ground) ──
   T_('12', () => { const G = fresh(), w = W(), P = open(G), M = F.MID, R = F.THRONE;
     const blow = (x, y) => { const a = F.addUnit(w, 'native', x, y); a.native = true; const t = F.addUnit(1, 'sword', x + 8, y); F.hurt(w, a, t, 10); const d = t.max - t.hp; gone(G, a, t); return d; };
-    const tree = G.nodes.find((n) => n.kind === 'tree' && n.amt > 0 && F.natGround(n.x, n.y) && Math.hypot(n.x - M, n.y - M) > 400);
-    const dOpen = blow(P.x, P.y), dCause = blow(M + R.isle + 25, M), dEdge = blow(M + (R.r + 10) * 0.7071, M + (R.r + 10) * 0.7071), dWood = tree ? blow(tree.x, tree.y) : 0;
-    const k = F.NATIVE.ambush;
-    if (Math.abs(dCause / dOpen - k) > 1e-6) bad.push(`12: on a causeway the blow is ${(dCause / dOpen).toFixed(3)} of the open, not ${k}`);
-    if (Math.abs(dEdge / dOpen - k) > 1e-6) bad.push(`12: at the camp's edge the blow is ${(dEdge / dOpen).toFixed(3)} of the open, not ${k}`);
-    if (!tree || Math.abs(dWood / dOpen - k) > 1e-6) bad.push(`12: in a wood the blow is ${(dWood / dOpen).toFixed(3)} of the open, not ${k}`);
-    if (F.natGround(P.x, P.y)) bad.push('12: open ground near home counts as the Natives\\' ground'); });
+    const tree = G.nodes.find((n) => n.kind === 'tree' && n.amt > 0 && Math.hypot(n.x - M, n.y - M) > 400);
+    const d = [blow(P.x, P.y), blow(M + R.isle + 25, M), blow(M + (R.r + 10) * 0.7071, M + (R.r + 10) * 0.7071), blow(tree.x, tree.y)];
+    if (new Set(d.map((x) => x.toFixed(6))).size !== 1) bad.push('12: a Native strikes harder on some ground (open, causeway, camp edge, wood): ' + d.map((x) => x.toFixed(2)).join(', ')); });
 
-  // ── hunt A #1, Victory sighting 3: the Games wait for the board's peace; no line for a war ──
+  // ── decision 6 (Albert, Nov 1, 11:29): an empty store is not a famine; a famine (no food in store or in reach) keeps full work two days,
+  // then weakens (Keys 1950), and only then, under Famine, people leave; those working food eat from it ──
+  const noFood = (G) => { G.nodes = G.nodes.filter((n) => n.type !== 'food'); for (const u of G.units) if (u.owner === W() && F.UNIT[u.kind].meat) u.hp = 0; G.units = G.units.filter((u) => u.hp > 0); };
+  T_('H1', () => { const G = fresh(), p = G.P[0]; G.hz = { starve: 1 }; G.diff = 'normal'; p.res.f = 0; run(5);
+    if (!p.hungry) bad.push('H1: no food in store did not make your side hungry');
+    if (p.famT || F.hungerOf(0) !== 1) bad.push('H1: an empty store with food in reach counts as a famine (' + p.famT + ', work ' + F.hungerOf(0) + ')');
+    if (!(G.mail || []).some((m) => m.text === 'Food stores empty: put villagers on food.')) bad.push('H1: no toast for an empty store'); });
+  T_('H2', () => { const G = fresh(), p = G.P[0]; G.hz = {}; G.diff = 'normal'; p.res.f = 0; noFood(G); run(5);
+    if (!(p.famT >= 3)) bad.push('H2: no food in store or in reach is not a famine (' + p.famT + ')');
+    if (!(G.mail || []).some((m) => m.text === 'Famine: no food in reach. Two days to recover.')) bad.push('H2: no toast at the start of a famine');
+    p.famT = F.STARVE.grace - 2; if (F.hungerOf(0) !== 1) bad.push('H2: a famine under two days already weakens the work: ' + F.hungerOf(0));
+    run(3); if (Math.abs(F.hungerOf(0) - F.UPKEEP.hunger) > 1e-9) bad.push('H2: after two days of famine work is ' + F.hungerOf(0) + ', not ' + F.UPKEEP.hunger); });
+  T_('H3', () => { const G = fresh(), p = G.P[0]; G.hz = { starve: 1 }; G.diff = 'normal'; p.res.f = 0; noFood(G);
+    const starve = (secs) => { for (let i = 0; i < secs; i++) { p.res.f = 0; run(1); } }; // nothing comes in: trade and tribute kept a little food arriving
+    const n0 = F.unitsOf(0, 'vil').length; starve(130); if (F.unitsOf(0, 'vil').length < n0) bad.push('H3: people left before the famine weakened them');
+    if (!(p.famT >= 60)) bad.push('H3: the check could not hold a famine (' + p.famT + ')');
+    p.famT = F.STARVE.grace + F.STARVE.every - 2; starve(4); if (!(F.unitsOf(0, 'vil').length < n0)) bad.push('H3: under Famine nobody left once the famine weakened them'); });
+  T_('H4', () => { const G = fresh(), p = G.P[0], vs = F.unitsOf(0, 'vil'); p.res.f = 500;
+    for (const v of vs) { v.job = 'wood'; v.node = null; v.hunt = null; } run(2); const all = p.eats;
+    const bush = G.nodes.find((n) => n.type === 'food' && n.amt > 0 && isFinite(n.amt)), v = vs[0]; v.job = 'food'; v.node = bush; v.x = bush.x + 200; v.y = bush.y; v.carry = 0; const a0 = bush.amt; run(2);
+    if (!(p.eats < all - 1e-9)) bad.push('H4: a villager working food still eats from the store (' + all.toFixed(3) + ' then ' + p.eats.toFixed(3) + ')');
+    if (!(bush.amt < a0)) bad.push('H4: a villager working a bush does not eat from it'); });
+
+    // ── hunt A #1, Victory sighting 3: the Games wait for the board's peace; no line for a war ──
   T_('A1', () => { const G = fresh(); G.gamesT = 0; G.t = 1500; const c0 = (G.chron || []).length, L0 = () => G.P.reduce((s, p) => s + (p.laurels || 0), 0);
     F.peaceTick();
     if ((G.chron || []).slice(c0).some((c) => /not held/.test(c.text))) bad.push('A1 (Victory sighting 3): the chronicle says the Games were not held: war');
@@ -99,6 +134,20 @@ JS = """() => {
     b.hp = 0; run(60);
     if (!(site.prog > 0.2)) bad.push(`A3: the site stood unworked after the bite (${site.prog.toFixed(2)})`); });
 
+  T_('A3b', () => { const G = fresh(3), k = F.keepOf(0); Object.assign(G.P[0].res, { f: 999, w: 999, s: 999, g: 999 });
+    const v = F.unitsOf(0, 'vil')[0], deer = F.addUnit(W(), 'deer', v.x + 280, v.y); F.setJob(v, 'food'); v.hunt = deer;
+    const site = F.build(0, 'house', k.x + 90, k.y - 70) || F.build(0, 'house', k.x - 90, k.y + 70);
+    for (const u of G.units) if (u.rep === site && u !== v) F.setJob(u, null);
+    F.sendBuilder(v, site); run(8);
+    if (v.hunt || !(site.prog > 0)) bad.push(`A3: a hunter sent to build went on hunting (hunt ${v.hunt ? v.hunt.kind : 'none'}, site ${site.prog.toFixed(2)} after 8 s)`); });
+
+  T_('D1', () => { const G = fresh(), w = W(), f = G.finds.find((x) => x.kind === 'ruins' && !x.done); F.dangerMap();
+    const c = F.gcell(f.x, f.y), at = () => (F.dangerMap(), F.DANGER[0][c]);
+    if (!at()) bad.push('D1: at war with the bandits, their guarded ruins are not danger to your gatherers');
+    F.gangState('ban').regard[0] = 60; F.gangState('ban').rel[0] = 'peace';
+    if (at()) bad.push('D1: at peace with the bandits, their guarded ruins are still danger to your gatherers');
+    if (F.DANGER[1][c]) bad.push("D1: guards that start nothing with a computer (4b) mark danger for it"); });
+
   // ── hunt A #4: a beast or guard with no foe held looks every fifth tick, not every tick; a lost foe is looked past at once ──
   T_('A4', () => { const G = fresh(), w = W(), P = open(G); clear(G, P, 300);
     const g = F.addUnit(w, 'bandit', P.x, P.y); g.hx = g.x; g.hy = g.y; g.tgt = null;
@@ -111,10 +160,10 @@ JS = """() => {
     F.wildTick(g, T, 1); if (g.tgt !== v2) bad.push('A4: a guard whose foe fell did not look again at once'); });
 
   // ── hunt A #5: the look-ahead runs when a corner is passed or four times a second, not every tick ──
-  T_('A5', () => { const G = fresh(), P = open(G); clear(G, P, 300); const u = F.addUnit(0, 'spear', P.x, P.y);
-    u.path = [{ x: P.x + 40, y: P.y }, { x: P.x + 80, y: P.y }, { x: P.x + 120, y: P.y }]; u.pi = 0; u.pv = F.NAV.v; u.pk = F.gcell(P.x + 120, P.y); u.lcT = G.t; u.laT = G.t;
-    F.route(u, P.x + 120, P.y); if (u.pi !== 0) bad.push('A5: the look-ahead ran again within a quarter second');
-    G.t += 0.3; u.lcT = G.t; F.route(u, P.x + 120, P.y); if (u.pi === 0) bad.push('A5: the look-ahead did not run after a quarter second'); });
+  T_('A5', () => { const G = fresh(), N = F.NC, M = F.MAP; let r = 7, diff = 0; const rnd = () => (r = (r * 16807) % 2147483647) / 2147483647;
+    const ref = (x1, y1, x2, y2, o) => { const dx = x2 - x1, dy = y2 - y1, n = Math.ceil(Math.hypot(dx, dy) / 4); for (let i = 1; i <= n; i++) { const c = F.gcell(x1 + (dx * i) / n, y1 + (dy * i) / n); if (F.blockedCell(c, o)) return false; } return true; };
+    for (let k = 0; k < 400; k++) { const x1 = rnd() * (M + 40) - 20, y1 = rnd() * (M + 40) - 20, x2 = x1 + (rnd() - 0.5) * 300, y2 = y1 + (rnd() - 0.5) * 300; if (F.lineClear(x1, y1, x2, y2, 0, false) !== ref(x1, y1, x2, y2, 0)) diff++; }
+    if (diff) bad.push(`A5: the inlined line test disagrees with gcell's in ${diff} of 400 lines (edges included)`); });
 
   // ── hunt A #6: one flood a side, its buffer made once and reused ──
   T_('A6', () => { const G = fresh(), a = F.compOf(1), keep = a.slice(); G.rel[1][2] = G.rel[1][2] === 'war' ? 'peace' : 'war'; const b = F.compOf(1);
@@ -141,6 +190,35 @@ JS = """() => {
     for (const beat of [5, 10]) { const G = fresh(); F.BEAT.natives[0] = beat; F.gangState('nat').regard[0] = 80; run(120); out.push(F.regardOf(0)); }
     F.BEAT.natives[0] = b0;
     if (Math.abs(out[0] - out[1]) > 0.5) bad.push(`A10: two minutes of regard drift at a 5 s beat give ${out[0].toFixed(2)}, at a 10 s beat ${out[1].toFixed(2)}: the body does not read its beat`); });
+
+  T_('S1', () => { const G = fresh(), k = F.keepOf(0); F.openCard({ type: 'bld', id: k.id }); F.act('ktab:mis'); F.gangState('ban').rel[0] = 'peace'; F.ui(true);
+    const hs = document.querySelector('#card [data-act="relwant:ban,ally"]');
+    if (!hs || hs.classList.contains('dis')) bad.push("S1: the bandits' handshake is dim: every misfit group can be a friend");
+    F.act('relwant:ban,ally'); F.ui(true); const cell = document.querySelector('#card [data-act="relok:ban"]').parentElement.querySelector('.info');
+    if (!/Neutral\\s*→\\s*Friend/.test(cell.innerText)) bad.push("S1: the bandits' handshake did not take the pick: " + cell.innerText.replace(/\\n/g, ' '));
+    F.act('close');
+    // a lord's row (a vassal) is dim and a tap there takes no pick
+    F.makeVassal(1, 0, 'fair'); F.openCard({ type: 'bld', id: k.id }); F.act('ktab:rel'); F.ui(true); F.act('relwant:1,war');
+    if ((G.relPick[1] || {}).want) bad.push("S1: a dim icon (your vassal's row) took the pick"); F.act('close'); });
+  T_('G1', () => { const G = fresh(), w = W(), P = G.P[0]; P.age = 1; P.res.g = 999; Object.assign(P.res, { f: 999 });
+    const f = G.finds.find((x) => x.kind === 'ruins' && !x.done), g = G.units.find((u) => u.find === f.id && u.hp > 0);
+    F.gangState('ban').regard[0] = 80; F.gangState('ban').rel[0] = 'peace';
+    if (!F.setRel(0, 'ban', 'ally')) bad.push('G1: no emissary went to the bandits at regard 80: ' + F.relWhy(0, 'ban', 'ally'));
+    for (let i = 0; i < 240 && F.gangRel(0, 'ban') !== 'ally'; i++) run(1);
+    if (F.gangRel(0, 'ban') !== 'ally') bad.push('G1: the bandits did not take you as a friend at regard 80');
+    else if (F.isFoe(0, g) || F.isFoe(w, F.addUnit(0, 'spear', g.x + 20, g.y), g)) bad.push('G1: a friend of the bandits is still their foe');
+    F.gangState('ban').regard[0] = 40; run(6); if (F.gangRel(0, 'ban') === 'ally') bad.push('G1: the bandits kept the alliance after regard fell'); });
+  T_('G2', () => { const G = fresh(), w = W(); G.rel[0][w] = G.rel[w][0] = 'peace'; F.gangState('rob').rel[0] = 'war';
+    F.natState().raidAt = 0.001; G.t = Math.max(G.t, 1200); F.natRaid();
+    if (!G.units.some((u) => u.back && u.hx !== undefined)) bad.push('G2: at war with the robbers and at peace with the Natives, no raid rode for you (the robbers alone decide)'); });
+
+  // ── Albert's sighting (Nov 1, 08:13 and 08:18; QC D10): "z 0" while villagers showed Zs. One predicate (freeVil) for the Zs, the strip and idlego ──
+  T_('D10', () => { const G = fresh(); G.nodes = G.nodes.filter((n) => n.type !== 'food'); for (const u of G.units) if (u.owner === W() && F.UNIT[u.kind].meat) u.hp = 0; G.units = G.units.filter((u) => u.hp > 0);
+    const vs = F.unitsOf(0, 'vil'); for (const u of vs) F.setJob(u, 'food'); run(6); F.ui(true);
+    const waiting = vs.filter((u) => u.job && u.idle), z = document.getElementById('stIdl').innerText.replace(/\\s+/g, ' ').trim();
+    if (!waiting.length) bad.push('D10: the check made no waiting villager');
+    if (z !== 'z ' + vs.filter((u) => !u.inside && (u.idle || !u.job)).length) bad.push(`D10: the strip reads "${z}" while ${waiting.length} villagers wait with Zs`);
+    F.act('idlego'); const c = F.cam; if (!waiting.some((u) => Math.abs(c.tx - u.x) < 1 && Math.abs(c.ty - u.y) < 1)) bad.push('D10: the idle button does not go to a waiting villager'); });
 
   // ── hunt B #5: the place bar goes with its game ──
   T_('B5', () => { fresh(); F.startPlace('house'); F.ui(true); if (document.getElementById('place').hidden) bad.push('B5: the place bar does not show while placing'); fresh(); F.ui(true); if (!document.getElementById('place').hidden) bad.push('B5: the place bar outlived its game'); });
@@ -198,7 +276,7 @@ FIT = """() => { const F = window.__fk, bad = [], G = (F.newGame(7), F.act('clos
   for (const tab of ['rel', 'mis']) { G.ktab = tab; F.openCard({ type: 'bld', id: k.id }); F.ui(true); G.relPick = {};
     const rows = tab === 'mis' ? [F.WILD, 'out', 'ban', 'rob'] : G.P.filter((q) => q.id && q.id !== F.WILD && q.alive).map((q) => q.id);
     for (const q of rows) { if (tab === 'mis') { if (q === F.WILD) G.rel[0][q] = G.rel[q][0] = 'peace'; else F.gangState(q).rel[0] = 'peace'; } else G.rel[0][q] = G.rel[q][0] = 'peace';
-      F.act(`relwant:${q},ally`); }
+      F.act(`relwant:${q},ally`); } // the widest change a row can take: every row can go to friend
     F.ui(true);
     for (const q of rows) { const row = document.querySelector(`#card [data-act="relok:${q}"]`).parentElement, cell = row.querySelector('.info');
       if (!/Neutral\\s*→\\s*Friend/.test(cell.innerText)) bad.push(`Relations ${tab}: row ${q} does not show the change: ${cell.innerText.replace(/\\n/g, ' ')}`);

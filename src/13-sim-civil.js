@@ -31,7 +31,6 @@ function makeNow(u, n, dt, room) {
 		n.amt,
 		room,
 	);
-	if (starving(u.owner)) g = 0;
 	const mk = n.farm && makeOf(n.farm),
 		from = mk && mk.from; // a workshop turns what is in store into something else: 2 wool make 1 cloth, 3 wood 1 iron
 	if (from) {
@@ -638,7 +637,7 @@ function scoutTick(u, dt, SP) {
 }
 function envoyTick(u, dt, SP) {
 	if (u.state === 'envoy') {
-		const k = homeOf(u.target);
+		const k = homeOf(u.target, u);
 		if (!k) {
 			u.state = 'return';
 			return;

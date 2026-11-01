@@ -403,7 +403,7 @@ const PLAY = {
 	relwant(a) {
 		const [q, w] = a.split(','),
 			n = relKey(q);
-		if (relLord(n)) return say(relWhy(0, n, w) || 'Not now.', '', 3);
+		if (stanceOff(n, w)) return say(relWhy(0, n, w) || 'Not now.', '', 3); // a dim icon takes no pick
 		const d = relPickOf(n);
 		d.want = w;
 	},

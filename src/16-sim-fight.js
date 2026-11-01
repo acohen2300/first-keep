@@ -66,7 +66,6 @@ function hurt(o, a, t, base) {
 			if (t.state === 'rout') d *= MORALE.routHit;
 			else if (t.fb > G.t) d *= FALLBACK.hit;
 		}
-		if (a && a.native && !isB && natGround(a.x, a.y)) d *= NATIVE.ambush; // a Native striking from its ground: the causeways, a wood, its camp's edge (answer 12)
 		if (a && A.gun && hasTag(t.kind, 'native')) d *= NATIVE.gunHit; // gunpowder against hide shields
 		if (isSoldier(t) && t.owner !== WILD) {
 			d *= stats(t.owner, t.kind).armor;
@@ -94,7 +93,7 @@ function hurt(o, a, t, base) {
 	}
 	const tg = o === WILD ? null : gangOf(t);
 	if (tg && tg !== 'beast') {
-		if (a && calm4b(o)) ((G.struck ??= {})[campOf(t)] ??= {})[a.id] = G.t; // 4b: the camp remembers who struck it
+		if (a && calm4b(o) && (tg !== 'nat' || t.native || !UNIT[t.kind])) ((G.struck ??= {})[campOf(t)] ??= {})[a.id] = G.t; // 4b: the camp remembers who struck it
 		const R = gangState(tg);
 		if ((tg !== 'nat' || t.native) && G.t - (R.hitT[o] ?? -9) > 3) {
 			R.hitT[o] = G.t;
