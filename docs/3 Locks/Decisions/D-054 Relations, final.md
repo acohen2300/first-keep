@@ -1,7 +1,7 @@
 # D-054 Relations, final [2026-11-01 07:45]
 
 - Date: 2026-10-31 10:16 [2026-11-01 07:45]
-- Status: locked (built in Build 80); the gift to rivals cut by D-057; a Misfits page added by D-058 [2026-11-01 07:45]
+- Status: locked (built in Build 80); the gift to rivals cut by D-057; a Misfits page added by D-058, as a third tab (D-077) [2026-11-01 11:55]
 - Albert's words: "we are locking into the final" [2026-11-01 07:45]
 - The rule: the record below [2026-11-01 07:45]
 - Its source: none named in the record [2026-11-01 07:45]
