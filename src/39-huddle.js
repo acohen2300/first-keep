@@ -434,7 +434,7 @@ function drawReticle() {
 	line(0, -R - 14, 0, -g);
 	line(0, g, 0, R + 14);
 	ctx.stroke();
-	ctx.font = '700 12px system-ui, sans-serif';
+	ctx.font = mapFont(12); // pinned to the screen: 12
 	ctx.textAlign = 'center';
 	ctx.fillText(eta ? `${mmss(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - R - 8);
 	ctx.restore();

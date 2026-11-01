@@ -76,7 +76,8 @@ const NATIVE = {
 	allyAt: 70,
 	decay: 0.1,
 	hitCost: 2,
-	gifts: [100, 300],
+	giftMax: 300, // the gift slider on Relations runs 0 to 300 (v70's two gifts were 100 and 300) and snaps to 50 (Albert, Oct 31)
+	giftStep: 50,
 	danegeld: 0.5,
 	giftWindow: 600,
 	garrison: 24,

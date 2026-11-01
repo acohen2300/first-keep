@@ -1,0 +1,143 @@
+# The cards of v80 (Albert's pictures, Oct 31; the audit's group E): each check below failed on the code before it and passes now. Run by the
+# gate:  python3 tests/cards.py
+#   Setup: each setting its own rank, its name quiet on the left, its choices one selector right-justified; Fog and Daily say their word once
+#   Relations: a rank a side, the gift a slider with its switch, the stance three icons in two slots, a ✓ a row that sends that row only;
+#     a friend's gift locked; the words friend, neutral, foe
+#   Mail: six lines a page, Previous and Next, the 30 kept are five pages; the Market's goods one selector
+#   E1 the Army card's Train fold has no commas; E2 a workshop counts what it made; E4 a find under the fog cannot be tapped; E5 a pinch lets
+#   go of the box and the crosshair's glow; E6 a dim Train button says why; E7 the pause follows the tab; E11 a burning Market has Send help
+#   The row: Emergency a slot on the cycle button's rank with its word; one steel panel holds both; a locked place in the line names its
+#   research; the map's labels are 12 at the starting zoom and 9 at the floor; the vassal's Demand rank keeps its 44
+import asyncio, os, sys
+from playwright.async_api import async_playwright
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+JS = r"""() => {
+  const F = window.__fk, bad = [], $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
+  F.newGame(5); F.act('close'); const G = F.G, P = G.P[0], k = F.keepOf(0); F.setPause(true); G.fogOn = false; P.age = 3;
+  for (const r of ['f', 'w', 's', 'g', 'i']) P.res[r] = 9999;
+  const put = (kind) => { const s = F.findSpot(0, kind, k.x, k.y, 70, 320); const b = F.build(0, kind, s.x, s.y); b.prog = 1; b.hp = F.BLD[kind].hp; F.built(b); return b; };
+  // Setup: six settings, each a rank: the name quiet in the slots on the left, the choices one selector ending at the card's right edge
+  try {
+  F.openCard({ type: 'setup' }); F.ui(true);
+  { const ranks = $$('#card .cin > .fm').filter((r) => r.querySelector('.info.quiet') && r.querySelector('.bar.sel')), card = $('#card .tb').getBoundingClientRect();
+    if (ranks.length < 7) bad.push(`Setup: ${ranks.length} settings stand on their own rank with their name, not 7 (six and Daily)`);
+    for (const r of ranks) { const b = r.querySelector('.bar.sel').getBoundingClientRect(), n = r.querySelector('.info.quiet').getBoundingClientRect();
+      if (Math.abs(b.right - card.right) > 1 || n.left > b.left || r.children.length !== 2) bad.push('Setup: a setting is not its name on the left and its choices right-justified: ' + r.textContent.trim().slice(0, 20)); }
+    const words = $('#card .cin').innerText.split(/\s+/);
+    for (const w of ['Fog', 'Daily']) if (words.filter((x) => x === w).length !== 1) bad.push(`Setup: ${w} says its word ${words.filter((x) => x === w).length} times`);
+    if ($$('#card .tick').length) bad.push('Setup: the old tick boxes are still there'); }
+  } catch (e) { bad.push('Setup: the check could not run: ' + e.message); }
+  // Relations: a rank a side; three stance icons in two slots; a slider with its switch; a ✓ a row
+  try {
+  G.rel[0][2] = G.rel[2][0] = 'ally'; G.ktab = 'rel'; F.openCard({ type: 'bld', id: k.id }); F.ui(true);
+  { const sides = 1 + G.P.filter((q) => q.id !== 0 && q.id !== F.WILD && q.alive).length, oks = $$('#card [data-act^="relok:"]');
+    if (oks.length !== sides) bad.push(`Relations: ${oks.length} check marks for ${sides} sides: a check mark per row`);
+    const rows = oks.map((o) => o.parentElement);
+    for (const r of rows) { const sel = r.querySelector('.bar.sel'), slt = r.querySelector('.slt'); if (!sel || sel.querySelectorAll('svg').length !== 3 || !sel.classList.contains('s2') || !slt || !slt.querySelector('input[type=range]')) bad.push('Relations: a row is not the gift slider and the three stance icons in two slots'); }
+    if (F.REL_WORD.ally !== 'Friend' || F.REL_WORD.peace !== 'Neutral' || F.REL_WORD.war !== 'Foe') bad.push('Relations: the words are not friend, neutral, foe: ' + Object.values(F.REL_WORD).join(', '));
+    if (/hostile|ally,/i.test($('#card').innerText)) bad.push('Relations: the card still says hostile or ally');
+    const was = G.rel[0][F.WILD]; G.rel[0][F.WILD] = G.rel[F.WILD][0] = 'ally'; F.ui(true);   // the Natives, the one side that takes a gift, as a friend
+    const nat = $(`#card [data-act="relok:${F.WILD}"]`), fr = nat && nat.parentElement.querySelector('.slt');
+    if (!fr || !fr.classList.contains('dis')) bad.push("Relations: a friend's gift is not locked");
+    G.rel[0][F.WILD] = G.rel[F.WILD][0] = was; F.ui(true);
+    // a gift to the Natives and a stance for the Raiders, each waiting on its row; the Natives' ✓ sends the gift only
+    const g0 = P.res.g, r0 = F.regardOf(0); F.act(`relgift:${F.WILD},100`); F.act('relwant:1,peace'); F.ui(true);
+    if (P.res.g !== g0) bad.push('Relations: the gift went before its check mark');
+    const ok = $(`#card [data-act="relok:${F.WILD}"]`); if (!ok || !ok.classList.contains('go')) bad.push("Relations: the Natives' check mark is not ready after a gift was picked");
+    ok && ok.click(); F.ui(true);
+    if (P.res.g !== g0 - 100 || !(F.regardOf(0) > r0)) bad.push("Relations: the Natives' check mark did not send their gift");
+    if (!(G.relPick || {})[1] || G.relPick[1].want !== 'peace') bad.push("Relations: the Natives' check mark sent another row's pick");
+    G.ktab = 'town'; }
+  // the vassal's Demand rank keeps its 44 (EXCEPTIONS #12 gone; the gate measures every card at every size, the vassal now included)
+  try {
+  { F.makeVassal(1, 0, 'fair'); const v = F.keepOf(1); F.openCard({ type: 'bld', id: v.id }); F.ui(true);
+    const tall = $$('#card [data-act^="demand:"]').filter((b) => b.getBoundingClientRect().height > 44.5);
+    if (!$$('#card [data-act^="demand:"]').length) bad.push('the vassal card shows no Demand rank'); else if (tall.length) bad.push(`the vassal's Demand rank grows past its 44: ${tall.map((b) => Math.round(b.getBoundingClientRect().height)).join(', ')}`); F.act('close'); }
+  } catch (e) { bad.push('vassal: the check could not run: ' + e.message); }
+  } catch (e) { bad.push('Relations: the check could not run: ' + e.message); }
+  // Mail: 30 lines, six a page, five pages; Previous dim on the first, Next dim on the last; nothing scrolls
+  try {
+  { G.mail = []; for (let i = 0; i < 40; i++) F.news('realm', 'A line of the mail number ' + 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN'[i] + '.', '', 4);
+    F.act('mail'); F.ui(true); const pages = [];
+    for (let p = 0; p < 6; p++) { pages.push($$('#card .mr').length); $('#card [data-act="mailp:1"]').click(); F.ui(true); }
+    if (pages.slice(0, 5).join() !== '6,6,6,6,6' || G.mailP !== 4) bad.push(`Mail: pages of ${pages.join(', ')} lines, last page ${G.mailP + 1}: six lines a page, five pages`);
+    if (!$('#card [data-act="mailp:1"]').classList.contains('dis')) bad.push('Mail: Next is not dim on the last page');
+    F.act('mail'); F.ui(true); if (!$('#card [data-act="mailp:-1"]').classList.contains('dis')) bad.push('Mail: Previous is not dim on the first page');
+    const c = $('#card'); if (c.scrollHeight > c.clientHeight + 1) bad.push('Mail: the card scrolls'); }
+  } catch (e) { bad.push('Mail: the check could not run: ' + e.message); }
+  // the Market: its goods one selector; burning, it has Send help and its health (E11)
+  try {
+  { const m = put('market'); m.fire = 5; F.openCard({ type: 'bld', id: m.id }); F.ui(true);
+    if (!$('#card .bar.sel [data-act^="mpick:"]')) bad.push('Market: the goods are not one selector');
+    if (!$(`#card [data-act="douse:${m.id}"]`) || !/health/.test($('#card').innerText)) bad.push('Market: a burning Market has no Send help or no health (it skips the shared page)');
+    m.fire = 0; }
+  } catch (e) { bad.push('the Market: the check could not run: ' + e.message); }
+  // E1: the Army card's Train soldiers fold has no stray commas in its ranks
+  try {
+  { F.act('close'); P.techs.add('command'); F.fxDirty(); F.openCard({ type: 'troops' }); const f = $('#card [data-f="armytrain"]'); if (f) f.open = true; F.ui(true);
+    const commas = $$('#card .fm').reduce((n, e) => n + [...e.childNodes].filter((x) => x.nodeType === 3 && x.textContent.trim() === ',').length, 0);
+    if (commas) bad.push(`E1: ${commas} commas between the Army card's Train buttons`); P.techs.delete('command'); F.fxDirty(); }
+  } catch (e) { bad.push('E1: the check could not run: ' + e.message); }
+  // E2: a workshop's "made" counts what it made, not its worker's life of gathering
+  try {
+  { const w = put('workshop'), v = G.units.find((u) => u.owner === 0 && u.kind === 'vil'); v.st.got = 512; v.node = w.node; F.openCard({ type: 'bld', id: w.id }); F.ui(true);
+    if (/512 made/.test($('#card').innerText)) bad.push("E2: the workshop says 512 made: its worker's gathering"); v.node = null; }
+  } catch (e) { bad.push('E2: the check could not run: ' + e.message); }
+  // E4: a find under the fog cannot be tapped open
+  try {
+  { F.act('close'); G.fogOn = true; const n = G.nodes.find((x) => x.kind === 'gold' && F.fogAt(x.x, x.y) === 0);
+    if (n) { const h = F.hitAt(F.SX(n.x), F.SY(n.y) - 6 * F.cam.z); if (h.t === 'node' && h.e === n) bad.push('E4: a gold mine under the fog was tapped open'); }
+    G.fogOn = false; }
+  } catch (e) { bad.push('E4: the check could not run: ' + e.message); }
+  // E5: a second finger lets go of the box and the crosshair's glow
+  try {
+  { const cv = $('#cv'), r = cv.getBoundingClientRect(), ev = (t, id, x) => cv.dispatchEvent(new PointerEvent(t, { pointerId: id, clientX: r.left + x, clientY: r.top + 300, bubbles: true }));
+    G.box = { mode: 'box', x0: 0, y0: 0, x1: 50, y1: 50 }; G.hud.drag = true; ev('pointerdown', 7, 100); ev('pointerdown', 8, 200);
+    if (G.box || G.hud.drag) bad.push('E5: a pinch left the box drawn or the crosshair glowing'); ev('pointerup', 8, 200); ev('pointerup', 7, 100); }
+  } catch (e) { bad.push('E5: the check could not run: ' + e.message); }
+  // E6: a dim Train button says why it cannot (here the line is full), never its cost as if payable
+  try {
+  { const keep = F.keepOf(0); keep.q.length = 0; for (let i = 0; i < 12; i++) F.train(0, 'vil'); const why = F.trainWhy(0, 'vil'), d = document.createElement('div');
+    d.innerHTML = F.trainButtons(['vil'])[0]; const b = d.firstElementChild;
+    if (!why) bad.push('E6: the check could not fill the line'); else if (!b.classList.contains('dis') || b.querySelector('small.can') || !b.innerText.includes(why.replace(/\.$/, ''))) bad.push('E6: a dim Train button does not say why: ' + b.innerText.replace(/\n/g, ' '));
+    keep.q.length = 0; }
+  } catch (e) { bad.push('E6: the check could not run: ' + e.message); }
+  // E7: the Town Center pauses on its Relations tab whichever way you came, and carries on when the tab turns back
+  try {
+  { F.act('close'); F.setPause(false); G.ktab = 'town'; F.openCard({ type: 'bld', id: k.id }); F.ui(true); if (G.paused) bad.push('E7: the Town tab paused the game');
+    $('#card [data-act="ktab:rel"]').click(); F.ui(true); if (!G.paused) bad.push('E7: turning to the Relations tab did not pause the game');
+    $('#card [data-act="ktab:town"]').click(); F.ui(true); if (G.paused) bad.push('E7: turning back to the Town tab left the game paused'); F.act('close'); F.setPause(true); }
+  } catch (e) { bad.push('E7: the check could not run: ' + e.message); }
+  // a locked place in the line names its research (+1 Records, +2 Guilds), not "research"
+  try {
+  { F.openCard({ type: 'bld', id: k.id }); F.ui(true); const l = $('#card [data-act^="qlock:"]');
+    if (l && /^\+\d\s*research$/i.test(l.innerText.replace(/\n/g, ' ').trim())) bad.push('a locked place in the line says "' + l.innerText.replace(/\n/g, ' ') + '", not its research'); F.act('close'); }
+  } catch (e) { bad.push('a locked place in the line names its res: the check could not run: ' + e.message); }
+  // the row: Emergency a slot (the cycle button's width) on the cycle button's rank, its word under its icon; War's steel panel holds both
+  try {
+  { F.hudPage('war'); F.ui(true); const e = $('#emgB').getBoundingClientRect(), c = $('#hudB').getBoundingClientRect();
+    if (Math.abs(e.width - c.width) > 0.6 || Math.abs(e.top - c.top) > 0.6 || Math.abs(e.right - (innerWidth - 6)) > 0.6) bad.push(`the Emergency button is ${e.width.toFixed(1)} wide at ${Math.round(e.top)}, not a slot on the cycle button's rank (${c.width.toFixed(1)} at ${Math.round(c.top)})`);
+    if (!$('#emgB .wd') || $('#emgB .wd').textContent !== F.ROW_WORD.emg) bad.push('the Emergency button has no word under its icon');
+    const top = parseFloat(getComputedStyle($('#orders'), '::before').top), o = $('#orders').getBoundingClientRect();
+    if (!(o.top + top <= c.top - 5)) bad.push("the War page's steel panel stops under the cycle button");
+    F.hudPage('jobs'); F.ui(true); }
+  } catch (e) { bad.push('the row: the check could not run: ' + e.message); }
+  // the map: a label is 12 at the starting zoom, larger zoomed in, 9 at the floor zoomed out
+  try {
+  { const z = F.cam.z; F.cam.z = F.ZOOM_START; const a = 12 * F.labelK(); F.cam.z = 0.2; const b = 12 * F.labelK(); F.cam.z = 3; const c = 12 * F.labelK(); F.cam.z = z;
+    if (Math.abs(a - 12) > 0.01 || Math.abs(b - 9) > 0.01 || !(c > 12)) bad.push(`the map's labels are ${a.toFixed(1)} at the start, ${b.toFixed(1)} zoomed out, ${c.toFixed(1)} zoomed in: not 12, 9 and larger`); }
+  } catch (e) { bad.push('the map: the check could not run: ' + e.message); }
+  return bad;
+}"""
+async def main():
+    async with async_playwright() as p:
+        br = await p.chromium.launch(); pg = await br.new_page(viewport={'width': 390, 'height': 844}); errs = []
+        pg.on('pageerror', lambda e: errs.append(str(e)[:200]))
+        await pg.goto('file://' + os.path.join(ROOT, 'first-keep.html')); await pg.wait_for_timeout(500)
+        try: bad = await pg.evaluate(JS)
+        except Exception as e: bad = ['the card checks could not run: ' + str(e)[:300]]
+        await br.close()
+    bad = bad + errs
+    print(('PASS ' if not bad else 'FAIL ') + 'the cards of v80 (Setup stacked, Relations final, Mail pages, Market selector, E1 to E11, Emergency and the steel panel, map labels)', '' if not bad else bad)
+    sys.exit(1 if bad else 0)
+asyncio.run(main())

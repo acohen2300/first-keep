@@ -115,8 +115,8 @@ function drawBld(b, s) {
 	if (b.owner === 0 && G.rdy && G.rdy.get(b.kind) && !b.q.some((j) => j.tech || j.age))
 		researchBadge(
 			sx - B.fp * NAVC * z * 0.3,
-			sy - (B.h * 1.2 + 6) * z - 10 * Math.max(0.9, z * 0.6),
-			Math.max(0.9, z * 0.6),
+			sy - (B.h * 1.2 + 6) * z - 10 * labelK(),
+			labelK(),
 			G.rdy.get(b.kind),
 		); // a parchment tab with a book and how many researches wait here
 	if (b.kind === 'mill' && !still()) {
@@ -141,7 +141,7 @@ function drawBld(b, s) {
 	const M = maxHpB(b.owner, b.kind);
 	if (b.hp < M - 1) bar(sx, sy - c.ay * k - 4, Math.min(60 * z, B.fp * NAVC * z), b.hp / M, G.P[b.owner].color);
 	if (G.wonder && G.wonder.id === b.id) {
-		ctx.font = '700 ' + Math.max(12, 12 * z) + 'px ' + fontF();
+		ctx.font = mapFont(12 * labelK());
 		ctx.fillStyle = '#ffd35e';
 		ctx.textAlign = 'center';
 		ctx.fillText(clock(Math.max(0, G.wonder.end - G.t)), sx, sy - c.ay * k - 10);

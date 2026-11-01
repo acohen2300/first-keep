@@ -149,7 +149,7 @@ function newGame(seed, carry, daily) {
 	const k = G.P[0].keep;
 	cam.x = k[0] + 120;
 	cam.y = k[1] - 120;
-	cam.z = 1.3;
+	cam.z = ZOOM_START;
 	clampCam();
 	if (carry) {
 		const p = G.P[0];

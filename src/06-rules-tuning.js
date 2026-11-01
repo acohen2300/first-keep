@@ -204,6 +204,7 @@ const HAZARDS = {
 	winter: {
 		pts: 2,
 		name: 'Bad weather',
+		short: 'Weather', // its one slot on Setup
 		desc: 'Winter fields give a quarter and marches crawl; blizzards blind the small map.',
 	},
 	drought: {

@@ -12,23 +12,31 @@ SETUP = """() => { const F = window.__fk; F.newGame(5); F.act('close'); const G 
 CARDS = [('help', "{type:'help'}"), ('setup', "{type:'setup'}"), ('army', "{type:'troops'}"), ('home', "{type:'menu',id:'home'}"), ('guide', "{type:'guide',page:'bld'}"),
          ('keep', "{type:'bld',id:IDS.keep}"), ('workshop', "{type:'bld',id:IDS.workshop}"), ('farm', "{type:'bld',id:IDS.farm}"),
          ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}"), ('mail', "{type:'mail'}"), ('squad', "{type:'squad',i:0}"), ('emergency', "{type:'emergency'}"),
-         ('villager', "{type:'unit',id:IDS.vil}"), ('stores', "{type:'stores'}"), ('house', "{type:'bld',id:IDS.house}")]
+         ('villager', "{type:'unit',id:IDS.vil}"), ('stores', "{type:'stores'}"), ('house', "{type:'bld',id:IDS.house}"),
+         # E8 (v80): the cards the gate never opened: Relations on its tab, Research, every milestone, and the Army card with Battalions (last: it researches)
+         ('relations', "(window.__fk.G.ktab = 'rel', {type:'bld',id:IDS.keep})"), ('research', "(window.__fk.G.ktab = 'town', {type:'research'})"),
+         ('milestones', "(window.__fk.G.ms = Object.keys(window.__fk.MS_TEXT).map((id, i) => ({ id, t: 60 * i })), {type:'milestone'})"),
+         ('army-squads', "(window.__fk.G.P[0].techs.add('command'), window.__fk.fxDirty(), {type:'troops'})")]
 MEASURE = """() => {
   const lum = c => { const f = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); };
   const parse = s => { const m = s.match(/[\\d.]+/g), k = s.startsWith('color(') ? 255 : 1; return m ? [m[0] * k, m[1] * k, m[2] * k, m[3] == null ? 1 : +m[3]] : [0, 0, 0, 0]; };   // rgb(), and color(srgb …) as color-mix gives it
   const bg = el => { const st = []; for (let e = el; e; e = e.parentElement) { const c = parse(getComputedStyle(e).backgroundColor); if (c[3] > 0) st.push(c); if (c[3] >= 1) break; } let col = [18, 23, 21]; for (let i = st.length - 1; i >= 0; i--) col = [0, 1, 2].map(j => st[i][j] * st[i][3] + col[j] * (1 - st[i][3])); return col; };
-  const out = { wide: document.documentElement.scrollWidth > innerWidth + 1, tall: document.documentElement.scrollHeight > innerHeight + 1, small: [], low: [], clip: [], tap: [], scroll: '' };
+  const out = { wide: document.documentElement.scrollWidth > innerWidth + 1, tall: document.documentElement.scrollHeight > innerHeight + 1, small: [], size: [], font: [], low: [], clip: [], tap: [], scroll: '' };
   const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
   for (let n = w.nextNode(); n; n = w.nextNode()) {
     const t = n.textContent.trim(), el = n.parentElement; if (!t || !el || el.closest('script,style,[hidden]')) continue;
     const r = el.getBoundingClientRect(), cs = getComputedStyle(el); if (!r.width || !r.height || cs.visibility === 'hidden' || r.bottom < 0 || r.top > innerHeight) continue;
     const px = parseFloat(cs.fontSize); if (px < 12) out.small.push(t.slice(0, 20) + ' ' + px);
+    if (px !== 12 && px !== 18) out.size.push(t.slice(0, 20) + ' ' + px);   // two text sizes (v80, Albert): 12 and 18
+    const fam = cs.fontFamily.split(',')[0].replace(/["']/g, '').trim(); if (fam !== 'Barlow Semi Condensed' && fam !== 'IM Fell English SC') out.font.push(t.slice(0, 20) + ' ' + fam);
+    else if (fam === 'Barlow Semi Condensed' && cs.fontWeight !== '600') out.font.push(t.slice(0, 20) + ' weight ' + cs.fontWeight);   // two fonts; Barlow at one weight, 600 (MAYBE)
     const fg = parse(cs.color), b = bg(el), L1 = lum(fg), L2 = lum(b), c = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05); if (c < 4.5) out.low.push(t.slice(0, 20) + ' ' + c.toFixed(1));
   }
   for (const b of document.querySelectorAll('button')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden]')) continue; for (const e of b.querySelectorAll('b,small')) if (e.scrollWidth > e.clientWidth + 1 && getComputedStyle(e).overflow !== 'visible') out.clip.push(e.textContent.slice(0, 24)); if (r.right > innerWidth + 1) out.clip.push('off screen: ' + b.textContent.slice(0, 20)); }
-  for (const b of document.querySelectorAll('button,[data-act],summary')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden],.h') || r.bottom < 0 || r.top > innerHeight) continue; if (r.width < 44 || r.height < 44) out.tap.push((b.id || b.textContent.trim().slice(0, 14) || b.className) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height)); }
+  for (const b of document.querySelectorAll('button,[data-act],summary')) { const r = b.getBoundingClientRect(); if (!r.width || b.closest('[hidden],.h,.hr,.thin') || r.bottom < 0 || r.top > innerHeight) continue; if (r.width < 44 || r.height < 44) out.tap.push((b.id || b.textContent.trim().slice(0, 14) || b.className) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height)); }
   out.grown = [...document.querySelectorAll('#card:not([hidden]) .fm>:not(.r2)')].filter((e) => e.getBoundingClientRect().height > 44.5).map((e) => e.textContent.trim().slice(0, 20) + ' ' + Math.round(e.getBoundingClientRect().height));   // a card is whole ranks: no cell taller than its slot (Build 70)
   { const c = document.getElementById('card'); out.scroll = c && !c.hidden && c.scrollHeight > c.clientHeight + 1 ? c.scrollHeight + '>' + c.clientHeight : ''; }
+  for (const e of document.querySelectorAll('#card .info.line :is(b,small)')) if (e.scrollWidth > e.clientWidth + 1) out.clip.push('line: ' + e.textContent.slice(0, 16));   // a line of a card cut short (v80: a name in one slot)
   for (const e of document.querySelectorAll('.wd,.top .c')) { if (e.closest('[hidden]') || !e.getBoundingClientRect().width) continue; if (e.scrollWidth > e.clientWidth + 1) out.clip.push('tile: ' + e.textContent.slice(0, 16)); }
   return out; }"""
 # Every title the game can show fits slots 2 to 4 of the title bar at 375 x 667, in the real font (MENU-SPEC §4, Build 70): the fixed titles (read
@@ -221,12 +229,12 @@ def verbs():
         i = s.index(f'const {name} = {{'); j = s.index('\n};', i); return set(re.findall(r'(?:^|[{;,]\s*|\n(?:\t| {2}))([a-z][a-zA-Z0-9]*)\(\w*\)\s*\{', s[i:j]))
     have = keys('ACT') | keys('PLAY')
     src = ''.join(open(f).read() for f in ['src/shell-head.html'] + sorted(glob.glob('src/*.js')))
-    used = set(re.findall(r'data-act="([a-z]+)', src)) | set(re.findall(r"btn\([`']([a-z]+)", src))
+    used = set(re.findall(r'data-(?:act|in)="([a-z]+)', src)) | set(re.findall(r"btn\([`']([a-z]+)", src)) | set(re.findall(r"(?:slt|sym)\([`']([a-z]+)", src))
     return sorted(used - have)
 async def main():
     fails = 0
     v = verbs(); print(('PASS ' if not v else 'FAIL ') + 'every button verb has a handler', '' if not v else v); fails += bool(v)
-    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/saves.py', 'tests/moves.py', 'tests/palette.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
+    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/saves.py', 'tests/moves.py', 'tests/palette.py', 'tests/cards.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
         r = subprocess.run([sys.executable, t], capture_output=True, text=True); print(r.stdout.strip() or ('FAIL ' + t + ' ' + r.stderr[-300:])); fails += r.returncode != 0
     w = subprocess.run([sys.executable, 'tests/words.py'], capture_output=True, text=True); print(('PASS ' if w.returncode == 0 else 'FAIL ') + 'toasts and tips: 10 words at most', w.stdout.strip() if w.returncode else ''); fails += w.returncode != 0
     async with async_playwright() as p:
@@ -243,7 +251,7 @@ async def main():
                     elif c == 'END': await pg.evaluate("() => { const F = window.__fk; F.closeCard && F.closeCard(); F.setPause(false); F.G.t = F.G.mode === 'conquest' ? F.G.t : 1799.9; F.G.mode = 't30'; for (let i = 0; i < 10; i++) F.step(1 / 30); }")
                     elif c: await pg.evaluate(f"window.__fk.openCard({c})")
                     await pg.wait_for_timeout(120); m = await pg.evaluate(MEASURE)
-                    issues = q + [k for k in ('wide', 'tall') if m[k]] + ([f"scroll:{m['scroll']}"] if m['scroll'] and W >= 390 and name not in ('help', 'guide', 'research') else []) + [f'{k}:{v[:3] if k != "tap" else v}' for k, v in (('small', m['small']), ('low', m['low']), ('clip', m['clip']), ('tap', sorted(set(m['tap']))), ('grown', m['grown'] if name != 'vassal' else [])) if v]
+                    issues = q + [k for k in ('wide', 'tall') if m[k]] + ([f"scroll:{m['scroll']}"] if m['scroll'] and W >= 390 and name not in ('help', 'guide', 'research') else []) + [f'{k}:{v[:3] if k != "tap" else v}' for k, v in (('small', m['small']), ('size', m['size']), ('font', m['font']), ('low', m['low']), ('clip', m['clip']), ('tap', sorted(set(m['tap']))), ('grown', m['grown'])) if v]
                     if issues: bad[name] = issues
                 if errs: bad['errors'] = errs[:2]
                 print(('PASS ' if not bad else 'FAIL ') + f'{page_file} {W}x{H}', '' if not bad else json.dumps(bad)[:2500]); fails += bool(bad); await pg.close()

@@ -737,6 +737,7 @@ const ROW_WORD = {
 	new: 'New',
 	army: 'The army',
 	fight: 'fighting',
+	emg: 'Emergency',
 	pace: ['slow', 'medium', 'fast'], // a squad's pace under it, from its slowest member (paceWord)
 };
 // What triggers what: when, then, why. Numbers come from the tables, so the text cannot drift from the game.

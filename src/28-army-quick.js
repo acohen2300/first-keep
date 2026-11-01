@@ -16,18 +16,15 @@ function qsPick(to) {
 function qsHTML(verb, label, to) {
 	if (!hasCmd()) G.qs.from = 'all';
 	let h = hasCmd()
-		? acts(
-				[['all', 'All'], ...BN.map((n, i) => [i, n])]
-					.map(([k, n]) =>
-						btn(
-							`qsfrom:${k}`,
-							n,
-							String(armyOf(0).filter((u) => u.kind !== 'spy' && (k === 'all' || u.bn === k)).length),
-							G.qs.from === k ? 'on' : '',
-						),
-					)
-					.join(''),
-				'c4',
+		? list(
+				[['all', 'All'], ...BN.map((n, i) => [i, n])].map(([k, n]) =>
+					btn(
+						`qsfrom:${k}`,
+						n,
+						String(armyOf(0).filter((u) => u.kind !== 'spy' && (k === 'all' || u.bn === k)).length),
+						G.qs.from === k ? 'on' : '',
+					),
+				),
 			)
 		: '';
 	const by = {};
@@ -224,12 +221,10 @@ function hideQuick() {
 const dialBtns = (a) => {
 	const tm = dialOf('temper', a),
 		sh = dialOf('form', a);
-	return (
-		btn(`temper:${a}`, 'Temper: ' + (tm < 0 ? 'mixed' : TEMPER[tm].name), '', tm >= 0 && tm !== T_GUARD ? 'on' : '') +
-		(G.P[0].techs.has('formations')
-			? btn(`shape:${a}`, 'Shape: ' + (sh < 0 ? 'mixed' : FORM[sh].name), '', sh > 0 ? 'on' : '')
-			: '')
-	);
+	return [
+		btn(`temper:${a}`, 'Temper: ' + (tm < 0 ? 'mixed' : TEMPER[tm].name), '', tm >= 0 && tm !== T_GUARD ? 'on' : ''),
+		G.P[0].techs.has('formations') ? btn(`shape:${a}`, 'Shape: ' + (sh < 0 ? 'mixed' : FORM[sh].name), '', sh > 0 ? 'on' : '') : '',
+	].filter(Boolean); // the cells, for a list: one is the whole rank
 };
 // ── Muster for a squad: what it still lacks, by soldier kind to train
 function musterGap(i) {

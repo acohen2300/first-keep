@@ -59,6 +59,7 @@ const BLD = {
 	keep: {
 		shelter: 8,
 		name: 'Town Center',
+		short: 'Town', // on a research step's line: 40f 30g · Town
 		fp: 5,
 		hp: 2400,
 		h: 34,

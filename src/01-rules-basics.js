@@ -40,6 +40,7 @@ const DIFF = {
 };
 const DIFK = Object.keys(DIFF);
 const ZOOM_MAX = 4,
+	ZOOM_START = 1.3, // the camera's zoom when a game opens: a map label is 12 there (labelK, 24-view-overlays)
 	TILT = 0.66,
 	SIDE = 0.4; // SIDE: how far right the back of a building sits, per unit of depth, so its east wall shows
 const FOG = 40,
@@ -59,8 +60,8 @@ const RES = Object.keys(RESOURCES),
 	LONG = Object.fromEntries(RES.map((r) => [RESOURCES[r].k, r]));
 const JOBS = RES; // a job for each resource
 
-// Relations: ally | peace (neutral) | war (hostile). Peace holds until a side gives NOTICE; alliance needs the other side's yes.
-const REL_WORD = { ally: 'Ally', peace: 'Neutral', war: 'Hostile' };
+// Relations: ally (friend) | peace (neutral) | war (foe). Peace holds until a side gives NOTICE; alliance needs the other side's yes.
+const REL_WORD = { ally: 'Friend', peace: 'Neutral', war: 'Foe' }; // the words agreed for v80 (cold review of v70): friend, neutral, foe
 // The four corners (a base rule): each Town Center CORNER from the middle on both axes, so the Throne is the same distance from all four.
 // 695, not 700: a 5-square Town Center centres on a half square; 300 and 1700 snapped to 305 and 1705 (the Raiders 14 nearer, to Build 70).
 const CORNER = 695;

@@ -61,7 +61,6 @@ const CARDS = {
 						? btn(`takedown:${b.id}`, 'Tap again', 'to take down · ' + costText(back), 'warn')
 						: btn(`takedown:${b.id}`, 'Take down', costText(back) + ' back')); // last on the card: it is the one you rarely want
 		}
-		if (mine && done && b.kind === 'market') return h + marketHTML(b, end) + more();
 		if (!(mine && kp)) h += infoRank(b, factOf(b, X, crew));
 		if (mine) {
 			const tr = done && !rel ? trainsAt(b.kind) : [],
@@ -119,9 +118,9 @@ const CARDS = {
 				h += folder(
 					'ktab',
 					[
-						['town', 'Town', 'train and tech'],
-						['rel', 'Relations', 'ally, neutral, hostile'],
-					],
+						['town', 'Town'],
+						['rel', 'Relations'],
+					], // the tabs say their name only (picture Relations Final); the stances are friend, neutral, foe (REL_WORD)
 					rel ? 'rel' : 'town',
 					rel ? relHTML() : page + list(end ? [end] : []),
 				);
@@ -340,10 +339,12 @@ const CARDS = {
 		const at = `${Math.round(c.x)},${Math.round(c.y)}`;
 		return (
 			title('Here', coord(c.x, c.y)) +
-			acts(btn(`rally:${at}`, 'New soldiers here', G.rally0 ? 'set: tap to clear' : 'off')) +
-			acts(
-				(unitsOf(0, 'scout').length ? btn(`scoutgo:${at}`, 'Send the scout', '') : '') +
-					(unitsOf(0, 'spy').length ? btn(`spygo:${at}`, 'Send a spy here', 'to look') : ''),
+			list(
+				[
+					btn(`rally:${at}`, 'New soldiers here', G.rally0 ? 'set: tap to clear' : 'off'),
+					unitsOf(0, 'scout').length ? btn(`scoutgo:${at}`, 'Send the scout', '') : '',
+					unitsOf(0, 'spy').length ? btn(`spygo:${at}`, 'Send a spy here', 'to look') : '',
+				].filter(Boolean),
 			) +
 			fold(
 				'about',
@@ -434,39 +435,39 @@ const CARDS = {
 		`<p>Your game from ${clock(c.t)}: ${CIVS[c.civ] ? CIVS[c.civ].name + ', ' : ''}${AGES[c.age].name} age. Resume it, or start a new one.</p>` +
 		acts(btn('resume', 'Resume', clock(c.t), 'go') + btn('card:setup', 'New game', '')),
 	setup() {
-		// the annoying part before the fun part (Albert): the settings first, then your people, the challenge as ticks, and Start at the foot
+		// the annoying part before the fun part (Albert): each setting its own rank, then your people and their soldier, the day's challenge,
+		// the hazards, and Start at the foot (v80, picture Setup Stacked with Names). The whys wait behind the book
 		const C = CIVS[SET.civ],
 			H = SET.daily ? TODAY_HZ : SET.hz || {},
 			lv = levelOf(H), // none ticked: the hazards are drawn by lot when the game starts (Build 70)
 			short = (k) => cap1(UNIT[CIVS[k].uu].name.replace(new RegExp('^' + CIVS[k].name + ' ', 'i'), ''));
-		let h =
+		fold(
+			'about',
+			'About',
+			settingsWhy() +
+				`<p><b>${short(SET.civ)}:</b> ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}. ${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>` +
+				HZK.map((k) => `<p><b>${HAZARDS[k].name}:</b> ${HAZARDS[k].desc}</p>`).join('') +
+				`<p><b>Daily challenge:</b> the same map and the same hazards for everyone, all day. Tick a hazard yourself and it becomes your own game again.</p><p><b>None ticked:</b> each hazard is drawn by lot, even odds, for every side alike; the first message says the level.</p><p class="copy">© Albert Labs, all rights reserved</p>`,
+		);
+		return (
 			title('A new game', '') +
 			settingsHTML() +
-			acts(CIVK.map((k) => btn(`civ:${k}`, CIVS[k].name, '', SET.civ === k ? 'on' : '')).join(''), 'c6 civs') +
-			// the people line opens on its history: tap it for why (Albert, Oct 29: put the Why back; one line, so the card still fits one page)
-			`<details class="fold civline" data-f="civwhy"${FOLD.has('civwhy') ? ' open' : ''}><summary><b>${short(SET.civ)}</b> · ${C.bonus}</summary>${`<p>Unique soldier: ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}.</p><p>${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>`}</details>` +
-			`<button class="tick daily${SET.daily ? ' on' : ''}" data-act="daily"><b>Daily challenge: level ${levelOf(TODAY_HZ)}</b><small>one map for all, today</small></button>` + // one tick, written out (Albert)
-			acts(HZK.map((k) => `<button class="tick${H[k] ? ' on' : ''}" data-act="hz:${k}"><b>${HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small></button>`).join(''), 'c3') +
-			fold(
-				'about',
-				'What each hazard does',
-				HZK.map((k) => `<p><b>${HAZARDS[k].name}:</b> ${HAZARDS[k].desc}</p>`).join('') +
-					`<p><b>Daily challenge:</b> the same map and the same hazards for everyone, all day. Tick a hazard yourself and it becomes your own game again.</p><p><b>None ticked:</b> each hazard is drawn by lot, even odds, for every side alike; the first message says the level.</p>`,
-			);
-		if (staleSave)
-			h += `<p class="dim">Your last game ${staleSave === 'damaged' ? 'could not be read' : `came from an older version (${staleSave}) and cannot be opened`}. It is kept aside, not deleted.</p>`;
-		return (
-			h +
+			acts(choice(CIVK.map((k) => [`civ:${k}`, CIVS[k].name, SET.civ === k]), 's6', true), 'c1') +
+			acts(info(short(SET.civ), C.bonus, 'left line'), 'c1') +
+			acts(lab(`Daily · level ${levelOf(TODAY_HZ)}`, 's4') + choice(offOn('daily', !!SET.daily), 's2', true), 'c6') +
+			acts(choice(HZK.map((k) => [`hz:${k}`, `<b>${HAZARDS[k].short || HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small>`, !!H[k]]), 's6'), 'c1') +
+			(staleSave
+				? acts(info(`Your last game ${staleSave === 'damaged' ? 'could not be read' : `came from an older version (${staleSave})`}`, 'kept aside, not deleted', 'left line'), 'c1')
+				: '') +
 			acts(
 				btn(
 					SET.daily ? 'today' : 'fresh',
 					'Start',
-					`${C.name} · ${SET.daily ? 'daily challenge' : MODES[SET.mode].name} · ${lv ? `level ${lv} · score ×${(1 + lv / 10).toFixed(1)}` : 'hazards at random'}`,
+					`${C.name} · ${SET.daily ? 'daily challenge' : MODES[SET.mode].name.replace('minutes', 'min')} · ${lv ? `level ${lv} · score ×${(1 + lv / 10).toFixed(1)}` : 'hazards at random'}`,
 					'main',
 				),
 				'c1',
-			) +
-			`<p class="dim copy">© Albert Labs, all rights reserved</p>`
+			)
 		);
 	},
 	node(c) {
@@ -531,16 +532,14 @@ const CARDS = {
 							`<p data-act="ordpick:${O.id}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`,
 					)
 					.join(''); // tap a line: that group is picked, and the camera goes to it
-		h += acts(btn('card:emergency', 'Emergency', 'town square · all hands · shelter', G.emg ? 'warn' : ''));
+		h += acts(btn('card:emergency', 'Emergency', 'town square · all hands · shelter', G.emg ? 'warn' : ''), 'c1');
 		if (S.length && hasCmd())
 			h +=
 				sec('Orders go to') +
-				acts(
+				list(
 					[['all', 'All', S.length]]
 						.concat(BN.map((n, i) => [i, n, S.filter((u) => u.bn === i).length]))
-						.map(([k, n, cnt]) => btn(`sel:${k}`, n, `${cnt}`, G.sel === k ? 'on' : ''))
-						.join(''),
-					'c4',
+						.map(([k, n, cnt]) => btn(`sel:${k}`, n, `${cnt}`, G.sel === k ? 'on' : '')),
 				);
 		if (S.length) {
 			h +=
@@ -575,7 +574,7 @@ const CARDS = {
 						'<p>Blows from the side and behind drain nerve; rest, a wall, a tower or a priest restore it. Under 20% a soldier runs.</p>',
 					);
 			}
-			h += acts(dialBtns(G.sel));
+			h += list(dialBtns(G.sel));
 			if (ready(0, 'temple').length) {
 				const why = zealWhy(0, orderSet());
 				h += acts(
@@ -590,7 +589,7 @@ const CARDS = {
 			}
 		}
 		const kinds = ARMYK.filter((k) => !UNIT[k].civ && UNIT[civKind(0, k)].age <= p.age + 1);
-		h += fold('armytrain', 'Train soldiers', acts(trainButtons(kinds)));
+		h += fold('armytrain', 'Train soldiers', list(trainButtons(kinds)));
 		return (
 			h +
 			fold(
@@ -643,11 +642,15 @@ const CARDS = {
 		);
 	},
 	research: () => researchHTML(),
-	// the mail (Build 64): every line kept, newest first, by group; a group can hide its previews here or from the preview's ×
+	// the mail (Build 64): every line kept, newest first, by group; a group can hide its previews here or from the preview's ×. Six lines a
+	// page, Previous and Next: the 30 kept are five pages, nothing scrolls (N13, Albert Oct 31: "a page system, nothing more")
 	mail() {
 		const M = G.mail || [],
 			g = G.mailG,
-			show = M.filter((m) => !g || m.grp === g).slice(0, 6);
+			all = M.filter((m) => !g || m.grp === g),
+			pages = Math.max(1, Math.ceil(all.length / MSG.page)),
+			pg = (G.mailP = clamp(G.mailP || 0, 0, pages - 1)),
+			show = all.slice(pg * MSG.page, pg * MSG.page + MSG.page);
 		let h = title('Mail', g ? GROUPS[g] : `${M.length} kept`);
 		h += acts(
 			[
@@ -668,8 +671,12 @@ const CARDS = {
 		return (
 			h +
 			(show.length
-				? `<div class="mrows">${show.map((m) => `<button class="mr" data-act="${linkOf(m) || 'mail'}" style="--cc:${ccOf(m.cls)}"><b>${m.text}${m.n > 1 ? ` ×${m.n}` : ''}</b><small>${GROUPS[m.grp]} · ${clock(m.t)}${m.why ? ' · ' + m.why : ''}</small></button>`).join('')}</div>`
-				: acts(info('Nothing here yet', 'each message is kept here as it comes', 'left line'), 'c1'))
+				? acts(show.map((m) => `<button class="mr" data-act="${linkOf(m) || 'mail'}" style="--cc:${ccOf(m.cls)}"><b>${m.text}${m.n > 1 ? ` ×${m.n}` : ''}</b><small>${GROUPS[m.grp]} · ${clock(m.t)}${m.why ? ' · ' + m.why : ''}</small></button>`).join(''), 'c1')
+				: acts(info('Nothing here yet', 'each message is kept here as it comes', 'left line'), 'c1')) +
+			acts(
+				btn('mailp:-1', 'Previous', `page ${pg + 1} of ${pages}`, pg ? '' : 'dis') +
+					btn('mailp:1', 'Next', all.length ? `${all.length} ${some(all.length, 'line')}` : '', pg < pages - 1 ? '' : 'dis'),
+			)
 		);
 	},
 	milestone(c) {
@@ -682,7 +689,7 @@ const CARDS = {
 			h += `<p><b>${msFill(line)}</b></p><p>${msFill(why)}</p>` + acts(btn(act, fix, '', 'go'), 'c1');
 		}
 		h += M.length
-			? `<div class="chips">${M.map((m) => `<span class="chip" data-act="card:milestone,${m.id}">${clock(m.t)} · ${MS_TEXT[m.id][0].split(':')[0].replace(/\.$/, '')}</span>`).join('')}</div>`
+			? list(M.filter((m) => MS_TEXT[m.id]).map((m) => btn(`card:milestone,${m.id}`, MS_TEXT[m.id][0].split(':')[0].replace(/\.$/, ''), clock(m.t), m.id === id ? 'on' : '')), 2) // a slot each, two a rank (E8: chips were 22 tall taps); a milestone cut from the text is left out (N9)
 			: '<p class="dim">None yet. Each first (a house, a field, a soldier, a squad, an age) and each hard moment (mud, snow, ice, hunger, fire, a rout) is one, with its why and its fix.</p>';
 		return h;
 	},
@@ -712,7 +719,7 @@ const CARDS = {
 		const pg = c.page || 'bld';
 		return (
 			title('Guide', 'what leads to what, and why') +
-			acts(
+			list(
 				[
 					['bld', 'Buildings'],
 					['unit', 'Units'],
@@ -722,9 +729,7 @@ const CARDS = {
 					['rule', 'Rules'],
 					['hist', 'History'],
 				]
-					.map(([k, n]) => btn(`guide:${k}`, n, '', pg === k ? 'on' : ''))
-					.join(''),
-				pg === 'hist' ? 'c4' : 'c3',
+					.map(([k, n]) => btn(`guide:${k}`, n, '', pg === k ? 'on' : '')),
 			) +
 			(pg === 'hist'
 				? `<p><b>History · beta.</b> ${HIST_NOTE}</p><input id="gq" class="q" type="search" placeholder="Search: a thing, a place, a date" value="${(G.gq || '').replace(/"/g, '')}" oninput="window.__fkq(this.value)"><div class="row"><button class="lnk" data-act="copyhist">Copy the whole timeline</button></div><div id="gres">${histHTML(G.gq)}</div><p>${HIST_ASK}</p>`
@@ -774,21 +779,15 @@ const CARDS = {
       <p><b>The world:</b> seasons, weather, harvests and sickness change what pays. Guarded finds wait in every corner.</p>
       <p><b>Win</b> by conquest, a wonder held ${WONDER_HOLD / 60} minutes, or the top score at the bell. Score is top right. The Guide and Rules above hold every number.</p>` +
 			settingsHTML() +
-			acts(
-				btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : '') +
-					btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : '') +
-					btn('news', 'World news', SET.news !== false ? 'on' : 'off', SET.news !== false ? 'on' : '') +
-					btn('lights', 'Lights', SET.lights !== false ? 'on' : 'off', SET.lights !== false ? 'on' : '') +
-					btn(
-						'cardpause',
-						'Pause on cards',
-						SET.cardPause !== false ? 'on' : 'off',
-						SET.cardPause !== false ? 'on' : '',
-					) +
-					btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off') +
-					btn('card:taps', 'Tap counts', 'this phone only'),
-				'c3',
-			) +
+			list([
+				btn('tips', 'Tips', SET.tips ? 'on' : 'off', SET.tips ? 'on' : ''),
+				btn('msgs', 'Messages', SET.msgs !== false ? 'on' : 'off', SET.msgs !== false ? 'on' : ''),
+				btn('news', 'World news', SET.news !== false ? 'on' : 'off', SET.news !== false ? 'on' : ''),
+				btn('lights', 'Lights', SET.lights !== false ? 'on' : 'off', SET.lights !== false ? 'on' : ''),
+				btn('cardpause', 'Pause on cards', SET.cardPause !== false ? 'on' : 'off', SET.cardPause !== false ? 'on' : ''),
+				btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off'),
+				btn('card:taps', 'Tap counts', 'this phone only'),
+			]) +
 			(SET.hideG && Object.keys(SET.hideG).length
 				? acts(btn('mailall', 'Show every group again', Object.keys(SET.hideG).map((g) => GROUPS[g]).join(', ') + ' hidden'), 'c1')
 				: '') +
@@ -799,18 +798,25 @@ const CARDS = {
 					G.confirm === 'new' ? 'this one is lost' : 'pick your people',
 					G.confirm === 'new' ? 'warn' : '',
 				),
+				'c1',
 			) +
 			`<p>The game saves itself every ${SAVE_EVERY} seconds on this phone. World, game length and people take effect in the next game.</p>`
 		);
 	},
 };
-const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'end', 'research', 'menu']); // the cards that take the whole height
+const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'research', 'menu', 'troops']); // the Army card with Battalions needs 11 ranks (E8) // the cards that take the whole height
 // three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet: lg every rank that fits above the row (the Build
 // card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most
-const SIZE_OF = (t) => (FULL.has(t) ? 'lg' : t === 'squad' || t === 'emergency' ? 'sm' : 'md');
+const SIZE_OF = (c) =>
+	FULL.has(c.type) || (c.type === 'bld' && (G.blds.find((b) => b.id === c.id) || {}).kind === 'market')
+		? 'lg'
+		: c.type === 'squad' || c.type === 'emergency'
+			? 'sm'
+			: 'md'; // one home for a card's size: the Market is a building card the height of a full one
 function renderCard() {
 	const c = G.card;
 	if (!c || !CARDS[c.type]) return;
+	cardPause(c);
 	infoBuf = [];
 	cardHead = ['', ''];
 	let h = CARDS[c.type](c);
@@ -830,10 +836,7 @@ function renderCard() {
 		cardSig = h;
 		patchHTML(cardIn, h);
 	}
-	const cc = G.card;
-	$('card').classList.toggle('setup', cc.type === 'setup');
-	const size =
-		cc.type === 'bld' && (G.blds.find((b) => b.id === cc.id) || {}).kind === 'market' ? 'lg' : SIZE_OF(cc.type);
+	const size = SIZE_OF(c);
 	for (const s of ['lg', 'md', 'sm']) $('card').classList.toggle(s, size === s);
 	$('card').hidden = false;
 }

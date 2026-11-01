@@ -1936,6 +1936,7 @@ const TECH = [
 	{
 		id: 'records',
 		name: 'Record keeping',
+		short: 'Records', // its name in a single slot (the line's locked place: +1 Records)
 		at: 'school',
 		line: 'Letters',
 		age: 1,

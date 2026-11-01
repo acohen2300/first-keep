@@ -81,7 +81,7 @@ cv.addEventListener('pointerdown', (e) => {
 	const p = lp(e);
 	ptrs.set(e.pointerId, p);
 	if (ptrs.size >= 2) {
-		drag = null;
+		dropDrag();
 		const [a, b] = [...ptrs.values()];
 		pinch = { d: hyp(a.x - b.x, a.y - b.y) || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
 		return;
@@ -199,7 +199,7 @@ cv.addEventListener('pointerup', (e) => {
 	holdStop();
 	if (pinch) {
 		if (ptrs.size < 2) pinch = null;
-		drag = null;
+		dropDrag();
 		return;
 	}
 	const d = drag;
@@ -237,14 +237,19 @@ cv.addEventListener('pointerup', (e) => {
 	}
 	tapAt(p.x, p.y);
 });
-cv.addEventListener('pointercancel', (e) => {
+// letting go of a drag, one home (E5: a pinch dropped the drag but left the box drawn and the crosshair glowing): the box, the crosshair's
+// glow, the edge and the drag itself, from a pinch's start and end and a cancel
+function dropDrag() {
 	EDGE = null;
 	if (G.hud) G.hud.drag = false;
-	holdStop();
 	G.box = null;
+	drag = null;
+}
+cv.addEventListener('pointercancel', (e) => {
+	holdStop();
 	ptrs.delete(e.pointerId);
 	if (ptrs.size < 2) pinch = null;
-	drag = null;
+	dropDrag();
 });
 cv.addEventListener(
 	'wheel',
@@ -310,7 +315,8 @@ function hitAt(sx, sy) {
 	let nd = null,
 		nr = Math.max(16, 11 * z);
 	for (const n of G.nodes)
-		if (n.kind !== 'farm') {
+		if (n.kind !== 'farm' && (!G.fogOn || fogAt(n.x, n.y) > 0)) {
+			// a find under the fog is not there to tap: the same test the drawing uses (E4)
 			const d = hyp(SX(n.x) - sx, SY(n.y) - 6 * z - sy);
 			if (d < nr) {
 				nr = d;

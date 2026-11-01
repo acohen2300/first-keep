@@ -57,18 +57,16 @@ const BLD_PAGE = {
 	council: () =>
 		hasCmd()
 			? {
-					page: acts(
-						BN.map((n, j) =>
-							btn(`wsq:${j}`, n, `${armyOf(0).filter((u) => u.kind !== 'spy' && u.bn === j).length} in it`),
-						).join(''),
-						'c4',
-					), // each opens its card, where it is built (39-huddle)
+					page: list(
+						BN.map((n, j) => btn(`wsq:${j}`, n, `${armyOf(0).filter((u) => u.kind !== 'spy' && u.bn === j).length} in it`)),
+					), // each opens its card, where it is built (39-huddle); four are two and two
 					book: `<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve. Send them from the War page with Go.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
 				}
 			: {
 					fact: ['No squads yet', G.P[0].techs.has('engage') ? 'next: Battalions' : 'first: Engagement'],
 					book: `<p>${G.P[0].techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, four squads.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`,
 				},
+	market: (b) => marketPage(b),
 	mint: () =>
 		G.P[0].debased
 			? { fact: ['Coin debased', `Market prices ×${MINT.price}`] }
@@ -93,11 +91,12 @@ function factOf(b, X, crew) {
 		return [`${clock(Math.max(0, G.wonder.end - G.t))} to ${b.owner === 0 ? 'win' : 'their win'}`, 'the wonder stands'];
 	return X.fact || (B.room ? [`Room for ${B.room}`, ''] : null);
 }
-// the info rank: the fact as a sentence (three slots), then health and age; with no fact, health and age take two triples (no holes)
+// the info rank: the fact as a sentence (four slots), then health and age a slot each; with no fact, health and age take two triples (no
+// holes). Whole slots (E9: they were one and a half)
 function infoRank(b, f) {
-	const s = f ? 's15' : 's3';
+	const s = f ? 's1' : 's3';
 	return acts(
-		(f ? info(f[0], f[1], 'left line s3') : '') +
+		(f ? info(f[0], f[1], 'left line s4') : '') +
 			info(`${Math.round(b.hp)}/${Math.round(maxHpB(b.owner, b.kind))}`, 'health', s) +
 			info(AGES[BLD[b.kind].age || 0].name, 'age', s),
 	);
@@ -131,128 +130,113 @@ function slotsHTML(b) {
 	const more = n < 6 && TECH.find((t) => (t.fx || []).some((f) => f.s === 'queue') && !G.P[0].techs.has(t.id)); // the next places, locked: a tap says how to open them
 	if (more)
 		cells.push(
-			`<button class="slot dis" data-act="qlock:${more.id}" aria-label="More places: ${more.name}"><b>+${more.fx.find((f) => f.s === 'queue').a}</b><small>research</small></button>`,
+			`<button class="slot dis" data-act="qlock:${more.id}" aria-label="More places: ${more.name}"><b>+${more.fx.find((f) => f.s === 'queue').a}</b><small>${more.short || more.name}</small></button>`, // the research that opens them, by name ("+2 Guilds", cold review of v70)
 		);
 	return acts(cells.join(''), 'c6');
 }
-// Relations, at the Town Center: one row per side, the stance you take toward them. Neutral keeps both swords sheathed; Hostile takes effect after notice; Ally needs their yes.
-function nativesHTML() {
-	const o = 0,
-		r = Math.round(regardOf(o)),
-		rel = G.rel[0][WILD],
-		P = (G.prisoners || []).filter((x) => x.o === 0);
-	let h = acts(
-		info('Natives', `regard ${r} · ${REL_WORD[rel].toLowerCase()}`, 'left') +
-			NATIVE.gifts
-				.map((a) =>
-					btn(
-						`gift:${WILD},${a}`,
-						`Gift ${a}g`,
-						giftWhy(0, a) ? giftWhy(0, a).replace(/\.$/, '') : `regard +${giftGain(0, a)}`,
-						giftWhy(0, a) ? 'dis' : '',
-					),
-				)
-				.join('') +
-			btn(
-				`rel:${WILD},ally`,
-				'Ally',
-				rel === 'ally' ? '' : relWhy(0, WILD, 'ally') ? relWhy(0, WILD, 'ally').replace(/\.$/, '') : 'by emissary',
-				rel === 'ally' ? 'on' : relWhy(0, WILD, 'ally') ? 'dis' : '',
-			),
-		'c4',
+// Relations, at the Town Center (v80, Albert Oct 31: "we are locking into the final"; picture Relations Final; decision 3: a ✓ for each
+// row): one rank a side. The name, its stance under it in the stance's colour; the gift, a slider with its switch (a bribe is a step for
+// anyone not a friend, so a friend's gift is locked; only the Natives take a gift in the game today); the stance, three icons in two slots;
+// the row's ✓. What is picked waits on the card (G.relPick) until that row's ✓ sends it: the picked icon wears the gold ring, the stance
+// held now stays in the name's colour, and the ✓ turns blue. The last rank says what the last ✓ touched will do, and the board
+const STANCE = [
+	['war', 'foe'],
+	['peace', 'neutral'],
+	['ally', 'friend'],
+];
+const relSides = () => [WILD, ...G.P.filter((q) => q.id !== 0 && q.id !== WILD && q.alive).map((q) => q.id)];
+// a side whose stance is not yours to pick here: your vassal (their own page) or your overlord
+const relLord = (q) => q !== WILD && ((G.P[q].lord === 0 && !G.P[q].rebel) || (G.P[0].lord === q && !G.P[0].rebel));
+const relName = (q) => (q === WILD ? 'Natives' : G.P[q].name);
+const giftLock = (q) => (q !== WILD ? 'Gifts go to the Natives only.' : G.rel[0][q] === 'ally' ? 'A gift to a friend is locked.' : null);
+// what the row's ✓ would send: [gift or 0, stance or null], and why it cannot, or null
+function relDraft(q) {
+	const d = (G.relPick || {})[q] || {},
+		rel = G.rel[0][q],
+		gift = d.on && d.gift > 0 && !giftLock(q) ? d.gift : 0,
+		want = d.want && d.want !== rel ? d.want : null;
+	return [gift, want, (gift && giftWhy(0, gift)) || (want && relWhy(0, q, want)) || null];
+}
+const relPickOf = (q) => {
+	G.relPick = G.relPick || {};
+	G.relPick.last = q;
+	return G.relPick[q] || (G.relPick[q] = {});
+};
+function relRow(q) {
+	const rel = G.rel[0][q],
+		d = (G.relPick || {})[q] || {},
+		lord = relLord(q),
+		lock = giftLock(q),
+		[gift, want, why] = relDraft(q),
+		nl = q === WILD ? 0 : noticeLeft(0, q) || noticeLeft(q, 0),
+		word = lord ? (G.P[q].lord === 0 ? 'vassal' : 'overlord') : REL_WORD[rel] + (nl ? ` · ${nl} s` : '');
+	return acts(
+		`<div class="info left line s1"><b>${relName(q)}</b><small class="${lord ? '' : 'stance-' + rel}">${word}</small></div>` +
+			slt(`relon:${q}`, `relgift:${q}`, 'Gift', lock ? '—' : `${d.gift || 0}g`, lock ? 0 : d.gift || 0, NATIVE.giftMax, NATIVE.giftStep, d.on, !!lock || lord) +
+			choice(
+				STANCE.map(([k, w]) => [`relwant:${q},${k}`, ICON[w], (d.want || rel) === k, `stance-${k}${lord ? ' dis' : ''}`, cap1(w)]),
+				's2',
+				true,
+			) +
+			sym(`relok:${q}`, ICON.ok, gift || want ? (why ? 'dis' : 'go') : 'dis', `Send to the ${relName(q)}`),
+		'c6',
 	);
-	h += acts(
-		['peace', 'war']
-			.map((w) =>
-				btn(
-					`rel:${WILD},${w}`,
-					REL_WORD[w],
-					rel === w
-						? ''
-						: relWhy(0, WILD, w)
-							? relWhy(0, WILD, w).replace(/\.$/, '')
-							: w === 'war'
-								? 'costs 20 regard, no notice'
-								: 'the swords go up',
-					rel === w ? 'on' : relWhy(0, WILD, w) ? 'dis' : w === 'war' ? 'warn' : '',
-				),
-			)
-			.join(''),
-		'c4',
-	);
-	if (P.length)
-		h +=
-			sec('Your people held') +
-			acts(
-				P.map((x, i) =>
-					btn(
-						`ransom:${i}`,
-						`Ransom ${UNIT[x.kind].name.toLowerCase()}`,
-						`${x.ransom}g · ${x.by === WILD ? 'Natives' : G.P[x.by].name} · ${clock(Math.max(0, x.t + PRISON.secs - G.t))}`,
-						G.P[0].res.g >= x.ransom ? 'warn' : 'dis',
-					),
-				).join(''),
-				'c2',
+}
+// what the last ✓ touched will do, in a line; and the board: at peace or not, the Games, the Natives' regard
+function relStatus() {
+	const q = (G.relPick || {}).last,
+		tf = truceFor(),
+		next = Math.max(0, PEACE.games.every - (G.t - (G.gamesT ?? 0))),
+		board = `${G.truce === null ? 'not at peace' : `at peace ${clock(tf)}`} · Games in ${clock(next)} · Natives regard ${Math.round(regardOf(0))}`;
+	let line = 'Pick a gift or a stance, then its ✓';
+	if (q !== undefined) {
+		const [gift, want, why] = relDraft(q),
+			to = `the ${relName(q)}`,
+			W = { war: 'a foe of', peace: 'at peace with', ally: 'a friend of' };
+		if (why) line = `${relName(q)}: ${why.replace(/\.$/, '')}`;
+		else if (gift || want)
+			line = cap1(
+				[gift ? `send ${gift}g to ${to}` : '', want ? `${gift ? 'and become' : 'become'} ${W[want]} ${to}` : ''].filter(Boolean).join(' '),
 			);
-	{
-		const H = (G.prisoners || []).filter((x) => x.by === 0);
-		if (H.length)
-			h += `<p><i>You hold ${H.length}:</i> ${H.map((x) => `a ${UNIT[x.kind].name.toLowerCase()} of ${G.P[x.o].name}`).join(', ')}. Unransomed in ${PRISON.secs / 60} minutes, they serve you.</p>`;
 	}
-	return h;
+	return acts(info(line, board, 'left line'), 'c1');
 }
 function relHTML() {
-	let h = sec('Relations') + nativesHTML();
-	{
-		// the board: at peace or not, the hidden age, the Games, standing down
-		const tf = truceFor(),
-			spare = Math.max(
-				0,
-				soldiersOf(0).filter((u) => u.state === 'home' && !u.inside).length -
-					Math.ceil(soldiersOf(0).length * PEACE.stand.keep),
+	const spare = Math.max(
+			0,
+			soldiersOf(0).filter((u) => u.state === 'home' && !u.inside).length - Math.ceil(soldiersOf(0).length * PEACE.stand.keep),
+		),
+		P = (G.prisoners || []).filter((x) => x.o === 0),
+		H = (G.prisoners || []).filter((x) => x.by === 0);
+	fold(
+		'about',
+		'About',
+		`<p><b>The sides:</b> ${relSides()
+			.filter((q) => q !== WILD)
+			.map((q) => `${G.P[q].name}, ${G.P[q].civ ? CIVS[G.P[q].civ].name : 'no people'}${G.P[q].ally !== null && G.P[q].ally !== undefined && G.P[q].ally !== 0 ? `, with ${G.P[G.P[q].ally].name}` : ''}`)
+			.join('; ')}.</p>` +
+			`<p><b>Gift:</b> only the Natives take one; each buys less regard than the last for ${NATIVE.giftWindow / 60} minutes. Their regard: ${NATIVE.peaceAt} for peace, ${NATIVE.allyAt} to be a friend. A gift to a friend is locked.</p>` +
+			`<p><b>Stance:</b> neutral keeps both swords sheathed; a foe after ${NOTICE} s of notice (the Natives at once, for 20 regard); a friend needs their yes, carried by an emissary.</p>` +
+			`<p><b>The board:</b> ${G.enlight ? `the ${AGES[5].name} is open.` : `a year of peace opens the ${AGES[5].name}${G.truce === null ? '' : ` (${clock(Math.max(0, PEACE.age.truce - truceFor()))} to go)`}.`} Laurels: ${G.P[0].laurels || 0}.</p>` +
+			(H.length
+				? `<p><b>You hold ${H.length}:</b> ${H.map((x) => `a ${UNIT[x.kind].name.toLowerCase()} of ${G.P[x.o].name}`).join(', ')}. Unransomed in ${PRISON.secs / 60} minutes, they serve you.</p>`
+				: ''),
+	);
+	return (
+		relSides().map(relRow).join('') +
+		relStatus() +
+		list([
+			...P.map((x, i) =>
+				btn(
+					`ransom:${i}`,
+					`Ransom ${UNIT[x.kind].name.toLowerCase()}`,
+					`${x.ransom}g · ${x.by === WILD ? 'Natives' : G.P[x.by].name} · ${clock(Math.max(0, x.t + PRISON.secs - G.t))}`,
+					G.P[0].res.g >= x.ransom ? 'warn' : 'dis',
+				),
 			),
-			next = Math.max(0, PEACE.games.every - (G.t - (G.gamesT ?? 0)));
-		h += `<p><i>The board:</i> ${G.truce === null ? 'not at peace.' : `at peace for ${clock(tf)}.`} ${G.enlight ? `The ${AGES[5].name} is open.` : `A year of peace opens the ${AGES[5].name}${G.truce === null ? '' : ` (${clock(Math.max(0, PEACE.age.truce - tf))} to go)`}.`} Games in ${clock(next)}${G.truce === null ? ', if the board is at peace' : ''}. Laurels: ${G.P[0].laurels || 0}.</p>`;
-		h += acts(
-			btn(
-				'stand',
-				'Stand down',
-				spare ? `${spare} spare soldiers to the fields` : 'no spare soldiers at home',
-				spare ? 'warn' : 'dis',
-			),
-			'c2',
-		);
-	}
-	for (const q of G.P) {
-		if (q.id === 0 || q.id === WILD || !q.alive) continue;
-		const rel = G.rel[0][q.id],
-			nl = noticeLeft(0, q.id) || noticeLeft(q.id, 0),
-			who = `${q.name}${q.civ ? ' · ' + CIVS[q.civ].name : ''}`;
-		if (q.lord === 0 && !q.rebel) {
-			h += `<p><i>${who}:</i> your vassal.</p>`;
-			continue;
-		}
-		if (G.P[0].lord === q.id && !G.P[0].rebel) {
-			h += `<p><i>${who}:</i> your overlord.</p>`;
-			continue;
-		}
-		h += acts(
-			info(q.name, nl ? `hostile in ${nl} s` : q.ally !== null && q.ally !== 0 ? `with ${G.P[q.ally].name}` : q.civ ? CIVS[q.civ].name : '', 'left') +
-				['ally', 'peace', 'war']
-					.map((w) => {
-						const why = relWhy(0, q.id, w);
-						return btn(
-							`rel:${q.id},${w}`,
-							REL_WORD[w],
-							w === rel ? '' : why ? why.replace(/\.$/, '') : w === 'war' ? `${NOTICE} s notice` : 'by emissary',
-							w === rel ? 'on' : why ? 'dis' : w === 'war' ? 'warn' : '',
-						);
-					})
-					.join(''),
-			'c4',
-		);
-	}
-	return h;
+			spare ? btn('stand', 'Stand down', `${spare} spare soldiers to the fields`, 'warn') : '',
+		].filter(Boolean))
+	);
 }
 // a workshop turns what is in store into goods: the same page for every one of them. The making is a slot of its own, its green ring the
 // share of the next one still to go; what it makes is a picker, the chosen one gold. The count made and the store are the fact
@@ -265,11 +249,12 @@ function workshopPage(b) {
 		low = (a) => (GOODS[a] ? GOODS[a].name.toLowerCase() : LONG[a]),
 		nm = (t) => (GOODS[t] ? GOODS[t].name : (RESOURCES[t] || RESOURCES[LONG[t]]).name),
 		keys = Object.keys(B.makes),
-		w = G.units.find((u) => u.node === b.node),
-		fr = w ? (w.st.got || 0) % 1 : 0;
+		w = G.units.find((u) => u.owner === 0 && u.node === b.node),
+		made = b.made || 0,
+		fr = made % 1; // the next one, part made
 	return {
 		fact: [
-			`${w ? Math.floor(w.st.got || 0) : 0} made`,
+			`${Math.floor(made)} made`,
 			`${Math.floor(k in p.res ? p.res[k] : p.goods[k] || 0)} ${low(k)} in store`,
 		],
 		book: `<p>${r} ${low(k)} make one ${nm(cur).toLowerCase()}; ${Math.round(mk.rate * 60 * fxv(0, 'make', [cur]).m)} a minute when worked.</p>`,
@@ -290,55 +275,35 @@ function workshopPage(b) {
 		]),
 	};
 }
-// the Market (MENU-SPEC §8, picture Market Card): Caravan and its techs; the goods as singles with what you have, one picked (gold); one
-// Sell and one Buy for the picked good with its price; ventures from their age; the caravans, Repair, Take down
-function marketHTML(b, end) {
+// the Market (MENU-SPEC §8, picture Market Card; v80 keeps v70's layout, no new drawing): on the shared building page (E11: it had skipped
+// it, so a burning Market had no Send help and no health); its fact the caravans; the goods one selector with what you have, the picked
+// one gold; its price, one Sell and one Buy for it; ventures from their age
+function marketPage(b) {
 	const p = G.P[0],
 		V = p.ventures || [],
 		k = MKT_SELL.includes(G.mktK) ? G.mktK : MKT_SELL[0],
 		nm = (g) => (GOODS[g] ? GOODS[g].name : RESOURCES[LONG[g]].name),
 		cv = unitsOf(0, 'caravan').length,
 		buy = MKT_BUY.includes(k);
-	fold(
-		'bmore',
-		'More',
-		`<p>Sell or buy a lot at a time: 100 of a resource, 10 of a good. Prices rise and fall with what everyone buys and sells.</p><p>Two lanes. One: a caravan with a route takes goods from here to a trade stop and sells them. Two: a caravan with no route runs to an ally's Market or Town Center and earns distance² ÷ ${TRADE_DIV}, at most ${TRADE_CAP} gold. ${allyMarket(0, b) ? 'An ally to trade with.' : 'No ally yet.'}</p><p>${p.age < VENTURE.age ? `From the ${AGES[VENTURE.age].name} age: put gold into a merchant venture.` : `A venture comes back in a year with ${Math.round((VENTURE.back - 1) * 100)}% more; about 1 in ${Math.round(1 / VENTURE.lost)} is lost.`}${V.length ? ' Out: ' + V.map((v) => `${v.amt}g (${clock(Math.max(0, v.due - G.t))})`).join(', ') + '.' : ''}</p>`,
-	);
-	return (
-		list([
-			...trainButtons(trainsAt('market')),
-			...TECH.filter((t) => ownTech(t) && t.at === 'market' && isNext(0, t)).map((t) => techBtn(t)),
-		]) +
-		slotsHTML(b) +
-		acts(
-			MKT_SELL.map((g) => btn(`mpick:${g}`, nm(g), fmt(Math.floor(haveOf(p, g))), g === k ? 'on' : '')).join('') +
+	return {
+		fact: [`${cv} ${some(cv, 'caravan')}`, V.length ? `${V.length} ${some(V.length, 'venture')} out` : 'tap a good, then Sell or Buy'],
+		book: `<p>Sell or buy a lot at a time: 100 of a resource, 10 of a good. Prices rise and fall with what everyone buys and sells.</p><p>Two lanes. One: a caravan with a route takes goods from here to a trade stop and sells them. Two: a caravan with no route runs to an ally's Market or Town Center and earns distance² ÷ ${TRADE_DIV}, at most ${TRADE_CAP} gold. ${allyMarket(0, b) ? 'An ally to trade with.' : 'No ally yet.'}</p><p>${p.age < VENTURE.age ? `From the ${AGES[VENTURE.age].name} age: put gold into a merchant venture.` : `A venture comes back in a year with ${Math.round((VENTURE.back - 1) * 100)}% more; about 1 in ${Math.round(1 / VENTURE.lost)} is lost.`}${V.length ? ' Out: ' + V.map((v) => `${v.amt}g (${clock(Math.max(0, v.due - G.t))})`).join(', ') + '.' : ''}</p>`,
+		page:
+			acts(choice(MKT_SELL.map((g) => [`mpick:${g}`, `<b>${nm(g)}</b><small>${fmt(Math.floor(haveOf(p, g)))}</small>`, g === k]), 's6', true), 'c1') +
+			acts(
 				info(`×${mkt(k).toFixed(2)}`, 'price') +
-				btn(`trade:sell:${k}`, 'Sell', `${LOT(k)} for +${sellPrice(0, k)}g`, haveOf(p, k) < LOT(k) ? 'dis s2' : 's2') +
-				btn(
-					`trade:buy:${k}`,
-					'Buy',
-					buy ? `${LOT(k)} for ${buyPrice(0, k)}g` : 'not sold here',
-					!buy || p.res.g < buyPrice(0, k) ? 'dis s2' : 's2',
-				),
-			'c6',
-		) +
-		(p.age >= VENTURE.age
-			? list(
-					VENTURE.sizes.map((a) =>
-						btn(
-							`venture:${a}`,
-							`Venture ${a}g`,
-							`back ×${VENTURE.back} in a year`,
-							p.res.g < a || V.length >= VENTURE.max ? 'dis' : '',
+					btn(`trade:sell:${k}`, 'Sell', `${LOT(k)} for +${sellPrice(0, k)}g`, haveOf(p, k) < LOT(k) ? 'dis' : '') +
+					btn(`trade:buy:${k}`, 'Buy', buy ? `${LOT(k)} for ${buyPrice(0, k)}g` : 'not sold here', !buy || p.res.g < buyPrice(0, k) ? 'dis' : ''),
+				'c3',
+			) +
+			(p.age >= VENTURE.age
+				? list(
+						VENTURE.sizes.map((a) =>
+							btn(`venture:${a}`, `Venture ${a}g`, `back ×${VENTURE.back} in a year`, p.res.g < a || V.length >= VENTURE.max ? 'dis' : ''),
 						),
-					),
-				)
-			: '') +
-		acts(
-			info(`${cv} ${some(cv, 'caravan')}`, V.length ? `${V.length} ${some(V.length, 'venture')} out` : '') + end,
-			'c3',
-		)
-	);
+					)
+				: ''),
+	};
 }
 function keepMoreHTML() {
 	// the Town Center's More: your people, goods and the whole research tree
@@ -409,7 +374,7 @@ function vassalHTML(P) {
 					btn(
 						`demand:${P.id},${r}`,
 						RESOURCES[LONG[r]].name,
-						`${Math.min(DEMAND.amt, Math.floor(P.res[r]))} of ${Math.floor(P.res[r])}`,
+						`${Math.min(DEMAND.amt, Math.floor(P.res[r]))}/${Math.floor(P.res[r])}`, // what you would take of what they hold, on one line: the rank keeps its 44 (v80; EXCEPTIONS #12 gone)
 						P.res[r] > 0 ? '' : 'dis',
 					),
 				)
@@ -439,21 +404,18 @@ function vassalHTML(P) {
 	);
 	h +=
 		sec(`Call up their soldiers · ${lv} with you`) +
-		acts(
-			[4, 8]
-				.map((n) =>
-					btn(
-						`levy:${P.id},${n}`,
-						`+${n}`,
-						levyWhy(0, P.id, n) ? levyWhy(0, P.id, n).replace(/\.$/, '') : 'march to you',
-						levyWhy(0, P.id, n) ? 'dis' : '',
-					),
-				)
-				.join('') +
-				btn(`levy:${P.id},0`, 'Half', `${half}`, levyWhy(0, P.id, half) ? 'dis' : '') +
-				btn(`release:${P.id}`, 'Release', lv ? `${lv} go home` : 'none', lv ? '' : 'dis'),
-			'c4',
-		);
+		list([
+			...[4, 8].map((n) =>
+				btn(
+					`levy:${P.id},${n}`,
+					`+${n}`,
+					levyWhy(0, P.id, n) ? levyWhy(0, P.id, n).replace(/\.$/, '') : 'march to you',
+					levyWhy(0, P.id, n) ? 'dis' : '',
+				),
+			),
+			btn(`levy:${P.id},0`, 'Half', `${half}`, levyWhy(0, P.id, half) ? 'dis' : ''),
+			btn(`release:${P.id}`, 'Release', lv ? `${lv} go home` : 'none', lv ? '' : 'dis'),
+		]);
 	return h;
 }
 function stopHTML(f) {
@@ -561,7 +523,7 @@ function researchHTML() {
 		acts(L.map((t) => `<div class="trow">${techBtn(t, true)}<button class="goto" data-act="techgo:${t.id}" aria-label="Go to the ${BLD[t.at].name}">›</button></div>`).join('')), // › takes you to the building (Albert: a purist goes there; the row itself stays the shortcut)
 		ageR = ageA && !p.aging && afford(p, ageA.cost) && keepOf(0);
 	let h = title('Research', `${by.ready.length + (ageR ? 1 : 0)} ready now`);
-	if (ageR) h += sec('Next age') + acts(keepAgeBtn());
+	if (ageR) h += sec('Next age') + acts(keepAgeBtn(), 'c1');
 	if (by.ready.length) h += sec('Ready') + grid(by.ready);
 	if (!by.ready.length && !ageR) h += `<p>Nothing to start right now.</p>`;
 	if (by.busy.length) h += sec('Under way') + grid(by.busy);
@@ -569,13 +531,11 @@ function researchHTML() {
 	if (by.locked.length) h += fold('lockedR', `Locked · ${by.locked.length}`, grid(by.locked));
 	return h;
 }
-// the Challenge: each hazard a switch with its points; the sum is the level, and the level multiplies the score
-// one mold for a setting (Albert, Build 41): the label on the left, a sliding toggle on the right; the lit part slides to the choice
-const seg = (label, opts, cur) => {
-	const n = opts.length;
-	return `<div class="seg"><b>${label}</b><div class="segT" style="--n:${n}">${opts.map(([act, name, v]) => `<button data-act="${act}" class="${v === cur ? 'on' : ''}" aria-pressed="${v === cur}">${name}</button>`).join('')}</div></div>`;
-};
-// one line under the settings says what the current choices do (Build 63: "Fantasy" explained nothing)
+// Setup (v80, Albert Oct 31, pictures Setup Stacked with Names, Setup Stacked): each setting its own rank, its name quiet in the slots on the
+// left, its choices right-justified as one selector, a slot a choice. Fog and Daily are two-choice settings like the rest (Off | On), so
+// each says its word once, in its name. What each choice does is in the book
+const setRow = (name, opts, cur) => acts(lab(name, 's' + (6 - opts.length)) + choice(opts.map(([act, w, v]) => [act, w, v === cur]), 's' + opts.length, true), 'c6');
+const offOn = (key, on) => [[`${key}:0`, 'Off', false], [`${key}:1`, 'On', true]].map(([a, w, v]) => [a, w, v === on]);
 const SET_WHY = {
 	diff: {
 		easy: 'Easy: the computers build and raid slowly.',
@@ -592,45 +552,12 @@ const SET_WHY = {
 		diplomacy: 'Dynamic diplomacy: truces, tribute, allies and vassals.',
 	},
 };
-// the one word a new player cannot guess is the World (Albert: "fantasy means I fly on a magic carpet?"); one line, so the card still fits a page
-const settingsWhy = () => `<p class="dim why">${SET_WHY.fantasy[SET.fantasy ? 1 : 0]}</p>`;
+const settingsWhy = () =>
+	`<p>${[SET_WHY.diff[SET.diff], SET_WHY.fantasy[SET.fantasy ? 1 : 0], SET_WHY.fog[SET.fog !== false ? 1 : 0], SET_WHY.tension[SET.tension]].filter(Boolean).join(' ')}</p>`;
 const settingsHTML = () =>
-	seg(
-		'Difficulty',
-		DIFK.map((k) => [`diff:${k}`, cap1(k), k]),
-		SET.diff,
-	) +
-	seg(
-		'Length',
-		Object.entries(MODES).map(([k, m]) => [`mode:${k}`, m.name.replace(' minutes', ''), k]),
-		SET.mode,
-	) +
-	seg(
-		'Scenario',
-		Object.keys(SCENARIOS).map((k) => [`scen:${k}`, SCEN_TEXT[k][0].replace('The ', ''), k]),
-		SET.scen || 'open',
-	) +
-	`<div class="seg2">${seg(
-		'World',
-		[
-			['fantasy:0', 'Real', false],
-			['fantasy:1', 'Fantasy', true],
-		],
-		!!SET.fantasy,
-	)}${seg(
-		'Fog',
-		[
-			['fog:1', 'On', true],
-			['fog:0', 'Off', false],
-		],
-		SET.fog !== false,
-	)}</div>` + // two choices of two share a row, so the setup card still fits one page
-	seg(
-		'Tension',
-		[
-			['tension:winner', 'Winner Takes All', 'winner'],
-			['tension:diplomacy', 'Dynamic Diplomacy', 'diplomacy'],
-		],
-		SET.tension,
-	) +
-	settingsWhy();
+	setRow('Difficulty', DIFK.map((k) => [`diff:${k}`, k, k]), SET.diff) +
+	setRow('Length', Object.entries(MODES).map(([k, m]) => [`mode:${k}`, m.name.replace('minutes', 'min'), k]), SET.mode) +
+	setRow('Scenario', Object.keys(SCENARIOS).map((k) => [`scen:${k}`, SCEN_TEXT[k][0].replace('The ', ''), k]), SET.scen || 'open') +
+	setRow('World', [['fantasy:0', 'Real', false], ['fantasy:1', 'Fantasy', true]], !!SET.fantasy) +
+	acts(lab('Fog', 's4') + choice(offOn('fog', SET.fog !== false), 's2', true), 'c6') +
+	setRow('Tension', [['tension:winner', 'Winner', 'winner'], ['tension:diplomacy', 'Diplomacy', 'diplomacy']], SET.tension);
