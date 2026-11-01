@@ -161,7 +161,7 @@ PLANTS = [
   # the docs (Build 80 preview 11, Albert, Nov 1): tests/docs.py
   ('docs/4 Now/Owed.md', '# Owed: the one open list [2026-11-01 07:45]', '# Owed: the one open list', 'tests/docs.py', 'a living line edited with no stamp', 'ends with a stamp'),
   ('docs/6 Records/v70 Record/Picks - v70 - Clean Up Session.md', 'Picks', 'Pick', 'tests/docs.py', 'a closed record edited', 'closed records'),
-  ('START-HERE.md', '`docs/4 Now/Owed.md`', '`docs/4 Now/Owe.md`', 'tests/docs.py', 'a file in the reading order is missing', 'reading order exists'),
+  ('./START-HERE.md', '`docs/4 Now/Owed.md`', '`docs/4 Now/Owe.md`', 'tests/docs.py', 'a file in the reading order is missing', 'reading order exists'),
 ]
 
 def plant_check():
