@@ -158,6 +158,7 @@ function pushApart(a, b) {
 	let dx = b.x - a.x,
 		dy = b.y - a.y;
 	if (dx > SPACE || dx < -SPACE || dy > SPACE || dy < -SPACE) return;
+	if (a.post && b.post && !a.job && !b.job && a.owner === b.owner) return; // two sent to their own spots (item 5): the spots keep them SPACE apart, so neither shoves the other off its way
 	if (dx === 0 && dy === 0) {
 		// two on one spot part along a direction fixed by their ids, the same every time (decision 10, Reynolds separation)
 		const g = ((a.id * 31 + b.id * 17) % 360) * (Math.PI / 180);

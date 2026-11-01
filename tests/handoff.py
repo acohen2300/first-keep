@@ -229,6 +229,9 @@ PLANTS = [
   ('13-sim-civil.js', '\t\tif (held >= findCap(n)) {', '\t\tif (false) {', 'tests/wild.py', 'a full find lets newcomers crowd in', 'K1:'),
   ('12-sim-core.js', '\t\t\tif ((n.wk || 0) - (u.node === n ? 1 : 0) >= findCap(n)) continue; // full', '\t\t\t; // full', 'tests/wild.py', 'the search sends to a full find', 'K3:'),
   ('13-sim-civil.js', "Math.max(1, Math.floor((2 * Math.PI * (WORK_R[n.kind] ?? WORK_R.other)) / SPACE))", "Math.max(1, 3)", 'tests/wild.py', 'a find holds a typed number', 'K1:'),
+  # item 5 on six seeds (the map-zones builder's find, Nov 1)
+  ('16-sim-fight.js', '\tif (a.post && b.post && !a.job && !b.job && a.owner === b.owner) return;', '\tif (false) return;', 'tests/combat.py', 'villagers on their way to their own spots shove each other off', 'item 5 (seed'),
+  ('13-sim-civil.js', '\tif (!BLD[a.kind]) {\n\t\t// a group sent to a point (item 5)', '\tif (false) {\n\t\t// a group sent to a point (item 5)', 'tests/combat.py', 'the last to arrive is sent across the crowd', 'item 5 (seed'),
 ]
 
 def plant_check():

@@ -84,7 +84,13 @@
     - **The tree** follows OSHA 29 CFR 1910.266(d)(6)(ii): "The distance between adjacent occupied work areas shall be at least two tree lengths of the trees being felled". Opened on govinfo.gov (CFR 2018 edition); ecfr.gov was not reachable from here.
     - **A full find:** the search skips it (`bestNode`). A newcomer reaching it finds every spot held and looks again; one that holds a spot (`u.at`) keeps it. Players and computers alike.
     - **Fingerprint:** unchanged by the caps. The five scripted minutes never put more than a find holds on one.
-12. **Tests.** `tests/wild.py` runs in the gate. Every check failed on main when first written; the later ones (A3b, D1, S1, G1, G2, the 4b extras, H1 to H4, D10) fail by plant.
+12. **Item 5 on six seeds** (the map-zones builder's find). Villagers sent to one point passed on seed 7 only. Traced in node: the nearest-first pairing sent the last to arrive across the crowd already standing, and the push held them off for good (each was still walking back every tick, but the pushes won).
+    - **The fix, two rules:**
+      - a group sent to a point takes its spots in arrival order, the first to arrive on the far side (`takeSpots`, lattice case);
+      - two of a side walking to their own spots do not shove each other (`pushApart`), since the spots already keep them SPACE apart.
+    - **What did not work:** walking all the way onto the spot and a tighter arrival were tried and did not settle it.
+    - **The test:** `tests/combat.py` item 5 runs on seeds 1, 3, 4, 6, 7 and 9, with 2 plants. The fingerprint is unchanged.
+13. **Tests.** `tests/wild.py` runs in the gate. Every check failed on main when first written; the later ones (A3b, D1, S1, G1, G2, the 4b extras, H1 to H4, D10) fail by plant.
     - The plants (`tests/handoff.py`): see Checks. Coarse 4b plants now name their own message.
 
 ## Measured (node, seed 2, minute 10; before → after)

@@ -126,11 +126,21 @@ function takeSpots(list, a, key, cm = BLD[a.kind] ? 0 : regionAt(a, list[0].owne
 		const p = spotAt(a, i);
 		if (!claimed.has(i) && spotFree(p, o, cm, mine)) free.push({ i, x: p.x, y: p.y });
 	}
+	const got = new Map();
+	if (!BLD[a.kind]) {
+		// a group sent to a point (item 5): the first to arrive takes the far side, the last the near side, so nobody has to push through
+		// those already standing (the nearest-first pairing sent the last ones across the crowd, and the push kept them off for good)
+		const cx = list.reduce((s, u) => s + u.x, 0) / list.length - a.x,
+			cy = list.reduce((s, u) => s + u.y, 0) / list.length - a.y,
+			L = [...list].sort((u, v) => hyp(u.x - a.x, u.y - a.y) - hyp(v.x - a.x, v.y - a.y)),
+			S = [...free].sort((p, q) => (p.x - a.x) * cx + (p.y - a.y) * cy - ((q.x - a.x) * cx + (q.y - a.y) * cy));
+		L.forEach((u, i) => S[i] && got.set(u, S[i]));
+		return got;
+	}
 	const pairs = [];
 	for (const u of list) for (const p of free) pairs.push({ u, p, c: hyp(p.x - u.x, p.y - u.y) });
 	pairs.sort((x, y) => x.c - y.c);
-	const got = new Map(),
-		used = new Set();
+	const used = new Set();
 	for (const { u, p } of pairs)
 		if (!got.has(u) && !used.has(p.i)) {
 			got.set(u, p);
