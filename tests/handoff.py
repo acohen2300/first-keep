@@ -135,6 +135,8 @@ PLANTS = [
   ('10-world.js', ' || N.some(([nx, ny]) => inBack(nx, ny))) continue;', ') continue;', 'tests/map.py', 'zone 2 and the wild laid in zone 1', 'the home zones'),
   ('10-world.js', 'Math.min(nx, ny) >= lo + BACK.edge))', 'Math.min(nx, ny) >= lo + gap))', 'tests/map.py', 'zone 1 two squares from the map edge, under half a tap', 'the home zones'),
   ('10-world.js', 'clr = back ? ext + gap / 2 : c0;', 'clr = back ? ext : c0;', 'tests/map.py', 'zone 1 without its two-square gaps', 'the home zones'),
+  # every building two squares from every find (Albert, Nov 1 13:00)
+  ('09-nav.js', 'const h = (n * NAVC) / 2 + LANE * NAVC;', 'const h = n * 5 + 6;', 'tests/map.py', 'a building within two squares of a tree', 'any find'),
   # the ghost (Albert, Nov 1 12:48): no build grid, no footprint box; the art tinted by canPlace
   ('24-view-overlays.js', '\tdrawGuides(sp, n / 2);\n\tconst s = quant', '\tctx.beginPath();\n\tfor (let i = 0; i <= B.fp; i++) ctx.lineTo(SX(sp.x + i * NAVC), SY(sp.y));\n\tctx.stroke();\n\tdrawGuides(sp, n / 2);\n\tconst s = quant', 'tests/map.py', 'the build grid drawn under the ghost', 'the ghost:'),
   ('24-view-overlays.js', '\tdrawGuides(sp, n / 2);\n\tconst s = quant', '\tctx.strokeRect(SX(sp.x - n / 2), SY(sp.y - n / 2), n * z, n * z * TILT);\n\tdrawGuides(sp, n / 2);\n\tconst s = quant', 'tests/map.py', 'the footprint box drawn round the ghost', 'the ghost:'),

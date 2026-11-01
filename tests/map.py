@@ -155,6 +155,24 @@ MIGRATE = """(O) => {
   const off = G.units.filter((u) => !(u.x >= 0 && u.y >= 0 && u.x <= F.MAP && u.y <= F.MAP)).length; if (off) bad.push(off + ' units off the map after 90 s');
   return bad; }"""
 
+# Every building LANE squares from every find (Albert, Nov 1 13:00), the same gap as between buildings: a tree, a bush or a rock one hair
+# inside LANE squares of the footprint refuses a house, a mine camp and a field; at LANE squares they stand. And the computers still find
+# room at the start on SEEDS/5 seeds: a house round the Town Center, a mill, a lumber camp and a mine camp by the nearest find of each.
+FINDGAP = """(seeds) => {
+  const F = window.__fk, bad = []; F.SET.scen = 'open'; F.newGame(7); F.act('close'); const G = F.G, k = F.keepOf(0), gap = F.LANE * F.NAVC;
+  for (const kind of ['house', 'mining', 'farm']) {
+    const n = F.BLD[kind].fp * F.NAVC, s = F.findSpot(0, kind, k.x, k.y, 90, 300); if (!s) { bad.push('no ground for the ' + kind); continue; }
+    const p = F.snapPos(kind, s.x, s.y), t = { id: -1, kind: 'tree', type: 'wood', x: p.x + n / 2 + gap - 0.5, y: p.y, amt: 1, max: 1 }; G.nodes.push(t);
+    if (!F.canPlace(0, kind, p.x, p.y)) bad.push('a ' + kind + ' is allowed with a tree inside two squares of it');
+    t.x = p.x + n / 2 + gap; t.y = p.y; const w = F.canPlace(0, kind, p.x, p.y); if (w) bad.push('a ' + kind + ' is refused with a tree two squares off: ' + w);
+    t.x = p.x; t.y = p.y - n / 2 - gap + 0.5; if (!F.canPlace(0, kind, p.x, p.y)) bad.push('a ' + kind + ' is allowed with a tree inside two squares above it');
+    G.nodes.splice(G.nodes.indexOf(t), 1); }
+  for (let sd = 1; sd <= seeds; sd++) { F.newGame(sd); F.act('close'); const G = F.G;
+    for (let o = 1; o < 4; o++) { const k = F.keepOf(o), near = (ty) => G.nodes.filter((q) => q.type === ty && !q.farm).sort((a, b) => Math.hypot(a.x - k.x, a.y - k.y) - Math.hypot(b.x - k.x, b.y - k.y))[0];
+      if (!F.findSpot(o, 'house', k.x, k.y, 60, 190)) bad.push(sd + '/' + o + ': no room for a house');
+      for (const [ty, kind] of [['food', 'mill'], ['wood', 'lumber'], ['stone', 'mining'], ['gold', 'mining']]) { const q = near(ty); if (q && !F.findSpot(o, kind, q.x, q.y, 30, 70)) bad.push(sd + '/' + o + ': no room for a ' + kind + ' by its ' + ty); } } }
+  return bad; }"""
+
 # The ghost (Albert, Nov 1): while a building is placed no build grid and no footprint box is drawn (no line, no rectangle besides its
 # label's), and the ghost's own art is tinted green where canPlace says it fits and red where it does not. Driven through the real
 # drawGhost, away from your buildings so no line-up guide is due, with the glass's drawing calls counted.
@@ -207,6 +225,8 @@ async def main():
         print(('PASS ' if not bad else 'FAIL ') + 'two squares between buildings (decision 2)', '' if not bad else bad); fails += bool(bad)
         bad, errs = await run(WAVE); bad += errs
         print(('PASS ' if not bad else 'FAIL ') + 'a wave is judged by its progress (D1); the map labels reach its edge', '' if not bad else bad); fails += bool(bad)
+        bad, errs = await run(FINDGAP, max(5, SEEDS // 5)); bad += errs
+        print(('PASS ' if not bad else 'FAIL ') + 'two squares between a building and any find; the computers find room', '' if not bad else bad[:6]); fails += bool(bad)
         bad, errs = await run(GHOST); bad += errs
         print(('PASS ' if not bad else 'FAIL ') + 'the ghost: no grid or footprint box, its art green where it fits and red where not', '' if not bad else bad[:4]); fails += bool(bad)
         bad, errs = await run(CITADEL); bad += errs

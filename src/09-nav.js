@@ -685,7 +685,7 @@ function moveTo(u, x, y, dt, r, SP, spot) {
 
 // ───────────────────────── Placement ─────────────────────────
 // Every building keeps LANE free squares from the next (decision 2: a one-square lane is shut by the slit rule, so it was a wall nobody
-// built); walls, gates and crops may touch anything, but not a building that trains people.
+// built) and from every find (Albert, Nov 1 13:00); walls, gates and crops may touch any building, but not one that trains people.
 function canPlace(o, kind, x, y) {
 	const B = BLD[kind],
 		n = B.fp,
@@ -713,7 +713,10 @@ function canPlace(o, kind, x, y) {
 				return 'Leave a lane around buildings that train people';
 		}
 	if (!B.wallish) {
-		const h = n * 5 + 6;
+		// LANE squares from every find too (Albert, Nov 1 13:00), the same gap as between buildings: a node within the footprint grown by
+		// LANE squares on every side refuses it. Fish swim in the water a dock needs, so they do not count. The map's own layout may lay a
+		// find nearer a starting building: the rule is for placing, by players and computers.
+		const h = (n * NAVC) / 2 + LANE * NAVC;
 		if (
 			nodesNear(
 				sp.x,
@@ -722,7 +725,7 @@ function canPlace(o, kind, x, y) {
 				(nd) => nd.kind !== 'farm' && nd.kind !== 'fish' && Math.abs(nd.x - sp.x) < h && Math.abs(nd.y - sp.y) < h,
 			)
 		)
-			return 'Clear of trees and rocks, please';
+			return 'Leave two squares from trees and rocks';
 	}
 	let stop = null;
 	if (B.atStop) {
