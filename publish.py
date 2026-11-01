@@ -23,6 +23,16 @@ msg = args[0]
 if not run(sys.executable, 'build.py') or not run(sys.executable, 'wrap.py'): sys.exit('publish refused: the build failed')
 if not run(sys.executable, 'tests/gate.py'): sys.exit('publish refused: the gate failed. Nothing was copied, committed or pushed.')
 if not run(sys.executable, 'tests/lint.py'): sys.exit('publish refused: lint found an error (an undefined name, a duplicate key). Nothing was copied, committed or pushed.')   # Build 64: lint caught a crash the gate did not
+def guide():   # GUIDE.md, written by the game from its own tables at every publish (Albert, Nov 1, D-071); the Build 70 snapshot is in docs/6 Records/v70/
+    import asyncio
+    from playwright.async_api import async_playwright
+    async def go():
+        async with async_playwright() as p:
+            br = await p.chromium.launch(); pg = await br.new_page()
+            await pg.goto('file://' + os.path.join(HERE, 'first-keep.html')); await pg.wait_for_timeout(500)
+            md = await pg.evaluate('() => window.__fk.guideMd()'); await br.close(); return md
+    open('GUIDE.md', 'w').write(asyncio.run(go()).rstrip('\n') + '\n')
+guide()
 if not PREVIEW: open(STAMP, 'w').write(sha('first-keep.html') + '\n')   # a preview does not touch the stamp, so the hook keeps checking the live index.html
 for dst in (('preview/index.html',) if PREVIEW else ('index.html', 'preview/index.html')): open(dst, 'wb').write(open('first-keep.html', 'rb').read())
 trailer = os.environ.get('TRAILER', '')

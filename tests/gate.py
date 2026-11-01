@@ -174,7 +174,7 @@ async def fingerprint(br):
     accept = '--accept' in sys.argv
     if accept:
         why = sys.argv[sys.argv.index('--accept') + 1] if len(sys.argv) > sys.argv.index('--accept') + 1 else 'no reason given'
-        json.dump({'why': why, 'minutes': got}, open(BASELINE, 'w'), indent=1); open('CUTS.md', 'a').write(f'\n- **Play fingerprint accepted:** {why}\n'); return [], got
+        json.dump({'why': why, 'minutes': got}, open(BASELINE, 'w'), indent=1); open('docs/5 Builds/v80/CUTS.md', 'a').write(f'\n- **Play fingerprint accepted:** {why}\n'); return [], got
     if not os.path.exists(BASELINE): return ['no baseline: run  python3 tests/gate.py --accept "first baseline"'], got
     want = json.load(open(BASELINE))['minutes']
     return [f'minute {i + 1}: {w}  now  {g}' for i, (w, g) in enumerate(zip(want, got)) if w != g] + (['length differs'] if len(want) != len(got) else []), got
