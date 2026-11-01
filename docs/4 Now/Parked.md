@@ -13,7 +13,7 @@ One list of every parked idea, cut idea to review, and question not yet decided,
 ## Needs Albert's call now (it touches v70)
 1. Mail has no door once the Realm page goes: the Realm page's Mail tile was its only way in. Where does Mail open from?
 2. The status strip: Gunpowder does not fit the age cell. The ballot's change (the People icon back, age and people three cells each) was refused by the tap-size check: the other cells fell to 40 pt at 375.
-3. Relations: how a stance looks once picked but not yet sent with ✓.
+3. Relations: how a stance looks once picked but not yet sent with ✓. Settled: "Foe → Neutral" under the name until ✓ sends it (D-076, Nov 1, 08:16). [2026-11-01 08:17]
 4. Whether v70 goes live (live is the Oct 28 build).
 ## Not decided yet
 10. The computers: the economy fix (V24, tested on 62, parked); fog for the computers (V25).

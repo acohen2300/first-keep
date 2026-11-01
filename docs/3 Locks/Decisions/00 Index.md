@@ -2,7 +2,7 @@
 
 One file per decision, numbered in order (D-001 …). Each holds the date, Albert's exact words, the rule, its source, its code home and its status (locked, or superseded by a later D). Albert's words are never reworded. A later answer supersedes an earlier one by a new file that names the old; the old file stays, marked superseded. [2026-11-01 07:45]
 
-Where they came from: D-001 to D-043, the Decision Record of Oct 31 (`docs/6 Records/v80 Audit/Decision Record - text export of the Claude Doc.txt`); D-044 to D-056, the v80 Build List's agreed and amended items; D-057 to D-074, Albert's answers of Nov 1 morning (`docs/6 Records/v80 Audit/Answers - Nov 1 morning.md`); D-075, the v81 list. [2026-11-01 07:45]
+Where they came from: D-001 to D-043, the Decision Record of Oct 31 (`docs/6 Records/v80 Audit/Decision Record - text export of the Claude Doc.txt`); D-044 to D-056, the v80 Build List's agreed and amended items; D-057 to D-074, Albert's answers of Nov 1 morning (`docs/6 Records/v80 Audit/Answers - Nov 1 morning.md`); D-075 to D-078, the v81 list and Albert's calls of Nov 1, 08:14 to 08:16. [2026-11-01 08:17]
 
 To add one: take the next number, name the file `D-NNN <what it decides>.md`, copy the fields of any file here, and stamp every line you write. [2026-11-01 07:45]
 
@@ -81,3 +81,6 @@ To add one: take the next number, name the file `D-NNN <what it decides>.md`, co
 - `D-073 The docs system.md`: locked (built in Build 80 preview 11: this layout) [2026-11-01 07:45]
 - `D-074 The batch approved.md`: locked: the order of work [2026-11-01 07:45]
 - `D-075 The v81 list.md`: locked as the v81 list [2026-11-01 07:45]
+- `D-076 Relations a picked stance shows Foe to Neutral until the check.md`: locked [2026-11-01 08:17]
+- `D-077 Relations the Misfits page is a third tab.md`: locked; amends D-058 [2026-11-01 08:17]
+- `D-078 v81 list one 3 to 2 proportion for the small card controls.md`: locked as a v81 item; amends D-075 [2026-11-01 08:17]

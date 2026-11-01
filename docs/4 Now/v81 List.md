@@ -6,5 +6,6 @@ Albert, Nov 1, 07:36 (D-075), in his words: "we were to finish all the menus and
 2. **The misfit logic:** the special rules for outlaws, bandits and robbers. v80 copies the Natives' flow for now (D-058, answer 1b). [2026-11-01 07:45]
 3. **Albert's play-test notes** on the coming v80 preview. [2026-11-01 07:45]
 4. **The conversion logic:** conversion past the army cap is parked. The options are Albert's up-to-2% idea or crowding raising sickness (D-069, answer 11; `docs/4 Now/Parked.md`). [2026-11-01 07:45]
+5. **One 3:2 proportion for the small controls on cards** (Albert, Nov 1, 08:16: "a 3:2 ratio, like the slider's width, for the book, the check, the × and the line checks"): the book, the ✓ and × buttons and the row checks, with the slider with its switch as the model. A design study with mockups first (D-078). [2026-11-01 08:17]
 
 Nothing on it is built until the list is drawn up item by item and Albert says yes yes. [2026-11-01 07:45]

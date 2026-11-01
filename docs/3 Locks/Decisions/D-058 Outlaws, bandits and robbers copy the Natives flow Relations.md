@@ -1,7 +1,7 @@
 # D-058 Outlaws, bandits and robbers copy the Natives' flow; Relations gets a Misfits page [2026-11-01 07:45]
 
 - Date: 2026-11-01 07:04 [2026-11-01 07:45]
-- Status: locked for v80; the special rules are on the v81 list (D-075); amends D-010 and D-054 [2026-11-01 07:45]
+- Status: locked for v80; the special rules are on the v81 list (D-075); amends D-010 and D-054; the page is a third tab (D-077) [2026-11-01 08:17]
 - Albert's words: in bold below; the consequence line is to confirm with Albert [2026-11-01 07:45]
 - The rule: the record below [2026-11-01 07:45]
 - Its source: none named in the record [2026-11-01 07:45]
