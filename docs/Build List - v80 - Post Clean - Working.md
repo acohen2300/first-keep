@@ -22,6 +22,10 @@
 ## Decision 8, amended (Albert, Oct 31, 20:38)
 - "It should fight back": a soldier attacked by anything, an animal included, fights back, at peace with the wild too. The rest of decision 8 stands: otherwise soldiers leave animals alone unless the player orders it, or a civilian is attacked and the animal is within the line of sight of a soldier or a finished building of that side (decision 8b: the eyes are soldiers and buildings, not the civilian). Built in Build 80 preview 9 (`15-sim-spatial` `ignorable`, `strikes`; `14-sim-troops` `solTick`); in `SCIENCE.md`.
 
+## Map: the shrine and the towers (Albert, Nov 1, 03:17, yes yes)
+- **The shrine** sits on the Throne's square: the centre is the only point the same distance from all four corners.
+- **Four towers,** one on each corner's side of the Throne, each the same distance from its corner, so no two corners share one.
+
 ## Owed
 The one maintained list of what is owed (Build 80 preview 9). `tests/handoff.py` prints this section; nothing else. Strike a line when it is built, add one when something is put off.
 - Balance: preview 9's balance run against v70 is in `CUTS.md`; read it before live. Every later rule change needs its own.
