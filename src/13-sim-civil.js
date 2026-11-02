@@ -18,19 +18,13 @@ function shopTick(u, dt) {
 		b.made = (b.made || 0) + g; // what this workshop has made, counted on the building (E2: its card read the worker's lifetime gathering)
 	}
 }
+// what a worker's own state does to its work: sick, weakened by a famine (hungerOf), cheered by the circus (one home: C15)
+const workMul = (u) =>
+	(u.sick > G.t ? 0.5 : 1) * hungerOf(u.owner) * (u.cheer > G.t ? EVENTS.circus.mul : 1);
 // what a worker makes in this moment from a field, a find or a workshop's inputs (which it takes from the stores), at most `room`
 function makeNow(u, n, dt, room) {
 	const rate = n.rate || RATE_OF[n.kind];
-	let g = Math.min(
-		rate *
-			dt *
-			gatherMul(u.owner, n) *
-			(u.sick > G.t ? 0.5 : 1) *
-			hungerOf(u.owner) *
-			(u.cheer > G.t ? EVENTS.circus.mul : 1),
-		n.amt,
-		room,
-	);
+	let g = Math.min(rate * dt * gatherMul(u.owner, n) * workMul(u), n.amt, room);
 	const mk = n.farm && makeOf(n.farm),
 		from = mk && mk.from; // a workshop turns what is in store into something else: 2 wool make 1 cloth, 3 wood 1 iron
 	if (from) {
@@ -305,7 +299,7 @@ function vilTick(u, dt, SP) {
 			return;
 		}
 		if (moveTo(u, drop.x, drop.y, dt, halfOf(drop) + 4, SP)) {
-			const got = Math.round(u.carry);
+			const got = u.carry; // the load as carried: rounding made and lost resources at the drop-off (C11)
 			stash(u.owner, u.carryType, got);
 			u.st.got += got;
 			u.st.trips++;
@@ -327,12 +321,14 @@ function vilTick(u, dt, SP) {
 	} // sent somewhere by the finger, it stands there; else it waits by the Town Center
 	if (
 		(G.tick + u.id) % 20 === 0 &&
-		((u.node && u.node.kind !== 'farm' && unsafe(u.node, u.owner)) || (u.hunt && unsafe(u.hunt, u.owner)))
+		((u.node && u.node.kind !== 'farm' && unsafe(u.node, u.owner)) ||
+			(u.hunt && unsafe(u.hunt, u.owner)) ||
+			(u.node && u.node.kind === 'fish' && !dockNear(u.owner, u.node)))
 	) {
 		if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 		u.node = null;
 		u.hunt = null;
-	} // work or game is on dangerous ground now: leave it
+	} // work or game is on dangerous ground now, or a fisher's dock is gone (C15): leave it
 	if (u.hunt) {
 		huntTick(u, dt, SP);
 		return;
@@ -341,7 +337,7 @@ function vilTick(u, dt, SP) {
 		u.node && u.node.farm && BLD[u.node.farm.kind].sheep && u.node.farm.hp > 0 && u.node.wk <= slotsOf(u.node); // a shepherd stays with the flock between shearings; one to a flock, as one to a field (Build 60: any number stacked, each milking the whole flock)
 	if (flock && u.node.farm.prog >= 1 && dist(u, u.node) < 40) {
 		const b = u.node.farm,
-			m = (b.sheep || 0) * BLD[b.kind].milk * dt * gatherMul(u.owner, u.node) * hungerOf(u.owner);
+			m = (b.sheep || 0) * BLD[b.kind].milk * dt * gatherMul(u.owner, u.node) * workMul(u);
 		if (m > 0) {
 			stash(u.owner, 'food', m);
 			u.st.got += m;
@@ -458,7 +454,8 @@ function vilTick(u, dt, SP) {
 		}
 		if (moveTo(u, b.x, open ? b.y + halfOf(b) + 3 : b.y, dt, open ? 3 : halfOf(b) + 4, SP) && b.prog >= 1) {
 			if (u.carry > 0) {
-				stash(u.owner, u.carryType, Math.round(u.carry));
+				stash(u.owner, u.carryType, u.carry);
+				u.st.got += u.carry;
 				u.carry = 0;
 			}
 			u.inside = !open;
@@ -764,7 +761,8 @@ function spyTick(u, dt, SP) {
 	}
 	if (o !== 0) {
 		// the computers' spy: stand off an enemy keep, take the first undefended target it can see
-		if (u.state === 'look' && (G.tick + u.id) % 15 === 0) {
+		if (u.state === 'look') {
+			if ((G.tick + u.id) % 15) return; // it watches between checks, never walks home (C12)
 			const best = nearest(
 				G.blds,
 				u,

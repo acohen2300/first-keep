@@ -433,7 +433,7 @@ function fireTick(dt) {
 	}
 }
 
-// ── sickness: a few fall ill now and then, more in summer and winter; Clean water halves it; medicine cures and saves lives
+// ── sickness: a few fall ill now and then, more in summer and winter; clean water, sewers and quarantine lower the spread (MEASURED, 04-rules-tech); medicine cures and saves lives
 function sickRisk(o) {
 	const s = season().name;
 	return (
@@ -789,7 +789,7 @@ function rebel(p, coalition) {
 	const L = p.lord;
 	levyOf(L, p.id).forEach(releaseLevy);
 	const V = G.units.filter((u) => u.owner === p.id && u.kind === 'vil'),
-		n = Math.ceil(V.length * 0.33);
+		n = Math.ceil(V.length * VASSAL.rise);
 	for (const v of V.slice(0, n)) {
 		v.hp = 0;
 		v.gone = true;

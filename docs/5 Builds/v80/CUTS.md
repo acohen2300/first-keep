@@ -232,3 +232,4 @@ Checks on main before publishing:
 - `tests/handoff.py`: see the publish commit.
 
 - [2026-11-01 18:02] Cut from preview 11: the nine long games (120/180/240 min x 3). Reason: Albert will play the preview himself ("you should just do your normal one"). Moved to the overnight run after publishing; the QC standard gains them then. [2026-11-01 18:02]
+- **Play fingerprint accepted:** text81 (Nov 1 batch): C11 stashes the load unrounded, so a partial load of 0.5 no longer becomes 1 at the drop-off; it is the whole of the change (each other change reverted alone leaves the fingerprint as it was; C11 reverted alone restores the baseline exactly). [2026-11-01 15:20]

@@ -34,6 +34,7 @@ const VASSAL = {
 	shareAt: 50,
 	giftAt: 60,
 	crushed: 0.25,
+	rise: 0.33, // the share of a vassal's villagers that take up arms in a rebellion
 	freeAfter: 240,
 	reign: 300,
 	invest: 3, // the loyalty a building of the lord's buys near the vassal when its own table names none (BLD invest)
@@ -445,7 +446,7 @@ const BLD = {
 		age: 2,
 		fx: [{ s: 'sick', m: 0.8 }],
 		sab: 'burn',
-		desc: 'Water for a city: clean water, and a people that falls sick a fifth less. An Apartment needs one. Houses nobody: it is a water work (Build 63).',
+		desc: 'Water for a city: its people fall sick a fifth less, and an Apartment needs one. It houses no one.',
 	},
 	dock: {
 		cap: [2, 2, 2, 2, 2],

@@ -70,7 +70,7 @@ function guideModel() {
 		cost: costText(t.cost),
 		secs: t.t + ' s',
 		what: t.desc,
-		why: WHY[t.id],
+		why: techWhy(t.id),
 	}));
 	const ages = AGES.map((A, i) => ({
 		id: 'age' + i,
@@ -215,7 +215,7 @@ function guideMd() {
 	L.push(
 		`# First Keep (build ${BUILD}): what triggers what, what begets what, and why`,
 		'',
-		'Written by the game from its own rule tables, so it cannot disagree with the game.',
+		'Written by the game from its own rule tables: its numbers are the game.',
 		'',
 	);
 	L.push('## Ages', '', '| Age | Costs | Opens | Why |', '|---|---|---|---|');

@@ -28,7 +28,7 @@ function train(o, kind) {
 	const k = civKind(o, kind),
 		U = UNIT[k],
 		p = G.P[o],
-		at = readyAt(o, U).sort((a, b) => a.q.length - b.q.length)[0];
+		at = shortest(readyAt(o, U));
 	const t = U.t * stats(o, k).train,
 		c = unitCost(o, k);
 	pay(p, c);
@@ -69,7 +69,8 @@ function musterCost(o, plan) {
 	for (const k in plan) {
 		const U = UNIT[k],
 			n = plan[k];
-		for (const r in U.cost) cost[r] = (cost[r] || 0) + U.cost[r] * n * 2;
+		const c = unitCost(o, k); // research discounts count (C16)
+		for (const r in c) cost[r] = (cost[r] || 0) + c[r] * n * 2;
 		t = Math.max(t, (n * U.t * stats(o, k).train) / Math.max(1, readyAt(o, U).length));
 	}
 	return { cost, t: Math.ceil(t * 1.25) };
@@ -94,7 +95,7 @@ function musterWhy(o, plan) {
 function muster(o, plan, bn) {
 	if (musterWhy(o, plan)) return false;
 	const { cost, t } = musterCost(o, plan),
-		at = ready(o, 'council').sort((a, b) => a.q.length - b.q.length)[0];
+		at = shortest(ready(o, 'council'));
 	pay(G.P[o], cost, 'units');
 	at.q.push({ muster: plan, bn, left: t, total: t, paid: cost });
 	return true;
@@ -107,7 +108,7 @@ function researchWhy(o, id) {
 	if (T.age > p.age) return `Needs the ${AGES[T.age].name} age.`;
 	for (const n of needsOf(T)) if (!p.techs.has(n)) return `Needs ${TECHBY[n].name}.`;
 	if (G.blds.some((b) => b.owner === o && b.q.some((j) => j.tech === id))) return 'Being researched.';
-	const at = ready(o, T.at)[0];
+	const at = shortest(ready(o, T.at));
 	if (!at) return `Needs a ${BLD[T.at].name.toLowerCase()}.`;
 	if (at.q.length >= qMax(o)) return 'That line is full.';
 	const c = techCost(o, T);
@@ -118,7 +119,7 @@ function research(o, id) {
 	if (researchWhy(o, id)) return false;
 	const T = TECHBY[id],
 		p = G.P[o],
-		at = ready(o, T.at)[0],
+		at = shortest(ready(o, T.at)),
 		tt = T.t * fxv(o, 'research').m,
 		c = techCost(o, T);
 	pay(p, c, 'research');
@@ -844,7 +845,7 @@ function hireWhy(o, f) {
 	const H = FINDS[f.kind].hire;
 	if (!H || f.done) return 'Gone.';
 	if (!G.units.some((u) => u.owner === o && u.kind !== 'envoy' && dist(u, f) < 80)) return 'Send a unit there first.';
-	if (clsCount(o, 'army') + H.n > ARMYMAX) return `Army limit: ${ARMYMAX}.`;
+	if (clsCount(o, 'army') + H.n > armyRoom(o)) return armyFull(o); // the same ceiling as training (C16)
 	if (!afford(G.P[o], H.cost)) return `Not enough: ${costText(H.cost)}.`;
 	return null;
 }

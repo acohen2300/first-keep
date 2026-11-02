@@ -38,17 +38,20 @@ JS = """() => {
     for (const [id, on] of Object.entries(want)) { P.techs = new Set([id]); F.fxDirty();
       for (const k in N) { const r = F.gatherMul(0, N[k]) / base[k], m = F.TECHBY[id].fx[0].m; if (on.includes(k) ? Math.abs(r - m) > 1e-9 : Math.abs(r - 1) > 1e-9) bad.push(`N9: ${F.TECHBY[id].name} ${on.includes(k) ? 'misses' : 'reaches'} the ${k} (x${r.toFixed(3)})`); } }
     P.techs = new Set(); F.fxDirty(); }
-  // Weather glass is a barometer, not a cloak (N10): no cold or wet cut; with Weather signs it tells the sky two minutes ahead
+  // Weather glass is a barometer, not a cloak (N10), and since D-062 (Albert, Nov 1) its effect is the measured gain of planning by the
+  // forecast (Rosenzweig & Udry 2013), not a longer forecast: no cold or wet cut, no forecast step; it waits on Weather signs, which alone
+  // tell the sky a minute ahead
   { const W = F.TECHBY.meteorology; if ((W.fx || []).some((f) => f.s === 'cold' || f.s === 'wet')) bad.push('N10: Weather glass still cuts the cold or the wet');
-    if (!F.needsOf(W).includes('weathersigns')) bad.push('N10: Weather glass can be had without Weather signs, so its minute is not further');
-    // every change of the sky is told two minutes before it comes, in words that say which way and how far, and nothing else is told
+    if ((W.fx || []).some((f) => f.s === 'forecast')) bad.push('D-062: Weather glass still only tells the sky further ahead');
+    if (!F.needsOf(W).includes('weathersigns')) bad.push('N10: Weather glass can be had without Weather signs');
+    // every change of the sky is told a minute before it comes, in words that say which way, and nothing else is told
     { const G = F.G, c = G.clim, wet = [], told = [], t0 = G.t; F.SET.msgs = true; P.techs = new Set(['weathersigns', 'meteorology']); F.fxDirty();
       for (let i = 0; i < 160; i++) { G.t += 60; const seen = new Set(G.mail || []); F.skyTurn(); const m = (G.mail || []).find((x) => !seen.has(x) && /^Signs of/.test(x.text)); told.push(m ? m.text : null); wet.push(c.wet); }
       let n = 0, miss = 0, wrong = 0;
-      for (let j = 2; j < wet.length; j++) if (wet[j] !== wet[j - 1]) { n++; const t = told[j - 2]; if (!t) miss++; else if (!t.includes('2 minutes') || /rain/.test(t) !== wet[j]) wrong++; }
-      for (let i = 0; i < told.length - 2; i++) if (told[i] && wet[i + 2] === wet[i + 1]) wrong++;
-      if (!n || miss || wrong) bad.push(`N10: Weather glass did not warn two minutes early (${n} changes, ${miss} untold, ${wrong} told wrong)`);
-      if ((c.ahead || []).length !== 2) bad.push('N10: Weather glass and Weather signs roll the sky ' + (c.ahead || []).length + ' minutes ahead, not 2'); G.t = t0; G.mail = []; }
+      for (let j = 1; j < wet.length; j++) if (wet[j] !== wet[j - 1]) { n++; const t = told[j - 1]; if (!t) miss++; else if (!t.includes('a minute') || /rain/.test(t) !== wet[j]) wrong++; }
+      for (let i = 0; i < told.length - 1; i++) if (told[i] && wet[i + 1] === wet[i]) wrong++;
+      if (!n || miss || wrong) bad.push(`N10: Weather signs did not warn a minute early (${n} changes, ${miss} untold, ${wrong} told wrong)`);
+      if ((c.ahead || []).length !== 1) bad.push('N10: Weather signs roll the sky ' + (c.ahead || []).length + ' minutes ahead, not 1'); G.t = t0; G.mail = []; }
     P.techs = new Set(); F.fxDirty(); F.skyTurn(); if ((F.G.clim.ahead || []).length !== 1) bad.push('N10: with no forecast the sky is rolled ' + (F.G.clim.ahead || []).length + ' minutes ahead, not 1'); }
   // the research card makes no cost formula claim (N11): the cost and time are set by hand
   for (const t of F.TECH) if (/Cost and time/.test(F.techBook(t))) { bad.push('N11: the research card says ' + t.name + "'s cost follows a formula"); break; }

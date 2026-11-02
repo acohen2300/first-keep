@@ -92,7 +92,7 @@ const WHY = {
 	sawpits: 'Two men over a pit, one above and one below, sawed planks for two thousand years before machines did.',
 	twosaw: 'The two-man crosscut saw, teeth set and filed, felled trees far faster than the axe.',
 	sawmill:
-		'Water-driven sawmills cut timber in Roman Hierapolis and spread through Europe by 1500; the stream does the pulling.',
+		'Rome drove saws by water: the mill at Hierapolis cut stone in the late 200s; water-driven saws later cut timber across Europe. The stream does the pulling.',
 	coppice:
 		'Cut a hazel to the stump and it throws up poles; the Sweet Track in Somerset, 3800 BC, was built of coppiced wood.',
 	pollard: 'Cut above the browse line and the deer cannot eat the regrowth; pollards stand for centuries.',
@@ -182,7 +182,7 @@ const WHY = {
 		'The Julian calendar fixed the year at 365 days and a quarter; sowing and festival fell on the same day each year.',
 	pride: 'Athens and Florence built to be admired; people fight harder for a home they are proud of.',
 	hearth:
-		'Cooking is far older than farming, but the hearth with a pot over it is the Neolithic home: cooked grain and stew give the body more of what it eats (Wrangham, and the pottery of Jōmon Japan and the Near East from about 10,000 years ago). Game: the share is a round number.',
+		'Cooking is far older than farming, but the hearth with a pot over it is the Neolithic home: cooked grain and stew give the body more of what it eats (Wrangham; the pottery of Jōmon Japan is about 16,500 years old). Game: the share is a round number.',
 	icehouse:
 		'Ice houses stood at Persepolis and across Persia by about 400 BC (the yakhchāl), and root cellars are older still: cold kept meat, fish and roots through the warm months.',
 	chimney:
@@ -192,7 +192,7 @@ const WHY = {
 	runners:
 		'The kings of Ur and Ebla kept runners on the roads by 2000 BC (Shulgi of Ur boasted of running from Nippur to Ur and back in a day); the Inca chasqui relays carried news 240 km a day. Game: news from your near lands at the pace of a runner.',
 	royalroad:
-		'Darius built the Royal Road from Sardis to Susa (about 500 BC): Herodotus says relays of riders, a fresh horse at every station, carried a message 2,700 km in seven days, and "neither snow nor rain" stopped them. Rome copied it as the cursus publicus.',
+		'Darius made older roads into the Royal Road from Sardis to Susa (about 500 BC): relays of riders, a fresh horse at every station, were to carry a message 2,700 km in nine days. Herodotus: nothing in the world travels faster. Rome copied it as the cursus publicus.',
 	yam: 'The Mongol yam (from the 1230s): post stations a day apart across Asia, horses and riders always ready; Marco Polo counted 10,000 stations. A ruler heard from the edge of the empire in days, and from his allies too.',
 	postal:
 		'Thurn und Taxis ran relays of riders from Innsbruck to Brussels in five days (1490), and opened the post to anyone who paid (1516): news from the whole of Europe, a court that hears first answers first.',
@@ -205,12 +205,14 @@ const WHY = {
 	drill:
 		'Men who train together hold together; Sparta drilled from the age of seven and nobody stood against them for a century.',
 	phalanx: 'Eight ranks of shields and spears: the Greek phalanx held Marathon and broke Persia.',
-	legion:
-		'The manipular legion, in three lines that relieved each other, beat the phalanx at Cynoscephalae (197 BC) and ruled for five centuries. Game: it replaces the swordsman of the Bronze age, three centuries before its time, so a Roman player has a Roman army from the start.',
-	pikesquare: 'Swiss pike squares at Morgarten and Sempach killed the mounted knight as the master of the field.',
+	'tech:legion':
+		'The manipular legion, in three lines that relieved each other, beat the phalanx at Cynoscephalae (197 BC); the cohort replaced the maniple after the reforms of Marius (107 BC).',
+	pikesquare:
+		'The Swiss won Morgarten (1315) with the halberd, then took up the pike; their squares of the 1400s ended the mounted knight as master of the field.',
 	arms: 'Dismounted men-at-arms in full harness won Crécy and Agincourt on foot, the knight turned heavy infantry.',
 	halberd: 'Axe and spear on one pole: the Swiss halberd cut knights from their horses at Morgarten.',
-	tercio: 'Spanish pikes with sleeves of shot: the tercio was unbeaten from Pavia to Rocroi, over a hundred years.',
+	tercio:
+		'Spanish pikes with sleeves of shot: from the first tercio (1534) to Rocroi (1643) it was held unbeatable in open battle.',
 	bayonet:
 		'The socket bayonet made every musketeer a pikeman too; the pike was gone from the armies of Europe by 1700.',
 	fieldcraft: 'Hunters read ground, wind and track long before there were soldiers; the first warriors were hunters.',
@@ -250,7 +252,7 @@ const WHY = {
 	bronze: 'Copper and a tenth of tin: the first metal that held an edge, and the age is named for it.',
 	spearheads:
 		'A socket cast into the head gripped the shaft; a tanged head split it. The socket is on every spear after.',
-	iron: 'Iron ore is everywhere, tin is not; when the Hittite secret spread, every farmer and his son could carry a sword.',
+	iron: 'Iron ore is everywhere, tin is not; as smelting spread, every farmer and his son could carry a sword. The old tale of a Hittite iron secret is now contested.',
 	tempering:
 		'Quenched steel is hard but brittle; reheated gently, it bends and comes back. Damascus and Toledo lived on the secret.',
 	casehard: 'Iron packed in charcoal and heated took a steel skin; the armourers of Innsbruck hardened plate with it.',
@@ -276,7 +278,8 @@ const WHY = {
 	starfort:
 		'Low, thick, angled bastions, the trace italienne, took the shot of the cannon and gave none of it a blind spot.',
 	engineers: 'Legions carried their own engineers; a trained crew built an engine on the spot instead of hauling it.',
-	torsion: 'Skeins of sinew or hair, twisted tight, threw stone and bolt for Dionysius of Syracuse in 399 BC.',
+	torsion:
+		'Skeins of sinew or hair, twisted tight, threw stone and bolt: first recorded at Tyre in 332 BC. The engines of Dionysius of Syracuse (399 BC) were giant bows.',
 	counterweight:
 		'The counterweight trebuchet threw stones of a hundred kilos farther than any torsion engine; it came from the Levant about 1100.',
 	burningshot:
@@ -307,7 +310,8 @@ const WHY = {
 	academy: 'Plato taught in an olive grove outside Athens for forty years; the school outlived him by nine hundred.',
 	military_academy: 'The Kriegsschule of John of Nassau at Siegen taught officers from a book: the first war college.',
 	medicine: 'Hippocrates made disease a thing of causes, not gods; his school wrote down what it saw.',
-	architecture: 'Vitruvius wrote the ten books every builder read for 1500 years: firmness, commodity and delight.',
+	architecture:
+		'Vitruvius wrote ten books on building: firmness, commodity and delight. A copy found at St Gall reached Florence in 1414 and taught the Renaissance.',
 	guilds: 'Guilds set the standard, kept the secret and trained the next man; a guild town made more and made it well.',
 	medschool: 'Salerno taught Greek and Arabic medicine to Europe; its doctors were licensed from 1140.',
 	press: 'The Gutenberg press spread learning across Europe in a generation, some twenty million books by 1500; a scholar with books learns faster.',
@@ -318,7 +322,8 @@ const WHY = {
 		'The Alpine passes were kept open by villages paid to shovel; the Gotthard carried mules all winter from 1230.',
 	crampons: 'Iron spikes strapped to the boot: Roman caligae had hobnails, Alpine hunters had crampons by 1500.',
 	levees: 'The Dutch raised dykes and drained polders from the 1000s; a land below the sea stayed dry by work.',
-	meteorology: 'The Torricelli barometer fell before a storm; a march planned by the glass was not caught in the open.',
+	meteorology:
+		'Torricelli made the first barometer in 1643; a falling glass warned of a storm. Game: farmers in India who plan by the monsoon forecast earn about a tenth more (Rosenzweig and Udry, 2013).',
 	bandages: 'Clean linen and lint, taught by Hippocrates, kept wounds from festering while they closed.',
 	herbs: 'Dioscorides listed six hundred plants and what each did; the book was copied for fifteen centuries.',
 	hospitals: 'The bimaristan of Baghdad took every patient and kept records; the first hospitals of Europe copied it.',
@@ -385,13 +390,13 @@ const WHY = {
 	bellows:
 		'The water-driven bellows blew Chinese furnaces in 31 AD; Europe had them by 1200. A hotter blast, more iron. Game: the Water bellows is older than the Medieval age it waits for here, because its building comes then.',
 	castiron:
-		'China poured iron into moulds from 500 BC; Europe only learned to from the 1400s. Game: the Cast iron is older than the Medieval age it waits for here, because its building comes then.',
+		'China poured iron into moulds from 500 BC; in Europe the first blast furnaces, like Lapphyttan in Sweden (about 1150 to 1350), made it in the Middle Ages. Game: the Cast iron is older than the Medieval age it waits for here, because its building comes then.',
 	blast: 'The blast furnace, blown by water, reached Europe by the 1300s and made iron in a continuous stream.',
 	finery: 'The finery hammered cast iron into wrought bar that could be forged; the Walloon method spread from Liège.',
-	cleanwater: 'The Aqua Appia brought Rome clean water in 312 BC; by Trajan eleven aqueducts fed a million people.',
+	cleanwater: 'The Aqua Appia brought Rome clean water in 312 BC; by Trajan ten aqueducts fed a million people.',
 	sewers: 'The Cloaca Maxima drained Rome for two thousand years; a city that carries its filth away buries fewer.',
 	plumbing:
-		'Lead pipe carried water to the upper floors of Roman insulae; a block with water could be a block of six storeys.',
+		'Roman insulae had running water, and at Ostia even upper floors may have had it; a block with water could rise to the legal limit, 70 feet under Augustus.',
 	waterworks: 'The Morice wheels under London Bridge pumped the Thames into the pipes of the city from 1582.',
 	keep: 'Towns grew around a hall where the lord or council met, the market was held and grain was stored: the town hall, the moot hall, the agora. It is the heart of the place: lose it and the town is lost.',
 	town: 'Kingdoms spread by founding new towns with a hall and a market of their own: the Roman colonia, the medieval new town and bastide.',
@@ -401,7 +406,7 @@ const WHY = {
 	apartment:
 		'Cities grow upward where land is dear. The insulae of Rome housed most of the city, five or six floors tall; emperors had to cap their height.',
 	aqueduct:
-		'The first aqueduct of Rome, the Aqua Appia, was begun in 312 BC; Persian qanats and Assyrian channels moved water long before. More water, more people.',
+		'The first aqueduct of Rome, the Aqua Appia, was begun in 312 BC; Persian qanats and Assyrian channels moved water long before. Game: it houses no one; it waters a city, so an Apartment can stand there.',
 	farm: 'Farming began about 10,000 years ago in several places (the Fertile Crescent, China, New Guinea, Mesoamerica). A field gives steady food where foraging runs out, but not in winter.',
 	treefarm:
 		'Coppicing, cutting trees back so they regrow, is as old as farming: the Sweet Track in Somerset (about 3800 BC) was built of coppiced timber.',
@@ -501,7 +506,9 @@ const WHY = {
 		'Greek and Roman bolt-throwers (the scorpio, later the ballista) shot soldiers at long range; they were field artillery as well as siege engines.',
 	treb: 'The traction trebuchet was Chinese (4th century BC); the counterweight trebuchet is described firmly in 1187, and threw heavier stones farther than any earlier engine.',
 	hanxbow:
-		'Han armies fielded crossbows by the tens of thousands: one arsenal list from 13 BC counts over 11,000, with bronze triggers cast to a standard pattern.',
+		'Han armies fielded crossbows by the tens of thousands: one arsenal list from 13 BC counts 537,707, 11,181 of them for the emperor, with bronze triggers cast to a standard pattern.',
+	legion:
+		'The Roman legionary: armoured, drilled and paid, the foot soldier who held an empire. Game: it replaces the swordsman of the Bronze age, three centuries before its time, so a Roman player has a Roman army from the start.',
 	immortal:
 		'Herodotus says the Persian royal guard of 10,000 was never allowed to fall below strength, so the Greeks called them Immortals. They carried spear, bow and wicker shield (about 500 BC). Game: it replaces the swordsman of the Bronze age, earlier than its time, so a Persian player has a Persian army from the start.',
 	mongolha:
@@ -512,14 +519,15 @@ const WHY = {
 		'Al-Umari (about 1340) reported that the Mansa of Mali kept a standing cavalry and gave his chiefs horses; Ibn Battuta saw mounted commanders with bows.',
 	// research
 	elite_roman:
-		'Augustus made the Praetorian Guard a standing corps in 27 BC: the guard of the emperor himself, best paid in the army.',
-	elite_han: 'Han armies fielded massed crossbowmen; the picked men shot in drilled volleys, rank after rank.',
+		'Octavian kept his praetorians in Rome from 40 BC, and as Augustus made them his own guard in 27 BC, the best paid in the army. Game: an elite rank at the Castle, in the Medieval age, after its own time.',
+	elite_han:
+		'Han armies fielded massed crossbowmen; an arsenal list of 13 BC kept 11,181 crossbows for the emperor. Game: an elite rank at the Castle, in the Medieval age, after its own time.',
 	elite_persian:
-		'Herodotus names a thousand Apple-bearers within the Immortals: the guard of the king himself, their spears butted with golden apples.',
+		'Herodotus (7.41) saw the guard round Xerxes in 480 BC carry spears butted with golden apples and pomegranates; later writers called them the Apple-bearers. Game: an elite rank at the Castle, in the Medieval age, after its own time.',
 	elite_mongol:
-		'The Keshig was the imperial guard of the Mongol khans, raised by Genghis Khan from the sons of his commanders.',
+		'The Keshig was the guard of the Mongol khans: Genghis Khan raised it from his sworn followers in 1203, and it grew to 10,000.',
 	elite_maurya:
-		'Greek visitors to the Maurya court wrote of thousands of war elephants; the king kept the finest for himself.',
+		'Greek visitors to the Maurya court (about 300 BC) wrote of thousands of war elephants; the king kept the finest for himself. Game: an elite rank at the Castle, in the Medieval age, after its own time.',
 	elite_mali:
 		'The armoured horsemen of Mali were its nobility; Ibn Battuta saw the court of the mansa ringed by armed guards in 1352.',
 	castle:
@@ -567,33 +575,33 @@ const WHY = {
 // World news: a line from the rest of history now and then, matched to your age. Every line is a real event at its real date; the joke is in the wording, never in a people.
 const NEWS = [
 	[
-		'Somewhere, someone has tamed a horse. Opinions are divided.',
+		'Someone has tamed a horse. Opinions are divided.',
 		'Jericho builds a wall. Neighbours unimpressed, for now.',
 		'Çatalhöyük: 8,000 people, no streets. Walk across the roofs.',
 		'Sumer invents writing. First document: a grain receipt.',
 		'Ötzi crosses the Alps with a copper axe. Weather fine.',
 	],
 	[
-		'The Great Pyramid at Giza is finished. 2.3 million blocks, no complaints filed.',
-		'Hammurabi publishes 282 laws. An eye for an eye, in stone.',
+		'Great Pyramid done: 2.3 million blocks, no complaints.',
+		'Hammurabi publishes 282 laws: an eye for an eye.',
 		'Knossos installs flushing toilets. Guests astonished.',
 		'Thera erupts. Minoan shipping advises patience.',
 		'Tin is scarce again. Bronze prices climb.',
 	],
 	[
-		'Rome opens new public baths. Attendance is mandatory, socially.',
-		'Caesar stabbed in the Senate. Twenty-three times. Politics continues.',
-		'Alexander reaches the Indus. His army would like to go home.',
-		'Library of Alexandria now the largest. Overdue scrolls pursued.',
+		'Rome opens public baths. Attendance socially mandatory.',
+		'Caesar stabbed in the Senate, 23 times. Politics continues.',
+		'Alexander reaches the Indus. His army wants to go home.',
+		'Library of Alexandria now the largest. Late scrolls pursued.',
 		'Qin Shi Huang unites China. Also standardises axle widths.',
 		'Eratosthenes measures the Earth with a stick. Close enough.',
 	],
 	[
 		'The wall of China, previously just okay, is becoming great.',
 		'The Black Death reaches the ports. Hospitals advised.',
-		'Charlemagne crowned on Christmas Day. Says he was not expecting it.',
+		'Charlemagne crowned at Christmas. He claims surprise.',
 		'Vikings reach Newfoundland. Will not be writing home.',
-		'Mansa Musa passes through Cairo. Gold prices fall for a decade.',
+		'Mansa Musa passes Cairo. Gold prices fall for a decade.',
 		'Oxford founded. Students already complaining about rent.',
 	],
 	[
@@ -612,7 +620,7 @@ const NEWS = [
 const SONG = 'There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, composed by your decisions.';
 const MS_TEXT = {
 	house: [
-		'Your first house: five more may live here.',
+		`Your first house: ${BLD.house.room} more may live here.`,
 		'Only homes hold people; soldiers and workers alike. A town grows by its roofs.',
 		'A field feeds them',
 		'menu:land',
@@ -624,7 +632,7 @@ const MS_TEXT = {
 		'card:guide,bld',
 	],
 	drop: [
-		'A camp by the finds: the walk is half the rate.',
+		'A camp by the finds: walking is half the rate.',
 		'What a villager brings home is its load over the time to fill it and carry it. A camp nearer doubles the take.',
 		'See the rate on a find',
 		'card:stores',
@@ -636,7 +644,7 @@ const MS_TEXT = {
 		'page:war',
 	],
 	squad: [
-		'Your first squad: it fills itself from the soldiers at home.',
+		'Your first squad: it fills from the soldiers at home.',
 		'A squad keeps a plan; soldiers at home step into it. Send it with Go; the crosshair tells the time.',
 		'The War page',
 		'page:war',
@@ -661,7 +669,7 @@ const MS_TEXT = {
 	],
 	ice: [
 		'Ice: your people slip, worst just below freezing.',
-		'The melt film makes ice slick; deep cold grips better. Crampons halve the slips.',
+		'The melt film makes ice slick; deep cold grips better. Crampons bite it.',
 		'Research Crampons',
 		'card:research',
 	],
@@ -679,7 +687,7 @@ const MS_TEXT = {
 	],
 	rout: [
 		'Your soldiers broke and ran: nerve.',
-		'A group breaks when it has lost about 30% of its number (Dupuy). Shelter, a priest and quiet bring nerve back.',
+		`A group breaks when it has lost about ${MORALE.breakAt * 100}% of its number (Dupuy). Shelter, a priest and quiet bring nerve back.`,
 		'Nerve and the rout',
 		'card:guide,rule',
 	],
@@ -691,7 +699,7 @@ const MS_TEXT = {
 	],
 	winter: [
 		'Winter: fields give less, marching slows.',
-		'The year turns every twelve minutes. Winter cuts the fields and the roads; spring brings lambs and the harvest roll.',
+		`The year turns every ${YEAR / 60} minutes. Winter cuts the fields and the roads; spring brings lambs and the harvest roll.`,
 		'The seasons',
 		'card:guide,rule',
 	],
@@ -728,7 +736,7 @@ const EV_TEXT = {
 	heatwave: ['A heat wave is coming.', 'Heat: armies tire and fight weaker.'],
 	mirage: ['Scouts report an army on the move.', 'Scouts report an army. Or do they?'],
 	circus: ['A travelling show is on the road.', 'A show passes: viewers work lighter.'],
-	wagon: ['A wagon train is crossing the land.', 'Settlers: reach the wagon, three join.'],
+	wagon: ['A wagon train is crossing the land.', `Settlers: reach the wagon, ${UNIT.wagon.joins} join.`],
 	mercs: ['A free company has camped by the road.', 'Mercenaries for hire, for three minutes.'],
 	dragon: ['Something large is flying this way.', 'A dragon passes. What it flies over, burns.'],
 	troll: ['A troll has left its bridge.', 'A troll is out. It goes home soon.'],
@@ -753,7 +761,17 @@ const ROW_WORD = {
 	emg: 'Emergency',
 	pace: ['slow', 'medium', 'fast'], // a squad's pace under it, from its slowest member (paceWord)
 };
-// What triggers what: when, then, why. Numbers come from the tables, so the text cannot drift from the game.
+// a research step's why: its own key first ('tech:' + id) where a unit shares its id (F4: one WHY.legion served both)
+const techWhy = (id) => WHY['tech:' + id] ?? WHY[id];
+// the upgrade lines, read from the research table (F3): each unit and the ranks its research gives it, in order; then the six elite ranks
+const tierLines = () => {
+	const by = {};
+	for (const t of TECH) if (t.tier && !t.civ) (by[t.tier.unit] = by[t.tier.unit] || []).push(t);
+	const L = Object.entries(by).map(([u, T]) => [UNIT[u].name, ...T.map((t) => `${t.tier.name} (${t.name})`)].join(' → ')),
+		E = TECH.filter((t) => t.tier && t.civ).map((t) => `${UNIT[t.tier.unit].name} → ${t.tier.name}`);
+	return `${L.join('; ')}. The unique soldier of each people gains one elite rank at the Castle: ${E.join('; ')}.`;
+};
+// What triggers what: when, then, why. Every number is read from its table (F9), so the numbers cannot drift from the game.
 const TRIGGERS = () => [
 	[
 		'You send soldiers somewhere',
@@ -772,12 +790,12 @@ const TRIGGERS = () => [
 	],
 	[
 		'You order a unit and the town is full',
-		'The order waits ("needs room") and nothing is lost. Room opens when a House, Apartment or Aqueduct finishes or a unit dies.',
+		'The order waits ("needs room") and nothing is lost. Room opens when a House or Apartment finishes or a unit dies; an Aqueduct houses no one.',
 		'A town is as big as its shelter.',
 	],
 	[
 		'The screen',
-		`Top, one bar: food, wood, stone, gold, iron, then sound, pause and play, and speed. Under it: your age, the season and the clock on the left (gold when the next age or a research is ready: tap it for the Town Center), idle villagers beside it, and your score and rank on the right (tap for the table). The map icon sits top right (its − shrinks it again); Home bottom left when your Town Center is out of sight; Build bottom right. Bottom: People first (tap for people, army, research and how to play; − cancels one waiting to train, + trains one), then each job with − and +. + places an idle villager, and new villagers go to the job you picked. Build swaps the jobs for War, Walls, Trade, Culture and Home; ✕ brings the jobs back. A book on a building means research waits there.`,
+		`Top, one bar: food, wood, stone, gold, iron, then sound, pause and play, and the map. Under it a thin strip: the age, the sky, the clock, your people and their room (tap for them), idle villagers (tap to see one), research you can start (tap for it), your rank (tap for the score) and your soldiers. Bottom, one row in three pages; the cycle button above it on the left turns ${ROW_WORD.jobs} → ${ROW_WORD.war} → ${ROW_WORD.train}, and ${ROW_WORD.emg} sits above it on the right. ${ROW_WORD.jobs}: ${ROW_WORD.people} (trains a villager) over ${ROW_WORD.build} (the hammer: building is a job), then each job with − and +. ${ROW_WORD.war}: ${ROW_WORD.target} over ${ROW_WORD.home}, the four squads with their time and pace, Go ✓ over Abort ✕. ${ROW_WORD.train}: ${ROW_WORD.orders} over the squad new soldiers join, the four kinds with − and +, ✓ over ✕. Home shows when your Town Center is out of sight. A book on a building means research waits there.`,
 		'Only what you act on stays in sight; the rest is a tap away.',
 	],
 	[
@@ -827,7 +845,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Unrest reaches 100',
-		'A rebellion: a third of their villagers take up arms and their army turns on you. Kill three quarters of them and it is crushed (the rebels are lost); if they hold out 4 minutes, they are free. With two or more vassals, every minute there is a chance that all the restless ones rise together: the chance grows with their unrest and their number.',
+		`A rebellion: ${Math.round(VASSAL.rise * 100)}% of their villagers take up arms and their army turns on you. Kill ${Math.round((1 - VASSAL.crushed) * 100)}% of them and it is crushed (the rebels are lost); if they hold out ${VASSAL.freeAfter / 60} minutes, they are free. With two or more vassals, every minute there is a chance that all the restless ones rise together: the chance grows with their unrest and their number.`,
 		'Overstretched empires fell to joint revolts.',
 	],
 	[
@@ -907,7 +925,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Unit lines and tiers',
-		'Some research upgrades a unit in place and renames it: Spearman → Hoplite (Phalanx) → Pikeman (Pike square); Swordsman → Man-at-arms; Archer → Longbowman; Chariot → Horseman (Cavalry); Cataphract → Knight (Knighthood); Arquebusier → Musketeer (Musket). Every one you have is upgraded at once.',
+		`Some research upgrades a unit in place and renames it: ${tierLines()} Every one you have is upgraded at once.`,
 		'Armies changed their kit, not their soldiers.',
 	],
 	[
@@ -972,7 +990,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Hospital and medics',
-		`Soldiers within ${BLD.hospital.hrng} of a Hospital or ${UNIT.medic.hrng} of a medic heal ${BLD.hospital.heal} health a second. The best one in reach counts. Medicine makes it 50% faster.`,
+		`Soldiers within ${BLD.hospital.hrng} of a Hospital or ${UNIT.medic.hrng} of a medic heal ${BLD.hospital.heal} health a second. The best one in reach counts. Medicine makes it ${Math.round((TECHBY.medicine.fx.find((f) => f.s === 'heal').m - 1) * 100)}% faster.`,
 		'Care near the camp saved more men than the field surgeon.',
 	],
 	[
@@ -1007,7 +1025,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'A computer decides to attack',
-		'It compares its power with that of the enemy: odds = r²/(1+r²), the square law of aimed fire (Lanchester, 1916, a modern model). It goes only if the odds beat its nerve: Raiders .5, Rivals .65, the Fortress .85 and only when it sees a chance. A wave that stalls goes home.',
+		`It compares its power with that of the enemy: odds = r²/(1+r²), the square law of aimed fire (Lanchester, 1916, a modern model). It goes only if the odds beat its nerve: ${PLAYERS.slice(1).filter((s) => PERS[s.pers] && PERS[s.pers].bold !== undefined).map((s) => `the ${s.name} ${PERS[s.pers].bold}`).join(', ')}, and only when it sees a chance. A wave that stalls goes home.`,
 		'A rule of thumb, not history: ancient melee followed the square law less well.',
 	],
 	[
@@ -1042,12 +1060,12 @@ const TRIGGERS = () => [
 	],
 	[
 		'Teach',
-		`Research Veterans at the Barracks, build a School: a soldier of an older kind can be taught a newer one (spear to sword, archer to crossbow, catapult to trebuchet). It stands frozen at its post for the lesson; tuition is ${TEACH.tuition} gold an age, plus the difference in cost. Four learn at a time per School. Fire arrows, burning shot and petards set wooden buildings alight; rain halves the chance. Soldiers resting by a Castle, Barracks or Town Center heal.`,
+		`Research Veterans at the Barracks, build a School: a soldier of an older kind can be taught a newer one (spear to sword, archer to crossbow, catapult to trebuchet). It stands frozen at its post for the lesson; tuition is ${TEACH.tuition} gold an age, plus the difference in cost. ${TEACH.seats} learn at a time per School. Fire arrows, burning shot and petards set wooden buildings alight; rain halves the chance. Soldiers resting by a Castle, Barracks or Town Center heal.`,
 		'Marius retrained his veterans rather than raising new legions; the Spanish army kept wards for its garrisons from 1500.',
 	],
 	[
 		'The seasons turn',
-		`Each lasts ${SEASON_LEN / 60} minutes. ${SEASONS.map((S) => `${S.name}: marching ×${S.spd}, fields ×${S.farm}`).join('; ')}. Roads halve the slowing. Each spring sheep are shorn, lambs born, and the harvest of the year set (about one year in six poor, one in twenty failed).`,
+		`Each lasts ${SEASON_LEN / 60} minutes. ${SEASONS.map((S) => `${S.name}: marching ×${S.spd}, fields ×${S.farm}`).join('; ')}. Roads halve the slowing. Each spring sheep are shorn, lambs born, and the harvest of the year set (about one year in ${Math.round(1 / HARVEST[1].p)} poor, one in ${Math.round(1 / HARVEST[0].p)} failed).`,
 		'Real farming years: mud and cold slowed armies, and the harvest decided the year.',
 	],
 	[
@@ -1062,13 +1080,13 @@ const TRIGGERS = () => [
 	],
 	[
 		'Sickness',
-		`Now and then, more in summer and winter, a case arrives; it spreads through the town as real sickness does: each case makes about ${HEALTH.R0} more while people are well to catch it, fewer as the sick recover (the SIR model). Clean water, sewers and quarantine halve the spread. The sick work and fight at 60% and a few die; a Hospital or medics cure them. Plague comes along the trade routes in some springs and spreads ${HEALTH.plagueR0}× faster.`,
+		`Now and then, more in summer and winter, a case arrives; it spreads through the town as real sickness does: each case makes about ${HEALTH.R0} more while people are well to catch it, fewer as the sick recover (the SIR model). Clean water and Sewers each cut the spread ${Math.round((1 - MEASURED.water) * 100)}%, Quarantine ${Math.round((1 - MEASURED.isolate) * 100)}%; together they multiply, to ${Math.round(MEASURED.water * MEASURED.sewer * MEASURED.isolate * 100)}% of it. The sick work at half and fight at 60%, and a few die; a Hospital or medics cure them. Plague comes along the trade routes in some springs and spreads ${HEALTH.plagueR0}× faster.`,
 		'Summer flux and winter fever were the yearly toll; plague followed trade. Kermack and McKendrick wrote the arithmetic of an epidemic in 1927: a sickness grows while each case makes more than one, and burns out as it runs short of the well.',
 	],
 	[
 		'How news reaches you',
 		`You know what you see, what your people hear and what a messenger brings. Out of sight, a fight near your people is heard (which way, not what); anything else waits for a messenger, on foot or on horseback, and only if your post reaches that far: Runners your near lands, the Royal Road all your lands, Relay stations your allies, Post riders the whole board, News sheets the ages of the other courts. The sky you always see; Weather signs tell the next one a minute ahead.`,
-		'Before the telegraph (1840s) news travelled at the speed of a horse: the news of the Battle of New Orleans (January 1815) reached Washington after the peace was already signed.',
+		'Before the telegraph (1840s) news travelled at the speed of a horse: the Battle of New Orleans (8 January 1815) was fought two weeks after the peace was signed at Ghent, and the treaty reached America only in February.',
 	],
 	[
 		'The whole board is at peace',
@@ -1122,7 +1140,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Difficulty',
-		`It turns the minds of the computers, never their stores. Easy: they think every ${DIFF.easy.react} s, wait longer to attack and to ally, and nobody comes for you before ${clock(EASY_SAFE)}. Normal: every ${DIFF.normal.react} s. Hard: twice a second, bolder, quicker to pounce on a side at war, and they ally against whoever leads the score.`,
+		`It turns the minds of the computers, never their stores. Easy: they think every ${DIFF.easy.react} s, wait longer to attack and to ally, and nobody comes for you before ${clock(EASY_SAFE)}. Normal: every ${DIFF.normal.react} s. Hard: every ${DIFF.hard.react} s, bolder, quicker to pounce on a side at war, and they ally against whoever leads the score.`,
 		'No cheating: only how they think.',
 	],
 	[
