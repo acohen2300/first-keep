@@ -670,7 +670,7 @@ const forageNow = (u) =>
 // the best find for this worker and its rate: fields, berries, trees, stone, gold, iron, fish, a carcass, or game within reach of home.
 // seek (decision 1, a lost find): the point the search is measured from. Then it may take a find of the same kind its side has seen within
 // the search radius of that point, or one a friend (its own side) is working; a placed villager none past the cap (x + y) from where it was
-// placed, the rest none past the leash (DANGER_R.far) from the find's nearest drop-off. Of those, the best by the forager's rate R.
+// placed, the rest none past the leash (REACH, the home band's edge) from the find's nearest drop-off. Of those, the best by the forager's rate R.
 function bestNode(u, job, seek, cm) {
 	let best = null,
 		bR = 0,
@@ -717,7 +717,7 @@ function bestNode(u, job, seek, cm) {
 				}
 				if (!mates.has(n)) continue; // past the radius only a find a friend is working
 			}
-			if (seek && (u.anchor ? dist(u.anchor, n) > SEARCH.x + SEARCH.y : dist(nearest(drops, n) || keepOf(u.owner) || n, n) > DANGER_R.far))
+			if (seek && (u.anchor ? dist(u.anchor, n) > REACH : dist(nearest(drops, n) || keepOf(u.owner) || n, n) > REACH))
 				continue; // the cap from where it was placed; else the leash from a drop-off
 		}
 		const R = forage(u, n, drops);

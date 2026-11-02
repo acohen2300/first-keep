@@ -10,7 +10,7 @@
 
 Say to the new session: "Read `START-HERE.md`. Run `python3 tests/handoff.py` and tell me every FAIL before you touch anything." [2026-11-01 07:45]
 
-1. **Run it:** `python3 tests/handoff.py` (everything, about 6 minutes), `--plant` (only the planted-bug check), `--state` (only the state and what is owed). It builds, runs lint, runs the whole gate, plants known bugs and checks the tests catch each, and prints what is owed. Exit 0 only if all of it passed.
+1. **Run it:** `python3 tests/handoff.py` (everything; the gate is about 6 minutes, the 270 plants an hour or more on a slow machine), `--plant` (only the planted-bug check), `--plant --only=word` (just the plants named with that word: a builder checks its own in minutes), `--state` (only the state and what is owed). It builds, runs lint, runs the whole gate, plants known bugs and checks the tests catch each, and prints what is owed. Exit 0 only if all of it passed. [2026-11-02 00:05]
 2. **Report before acting:** every FAIL, in the first message. A FAIL is not fixed silently and not argued away.
 3. **What the planted-bug check means:** each line plants one old bug in a temporary copy and the named test must fail. If one passes, that test can no longer fail, and it is fixed before any new work. When a new test is written, a planted bug for it is added to `PLANTS` in `tests/handoff.py` in the same build.
 4. **Sources:** a new equation goes in `SCIENCE.md` with the source, what was opened, and what was not. "From memory" is said as "from memory". Nothing is cited that was not opened or marked so.
@@ -37,7 +37,7 @@ START QC also runs `tests/docs.py`: every line added or changed in a living doc 
    4. `docs/2 Rules/EXCEPTIONS.md`: every rule bent on purpose, with Albert's yes. [2026-11-01 07:45]
    5. `docs/2 Rules/MENU-SPEC.md`: the grid and every card's layout. [2026-11-01 07:45]
 3. **Locks** (`docs/3 Locks/`): [2026-11-01 07:45]
-   1. `docs/3 Locks/Decisions/00 Index.md`: every decision, D-001 to D-080, one file each, with its status. [2026-11-01 09:10]
+   1. `docs/3 Locks/Decisions/00 Index.md`: every decision, D-001 to D-088, one file each, with its status. [2026-11-02 00:05]
    2. `docs/3 Locks/Designs/00 Index.md`: every locked screen and card, with its pictures. [2026-11-01 07:45]
 4. **Now** (`docs/4 Now/`): [2026-11-01 07:45]
    1. `docs/4 Now/Handoff.md`: the current state. [2026-11-01 07:45]

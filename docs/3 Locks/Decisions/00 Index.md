@@ -92,3 +92,4 @@ To add one: take the next number, name the file `D-NNN <what it decides>.md`, co
 - `D-084 Every Misfit group can become a friend.md`: locked; the logic of getting there is on the v81 list (D-075) [2026-11-01 11:55]
 - `D-085 No terrain bonus now surprise and home ground in v81.md`: locked; removes the flat ×1.3 ambush; supersedes D-071's ambush rule [2026-11-01 11:55]
 - `D-086 Famine only when no food is in reach.md`: locked [2026-11-01 11:55]
+- `D-088 Reach the search covers the home band.md`: locked; Build 80 preview 13; D-087 (grip strength 0.72 in famine) is still to be written [2026-11-02 00:05]

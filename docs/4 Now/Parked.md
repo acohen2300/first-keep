@@ -116,3 +116,6 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 
 ### `docs/5 Builds/v70/CUTS.md`, Build 70 mockup (preview, Oct 30 evening): Build 62's controls back on Build 66, line 934 [2026-11-01 07:45]
 - **Cut, review for later:** the door under People (Albert: no); the Realm page (no); pictures and ★ pins on the Build menu (no; the Build page keeps its pictures).
+
+## The clearing against the human's economy (Albert, Nov 1, "why it's so hard to get food") [2026-11-02 00:10]
+- Measured (preview 12, seed 1, the same simple policy): v70's nearest bush 147 from the Town Center, 24 food per villager-minute, 633 food at minute 8; preview 12's nearest bush 251, 14 per villager-minute, 430 at minute 8. The walk doubled (10 food a trip, 500 round). Cause: HOME.clear is set from the computers' wall ring (WALL_R 190 + a square's diagonal + 2 lanes = 230), so the human's economy is sized by the computers' wall; the computers got a mill and a farm for it (EXCEPTIONS #16), the player nothing. Zone 1 (BACK.on) does not help: its bushes also obey the clearing (275 on seed 1). Options for Albert: the player gets what the computers got (a mill at start); or the clearing shrinks and the wall ring with it; or leave it and teach the mill. [2026-11-02 00:10]

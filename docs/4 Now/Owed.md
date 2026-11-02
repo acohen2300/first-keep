@@ -60,3 +60,4 @@ Build 80 preview 11 split the v80 Build List: its agreed and amended items are l
 
 ## Gatherer caps: AoE2 comparison [2026-11-01 17:06]
 Albert asked how AoE2 DE handles gatherers per resource. No opened source states a cap (Villager wiki, Berry Bush wiki, forgottenempires.net, aoe2-guide checked). From memory, unopened: no fixed cap, the limit is the room round the node; farms one farmer; depleted node sends the villager to the nearest same type. Open for the research-truth audit; Albert said to wait and see how the preview plays first.
+- Preview 13 (Nov 2): soak and balance on the merged build with REACH (not yet run: D-088); Albert's steps for the idle count in the strip (D, not reproduced) and for farmers leaving a field (not reproduced: three tapped onto three finished fields stayed 5 minutes); the clearing question (Parked.md). [2026-11-02 00:10]

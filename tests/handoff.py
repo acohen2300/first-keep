@@ -1,6 +1,6 @@
 # The start QC for any hand-off (Build 80). One command, the same checks every time:
 #   python3 tests/handoff.py            everything: state, build, lint, the gate, the planted-bug check, what is owed
-#   python3 tests/handoff.py --plant    only the planted-bug check (can the tests still fail?)
+#   python3 tests/handoff.py --plant    only the planted-bug check (can the tests still fail?); --plant --only=word runs just the plants named with that word
 #   python3 tests/handoff.py --state    only the state and what is owed (no build, no tests)
 # Exit 0 only if every check passed. A new session runs this first and reports every FAIL before it touches anything.
 import os, re, shutil, subprocess, sys, tempfile
@@ -44,7 +44,7 @@ PLANTS = [
   ('08-core.js', 'm.owner === o && isSoldier(m) && m.hp > 0', 'm.owner === o && m.hp > 0', 'tests/moves.py', 'the attacked villager is one of the eyes', "side's eyes"),
   ('13-sim-civil.js', 'u.next = n && !n.hunt ? n.id : null;', 'u.next = null;', 'tests/moves.py', 'the find seen when the last ran out is forgotten', 'was never taken'),
   ('13-sim-civil.js', 'lost ? u.anchor || dropFor(u.owner, u.job, u) || u : undefined', 'lost ? u : undefined', 'tests/moves.py', 'the search runs from where the villager stands, not the anchor', 'did not start from the drop-off'),
-  ('12-sim-core.js', ': dist(nearest(drops, n) || keepOf(u.owner) || n, n) > DANGER_R.far))', ': false))', 'tests/moves.py', 'no leash from the drop-off', 'past the leash'),
+  ('12-sim-core.js', ': dist(nearest(drops, n) || keepOf(u.owner) || n, n) > REACH))', ': false))', 'tests/moves.py', 'no leash from the drop-off', 'past the leash'),
   ('12-sim-core.js', 'if (!mates.has(n)) continue;', 'continue;', 'tests/moves.py', 'a friend\'s find does not count', 'a friend is working'),
   ('13-sim-civil.js', 'u.nnT = G.t + SEARCH.again + rng(); // nothing in reach', 'setJob(u, null); // nothing in reach', 'tests/moves.py', 'a villager with nothing in reach gives up its job', 'gave up its job'),
   ('13-sim-civil.js', 'if (!u.job || u.hunt || (u.node && u.node.amt > 0)) {', 'if (!u.job || u.hunt) {', 'tests/moves.py', 'the search clock survives a new find', 'kept the old search clock'),
@@ -55,8 +55,12 @@ PLANTS = [
   ('23-view-things.js', 'B.h * Math.min(1, e.prog)', 'B.h', 'tests/moves.py', 'a site casts a full building\'s shadow', 'quarter raised'),
   ('23-view-things.js', 'if (HEX.k === k) return HEX.pts;', '', 'tests/moves.py', 'the shadow shape is made again every time', 'made again'),
   ('13-sim-civil.js', 't = ((i % k) * 2 * R) / k - R;', 't = ((i % k) * 2 * R) / k - R + R / k / 2;', 'tests/moves.py', 'waiting spots crowd at the corners', 'ft apart, under'),
-  ('12-sim-core.js', 'u.anchor ? dist(u.anchor, n) > SEARCH.x + SEARCH.y :', 'u.anchor ? false :', 'tests/moves.py', 'no cap for a placed villager', 'past the cap'),
+  ('12-sim-core.js', 'u.anchor ? dist(u.anchor, n) > REACH :', 'u.anchor ? false :', 'tests/moves.py', 'no cap for a placed villager', 'past the cap'),
   ('13-sim-civil.js', 'lost ? u.anchor || dropFor(u.owner, u.job, u) || u : undefined', 'lost ? dropFor(u.owner, u.job, u) || u : undefined', 'tests/moves.py', 'a placed villager searches from the drop-off', 'search from where it was placed'),
+  # Build 80 preview 13: reach and the overflow of waiters
+  ('06-rules-tuning.js', 'const REACH = HOME.clear + HOME.band + 60;', 'const REACH = 200;', 'tests/science.py', 'the reach is typed, not derived from the home band', 'reach'),
+  ('06-rules-tuning.js', 'const SEARCH = { x: REACH / 2, y: REACH / 2, tau: 10, again: 2 };', 'const SEARCH = { x: 90, y: 90, tau: 10, again: 2 };', 'tests/moves.py', 'the search stops at 180 again', 'sleeps beside berries'),
+  ('13-sim-civil.js', '.filter((x) => x.owner === u.owner && x.prog >= 1 && x.hp > 0 && BLD[x.kind].drop && BLD[x.kind].drop.includes(u.job))', '.filter((x) => x === dropFor(u.owner, u.job, u))', 'tests/moves.py', 'the overflow of waiters piles up at a full drop-off', 'a pile'),
   ('34-save.js', "['pointerdown', 'pointermove', 'pointerup', 'click', 'wheel']", "['pointerdown', 'pointermove', 'pointerup', 'click']", 'tests/saves.py', 'the wheel zooms behind the Welcome back card', 'the wheel zoomed'),
   ('08-core.js', '(C <= V ? 1 : V / C)', '(C <= V ? 1 : 1)', 'tests/science.py', 'Hawk-Dove always fights', 'hawk V<C'),
   # the combat batch (Build 80, Nov 1): one or more for each item, in tests/combat.py
@@ -315,7 +319,9 @@ PLANTS = [
 ]
 
 def plant_check():
-    print(f'planted bugs: {len(PLANTS)}')
+    only = next((a.split('=', 1)[1] for a in sys.argv if a.startswith('--only=')), None)   # --only=word: just the plants whose name has the word (a builder checks its own in minutes; the whole set runs overnight)
+    plants = [p for p in PLANTS if not only or only in p[4]]
+    print(f'planted bugs: {len(plants)}' + (f' of {len(PLANTS)} (--only={only})' if only else ''))
     os.environ['FK_PLANT'] = '1'; os.environ['FK_REPO'] = ROOT   # tests/docs.py reads the last commit from the real repository   # tests/map.py runs 25 seeds and one phone size for each plant (the gate runs it whole)
     tmp = tempfile.mkdtemp(prefix='fk-plant-')
     try:
@@ -326,12 +332,12 @@ def plant_check():
         c, out = run([PY, 'build.py'], cwd=tmp)
         say(c == 0, 'the clean copy builds', out[-300:])
         clean_ok = {}
-        for test in sorted({p[3] for p in PLANTS}):
+        for test in sorted({p[3] for p in plants}):
             c, out = run([PY, test], cwd=tmp)
             clean_ok[test] = c == 0
             say(c == 0, f'{test} passes on the clean copy (the control run)', out[-300:])
         clean = {}
-        for f, old, new, test, why, expect in PLANTS:
+        for f, old, new, test, why, expect in plants:
             p = os.path.join(tmp, f if '/' in f else os.path.join('src', f))   # a path with a folder is from the root (the docs plants)
             if f not in clean: clean[f] = open(p).read()
             src = clean[f]

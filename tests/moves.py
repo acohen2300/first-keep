@@ -43,6 +43,7 @@ JS2 = """() => {
   // a fresh game, fog off, the computers' and the player's other villagers out of the way, so one villager's choices can be read
   const fresh = () => { F.newGame(7); F.act('close'); F.setPause(false); const G = F.G; G.fogOn = false; G.ev.next = 1e9; G.ev.cur = null;
     for (const u of G.units) if (u.kind === 'vil') { u.job = null; u.node = null; u.hunt = null; u.post = { x: u.x, y: u.y }; }
+    G.units = G.units.filter((u) => u.owner !== W()); // no animals: a find beyond the clearing is not unsafe by chance (preview 13: the finds lie further out)
     F.step(T); return G; }; // one step lays the walking grid
   // a straight run of open land out from the Town Center, so finds can be laid at set distances from the drop-off
   const ray = (G, k, from, to) => { for (let a = 0; a < 24; a++) { const cx = Math.cos(a * Math.PI / 12), cy = Math.sin(a * Math.PI / 12); let ok = true;
@@ -54,13 +55,13 @@ JS2 = """() => {
   const vil = (G, i = 0) => G.units.filter((u) => u.owner === 0 && u.kind === 'vil')[i];
 
   // ── decision 1, the villager search ──
-  { // deliver first, then straight to the find seen from the spent spot (it lies 190 from the drop-off: the search from there never reaches it)
-    const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 240); if (d) {
-    const S = bush(G, k, d, 150, 0.4), Q = bush(G, k, d, 190), u = vil(G); only(u, [S, Q]);
+  { // deliver first, then straight to the find seen from the spent spot (it lies REACH - 10 from the drop-off, past the first look from there)
+    const R = F.REACH, G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, R); if (d) {
+    const S = bush(G, k, d, R - 60, 0.4), Q = bush(G, k, d, R - 10), u = vil(G); only(u, [S, Q]);
     u.x = S.x - d.cx * 8; u.y = S.y - d.cy * 8; F.setJob(u, 'food', S); u.carry = 5; u.carryType = 'food';
     let dropT = -1, tookT = -1; const f0 = G.P[0].res.f;
     run(40, () => { if (dropT < 0 && u.carry === 0 && G.P[0].res.f > f0) dropT = G.t; if (tookT < 0 && u.node === Q) tookT = G.t; return tookT >= 0; });
-    if (tookT < 0) bad.push('a find seen when the last ran out (40 from it, 190 from the drop-off) was never taken');
+    if (tookT < 0) bad.push('a find seen when the last ran out (50 from it, REACH - 10 from the drop-off) was never taken');
     else if (dropT < 0 || dropT > tookT) bad.push('a villager went to the next find with its load, before delivering it');
     else if (tookT - dropT > 1) bad.push('after delivering, the villager searched again instead of going straight to the find it had seen (' + (tookT - dropT).toFixed(1) + ' s)'); } }
   { // the anchor: an unplaced villager whose find was emptied by another searches from its nearest drop-off, not from where it stands
@@ -68,37 +69,38 @@ JS2 = """() => {
     const S = bush(G, k, d, 200, 0), B = bush(G, k, { cx: -d.cx, cy: -d.cy }, 100), u = vil(G); only(u, [S, B]);
     u.x = S.x; u.y = S.y; F.setJob(u, 'food', S); u.carry = 0;
     const t0 = G.t; if (!run(20, () => u.node === B) || G.t - t0 > 5) bad.push('the search did not start from the drop-off: a find 100 from it, 300 from the villager, took ' + (G.t - t0).toFixed(1) + ' s (from the drop-off it is in reach by 3 s)'); } }
-  { // the leash and the cap: unplaced, a find 230 from the drop-off is never taken; placed beside it, the same find is
+  { // the leash and the cap: unplaced, a find REACH + 32 from the drop-off is never taken; placed beside it, the same find is
     for (const placed of [false, true]) {
-      const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 240); if (!d) continue;
-      const S = bush(G, k, d, 160, 0.4), C = bush(G, k, d, 232), u = vil(G); only(u, [S, C]);
+      const R = F.REACH, G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, R + 40); if (!d) continue;
+      const S = bush(G, k, d, R - 72, 0.4), C = bush(G, k, d, R + 32), u = vil(G); only(u, [S, C]);
       u.x = S.x - d.cx * 8; u.y = S.y - d.cy * 8; F.setJob(u, 'food', S, placed ? S : undefined); u.carry = 5; u.carryType = 'food';
       const took = run(30, () => u.node === C);
-      if (!placed && took) bad.push('an unplaced villager took a find 232 from the drop-off, past the leash of ' + F.DANGER_R.far);
-      if (placed && !took) bad.push('a placed villager did not take a find 72 from the spot it was placed'); } }
-  { // the anchor: a placed villager searches from where it was placed. Its find 130 from that spot (past the first look's 90) and 198 from the
-    // drop-off (past the full radius from there) is taken in time
+      if (!placed && took) bad.push('an unplaced villager took a find REACH + 32 from the drop-off, past the leash of ' + F.REACH);
+      if (placed && !took) bad.push('a placed villager did not take a find 104 from the spot it was placed'); } }
+  { // the anchor: a placed villager searches from where it was placed. Its find 330 from that spot (past the first look's 175) and 362 from the
+    // drop-off (past the full radius and the leash from there) is taken in time
     const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 160); if (d) {
-    const S = bush(G, k, d, 150, 0), C = bush(G, k, d, 150, 300, 130), u = vil(G); only(u, [S, C]);
+    const S = bush(G, k, d, 150, 0), C = bush(G, k, d, 150, 300, 330), u = vil(G); only(u, [S, C]);
     if (F.blockedCell(F.gcell(C.x, C.y), 0)) bad.push('the anchor test find stands on a wall: move it'); else {
     u.x = S.x; u.y = S.y; F.setJob(u, 'food', S, S); u.carry = 0;
-    if (!run(20, () => u.node === C)) bad.push('a placed villager did not search from where it was placed: a find 130 from that spot was never taken'); } } }
-  { // the cap: a placed villager takes nothing past x + y from where it was placed, not even a friend's find (200 from it)
-    const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 110); if (d) {
-    const S = bush(G, k, d, 100, 0), D = bush(G, k, { cx: -d.cx, cy: -d.cy }, 100, 3000), u = vil(G), m = vil(G, 1); only(u, [S, D]);
+    if (!run(20, () => u.node === C)) bad.push('a placed villager did not search from where it was placed: a find 330 from that spot was never taken'); } } }
+  { // the cap: a placed villager takes nothing past REACH from where it was placed, not even a friend's find (REACH + 10 from it)
+    const R = F.REACH, G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 110); if (d) {
+    const S = bush(G, k, d, 100, 0), D = bush(G, k, { cx: -d.cx, cy: -d.cy }, R - 90, 3000), u = vil(G), m = vil(G, 1); only(u, [S, D]);
     if (F.blockedCell(F.gcell(D.x, D.y), 0)) bad.push('the cap test find stands on a wall: move it'); else {
     m.x = D.x + 6; m.y = D.y; F.setJob(m, 'food', D); only(m, [D]);
     u.x = S.x; u.y = S.y; F.setJob(u, 'food', S, S); u.carry = 0;
-    if (run(15, () => u.node === D)) bad.push('a placed villager took a find 200 from where it was placed, past the cap of ' + (F.SEARCH.x + F.SEARCH.y)); } } }
-  { // a find a friend is working counts past the radius: 195 from the drop-off, past 180, inside the leash
+    if (run(15, () => u.node === D)) bad.push('a placed villager took a find REACH + 10 from where it was placed, past the cap of ' + F.REACH); } } }
+  { // a find a friend is working counts past the radius: at the loss the radius is REACH / 2; a find at REACH / 2 + 60 from the drop-off
+    // is taken within 2 s only when a friend is on it (alone it waits for the radius to grow, 3.4 s)
     for (const friend of [false, true]) {
-      const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 220); if (!d) continue;
-      const S = bush(G, k, { cx: -d.cx, cy: -d.cy }, 40, 0), Fd = bush(G, k, d, 195, 3000), u = vil(G), m = vil(G, 1); only(u, [S, Fd]);
+      const R = F.REACH, G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, R); if (!d) continue;
+      const S = bush(G, k, { cx: -d.cx, cy: -d.cy }, 40, 0), Fd = bush(G, k, d, R / 2 + 60, 3000), u = vil(G), m = vil(G, 1); only(u, [S, Fd]);
       u.x = S.x; u.y = S.y; F.setJob(u, 'food', S); u.carry = 0;
       if (friend) { m.x = Fd.x + 6; m.y = Fd.y; F.setJob(m, 'food', Fd); only(m, [Fd]); }
-      const took = run(25, () => u.node === Fd);
-      if (friend && !took) bad.push('a find a friend is working, 195 from the drop-off, was not taken');
-      if (!friend && took) bad.push('a find 195 from the drop-off, past the search radius, was taken with no friend on it'); } }
+      const took = run(2, () => u.node === Fd);
+      if (friend && !took) bad.push('a find a friend is working, REACH / 2 + 60 from the drop-off, was not taken within 2 s');
+      if (!friend && took) bad.push('a find REACH / 2 + 60 from the drop-off, past the first look, was taken within 2 s with no friend on it (the radius grows there in 3.4 s)'); } }
   { // no end: nothing in reach, it keeps its job a full minute, waits at the drop-off, and still takes a find the moment one appears
     const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 160); if (d) {
     const S = bush(G, k, d, 120, 0), u = vil(G); only(u, [S]); u.x = S.x; u.y = S.y; F.setJob(u, 'food', S); u.carry = 0;
@@ -137,6 +139,25 @@ JS2 = """() => {
       if (far) bad.push(far + ' waiting villagers are not at their own spots (they pile up)');
       const B = spots(); if (B.map((b) => b.s && b.s.i).join() !== ids.join()) bad.push('the same seed stood the waiters on different spots');
     } }
+
+  // ── preview 13: no sleeper beside berries. An unplaced villager whose bush ran out takes the next bush at the far edge of the home band
+  // (REACH - 20 from the drop-off) once the radius has grown there (tau), instead of waiting at the drop-off with no end
+  { const R = F.REACH, G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, R); if (d) {
+    const S = bush(G, k, d, 120, 0.4), N = bush(G, k, d, R - 20), u = vil(G); only(u, [S, N]);
+    u.x = S.x - d.cx * 8; u.y = S.y - d.cy * 8; F.setJob(u, 'food', S); u.carry = 0;
+    if (!run(F.SEARCH.tau + 6, () => u.node === N)) bad.push('a villager whose bush ran out never took the next bush, REACH - 20 from the drop-off: it sleeps beside berries'); } }
+  // ── preview 13: the overflow of waiters goes to the next drop-off's spots, never a pile where it stood ──
+  { const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) {
+    const s = F.findSpot(0, 'mill', k.x + d.cx * 120, k.y + d.cy * 120, 10, 80), mill = s && F.build(0, 'mill', s.x, s.y);
+    if (!mill) bad.push('the overflow test could not place a mill'); else {
+      mill.prog = 1; mill.hp = mill.mx || F.BLD.mill.hp; F.built(mill); F.step(T);
+      const N = F.spotAt(mill, 0).N + 3, V = [];
+      for (let i = 0; i < N; i++) V.push(F.addUnit(0, 'vil', mill.x + 30 + (i % 4) * 8, mill.y + 30 + ((i / 4) | 0) * 8));
+      for (const u of V) { F.setJob(u, 'food'); u.was = 'bush'; u.lostT = G.t; u.node = null; only(u, []); }
+      run(25);
+      const none = V.filter((u) => !u.spot).length, at = V.filter((u) => u.spot && u.spot.b === k.id).length;
+      if (none) bad.push(none + ' of ' + N + ' waiters at a full mill have no spot: they stand where they stopped, a pile');
+      else if (at < 3) bad.push('the overflow of a full mill did not go to the Town Center (' + at + ' there, 3 expected)'); } } }
 
   // ── any real move is a step ──
   { const G = fresh(), k = F.keepOf(0), V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), a = V[0], b = V[1];

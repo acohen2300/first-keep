@@ -169,8 +169,7 @@ const LOOKOUT = { base: 60, k: 24 }; // a building sees 60 + 24 × the square ro
 const WORK_R = { fish: 13, other: 9 };
 const SPACE = 3 * FOOT,
 	ARRIVE = SPACE / 4;
-const SEARCH = { x: 90, y: 90, tau: 10, again: 2 };
-const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
+// SEARCH and searchR (where a villager looks for work) are below HOME: the search reaches the home band (REACH).
 const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, keep: 8 }; // a gatherer will not work within 110 of an enemy or a hunting beast, inside an enemy tower's reach plus 30, within 60 of a fire, or for 45 s within 80 of where one of its side was frightened more than 200 from home (the last 8 such places are kept)
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
@@ -360,6 +359,14 @@ const WALL_R = 190;
 // the ring is drawn on the grid), then LANE squares, rounded up to whole squares (230), so no find stands within the gap of any square of
 // the ring and every ring closes. 220 (one square's margin) left a hole in 1 ring of 75.
 const HOME = { clear: Math.ceil((WALL_R + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC, band: 60, rich: 1.18 };
+// Reach (Build 80 preview 13, Albert's sighting of Nov 1: twenty villagers asleep at the mill with full bushes 180 to 225 away). The search,
+// the leash and the placed villager's cap were 90 to 180 and 200, written for the v62 map (finds about 150 from home) and never re-measured
+// when the zones moved the home finds to clear + band. One number, derived: the home band's outer edge plus the room of the largest home
+// find (groveP, 56 in LAYOUT), so every node of every home find is in reach of the Town Center. r(t) keeps its form (decision 1): half
+// of REACH at the loss, all of it from tau on.
+const REACH = HOME.clear + HOME.band + 60;
+const SEARCH = { x: REACH / 2, y: REACH / 2, tau: 10, again: 2 };
+const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
 // Zone 1 (Albert, Nov 1): a berry patch and a small grove that hold Bronze's cost with a margin for the villagers and houses on the way
 // (600 food, 250 wood), worked out from the costs, not typed; on every land the same (no land's amt). Each node behind the Town Center
 // (on the corner's side of both its axes), LANE squares or more from any other find's, and edge or more from the map's edge: whole squares

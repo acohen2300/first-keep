@@ -5470,8 +5470,7 @@ const LOOKOUT = { base: 60, k: 24 }; // a building sees 60 + 24 × the square ro
 const WORK_R = { fish: 13, other: 9 };
 const SPACE = 3 * FOOT,
 	ARRIVE = SPACE / 4;
-const SEARCH = { x: 90, y: 90, tau: 10, again: 2 };
-const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
+// SEARCH and searchR (where a villager looks for work) are below HOME: the search reaches the home band (REACH).
 const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, keep: 8 }; // a gatherer will not work within 110 of an enemy or a hunting beast, inside an enemy tower's reach plus 30, within 60 of a fire, or for 45 s within 80 of where one of its side was frightened more than 200 from home (the last 8 such places are kept)
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
@@ -5661,6 +5660,14 @@ const WALL_R = 190;
 // the ring is drawn on the grid), then LANE squares, rounded up to whole squares (230), so no find stands within the gap of any square of
 // the ring and every ring closes. 220 (one square's margin) left a hole in 1 ring of 75.
 const HOME = { clear: Math.ceil((WALL_R + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC, band: 60, rich: 1.18 };
+// Reach (Build 80 preview 13, Albert's sighting of Nov 1: twenty villagers asleep at the mill with full bushes 180 to 225 away). The search,
+// the leash and the placed villager's cap were 90 to 180 and 200, written for the v62 map (finds about 150 from home) and never re-measured
+// when the zones moved the home finds to clear + band. One number, derived: the home band's outer edge plus the room of the largest home
+// find (groveP, 56 in LAYOUT), so every node of every home find is in reach of the Town Center. r(t) keeps its form (decision 1): half
+// of REACH at the loss, all of it from tau on.
+const REACH = HOME.clear + HOME.band + 60;
+const SEARCH = { x: REACH / 2, y: REACH / 2, tau: 10, again: 2 };
+const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
 // Zone 1 (Albert, Nov 1): a berry patch and a small grove that hold Bronze's cost with a margin for the villagers and houses on the way
 // (600 food, 250 wood), worked out from the costs, not typed; on every land the same (no land's amt). Each node behind the Town Center
 // (on the corner's side of both its axes), LANE squares or more from any other find's, and edge or more from the map's edge: whole squares
@@ -11144,7 +11151,7 @@ const forageNow = (u) =>
 // the best find for this worker and its rate: fields, berries, trees, stone, gold, iron, fish, a carcass, or game within reach of home.
 // seek (decision 1, a lost find): the point the search is measured from. Then it may take a find of the same kind its side has seen within
 // the search radius of that point, or one a friend (its own side) is working; a placed villager none past the cap (x + y) from where it was
-// placed, the rest none past the leash (DANGER_R.far) from the find's nearest drop-off. Of those, the best by the forager's rate R.
+// placed, the rest none past the leash (REACH, the home band's edge) from the find's nearest drop-off. Of those, the best by the forager's rate R.
 function bestNode(u, job, seek, cm) {
 	let best = null,
 		bR = 0,
@@ -11191,7 +11198,7 @@ function bestNode(u, job, seek, cm) {
 				}
 				if (!mates.has(n)) continue; // past the radius only a find a friend is working
 			}
-			if (seek && (u.anchor ? dist(u.anchor, n) > SEARCH.x + SEARCH.y : dist(nearest(drops, n) || keepOf(u.owner) || n, n) > DANGER_R.far))
+			if (seek && (u.anchor ? dist(u.anchor, n) > REACH : dist(nearest(drops, n) || keepOf(u.owner) || n, n) > REACH))
 				continue; // the cap from where it was placed; else the leash from a drop-off
 		}
 		const R = forage(u, n, drops);
@@ -11427,10 +11434,19 @@ function stepOut(u, b) {
 function waitAt(u, dt, SP) {
 	let b = u.spot && G.blds.find((x) => x.id === u.spot.b && x.hp > 0);
 	if (!b) {
-		b = dropFor(u.owner, u.job, u);
-		if (!b) return;
-		const p = takeSpots([u], b, b.id).get(u);
-		if (!p) return; // every spot is taken: it stands where it is and asks again
+		// a spot on the nearest drop-off for its job; when every spot there is taken, the next drop-off, nearest first (Build 80 preview 13:
+		// the overflow froze where it stood, a pile on one side of the mill). Only with no spot on any does it stand where it is and ask again
+		let p = null;
+		for (const c of G.blds
+			.filter((x) => x.owner === u.owner && x.prog >= 1 && x.hp > 0 && BLD[x.kind].drop && BLD[x.kind].drop.includes(u.job))
+			.sort((x, y) => dist(x, u) - dist(y, u))) {
+			p = takeSpots([u], c, c.id).get(u);
+			if (p) {
+				b = c;
+				break;
+			}
+		}
+		if (!p) return;
 		u.spot = { b: b.id, i: p.i };
 		if (u.owner === 0) {
 			const full = G.nodes.some((n) => n.kind === u.was && n.amt > 0 && (n.wk || 0) >= findCap(n)); // some stand, every spot on them taken
@@ -31060,6 +31076,7 @@ window.__fk = {
 	nearestFoe,
 	searchR,
 	SEARCH,
+	REACH,
 	SPACE,
 	FOOT,
 	WILD_LOOK,

@@ -256,6 +256,7 @@ window.__fk = {
 	nearestFoe,
 	searchR,
 	SEARCH,
+	REACH,
 	SPACE,
 	FOOT,
 	WILD_LOOK,

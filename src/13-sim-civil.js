@@ -166,10 +166,19 @@ function stepOut(u, b) {
 function waitAt(u, dt, SP) {
 	let b = u.spot && G.blds.find((x) => x.id === u.spot.b && x.hp > 0);
 	if (!b) {
-		b = dropFor(u.owner, u.job, u);
-		if (!b) return;
-		const p = takeSpots([u], b, b.id).get(u);
-		if (!p) return; // every spot is taken: it stands where it is and asks again
+		// a spot on the nearest drop-off for its job; when every spot there is taken, the next drop-off, nearest first (Build 80 preview 13:
+		// the overflow froze where it stood, a pile on one side of the mill). Only with no spot on any does it stand where it is and ask again
+		let p = null;
+		for (const c of G.blds
+			.filter((x) => x.owner === u.owner && x.prog >= 1 && x.hp > 0 && BLD[x.kind].drop && BLD[x.kind].drop.includes(u.job))
+			.sort((x, y) => dist(x, u) - dist(y, u))) {
+			p = takeSpots([u], c, c.id).get(u);
+			if (p) {
+				b = c;
+				break;
+			}
+		}
+		if (!p) return;
 		u.spot = { b: b.id, i: p.i };
 		if (u.owner === 0) {
 			const full = G.nodes.some((n) => n.kind === u.was && n.amt > 0 && (n.wk || 0) >= findCap(n)); // some stand, every spot on them taken
