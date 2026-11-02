@@ -14,6 +14,8 @@ The architectural drawings for every menu, page and card: one home for layout. C
 - **One rank = 44 + 6 = 50.** Every height is a whole number of ranks, as every width is a whole number of slots. No loose lines between ranks: text lives in a slot or takes a rank of its own. One exception, locked: the subtitle line under the title bar (§4).
 - **A half rank is 19** (19 + 6 + 19 = one rank). Used once: the status strip (§5).
 - **Cards are counted in ranks**, never a share of the screen.
+- **A card is at most 7 ranks tall, its title rank included, and 6 slots across** (D-094, Albert Nov 2): on the smallest phone (375 x 667) it leaves 130 pt of map; what is taller goes into pages, tabs or folds. [2026-11-02 11:26]
+- **Research and building cards are words only: no icons** (D-094). [2026-11-02 11:26]
 - **The screen stacks in ranks:** top bar, strip, map, card, job ribbon; cards rise from the bottom in whole ranks over the map.
 - **One flat layer** on the grid. A floating menu (the quick action, §7) is one tight block: no gaps inside it, one outer border at radius 9, thin divider lines.
 - **Tabs are a file folder:** the open tab joins one outline (Gold 1, radius 9) round its whole page; the outline runs down the middle of the 6 gap, so it adds no width or height.

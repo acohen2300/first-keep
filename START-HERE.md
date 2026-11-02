@@ -37,7 +37,7 @@ START QC also runs `tests/docs.py`: every line added or changed in a living doc 
    4. `docs/2 Rules/EXCEPTIONS.md`: every rule bent on purpose, with Albert's yes. [2026-11-01 07:45]
    5. `docs/2 Rules/MENU-SPEC.md`: the grid and every card's layout. [2026-11-01 07:45]
 3. **Locks** (`docs/3 Locks/`): [2026-11-01 07:45]
-   1. `docs/3 Locks/Decisions/00 Index.md`: every decision, D-001 to D-093, one file each, with its status. [2026-11-02 09:06]
+   1. `docs/3 Locks/Decisions/00 Index.md`: every decision, D-001 to D-094, one file each, with its status. [2026-11-02 11:26]
    2. `docs/3 Locks/Designs/00 Index.md`: every locked screen and card, with its pictures. [2026-11-01 07:45]
 4. **Now** (`docs/4 Now/`): [2026-11-01 07:45]
    1. `docs/4 Now/Handoff.md`: the current state. [2026-11-01 07:45]

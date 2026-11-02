@@ -98,3 +98,4 @@ To add one: take the next number, name the file `D-NNN <what it decides>.md`, co
 - `D-091 The nearest villager raises a site then goes back.md`: locked; amends D-089 W4 for placing [2026-11-02 09:06]
 - `D-092 Rest every stopped unit has a place deer graze.md`: locked [2026-11-02 09:06]
 - `D-093 Focus F means where you put them.md`: locked [2026-11-02 09:06]
+- `D-094 A card is 7 ranks at most and no icons on research or building cards.md`: locked; building the cards to it waits on drawings [2026-11-02 11:26]
