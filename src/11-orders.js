@@ -202,8 +202,9 @@ function autoBuilder(o, b) {
 		).length >= 2
 	)
 		return;
-	const v = pickVil(o, b, typesOf(b.kind));
+	const v = pickVil(o, b, typesOf(b.kind), null, hand(o));
 	if (v) sendBuilder(v, b);
+	else if (hand(o)) say(NO_HANDS, 'warn', 3);
 }
 function sendBuilder(v, b) {
 	if (v.job !== 'repair') v.pj = v.job;
@@ -215,9 +216,9 @@ function sendBuilder(v, b) {
 function sendBuild(o, id) {
 	const b = G.blds.find((x) => x.id === id && x.owner === o && x.hp > 0 && x.prog < 1);
 	if (!b) return false;
-	const v = pickVil(o, b, typesOf(b.kind), b);
+	const v = pickVil(o, b, typesOf(b.kind), b, hand(o));
 	if (!v) {
-		if (o === 0) say('No villager is free.', '', 3);
+		if (o === 0) say(NO_HANDS, 'warn', 3);
 		return false;
 	}
 	sendBuilder(v, b);
@@ -873,6 +874,8 @@ function setJob(u, job, n, at) {
 	u.node = n || null;
 	u.at = null; // a spot held at the old find is let go: the new order is cap-checked on arrival (fresh review #1)
 	u.was = n ? n.kind : null; // a fresh order: any find of the job until it has worked one
+	if (!job || (n && !n.farm)) u.plot = null; // stopped, or sent to the land: no longer posted (D-089)
+	else if (n && n.farm) u.plot = n.farm.id; // given a building: posted to it until you tap it off or it falls
 	u.anchor = at ? { x: at.x, y: at.y } : null; // the spot it was placed: its search starts there and stays within the cap (decision 1)
 	u.wait = false;
 	if (job) u.post = null;
@@ -882,21 +885,21 @@ function setJob(u, job, n, at) {
 }
 // a villager at a workshop, a mint or a foundry, walking there or working inside: + and the computers leave it be; − and Send out free it
 const atShop = (u) => !!(u.node && u.node.farm && BLD[u.node.farm.kind].makes);
-// the + and − under a job: + takes an idle villager, else the one earning least on another job; − sends home the one earning least on this
-// one, a shop worker too (Build 60: one inside a Mint or a Foundry could never be called out)
+// the + and − under a job (D-089): + takes an idle villager, else the roaming one earning least on another job; − frees an idle one on this
+// job, else the roaming one earning least. Neither ever takes a posted villager: it leaves its building only when you tap it off
+const NO_HANDS = 'No free hands: train more villagers.';
 function moveVil(o, job, down) {
-	const all = unitsOf(o, 'vil'),
-		V = all.filter((u) => !u.inside),
+	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !posted(u)),
 		low = (L) => L.reduce((b, u) => (!b || forageNow(u) < forageNow(b) ? u : b), null);
 	if (down) {
-		const v = low(all.filter((u) => u.job === job && (!u.inside || u.shop)));
+		const L = V.filter((u) => u.job === job),
+			v = L.find(freeVil) || low(L);
 		if (v) setJob(v, null);
 		return;
 	}
-	const v =
-		V.find(freeVil) ||
-		low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job) && !atShop(u)));
+	const v = V.find(freeVil) || low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job)));
 	if (v) setJob(v, job);
+	else if (o === 0) say(NO_HANDS, 'warn', 3);
 }
 // Stop: a villager drops its job and stands where it is (or where it is sent), ready for a new order (Build 61)
 function stopVil(u, post) {
@@ -924,9 +927,9 @@ function sendVil(o, id) {
 		return false;
 	}
 	const job = n.type,
-		v = pickVil(o, n, job);
+		v = pickVil(o, n, job, null, hand(o) && !!n.farm); // to a building of yours: an idle villager only (D-089)
 	if (!v) {
-		if (o === 0) say('No villager is free.', '', 3);
+		if (o === 0) say(NO_HANDS, 'warn', 3);
 		return false;
 	}
 	setJob(v, job, n, n);
@@ -939,7 +942,7 @@ function sendHunt(o, id) {
 	if (!a) return false;
 	const v = pickVil(o, a, 'food');
 	if (!v) {
-		if (o === 0) say('No villager is free.', '', 3);
+		if (o === 0) say(NO_HANDS, 'warn', 3);
 		return false;
 	}
 	setJob(v, 'food');
@@ -950,9 +953,9 @@ function sendHunt(o, id) {
 function sendRepair(o, id) {
 	const b = G.blds.find((x) => x.id === id && x.owner === o && x.hp > 0 && x.prog >= 1);
 	if (!b || b.hp >= maxHpB(o, b.kind) - 0.5) return false;
-	const v = pickVil(o, b);
+	const v = pickVil(o, b, null, null, hand(o));
 	if (!v) {
-		if (o === 0) say('No villager is free.', '', 3);
+		if (o === 0) say(NO_HANDS, 'warn', 3);
 		return false;
 	}
 	setJob(v, 'repair');

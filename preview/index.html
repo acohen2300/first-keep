@@ -5642,42 +5642,45 @@ const LAND = {
 };
 const LANDK = Object.keys(LAND),
 	SPREAD = [0.85, 1.25];
-// The map's base rules (Albert, Build 70): a flat page, four corners (CORNER), the same clear radius and home finds in every corner, the
-// Throne at the middle. All else is random from the one randomizer, laid once: no measure, no reshuffle. CLEAR: no forest or water within it.
+// The map's base rules (Albert, Build 70): a flat page, four corners (CORNER), the same zones and home finds in every corner, the Throne at
+// the middle. All else is random from the one randomizer, laid once: no measure, no reshuffle. CLEAR: no water within it of a Town Center.
 const CLEAR = 360;
-// The home zones (decision 5a, Albert, Oct 31; three zones, Nov 1, answer 2; the same in every corner), measured on the finds' own nodes
-// (each bush, tree, rock): clear, no node of any find within it of the Town Center; the radius CLEAR above, no forest or water within it.
-//   zone 1, behind: between the Town Center and its corner (BACK below), from clear to the map's edge (MID − CORNER deep);
-//   zone 2, the band: the five home finds (HOME_IDS in 10) each at a random place round the front, its nearest node from clear to
-//     clear + band and no node in zone 1; rich, their amounts over today's pocket (HOME_RICH 1.18, on top of RICH);
-//   zone 3, the wild: everything else, at random, outside zones 1 and 2.
 // Between two buildings (decision 2, Albert, Oct 31): LANE squares at least. A gap is passable only if wider than a figure (2r); the slit rule
 // shuts a one-square gap because the drawn figure is wider than it (Build 41), so two. Walls, gates and crops may touch.
 const LANE = 2;
-// The computers' wall ring (wallPlan in 17): an arc WALL_R out from the Town Center.
-const WALL_R = 190;
-// clear (Albert, Nov 1 14:16, "push the trees to 220"): the wall ring, then the margin a ring square can reach past it (its diagonal, NAVC √2:
-// the ring is drawn on the grid), then LANE squares, rounded up to whole squares (230), so no find stands within the gap of any square of
-// the ring and every ring closes. 220 (one square's margin) left a hole in 1 ring of 75.
-const HOME = { clear: Math.ceil((WALL_R + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC, band: 60, rich: 1.18 };
-// Reach (Build 80 preview 13, Albert's sighting of Nov 1: twenty villagers asleep at the mill with full bushes 180 to 225 away). The search,
-// the leash and the placed villager's cap were 90 to 180 and 200, written for the v62 map (finds about 150 from home) and never re-measured
-// when the zones moved the home finds to clear + band. One number, derived: the home band's outer edge plus the room of the largest home
-// find (groveP, 56 in LAYOUT), so every node of every home find is in reach of the Town Center. r(t) keeps its form (decision 1): half
-// of REACH at the loss, all of it from tau on.
-const REACH = HOME.clear + HOME.band + 60;
+// The four zones (Albert, Nov 2, 07:07 to 07:14, D-090; the same in every corner), measured on the finds' own nodes (each bush, tree, rock):
+//   1 close: behind the Town Center, between it and its corner (BACK below): enough to reach Bronze;
+//   2 your zone: the rest of the clearing, to HOME.clear (220, Albert's number): no forest, open ground to build on, and the five home finds
+//     (HOME_IDS in 10), each the same walk from the Town Center in every corner (HOME.at), in a random direction (fair, not mirrored: the
+//     same deal, a different layout). The nearer the find, the sooner it is needed: food, wood, gold, stone, iron, the order the ages ask for
+//     them (AGES), as von Thünen laid the land most worked nearest the town (von Thünen 1826, from memory, not opened);
+//   3 the wall band: the computers' wall ring (WALL_R), two squares past the clearing; no finds; the forest starts past the ring (HOME.out);
+//   4 further: the rest of the map, every wild find and the forest from HOME.out on.
+// HOME.near: the first home find's walk, v70's nearest bush (147, measured Nov 1 on seed 1; v62 to v70 was the map Albert called great),
+// rounded to 150; HOME.step spreads the five evenly from there to the clearing, the iron pair's room (10) inside it.
+const HOME = { clear: 220, near: 150, rich: 1.18 };
+HOME.step = (HOME.clear - 10 - HOME.near) / 4;
+HOME.at = (k) => HOME.near + k * HOME.step;
+// The computers' wall ring (wallPlan in 17): the clearing, then the margin a ring square can reach (its diagonal, NAVC √2: the ring is
+// drawn on the grid), then LANE squares, rounded up to whole squares (260), so no find stands within the gap of any square of the ring.
+const WALL_R = Math.ceil((HOME.clear + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC;
+// The wall band's far side, by the same rule from the ring (300): the forest and every wild find lie wholly past it, so every ring closes.
+HOME.out = Math.ceil((WALL_R + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC;
+// Reach (D-088, Albert's sighting of Nov 1: villagers asleep at the mill with full bushes in sight; D-090 moved the finds in): a villager
+// looks for work, and is leashed, within the wall ring of its drop-off. Every home find's every node lies inside it (HOME.clear < WALL_R),
+// the wild past it is reached from a drop-off built out there. r(t) keeps its form (decision 1): half of REACH at the loss, all from tau on.
+const REACH = WALL_R;
 const SEARCH = { x: REACH / 2, y: REACH / 2, tau: 10, again: 2 };
 const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
-// Zone 1 (Albert, Nov 1): a berry patch and a small grove that hold Bronze's cost with a margin for the villagers and houses on the way
-// (600 food, 250 wood), worked out from the costs, not typed; on every land the same (no land's amt). Each node behind the Town Center
-// (on the corner's side of both its axes), LANE squares or more from any other find's, and edge or more from the map's edge: whole squares
-// enough for half a tap (22 px) at the opening zoom on the tilted axis, so the corner's finds can be seen and tapped (tests/map.py's camera
-// check; LANE squares gave 19 px). Laid first and never moved out front: a corner it does not fit fails tests/map.py.
-// on: held out of this preview (Albert, Nov 1 14:13: Classical by 10 minutes did not come back within 10% of main): no zone 1 is laid; the
-// keep-out stands, and tests/map.py still lays it to check it. On the v81 list.
+// Zone 1 (Albert, Nov 1; on, Nov 2: "Close was supposed to have enough to get you to the first age between you and the corner"): a berry
+// patch and a small grove that hold Bronze's cost with a margin for the villagers and houses on the way (600 food, 250 wood), worked out from
+// the costs, not typed; on every land the same (no land's amt). Each node behind the Town Center (on the corner's side of both its axes),
+// from near (the Town Center's half and LANE squares: the find gap from its wall) to the clearing, LANE squares or more from any other
+// find's, and edge or more from the map's edge: whole squares enough for half a tap (22 px) at the opening zoom on the tilted axis, so the
+// corner's finds can be seen and tapped (tests/map.py's camera check; LANE squares gave 19 px). Laid first: a corner it does not fit fails.
 const BACK_MARGIN = { vils: 6, houses: 5 },
 	BACK = {
-		on: false,
+		near: (BLD.keep.fp * NAVC) / 2 + LANE * NAVC,
 		bushes: 2, // Albert, Nov 1 14:13: fewer, bigger finds (300 and 125), so a drop-off by them is worth its cost
 		trees: 2,
 		edge: Math.ceil(22 / (ZOOM_START * TILT) / NAVC) * NAVC,
@@ -7455,6 +7458,16 @@ function keepHealth() {
 // who is idle (Albert's sighting, Nov 1, QC D10): a villager with no job, or with one and nothing it can do (waiting, no find in reach,
 // no drop-off: u.idle, set by its tick). The one home: its Zs, the strip's count, the idle button and the quick action all read it
 const freeVil = (u) => u.kind === 'vil' && !u.inside && (!u.job || !!u.idle);
+// Posted and roaming (Albert, Nov 2, D-089: "a farm is a farm"): a villager given a building (a field, a tree farm, a quarry, the Mint, a
+// foundry, a pasture, a workshop) belongs to it (u.plot, set by setJob) until you tap it off or the building falls. It leaves only for
+// shelter, the Emergency, a fire or a site, and goes back to it after; with nothing to do there it waits there. + and − never take it.
+// A roaming villager works the land (berries, trees, rock, game), goes where its job is, and + on another job may take it.
+const posted = (u) => !!u.plot && G.blds.some((b) => b.id === u.plot && b.hp > 0);
+// a plot of yours with no worker on it: the Z on the field (23-view-things) and its count in the strip (32-frame), the one home
+// your hand (D-089): orders from your own building flow take an idle villager only. The test harness that plays your seat with a computer
+// (tests/balance.py, probe.py) sets ai.bot, so that seat plays by the computers' rules
+const hand = (o) => o === 0 && !(G.P[0].ai && G.P[0].ai.bot);
+const idlePost = (b) => b.owner === 0 && BLD[b.kind].crop && b.node && b.prog >= 1 && !(b.node.wk > 0);
 const unitKeys = (kind) => {
 	const U = UNIT[kind],
 		k = [kind, baseKind(kind)];
@@ -8703,14 +8716,15 @@ const SHAPE = {
 const LAYOUT = [
 	// what, nearest, farthest from the keep, room it needs
 	// zone 1 (BACK in 06): behind the Town Center, its room worked out from its shape (laySpots)
-	['bushH', HOME.clear, MID - CORNER, 0],
-	['groveH', HOME.clear, MID - CORNER, 0],
-	// zone 2 (HOME in 06, decision 5a): the five home finds at random positions in the band round the front; every other find outside both (makeMap)
-	['bushP', HOME.clear, HOME.clear + HOME.band, 38],
-	['groveP', HOME.clear, HOME.clear + HOME.band, 56],
-	['stoneP', HOME.clear, HOME.clear + HOME.band, 24],
-	['goldP', HOME.clear, HOME.clear + HOME.band, 24],
-	['ironP', HOME.clear, HOME.clear + HOME.band, 24],
+	['bushH', BACK.near, HOME.clear, 0],
+	['groveH', BACK.near, HOME.clear, 0],
+	// zone 2 (HOME in 06, D-090): the five home finds, each the same walk in every corner (HOME.at, in the order the ages need them), in a
+	// random direction round the front; every other find past the wall band (makeMap)
+	['bushP', HOME.at(0), HOME.at(0), 38],
+	['groveP', HOME.at(1), HOME.at(1), 56],
+	['goldP', HOME.at(2), HOME.at(2), 24],
+	['stoneP', HOME.at(3), HOME.at(3), 24],
+	['ironP', HOME.at(4), HOME.at(4), 24],
 	['bushA', 150, 190, 38],
 	['groveA', 170, 250, 72],
 	['bushB', 180, 230, 38],
@@ -8777,7 +8791,7 @@ function makeForest(spot, loc, near) {
 			Math.sin((x - y) * 0.009 + ph[3]) +
 			Math.max(0, hyp(x, y) - 450) * 0.004;
 	const keepOut = [
-		{ x: 0, y: 0, r: CLEAR },
+		{ x: 0, y: 0, r: HOME.out }, // the forest starts past the wall band (D-090); water keeps to CLEAR (makeWater)
 		{ x: CORNER, y: CORNER, r: LAKE0.r + 40 },
 		...loc.map((l) => ({ x: l.x, y: l.y, r: l.r + 35 })),
 		...Object.entries(spot).map(([id, s]) => ({
@@ -8825,7 +8839,7 @@ function makeForest(spot, loc, near) {
 		return { x: a.x + (b.x - a.x) * t + (nx / l) * 36, y: a.y + (b.y - a.y) * t + (ny / l) * 36 };
 	};
 	const held = [
-			{ x: 0, y: 0, r: HOME.clear + HOME.band }, // the home zone
+			{ x: 0, y: 0, r: HOME.out }, // the home zones and the wall band
 			{ x: CORNER, y: CORNER, r: LAKE0.r },
 			...loc,
 			...Object.values(spot),
@@ -8900,8 +8914,9 @@ function makeRiver(L, w, toX) {
 	return C.filter((_, i) => Math.abs(i - i1) > h && Math.abs(i - i2) > h);
 }
 // one corner's finds, each at random in its own ring, judged by its own nodes (shape: each bush, tree, rock or animal from the find's
-// middle): a zone 1 find's every node behind the Town Center, from the clearing to the map's edge, BACK.edge in from it; a home find's
-// nearest node in the band and none inside the clearing; any other find's nodes all past the band; and no node but zone 1's in zone 1. Each
+// middle): a zone 1 find's every node behind the Town Center, from BACK.near to the clearing, BACK.edge in from the map's edge; a home
+// find's middle at its own walk (HOME.at), in a random direction, every node inside the clearing; any other find's nodes all past the wall
+// band (HOME.out); and no node but zone 1's in zone 1. Each
 // with its room clear of what was laid before and of the water, and inside this corner's quarter of the map (local: keep 0,0, edge at
 // CORNER − MID, the middle lines at CORNER). A find that has no room searches outward: its ring widens by a step every few tries, so every
 // corner gets every find (equal content; tests/map.py holds it on 100 seeds). Zone 1 never searches outward: it fits, or the test fails.
@@ -8911,9 +8926,7 @@ function laySpots(lay, loc, spot, shape) {
 		room = [{ x: CORNER, y: CORNER, r: LAKE0.r + 25 }, ...loc.map((l) => ({ x: l.x, y: l.y, r: l.r + 25 }))], // the great lake, the water in this corner
 		lo = CORNER - MID,
 		gap = LANE * NAVC,
-		b0 = HOME.clear,
-		b1 = HOME.clear + HOME.band,
-		inBack = (x, y) => x <= 0 && y <= 0 && hyp(x, y) <= MID - CORNER; // zone 1: between the Town Center and its corner
+		inBack = (x, y) => x <= 0 && y <= 0 && hyp(x, y) <= HOME.clear; // zone 1: between the Town Center and its corner, inside the clearing (D-090)
 	for (const [id, r0, r1, c0] of lay) {
 		const S = shape[id],
 			ext = Math.max(...S.map(([ox, oy]) => hyp(ox, oy))),
@@ -8922,14 +8935,15 @@ function laySpots(lay, loc, spot, shape) {
 			clr = back ? ext + gap / 2 : c0; // zone 1's room: its shape and half a lane, so two finds keep LANE squares between their nodes
 		for (let t = 0; t < SEEK.most; t++) {
 			const a = back ? rnd(-Math.PI, -Math.PI / 2) : rnd(-Math.PI, Math.PI),
-				d = back ? rnd(r0, r1) : rnd(r0, r1 + ext + Math.floor(t / SEEK.tries) * SEEK.step),
+				d = back ? rnd(r0, r1) : home ? r0 : rnd(r0, r1 + ext + Math.floor(t / SEEK.tries) * SEEK.step), // a home find: its walk, the same in every corner
 				x = Math.cos(a) * d,
 				y = Math.sin(a) * d,
 				N = S.map(([ox, oy]) => [x + ox, y + oy]),
-				near = Math.min(...N.map(([nx, ny]) => hyp(nx, ny)));
+				near = Math.min(...N.map(([nx, ny]) => hyp(nx, ny))),
+				far = Math.max(...N.map(([nx, ny]) => hyp(nx, ny)));
 			if (back) {
-				if (!N.every(([nx, ny]) => inBack(nx, ny) && hyp(nx, ny) >= b0 && Math.min(nx, ny) >= lo + BACK.edge)) continue;
-			} else if ((home ? near < b0 || near > b1 : near < b1) || N.some(([nx, ny]) => inBack(nx, ny))) continue;
+				if (!N.every(([nx, ny]) => inBack(nx, ny) && hyp(nx, ny) >= r0 && hyp(nx, ny) <= r1 && Math.min(nx, ny) >= lo + BACK.edge)) continue;
+			} else if ((home ? near < BACK.near || far > HOME.clear : near - (MOVE_IDS.has(id) ? c0 : 0) < HOME.out) || N.some(([nx, ny]) => inBack(nx, ny))) continue; // a carried find or game: its own room past the band too (a find keeps a wall off by its box, canPlace)
 			if (Math.min(x, y) - clr < lo || Math.max(x, y) + clr > CORNER) continue;
 			if (taken.some((q) => hyp(q.x - x, q.y - y) < q.r + clr) || room.some((q) => hyp(q.x - x, q.y - y) < q.r + clr))
 				continue;
@@ -8941,13 +8955,13 @@ function laySpots(lay, loc, spot, shape) {
 	return spot;
 }
 // The map in five layers (Albert, Build 63), on the base rules (CLEAR and HOME in 06), laid once from the seed:
-//   1 home: the home zone round each Town Center (decision 5a): the same clearing, the same five finds at random in the same band, the same radius;
+//   1 home: the zones round each Town Center (D-090): close behind it, the five home finds at their walks in your zone, the wall band;
 //   2 ground: the lakes and rivers, at random over the whole map and never in a clear radius (makeWater), so laid first;
 //   3 wild: the finds beyond the pocket, the forest, the deposits in it;
 //   4 movables: the game, the boar, the finds that walk or are carried off (chest, ruins, den, cemetery, vagabonds);
 //   5 weather: the first sky, rolled from the season's chain (in newGame, once the economy stands).
 // Fair is not mirror: each corner is its own roll of the same element, and the land between is random (Build 70: no measure, no reshuffle).
-// Decision 5a: equal content, not equal distances; every find outside the zone is rolled for each corner on its own.
+// Equal content and, for the home finds, equal walks (D-090); every find past the wall band is rolled for each corner on its own.
 const BACK_IDS = new Set(['bushH', 'groveH']),
 	HOME_IDS = new Set(['bushP', 'groveP', 'stoneP', 'goldP', 'ironP']),
 	MOVE_IDS = new Set(['deerA', 'deerB', 'boar', 'chest', 'ruins', 'den', 'cemetery', 'vagabonds']);
@@ -8957,7 +8971,7 @@ function makeMap() {
 	G.land = LANDK[Math.floor(rng() * LANDK.length)];
 	const Ld = LAND[G.land],
 		k = rnd(SPREAD[0], SPREAD[1]),
-		out = HOME.clear + HOME.band; // every find but the home five lies wholly outside the band
+		out = HOME.out; // every find but zones 1 and 2 lies wholly past the wall band
 	const lay = (Ld.extra ? [...LAYOUT, ['extra', 240, 380, 30]] : LAYOUT).map(([id, r0, r1, clr]) => {
 		if (HOME_IDS.has(id) || BACK_IDS.has(id)) return [id, r0, r1, clr];
 		const lo = Math.min(560, r0 * k),
@@ -8965,7 +8979,7 @@ function makeMap() {
 			up = Math.max(0, out - lo);
 		return [id, lo + up, hi + up, clr];
 	}); // stretched, never past the old outer ring, then moved out to start at the band's edge (laySpots keeps every node past it)
-	const layHome = lay.filter(([id]) => (BACK.on && BACK_IDS.has(id)) || HOME_IDS.has(id)), // zone 1 first (when on), then zone 2
+	const layHome = lay.filter(([id]) => BACK_IDS.has(id) || HOME_IDS.has(id)), // zone 1 first, then zone 2
 		layWild = lay.filter(([id]) => !BACK_IDS.has(id) && !HOME_IDS.has(id) && !MOVE_IDS.has(id)),
 		layMove = lay.filter(([id]) => MOVE_IDS.has(id));
 	G.lakes = [{ ...LAKE0 }, ...makeWater()]; // 2 ground
@@ -9499,8 +9513,9 @@ function autoBuilder(o, b) {
 		).length >= 2
 	)
 		return;
-	const v = pickVil(o, b, typesOf(b.kind));
+	const v = pickVil(o, b, typesOf(b.kind), null, hand(o));
 	if (v) sendBuilder(v, b);
+	else if (hand(o)) say(NO_HANDS, 'warn', 3);
 }
 function sendBuilder(v, b) {
 	if (v.job !== 'repair') v.pj = v.job;
@@ -9512,9 +9527,9 @@ function sendBuilder(v, b) {
 function sendBuild(o, id) {
 	const b = G.blds.find((x) => x.id === id && x.owner === o && x.hp > 0 && x.prog < 1);
 	if (!b) return false;
-	const v = pickVil(o, b, typesOf(b.kind), b);
+	const v = pickVil(o, b, typesOf(b.kind), b, hand(o));
 	if (!v) {
-		if (o === 0) say('No villager is free.', '', 3);
+		if (o === 0) say(NO_HANDS, 'warn', 3);
 		return false;
 	}
 	sendBuilder(v, b);
@@ -10170,6 +10185,8 @@ function setJob(u, job, n, at) {
 	u.node = n || null;
 	u.at = null; // a spot held at the old find is let go: the new order is cap-checked on arrival (fresh review #1)
 	u.was = n ? n.kind : null; // a fresh order: any find of the job until it has worked one
+	if (!job || (n && !n.farm)) u.plot = null; // stopped, or sent to the land: no longer posted (D-089)
+	else if (n && n.farm) u.plot = n.farm.id; // given a building: posted to it until you tap it off or it falls
 	u.anchor = at ? { x: at.x, y: at.y } : null; // the spot it was placed: its search starts there and stays within the cap (decision 1)
 	u.wait = false;
 	if (job) u.post = null;
@@ -10179,21 +10196,21 @@ function setJob(u, job, n, at) {
 }
 // a villager at a workshop, a mint or a foundry, walking there or working inside: + and the computers leave it be; − and Send out free it
 const atShop = (u) => !!(u.node && u.node.farm && BLD[u.node.farm.kind].makes);
-// the + and − under a job: + takes an idle villager, else the one earning least on another job; − sends home the one earning least on this
-// one, a shop worker too (Build 60: one inside a Mint or a Foundry could never be called out)
+// the + and − under a job (D-089): + takes an idle villager, else the roaming one earning least on another job; − frees an idle one on this
+// job, else the roaming one earning least. Neither ever takes a posted villager: it leaves its building only when you tap it off
+const NO_HANDS = 'No free hands: train more villagers.';
 function moveVil(o, job, down) {
-	const all = unitsOf(o, 'vil'),
-		V = all.filter((u) => !u.inside),
+	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !posted(u)),
 		low = (L) => L.reduce((b, u) => (!b || forageNow(u) < forageNow(b) ? u : b), null);
 	if (down) {
-		const v = low(all.filter((u) => u.job === job && (!u.inside || u.shop)));
+		const L = V.filter((u) => u.job === job),
+			v = L.find(freeVil) || low(L);
 		if (v) setJob(v, null);
 		return;
 	}
-	const v =
-		V.find(freeVil) ||
-		low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job) && !atShop(u)));
+	const v = V.find(freeVil) || low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job)));
 	if (v) setJob(v, job);
+	else if (o === 0) say(NO_HANDS, 'warn', 3);
 }
 // Stop: a villager drops its job and stands where it is (or where it is sent), ready for a new order (Build 61)
 function stopVil(u, post) {
@@ -10221,9 +10238,9 @@ function sendVil(o, id) {
 		return false;
 	}
 	const job = n.type,
-		v = pickVil(o, n, job);
+		v = pickVil(o, n, job, null, hand(o) && !!n.farm); // to a building of yours: an idle villager only (D-089)
 	if (!v) {
-		if (o === 0) say('No villager is free.', '', 3);
+		if (o === 0) say(NO_HANDS, 'warn', 3);
 		return false;
 	}
 	setJob(v, job, n, n);
@@ -10236,7 +10253,7 @@ function sendHunt(o, id) {
 	if (!a) return false;
 	const v = pickVil(o, a, 'food');
 	if (!v) {
-		if (o === 0) say('No villager is free.', '', 3);
+		if (o === 0) say(NO_HANDS, 'warn', 3);
 		return false;
 	}
 	setJob(v, 'food');
@@ -10247,9 +10264,9 @@ function sendHunt(o, id) {
 function sendRepair(o, id) {
 	const b = G.blds.find((x) => x.id === id && x.owner === o && x.hp > 0 && x.prog >= 1);
 	if (!b || b.hp >= maxHpB(o, b.kind) - 0.5) return false;
-	const v = pickVil(o, b);
+	const v = pickVil(o, b, null, null, hand(o));
 	if (!v) {
-		if (o === 0) say('No villager is free.', '', 3);
+		if (o === 0) say(NO_HANDS, 'warn', 3);
 		return false;
 	}
 	setJob(v, 'repair');
@@ -11232,21 +11249,16 @@ function bestNode(u, job, seek, cm) {
 // cm: when given, only a find whose foot (an open square within two of it) lies in that walking region counts: a find out of reach is no find
 const reachFrom = (n, cm, o) => !!freeNear(Math.floor(n.x / NAVC), Math.floor(n.y / NAVC), o, 2, n.x, n.y, 1, cm);
 const nearestNode = (u, job, seek) => (bestNode(u, job, seek) || { n: null }).n; // the one find a worker should take now
-// who to send: an idle villager first, the nearest; then, of the workers on the same resource (types), the one earning least; then the one
-// earning least on any gathering job. Weavers, brewers, shepherds and builders keep their posts. (Albert, Oct 29: a new field takes the
-// berry picker farthest from home, not a woodcutter)
-function pickVil(o, to, types, site) {
-	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !(site && u.rep === site)),
+// who to send: an idle villager first, the nearest; with strict (your orders to a building, D-089) nobody else. Otherwise, of the roaming
+// workers on the same resource (types), the one earning least; then the one earning least on any gathering job. A posted villager keeps
+// its building, a builder its site. (Albert, Oct 29: a new field takes the berry picker farthest from home, not a woodcutter)
+function pickVil(o, to, types, site, strict) {
+	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !(site && u.rep === site) && !posted(u)),
 		idle = V.filter(freeVil);
 	if (idle.length) return nearest(idle, to);
+	if (strict) return null;
 	const T = types ? [].concat(types) : null,
-		free = V.filter(
-			(u) =>
-				u.job &&
-				u.job !== 'repair' &&
-				!GOODK.includes(u.job) &&
-				!(u.node && u.node.farm && (BLD[u.node.farm.kind].makes || BLD[u.node.farm.kind].sheep)),
-		),
+		free = V.filter((u) => u.job && u.job !== 'repair' && !GOODK.includes(u.job)),
 		same = T ? free.filter((u) => T.includes(u.job)) : [],
 		pool = same.length ? same : free;
 	if (!pool.length) return null; // nobody is pulled off a site or a post: with all hands busy, the order waits
@@ -11636,6 +11648,23 @@ function vilTick(u, dt, SP) {
 		if (u.owner !== 0 && G.P[u.owner].alive && (G.tick + u.id) % 150 === 0) replant(u.owner, u.node.farm.id); // a computer replants by itself: it has no finger
 		moveTo(u, u.node.x, u.node.y, dt, 4, SP);
 		return;
+	}
+	if (u.plot && !u.node && !u.hunt && u.job) {
+		// posted (D-089): back from shelter, the Emergency, a fire or a site, it goes back to its own building; with its building not ready or
+		// its place taken, it waits there. Only a fallen building sets it free to roam
+		const b = G.blds.find((x) => x.id === u.plot);
+		if (!b || b.hp <= 0) u.plot = null;
+		else if (b.node && nodeFits(b.node, u.job)) {
+			if (b.prog >= 1 && (b.node.wk || 0) < slotsOf(b.node)) {
+				u.node = b.node;
+				b.node.wk = (b.node.wk || 0) + 1;
+				u.was = 'farm';
+			} else {
+				u.idle = true;
+				moveTo(u, b.x, b.y, dt, halfOf(b) + 6, SP);
+				return;
+			}
+		}
 	}
 	if (
 		!flock &&
@@ -19790,7 +19819,7 @@ function drawBld(b, s) {
 		smoke(sx + dx * z, sy - h * z, b.id, z);
 	} // a hearth always; a forge, a foundry or a Town Center only while it works (Build 52: smoke shows who is busy)
 	blaze(b, sx, sy, z);
-	if (b.owner === 0 && B.crop && b.node && !(b.node.wk > 0)) idleMark(sx, sy, z * 1.2);
+	if (idlePost(b)) idleMark(sx, sy, z * 1.2);
 	const M = maxHpB(b.owner, b.kind);
 	if (b.hp < M - 1) bar(sx, sy - c.ay * k - 4, Math.min(60 * z, B.fp * NAVC * z), b.hp / M, G.P[b.owner].color);
 	if (G.wonder && G.wonder.id === b.id) {
@@ -25506,7 +25535,7 @@ function ui(force) {
 			clk = G.wonder ? clock(Math.max(0, G.wonder.end - G.t)) : lim ? clock(Math.max(0, lim - G.t)) : clock(G.t);
 		let ready = 0;
 		for (const v of G.rdy.values()) ready += v; // research you can start now (the age counts: it is research too)
-		const idleN = unitsOf(0, 'vil').filter(freeVil).length,
+		const idleN = unitsOf(0, 'vil').filter(freeVil).length + G.blds.filter(idlePost).length, // every Z on the map: idle people and empty posts (D-089)
 			sol = armyOf(0).length,
 			rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length,
 			sky = `${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''}`,
@@ -26430,7 +26459,7 @@ const PLAY = {
 		let n = 0;
 		if (b && b.fire > 0)
 			for (let i = 0; i < 2; i++) {
-				const v = pickVil(0, b, null, b);
+				const v = pickVil(0, b, null, b, true); // from the building's card: an idle villager only (D-089)
 				if (v) {
 					if (v.job !== 'repair') v.pj = v.job;
 					setJob(v, 'repair');
@@ -27309,6 +27338,7 @@ function loadGame(S) {
 		if (!su || !UNIT[su.kind] || !Number.isFinite(su.x) || !Number.isFinite(su.y)) continue; // likewise a damaged unit
 		const { nodeId, repId, huntId, ...u } = su;
 		u.node = nodeId ? byNode.get(nodeId) || null : null;
+		if (u.plot === undefined && u.node && u.node.farm) u.plot = u.node.farm.id; // a save from before D-089: a worker on a building is posted to it
 		u.rep = repId ? byB.get(repId) || null : null;
 		u._hunt = huntId;
 		G.units.push(u);
@@ -30752,8 +30782,10 @@ function townSquare() {
 		};
 	};
 	for (const u of unitsOf(0, 'vil')) {
+		const pl = u.plot;
 		release(u);
 		stopVil(u, at(u, halfOf(k) + EMG.square));
+		u.plot = pl; // posted (D-089): it keeps its building through the Emergency and goes back to it on Stop
 	}
 	for (const u of troops()) {
 		const p = at(u, halfOf(k) + EMG.square * 3);
@@ -31156,6 +31188,9 @@ window.__fk = {
 	sendVil,
 	setJob,
 	moveVil,
+	posted,
+	idlePost,
+	freeVil,
 	orderSet,
 	clsCount,
 	nearestNode,
@@ -31278,6 +31313,7 @@ window.__fk = {
 	compOf,
 	decideWar,
 	HOME,
+	WALL_R,
 	BACK,
 	BACK_MARGIN,
 	LANE,

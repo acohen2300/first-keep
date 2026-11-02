@@ -130,8 +130,10 @@ function townSquare() {
 		};
 	};
 	for (const u of unitsOf(0, 'vil')) {
+		const pl = u.plot;
 		release(u);
 		stopVil(u, at(u, halfOf(k) + EMG.square));
+		u.plot = pl; // posted (D-089): it keeps its building through the Emergency and goes back to it on Stop
 	}
 	for (const u of troops()) {
 		const p = at(u, halfOf(k) + EMG.square * 3);

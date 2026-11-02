@@ -16,7 +16,7 @@ HTML = sys.argv[sys.argv.index('--html') + 1] if '--html' in sys.argv else os.pa
 SEEDS, MINUTES, FROM, JOBS = arg('--seeds', 20), arg('--minutes', 45), arg('--from', 1), arg('--jobs', 2)
 GAME = """([seed, minutes]) => {
   const F = window.__fk, CV = Object.keys(F.CIVS); F.SET.diff = 'normal'; F.SET.fog = false; F.SET.civ = CV[seed % CV.length]; F.newGame(seed); F.act('close'); F.setPause(false);
-  const G = F.G, P0 = G.P[0]; P0.pers = 'bal'; P0.ai.t = 1;
+  const G = F.G, P0 = G.P[0]; P0.pers = 'bal'; P0.ai.bot = true; P0.ai.t = 1;
   const sides = [0, 1, 2, 3], ages = sides.map(() => [0]), fell = sides.map(() => null);
   const seen = new Map(), still = new Map(), why = { blocked: 0, idle: 0, waiting: 0 }; let stuck = sides.map(() => 0), lostAt = null;
   const cost = (k) => Object.values(F.UNIT[k].cost || {}).reduce((a, b) => a + b, 0);

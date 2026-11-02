@@ -9,7 +9,7 @@ SEEDS = [int(a) for a in (sys.argv[1] if len(sys.argv) > 1 else '1,2').split(','
 MINUTES = int(sys.argv[2]) if len(sys.argv) > 2 else 40
 JS = """([seed, minutes]) => {
   const F = window.__fk, CV = Object.keys(F.CIVS); F.SET.diff = 'normal'; F.SET.fog = false; F.SET.scen = 'open'; F.SET.civ = CV[seed % CV.length]; F.newGame(seed); F.act('close'); F.setPause(false);
-  const G = F.G, P0 = G.P[0]; P0.pers = 'bal'; P0.ai.t = 1; const st = [0, 1, 2, 3].map(() => ({ s: 0, t: 0, n: 0 })), out = [];
+  const G = F.G, P0 = G.P[0]; P0.pers = 'bal'; P0.ai.bot = true; P0.ai.t = 1; const st = [0, 1, 2, 3].map(() => ({ s: 0, t: 0, n: 0 })), out = [];
   let last = [0, 1, 2, 3].map((o) => ({ ...G.P[o].ledger.out }));
   for (let sec = 0; sec < minutes * 60; sec++) {
     for (let i = 0; i < 30; i++) { F.step(1 / 30); if (P0.alive) { P0.ai.t -= 1 / 30; if (P0.ai.t <= 0) { P0.ai.t = F.react(); F.think(P0); } } }

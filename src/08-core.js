@@ -545,6 +545,16 @@ function keepHealth() {
 // who is idle (Albert's sighting, Nov 1, QC D10): a villager with no job, or with one and nothing it can do (waiting, no find in reach,
 // no drop-off: u.idle, set by its tick). The one home: its Zs, the strip's count, the idle button and the quick action all read it
 const freeVil = (u) => u.kind === 'vil' && !u.inside && (!u.job || !!u.idle);
+// Posted and roaming (Albert, Nov 2, D-089: "a farm is a farm"): a villager given a building (a field, a tree farm, a quarry, the Mint, a
+// foundry, a pasture, a workshop) belongs to it (u.plot, set by setJob) until you tap it off or the building falls. It leaves only for
+// shelter, the Emergency, a fire or a site, and goes back to it after; with nothing to do there it waits there. + and − never take it.
+// A roaming villager works the land (berries, trees, rock, game), goes where its job is, and + on another job may take it.
+const posted = (u) => !!u.plot && G.blds.some((b) => b.id === u.plot && b.hp > 0);
+// a plot of yours with no worker on it: the Z on the field (23-view-things) and its count in the strip (32-frame), the one home
+// your hand (D-089): orders from your own building flow take an idle villager only. The test harness that plays your seat with a computer
+// (tests/balance.py, probe.py) sets ai.bot, so that seat plays by the computers' rules
+const hand = (o) => o === 0 && !(G.P[0].ai && G.P[0].ai.bot);
+const idlePost = (b) => b.owner === 0 && BLD[b.kind].crop && b.node && b.prog >= 1 && !(b.node.wk > 0);
 const unitKeys = (kind) => {
 	const U = UNIT[kind],
 		k = [kind, baseKind(kind)];

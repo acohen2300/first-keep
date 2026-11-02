@@ -20,7 +20,8 @@ JS = """() => {
   const s = F.addUnit(0, 'spear', k.x + 40, k.y + 40);
   if (s) { s.state = 'school'; if (F.troops().includes(s)) bad.push('All hands / Town square pulls a student out of the School'); if (F.sendable().includes(s)) bad.push('Home pulls a student out of the School'); }
   // decision 12: a deer's diagonal run is no faster than a straight one
-  const d = F.addUnit(G.P.length - 1, 'deer', 600, 600); G.tick = 1 - (d.id % 6); d.hurtT = undefined; d.run = { x: 1600, y: 1600 };
+  F.step(1 / 30); const op = (() => { for (let x = 400; x < 1600; x += 10) if ([-30, 0, 30].every((e) => !F.blockedCell(F.gcell(x + e, x + e), 0))) return x; return 600; })(); // open ground on the diagonal (D-090 brought the forest in to 300)
+  const d = F.addUnit(G.P.length - 1, 'deer', op, op); G.tick = 1 - (d.id % 6); d.hurtT = undefined; d.run = { x: 1600, y: 1600 };
   const x0 = d.x, y0 = d.y; F.wildTick(d, 0.25, 1); const step = Math.hypot(d.x - x0, d.y - y0), want = F.UNIT.deer.spd * 0.25;
   if (Math.abs(step - want) > 0.05 * want) bad.push('a deer runs ' + step.toFixed(2) + ' a step on a diagonal, not ' + want.toFixed(2));
   // decisions 8, 8b, 13: soldiers leave animals alone; a boar on one of your civilians, seen by your side, is not left alone
@@ -77,13 +78,13 @@ JS2 = """() => {
       const took = run(30, () => u.node === C);
       if (!placed && took) bad.push('an unplaced villager took a find REACH + 32 from the drop-off, past the leash of ' + F.REACH);
       if (placed && !took) bad.push('a placed villager did not take a find 104 from the spot it was placed'); } }
-  { // the anchor: a placed villager searches from where it was placed. Its find 330 from that spot (past the first look's 175) and 362 from the
-    // drop-off (past the full radius and the leash from there) is taken in time
+  { // the anchor: a placed villager searches from where it was placed. Its find 230 from that spot (past the first look's REACH / 2) and 274 from
+    // the drop-off (past the full radius and the leash from there) is taken in time
     const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 160); if (d) {
-    const S = bush(G, k, d, 150, 0), C = bush(G, k, d, 150, 300, 330), u = vil(G); only(u, [S, C]);
+    const S = bush(G, k, d, 150, 0), C = bush(G, k, d, 150, 300, 230), u = vil(G); only(u, [S, C]);
     if (F.blockedCell(F.gcell(C.x, C.y), 0)) bad.push('the anchor test find stands on a wall: move it'); else {
     u.x = S.x; u.y = S.y; F.setJob(u, 'food', S, S); u.carry = 0;
-    if (!run(20, () => u.node === C)) bad.push('a placed villager did not search from where it was placed: a find 330 from that spot was never taken'); } } }
+    if (!run(20, () => u.node === C)) bad.push('a placed villager did not search from where it was placed: a find 230 from that spot was never taken'); } } }
   { // the cap: a placed villager takes nothing past REACH from where it was placed, not even a friend's find (REACH + 10 from it)
     const R = F.REACH, G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 110); if (d) {
     const S = bush(G, k, d, 100, 0), D = bush(G, k, { cx: -d.cx, cy: -d.cy }, R - 90, 3000), u = vil(G), m = vil(G, 1); only(u, [S, D]);
@@ -159,6 +160,44 @@ JS2 = """() => {
       if (none) bad.push(none + ' of ' + N + ' waiters at a full mill have no spot: they stand where they stopped, a pile');
       else if (at < 3) bad.push('the overflow of a full mill did not go to the Town Center (' + at + ' there, 3 expected)'); } } }
 
+  // ── D-089, posted and roaming (Albert, Nov 2: "a farm is a farm"). A field of yours, finished, and a rich bush nearer the Town Center than it ──
+  const field = (G, k, d) => { const s = F.findSpot(0, 'farm', k.x + d.cx * 150, k.y + d.cy * 150, 10, 90), b = s && F.build(0, 'farm', s.x, s.y);
+    if (!b) { bad.push('D-089: no ground for a field'); return null; } b.prog = 1; b.hp = b.mx || F.BLD.farm.hp; F.built(b); F.step(T);
+    for (const u of G.units) if (u.owner === 0 && u.kind === 'vil' && (u.rep === b || u.node === b.node)) { F.setJob(u, null); u.rep = null; } F.step(T); return b; }; // the builder sent to it is called off
+  { // through shelter: a farmer frightened into the Town Center comes out to its own field, not to the richer bush by the door
+    const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) { const b = field(G, k, d); if (b) {
+    const B = bush(G, k, { cx: -d.cx, cy: -d.cy }, 60, 3000), u = vil(G); u.x = b.x; u.y = b.y; F.setJob(u, 'food', b.node, b.node); run(3);
+    u.emg = true; run(20, () => u.inside); const went = !!u.inside; u.emg = false; run(20, () => !u.inside); run(25, () => u.node === b.node || u.node === B);
+    if (!went) bad.push('D-089: the shelter test could not send the farmer inside');
+    else if (u.node !== b.node) bad.push('a farmer back from shelter left its field' + (u.node === B ? ' for the berries' : ' (' + (u.node ? u.node.kind : 'no work') + ')')); } } }
+  { // through the Emergency: Town square, then Stop: the farmer goes back to its own field
+    const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) { const b = field(G, k, d); if (b) {
+    const u = vil(G); u.x = b.x; u.y = b.y; F.setJob(u, 'food', b.node, b.node); run(3); F.emgStart('square'); run(5);
+    F.moveVil(0, 'wood', false); if (u.job === 'wood') bad.push('+ on Wood took a farmer standing in the Town square (it is still posted)');
+    F.emgStop(); run(20, () => u.node === b.node);
+    if (u.node !== b.node || !F.posted(u)) bad.push('a farmer called to the Town square did not go back to its field on Stop'); } } }
+  { // + and − never take a posted villager; with no free hands, + says so
+    const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) { const b = field(G, k, d); if (b) {
+    const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), f = V[0], r = V[1], B = bush(G, k, { cx: -d.cx, cy: -d.cy }, 80, 3000);
+    for (const u of V.slice(2)) { u.hp = 0; G.units.splice(G.units.indexOf(u), 1); }
+    f.x = b.x; f.y = b.y; F.setJob(f, 'food', b.node, b.node); F.setJob(r, 'food', B); run(3);
+    F.moveVil(0, 'wood', false); if (r.job !== 'wood') bad.push('+ on Wood did not take the roaming berry picker'); if (f.job !== 'food' || f.node !== b.node) bad.push('+ on Wood took the farmer off its field');
+    F.moveVil(0, 'wood', false); if (f.job !== 'food' || f.node !== b.node) bad.push('+ on Wood with no free hands took the farmer');
+    F.moveVil(0, 'food', true); if (f.job !== 'food' || !F.posted(f)) bad.push('− on Food took the farmer off its field');
+    F.moveVil(0, 'wood', true); if (r.job) bad.push('− on Wood did not free the roaming woodcutter'); } } }
+  { // from a building: an idle villager only. With every hand at work, a free field gets nobody; with one idle, it goes
+    const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) { const b = field(G, k, d); if (b) {
+    const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), B = bush(G, k, { cx: -d.cx, cy: -d.cy }, 80, 3000);
+    for (const u of V) F.setJob(u, 'food', B); run(2);
+    if (F.sendVil(0, b.node.id)) bad.push('a free field took a villager who was at work (the building flow takes the idle only)');
+    F.setJob(V[0], null); run(1); if (!F.sendVil(0, b.node.id) || V[0].node !== b.node) bad.push('a free field did not take the idle villager'); } } }
+  { // the strip counts every Z: an empty field is one
+    const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) { const b = field(G, k, d); if (b) {
+    const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), B = bush(G, k, { cx: -d.cx, cy: -d.cy }, 80, 3000);
+    for (const u of V) F.setJob(u, 'food', B); run(2); F.ui(true);
+    const z = (document.body.innerText.match(/z (\\d+)/) || [])[1];
+    if (z !== '1') bad.push('the strip shows z ' + z + ' with every villager at work and one empty field (want z 1)'); } } }
+
   // ── any real move is a step ──
   { const G = fresh(), k = F.keepOf(0), V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), a = V[0], b = V[1];
     const walk = (u) => u.st.walk;
@@ -169,7 +208,8 @@ JS2 = """() => {
     if (a.x !== x0 && !(walk(a) > wa)) bad.push('a knockback moves a villager without a step');
     const L = G.lakes[0]; if (L) { a.x = L.x + (L.r - 3) * 0.7071; a.y = L.y + (L.r - 3) * 0.7071; wa = walk(a); F.collide(); if (!(walk(a) > wa)) bad.push('the push out of the water is not a step'); }
     a.x = k.x; a.y = k.y; wa = walk(a); F.collide(); if (!(walk(a) > wa)) bad.push('the rescue out of a wall is not a step');
-    const dr = F.addUnit(W(), 'deer', 600, 600); G.tick = 1 - (dr.id % 6); dr.hurtT = undefined; dr.run = { x: 900, y: 600 }; const wd = walk(dr); F.wildTick(dr, 0.25, 1);
+    const op = (() => { for (let x = 400; x < 1600; x += 10) if ([-30, 0, 30].every((e) => !F.blockedCell(F.gcell(x + e, x + e), 0))) return x; return 600; })();
+    const dr = F.addUnit(W(), 'deer', op, op); G.tick = 1 - (dr.id % 6); dr.hurtT = undefined; dr.run = { x: 900, y: 600 }; const wd = walk(dr); F.wildTick(dr, 0.25, 1);
     if (!(walk(dr) > wd)) bad.push('a fleeing deer runs without a step');
     const s = V[2]; s.x = k.x + 80; s.y = k.y + 80; s.path = null; const ws = walk(s), sx = s.x, sy = s.y; F.moveTo(s, s.x + 50, s.y, 0.005, 2, 1); const moved = Math.hypot(s.x - sx, s.y - sy);
     if (moved > 0 && Math.abs(walk(s) - ws - moved) > 1e-6) bad.push('a move under 0.3 a step is not counted (' + moved.toFixed(3) + ' moved, ' + (walk(s) - ws).toFixed(3) + ' walked)'); }

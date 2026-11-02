@@ -57,8 +57,15 @@ PLANTS = [
   ('13-sim-civil.js', 't = ((i % k) * 2 * R) / k - R;', 't = ((i % k) * 2 * R) / k - R + R / k / 2;', 'tests/moves.py', 'waiting spots crowd at the corners', 'ft apart, under'),
   ('12-sim-core.js', 'u.anchor ? dist(u.anchor, n) > REACH :', 'u.anchor ? false :', 'tests/moves.py', 'no cap for a placed villager', 'past the cap'),
   ('13-sim-civil.js', 'lost ? u.anchor || dropFor(u.owner, u.job, u) || u : undefined', 'lost ? dropFor(u.owner, u.job, u) || u : undefined', 'tests/moves.py', 'a placed villager searches from the drop-off', 'search from where it was placed'),
+  # Build 80 preview 14: D-089, posted and roaming (--only=posted)
+  ('13-sim-civil.js', 'if (u.plot && !u.node && !u.hunt && u.job) {', 'if (false) {', 'tests/moves.py', 'posted: a farmer back from shelter takes the best rate, not its field', 'left its field'),
+  ('11-orders.js', 'else if (n && n.farm) u.plot = n.farm.id;', 'else if (false) u.plot = 0;', 'tests/moves.py', 'posted: an order to a field does not post the villager', 'left its field'),
+  ('11-orders.js', "const V = unitsOf(o, 'vil').filter((u) => !u.inside && !posted(u)),", "const V = unitsOf(o, 'vil').filter((u) => !u.inside),", 'tests/moves.py', 'posted: + and − take a farmer', 'took the farmer'),
+  ('40-emergency.js', 'u.plot = pl; // posted', '// posted', 'tests/moves.py', 'posted: the Town square frees a farmer', 'standing in the Town square'),
+  ('12-sim-core.js', '\tif (strict) return null;\n', '', 'tests/moves.py', 'posted: a building order pulls a villager at work', 'who was at work'),
+  ('32-frame.js', ' + G.blds.filter(idlePost).length', '', 'tests/moves.py', 'posted: the strip leaves out the empty fields', 'the strip shows z'),
   # Build 80 preview 13: reach and the overflow of waiters
-  ('06-rules-tuning.js', 'const REACH = HOME.clear + HOME.band + 60;', 'const REACH = 200;', 'tests/science.py', 'the reach is typed, not derived from the home band', 'reach'),
+  ('06-rules-tuning.js', 'const REACH = WALL_R;', 'const REACH = 200;', 'tests/science.py', 'the reach is typed, not the wall ring', 'reach'),
   ('06-rules-tuning.js', 'const SEARCH = { x: REACH / 2, y: REACH / 2, tau: 10, again: 2 };', 'const SEARCH = { x: 90, y: 90, tau: 10, again: 2 };', 'tests/moves.py', 'the search stops at 180 again', 'sleeps beside berries'),
   ('13-sim-civil.js', '.filter((x) => x.owner === u.owner && x.prog >= 1 && x.hp > 0 && BLD[x.kind].drop && BLD[x.kind].drop.includes(u.job))', '.filter((x) => x === dropFor(u.owner, u.job, u))', 'tests/moves.py', 'the overflow of waiters piles up at a full drop-off', 'a pile'),
   ('34-save.js', "['pointerdown', 'pointermove', 'pointerup', 'click', 'wheel']", "['pointerdown', 'pointermove', 'pointerup', 'click']", 'tests/saves.py', 'the wheel zooms behind the Welcome back card', 'the wheel zoomed'),
@@ -130,8 +137,11 @@ PLANTS = [
   ('17-ai.js', 'if (!threat && (p.ai.cool[q.id] || 0) > G.t) continue;', 'if ((p.ai.cool[q.id] || 0) > G.t) continue;', 'tests/map.py', 'a side building a wonder is waited out', 'judged by its progress'),
   ('09-nav.js', 'COORDN = Math.ceil(MAP / COORD);', 'COORDN = 20;', 'tests/map.py', 'the map labels stop at the old 2000', 'labels reach its edge'),
   ('10-world.js', "180 * RICH * HOME.rich", "180 * RICH", 'tests/map.py', 'the home berries without HOME_RICH', 'the home zone'),
-  ('10-world.js', '(home ? near < b0 || near > b1 : near < b1)', '(home ? near < b0 || near > b1 : false)', 'tests/map.py', 'a wild find with nodes inside the home band', 'the home zone'),
-  ('10-world.js', '(home ? near < b0 || near > b1 : near < b1)', '(home ? false : near < b1)', 'tests/map.py', 'home finds laid by their middles, not their nodes', 'the home zone'),
+  ('10-world.js', '(home ? near < BACK.near || far > HOME.clear : near - (MOVE_IDS.has(id) ? c0 : 0) < HOME.out)', '(home ? near < BACK.near || far > HOME.clear : false)', 'tests/map.py', 'a wild find with nodes inside the wall band', 'the home zone'),
+  ('10-world.js', '(home ? near < BACK.near || far > HOME.clear : near - (MOVE_IDS.has(id) ? c0 : 0) < HOME.out)', '(home ? false : near - (MOVE_IDS.has(id) ? c0 : 0) < HOME.out)', 'tests/map.py', 'home finds past the clearing', 'the home zone'),
+  ('10-world.js', 'd = back ? rnd(r0, r1) : home ? r0 :', 'd = back ? rnd(r0, r1) : home ? rnd(r0 - 30, r0 + 30) :', 'tests/map.py', 'home finds at random walks, not the same in every corner', 'the home zone'),
+  ('10-world.js', "['goldP', HOME.at(2), HOME.at(2), 24],\n\t['stoneP', HOME.at(3), HOME.at(3), 24],", "['goldP', HOME.at(3), HOME.at(3), 24],\n\t['stoneP', HOME.at(2), HOME.at(2), 24],", 'tests/map.py', 'stone nearer than gold, against the order the ages need them', 'the home zone'),
+  ('10-world.js', '{ x: 0, y: 0, r: HOME.out }, // the forest starts past the wall band', '{ x: 0, y: 0, r: HOME.clear }, // the forest starts past the wall band', 'tests/map.py', 'forest in the wall band', 'the home zone'),
   # the three zones (Albert, Nov 1, answer 2): zone 1 behind the Town Center with Bronze's cost and its margin
   ('10-world.js', 'if (!N.every(([nx, ny]) => inBack(nx, ny) &&', 'if (!N.every(([nx, ny]) => true &&', 'tests/map.py', 'zone 1 laid out front, not behind the Town Center', 'the home zones'),
   ('06-rules-tuning.js', 'food: AGES[1].cost.f + BACK_MARGIN.vils * UNIT.vil.cost.f,', 'food: 550,', 'tests/map.py', "zone 1's food typed, not worked out from the costs", 'the home zones'),
@@ -142,13 +152,12 @@ PLANTS = [
   # every building two squares from every find (Albert, Nov 1 13:00)
   ('09-nav.js', 'gapF = LANE * NAVC,', 'gapF = 6,', 'tests/map.py', 'a building within two squares of a tree', 'any find'),
   ('09-nav.js', "edge(nd) < gapF))", "Math.abs(nd.x - sp.x) < half + gapF && Math.abs(nd.y - sp.y) < half + gapF))", 'tests/map.py', 'the find gap a square box, not from the footprint edge', 'any find'),
-  ('06-rules-tuning.js', 'clear: Math.ceil((WALL_R + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC,', 'clear: WALL_R + LANE * NAVC + NAVC,', 'tests/map.py', "the clearing at 220, inside a ring square's reach", 'any find'),
+  ('06-rules-tuning.js', 'const WALL_R = Math.ceil((HOME.clear + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC;', 'const WALL_R = HOME.clear + LANE * NAVC + NAVC;', 'tests/map.py', "the wall ring inside a find's gap", 'any find'),
   # the start (Albert, Nov 1 14:18, 14:23): 200 of each but iron; EXCEPTIONS #16, the computers' handicap
   ('10-world.js', 'res: { ...START_RES },', 'res: { f: 200, w: 200, s: 100, g: 50, i: 0 },', 'tests/map.py', 'the old typed starting stores', 'the start:'),
   ('10-world.js', 'for (let o = 1; o < WILD; o++)\n\t\tfor (const kind of HANDICAP.blds)', 'for (let o = 0; o < WILD; o++)\n\t\tfor (const kind of HANDICAP.blds)', 'tests/map.py', 'the player gets the handicap too', 'the start:'),
   ('10-world.js', 'G.blds.push(mkBld(o, kind, s.x, s.y, 1));\n\t\t\tnavRebuild();', 'G.blds.push(mkBld(o, kind, s.x, s.y, 1));', 'tests/map.py', 'the handicap laid on an empty grid (it can overlap)', 'the start:'),
   ('10-world.js', 's = k && findSpot(o, kind, k.x, k.y, HANDICAP.r[0], HANDICAP.r[1]);', 's = k && { x: k.x + 70, y: k.y + 40 };', 'tests/map.py', 'the handicap laid by hand, not by the rules', 'the start:'),
-  ('10-world.js', '(BACK.on && BACK_IDS.has(id)) || HOME_IDS.has(id)', 'BACK_IDS.has(id) || HOME_IDS.has(id)', 'tests/map.py', 'zone 1 laid though it is held out', 'the home zones'),
   # the ghost (Albert, Nov 1 12:48): no build grid, no footprint box; the art tinted by canPlace
   ('24-view-overlays.js', '\tdrawGuides(sp, n / 2);\n\tconst s = quant', '\tctx.beginPath();\n\tfor (let i = 0; i <= B.fp; i++) ctx.lineTo(SX(sp.x + i * NAVC), SY(sp.y));\n\tctx.stroke();\n\tdrawGuides(sp, n / 2);\n\tconst s = quant', 'tests/map.py', 'the build grid drawn under the ghost', 'the ghost:'),
   ('24-view-overlays.js', '\tdrawGuides(sp, n / 2);\n\tconst s = quant', '\tctx.strokeRect(SX(sp.x - n / 2), SY(sp.y - n / 2), n * z, n * z * TILT);\n\tdrawGuides(sp, n / 2);\n\tconst s = quant', 'tests/map.py', 'the footprint box drawn round the ghost', 'the ghost:'),
@@ -296,13 +305,13 @@ PLANTS = [
   ('11-orders.js', '> armyRoom(o)) return armyFull(o); // the same ceiling', "> ARMYMAX) return 'Army limit.'; // the same ceiling", 'tests/text81.py', 'hiring uses the wrong army limit (C16)', 'C16: hiring'),
   ('11-orders.js', 'const at = shortest(ready(o, T.at));', 'const at = ready(o, T.at)[0];', 'tests/text81.py', 'research waits at the first building (C16)', 'C16: research'),
   # the computers batch (branch ai81, Nov 1): answer 10 by need, W6, plots, N6, N7, N8, N16a, D2 to D5; tests/ai.py
-  ('17-ai.js', 'for (const r of order.length ? order : RES) {', 'for (const r of RES) {', 'tests/ai.py', 'a waiting villager goes to the best rate, not the bottleneck', 'A10:'),
+  ('17-ai.js', '\t\t\tfor (const r of order) {\n\t\t\t\tconst b = bestNode(probe, r, undefined, cm);', '\t\t\tfor (const r of []) {\n\t\t\t\tconst b = bestNode(probe, r, undefined, cm);', 'tests/ai.py', 'a waiting villager goes to the best rate, not the bottleneck', 'A10:'),   # retargeted Nov 2: the old text left with the ai81 merge, so the plant could not run
   ('17-ai.js', 'famine = famineNear(p, plan),', 'famine = false,', 'tests/ai.py', 'no famine runway', 'W6:'),
   ('17-ai.js', 'return plot > wild && (plot - wild) * T > sumCost(B.cost);', 'return plot > wild + 1;', 'tests/ai.py', 'a plot must beat the wild by a margin it never does', 'P1:'),
   ('17-ai.js', 'return plot > wild && (plot - wild) * T', 'return true || plot > wild && (plot - wild) * T', 'tests/ai.py', 'a plot is built whatever the wild pays', 'P2:'),
   ('17-ai.js', 'T = Math.min(timeLeft(), B.reserve', 'T = Math.min(Infinity, B.reserve', 'tests/ai.py', "a plot's payback ignores the time left", 'P3:'),
   ('17-ai.js', "Math.max(...RES.map((r) => rateFrom(o, r, k))) * timeLeft() > sumCost(unitCost(o, 'vil'))", 'true', 'tests/ai.py', 'a villager is trained whatever its payback', 'N7: a villager trained'),
-  ('17-ai.js', '\t\tk.q.length < 2 &&\n\t\t(!saving', '\t\tk.q.length < 2 && vils.length < 26 &&\n\t\t(!saving', 'tests/ai.py', 'the flat villager ceiling is back', 'N7: 30 villagers'),
+  ('17-ai.js', 'if (k.q.length < 2 && (!saving', 'if (k.q.length < 2 && vils.length < 26 && (!saving', 'tests/ai.py', 'the flat villager ceiling is back', 'N7: 30 villagers'),   # retargeted Nov 2, as above
   ('17-ai.js', '(peaceAll(p.id) ? PEACE.stand.keep : 1)', '(false ? PEACE.stand.keep : 1)', 'tests/ai.py', 'no peace mode', 'N8:'),
   ('39-games.js', 'wealth: (p) => Math.round(p.gathered),', 'wealth: (p) => Math.round(p.gathered + Object.values(p.res).reduce((a, b) => a + b, 0)),', 'tests/ai.py', 'Wealth counts the stores again', 'N6: Wealth'),
   ('16-sim-fight.js', 'warCredit(a.owner, t.owner, UNIT[t.kind].cost);', 'warCredit(a.owner, t.owner, { n: 1 });', 'tests/ai.py', 'War counts kills, not their cost', 'N6: War'),

@@ -751,21 +751,16 @@ function bestNode(u, job, seek, cm) {
 // cm: when given, only a find whose foot (an open square within two of it) lies in that walking region counts: a find out of reach is no find
 const reachFrom = (n, cm, o) => !!freeNear(Math.floor(n.x / NAVC), Math.floor(n.y / NAVC), o, 2, n.x, n.y, 1, cm);
 const nearestNode = (u, job, seek) => (bestNode(u, job, seek) || { n: null }).n; // the one find a worker should take now
-// who to send: an idle villager first, the nearest; then, of the workers on the same resource (types), the one earning least; then the one
-// earning least on any gathering job. Weavers, brewers, shepherds and builders keep their posts. (Albert, Oct 29: a new field takes the
-// berry picker farthest from home, not a woodcutter)
-function pickVil(o, to, types, site) {
-	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !(site && u.rep === site)),
+// who to send: an idle villager first, the nearest; with strict (your orders to a building, D-089) nobody else. Otherwise, of the roaming
+// workers on the same resource (types), the one earning least; then the one earning least on any gathering job. A posted villager keeps
+// its building, a builder its site. (Albert, Oct 29: a new field takes the berry picker farthest from home, not a woodcutter)
+function pickVil(o, to, types, site, strict) {
+	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !(site && u.rep === site) && !posted(u)),
 		idle = V.filter(freeVil);
 	if (idle.length) return nearest(idle, to);
+	if (strict) return null;
 	const T = types ? [].concat(types) : null,
-		free = V.filter(
-			(u) =>
-				u.job &&
-				u.job !== 'repair' &&
-				!GOODK.includes(u.job) &&
-				!(u.node && u.node.farm && (BLD[u.node.farm.kind].makes || BLD[u.node.farm.kind].sheep)),
-		),
+		free = V.filter((u) => u.job && u.job !== 'repair' && !GOODK.includes(u.job)),
 		same = T ? free.filter((u) => T.includes(u.job)) : [],
 		pool = same.length ? same : free;
 	if (!pool.length) return null; // nobody is pulled off a site or a post: with all hands busy, the order waits

@@ -112,6 +112,7 @@ JS = r"""() => {
   // worker's life of gathering)
   try {
   { const w = put('workshop'); for (const g in P.goods) P.goods[g] = 200;
+    F.setJob(G.units.find((u) => u.owner === 0 && u.kind === 'vil'), null); // a building takes an idle villager only (D-089)
     F.sendVil(0, w.node.id); for (let i = 0; i < 30 * 90; i++) F.step(1 / 30);
     const wk = G.units.find((u) => u.owner === 0 && u.node === w.node); if (wk) wk.st.got += 512; // its worker's life of gathering, which the card must not show
     F.openCard({ type: 'bld', id: w.id }); F.ui(true);

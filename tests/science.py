@@ -81,8 +81,8 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   // Hawk-Dove (Maynard Smith and Price 1973; the V/C form checked on a course page, ESS p = V/C when V < C)
   near('hawk V<C', F.hawkP(1, 4), 0.25, 1e-9); near('hawk V=C', F.hawkP(2, 2), 1, 1e-9); near('hawk V>C', F.hawkP(3, 1), 1, 1e-9);
   // area-restricted search (decision 1): r(t) = x + y min(1, t/tau), REACH / 2 at the loss, three quarters at tau/2, REACH from tau on;
-  // REACH is the home band's outer edge plus the largest home find's room (clear + band + 60), so every home find is in reach (preview 13)
-  near('reach', F.REACH, F.HOME.clear + F.HOME.band + 60, 1e-9);
+  // REACH is the wall ring (D-090): every home find lies inside the clearing, inside it (preview 14)
+  near('reach', F.REACH, F.WALL_R, 1e-9); if (!(F.HOME.clear < F.REACH)) out.push('reach: the clearing reaches past the wall ring');
   near('search start', F.searchR({}), F.REACH / 2, 1e-9); near('search half', F.searchR({ lostT: F.G.t - F.SEARCH.tau / 2 }), (3 * F.REACH) / 4, 1e-9); near('search full', F.searchR({ lostT: F.G.t - 99 }), F.REACH, 1e-9);
   // the game's scale (Build 80 preview 9): a villager's body is drawn 22.1 figure units tall (hip 9, shoulders 7.5 above, the head's middle 2.9
   // above those, its half-height 2.7), at FIG world units each, taken as an adult of 5.5 ft; the waiting spots are SPACE (3 ft) apart

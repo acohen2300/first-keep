@@ -247,14 +247,15 @@ const SHAPE = {
 const LAYOUT = [
 	// what, nearest, farthest from the keep, room it needs
 	// zone 1 (BACK in 06): behind the Town Center, its room worked out from its shape (laySpots)
-	['bushH', HOME.clear, MID - CORNER, 0],
-	['groveH', HOME.clear, MID - CORNER, 0],
-	// zone 2 (HOME in 06, decision 5a): the five home finds at random positions in the band round the front; every other find outside both (makeMap)
-	['bushP', HOME.clear, HOME.clear + HOME.band, 38],
-	['groveP', HOME.clear, HOME.clear + HOME.band, 56],
-	['stoneP', HOME.clear, HOME.clear + HOME.band, 24],
-	['goldP', HOME.clear, HOME.clear + HOME.band, 24],
-	['ironP', HOME.clear, HOME.clear + HOME.band, 24],
+	['bushH', BACK.near, HOME.clear, 0],
+	['groveH', BACK.near, HOME.clear, 0],
+	// zone 2 (HOME in 06, D-090): the five home finds, each the same walk in every corner (HOME.at, in the order the ages need them), in a
+	// random direction round the front; every other find past the wall band (makeMap)
+	['bushP', HOME.at(0), HOME.at(0), 38],
+	['groveP', HOME.at(1), HOME.at(1), 56],
+	['goldP', HOME.at(2), HOME.at(2), 24],
+	['stoneP', HOME.at(3), HOME.at(3), 24],
+	['ironP', HOME.at(4), HOME.at(4), 24],
 	['bushA', 150, 190, 38],
 	['groveA', 170, 250, 72],
 	['bushB', 180, 230, 38],
@@ -321,7 +322,7 @@ function makeForest(spot, loc, near) {
 			Math.sin((x - y) * 0.009 + ph[3]) +
 			Math.max(0, hyp(x, y) - 450) * 0.004;
 	const keepOut = [
-		{ x: 0, y: 0, r: CLEAR },
+		{ x: 0, y: 0, r: HOME.out }, // the forest starts past the wall band (D-090); water keeps to CLEAR (makeWater)
 		{ x: CORNER, y: CORNER, r: LAKE0.r + 40 },
 		...loc.map((l) => ({ x: l.x, y: l.y, r: l.r + 35 })),
 		...Object.entries(spot).map(([id, s]) => ({
@@ -369,7 +370,7 @@ function makeForest(spot, loc, near) {
 		return { x: a.x + (b.x - a.x) * t + (nx / l) * 36, y: a.y + (b.y - a.y) * t + (ny / l) * 36 };
 	};
 	const held = [
-			{ x: 0, y: 0, r: HOME.clear + HOME.band }, // the home zone
+			{ x: 0, y: 0, r: HOME.out }, // the home zones and the wall band
 			{ x: CORNER, y: CORNER, r: LAKE0.r },
 			...loc,
 			...Object.values(spot),
@@ -444,8 +445,9 @@ function makeRiver(L, w, toX) {
 	return C.filter((_, i) => Math.abs(i - i1) > h && Math.abs(i - i2) > h);
 }
 // one corner's finds, each at random in its own ring, judged by its own nodes (shape: each bush, tree, rock or animal from the find's
-// middle): a zone 1 find's every node behind the Town Center, from the clearing to the map's edge, BACK.edge in from it; a home find's
-// nearest node in the band and none inside the clearing; any other find's nodes all past the band; and no node but zone 1's in zone 1. Each
+// middle): a zone 1 find's every node behind the Town Center, from BACK.near to the clearing, BACK.edge in from the map's edge; a home
+// find's middle at its own walk (HOME.at), in a random direction, every node inside the clearing; any other find's nodes all past the wall
+// band (HOME.out); and no node but zone 1's in zone 1. Each
 // with its room clear of what was laid before and of the water, and inside this corner's quarter of the map (local: keep 0,0, edge at
 // CORNER − MID, the middle lines at CORNER). A find that has no room searches outward: its ring widens by a step every few tries, so every
 // corner gets every find (equal content; tests/map.py holds it on 100 seeds). Zone 1 never searches outward: it fits, or the test fails.
@@ -455,9 +457,7 @@ function laySpots(lay, loc, spot, shape) {
 		room = [{ x: CORNER, y: CORNER, r: LAKE0.r + 25 }, ...loc.map((l) => ({ x: l.x, y: l.y, r: l.r + 25 }))], // the great lake, the water in this corner
 		lo = CORNER - MID,
 		gap = LANE * NAVC,
-		b0 = HOME.clear,
-		b1 = HOME.clear + HOME.band,
-		inBack = (x, y) => x <= 0 && y <= 0 && hyp(x, y) <= MID - CORNER; // zone 1: between the Town Center and its corner
+		inBack = (x, y) => x <= 0 && y <= 0 && hyp(x, y) <= HOME.clear; // zone 1: between the Town Center and its corner, inside the clearing (D-090)
 	for (const [id, r0, r1, c0] of lay) {
 		const S = shape[id],
 			ext = Math.max(...S.map(([ox, oy]) => hyp(ox, oy))),
@@ -466,14 +466,15 @@ function laySpots(lay, loc, spot, shape) {
 			clr = back ? ext + gap / 2 : c0; // zone 1's room: its shape and half a lane, so two finds keep LANE squares between their nodes
 		for (let t = 0; t < SEEK.most; t++) {
 			const a = back ? rnd(-Math.PI, -Math.PI / 2) : rnd(-Math.PI, Math.PI),
-				d = back ? rnd(r0, r1) : rnd(r0, r1 + ext + Math.floor(t / SEEK.tries) * SEEK.step),
+				d = back ? rnd(r0, r1) : home ? r0 : rnd(r0, r1 + ext + Math.floor(t / SEEK.tries) * SEEK.step), // a home find: its walk, the same in every corner
 				x = Math.cos(a) * d,
 				y = Math.sin(a) * d,
 				N = S.map(([ox, oy]) => [x + ox, y + oy]),
-				near = Math.min(...N.map(([nx, ny]) => hyp(nx, ny)));
+				near = Math.min(...N.map(([nx, ny]) => hyp(nx, ny))),
+				far = Math.max(...N.map(([nx, ny]) => hyp(nx, ny)));
 			if (back) {
-				if (!N.every(([nx, ny]) => inBack(nx, ny) && hyp(nx, ny) >= b0 && Math.min(nx, ny) >= lo + BACK.edge)) continue;
-			} else if ((home ? near < b0 || near > b1 : near < b1) || N.some(([nx, ny]) => inBack(nx, ny))) continue;
+				if (!N.every(([nx, ny]) => inBack(nx, ny) && hyp(nx, ny) >= r0 && hyp(nx, ny) <= r1 && Math.min(nx, ny) >= lo + BACK.edge)) continue;
+			} else if ((home ? near < BACK.near || far > HOME.clear : near - (MOVE_IDS.has(id) ? c0 : 0) < HOME.out) || N.some(([nx, ny]) => inBack(nx, ny))) continue; // a carried find or game: its own room past the band too (a find keeps a wall off by its box, canPlace)
 			if (Math.min(x, y) - clr < lo || Math.max(x, y) + clr > CORNER) continue;
 			if (taken.some((q) => hyp(q.x - x, q.y - y) < q.r + clr) || room.some((q) => hyp(q.x - x, q.y - y) < q.r + clr))
 				continue;
@@ -485,13 +486,13 @@ function laySpots(lay, loc, spot, shape) {
 	return spot;
 }
 // The map in five layers (Albert, Build 63), on the base rules (CLEAR and HOME in 06), laid once from the seed:
-//   1 home: the home zone round each Town Center (decision 5a): the same clearing, the same five finds at random in the same band, the same radius;
+//   1 home: the zones round each Town Center (D-090): close behind it, the five home finds at their walks in your zone, the wall band;
 //   2 ground: the lakes and rivers, at random over the whole map and never in a clear radius (makeWater), so laid first;
 //   3 wild: the finds beyond the pocket, the forest, the deposits in it;
 //   4 movables: the game, the boar, the finds that walk or are carried off (chest, ruins, den, cemetery, vagabonds);
 //   5 weather: the first sky, rolled from the season's chain (in newGame, once the economy stands).
 // Fair is not mirror: each corner is its own roll of the same element, and the land between is random (Build 70: no measure, no reshuffle).
-// Decision 5a: equal content, not equal distances; every find outside the zone is rolled for each corner on its own.
+// Equal content and, for the home finds, equal walks (D-090); every find past the wall band is rolled for each corner on its own.
 const BACK_IDS = new Set(['bushH', 'groveH']),
 	HOME_IDS = new Set(['bushP', 'groveP', 'stoneP', 'goldP', 'ironP']),
 	MOVE_IDS = new Set(['deerA', 'deerB', 'boar', 'chest', 'ruins', 'den', 'cemetery', 'vagabonds']);
@@ -501,7 +502,7 @@ function makeMap() {
 	G.land = LANDK[Math.floor(rng() * LANDK.length)];
 	const Ld = LAND[G.land],
 		k = rnd(SPREAD[0], SPREAD[1]),
-		out = HOME.clear + HOME.band; // every find but the home five lies wholly outside the band
+		out = HOME.out; // every find but zones 1 and 2 lies wholly past the wall band
 	const lay = (Ld.extra ? [...LAYOUT, ['extra', 240, 380, 30]] : LAYOUT).map(([id, r0, r1, clr]) => {
 		if (HOME_IDS.has(id) || BACK_IDS.has(id)) return [id, r0, r1, clr];
 		const lo = Math.min(560, r0 * k),
@@ -509,7 +510,7 @@ function makeMap() {
 			up = Math.max(0, out - lo);
 		return [id, lo + up, hi + up, clr];
 	}); // stretched, never past the old outer ring, then moved out to start at the band's edge (laySpots keeps every node past it)
-	const layHome = lay.filter(([id]) => (BACK.on && BACK_IDS.has(id)) || HOME_IDS.has(id)), // zone 1 first (when on), then zone 2
+	const layHome = lay.filter(([id]) => BACK_IDS.has(id) || HOME_IDS.has(id)), // zone 1 first, then zone 2
 		layWild = lay.filter(([id]) => !BACK_IDS.has(id) && !HOME_IDS.has(id) && !MOVE_IDS.has(id)),
 		layMove = lay.filter(([id]) => MOVE_IDS.has(id));
 	G.lakes = [{ ...LAKE0 }, ...makeWater()]; // 2 ground

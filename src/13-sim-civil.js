@@ -369,6 +369,23 @@ function vilTick(u, dt, SP) {
 		moveTo(u, u.node.x, u.node.y, dt, 4, SP);
 		return;
 	}
+	if (u.plot && !u.node && !u.hunt && u.job) {
+		// posted (D-089): back from shelter, the Emergency, a fire or a site, it goes back to its own building; with its building not ready or
+		// its place taken, it waits there. Only a fallen building sets it free to roam
+		const b = G.blds.find((x) => x.id === u.plot);
+		if (!b || b.hp <= 0) u.plot = null;
+		else if (b.node && nodeFits(b.node, u.job)) {
+			if (b.prog >= 1 && (b.node.wk || 0) < slotsOf(b.node)) {
+				u.node = b.node;
+				b.node.wk = (b.node.wk || 0) + 1;
+				u.was = 'farm';
+			} else {
+				u.idle = true;
+				moveTo(u, b.x, b.y, dt, halfOf(b) + 6, SP);
+				return;
+			}
+		}
+	}
 	if (
 		!flock &&
 		(!u.node || u.node.amt <= 0 || !nodeFits(u.node, u.job) || (u.node.farm && u.node.wk > slotsOf(u.node)))

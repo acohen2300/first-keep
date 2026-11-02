@@ -341,42 +341,45 @@ const LAND = {
 };
 const LANDK = Object.keys(LAND),
 	SPREAD = [0.85, 1.25];
-// The map's base rules (Albert, Build 70): a flat page, four corners (CORNER), the same clear radius and home finds in every corner, the
-// Throne at the middle. All else is random from the one randomizer, laid once: no measure, no reshuffle. CLEAR: no forest or water within it.
+// The map's base rules (Albert, Build 70): a flat page, four corners (CORNER), the same zones and home finds in every corner, the Throne at
+// the middle. All else is random from the one randomizer, laid once: no measure, no reshuffle. CLEAR: no water within it of a Town Center.
 const CLEAR = 360;
-// The home zones (decision 5a, Albert, Oct 31; three zones, Nov 1, answer 2; the same in every corner), measured on the finds' own nodes
-// (each bush, tree, rock): clear, no node of any find within it of the Town Center; the radius CLEAR above, no forest or water within it.
-//   zone 1, behind: between the Town Center and its corner (BACK below), from clear to the map's edge (MID − CORNER deep);
-//   zone 2, the band: the five home finds (HOME_IDS in 10) each at a random place round the front, its nearest node from clear to
-//     clear + band and no node in zone 1; rich, their amounts over today's pocket (HOME_RICH 1.18, on top of RICH);
-//   zone 3, the wild: everything else, at random, outside zones 1 and 2.
 // Between two buildings (decision 2, Albert, Oct 31): LANE squares at least. A gap is passable only if wider than a figure (2r); the slit rule
 // shuts a one-square gap because the drawn figure is wider than it (Build 41), so two. Walls, gates and crops may touch.
 const LANE = 2;
-// The computers' wall ring (wallPlan in 17): an arc WALL_R out from the Town Center.
-const WALL_R = 190;
-// clear (Albert, Nov 1 14:16, "push the trees to 220"): the wall ring, then the margin a ring square can reach past it (its diagonal, NAVC √2:
-// the ring is drawn on the grid), then LANE squares, rounded up to whole squares (230), so no find stands within the gap of any square of
-// the ring and every ring closes. 220 (one square's margin) left a hole in 1 ring of 75.
-const HOME = { clear: Math.ceil((WALL_R + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC, band: 60, rich: 1.18 };
-// Reach (Build 80 preview 13, Albert's sighting of Nov 1: twenty villagers asleep at the mill with full bushes 180 to 225 away). The search,
-// the leash and the placed villager's cap were 90 to 180 and 200, written for the v62 map (finds about 150 from home) and never re-measured
-// when the zones moved the home finds to clear + band. One number, derived: the home band's outer edge plus the room of the largest home
-// find (groveP, 56 in LAYOUT), so every node of every home find is in reach of the Town Center. r(t) keeps its form (decision 1): half
-// of REACH at the loss, all of it from tau on.
-const REACH = HOME.clear + HOME.band + 60;
+// The four zones (Albert, Nov 2, 07:07 to 07:14, D-090; the same in every corner), measured on the finds' own nodes (each bush, tree, rock):
+//   1 close: behind the Town Center, between it and its corner (BACK below): enough to reach Bronze;
+//   2 your zone: the rest of the clearing, to HOME.clear (220, Albert's number): no forest, open ground to build on, and the five home finds
+//     (HOME_IDS in 10), each the same walk from the Town Center in every corner (HOME.at), in a random direction (fair, not mirrored: the
+//     same deal, a different layout). The nearer the find, the sooner it is needed: food, wood, gold, stone, iron, the order the ages ask for
+//     them (AGES), as von Thünen laid the land most worked nearest the town (von Thünen 1826, from memory, not opened);
+//   3 the wall band: the computers' wall ring (WALL_R), two squares past the clearing; no finds; the forest starts past the ring (HOME.out);
+//   4 further: the rest of the map, every wild find and the forest from HOME.out on.
+// HOME.near: the first home find's walk, v70's nearest bush (147, measured Nov 1 on seed 1; v62 to v70 was the map Albert called great),
+// rounded to 150; HOME.step spreads the five evenly from there to the clearing, the iron pair's room (10) inside it.
+const HOME = { clear: 220, near: 150, rich: 1.18 };
+HOME.step = (HOME.clear - 10 - HOME.near) / 4;
+HOME.at = (k) => HOME.near + k * HOME.step;
+// The computers' wall ring (wallPlan in 17): the clearing, then the margin a ring square can reach (its diagonal, NAVC √2: the ring is
+// drawn on the grid), then LANE squares, rounded up to whole squares (260), so no find stands within the gap of any square of the ring.
+const WALL_R = Math.ceil((HOME.clear + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC;
+// The wall band's far side, by the same rule from the ring (300): the forest and every wild find lie wholly past it, so every ring closes.
+HOME.out = Math.ceil((WALL_R + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC;
+// Reach (D-088, Albert's sighting of Nov 1: villagers asleep at the mill with full bushes in sight; D-090 moved the finds in): a villager
+// looks for work, and is leashed, within the wall ring of its drop-off. Every home find's every node lies inside it (HOME.clear < WALL_R),
+// the wild past it is reached from a drop-off built out there. r(t) keeps its form (decision 1): half of REACH at the loss, all from tau on.
+const REACH = WALL_R;
 const SEARCH = { x: REACH / 2, y: REACH / 2, tau: 10, again: 2 };
 const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
-// Zone 1 (Albert, Nov 1): a berry patch and a small grove that hold Bronze's cost with a margin for the villagers and houses on the way
-// (600 food, 250 wood), worked out from the costs, not typed; on every land the same (no land's amt). Each node behind the Town Center
-// (on the corner's side of both its axes), LANE squares or more from any other find's, and edge or more from the map's edge: whole squares
-// enough for half a tap (22 px) at the opening zoom on the tilted axis, so the corner's finds can be seen and tapped (tests/map.py's camera
-// check; LANE squares gave 19 px). Laid first and never moved out front: a corner it does not fit fails tests/map.py.
-// on: held out of this preview (Albert, Nov 1 14:13: Classical by 10 minutes did not come back within 10% of main): no zone 1 is laid; the
-// keep-out stands, and tests/map.py still lays it to check it. On the v81 list.
+// Zone 1 (Albert, Nov 1; on, Nov 2: "Close was supposed to have enough to get you to the first age between you and the corner"): a berry
+// patch and a small grove that hold Bronze's cost with a margin for the villagers and houses on the way (600 food, 250 wood), worked out from
+// the costs, not typed; on every land the same (no land's amt). Each node behind the Town Center (on the corner's side of both its axes),
+// from near (the Town Center's half and LANE squares: the find gap from its wall) to the clearing, LANE squares or more from any other
+// find's, and edge or more from the map's edge: whole squares enough for half a tap (22 px) at the opening zoom on the tilted axis, so the
+// corner's finds can be seen and tapped (tests/map.py's camera check; LANE squares gave 19 px). Laid first: a corner it does not fit fails.
 const BACK_MARGIN = { vils: 6, houses: 5 },
 	BACK = {
-		on: false,
+		near: (BLD.keep.fp * NAVC) / 2 + LANE * NAVC,
 		bushes: 2, // Albert, Nov 1 14:13: fewer, bigger finds (300 and 125), so a drop-off by them is worth its cost
 		trees: 2,
 		edge: Math.ceil(22 / (ZOOM_START * TILT) / NAVC) * NAVC,

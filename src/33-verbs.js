@@ -779,7 +779,7 @@ const PLAY = {
 		let n = 0;
 		if (b && b.fire > 0)
 			for (let i = 0; i < 2; i++) {
-				const v = pickVil(0, b, null, b);
+				const v = pickVil(0, b, null, b, true); // from the building's card: an idle villager only (D-089)
 				if (v) {
 					if (v.job !== 'repair') v.pj = v.job;
 					setJob(v, 'repair');

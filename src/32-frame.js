@@ -561,7 +561,7 @@ function ui(force) {
 			clk = G.wonder ? clock(Math.max(0, G.wonder.end - G.t)) : lim ? clock(Math.max(0, lim - G.t)) : clock(G.t);
 		let ready = 0;
 		for (const v of G.rdy.values()) ready += v; // research you can start now (the age counts: it is research too)
-		const idleN = unitsOf(0, 'vil').filter(freeVil).length,
+		const idleN = unitsOf(0, 'vil').filter(freeVil).length + G.blds.filter(idlePost).length, // every Z on the map: idle people and empty posts (D-089)
 			sol = armyOf(0).length,
 			rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length,
 			sky = `${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''}`,

@@ -507,6 +507,7 @@ function loadGame(S) {
 		if (!su || !UNIT[su.kind] || !Number.isFinite(su.x) || !Number.isFinite(su.y)) continue; // likewise a damaged unit
 		const { nodeId, repId, huntId, ...u } = su;
 		u.node = nodeId ? byNode.get(nodeId) || null : null;
+		if (u.plot === undefined && u.node && u.node.farm) u.plot = u.node.farm.id; // a save from before D-089: a worker on a building is posted to it
 		u.rep = repId ? byB.get(repId) || null : null;
 		u._hunt = huntId;
 		G.units.push(u);

@@ -137,7 +137,7 @@ function drawBld(b, s) {
 		smoke(sx + dx * z, sy - h * z, b.id, z);
 	} // a hearth always; a forge, a foundry or a Town Center only while it works (Build 52: smoke shows who is busy)
 	blaze(b, sx, sy, z);
-	if (b.owner === 0 && B.crop && b.node && !(b.node.wk > 0)) idleMark(sx, sy, z * 1.2);
+	if (idlePost(b)) idleMark(sx, sy, z * 1.2);
 	const M = maxHpB(b.owner, b.kind);
 	if (b.hp < M - 1) bar(sx, sy - c.ay * k - 4, Math.min(60 * z, B.fp * NAVC * z), b.hp / M, G.P[b.owner].color);
 	if (G.wonder && G.wonder.id === b.id) {
