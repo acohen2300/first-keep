@@ -304,3 +304,9 @@ Checks on main before publishing:
 - Tests: `tests/cards.py` Q1 (steel box, above Train) and T2 (every Build tab's ranks filled to three); Q1 planted (box class removed), caught. Gate passes. [2026-11-02 12:05]
 - Cut: the line under the Train rank; the Build menu's hand-filled ranks (now the one `grid3`). [2026-11-02 12:05]
 
+## Build 80 preview 21 (the colour levels; the queue without its box; the cycle button) [2026-11-02 12:45]
+- Albert, Nov 2, 12:14 to 12:30 ("just do it"): every colour is a hue at a level, full, dim or faint (COLORS.md); the queue's places stay steel with brown between; a dim tech's edge faint white, apart from Train; the half gap under the top ribbon; the cycle button brown on every page, only its word changing. [2026-11-02 12:45]
+- Merged: Cream 1 and the old White (#e9ecef) are one white, `--ring-w` #ece5d3; Cream 2 is that white at the dim level (80%, blended into what it sits on); the hand-set 35% and 50% blends are the faint level. The five age colours moved into `:root`; the Natives' health bar uses the Natives' colour, not its own. [2026-11-02 12:45]
+- Found on the way: a dim button on the War page was brown on steel (the states layer beat the steel rule); dim on steel is now Steel 1, steel's own first step. A dim button keeps its Brown 3 edge, so it no longer looks like an empty place. [2026-11-02 12:45]
+- Tests: `tests/palette.py` reads the dim white's contrast from the level (4.5:1 on Brown 1, Brown 2, Steel 2); `tests/cards.py` the levels (dim tech edge apart from Train; the cycle button the same on Jobs and War); three plants, caught. [2026-11-02 12:45]
+- Cut: `--cream-1`, `--cream-2`, the old White, the queue's steel box, the cycle button's steel tint, the Natives' bar colour #c9b48a. [2026-11-02 12:45]

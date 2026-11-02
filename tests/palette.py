@@ -11,6 +11,7 @@ css = open('src/shell-head.html').read()
 files = sorted(glob.glob('src/[0-9][0-9]-*.js'))
 js = ''.join(open(f).read() for f in files)
 ui = ''.join(open(f).read() for f in files if 26 <= int(os.path.basename(f)[:2]) <= 33 or int(os.path.basename(f)[:2]) >= 39)   # touch, cards, the frame, the verbs, the row, Emergency, boot
+rest_js = ''.join(open(f).read() for f in files if int(os.path.basename(f)[:2]) >= 8)   # past the rules files: their players', resources' and goods' colours are data (EXCEPTIONS #11; wool is the white by chance)
 bad = []
 index = open('docs/2 Rules/COLORS.md').read()
 named = {}   # token -> colour, read from the index's tables (the gold fill's row names two of each)
@@ -24,7 +25,7 @@ rest = css[:root.start()] + css[root.end():]
 for k, h in named.items():
     if V.get(k, '').strip().lower() != h: bad.append(f'--{k} is {V.get(k, "missing")} in :root; the index says {h}')
     if len(re.findall(r'--' + k + r':', css)) != 1: bad.append(f'--{k} is defined more than once')
-    n = rest.lower().count(h) + (js if k.startswith('ring-') else ui).lower().count(h)
+    n = rest.lower().count(h) + (rest_js if k.startswith('ring-') else ui).lower().count(h)
     if n: bad.append(f'{h} (--{k}) is written by hand {n} times: use the name')
 for k in retired:
     n = len(re.findall(r'--' + re.escape(k) + r'(?![\w-])', css + js))
@@ -35,10 +36,14 @@ def lum(c):
     return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
 def ratio(a, b): return (max(lum(a), lum(b)) + 0.05) / (min(lum(a), lum(b)) + 0.05)
 mix = lambda a, b, t: [x * t + y * (1 - t) for x, y in zip(rgb(named[a]), rgb(named[b]))]
-pairs = [(w, g) for w in ['cream-1', 'cream-2', 'gold-1', 'ring-b', 'ring-g', 'ring-r', 'ring-w'] for g in ['brown-1', 'brown-2']] + [(w, 'steel-2') for w in ['cream-1', 'cream-2']]
+pairs = [(w, g) for w in ['gold-1', 'ring-b', 'ring-g', 'ring-r', 'ring-w'] for g in ['brown-1', 'brown-2']] + [('ring-w', 'steel-2')]
 for w, g in pairs:
     r = ratio(rgb(named[w]), rgb(named[g]))
     if r < 4.5: bad.append(f'--{w} on --{g}: {r:.1f}:1, under 4.5')
+DIM = int(V.get('dim', '0').strip().rstrip('%')) / 100   # the dim white (the levels, Nov 2): the white blended into what it sits on
+for g in ['brown-1', 'brown-2', 'steel-2']:
+    r = ratio(mix('ring-w', g, DIM), rgb(named[g]))
+    if r < 4.5: bad.append(f'the dim white on --{g}: {r:.1f}:1, under 4.5')
 r = ratio(rgb(named['ink']), mix('fill-1', 'fill-2', 0.5))
 if r < 4.5: bad.append(f'the ink on the gold fill: {r:.1f}:1, under 4.5')
 sizes = {k: v.strip() for k, v in V.items() if k.startswith('fs-')}

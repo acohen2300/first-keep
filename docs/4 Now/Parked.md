@@ -127,3 +127,7 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 
 ## The 6 x 7 grid for every menu (Albert, Nov 2, 10:42; parked 10:51) [2026-11-02 11:03]
 - Measured Nov 2 at 390 x 844, title included: 13 of 22 cards are taller than 7 ranks (Help and Guide 13, Setup 12, Market and Army with squads 11, Vassal and Mail 10, Research, Misfits, Milestones and Army 9, Score and Relations 8). To fit, rows move into pages, tabs or folds: drawn first, for Albert. Open: is it 6 slots across by 7 ranks tall, the title rank counted? [2026-11-02 11:03]
+
+## Left out of the colour levels (Nov 2) [2026-11-02 12:45]
+- The two see-through panels (the War page's steel at 84%, the end card's brown at 90%) are glass, not a level; one number for both would change the War page's look. [2026-11-02 12:45]
+- The map's own colours stay out of the index (EXCEPTIONS #11): the ground (#20301c), the ripple's gold (#ffd35e, a canvas paint), the night's canvas colours in 37-events. [2026-11-02 12:45]

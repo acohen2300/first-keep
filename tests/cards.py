@@ -166,6 +166,15 @@ JS = r"""() => {
     if (!q) bad.push('Q1: the training line has no steel box'); else if (t && !(q.compareDocumentPosition(t) & Node.DOCUMENT_POSITION_FOLLOWING)) bad.push('Q1: the training line sits under the Train rank, not above it');
     keep.q.length = 0; F.closeCard(); }
   } catch (e) { bad.push('Q1: the check could not run: ' + e.message); }
+  // the levels (Albert, Nov 2): a dim tech's edge is faint white, a dim Train's the slot's edge; the cycle button the same on every page
+  try {
+  { const keep = F.keepOf(0); keep.q.length = 0; for (let i = 0; i < 12; i++) F.train(0, 'vil'); F.openCard({ type: 'bld', id: keep.id }); F.ui(true);
+    const a = $('#card [data-act^="tech:"].dis'), b = $('#card [data-act^="train:"].dis'), ec = (e) => getComputedStyle(e).borderTopColor;
+    if (!a || !b) bad.push('the levels: no dim tech and dim Train button on the Town Center card'); else if (ec(a) === ec(b)) bad.push(`the levels: a dim tech's edge (${ec(a)}) is the same as a dim Train button's`);
+    keep.q.length = 0; F.closeCard();
+    const bg = () => getComputedStyle($('#hudB')).backgroundColor; F.hudPage('jobs'); F.ui(true); const j = bg(); F.hudPage('war'); F.ui(true); const w = bg(); F.hudPage('jobs'); F.ui(true);
+    if (j !== w) bad.push(`the cycle button changes with the page (${j} on Jobs, ${w} on War)`); }
+  } catch (e) { bad.push('the levels: the check could not run: ' + e.message); }
   // T2 (Albert, Nov 2): every Build tab is two slots a building, three a rank, a short rank filled with empty places
   try {
   for (const m of F.MENUS) { F.openCard({ type: 'menu', id: m.id }); F.ui(true);

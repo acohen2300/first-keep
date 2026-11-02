@@ -63,6 +63,9 @@ PLANTS = [
   # Build 80 preview 18: T1, Train and Research double-wide, a short rank filled (--only=T1)
   ('27-cards-core.js', "empty().repeat((3 - (cells.length % 3)) % 3)", "empty().repeat(0)", 'tests/cards.py', 'T1: a short Train or Research rank is not filled', 'T1:'),
   ('29-card-pages.js', "acts(cells.join(''), 'c6 queue')", "acts(cells.join(''), 'c6')", 'tests/cards.py', 'Q1: the training line loses its steel box', 'Q1:'),
+  ('shell-head.html', '[data-act^="tech:"].dis:not(.pill>*){border-color:var(--white-faint)}', '', 'tests/cards.py', 'levels: a dim tech loses its faint white edge', 'the levels'),
+  ('shell-head.html', '#orders:not(.pg-jobs)~#emgB{', '#orders:not(.pg-jobs)~:is(#hudB,#emgB){', 'tests/cards.py', 'levels: the cycle button turns steel on the War page', 'the cycle button changes'),
+  ('shell-head.html', '--dim:80%;', '--dim:50%;', 'tests/palette.py', 'levels: the dim white too faint to read', 'the dim white'),
   # Build 80 preview 15: D-091 to D-093 (--only=p15)
   ('11-orders.js', '\tif (!v && hand(o)) {', '\tif (false) {', 'tests/moves.py', 'p15: a site placed with nobody idle gets no builder', 'got no builder'),
   ('11-orders.js', "\t\tv.pn = v.node ? v.node.id : null;", "\t\tv.pn = null;", 'tests/moves.py', 'p15: a builder goes back to any find, not the one it left', 'the very find it left'),

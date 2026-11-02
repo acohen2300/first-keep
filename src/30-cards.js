@@ -297,7 +297,7 @@ const CARDS = {
 					: o === WILD
 						? 'the wild'
 						: P.name + (P.civ ? ' · ' + CIVS[P.civ].name : ''),
-			) + hpBar(u.hp / u.max, o === WILD ? '#c9b48a' : P.color);
+			) + hpBar(u.hp / u.max, P.color); // the wild in the Natives' own colour (COLORS, Nov 2)
 		h += `<p>Health ${Math.round(u.hp)}/${Math.round(u.max)}${U.dmg ? ` · hits ${Math.round(S.dmg * 10) / 10} · reach ${Math.round(S.rng)}` : ''} · speed ${Math.round(S.spd)}${o !== WILD && isSoldier(u) ? ` · takes ${Math.round(S.armor * 100)}% damage` : ''}.</p>`;
 		if (o === 0) h += `<p><i>Now:</i> ${statusOf(u)}.</p><p><i>Life:</i> ${lifeText(u)}.</p>`;
 		if (o === WILD && U.meat && U.tick === 'wild') {
