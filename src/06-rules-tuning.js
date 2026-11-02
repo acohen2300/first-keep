@@ -178,12 +178,12 @@ const LAUNCH = { ms: 1500, r: 34 };
 // The War Director (Albert, Nov 2: "a war director"): one move a kind, every soldier of that kind at once, from the battle station. Each move
 // is a drill the rules already hold, so no new number but these: how long a shield wall stands (secs), how long the volley's reload is lined
 // up (loose), and the wait after Wheel (wheel). wall: the Square shape's numbers while it stands (FORM[2]: 10% less damage, 30% less from
-// riders, 20% slower) and the Hold temper (no chase, steadier nerve). loose: every archer's reload set to zero together, so they release
+// riders, 20% slower) and the Hold temper (no chase, steadier nerve), their target dropped. loose: every archer's reload set to zero together, so they release
 // in one instant; each arrow does its usual harm, but Dupuy's break point (MORALE.breakAt) is counted on losses in one blow, which is why
 // massed volleys broke armies the same losses spread out would not (Crécy, Agincourt; from memory). charge: CHARGE. wheel: the riders ride
 // to the far side of the enemy nearest the crosshair and hit from behind (FLANK, MORALE.rear). bombard: the engines on the nearest enemy
 // building to the crosshair, burning once Burning shot is researched (FIREARMS). back: FALLBACK.
-const DIRECT = { wall: 12, loose: 0, wheel: 15, behind: 70 }; // wall: seconds a shield wall stands; wheel: seconds before riders may wheel again; behind: how far past the foe they ride // the hold that launches an attack (Albert, Nov 2): how long, and the ring's radius at full, in screen points
+const DIRECT = { wall: 12, loose: 6, wheel: 15, behind: 70 }; // wall: seconds a shield wall stands; loose: seconds before the archers may volley again (an audit, Nov 2: with none, a tap a frame was a machine gun); wheel: seconds before riders may wheel again; behind: how far past the foe they ride, away from home // the hold that launches an attack (Albert, Nov 2): how long, and the ring's radius at full, in screen points
 const TOAST = { short: 3, mid: 5, long: 8 };
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 

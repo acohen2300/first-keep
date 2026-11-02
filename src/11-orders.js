@@ -621,7 +621,7 @@ const chargeWhy = (o, S, bn) => {
 	if (t > G.t) return `Winded: ${Math.ceil(t - G.t)} s.`;
 	return null;
 };
-function charge(o, S, bn) {
+function charge(o, S, bn, quiet) {
 	// a burst of speed and blows for a few seconds, then tired; once a half minute a battalion
 	if (chargeWhy(o, S, bn)) return false;
 	(G.chargeT = G.chargeT || {})[o + ':' + (bn ?? 'all')] = G.t + CHARGE.cd;
@@ -630,13 +630,13 @@ function charge(o, S, bn) {
 			u.chg = G.t + CHARGE.secs;
 			u.mor = Math.min(1, u.mor + 0.1);
 		}
-	if (o === 0) {
+	if (o === 0 && !quiet) {
 		say(`${bn !== undefined ? BN[bn] : 'The army'} charge!`, 'good', TOAST.mid);
 		sfx('horn');
-	}
+	} // the Director says and sounds its own (quiet)
 	return true;
 }
-function fallBack(o, S, bn, who) {
+function fallBack(o, S, bn, quiet) {
 	// withdraw in order toward home: fewer losses than a rout, and no rout while it lasts
 	const h = homeOf(o);
 	if (!h) return false;
@@ -657,7 +657,7 @@ function fallBack(o, S, bn, who) {
 		u.ord = undefined;
 		n++;
 	}
-	if (o === 0 && n) say(who || `${bn !== undefined ? BN[bn] : 'The army'} fall back.`, who ? 'good' : '', who ? TOAST.short : TOAST.mid); // the Director names the kind
+	if (o === 0 && n && !quiet) say(`${bn !== undefined ? BN[bn] : 'The army'} fall back.`, '', TOAST.mid);
 	return n > 0;
 }
 // Prisoners: a runner touched by a foe, or a man netted by the Natives. The owner may ransom them back; unransomed, they serve the captor.

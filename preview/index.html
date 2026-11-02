@@ -5485,12 +5485,12 @@ const LAUNCH = { ms: 1500, r: 34 };
 // The War Director (Albert, Nov 2: "a war director"): one move a kind, every soldier of that kind at once, from the battle station. Each move
 // is a drill the rules already hold, so no new number but these: how long a shield wall stands (secs), how long the volley's reload is lined
 // up (loose), and the wait after Wheel (wheel). wall: the Square shape's numbers while it stands (FORM[2]: 10% less damage, 30% less from
-// riders, 20% slower) and the Hold temper (no chase, steadier nerve). loose: every archer's reload set to zero together, so they release
+// riders, 20% slower) and the Hold temper (no chase, steadier nerve), their target dropped. loose: every archer's reload set to zero together, so they release
 // in one instant; each arrow does its usual harm, but Dupuy's break point (MORALE.breakAt) is counted on losses in one blow, which is why
 // massed volleys broke armies the same losses spread out would not (Crécy, Agincourt; from memory). charge: CHARGE. wheel: the riders ride
 // to the far side of the enemy nearest the crosshair and hit from behind (FLANK, MORALE.rear). bombard: the engines on the nearest enemy
 // building to the crosshair, burning once Burning shot is researched (FIREARMS). back: FALLBACK.
-const DIRECT = { wall: 12, loose: 0, wheel: 15, behind: 70 }; // wall: seconds a shield wall stands; wheel: seconds before riders may wheel again; behind: how far past the foe they ride // the hold that launches an attack (Albert, Nov 2): how long, and the ring's radius at full, in screen points
+const DIRECT = { wall: 12, loose: 6, wheel: 15, behind: 70 }; // wall: seconds a shield wall stands; loose: seconds before the archers may volley again (an audit, Nov 2: with none, a tap a frame was a machine gun); wheel: seconds before riders may wheel again; behind: how far past the foe they ride, away from home // the hold that launches an attack (Albert, Nov 2): how long, and the ring's radius at full, in screen points
 const TOAST = { short: 3, mid: 5, long: 8 };
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
@@ -9970,7 +9970,7 @@ const chargeWhy = (o, S, bn) => {
 	if (t > G.t) return `Winded: ${Math.ceil(t - G.t)} s.`;
 	return null;
 };
-function charge(o, S, bn) {
+function charge(o, S, bn, quiet) {
 	// a burst of speed and blows for a few seconds, then tired; once a half minute a battalion
 	if (chargeWhy(o, S, bn)) return false;
 	(G.chargeT = G.chargeT || {})[o + ':' + (bn ?? 'all')] = G.t + CHARGE.cd;
@@ -9979,13 +9979,13 @@ function charge(o, S, bn) {
 			u.chg = G.t + CHARGE.secs;
 			u.mor = Math.min(1, u.mor + 0.1);
 		}
-	if (o === 0) {
+	if (o === 0 && !quiet) {
 		say(`${bn !== undefined ? BN[bn] : 'The army'} charge!`, 'good', TOAST.mid);
 		sfx('horn');
-	}
+	} // the Director says and sounds its own (quiet)
 	return true;
 }
-function fallBack(o, S, bn, who) {
+function fallBack(o, S, bn, quiet) {
 	// withdraw in order toward home: fewer losses than a rout, and no rout while it lasts
 	const h = homeOf(o);
 	if (!h) return false;
@@ -10006,7 +10006,7 @@ function fallBack(o, S, bn, who) {
 		u.ord = undefined;
 		n++;
 	}
-	if (o === 0 && n) say(who || `${bn !== undefined ? BN[bn] : 'The army'} fall back.`, who ? 'good' : '', who ? TOAST.short : TOAST.mid); // the Director names the kind
+	if (o === 0 && n && !quiet) say(`${bn !== undefined ? BN[bn] : 'The army'} fall back.`, '', TOAST.mid);
 	return n > 0;
 }
 // Prisoners: a runner touched by a foe, or a man netted by the Natives. The owner may ransom them back; unransomed, they serve the captor.
@@ -22038,7 +22038,7 @@ cv.addEventListener('pointerdown', (e) => {
 		drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, touch }; // away from the ghost: drag looks around; a tap moves the ghost there
 		return;
 	}
-	drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false };
+	drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, t0: performance.now() };
 	G.press = { x: p.x, y: p.y, t: performance.now() };
 	holdT = setTimeout(() => {
 		const d = drag;
@@ -22061,7 +22061,7 @@ cv.addEventListener('pointerdown', (e) => {
 		} // held on one of yours: it is picked, and the next taps add more
 		const at = { x0: G.press.x, y0: G.press.y, x1: G.press.x, y1: G.press.y };
 		G.press = null;
-		if ((h.t === 'ground' || ((h.t === 'unit' || h.t === 'bld') && foeOf(h.e))) && launchAt(h)) {
+		if ((h.t === 'ground' || ((h.t === 'unit' || h.t === 'bld') && foeOf(h.e))) && launchAt(h, d.t0)) {
 			drag = { mode: 'launch', ...at };
 			return;
 		} // held on the ground or an enemy: the ring grows, and at full every soldier goes (28-army-quick); a drag turns it into the box
@@ -22205,20 +22205,33 @@ cv.addEventListener(
 	{ passive: false },
 );
 ['gesturestart', 'gesturechange', 'gestureend'].forEach((t) => document.addEventListener(t, (e) => e.preventDefault()));
-let miniHold = 0;
+let miniHold = 0,
+	miniAt = null;
 mini.addEventListener('pointerdown', (e) => {
 	e.stopPropagation();
 	if (G) G.follow = false;
+	try {
+		mini.setPointerCapture(e.pointerId);
+	} catch (err) {} // the finger stays the map's until it lifts, even off its edge (an audit, Nov 2)
 	const r = mini.getBoundingClientRect(),
 		x = ((e.clientX - r.left) / r.width) * MAP,
-		y = ((e.clientY - r.top) / r.height) * MAP;
+		y = ((e.clientY - r.top) / r.height) * MAP,
+		t0 = performance.now();
 	camGo(x, y);
+	miniAt = { x: e.clientX, y: e.clientY };
 	clearTimeout(miniHold);
-	miniHold = setTimeout(() => launchAt({ t: 'ground', e: { x, y } }), HOLD_MS); // held on the small map: the army is launched there (the ring grows at the spot, now in view)
+	miniHold = setTimeout(() => launchAt({ t: 'ground', e: { x, y } }, t0), HOLD_MS); // held on the small map: the army is launched there (the ring grows at the spot, now in view)
 });
-for (const ev of ['pointerup', 'pointercancel', 'pointerleave'])
+mini.addEventListener('pointermove', (e) => {
+	if (miniAt && hyp(e.clientX - miniAt.x, e.clientY - miniAt.y) > 8) {
+		clearTimeout(miniHold);
+		cancelLaunch();
+	} // a finger that moves is looking, not launching
+});
+for (const ev of ['pointerup', 'pointercancel'])
 	mini.addEventListener(ev, () => {
 		clearTimeout(miniHold);
+		miniAt = null;
 		cancelLaunch();
 	});
 // what is under the finger: a building (they have height), a find, a unit, a resource, else the ground
@@ -22328,9 +22341,9 @@ function tapAt(sx, sy) {
 			ACT.ordpick(String(O.id));
 			return;
 		} // the ring of a group on the march: tap it to pick the group
-		hintAt(h);
+		hintAt(h, sendable().length ? HOLD_WORD.attack : HOLD_WORD.none);
 		return;
-	} // nothing picked: the words "Hold to launch attack" a moment, which teach the hold (Albert, Nov 2)
+	} // nothing picked: the words "Hold to launch attack" a moment, which teach the hold (Albert, Nov 2); with no soldiers, "No soldiers yet"
 	if (
 		h.t === 'bld' &&
 		h.e.owner === 0 &&
@@ -23189,12 +23202,12 @@ const foeOf = (e) =>
 // drag is the box, 26-input). A plain tap on the ground shows the words a moment, which teaches it. G.launch: what is held (h, as hitAt gives
 // it), when it started, when it fired; G.hint: the words a tap left.
 let launchT = 0;
-function launchAt(h) {
+function launchAt(h, t0 = performance.now()) {
 	cancelLaunch();
-	if (!sendable().length) return hintAt(h, HOLD_WORD.none), false;
+	if (!sendable().length) return false; // no soldiers: no ring, no words (a hold with none is the box; a tap says "No soldiers yet")
 	G.hint = null;
-	G.launch = { h, t0: performance.now() };
-	launchT = setTimeout(fireLaunch, LAUNCH.ms);
+	G.launch = { h, t0 }; // the 1.5 s count from the moment the finger landed (an audit, Nov 2: it was the hold's 320 ms and then 1.5 s)
+	launchT = setTimeout(fireLaunch, Math.max(0, LAUNCH.ms - (performance.now() - t0)));
 	feel('tick');
 	return true;
 }
@@ -23205,6 +23218,7 @@ function cancelLaunch() {
 function fireLaunch() {
 	const C = G.launch;
 	if (!C || C.fired) return;
+	if (G.paused) return cancelLaunch(); // paused under the finger (a card came up): nothing is sent (an audit, Nov 2)
 	clearTimeout(launchT);
 	const S = sendable();
 	if (S.length) order(S, C.h);
@@ -23272,33 +23286,39 @@ const DIRECTS = {
 			u.px = u.x;
 			u.py = u.y;
 			u.focus = null;
+			u.tgt = null; // (an audit, Nov 2: a foe it was chasing would have pulled it out of the wall)
 		}
 		return 'Shield wall!';
 	},
 	advance: (S) => (order(S, aimH()), 'Foot, advance!'),
 	loose: (S) => {
+		if (G.looseT > G.t) return `Reloading: ${Math.ceil(G.looseT - G.t)} s.`;
 		order(S, aimH());
-		for (const u of S) u.cd = DIRECT.loose; // the reload lined up: everyone in reach releases on the next step
+		for (const u of S) u.cd = 0; // the reload lined up: everyone in reach releases on the next step
+		G.looseT = G.t + DIRECT.loose;
 		return 'Archers, loose!';
 	},
-	back: (S, word) => (fallBack(0, S, undefined, word), ''), // fallBack says it
+	back: (S, word) => (fallBack(0, S, undefined, true) ? word : 'Nowhere to fall back to.'),
 	charge: (S) => {
+		const why = chargeWhy(0, S);
+		if (why) return why; // winded: nobody moves (an audit, Nov 2: they were ordered off before the check)
 		order(S, aimH());
-		return charge(0, S) ? '' : chargeWhy(0, S); // charge() says it and sounds the horn
+		charge(0, S, undefined, true);
+		return 'Riders, charge!';
 	},
 	wheel: (S) => {
+		if ((G.wheelT || 0) > G.t) return `Winded: ${Math.ceil(G.wheelT - G.t)} s.`;
 		const h = aimH(),
-			foes = foesNear(h.e);
+			foes = foesNear(h.e),
+			home = homeOf(0) || h.e;
 		if (!foes.length) return DIRECT_WHY.wheel;
 		const cx = foes.reduce((s, f) => s + f.x, 0) / foes.length,
 			cy = foes.reduce((s, f) => s + f.y, 0) / foes.length,
-			mx = S.reduce((s, u) => s + u.x, 0) / S.length,
-			my = S.reduce((s, u) => s + u.y, 0) / S.length,
-			d = hyp(cx - mx, cy - my) || 1,
-			x = clamp(cx + ((cx - mx) / d) * DIRECT.behind, 20, MAP - 20),
-			y = clamp(cy + ((cy - my) / d) * DIRECT.behind, 20, MAP - 20);
+			d = hyp(cx - home.x, cy - home.y) || 1, // the far side of the foe from home (an audit, Nov 2: the riders' own centre sat on the foe when they were split)
+			x = clamp(cx + ((cx - home.x) / d) * DIRECT.behind, 20, MAP - 20),
+			y = clamp(cy + ((cy - home.y) / d) * DIRECT.behind, 20, MAP - 20);
 		order(S, { t: 'ground', e: { x, y } });
-		(G.wheelT = G.wheelT || {})[0] = G.t + DIRECT.wheel;
+		G.wheelT = G.t + DIRECT.wheel;
 		return 'Riders, wheel!';
 	},
 	bombard: (S) => {
@@ -23319,21 +23339,14 @@ function direct(t, hold) {
 	const [id, word, snd] = DIRECT_OF[t][hold ? 1 : 0],
 		S = ofKind(t);
 	if (!S.length) return say(DIRECT_WHY.none, '', TOAST.short);
-	if (id === 'wheel' && (G.wheelT || {})[0] > G.t) return say(`Winded: ${Math.ceil(G.wheelT[0] - G.t)} s.`, '', TOAST.short);
 	const said = DIRECTS[id](S, word);
-	if (said === '') {
-		sfx(snd);
-		feel('snap');
-		return;
-	} // charge and fall back say their own
-	if (!/!$/.test(said)) return say(said, '', TOAST.short); // a reason ends with a stop: nobody could go
+	if (!/!$/.test(said)) return say(said, '', TOAST.short); // a reason ends with a stop: nobody moved, no horn
 	say(said, 'good', TOAST.short);
 	sfx(snd);
 	feel('snap');
 }
-// the wait a kind's tap still has to sit out, in seconds: the riders' charge, the wheel; 0 when it is ready
-const directWait = (t) =>
-	t === 2 ? Math.max(0, Math.ceil(Math.max((G.chargeT || {})['0:all'] || 0, (G.wheelT || {})[0] || 0) - G.t)) : 0;
+// the wait a kind's tap still has to sit out, in seconds (0 when it is ready): the archers' reload, the riders' charge; the hold keeps its own
+const directWait = (t) => Math.max(0, Math.ceil((t === 1 ? G.looseT || 0 : t === 2 ? (G.chargeT || {})['0:all'] || 0 : 0) - G.t));
 // what the game thinks fits a spot (Albert, Build 41): each reason scores a kind, the best one is marked and its menu opens.
 // A drop-off for what grows there with none near; more of what stands around you (houses: a house; fields: a mill, then a field; army buildings: the one you lack);
 // a narrow way between forest, water or buildings: a wall, or a gate beside your wall; and a house when room is short.
@@ -26823,11 +26836,16 @@ function learnAct(verb, arg) {
 	} else if (['sendbld', 'age', 'trade'].includes(verb)) learn(verb);
 }
 let lpT = 0,
-	lpDone = false;
-const lpStop = () => clearTimeout(lpT);
+	lpDone = false,
+	lpAt = null;
+const lpStop = (e) => {
+	if (e && e.type === 'pointermove' && lpAt && hyp(e.clientX - lpAt.x, e.clientY - lpAt.y) < 8) return; // a thumb rolls a little while it holds (an audit, Nov 2)
+	clearTimeout(lpT);
+};
 document.addEventListener('pointerdown', (e) => {
 	lpStop();
 	lpDone = false;
+	lpAt = { x: e.clientX, y: e.clientY };
 	const el = e.target.closest('[data-act^="tech:"], [data-hold]');
 	if (el)
 		lpT = setTimeout(() => {
@@ -27245,6 +27263,8 @@ function saveGame(force) {
 			gamesT: G.gamesT,
 			chron: G.chron,
 			chargeT: G.chargeT || {},
+			wheelT: G.wheelT || 0,
+			looseT: G.looseT || 0,
 			sand: G.sand || null,
 			mirage: G.mirage || null,
 			mkt: G.mkt || null,
@@ -27453,6 +27473,8 @@ function loadGame(S) {
 	G.gamesT = S.gamesT || 0;
 	G.chron = S.chron || [];
 	G.chargeT = S.chargeT || {};
+	G.wheelT = S.wheelT || 0;
+	G.looseT = S.looseT || 0;
 	G.sand = S.sand || null;
 	G.mirage = S.mirage || null;
 	if (G.ev.cur) {

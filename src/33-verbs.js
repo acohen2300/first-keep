@@ -1018,11 +1018,16 @@ function learnAct(verb, arg) {
 	} else if (['sendbld', 'age', 'trade'].includes(verb)) learn(verb);
 }
 let lpT = 0,
-	lpDone = false;
-const lpStop = () => clearTimeout(lpT);
+	lpDone = false,
+	lpAt = null;
+const lpStop = (e) => {
+	if (e && e.type === 'pointermove' && lpAt && hyp(e.clientX - lpAt.x, e.clientY - lpAt.y) < 8) return; // a thumb rolls a little while it holds (an audit, Nov 2)
+	clearTimeout(lpT);
+};
 document.addEventListener('pointerdown', (e) => {
 	lpStop();
 	lpDone = false;
+	lpAt = { x: e.clientX, y: e.clientY };
 	const el = e.target.closest('[data-act^="tech:"], [data-hold]');
 	if (el)
 		lpT = setTimeout(() => {

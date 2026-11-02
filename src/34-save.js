@@ -351,6 +351,8 @@ function saveGame(force) {
 			gamesT: G.gamesT,
 			chron: G.chron,
 			chargeT: G.chargeT || {},
+			wheelT: G.wheelT || 0,
+			looseT: G.looseT || 0,
 			sand: G.sand || null,
 			mirage: G.mirage || null,
 			mkt: G.mkt || null,
@@ -559,6 +561,8 @@ function loadGame(S) {
 	G.gamesT = S.gamesT || 0;
 	G.chron = S.chron || [];
 	G.chargeT = S.chargeT || {};
+	G.wheelT = S.wheelT || 0;
+	G.looseT = S.looseT || 0;
 	G.sand = S.sand || null;
 	G.mirage = S.mirage || null;
 	if (G.ev.cur) {

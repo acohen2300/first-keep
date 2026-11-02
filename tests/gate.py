@@ -79,10 +79,16 @@ DOUBLES = """async (extra) => { await document.fonts.ready; const F = window.__f
 # The quick action (MENU-SPEC §7, Build 70), at every size: each of its four cells is the screen's slot (W − 42) ÷ 6 by 44; opened in the middle,
 # at the right edge, above the row and in that corner, its first icon (the sword) is right under the finger (its column on it, half a slot
 # below it; above it when flipped at the row); the sword turns it to All in the same place. Left open in the middle for the page's measures.
-QUICK = """() => { const F = window.__fk, G = F.G, out = [];   // the hold (Albert, Nov 2): a ring under the finger, the words over it, inside the screen at every size
+QUICK = """async () => { const F = window.__fk, G = F.G, out = [];   // the hold (Albert, Nov 2): a ring under the finger, the words over it, inside the screen at every size
   F.act('close'); const k = F.keepOf(0); F.addUnit(0, 'spear', k.x + 40, k.y + 40); const h = F.hitAt(innerWidth / 2, 300);
   if (!F.launchAt(h)) out.push('the hold did not start with a soldier to send'); F.draw();
   if (!G.launch) out.push('the hold has no ring'); F.cancelLaunch(); if (G.launch) out.push('letting go left the ring');
+  // a hold on a button (data-hold) survives a thumb that rolls a pixel or two (an audit, Nov 2); the lift after it is not a tap
+  F.hudPage('war'); F.ui(true); const b = document.querySelector('#row [data-hold="whome"]'), r = b.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+  const ev = (type, dx) => b.dispatchEvent(new PointerEvent(type, { bubbles: true, clientX: x + dx, clientY: y, pointerId: 1 }));
+  G.msn[0] = { name: 'test', sq: 0, ord: -1, n0: 0, kinds: {}, what: 'Go to', label: '', x: k.x, y: k.y, t: G.t, due: G.t, st: 'go', odds: 0.5 };
+  ev('pointerdown', 0); ev('pointermove', 3); await new Promise((r) => setTimeout(r, 420)); ev('pointerup', 3); b.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  if (G.msn[0]) out.push('a held button whose thumb rolls 3 px lost its hold (everyone home did not fire)'); F.hudPage('jobs'); F.ui(true);
   return out; }"""
 def fixed_titles():
     import re, glob
@@ -117,8 +123,9 @@ PLAY = """async () => {
   // the hold (Albert, Nov 2, 15:35): a tap on open ground shows "Hold to launch attack" and sends nobody; a double tap opens nothing;
   // a hold on the ground fills the ring and at full every soldier goes there; let go first and nobody goes; a hold on an enemy sends them at it
   { F.act('close'); G.fogOn = false; let p = null; for (let y = 260; y < 500 && !p; y += 23) for (let x = 60; x < 330 && !p; x += 23) if (F.hitAt(x, y).t === 'ground') p = [x, y];
-    const spot = F.hitAt(...p).e; F.tapAt(...p); if (!G.hint || G.hint.w !== F.HOLD_WORD.attack) out.push('a tap on the ground did not show "Hold to launch attack"'); if (G.card) out.push('a tap on the ground opened a card');
-    F.tapAt(...p); if (G.card || G.hint) out.push('a double tap on the ground opened a card or left the words showing (the Here card is cut)');
+    const spot = F.hitAt(...p).e; F.tapAt(...p); if (!G.hint || G.hint.w !== F.HOLD_WORD.none) out.push('a tap on the ground with no soldiers did not say "No soldiers yet"');
+    const sp = F.addUnit(0, 'spear', F.keepOf(0).x + 30, F.keepOf(0).y + 30); F.lastTapReset && F.lastTapReset(); F.tapAt(p[0] + 60, p[1]); if (!G.hint || G.hint.w !== F.HOLD_WORD.attack) out.push('a tap on the ground did not show "Hold to launch attack"'); if (G.card) out.push('a tap on the ground opened a card'); sp.hp = 0;
+    F.tapAt(...p); F.tapAt(...p); if (G.card || G.hint) out.push('a double tap on the ground opened a card or left the words showing (the Here card is cut)');
     const k = F.keepOf(0), S = [0, 1, 2].map((i) => F.addUnit(0, 'spear', k.x + 40 + i * 8, k.y + 40)), e = F.addUnit(1, 'spear', spot.x, spot.y); G.rel[0][1] = G.rel[1][0] = 'war';
     const o0 = JSON.stringify(G.ords || {}); F.launchAt(F.hitAt(...p)); F.cancelLaunch(); if (JSON.stringify(G.ords || {}) !== o0) out.push('letting go before the ring was full still sent soldiers');
     F.launchAt(F.hitAt(F.SX(e.x), F.SY(e.y) - 6 * F.cam.z)); F.fireLaunch(); if (!S.every((u) => u.focus === e)) out.push('a full hold on an enemy did not send every soldier at it');
@@ -210,6 +217,8 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
     if (!document.querySelector('#row .midb [data-act="direct:0"]') || document.querySelector('#row .midb [data-act="direct:1"]').dataset.hold !== 'directh:1') bad.push('director: the middle has no moves, or no hold');
     F.act('direct:0'); if (!foot.every((u) => u.wall > G.t) || F.shapeOf(foot[0]).name !== 'Square' || F.temperOf(foot[0]) !== F.T_HOLD) bad.push('director: Shield wall did not stand the foot to the Square and hold');
     F.act('direct:1'); if (!arch.every((u) => u.cd === 0)) bad.push('director: Loose did not line up the reload'); const h0 = foes.reduce((s, f) => s + f.hp, 0); run(3); if (!(foes.reduce((s, f) => s + f.hp, 0) < h0)) bad.push('director: the volley hit nobody');
+    F.ui(true); if (!/[0-9]+ s/.test(document.querySelector('#row .midb [data-act="direct:1"]').innerText)) bad.push('director: the archers can volley again at once (no reload wait on the slot)');
+    { const n0 = G.mail.length; G.chargeT = { '0:all': G.t + 20 }; const was = horse.map((u) => [u.px, u.py].join()); F.act('direct:2'); if (horse.map((u) => [u.px, u.py].join()).join() !== was.join()) bad.push('director: winded riders were still sent'); G.chargeT = {}; }
     F.act('direct:2'); if (!horse.some((u) => u.chg > G.t)) bad.push('director: Charge did not set the riders charging'); F.ui(true); if (!/[0-9]+ s/.test(document.querySelector('#row .midb [data-act="direct:2"]').innerText)) bad.push('director: the wait of the riders is not on their slot');
     F.act('direct:3'); run(20); if (eb && !(eb.hp < F.BLD.house.hp)) bad.push('director: Bombard did not hit the enemy building');
     F.act('directh:1'); if (!arch.every((u) => u.fb > G.t)) bad.push('director: a hold on Archers did not fall them back');

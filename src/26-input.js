@@ -111,7 +111,7 @@ cv.addEventListener('pointerdown', (e) => {
 		drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, touch }; // away from the ghost: drag looks around; a tap moves the ghost there
 		return;
 	}
-	drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false };
+	drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, t0: performance.now() };
 	G.press = { x: p.x, y: p.y, t: performance.now() };
 	holdT = setTimeout(() => {
 		const d = drag;
@@ -134,7 +134,7 @@ cv.addEventListener('pointerdown', (e) => {
 		} // held on one of yours: it is picked, and the next taps add more
 		const at = { x0: G.press.x, y0: G.press.y, x1: G.press.x, y1: G.press.y };
 		G.press = null;
-		if ((h.t === 'ground' || ((h.t === 'unit' || h.t === 'bld') && foeOf(h.e))) && launchAt(h)) {
+		if ((h.t === 'ground' || ((h.t === 'unit' || h.t === 'bld') && foeOf(h.e))) && launchAt(h, d.t0)) {
 			drag = { mode: 'launch', ...at };
 			return;
 		} // held on the ground or an enemy: the ring grows, and at full every soldier goes (28-army-quick); a drag turns it into the box
@@ -278,20 +278,33 @@ cv.addEventListener(
 	{ passive: false },
 );
 ['gesturestart', 'gesturechange', 'gestureend'].forEach((t) => document.addEventListener(t, (e) => e.preventDefault()));
-let miniHold = 0;
+let miniHold = 0,
+	miniAt = null;
 mini.addEventListener('pointerdown', (e) => {
 	e.stopPropagation();
 	if (G) G.follow = false;
+	try {
+		mini.setPointerCapture(e.pointerId);
+	} catch (err) {} // the finger stays the map's until it lifts, even off its edge (an audit, Nov 2)
 	const r = mini.getBoundingClientRect(),
 		x = ((e.clientX - r.left) / r.width) * MAP,
-		y = ((e.clientY - r.top) / r.height) * MAP;
+		y = ((e.clientY - r.top) / r.height) * MAP,
+		t0 = performance.now();
 	camGo(x, y);
+	miniAt = { x: e.clientX, y: e.clientY };
 	clearTimeout(miniHold);
-	miniHold = setTimeout(() => launchAt({ t: 'ground', e: { x, y } }), HOLD_MS); // held on the small map: the army is launched there (the ring grows at the spot, now in view)
+	miniHold = setTimeout(() => launchAt({ t: 'ground', e: { x, y } }, t0), HOLD_MS); // held on the small map: the army is launched there (the ring grows at the spot, now in view)
 });
-for (const ev of ['pointerup', 'pointercancel', 'pointerleave'])
+mini.addEventListener('pointermove', (e) => {
+	if (miniAt && hyp(e.clientX - miniAt.x, e.clientY - miniAt.y) > 8) {
+		clearTimeout(miniHold);
+		cancelLaunch();
+	} // a finger that moves is looking, not launching
+});
+for (const ev of ['pointerup', 'pointercancel'])
 	mini.addEventListener(ev, () => {
 		clearTimeout(miniHold);
+		miniAt = null;
 		cancelLaunch();
 	});
 // what is under the finger: a building (they have height), a find, a unit, a resource, else the ground
@@ -401,9 +414,9 @@ function tapAt(sx, sy) {
 			ACT.ordpick(String(O.id));
 			return;
 		} // the ring of a group on the march: tap it to pick the group
-		hintAt(h);
+		hintAt(h, sendable().length ? HOLD_WORD.attack : HOLD_WORD.none);
 		return;
-	} // nothing picked: the words "Hold to launch attack" a moment, which teach the hold (Albert, Nov 2)
+	} // nothing picked: the words "Hold to launch attack" a moment, which teach the hold (Albert, Nov 2); with no soldiers, "No soldiers yet"
 	if (
 		h.t === 'bld' &&
 		h.e.owner === 0 &&

@@ -115,12 +115,12 @@ const foeOf = (e) =>
 // drag is the box, 26-input). A plain tap on the ground shows the words a moment, which teaches it. G.launch: what is held (h, as hitAt gives
 // it), when it started, when it fired; G.hint: the words a tap left.
 let launchT = 0;
-function launchAt(h) {
+function launchAt(h, t0 = performance.now()) {
 	cancelLaunch();
-	if (!sendable().length) return hintAt(h, HOLD_WORD.none), false;
+	if (!sendable().length) return false; // no soldiers: no ring, no words (a hold with none is the box; a tap says "No soldiers yet")
 	G.hint = null;
-	G.launch = { h, t0: performance.now() };
-	launchT = setTimeout(fireLaunch, LAUNCH.ms);
+	G.launch = { h, t0 }; // the 1.5 s count from the moment the finger landed (an audit, Nov 2: it was the hold's 320 ms and then 1.5 s)
+	launchT = setTimeout(fireLaunch, Math.max(0, LAUNCH.ms - (performance.now() - t0)));
 	feel('tick');
 	return true;
 }
@@ -131,6 +131,7 @@ function cancelLaunch() {
 function fireLaunch() {
 	const C = G.launch;
 	if (!C || C.fired) return;
+	if (G.paused) return cancelLaunch(); // paused under the finger (a card came up): nothing is sent (an audit, Nov 2)
 	clearTimeout(launchT);
 	const S = sendable();
 	if (S.length) order(S, C.h);
@@ -198,33 +199,39 @@ const DIRECTS = {
 			u.px = u.x;
 			u.py = u.y;
 			u.focus = null;
+			u.tgt = null; // (an audit, Nov 2: a foe it was chasing would have pulled it out of the wall)
 		}
 		return 'Shield wall!';
 	},
 	advance: (S) => (order(S, aimH()), 'Foot, advance!'),
 	loose: (S) => {
+		if (G.looseT > G.t) return `Reloading: ${Math.ceil(G.looseT - G.t)} s.`;
 		order(S, aimH());
-		for (const u of S) u.cd = DIRECT.loose; // the reload lined up: everyone in reach releases on the next step
+		for (const u of S) u.cd = 0; // the reload lined up: everyone in reach releases on the next step
+		G.looseT = G.t + DIRECT.loose;
 		return 'Archers, loose!';
 	},
-	back: (S, word) => (fallBack(0, S, undefined, word), ''), // fallBack says it
+	back: (S, word) => (fallBack(0, S, undefined, true) ? word : 'Nowhere to fall back to.'),
 	charge: (S) => {
+		const why = chargeWhy(0, S);
+		if (why) return why; // winded: nobody moves (an audit, Nov 2: they were ordered off before the check)
 		order(S, aimH());
-		return charge(0, S) ? '' : chargeWhy(0, S); // charge() says it and sounds the horn
+		charge(0, S, undefined, true);
+		return 'Riders, charge!';
 	},
 	wheel: (S) => {
+		if ((G.wheelT || 0) > G.t) return `Winded: ${Math.ceil(G.wheelT - G.t)} s.`;
 		const h = aimH(),
-			foes = foesNear(h.e);
+			foes = foesNear(h.e),
+			home = homeOf(0) || h.e;
 		if (!foes.length) return DIRECT_WHY.wheel;
 		const cx = foes.reduce((s, f) => s + f.x, 0) / foes.length,
 			cy = foes.reduce((s, f) => s + f.y, 0) / foes.length,
-			mx = S.reduce((s, u) => s + u.x, 0) / S.length,
-			my = S.reduce((s, u) => s + u.y, 0) / S.length,
-			d = hyp(cx - mx, cy - my) || 1,
-			x = clamp(cx + ((cx - mx) / d) * DIRECT.behind, 20, MAP - 20),
-			y = clamp(cy + ((cy - my) / d) * DIRECT.behind, 20, MAP - 20);
+			d = hyp(cx - home.x, cy - home.y) || 1, // the far side of the foe from home (an audit, Nov 2: the riders' own centre sat on the foe when they were split)
+			x = clamp(cx + ((cx - home.x) / d) * DIRECT.behind, 20, MAP - 20),
+			y = clamp(cy + ((cy - home.y) / d) * DIRECT.behind, 20, MAP - 20);
 		order(S, { t: 'ground', e: { x, y } });
-		(G.wheelT = G.wheelT || {})[0] = G.t + DIRECT.wheel;
+		G.wheelT = G.t + DIRECT.wheel;
 		return 'Riders, wheel!';
 	},
 	bombard: (S) => {
@@ -245,21 +252,14 @@ function direct(t, hold) {
 	const [id, word, snd] = DIRECT_OF[t][hold ? 1 : 0],
 		S = ofKind(t);
 	if (!S.length) return say(DIRECT_WHY.none, '', TOAST.short);
-	if (id === 'wheel' && (G.wheelT || {})[0] > G.t) return say(`Winded: ${Math.ceil(G.wheelT[0] - G.t)} s.`, '', TOAST.short);
 	const said = DIRECTS[id](S, word);
-	if (said === '') {
-		sfx(snd);
-		feel('snap');
-		return;
-	} // charge and fall back say their own
-	if (!/!$/.test(said)) return say(said, '', TOAST.short); // a reason ends with a stop: nobody could go
+	if (!/!$/.test(said)) return say(said, '', TOAST.short); // a reason ends with a stop: nobody moved, no horn
 	say(said, 'good', TOAST.short);
 	sfx(snd);
 	feel('snap');
 }
-// the wait a kind's tap still has to sit out, in seconds: the riders' charge, the wheel; 0 when it is ready
-const directWait = (t) =>
-	t === 2 ? Math.max(0, Math.ceil(Math.max((G.chargeT || {})['0:all'] || 0, (G.wheelT || {})[0] || 0) - G.t)) : 0;
+// the wait a kind's tap still has to sit out, in seconds (0 when it is ready): the archers' reload, the riders' charge; the hold keeps its own
+const directWait = (t) => Math.max(0, Math.ceil((t === 1 ? G.looseT || 0 : t === 2 ? (G.chargeT || {})['0:all'] || 0 : 0) - G.t));
 // what the game thinks fits a spot (Albert, Build 41): each reason scores a kind, the best one is marked and its menu opens.
 // A drop-off for what grows there with none near; more of what stands around you (houses: a house; fields: a mill, then a field; army buildings: the one you lack);
 // a narrow way between forest, water or buildings: a wall, or a gate beside your wall; and a house when room is short.
