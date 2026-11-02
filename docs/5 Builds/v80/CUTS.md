@@ -235,3 +235,7 @@ Checks on main before publishing:
 - **Play fingerprint accepted:** text81 (Nov 1 batch): C11 stashes the load unrounded, so a partial load of 0.5 no longer becomes 1 at the drop-off; it is the whole of the change (each other change reverted alone leaves the fingerprint as it was; C11 reverted alone restores the baseline exactly). [2026-11-01 15:20]
 
 - **Play fingerprint accepted:** Preview 11 merge of wild81, text81, zones81 and ai81: every side starts with 200 food, wood, stone and gold (S1), the computers start with a mill and a farm (EXCEPTIONS #16), plus the wild, famine, caps, text and computers changes. Albert: forget the full QC, get it into the preview (Nov 1 20:49).
+
+## Preview 12 [2026-11-01 21:15]
+
+- [2026-11-01 21:15] Item 5 test (tests/combat.py) waits 80 s, not 40: on the merged map the open point on seed 1 is about 360 from the Town Center and the villagers were still walking at 40 s; at 80 s all 12 stand on their own spots on every seed. Test only, no game code. (Albert, Nov 1 21:14, yes yes) [2026-11-01 21:15]

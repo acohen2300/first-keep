@@ -101,7 +101,7 @@ JS = """() => {
     const far = Math.max(...V.map((u) => Math.hypot(u.post.x - P.x, u.post.y - P.y)));
     if (far > Rn + d) bad.push('item 5: the spots spread to ' + far.toFixed(1) + ', past the disc R = 0.525 d sqrt(n) = ' + Rn.toFixed(1));
     if (!(F.ARRIVE + 0.5 < d / 2)) bad.push('item 5: the arrival tolerance ' + F.ARRIVE.toFixed(2) + ' is not under half the spacing ' + (d / 2).toFixed(2));
-    run(40); const off = V.filter((u) => Math.hypot(u.x - u.post.x, u.y - u.post.y) > F.ARRIVE + 0.5).length,
+    run(80); const off = V.filter((u) => Math.hypot(u.x - u.post.x, u.y - u.post.y) > F.ARRIVE + 0.5).length,
       wrong = V.filter((u) => V.some((w) => w !== u && Math.hypot(u.x - w.post.x, u.y - w.post.y) < Math.hypot(u.x - u.post.x, u.y - u.post.y))).length;
     if (off) bad.push('item 5 (seed ' + seed + '): ' + off + ' of ' + V.length + ' villagers sent to a point stand off their own spots');
     if (wrong) bad.push('item 5 (seed ' + seed + '): ' + wrong + ' of ' + V.length + " villagers stand nearer another's spot than their own"); });
