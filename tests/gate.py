@@ -57,16 +57,13 @@ TITLES = """async (fixed) => { await document.fonts.ready; const F = window.__fk
 # (ROW_WORD, the paces with them), the jobs, the squads, the four kinds; under a squad the longest time; beside an icon the widest count. Measured in a
 # real slot of the War page, the cycle button and an info cell. A word that does not fit fails the gate:  --word "a long word"  shows it failing.
 SLOT_WORDS = """async (extra) => { await document.fonts.ready; const F = window.__fk, out = [];
-  F.newGame(5); F.act('close'); const G = F.G; G.P[0].techs.add('command'); F.fxDirty(); F.sqPlan(0, 'foot', 1); F.hudPage('war'); F.ui(true);
+  F.newGame(5); F.act('close'); const G = F.G; G.P[0].techs.add('command'); F.fxDirty(); F.sqPlan(0, 'foot', 1); F.hudPage('war'); F.act('wmid:squad'); F.ui(true);
   const words = [...Object.values(F.ROW_WORD).flat(2), ...F.RES.map((r) => F.RESOURCES[r].name), ...F.BN, ...F.CLS.map((c) => c[1]), ...extra],
-    slot = document.querySelector('#row [data-act="wsq:0"]'), top = slot.querySelector('.top'), info = document.querySelector('#row .info'),
-    fits = (e, box) => e.getBoundingClientRect().width <= box.clientWidth, put = (e, t) => { e.textContent = t; return e; };
-  for (const t of words) for (const e of [slot.querySelector('.wd'), document.querySelector('#emgB .wd')]) if (put(e, t).scrollWidth > e.clientWidth) out.push(`${t} ${e.scrollWidth}>${e.clientWidth}`);
+    slot = document.querySelector('#row [data-act="wsq:0"]'), top = slot.querySelector('.top'), end = document.querySelector('#row [data-act="wfire"] .wd'),
+    put = (e, t) => { e.textContent = t; return e; };
+  for (const t of words) for (const e of [slot.querySelector('.wd'), end, document.querySelector('#emgB .wd')]) if (put(e, t).scrollWidth > e.clientWidth) out.push(`${t} ${e.scrollWidth}>${e.clientWidth}`);
   if (put(top.querySelector('.c'), String(F.POPMAX)) && top.scrollWidth > top.clientWidth) out.push(`the count ${F.POPMAX} beside an icon`);
-  info.innerHTML = '<b></b><small></small>'; const [b, sm] = info.children;
-  for (const t of ['59:59', '—', ...extra]) if (!fits(put(b, t), info)) out.push(`${t} under a squad`);
-  for (const t of [...F.ROW_WORD.pace, F.ROW_WORD.fight, ...extra]) if (!fits(put(sm, t), info)) out.push(`${t} under a squad`);
-  F.act('close'); return [words.length + 3, out]; }"""
+  F.act('wmid:squad'); F.act('close'); return [words.length + 1, out]; }"""
 # Every name a double-wide slot of a card can show fits it on one line at 375 x 667, in the real font (MENU-SPEC §3, §8, Build 70): every research
 # step (its short name where it has one), every building (the Build menu), every soldier of every people at every rank (a Train button, its short
 # name from TITLE_SHORT). A name that wraps grows its rank off the grid, so it fails: its short form goes in its record (TECH short, BLD short) or TITLE_SHORT.
@@ -105,8 +102,8 @@ PLAY = """async () => {
   tap('[data-act="build:house"]'); if (!G.place || G.place.kind !== 'house') out.push('tapping House did not start placing');
   F.act('cancel'); if (G.place) out.push('Cancel left a placement'); F.ui(true);
   // the row (Build 70; Nov 2): one button turns Jobs, War, Train, its dot following the page; a squad opens its card, where + adds and Cancel puts back what it held
-  for (const pg of ['war', 'train', 'jobs']) { tap('#hudB'); F.ui(true); const at = [...document.querySelectorAll('#hudB .dots i')].findIndex((i) => i.classList.contains('at')); if (G.hud.page !== pg || at !== F.PAGES.indexOf(pg)) out.push('the cycle button did not turn to ' + pg + ' or its dot did not follow'); }
-  G.P[0].techs.add('command'); F.fxDirty(); F.hudPage('war'); F.ui(true); tap('#row [data-act="wsq:1"]'); if (!G.card || G.card.type !== 'squad' || G.card.i !== 1) out.push('a squad did not open its card');
+  for (const pg of ['war', 'jobs']) { tap('#hudB'); F.ui(true); const at = [...document.querySelectorAll('#hudB .dots i')].findIndex((i) => i.classList.contains('at')); if (G.hud.page !== pg || at !== F.PAGES.indexOf(pg)) out.push('the cycle button did not turn to ' + pg + ' or its dot did not follow'); }
+  G.P[0].techs.add('command'); F.fxDirty(); F.hudPage('war'); F.act('wmid:squad'); F.ui(true); F.act('sqcard:1'); if (!G.card || G.card.type !== 'squad' || G.card.i !== 1) out.push('a squad held did not open its card');
   tap('#card [data-act="sqpk:1,0,+"]'); if (G.bnPlan[1].foot !== 1) out.push('+ under Foot on the squad card added none'); tap('#card [data-act="sqcancel"]'); if (G.bnPlan[1].foot || G.card) out.push('Cancel did not put the squad back and close');
   G.P[0].techs.delete('command'); F.fxDirty(); F.hudPage('jobs'); F.ui(true);
   F.news('trade', 'A test line for the mail.', '', 4); F.act('pvx'); if (G.pvAsk !== 'trade') out.push('× on news did not ask to hide its group'); F.act('pvhide:trade'); F.news('trade', 'Another quiet line.', '', 4); if ((G.mail[0] || {}).ru) out.push('a hidden group still previewed'); F.news('trade', 'Raiders took the caravan.', 'warn', 4); if (!(G.mail[0] || {}).ru) out.push('a red line from a hidden group did not show'); F.act('mailall');
@@ -114,11 +111,11 @@ PLAY = """async () => {
   F.act('qcancel:' + F.keepOf(0).id + ',' + q0); if (F.keepOf(0).q.length !== q0) out.push('a slot tap did not cancel the villager');
   tap('[data-act="move:wood"]'); if (!F.G.units.some(u => u.owner === 0 && u.kind === 'vil' && u.job === 'wood')) out.push('+ under Wood put nobody on wood');
   
-  // the hold (Albert, Nov 2, 15:35): a tap on open ground shows "Hold to launch attack" and sends nobody; a double tap opens its Here card;
+  // the hold (Albert, Nov 2, 15:35): a tap on open ground shows "Hold to launch attack" and sends nobody; a double tap opens nothing;
   // a hold on the ground fills the ring and at full every soldier goes there; let go first and nobody goes; a hold on an enemy sends them at it
   { F.act('close'); G.fogOn = false; let p = null; for (let y = 260; y < 500 && !p; y += 23) for (let x = 60; x < 330 && !p; x += 23) if (F.hitAt(x, y).t === 'ground') p = [x, y];
     const spot = F.hitAt(...p).e; F.tapAt(...p); if (!G.hint || G.hint.w !== F.HOLD_WORD.attack) out.push('a tap on the ground did not show "Hold to launch attack"'); if (G.card) out.push('a tap on the ground opened a card');
-    F.tapAt(...p); if (!G.card || G.card.type !== 'ground' || Math.abs(G.card.x - spot.x) > 1) out.push('a double tap on the ground did not open the Here card for the spot'); F.act('close');
+    F.tapAt(...p); if (G.card || G.hint) out.push('a double tap on the ground opened a card or left the words showing (the Here card is cut)');
     const k = F.keepOf(0), S = [0, 1, 2].map((i) => F.addUnit(0, 'spear', k.x + 40 + i * 8, k.y + 40)), e = F.addUnit(1, 'spear', spot.x, spot.y); G.rel[0][1] = G.rel[1][0] = 'war';
     const o0 = JSON.stringify(G.ords || {}); F.launchAt(F.hitAt(...p)); F.cancelLaunch(); if (JSON.stringify(G.ords || {}) !== o0) out.push('letting go before the ring was full still sent soldiers');
     F.launchAt(F.hitAt(F.SX(e.x), F.SY(e.y) - 6 * F.cam.z)); F.fireLaunch(); if (!S.every((u) => u.focus === e)) out.push('a full hold on an enemy did not send every soldier at it');
@@ -196,7 +193,7 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
       F.hudAbort(0); for (const f of foes) f.hp = 0; run(3); if (G.msn[0]) bad.push('war room: Abort left the mission'); }
     // a squad (Build 70: built on its card, by kind): two Riders set with + fill from the chariots at home; Go sends it, the squad at home and ready, and Abort calls it back
     G.P[0].techs.add('command'); F.fxDirty(); F.sqPlan(0, 'horse', 1); F.sqPlan(0, 'horse', 1); run(2); if (F.sqUnits(0).length !== 2) bad.push('squad: the plan did not fill (' + F.sqUnits(0).length + ')');
-    G.hud.h = { t: 'ground', e: { x: home.x + 200, y: home.y + 60 } }; F.act('wfire'); if (!G.msn[0] || G.msn[0].name !== F.BN[0] || G.msn[0].n0 !== 2) bad.push('squad: Go did not send the squad that was ready'); F.act('wabort'); if (G.msn[0]) bad.push('squad: Abort left its mission');
+    G.hud.h = { t: 'ground', e: { x: home.x + 200, y: home.y + 60 } }; F.act('wfire'); if (!G.msn[0] || G.msn[0].name !== F.BN[0] || G.msn[0].n0 !== 2) bad.push('squad: Attack did not send the squad that was ready'); F.act('whome'); if (G.msn[0]) bad.push('squad: Home (Attack held) left its mission');
     F.hudPage('jobs'); G.P[0].techs.delete('command'); F.fxDirty(); for (let i = 0; i < 4; i++) G.msn[i] = null; G.bnPlan[0] = {}; }
   // emergencies (Build 70, four orders): Town square gathers everyone round the Town Center and Stop sends the villagers back to their work;
   // All hands: villagers take cover in the sturdiest building first, soldiers garrison; Stop sends the villagers back and the soldiers stay

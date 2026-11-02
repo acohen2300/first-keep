@@ -752,16 +752,14 @@ const ROW_WORD = {
 	train: 'Train',
 	people: 'People',
 	build: 'Build',
-	target: 'Target',
 	home: 'Home',
 	orders: 'Orders',
-	nosq: 'No squad',
-	new: 'New',
+	attack: 'Attack',
+	squad: 'Squad',
 	army: 'The army',
-	fight: 'fighting',
+	pace: ['slow', 'medium', 'fast'], // a squad's pace, from its slowest member (paceWord)
 	emg: 'Alarm', // the red button: the alarm you raise (Albert, Nov 2: Emergency was too wide)
 	emgW: [['Work', 'all clear'], ['Gather', 'at home'], ['Garrison', 'all in'], ['Shelter', 'hide']], // the Alarm page: each order's word and what it does, in the row's order (Albert, Nov 2: Age of Empires' Town Bell and Back to Work)
-	pace: ['slow', 'medium', 'fast'], // a squad's pace under it, from its slowest member (paceWord)
 };
 // a research step's why: its own key first ('tech:' + id) where a unit shares its id (F4: one WHY.legion served both)
 const techWhy = (id) => WHY['tech:' + id] ?? WHY[id];

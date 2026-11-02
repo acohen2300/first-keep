@@ -278,12 +278,22 @@ cv.addEventListener(
 	{ passive: false },
 );
 ['gesturestart', 'gesturechange', 'gestureend'].forEach((t) => document.addEventListener(t, (e) => e.preventDefault()));
+let miniHold = 0;
 mini.addEventListener('pointerdown', (e) => {
 	e.stopPropagation();
 	if (G) G.follow = false;
-	const r = mini.getBoundingClientRect();
-	camGo(((e.clientX - r.left) / r.width) * MAP, ((e.clientY - r.top) / r.height) * MAP);
+	const r = mini.getBoundingClientRect(),
+		x = ((e.clientX - r.left) / r.width) * MAP,
+		y = ((e.clientY - r.top) / r.height) * MAP;
+	camGo(x, y);
+	clearTimeout(miniHold);
+	miniHold = setTimeout(() => launchAt({ t: 'ground', e: { x, y } }), HOLD_MS); // held on the small map: the army is launched there (the ring grows at the spot, now in view)
 });
+for (const ev of ['pointerup', 'pointercancel', 'pointerleave'])
+	mini.addEventListener(ev, () => {
+		clearTimeout(miniHold);
+		cancelLaunch();
+	});
 // what is under the finger: a building (they have height), a find, a unit, a resource, else the ground
 function hitAt(sx, sy) {
 	const z = cam.z;
@@ -349,10 +359,8 @@ const cardFor = (h) =>
 			? { type: 'find', id: h.e.id }
 			: h.t === 'unit'
 				? { type: 'unit', id: h.e.id }
-				: h.t === 'ground'
-					? { type: 'ground', x: h.e.x, y: h.e.y }
-					: { type: 'node', id: h.e.id };
-// One rule for the finger (Albert, Build 40; Nov 2): a tap picks a unit, a double tap opens its card (the ground's too), a hold does more (on yours, picks and keeps picking; on the ground or an enemy, the attack's ring; held and dragged, a box). Buildings and places open on one tap.
+				: { type: 'node', id: h.e.id };
+// One rule for the finger (Albert, Build 40; Nov 2): a tap picks a unit, a double tap opens its card, a hold does more (on yours, picks and keeps picking; on the ground or an enemy, the attack's ring; held and dragged, a box). Buildings and places open on one tap.
 // With one or more of yours picked, a tap on anything else is the obvious order, without a menu: attack, hunt, gather, build, mend, walk.
 // The order goes at once (Build 40 reviews: a waiting order reads as lag); a second tap on the same thing within a blink opens its card, the order already given.
 let lastTap = { key: '', t: 0 };
@@ -370,6 +378,8 @@ function tapAt(sx, sy) {
 		dbl = key === lastTap.key && now - lastTap.t < DBL_MS && (key !== 'ground' || hyp(sx - lastTap.sx, sy - lastTap.sy) < 26);
 	lastTap = { key, t: now, sx, sy }; // a double tap on the ground opens the Here card for that spot (Albert, Nov 2), as on anything else
 	if (dbl) {
+		G.hint = null; // the first tap's words go
+		if (h.t === 'ground') return; // the ground has no card (the Here card is cut, Nov 2)
 		setPick([]);
 		openCard(cardFor(h));
 		return;

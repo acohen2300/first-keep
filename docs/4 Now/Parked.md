@@ -131,3 +131,8 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 ## Left out of the colour levels (Nov 2) [2026-11-02 12:45]
 - The two see-through panels (the War page's steel at 84%, the end card's brown at 90%) are glass, not a level; one number for both would change the War page's look. [2026-11-02 12:45]
 - The map's own colours stay out of the index (EXCEPTIONS #11): the ground (#20301c), the ripple's gold (#ffd35e, a canvas paint), the night's canvas colours in 37-events. [2026-11-02 12:45]
+
+## The War Director and after (Albert, Nov 2, 16:36 to 16:50) [2026-11-02 16:56]
+- Battle plans: missions, orders and squads as plans that play out; rehearsals on a life-size mock screen. The next layer after the Director. [2026-11-02 16:56]
+- Fog that drifts with the wind on the small map (Albert: "maybe too much"). [2026-11-02 16:56]
+

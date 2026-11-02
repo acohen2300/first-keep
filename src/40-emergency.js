@@ -164,24 +164,3 @@ function emgStop() {
 	G.emg = null;
 	say('Back to work.', 'good', TOAST.short);
 }
-// the page of the row (Albert, Nov 2): the four orders, each an icon with its word and what it does under it, and what is coming beside them
-// (tap it to look); ✕ goes back to the page you came from. The order on is gold, Garrison red. The map stays in sight: no card
-ROWS.emg = () => {
-	const I = G.incoming,
-		k = keepOf(0),
-		V = unitsOf(0, 'vil').length,
-		on = (kind) => (G.emg && G.emg.kind === kind ? 'on' : ''),
-		W = ROW_WORD.emgW;
-	return (
-		pic('emgstop', ICON.stop, W[0][0], G.emg ? 'go' : 'dis') +
-		pic('emg:square', ICON.home, W[1][0], on('square')) +
-		pic('emg:hands', ICON.sword, W[2][0], on('hands') || 'warn') +
-		pic('emg:shelter', ICON.shield, W[3][0], V ? on('shelter') : 'dis') +
-		(I
-			? info(`${I.n} ${I.what}`, `${k ? dirOf(k, I) + ' · ' : ''}${clock(I.eta)}`, 's2', `jump:${Math.round(I.x)},${Math.round(I.y)}`)
-			: info('Nothing coming', 'no attack', 's2')) +
-		W.map((w) => info('', w[1])).join('') +
-		info('', '') +
-		sym('emgclose', ICON.close, '', 'Back to the page you came from')
-	);
-};

@@ -111,7 +111,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 #homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}
 /* the cycle button and Emergency: a slot each, on their own rank above the row, slot 1 and slot 6 (MENU-SPEC §6; cold review of v70: Emergency
    was 44 wide a rank higher, with no word). Emergency steps aside while any card is open, where it would sit over the card's buttons */
-#hudB,#emgB{width:calc((100% - 7 * var(--gap)) / 6)}#hudB .dots{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);display:flex;justify-content:center;gap:5px}#hudB .dots i{width:6px;height:6px;border-radius:50%;background:var(--white-faint)}#hudB .dots .at{background:var(--ring-w)}   /* the page dots (Albert, Nov 2) */#hudB{left:var(--gap)}#emgB{right:var(--gap)}#stage:has(#card:not([hidden])) #emgB{display:none}
+#hudB,#emgB{width:calc((100% - 7 * var(--gap)) / 6)}#hudB .dots{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);display:flex;justify-content:center;gap:5px}#hudB .dots i{width:6px;height:6px;border-radius:50%;background:var(--white-faint)}#hudB .dots .at{background:var(--ring-w)}#orders.pg-war~#mini{display:none}   /* the page dots (Albert, Nov 2) */#hudB{left:var(--gap)}#emgB{right:var(--gap)}#stage:has(#card:not([hidden])) #emgB{display:none}
 #stage.busy :is(#hudB,#homeB,#emgB),#stage.picking #homeB{display:none}
 #place,#pickbar{position:absolute;z-index:var(--z-float);left:var(--gap);right:var(--gap);bottom:calc(var(--ob) + var(--gap));box-sizing:border-box;display:flex;gap:var(--gap);padding:var(--gap);background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o)}
 #place{justify-content:space-between;align-items:center;padding-left:10px}#place span{flex:1;min-width:0;line-height:1.25}#place button{padding:0 12px}
@@ -124,7 +124,11 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 #orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--gap) calc(env(safe-area-inset-bottom,0px) + var(--gap));pointer-events:none}
 #row{pointer-events:auto}#row .info :is(b,small){white-space:nowrap}
 #row button{box-shadow:var(--shade)}   /* no panel behind the row on any page (Albert, Nov 2): the map shows between the slots */
-.pg-war #row button,.pg-train #row button{background:var(--steel-2);border-color:var(--steel-3)}#emgB{border-color:var(--ring-r)}   /* the Emergency button red, always (Albert, Nov 2); it breathes while something is coming */
+.pg-war #row button{background:var(--steel-1);border-color:var(--steel-3)}.pg-war #row :is(.wd,.gl,.c){color:var(--white-dim)}#emgB{border-color:var(--ring-r)}   /* the battle station (Albert, Nov 2): muted steel ends, the words dim; the Alarm button red, always */
+.pg-war #row .midb{grid-column:span 4;grid-row:span 2;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--steel-3);border:1px solid var(--ring-w);border-radius:var(--rad-o);overflow:hidden}   /* the middle: one joined block, thin dividers, a white edge */
+.pg-war #row .midb>button{background:var(--steel-2);border:0;border-radius:0;box-shadow:none}.pg-war #row .midb :is(.wd,.gl,.c){color:var(--ring-w)}
+.pg-war #row .midb.map{display:flex;align-items:center;justify-content:center;background:var(--steel-1)}.pg-war #row .midb.map>canvas{position:static;height:calc(2 * var(--slot) + var(--gap) - 2px);width:auto;border:0;border-radius:0;background:none}
+.pg-war #row .cell.hit{--rc:var(--ring-r);border-color:var(--rc);box-shadow:inset 0 0 0 1px var(--rc)}   /* the station sets no state class (EXCEPTIONS); a tap flashes red and snaps off */
 /* a slot of icon and word (the row, the cycle button, a card's rank): the picture at 18 with its number at 12 beside it, the word at 12 in
    Cream 2 under it; a symbol alone at 24 */
 .cell .top{position:absolute;left:0;right:0;top:13px;transform:translateY(-50%);display:flex;justify-content:center;align-items:center;gap:4px}

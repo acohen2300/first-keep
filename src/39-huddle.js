@@ -13,7 +13,7 @@ const HUD = {
 	gap: 8, // reinforcements arriving within this many seconds of each other are one wave
 	waves: 3,
 };
-const PAGES = ['jobs', 'war', 'train']; // one button turns them, the same for everyone (Build 64; Albert, Oct 31: Jobs, War, Train)
+const PAGES = ['jobs', 'war']; // one button turns them: Jobs and the battle station (Albert, Nov 2)
 const mUnits = (m) => G.units.filter((u) => u.owner === 0 && u.ord === m.ord && u.hp > 0);
 const sqUnits = (i) => armyOf(0).filter((u) => u.bn === i && u.kind !== 'spy');
 const sqOut = (i) => G.msn[i] && !G.msn[i].end; // the squad is out on a mission
@@ -36,7 +36,7 @@ function chance(S, foes) {
 }
 const dpsOf = (L) => L.reduce((s, v) => s + dmgOf(v) / (UNIT[v.kind].cd || 1.5), 0);
 const wxWord = () => (G.wx !== 'clear' && WEATHER[G.wx] ? WEATHER[G.wx].name : season().name);
-// a squad's pace in a word, from its slowest member (an elephant makes it slow, horse alone fast): what the card and the tile say (Albert, Build 63)
+// a squad's pace in a word, from its slowest member (an elephant makes it slow, horse alone fast): what the squad card says (Albert, Build 63)
 function paceWord(S) {
 	if (!S.length) return '';
 	const v = Math.min(...S.map((u) => paceOf(u, 1)));
@@ -46,11 +46,9 @@ function paceWord(S) {
 function hudPage(page) {
 	const H = G.hud;
 	H.page = page;
-	H.aim = page === 'war' || page === 'train'; // War and Train put the crosshair up: a tap on the map moves it
+	H.aim = page === 'war'; // the station puts the crosshair up: a tap on the map moves it
 	if (H.aim) {
-		H.mode = page === 'train' ? 'rally' : 'war';
 		H.aimT = performance.now();
-		if (page === 'train' && G.rally0) H.h = { t: 'ground', e: { x: G.rally0.x, y: G.rally0.y } };
 		if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
 		closeCard();
 	}
@@ -305,50 +303,47 @@ function jobsPage() {
 	}
 	return top + low;
 }
-// War, the HUD: the target over Home; each squad with its size and its word, its time to the target and its pace under it; Go over Abort.
-// A squad marching wears the working ring (the share of its march still to go), fighting the red one, at home and ready the blue; an empty
-// squad is a faint New; before Battalions the squads are locked, and the army's one mission shows in the first slot.
-function warPage() {
+// The battle station (Albert, Nov 2, his drawings: "the controller"): one page in place of War and Train, the row's 6 x 2 as three 2 x 2
+// blocks. Left, the Alarm's four orders (40-emergency). Middle, one joined block that changes: the small map (tap: the camera goes there;
+// hold: the army is launched there), or the four squads (tap: send it to the crosshair; hold: its card), or the four kinds to train (tap:
+// one more; hold: one fewer). Right: Train and Squad turn the middle, Orders sets where new soldiers go (the crosshair), Attack sends every
+// ready squad there (hold: everyone home). Plain steel, no state rings (EXCEPTIONS: a battle station is all live); a tap flashes red and
+// snaps off (the click handler, 33-verbs). The crosshair is up while it is open: a tap on the map moves it.
+const SMID = { map: 'map', squad: 'squad', train: 'train' }; // what the station's middle shows
+function stationPage() {
 	const H = G.hud,
-		cmd = hasCmd();
-	let top = pic('waim', ICON.aim, ROW_WORD.target, H.moved ? 'on' : '', null, ' aria-label="Target: the crosshair to the middle of the screen"'),
-		low = pic('whome', ICON.home, ROW_WORD.home, '', null, ' aria-label="Everyone home"');
-	BN.forEach((nm, i) => {
-		const m = sqOut(i) ? G.msn[i] : null,
-			S = m ? mUnits(m) : cmd ? sqUnits(i) : [],
-			fight = !!m && m.st === 'act',
-			ready = !m && sqFree(i).length > 0;
-		if (!m && !cmd) {
-			top += pic(`wsq:${i}`, ICON.squad, nm, 'dis');
-			low += info('', '');
-		} else if (!m && !S.length && !Object.keys(G.bnPlan[i]).length) {
-			top += pic(`wsq:${i}`, ICON.plus, ROW_WORD.new, 'empty', null, ` aria-label="${nm}: a new squad"`);
-			low += info('', '');
-		} else {
-			top += pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, fight ? 'warn' : m ? 'work' : ready ? 'go' : '', S.length, m && !fight ? ` style="${toGo((m.eta ?? m.due - G.t) / Math.max(1, m.due - m.t))}"` : '');
-			low += info(fight ? '—' : m ? clock(m.eta ?? m.due - G.t) : ready ? clock(hudEta(i)) : '—', fight ? ROW_WORD.fight : paceWord(S));
-		}
-	});
-	return top + sym('wfire', ICON.ok, H.h && free().length ? 'go' : 'dis', 'Go') + low + sym('wabort', ICON.close, '', 'Abort');
+		mid = H.mid || SMID.map,
+		V = unitsOf(0, 'vil').length,
+		on = (kind) => (G.emg && G.emg.kind === kind ? '●' : null),
+		W = ROW_WORD.emgW;
+	let h =
+		pic('emgstop', ICON.stop, W[0][0], G.emg ? '' : 'dis') +
+		pic('emg:square', ICON.home, W[1][0], '', on('square')) +
+		`<div class="midb${mid === SMID.map ? ' map' : ''}">` +
+		(mid === SMID.squad
+			? BN.map((nm, i) => {
+					const m = sqOut(i) ? G.msn[i] : null,
+						S = m ? mUnits(m) : hasCmd() ? sqUnits(i) : [];
+					return pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, hasCmd() || m ? '' : 'dis', S.length, ` data-hold="sqcard:${i}"`);
+				}).join('')
+			: mid === SMID.train
+				? CLS.map((c, t) => {
+						const k = kindOf(t),
+							at = k ? readyAt(0, UNIT[k]) : [],
+							n = at.reduce((s, b) => s + b.q.filter((j) => j.kind === k).length, 0);
+						return pic(`tq:${t},+`, ICON.cls[c[0]], c[1], at.length ? '' : 'dis', at.length ? n : null, ` data-hold="tq:${t},-"`);
+					}).join('')
+				: '') +
+		'</div>' +
+		pic('wmid:train', ICON.mil, ROW_WORD.train) +
+		pic('wmid:squad', ICON.squad, ROW_WORD.squad) +
+		pic('emg:hands', ICON.sword, W[2][0], '', on('hands')) +
+		pic('emg:shelter', ICON.shield, W[3][0], V ? '' : 'dis', on('shelter')) +
+		pic('tok', ICON.aim, ROW_WORD.orders, '') +
+		pic('wfire', ICON.sword, ROW_WORD.attack, H.h && free().length ? '' : 'dis', null, ' data-hold="whome"');
+	return h;
 }
-// Train: the orders (where new soldiers go) over the squad they join; the four kinds, each with how many wait in line (the working ring on
-// the one in training) and − + under it; ✓ sets the orders on the crosshair, ✕ leaves
-function trainPage() {
-	const H = G.hud,
-		rs = G.recruitSq;
-	let top = pic('torders', ICON.aim, ROW_WORD.orders, H.aim ? 'on' : '', null, ' aria-label="Orders: where new soldiers go"'),
-		low = pic('tsq', ICON.squad, rs === null || rs === undefined ? ROW_WORD.nosq : BN[rs], hasCmd() ? '' : 'dis', null, ' aria-label="Which squad new soldiers join"');
-	CLS.forEach((c, t) => {
-		const k = kindOf(t),
-			at = k ? readyAt(0, UNIT[k]) : [],
-			n = at.reduce((s, b) => s + b.q.filter((j) => j.kind === k).length, 0),
-			now = at.map((b) => b.q[0]).find((j) => j && j.kind === k);
-		top += pic(`bldgo:${c[2]}`, ICON.cls[c[0]], c[1], !at.length ? 'dis' : now ? 'work' : '', at.length ? n : null, now ? ` style="${toGo(now.left / now.total)}"` : '');
-		low += sym(`tq:${t},-`, ICON.minus, n ? 'h' : 'h dis', `One fewer ${c[3]}`) + sym(`tq:${t},+`, ICON.plus, k && !trainWhy(0, k) ? 'h' : 'h dis', `One more ${c[3]}`);
-	});
-	return top + sym('tok', ICON.ok, H.aim ? 'go' : 'dis', 'Set the orders on the crosshair') + low + sym('tcancel', ICON.close, '', 'Cancel');
-}
-const ROWS = { jobs: jobsPage, war: warPage, train: trainPage };
+const ROWS = { jobs: jobsPage, war: stationPage };
 // the row on show, patched in place (a button under a finger stays the same button); the cycle button above slot 1 wears the page's name
 // and its tint
 function rowUI() {
@@ -361,6 +356,14 @@ function rowUI() {
 		patchHTML(el, h);
 	}
 	$('emgB').classList.toggle('warn', !!G.incoming); // the red button breathes while something is coming
+	const mb = el.querySelector('.midb.map');
+	if (mb && mini.parentNode !== mb) {
+		mb.appendChild(mini);
+		mini.hidden = false;
+	} else if (!mb && mini.parentNode !== $('stage')) {
+		$('stage').appendChild(mini);
+		mini.hidden = !SET.mini;
+	} // the small map lives in the station's middle while it is up, whether or not the corner one is on
 	if (chip.pg !== page) {
 		chip.pg = page;
 		$('orders').className = 'pg-' + page;
@@ -379,7 +382,7 @@ function drawReticle() {
 		L = performance.now() - (H.firedT || -1e9) < timeOf('settle') ? 1 : 0,
 		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
 		t = still() ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
-		eta = H.mode === 'rally' ? 0 : hudEta(),
+		eta = hudEta(),
 		line = (a, b, c, d) => (ctx.moveTo(x + a, y + b), ctx.lineTo(x + c, y + d));
 	ctx.save();
 	ctx.strokeStyle = ctx.fillStyle = L ? codeOf('g') : aimColor();

@@ -192,13 +192,18 @@ JS = r"""() => {
     H.prog = 0.4; F.ui(true); if (!$('#card .tb h3').classList.contains('work')) bad.push('the title box: a House going up does not wear the working ring');
     H.prog = 1; H.hp = F.BLD.house.hp; F.closeCard(); }
   } catch (e) { bad.push('the title box: the check could not run: ' + e.message); }
-  // Emergency page (Albert, Nov 2): the red button turns the row to the four orders, the map in sight; again, back to the page it came from
+  // the battle station (Albert, Nov 2): the red Alarm button turns the row to the station, the four orders on its left, the small map in its
+  // middle, Train · Squad / Orders · Attack on its right; Train and Squad turn the middle to their four and back; no state ring on it
   try {
-  { F.closeCard(); F.hudPage('war'); F.ui(true); $('#emgB').click(); F.ui(true);
-    if (G.hud.page !== 'emg' || !$('#row [data-act="emg:square"]') || G.card) bad.push('Emergency page: the red button did not turn the row to the four orders');
-    if (getComputedStyle($('#emgB')).borderTopColor !== getComputedStyle(document.documentElement).getPropertyValue('--ring-r').trim().replace(/^#(..)(..)(..)$/, (m, r, g, b) => `rgb(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)})`)) bad.push('Emergency page: the Emergency button is not red');
-    $('#emgB').click(); F.ui(true); if (G.hud.page !== 'war') bad.push(`Emergency page: the red button again went to ${G.hud.page}, not back to War`); F.hudPage('jobs'); F.ui(true); }
-  } catch (e) { bad.push('Emergency page: the check could not run: ' + e.message); }
+  { F.closeCard(); F.hudPage('jobs'); F.ui(true); $('#emgB').click(); F.ui(true);
+    if (G.hud.page !== 'war' || !$('#row [data-act="emg:square"]') || !$('#row .midb.map canvas') || !$('#row [data-act="wfire"]') || G.card) bad.push('the station: the Alarm button did not turn the row to the station (orders, the small map, Attack)');
+    F.act('wmid:train'); F.ui(true); if (!$('#row .midb [data-act="tq:0,+"]') || $('#row .midb [data-act="tq:0,+"]').dataset.hold !== 'tq:0,-') bad.push('the station: Train did not turn the middle to the four kinds, a hold one fewer');
+    F.act('wmid:train'); F.ui(true); if (!$('#row .midb.map canvas')) bad.push('the station: Train again did not bring the small map back');
+    F.act('wmid:squad'); F.ui(true); if (!$('#row .midb [data-act="wsq:0"]')) bad.push('the station: Squad did not turn the middle to the four squads'); F.act('wmid:squad'); F.ui(true);
+    if ($('#row .go, #row .on, #row .warn, #row .work')) bad.push('the station wears a state ring: ' + $('#row .go, #row .on, #row .warn, #row .work').outerHTML.slice(0, 80));
+    if (getComputedStyle($('#emgB')).borderTopColor !== getComputedStyle(document.documentElement).getPropertyValue('--ring-r').trim().replace(/^#(..)(..)(..)$/, (m, r, g, b) => `rgb(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)})`)) bad.push('the station: the Alarm button is not red');
+    $('#emgB').click(); F.ui(true); if (G.hud.page !== 'jobs') bad.push(`the station: the Alarm button again went to ${G.hud.page}, not back to Jobs`); if ($('#mini').parentNode !== $('#stage')) bad.push('the station: the small map did not go back to its corner'); F.ui(true); }
+  } catch (e) { bad.push('the station: the check could not run: ' + e.message); }
   // T2 (Albert, Nov 2): every Build tab is two slots a building, three a rank, a short rank filled with empty places
   try {
   for (const m of F.MENUS) { F.openCard({ type: 'menu', id: m.id }); F.ui(true);

@@ -344,3 +344,11 @@ Checks on main before publishing:
 - Cut: `#qa` and its styles, `QA`, `showQuick`, `quickStep`, `hideQuick`, the verbs `qsword`, `qall`, `qhere`, `qclose`, `holdAt`, the red ring under the quick action's enemy. The cavalry's `CHARGE` kept its name; the hold is `LAUNCH`. [2026-11-02 15:41]
 - Tests: gate the hold (a tap teaches, a double tap opens the Here card, letting go sends nobody, a full hold on an enemy sends every soldier at it), QUICK measures the ring. Plants: four new, caught. Gate passes. [2026-11-02 15:41]
 
+## Build 80 preview 27 (the battle station) [2026-11-02 16:56]
+- Albert, Nov 2, 16:13 to 16:36 (his drawings; "this is gold"): the War, Train and Alarm pages become one, the controller: the Alarm's orders left, the small map in the middle (tap: go there; hold: launch the army there), Train · Squad / Orders · Attack right, with Train and Squad turning the middle to their four. Muted steel, no state rings, a red flash on a tap. [2026-11-02 16:56]
+- The small map moves into the middle while the station is up (one canvas, one home), and back to its corner after; it draws whether or not the corner map is on. [2026-11-02 16:56]
+- Cut: `warPage`, `trainPage`, `ROWS.emg`, the Train page's squad picker (`tsq`), ✓ ✕ (`tcancel`, `wabort`, `waim`, `torders`), the Here card (`CARDS.ground`, `rally`, `spygo`; a double tap on the ground opens nothing), `H.mode` (rally). Found: `hdel` (Abort on a squad's card) had lost its verb in the cleanup; the gate caught it. [2026-11-02 16:56]
+- Added: `data-hold`, one way for any button to carry a second verb on a hold (the station's one fewer, a squad's card, everyone home), on the tech tip's own timer. [2026-11-02 16:56]
+- Tests: `tests/cards.py` the station (the Alarm button in and back, Train and Squad turning the middle, no state ring, the small map back in its corner); gate the cycle button Jobs ↔ station, Attack and Home, a double tap on the ground opens nothing; `tests/saves.py` Garrison's dot. Plants: four. [2026-11-02 16:56]
+- Parked (Albert, 16:50): fog that drifts with the wind on the small map. [2026-11-02 16:56]
+

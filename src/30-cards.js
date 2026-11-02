@@ -343,25 +343,6 @@ const CARDS = {
 			`<p>${B.desc}</p><p>Unlocks in the ${AGES[B.age].name} age. Advance at your Town Center.</p>`
 		);
 	},
-	ground(c) {
-		// ☰ on the quick action: the rally point, the scout, the spy
-		const at = `${Math.round(c.x)},${Math.round(c.y)}`;
-		return (
-			title('Here', coord(c.x, c.y)) +
-			list(
-				[
-					btn(`rally:${at}`, 'New soldiers here', G.rally0 ? 'set: tap to clear' : 'off'),
-					unitsOf(0, 'scout').length ? btn(`scoutgo:${at}`, 'Send the scout', '') : '',
-					unitsOf(0, 'spy').length ? btn(`spygo:${at}`, 'Send a spy here', 'to look') : '',
-				].filter(Boolean),
-			) +
-			fold(
-				'about',
-				'About',
-				`<p>Soldiers you send hold the spot and fight what comes. Drag the map to look around; tap the small map to jump.</p>`,
-			)
-		);
-	},
 	box(c) {
 		const left = G.nodes.filter((n) => n.kind === 'tree' && n.amt > 0 && inBox(n, c.r)).length;
 		if (!left) return null;

@@ -437,23 +437,12 @@ const PLAY = {
 		emgStop();
 	},
 	emgpage() {
-		if (G.hud.page === 'emg') return hudPage(G.hud.from || 'jobs');
-		G.hud.from = G.hud.page;
-		closeCard();
-		hudPage('emg');
+		hudPage(G.hud.page === 'war' ? 'jobs' : 'war');
 		feel('tick');
-	}, // the red button turns the row to Emergency; again, back
-	emgclose() {
-		hudPage(G.hud.from || 'jobs');
-	},
+	}, // the red button: the battle station, with the Alarm's orders on its left; again, Jobs
 	pagecycle() {
 		pageCycle();
-	}, // the cycle button above slot 1: Jobs, War, Train (Build 70)
-	tsq() {
-		const n = G.recruitSq;
-		G.recruitSq = n === null || n === undefined ? 0 : n + 1 >= BNS ? null : n + 1;
-		feel('tick');
-	}, // which squad new soldiers join: none, Squad A … Squad D
+	}, // the cycle button above slot 1: Jobs, the battle station (Build 70; Nov 2)
 	tq(a) {
 		const [t, d] = a.split(','),
 			k = kindOf(Number(t));
@@ -467,30 +456,16 @@ const PLAY = {
 	tok() {
 		setRally();
 	},
-	tcancel() {
-		G.hud.aim = false;
-		hudPage('jobs');
-	},
 	intent(a) {
 		const [i, k] = a.split(',').map(Number);
 		G.bnIntent[i] = k;
 		feel('tick');
 	}, // a squad's intent: one of three, chosen
-	waim() {
+	wmid(a) {
 		const H = G.hud;
-		H.aim = true;
-		H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
-		H.moved = false;
+		H.mid = H.mid === a ? SMID.map : a;
 		feel('tick');
-	}, // the crosshair to the middle of the screen
-	torders() {
-		const H = G.hud;
-		H.aim = true;
-		H.mode = 'rally';
-		if (G.rally0) H.h = { t: 'ground', e: { x: G.rally0.x, y: G.rally0.y } };
-		say('Tap where new soldiers should go, then ✓.', '', TOAST.mid);
-		feel('tick');
-	},
+	}, // Train or Squad turns the station's middle to its four; again, back to the small map
 	sqpk(a) {
 		const [i, t, d] = a.split(',');
 		sqPlan(Number(i), CLS[t][0], d === '+' ? 1 : -1);
@@ -507,21 +482,23 @@ const PLAY = {
 	}, // Save ✓: the changes stand (they took at once), and back
 	whome() {
 		hudHome();
-	},
+	}, // hold Attack: everyone home, every mission off
 	wsq(a) {
+		const i = Number(a);
+		if (!hasCmd()) return say('Squads come with Battalions.', '', TOAST.short);
+		hudFire(i);
+	}, // a squad on the station: tap, and it marches on the crosshair
+	sqcard(a) {
 		const i = Number(a);
 		if (!hasCmd() && !sqOut(i)) return say('Squads come with Battalions.', '', TOAST.short);
 		openCard({ type: 'squad', i });
-	}, // a squad's card: built at home, watched on its mission; an empty squad opens as a new one
+	}, // hold a squad: its card, built at home, watched on its mission; an empty squad opens as a new one
 	wfire() {
 		hudGo();
 	},
-	wabort() {
-		hudAbortAll();
-	}, // Abort: every mission out comes home
 	hdel(a) {
 		hudAbort(Number(a));
-	},
+	}, // Abort on a squad's card: they come home
 	hudrein(a) {
 		hudReinforce(Number(a));
 	},
@@ -887,10 +864,6 @@ const PLAY = {
 		}
 		closeCard();
 	},
-	rally(a) {
-		const [x, y] = a.split(',').map(Number);
-		G.rally0 = G.rally0 ? null : { x, y };
-	},
 	recall() {
 		sendHome(orderSet());
 		closeCard();
@@ -959,21 +932,6 @@ const PLAY = {
 		sp.state = 'sab';
 		sp.tid = b.id;
 		say('A spy slips away to sabotage it.', '', TOAST.mid);
-		closeCard();
-	},
-	spygo(a) {
-		const [x, y] = a.split(',').map(Number),
-			sp = unitsOf(0, 'spy')
-				.filter((u) => u.state !== 'sab')
-				.sort((p, q) => dist(p, { x, y }) - dist(q, { x, y }))[0];
-		if (!sp) {
-			say('You have no free spy.', '', TOAST.short);
-			return;
-		}
-		sp.state = 'goto';
-		sp.px = x;
-		sp.py = y;
-		say('A spy goes to look.', '', TOAST.short);
 		closeCard();
 	},
 	shrine(a) {
@@ -1067,14 +1025,15 @@ const lpStop = () => clearTimeout(lpT);
 document.addEventListener('pointerdown', (e) => {
 	lpStop();
 	lpDone = false;
-	const el = e.target.closest('[data-act^="tech:"]');
+	const el = e.target.closest('[data-act^="tech:"], [data-hold]');
 	if (el)
 		lpT = setTimeout(() => {
 			lpDone = true;
 			feel('snap');
+			if (el.dataset.hold) return act(el.dataset.hold); // a button's second verb, held (the station: one fewer, a squad's card, everyone home)
 			G.techTip = el.dataset.act.slice(5);
 			renderCard();
-		}, 450);
+		}, el.dataset.hold ? HOLD_MS : 450);
 }); // hold a research step: what it does, the number, the date, the weight and why, the cost
 for (const ev of ['pointerup', 'pointercancel', 'pointermove'])
 	document.addEventListener(ev, lpStop, { passive: true });
@@ -1106,6 +1065,10 @@ document.addEventListener('click', (e) => {
 	}
 	sndInit();
 	sfx('tap');
+	if (el.closest('#orders.pg-war')) {
+		el.classList.add('hit');
+		setTimeout(() => el.classList.remove('hit'), timeOf('quick'));
+	} // the station: a tap flashes red and snaps off (Albert, Nov 2)
 	const off = el.closest('.dis, .lock'); // the button, or the control it is part of (the slider's switch inside a locked slider)
 	tapCount(el.dataset.act, !!off);
 	cardTap = !!el.closest('#card'); // what it opens remembers this card (back)
