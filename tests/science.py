@@ -47,7 +47,7 @@ CHECKS = """() => { const F = window.__fk, out = [], near = (name, got, want, to
   { const G = F.G, c = G.clim, was = { ...c }, P = G.P[0], M = F.CLIMATE.mu, set = (ids) => { P.techs = new Set(ids); F.fxDirty(); };
     near('studs μ (Ichihara & Mizoguchi)', M.studs, 0.28, 1e-12); near('bare wet ice μ (Hsu et al. 2016)', M.ice0, 0.08, 1e-12);
     Object.assign(c, { T: -1, W: 0.2, snow: 0, ice: 1, mud: 0 }); const at = { x: 100, y: 100 }, foot = F.unitKeys('spear'), horse = F.unitKeys('chariot');
-    const want = (need, mu) => 1 / (1 + Math.exp(-(need - mu) / M.soft)), bare = F.iceMu(false), slip = (keys) => F.slipChance(at, F.needOf(keys), F.studded(0, keys));
+    const want = (need, mu) => 1 / (1 + Math.exp(-(need - mu) / M.soft)), bare = F.iceMu(false), slip = (keys) => F.slipChance(at, F.groundNeed(keys), F.studded(0, keys));
     set([]); near('a walker, bare boots', slip(foot), want(M.need.foot, bare), 1e-9);
     set(['crampons']); near('a walker with Crampons', slip(foot), want(M.need.foot, Math.max(bare, M.studs)), 1e-9); near('a horse with Crampons only', slip(horse), want(M.need.horse, bare), 1e-9);
     set(['horseshoes']); const h1 = slip(horse); near('a horse with Horseshoes', h1, want(M.need.horse, Math.max(bare, M.studs)), 1e-9);

@@ -687,6 +687,7 @@ function bestNode(u, job, seek, cm) {
 			continue; // your people work only what you have found (Build 60: under fog they set out for finds nobody had seen, into whatever stood there)
 		if (n.kind === 'farm') {
 			if (
+				u.wild ||
 				n.farm.owner !== u.owner ||
 				n.farm.prog < 1 ||
 				n.farm.hp <= 0 ||

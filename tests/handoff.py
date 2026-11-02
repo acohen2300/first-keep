@@ -291,6 +291,27 @@ PLANTS = [
   ('11-orders.js', 'const c = unitCost(o, k); // research discounts count (C16)', 'const c = UNIT[k].cost; // research discounts count (C16)', 'tests/text81.py', 'muster ignores research discounts (C16)', 'C16 muster'),
   ('11-orders.js', '> armyRoom(o)) return armyFull(o); // the same ceiling', "> ARMYMAX) return 'Army limit.'; // the same ceiling", 'tests/text81.py', 'hiring uses the wrong army limit (C16)', 'C16: hiring'),
   ('11-orders.js', 'const at = shortest(ready(o, T.at));', 'const at = ready(o, T.at)[0];', 'tests/text81.py', 'research waits at the first building (C16)', 'C16: research'),
+  # the computers batch (branch ai81, Nov 1): answer 10 by need, W6, plots, N6, N7, N8, N16a, D2 to D5; tests/ai.py
+  ('17-ai.js', 'for (const r of order.length ? order : RES) {', 'for (const r of RES) {', 'tests/ai.py', 'a waiting villager goes to the best rate, not the bottleneck', 'A10:'),
+  ('17-ai.js', 'famine = famineNear(p, plan),', 'famine = false,', 'tests/ai.py', 'no famine runway', 'W6:'),
+  ('17-ai.js', 'return plot > wild && (plot - wild) * T > sumCost(B.cost);', 'return plot > wild + 1;', 'tests/ai.py', 'a plot must beat the wild by a margin it never does', 'P1:'),
+  ('17-ai.js', 'return plot > wild && (plot - wild) * T', 'return true || plot > wild && (plot - wild) * T', 'tests/ai.py', 'a plot is built whatever the wild pays', 'P2:'),
+  ('17-ai.js', 'T = Math.min(timeLeft(), B.reserve', 'T = Math.min(Infinity, B.reserve', 'tests/ai.py', "a plot's payback ignores the time left", 'P3:'),
+  ('17-ai.js', "Math.max(...RES.map((r) => rateFrom(o, r, k))) * timeLeft() > sumCost(unitCost(o, 'vil'))", 'true', 'tests/ai.py', 'a villager is trained whatever its payback', 'N7: a villager trained'),
+  ('17-ai.js', '\t\tk.q.length < 2 &&\n\t\t(!saving', '\t\tk.q.length < 2 && vils.length < 26 &&\n\t\t(!saving', 'tests/ai.py', 'the flat villager ceiling is back', 'N7: 30 villagers'),
+  ('17-ai.js', '(peaceAll(p.id) ? PEACE.stand.keep : 1)', '(false ? PEACE.stand.keep : 1)', 'tests/ai.py', 'no peace mode', 'N8:'),
+  ('39-games.js', 'wealth: (p) => Math.round(p.gathered),', 'wealth: (p) => Math.round(p.gathered + Object.values(p.res).reduce((a, b) => a + b, 0)),', 'tests/ai.py', 'Wealth counts the stores again', 'N6: Wealth'),
+  ('16-sim-fight.js', 'warCredit(a.owner, t.owner, UNIT[t.kind].cost);', 'warCredit(a.owner, t.owner, { n: 1 });', 'tests/ai.py', 'War counts kills, not their cost', 'N6: War'),
+  ('39-games.js', 'well = ppl.filter((u) => !(u.sick > G.t)).length;', 'well = ppl.length;', 'tests/ai.py', 'Wellbeing ignores the sick', 'N6: Wellbeing'),
+  ('38-natives.js', 'if (lanchester(band / Math.max(1e-6, unitPower(v) + guard)) <= 0.5) continue;', ';', 'tests/ai.py', 'the raid ignores what it cannot beat', 'raided'),
+  ('38-natives.js', 'NATIVE.raidLoad * load', '0 * load', 'tests/ai.py', 'the raid ignores the load', 'the loaded villager'),
+  ('08-core.js', 'let x = rng() * w.reduce', 'let x = Math.random() * w.reduce', 'tests/ai.py', 'the weighted draw uses Math.random', 'seeded dice'),
+  ('17-ai.js', 'research(o, firstNeed(o, id) || id)', 'research(o, id)', 'tests/ai.py', 'research skips the step it waits on', 'D2:'),
+  ('36-economy.js', '\tif (saving) return;\n', '\n', 'tests/ai.py', "saving for an age, the computers' economy still buys", 'D3: saving'),
+  ('36-economy.js', 'p.res.g - ((A && A.cost.g) || 0) > 900', 'p.res.g > 900', 'tests/ai.py', 'a venture from gold the next age needs', 'D3: a venture'),
+  ('36-economy.js', 'setRoute(c, t, true, false)', 'setRoute(c, t, true, true)', 'tests/ai.py', 'computer caravans buy spice', 'spice'),
+  ('17-ai.js', 'short = Math.max(0, (cost[key] || 0) - (p.res[key] || 0));', 'short = (p.res[key] || 0) > 600 ? 0 : Math.max(0, (cost[key] || 0) - (p.res[key] || 0));', 'tests/ai.py', 'a store over 600 counts as not short', 'D4:'),
+  ('17-ai.js', '((p.ai.save && p.ai.save.age === p.age + 1) ||', '((false) ||', 'tests/ai.py', 'a save for an age resets under the mark', 'D5:'),
 ]
 
 def plant_check():

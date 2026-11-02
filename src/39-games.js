@@ -16,7 +16,7 @@ const PEACE = {
 		],
 	},
 	age: { truce: YEAR }, // the hidden age opens for every side once the whole board has kept the peace for one year
-	crown: { bld: 8, laurel: 5, people: 1 }, // the Wellbeing crown: people × health, plus each place of care or recreation, plus each laurel
+	crown: { bld: 8, laurel: 5, people: 1 }, // the Wellbeing crown: people × (1 − sick share), plus each place of care or recreation, plus each laurel
 	chron: 80, // lines kept in the chronicle
 };
 const CARE = ['hospital', 'temple', 'baths', 'theatre', 'tavern']; // what counts as care for the Wellbeing crown
@@ -83,7 +83,7 @@ function standDown(o, quiet) {
 	const p = G.P[o],
 		k = keepOf(o),
 		S = soldiersOf(o).filter((u) => u.state === 'home' && !u.inside),
-		keep = Math.ceil((o === 0 ? soldiersOf(0).length : armyCap(p)) * PEACE.stand.keep), // yours: half of what you have (Build 63: it was half the ceiling, 60, so nothing stood down)
+		keep = o === 0 ? Math.ceil(soldiersOf(0).length * PEACE.stand.keep) : armyAim(p), // yours: half of what you have (Build 63: it was half the ceiling, 60, so nothing stood down); a computer's: the army it keeps at peace (N8)
 		go = S.slice(keep);
 	if (!k || !go.length) return 0;
 	let n = 0;
@@ -107,14 +107,7 @@ function holdGames() {
 	if (L.length < 2) return;
 	const won = [];
 	for (const ev of PEACE.games.events) {
-		const w = L.map((p) => {
-			const v = ev.of(p.id);
-			return v * v;
-		});
-		let r = rng() * w.reduce((a, b) => a + b, 0),
-			i = 0;
-		while (i < L.length - 1 && r >= w[i]) r -= w[i++];
-		const p = L[i];
+		const p = L[roulette(L.map((p) => ev.of(p.id) ** 2))];
 		p.laurels = (p.laurels || 0) + 1;
 		won.push(`${p.id === 0 ? 'you' : p.name} ${ev.name}`);
 	}
@@ -129,25 +122,25 @@ function holdGames() {
 	celebrate(3, MID, MID);
 	if (mine) sfx('age');
 }
-// the three crowns and the overall: Wealth is all a side ever gathered and holds; War is its kills; Wellbeing is its people in health, its care and its laurels
+// the three crowns and the overall (N6, best practice of the genre's flow scores: 0 A.D.'s economy and military scores, StarCraft II's
+// resources killed). Wealth is all a side ever gathered, counted once (the stores were added on top); War is the cost value of the enemy
+// people and buildings it destroyed, animals not counted (warCredit, 16-sim-fight); Wellbeing is its people in health (the share not sick),
+// its places of care and its laurels
 function crownsOf() {
 	const L = G.P.filter((p) => p.id !== WILD),
 		val = {
-			wealth: (p) => Math.round(p.gathered + Object.values(p.res).reduce((a, b) => a + b, 0)),
-			war: (p) => p.kills || 0,
-			wellbeing: (p) =>
-				Math.round(
-					(p.alive
-						? G.units.filter((u) => u.owner === p.id && UNIT[u.kind].cls === 'civ').length *
-							PEACE.crown.people *
-							(p.health / 100)
-						: 0) +
-						(p.alive
-							? G.blds.filter((b) => b.owner === p.id && b.hp > 0 && b.prog >= 1 && CARE.includes(b.kind)).length *
-								PEACE.crown.bld
-							: 0) +
+			wealth: (p) => Math.round(p.gathered),
+			war: (p) => Math.round(p.war || 0),
+			wellbeing: (p) => {
+				if (!p.alive) return Math.round((p.laurels || 0) * PEACE.crown.laurel);
+				const ppl = G.units.filter((u) => u.owner === p.id && UNIT[u.kind].cls === 'civ'),
+					well = ppl.filter((u) => !(u.sick > G.t)).length; // people × (1 − sick share)
+				return Math.round(
+					well * PEACE.crown.people +
+						G.blds.filter((b) => b.owner === p.id && b.hp > 0 && b.prog >= 1 && CARE.includes(b.kind)).length * PEACE.crown.bld +
 						(p.laurels || 0) * PEACE.crown.laurel,
-				),
+				);
+			},
 		},
 		pts = Object.fromEntries(L.map((p) => [p.id, 0])),
 		out = {};
@@ -166,7 +159,7 @@ const CROWN_NAME = { wealth: 'Wealth', war: 'War', wellbeing: 'Wellbeing' };
 function crownsHTML() {
 	const C = crownsOf(),
 		nm = (id) => (id === 0 ? 'You' : G.P[id].name),
-		unit = { wealth: '', war: ' kills', wellbeing: '' };
+		unit = { wealth: '', war: '', wellbeing: '' };
 	let h = '<div class="crowns">';
 	for (const c of ['wealth', 'war', 'wellbeing']) {
 		const r = C[c][0];

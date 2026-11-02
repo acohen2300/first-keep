@@ -88,7 +88,7 @@ function hurt(o, a, t, base) {
 	t.hurtT = G.t;
 	if (a && t.hp <= 0 && !isB && a.st) {
 		a.st.kills++;
-		if (a.owner !== WILD && t.owner !== a.owner) G.P[a.owner].kills = (G.P[a.owner].kills || 0) + 1;
+		warCredit(a.owner, t.owner, UNIT[t.kind].cost); // an animal costs nothing, so it counts nothing
 		if (isSoldier(a)) a.mor = Math.min(1, a.mor + MORALE.kill);
 	}
 	const tg = o === WILD ? null : gangOf(t);
@@ -247,9 +247,15 @@ function plunder(to, got) {
 		sfx('coin');
 	}
 }
+// the War crown (N6): the cost value of an enemy's people or building destroyed, to the side that destroyed it; animals are not counted
+function warCredit(to, from, cost) {
+	if (to === from || to === WILD || !G.P[to]) return;
+	G.P[to].war = (G.P[to].war || 0) + sumCost(cost);
+}
 function plunderBld(b) {
 	const to = b.by;
 	b.by = undefined;
+	warCredit(to, b.owner, BLD[b.kind].cost);
 	if (to === b.owner || !G.P[to] || to === WILD) return;
 	if (b.kind === 'keep') G.P[b.owner].killer = to;
 	const got = {};

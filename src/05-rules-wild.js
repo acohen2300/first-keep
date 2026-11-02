@@ -107,6 +107,8 @@ const NATIVE = {
 	raidN: 2,
 	raidFrom: 600,
 	raidSecs: 45,
+	raidLoad: 2, // N16a: β, the pull of a load in transport, w = (1 + β·load / CARRY) / (1 + γ·guard) (38-natives natRaid)
+	raidGuard: 1, // γ, the push of an armed guard within GROUP_R, as a share of the band's strength
 	handover: 60,
 	handoverMen: 8,
 	struck: 60, // decision 4b: how long a camp remembers a computer's unit that struck it (s)
@@ -120,11 +122,11 @@ const THRONE = { hold: 900, tithe: 0.1, score: 50, r: 80, isle: 100, cause: 30 }
 const WAVE = { broke: 0.35, stall: 45, step: 30, fight: 30, cool: 180 };
 
 // The three computer personalities: one brain, three settings. Every behaviour is a field, never a name check.
-// build: [kind, from age, how many, needs army of at least, needs stock]; techs in the order they want them.
+// build: [kind, from age, how many, needs army of at least, needs stock] (plots are not listed: they follow the plot test, 17-ai); techs in the order they want them.
 const PERS = {
 	aggr: {
 		crown: 'war', // the crown this personality chases (39-games)
-		vils: 16,
+		goals: ['army', 'age', 'build'], // what its hands work toward: the first of these it wants (17-ai goalOf; answer 10)
 		mix: { food: 0.5, wood: 0.35, gold: 0.15, stone: 0, iron: 0.08 },
 		extraBarracks: 1,
 		armyCap: 34,
@@ -170,7 +172,7 @@ const PERS = {
 	},
 	bal: {
 		crown: 'wealth',
-		vils: 26,
+		goals: ['age', 'build', 'army'],
 		mix: { food: 0.4, wood: 0.3, gold: 0.2, stone: 0.1, iron: 0.1 },
 		extraBarracks: 0,
 		armyCap: 34,
@@ -202,9 +204,6 @@ const PERS = {
 			['hospital', 2, 1, 10, { w: 250, s: 200 }],
 			['library', 2, 1, 10, { w: 400, s: 300 }],
 			['council', 2, 1, 12, { w: 250, s: 150 }],
-			['quarry', 2, 1, 8, { w: 150 }],
-			['foundry', 3, 1, 10, { s: 400, w: 300 }],
-			['mint', 3, 1, 10, { s: 500, g: 300 }],
 		],
 		techs: [
 			'axes',
@@ -245,7 +244,7 @@ const PERS = {
 	},
 	fort: {
 		crown: 'wellbeing',
-		vils: 28,
+		goals: ['build', 'age', 'army'],
 		mix: { food: 0.4, wood: 0.3, gold: 0.15, stone: 0.15, iron: 0.08 },
 		extraBarracks: 0,
 		armyCap: 30,
@@ -273,8 +272,6 @@ const PERS = {
 			['school', 1, 1, 6, { w: 300, s: 100 }],
 			['temple', 1, 1, 8, { s: 450, g: 300 }],
 			['courthouse', 1, 1, 6, { w: 250, g: 100 }],
-			['quarry', 2, 1, 6, { w: 150 }],
-			['foundry', 3, 1, 8, { s: 400, w: 300 }],
 			['hospital', 2, 1, 8, { w: 250, s: 200 }],
 			['library', 2, 1, 8, { w: 400, s: 300 }],
 			['aqueduct', 2, 1, 8, { s: 400 }],

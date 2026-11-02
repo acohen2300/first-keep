@@ -143,6 +143,7 @@ JS = """() => {
     const B = { id: 9e6, kind: 'bush', type: 'food', x: k.x + 150, y: k.y - 150, amt: 3000, max: 3000 }, bc = { cx: Math.floor(B.x / F.NAVC), cy: Math.floor(B.y / F.NAVC) };
     for (let i = -3; i <= 3; i++) for (let j = -3; j <= 3; j++) if (Math.max(Math.abs(i), Math.abs(j)) === 3) G.blds.push(F.mkBld(W(), 'wall', (bc.cx + i) * F.NAVC + 5, (bc.cy + j) * F.NAVC + 5, 1));
     G.nodes.push(B); F.navRebuild(); for (const r in G.P[o].res) G.P[o].res[r] = 0; // nothing to build with: the waiters can only be given work
+    G.nodes = G.nodes.filter((n) => n.type !== 'wood'); // no wood anywhere: by need (answer 10) the waiters go to food, the deer and the walled bush
     F.think(G.P[o]);
     const sent = V.filter((v) => v.node || v.hunt).length; if (sent < V.length) bad.push('item 6: ' + (V.length - sent) + ' of ' + V.length + " computer villagers waiting with nothing in reach were given no other work");
     const on = new Map(); for (const v of V) { const t = v.hunt || v.node; if (t) on.set(t, (on.get(t) || 0) + 1); }

@@ -105,6 +105,13 @@ function rng() {
 	return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 }
 const rnd = (a, b) => a + rng() * (b - a);
+// one weighted draw on the seeded dice: index i with probability w_i / Σw (roulette-wheel selection; Goldberg 1989, from memory)
+function roulette(w) {
+	let x = rng() * w.reduce((a, b) => a + b, 0),
+		i = 0;
+	while (i < w.length - 1 && (x -= w[i]) > 0) i++;
+	return i;
+}
 // Random events are a Poisson process, the established model of independent rare events (Poisson 1837; Feller, vol. 1, ch. XVII):
 // the wait to the next one is exponential with the stated mean, t = −mean · ln U, and the chance of one in a step is 1 − e^(−rate · dt) (hazard).
 // Every random "when" in the game draws from these two (Build 57, Albert: "the established and correct formula for random events").

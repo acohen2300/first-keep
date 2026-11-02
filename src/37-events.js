@@ -661,7 +661,7 @@ const rutOf = (x, y) => CLIMATE.rut.deep * Math.min(1, rutsAt(x, y) / CLIMATE.ru
 const mudAt = (at) =>
 	at ? G.clim.mud * (NAV.shore[gcell(at.x, at.y)] ? CLIMATE.shore : 1) * (1 + rutOf(at.x, at.y)) : G.clim.mud;
 // what a step needs of the ground (Hanson et al. 1999), by what is stepping: an engine's haulers, a horse, a man (keys: unitKeys)
-const needOf = (keys) =>
+const groundNeed = (keys) =>
 	CLIMATE.mu.need[keys && keys.includes('#siege') ? 'siege' : keys && keys.includes('#mounted') ? 'horse' : 'foot'];
 // whether iron bites the ice for this contact (D-064): Horseshoes on hooves, Crampons on boots, each keyed to its own
 const studded = (o, keys) => o !== WILD && fxv(o, 'studs', keys).a > 0;
@@ -676,7 +676,7 @@ const iceMu = (studs) => {
 const strideShare = (need, mu) => (need <= mu ? 0 : clamp((need - mu) / (need - iceMu(false)), 0, 1)); // no stride lost when the studs hold the need
 const groundSpd = (o, keys, at) => {
 	const c = G.clim,
-		need = needOf(keys);
+		need = groundNeed(keys);
 	return (
 		(1 /
 			(1 +
