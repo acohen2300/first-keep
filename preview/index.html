@@ -108,14 +108,14 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 #stage{position:absolute;inset:0;overflow:hidden;background:#20301c;touch-action:none}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 #vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse farthest-corner at 50% 50%,rgba(0,0,0,0) 42%,rgba(0,0,0,.3) 100%)}
-#mini{position:absolute;top:calc(var(--hb) + var(--gap));right:var(--gap);width:86px;height:86px;border:1px solid var(--white-faint);border-radius:var(--rad);background:var(--brown-1)}
+#mini{width:86px;height:86px}
 .fab{position:absolute;z-index:var(--z-float);width:var(--slot);height:var(--slot);padding:0;bottom:calc(var(--ob) + var(--gap));box-shadow:var(--shade)}
 .fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}
 #homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}
 /* the cycle button and Emergency: a slot each, on their own rank above the row, slot 1 and slot 6 (MENU-SPEC §6; cold review of v70: Emergency
    was 44 wide a rank higher, with no word). Emergency steps aside while any card is open, where it would sit over the card's buttons */
-#hudB,#emgB{width:calc((100% - 7 * var(--gap)) / 6)}#hudB .dots{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);display:flex;justify-content:center;gap:5px}#hudB .dots i{width:6px;height:6px;border-radius:50%;background:var(--white-faint)}#hudB .dots .at{background:var(--ring-w)}#orders.pg-war~#mini{display:none}   /* the page dots (Albert, Nov 2) */#hudB{left:var(--gap)}#emgB{right:var(--gap)}#stage:has(#card:not([hidden])) #emgB{display:none}
-#stage.busy :is(#hudB,#homeB,#emgB),#stage.picking #homeB{display:none}
+#emgB{width:calc((100% - 7 * var(--gap)) / 6);right:var(--gap)}#stage:has(#card:not([hidden])) #emgB{display:none}#stage>#mini{display:none}   /* War, the one button on the rank above the row (Albert, Nov 2); the small map shows only in the station */
+#stage.busy :is(#homeB,#emgB),#stage.picking #homeB{display:none}
 #place,#pickbar{position:absolute;z-index:var(--z-float);left:var(--gap);right:var(--gap);bottom:calc(var(--ob) + var(--gap));box-sizing:border-box;display:flex;gap:var(--gap);padding:var(--gap);background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o)}
 #place{justify-content:space-between;align-items:center;padding-left:10px}#place span{flex:1;min-width:0;line-height:1.25}#place button{padding:0 12px}
 #pickbar{flex-direction:column;border-color:var(--ring-g)}#pickbar .pbTop,#pickbar .pbRow{display:flex;gap:var(--gap);align-items:center}#pickbar .pbRow:empty{display:none}#pickbar span{flex:1;min-width:0;line-height:1.25;padding-left:6px}#pickbar button{min-width:var(--slot);padding:0 10px}#pickbar .pbRow button{flex:1;padding:0 4px}#pickbar .gl{width:18px;height:18px}
@@ -127,7 +127,8 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 #orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--gap) calc(env(safe-area-inset-bottom,0px) + var(--gap));pointer-events:none}
 #row{pointer-events:auto}#row .info :is(b,small){white-space:nowrap}
 #row button{box-shadow:var(--shade)}   /* no panel behind the row on any page (Albert, Nov 2): the map shows between the slots */
-.pg-war #row button{background:var(--steel-1);border-color:var(--steel-3)}.pg-war #row :is(.wd,.gl,.c){color:var(--white-dim)}#emgB{border-color:var(--ring-r)}   /* the battle station (Albert, Nov 2): muted steel ends, the words dim; the Alarm button red, always */
+.pg-war #row button{background:var(--steel-1);border-color:var(--steel-3)}.pg-war #row :is(.wd,.gl,.c){color:var(--white-dim)}#emgB{background:var(--steel-1);border-color:var(--ring-r)}   /* the battle station (Albert, Nov 2): muted ends, the words dim; the War button red on steel */
+.pg-war #row .vb{background:var(--brown-2);border-color:var(--brown-3)}.pg-war #row .wb{background:color-mix(in srgb,var(--ring-r) var(--faint),var(--steel-1));border-color:color-mix(in srgb,var(--ring-r) var(--faint),var(--steel-3))}   /* the villagers' block brown, the war block steel tinted red at the faint level (Albert, Nov 2: the campaign desk) */
 .pg-war #row .midb{grid-column:span 4;grid-row:span 2;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--steel-3);border:1px solid var(--ring-w);border-radius:var(--rad-o);overflow:hidden}   /* the middle: one joined block, thin dividers, a white edge */
 .pg-war #row .midb>button{background:var(--steel-2);border:0;border-radius:0;box-shadow:none}.pg-war #row .midb :is(.wd,.gl,.c){color:var(--ring-w)}
 .pg-war #row .midb.map{display:flex;align-items:center;justify-content:center;background:var(--steel-1)}.pg-war #row .midb.map>canvas{position:static;height:calc(2 * var(--slot) + var(--gap) - 2px);width:auto;border:0;border-radius:0;background:none}
@@ -215,7 +216,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 @keyframes breathe{50%{box-shadow:inset 0 0 0 1px var(--rc),0 0 8px 1px var(--rc)}}
 @media (prefers-reduced-motion:reduce){.warn:not(.pill>*){box-shadow:inset 0 0 0 2px var(--rc)}}   /* still, and 3 wide: never colour alone */
 .work:not(.warn,.nope)::after{content:'';position:absolute;inset:-1px;padding:2px;border-radius:var(--rad);background:conic-gradient(var(--ring-g) var(--p,100%),transparent 0);mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);pointer-events:none}
-.dis:not(.pill>*){background:var(--brown-1)}[data-act^="tech:"].dis:not(.pill>*){border-color:var(--white-faint)}:is(.pg-war,.pg-train) #row .dis{background:var(--steel-1)}.dis,.dis :is(b,.wd){color:var(--white-dim)}
+.dis:not(.pill>*){background:var(--brown-1)}[data-act^="tech:"].dis:not(.pill>*){border-color:var(--white-faint)}.pg-war #row .dis{background:var(--steel-1)}.pg-war #row .vb.dis{background:var(--brown-1)}.pg-war #row .wb.dis{background:color-mix(in srgb,var(--ring-r) var(--faint),var(--steel-1));opacity:.6}.dis,.dis :is(b,.wd){color:var(--white-dim)}
 .empty{background:var(--brown-1);border:1px solid var(--brown-2);border-radius:var(--rad);color:var(--white-dim)}
 /* inside a bar a chosen part is ringed inside the shape, and a selector's ring is the one that slides; the switch and the slider on are gold */
 .bar>.on{border-color:transparent;box-shadow:inset 0 0 0 4px var(--brown-2),inset 0 0 0 6px var(--gold-1)}.sel>.on{box-shadow:none}
@@ -253,7 +254,6 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
     <button class="fab cell" id="emgB" data-act="emgpage" aria-label="Alarm"></button>
-    <button class="fab cell jobs" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, War, Train"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
 
     <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>
@@ -5481,7 +5481,16 @@ const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, 
 // How long a toast stays (Nov 2, M7: 219 calls typed their own seconds, from 2 to 10): three lengths, by how much there is to read.
 // At about 200 words a minute (adult silent reading, 238 in Brysbaert's 2019 review, from memory, not opened) a short line of a few words
 // needs 2 to 3 s, a sentence 4 to 5, two sentences 7 to 8. 2 and 3 became short; 4, 5 and 6 mid; 7 to 10 long.
-const LAUNCH = { ms: 1500, r: 34 }; // the hold that launches an attack (Albert, Nov 2): how long, and the ring's radius at full, in screen points
+const LAUNCH = { ms: 1500, r: 34 };
+// The War Director (Albert, Nov 2: "a war director"): one move a kind, every soldier of that kind at once, from the battle station. Each move
+// is a drill the rules already hold, so no new number but these: how long a shield wall stands (secs), how long the volley's reload is lined
+// up (loose), and the wait after Wheel (wheel). wall: the Square shape's numbers while it stands (FORM[2]: 10% less damage, 30% less from
+// riders, 20% slower) and the Hold temper (no chase, steadier nerve). loose: every archer's reload set to zero together, so they release
+// in one instant; each arrow does its usual harm, but Dupuy's break point (MORALE.breakAt) is counted on losses in one blow, which is why
+// massed volleys broke armies the same losses spread out would not (Crécy, Agincourt; from memory). charge: CHARGE. wheel: the riders ride
+// to the far side of the enemy nearest the crosshair and hit from behind (FLANK, MORALE.rear). bombard: the engines on the nearest enemy
+// building to the crosshair, burning once Burning shot is researched (FIREARMS). back: FALLBACK.
+const DIRECT = { wall: 12, loose: 0, wheel: 15, behind: 70 }; // wall: seconds a shield wall stands; wheel: seconds before riders may wheel again; behind: how far past the foe they ride // the hold that launches an attack (Albert, Nov 2): how long, and the ring's radius at full, in screen points
 const TOAST = { short: 3, mid: 5, long: 8 };
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
@@ -6527,11 +6536,12 @@ const ROW_WORD = {
 	build: 'Build',
 	home: 'Home',
 	orders: 'Orders',
+	direct: 'Direct', // the War Director's four moves
 	attack: 'Attack',
 	squad: 'Squad',
 	army: 'The army',
 	pace: ['slow', 'medium', 'fast'], // a squad's pace, from its slowest member (paceWord)
-	emg: 'Alarm', // the red button: the alarm you raise (Albert, Nov 2: Emergency was too wide)
+	emg: 'War', // the red button: the battle station (Albert, Nov 2)
 	emgW: [['Work', 'all clear'], ['Gather', 'at home'], ['Garrison', 'all in'], ['Shelter', 'hide']], // the Alarm page: each order's word and what it does, in the row's order (Albert, Nov 2: Age of Empires' Town Bell and Back to Work)
 };
 // a research step's why: its own key first ('tech:' + id) where a unit shares its id (F4: one WHY.legion served both)
@@ -7088,8 +7098,6 @@ const SET = {
 	vol: 0.6,
 	mix: {},
 	hideG: {}, // the message groups whose lines go quietly to the mail (Build 64; the old per-line hush folds into this)
-	mini: undefined,
-	mapSeen: false,
 	vibe: true,
 	learned: {},
 };
@@ -7283,7 +7291,7 @@ const hasCmd = () => G.P[0].techs.has('command');
 const formOf = (u) => (u.owner === 0 && u.bn !== undefined && G.P[0].techs.has('formations') ? G.form[u.bn] || 0 : 0);
 // Shape and temper, the two dials. On the march a side with Formations goes in column; on contact or at rest it stands to its chosen shape.
 const marching = (u) => !u.tgt && (u.state === 'goto' || u.state === 'attack') && G.t - (u.mvT ?? -9) < 0.6;
-const shapeOf = (u) => (marching(u) && G.P[u.owner] && G.P[u.owner].techs.has('formations') ? COLUMN : FORM[formOf(u)]);
+const shapeOf = (u) => (u.wall > G.t ? FORM[2] : marching(u) && G.P[u.owner] && G.P[u.owner].techs.has('formations') ? COLUMN : FORM[formOf(u)]); // a shield wall (the Director) stands to the Square
 // a dial's setting for one battalion or for all of them (-1 when they differ), and one step round it
 const dialOf = (key, a) => (a === 'all' ? (G[key].every((x) => x === G[key][0]) ? G[key][0] : -1) : G[key][Number(a)]);
 const cycle = (key, a, n) => {
@@ -7291,7 +7299,7 @@ const cycle = (key, a, n) => {
 	if (a === 'all') G[key] = G[key].map(() => nx);
 	else G[key][Number(a)] = nx;
 };
-const temperOf = (u) => (u.owner === 0 ? (G.temper[u.bn ?? BNS] ?? T_GUARD) : T_GUARD);
+const temperOf = (u) => (u.wall > G.t ? T_HOLD : u.owner === 0 ? (G.temper[u.bn ?? BNS] ?? T_GUARD) : T_GUARD); // a shield wall holds: no chase
 const kiteOf = (u) =>
 	!!UNIT[u.kind].kite ||
 	(!!G.P[u.owner] &&
@@ -9977,7 +9985,7 @@ function charge(o, S, bn) {
 	}
 	return true;
 }
-function fallBack(o, S, bn) {
+function fallBack(o, S, bn, who) {
 	// withdraw in order toward home: fewer losses than a rout, and no rout while it lasts
 	const h = homeOf(o);
 	if (!h) return false;
@@ -9998,7 +10006,7 @@ function fallBack(o, S, bn) {
 		u.ord = undefined;
 		n++;
 	}
-	if (o === 0 && n) say(`${bn !== undefined ? BN[bn] : 'The army'} fall back.`, '', TOAST.mid);
+	if (o === 0 && n) say(who || `${bn !== undefined ? BN[bn] : 'The army'} fall back.`, who ? 'good' : '', who ? TOAST.short : TOAST.mid); // the Director names the kind
 	return n > 0;
 }
 // Prisoners: a runner touched by a foe, or a man netted by the Natives. The owner may ransom them back; unransomed, they serve the captor.
@@ -19569,7 +19577,7 @@ function draw() {
 	drawGhost();
 	{
 		const now = performance.now();
-		if ((SET.mini || G.hud.page === 'war') && now - miniT > 150) {
+		if (G.hud.page === 'war' && now - miniT > 150) {
 			miniT = now;
 			drawMini();
 		}
@@ -23251,6 +23259,81 @@ function drawLaunch() {
 	}
 	ctx.restore();
 }
+// ── The War Director (06-rules-tuning, DIRECT): a tap on a kind in the station's middle is its move, a hold its second. Every soldier of
+// that kind that can be sent goes at once; the crosshair (G.hud.h) is where. Each returns what was said, or '' when nobody could go.
+const ofKind = (t) => sendable().filter((u) => clsOf(u.kind) === t);
+const aimH = () => G.hud.h || { t: 'ground', e: { x: cam.x, y: cam.y } };
+const DIRECT_WHY = { none: 'Nobody of that kind.', wheel: 'Nobody to wheel round.' };
+const DIRECTS = {
+	wall: (S) => {
+		for (const u of S) {
+			u.wall = G.t + DIRECT.wall;
+			u.state = 'goto';
+			u.px = u.x;
+			u.py = u.y;
+			u.focus = null;
+		}
+		return 'Shield wall!';
+	},
+	advance: (S) => (order(S, aimH()), 'Foot, advance!'),
+	loose: (S) => {
+		order(S, aimH());
+		for (const u of S) u.cd = DIRECT.loose; // the reload lined up: everyone in reach releases on the next step
+		return 'Archers, loose!';
+	},
+	back: (S, word) => (fallBack(0, S, undefined, word), ''), // fallBack says it
+	charge: (S) => {
+		order(S, aimH());
+		return charge(0, S) ? '' : chargeWhy(0, S); // charge() says it and sounds the horn
+	},
+	wheel: (S) => {
+		const h = aimH(),
+			foes = foesNear(h.e);
+		if (!foes.length) return DIRECT_WHY.wheel;
+		const cx = foes.reduce((s, f) => s + f.x, 0) / foes.length,
+			cy = foes.reduce((s, f) => s + f.y, 0) / foes.length,
+			mx = S.reduce((s, u) => s + u.x, 0) / S.length,
+			my = S.reduce((s, u) => s + u.y, 0) / S.length,
+			d = hyp(cx - mx, cy - my) || 1,
+			x = clamp(cx + ((cx - mx) / d) * DIRECT.behind, 20, MAP - 20),
+			y = clamp(cy + ((cy - my) / d) * DIRECT.behind, 20, MAP - 20);
+		order(S, { t: 'ground', e: { x, y } });
+		(G.wheelT = G.wheelT || {})[0] = G.t + DIRECT.wheel;
+		return 'Riders, wheel!';
+	},
+	bombard: (S) => {
+		const h = aimH(),
+			b = nearestFoeBld(0, h.e, undefined, 300);
+		order(S, b ? { t: 'bld', e: b } : h);
+		return b ? `Bombard the ${bldName(b.owner, b.kind).toLowerCase()}!` : 'Engines, forward!';
+	},
+};
+// the four kinds' moves: [tap, hold], with the word each says, and the sound
+const DIRECT_OF = [
+	[['wall', 'Shield wall', 'hit'], ['advance', 'Advance', 'horn']],
+	[['loose', 'Loose!', 'arrow'], ['back', 'Archers, fall back!', 'horn']],
+	[['charge', 'Charge', 'horn'], ['wheel', 'Wheel', 'hooves']],
+	[['bombard', 'Bombard', 'boom'], ['back', 'Engines, pull back!', 'horn']],
+];
+function direct(t, hold) {
+	const [id, word, snd] = DIRECT_OF[t][hold ? 1 : 0],
+		S = ofKind(t);
+	if (!S.length) return say(DIRECT_WHY.none, '', TOAST.short);
+	if (id === 'wheel' && (G.wheelT || {})[0] > G.t) return say(`Winded: ${Math.ceil(G.wheelT[0] - G.t)} s.`, '', TOAST.short);
+	const said = DIRECTS[id](S, word);
+	if (said === '') {
+		sfx(snd);
+		feel('snap');
+		return;
+	} // charge and fall back say their own
+	if (!/!$/.test(said)) return say(said, '', TOAST.short); // a reason ends with a stop: nobody could go
+	say(said, 'good', TOAST.short);
+	sfx(snd);
+	feel('snap');
+}
+// the wait a kind's tap still has to sit out, in seconds: the riders' charge, the wheel; 0 when it is ready
+const directWait = (t) =>
+	t === 2 ? Math.max(0, Math.ceil(Math.max((G.chargeT || {})['0:all'] || 0, (G.wheelT || {})[0] || 0) - G.t)) : 0;
 // what the game thinks fits a spot (Albert, Build 41): each reason scores a kind, the best one is marked and its menu opens.
 // A drop-off for what grows there with none near; more of what stands around you (houses: a house; fields: a mill, then a field; army buildings: the one you lack);
 // a narrow way between forest, water or buildings: a wall, or a gate beside your wall; and a house when room is short.
@@ -24613,7 +24696,7 @@ const CARDS = {
 			) +
 			`<table><tr><th></th>${rows.map((q) => `<th style="border-bottom:3px solid ${q.color}">${q.id === 0 ? 'You' : `<button class="lnk" data-act="seek:${q.id}">${q.name}</button>`}</th>`).join('')}</tr>${cats.map(([k, n]) => `<tr><td>${n}</td>${rows.map((q) => `<td>${q.alive || k === 'total' ? fmt(q.score[k]) : '–'}</td>`).join('')}</tr>`).join('')}</table>` +
 			`<p>People and Army: what you hold, cost ÷ ${SCORE.unit}. Tech: research and ages paid ÷ ${SCORE.tech}. Buildings: standing, cost ÷ ${SCORE.bld}. Wealth: everything gathered, traded, found and plundered ÷ ${SCORE.wealth}. ${G.wonder ? `A wonder stands: ${clock(Math.max(0, G.wonder.end - G.t))} left.` : ''}</p>` +
-			acts(btn('help', 'How to play', 'the guide, the rules, the settings'), 'c1')
+			acts(btn('card:milestone', 'Milestones', `${(G.ms || []).length} of ${Object.keys(MS_TEXT).length}`) + btn('help', 'How to play', 'the guide, the rules, the settings')) // Milestones' door (D-080, Nov 2)
 		);
 	},
 	guide(c) {
@@ -25117,10 +25200,6 @@ const ICON = {
 		20,
 		'<path d="M4 17 V6 H6.5 V8.2 H8.6 V6 H11.4 V8.2 H13.5 V6 H16 V17 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 17 V13 H11.4 V17" fill="currentColor"/>',
 	),
-	next: SVG(
-		20,
-		'<path d="M8 4.5l5.5 5.5L8 15.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
-	), // the cycle button's chevron: the next page
 	sword: SVG(
 		16,
 		'<path d="M13.5 2.5 L13.5 4.6 L6.6 11.5 L4.5 9.4 L11.4 2.5 Z" fill="currentColor"/><path d="M3.2 8.6 L7.4 12.8 M2.4 13.6 L5 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
@@ -25142,10 +25221,6 @@ const ICON = {
 	follow: SVG(
 		16,
 		'<circle cx="8" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 1.5 V4 M8 12 V14.5 M1.5 8 H4 M12 8 H14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
-	),
-	map: SVG(
-		20,
-		'<path d="M3 5.5 L7.5 4 L12.5 5.5 L17 4 V14.5 L12.5 16 L7.5 14.5 L3 16 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M7.5 4 V14.5 M12.5 5.5 V16" stroke="currentColor" stroke-width="1.5"/>',
 	),
 	sound: SVG(
 		16,
@@ -25215,7 +25290,7 @@ function buildPanel() {
 			.join('') +
 		cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') +
 		cell('id="pauseB" data-act="pause" aria-label="Pause"', ICON.pause, '', 'one') +
-		cell('id="mapT" data-act="map" aria-label="The small map"', ICON.map, '', 'one'); // one button for play, pause and speed (hold it); the freed cell is the map (Albert, Build 40)
+		cell('id="mailB" data-act="mail" aria-label="The mail"', `<span class="top">${ICON.mail}<span class="c" id="mailN">0</span></span>`, '', 'one'); // one button for play, pause and speed (hold it); the last cell the mail, with what is unread beside it (Albert, Nov 2: the Mail's door, D-080; it was the small map, now in the battle station)
 	// the status pill: the state of the world, one cell under each column of the tally (Albert, Build 64: "age under Food, season under
 	// Wood"); the cells never move, and a narrow tally shows the first ones (the age, the season, the clock, the people come first)
 	const sc = (id, act, label) =>
@@ -25224,7 +25299,8 @@ function buildPanel() {
 			: `<span class="cell" id="${id}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></span>`;
 	$('status').innerHTML = STATUS.map(([id, act, label]) => sc(id, act, label)).join('');
 	$('homeB').innerHTML = ICON.home;
-	$('emgB').innerHTML = topOf(ICON.def) + wd(ROW_WORD.emg); // a slot with its word under its icon, on the cycle button's rank (cold review of v70)
+	$('emgB').innerHTML = topOf(ICON.def) + wd(ROW_WORD.emg); // War, red on steel, on the rank above the row: the battle station; ✕ while it is up (rowUI)
+	mini.hidden = false; // the small map draws in the station's middle; on the stage between, the style sheet keeps it out of sight // a slot with its word under its icon, on the cycle button's rank (cold review of v70)
 	$('pX').innerHTML = ICON.close;
 }
 const refresh = () => {
@@ -25246,11 +25322,6 @@ function setPause(v) {
 	G.paused = v;
 	paceBtn();
 	if (!v && typeof spdPop === 'function') spdPop(false);
-}
-function applyMini() {
-	mini.hidden = !SET.mini;
-	$('mapT').classList.toggle('on', !!SET.mini);
-	$('stage').classList.toggle('mapOn', !!SET.mini);
 }
 // the end of a game: the sim says who won and why; the screen shows it
 function showEnd(won, text, all) {
@@ -25615,6 +25686,8 @@ function ui(force) {
 			[ICON.mil, String(sol), sol ? '' : 'dis'],
 		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
 		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2]));
+		txt('mailN', String(G.mailN || 0)); // the unread, beside the envelope at the top
+		$('mailB').classList.toggle('dis', !(G.mailN || 0));
 	} // the colour code on the pill: blue research you can start, red the people at the roof or idle hands; dim is nothing to see
 	rowUI();
 	{
@@ -25854,11 +25927,6 @@ const ACT = {
 		G.infoOpen = !G.infoOpen;
 		cardSig = '';
 		renderCard();
-	},
-	map() {
-		SET.mini = !SET.mini;
-		saveSet();
-		applyMini();
 	},
 	home() {
 		const k = keepOf(0);
@@ -26172,9 +26240,6 @@ const PLAY = {
 		hudPage(G.hud.page === 'war' ? 'jobs' : 'war');
 		feel('tick');
 	}, // the red button: the battle station, with the Alarm's orders on its left; again, Jobs
-	pagecycle() {
-		pageCycle();
-	}, // the cycle button above slot 1: Jobs, the battle station (Build 70; Nov 2)
 	tq(a) {
 		const [t, d] = a.split(','),
 			k = kindOf(Number(t));
@@ -26193,6 +26258,12 @@ const PLAY = {
 		G.bnIntent[i] = k;
 		feel('tick');
 	}, // a squad's intent: one of three, chosen
+	direct(a) {
+		direct(Number(a), false);
+	}, // the War Director: a kind's move, every soldier of it at once
+	directh(a) {
+		direct(Number(a), true);
+	}, // held: the kind's second move
 	wmid(a) {
 		const H = G.hud;
 		H.mid = H.mid === a ? SMID.map : a;
@@ -30128,7 +30199,6 @@ const HUD = {
 	gap: 8, // reinforcements arriving within this many seconds of each other are one wave
 	waves: 3,
 };
-const PAGES = ['jobs', 'war']; // one button turns them: Jobs and the battle station (Albert, Nov 2)
 const mUnits = (m) => G.units.filter((u) => u.owner === 0 && u.ord === m.ord && u.hp > 0);
 const sqUnits = (i) => armyOf(0).filter((u) => u.bn === i && u.kind !== 'spy');
 const sqOut = (i) => G.msn[i] && !G.msn[i].end; // the squad is out on a mission
@@ -30167,10 +30237,6 @@ function hudPage(page) {
 		if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
 		closeCard();
 	}
-}
-function pageCycle() {
-	hudPage(PAGES[(PAGES.indexOf(G.hud.page) + 1) % PAGES.length]);
-	feel('tick');
 }
 // the kind a class trains from the Train page, and fills a muster with: the first its building trains in this age (a people's own unit in its place)
 const kindOf = (t) =>
@@ -30418,13 +30484,14 @@ function jobsPage() {
 	}
 	return top + low;
 }
-// The battle station (Albert, Nov 2, his drawings: "the controller"): one page in place of War and Train, the row's 6 x 2 as three 2 x 2
+// The battle station (Albert, Nov 2, his drawings: "the controller"; the War Director, 28-army-quick): one page in place of War and Train, the row's 6 x 2 as three 2 x 2
 // blocks. Left, the Alarm's four orders (40-emergency). Middle, one joined block that changes: the small map (tap: the camera goes there;
 // hold: the army is launched there), or the four squads (tap: send it to the crosshair; hold: its card), or the four kinds to train (tap:
-// one more; hold: one fewer). Right: Train and Squad turn the middle, Orders sets where new soldiers go (the crosshair), Attack sends every
-// ready squad there (hold: everyone home). Plain steel, no state rings (EXCEPTIONS: a battle station is all live); a tap flashes red and
+// one more; hold: one fewer), or the Director's four (tap: the kind's move; hold: its second). Right: Train (hold: new soldiers go to the
+// crosshair), Squad and Direct turn the middle, Attack sends every
+// ready squad there (hold: everyone home). The villagers' block brown (vb), the war block steel tinted red (wb), no state rings (EXCEPTIONS: a battle station is all live); a tap flashes red and
 // snaps off (the click handler, 33-verbs). The crosshair is up while it is open: a tap on the map moves it.
-const SMID = { map: 'map', squad: 'squad', train: 'train' }; // what the station's middle shows
+const SMID = { map: 'map', squad: 'squad', train: 'train', direct: 'direct' }; // what the station's middle shows
 function stationPage() {
 	const H = G.hud,
 		mid = H.mid || SMID.map,
@@ -30432,8 +30499,8 @@ function stationPage() {
 		on = (kind) => (G.emg && G.emg.kind === kind ? '●' : null),
 		W = ROW_WORD.emgW;
 	let h =
-		pic('emgstop', ICON.stop, W[0][0], G.emg ? '' : 'dis') +
-		pic('emg:square', ICON.home, W[1][0], '', on('square')) +
+		pic('emgstop', ICON.stop, W[0][0], 'vb' + (G.emg ? '' : ' dis')) +
+		pic('emg:square', ICON.home, W[1][0], 'vb', on('square')) +
 		`<div class="midb${mid === SMID.map ? ' map' : ''}">` +
 		(mid === SMID.squad
 			? BN.map((nm, i) => {
@@ -30441,7 +30508,14 @@ function stationPage() {
 						S = m ? mUnits(m) : hasCmd() ? sqUnits(i) : [];
 					return pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, hasCmd() || m ? '' : 'dis', S.length, ` data-hold="sqcard:${i}"`);
 				}).join('')
-			: mid === SMID.train
+			: mid === SMID.direct
+				? CLS.map((c, t) => {
+						const n = ofKind(t).length,
+							w = directWait(t),
+							[tap, hold] = DIRECT_OF[t];
+						return pic(`direct:${t}`, ICON.cls[c[0]], w ? `${w} s` : tap[1], n && !w ? '' : 'dis', n || null, ` data-hold="directh:${t}" aria-label="${c[1]}: ${tap[1]}; hold: ${hold[1]}"`);
+					}).join('')
+				: mid === SMID.train
 				? CLS.map((c, t) => {
 						const k = kindOf(t),
 							at = k ? readyAt(0, UNIT[k]) : [],
@@ -30450,12 +30524,12 @@ function stationPage() {
 					}).join('')
 				: '') +
 		'</div>' +
-		pic('wmid:train', ICON.mil, ROW_WORD.train) +
-		pic('wmid:squad', ICON.squad, ROW_WORD.squad) +
-		pic('emg:hands', ICON.sword, W[2][0], '', on('hands')) +
-		pic('emg:shelter', ICON.shield, W[3][0], V ? '' : 'dis', on('shelter')) +
-		pic('tok', ICON.aim, ROW_WORD.orders, '') +
-		pic('wfire', ICON.sword, ROW_WORD.attack, H.h && free().length ? '' : 'dis', null, ' data-hold="whome"');
+		pic('wmid:train', ICON.mil, ROW_WORD.train, 'wb', null, ' data-hold="tok"') +
+		pic('wmid:squad', ICON.squad, ROW_WORD.squad, 'wb') +
+		pic('emg:hands', ICON.sword, W[2][0], 'vb', on('hands')) +
+		pic('emg:shelter', ICON.shield, W[3][0], 'vb' + (V ? '' : ' dis'), on('shelter')) +
+		pic('wmid:direct', ICON.aim, ROW_WORD.direct, 'wb') +
+		pic('wfire', ICON.sword, ROW_WORD.attack, 'wb' + (H.h && free().length ? '' : ' dis'), null, ' data-hold="whome"');
 	return h;
 }
 const ROWS = { jobs: jobsPage, war: stationPage };
@@ -30465,26 +30539,21 @@ function rowUI() {
 	const page = G.hud.page,
 		el = $('row'),
 		h = ROWS[page](),
-		chip = $('hudB');
+		chip = $('emgB');
 	if (el.sigH !== h) {
 		el.sigH = h;
 		patchHTML(el, h);
 	}
-	$('emgB').classList.toggle('warn', !!G.incoming); // the red button breathes while something is coming
+	chip.classList.toggle('warn', !!G.incoming); // the red War button breathes while something is coming
 	const mb = el.querySelector('.midb.map');
-	if (mb && mini.parentNode !== mb) {
-		mb.appendChild(mini);
-		mini.hidden = false;
-	} else if (!mb && mini.parentNode !== $('stage')) {
-		$('stage').appendChild(mini);
-		mini.hidden = !SET.mini;
-	} // the small map lives in the station's middle while it is up, whether or not the corner one is on
+	if (mb && mini.parentNode !== mb) mb.appendChild(mini); // the small map's one home is the station's middle (Albert, Nov 2); it waits on the stage, hidden, between
+	else if (!mb && mini.parentNode !== $('stage')) $('stage').appendChild(mini);
 	if (chip.pg !== page) {
 		chip.pg = page;
 		$('orders').className = 'pg-' + page;
-		chip.className = 'fab cell';
-		chip.innerHTML = topOf(ICON.next) + `<span class="dots">${PAGES.map((p) => `<i${p === page ? ' class="at"' : ''}></i>`).join('')}</span>`; // the same on every page: › over the page dots, the one you are on filled (Albert, Nov 2)
-		chip.setAttribute('aria-label', `${ROW_WORD[page]}: the next page`);
+		chip.innerHTML = page === 'war' ? ICON.close : topOf(ICON.def) + wd(ROW_WORD.emg); // War, the one button that turns the row; while the station is up it reads ✕ (Albert, Nov 2)
+		chip.classList.toggle('sym', page === 'war');
+		chip.setAttribute('aria-label', page === 'war' ? 'Close the battle station' : 'War: the battle station');
 		fit(); // the row is drawn anew: the map's bottom edge is measured again
 	}
 }
@@ -30898,13 +30967,7 @@ for (const ev of ['pointerdown', 'pointermove', 'wheel'])
 		{ passive: true, capture: true },
 	);
 window.addEventListener('resize', fit);
-{
-	SET.mapSeen = true;
-	if (SET.mini === undefined) SET.mini = false;
-	saveSet();
-} // the small map starts closed; the map cell at the top opens it   // the first look shows the map; after that it stays shut until opened
 buildPanel();
-applyMini();
 fit();
 newGame();
 scoreAll();
@@ -30956,7 +31019,6 @@ const clip = (text) => {
 };
 window.__fk = {
 	suggestAt,
-	PAGES,
 	whoIs,
 	isNext,
 	nextStep,
@@ -30971,6 +31033,12 @@ window.__fk = {
 	wearMul,
 	say,
 	launchAt,
+	direct,
+	shapeOf,
+	temperOf,
+	T_HOLD,
+	DIRECT_OF,
+	ofKind,
 	HOLD_WORD,
 	fireLaunch,
 	cancelLaunch,
@@ -31056,7 +31124,6 @@ window.__fk = {
 	emgStop,
 	hudFire,
 	hudAbort,
-	pageCycle,
 	hudPage,
 	sqPlan,
 	sqUnits,

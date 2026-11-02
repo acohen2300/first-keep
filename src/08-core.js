@@ -164,8 +164,6 @@ const SET = {
 	vol: 0.6,
 	mix: {},
 	hideG: {}, // the message groups whose lines go quietly to the mail (Build 64; the old per-line hush folds into this)
-	mini: undefined,
-	mapSeen: false,
 	vibe: true,
 	learned: {},
 };
@@ -359,7 +357,7 @@ const hasCmd = () => G.P[0].techs.has('command');
 const formOf = (u) => (u.owner === 0 && u.bn !== undefined && G.P[0].techs.has('formations') ? G.form[u.bn] || 0 : 0);
 // Shape and temper, the two dials. On the march a side with Formations goes in column; on contact or at rest it stands to its chosen shape.
 const marching = (u) => !u.tgt && (u.state === 'goto' || u.state === 'attack') && G.t - (u.mvT ?? -9) < 0.6;
-const shapeOf = (u) => (marching(u) && G.P[u.owner] && G.P[u.owner].techs.has('formations') ? COLUMN : FORM[formOf(u)]);
+const shapeOf = (u) => (u.wall > G.t ? FORM[2] : marching(u) && G.P[u.owner] && G.P[u.owner].techs.has('formations') ? COLUMN : FORM[formOf(u)]); // a shield wall (the Director) stands to the Square
 // a dial's setting for one battalion or for all of them (-1 when they differ), and one step round it
 const dialOf = (key, a) => (a === 'all' ? (G[key].every((x) => x === G[key][0]) ? G[key][0] : -1) : G[key][Number(a)]);
 const cycle = (key, a, n) => {
@@ -367,7 +365,7 @@ const cycle = (key, a, n) => {
 	if (a === 'all') G[key] = G[key].map(() => nx);
 	else G[key][Number(a)] = nx;
 };
-const temperOf = (u) => (u.owner === 0 ? (G.temper[u.bn ?? BNS] ?? T_GUARD) : T_GUARD);
+const temperOf = (u) => (u.wall > G.t ? T_HOLD : u.owner === 0 ? (G.temper[u.bn ?? BNS] ?? T_GUARD) : T_GUARD); // a shield wall holds: no chase
 const kiteOf = (u) =>
 	!!UNIT[u.kind].kite ||
 	(!!G.P[u.owner] &&

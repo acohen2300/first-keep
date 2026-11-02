@@ -13,7 +13,6 @@ const HUD = {
 	gap: 8, // reinforcements arriving within this many seconds of each other are one wave
 	waves: 3,
 };
-const PAGES = ['jobs', 'war']; // one button turns them: Jobs and the battle station (Albert, Nov 2)
 const mUnits = (m) => G.units.filter((u) => u.owner === 0 && u.ord === m.ord && u.hp > 0);
 const sqUnits = (i) => armyOf(0).filter((u) => u.bn === i && u.kind !== 'spy');
 const sqOut = (i) => G.msn[i] && !G.msn[i].end; // the squad is out on a mission
@@ -52,10 +51,6 @@ function hudPage(page) {
 		if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
 		closeCard();
 	}
-}
-function pageCycle() {
-	hudPage(PAGES[(PAGES.indexOf(G.hud.page) + 1) % PAGES.length]);
-	feel('tick');
 }
 // the kind a class trains from the Train page, and fills a muster with: the first its building trains in this age (a people's own unit in its place)
 const kindOf = (t) =>
@@ -303,13 +298,14 @@ function jobsPage() {
 	}
 	return top + low;
 }
-// The battle station (Albert, Nov 2, his drawings: "the controller"): one page in place of War and Train, the row's 6 x 2 as three 2 x 2
+// The battle station (Albert, Nov 2, his drawings: "the controller"; the War Director, 28-army-quick): one page in place of War and Train, the row's 6 x 2 as three 2 x 2
 // blocks. Left, the Alarm's four orders (40-emergency). Middle, one joined block that changes: the small map (tap: the camera goes there;
 // hold: the army is launched there), or the four squads (tap: send it to the crosshair; hold: its card), or the four kinds to train (tap:
-// one more; hold: one fewer). Right: Train and Squad turn the middle, Orders sets where new soldiers go (the crosshair), Attack sends every
-// ready squad there (hold: everyone home). Plain steel, no state rings (EXCEPTIONS: a battle station is all live); a tap flashes red and
+// one more; hold: one fewer), or the Director's four (tap: the kind's move; hold: its second). Right: Train (hold: new soldiers go to the
+// crosshair), Squad and Direct turn the middle, Attack sends every
+// ready squad there (hold: everyone home). The villagers' block brown (vb), the war block steel tinted red (wb), no state rings (EXCEPTIONS: a battle station is all live); a tap flashes red and
 // snaps off (the click handler, 33-verbs). The crosshair is up while it is open: a tap on the map moves it.
-const SMID = { map: 'map', squad: 'squad', train: 'train' }; // what the station's middle shows
+const SMID = { map: 'map', squad: 'squad', train: 'train', direct: 'direct' }; // what the station's middle shows
 function stationPage() {
 	const H = G.hud,
 		mid = H.mid || SMID.map,
@@ -317,8 +313,8 @@ function stationPage() {
 		on = (kind) => (G.emg && G.emg.kind === kind ? '●' : null),
 		W = ROW_WORD.emgW;
 	let h =
-		pic('emgstop', ICON.stop, W[0][0], G.emg ? '' : 'dis') +
-		pic('emg:square', ICON.home, W[1][0], '', on('square')) +
+		pic('emgstop', ICON.stop, W[0][0], 'vb' + (G.emg ? '' : ' dis')) +
+		pic('emg:square', ICON.home, W[1][0], 'vb', on('square')) +
 		`<div class="midb${mid === SMID.map ? ' map' : ''}">` +
 		(mid === SMID.squad
 			? BN.map((nm, i) => {
@@ -326,7 +322,14 @@ function stationPage() {
 						S = m ? mUnits(m) : hasCmd() ? sqUnits(i) : [];
 					return pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, hasCmd() || m ? '' : 'dis', S.length, ` data-hold="sqcard:${i}"`);
 				}).join('')
-			: mid === SMID.train
+			: mid === SMID.direct
+				? CLS.map((c, t) => {
+						const n = ofKind(t).length,
+							w = directWait(t),
+							[tap, hold] = DIRECT_OF[t];
+						return pic(`direct:${t}`, ICON.cls[c[0]], w ? `${w} s` : tap[1], n && !w ? '' : 'dis', n || null, ` data-hold="directh:${t}" aria-label="${c[1]}: ${tap[1]}; hold: ${hold[1]}"`);
+					}).join('')
+				: mid === SMID.train
 				? CLS.map((c, t) => {
 						const k = kindOf(t),
 							at = k ? readyAt(0, UNIT[k]) : [],
@@ -335,12 +338,12 @@ function stationPage() {
 					}).join('')
 				: '') +
 		'</div>' +
-		pic('wmid:train', ICON.mil, ROW_WORD.train) +
-		pic('wmid:squad', ICON.squad, ROW_WORD.squad) +
-		pic('emg:hands', ICON.sword, W[2][0], '', on('hands')) +
-		pic('emg:shelter', ICON.shield, W[3][0], V ? '' : 'dis', on('shelter')) +
-		pic('tok', ICON.aim, ROW_WORD.orders, '') +
-		pic('wfire', ICON.sword, ROW_WORD.attack, H.h && free().length ? '' : 'dis', null, ' data-hold="whome"');
+		pic('wmid:train', ICON.mil, ROW_WORD.train, 'wb', null, ' data-hold="tok"') +
+		pic('wmid:squad', ICON.squad, ROW_WORD.squad, 'wb') +
+		pic('emg:hands', ICON.sword, W[2][0], 'vb', on('hands')) +
+		pic('emg:shelter', ICON.shield, W[3][0], 'vb' + (V ? '' : ' dis'), on('shelter')) +
+		pic('wmid:direct', ICON.aim, ROW_WORD.direct, 'wb') +
+		pic('wfire', ICON.sword, ROW_WORD.attack, 'wb' + (H.h && free().length ? '' : ' dis'), null, ' data-hold="whome"');
 	return h;
 }
 const ROWS = { jobs: jobsPage, war: stationPage };
@@ -350,26 +353,21 @@ function rowUI() {
 	const page = G.hud.page,
 		el = $('row'),
 		h = ROWS[page](),
-		chip = $('hudB');
+		chip = $('emgB');
 	if (el.sigH !== h) {
 		el.sigH = h;
 		patchHTML(el, h);
 	}
-	$('emgB').classList.toggle('warn', !!G.incoming); // the red button breathes while something is coming
+	chip.classList.toggle('warn', !!G.incoming); // the red War button breathes while something is coming
 	const mb = el.querySelector('.midb.map');
-	if (mb && mini.parentNode !== mb) {
-		mb.appendChild(mini);
-		mini.hidden = false;
-	} else if (!mb && mini.parentNode !== $('stage')) {
-		$('stage').appendChild(mini);
-		mini.hidden = !SET.mini;
-	} // the small map lives in the station's middle while it is up, whether or not the corner one is on
+	if (mb && mini.parentNode !== mb) mb.appendChild(mini); // the small map's one home is the station's middle (Albert, Nov 2); it waits on the stage, hidden, between
+	else if (!mb && mini.parentNode !== $('stage')) $('stage').appendChild(mini);
 	if (chip.pg !== page) {
 		chip.pg = page;
 		$('orders').className = 'pg-' + page;
-		chip.className = 'fab cell';
-		chip.innerHTML = topOf(ICON.next) + `<span class="dots">${PAGES.map((p) => `<i${p === page ? ' class="at"' : ''}></i>`).join('')}</span>`; // the same on every page: › over the page dots, the one you are on filled (Albert, Nov 2)
-		chip.setAttribute('aria-label', `${ROW_WORD[page]}: the next page`);
+		chip.innerHTML = page === 'war' ? ICON.close : topOf(ICON.def) + wd(ROW_WORD.emg); // War, the one button that turns the row; while the station is up it reads ✕ (Albert, Nov 2)
+		chip.classList.toggle('sym', page === 'war');
+		chip.setAttribute('aria-label', page === 'war' ? 'Close the battle station' : 'War: the battle station');
 		fit(); // the row is drawn anew: the map's bottom edge is measured again
 	}
 }

@@ -7,3 +7,4 @@
 - Its source: an outside review of Nov 1, checked against the code, passed on by the coordinating session. [2026-11-01 09:10]
 - Its code home: the status strip in `32-frame.js`; the Mail card in `30-cards.js`. [2026-11-01 09:10]
 - The list: `docs/4 Now/v81 List.md`. The open question: `docs/4 Now/Parked.md` ("Mail has no door"). [2026-11-01 09:10]
+- Closed (Albert, Nov 2, 17:31): the Mail's door is the top bar's last cell, where the small map's button was (the map now lives only in the battle station): the envelope with the unread count beside it. Milestones' door: a row on the Score card. `32-frame` buildPanel, `30-cards` score; the gate holds both. [2026-11-02 17:53]

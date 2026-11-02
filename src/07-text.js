@@ -754,11 +754,12 @@ const ROW_WORD = {
 	build: 'Build',
 	home: 'Home',
 	orders: 'Orders',
+	direct: 'Direct', // the War Director's four moves
 	attack: 'Attack',
 	squad: 'Squad',
 	army: 'The army',
 	pace: ['slow', 'medium', 'fast'], // a squad's pace, from its slowest member (paceWord)
-	emg: 'Alarm', // the red button: the alarm you raise (Albert, Nov 2: Emergency was too wide)
+	emg: 'War', // the red button: the battle station (Albert, Nov 2)
 	emgW: [['Work', 'all clear'], ['Gather', 'at home'], ['Garrison', 'all in'], ['Shelter', 'hide']], // the Alarm page: each order's word and what it does, in the row's order (Albert, Nov 2: Age of Empires' Town Bell and Back to Work)
 };
 // a research step's why: its own key first ('tech:' + id) where a unit shares its id (F4: one WHY.legion served both)

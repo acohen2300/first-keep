@@ -91,10 +91,6 @@ const ICON = {
 		20,
 		'<path d="M4 17 V6 H6.5 V8.2 H8.6 V6 H11.4 V8.2 H13.5 V6 H16 V17 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 17 V13 H11.4 V17" fill="currentColor"/>',
 	),
-	next: SVG(
-		20,
-		'<path d="M8 4.5l5.5 5.5L8 15.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
-	), // the cycle button's chevron: the next page
 	sword: SVG(
 		16,
 		'<path d="M13.5 2.5 L13.5 4.6 L6.6 11.5 L4.5 9.4 L11.4 2.5 Z" fill="currentColor"/><path d="M3.2 8.6 L7.4 12.8 M2.4 13.6 L5 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
@@ -116,10 +112,6 @@ const ICON = {
 	follow: SVG(
 		16,
 		'<circle cx="8" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 1.5 V4 M8 12 V14.5 M1.5 8 H4 M12 8 H14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
-	),
-	map: SVG(
-		20,
-		'<path d="M3 5.5 L7.5 4 L12.5 5.5 L17 4 V14.5 L12.5 16 L7.5 14.5 L3 16 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M7.5 4 V14.5 M12.5 5.5 V16" stroke="currentColor" stroke-width="1.5"/>',
 	),
 	sound: SVG(
 		16,
@@ -189,7 +181,7 @@ function buildPanel() {
 			.join('') +
 		cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') +
 		cell('id="pauseB" data-act="pause" aria-label="Pause"', ICON.pause, '', 'one') +
-		cell('id="mapT" data-act="map" aria-label="The small map"', ICON.map, '', 'one'); // one button for play, pause and speed (hold it); the freed cell is the map (Albert, Build 40)
+		cell('id="mailB" data-act="mail" aria-label="The mail"', `<span class="top">${ICON.mail}<span class="c" id="mailN">0</span></span>`, '', 'one'); // one button for play, pause and speed (hold it); the last cell the mail, with what is unread beside it (Albert, Nov 2: the Mail's door, D-080; it was the small map, now in the battle station)
 	// the status pill: the state of the world, one cell under each column of the tally (Albert, Build 64: "age under Food, season under
 	// Wood"); the cells never move, and a narrow tally shows the first ones (the age, the season, the clock, the people come first)
 	const sc = (id, act, label) =>
@@ -198,7 +190,8 @@ function buildPanel() {
 			: `<span class="cell" id="${id}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></span>`;
 	$('status').innerHTML = STATUS.map(([id, act, label]) => sc(id, act, label)).join('');
 	$('homeB').innerHTML = ICON.home;
-	$('emgB').innerHTML = topOf(ICON.def) + wd(ROW_WORD.emg); // a slot with its word under its icon, on the cycle button's rank (cold review of v70)
+	$('emgB').innerHTML = topOf(ICON.def) + wd(ROW_WORD.emg); // War, red on steel, on the rank above the row: the battle station; ✕ while it is up (rowUI)
+	mini.hidden = false; // the small map draws in the station's middle; on the stage between, the style sheet keeps it out of sight // a slot with its word under its icon, on the cycle button's rank (cold review of v70)
 	$('pX').innerHTML = ICON.close;
 }
 const refresh = () => {
@@ -220,11 +213,6 @@ function setPause(v) {
 	G.paused = v;
 	paceBtn();
 	if (!v && typeof spdPop === 'function') spdPop(false);
-}
-function applyMini() {
-	mini.hidden = !SET.mini;
-	$('mapT').classList.toggle('on', !!SET.mini);
-	$('stage').classList.toggle('mapOn', !!SET.mini);
 }
 // the end of a game: the sim says who won and why; the screen shows it
 function showEnd(won, text, all) {
@@ -589,6 +577,8 @@ function ui(force) {
 			[ICON.mil, String(sol), sol ? '' : 'dis'],
 		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
 		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2]));
+		txt('mailN', String(G.mailN || 0)); // the unread, beside the envelope at the top
+		$('mailB').classList.toggle('dis', !(G.mailN || 0));
 	} // the colour code on the pill: blue research you can start, red the people at the roof or idle hands; dim is nothing to see
 	rowUI();
 	{

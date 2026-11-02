@@ -174,7 +174,16 @@ const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, 
 // How long a toast stays (Nov 2, M7: 219 calls typed their own seconds, from 2 to 10): three lengths, by how much there is to read.
 // At about 200 words a minute (adult silent reading, 238 in Brysbaert's 2019 review, from memory, not opened) a short line of a few words
 // needs 2 to 3 s, a sentence 4 to 5, two sentences 7 to 8. 2 and 3 became short; 4, 5 and 6 mid; 7 to 10 long.
-const LAUNCH = { ms: 1500, r: 34 }; // the hold that launches an attack (Albert, Nov 2): how long, and the ring's radius at full, in screen points
+const LAUNCH = { ms: 1500, r: 34 };
+// The War Director (Albert, Nov 2: "a war director"): one move a kind, every soldier of that kind at once, from the battle station. Each move
+// is a drill the rules already hold, so no new number but these: how long a shield wall stands (secs), how long the volley's reload is lined
+// up (loose), and the wait after Wheel (wheel). wall: the Square shape's numbers while it stands (FORM[2]: 10% less damage, 30% less from
+// riders, 20% slower) and the Hold temper (no chase, steadier nerve). loose: every archer's reload set to zero together, so they release
+// in one instant; each arrow does its usual harm, but Dupuy's break point (MORALE.breakAt) is counted on losses in one blow, which is why
+// massed volleys broke armies the same losses spread out would not (Crécy, Agincourt; from memory). charge: CHARGE. wheel: the riders ride
+// to the far side of the enemy nearest the crosshair and hit from behind (FLANK, MORALE.rear). bombard: the engines on the nearest enemy
+// building to the crosshair, burning once Burning shot is researched (FIREARMS). back: FALLBACK.
+const DIRECT = { wall: 12, loose: 0, wheel: 15, behind: 70 }; // wall: seconds a shield wall stands; wheel: seconds before riders may wheel again; behind: how far past the foe they ride // the hold that launches an attack (Albert, Nov 2): how long, and the ring's radius at full, in screen points
 const TOAST = { short: 3, mid: 5, long: 8 };
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 

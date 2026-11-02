@@ -171,9 +171,7 @@ JS = r"""() => {
   { const keep = F.keepOf(0); keep.q.length = 0; for (let i = 0; i < 12; i++) F.train(0, 'vil'); F.openCard({ type: 'bld', id: keep.id }); F.ui(true);
     const a = $('#card [data-act^="tech:"].dis'), b = $('#card [data-act^="train:"].dis'), ec = (e) => getComputedStyle(e).borderTopColor;
     if (!a || !b) bad.push('the levels: no dim tech and dim Train button on the Town Center card'); else if (ec(a) === ec(b)) bad.push(`the levels: a dim tech's edge (${ec(a)}) is the same as a dim Train button's`);
-    keep.q.length = 0; F.closeCard();
-    const bg = () => getComputedStyle($('#hudB')).backgroundColor; F.hudPage('jobs'); F.ui(true); const j = bg(); F.hudPage('war'); F.ui(true); const w = bg(); F.hudPage('jobs'); F.ui(true);
-    if (j !== w) bad.push(`the cycle button changes with the page (${j} on Jobs, ${w} on War)`); }
+    keep.q.length = 0; F.closeCard(); }
   } catch (e) { bad.push('the levels: the check could not run: ' + e.message); }
   // card sizes (Albert, Nov 2): a card rises from the row as tall as it holds; on the House, the Barracks and the Town Center the last
   // button sits one gap above the row, nothing scrolls, and the next card does not keep the last one's height
@@ -230,11 +228,13 @@ JS = r"""() => {
   { F.openCard({ type: 'bld', id: k.id }); F.ui(true); const l = $('#card [data-act^="qlock:"]');
     if (l && /^\+\d\s*research$/i.test(l.innerText.replace(/\n/g, ' ').trim())) bad.push('a locked place in the line says "' + l.innerText.replace(/\n/g, ' ') + '", not its research'); F.act('close'); }
   } catch (e) { bad.push('a locked place in the line names its res: the check could not run: ' + e.message); }
-  // the row: Emergency a slot (the cycle button's width) on the cycle button's rank, its word under its icon; no panel behind the row (Nov 2)
+  // the row: War a slot on its own rank above the row, at the right, its word under its icon; no chevron on the left (Nov 2); no panel behind the row
   try {
-  { F.hudPage('war'); F.ui(true); const e = $('#emgB').getBoundingClientRect(), c = $('#hudB').getBoundingClientRect();
-    if (Math.abs(e.width - c.width) > 0.6 || Math.abs(e.top - c.top) > 0.6 || Math.abs(e.right - (innerWidth - 6)) > 0.6) bad.push(`the Emergency button is ${e.width.toFixed(1)} wide at ${Math.round(e.top)}, not a slot on the cycle button's rank (${c.width.toFixed(1)} at ${Math.round(c.top)})`);
-    if (!$('#emgB .wd') || $('#emgB .wd').textContent !== F.ROW_WORD.emg) bad.push('the Emergency button has no word under its icon');
+  { F.hudPage('war'); F.ui(true); const e = $('#emgB').getBoundingClientRect(), r = $('#row button').getBoundingClientRect(), slot = (innerWidth - 7 * 6) / 6;
+    if (Math.abs(e.width - slot) > 0.6 || Math.abs(r.top - e.bottom - 6) > 1 || Math.abs(e.right - (innerWidth - 6)) > 0.6) bad.push(`the War button is ${e.width.toFixed(1)} wide, ${Math.round(r.top - e.bottom)} over the row, ${Math.round(innerWidth - e.right)} from the right: not a slot one gap above the row at the right`);
+    if ($('#hudB')) bad.push('the chevron is still on the left'); if ($('#stage > #mini') && getComputedStyle($('#stage > #mini')).display !== 'none') bad.push('the small map shows outside the station');
+    if (!$('#emgB svg') || $('#emgB .wd')) bad.push('the War button does not read ✕ while the station is up'); F.hudPage('jobs'); F.ui(true);
+    if (!$('#emgB .wd') || $('#emgB .wd').textContent !== F.ROW_WORD.emg) bad.push('the War button has no word under its icon');
     if (getComputedStyle($('#orders'), '::before').content !== 'none') bad.push('a panel is drawn behind the row on the War page (Albert, Nov 2: none on any page)');
     F.hudPage('jobs'); F.ui(true); }
   } catch (e) { bad.push('the row: the check could not run: ' + e.message); }

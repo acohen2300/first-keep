@@ -185,6 +185,81 @@ function drawLaunch() {
 	}
 	ctx.restore();
 }
+// ── The War Director (06-rules-tuning, DIRECT): a tap on a kind in the station's middle is its move, a hold its second. Every soldier of
+// that kind that can be sent goes at once; the crosshair (G.hud.h) is where. Each returns what was said, or '' when nobody could go.
+const ofKind = (t) => sendable().filter((u) => clsOf(u.kind) === t);
+const aimH = () => G.hud.h || { t: 'ground', e: { x: cam.x, y: cam.y } };
+const DIRECT_WHY = { none: 'Nobody of that kind.', wheel: 'Nobody to wheel round.' };
+const DIRECTS = {
+	wall: (S) => {
+		for (const u of S) {
+			u.wall = G.t + DIRECT.wall;
+			u.state = 'goto';
+			u.px = u.x;
+			u.py = u.y;
+			u.focus = null;
+		}
+		return 'Shield wall!';
+	},
+	advance: (S) => (order(S, aimH()), 'Foot, advance!'),
+	loose: (S) => {
+		order(S, aimH());
+		for (const u of S) u.cd = DIRECT.loose; // the reload lined up: everyone in reach releases on the next step
+		return 'Archers, loose!';
+	},
+	back: (S, word) => (fallBack(0, S, undefined, word), ''), // fallBack says it
+	charge: (S) => {
+		order(S, aimH());
+		return charge(0, S) ? '' : chargeWhy(0, S); // charge() says it and sounds the horn
+	},
+	wheel: (S) => {
+		const h = aimH(),
+			foes = foesNear(h.e);
+		if (!foes.length) return DIRECT_WHY.wheel;
+		const cx = foes.reduce((s, f) => s + f.x, 0) / foes.length,
+			cy = foes.reduce((s, f) => s + f.y, 0) / foes.length,
+			mx = S.reduce((s, u) => s + u.x, 0) / S.length,
+			my = S.reduce((s, u) => s + u.y, 0) / S.length,
+			d = hyp(cx - mx, cy - my) || 1,
+			x = clamp(cx + ((cx - mx) / d) * DIRECT.behind, 20, MAP - 20),
+			y = clamp(cy + ((cy - my) / d) * DIRECT.behind, 20, MAP - 20);
+		order(S, { t: 'ground', e: { x, y } });
+		(G.wheelT = G.wheelT || {})[0] = G.t + DIRECT.wheel;
+		return 'Riders, wheel!';
+	},
+	bombard: (S) => {
+		const h = aimH(),
+			b = nearestFoeBld(0, h.e, undefined, 300);
+		order(S, b ? { t: 'bld', e: b } : h);
+		return b ? `Bombard the ${bldName(b.owner, b.kind).toLowerCase()}!` : 'Engines, forward!';
+	},
+};
+// the four kinds' moves: [tap, hold], with the word each says, and the sound
+const DIRECT_OF = [
+	[['wall', 'Shield wall', 'hit'], ['advance', 'Advance', 'horn']],
+	[['loose', 'Loose!', 'arrow'], ['back', 'Archers, fall back!', 'horn']],
+	[['charge', 'Charge', 'horn'], ['wheel', 'Wheel', 'hooves']],
+	[['bombard', 'Bombard', 'boom'], ['back', 'Engines, pull back!', 'horn']],
+];
+function direct(t, hold) {
+	const [id, word, snd] = DIRECT_OF[t][hold ? 1 : 0],
+		S = ofKind(t);
+	if (!S.length) return say(DIRECT_WHY.none, '', TOAST.short);
+	if (id === 'wheel' && (G.wheelT || {})[0] > G.t) return say(`Winded: ${Math.ceil(G.wheelT[0] - G.t)} s.`, '', TOAST.short);
+	const said = DIRECTS[id](S, word);
+	if (said === '') {
+		sfx(snd);
+		feel('snap');
+		return;
+	} // charge and fall back say their own
+	if (!/!$/.test(said)) return say(said, '', TOAST.short); // a reason ends with a stop: nobody could go
+	say(said, 'good', TOAST.short);
+	sfx(snd);
+	feel('snap');
+}
+// the wait a kind's tap still has to sit out, in seconds: the riders' charge, the wheel; 0 when it is ready
+const directWait = (t) =>
+	t === 2 ? Math.max(0, Math.ceil(Math.max((G.chargeT || {})['0:all'] || 0, (G.wheelT || {})[0] || 0) - G.t)) : 0;
 // what the game thinks fits a spot (Albert, Build 41): each reason scores a kind, the best one is marked and its menu opens.
 // A drop-off for what grows there with none near; more of what stands around you (houses: a house; fields: a mill, then a field; army buildings: the one you lack);
 // a narrow way between forest, water or buildings: a wall, or a gate beside your wall; and a house when room is short.

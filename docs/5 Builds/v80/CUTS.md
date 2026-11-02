@@ -352,3 +352,11 @@ Checks on main before publishing:
 - Tests: `tests/cards.py` the station (the Alarm button in and back, Train and Squad turning the middle, no state ring, the small map back in its corner); gate the cycle button Jobs ↔ station, Attack and Home, a double tap on the ground opens nothing; `tests/saves.py` Garrison's dot. Plants: four. [2026-11-02 16:56]
 - Parked (Albert, 16:50): fog that drifts with the wind on the small map. [2026-11-02 16:56]
 
+## Build 80 preview 28 (the War Director; War, the Mail's door, the map's one home) [2026-11-02 17:53]
+- Albert, Nov 2, 16:36 to 17:34 ("I want this like real army control"; "let's crush it"): the War Director on the station's middle, Direct in place of Orders (Orders is a hold on Train): Shield wall / Advance, Loose! / Fall back, Charge / Wheel, Bombard / Pull back, each on every soldier of its kind at once, with its horn, its line and the red flash; a wait as seconds on the slot. No new number but the seconds (DIRECT; SCIENCE). [2026-11-02 17:53]
+- The War button (was Alarm): steel, red edge, on the rank above the row at the right; ✕ while the station is up; the chevron and the page dots cut. The small map's one home is the station; the corner map, its setting and its top-bar button cut. The top bar's last cell is the Mail with its unread count: the Mail's door (D-080, open since Nov 1) closed; Milestones a row on the Score card. [2026-11-02 17:53]
+- The campaign desk (Albert's pick of the three skins): the villagers' block brown, the war block steel tinted red at the faint level; the middle brighter steel in its white-edged frame. [2026-11-02 17:53]
+- Found: fallBack says "The army fall back." for any set; it now takes the Director's words for the kind. [2026-11-02 17:53]
+- Cut: `ICON.next`, `ICON.map`, `pageCycle`, `PAGES`, `applyMini`, `SET.mini`, `SET.mapSeen`, the `map` verb. [2026-11-02 17:53]
+- Tests: gate the Director (the wall's shape and temper, the volley's reload and its hits, the charge and its wait on the slot, Bombard hitting a building, the hold's fall back), the War button turning the row, the mail count and door; `tests/cards.py` the War button a slot at the right with ✕ up, no chevron, the map nowhere but the station. [2026-11-02 17:53]
+

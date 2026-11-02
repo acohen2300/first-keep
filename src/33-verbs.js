@@ -123,11 +123,6 @@ const ACT = {
 		cardSig = '';
 		renderCard();
 	},
-	map() {
-		SET.mini = !SET.mini;
-		saveSet();
-		applyMini();
-	},
 	home() {
 		const k = keepOf(0);
 		if (k) camGo(k.x, k.y);
@@ -440,9 +435,6 @@ const PLAY = {
 		hudPage(G.hud.page === 'war' ? 'jobs' : 'war');
 		feel('tick');
 	}, // the red button: the battle station, with the Alarm's orders on its left; again, Jobs
-	pagecycle() {
-		pageCycle();
-	}, // the cycle button above slot 1: Jobs, the battle station (Build 70; Nov 2)
 	tq(a) {
 		const [t, d] = a.split(','),
 			k = kindOf(Number(t));
@@ -461,6 +453,12 @@ const PLAY = {
 		G.bnIntent[i] = k;
 		feel('tick');
 	}, // a squad's intent: one of three, chosen
+	direct(a) {
+		direct(Number(a), false);
+	}, // the War Director: a kind's move, every soldier of it at once
+	directh(a) {
+		direct(Number(a), true);
+	}, // held: the kind's second move
 	wmid(a) {
 		const H = G.hud;
 		H.mid = H.mid === a ? SMID.map : a;

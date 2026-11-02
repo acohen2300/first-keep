@@ -331,7 +331,7 @@ function draw() {
 	drawGhost();
 	{
 		const now = performance.now();
-		if ((SET.mini || G.hud.page === 'war') && now - miniT > 150) {
+		if (G.hud.page === 'war' && now - miniT > 150) {
 			miniT = now;
 			drawMini();
 		}

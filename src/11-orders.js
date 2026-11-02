@@ -636,7 +636,7 @@ function charge(o, S, bn) {
 	}
 	return true;
 }
-function fallBack(o, S, bn) {
+function fallBack(o, S, bn, who) {
 	// withdraw in order toward home: fewer losses than a rout, and no rout while it lasts
 	const h = homeOf(o);
 	if (!h) return false;
@@ -657,7 +657,7 @@ function fallBack(o, S, bn) {
 		u.ord = undefined;
 		n++;
 	}
-	if (o === 0 && n) say(`${bn !== undefined ? BN[bn] : 'The army'} fall back.`, '', TOAST.mid);
+	if (o === 0 && n) say(who || `${bn !== undefined ? BN[bn] : 'The army'} fall back.`, who ? 'good' : '', who ? TOAST.short : TOAST.mid); // the Director names the kind
 	return n > 0;
 }
 // Prisoners: a runner touched by a foe, or a man netted by the Natives. The owner may ransom them back; unransomed, they serve the captor.

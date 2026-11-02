@@ -85,13 +85,7 @@ for (const ev of ['pointerdown', 'pointermove', 'wheel'])
 		{ passive: true, capture: true },
 	);
 window.addEventListener('resize', fit);
-{
-	SET.mapSeen = true;
-	if (SET.mini === undefined) SET.mini = false;
-	saveSet();
-} // the small map starts closed; the map cell at the top opens it   // the first look shows the map; after that it stays shut until opened
 buildPanel();
-applyMini();
 fit();
 newGame();
 scoreAll();
@@ -143,7 +137,6 @@ const clip = (text) => {
 };
 window.__fk = {
 	suggestAt,
-	PAGES,
 	whoIs,
 	isNext,
 	nextStep,
@@ -158,6 +151,12 @@ window.__fk = {
 	wearMul,
 	say,
 	launchAt,
+	direct,
+	shapeOf,
+	temperOf,
+	T_HOLD,
+	DIRECT_OF,
+	ofKind,
 	HOLD_WORD,
 	fireLaunch,
 	cancelLaunch,
@@ -243,7 +242,6 @@ window.__fk = {
 	emgStop,
 	hudFire,
 	hudAbort,
-	pageCycle,
 	hudPage,
 	sqPlan,
 	sqUnits,

@@ -57,11 +57,13 @@ TITLES = """async (fixed) => { await document.fonts.ready; const F = window.__fk
 # (ROW_WORD, the paces with them), the jobs, the squads, the four kinds; under a squad the longest time; beside an icon the widest count. Measured in a
 # real slot of the War page, the cycle button and an info cell. A word that does not fit fails the gate:  --word "a long word"  shows it failing.
 SLOT_WORDS = """async (extra) => { await document.fonts.ready; const F = window.__fk, out = [];
-  F.newGame(5); F.act('close'); const G = F.G; G.P[0].techs.add('command'); F.fxDirty(); F.sqPlan(0, 'foot', 1); F.hudPage('war'); F.act('wmid:squad'); F.ui(true);
-  const words = [...Object.values(F.ROW_WORD).flat(2), ...F.RES.map((r) => F.RESOURCES[r].name), ...F.BN, ...F.CLS.map((c) => c[1]), ...extra],
-    slot = document.querySelector('#row [data-act="wsq:0"]'), top = slot.querySelector('.top'), end = document.querySelector('#row [data-act="wfire"] .wd'),
-    put = (e, t) => { e.textContent = t; return e; };
-  for (const t of words) for (const e of [slot.querySelector('.wd'), end, document.querySelector('#emgB .wd')]) if (put(e, t).scrollWidth > e.clientWidth) out.push(`${t} ${e.scrollWidth}>${e.clientWidth}`);
+  F.newGame(5); F.act('close'); const G = F.G; G.P[0].techs.add('command'); F.fxDirty(); F.sqPlan(0, 'foot', 1); F.hudPage('jobs'); F.ui(true);
+  const words = [...Object.values(F.ROW_WORD).flat(2), ...F.RES.map((r) => F.RESOURCES[r].name), ...F.BN, ...F.CLS.map((c) => c[1]), ...F.DIRECT_OF.map((d) => d[0][1]), '30 s', ...extra],
+    put = (e, t) => { e.textContent = t; return e; }, war = document.querySelector('#emgB .wd');
+  for (const t of words) if (put(war, t).scrollWidth > war.clientWidth) out.push(`${t} ${war.scrollWidth}>${war.clientWidth} (the War button)`);
+  F.hudPage('war'); F.act('wmid:squad'); F.ui(true);
+  const slot = document.querySelector('#row [data-act="wsq:0"]'), top = slot.querySelector('.top'), end = document.querySelector('#row [data-act="wfire"] .wd');
+  for (const t of words) for (const e of [slot.querySelector('.wd'), end]) if (put(e, t).scrollWidth > e.clientWidth) out.push(`${t} ${e.scrollWidth}>${e.clientWidth}`);
   if (put(top.querySelector('.c'), String(F.POPMAX)) && top.scrollWidth > top.clientWidth) out.push(`the count ${F.POPMAX} beside an icon`);
   F.act('wmid:squad'); F.act('close'); return [words.length + 1, out]; }"""
 # Every name a double-wide slot of a card can show fits it on one line at 375 x 667, in the real font (MENU-SPEC §3, §8, Build 70): every research
@@ -101,8 +103,9 @@ PLAY = """async () => {
   tap('[data-act="menu:home"]'); if (!G.card || G.card.id !== 'home') out.push('the Home tab did not open');
   tap('[data-act="build:house"]'); if (!G.place || G.place.kind !== 'house') out.push('tapping House did not start placing');
   F.act('cancel'); if (G.place) out.push('Cancel left a placement'); F.ui(true);
-  // the row (Build 70; Nov 2): one button turns Jobs, War, Train, its dot following the page; a squad opens its card, where + adds and Cancel puts back what it held
-  for (const pg of ['war', 'jobs']) { tap('#hudB'); F.ui(true); const at = [...document.querySelectorAll('#hudB .dots i')].findIndex((i) => i.classList.contains('at')); if (G.hud.page !== pg || at !== F.PAGES.indexOf(pg)) out.push('the cycle button did not turn to ' + pg + ' or its dot did not follow'); }
+  // the row (Build 70; Nov 2): the War button turns Jobs and the station; the mail button at the top counts the unread and opens the Mail (D-080); a squad opens its card, where + adds and Cancel puts back what it held
+  for (const pg of ['war', 'jobs']) { tap('#emgB'); F.ui(true); if (G.hud.page !== pg) out.push('the War button did not turn the row to ' + pg); }
+  { G.mailN = 3; F.ui(true); if (document.getElementById('mailN').textContent !== '3') out.push('the mail button does not count the unread'); tap('#mailB'); if (!G.card || G.card.type !== 'mail' || G.mailN) out.push('the mail button did not open the Mail with the count cleared'); F.act('close'); }
   G.P[0].techs.add('command'); F.fxDirty(); F.hudPage('war'); F.act('wmid:squad'); F.ui(true); F.act('sqcard:1'); if (!G.card || G.card.type !== 'squad' || G.card.i !== 1) out.push('a squad held did not open its card');
   tap('#card [data-act="sqpk:1,0,+"]'); if (G.bnPlan[1].foot !== 1) out.push('+ under Foot on the squad card added none'); tap('#card [data-act="sqcancel"]'); if (G.bnPlan[1].foot || G.card) out.push('Cancel did not put the squad back and close');
   G.P[0].techs.delete('command'); F.fxDirty(); F.hudPage('jobs'); F.ui(true);
@@ -195,6 +198,22 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
     G.P[0].techs.add('command'); F.fxDirty(); F.sqPlan(0, 'horse', 1); F.sqPlan(0, 'horse', 1); run(2); if (F.sqUnits(0).length !== 2) bad.push('squad: the plan did not fill (' + F.sqUnits(0).length + ')');
     G.hud.h = { t: 'ground', e: { x: home.x + 200, y: home.y + 60 } }; F.act('wfire'); if (!G.msn[0] || G.msn[0].name !== F.BN[0] || G.msn[0].n0 !== 2) bad.push('squad: Attack did not send the squad that was ready'); F.act('whome'); if (G.msn[0]) bad.push('squad: Home (Attack held) left its mission');
     F.hudPage('jobs'); G.P[0].techs.delete('command'); F.fxDirty(); for (let i = 0; i < 4; i++) G.msn[i] = null; G.bnPlan[0] = {}; }
+  // the War Director (Albert, Nov 2): one move a kind, every soldier of it at once, from the station's middle. Shield wall: the foot stand to the
+  // Square and hold; Loose: every archer's reload at zero, and the volley lands in one step; Charge: the riders burst; Wheel: they ride to the far
+  // side of the foe; Bombard: the engines on the nearest enemy building to the crosshair; a hold is the second move (fall back)
+  { const k = F.keepOf(0); G.fogOn = false; G.rel[0][1] = G.rel[1][0] = 'war';
+    const add = (kind, n, dx) => { const L = []; for (let i = 0; i < n; i++) L.push(F.addUnit(0, kind, k.x + dx + (i % 4) * 9, k.y + 120 + ((i / 4) | 0) * 9)); return L; };
+    const foot = add('spear', 4, -40), arch = add('archer', 4, 0), horse = add('chariot', 3, 40), eng = add('catapult', 2, 80), foes = [];
+    for (let i = 0; i < 6; i++) foes.push(F.addUnit(1, 'spear', k.x + (i % 3) * 10, k.y + 250 + ((i / 3) | 0) * 10));
+    const es = F.findSpot(1, 'house', k.x + 120, k.y + 300, 10, 200), eb = es && F.build(1, 'house', es.x, es.y); if (eb) { eb.prog = 1; eb.hp = F.BLD.house.hp; F.built(eb); }
+    F.hudPage('war'); G.hud.h = { t: 'ground', e: { x: k.x, y: k.y + 240 } }; F.act('wmid:direct'); F.ui(true);
+    if (!document.querySelector('#row .midb [data-act="direct:0"]') || document.querySelector('#row .midb [data-act="direct:1"]').dataset.hold !== 'directh:1') bad.push('director: the middle has no moves, or no hold');
+    F.act('direct:0'); if (!foot.every((u) => u.wall > G.t) || F.shapeOf(foot[0]).name !== 'Square' || F.temperOf(foot[0]) !== F.T_HOLD) bad.push('director: Shield wall did not stand the foot to the Square and hold');
+    F.act('direct:1'); if (!arch.every((u) => u.cd === 0)) bad.push('director: Loose did not line up the reload'); const h0 = foes.reduce((s, f) => s + f.hp, 0); run(3); if (!(foes.reduce((s, f) => s + f.hp, 0) < h0)) bad.push('director: the volley hit nobody');
+    F.act('direct:2'); if (!horse.some((u) => u.chg > G.t)) bad.push('director: Charge did not set the riders charging'); F.ui(true); if (!/[0-9]+ s/.test(document.querySelector('#row .midb [data-act="direct:2"]').innerText)) bad.push('director: the wait of the riders is not on their slot');
+    F.act('direct:3'); run(20); if (eb && !(eb.hp < F.BLD.house.hp)) bad.push('director: Bombard did not hit the enemy building');
+    F.act('directh:1'); if (!arch.every((u) => u.fb > G.t)) bad.push('director: a hold on Archers did not fall them back');
+    for (const u of [...foot, ...arch, ...horse, ...eng, ...foes]) u.hp = 0; if (eb) eb.hp = 0; G.rel[0][1] = G.rel[1][0] = 'neutral'; F.hudPage('jobs'); G.hud.mid = 'map'; G.fogOn = true; }
   // emergencies (Build 70, four orders): Town square gathers everyone round the Town Center and Stop sends the villagers back to their work;
   // All hands: villagers take cover in the sturdiest building first, soldiers garrison; Stop sends the villagers back and the soldiers stay
   { const home = G.blds.find((b) => b.owner === 0), k = F.keepOf(0); for (let i = 0; i < 4; i++) F.addUnit(0, 'spear', home.x + 70 + i * 6, home.y + 40); const vil0 = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), ids = new Set(vil0.map((u) => u.id)), jobs = vil0.map((u) => u.job).join(',');   // the villagers there at the start: one trained meanwhile is not a job to restore
