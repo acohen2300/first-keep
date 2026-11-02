@@ -174,7 +174,6 @@ const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, 
 // How long a toast stays (Nov 2, M7: 219 calls typed their own seconds, from 2 to 10): three lengths, by how much there is to read.
 // At about 200 words a minute (adult silent reading, 238 in Brysbaert's 2019 review, from memory, not opened) a short line of a few words
 // needs 2 to 3 s, a sentence 4 to 5, two sentences 7 to 8. 2 and 3 became short; 4, 5 and 6 mid; 7 to 10 long.
-const CARD_RANKS = { small: 3, full: 7, keep: 8 }; // a building card's fixed heights in ranks, its title included (Albert, Nov 2; MENU-SPEC §8); a kind whose card has a line of its own (a field's crop, a castle mending) is one more; the Town Center 8, for its Misfits tab
 const TOAST = { short: 3, mid: 5, long: 8 };
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 

@@ -823,15 +823,6 @@ const GUIDE_PG = { key: '', h: '' }; // the Guide's page, built once a page (CAR
 const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'research', 'menu', 'troops']); // the cards that take the whole height; the Army card with Battalions needs 11 ranks (E8)
 // three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet: lg every rank that fits above the row (the Build
 // card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most
-// a building's card is one of two fixed heights, by its kind, never by what it shows today (Albert, Nov 2, no card that changes). Full,
-// half the screen, where it trains or makes goods, the Town Center, the Town, and the two whose work or techs pass the small one (School,
-// Quarry, Library). Small, the title and two ranks, for the rest. The Market keeps the whole height (lg): its goods selector needs nine ranks.
-// Another side's building fits what it shows
-const bldFull = (kind) => trainsAt(kind).length > 0 || !!BLD[kind].makes || ['keep', 'town', 'school', 'quarry', 'library'].includes(kind);
-const fixOf = (c) => {
-	const b = c.type === 'bld' && byId(G.blds, c.id);
-	return b && b.owner === 0 && b.kind !== 'market' ? (b.kind === 'keep' ? CARD_RANKS.keep : bldFull(b.kind) ? CARD_RANKS.full : CARD_RANKS.small + (BLD_PAGE[b.kind] && BLD_PAGE[b.kind](b).fact ? 1 : 0)) : 0;
-};
 const SIZE_OF = (c) =>
 	FULL.has(c.type) || (c.type === 'bld' && (byId(G.blds, c.id) || {}).kind === 'market')
 		? 'lg'
@@ -861,10 +852,7 @@ function renderCard() {
 		cardSig = h;
 		patchHTML(cardIn, h);
 	}
-	const size = SIZE_OF(c),
-		fix = fixOf(c);
-	$('card').dataset.fix = fix || '';
-	cardRanks(); // now, not when the observer next sees a change: the last card's height never lingers
+	const size = SIZE_OF(c);
 	for (const s of ['lg', 'md', 'sm']) $('card').classList.toggle(s, size === s);
 	$('card').hidden = false;
 }

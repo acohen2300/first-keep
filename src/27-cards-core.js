@@ -99,16 +99,9 @@ function patchHTML(el, html) {
 	tpl.innerHTML = html;
 	patchKids(el, tpl);
 }
-// A card rises from the row in whole ranks (MENU-SPEC §1): its height is its content rounded up to the next rank, never more than its size
-// allows (the style sheet's --capH). One observer sees every change of the content: a new page, a fold opened, the font arriving.
+// A card rises from the row (MENU-SPEC §1): as tall as what it holds, its last rank always one gap above the row, never more than its size
+// allows (the style sheet's --capH; Albert, Nov 2: bottom-anchored, no rank of padding)
 const cardIn = $('card').firstElementChild;
-function cardRanks() {
-	const s = getComputedStyle(document.documentElement),
-		gap = parseFloat(s.getPropertyValue('--gap')),
-		rank = parseFloat(s.getPropertyValue('--slot')) + gap;
-	$('card').style.setProperty('--rk', Number($('card').dataset.fix) || Math.max(1, Math.ceil((cardIn.offsetHeight + gap) / rank))); // a building's card keeps its fixed height (fixOf)
-}
-new ResizeObserver(cardRanks).observe(cardIn);
 // ── the pieces every card is made of. The slot is a button; the Formation lays them (MENU-SPEC §2, §3); the states are classes (§9):
 // go ready (blue ring), on chosen (gold ring), warn danger (red ring, breathing), work in progress (the green ring that recedes, --p the
 // share still to go: toGo), dis locked (dim), main the card's one main action (the gold fill). A cell's span is a class too: h (a half slot), s1 to s6

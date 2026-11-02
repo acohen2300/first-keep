@@ -145,7 +145,6 @@ window.__fk = {
 	suggestAt,
 	holdAt,
 	PAGES,
-	CARD_RANKS,
 	whoIs,
 	isNext,
 	nextStep,

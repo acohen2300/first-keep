@@ -175,13 +175,13 @@ JS = r"""() => {
     const bg = () => getComputedStyle($('#hudB')).backgroundColor; F.hudPage('jobs'); F.ui(true); const j = bg(); F.hudPage('war'); F.ui(true); const w = bg(); F.hudPage('jobs'); F.ui(true);
     if (j !== w) bad.push(`the cycle button changes with the page (${j} on Jobs, ${w} on War)`); }
   } catch (e) { bad.push('the levels: the check could not run: ' + e.message); }
-  // card sizes (Albert, Nov 2): a building's card is one of two fixed heights by its kind: the House small (4 ranks), the Barracks full (8),
-  // whatever it shows; the next card does not keep the last one's height
+  // card sizes (Albert, Nov 2): a card rises from the row as tall as it holds; on the House, the Barracks and the Town Center the last
+  // button sits one gap above the row, nothing scrolls, and the next card does not keep the last one's height
   try {
-  { const rk = () => Number($('#card').style.getPropertyValue('--rk')), H = put('house'), B = put('barracks');
-    F.openCard({ type: 'bld', id: H.id }); F.ui(true); const h = rk(); F.closeCard(); F.openCard({ type: 'bld', id: B.id }); F.ui(true); const b = rk();
-    B.prog = 0.5; F.ui(true); const b2 = rk(); B.prog = 1; F.closeCard();
-    if (h !== F.CARD_RANKS.small || b !== F.CARD_RANKS.full || b2 !== b) bad.push(`card sizes: the House ${h} ranks, the Barracks ${b} then ${b2}, not ${F.CARD_RANKS.small} and ${F.CARD_RANKS.full} always`); }
+  for (const kind of ['house', 'barracks', 'keep']) { const b = G.blds.find((x) => x.owner === 0 && x.kind === kind && x.prog >= 1) || put(kind); F.openCard({ type: 'bld', id: b.id }); F.ui(true);
+    const c = $('#card'), last = Math.max(...[...c.querySelectorAll('button')].map((x) => x.getBoundingClientRect().bottom)), row = $('#row button').getBoundingClientRect().top;
+    if (Math.abs(row - last - 6) > 1.5 || c.scrollHeight > c.clientHeight + 1) bad.push(`card sizes: on the ${kind} the last button is ${Math.round(row - last)} px above the row (one gap is 6)${c.scrollHeight > c.clientHeight + 1 ? ', and it scrolls' : ''}`);
+    F.closeCard(); }
   } catch (e) { bad.push('card sizes: the check could not run: ' + e.message); }
   // the title box (Albert, Nov 2): a building's health a bar under its name and its age the top edge; no second line on your own House;
   // a building going up wears the working ring instead

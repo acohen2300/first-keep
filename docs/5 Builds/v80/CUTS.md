@@ -327,3 +327,8 @@ Checks on main before publishing:
 - Tests: cards.py the title box, card sizes at 3 / 7 / 8; gate the page dot follows the page; palette.py the glass over white. Plants: four new, one repointed (E11), caught. Gate passes. [2026-11-02 14:15]
 - Cut: Emergency, Stop, Town square, All hands (as names), the ↻ icon and the page word on the cycle button, the info line on your own building cards. [2026-11-02 14:15]
 
+## Build 80 preview 24 (cards bottom-anchored) [2026-11-02 14:38]
+- Albert, Nov 2, 14:26 to 14:33 (go for it): the fixed card heights of preview 23 padded the Barracks and the Town Center 106 px over the row; a card now rises from the row as tall as it holds, its last button one gap (6 px) above the row on every card. Whole-rank rounding cut too (it left up to a rank of padding). [2026-11-02 14:38]
+- Code: the fixed heights (`CARD_RANKS`, `fixOf`, `bldFull`), the content observer and `--rk` cut; the style sheet's `max-height` is the whole rule. [2026-11-02 14:38]
+- Tests: `tests/cards.py` card sizes now measures the gap over the row on the House, the Barracks and the Town Center; its plant (a card padded to its cap) caught; the two fixed-height plants removed. Gate passes. [2026-11-02 14:38]
+

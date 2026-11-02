@@ -138,11 +138,11 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 .cell .top~.wd{color:var(--white-dim)}
 .cell.sym .gl{top:50%;width:24px;height:24px}
 /* The card (MENU-SPEC §1, §4): its slots on the screen's own grid, 6 from the edge and 6 from the row, its frame an outline down the middle
-   of that 6 (9, so the curves nest): a card of n ranks stands exactly n ranks tall. It rises from the row in whole ranks: its content
-   rounded up to the next rank (--rk, renderCard), at most every rank that fits above the row: a large card all of them (the preview steps
+   of that 6 (9, so the curves nest): a card of n ranks stands exactly n ranks tall. It rises from the row as tall as its content (Albert,
+   Nov 2: bottom-anchored, its last rank one gap above the row), at most every rank that fits above the row: a large card all of them (the preview steps
    aside), a middle one 10 and a small one 8, each below the preview's rank under the strip */
 #card{position:absolute;left:calc(var(--gap) / 2);right:calc(var(--gap) / 2);bottom:calc(var(--ob) + var(--gap) / 2);box-sizing:border-box;padding:calc(var(--gap) / 2);
-  --capH:min(var(--cap) * var(--rank),round(down,100% - var(--ob) - var(--hb) - var(--gap) - var(--pv),var(--rank)));height:min(var(--capH),var(--rk,99) * var(--rank));
+  --capH:min(var(--cap) * var(--rank),round(down,100% - var(--ob) - var(--hb) - var(--gap) - var(--pv),var(--rank)));max-height:var(--capH);
   overflow-y:auto;scrollbar-width:none;background:color-mix(in srgb,var(--brown-1) var(--glass),transparent);border-radius:var(--rad-o);outline:1px solid var(--brown-3);outline-offset:-1px;box-shadow:var(--shade);color:var(--ring-w)}   /* the edge an outline, drawn over what scrolls */
 #card.lg{--cap:99;--pv:0px}#card.md{--cap:10;--pv:var(--rank)}#card.sm{--cap:8;--pv:var(--rank)}
 .night #card{filter:brightness(.88)}
@@ -5480,7 +5480,6 @@ const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, 
 // How long a toast stays (Nov 2, M7: 219 calls typed their own seconds, from 2 to 10): three lengths, by how much there is to read.
 // At about 200 words a minute (adult silent reading, 238 in Brysbaert's 2019 review, from memory, not opened) a short line of a few words
 // needs 2 to 3 s, a sentence 4 to 5, two sentences 7 to 8. 2 and 3 became short; 4, 5 and 6 mid; 7 to 10 long.
-const CARD_RANKS = { small: 3, full: 7, keep: 8 }; // a building card's fixed heights in ranks, its title included (Albert, Nov 2; MENU-SPEC §8); a kind whose card has a line of its own (a field's crop, a castle mending) is one more; the Town Center 8, for its Misfits tab
 const TOAST = { short: 3, mid: 5, long: 8 };
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
@@ -22641,16 +22640,9 @@ function patchHTML(el, html) {
 	tpl.innerHTML = html;
 	patchKids(el, tpl);
 }
-// A card rises from the row in whole ranks (MENU-SPEC §1): its height is its content rounded up to the next rank, never more than its size
-// allows (the style sheet's --capH). One observer sees every change of the content: a new page, a fold opened, the font arriving.
+// A card rises from the row (MENU-SPEC §1): as tall as what it holds, its last rank always one gap above the row, never more than its size
+// allows (the style sheet's --capH; Albert, Nov 2: bottom-anchored, no rank of padding)
 const cardIn = $('card').firstElementChild;
-function cardRanks() {
-	const s = getComputedStyle(document.documentElement),
-		gap = parseFloat(s.getPropertyValue('--gap')),
-		rank = parseFloat(s.getPropertyValue('--slot')) + gap;
-	$('card').style.setProperty('--rk', Number($('card').dataset.fix) || Math.max(1, Math.ceil((cardIn.offsetHeight + gap) / rank))); // a building's card keeps its fixed height (fixOf)
-}
-new ResizeObserver(cardRanks).observe(cardIn);
 // ── the pieces every card is made of. The slot is a button; the Formation lays them (MENU-SPEC §2, §3); the states are classes (§9):
 // go ready (blue ring), on chosen (gold ring), warn danger (red ring, breathing), work in progress (the green ring that recedes, --p the
 // share still to go: toGo), dis locked (dim), main the card's one main action (the gold fill). A cell's span is a class too: h (a half slot), s1 to s6
@@ -24699,15 +24691,6 @@ const GUIDE_PG = { key: '', h: '' }; // the Guide's page, built once a page (CAR
 const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'research', 'menu', 'troops']); // the cards that take the whole height; the Army card with Battalions needs 11 ranks (E8)
 // three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet: lg every rank that fits above the row (the Build
 // card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most
-// a building's card is one of two fixed heights, by its kind, never by what it shows today (Albert, Nov 2, no card that changes). Full,
-// half the screen, where it trains or makes goods, the Town Center, the Town, and the two whose work or techs pass the small one (School,
-// Quarry, Library). Small, the title and two ranks, for the rest. The Market keeps the whole height (lg): its goods selector needs nine ranks.
-// Another side's building fits what it shows
-const bldFull = (kind) => trainsAt(kind).length > 0 || !!BLD[kind].makes || ['keep', 'town', 'school', 'quarry', 'library'].includes(kind);
-const fixOf = (c) => {
-	const b = c.type === 'bld' && byId(G.blds, c.id);
-	return b && b.owner === 0 && b.kind !== 'market' ? (b.kind === 'keep' ? CARD_RANKS.keep : bldFull(b.kind) ? CARD_RANKS.full : CARD_RANKS.small + (BLD_PAGE[b.kind] && BLD_PAGE[b.kind](b).fact ? 1 : 0)) : 0;
-};
 const SIZE_OF = (c) =>
 	FULL.has(c.type) || (c.type === 'bld' && (byId(G.blds, c.id) || {}).kind === 'market')
 		? 'lg'
@@ -24737,10 +24720,7 @@ function renderCard() {
 		cardSig = h;
 		patchHTML(cardIn, h);
 	}
-	const size = SIZE_OF(c),
-		fix = fixOf(c);
-	$('card').dataset.fix = fix || '';
-	cardRanks(); // now, not when the observer next sees a change: the last card's height never lingers
+	const size = SIZE_OF(c);
 	for (const s of ['lg', 'md', 'sm']) $('card').classList.toggle(s, size === s);
 	$('card').hidden = false;
 }
@@ -31036,7 +31016,6 @@ window.__fk = {
 	suggestAt,
 	holdAt,
 	PAGES,
-	CARD_RANKS,
 	whoIs,
 	isNext,
 	nextStep,
