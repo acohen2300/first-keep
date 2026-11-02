@@ -65,7 +65,7 @@ PLANTS = [
   ('29-card-pages.js', "acts(cells.join(''), 'c6 queue')", "acts(cells.join(''), 'c6')", 'tests/cards.py', 'Q1: the training line loses its steel box', 'Q1:'),
   ('28-army-quick.js', "x = G.qa.left ? G.qa.sx + s / 2 - w : G.qa.sx - s / 2;", "x = G.qa.sx;", 'tests/gate.py', 'quick: the sword is off the finger', 'not centred under'),
   ('26-input.js', "	if (h.t !== 'ground' || picked().length) return tapAt(sx, sy);", "	return tapAt(sx, sy);", 'tests/gate.py', 'a hold on the ground no longer opens the Here card', 'hold on the ground'),
-  ('30-cards.js', "	cardRanks(); // now", "	// now", 'tests/cards.py', 'a card keeps the last card\'s height', 'Mail: the card scrolls'),
+  ('30-cards.js', "	cardRanks(); // now", "	// now", 'tests/cards.py', 'a card keeps the last card\'s height', 'card sizes'),
   ('30-cards.js', "['keep', 'town', 'school', 'quarry']", "['keep', 'town', 'school', 'quarry', 'house']", 'tests/cards.py', 'cards: the House gets the full card', 'card sizes'),
   ('33-verbs.js', "		if (G.hud.page === 'emg') return hudPage(G.hud.from || 'jobs');", "", 'tests/cards.py', 'Emergency: the red button does not turn the row back', 'Emergency page'),
   ('shell-head.html', '[data-act^="tech:"].dis:not(.pill>*){border-color:var(--white-faint)}', '', 'tests/cards.py', 'levels: a dim tech loses its faint white edge', 'the levels'),
