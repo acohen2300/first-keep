@@ -29,3 +29,6 @@ Albert, Nov 2, 10:05 to 10:17: "set up a group of things and then every other th
 4. One looks-dice (2). [2026-11-02 10:19]
 5. Words home (7) and the card mold (8): the largest, file by file. [2026-11-02 10:19]
 6. Drawings by material (6): last; the most work for the least a player sees. [2026-11-02 10:19]
+
+## Done (Nov 2, preview 17) [2026-11-02 10:41]
+- 2 the looks' dice (`lookDice`), 10 the army (`armyFree`), 11 the clock, 12 the rings (`ring`): one home each. 7 and 8 parked (Parked.md, O5 and O6). [2026-11-02 10:41]

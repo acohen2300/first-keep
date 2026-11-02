@@ -60,7 +60,7 @@ function sndInit() {
 		} // a limiter: a battle's many hits never clip a phone speaker
 		NOISE = AC.createBuffer(1, AC.sampleRate, AC.sampleRate);
 		const d = NOISE.getChannelData(0);
-		for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+		for (let i = 0; i < d.length; i++) d[i] = lookDice() * 2 - 1;
 		if (AC.state !== 'running') AC.resume().catch(() => {});
 	} catch (e) {
 		AC = null;
@@ -416,13 +416,13 @@ function ambience(dt) {
 		T = [];
 	if (!winter && !night)
 		for (const n of G.nodes) if (n.kind === 'tree' && n.amt > 0 && n.x > x0 && n.x < x1 && n.y > y0 && n.y < y1 && T.push(n) >= AMB.maxSingers) break;
-	if (T.length && Math.random() < 1 - Math.exp(-AMB.bird * T.length)) {
-		const t = T[(Math.random() * T.length) | 0];
+	if (T.length && lookDice() < 1 - Math.exp(-AMB.bird * T.length)) {
+		const t = T[(lookDice() * T.length) | 0];
 		return sfx('bird', t.x, t.y);
 	}
-	if (night && !winter && Math.random() < 1 - Math.exp(-AMB.cricket * AMB.maxSingers))
-		return sfx('cricket', cam.x + (Math.random() - 0.5) * (x1 - x0), cam.y + (Math.random() - 0.5) * (y1 - y0));
-	if (Math.abs(wind) > AMB.wind && Math.random() < Math.abs(wind) / 4) sfx('wind'); // the wind is everywhere: no place, its own strength
+	if (night && !winter && lookDice() < 1 - Math.exp(-AMB.cricket * AMB.maxSingers))
+		return sfx('cricket', cam.x + (lookDice() - 0.5) * (x1 - x0), cam.y + (lookDice() - 0.5) * (y1 - y0));
+	if (Math.abs(wind) > AMB.wind && lookDice() < Math.abs(wind) / 4) sfx('wind'); // the wind is everywhere: no place, its own strength
 }
 
 // Thunder comes after the flash by the real delay (SOUND.c over SOUND.metre), quieter by the same law as every sound; a strike is loud enough to carry the map

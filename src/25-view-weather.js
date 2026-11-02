@@ -39,7 +39,7 @@ function drawWeather() {
 			m.x += wind * 60 * dt;
 			if (m.y > ch + 12) {
 				m.y = -12;
-				m.x = Math.random() * cw;
+				m.x = lookDice() * cw;
 			}
 			if (m.x < -24) m.x = cw + 12;
 			else if (m.x > cw + 24) m.x = -12;
@@ -65,14 +65,14 @@ function drawWeather() {
 		}
 	}
 	// the storm's own lightning: far sheet flashes while it walks, a close bolt now and then (the strikes on buildings come from 36-economy)
-	if (stormy && !still() && !G.paused && now - sheetT > 2.5 + 6 * Math.random() && flashOK(now)) {
+	if (stormy && !still() && !G.paused && now - sheetT > 2.5 + 6 * lookDice() && flashOK(now)) {
 		// not while paused: a bolt ages on the game clock, so one made in a pause never faded and they piled up, each with its thunder (Build 60)
 		sheetT = now;
-		const close = Math.random();
+		const close = lookDice();
 		if (close > 0.75) {
-			const bx = cam.x + ((Math.random() - 0.5) * cw) / z,
-				by = cam.y + ((Math.random() - 0.5) * ch) / z;
-			(G.bolts = G.bolts || []).push({ x: bx, y: by, t: G.t, seed: Math.random() });
+			const bx = cam.x + ((lookDice() - 0.5) * cw) / z,
+				by = cam.y + ((lookDice() - 0.5) * ch) / z;
+			(G.bolts = G.bolts || []).push({ x: bx, y: by, t: G.t, seed: lookDice() });
 			thunder(bx, by);
 		} else {
 			flashA = Math.max(flashA, 0.25 + 0.3 * close);

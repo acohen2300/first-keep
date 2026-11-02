@@ -10,9 +10,7 @@ function drawBld(b, s) {
 			ctx.strokeStyle = 'rgba(255,211,94,.7)';
 			ctx.setLineDash([3, 3]);
 			ctx.lineWidth = 1;
-			ctx.beginPath();
-			ctx.ellipse(x, y, 6 * z, 3.6 * z, 0, 0, 7);
-			ctx.stroke();
+			ring(x, y, 6 * z, 3.6 * z);
 			ctx.setLineDash([]);
 			return;
 		}
@@ -505,9 +503,7 @@ function ripDraw() {
 		ctx.strokeStyle = RIPS[i].col;
 		ctx.globalAlpha = 1 - a;
 		ctx.lineWidth = 2;
-		ctx.beginPath();
-		ctx.ellipse(SX(RIPS[i].x), SY(RIPS[i].y), (6 + a * 18) * z, (6 + a * 18) * z * TILT, 0, 0, 7);
-		ctx.stroke();
+		ring(SX(RIPS[i].x), SY(RIPS[i].y), (6 + a * 18) * z, (6 + a * 18) * z * TILT);
 		ctx.globalAlpha = 1;
 	}
 }
@@ -594,9 +590,7 @@ function drawNode(n, s) {
 		const ph = (G.t * 0.5 + n.id * 0.13) % 1;
 		ctx.strokeStyle = `rgba(225,242,255,${0.6 * (1 - ph)})`;
 		ctx.lineWidth = 1;
-		ctx.beginPath();
-		ctx.ellipse(sx, sy, (3 + ph * 6) * z, (1.5 + ph * 3) * z * TILT, 0, 0, 7);
-		ctx.stroke();
+		ring(sx, sy, (3 + ph * 6) * z, (1.5 + ph * 3) * z * TILT);
 		return;
 	}
 	if (n.kind === 'meat') {
@@ -663,13 +657,9 @@ function drawStandards(z, inView) {
 		STANDARDS.push({ x, y, o: g.o });
 		ctx.lineWidth = Math.max(2, 2.4 * z);
 		ctx.strokeStyle = 'rgba(16,12,8,.6)';
-		ctx.beginPath();
-		ctx.ellipse(x, y, r, r * TILT, 0, 0, 7);
-		ctx.stroke();
+		ring(x, y, r, r * TILT);
 		ctx.strokeStyle = col;
-		ctx.beginPath();
-		ctx.ellipse(x, y, r, r * TILT, 0, -Math.PI / 2, -Math.PI / 2 + f * 6.283);
-		ctx.stroke(); // the ring: how much of the group's health is left
+		ring(x, y, r, r * TILT, -Math.PI / 2, -Math.PI / 2 + f * 6.283); // the ring: how much of the group's health is left
 		ctx.strokeStyle = '#3a2a1a';
 		ctx.lineWidth = Math.max(1, 1.1 * z);
 		ctx.beginPath();
@@ -787,9 +777,7 @@ function drawUnit(u, s) {
 	if (u.owner === 0 && G.sel !== 'all' && u.bn === G.sel) {
 		ctx.strokeStyle = '#ffd35e';
 		ctx.lineWidth = 1.4;
-		ctx.beginPath();
-		ctx.ellipse(sx, sy, 7 * z + 2, 3.4 * z + 1, 0, 0, 7);
-		ctx.stroke();
+		ring(sx, sy, 7 * z + 2, 3.4 * z + 1);
 	}
 	if (u.owner !== WILD) {
 		ctx.fillStyle = col;
@@ -841,9 +829,7 @@ function drawUnit(u, s) {
 	if (u.zeal > G.t) {
 		ctx.strokeStyle = 'rgba(244,206,90,.85)';
 		ctx.lineWidth = 1.4;
-		ctx.beginPath();
-		ctx.ellipse(sx, sy - 6 * z, 8 * z, 9 * z, 0, 0, 7);
-		ctx.stroke();
+		ring(sx, sy - 6 * z, 8 * z, 9 * z);
 	}
 	if (u.hp < u.max - 0.5 && z > 0.45)
 		bar(sx, top - 5, Math.max(12, 12 * z), u.hp / u.max, u.owner === WILD ? '#c9b48a' : col);
@@ -1270,9 +1256,7 @@ function drawPicks(z) {
 					: own === undefined || own === null || own === WILD
 						? '#ffd35e'
 						: '#ff6a52';
-		ctx.beginPath();
-		ctx.ellipse(SX(e.x), SY(e.y), r * z + 3, r * z * TILT + 2, 0, 0, 7);
-		ctx.stroke();
+		ring(SX(e.x), SY(e.y), r * z + 3, r * z * TILT + 2);
 	}
 }
-const rnd2 = () => Math.random() * 2 - 1;
+const rnd2 = () => lookDice() * 2 - 1;

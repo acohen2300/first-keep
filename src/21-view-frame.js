@@ -6,14 +6,14 @@ function makeBg() {
 	bg.width = bg.height = N;
 	const b = bg.getContext('2d');
 	b.scale(bgK, bgK);
-	const R = (a, z) => a + Math.random() * (z - a);
+	const R = (a, z) => a + lookDice() * (z - a);
 	b.fillStyle = '#4a6634';
 	b.fillRect(0, 0, MAP, MAP);
 	const blot = (n, cols, r0, r1) => {
 		for (let i = 0; i < n; i++) {
 			b.fillStyle = cols[i % cols.length];
 			b.beginPath();
-			b.ellipse(Math.random() * MAP, Math.random() * MAP, R(r0, r1), R(r0, r1) * 0.7, R(0, 3), 0, 7);
+			b.ellipse(lookDice() * MAP, lookDice() * MAP, R(r0, r1), R(r0, r1) * 0.7, R(0, 3), 0, 7);
 			b.fill();
 		}
 	};
@@ -27,9 +27,9 @@ function makeBg() {
 		} // the floor of a wood is darker, needles and leaf litter, and stays when the trees are cut (Build 52)
 	blot(220, ['rgba(122,100,62,.16)', 'rgba(140,118,76,.12)'], 10, 34);
 	for (let i = 0; i < 500; i++) {
-		b.fillStyle = Math.random() < 0.5 ? 'rgba(230,220,120,.5)' : 'rgba(235,235,245,.45)';
+		b.fillStyle = lookDice() < 0.5 ? 'rgba(230,220,120,.5)' : 'rgba(235,235,245,.45)';
 		b.beginPath();
-		b.arc(Math.random() * MAP, Math.random() * MAP, 2.4, 0, 7);
+		b.arc(lookDice() * MAP, lookDice() * MAP, 2.4, 0, 7);
 		b.fill();
 	}
 	// A river is drawn as one stream (Build 53): each unbroken run of pools is a smooth curve through their centres, stroked three times
@@ -182,9 +182,9 @@ function makeBg() {
 	const q = t.getContext('2d');
 	q.lineCap = 'round';
 	for (let i = 0; i < 260; i++) {
-		const x = Math.random() * 128,
-			y = Math.random() * 128;
-		q.strokeStyle = Math.random() < 0.5 ? 'rgba(28,48,22,.42)' : 'rgba(140,170,90,.32)';
+		const x = lookDice() * 128,
+			y = lookDice() * 128;
+		q.strokeStyle = lookDice() < 0.5 ? 'rgba(28,48,22,.42)' : 'rgba(140,170,90,.32)';
 		q.lineWidth = 1.4;
 		q.beginPath();
 		q.moveTo(x, y);

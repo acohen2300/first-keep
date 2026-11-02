@@ -33,6 +33,8 @@ const standing = (b, o) => b.owner === o && b.prog >= 1 && b.hp > 0; // a buildi
 const crowd = (n, d) => (n.wk = Math.max(0, (n.wk || 0) + d));
 // the seeded dice for drawings and the sky (Park and Miller's minimal standard, 1988, a = 16807, m = 2³¹ − 1): the same picture every time
 const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647;
+// the looks' dice (Nov 2, O4): the sky, the sound, the ground's texture, the smoke; never the game's rules (those are rng, seeded by the game)
+const lookDice = NS_rng(7919);
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
 const costText = (c) =>
 	Object.entries(c || {})
@@ -104,7 +106,7 @@ function nearest(list, from, ok, maxD = 1e9) {
 	}
 	return best;
 }
-// The simulation's dice are seeded, so a game can be replayed and tested; looks use Math.random.
+// The simulation's dice are seeded, so a game can be replayed and tested; looks use lookDice (08-core).
 function rng() {
 	let t = (G.rs = (G.rs + 0x6d2b79f5) | 0);
 	t = Math.imul(t ^ (t >>> 15), t | 1);
@@ -265,7 +267,17 @@ const readyAt = (o, U) => [U.at, ...(U.also || [])].flatMap((k) => ready(o, k));
 const unitsOf = (o, kind) => G.units.filter((u) => u.owner === o && u.hp > 0 && (!kind || u.kind === kind)); // the living: the dead leave the list only at the end of a step
 const isSoldier = (u) => UNIT[u.kind].tick === 'sol';
 const soldiersOf = (o) => G.units.filter((u) => u.owner === o && u.hp > 0 && isSoldier(u));
-const armyOf = (o) => G.units.filter((u) => u.owner === o && u.hp > 0 && UNIT[u.kind].cls === 'army');
+const armyOf = (o) => G.units.filter((u) => u.owner === o && u.hp > 0 && UNIT[u.kind].cls === 'army'); // the army: the fighters, the spy, the priest, the medic
+// One home for "your army less who is busy" (Nov 2, O2: four filters wrote it four ways). Each order names what it leaves out
+const BUSY = {
+	spy: (u) => u.kind === 'spy', // a spy keeps to its watch
+	shrine: (u) => u.state === 'shrine', // a priest holding a shrine
+	escort: (u) => u.state === 'escort', // a guard keeps to what it guards
+	school: (u) => u.state === 'school', // a student keeps its lesson (C10)
+	rout: (u) => u.state === 'rout', // its nerve is broken
+	unarmed: (u) => !isSoldier(u), // a priest or a medic does not fight
+};
+const armyFree = (o, ...skip) => armyOf(o).filter((u) => !skip.some((k) => BUSY[k](u)));
 const popOf = (o) => {
 	const C = qc();
 	if (C.pop[o] === undefined) {
@@ -341,7 +353,7 @@ const queuedOf = (o, kind) =>
 		0,
 	);
 const orderSet = () =>
-	armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && (G.sel === 'all' || u.bn === G.sel)); // spies and priests holding a shrine keep their own work
+	armyFree(0, 'spy', 'shrine').filter((u) => G.sel === 'all' || u.bn === G.sel); // spies and priests holding a shrine keep their own work
 const selName = () => (G.sel === 'all' ? 'army' : BN[G.sel]);
 const hasCmd = () => G.P[0].techs.has('command');
 const formOf = (u) => (u.owner === 0 && u.bn !== undefined && G.P[0].techs.has('formations') ? G.form[u.bn] || 0 : 0);

@@ -35,7 +35,6 @@ function chance(S, foes) {
 	return lanchester(r);
 }
 const dpsOf = (L) => L.reduce((s, v) => s + dmgOf(v) / (UNIT[v.kind].cd || 1.5), 0);
-const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const wxWord = () => (G.wx !== 'clear' && WEATHER[G.wx] ? WEATHER[G.wx].name : season().name);
 // a squad's pace in a word, from its slowest member (an elephant makes it slow, horse alone fast): what the card and the tile say (Albert, Build 63)
 function paceWord(S) {
@@ -267,7 +266,7 @@ function waveLine(plan) {
 		return k.size === 1 ? CLS[[...k][0]][3] : 'soldiers';
 	};
 	return plan.waves
-		.map((w, i) => `${w.list.length} ${i ? 'more' : word(w.list)} ${i ? 'by' : 'in'} ${mmss(w.t)}`)
+		.map((w, i) => `${w.list.length} ${i ? 'more' : word(w.list)} ${i ? 'by' : 'in'} ${clock(w.t)}`)
 		.join(', ');
 }
 // units moved into a mission (a reinforcement): they march to its middle and join its order
@@ -327,7 +326,7 @@ function warPage() {
 			low += info('', '');
 		} else {
 			top += pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, fight ? 'warn' : m ? 'work' : ready ? 'go' : '', S.length, m && !fight ? ` style="${toGo((m.eta ?? m.due - G.t) / Math.max(1, m.due - m.t))}"` : '');
-			low += info(fight ? '—' : m ? mmss(m.eta ?? m.due - G.t) : ready ? mmss(hudEta(i)) : '—', fight ? ROW_WORD.fight : paceWord(S));
+			low += info(fight ? '—' : m ? clock(m.eta ?? m.due - G.t) : ready ? clock(hudEta(i)) : '—', fight ? ROW_WORD.fight : paceWord(S));
 		}
 	});
 	return top + sym('wfire', ICON.ok, H.h && free().length ? 'go' : 'dis', 'Go') + low + sym('wabort', ICON.close, '', 'Abort');
@@ -436,7 +435,7 @@ function drawReticle() {
 	ctx.stroke();
 	ctx.font = mapFont(); // pinned to the screen
 	ctx.textAlign = 'center';
-	ctx.fillText(eta ? `${mmss(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - R - 8);
+	ctx.fillText(eta ? `${clock(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - R - 8);
 	ctx.restore();
 }
 // ── the squad card (MENU-SPEC §8, picture Mission Flow): the squad builder while it is home, the live view while it is out (Build 61, one card, two states)
@@ -459,7 +458,7 @@ function squadHomeHTML(c) {
 		n = Object.values(P).reduce((s, v) => s + v, 0),
 		H = G.hud,
 		eta = H.h && sqFree(i).length ? hudEta(i) : 0;
-	title(BN[i], `${sqUnits(i).length} at home${eta ? ` · ${mmss(eta)} to ${coord(H.h.e.x, H.h.e.y)}` : ''}`);
+	title(BN[i], `${sqUnits(i).length} at home${eta ? ` · ${clock(eta)} to ${coord(H.h.e.x, H.h.e.y)}` : ''}`);
 	fold('about', 'About squads', '<p>Soldiers at home fill what a squad holds by themselves; the rest are the reserve. Send it from the War page with Go.</p>');
 	let h =
 		acts(CLS.map((k, t) => pic(`bldgo:${k[2]}`, ICON.cls[k[0]], k[1], '', P[k[0]] || 0)).join(''), 'c4') +
@@ -496,10 +495,10 @@ function squadOutHTML(i, m) {
 				return `<tr><td>${stats(0, k).name}</td><td>${alive} / ${n0}</td><td class="${n0 - alive ? 'low' : ''}">${n0 - alive ? n0 - alive + ' fell' : '—'}</td></tr>`;
 			})
 			.join('');
-	title(m.name, m.st === 'act' ? `fighting · ${Math.round(m.odds * 100)}% to win` : `${mmss(m.eta || 0)} to arrive`);
+	title(m.name, m.st === 'act' ? `fighting · ${Math.round(m.odds * 100)}% to win` : `${clock(m.eta || 0)} to arrive`);
 	return (
 		hpBar(hp, hp > 0.5 ? codeOf('g') : hp > 0.25 ? 'var(--gold-1)' : codeOf('r')) +
-		`<p><i>Health ${Math.round(hp * 100)}%</i> · ${S.length} of ${m.n0} standing · ${m.what.toLowerCase()} ${m.label}${m.st === 'go' ? `, ${mmss(m.eta || 0)} to arrive` : ''} · ${paceWord(S)}</p>` +
+		`<p><i>Health ${Math.round(hp * 100)}%</i> · ${S.length} of ${m.n0} standing · ${m.what.toLowerCase()} ${m.label}${m.st === 'go' ? `, ${clock(m.eta || 0)} to arrive` : ''} · ${paceWord(S)}</p>` +
 		`<table style="width:100%;border-collapse:collapse"><tr><th>Kind</th><th>Alive</th><th>Lost</th></tr>${rows}</table>` +
 		(slow < 0.98
 			? `<p class="dim">${G.wx !== 'clear' ? 'Weather' : 'Season'}: ${wxWord()}, walking ×${slow.toFixed(2)}.</p>`

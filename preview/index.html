@@ -6950,6 +6950,8 @@ const standing = (b, o) => b.owner === o && b.prog >= 1 && b.hp > 0; // a buildi
 const crowd = (n, d) => (n.wk = Math.max(0, (n.wk || 0) + d));
 // the seeded dice for drawings and the sky (Park and Miller's minimal standard, 1988, a = 16807, m = 2³¹ − 1): the same picture every time
 const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647;
+// the looks' dice (Nov 2, O4): the sky, the sound, the ground's texture, the smoke; never the game's rules (those are rng, seeded by the game)
+const lookDice = NS_rng(7919);
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
 const costText = (c) =>
 	Object.entries(c || {})
@@ -7021,7 +7023,7 @@ function nearest(list, from, ok, maxD = 1e9) {
 	}
 	return best;
 }
-// The simulation's dice are seeded, so a game can be replayed and tested; looks use Math.random.
+// The simulation's dice are seeded, so a game can be replayed and tested; looks use lookDice (08-core).
 function rng() {
 	let t = (G.rs = (G.rs + 0x6d2b79f5) | 0);
 	t = Math.imul(t ^ (t >>> 15), t | 1);
@@ -7182,7 +7184,17 @@ const readyAt = (o, U) => [U.at, ...(U.also || [])].flatMap((k) => ready(o, k));
 const unitsOf = (o, kind) => G.units.filter((u) => u.owner === o && u.hp > 0 && (!kind || u.kind === kind)); // the living: the dead leave the list only at the end of a step
 const isSoldier = (u) => UNIT[u.kind].tick === 'sol';
 const soldiersOf = (o) => G.units.filter((u) => u.owner === o && u.hp > 0 && isSoldier(u));
-const armyOf = (o) => G.units.filter((u) => u.owner === o && u.hp > 0 && UNIT[u.kind].cls === 'army');
+const armyOf = (o) => G.units.filter((u) => u.owner === o && u.hp > 0 && UNIT[u.kind].cls === 'army'); // the army: the fighters, the spy, the priest, the medic
+// One home for "your army less who is busy" (Nov 2, O2: four filters wrote it four ways). Each order names what it leaves out
+const BUSY = {
+	spy: (u) => u.kind === 'spy', // a spy keeps to its watch
+	shrine: (u) => u.state === 'shrine', // a priest holding a shrine
+	escort: (u) => u.state === 'escort', // a guard keeps to what it guards
+	school: (u) => u.state === 'school', // a student keeps its lesson (C10)
+	rout: (u) => u.state === 'rout', // its nerve is broken
+	unarmed: (u) => !isSoldier(u), // a priest or a medic does not fight
+};
+const armyFree = (o, ...skip) => armyOf(o).filter((u) => !skip.some((k) => BUSY[k](u)));
 const popOf = (o) => {
 	const C = qc();
 	if (C.pop[o] === undefined) {
@@ -7258,7 +7270,7 @@ const queuedOf = (o, kind) =>
 		0,
 	);
 const orderSet = () =>
-	armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && (G.sel === 'all' || u.bn === G.sel)); // spies and priests holding a shrine keep their own work
+	armyFree(0, 'spy', 'shrine').filter((u) => G.sel === 'all' || u.bn === G.sel); // spies and priests holding a shrine keep their own work
 const selName = () => (G.sel === 'all' ? 'army' : BN[G.sel]);
 const hasCmd = () => G.P[0].techs.has('command');
 const formOf = (u) => (u.owner === 0 && u.bn !== undefined && G.P[0].techs.has('formations') ? G.form[u.bn] || 0 : 0);
@@ -19225,14 +19237,14 @@ function makeBg() {
 	bg.width = bg.height = N;
 	const b = bg.getContext('2d');
 	b.scale(bgK, bgK);
-	const R = (a, z) => a + Math.random() * (z - a);
+	const R = (a, z) => a + lookDice() * (z - a);
 	b.fillStyle = '#4a6634';
 	b.fillRect(0, 0, MAP, MAP);
 	const blot = (n, cols, r0, r1) => {
 		for (let i = 0; i < n; i++) {
 			b.fillStyle = cols[i % cols.length];
 			b.beginPath();
-			b.ellipse(Math.random() * MAP, Math.random() * MAP, R(r0, r1), R(r0, r1) * 0.7, R(0, 3), 0, 7);
+			b.ellipse(lookDice() * MAP, lookDice() * MAP, R(r0, r1), R(r0, r1) * 0.7, R(0, 3), 0, 7);
 			b.fill();
 		}
 	};
@@ -19246,9 +19258,9 @@ function makeBg() {
 		} // the floor of a wood is darker, needles and leaf litter, and stays when the trees are cut (Build 52)
 	blot(220, ['rgba(122,100,62,.16)', 'rgba(140,118,76,.12)'], 10, 34);
 	for (let i = 0; i < 500; i++) {
-		b.fillStyle = Math.random() < 0.5 ? 'rgba(230,220,120,.5)' : 'rgba(235,235,245,.45)';
+		b.fillStyle = lookDice() < 0.5 ? 'rgba(230,220,120,.5)' : 'rgba(235,235,245,.45)';
 		b.beginPath();
-		b.arc(Math.random() * MAP, Math.random() * MAP, 2.4, 0, 7);
+		b.arc(lookDice() * MAP, lookDice() * MAP, 2.4, 0, 7);
 		b.fill();
 	}
 	// A river is drawn as one stream (Build 53): each unbroken run of pools is a smooth curve through their centres, stroked three times
@@ -19401,9 +19413,9 @@ function makeBg() {
 	const q = t.getContext('2d');
 	q.lineCap = 'round';
 	for (let i = 0; i < 260; i++) {
-		const x = Math.random() * 128,
-			y = Math.random() * 128;
-		q.strokeStyle = Math.random() < 0.5 ? 'rgba(28,48,22,.42)' : 'rgba(140,170,90,.32)';
+		const x = lookDice() * 128,
+			y = lookDice() * 128;
+		q.strokeStyle = lookDice() < 0.5 ? 'rgba(28,48,22,.42)' : 'rgba(140,170,90,.32)';
 		q.lineWidth = 1.4;
 		q.beginPath();
 		q.moveTo(x, y);
@@ -19735,9 +19747,7 @@ function drawBld(b, s) {
 			ctx.strokeStyle = 'rgba(255,211,94,.7)';
 			ctx.setLineDash([3, 3]);
 			ctx.lineWidth = 1;
-			ctx.beginPath();
-			ctx.ellipse(x, y, 6 * z, 3.6 * z, 0, 0, 7);
-			ctx.stroke();
+			ring(x, y, 6 * z, 3.6 * z);
 			ctx.setLineDash([]);
 			return;
 		}
@@ -20230,9 +20240,7 @@ function ripDraw() {
 		ctx.strokeStyle = RIPS[i].col;
 		ctx.globalAlpha = 1 - a;
 		ctx.lineWidth = 2;
-		ctx.beginPath();
-		ctx.ellipse(SX(RIPS[i].x), SY(RIPS[i].y), (6 + a * 18) * z, (6 + a * 18) * z * TILT, 0, 0, 7);
-		ctx.stroke();
+		ring(SX(RIPS[i].x), SY(RIPS[i].y), (6 + a * 18) * z, (6 + a * 18) * z * TILT);
 		ctx.globalAlpha = 1;
 	}
 }
@@ -20319,9 +20327,7 @@ function drawNode(n, s) {
 		const ph = (G.t * 0.5 + n.id * 0.13) % 1;
 		ctx.strokeStyle = `rgba(225,242,255,${0.6 * (1 - ph)})`;
 		ctx.lineWidth = 1;
-		ctx.beginPath();
-		ctx.ellipse(sx, sy, (3 + ph * 6) * z, (1.5 + ph * 3) * z * TILT, 0, 0, 7);
-		ctx.stroke();
+		ring(sx, sy, (3 + ph * 6) * z, (1.5 + ph * 3) * z * TILT);
 		return;
 	}
 	if (n.kind === 'meat') {
@@ -20388,13 +20394,9 @@ function drawStandards(z, inView) {
 		STANDARDS.push({ x, y, o: g.o });
 		ctx.lineWidth = Math.max(2, 2.4 * z);
 		ctx.strokeStyle = 'rgba(16,12,8,.6)';
-		ctx.beginPath();
-		ctx.ellipse(x, y, r, r * TILT, 0, 0, 7);
-		ctx.stroke();
+		ring(x, y, r, r * TILT);
 		ctx.strokeStyle = col;
-		ctx.beginPath();
-		ctx.ellipse(x, y, r, r * TILT, 0, -Math.PI / 2, -Math.PI / 2 + f * 6.283);
-		ctx.stroke(); // the ring: how much of the group's health is left
+		ring(x, y, r, r * TILT, -Math.PI / 2, -Math.PI / 2 + f * 6.283); // the ring: how much of the group's health is left
 		ctx.strokeStyle = '#3a2a1a';
 		ctx.lineWidth = Math.max(1, 1.1 * z);
 		ctx.beginPath();
@@ -20512,9 +20514,7 @@ function drawUnit(u, s) {
 	if (u.owner === 0 && G.sel !== 'all' && u.bn === G.sel) {
 		ctx.strokeStyle = '#ffd35e';
 		ctx.lineWidth = 1.4;
-		ctx.beginPath();
-		ctx.ellipse(sx, sy, 7 * z + 2, 3.4 * z + 1, 0, 0, 7);
-		ctx.stroke();
+		ring(sx, sy, 7 * z + 2, 3.4 * z + 1);
 	}
 	if (u.owner !== WILD) {
 		ctx.fillStyle = col;
@@ -20566,9 +20566,7 @@ function drawUnit(u, s) {
 	if (u.zeal > G.t) {
 		ctx.strokeStyle = 'rgba(244,206,90,.85)';
 		ctx.lineWidth = 1.4;
-		ctx.beginPath();
-		ctx.ellipse(sx, sy - 6 * z, 8 * z, 9 * z, 0, 0, 7);
-		ctx.stroke();
+		ring(sx, sy - 6 * z, 8 * z, 9 * z);
 	}
 	if (u.hp < u.max - 0.5 && z > 0.45)
 		bar(sx, top - 5, Math.max(12, 12 * z), u.hp / u.max, u.owner === WILD ? '#c9b48a' : col);
@@ -20995,12 +20993,10 @@ function drawPicks(z) {
 					: own === undefined || own === null || own === WILD
 						? '#ffd35e'
 						: '#ff6a52';
-		ctx.beginPath();
-		ctx.ellipse(SX(e.x), SY(e.y), r * z + 3, r * z * TILT + 2, 0, 0, 7);
-		ctx.stroke();
+		ring(SX(e.x), SY(e.y), r * z + 3, r * z * TILT + 2);
 	}
 }
-const rnd2 = () => Math.random() * 2 - 1;
+const rnd2 = () => lookDice() * 2 - 1;
 // ═════ 24-view-overlays.js: ground, event effects, bars, flags, ghost building, minimap ═════
 // Spectacle on the glass: each event's picture, drawn over the world. Light, particles, a real shape; nothing that hides the game.
 // the ground after the weather: mud darkens the land, snow whitens it, ice gives it a sheen
@@ -21139,6 +21135,12 @@ const fontF = () => FONTF || (FONTF = getComputedStyle(document.body).fontFamily
 // the crosshair's reference) takes 1
 const labelK = () => Math.max(LABEL.floor / LABEL.px, cam.z / ZOOM_START);
 const mapFont = (k = 1) => `${FONTW || (FONTW = getComputedStyle(document.body).fontWeight)} ${Math.round(LABEL.px * k)}px ${fontF()}`;
+// a ring on the ground (a selection, a ripple, a group's health, a placing mark): the one drawer (Nov 2, O3); the caller sets its colour and line
+function ring(x, y, rx, ry, a0 = 0, a1 = 7) {
+	ctx.beginPath();
+	ctx.ellipse(x, y, rx, ry, 0, a0, a1);
+	ctx.stroke();
+}
 function idleMark(x, y, z, ch = 'z', dx = 4) {
 	ctx.font = mapFont(labelK());
 	ctx.fillStyle = '#ffd35e';
@@ -21412,9 +21414,7 @@ function drawSand(z) {
 		ctx.strokeStyle = 'rgba(120,100,60,.5)';
 		ctx.lineWidth = 1;
 		for (let i = 1; i <= 3; i++) {
-			ctx.beginPath();
-			ctx.ellipse(SX(s.x), SY(s.y), (s.r * z * i) / 4, (s.r * z * TILT * i) / 4, 0, 0, 7);
-			ctx.stroke();
+			ring(SX(s.x), SY(s.y), (s.r * z * i) / 4, (s.r * z * TILT * i) / 4);
 		}
 	} // quicksand: a pale patch with ripples
 }
@@ -21534,9 +21534,7 @@ function drawOrders(z) {
 		ctx.globalAlpha = O.arrived ? 0.35 : 0.85;
 		ctx.lineWidth = O.arrived ? 1.2 : 2;
 		ctx.setLineDash(O.arrived ? [3, 5] : [6, 6]);
-		ctx.beginPath();
-		ctx.ellipse(bx, by, r, r * TILT, 0, 0, 7);
-		ctx.stroke();
+		ring(bx, by, r, r * TILT);
 		if (!O.arrived && O.eta > 0) {
 			ctx.globalAlpha = 0.95;
 			ctx.fillText(Math.ceil(O.eta) + 's', bx, by - r * TILT - 4);
@@ -21733,7 +21731,7 @@ function drawWeather() {
 			m.x += wind * 60 * dt;
 			if (m.y > ch + 12) {
 				m.y = -12;
-				m.x = Math.random() * cw;
+				m.x = lookDice() * cw;
 			}
 			if (m.x < -24) m.x = cw + 12;
 			else if (m.x > cw + 24) m.x = -12;
@@ -21759,14 +21757,14 @@ function drawWeather() {
 		}
 	}
 	// the storm's own lightning: far sheet flashes while it walks, a close bolt now and then (the strikes on buildings come from 36-economy)
-	if (stormy && !still() && !G.paused && now - sheetT > 2.5 + 6 * Math.random() && flashOK(now)) {
+	if (stormy && !still() && !G.paused && now - sheetT > 2.5 + 6 * lookDice() && flashOK(now)) {
 		// not while paused: a bolt ages on the game clock, so one made in a pause never faded and they piled up, each with its thunder (Build 60)
 		sheetT = now;
-		const close = Math.random();
+		const close = lookDice();
 		if (close > 0.75) {
-			const bx = cam.x + ((Math.random() - 0.5) * cw) / z,
-				by = cam.y + ((Math.random() - 0.5) * ch) / z;
-			(G.bolts = G.bolts || []).push({ x: bx, y: by, t: G.t, seed: Math.random() });
+			const bx = cam.x + ((lookDice() - 0.5) * cw) / z,
+				by = cam.y + ((lookDice() - 0.5) * ch) / z;
+			(G.bolts = G.bolts || []).push({ x: bx, y: by, t: G.t, seed: lookDice() });
 			thunder(bx, by);
 		} else {
 			flashA = Math.max(flashA, 0.25 + 0.3 * close);
@@ -23052,7 +23050,7 @@ function oddsText(S, t) {
 // ═════ 28-army-quick.js: the army: who can be sent, how many, and the sends; the quick action ═════
 // ── Attack with: on an enemy or a find card, from the whole army or one battalion, how many of each type, then go. The nearest of each type go.
 const qsPool = () =>
-	armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && (G.qs.from === 'all' || u.bn === G.qs.from));
+	armyFree(0, 'spy', 'shrine').filter((u) => G.qs.from === 'all' || u.bn === G.qs.from);
 function qsPick(to) {
 	const by = {};
 	for (const u of qsPool()) (by[u.kind] = by[u.kind] || []).push(u);
@@ -23107,7 +23105,7 @@ function qsHTML(verb, label, to) {
 	);
 }
 // ── who can be sent
-const sendable = () => armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && u.state !== 'escort' && u.state !== 'school'); // guards keep to what they guard
+const sendable = () => armyFree(0, 'spy', 'shrine', 'escort', 'school'); // guards keep to what they guard
 // What each soldier is doing, in one word (Albert, Build 42), worked out from the soldier alone:
 // rally (just trained or called home, walking to its place), march (on your order), fight, hold (stopped: at its place or at the spot you sent it), rout (nerve broke, running).
 // 'other' is a guard, a priest at a shrine, a student, a spy. A soldier that has not moved for two and a half seconds is holding, even if it never got there.
@@ -27540,7 +27538,7 @@ function sndInit() {
 		} // a limiter: a battle's many hits never clip a phone speaker
 		NOISE = AC.createBuffer(1, AC.sampleRate, AC.sampleRate);
 		const d = NOISE.getChannelData(0);
-		for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+		for (let i = 0; i < d.length; i++) d[i] = lookDice() * 2 - 1;
 		if (AC.state !== 'running') AC.resume().catch(() => {});
 	} catch (e) {
 		AC = null;
@@ -27896,13 +27894,13 @@ function ambience(dt) {
 		T = [];
 	if (!winter && !night)
 		for (const n of G.nodes) if (n.kind === 'tree' && n.amt > 0 && n.x > x0 && n.x < x1 && n.y > y0 && n.y < y1 && T.push(n) >= AMB.maxSingers) break;
-	if (T.length && Math.random() < 1 - Math.exp(-AMB.bird * T.length)) {
-		const t = T[(Math.random() * T.length) | 0];
+	if (T.length && lookDice() < 1 - Math.exp(-AMB.bird * T.length)) {
+		const t = T[(lookDice() * T.length) | 0];
 		return sfx('bird', t.x, t.y);
 	}
-	if (night && !winter && Math.random() < 1 - Math.exp(-AMB.cricket * AMB.maxSingers))
-		return sfx('cricket', cam.x + (Math.random() - 0.5) * (x1 - x0), cam.y + (Math.random() - 0.5) * (y1 - y0));
-	if (Math.abs(wind) > AMB.wind && Math.random() < Math.abs(wind) / 4) sfx('wind'); // the wind is everywhere: no place, its own strength
+	if (night && !winter && lookDice() < 1 - Math.exp(-AMB.cricket * AMB.maxSingers))
+		return sfx('cricket', cam.x + (lookDice() - 0.5) * (x1 - x0), cam.y + (lookDice() - 0.5) * (y1 - y0));
+	if (Math.abs(wind) > AMB.wind && lookDice() < Math.abs(wind) / 4) sfx('wind'); // the wind is everywhere: no place, its own strength
 }
 
 // Thunder comes after the flash by the real delay (SOUND.c over SOUND.metre), quieter by the same law as every sound; a strike is loud enough to carry the map
@@ -30213,7 +30211,6 @@ function chance(S, foes) {
 	return lanchester(r);
 }
 const dpsOf = (L) => L.reduce((s, v) => s + dmgOf(v) / (UNIT[v.kind].cd || 1.5), 0);
-const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const wxWord = () => (G.wx !== 'clear' && WEATHER[G.wx] ? WEATHER[G.wx].name : season().name);
 // a squad's pace in a word, from its slowest member (an elephant makes it slow, horse alone fast): what the card and the tile say (Albert, Build 63)
 function paceWord(S) {
@@ -30445,7 +30442,7 @@ function waveLine(plan) {
 		return k.size === 1 ? CLS[[...k][0]][3] : 'soldiers';
 	};
 	return plan.waves
-		.map((w, i) => `${w.list.length} ${i ? 'more' : word(w.list)} ${i ? 'by' : 'in'} ${mmss(w.t)}`)
+		.map((w, i) => `${w.list.length} ${i ? 'more' : word(w.list)} ${i ? 'by' : 'in'} ${clock(w.t)}`)
 		.join(', ');
 }
 // units moved into a mission (a reinforcement): they march to its middle and join its order
@@ -30505,7 +30502,7 @@ function warPage() {
 			low += info('', '');
 		} else {
 			top += pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, fight ? 'warn' : m ? 'work' : ready ? 'go' : '', S.length, m && !fight ? ` style="${toGo((m.eta ?? m.due - G.t) / Math.max(1, m.due - m.t))}"` : '');
-			low += info(fight ? '—' : m ? mmss(m.eta ?? m.due - G.t) : ready ? mmss(hudEta(i)) : '—', fight ? ROW_WORD.fight : paceWord(S));
+			low += info(fight ? '—' : m ? clock(m.eta ?? m.due - G.t) : ready ? clock(hudEta(i)) : '—', fight ? ROW_WORD.fight : paceWord(S));
 		}
 	});
 	return top + sym('wfire', ICON.ok, H.h && free().length ? 'go' : 'dis', 'Go') + low + sym('wabort', ICON.close, '', 'Abort');
@@ -30614,7 +30611,7 @@ function drawReticle() {
 	ctx.stroke();
 	ctx.font = mapFont(); // pinned to the screen
 	ctx.textAlign = 'center';
-	ctx.fillText(eta ? `${mmss(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - R - 8);
+	ctx.fillText(eta ? `${clock(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - R - 8);
 	ctx.restore();
 }
 // ── the squad card (MENU-SPEC §8, picture Mission Flow): the squad builder while it is home, the live view while it is out (Build 61, one card, two states)
@@ -30637,7 +30634,7 @@ function squadHomeHTML(c) {
 		n = Object.values(P).reduce((s, v) => s + v, 0),
 		H = G.hud,
 		eta = H.h && sqFree(i).length ? hudEta(i) : 0;
-	title(BN[i], `${sqUnits(i).length} at home${eta ? ` · ${mmss(eta)} to ${coord(H.h.e.x, H.h.e.y)}` : ''}`);
+	title(BN[i], `${sqUnits(i).length} at home${eta ? ` · ${clock(eta)} to ${coord(H.h.e.x, H.h.e.y)}` : ''}`);
 	fold('about', 'About squads', '<p>Soldiers at home fill what a squad holds by themselves; the rest are the reserve. Send it from the War page with Go.</p>');
 	let h =
 		acts(CLS.map((k, t) => pic(`bldgo:${k[2]}`, ICON.cls[k[0]], k[1], '', P[k[0]] || 0)).join(''), 'c4') +
@@ -30674,10 +30671,10 @@ function squadOutHTML(i, m) {
 				return `<tr><td>${stats(0, k).name}</td><td>${alive} / ${n0}</td><td class="${n0 - alive ? 'low' : ''}">${n0 - alive ? n0 - alive + ' fell' : '—'}</td></tr>`;
 			})
 			.join('');
-	title(m.name, m.st === 'act' ? `fighting · ${Math.round(m.odds * 100)}% to win` : `${mmss(m.eta || 0)} to arrive`);
+	title(m.name, m.st === 'act' ? `fighting · ${Math.round(m.odds * 100)}% to win` : `${clock(m.eta || 0)} to arrive`);
 	return (
 		hpBar(hp, hp > 0.5 ? codeOf('g') : hp > 0.25 ? 'var(--gold-1)' : codeOf('r')) +
-		`<p><i>Health ${Math.round(hp * 100)}%</i> · ${S.length} of ${m.n0} standing · ${m.what.toLowerCase()} ${m.label}${m.st === 'go' ? `, ${mmss(m.eta || 0)} to arrive` : ''} · ${paceWord(S)}</p>` +
+		`<p><i>Health ${Math.round(hp * 100)}%</i> · ${S.length} of ${m.n0} standing · ${m.what.toLowerCase()} ${m.label}${m.st === 'go' ? `, ${clock(m.eta || 0)} to arrive` : ''} · ${paceWord(S)}</p>` +
 		`<table style="width:100%;border-collapse:collapse"><tr><th>Kind</th><th>Alive</th><th>Lost</th></tr>${rows}</table>` +
 		(slow < 0.98
 			? `<p class="dim">${G.wx !== 'clear' ? 'Weather' : 'Season'}: ${wxWord()}, walking ×${slow.toFixed(2)}.</p>`
@@ -30726,7 +30723,7 @@ const roomIn = (b) =>
 	shelterOf(b.owner, b.kind) -
 	G.units.filter((u) => u.hid === b.id || (u.state === 'garrison' && u.gar === b.id)).length; // in, or on the way in (Build 60: a second Shelter counted only those in, and over-filled)
 // the soldiers an emergency moves: every one but the guards (they keep to what they guard) and the routed (they run for home)
-const troops = () => armyOf(0).filter((u) => isSoldier(u) && u.state !== 'escort' && u.state !== 'rout' && u.state !== 'school'); // a student keeps its lesson (C10)
+const troops = () => armyFree(0, 'unarmed', 'escort', 'rout', 'school'); // a student keeps its lesson (C10)
 // a soldier off its order, to stand at a spot and fight what comes
 const stand = (u, x, y) =>
 	Object.assign(u, {
@@ -30888,7 +30885,7 @@ CARDS.emergency = () => {
 			I
 				? info(
 						`${I.n} ${I.what}`,
-						`${k ? `coming from the ${dirOf(k, I)} · ` : ''}${mmss(I.eta)} · tap to look`,
+						`${k ? `coming from the ${dirOf(k, I)} · ` : ''}${clock(I.eta)} · tap to look`,
 						's6',
 						`jump:${Math.round(I.x)},${Math.round(I.y)}`,
 					)

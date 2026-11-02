@@ -32,7 +32,7 @@ PLANTS = [
   # movement and work (tests/moves.py)
   ('12-sim-core.js', "dr = (drops ? nearest(drops, at) : dropFor(o, n.type || 'food', at)) || keepOf(o),", "dr = n.kind === 'fish' ? null : (drops ? nearest(drops, at) : dropFor(o, n.type || 'food', at)) || keepOf(o),", 'tests/moves.py', 'fish pay no walk home', 'a fish far from'),
   ('16-sim-fight.js', 'if (dx === 0 && dy === 0) {', 'if (false) {', 'tests/moves.py', 'two units on one spot never part', 'did not part'),
-  ('40-emergency.js', " && u.state !== 'school'); // a student", '); // a student', 'tests/moves.py', 'a student is pulled out of the School', 'out of the School'),
+  ('40-emergency.js', "armyFree(0, 'unarmed', 'escort', 'rout', 'school');", "armyFree(0, 'unarmed', 'escort', 'rout');", 'tests/moves.py', 'a student is pulled out of the School', 'out of the School'),   # repointed Nov 2 (O2: one army home)
   ('14-sim-troops.js', 'sx = ((nx - u.x) / rd) * sp * dt,', 'sx = clamp(nx - u.x, -1, 1) * sp * dt,', 'tests/moves.py', 'a deer runs faster on a diagonal', 'a deer runs'),
   ('08-core.js', 'if (b.mx && b.mx !== M) b.hp =', 'if (false) b.hp =', 'tests/moves.py', 'Masonry leaves a Town Center at 77%', 'Masonry left'),
   ('10-world.js', 'if (!onLand(fx, fy))', 'if (true)', 'tests/moves.py', 'fish sit on land', 'a fish sits on land'),

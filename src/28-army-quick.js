@@ -1,7 +1,7 @@
 // ═════ 28-army-quick.js: the army: who can be sent, how many, and the sends; the quick action ═════
 // ── Attack with: on an enemy or a find card, from the whole army or one battalion, how many of each type, then go. The nearest of each type go.
 const qsPool = () =>
-	armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && (G.qs.from === 'all' || u.bn === G.qs.from));
+	armyFree(0, 'spy', 'shrine').filter((u) => G.qs.from === 'all' || u.bn === G.qs.from);
 function qsPick(to) {
 	const by = {};
 	for (const u of qsPool()) (by[u.kind] = by[u.kind] || []).push(u);
@@ -56,7 +56,7 @@ function qsHTML(verb, label, to) {
 	);
 }
 // ── who can be sent
-const sendable = () => armyOf(0).filter((u) => u.kind !== 'spy' && u.state !== 'shrine' && u.state !== 'escort' && u.state !== 'school'); // guards keep to what they guard
+const sendable = () => armyFree(0, 'spy', 'shrine', 'escort', 'school'); // guards keep to what they guard
 // What each soldier is doing, in one word (Albert, Build 42), worked out from the soldier alone:
 // rally (just trained or called home, walking to its place), march (on your order), fight, hold (stopped: at its place or at the spot you sent it), rout (nerve broke, running).
 // 'other' is a guard, a priest at a shrine, a student, a spy. A soldier that has not moved for two and a half seconds is holding, even if it never got there.

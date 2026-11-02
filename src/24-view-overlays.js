@@ -136,6 +136,12 @@ const fontF = () => FONTF || (FONTF = getComputedStyle(document.body).fontFamily
 // the crosshair's reference) takes 1
 const labelK = () => Math.max(LABEL.floor / LABEL.px, cam.z / ZOOM_START);
 const mapFont = (k = 1) => `${FONTW || (FONTW = getComputedStyle(document.body).fontWeight)} ${Math.round(LABEL.px * k)}px ${fontF()}`;
+// a ring on the ground (a selection, a ripple, a group's health, a placing mark): the one drawer (Nov 2, O3); the caller sets its colour and line
+function ring(x, y, rx, ry, a0 = 0, a1 = 7) {
+	ctx.beginPath();
+	ctx.ellipse(x, y, rx, ry, 0, a0, a1);
+	ctx.stroke();
+}
 function idleMark(x, y, z, ch = 'z', dx = 4) {
 	ctx.font = mapFont(labelK());
 	ctx.fillStyle = '#ffd35e';
@@ -409,9 +415,7 @@ function drawSand(z) {
 		ctx.strokeStyle = 'rgba(120,100,60,.5)';
 		ctx.lineWidth = 1;
 		for (let i = 1; i <= 3; i++) {
-			ctx.beginPath();
-			ctx.ellipse(SX(s.x), SY(s.y), (s.r * z * i) / 4, (s.r * z * TILT * i) / 4, 0, 0, 7);
-			ctx.stroke();
+			ring(SX(s.x), SY(s.y), (s.r * z * i) / 4, (s.r * z * TILT * i) / 4);
 		}
 	} // quicksand: a pale patch with ripples
 }
@@ -531,9 +535,7 @@ function drawOrders(z) {
 		ctx.globalAlpha = O.arrived ? 0.35 : 0.85;
 		ctx.lineWidth = O.arrived ? 1.2 : 2;
 		ctx.setLineDash(O.arrived ? [3, 5] : [6, 6]);
-		ctx.beginPath();
-		ctx.ellipse(bx, by, r, r * TILT, 0, 0, 7);
-		ctx.stroke();
+		ring(bx, by, r, r * TILT);
 		if (!O.arrived && O.eta > 0) {
 			ctx.globalAlpha = 0.95;
 			ctx.fillText(Math.ceil(O.eta) + 's', bx, by - r * TILT - 4);
