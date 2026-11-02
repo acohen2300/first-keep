@@ -108,8 +108,8 @@ const CARDS = {
 			// the page (MENU-SPEC §8): what it trains, double-wide, add only; its line directly under; its techs, three a rank (the Town Center's
 			// next age first and All tech last); what its kind adds. No labels
 			const page =
+				(tr.length || b.q.length ? slotsHTML(b) : '') + // the queue first, in its steel box (Q1, Albert Nov 2): what is training over what you can train
 				grid3(trainButtons(tr)) +
-				(tr.length || b.q.length ? slotsHTML(b) : '') +
 				grid3(
 					[
 						kp && !rel ? keepAgeBtn() : '',
@@ -644,7 +644,7 @@ const CARDS = {
 					return [m.id, m.name, open.length && open.every((k) => bldsOf(0, k).length >= capFor(0, k)) ? '✓' : ''];
 				}),
 				c.id,
-				`<div class="hold" style="--n:${Math.ceil(Math.max(...MENUS.map((m) => m.items.length)) / 3)}">${list(M.items.map(item))}</div>`,
+				`<div class="hold" style="--n:${Math.ceil(Math.max(...MENUS.map((m) => m.items.length)) / 3)}">${grid3(M.items.map(item))}</div>`, // T2: double-wide, three a rank, a short rank filled
 				'c6',
 			) +
 			fold('menu', 'What each one does', M.items.map((k) => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''))

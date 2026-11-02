@@ -219,8 +219,13 @@ button small{font-size:var(--fs-s);color:var(--cream-2);font-variant-numeric:tab
 /* the open tab of a folder: no slot of its own; the folder's outline round it, open at the foot into its page (MENU-SPEC §1) */
 .fo>.fm>.on{background:var(--brown-1);border-color:transparent;box-shadow:none}
 .fo>.fm>.on::before,.fo>.fm>.on::after{content:'';position:absolute;pointer-events:none}
-.fo>.fm>.on::before{inset:-4px -4px -5px;border:1px solid var(--gold-1);border-bottom:0;border-radius:var(--rad-o) var(--rad-o) 0 0}
-.fo>.fm>.on::after{left:-3px;right:-3px;bottom:-5px;height:2px;background:var(--brown-1);z-index:1}
+.fo>.fm>.on::before{inset:-4px -3px -5px;border:1px solid var(--gold-1);border-bottom:0;border-radius:var(--rad-o) var(--rad-o) 0 0}
+.fo>.fm>.on::after{left:-2px;right:-2px;bottom:-5px;height:2px;background:var(--brown-1);z-index:1}
+/* F1 (Albert, Nov 2): the open tab at an edge meets the page as a file folder does: the tab's side runs straight down, the page's corner on that side square */
+.fo:has(>.fm>.on:first-child)>.pg::before{border-top-left-radius:0}.fo:has(>.fm>.on:last-child)>.pg::before{border-top-right-radius:0}
+/* Q1 (Albert, Nov 2): the training queue in its own steel box, no edge line; the War and Train pages' steel (COLORS.md) */
+.fm.queue{background:var(--steel-1);border-radius:var(--rad-o);box-shadow:0 0 0 calc(var(--gap) / 2) var(--steel-1)}
+.fm.queue>*{background:var(--steel-2);border-color:var(--steel-3)}.fm.queue>.empty{background:var(--steel-1);border-color:var(--steel-2)}
 .main{background:linear-gradient(var(--fill-1),var(--fill-2)) var(--fill-1);border-color:var(--fill-1);color:var(--ink)}.main :is(b,small){color:var(--ink)}.main b{font-size:var(--fs-l)}
 /* the bar and the strip draw no frame round a cell: a chosen cell of the bar wears its ring inside, a cell of the strip says its state in its word */
 .pill>.on::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:var(--rad);box-shadow:inset 0 0 0 2px var(--rc)}

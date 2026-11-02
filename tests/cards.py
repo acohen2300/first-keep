@@ -159,6 +159,21 @@ JS = r"""() => {
     for (const r of R) if (r.children.length % 3) bad.push('T1: a Train or Research rank of ' + r.children.length + ' places, not filled to three (' + r.innerText.replace(/\n/g, ' ').slice(0, 60) + ')');
     F.closeCard(); }
   } catch (e) { bad.push('T1: the check could not run: ' + e.message); }
+  // Q1 (Albert, Nov 2): the line sits in its steel box above the Train rank, not under it
+  try {
+  { const keep = F.keepOf(0); keep.q.length = 0; F.train(0, 'vil'); F.openCard({ type: 'bld', id: keep.id }); F.ui(true);
+    const q = $('#card .fm.queue'), t = $('#card [data-act^="train:"]');
+    if (!q) bad.push('Q1: the training line has no steel box'); else if (t && !(q.compareDocumentPosition(t) & Node.DOCUMENT_POSITION_FOLLOWING)) bad.push('Q1: the training line sits under the Train rank, not above it');
+    keep.q.length = 0; F.closeCard(); }
+  } catch (e) { bad.push('Q1: the check could not run: ' + e.message); }
+  // T2 (Albert, Nov 2): every Build tab is two slots a building, three a rank, a short rank filled with empty places
+  try {
+  for (const m of F.MENUS) { F.openCard({ type: 'menu', id: m.id }); F.ui(true);
+    const R = [...document.querySelectorAll('#card .fm.c3')];
+    if (!R.length) bad.push('T2: the ' + m.id + ' tab has no rank of three');
+    for (const r of R) if (r.children.length % 3) bad.push('T2: a rank of ' + r.children.length + ' on the ' + m.id + ' tab, not filled to three');
+    F.closeCard(); }
+  } catch (e) { bad.push('T2: the check could not run: ' + e.message); }
   // E6: a dim Train button says why it cannot (here the line is full), never its cost as if payable
   try {
   { const keep = F.keepOf(0); keep.q.length = 0; for (let i = 0; i < 12; i++) F.train(0, 'vil'); const why = F.trainWhy(0, 'vil'), d = document.createElement('div');

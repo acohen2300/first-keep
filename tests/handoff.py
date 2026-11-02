@@ -62,6 +62,7 @@ PLANTS = [
   ('30-cards.js', "acts(end, 'c6')", "acts(end)", 'tests/cards.py', 'S2: the last rank is not one slot each', 'S2:'),
   # Build 80 preview 18: T1, Train and Research double-wide, a short rank filled (--only=T1)
   ('27-cards-core.js', "empty().repeat((3 - (cells.length % 3)) % 3)", "empty().repeat(0)", 'tests/cards.py', 'T1: a short Train or Research rank is not filled', 'T1:'),
+  ('29-card-pages.js', "acts(cells.join(''), 'c6 queue')", "acts(cells.join(''), 'c6')", 'tests/cards.py', 'Q1: the training line loses its steel box', 'Q1:'),
   # Build 80 preview 15: D-091 to D-093 (--only=p15)
   ('11-orders.js', '\tif (!v && hand(o)) {', '\tif (false) {', 'tests/moves.py', 'p15: a site placed with nobody idle gets no builder', 'got no builder'),
   ('11-orders.js', "\t\tv.pn = v.node ? v.node.id : null;", "\t\tv.pn = null;", 'tests/moves.py', 'p15: a builder goes back to any find, not the one it left', 'the very find it left'),

@@ -132,7 +132,7 @@ function slotsHTML(b) {
 		cells.push(
 			`<button class="slot dis" data-act="qlock:${more.id}" aria-label="More places: ${more.name}"><b>+${more.fx.find((f) => f.s === 'queue').a}</b><small>${more.short || more.name}</small></button>`, // the research that opens them, by name ("+2 Guilds", cold review of v70)
 		);
-	return acts(cells.join(''), 'c6');
+	return acts(cells.join(''), 'c6 queue'); // the queue's steel box (Q1)
 }
 // Relations, at the Town Center (v80, Albert Oct 31: "we are locking into the final"; picture Relations Final; decision 3: a ✓ for each
 // row): one rank a side. The name, its stance under it in the stance's colour; the gift, a slider with its switch (a bribe is a step for

@@ -297,3 +297,10 @@ Checks on main before publishing:
 - One word changed by Claude to fit (flagged to Albert): "Send help" is wider than one slot at 375 pt (the gate), so "Help". [2026-11-02 11:43]
 - Results: the Stable 9 ranks to 7, the Barracks 8 to 6, the House 6 to 5. Gate passes; `tests/cards.py` S1 and S2 with two plants, caught. [2026-11-02 11:43]
 - Cut: the "yours" line on your own cards; "Take down", "Tap again" and "back" on the last rank; the full-width Send help rank. [2026-11-02 11:43]
+
+## Build 80 preview 20 (the line above Train, Build menu threes, the tab corner: Q1, T2, F1) [2026-11-02 12:05]
+- Albert, Nov 2 (I like the steel; no ribbon outline; yes yes): the training line moves above the Train rank in its own steel box with no edge (Q1); every Build tab two slots a building, three a rank, a short rank filled with faint empty places (T2); the open tab at the card's edge meets the outline square (F1). [2026-11-02 12:05]
+- Changed: `30-cards.js` (the line before `grid3(trainButtons)`; the Build menu through `grid3`), `29-card-pages.js` (`slotsHTML` rank class `queue`), `shell-head.html` (the steel box; the tab's edges; square corner under the first or last open tab). 10 lines in, 5 out. [2026-11-02 12:05]
+- Tests: `tests/cards.py` Q1 (steel box, above Train) and T2 (every Build tab's ranks filled to three); Q1 planted (box class removed), caught. Gate passes. [2026-11-02 12:05]
+- Cut: the line under the Train rank; the Build menu's hand-filled ranks (now the one `grid3`). [2026-11-02 12:05]
+
