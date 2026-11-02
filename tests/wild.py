@@ -5,7 +5,7 @@ from playwright.async_api import async_playwright
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JS = """() => {
   const F = window.__fk, bad = [], T = 1 / 30, W = () => F.G.P.length - 1;
-  const T_ = (n, f) => { try { f(); } catch (e) { bad.push(n + ': a check stopped: ' + e.message); } };
+  const T_ = (n, f) => { try { f(); } catch (e) { bad.push(n + ': a check stopped: ' + e.message + ' @ ' + String(e.stack).split(String.fromCharCode(10)).slice(1,4).join(' | ')); } };
   const run = (secs) => { for (let i = 0; i < secs * 30; i++) F.step(T); };
   const fresh = (seed = 7) => { F.newGame(seed); F.act('close'); F.setPause(false); const G = F.G; G.fogOn = false; G.ev.next = 1e9; G.ev.cur = null; F.step(T); return G; };
   const open = (G) => { const k = F.keepOf(0); let best = 0, P = null; for (let x = 100; x < F.MAP - 100; x += 20) for (let y = 100; y < F.MAP - 100; y += 20) {
@@ -58,7 +58,7 @@ JS = """() => {
     G.horde = { at: G.t, said: 2 }; const n0 = G.units.length; F.hordeTick(); const H = G.units.slice(n0).filter((u) => u.horde);
     const k0 = F.keepOf(0); if (!H.length) bad.push('4b horde: the check raised no horde'); else if (H.some((u) => u.hx !== k0.x || u.hy !== k0.y)) bad.push('4b horde: the horde went for a computer'); });
   T_('4b pits', () => { const G = fresh(), w = W(), M = F.MID, R = F.THRONE, x = M + R.isle + 40, y = M;
-    const pit = F.mkBld(w, 'pit', x, y, 1); G.blds.push(pit); const cu = F.addUnit(1, 'spear', x + 2, y); F.step(T); for (let i = 0; i < 12; i++) F.step(T);
+    const pit = F.mkBld(w, 'pit', x, y, 1); pit.seen = {}; G.blds.push(pit); const cu = F.addUnit(1, 'spear', x + 2, y); F.step(T); for (let i = 0; i < 12; i++) F.step(T);
     if (!(pit.hp > 0) || cu.hp < cu.max) bad.push("4b pits: the Natives' pit took a computer's soldier");
     const pu = F.addUnit(0, 'spear', x + 2, y); for (let i = 0; i < 12; i++) F.step(T); if (pit.hp > 0 && pu.hp >= pu.max) bad.push("4b pits: the Natives' pit let your soldier through (the player's rules changed)"); });
   T_('4b leash', () => { const G = fresh(), w = W(), n = G.units.find((u) => u.native && u.hp > 0), T0 = G.blds.find((b) => b.kind === 'throne');
@@ -143,7 +143,8 @@ JS = """() => {
     F.sendBuilder(v, site); run(8);
     if (v.hunt || !(site.prog > 0)) bad.push(`A3: a hunter sent to build went on hunting (hunt ${v.hunt ? v.hunt.kind : 'none'}, site ${site.prog.toFixed(2)} after 8 s)`); });
 
-  T_('D1', () => { const G = fresh(), w = W(), f = G.finds.find((x) => x.kind === 'ruins' && !x.done); F.dangerMap();
+  T_('D1', () => { const G = fresh(), w = W(), f = G.finds.find((x) => x.kind === 'ruins' && !x.done && G.units.some((u) => u.find === x.id && F.gangOf(u) === 'ban')); F.dangerMap(); // the first ruin the bandits guard (the map's order is not fixed)
+    G.guarded = (G.guarded || []).filter((g) => g.id === f.id); G.threats = []; // only this ruin's guards are tested: the map's other dens, chests and animals near it are not fixed
     const c = F.gcell(f.x, f.y), at = () => (F.dangerMap(), F.DANGER[0][c]);
     if (!at()) bad.push('D1: at war with the bandits, their guarded ruins are not danger to your gatherers');
     F.gangState('ban').regard[0] = 60; F.gangState('ban').rel[0] = 'peace';

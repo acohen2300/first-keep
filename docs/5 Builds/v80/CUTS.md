@@ -233,3 +233,5 @@ Checks on main before publishing:
 
 - [2026-11-01 18:02] Cut from preview 11: the nine long games (120/180/240 min x 3). Reason: Albert will play the preview himself ("you should just do your normal one"). Moved to the overnight run after publishing; the QC standard gains them then. [2026-11-01 18:02]
 - **Play fingerprint accepted:** text81 (Nov 1 batch): C11 stashes the load unrounded, so a partial load of 0.5 no longer becomes 1 at the drop-off; it is the whole of the change (each other change reverted alone leaves the fingerprint as it was; C11 reverted alone restores the baseline exactly). [2026-11-01 15:20]
+
+- **Play fingerprint accepted:** Preview 11 merge of wild81, text81, zones81 and ai81: every side starts with 200 food, wood, stone and gold (S1), the computers start with a mill and a farm (EXCEPTIONS #16), plus the wild, famine, caps, text and computers changes. Albert: forget the full QC, get it into the preview (Nov 1 20:49).
