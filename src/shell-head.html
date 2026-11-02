@@ -11,7 +11,7 @@
   --brown-1:#2a1d13;--brown-2:#33241a;--brown-3:#6b5230;--gold-1:#e6b947;   /* the materials: card, slot fill, slot edge; titles and the chosen ring */
   --steel-1:#1e2329;--steel-2:#2a3038;--steel-3:#4d5a68;   /* the War and Train pages: the page, slot fill, slot edge */
   --ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b;--ring-w:#ece5d3;   /* the colour code (RULES): blue available, green active, red wrong, white words and all is well */
-  --dim:80%;--faint:35%;--white-dim:color-mix(in srgb,var(--ring-w) var(--dim),transparent);--white-faint:color-mix(in srgb,var(--ring-w) var(--faint),transparent);   /* the levels (COLORS, Nov 2): a hue full, dim or faint, blended into what it sits on */
+  --dim:80%;--faint:35%;--white-dim:color-mix(in srgb,var(--ring-w) var(--dim),transparent);--white-faint:color-mix(in srgb,var(--ring-w) var(--faint),transparent);--glass:92%;   /* the levels (COLORS, Nov 2): a hue full, dim or faint, blended into what it sits on; glass: a card over the map, the map's shapes through it (no blur: it costs every frame) */
   --age-0:#9a9890;--age-1:#b5793a;--age-2:#c9c2a6;--age-3:#4d6b9e;--age-4:#8e2f2a;   /* the ages: a tech's top edge */
   --fill-1:#f2d27a;--fill-2:#b8862e;--ink:#2a1c10;   /* the gold fill of a card's one main action, and its words */
   --shade:0 2px 8px rgba(0,0,0,.4);   /* the one shadow, under what floats over the map */
@@ -111,7 +111,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 #homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}
 /* the cycle button and Emergency: a slot each, on their own rank above the row, slot 1 and slot 6 (MENU-SPEC §6; cold review of v70: Emergency
    was 44 wide a rank higher, with no word). Emergency steps aside while any card is open, where it would sit over the card's buttons */
-#hudB,#emgB{width:calc((100% - 7 * var(--gap)) / 6)}#hudB{left:var(--gap)}#emgB{right:var(--gap)}#stage:has(#card:not([hidden])) #emgB{display:none}
+#hudB,#emgB{width:calc((100% - 7 * var(--gap)) / 6)}#hudB .dots{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);display:flex;justify-content:center;gap:5px}#hudB .dots i{width:6px;height:6px;border-radius:50%;background:var(--white-faint)}#hudB .dots .at{background:var(--ring-w)}   /* the page dots (Albert, Nov 2) */#hudB{left:var(--gap)}#emgB{right:var(--gap)}#stage:has(#card:not([hidden])) #emgB{display:none}
 #stage.busy :is(#hudB,#homeB,#emgB),#stage.picking #homeB{display:none}
 #place,#pickbar{position:absolute;z-index:var(--z-float);left:var(--gap);right:var(--gap);bottom:calc(var(--ob) + var(--gap));box-sizing:border-box;display:flex;gap:var(--gap);padding:var(--gap);background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o)}
 #place{justify-content:space-between;align-items:center;padding-left:10px}#place span{flex:1;min-width:0;line-height:1.25}#place button{padding:0 12px}
@@ -119,7 +119,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 /* the quick action (MENU-SPEC §7): a 2 × 2 of slots, icons only, one tight block: no gaps inside, one outer border at 9, thin dividers (the
    slot edge, showing through a one-pixel gap). Two slots wide: the screen's slot width, whatever the phone */
 #qa{position:absolute;z-index:var(--z-pop);display:flex;gap:var(--gap)}#qa.left{flex-direction:row-reverse}   /* the quick action: round chips, the first under the finger (MENU-SPEC §7, Albert Nov 2) */
-#qa .cell{width:var(--slot);height:var(--slot);flex:none;border-radius:50%;background:var(--brown-2);border:1px solid var(--brown-3);box-shadow:var(--shade)}#qa .cell svg{width:22px;height:22px}
+#qa .cell{width:var(--slot);height:var(--slot);flex:none;border-radius:50%;background:var(--brown-2);border:1px solid var(--brown-3);box-shadow:var(--shade)}#qa .cell svg{width:22px;height:22px}#qa [data-act=qsword] svg{width:34px;height:34px;color:var(--rc)}   /* the bullseye wears the state's colour: blue, red on an enemy */
 #spdPop{position:absolute;z-index:var(--z-drop);display:flex;gap:4px;padding:4px;background:var(--brown-1);border:1px solid var(--brown-3);border-radius:var(--rad-o);box-shadow:var(--shade)}#spdPop button{min-width:52px}
 /* The row below the map (MENU-SPEC §6): one Formation two ranks tall on the screen's grid, 6 to the edge; the − and + under a job, and any
    a / b pair, are half slots. Jobs stands over the map; War and Train lie on steel, and so does the cycle button on them (COLORS.md) */
@@ -140,7 +140,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
    aside), a middle one 10 and a small one 8, each below the preview's rank under the strip */
 #card{position:absolute;left:calc(var(--gap) / 2);right:calc(var(--gap) / 2);bottom:calc(var(--ob) + var(--gap) / 2);box-sizing:border-box;padding:calc(var(--gap) / 2);
   --capH:min(var(--cap) * var(--rank),round(down,100% - var(--ob) - var(--hb) - var(--gap) - var(--pv),var(--rank)));height:min(var(--capH),var(--rk,99) * var(--rank));
-  overflow-y:auto;scrollbar-width:none;background:var(--brown-1);border-radius:var(--rad-o);outline:1px solid var(--brown-3);outline-offset:-1px;box-shadow:var(--shade);color:var(--ring-w)}   /* the edge an outline, drawn over what scrolls */
+  overflow-y:auto;scrollbar-width:none;background:color-mix(in srgb,var(--brown-1) var(--glass),transparent);border-radius:var(--rad-o);outline:1px solid var(--brown-3);outline-offset:-1px;box-shadow:var(--shade);color:var(--ring-w)}   /* the edge an outline, drawn over what scrolls */
 #card.lg{--cap:99;--pv:0px}#card.md{--cap:10;--pv:var(--rank)}#card.sm{--cap:8;--pv:var(--rank)}
 .night #card{filter:brightness(.88)}
 .cin{display:flex;flex-direction:column;gap:var(--gap)}
@@ -175,8 +175,8 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 /* a research step and its › to the building: two slots and one */
 .trow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--gap)}.trow>button{grid-column:span 4}.trow>.goto{grid-column:span 2;font-size:var(--fs-l)}
 /* a research step wears its age on its top edge */
-.cin button:is(.a0,.a1,.a2,.a3,.a4)::before{content:'';position:absolute;left:10px;right:10px;top:4px;height:3px;border-radius:2px;background:var(--age)}
-.cin .a0{--age:var(--age-0)}.cin .a1{--age:var(--age-1)}.cin .a2{--age:var(--age-2)}.cin .a3{--age:var(--age-3)}.cin .a4{--age:var(--age-4)}
+:is(.cin button,.tb h3):is(.a0,.a1,.a2,.a3,.a4)::before{content:'';position:absolute;left:10px;right:10px;top:4px;height:3px;border-radius:2px;background:var(--age)}
+.a0{--age:var(--age-0)}.a1{--age:var(--age-1)}.a2{--age:var(--age-2)}.a3{--age:var(--age-3)}.a4{--age:var(--age-4)}.tb h3{position:relative}.tb h3.life::after{content:'';position:absolute;left:10px;right:10px;bottom:4px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--hc) var(--hp),var(--white-faint) 0)}   /* a building's title: its age the top edge, its health the bar under the name, the colour and the length (Nov 2) */
 /* tabs are a file folder (MENU-SPEC §1): the page under the tabs wears one Gold 1 outline down the middle of the 6 gap, radius 9 (the open
    tab joins it, in the states). A page that holds its height (the Build menu) keeps --n ranks, so the tabs never move */
 .fo,.fo>.pg,.hold{display:flex;flex-direction:column;gap:var(--gap)}
@@ -190,7 +190,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 .cin .row{display:flex;gap:12px;align-items:center}.cin .look{color:var(--gold-1);min-height:var(--slot);display:inline-flex;align-items:center}.cin .row .lnk{width:auto}
 .cin button.lnk{width:100%;padding:0;background:none;border:0;color:inherit;text-decoration:underline;text-underline-offset:3px;align-items:flex-start;text-align:left}
 /* The end of a game */
-#end{position:absolute;z-index:var(--z-end);inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--gap);background:color-mix(in srgb,var(--brown-1) 90%,transparent);text-align:center;padding:0 var(--gap)}
+#end{position:absolute;z-index:var(--z-end);inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--gap);background:color-mix(in srgb,var(--brown-1) var(--glass),transparent);text-align:center;padding:0 var(--gap)}
 #end h2{font-family:var(--display);font-weight:400;font-size:var(--fs-l);margin:0}
 #end p{margin:0;color:var(--white-dim);font-size:var(--fs-s)}
 #endX .crowns{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:8px 0}#endX .crowns b{color:var(--ring-w)}
@@ -245,7 +245,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
   <section id="orders" class="pg-jobs"><div class="fm" id="row"></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
-    <button class="fab cell" id="emgB" data-act="emgpage" aria-label="Emergency"></button>
+    <button class="fab cell" id="emgB" data-act="emgpage" aria-label="Alarm"></button>
     <button class="fab cell jobs" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, War, Train"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
 

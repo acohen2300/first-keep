@@ -199,17 +199,17 @@ const sec = (t) => `<div class="sec">${t}</div>`;
 const rowHTML = (slots) => acts(slots.map((s) => (s ? pic(s[0], s[1], s[2], s[3]) : empty())).join(''), 'c6');
 // a card's name and subtitle: kept here and laid by renderCard as the title bar, which knows the book and the way back
 let cardHead = ['', ''];
-const title = (name, sub) => ((cardHead = [name, sub || '']), '');
+const title = (name, sub, look) => ((cardHead = [name, sub || '', look]), ''); // look: a building's title box, its age on the top edge and its health a bar on the bottom (Nov 2)
 // The title bar (MENU-SPEC §4), one rank on every card: back · the name, slots 2 to 4 · the book · ×; the subtitle on the line under it.
 // A name too long for slots 2 to 4 shows its short one (TITLE_SHORT), its full name going to the subtitle. The book is dim on a card
 // without one, so nothing moves.
-function titleBar([name, sub], book, bookOn) {
+function titleBar([name, sub, look], book, bookOn) {
 	const t = TITLE_SHORT[name] || name,
 		s = t === name ? sub : [sub, name].filter(Boolean).join(' · ');
 	const lock = cardLocked() ? ' class="dis"' : '', // a card that must be answered: close is dim (back too on Resume, which has nowhere to go back to)
 		lockB = G.card && G.card.type === 'resume' ? lock : '';
 	return (
-		`<div class="tb fm"><button data-act="cardback"${lockB} aria-label="Back">${ICON.back}</button><h3 class="s3">${t}</h3>` +
+		`<div class="tb fm"><button data-act="cardback"${lockB} aria-label="Back">${ICON.back}</button><h3 class="s3${look ? ` a${look.age}${look.work !== undefined ? ' work' : ' life'}` : ''}"${look ? ` style="${look.work !== undefined ? toGo(1 - look.work) : `--hp:${Math.round(look.hp * 100)}%;--hc:${grad(look.hp * 2 - 1)}`}"` : ''}>${t}</h3>` +
 		`<button data-act="info" class="${book ? (bookOn ? 'on' : '') : 'dis'}" aria-label="About this">${ICON.book}</button>` +
 		`<button data-act="close"${lock} aria-label="Close">${ICON.close}</button></div>${s ? `<div class="sub">${s}</div>` : ''}`
 	);

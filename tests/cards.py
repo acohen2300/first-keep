@@ -99,7 +99,7 @@ JS = r"""() => {
   { const m = put('market'); m.fire = 5; F.openCard({ type: 'bld', id: m.id }); F.ui(true);
     if (!$('#card .bar.sel [data-act^="mpick:"]')) bad.push('Market: the goods are not one selector');
     if ($('#card .thin')) bad.push('Market: the goods selector is marked thin, which EXCEPTIONS #13 does not name');
-    if (!$(`#card [data-act="douse:${m.id}"]`) || !/\d+\/\d+/.test(($('#card .sub') || {}).innerText || '')) bad.push('Market: a burning Market has no Send help or no health on its title line (it skips the shared page)');
+    if (!$(`#card [data-act="douse:${m.id}"]`) || !$('#card .tb h3.life')) bad.push('Market: a burning Market has no Send help or no health bar on its title (it skips the shared page)');
     m.fire = 0; }
   } catch (e) { bad.push('the Market: the check could not run: ' + e.message); }
   // E1: the Army card's Train soldiers fold has no stray commas in its ranks
@@ -183,6 +183,15 @@ JS = r"""() => {
     B.prog = 0.5; F.ui(true); const b2 = rk(); B.prog = 1; F.closeCard();
     if (h !== F.CARD_RANKS.small || b !== F.CARD_RANKS.full || b2 !== b) bad.push(`card sizes: the House ${h} ranks, the Barracks ${b} then ${b2}, not ${F.CARD_RANKS.small} and ${F.CARD_RANKS.full} always`); }
   } catch (e) { bad.push('card sizes: the check could not run: ' + e.message); }
+  // the title box (Albert, Nov 2): a building's health a bar under its name and its age the top edge; no second line on your own House;
+  // a building going up wears the working ring instead
+  try {
+  { const H = put('house'); H.hp = F.BLD.house.hp / 2; F.openCard({ type: 'bld', id: H.id }); F.ui(true); const t = $('#card .tb h3');
+    if (!t.classList.contains('life') || !t.classList.contains('a' + (F.BLD.house.age || 0)) || t.style.getPropertyValue('--hp') !== '50%') bad.push(`the title box: the House's title is "${t.className}" ${t.style.cssText}, not its health (50%) and age`);
+    if ($('#card .sub')) bad.push('the title box: your own House still has a second line: ' + $('#card .sub').innerText);
+    H.prog = 0.4; F.ui(true); if (!$('#card .tb h3').classList.contains('work')) bad.push('the title box: a House going up does not wear the working ring');
+    H.prog = 1; H.hp = F.BLD.house.hp; F.closeCard(); }
+  } catch (e) { bad.push('the title box: the check could not run: ' + e.message); }
   // Emergency page (Albert, Nov 2): the red button turns the row to the four orders, the map in sight; again, back to the page it came from
   try {
   { F.closeCard(); F.hudPage('war'); F.ui(true); $('#emgB').click(); F.ui(true);

@@ -318,3 +318,12 @@ Checks on main before publishing:
 - Tests: gate QUICK redrawn (one sword of 44 centred under the finger, All in its place, Idle toward the middle), the hold opens the Here card; `tests/cards.py` card sizes, Emergency page, no panel; `tests/saves.py` All hands on the page. Plants: five new, five repointed. Gate passes. [2026-11-02 13:28]
 - Cut: the Emergency card, its "How it works" fold (the Guide says it), the steel panel, the quick action's hammer, menu, ✕ and +, `infoRank`, the info rank on building cards. [2026-11-02 13:28]
 
+## Build 80 preview 23 (one start; the Alarm; the bullseye; the page dots; the title box; glass cards) [2026-11-02 14:15]
+- Albert, Nov 2, 13:54 (yes yes yes): one start for every agent (`CLAUDE.md` points to `START-HERE.md` §1, which overrides anything else); the full QC renamed Live QC and kept for going live and overnight, not a session's start (`START-HERE.md`, `02 SOP.md`, `06 QC standard.md`). [2026-11-02 14:15]
+- The Alarm: Emergency renamed (too wide); its orders Work (was Stop: it never stopped anything, it sent everyone back), Gather (was Town square), Garrison (was All hands), Shelter. Their behaviour unchanged. [2026-11-02 14:15]
+- The quick action's first chip a bullseye (the diamond turned down), blue, red on an enemy. The cycle button the same on every page: › over three dots; ICON.cycle cut. [2026-11-02 14:15]
+- The building title box: its age the top edge (the tech rule), its health a bar (length and colour), a building going up the green ring; the second line cut for your own buildings, kept for what only a kind says (a field's crop) and another side's owner; room, health and age in the book. The small card 4 ranks to 3 (the gap under it gone); full 8 to 7; the Town Center 8. [2026-11-02 14:15]
+- Glass: cards at 92% Brown 1 (one number, `--glass`, the end card's 90% folded in); no blur. 90% failed the contrast check for red words over white ground (4.3:1), so 92%. [2026-11-02 14:15]
+- Tests: cards.py the title box, card sizes at 3 / 7 / 8; gate the page dot follows the page; palette.py the glass over white. Plants: four new, one repointed (E11), caught. Gate passes. [2026-11-02 14:15]
+- Cut: Emergency, Stop, Town square, All hands (as names), the ↻ icon and the page word on the cycle button, the info line on your own building cards. [2026-11-02 14:15]
+

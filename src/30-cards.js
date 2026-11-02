@@ -23,21 +23,20 @@ const CARDS = {
 							? workshopPage(b)
 							: {}
 					: {};
-		const f = !(mine && kp) && factOf(b, X, crew);
+		const f = G.wonder && G.wonder.id === b.id ? factOf(b, X, crew) : X.fact; // what only this kind says (a castle mending, a field's crop) keeps the line; room goes to the book
 		let h = title(
 				bldName(b.owner, b.kind),
 				[
 					mine ? '' : P.name, // your own building: no "yours" line (S1, Albert Nov 2); another side's says whose
 					mine ? '' : P.lord === 0 ? (P.rebel ? 'in revolt' : 'your vassal') : REL_WORD[G.rel[0][b.owner]].toLowerCase(),
 					f && f.filter(Boolean).join(' '),
-					!(mine && kp) && `${Math.round(b.hp)}/${Math.round(M)}`,
-					!(mine && kp) && `${AGES[B.age || 0].name} age`,
 				]
 					.filter(Boolean)
-					.join(' · '), // what the info rank said, on the title's second line (Albert, Nov 2: the House card says little, so it is small)
+					.join(' · '),
+				{ age: B.age || 0, hp: clamp(b.hp / M, 0, 1), work: done ? undefined : b.prog }, // the title box says the rest: its age on the top edge, its health a bar, its building the green ring (Albert, Nov 2)
 			),
 			end = '', // the last rank: Help, Repair, Raze
-			book = X.book || ''; // the book: what its kind explains, then what was researched here, then what it is and why
+			book = `<p>Health ${Math.round(b.hp)}/${Math.round(M)} · ${AGES[B.age || 0].name} age${B.room ? ` · room for ${B.room}` : ''}.</p>` + (X.book || ''); // the book: health, age and room first (they left the card, Nov 2), then what its kind explains, then what was researched here, then what it is and why
 		const more = () =>
 			fold(
 				'bmore',
@@ -544,7 +543,7 @@ const CARDS = {
 							`<p data-act="ordpick:${O.id}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`,
 					)
 					.join(''); // tap a line: that group is picked, and the camera goes to it
-		h += acts(btn('emgpage', 'Emergency', 'town square · all hands · shelter', G.emg ? 'warn' : ''), 'c1');
+		h += acts(btn('emgpage', 'Alarm', 'gather · garrison · shelter', G.emg ? 'warn' : ''), 'c1');
 		if (S.length && hasCmd())
 			h +=
 				sec('Orders go to') +
@@ -826,12 +825,12 @@ const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'research', '
 // card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most
 // a building's card is one of two fixed heights, by its kind, never by what it shows today (Albert, Nov 2, no card that changes). Full,
 // half the screen, where it trains or makes goods, the Town Center, the Town, and the two whose work or techs pass the small one (School,
-// Quarry). Small, the title and two ranks, for the rest. The Market keeps the whole height (lg): its goods selector needs nine ranks.
+// Quarry, Library). Small, the title and two ranks, for the rest. The Market keeps the whole height (lg): its goods selector needs nine ranks.
 // Another side's building fits what it shows
-const bldFull = (kind) => trainsAt(kind).length > 0 || !!BLD[kind].makes || ['keep', 'town', 'school', 'quarry'].includes(kind);
+const bldFull = (kind) => trainsAt(kind).length > 0 || !!BLD[kind].makes || ['keep', 'town', 'school', 'quarry', 'library'].includes(kind);
 const fixOf = (c) => {
 	const b = c.type === 'bld' && byId(G.blds, c.id);
-	return b && b.owner === 0 && b.kind !== 'market' ? CARD_RANKS[bldFull(b.kind) ? 'full' : 'small'] : 0;
+	return b && b.owner === 0 && b.kind !== 'market' ? (b.kind === 'keep' ? CARD_RANKS.keep : bldFull(b.kind) ? CARD_RANKS.full : CARD_RANKS.small + (BLD_PAGE[b.kind] && BLD_PAGE[b.kind](b).fact ? 1 : 0)) : 0;
 };
 const SIZE_OF = (c) =>
 	FULL.has(c.type) || (c.type === 'bld' && (byId(G.blds, c.id) || {}).kind === 'market')

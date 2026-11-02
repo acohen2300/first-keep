@@ -6,8 +6,8 @@
 // over hold a line toward the danger. Shelter: the villagers alone, the same way. Villagers left over wait behind the Town Center. Stop:
 // every villager back to its work; soldiers stay where the order put them (a garrison adds arrows, DEFENDING) until you send them.
 const EMERGENCY = [
-	['square', 'Town square', 'everyone to the Town Center'],
-	['hands', 'All hands', 'villagers and soldiers fight'],
+	['square', 'Gather', 'everyone to the Town Center'],
+	['hands', 'Garrison', 'villagers and soldiers fight'],
 	['shelter', 'Shelter', 'villagers inside'],
 ];
 const EMG = { line: 110, row: 12, perRow: 12, behind: 60, square: 20 }; // square: the villagers stand this far out from the Town Center's walls, the soldiers three times as far
@@ -165,7 +165,7 @@ function emgStop() {
 	say('Back to work.', 'good', TOAST.short);
 }
 // the page of the row (Albert, Nov 2): the four orders, each an icon with its word and what it does under it, and what is coming beside them
-// (tap it to look); ✕ goes back to the page you came from. The order on is gold, All hands red. The map stays in sight: no card
+// (tap it to look); ✕ goes back to the page you came from. The order on is gold, Garrison red. The map stays in sight: no card
 ROWS.emg = () => {
 	const I = G.incoming,
 		k = keepOf(0),

@@ -63,10 +63,13 @@ PLANTS = [
   # Build 80 preview 18: T1, Train and Research double-wide, a short rank filled (--only=T1)
   ('27-cards-core.js', "empty().repeat((3 - (cells.length % 3)) % 3)", "empty().repeat(0)", 'tests/cards.py', 'T1: a short Train or Research rank is not filled', 'T1:'),
   ('29-card-pages.js', "acts(cells.join(''), 'c6 queue')", "acts(cells.join(''), 'c6')", 'tests/cards.py', 'Q1: the training line loses its steel box', 'Q1:'),
+  ('27-cards-core.js', "' work' : ' life'}", "' work' : ''}", 'tests/cards.py', 'title: the health bar is gone from the title box', 'the title box'),
+  ('shell-head.html', '--glass:92%;', '--glass:75%;', 'tests/palette.py', 'glass: the card too see-through to read', 'glass card'),
+  ('39-huddle.js', "`<i${p === page ? ' class=\"at\"' : ''}></i>`", "'<i></i>'", 'tests/gate.py', 'cycle: the page dot does not follow the page', 'dot did not follow'),
   ('28-army-quick.js', "x = G.qa.left ? G.qa.sx + s / 2 - w : G.qa.sx - s / 2;", "x = G.qa.sx;", 'tests/gate.py', 'quick: the sword is off the finger', 'not centred under'),
   ('26-input.js', "	if (h.t !== 'ground' || picked().length) return tapAt(sx, sy);", "	return tapAt(sx, sy);", 'tests/gate.py', 'a hold on the ground no longer opens the Here card', 'hold on the ground'),
   ('30-cards.js', "	cardRanks(); // now", "	// now", 'tests/cards.py', 'a card keeps the last card\'s height', 'card sizes'),
-  ('30-cards.js', "['keep', 'town', 'school', 'quarry']", "['keep', 'town', 'school', 'quarry', 'house']", 'tests/cards.py', 'cards: the House gets the full card', 'card sizes'),
+  ('30-cards.js', "['keep', 'town', 'school', 'quarry', 'library']", "['keep', 'town', 'school', 'quarry', 'house']", 'tests/cards.py', 'cards: the House gets the full card', 'card sizes'),
   ('33-verbs.js', "		if (G.hud.page === 'emg') return hudPage(G.hud.from || 'jobs');", "", 'tests/cards.py', 'Emergency: the red button does not turn the row back', 'Emergency page'),
   ('shell-head.html', '[data-act^="tech:"].dis:not(.pill>*){border-color:var(--white-faint)}', '', 'tests/cards.py', 'levels: a dim tech loses its faint white edge', 'the levels'),
   ('shell-head.html', '.pg-war #row button,.pg-train #row button{', '.pg-war #row button,.pg-train #row button,#orders:not(.pg-jobs)~#hudB{', 'tests/cards.py', 'levels: the cycle button turns steel on the War page', 'the cycle button changes'),
@@ -125,7 +128,7 @@ PLANTS = [
   ('01-rules-basics.js', "const REL_WORD = { war: 'Foe', peace: 'Neutral', ally: 'Friend' };", "const REL_WORD = { war: 'Hostile', peace: 'Neutral', ally: 'Ally' };", 'tests/cards.py', 'the stances say ally, neutral, hostile', 'not friend, neutral, foe'),
   ('32-frame.js', 'page: 6 };', 'page: 30 };', 'tests/cards.py', 'the mail shows every line on one page', 'six lines a page'),
   ('29-card-pages.js', "acts(choice(MKT_SELL.map((g) => [`mpick:${g}`, `<b>${nm(g)}</b><small>${fmt(Math.floor(haveOf(p, g)))}</small>`, g === k]), 's6', true), 'c1')", "acts(MKT_SELL.map((g) => btn(`mpick:${g}`, nm(g), fmt(Math.floor(haveOf(p, g))), g === k ? 'on' : '')).join(''), 'c6')", 'tests/cards.py', 'the goods are singles, not one selector', 'not one selector'),
-  ('30-cards.js', "\t\t\t\t\t!(mine && kp) && `${Math.round(b.hp)}/${Math.round(M)}`,", "\t\t\t\t\t'',", 'tests/cards.py', 'a building card loses its health on the title line (E11)', 'skips the shared page'),
+  ('30-cards.js', "				{ age: B.age || 0, hp:", "				mine && b.kind === 'market' ? null : { age: B.age || 0, hp:", 'tests/cards.py', 'the Market skips the title box (E11)', 'skips the shared page'),
   ('30-cards.js', "fold('armytrain', 'Train soldiers', list(trainButtons(kinds)))", "fold('armytrain', 'Train soldiers', acts(trainButtons(kinds)))", 'tests/cards.py', "commas between the Army card's Train buttons (E1)", 'commas'),
   ('29-card-pages.js', '\t\t\t`${Math.floor(made)} made`,', '\t\t\t`${w ? Math.floor(w.st.got || 0) : 0} made`,', 'tests/cards.py', "a workshop counts its worker's gathering (E2)", 'E2: the workshop says'),
   ('26-input.js', "if (n.kind !== 'farm' && (!G.fogOn || fogAt(n.x, n.y) > 0)) {", "if (n.kind !== 'farm') {", 'tests/cards.py', 'a find under the fog can be tapped (E4)', 'under the fog was tapped'),
@@ -424,5 +427,5 @@ if __name__ == '__main__':
             say(c == 0, 'the gate passes (science, history, tables, saves, moves, palette, words, four phone sizes, baseline)')
         plant_check()
     owed()
-    print('\n' + ('START QC PASSED' if not fails else 'START QC FAILED: ' + str(len(fails)) + ' problem(s) above; report them before touching anything'))
+    print('\n' + ('LIVE QC PASSED' if not fails else 'LIVE QC FAILED: ' + str(len(fails)) + ' problem(s) above; report them before touching anything'))
     sys.exit(1 if fails else 0)

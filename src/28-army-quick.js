@@ -106,12 +106,12 @@ function guardRow(t, id) {
 		) + btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis'),
 	);
 }
-// ── The quick action (MENU-SPEC §7, Albert Nov 2): for emergencies, small. Tap open ground: a round sword under the finger. Tap it: All
+// ── The quick action (MENU-SPEC §7, Albert Nov 2): for emergencies, small. Tap open ground: a bullseye under the finger, its rings blue. Tap it: All
 // in its place, Idle beside it toward the middle of the screen. Tap All: every soldier goes. Three taps, the finger never moves. An enemy or
 // a hazard: a red ring under it (drawPicks) and it opens straight at All, ringed red. A tap anywhere else closes it; press and hold the
 // ground for the Here card (26-input). G.qa holds what was tapped (h, as hitAt gives it) for the verbs (33-verbs).
 const QA = [
-	[['qsword', 'sword', 'Send soldiers here']],
+	[['qsword', 'target', 'Send soldiers here']],
 	[
 		['qall', 'squad', 'Send every soldier'],
 		['qidle', 'idle', 'Send the idle ones'],

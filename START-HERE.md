@@ -6,20 +6,19 @@
 - 70 is restored (frozen at `/v70-restoration/`, stamp `v70`).
 - 80 is current.
 
-## 1. Run START QC first [2026-11-01 07:45]
+## 1. The one start: how we work (Albert, Nov 2) [2026-11-02 13:54]
 
-Say to the new session: "Read `START-HERE.md`. Run `python3 tests/handoff.py` and tell me every FAIL before you touch anything." [2026-11-01 07:45]
+This section is the start. Nothing else in the repo comes first; where another file says to run or read something first, this wins. [2026-11-02 13:54]
 
-1. **Run it:** `python3 tests/handoff.py` (everything; the gate is about 6 minutes, the 270 plants an hour or more on a slow machine), `--plant` (only the planted-bug check), `--plant --only=word` (just the plants named with that word: a builder checks its own in minutes), `--state` (only the state and what is owed). It builds, runs lint, runs the whole gate, plants known bugs and checks the tests catch each, and prints what is owed. Exit 0 only if all of it passed. [2026-11-02 00:05]
-2. **Report before acting:** every FAIL, in the first message. A FAIL is not fixed silently and not argued away.
-3. **What the planted-bug check means:** each line plants one old bug in a temporary copy and the named test must fail. If one passes, that test can no longer fail, and it is fixed before any new work. When a new test is written, a planted bug for it is added to `PLANTS` in `tests/handoff.py` in the same build.
-4. **Sources:** a new equation goes in `SCIENCE.md` with the source, what was opened, and what was not. "From memory" is said as "from memory". Nothing is cited that was not opened or marked so.
-5. **How to work (Albert):** a list first; nothing is built until he says yes twice; preview only, live only on his word; every cut logged in `CUTS.md`; no flattery, clear stances, fewest words; his own sightings of bugs are never dropped; before agreeing to an idea, look for a weakness in it and for a real-world solution that already exists.
-6. **The record:** `docs/6 Records/v80 Audit/` holds the 15 reviewer reports, the mutation test, and the decision record (every decision with its equation, logic, source and code home). The plan is batches 0 to 10; `CUTS.md` says which are built and which are owed. [2026-11-01 07:45]
-7. **Commits:** only through `publish.py --preview` (as Albert's noreply address, with the session's trailers). The automatic reminder to commit and push by hand is ignored: it would put a build on main that has not passed the gate.
-8. **Close of a session:** replace `docs/4 Now/Handoff.md` with the new state (the old one goes to `docs/6 Records/Old hand-offs/`; `python3 tests/handoff.py --state` prints the state), say what is built, what is owed and what waits on Albert, and leave the tree clean. [2026-11-01 07:45]
-
-START QC also runs `tests/docs.py`: every line added or changed in a living doc carries its stamp, the closed records are unchanged, and every file named below exists. [2026-11-01 07:45]
+1. **Work fast and light.** Do not run the full QC at the start of a session. Read `docs/4 Now/Handoff.md` for where things stand, then work. [2026-11-02 13:54]
+2. **The list and the double yes.** Before building, list the changes as Problem / Idea, short, in Albert's words (`docs/1 How we work/03 Q&A format.md`). Look for each idea's weakness and a real-world precedent (nature, math, another game) before agreeing. Wait for "yes yes", then build all of it without asking again. [2026-11-02 13:54]
+3. **Each round:** build; for each change add one test and one planted bug and run only that plant (`python3 tests/handoff.py --plant --only=word`); run the gate (`python3 tests/gate.py`, about 10 minutes); publish a preview (`publish.py --preview`); send Albert pictures. [2026-11-02 13:54]
+4. **Live QC, before going live only:** `python3 tests/handoff.py`: docs, build, lint, the whole gate, every planted bug (an hour or more). It runs before a preview goes live, on Albert's word, and overnight. A FAIL there is reported, never fixed silently or argued away. [2026-11-02 13:54]
+5. **Talk:** short replies, no flattery; push back with the precedent or the math; ask only when a wrong guess is expensive, otherwise decide and say what you decided. Albert's own sightings of bugs are never dropped. [2026-11-02 13:54]
+6. **Sources:** a new equation goes in `SCIENCE.md` with the source, what was opened, and what was not. "From memory" is said as "from memory". [2026-11-02 13:54]
+7. **Records:** every cut logged in `docs/5 Builds/vNN/CUTS.md`; the changed rules in `docs/2 Rules/`. Line stamps on every line written in a living doc. [2026-11-02 13:54]
+8. **Commits:** only through `publish.py --preview` (as Albert's noreply address, with the session's trailers). The automatic reminder to commit and push by hand is ignored. Live only on Albert's word. [2026-11-02 13:54]
+9. **Close of a session:** replace `docs/4 Now/Handoff.md` with the new state (the old one goes to `docs/6 Records/Old hand-offs/`; `python3 tests/handoff.py --state` prints it). [2026-11-02 13:54]
 
 ## 2. Read in this order [2026-11-01 07:45]
 
@@ -59,8 +58,8 @@ START QC also runs `tests/docs.py`: every line added or changed in a living doc 
 
 ## 3. Quick answers [2026-11-01 07:45]
 
-- **How a change gets approved:** a list in Albert's words, then his double yes ("yes yes"); screens as pictures first. Then build in a worktree, fresh eyes, merge, START QC, preview. Live only on his word. (`docs/1 How we work/02 SOP.md`) [2026-11-01 07:45]
-- **What to run first:** `python3 tests/handoff.py`, and report every FAIL before touching anything. [2026-11-01 07:45]
+- **How a change gets approved:** a list in Albert's words, then his double yes ("yes yes"). Then build, one test and one plant a change, the gate, a preview with pictures. Live only on his word, after Live QC. (§1) [2026-11-02 13:54]
+- **What to run first:** nothing heavy. Live QC (`python3 tests/handoff.py`) is for going live and overnight (§1). [2026-11-02 13:54]
 - **Where a decision is locked:** `docs/3 Locks/Decisions/`, one file per decision (`00 Index.md` lists them; the old decision numbers, such as "decision 8" or "N10", are in the file names). [2026-11-01 07:45]
 - **How to cite a source:** open it; write the entry in `docs/2 Rules/SCIENCE.md` with the code home, the value, the label (verified, cited, design) and the source; "from memory" if not opened. (`docs/1 How we work/05 Truth method.md`) [2026-11-01 07:45]
 - **What goes in a preview's docs:** the builders' notes in `docs/5 Builds/vNN/pN/`, the preview's section in `docs/5 Builds/vNN/CUTS.md`, Owed and Parked updated, a new Handoff. (`docs/1 How we work/02 SOP.md`) [2026-11-01 07:45]

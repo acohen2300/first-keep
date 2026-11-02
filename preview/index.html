@@ -14,7 +14,7 @@
   --brown-1:#2a1d13;--brown-2:#33241a;--brown-3:#6b5230;--gold-1:#e6b947;   /* the materials: card, slot fill, slot edge; titles and the chosen ring */
   --steel-1:#1e2329;--steel-2:#2a3038;--steel-3:#4d5a68;   /* the War and Train pages: the page, slot fill, slot edge */
   --ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b;--ring-w:#ece5d3;   /* the colour code (RULES): blue available, green active, red wrong, white words and all is well */
-  --dim:80%;--faint:35%;--white-dim:color-mix(in srgb,var(--ring-w) var(--dim),transparent);--white-faint:color-mix(in srgb,var(--ring-w) var(--faint),transparent);   /* the levels (COLORS, Nov 2): a hue full, dim or faint, blended into what it sits on */
+  --dim:80%;--faint:35%;--white-dim:color-mix(in srgb,var(--ring-w) var(--dim),transparent);--white-faint:color-mix(in srgb,var(--ring-w) var(--faint),transparent);--glass:92%;   /* the levels (COLORS, Nov 2): a hue full, dim or faint, blended into what it sits on; glass: a card over the map, the map's shapes through it (no blur: it costs every frame) */
   --age-0:#9a9890;--age-1:#b5793a;--age-2:#c9c2a6;--age-3:#4d6b9e;--age-4:#8e2f2a;   /* the ages: a tech's top edge */
   --fill-1:#f2d27a;--fill-2:#b8862e;--ink:#2a1c10;   /* the gold fill of a card's one main action, and its words */
   --shade:0 2px 8px rgba(0,0,0,.4);   /* the one shadow, under what floats over the map */
@@ -114,7 +114,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 #homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}
 /* the cycle button and Emergency: a slot each, on their own rank above the row, slot 1 and slot 6 (MENU-SPEC §6; cold review of v70: Emergency
    was 44 wide a rank higher, with no word). Emergency steps aside while any card is open, where it would sit over the card's buttons */
-#hudB,#emgB{width:calc((100% - 7 * var(--gap)) / 6)}#hudB{left:var(--gap)}#emgB{right:var(--gap)}#stage:has(#card:not([hidden])) #emgB{display:none}
+#hudB,#emgB{width:calc((100% - 7 * var(--gap)) / 6)}#hudB .dots{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);display:flex;justify-content:center;gap:5px}#hudB .dots i{width:6px;height:6px;border-radius:50%;background:var(--white-faint)}#hudB .dots .at{background:var(--ring-w)}   /* the page dots (Albert, Nov 2) */#hudB{left:var(--gap)}#emgB{right:var(--gap)}#stage:has(#card:not([hidden])) #emgB{display:none}
 #stage.busy :is(#hudB,#homeB,#emgB),#stage.picking #homeB{display:none}
 #place,#pickbar{position:absolute;z-index:var(--z-float);left:var(--gap);right:var(--gap);bottom:calc(var(--ob) + var(--gap));box-sizing:border-box;display:flex;gap:var(--gap);padding:var(--gap);background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o)}
 #place{justify-content:space-between;align-items:center;padding-left:10px}#place span{flex:1;min-width:0;line-height:1.25}#place button{padding:0 12px}
@@ -122,7 +122,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 /* the quick action (MENU-SPEC §7): a 2 × 2 of slots, icons only, one tight block: no gaps inside, one outer border at 9, thin dividers (the
    slot edge, showing through a one-pixel gap). Two slots wide: the screen's slot width, whatever the phone */
 #qa{position:absolute;z-index:var(--z-pop);display:flex;gap:var(--gap)}#qa.left{flex-direction:row-reverse}   /* the quick action: round chips, the first under the finger (MENU-SPEC §7, Albert Nov 2) */
-#qa .cell{width:var(--slot);height:var(--slot);flex:none;border-radius:50%;background:var(--brown-2);border:1px solid var(--brown-3);box-shadow:var(--shade)}#qa .cell svg{width:22px;height:22px}
+#qa .cell{width:var(--slot);height:var(--slot);flex:none;border-radius:50%;background:var(--brown-2);border:1px solid var(--brown-3);box-shadow:var(--shade)}#qa .cell svg{width:22px;height:22px}#qa [data-act=qsword] svg{width:34px;height:34px;color:var(--rc)}   /* the bullseye wears the state's colour: blue, red on an enemy */
 #spdPop{position:absolute;z-index:var(--z-drop);display:flex;gap:4px;padding:4px;background:var(--brown-1);border:1px solid var(--brown-3);border-radius:var(--rad-o);box-shadow:var(--shade)}#spdPop button{min-width:52px}
 /* The row below the map (MENU-SPEC §6): one Formation two ranks tall on the screen's grid, 6 to the edge; the − and + under a job, and any
    a / b pair, are half slots. Jobs stands over the map; War and Train lie on steel, and so does the cycle button on them (COLORS.md) */
@@ -143,7 +143,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
    aside), a middle one 10 and a small one 8, each below the preview's rank under the strip */
 #card{position:absolute;left:calc(var(--gap) / 2);right:calc(var(--gap) / 2);bottom:calc(var(--ob) + var(--gap) / 2);box-sizing:border-box;padding:calc(var(--gap) / 2);
   --capH:min(var(--cap) * var(--rank),round(down,100% - var(--ob) - var(--hb) - var(--gap) - var(--pv),var(--rank)));height:min(var(--capH),var(--rk,99) * var(--rank));
-  overflow-y:auto;scrollbar-width:none;background:var(--brown-1);border-radius:var(--rad-o);outline:1px solid var(--brown-3);outline-offset:-1px;box-shadow:var(--shade);color:var(--ring-w)}   /* the edge an outline, drawn over what scrolls */
+  overflow-y:auto;scrollbar-width:none;background:color-mix(in srgb,var(--brown-1) var(--glass),transparent);border-radius:var(--rad-o);outline:1px solid var(--brown-3);outline-offset:-1px;box-shadow:var(--shade);color:var(--ring-w)}   /* the edge an outline, drawn over what scrolls */
 #card.lg{--cap:99;--pv:0px}#card.md{--cap:10;--pv:var(--rank)}#card.sm{--cap:8;--pv:var(--rank)}
 .night #card{filter:brightness(.88)}
 .cin{display:flex;flex-direction:column;gap:var(--gap)}
@@ -178,8 +178,8 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 /* a research step and its › to the building: two slots and one */
 .trow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--gap)}.trow>button{grid-column:span 4}.trow>.goto{grid-column:span 2;font-size:var(--fs-l)}
 /* a research step wears its age on its top edge */
-.cin button:is(.a0,.a1,.a2,.a3,.a4)::before{content:'';position:absolute;left:10px;right:10px;top:4px;height:3px;border-radius:2px;background:var(--age)}
-.cin .a0{--age:var(--age-0)}.cin .a1{--age:var(--age-1)}.cin .a2{--age:var(--age-2)}.cin .a3{--age:var(--age-3)}.cin .a4{--age:var(--age-4)}
+:is(.cin button,.tb h3):is(.a0,.a1,.a2,.a3,.a4)::before{content:'';position:absolute;left:10px;right:10px;top:4px;height:3px;border-radius:2px;background:var(--age)}
+.a0{--age:var(--age-0)}.a1{--age:var(--age-1)}.a2{--age:var(--age-2)}.a3{--age:var(--age-3)}.a4{--age:var(--age-4)}.tb h3{position:relative}.tb h3.life::after{content:'';position:absolute;left:10px;right:10px;bottom:4px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--hc) var(--hp),var(--white-faint) 0)}   /* a building's title: its age the top edge, its health the bar under the name, the colour and the length (Nov 2) */
 /* tabs are a file folder (MENU-SPEC §1): the page under the tabs wears one Gold 1 outline down the middle of the 6 gap, radius 9 (the open
    tab joins it, in the states). A page that holds its height (the Build menu) keeps --n ranks, so the tabs never move */
 .fo,.fo>.pg,.hold{display:flex;flex-direction:column;gap:var(--gap)}
@@ -193,7 +193,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 .cin .row{display:flex;gap:12px;align-items:center}.cin .look{color:var(--gold-1);min-height:var(--slot);display:inline-flex;align-items:center}.cin .row .lnk{width:auto}
 .cin button.lnk{width:100%;padding:0;background:none;border:0;color:inherit;text-decoration:underline;text-underline-offset:3px;align-items:flex-start;text-align:left}
 /* The end of a game */
-#end{position:absolute;z-index:var(--z-end);inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--gap);background:color-mix(in srgb,var(--brown-1) 90%,transparent);text-align:center;padding:0 var(--gap)}
+#end{position:absolute;z-index:var(--z-end);inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--gap);background:color-mix(in srgb,var(--brown-1) var(--glass),transparent);text-align:center;padding:0 var(--gap)}
 #end h2{font-family:var(--display);font-weight:400;font-size:var(--fs-l);margin:0}
 #end p{margin:0;color:var(--white-dim);font-size:var(--fs-s)}
 #endX .crowns{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:8px 0}#endX .crowns b{color:var(--ring-w)}
@@ -250,7 +250,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
   <section id="orders" class="pg-jobs"><div class="fm" id="row"></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
-    <button class="fab cell" id="emgB" data-act="emgpage" aria-label="Emergency"></button>
+    <button class="fab cell" id="emgB" data-act="emgpage" aria-label="Alarm"></button>
     <button class="fab cell jobs" id="hudB" data-act="pagecycle" aria-label="The next page: Jobs, War, Train"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
 
@@ -5480,7 +5480,7 @@ const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, 
 // How long a toast stays (Nov 2, M7: 219 calls typed their own seconds, from 2 to 10): three lengths, by how much there is to read.
 // At about 200 words a minute (adult silent reading, 238 in Brysbaert's 2019 review, from memory, not opened) a short line of a few words
 // needs 2 to 3 s, a sentence 4 to 5, two sentences 7 to 8. 2 and 3 became short; 4, 5 and 6 mid; 7 to 10 long.
-const CARD_RANKS = { small: 4, full: 8 }; // a building card's two fixed heights in ranks, its title included (Albert, Nov 2; MENU-SPEC §8)
+const CARD_RANKS = { small: 3, full: 7, keep: 8 }; // a building card's fixed heights in ranks, its title included (Albert, Nov 2; MENU-SPEC §8); a kind whose card has a line of its own (a field's crop, a castle mending) is one more; the Town Center 8, for its Misfits tab
 const TOAST = { short: 3, mid: 5, long: 8 };
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
@@ -6530,8 +6530,8 @@ const ROW_WORD = {
 	new: 'New',
 	army: 'The army',
 	fight: 'fighting',
-	emg: 'Emergency',
-	emgW: [['Stop', 'to work'], ['Square', 'gather'], ['All hands', 'fight'], ['Shelter', 'hide']], // the Emergency page: each order's word and what it does, in the row's order
+	emg: 'Alarm', // the red button: the alarm you raise (Albert, Nov 2: Emergency was too wide)
+	emgW: [['Work', 'all clear'], ['Gather', 'at home'], ['Garrison', 'all in'], ['Shelter', 'hide']], // the Alarm page: each order's word and what it does, in the row's order (Albert, Nov 2: Age of Empires' Town Bell and Back to Work)
 	pace: ['slow', 'medium', 'fast'], // a squad's pace under it, from its slowest member (paceWord)
 };
 // a research step's why: its own key first ('tech:' + id) where a unit shares its id (F4: one WHY.legion served both)
@@ -6593,7 +6593,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Villager jobs: Food, Wood, Stone, Gold, Iron',
-		`The − and + under each job move one villager off or on: + takes an idle villager, else the one earning least elsewhere; − sends home the one earning least. Each worker takes the find that brings home most a minute: its load over the time to fill it and carry it home and back (fish only within ${DOCKR} of a dock). A worker on a field, tree farm, pasture or quarry stays on it. A worker on a wild find that runs out looks only for the same kind of find within its own sight (gold rock to gold rock); when none is in sight it waits at the drop-off for your order. Tap the lit job tile again to turn the default job off: new villagers then wait at the Town Center. Stop and Dismiss sit on a villager card; Town square (Emergency) stops everyone, and idle on the quick action sends the idle ones to a spot.`,
+		`The − and + under each job move one villager off or on: + takes an idle villager, else the one earning least elsewhere; − sends home the one earning least. Each worker takes the find that brings home most a minute: its load over the time to fill it and carry it home and back (fish only within ${DOCKR} of a dock). A worker on a field, tree farm, pasture or quarry stays on it. A worker on a wild find that runs out looks only for the same kind of find within its own sight (gold rock to gold rock); when none is in sight it waits at the drop-off for your order. Tap the lit job tile again to turn the default job off: new villagers then wait at the Town Center. Stop and Dismiss sit on a villager card; Gather (the Alarm) stops everyone, and idle on the quick action sends the idle ones to a spot.`,
 		'You decide who does what, and nobody wanders off.',
 	],
 	[
@@ -6827,8 +6827,8 @@ const TRIGGERS = () => [
 		'A plan you can read: time, odds and who is where. The weather on the screen is counted in the time; a storm that comes later is bad luck.',
 	],
 	[
-		'Emergency: four orders',
-		'The red button on the right of the row and the Army card turn the row to it, with what is coming. Town square gathers everyone round the Town Center, the soldiers outside the villagers. All hands sends soldiers into the sturdiest buildings (they add arrows) and a line toward the danger, and villagers into the room left. Shelter puts the villagers alone in the sturdiest shelter first. Stop sends villagers back to the work they had; soldiers stay until you give them an order.',
+		'The Alarm: four orders',
+		'The red Alarm button on the right of the row and the Army card turn the row to it, with what is coming. Gather brings everyone round the Town Center, the soldiers outside the villagers. Garrison sends soldiers into the sturdiest buildings (they add arrows) and a line toward the danger, and villagers into the room left. Shelter puts the villagers alone in the sturdiest shelter first. Work, the all clear, sends villagers back to the work they had; soldiers stay until you give them an order.',
 		'One rule for everyone: the strongest walls first, the nearest hands first.',
 	],
 	[
@@ -22741,17 +22741,17 @@ const sec = (t) => `<div class="sec">${t}</div>`;
 const rowHTML = (slots) => acts(slots.map((s) => (s ? pic(s[0], s[1], s[2], s[3]) : empty())).join(''), 'c6');
 // a card's name and subtitle: kept here and laid by renderCard as the title bar, which knows the book and the way back
 let cardHead = ['', ''];
-const title = (name, sub) => ((cardHead = [name, sub || '']), '');
+const title = (name, sub, look) => ((cardHead = [name, sub || '', look]), ''); // look: a building's title box, its age on the top edge and its health a bar on the bottom (Nov 2)
 // The title bar (MENU-SPEC §4), one rank on every card: back · the name, slots 2 to 4 · the book · ×; the subtitle on the line under it.
 // A name too long for slots 2 to 4 shows its short one (TITLE_SHORT), its full name going to the subtitle. The book is dim on a card
 // without one, so nothing moves.
-function titleBar([name, sub], book, bookOn) {
+function titleBar([name, sub, look], book, bookOn) {
 	const t = TITLE_SHORT[name] || name,
 		s = t === name ? sub : [sub, name].filter(Boolean).join(' · ');
 	const lock = cardLocked() ? ' class="dis"' : '', // a card that must be answered: close is dim (back too on Resume, which has nowhere to go back to)
 		lockB = G.card && G.card.type === 'resume' ? lock : '';
 	return (
-		`<div class="tb fm"><button data-act="cardback"${lockB} aria-label="Back">${ICON.back}</button><h3 class="s3">${t}</h3>` +
+		`<div class="tb fm"><button data-act="cardback"${lockB} aria-label="Back">${ICON.back}</button><h3 class="s3${look ? ` a${look.age}${look.work !== undefined ? ' work' : ' life'}` : ''}"${look ? ` style="${look.work !== undefined ? toGo(1 - look.work) : `--hp:${Math.round(look.hp * 100)}%;--hc:${grad(look.hp * 2 - 1)}`}"` : ''}>${t}</h3>` +
 		`<button data-act="info" class="${book ? (bookOn ? 'on' : '') : 'dis'}" aria-label="About this">${ICON.book}</button>` +
 		`<button data-act="close"${lock} aria-label="Close">${ICON.close}</button></div>${s ? `<div class="sub">${s}</div>` : ''}`
 	);
@@ -23174,12 +23174,12 @@ function guardRow(t, id) {
 		) + btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis'),
 	);
 }
-// ── The quick action (MENU-SPEC §7, Albert Nov 2): for emergencies, small. Tap open ground: a round sword under the finger. Tap it: All
+// ── The quick action (MENU-SPEC §7, Albert Nov 2): for emergencies, small. Tap open ground: a bullseye under the finger, its rings blue. Tap it: All
 // in its place, Idle beside it toward the middle of the screen. Tap All: every soldier goes. Three taps, the finger never moves. An enemy or
 // a hazard: a red ring under it (drawPicks) and it opens straight at All, ringed red. A tap anywhere else closes it; press and hold the
 // ground for the Here card (26-input). G.qa holds what was tapped (h, as hitAt gives it) for the verbs (33-verbs).
 const QA = [
-	[['qsword', 'sword', 'Send soldiers here']],
+	[['qsword', 'target', 'Send soldiers here']],
 	[
 		['qall', 'squad', 'Send every soldier'],
 		['qidle', 'idle', 'Send the idle ones'],
@@ -23899,21 +23899,20 @@ const CARDS = {
 							? workshopPage(b)
 							: {}
 					: {};
-		const f = !(mine && kp) && factOf(b, X, crew);
+		const f = G.wonder && G.wonder.id === b.id ? factOf(b, X, crew) : X.fact; // what only this kind says (a castle mending, a field's crop) keeps the line; room goes to the book
 		let h = title(
 				bldName(b.owner, b.kind),
 				[
 					mine ? '' : P.name, // your own building: no "yours" line (S1, Albert Nov 2); another side's says whose
 					mine ? '' : P.lord === 0 ? (P.rebel ? 'in revolt' : 'your vassal') : REL_WORD[G.rel[0][b.owner]].toLowerCase(),
 					f && f.filter(Boolean).join(' '),
-					!(mine && kp) && `${Math.round(b.hp)}/${Math.round(M)}`,
-					!(mine && kp) && `${AGES[B.age || 0].name} age`,
 				]
 					.filter(Boolean)
-					.join(' · '), // what the info rank said, on the title's second line (Albert, Nov 2: the House card says little, so it is small)
+					.join(' · '),
+				{ age: B.age || 0, hp: clamp(b.hp / M, 0, 1), work: done ? undefined : b.prog }, // the title box says the rest: its age on the top edge, its health a bar, its building the green ring (Albert, Nov 2)
 			),
 			end = '', // the last rank: Help, Repair, Raze
-			book = X.book || ''; // the book: what its kind explains, then what was researched here, then what it is and why
+			book = `<p>Health ${Math.round(b.hp)}/${Math.round(M)} · ${AGES[B.age || 0].name} age${B.room ? ` · room for ${B.room}` : ''}.</p>` + (X.book || ''); // the book: health, age and room first (they left the card, Nov 2), then what its kind explains, then what was researched here, then what it is and why
 		const more = () =>
 			fold(
 				'bmore',
@@ -24420,7 +24419,7 @@ const CARDS = {
 							`<p data-act="ordpick:${O.id}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`,
 					)
 					.join(''); // tap a line: that group is picked, and the camera goes to it
-		h += acts(btn('emgpage', 'Emergency', 'town square · all hands · shelter', G.emg ? 'warn' : ''), 'c1');
+		h += acts(btn('emgpage', 'Alarm', 'gather · garrison · shelter', G.emg ? 'warn' : ''), 'c1');
 		if (S.length && hasCmd())
 			h +=
 				sec('Orders go to') +
@@ -24702,12 +24701,12 @@ const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'research', '
 // card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most
 // a building's card is one of two fixed heights, by its kind, never by what it shows today (Albert, Nov 2, no card that changes). Full,
 // half the screen, where it trains or makes goods, the Town Center, the Town, and the two whose work or techs pass the small one (School,
-// Quarry). Small, the title and two ranks, for the rest. The Market keeps the whole height (lg): its goods selector needs nine ranks.
+// Quarry, Library). Small, the title and two ranks, for the rest. The Market keeps the whole height (lg): its goods selector needs nine ranks.
 // Another side's building fits what it shows
-const bldFull = (kind) => trainsAt(kind).length > 0 || !!BLD[kind].makes || ['keep', 'town', 'school', 'quarry'].includes(kind);
+const bldFull = (kind) => trainsAt(kind).length > 0 || !!BLD[kind].makes || ['keep', 'town', 'school', 'quarry', 'library'].includes(kind);
 const fixOf = (c) => {
 	const b = c.type === 'bld' && byId(G.blds, c.id);
-	return b && b.owner === 0 && b.kind !== 'market' ? CARD_RANKS[bldFull(b.kind) ? 'full' : 'small'] : 0;
+	return b && b.owner === 0 && b.kind !== 'market' ? (b.kind === 'keep' ? CARD_RANKS.keep : bldFull(b.kind) ? CARD_RANKS.full : CARD_RANKS.small + (BLD_PAGE[b.kind] && BLD_PAGE[b.kind](b).fact ? 1 : 0)) : 0;
 };
 const SIZE_OF = (c) =>
 	FULL.has(c.type) || (c.type === 'bld' && (byId(G.blds, c.id) || {}).kind === 'market')
@@ -25075,10 +25074,6 @@ const ICON = {
 		22,
 		'<circle cx="5" cy="6" r="2.4" fill="currentColor"/><circle cx="11" cy="5.2" r="2.7" fill="currentColor"/><circle cx="17" cy="6" r="2.4" fill="currentColor"/><path d="M1.2 15.5c0-3 1.7-4.6 3.8-4.6s3.8 1.6 3.8 4.6ZM6.8 15.5c0-3.5 1.9-5.3 4.2-5.3s4.2 1.8 4.2 5.3ZM13.2 15.5c0-3 1.7-4.6 3.8-4.6s3.8 1.6 3.8 4.6Z" fill="currentColor"/>',
 	),
-	cycle: SVG(
-		16,
-		'<path d="M3 8a5 5 0 0 1 8.6-3.5M13 8a5 5 0 0 1-8.6 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M11.8 1.6v3.2H8.6M4.2 14.4v-3.2h3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
-	),
 	shield: SVG(
 		16,
 		'<path d="M8 1.5 L13.5 3.5 V8 Q13.5 12.5 8 14.5 Q2.5 12.5 2.5 8 V3.5 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>',
@@ -25122,6 +25117,14 @@ const ICON = {
 		20,
 		'<path d="M4 17 V6 H6.5 V8.2 H8.6 V6 H11.4 V8.2 H13.5 V6 H16 V17 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 17 V13 H11.4 V17" fill="currentColor"/>',
 	),
+	next: SVG(
+		20,
+		'<path d="M8 4.5l5.5 5.5L8 15.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
+	), // the cycle button's chevron: the next page
+	target: SVG(
+		20,
+		'<circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="10" r="4.8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="10" r="1.8" fill="currentColor"/>',
+	), // the quick action's bullseye (Albert, Nov 2): send them here
 	sword: SVG(
 		16,
 		'<path d="M13.5 2.5 L13.5 4.6 L6.6 11.5 L4.5 9.4 L11.4 2.5 Z" fill="currentColor"/><path d="M3.2 8.6 L7.4 12.8 M2.4 13.6 L5 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
@@ -30536,8 +30539,8 @@ function rowUI() {
 	if (chip.pg !== page) {
 		chip.pg = page;
 		$('orders').className = 'pg-' + page;
-		chip.className = 'fab cell ' + page;
-		chip.innerHTML = topOf(ICON.cycle) + wd(ROW_WORD[page]);
+		chip.className = 'fab cell';
+		chip.innerHTML = topOf(ICON.next) + `<span class="dots">${PAGES.map((p) => `<i${p === page ? ' class="at"' : ''}></i>`).join('')}</span>`; // the same on every page: › over the page dots, the one you are on filled (Albert, Nov 2)
 		chip.setAttribute('aria-label', `${ROW_WORD[page]}: the next page`);
 		fit(); // the row is drawn anew: the map's bottom edge is measured again
 	}
@@ -30707,8 +30710,8 @@ CARDS.squad = (c) => {
 // over hold a line toward the danger. Shelter: the villagers alone, the same way. Villagers left over wait behind the Town Center. Stop:
 // every villager back to its work; soldiers stay where the order put them (a garrison adds arrows, DEFENDING) until you send them.
 const EMERGENCY = [
-	['square', 'Town square', 'everyone to the Town Center'],
-	['hands', 'All hands', 'villagers and soldiers fight'],
+	['square', 'Gather', 'everyone to the Town Center'],
+	['hands', 'Garrison', 'villagers and soldiers fight'],
 	['shelter', 'Shelter', 'villagers inside'],
 ];
 const EMG = { line: 110, row: 12, perRow: 12, behind: 60, square: 20 }; // square: the villagers stand this far out from the Town Center's walls, the soldiers three times as far
@@ -30866,7 +30869,7 @@ function emgStop() {
 	say('Back to work.', 'good', TOAST.short);
 }
 // the page of the row (Albert, Nov 2): the four orders, each an icon with its word and what it does under it, and what is coming beside them
-// (tap it to look); ✕ goes back to the page you came from. The order on is gold, All hands red. The map stays in sight: no card
+// (tap it to look); ✕ goes back to the page you came from. The order on is gold, Garrison red. The map stays in sight: no card
 ROWS.emg = () => {
 	const I = G.incoming,
 		k = keepOf(0),
@@ -31032,6 +31035,7 @@ const clip = (text) => {
 window.__fk = {
 	suggestAt,
 	holdAt,
+	PAGES,
 	CARD_RANKS,
 	whoIs,
 	isNext,

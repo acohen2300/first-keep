@@ -48,10 +48,6 @@ const ICON = {
 		22,
 		'<circle cx="5" cy="6" r="2.4" fill="currentColor"/><circle cx="11" cy="5.2" r="2.7" fill="currentColor"/><circle cx="17" cy="6" r="2.4" fill="currentColor"/><path d="M1.2 15.5c0-3 1.7-4.6 3.8-4.6s3.8 1.6 3.8 4.6ZM6.8 15.5c0-3.5 1.9-5.3 4.2-5.3s4.2 1.8 4.2 5.3ZM13.2 15.5c0-3 1.7-4.6 3.8-4.6s3.8 1.6 3.8 4.6Z" fill="currentColor"/>',
 	),
-	cycle: SVG(
-		16,
-		'<path d="M3 8a5 5 0 0 1 8.6-3.5M13 8a5 5 0 0 1-8.6 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M11.8 1.6v3.2H8.6M4.2 14.4v-3.2h3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
-	),
 	shield: SVG(
 		16,
 		'<path d="M8 1.5 L13.5 3.5 V8 Q13.5 12.5 8 14.5 Q2.5 12.5 2.5 8 V3.5 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>',
@@ -95,6 +91,14 @@ const ICON = {
 		20,
 		'<path d="M4 17 V6 H6.5 V8.2 H8.6 V6 H11.4 V8.2 H13.5 V6 H16 V17 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 17 V13 H11.4 V17" fill="currentColor"/>',
 	),
+	next: SVG(
+		20,
+		'<path d="M8 4.5l5.5 5.5L8 15.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
+	), // the cycle button's chevron: the next page
+	target: SVG(
+		20,
+		'<circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="10" r="4.8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="10" r="1.8" fill="currentColor"/>',
+	), // the quick action's bullseye (Albert, Nov 2): send them here
 	sword: SVG(
 		16,
 		'<path d="M13.5 2.5 L13.5 4.6 L6.6 11.5 L4.5 9.4 L11.4 2.5 Z" fill="currentColor"/><path d="M3.2 8.6 L7.4 12.8 M2.4 13.6 L5 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',

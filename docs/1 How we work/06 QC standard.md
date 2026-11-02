@@ -36,10 +36,10 @@
 ## 3. The test suite
 | File | What it holds | Run |
 |---|---|---|
-| `tests/handoff.py` | **START QC.** The docs check, build, wrap, lint, the whole gate, then every planted bug (a clean control run first). Prints the Owed list. | Every session and every hand-off, before touching anything: `python3 tests/handoff.py`. Report every FAIL first. | [2026-11-01 07:45]
-| `tests/docs.py` | The docs: a stamp on every line added or changed in a living doc, the closed records unchanged, every file in START-HERE's reading order there | Inside START QC | [2026-11-01 07:45]
-| `tests/gate.py` | Four phone sizes (375×667, 390×844, 393×852, 430×932). Layout, fit, taps, events, the fingerprint, the map's base rules, the button budget, and the words. It also runs all the quick tests below. | Inside START QC and `publish.py` |
-| `tests/lint.py` | No undefined names, duplicate keys or unreachable code | Inside START QC and `publish.py` |
+| `tests/handoff.py` | **Live QC** (was START QC; Nov 2: before live and overnight, not at a session's start). The docs check, build, wrap, lint, the whole gate, then every planted bug (a clean control run first). Prints the Owed list. | Every session and every hand-off, before touching anything: `python3 tests/handoff.py`. Report every FAIL first. | [2026-11-02 13:55]
+| `tests/docs.py` | The docs: a stamp on every line added or changed in a living doc, the closed records unchanged, every file in START-HERE's reading order there | Inside Live QC | [2026-11-02 13:55]
+| `tests/gate.py` | Four phone sizes (375×667, 390×844, 393×852, 430×932). Layout, fit, taps, events, the fingerprint, the map's base rules, the button budget, and the words. It also runs all the quick tests below. | Inside Live QC and `publish.py` | [2026-11-02 13:55]
+| `tests/lint.py` | No undefined names, duplicate keys or unreachable code | Inside Live QC and `publish.py` | [2026-11-02 13:55]
 | `tests/science.py` | Each equation against its source (`SCIENCE.md`) | In the gate |
 | `tests/history.py` | Each research step in its age | In the gate |
 | `tests/tables.py` | The rule tables hold together | In the gate |
@@ -56,28 +56,10 @@
 | `tests/probe.py`, `bot.py`, `econ.py` | Tools for one question (a computer's stall, a stranger's first minutes, the economy's rates) | When needed |
 | `tests/fmt.py` | Prettier formatting | Before committing source |
 
-## 4. The QC rounds (who checks what, and when)
-1. **A builder's own checks:**
-   - build, lint, its tests and plants, and the full START QC on its commit;
-   - soak on 3 seeds, and balance before and after if a rule changed.
-2. **Fresh eyes on each build.** A reviewer who has not seen the work compares what was agreed (the locks in `docs/3 Locks/`, the mockups, `RULES.md`) with the code, and finds: [2026-11-01 07:45]
-   - bugs;
-   - tests that cannot fail;
-   - build-rule breaks;
-   - records left out.
-
-   Its report goes in `docs/6 Records/v80 Audit/` (a new record there; records are never edited). The builder fixes every blocker and every should-fix, or names it for Albert, before the merge. [2026-11-01 07:45]
-3. **The merge:**
-   - `git merge --no-ff`, conflicts resolved by hand with nothing lost or doubled;
-   - the builder's draft appended to the version's `CUTS.md` (`docs/5 Builds/vNN/CUTS.md`), with the merge's own notes; [2026-11-01 07:45]
-   - START QC on main after every merge.
-4. **Before a preview:**
-   - START QC passes on main, with every plant caught;
-   - soak on 6 seeds × 30 minutes;
-   - balance against v70 (4 seeds × 30 minutes, the table in `CUTS.md`);
-   - a last fresh-eyes review of the seams between builds (merge resolutions, cross-build effects, the records, the first minute of play and an old save).
-
-   Then `publish.py --preview`, which runs the build, the gate and lint again and stops at the first failure.
+## 4. The QC rounds (Albert, Nov 2: light for previews, full for live) [2026-11-02 13:54]
+1. **Each preview:** each change has one test and one planted bug, its plant run alone (`--plant --only=word`); the gate passes; `publish.py --preview` runs build, gate and lint again and stops at the first failure. [2026-11-02 13:54]
+2. **Before live, on Albert's word:** Live QC (`python3 tests/handoff.py`) passes with every plant caught; soak on 6 seeds × 30 minutes; balance against v70 (4 seeds × 30 minutes). A fresh-eyes review of what changed since the last live. [2026-11-02 13:54]
+3. **Overnight:** Live QC, long games, deep audits. [2026-11-02 13:54]
 5. **The hunt** (a deep read of the whole code), at a version's close or overnight:
    - two readers, one for the rules and simulation, one for the view, cards, input and saves;
    - bugs, cost per tick and per frame, build-rule breaks;

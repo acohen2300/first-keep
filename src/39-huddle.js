@@ -364,8 +364,8 @@ function rowUI() {
 	if (chip.pg !== page) {
 		chip.pg = page;
 		$('orders').className = 'pg-' + page;
-		chip.className = 'fab cell ' + page;
-		chip.innerHTML = topOf(ICON.cycle) + wd(ROW_WORD[page]);
+		chip.className = 'fab cell';
+		chip.innerHTML = topOf(ICON.next) + `<span class="dots">${PAGES.map((p) => `<i${p === page ? ' class="at"' : ''}></i>`).join('')}</span>`; // the same on every page: › over the page dots, the one you are on filled (Albert, Nov 2)
 		chip.setAttribute('aria-label', `${ROW_WORD[page]}: the next page`);
 		fit(); // the row is drawn anew: the map's bottom edge is measured again
 	}

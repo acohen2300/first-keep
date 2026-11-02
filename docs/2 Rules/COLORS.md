@@ -33,10 +33,11 @@ A colour is a hue (the white, blue, green, red, gold above) at one of three leve
 |---|---|---|---|---|
 | Full | the hue's own | 100% | live words and icons, the rings | [2026-11-02 12:40]
 | Dim | `--dim` (`--white-dim`) | 80% | quiet words, a dim button's words, sound off (was Cream 2) | [2026-11-02 12:40]
-| Faint | `--faint` (`--white-faint`) | 35% | a dim tech's edge, the minimap's edge, the blue glow | [2026-11-02 12:40]
+| Glass | `--glass` | 92% | a card over the map: Brown 1 blended, the map's shapes through it; words hold 4.5:1 even over white ground (`tests/palette.py`) | [2026-11-02 14:15]
+| Faint | `--faint` (`--white-faint`) | 35% | a dim tech's edge, the minimap's edge, the blue glow, the empty part of a building's health bar, the page dots not on | [2026-11-02 12:40]
 - **A dim button** drops its fill one step (Brown 1) and keeps its edge (Brown 3), so it never looks like an empty place (Brown 1, Brown 2 edge); its words are dim white. A dim tech's edge is faint white, so tech and Train never look alike; blue stays for the one you can press. [2026-11-02 12:40]
 
-## The ages (a tech's top edge; one home since Nov 2) [2026-11-02 12:40]
+## The ages (a tech's and a building title's top edge; one home since Nov 2) [2026-11-02 12:40]
 | Name | Token | Colour | Used for | [2026-11-02 12:40]
 |---|---|---|---|---|
 | Stone | `--age-0` | #9a9890 | the age's edge | [2026-11-02 12:40]

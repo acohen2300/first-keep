@@ -758,8 +758,8 @@ const ROW_WORD = {
 	new: 'New',
 	army: 'The army',
 	fight: 'fighting',
-	emg: 'Emergency',
-	emgW: [['Stop', 'to work'], ['Square', 'gather'], ['All hands', 'fight'], ['Shelter', 'hide']], // the Emergency page: each order's word and what it does, in the row's order
+	emg: 'Alarm', // the red button: the alarm you raise (Albert, Nov 2: Emergency was too wide)
+	emgW: [['Work', 'all clear'], ['Gather', 'at home'], ['Garrison', 'all in'], ['Shelter', 'hide']], // the Alarm page: each order's word and what it does, in the row's order (Albert, Nov 2: Age of Empires' Town Bell and Back to Work)
 	pace: ['slow', 'medium', 'fast'], // a squad's pace under it, from its slowest member (paceWord)
 };
 // a research step's why: its own key first ('tech:' + id) where a unit shares its id (F4: one WHY.legion served both)
@@ -821,7 +821,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Villager jobs: Food, Wood, Stone, Gold, Iron',
-		`The − and + under each job move one villager off or on: + takes an idle villager, else the one earning least elsewhere; − sends home the one earning least. Each worker takes the find that brings home most a minute: its load over the time to fill it and carry it home and back (fish only within ${DOCKR} of a dock). A worker on a field, tree farm, pasture or quarry stays on it. A worker on a wild find that runs out looks only for the same kind of find within its own sight (gold rock to gold rock); when none is in sight it waits at the drop-off for your order. Tap the lit job tile again to turn the default job off: new villagers then wait at the Town Center. Stop and Dismiss sit on a villager card; Town square (Emergency) stops everyone, and idle on the quick action sends the idle ones to a spot.`,
+		`The − and + under each job move one villager off or on: + takes an idle villager, else the one earning least elsewhere; − sends home the one earning least. Each worker takes the find that brings home most a minute: its load over the time to fill it and carry it home and back (fish only within ${DOCKR} of a dock). A worker on a field, tree farm, pasture or quarry stays on it. A worker on a wild find that runs out looks only for the same kind of find within its own sight (gold rock to gold rock); when none is in sight it waits at the drop-off for your order. Tap the lit job tile again to turn the default job off: new villagers then wait at the Town Center. Stop and Dismiss sit on a villager card; Gather (the Alarm) stops everyone, and idle on the quick action sends the idle ones to a spot.`,
 		'You decide who does what, and nobody wanders off.',
 	],
 	[
@@ -1055,8 +1055,8 @@ const TRIGGERS = () => [
 		'A plan you can read: time, odds and who is where. The weather on the screen is counted in the time; a storm that comes later is bad luck.',
 	],
 	[
-		'Emergency: four orders',
-		'The red button on the right of the row and the Army card turn the row to it, with what is coming. Town square gathers everyone round the Town Center, the soldiers outside the villagers. All hands sends soldiers into the sturdiest buildings (they add arrows) and a line toward the danger, and villagers into the room left. Shelter puts the villagers alone in the sturdiest shelter first. Stop sends villagers back to the work they had; soldiers stay until you give them an order.',
+		'The Alarm: four orders',
+		'The red Alarm button on the right of the row and the Army card turn the row to it, with what is coming. Gather brings everyone round the Town Center, the soldiers outside the villagers. Garrison sends soldiers into the sturdiest buildings (they add arrows) and a line toward the danger, and villagers into the room left. Shelter puts the villagers alone in the sturdiest shelter first. Work, the all clear, sends villagers back to the work they had; soldiers stay until you give them an order.',
 		'One rule for everyone: the strongest walls first, the nearest hands first.',
 	],
 	[

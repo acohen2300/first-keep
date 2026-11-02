@@ -61,7 +61,7 @@ SLOT_WORDS = """async (extra) => { await document.fonts.ready; const F = window.
   const words = [...Object.values(F.ROW_WORD).flat(2), ...F.RES.map((r) => F.RESOURCES[r].name), ...F.BN, ...F.CLS.map((c) => c[1]), ...extra],
     slot = document.querySelector('#row [data-act="wsq:0"]'), top = slot.querySelector('.top'), info = document.querySelector('#row .info'),
     fits = (e, box) => e.getBoundingClientRect().width <= box.clientWidth, put = (e, t) => { e.textContent = t; return e; };
-  for (const t of words) for (const e of [slot.querySelector('.wd'), document.querySelector('#hudB .wd')]) if (put(e, t).scrollWidth > e.clientWidth) out.push(`${t} ${e.scrollWidth}>${e.clientWidth}`);
+  for (const t of words) for (const e of [slot.querySelector('.wd'), document.querySelector('#emgB .wd')]) if (put(e, t).scrollWidth > e.clientWidth) out.push(`${t} ${e.scrollWidth}>${e.clientWidth}`);
   if (put(top.querySelector('.c'), String(F.POPMAX)) && top.scrollWidth > top.clientWidth) out.push(`the count ${F.POPMAX} beside an icon`);
   info.innerHTML = '<b></b><small></small>'; const [b, sm] = info.children;
   for (const t of ['59:59', '—', ...extra]) if (!fits(put(b, t), info)) out.push(`${t} under a squad`);
@@ -110,8 +110,8 @@ PLAY = """async () => {
   tap('[data-act="menu:home"]'); if (!G.card || G.card.id !== 'home') out.push('the Home tab did not open');
   tap('[data-act="build:house"]'); if (!G.place || G.place.kind !== 'house') out.push('tapping House did not start placing');
   F.act('cancel'); if (G.place) out.push('Cancel left a placement'); F.ui(true);
-  // the row (Build 70): one button turns Jobs, War, Train and says the page; a squad opens its card, where + adds and Cancel puts back what it held
-  for (const pg of ['war', 'train', 'jobs']) { tap('#hudB'); F.ui(true); if (G.hud.page !== pg || document.querySelector('#hudB .wd').textContent !== F.ROW_WORD[pg]) out.push('the cycle button did not turn to ' + pg); }
+  // the row (Build 70; Nov 2): one button turns Jobs, War, Train, its dot following the page; a squad opens its card, where + adds and Cancel puts back what it held
+  for (const pg of ['war', 'train', 'jobs']) { tap('#hudB'); F.ui(true); const at = [...document.querySelectorAll('#hudB .dots i')].findIndex((i) => i.classList.contains('at')); if (G.hud.page !== pg || at !== F.PAGES.indexOf(pg)) out.push('the cycle button did not turn to ' + pg + ' or its dot did not follow'); }
   G.P[0].techs.add('command'); F.fxDirty(); F.hudPage('war'); F.ui(true); tap('#row [data-act="wsq:1"]'); if (!G.card || G.card.type !== 'squad' || G.card.i !== 1) out.push('a squad did not open its card');
   tap('#card [data-act="sqpk:1,0,+"]'); if (G.bnPlan[1].foot !== 1) out.push('+ under Foot on the squad card added none'); tap('#card [data-act="sqcancel"]'); if (G.bnPlan[1].foot || G.card) out.push('Cancel did not put the squad back and close');
   G.P[0].techs.delete('command'); F.fxDirty(); F.hudPage('jobs'); F.ui(true);

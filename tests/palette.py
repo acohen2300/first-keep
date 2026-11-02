@@ -40,6 +40,11 @@ pairs = [(w, g) for w in ['gold-1', 'ring-b', 'ring-g', 'ring-r', 'ring-w'] for 
 for w, g in pairs:
     r = ratio(rgb(named[w]), rgb(named[g]))
     if r < 4.5: bad.append(f'--{w} on --{g}: {r:.1f}:1, under 4.5')
+GLASS = int(V.get('glass', '0').strip().rstrip('%')) / 100   # a card is glass over the map (Nov 2): its words hold on the worst ground, white
+glassy = [x * GLASS + 255 * (1 - GLASS) for x in rgb(named['brown-1'])]
+for w in ['ring-w', 'gold-1', 'ring-r']:
+    r = ratio(rgb(named[w]), glassy)
+    if r < 4.5: bad.append(f'--{w} on a glass card over white ground: {r:.1f}:1, under 4.5')
 DIM = int(V.get('dim', '0').strip().rstrip('%')) / 100   # the dim white (the levels, Nov 2): the white blended into what it sits on
 for g in ['brown-1', 'brown-2', 'steel-2']:
     r = ratio(mix('ring-w', g, DIM), rgb(named[g]))
