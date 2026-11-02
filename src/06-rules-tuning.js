@@ -345,15 +345,37 @@ const LANDK = Object.keys(LAND),
 // The map's base rules (Albert, Build 70): a flat page, four corners (CORNER), the same clear radius and home finds in every corner, the
 // Throne at the middle. All else is random from the one randomizer, laid once: no measure, no reshuffle. CLEAR: no forest or water within it.
 const CLEAR = 360;
-// The home zone (decision 5a, Albert, Oct 31; the same three numbers in every corner), measured on the finds' own nodes (each bush, tree,
-// rock): clear, no node of any find within it of the Town Center; the five home finds (HOME_IDS in 10) each at a random place round the
-// Town Center with its nearest node in the band from clear to clear + band; rich, their amounts over today's pocket (HOME_RICH 1.18, on top
-// of RICH); and the radius CLEAR above, no forest or water within it. Everything else is random, outside the band. Fallback if the 100-seed
-// placement test fails (decision 5a): clear 190.
-const HOME = { clear: 200, band: 60, rich: 1.18 };
+// The home zones (decision 5a, Albert, Oct 31; three zones, Nov 1, answer 2; the same in every corner), measured on the finds' own nodes
+// (each bush, tree, rock): clear, no node of any find within it of the Town Center; the radius CLEAR above, no forest or water within it.
+//   zone 1, behind: between the Town Center and its corner (BACK below), from clear to the map's edge (MID − CORNER deep);
+//   zone 2, the band: the five home finds (HOME_IDS in 10) each at a random place round the front, its nearest node from clear to
+//     clear + band and no node in zone 1; rich, their amounts over today's pocket (HOME_RICH 1.18, on top of RICH);
+//   zone 3, the wild: everything else, at random, outside zones 1 and 2.
 // Between two buildings (decision 2, Albert, Oct 31): LANE squares at least. A gap is passable only if wider than a figure (2r); the slit rule
 // shuts a one-square gap because the drawn figure is wider than it (Build 41), so two. Walls, gates and crops may touch.
 const LANE = 2;
+// The computers' wall ring (wallPlan in 17): an arc WALL_R out from the Town Center.
+const WALL_R = 190;
+// clear (Albert, Nov 1 14:16, "push the trees to 220"): the wall ring, then the margin a ring square can reach past it (its diagonal, NAVC √2:
+// the ring is drawn on the grid), then LANE squares, rounded up to whole squares (230), so no find stands within the gap of any square of
+// the ring and every ring closes. 220 (one square's margin) left a hole in 1 ring of 75.
+const HOME = { clear: Math.ceil((WALL_R + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC, band: 60, rich: 1.18 };
+// Zone 1 (Albert, Nov 1): a berry patch and a small grove that hold Bronze's cost with a margin for the villagers and houses on the way
+// (600 food, 250 wood), worked out from the costs, not typed; on every land the same (no land's amt). Each node behind the Town Center
+// (on the corner's side of both its axes), LANE squares or more from any other find's, and edge or more from the map's edge: whole squares
+// enough for half a tap (22 px) at the opening zoom on the tilted axis, so the corner's finds can be seen and tapped (tests/map.py's camera
+// check; LANE squares gave 19 px). Laid first and never moved out front: a corner it does not fit fails tests/map.py.
+// on: held out of this preview (Albert, Nov 1 14:13: Classical by 10 minutes did not come back within 10% of main): no zone 1 is laid; the
+// keep-out stands, and tests/map.py still lays it to check it. On the v81 list.
+const BACK_MARGIN = { vils: 6, houses: 5 },
+	BACK = {
+		on: false,
+		bushes: 2, // Albert, Nov 1 14:13: fewer, bigger finds (300 and 125), so a drop-off by them is worth its cost
+		trees: 2,
+		edge: Math.ceil(22 / (ZOOM_START * TILT) / NAVC) * NAVC,
+		food: AGES[1].cost.f + BACK_MARGIN.vils * UNIT.vil.cost.f,
+		wood: AGES[1].cost.w + BACK_MARGIN.houses * BLD.house.cost.w,
+	};
 // Lakes and rivers (Build 70: random; it was one lake and one river of one width a corner). lakes: how many beside the great lake; r: from a
 // pond five houses across to a lake short of the great lake's 170, on the power law of lake sizes (lakeSize; Downing et al. 2006: the number
 // of lakes larger than an area falls as area^−c, c 1.06). On 60 seeds about nine tenths of the old water and fish (fish 31 to 105, median 58;
@@ -381,6 +403,13 @@ const WATER = {
 // Nothing here is a new rule: an age, a store, relations, hazards, buildings already in the game, and the mode.
 // the villagers every side starts with, beside its keep and scout; a scenario's vils come on top (F1: the Open text said five)
 const START_VILS = 3;
+// the stores every side starts with (Albert, Nov 1 14:18): 200 of food, wood, stone and gold, no iron
+const START_RES = { f: 200, w: 200, s: 200, g: 200, i: 0 };
+// EXCEPTIONS #16, LIVE TEST IN PROCESS (Albert, Nov 1 14:23): each computer starts with these already built beside its Town Center, the
+// player not. The computers play worse than a person, so this is a handicap (Go's handicap stones). Laid by the placing rules (findSpot,
+// canPlace: the lanes, the gap from finds) within r of the Town Center. Remove it when the computers reach Classical as fast without it as
+// v70 did (8.2 min median, tests/balance.py).
+const HANDICAP = { blds: ['mill', 'farm'], r: [60, 170] };
 const SCENARIOS = {
 	open: {}, // the ordinary start
 	siege: {

@@ -77,7 +77,7 @@ function mkPlayer(i, civ) {
 		color: d.color,
 		keep: d.keep.slice(),
 		civ,
-		res: { f: 200, w: 200, s: 100, g: 50, i: 0 },
+		res: { ...START_RES },
 		goods: Object.fromEntries(GOODK.map((k) => [k, 0])),
 		ventures: [],
 		hungry: false,
@@ -139,6 +139,15 @@ function newGame(seed, carry, daily) {
 	G.clim.T = airTemp();
 	skyTurn(); // 5 weather: the first sky from the season's chain, not always clear
 	navRebuild();
+	// EXCEPTIONS #16 (LIVE TEST IN PROCESS): each computer's handicap, built beside its Town Center by the placing rules (HANDICAP in 06)
+	for (let o = 1; o < WILD; o++)
+		for (const kind of HANDICAP.blds) {
+			const k = keepOf(o),
+				s = k && findSpot(o, kind, k.x, k.y, HANDICAP.r[0], HANDICAP.r[1]);
+			if (!s) continue;
+			G.blds.push(mkBld(o, kind, s.x, s.y, 1));
+			navRebuild();
+		}
 	makeBg();
 	for (const b of G.blds) if (!G.fogOn || friendly(0, b.owner)) wearGround(b);
 	dangerMap(); // a fresh danger map: the last game's must not steer the first second of this one
@@ -237,7 +246,10 @@ const SHAPE = {
 };
 const LAYOUT = [
 	// what, nearest, farthest from the keep, room it needs
-	// the home zone (HOME in 06, decision 5a): the five home finds at random positions in the band, all round the Town Center; every other find outside it (makeMap)
+	// zone 1 (BACK in 06): behind the Town Center, its room worked out from its shape (laySpots)
+	['bushH', HOME.clear, MID - CORNER, 0],
+	['groveH', HOME.clear, MID - CORNER, 0],
+	// zone 2 (HOME in 06, decision 5a): the five home finds at random positions in the band round the front; every other find outside both (makeMap)
 	['bushP', HOME.clear, HOME.clear + HOME.band, 38],
 	['groveP', HOME.clear, HOME.clear + HOME.band, 56],
 	['stoneP', HOME.clear, HOME.clear + HOME.band, 24],
@@ -320,7 +332,9 @@ function makeForest(spot, loc, near) {
 		...Object.entries(near).flatMap(([k, L]) => L.map((l) => ({ ...l, r: FOREST.clear[k] }))), // the shared places on this corner's two middle lines
 	];
 	const out = [0, 1].map((ax) =>
-		near.stop.filter((l) => Math.abs((ax ? l.x : l.y) - CORNER) < 1).reduce((a, l) => (hyp(l.x, l.y) < hyp(a.x, a.y) ? l : a)),
+		near.stop
+			.filter((l) => Math.abs((ax ? l.x : l.y) - CORNER) < 1)
+			.reduce((a, l) => (hyp(l.x, l.y) < hyp(a.x, a.y) ? l : a)),
 	); // the stop nearest home on each middle line: a neighbour's way
 	const camp = PLACES.camp - (MID - CORNER), // the trade lanes run in from the robbers' camp
 		lane = (x, y) => (y > CORNER - FOREST.lane && x > camp) || (x > CORNER - FOREST.lane && y > camp);
@@ -363,7 +377,8 @@ function makeForest(spot, loc, near) {
 		wet = (p) =>
 			Math.min(p.x, p.y) < CORNER - MID + 45 ||
 			Math.max(p.x, p.y) > CORNER - 45 ||
-			held.some((l) => hyp(p.x - l.x, p.y - l.y) < l.r + 45); // in this corner's quarter, never in or at the edge of a lake, a find or the home zone (QC 05 N5)
+			held.some((l) => hyp(p.x - l.x, p.y - l.y) < l.r + 45) ||
+			(p.x <= 45 && p.y <= 45 && hyp(p.x, p.y) < MID - CORNER + 45); // in this corner's quarter, never in or at the edge of a lake, a find or the home zones (QC 05 N5)
 	const dep = [
 		['bush', 0, 0.45],
 		['stone', 0, 0.75],
@@ -428,29 +443,37 @@ function makeRiver(L, w, toX) {
 	if (Math.min(i1 - h, i2 - i1 - 2 * h - 1, C.length - 1 - i2 - h) < h + 1) return null; // too short: each run of water at least half a ford, or no river
 	return C.filter((_, i) => Math.abs(i - i1) > h && Math.abs(i - i2) > h);
 }
-// one corner's finds, each at random in its own ring, at any angle, judged by its own nodes (shape: each bush, tree, rock or animal from
-// the find's middle): a home find's nearest node in the band and none inside the clearing; any other find's nodes all past the band. Each
+// one corner's finds, each at random in its own ring, judged by its own nodes (shape: each bush, tree, rock or animal from the find's
+// middle): a zone 1 find's every node behind the Town Center, from the clearing to the map's edge, BACK.edge in from it; a home find's
+// nearest node in the band and none inside the clearing; any other find's nodes all past the band; and no node but zone 1's in zone 1. Each
 // with its room clear of what was laid before and of the water, and inside this corner's quarter of the map (local: keep 0,0, edge at
 // CORNER − MID, the middle lines at CORNER). A find that has no room searches outward: its ring widens by a step every few tries, so every
-// corner gets every find (equal content; tests/map.py holds it on 100 seeds).
+// corner gets every find (equal content; tests/map.py holds it on 100 seeds). Zone 1 never searches outward: it fits, or the test fails.
 const SEEK = { tries: 50, step: 20, most: 4000 };
 function laySpots(lay, loc, spot, shape) {
 	const taken = Object.values(spot),
 		room = [{ x: CORNER, y: CORNER, r: LAKE0.r + 25 }, ...loc.map((l) => ({ x: l.x, y: l.y, r: l.r + 25 }))], // the great lake, the water in this corner
 		lo = CORNER - MID,
+		gap = LANE * NAVC,
 		b0 = HOME.clear,
-		b1 = HOME.clear + HOME.band;
-	for (const [id, r0, r1, clr] of lay) {
+		b1 = HOME.clear + HOME.band,
+		inBack = (x, y) => x <= 0 && y <= 0 && hyp(x, y) <= MID - CORNER; // zone 1: between the Town Center and its corner
+	for (const [id, r0, r1, c0] of lay) {
 		const S = shape[id],
 			ext = Math.max(...S.map(([ox, oy]) => hyp(ox, oy))),
-			home = HOME_IDS.has(id);
+			back = BACK_IDS.has(id),
+			home = HOME_IDS.has(id),
+			clr = back ? ext + gap / 2 : c0; // zone 1's room: its shape and half a lane, so two finds keep LANE squares between their nodes
 		for (let t = 0; t < SEEK.most; t++) {
-			const a = rnd(-Math.PI, Math.PI),
-				d = rnd(r0, r1 + ext + Math.floor(t / SEEK.tries) * SEEK.step),
+			const a = back ? rnd(-Math.PI, -Math.PI / 2) : rnd(-Math.PI, Math.PI),
+				d = back ? rnd(r0, r1) : rnd(r0, r1 + ext + Math.floor(t / SEEK.tries) * SEEK.step),
 				x = Math.cos(a) * d,
 				y = Math.sin(a) * d,
-				near = Math.min(...S.map(([ox, oy]) => hyp(x + ox, y + oy)));
-			if (home ? near < b0 || near > b1 : near < b1) continue;
+				N = S.map(([ox, oy]) => [x + ox, y + oy]),
+				near = Math.min(...N.map(([nx, ny]) => hyp(nx, ny)));
+			if (back) {
+				if (!N.every(([nx, ny]) => inBack(nx, ny) && hyp(nx, ny) >= b0 && Math.min(nx, ny) >= lo + BACK.edge)) continue;
+			} else if ((home ? near < b0 || near > b1 : near < b1) || N.some(([nx, ny]) => inBack(nx, ny))) continue;
 			if (Math.min(x, y) - clr < lo || Math.max(x, y) + clr > CORNER) continue;
 			if (taken.some((q) => hyp(q.x - x, q.y - y) < q.r + clr) || room.some((q) => hyp(q.x - x, q.y - y) < q.r + clr))
 				continue;
@@ -469,7 +492,8 @@ function laySpots(lay, loc, spot, shape) {
 //   5 weather: the first sky, rolled from the season's chain (in newGame, once the economy stands).
 // Fair is not mirror: each corner is its own roll of the same element, and the land between is random (Build 70: no measure, no reshuffle).
 // Decision 5a: equal content, not equal distances; every find outside the zone is rolled for each corner on its own.
-const HOME_IDS = new Set(['bushP', 'groveP', 'stoneP', 'goldP', 'ironP']),
+const BACK_IDS = new Set(['bushH', 'groveH']),
+	HOME_IDS = new Set(['bushP', 'groveP', 'stoneP', 'goldP', 'ironP']),
 	MOVE_IDS = new Set(['deerA', 'deerB', 'boar', 'chest', 'ruins', 'den', 'cemetery', 'vagabonds']);
 function makeMap() {
 	const N = G.nodes;
@@ -479,17 +503,18 @@ function makeMap() {
 		k = rnd(SPREAD[0], SPREAD[1]),
 		out = HOME.clear + HOME.band; // every find but the home five lies wholly outside the band
 	const lay = (Ld.extra ? [...LAYOUT, ['extra', 240, 380, 30]] : LAYOUT).map(([id, r0, r1, clr]) => {
-		if (HOME_IDS.has(id)) return [id, r0, r1, clr];
+		if (HOME_IDS.has(id) || BACK_IDS.has(id)) return [id, r0, r1, clr];
 		const lo = Math.min(560, r0 * k),
 			hi = Math.min(640, r1 * k),
 			up = Math.max(0, out - lo);
 		return [id, lo + up, hi + up, clr];
 	}); // stretched, never past the old outer ring, then moved out to start at the band's edge (laySpots keeps every node past it)
-	const layHome = lay.filter(([id]) => HOME_IDS.has(id)),
-		layWild = lay.filter(([id]) => !HOME_IDS.has(id) && !MOVE_IDS.has(id)),
+	const layHome = lay.filter(([id]) => (BACK.on && BACK_IDS.has(id)) || HOME_IDS.has(id)), // zone 1 first (when on), then zone 2
+		layWild = lay.filter(([id]) => !BACK_IDS.has(id) && !HOME_IDS.has(id) && !MOVE_IDS.has(id)),
 		layMove = lay.filter(([id]) => MOVE_IDS.has(id));
 	G.lakes = [{ ...LAKE0 }, ...makeWater()]; // 2 ground
-	const woods = []; // [side, tree]: the forest and wild groves, what a cut home may clear
+	const fixed = new Set(), // zone 1's nodes: no land's amt
+		woods = []; // [side, tree]: the forest and wild groves, what a cut home may clear
 	for (const p of G.P) {
 		if (p.id === WILD) continue;
 		const [kx, ky] = p.keep,
@@ -508,6 +533,8 @@ function makeMap() {
 				]),
 			scatter = (n, r) => Array.from({ length: n }, () => [rnd(-r, r), rnd(-r, r)]),
 			shape = {
+				bushH: SHAPE.bushes.slice(0, BACK.bushes),
+				groveH: lattice(BACK.trees, Math.ceil(Math.sqrt(BACK.trees)), 22),
 				bushP: SHAPE.bushes.slice(0, 5),
 				groveP: lattice(12, 4, 22),
 				stoneP: SHAPE.pair,
@@ -529,9 +556,15 @@ function makeMap() {
 		const spot = laySpots(layHome, loc, {}, shape),
 			P = (id, [dx, dy]) => at(spot[id].x + dx, spot[id].y + dy),
 			bunch = (id, kind, amt) => {
-				if (spot[id]) for (const o of shape[id]) N.push(node(kind, kind === 'bush' ? 'food' : kind === 'tree' ? 'wood' : kind, ...P(id, o), amt));
+				if (spot[id])
+					for (const o of shape[id])
+						N.push(node(kind, kind === 'bush' ? 'food' : kind === 'tree' ? 'wood' : kind, ...P(id, o), amt));
 			};
-		bunch('bushP', 'bush', 180 * RICH * HOME.rich); // the home zone: enough to start on
+		const n0 = N.length;
+		bunch('bushH', 'bush', BACK.food / BACK.bushes); // zone 1: Bronze's cost with its margin, on every land the same
+		bunch('groveH', 'tree', BACK.wood / BACK.trees);
+		for (const n of N.slice(n0)) fixed.add(n);
+		bunch('bushP', 'bush', 180 * RICH * HOME.rich); // zone 2: enough to start on
 		bunch('groveP', 'tree', 120 * RICH * HOME.rich);
 		for (const kind of ['stone', 'gold', 'iron']) bunch(kind + 'P', kind, 300 * RICH * HOME.rich);
 		G.blds.push(mkBld(p.id, 'keep', kx, ky, 1));
@@ -568,9 +601,11 @@ function makeMap() {
 		const sc = towardMid({ x: kx, y: ky }, 60);
 		addUnit(p.id, 'scout', sc.x, sc.y);
 		// the wild near home: two herds of game, and danger a little farther out
-		for (const id of ['deerA', 'deerB'].filter((id) => spot[id])) for (const o of shape[id]) wildAt('deer', ...P(id, o));
+		for (const id of ['deerA', 'deerB'].filter((id) => spot[id]))
+			for (const o of shape[id]) wildAt('deer', ...P(id, o));
 		if (spot.boar) wildAt('boar', ...P('boar', [0, 0]));
-		for (const id of ['chest', 'ruins', 'den', 'cemetery', 'vagabonds'].filter((id) => spot[id])) addFind(id, ...P(id, [0, 0]));
+		for (const id of ['chest', 'ruins', 'den', 'cemetery', 'vagabonds'].filter((id) => spot[id]))
+			addFind(id, ...P(id, [0, 0]));
 	}
 	// shared ground: a robbers' camp at the middle of each map edge, at the end of a trade route; gold and stone near the great lake
 	for (const [x, y] of cross(MID - PLACES.camp)) addFind('camp', x, y);
@@ -599,7 +634,7 @@ function makeMap() {
 		}
 	});
 	for (const n of N) {
-		const m = Ld.amt[n.type] || 1;
+		const m = fixed.has(n) ? 1 : Ld.amt[n.type] || 1;
 		if (m !== 1) {
 			n.amt *= m;
 			n.max *= m;
@@ -678,7 +713,8 @@ function wayHome(g, C, home) {
 		}
 	}
 	const P = [];
-	for (let c = end; c >= 0; c = from[c]) P.push({ x: (c % NC) * NAVC + NAVC / 2, y: Math.floor(c / NC) * NAVC + NAVC / 2 });
+	for (let c = end; c >= 0; c = from[c])
+		P.push({ x: (c % NC) * NAVC + NAVC / 2, y: Math.floor(c / NC) * NAVC + NAVC / 2 });
 	return P;
 }
 // in the quarter of the map whose Town Center is k: what stands on a middle line (a stop, a camp, a lode) is in both quarters beside it

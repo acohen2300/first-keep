@@ -439,7 +439,7 @@ function throneRun(p, per) {
 	news('war', `${p.name} march on the Throne.`, 'warn', 8, T);
 }
 function wallPlan(k) {
-	// an arc 190 out from the keep, facing the middle of the map; the two squares nearest the middle are the gate
+	// an arc WALL_R (06) out from the keep, facing the middle of the map; the two squares nearest the middle are the gate
 	const base = Math.atan2(MID - k.y, MID - k.x),
 		cells = [],
 		seen = new Set();
@@ -453,8 +453,8 @@ function wallPlan(k) {
 	};
 	for (let i = -66; i <= 66; i++) {
 		const a = base + i * 0.019,
-			gx = Math.floor((k.x + Math.cos(a) * 190) / NAVC),
-			gy = Math.floor((k.y + Math.sin(a) * 190) / NAVC);
+			gx = Math.floor((k.x + Math.cos(a) * WALL_R) / NAVC),
+			gy = Math.floor((k.y + Math.sin(a) * WALL_R) / NAVC);
 		if (pc && gx !== pc.gx && gy !== pc.gy) add(gx, pc.gy); // four-connected: no gap to slip through
 		add(gx, gy);
 		pc = { gx, gy };

@@ -267,44 +267,37 @@ function drawGhost() {
 		why = canPlace(0, kind, sp.x, sp.y),
 		ok = !why;
 	pl.why = why;
-	// the build grid shows while a ghost is held (Build 61, Albert: "other games lock buildings to grids better"): the squares the
-	// footprint snaps to, four out from it on every side, with the ones already taken filled darker
-	const g0x = Math.round(sp.x / NAVC) - B.fp / 2 - 4,
-		g0y = Math.round(sp.y / NAVC) - B.fp / 2 - 4,
-		gn = B.fp + 8;
-	ctx.strokeStyle = 'rgba(255,255,255,.28)';
-	ctx.lineWidth = 1;
-	ctx.beginPath();
-	for (let i = 0; i <= gn; i++) {
-		ctx.moveTo(SX((g0x + i) * NAVC), SY(g0y * NAVC));
-		ctx.lineTo(SX((g0x + i) * NAVC), SY((g0y + gn) * NAVC));
-		ctx.moveTo(SX(g0x * NAVC), SY((g0y + i) * NAVC));
-		ctx.lineTo(SX((g0x + gn) * NAVC), SY((g0y + i) * NAVC));
-	}
-	ctx.stroke();
-	ctx.fillStyle = 'rgba(40,30,20,.22)';
-	for (let i = 0; i < gn; i++)
-		for (let j = 0; j < gn; j++) {
-			const cx = (g0x + i) * NAVC + NAVC / 2,
-				cy = (g0y + j) * NAVC + NAVC / 2;
-			if (cx < 0 || cy < 0 || cx >= MAP || cy >= MAP) continue;
-			const ci = Math.floor(cy / NAVC) * NC + Math.floor(cx / NAVC);
-			if (!NAV.solid[ci] && !NAV.lake[ci]) continue;
-			ctx.fillRect(SX((g0x + i) * NAVC), SY((g0y + j) * NAVC), NAVC * z, NAVC * z * TILT);
-		}
-	ctx.fillStyle = ok ? 'rgba(110,210,110,.35)' : 'rgba(222,90,68,.38)';
-	ctx.fillRect(SX(sp.x - n / 2), SY(sp.y - n / 2), n * z, n * z * TILT);
-	ctx.strokeStyle = ok ? '#7ee07e' : '#de5a44';
-	ctx.lineWidth = 2;
-	ctx.strokeRect(SX(sp.x - n / 2), SY(sp.y - n / 2), n * z, n * z * TILT);
 	drawGuides(sp, n / 2);
 	const s = quant(z * dpr),
 		c = bldSprite({ kind, owner: 0 }, s);
 	ctx.globalAlpha = 0.6;
-	stamp(c, SX(sp.x), SY(sp.y), z / s);
+	stamp(ghostTint(c, ok), SX(sp.x), SY(sp.y), z / s);
 	flagsOn(c, SX(sp.x), SY(sp.y), z, G.P[0].color, 0);
 	ctx.globalAlpha = 1;
 	tag(why || `${B.name} · ${costText(B.cost)}`, SX(sp.x - n / 2), SY(sp.y - n / 2) - 8 - (BLD[kind].h + 10) * z);
+}
+// The ghost's own art tinted green where it fits and red where it does not (Albert, Nov 1): no grid, no footprint box; the reason is in its label.
+// One tinted copy of each sprite for each answer, kept with the sprite.
+const GHOST_TINT = { ok: 'rgba(126,224,126,.55)', no: 'rgba(222,90,68,.6)' },
+	ghostTints = new WeakMap();
+function ghostTint(c, ok) {
+	const T = ghostTints.get(c) || {},
+		k = ok ? 'ok' : 'no';
+	if (!T[k]) {
+		const t = document.createElement('canvas');
+		t.width = c.width;
+		t.height = c.height;
+		t.ax = c.ax;
+		t.ay = c.ay;
+		const g = t.getContext('2d');
+		g.drawImage(c, 0, 0);
+		g.globalCompositeOperation = 'source-atop';
+		g.fillStyle = GHOST_TINT[k];
+		g.fillRect(0, 0, t.width, t.height);
+		T[k] = t;
+		ghostTints.set(c, T);
+	}
+	return T[k];
 }
 function miniIncoming(m, k) {
 	const I = G.incoming;
