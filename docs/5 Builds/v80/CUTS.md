@@ -231,4 +231,4 @@ Checks on main before publishing:
   Mali won all 3 of its games, and the balanced seat won 3 of 4. Four seeds only.
 - `tests/handoff.py`: see the publish commit.
 
-- [2026-11-01 18:02] Cut from preview 11: the nine long games (120/180/240 min x 3). Reason: Albert will play the preview himself ("you should just do your normal one"). Moved to the overnight run after publishing; the QC standard gains them then.
+- [2026-11-01 18:02] Cut from preview 11: the nine long games (120/180/240 min x 3). Reason: Albert will play the preview himself ("you should just do your normal one"). Moved to the overnight run after publishing; the QC standard gains them then. [2026-11-01 18:02]
