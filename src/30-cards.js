@@ -111,9 +111,9 @@ const CARDS = {
 			// the page (MENU-SPEC §8): what it trains, double-wide, add only; its line directly under; its techs, three a rank (the Town Center's
 			// next age first and All tech last); what its kind adds. No labels
 			const page =
-				list(trainButtons(tr)) +
+				grid3(trainButtons(tr)) +
 				(tr.length || b.q.length ? slotsHTML(b) : '') +
-				list(
+				grid3(
 					[
 						kp && !rel ? keepAgeBtn() : '',
 						...techs.map((t) => techBtn(t)),

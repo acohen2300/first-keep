@@ -138,11 +138,19 @@ JS = r"""() => {
     G.box = { mode: 'box', x0: 0, y0: 0, x1: 50, y1: 50 }; G.hud.drag = true; ev('pointerdown', 7, 100); ev('pointerdown', 8, 200);
     if (G.box || G.hud.drag) bad.push('E5: a pinch left the box drawn or the crosshair glowing'); ev('pointerup', 8, 200); ev('pointerup', 7, 100); }
   } catch (e) { bad.push('E5: the check could not run: ' + e.message); }
+  // T1 (Albert, Nov 2): on a building card, Train and Research are double-wide, three a rank, a short rank filled with empty places
+  try {
+  { const h = G.blds.find((x) => x.owner === 0 && x.kind === 'house' && x.prog >= 1) || F.keepOf(0); F.openCard({ type: 'bld', id: h.id }); F.ui(true);
+    const R = [...document.querySelectorAll('#card .fm.c3')].filter((r) => r.querySelector('[data-act^="train:"], [data-act^="tech:"], [data-act^="research:"]'));
+    if (!R.length) bad.push('T1: no Train or Research rank on the ' + h.kind + ' card');
+    for (const r of R) if (r.children.length % 3) bad.push('T1: a Train or Research rank of ' + r.children.length + ' places, not filled to three (' + r.innerText.replace(/\n/g, ' ').slice(0, 60) + ')');
+    F.closeCard(); }
+  } catch (e) { bad.push('T1: the check could not run: ' + e.message); }
   // E6: a dim Train button says why it cannot (here the line is full), never its cost as if payable
   try {
   { const keep = F.keepOf(0); keep.q.length = 0; for (let i = 0; i < 12; i++) F.train(0, 'vil'); const why = F.trainWhy(0, 'vil'), d = document.createElement('div');
     d.innerHTML = F.trainButtons(['vil'])[0]; const b = d.firstElementChild;
-    if (!why) bad.push('E6: the check could not fill the line'); else if (!b.classList.contains('dis') || b.querySelector('small.can') || !b.innerText.includes(why.replace(/\.$/, ''))) bad.push('E6: a dim Train button does not say why: ' + b.innerText.replace(/\n/g, ' '));
+    if (!why) bad.push('E6: the check could not fill the line'); else if (!b.classList.contains('dis') || b.querySelector('small.can') || !b.innerText.toLowerCase().includes('line full')) bad.push('E6: a dim Train button does not say why (its few words: line full, T1): ' + b.innerText.replace(/\n/g, ' '));
     keep.q.length = 0; }
   } catch (e) { bad.push('E6: the check could not run: ' + e.message); }
   // E7: the Town Center pauses on its Relations tab whichever way you came, and carries on when the tab turns back

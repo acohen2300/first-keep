@@ -57,6 +57,8 @@ PLANTS = [
   ('13-sim-civil.js', 't = ((i % k) * 2 * R) / k - R;', 't = ((i % k) * 2 * R) / k - R + R / k / 2;', 'tests/moves.py', 'waiting spots crowd at the corners', 'ft apart, under'),
   ('12-sim-core.js', 'u.anchor ? dist(u.anchor, n) > REACH :', 'u.anchor ? false :', 'tests/moves.py', 'no cap for a placed villager', 'past the cap'),
   ('13-sim-civil.js', 'lost ? u.anchor || dropFor(u.owner, u.job, u) || u : undefined', 'lost ? dropFor(u.owner, u.job, u) || u : undefined', 'tests/moves.py', 'a placed villager searches from the drop-off', 'search from where it was placed'),
+  # Build 80 preview 18: T1, Train and Research double-wide, a short rank filled (--only=T1)
+  ('27-cards-core.js', "empty().repeat((3 - (cells.length % 3)) % 3)", "empty().repeat(0)", 'tests/cards.py', 'T1: a short Train or Research rank is not filled', 'T1:'),
   # Build 80 preview 15: D-091 to D-093 (--only=p15)
   ('11-orders.js', '\tif (!v && hand(o)) {', '\tif (false) {', 'tests/moves.py', 'p15: a site placed with nobody idle gets no builder', 'got no builder'),
   ('11-orders.js', "\t\tv.pn = v.node ? v.node.id : null;", "\t\tv.pn = null;", 'tests/moves.py', 'p15: a builder goes back to any find, not the one it left', 'the very find it left'),
@@ -116,7 +118,7 @@ PLANTS = [
   ('29-card-pages.js', '\t\t\t`${Math.floor(made)} made`,', '\t\t\t`${w ? Math.floor(w.st.got || 0) : 0} made`,', 'tests/cards.py', "a workshop counts its worker's gathering (E2)", 'E2: the workshop says'),
   ('26-input.js', "if (n.kind !== 'farm' && (!G.fogOn || fogAt(n.x, n.y) > 0)) {", "if (n.kind !== 'farm') {", 'tests/cards.py', 'a find under the fog can be tapped (E4)', 'under the fog was tapped'),
   ('26-input.js', '\tif (G.hud) G.hud.drag = false;\n\tG.box = null;\n\tdrag = null;\n}', '\tdrag = null;\n}', 'tests/cards.py', 'a pinch leaves the box and the glow (E5)', 'a pinch left the box'),
-  ('27-cards-core.js', "\t\t\tsub = why && told === costText(cost) ? why.replace(/\\.$/, '') : told;", '\t\t\tsub = told;', 'tests/cards.py', 'a dim Train button shows its cost as payable (E6)', 'does not say why'),
+  ('27-cards-core.js', "\t\t\tsub = why && told === costText(cost) ? (p.hungry ? 'hungry' : 'line full') : told;", '\t\t\tsub = told;', 'tests/cards.py', 'a dim Train button shows its cost as payable (E6)', 'does not say why'),
   ('30-cards.js', '\tcardPause(c);\n', '', 'tests/cards.py', 'the pause is decided once at open (E7)', 'did not pause'),
   ('29-card-pages.js', '<small>${more.short || more.name}</small></button>`,', '<small>research</small></button>`,', 'tests/cards.py', 'a locked place says research, not its name', 'not its research'),
   ('shell-head.html', '#hudB,#emgB{width:calc((100% - 7 * var(--gap)) / 6)}', '#hudB{width:calc((100% - 7 * var(--gap)) / 6)}#emgB{width:var(--slot)}', 'tests/cards.py', 'the Emergency button is 44 wide, off the grid', 'not a slot on the cycle button'),

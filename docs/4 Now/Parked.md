@@ -124,3 +124,6 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 ## O5 and O6 from the parts map (Nov 2) [2026-11-02 10:41]
 - O5, the messages' one home: 85 plain, 95 with names or numbers filled in; moving them all makes 95 small functions. Albert's call: keep them where they fire, or move all. [2026-11-02 10:41]
 - O6, the card mold's missing parts: the mail row (`mr`), the queue slot (`slot`), the link (`lnk`), the HUD cell (`cell`). To be drawn with the Formation (parts map item 9). [2026-11-02 10:41]
+
+## The 6 x 7 grid for every menu (Albert, Nov 2, 10:42; parked 10:51) [2026-11-02 11:03]
+- Measured Nov 2 at 390 x 844, title included: 13 of 22 cards are taller than 7 ranks (Help and Guide 13, Setup 12, Market and Army with squads 11, Vassal and Mail 10, Research, Misfits, Milestones and Army 9, Score and Relations 8). To fit, rows move into pages, tabs or folds: drawn first, for Albert. Open: is it 6 slots across by 7 ranks tall, the title rank counted? [2026-11-02 11:03]

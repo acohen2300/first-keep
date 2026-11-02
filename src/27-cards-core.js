@@ -120,6 +120,9 @@ const btn = (act, title, sub, cls, fr) =>
 const acts = (h, cls = 'c2') => `<div class="fm ${cls}">${h}</div>`;
 // a list collapses (MENU-SPEC §3): its things three a rank, as even as they go, so no rank has a hole: two are two triples, four two and two,
 // five three and two. Things you do are double-wide; a list of one is the whole rank. per: at most two a rank, for words that need three slots
+// Train and Research on a building card (MENU-SPEC §8, Albert Nov 2, T1): every button double-wide, three a rank; a short rank is filled with
+// empty places (faint outlines), so the rank keeps its shape and nothing moves when a button comes or goes
+const grid3 = (cells) => (cells.length ? acts(cells.join('') + empty().repeat((3 - (cells.length % 3)) % 3), 'c3') : '');
 const list = (cells, per = 3) => {
 	let h = '',
 		i = 0;
@@ -252,7 +255,7 @@ function trainButtons(kinds) {
 							: !afford(p, cost)
 								? `short ${need(cost)}`
 								: costText(cost),
-			sub = why && told === costText(cost) ? why.replace(/\.$/, '') : told; // refused for a reason none of the above says (hunger, a full line): the reason, never the cost as if payable (E6)
+			sub = why && told === costText(cost) ? (p.hungry ? 'hungry' : 'line full') : told; // refused for a reason none of the above says (hunger, a full line): the reason, never the cost as if payable (E6), in a double slot's few words (T1)
 		return btn(
 			`train:${k}`,
 			TITLE_SHORT[stats(0, ck).name] || stats(0, ck).name, // a name too long for its slot shows its short one
