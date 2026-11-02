@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 42; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 43; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -188,6 +188,22 @@ const MIGRATE = {
 		S.v = 42;
 		return S;
 	}, // C6: a rout keeps when it began, not when it ends
+	42: (S) => {
+		if (S.nat && S.nat.regard) {
+			const N = S.nat;
+			S.gang = {
+				nat: { regard: N.regard, gifts: N.gifts || N.regard.map(() => []), warBy: N.warBy || {}, hitT: N.hitT || {} },
+			};
+			for (const k of ['regard', 'gifts', 'warBy', 'hitT']) delete N[k];
+		}
+		delete S.gamesN;
+		for (const p of S.P || []) {
+			delete p.ration;
+			delete p.rations;
+		}
+		S.v = 43;
+		return S;
+	}, // answer 1b: regard is kept per group (the Natives, outlaws, bandits, robbers); the Natives' moves from G.nat to G.gang.nat; the dead fields go (hunt A #9)
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -298,6 +314,10 @@ function saveGame(force) {
 			throne: G.throne || null,
 			prisoners: G.prisoners || [],
 			nat: G.nat || null,
+			gang: G.gang || null,
+			struck: G.struck || null,
+			alertT: G.alertT,
+			warnT: G.warnT, // the attack alarms' clocks (hunt B #7: a resumed game could sound the horn again at once)
 			fantasy: G.fantasy,
 			fogOn: G.fogOn,
 			mode: G.mode,
@@ -329,7 +349,6 @@ function saveGame(force) {
 			enlight: G.enlight,
 			stood: G.stood,
 			gamesT: G.gamesT,
-			gamesN: G.gamesN,
 			chron: G.chron,
 			chargeT: G.chargeT || {},
 			sand: G.sand || null,
@@ -505,6 +524,10 @@ function loadGame(S) {
 	G.throne = S.throne || null;
 	G.prisoners = S.prisoners || [];
 	G.nat = S.nat || null;
+	G.gang = S.gang || null;
+	G.struck = S.struck || null;
+	G.alertT = S.alertT ?? -99;
+	G.warnT = S.warnT ?? -99;
 	if (S.fog) {
 		try {
 			const s = atob(S.fog);
@@ -533,7 +556,6 @@ function loadGame(S) {
 	G.enlight = !!S.enlight;
 	G.stood = !!S.stood;
 	G.gamesT = S.gamesT || 0;
-	G.gamesN = S.gamesN || 0;
 	G.chron = S.chron || [];
 	G.chargeT = S.chargeT || {};
 	G.sand = S.sand || null;

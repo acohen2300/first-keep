@@ -289,6 +289,10 @@ const ACT = {
 		G.mailP = 0;
 		refresh();
 	},
+	chronp(a) {
+		G.chronP = (G.chronP || 0) + Number(a);
+		$('endX').innerHTML = crownsHTML();
+	}, // the chronicle's pages on the end card
 	mailp(a) {
 		G.mailP = (G.mailP || 0) + Number(a); // the card holds it inside its pages
 		refresh();
@@ -352,6 +356,7 @@ const ACT = {
 	}, // to your nearest finished building of a kind, its card open: a kind of soldier on the Train page or a squad's card goes to where it is trained
 	jump(a) {
 		const [x, y] = a.split(',').map(Number);
+		closeCard(); // the map behind a paused card is not where you look (as idlego and seek)
 		camGo(x, y);
 	},
 	card(a) {
@@ -397,24 +402,26 @@ const PLAY = {
 	// Relations (v80): what is picked on a row waits there until its ✓; the slider snaps, its switch turns the gift on or off and keeps the amount
 	relwant(a) {
 		const [q, w] = a.split(','),
-			n = Number(q);
-		if (relLord(n)) return say(relWhy(0, n, w) || 'Not now.', '', 3);
+			n = relKey(q);
+		if (stanceOff(n, w)) return say(relWhy(0, n, w) || 'Not now.', '', 3); // a dim icon takes no pick
 		const d = relPickOf(n);
 		d.want = w;
 	},
 	relgift(a) {
-		const [q, v] = a.split(',').map(Number),
+		const [k, x] = a.split(','),
+			q = relKey(k),
+			v = Number(x),
 			d = relPickOf(q);
 		if (giftLock(q)) return say(giftLock(q), '', 3);
 		d.gift = v;
 		d.on = v > 0;
 	},
 	relon(a) {
-		const q = Number(a),
+		const q = relKey(a),
 			d = relPickOf(q);
 		if (giftLock(q) || relLord(q)) return say(giftLock(q) || relWhy(0, q, 'peace') || 'Not now.', '', 3);
 		d.on = !d.on;
-		if (d.on && !d.gift) d.gift = NATIVE.giftStep;
+		if (d.on && !d.gift) d.gift = REGARD.giftStep;
 	},
 	mpick(a) {
 		G.mktK = a;
@@ -704,10 +711,10 @@ const PLAY = {
 	// relations and a lord's hand: one verb each, the reason on the card when it cannot be done. Relations (v80): the row's ✓ sends what
 	// was picked on it, the gift then the stance
 	relok(a) {
-		const q = Number(a),
+		const q = relKey(a),
 			[gift, want, why] = relDraft(q);
 		if (why || !(gift || want)) return say(why || 'Pick a gift or a stance first.', '', 3);
-		if (gift) giveGift(0, gift);
+		if (gift) giveGift(0, gift, gangKey(q));
 		if (want) setRel(0, q, want);
 		delete G.relPick[q];
 	},
@@ -1122,16 +1129,17 @@ document.addEventListener('click', (e) => {
 	}
 	sndInit();
 	sfx('tap');
-	tapCount(el.dataset.act, /(^|\s)(dis|lock)(\s|$)/.test(el.className));
-	if (/(^|\s)(dis|lock)(\s|$)/.test(el.className)) {
-		el.classList.add('nope');
-		setTimeout(() => el.classList.remove('nope'), 450);
-	} // a tap it cannot do glows red a moment
+	const off = el.closest('.dis, .lock'); // the button, or the control it is part of (the slider's switch inside a locked slider)
+	tapCount(el.dataset.act, !!off);
 	cardTap = !!el.closest('#card'); // what it opens remembers this card (back)
 	try {
 		act(el.dataset.act);
 	} finally {
 		cardTap = false;
+		if (off) {
+			off.classList.add('nope');
+			setTimeout(() => off.classList.remove('nope'), 450);
+		} // a tap it cannot do glows red a moment (after the verb, so the card's redraw does not wipe it)
 	}
 });
 // a slider (data-in) sends its verb with its value as it moves, and the card shows it at once

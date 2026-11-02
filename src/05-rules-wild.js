@@ -71,20 +71,28 @@ const WILD_LOOK = 140; // how far a beast or a guard looks for a stranger near i
 // They hold the Throne, a citadel on the great lake's island, reached by four causeways (the choke points). Their regard for each side moves
 // with gifts, blows and time; at PEACE they leave you be, at ALLY their gate opens. Gifts follow the Danegeld rule: each one buys less than
 // the last. Pits and nets on the causeways; prisoners for ransom; outlaw raids on whoever they regard least. They command the camps.
-const NATIVE = {
+// Regard (answer 1b, Albert Nov 1): the Natives' flow, one for each of the four misfit groups. What a group thinks of each side (0..100): gifts
+// raise it (the Danegeld rule, each buys less than the last), blows on the group lower it, it drifts back to regard0; at peaceAt the group
+// leaves the side be, under it the group is a foe. At allyAt an emissary makes a friend of any group, as of the Natives (Albert, Nov 1). Special rules per group come later (v81).
+const REGARD = {
 	regard0: 20,
 	peaceAt: 40,
 	allyAt: 70,
 	decay: 0.1,
 	hitCost: 2,
+	warCost: 20, // turning on a group yourself
 	giftMax: 300, // the gift slider on Relations runs 0 to 300 (v70's two gifts were 100 and 300) and snaps to 50 (Albert, Oct 31)
 	giftStep: 50,
 	danegeld: 0.5,
 	giftWindow: 600,
+};
+// The wild's groups (answer 1b): animals are everyone's foe, always; the four misfit groups each keep their own regard for each side.
+// Who belongs: the Natives (their warriors, walls, towers and pits), the outlaws (the horde), the bandits and the robbers (by kind: UNIT.gang).
+const GANG = { nat: 'Natives', out: 'Outlaws', ban: 'Bandits', rob: 'Robbers' };
+const NATIVE = {
 	garrison: 24,
 	perAge: 8,
 	regrow: 20,
-	ambush: 1.3,
 	gunAge: 4,
 	gunMax: 0.6,
 	gunRegrow: 2,
@@ -101,6 +109,7 @@ const NATIVE = {
 	raidSecs: 45,
 	handover: 60,
 	handoverMen: 8,
+	struck: 60, // decision 4b: how long a camp remembers a computer's unit that struck it (s)
 };
 const THRONE = { hold: 900, tithe: 0.1, score: 50, r: 80, isle: 100, cause: 30 }; // hold: seconds to win in a 60-minute game (scaled to the game's length); tithe of every other side's gathering; score a minute
 

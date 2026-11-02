@@ -405,14 +405,7 @@ function pileAt(b, sx, sy, z) {
 	if (!c) {
 		const W = w * 0.62 + 40 * z + 4,
 			H = w * TILT * 0.42 + 14 * z + 4;
-		c = document.createElement('canvas');
-		c.width = Math.ceil(W * dpr);
-		c.height = Math.ceil(H * dpr);
-		const was = ctx;
-		ctx = c.getContext('2d');
-		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-		pileArt(b.kind, ns, 0, 0, w, z);
-		ctx = was;
+		c = drawOnce(W, H, () => pileArt(b.kind, ns, 0, 0, w, z));
 		PSPR.set(key, c);
 		trim(PSPR, 60);
 	}
@@ -899,7 +892,7 @@ function drawUnit(u, s) {
 		);
 		ctx.stroke();
 	} // the conversion, filling
-	if (u.owner === 0 && u.idle) idleMark(sx, top, z);
+	if (u.owner === 0 && (u.kind === 'vil' ? freeVil(u) : u.idle)) idleMark(sx, top, z); // a villager by freeVil, the one home; a cart by its own flag
 	if (u.sick > G.t) {
 		ctx.fillStyle = u.plague ? '#7a3a8a' : '#7aa04a';
 		ctx.beginPath();

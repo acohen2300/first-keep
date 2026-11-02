@@ -64,7 +64,6 @@ function blankGame(seed) {
 		enlight: false,
 		stood: false,
 		gamesT: 0,
-		gamesN: 0,
 		chron: [], // the climate: the air's temperature, the ground's wetness, snow, ice, mud, the sky's run (37-events)
 		fog: new Uint8Array(FOGN * FOGN),
 	}; // warAt: notice given, 'a,b' → when it falls due; pick: what the finger holds; hz: the hazards on; ev: the spectacle's state
@@ -87,8 +86,6 @@ function mkPlayer(i, civ) {
 		unrest: 0,
 		loyal: 0,
 		health: 100,
-		ration: 1,
-		rations: {},
 		age: 0,
 		aging: false,
 		techs: new Set(),

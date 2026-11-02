@@ -466,9 +466,7 @@ function squadHomeHTML(c) {
 		acts(
 			CLS.map(
 				(k, t) =>
-					sym(`sqpk:${i},${t},-`, ICON.minus, P[k[0]] ? 'h' : 'h dis', `One fewer ${k[3]}`) +
-					sym(`sqpk:${i},${t},+`, ICON.plus, n < BNSIZE ? 'h' : 'h dis', `One more ${k[3]}`) +
-					'<i class="h"></i>',
+					`<div class="duo">${sym(`sqpk:${i},${t},-`, ICON.minus, P[k[0]] ? 'h' : 'h dis', `One fewer ${k[3]}`)}${sym(`sqpk:${i},${t},+`, ICON.plus, n < BNSIZE ? 'h' : 'h dis', `One more ${k[3]}`)}</div>`, // − and + share the tile's width above them
 			).join(''),
 			'c4',
 		) +

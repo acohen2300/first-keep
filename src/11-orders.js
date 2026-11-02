@@ -139,6 +139,17 @@ function ageUp(o) {
 }
 let navHold = false,
 	navLate = false;
+// pieces laid in one go rebuild the grid once, after them (B13: forty pieces stalled a frame 131 ms; hunt A #8: the computers' wall plan too)
+function navOnce(fn) {
+	navHold = true;
+	navLate = false;
+	try {
+		fn();
+	} finally {
+		navHold = false;
+		if (navLate) navRebuild();
+	}
+}
 function build(o, kind, x, y) {
 	const B = BLD[kind],
 		p = G.P[o];
@@ -155,7 +166,7 @@ function build(o, kind, x, y) {
 	const b = mkBld(o, kind, x, y, 0);
 	G.blds.push(b);
 	if (navHold) navLate = true;
-	else navRebuild(); // a line of wall is laid in one go and the grid built once after it (B13: forty pieces stalled a frame 131 ms)
+	else navRebuild(); // a line laid in one go builds the grid once after it (navOnce)
 	qcDrop();
 	if (o === 0) learn('build:' + kind);
 	if (B.atStop) {
@@ -305,18 +316,31 @@ const noticeLeft = (a, b) => {
 	return t === undefined ? 0 : Math.max(0, Math.ceil(t - G.t));
 };
 // why a side cannot take this stance toward another right now, or null
+// a misfit group (GANG) on a Relations row, by its key; the Natives are also the fifth side (WILD)
+const gangKey = (q) => (q === WILD ? 'nat' : typeof q === 'string' && GANG[q] ? q : null);
 function relWhy(o, q, want) {
-	const p = G.P[o],
-		Q = G.P[q],
+	const g = gangKey(q);
+	const p = G.P[o];
+	if (g) {
+		// a misfit group, the Natives' flow for each (Albert, Nov 1): peace by regard; a friend at REGARD.allyAt, by an emissary; war is yours
+		const rel = gangRel(o, g);
+		if (want === rel) return 'Already.';
+		if (want === 'war') return null;
+		if (regardOf(o, g) < REGARD[want === 'peace' ? 'peaceAt' : 'allyAt']) return `Needs regard ${REGARD[want === 'peace' ? 'peaceAt' : 'allyAt']}.`;
+		return want === 'peace' ? null : envoyWhy(p, rel);
+	}
+	const Q = G.P[q],
 		rel = G.rel[o][q];
-	if (q === o || (q !== WILD && !Q.alive)) return 'Not now.';
+	if (q === o || !Q.alive) return 'Not now.';
 	if (Q.lord === o && !Q.rebel) return 'Your vassal: see their card.';
 	if (p.lord === q && !p.rebel) return 'Your overlord.';
 	if (want === rel) return 'Already.';
-	if (q === WILD && want === 'peace') return regardOf(o) < NATIVE.peaceAt ? `Needs regard ${NATIVE.peaceAt}.` : null; // the Natives: peace needs regard; alliance by emissary when regard is high; war is yours to declare
-	if (q === WILD && want === 'ally' && regardOf(o) < NATIVE.allyAt) return `Needs regard ${NATIVE.allyAt}.`;
-	if (want === 'war' && q !== WILD && G.sworn > G.t) return `A sworn peace holds ${clock(G.sworn - G.t)} more.`; // a scenario's term of peace (the Olympic truce was sworn for the festival)
+	if (want === 'war' && G.sworn > G.t) return `A sworn peace holds ${clock(G.sworn - G.t)} more.`; // a scenario's term of peace (the Olympic truce was sworn for the festival)
 	if (want === 'war') return noticeLeft(o, q) ? `Notice given: ${noticeLeft(o, q)} s.` : null;
+	return envoyWhy(p, rel, want);
+}
+// what stops an emissary going: one for courts and groups alike
+function envoyWhy(p, rel, want = 'ally') {
 	if (want === 'ally' && rel === 'war') return 'Make peace first.';
 	if (p.envoyOut) return 'Your emissary is out.';
 	if (p.age < 1) return 'Needs the Bronze age.';
@@ -325,18 +349,19 @@ function relWhy(o, q, want) {
 }
 function setRel(o, q, want) {
 	if (relWhy(o, q, want)) return false;
-	const rel = G.rel[o][q];
-	if (q === WILD && want === 'war') {
-		makePeace(o, q);
-		G.rel[o][q] = G.rel[q][o] = 'war';
-		natState().warBy[o] = true;
-		G.navDirty = true;
-		natRegard(o, -20);
+	const g = gangKey(q),
+		rel = G.rel[o][q];
+	if (g && want === 'war') {
+		if (g === 'nat') makePeace(o, WILD);
+		gangSet(o, g, 'war');
+		gangState(g).warBy[o] = true;
+		addRegard(o, g, -REGARD.warCost);
 		return true;
-	} // turning on the Natives costs regard, and needs no notice: they are not a court; it holds until you make peace
-	if (q === WILD && want === 'peace') {
-		natState().warBy[o] = false;
-		makePeace(o, q);
+	} // turning on a group costs regard, and needs no notice: they are not a court; it holds until you make peace
+	if (g && want === 'peace') {
+		gangState(g).warBy[o] = false;
+		if (g === 'nat') makePeace(o, WILD);
+		else gangSet(o, g, 'peace');
 		return true;
 	}
 	if (want === 'war') {
@@ -364,7 +389,7 @@ function noticeTick() {
 function sendEnvoy(o, to, ask) {
 	const p = G.P[o],
 		k = keepOf(o),
-		tk = homeOf(to);
+		tk = homeOf(to, k);
 	if (!k || !tk || p.envoyOut || p.age < 1 || !afford(p, UNIT.envoy.cost)) return false;
 	pay(p, UNIT.envoy.cost);
 	const u = addUnit(o, 'envoy', k.x, k.y);
@@ -373,7 +398,7 @@ function sendEnvoy(o, to, ask) {
 	u.ask = ask || 'ally';
 	p.envoyOut = true;
 	p.envoyAt = G.t;
-	if (o === 0) say(`Your emissary rides to the ${G.P[to].name}: ${ask === 'peace' ? 'peace' : 'alliance'}.`, '', 4);
+	if (o === 0) say(`Your emissary rides to the ${GANG[gangKey(to)] || G.P[to].name}: ${ask === 'peace' ? 'peace' : 'alliance'}.`, '', 4);
 	return true;
 }
 // the square law on strength, bent by who counters whom: the odds q gives itself against o
@@ -383,14 +408,15 @@ const oddsOf = (q, o) => {
 	return lanchester(r);
 };
 function judgeEnvoy(to, from, envoy) {
-	const T = G.P[to],
+	const g = gangKey(to),
 		ask = envoy.ask || 'ally';
-	if (G.rel[to][from] === 'war' && ask !== 'peace') {
+	if ((g ? gangRel(from, g) : G.rel[to][from]) === 'war' && ask !== 'peace') {
 		envoy.hp = 0;
-		if (from === 0) news('realm', `The ${T.name} killed your emissary.`, 'warn', 6);
+		if (from === 0) news('realm', `The ${g ? GANG[g] : G.P[to].name} killed your emissary.`, 'warn', 6);
 		return;
 	}
-	if (to === WILD) return judgeNatives(from, envoy, ask);
+	if (g) return judgeGang(g, from, envoy, ask);
+	const T = G.P[to];
 	if (to === 0) {
 		envoy.state = 'return';
 		news('realm', `${G.P[from].name} offer ${ask === 'peace' ? 'peace' : 'an alliance'}: answer at your Town Center.`, 'soft', 8);
@@ -844,12 +870,14 @@ function setJob(u, job, n, at) {
 	if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 	u.job = job;
 	u.node = n || null;
+	u.at = null; // a spot held at the old find is let go: the new order is cap-checked on arrival (fresh review #1)
 	u.was = n ? n.kind : null; // a fresh order: any find of the job until it has worked one
 	u.anchor = at ? { x: at.x, y: at.y } : null; // the spot it was placed: its search starts there and stays within the cap (decision 1)
 	u.wait = false;
 	if (job) u.post = null;
 	if (n && n.farm) n.wk = (n.wk || 0) + 1;
 	if (job !== 'repair') u.rep = null;
+	else u.hunt = null; // sent to build: a hunt it was on is dropped (fresh review #1); a builder bitten takes the beast on its own job (hurt)
 }
 // a villager at a workshop, a mint or a foundry, walking there or working inside: + and the computers leave it be; − and Send out free it
 const atShop = (u) => !!(u.node && u.node.farm && BLD[u.node.farm.kind].makes);
@@ -865,7 +893,7 @@ function moveVil(o, job, down) {
 		return;
 	}
 	const v =
-		V.find((u) => !u.job) ||
+		V.find(freeVil) ||
 		low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job) && !atShop(u)));
 	if (v) setJob(v, job);
 }
@@ -958,18 +986,16 @@ function commitPlace() {
 		let built = 0,
 			blocked = 0,
 			broke = false;
-		navHold = true;
-		navLate = false;
-		for (const c of cells) {
-			if (!afford(p, B.cost)) {
-				broke = true;
-				break;
+		navOnce(() => {
+			for (const c of cells) {
+				if (!afford(p, B.cost)) {
+					broke = true;
+					break;
+				}
+				if (build(0, 'wall', c.gx * NAVC + 5, c.gy * NAVC + 5)) built++;
+				else blocked++;
 			}
-			if (build(0, 'wall', c.gx * NAVC + 5, c.gy * NAVC + 5)) built++;
-			else blocked++;
-		}
-		navHold = false;
-		if (navLate) navRebuild();
+		});
 		say(
 			built
 				? `${built} wall piece${built > 1 ? 's' : ''} going up${blocked ? `; ${blocked} blocked` : ''}${broke ? '; out of stone' : ''}.`

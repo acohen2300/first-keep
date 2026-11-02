@@ -35,7 +35,7 @@ function cardPause(c) {
 		!G.over &&
 		(c.type in READ_CARDS ||
 			(c.type === 'bld' &&
-				G.blds.some((b) => b.id === c.id && b.owner === 0 && (b.kind === 'council' || (b.kind === 'keep' && G.ktab === 'rel')))));
+				G.blds.some((b) => b.id === c.id && b.owner === 0 && (b.kind === 'council' || (b.kind === 'keep' && (G.ktab === 'rel' || G.ktab === 'mis'))))));
 	if (want && !G.paused) {
 		setPause(true);
 		G.cardPaused = true;
@@ -135,6 +135,24 @@ const info = (value, label, cls = '', act) =>
 	`<div class="info ${cls}"${act ? ` data-act="${act}"` : ''}><b>${value}</b>${label ? `<small>${label}</small>` : ''}</div>`;
 // a fixed place with nothing in it: a faint plain outline (never dashed)
 const empty = (cls = '') => `<div class="empty ${cls}"></div>`;
+// One pager (N13, the Mail; hunt B #1, the Chronicle): rows MSG.page to a page, a short page padded with pad so nothing moves, and Previous ·
+// mid · Next under them, sending verb:-1 and verb:1. Returns [the page shown, its rows, the pager's rank].
+function pager(rows, at, verb, pad, count, mid = empty()) {
+	const pages = Math.max(1, Math.ceil(rows.length / MSG.page)),
+		pg = clamp(at || 0, 0, pages - 1),
+		show = rows.slice(pg * MSG.page, (pg + 1) * MSG.page);
+	while (show.length < MSG.page) show.push(pad);
+	return [
+		pg,
+		show.join(''),
+		acts(
+			btn(`${verb}:-1`, 'Previous', `page ${pg + 1} of ${pages}`, pg ? '' : 'dis') +
+				mid +
+				btn(`${verb}:1`, 'Next', count, pg < pages - 1 ? '' : 'dis'),
+			'c3',
+		),
+	];
+}
 // ── the controls (v80, the control sheet, Albert Oct 31), each built once and whole slots wide (span: s1 to s6), corners 6. Only the pieces
 // a card uses are built: the bar (choice), the selector, the slider with its switch.
 // choice: one shape (a bar) holding one set's choices (a box is one decision), each [act, words or an icon, chosen, cls, label]; a chosen part wears the
@@ -162,7 +180,7 @@ const techBook = (t) =>
 // the middle of the 6 gap. opts: [key, name, sub]; page: the page under the tabs
 const folder = (key, opts, cur, page, cls = 'c2') =>
 	`<div class="fo">${acts(opts.map(([k, t, sub]) => btn(`${key}:${k}`, t, sub, cur === k ? 'on' : '')).join(''), cls)}<div class="pg">${page}</div></div>`;
-const INFO = new Set(['why', 'bmore', 'about', 'menu', 'bnabout']);
+const INFO = new Set(['why', 'bmore', 'about', 'menu']);
 let infoBuf = []; // the explaining text of a card waits behind the book icon
 const fold = (id, title, html) =>
 	INFO.has(id)
@@ -411,7 +429,7 @@ function yieldText(n, o) {
 		fin = isFinite(n.amt),
 		carry = carryOf(o);
 	return (
-		`<p>${wk ? `<i>${wk} at work:</i> ` : ''}each takes ${Math.round(rate)} ${n.type} a minute and carries ${carry} a trip${wk ? `; together about ${Math.round(rate * wk)} a minute` : ''}${fin && wk ? `; gone in about ${clock((n.amt / (rate * wk)) * 60)}` : ''}.${fin && n.max > 0 ? ` Taken so far: ${Math.round(n.max - n.amt)} of ${Math.round(n.max)}.` : ''}</p>` +
+		`<p>${wk ? `<i>${wk} of ${n.kind === 'farm' ? slotsOf(n) : findCap(n)} at work:</i> ` : ''}each takes ${Math.round(rate)} ${n.type} a minute and carries ${carry} a trip${wk ? `; together about ${Math.round(rate * wk)} a minute` : ''}${fin && wk ? `; gone in about ${clock((n.amt / (rate * wk)) * 60)}` : ''}.${fin && n.max > 0 ? ` Taken so far: ${Math.round(n.max - n.amt)} of ${Math.round(n.max)}.` : ''}</p>` +
 		bonusText(n, o)
 	);
 }

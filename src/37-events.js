@@ -529,7 +529,7 @@ function hordeTick() {
 		news('war', EV_TEXT.horde[1], 'warn', 8);
 	}
 	if (left > 0) return;
-	const sides = G.P.filter((p) => p.id !== WILD && p.alive && keepOf(p.id)),
+	const sides = G.P.filter((p) => p.id !== WILD && !calm4b(p.id) && p.alive && keepOf(p.id) && gangRel(p.id, 'out') === 'war'), // 4b: the horde starts nothing with a computer, nor with a side at peace with the outlaws
 		weak = sides.sort((a, b) => estPower(WILD, a.id) - estPower(WILD, b.id))[0];
 	if (!weak) {
 		G.horde = 'done';
@@ -723,25 +723,29 @@ function herdTick(u, dt, SP) {
 		if (n && n.farm.fert > FERT.floor) n.farm.fert = Math.max(FERT.floor, n.farm.fert - 0.02);
 	}
 }
-// starvation (the hazard): work stops after a minute without food; after two, people leave
+// hunger, once a second, for every side (Albert, Nov 1): the store empty is hunger (p.hungry); with no food in reach too it is a famine (famT),
+// which weakens the work after STARVE.grace (hungerOf); under the Famine hazard people then leave, one every STARVE.every
 function starveTick(p) {
-	if (!hz('starve') || !p.hungry) {
-		p.hungryT = 0;
-		return;
-	}
-	p.hungryT = (p.hungryT || 0) + 1;
 	const o = p.id;
-	if (p.hungryT === STARVE.stop && o === 0) news('home', 'Starving: work has stopped. Food, now.', 'warn', 8);
-	if (p.hungryT >= STARVE.leave && (p.hungryT - STARVE.leave) % STARVE.every === 0) {
-		const v = unitsOf(o, 'vil').sort((a, b) => a.carry - b.carry)[0],
-			s = soldiersOf(o).filter((u) => u.state === 'home')[0];
-		for (const u of [v, s])
-			if (u) {
-				u.hp = 0;
-				u.gone = true;
-			}
-		if (o === 0 && (v || s))
-			news('home', `Starving: ${v ? 'a villager left' : ''}${v && s ? ', ' : ''}${s ? 'a soldier deserted' : ''}.`, 'warn', 6);
-	}
+	p.famT = p.hungry && !foodInReach(o) ? (p.famT || 0) + 1 : 0;
+	if (o === 0 && p.famT === 1) news('home', 'Famine: no food in reach. Two days to recover.', 'warn', 8);
+	if (!hz('starve') || p.famT < STARVE.grace || (p.famT - STARVE.grace) % STARVE.every) return;
+	const v = unitsOf(o, 'vil').sort((a, b) => a.carry - b.carry)[0],
+		s = soldiersOf(o).filter((u) => u.state === 'home')[0];
+	for (const u of [v, s])
+		if (u) {
+			u.hp = 0;
+			u.gone = true;
+		}
+	if (o === 0 && (v || s)) news('home', `Starving: ${v ? 'a villager left' : ''}${v && s ? ', ' : ''}${s ? 'a soldier deserted' : ''}.`, 'warn', 6);
 }
-const starving = (o) => hz('starve') && (G.P[o].hungryT || 0) >= STARVE.stop; // nobody works
+// food a side can still reach: a bush, its own field, fish or meat with something left, or game, in its Town Center's region of the walking grid
+function foodInReach(o) {
+	const k = keepOf(o);
+	if (!k) return false;
+	const cm = regionAt(k, o);
+	return (
+		G.nodes.some((n) => n.type === 'food' && n.amt > 0 && (!n.farm || n.farm.owner === o) && (n.kind !== 'fish' || dockNear(o, n)) && reachFrom(n, cm, o)) || // a field only if it is your own
+		G.units.some((u) => u.owner === WILD && u.hp > 0 && UNIT[u.kind].meat && regionAt(u, o) === cm)
+	);
+}

@@ -101,6 +101,10 @@ const FIREARMS = { chance: 0.12, blast: 0.3, splash: 40, splashHit: 0.3 }; // fi
 // distance from the camera, full within d0 (the camera's height at the closest zoom), then the inverse-square law, less the air's absorption α: 5 dB a kilometre at 1 kHz, 20 °C, 50% humidity (ISO 9613-1), over a world unit of 0.14 m.
 // Thunder reaches the ear after the flash at 340 m/s over the same metre. floor: below this share it is not played.
 const SOUND = { fov: 60, alphaKm: 5, metre: 0.14, floor: 0.03, c: 340 }; // fov: the camera's field of view, degrees, which turns the zoom into a height (Albert, Build 64)
+// The slow ticks (hunt A #10): each runs every so many seconds (at its own phase in ticks, so they do not land on one step), and its body
+// reads the same seconds (every, 08-core): one home for the period. slow: prices, ventures, vassals, the league; health: sickness; natives: regard, the garrison, raids
+const BEAT = { slow: [10, 150], health: [5, 75], natives: [5, 7] };
+const YARD = 320; // a soldier at home fights within this of its post or its Town Center (the Natives: of the Throne, their camp's radius in 4b)
 const GARRISON = { r: 70, heal: 0.6 }; // soldiers resting by their own Castle, Barracks or Town Center heal; Garrison wards double it
 const TEACH = { seats: 4, mul: 1.5, tuition: 40 }; // Teach: a soldier learns a newer kind at the School, four at a time; time ×1.5 per age climbed, tuition in gold per age; opened by Veterans
 const TEACH_TO = {
@@ -159,6 +163,8 @@ const LOOKOUT = { base: 60, k: 24 }; // a building sees 60 + 24 × the square ro
 // Personal space, one number (Albert: Hall's personal distance, 2.5 to 4 ft; OSHA 1910.142(b)(3), 36 inches between beds): 3 ft. Spots are laid
 // SPACE apart, two bodies nearer than SPACE are pushed apart, a villager at work arrives within SPACE (the push's reach: decision 10a), and
 // one at its own spot within ARRIVE, a quarter of it: under half the spacing, so it always stands nearer its own spot than any other's (item 5).
+// where a gatherer stands to work a find: within this of its middle (fish from the shore, further out); the ring its working spots sit on
+const WORK_R = { fish: 13, other: 9 };
 const SPACE = 3 * FOOT,
 	ARRIVE = SPACE / 4;
 const SEARCH = { x: 90, y: 90, tau: 10, again: 2 };
@@ -203,7 +209,7 @@ const HAZARDS = {
 	starve: {
 		pts: 2,
 		name: 'Famine',
-		desc: 'No food for a minute: work stops. After two, a villager leaves and a soldier deserts every half minute.',
+		desc: 'Two days of famine (no food in store or in reach): a villager leaves and a soldier deserts every half minute.',
 	},
 	winter: {
 		pts: 2,
@@ -230,7 +236,10 @@ const HAZARDS = {
 const HZK = Object.keys(HAZARDS),
 	HZ_ODDS = 0.5, // none picked (Build 70, Albert's A): each hazard is on at even odds, drawn by lot for the game (design: a coin, the plainest random)
 	TODAY_HZ = { hard: 1, starve: 1, horde: 1, winter: 1 }; // the challenge today is level 10 on the day's seed
-const STARVE = { stop: 60, leave: 120, every: 30 },
+// Hunger (Albert, Nov 1). An empty store is not a famine: people working food eat from it, and the rest work on. A famine is an empty store
+// with no bush, field, fish or game in reach: full strength for grace (two days: with water, hunger takes weeks, the rule of threes), then
+// work and blows at UPKEEP.hunger; then, under the Famine hazard, one leaves every every seconds
+const STARVE = { grace: 2 * DAY_LEN, every: 30 },
 	HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 },
 	HORDE = { min: 1200, mean: 1800, warn: SEASON_LEN * 2, n: 16, perAge: 6 }; // the horde comes after min seconds, at an exponential wait about mean (nextIn)
 // Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 37-events.

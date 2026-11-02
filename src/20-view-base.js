@@ -82,6 +82,22 @@ function scarBurn(b) {
 }
 // a small parchment tab with a book in red ink, and a count when more than one thing waits
 // the badge is drawn once per count and zoom into BADGE and stamped (Build 62: measured at a tenth of a zoomed-out frame as vector work); the bob is in the stamp
+// One home for art drawn once into a little canvas of its own (W × H on screen): the drawing goes to ctx, which is swapped for the sprite's
+// and always given back, even if the art throws (hunt B #10: a throw left every later frame drawing off screen)
+function drawOnce(W, H, art) {
+	const c = document.createElement('canvas'),
+		was = ctx;
+	c.width = Math.ceil(W * dpr);
+	c.height = Math.ceil(H * dpr);
+	ctx = c.getContext('2d');
+	try {
+		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+		art();
+	} finally {
+		ctx = was;
+	}
+	return c;
+}
 const BADGE = new Map();
 function researchBadge(x, y, s, n) {
 	const key = `${Math.min(n, 9)}:${s.toFixed(2)}`,
@@ -90,14 +106,7 @@ function researchBadge(x, y, s, n) {
 	if (!c) {
 		const w = (n > 1 ? 31 : 23) * s + 4,
 			h = 17 * s + 4;
-		c = document.createElement('canvas');
-		c.width = Math.ceil(w * dpr);
-		c.height = Math.ceil(h * dpr);
-		const was = ctx;
-		ctx = c.getContext('2d');
-		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-		badgeArt(w / 2, h / 2, s, n);
-		ctx = was;
+		c = drawOnce(w, h, () => badgeArt(w / 2, h / 2, s, n));
 		c.ax = w / 2;
 		c.ay = h / 2;
 		BADGE.set(key, c);

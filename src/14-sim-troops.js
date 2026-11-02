@@ -27,15 +27,11 @@ function priestTick(u, dt, SP) {
 	if (u.state === 'convert') {
 		// beside an enemy for a spell, the priest turns them; the counter is to kill the priest
 		const t = G.units.find(
-			(v) =>
-				v.id === u.cv &&
-				v.hp > 0 &&
-				!v.inside &&
-				atWar(u.owner, v.owner) &&
-				UNIT[v.kind].cls &&
-				clsCount(u.owner, UNIT[v.kind].cls) < clsMax(UNIT[v.kind].cls, u.owner),
-		); // the ceiling holds for a convert as for a recruit (C8): with no room the spell stops
-		if (!t || u.cvCd > G.t) {
+				(v) => v.id === u.cv && v.hp > 0 && !v.inside && atWar(u.owner, v.owner) && UNIT[v.kind].cls,
+			),
+			full = !!t && clsCount(u.owner, UNIT[t.kind].cls) >= clsMax(UNIT[t.kind].cls, u.owner); // the ceiling holds for a convert as for a recruit (C8): with no room the spell stops
+		if (full && u.owner === 0) say('At Maximum Occupancy Capacity', '', 3); // answer 11, Albert's words
+		if (!t || full || u.cvCd > G.t) {
 			u.state = 'home';
 			u.cv = null;
 			return;
@@ -130,7 +126,8 @@ function shot(x1, y1, h1, x2, y2, fire) {
 }
 // a soldier at home guards the ground round its own yard and round the Town Center (Build 39 review: a yard far from the Town Center was left undefended)
 const routSecs = (o) => MORALE.rout * (G.P[o].techs.has('engage') ? 0.5 : 1); // Engagement halves the run (C6: the grace no longer shrinks with it)
-const nearHome = (u, t, k) => (u.hax !== undefined && hyp(t.x - u.hax, t.y - u.hay) < 320) || (!!k && dist(t, k) < 320);
+const nearHome = (u, t, k) =>
+	(u.hax !== undefined && hyp(t.x - u.hax, t.y - u.hay) < YARD) || (!!k && dist(t, k) < YARD);
 function solTick(u, dt, SP) {
 	const U = UNIT[u.kind],
 		o = u.owner,
@@ -286,8 +283,8 @@ function solTick(u, dt, SP) {
 		if (u.state === 'home' && tgt && !nearHome(u, tgt, k) && !onMe(tgt, u)) tgt = null; // one on it is fought wherever it stands
 		if (!tgt && u.state === 'home' && !U.bonly)
 			tgt =
-				(u.hax !== undefined && nearestFoe(o, u, 320, { x: u.hax, y: u.hay })) ||
-				(k && nearestFoe(o, u, 320, k)) ||
+				(u.hax !== undefined && nearestFoe(o, u, YARD, { x: u.hax, y: u.hay })) ||
+				(k && nearestFoe(o, u, YARD, k)) ||
 				null; // a foe near its own yard first, then near the Town Center
 		u.tgt = tgt;
 	}
@@ -416,6 +413,7 @@ function escortPick(u) {
 }
 
 // ───────────────────────── The wild ─────────────────────────
+const wildLeash = (u) => (u.horde ? 1e9 : (UNIT[u.kind].raid || 120) + 60); // how far from home a beast or a guard follows a foe: the camp's ground
 // Guards stay by what they guard and attack whoever comes close; game grazes and runs; robbers raid within their reach.
 function wildTick(u, dt, SP) {
 	const U = UNIT[u.kind];
@@ -467,9 +465,10 @@ function wildTick(u, dt, SP) {
 	}
 	u.cd = Math.max(0, u.cd - dt);
 	const home = { x: u.hx, y: u.hy },
-		leash = u.horde ? 1e9 : (U.raid || 120) + 60;
+		leash = wildLeash(u);
 	let t = u.tgt;
-	if ((G.tick + u.id) % 5 === 0 || !(t && t.hp > 0 && !t.inside)) {
+	if ((G.tick + u.id) % 5 === 0 || (t && !(t.hp > 0 && !t.inside))) {
+		// a look every fifth tick, or at once when the foe it held is lost (hunt A #4: with none held it looked every tick)
 		t = null;
 		if (u.aggro && u.aggro.hp > 0 && !u.aggro.inside && dist(u.aggro, home) < leash) t = u.aggro;
 		if (!t)
@@ -480,6 +479,7 @@ function wildTick(u, dt, SP) {
 					v.owner !== WILD &&
 					!v.inside &&
 					v.kind !== 'envoy' &&
+					isFoe(WILD, v, u) && // a group at peace with the side leaves it be (answer 1b); a computer only if it struck (4b)
 					(u.horde || dist(v, home) < (U.raid && hasTag(v.kind, 'civ') ? U.raid : 90)) &&
 					!(U.raid && guardedCart(v)),
 			);

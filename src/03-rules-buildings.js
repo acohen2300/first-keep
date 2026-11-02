@@ -13,7 +13,7 @@ const LOAD = 20,
 	RAW_NAME = { f: 'Food', w: 'Wood', s: 'Stone', i: 'Iron' },
 	CARRIED = [...WARES, 'f', 'w', 's', 'i'];
 // Food upkeep: one share is what a person eats; a villager gathering food brings in about 30 a minute, enough for 8 shares.
-const UPKEEP = { share: 30 / 8 / 60, foot: 1.5, mounted: 3, cart: 2, hunger: 0.75 };
+const UPKEEP = { share: 30 / 8 / 60, foot: 1.5, mounted: 3, cart: 2, hunger: 0.72 }; // hunger: work and blows after STARVE.grace without food; the Minnesota study's fall in grip strength, 58.2 to 41.8 kg (Keys et al. 1950, via Hargrove, Heinz & Heinz 2008, Table 1)
 // Vassals. Every 10 seconds: tax takes a share of what the vassal gathered; unrest moves by the tax push minus loyalty/25 (0..100).
 // Loyalty moves 5% of the way to its target: 20 + investment + garrison + protection − the tax's resentment (0..100).
 const TAX = {

@@ -55,9 +55,10 @@ function hurt(o, a, t, base) {
 				.sort((p, q) => dist(p, a) - dist(q, a))
 				.slice(0, 2);
 			for (const v of [t, ...helpers]) {
+				v.hunt = a;
+				if (v.job === 'repair') continue; // a builder fights back on its own job, then goes back to its site (hunt A #3: it lost both)
 				v.pj = v.job === 'food' ? null : v.job;
 				setJob(v, 'food');
-				v.hunt = a;
 			}
 		}
 		if (isSoldier(t)) {
@@ -65,7 +66,6 @@ function hurt(o, a, t, base) {
 			if (t.state === 'rout') d *= MORALE.routHit;
 			else if (t.fb > G.t) d *= FALLBACK.hit;
 		}
-		if (a && a.native && !isB && onLand(t.x, t.y) && hyp(t.x - MID, t.y - MID) > THRONE.isle - 10) d *= NATIVE.ambush; // the Natives at the causeways: the ground is theirs
 		if (a && A.gun && hasTag(t.kind, 'native')) d *= NATIVE.gunHit; // gunpowder against hide shields
 		if (isSoldier(t) && t.owner !== WILD) {
 			d *= stats(t.owner, t.kind).armor;
@@ -91,10 +91,15 @@ function hurt(o, a, t, base) {
 		if (a.owner !== WILD && t.owner !== a.owner) G.P[a.owner].kills = (G.P[a.owner].kills || 0) + 1;
 		if (isSoldier(a)) a.mor = Math.min(1, a.mor + MORALE.kill);
 	}
-	if (t.native && o !== WILD && G.t - (natState().hitT ? natState().hitT[o] || -9 : -9) > 3) {
-		(natState().hitT = natState().hitT || {})[o] = G.t;
-		natRegard(o, -NATIVE.hitCost);
-	} // blows on the Natives cost regard
+	const tg = o === WILD ? null : gangOf(t);
+	if (tg && tg !== 'beast') {
+		if (a && calm4b(o) && (tg !== 'nat' || t.native || !UNIT[t.kind])) ((G.struck ??= {})[campOf(t)] ??= {})[a.id] = G.t; // 4b: the camp remembers who struck it
+		const R = gangState(tg);
+		if ((tg !== 'nat' || t.native) && G.t - (R.hitT[o] ?? -9) > 3) {
+			R.hitT[o] = G.t;
+			addRegard(o, tg, -REGARD.hitCost);
+		}
+	} // blows on a group (a Native warrior, a bandit, a robber, the horde) cost that group's regard
 	if (a && A.knock && !isB && t.hp > 0 && t.kind !== 'caravan') {
 		// a heavy blow drives the target back and flashes it
 		const dx = t.x - a.x,
@@ -153,6 +158,7 @@ function pushApart(a, b) {
 	let dx = b.x - a.x,
 		dy = b.y - a.y;
 	if (dx > SPACE || dx < -SPACE || dy > SPACE || dy < -SPACE) return;
+	if (a.post && b.post && a.post.b != null && a.post.b === b.post.b && !a.job && !b.job) return; // two of one group sent to their own spots round a point (item 5): the spots keep them SPACE apart, so neither shoves the other off its way
 	if (dx === 0 && dy === 0) {
 		// two on one spot part along a direction fixed by their ids, the same every time (decision 10, Reynolds separation)
 		const g = ((a.id * 31 + b.id * 17) % 360) * (Math.PI / 180);

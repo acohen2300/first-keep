@@ -666,7 +666,7 @@ const MS_TEXT = {
 		'card:research',
 	],
 	hungry: [
-		'Your people are hungry: work and damage at 75%.',
+		'Food stores empty: put villagers on food.',
 		'Everyone eats a share a minute, a soldier more, a rider most. Food is the real limit on an army.',
 		'More on Food',
 		'job:food',
@@ -952,7 +952,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The Natives and the Throne',
-		`The fifth side holds the Throne, a citadel on the island of the great lake, reached by four causeways. Their regard for you starts at ${NATIVE.regard0}: gifts raise it (each buys less than the last, as the Danegeld did), blows on them lower it, and it drifts back with time. At ${NATIVE.peaceAt} they leave you be; at ${NATIVE.allyAt} an emissary can make them allies and their gate opens. Pits and nets wait on the causeways; a scout within ${NATIVE.scoutSees} finds them. A net takes a prisoner: pay the ransom within ${PRISON.secs / 60} minutes or they join the Natives. From minute ${NATIVE.raidFrom / 60}, at random times ${NATIVE.raidGap[0] / 60} to ${NATIVE.raidGap[1] / 60} minutes apart, outlaws from a camp raid a side at war with the Natives, the least regarded most often, never the same side twice running.`,
+		`The fifth side holds the Throne, a citadel on the island of the great lake, reached by four causeways. Their regard for you starts at ${REGARD.regard0}: gifts raise it (each buys less than the last, as the Danegeld did), blows on them lower it, and it drifts back with time. At ${REGARD.peaceAt} they leave you be; at ${REGARD.allyAt} an emissary can make them allies and their gate opens. Pits and nets wait on the causeways; a scout within ${NATIVE.scoutSees} finds them. A net takes a prisoner: pay the ransom within ${PRISON.secs / 60} minutes or they join the Natives. From minute ${NATIVE.raidFrom / 60}, at random times ${NATIVE.raidGap[0] / 60} to ${NATIVE.raidGap[1] / 60} minutes apart, robbers from a camp raid a side at war with the robbers, the one they regard least most often, never the same side twice running.`,
 		'Rome paid frontier peoples to stay quiet; ransom ran through medieval warfare; pits and snares are the oldest defences there are.',
 	],
 	[

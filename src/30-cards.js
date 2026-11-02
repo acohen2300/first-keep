@@ -11,7 +11,7 @@ const CARDS = {
 			P = G.P[b.owner],
 			done = b.prog >= 1,
 			kp = b.kind === 'keep',
-			rel = kp && G.ktab === 'rel',
+			rel = kp && (G.ktab === 'rel' || G.ktab === 'mis'),
 			M = maxHpB(b.owner, b.kind),
 			hurt = done && b.hp < M - 1,
 			crew = unitsOf(0, 'vil').filter((u) => u.rep === b && u.job === 'repair'),
@@ -69,7 +69,14 @@ const CARDS = {
 			// things you do here now, double-wide, a list: help with a fire, replant, send a builder, send a worker or one out
 			h += list(
 				[
-					b.fire > 0 ? btn(`douse:${b.id}`, 'Send help', 'two more with buckets', 'warn') : '',
+					done && B.wood
+						? btn(
+								`douse:${b.id}`,
+								'Send help',
+								b.fire > 0 ? 'two more with buckets' : 'no fire',
+								b.fire > 0 ? 'warn' : 'dis',
+							)
+						: '', // always there on what can burn, so a fire moves nothing (hunt B #6)
 					done && B.reserve && b.node && b.node.amt <= 0
 						? btn(
 								`replant:${b.id}`,
@@ -120,9 +127,11 @@ const CARDS = {
 					[
 						['town', 'Town'],
 						['rel', 'Relations'],
-					], // the tabs say their name only (picture Relations Final); the stances are friend, neutral, foe (REL_WORD)
-					rel ? 'rel' : 'town',
-					rel ? relHTML() : page + list(end ? [end] : []),
+						['mis', 'Misfits'],
+					], // the tabs say their name only (pictures Relations Final, Relations Misfits); the stances are friend, neutral, foe (REL_WORD)
+					rel ? G.ktab : 'town',
+					rel ? relHTML(G.ktab === 'mis') : page + list(end ? [end] : []),
+					'c3',
 				);
 			else h += page;
 			if (done) {
@@ -506,6 +515,8 @@ const CARDS = {
 					.map(([n, k]) => `${k} ${some(k, n.toLowerCase())}`)
 					.join(' · ') || 'Nobody yet: train soldiers below.'
 			}</p>`;
+		// the live lines go under every button, so their coming and going moves nothing under the finger (hunt B #6)
+		let live = '';
 		{
 			// who is doing what, soldier by soldier (Build 42)
 			const c = { hold: 0, rally: 0, march: 0, fight: 0, rout: 0 },
@@ -515,16 +526,16 @@ const CARDS = {
 				.filter((k) => c[k])
 				.map((k) => `<b>${c[k]}</b> ${W[k]}`)
 				.join(' · ');
-			if (line) h += `<p>${line}</p>`;
+			if (line) live += `<p>${line}</p>`;
 		}
 		const ords = Object.values(G.ords || {}).filter((O) => O.n),
 			inc = G.incoming;
 		if (inc)
-			h +=
+			live +=
 				sec('Coming at you') +
 				`<p data-act="jump:${Math.round(inc.x)},${Math.round(inc.y)}"><b>${inc.n}</b> ${inc.what} · ${inc.eta} s away</p>`;
 		if (ords.length)
-			h +=
+			live +=
 				sec('Out on orders') +
 				ords
 					.map(
@@ -596,7 +607,8 @@ const CARDS = {
 				'about',
 				'About orders',
 				`<p>Tap open ground, then the sword: All or the idle ones go there, or + aims a mission there. A squad is built on its card (tap it on the War page); War sends squads with a time and odds; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
-			)
+			) +
+			live
 		);
 	},
 	menu(c) {
@@ -647,10 +659,7 @@ const CARDS = {
 	mail() {
 		const M = G.mail || [],
 			g = G.mailG,
-			all = M.filter((m) => !g || m.grp === g),
-			pages = Math.max(1, Math.ceil(all.length / MSG.page)),
-			pg = (G.mailP = clamp(G.mailP || 0, 0, pages - 1)),
-			show = all.slice(pg * MSG.page, pg * MSG.page + MSG.page);
+			all = M.filter((m) => !g || m.grp === g);
 		let h = title('Mail', g ? GROUPS[g] : `${M.length} kept`);
 		h += acts(
 			[
@@ -661,22 +670,27 @@ const CARDS = {
 		); // the six filters, one rank, always the same six in the same places
 		// six places a page, always: a short page keeps its height with empty places, so the card never shrinks and Next stays under the finger;
 		// a group's preview switch sits between Previous and Next (it had a rank of its own: 11 ranks, and the pager fell below the card)
-		const rows = show.length
-			? show.map((m) => `<button class="mr" data-act="${linkOf(m) || 'mailp:0'}" style="--cc:${ccOf(m.cls)}"><b>${m.text}${m.n > 1 ? ` ×${m.n}` : ''}</b><small>${GROUPS[m.grp]} · ${clock(m.t)}${m.why ? ' · ' + m.why : ''}</small></button>`)
-			: [info('Nothing here yet', 'each message is kept here as it comes', 'left line')];
-		while (rows.length < MSG.page) rows.push(empty());
-		return (
-			h +
-			acts(rows.join(''), 'c1') +
-			acts(
-				btn('mailp:-1', 'Previous', `page ${pg + 1} of ${pages}`, pg ? '' : 'dis') +
-					(g && g !== 'reply'
-						? btn(`mailtog:${g}`, hiddenG(g) ? 'Show previews' : 'Hide previews', hiddenG(g) ? 'red still shows' : 'a preview, then here')
-						: empty()) +
-					btn('mailp:1', 'Next', all.length ? `${all.length} ${some(all.length, 'line')}` : '', pg < pages - 1 ? '' : 'dis'),
-				'c3',
-			)
+		const [pg, rows, nav] = pager(
+			all.length
+				? all.map(
+						(m) =>
+							`<button class="mr" data-act="${linkOf(m) || 'mailp:0'}" style="--cc:${ccOf(m.cls)}"><b>${m.text}${m.n > 1 ? ` ×${m.n}` : ''}</b><small>${GROUPS[m.grp]} · ${clock(m.t)}${m.why ? ' · ' + m.why : ''}</small></button>`,
+					)
+				: [info('Nothing here yet', 'each message is kept here as it comes', 'left line')],
+			G.mailP,
+			'mailp',
+			empty(),
+			all.length ? `${all.length} ${some(all.length, 'line')}` : '',
+			g && g !== 'reply'
+				? btn(
+						`mailtog:${g}`,
+						hiddenG(g) ? 'Show previews' : 'Hide previews',
+						hiddenG(g) ? 'red still shows' : 'a preview, then here',
+					)
+				: empty(),
 		);
+		G.mailP = pg;
+		return h + acts(rows, 'c1') + nav;
 	},
 	milestone(c) {
 		const id = c.page,
@@ -715,8 +729,11 @@ const CARDS = {
 		);
 	},
 	guide(c) {
-		const pg = c.page || 'bld';
-		return (
+		const pg = c.page || 'bld',
+			key = `${pg}|${G.P[0].age}|${G.P[0].techs.size}|${G.gq || ''}`; // what the page reads; the Guide pauses the game, so it changes only by a tap
+		if (GUIDE_PG.key === key) return GUIDE_PG.h; // hunt B #8: it was rebuilt seven times a second
+		GUIDE_PG.key = key;
+		return (GUIDE_PG.h =
 			title('Guide', 'what leads to what, and why') +
 			list(
 				[
@@ -732,8 +749,7 @@ const CARDS = {
 			) +
 			(pg === 'hist'
 				? `<p><b>History · beta.</b> ${HIST_NOTE}</p><input id="gq" class="q" type="search" placeholder="Search: a thing, a place, a date" value="${(G.gq || '').replace(/"/g, '')}" oninput="window.__fkq(this.value)"><div class="row"><button class="lnk" data-act="copyhist">Copy the whole timeline</button></div><div id="gres">${histHTML(G.gq)}</div><p>${HIST_ASK}</p>`
-				: guideHTML(pg))
-		);
+				: guideHTML(pg)));
 	},
 	sound() {
 		const row = (k, name, v) => acts(btn(`vol:${k},-`, '−', '') + info(name, `${Math.round(v * 100)}%`) + btn(`vol:${k},+`, '+', ''), 'c3');
@@ -803,6 +819,7 @@ const CARDS = {
 		);
 	},
 };
+const GUIDE_PG = { key: '', h: '' }; // the Guide's page, built once a page (CARDS.guide)
 const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'research', 'menu', 'troops']); // the cards that take the whole height; the Army card with Battalions needs 11 ranks (E8)
 // three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet: lg every rank that fits above the row (the Build
 // card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most

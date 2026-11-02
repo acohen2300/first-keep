@@ -7,7 +7,7 @@ JS = """() => {
   const F = window.__fk, bad = [], T = 1 / 30, W = () => F.G.P.length - 1;
   const T_ = (f) => { try { f(); } catch (e) { bad.push('a check stopped: ' + e.message); } }; // one check's crash does not hide the others
   const run = (secs) => { for (let i = 0; i < secs * 30; i++) F.step(T); };
-  const fresh = () => { F.newGame(7); F.act('close'); F.setPause(false); const G = F.G; G.fogOn = false; G.ev.next = 1e9; G.ev.cur = null;
+  const fresh = (seed = 7) => { F.newGame(seed); F.act('close'); F.setPause(false); const G = F.G; G.fogOn = false; G.ev.next = 1e9; G.ev.cur = null;
     for (const u of G.units) if (u.kind === 'vil') { u.job = null; u.node = null; u.hunt = null; u.post = { x: u.x, y: u.y }; }
     F.step(T); return G; };
   // open ground near home (150 to 400 from your Town Center, far from the Throne): the point farthest from every building and unit, off water
@@ -93,7 +93,7 @@ JS = """() => {
     if (h3.by !== 1) bad.push("C9: a petard's splash on a neighbour records no attacker, so its plunder is never paid"); });
 
   // ── item 5: villagers sent to a tapped point each stand on their own spot; one out of a building steps onto a free spot of its outline ──
-  T_(() => { const G = fresh(), P = open(G); clear(G, P, 120); const k = F.keepOf(0), V = [];
+  for (const seed of [1, 3, 4, 6, 7, 9]) T_(() => { const G = fresh(seed), P = open(G); clear(G, P, 120); const k = F.keepOf(0), V = []; // six seeds: it passed on seed 7 alone by luck
     for (let i = 0; i < 12; i++) V.push(F.addUnit(0, 'vil', k.x + 40 + (i % 4) * 6, k.y + 40 + Math.floor(i / 4) * 6));
     F.order(V, { t: 'ground', e: { x: P.x, y: P.y } }); const d = F.SPACE, Rn = 0.525 * d * Math.sqrt(V.length);
     const key = V.map((u) => u.post && Math.round(u.post.x * 10) + ',' + Math.round(u.post.y * 10));
@@ -103,8 +103,8 @@ JS = """() => {
     if (!(F.ARRIVE + 0.5 < d / 2)) bad.push('item 5: the arrival tolerance ' + F.ARRIVE.toFixed(2) + ' is not under half the spacing ' + (d / 2).toFixed(2));
     run(40); const off = V.filter((u) => Math.hypot(u.x - u.post.x, u.y - u.post.y) > F.ARRIVE + 0.5).length,
       wrong = V.filter((u) => V.some((w) => w !== u && Math.hypot(u.x - w.post.x, u.y - w.post.y) < Math.hypot(u.x - u.post.x, u.y - u.post.y))).length;
-    if (off) bad.push('item 5: ' + off + ' of ' + V.length + ' villagers sent to a point stand off their own spots');
-    if (wrong) bad.push('item 5: ' + wrong + ' of ' + V.length + " villagers stand nearer another's spot than their own"); });
+    if (off) bad.push('item 5 (seed ' + seed + '): ' + off + ' of ' + V.length + ' villagers sent to a point stand off their own spots');
+    if (wrong) bad.push('item 5 (seed ' + seed + '): ' + wrong + ' of ' + V.length + " villagers stand nearer another's spot than their own"); });
   // item 5, what makes a spot free: open squares, the map's edge, the same side of a wall, nobody standing there, nobody's claim
   T_(() => { const G = fresh(), P = open(G); clear(G, P, 160); const k = F.keepOf(0), mk = (n, x = k.x + 40, y = k.y + 40) => { const V = []; for (let i = 0; i < n; i++) V.push(F.addUnit(0, 'vil', x + (i % 5) * 6, y + Math.floor(i / 5) * 6)); return V; };
     // two houses wall to wall: out of the first on the side they share, nobody lands on the second's squares
@@ -142,7 +142,7 @@ JS = """() => {
     // a rich bush beside them, walled in: the best rate on the map, and out of reach
     const B = { id: 9e6, kind: 'bush', type: 'food', x: k.x + 150, y: k.y - 150, amt: 3000, max: 3000 }, bc = { cx: Math.floor(B.x / F.NAVC), cy: Math.floor(B.y / F.NAVC) };
     for (let i = -3; i <= 3; i++) for (let j = -3; j <= 3; j++) if (Math.max(Math.abs(i), Math.abs(j)) === 3) G.blds.push(F.mkBld(W(), 'wall', (bc.cx + i) * F.NAVC + 5, (bc.cy + j) * F.NAVC + 5, 1));
-    G.nodes.push(B); F.navRebuild();
+    G.nodes.push(B); F.navRebuild(); for (const r in G.P[o].res) G.P[o].res[r] = 0; // nothing to build with: the waiters can only be given work
     F.think(G.P[o]);
     const sent = V.filter((v) => v.node || v.hunt).length; if (sent < V.length) bad.push('item 6: ' + (V.length - sent) + ' of ' + V.length + " computer villagers waiting with nothing in reach were given no other work");
     const on = new Map(); for (const v of V) { const t = v.hunt || v.node; if (t) on.set(t, (on.get(t) || 0) + 1); }

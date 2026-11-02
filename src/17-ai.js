@@ -150,11 +150,13 @@ function think(p) {
 	if (per.walls && p.age >= 1 && R.s >= 60) {
 		const plan = p.ai.wallPlan || (p.ai.wallPlan = wallPlan(k));
 		let nb = 0;
-		for (const c of plan) {
-			if (nb >= 3 || p.res.s < 40) break;
-			if (NAV.occ[c.gy * NC + c.gx]) continue;
-			if (build(o, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) nb++;
-		}
+		navOnce(() => {
+			for (const c of plan) {
+				if (nb >= 3 || p.res.s < 40) break;
+				if (NAV.occ[c.gy * NC + c.gx]) continue;
+				if (build(o, c.kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) nb++;
+			}
+		});
 	}
 	if (
 		per.wonder &&
@@ -284,7 +286,7 @@ function think(p) {
 	}
 	const tot = RES.reduce((s, r) => s + mix[r], 0) || 1;
 	for (const r of RES) mix[r] /= tot;
-	const idle = vils.find(freeVil),
+	const idle = vils.find((v) => !v.job && !v.inside), // a villager with no job yet (a waiting one is placed by need below)
 		short = RES.map((r) => [r, mix[r] * vils.length - jobsN(r)]).sort((a, b) => b[1] - a[1]);
 	if (idle) idle.job = short[0][0];
 	else if (short[0][1] >= 1) {
@@ -292,6 +294,7 @@ function think(p) {
 			v = vils.find((x) => x.job === over && x.carry < 3 && !atShop(x)); // never a shop worker (Build 60: a Mint or Foundry was emptied each time gold or iron ran over)
 		if (v) setJob(v, short[0][0]);
 	}
+	// (the computers' own test, kept apart from freeVil on purpose: it also needs no find and no hunt, because it sends the waiter to a find)
 	// a villager waiting with no find in reach (its Zs) is put to the job whose best free find pays most: the forager's rate R at that find,
 	// its walk out counted and the crowd already there (g ÷ (1 + others ÷ room), a hunt too), and only a find it can walk to (Charnov 1976, the
 	// marginal value theorem; the rate of decision 1). Each one sent counts in the crowd at once, so the next waiter sees it. Yours wait for your word (item 6)

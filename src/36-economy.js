@@ -61,7 +61,6 @@ function initEconomy() {
 		harvest: 1,
 		plague: null,
 		seasonN: 0,
-		yearN: 0,
 		mkt: Object.fromEntries(MKTK.map((k) => [k, 1])),
 	}); // prices float from the start
 	ROUTES.forEach((r, ri) =>
@@ -294,7 +293,7 @@ function natureTick() {
 			if (o === 0 && G.tick % 300 === 0) sfx('tribute'); // held routes pay all the time: a chime every ten seconds
 		}
 	}
-	if (G.tick % 300 === 150) {
+	if (every(BEAT.slow)) {
 		priceDrift();
 		ventureTick();
 		vassalTick();
@@ -468,7 +467,7 @@ function healthTick() {
 	for (const u of G.units) if (UNIT[u.kind].heal) H.push(u);
 	for (const p of G.P)
 		if (p.alive && p.id !== WILD) {
-			p.ai.sickT = (p.ai.sickT ?? HEALTH.every) - 5;
+			p.ai.sickT = (p.ai.sickT ?? HEALTH.every) - BEAT.health[0];
 			if (p.ai.sickT <= 0) {
 				p.ai.sickT = HEALTH.every;
 				if (hazard(sickRisk(p.id))) outbreak(p.id, 0, false);
@@ -491,7 +490,7 @@ function healthTick() {
 			}
 		if (!I || !S.length) continue;
 		const N = I + S.length,
-			beta = ((HEALTH.R0 * (plague ? HEALTH.plagueR0 : 1)) / HEALTH.sickFor) * 5 * fxv(p.id, 'spread').m,
+			beta = ((HEALTH.R0 * (plague ? HEALTH.plagueR0 : 1)) / HEALTH.sickFor) * BEAT.health[0] * fxv(p.id, 'spread').m,
 			x = (beta * S.length * I) / N;
 		let n = Math.floor(x);
 		if (rng() < x - n) n++;
@@ -536,9 +535,17 @@ function upkeepTick() {
 		if (p.alive && p.id !== WILD) {
 			const o = p.id;
 			// everyone eats: a share a person, more for soldiers and far more for horses
+			// a villager working a bush, a field, fish or game eats from it, not from the store (Albert, Nov 1)
+			const per = UPKEEP.share * fxv(o, 'eat').m; // cooked food feeds better (hearth)
 			let sh = 0;
-			for (const u of G.units) if (u.owner === o) sh += shareOf(u);
-			const eat = sh * UPKEEP.share * fxv(o, 'eat').m; // cooked food feeds better (hearth)
+			for (const u of G.units)
+				if (u.owner === o) {
+					const n = u.kind === 'vil' && u.job === 'food' && !u.inside ? u.node || u.hunt : null;
+					if (n && (n.amt > 0 || n.hp > 0)) {
+						if (n.amt > 0 && isFinite(n.amt)) n.amt = Math.max(0, n.amt - shareOf(u) * per);
+					} else sh += shareOf(u);
+				}
+			const eat = sh * per;
 			p.eats = eat * 60;
 			starveTick(p);
 			if (p.res.f >= eat) {
@@ -551,7 +558,7 @@ function upkeepTick() {
 				spend(p, 'f', p.res.f, 'upkeep'); // what is left is eaten
 				if (!p.hungry) {
 					p.hungry = true;
-					if (o === 0) news('home', 'No food. Work slows. Put villagers on Food.', 'warn', 8);
+					if (o === 0 && foodInReach(0)) news('home', 'Food stores empty: put villagers on food.', 'warn', 8); // with none in reach the famine toast speaks
 				}
 			}
 		}
@@ -562,7 +569,7 @@ function econTick(dt) {
 		natureTick();
 		upkeepTick();
 	}
-	if (G.tick % 150 === 75) healthTick();
+	if (every(BEAT.health)) healthTick();
 	fireTick(dt);
 }
 
@@ -624,7 +631,7 @@ function shareOf(u) {
 	if (hasTag(u.kind, 'mounted') || hasTag(u.kind, 'elephant')) return UPKEEP.mounted;
 	return U.tick === 'sol' ? UPKEEP.foot : 1;
 }
-const hungerOf = (o) => (G.P[o] && G.P[o].hungry ? UPKEEP.hunger : 1);
+const hungerOf = (o) => (G.P[o] && (G.P[o].famT || 0) >= STARVE.grace ? UPKEEP.hunger : 1); // full strength for the first two days of a famine
 
 // ── prices float with what is sold and bought, and drift back
 // a workshop's choice: what it makes now (the node's type and rate follow)
@@ -667,7 +674,7 @@ function priceDrift() {
 	});
 	for (const k of MKTK) {
 		const aim = k === 'spice' ? (G.plague && G.plague.until > G.t ? 1.4 : 1) * (full ? 1.2 : 1) : 1;
-		G.mkt[k] = relax(G.mkt[k], aim ** -PRICE.eps[k], PRICE.tau, 10); // every 10 s, toward the stock that gives the aimed price
+		G.mkt[k] = relax(G.mkt[k], aim ** -PRICE.eps[k], PRICE.tau, BEAT.slow[0]); // each slow beat, toward the stock that gives the aimed price
 	}
 }
 // ventures: gold put into a merchant voyage; a year later it comes back with 40% more, or not at all
@@ -860,13 +867,13 @@ function vassalTick() {
 		if (L.id === 0 && p.paid > 0) sfx('tribute');
 		p.protect = (p.protect || 0) * VASSAL.decay;
 		const parts = loyaltyParts(p);
-		p.loyal = relax(p.loyal || 0, parts.target, VASSAL.tau, 10); // loyalty settles toward what you have earned, 63% of the way in VASSAL.tau
+		p.loyal = relax(p.loyal || 0, parts.target, VASSAL.tau, BEAT.slow[0]); // loyalty settles toward what you have earned, 63% of the way in VASSAL.tau
 		p.unrest = clamp(
 			(p.unrest || 0) + TAX[p.tax].push * fxv(L.id, 'push').m + (p.forced > G.t ? 1 : 0) - p.loyal / 25,
 			0,
 			100,
 		); // magistrates slow the climb
-		if (p.loyal >= VASSAL.giftAt && G.tick % (30 * VASSAL.gift) === 150) {
+		if (p.loyal >= VASSAL.giftAt && every([VASSAL.gift, BEAT.slow[1]])) {
 			const gift = {};
 			for (const r of ['f', 'w', 's', 'g', 'i']) {
 				const x = Math.floor((p.res[r] * 0.1 * (p.loyal - 50)) / 100);
@@ -890,7 +897,6 @@ function vassalTick() {
 			const V = vassalsOf(L.id).filter((p) => !p.rebel);
 			if (V.length < 2) continue;
 			const risk = V.reduce((s, p) => s + (p.unrest / 100) ** 2, 0) * 0.08 * V.length;
-			L.coalRisk = risk;
 			if (L.id === 0 && risk > 0.1 && G.t - (L.coalT || -99) > 120) {
 				L.coalT = G.t;
 				news('realm', 'Talk of revolt spreads among your vassals.', 'warn', 7);

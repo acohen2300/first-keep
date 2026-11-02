@@ -31,7 +31,6 @@ function makeNow(u, n, dt, room) {
 		n.amt,
 		room,
 	);
-	if (starving(u.owner)) g = 0;
 	const mk = n.farm && makeOf(n.farm),
 		from = mk && mk.from; // a workshop turns what is in store into something else: 2 wool make 1 cloth, 3 wood 1 iron
 	if (from) {
@@ -86,6 +85,9 @@ function spotAt(b, i) {
 		t = ((i % k) * 2 * R) / k - R;
 	return { N, ...[{ x: b.x + t, y: b.y - R }, { x: b.x + R, y: b.y + t }, { x: b.x - t, y: b.y + R }, { x: b.x - R, y: b.y - t }][e] };
 }
+// How many can work a find at once (Albert, Nov 1, 12:57): the working spots on the ring it is worked from (WORK_R), SPACE apart; a tree
+// takes one feller (OSHA 29 CFR 1910.266(d)(6)(ii): fellers at least two tree lengths apart). Fields keep their own one (slotsOf)
+const findCap = (n) => (n.kind === 'tree' ? 1 : Math.max(1, Math.floor((2 * Math.PI * (WORK_R[n.kind] ?? WORK_R.other)) / SPACE)));
 // the walking region a point belongs to: its own square's, else the nearest open square's (a tap on a tree or a wall)
 const regionAt = (p, o) => {
 	const c = gcell(p.x, p.y);
@@ -124,11 +126,21 @@ function takeSpots(list, a, key, cm = BLD[a.kind] ? 0 : regionAt(a, list[0].owne
 		const p = spotAt(a, i);
 		if (!claimed.has(i) && spotFree(p, o, cm, mine)) free.push({ i, x: p.x, y: p.y });
 	}
+	const got = new Map();
+	if (!BLD[a.kind]) {
+		// a group sent to a point (item 5): the first to arrive takes the far side, the last the near side, so nobody has to push through
+		// those already standing (the nearest-first pairing sent the last ones across the crowd, and the push kept them off for good)
+		const cx = list.reduce((s, u) => s + u.x, 0) / list.length - a.x,
+			cy = list.reduce((s, u) => s + u.y, 0) / list.length - a.y,
+			L = [...list].sort((u, v) => hyp(u.x - a.x, u.y - a.y) - hyp(v.x - a.x, v.y - a.y)),
+			S = [...free].sort((p, q) => (p.x - a.x) * cx + (p.y - a.y) * cy - ((q.x - a.x) * cx + (q.y - a.y) * cy));
+		L.forEach((u, i) => S[i] && got.set(u, S[i]));
+		return got;
+	}
 	const pairs = [];
 	for (const u of list) for (const p of free) pairs.push({ u, p, c: hyp(p.x - u.x, p.y - u.y) });
 	pairs.sort((x, y) => x.c - y.c);
-	const got = new Map(),
-		used = new Set();
+	const used = new Set();
 	for (const { u, p } of pairs)
 		if (!got.has(u) && !used.has(p.i)) {
 			got.set(u, p);
@@ -165,8 +177,18 @@ function waitAt(u, dt, SP) {
 		const p = takeSpots([u], b, b.id).get(u);
 		if (!p) return; // every spot is taken: it stands where it is and asks again
 		u.spot = { b: b.id, i: p.i };
-		if (u.owner === 0)
-			news('home', `No ${u.was === 'tree' ? 'trees' : u.was} in sight: one waits at the ${bldName(0, b.kind).toLowerCase()}.`, '', 4, u);
+		if (u.owner === 0) {
+			const full = G.nodes.some((n) => n.kind === u.was && n.amt > 0 && (n.wk || 0) >= findCap(n)); // some stand, every spot on them taken
+			news(
+				'home',
+				full
+					? `Every ${u.was} is full: one waits at the ${bldName(0, b.kind).toLowerCase()}.`
+					: `No ${u.was === 'tree' ? 'trees' : u.was} in sight: one waits at the ${bldName(0, b.kind).toLowerCase()}.`,
+				'',
+				4,
+				u,
+			);
+		}
 	}
 	const p = spotAt(b, u.spot.i);
 	moveTo(u, p.x, p.y, dt, 2, SP, true);
@@ -292,7 +314,9 @@ function vilTick(u, dt, SP) {
 		if (u.carry > 0 || u.hunt || !u.node || u.node.amt > 0) return;
 	}
 	if (u.job === 'repair') {
-		repairTick(u, dt, SP);
+		if (u.hunt)
+			huntTick(u, dt, SP); // bitten at its site: the beast first (hunt A #3)
+		else repairTick(u, dt, SP);
 		return;
 	}
 	if (!u.job) {
@@ -442,6 +466,16 @@ function vilTick(u, dt, SP) {
 		} else if (u.noPathT === G.t) leaveWork(u, n);
 		return;
 	}
+	if (n.kind !== 'farm' && u.at !== n.id && (n.kind === 'tree' || dist(u, n) < (WORK_R[n.kind] ?? WORK_R.other) + 8)) {
+		let held = 0;
+		for (const v of G.units) if (v !== u && v.node === n && v.at === n.id) held++;
+		if (held >= findCap(n)) {
+			n.wk = Math.max(0, (n.wk || 0) - 1);
+			u.node = null;
+			return;
+		} // a full find: a newcomer looks again (the search skips full finds); one that holds a spot keeps it
+		u.at = n.id; // its spot is taken on arrival (a tree's at once: its feller stands short of it, in the clump)
+	}
 	// a worker already at work keeps its place a little further out (4 more), so crowd spacing and walking in no longer fight
 	if (
 		moveTo(
@@ -449,7 +483,7 @@ function vilTick(u, dt, SP) {
 			n.x,
 			n.y,
 			dt,
-			(n.kind === 'fish' ? 13 : n.kind === 'farm' ? 4 : 9) + (G.t - (u.work || -9) < 0.5 ? 4 : 0),
+			(n.kind === 'farm' ? 4 : (WORK_R[n.kind] ?? WORK_R.other)) + (G.t - (u.work || -9) < 0.5 ? 4 : 0),
 			SP,
 		)
 	) {
@@ -468,6 +502,7 @@ function leaveWork(u, n) {
 	B[n.id] = G.t + DANGER_R.secs;
 	if (n.farm) n.wk = Math.max(0, (n.wk || 0) - 1);
 	u.node = null;
+	u.at = null;
 }
 function huntTick(u, dt, SP) {
 	const a = u.hunt;
@@ -636,7 +671,7 @@ function scoutTick(u, dt, SP) {
 }
 function envoyTick(u, dt, SP) {
 	if (u.state === 'envoy') {
-		const k = homeOf(u.target);
+		const k = homeOf(u.target, u);
 		if (!k) {
 			u.state = 'return';
 			return;
