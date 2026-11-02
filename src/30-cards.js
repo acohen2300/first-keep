@@ -26,12 +26,12 @@ const CARDS = {
 		let h = title(
 				bldName(b.owner, b.kind),
 				mine
-					? 'yours'
+					? '' // your own building: no "yours" line (S1, Albert Nov 2); another side's says whose
 					: P.name +
 							' · ' +
 							(P.lord === 0 ? (P.rebel ? 'in revolt' : 'your vassal') : REL_WORD[G.rel[0][b.owner]].toLowerCase()),
 			),
-			end = '', // the last rank: Repair and Take down
+			end = '', // the last rank: Help, Repair, Raze
 			book = X.book || ''; // the book: what its kind explains, then what was researched here, then what it is and why
 		const more = () =>
 			fold(
@@ -47,8 +47,13 @@ const CARDS = {
 		} else if (mine) {
 			const back = refundOf(b),
 				menders = crew.filter((u) => !u.inside).length;
-			// Repair and Take down share the last rank, both always there so nothing jumps (Albert, Build 63): Repair dim while the building is whole
+			// Repair and Raze share the last rank, both always there so nothing jumps (Albert, Build 63): Repair dim while the building is whole
+			// the last rank (S2, Albert Nov 2): Help · Repair · Raze, each one slot wide, on every building card; Send help always there
+			// on what can burn, so a fire moves nothing (hunt B #6)
 			end =
+				(done && B.wood
+					? btn(`douse:${b.id}`, 'Help', b.fire > 0 ? 'two more' : 'no fire', b.fire > 0 ? 'warn' : 'dis') // Help: "Send help" is wider than one slot at 375 pt (the gate)
+					: '') +
 				btn(
 					`repair:${b.id}`,
 					'Repair',
@@ -58,8 +63,8 @@ const CARDS = {
 				(b.prog < 0.15
 					? btn(`takedown:${b.id}`, 'Cancel', 'all back')
 					: G.confirm === b.id
-						? btn(`takedown:${b.id}`, 'Tap again', 'to take down · ' + costText(back), 'warn')
-						: btn(`takedown:${b.id}`, 'Take down', costText(back) + ' back')); // last on the card: it is the one you rarely want
+						? btn(`takedown:${b.id}`, 'Sure?', costText(back), 'warn') // the second tap, as Dismiss asks on the villager card
+						: btn(`takedown:${b.id}`, 'Raze', costText(back))); // last on the card: the one you rarely want; one slot: Raze, its refund under it (Albert, Nov 2: "A")
 		}
 		if (!(mine && kp)) h += infoRank(b, factOf(b, X, crew));
 		if (mine) {
@@ -69,14 +74,6 @@ const CARDS = {
 			// things you do here now, double-wide, a list: help with a fire, replant, send a builder, send a worker or one out
 			h += list(
 				[
-					done && B.wood
-						? btn(
-								`douse:${b.id}`,
-								'Send help',
-								b.fire > 0 ? 'two more with buckets' : 'no fire',
-								b.fire > 0 ? 'warn' : 'dis',
-							)
-						: '', // always there on what can burn, so a fire moves nothing (hunt B #6)
 					done && B.reserve && b.node && b.node.amt <= 0
 						? btn(
 								`replant:${b.id}`,
@@ -199,7 +196,7 @@ const CARDS = {
 					'c1',
 				) + qsHTML(`qatk:${b.id}`, 'Attack with', b);
 		}
-		return h + (kp || !end ? '' : acts(end)) + more();
+		return h + (kp || !end ? '' : acts(end, 'c6')) + more();
 	},
 	find(c) {
 		const f = byId(G.finds, c.id);

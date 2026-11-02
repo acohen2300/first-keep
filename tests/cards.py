@@ -138,6 +138,19 @@ JS = r"""() => {
     G.box = { mode: 'box', x0: 0, y0: 0, x1: 50, y1: 50 }; G.hud.drag = true; ev('pointerdown', 7, 100); ev('pointerdown', 8, 200);
     if (G.box || G.hud.drag) bad.push('E5: a pinch left the box drawn or the crosshair glowing'); ev('pointerup', 8, 200); ev('pointerup', 7, 100); }
   } catch (e) { bad.push('E5: the check could not run: ' + e.message); }
+  // S1, S2 (Albert, Nov 2): your own building's card has no "yours" line; its last rank is Send help (on what can burn), Repair and Raze, one slot each
+  try {
+  { const k0 = F.keepOf(0), sp = F.findSpot(0, 'house', k0.x, k0.y, 60, 300), h = sp && F.build(0, 'house', sp.x, sp.y); if (!h) bad.push('S1: no ground for a house'); else { h.prog = 1; h.hp = F.BLD.house.hp; F.built(h);
+    F.openCard({ type: 'bld', id: h.id }); F.ui(true); const sub = document.querySelector('#card .sub');
+    if (sub && /yours/.test(sub.innerText)) bad.push('S1: your own house says "yours" on a line of its own');
+    const last = [...document.querySelectorAll('#card .fm')].find((r) => r.querySelector('[data-act^="takedown:"]'));
+    if (!last) bad.push('S2: no Raze on the house card');
+    else { const acts = [...last.children].map((c) => (c.dataset.act || '').split(':')[0]);
+      if (acts.join() !== 'douse,repair,takedown') bad.push('S2: the last rank is ' + acts.join(', ') + ', not Help, Repair, Raze');
+      if (!last.classList.contains('c6')) bad.push('S2: the last rank is not one slot each');
+      if (!/Raze/.test(last.innerText)) bad.push('S2: the last button does not say Raze'); }
+    F.closeCard(); } }
+  } catch (e) { bad.push('S2: the check could not run: ' + e.message); }
   // T1 (Albert, Nov 2): on a building card, Train and Research are double-wide, three a rank, a short rank filled with empty places
   try {
   { const h = G.blds.find((x) => x.owner === 0 && x.kind === 'house' && x.prog >= 1) || F.keepOf(0); F.openCard({ type: 'bld', id: h.id }); F.ui(true);

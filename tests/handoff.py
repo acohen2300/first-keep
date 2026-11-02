@@ -57,6 +57,9 @@ PLANTS = [
   ('13-sim-civil.js', 't = ((i % k) * 2 * R) / k - R;', 't = ((i % k) * 2 * R) / k - R + R / k / 2;', 'tests/moves.py', 'waiting spots crowd at the corners', 'ft apart, under'),
   ('12-sim-core.js', 'u.anchor ? dist(u.anchor, n) > REACH :', 'u.anchor ? false :', 'tests/moves.py', 'no cap for a placed villager', 'past the cap'),
   ('13-sim-civil.js', 'lost ? u.anchor || dropFor(u.owner, u.job, u) || u : undefined', 'lost ? dropFor(u.owner, u.job, u) || u : undefined', 'tests/moves.py', 'a placed villager searches from the drop-off', 'search from where it was placed'),
+  # Build 80 preview 19: S1, S2 (--only=S1 / S2)
+  ('30-cards.js', "? '' // your own building: no \"yours\" line", "? 'yours' // your own building: no \"yours\" line", 'tests/cards.py', 'S1: your own building says yours', 'S1:'),
+  ('30-cards.js', "acts(end, 'c6')", "acts(end)", 'tests/cards.py', 'S2: the last rank is not one slot each', 'S2:'),
   # Build 80 preview 18: T1, Train and Research double-wide, a short rank filled (--only=T1)
   ('27-cards-core.js', "empty().repeat((3 - (cells.length % 3)) % 3)", "empty().repeat(0)", 'tests/cards.py', 'T1: a short Train or Research rank is not filled', 'T1:'),
   # Build 80 preview 15: D-091 to D-093 (--only=p15)

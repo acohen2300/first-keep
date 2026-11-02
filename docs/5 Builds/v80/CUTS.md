@@ -291,3 +291,9 @@ Checks on main before publishing:
 - Seen: the Town Center, House, Market and Workshop cards changed (the single research button that filled a whole rank is now two slots with two empty places); the other 19 cards identical. [2026-11-02 11:03]
 - Tests: `tests/cards.py` T1 (every Train or Research rank filled to three); E6 now expects the short reason; two plants (T1 new, E6 repointed), caught. Gate passes. [2026-11-02 11:03]
 - Parked (Albert): the 6 x 7 grid for every menu; measured: 13 of 22 cards are taller than 7 ranks (Help and Guide 13, Setup 12, Market and Army with squads 11, Vassal and Mail 10, Research, Misfits, Milestones and Army 9, Score and Relations 8). [2026-11-02 11:03]
+
+## Build 80 preview 19 (the building card's last rank, S1 and S2) [2026-11-02 11:43]
+- Albert, Nov 2, 11:30 to 11:34 (A, yes yes): no gold outlines round Train and Research (drawn, and turned down); no "yours" line on your own building card (S1); Help, Repair and Raze one slot each on the last rank of every building card (S2); "Take down" is now "Raze", its refund under it, its second tap "Sure?". [2026-11-02 11:43]
+- One word changed by Claude to fit (flagged to Albert): "Send help" is wider than one slot at 375 pt (the gate), so "Help". [2026-11-02 11:43]
+- Results: the Stable 9 ranks to 7, the Barracks 8 to 6, the House 6 to 5. Gate passes; `tests/cards.py` S1 and S2 with two plants, caught. [2026-11-02 11:43]
+- Cut: the "yours" line on your own cards; "Take down", "Tap again" and "back" on the last rank; the full-width Send help rank. [2026-11-02 11:43]

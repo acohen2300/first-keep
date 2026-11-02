@@ -83,7 +83,7 @@ Three moves: **split** (a | b), **merge across**, **merge down**. Never split a 
 | Emergency | DRAFT. What is coming (an info rank) · four orders as two doubles a rank: **Stop** (everyone back to work) · **Town square** (everyone to the Town Center) / **All hands** (villagers and soldiers fight, red ring) · **Shelter** (villagers inside). | `Easy Cards` |
 | Villager | DRAFT. What they are doing + health, age, speed as info cells · Stop · Send home · Dismiss · the job picker (the job ribbon reskinned). | `Easy Cards` |
 | Stores | DRAFT. One rank per resource: name · have · in (green) · out (red) · on it · ›. No header rank. | `States and Text` |
-| A building (House and the rest) | DRAFT. An info rank (room, health, age) · Train and Research double-wide, three a rank, a short rank filled with empty places (T1, below) · Repair · Take down. | `States and Text` | [2026-11-02 11:03]
+| A building (House and the rest) | DRAFT. An info rank (room, health, age) · Train and Research double-wide, three a rank, a short rank filled with empty places (§10) · the last rank: Help · Repair · Raze, one slot each (S2). No "yours" line on your own building (S1). | `States and Text` | [2026-11-02 11:43]
 | Mail | The six groups as one rank of filters · six messages a page, a rank each, a coloured edge · Previous and Next (the 30 kept are five pages; nothing scrolls; N13, Albert Oct 31). | `Easy Cards` |
 | Setup | BUILT v80. Each setting its own rank: its name quiet on the left, its choices one selector right-justified (Difficulty, Length, Scenario, World, Fog Off · On, Tension) · the peoples, one selector · the people's soldier and bonus · Daily, Off · On · the hazards, one bar · Start. The whys in the book. | `Setup Stacked with Names` (mockups/80) |
 | Research (full list) | Not redrawn yet. | |
@@ -98,3 +98,5 @@ Three moves: **split** (a | b), **merge across**, **merge down**. Never split a 
 - A short rank is filled with empty places: the mold's `empty()`, a faint plain outline (never dashed), so the rank keeps its shape and nothing moves when a button comes or goes. [2026-11-02 11:03]
 - Its words fit a double slot: a refused Train button says its reason in a few words (no building, the age, short of room, short of a resource, line full, hungry), never a sentence. [2026-11-02 11:03]
 - One home: `grid3` in `27-cards-core.js`; tested by `tests/cards.py` T1. The Army card's Train fold is not a building card and keeps the list rule. [2026-11-02 11:03]
+- **The last rank of a building card (S2, Albert Nov 2):** Help (on what can burn) · Repair · Raze, one slot each, in that order; the second tap of Raze reads "Sure?", as Dismiss does on the villager card. "Send help" became "Help" to fit one slot at 375 pt. [2026-11-02 11:43]
+- **No "yours" line on your own building (S1):** the subtitle line names the owner only on another side's building. [2026-11-02 11:43]

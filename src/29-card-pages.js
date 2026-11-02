@@ -1,6 +1,6 @@
 // ═════ 29-card-pages.js: what a building adds to its card: market, council, workshop and the rest ═════
 // ───────────────────────── What a building's page says, by kind ─────────────────────────
-// A building's card (MENU-SPEC §8): an info rank (what it holds or does, health, age), its line, its techs, Repair · Take down. What a kind
+// A building's card (MENU-SPEC §8): an info rank (what it holds or does, health, age), its line, its techs, Help · Repair · Raze. What a kind
 // adds is one entry here, never a branch in the page: fact, the first cell of the info rank ([value, label]); book, its explaining text,
 // behind the book icon; page, the slots it adds. Every number on the face is a value in a cell; every sentence goes to the book.
 const BLD_PAGE = {

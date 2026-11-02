@@ -849,8 +849,8 @@ const TRIGGERS = () => [
 		'Overstretched empires fell to joint revolts.',
 	],
 	[
-		'You take down a building',
-		'Half its cost comes back; whatever was waiting in it comes back in full. Cancel in the first 15% of the build returns all of it. The Town Center cannot be taken down.',
+		'You raze a building',
+		'Half its cost comes back; whatever was waiting in it comes back in full. Cancel in the first 15% of the build returns all of it. The Town Center cannot be razed.',
 		'Salvage, never a way to make money.',
 	],
 	[
