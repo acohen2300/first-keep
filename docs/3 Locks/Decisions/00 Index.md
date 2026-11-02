@@ -95,3 +95,6 @@ To add one: take the next number, name the file `D-NNN <what it decides>.md`, co
 - `D-088 Reach the search covers the home band.md`: locked; Build 80 preview 13; D-087 (grip strength 0.72 in famine) is still to be written [2026-11-02 00:05]
 - `D-089 Posted and roaming a farm is a farm.md`: locked [2026-11-02 07:29]
 - `D-090 Four zones close your zone wall band further.md`: locked; supersedes the Nov 1 zones and D-088's REACH [2026-11-02 07:29]
+- `D-091 The nearest villager raises a site then goes back.md`: locked; amends D-089 W4 for placing [2026-11-02 09:06]
+- `D-092 Rest every stopped unit has a place deer graze.md`: locked [2026-11-02 09:06]
+- `D-093 Focus F means where you put them.md`: locked [2026-11-02 09:06]

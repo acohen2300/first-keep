@@ -57,10 +57,17 @@ PLANTS = [
   ('13-sim-civil.js', 't = ((i % k) * 2 * R) / k - R;', 't = ((i % k) * 2 * R) / k - R + R / k / 2;', 'tests/moves.py', 'waiting spots crowd at the corners', 'ft apart, under'),
   ('12-sim-core.js', 'u.anchor ? dist(u.anchor, n) > REACH :', 'u.anchor ? false :', 'tests/moves.py', 'no cap for a placed villager', 'past the cap'),
   ('13-sim-civil.js', 'lost ? u.anchor || dropFor(u.owner, u.job, u) || u : undefined', 'lost ? dropFor(u.owner, u.job, u) || u : undefined', 'tests/moves.py', 'a placed villager searches from the drop-off', 'search from where it was placed'),
+  # Build 80 preview 15: D-091 to D-093 (--only=p15)
+  ('11-orders.js', '\tif (!v && hand(o)) {', '\tif (false) {', 'tests/moves.py', 'p15: a site placed with nobody idle gets no builder', 'got no builder'),
+  ('11-orders.js', "\t\tv.pn = v.node ? v.node.id : null;", "\t\tv.pn = null;", 'tests/moves.py', 'p15: a builder goes back to any find, not the one it left', 'the very find it left'),
+  ('13-sim-civil.js', 'u.spot = p ? { b: b.id, i: p.i } : null;', 'u.spot = null;', 'tests/moves.py', 'p15: a posted waiter has no spot of its own', 'no spot of its own'),
+  ('16-sim-fight.js', '\t\tif (ra) settle(a);\n\t\tif (rb) settle(b);', '', 'tests/moves.py', 'p15: villagers at rest shuffle', 'still shuffle'),
+  ('13-sim-civil.js', 'if (u.focus && !u.plot && !u.hunt', 'if (false && !u.plot && !u.hunt', 'tests/moves.py', 'p15: a focused villager moves on when its bush is spent', 'a focused villager whose bush ran out'),
+  ('11-orders.js', "const V = unitsOf(o, 'vil').filter((u) => !u.inside && !posted(u) && !u.focus),", "const V = unitsOf(o, 'vil').filter((u) => !u.inside && !posted(u)),", 'tests/moves.py', 'p15: + takes a focused villager', 'took a focused villager'),
   # Build 80 preview 14: D-089, posted and roaming (--only=posted)
   ('13-sim-civil.js', 'if (u.plot && !u.node && !u.hunt && u.job) {', 'if (false) {', 'tests/moves.py', 'posted: a farmer back from shelter takes the best rate, not its field', 'left its field'),
   ('11-orders.js', 'else if (n && n.farm) u.plot = n.farm.id;', 'else if (false) u.plot = 0;', 'tests/moves.py', 'posted: an order to a field does not post the villager', 'left its field'),
-  ('11-orders.js', "const V = unitsOf(o, 'vil').filter((u) => !u.inside && !posted(u)),", "const V = unitsOf(o, 'vil').filter((u) => !u.inside),", 'tests/moves.py', 'posted: + and − take a farmer', 'took the farmer'),
+  ('11-orders.js', "const V = unitsOf(o, 'vil').filter((u) => !u.inside && !posted(u) && !u.focus),", "const V = unitsOf(o, 'vil').filter((u) => !u.inside && !u.focus),", 'tests/moves.py', 'posted: + and − take a farmer', 'took the farmer'),
   ('40-emergency.js', 'u.plot = pl; // posted', '// posted', 'tests/moves.py', 'posted: the Town square frees a farmer', 'standing in the Town square'),
   ('12-sim-core.js', '\tif (strict) return null;\n', '', 'tests/moves.py', 'posted: a building order pulls a villager at work', 'who was at work'),
   ('32-frame.js', ' + G.blds.filter(idlePost).length', '', 'tests/moves.py', 'posted: the strip leaves out the empty fields', 'the strip shows z'),

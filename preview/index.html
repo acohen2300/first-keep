@@ -9513,12 +9513,25 @@ function autoBuilder(o, b) {
 		).length >= 2
 	)
 		return;
-	const v = pickVil(o, b, typesOf(b.kind), null, hand(o));
+	let v = pickVil(o, b, typesOf(b.kind), null, hand(o));
+	if (!v && hand(o)) {
+		// nobody idle (Albert, Nov 2, 08:05, D-091): the nearest villager raises it, a posted one too, then goes back to exactly what it was doing
+		v = nearest(
+			unitsOf(o, 'vil').filter((u) => !u.inside && u.job !== 'repair' && !u.focus),
+			b,
+		);
+		if (v) v.back = true;
+	}
 	if (v) sendBuilder(v, b);
 	else if (hand(o)) say(NO_HANDS, 'warn', 3);
 }
+// a builder remembers what it left (its job, its find or building, where it was placed), so backToWork takes it back to that
 function sendBuilder(v, b) {
-	if (v.job !== 'repair') v.pj = v.job;
+	if (v.job !== 'repair') {
+		v.pj = v.job;
+		v.pn = v.node ? v.node.id : null;
+		v.pa = v.anchor;
+	}
 	setJob(v, 'repair');
 	v.rep = b;
 	v.building = true;
@@ -10185,6 +10198,10 @@ function setJob(u, job, n, at) {
 	u.node = n || null;
 	u.at = null; // a spot held at the old find is let go: the new order is cap-checked on arrival (fresh review #1)
 	u.was = n ? n.kind : null; // a fresh order: any find of the job until it has worked one
+	if (n) {
+		u.fn = n.id; // where it was put: Focus holds it there (D-093)
+		u.fpos = { x: n.x, y: n.y };
+	}
 	if (!job || (n && !n.farm)) u.plot = null; // stopped, or sent to the land: no longer posted (D-089)
 	else if (n && n.farm) u.plot = n.farm.id; // given a building: posted to it until you tap it off or it falls
 	u.anchor = at ? { x: at.x, y: at.y } : null; // the spot it was placed: its search starts there and stays within the cap (decision 1)
@@ -10200,7 +10217,7 @@ const atShop = (u) => !!(u.node && u.node.farm && BLD[u.node.farm.kind].makes);
 // job, else the roaming one earning least. Neither ever takes a posted villager: it leaves its building only when you tap it off
 const NO_HANDS = 'No free hands: train more villagers.';
 function moveVil(o, job, down) {
-	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !posted(u)),
+	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !posted(u) && !u.focus),
 		low = (L) => L.reduce((b, u) => (!b || forageNow(u) < forageNow(b) ? u : b), null);
 	if (down) {
 		const L = V.filter((u) => u.job === job),
@@ -11253,7 +11270,7 @@ const nearestNode = (u, job, seek) => (bestNode(u, job, seek) || { n: null }).n;
 // workers on the same resource (types), the one earning least; then the one earning least on any gathering job. A posted villager keeps
 // its building, a builder its site. (Albert, Oct 29: a new field takes the berry picker farthest from home, not a woodcutter)
 function pickVil(o, to, types, site, strict) {
-	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !(site && u.rep === site) && !posted(u)),
+	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !(site && u.rep === site) && !posted(u) && !u.focus),
 		idle = V.filter(freeVil);
 	if (idle.length) return nearest(idle, to);
 	if (strict) return null;
@@ -11649,6 +11666,20 @@ function vilTick(u, dt, SP) {
 		moveTo(u, u.node.x, u.node.y, dt, 4, SP);
 		return;
 	}
+	if (u.focus && !u.plot && !u.hunt && u.job && u.fn != null && (!u.node || u.node.amt <= 0)) {
+		// focused on a find (D-093): back to that very find after shelter or a site; when it runs out, it waits on the spot (Z and F), and the
+		// game never sends it to another
+		const n = G.nodes.find((x) => x.id === u.fn && x.amt > 0);
+		if (n && nodeFits(n, u.job) && (n.wk || 0) - (u.node === n ? 1 : 0) < findCap(n)) {
+			if (u.node !== n) n.wk = (n.wk || 0) + 1;
+			u.node = n;
+		} else {
+			u.node = null;
+			u.idle = true;
+			if (u.fpos) moveTo(u, u.fpos.x, u.fpos.y, dt, WORK_R.other, SP);
+			return;
+		}
+	}
 	if (u.plot && !u.node && !u.hunt && u.job) {
 		// posted (D-089): back from shelter, the Emergency, a fire or a site, it goes back to its own building; with its building not ready or
 		// its place taken, it waits there. Only a fallen building sets it free to roam
@@ -11660,8 +11691,14 @@ function vilTick(u, dt, SP) {
 				b.node.wk = (b.node.wk || 0) + 1;
 				u.was = 'farm';
 			} else {
+				// it waits on a spot of its own round its building (D-092: they made for its middle and shuffled), as waiters do at a drop-off
 				u.idle = true;
-				moveTo(u, b.x, b.y, dt, halfOf(b) + 6, SP);
+				if (!u.spot || u.spot.b !== b.id) {
+					const p = takeSpots([u], b, b.id).get(u);
+					u.spot = p ? { b: b.id, i: p.i } : null;
+				}
+				const q = u.spot ? spotAt(b, u.spot.i) : b;
+				moveTo(u, q.x, q.y, dt, u.spot ? 2 : halfOf(b) + 6, SP, true);
 				return;
 			}
 		}
@@ -11671,6 +11708,10 @@ function vilTick(u, dt, SP) {
 		(!u.node || u.node.amt <= 0 || !nodeFits(u.node, u.job) || (u.node.farm && u.node.wk > slotsOf(u.node)))
 	) {
 		if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+		if (posted(u)) {
+			u.node = null;
+			return;
+		} // posted (D-089): it never looks for another building; next tick it goes back to its own, or waits there
 		if (u.node) u.was = u.node.kind; // what it worked last: the next find must be of the same kind, in sight
 		const lost = u.was && u.was !== 'farm' && !u.patch;
 		if (u.nnT > G.t) {
@@ -11727,7 +11768,7 @@ function vilTick(u, dt, SP) {
 		u.evalV = G.bldV;
 		u.chk = G.t + 8 + rng() * 4;
 		if (!u.node.farm) u.was = u.node.kind;
-		const b = u.node.farm ? null : bestNode(u, u.job); // a plot worker stays put; a wild worker may step to a better find of the same kind in sight
+		const b = u.node.farm || u.focus ? null : bestNode(u, u.job); // a plot worker and a focused one stay put; a wild worker may step to a better find of the same kind in sight
 		if (b && b.n !== u.node && b.R > FORAGE.move * forageNow(u)) {
 			if (u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 			if (b.n.hunt) {
@@ -11828,11 +11869,15 @@ function huntTick(u, dt, SP) {
 // Mending: three times the build time for a full repair, a quarter of the cost, paid as the work goes.
 // every way a repair or a fire ends sends the villager back to what it was doing before, or to nothing (C14: three exits did three things)
 function backToWork(u) {
-	const pj = u.pj;
+	const pj = u.pj,
+		n = u.pn != null ? G.nodes.find((x) => x.id === u.pn && (x.amt > 0 || x.farm)) : null; // the very find or building it left, if it stands
 	u.pj = null;
 	u.rep = null;
 	u.fireman = false;
-	setJob(u, pj && pj !== 'repair' ? pj : null);
+	u.back = false;
+	u.pn = null;
+	setJob(u, pj && pj !== 'repair' ? pj : null, n && pj && nodeFits(n, pj) ? n : undefined, n ? u.pa || undefined : undefined); // a job with no find keeps its post (D-089)
+	u.pa = null;
 }
 function repairTick(u, dt, SP) {
 	let b = u.rep;
@@ -11841,6 +11886,10 @@ function repairTick(u, dt, SP) {
 	if (b && b.hp > 0 && b.owner === o && b.prog >= 1 && u.building) {
 		// the site it was raising is done: the next unfinished piece of wall nearby, else back to what it was doing
 		u.building = false;
+		if (u.back) {
+			backToWork(u);
+			return;
+		} // pulled off its work to raise this one (D-091): straight back to it
 		if (startWork(u, b)) return; // a field, a workshop, a dock or a camp: the builders start working it
 		const open = (s) =>
 			s.owner === o && s.hp > 0 && s.prog < 1 && !G.units.some((v) => v !== u && v.rep === s && v.job === 'repair');
@@ -13121,11 +13170,22 @@ function pushApart(a, b) {
 			ax = a.x - dx * pa,
 			ay = a.y - dy * pa,
 			bx = b.x + dx * pb,
-			by = b.y + dy * pb;
+			by = b.y + dy * pb,
+			ra = atRest(a),
+			rb = atRest(b);
 		if (!blockedCell(gcell(ax, ay), a.owner)) stepTo(a, ax, ay);
 		if (!blockedCell(gcell(bx, by), b.owner)) stepTo(b, bx, by);
+		if (ra) settle(a);
+		if (rb) settle(b);
 	}
 }
+// at rest (D-092): a stopped villager on a point of its own (not a group's spot), or a grazer between bites. Nudged, it stays where it was
+// nudged instead of walking back and being nudged again (the shuffle): a crowd at rest settles, as people standing in a room shift and stay
+const atRest = (u) => (u.kind === 'vil' ? !u.job && u.post && u.post.b == null : !!u.grazeAt && !u.run) && G.t - (u.mvT ?? -9) >= 0.25,
+	settle = (u) => {
+		if (u.kind === 'vil') u.post = { x: u.x, y: u.y };
+		else u.grazeAt = { x: u.x, y: u.y };
+	};
 function collide() {
 	const U = G.units,
 		n = U.length;
@@ -15192,8 +15252,8 @@ function quad(o, fr) {
 	if (o.tail) L_(-L * 0.48, -o.legH - H * 0.6, -L * 0.6, -o.legH - H * 0.1, cd, o.tail);
 	E_(0, -o.legH - H / 2, L / 2, H / 2, LG(0, -o.legH - H, 0, -o.legH, [shade(c, 1.2), c, shade(c, 0.75)]), INK, 0.4);
 	if (o.hump) E_(-L * 0.05, -o.legH - H * 0.9, L * 0.3, H * 0.4, shade(c, 1.05));
-	const hx = L / 2 + o.head * 0.4,
-		hy = -o.legH - H * o.headY;
+	const hx = L / 2 + o.head * (fr === 4 ? 1.2 : 0.4),
+		hy = fr === 4 ? -o.head * 0.9 : -o.legH - H * o.headY; // frame 4: grazing, the muzzle at the grass (D-092)
 	P_(
 		[
 			[L * 0.35, -o.legH - H * 0.9],
@@ -20440,7 +20500,9 @@ function drawUnit(u, s) {
 			? 3
 			: moving
 				? 1 + (((pace | 0) + u.id) % 2)
-				: working
+				: u.grazeAt && !u.run && U.flee
+					? 4 // a grazer at rest: head down at the grass (D-092)
+					: working
 					? U.look === 'vil'
 						? 10 + workOf(u) * 2 + ((((G.t * 2.5) | 0) + u.id) % 2)
 						: 1 + ((((G.t * 6) | 0) + u.id) % 2)
@@ -20575,6 +20637,7 @@ function drawUnit(u, s) {
 		ctx.stroke();
 	} // the conversion, filling
 	if (u.owner === 0 && (u.kind === 'vil' ? freeVil(u) : u.idle)) idleMark(sx, top, z); // a villager by freeVil, the one home; a cart by its own flag
+	if (u.owner === 0 && u.focus) idleMark(sx, top, z, 'F', -6); // focused (D-093): it stays where you put it
 	if (u.sick > G.t) {
 		ctx.fillStyle = u.plague ? '#7a3a8a' : '#7aa04a';
 		ctx.beginPath();
@@ -21093,13 +21156,13 @@ const fontF = () => FONTF || (FONTF = getComputedStyle(document.body).fontFamily
 // the crosshair's reference) takes 1
 const labelK = () => Math.max(LABEL.floor / LABEL.px, cam.z / ZOOM_START);
 const mapFont = (k = 1) => `${FONTW || (FONTW = getComputedStyle(document.body).fontWeight)} ${Math.round(LABEL.px * k)}px ${fontF()}`;
-function idleMark(x, y, z) {
+function idleMark(x, y, z, ch = 'z', dx = 4) {
 	ctx.font = mapFont(labelK());
 	ctx.fillStyle = '#ffd35e';
 	ctx.strokeStyle = 'rgba(0,0,0,.7)';
 	ctx.lineWidth = 2.5;
-	ctx.strokeText('z', x + 4 * z, y);
-	ctx.fillText('z', x + 4 * z, y);
+	ctx.strokeText(ch, x + dx * z, y);
+	ctx.fillText(ch, x + dx * z, y);
 }
 function tag(text, x, y) {
 	const k = labelK();
@@ -24105,12 +24168,12 @@ const CARDS = {
 						info(Math.round(S.spd), 'speed'),
 					'c6',
 				) +
-				acts(
-					btn(`vstop:${u.id}`, 'Stop', '', u.job || u.post ? '' : 'dis') +
-						btn(`vhome:${u.id}`, 'Send home') +
-						btn(`vgo:${u.id}`, sure ? 'Sure?' : 'Dismiss', sure ? 'tap again' : '', sure ? 'warn' : ''),
-					'c3',
-				) +
+				list([
+					btn(`vstop:${u.id}`, 'Stop', '', u.job || u.post ? '' : 'dis'),
+					btn(`vfocus:${u.id}`, 'Focus', u.focus ? 'stays where put' : '', u.focus ? 'on' : ''),
+					btn(`vhome:${u.id}`, 'Send home'),
+					btn(`vgo:${u.id}`, sure ? 'Sure?' : 'Dismiss', sure ? 'tap again' : '', sure ? 'warn' : ''),
+				]) +
 				rowHTML(
 					JOBS.map((j) => [`vjob:${u.id},${j}`, ICON[j], cap1(j), u.job === j ? 'on' : '']).concat([
 						[`pbuild:${u.id}`, ICON.hammer, 'Build', u.job === 'repair' ? 'on' : ''],
@@ -26284,6 +26347,16 @@ const PLAY = {
 		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a));
 		if (u) stopVil(u, null);
 	},
+	vfocus(a) {
+		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a));
+		if (!u) return;
+		u.focus = !u.focus;
+		if (u.focus && u.node) {
+			u.fn = u.node.id;
+			u.fpos = { x: u.node.x, y: u.node.y };
+		}
+		say(u.focus ? 'Focus: it stays where you put it.' : 'Focus off.', '', 3);
+	}, // Focus (D-093): a stance, as Stand Ground is; your next order re-aims it, only this turns it off
 	vhome(a) {
 		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a)),
 			k = keepOf(0);

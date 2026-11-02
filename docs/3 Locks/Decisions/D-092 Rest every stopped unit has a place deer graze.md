@@ -1,0 +1,9 @@
+# D-092 Rest: every stopped unit has a place; deer graze [2026-11-02 09:06]
+
+- Date: 2026-11-02 08:05 to 08:09; yes yes 08:53 [2026-11-02 09:06]
+- Status: locked [2026-11-02 09:06]
+- Albert's words: "Is there a concept of resting? Where a unit, animal, or army person when going to group somewhere as idle can find a spot to stop moving versus trying to shuffle around?" "Also deer should graze." "Yes yes" (08:53). [2026-11-02 09:06]
+- What was there: waiters at a drop-off, a group sent to a point and soldiers at home each had their own places; everything else did not. Measured: seven villagers stopped on one point walked about 1,400 units every 10 s going nowhere (each pushed off, each walking back). Deer already grazed (a new spot near home every 3 to 8 s, at a slow walk) but were drawn head-up, so it did not read as grazing. [2026-11-02 09:06]
+- The rule: a posted villager waiting at its building waits on a spot of its own round it (takeSpots, the drop-off's rule); a unit at rest (a stopped villager on its own point, a grazer between bites) that is nudged stays where it was nudged (settle in 16-sim-fight): measured, the seven walked 0. A grazing deer is drawn with its head down at the grass (frame 4). [2026-11-02 09:06]
+- Real-world check: people standing in a room shift when bumped and stay there; nobody walks back to the exact spot (crowd dynamics, Helbing and Molnár 1995, from memory, not opened). [2026-11-02 09:06]
+- Code home: `13-sim-civil.js` vilTick (the posted waiter's spot); `16-sim-fight.js` pushApart, atRest, settle; `18-figures.js` quad (frame 4); `23-view-things.js` (the frame chosen). Tests: `tests/moves.py` (the waiter's spot and stillness; seven on one point walk under 20 in 10 s); plants p15. The deer's frame has no test: it is a drawing, for Albert to see. [2026-11-02 09:06]

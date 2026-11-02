@@ -175,11 +175,22 @@ function pushApart(a, b) {
 			ax = a.x - dx * pa,
 			ay = a.y - dy * pa,
 			bx = b.x + dx * pb,
-			by = b.y + dy * pb;
+			by = b.y + dy * pb,
+			ra = atRest(a),
+			rb = atRest(b);
 		if (!blockedCell(gcell(ax, ay), a.owner)) stepTo(a, ax, ay);
 		if (!blockedCell(gcell(bx, by), b.owner)) stepTo(b, bx, by);
+		if (ra) settle(a);
+		if (rb) settle(b);
 	}
 }
+// at rest (D-092): a stopped villager on a point of its own (not a group's spot), or a grazer between bites. Nudged, it stays where it was
+// nudged instead of walking back and being nudged again (the shuffle): a crowd at rest settles, as people standing in a room shift and stay
+const atRest = (u) => (u.kind === 'vil' ? !u.job && u.post && u.post.b == null : !!u.grazeAt && !u.run) && G.t - (u.mvT ?? -9) >= 0.25,
+	settle = (u) => {
+		if (u.kind === 'vil') u.post = { x: u.x, y: u.y };
+		else u.grazeAt = { x: u.x, y: u.y };
+	};
 function collide() {
 	const U = G.units,
 		n = U.length;

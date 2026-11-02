@@ -269,12 +269,12 @@ const CARDS = {
 						info(Math.round(S.spd), 'speed'),
 					'c6',
 				) +
-				acts(
-					btn(`vstop:${u.id}`, 'Stop', '', u.job || u.post ? '' : 'dis') +
-						btn(`vhome:${u.id}`, 'Send home') +
-						btn(`vgo:${u.id}`, sure ? 'Sure?' : 'Dismiss', sure ? 'tap again' : '', sure ? 'warn' : ''),
-					'c3',
-				) +
+				list([
+					btn(`vstop:${u.id}`, 'Stop', '', u.job || u.post ? '' : 'dis'),
+					btn(`vfocus:${u.id}`, 'Focus', u.focus ? 'stays where put' : '', u.focus ? 'on' : ''),
+					btn(`vhome:${u.id}`, 'Send home'),
+					btn(`vgo:${u.id}`, sure ? 'Sure?' : 'Dismiss', sure ? 'tap again' : '', sure ? 'warn' : ''),
+				]) +
 				rowHTML(
 					JOBS.map((j) => [`vjob:${u.id},${j}`, ICON[j], cap1(j), u.job === j ? 'on' : '']).concat([
 						[`pbuild:${u.id}`, ICON.hammer, 'Build', u.job === 'repair' ? 'on' : ''],

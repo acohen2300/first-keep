@@ -604,6 +604,16 @@ const PLAY = {
 		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a));
 		if (u) stopVil(u, null);
 	},
+	vfocus(a) {
+		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a));
+		if (!u) return;
+		u.focus = !u.focus;
+		if (u.focus && u.node) {
+			u.fn = u.node.id;
+			u.fpos = { x: u.node.x, y: u.node.y };
+		}
+		say(u.focus ? 'Focus: it stays where you put it.' : 'Focus off.', '', 3);
+	}, // Focus (D-093): a stance, as Stand Ground is; your next order re-aims it, only this turns it off
 	vhome(a) {
 		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a)),
 			k = keepOf(0);

@@ -755,7 +755,7 @@ const nearestNode = (u, job, seek) => (bestNode(u, job, seek) || { n: null }).n;
 // workers on the same resource (types), the one earning least; then the one earning least on any gathering job. A posted villager keeps
 // its building, a builder its site. (Albert, Oct 29: a new field takes the berry picker farthest from home, not a woodcutter)
 function pickVil(o, to, types, site, strict) {
-	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !(site && u.rep === site) && !posted(u)),
+	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !(site && u.rep === site) && !posted(u) && !u.focus),
 		idle = V.filter(freeVil);
 	if (idle.length) return nearest(idle, to);
 	if (strict) return null;

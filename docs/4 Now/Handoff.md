@@ -2,10 +2,10 @@
 
 **Read START-HERE.md first, then this file.** This is the live state. [2026-11-02 07:48]
 
-## Where it stands [2026-11-02 07:48]
-- Preview 14: D-089 (posted and roaming workers, "a farm is a farm") and D-090 (the four zones: close, your zone to 220, the wall band, further). CUTS.md has the section, with the balance run. [2026-11-02 07:48]
-- Albert played preview 13 overnight: the fortress reached Gunpowder first; his fields emptied every night (shelter dropped the farmers) and never refilled. That is what D-089 fixes. [2026-11-02 07:48]
-- Open for Albert (Owed.md): blocked villagers up; the aggressive seat wins everything; no caravans; EXCEPTIONS #16; a house placed with nobody idle gets no builder. [2026-11-02 07:48]
+## Where it stands [2026-11-02 09:16]
+- Preview 15: D-091 (the nearest villager builds, then goes back), D-092 (rest spots; deer graze head-down), D-093 (Focus, the F). On top of preview 14 (D-089 posted workers, D-090 the four zones). [2026-11-02 09:16]
+- The Grower (Albert's new personality) is a test on branch `grower-test`, not in the preview: inconclusive in 30-minute games. [2026-11-02 09:16]
+- Open for Albert (Owed.md): the code size report; the Grower's longer test, then S; blocked villagers; the aggressive seat wins everything; no caravans; EXCEPTIONS #16. [2026-11-02 09:16]
 
 ## Owed next [2026-11-02 07:48]
 - Albert plays preview 14. His sightings first. [2026-11-02 07:48]

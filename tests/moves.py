@@ -198,6 +198,42 @@ JS2 = """() => {
     const z = (document.body.innerText.match(/z (\\d+)/) || [])[1];
     if (z !== '1') bad.push('the strip shows z ' + z + ' with every villager at work and one empty field (want z 1)'); } } }
 
+  // ── D-091: with nobody idle, the nearest villager raises a site you place, then goes back to the very find it left ──
+  { const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) {
+    const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), B = bush(G, k, d, 120, 3000), C = bush(G, k, { cx: -d.cx, cy: -d.cy }, 120, 3000);
+    for (const u of V) F.setJob(u, 'food', C); const w = V[0]; w.x = B.x - d.cx * 8; w.y = B.y - d.cy * 8; F.setJob(w, 'food', B, B); run(3);
+    const s = F.findSpot(0, 'house', w.x, w.y, 20, 90), h = s && F.build(0, 'house', s.x, s.y);
+    if (!h) bad.push('D-091: no ground for the house');
+    else { const nearest = V.filter((u) => !u.inside).sort((a, b) => Math.hypot(a.x - h.x, a.y - h.y) - Math.hypot(b.x - h.x, b.y - h.y))[0];
+      if (nearest.job !== 'repair' || nearest.rep !== h) bad.push('a house placed with nobody idle got no builder (the nearest villager raises it)');
+      else { run(90, () => h.prog >= 1 && nearest.job !== 'repair'); // the moment it is done: is it sent back to its own find (a richer one may draw it later, as any gatherer)
+        const back = nearest === w ? B : C;
+        if (h.prog < 1) bad.push('the house was not raised in 90 s');
+        else if (nearest.node !== back) bad.push('the builder did not go back to the very find it left (' + (nearest.node ? nearest.node.kind + ' ' + nearest.node.id : nearest.job) + ')'); } } } }
+  // ── D-092: rest. A second villager posted to a full field waits on a spot of its own round it, still; two stopped on one point settle ──
+  { const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) { const b = field(G, k, d); if (b) {
+    const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), a = V[0], c = V[1];
+    a.x = b.x; a.y = b.y; c.x = b.x + 20; c.y = b.y; F.setJob(a, 'food', b.node, b.node); F.setJob(c, 'food', b.node, b.node); run(12);
+    const w = a.node === b.node ? c : a, p0 = { x: w.x, y: w.y }; run(5);
+    if (!w.spot || w.spot.b !== b.id) bad.push('a posted villager with its field taken has no spot of its own round it');
+    else if (Math.hypot(w.x - p0.x, w.y - p0.y) > 1) bad.push('a posted villager waiting at its field shuffles (' + Math.hypot(w.x - p0.x, w.y - p0.y).toFixed(1) + ' in 5 s)'); } } }
+  { const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) {
+    const at = { x: k.x + d.cx * 120, y: k.y + d.cy * 120 }; for (let i = 0; i < 4; i++) F.addUnit(0, 'vil', at.x - 10, at.y - 10);
+    const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), walk = () => V.reduce((a, u) => a + u.st.walk, 0);
+    for (const u of V) F.stopVil(u, { x: at.x, y: at.y }); run(20); const w0 = walk(); run(10);   // 7 on one point walked about 1,400 in 10 s, going nowhere
+    if (walk() - w0 > 20) bad.push(V.length + ' villagers stopped on one point still shuffle after 20 s (they walked ' + Math.round(walk() - w0) + ' in 10 s)'); } }
+  // ── D-093: Focus. A focused villager stays on its find: no + or −, no richer find, and when its bush is spent it waits there ──
+  { const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) {
+    const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), u = V[0], B = bush(G, k, d, 140, 6), R = bush(G, k, d, 100, 3000);
+    for (const v of V.slice(1)) { v.hp = 0; G.units.splice(G.units.indexOf(v), 1); }
+    u.x = B.x; u.y = B.y; F.setJob(u, 'food', B, B); F.act('vfocus:' + u.id); run(1);
+    if (!u.focus) bad.push('the Focus button did not focus the villager');
+    F.moveVil(0, 'wood', false); if (u.job !== 'food') bad.push('+ on Wood took a focused villager');
+    F.moveVil(0, 'food', true); if (u.job !== 'food') bad.push('− on Food took a focused villager');
+    if (!run(60, () => B.amt <= 0)) bad.push('the focus test bush was not spent in 60 s'); run(40); // it delivers, then comes back to its spot
+    if (u.node === R) bad.push('a focused villager whose bush ran out took another bush');
+    else if (!u.idle || Math.hypot(u.x - B.x, u.y - B.y) > 20) bad.push('a focused villager whose bush ran out is not waiting at it (' + Math.round(Math.hypot(u.x - B.x, u.y - B.y)) + ' away)'); } }
+
   // ── any real move is a step ──
   { const G = fresh(), k = F.keepOf(0), V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), a = V[0], b = V[1];
     const walk = (u) => u.st.walk;

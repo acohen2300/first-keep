@@ -261,3 +261,15 @@ Checks on main before publishing:
 - Results: food at minute 8 on seed 1, the same plain play: 689 (v70 633, preview 12 430). Balance, 4 seeds x 30 min: Bronze 5.8 min (v70 4.4, preview 13 8.2); Classical 9.6 (8.2, 12.9); Medieval 19.6, 14 of 16 sides (20.0, 6 of 16; 21.4, 8 of 16); Gunpowder 24.1, 8 of 16; no side fell; idle with no work 1.0. Worse: blocked villager-seconds 169.5 (preview 13 50.5, v70 75.5); the aggressive seat won 4 of 4 and every wealth, war and overall crown. [2026-11-02 07:48]
 
 - **Play fingerprint accepted:** Build 80 preview 14: D-090 the four zones (home finds 150 to 210, the same walk in every corner; zone 1 on; forest and wild from 300) and D-089 posted workers: the map and the first minutes move [2026-11-02 08:40]
+
+
+## Build 80 preview 15 (the nearest builder, rest, Focus) [2026-11-02 09:16]
+- Albert, Nov 2, 08:05 to 08:53 (yes yes 08:53): D-091 with nobody idle the nearest villager raises a site you place, then goes back to exactly what it was doing; D-092 rest: a posted villager waits on a spot of its own round its building, a unit at rest that is nudged stays where it was nudged, a grazing deer is drawn head-down; D-093 Focus on the villager card, F over its head, it stays where you put it. [2026-11-02 09:16]
+- Measured before the fix: seven villagers stopped on one point walked about 1,400 units every 10 s going nowhere (the shuffle); after, 0. [2026-11-02 09:16]
+- Changed: `autoBuilder`, `sendBuilder` (remembers the job, the find or building and the anchor), `backToWork` (restores them), `repairTick` (u.back: straight home); a posted villager never searches for another building; `pushApart` settles a unit at rest (`atRest`, `settle`); the four-legged figure's frame 4; the villager card's actions as two and two (Stop, Focus, Send home, Dismiss); `vfocus`; `idleMark` draws the Z and the F. [2026-11-02 09:16]
+- Cut: nothing. [2026-11-02 09:16]
+- Tests: `tests/moves.py`: the nearest builder goes back to its own bush; the posted waiter's own spot, still; seven on one point at rest; Focus (the button, + and −, the spent bush). Six plants (p15), each caught. The deer's head-down frame has no test (a drawing). [2026-11-02 09:16]
+- Fingerprint: moved by D-091 alone (traced by taking each change out): the scripted house is now built. [2026-11-02 09:16]
+- The Grower test (branch `grower-test`, not in this preview): 4 seeds x 30 min against preview 14, the same seats: seeds 1 and 2 identical, 3 and 4 +1,254 and −822 in score; in 30 minutes neither marches nor reaches its army limit, so the two brains barely differ. Needs longer games. [2026-11-02 09:16]
+
+- **Play fingerprint accepted:** Build 80 preview 15: D-091 the nearest villager raises a site when nobody is idle: the scripted house is now built (in preview 14 it never got a builder), so the town grows to 7 at minute 3 and food dips while it builds; traced by taking the change out alone (the rest moves minute 5 a little: rest spots) [2026-11-02 09:16]

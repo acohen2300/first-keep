@@ -369,6 +369,20 @@ function vilTick(u, dt, SP) {
 		moveTo(u, u.node.x, u.node.y, dt, 4, SP);
 		return;
 	}
+	if (u.focus && !u.plot && !u.hunt && u.job && u.fn != null && (!u.node || u.node.amt <= 0)) {
+		// focused on a find (D-093): back to that very find after shelter or a site; when it runs out, it waits on the spot (Z and F), and the
+		// game never sends it to another
+		const n = G.nodes.find((x) => x.id === u.fn && x.amt > 0);
+		if (n && nodeFits(n, u.job) && (n.wk || 0) - (u.node === n ? 1 : 0) < findCap(n)) {
+			if (u.node !== n) n.wk = (n.wk || 0) + 1;
+			u.node = n;
+		} else {
+			u.node = null;
+			u.idle = true;
+			if (u.fpos) moveTo(u, u.fpos.x, u.fpos.y, dt, WORK_R.other, SP);
+			return;
+		}
+	}
 	if (u.plot && !u.node && !u.hunt && u.job) {
 		// posted (D-089): back from shelter, the Emergency, a fire or a site, it goes back to its own building; with its building not ready or
 		// its place taken, it waits there. Only a fallen building sets it free to roam
@@ -380,8 +394,14 @@ function vilTick(u, dt, SP) {
 				b.node.wk = (b.node.wk || 0) + 1;
 				u.was = 'farm';
 			} else {
+				// it waits on a spot of its own round its building (D-092: they made for its middle and shuffled), as waiters do at a drop-off
 				u.idle = true;
-				moveTo(u, b.x, b.y, dt, halfOf(b) + 6, SP);
+				if (!u.spot || u.spot.b !== b.id) {
+					const p = takeSpots([u], b, b.id).get(u);
+					u.spot = p ? { b: b.id, i: p.i } : null;
+				}
+				const q = u.spot ? spotAt(b, u.spot.i) : b;
+				moveTo(u, q.x, q.y, dt, u.spot ? 2 : halfOf(b) + 6, SP, true);
 				return;
 			}
 		}
@@ -391,6 +411,10 @@ function vilTick(u, dt, SP) {
 		(!u.node || u.node.amt <= 0 || !nodeFits(u.node, u.job) || (u.node.farm && u.node.wk > slotsOf(u.node)))
 	) {
 		if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+		if (posted(u)) {
+			u.node = null;
+			return;
+		} // posted (D-089): it never looks for another building; next tick it goes back to its own, or waits there
 		if (u.node) u.was = u.node.kind; // what it worked last: the next find must be of the same kind, in sight
 		const lost = u.was && u.was !== 'farm' && !u.patch;
 		if (u.nnT > G.t) {
@@ -447,7 +471,7 @@ function vilTick(u, dt, SP) {
 		u.evalV = G.bldV;
 		u.chk = G.t + 8 + rng() * 4;
 		if (!u.node.farm) u.was = u.node.kind;
-		const b = u.node.farm ? null : bestNode(u, u.job); // a plot worker stays put; a wild worker may step to a better find of the same kind in sight
+		const b = u.node.farm || u.focus ? null : bestNode(u, u.job); // a plot worker and a focused one stay put; a wild worker may step to a better find of the same kind in sight
 		if (b && b.n !== u.node && b.R > FORAGE.move * forageNow(u)) {
 			if (u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
 			if (b.n.hunt) {
@@ -548,11 +572,15 @@ function huntTick(u, dt, SP) {
 // Mending: three times the build time for a full repair, a quarter of the cost, paid as the work goes.
 // every way a repair or a fire ends sends the villager back to what it was doing before, or to nothing (C14: three exits did three things)
 function backToWork(u) {
-	const pj = u.pj;
+	const pj = u.pj,
+		n = u.pn != null ? G.nodes.find((x) => x.id === u.pn && (x.amt > 0 || x.farm)) : null; // the very find or building it left, if it stands
 	u.pj = null;
 	u.rep = null;
 	u.fireman = false;
-	setJob(u, pj && pj !== 'repair' ? pj : null);
+	u.back = false;
+	u.pn = null;
+	setJob(u, pj && pj !== 'repair' ? pj : null, n && pj && nodeFits(n, pj) ? n : undefined, n ? u.pa || undefined : undefined); // a job with no find keeps its post (D-089)
+	u.pa = null;
 }
 function repairTick(u, dt, SP) {
 	let b = u.rep;
@@ -561,6 +589,10 @@ function repairTick(u, dt, SP) {
 	if (b && b.hp > 0 && b.owner === o && b.prog >= 1 && u.building) {
 		// the site it was raising is done: the next unfinished piece of wall nearby, else back to what it was doing
 		u.building = false;
+		if (u.back) {
+			backToWork(u);
+			return;
+		} // pulled off its work to raise this one (D-091): straight back to it
 		if (startWork(u, b)) return; // a field, a workshop, a dock or a camp: the builders start working it
 		const open = (s) =>
 			s.owner === o && s.hp > 0 && s.prog < 1 && !G.units.some((v) => v !== u && v.rep === s && v.job === 'repair');

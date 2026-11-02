@@ -202,12 +202,25 @@ function autoBuilder(o, b) {
 		).length >= 2
 	)
 		return;
-	const v = pickVil(o, b, typesOf(b.kind), null, hand(o));
+	let v = pickVil(o, b, typesOf(b.kind), null, hand(o));
+	if (!v && hand(o)) {
+		// nobody idle (Albert, Nov 2, 08:05, D-091): the nearest villager raises it, a posted one too, then goes back to exactly what it was doing
+		v = nearest(
+			unitsOf(o, 'vil').filter((u) => !u.inside && u.job !== 'repair' && !u.focus),
+			b,
+		);
+		if (v) v.back = true;
+	}
 	if (v) sendBuilder(v, b);
 	else if (hand(o)) say(NO_HANDS, 'warn', 3);
 }
+// a builder remembers what it left (its job, its find or building, where it was placed), so backToWork takes it back to that
 function sendBuilder(v, b) {
-	if (v.job !== 'repair') v.pj = v.job;
+	if (v.job !== 'repair') {
+		v.pj = v.job;
+		v.pn = v.node ? v.node.id : null;
+		v.pa = v.anchor;
+	}
 	setJob(v, 'repair');
 	v.rep = b;
 	v.building = true;
@@ -874,6 +887,10 @@ function setJob(u, job, n, at) {
 	u.node = n || null;
 	u.at = null; // a spot held at the old find is let go: the new order is cap-checked on arrival (fresh review #1)
 	u.was = n ? n.kind : null; // a fresh order: any find of the job until it has worked one
+	if (n) {
+		u.fn = n.id; // where it was put: Focus holds it there (D-093)
+		u.fpos = { x: n.x, y: n.y };
+	}
 	if (!job || (n && !n.farm)) u.plot = null; // stopped, or sent to the land: no longer posted (D-089)
 	else if (n && n.farm) u.plot = n.farm.id; // given a building: posted to it until you tap it off or it falls
 	u.anchor = at ? { x: at.x, y: at.y } : null; // the spot it was placed: its search starts there and stays within the cap (decision 1)
@@ -889,7 +906,7 @@ const atShop = (u) => !!(u.node && u.node.farm && BLD[u.node.farm.kind].makes);
 // job, else the roaming one earning least. Neither ever takes a posted villager: it leaves its building only when you tap it off
 const NO_HANDS = 'No free hands: train more villagers.';
 function moveVil(o, job, down) {
-	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !posted(u)),
+	const V = unitsOf(o, 'vil').filter((u) => !u.inside && !posted(u) && !u.focus),
 		low = (L) => L.reduce((b, u) => (!b || forageNow(u) < forageNow(b) ? u : b), null);
 	if (down) {
 		const L = V.filter((u) => u.job === job),

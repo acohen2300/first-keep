@@ -1104,8 +1104,8 @@ function quad(o, fr) {
 	if (o.tail) L_(-L * 0.48, -o.legH - H * 0.6, -L * 0.6, -o.legH - H * 0.1, cd, o.tail);
 	E_(0, -o.legH - H / 2, L / 2, H / 2, LG(0, -o.legH - H, 0, -o.legH, [shade(c, 1.2), c, shade(c, 0.75)]), INK, 0.4);
 	if (o.hump) E_(-L * 0.05, -o.legH - H * 0.9, L * 0.3, H * 0.4, shade(c, 1.05));
-	const hx = L / 2 + o.head * 0.4,
-		hy = -o.legH - H * o.headY;
+	const hx = L / 2 + o.head * (fr === 4 ? 1.2 : 0.4),
+		hy = fr === 4 ? -o.head * 0.9 : -o.legH - H * o.headY; // frame 4: grazing, the muzzle at the grass (D-092)
 	P_(
 		[
 			[L * 0.35, -o.legH - H * 0.9],

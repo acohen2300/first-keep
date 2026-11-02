@@ -758,7 +758,9 @@ function drawUnit(u, s) {
 			? 3
 			: moving
 				? 1 + (((pace | 0) + u.id) % 2)
-				: working
+				: u.grazeAt && !u.run && U.flee
+					? 4 // a grazer at rest: head down at the grass (D-092)
+					: working
 					? U.look === 'vil'
 						? 10 + workOf(u) * 2 + ((((G.t * 2.5) | 0) + u.id) % 2)
 						: 1 + ((((G.t * 6) | 0) + u.id) % 2)
@@ -893,6 +895,7 @@ function drawUnit(u, s) {
 		ctx.stroke();
 	} // the conversion, filling
 	if (u.owner === 0 && (u.kind === 'vil' ? freeVil(u) : u.idle)) idleMark(sx, top, z); // a villager by freeVil, the one home; a cart by its own flag
+	if (u.owner === 0 && u.focus) idleMark(sx, top, z, 'F', -6); // focused (D-093): it stays where you put it
 	if (u.sick > G.t) {
 		ctx.fillStyle = u.plague ? '#7a3a8a' : '#7aa04a';
 		ctx.beginPath();

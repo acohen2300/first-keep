@@ -136,13 +136,13 @@ const fontF = () => FONTF || (FONTF = getComputedStyle(document.body).fontFamily
 // the crosshair's reference) takes 1
 const labelK = () => Math.max(LABEL.floor / LABEL.px, cam.z / ZOOM_START);
 const mapFont = (k = 1) => `${FONTW || (FONTW = getComputedStyle(document.body).fontWeight)} ${Math.round(LABEL.px * k)}px ${fontF()}`;
-function idleMark(x, y, z) {
+function idleMark(x, y, z, ch = 'z', dx = 4) {
 	ctx.font = mapFont(labelK());
 	ctx.fillStyle = '#ffd35e';
 	ctx.strokeStyle = 'rgba(0,0,0,.7)';
 	ctx.lineWidth = 2.5;
-	ctx.strokeText('z', x + 4 * z, y);
-	ctx.fillText('z', x + 4 * z, y);
+	ctx.strokeText(ch, x + dx * z, y);
+	ctx.fillText(ch, x + dx * z, y);
 }
 function tag(text, x, y) {
 	const k = labelK();
