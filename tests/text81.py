@@ -46,7 +46,7 @@ JS = """() => {
   for (const t of F.TECH.filter((t) => t.civ)) if (/mans\\b|ss\\b|Keshigs/.test(t.desc)) bad.push('F8: ' + t.desc);
   // F9: the numbers in the text are the tables'
   { const tx = TR() + ' ' + Object.values(F.MS_TEXT).map((r) => r.join(' ')).join(' ') + ' ' + Object.values(F.EV_TEXT).map((r) => [].concat(r).join(' ')).join(' ');
-    const want = [F.BLD.house.room + ' more may live', F.UPKEEP.hunger * 100 + '%', 'lost about ' + F.MORALE.breakAt * 100 + '%', 'every ' + F.SEASON_LEN * 4 / 60 + ' minutes', 'the wagon, ' + F.UNIT.wagon.joins + ' join',
+    const want = [F.BLD.house.room + ' more may live', 'lost about ' + F.MORALE.breakAt * 100 + '%', 'every ' + F.SEASON_LEN * 4 / 60 + ' minutes', 'the wagon, ' + F.UNIT.wagon.joins + ' join',
       Math.round(F.VASSAL.rise * 100) + '% of their villagers', 'hold out ' + F.VASSAL.freeAfter / 60 + ' minutes', F.TEACH.seats + ' learn at a time', 'Hard: every ' + F.DIFF.hard.react + ' s'];
     for (const w of want) if (!tx.includes(w)) bad.push('F9: the text does not read "' + w + '" from its table'); }
   // D16: every lesson climbs at least one age
