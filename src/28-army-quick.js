@@ -106,37 +106,36 @@ function guardRow(t, id) {
 		) + btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis'),
 	);
 }
-// ── The quick action (MENU-SPEC §7, Albert Nov 2): for emergencies, small. Tap open ground: a bullseye under the finger, its rings blue. Tap it: All
-// in its place, Idle beside it toward the middle of the screen. Tap All: every soldier goes. Three taps, the finger never moves. An enemy or
-// a hazard: a red ring under it (drawPicks) and it opens straight at All, ringed red. A tap anywhere else closes it; press and hold the
-// ground for the Here card (26-input). G.qa holds what was tapped (h, as hitAt gives it) for the verbs (33-verbs).
+// ── The quick action (MENU-SPEC §7, Albert Nov 2, 14:54): for emergencies, small. Tap open ground: the sword under the finger, ✕ beside it
+// toward the middle. Tap the sword: All in its place, ☰ beside it (the Here card for the spot). Tap All: every soldier goes there. Three taps,
+// the finger never moves. An enemy or a hazard: a red ring under it (drawPicks) and it opens straight at All, ringed red. ✕, or a tap
+// anywhere else, closes it (that tap does nothing more). G.qa holds what was tapped (h, as hitAt gives it) for the verbs (33-verbs).
 const QA = [
-	[['qsword', 'target', 'Send soldiers here']],
 	[
-		['qall', 'squad', 'Send every soldier'],
-		['qidle', 'idle', 'Send the idle ones'],
+		['qsword', 'sword', 'Send soldiers here'],
+		['qclose', 'close', 'Close'],
+	],
+	[
+		['qall', null, 'Send every soldier'], // the word, not an icon: All (Albert, Nov 2)
+		['qhere', 'list', 'About this place'],
 	],
 ];
 // an enemy the finger can send soldiers at: a beast that is not game (game is hunted from the bar) always; anyone else, the Natives and
 // their Throne too, while you are at war
 const foeOf = (e) =>
 	e.owner !== 0 && e.hp > 0 && (e.owner === WILD && !e.q && !e.native ? !UNIT[e.kind].meat : atWar(0, e.owner));
-// the idle ones: the idle soldiers (S), and on open ground the idle villagers too (V; never sent at an enemy or a hazard)
-const qaIdle = () => ({ S: free(), V: G.qa.red ? [] : unitsOf(0, 'vil').filter(freeVil) });
 function showQuick(sx, sy, h, step) {
 	closeCard();
 	$('qa').hidden = false;
-	G.qa = { h, red: step === 2, sx, sy, left: sx > $('stage').getBoundingClientRect().width / 2 }; // Idle opens toward the middle
+	G.qa = { h, red: step === 2, sx, sy, left: sx > $('stage').getBoundingClientRect().width / 2 }; // the second chip opens toward the middle
 	quickStep(step);
 }
 // a step's chips: the first centred under the finger, the second beside it toward the middle; kept inside the map between the bars
 function quickStep(step) {
-	const I = qaIdle(),
-		el = $('qa'),
-		on = [sendable().length > 0 || step === 1, I.S.length + I.V.length > 0],
-		ring = G.qa.red ? 'warn' : 'go';
+	const el = $('qa'),
+		first = step === 1 || sendable().length ? (G.qa.red ? 'warn' : 'go') : 'dis'; // the first chip rings; the second is plain
 	el.classList.toggle('left', G.qa.left);
-	patchHTML(el, QA[step - 1].map(([act, icon, label], i) => sym(act, ICON[icon], on[i] ? ring : 'dis', label)).join(''));
+	patchHTML(el, QA[step - 1].map(([act, icon, label], i) => sym(act, icon ? ICON[icon] : `<b>${ROW_WORD.all}</b>`, i ? '' : first, label)).join(''));
 	const r = $('stage').getBoundingClientRect(),
 		css = getComputedStyle(el),
 		gap = parseFloat(css.getPropertyValue('--gap')),

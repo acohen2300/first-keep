@@ -535,15 +535,13 @@ const PLAY = {
 		else say(freeWhy(), '', TOAST.mid);
 		hideQuick();
 	},
-	qidle() {
-		const { S, V } = qaIdle(),
-			h = G.qa.h;
-		if (S.length) order(S, h);
-		postTo(V, h.e);
-		if (V.length) say(`${V.length} idle villagers come here.`, '', TOAST.short);
-		else if (!S.length) say(freeWhy(), '', TOAST.mid);
+	qhere() {
+		const { x, y } = G.qa.h.e;
+		openCard({ type: 'ground', x, y });
+	}, // ☰: the Here card for that spot
+	qclose() {
 		hideQuick();
-	}, // the idle soldiers, and on open ground the idle villagers (the Town Center's Idle to me, cut in Build 70, lives on here)
+	},
 	qsfrom(a) {
 		G.qs.from = a === 'all' ? 'all' : Number(a);
 	},

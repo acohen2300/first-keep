@@ -65,12 +65,12 @@ Three moves: **split** (a | b), **merge across**, **merge down**. Never split a 
 - **Tints:** Jobs as now; War and Train in Steel (`COLORS.md`). No panel behind the row on any page (Nov 2): the map shows between the slots. **The cycle button** is the same on every page: a chevron › over three page dots, the one you are on filled (↻ reads as reload). Cards are glass: Brown 1 at 92%, the map's shapes through it; no blur (it costs every frame). [2026-11-02 13:28]
 - **Cut:** the door, the Realm page, the Build page (two versions: Build 64's shuffling "what the town needs" page and the fixed two-rank draft, `Build Page (cut)`), the Squad page (its work moves into the squad card).
 
-## 7. The quick action (AGREED Oct 31; redrawn Albert, Nov 2) [2026-11-02 13:28]
-- For emergencies, small: round chips one slot across (44), the first centred under the finger: a bullseye, its rings blue, red on an enemy (Nov 2). [2026-11-02 13:28]
-- **Tap open ground:** a bullseye. **Tap it:** All in its place, Idle beside it toward the middle of the screen. **Tap All:** every soldier goes. Three taps, the finger never moves. [2026-11-02 13:28]
-- **Tap an enemy or a hazard:** a red circle under it, and it opens straight at All, ringed red. [2026-11-02 13:28]
-- A tap anywhere else closes it. **Press and hold the ground:** the Here card for that spot. With yours picked, a tap is their obvious order, no menu (Build 40). [2026-11-02 13:28]
-- Cut (Nov 2): the 2 × 2 block, the hammer (Build is bottom left), the menu (press and hold), ✕ (a tap elsewhere), + (missions live on the War page). [2026-11-02 13:28]
+## 7. The quick action (AGREED Oct 31; redrawn Albert, Nov 2, 14:54) [2026-11-02 15:06]
+- For emergencies, small: round chips one slot across (44), the first centred under the finger, the second beside it toward the middle of the screen. [2026-11-02 15:06]
+- **Tap open ground:** the sword (blue ring) and ✕. **Tap the sword:** All, the word, in its place, and ☰ beside it (the Here card for the spot). **Tap All:** every soldier goes there. Three taps, the finger never moves. [2026-11-02 15:06]
+- **Tap an enemy or a hazard:** a red circle under it, and it opens straight at All, ringed red. [2026-11-02 15:06]
+- ✕, or a tap anywhere else, closes it; that tap does nothing more (it used to open a new one at once, so it would not go away). **Press and hold the ground:** the Here card. With yours picked, a tap is their obvious order, no menu (Build 40). [2026-11-02 15:06]
+- Cut (Nov 2): the 2 × 2 block, the hammer, +, Idle, the bullseye. [2026-11-02 15:06]
 
 ## 8. Cards (pictures in `mockups/70/`)
 | Card | Layout | Picture |

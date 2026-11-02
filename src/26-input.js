@@ -341,6 +341,7 @@ const cardFor = (h) =>
 // The order goes at once (Build 40 reviews: a waiting order reads as lag); a second tap on the same thing within a blink opens its card, the order already given.
 let lastTap = { key: '', t: 0 };
 function tapAt(sx, sy) {
+	const qa = !!G.qa; // a tap while the quick action is open only closes it (Albert, Nov 2: it would not go away)
 	hideQuick();
 	if (G.over) return;
 	if (RADAR && hyp(sx - RADAR.sx, sy - RADAR.sy) < 26) {
@@ -376,7 +377,7 @@ function tapAt(sx, sy) {
 			ACT.ordpick(String(O.id));
 			return;
 		} // the ring of a group on the march: tap it to pick the group
-		showQuick(sx, sy, h, hazardAt(h.e.x, h.e.y) ? 2 : 1);
+		if (!qa) showQuick(sx, sy, h, hazardAt(h.e.x, h.e.y) ? 2 : 1);
 		return;
 	} // nothing picked: the quick action; on a hazard, straight at its second step
 	if ((h.t === 'unit' || h.t === 'bld') && foeOf(h.e)) {

@@ -83,13 +83,15 @@ DOUBLES = """async (extra) => { await document.fonts.ready; const F = window.__f
 QUICK = """() => { const F = window.__fk, out = [], el = document.getElementById('qa'), W = innerWidth;
   F.act('close'); const row = document.getElementById('orders').getBoundingClientRect().top, mid = (r) => [r.left + r.width / 2, r.top + r.height / 2];
   const open = (x, y) => { F.showQuick(x, y, F.hitAt(x, y), 1); return el.querySelector('[data-act=qsword]').getBoundingClientRect(); };
-  for (const [x, y] of [[W / 2, 300], [W - 40, 300], [80, 400]]) {   // the quick action (Albert, Nov 2): round chips 44 across, the sword centred under the finger, All where it was, Idle toward the middle
+  for (const [x, y] of [[W / 2, 300], [W - 40, 300], [80, 400]]) {   // the quick action (Albert, Nov 2): round chips 44 across, the sword centred under the finger with ✕ toward the middle; All where it was with ☰
     const first = open(x, y), [cx, cy] = mid(first);
-    if (el.children.length !== 1 || Math.abs(first.width - 44) > 0.6 || Math.abs(first.height - 44) > 0.6) out.push(`quick: ${el.children.length} chips of ${first.width.toFixed(1)}x${first.height.toFixed(1)}, not one sword of 44`);
+    const x1 = el.querySelector('[data-act=qclose]').getBoundingClientRect();
+    if (el.children.length !== 2 || Math.abs(first.width - 44) > 0.6 || Math.abs(first.height - 44) > 0.6) out.push(`quick: ${el.children.length} chips of ${first.width.toFixed(1)}x${first.height.toFixed(1)}, not a sword of 44 and ✕`);
+    if ((x > W / 2) !== (x1.left < first.left)) out.push('quick: ✕ does not open toward the middle of the screen');
     if (Math.abs(cx - x) > 1 || Math.abs(cy - y) > 1) out.push(`quick: the sword is not centred under a tap at ${Math.round(x)},${Math.round(y)}`);
-    el.querySelector('[data-act=qsword]').click(); const all = el.querySelector('[data-act=qall]').getBoundingClientRect(), idle = el.querySelector('[data-act=qidle]').getBoundingClientRect();
+    el.querySelector('[data-act=qsword]').click(); const all = el.querySelector('[data-act=qall]').getBoundingClientRect(), menu = el.querySelector('[data-act=qhere]').getBoundingClientRect();
     if (Math.abs(all.left - first.left) > 0.5 || Math.abs(all.top - first.top) > 0.5) out.push('quick: All is not where the sword was');
-    if ((x > W / 2) !== (idle.left < all.left)) out.push('quick: Idle does not open toward the middle of the screen'); }
+    if ((x > W / 2) !== (menu.left < all.left)) out.push('quick: ☰ does not open toward the middle of the screen'); }
   open(W / 2, 300); return out; }"""
 def fixed_titles():
     import re, glob
@@ -120,15 +122,16 @@ PLAY = """async () => {
   F.act('qcancel:' + F.keepOf(0).id + ',' + q0); if (F.keepOf(0).q.length !== q0) out.push('a slot tap did not cancel the villager');
   tap('[data-act="move:wood"]'); if (!F.G.units.some(u => u.owner === 0 && u.kind === 'vil' && u.job === 'wood')) out.push('+ under Wood put nobody on wood');
   
-  // the quick action (Albert, Nov 2): a tap on open ground opens the sword; the sword turns to All in place; a hold on the ground opens its Here
-  // card; Idle sends an idle villager there; a tap on an enemy opens it at All with the red ring, and All sends every soldier at the enemy
+  // the quick action (Albert, Nov 2, 14:54): a tap on open ground opens the sword and ✕; the sword turns to All and ☰ in place; ☰ opens the
+  // Here card; ✕ closes it, and so does a tap anywhere else (that tap does nothing more); a hold on the ground opens its Here card; a tap
+  // on an enemy opens it at All with the red ring, and All sends every soldier at the enemy
   { F.act('close'); G.fogOn = false; let p = null; for (let y = 260; y < 500 && !p; y += 23) for (let x = 60; x < 330 && !p; x += 23) if (F.hitAt(x, y).t === 'ground') p = [x, y];
     F.tapAt(...p); const spot = G.qa && G.qa.h.e; if (!spot || document.getElementById('qa').hidden) out.push('a tap on open ground did not open the quick action');
     tap('#qa [data-act=qsword]'); if (!document.querySelector('#qa [data-act=qall]')) out.push('the sword did not turn the quick action to All');
-    F.tapAt(...p); if (!document.querySelector('#qa [data-act=qsword]')) out.push('a second tap on the ground did not close the quick action and open it again'); F.act('close');
+    F.tapAt(...p); if (!document.getElementById('qa').hidden) out.push('a tap on the ground while the quick action is open did not close it');
+    F.tapAt(...p); tap('#qa [data-act=qclose]'); if (!document.getElementById('qa').hidden) out.push('✕ did not close the quick action');
+    F.tapAt(...p); tap('#qa [data-act=qsword]'); tap('#qa [data-act=qhere]'); if (!G.card || G.card.type !== 'ground' || G.card.x !== spot.x) out.push('☰ did not open the Here card for the spot'); F.act('close');
     F.holdAt(...p); if (!G.card || G.card.type !== 'ground' || G.card.x !== spot.x) out.push('a hold on the ground did not open the Here card for the spot'); F.act('close');
-    const v = G.units.find((u) => u.owner === 0 && u.kind === 'vil' && !u.inside); F.setJob(v, null); F.tapAt(...p); tap('#qa [data-act=qsword]'); tap('#qa [data-act=qidle]');
-    if (!v.post || Math.hypot(v.post.x - spot.x, v.post.y - spot.y) > 45) out.push('idle did not send an idle villager to the spot');
     const k = F.keepOf(0), S = [0, 1, 2].map((i) => F.addUnit(0, 'spear', k.x + 40 + i * 8, k.y + 40)), e = F.addUnit(1, 'spear', spot.x, spot.y); G.rel[0][1] = G.rel[1][0] = 'war';
     F.tapAt(F.SX(e.x), F.SY(e.y) - 6 * F.cam.z); if (!G.qa || !G.qa.red || G.qa.h.e !== e || !document.querySelector('#qa [data-act=qall]')) out.push('a tap on an enemy did not open the quick action at All, ringed red');
     tap('#qa [data-act=qall]'); if (!S.every((u) => u.focus === e)) out.push('All on an enemy did not send every soldier at it');

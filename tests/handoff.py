@@ -67,6 +67,7 @@ PLANTS = [
   ('27-cards-core.js', "' work' : ' life'}", "' work' : ''}", 'tests/cards.py', 'title: the health bar is gone from the title box', 'the title box'),
   ('shell-head.html', '--glass:92%;', '--glass:75%;', 'tests/palette.py', 'glass: the card too see-through to read', 'glass card'),
   ('39-huddle.js', "`<i${p === page ? ' class=\"at\"' : ''}></i>`", "'<i></i>'", 'tests/gate.py', 'cycle: the page dot does not follow the page', 'dot did not follow'),
+  ('26-input.js', "		if (!qa) showQuick(sx, sy, h,", "		showQuick(sx, sy, h,", 'tests/gate.py', 'quick: a tap elsewhere does not close it', 'did not close it'),
   ('28-army-quick.js', "x = G.qa.left ? G.qa.sx + s / 2 - w : G.qa.sx - s / 2;", "x = G.qa.sx;", 'tests/gate.py', 'quick: the sword is off the finger', 'not centred under'),
   ('26-input.js', "	if (h.t !== 'ground' || picked().length) return tapAt(sx, sy);", "	return tapAt(sx, sy);", 'tests/gate.py', 'a hold on the ground no longer opens the Here card', 'hold on the ground'),
   ('33-verbs.js', "		if (G.hud.page === 'emg') return hudPage(G.hud.from || 'jobs');", "", 'tests/cards.py', 'Emergency: the red button does not turn the row back', 'Emergency page'),

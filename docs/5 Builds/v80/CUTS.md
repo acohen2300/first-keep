@@ -332,3 +332,9 @@ Checks on main before publishing:
 - Code: the fixed heights (`CARD_RANKS`, `fixOf`, `bldFull`), the content observer and `--rk` cut; the style sheet's `max-height` is the whole rule. [2026-11-02 14:38]
 - Tests: `tests/cards.py` card sizes now measures the gap over the row on the House, the Barracks and the Town Center; its plant (a card padded to its cap) caught; the two fixed-height plants removed. Gate passes. [2026-11-02 14:38]
 
+## Build 80 preview 25 (the quick action, fixed) [2026-11-02 15:06]
+- Albert, Nov 2, 14:54 ("we messed it up"): a sword and ✕; the sword turns to All (the word) and ☰ (the Here card); All sends every soldier. [2026-11-02 15:06]
+- The bug he hit: a tap anywhere while it was open closed it and at once opened a new one under the finger, so it could not be put away. A tap while it is open now only closes it. [2026-11-02 15:06]
+- Cut: the bullseye and its icon, Idle and its verb (`qidle`, `qaIdle`: idle villagers called to the spot). [2026-11-02 15:06]
+- Tests: gate QUICK (a sword of 44 under the finger with ✕ toward the middle; All in its place with ☰); a tap elsewhere closes it; ✕ closes it; ☰ opens the Here card. Plant: a tap elsewhere that reopens it, caught. [2026-11-02 15:06]
+

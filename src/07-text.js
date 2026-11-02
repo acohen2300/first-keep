@@ -758,6 +758,7 @@ const ROW_WORD = {
 	new: 'New',
 	army: 'The army',
 	fight: 'fighting',
+	all: 'All', // the quick action's second step: every soldier
 	emg: 'Alarm', // the red button: the alarm you raise (Albert, Nov 2: Emergency was too wide)
 	emgW: [['Work', 'all clear'], ['Gather', 'at home'], ['Garrison', 'all in'], ['Shelter', 'hide']], // the Alarm page: each order's word and what it does, in the row's order (Albert, Nov 2: Age of Empires' Town Bell and Back to Work)
 	pace: ['slow', 'medium', 'fast'], // a squad's pace under it, from its slowest member (paceWord)
