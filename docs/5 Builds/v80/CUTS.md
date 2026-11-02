@@ -310,3 +310,11 @@ Checks on main before publishing:
 - Found on the way: a dim button on the War page was brown on steel (the states layer beat the steel rule); dim on steel is now Steel 1, steel's own first step. A dim button keeps its Brown 3 edge, so it no longer looks like an empty place. [2026-11-02 12:45]
 - Tests: `tests/palette.py` reads the dim white's contrast from the level (4.5:1 on Brown 1, Brown 2, Steel 2); `tests/cards.py` the levels (dim tech edge apart from Train; the cycle button the same on Jobs and War); three plants, caught. [2026-11-02 12:45]
 - Cut: `--cream-1`, `--cream-2`, the old White, the queue's steel box, the cycle button's steel tint, the Natives' bar colour #c9b48a. [2026-11-02 12:45]
+
+## Build 80 preview 22 (Emergency a page of the row; no panel; the quick action a sword; building cards two fixed heights) [2026-11-02 13:28]
+- Albert, Nov 2, 12:59 to 13:12 (yea yea): Emergency turns the row instead of covering the map; the Emergency button red; no panel behind the row; the quick action for emergencies only, small (sword, then All or Idle, then go; hold the ground for the Here card); building cards one of two fixed heights by kind; a picked villager and a tap: the obvious order (it was already so, Build 40: nothing built). [2026-11-02 13:28]
+- Results: the House card 5 ranks to 4 (the info rank on the title's line); the Barracks, Stable and the rest that train 8 always, so nothing changes height as a building goes up or its techs come and go. [2026-11-02 13:28]
+- Found: a card could keep the last card's height until the next change of its content (the Mail scrolled after a building card); the height is now set at once (`cardRanks`). [2026-11-02 13:28]
+- Tests: gate QUICK redrawn (one sword of 44 centred under the finger, All in its place, Idle toward the middle), the hold opens the Here card; `tests/cards.py` card sizes, Emergency page, no panel; `tests/saves.py` All hands on the page. Plants: five new, five repointed. Gate passes. [2026-11-02 13:28]
+- Cut: the Emergency card, its "How it works" fold (the Guide says it), the steel panel, the quick action's hammer, menu, ✕ and +, `infoRank`, the info rank on building cards. [2026-11-02 13:28]
+

@@ -91,16 +91,6 @@ function factOf(b, X, crew) {
 		return [`${clock(Math.max(0, G.wonder.end - G.t))} to ${b.owner === 0 ? 'win' : 'their win'}`, 'the wonder stands'];
 	return X.fact || (B.room ? [`Room for ${B.room}`, ''] : null);
 }
-// the info rank: the fact as a sentence (four slots), then health and age a slot each; with no fact, health and age take two triples (no
-// holes). Whole slots (E9: they were one and a half)
-function infoRank(b, f) {
-	const s = f ? 's1' : 's3';
-	return acts(
-		(f ? info(f[0], f[1], 'left line s4') : '') +
-			info(`${Math.round(b.hp)}/${Math.round(maxHpB(b.owner, b.kind))}`, 'health', s) +
-			info(AGES[BLD[b.kind].age || 0].name, 'age', s),
-	);
-}
 // A building's line (MENU-SPEC §3, §8): a fixed capacity, one single a place, the first working (its green ring what is left of it, red when
 // it cannot go on: no room, or sabotage). Tap a filled one and its order is cancelled, its cost back; an empty place is a faint outline.
 // Six singles a rank: past six the last reads +n (a tap cancels the last order); short of six, the place a research would add reads +n, locked.

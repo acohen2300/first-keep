@@ -23,13 +23,18 @@ const CARDS = {
 							? workshopPage(b)
 							: {}
 					: {};
+		const f = !(mine && kp) && factOf(b, X, crew);
 		let h = title(
 				bldName(b.owner, b.kind),
-				mine
-					? '' // your own building: no "yours" line (S1, Albert Nov 2); another side's says whose
-					: P.name +
-							' · ' +
-							(P.lord === 0 ? (P.rebel ? 'in revolt' : 'your vassal') : REL_WORD[G.rel[0][b.owner]].toLowerCase()),
+				[
+					mine ? '' : P.name, // your own building: no "yours" line (S1, Albert Nov 2); another side's says whose
+					mine ? '' : P.lord === 0 ? (P.rebel ? 'in revolt' : 'your vassal') : REL_WORD[G.rel[0][b.owner]].toLowerCase(),
+					f && f.filter(Boolean).join(' '),
+					!(mine && kp) && `${Math.round(b.hp)}/${Math.round(M)}`,
+					!(mine && kp) && `${AGES[B.age || 0].name} age`,
+				]
+					.filter(Boolean)
+					.join(' · '), // what the info rank said, on the title's second line (Albert, Nov 2: the House card says little, so it is small)
 			),
 			end = '', // the last rank: Help, Repair, Raze
 			book = X.book || ''; // the book: what its kind explains, then what was researched here, then what it is and why
@@ -66,7 +71,6 @@ const CARDS = {
 						? btn(`takedown:${b.id}`, 'Sure?', costText(back), 'warn') // the second tap, as Dismiss asks on the villager card
 						: btn(`takedown:${b.id}`, 'Raze', costText(back))); // last on the card: the one you rarely want; one slot: Raze, its refund under it (Albert, Nov 2: "A")
 		}
-		if (!(mine && kp)) h += infoRank(b, factOf(b, X, crew));
 		if (mine) {
 			const tr = done && !rel ? trainsAt(b.kind) : [],
 				techs = done && !rel ? TECH.filter((t) => ownTech(t) && t.at === b.kind && isNext(0, t)) : [], // one step a line: the next
@@ -540,7 +544,7 @@ const CARDS = {
 							`<p data-act="ordpick:${O.id}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`,
 					)
 					.join(''); // tap a line: that group is picked, and the camera goes to it
-		h += acts(btn('card:emergency', 'Emergency', 'town square · all hands · shelter', G.emg ? 'warn' : ''), 'c1');
+		h += acts(btn('emgpage', 'Emergency', 'town square · all hands · shelter', G.emg ? 'warn' : ''), 'c1');
 		if (S.length && hasCmd())
 			h +=
 				sec('Orders go to') +
@@ -820,10 +824,19 @@ const GUIDE_PG = { key: '', h: '' }; // the Guide's page, built once a page (CAR
 const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'research', 'menu', 'troops']); // the cards that take the whole height; the Army card with Battalions needs 11 ranks (E8)
 // three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet: lg every rank that fits above the row (the Build
 // card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most
+// a building's card is one of two fixed heights, by its kind, never by what it shows today (Albert, Nov 2, no card that changes). Full,
+// half the screen, where it trains or makes goods, the Town Center, the Town, and the two whose work or techs pass the small one (School,
+// Quarry). Small, the title and two ranks, for the rest. The Market keeps the whole height (lg): its goods selector needs nine ranks.
+// Another side's building fits what it shows
+const bldFull = (kind) => trainsAt(kind).length > 0 || !!BLD[kind].makes || ['keep', 'town', 'school', 'quarry'].includes(kind);
+const fixOf = (c) => {
+	const b = c.type === 'bld' && byId(G.blds, c.id);
+	return b && b.owner === 0 && b.kind !== 'market' ? CARD_RANKS[bldFull(b.kind) ? 'full' : 'small'] : 0;
+};
 const SIZE_OF = (c) =>
 	FULL.has(c.type) || (c.type === 'bld' && (byId(G.blds, c.id) || {}).kind === 'market')
 		? 'lg'
-		: c.type === 'squad' || c.type === 'emergency'
+		: c.type === 'squad'
 			? 'sm'
 			: 'md'; // one home for a card's size: the Market is a building card the height of a full one
 function renderCard() {
@@ -849,7 +862,10 @@ function renderCard() {
 		cardSig = h;
 		patchHTML(cardIn, h);
 	}
-	const size = SIZE_OF(c);
+	const size = SIZE_OF(c),
+		fix = fixOf(c);
+	$('card').dataset.fix = fix || '';
+	cardRanks(); // now, not when the observer next sees a change: the last card's height never lingers
 	for (const s of ['lg', 'md', 'sm']) $('card').classList.toggle(s, size === s);
 	$('card').hidden = false;
 }

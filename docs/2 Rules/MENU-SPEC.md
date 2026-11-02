@@ -62,15 +62,15 @@ Three moves: **split** (a | b), **merge across**, **merge down**. Never split a 
 - **War is the HUD:** slot 1 the target (aim) over Home; slots 2–5 the four squads, each showing its size and ETA, its pace under it as an info cell (fast, slow, fighting); slot 6 Go ✓ over Abort ✕. Tapping a squad opens its card, the squad builder (§8). An empty squad opens a new one.
 - **Train** as today: Orders over the squad recruits join; four kinds with − +; ✓ over ✕.
 - **Words under picture icons** (Oct 31; `Words Under Icons`, `In Game Jobs`, `In Game War`): an icon that pictures a thing carries its word: the 18 icon with its number beside it, the word at 12 under it (People, the jobs, Build, Target, Home, the squads, the cycle button's page name; on cards the stances and Gift). Symbols stand alone at 24: ✓ ✕ − + back × ☰, and the quick action (no words). A gate test measures every slot word at 375 pt and refuses the publish if one overflows, as for the titles.
-- **Tints:** Jobs as now; War and Train in Steel (`COLORS.md`).
+- **Tints:** Jobs as now; War and Train in Steel (`COLORS.md`). No panel behind the row on any page (Nov 2): the map shows between the slots. [2026-11-02 13:28]
 - **Cut:** the door, the Realm page, the Build page (two versions: Build 64's shuffling "what the town needs" page and the fixed two-rank draft, `Build Page (cut)`), the Squad page (its work moves into the squad card).
 
-## 7. The quick action (AGREED Oct 31; picture `Quick Action`)
-- A 2 × 2 of 58 × 44 slots, icons only, opened right under the tap: one tight block, one border (radius 9), thin dividers inside.
-- **Tap empty ground:** sword (under the thumb) · hammer / menu · ✕. The hammer opens the Build menu for that spot; the menu opens the Here card (everything about that spot).
-- **Tap the sword:** all · idle / + · ✕, swapped in place so the thumb never moves. All sends every soldier, idle the idle ones, **+** is a mission: it opens the War HUD with the target set.
-- **Tap an enemy or a hazard:** a red circle under it (yours have green) and the quick action opens straight at step 2.
-- Near a screen edge the block flips so the first icon stays under the thumb.
+## 7. The quick action (AGREED Oct 31; redrawn Albert, Nov 2) [2026-11-02 13:28]
+- For emergencies, small: round chips one slot across (44), the first centred under the finger. [2026-11-02 13:28]
+- **Tap open ground:** a sword. **Tap it:** All in its place, Idle beside it toward the middle of the screen. **Tap All:** every soldier goes. Three taps, the finger never moves. [2026-11-02 13:28]
+- **Tap an enemy or a hazard:** a red circle under it, and it opens straight at All, ringed red. [2026-11-02 13:28]
+- A tap anywhere else closes it. **Press and hold the ground:** the Here card for that spot. With yours picked, a tap is their obvious order, no menu (Build 40). [2026-11-02 13:28]
+- Cut (Nov 2): the 2 × 2 block, the hammer (Build is bottom left), the menu (press and hold), ✕ (a tap elsewhere), + (missions live on the War page). [2026-11-02 13:28]
 
 ## 8. Cards (pictures in `mockups/70/`)
 | Card | Layout | Picture |
@@ -80,10 +80,10 @@ Three moves: **split** (a | b), **merge across**, **merge down**. Never split a 
 | Market | DRAFT. Caravan and the market's techs, double-wide · the goods one selector with what you have (tap to pick; the gold ring slides; v80) · one Sell and one Buy for the picked good, with its price rate · caravans · Repair · Take down. | `Market Card` |
 | Build menu | DRAFT. Six tabs = six slots (folder) · buildings double-wide, three a rank, words only (no pictures, no pins): name, how many of how many, cost · a short rank filled with empty places, every tab (T2, `grid3`) · blue ring fits here, dim a later age. | `Build Menu` | [2026-11-02 12:05]
 | Squad (from the War HUD) | DRAFT. Title · the four kinds (Foot, Archers, Riders, Siege) with − + · the three intents (Engage, No pursuit, Buildings first; one chosen) · Cancel and Save (✓, the card's gold fill). | `Mission Flow` |
-| Emergency | DRAFT. What is coming (an info rank) · four orders as two doubles a rank: **Stop** (everyone back to work) · **Town square** (everyone to the Town Center) / **All hands** (villagers and soldiers fight, red ring) · **Shelter** (villagers inside). | `Easy Cards` |
+| Emergency | A page of the row (Nov 2), not a card: the red button on the cycle button's rank turns the row to Stop · Square · All hands · Shelter, what each does under it, what is coming beside them (tap to look), ✕ back to the page you came from. The button is red always and breathes while something is coming. | — | [2026-11-02 13:28]
 | Villager | DRAFT. What they are doing + health, age, speed as info cells · Stop · Send home · Dismiss · the job picker (the job ribbon reskinned). | `Easy Cards` |
 | Stores | DRAFT. One rank per resource: name · have · in (green) · out (red) · on it · ›. No header rank. | `States and Text` |
-| A building (House and the rest) | DRAFT. An info rank (room, health, age) · Train and Research double-wide, three a rank, a short rank filled with empty places (§10) · the last rank: Help · Repair · Raze, one slot each (S2). No "yours" line on your own building (S1). | `States and Text` | [2026-11-02 11:43]
+| A building (House and the rest) | DRAFT. Two fixed heights by its kind, never by what it shows (Nov 2): **full**, 8 ranks, where it trains or makes goods, the Town Center, the Town, School, Quarry; **small**, 4 ranks, the rest. The Market keeps the whole height. The info rank is cut: room, health and age on the title's line. Train and Research double-wide, three a rank (§10) · the last rank Help · Repair · Raze (S2). | `States and Text` | [2026-11-02 13:28]
 | Mail | The six groups as one rank of filters · six messages a page, a rank each, a coloured edge · Previous and Next (the 30 kept are five pages; nothing scrolls; N13, Albert Oct 31). | `Easy Cards` |
 | Setup | BUILT v80. Each setting its own rank: its name quiet on the left, its choices one selector right-justified (Difficulty, Length, Scenario, World, Fog Off · On, Tension) · the peoples, one selector · the people's soldier and bonus · Daily, Off · On · the hazards, one bar · Start. The whys in the book. | `Setup Stacked with Names` (mockups/80) |
 | Research (full list) | Not redrawn yet. | |

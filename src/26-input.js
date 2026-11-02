@@ -215,11 +215,11 @@ cv.addEventListener('pointerup', (e) => {
 		G.box = null;
 		if (Math.abs(d.x1 - d.x0) < 12 && Math.abs(d.y1 - d.y0) < 12) {
 			const q = lp(e);
-			tapAt(q.x, q.y);
+			holdAt(q.x, q.y);
 		} else boxPick(d);
 		ui(true);
 		return;
-	} // held on open ground but never dragged: it was a tap
+	} // held on open ground but never dragged: the Here card for the spot (Albert, Nov 2), or a tap with soldiers picked
 	if (d.mode === 'place' || d.mode === 'wpt' || d.mode === 'wall') {
 		ui(true);
 		return;
@@ -401,6 +401,14 @@ function tapAt(sx, sy) {
 		return;
 	} // a building, a field, a find: nothing to pick, so one tap opens it (Albert, Build 40)
 	setPick([{ t: h.t, id: h.e.id }]); // a unit not yours: a ring says what the finger found; a second tap opens its page
+}
+// a hold on open ground, never dragged (Albert, Nov 2): the Here card for that spot, as a phone's press and hold tells you about a thing;
+// with yours picked it is a tap: their order
+function holdAt(sx, sy) {
+	const h = hitAt(sx, sy);
+	if (h.t !== 'ground' || picked().length) return tapAt(sx, sy);
+	hideQuick();
+	openCard({ type: 'ground', x: h.e.x, y: h.e.y });
 }
 // the order ring under a finger (tap slop 26 px): the nearest group ring wins
 function ordAt(sx, sy) {

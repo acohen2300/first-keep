@@ -683,7 +683,7 @@ const MS_TEXT = {
 		'A fire: it spreads to wooden neighbours.',
 		'A fire grows as the square of its age and the heat falls with the gap between walls. Stone does not burn; rain damps it.',
 		'Who is on it',
-		'card:emergency',
+		'emgpage',
 	],
 	rout: [
 		'Your soldiers broke and ran: nerve.',
@@ -759,6 +759,7 @@ const ROW_WORD = {
 	army: 'The army',
 	fight: 'fighting',
 	emg: 'Emergency',
+	emgW: [['Stop', 'to work'], ['Square', 'gather'], ['All hands', 'fight'], ['Shelter', 'hide']], // the Emergency page: each order's word and what it does, in the row's order
 	pace: ['slow', 'medium', 'fast'], // a squad's pace under it, from its slowest member (paceWord)
 };
 // a research step's why: its own key first ('tech:' + id) where a unit shares its id (F4: one WHY.legion served both)
@@ -1055,7 +1056,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'Emergency: four orders',
-		'The button at the bottom right and the Army card open it, with what is coming. Town square gathers everyone round the Town Center, the soldiers outside the villagers. All hands sends soldiers into the sturdiest buildings (they add arrows) and a line toward the danger, and villagers into the room left. Shelter puts the villagers alone in the sturdiest shelter first. Stop sends villagers back to the work they had; soldiers stay until you give them an order.',
+		'The red button on the right of the row and the Army card turn the row to it, with what is coming. Town square gathers everyone round the Town Center, the soldiers outside the villagers. All hands sends soldiers into the sturdiest buildings (they add arrows) and a line toward the danger, and villagers into the room left. Shelter puts the villagers alone in the sturdiest shelter first. Stop sends villagers back to the work they had; soldiers stay until you give them an order.',
 		'One rule for everyone: the strongest walls first, the nearest hands first.',
 	],
 	[

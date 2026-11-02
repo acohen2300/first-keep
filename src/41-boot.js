@@ -143,6 +143,8 @@ const clip = (text) => {
 };
 window.__fk = {
 	suggestAt,
+	holdAt,
+	CARD_RANKS,
 	whoIs,
 	isNext,
 	nextStep,

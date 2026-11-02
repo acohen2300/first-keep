@@ -6,7 +6,7 @@
 #   Mail: six lines a page, Previous and Next, the 30 kept are five pages; the Market's goods one selector
 #   E1 the Army card's Train fold has no commas; E2 a workshop counts what it made; E4 a find under the fog cannot be tapped; E5 a pinch lets
 #   go of the box and the crosshair's glow; E6 a dim Train button says why; E7 the pause follows the tab; E11 a burning Market has Send help
-#   The row: Emergency a slot on the cycle button's rank with its word; one steel panel holds both; a locked place in the line names its
+#   The row: Emergency a slot on the cycle button's rank with its word; no panel behind it (Nov 2); a locked place in the line names its
 #   research; the map's labels are 12 at the starting zoom and 9 at the floor; the vassal's Demand rank keeps its 44
 import asyncio, os, sys
 from playwright.async_api import async_playwright
@@ -99,7 +99,7 @@ JS = r"""() => {
   { const m = put('market'); m.fire = 5; F.openCard({ type: 'bld', id: m.id }); F.ui(true);
     if (!$('#card .bar.sel [data-act^="mpick:"]')) bad.push('Market: the goods are not one selector');
     if ($('#card .thin')) bad.push('Market: the goods selector is marked thin, which EXCEPTIONS #13 does not name');
-    if (!$(`#card [data-act="douse:${m.id}"]`) || !/health/.test($('#card').innerText)) bad.push('Market: a burning Market has no Send help or no health (it skips the shared page)');
+    if (!$(`#card [data-act="douse:${m.id}"]`) || !/\d+\/\d+/.test(($('#card .sub') || {}).innerText || '')) bad.push('Market: a burning Market has no Send help or no health on its title line (it skips the shared page)');
     m.fire = 0; }
   } catch (e) { bad.push('the Market: the check could not run: ' + e.message); }
   // E1: the Army card's Train soldiers fold has no stray commas in its ranks
@@ -175,6 +175,21 @@ JS = r"""() => {
     const bg = () => getComputedStyle($('#hudB')).backgroundColor; F.hudPage('jobs'); F.ui(true); const j = bg(); F.hudPage('war'); F.ui(true); const w = bg(); F.hudPage('jobs'); F.ui(true);
     if (j !== w) bad.push(`the cycle button changes with the page (${j} on Jobs, ${w} on War)`); }
   } catch (e) { bad.push('the levels: the check could not run: ' + e.message); }
+  // card sizes (Albert, Nov 2): a building's card is one of two fixed heights by its kind: the House small (4 ranks), the Barracks full (8),
+  // whatever it shows; the next card does not keep the last one's height
+  try {
+  { const rk = () => Number($('#card').style.getPropertyValue('--rk')), H = put('house'), B = put('barracks');
+    F.openCard({ type: 'bld', id: H.id }); F.ui(true); const h = rk(); F.closeCard(); F.openCard({ type: 'bld', id: B.id }); F.ui(true); const b = rk();
+    B.prog = 0.5; F.ui(true); const b2 = rk(); B.prog = 1; F.closeCard();
+    if (h !== F.CARD_RANKS.small || b !== F.CARD_RANKS.full || b2 !== b) bad.push(`card sizes: the House ${h} ranks, the Barracks ${b} then ${b2}, not ${F.CARD_RANKS.small} and ${F.CARD_RANKS.full} always`); }
+  } catch (e) { bad.push('card sizes: the check could not run: ' + e.message); }
+  // Emergency page (Albert, Nov 2): the red button turns the row to the four orders, the map in sight; again, back to the page it came from
+  try {
+  { F.closeCard(); F.hudPage('war'); F.ui(true); $('#emgB').click(); F.ui(true);
+    if (G.hud.page !== 'emg' || !$('#row [data-act="emg:square"]') || G.card) bad.push('Emergency page: the red button did not turn the row to the four orders');
+    if (getComputedStyle($('#emgB')).borderTopColor !== getComputedStyle(document.documentElement).getPropertyValue('--ring-r').trim().replace(/^#(..)(..)(..)$/, (m, r, g, b) => `rgb(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)})`)) bad.push('Emergency page: the Emergency button is not red');
+    $('#emgB').click(); F.ui(true); if (G.hud.page !== 'war') bad.push(`Emergency page: the red button again went to ${G.hud.page}, not back to War`); F.hudPage('jobs'); F.ui(true); }
+  } catch (e) { bad.push('Emergency page: the check could not run: ' + e.message); }
   // T2 (Albert, Nov 2): every Build tab is two slots a building, three a rank, a short rank filled with empty places
   try {
   for (const m of F.MENUS) { F.openCard({ type: 'menu', id: m.id }); F.ui(true);
@@ -201,13 +216,12 @@ JS = r"""() => {
   { F.openCard({ type: 'bld', id: k.id }); F.ui(true); const l = $('#card [data-act^="qlock:"]');
     if (l && /^\+\d\s*research$/i.test(l.innerText.replace(/\n/g, ' ').trim())) bad.push('a locked place in the line says "' + l.innerText.replace(/\n/g, ' ') + '", not its research'); F.act('close'); }
   } catch (e) { bad.push('a locked place in the line names its res: the check could not run: ' + e.message); }
-  // the row: Emergency a slot (the cycle button's width) on the cycle button's rank, its word under its icon; War's steel panel holds both
+  // the row: Emergency a slot (the cycle button's width) on the cycle button's rank, its word under its icon; no panel behind the row (Nov 2)
   try {
   { F.hudPage('war'); F.ui(true); const e = $('#emgB').getBoundingClientRect(), c = $('#hudB').getBoundingClientRect();
     if (Math.abs(e.width - c.width) > 0.6 || Math.abs(e.top - c.top) > 0.6 || Math.abs(e.right - (innerWidth - 6)) > 0.6) bad.push(`the Emergency button is ${e.width.toFixed(1)} wide at ${Math.round(e.top)}, not a slot on the cycle button's rank (${c.width.toFixed(1)} at ${Math.round(c.top)})`);
     if (!$('#emgB .wd') || $('#emgB .wd').textContent !== F.ROW_WORD.emg) bad.push('the Emergency button has no word under its icon');
-    const top = parseFloat(getComputedStyle($('#orders'), '::before').top), o = $('#orders').getBoundingClientRect();
-    if (!(o.top + top <= c.top - 5)) bad.push("the War page's steel panel stops under the cycle button");
+    if (getComputedStyle($('#orders'), '::before').content !== 'none') bad.push('a panel is drawn behind the row on the War page (Albert, Nov 2: none on any page)');
     F.hudPage('jobs'); F.ui(true); }
   } catch (e) { bad.push('the row: the check could not run: ' + e.message); }
   // the map: a label is 12 at the starting zoom, larger zoomed in, 9 at the floor zoomed out
@@ -256,6 +270,6 @@ async def main():
         except Exception as e: bad.append('the mail pages could not run: ' + str(e)[:200])
         await br.close()
     bad = bad + errs
-    print(('PASS ' if not bad else 'FAIL ') + 'the cards of v80 (Setup stacked, Relations final, Mail pages, Market selector, E1 to E11, Emergency and the steel panel, map labels)', '' if not bad else bad)
+    print(('PASS ' if not bad else 'FAIL ') + 'the cards of v80 (Setup stacked, Relations final, Mail pages, Market selector, E1 to E11, Emergency, no panel, map labels)', '' if not bad else bad)
     sys.exit(1 if bad else 0)
 asyncio.run(main())

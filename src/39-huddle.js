@@ -46,7 +46,7 @@ function paceWord(S) {
 function hudPage(page) {
 	const H = G.hud;
 	H.page = page;
-	H.aim = page !== 'jobs'; // War and Train put the crosshair up: a tap on the map moves it
+	H.aim = page === 'war' || page === 'train'; // War and Train put the crosshair up: a tap on the map moves it
 	if (H.aim) {
 		H.mode = page === 'train' ? 'rally' : 'war';
 		H.aimT = performance.now();
@@ -360,6 +360,7 @@ function rowUI() {
 		el.sigH = h;
 		patchHTML(el, h);
 	}
+	$('emgB').classList.toggle('warn', !!G.incoming); // the red button breathes while something is coming
 	if (chip.pg !== page) {
 		chip.pg = page;
 		$('orders').className = 'pg-' + page;

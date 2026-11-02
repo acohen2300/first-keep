@@ -164,37 +164,24 @@ function emgStop() {
 	G.emg = null;
 	say('Back to work.', 'good', TOAST.short);
 }
-// the card: what is coming (tap it to look), then the four orders, two a rank; the order on is gold, All hands is red
-CARDS.emergency = () => {
+// the page of the row (Albert, Nov 2): the four orders, each an icon with its word and what it does under it, and what is coming beside them
+// (tap it to look); ✕ goes back to the page you came from. The order on is gold, All hands red. The map stays in sight: no card
+ROWS.emg = () => {
 	const I = G.incoming,
 		k = keepOf(0),
 		V = unitsOf(0, 'vil').length,
-		on = (kind) => (G.emg && G.emg.kind === kind ? 'on' : '');
-	title('Emergency'); // no subtitle: what is coming says the rest, and the order on wears its ring
-	fold(
-		'why',
-		'How it works',
-		`<p>Town square: everyone gathers round the Town Center, the soldiers outside the villagers. All hands: soldiers fill the sturdiest buildings first, shooters first (they add arrows), and the rest hold a line toward the danger; villagers fill what room is left. Shelter: the villagers alone. Whoever finds no room waits behind the Town Center. Stop sends every villager back to the work it had; soldiers stay until you send them.</p>`,
-	);
+		on = (kind) => (G.emg && G.emg.kind === kind ? 'on' : ''),
+		W = ROW_WORD.emgW;
 	return (
-		acts(
-			I
-				? info(
-						`${I.n} ${I.what}`,
-						`${k ? `coming from the ${dirOf(k, I)} · ` : ''}${clock(I.eta)} · tap to look`,
-						's6',
-						`jump:${Math.round(I.x)},${Math.round(I.y)}`,
-					)
-				: info('Nothing coming', 'no attack in sight', 's6'),
-			'c1',
-		) +
-		acts(
-			btn('emgstop', 'Stop', 'everyone back to work', G.emg ? 'go' : 'dis') +
-				btn('emg:square', EMERGENCY[0][1], EMERGENCY[0][2], on('square')),
-		) +
-		acts(
-			btn('emg:hands', EMERGENCY[1][1], EMERGENCY[1][2], on('hands') || 'warn') +
-				btn('emg:shelter', EMERGENCY[2][1], `${V} ${EMERGENCY[2][2]}`, V ? on('shelter') : 'dis'),
-		)
+		pic('emgstop', ICON.stop, W[0][0], G.emg ? 'go' : 'dis') +
+		pic('emg:square', ICON.home, W[1][0], on('square')) +
+		pic('emg:hands', ICON.sword, W[2][0], on('hands') || 'warn') +
+		pic('emg:shelter', ICON.shield, W[3][0], V ? on('shelter') : 'dis') +
+		(I
+			? info(`${I.n} ${I.what}`, `${k ? dirOf(k, I) + ' · ' : ''}${clock(I.eta)}`, 's2', `jump:${Math.round(I.x)},${Math.round(I.y)}`)
+			: info('Nothing coming', 'no attack', 's2')) +
+		W.map((w) => info('', w[1])).join('') +
+		info('', '') +
+		sym('emgclose', ICON.close, '', 'Back to the page you came from')
 	);
 };

@@ -431,13 +431,20 @@ const PLAY = {
 	},
 	emg(a) {
 		emgStart(a);
-		hudPage('jobs');
 		ACT.home();
-		closeCard();
-	},
+	}, // the page stays, so Stop is under the same thumb
 	emgstop() {
 		emgStop();
+	},
+	emgpage() {
+		if (G.hud.page === 'emg') return hudPage(G.hud.from || 'jobs');
+		G.hud.from = G.hud.page;
 		closeCard();
+		hudPage('emg');
+		feel('tick');
+	}, // the red button turns the row to Emergency; again, back
+	emgclose() {
+		hudPage(G.hud.from || 'jobs');
 	},
 	pagecycle() {
 		pageCycle();
@@ -518,7 +525,7 @@ const PLAY = {
 	hudrein(a) {
 		hudReinforce(Number(a));
 	},
-	// the quick action (28-army-quick): each reads what was tapped, G.qa, and closes the block (a card it opens closes it too)
+	// the quick action (28-army-quick): each reads what was tapped, G.qa, and closes it
 	qsword() {
 		quickStep(2);
 	}, // swapped in place: All where the sword was
@@ -537,27 +544,6 @@ const PLAY = {
 		else if (!S.length) say(freeWhy(), '', TOAST.mid);
 		hideQuick();
 	}, // the idle soldiers, and on open ground the idle villagers (the Town Center's Idle to me, cut in Build 70, lives on here)
-	qwar() {
-		const h = G.qa.h;
-		hudPage('war');
-		G.hud.h = h;
-		G.hud.moved = true;
-		hideQuick();
-	}, // +: a mission, the War page with its target set on the spot or the enemy
-	qbuild() {
-		const { x, y } = G.qa.h.e,
-			hint = suggestAt(x, y),
-			M = hint && MENUS.find((m) => m.items.includes(hint));
-		G.buildAt = { x, y, hint };
-		openCard({ type: 'menu', id: M ? M.id : G.lastMenu || MENUS[0].id });
-	}, // the hammer: the Build menu for that spot, on what fits there
-	qhere() {
-		const { x, y } = G.qa.h.e;
-		openCard({ type: 'ground', x, y });
-	}, // ☰: the Here card for that spot
-	qclose() {
-		hideQuick();
-	},
 	qsfrom(a) {
 		G.qs.from = a === 'all' ? 'all' : Number(a);
 	},

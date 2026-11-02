@@ -11,7 +11,7 @@ SETUP = """() => { const F = window.__fk; F.newGame(5); F.act('close'); const G 
   for (let i = 0; i < 7; i++) F.train(0, 'vil'); }"""
 CARDS = [('help', "{type:'help'}"), ('setup', "{type:'setup'}"), ('army', "{type:'troops'}"), ('home', "{type:'menu',id:'home'}"), ('guide', "{type:'guide',page:'bld'}"),
          ('keep', "{type:'bld',id:IDS.keep}"), ('workshop', "{type:'bld',id:IDS.workshop}"), ('farm', "{type:'bld',id:IDS.farm}"),
-         ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}"), ('mail', "{type:'mail'}"), ('squad', "{type:'squad',i:0}"), ('emergency', "{type:'emergency'}"),
+         ('market', "{type:'bld',id:IDS.market}"), ('vassal', "{type:'bld',id:IDS.vassal}"), ('score', "{type:'score'}"), ('mail', "{type:'mail'}"), ('squad', "{type:'squad',i:0}"),
          ('villager', "{type:'unit',id:IDS.vil}"), ('stores', "{type:'stores'}"), ('house', "{type:'bld',id:IDS.house}"),
          # E8 (v80): the cards the gate never opened: Relations on its tab, Research, every milestone, and the Army card with Battalions (last: it researches)
          ('relations', "(window.__fk.G.ktab = 'rel', {type:'bld',id:IDS.keep})"), ('misfits', "(window.__fk.G.ktab = 'mis', {type:'bld',id:IDS.keep})"), ('research', "(window.__fk.G.ktab = 'town', {type:'research'})"),
@@ -58,7 +58,7 @@ TITLES = """async (fixed) => { await document.fonts.ready; const F = window.__fk
 # real slot of the War page, the cycle button and an info cell. A word that does not fit fails the gate:  --word "a long word"  shows it failing.
 SLOT_WORDS = """async (extra) => { await document.fonts.ready; const F = window.__fk, out = [];
   F.newGame(5); F.act('close'); const G = F.G; G.P[0].techs.add('command'); F.fxDirty(); F.sqPlan(0, 'foot', 1); F.hudPage('war'); F.ui(true);
-  const words = [...Object.values(F.ROW_WORD).flat(), ...F.RES.map((r) => F.RESOURCES[r].name), ...F.BN, ...F.CLS.map((c) => c[1]), ...extra],
+  const words = [...Object.values(F.ROW_WORD).flat(2), ...F.RES.map((r) => F.RESOURCES[r].name), ...F.BN, ...F.CLS.map((c) => c[1]), ...extra],
     slot = document.querySelector('#row [data-act="wsq:0"]'), top = slot.querySelector('.top'), info = document.querySelector('#row .info'),
     fits = (e, box) => e.getBoundingClientRect().width <= box.clientWidth, put = (e, t) => { e.textContent = t; return e; };
   for (const t of words) for (const e of [slot.querySelector('.wd'), document.querySelector('#hudB .wd')]) if (put(e, t).scrollWidth > e.clientWidth) out.push(`${t} ${e.scrollWidth}>${e.clientWidth}`);
@@ -80,15 +80,16 @@ DOUBLES = """async (extra) => { await document.fonts.ready; const F = window.__f
 # The quick action (MENU-SPEC §7, Build 70), at every size: each of its four cells is the screen's slot (W − 42) ÷ 6 by 44; opened in the middle,
 # at the right edge, above the row and in that corner, its first icon (the sword) is right under the finger (its column on it, half a slot
 # below it; above it when flipped at the row); the sword turns it to All in the same place. Left open in the middle for the page's measures.
-QUICK = """() => { const F = window.__fk, out = [], el = document.getElementById('qa'), W = innerWidth, slot = (W - 42) / 6;
-  F.act('close'); const row = document.getElementById('orders').getBoundingClientRect().top, under = (r, x, y) => x >= r.left && x <= r.right && (Math.abs(r.top - y - 22) < 1.5 || Math.abs(y - r.bottom - 22) < 1.5);
+QUICK = """() => { const F = window.__fk, out = [], el = document.getElementById('qa'), W = innerWidth;
+  F.act('close'); const row = document.getElementById('orders').getBoundingClientRect().top, mid = (r) => [r.left + r.width / 2, r.top + r.height / 2];
   const open = (x, y) => { F.showQuick(x, y, F.hitAt(x, y), 1); return el.querySelector('[data-act=qsword]').getBoundingClientRect(); };
-  for (const [x, y] of [[W / 2, 300], [W - 12, 300], [W / 2, row - 40], [W - 12, row - 40]]) {
-    const first = open(x, y);
-    for (const b of el.children) { const r = b.getBoundingClientRect(); if (Math.abs(r.width - slot) > 0.6 || Math.abs(r.height - 44) > 0.6) out.push(`quick: a cell ${r.width.toFixed(1)}x${r.height.toFixed(1)}, the slot ${slot.toFixed(1)}x44`); }
-    if (!under(first, x, y)) out.push(`quick: the sword is not under a tap at ${Math.round(x)},${Math.round(y)}`);
-    el.querySelector('[data-act=qsword]').click(); const all = el.querySelector('[data-act=qall]').getBoundingClientRect();
-    if (Math.abs(all.left - first.left) > 0.5 || Math.abs(all.top - first.top) > 0.5) out.push('quick: All is not where the sword was'); }
+  for (const [x, y] of [[W / 2, 300], [W - 40, 300], [80, 400]]) {   // the quick action (Albert, Nov 2): round chips 44 across, the sword centred under the finger, All where it was, Idle toward the middle
+    const first = open(x, y), [cx, cy] = mid(first);
+    if (el.children.length !== 1 || Math.abs(first.width - 44) > 0.6 || Math.abs(first.height - 44) > 0.6) out.push(`quick: ${el.children.length} chips of ${first.width.toFixed(1)}x${first.height.toFixed(1)}, not one sword of 44`);
+    if (Math.abs(cx - x) > 1 || Math.abs(cy - y) > 1) out.push(`quick: the sword is not centred under a tap at ${Math.round(x)},${Math.round(y)}`);
+    el.querySelector('[data-act=qsword]').click(); const all = el.querySelector('[data-act=qall]').getBoundingClientRect(), idle = el.querySelector('[data-act=qidle]').getBoundingClientRect();
+    if (Math.abs(all.left - first.left) > 0.5 || Math.abs(all.top - first.top) > 0.5) out.push('quick: All is not where the sword was');
+    if ((x > W / 2) !== (idle.left < all.left)) out.push('quick: Idle does not open toward the middle of the screen'); }
   open(W / 2, 300); return out; }"""
 def fixed_titles():
     import re, glob
@@ -119,15 +120,13 @@ PLAY = """async () => {
   F.act('qcancel:' + F.keepOf(0).id + ',' + q0); if (F.keepOf(0).q.length !== q0) out.push('a slot tap did not cancel the villager');
   tap('[data-act="move:wood"]'); if (!F.G.units.some(u => u.owner === 0 && u.kind === 'vil' && u.job === 'wood')) out.push('+ under Wood put nobody on wood');
   
-  // the quick action (Build 70): a tap on open ground opens it; the sword turns it to All in place; + opens War aimed at the spot; the hammer opens the
-  // Build menu for the spot, the menu its Here card; idle sends an idle villager there; a tap on an enemy opens it at All with the red ring, and All
-  // sends every soldier at the enemy
+  // the quick action (Albert, Nov 2): a tap on open ground opens the sword; the sword turns to All in place; a hold on the ground opens its Here
+  // card; Idle sends an idle villager there; a tap on an enemy opens it at All with the red ring, and All sends every soldier at the enemy
   { F.act('close'); G.fogOn = false; let p = null; for (let y = 260; y < 500 && !p; y += 23) for (let x = 60; x < 330 && !p; x += 23) if (F.hitAt(x, y).t === 'ground') p = [x, y];
     F.tapAt(...p); const spot = G.qa && G.qa.h.e; if (!spot || document.getElementById('qa').hidden) out.push('a tap on open ground did not open the quick action');
     tap('#qa [data-act=qsword]'); if (!document.querySelector('#qa [data-act=qall]')) out.push('the sword did not turn the quick action to All');
-    tap('#qa [data-act=qwar]'); if (G.hud.page !== 'war' || !G.hud.h || G.hud.h.e !== spot || !document.getElementById('qa').hidden) out.push('+ did not open War aimed at the spot');
-    F.hudPage('jobs'); F.ui(true); F.tapAt(...p); tap('#qa [data-act=qbuild]'); if (!G.card || G.card.type !== 'menu' || !G.buildAt || G.buildAt.x !== spot.x) out.push('the hammer did not open the Build menu for the spot'); F.act('close');
-    F.tapAt(...p); tap('#qa [data-act=qhere]'); if (!G.card || G.card.type !== 'ground' || G.card.x !== spot.x) out.push('the menu did not open the Here card for the spot'); F.act('close');
+    F.tapAt(...p); if (!document.querySelector('#qa [data-act=qsword]')) out.push('a second tap on the ground did not close the quick action and open it again'); F.act('close');
+    F.holdAt(...p); if (!G.card || G.card.type !== 'ground' || G.card.x !== spot.x) out.push('a hold on the ground did not open the Here card for the spot'); F.act('close');
     const v = G.units.find((u) => u.owner === 0 && u.kind === 'vil' && !u.inside); F.setJob(v, null); F.tapAt(...p); tap('#qa [data-act=qsword]'); tap('#qa [data-act=qidle]');
     if (!v.post || Math.hypot(v.post.x - spot.x, v.post.y - spot.y) > 45) out.push('idle did not send an idle villager to the spot');
     const k = F.keepOf(0), S = [0, 1, 2].map((i) => F.addUnit(0, 'spear', k.x + 40 + i * 8, k.y + 40)), e = F.addUnit(1, 'spear', spot.x, spot.y); G.rel[0][1] = G.rel[1][0] = 'war';
