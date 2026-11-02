@@ -74,6 +74,7 @@ PLANTS = [
   ('33-verbs.js', "hyp(e.clientX - lpAt.x, e.clientY - lpAt.y) < 8", "false", 'tests/gate.py', 'hold: a thumb that rolls a pixel loses its hold', 'rolls'),
   ('39-huddle.js', "w ? `${w} s` : tap[1]", "tap[1]", 'tests/gate.py', "director: the wait of the riders never shows", 'wait is not on their slot'),
   ('28-army-quick.js', "			b = nearestFoeBld(0, h.e, undefined, 300);", "			b = null;", 'tests/gate.py', 'director: Bombard ignores the enemy building', 'did not hit the enemy building'),
+  ('26-input.js', "		miniAt.pan = true;", "", 'tests/gate.py', 'the small map: a drag does not sweep the camera', 'did not sweep'),
   ('32-frame.js', "		txt('mailN', String(G.mailN || 0));", "		txt('mailN', '0');", 'tests/gate.py', 'mail: the button never counts the unread', 'count the unread'),
   ('39-huddle.js', "	if (mb && mini.parentNode !== mb) mb.appendChild(mini);", "	if (false) mb.appendChild(mini);", 'tests/cards.py', 'the station: the small map never comes into the middle', 'the small map'),
   ('27-cards-core.js', "' work' : ' life'}", "' work' : ''}", 'tests/cards.py', 'title: the health bar is gone from the title box', 'the title box'),

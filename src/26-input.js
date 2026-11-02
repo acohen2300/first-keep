@@ -291,15 +291,24 @@ mini.addEventListener('pointerdown', (e) => {
 		y = ((e.clientY - r.top) / r.height) * MAP,
 		t0 = performance.now();
 	camGo(x, y);
-	miniAt = { x: e.clientX, y: e.clientY };
+	miniAt = { x: e.clientX, y: e.clientY, pan: false };
 	clearTimeout(miniHold);
 	miniHold = setTimeout(() => launchAt({ t: 'ground', e: { x, y } }, t0), HOLD_MS); // held on the small map: the army is launched there (the ring grows at the spot, now in view)
 });
 mini.addEventListener('pointermove', (e) => {
-	if (miniAt && hyp(e.clientX - miniAt.x, e.clientY - miniAt.y) > 8) {
+	if (!miniAt) return;
+	if (!miniAt.pan && hyp(e.clientX - miniAt.x, e.clientY - miniAt.y) > 8) {
 		clearTimeout(miniHold);
 		cancelLaunch();
+		miniAt.pan = true;
 	} // a finger that moves is looking, not launching
+	if (miniAt.pan) {
+		const r = mini.getBoundingClientRect();
+		camStop();
+		cam.x = clamp(((e.clientX - r.left) / r.width) * MAP, 0, MAP);
+		cam.y = clamp(((e.clientY - r.top) / r.height) * MAP, 0, MAP);
+		clampCam();
+	} // and a drag on the small map sweeps the camera with it, no glide (Albert, Nov 2)
 });
 for (const ev of ['pointerup', 'pointercancel'])
 	mini.addEventListener(ev, () => {

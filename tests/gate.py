@@ -89,6 +89,10 @@ QUICK = """async () => { const F = window.__fk, G = F.G, out = [];   // the hold
   G.msn[0] = { name: 'test', sq: 0, ord: -1, n0: 0, kinds: {}, what: 'Go to', label: '', x: k.x, y: k.y, t: G.t, due: G.t, st: 'go', odds: 0.5 };
   ev('pointerdown', 0); ev('pointermove', 3); await new Promise((r) => setTimeout(r, 420)); ev('pointerup', 3); b.dispatchEvent(new MouseEvent('click', { bubbles: true }));
   if (G.msn[0]) out.push('a held button whose thumb rolls 3 px lost its hold (everyone home did not fire)'); F.hudPage('jobs'); F.ui(true);
+  // the small map (Albert, Nov 2): a tap jumps the camera, a drag sweeps it with the finger and launches nobody
+  { F.hudPage('war'); F.ui(true); const m = document.getElementById('mini'), mr = m.getBoundingClientRect(), mev = (type, fx, fy) => m.dispatchEvent(new PointerEvent(type, { bubbles: true, clientX: mr.left + mr.width * fx, clientY: mr.top + mr.height * fy, pointerId: 2 }));
+    mev('pointerdown', 0.2, 0.2); mev('pointermove', 0.6, 0.6); const cx = F.cam.x; mev('pointermove', 0.8, 0.8); if (!(F.cam.x > cx)) out.push('a drag on the small map did not sweep the camera');
+    await new Promise((r) => setTimeout(r, 420)); if (G.launch) out.push('a drag on the small map started a launch'); mev('pointerup', 0.8, 0.8); F.hudPage('jobs'); F.ui(true); }
   return out; }"""
 def fixed_titles():
     import re, glob

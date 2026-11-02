@@ -365,3 +365,6 @@ Checks on main before publishing:
 - Wrong (3): the lift after a hold fires the tap (no: the click after a hold is swallowed, `lpDone`; a test now holds Attack with a 3 px roll); `u.wall` stripped on reload (no: units save every property but a skip list); the crosshair a dead clone after reload (no: the HUD is rebuilt on load). [2026-11-02 18:19]
 - Tests: gate the reload wait on the slot, winded riders not sent, the hold through a 3 px roll, a tap with no soldiers. Plants: four. [2026-11-02 18:19]
 
+## Build 80 preview 30 (a drag on the small map pans) [2026-11-02 18:36]
+- Albert, Nov 2, 18:28: a drag on the small map sweeps the camera with the finger (no glide) and launches nobody; a tap still jumps, a hold still launches. The standard small-map behaviour. Gate test and a plant. [2026-11-02 18:36]
+
