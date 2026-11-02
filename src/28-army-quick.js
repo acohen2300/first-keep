@@ -106,46 +106,84 @@ function guardRow(t, id) {
 		) + btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis'),
 	);
 }
-// ── The quick action (MENU-SPEC §7, Albert Nov 2, 14:54): for emergencies, small. Tap open ground: the sword under the finger, ✕ beside it
-// toward the middle. Tap the sword: All in its place, ☰ beside it (the Here card for the spot). Tap All: every soldier goes there. Three taps,
-// the finger never moves. An enemy or a hazard: a red ring under it (drawPicks) and it opens straight at All, ringed red. ✕, or a tap
-// anywhere else, closes it (that tap does nothing more). G.qa holds what was tapped (h, as hitAt gives it) for the verbs (33-verbs).
-const QA = [
-	[
-		['qsword', 'sword', 'Send soldiers here'],
-		['qclose', 'close', 'Close'],
-	],
-	[
-		['qall', null, 'Send every soldier'], // the word, not an icon: All (Albert, Nov 2)
-		['qhere', 'list', 'About this place'],
-	],
-];
 // an enemy the finger can send soldiers at: a beast that is not game (game is hunted from the bar) always; anyone else, the Natives and
 // their Throne too, while you are at war
 const foeOf = (e) =>
 	e.owner !== 0 && e.hp > 0 && (e.owner === WILD && !e.q && !e.native ? !UNIT[e.kind].meat : atWar(0, e.owner));
-function showQuick(sx, sy, h, step) {
-	closeCard();
-	$('qa').hidden = false;
-	G.qa = { h, red: step === 2, sx, sy, left: sx > $('stage').getBoundingClientRect().width / 2 }; // the second chip opens toward the middle
-	quickStep(step);
+// ── The hold (MENU-SPEC §7, Albert Nov 2, 15:35): hold the ground or an enemy and a point under the finger grows into a ring, white to
+// red, "Hold to launch attack" over it; at full every soldier goes there and the ring snaps out. Lift or drag first and nothing is sent (a
+// drag is the box, 26-input). A plain tap on the ground shows the words a moment, which teaches it. G.launch: what is held (h, as hitAt gives
+// it), when it started, when it fired; G.hint: the words a tap left.
+let launchT = 0;
+function launchAt(h) {
+	cancelLaunch();
+	if (!sendable().length) return hintAt(h, HOLD_WORD.none), false;
+	G.hint = null;
+	G.launch = { h, t0: performance.now() };
+	launchT = setTimeout(fireLaunch, LAUNCH.ms);
+	feel('tick');
+	return true;
 }
-// a step's chips: the first centred under the finger, the second beside it toward the middle; kept inside the map between the bars
-function quickStep(step) {
-	const el = $('qa'),
-		first = step === 1 || sendable().length ? (G.qa.red ? 'warn' : 'go') : 'dis'; // the first chip rings; the second is plain
-	el.classList.toggle('left', G.qa.left);
-	patchHTML(el, QA[step - 1].map(([act, icon, label], i) => sym(act, icon ? ICON[icon] : `<b>${ROW_WORD.all}</b>`, i ? '' : first, label)).join(''));
-	const r = $('stage').getBoundingClientRect(),
-		css = getComputedStyle(el),
-		gap = parseFloat(css.getPropertyValue('--gap')),
-		s = parseFloat(css.getPropertyValue('--slot')),
-		up = $('hud').getBoundingClientRect().bottom - r.top + gap,
-		down = $('orders').getBoundingClientRect().top - r.top - gap - s,
-		w = el.offsetWidth,
-		x = G.qa.left ? G.qa.sx + s / 2 - w : G.qa.sx - s / 2;
-	el.style.left = clamp(x, gap, r.width - w - gap) + 'px';
-	el.style.top = clamp(G.qa.sy - s / 2, up, down) + 'px';
+function cancelLaunch() {
+	clearTimeout(launchT);
+	if (G.launch && !G.launch.fired) G.launch = null;
+}
+function fireLaunch() {
+	const C = G.launch;
+	if (!C || C.fired) return;
+	clearTimeout(launchT);
+	const S = sendable();
+	if (S.length) order(S, C.h);
+	else say(freeWhy(), '', TOAST.mid);
+	C.fired = performance.now();
+	feel('snap');
+}
+const hintAt = (h, w = HOLD_WORD.attack) => (G.hint = { h, w, t: performance.now() });
+// the ring and the words, on the map, over the spot (the canvas, each frame; 21-view-frame)
+function drawLaunch() {
+	const now = performance.now(),
+		C = G.launch,
+		I = G.hint,
+		word = (x, y, w, a) => {
+			ctx.globalAlpha = a;
+			ctx.strokeStyle = 'rgba(0,0,0,.75)';
+			ctx.lineWidth = 3;
+			ctx.strokeText(w, x, y);
+			ctx.fillStyle = codeOf('w');
+			ctx.fillText(w, x, y);
+		};
+	if (I && now - I.t > timeOf('settle')) G.hint = null;
+	if (!C && !G.hint) return;
+	ctx.save();
+	ctx.font = mapFont();
+	ctx.textAlign = 'center';
+	ctx.lineJoin = 'round';
+	if (G.hint) word(SX(I.h.e.x), SY(I.h.e.y) - LAUNCH.r - 14, I.w, 1 - (now - I.t) / timeOf('settle'));
+	if (C) {
+		const x = SX(C.h.e.x),
+			y = SY(C.h.e.y),
+			f = C.fired ? 1 : clamp((now - C.t0) / LAUNCH.ms, 0, 1),
+			out = C.fired ? clamp((now - C.fired) / timeOf('quick'), 0, 1) : 0, // at full it snaps out: a little wider, gone
+			r = (4 + (LAUNCH.r - 4) * f) * (1 + 0.4 * out),
+			col = grad(-f); // white to red, the one gradient
+		if (out >= 1) G.launch = null;
+		else {
+			ctx.shadowColor = 'rgba(0,0,0,.85)';
+			ctx.shadowBlur = 3;
+			ctx.beginPath();
+			ctx.arc(x, y, r, 0, 7);
+			ctx.globalAlpha = (1 - out) * 0.1 * f;
+			ctx.fillStyle = col;
+			ctx.fill();
+			ctx.globalAlpha = 1 - out;
+			ctx.strokeStyle = col;
+			ctx.lineWidth = 1.6 + 1.2 * f;
+			ctx.stroke();
+			ctx.shadowBlur = 0;
+			if (!C.fired) word(x, y - LAUNCH.r - 14, HOLD_WORD.attack, 1);
+		}
+	}
+	ctx.restore();
 }
 // what the game thinks fits a spot (Albert, Build 41): each reason scores a kind, the best one is marked and its menu opens.
 // A drop-off for what grows there with none near; more of what stands around you (houses: a house; fields: a mill, then a field; army buildings: the one you lack);
@@ -199,10 +237,6 @@ function suggestAt(x, y) {
 	if (capOf(0) - popOf(0) - queuedOf(0) <= SUGGEST.room) add('house', 1.5);
 	const best = Object.entries(sc).sort((a, b) => b[1] - a[1])[0];
 	return best ? best[0] : null;
-}
-function hideQuick() {
-	$('qa').hidden = true;
-	G.qa = null;
 }
 // The two dials of an army or one battalion (a: 'all' or its number): temper, and shape once Formations is researched. One button each, a tap steps round; a gold ring marks what is not the plain setting.
 const dialBtns = (a) => {

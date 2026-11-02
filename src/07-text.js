@@ -745,6 +745,7 @@ const EV_TEXT = {
 };
 // The row's words (MENU-SPEC §6): the word under each picture icon that is not a name from a table (RESOURCES, BN, CLS) or a pace (paceWord),
 // and the cycle button's page names. The gate measures every word a slot can show in its slot at 375 pt.
+const HOLD_WORD = { attack: 'Hold to launch attack', none: 'No soldiers yet' }; // over the hold's ring (28-army-quick)
 const ROW_WORD = {
 	jobs: 'Jobs',
 	war: 'War',
@@ -758,7 +759,6 @@ const ROW_WORD = {
 	new: 'New',
 	army: 'The army',
 	fight: 'fighting',
-	all: 'All', // the quick action's second step: every soldier
 	emg: 'Alarm', // the red button: the alarm you raise (Albert, Nov 2: Emergency was too wide)
 	emgW: [['Work', 'all clear'], ['Gather', 'at home'], ['Garrison', 'all in'], ['Shelter', 'hide']], // the Alarm page: each order's word and what it does, in the row's order (Albert, Nov 2: Age of Empires' Town Bell and Back to Work)
 	pace: ['slow', 'medium', 'fast'], // a squad's pace under it, from its slowest member (paceWord)

@@ -73,7 +73,6 @@ function wallDrag(d, p) {
 	wallSet(pl);
 }
 cv.addEventListener('pointerdown', (e) => {
-	hideQuick();
 	holdStop();
 	try {
 		cv.setPointerCapture(e.pointerId);
@@ -133,9 +132,14 @@ cv.addEventListener('pointerdown', (e) => {
 			ui(true);
 			return;
 		} // held on one of yours: it is picked, and the next taps add more
-		drag = { mode: 'box', x0: G.press.x, y0: G.press.y, x1: G.press.x, y1: G.press.y };
-		G.box = drag;
+		const at = { x0: G.press.x, y0: G.press.y, x1: G.press.x, y1: G.press.y };
 		G.press = null;
+		if ((h.t === 'ground' || ((h.t === 'unit' || h.t === 'bld') && foeOf(h.e))) && launchAt(h)) {
+			drag = { mode: 'launch', ...at };
+			return;
+		} // held on the ground or an enemy: the ring grows, and at full every soldier goes (28-army-quick); a drag turns it into the box
+		drag = { mode: 'box', ...at };
+		G.box = drag;
 	}, HOLD_MS);
 });
 cv.addEventListener('pointermove', (e) => {
@@ -161,6 +165,11 @@ cv.addEventListener('pointermove', (e) => {
 		aimSpot(p.x, p.y);
 		return;
 	}
+	if (drag && drag.mode === 'launch' && hyp(p.x - drag.x0, p.y - drag.y0) > 12) {
+		cancelLaunch();
+		drag = { mode: 'box', x0: drag.x0, y0: drag.y0, x1: p.x, y1: p.y };
+		G.box = drag;
+	} // the finger moved: no attack, a box
 	if (drag && drag.mode === 'box') {
 		drag.x1 = p.x;
 		drag.y1 = p.y;
@@ -211,15 +220,19 @@ cv.addEventListener('pointerup', (e) => {
 		ui(true);
 		return;
 	}
+	if (d.mode === 'launch') {
+		cancelLaunch();
+		return;
+	} // let go before the ring was full: nothing is sent
 	if (d.mode === 'box') {
 		G.box = null;
 		if (Math.abs(d.x1 - d.x0) < 12 && Math.abs(d.y1 - d.y0) < 12) {
 			const q = lp(e);
-			holdAt(q.x, q.y);
+			tapAt(q.x, q.y);
 		} else boxPick(d);
 		ui(true);
 		return;
-	} // held on open ground but never dragged: the Here card for the spot (Albert, Nov 2), or a tap with soldiers picked
+	} // held but never dragged: it was a tap
 	if (d.mode === 'place' || d.mode === 'wpt' || d.mode === 'wall') {
 		ui(true);
 		return;
@@ -249,6 +262,7 @@ function dropDrag() {
 }
 cv.addEventListener('pointercancel', (e) => {
 	holdStop();
+	cancelLaunch();
 	ptrs.delete(e.pointerId);
 	if (ptrs.size < 2) pinch = null;
 	dropDrag();
@@ -335,14 +349,14 @@ const cardFor = (h) =>
 			? { type: 'find', id: h.e.id }
 			: h.t === 'unit'
 				? { type: 'unit', id: h.e.id }
-				: { type: 'node', id: h.e.id };
-// One rule for the finger (Albert, Build 40): a tap picks a unit, a double tap opens its card, a hold does more (picks and keeps picking; on open ground, a box). Buildings and places open on one tap.
+				: h.t === 'ground'
+					? { type: 'ground', x: h.e.x, y: h.e.y }
+					: { type: 'node', id: h.e.id };
+// One rule for the finger (Albert, Build 40; Nov 2): a tap picks a unit, a double tap opens its card (the ground's too), a hold does more (on yours, picks and keeps picking; on the ground or an enemy, the attack's ring; held and dragged, a box). Buildings and places open on one tap.
 // With one or more of yours picked, a tap on anything else is the obvious order, without a menu: attack, hunt, gather, build, mend, walk.
 // The order goes at once (Build 40 reviews: a waiting order reads as lag); a second tap on the same thing within a blink opens its card, the order already given.
 let lastTap = { key: '', t: 0 };
 function tapAt(sx, sy) {
-	const qa = !!G.qa; // a tap while the quick action is open only closes it (Albert, Nov 2: it would not go away)
-	hideQuick();
 	if (G.over) return;
 	if (RADAR && hyp(sx - RADAR.sx, sy - RADAR.sy) < 26) {
 		G.follow = false;
@@ -351,10 +365,10 @@ function tapAt(sx, sy) {
 	}
 	if (G.hud.aim) return aimAt(sx, sy); // Aim: the next tap is the target
 	const h = hitAt(sx, sy),
-		key = h.t === 'ground' ? '' : h.t + h.e.id,
+		key = h.t === 'ground' ? 'ground' : h.t + h.e.id,
 		now = performance.now(),
-		dbl = key && key === lastTap.key && now - lastTap.t < DBL_MS;
-	lastTap = { key, t: now };
+		dbl = key === lastTap.key && now - lastTap.t < DBL_MS && (key !== 'ground' || hyp(sx - lastTap.sx, sy - lastTap.sy) < 26);
+	lastTap = { key, t: now, sx, sy }; // a double tap on the ground opens the Here card for that spot (Albert, Nov 2), as on anything else
 	if (dbl) {
 		setPick([]);
 		openCard(cardFor(h));
@@ -377,13 +391,9 @@ function tapAt(sx, sy) {
 			ACT.ordpick(String(O.id));
 			return;
 		} // the ring of a group on the march: tap it to pick the group
-		if (!qa) showQuick(sx, sy, h, hazardAt(h.e.x, h.e.y) ? 2 : 1);
+		hintAt(h);
 		return;
-	} // nothing picked: the quick action; on a hazard, straight at its second step
-	if ((h.t === 'unit' || h.t === 'bld') && foeOf(h.e)) {
-		showQuick(sx, sy, h, 2);
-		return;
-	} // an enemy: a red ring under it, and the quick action at its second step (MENU-SPEC §7)
+	} // nothing picked: the words "Hold to launch attack" a moment, which teach the hold (Albert, Nov 2)
 	if (
 		h.t === 'bld' &&
 		h.e.owner === 0 &&
@@ -402,14 +412,6 @@ function tapAt(sx, sy) {
 		return;
 	} // a building, a field, a find: nothing to pick, so one tap opens it (Albert, Build 40)
 	setPick([{ t: h.t, id: h.e.id }]); // a unit not yours: a ring says what the finger found; a second tap opens its page
-}
-// a hold on open ground, never dragged (Albert, Nov 2): the Here card for that spot, as a phone's press and hold tells you about a thing;
-// with yours picked it is a tap: their order
-function holdAt(sx, sy) {
-	const h = hitAt(sx, sy);
-	if (h.t !== 'ground' || picked().length) return tapAt(sx, sy);
-	hideQuick();
-	openCard({ type: 'ground', x: h.e.x, y: h.e.y });
 }
 // the order ring under a finger (tap slop 26 px): the nearest group ring wins
 function ordAt(sx, sy) {

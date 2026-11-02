@@ -143,7 +143,6 @@ const clip = (text) => {
 };
 window.__fk = {
 	suggestAt,
-	holdAt,
 	PAGES,
 	whoIs,
 	isNext,
@@ -158,7 +157,10 @@ window.__fk = {
 	groundSpd,
 	wearMul,
 	say,
-	showQuick,
+	launchAt,
+	HOLD_WORD,
+	fireLaunch,
+	cancelLaunch,
 	capFor,
 	armyRoom,
 	capOf,

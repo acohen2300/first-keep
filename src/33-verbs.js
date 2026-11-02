@@ -525,23 +525,6 @@ const PLAY = {
 	hudrein(a) {
 		hudReinforce(Number(a));
 	},
-	// the quick action (28-army-quick): each reads what was tapped, G.qa, and closes it
-	qsword() {
-		quickStep(2);
-	}, // swapped in place: All where the sword was
-	qall() {
-		const S = sendable();
-		if (S.length) order(S, G.qa.h);
-		else say(freeWhy(), '', TOAST.mid);
-		hideQuick();
-	},
-	qhere() {
-		const { x, y } = G.qa.h.e;
-		openCard({ type: 'ground', x, y });
-	}, // ☰: the Here card for that spot
-	qclose() {
-		hideQuick();
-	},
 	qsfrom(a) {
 		G.qs.from = a === 'all' ? 'all' : Number(a);
 	},

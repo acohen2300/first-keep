@@ -65,12 +65,12 @@ Three moves: **split** (a | b), **merge across**, **merge down**. Never split a 
 - **Tints:** Jobs as now; War and Train in Steel (`COLORS.md`). No panel behind the row on any page (Nov 2): the map shows between the slots. **The cycle button** is the same on every page: a chevron › over three page dots, the one you are on filled (↻ reads as reload). Cards are glass: Brown 1 at 92%, the map's shapes through it; no blur (it costs every frame). [2026-11-02 13:28]
 - **Cut:** the door, the Realm page, the Build page (two versions: Build 64's shuffling "what the town needs" page and the fixed two-rank draft, `Build Page (cut)`), the Squad page (its work moves into the squad card).
 
-## 7. The quick action (AGREED Oct 31; redrawn Albert, Nov 2, 14:54) [2026-11-02 15:06]
-- For emergencies, small: round chips one slot across (44), the first centred under the finger, the second beside it toward the middle of the screen. [2026-11-02 15:06]
-- **Tap open ground:** the sword (blue ring) and ✕. **Tap the sword:** All, the word, in its place, and ☰ beside it (the Here card for the spot). **Tap All:** every soldier goes there. Three taps, the finger never moves. [2026-11-02 15:06]
-- **Tap an enemy or a hazard:** a red circle under it, and it opens straight at All, ringed red. [2026-11-02 15:06]
-- ✕, or a tap anywhere else, closes it; that tap does nothing more (it used to open a new one at once, so it would not go away). **Press and hold the ground:** the Here card. With yours picked, a tap is their obvious order, no menu (Build 40). [2026-11-02 15:06]
-- Cut (Nov 2): the 2 × 2 block, the hammer, +, Idle, the bullseye. [2026-11-02 15:06]
+## 7. The hold: launch an attack (Albert, Nov 2, 15:35; the quick action cut) [2026-11-02 15:41]
+- **Hold the ground or an enemy:** a point under the finger grows into a ring (34 across at full) over 1.5 s, white to red on the one gradient, a faint tint inside, "Hold to launch attack" over it. At full every soldier goes there and the ring snaps out (a little wider, gone). `LAUNCH` in `06-rules-tuning.js`. [2026-11-02 15:41]
+- **Let go, or drag, before it is full:** nothing is sent; a drag becomes the box. No soldiers: the words say "No soldiers yet" and no ring grows. [2026-11-02 15:41]
+- **A plain tap on the ground:** "Hold to launch attack" over the spot a moment, which teaches the hold; nothing else. **A double tap on the ground:** its Here card, as a double tap opens anything's card. With yours picked, a tap is their obvious order (Build 40). [2026-11-02 15:41]
+- Precedent: hold to confirm (games' high-stakes actions); a strike's radius growing (strategy games). [2026-11-02 15:41]
+- Cut (Nov 2): the quick action whole (the 2 × 2 block, then the sword, ✕, All, ☰, the bullseye), its verbs and its styles. [2026-11-02 15:41]
 
 ## 8. Cards (pictures in `mockups/70/`)
 | Card | Layout | Picture |

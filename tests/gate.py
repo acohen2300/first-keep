@@ -80,19 +80,11 @@ DOUBLES = """async (extra) => { await document.fonts.ready; const F = window.__f
 # The quick action (MENU-SPEC §7, Build 70), at every size: each of its four cells is the screen's slot (W − 42) ÷ 6 by 44; opened in the middle,
 # at the right edge, above the row and in that corner, its first icon (the sword) is right under the finger (its column on it, half a slot
 # below it; above it when flipped at the row); the sword turns it to All in the same place. Left open in the middle for the page's measures.
-QUICK = """() => { const F = window.__fk, out = [], el = document.getElementById('qa'), W = innerWidth;
-  F.act('close'); const row = document.getElementById('orders').getBoundingClientRect().top, mid = (r) => [r.left + r.width / 2, r.top + r.height / 2];
-  const open = (x, y) => { F.showQuick(x, y, F.hitAt(x, y), 1); return el.querySelector('[data-act=qsword]').getBoundingClientRect(); };
-  for (const [x, y] of [[W / 2, 300], [W - 40, 300], [80, 400]]) {   // the quick action (Albert, Nov 2): round chips 44 across, the sword centred under the finger with ✕ toward the middle; All where it was with ☰
-    const first = open(x, y), [cx, cy] = mid(first);
-    const x1 = el.querySelector('[data-act=qclose]').getBoundingClientRect();
-    if (el.children.length !== 2 || Math.abs(first.width - 44) > 0.6 || Math.abs(first.height - 44) > 0.6) out.push(`quick: ${el.children.length} chips of ${first.width.toFixed(1)}x${first.height.toFixed(1)}, not a sword of 44 and ✕`);
-    if ((x > W / 2) !== (x1.left < first.left)) out.push('quick: ✕ does not open toward the middle of the screen');
-    if (Math.abs(cx - x) > 1 || Math.abs(cy - y) > 1) out.push(`quick: the sword is not centred under a tap at ${Math.round(x)},${Math.round(y)}`);
-    el.querySelector('[data-act=qsword]').click(); const all = el.querySelector('[data-act=qall]').getBoundingClientRect(), menu = el.querySelector('[data-act=qhere]').getBoundingClientRect();
-    if (Math.abs(all.left - first.left) > 0.5 || Math.abs(all.top - first.top) > 0.5) out.push('quick: All is not where the sword was');
-    if ((x > W / 2) !== (menu.left < all.left)) out.push('quick: ☰ does not open toward the middle of the screen'); }
-  open(W / 2, 300); return out; }"""
+QUICK = """() => { const F = window.__fk, G = F.G, out = [];   // the hold (Albert, Nov 2): a ring under the finger, the words over it, inside the screen at every size
+  F.act('close'); const k = F.keepOf(0); F.addUnit(0, 'spear', k.x + 40, k.y + 40); const h = F.hitAt(innerWidth / 2, 300);
+  if (!F.launchAt(h)) out.push('the hold did not start with a soldier to send'); F.draw();
+  if (!G.launch) out.push('the hold has no ring'); F.cancelLaunch(); if (G.launch) out.push('letting go left the ring');
+  return out; }"""
 def fixed_titles():
     import re, glob
     return sorted(set(re.findall(r"\btitle\(\s*'([^']+)'", ''.join(open(f).read() for f in sorted(glob.glob('src/*.js'))))))
@@ -122,19 +114,14 @@ PLAY = """async () => {
   F.act('qcancel:' + F.keepOf(0).id + ',' + q0); if (F.keepOf(0).q.length !== q0) out.push('a slot tap did not cancel the villager');
   tap('[data-act="move:wood"]'); if (!F.G.units.some(u => u.owner === 0 && u.kind === 'vil' && u.job === 'wood')) out.push('+ under Wood put nobody on wood');
   
-  // the quick action (Albert, Nov 2, 14:54): a tap on open ground opens the sword and ✕; the sword turns to All and ☰ in place; ☰ opens the
-  // Here card; ✕ closes it, and so does a tap anywhere else (that tap does nothing more); a hold on the ground opens its Here card; a tap
-  // on an enemy opens it at All with the red ring, and All sends every soldier at the enemy
+  // the hold (Albert, Nov 2, 15:35): a tap on open ground shows "Hold to launch attack" and sends nobody; a double tap opens its Here card;
+  // a hold on the ground fills the ring and at full every soldier goes there; let go first and nobody goes; a hold on an enemy sends them at it
   { F.act('close'); G.fogOn = false; let p = null; for (let y = 260; y < 500 && !p; y += 23) for (let x = 60; x < 330 && !p; x += 23) if (F.hitAt(x, y).t === 'ground') p = [x, y];
-    F.tapAt(...p); const spot = G.qa && G.qa.h.e; if (!spot || document.getElementById('qa').hidden) out.push('a tap on open ground did not open the quick action');
-    tap('#qa [data-act=qsword]'); if (!document.querySelector('#qa [data-act=qall]')) out.push('the sword did not turn the quick action to All');
-    F.tapAt(...p); if (!document.getElementById('qa').hidden) out.push('a tap on the ground while the quick action is open did not close it');
-    F.tapAt(...p); tap('#qa [data-act=qclose]'); if (!document.getElementById('qa').hidden) out.push('✕ did not close the quick action');
-    F.tapAt(...p); tap('#qa [data-act=qsword]'); tap('#qa [data-act=qhere]'); if (!G.card || G.card.type !== 'ground' || G.card.x !== spot.x) out.push('☰ did not open the Here card for the spot'); F.act('close');
-    F.holdAt(...p); if (!G.card || G.card.type !== 'ground' || G.card.x !== spot.x) out.push('a hold on the ground did not open the Here card for the spot'); F.act('close');
+    const spot = F.hitAt(...p).e; F.tapAt(...p); if (!G.hint || G.hint.w !== F.HOLD_WORD.attack) out.push('a tap on the ground did not show "Hold to launch attack"'); if (G.card) out.push('a tap on the ground opened a card');
+    F.tapAt(...p); if (!G.card || G.card.type !== 'ground' || Math.abs(G.card.x - spot.x) > 1) out.push('a double tap on the ground did not open the Here card for the spot'); F.act('close');
     const k = F.keepOf(0), S = [0, 1, 2].map((i) => F.addUnit(0, 'spear', k.x + 40 + i * 8, k.y + 40)), e = F.addUnit(1, 'spear', spot.x, spot.y); G.rel[0][1] = G.rel[1][0] = 'war';
-    F.tapAt(F.SX(e.x), F.SY(e.y) - 6 * F.cam.z); if (!G.qa || !G.qa.red || G.qa.h.e !== e || !document.querySelector('#qa [data-act=qall]')) out.push('a tap on an enemy did not open the quick action at All, ringed red');
-    tap('#qa [data-act=qall]'); if (!S.every((u) => u.focus === e)) out.push('All on an enemy did not send every soldier at it');
+    const o0 = JSON.stringify(G.ords || {}); F.launchAt(F.hitAt(...p)); F.cancelLaunch(); if (JSON.stringify(G.ords || {}) !== o0) out.push('letting go before the ring was full still sent soldiers');
+    F.launchAt(F.hitAt(F.SX(e.x), F.SY(e.y) - 6 * F.cam.z)); F.fireLaunch(); if (!S.every((u) => u.focus === e)) out.push('a full hold on an enemy did not send every soldier at it');
     e.hp = 0; for (const u of S) u.hp = 0; G.rel[0][1] = G.rel[1][0] = 'neutral'; G.fogOn = true; }
   // the cards (Build 70): Villager on the Town Center queues one in its line, and a tap on the queued one gives it back; the Market sells the
   // good picked; › on the Stores opens the book on its why; Build on a villager's job picker names it the builder of what is placed next

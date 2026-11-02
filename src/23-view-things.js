@@ -1235,11 +1235,9 @@ function drawFind(f) {
 	ctx.restore();
 	g = null;
 }
-// what the finger holds: a ring on the ground under each, green for yours, red for a foe's, gold for the wild and the land; and red under
-// the enemy or the hazard the quick action is open on (Build 70; a hazard is a spot on the ground, ringed as wide as a find)
+// what the finger holds: a ring on the ground under each, green for yours, red for a foe's, gold for the wild and the land
 function drawPicks(z) {
-	const red = G.qa && G.qa.red ? G.qa.h.e : null,
-		E = red ? [...(G.pickE || []), red] : G.pickE;
+	const E = G.pickE;
 	if (!E || !E.length) return;
 	ctx.lineWidth = 2;
 	ctx.setLineDash([]);
@@ -1248,14 +1246,7 @@ function drawPicks(z) {
 		if (e.amt !== undefined && e.amt <= 0 && !e.farm) continue;
 		const own = e.owner,
 			r = e.q ? halfOf(e) + 6 : !e.kind || FINDS[e.kind] ? 18 : 9;
-		ctx.strokeStyle =
-			e === red
-				? '#ff6a52'
-				: own === 0
-					? '#5ad27a'
-					: own === undefined || own === null || own === WILD
-						? '#ffd35e'
-						: '#ff6a52';
+		ctx.strokeStyle = own === 0 ? '#5ad27a' : own === undefined || own === null || own === WILD ? '#ffd35e' : '#ff6a52';
 		ring(SX(e.x), SY(e.y), r * z + 3, r * z * TILT + 2);
 	}
 }

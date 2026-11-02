@@ -338,3 +338,9 @@ Checks on main before publishing:
 - Cut: the bullseye and its icon, Idle and its verb (`qidle`, `qaIdle`: idle villagers called to the spot). [2026-11-02 15:06]
 - Tests: gate QUICK (a sword of 44 under the finger with ✕ toward the middle; All in its place with ☰); a tap elsewhere closes it; ✕ closes it; ☰ opens the Here card. Plant: a tap elsewhere that reopens it, caught. [2026-11-02 15:06]
 
+## Build 80 preview 26 (the hold launches an attack; the quick action cut) [2026-11-02 15:41]
+- Albert, Nov 2, 15:19 to 15:35 (mocked: smaller chips, icons only, a bullseye, his arrow, lock-on, chevrons, crossed swords; chosen: a point that grows into a ring; "let's try it"): hold the ground or an enemy 1.5 s and every soldier goes; the ring snaps out at full. A tap shows "Hold to launch attack"; a double tap on the ground opens the Here card. [2026-11-02 15:41]
+- Why: the quick action could not tell a tap that meant "here" from one that meant "close" (Albert: "how does it know?"); a hold means one thing. [2026-11-02 15:41]
+- Cut: `#qa` and its styles, `QA`, `showQuick`, `quickStep`, `hideQuick`, the verbs `qsword`, `qall`, `qhere`, `qclose`, `holdAt`, the red ring under the quick action's enemy. The cavalry's `CHARGE` kept its name; the hold is `LAUNCH`. [2026-11-02 15:41]
+- Tests: gate the hold (a tap teaches, a double tap opens the Here card, letting go sends nobody, a full hold on an enemy sends every soldier at it), QUICK measures the ring. Plants: four new, caught. Gate passes. [2026-11-02 15:41]
+
