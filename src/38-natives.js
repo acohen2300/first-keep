@@ -284,7 +284,7 @@ function natRaid() {
 		u.back = G.t + NATIVE.raidSecs;
 	}
 	if (q.id === 0)
-		news('war', `Robbers ride for your ${bldName(0, mark.kind).toLowerCase()} (${coord(mark.x, mark.y)}).`, 'warn', 7, mark);
+		news('war', `Robbers ride for your ${(BLD[mark.kind] ? bldName(0, mark.kind) : UNIT[mark.kind].name).toLowerCase()} (${coord(mark.x, mark.y)}).`, 'warn', 7, mark);
 }
 function nativesTick(dt) {
 	if (G.tick % 10 === 5) trapsTick();

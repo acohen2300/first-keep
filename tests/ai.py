@@ -44,8 +44,9 @@ JS = """() => {
     G.nodes = G.nodes.filter((n) => !(n.type === 'food' && Math.hypot(n.x - k.x, n.y - k.y) < 420));
     for (const a of G.units) if (a.owner === W() && F.UNIT[a.kind].meat) { a.hp = 0; a.gone = true; } G.units = G.units.filter((u) => u.hp > 0);
     for (let i = 0; i < 2; i++) G.nodes.push({ id: 9e6 + 10 + i, kind: 'bush', type: 'food', x: k.x + 50, y: k.y + (i ? 60 : -60), amt: 3000, max: 3000 });
+    const farms = () => G.blds.filter((b) => b.owner === o && b.kind === 'farm').length, f0 = farms(); // each computer now starts with one (EXCEPTIONS #16)
     F.think(p);
-    if (G.blds.some((b) => b.owner === o && b.kind === 'farm')) bad.push('P2: a field was built while two rich berry bushes by the Town Center beat it'); });
+    if (farms() > f0) bad.push('P2: a field was built while two rich berry bushes by the Town Center beat it'); });
   T_('P3', () => { const G = fresh(), o = 1, { p } = side(G, o, 'aggr', 3, 'stone', { f: 5000, w: 5000, s: 5000, g: 5000 }); p.age = 2;
     G.nodes = G.nodes.filter((n) => n.type !== 'stone' || n.kind === 'farm'); G.mode = 't15'; G.t = 899; F.think(p);
     if (G.blds.some((b) => b.owner === o && b.kind === 'quarry')) bad.push('P3: a quarry was built a second before the bell (it cannot pay back its cost)'); });
