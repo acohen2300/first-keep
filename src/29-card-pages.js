@@ -51,7 +51,7 @@ const BLD_PAGE = {
 		};
 	},
 	tpost: (b) => {
-		const f = G.finds.find((x) => x.id === b.sid);
+		const f = byId(G.finds, b.sid);
 		return f ? { fact: [`Holds ${coord(f.x, f.y)}`, 'tap the stop for prices'] } : {};
 	},
 	council: () =>
@@ -500,7 +500,7 @@ function caravanHTML(u) {
 	const r = u.route,
 		t = targetOf(r),
 		h0 = homeBiz(0, u),
-		d = !r && u.dest ? G.blds.find((b) => b.id === u.dest) : null;
+		d = !r && u.dest ? byId(G.blds, u.dest) : null;
 	let h = `<p>${r && t ? `Lane one: to the trade stop at ${coord(t.x, t.y)}${r.rep ? ', again and again' : ''}. ${u.leg === 'go' ? 'Carrying ' + (goodsText(u.goods || {}) || 'nothing') : u.leg === 'back' ? 'Coming home' + (u.goods && u.goods.spice ? ' with ' + u.goods.spice + ' spice' : '') : 'Loading'}.` : d && d.owner !== 0 ? `Lane two: to the ${bldName(d.owner, d.kind).toLowerCase()} of ${G.P[d.owner].name}, ${u.cargo} gold on arrival.` : allyMarket(0, u) ? 'Lane two: on its way to trade with your ally.' : 'No route, and no ally to trade with: it waits at your Market.'}</p>`;
 	h += guardRow('c', u.id);
 	if (!h0) return h + '<p>Build a Market (Trade) to send goods to the trade stops.</p>';

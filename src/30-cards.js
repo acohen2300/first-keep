@@ -3,7 +3,7 @@
 // Each takes the card's description (G.card) and returns its page, or null when what it showed is gone.
 const CARDS = {
 	bld(c) {
-		const b = G.blds.find((x) => x.id === c.id);
+		const b = byId(G.blds, c.id);
 		if (!b) return null;
 		const p = G.P[0],
 			B = BLD[b.kind],
@@ -202,7 +202,7 @@ const CARDS = {
 		return h + (kp || !end ? '' : acts(end)) + more();
 	},
 	find(c) {
-		const f = G.finds.find((x) => x.id === c.id);
+		const f = byId(G.finds, c.id);
 		if (!f) return null;
 		const F = FINDS[f.kind],
 			gl = G.units.filter((v) => v.find === f.id && v.owner === WILD && v.hp > 0 && v.kind !== 'vagabond'),
@@ -247,7 +247,7 @@ const CARDS = {
 		return h + fold('why', 'Why?', `<p>${WHY[f.kind]}</p>`); // one row of peoples, their soldier in the line under it: the whole card on one page (Albert)
 	},
 	unit(c) {
-		const u = G.units.find((x) => x.id === c.id);
+		const u = byId(G.units, c.id);
 		if (!u) return null;
 		const U = UNIT[u.kind],
 			o = u.owner,
@@ -412,7 +412,7 @@ const CARDS = {
 			// villagers on it, and the buildings that make it or take it (shops, the mint, the foundry)
 			const r = RES.find((x) => KEY[x] === K),
 				own = (f) =>
-					G.blds.filter((b) => b.owner === 0 && b.prog >= 1 && b.hp > 0 && BLD[b.kind].makes && f(BLD[b.kind].makes)),
+					G.blds.filter((b) => standing(b, 0) && BLD[b.kind].makes && f(BLD[b.kind].makes)),
 				makers = own((m) => K in m),
 				takers = own((m) => Object.values(m).some((x) => x.from && K in x.from)),
 				who = (L) => L.map((b) => `<span data-act="open:bld,${b.id}">${bldName(0, b.kind)}</span>`).join(', ');
@@ -480,7 +480,7 @@ const CARDS = {
 		);
 	},
 	node(c) {
-		const n = G.nodes.find((x) => x.id === c.id);
+		const n = byId(G.nodes, c.id);
 		if (!n) return null;
 		const who = unitsOf(0, 'vil').filter((u) => u.node === n).length,
 			dr = dropFor(0, n.type, n),
@@ -824,7 +824,7 @@ const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'research', '
 // three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet: lg every rank that fits above the row (the Build
 // card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most
 const SIZE_OF = (c) =>
-	FULL.has(c.type) || (c.type === 'bld' && (G.blds.find((b) => b.id === c.id) || {}).kind === 'market')
+	FULL.has(c.type) || (c.type === 'bld' && (byId(G.blds, c.id) || {}).kind === 'market')
 		? 'lg'
 		: c.type === 'squad' || c.type === 'emergency'
 			? 'sm'

@@ -178,7 +178,7 @@ const EV = {
 				) {
 					b.hp -= maxHpB(b.owner, b.kind) * EVENTS.flood.hit;
 					if (b.owner === 0 && e.s % 10 === 1)
-						news('land', `Water at the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 5, b);
+						news('land', `Water at the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', TOAST.mid, b);
 				}
 		},
 		end() {
@@ -216,7 +216,7 @@ const EV = {
 			scarStrike(e.at.x + 6, e.at.y + 4);
 			sfx('boom', e.at.x, e.at.y);
 			G.whiteT = G.t;
-			news('land', EV_TEXT.meteor[1], 'good', 7, e.at);
+			news('land', EV_TEXT.meteor[1], 'good', TOAST.long, e.at);
 		},
 	},
 	wildfire: {
@@ -295,7 +295,7 @@ const EV = {
 			crackAt(b.x, b.y, 36);
 			sfx('rumble', b.x, b.y);
 			if (b.owner === 0)
-				news('land', `A sinkhole under the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 6, b);
+				news('land', `A sinkhole under the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', TOAST.mid, b);
 		},
 	},
 	quicksand: {
@@ -313,11 +313,11 @@ const EV = {
 			const k = keepOf(0);
 			e.at = k ? towardMid(k, 500) : { x: MID, y: MID };
 			G.mirage = { x: e.at.x, y: e.at.y, n: EVENTS.mirage.n, until: e.until };
-			news('war', `An army seen at ${coord(e.at.x, e.at.y)}.`, 'warn', 5, e.at);
+			news('war', `An army seen at ${coord(e.at.x, e.at.y)}.`, 'warn', TOAST.mid, e.at);
 		},
 		end() {
 			G.mirage = null;
-			news('war', 'The army at that spot was a mirage.', '', 5);
+			news('war', 'The army at that spot was a mirage.', '', TOAST.mid);
 		},
 	},
 	circus: {
@@ -473,7 +473,7 @@ function startEvent(kind) {
 		news('land', 
 			EV_TEXT[kind][1],
 			E.harm ? 'warn' : E.gift ? 'good' : 'soft',
-			6,
+			TOAST.mid,
 			e.at || (e.units && e.units[0]) || null,
 			null,
 			EV_WHY[kind],
@@ -522,11 +522,11 @@ function hordeTick() {
 		left = H.at - G.t;
 	if (H.said < 1 && left <= HORDE.warn) {
 		H.said = 1;
-		news('war', EV_TEXT.horde[0], 'warn', 8);
+		news('war', EV_TEXT.horde[0], 'warn', TOAST.long);
 	}
 	if (H.said < 2 && left <= HORDE.warn / 2) {
 		H.said = 2;
-		news('war', EV_TEXT.horde[1], 'warn', 8);
+		news('war', EV_TEXT.horde[1], 'warn', TOAST.long);
 	}
 	if (left > 0) return;
 	const sides = G.P.filter((p) => p.id !== WILD && !calm4b(p.id) && p.alive && keepOf(p.id) && gangRel(p.id, 'out') === 'war'), // 4b: the horde starts nothing with a computer, nor with a side at peace with the outlaws
@@ -546,7 +546,7 @@ function hordeTick() {
 		u.hy = k.y;
 		u.horde = true;
 	}
-	news('war', EV_TEXT.horde[2], 'warn', 10, from);
+	news('war', EV_TEXT.horde[2], 'warn', TOAST.long, from);
 	sfx('horn');
 	G.horde = 'done';
 }
@@ -587,7 +587,7 @@ function skyTurn() {
 	c.wet = A.length ? A.shift() : rng() < P[c.wet ? 1 : 0];
 	while (A.length < Math.max(1, lead)) A.push(rng() < P[(A.length ? A[A.length - 1] : c.wet) ? 1 : 0]);
 	if (lead && A[lead - 1] !== (lead > 1 ? A[lead - 2] : c.wet))
-		news('land', `${A[lead - 1] ? 'Signs of rain' : 'Signs of a clearing sky'} in ${lead > 1 ? lead + ' minutes' : 'a minute'}.`, 'soft', 6);
+		news('land', `${A[lead - 1] ? 'Signs of rain' : 'Signs of a clearing sky'} in ${lead > 1 ? lead + ' minutes' : 'a minute'}.`, 'soft', TOAST.mid);
 	c.dry = c.wet ? 0 : c.dry + 1;
 	G.wx = c.wet
 		? c.T <= CLIMATE.snowAt
@@ -600,7 +600,7 @@ function skyTurn() {
 			: c.dry >= CLIMATE.drought.dry && c.T > CLIMATE.drought.temp
 				? 'drought'
 				: 'clear';
-	if (G.wx !== was && G.t > 1 && WEATHER[G.wx].text) news('land', WEATHER[G.wx].text, '', 6, null, null, wxWhy(G.wx, was, P, c));
+	if (G.wx !== was && G.t > 1 && WEATHER[G.wx].text) news('land', WEATHER[G.wx].text, '', TOAST.mid, null, null, wxWhy(G.wx, was, P, c));
 }
 function climateTick(dt) {
 	const c = G.clim;
@@ -705,7 +705,7 @@ function newsTick() {
 	G.ev.newsT = G.t;
 	const L = NEWS[Math.min(G.P[0].age, NEWS.length - 1)],
 		i = (G.ev.newsI = (G.ev.newsI || 0) + 1) % L.length;
-	news('chronicle', L[i], 'news', 8);
+	news('chronicle', L[i], 'news', TOAST.long);
 }
 // a herd crosses: bison trample what they run over; performers only pass; a dragon flies (it is drawn above everything and walks through walls)
 function herdTick(u, dt, SP) {
@@ -741,7 +741,7 @@ function herdTick(u, dt, SP) {
 function starveTick(p) {
 	const o = p.id;
 	p.famT = p.hungry && !foodInReach(o) ? (p.famT || 0) + 1 : 0;
-	if (o === 0 && p.famT === 1) news('home', 'Famine: no food in reach. Two days to recover.', 'warn', 8);
+	if (o === 0 && p.famT === 1) news('home', 'Famine: no food in reach. Two days to recover.', 'warn', TOAST.long);
 	if (!hz('starve') || p.famT < STARVE.grace || (p.famT - STARVE.grace) % STARVE.every) return;
 	const v = unitsOf(o, 'vil').sort((a, b) => a.carry - b.carry)[0],
 		s = soldiersOf(o).filter((u) => u.state === 'home')[0];
@@ -750,7 +750,7 @@ function starveTick(p) {
 			u.hp = 0;
 			u.gone = true;
 		}
-	if (o === 0 && (v || s)) news('home', `Starving: ${v ? 'a villager left' : ''}${v && s ? ', ' : ''}${s ? 'a soldier deserted' : ''}.`, 'warn', 6);
+	if (o === 0 && (v || s)) news('home', `Starving: ${v ? 'a villager left' : ''}${v && s ? ', ' : ''}${s ? 'a soldier deserted' : ''}.`, 'warn', TOAST.mid);
 }
 // food a side can still reach: a bush, its own field, fish or meat with something left, or game, in its Town Center's region of the walking grid
 function foodInReach(o) {

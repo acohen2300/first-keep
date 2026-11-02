@@ -37,7 +37,7 @@ function gangSync(o, g) {
 	if (rel === 'ally' && r < REGARD.allyAt - 10) {
 		if (g === 'nat') makePeace(o, WILD);
 		else gangSet(o, g, 'peace');
-		if (o === 0) news('realm', `The ${GANG[g]} end the alliance: regard fell.`, 'warn', 6);
+		if (o === 0) news('realm', `The ${GANG[g]} end the alliance: regard fell.`, 'warn', TOAST.mid);
 	} else if (rel !== 'ally') {
 		if (N.warBy[o] && r >= REGARD.allyAt) N.warBy[o] = false;
 		const want = N.warBy[o] ? 'war' : r >= REGARD.peaceAt ? 'peace' : 'war';
@@ -50,7 +50,7 @@ function gangSync(o, g) {
 						? `The ${GANG[g]} leave you be: regard above ${REGARD.peaceAt}.`
 						: `The ${GANG[g]} turn on you: regard under ${REGARD.peaceAt}.`,
 					want === 'peace' ? 'good' : 'warn',
-					6,
+					TOAST.mid,
 				);
 		}
 	}
@@ -74,7 +74,7 @@ function giveGift(o, amt, g) {
 			'realm',
 			`${GANG[g]}: ${amt} gold, regard +${gain}${giftsRecent(o, g) > 1 ? '. They expect more' : ''}.`,
 			'good',
-			6,
+			TOAST.mid,
 		);
 	return true;
 }
@@ -147,7 +147,7 @@ function takeThrone(o, sworn) {
 				: 'The Throne is yours. Hold it.'
 			: `${G.P[o].name} ${sworn ? 'were sworn' : 'took'} the Throne!`,
 		o === 0 ? 'good' : 'warn',
-		10,
+		TOAST.long,
 		T,
 	);
 	sfx(o === 0 ? 'win' : 'horn');
@@ -207,7 +207,7 @@ function trapsTick() {
 					news('war', 
 						`Your scout found ${kind === 'pit' ? 'a pit' : kind === 'net' ? 'a net' : 'stakes'} at ${coord(b.x, b.y)}.`,
 						'good',
-						5,
+						TOAST.mid,
 						b,
 					);
 				return;
@@ -220,15 +220,15 @@ function trapsTick() {
 				v.hp -= v.max * NATIVE.pit;
 				v.hurtT = G.t;
 				v.stuck = G.t + NATIVE.stuck;
-				if (v.owner === 0) news('war', `A pit! Your ${UNIT[v.kind].name.toLowerCase()} is hurt and stuck.`, 'warn', 5, b);
+				if (v.owner === 0) news('war', `A pit! Your ${UNIT[v.kind].name.toLowerCase()} is hurt and stuck.`, 'warn', TOAST.mid, b);
 				else if (b.owner === 0)
-					news('war', `Your pit took a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', 4, b);
+					news('war', `Your pit took a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', TOAST.mid, b);
 			} else if (kind === 'stakes') {
 				v.hp -= v.max * (hasTag(v.kind, 'mounted') ? 0.45 : 0.25);
 				v.hurtT = G.t;
 				v.flashT = G.t;
 				if (b.owner === 0)
-					news('war', `Your stakes caught a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', 4, b);
+					news('war', `Your stakes caught a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', TOAST.mid, b);
 			} else if ((isSoldier(v) && !hasTag(v.kind, 'siege')) || v.kind === 'vil') takePrisoner(b.owner, v);
 		});
 	}
@@ -284,7 +284,7 @@ function natRaid() {
 		u.back = G.t + NATIVE.raidSecs;
 	}
 	if (q.id === 0)
-		news('war', `Robbers ride for your ${(BLD[mark.kind] ? bldName(0, mark.kind) : UNIT[mark.kind].name).toLowerCase()} (${coord(mark.x, mark.y)}).`, 'warn', 7, mark);
+		news('war', `Robbers ride for your ${(BLD[mark.kind] ? bldName(0, mark.kind) : UNIT[mark.kind].name).toLowerCase()} (${coord(mark.x, mark.y)}).`, 'warn', TOAST.long, mark);
 }
 function nativesTick(dt) {
 	if (G.tick % 10 === 5) trapsTick();
@@ -333,7 +333,7 @@ function nativesTick(dt) {
 				if (n >= NATIVE.handoverMen) {
 					N.handT[p.id] = (N.handT[p.id] || 0) + BEAT.natives[0];
 					if (p.id === 0 && N.handT[0] === BEAT.natives[0])
-						news('realm', `Hold ${NATIVE.handoverMen} inside ${NATIVE.handover} s: they swear to you.`, 'good', 6);
+						news('realm', `Hold ${NATIVE.handoverMen} inside ${NATIVE.handover} s: they swear to you.`, 'good', TOAST.mid);
 					if (N.handT[p.id] >= NATIVE.handover) takeThrone(p.id, true);
 				} else N.handT[p.id] = 0;
 			}

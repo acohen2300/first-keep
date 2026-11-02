@@ -136,8 +136,8 @@ function hudFire(i) {
 		S = sqFree(i),
 		slot = i ?? G.msn.findIndex((m) => !m || m.end);
 	if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
-	if (slot < 0) return say('Every slot is out.', '', 3);
-	if (!S.length) return say(i === null || i === undefined ? freeWhy() : `${BN[i]}: nobody idle in it.`, '', 3);
+	if (slot < 0) return say('Every slot is out.', '', TOAST.short);
+	if (!S.length) return say(i === null || i === undefined ? freeWhy() : `${BN[i]}: nobody idle in it.`, '', TOAST.short);
 	if (sqOut(slot)) hudAbort(slot, true);
 	const before = G.ordN || 0;
 	order(S, H.h);
@@ -178,7 +178,7 @@ function hudAbort(slot, quiet) {
 	sendHome(mUnits(m));
 	G.msn[slot] = null;
 	if (G.card && G.card.type === 'squad' && G.card.i === slot) refresh();
-	if (!quiet) say(`${m.name} called home.`, '', 3);
+	if (!quiet) say(`${m.name} called home.`, '', TOAST.short);
 }
 function hudAbortAll() {
 	G.msn.forEach((_, i) => hudAbort(i));
@@ -187,14 +187,14 @@ function hudAbortAll() {
 function hudHome() {
 	hudAbortAll();
 	sendHome(sendable());
-	say('Everyone home.', '', 3);
+	say('Everyone home.', '', TOAST.short);
 }
 // Orders (the Train page): where new soldiers go when they are made, and which squad they join; ✓ on the crosshair sets it
 function setRally() {
 	const H = G.hud;
 	if (!H.h) return;
 	G.rally0 = { x: Math.round(H.h.e.x), y: Math.round(H.h.e.y) };
-	say('New soldiers will go there.', 'good', 3);
+	say('New soldiers will go there.', 'good', TOAST.short);
 	feel('thock');
 }
 
@@ -208,7 +208,7 @@ function missionsTick() {
 			m.end = G.t;
 			m.st = 'lost';
 			m.flash = null;
-			say(`${m.name} is lost.`, 'warn', 4);
+			say(`${m.name} is lost.`, 'warn', TOAST.mid);
 			return;
 		}
 		const c = centreOf(S),
@@ -228,7 +228,7 @@ function missionsTick() {
 		m.odds += (chance(S, foes) - m.odds) * HUD.smooth;
 		if (m.odds < HUD.lose && m.flash !== 'lose') {
 			m.flash = 'lose';
-			say(`${m.name} is losing.`, 'warn', 4);
+			say(`${m.name} is losing.`, 'warn', TOAST.mid);
 		} else if (m.flash === 'lose' && m.odds > HUD.clear) m.flash = null;
 	});
 }
@@ -284,9 +284,9 @@ function hudJoin(S, m) {
 function hudReinforce(slot) {
 	const m = G.msn[slot],
 		plan = m && reinforcePlan(m);
-	if (!plan || !plan.go.length) return say('Too late: nobody can get there in time.', '', 3);
+	if (!plan || !plan.go.length) return say('Too late: nobody can get there in time.', '', TOAST.short);
 	hudJoin(plan.go, m);
-	say(`${plan.go.length} reinforce ${m.name}.`, 'good', 3);
+	say(`${plan.go.length} reinforce ${m.name}.`, 'good', TOAST.short);
 }
 // ── the row: three pages on one mold. Rank one is the page's six things, rank two what each is under it; grid order lays them
 // Jobs: People over the hammer; each job with its count (in its store's colour) and − + under it. People rings blue while people stand idle;

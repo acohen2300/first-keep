@@ -290,8 +290,7 @@ function roofGrain(rc, e0, e1, r0, r1, sag) {
 		if (!thatch) L_(xa, y - 0.25, xb, y - 0.25, 'rgba(255,220,180,.16)', 0.25);
 	}
 	if (thatch) {
-		let r = 5;
-		const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+		const R = NS_rng(5);
 		for (let i = 0; i < 40; i++) {
 			const t = R(),
 				u = R(),
@@ -498,8 +497,7 @@ const stump = (x, y) => {
 	E_(x, y - 2.1, 0.8, 0.32, 'rgba(120,80,30,.5)');
 };
 const grassTufts = (w, col, n) => {
-	let r = 3;
-	const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+	const R = NS_rng(3);
 	for (let i = 0; i < n; i++) {
 		const [x, y] = gpt(w, 0.05 + R() * 0.9, 0.05 + R() * 0.9);
 		L_(x, y, x + 0.4, y - 1.3, col, 0.3);
@@ -1078,8 +1076,7 @@ const ART = {
 			'#cdb990',
 			c,
 			() => {
-				let r = 9;
-				const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+				const R = NS_rng(9);
 				for (let i = 0; i < 70; i++) {
 					const [x, y] = gpt(w, 0.03 + R() * 0.94, 0.03 + R() * 0.94);
 					E_(
@@ -2630,7 +2627,6 @@ function bldSprite(b, s) {
 }
 // trees, bushes, rocks: a few variants each, cached the same way
 const NSPR = new Map();
-const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647;
 const NS_c = (hex, f) => {
 	const n = parseInt(hex.slice(1), 16),
 		k = (v) => Math.max(0, Math.min(255, Math.round(v * f)));

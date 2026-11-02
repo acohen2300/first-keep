@@ -181,7 +181,7 @@ function build(o, kind, x, y) {
 // A site rises only while villagers work it. The nearest free villager goes at once; a line of wall gets two at most, who then work down it.
 function autoBuilder(o, b) {
 	if (o === 0 && G.buildBy && G.buildBy.length) {
-		const V = G.buildBy.map((id) => G.units.find((u) => u.id === id)).filter((u) => u && u.hp > 0 && u.kind === 'vil');
+		const V = G.buildBy.map((id) => byId(G.units, id)).filter((u) => u && u.hp > 0 && u.kind === 'vil');
 		G.buildBy = null;
 		if (V.length) {
 			V.forEach((v) => {
@@ -212,7 +212,7 @@ function autoBuilder(o, b) {
 		if (v) v.back = true;
 	}
 	if (v) sendBuilder(v, b);
-	else if (hand(o)) say(NO_HANDS, 'warn', 3);
+	else if (hand(o)) say(NO_HANDS, 'warn', TOAST.short);
 }
 // a builder remembers what it left (its job, its find or building, where it was placed), so backToWork takes it back to that
 function sendBuilder(v, b) {
@@ -231,11 +231,11 @@ function sendBuild(o, id) {
 	if (!b) return false;
 	const v = pickVil(o, b, typesOf(b.kind), b, hand(o));
 	if (!v) {
-		if (o === 0) say(NO_HANDS, 'warn', 3);
+		if (o === 0) say(NO_HANDS, 'warn', TOAST.short);
 		return false;
 	}
 	sendBuilder(v, b);
-	if (o === 0) say(`A villager goes to raise the ${bldName(o, b.kind).toLowerCase()}.`, '', 3);
+	if (o === 0) say(`A villager goes to raise the ${bldName(o, b.kind).toLowerCase()}.`, '', TOAST.short);
 	return true;
 }
 // Replant a plot that is cut out or worked out (Build 61, Albert): half its cost, and it is full again; a coppice regrows from its stumps
@@ -252,7 +252,7 @@ function replant(o, id) {
 	pay(G.P[o], scaled(BLD[b.kind].cost, 0.5), 'buildings');
 	b.node.amt = b.node.max = BLD[b.kind].reserve;
 	G.treeV = (G.treeV || 0) + 1;
-	if (o === 0) say(`${bldName(0, b.kind)} replanted.`, 'good', 3);
+	if (o === 0) say(`${bldName(0, b.kind)} replanted.`, 'good', TOAST.short);
 	return true;
 }
 // Take a building down: half its cost back (all of it in the first 15% of the build); every order waiting inside is cancelled, so what
@@ -282,7 +282,7 @@ function demolish(o, id) {
 	b.gone = true;
 	G.navDirty = true;
 	if (BLD[b.kind].fx) fxDirty();
-	if (o === 0) say(`${bldName(o, b.kind)} ${full ? 'cancelled' : 'taken down'}: ${costText(back)} back.`, '', 4);
+	if (o === 0) say(`${bldName(o, b.kind)} ${full ? 'cancelled' : 'taken down'}: ${costText(back)} back.`, '', TOAST.mid);
 	return true;
 }
 
@@ -300,8 +300,8 @@ function declareWar(a, b, why) {
 	if (G.P[a].ally === b) G.P[a].ally = null;
 	if (G.P[b].ally === a) G.P[b].ally = null;
 	if (a === 0 || b === 0)
-		news('realm', `${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken; ' : ''}war, ${why}.`, 'warn', 6);
-	else news('chronicle', `${G.P[a].name} and ${G.P[b].name} are now at war.`, '', 5, keepOf(a)); // news between other courts comes by the post
+		news('realm', `${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken; ' : ''}war, ${why}.`, 'warn', TOAST.mid);
+	else news('chronicle', `${G.P[a].name} and ${G.P[b].name} are now at war.`, '', TOAST.mid, keepOf(a)); // news between other courts comes by the post
 	chron(`${a === 0 ? 'You' : G.P[a].name} and ${b === 0 ? 'you' : G.P[b].name}: war, ${why}.`);
 }
 function makePeace(a, b) {
@@ -323,7 +323,7 @@ function makeAlly(a, b) {
 	G.P[a].ally = b;
 	G.P[b].ally = a;
 	G.navDirty = true;
-	if (b !== 0 && a !== 0) news('realm', `${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', 6, keepOf(a));
+	if (b !== 0 && a !== 0) news('realm', `${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', TOAST.mid, keepOf(a));
 	chron(`${a === 0 ? 'You' : G.P[a].name} allied with ${b === 0 ? 'you' : G.P[b].name}.`);
 }
 const noticeLeft = (a, b) => {
@@ -383,13 +383,13 @@ function setRel(o, q, want) {
 		if (rel === 'ally') makePeace(o, q);
 		G.warAt[o + ',' + q] = G.t + NOTICE;
 		if (o === 0 || q === 0)
-			news('realm', `${G.P[o === 0 ? q : o].name}: ${REL_WORD.war.toLowerCase()} in ${NOTICE} s${o === 0 ? ' (notice given)' : ''}.`, 'warn', 6);
+			news('realm', `${G.P[o === 0 ? q : o].name}: ${REL_WORD.war.toLowerCase()} in ${NOTICE} s${o === 0 ? ' (notice given)' : ''}.`, 'warn', TOAST.mid);
 		return true;
 	}
 	delete G.warAt[o + ',' + q]; // a side that was giving notice has thought again
 	if (want === 'peace' && rel === 'ally') {
 		makePeace(o, q);
-		if (q === 0) news('realm', `${G.P[o].name} ended the alliance.`, 'warn', 6);
+		if (q === 0) news('realm', `${G.P[o].name} ended the alliance.`, 'warn', TOAST.mid);
 		return true;
 	}
 	return sendEnvoy(o, q, want); // peace from war, or an alliance: carried over, answered there
@@ -413,7 +413,7 @@ function sendEnvoy(o, to, ask) {
 	u.ask = ask || 'ally';
 	p.envoyOut = true;
 	p.envoyAt = G.t;
-	if (o === 0) say(`Your emissary rides to the ${GANG[gangKey(to)] || G.P[to].name}: ${ask === 'peace' ? 'peace' : 'alliance'}.`, '', 4);
+	if (o === 0) say(`Your emissary rides to the ${GANG[gangKey(to)] || G.P[to].name}: ${ask === 'peace' ? 'peace' : 'alliance'}.`, '', TOAST.mid);
 	return true;
 }
 // the square law on strength, bent by who counters whom: the odds q gives itself against o
@@ -427,14 +427,14 @@ function judgeEnvoy(to, from, envoy) {
 		ask = envoy.ask || 'ally';
 	if ((g ? gangRel(from, g) : G.rel[to][from]) === 'war' && ask !== 'peace') {
 		envoy.hp = 0;
-		if (from === 0) news('realm', `The ${g ? GANG[g] : G.P[to].name} killed your emissary.`, 'warn', 6);
+		if (from === 0) news('realm', `The ${g ? GANG[g] : G.P[to].name} killed your emissary.`, 'warn', TOAST.mid);
 		return;
 	}
 	if (g) return judgeGang(g, from, envoy, ask);
 	const T = G.P[to];
 	if (to === 0) {
 		envoy.state = 'return';
-		news('realm', `${G.P[from].name} offer ${ask === 'peace' ? 'peace' : 'an alliance'}: answer at your Town Center.`, 'soft', 8);
+		news('realm', `${G.P[from].name} offer ${ask === 'peace' ? 'peace' : 'an alliance'}: answer at your Town Center.`, 'soft', TOAST.long);
 		return;
 	} // the player answers for themselves, on the Relations side
 	const busy = G.P.some((q) => q.alive && q.id !== WILD && q.id !== from && atWar(to, q.id)); // another war on their hands
@@ -481,7 +481,7 @@ function judgeEnvoy(to, from, envoy) {
 }
 function reply(from, envoy, text) {
 	envoy.state = 'return';
-	if (from === 0) news('realm', text, text.includes('accept') ? 'good' : '', 7);
+	if (from === 0) news('realm', text, text.includes('accept') ? 'good' : '', TOAST.long);
 }
 // an ally sends half of what stands at home to a friend's town under attack (every computer does this for its ally, the Fortress included)
 function sendHelp(f, pt, tell) {
@@ -495,7 +495,7 @@ function sendHelp(f, pt, tell) {
 		u.py = pt.y;
 		u.idleT = 0;
 	});
-	if (tell) news('war', `${G.P[f].name} send ${some(go.length, 'soldier')} to help.`, 'good', 5);
+	if (tell) news('war', `${G.P[f].name} send ${some(go.length, 'soldier')} to help.`, 'good', TOAST.mid);
 	return true;
 }
 // an ally twice your strength may be offered overlordship: they become your vassal at a light tax
@@ -538,7 +538,7 @@ function demand(L, q, r) {
 	earn(G.P[L], r, x, 'tax');
 	Q.loyal = Math.max(0, (Q.loyal || 0) - cost);
 	(Q.demands = Q.demands || []).push(G.t);
-	if (L === 0) news('realm', `${Q.name} hand over ${x} ${LONG[r]}: loyalty −${cost}.`, '', 4);
+	if (L === 0) news('realm', `${Q.name} hand over ${x} ${LONG[r]}: loyalty −${cost}.`, '', TOAST.mid);
 	return true;
 }
 const menAt = (L, q) => {
@@ -557,7 +557,7 @@ function forceTribute(L, q) {
 	const Q = G.P[q];
 	Q.forced = G.t + DEMAND.tribute;
 	Q.unrest = clamp((Q.unrest || 0) + DEMAND.tributeUnrest, 0, 100);
-	if (L === 0) news('realm', `${Q.name} pay double for ${DEMAND.tribute / 60} minutes.`, '', 4);
+	if (L === 0) news('realm', `${Q.name} pay double for ${DEMAND.tribute / 60} minutes.`, '', TOAST.mid);
 	return true;
 }
 const levyOf = (L, q) => G.units.filter((u) => u.owner === L && u.levy === q && u.hp > 0);
@@ -592,7 +592,7 @@ function levy(L, q, n) {
 		u.bn = G.sel !== 'all' && L === 0 ? G.sel : undefined;
 	}
 	if (L === 0) {
-		news('realm', `${home.length} soldiers of ${G.P[q].name} march to you.`, 'good', 5);
+		news('realm', `${home.length} soldiers of ${G.P[q].name} march to you.`, 'good', TOAST.mid);
 		march(home, k || home[0], 'your town');
 	}
 	return true;
@@ -610,7 +610,7 @@ function releaseLevy(u) {
 function releaseAll(L, q) {
 	const S = levyOf(L, q);
 	S.forEach(releaseLevy);
-	if (L === 0 && S.length) news('realm', `${S.length} soldiers go home to ${G.P[q].name}.`, '', 4);
+	if (L === 0 && S.length) news('realm', `${S.length} soldiers go home to ${G.P[q].name}.`, '', TOAST.mid);
 	return S.length > 0;
 }
 
@@ -631,7 +631,7 @@ function charge(o, S, bn) {
 			u.mor = Math.min(1, u.mor + 0.1);
 		}
 	if (o === 0) {
-		say(`${bn !== undefined ? BN[bn] : 'The army'} charge!`, 'good', 4);
+		say(`${bn !== undefined ? BN[bn] : 'The army'} charge!`, 'good', TOAST.mid);
 		sfx('horn');
 	}
 	return true;
@@ -657,7 +657,7 @@ function fallBack(o, S, bn) {
 		u.ord = undefined;
 		n++;
 	}
-	if (o === 0 && n) say(`${bn !== undefined ? BN[bn] : 'The army'} fall back.`, '', 4);
+	if (o === 0 && n) say(`${bn !== undefined ? BN[bn] : 'The army'} fall back.`, '', TOAST.mid);
 	return n > 0;
 }
 // Prisoners: a runner touched by a foe, or a man netted by the Natives. The owner may ransom them back; unransomed, they serve the captor.
@@ -675,10 +675,10 @@ function takePrisoner(by, v) {
 		news('war', 
 			`${by === WILD ? 'Netted' : G.P[by].name + ' took a prisoner'}: your ${UNIT[v.kind].name.toLowerCase()}. Ransom ${ransom}g.`,
 			'warn',
-			7,
+			TOAST.long,
 			v,
 		);
-	else if (by === 0) news('war', `A prisoner taken: their ${UNIT[v.kind].name.toLowerCase()}.`, 'good', 4, v);
+	else if (by === 0) news('war', `A prisoner taken: their ${UNIT[v.kind].name.toLowerCase()}.`, 'good', TOAST.mid, v);
 }
 const prisonersOf = (o) => (G.prisoners || []).filter((x) => x.o === o);
 function payRansom(o, i) {
@@ -692,7 +692,7 @@ function payRansom(o, i) {
 		const u = addUnit(o, x.kind, k.x + 40, k.y + 40);
 		u.state = 'home';
 	}
-	if (o === 0) news('war', `Ransom paid: your ${UNIT[x.kind].name.toLowerCase()} walks home.`, 'good', 5);
+	if (o === 0) news('war', `Ransom paid: your ${UNIT[x.kind].name.toLowerCase()} walks home.`, 'good', TOAST.mid);
 	return true;
 }
 // ── Teach: a soldier of an older kind learns a newer one at the School. It stands frozen for the lesson; tuition is paid up front.
@@ -743,7 +743,7 @@ function graduate(u) {
 	u.hp = Math.max(1, u.max * f);
 	u.state = 'home';
 	u.schoolT = 0;
-	if (o === 0) news('war', `Taught: a ${stats(0, to).name.toLowerCase()} joins the ranks.`, 'good', 4, u);
+	if (o === 0) news('war', `Taught: a ${stats(0, to).name.toLowerCase()} joins the ranks.`, 'good', TOAST.mid, u);
 }
 function prisonersTick() {
 	// every five seconds: the unransomed change sides
@@ -762,7 +762,7 @@ function prisonersTick() {
 				news('war', 
 					`Unransomed: your ${UNIT[x.kind].name.toLowerCase()} serves ${x.by === WILD ? 'the Natives' : G.P[x.by].name} now.`,
 					'warn',
-					6,
+					TOAST.mid,
 				);
 		}
 }
@@ -816,7 +816,7 @@ function zeal(o, list) {
 	p.zealT = G.t + ZEAL.cd * fxv(o, 'zealcd').m;
 	for (const u of list) if (isSoldier(u)) u.zeal = G.t + ZEAL.secs + fxv(o, 'zealsecs').a;
 	if (o === 0) {
-		say(`Zeal on the ${selName()} for ${ZEAL.secs} s.`, 'good', 5);
+		say(`Zeal on the ${selName()} for ${ZEAL.secs} s.`, 'good', TOAST.mid);
 		sfx('zeal');
 	}
 	return true;
@@ -843,9 +843,9 @@ function sabotage(u, b) {
 	const nm = bldName(b.owner, b.kind);
 	if (b.owner === 0) {
 		const what = how === 'burn' ? 'on fire' : `stopped ${SAB.stall} s`;
-		news('war', `Sabotage at ${coord(b.x, b.y)}: ${nm} ${what}.`, 'warn', 7, b);
+		news('war', `Sabotage at ${coord(b.x, b.y)}: ${nm} ${what}.`, 'warn', TOAST.long, b);
 	} else if (u.owner === 0)
-		news('war', `Your spy ${how === 'burn' ? 'set fire to' : 'stalled'} their ${nm.toLowerCase()}.`, 'good', 5);
+		news('war', `Your spy ${how === 'burn' ? 'set fire to' : 'stalled'} their ${nm.toLowerCase()}.`, 'good', TOAST.mid);
 	return true;
 }
 function intel(o, owner) {
@@ -876,13 +876,13 @@ function hire(o, f) {
 			const s = addUnit(o, civKind(o, H.unit), v.x, v.y);
 			s.state = 'home';
 		}
-	if (o === 0) news('realm', `${H.n} vagabonds join your army.`, 'good', 5);
+	if (o === 0) news('realm', `${H.n} vagabonds join your army.`, 'good', TOAST.mid);
 	return true;
 }
 
 // ───────────────────────── Villager orders ─────────────────────────
 function setJob(u, job, n, at) {
-	if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+	if (u.node && u.node.farm) crowd(u.node, -1);
 	u.job = job;
 	u.node = n || null;
 	u.at = null; // a spot held at the old find is let go: the new order is cap-checked on arrival (fresh review #1)
@@ -896,7 +896,7 @@ function setJob(u, job, n, at) {
 	u.anchor = at ? { x: at.x, y: at.y } : null; // the spot it was placed: its search starts there and stays within the cap (decision 1)
 	u.wait = false;
 	if (job) u.post = null;
-	if (n && n.farm) n.wk = (n.wk || 0) + 1;
+	if (n && n.farm) crowd(n, 1);
 	if (job !== 'repair') u.rep = null;
 	else u.hunt = null; // sent to build: a hunt it was on is dropped (fresh review #1); a builder bitten takes the beast on its own job (hurt)
 }
@@ -916,11 +916,11 @@ function moveVil(o, job, down) {
 	}
 	const v = V.find(freeVil) || low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job)));
 	if (v) setJob(v, job);
-	else if (o === 0) say(NO_HANDS, 'warn', 3);
+	else if (o === 0) say(NO_HANDS, 'warn', TOAST.short);
 }
 // Stop: a villager drops its job and stands where it is (or where it is sent), ready for a new order (Build 61)
 function stopVil(u, post) {
-	if (u.inside && u.shop) stepOut(u, G.blds.find((x) => x.id === u.shop));
+	if (u.inside && u.shop) stepOut(u, byId(G.blds, u.shop));
 	u.shop = 0;
 	setJob(u, null);
 	u.hunt = null;
@@ -937,20 +937,20 @@ function sendOut(o, id) {
 	return !!v;
 }
 function sendVil(o, id) {
-	const n = G.nodes.find((x) => x.id === id);
+	const n = byId(G.nodes, id);
 	if (!n || (n.amt <= 0 && n.kind !== 'farm')) return false;
 	if (n.farm && (n.wk || 0) >= slotsOf(n)) {
-		if (o === 0) say('Already worked: one to each.', '', 3);
+		if (o === 0) say('Already worked: one to each.', '', TOAST.short);
 		return false;
 	}
 	const job = n.type,
 		v = pickVil(o, n, job, null, hand(o) && !!n.farm); // to a building of yours: an idle villager only (D-089)
 	if (!v) {
-		if (o === 0) say(NO_HANDS, 'warn', 3);
+		if (o === 0) say(NO_HANDS, 'warn', TOAST.short);
 		return false;
 	}
 	setJob(v, job, n, n);
-	if (o === 0) say(`A villager heads for the ${nodeName(n).toLowerCase()}.`, '', 3);
+	if (o === 0) say(`A villager heads for the ${nodeName(n).toLowerCase()}.`, '', TOAST.short);
 	return true;
 }
 function sendHunt(o, id) {
@@ -959,25 +959,25 @@ function sendHunt(o, id) {
 	if (!a) return false;
 	const v = pickVil(o, a, 'food');
 	if (!v) {
-		if (o === 0) say(NO_HANDS, 'warn', 3);
+		if (o === 0) say(NO_HANDS, 'warn', TOAST.short);
 		return false;
 	}
 	setJob(v, 'food');
 	v.hunt = a;
-	if (o === 0) say(`A villager goes hunting ${UNIT[a.kind].name.toLowerCase()}.`, '', 3);
+	if (o === 0) say(`A villager goes hunting ${UNIT[a.kind].name.toLowerCase()}.`, '', TOAST.short);
 	return true;
 }
 function sendRepair(o, id) {
-	const b = G.blds.find((x) => x.id === id && x.owner === o && x.hp > 0 && x.prog >= 1);
+	const b = G.blds.find((x) => x.id === id && standing(x, o));
 	if (!b || b.hp >= maxHpB(o, b.kind) - 0.5) return false;
 	const v = pickVil(o, b, null, null, hand(o));
 	if (!v) {
-		if (o === 0) say(NO_HANDS, 'warn', 3);
+		if (o === 0) say(NO_HANDS, 'warn', TOAST.short);
 		return false;
 	}
 	setJob(v, 'repair');
 	v.rep = b;
-	if (o === 0) say(`A villager goes to mend the ${bldName(o, b.kind).toLowerCase()}.`, '', 3);
+	if (o === 0) say(`A villager goes to mend the ${bldName(o, b.kind).toLowerCase()}.`, '', TOAST.short);
 	return true;
 }
 const repairCost = (o, b) => {
@@ -1024,7 +1024,7 @@ function commitPlace() {
 					? `Not enough stone: ${B.cost.s} a piece.`
 					: 'Something is in the way.',
 			'',
-			4,
+			TOAST.mid,
 		);
 		pl.cells = null;
 		pl.pts = [];
@@ -1034,12 +1034,12 @@ function commitPlace() {
 	}
 	const why = canPlace(0, kind, pl.at.x, pl.at.y);
 	if (why) {
-		say(why + '.', '', 3);
+		say(why + '.', '', TOAST.short);
 		sfx('err');
 		return;
 	}
 	if (!afford(p, B.cost)) {
-		say(`Not enough for a ${B.name.toLowerCase()}: ${costText(B.cost)}.`, '', 3);
+		say(`Not enough for a ${B.name.toLowerCase()}: ${costText(B.cost)}.`, '', TOAST.short);
 		sfx('err');
 		return;
 	}
@@ -1075,7 +1075,7 @@ function boxCut(r, n) {
 	say(
 		sent ? `${sent} villager${sent > 1 ? 's go' : ' goes'} to cut the trees in the box.` : 'No villager is free.',
 		'',
-		4,
+		TOAST.mid,
 	);
 }
 
@@ -1091,13 +1091,13 @@ const centreOf = (S) => ({
 function routeK(c, to) {
 	const p = astar(c.x, c.y, to.x, to.y, 0),
 		len = p.pts.reduce(
-			(s, q, i) => s + (i ? hyp(q.x - p.pts[i - 1].x, q.y - p.pts[i - 1].y) : hyp(q.x - c.x, q.y - c.y)),
+			(s, q, i) => s + (i ? hyp(q.x - p.pts[i - 1].x, q.y - p.pts[i - 1].y) : dist(q, c)),
 			0,
 		);
-	return p.pts.length ? clamp(len / Math.max(1, hyp(to.x - c.x, to.y - c.y)), 1, 3) : 1;
+	return p.pts.length ? clamp(len / Math.max(1, dist(to, c)), 1, 3) : 1;
 }
 const etaOf = (S, to, k) =>
-	Math.max(0, ...S.map((u) => (hyp(u.x - to.x, u.y - to.y) * k) / Math.max(1, paceOf(u, sideSpd(0)))));
+	Math.max(0, ...S.map((u) => (dist(u, to) * k) / Math.max(1, paceOf(u, sideSpd(0)))));
 function march(S, to, label) {
 	if (!S.length) return;
 	const id = (G.ordN = (G.ordN || 0) + 1);
@@ -1114,7 +1114,7 @@ function march(S, to, label) {
 		u.ord = id;
 		u.mvT = G.t; // just ordered: counts as moving until it proves otherwise
 	}
-	say(`${S.length} marching: ${label}.`, '', 3);
+	say(`${S.length} marching: ${label}.`, '', TOAST.short);
 }
 // soldiers called home: off whatever they were doing and off their order
 function sendHome(S) {
@@ -1136,7 +1136,7 @@ function incomingTick() {
 			if (u.hp <= 0 || u.owner === 0 || friendly(0, u.owner) || !isSoldier(u) || u.state !== 'attack' || !seen0(u))
 				continue;
 			for (const b of mine) {
-				const d = hyp(u.x - b.x, u.y - b.y);
+				const d = dist(u, b);
 				if (d < bd) {
 					bd = d;
 					best = u;
@@ -1149,7 +1149,7 @@ function incomingTick() {
 	}
 	const n = G.units.filter(
 		(u) =>
-			u.hp > 0 && u.owner === best.owner && u.state === 'attack' && hyp(u.x - best.x, u.y - best.y) < 140 && seen0(u),
+			u.hp > 0 && u.owner === best.owner && u.state === 'attack' && dist(u, best) < 140 && seen0(u),
 	).length; // the ones you can see
 	G.incoming = {
 		x: best.x,
@@ -1195,7 +1195,7 @@ function ordersTick() {
 		O.fight = fight > 0;
 		if (!O.arrived && !walk && !fight && !rout && G.t - O.t > 3) {
 			O.arrived = true;
-			news('war', `${S.length} arrived: ${O.label}.`, 'good', 4, O);
+			news('war', `${S.length} arrived: ${O.label}.`, 'good', TOAST.mid, O);
 		} // every one has stopped: a straggler that never got there is counted as stopped too
 		O.eta = O.arrived ? 0 : Math.ceil(eta);
 	}

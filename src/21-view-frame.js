@@ -39,7 +39,7 @@ function makeBg() {
 	for (const L of G.lakes) {
 		const last = runs.length ? runs[runs.length - 1] : null,
 			tail = last && last[last.length - 1];
-		if (L.river && tail && tail.river && hyp(L.x - tail.x, L.y - tail.y) < 2.2 * L.r) last.push(L);
+		if (L.river && tail && tail.river && dist(L, tail) < 2.2 * L.r) last.push(L);
 		else if (L.river) runs.push([L]);
 	}
 	const stream = (run, extra, col) => {
@@ -92,7 +92,7 @@ function makeBg() {
 		// where a river leaves its lake, the lake's shade covers the join
 		const L = run[0];
 		if (!L.river) continue;
-		const src = G.lakes.find((q) => !q.river && hyp(q.x - L.x, q.y - L.y) < q.r + L.r + 20);
+		const src = G.lakes.find((q) => !q.river && dist(q, L) < q.r + L.r + 20);
 		if (!src) continue;
 		const lg = b.createRadialGradient(src.x, src.y, src.r - 6, src.x, src.y, src.r + 14);
 		lg.addColorStop(0, '#2a6488');

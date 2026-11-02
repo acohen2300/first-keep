@@ -21,7 +21,7 @@ const ACT = {
 		G.free = true;
 		$('end').hidden = true;
 		setPause(false);
-		say('Free play: no clock, no victory.', '', 6);
+		say('Free play: no clock, no victory.', '', TOAST.mid);
 	},
 	next() {
 		const p = G.P[0],
@@ -30,7 +30,7 @@ const ACT = {
 		freshSlate();
 		newGame(undefined, keep);
 		setPause(false);
-		say('New land. Your age and research stay.', 'good', 8);
+		say('New land. Your age and research stay.', 'good', TOAST.long);
 		saveGame(true);
 	},
 	close() {
@@ -101,7 +101,7 @@ const ACT = {
 		const o = Number(a),
 			k = keepOf(o) || G.blds.find((b) => b.owner === o);
 		if (!k) {
-			say('Nothing of theirs stands.', '', 3);
+			say('Nothing of theirs stands.', '', TOAST.short);
 			return;
 		}
 		camGo(k.x, k.y);
@@ -222,7 +222,7 @@ const ACT = {
 		setPause(false);
 		saveGame(true);
 		refresh();
-		say(`Challenge of the day: level ${levelOf(G.hz)}.`, 'good', 8);
+		say(`Challenge of the day: level ${levelOf(G.hz)}.`, 'good', TOAST.long);
 	},
 	tips() {
 		SET.tips = !SET.tips;
@@ -256,7 +256,7 @@ const ACT = {
 	},
 	qlock(id) {
 		const t = TECHBY[id];
-		say(`Research ${t.name} at the ${BLD[t.at].name} for more slots.`, '', 5);
+		say(`Research ${t.name} at the ${BLD[t.at].name} for more slots.`, '', TOAST.mid);
 	},
 	page(a) {
 		hudPage(a);
@@ -273,7 +273,7 @@ const ACT = {
 		(SET.hideG = SET.hideG || {})[g] = 1;
 		saveSet();
 		G.pvAsk = null;
-		say(`${GROUPS[g]} now goes quietly to the mail.`, '', 3);
+		say(`${GROUPS[g]} now goes quietly to the mail.`, '', TOAST.short);
 	}, // the group goes to the mail without a preview; red still comes through
 	pvkeep() {
 		G.pvAsk = null;
@@ -350,7 +350,7 @@ const ACT = {
 	bldgo(kind) {
 		const k = keepOf(0),
 			B = G.blds.filter((b) => b.owner === 0 && b.kind === kind && b.prog >= 1 && b.hp > 0).sort((a, b) => (k ? dist(a, k) - dist(b, k) : 0))[0];
-		if (!B) return say(`Build a ${BLD[kind].name} first.`, '', 3);
+		if (!B) return say(`Build a ${BLD[kind].name} first.`, '', TOAST.short);
 		camGo(B.x, B.y);
 		openCard({ type: 'bld', id: B.id });
 	}, // to your nearest finished building of a kind, its card open: a kind of soldier on the Train page or a squad's card goes to where it is trained
@@ -374,7 +374,7 @@ const ACT = {
 	},
 };
 // a job is locked until its age (32-frame, resOn): a tap on it says when it opens
-const shut = (r) => !resOn(KEY[r]) && (say(`${RESOURCES[r].name} opens in the ${AGES[resAge(KEY[r])].name} age.`, '', 3), true);
+const shut = (r) => !resOn(KEY[r]) && (say(`${RESOURCES[r].name} opens in the ${AGES[resAge(KEY[r])].name} age.`, '', TOAST.short), true);
 // orders that change the game: refused once it is over
 const PLAY = {
 	job(a) {
@@ -388,7 +388,7 @@ const PLAY = {
 	move(a) {
 		if (shut(a)) return;
 		if (!unitsOf(0, 'vil').some(freeVil)) {
-			say('Nobody is idle. Use − on another job.', '', 3);
+			say('Nobody is idle. Use − on another job.', '', TOAST.short);
 			return;
 		}
 		moveVil(0, a);
@@ -403,7 +403,7 @@ const PLAY = {
 	relwant(a) {
 		const [q, w] = a.split(','),
 			n = relKey(q);
-		if (stanceOff(n, w)) return say(relWhy(0, n, w) || 'Not now.', '', 3); // a dim icon takes no pick
+		if (stanceOff(n, w)) return say(relWhy(0, n, w) || 'Not now.', '', TOAST.short); // a dim icon takes no pick
 		const d = relPickOf(n);
 		d.want = w;
 	},
@@ -412,14 +412,14 @@ const PLAY = {
 			q = relKey(k),
 			v = Number(x),
 			d = relPickOf(q);
-		if (giftLock(q)) return say(giftLock(q), '', 3);
+		if (giftLock(q)) return say(giftLock(q), '', TOAST.short);
 		d.gift = v;
 		d.on = v > 0;
 	},
 	relon(a) {
 		const q = relKey(a),
 			d = relPickOf(q);
-		if (giftLock(q) || relLord(q)) return say(giftLock(q) || relWhy(0, q, 'peace') || 'Not now.', '', 3);
+		if (giftLock(q) || relLord(q)) return say(giftLock(q) || relWhy(0, q, 'peace') || 'Not now.', '', TOAST.short);
 		d.on = !d.on;
 		if (d.on && !d.gift) d.gift = REGARD.giftStep;
 	},
@@ -450,12 +450,12 @@ const PLAY = {
 	tq(a) {
 		const [t, d] = a.split(','),
 			k = kindOf(Number(t));
-		if (!k) return say(`Build a ${BLD[CLS[t][2]].name} first.`, '', 3);
+		if (!k) return say(`Build a ${BLD[CLS[t][2]].name} first.`, '', TOAST.short);
 		if (d === '+') {
 			const why = trainWhy(0, k);
-			if (why) say(why, '', 3);
+			if (why) say(why, '', TOAST.short);
 			else train(0, k);
-		} else if (!unTrain(0, k)) say('Nothing of that kind is waiting.', '', 3);
+		} else if (!unTrain(0, k)) say('Nothing of that kind is waiting.', '', TOAST.short);
 	}, // the Train page: one more or one fewer of a kind, at the building with the shortest line
 	tok() {
 		setRally();
@@ -481,7 +481,7 @@ const PLAY = {
 		H.aim = true;
 		H.mode = 'rally';
 		if (G.rally0) H.h = { t: 'ground', e: { x: G.rally0.x, y: G.rally0.y } };
-		say('Tap where new soldiers should go, then ✓.', '', 4);
+		say('Tap where new soldiers should go, then ✓.', '', TOAST.mid);
 		feel('tick');
 	},
 	sqpk(a) {
@@ -503,7 +503,7 @@ const PLAY = {
 	},
 	wsq(a) {
 		const i = Number(a);
-		if (!hasCmd() && !sqOut(i)) return say('Squads come with Battalions.', '', 3);
+		if (!hasCmd() && !sqOut(i)) return say('Squads come with Battalions.', '', TOAST.short);
 		openCard({ type: 'squad', i });
 	}, // a squad's card: built at home, watched on its mission; an empty squad opens as a new one
 	wfire() {
@@ -525,7 +525,7 @@ const PLAY = {
 	qall() {
 		const S = sendable();
 		if (S.length) order(S, G.qa.h);
-		else say(freeWhy(), '', 4);
+		else say(freeWhy(), '', TOAST.mid);
 		hideQuick();
 	},
 	qidle() {
@@ -533,8 +533,8 @@ const PLAY = {
 			h = G.qa.h;
 		if (S.length) order(S, h);
 		postTo(V, h.e);
-		if (V.length) say(`${V.length} idle villagers come here.`, '', 3);
-		else if (!S.length) say(freeWhy(), '', 4);
+		if (V.length) say(`${V.length} idle villagers come here.`, '', TOAST.short);
+		else if (!S.length) say(freeWhy(), '', TOAST.mid);
 		hideQuick();
 	}, // the idle soldiers, and on open ground the idle villagers (the Town Center's Idle to me, cut in Build 70, lives on here)
 	qwar() {
@@ -612,7 +612,7 @@ const PLAY = {
 			u.fn = u.node.id;
 			u.fpos = { x: u.node.x, y: u.node.y };
 		}
-		say(u.focus ? 'Focus: it stays where you put it.' : 'Focus off.', '', 3);
+		say(u.focus ? 'Focus: it stays where you put it.' : 'Focus off.', '', TOAST.short);
 	}, // Focus (D-093): a stance, as Stand Ground is; your next order re-aims it, only this turns it off
 	vhome(a) {
 		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a)),
@@ -627,7 +627,7 @@ const PLAY = {
 		const b = G.blds.find((x) => x.id === Number(a) && x.owner === 0);
 		if (!b) return;
 		const why = replantWhy(0, b);
-		if (why) say(why, '', 3);
+		if (why) say(why, '', TOAST.short);
 		else replant(0, b.id);
 	},
 	boxcut(a) {
@@ -638,7 +638,7 @@ const PLAY = {
 		setPick([]);
 	},
 	look(id) {
-		const e = G.units.find((u) => u.id === Number(id));
+		const e = byId(G.units, Number(id));
 		if (e) {
 			setPick([]);
 			openCard({ type: 'unit', id: e.id });
@@ -652,7 +652,7 @@ const PLAY = {
 				u.post = null;
 				u.idleT = 0;
 			}
-		say(`To ${j}.`, '', 2);
+		say(`To ${j}.`, '', TOAST.short);
 		setPick([]);
 	},
 	pbuild(a) {
@@ -675,11 +675,11 @@ const PLAY = {
 				u.idleT = 2; // stopped at once: Holding, and free for the next send
 				u.ord = undefined; // and off the old order
 			}
-		say('Holding here.', '', 2);
+		say('Holding here.', '', TOAST.short);
 	},
 	precall() {
 		sendHome(picked().filter(isSoldier));
-		say('Called home.', '', 2);
+		say('Called home.', '', TOAST.short);
 	},
 	pvil() {
 		setPick(
@@ -690,7 +690,7 @@ const PLAY = {
 	},
 	pcharge() {
 		const S = picked();
-		if (!charge(0, S)) say(chargeWhy(0, S) || 'Not now.', '', 3);
+		if (!charge(0, S)) say(chargeWhy(0, S) || 'Not now.', '', TOAST.short);
 	},
 	pfall() {
 		fallBack(0, picked());
@@ -703,16 +703,16 @@ const PLAY = {
 			if (teach(0, u)) n++;
 			else why = why || teachWhy(0, u);
 		}
-		say(n ? `${n} to the School.` : why || 'Nobody here can be taught.', n ? 'good' : '', 3);
+		say(n ? `${n} to the School.` : why || 'Nobody here can be taught.', n ? 'good' : '', TOAST.short);
 	},
 	teach(id) {
 		const u = G.units.find((x) => x.id === +id);
-		if (u && !teach(0, u)) say(teachWhy(0, u) || 'Not now.', '', 3);
+		if (u && !teach(0, u)) say(teachWhy(0, u) || 'Not now.', '', TOAST.short);
 	},
 	charge() {
 		const S = orderSet(),
 			bn = G.sel === 'all' ? undefined : G.sel;
-		if (!charge(0, S, bn)) say(chargeWhy(0, S, bn) || 'Not now.', '', 3);
+		if (!charge(0, S, bn)) say(chargeWhy(0, S, bn) || 'Not now.', '', TOAST.short);
 	},
 	fallback() {
 		fallBack(0, orderSet(), G.sel === 'all' ? undefined : G.sel);
@@ -723,7 +723,7 @@ const PLAY = {
 	relok(a) {
 		const q = relKey(a),
 			[gift, want, why] = relDraft(q);
-		if (why || !(gift || want)) return say(why || 'Pick a gift or a stance first.', '', 3);
+		if (why || !(gift || want)) return say(why || 'Pick a gift or a stance first.', '', TOAST.short);
 		if (gift) giveGift(0, gift, gangKey(q));
 		if (want) setRel(0, q, want);
 		delete G.relPick[q];
@@ -738,51 +738,51 @@ const PLAY = {
 	},
 	demand(a) {
 		const [q, r] = a.split(',');
-		if (!demand(0, Number(q), r)) say(demandWhy(0, Number(q), r) || 'Not now.', '', 3);
+		if (!demand(0, Number(q), r)) say(demandWhy(0, Number(q), r) || 'Not now.', '', TOAST.short);
 	},
 	tribute(a) {
-		if (!forceTribute(0, Number(a))) say(tributeWhy(0, Number(a)) || 'Not now.', '', 3);
+		if (!forceTribute(0, Number(a))) say(tributeWhy(0, Number(a)) || 'Not now.', '', TOAST.short);
 	},
 	levy(a) {
 		const [q, n] = a.split(',').map(Number);
-		if (!levy(0, q, n === 0 ? levyRoom(0, q) : n)) say(levyWhy(0, q, n || 1) || 'Not now.', '', 3);
+		if (!levy(0, q, n === 0 ? levyRoom(0, q) : n)) say(levyWhy(0, q, n || 1) || 'Not now.', '', TOAST.short);
 	},
 	release(a) {
 		releaseAll(0, Number(a));
 	},
 	qcancel(a) {
 		const [b, i] = a.split(',').map(Number),
-			B = G.blds.find((x) => x.id === b);
+			B = byId(G.blds, b);
 		if (B && cancelOrder(0, B, i)) sfx('err');
 	},
 	sellat(a) {
 		const [f, k] = a.split(','),
-			F = G.finds.find((x) => x.id === Number(f));
+			F = byId(G.finds, Number(f));
 		if (F && F.owner === 0) {
 			F.sell = F.sell || Object.fromEntries(WARES.map((w) => [w, 1]));
 			F.sell[k] = F.sell[k] ? 0 : 1;
 		}
 	},
 	debase() {
-		if (!debase(0)) say('Needs a finished Mint, once a game.', '', 3);
+		if (!debase(0)) say('Needs a finished Mint, once a game.', '', TOAST.short);
 	},
 	surrender(a) {
 		demandSurrender(0, Number(a));
 		closeCard();
 	},
 	overlord(a) {
-		if (!offerOverlord(0, Number(a))) say(overlordWhy(0, Number(a)) || 'Not now.', '', 3);
+		if (!offerOverlord(0, Number(a))) say(overlordWhy(0, Number(a)) || 'Not now.', '', TOAST.short);
 	},
 	tax(a) {
 		const [q, t] = a.split(','),
 			P = G.P[Number(q)];
 		if (P && P.lord === 0 && TAX[t]) {
 			P.tax = t;
-			say(`Tax on ${P.name}: ${t}.`, '', 3);
+			say(`Tax on ${P.name}: ${t}.`, '', TOAST.short);
 		}
 	},
 	venture(a) {
-		if (!venture(0, Number(a))) say('Needs Medieval age, gold; 3 at most.', '', 4);
+		if (!venture(0, Number(a))) say('Needs Medieval age, gold; 3 at most.', '', TOAST.mid);
 	},
 	douse(a) {
 		const b = G.blds.find((x) => x.id === Number(a) && x.owner === 0);
@@ -799,30 +799,30 @@ const PLAY = {
 				}
 			}
 		G.mail = (G.mail || []).filter((m) => m.act !== 'douse:' + a);
-		if (n) say(`${n} more run to the fire.`, '', 3);
-		else if (b && b.fire > 0) say('No villager is free.', '', 3);
+		if (n) say(`${n} more run to the fire.`, '', TOAST.short);
+		else if (b && b.fire > 0) say('No villager is free.', '', TOAST.short);
 	},
 	tpost(a) {
-		const f = G.finds.find((x) => x.id === Number(a));
+		const f = byId(G.finds, Number(a));
 		if (!f) return;
 		const why = canPlace(0, 'tpost', f.x, f.y);
 		if (why) {
-			say(why + '.', '', 3);
+			say(why + '.', '', TOAST.short);
 			return;
 		}
 		if (!afford(G.P[0], BLD.tpost.cost)) {
-			say(`Not enough: ${costText(BLD.tpost.cost)}.`, '', 3);
+			say(`Not enough: ${costText(BLD.tpost.cost)}.`, '', TOAST.short);
 			return;
 		}
 		if (G.P[0].age < BLD.tpost.age) {
-			say('Trade posts need the Bronze age.', '', 3);
+			say('Trade posts need the Bronze age.', '', TOAST.short);
 			return;
 		}
 		build(0, 'tpost', f.x, f.y);
-		say('A villager sets out to build the trade post.', '', 4);
+		say('A villager sets out to build the trade post.', '', TOAST.mid);
 	},
 	want(a) {
-		const f = G.finds.find((x) => x.id === Number(a));
+		const f = byId(G.finds, Number(a));
 		if (f && f.owner === 0) {
 			f.want = WARES[(WARES.indexOf(f.want) + 1) % WARES.length];
 		}
@@ -830,14 +830,14 @@ const PLAY = {
 	route(a) {
 		const [cid, s, id] = a.split(','),
 			c = G.units.find((u) => u.id === Number(cid) && u.owner === 0),
-			t = s === 's' ? G.finds.find((f) => f.id === Number(id)) : G.blds.find((b) => b.id === Number(id));
+			t = s === 's' ? byId(G.finds, Number(id)) : byId(G.blds, Number(id));
 		if (c && t) {
 			if (!homeBiz(0, c)) {
-				say('Build a Market first.', '', 4);
+				say('Build a Market first.', '', TOAST.mid);
 				return;
 			}
 			setRoute(c, t, true, s === 's');
-			say('The caravan runs the route on repeat.', '', 3);
+			say('The caravan runs the route on repeat.', '', TOAST.short);
 		}
 	},
 	make(a) {
@@ -846,29 +846,29 @@ const PLAY = {
 		if (B) setMake(B, t);
 	},
 	routeto(a) {
-		const f = G.finds.find((x) => x.id === Number(a));
+		const f = byId(G.finds, Number(a));
 		if (!f || !homeBiz(0, f)) {
-			say('Build a Market first.', '', 4);
+			say('Build a Market first.', '', TOAST.mid);
 			return;
 		}
 		const c = unitsOf(0, 'caravan').sort((p, q) => !!p.route - !!q.route || dist(p, f) - dist(q, f))[0];
 		if (!c) {
-			say('No caravan: train one at the Market.', '', 3);
+			say('No caravan: train one at the Market.', '', TOAST.short);
 			return;
 		}
 		setRoute(c, f, true, true);
-		say('A caravan takes the route, on repeat.', '', 3);
+		say('A caravan takes the route, on repeat.', '', TOAST.short);
 	},
 	rrep(a) {
-		const c = G.units.find((u) => u.id === Number(a));
+		const c = byId(G.units, Number(a));
 		if (c && c.route) c.route.rep = !c.route.rep;
 	},
 	rsp(a) {
-		const c = G.units.find((u) => u.id === Number(a));
+		const c = byId(G.units, Number(a));
 		if (c && c.route) c.route.spice = !c.route.spice;
 	},
 	rclr(a) {
-		const c = G.units.find((u) => u.id === Number(a));
+		const c = byId(G.units, Number(a));
 		if (c) {
 			c.route = null;
 			c.dest = null;
@@ -898,10 +898,10 @@ const PLAY = {
 		}
 	},
 	train(a) {
-		if (!train(0, a)) say(trainWhy(0, a) || 'Not now.', '', 3);
+		if (!train(0, a)) say(trainWhy(0, a) || 'Not now.', '', TOAST.short);
 	},
 	tech(a) {
-		if (!research(0, a)) say(researchWhy(0, a) || 'Not now.', '', 3);
+		if (!research(0, a)) say(researchWhy(0, a) || 'Not now.', '', TOAST.short);
 	},
 	age() {
 		ageUp(0);
@@ -916,7 +916,7 @@ const PLAY = {
 			s.state = 'goto';
 			s.px = x;
 			s.py = y;
-			say('The scout rides out.', '', 3);
+			say('The scout rides out.', '', TOAST.short);
 		}
 		closeCard();
 	},
@@ -936,19 +936,19 @@ const PLAY = {
 				u.target = target;
 				u.bid = null;
 			});
-			say(`Marching on the ${G.P[target].name}.`, '', 3);
+			say(`Marching on the ${G.P[target].name}.`, '', TOAST.short);
 		}
 		closeCard();
 	},
 	ransom(a) {
-		if (!payRansom(0, Number(a))) say('Not enough gold.', '', 3);
+		if (!payRansom(0, Number(a))) say('Not enough gold.', '', TOAST.short);
 	},
 	stand() {
-		if (!standDown(0)) say('No spare soldiers at home to stand down.', '', 3);
+		if (!standDown(0)) say('No spare soldiers at home to stand down.', '', TOAST.short);
 	},
 	vjob(a) {
 		const [id, j] = a.split(','),
-			u = G.units.find((x) => x.id === Number(id));
+			u = byId(G.units, Number(id));
 		if (u && u.owner === 0) {
 			setJob(u, u.job === j ? null : j);
 			u.pj = null;
@@ -956,7 +956,7 @@ const PLAY = {
 		}
 	},
 	vgo(a) {
-		const u = G.units.find((x) => x.id === Number(a));
+		const u = byId(G.units, Number(a));
 		if (!u) return;
 		if (G.confirm !== 'v' + u.id) {
 			G.confirm = 'v' + u.id;
@@ -966,7 +966,7 @@ const PLAY = {
 		setJob(u, null);
 		u.hp = 0;
 		u.gone = true;
-		say('A villager was sent home.', '', 3);
+		say('A villager was sent home.', '', TOAST.short);
 		closeCard();
 	},
 	dismiss() {
@@ -975,23 +975,23 @@ const PLAY = {
 			setJob(v, null);
 			v.hp = 0;
 			v.gone = true;
-			say('A villager was sent home.', '', 3);
+			say('A villager was sent home.', '', TOAST.short);
 		}
 	},
 	sab(a) {
-		const b = G.blds.find((x) => x.id === Number(a)),
+		const b = byId(G.blds, Number(a)),
 			sp =
 				b &&
 				unitsOf(0, 'spy')
 					.filter((u) => u.state !== 'sab')
 					.sort((x, y) => dist(x, b) - dist(y, b))[0];
 		if (!b || !BLD[b.kind].sab || !sp) {
-			say(!sp ? 'You have no free spy.' : 'That cannot be sabotaged.', '', 3);
+			say(!sp ? 'You have no free spy.' : 'That cannot be sabotaged.', '', TOAST.short);
 			return;
 		}
 		sp.state = 'sab';
 		sp.tid = b.id;
-		say('A spy slips away to sabotage it.', '', 4);
+		say('A spy slips away to sabotage it.', '', TOAST.mid);
 		closeCard();
 	},
 	spygo(a) {
@@ -1000,35 +1000,35 @@ const PLAY = {
 				.filter((u) => u.state !== 'sab')
 				.sort((p, q) => dist(p, { x, y }) - dist(q, { x, y }))[0];
 		if (!sp) {
-			say('You have no free spy.', '', 3);
+			say('You have no free spy.', '', TOAST.short);
 			return;
 		}
 		sp.state = 'goto';
 		sp.px = x;
 		sp.py = y;
-		say('A spy goes to look.', '', 3);
+		say('A spy goes to look.', '', TOAST.short);
 		closeCard();
 	},
 	shrine(a) {
-		const f = G.finds.find((x) => x.id === Number(a)),
+		const f = byId(G.finds, Number(a)),
 			pr = f && unitsOf(0, 'priest').sort((p, q) => dist(p, f) - dist(q, f))[0];
 		if (!pr) {
-			say('You have no priest: Build → Temple.', '', 3);
+			say('You have no priest: Build → Temple.', '', TOAST.short);
 			return;
 		}
 		pr.state = 'shrine';
 		pr.fid = f.id;
-		say('A priest walks to the shrine.', '', 3);
+		say('A priest walks to the shrine.', '', TOAST.short);
 		closeCard();
 	},
 	hire(a) {
-		const f = G.finds.find((x) => x.id === Number(a));
-		if (f && !hire(0, f)) say(hireWhy(0, f), '', 3);
+		const f = byId(G.finds, Number(a));
+		if (f && !hire(0, f)) say(hireWhy(0, f), '', TOAST.short);
 	},
 	guard(a) {
 		const [t, i] = a.split(','),
 			id = Number(i),
-			at = t === 'f' ? G.finds.find((f) => f.id === id) : G.units.find((v) => v.id === id);
+			at = t === 'f' ? byId(G.finds, id) : byId(G.units, id);
 		if (!at) return;
 		const room = POST.guard - guardsOf(t, id).length,
 			S = sendable()
@@ -1058,10 +1058,10 @@ const PLAY = {
 	},
 	trade(a) {
 		const [dir, k] = a.split(':');
-		if (!marketTrade(0, k, dir)) say(dir === 'sell' ? 'Not enough to sell.' : 'Not enough gold.', '', 3);
+		if (!marketTrade(0, k, dir)) say(dir === 'sell' ? 'Not enough to sell.' : 'Not enough gold.', '', TOAST.short);
 	},
 	zeal() {
-		if (!zeal(0, orderSet())) say(zealWhy(0, orderSet()) || 'Not now.', '', 3);
+		if (!zeal(0, orderSet())) say(zealWhy(0, orderSet()) || 'Not now.', '', TOAST.short);
 	},
 };
 function act(a) {
@@ -1090,7 +1090,7 @@ function learnAct(verb, arg) {
 		learn('job:' + arg);
 	} else if (verb === 'sendvil') {
 		learn('job');
-		const n = G.nodes.find((x) => x.id === Number(arg));
+		const n = byId(G.nodes, Number(arg));
 		if (n) learn('job:' + (n.kind === 'farm' && n.type === 'food' ? 'field' : n.type));
 	} else if (['sendbld', 'age', 'trade'].includes(verb)) learn(verb);
 }

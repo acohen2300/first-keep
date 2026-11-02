@@ -451,8 +451,8 @@ function think(p) {
 			setJob(v, best.r, best.n.hunt ? null : best.n);
 			if (best.n.hunt) {
 				v.hunt = best.n.hunt;
-				v.hunt.wk = (v.hunt.wk || 0) + 1;
-			} else if (!best.n.farm) best.n.wk = (best.n.wk || 0) + 1; // setJob counts a field
+				crowd(v.hunt, 1);
+			} else if (!best.n.farm) crowd(best.n, 1); // setJob counts a field
 		}
 	// finds: a detachment clears the nearest guarded one when nothing else is going on; it hires vagabonds it walks past
 	if (per.loot && armyN >= 10 && !p.wave) lootRun(p);
@@ -576,7 +576,7 @@ function throneRun(p, per) {
 		u.bid = T.id;
 	});
 	p.wave = newWave(home.length, holder, T.id);
-	news('war', `${p.name} march on the Throne.`, 'warn', 8, T);
+	news('war', `${p.name} march on the Throne.`, 'warn', TOAST.long, T);
 }
 function wallPlan(k) {
 	// an arc WALL_R (06) out from the keep, facing the middle of the map; the two squares nearest the middle are the gate
@@ -691,13 +691,13 @@ function decideWar(p, per) {
 				k = keepOf(o);
 			const mark =
 				k &&
-				nearest(G.blds, k, (b) => b.owner === best && b.prog >= 1 && b.hp > 0 && b.kind !== 'keep' && BLD[b.kind].drop);
+				nearest(G.blds, k, (b) => standing(b, best) && b.kind !== 'keep' && BLD[b.kind].drop);
 			if (mark)
 				fast.forEach((u) => {
 					u.bid = mark.id;
 				});
 		}
-		if (best === 0) news('realm', `${p.name} march on you with ${go.length} soldiers.`, 'warn', 8, go[0]);
+		if (best === 0) news('realm', `${p.name} march on you with ${go.length} soldiers.`, 'warn', TOAST.long, go[0]);
 	}
 }
 
@@ -716,7 +716,7 @@ function leagueTick() {
 		G.league = lead.id;
 	} else if (G.league !== lead.id || ratio < LEAGUE.release) {
 		G.league = null;
-		news('realm', 'The league against the leader breaks up.', '', 6);
+		news('realm', 'The league against the leader breaks up.', '', TOAST.mid);
 		return;
 	}
 	const M = S.slice(1).filter((p) => p.id !== 0 && p.lord !== lead.id);
@@ -727,5 +727,5 @@ function leagueTick() {
 		for (const q of M) if (q !== p && G.rel[p.id][q.id] !== 'ally') G.rel[p.id][q.id] = 'ally';
 	}
 	G.navDirty = true;
-	if (fresh) news('realm', `${M.map((p) => p.name).join(', ')} unite against ${lead.name}, the leader.`, 'warn', 8);
+	if (fresh) news('realm', `${M.map((p) => p.name).join(', ')} unite against ${lead.name}, the leader.`, 'warn', TOAST.long);
 }

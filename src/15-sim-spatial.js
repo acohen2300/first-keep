@@ -33,31 +33,33 @@ const ignorable = (v, o, me) => {
 }; // a herald is sacred: nobody shoots at an emissary on its way (it dies only by a side's own order)
 // who a side strikes: a foe (isFoe), or anything attacking the one looking (at peace too), less what it leaves alone
 const strikes = (o, v, me) => !v.inside && v.hp > 0 && v.owner !== o && (isFoe(o, v, me) || onMe(v, me)) && !ignorable(v, o, me);
+// every unit in the grid's squares within r of a (the unit grid, rebuilt each step), in the grid's own order; with no grid this step, every
+// unit, last to first. The one home of the scan nearestFoe, bestFoe, nearU and unitsNear each wrote out (Nov 2, M6)
+function scanNear(a, r, fn) {
+	const U = G.units;
+	if (G.ugTick !== G.tick) {
+		for (let i = U.length - 1; i >= 0; i--) fn(U[i]);
+		return;
+	}
+	const x0 = clamp(((a.x - r) / UG) | 0, 0, UGN - 1),
+		x1 = clamp(((a.x + r) / UG) | 0, 0, UGN - 1),
+		y0 = clamp(((a.y - r) / UG) | 0, 0, UGN - 1),
+		y1 = clamp(((a.y + r) / UG) | 0, 0, UGN - 1);
+	for (let cy = y0; cy <= y1; cy++) for (let cx = x0; cx <= x1; cx++) for (let i = UGH[cy * UGN + cx]; i >= 0; i = UGX[i]) fn(U[i]);
+}
 function nearestFoe(o, from, range, anchor) {
 	const a = anchor || from,
-		U = G.units,
 		sR = spySeen(o, from);
 	let best = null,
 		bd = range;
-	const grid = G.ugTick === G.tick,
-		r = range + 3;
-	const x0 = grid ? clamp(((a.x - r) / UG) | 0, 0, UGN - 1) : 0,
-		x1 = grid ? clamp(((a.x + r) / UG) | 0, 0, UGN - 1) : 0,
-		y0 = grid ? clamp(((a.y - r) / UG) | 0, 0, UGN - 1) : 0,
-		y1 = grid ? clamp(((a.y + r) / UG) | 0, 0, UGN - 1) : 0;
-	for (let cy = y0; cy <= y1; cy++)
-		for (let cx = x0; cx <= x1; cx++)
-			for (let i = grid ? UGH[cy * UGN + cx] : U.length - 1; i >= 0; i = grid ? UGX[i] : i - 1) {
-				const v = U[i];
-				if (!strikes(o, v, from)) continue;
-				const dx = a.x - v.x,
-					dy = a.y - v.y,
-					d = Math.sqrt(dx * dx + dy * dy);
-				if (d < bd && !(v.kind === 'spy' && d > sR)) {
-					bd = d;
-					best = v;
-				}
-			}
+	scanNear(a, range + 3, (v) => {
+		if (!strikes(o, v, from)) return;
+		const d = dist(a, v);
+		if (d < bd && !(v.kind === 'spy' && d > sR)) {
+			bd = d;
+			best = v;
+		}
+	});
 	return best;
 }
 // ───────────────────────── Who a soldier fights (Build 59)
@@ -90,55 +92,37 @@ function groupPower(u) {
 const canBeat = (u, v) => lanchester((groupPower(u) * vsMul(u, v)) / Math.max(1e-6, unitPower(v) * vsMul(v, u))) > 0.5;
 function bestFoe(o, from, range, anchor) {
 	const a = anchor || from,
-		U = G.units,
 		sR = spySeen(o, from);
 	let best = null,
 		bV = -1,
 		bBeat = false;
-	const grid = G.ugTick === G.tick,
-		r = range + 3;
-	const x0 = grid ? clamp(((a.x - r) / UG) | 0, 0, UGN - 1) : 0,
-		x1 = grid ? clamp(((a.x + r) / UG) | 0, 0, UGN - 1) : 0,
-		y0 = grid ? clamp(((a.y - r) / UG) | 0, 0, UGN - 1) : 0,
-		y1 = grid ? clamp(((a.y + r) / UG) | 0, 0, UGN - 1) : 0;
-	for (let cy = y0; cy <= y1; cy++)
-		for (let cx = x0; cx <= x1; cx++)
-			for (let i = grid ? UGH[cy * UGN + cx] : U.length - 1; i >= 0; i = grid ? UGX[i] : i - 1) {
-				const v = U[i];
-				if (!strikes(o, v, from)) continue;
-				const d = hyp(a.x - v.x, a.y - v.y);
-				if (d > range || (v.kind === 'spy' && d > sR)) continue;
-				const beat = canBeat(from, v),
-					V = foeValue(from, v, dist(from, v));
-				if ((beat && !bBeat) || (beat === bBeat && V > bV)) {
-					best = v;
-					bV = V;
-					bBeat = beat;
-				}
-			}
+	scanNear(a, range + 3, (v) => {
+		if (!strikes(o, v, from)) return;
+		const d = dist(a, v);
+		if (d > range || (v.kind === 'spy' && d > sR)) return;
+		const beat = canBeat(from, v),
+			V = foeValue(from, v, dist(from, v));
+		if ((beat && !bBeat) || (beat === bBeat && V > bV)) {
+			best = v;
+			bV = V;
+			bBeat = beat;
+		}
+	});
 	return best;
 }
 // the nearest unit within r that passes ok, looking only at the squares around (the grid is rebuilt each step)
 function nearU(from, r, ok) {
 	if (G.ugTick !== G.tick) return nearest(G.units, from, (v) => v !== from && v.hp > 0 && ok(v), r); // never itself nor the fallen, as the grid path
-	const U = G.units,
-		x0 = clamp(((from.x - r) / UG) | 0, 0, UGN - 1),
-		x1 = clamp(((from.x + r) / UG) | 0, 0, UGN - 1),
-		y0 = clamp(((from.y - r) / UG) | 0, 0, UGN - 1),
-		y1 = clamp(((from.y + r) / UG) | 0, 0, UGN - 1);
 	let best = null,
 		bd = r;
-	for (let cy = y0; cy <= y1; cy++)
-		for (let cx = x0; cx <= x1; cx++)
-			for (let i = UGH[cy * UGN + cx]; i >= 0; i = UGX[i]) {
-				const v = U[i];
-				if (v === from || v.hp <= 0) continue;
-				const d = dist(from, v);
-				if (d < bd && ok(v)) {
-					bd = d;
-					best = v;
-				}
-			}
+	scanNear(from, r, (v) => {
+		if (v === from || v.hp <= 0) return;
+		const d = dist(from, v);
+		if (d < bd && ok(v)) {
+			bd = d;
+			best = v;
+		}
+	});
 	return best;
 }
 function nearestFoeBld(o, from, owner, range) {
@@ -197,17 +181,9 @@ function unitsNear(from, r, fn) {
 		for (const v of G.units) if (v !== from && Math.abs(v.x - from.x) < r && Math.abs(v.y - from.y) < r) fn(v);
 		return;
 	}
-	const U = G.units,
-		x0 = clamp(((from.x - r) / UG) | 0, 0, UGN - 1),
-		x1 = clamp(((from.x + r) / UG) | 0, 0, UGN - 1),
-		y0 = clamp(((from.y - r) / UG) | 0, 0, UGN - 1),
-		y1 = clamp(((from.y + r) / UG) | 0, 0, UGN - 1);
-	for (let cy = y0; cy <= y1; cy++)
-		for (let cx = x0; cx <= x1; cx++)
-			for (let i = UGH[cy * UGN + cx]; i >= 0; i = UGX[i]) {
-				const v = U[i];
-				if (v !== from && Math.abs(v.x - from.x) < r && Math.abs(v.y - from.y) < r) fn(v);
-			}
+	scanNear(from, r, (v) => {
+		if (v !== from && Math.abs(v.x - from.x) < r && Math.abs(v.y - from.y) < r) fn(v);
+	});
 }
 function vsMul(a, t) {
 	const vs = a.owner === WILD ? UNIT[a.kind].vs : stats(a.owner, a.kind).vs;

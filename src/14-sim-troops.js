@@ -30,7 +30,7 @@ function priestTick(u, dt, SP) {
 				(v) => v.id === u.cv && v.hp > 0 && !v.inside && atWar(u.owner, v.owner) && UNIT[v.kind].cls,
 			),
 			full = !!t && clsCount(u.owner, UNIT[t.kind].cls) >= clsMax(UNIT[t.kind].cls, u.owner); // the ceiling holds for a convert as for a recruit (C8): with no room the spell stops
-		if (full && u.owner === 0) say('At Maximum Occupancy Capacity', '', 3); // answer 11, Albert's words
+		if (full && u.owner === 0) say('At Maximum Occupancy Capacity', '', TOAST.short); // answer 11, Albert's words
 		if (!t || full || u.cvCd > G.t) {
 			u.state = 'home';
 			u.cv = null;
@@ -55,8 +55,8 @@ function priestTick(u, dt, SP) {
 				u.cvCd = G.t + CONVERT.cd;
 				u.cvT = 0;
 				u.state = 'home';
-				if (u.owner === 0) news('war', `Converted: their ${UNIT[t.kind].name.toLowerCase()} is yours.`, 'good', 5, t);
-				else if (was === 0) news('war', `A priest turned your ${UNIT[t.kind].name.toLowerCase()}!`, 'warn', 5, t);
+				if (u.owner === 0) news('war', `Converted: their ${UNIT[t.kind].name.toLowerCase()} is yours.`, 'good', TOAST.mid, t);
+				else if (was === 0) news('war', `A priest turned your ${UNIT[t.kind].name.toLowerCase()}!`, 'warn', TOAST.mid, t);
 			}
 		} else {
 			u.cvT = Math.max(0, (u.cvT || 0) - dt);
@@ -65,7 +65,7 @@ function priestTick(u, dt, SP) {
 		return;
 	}
 	if (u.state === 'shrine') {
-		const f = G.finds.find((x) => x.id === u.fid);
+		const f = byId(G.finds, u.fid);
 		if (f) {
 			const d = dist(u, f) || 1,
 				r = FINDS[f.kind].r - 10; // the foot of the Throne on the priest's own side
@@ -154,7 +154,7 @@ function solTick(u, dt, SP) {
 	}
 	if (u.inside) {
 		// a new order: out of the building
-		stepOut(u, G.blds.find((x) => x.id === u.hid));
+		stepOut(u, byId(G.blds, u.hid));
 		u.hid = 0;
 	}
 	if (
@@ -209,7 +209,7 @@ function solTick(u, dt, SP) {
 					u.y,
 					60,
 					(b) =>
-						b.owner === o && b.prog >= 1 && b.hp > 0 && (BLD[b.kind].dmg || BLD[b.kind].wallish) && dist(b, u) < 60,
+						standing(b, o) && (BLD[b.kind].dmg || BLD[b.kind].wallish) && dist(b, u) < 60,
 				)
 			)
 				rate *= MORALE.shelter * fxv(o, 'shelter').m;
@@ -240,7 +240,7 @@ function solTick(u, dt, SP) {
 			u.fleeFrom = null;
 			if (o === 0 && G.t - (G.routSay || -99) > 8) {
 				G.routSay = G.t;
-				news('war', `${u.bn !== undefined ? BN[u.bn] : 'Your soldiers'} break and run!`, 'warn', 5, u);
+				news('war', `${u.bn !== undefined ? BN[u.bn] : 'Your soldiers'} break and run!`, 'warn', TOAST.mid, u);
 			}
 			return;
 		}
@@ -368,7 +368,7 @@ function solTick(u, dt, SP) {
 				if (hasTag(u.kind, 'siege') && G.clim.snow > 0 && rng() < CLIMATE.miss * G.clim.snow * (1 - fxv(o, 'snow').a)) {
 					u.hp -= u.max * CLIMATE.missHurt;
 					scarStrike(u.x + u.fx * 30, u.y + u.fy * 30);
-					if (o === 0 && (G.tick + u.id) % 90 < 3) news('war', 'Snow: the engine slid, shot short.', 'warn', 4, u);
+					if (o === 0 && (G.tick + u.id) % 90 < 3) news('war', 'Snow: the engine slid, shot short.', 'warn', TOAST.mid, u);
 				} // an engine on snow
 				else {
 					hurt(o, u, tgt, dmgOf(u));
@@ -399,7 +399,7 @@ function solTick(u, dt, SP) {
 // a guard keeps to what it guards: a caravan (escort) or a trade stop you hold (garrison); when that is gone, it goes home
 function escortPick(u) {
 	if (u.escF !== undefined) {
-		const f = G.finds.find((x) => x.id === u.escF);
+		const f = byId(G.finds, u.escF);
 		u.esc = f && f.owner === u.owner ? f : null;
 		if (!u.esc) u.escF = undefined;
 		return;
@@ -528,7 +528,7 @@ function wayfarers(dt) {
 	const w = addUnit(WILD, 'wayfarer', a[0], a[1]);
 	w.px = b[0];
 	w.py = b[1];
-	news('realm', 'A wayfarer: reach him first to gain him.', '', 6, w);
+	news('realm', 'A wayfarer: reach him first to gain him.', '', TOAST.mid, w);
 }
 function wayfarerTick(u, dt, SP) {
 	if ((G.tick + u.id) % 6 === 0) {
@@ -543,7 +543,7 @@ function wayfarerTick(u, dt, SP) {
 					v.job = o === 0 ? G.P[0].rally : null;
 				} else earn(G.P[o], 'f', 50, 'finds'); // no room: what it carried
 			if (o === 0)
-				news('realm', UNIT[u.kind].joins > 1 ? 'The settlers join your people.' : 'A wayfarer joins your people.', 'good', 5);
+				news('realm', UNIT[u.kind].joins > 1 ? 'The settlers join your people.' : 'A wayfarer joins your people.', 'good', TOAST.mid);
 			return;
 		}
 	}
@@ -570,8 +570,8 @@ function findsTick(dt) {
 					const was = f.owner;
 					f.owner = o;
 					f.cap = null;
-					if (o === 0) news('realm', 'Your priest holds the shrine.', 'good', 5);
-					else if (was === 0) news('realm', `${G.P[o].name} took your shrine.`, 'warn', 5, f);
+					if (o === 0) news('realm', 'Your priest holds the shrine.', 'good', TOAST.mid);
+					else if (was === 0) news('realm', `${G.P[o].name} took your shrine.`, 'warn', TOAST.mid, f);
 				}
 			} else if (!sides.length) f.cap = null;
 			if (f.owner !== null && G.P[f.owner].alive) {
@@ -613,7 +613,7 @@ function findsTick(dt) {
 			}
 		}
 		if (o === 0) {
-			news('trade', `${F.name}: ${costText(got)}${extra}.`, 'good', 6);
+			news('trade', `${F.name}: ${costText(got)}${extra}.`, 'good', TOAST.mid);
 			sfx('coin');
 		}
 	}

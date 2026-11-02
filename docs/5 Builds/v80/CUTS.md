@@ -273,3 +273,8 @@ Checks on main before publishing:
 - The Grower test (branch `grower-test`, not in this preview): 4 seeds x 30 min against preview 14, the same seats: seeds 1 and 2 identical, 3 and 4 +1,254 and −822 in score; in 30 minutes neither marches nor reaches its army limit, so the two brains barely differ. Needs longer games. [2026-11-02 09:16]
 
 - **Play fingerprint accepted:** Build 80 preview 15: D-091 the nearest villager raises a site when nobody is idle: the scripted house is now built (in preview 14 it never got a builder), so the town grows to 7 at minute 3 and food dips while it builds; traced by taking the change out alone (the rest moves minute 5 a little: rest spots) [2026-11-02 09:16]
+
+## Build 80 preview 16 (standardization, M1 to M7) [2026-11-02 10:09]
+- Albert, Nov 2, 09:54 to 09:58 (yes yes): merge what is written in more than one place, no rule changed; the play fingerprint must stay exactly the same (it did). [2026-11-02 10:09]
+- M1 `byId(list, id)`: 36 hand-written look-ups by id. M2 `dist(a, b)`: 23 hand-written distances. M3 `crowd(n, ±1)`: 17 hand-bumped worker counts. M4 `standing(b, o)`: 13 hand-written "finished, standing, this side" checks. M5 `NS_rng`: the seeded dice written by hand 4 times (building art, the sky's lightning) now use the one home, moved to `08-core`. M6 `scanNear`: the unit grid's scan, written out in nearestFoe, bestFoe, nearU and unitsNear, now one. M7 `TOAST` (short 3, mid 5, long 8): 219 toasts typed their own seconds (2 to 10); now three lengths, the only change a player sees. [2026-11-02 10:09]
+- Cut: the hand-written copies above. Nothing else. Five plants repointed at the new text, each shown caught. Size: src 364 lines in, 382 out. [2026-11-02 10:09]

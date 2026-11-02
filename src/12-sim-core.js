@@ -13,7 +13,7 @@ function recount() {
 	for (const u of G.units)
 		if (u.kind === 'vil') {
 			if (u.node) u.node.wk++;
-			else if (u.hunt) u.hunt.wk = (u.hunt.wk || 0) + 1;
+			else if (u.hunt) crowd(u.hunt, 1);
 		} // a hunted animal counts its hunters, as a find its workers: the crowd is the same rule (item 6)
 }
 // layers worn in series (decision N10): heat loss Q = ΔT / R_total and R_total = R_body + Σ R_i, so the cold's or the rain's toll on a march
@@ -100,7 +100,7 @@ function reap() {
 	for (const b of G.blds)
 		if (b.node && b.node.amt <= 0 && b.hp > 0 && BLD[b.kind].reserve > 0 && !b.spent) {
 			b.spent = true;
-			if (b.owner === 0) news('home', `${bldName(0, b.kind)} cut out: tap it to replant.`, '', 5, b);
+			if (b.owner === 0) news('home', `${bldName(0, b.kind)} cut out: tap it to replant.`, '', TOAST.mid, b);
 		} else if (b.spent && b.node && b.node.amt > 0) b.spent = false; // a coppice plot, spent: it stands, stumps and all, until it is replanted (Build 61; it used to vanish)
 	for (const b of G.blds)
 		if (b.kind === 'throne' && b.hp <= 0 && !b.gone) {
@@ -117,7 +117,7 @@ function reap() {
 				news('realm', 
 					`${G.P[b.owner].name === 'You' ? 'Your wonder' : 'The wonder of ' + G.P[b.owner].name} has fallen.`,
 					b.owner === 0 ? 'warn' : 'good',
-					7,
+					TOAST.long,
 				);
 				const w2 = G.blds.find((x) => x !== b && x.kind === 'wonder' && x.prog >= 1 && x.hp > 0 && x.wend);
 				G.wonder = w2 ? { owner: w2.owner, id: w2.id, end: w2.wend } : null; // another wonder still stands: its own clock goes on (B6)
@@ -125,7 +125,7 @@ function reap() {
 		}
 	if (fxChange) fxDirty();
 	if (G.lootT && G.t - G.lootT > 1.5) {
-		news('trade', `Plunder: ${costText(G.loot)}.`, 'good', 6);
+		news('trade', `Plunder: ${costText(G.loot)}.`, 'good', TOAST.mid);
 		G.loot = {};
 		G.lootT = 0;
 	}
@@ -317,7 +317,7 @@ function died(u) {
 		const share = 1 / (MORALE.breakAt * (near.length + 1));
 		for (const v of near) v.mor -= share;
 	}
-	if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+	if (u.node && u.node.farm) crowd(u.node, -1);
 	if (u.kind === 'envoy') G.P[u.owner].envoyOut = false;
 	if (u.kind === 'caravan' && u.by === WILD) robbed(u);
 	else if (u.kind === 'caravan' && u.by !== undefined && u.by !== WILD) {
@@ -390,7 +390,7 @@ function judge() {
 		for (const m of [300, 60])
 			if (G.t >= lim - m && !G.bell[m]) {
 				G.bell[m] = 1;
-				if (G.t < lim - m + 5) news('realm', `${m / 60} minute${m > 60 ? 's' : ''} left: top score wins.`, 'warn', 7);
+				if (G.t < lim - m + 5) news('realm', `${m / 60} minute${m > 60 ? 's' : ''} left: top score wins.`, 'warn', TOAST.long);
 			}
 	if (lim && G.t >= lim) {
 		scoreAll();
@@ -450,7 +450,7 @@ function bldTick(b, dt) {
 				b.cd = B.cd;
 				if (o === 0 && b.kind === 'tower' && G.t - (b.alarmT || -99) > 20) {
 					b.alarmT = G.t;
-					news('war', `Foes at your tower at ${coord(b.x, b.y)}.`, 'warn', 6, b);
+					news('war', `Foes at your tower at ${coord(b.x, b.y)}.`, 'warn', TOAST.mid, b);
 					sfx('horn', b.x, b.y);
 				}
 				shot(b.x, b.y, B.h, t.x, t.y);
@@ -484,7 +484,7 @@ function built(b) {
 				? `Your wonder stands. Hold it ${WONDER_HOLD / 60} min to win.`
 				: `${G.P[o].name} built a wonder: break it in ${WONDER_HOLD / 60} min!`,
 			o === 0 ? 'good' : 'warn',
-			10,
+			TOAST.long,
 			b,
 		);
 		sfx('age');
@@ -526,7 +526,7 @@ function jobDone(b, j) {
 			}
 		if (o === 0) {
 			sfx('done', b.x, b.y);
-			news('war', `${j.bn !== undefined ? BN[j.bn] : 'A battalion'} mustered: ${musterN(j.muster)} soldiers.`, 'good', 5, b);
+			news('war', `${j.bn !== undefined ? BN[j.bn] : 'A battalion'} mustered: ${musterN(j.muster)} soldiers.`, 'good', TOAST.mid, b);
 		}
 	} else if (j.tech) {
 		learnTech(o, j.tech);
@@ -535,14 +535,14 @@ function jobDone(b, j) {
 		p.aging = false;
 		fxDirty();
 		if (o === 0) {
-			news('realm', `You enter the ${AGES[p.age].name} age.`, 'good', 6);
+			news('realm', `You enter the ${AGES[p.age].name} age.`, 'good', TOAST.mid);
 			sfx('age');
 			const k = keepOf(0);
 			if (k) {
 				k.doneT = G.t;
 				celebrate(3, k.x, k.y);
 			}
-		} else if (fxv(0, 'news').a >= 5 || !G.fogOn) news('chronicle', `${p.name} entered the ${AGES[p.age].name} age.`, '', 4); // another court's age: in the news sheets
+		} else if (fxv(0, 'news').a >= 5 || !G.fogOn) news('chronicle', `${p.name} entered the ${AGES[p.age].name} age.`, '', TOAST.mid); // another court's age: in the news sheets
 		chron(`${o === 0 ? 'You' : p.name} entered the ${AGES[p.age].name} age.`);
 	}
 }
@@ -557,7 +557,7 @@ function learnTech(o, id) {
 				? `${T.name}: your ${plural(UNIT[T.tier.unit].name.toLowerCase())} are now ${plural(stats(0, civKind(0, T.tier.unit)).name.toLowerCase())}.`
 				: `${T.name} learned.`,
 			'good',
-			5,
+			TOAST.mid,
 		);
 		sfx('done');
 		const hit = T.tier
@@ -577,7 +577,7 @@ function dropFor(o, type, from) {
 	return nearest(
 		G.blds,
 		from,
-		(b) => b.owner === o && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(type),
+		(b) => standing(b, o) && BLD[b.kind].drop && BLD[b.kind].drop.includes(type),
 	);
 }
 const dockNear = (o, n) =>
@@ -705,7 +705,7 @@ function bestNode(u, job, seek, cm) {
 		}
 		if (!drops)
 			drops = G.blds.filter(
-				(b) => b.owner === u.owner && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(job),
+				(b) => standing(b, u.owner) && BLD[b.kind].drop && BLD[b.kind].drop.includes(job),
 			);
 		if (u.was && n.kind !== 'farm') {
 			const from = seek || u;

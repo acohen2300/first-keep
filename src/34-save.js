@@ -385,7 +385,7 @@ function saveGame(force) {
 	} catch (e) {
 		if (G.t - (saveFailT ?? -999) > 60) {
 			saveFailT = G.t;
-			say('Save failed. Storage may be full.', 'warn', 6);
+			say('Save failed. Storage may be full.', 'warn', TOAST.mid);
 		}
 	} // a save that did not happen says so, once a minute (Build 42: it used to fail silently)
 }

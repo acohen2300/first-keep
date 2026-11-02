@@ -523,7 +523,7 @@ function route(u, tx, ty) {
 		if (
 			hit &&
 			T - hit.t < 2 &&
-			hyp(hit.x - u.x, hit.y - u.y) < GRID.share &&
+			dist(hit, u) < GRID.share &&
 			lineClear(u.x, u.y, hit.x, hit.y, o, avoid)
 		)
 			p = hit.p; // a big army leaves one spot for one place: it asks once and all of it follows (Build 42; Build 48: from nearby squares too, not only the same one)
@@ -612,7 +612,7 @@ function moveTo(u, x, y, dt, r, SP, spot) {
 			u.stuck = G.t + CLIMATE.slipSecs;
 			if (u.owner === 0 && !(G.slipT > G.t - 20)) {
 				G.slipT = G.t;
-				news('land', 'Ice: your people slip and fall.', 'soft', 4, u);
+				news('land', 'Ice: your people slip and fall.', 'soft', TOAST.mid, u);
 			}
 			return false;
 		}

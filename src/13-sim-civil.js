@@ -126,13 +126,13 @@ function takeSpots(list, a, key, cm = BLD[a.kind] ? 0 : regionAt(a, list[0].owne
 		// those already standing (the nearest-first pairing sent the last ones across the crowd, and the push kept them off for good)
 		const cx = list.reduce((s, u) => s + u.x, 0) / list.length - a.x,
 			cy = list.reduce((s, u) => s + u.y, 0) / list.length - a.y,
-			L = [...list].sort((u, v) => hyp(u.x - a.x, u.y - a.y) - hyp(v.x - a.x, v.y - a.y)),
+			L = [...list].sort((u, v) => dist(u, a) - dist(v, a)),
 			S = [...free].sort((p, q) => (p.x - a.x) * cx + (p.y - a.y) * cy - ((q.x - a.x) * cx + (q.y - a.y) * cy));
 		L.forEach((u, i) => S[i] && got.set(u, S[i]));
 		return got;
 	}
 	const pairs = [];
-	for (const u of list) for (const p of free) pairs.push({ u, p, c: hyp(p.x - u.x, p.y - u.y) });
+	for (const u of list) for (const p of free) pairs.push({ u, p, c: dist(p, u) });
 	pairs.sort((x, y) => x.c - y.c);
 	const used = new Set();
 	for (const { u, p } of pairs)
@@ -170,7 +170,7 @@ function waitAt(u, dt, SP) {
 		// the overflow froze where it stood, a pile on one side of the mill). Only with no spot on any does it stand where it is and ask again
 		let p = null;
 		for (const c of G.blds
-			.filter((x) => x.owner === u.owner && x.prog >= 1 && x.hp > 0 && BLD[x.kind].drop && BLD[x.kind].drop.includes(u.job))
+			.filter((x) => standing(x, u.owner) && BLD[x.kind].drop && BLD[x.kind].drop.includes(u.job))
 			.sort((x, y) => dist(x, u) - dist(y, u))) {
 			p = takeSpots([u], c, c.id).get(u);
 			if (p) {
@@ -188,7 +188,7 @@ function waitAt(u, dt, SP) {
 					? `Every ${u.was} is full: one waits at the ${bldName(0, b.kind).toLowerCase()}.`
 					: `No ${u.was === 'tree' ? 'trees' : u.was} in sight: one waits at the ${bldName(0, b.kind).toLowerCase()}.`,
 				'',
-				4,
+				TOAST.mid,
 				u,
 			);
 		}
@@ -334,7 +334,7 @@ function vilTick(u, dt, SP) {
 			(u.hunt && unsafe(u.hunt, u.owner)) ||
 			(u.node && u.node.kind === 'fish' && !dockNear(u.owner, u.node)))
 	) {
-		if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+		if (u.node && u.node.farm) crowd(u.node, -1);
 		u.node = null;
 		u.hunt = null;
 	} // work or game is on dangerous ground now, or a fisher's dock is gone (C15): leave it
@@ -374,7 +374,7 @@ function vilTick(u, dt, SP) {
 		// game never sends it to another
 		const n = G.nodes.find((x) => x.id === u.fn && x.amt > 0);
 		if (n && nodeFits(n, u.job) && (n.wk || 0) - (u.node === n ? 1 : 0) < findCap(n)) {
-			if (u.node !== n) n.wk = (n.wk || 0) + 1;
+			if (u.node !== n) crowd(n, 1);
 			u.node = n;
 		} else {
 			u.node = null;
@@ -386,12 +386,12 @@ function vilTick(u, dt, SP) {
 	if (u.plot && !u.node && !u.hunt && u.job) {
 		// posted (D-089): back from shelter, the Emergency, a fire or a site, it goes back to its own building; with its building not ready or
 		// its place taken, it waits there. Only a fallen building sets it free to roam
-		const b = G.blds.find((x) => x.id === u.plot);
+		const b = byId(G.blds, u.plot);
 		if (!b || b.hp <= 0) u.plot = null;
 		else if (b.node && nodeFits(b.node, u.job)) {
 			if (b.prog >= 1 && (b.node.wk || 0) < slotsOf(b.node)) {
 				u.node = b.node;
-				b.node.wk = (b.node.wk || 0) + 1;
+				crowd(b.node, 1);
 				u.was = 'farm';
 			} else {
 				// it waits on a spot of its own round its building (D-092: they made for its middle and shuffled), as waiters do at a drop-off
@@ -410,7 +410,7 @@ function vilTick(u, dt, SP) {
 		!flock &&
 		(!u.node || u.node.amt <= 0 || !nodeFits(u.node, u.job) || (u.node.farm && u.node.wk > slotsOf(u.node)))
 	) {
-		if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+		if (u.node && u.node.farm) crowd(u.node, -1);
 		if (posted(u)) {
 			u.node = null;
 			return;
@@ -454,12 +454,12 @@ function vilTick(u, dt, SP) {
 		}
 		if (n && n.hunt) {
 			u.hunt = n.hunt;
-			u.hunt.wk = (u.hunt.wk || 0) + 1; // counted at once, as a find (recount sets it true every second)
+			crowd(u.hunt, 1); // counted at once, as a find (recount sets it true every second)
 			u.node = null;
 			return;
 		}
 		u.node = n;
-		if (n) n.wk = (n.wk || 0) + 1; // counted at once, so the next worker this second sees the crowd (recount sets it true every second)
+		if (n) crowd(n, 1); // counted at once, so the next worker this second sees the crowd (recount sets it true every second)
 	} else if (
 		!flock &&
 		u.carry === 0 &&
@@ -473,15 +473,15 @@ function vilTick(u, dt, SP) {
 		if (!u.node.farm) u.was = u.node.kind;
 		const b = u.node.farm || u.focus ? null : bestNode(u, u.job); // a plot worker and a focused one stay put; a wild worker may step to a better find of the same kind in sight
 		if (b && b.n !== u.node && b.R > FORAGE.move * forageNow(u)) {
-			if (u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+			if (u.node.farm) crowd(u.node, -1);
 			if (b.n.hunt) {
 				u.hunt = b.n.hunt;
 				u.node = null;
 				return;
 			}
-			if (!u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+			if (!u.node.farm) crowd(u.node, -1);
 			u.node = b.n;
-			b.n.wk = (b.n.wk || 0) + 1;
+			crowd(b.n, 1);
 		}
 	}
 	const n = u.node;
@@ -517,7 +517,7 @@ function vilTick(u, dt, SP) {
 		let held = 0;
 		for (const v of G.units) if (v !== u && v.node === n && v.at === n.id) held++;
 		if (held >= findCap(n)) {
-			n.wk = Math.max(0, (n.wk || 0) - 1);
+			crowd(n, -1);
 			u.node = null;
 			return;
 		} // a full find: a newcomer looks again (the search skips full finds); one that holds a spot keeps it
@@ -547,7 +547,7 @@ function leaveWork(u, n) {
 	const B = u.bad || (u.bad = {});
 	for (const id in B) if (B[id] <= G.t) delete B[id];
 	B[n.id] = G.t + DANGER_R.secs;
-	if (n.farm) n.wk = Math.max(0, (n.wk || 0) - 1);
+	if (n.farm) crowd(n, -1);
 	u.node = null;
 	u.at = null;
 }
@@ -623,12 +623,12 @@ function repairTick(u, dt, SP) {
 		if (!b.smoke && (b.spread || b.hp < maxHpB(o, b.kind) / 2) && rng() < FIRE_SMOKE * dt) {
 			b.smoke = true;
 			u.hp = 0;
-			if (o === 0) news('home', `Smoke killed a villager at the ${bldName(0, b.kind).toLowerCase()}.`, 'warn', 6, b);
+			if (o === 0) news('home', `Smoke killed a villager at the ${bldName(0, b.kind).toLowerCase()}.`, 'warn', TOAST.mid, b);
 			return;
 		} // a big fire can take one of its fighters
 		b.fire = Math.max(0, b.fire - 0.2 * dt);
 		u.work = G.t;
-		if (!b.fire && b.owner === 0) news('home', `The fire at the ${bldName(0, b.kind).toLowerCase()} is out.`, 'good', 4, b);
+		if (!b.fire && b.owner === 0) news('home', `The fire at the ${bldName(0, b.kind).toLowerCase()} is out.`, 'good', TOAST.mid, b);
 		return;
 	}
 	if (b.prog < 1) {
@@ -660,7 +660,7 @@ function repairTick(u, dt, SP) {
 		backToWork(u);
 		if (o === 0 && G.t - (G.repSay || -99) > 5) {
 			G.repSay = G.t;
-			say('Not enough to pay for repairs.', '', 3);
+			say('Not enough to pay for repairs.', '', TOAST.short);
 		}
 		return;
 	}
@@ -776,7 +776,7 @@ function caravanTick(u, dt, SP) {
 		if (d.owner !== o) {
 			earn(G.P[o], 'g', u.cargo, 'trade');
 			if (o === 0 && u.cargo) {
-				news('trade', `A caravan earns ${u.cargo} gold from your ally.`, 'good', 3, d);
+				news('trade', `A caravan earns ${u.cargo} gold from your ally.`, 'good', TOAST.short, d);
 				sfx('tribute');
 			}
 			u.dest = u.lastId;

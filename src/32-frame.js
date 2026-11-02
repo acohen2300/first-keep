@@ -409,7 +409,7 @@ function milestoneTick() {
 		if (!on) continue;
 		M.push({ id, t: Math.round(G.t) });
 		const [line] = MS_TEXT[id];
-		news('lesson', msFill(line), 'good', 7, null, `card:milestone,${id}`);
+		news('lesson', msFill(line), 'good', TOAST.long, null, `card:milestone,${id}`);
 		sfx('coin');
 		return; // one a tick: they never pile up
 	}

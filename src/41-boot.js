@@ -134,11 +134,11 @@ window.__fkq = (v) => {
 const clip = (text) => {
 	try {
 		navigator.clipboard.writeText(text).then(
-			() => say('Copied.', 'good', 2),
-			() => say('Could not copy here.', '', 3),
+			() => say('Copied.', 'good', TOAST.short),
+			() => say('Could not copy here.', '', TOAST.short),
 		);
 	} catch (e) {
-		say('Could not copy here.', '', 3);
+		say('Could not copy here.', '', TOAST.short);
 	}
 };
 window.__fk = {

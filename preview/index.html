@@ -5472,6 +5472,10 @@ const SPACE = 3 * FOOT,
 	ARRIVE = SPACE / 4;
 // SEARCH and searchR (where a villager looks for work) are below HOME: the search reaches the home band (REACH).
 const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, keep: 8 }; // a gatherer will not work within 110 of an enemy or a hunting beast, inside an enemy tower's reach plus 30, within 60 of a fire, or for 45 s within 80 of where one of its side was frightened more than 200 from home (the last 8 such places are kept)
+// How long a toast stays (Nov 2, M7: 219 calls typed their own seconds, from 2 to 10): three lengths, by how much there is to read.
+// At about 200 words a minute (adult silent reading, 238 in Brysbaert's 2019 review, from memory, not opened) a short line of a few words
+// needs 2 to 3 s, a sentence 4 to 5, two sentences 7 to 8. 2 and 3 became short; 4, 5 and 6 mid; 7 to 10 long.
+const TOAST = { short: 3, mid: 5, long: 8 };
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
 // ───────────────────────── The world's own numbers: weather, soil, sickness, the trade routes, the market ─────────────────────────
@@ -6939,6 +6943,13 @@ const dist = (a, b) => {
 		dy = a.y - b.y;
 	return Math.sqrt(dx * dx + dy * dy);
 };
+// One home for four things written by hand in many places (Nov 2, the standardization check, M1 to M4):
+const byId = (L, id) => L.find((x) => x.id === id); // the thing in a list with this id (a building, a unit, a find, a node)
+const standing = (b, o) => b.owner === o && b.prog >= 1 && b.hp > 0; // a building of this side, finished and standing
+// how many work a find, counted at once so the next worker this second sees the crowd (recount sets it true every second)
+const crowd = (n, d) => (n.wk = Math.max(0, (n.wk || 0) + d));
+// the seeded dice for drawings and the sky (Park and Miller's minimal standard, 1988, a = 16807, m = 2³¹ − 1): the same picture every time
+const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647;
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
 const costText = (c) =>
 	Object.entries(c || {})
@@ -7187,7 +7198,7 @@ const capOf = (o) => {
 	if (C.cap[o] === undefined)
 		C.cap[o] = Math.min(
 			POPMAX,
-			G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 ? roomOf(o, b.kind) : 0), 0),
+			G.blds.reduce((n, b) => n + (standing(b, o) ? roomOf(o, b.kind) : 0), 0),
 		);
 	return C.cap[o];
 };
@@ -7329,7 +7340,7 @@ const struckBy = (me, x) => {
 	const L = (G.struck || {})[campOf(me)];
 	if (!L || !(G.t - (L[x.id] ?? -1e9) < NATIVE.struck)) return false;
 	const h = groundOf(me);
-	return hyp(x.x - h.x, x.y - h.y) < h.r;
+	return dist(x, h) < h.r;
 };
 const isFoe = (o, x, me) => {
 	if (x.owner === o) return false;
@@ -7407,7 +7418,7 @@ function fxList(o) {
 	if (p.civ) add(CIVS[p.civ].fx);
 	const seen = new Set();
 	for (const b of G.blds)
-		if (b.owner === o && b.prog >= 1 && b.hp > 0 && BLD[b.kind].fx && !seen.has(b.kind)) {
+		if (standing(b, o) && BLD[b.kind].fx && !seen.has(b.kind)) {
 			seen.add(b.kind);
 			add(BLD[b.kind].fx);
 		}
@@ -7577,7 +7588,7 @@ const sightOf = (e) => Math.min(sightClear(e), visCap());
 // No dice, no cap: night, fog and weather already shrink each eye's own disc through sightOf.
 const groupSees = (o, t) =>
 	G.units.some((m) => m.owner === o && isSoldier(m) && m.hp > 0 && !m.inside && dist(m, t) <= sightOf(m)) ||
-	G.blds.some((b) => b.owner === o && b.hp > 0 && b.prog >= 1 && dist(b, t) <= sightOf(b));
+	G.blds.some((b) => standing(b, o) && dist(b, t) <= sightOf(b));
 const carryOf = (o) => CARRY + fxv(o, 'carry').a;
 // what gather research is keyed to: the find itself (tree, bush, fish, meat, stone, gold, iron), or the building a worked plot belongs to
 // (farm, treefarm, quarry, mint, foundry, pasture). Decision N9: a step reaches the finds its text names, never by the resource alone
@@ -8154,7 +8165,7 @@ function route(u, tx, ty) {
 		if (
 			hit &&
 			T - hit.t < 2 &&
-			hyp(hit.x - u.x, hit.y - u.y) < GRID.share &&
+			dist(hit, u) < GRID.share &&
 			lineClear(u.x, u.y, hit.x, hit.y, o, avoid)
 		)
 			p = hit.p; // a big army leaves one spot for one place: it asks once and all of it follows (Build 42; Build 48: from nearby squares too, not only the same one)
@@ -8243,7 +8254,7 @@ function moveTo(u, x, y, dt, r, SP, spot) {
 			u.stuck = G.t + CLIMATE.slipSecs;
 			if (u.owner === 0 && !(G.slipT > G.t - 20)) {
 				G.slipT = G.t;
-				news('land', 'Ice: your people slip and fall.', 'soft', 4, u);
+				news('land', 'Ice: your people slip and fall.', 'soft', TOAST.mid, u);
 			}
 			return false;
 		}
@@ -8637,12 +8648,12 @@ function newGame(seed, carry, daily) {
 			'land',
 			`${LAND[G.land].name}. Hazards at random: level ${levelOf(G.hz)}.`,
 			'',
-			8,
+			TOAST.long,
 			null,
 			null,
 			drawn.join(', ') || 'none',
 		); // which ones in its why: the mail shows it
-	} else news('land', `${LAND[G.land].name}. Gather, grow, explore.`, '', 8);
+	} else news('land', `${LAND[G.land].name}. Gather, grow, explore.`, '', TOAST.long);
 	if (scen) applyScenario(SET.scen);
 	if (G.fogOn) fogTick(); // lit here, not by the first frame drawn: the same seed plays the same whether or not a frame came first (B1)
 }
@@ -8691,7 +8702,7 @@ function applyScenario(id) {
 	navRebuild();
 	fxDirty();
 	if (S.hordeAt) G.horde = { at: S.hordeAt, said: 0 };
-	news('realm', `${SCEN_TEXT[id][0]}: ${SCEN_TEXT[id][1]}`, 'soft', 10);
+	news('realm', `${SCEN_TEXT[id][0]}: ${SCEN_TEXT[id][1]}`, 'soft', TOAST.long);
 }
 const inBox = (p, r) => p.x >= r.x0 && p.x <= r.x1 && p.y >= r.y0 && p.y <= r.y1;
 const node = (kind, type, x, y, amt) => ({ id: NID++, kind, type, x, y, amt, max: amt });
@@ -8847,7 +8858,7 @@ function makeForest(spot, loc, near) {
 		wet = (p) =>
 			Math.min(p.x, p.y) < CORNER - MID + 45 ||
 			Math.max(p.x, p.y) > CORNER - 45 ||
-			held.some((l) => hyp(p.x - l.x, p.y - l.y) < l.r + 45) ||
+			held.some((l) => dist(p, l) < l.r + 45) ||
 			(p.x <= 45 && p.y <= 45 && hyp(p.x, p.y) < MID - CORNER + 45); // in this corner's quarter, never in or at the edge of a lake, a find or the home zones (QC 05 N5)
 	const dep = [
 		['bush', 0, 0.45],
@@ -8902,7 +8913,7 @@ function makeRiver(L, w, toX) {
 	let last = at(0);
 	for (let t = 0; t <= 1; t += 0.002) {
 		const p = at(t);
-		if (hyp(p.x - last.x, p.y - last.y) >= w * WATER.step || !C.length) {
+		if (dist(p, last) >= w * WATER.step || !C.length) {
 			C.push({ x: p.x, y: p.y, r: w, river: true });
 			last = p;
 		}
@@ -9145,7 +9156,7 @@ function openWays(woods) {
 			const home = near(towardMid(w.k, PLACES.start), C); // where the first villagers stand
 			if (near(w.g, C, home)) continue;
 			const P = wayHome(w.g, C, home);
-			for (const [o, t] of woods) if (o === w.o && P.some((q) => hyp(q.x - t.x, q.y - t.y) < FOREST.cut)) cut.add(t);
+			for (const [o, t] of woods) if (o === w.o && P.some((q) => dist(q, t) < FOREST.cut)) cut.add(t);
 		}
 		if (!cut.size) return;
 		G.nodes = G.nodes.filter((n) => !cut.has(n));
@@ -9492,7 +9503,7 @@ function build(o, kind, x, y) {
 // A site rises only while villagers work it. The nearest free villager goes at once; a line of wall gets two at most, who then work down it.
 function autoBuilder(o, b) {
 	if (o === 0 && G.buildBy && G.buildBy.length) {
-		const V = G.buildBy.map((id) => G.units.find((u) => u.id === id)).filter((u) => u && u.hp > 0 && u.kind === 'vil');
+		const V = G.buildBy.map((id) => byId(G.units, id)).filter((u) => u && u.hp > 0 && u.kind === 'vil');
 		G.buildBy = null;
 		if (V.length) {
 			V.forEach((v) => {
@@ -9523,7 +9534,7 @@ function autoBuilder(o, b) {
 		if (v) v.back = true;
 	}
 	if (v) sendBuilder(v, b);
-	else if (hand(o)) say(NO_HANDS, 'warn', 3);
+	else if (hand(o)) say(NO_HANDS, 'warn', TOAST.short);
 }
 // a builder remembers what it left (its job, its find or building, where it was placed), so backToWork takes it back to that
 function sendBuilder(v, b) {
@@ -9542,11 +9553,11 @@ function sendBuild(o, id) {
 	if (!b) return false;
 	const v = pickVil(o, b, typesOf(b.kind), b, hand(o));
 	if (!v) {
-		if (o === 0) say(NO_HANDS, 'warn', 3);
+		if (o === 0) say(NO_HANDS, 'warn', TOAST.short);
 		return false;
 	}
 	sendBuilder(v, b);
-	if (o === 0) say(`A villager goes to raise the ${bldName(o, b.kind).toLowerCase()}.`, '', 3);
+	if (o === 0) say(`A villager goes to raise the ${bldName(o, b.kind).toLowerCase()}.`, '', TOAST.short);
 	return true;
 }
 // Replant a plot that is cut out or worked out (Build 61, Albert): half its cost, and it is full again; a coppice regrows from its stumps
@@ -9563,7 +9574,7 @@ function replant(o, id) {
 	pay(G.P[o], scaled(BLD[b.kind].cost, 0.5), 'buildings');
 	b.node.amt = b.node.max = BLD[b.kind].reserve;
 	G.treeV = (G.treeV || 0) + 1;
-	if (o === 0) say(`${bldName(0, b.kind)} replanted.`, 'good', 3);
+	if (o === 0) say(`${bldName(0, b.kind)} replanted.`, 'good', TOAST.short);
 	return true;
 }
 // Take a building down: half its cost back (all of it in the first 15% of the build); every order waiting inside is cancelled, so what
@@ -9593,7 +9604,7 @@ function demolish(o, id) {
 	b.gone = true;
 	G.navDirty = true;
 	if (BLD[b.kind].fx) fxDirty();
-	if (o === 0) say(`${bldName(o, b.kind)} ${full ? 'cancelled' : 'taken down'}: ${costText(back)} back.`, '', 4);
+	if (o === 0) say(`${bldName(o, b.kind)} ${full ? 'cancelled' : 'taken down'}: ${costText(back)} back.`, '', TOAST.mid);
 	return true;
 }
 
@@ -9611,8 +9622,8 @@ function declareWar(a, b, why) {
 	if (G.P[a].ally === b) G.P[a].ally = null;
 	if (G.P[b].ally === a) G.P[b].ally = null;
 	if (a === 0 || b === 0)
-		news('realm', `${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken; ' : ''}war, ${why}.`, 'warn', 6);
-	else news('chronicle', `${G.P[a].name} and ${G.P[b].name} are now at war.`, '', 5, keepOf(a)); // news between other courts comes by the post
+		news('realm', `${G.P[a === 0 ? b : a].name}: ${wasAlly ? 'the alliance is broken; ' : ''}war, ${why}.`, 'warn', TOAST.mid);
+	else news('chronicle', `${G.P[a].name} and ${G.P[b].name} are now at war.`, '', TOAST.mid, keepOf(a)); // news between other courts comes by the post
 	chron(`${a === 0 ? 'You' : G.P[a].name} and ${b === 0 ? 'you' : G.P[b].name}: war, ${why}.`);
 }
 function makePeace(a, b) {
@@ -9634,7 +9645,7 @@ function makeAlly(a, b) {
 	G.P[a].ally = b;
 	G.P[b].ally = a;
 	G.navDirty = true;
-	if (b !== 0 && a !== 0) news('realm', `${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', 6, keepOf(a));
+	if (b !== 0 && a !== 0) news('realm', `${G.P[a].name} allied with ${G.P[b].name}.`, 'warn', TOAST.mid, keepOf(a));
 	chron(`${a === 0 ? 'You' : G.P[a].name} allied with ${b === 0 ? 'you' : G.P[b].name}.`);
 }
 const noticeLeft = (a, b) => {
@@ -9694,13 +9705,13 @@ function setRel(o, q, want) {
 		if (rel === 'ally') makePeace(o, q);
 		G.warAt[o + ',' + q] = G.t + NOTICE;
 		if (o === 0 || q === 0)
-			news('realm', `${G.P[o === 0 ? q : o].name}: ${REL_WORD.war.toLowerCase()} in ${NOTICE} s${o === 0 ? ' (notice given)' : ''}.`, 'warn', 6);
+			news('realm', `${G.P[o === 0 ? q : o].name}: ${REL_WORD.war.toLowerCase()} in ${NOTICE} s${o === 0 ? ' (notice given)' : ''}.`, 'warn', TOAST.mid);
 		return true;
 	}
 	delete G.warAt[o + ',' + q]; // a side that was giving notice has thought again
 	if (want === 'peace' && rel === 'ally') {
 		makePeace(o, q);
-		if (q === 0) news('realm', `${G.P[o].name} ended the alliance.`, 'warn', 6);
+		if (q === 0) news('realm', `${G.P[o].name} ended the alliance.`, 'warn', TOAST.mid);
 		return true;
 	}
 	return sendEnvoy(o, q, want); // peace from war, or an alliance: carried over, answered there
@@ -9724,7 +9735,7 @@ function sendEnvoy(o, to, ask) {
 	u.ask = ask || 'ally';
 	p.envoyOut = true;
 	p.envoyAt = G.t;
-	if (o === 0) say(`Your emissary rides to the ${GANG[gangKey(to)] || G.P[to].name}: ${ask === 'peace' ? 'peace' : 'alliance'}.`, '', 4);
+	if (o === 0) say(`Your emissary rides to the ${GANG[gangKey(to)] || G.P[to].name}: ${ask === 'peace' ? 'peace' : 'alliance'}.`, '', TOAST.mid);
 	return true;
 }
 // the square law on strength, bent by who counters whom: the odds q gives itself against o
@@ -9738,14 +9749,14 @@ function judgeEnvoy(to, from, envoy) {
 		ask = envoy.ask || 'ally';
 	if ((g ? gangRel(from, g) : G.rel[to][from]) === 'war' && ask !== 'peace') {
 		envoy.hp = 0;
-		if (from === 0) news('realm', `The ${g ? GANG[g] : G.P[to].name} killed your emissary.`, 'warn', 6);
+		if (from === 0) news('realm', `The ${g ? GANG[g] : G.P[to].name} killed your emissary.`, 'warn', TOAST.mid);
 		return;
 	}
 	if (g) return judgeGang(g, from, envoy, ask);
 	const T = G.P[to];
 	if (to === 0) {
 		envoy.state = 'return';
-		news('realm', `${G.P[from].name} offer ${ask === 'peace' ? 'peace' : 'an alliance'}: answer at your Town Center.`, 'soft', 8);
+		news('realm', `${G.P[from].name} offer ${ask === 'peace' ? 'peace' : 'an alliance'}: answer at your Town Center.`, 'soft', TOAST.long);
 		return;
 	} // the player answers for themselves, on the Relations side
 	const busy = G.P.some((q) => q.alive && q.id !== WILD && q.id !== from && atWar(to, q.id)); // another war on their hands
@@ -9792,7 +9803,7 @@ function judgeEnvoy(to, from, envoy) {
 }
 function reply(from, envoy, text) {
 	envoy.state = 'return';
-	if (from === 0) news('realm', text, text.includes('accept') ? 'good' : '', 7);
+	if (from === 0) news('realm', text, text.includes('accept') ? 'good' : '', TOAST.long);
 }
 // an ally sends half of what stands at home to a friend's town under attack (every computer does this for its ally, the Fortress included)
 function sendHelp(f, pt, tell) {
@@ -9806,7 +9817,7 @@ function sendHelp(f, pt, tell) {
 		u.py = pt.y;
 		u.idleT = 0;
 	});
-	if (tell) news('war', `${G.P[f].name} send ${some(go.length, 'soldier')} to help.`, 'good', 5);
+	if (tell) news('war', `${G.P[f].name} send ${some(go.length, 'soldier')} to help.`, 'good', TOAST.mid);
 	return true;
 }
 // an ally twice your strength may be offered overlordship: they become your vassal at a light tax
@@ -9849,7 +9860,7 @@ function demand(L, q, r) {
 	earn(G.P[L], r, x, 'tax');
 	Q.loyal = Math.max(0, (Q.loyal || 0) - cost);
 	(Q.demands = Q.demands || []).push(G.t);
-	if (L === 0) news('realm', `${Q.name} hand over ${x} ${LONG[r]}: loyalty −${cost}.`, '', 4);
+	if (L === 0) news('realm', `${Q.name} hand over ${x} ${LONG[r]}: loyalty −${cost}.`, '', TOAST.mid);
 	return true;
 }
 const menAt = (L, q) => {
@@ -9868,7 +9879,7 @@ function forceTribute(L, q) {
 	const Q = G.P[q];
 	Q.forced = G.t + DEMAND.tribute;
 	Q.unrest = clamp((Q.unrest || 0) + DEMAND.tributeUnrest, 0, 100);
-	if (L === 0) news('realm', `${Q.name} pay double for ${DEMAND.tribute / 60} minutes.`, '', 4);
+	if (L === 0) news('realm', `${Q.name} pay double for ${DEMAND.tribute / 60} minutes.`, '', TOAST.mid);
 	return true;
 }
 const levyOf = (L, q) => G.units.filter((u) => u.owner === L && u.levy === q && u.hp > 0);
@@ -9903,7 +9914,7 @@ function levy(L, q, n) {
 		u.bn = G.sel !== 'all' && L === 0 ? G.sel : undefined;
 	}
 	if (L === 0) {
-		news('realm', `${home.length} soldiers of ${G.P[q].name} march to you.`, 'good', 5);
+		news('realm', `${home.length} soldiers of ${G.P[q].name} march to you.`, 'good', TOAST.mid);
 		march(home, k || home[0], 'your town');
 	}
 	return true;
@@ -9921,7 +9932,7 @@ function releaseLevy(u) {
 function releaseAll(L, q) {
 	const S = levyOf(L, q);
 	S.forEach(releaseLevy);
-	if (L === 0 && S.length) news('realm', `${S.length} soldiers go home to ${G.P[q].name}.`, '', 4);
+	if (L === 0 && S.length) news('realm', `${S.length} soldiers go home to ${G.P[q].name}.`, '', TOAST.mid);
 	return S.length > 0;
 }
 
@@ -9942,7 +9953,7 @@ function charge(o, S, bn) {
 			u.mor = Math.min(1, u.mor + 0.1);
 		}
 	if (o === 0) {
-		say(`${bn !== undefined ? BN[bn] : 'The army'} charge!`, 'good', 4);
+		say(`${bn !== undefined ? BN[bn] : 'The army'} charge!`, 'good', TOAST.mid);
 		sfx('horn');
 	}
 	return true;
@@ -9968,7 +9979,7 @@ function fallBack(o, S, bn) {
 		u.ord = undefined;
 		n++;
 	}
-	if (o === 0 && n) say(`${bn !== undefined ? BN[bn] : 'The army'} fall back.`, '', 4);
+	if (o === 0 && n) say(`${bn !== undefined ? BN[bn] : 'The army'} fall back.`, '', TOAST.mid);
 	return n > 0;
 }
 // Prisoners: a runner touched by a foe, or a man netted by the Natives. The owner may ransom them back; unransomed, they serve the captor.
@@ -9986,10 +9997,10 @@ function takePrisoner(by, v) {
 		news('war', 
 			`${by === WILD ? 'Netted' : G.P[by].name + ' took a prisoner'}: your ${UNIT[v.kind].name.toLowerCase()}. Ransom ${ransom}g.`,
 			'warn',
-			7,
+			TOAST.long,
 			v,
 		);
-	else if (by === 0) news('war', `A prisoner taken: their ${UNIT[v.kind].name.toLowerCase()}.`, 'good', 4, v);
+	else if (by === 0) news('war', `A prisoner taken: their ${UNIT[v.kind].name.toLowerCase()}.`, 'good', TOAST.mid, v);
 }
 const prisonersOf = (o) => (G.prisoners || []).filter((x) => x.o === o);
 function payRansom(o, i) {
@@ -10003,7 +10014,7 @@ function payRansom(o, i) {
 		const u = addUnit(o, x.kind, k.x + 40, k.y + 40);
 		u.state = 'home';
 	}
-	if (o === 0) news('war', `Ransom paid: your ${UNIT[x.kind].name.toLowerCase()} walks home.`, 'good', 5);
+	if (o === 0) news('war', `Ransom paid: your ${UNIT[x.kind].name.toLowerCase()} walks home.`, 'good', TOAST.mid);
 	return true;
 }
 // ── Teach: a soldier of an older kind learns a newer one at the School. It stands frozen for the lesson; tuition is paid up front.
@@ -10054,7 +10065,7 @@ function graduate(u) {
 	u.hp = Math.max(1, u.max * f);
 	u.state = 'home';
 	u.schoolT = 0;
-	if (o === 0) news('war', `Taught: a ${stats(0, to).name.toLowerCase()} joins the ranks.`, 'good', 4, u);
+	if (o === 0) news('war', `Taught: a ${stats(0, to).name.toLowerCase()} joins the ranks.`, 'good', TOAST.mid, u);
 }
 function prisonersTick() {
 	// every five seconds: the unransomed change sides
@@ -10073,7 +10084,7 @@ function prisonersTick() {
 				news('war', 
 					`Unransomed: your ${UNIT[x.kind].name.toLowerCase()} serves ${x.by === WILD ? 'the Natives' : G.P[x.by].name} now.`,
 					'warn',
-					6,
+					TOAST.mid,
 				);
 		}
 }
@@ -10127,7 +10138,7 @@ function zeal(o, list) {
 	p.zealT = G.t + ZEAL.cd * fxv(o, 'zealcd').m;
 	for (const u of list) if (isSoldier(u)) u.zeal = G.t + ZEAL.secs + fxv(o, 'zealsecs').a;
 	if (o === 0) {
-		say(`Zeal on the ${selName()} for ${ZEAL.secs} s.`, 'good', 5);
+		say(`Zeal on the ${selName()} for ${ZEAL.secs} s.`, 'good', TOAST.mid);
 		sfx('zeal');
 	}
 	return true;
@@ -10154,9 +10165,9 @@ function sabotage(u, b) {
 	const nm = bldName(b.owner, b.kind);
 	if (b.owner === 0) {
 		const what = how === 'burn' ? 'on fire' : `stopped ${SAB.stall} s`;
-		news('war', `Sabotage at ${coord(b.x, b.y)}: ${nm} ${what}.`, 'warn', 7, b);
+		news('war', `Sabotage at ${coord(b.x, b.y)}: ${nm} ${what}.`, 'warn', TOAST.long, b);
 	} else if (u.owner === 0)
-		news('war', `Your spy ${how === 'burn' ? 'set fire to' : 'stalled'} their ${nm.toLowerCase()}.`, 'good', 5);
+		news('war', `Your spy ${how === 'burn' ? 'set fire to' : 'stalled'} their ${nm.toLowerCase()}.`, 'good', TOAST.mid);
 	return true;
 }
 function intel(o, owner) {
@@ -10187,13 +10198,13 @@ function hire(o, f) {
 			const s = addUnit(o, civKind(o, H.unit), v.x, v.y);
 			s.state = 'home';
 		}
-	if (o === 0) news('realm', `${H.n} vagabonds join your army.`, 'good', 5);
+	if (o === 0) news('realm', `${H.n} vagabonds join your army.`, 'good', TOAST.mid);
 	return true;
 }
 
 // ───────────────────────── Villager orders ─────────────────────────
 function setJob(u, job, n, at) {
-	if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+	if (u.node && u.node.farm) crowd(u.node, -1);
 	u.job = job;
 	u.node = n || null;
 	u.at = null; // a spot held at the old find is let go: the new order is cap-checked on arrival (fresh review #1)
@@ -10207,7 +10218,7 @@ function setJob(u, job, n, at) {
 	u.anchor = at ? { x: at.x, y: at.y } : null; // the spot it was placed: its search starts there and stays within the cap (decision 1)
 	u.wait = false;
 	if (job) u.post = null;
-	if (n && n.farm) n.wk = (n.wk || 0) + 1;
+	if (n && n.farm) crowd(n, 1);
 	if (job !== 'repair') u.rep = null;
 	else u.hunt = null; // sent to build: a hunt it was on is dropped (fresh review #1); a builder bitten takes the beast on its own job (hurt)
 }
@@ -10227,11 +10238,11 @@ function moveVil(o, job, down) {
 	}
 	const v = V.find(freeVil) || low(V.filter((u) => u.job && u.job !== job && u.job !== 'repair' && !GOODK.includes(u.job)));
 	if (v) setJob(v, job);
-	else if (o === 0) say(NO_HANDS, 'warn', 3);
+	else if (o === 0) say(NO_HANDS, 'warn', TOAST.short);
 }
 // Stop: a villager drops its job and stands where it is (or where it is sent), ready for a new order (Build 61)
 function stopVil(u, post) {
-	if (u.inside && u.shop) stepOut(u, G.blds.find((x) => x.id === u.shop));
+	if (u.inside && u.shop) stepOut(u, byId(G.blds, u.shop));
 	u.shop = 0;
 	setJob(u, null);
 	u.hunt = null;
@@ -10248,20 +10259,20 @@ function sendOut(o, id) {
 	return !!v;
 }
 function sendVil(o, id) {
-	const n = G.nodes.find((x) => x.id === id);
+	const n = byId(G.nodes, id);
 	if (!n || (n.amt <= 0 && n.kind !== 'farm')) return false;
 	if (n.farm && (n.wk || 0) >= slotsOf(n)) {
-		if (o === 0) say('Already worked: one to each.', '', 3);
+		if (o === 0) say('Already worked: one to each.', '', TOAST.short);
 		return false;
 	}
 	const job = n.type,
 		v = pickVil(o, n, job, null, hand(o) && !!n.farm); // to a building of yours: an idle villager only (D-089)
 	if (!v) {
-		if (o === 0) say(NO_HANDS, 'warn', 3);
+		if (o === 0) say(NO_HANDS, 'warn', TOAST.short);
 		return false;
 	}
 	setJob(v, job, n, n);
-	if (o === 0) say(`A villager heads for the ${nodeName(n).toLowerCase()}.`, '', 3);
+	if (o === 0) say(`A villager heads for the ${nodeName(n).toLowerCase()}.`, '', TOAST.short);
 	return true;
 }
 function sendHunt(o, id) {
@@ -10270,25 +10281,25 @@ function sendHunt(o, id) {
 	if (!a) return false;
 	const v = pickVil(o, a, 'food');
 	if (!v) {
-		if (o === 0) say(NO_HANDS, 'warn', 3);
+		if (o === 0) say(NO_HANDS, 'warn', TOAST.short);
 		return false;
 	}
 	setJob(v, 'food');
 	v.hunt = a;
-	if (o === 0) say(`A villager goes hunting ${UNIT[a.kind].name.toLowerCase()}.`, '', 3);
+	if (o === 0) say(`A villager goes hunting ${UNIT[a.kind].name.toLowerCase()}.`, '', TOAST.short);
 	return true;
 }
 function sendRepair(o, id) {
-	const b = G.blds.find((x) => x.id === id && x.owner === o && x.hp > 0 && x.prog >= 1);
+	const b = G.blds.find((x) => x.id === id && standing(x, o));
 	if (!b || b.hp >= maxHpB(o, b.kind) - 0.5) return false;
 	const v = pickVil(o, b, null, null, hand(o));
 	if (!v) {
-		if (o === 0) say(NO_HANDS, 'warn', 3);
+		if (o === 0) say(NO_HANDS, 'warn', TOAST.short);
 		return false;
 	}
 	setJob(v, 'repair');
 	v.rep = b;
-	if (o === 0) say(`A villager goes to mend the ${bldName(o, b.kind).toLowerCase()}.`, '', 3);
+	if (o === 0) say(`A villager goes to mend the ${bldName(o, b.kind).toLowerCase()}.`, '', TOAST.short);
 	return true;
 }
 const repairCost = (o, b) => {
@@ -10335,7 +10346,7 @@ function commitPlace() {
 					? `Not enough stone: ${B.cost.s} a piece.`
 					: 'Something is in the way.',
 			'',
-			4,
+			TOAST.mid,
 		);
 		pl.cells = null;
 		pl.pts = [];
@@ -10345,12 +10356,12 @@ function commitPlace() {
 	}
 	const why = canPlace(0, kind, pl.at.x, pl.at.y);
 	if (why) {
-		say(why + '.', '', 3);
+		say(why + '.', '', TOAST.short);
 		sfx('err');
 		return;
 	}
 	if (!afford(p, B.cost)) {
-		say(`Not enough for a ${B.name.toLowerCase()}: ${costText(B.cost)}.`, '', 3);
+		say(`Not enough for a ${B.name.toLowerCase()}: ${costText(B.cost)}.`, '', TOAST.short);
 		sfx('err');
 		return;
 	}
@@ -10386,7 +10397,7 @@ function boxCut(r, n) {
 	say(
 		sent ? `${sent} villager${sent > 1 ? 's go' : ' goes'} to cut the trees in the box.` : 'No villager is free.',
 		'',
-		4,
+		TOAST.mid,
 	);
 }
 
@@ -10402,13 +10413,13 @@ const centreOf = (S) => ({
 function routeK(c, to) {
 	const p = astar(c.x, c.y, to.x, to.y, 0),
 		len = p.pts.reduce(
-			(s, q, i) => s + (i ? hyp(q.x - p.pts[i - 1].x, q.y - p.pts[i - 1].y) : hyp(q.x - c.x, q.y - c.y)),
+			(s, q, i) => s + (i ? hyp(q.x - p.pts[i - 1].x, q.y - p.pts[i - 1].y) : dist(q, c)),
 			0,
 		);
-	return p.pts.length ? clamp(len / Math.max(1, hyp(to.x - c.x, to.y - c.y)), 1, 3) : 1;
+	return p.pts.length ? clamp(len / Math.max(1, dist(to, c)), 1, 3) : 1;
 }
 const etaOf = (S, to, k) =>
-	Math.max(0, ...S.map((u) => (hyp(u.x - to.x, u.y - to.y) * k) / Math.max(1, paceOf(u, sideSpd(0)))));
+	Math.max(0, ...S.map((u) => (dist(u, to) * k) / Math.max(1, paceOf(u, sideSpd(0)))));
 function march(S, to, label) {
 	if (!S.length) return;
 	const id = (G.ordN = (G.ordN || 0) + 1);
@@ -10425,7 +10436,7 @@ function march(S, to, label) {
 		u.ord = id;
 		u.mvT = G.t; // just ordered: counts as moving until it proves otherwise
 	}
-	say(`${S.length} marching: ${label}.`, '', 3);
+	say(`${S.length} marching: ${label}.`, '', TOAST.short);
 }
 // soldiers called home: off whatever they were doing and off their order
 function sendHome(S) {
@@ -10447,7 +10458,7 @@ function incomingTick() {
 			if (u.hp <= 0 || u.owner === 0 || friendly(0, u.owner) || !isSoldier(u) || u.state !== 'attack' || !seen0(u))
 				continue;
 			for (const b of mine) {
-				const d = hyp(u.x - b.x, u.y - b.y);
+				const d = dist(u, b);
 				if (d < bd) {
 					bd = d;
 					best = u;
@@ -10460,7 +10471,7 @@ function incomingTick() {
 	}
 	const n = G.units.filter(
 		(u) =>
-			u.hp > 0 && u.owner === best.owner && u.state === 'attack' && hyp(u.x - best.x, u.y - best.y) < 140 && seen0(u),
+			u.hp > 0 && u.owner === best.owner && u.state === 'attack' && dist(u, best) < 140 && seen0(u),
 	).length; // the ones you can see
 	G.incoming = {
 		x: best.x,
@@ -10506,7 +10517,7 @@ function ordersTick() {
 		O.fight = fight > 0;
 		if (!O.arrived && !walk && !fight && !rout && G.t - O.t > 3) {
 			O.arrived = true;
-			news('war', `${S.length} arrived: ${O.label}.`, 'good', 4, O);
+			news('war', `${S.length} arrived: ${O.label}.`, 'good', TOAST.mid, O);
 		} // every one has stopped: a straggler that never got there is counted as stopped too
 		O.eta = O.arrived ? 0 : Math.ceil(eta);
 	}
@@ -10528,7 +10539,7 @@ function recount() {
 	for (const u of G.units)
 		if (u.kind === 'vil') {
 			if (u.node) u.node.wk++;
-			else if (u.hunt) u.hunt.wk = (u.hunt.wk || 0) + 1;
+			else if (u.hunt) crowd(u.hunt, 1);
 		} // a hunted animal counts its hunters, as a find its workers: the crowd is the same rule (item 6)
 }
 // layers worn in series (decision N10): heat loss Q = ΔT / R_total and R_total = R_body + Σ R_i, so the cold's or the rain's toll on a march
@@ -10615,7 +10626,7 @@ function reap() {
 	for (const b of G.blds)
 		if (b.node && b.node.amt <= 0 && b.hp > 0 && BLD[b.kind].reserve > 0 && !b.spent) {
 			b.spent = true;
-			if (b.owner === 0) news('home', `${bldName(0, b.kind)} cut out: tap it to replant.`, '', 5, b);
+			if (b.owner === 0) news('home', `${bldName(0, b.kind)} cut out: tap it to replant.`, '', TOAST.mid, b);
 		} else if (b.spent && b.node && b.node.amt > 0) b.spent = false; // a coppice plot, spent: it stands, stumps and all, until it is replanted (Build 61; it used to vanish)
 	for (const b of G.blds)
 		if (b.kind === 'throne' && b.hp <= 0 && !b.gone) {
@@ -10632,7 +10643,7 @@ function reap() {
 				news('realm', 
 					`${G.P[b.owner].name === 'You' ? 'Your wonder' : 'The wonder of ' + G.P[b.owner].name} has fallen.`,
 					b.owner === 0 ? 'warn' : 'good',
-					7,
+					TOAST.long,
 				);
 				const w2 = G.blds.find((x) => x !== b && x.kind === 'wonder' && x.prog >= 1 && x.hp > 0 && x.wend);
 				G.wonder = w2 ? { owner: w2.owner, id: w2.id, end: w2.wend } : null; // another wonder still stands: its own clock goes on (B6)
@@ -10640,7 +10651,7 @@ function reap() {
 		}
 	if (fxChange) fxDirty();
 	if (G.lootT && G.t - G.lootT > 1.5) {
-		news('trade', `Plunder: ${costText(G.loot)}.`, 'good', 6);
+		news('trade', `Plunder: ${costText(G.loot)}.`, 'good', TOAST.mid);
 		G.loot = {};
 		G.lootT = 0;
 	}
@@ -10832,7 +10843,7 @@ function died(u) {
 		const share = 1 / (MORALE.breakAt * (near.length + 1));
 		for (const v of near) v.mor -= share;
 	}
-	if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+	if (u.node && u.node.farm) crowd(u.node, -1);
 	if (u.kind === 'envoy') G.P[u.owner].envoyOut = false;
 	if (u.kind === 'caravan' && u.by === WILD) robbed(u);
 	else if (u.kind === 'caravan' && u.by !== undefined && u.by !== WILD) {
@@ -10905,7 +10916,7 @@ function judge() {
 		for (const m of [300, 60])
 			if (G.t >= lim - m && !G.bell[m]) {
 				G.bell[m] = 1;
-				if (G.t < lim - m + 5) news('realm', `${m / 60} minute${m > 60 ? 's' : ''} left: top score wins.`, 'warn', 7);
+				if (G.t < lim - m + 5) news('realm', `${m / 60} minute${m > 60 ? 's' : ''} left: top score wins.`, 'warn', TOAST.long);
 			}
 	if (lim && G.t >= lim) {
 		scoreAll();
@@ -10965,7 +10976,7 @@ function bldTick(b, dt) {
 				b.cd = B.cd;
 				if (o === 0 && b.kind === 'tower' && G.t - (b.alarmT || -99) > 20) {
 					b.alarmT = G.t;
-					news('war', `Foes at your tower at ${coord(b.x, b.y)}.`, 'warn', 6, b);
+					news('war', `Foes at your tower at ${coord(b.x, b.y)}.`, 'warn', TOAST.mid, b);
 					sfx('horn', b.x, b.y);
 				}
 				shot(b.x, b.y, B.h, t.x, t.y);
@@ -10999,7 +11010,7 @@ function built(b) {
 				? `Your wonder stands. Hold it ${WONDER_HOLD / 60} min to win.`
 				: `${G.P[o].name} built a wonder: break it in ${WONDER_HOLD / 60} min!`,
 			o === 0 ? 'good' : 'warn',
-			10,
+			TOAST.long,
 			b,
 		);
 		sfx('age');
@@ -11041,7 +11052,7 @@ function jobDone(b, j) {
 			}
 		if (o === 0) {
 			sfx('done', b.x, b.y);
-			news('war', `${j.bn !== undefined ? BN[j.bn] : 'A battalion'} mustered: ${musterN(j.muster)} soldiers.`, 'good', 5, b);
+			news('war', `${j.bn !== undefined ? BN[j.bn] : 'A battalion'} mustered: ${musterN(j.muster)} soldiers.`, 'good', TOAST.mid, b);
 		}
 	} else if (j.tech) {
 		learnTech(o, j.tech);
@@ -11050,14 +11061,14 @@ function jobDone(b, j) {
 		p.aging = false;
 		fxDirty();
 		if (o === 0) {
-			news('realm', `You enter the ${AGES[p.age].name} age.`, 'good', 6);
+			news('realm', `You enter the ${AGES[p.age].name} age.`, 'good', TOAST.mid);
 			sfx('age');
 			const k = keepOf(0);
 			if (k) {
 				k.doneT = G.t;
 				celebrate(3, k.x, k.y);
 			}
-		} else if (fxv(0, 'news').a >= 5 || !G.fogOn) news('chronicle', `${p.name} entered the ${AGES[p.age].name} age.`, '', 4); // another court's age: in the news sheets
+		} else if (fxv(0, 'news').a >= 5 || !G.fogOn) news('chronicle', `${p.name} entered the ${AGES[p.age].name} age.`, '', TOAST.mid); // another court's age: in the news sheets
 		chron(`${o === 0 ? 'You' : p.name} entered the ${AGES[p.age].name} age.`);
 	}
 }
@@ -11072,7 +11083,7 @@ function learnTech(o, id) {
 				? `${T.name}: your ${plural(UNIT[T.tier.unit].name.toLowerCase())} are now ${plural(stats(0, civKind(0, T.tier.unit)).name.toLowerCase())}.`
 				: `${T.name} learned.`,
 			'good',
-			5,
+			TOAST.mid,
 		);
 		sfx('done');
 		const hit = T.tier
@@ -11092,7 +11103,7 @@ function dropFor(o, type, from) {
 	return nearest(
 		G.blds,
 		from,
-		(b) => b.owner === o && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(type),
+		(b) => standing(b, o) && BLD[b.kind].drop && BLD[b.kind].drop.includes(type),
 	);
 }
 const dockNear = (o, n) =>
@@ -11220,7 +11231,7 @@ function bestNode(u, job, seek, cm) {
 		}
 		if (!drops)
 			drops = G.blds.filter(
-				(b) => b.owner === u.owner && b.prog >= 1 && b.hp > 0 && BLD[b.kind].drop && BLD[b.kind].drop.includes(job),
+				(b) => standing(b, u.owner) && BLD[b.kind].drop && BLD[b.kind].drop.includes(job),
 			);
 		if (u.was && n.kind !== 'farm') {
 			const from = seek || u;
@@ -11423,13 +11434,13 @@ function takeSpots(list, a, key, cm = BLD[a.kind] ? 0 : regionAt(a, list[0].owne
 		// those already standing (the nearest-first pairing sent the last ones across the crowd, and the push kept them off for good)
 		const cx = list.reduce((s, u) => s + u.x, 0) / list.length - a.x,
 			cy = list.reduce((s, u) => s + u.y, 0) / list.length - a.y,
-			L = [...list].sort((u, v) => hyp(u.x - a.x, u.y - a.y) - hyp(v.x - a.x, v.y - a.y)),
+			L = [...list].sort((u, v) => dist(u, a) - dist(v, a)),
 			S = [...free].sort((p, q) => (p.x - a.x) * cx + (p.y - a.y) * cy - ((q.x - a.x) * cx + (q.y - a.y) * cy));
 		L.forEach((u, i) => S[i] && got.set(u, S[i]));
 		return got;
 	}
 	const pairs = [];
-	for (const u of list) for (const p of free) pairs.push({ u, p, c: hyp(p.x - u.x, p.y - u.y) });
+	for (const u of list) for (const p of free) pairs.push({ u, p, c: dist(p, u) });
 	pairs.sort((x, y) => x.c - y.c);
 	const used = new Set();
 	for (const { u, p } of pairs)
@@ -11467,7 +11478,7 @@ function waitAt(u, dt, SP) {
 		// the overflow froze where it stood, a pile on one side of the mill). Only with no spot on any does it stand where it is and ask again
 		let p = null;
 		for (const c of G.blds
-			.filter((x) => x.owner === u.owner && x.prog >= 1 && x.hp > 0 && BLD[x.kind].drop && BLD[x.kind].drop.includes(u.job))
+			.filter((x) => standing(x, u.owner) && BLD[x.kind].drop && BLD[x.kind].drop.includes(u.job))
 			.sort((x, y) => dist(x, u) - dist(y, u))) {
 			p = takeSpots([u], c, c.id).get(u);
 			if (p) {
@@ -11485,7 +11496,7 @@ function waitAt(u, dt, SP) {
 					? `Every ${u.was} is full: one waits at the ${bldName(0, b.kind).toLowerCase()}.`
 					: `No ${u.was === 'tree' ? 'trees' : u.was} in sight: one waits at the ${bldName(0, b.kind).toLowerCase()}.`,
 				'',
-				4,
+				TOAST.mid,
 				u,
 			);
 		}
@@ -11631,7 +11642,7 @@ function vilTick(u, dt, SP) {
 			(u.hunt && unsafe(u.hunt, u.owner)) ||
 			(u.node && u.node.kind === 'fish' && !dockNear(u.owner, u.node)))
 	) {
-		if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+		if (u.node && u.node.farm) crowd(u.node, -1);
 		u.node = null;
 		u.hunt = null;
 	} // work or game is on dangerous ground now, or a fisher's dock is gone (C15): leave it
@@ -11671,7 +11682,7 @@ function vilTick(u, dt, SP) {
 		// game never sends it to another
 		const n = G.nodes.find((x) => x.id === u.fn && x.amt > 0);
 		if (n && nodeFits(n, u.job) && (n.wk || 0) - (u.node === n ? 1 : 0) < findCap(n)) {
-			if (u.node !== n) n.wk = (n.wk || 0) + 1;
+			if (u.node !== n) crowd(n, 1);
 			u.node = n;
 		} else {
 			u.node = null;
@@ -11683,12 +11694,12 @@ function vilTick(u, dt, SP) {
 	if (u.plot && !u.node && !u.hunt && u.job) {
 		// posted (D-089): back from shelter, the Emergency, a fire or a site, it goes back to its own building; with its building not ready or
 		// its place taken, it waits there. Only a fallen building sets it free to roam
-		const b = G.blds.find((x) => x.id === u.plot);
+		const b = byId(G.blds, u.plot);
 		if (!b || b.hp <= 0) u.plot = null;
 		else if (b.node && nodeFits(b.node, u.job)) {
 			if (b.prog >= 1 && (b.node.wk || 0) < slotsOf(b.node)) {
 				u.node = b.node;
-				b.node.wk = (b.node.wk || 0) + 1;
+				crowd(b.node, 1);
 				u.was = 'farm';
 			} else {
 				// it waits on a spot of its own round its building (D-092: they made for its middle and shuffled), as waiters do at a drop-off
@@ -11707,7 +11718,7 @@ function vilTick(u, dt, SP) {
 		!flock &&
 		(!u.node || u.node.amt <= 0 || !nodeFits(u.node, u.job) || (u.node.farm && u.node.wk > slotsOf(u.node)))
 	) {
-		if (u.node && u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+		if (u.node && u.node.farm) crowd(u.node, -1);
 		if (posted(u)) {
 			u.node = null;
 			return;
@@ -11751,12 +11762,12 @@ function vilTick(u, dt, SP) {
 		}
 		if (n && n.hunt) {
 			u.hunt = n.hunt;
-			u.hunt.wk = (u.hunt.wk || 0) + 1; // counted at once, as a find (recount sets it true every second)
+			crowd(u.hunt, 1); // counted at once, as a find (recount sets it true every second)
 			u.node = null;
 			return;
 		}
 		u.node = n;
-		if (n) n.wk = (n.wk || 0) + 1; // counted at once, so the next worker this second sees the crowd (recount sets it true every second)
+		if (n) crowd(n, 1); // counted at once, so the next worker this second sees the crowd (recount sets it true every second)
 	} else if (
 		!flock &&
 		u.carry === 0 &&
@@ -11770,15 +11781,15 @@ function vilTick(u, dt, SP) {
 		if (!u.node.farm) u.was = u.node.kind;
 		const b = u.node.farm || u.focus ? null : bestNode(u, u.job); // a plot worker and a focused one stay put; a wild worker may step to a better find of the same kind in sight
 		if (b && b.n !== u.node && b.R > FORAGE.move * forageNow(u)) {
-			if (u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+			if (u.node.farm) crowd(u.node, -1);
 			if (b.n.hunt) {
 				u.hunt = b.n.hunt;
 				u.node = null;
 				return;
 			}
-			if (!u.node.farm) u.node.wk = Math.max(0, (u.node.wk || 0) - 1);
+			if (!u.node.farm) crowd(u.node, -1);
 			u.node = b.n;
-			b.n.wk = (b.n.wk || 0) + 1;
+			crowd(b.n, 1);
 		}
 	}
 	const n = u.node;
@@ -11814,7 +11825,7 @@ function vilTick(u, dt, SP) {
 		let held = 0;
 		for (const v of G.units) if (v !== u && v.node === n && v.at === n.id) held++;
 		if (held >= findCap(n)) {
-			n.wk = Math.max(0, (n.wk || 0) - 1);
+			crowd(n, -1);
 			u.node = null;
 			return;
 		} // a full find: a newcomer looks again (the search skips full finds); one that holds a spot keeps it
@@ -11844,7 +11855,7 @@ function leaveWork(u, n) {
 	const B = u.bad || (u.bad = {});
 	for (const id in B) if (B[id] <= G.t) delete B[id];
 	B[n.id] = G.t + DANGER_R.secs;
-	if (n.farm) n.wk = Math.max(0, (n.wk || 0) - 1);
+	if (n.farm) crowd(n, -1);
 	u.node = null;
 	u.at = null;
 }
@@ -11920,12 +11931,12 @@ function repairTick(u, dt, SP) {
 		if (!b.smoke && (b.spread || b.hp < maxHpB(o, b.kind) / 2) && rng() < FIRE_SMOKE * dt) {
 			b.smoke = true;
 			u.hp = 0;
-			if (o === 0) news('home', `Smoke killed a villager at the ${bldName(0, b.kind).toLowerCase()}.`, 'warn', 6, b);
+			if (o === 0) news('home', `Smoke killed a villager at the ${bldName(0, b.kind).toLowerCase()}.`, 'warn', TOAST.mid, b);
 			return;
 		} // a big fire can take one of its fighters
 		b.fire = Math.max(0, b.fire - 0.2 * dt);
 		u.work = G.t;
-		if (!b.fire && b.owner === 0) news('home', `The fire at the ${bldName(0, b.kind).toLowerCase()} is out.`, 'good', 4, b);
+		if (!b.fire && b.owner === 0) news('home', `The fire at the ${bldName(0, b.kind).toLowerCase()} is out.`, 'good', TOAST.mid, b);
 		return;
 	}
 	if (b.prog < 1) {
@@ -11957,7 +11968,7 @@ function repairTick(u, dt, SP) {
 		backToWork(u);
 		if (o === 0 && G.t - (G.repSay || -99) > 5) {
 			G.repSay = G.t;
-			say('Not enough to pay for repairs.', '', 3);
+			say('Not enough to pay for repairs.', '', TOAST.short);
 		}
 		return;
 	}
@@ -12073,7 +12084,7 @@ function caravanTick(u, dt, SP) {
 		if (d.owner !== o) {
 			earn(G.P[o], 'g', u.cargo, 'trade');
 			if (o === 0 && u.cargo) {
-				news('trade', `A caravan earns ${u.cargo} gold from your ally.`, 'good', 3, d);
+				news('trade', `A caravan earns ${u.cargo} gold from your ally.`, 'good', TOAST.short, d);
 				sfx('tribute');
 			}
 			u.dest = u.lastId;
@@ -12187,7 +12198,7 @@ function priestTick(u, dt, SP) {
 				(v) => v.id === u.cv && v.hp > 0 && !v.inside && atWar(u.owner, v.owner) && UNIT[v.kind].cls,
 			),
 			full = !!t && clsCount(u.owner, UNIT[t.kind].cls) >= clsMax(UNIT[t.kind].cls, u.owner); // the ceiling holds for a convert as for a recruit (C8): with no room the spell stops
-		if (full && u.owner === 0) say('At Maximum Occupancy Capacity', '', 3); // answer 11, Albert's words
+		if (full && u.owner === 0) say('At Maximum Occupancy Capacity', '', TOAST.short); // answer 11, Albert's words
 		if (!t || full || u.cvCd > G.t) {
 			u.state = 'home';
 			u.cv = null;
@@ -12212,8 +12223,8 @@ function priestTick(u, dt, SP) {
 				u.cvCd = G.t + CONVERT.cd;
 				u.cvT = 0;
 				u.state = 'home';
-				if (u.owner === 0) news('war', `Converted: their ${UNIT[t.kind].name.toLowerCase()} is yours.`, 'good', 5, t);
-				else if (was === 0) news('war', `A priest turned your ${UNIT[t.kind].name.toLowerCase()}!`, 'warn', 5, t);
+				if (u.owner === 0) news('war', `Converted: their ${UNIT[t.kind].name.toLowerCase()} is yours.`, 'good', TOAST.mid, t);
+				else if (was === 0) news('war', `A priest turned your ${UNIT[t.kind].name.toLowerCase()}!`, 'warn', TOAST.mid, t);
 			}
 		} else {
 			u.cvT = Math.max(0, (u.cvT || 0) - dt);
@@ -12222,7 +12233,7 @@ function priestTick(u, dt, SP) {
 		return;
 	}
 	if (u.state === 'shrine') {
-		const f = G.finds.find((x) => x.id === u.fid);
+		const f = byId(G.finds, u.fid);
 		if (f) {
 			const d = dist(u, f) || 1,
 				r = FINDS[f.kind].r - 10; // the foot of the Throne on the priest's own side
@@ -12311,7 +12322,7 @@ function solTick(u, dt, SP) {
 	}
 	if (u.inside) {
 		// a new order: out of the building
-		stepOut(u, G.blds.find((x) => x.id === u.hid));
+		stepOut(u, byId(G.blds, u.hid));
 		u.hid = 0;
 	}
 	if (
@@ -12366,7 +12377,7 @@ function solTick(u, dt, SP) {
 					u.y,
 					60,
 					(b) =>
-						b.owner === o && b.prog >= 1 && b.hp > 0 && (BLD[b.kind].dmg || BLD[b.kind].wallish) && dist(b, u) < 60,
+						standing(b, o) && (BLD[b.kind].dmg || BLD[b.kind].wallish) && dist(b, u) < 60,
 				)
 			)
 				rate *= MORALE.shelter * fxv(o, 'shelter').m;
@@ -12397,7 +12408,7 @@ function solTick(u, dt, SP) {
 			u.fleeFrom = null;
 			if (o === 0 && G.t - (G.routSay || -99) > 8) {
 				G.routSay = G.t;
-				news('war', `${u.bn !== undefined ? BN[u.bn] : 'Your soldiers'} break and run!`, 'warn', 5, u);
+				news('war', `${u.bn !== undefined ? BN[u.bn] : 'Your soldiers'} break and run!`, 'warn', TOAST.mid, u);
 			}
 			return;
 		}
@@ -12525,7 +12536,7 @@ function solTick(u, dt, SP) {
 				if (hasTag(u.kind, 'siege') && G.clim.snow > 0 && rng() < CLIMATE.miss * G.clim.snow * (1 - fxv(o, 'snow').a)) {
 					u.hp -= u.max * CLIMATE.missHurt;
 					scarStrike(u.x + u.fx * 30, u.y + u.fy * 30);
-					if (o === 0 && (G.tick + u.id) % 90 < 3) news('war', 'Snow: the engine slid, shot short.', 'warn', 4, u);
+					if (o === 0 && (G.tick + u.id) % 90 < 3) news('war', 'Snow: the engine slid, shot short.', 'warn', TOAST.mid, u);
 				} // an engine on snow
 				else {
 					hurt(o, u, tgt, dmgOf(u));
@@ -12556,7 +12567,7 @@ function solTick(u, dt, SP) {
 // a guard keeps to what it guards: a caravan (escort) or a trade stop you hold (garrison); when that is gone, it goes home
 function escortPick(u) {
 	if (u.escF !== undefined) {
-		const f = G.finds.find((x) => x.id === u.escF);
+		const f = byId(G.finds, u.escF);
 		u.esc = f && f.owner === u.owner ? f : null;
 		if (!u.esc) u.escF = undefined;
 		return;
@@ -12685,7 +12696,7 @@ function wayfarers(dt) {
 	const w = addUnit(WILD, 'wayfarer', a[0], a[1]);
 	w.px = b[0];
 	w.py = b[1];
-	news('realm', 'A wayfarer: reach him first to gain him.', '', 6, w);
+	news('realm', 'A wayfarer: reach him first to gain him.', '', TOAST.mid, w);
 }
 function wayfarerTick(u, dt, SP) {
 	if ((G.tick + u.id) % 6 === 0) {
@@ -12700,7 +12711,7 @@ function wayfarerTick(u, dt, SP) {
 					v.job = o === 0 ? G.P[0].rally : null;
 				} else earn(G.P[o], 'f', 50, 'finds'); // no room: what it carried
 			if (o === 0)
-				news('realm', UNIT[u.kind].joins > 1 ? 'The settlers join your people.' : 'A wayfarer joins your people.', 'good', 5);
+				news('realm', UNIT[u.kind].joins > 1 ? 'The settlers join your people.' : 'A wayfarer joins your people.', 'good', TOAST.mid);
 			return;
 		}
 	}
@@ -12727,8 +12738,8 @@ function findsTick(dt) {
 					const was = f.owner;
 					f.owner = o;
 					f.cap = null;
-					if (o === 0) news('realm', 'Your priest holds the shrine.', 'good', 5);
-					else if (was === 0) news('realm', `${G.P[o].name} took your shrine.`, 'warn', 5, f);
+					if (o === 0) news('realm', 'Your priest holds the shrine.', 'good', TOAST.mid);
+					else if (was === 0) news('realm', `${G.P[o].name} took your shrine.`, 'warn', TOAST.mid, f);
 				}
 			} else if (!sides.length) f.cap = null;
 			if (f.owner !== null && G.P[f.owner].alive) {
@@ -12770,7 +12781,7 @@ function findsTick(dt) {
 			}
 		}
 		if (o === 0) {
-			news('trade', `${F.name}: ${costText(got)}${extra}.`, 'good', 6);
+			news('trade', `${F.name}: ${costText(got)}${extra}.`, 'good', TOAST.mid);
 			sfx('coin');
 		}
 	}
@@ -12810,31 +12821,33 @@ const ignorable = (v, o, me) => {
 }; // a herald is sacred: nobody shoots at an emissary on its way (it dies only by a side's own order)
 // who a side strikes: a foe (isFoe), or anything attacking the one looking (at peace too), less what it leaves alone
 const strikes = (o, v, me) => !v.inside && v.hp > 0 && v.owner !== o && (isFoe(o, v, me) || onMe(v, me)) && !ignorable(v, o, me);
+// every unit in the grid's squares within r of a (the unit grid, rebuilt each step), in the grid's own order; with no grid this step, every
+// unit, last to first. The one home of the scan nearestFoe, bestFoe, nearU and unitsNear each wrote out (Nov 2, M6)
+function scanNear(a, r, fn) {
+	const U = G.units;
+	if (G.ugTick !== G.tick) {
+		for (let i = U.length - 1; i >= 0; i--) fn(U[i]);
+		return;
+	}
+	const x0 = clamp(((a.x - r) / UG) | 0, 0, UGN - 1),
+		x1 = clamp(((a.x + r) / UG) | 0, 0, UGN - 1),
+		y0 = clamp(((a.y - r) / UG) | 0, 0, UGN - 1),
+		y1 = clamp(((a.y + r) / UG) | 0, 0, UGN - 1);
+	for (let cy = y0; cy <= y1; cy++) for (let cx = x0; cx <= x1; cx++) for (let i = UGH[cy * UGN + cx]; i >= 0; i = UGX[i]) fn(U[i]);
+}
 function nearestFoe(o, from, range, anchor) {
 	const a = anchor || from,
-		U = G.units,
 		sR = spySeen(o, from);
 	let best = null,
 		bd = range;
-	const grid = G.ugTick === G.tick,
-		r = range + 3;
-	const x0 = grid ? clamp(((a.x - r) / UG) | 0, 0, UGN - 1) : 0,
-		x1 = grid ? clamp(((a.x + r) / UG) | 0, 0, UGN - 1) : 0,
-		y0 = grid ? clamp(((a.y - r) / UG) | 0, 0, UGN - 1) : 0,
-		y1 = grid ? clamp(((a.y + r) / UG) | 0, 0, UGN - 1) : 0;
-	for (let cy = y0; cy <= y1; cy++)
-		for (let cx = x0; cx <= x1; cx++)
-			for (let i = grid ? UGH[cy * UGN + cx] : U.length - 1; i >= 0; i = grid ? UGX[i] : i - 1) {
-				const v = U[i];
-				if (!strikes(o, v, from)) continue;
-				const dx = a.x - v.x,
-					dy = a.y - v.y,
-					d = Math.sqrt(dx * dx + dy * dy);
-				if (d < bd && !(v.kind === 'spy' && d > sR)) {
-					bd = d;
-					best = v;
-				}
-			}
+	scanNear(a, range + 3, (v) => {
+		if (!strikes(o, v, from)) return;
+		const d = dist(a, v);
+		if (d < bd && !(v.kind === 'spy' && d > sR)) {
+			bd = d;
+			best = v;
+		}
+	});
 	return best;
 }
 // ───────────────────────── Who a soldier fights (Build 59)
@@ -12867,55 +12880,37 @@ function groupPower(u) {
 const canBeat = (u, v) => lanchester((groupPower(u) * vsMul(u, v)) / Math.max(1e-6, unitPower(v) * vsMul(v, u))) > 0.5;
 function bestFoe(o, from, range, anchor) {
 	const a = anchor || from,
-		U = G.units,
 		sR = spySeen(o, from);
 	let best = null,
 		bV = -1,
 		bBeat = false;
-	const grid = G.ugTick === G.tick,
-		r = range + 3;
-	const x0 = grid ? clamp(((a.x - r) / UG) | 0, 0, UGN - 1) : 0,
-		x1 = grid ? clamp(((a.x + r) / UG) | 0, 0, UGN - 1) : 0,
-		y0 = grid ? clamp(((a.y - r) / UG) | 0, 0, UGN - 1) : 0,
-		y1 = grid ? clamp(((a.y + r) / UG) | 0, 0, UGN - 1) : 0;
-	for (let cy = y0; cy <= y1; cy++)
-		for (let cx = x0; cx <= x1; cx++)
-			for (let i = grid ? UGH[cy * UGN + cx] : U.length - 1; i >= 0; i = grid ? UGX[i] : i - 1) {
-				const v = U[i];
-				if (!strikes(o, v, from)) continue;
-				const d = hyp(a.x - v.x, a.y - v.y);
-				if (d > range || (v.kind === 'spy' && d > sR)) continue;
-				const beat = canBeat(from, v),
-					V = foeValue(from, v, dist(from, v));
-				if ((beat && !bBeat) || (beat === bBeat && V > bV)) {
-					best = v;
-					bV = V;
-					bBeat = beat;
-				}
-			}
+	scanNear(a, range + 3, (v) => {
+		if (!strikes(o, v, from)) return;
+		const d = dist(a, v);
+		if (d > range || (v.kind === 'spy' && d > sR)) return;
+		const beat = canBeat(from, v),
+			V = foeValue(from, v, dist(from, v));
+		if ((beat && !bBeat) || (beat === bBeat && V > bV)) {
+			best = v;
+			bV = V;
+			bBeat = beat;
+		}
+	});
 	return best;
 }
 // the nearest unit within r that passes ok, looking only at the squares around (the grid is rebuilt each step)
 function nearU(from, r, ok) {
 	if (G.ugTick !== G.tick) return nearest(G.units, from, (v) => v !== from && v.hp > 0 && ok(v), r); // never itself nor the fallen, as the grid path
-	const U = G.units,
-		x0 = clamp(((from.x - r) / UG) | 0, 0, UGN - 1),
-		x1 = clamp(((from.x + r) / UG) | 0, 0, UGN - 1),
-		y0 = clamp(((from.y - r) / UG) | 0, 0, UGN - 1),
-		y1 = clamp(((from.y + r) / UG) | 0, 0, UGN - 1);
 	let best = null,
 		bd = r;
-	for (let cy = y0; cy <= y1; cy++)
-		for (let cx = x0; cx <= x1; cx++)
-			for (let i = UGH[cy * UGN + cx]; i >= 0; i = UGX[i]) {
-				const v = U[i];
-				if (v === from || v.hp <= 0) continue;
-				const d = dist(from, v);
-				if (d < bd && ok(v)) {
-					bd = d;
-					best = v;
-				}
-			}
+	scanNear(from, r, (v) => {
+		if (v === from || v.hp <= 0) return;
+		const d = dist(from, v);
+		if (d < bd && ok(v)) {
+			bd = d;
+			best = v;
+		}
+	});
 	return best;
 }
 function nearestFoeBld(o, from, owner, range) {
@@ -12974,17 +12969,9 @@ function unitsNear(from, r, fn) {
 		for (const v of G.units) if (v !== from && Math.abs(v.x - from.x) < r && Math.abs(v.y - from.y) < r) fn(v);
 		return;
 	}
-	const U = G.units,
-		x0 = clamp(((from.x - r) / UG) | 0, 0, UGN - 1),
-		x1 = clamp(((from.x + r) / UG) | 0, 0, UGN - 1),
-		y0 = clamp(((from.y - r) / UG) | 0, 0, UGN - 1),
-		y1 = clamp(((from.y + r) / UG) | 0, 0, UGN - 1);
-	for (let cy = y0; cy <= y1; cy++)
-		for (let cx = x0; cx <= x1; cx++)
-			for (let i = UGH[cy * UGN + cx]; i >= 0; i = UGX[i]) {
-				const v = U[i];
-				if (v !== from && Math.abs(v.x - from.x) < r && Math.abs(v.y - from.y) < r) fn(v);
-			}
+	scanNear(from, r, (v) => {
+		if (v !== from && Math.abs(v.x - from.x) < r && Math.abs(v.y - from.y) < r) fn(v);
+	});
 }
 function vsMul(a, t) {
 	const vs = a.owner === WILD ? UNIT[a.kind].vs : stats(a.owner, a.kind).vs;
@@ -13133,7 +13120,7 @@ function hurt(o, a, t, base) {
 					? `${plural(UNIT[a ? a.kind : 'wolf'].name)} attack at ${coord(t.x, t.y)}`
 					: `Under attack at ${coord(t.x, t.y)}`,
 				'warn',
-				7,
+				TOAST.long,
 				t,
 			);
 		}
@@ -13219,7 +13206,7 @@ function collide() {
 		if (u.inside) continue;
 		for (const L of G.lakes) {
 			if (Math.abs(u.x - L.x) > L.r + 60 || Math.abs(u.y - L.y) > L.r + 60) continue; // far from this one: the cheap test first
-			const dl = hyp(u.x - L.x, u.y - L.y),
+			const dl = dist(u, L),
 				lr = lakeR(L);
 			if (dl < lr + 6 && !u.fly && !onLand(u.x, u.y)) {
 				const s = (lr + 6) / (dl || 1);
@@ -13317,7 +13304,7 @@ function fall(p) {
 			news('realm', 
 				`Shared out: the ceiling rises by ${Math.floor((ARMYMAX * SHARE_FALLEN) / left.length)} soldiers.`,
 				'good',
-				7,
+				TOAST.long,
 			);
 	} // a fallen side's room is shared
 	for (const f of G.finds) if (f.owner === p.id && FINDS[f.kind].capture) f.owner = null;
@@ -13325,7 +13312,7 @@ function fall(p) {
 		const q = G.P[p.ally];
 		if (q.ally === p.id) q.ally = null;
 	}
-	if (p.id) news('war', `${p.name} has fallen.`, 'good', 7);
+	if (p.id) news('war', `${p.name} has fallen.`, 'good', TOAST.long);
 	chron(`${p.id === 0 ? 'Your keep' : p.name} fell.`);
 }
 function scoreAll() {
@@ -13337,7 +13324,7 @@ function scoreAll() {
 				if (u.owner === p.id && UNIT[u.kind].cls)
 					s[UNIT[u.kind].cls === 'army' ? 'army' : 'people'] += sumCost(UNIT[u.kind].cost) / SCORE.unit;
 			for (const b of G.blds)
-				if (b.owner === p.id && b.prog >= 1 && b.hp > 0) s.bld += sumCost(BLD[b.kind].cost) / SCORE.bld;
+				if (standing(b, p.id)) s.bld += sumCost(BLD[b.kind].cost) / SCORE.bld;
 		}
 		for (const k in s) s[k] = Math.round(s[k]);
 		s.total = s.people + s.army + s.tech + s.bld + s.wealth;
@@ -13350,7 +13337,7 @@ function watchHome() {
 	const near = G.units.find((u) => atWar(0, u.owner) && u.owner !== WILD && isSoldier(u) && dist(u, k) < 340);
 	if (near && G.t - G.warnT > 20) {
 		G.warnT = G.t;
-		news('war', 'Enemies at your town!', 'warn', 7, near);
+		news('war', 'Enemies at your town!', 'warn', TOAST.long, near);
 	}
 }
 function finish(won, text, all) {
@@ -13868,8 +13855,8 @@ function think(p) {
 			setJob(v, best.r, best.n.hunt ? null : best.n);
 			if (best.n.hunt) {
 				v.hunt = best.n.hunt;
-				v.hunt.wk = (v.hunt.wk || 0) + 1;
-			} else if (!best.n.farm) best.n.wk = (best.n.wk || 0) + 1; // setJob counts a field
+				crowd(v.hunt, 1);
+			} else if (!best.n.farm) crowd(best.n, 1); // setJob counts a field
 		}
 	// finds: a detachment clears the nearest guarded one when nothing else is going on; it hires vagabonds it walks past
 	if (per.loot && armyN >= 10 && !p.wave) lootRun(p);
@@ -13993,7 +13980,7 @@ function throneRun(p, per) {
 		u.bid = T.id;
 	});
 	p.wave = newWave(home.length, holder, T.id);
-	news('war', `${p.name} march on the Throne.`, 'warn', 8, T);
+	news('war', `${p.name} march on the Throne.`, 'warn', TOAST.long, T);
 }
 function wallPlan(k) {
 	// an arc WALL_R (06) out from the keep, facing the middle of the map; the two squares nearest the middle are the gate
@@ -14108,13 +14095,13 @@ function decideWar(p, per) {
 				k = keepOf(o);
 			const mark =
 				k &&
-				nearest(G.blds, k, (b) => b.owner === best && b.prog >= 1 && b.hp > 0 && b.kind !== 'keep' && BLD[b.kind].drop);
+				nearest(G.blds, k, (b) => standing(b, best) && b.kind !== 'keep' && BLD[b.kind].drop);
 			if (mark)
 				fast.forEach((u) => {
 					u.bid = mark.id;
 				});
 		}
-		if (best === 0) news('realm', `${p.name} march on you with ${go.length} soldiers.`, 'warn', 8, go[0]);
+		if (best === 0) news('realm', `${p.name} march on you with ${go.length} soldiers.`, 'warn', TOAST.long, go[0]);
 	}
 }
 
@@ -14133,7 +14120,7 @@ function leagueTick() {
 		G.league = lead.id;
 	} else if (G.league !== lead.id || ratio < LEAGUE.release) {
 		G.league = null;
-		news('realm', 'The league against the leader breaks up.', '', 6);
+		news('realm', 'The league against the leader breaks up.', '', TOAST.mid);
 		return;
 	}
 	const M = S.slice(1).filter((p) => p.id !== 0 && p.lord !== lead.id);
@@ -14144,7 +14131,7 @@ function leagueTick() {
 		for (const q of M) if (q !== p && G.rel[p.id][q.id] !== 'ally') G.rel[p.id][q.id] = 'ally';
 	}
 	G.navDirty = true;
-	if (fresh) news('realm', `${M.map((p) => p.name).join(', ')} unite against ${lead.name}, the leader.`, 'warn', 8);
+	if (fresh) news('realm', `${M.map((p) => p.name).join(', ')} unite against ${lead.name}, the leader.`, 'warn', TOAST.long);
 }
 // ═════ 18-figures.js: people and beasts, drawn from data ═════
 // ───────────────────────── Figures: every unit drawn once per look, colour, pose and zoom, then stamped ─────────────────────────
@@ -16481,8 +16468,7 @@ function roofGrain(rc, e0, e1, r0, r1, sag) {
 		if (!thatch) L_(xa, y - 0.25, xb, y - 0.25, 'rgba(255,220,180,.16)', 0.25);
 	}
 	if (thatch) {
-		let r = 5;
-		const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+		const R = NS_rng(5);
 		for (let i = 0; i < 40; i++) {
 			const t = R(),
 				u = R(),
@@ -16689,8 +16675,7 @@ const stump = (x, y) => {
 	E_(x, y - 2.1, 0.8, 0.32, 'rgba(120,80,30,.5)');
 };
 const grassTufts = (w, col, n) => {
-	let r = 3;
-	const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+	const R = NS_rng(3);
 	for (let i = 0; i < n; i++) {
 		const [x, y] = gpt(w, 0.05 + R() * 0.9, 0.05 + R() * 0.9);
 		L_(x, y, x + 0.4, y - 1.3, col, 0.3);
@@ -17269,8 +17254,7 @@ const ART = {
 			'#cdb990',
 			c,
 			() => {
-				let r = 9;
-				const R = () => (r = (r * 16807) % 2147483647) / 2147483647;
+				const R = NS_rng(9);
 				for (let i = 0; i < 70; i++) {
 					const [x, y] = gpt(w, 0.03 + R() * 0.94, 0.03 + R() * 0.94);
 					E_(
@@ -18821,7 +18805,6 @@ function bldSprite(b, s) {
 }
 // trees, bushes, rocks: a few variants each, cached the same way
 const NSPR = new Map();
-const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647;
 const NS_c = (hex, f) => {
 	const n = parseInt(hex.slice(1), 16),
 		k = (v) => Math.max(0, Math.min(255, Math.round(v * f)));
@@ -19275,7 +19258,7 @@ function makeBg() {
 	for (const L of G.lakes) {
 		const last = runs.length ? runs[runs.length - 1] : null,
 			tail = last && last[last.length - 1];
-		if (L.river && tail && tail.river && hyp(L.x - tail.x, L.y - tail.y) < 2.2 * L.r) last.push(L);
+		if (L.river && tail && tail.river && dist(L, tail) < 2.2 * L.r) last.push(L);
 		else if (L.river) runs.push([L]);
 	}
 	const stream = (run, extra, col) => {
@@ -19328,7 +19311,7 @@ function makeBg() {
 		// where a river leaves its lake, the lake's shade covers the join
 		const L = run[0];
 		if (!L.river) continue;
-		const src = G.lakes.find((q) => !q.river && hyp(q.x - L.x, q.y - L.y) < q.r + L.r + 20);
+		const src = G.lakes.find((q) => !q.river && dist(q, L) < q.r + L.r + 20);
 		if (!src) continue;
 		const lg = b.createRadialGradient(src.x, src.y, src.r - 6, src.x, src.y, src.r + 14);
 		lg.addColorStop(0, '#2a6488');
@@ -21796,12 +21779,11 @@ function drawWeather() {
 			const age = G.t - b.t;
 			if (!b.lit && flashOK(now)) {
 				b.lit = true;
-				flashA = Math.max(flashA, 0.6 + 0.4 * (1 - Math.min(1, hyp(b.x - cam.x, b.y - cam.y) / 900)));
+				flashA = Math.max(flashA, 0.6 + 0.4 * (1 - Math.min(1, dist(b, cam) / 900)));
 				flashT = now;
 			}
 			if (age > 0.45) continue;
-			let r = (b.seed * 1e6) | 1;
-			const rr = () => (r = (r * 16807) % 2147483647) / 2147483647; // the same jagged path every frame
+			const rr = NS_rng((b.seed * 1e6) | 1); // the same jagged path every frame
 			const x1 = SX(b.x),
 				y1 = SY(b.y),
 				paths = [],
@@ -21985,7 +21967,7 @@ const wallXY = (c) => ({ x: SX(c.gx * NAVC + 5), y: SY(c.gy * NAVC + 5) });
 function wallHit(pl, p) {
 	const R = 24,
 		P = pl.pts.map(wallXY);
-	const i = P.findIndex((q) => hyp(q.x - p.x, q.y - p.y) < R);
+	const i = P.findIndex((q) => dist(q, p) < R);
 	if (i >= 0) return { mode: 'wpt', i };
 	for (let j = 1; j < P.length; j++) {
 		const a = P[j - 1],
@@ -22023,7 +22005,7 @@ cv.addEventListener('pointerdown', (e) => {
 	if (ptrs.size >= 2) {
 		dropDrag();
 		const [a, b] = [...ptrs.values()];
-		pinch = { d: hyp(a.x - b.x, a.y - b.y) || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
+		pinch = { d: dist(a, b) || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
 		return;
 	}
 	if (G.place && G.place.kind === 'wall') {
@@ -22083,7 +22065,7 @@ cv.addEventListener('pointermove', (e) => {
 	if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, p);
 	if (pinch && ptrs.size >= 2) {
 		const [a, b] = [...ptrs.values()],
-			d = hyp(a.x - b.x, a.y - b.y) || 1,
+			d = dist(a, b) || 1,
 			mx = (a.x + b.x) / 2,
 			my = (a.y + b.y) / 2;
 		if (G) G.follow = false; // a pinch is yours: the camera stops following
@@ -22360,7 +22342,7 @@ function ordAt(sx, sy) {
 const picked = () =>
 	G.pick
 		.filter((k) => k.t === 'unit')
-		.map((k) => G.units.find((u) => u.id === k.id))
+		.map((k) => byId(G.units, k.id))
 		.filter((u) => u && u.owner === 0 && u.hp > 0 && !u.inside);
 const pickObj = (k) =>
 	(k.t === 'unit' ? G.units : k.t === 'bld' ? G.blds : k.t === 'find' ? G.finds : G.nodes).find((e) => e.id === k.id);
@@ -22416,7 +22398,7 @@ function order(S, h) {
 		};
 	if (h.t === 'unit' && e.owner !== 0) {
 		if (e.owner !== WILD && !atWar(0, e.owner)) {
-			say(foeFirst(e.owner), '', 4);
+			say(foeFirst(e.owner), '', TOAST.mid);
 			return;
 		}
 		if (UNIT[e.kind].meat && vil.length)
@@ -22441,7 +22423,7 @@ function order(S, h) {
 		if (sol.length) march(sol, e, e.owner === WILD ? UNIT[e.kind].name : G.P[e.owner].name);
 	} else if (h.t === 'bld' && e.owner !== 0) {
 		if (!atWar(0, e.owner)) {
-			say(foeFirst(e.owner), '', 4);
+			say(foeFirst(e.owner), '', TOAST.mid);
 			return;
 		}
 		sol.forEach((u) => {
@@ -22508,7 +22490,7 @@ function startPlace(kind) {
 	}
 	const why = capWhy(0, kind);
 	if (why) {
-		say(why + '.', '', 3);
+		say(why + '.', '', TOAST.short);
 		sfx('err');
 		return;
 	}
@@ -22540,7 +22522,7 @@ function boxPick(d) {
 	}
 	const trees = G.nodes.filter((n) => n.kind === 'tree' && n.amt > 0 && inBox(n, r)).length;
 	if (!trees) {
-		say('Nothing of yours in that box.', '', 3);
+		say('Nothing of yours in that box.', '', TOAST.short);
 		return;
 	}
 	openCard({ type: 'box', r, trees });
@@ -23367,7 +23349,7 @@ const BLD_PAGE = {
 		};
 	},
 	tpost: (b) => {
-		const f = G.finds.find((x) => x.id === b.sid);
+		const f = byId(G.finds, b.sid);
 		return f ? { fact: [`Holds ${coord(f.x, f.y)}`, 'tap the stop for prices'] } : {};
 	},
 	council: () =>
@@ -23816,7 +23798,7 @@ function caravanHTML(u) {
 	const r = u.route,
 		t = targetOf(r),
 		h0 = homeBiz(0, u),
-		d = !r && u.dest ? G.blds.find((b) => b.id === u.dest) : null;
+		d = !r && u.dest ? byId(G.blds, u.dest) : null;
 	let h = `<p>${r && t ? `Lane one: to the trade stop at ${coord(t.x, t.y)}${r.rep ? ', again and again' : ''}. ${u.leg === 'go' ? 'Carrying ' + (goodsText(u.goods || {}) || 'nothing') : u.leg === 'back' ? 'Coming home' + (u.goods && u.goods.spice ? ' with ' + u.goods.spice + ' spice' : '') : 'Loading'}.` : d && d.owner !== 0 ? `Lane two: to the ${bldName(d.owner, d.kind).toLowerCase()} of ${G.P[d.owner].name}, ${u.cargo} gold on arrival.` : allyMarket(0, u) ? 'Lane two: on its way to trade with your ally.' : 'No route, and no ally to trade with: it waits at your Market.'}</p>`;
 	h += guardRow('c', u.id);
 	if (!h0) return h + '<p>Build a Market (Trade) to send goods to the trade stops.</p>';
@@ -23902,7 +23884,7 @@ const settingsHTML = () =>
 // Each takes the card's description (G.card) and returns its page, or null when what it showed is gone.
 const CARDS = {
 	bld(c) {
-		const b = G.blds.find((x) => x.id === c.id);
+		const b = byId(G.blds, c.id);
 		if (!b) return null;
 		const p = G.P[0],
 			B = BLD[b.kind],
@@ -24101,7 +24083,7 @@ const CARDS = {
 		return h + (kp || !end ? '' : acts(end)) + more();
 	},
 	find(c) {
-		const f = G.finds.find((x) => x.id === c.id);
+		const f = byId(G.finds, c.id);
 		if (!f) return null;
 		const F = FINDS[f.kind],
 			gl = G.units.filter((v) => v.find === f.id && v.owner === WILD && v.hp > 0 && v.kind !== 'vagabond'),
@@ -24146,7 +24128,7 @@ const CARDS = {
 		return h + fold('why', 'Why?', `<p>${WHY[f.kind]}</p>`); // one row of peoples, their soldier in the line under it: the whole card on one page (Albert)
 	},
 	unit(c) {
-		const u = G.units.find((x) => x.id === c.id);
+		const u = byId(G.units, c.id);
 		if (!u) return null;
 		const U = UNIT[u.kind],
 			o = u.owner,
@@ -24311,7 +24293,7 @@ const CARDS = {
 			// villagers on it, and the buildings that make it or take it (shops, the mint, the foundry)
 			const r = RES.find((x) => KEY[x] === K),
 				own = (f) =>
-					G.blds.filter((b) => b.owner === 0 && b.prog >= 1 && b.hp > 0 && BLD[b.kind].makes && f(BLD[b.kind].makes)),
+					G.blds.filter((b) => standing(b, 0) && BLD[b.kind].makes && f(BLD[b.kind].makes)),
 				makers = own((m) => K in m),
 				takers = own((m) => Object.values(m).some((x) => x.from && K in x.from)),
 				who = (L) => L.map((b) => `<span data-act="open:bld,${b.id}">${bldName(0, b.kind)}</span>`).join(', ');
@@ -24379,7 +24361,7 @@ const CARDS = {
 		);
 	},
 	node(c) {
-		const n = G.nodes.find((x) => x.id === c.id);
+		const n = byId(G.nodes, c.id);
 		if (!n) return null;
 		const who = unitsOf(0, 'vil').filter((u) => u.node === n).length,
 			dr = dropFor(0, n.type, n),
@@ -24723,7 +24705,7 @@ const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'research', '
 // three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet: lg every rank that fits above the row (the Build
 // card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most
 const SIZE_OF = (c) =>
-	FULL.has(c.type) || (c.type === 'bld' && (G.blds.find((b) => b.id === c.id) || {}).kind === 'market')
+	FULL.has(c.type) || (c.type === 'bld' && (byId(G.blds, c.id) || {}).kind === 'market')
 		? 'lg'
 		: c.type === 'squad' || c.type === 'emergency'
 			? 'sm'
@@ -25446,7 +25428,7 @@ function milestoneTick() {
 		if (!on) continue;
 		M.push({ id, t: Math.round(G.t) });
 		const [line] = MS_TEXT[id];
-		news('lesson', msFill(line), 'good', 7, null, `card:milestone,${id}`);
+		news('lesson', msFill(line), 'good', TOAST.long, null, `card:milestone,${id}`);
 		sfx('coin');
 		return; // one a tick: they never pile up
 	}
@@ -25764,7 +25746,7 @@ const ACT = {
 		G.free = true;
 		$('end').hidden = true;
 		setPause(false);
-		say('Free play: no clock, no victory.', '', 6);
+		say('Free play: no clock, no victory.', '', TOAST.mid);
 	},
 	next() {
 		const p = G.P[0],
@@ -25773,7 +25755,7 @@ const ACT = {
 		freshSlate();
 		newGame(undefined, keep);
 		setPause(false);
-		say('New land. Your age and research stay.', 'good', 8);
+		say('New land. Your age and research stay.', 'good', TOAST.long);
 		saveGame(true);
 	},
 	close() {
@@ -25844,7 +25826,7 @@ const ACT = {
 		const o = Number(a),
 			k = keepOf(o) || G.blds.find((b) => b.owner === o);
 		if (!k) {
-			say('Nothing of theirs stands.', '', 3);
+			say('Nothing of theirs stands.', '', TOAST.short);
 			return;
 		}
 		camGo(k.x, k.y);
@@ -25965,7 +25947,7 @@ const ACT = {
 		setPause(false);
 		saveGame(true);
 		refresh();
-		say(`Challenge of the day: level ${levelOf(G.hz)}.`, 'good', 8);
+		say(`Challenge of the day: level ${levelOf(G.hz)}.`, 'good', TOAST.long);
 	},
 	tips() {
 		SET.tips = !SET.tips;
@@ -25999,7 +25981,7 @@ const ACT = {
 	},
 	qlock(id) {
 		const t = TECHBY[id];
-		say(`Research ${t.name} at the ${BLD[t.at].name} for more slots.`, '', 5);
+		say(`Research ${t.name} at the ${BLD[t.at].name} for more slots.`, '', TOAST.mid);
 	},
 	page(a) {
 		hudPage(a);
@@ -26016,7 +25998,7 @@ const ACT = {
 		(SET.hideG = SET.hideG || {})[g] = 1;
 		saveSet();
 		G.pvAsk = null;
-		say(`${GROUPS[g]} now goes quietly to the mail.`, '', 3);
+		say(`${GROUPS[g]} now goes quietly to the mail.`, '', TOAST.short);
 	}, // the group goes to the mail without a preview; red still comes through
 	pvkeep() {
 		G.pvAsk = null;
@@ -26093,7 +26075,7 @@ const ACT = {
 	bldgo(kind) {
 		const k = keepOf(0),
 			B = G.blds.filter((b) => b.owner === 0 && b.kind === kind && b.prog >= 1 && b.hp > 0).sort((a, b) => (k ? dist(a, k) - dist(b, k) : 0))[0];
-		if (!B) return say(`Build a ${BLD[kind].name} first.`, '', 3);
+		if (!B) return say(`Build a ${BLD[kind].name} first.`, '', TOAST.short);
 		camGo(B.x, B.y);
 		openCard({ type: 'bld', id: B.id });
 	}, // to your nearest finished building of a kind, its card open: a kind of soldier on the Train page or a squad's card goes to where it is trained
@@ -26117,7 +26099,7 @@ const ACT = {
 	},
 };
 // a job is locked until its age (32-frame, resOn): a tap on it says when it opens
-const shut = (r) => !resOn(KEY[r]) && (say(`${RESOURCES[r].name} opens in the ${AGES[resAge(KEY[r])].name} age.`, '', 3), true);
+const shut = (r) => !resOn(KEY[r]) && (say(`${RESOURCES[r].name} opens in the ${AGES[resAge(KEY[r])].name} age.`, '', TOAST.short), true);
 // orders that change the game: refused once it is over
 const PLAY = {
 	job(a) {
@@ -26131,7 +26113,7 @@ const PLAY = {
 	move(a) {
 		if (shut(a)) return;
 		if (!unitsOf(0, 'vil').some(freeVil)) {
-			say('Nobody is idle. Use − on another job.', '', 3);
+			say('Nobody is idle. Use − on another job.', '', TOAST.short);
 			return;
 		}
 		moveVil(0, a);
@@ -26146,7 +26128,7 @@ const PLAY = {
 	relwant(a) {
 		const [q, w] = a.split(','),
 			n = relKey(q);
-		if (stanceOff(n, w)) return say(relWhy(0, n, w) || 'Not now.', '', 3); // a dim icon takes no pick
+		if (stanceOff(n, w)) return say(relWhy(0, n, w) || 'Not now.', '', TOAST.short); // a dim icon takes no pick
 		const d = relPickOf(n);
 		d.want = w;
 	},
@@ -26155,14 +26137,14 @@ const PLAY = {
 			q = relKey(k),
 			v = Number(x),
 			d = relPickOf(q);
-		if (giftLock(q)) return say(giftLock(q), '', 3);
+		if (giftLock(q)) return say(giftLock(q), '', TOAST.short);
 		d.gift = v;
 		d.on = v > 0;
 	},
 	relon(a) {
 		const q = relKey(a),
 			d = relPickOf(q);
-		if (giftLock(q) || relLord(q)) return say(giftLock(q) || relWhy(0, q, 'peace') || 'Not now.', '', 3);
+		if (giftLock(q) || relLord(q)) return say(giftLock(q) || relWhy(0, q, 'peace') || 'Not now.', '', TOAST.short);
 		d.on = !d.on;
 		if (d.on && !d.gift) d.gift = REGARD.giftStep;
 	},
@@ -26193,12 +26175,12 @@ const PLAY = {
 	tq(a) {
 		const [t, d] = a.split(','),
 			k = kindOf(Number(t));
-		if (!k) return say(`Build a ${BLD[CLS[t][2]].name} first.`, '', 3);
+		if (!k) return say(`Build a ${BLD[CLS[t][2]].name} first.`, '', TOAST.short);
 		if (d === '+') {
 			const why = trainWhy(0, k);
-			if (why) say(why, '', 3);
+			if (why) say(why, '', TOAST.short);
 			else train(0, k);
-		} else if (!unTrain(0, k)) say('Nothing of that kind is waiting.', '', 3);
+		} else if (!unTrain(0, k)) say('Nothing of that kind is waiting.', '', TOAST.short);
 	}, // the Train page: one more or one fewer of a kind, at the building with the shortest line
 	tok() {
 		setRally();
@@ -26224,7 +26206,7 @@ const PLAY = {
 		H.aim = true;
 		H.mode = 'rally';
 		if (G.rally0) H.h = { t: 'ground', e: { x: G.rally0.x, y: G.rally0.y } };
-		say('Tap where new soldiers should go, then ✓.', '', 4);
+		say('Tap where new soldiers should go, then ✓.', '', TOAST.mid);
 		feel('tick');
 	},
 	sqpk(a) {
@@ -26246,7 +26228,7 @@ const PLAY = {
 	},
 	wsq(a) {
 		const i = Number(a);
-		if (!hasCmd() && !sqOut(i)) return say('Squads come with Battalions.', '', 3);
+		if (!hasCmd() && !sqOut(i)) return say('Squads come with Battalions.', '', TOAST.short);
 		openCard({ type: 'squad', i });
 	}, // a squad's card: built at home, watched on its mission; an empty squad opens as a new one
 	wfire() {
@@ -26268,7 +26250,7 @@ const PLAY = {
 	qall() {
 		const S = sendable();
 		if (S.length) order(S, G.qa.h);
-		else say(freeWhy(), '', 4);
+		else say(freeWhy(), '', TOAST.mid);
 		hideQuick();
 	},
 	qidle() {
@@ -26276,8 +26258,8 @@ const PLAY = {
 			h = G.qa.h;
 		if (S.length) order(S, h);
 		postTo(V, h.e);
-		if (V.length) say(`${V.length} idle villagers come here.`, '', 3);
-		else if (!S.length) say(freeWhy(), '', 4);
+		if (V.length) say(`${V.length} idle villagers come here.`, '', TOAST.short);
+		else if (!S.length) say(freeWhy(), '', TOAST.mid);
 		hideQuick();
 	}, // the idle soldiers, and on open ground the idle villagers (the Town Center's Idle to me, cut in Build 70, lives on here)
 	qwar() {
@@ -26355,7 +26337,7 @@ const PLAY = {
 			u.fn = u.node.id;
 			u.fpos = { x: u.node.x, y: u.node.y };
 		}
-		say(u.focus ? 'Focus: it stays where you put it.' : 'Focus off.', '', 3);
+		say(u.focus ? 'Focus: it stays where you put it.' : 'Focus off.', '', TOAST.short);
 	}, // Focus (D-093): a stance, as Stand Ground is; your next order re-aims it, only this turns it off
 	vhome(a) {
 		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a)),
@@ -26370,7 +26352,7 @@ const PLAY = {
 		const b = G.blds.find((x) => x.id === Number(a) && x.owner === 0);
 		if (!b) return;
 		const why = replantWhy(0, b);
-		if (why) say(why, '', 3);
+		if (why) say(why, '', TOAST.short);
 		else replant(0, b.id);
 	},
 	boxcut(a) {
@@ -26381,7 +26363,7 @@ const PLAY = {
 		setPick([]);
 	},
 	look(id) {
-		const e = G.units.find((u) => u.id === Number(id));
+		const e = byId(G.units, Number(id));
 		if (e) {
 			setPick([]);
 			openCard({ type: 'unit', id: e.id });
@@ -26395,7 +26377,7 @@ const PLAY = {
 				u.post = null;
 				u.idleT = 0;
 			}
-		say(`To ${j}.`, '', 2);
+		say(`To ${j}.`, '', TOAST.short);
 		setPick([]);
 	},
 	pbuild(a) {
@@ -26418,11 +26400,11 @@ const PLAY = {
 				u.idleT = 2; // stopped at once: Holding, and free for the next send
 				u.ord = undefined; // and off the old order
 			}
-		say('Holding here.', '', 2);
+		say('Holding here.', '', TOAST.short);
 	},
 	precall() {
 		sendHome(picked().filter(isSoldier));
-		say('Called home.', '', 2);
+		say('Called home.', '', TOAST.short);
 	},
 	pvil() {
 		setPick(
@@ -26433,7 +26415,7 @@ const PLAY = {
 	},
 	pcharge() {
 		const S = picked();
-		if (!charge(0, S)) say(chargeWhy(0, S) || 'Not now.', '', 3);
+		if (!charge(0, S)) say(chargeWhy(0, S) || 'Not now.', '', TOAST.short);
 	},
 	pfall() {
 		fallBack(0, picked());
@@ -26446,16 +26428,16 @@ const PLAY = {
 			if (teach(0, u)) n++;
 			else why = why || teachWhy(0, u);
 		}
-		say(n ? `${n} to the School.` : why || 'Nobody here can be taught.', n ? 'good' : '', 3);
+		say(n ? `${n} to the School.` : why || 'Nobody here can be taught.', n ? 'good' : '', TOAST.short);
 	},
 	teach(id) {
 		const u = G.units.find((x) => x.id === +id);
-		if (u && !teach(0, u)) say(teachWhy(0, u) || 'Not now.', '', 3);
+		if (u && !teach(0, u)) say(teachWhy(0, u) || 'Not now.', '', TOAST.short);
 	},
 	charge() {
 		const S = orderSet(),
 			bn = G.sel === 'all' ? undefined : G.sel;
-		if (!charge(0, S, bn)) say(chargeWhy(0, S, bn) || 'Not now.', '', 3);
+		if (!charge(0, S, bn)) say(chargeWhy(0, S, bn) || 'Not now.', '', TOAST.short);
 	},
 	fallback() {
 		fallBack(0, orderSet(), G.sel === 'all' ? undefined : G.sel);
@@ -26466,7 +26448,7 @@ const PLAY = {
 	relok(a) {
 		const q = relKey(a),
 			[gift, want, why] = relDraft(q);
-		if (why || !(gift || want)) return say(why || 'Pick a gift or a stance first.', '', 3);
+		if (why || !(gift || want)) return say(why || 'Pick a gift or a stance first.', '', TOAST.short);
 		if (gift) giveGift(0, gift, gangKey(q));
 		if (want) setRel(0, q, want);
 		delete G.relPick[q];
@@ -26481,51 +26463,51 @@ const PLAY = {
 	},
 	demand(a) {
 		const [q, r] = a.split(',');
-		if (!demand(0, Number(q), r)) say(demandWhy(0, Number(q), r) || 'Not now.', '', 3);
+		if (!demand(0, Number(q), r)) say(demandWhy(0, Number(q), r) || 'Not now.', '', TOAST.short);
 	},
 	tribute(a) {
-		if (!forceTribute(0, Number(a))) say(tributeWhy(0, Number(a)) || 'Not now.', '', 3);
+		if (!forceTribute(0, Number(a))) say(tributeWhy(0, Number(a)) || 'Not now.', '', TOAST.short);
 	},
 	levy(a) {
 		const [q, n] = a.split(',').map(Number);
-		if (!levy(0, q, n === 0 ? levyRoom(0, q) : n)) say(levyWhy(0, q, n || 1) || 'Not now.', '', 3);
+		if (!levy(0, q, n === 0 ? levyRoom(0, q) : n)) say(levyWhy(0, q, n || 1) || 'Not now.', '', TOAST.short);
 	},
 	release(a) {
 		releaseAll(0, Number(a));
 	},
 	qcancel(a) {
 		const [b, i] = a.split(',').map(Number),
-			B = G.blds.find((x) => x.id === b);
+			B = byId(G.blds, b);
 		if (B && cancelOrder(0, B, i)) sfx('err');
 	},
 	sellat(a) {
 		const [f, k] = a.split(','),
-			F = G.finds.find((x) => x.id === Number(f));
+			F = byId(G.finds, Number(f));
 		if (F && F.owner === 0) {
 			F.sell = F.sell || Object.fromEntries(WARES.map((w) => [w, 1]));
 			F.sell[k] = F.sell[k] ? 0 : 1;
 		}
 	},
 	debase() {
-		if (!debase(0)) say('Needs a finished Mint, once a game.', '', 3);
+		if (!debase(0)) say('Needs a finished Mint, once a game.', '', TOAST.short);
 	},
 	surrender(a) {
 		demandSurrender(0, Number(a));
 		closeCard();
 	},
 	overlord(a) {
-		if (!offerOverlord(0, Number(a))) say(overlordWhy(0, Number(a)) || 'Not now.', '', 3);
+		if (!offerOverlord(0, Number(a))) say(overlordWhy(0, Number(a)) || 'Not now.', '', TOAST.short);
 	},
 	tax(a) {
 		const [q, t] = a.split(','),
 			P = G.P[Number(q)];
 		if (P && P.lord === 0 && TAX[t]) {
 			P.tax = t;
-			say(`Tax on ${P.name}: ${t}.`, '', 3);
+			say(`Tax on ${P.name}: ${t}.`, '', TOAST.short);
 		}
 	},
 	venture(a) {
-		if (!venture(0, Number(a))) say('Needs Medieval age, gold; 3 at most.', '', 4);
+		if (!venture(0, Number(a))) say('Needs Medieval age, gold; 3 at most.', '', TOAST.mid);
 	},
 	douse(a) {
 		const b = G.blds.find((x) => x.id === Number(a) && x.owner === 0);
@@ -26542,30 +26524,30 @@ const PLAY = {
 				}
 			}
 		G.mail = (G.mail || []).filter((m) => m.act !== 'douse:' + a);
-		if (n) say(`${n} more run to the fire.`, '', 3);
-		else if (b && b.fire > 0) say('No villager is free.', '', 3);
+		if (n) say(`${n} more run to the fire.`, '', TOAST.short);
+		else if (b && b.fire > 0) say('No villager is free.', '', TOAST.short);
 	},
 	tpost(a) {
-		const f = G.finds.find((x) => x.id === Number(a));
+		const f = byId(G.finds, Number(a));
 		if (!f) return;
 		const why = canPlace(0, 'tpost', f.x, f.y);
 		if (why) {
-			say(why + '.', '', 3);
+			say(why + '.', '', TOAST.short);
 			return;
 		}
 		if (!afford(G.P[0], BLD.tpost.cost)) {
-			say(`Not enough: ${costText(BLD.tpost.cost)}.`, '', 3);
+			say(`Not enough: ${costText(BLD.tpost.cost)}.`, '', TOAST.short);
 			return;
 		}
 		if (G.P[0].age < BLD.tpost.age) {
-			say('Trade posts need the Bronze age.', '', 3);
+			say('Trade posts need the Bronze age.', '', TOAST.short);
 			return;
 		}
 		build(0, 'tpost', f.x, f.y);
-		say('A villager sets out to build the trade post.', '', 4);
+		say('A villager sets out to build the trade post.', '', TOAST.mid);
 	},
 	want(a) {
-		const f = G.finds.find((x) => x.id === Number(a));
+		const f = byId(G.finds, Number(a));
 		if (f && f.owner === 0) {
 			f.want = WARES[(WARES.indexOf(f.want) + 1) % WARES.length];
 		}
@@ -26573,14 +26555,14 @@ const PLAY = {
 	route(a) {
 		const [cid, s, id] = a.split(','),
 			c = G.units.find((u) => u.id === Number(cid) && u.owner === 0),
-			t = s === 's' ? G.finds.find((f) => f.id === Number(id)) : G.blds.find((b) => b.id === Number(id));
+			t = s === 's' ? byId(G.finds, Number(id)) : byId(G.blds, Number(id));
 		if (c && t) {
 			if (!homeBiz(0, c)) {
-				say('Build a Market first.', '', 4);
+				say('Build a Market first.', '', TOAST.mid);
 				return;
 			}
 			setRoute(c, t, true, s === 's');
-			say('The caravan runs the route on repeat.', '', 3);
+			say('The caravan runs the route on repeat.', '', TOAST.short);
 		}
 	},
 	make(a) {
@@ -26589,29 +26571,29 @@ const PLAY = {
 		if (B) setMake(B, t);
 	},
 	routeto(a) {
-		const f = G.finds.find((x) => x.id === Number(a));
+		const f = byId(G.finds, Number(a));
 		if (!f || !homeBiz(0, f)) {
-			say('Build a Market first.', '', 4);
+			say('Build a Market first.', '', TOAST.mid);
 			return;
 		}
 		const c = unitsOf(0, 'caravan').sort((p, q) => !!p.route - !!q.route || dist(p, f) - dist(q, f))[0];
 		if (!c) {
-			say('No caravan: train one at the Market.', '', 3);
+			say('No caravan: train one at the Market.', '', TOAST.short);
 			return;
 		}
 		setRoute(c, f, true, true);
-		say('A caravan takes the route, on repeat.', '', 3);
+		say('A caravan takes the route, on repeat.', '', TOAST.short);
 	},
 	rrep(a) {
-		const c = G.units.find((u) => u.id === Number(a));
+		const c = byId(G.units, Number(a));
 		if (c && c.route) c.route.rep = !c.route.rep;
 	},
 	rsp(a) {
-		const c = G.units.find((u) => u.id === Number(a));
+		const c = byId(G.units, Number(a));
 		if (c && c.route) c.route.spice = !c.route.spice;
 	},
 	rclr(a) {
-		const c = G.units.find((u) => u.id === Number(a));
+		const c = byId(G.units, Number(a));
 		if (c) {
 			c.route = null;
 			c.dest = null;
@@ -26641,10 +26623,10 @@ const PLAY = {
 		}
 	},
 	train(a) {
-		if (!train(0, a)) say(trainWhy(0, a) || 'Not now.', '', 3);
+		if (!train(0, a)) say(trainWhy(0, a) || 'Not now.', '', TOAST.short);
 	},
 	tech(a) {
-		if (!research(0, a)) say(researchWhy(0, a) || 'Not now.', '', 3);
+		if (!research(0, a)) say(researchWhy(0, a) || 'Not now.', '', TOAST.short);
 	},
 	age() {
 		ageUp(0);
@@ -26659,7 +26641,7 @@ const PLAY = {
 			s.state = 'goto';
 			s.px = x;
 			s.py = y;
-			say('The scout rides out.', '', 3);
+			say('The scout rides out.', '', TOAST.short);
 		}
 		closeCard();
 	},
@@ -26679,19 +26661,19 @@ const PLAY = {
 				u.target = target;
 				u.bid = null;
 			});
-			say(`Marching on the ${G.P[target].name}.`, '', 3);
+			say(`Marching on the ${G.P[target].name}.`, '', TOAST.short);
 		}
 		closeCard();
 	},
 	ransom(a) {
-		if (!payRansom(0, Number(a))) say('Not enough gold.', '', 3);
+		if (!payRansom(0, Number(a))) say('Not enough gold.', '', TOAST.short);
 	},
 	stand() {
-		if (!standDown(0)) say('No spare soldiers at home to stand down.', '', 3);
+		if (!standDown(0)) say('No spare soldiers at home to stand down.', '', TOAST.short);
 	},
 	vjob(a) {
 		const [id, j] = a.split(','),
-			u = G.units.find((x) => x.id === Number(id));
+			u = byId(G.units, Number(id));
 		if (u && u.owner === 0) {
 			setJob(u, u.job === j ? null : j);
 			u.pj = null;
@@ -26699,7 +26681,7 @@ const PLAY = {
 		}
 	},
 	vgo(a) {
-		const u = G.units.find((x) => x.id === Number(a));
+		const u = byId(G.units, Number(a));
 		if (!u) return;
 		if (G.confirm !== 'v' + u.id) {
 			G.confirm = 'v' + u.id;
@@ -26709,7 +26691,7 @@ const PLAY = {
 		setJob(u, null);
 		u.hp = 0;
 		u.gone = true;
-		say('A villager was sent home.', '', 3);
+		say('A villager was sent home.', '', TOAST.short);
 		closeCard();
 	},
 	dismiss() {
@@ -26718,23 +26700,23 @@ const PLAY = {
 			setJob(v, null);
 			v.hp = 0;
 			v.gone = true;
-			say('A villager was sent home.', '', 3);
+			say('A villager was sent home.', '', TOAST.short);
 		}
 	},
 	sab(a) {
-		const b = G.blds.find((x) => x.id === Number(a)),
+		const b = byId(G.blds, Number(a)),
 			sp =
 				b &&
 				unitsOf(0, 'spy')
 					.filter((u) => u.state !== 'sab')
 					.sort((x, y) => dist(x, b) - dist(y, b))[0];
 		if (!b || !BLD[b.kind].sab || !sp) {
-			say(!sp ? 'You have no free spy.' : 'That cannot be sabotaged.', '', 3);
+			say(!sp ? 'You have no free spy.' : 'That cannot be sabotaged.', '', TOAST.short);
 			return;
 		}
 		sp.state = 'sab';
 		sp.tid = b.id;
-		say('A spy slips away to sabotage it.', '', 4);
+		say('A spy slips away to sabotage it.', '', TOAST.mid);
 		closeCard();
 	},
 	spygo(a) {
@@ -26743,35 +26725,35 @@ const PLAY = {
 				.filter((u) => u.state !== 'sab')
 				.sort((p, q) => dist(p, { x, y }) - dist(q, { x, y }))[0];
 		if (!sp) {
-			say('You have no free spy.', '', 3);
+			say('You have no free spy.', '', TOAST.short);
 			return;
 		}
 		sp.state = 'goto';
 		sp.px = x;
 		sp.py = y;
-		say('A spy goes to look.', '', 3);
+		say('A spy goes to look.', '', TOAST.short);
 		closeCard();
 	},
 	shrine(a) {
-		const f = G.finds.find((x) => x.id === Number(a)),
+		const f = byId(G.finds, Number(a)),
 			pr = f && unitsOf(0, 'priest').sort((p, q) => dist(p, f) - dist(q, f))[0];
 		if (!pr) {
-			say('You have no priest: Build → Temple.', '', 3);
+			say('You have no priest: Build → Temple.', '', TOAST.short);
 			return;
 		}
 		pr.state = 'shrine';
 		pr.fid = f.id;
-		say('A priest walks to the shrine.', '', 3);
+		say('A priest walks to the shrine.', '', TOAST.short);
 		closeCard();
 	},
 	hire(a) {
-		const f = G.finds.find((x) => x.id === Number(a));
-		if (f && !hire(0, f)) say(hireWhy(0, f), '', 3);
+		const f = byId(G.finds, Number(a));
+		if (f && !hire(0, f)) say(hireWhy(0, f), '', TOAST.short);
 	},
 	guard(a) {
 		const [t, i] = a.split(','),
 			id = Number(i),
-			at = t === 'f' ? G.finds.find((f) => f.id === id) : G.units.find((v) => v.id === id);
+			at = t === 'f' ? byId(G.finds, id) : byId(G.units, id);
 		if (!at) return;
 		const room = POST.guard - guardsOf(t, id).length,
 			S = sendable()
@@ -26801,10 +26783,10 @@ const PLAY = {
 	},
 	trade(a) {
 		const [dir, k] = a.split(':');
-		if (!marketTrade(0, k, dir)) say(dir === 'sell' ? 'Not enough to sell.' : 'Not enough gold.', '', 3);
+		if (!marketTrade(0, k, dir)) say(dir === 'sell' ? 'Not enough to sell.' : 'Not enough gold.', '', TOAST.short);
 	},
 	zeal() {
-		if (!zeal(0, orderSet())) say(zealWhy(0, orderSet()) || 'Not now.', '', 3);
+		if (!zeal(0, orderSet())) say(zealWhy(0, orderSet()) || 'Not now.', '', TOAST.short);
 	},
 };
 function act(a) {
@@ -26833,7 +26815,7 @@ function learnAct(verb, arg) {
 		learn('job:' + arg);
 	} else if (verb === 'sendvil') {
 		learn('job');
-		const n = G.nodes.find((x) => x.id === Number(arg));
+		const n = byId(G.nodes, Number(arg));
 		if (n) learn('job:' + (n.kind === 'farm' && n.type === 'food' ? 'field' : n.type));
 	} else if (['sendbld', 'age', 'trade'].includes(verb)) learn(verb);
 }
@@ -27289,7 +27271,7 @@ function saveGame(force) {
 	} catch (e) {
 		if (G.t - (saveFailT ?? -999) > 60) {
 			saveFailT = G.t;
-			say('Save failed. Storage may be full.', 'warn', 6);
+			say('Save failed. Storage may be full.', 'warn', TOAST.mid);
 		}
 	} // a save that did not happen says so, once a minute (Build 42: it used to fail silently)
 }
@@ -28083,7 +28065,7 @@ function allyMarket(o, from) {
 		}
 	return best;
 }
-const targetOf = (r) => r && (r.s ? G.finds.find((f) => f.id === r.to) : G.blds.find((b) => b.id === r.to && b.hp > 0));
+const targetOf = (r) => r && (r.s ? byId(G.finds, r.to) : G.blds.find((b) => b.id === r.to && b.hp > 0));
 const homeBiz = (o, u) => nearest(G.blds, u, (b) => b.owner === o && b.kind === 'market' && b.prog >= 1 && b.hp > 0); // the Market stores goods and loads caravans
 function estPay(o, place, from) {
 	let n = LOAD,
@@ -28181,7 +28163,7 @@ function routeTick(u, dt, SP) {
 			news('trade', 
 				`A caravan ${sold.length ? `sold ${sold.join(', ')} for ${gold} gold` : 'reached the stop'}${u.goods.spice ? `, bought ${u.goods.spice} spice` : ''}.`,
 				'good',
-				4,
+				TOAST.mid,
 				t,
 			);
 			sfx('tribute');
@@ -28224,7 +28206,7 @@ function robbed(u) {
 	for (const k in u.goods || {}) v += u.goods[k] * baseOf(k); // a raw load is robbed too (Build 48: it threw)
 	const f = nearest(G.finds, u, (f) => f.kind === 'camp' && !f.done);
 	if (f && v > 0) f.hoard = (f.hoard || 0) + Math.round(v);
-	if (u.owner === 0) news('trade', `Caravan robbed${v ? ` (${Math.round(v)}g)` : ''}. Break their camp.`, 'warn', 7, u);
+	if (u.owner === 0) news('trade', `Caravan robbed${v ? ` (${Math.round(v)}g)` : ''}. Break their camp.`, 'warn', TOAST.long, u);
 }
 
 // ── the calendar: weather every minute, the seasons' work, the year's harvest
@@ -28275,7 +28257,7 @@ function seasonTurn() {
 				lost = Math.floor(p.res.f * (1 - Math.exp(-k)));
 			if (lost > 0) {
 				spend(p, 'f', lost, 'spoiled');
-				if (p.id === 0 && lost >= 20) news('home', `${lost} food spoiled in store this season.`, 'soft', 5);
+				if (p.id === 0 && lost >= 20) news('home', `${lost} food spoiled in store this season.`, 'soft', TOAST.mid);
 			}
 		}
 	for (const b of G.blds)
@@ -28291,7 +28273,7 @@ function seasonTurn() {
 			if (wolf && b.sheep > 0) {
 				const lost = Math.min(b.sheep, 1 + Math.floor(rng() * 2));
 				b.sheep -= lost;
-				if (b.owner === 0) news('land', `Wolves took ${lost} sheep at ${coord(b.x, b.y)}.`, 'warn', 5, b);
+				if (b.owner === 0) news('land', `Wolves took ${lost} sheep at ${coord(b.x, b.y)}.`, 'warn', TOAST.mid, b);
 			}
 		}
 	if (s === 'Spring') {
@@ -28303,7 +28285,7 @@ function seasonTurn() {
 				acc += H.p;
 				if (r < acc) {
 					G.harvest = H.m;
-					news('land', H.text, 'warn', 8);
+					news('land', H.text, 'warn', TOAST.long);
 					break;
 				}
 			}
@@ -28313,9 +28295,9 @@ function seasonTurn() {
 			hazard(HEALTH.plague * (hz('plague') ? 3 : 1))
 		) {
 			G.plague = { until: G.t + SEASON_LEN * 2 };
-			news('home', 'Plague on the roads: build a Hospital.', 'warn', 10);
+			news('home', 'Plague on the roads: build a Hospital.', 'warn', TOAST.long);
 		}
-		if (G.blds.some((b) => b.owner === 0 && b.kind === 'pasture')) news('land', 'Spring: sheep shorn, lambs born.', 'good', 5);
+		if (G.blds.some((b) => b.owner === 0 && b.kind === 'pasture')) news('land', 'Spring: sheep shorn, lambs born.', 'good', TOAST.mid);
 	}
 	if (s !== 'Spring' && s !== 'Summer' && G.plague && G.plague.until <= G.t) G.plague = null;
 }
@@ -28348,7 +28330,7 @@ function ignite(b, why) {
 		news('home', 
 			`Fire at the ${bldName(0, b.kind).toLowerCase()} (${why}). ${near.length ? (near.length > 1 ? 'Two neighbours' : 'A neighbour') + ' run with buckets.' : 'Nobody is near it.'}`,
 			'warn help',
-			9,
+			TOAST.long,
 			b,
 			'douse:' + b.id,
 		);
@@ -28385,7 +28367,7 @@ function fireTick(dt) {
 		b.hp -= maxHpB(b.owner, b.kind) * 0.02 * dt * b.fire;
 		if (b.hp <= 0) {
 			b.by = undefined;
-			if (b.owner === 0) news('home', `The ${bldName(0, b.kind).toLowerCase()} burned down.`, 'warn', 6, b);
+			if (b.owner === 0) news('home', `The ${bldName(0, b.kind).toLowerCase()} burned down.`, 'warn', TOAST.mid, b);
 			continue;
 		}
 		if ((G.tick + b.id) % 90 === 0) {
@@ -28424,7 +28406,7 @@ function outbreak(o, share, plague, at) {
 	}
 	if (plague) p.plagueDead = 0;
 	if (o === 0)
-		news('home', plague ? 'Plague, brought by a caravan!' : `Sickness: ${n} ill. A Hospital cures them.`, 'warn', 9, at);
+		news('home', plague ? 'Plague, brought by a caravan!' : `Sickness: ${n} ill. A Hospital cures them.`, 'warn', TOAST.long, at);
 }
 function healthTick() {
 	// every 5 seconds
@@ -28518,13 +28500,13 @@ function upkeepTick() {
 				spend(p, 'f', eat, 'upkeep');
 				if (p.hungry && p.res.f > 20) {
 					p.hungry = false;
-					if (o === 0) news('home', 'Your people are fed again.', 'good', 4);
+					if (o === 0) news('home', 'Your people are fed again.', 'good', TOAST.mid);
 				}
 			} else {
 				spend(p, 'f', p.res.f, 'upkeep'); // what is left is eaten
 				if (!p.hungry) {
 					p.hungry = true;
-					if (o === 0 && foodInReach(0)) news('home', 'Food stores empty: put villagers on food.', 'warn', 8); // with none in reach the famine toast speaks
+					if (o === 0 && foodInReach(0)) news('home', 'Food stores empty: put villagers on food.', 'warn', TOAST.long); // with none in reach the famine toast speaks
 				}
 			}
 		}
@@ -28625,7 +28607,7 @@ function debase(o) {
 	if (p.debased || !ready(o, 'mint').length) return false;
 	p.debased = true;
 	earn(p, 'g', MINT.debase, 'mint');
-	if (o === 0) news('trade', `Debased: +${MINT.debase} gold, prices ×${MINT.price} for good.`, 'warn', 7);
+	if (o === 0) news('trade', `Debased: +${MINT.debase} gold, prices ×${MINT.price} for good.`, 'warn', TOAST.long);
 	return true;
 }
 function mktHit(k, q, dir) {
@@ -28655,7 +28637,7 @@ function venture(o, amt) {
 		return false;
 	spend(p, 'g', amt, 'venture');
 	p.ventures.push({ amt, due: G.t + YEAR });
-	if (o === 0) news('trade', `${amt} gold sent out. Back in a year.`, '', 5);
+	if (o === 0) news('trade', `${amt} gold sent out. Back in a year.`, '', TOAST.mid);
 	return true;
 }
 function ventureTick() {
@@ -28664,12 +28646,12 @@ function ventureTick() {
 			p.ventures = p.ventures.filter((v) => {
 				if (v.due > G.t) return true;
 				if (rng() < VENTURE.lost) {
-					if (p.id === 0) news('trade', `Robbers took a venture of ${v.amt} gold.`, 'warn', 6);
+					if (p.id === 0) news('trade', `Robbers took a venture of ${v.amt} gold.`, 'warn', TOAST.mid);
 				} else {
 					const back = Math.round(shareUp(p.id, v.amt * (VENTURE.back + fxv(p.id, 'venture').a)));
 					earn(p, 'g', back, 'venture');
 					p.gathered -= v.amt; // only the profit counts as gathered
-					if (p.id === 0) news('trade', `A venture comes home: ${back} gold for ${v.amt}.`, 'good', 6);
+					if (p.id === 0) news('trade', `A venture comes home: ${back} gold for ${v.amt}.`, 'good', TOAST.mid);
 				}
 				return false;
 			});
@@ -28730,7 +28712,7 @@ function makeVassal(q, L, tax) {
 	news('realm', 
 		L === 0 ? `${p.name} kneel: your vassal now.` : `${p.name} became a vassal of ${G.P[L].name}.`,
 		L === 0 ? 'good' : '',
-		8,
+		TOAST.long,
 		keepOf(q),
 	);
 }
@@ -28748,7 +28730,7 @@ function surrenderWhy(o, q) {
 function demandSurrender(o, q) {
 	const why = surrenderWhy(o, q);
 	if (why) {
-		if (o === 0) news('realm', why, '', 4);
+		if (o === 0) news('realm', why, '', TOAST.mid);
 		return false;
 	}
 	makeVassal(q, o, 'fair');
@@ -28781,7 +28763,7 @@ function rebel(p, coalition) {
 				? `Vassals rise: ${n} rebels march on you!`
 				: `${p.name} rebel! Crush them in ${VASSAL.freeAfter / 60} min.`,
 			'warn',
-			10,
+			TOAST.long,
 			keepOf(p.id),
 		);
 		sfx('horn');
@@ -28812,12 +28794,12 @@ function vassalTick() {
 							u.gone = true;
 						} else u.state = 'home';
 					}
-				if (L.id === 0) news('realm', `Rebellion in the lands of ${p.name} crushed.`, 'good', 7);
+				if (L.id === 0) news('realm', `Rebellion in the lands of ${p.name} crushed.`, 'good', TOAST.long);
 			} else if (G.t - p.rebel.t0 > VASSAL.freeAfter) {
 				p.rebel = null;
 				p.lord = null;
 				levyOf(L.id, p.id).forEach(releaseLevy);
-				if (L.id === 0) news('realm', `${p.name} have thrown off your rule.`, 'warn', 8);
+				if (L.id === 0) news('realm', `${p.name} have thrown off your rule.`, 'warn', TOAST.long);
 			}
 			continue;
 		}
@@ -28853,11 +28835,11 @@ function vassalTick() {
 					gift[r] = x;
 				}
 			}
-			if (L.id === 0 && Object.keys(gift).length) news('realm', `${p.name} send a gift: ${costText(gift)}.`, 'good', 5);
+			if (L.id === 0 && Object.keys(gift).length) news('realm', `${p.name} send a gift: ${costText(gift)}.`, 'good', TOAST.mid);
 		}
 		if (L.id === 0 && p.unrest > 70 && G.t - (p.warnT || -99) > 60) {
 			p.warnT = G.t;
-			news('realm', `${p.name}: unrest ${Math.round(p.unrest)}%. Cut tax.`, 'warn', 7, keepOf(p.id));
+			news('realm', `${p.name}: unrest ${Math.round(p.unrest)}%. Cut tax.`, 'warn', TOAST.long, keepOf(p.id));
 		}
 		if (p.unrest >= 100) rebel(p);
 	}
@@ -28869,7 +28851,7 @@ function vassalTick() {
 			const risk = V.reduce((s, p) => s + (p.unrest / 100) ** 2, 0) * 0.08 * V.length;
 			if (L.id === 0 && risk > 0.1 && G.t - (L.coalT || -99) > 120) {
 				L.coalT = G.t;
-				news('realm', 'Talk of revolt spreads among your vassals.', 'warn', 7);
+				news('realm', 'Talk of revolt spreads among your vassals.', 'warn', TOAST.long);
 			}
 			if (rng() < risk) {
 				const R = V.filter((p) => p.unrest >= 50);
@@ -29060,7 +29042,7 @@ const EV = {
 				) {
 					b.hp -= maxHpB(b.owner, b.kind) * EVENTS.flood.hit;
 					if (b.owner === 0 && e.s % 10 === 1)
-						news('land', `Water at the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 5, b);
+						news('land', `Water at the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', TOAST.mid, b);
 				}
 		},
 		end() {
@@ -29098,7 +29080,7 @@ const EV = {
 			scarStrike(e.at.x + 6, e.at.y + 4);
 			sfx('boom', e.at.x, e.at.y);
 			G.whiteT = G.t;
-			news('land', EV_TEXT.meteor[1], 'good', 7, e.at);
+			news('land', EV_TEXT.meteor[1], 'good', TOAST.long, e.at);
 		},
 	},
 	wildfire: {
@@ -29177,7 +29159,7 @@ const EV = {
 			crackAt(b.x, b.y, 36);
 			sfx('rumble', b.x, b.y);
 			if (b.owner === 0)
-				news('land', `A sinkhole under the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', 6, b);
+				news('land', `A sinkhole under the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', TOAST.mid, b);
 		},
 	},
 	quicksand: {
@@ -29195,11 +29177,11 @@ const EV = {
 			const k = keepOf(0);
 			e.at = k ? towardMid(k, 500) : { x: MID, y: MID };
 			G.mirage = { x: e.at.x, y: e.at.y, n: EVENTS.mirage.n, until: e.until };
-			news('war', `An army seen at ${coord(e.at.x, e.at.y)}.`, 'warn', 5, e.at);
+			news('war', `An army seen at ${coord(e.at.x, e.at.y)}.`, 'warn', TOAST.mid, e.at);
 		},
 		end() {
 			G.mirage = null;
-			news('war', 'The army at that spot was a mirage.', '', 5);
+			news('war', 'The army at that spot was a mirage.', '', TOAST.mid);
 		},
 	},
 	circus: {
@@ -29355,7 +29337,7 @@ function startEvent(kind) {
 		news('land', 
 			EV_TEXT[kind][1],
 			E.harm ? 'warn' : E.gift ? 'good' : 'soft',
-			6,
+			TOAST.mid,
 			e.at || (e.units && e.units[0]) || null,
 			null,
 			EV_WHY[kind],
@@ -29404,11 +29386,11 @@ function hordeTick() {
 		left = H.at - G.t;
 	if (H.said < 1 && left <= HORDE.warn) {
 		H.said = 1;
-		news('war', EV_TEXT.horde[0], 'warn', 8);
+		news('war', EV_TEXT.horde[0], 'warn', TOAST.long);
 	}
 	if (H.said < 2 && left <= HORDE.warn / 2) {
 		H.said = 2;
-		news('war', EV_TEXT.horde[1], 'warn', 8);
+		news('war', EV_TEXT.horde[1], 'warn', TOAST.long);
 	}
 	if (left > 0) return;
 	const sides = G.P.filter((p) => p.id !== WILD && !calm4b(p.id) && p.alive && keepOf(p.id) && gangRel(p.id, 'out') === 'war'), // 4b: the horde starts nothing with a computer, nor with a side at peace with the outlaws
@@ -29428,7 +29410,7 @@ function hordeTick() {
 		u.hy = k.y;
 		u.horde = true;
 	}
-	news('war', EV_TEXT.horde[2], 'warn', 10, from);
+	news('war', EV_TEXT.horde[2], 'warn', TOAST.long, from);
 	sfx('horn');
 	G.horde = 'done';
 }
@@ -29469,7 +29451,7 @@ function skyTurn() {
 	c.wet = A.length ? A.shift() : rng() < P[c.wet ? 1 : 0];
 	while (A.length < Math.max(1, lead)) A.push(rng() < P[(A.length ? A[A.length - 1] : c.wet) ? 1 : 0]);
 	if (lead && A[lead - 1] !== (lead > 1 ? A[lead - 2] : c.wet))
-		news('land', `${A[lead - 1] ? 'Signs of rain' : 'Signs of a clearing sky'} in ${lead > 1 ? lead + ' minutes' : 'a minute'}.`, 'soft', 6);
+		news('land', `${A[lead - 1] ? 'Signs of rain' : 'Signs of a clearing sky'} in ${lead > 1 ? lead + ' minutes' : 'a minute'}.`, 'soft', TOAST.mid);
 	c.dry = c.wet ? 0 : c.dry + 1;
 	G.wx = c.wet
 		? c.T <= CLIMATE.snowAt
@@ -29482,7 +29464,7 @@ function skyTurn() {
 			: c.dry >= CLIMATE.drought.dry && c.T > CLIMATE.drought.temp
 				? 'drought'
 				: 'clear';
-	if (G.wx !== was && G.t > 1 && WEATHER[G.wx].text) news('land', WEATHER[G.wx].text, '', 6, null, null, wxWhy(G.wx, was, P, c));
+	if (G.wx !== was && G.t > 1 && WEATHER[G.wx].text) news('land', WEATHER[G.wx].text, '', TOAST.mid, null, null, wxWhy(G.wx, was, P, c));
 }
 function climateTick(dt) {
 	const c = G.clim;
@@ -29587,7 +29569,7 @@ function newsTick() {
 	G.ev.newsT = G.t;
 	const L = NEWS[Math.min(G.P[0].age, NEWS.length - 1)],
 		i = (G.ev.newsI = (G.ev.newsI || 0) + 1) % L.length;
-	news('chronicle', L[i], 'news', 8);
+	news('chronicle', L[i], 'news', TOAST.long);
 }
 // a herd crosses: bison trample what they run over; performers only pass; a dragon flies (it is drawn above everything and walks through walls)
 function herdTick(u, dt, SP) {
@@ -29623,7 +29605,7 @@ function herdTick(u, dt, SP) {
 function starveTick(p) {
 	const o = p.id;
 	p.famT = p.hungry && !foodInReach(o) ? (p.famT || 0) + 1 : 0;
-	if (o === 0 && p.famT === 1) news('home', 'Famine: no food in reach. Two days to recover.', 'warn', 8);
+	if (o === 0 && p.famT === 1) news('home', 'Famine: no food in reach. Two days to recover.', 'warn', TOAST.long);
 	if (!hz('starve') || p.famT < STARVE.grace || (p.famT - STARVE.grace) % STARVE.every) return;
 	const v = unitsOf(o, 'vil').sort((a, b) => a.carry - b.carry)[0],
 		s = soldiersOf(o).filter((u) => u.state === 'home')[0];
@@ -29632,7 +29614,7 @@ function starveTick(p) {
 			u.hp = 0;
 			u.gone = true;
 		}
-	if (o === 0 && (v || s)) news('home', `Starving: ${v ? 'a villager left' : ''}${v && s ? ', ' : ''}${s ? 'a soldier deserted' : ''}.`, 'warn', 6);
+	if (o === 0 && (v || s)) news('home', `Starving: ${v ? 'a villager left' : ''}${v && s ? ', ' : ''}${s ? 'a soldier deserted' : ''}.`, 'warn', TOAST.mid);
 }
 // food a side can still reach: a bush, its own field, fish or meat with something left, or game, in its Town Center's region of the walking grid
 function foodInReach(o) {
@@ -29683,7 +29665,7 @@ function gangSync(o, g) {
 	if (rel === 'ally' && r < REGARD.allyAt - 10) {
 		if (g === 'nat') makePeace(o, WILD);
 		else gangSet(o, g, 'peace');
-		if (o === 0) news('realm', `The ${GANG[g]} end the alliance: regard fell.`, 'warn', 6);
+		if (o === 0) news('realm', `The ${GANG[g]} end the alliance: regard fell.`, 'warn', TOAST.mid);
 	} else if (rel !== 'ally') {
 		if (N.warBy[o] && r >= REGARD.allyAt) N.warBy[o] = false;
 		const want = N.warBy[o] ? 'war' : r >= REGARD.peaceAt ? 'peace' : 'war';
@@ -29696,7 +29678,7 @@ function gangSync(o, g) {
 						? `The ${GANG[g]} leave you be: regard above ${REGARD.peaceAt}.`
 						: `The ${GANG[g]} turn on you: regard under ${REGARD.peaceAt}.`,
 					want === 'peace' ? 'good' : 'warn',
-					6,
+					TOAST.mid,
 				);
 		}
 	}
@@ -29720,7 +29702,7 @@ function giveGift(o, amt, g) {
 			'realm',
 			`${GANG[g]}: ${amt} gold, regard +${gain}${giftsRecent(o, g) > 1 ? '. They expect more' : ''}.`,
 			'good',
-			6,
+			TOAST.mid,
 		);
 	return true;
 }
@@ -29793,7 +29775,7 @@ function takeThrone(o, sworn) {
 				: 'The Throne is yours. Hold it.'
 			: `${G.P[o].name} ${sworn ? 'were sworn' : 'took'} the Throne!`,
 		o === 0 ? 'good' : 'warn',
-		10,
+		TOAST.long,
 		T,
 	);
 	sfx(o === 0 ? 'win' : 'horn');
@@ -29853,7 +29835,7 @@ function trapsTick() {
 					news('war', 
 						`Your scout found ${kind === 'pit' ? 'a pit' : kind === 'net' ? 'a net' : 'stakes'} at ${coord(b.x, b.y)}.`,
 						'good',
-						5,
+						TOAST.mid,
 						b,
 					);
 				return;
@@ -29866,15 +29848,15 @@ function trapsTick() {
 				v.hp -= v.max * NATIVE.pit;
 				v.hurtT = G.t;
 				v.stuck = G.t + NATIVE.stuck;
-				if (v.owner === 0) news('war', `A pit! Your ${UNIT[v.kind].name.toLowerCase()} is hurt and stuck.`, 'warn', 5, b);
+				if (v.owner === 0) news('war', `A pit! Your ${UNIT[v.kind].name.toLowerCase()} is hurt and stuck.`, 'warn', TOAST.mid, b);
 				else if (b.owner === 0)
-					news('war', `Your pit took a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', 4, b);
+					news('war', `Your pit took a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', TOAST.mid, b);
 			} else if (kind === 'stakes') {
 				v.hp -= v.max * (hasTag(v.kind, 'mounted') ? 0.45 : 0.25);
 				v.hurtT = G.t;
 				v.flashT = G.t;
 				if (b.owner === 0)
-					news('war', `Your stakes caught a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', 4, b);
+					news('war', `Your stakes caught a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', TOAST.mid, b);
 			} else if ((isSoldier(v) && !hasTag(v.kind, 'siege')) || v.kind === 'vil') takePrisoner(b.owner, v);
 		});
 	}
@@ -29930,7 +29912,7 @@ function natRaid() {
 		u.back = G.t + NATIVE.raidSecs;
 	}
 	if (q.id === 0)
-		news('war', `Robbers ride for your ${(BLD[mark.kind] ? bldName(0, mark.kind) : UNIT[mark.kind].name).toLowerCase()} (${coord(mark.x, mark.y)}).`, 'warn', 7, mark);
+		news('war', `Robbers ride for your ${(BLD[mark.kind] ? bldName(0, mark.kind) : UNIT[mark.kind].name).toLowerCase()} (${coord(mark.x, mark.y)}).`, 'warn', TOAST.long, mark);
 }
 function nativesTick(dt) {
 	if (G.tick % 10 === 5) trapsTick();
@@ -29979,7 +29961,7 @@ function nativesTick(dt) {
 				if (n >= NATIVE.handoverMen) {
 					N.handT[p.id] = (N.handT[p.id] || 0) + BEAT.natives[0];
 					if (p.id === 0 && N.handT[0] === BEAT.natives[0])
-						news('realm', `Hold ${NATIVE.handoverMen} inside ${NATIVE.handover} s: they swear to you.`, 'good', 6);
+						news('realm', `Hold ${NATIVE.handoverMen} inside ${NATIVE.handover} s: they swear to you.`, 'good', TOAST.mid);
 					if (N.handT[p.id] >= NATIVE.handover) takeThrone(p.id, true);
 				} else N.handT[p.id] = 0;
 			}
@@ -30044,7 +30026,7 @@ function peaceTick() {
 		if (G.truce === null) {
 			G.truce = G.t;
 			if (G.t > 30) {
-				news('realm', 'The whole board is at peace.', 'soft', 6);
+				news('realm', 'The whole board is at peace.', 'soft', TOAST.mid);
 				chron('The whole board at peace.');
 			}
 		}
@@ -30054,7 +30036,7 @@ function peaceTick() {
 	}
 	if (!G.enlight && truceFor() >= PEACE.age.truce) {
 		G.enlight = true;
-		news('realm', `A year of peace: the ${AGES[5].name} opens.`, 'good', 9);
+		news('realm', `A year of peace: the ${AGES[5].name} opens.`, 'good', TOAST.long);
 		chron(`A year of peace opened the ${AGES[5].name}.`);
 	}
 	if (G.truce !== null && !G.stood && truceFor() >= PEACE.stand.after) {
@@ -30084,8 +30066,8 @@ function standDown(o, quiet) {
 		n++;
 	}
 	if (n) {
-		if (o === 0) news('chronicle', `${n} soldiers stood down to work.`, 'good', 6);
-		else if (!quiet) news('chronicle', `${p.name} stood down ${n} soldiers.`, '', 4);
+		if (o === 0) news('chronicle', `${n} soldiers stood down to work.`, 'good', TOAST.mid);
+		else if (!quiet) news('chronicle', `${p.name} stood down ${n} soldiers.`, '', TOAST.mid);
 		chron(`${o === 0 ? 'You' : p.name} stood down ${n} soldiers.`);
 	}
 	return n;
@@ -30105,7 +30087,7 @@ function holdGames() {
 	news('realm', 
 		`The Games: ${mine ? mine + (mine === 1 ? ' laurel' : ' laurels') + ' for you' : 'no laurel for you'}.`,
 		mine ? 'good' : 'soft',
-		8,
+		TOAST.long,
 		{ x: MID, y: MID },
 	);
 	celebrate(3, MID, MID);
@@ -30126,7 +30108,7 @@ function crownsOf() {
 					well = ppl.filter((u) => !(u.sick > G.t)).length; // people × (1 − sick share)
 				return Math.round(
 					well * PEACE.crown.people +
-						G.blds.filter((b) => b.owner === p.id && b.hp > 0 && b.prog >= 1 && CARE.includes(b.kind)).length * PEACE.crown.bld +
+						G.blds.filter((b) => standing(b, p.id) && CARE.includes(b.kind)).length * PEACE.crown.bld +
 						(p.laurels || 0) * PEACE.crown.laurel,
 				);
 			},
@@ -30332,8 +30314,8 @@ function hudFire(i) {
 		S = sqFree(i),
 		slot = i ?? G.msn.findIndex((m) => !m || m.end);
 	if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
-	if (slot < 0) return say('Every slot is out.', '', 3);
-	if (!S.length) return say(i === null || i === undefined ? freeWhy() : `${BN[i]}: nobody idle in it.`, '', 3);
+	if (slot < 0) return say('Every slot is out.', '', TOAST.short);
+	if (!S.length) return say(i === null || i === undefined ? freeWhy() : `${BN[i]}: nobody idle in it.`, '', TOAST.short);
 	if (sqOut(slot)) hudAbort(slot, true);
 	const before = G.ordN || 0;
 	order(S, H.h);
@@ -30374,7 +30356,7 @@ function hudAbort(slot, quiet) {
 	sendHome(mUnits(m));
 	G.msn[slot] = null;
 	if (G.card && G.card.type === 'squad' && G.card.i === slot) refresh();
-	if (!quiet) say(`${m.name} called home.`, '', 3);
+	if (!quiet) say(`${m.name} called home.`, '', TOAST.short);
 }
 function hudAbortAll() {
 	G.msn.forEach((_, i) => hudAbort(i));
@@ -30383,14 +30365,14 @@ function hudAbortAll() {
 function hudHome() {
 	hudAbortAll();
 	sendHome(sendable());
-	say('Everyone home.', '', 3);
+	say('Everyone home.', '', TOAST.short);
 }
 // Orders (the Train page): where new soldiers go when they are made, and which squad they join; ✓ on the crosshair sets it
 function setRally() {
 	const H = G.hud;
 	if (!H.h) return;
 	G.rally0 = { x: Math.round(H.h.e.x), y: Math.round(H.h.e.y) };
-	say('New soldiers will go there.', 'good', 3);
+	say('New soldiers will go there.', 'good', TOAST.short);
 	feel('thock');
 }
 
@@ -30404,7 +30386,7 @@ function missionsTick() {
 			m.end = G.t;
 			m.st = 'lost';
 			m.flash = null;
-			say(`${m.name} is lost.`, 'warn', 4);
+			say(`${m.name} is lost.`, 'warn', TOAST.mid);
 			return;
 		}
 		const c = centreOf(S),
@@ -30424,7 +30406,7 @@ function missionsTick() {
 		m.odds += (chance(S, foes) - m.odds) * HUD.smooth;
 		if (m.odds < HUD.lose && m.flash !== 'lose') {
 			m.flash = 'lose';
-			say(`${m.name} is losing.`, 'warn', 4);
+			say(`${m.name} is losing.`, 'warn', TOAST.mid);
 		} else if (m.flash === 'lose' && m.odds > HUD.clear) m.flash = null;
 	});
 }
@@ -30480,9 +30462,9 @@ function hudJoin(S, m) {
 function hudReinforce(slot) {
 	const m = G.msn[slot],
 		plan = m && reinforcePlan(m);
-	if (!plan || !plan.go.length) return say('Too late: nobody can get there in time.', '', 3);
+	if (!plan || !plan.go.length) return say('Too late: nobody can get there in time.', '', TOAST.short);
 	hudJoin(plan.go, m);
-	say(`${plan.go.length} reinforce ${m.name}.`, 'good', 3);
+	say(`${plan.go.length} reinforce ${m.name}.`, 'good', TOAST.short);
 }
 // ── the row: three pages on one mold. Rank one is the page's six things, rank two what each is under it; grid order lays them
 // Jobs: People over the hammer; each job with its count (in its store's colour) and − + under it. People rings blue while people stand idle;
@@ -30738,7 +30720,7 @@ const EMERGENCY = [
 const EMG = { line: 110, row: 12, perRow: 12, behind: 60, square: 20 }; // square: the villagers stand this far out from the Town Center's walls, the soldiers three times as far
 const shelterRank = () =>
 	G.blds
-		.filter((b) => b.owner === 0 && b.hp > 0 && b.prog >= 1 && BLD[b.kind].shelter)
+		.filter((b) => standing(b, 0) && BLD[b.kind].shelter)
 		.sort((a, b) => b.hp - a.hp || shelterOf(0, b.kind) - shelterOf(0, a.kind));
 const roomIn = (b) =>
 	shelterOf(b.owner, b.kind) -
@@ -30760,7 +30742,7 @@ const stand = (u, x, y) =>
 // the way the danger lies from the Town Center: the attack coming, else the nearest threat, else across the map
 function threatDir(k) {
 	const t = G.incoming || nearest(G.threats, k, (v) => isFoe(0, v), 700) || { x: MID, y: MID },
-		d = hyp(t.x - k.x, t.y - k.y) || 1;
+		d = dist(t, k) || 1;
 	return { x: (t.x - k.x) / d, y: (t.y - k.y) / d };
 }
 // fill the ranked buildings with the nearest of these units (shooters first when asked); what is left over is returned
@@ -30788,7 +30770,7 @@ function release(u) {
 	u.emg = false;
 	u.scared = false;
 	u.safe = null;
-	if (u.inside) stepOut(u, G.blds.find((x) => x.id === u.hid));
+	if (u.inside) stepOut(u, byId(G.blds, u.hid));
 	u.hid = 0;
 }
 function villagersIn() {
@@ -30848,7 +30830,7 @@ function townSquare() {
 	if (!k) return;
 	hudAbortAll();
 	const at = (u, r) => {
-		const d = hyp(u.x - k.x, u.y - k.y) || 1;
+		const d = dist(u, k) || 1;
 		return {
 			x: clamp(k.x + ((u.x - k.x) / d) * r + u.ox * 0.5, 20, MAP - 20),
 			y: clamp(k.y + ((u.y - k.y) / d) * r + u.oy * 0.5, 20, MAP - 20),
@@ -30870,7 +30852,7 @@ function emgStart(kind) {
 	if (kind === 'square') townSquare();
 	if (kind === 'hands') soldiersIn(); // soldiers first: the strongest places are theirs
 	if (kind === 'shelter' || kind === 'hands') villagersIn();
-	say(`${EMERGENCY.find((e) => e[0] === kind)[1]}.`, 'warn', 4);
+	say(`${EMERGENCY.find((e) => e[0] === kind)[1]}.`, 'warn', TOAST.mid);
 	feel('crack');
 }
 // Stop: every villager back to what it was doing; soldiers stay where the order put them
@@ -30887,7 +30869,7 @@ function emgStop() {
 	}
 	G.temper = G.emg.temper;
 	G.emg = null;
-	say('Back to work.', 'good', 3);
+	say('Back to work.', 'good', TOAST.short);
 }
 // the card: what is coming (tap it to look), then the four orders, two a rank; the order on is gold, All hands is red
 CARDS.emergency = () => {
@@ -31059,11 +31041,11 @@ window.__fkq = (v) => {
 const clip = (text) => {
 	try {
 		navigator.clipboard.writeText(text).then(
-			() => say('Copied.', 'good', 2),
-			() => say('Could not copy here.', '', 3),
+			() => say('Copied.', 'good', TOAST.short),
+			() => say('Could not copy here.', '', TOAST.short),
 		);
 	} catch (e) {
-		say('Could not copy here.', '', 3);
+		say('Could not copy here.', '', TOAST.short);
 	}
 };
 window.__fk = {

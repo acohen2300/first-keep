@@ -168,12 +168,12 @@ function newGame(seed, carry, daily) {
 			'land',
 			`${LAND[G.land].name}. Hazards at random: level ${levelOf(G.hz)}.`,
 			'',
-			8,
+			TOAST.long,
 			null,
 			null,
 			drawn.join(', ') || 'none',
 		); // which ones in its why: the mail shows it
-	} else news('land', `${LAND[G.land].name}. Gather, grow, explore.`, '', 8);
+	} else news('land', `${LAND[G.land].name}. Gather, grow, explore.`, '', TOAST.long);
 	if (scen) applyScenario(SET.scen);
 	if (G.fogOn) fogTick(); // lit here, not by the first frame drawn: the same seed plays the same whether or not a frame came first (B1)
 }
@@ -222,7 +222,7 @@ function applyScenario(id) {
 	navRebuild();
 	fxDirty();
 	if (S.hordeAt) G.horde = { at: S.hordeAt, said: 0 };
-	news('realm', `${SCEN_TEXT[id][0]}: ${SCEN_TEXT[id][1]}`, 'soft', 10);
+	news('realm', `${SCEN_TEXT[id][0]}: ${SCEN_TEXT[id][1]}`, 'soft', TOAST.long);
 }
 const inBox = (p, r) => p.x >= r.x0 && p.x <= r.x1 && p.y >= r.y0 && p.y <= r.y1;
 const node = (kind, type, x, y, amt) => ({ id: NID++, kind, type, x, y, amt, max: amt });
@@ -378,7 +378,7 @@ function makeForest(spot, loc, near) {
 		wet = (p) =>
 			Math.min(p.x, p.y) < CORNER - MID + 45 ||
 			Math.max(p.x, p.y) > CORNER - 45 ||
-			held.some((l) => hyp(p.x - l.x, p.y - l.y) < l.r + 45) ||
+			held.some((l) => dist(p, l) < l.r + 45) ||
 			(p.x <= 45 && p.y <= 45 && hyp(p.x, p.y) < MID - CORNER + 45); // in this corner's quarter, never in or at the edge of a lake, a find or the home zones (QC 05 N5)
 	const dep = [
 		['bush', 0, 0.45],
@@ -433,7 +433,7 @@ function makeRiver(L, w, toX) {
 	let last = at(0);
 	for (let t = 0; t <= 1; t += 0.002) {
 		const p = at(t);
-		if (hyp(p.x - last.x, p.y - last.y) >= w * WATER.step || !C.length) {
+		if (dist(p, last) >= w * WATER.step || !C.length) {
 			C.push({ x: p.x, y: p.y, r: w, river: true });
 			last = p;
 		}
@@ -676,7 +676,7 @@ function openWays(woods) {
 			const home = near(towardMid(w.k, PLACES.start), C); // where the first villagers stand
 			if (near(w.g, C, home)) continue;
 			const P = wayHome(w.g, C, home);
-			for (const [o, t] of woods) if (o === w.o && P.some((q) => hyp(q.x - t.x, q.y - t.y) < FOREST.cut)) cut.add(t);
+			for (const [o, t] of woods) if (o === w.o && P.some((q) => dist(q, t) < FOREST.cut)) cut.add(t);
 		}
 		if (!cut.size) return;
 		G.nodes = G.nodes.filter((n) => !cut.has(n));

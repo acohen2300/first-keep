@@ -26,6 +26,13 @@ const dist = (a, b) => {
 		dy = a.y - b.y;
 	return Math.sqrt(dx * dx + dy * dy);
 };
+// One home for four things written by hand in many places (Nov 2, the standardization check, M1 to M4):
+const byId = (L, id) => L.find((x) => x.id === id); // the thing in a list with this id (a building, a unit, a find, a node)
+const standing = (b, o) => b.owner === o && b.prog >= 1 && b.hp > 0; // a building of this side, finished and standing
+// how many work a find, counted at once so the next worker this second sees the crowd (recount sets it true every second)
+const crowd = (n, d) => (n.wk = Math.max(0, (n.wk || 0) + d));
+// the seeded dice for drawings and the sky (Park and Miller's minimal standard, 1988, a = 16807, m = 2³¹ − 1): the same picture every time
+const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647;
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
 const costText = (c) =>
 	Object.entries(c || {})
@@ -274,7 +281,7 @@ const capOf = (o) => {
 	if (C.cap[o] === undefined)
 		C.cap[o] = Math.min(
 			POPMAX,
-			G.blds.reduce((n, b) => n + (b.owner === o && b.prog >= 1 && b.hp > 0 ? roomOf(o, b.kind) : 0), 0),
+			G.blds.reduce((n, b) => n + (standing(b, o) ? roomOf(o, b.kind) : 0), 0),
 		);
 	return C.cap[o];
 };
@@ -416,7 +423,7 @@ const struckBy = (me, x) => {
 	const L = (G.struck || {})[campOf(me)];
 	if (!L || !(G.t - (L[x.id] ?? -1e9) < NATIVE.struck)) return false;
 	const h = groundOf(me);
-	return hyp(x.x - h.x, x.y - h.y) < h.r;
+	return dist(x, h) < h.r;
 };
 const isFoe = (o, x, me) => {
 	if (x.owner === o) return false;
@@ -494,7 +501,7 @@ function fxList(o) {
 	if (p.civ) add(CIVS[p.civ].fx);
 	const seen = new Set();
 	for (const b of G.blds)
-		if (b.owner === o && b.prog >= 1 && b.hp > 0 && BLD[b.kind].fx && !seen.has(b.kind)) {
+		if (standing(b, o) && BLD[b.kind].fx && !seen.has(b.kind)) {
 			seen.add(b.kind);
 			add(BLD[b.kind].fx);
 		}
@@ -664,7 +671,7 @@ const sightOf = (e) => Math.min(sightClear(e), visCap());
 // No dice, no cap: night, fog and weather already shrink each eye's own disc through sightOf.
 const groupSees = (o, t) =>
 	G.units.some((m) => m.owner === o && isSoldier(m) && m.hp > 0 && !m.inside && dist(m, t) <= sightOf(m)) ||
-	G.blds.some((b) => b.owner === o && b.hp > 0 && b.prog >= 1 && dist(b, t) <= sightOf(b));
+	G.blds.some((b) => standing(b, o) && dist(b, t) <= sightOf(b));
 const carryOf = (o) => CARRY + fxv(o, 'carry').a;
 // what gather research is keyed to: the find itself (tree, bush, fish, meat, stone, gold, iron), or the building a worked plot belongs to
 // (farm, treefarm, quarry, mint, foundry, pasture). Decision N9: a step reaches the finds its text names, never by the resource alone

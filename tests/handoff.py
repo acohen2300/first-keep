@@ -74,7 +74,7 @@ PLANTS = [
   # Build 80 preview 13: reach and the overflow of waiters
   ('06-rules-tuning.js', 'const REACH = WALL_R;', 'const REACH = 200;', 'tests/science.py', 'the reach is typed, not the wall ring', 'reach'),
   ('06-rules-tuning.js', 'const SEARCH = { x: REACH / 2, y: REACH / 2, tau: 10, again: 2 };', 'const SEARCH = { x: 90, y: 90, tau: 10, again: 2 };', 'tests/moves.py', 'the search stops at 180 again', 'sleeps beside berries'),
-  ('13-sim-civil.js', '.filter((x) => x.owner === u.owner && x.prog >= 1 && x.hp > 0 && BLD[x.kind].drop && BLD[x.kind].drop.includes(u.job))', '.filter((x) => x === dropFor(u.owner, u.job, u))', 'tests/moves.py', 'the overflow of waiters piles up at a full drop-off', 'a pile'),
+  ('13-sim-civil.js', '.filter((x) => standing(x, u.owner) && BLD[x.kind].drop && BLD[x.kind].drop.includes(u.job))', '.filter((x) => x === dropFor(u.owner, u.job, u))', 'tests/moves.py', 'the overflow of waiters piles up at a full drop-off', 'a pile'),
   ('34-save.js', "['pointerdown', 'pointermove', 'pointerup', 'click', 'wheel']", "['pointerdown', 'pointermove', 'pointerup', 'click']", 'tests/saves.py', 'the wheel zooms behind the Welcome back card', 'the wheel zoomed'),
   ('08-core.js', '(C <= V ? 1 : V / C)', '(C <= V ? 1 : 1)', 'tests/science.py', 'Hawk-Dove always fights', 'hawk V<C'),
   # the combat batch (Build 80, Nov 1): one or more for each item, in tests/combat.py
@@ -206,9 +206,9 @@ PLANTS = [
   ('14-sim-troops.js', '\t\t\t\t\tisFoe(WILD, v, u) && //', '\t\t\t\t\ttrue && //', 'tests/wild.py', 'a guard ignores its group\'s stance and 4b', '4b:'),
   ('08-core.js', '(!calm4b(x.owner) || struckBy(me, x))', '(true)', 'tests/wild.py', 'the wild starts fights with computers', 'never struck it for a foe'),
   ('08-core.js', '!(G.t - (L[x.id] ?? -1e9) < NATIVE.struck)) return false;', 'false) return false;', 'tests/wild.py', 'a camp never forgets who struck it', 'after a minute'),
-  ('08-core.js', '\treturn hyp(x.x - h.x, x.y - h.y) < h.r;', '\treturn true;', 'tests/wild.py', 'a camp chases its instigator anywhere', 'off its own ground'),
+  ('08-core.js', '\treturn dist(x, h) < h.r;', '\treturn true;', 'tests/wild.py', 'a camp chases its instigator anywhere', 'off its own ground'),
   ('38-natives.js', "(p) => p.id !== WILD && !calm4b(p.id) && p.alive && keepOf(p.id) && gangRel(p.id, 'rob')", "(p) => p.id !== WILD && p.alive && keepOf(p.id) && gangRel(p.id, 'rob')", 'tests/wild.py', 'raids ride for computers', 'a raid rode'),
-  ('14-sim-troops.js', "\t\tif (full && u.owner === 0) say('At Maximum Occupancy Capacity', '', 3);", '', 'tests/wild.py', 'a conversion refused at the ceiling says nothing', '11:'),
+  ('14-sim-troops.js', "\t\tif (full && u.owner === 0) say('At Maximum Occupancy Capacity', '', TOAST.short);", '', 'tests/wild.py', 'a conversion refused at the ceiling says nothing', '11:'),
   ('39-games.js', 'if (G.truce !== null && G.t - (G.gamesT ?? 0) >= PEACE.games.every) {', 'if (G.t - (G.gamesT ?? 0) >= PEACE.games.every) {', 'tests/wild.py', 'the Games are held at war', 'A1:'),
   ('09-nav.js', '=> Math.floor(Math.sqrt(R * R - (i - R) ** 2))', '=> Math.round(Math.sqrt(R * R - (i - R) ** 2))', 'tests/wild.py', 'the row disc is not the disc', 'A2:'),
   ('16-sim-fight.js', "\t\t\t\tif (v.job === 'repair') continue;", '', 'tests/wild.py', 'a bitten builder leaves its site', 'A3:'),
@@ -255,8 +255,8 @@ PLANTS = [
   # decision 5 (no ambush) and decision 6 (hunger) of Nov 1
   ('16-sim-fight.js', "\t\tif (a && A.gun && hasTag(t.kind, 'native')) d *= NATIVE.gunHit;", "\t\tif (a && a.native && !isB && !onLand(a.x, a.y)) d *= 1.3;\n\t\tif (a && A.gun && hasTag(t.kind, 'native')) d *= NATIVE.gunHit;", 'tests/wild.py', 'an ambush bonus comes back', '12:'),
   ('37-events.js', '\tp.famT = p.hungry && !foodInReach(o) ? (p.famT || 0) + 1 : 0;', '\tp.famT = p.hungry ? (p.famT || 0) + 1 : 0;', 'tests/wild.py', 'an empty store with food in reach is a famine', 'H1:'),
-  ('36-economy.js', "\t\t\t\t\tif (o === 0 && foodInReach(0)) news('home', 'Food stores empty: put villagers on food.', 'warn', 8); // with none in reach the famine toast speaks", '', 'tests/wild.py', 'no toast for an empty store', 'H1:'),
-  ('37-events.js', "\tif (o === 0 && p.famT === 1) news('home', 'Famine: no food in reach. Two days to recover.', 'warn', 8);", '', 'tests/wild.py', 'no toast when a famine starts', 'H2:'),
+  ('36-economy.js', "\t\t\t\t\tif (o === 0 && foodInReach(0)) news('home', 'Food stores empty: put villagers on food.', 'warn', TOAST.long); // with none in reach the famine toast speaks", '', 'tests/wild.py', 'no toast for an empty store', 'H1:'),
+  ('37-events.js', "\tif (o === 0 && p.famT === 1) news('home', 'Famine: no food in reach. Two days to recover.', 'warn', TOAST.long);", '', 'tests/wild.py', 'no toast when a famine starts', 'H2:'),
   ('36-economy.js', '(G.P[o].famT || 0) >= STARVE.grace ? UPKEEP.hunger : 1);', '(G.P[o].famT || 0) >= 0 ? UPKEEP.hunger : 1);', 'tests/wild.py', 'a famine weakens the work at once', 'H2:'),
   ('37-events.js', "if (!hz('starve') || p.famT < STARVE.grace || (p.famT", "if (!hz('starve') || (p.famT", 'tests/wild.py', 'people leave before the famine weakens them', 'H3:'),
   ('36-economy.js', '\t\t\t\t\tif (n && (n.amt > 0 || n.hp > 0)) {', '\t\t\t\t\tif (false) {', 'tests/wild.py', 'those working food eat from the store', 'H4:'),

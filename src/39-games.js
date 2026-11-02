@@ -55,7 +55,7 @@ function peaceTick() {
 		if (G.truce === null) {
 			G.truce = G.t;
 			if (G.t > 30) {
-				news('realm', 'The whole board is at peace.', 'soft', 6);
+				news('realm', 'The whole board is at peace.', 'soft', TOAST.mid);
 				chron('The whole board at peace.');
 			}
 		}
@@ -65,7 +65,7 @@ function peaceTick() {
 	}
 	if (!G.enlight && truceFor() >= PEACE.age.truce) {
 		G.enlight = true;
-		news('realm', `A year of peace: the ${AGES[5].name} opens.`, 'good', 9);
+		news('realm', `A year of peace: the ${AGES[5].name} opens.`, 'good', TOAST.long);
 		chron(`A year of peace opened the ${AGES[5].name}.`);
 	}
 	if (G.truce !== null && !G.stood && truceFor() >= PEACE.stand.after) {
@@ -95,8 +95,8 @@ function standDown(o, quiet) {
 		n++;
 	}
 	if (n) {
-		if (o === 0) news('chronicle', `${n} soldiers stood down to work.`, 'good', 6);
-		else if (!quiet) news('chronicle', `${p.name} stood down ${n} soldiers.`, '', 4);
+		if (o === 0) news('chronicle', `${n} soldiers stood down to work.`, 'good', TOAST.mid);
+		else if (!quiet) news('chronicle', `${p.name} stood down ${n} soldiers.`, '', TOAST.mid);
 		chron(`${o === 0 ? 'You' : p.name} stood down ${n} soldiers.`);
 	}
 	return n;
@@ -116,7 +116,7 @@ function holdGames() {
 	news('realm', 
 		`The Games: ${mine ? mine + (mine === 1 ? ' laurel' : ' laurels') + ' for you' : 'no laurel for you'}.`,
 		mine ? 'good' : 'soft',
-		8,
+		TOAST.long,
 		{ x: MID, y: MID },
 	);
 	celebrate(3, MID, MID);
@@ -137,7 +137,7 @@ function crownsOf() {
 					well = ppl.filter((u) => !(u.sick > G.t)).length; // people × (1 − sick share)
 				return Math.round(
 					well * PEACE.crown.people +
-						G.blds.filter((b) => b.owner === p.id && b.hp > 0 && b.prog >= 1 && CARE.includes(b.kind)).length * PEACE.crown.bld +
+						G.blds.filter((b) => standing(b, p.id) && CARE.includes(b.kind)).length * PEACE.crown.bld +
 						(p.laurels || 0) * PEACE.crown.laurel,
 				);
 			},

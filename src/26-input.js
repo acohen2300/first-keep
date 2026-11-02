@@ -45,7 +45,7 @@ const wallXY = (c) => ({ x: SX(c.gx * NAVC + 5), y: SY(c.gy * NAVC + 5) });
 function wallHit(pl, p) {
 	const R = 24,
 		P = pl.pts.map(wallXY);
-	const i = P.findIndex((q) => hyp(q.x - p.x, q.y - p.y) < R);
+	const i = P.findIndex((q) => dist(q, p) < R);
 	if (i >= 0) return { mode: 'wpt', i };
 	for (let j = 1; j < P.length; j++) {
 		const a = P[j - 1],
@@ -83,7 +83,7 @@ cv.addEventListener('pointerdown', (e) => {
 	if (ptrs.size >= 2) {
 		dropDrag();
 		const [a, b] = [...ptrs.values()];
-		pinch = { d: hyp(a.x - b.x, a.y - b.y) || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
+		pinch = { d: dist(a, b) || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
 		return;
 	}
 	if (G.place && G.place.kind === 'wall') {
@@ -143,7 +143,7 @@ cv.addEventListener('pointermove', (e) => {
 	if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, p);
 	if (pinch && ptrs.size >= 2) {
 		const [a, b] = [...ptrs.values()],
-			d = hyp(a.x - b.x, a.y - b.y) || 1,
+			d = dist(a, b) || 1,
 			mx = (a.x + b.x) / 2,
 			my = (a.y + b.y) / 2;
 		if (G) G.follow = false; // a pinch is yours: the camera stops following
@@ -420,7 +420,7 @@ function ordAt(sx, sy) {
 const picked = () =>
 	G.pick
 		.filter((k) => k.t === 'unit')
-		.map((k) => G.units.find((u) => u.id === k.id))
+		.map((k) => byId(G.units, k.id))
 		.filter((u) => u && u.owner === 0 && u.hp > 0 && !u.inside);
 const pickObj = (k) =>
 	(k.t === 'unit' ? G.units : k.t === 'bld' ? G.blds : k.t === 'find' ? G.finds : G.nodes).find((e) => e.id === k.id);
@@ -476,7 +476,7 @@ function order(S, h) {
 		};
 	if (h.t === 'unit' && e.owner !== 0) {
 		if (e.owner !== WILD && !atWar(0, e.owner)) {
-			say(foeFirst(e.owner), '', 4);
+			say(foeFirst(e.owner), '', TOAST.mid);
 			return;
 		}
 		if (UNIT[e.kind].meat && vil.length)
@@ -501,7 +501,7 @@ function order(S, h) {
 		if (sol.length) march(sol, e, e.owner === WILD ? UNIT[e.kind].name : G.P[e.owner].name);
 	} else if (h.t === 'bld' && e.owner !== 0) {
 		if (!atWar(0, e.owner)) {
-			say(foeFirst(e.owner), '', 4);
+			say(foeFirst(e.owner), '', TOAST.mid);
 			return;
 		}
 		sol.forEach((u) => {
@@ -568,7 +568,7 @@ function startPlace(kind) {
 	}
 	const why = capWhy(0, kind);
 	if (why) {
-		say(why + '.', '', 3);
+		say(why + '.', '', TOAST.short);
 		sfx('err');
 		return;
 	}
@@ -600,7 +600,7 @@ function boxPick(d) {
 	}
 	const trees = G.nodes.filter((n) => n.kind === 'tree' && n.amt > 0 && inBox(n, r)).length;
 	if (!trees) {
-		say('Nothing of yours in that box.', '', 3);
+		say('Nothing of yours in that box.', '', TOAST.short);
 		return;
 	}
 	openCard({ type: 'box', r, trees });

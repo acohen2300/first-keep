@@ -13,7 +13,7 @@ const EMERGENCY = [
 const EMG = { line: 110, row: 12, perRow: 12, behind: 60, square: 20 }; // square: the villagers stand this far out from the Town Center's walls, the soldiers three times as far
 const shelterRank = () =>
 	G.blds
-		.filter((b) => b.owner === 0 && b.hp > 0 && b.prog >= 1 && BLD[b.kind].shelter)
+		.filter((b) => standing(b, 0) && BLD[b.kind].shelter)
 		.sort((a, b) => b.hp - a.hp || shelterOf(0, b.kind) - shelterOf(0, a.kind));
 const roomIn = (b) =>
 	shelterOf(b.owner, b.kind) -
@@ -35,7 +35,7 @@ const stand = (u, x, y) =>
 // the way the danger lies from the Town Center: the attack coming, else the nearest threat, else across the map
 function threatDir(k) {
 	const t = G.incoming || nearest(G.threats, k, (v) => isFoe(0, v), 700) || { x: MID, y: MID },
-		d = hyp(t.x - k.x, t.y - k.y) || 1;
+		d = dist(t, k) || 1;
 	return { x: (t.x - k.x) / d, y: (t.y - k.y) / d };
 }
 // fill the ranked buildings with the nearest of these units (shooters first when asked); what is left over is returned
@@ -63,7 +63,7 @@ function release(u) {
 	u.emg = false;
 	u.scared = false;
 	u.safe = null;
-	if (u.inside) stepOut(u, G.blds.find((x) => x.id === u.hid));
+	if (u.inside) stepOut(u, byId(G.blds, u.hid));
 	u.hid = 0;
 }
 function villagersIn() {
@@ -123,7 +123,7 @@ function townSquare() {
 	if (!k) return;
 	hudAbortAll();
 	const at = (u, r) => {
-		const d = hyp(u.x - k.x, u.y - k.y) || 1;
+		const d = dist(u, k) || 1;
 		return {
 			x: clamp(k.x + ((u.x - k.x) / d) * r + u.ox * 0.5, 20, MAP - 20),
 			y: clamp(k.y + ((u.y - k.y) / d) * r + u.oy * 0.5, 20, MAP - 20),
@@ -145,7 +145,7 @@ function emgStart(kind) {
 	if (kind === 'square') townSquare();
 	if (kind === 'hands') soldiersIn(); // soldiers first: the strongest places are theirs
 	if (kind === 'shelter' || kind === 'hands') villagersIn();
-	say(`${EMERGENCY.find((e) => e[0] === kind)[1]}.`, 'warn', 4);
+	say(`${EMERGENCY.find((e) => e[0] === kind)[1]}.`, 'warn', TOAST.mid);
 	feel('crack');
 }
 // Stop: every villager back to what it was doing; soldiers stay where the order put them
@@ -162,7 +162,7 @@ function emgStop() {
 	}
 	G.temper = G.emg.temper;
 	G.emg = null;
-	say('Back to work.', 'good', 3);
+	say('Back to work.', 'good', TOAST.short);
 }
 // the card: what is coming (tap it to look), then the four orders, two a rank; the order on is gold, All hands is red
 CARDS.emergency = () => {

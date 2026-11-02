@@ -85,12 +85,11 @@ function drawWeather() {
 			const age = G.t - b.t;
 			if (!b.lit && flashOK(now)) {
 				b.lit = true;
-				flashA = Math.max(flashA, 0.6 + 0.4 * (1 - Math.min(1, hyp(b.x - cam.x, b.y - cam.y) / 900)));
+				flashA = Math.max(flashA, 0.6 + 0.4 * (1 - Math.min(1, dist(b, cam) / 900)));
 				flashT = now;
 			}
 			if (age > 0.45) continue;
-			let r = (b.seed * 1e6) | 1;
-			const rr = () => (r = (r * 16807) % 2147483647) / 2147483647; // the same jagged path every frame
+			const rr = NS_rng((b.seed * 1e6) | 1); // the same jagged path every frame
 			const x1 = SX(b.x),
 				y1 = SY(b.y),
 				paths = [],

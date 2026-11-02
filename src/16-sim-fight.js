@@ -138,7 +138,7 @@ function hurt(o, a, t, base) {
 					? `${plural(UNIT[a ? a.kind : 'wolf'].name)} attack at ${coord(t.x, t.y)}`
 					: `Under attack at ${coord(t.x, t.y)}`,
 				'warn',
-				7,
+				TOAST.long,
 				t,
 			);
 		}
@@ -224,7 +224,7 @@ function collide() {
 		if (u.inside) continue;
 		for (const L of G.lakes) {
 			if (Math.abs(u.x - L.x) > L.r + 60 || Math.abs(u.y - L.y) > L.r + 60) continue; // far from this one: the cheap test first
-			const dl = hyp(u.x - L.x, u.y - L.y),
+			const dl = dist(u, L),
 				lr = lakeR(L);
 			if (dl < lr + 6 && !u.fly && !onLand(u.x, u.y)) {
 				const s = (lr + 6) / (dl || 1);
@@ -322,7 +322,7 @@ function fall(p) {
 			news('realm', 
 				`Shared out: the ceiling rises by ${Math.floor((ARMYMAX * SHARE_FALLEN) / left.length)} soldiers.`,
 				'good',
-				7,
+				TOAST.long,
 			);
 	} // a fallen side's room is shared
 	for (const f of G.finds) if (f.owner === p.id && FINDS[f.kind].capture) f.owner = null;
@@ -330,7 +330,7 @@ function fall(p) {
 		const q = G.P[p.ally];
 		if (q.ally === p.id) q.ally = null;
 	}
-	if (p.id) news('war', `${p.name} has fallen.`, 'good', 7);
+	if (p.id) news('war', `${p.name} has fallen.`, 'good', TOAST.long);
 	chron(`${p.id === 0 ? 'Your keep' : p.name} fell.`);
 }
 function scoreAll() {
@@ -342,7 +342,7 @@ function scoreAll() {
 				if (u.owner === p.id && UNIT[u.kind].cls)
 					s[UNIT[u.kind].cls === 'army' ? 'army' : 'people'] += sumCost(UNIT[u.kind].cost) / SCORE.unit;
 			for (const b of G.blds)
-				if (b.owner === p.id && b.prog >= 1 && b.hp > 0) s.bld += sumCost(BLD[b.kind].cost) / SCORE.bld;
+				if (standing(b, p.id)) s.bld += sumCost(BLD[b.kind].cost) / SCORE.bld;
 		}
 		for (const k in s) s[k] = Math.round(s[k]);
 		s.total = s.people + s.army + s.tech + s.bld + s.wealth;
@@ -355,7 +355,7 @@ function watchHome() {
 	const near = G.units.find((u) => atWar(0, u.owner) && u.owner !== WILD && isSoldier(u) && dist(u, k) < 340);
 	if (near && G.t - G.warnT > 20) {
 		G.warnT = G.t;
-		news('war', 'Enemies at your town!', 'warn', 7, near);
+		news('war', 'Enemies at your town!', 'warn', TOAST.long, near);
 	}
 }
 function finish(won, text, all) {
