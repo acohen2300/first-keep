@@ -162,10 +162,12 @@ function drawSky() {
 		base = mix(mix(SKY.day, SKY.dusk, dusk), SKY.night, nt),
 		cast = stormy ? SKY.storm : SKY[wx],
 		col = cast ? mix(base, cast, wx === 'rain' ? 0.7 : 0.55) : base;
-	const top = (parseFloat(getComputedStyle($('stage')).getPropertyValue('--hb')) || 86) + 2; // the sky begins under the top bars
+	const top = (parseFloat(getComputedStyle($('stage')).getPropertyValue('--hb')) || 86) + 2; // the fade begins under the top bars
 	const gr = ctx.createLinearGradient(0, top, 0, top + h);
 	gr.addColorStop(0, `rgba(${col},.6)`);
 	gr.addColorStop(1, `rgba(${col},0)`);
+	ctx.fillStyle = `rgba(${col},.6)`;
+	ctx.fillRect(0, 0, cw, top); // the sky runs to the top of the screen, under the bars (Albert, Nov 2)
 	ctx.fillStyle = gr;
 	ctx.fillRect(0, top, cw, h);
 	if (still()) return;

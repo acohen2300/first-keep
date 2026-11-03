@@ -59,12 +59,12 @@ const BLD_PAGE = {
 			? {
 					page: list(
 						BN.map((n, j) => btn(`wsq:${j}`, n, `${armyOf(0).filter((u) => u.kind !== 'spy' && u.bn === j).length} in it`)),
-					), // each opens its card, where it is built (39-huddle); four are two and two
+					), // each opens its card, where it is built (39-huddle); three are one rank
 					book: `<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve. Send them from the War page with Go.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
 				}
 			: {
 					fact: ['No squads yet', G.P[0].techs.has('engage') ? 'next: Battalions' : 'first: Engagement'],
-					book: `<p>${G.P[0].techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, four squads.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`,
+					book: `<p>${G.P[0].techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, three squads.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`,
 				},
 	market: (b) => marketPage(b),
 	mint: () =>

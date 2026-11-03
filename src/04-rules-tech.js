@@ -2614,7 +2614,7 @@ const TECH = [
 		t: 41,
 		fx: [],
 		need: ['engage'],
-		desc: 'Four squads, A to D.',
+		desc: 'Three squads: Alpha, Bravo, Charlie.',
 	},
 	{
 		id: 'formations',

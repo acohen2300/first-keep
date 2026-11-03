@@ -12,6 +12,9 @@ One list of every parked idea, cut idea to review, and question not yet decided,
 
 - **App Store path** (parked by Albert, Nov 1, 09:10; from two outside reviews, Argon, Nov 1, checked). For the app build: iOS can purge localStorage when storage is low, so an app build needs native storage (Capacitor Preferences); external links through SFSafariViewController; suspend audio when the app is in the background; gate the test harness out of production; Game Center for milestones and the daily challenge; Apple's guideline 4.2 on wrapped websites; pricing: free to try plus a one-time unlock; no data collected. Their market and revenue figures had no sources and are not kept. See `docs/4 Now/App prep.md`. [2026-11-01 09:10]
 
+- **Item 2, the gap between the plus/minus row and the ribbon above it** (parked by Albert, Nov 2): the idea was 3 px instead of 6 between that pair; the spacing stays 6. [2026-11-02 21:35]
+- **Open-button highlight on Squad, Train and Direct, and a way back to the small map** (parked by Albert, Nov 2): the lit look I mocked clashed with the colour page; no light-up for now. [2026-11-02 21:35]
+
 ## Needs Albert's call now (it touches v70)
 1. Mail has no door once the Realm page goes: the Realm page's Mail tile was its only way in. Where does Mail open from? On the v81 list (D-080, Nov 1, 09:10): the status strip's clock, or Mail and Milestones rows on Help or Score; Albert decides after playing the coming preview. [2026-11-01 09:10] Done, Nov 2: the top bar's envelope (D-080 closed). [2026-11-02 17:53]
 2. The status strip: Gunpowder does not fit the age cell. The ballot's change (the People icon back, age and people three cells each) was refused by the tap-size check: the other cells fell to 40 pt at 375.

@@ -491,6 +491,10 @@ const PLAY = {
 		if (!hasCmd() && !sqOut(i)) return say('Squads come with Battalions.', '', TOAST.short);
 		openCard({ type: 'squad', i });
 	}, // hold a squad: its card, built at home, watched on its mission; an empty squad opens as a new one
+	sqsetup() {
+		if (!hasCmd()) return say('Squads come with Battalions.', '', TOAST.short);
+		openCard({ type: 'sqsetup' });
+	}, // Set Up (Albert, Nov 2): the three squads in one rank, each opening its card where it is built
 	wfire() {
 		hudGo();
 	},

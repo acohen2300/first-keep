@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 43; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 44; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -204,6 +204,18 @@ const MIGRATE = {
 		S.v = 43;
 		return S;
 	}, // answer 1b: regard is kept per group (the Natives, outlaws, bandits, robbers); the Natives' moves from G.nat to G.gang.nat; the dead fields go (hunt A #9)
+	43: (S) => {
+		if (S.bnPlan) S.bnPlan = S.bnPlan.slice(0, BNS);
+		if (S.bnIntent) S.bnIntent = S.bnIntent.slice(0, BNS);
+		if (S.form) S.form = S.form.slice(0, BNS);
+		if (S.temper) S.temper = S.temper.slice(0, BNS).concat([S.temper[S.temper.length - 1] ?? T_GUARD]);
+		for (const u of S.units || []) if (u.bn !== undefined && u.bn >= BNS) u.bn = undefined;
+		for (const b of S.blds || []) for (const j of b.q || []) if (j.muster && j.bn >= BNS) j.bn = undefined;
+		S.msn = (S.msn || []).slice(0, BNS);
+		if (typeof S.sel === 'number' && S.sel >= BNS) S.sel = 'all';
+		S.v = 44;
+		return S;
+	}, // Nov 2 (Albert): three squads, Alpha, Bravo and Charlie, and the fourth tile of the row's middle is Set Up; the old fourth squad's soldiers fold into the reserve, as Epsilon and Zeta did in step 36
 };
 const evSave = () => {
 	const V = G.ev || {},

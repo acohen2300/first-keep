@@ -5,7 +5,7 @@ const BUILD_NAME = 'Restoration'; // the version's name, shown as "v70 · Restor
 const MAP = 2160, // decision 5a (Albert, Oct 31: LOCKED at +8%): 2000 to 2160, the walking grid 216 squares a side
 	MID = MAP / 2,
 	DT = 1 / 30;
-const BN = ['Squad A', 'Squad B', 'Squad C', 'Squad D'], // four squads, slots 2 to 5 of the War page (Build 61; six before; named as drawn, Build 70)
+const BN = ['Alpha', 'Bravo', 'Charlie'], // three squads, slots 2 to 4 of the station's middle, the fourth tile Set Up (Albert, Nov 2; four before, six before that; Alpha to Charlie, the NATO names)
 	BNS = BN.length; // the battalions, once Command is researched
 // The four kinds of soldier, by the building that trains them: [id, name, building, the word in a line]. A squad holds so many of each (Build 70)
 const CLS = [

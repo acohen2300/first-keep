@@ -745,7 +745,7 @@ const EV_TEXT = {
 };
 // The row's words (MENU-SPEC §6): the word under each picture icon that is not a name from a table (RESOURCES, BN, CLS) or a pace (paceWord),
 // and the cycle button's page names. The gate measures every word a slot can show in its slot at 375 pt.
-const HOLD_WORD = { attack: 'Hold to launch attack', none: 'No soldiers yet' }; // over the hold's ring (28-army-quick)
+const HOLD_WORD = { none: 'No soldiers yet' }; // over a tap on the ground with nobody to send (28-army-quick)
 const ROW_WORD = {
 	jobs: 'Jobs',
 	war: 'War',
@@ -757,6 +757,7 @@ const ROW_WORD = {
 	direct: 'Direct', // the War Director's four moves
 	attack: 'Attack',
 	squad: 'Squad',
+	setup: 'Set Up', // the fourth tile of the Squad page: the three squads, each built on its card (Albert, Nov 2)
 	army: 'The army',
 	pace: ['slow', 'medium', 'fast'], // a squad's pace, from its slowest member (paceWord)
 	emg: 'War', // the red button: the battle station (Albert, Nov 2)
@@ -796,7 +797,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The screen',
-		`Top, one bar: food, wood, stone, gold, iron, then sound, pause and play, and the map. Under it a thin strip: the age, the sky, the clock, your people and their room (tap for them), idle villagers (tap to see one), research you can start (tap for it), your rank (tap for the score) and your soldiers. Bottom, one row in three pages; the cycle button above it on the left turns ${ROW_WORD.jobs} → ${ROW_WORD.war} → ${ROW_WORD.train}, and ${ROW_WORD.emg} sits above it on the right. ${ROW_WORD.jobs}: ${ROW_WORD.people} (trains a villager) over ${ROW_WORD.build} (the hammer: building is a job), then each job with − and +. ${ROW_WORD.war}: ${ROW_WORD.target} over ${ROW_WORD.home}, the four squads with their time and pace, Go ✓ over Abort ✕. ${ROW_WORD.train}: ${ROW_WORD.orders} over the squad new soldiers join, the four kinds with − and +, ✓ over ✕. Home shows when your Town Center is out of sight. A book on a building means research waits there.`,
+		`Top, one bar: food, wood, stone, gold, iron, then sound, pause and play, and the map. Under it a thin strip: the age, the sky, the clock, your people and their room (tap for them), idle villagers (tap to see one), research you can start (tap for it), your rank (tap for the score) and your soldiers. Bottom, one row in three pages; the cycle button above it on the left turns ${ROW_WORD.jobs} → ${ROW_WORD.war} → ${ROW_WORD.train}, and ${ROW_WORD.emg} sits above it on the right. ${ROW_WORD.jobs}: ${ROW_WORD.people} (trains a villager) over ${ROW_WORD.build} (the hammer: building is a job), then each job with − and +. ${ROW_WORD.war}: ${ROW_WORD.target} over ${ROW_WORD.home}, the three squads with their time and pace, Go ✓ over Abort ✕. ${ROW_WORD.train}: ${ROW_WORD.orders} over the squad new soldiers join, the four kinds with − and +, ✓ over ✕. Home shows when your Town Center is out of sight. A book on a building means research waits there.`,
 		'Only what you act on stays in sight; the rest is a tap away.',
 	],
 	[
@@ -816,7 +817,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The War Council ladder',
-		'Four researches, each opening the next. Engagement: shooters step back from a foe on top of them. Battalions: four squads, A to D; set what each holds of Foot, Archers, Riders and Siege; new soldiers fill them, the rest are the reserve. Formations: Line, Wedge, Square, and your armies march in column. Muster (Gunpowder): the missing soldiers of a battalion in one order, twice the cost, a quarter longer, the time shared by every building that trains them. The computers climb it too.',
+		'Four researches, each opening the next. Engagement: shooters step back from a foe on top of them. Battalions: three squads, Alpha, Bravo and Charlie; set what each holds of Foot, Archers, Riders and Siege; new soldiers fill them, the rest are the reserve. Formations: Line, Wedge, Square, and your armies march in column. Muster (Gunpowder): the missing soldiers of a battalion in one order, twice the cost, a quarter longer, the time shared by every building that trains them. The computers climb it too.',
 		'Rome levied whole legions at once; the drill of Maurice of Nassau (1590s) made trained formations, and armies like the New Model Army (1645) were raised as one force.',
 	],
 	[
@@ -1046,7 +1047,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The row, the squads and pausing',
-		`The cycle button above the first slot turns the row: Jobs, War, Train. On War sit the four squads (once Battalions is researched): tap one for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Out on a mission its card shows its health and standing. Opening a card you sit and read (${orList([...Object.values(READ_CARDS), 'the War Council', 'Relations'])}) pauses the game; a building, a unit or a field to glance at does not; closing it carries on (Help: Pause on cards, off if you like).`,
+		`The cycle button above the first slot turns the row: Jobs, War, Train. On War sit the three squads (once Battalions is researched): tap one for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Out on a mission its card shows its health and standing. Opening a card you sit and read (${orList([...Object.values(READ_CARDS), 'the War Council', 'Relations'])}) pauses the game; a building, a unit or a field to glance at does not; closing it carries on (Help: Pause on cards, off if you like).`,
 		'Thumbs on the map, not in a menu: a phone is not a desk.',
 	],
 	[

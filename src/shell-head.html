@@ -136,6 +136,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 .cell .top :is(.gl,svg){position:static;transform:none;width:18px;height:18px}
 .cell .top .c{font-size:var(--fs-s);line-height:1;font-variant-numeric:tabular-nums;color:var(--nc,inherit)}
 .cell .top~.wd{color:var(--white-dim)}
+#mailB .top{top:50%;gap:0}#mailB .top .c{position:absolute;left:calc(50% + 2px);top:-7px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--ring-r);color:var(--brown-1)}#mailB.dis .top .c{display:none}   /* Mail (Albert, Nov 2): the icon dead centre of its slot, the unread a red count on its top right corner, none at 0 (the cell is dim then) */
 .cell.sym .gl{top:50%;width:24px;height:24px}
 /* The card (MENU-SPEC §1, §4): its slots on the screen's own grid, 6 from the edge and 6 from the row, its frame an outline down the middle
    of that 6 (9, so the curves nest): a card of n ranks stands exactly n ranks tall. It rises from the row as tall as its content (Albert,

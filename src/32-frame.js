@@ -11,6 +11,10 @@ const ICON = {
 		20,
 		'<path d="M9 5l-5 5 5 5M4 10h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
 	),
+	gear: SVG(
+		20,
+		'<circle cx="10" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M15.8 4.2l-1.7 1.7M5.9 14.1l-1.7 1.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+	),
 	stop: SVG(20, '<rect x="5" y="5" width="10" height="10" rx="1.5" fill="currentColor"/>'),
 	ok: SVG(
 		20,
@@ -223,7 +227,7 @@ function showEnd(won, text, all) {
 	$('endNext').hidden = $('endFree').hidden = !won;
 	$('end').hidden = false;
 	closeCard();
-	cancelLaunch(); // the next game starts with nothing of this one open
+	cancelStrike(); // the next game starts with nothing of this one open
 }
 // The page's own measures: how tall the orders are (the map's bottom edge) and where the map's middle sits between the bars
 function fit() {
@@ -577,7 +581,7 @@ function ui(force) {
 			[ICON.mil, String(sol), sol ? '' : 'dis'],
 		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
 		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2]));
-		txt('mailN', String(G.mailN || 0)); // the unread, beside the envelope at the top
+		txt('mailN', (G.mailN || 0) > 99 ? '99+' : String(G.mailN || 0)); // the unread, a badge on the envelope at the top (Albert, Nov 2); 99+ past 99
 		$('mailB').classList.toggle('dis', !(G.mailN || 0));
 	} // the colour code on the pill: blue research you can start, red the people at the roof or idle hands; dim is nothing to see
 	rowUI();

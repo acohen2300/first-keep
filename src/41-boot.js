@@ -85,6 +85,7 @@ for (const ev of ['pointerdown', 'pointermove', 'wheel'])
 		{ passive: true, capture: true },
 	);
 window.addEventListener('resize', fit);
+if (window.ResizeObserver) new ResizeObserver(() => fit()).observe(cv); // a safety net: whenever the map's box changes size, its drawing is measured again (the squashed map, Nov 2)
 buildPanel();
 fit();
 newGame();
@@ -150,7 +151,8 @@ window.__fk = {
 	groundSpd,
 	wearMul,
 	say,
-	launchAt,
+	strikeAt,
+	strikeTap,
 	direct,
 	shapeOf,
 	temperOf,
@@ -158,8 +160,7 @@ window.__fk = {
 	DIRECT_OF,
 	ofKind,
 	HOLD_WORD,
-	fireLaunch,
-	cancelLaunch,
+	cancelStrike,
 	capFor,
 	armyRoom,
 	capOf,

@@ -368,3 +368,10 @@ Checks on main before publishing:
 ## Build 80 preview 30 (a drag on the small map pans) [2026-11-02 18:36]
 - Albert, Nov 2, 18:28: a drag on the small map sweeps the camera with the finger (no glide) and launches nobody; a tap still jumps, a hold still launches. The standard small-map behaviour. Gate test and a plant. [2026-11-02 18:36]
 
+## Build 80 preview 32 (Albert's five: mail, squads, the strike, the sky, the guard) [2026-11-02 21:35]
+- Mail: the icon dead centre in its slot; the count a red badge at its top right; hidden at 0; "99+" past 99. Test and two plants. [2026-11-02 21:35]
+- Squads: Squad A/B/C/D are now Alpha, Bravo, Charlie (three squads); the fourth tile of the Squad page is "Set Up" (gear), a card that lists the three squads and opens each one's builder. Save 43 to 44 folds the fourth squad into the others. Tests (gate, saves) and three plants. [2026-11-02 21:35]
+- Attack, replaced: tap bare ground and a sword shows there; tap the sword and it is the reticle (the crosshair's drawing, with the time and place); tap the reticle and every soldier goes. A tap elsewhere moves or drops the sword; a tap on an enemy opens its card; with no soldiers a tap says "No soldiers yet". The sword starts only on bare ground. [2026-11-02 21:35]
+- Cut: the hold to launch an attack, its ring (`drawLaunch`, `LAUNCH`), the words "Hold to launch attack" (`HOLD_WORD.attack`), `launchAt`, `cancelLaunch`, `fireLaunch`, `hintAt`, the 'launch' drag mode, and the hold on the small map (a drag still sweeps the camera, a tap still jumps). The hold on a button (Everyone home) and the hold that picks a soldier stay. The old gate checks and two plants are rewritten for the strike. [2026-11-02 21:35]
+- Sky: the weather tint now runs to the top of the screen under the bars (solid there, the fade below as before, the clouds unchanged). Test and plant. [2026-11-02 21:35]
+- Guard: a ResizeObserver on the map calls `fit()` whenever its box changes size. A safety net for the squashed map that could not be reproduced; not a proven fix. Test and plant. [2026-11-02 21:35]

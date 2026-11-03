@@ -134,10 +134,6 @@ cv.addEventListener('pointerdown', (e) => {
 		} // held on one of yours: it is picked, and the next taps add more
 		const at = { x0: G.press.x, y0: G.press.y, x1: G.press.x, y1: G.press.y };
 		G.press = null;
-		if ((h.t === 'ground' || ((h.t === 'unit' || h.t === 'bld') && foeOf(h.e))) && launchAt(h, d.t0)) {
-			drag = { mode: 'launch', ...at };
-			return;
-		} // held on the ground or an enemy: the ring grows, and at full every soldier goes (28-army-quick); a drag turns it into the box
 		drag = { mode: 'box', ...at };
 		G.box = drag;
 	}, HOLD_MS);
@@ -165,11 +161,6 @@ cv.addEventListener('pointermove', (e) => {
 		aimSpot(p.x, p.y);
 		return;
 	}
-	if (drag && drag.mode === 'launch' && hyp(p.x - drag.x0, p.y - drag.y0) > 12) {
-		cancelLaunch();
-		drag = { mode: 'box', x0: drag.x0, y0: drag.y0, x1: p.x, y1: p.y };
-		G.box = drag;
-	} // the finger moved: no attack, a box
 	if (drag && drag.mode === 'box') {
 		drag.x1 = p.x;
 		drag.y1 = p.y;
@@ -220,10 +211,6 @@ cv.addEventListener('pointerup', (e) => {
 		ui(true);
 		return;
 	}
-	if (d.mode === 'launch') {
-		cancelLaunch();
-		return;
-	} // let go before the ring was full: nothing is sent
 	if (d.mode === 'box') {
 		G.box = null;
 		if (Math.abs(d.x1 - d.x0) < 12 && Math.abs(d.y1 - d.y0) < 12) {
@@ -262,7 +249,6 @@ function dropDrag() {
 }
 cv.addEventListener('pointercancel', (e) => {
 	holdStop();
-	cancelLaunch();
 	ptrs.delete(e.pointerId);
 	if (ptrs.size < 2) pinch = null;
 	dropDrag();
@@ -278,8 +264,7 @@ cv.addEventListener(
 	{ passive: false },
 );
 ['gesturestart', 'gesturechange', 'gestureend'].forEach((t) => document.addEventListener(t, (e) => e.preventDefault()));
-let miniHold = 0,
-	miniAt = null;
+let miniAt = null;
 mini.addEventListener('pointerdown', (e) => {
 	e.stopPropagation();
 	if (G) G.follow = false;
@@ -288,20 +273,15 @@ mini.addEventListener('pointerdown', (e) => {
 	} catch (err) {} // the finger stays the map's until it lifts, even off its edge (an audit, Nov 2)
 	const r = mini.getBoundingClientRect(),
 		x = ((e.clientX - r.left) / r.width) * MAP,
-		y = ((e.clientY - r.top) / r.height) * MAP,
-		t0 = performance.now();
+		y = ((e.clientY - r.top) / r.height) * MAP;
 	camGo(x, y);
 	miniAt = { x: e.clientX, y: e.clientY, pan: false };
-	clearTimeout(miniHold);
-	miniHold = setTimeout(() => launchAt({ t: 'ground', e: { x, y } }, t0), HOLD_MS); // held on the small map: the army is launched there (the ring grows at the spot, now in view)
 });
 mini.addEventListener('pointermove', (e) => {
 	if (!miniAt) return;
 	if (!miniAt.pan && hyp(e.clientX - miniAt.x, e.clientY - miniAt.y) > 8) {
-		clearTimeout(miniHold);
-		cancelLaunch();
 		miniAt.pan = true;
-	} // a finger that moves is looking, not launching
+	} // a finger that moves is looking
 	if (miniAt.pan) {
 		const r = mini.getBoundingClientRect();
 		camStop();
@@ -312,9 +292,7 @@ mini.addEventListener('pointermove', (e) => {
 });
 for (const ev of ['pointerup', 'pointercancel'])
 	mini.addEventListener(ev, () => {
-		clearTimeout(miniHold);
 		miniAt = null;
-		cancelLaunch();
 	});
 // what is under the finger: a building (they have height), a find, a unit, a resource, else the ground
 function hitAt(sx, sy) {
@@ -394,13 +372,15 @@ function tapAt(sx, sy) {
 		return;
 	}
 	if (G.hud.aim) return aimAt(sx, sy); // Aim: the next tap is the target
+	if (strikeTap(sx, sy)) return; // the sword, then the reticle, then the army goes (28-army-quick)
+	cancelStrike(); // a tap anywhere else: the sword goes (a tap on bare ground puts it down again, below)
 	const h = hitAt(sx, sy),
 		key = h.t === 'ground' ? 'ground' : h.t + h.e.id,
 		now = performance.now(),
 		dbl = key === lastTap.key && now - lastTap.t < DBL_MS && (key !== 'ground' || hyp(sx - lastTap.sx, sy - lastTap.sy) < 26);
 	lastTap = { key, t: now, sx, sy }; // a double tap on the ground opens the Here card for that spot (Albert, Nov 2), as on anything else
 	if (dbl) {
-		G.hint = null; // the first tap's words go
+		G.hint = null;
 		if (h.t === 'ground') return; // the ground has no card (the Here card is cut, Nov 2)
 		setPick([]);
 		openCard(cardFor(h));
@@ -423,9 +403,9 @@ function tapAt(sx, sy) {
 			ACT.ordpick(String(O.id));
 			return;
 		} // the ring of a group on the march: tap it to pick the group
-		hintAt(h, sendable().length ? HOLD_WORD.attack : HOLD_WORD.none);
+		strikeAt(h.e.x, h.e.y);
 		return;
-	} // nothing picked: the words "Hold to launch attack" a moment, which teach the hold (Albert, Nov 2); with no soldiers, "No soldiers yet"
+	} // nothing picked: the sword appears there (Albert, Nov 2); with no soldiers, "No soldiers yet"
 	if (
 		h.t === 'bld' &&
 		h.e.owner === 0 &&

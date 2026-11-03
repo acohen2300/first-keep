@@ -110,81 +110,71 @@ function guardRow(t, id) {
 // their Throne too, while you are at war
 const foeOf = (e) =>
 	e.owner !== 0 && e.hp > 0 && (e.owner === WILD && !e.q && !e.native ? !UNIT[e.kind].meat : atWar(0, e.owner));
-// ── The hold (MENU-SPEC §7, Albert Nov 2, 15:35): hold the ground or an enemy and a point under the finger grows into a ring, white to
-// red, "Hold to launch attack" over it; at full every soldier goes there and the ring snaps out. Lift or drag first and nothing is sent (a
-// drag is the box, 26-input). A plain tap on the ground shows the words a moment, which teaches it. G.launch: what is held (h, as hitAt gives
-// it), when it started, when it fired; G.hint: the words a tap left.
-let launchT = 0;
-function launchAt(h, t0 = performance.now()) {
-	cancelLaunch();
-	if (!sendable().length) return false; // no soldiers: no ring, no words (a hold with none is the box; a tap says "No soldiers yet")
+// ── The strike (Albert, Nov 2, replaces the hold): tap empty ground and a sword shows there; tap the sword and it becomes the reticle;
+// tap the reticle and every soldier goes. A tap anywhere else moves the sword back to its first stage; a tap on an enemy opens its card.
+// G.strike: { x, y, stage: 1 sword | 2 reticle, eta }; G.hint: "No soldiers yet" over a tap with nobody to send
+const strikeNear = (sx, sy) => G.strike && hyp(sx - SX(G.strike.x), sy - SY(G.strike.y)) < 34;
+function strikeAt(x, y) {
+	if (!sendable().length) return (G.strike = null), (G.hint = { h: { e: { x, y } }, w: HOLD_WORD.none, t: performance.now() });
 	G.hint = null;
-	G.launch = { h, t0 }; // the 1.5 s count from the moment the finger landed (an audit, Nov 2: it was the hold's 320 ms and then 1.5 s)
-	launchT = setTimeout(fireLaunch, Math.max(0, LAUNCH.ms - (performance.now() - t0)));
+	G.strike = { x, y, stage: 1 };
 	feel('tick');
+}
+function strikeTap(sx, sy) {
+	const K = G.strike;
+	if (!K || !strikeNear(sx, sy)) return false;
+	if (K.stage === 1) {
+		K.stage = 2;
+		const S = sendable(), e = { x: K.x, y: K.y };
+		K.eta = S.length ? etaOf(S, e, routeK(centreOf(S), e)) : 0;
+		K.t0 = performance.now();
+		feel('snap');
+		return true;
+	}
+	const S = sendable();
+	if (S.length) order(S, { t: 'ground', e: { x: K.x, y: K.y } });
+	else say(freeWhy(), '', TOAST.mid);
+	G.strike = null;
+	feel('thock');
 	return true;
 }
-function cancelLaunch() {
-	clearTimeout(launchT);
-	if (G.launch && !G.launch.fired) G.launch = null;
-}
-function fireLaunch() {
-	const C = G.launch;
-	if (!C || C.fired) return;
-	if (G.paused) return cancelLaunch(); // paused under the finger (a card came up): nothing is sent (an audit, Nov 2)
-	clearTimeout(launchT);
-	const S = sendable();
-	if (S.length) order(S, C.h);
-	else say(freeWhy(), '', TOAST.mid);
-	C.fired = performance.now();
-	feel('snap');
-}
-const hintAt = (h, w = HOLD_WORD.attack) => (G.hint = { h, w, t: performance.now() });
-// the ring and the words, on the map, over the spot (the canvas, each frame; 21-view-frame)
-function drawLaunch() {
-	const now = performance.now(),
-		C = G.launch,
-		I = G.hint,
-		word = (x, y, w, a) => {
-			ctx.globalAlpha = a;
-			ctx.strokeStyle = 'rgba(0,0,0,.75)';
-			ctx.lineWidth = 3;
-			ctx.strokeText(w, x, y);
-			ctx.fillStyle = codeOf('w');
-			ctx.fillText(w, x, y);
-		};
+const cancelStrike = () => (G.strike = null);
+// the sword (a sword in a dark disc) at its spot, and the "No soldiers yet" words a tap with none left (the canvas, each frame; 21-view-frame)
+function drawStrike() {
+	const now = performance.now(), K = G.strike, I = G.hint;
 	if (I && now - I.t > timeOf('settle')) G.hint = null;
-	if (!C && !G.hint) return;
-	ctx.save();
-	ctx.font = mapFont();
-	ctx.textAlign = 'center';
-	ctx.lineJoin = 'round';
-	if (G.hint) word(SX(I.h.e.x), SY(I.h.e.y) - LAUNCH.r - 14, I.w, 1 - (now - I.t) / timeOf('settle'));
-	if (C) {
-		const x = SX(C.h.e.x),
-			y = SY(C.h.e.y),
-			f = C.fired ? 1 : clamp((now - C.t0) / LAUNCH.ms, 0, 1),
-			out = C.fired ? clamp((now - C.fired) / timeOf('quick'), 0, 1) : 0, // at full it snaps out: a little wider, gone
-			r = (4 + (LAUNCH.r - 4) * f) * (1 + 0.4 * out),
-			col = grad(-f); // white to red, the one gradient
-		if (out >= 1) G.launch = null;
-		else {
-			ctx.shadowColor = 'rgba(0,0,0,.85)';
-			ctx.shadowBlur = 3;
-			ctx.beginPath();
-			ctx.arc(x, y, r, 0, 7);
-			ctx.globalAlpha = (1 - out) * 0.1 * f;
-			ctx.fillStyle = col;
-			ctx.fill();
-			ctx.globalAlpha = 1 - out;
-			ctx.strokeStyle = col;
-			ctx.lineWidth = 1.6 + 1.2 * f;
-			ctx.stroke();
-			ctx.shadowBlur = 0;
-			if (!C.fired) word(x, y - LAUNCH.r - 14, HOLD_WORD.attack, 1);
-		}
+	if (K && K.stage === 1) {
+		const x = SX(K.x), y = SY(K.y);
+		ctx.save();
+		ctx.globalAlpha = 0.7;
+		ctx.fillStyle = 'rgba(0,0,0,.7)';
+		ctx.beginPath();
+		ctx.arc(x, y, 18, 0, 7);
+		ctx.fill();
+		ctx.globalAlpha = 1;
+		ctx.strokeStyle = codeOf('w');
+		ctx.lineWidth = 2;
+		ctx.lineCap = 'round';
+		ctx.beginPath();
+		ctx.moveTo(x - 8, y + 8); ctx.lineTo(x + 8, y - 8); // the blade
+		ctx.moveTo(x - 6, y - 2); ctx.lineTo(x + 2, y + 6); // the guard
+		ctx.moveTo(x - 9, y + 9); ctx.lineTo(x - 11, y + 11); // the grip
+		ctx.stroke();
+		ctx.restore();
 	}
-	ctx.restore();
+	if (G.hint) {
+		ctx.save();
+		ctx.font = mapFont();
+		ctx.textAlign = 'center';
+		ctx.lineJoin = 'round';
+		ctx.globalAlpha = 1 - (now - I.t) / timeOf('settle');
+		ctx.strokeStyle = 'rgba(0,0,0,.75)';
+		ctx.lineWidth = 3;
+		ctx.strokeText(I.w, SX(I.h.e.x), SY(I.h.e.y) - 30);
+		ctx.fillStyle = codeOf('w');
+		ctx.fillText(I.w, SX(I.h.e.x), SY(I.h.e.y) - 30);
+		ctx.restore();
+	}
 }
 // ── The War Director (06-rules-tuning, DIRECT): a tap on a kind in the station's middle is its move, a hold its second. Every soldier of
 // that kind that can be sent goes at once; the crosshair (G.hud.h) is where. Each returns what was said, or '' when nobody could go.

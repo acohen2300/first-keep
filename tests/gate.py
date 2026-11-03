@@ -79,20 +79,18 @@ DOUBLES = """async (extra) => { await document.fonts.ready; const F = window.__f
 # The quick action (MENU-SPEC §7, Build 70), at every size: each of its four cells is the screen's slot (W − 42) ÷ 6 by 44; opened in the middle,
 # at the right edge, above the row and in that corner, its first icon (the sword) is right under the finger (its column on it, half a slot
 # below it; above it when flipped at the row); the sword turns it to All in the same place. Left open in the middle for the page's measures.
-QUICK = """async () => { const F = window.__fk, G = F.G, out = [];   // the hold (Albert, Nov 2): a ring under the finger, the words over it, inside the screen at every size
-  F.act('close'); const k = F.keepOf(0); F.addUnit(0, 'spear', k.x + 40, k.y + 40); const h = F.hitAt(innerWidth / 2, 300);
-  if (!F.launchAt(h)) out.push('the hold did not start with a soldier to send'); F.draw();
-  if (!G.launch) out.push('the hold has no ring'); F.cancelLaunch(); if (G.launch) out.push('letting go left the ring');
+QUICK = """async () => { const F = window.__fk, G = F.G, out = [];   // the strike (Albert, Nov 2) is tested in the main run; here the hold on a button and the small map
+  F.act('close'); const k = F.keepOf(0); F.addUnit(0, 'spear', k.x + 40, k.y + 40); 
   // a hold on a button (data-hold) survives a thumb that rolls a pixel or two (an audit, Nov 2); the lift after it is not a tap
   F.hudPage('war'); F.ui(true); const b = document.querySelector('#row [data-hold="whome"]'), r = b.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
   const ev = (type, dx) => b.dispatchEvent(new PointerEvent(type, { bubbles: true, clientX: x + dx, clientY: y, pointerId: 1 }));
   G.msn[0] = { name: 'test', sq: 0, ord: -1, n0: 0, kinds: {}, what: 'Go to', label: '', x: k.x, y: k.y, t: G.t, due: G.t, st: 'go', odds: 0.5 };
   ev('pointerdown', 0); ev('pointermove', 3); await new Promise((r) => setTimeout(r, 420)); ev('pointerup', 3); b.dispatchEvent(new MouseEvent('click', { bubbles: true }));
   if (G.msn[0]) out.push('a held button whose thumb rolls 3 px lost its hold (everyone home did not fire)'); F.hudPage('jobs'); F.ui(true);
-  // the small map (Albert, Nov 2): a tap jumps the camera, a drag sweeps it with the finger and launches nobody
+  // the small map (Albert, Nov 2): a tap jumps the camera, a drag sweeps it with the finger and launches nobody (the hold launch is cut)
   { F.hudPage('war'); F.ui(true); const m = document.getElementById('mini'), mr = m.getBoundingClientRect(), mev = (type, fx, fy) => m.dispatchEvent(new PointerEvent(type, { bubbles: true, clientX: mr.left + mr.width * fx, clientY: mr.top + mr.height * fy, pointerId: 2 }));
     mev('pointerdown', 0.2, 0.2); mev('pointermove', 0.6, 0.6); const cx = F.cam.x; mev('pointermove', 0.8, 0.8); if (!(F.cam.x > cx)) out.push('a drag on the small map did not sweep the camera');
-    await new Promise((r) => setTimeout(r, 420)); if (G.launch) out.push('a drag on the small map started a launch'); mev('pointerup', 0.8, 0.8); F.hudPage('jobs'); F.ui(true); }
+    await new Promise((r) => setTimeout(r, 420)); if (G.strike) out.push('a drag on the small map started a strike'); mev('pointerup', 0.8, 0.8); F.hudPage('jobs'); F.ui(true); }
   return out; }"""
 def fixed_titles():
     import re, glob
@@ -116,7 +114,15 @@ PLAY = """async () => {
   // the row (Build 70; Nov 2): the War button turns Jobs and the station; the mail button at the top counts the unread and opens the Mail (D-080); a squad opens its card, where + adds and Cancel puts back what it held
   for (const pg of ['war', 'jobs']) { tap('#emgB'); F.ui(true); if (G.hud.page !== pg) out.push('the War button did not turn the row to ' + pg); }
   { G.mailN = 3; F.ui(true); if (document.getElementById('mailN').textContent !== '3') out.push('the mail button does not count the unread'); tap('#mailB'); if (!G.card || G.card.type !== 'mail' || G.mailN) out.push('the mail button did not open the Mail with the count cleared'); F.act('close'); }
+  { G.mailN = 3; F.ui(true); const c = document.getElementById('mailB').getBoundingClientRect(), s = document.querySelector('#mailB svg').getBoundingClientRect(), b = document.getElementById('mailN').getBoundingClientRect();   // Mail (Albert, Nov 2): the icon dead centre, the count a badge on its top right, none at 0
+    if (Math.abs(s.x + s.width / 2 - (c.x + c.width / 2)) > 1 || Math.abs(s.y + s.height / 2 - (c.y + c.height / 2)) > 1) out.push('the mail icon is not centred in its slot');
+    if (b.x < s.x + s.width / 2 - 1 || b.y + b.height / 2 > s.y + 2) out.push('the mail count is not a badge on the icon top right');
+    G.mailN = 0; F.ui(true); if (document.getElementById('mailN').getBoundingClientRect().width) out.push('the mail badge shows at 0'); G.mailN = 0; }
   G.P[0].techs.add('command'); F.fxDirty(); F.hudPage('war'); F.act('wmid:squad'); F.ui(true); F.act('sqcard:1'); if (!G.card || G.card.type !== 'squad' || G.card.i !== 1) out.push('a squad held did not open its card');
+  { if (F.BN.join() !== 'Alpha,Bravo,Charlie') out.push('the squads are not Alpha, Bravo and Charlie'); F.act('close'); F.ui(true);   // Albert, Nov 2: three squads and Set Up
+    const tiles = [...document.querySelectorAll('#row .midb [data-act]')].map((e) => e.dataset.act).join();
+    if (tiles !== 'wsq:0,wsq:1,wsq:2,sqsetup') out.push('the Squad page is not Alpha, Bravo, Charlie and Set Up: ' + tiles);
+    F.act('sqsetup'); if (!G.card || G.card.type !== 'sqsetup') out.push('Set Up did not open the squad setup card'); else if (document.querySelectorAll('#card [data-act^="sqcard:"]').length !== 3) out.push('the Set Up card does not list the three squads'); F.act('close'); F.act('sqcard:1'); }
   tap('#card [data-act="sqpk:1,0,+"]'); if (G.bnPlan[1].foot !== 1) out.push('+ under Foot on the squad card added none'); tap('#card [data-act="sqcancel"]'); if (G.bnPlan[1].foot || G.card) out.push('Cancel did not put the squad back and close');
   G.P[0].techs.delete('command'); F.fxDirty(); F.hudPage('jobs'); F.ui(true);
   F.news('trade', 'A test line for the mail.', '', 4); F.act('pvx'); if (G.pvAsk !== 'trade') out.push('× on news did not ask to hide its group'); F.act('pvhide:trade'); F.news('trade', 'Another quiet line.', '', 4); if ((G.mail[0] || {}).ru) out.push('a hidden group still previewed'); F.news('trade', 'Raiders took the caravan.', 'warn', 4); if (!(G.mail[0] || {}).ru) out.push('a red line from a hidden group did not show'); F.act('mailall');
@@ -124,16 +130,23 @@ PLAY = """async () => {
   F.act('qcancel:' + F.keepOf(0).id + ',' + q0); if (F.keepOf(0).q.length !== q0) out.push('a slot tap did not cancel the villager');
   tap('[data-act="move:wood"]'); if (!F.G.units.some(u => u.owner === 0 && u.kind === 'vil' && u.job === 'wood')) out.push('+ under Wood put nobody on wood');
   
-  // the hold (Albert, Nov 2, 15:35): a tap on open ground shows "Hold to launch attack" and sends nobody; a double tap opens nothing;
-  // a hold on the ground fills the ring and at full every soldier goes there; let go first and nobody goes; a hold on an enemy sends them at it
+  // the strike (Albert, Nov 2, replaces the hold): a tap on open ground with no soldiers says "No soldiers yet"; with soldiers it puts a sword there
+  // (stage 1) and sends nobody; a tap on the sword makes it the reticle (stage 2); a tap on the reticle sends every soldier; a tap elsewhere moves the sword
   { F.act('close'); G.fogOn = false; let p = null; for (let y = 260; y < 500 && !p; y += 23) for (let x = 60; x < 330 && !p; x += 23) if (F.hitAt(x, y).t === 'ground') p = [x, y];
-    const spot = F.hitAt(...p).e; F.tapAt(...p); if (!G.hint || G.hint.w !== F.HOLD_WORD.none) out.push('a tap on the ground with no soldiers did not say "No soldiers yet"');
-    const sp = F.addUnit(0, 'spear', F.keepOf(0).x + 30, F.keepOf(0).y + 30); F.lastTapReset && F.lastTapReset(); F.tapAt(p[0] + 60, p[1]); if (!G.hint || G.hint.w !== F.HOLD_WORD.attack) out.push('a tap on the ground did not show "Hold to launch attack"'); if (G.card) out.push('a tap on the ground opened a card'); sp.hp = 0;
-    F.tapAt(...p); F.tapAt(...p); if (G.card || G.hint) out.push('a double tap on the ground opened a card or left the words showing (the Here card is cut)');
-    const k = F.keepOf(0), S = [0, 1, 2].map((i) => F.addUnit(0, 'spear', k.x + 40 + i * 8, k.y + 40)), e = F.addUnit(1, 'spear', spot.x, spot.y); G.rel[0][1] = G.rel[1][0] = 'war';
-    const o0 = JSON.stringify(G.ords || {}); F.launchAt(F.hitAt(...p)); F.cancelLaunch(); if (JSON.stringify(G.ords || {}) !== o0) out.push('letting go before the ring was full still sent soldiers');
-    F.launchAt(F.hitAt(F.SX(e.x), F.SY(e.y) - 6 * F.cam.z)); F.fireLaunch(); if (!S.every((u) => u.focus === e)) out.push('a full hold on an enemy did not send every soldier at it');
-    e.hp = 0; for (const u of S) u.hp = 0; G.rel[0][1] = G.rel[1][0] = 'neutral'; G.fogOn = true; }
+    const spot = F.hitAt(...p).e; F.tapAt(...p); if (!G.hint || G.hint.w !== F.HOLD_WORD.none) out.push('a tap on the ground with no soldiers did not say "No soldiers yet"'); if (G.strike) out.push('a tap with no soldiers put a sword down');
+    if (F.HOLD_WORD.attack) out.push('the words "Hold to launch attack" are still in the game');
+    const k = F.keepOf(0), S = [0, 1, 2].map((i) => F.addUnit(0, 'spear', k.x + 40 + i * 8, k.y + 40)); F.lastTapReset && F.lastTapReset();
+    const o0 = JSON.stringify(G.ords || {}), p2 = [p[0] + 60, p[1]]; F.tapAt(...p2); if (!G.strike || G.strike.stage !== 1) out.push('a tap on open ground did not put the sword down'); if (G.card) out.push('a tap on the ground opened a card');
+    const sx = F.SX(G.strike.x), sy = F.SY(G.strike.y); F.tapAt(sx, sy); if (!G.strike || G.strike.stage !== 2) out.push('a tap on the sword did not make it the reticle');
+    if (JSON.stringify(G.ords || {}) !== o0) out.push('the sword or the reticle sent soldiers before the last tap');
+    F.draw(); F.tapAt(sx, sy); if (G.strike) out.push('a tap on the reticle left it up'); if (!S.every((u) => u.ord || u.tx !== undefined || u.focus || (G.ords && Object.keys(G.ords).length))) out.push('a tap on the reticle did not send the army');
+    F.tapAt(...p); const q = [p[0], p[1] + 60]; if (F.hitAt(...q).t === 'ground') { F.tapAt(...q); if (!G.strike || Math.abs(F.SX(G.strike.x) - q[0]) > 2) out.push('a tap elsewhere did not move the sword'); }
+    for (const u of S) u.hp = 0; G.strike = null;
+    const e = F.addUnit(1, 'spear', spot.x, spot.y); G.rel[0][1] = G.rel[1][0] = 'war'; F.addUnit(0, 'spear', k.x + 30, k.y + 30); F.tapAt(F.SX(e.x), F.SY(e.y) - 6 * F.cam.z); if (G.strike) out.push('a tap on an enemy started a strike (it opens its card)');
+    e.hp = 0; G.rel[0][1] = G.rel[1][0] = 'neutral'; G.fogOn = true; }
+  { const cx = document.getElementById('cv').getContext('2d'), f0 = cx.fillRect.bind(cx), seen = []; cx.fillRect = (...a) => { seen.push(a); return f0(...a); }; F.draw(); cx.fillRect = f0;   // the sky runs to the top (Albert, Nov 2)
+    if (!seen.some((a) => a[1] === 0 && a[3] > 40 && a[3] < innerHeight * 0.4)) out.push('the sky does not run to the top of the screen'); }
+  { const cv0 = document.getElementById('cv'), k0 = cv0.width / cv0.getBoundingClientRect().width; cv0.style.width = '200px'; await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); if (Math.abs(cv0.width / cv0.getBoundingClientRect().width - k0) > 0.05 || cv0.width > 200 * k0 + 4) out.push('the map did not measure itself again after its box changed'); cv0.style.width = ''; await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); }
   // the cards (Build 70): Villager on the Town Center queues one in its line, and a tap on the queued one gives it back; the Market sells the
   // good picked; › on the Stores opens the book on its why; Build on a villager's job picker names it the builder of what is placed next
   { const k = F.keepOf(0), q0 = k.q.length; F.openCard({ type: 'bld', id: k.id }); tap('#card [data-act="train:vil"]'); if (k.q.length !== q0 + 1) out.push('Villager on the Town Center did not queue one');

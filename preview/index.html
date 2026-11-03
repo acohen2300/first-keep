@@ -139,6 +139,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 .cell .top :is(.gl,svg){position:static;transform:none;width:18px;height:18px}
 .cell .top .c{font-size:var(--fs-s);line-height:1;font-variant-numeric:tabular-nums;color:var(--nc,inherit)}
 .cell .top~.wd{color:var(--white-dim)}
+#mailB .top{top:50%;gap:0}#mailB .top .c{position:absolute;left:calc(50% + 2px);top:-7px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--ring-r);color:var(--brown-1)}#mailB.dis .top .c{display:none}   /* Mail (Albert, Nov 2): the icon dead centre of its slot, the unread a red count on its top right corner, none at 0 (the cell is dim then) */
 .cell.sym .gl{top:50%;width:24px;height:24px}
 /* The card (MENU-SPEC §1, §4): its slots on the screen's own grid, 6 from the edge and 6 from the row, its frame an outline down the middle
    of that 6 (9, so the curves nest): a card of n ranks stands exactly n ranks tall. It rises from the row as tall as its content (Albert,
@@ -279,7 +280,7 @@ const BUILD_NAME = 'Restoration'; // the version's name, shown as "v70 · Restor
 const MAP = 2160, // decision 5a (Albert, Oct 31: LOCKED at +8%): 2000 to 2160, the walking grid 216 squares a side
 	MID = MAP / 2,
 	DT = 1 / 30;
-const BN = ['Squad A', 'Squad B', 'Squad C', 'Squad D'], // four squads, slots 2 to 5 of the War page (Build 61; six before; named as drawn, Build 70)
+const BN = ['Alpha', 'Bravo', 'Charlie'], // three squads, slots 2 to 4 of the station's middle, the fourth tile Set Up (Albert, Nov 2; four before, six before that; Alpha to Charlie, the NATO names)
 	BNS = BN.length; // the battalions, once Command is researched
 // The four kinds of soldier, by the building that trains them: [id, name, building, the word in a line]. A squad holds so many of each (Build 70)
 const CLS = [
@@ -4379,7 +4380,7 @@ const TECH = [
 		t: 41,
 		fx: [],
 		need: ['engage'],
-		desc: 'Four squads, A to D.',
+		desc: 'Three squads: Alpha, Bravo, Charlie.',
 	},
 	{
 		id: 'formations',
@@ -5481,7 +5482,6 @@ const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, 
 // How long a toast stays (Nov 2, M7: 219 calls typed their own seconds, from 2 to 10): three lengths, by how much there is to read.
 // At about 200 words a minute (adult silent reading, 238 in Brysbaert's 2019 review, from memory, not opened) a short line of a few words
 // needs 2 to 3 s, a sentence 4 to 5, two sentences 7 to 8. 2 and 3 became short; 4, 5 and 6 mid; 7 to 10 long.
-const LAUNCH = { ms: 1500, r: 34 };
 // The War Director (Albert, Nov 2: "a war director"): one move a kind, every soldier of that kind at once, from the battle station. Each move
 // is a drill the rules already hold, so no new number but these: how long a shield wall stands (secs), how long the volley's reload is lined
 // up (loose), and the wait after Wheel (wheel). wall: the Square shape's numbers while it stands (FORM[2]: 10% less damage, 30% less from
@@ -6527,7 +6527,7 @@ const EV_TEXT = {
 };
 // The row's words (MENU-SPEC §6): the word under each picture icon that is not a name from a table (RESOURCES, BN, CLS) or a pace (paceWord),
 // and the cycle button's page names. The gate measures every word a slot can show in its slot at 375 pt.
-const HOLD_WORD = { attack: 'Hold to launch attack', none: 'No soldiers yet' }; // over the hold's ring (28-army-quick)
+const HOLD_WORD = { none: 'No soldiers yet' }; // over a tap on the ground with nobody to send (28-army-quick)
 const ROW_WORD = {
 	jobs: 'Jobs',
 	war: 'War',
@@ -6539,6 +6539,7 @@ const ROW_WORD = {
 	direct: 'Direct', // the War Director's four moves
 	attack: 'Attack',
 	squad: 'Squad',
+	setup: 'Set Up', // the fourth tile of the Squad page: the three squads, each built on its card (Albert, Nov 2)
 	army: 'The army',
 	pace: ['slow', 'medium', 'fast'], // a squad's pace, from its slowest member (paceWord)
 	emg: 'War', // the red button: the battle station (Albert, Nov 2)
@@ -6578,7 +6579,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The screen',
-		`Top, one bar: food, wood, stone, gold, iron, then sound, pause and play, and the map. Under it a thin strip: the age, the sky, the clock, your people and their room (tap for them), idle villagers (tap to see one), research you can start (tap for it), your rank (tap for the score) and your soldiers. Bottom, one row in three pages; the cycle button above it on the left turns ${ROW_WORD.jobs} → ${ROW_WORD.war} → ${ROW_WORD.train}, and ${ROW_WORD.emg} sits above it on the right. ${ROW_WORD.jobs}: ${ROW_WORD.people} (trains a villager) over ${ROW_WORD.build} (the hammer: building is a job), then each job with − and +. ${ROW_WORD.war}: ${ROW_WORD.target} over ${ROW_WORD.home}, the four squads with their time and pace, Go ✓ over Abort ✕. ${ROW_WORD.train}: ${ROW_WORD.orders} over the squad new soldiers join, the four kinds with − and +, ✓ over ✕. Home shows when your Town Center is out of sight. A book on a building means research waits there.`,
+		`Top, one bar: food, wood, stone, gold, iron, then sound, pause and play, and the map. Under it a thin strip: the age, the sky, the clock, your people and their room (tap for them), idle villagers (tap to see one), research you can start (tap for it), your rank (tap for the score) and your soldiers. Bottom, one row in three pages; the cycle button above it on the left turns ${ROW_WORD.jobs} → ${ROW_WORD.war} → ${ROW_WORD.train}, and ${ROW_WORD.emg} sits above it on the right. ${ROW_WORD.jobs}: ${ROW_WORD.people} (trains a villager) over ${ROW_WORD.build} (the hammer: building is a job), then each job with − and +. ${ROW_WORD.war}: ${ROW_WORD.target} over ${ROW_WORD.home}, the three squads with their time and pace, Go ✓ over Abort ✕. ${ROW_WORD.train}: ${ROW_WORD.orders} over the squad new soldiers join, the four kinds with − and +, ✓ over ✕. Home shows when your Town Center is out of sight. A book on a building means research waits there.`,
 		'Only what you act on stays in sight; the rest is a tap away.',
 	],
 	[
@@ -6598,7 +6599,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The War Council ladder',
-		'Four researches, each opening the next. Engagement: shooters step back from a foe on top of them. Battalions: four squads, A to D; set what each holds of Foot, Archers, Riders and Siege; new soldiers fill them, the rest are the reserve. Formations: Line, Wedge, Square, and your armies march in column. Muster (Gunpowder): the missing soldiers of a battalion in one order, twice the cost, a quarter longer, the time shared by every building that trains them. The computers climb it too.',
+		'Four researches, each opening the next. Engagement: shooters step back from a foe on top of them. Battalions: three squads, Alpha, Bravo and Charlie; set what each holds of Foot, Archers, Riders and Siege; new soldiers fill them, the rest are the reserve. Formations: Line, Wedge, Square, and your armies march in column. Muster (Gunpowder): the missing soldiers of a battalion in one order, twice the cost, a quarter longer, the time shared by every building that trains them. The computers climb it too.',
 		'Rome levied whole legions at once; the drill of Maurice of Nassau (1590s) made trained formations, and armies like the New Model Army (1645) were raised as one force.',
 	],
 	[
@@ -6828,7 +6829,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The row, the squads and pausing',
-		`The cycle button above the first slot turns the row: Jobs, War, Train. On War sit the four squads (once Battalions is researched): tap one for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Out on a mission its card shows its health and standing. Opening a card you sit and read (${orList([...Object.values(READ_CARDS), 'the War Council', 'Relations'])}) pauses the game; a building, a unit or a field to glance at does not; closing it carries on (Help: Pause on cards, off if you like).`,
+		`The cycle button above the first slot turns the row: Jobs, War, Train. On War sit the three squads (once Battalions is researched): tap one for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Out on a mission its card shows its health and standing. Opening a card you sit and read (${orList([...Object.values(READ_CARDS), 'the War Council', 'Relations'])}) pauses the game; a building, a unit or a field to glance at does not; closing it carries on (Help: Pause on cards, off if you like).`,
 		'Thumbs on the map, not in a menu: a phone is not a desk.',
 	],
 	[
@@ -19564,7 +19565,7 @@ function draw() {
 	drawEvents(z);
 	drawOrders(z);
 	drawReticle();
-	drawLaunch();
+	drawStrike();
 	if (G.rally0) flagAt(SX(G.rally0.x), SY(G.rally0.y), G.P[0].color, z);
 	drawTracers();
 	drawLight(z, inView);
@@ -21861,10 +21862,12 @@ function drawSky() {
 		base = mix(mix(SKY.day, SKY.dusk, dusk), SKY.night, nt),
 		cast = stormy ? SKY.storm : SKY[wx],
 		col = cast ? mix(base, cast, wx === 'rain' ? 0.7 : 0.55) : base;
-	const top = (parseFloat(getComputedStyle($('stage')).getPropertyValue('--hb')) || 86) + 2; // the sky begins under the top bars
+	const top = (parseFloat(getComputedStyle($('stage')).getPropertyValue('--hb')) || 86) + 2; // the fade begins under the top bars
 	const gr = ctx.createLinearGradient(0, top, 0, top + h);
 	gr.addColorStop(0, `rgba(${col},.6)`);
 	gr.addColorStop(1, `rgba(${col},0)`);
+	ctx.fillStyle = `rgba(${col},.6)`;
+	ctx.fillRect(0, 0, cw, top); // the sky runs to the top of the screen, under the bars (Albert, Nov 2)
 	ctx.fillStyle = gr;
 	ctx.fillRect(0, top, cw, h);
 	if (still()) return;
@@ -22061,10 +22064,6 @@ cv.addEventListener('pointerdown', (e) => {
 		} // held on one of yours: it is picked, and the next taps add more
 		const at = { x0: G.press.x, y0: G.press.y, x1: G.press.x, y1: G.press.y };
 		G.press = null;
-		if ((h.t === 'ground' || ((h.t === 'unit' || h.t === 'bld') && foeOf(h.e))) && launchAt(h, d.t0)) {
-			drag = { mode: 'launch', ...at };
-			return;
-		} // held on the ground or an enemy: the ring grows, and at full every soldier goes (28-army-quick); a drag turns it into the box
 		drag = { mode: 'box', ...at };
 		G.box = drag;
 	}, HOLD_MS);
@@ -22092,11 +22091,6 @@ cv.addEventListener('pointermove', (e) => {
 		aimSpot(p.x, p.y);
 		return;
 	}
-	if (drag && drag.mode === 'launch' && hyp(p.x - drag.x0, p.y - drag.y0) > 12) {
-		cancelLaunch();
-		drag = { mode: 'box', x0: drag.x0, y0: drag.y0, x1: p.x, y1: p.y };
-		G.box = drag;
-	} // the finger moved: no attack, a box
 	if (drag && drag.mode === 'box') {
 		drag.x1 = p.x;
 		drag.y1 = p.y;
@@ -22147,10 +22141,6 @@ cv.addEventListener('pointerup', (e) => {
 		ui(true);
 		return;
 	}
-	if (d.mode === 'launch') {
-		cancelLaunch();
-		return;
-	} // let go before the ring was full: nothing is sent
 	if (d.mode === 'box') {
 		G.box = null;
 		if (Math.abs(d.x1 - d.x0) < 12 && Math.abs(d.y1 - d.y0) < 12) {
@@ -22189,7 +22179,6 @@ function dropDrag() {
 }
 cv.addEventListener('pointercancel', (e) => {
 	holdStop();
-	cancelLaunch();
 	ptrs.delete(e.pointerId);
 	if (ptrs.size < 2) pinch = null;
 	dropDrag();
@@ -22205,8 +22194,7 @@ cv.addEventListener(
 	{ passive: false },
 );
 ['gesturestart', 'gesturechange', 'gestureend'].forEach((t) => document.addEventListener(t, (e) => e.preventDefault()));
-let miniHold = 0,
-	miniAt = null;
+let miniAt = null;
 mini.addEventListener('pointerdown', (e) => {
 	e.stopPropagation();
 	if (G) G.follow = false;
@@ -22215,20 +22203,15 @@ mini.addEventListener('pointerdown', (e) => {
 	} catch (err) {} // the finger stays the map's until it lifts, even off its edge (an audit, Nov 2)
 	const r = mini.getBoundingClientRect(),
 		x = ((e.clientX - r.left) / r.width) * MAP,
-		y = ((e.clientY - r.top) / r.height) * MAP,
-		t0 = performance.now();
+		y = ((e.clientY - r.top) / r.height) * MAP;
 	camGo(x, y);
 	miniAt = { x: e.clientX, y: e.clientY, pan: false };
-	clearTimeout(miniHold);
-	miniHold = setTimeout(() => launchAt({ t: 'ground', e: { x, y } }, t0), HOLD_MS); // held on the small map: the army is launched there (the ring grows at the spot, now in view)
 });
 mini.addEventListener('pointermove', (e) => {
 	if (!miniAt) return;
 	if (!miniAt.pan && hyp(e.clientX - miniAt.x, e.clientY - miniAt.y) > 8) {
-		clearTimeout(miniHold);
-		cancelLaunch();
 		miniAt.pan = true;
-	} // a finger that moves is looking, not launching
+	} // a finger that moves is looking
 	if (miniAt.pan) {
 		const r = mini.getBoundingClientRect();
 		camStop();
@@ -22239,9 +22222,7 @@ mini.addEventListener('pointermove', (e) => {
 });
 for (const ev of ['pointerup', 'pointercancel'])
 	mini.addEventListener(ev, () => {
-		clearTimeout(miniHold);
 		miniAt = null;
-		cancelLaunch();
 	});
 // what is under the finger: a building (they have height), a find, a unit, a resource, else the ground
 function hitAt(sx, sy) {
@@ -22321,13 +22302,15 @@ function tapAt(sx, sy) {
 		return;
 	}
 	if (G.hud.aim) return aimAt(sx, sy); // Aim: the next tap is the target
+	if (strikeTap(sx, sy)) return; // the sword, then the reticle, then the army goes (28-army-quick)
+	cancelStrike(); // a tap anywhere else: the sword goes (a tap on bare ground puts it down again, below)
 	const h = hitAt(sx, sy),
 		key = h.t === 'ground' ? 'ground' : h.t + h.e.id,
 		now = performance.now(),
 		dbl = key === lastTap.key && now - lastTap.t < DBL_MS && (key !== 'ground' || hyp(sx - lastTap.sx, sy - lastTap.sy) < 26);
 	lastTap = { key, t: now, sx, sy }; // a double tap on the ground opens the Here card for that spot (Albert, Nov 2), as on anything else
 	if (dbl) {
-		G.hint = null; // the first tap's words go
+		G.hint = null;
 		if (h.t === 'ground') return; // the ground has no card (the Here card is cut, Nov 2)
 		setPick([]);
 		openCard(cardFor(h));
@@ -22350,9 +22333,9 @@ function tapAt(sx, sy) {
 			ACT.ordpick(String(O.id));
 			return;
 		} // the ring of a group on the march: tap it to pick the group
-		hintAt(h, sendable().length ? HOLD_WORD.attack : HOLD_WORD.none);
+		strikeAt(h.e.x, h.e.y);
 		return;
-	} // nothing picked: the words "Hold to launch attack" a moment, which teach the hold (Albert, Nov 2); with no soldiers, "No soldiers yet"
+	} // nothing picked: the sword appears there (Albert, Nov 2); with no soldiers, "No soldiers yet"
 	if (
 		h.t === 'bld' &&
 		h.e.owner === 0 &&
@@ -22585,7 +22568,7 @@ function boxPick(d) {
 let cardTap = false; // the tap being handled was inside a card (the click handler, 33-verbs)
 function openCard(c, back) {
 	if (!back) c.from = cardTap && G.card ? (G.card.type === c.type ? G.card.from : G.card) : null;
-	cancelLaunch();
+	cancelStrike();
 	G.techTip = null;
 	G.qs = { from: 'all', n: {} }; // the Attack-with counts start fresh on every card
 	G.relPick = {}; // and what was picked on Relations and not sent
@@ -23206,81 +23189,71 @@ function guardRow(t, id) {
 // their Throne too, while you are at war
 const foeOf = (e) =>
 	e.owner !== 0 && e.hp > 0 && (e.owner === WILD && !e.q && !e.native ? !UNIT[e.kind].meat : atWar(0, e.owner));
-// ── The hold (MENU-SPEC §7, Albert Nov 2, 15:35): hold the ground or an enemy and a point under the finger grows into a ring, white to
-// red, "Hold to launch attack" over it; at full every soldier goes there and the ring snaps out. Lift or drag first and nothing is sent (a
-// drag is the box, 26-input). A plain tap on the ground shows the words a moment, which teaches it. G.launch: what is held (h, as hitAt gives
-// it), when it started, when it fired; G.hint: the words a tap left.
-let launchT = 0;
-function launchAt(h, t0 = performance.now()) {
-	cancelLaunch();
-	if (!sendable().length) return false; // no soldiers: no ring, no words (a hold with none is the box; a tap says "No soldiers yet")
+// ── The strike (Albert, Nov 2, replaces the hold): tap empty ground and a sword shows there; tap the sword and it becomes the reticle;
+// tap the reticle and every soldier goes. A tap anywhere else moves the sword back to its first stage; a tap on an enemy opens its card.
+// G.strike: { x, y, stage: 1 sword | 2 reticle, eta }; G.hint: "No soldiers yet" over a tap with nobody to send
+const strikeNear = (sx, sy) => G.strike && hyp(sx - SX(G.strike.x), sy - SY(G.strike.y)) < 34;
+function strikeAt(x, y) {
+	if (!sendable().length) return (G.strike = null), (G.hint = { h: { e: { x, y } }, w: HOLD_WORD.none, t: performance.now() });
 	G.hint = null;
-	G.launch = { h, t0 }; // the 1.5 s count from the moment the finger landed (an audit, Nov 2: it was the hold's 320 ms and then 1.5 s)
-	launchT = setTimeout(fireLaunch, Math.max(0, LAUNCH.ms - (performance.now() - t0)));
+	G.strike = { x, y, stage: 1 };
 	feel('tick');
+}
+function strikeTap(sx, sy) {
+	const K = G.strike;
+	if (!K || !strikeNear(sx, sy)) return false;
+	if (K.stage === 1) {
+		K.stage = 2;
+		const S = sendable(), e = { x: K.x, y: K.y };
+		K.eta = S.length ? etaOf(S, e, routeK(centreOf(S), e)) : 0;
+		K.t0 = performance.now();
+		feel('snap');
+		return true;
+	}
+	const S = sendable();
+	if (S.length) order(S, { t: 'ground', e: { x: K.x, y: K.y } });
+	else say(freeWhy(), '', TOAST.mid);
+	G.strike = null;
+	feel('thock');
 	return true;
 }
-function cancelLaunch() {
-	clearTimeout(launchT);
-	if (G.launch && !G.launch.fired) G.launch = null;
-}
-function fireLaunch() {
-	const C = G.launch;
-	if (!C || C.fired) return;
-	if (G.paused) return cancelLaunch(); // paused under the finger (a card came up): nothing is sent (an audit, Nov 2)
-	clearTimeout(launchT);
-	const S = sendable();
-	if (S.length) order(S, C.h);
-	else say(freeWhy(), '', TOAST.mid);
-	C.fired = performance.now();
-	feel('snap');
-}
-const hintAt = (h, w = HOLD_WORD.attack) => (G.hint = { h, w, t: performance.now() });
-// the ring and the words, on the map, over the spot (the canvas, each frame; 21-view-frame)
-function drawLaunch() {
-	const now = performance.now(),
-		C = G.launch,
-		I = G.hint,
-		word = (x, y, w, a) => {
-			ctx.globalAlpha = a;
-			ctx.strokeStyle = 'rgba(0,0,0,.75)';
-			ctx.lineWidth = 3;
-			ctx.strokeText(w, x, y);
-			ctx.fillStyle = codeOf('w');
-			ctx.fillText(w, x, y);
-		};
+const cancelStrike = () => (G.strike = null);
+// the sword (a sword in a dark disc) at its spot, and the "No soldiers yet" words a tap with none left (the canvas, each frame; 21-view-frame)
+function drawStrike() {
+	const now = performance.now(), K = G.strike, I = G.hint;
 	if (I && now - I.t > timeOf('settle')) G.hint = null;
-	if (!C && !G.hint) return;
-	ctx.save();
-	ctx.font = mapFont();
-	ctx.textAlign = 'center';
-	ctx.lineJoin = 'round';
-	if (G.hint) word(SX(I.h.e.x), SY(I.h.e.y) - LAUNCH.r - 14, I.w, 1 - (now - I.t) / timeOf('settle'));
-	if (C) {
-		const x = SX(C.h.e.x),
-			y = SY(C.h.e.y),
-			f = C.fired ? 1 : clamp((now - C.t0) / LAUNCH.ms, 0, 1),
-			out = C.fired ? clamp((now - C.fired) / timeOf('quick'), 0, 1) : 0, // at full it snaps out: a little wider, gone
-			r = (4 + (LAUNCH.r - 4) * f) * (1 + 0.4 * out),
-			col = grad(-f); // white to red, the one gradient
-		if (out >= 1) G.launch = null;
-		else {
-			ctx.shadowColor = 'rgba(0,0,0,.85)';
-			ctx.shadowBlur = 3;
-			ctx.beginPath();
-			ctx.arc(x, y, r, 0, 7);
-			ctx.globalAlpha = (1 - out) * 0.1 * f;
-			ctx.fillStyle = col;
-			ctx.fill();
-			ctx.globalAlpha = 1 - out;
-			ctx.strokeStyle = col;
-			ctx.lineWidth = 1.6 + 1.2 * f;
-			ctx.stroke();
-			ctx.shadowBlur = 0;
-			if (!C.fired) word(x, y - LAUNCH.r - 14, HOLD_WORD.attack, 1);
-		}
+	if (K && K.stage === 1) {
+		const x = SX(K.x), y = SY(K.y);
+		ctx.save();
+		ctx.globalAlpha = 0.7;
+		ctx.fillStyle = 'rgba(0,0,0,.7)';
+		ctx.beginPath();
+		ctx.arc(x, y, 18, 0, 7);
+		ctx.fill();
+		ctx.globalAlpha = 1;
+		ctx.strokeStyle = codeOf('w');
+		ctx.lineWidth = 2;
+		ctx.lineCap = 'round';
+		ctx.beginPath();
+		ctx.moveTo(x - 8, y + 8); ctx.lineTo(x + 8, y - 8); // the blade
+		ctx.moveTo(x - 6, y - 2); ctx.lineTo(x + 2, y + 6); // the guard
+		ctx.moveTo(x - 9, y + 9); ctx.lineTo(x - 11, y + 11); // the grip
+		ctx.stroke();
+		ctx.restore();
 	}
-	ctx.restore();
+	if (G.hint) {
+		ctx.save();
+		ctx.font = mapFont();
+		ctx.textAlign = 'center';
+		ctx.lineJoin = 'round';
+		ctx.globalAlpha = 1 - (now - I.t) / timeOf('settle');
+		ctx.strokeStyle = 'rgba(0,0,0,.75)';
+		ctx.lineWidth = 3;
+		ctx.strokeText(I.w, SX(I.h.e.x), SY(I.h.e.y) - 30);
+		ctx.fillStyle = codeOf('w');
+		ctx.fillText(I.w, SX(I.h.e.x), SY(I.h.e.y) - 30);
+		ctx.restore();
+	}
 }
 // ── The War Director (06-rules-tuning, DIRECT): a tap on a kind in the station's middle is its move, a hold its second. Every soldier of
 // that kind that can be sent goes at once; the crosshair (G.hud.h) is where. Each returns what was said, or '' when nobody could go.
@@ -23498,12 +23471,12 @@ const BLD_PAGE = {
 			? {
 					page: list(
 						BN.map((n, j) => btn(`wsq:${j}`, n, `${armyOf(0).filter((u) => u.kind !== 'spy' && u.bn === j).length} in it`)),
-					), // each opens its card, where it is built (39-huddle); four are two and two
+					), // each opens its card, where it is built (39-huddle); three are one rank
 					book: `<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve. Send them from the War page with Go.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}.</p>`,
 				}
 			: {
 					fact: ['No squads yet', G.P[0].techs.has('engage') ? 'next: Battalions' : 'first: Engagement'],
-					book: `<p>${G.P[0].techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, four squads.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`,
+					book: `<p>${G.P[0].techs.has('engage') ? 'Temper is open: set it in the Army card. Next: Battalions, three squads.' : 'Research Engagement first: shooters step back. Then Battalions, Formations and Muster.'}</p>`,
 				},
 	market: (b) => marketPage(b),
 	mint: () =>
@@ -25142,6 +25115,10 @@ const ICON = {
 		20,
 		'<path d="M9 5l-5 5 5 5M4 10h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
 	),
+	gear: SVG(
+		20,
+		'<circle cx="10" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M15.8 4.2l-1.7 1.7M5.9 14.1l-1.7 1.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+	),
 	stop: SVG(20, '<rect x="5" y="5" width="10" height="10" rx="1.5" fill="currentColor"/>'),
 	ok: SVG(
 		20,
@@ -25354,7 +25331,7 @@ function showEnd(won, text, all) {
 	$('endNext').hidden = $('endFree').hidden = !won;
 	$('end').hidden = false;
 	closeCard();
-	cancelLaunch(); // the next game starts with nothing of this one open
+	cancelStrike(); // the next game starts with nothing of this one open
 }
 // The page's own measures: how tall the orders are (the map's bottom edge) and where the map's middle sits between the bars
 function fit() {
@@ -25708,7 +25685,7 @@ function ui(force) {
 			[ICON.mil, String(sol), sol ? '' : 'dis'],
 		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
 		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2]));
-		txt('mailN', String(G.mailN || 0)); // the unread, beside the envelope at the top
+		txt('mailN', (G.mailN || 0) > 99 ? '99+' : String(G.mailN || 0)); // the unread, a badge on the envelope at the top (Albert, Nov 2); 99+ past 99
 		$('mailB').classList.toggle('dis', !(G.mailN || 0));
 	} // the colour code on the pill: blue research you can start, red the people at the roof or idle hands; dim is nothing to see
 	rowUI();
@@ -26318,6 +26295,10 @@ const PLAY = {
 		if (!hasCmd() && !sqOut(i)) return say('Squads come with Battalions.', '', TOAST.short);
 		openCard({ type: 'squad', i });
 	}, // hold a squad: its card, built at home, watched on its mission; an empty squad opens as a new one
+	sqsetup() {
+		if (!hasCmd()) return say('Squads come with Battalions.', '', TOAST.short);
+		openCard({ type: 'sqsetup' });
+	}, // Set Up (Albert, Nov 2): the three squads in one rank, each opening its card where it is built
 	wfire() {
 		hudGo();
 	},
@@ -26922,7 +26903,7 @@ for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndIni
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 43; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 44; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -27125,6 +27106,18 @@ const MIGRATE = {
 		S.v = 43;
 		return S;
 	}, // answer 1b: regard is kept per group (the Natives, outlaws, bandits, robbers); the Natives' moves from G.nat to G.gang.nat; the dead fields go (hunt A #9)
+	43: (S) => {
+		if (S.bnPlan) S.bnPlan = S.bnPlan.slice(0, BNS);
+		if (S.bnIntent) S.bnIntent = S.bnIntent.slice(0, BNS);
+		if (S.form) S.form = S.form.slice(0, BNS);
+		if (S.temper) S.temper = S.temper.slice(0, BNS).concat([S.temper[S.temper.length - 1] ?? T_GUARD]);
+		for (const u of S.units || []) if (u.bn !== undefined && u.bn >= BNS) u.bn = undefined;
+		for (const b of S.blds || []) for (const j of b.q || []) if (j.muster && j.bn >= BNS) j.bn = undefined;
+		S.msn = (S.msn || []).slice(0, BNS);
+		if (typeof S.sel === 'number' && S.sel >= BNS) S.sel = 'all';
+		S.v = 44;
+		return S;
+	}, // Nov 2 (Albert): three squads, Alpha, Bravo and Charlie, and the fourth tile of the row's middle is Set Up; the old fourth squad's soldiers fold into the reserve, as Epsilon and Zeta did in step 36
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -30219,7 +30212,7 @@ function chaseCrown(p, put) {
 // The row (MENU-SPEC §6, Albert's drawings of Oct 30 and 31): one Formation two ranks tall, the same six columns on every page, turned by one
 // button that sits on its own rank above slot 1 and says the page's name: Jobs → War → Train. Slot 1 is two whole slots with the 6 gap
 // between; slots 2 to 5 (to 6 on Jobs) are the page's things, each with − and + under it or, on War, its time and pace; slot 6 is ✓ over ✕.
-// Building is a job: the hammer under People is the one way to the Build menu. War is the HUD: the target over Home, the four squads, Go over
+// Building is a job: the hammer under People is the one way to the Build menu. War is the HUD: the target over Home, the three squads, Go over
 // Abort; a squad is built on its card. Every slot is a picture icon with its number and its word, or a symbol alone (pic, sym in 32-frame);
 // its state is a ring (the states in the style sheet). The Huddle's sequence (ready, aim, fire, abort) lives on in the War page's missions.
 const HUD = {
@@ -30304,9 +30297,7 @@ function aimAt(sx, sy) {
 	feel('tick');
 }
 // the crosshair's colour says what is under it (Albert, Build 63): green yours, blue an ally, white nothing (nature), red an enemy or a hazard
-function aimColor() {
-	const H = G.hud,
-		h = H.h;
+function aimColor(h = G.hud.h) {
 	if (!h) return codeOf('w');
 	if (h.t === 'unit' || h.t === 'bld') {
 		const o = h.e.owner;
@@ -30538,7 +30529,7 @@ function stationPage() {
 					const m = sqOut(i) ? G.msn[i] : null,
 						S = m ? mUnits(m) : hasCmd() ? sqUnits(i) : [];
 					return pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, hasCmd() || m ? '' : 'dis', S.length, ` data-hold="sqcard:${i}"`);
-				}).join('')
+				}).join('') + pic('sqsetup', ICON.gear, ROW_WORD.setup, hasCmd() ? '' : 'dis')
 			: mid === SMID.direct
 				? CLS.map((c, t) => {
 						const n = ofKind(t).length,
@@ -30590,17 +30581,18 @@ function rowUI() {
 }
 // the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; its colour says what is under it; green once fired
 function drawReticle() {
-	const H = G.hud;
-	if (!H.aim || !H.h) return;
+	const K = G.strike && G.strike.stage === 2 ? G.strike : null, // the strike's second stage is this same reticle (Albert, Nov 2)
+		H = K ? { h: { t: 'ground', e: K }, aimT: K.t0, drag: false } : G.hud;
+	if (!K && (!H.aim || !H.h)) return;
 	const x = SX(H.h.e.x),
 		y = SY(H.h.e.y),
 		L = performance.now() - (H.firedT || -1e9) < timeOf('settle') ? 1 : 0,
 		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
 		t = still() ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
-		eta = hudEta(),
+		eta = K ? K.eta : hudEta(),
 		line = (a, b, c, d) => (ctx.moveTo(x + a, y + b), ctx.lineTo(x + c, y + d));
 	ctx.save();
-	ctx.strokeStyle = ctx.fillStyle = L ? codeOf('g') : aimColor();
+	ctx.strokeStyle = ctx.fillStyle = L ? codeOf('g') : aimColor(H.h);
 	ctx.lineWidth = 1.5;
 	if (H.drag) {
 		ctx.globalAlpha = 0.14;
@@ -30744,6 +30736,19 @@ function squadOutHTML(i, m) {
 CARDS.squad = (c) => {
 	c.was = c.was || { plan: { ...G.bnPlan[c.i] }, intent: G.bnIntent[c.i] || 0 }; // what Cancel goes back to: the squad as the card found it
 	return sqOut(c.i) ? squadOutHTML(c.i, G.msn[c.i]) : squadHomeHTML(c);
+};
+// Set Up (Albert, Nov 2): the Squad page's fourth tile. The three squads in one rank, each with what it is set to hold; a tap opens that squad's card, where it is built.
+CARDS.sqsetup = () => {
+	title('Set Up', 'build your squads');
+	return (
+		list(
+			BN.map((n, i) => {
+				const P = G.bnPlan[i],
+					held = CLS.filter((c) => P[c[0]]).map((c) => `${P[c[0]]} ${c[3]}`).join(' · ');
+				return btn(`sqcard:${i}`, n, held || 'empty');
+			}),
+		) + `<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve.</p>`
+	);
 };
 // ═════ 40-emergency.js: Emergency: Stop, Town square, All hands, Shelter ═════
 // Four orders (MENU-SPEC §8, picture Easy Cards). At the first of them the game notes the picture Stop goes back to: every villager's work
@@ -30998,6 +31003,7 @@ for (const ev of ['pointerdown', 'pointermove', 'wheel'])
 		{ passive: true, capture: true },
 	);
 window.addEventListener('resize', fit);
+if (window.ResizeObserver) new ResizeObserver(() => fit()).observe(cv); // a safety net: whenever the map's box changes size, its drawing is measured again (the squashed map, Nov 2)
 buildPanel();
 fit();
 newGame();
@@ -31063,7 +31069,8 @@ window.__fk = {
 	groundSpd,
 	wearMul,
 	say,
-	launchAt,
+	strikeAt,
+	strikeTap,
 	direct,
 	shapeOf,
 	temperOf,
@@ -31071,8 +31078,7 @@ window.__fk = {
 	DIRECT_OF,
 	ofKind,
 	HOLD_WORD,
-	fireLaunch,
-	cancelLaunch,
+	cancelStrike,
 	capFor,
 	armyRoom,
 	capOf,

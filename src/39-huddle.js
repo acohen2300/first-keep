@@ -2,7 +2,7 @@
 // The row (MENU-SPEC §6, Albert's drawings of Oct 30 and 31): one Formation two ranks tall, the same six columns on every page, turned by one
 // button that sits on its own rank above slot 1 and says the page's name: Jobs → War → Train. Slot 1 is two whole slots with the 6 gap
 // between; slots 2 to 5 (to 6 on Jobs) are the page's things, each with − and + under it or, on War, its time and pace; slot 6 is ✓ over ✕.
-// Building is a job: the hammer under People is the one way to the Build menu. War is the HUD: the target over Home, the four squads, Go over
+// Building is a job: the hammer under People is the one way to the Build menu. War is the HUD: the target over Home, the three squads, Go over
 // Abort; a squad is built on its card. Every slot is a picture icon with its number and its word, or a symbol alone (pic, sym in 32-frame);
 // its state is a ring (the states in the style sheet). The Huddle's sequence (ready, aim, fire, abort) lives on in the War page's missions.
 const HUD = {
@@ -87,9 +87,7 @@ function aimAt(sx, sy) {
 	feel('tick');
 }
 // the crosshair's colour says what is under it (Albert, Build 63): green yours, blue an ally, white nothing (nature), red an enemy or a hazard
-function aimColor() {
-	const H = G.hud,
-		h = H.h;
+function aimColor(h = G.hud.h) {
 	if (!h) return codeOf('w');
 	if (h.t === 'unit' || h.t === 'bld') {
 		const o = h.e.owner;
@@ -321,7 +319,7 @@ function stationPage() {
 					const m = sqOut(i) ? G.msn[i] : null,
 						S = m ? mUnits(m) : hasCmd() ? sqUnits(i) : [];
 					return pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, hasCmd() || m ? '' : 'dis', S.length, ` data-hold="sqcard:${i}"`);
-				}).join('')
+				}).join('') + pic('sqsetup', ICON.gear, ROW_WORD.setup, hasCmd() ? '' : 'dis')
 			: mid === SMID.direct
 				? CLS.map((c, t) => {
 						const n = ofKind(t).length,
@@ -373,17 +371,18 @@ function rowUI() {
 }
 // the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; its colour says what is under it; green once fired
 function drawReticle() {
-	const H = G.hud;
-	if (!H.aim || !H.h) return;
+	const K = G.strike && G.strike.stage === 2 ? G.strike : null, // the strike's second stage is this same reticle (Albert, Nov 2)
+		H = K ? { h: { t: 'ground', e: K }, aimT: K.t0, drag: false } : G.hud;
+	if (!K && (!H.aim || !H.h)) return;
 	const x = SX(H.h.e.x),
 		y = SY(H.h.e.y),
 		L = performance.now() - (H.firedT || -1e9) < timeOf('settle') ? 1 : 0,
 		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
 		t = still() ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
-		eta = hudEta(),
+		eta = K ? K.eta : hudEta(),
 		line = (a, b, c, d) => (ctx.moveTo(x + a, y + b), ctx.lineTo(x + c, y + d));
 	ctx.save();
-	ctx.strokeStyle = ctx.fillStyle = L ? codeOf('g') : aimColor();
+	ctx.strokeStyle = ctx.fillStyle = L ? codeOf('g') : aimColor(H.h);
 	ctx.lineWidth = 1.5;
 	if (H.drag) {
 		ctx.globalAlpha = 0.14;
@@ -527,4 +526,17 @@ function squadOutHTML(i, m) {
 CARDS.squad = (c) => {
 	c.was = c.was || { plan: { ...G.bnPlan[c.i] }, intent: G.bnIntent[c.i] || 0 }; // what Cancel goes back to: the squad as the card found it
 	return sqOut(c.i) ? squadOutHTML(c.i, G.msn[c.i]) : squadHomeHTML(c);
+};
+// Set Up (Albert, Nov 2): the Squad page's fourth tile. The three squads in one rank, each with what it is set to hold; a tap opens that squad's card, where it is built.
+CARDS.sqsetup = () => {
+	title('Set Up', 'build your squads');
+	return (
+		list(
+			BN.map((n, i) => {
+				const P = G.bnPlan[i],
+					held = CLS.filter((c) => P[c[0]]).map((c) => `${P[c[0]]} ${c[3]}`).join(' · ');
+				return btn(`sqcard:${i}`, n, held || 'empty');
+			}),
+		) + `<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve.</p>`
+	);
 };

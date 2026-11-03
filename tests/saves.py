@@ -47,6 +47,13 @@ REST = """(raw) => {
     const S = F.MIGRATE[41](o), R = F.MORALE.rout;
     if (S.v !== 42) bad.push('C6: save step 41 does not lead to shape 42');
     if (a.routAt !== 100 - R / 2 || b.routAt !== 100 - R || 'routT' in a || 'routT' in b) bad.push('C6: an old rout opens with the wrong start (' + a.routAt + ', ' + b.routAt + '; want ' + (100 - R / 2) + ', ' + (100 - R) + ')'); }
+  // Nov 2 (Albert): a save with four squads opens with three; the old fourth squad's soldiers go to the reserve, and its selection and plan go with it
+  { const o = JSON.parse(raw); o.v = 43; o.bnPlan = [{}, {}, {}, { foot: 5 }]; o.form = [0, 0, 0, 1]; o.units[0].bn = 3; o.units[1].bn = 1; o.msn = [null, null, null, { name: 'Squad D' }]; o.sel = 3; o.temper = [1, 1, 1, 1, 2];
+    const S = F.MIGRATE[43](o);
+    if (S.v !== 44) bad.push('Nov 2: save step 43 does not lead to shape 44');
+    if (S.bnPlan.length !== 3 || S.form.length !== 3 || S.msn.length !== 3) bad.push('Nov 2: an old four-squad save keeps a fourth squad (' + S.bnPlan.length + ')');
+    if (o.units[0].bn !== undefined || o.units[1].bn !== 1) bad.push("Nov 2: the old fourth squad's soldiers do not go to the reserve");
+    if (S.sel !== 'all' || S.temper.length !== 4 || S.temper[3] !== 2) bad.push("Nov 2: an old save's selection or temper is wrong after the fold"); }
   localStorage.setItem(F.SAVEKEY, '{"units":1,"P":[],"v":39,"blds":null,"x":'); F.readSave();
   if (!localStorage.getItem(F.SAVEKEY + '.lost')) bad.push('a damaged save was not kept aside');
   // two stale saves of different shapes each keep their own slot: the second never overwrites the first
