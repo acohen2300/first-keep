@@ -395,3 +395,9 @@ Checks on main before publishing:
 - Fixed tests (the holes of preview 33): the shield-wall test no longer crashes without a drill; the drilled-archer test now gives it a foe to chase. [2026-11-03 09:05]
 - Taken out: the mine's builder change of preview 33. The builder already went to the gold; the test passes without it (D-091 note). Its plant with it. [2026-11-03 09:05]
 - Cut: the War button (`#emgB`), the cycle button, `jobsPage`, `stationPage`, `SMID`, `ROWS`, the station's styles; the Build menu card (`CARDS.menu`, `buildrow`, `G.buildAt`, `G.lastMenu`: a milestone's or a villager's Build opens Town · Build); the Director's second moves (`advance`, `back`, `wheel`, `directh`, `DIRECT.wheel`, `DIRECT.behind`, `G.wheelT`); `emgpage`, `wmid`, `wfire`, `tok`; EXCEPTIONS #17 closed. [2026-11-03 09:05]
+
+## Build 80 preview 35 (the share as a tap cycle: Albert, Nov 3, 10:06) [2026-11-03 10:09]
+- A tap on a kind in War · Kinds picks all of it; again half, again a quarter, again all; the tile shows the count and the step. At the map's tap the ones nearest that spot go, the rest stay (`SHARE`, `sharePick`, `shareOn`, `shareFor`, 28-army-quick; tapAt, 26-input). Test (gate) and two plants. [2026-11-03 10:09]
+- Built and cut the same morning (never published): the slider up the right edge (Albert, 09:40; cut 10:06 on his outside note: no haptics in Safari, Android's back gesture at the edge, the eyes off the battle; and it kept the ones nearest the middle of the screen, not the target). [2026-11-03 10:09]
+- Already in the game, out of date in the notes: prisoners and ransom; the hold-to-launch ring, Squads A to D, the battle station. [2026-11-03 10:09]
+- Tests: the controller's size check reads the tile's width (seven columns of 3), not the grid's track list (it counted an implicit column); the Town plant gives a page, not a crash; the drawing check waits 250 ms (the idle frame is 66 ms). [2026-11-03 10:09]

@@ -356,8 +356,9 @@ function warCells(sub) {
 				...CLS.map((c, t) => {
 					const n = ofKind(t).length,
 						w = directWait(t),
-						tap = DIRECT_OF[t];
-					return pic(`kpick:${t}`, ICON.cls[c[0]], w ? `${w} s` : c[1], 'w2' + (n ? '' : ' dis'), n || null, ` data-hold="direct:${t}" aria-label="${c[1]}: pick them; hold: ${tap[1]}"`);
+						tap = DIRECT_OF[t],
+						Sh = G.share && G.share.t === t && shareOn() ? G.share : null; // the share picked: its count, and the step it is on
+					return pic(`kpick:${t}`, ICON.cls[c[0]], w ? `${w} s` : Sh && Sh.i ? `${c[1]} ${['', '½', '¼'][Sh.i]}` : c[1], 'w2' + (n ? '' : ' dis') + (Sh ? ' on' : ''), Sh ? Sh.n : n || null, ` data-hold="direct:${t}" aria-label="${c[1]}: tap for all, half, a quarter; hold: ${tap[1]}"`);
 				}),
 				pic('kidle', ICON.idle, ROW_WORD.idle, 'w2' + (idleSoldiers().length ? '' : ' dis'), idleSoldiers().length || null),
 			]) + backCell('w2')

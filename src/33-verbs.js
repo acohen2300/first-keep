@@ -480,8 +480,8 @@ const PLAY = {
 	kpick(a) {
 		const S = ofKind(Number(a));
 		if (!S.length) return say(DIRECT_WHY.none, '', TOAST.short);
-		setPick(S.map((u) => ({ t: 'unit', id: u.id })));
-		say(`${S.length} picked: tap where they go.`, '', TOAST.short);
+		const n = sharePick(Number(a));
+		say(`${n} of ${S.length} picked: tap where they go.`, '', TOAST.short);
 	}, // a kind: every soldier of it picked; the next tap on the map is their order (Albert, Nov 3)
 	rallyat() {
 		const H = G.hud;

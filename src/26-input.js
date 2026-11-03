@@ -397,7 +397,7 @@ function tapAt(sx, sy) {
 		pickToggle(h.e);
 		return;
 	}
-	const mine = picked();
+	const mine = shareFor(h) || picked(); // a share of a kind: the ones nearest this spot (28-army-quick)
 	if (mine.length) {
 		order(mine, h);
 		if (!mine.some(isSoldier)) setPick([]); // villagers given work are let go of; soldiers keep their orders coming (Build 61, Albert)

@@ -131,6 +131,42 @@ function hideQuick() {
 	$('qa').hidden = true;
 	G.qa = null;
 }
+// ── The share (Albert, Nov 3, 10:06: the tap cycle, the slider cut): a tap on a kind in War · Kinds picks all of it; tapping it again picks
+// half, then a quarter, then all again; its count shows on the tile. The ones that go are those nearest the target, chosen when the map is
+// tapped (shareFor); till then the rings show the ones nearest the middle of the screen. G.share: { t, ids, n }. Strategy games run on these
+// roles (all, half, a few): no slider, no edge gesture, no eyes off the battle.
+const SHARE = [1, 0.5, 0.25]; // the steps of the cycle
+const shareN = (N, i) => Math.max(1, Math.ceil(N * SHARE[i]));
+function sharePick(t) {
+	const S = ofKind(t),
+		Sh = G.share,
+		i = Sh && Sh.t === t && shareOn() ? (Sh.i + 1) % SHARE.length : 0,
+		c = toWorld(cw / 2, ch / 2 + vy),
+		near = (p) => (a, b) => hyp(a.x - p.x, a.y - p.y) - hyp(b.x - p.x, b.y - p.y);
+	if (!S.length) return 0;
+	const ids = S.slice().sort(near(c)).map((u) => u.id);
+	G.share = { t, i, ids, n: shareN(ids.length, i) };
+	setPick(ids.slice(0, G.share.n).map((id) => ({ t: 'unit', id })));
+	return G.share.n;
+}
+// the pick is the share's own (a new pick, a tap on one of yours, an empty pick: the share is over)
+const shareOn = () => {
+	const Sh = G.share;
+	if (!Sh) return false;
+	const P = G.pick.filter((k) => k.t === 'unit');
+	return P.length === Sh.n && P.every((k) => Sh.ids.includes(k.id));
+};
+// a tap on the map with the share picked: the n of the kind nearest that spot go, the rest stay as they are
+function shareFor(h) {
+	if (!shareOn()) return null;
+	const p = h.e,
+		U = G.share.ids.map((id) => byId(G.units, id)).filter((u) => u && u.hp > 0);
+	U.sort((a, b) => hyp(a.x - p.x, a.y - p.y) - hyp(b.x - p.x, b.y - p.y));
+	const go = U.slice(0, G.share.n);
+	setPick(go.map((u) => ({ t: 'unit', id: u.id })));
+	G.share.ids = go.map((u) => u.id).concat(G.share.ids.filter((id) => !go.some((u) => u.id === id)));
+	return go;
+}
 function quickGo() {
 	const Q = G.qa,
 		S = sendable();

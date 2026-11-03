@@ -152,3 +152,11 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - A real icon pass for the controller: Jobs, Town, Kinds, Train and War each their own picture (today's stand-ins share icons). [2026-11-03 09:05]
 - The slim strip under the top bar cut, a tap up top opening its place in the controller; Sound to the pause card, the Mail count on pause (preview 36). [2026-11-03 09:05]
 - The Map tile on the full pages too (Albert: "it can replace whatever icons it covers if a person wants"): today it stands at rest and beside Town's column only. [2026-11-03 09:05]
+
+## From Albert's outside notes (Nov 3, 09:35) [2026-11-03 09:46]
+- The war camp: one supply wagon that unpacks into a camp (a forward base), its aura feeding and mending the soldiers near it; the lean form of the forward and support bases. [2026-11-03 09:46]
+- Forming traffic: lower ranks give way to higher (foot, then archers, then siege), a soft push while a drill forms; with Albert's x%-by-time rule. [2026-11-03 09:46]
+- The computers' handicap (EXCEPTIONS #16): replace the free mill and farm with pressure (a raid on a greedy player with no guard, early claims on choke points). [2026-11-03 09:46]
+- Civilisations with ways of their own on the land (walls, riders, rivers): a balance project, each with its own run. [2026-11-03 09:46]
+- Impact on a charge (a front rank pushed back a little, a short shake, a thud): with the juice pass. [2026-11-03 09:46]
+- The share's slider (built and cut Nov 3): kept here in case the tap cycle wants a fine step one day; it would need to sit away from the edge (Android's back gesture) and in the app (haptics). [2026-11-03 10:09]
