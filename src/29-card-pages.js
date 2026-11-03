@@ -546,31 +546,25 @@ function researchHTML() {
 // each says its word once, in its name. What each choice does is in the book
 const setRow = (name, opts, cur) => acts(lab(name, 's' + (6 - opts.length)) + choice(opts.map(([act, w, v]) => [act, w, v === cur]), 's' + opts.length, true), 'c6');
 const offOn = (key, on) => [[`${key}:0`, 'Off', false], [`${key}:1`, 'On', true]].map(([a, w, v]) => [a, w, v === on]);
-const SET_WHY = {
-	diff: {
-		easy: 'Easy: the computers build and raid slowly.',
-		normal: 'Normal: the computers play a fair game.',
-		hard: 'Hard: the computers plan well and raid early.',
-	},
-	fantasy: {
-		0: 'Real: wolves, boar and bandits; nothing that is not history.',
-		1: 'Fantasy: trolls guard the finds, which pay half again.',
-	},
-	fog: { 1: 'Fog on: you see what your people see.', 0: 'Fog off: the whole map, as the computers see it.' },
-	tension: {
-		winner: 'Winner takes all: war until one stands.',
-		diplomacy: 'Dynamic diplomacy: truces, tribute, allies and vassals.',
-	},
-};
-const settingsWhy = () =>
-	`<p>${[SET_WHY.diff[SET.diff], SET_WHY.fantasy[SET.fantasy ? 1 : 0], SET_WHY.fog[SET.fog !== false ? 1 : 0], SET_WHY.tension[SET.tension]].filter(Boolean).join(' ')}</p>`;
-// two two-choice settings share a rank (Nov 3, Albert: the start page on one screen): name, its pair, name, its pair
-const pairRow = (a, b) => acts(lab(a[0], 's1') + choice(a[1].map(([act, w, v]) => [act, w, v === a[2]]), 's2', true) + lab(b[0], 's1') + choice(b[1].map(([act, w, v]) => [act, w, v === b[2]]), 's2', true), 'c6');
+// every setting is its own line (Albert, Nov 3: "all to be on their own line"); Daily only on the New game card
 const settingsHTML = (daily) =>
 	setRow('Difficulty', DIFK.map((k) => [`diff:${k}`, k, k]), SET.diff) +
 	setRow('Length', Object.entries(MODES).map(([k, m]) => [`mode:${k}`, m.name.replace('minutes', 'min'), k]), SET.mode) +
 	setRow('Scenario', Object.keys(SCENARIOS).map((k) => [`scen:${k}`, SCEN_TEXT[k][0].replace('The ', ''), k]), SET.scen || 'open') +
-	pairRow(['World', [['fantasy:0', 'Real', false], ['fantasy:1', 'Fantasy', true]], !!SET.fantasy], ['Fog', offOn('fog', SET.fog !== false), true]) +
-	(daily
-		? pairRow(['Tension', [['tension:winner', 'Winner', 'winner'], ['tension:diplomacy', 'Diplomacy', 'diplomacy']], SET.tension], ['Daily', offOn('daily', !!SET.daily), true])
-		: setRow('Tension', [['tension:winner', 'Winner', 'winner'], ['tension:diplomacy', 'Diplomacy', 'diplomacy']], SET.tension));
+	setRow('World', [['fantasy:0', 'Real', false], ['fantasy:1', 'Fantasy', true]], !!SET.fantasy) +
+	setRow('Fog', offOn('fog', SET.fog !== false), true) +
+	setRow('Tension', [['tension:winner', 'Winner', 'winner'], ['tension:diplomacy', 'Diplomacy', 'diplomacy']], SET.tension) +
+	(daily ? setRow('Daily', offOn('daily', !!SET.daily), true) : '');
+// a people's short name (their unique soldier, without the people's own name)
+const civShort = (k) => cap1(UNIT[CIVS[k].uu].name.replace(new RegExp('^' + CIVS[k].name + ' ', 'i'), ''));
+// The New game card's one info line (Albert, Nov 3): the last option tapped, its act kept on the card itself (G.card.tip, never saved), says
+// what it means; with nothing tapped it shows the picked people's bonus. Returns [the line, a second quiet line]
+const SET_TAP = /^(diff|mode|scen|fantasy|fog|tension|daily|civ|hz):/;
+const tipOf = (k) => {
+	const [v, a] = k.split(/:(.*)/s);
+	return v === 'hz' ? [HAZARDS[a].name, HAZARDS[a].desc] : v === 'civ' ? [civShort(a), CIVS[a].bonus] : [SET_WHY[v][a]];
+};
+document.addEventListener('click', (e) => {
+	const b = e.target.closest('#card [data-act]');
+	if (b && G && G.card && G.card.type === 'setup' && SET_TAP.test(b.dataset.act)) G.card.tip = b.dataset.act; // before the verb redraws the card (33-verbs runs after this file)
+});

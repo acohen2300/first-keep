@@ -55,6 +55,8 @@ function closeCard() {
 		}
 	}
 	$('card').hidden = true;
+	cardMold = false;
+	$('app').classList.remove('cardUp');
 	if (G) preview();
 } // the preview steps back at once
 let cardSig = '';
@@ -99,9 +101,22 @@ function patchHTML(el, html) {
 	tpl.innerHTML = html;
 	patchKids(el, tpl);
 }
-// A card rises from the row (MENU-SPEC §1): as tall as what it holds, its last rank always one gap above the row, never more than its size
-// allows (the style sheet's --capH; Albert, Nov 2: bottom-anchored, no rank of padding)
+// A card stands on the floor over the controller (MENU-SPEC §1; Albert, Nov 3): as tall as what it holds, its last rank at the screen's foot, never
+// more than its size allows (the style sheet's --capH, whole ranks from the floor up to the top bar)
 const cardIn = $('card').firstElementChild;
+// The mold (MENU-SPEC §8; Albert, Nov 3): the villager's card and an item's, nine cells in columns 3 to 5 of the controller's grid and a tab over
+// column 3 holding the kind's icon, one gold outline round both. No title bar, no close: a tap anywhere outside the card closes it. The card
+// being a mold is told by mold(), as title() tells the title: renderCard reads cardMold
+let cardMold = false;
+const mold = (icon, cells) => ((cardMold = true), `<div class="mold"><div class="mt">${icon}</div><div class="mb">${cells.join('')}</div></div>`);
+const mbtn = (act, icon, label, cls = '') => `<button data-act="${act}" class="${cls}" aria-label="${label}">${icon}</button>`; // a tap cell: one icon
+document.addEventListener(
+	'pointerdown',
+	(e) => {
+		if (G && G.card && cardMold && !e.target.closest('#card')) closeCard(); // the tap goes on to do what it does: with a villager picked (Go), it is their order
+	},
+	true,
+);
 // ── the pieces every card is made of. The slot is a button; the Formation lays them (MENU-SPEC §2, §3); the states are classes (§9):
 // go ready (blue ring), on chosen (gold ring), warn danger (red ring, breathing), work in progress (the green ring that recedes, --p the
 // share still to go: toGo), dis locked (dim), main the card's one main action (the gold fill). A cell's span is a class too: h (a half slot), s1 to s6
@@ -188,8 +203,6 @@ const fold = (id, title, html) =>
 const hpBar = (f, col) =>
 	`<div class="hp"><i style="width:${Math.round(100 * clamp(f, 0, 1))}%;background:${col}"></i></div>`;
 const sec = (t) => `<div class="sec">${t}</div>`;
-// a rank of six slots in a card, on the row's mold (pic): an icon over its word. Each [act, icon, word, cls], or null for an empty place
-const rowHTML = (slots) => acts(slots.map((s) => (s ? pic(s[0], s[1], s[2], s[3]) : empty())).join(''), 'c6');
 // a card's name and subtitle: kept here and laid by renderCard as the title bar, which knows the book and the way back
 let cardHead = ['', ''];
 const title = (name, sub, look) => ((cardHead = [name, sub || '', look]), ''); // look: a building's title box, its age on the top edge and its health a bar on the bottom (Nov 2)
@@ -407,6 +420,11 @@ function statusOf(u) {
 						? `on levy from ${G.P[u.levy].name}`
 						: 'at home';
 }
+// what one of yours is doing, in one word: the first of statusOf's words ("at work in the" is working; DOING_WORD)
+const doingWord = (u) => {
+	const w = statusOf(u).split(/[ :,]/)[0].toLowerCase();
+	return cap1(DOING_WORD[w] || w);
+};
 function lifeText(u) {
 	const S = u.st || {},
 		parts = [`${clock(Math.max(0, G.t - (u.bornT || 0)))} old`];

@@ -255,42 +255,39 @@ const CARDS = {
 			P = G.P[o],
 			mine = o === 0 && u.kind === 'vil';
 		if (mine) {
-			// the villager's card (MENU-SPEC §8, picture Easy Cards): what they are doing, then health, age and speed, as info cells; Stop · Send
-			// home · Dismiss; the job picker, the job ribbon reskinned (Build: whatever is placed next, this one raises it). The rest is in the book
-			const [now, more] = statusOf(u).split(' · '),
-				sick = u.sick > G.t,
-				sure = G.confirm === 'v' + u.id;
-			return (
-				title(S.name, 'yours') +
-				acts(
-					info(cap1(now), more || '', 'left line s3') +
-						info(`${Math.round(u.hp)}/${Math.round(u.max)}`, sick ? (u.plague ? 'plague' : 'sick') : 'health') +
-						info(clock(G.t - (u.bornT || 0)), 'age') +
-						info(Math.round(S.spd), 'speed'),
-					'c6',
-				) +
-				list([
-					btn(`vstop:${u.id}`, 'Stop', '', u.job || u.post ? '' : 'dis'),
-					btn(`vfocus:${u.id}`, 'Focus', u.focus ? 'stays where put' : '', u.focus ? 'on' : ''),
-					btn(`vhome:${u.id}`, 'Send home'),
-					btn(`vgo:${u.id}`, sure ? 'Sure?' : 'Dismiss', sure ? 'tap again' : '', sure ? 'warn' : ''),
-				]) +
-				rowHTML(
-					JOBS.map((j) => [`vjob:${u.id},${j}`, ICON[j], cap1(j), u.job === j ? 'on' : '']).concat([
-						[`pbuild:${u.id}`, ICON.hammer, 'Build', u.job === 'repair' ? 'on' : ''],
-					]),
-				) +
-				fold(
-					'about',
-					'About',
-					`<p><i>Life:</i> ${lifeText(u)}. Hits ${Math.round(S.dmg * 10) / 10}, reach ${Math.round(S.rng)}.</p>` +
-						(sick
-							? `<p><b>${u.plague ? 'Plague' : 'Sick'}:</b> works and fights at half strength. A Hospital or a medic nearby cures it.</p>`
-							: '') +
-						`<p>${U.desc}</p>` +
-						(WHY[u.kind] ? `<p><i>Why:</i> ${WHY[u.kind]}</p>` : ''),
-				)
-			);
+			// the villager's card (MENU-SPEC §8, the mold, Albert Nov 3): Go · Build · Job / Doing · Health · Carrying / Stop · Home · Dismiss.
+			// Go picks them, so the next tap on the ground is their order; Job is the next job in the ribbon's order (the vjob verb)
+			const sick = u.sick > G.t,
+				sure = G.confirm === 'v' + u.id,
+				car = Math.round(u.carry || 0),
+				job = JOBS[(JOBS.indexOf(u.job) + 1) % JOBS.length];
+			return mold(ICON.people, [
+				mbtn(`vwalk:${u.id}`, ICON.flag, MOLD_WORD.go, G.pickSet && G.pickSet.has('unit' + u.id) ? 'on' : ''),
+				mbtn(`pbuild:${u.id}`, ICON.hammer, ROW_WORD.build, u.job === 'repair' ? 'on' : ''),
+				mbtn(`vjob:${u.id},${job}`, ICON.basket, MOLD_WORD.job),
+				info(doingWord(u), MOLD_WORD.doing),
+				info(`${Math.round(u.hp)}/${Math.round(u.max)}`, sick ? (u.plague ? 'plague' : 'sick') : MOLD_WORD.health),
+				car > 0 ? info(car, cap1(u.carryType)) : info(MOLD_WORD.nothing, MOLD_WORD.carry),
+				mbtn(`vstop:${u.id}`, ICON.stop, MOLD_WORD.stop, u.job || u.post ? '' : 'dis'),
+				mbtn(`vhome:${u.id}`, ICON.home, MOLD_WORD.home),
+				mbtn(`vgo:${u.id}`, sure ? ICON.ok : ICON.close, sure ? MOLD_WORD.sure : MOLD_WORD.dismiss, sure ? 'warn' : ''),
+			]);
+		}
+		if (o === WILD && U.tags.includes('animal')) {
+			// an animal's card, the item mold: Send a hunter · Locate · Info / Left · Drop · Bonus / Health · Danger · Loot
+			const dr = U.meat ? dropFor(0, 'food', u) : null;
+			fold('about', 'About', `<p>${U.desc}</p>` + (WHY[u.kind] ? `<p><i>Why:</i> ${WHY[u.kind]}</p>` : ''));
+			return mold(U.dmg ? ICON.sword : ICON.food, [
+				U.meat && U.tick === 'wild' ? mbtn(`hunt:${u.id}`, ICON.next, MOLD_WORD.hunter, 'go') : empty(),
+				mbtn(`jump:${Math.round(u.x)},${Math.round(u.y)}`, ICON.aim, MOLD_WORD.locate),
+				mbtn('info', ICON.book, MOLD_WORD.info, G.infoOpen ? 'on' : ''),
+				empty(),
+				U.meat ? info(dr ? Math.round(dist(dr, u)) : MOLD_WORD.none, MOLD_WORD.drop) : empty(),
+				empty(),
+				info(`${Math.round(u.hp)}/${Math.round(u.max)}`, MOLD_WORD.health),
+				U.dmg ? info(Math.round(S.dmg), MOLD_WORD.danger) : empty(),
+				U.meat ? info(U.meat, MOLD_WORD.loot) : empty(),
+			]);
 		}
 		let h =
 			title(
@@ -303,10 +300,6 @@ const CARDS = {
 			) + hpBar(u.hp / u.max, P.color); // the wild in the Natives' own colour (COLORS, Nov 2)
 		h += `<p>Health ${Math.round(u.hp)}/${Math.round(u.max)}${U.dmg ? ` · hits ${Math.round(S.dmg * 10) / 10} · reach ${Math.round(S.rng)}` : ''} · speed ${Math.round(S.spd)}${o !== WILD && isSoldier(u) ? ` · takes ${Math.round(S.armor * 100)}% damage` : ''}.</p>`;
 		if (o === 0) h += `<p><i>Now:</i> ${statusOf(u)}.</p><p><i>Life:</i> ${lifeText(u)}.</p>`;
-		if (o === WILD && U.meat && U.tick === 'wild') {
-			const who = unitsOf(0, 'vil').filter((v) => v.hunt === u).length;
-			h += acts(btn(`hunt:${u.id}`, 'Send a hunter', who ? `${who} hunting` : 'nobody yet', 'go'), 'c1');
-		}
 		if (o === 0 && u.kind === 'caravan') h += caravanHTML(u);
 		if (o === 0 && isSoldier(u) && teachTo(u)) {
 			const why = teachWhy(0, u);
@@ -424,30 +417,28 @@ const CARDS = {
 		title('Welcome back', 'saved on this phone') +
 		`<p>Your game from ${clock(c.t)}: ${CIVS[c.civ] ? CIVS[c.civ].name + ', ' : ''}${AGES[c.age].name} age. Resume it, or start a new one.</p>` +
 		acts(btn('resume', 'Resume', clock(c.t), 'go') + btn('card:setup', 'New game', '')),
-	setup() {
-		// the annoying part before the fun part (Albert): each setting its own rank, then your people and their soldier, the day's challenge,
-		// the hazards, and Start at the foot (v80, picture Setup Stacked with Names). The whys wait behind the book
+	setup(c) {
+		// the annoying part before the fun part (Albert): every setting its own line, your people (no label), the hazards under a label line,
+		// ONE info line (what the last option tapped means) and Start at the foot (v80; Nov 3). The people's soldier and the none-ticked rule wait behind the book
 		const C = CIVS[SET.civ],
 			H = SET.daily ? TODAY_HZ : SET.hz || {},
 			lv = levelOf(H), // none ticked: the hazards are drawn by lot when the game starts (Build 70)
-			short = (k) => cap1(UNIT[CIVS[k].uu].name.replace(new RegExp('^' + CIVS[k].name + ' ', 'i'), ''));
+			[tip1, tip2] = tipOf(c.tip || 'civ:' + SET.civ);
 		fold(
 			'about',
 			'About',
-			settingsWhy() +
-				`<p><b>${short(SET.civ)}:</b> ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}. ${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p>` +
-				HZK.map((k) => `<p><b>${HAZARDS[k].name}:</b> ${HAZARDS[k].desc}</p>`).join('') +
-				`<p><b>Daily challenge:</b> the same map and the same hazards for everyone, all day. Tick a hazard yourself and it becomes your own game again.</p><p><b>None ticked:</b> each hazard is drawn by lot, even odds, for every side alike; the first message says the level.</p><p class="copy">© Albert Labs, all rights reserved</p>`,
+			`<p><b>${civShort(SET.civ)}:</b> ${UNIT[C.uu].name}, in place of the ${UNIT[UNIT[C.uu].replaces].name.toLowerCase()}. Wonder: ${C.wonder}. ${WHY['bonus:' + SET.civ]}</p><p>The other three sides take three of the other peoples at random. Every people has the same rules; only the unique soldier, the bonus and the wonder differ.</p><p><b>None ticked:</b> each hazard is drawn by lot, even odds, for every side alike; the first message says the level.</p><p class="copy">© Albert Labs, all rights reserved</p>`,
 		);
 		return (
 			title('A new game', '') +
 			settingsHTML(true) +
 			acts(choice(CIVK.map((k) => [`civ:${k}`, CIVS[k].name, SET.civ === k]), 's6', true), 'c1') +
-			acts(info(short(SET.civ), C.bonus, 'left line'), 'c1') +
+			acts(lab(SET_WORD.hazards, 's6'), 'c6') +
 			acts(choice(HZK.map((k) => [`hz:${k}`, `<b>${HAZARDS[k].short || HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small>`, !!H[k]]), 's6'), 'c1') +
 			(staleSave
 				? acts(info(`Your last game ${staleSave === 'damaged' ? 'could not be read' : `came from an older version (${staleSave})`}`, 'kept aside, not deleted', 'left line'), 'c1')
 				: '') +
+			acts(info(tip1, tip2 || '', 'left line say'), 'c1') +
 			acts(
 				btn(
 					SET.daily ? 'today' : 'fresh',
@@ -462,22 +453,30 @@ const CARDS = {
 	node(c) {
 		const n = byId(G.nodes, c.id);
 		if (!n) return null;
-		const who = unitsOf(0, 'vil').filter((u) => u.node === n).length,
-			dr = dropFor(0, n.type, n),
+		// an item card (MENU-SPEC section 8, the mold): Send · Locate · Info; Left · Drop · Bonus; what a find says (who works it, what each takes
+		// a minute, what a trip carries). The coordinates, the yield maths and the drop-off sentence wait behind Info
+		const dr = dropFor(0, n.type, n),
 			far = dr ? Math.round(dist(dr, n)) : null,
-			dropName = RESOURCES[n.type].drop;
-		return (
-			title(nodeName(n), `${coord(n.x, n.y)} · ${Math.round(n.amt)} ${n.type} left`) +
-			(n.max > 0 && isFinite(n.max) ? hpBar(Math.min(1, n.amt / n.max), RESOURCES[n.type].col) : '') +
-			acts(btn(`sendvil:${n.id}`, 'Send a villager here', who ? `${who} working` : 'nobody there yet', 'go'), 'c1') +
-			yieldText(n, 0) +
-			`<p>${far === null ? `No drop-off for ${n.type} yet: build a ${dropName}.` : far > 110 ? `Nearest drop-off is ${far} away: build a ${dropName} closer.` : `Nearest drop-off: ${far} away.`}</p>` +
-			fold(
-				'about',
-				'About',
-				`<p>The nearest idle villager goes; if none is idle, one from the job you hold the most of.</p>`,
-			)
+			dropName = RESOURCES[n.type].drop,
+			mul = gatherMul(0, n);
+		fold(
+			'about',
+			'About',
+			`<p>${nodeName(n)} at ${coord(n.x, n.y)}. The nearest idle villager goes; if none is idle, one from the job you hold the most of.</p>` +
+				yieldText(n, 0) +
+				`<p>${far === null ? `No drop-off for ${n.type} yet: build a ${dropName}.` : far > 110 ? `Nearest drop-off is ${far} away: build a ${dropName} closer.` : `Nearest drop-off: ${far} away.`}</p>`,
 		);
+		return mold(ICON[n.type] || ICON.food, [
+			mbtn(`sendvil:${n.id}`, ICON.next, MOLD_WORD.villager, 'go'),
+			mbtn(`jump:${Math.round(n.x)},${Math.round(n.y)}`, ICON.aim, MOLD_WORD.locate),
+			mbtn('info', ICON.book, MOLD_WORD.info, G.infoOpen ? 'on' : ''),
+			info(isFinite(n.amt) ? Math.round(n.amt) : '∞', MOLD_WORD.left),
+			info(far === null ? MOLD_WORD.none : far, MOLD_WORD.drop),
+			Math.abs(mul - 1) < 0.005 ? info(MOLD_WORD.none, MOLD_WORD.bonus) : info(`${mul > 1 ? '+' : ''}${Math.round((mul - 1) * 100)}%`, MOLD_WORD.bonus),
+			info(`${n.wk || 0}/${n.kind === 'farm' ? slotsOf(n) : findCap(n)}`, MOLD_WORD.working),
+			info(Math.round((n.rate || RATE_OF[n.kind]) * mul * 60), MOLD_WORD.rate),
+			info(carryOf(0), MOLD_WORD.trip),
+		]);
 	},
 	troops() {
 		// the Army card (Albert, Build 41): from the sword under Build
@@ -818,8 +817,9 @@ const CARDS = {
 };
 const GUIDE_PG = { key: '', h: '' }; // the Guide's page, built once a page (CARDS.guide)
 const FULL = new Set(['setup', 'resume', 'help', 'guide', 'score', 'research', 'menu', 'troops']); // the cards that take the whole height; the Army card with Battalions needs 11 ranks (E8)
-// three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet: lg every rank that fits above the row (the Build
-// card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most
+const UP_CARDS = new Set(['setup', 'resume']); // the cards that may rise over the top bar (Albert, Nov 3); every other card stops under it, the counts in sight
+// three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet from the floor up: lg every rank that fits under the top
+// bar (the Build card, the Guide, Help, Setup); md a thing's card, 10 at most; sm a short one, 8 at most; mold the villager's and an item's
 const SIZE_OF = (c) =>
 	FULL.has(c.type) || (c.type === 'bld' && (byId(G.blds, c.id) || {}).kind === 'market')
 		? 'lg'
@@ -832,6 +832,7 @@ function renderCard() {
 	cardPause(c);
 	infoBuf = [];
 	cardHead = ['', ''];
+	cardMold = false;
 	let h = CARDS[c.type](c);
 	if (h === null) {
 		closeCard();
@@ -841,7 +842,7 @@ function renderCard() {
 		bookOn = !!book && G.infoOpen,
 		tip = G.techTip && TECHBY[G.techTip];
 	h =
-		titleBar(cardHead, !!book, bookOn) +
+		(cardMold ? '' : titleBar(cardHead, !!book, bookOn)) + // a mold card has no title bar: its Info cell opens the book
 		(bookOn ? `<div class="infoP">${book}</div>` : '') +
 		(tip ? `<div class="infoP">${techBook(tip)}<p>Cost ${costText(tip.cost)} · ${tip.t} s to research.</p></div>` : '') +
 		h;
@@ -849,8 +850,10 @@ function renderCard() {
 		cardSig = h;
 		patchHTML(cardIn, h);
 	}
-	const size = SIZE_OF(c);
-	for (const s of ['lg', 'md', 'sm']) $('card').classList.toggle(s, size === s);
+	const size = cardMold ? 'mold' : SIZE_OF(c);
+	for (const s of ['lg', 'md', 'sm', 'mold']) $('card').classList.toggle(s, size === s);
+	$('card').classList.toggle('up', UP_CARDS.has(c.type)); // New game and Welcome back rise over the top bar too: no game runs under them
+	$('app').classList.add('cardUp'); // the floating buttons step aside while a card stands on the floor (shell-head)
 	$('card').hidden = false;
 }
 $('card').addEventListener(

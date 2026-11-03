@@ -834,6 +834,66 @@ const tierLines = () => {
 		E = TECH.filter((t) => t.tier && t.civ).map((t) => `${UNIT[t.tier.unit].name} → ${t.tier.name}`);
 	return `${L.join('; ')}. The unique soldier of each people gains one elite rank at the Castle: ${E.join('; ')}.`;
 };
+// the New game card (Albert, Nov 3): its one info line says what the last option tapped means, a sentence of ten words at most, keyed as the
+// verb and its argument ("diff", "easy"); a hazard says its own desc (HAZARDS) and a people its bonus (CIVS)
+const SET_WHY = {
+	diff: {
+		easy: 'Easy: the computers build and raid slowly.',
+		normal: 'Normal: the computers play a fair game.',
+		hard: 'Hard: the computers plan well and raid early.',
+	},
+	mode: {
+		conquest: 'Conquest: no clock; play until one side stands.',
+		t15: 'Fifteen minutes: the top score at the bell wins.',
+		t30: 'Thirty minutes: the top score at the bell wins.',
+		t60: 'Sixty minutes: the top score at the bell wins.',
+	},
+	scen: {
+		open: 'Open: the ordinary start, a keep and villagers.',
+		siege: 'The Siege: hold a walled town for thirty minutes.',
+		road: 'Silk Road: every court at peace; trade and the Games.',
+		last: 'Last Keep: three courts allied against you from the start.',
+	},
+	fantasy: {
+		0: 'Real: wolves, boar and bandits; nothing that is not history.',
+		1: 'Fantasy: trolls guard the finds, which pay half again.',
+	},
+	fog: { 1: 'Fog on: you see what your people see.', 0: 'Fog off: the whole map, as the computers see it.' },
+	tension: {
+		winner: 'Winner takes all: war until one stands.',
+		diplomacy: 'Dynamic diplomacy: truces, tribute, allies and vassals.',
+	},
+	daily: { 1: 'Daily on: one map and hazards for everyone, all day.', 0: 'Daily off: your own map and your own hazards.' },
+};
+const SET_WORD = { hazards: 'Hazards · the number is its points' }; // the label line over the hazards
+// the villager and item cards (the mold, MENU-SPEC section 8): a cell's label under its value, or its aria-label when it is only an icon
+const MOLD_WORD = {
+	go: 'Go: your next tap on the ground sends them',
+	job: 'Job: the next one',
+	home: 'Send home',
+	dismiss: 'Dismiss',
+	sure: 'Sure? Tap again',
+	stop: 'Stop',
+	hunter: 'Send a hunter',
+	villager: 'Send a villager',
+	locate: 'Locate',
+	info: 'Info',
+	doing: 'doing',
+	health: 'health',
+	carry: 'carrying',
+	nothing: 'Nothing',
+	left: 'left',
+	drop: 'drop-off',
+	none: 'none',
+	bonus: 'bonus',
+	working: 'working',
+	rate: 'a minute',
+	trip: 'a trip',
+	danger: 'danger',
+	loot: 'meat',
+};
+// what one is doing in one word that fits a cell of the mold at 375 pt: the first word of its state, and these where that is too wide
+const DOING_WORD = { at: 'working', butchering: 'butchery', sheltering: 'hiding', defending: 'guarding' };
 // What triggers what: when, then, why. Every number is read from its table (F9), so the numbers cannot drift from the game.
 const TRIGGERS = () => [
 	[
