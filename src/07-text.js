@@ -795,6 +795,7 @@ const EV_TEXT = {
 // The row's words (MENU-SPEC §6): the word under each picture icon that is not a name from a table (RESOURCES, BN, CLS) or a pace (paceWord),
 // and the cycle button's page names. The gate measures every word a slot can show in its slot at 375 pt.
 const HOLD_WORD = { none: 'No soldiers yet' }; // the sword with nobody to send (28-army-quick)
+const HIDE_WORD = { hide: 'Hide the controls', show: 'Open the controls' }; // the Hide button's label unfolded and folded (Albert, Nov 3); not a slot word
 const ROW_WORD = {
 	jobs: 'Jobs',
 	war: 'War',
@@ -820,8 +821,6 @@ const ROW_WORD = {
 	research: 'Research',
 	relations: 'Relations',
 	map: 'Map',
-	hide: 'Hide the controls', // the Hide button's label, and when folded (Albert, Nov 3)
-	show: 'Open the controls',
 	ambush: 'Ambush',
 	choke: 'Choke',
 	emgW: [['Work', 'all clear'], ['Gather', 'at home'], ['Garrison', 'all in'], ['Shelter', 'hide']], // the Alarm page: each order's word and what it does, in the row's order (Albert, Nov 2: Age of Empires' Town Bell and Back to Work)

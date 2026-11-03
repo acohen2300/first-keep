@@ -438,7 +438,7 @@ function rowUI() {
 		$('orders').className = 'ctl pg-' + (G.hud.page || 'rest');
 		$('hideB').innerHTML = G.hud.shut ? ICON.plus : ICON.minus; // one button: a minus over War; folded, a plus in the corner
 		$('hideB').classList.toggle('shut', !!G.hud.shut);
-		$('hideB').setAttribute('aria-label', G.hud.shut ? ROW_WORD.show : ROW_WORD.hide);
+		$('hideB').setAttribute('aria-label', G.hud.shut ? HIDE_WORD.show : HIDE_WORD.hide);
 		fit(); // the row is drawn anew: the map's bottom edge is measured again
 	}
 }
