@@ -163,7 +163,7 @@ JS = """() => {
     G.P[0].res.f = 1; if (F.orderCost(0, S) !== 1 || G.P[0].res.f !== 0) bad.push('order: with one food in the store the order took more'); });
   // ── war camps (Nov 3, CAMP): the wagon from the Stable, the strip and the square, trees burned, soldiers raising at 60%, the tent's price, the wounded sent home ──
   T_(() => { const G = fresh(), k = F.keepOf(0); let P = null; for (let r = 220; r < 700 && !P; r += 20) for (let t = 0; t < 12 && !P; t++) { const x = k.x + Math.cos(t) * r, y = k.y + Math.sin(t) * r; if (Math.abs(x - F.MID) > 300 || Math.abs(y - F.MID) > 300) if (!F.campWhy(0, 'camp', x, y)) P = { x, y }; }   // room for the square, off the Throne's lake
-    if (!P) { bad.push('camp: no ground for a camp within 700 of the Town Center'); return; } clear(G, P, 300); G.P[0].age = 2; G.P[0].techs.add('campwagons'); G.P[0].techs.add('granary'); F.fxDirty();
+    if (!P) { bad.push('camp: no ground for a camp within 700 of the Town Center'); return; } clear(G, P, 300); G.P[0].age = 2; G.P[0].techs.add('campwagons'); { const q = F.findSpot(0, 'store', k.x, k.y, 80, 260); if (q) { const b = F.mkBld(0, 'store', q.x, q.y, 1); G.blds.push(b); F.navRebuild(); } } F.fxDirty();   // the Store a camp draws on
     const O = F.campLayout('outpost', P.x, P.y, 0, 1), C = F.campLayout('camp', P.x, P.y, 0, 1), cnt = (L, kind) => L.filter((p) => p.kind === kind).length;
     if (O.length !== 5 || cnt(O, 'camptower') !== 1 || !['medtent', 'traintent', 'messtent', 'depot'].every((t) => cnt(O, t) === 1)) bad.push('camp: the outpost is not four tents and a tower (' + O.map((p) => p.kind).join() + ')');
     if (Math.max(...O.map((p) => Math.abs(p.y - P.y))) > 1 || new Set(O.map((p) => Math.round(p.x))).size !== 5) bad.push('camp: the outpost is not one thin strip');
@@ -173,7 +173,7 @@ JS = """() => {
     const yard = C.filter((p) => p.kind !== 'palisade' && p.kind !== 'gate').map((p) => F.snapPos(p.kind, p.x, p.y)), inner = (side - 2) * (side - 2) - yard.length * 4, room = Math.floor(inner * 100 / (F.GRID.gap * F.GRID.gap)); if (room < F.CAMP.hold) bad.push('camp: the yard holds ' + room + ' at ' + F.GRID.gap + ' apart, not ' + F.CAMP.hold);
     // the limit: one of each; the Outpost from Bronze, the Camp from Classical with the research; a second with the next age
     G.P[0].age = 0; if (!F.campWhyTrain(0, 'outpost') || !F.campWhyTrain(0, 'camp')) bad.push('camp: a wagon is allowed in the Stone age'); G.P[0].age = 1; if (F.campWhyTrain(0, 'outpost') || !F.campWhyTrain(0, 'camp')) bad.push('camp: the Bronze age does not give the outpost alone');
-    G.P[0].age = 2; G.P[0].techs.delete('campwagons'); if (!F.campWhyTrain(0, 'camp')) bad.push('camp: a Camp wagon without the research'); G.P[0].techs.add('campwagons'); G.P[0].techs.delete('granary'); if (!F.campWhyTrain(0, 'camp')) bad.push('camp: a Camp wagon without the store (Stone granary)'); G.P[0].techs.add('granary'); if (F.campWhyTrain(0, 'camp')) bad.push('camp: a Camp wagon refused with the research');
+    G.P[0].age = 2; G.P[0].techs.delete('campwagons'); if (!F.campWhyTrain(0, 'camp')) bad.push('camp: a Camp wagon without the research'); G.P[0].techs.add('campwagons'); { const st = G.blds.find((b) => b.owner === 0 && b.kind === 'store'); st.hp = 0; if (!F.campWhyTrain(0, 'camp')) bad.push('camp: a Camp wagon without a Store standing'); st.hp = 400; } if (F.campWhyTrain(0, 'camp')) bad.push('camp: a Camp wagon refused with the research');
     // the wagon unpacks on open ground; the trees under it burn; it is gone
     const w = F.addUnit(0, 'campcart', P.x, P.y); if (!F.campWhyTrain(0, 'camp')) bad.push('camp: a second Camp wagon allowed while one is out');
     const before = G.nodes.filter((n) => n.kind === 'tree' && Math.hypot(n.x - P.x, n.y - P.y) < side * 5 + 20).length;
@@ -198,8 +198,8 @@ JS = """() => {
       s.hp = s.max; run(2); if (s.goingHome) bad.push('camp: a healed soldier is still going home'); }
     // step 2: the depot feeds the camp and an empty one leaves it unsupplied; a caravan runs food out for the food and a fee; weather wears a piece and a soldier mends it; a wagon sinks deeper in mud; a camp is a pool for sickness
     if (G.blds.some((b) => b.owner === 0 && b.kind === 'depot' && b.prog >= 1)) { const dep = G.blds.find((b) => b.owner === 0 && b.kind === 'depot' && b.prog >= 1), S2 = [0, 1, 2].map((i) => F.addUnit(0, 'spear', dep.x + 20 + i * 8, dep.y + 20)); for (const u of S2) { u.state = 'home'; u.px = u.x; u.py = u.y; }
-      dep.supply = 100; const f0 = G.P[0].res.f, fed = F.campEat(0, F.UPKEEP.share); if (!(fed > 4 && dep.supply < 100 && G.P[0].res.f === f0)) bad.push('camp: three soldiers by the depot did not eat from it (' + fed + ' shares, supply ' + dep.supply.toFixed(1) + ')'); if (S2.some((u) => u.unfed)) bad.push('camp: a fed soldier counts as unsupplied');
-      dep.supply = 0; F.campEat(0, F.UPKEEP.share); if (!S2.every((u) => u.unfed > 0 && u.tired > G.t)) bad.push('camp: an empty depot left the soldiers supplied'); dep.supply = 50; F.campEat(0, F.UPKEEP.share); if (S2.some((u) => u.unfed)) bad.push('camp: a restocked depot did not feed');
+      dep.supply = 100; const eats = (u) => F.shareOf(u) * F.UPKEEP.share, f0 = G.P[0].res.f, fed = F.campEat(0, eats); if (!(fed > 0.2 && dep.supply < 100 && G.P[0].res.f === f0)) bad.push('camp: three soldiers by the depot did not eat from it (' + fed.toFixed(2) + ' food, supply ' + dep.supply.toFixed(1) + ')'); if (S2.some((u) => u.unfed)) bad.push('camp: a fed soldier counts as unsupplied');
+      dep.supply = 0; F.campEat(0, eats); if (!S2.every((u) => u.unfed > 0 && u.tired > G.t)) bad.push('camp: an empty depot left the soldiers supplied'); dep.supply = 50; F.campEat(0, eats); if (S2.some((u) => u.unfed)) bad.push('camp: a restocked depot did not feed');
       // the caravan's run: a Market, a caravan, a depot under half; it loads at the Market for the food and the fee and unloads at the depot
       const mk = F.mkBld(0, 'market', k.x + 70, k.y - 70, 1); G.blds.push(mk); const c = F.addUnit(0, 'caravan', mk.x, mk.y + 30); c.lastId = mk.id; dep.supply = 0; G.P[0].res.f = 1000; G.P[0].res.g = 500; const g0 = G.P[0].res.g, f1 = G.P[0].res.f;
       run(2); if (!c.sup) bad.push('camp: the idle caravan did not take the supply run'); else { const fee = Math.ceil(F.CAMP.fee * Math.hypot(mk.x - dep.x, mk.y - dep.y) / 100); let secs = 0; while (c.sup && c.sup.leg === 'load' && secs < 60) { run(1); secs++; } const ate = secs * G.P[0].eats / 60 + 2;
@@ -215,6 +215,33 @@ JS = """() => {
     else bad.push('camp: no depot standing for step 2');
     // the wagon on the road is a mark: a foe kills it
     const w2 = F.addUnit(0, 'outpostcart', P.x, P.y), e = F.addUnit(1, 'sword', P.x + 15, P.y); G.rel[0][1] = G.rel[1][0] = 'war'; if (F.nearestFoe(1, e, 50) !== w2) bad.push('camp: a foe beside the wagon does not take it for a mark'); F.hurt(1, e, w2, 10); if (!(w2.hp < F.UNIT.outpostcart.hp)) bad.push('camp: a blow on the wagon did nothing'); });
+  // ── the Store (Nov 3, Albert 13:15): food spoils half as fast, soldiers eat a tenth less, prices swing half as far; a Camp wagon needs one; Learning by doing ──
+  T_(() => { const G = fresh(), k = F.keepOf(0), P = G.P[0]; P.age = 2; P.techs.add('campwagons'); F.fxDirty();
+    if (!F.campWhyTrain(0, 'camp') || !/Store/.test(F.campWhyTrain(0, 'camp'))) bad.push('store: a Camp wagon allowed with no Store standing (' + F.campWhyTrain(0, 'camp') + ')');
+    const s0 = F.fxv(0, 'spoil').m, e0 = F.fxv(0, 'eat', F.unitKeys('spear')).m, v0 = F.fxv(0, 'eat', F.unitKeys('vil')).m;
+    const sp = F.findSpot(0, 'store', k.x, k.y, 80, 260); if (!sp) { bad.push('store: no ground for one'); return; } const st = F.mkBld(0, 'store', sp.x, sp.y, 1); G.blds.push(st); F.navRebuild(); F.fxDirty();
+    if (F.campWhyTrain(0, 'camp')) bad.push('store: a Camp wagon refused with a Store standing: ' + F.campWhyTrain(0, 'camp'));
+    if (Math.abs(F.fxv(0, 'spoil').m / s0 - 0.5) > 1e-6) bad.push('store: food does not spoil half as fast (' + (F.fxv(0, 'spoil').m / s0).toFixed(2) + ')');
+    if (Math.abs(F.fxv(0, 'eat', F.unitKeys('spear')).m / e0 - 0.9) > 1e-6 || F.fxv(0, 'eat', F.unitKeys('vil')).m !== v0) bad.push('store: the ration is not a tenth off for soldiers alone');
+    G.mkt = G.mkt || {}; G.mkt.f = 0.25; const m1 = F.mkt('f'), m0 = F.mkt('f', 0); if (!(m1 > 1.5 && Math.abs(m0 - 1 - (m1 - 1) * 0.5) < 1e-6)) bad.push('store: the price swing is not halved for its owner (' + m1.toFixed(2) + ' against ' + m0.toFixed(2) + ')'); G.mkt.f = 1;
+    // Learning by doing: three farms standing, each yields 10% more; four, 15%; the cap at four past the first
+    const farms = []; for (let i = 0; i < 6 && farms.length < 6; i++) { const q = F.findSpot(0, 'farm', k.x, k.y, 100, 400); if (!q) break; const b = F.mkBld(0, 'farm', q.x, q.y, 1); G.blds.push(b); F.navRebuild(); farms.push(b); }
+    if (farms.length < 3) bad.push('store: no ground for three farms'); else { const n0 = F.gatherMul(0, farms[0].node); P.techs.add('learning'); F.fxDirty(); const n1 = F.gatherMul(0, farms[0].node), want = 1 + F.SCALE.per * Math.min(F.SCALE.cap, farms.length - 1);
+      if (Math.abs(n1 / n0 - want) > 1e-6) bad.push('store: with ' + farms.length + ' farms Learning by doing gives ×' + (n1 / n0).toFixed(3) + ', not ×' + want.toFixed(3)); } });
+  // ── field defences (Nov 3, Albert: yes): caltrops sown in a strip, the archers' stakes, pits in a band, the abatis of a camp by forest ──
+  T_(() => { const G = fresh(), k = F.keepOf(0), P = G.P[0]; P.age = 2; P.res.i = 500; P.res.w = 900; G.rel[0][1] = G.rel[1][0] = 'war';
+    if (!F.capWhy(0, 'caltrops')) bad.push('field: caltrops may be laid without the research'); P.techs.add('caltrops'); F.fxDirty(); if (F.capWhy(0, 'caltrops')) bad.push('field: caltrops refused with the research: ' + F.capWhy(0, 'caltrops'));
+    if (!F.lineKind('caltrops') || !F.lineKind('pit') || F.lineKind('house')) bad.push('field: traps are not drawn as a line like a wall');
+    let o = null; for (let r = 120; r < 500 && !o; r += 20) for (let t = 0; t < 12 && !o; t++) { const x = k.x + Math.cos(t) * r, y = k.y + Math.sin(t) * r; if (!F.canPlace(0, 'caltrops', x, y) && !F.canPlace(0, 'caltrops', x + 10, y) && !F.canPlace(0, 'caltrops', x + 20, y)) o = { x: Math.floor(x / 10) * 10 + 5, y: Math.floor(y / 10) * 10 + 5 }; }
+    if (!o) { bad.push('field: no ground for a strip of three'); return; }
+    const C = [0, 10, 20].map((dx) => F.build(0, 'caltrops', o.x + dx, o.y)); if (C.some((b) => !b)) bad.push('field: three caltrop squares side by side refused (a trap keeps no lane)'); for (const b of C) if (b) { b.prog = 1; F.built(b); }
+    const e = F.addUnit(1, 'chariot', o.x, o.y); e.state = 'goto'; e.px = e.x; e.py = e.y; const h0 = e.hp; run(1); if (!(e.hp < h0 && e.stuck > G.t)) bad.push('field: a chariot on caltrops was not hurt and stuck (' + (h0 - e.hp).toFixed(1) + ')'); if (C[0] && C[0].hp <= 0) bad.push('field: one horse trod the caltrops flat'); if (C[0] && !C[0].seen[1]) bad.push('field: sprung caltrops are still unseen by that side');
+    const ft = F.addUnit(1, 'spear', o.x, o.y); ft.state = 'goto'; ft.px = ft.x; ft.py = ft.y; const f0 = ft.hp; run(1); if (!(ft.hp < f0 && ft.hp > f0 - ft.max * F.CALTROPS.horse)) bad.push('field: a foot soldier on caltrops was hurt like a horse, or not at all'); e.hp = 0; ft.hp = 0;
+    // the archers' stake: a shooter that has stood with the research; a horse that strikes it is hurt, its charge ends, it is thrown back
+    const a = F.addUnit(0, 'archer', o.x + 60, o.y + 60), rd = F.addUnit(1, 'chariot', o.x + 66, o.y + 60); a.state = 'goto'; a.px = a.x; a.py = a.y; a.mvT = G.t - 10; rd.chg = G.t + 5;
+    F.hurt(1, rd, a, 1); if (a.staked) bad.push('field: a shooter without the research has a stake'); P.techs.add('archerstakes'); F.step(T); if (!a.staked) bad.push('field: a shooter that has stood five seconds has no stake');
+    const r0 = rd.hp, rx = rd.x; F.hurt(1, rd, a, 1); if (!(rd.hp < r0 - rd.max * F.STAKES.dmg * 0.9 && rd.chg <= G.t && Math.abs(rd.x - rx) > F.STAKES.shove * 0.5)) bad.push('field: a horse on the stake was not hurt, stopped and thrown back (' + (r0 - rd.hp).toFixed(1) + ', moved ' + Math.abs(rd.x - rx).toFixed(1) + ')');
+    a.mvT = G.t; F.step(T); if (a.staked) bad.push('field: a shooter that moved kept its stake'); rd.hp = 0; a.hp = 0; });
   return bad;
 }"""
 async def main():

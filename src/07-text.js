@@ -218,6 +218,9 @@ const WHY = {
 	fieldcraft: 'Hunters read ground, wind and track long before there were soldiers; the first warriors were hunters.',
 	camps: 'Every Roman army dug a ditched camp each night; a fed, rested army was never surprised asleep.',
 	marching: 'Roman roads and Roman discipline moved a legion twenty miles a day with its baggage; Caesar did thirty.',
+	archerstakes: 'Henry V had every archer cut a six-foot stake before Agincourt (1415), after the Turkish stakes at Nicopolis; driven in at an angle, they impaled the horses of the French charge.',
+	learning: 'Wright (1936) measured it on aircraft: each doubling of what a shop had made cut the labour in a unit by a fixed share, about a fifth; the Romans knew it as the quarry gang and the mint team that struck a thousand coins a day.',
+	pinfactory: 'Adam Smith (1776): ten men dividing the work made 48,000 pins a day where one man alone made twenty; the mint and the workshops run on the same rule.',
 	campwagons: 'A Roman camp travelled on its baggage train: tents, tools, mills and grain, a mule to every eight men and carts behind; the Hussites went further and fought from the wagons.',
 	fieldlog: 'Marius made his soldiers carry their own kit, the mules of Marius; a legion that fed and housed itself in the field outmarched one that waited on its train.',
 	warmclothes: 'The sagum, the wool cloak of the legions, kept the legions through Gaul; wet wool still warms.',
@@ -437,6 +440,12 @@ const WHY = {
 		'Scribal schools taught writing in Sumer by about 2000 BC; writing itself began as accounts at Uruk (about 3100 BC) and in Egypt soon after.',
 	library:
 		'The library of Ashurbanipal at Nineveh (7th century BC) and the Library of Alexandria (about 295 BC) gathered texts and scholars. Universities came later: Bologna in the 11th century, with al-Qarawiyyin (859) and Nalanda (5th century) older in their own traditions.',
+	store:
+		'Rome kept its grain in horrea raised on pillars against the damp, some 290 of them by the late empire; the Han ever-normal granary of Geng Shouchang (54 BC) bought in good years and sold in bad to hold the price.',
+	caltrops:
+		'The Roman tribulus: four iron spikes, one always up. Quintus Curtius has them strewn at Gaugamela (331 BC); Vegetius has the Romans sow them against scythed chariots. Worst on the soft foot of a camel.',
+	abatis:
+		'The oldest obstacle: trees felled toward the enemy with the branches sharpened, the trunks pinned. Caesar at Alesia set his cippi the same way; armies dug it in to 1914.',
 	medtent:
 		'The Roman marching camp kept a hospital tent: Hyginus sets the valetudinarium away from the workshops so the convalescent could rest, and sized it for 200 men.',
 	traintent:

@@ -205,7 +205,7 @@ function trapsTick() {
 				b.seen[v.owner] = 1;
 				if (v.owner === 0)
 					news('war', 
-						`Your scout found ${kind === 'pit' ? 'a pit' : kind === 'net' ? 'a net' : 'stakes'} at ${coord(b.x, b.y)}.`,
+						`Your scout found ${kind === 'pit' ? 'a pit' : kind === 'net' ? 'a net' : kind === 'caltrops' ? 'caltrops' : 'stakes'} at ${coord(b.x, b.y)}.`,
 						'good',
 						TOAST.mid,
 						b,
@@ -213,6 +213,25 @@ function trapsTick() {
 				return;
 			}
 			if (b.seen[v.owner] || dist(v, b) > NATIVE.trapR) return;
+			if (kind === 'caltrops') {
+				// a square of caltrops takes CALTROPS.hits before it is trodden flat; horse worst, then foot; seen by the side once sprung
+				if (G.t - (v.spikeT || -9) < CALTROPS.again) return;
+				v.spikeT = G.t;
+				const horse = hasTag(v.kind, 'mounted');
+				v.hp -= v.max * (horse ? CALTROPS.horse : CALTROPS.foot);
+				v.hurtT = G.t;
+				v.flashT = G.t;
+				if (horse) v.stuck = G.t + CALTROPS.stuck;
+				b.hits = (b.hits || 0) + 1;
+				b.seen[v.owner] = 1;
+				if (b.hits >= CALTROPS.hits) {
+					b.hp = 0;
+					b.gone = true;
+				}
+				if (v.owner === 0) news('war', `Caltrops! Your ${UNIT[v.kind].name.toLowerCase()} is hurt${horse ? ' and lamed' : ''}.`, 'warn', TOAST.mid, b);
+				else if (b.owner === 0 && (G.tick + b.id) % 90 === 0) news('war', `Your caltrops caught a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', TOAST.mid, b);
+				return;
+			}
 			b.hp = 0;
 			b.gone = true;
 			scarStrike(b.x, b.y);

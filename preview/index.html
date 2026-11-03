@@ -128,7 +128,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 #row :is(.vb,.wb){background:var(--brown-2);border-color:var(--brown-3)}#row :is(.vo,.wo){background:color-mix(in srgb,var(--ring-w) 12%,var(--brown-2));border-color:color-mix(in srgb,var(--ring-w) 30%,var(--brown-3))}#row :is(.v2,.w2){background:color-mix(in srgb,#000 18%,var(--brown-2));border-color:var(--brown-3)}
 #row :is(.wb,.wo,.w2){box-shadow:0 0 6px 1px color-mix(in srgb,var(--ember) 45%,transparent),var(--shade)}#row :is(.vb,.wb) :is(.wd,.gl,.c){color:var(--white-dim)}#row :is(.vo,.wo,.v2,.w2) :is(.wd,.gl,.c){color:var(--ring-w)}#row .mb{box-shadow:var(--shade)}#row .raid{animation:ember var(--t-long) ease-in-out infinite}
 #row .pm{display:flex;gap:3px;min-width:0}#row .pm>.cell{flex:1 1 0}#row .wc{padding:0 2px}#row .wc b{font-size:var(--fs-s);line-height:1.05;white-space:normal;overflow:hidden;max-width:100%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-align:center}#row .wc small{font-size:var(--fs-s);line-height:1}
-#row .mapb{border:1px solid var(--ring-w);border-radius:var(--rad-o);overflow:hidden;background:var(--brown-1);box-shadow:var(--shade)}#row .mapb>canvas{display:block;width:100%;height:100%;object-fit:cover;border:0;border-radius:0;background:none}
+#row .mapb{position:relative;z-index:1;border:1px solid var(--ring-w);border-radius:var(--rad-o);overflow:hidden;background:var(--brown-1);box-shadow:var(--shade)}#row .mapb>canvas{display:block;width:100%;height:100%;object-fit:cover;border:0;border-radius:0;background:none}
 #row .bd{position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;background:var(--ring-r);color:var(--brown-1);font-size:var(--fs-s);line-height:16px;text-align:center;pointer-events:none}
 /* a slot of icon and word (the row, the cycle button, a card's rank): the picture at 18 with its number at 12 beside it, the word at 12 in
    Cream 2 under it; a symbol alone at 24 */
@@ -379,7 +379,7 @@ const SEASONS = [
 // cart, Procopius' and Ammianus' complaint); a wagon's wheels sink `wheelMud` times as deep as a foot (Pandolf's terrain factor on a cart, design);
 // rain, snow and frost take `wear` of a piece's health a minute (the same weathers that take CLIMATE.wear off blades), and soldiers mend a
 // piece under `mend` of its health as they raise one; a camp is a pool for sickness and plague like the town (HEALTH, the SIR spread)
-const CAMP = { build: 0.6, extra: 0.25, extraLog: 0.1, sendHome: 0.5, hold: 32, side: 14, burn: 1, tentHeal: 2, tentRng: 70, supply: 600, load: 200, fee: 2, reach: 120, wheelMud: 2, wear: 0.03, mend: 0.6, need: 'granary' }; // side: the Camp's palisade, squares; need: the Camp wagon's research (the game's warehouse is the Stone granary) // cover: forest within so many walking squares; find: how far from the tap cover is looked for
+const CAMP = { build: 0.6, extra: 0.25, extraLog: 0.1, sendHome: 0.5, hold: 32, side: 14, burn: 1, tentHeal: 2, tentRng: 70, supply: 600, load: 200, fee: 2, reach: 120, wheelMud: 2, wear: 0.03, mend: 0.6, need: 'store' }; // side: the Camp's palisade, squares; need: the building a Camp wagon draws on (the Store, Albert 13:15) // cover: forest within so many walking squares; find: how far from the tap cover is looked for
 const UNIT = {
 	vil: {
 		name: 'Villager',
@@ -1261,6 +1261,30 @@ const BLD = {
 		wood: true,
 		desc: 'Drop-off for food. Put it by berries, fields or game.',
 	},
+	// the Store (Albert, Nov 3, 13:15: "a Store building the age before the wagons ... cheaper ... doesn't spoil ... feeds the army better"):
+	// the ever-normal granary of Geng Shouchang (54 BC) and the Roman horrea on raised floors. Its effects are fx on the side: food spoils half
+	// as fast (raised, sealed stores against the open pit: SCIENCE), the army eats 10% less (a measured ration, the annona's 5 modii a month),
+	// prices swing half as far for its owner (the granary bought cheap and sold at the set price). A Camp wagon needs one. The Scale line
+	// researches here.
+	store: {
+		cap: [0, 1, 1, 2, 2],
+		invest: 2,
+		name: 'Store',
+		fp: 3,
+		hp: 400,
+		h: 20,
+		cost: { w: 150, s: 80 },
+		t: 30,
+		age: 1,
+		drop: [...RES],
+		fx: [
+			{ s: 'spoil', m: 0.5 },
+			{ s: 'eat', k: '#soldier', m: 0.9 },
+			{ s: 'band', m: 0.5 },
+		],
+		sab: 'burn',
+		desc: 'A raised, sealed storehouse and a drop-off for everything. Food spoils half as fast, soldiers eat 10% less, and prices swing half as far for you. A Camp wagon needs one. Researches the Scale line.',
+	},
 	lumber: {
 		cap: [4, 4, 4, 4, 4],
 		short: 'Lumber',
@@ -1351,6 +1375,22 @@ const BLD = {
 		trap: 'stakes',
 		walk: true,
 		desc: 'Sharpened stakes hidden in the grass: a foe who runs onto them is hurt, horses worst. Your people walk round them.',
+	},
+	// caltrops (Albert, Nov 3, field defences: yes): the Roman tribulus, four spikes with one always up, sown against horse; a strip drawn
+	// like a wall, hidden until sprung; each square takes CALTROPS.hits before it is trodden flat; a foe on horse is hurt more and stuck (38-natives trapsTick)
+	caltrops: {
+		nocap: 1,
+		name: 'Caltrops',
+		fp: 1,
+		hp: 40,
+		h: 0,
+		cost: { i: 6 },
+		t: 4,
+		age: 2,
+		tech: 'caltrops',
+		trap: 'caltrops',
+		walk: true,
+		desc: 'Iron spikes sown on the ground, hidden: a horse that crosses is hurt and stuck, a foot soldier hurt a little; each square takes three before it is trodden flat. Drag to sow a strip. Needs Caltrops at the Smithy.',
 	},
 	gate: {
 		nocap: 1,
@@ -1600,6 +1640,20 @@ const BLD = {
 		cd: 1.4,
 		wood: true,
 		desc: 'A timber tower: shoots enemies in range and sounds the horn.',
+	},
+	abatis: {
+		nocap: 1,
+		camp: 1,
+		name: 'Abatis',
+		fp: 1,
+		hp: 80,
+		h: 10,
+		cost: {},
+		t: 1,
+		age: 1,
+		wallish: true,
+		wood: true,
+		desc: 'Felled trees laid toward the enemy, their branches sharpened: the trees that stood where a camp was cut, kept as its outer work. Blocks everyone.',
 	},
 	palisade: {
 		nocap: 1,
@@ -1882,7 +1936,7 @@ const MENUS = [
 		id: 'land',
 		name: 'Land',
 		blurb: 'food, wood, stone, gold',
-		items: ['farm', 'pasture', 'treefarm', 'quarry', 'mill', 'dock', 'lumber', 'mining'],
+		items: ['farm', 'pasture', 'treefarm', 'quarry', 'mill', 'store', 'dock', 'lumber', 'mining'],
 	},
 	{
 		id: 'mil',
@@ -1894,7 +1948,7 @@ const MENUS = [
 		id: 'def',
 		name: 'Walls',
 		blurb: 'towers, walls and gates',
-		items: ['tower', 'castle', 'wall', 'gate', 'pit', 'stakes'],
+		items: ['tower', 'castle', 'wall', 'gate', 'pit', 'stakes', 'caltrops'],
 	},
 	{ id: 'shop', name: 'Trade', blurb: 'markets, goods and caravans', items: ['market', 'workshop', 'mint', 'foundry'] },
 	{
@@ -3252,6 +3306,40 @@ const TECH = [
 		need: ['musket'],
 		desc: 'Guns hit harder.',
 	},
+	// the Scale line (Albert, Nov 3, 13:18: "research to increase mint, quarry, farm, tree farm, foundry production ... math and history"),
+	// at the Store. The machines (watermill, saws, furnaces) are already each building's own line; the Store's line is scale itself:
+	// Wright's learning curve (1936: labour per unit falls a constant share each time the quantity doubles) as a bonus per plot of a kind
+	// (SCALE in 06, gatherMul), and Smith's division of labour (1776, the pin factory). The percentages are design, the law cited in SCIENCE
+	{
+		id: 'learning',
+		name: 'Learning by doing',
+		at: 'store',
+		line: 'Scale',
+		age: 2,
+		w: 6,
+		when: '100s BC',
+		cost: { w: 220, g: 140 },
+		t: 40,
+		fx: [{ s: 'scale', a: 1 }],
+		desc: 'Every farm, tree farm, quarry, mint or foundry past the first adds 5% to all of its kind, up to four.',
+	},
+	{
+		id: 'pinfactory',
+		name: 'Division of labour',
+		at: 'store',
+		line: 'Scale',
+		age: 4,
+		w: 7,
+		when: '1776',
+		cost: { w: 360, g: 260 },
+		t: 55,
+		fx: [
+			{ s: 'gather', k: ['mint'], m: 1.2 },
+			{ s: 'make', k: '*', m: 1.1 },
+		],
+		need: ['learning'],
+		desc: 'Each hand one task: the mint strikes 20% more, the workshops make 10% more.',
+	},
 	{
 		id: 'campwagons',
 		name: 'Camp wagons',
@@ -3280,6 +3368,30 @@ const TECH = [
 		],
 		need: ['campwagons'],
 		desc: 'Soldiers raise a camp as fast as villagers, and a tent trains at a tenth over the price, not a quarter.',
+	},
+	{
+		id: 'caltrops',
+		name: 'Caltrops',
+		at: 'smith',
+		line: 'Field',
+		age: 2,
+		w: 4,
+		when: '331 BC',
+		cost: { w: 120, i: 80 },
+		t: 30,
+		desc: 'Iron caltrops may be sown from the Build menu: a strip of spikes against horse.',
+	},
+	{
+		id: 'archerstakes',
+		name: 'Archer stakes',
+		at: 'range',
+		line: 'Field',
+		age: 3,
+		w: 5,
+		when: '1415',
+		cost: { w: 200, f: 120 },
+		t: 36,
+		desc: 'A shooter who has stood five seconds plants a stake: a horse that charges it is hurt and thrown back.',
 	},
 	{
 		id: 'horses',
@@ -5525,6 +5637,15 @@ const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }
 // with 10 of fodder), and leaves it tired for tired s (CHARGE.tiredSpd): give many orders and the army slows. With no food in the store
 // the order still goes; the hunger rule (UPKEEP.hunger) is the price then
 const ORDER = { mins: 0.5, tired: 6 };
+// scale (the Store's Learning by doing; Wright 1936: unit labour falls a constant share per doubling of the quantity made; here a plot's
+// yield rises per standing plot of its kind past the first, to a cap): yield × (1 + per × min(cap, n − 1)) with fx 'scale'
+const SCALE = { per: 0.05, cap: 4 };
+// field defences (Albert, Nov 3, "yes" to the report docs/4 Now/Field defences.md): caltrops, a sown square takes `hits` before it is flat; a horse
+// loses `horse` of its health and is stuck `stuck` s, a foot soldier `foot`; one unit is spiked once in `again` s. The archers' stakes: a
+// shooter that has stood `plant` s with Archers' stakes researched has its stake in the ground; a horse that strikes it takes `dmg` of its
+// health, its charge ends and it is thrown back; the stake comes up when the shooter moves
+const CALTROPS = { hits: 3, horse: 0.3, foot: 0.08, stuck: 3, again: 2 };
+const STAKES = { plant: 5, dmg: 0.25, shove: 10 };
 // forming (Albert, Nov 3, 10:48; his outside note of 09:35): while soldiers walk to their places in a shape, the one of lower precedence
 // gives way (foot, then archers, then riders, then siege: CLS order), and the push between two forming is soft; past share of the drill's
 // time, one not share of the way to its place holds where it stands and fights from there (the x% by x% rule)
@@ -6202,6 +6323,9 @@ const WHY = {
 	fieldcraft: 'Hunters read ground, wind and track long before there were soldiers; the first warriors were hunters.',
 	camps: 'Every Roman army dug a ditched camp each night; a fed, rested army was never surprised asleep.',
 	marching: 'Roman roads and Roman discipline moved a legion twenty miles a day with its baggage; Caesar did thirty.',
+	archerstakes: 'Henry V had every archer cut a six-foot stake before Agincourt (1415), after the Turkish stakes at Nicopolis; driven in at an angle, they impaled the horses of the French charge.',
+	learning: 'Wright (1936) measured it on aircraft: each doubling of what a shop had made cut the labour in a unit by a fixed share, about a fifth; the Romans knew it as the quarry gang and the mint team that struck a thousand coins a day.',
+	pinfactory: 'Adam Smith (1776): ten men dividing the work made 48,000 pins a day where one man alone made twenty; the mint and the workshops run on the same rule.',
 	campwagons: 'A Roman camp travelled on its baggage train: tents, tools, mills and grain, a mule to every eight men and carts behind; the Hussites went further and fought from the wagons.',
 	fieldlog: 'Marius made his soldiers carry their own kit, the mules of Marius; a legion that fed and housed itself in the field outmarched one that waited on its train.',
 	warmclothes: 'The sagum, the wool cloak of the legions, kept the legions through Gaul; wet wool still warms.',
@@ -6421,6 +6545,12 @@ const WHY = {
 		'Scribal schools taught writing in Sumer by about 2000 BC; writing itself began as accounts at Uruk (about 3100 BC) and in Egypt soon after.',
 	library:
 		'The library of Ashurbanipal at Nineveh (7th century BC) and the Library of Alexandria (about 295 BC) gathered texts and scholars. Universities came later: Bologna in the 11th century, with al-Qarawiyyin (859) and Nalanda (5th century) older in their own traditions.',
+	store:
+		'Rome kept its grain in horrea raised on pillars against the damp, some 290 of them by the late empire; the Han ever-normal granary of Geng Shouchang (54 BC) bought in good years and sold in bad to hold the price.',
+	caltrops:
+		'The Roman tribulus: four iron spikes, one always up. Quintus Curtius has them strewn at Gaugamela (331 BC); Vegetius has the Romans sow them against scythed chariots. Worst on the soft foot of a camel.',
+	abatis:
+		'The oldest obstacle: trees felled toward the enemy with the branches sharpened, the trunks pinned. Caesar at Alesia set his cippi the same way; armies dug it in to 1914.',
 	medtent:
 		'The Roman marching camp kept a hospital tent: Hyginus sets the valetudinarium away from the workshops so the convalescent could rest, and sized it for 200 men.',
 	traintent:
@@ -7200,6 +7330,7 @@ const dist = (a, b) => {
 };
 // One home for four things written by hand in many places (Nov 2, the standardization check, M1 to M4):
 const byId = (L, id) => L.find((x) => x.id === id); // the thing in a list with this id (a building, a unit, a find, a node)
+const lineKind = (k) => k === 'wall' || !!(BLD[k] && BLD[k].trap); // laid as a line, corner to corner (walls; traps in a band, Nov 3: the lilia of Alesia)
 const standing = (b, o) => b.owner === o && b.prog >= 1 && b.hp > 0; // a building of this side, finished and standing
 // how many work a find, counted at once so the next worker this second sees the crowd (recount sets it true every second)
 const crowd = (n, d) => (n.wk = Math.max(0, (n.wk || 0) + d));
@@ -7487,6 +7618,7 @@ const atCap = (o, kind) => bldsOf(o, kind).length >= capFor(o, kind);
 function capWhy(o, kind) {
 	// why no more of this building, or null
 	if (kind === 'apartment' && !ready(o, 'aqueduct').length) return 'Needs an Aqueduct standing';
+	if (BLD[kind].tech && !G.P[o].techs.has(BLD[kind].tech)) return `Research ${TECH.find((t) => t.id === BLD[kind].tech).name} first`; // a building behind a research step (caltrops)
 	if (!atCap(o, kind)) return null;
 	const c = capFor(o, kind),
 		A = G.P[o].age,
@@ -7875,6 +8007,7 @@ function gatherMul(o, n) {
 		EVM.gather *
 		(WEATHER[G.wx].gather || 1) *
 		(season().name === 'Winter' ? 1 + fxv(o, 'warm').a : 1); // warm homes: better winter work
+	if (n.kind === 'farm' && fxv(o, 'scale').a) m *= 1 + SCALE.per * Math.min(SCALE.cap, Math.max(0, bldsOf(o, n.farm.kind).filter((b) => standing(b, o)).length - 1)); // Learning by doing (SCALE)
 	if (n.kind === 'farm') {
 		m *= fxv(o, 'crop', [n.type]).m;
 		if (n.type === 'food') {
@@ -8610,7 +8743,7 @@ function canPlace(o, kind, x, y) {
 	const B = BLD[kind],
 		n = B.fp,
 		sp = snapPos(kind, x, y),
-		m = B.wallish ? 0 : LANE;
+		m = B.wallish || B.trap ? 0 : LANE; // a trap keeps no lane: pits in a band, caltrops sown in a strip (Nov 3)
 	if (sp.gx < 1 || sp.gy < 1 || sp.gx + n > NC - 1 || sp.gy + n > NC - 1) return 'Too close to the edge';
 	const cw_ = capWhy(o, kind);
 	if (cw_) return cw_;
@@ -8626,7 +8759,7 @@ function canPlace(o, kind, x, y) {
 				return 'Something is in the way';
 			}
 			// a lane on every side (Build 63: "buildings need buffers"); walls, gates and crops may touch anything
-			if (!B.wallish && !B.crop && !BLD[q.kind].wallish && !BLD[q.kind].crop)
+			if (!B.wallish && !B.crop && !B.trap && !BLD[q.kind].wallish && !BLD[q.kind].crop && !BLD[q.kind].trap)
 				return 'Leave a gap: two squares round each building';
 			const touch = i === -1 || j === -1 || i === n || j === n; // the ring next to the footprint
 			if (touch && !BLD[q.kind].wallish && (TRAINERS.has(kind) || TRAINERS.has(q.kind)))
@@ -10427,8 +10560,8 @@ function prisonersTick() {
 const LOT = (k) => (TRADE[k] ? 100 : 10);
 const worth = (k) => (TRADE[k] ? TRADE[k] / 100 : GOODS[k].buy || GOODS[k].base); // spice is worth what it costs at a stop
 const coinOf = (o) => (G.P[o].debased ? MINT.price : 1); // debased coin: dearer to buy, less for what you sell
-const sellPrice = (o, k) => Math.floor((LOT(k) * worth(k) * (SELL + fxv(o, 'sell').a) * mkt(k)) / coinOf(o));
-const buyPrice = (o, k) => Math.ceil(LOT(k) * worth(k) * BUY * mkt(k) * coinOf(o));
+const sellPrice = (o, k) => Math.floor((LOT(k) * worth(k) * (SELL + fxv(o, 'sell').a) * mkt(k, o)) / coinOf(o));
+const buyPrice = (o, k) => Math.ceil(LOT(k) * worth(k) * BUY * mkt(k, o) * coinOf(o));
 const haveOf = (p, k) => (TRADE[k] ? p.res[k] : p.goods[k] || 0);
 function marketTrade(o, k, dir) {
 	const p = G.P[o],
@@ -10666,7 +10799,7 @@ function commitPlace() {
 	const kind = pl.kind,
 		B = BLD[kind],
 		p = G.P[0];
-	if (kind === 'wall') {
+	if (lineKind(kind)) {
 		const cells = pl.cells && pl.cells.length ? pl.cells : [toCell(pl.at)];
 		let built = 0,
 			blocked = 0,
@@ -10677,15 +10810,15 @@ function commitPlace() {
 					broke = true;
 					break;
 				}
-				if (build(0, 'wall', c.gx * NAVC + 5, c.gy * NAVC + 5)) built++;
+				if (build(0, kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) built++;
 				else blocked++;
 			}
 		});
 		say(
 			built
-				? `${built} wall piece${built > 1 ? 's' : ''} going up${blocked ? `; ${blocked} blocked` : ''}${broke ? '; out of stone' : ''}.`
+				? `${built} ${kind === 'wall' ? 'wall piece' : B.name.toLowerCase()}${built > 1 ? 's' : ''} going up${blocked ? `; ${blocked} blocked` : ''}${broke ? '; out of stone' : ''}.`
 				: broke
-					? `Not enough stone: ${B.cost.s} a piece.`
+					? `Not enough: ${costText(B.cost)} a piece.`
 					: 'Something is in the way.',
 			'',
 			TOAST.mid,
@@ -12706,6 +12839,8 @@ function solTick(u, dt, SP) {
 	u.kiting = kiteOf(u);
 	if (u.amb) ambushTick(u);
 	campSendHome(u); // by a medical tent, the badly hurt and the sick walk home to the Hospital (CAMP)
+	// the archers' stake (STAKES; the Agincourt stake): a shooter with the research that has stood STAKES.plant s has it in the ground; it comes up when it moves
+	u.staked = (UNIT[u.kind].tags || []).includes('ranged') && !hasTag(u.kind, 'mounted') && G.t - (u.mvT ?? -9) > STAKES.plant && !u.inside && G.P[o].techs.has('archerstakes');
 	if (u.goingHome && (u.state !== 'goto' || u.hp >= u.max * 0.95)) u.goingHome = false;
 	// a shooter steps back from a foe on top of it, unless it presses; a horse archer always rides away
 	if (u.state === 'school') {
@@ -13480,6 +13615,19 @@ function hurt(o, a, t, base) {
 	}
 	t.hp -= d;
 	t.hurtT = G.t;
+	if (a && !isB && t.staked && !a.q && hasTag(a.kind, 'mounted') && G.t - (a.stakeT || -9) > 2) {
+		// a horse rides onto a shooter's stake (STAKES): it is hurt, its charge ends, and it is thrown back
+		a.stakeT = G.t;
+		a.hp -= a.max * STAKES.dmg;
+		a.hurtT = G.t;
+		a.flashT = G.t;
+		a.chg = 0;
+		const dx = a.x - t.x,
+			dy = a.y - t.y,
+			dd = hyp(dx, dy) || 1;
+		if (!blockedCell(gcell(a.x + (dx / dd) * STAKES.shove, a.y + (dy / dd) * STAKES.shove), a.owner)) stepTo(a, a.x + (dx / dd) * STAKES.shove, a.y + (dy / dd) * STAKES.shove);
+		if (t.owner === 0 && (G.tick + t.id) % 60 === 0) say('A horse on the stakes!', 'good', TOAST.short);
+	}
 	if (a && !isB && a.chg > G.t && isSoldier(t) && !t.inside && G.t - (t.shoveT || -9) > 1) {
 		const dx = t.x - a.x,
 			dy = t.y - a.y,
@@ -17599,6 +17747,31 @@ const ART = {
 		L_(2, f, 2, f - 30, lit(PLANK, -0.6), 0.8); // the ladder
 		for (let y = f - 4; y > f - 30; y -= 4) L_(0.5, y, 3.5, y, lit(PLANK, -0.6), 0.8);
 	},
+	abatis(c) {
+		// a felled trunk laid across the square, its branches sharpened and pointing out
+		const d = 10 * TILT,
+			f = d / 2;
+		P_(
+			[
+				[-6, f - 1],
+				[6, f - 3],
+				[6, f - 6],
+				[-6, f - 4],
+			],
+			lit('#6b4a2a', -0.1),
+			LINE,
+			0.4,
+		); // the trunk
+		for (const [x, y] of [
+			[-4, f - 4],
+			[-1, f - 5],
+			[2, f - 5.5],
+			[5, f - 6],
+		]) {
+			L_(x, y, x + 1.5, y - 5, lit(PLANK, -0.4), 1);
+			L_(x + 1.5, y - 5, x + 3, y - 3, lit(PLANK, -0.4), 0.8);
+		}
+	},
 	palisade(c) {
 		// one square of stakes: four pointed posts of timber, lashed, the shaded side east
 		const d = 10 * TILT,
@@ -17695,6 +17868,17 @@ const ART = {
 		E_(-8, r.d / 2 - 3, 3, 2, '#d8c27a', LINE, 0.3);
 		E_(9, r.d / 2 - 3, 3, 2, '#d8c27a', LINE, 0.3);
 		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
+	},
+	store(c) {
+		// the storehouse: a long timber granary raised on stone staddles against damp and rats (the Roman horrea stood on pillars), a hip roof
+		// of tile, one wide door, air slits under the eaves; the side's banner at the gable
+		const d = 30 * TILT,
+			f = d / 2;
+		for (const x of [-11, -4, 4, 11]) P_([[x - 1.5, f + 1], [x + 1.5, f + 1], [x + 1.5, f - 3], [x - 1.5, f - 3]], lit(STONE, -0.2), LINE, 0.4); // the staddle stones
+		const r = block(30, 20, PLANK, 'plank', 'hip', TILE, 7, 26);
+		door(0, r.d / 2 - 3, 7, 8);
+		for (const x of [-11, -7, 7, 11]) win(x, r.d / 2 - 14, 1.6, 1.2, '#2a2014'); // the air slits
+		banner(0, r.d / 2 - 22, c, 8);
 	},
 	lumber(c) {
 		const r = block(30, 12, PLANK, 'plank', 'gable', '#7a5634', 6, 20);
@@ -20413,6 +20597,23 @@ function drawBld(b, s) {
 				ctx.lineTo(x + 6 * z, y + i * z * 0.6);
 				ctx.stroke();
 			}
+		} else if (k === 'caltrops') {
+			// a scatter of four-spiked irons, one spike always up; the squares trodden flat lose them one by one
+			ctx.strokeStyle = own ? 'rgba(90,100,110,.95)' : 'rgba(200,60,40,.9)';
+			ctx.lineWidth = Math.max(0.8, 0.9 * z);
+			const left = Math.max(1, CALTROPS.hits - (b.hits || 0));
+			for (let i = 0; i < left + 1; i++) {
+				const px = x + ((i * 7) % 11 - 5) * z * 0.8,
+					py = y + ((i * 5) % 7 - 3) * z * 0.5;
+				ctx.beginPath();
+				ctx.moveTo(px, py);
+				ctx.lineTo(px, py - 3 * z);
+				ctx.moveTo(px - 2 * z, py + 1 * z);
+				ctx.lineTo(px + 2 * z, py + 1 * z);
+				ctx.moveTo(px, py);
+				ctx.lineTo(px + 1.5 * z, py + 2 * z);
+				ctx.stroke();
+			}
 		} else {
 			ctx.strokeStyle = own ? 'rgba(120,90,40,.9)' : 'rgba(200,60,40,.9)';
 			ctx.lineWidth = 1.2;
@@ -21168,6 +21369,20 @@ function drawUnit(u, s) {
 		ctx.ellipse(sx, sy, 3.4 * z + 1, 1.6 * z + 0.6, 0, 0, 7);
 		ctx.fill();
 	}
+	if (u.staked && z > 0.55) {
+		// the archer's stake (STAKES): two sharpened stakes leaning out in front of the shooter, the way it faces
+		const f = (u.fx || 1) < 0 ? -1 : 1;
+		ctx.strokeStyle = '#8a6644';
+		ctx.lineWidth = Math.max(1, 1.2 * z);
+		ctx.lineCap = 'round';
+		for (const o of [-3, 3]) {
+			ctx.beginPath();
+			ctx.moveTo(sx + f * 5 * z + o * z * 0.6, sy + 1.5 * z);
+			ctx.lineTo(sx + f * 9 * z + o * z * 0.6, sy - 4 * z);
+			ctx.stroke();
+		}
+		ctx.lineCap = 'butt';
+	}
 	// the body in motion (Build 52): a rise and fall with each step; a lunge into the blow and back; a shooter's kick on the release
 	const face = (u.fx || 1) < 0 ? -1 : 1,
 		ha = G.t - (u.hitT ?? -9),
@@ -21879,7 +22094,7 @@ function drawGhost() {
 	const z = cam.z,
 		kind = pl.kind,
 		B = BLD[kind];
-	if (kind === 'wall') {
+	if (lineKind(kind)) {
 		const cells = pl.cells || [toCell(pl.at)];
 		let bad = 0;
 		for (const c of cells) {
@@ -22674,7 +22889,7 @@ cv.addEventListener('pointerdown', (e) => {
 		if (G.qa) hideQuick(); // a pinch moves the map under the chips
 		return;
 	}
-	if (G.place && G.place.kind === 'wall') {
+	if (G.place && lineKind(G.place.kind)) {
 		const h = wallHit(G.place, p);
 		drag = h
 			? { ...h, p0: p, c0: toCell(toWorld(p.x, p.y)), pts0: G.place.pts.map((q) => ({ ...q })), touch: true }
@@ -22836,7 +23051,7 @@ cv.addEventListener('pointerup', (e) => {
 	const p = lp(e);
 	if (G.place) {
 		const pl = G.place;
-		if (pl.kind === 'wall') {
+		if (lineKind(pl.kind)) {
 			pl.pts.push(wallSnap(pl.pts[pl.pts.length - 1], toCell(toWorld(p.x, p.y)))); // a tap: the next corner, exactly where the finger is
 			wallSet(pl);
 		} else ghostAt(p, d.touch);
@@ -23441,10 +23656,10 @@ const title = (name, sub, look) => ((cardHead = [name, sub || '', look]), ''); /
 function titleBar([name, sub, look], book, bookOn) {
 	const t = TITLE_SHORT[name] || name,
 		s = t === name ? sub : [sub, name].filter(Boolean).join(' · ');
-	const lock = cardLocked() ? ' class="dis"' : '', // a card that must be answered: close is dim (back too on Resume, which has nowhere to go back to)
-		lockB = G.card && G.card.type === 'resume' ? lock : '';
+	const lock = cardLocked() ? ' class="dis"' : '', // a card that must be answered: close is dim
+		from = !!(G.card && G.card.from); // back only on a card with a parent (Albert, Nov 3: cards open from the controller, so most have nowhere to go back to); the name widens into its slot
 	return (
-		`<div class="tb fm"><button data-act="cardback"${lockB} aria-label="Back">${ICON.back}</button><h3 class="s3${look ? ` a${look.age}${look.work !== undefined ? ' work' : ' life'}` : ''}"${look ? ` style="${look.work !== undefined ? toGo(1 - look.work) : `--hp:${Math.round(look.hp * 100)}%;--hc:${grad(look.hp * 2 - 1)}`}"` : ''}>${t}</h3>` +
+		`<div class="tb fm">${from ? `<button data-act="cardback" aria-label="Back">${ICON.back}</button>` : ''}<h3 class="${from ? 's3' : 's4'}${look ? ` a${look.age}${look.work !== undefined ? ' work' : ' life'}` : ''}"${look ? ` style="${look.work !== undefined ? toGo(1 - look.work) : `--hp:${Math.round(look.hp * 100)}%;--hc:${grad(look.hp * 2 - 1)}`}"` : ''}>${t}</h3>` +
 		`<button data-act="info" class="${book ? (bookOn ? 'on' : '') : 'dis'}" aria-label="About this">${ICON.book}</button>` +
 		`<button data-act="close"${lock} aria-label="Close">${ICON.close}</button></div>${s ? `<div class="sub">${s}</div>` : ''}`
 	);
@@ -24489,7 +24704,7 @@ function marketPage(b) {
 		page:
 			acts(choice(MKT_SELL.map((g) => [`mpick:${g}`, `<b>${nm(g)}</b><small>${fmt(Math.floor(haveOf(p, g)))}</small>`, g === k]), 's6', true), 'c1') +
 			acts(
-				info(`×${mkt(k).toFixed(2)}`, 'price') +
+				info(`×${mkt(k, 0).toFixed(2)}`, 'price') +
 					btn(`trade:sell:${k}`, 'Sell', `${LOT(k)} for +${sellPrice(0, k)}g`, haveOf(p, k) < LOT(k) ? 'dis' : '') +
 					btn(`trade:buy:${k}`, 'Buy', buy ? `${LOT(k)} for ${buyPrice(0, k)}g` : 'not sold here', !buy || p.res.g < buyPrice(0, k) ? 'dis' : ''),
 				'c3',
@@ -25867,6 +26082,10 @@ const ICON = {
 		20,
 		'<circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 1v4M10 15v4M1 10h4M15 10h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="10" cy="10" r="1.6" fill="currentColor"/>',
 	),
+	next: SVG(
+		20,
+		'<path d="M8 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+	), // the next page (the Build menu)
 	back: SVG(
 		20,
 		'<path d="M9 5l-5 5 5 5M4 10h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
@@ -25877,7 +26096,6 @@ const ICON = {
 	// the controller's own (Albert, Nov 3, the icon review: one picture, one meaning, one line style at 20)
 	basket: SVG(20, '<path d="M3 8h14l-1.5 8h-11z M7 8l2-4.5 M13 8l-2-4.5 M7.5 11v3 M10 11v3 M12.5 11v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
 	town: SVG(20, '<path d="M2.5 17V9l3.5-3 3.5 3v8 M9.5 17V7.5L13 4l3.5 3.5V17 M2.5 17h15 M5 13h2 M12 10h2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
-	swords: SVG(20, '<path d="M3.5 3.5l9 9 M16.5 3.5l-9 9 M3.5 16.5l4-4 M16.5 16.5l-4-4 M3.5 3.5h2.5v2.5 M16.5 3.5H14v2.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
 	kinds: SVG(20, '<circle cx="5" cy="6.5" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="15" cy="6.5" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M1.5 16c0-3 1.6-4.5 3.5-4.5s3.5 1.5 3.5 4.5 M6.5 15c0-3.5 1.6-5 3.5-5s3.5 1.5 3.5 5 M11.5 16c0-3 1.6-4.5 3.5-4.5s3.5 1.5 3.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'),
 	train: SVG(20, '<path d="M10 2.5 L16 4.8 V10 C16 13.4 13.4 15.8 10 17.5 C6.6 15.8 4 13.4 4 10 V4.8 Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M10 7v6 M7 10h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'),
 	tent: SVG(20, '<path d="M2.5 16.5L10 3.5l7.5 13z M10 16.5V10 M7 16.5l3-6.5 3 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
@@ -25968,6 +26186,10 @@ const ICON = {
 		20,
 		'<path d="M4 17 V6 H6.5 V8.2 H8.6 V6 H11.4 V8.2 H13.5 V6 H16 V17 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 17 V13 H11.4 V17" fill="currentColor"/>',
 	),
+	swordup: SVG(
+		20,
+		'<path d="M10 1.5 L12 5 L12 12.5 L8 12.5 L8 5 Z" fill="currentColor"/><path d="M5 13.2 H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 13.5 V18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="10" cy="18.4" r="1.1" fill="currentColor"/>',
+	), // one sword, point up: the War tile (Nov 3: the crossed swords read as an X)
 	sword: SVG(
 		16,
 		'<path d="M13.5 2.5 L13.5 4.6 L6.6 11.5 L4.5 9.4 L11.4 2.5 Z" fill="currentColor"/><path d="M3.2 8.6 L7.4 12.8 M2.4 13.6 L5 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
@@ -26481,16 +26703,16 @@ function ui(force) {
 	if (G.place) {
 		const B = BLD[G.place.kind],
 			t = !G.place.at
-				? G.place.kind === 'wall'
-					? 'Tap where the wall starts'
+				? lineKind(G.place.kind)
+					? `Tap where the ${G.place.kind === 'wall' ? 'wall' : 'line'} starts`
 					: `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`
 				: G.place.why
 					? G.place.why
-					: G.place.kind === 'wall'
-						? `${G.place.cells.length} pieces: tap a corner to add, drag a corner or the wall, or Build`
+					: lineKind(G.place.kind)
+						? `${G.place.cells.length} pieces: tap a corner to add, drag a corner or the line, or Build`
 						: `${B.name}: tap Build, or drag it to move · drag empty ground to look`;
 		txt('placeT', t);
-		$('placeUndo').hidden = G.place.kind !== 'wall' || !G.place.pts.length;
+		$('placeUndo').hidden = !lineKind(G.place.kind) || !G.place.pts.length;
 		$('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why);
 	}
 	preview();
@@ -26900,9 +27122,15 @@ const ACT = {
 	ctlback() {
 		ctlBack();
 	},
+	bpage() {
+		G.hud.bpage = (G.hud.bpage || 0) + 1; // the Build page turned; it wraps in townCells
+		feel('tick');
+	},
 	mapt() {
-		G.hud.map = !G.hud.map;
-	}, // the small map on or off
+		const H = G.hud;
+		if (fullPage()) H.mapOn = mapShown() ? null : H.page + (H.sub || '');
+		else H.map = !H.map;
+	}, // the small map on or off: at rest for good; on a full page, for that page (it covers cells there)
 	ctlshut() {
 		G.hud.shut = !G.hud.shut;
 		if (G.hud.shut) G.hud.aim = false;
@@ -28850,7 +29078,7 @@ function priceAt(o, good, place, from) {
 	let m = 1;
 	if (place.kind === 'stop' && good === 'spice') return 0; // a stop sells spice; it does not buy it
 	m = place.want === good ? POST.want : 1;
-	return baseOf(good) * m * mkt(good) * (from ? distF(dist(from, place)) : 1) * fxv(o, 'trade').m;
+	return baseOf(good) * m * mkt(good, o) * (from ? distF(dist(from, place)) : 1) * fxv(o, 'trade').m;
 }
 // Trade has two lanes. One: a caravan with a route carries goods to a trade stop, the world's old markets, and sells them.
 // Two: a caravan with no route runs between your Market and an ally's Market or Town Center, paid by distance.
@@ -29296,17 +29524,18 @@ function upkeepTick() {
 			const o = p.id;
 			// everyone eats: a share a person, more for soldiers and far more for horses
 			// a villager working a bush, a field, fish or game eats from it, not from the store (Albert, Nov 1)
-			const per = UPKEEP.share * fxv(o, 'eat').m; // cooked food feeds better (hearth)
+			const per = UPKEEP.share, // a share; what each eats of it is fx 'eat' by the unit's keys: cooked food feeds better (hearth, everyone), the Store's ration (soldiers)
+				eats = (u) => shareOf(u) * per * fxv(o, 'eat', unitKeys(u.kind)).m;
 			let sh = 0;
 			for (const u of G.units)
 				if (u.owner === o) {
 					const n = u.kind === 'vil' && u.job === 'food' && !u.inside ? u.node || u.hunt : null;
 					if (n && (n.amt > 0 || n.hp > 0)) {
-						if (n.amt > 0 && isFinite(n.amt)) n.amt = Math.max(0, n.amt - shareOf(u) * per);
-					} else sh += shareOf(u);
+						if (n.amt > 0 && isFinite(n.amt)) n.amt = Math.max(0, n.amt - eats(u));
+					} else sh += eats(u);
 				}
-			sh = Math.max(0, sh - campEat(o, per)); // the soldiers in a camp eat from its depot (CAMP)
-			const eat = sh * per;
+			sh = Math.max(0, sh - campEat(o, eats)); // the soldiers in a camp eat from its depot (CAMP)
+			const eat = sh;
 			p.eats = eat * 60;
 			starveTick(p);
 			if (p.res.f >= eat) {
@@ -29425,7 +29654,11 @@ function setMake(b, type) {
 		}
 	return true;
 }
-const mkt = (k) => (G.mkt ? clamp(Math.max(0.01, G.mkt[k] ?? 1) ** (-1 / PRICE.eps[k]), PRICE.floor, PRICE.cap) : 1); // the price multiplier from the stock
+const mkt = (k, o) => {
+	if (!G.mkt) return 1;
+	const m = clamp(Math.max(0.01, G.mkt[k] ?? 1) ** (-1 / PRICE.eps[k]), PRICE.floor, PRICE.cap);
+	return o === undefined ? m : 1 + (m - 1) * fxv(o, 'band').m; // the price multiplier from the stock; a side with a Store sees it swing less (fx 'band': the ever-normal granary)
+};
 function debase(o) {
 	// Rome's denarius: more coin at once, worth less for good
 	const p = G.P[o];
@@ -30550,6 +30783,14 @@ function campUnpack(u) {
 		}
 	for (const n of burnt) n.amt = 0;
 	if (burnt.length) G.nodes = G.nodes.filter((n) => !burnt.includes(n));
+	// the abatis (Albert, Nov 3, field defences: yes): a Camp's felled trees outside the palisade are laid as its outer work, a wall of
+	// branches on the forest side, for nothing; a tree inside the square is burned and gone
+	const abatis = [];
+	if (kind === 'camp') {
+		const h = CAMP.side / 2,
+			inSquare = (n) => Math.abs(-f.y * (n.x - u.x) + f.x * (n.y - u.y)) < h * NAVC && Math.abs(f.x * (n.x - u.x) + f.y * (n.y - u.y)) < h * NAVC;
+		for (const n of burnt) if (!inSquare(n)) abatis.push(n);
+	}
 	const id = NID++;
 	navOnce(() => {
 		for (const p of L) {
@@ -30559,12 +30800,20 @@ function campUnpack(u) {
 			G.blds.push(b);
 			G.navDirty = true;
 		}
+		for (const n of abatis) {
+			const sp = snapPos('abatis', n.x, n.y);
+			if (cells.has(sp.gy * NC + sp.gx) || NAV.occ[sp.gy * NC + sp.gx] || G.blds.some((b) => b.camp === id && b.gx === sp.gx && b.gy === sp.gy)) continue;
+			const b = mkBld(o, 'abatis', n.x, n.y, 1);
+			b.camp = id;
+			b.campKind = kind;
+			G.blds.push(b);
+		}
 		navRebuild();
 	});
 	u.hp = 0;
 	u.gone = true;
 	if (o === 0) {
-		news('war', `${kind === 'camp' ? 'The camp' : 'The outpost'} is unpacked at ${coord(u.x, u.y)}: ${burnt.length ? burnt.length + ' trees burned; ' : ''}soldiers and villagers raise it.`, 'good', TOAST.mid, { x: u.x, y: u.y });
+		news('war', `${kind === 'camp' ? 'The camp' : 'The outpost'} is unpacked at ${coord(u.x, u.y)}: ${burnt.length ? burnt.length + ' trees felled' + (abatis.length ? ', an abatis laid' : '') + '; ' : ''}soldiers and villagers raise it.`, 'good', TOAST.mid, { x: u.x, y: u.y });
 		sfx('thock', u.x, u.y);
 	}
 	return true;
@@ -30581,7 +30830,7 @@ function wagonTick(u, dt, SP) {
 // how many camps of a kind a side may have out at once, wagons on the road and in the line counted: one, two from the age after
 const campCap = (o, kind) => {
 	const p = G.P[o];
-	if (kind === 'camp' && (!p.techs.has('campwagons') || !p.techs.has(CAMP.need))) return 0;
+	if (kind === 'camp' && (!p.techs.has('campwagons') || !bldsOf(o, CAMP.need).some((b) => standing(b, o)))) return 0; // a Store standing (the stores a camp draws on)
 	const first = kind === 'camp' ? 2 : 1;
 	return p.age < first ? 0 : p.age >= first + 1 ? 2 : 1;
 };
@@ -30595,7 +30844,7 @@ const campsOut = (o, kind) => {
 };
 const campWhyTrain = (o, kind) => {
 	const cap = campCap(o, kind);
-	if (!cap) return kind === 'camp' ? (G.P[o].age < 2 ? 'Camp wagons need the Classical age.' : !G.P[o].techs.has(CAMP.need) ? 'A camp needs a store to draw on: research Stone granary at the Mill first.' : 'Research Camp wagons at the Stable first.') : 'Outpost wagons need the Bronze age.';
+	if (!cap) return kind === 'camp' ? (G.P[o].age < 2 ? 'Camp wagons need the Classical age.' : !bldsOf(o, CAMP.need).some((b) => standing(b, o)) ? 'A camp draws on a Store: build one first.' : 'Research Camp wagons at the Stable first.') : 'Outpost wagons need the Bronze age.';
 	if (campsOut(o, kind) >= cap) return cap === 1 ? `One ${kind} at a time; a second comes with the next age.` : `Two ${kind}s at a time.`;
 	return null;
 };
@@ -30657,8 +30906,8 @@ function campSendHome(u) {
 // ── step 2: supplies, the caravan's run, wear and mending, the camp as a pool for sickness
 const depotsOf = (o) => G.blds.filter((b) => b.owner === o && b.kind === 'depot' && b.prog >= 1 && b.hp > 0);
 const depotNear = (u) => depotsOf(u.owner).find((b) => dist(b, u) < CAMP.reach) || null; // the depot a unit eats from
-// every second (36-economy upkeepTick): the soldiers in a camp's reach eat from its depot; with it empty they are unsupplied
-function campEat(o, per) {
+// every second (36-economy upkeepTick): the soldiers in a camp's reach eat from its depot (eats(u): the food a unit eats a second); with it empty they are unsupplied
+function campEat(o, eats) {
 	const D = depotsOf(o);
 	if (!D.length) return 0;
 	let fed = 0;
@@ -30669,10 +30918,10 @@ function campEat(o, per) {
 			u.unfed = 0;
 			continue;
 		}
-		const eat = shareOf(u) * per;
+		const eat = eats(u);
 		if ((d.supply || 0) >= eat) {
 			d.supply -= eat;
-			fed += shareOf(u);
+			fed += eat;
 			u.unfed = 0;
 		} else {
 			u.unfed = (u.unfed || 0) + 1;
@@ -30683,7 +30932,7 @@ function campEat(o, per) {
 			}
 		}
 	}
-	return fed; // the shares fed here, off the town's bill
+	return fed; // the food eaten here, off the town's bill
 }
 // a Market caravan with nothing to carry runs food to a depot under half (caravanTick): the food from the store and the carter's fee in gold
 function supplyRun(u, dt, SP) {
@@ -30945,7 +31194,7 @@ function trapsTick() {
 				b.seen[v.owner] = 1;
 				if (v.owner === 0)
 					news('war', 
-						`Your scout found ${kind === 'pit' ? 'a pit' : kind === 'net' ? 'a net' : 'stakes'} at ${coord(b.x, b.y)}.`,
+						`Your scout found ${kind === 'pit' ? 'a pit' : kind === 'net' ? 'a net' : kind === 'caltrops' ? 'caltrops' : 'stakes'} at ${coord(b.x, b.y)}.`,
 						'good',
 						TOAST.mid,
 						b,
@@ -30953,6 +31202,25 @@ function trapsTick() {
 				return;
 			}
 			if (b.seen[v.owner] || dist(v, b) > NATIVE.trapR) return;
+			if (kind === 'caltrops') {
+				// a square of caltrops takes CALTROPS.hits before it is trodden flat; horse worst, then foot; seen by the side once sprung
+				if (G.t - (v.spikeT || -9) < CALTROPS.again) return;
+				v.spikeT = G.t;
+				const horse = hasTag(v.kind, 'mounted');
+				v.hp -= v.max * (horse ? CALTROPS.horse : CALTROPS.foot);
+				v.hurtT = G.t;
+				v.flashT = G.t;
+				if (horse) v.stuck = G.t + CALTROPS.stuck;
+				b.hits = (b.hits || 0) + 1;
+				b.seen[v.owner] = 1;
+				if (b.hits >= CALTROPS.hits) {
+					b.hp = 0;
+					b.gone = true;
+				}
+				if (v.owner === 0) news('war', `Caltrops! Your ${UNIT[v.kind].name.toLowerCase()} is hurt${horse ? ' and lamed' : ''}.`, 'warn', TOAST.mid, b);
+				else if (b.owner === 0 && (G.tick + b.id) % 90 === 0) news('war', `Your caltrops caught a ${UNIT[v.kind].name.toLowerCase()} of ${G.P[v.owner].name}.`, 'good', TOAST.mid, b);
+				return;
+			}
 			b.hp = 0;
 			b.gone = true;
 			scarStrike(b.x, b.y);
@@ -31581,7 +31849,7 @@ function hudReinforce(slot) {
 // (Kinds, Train, Alarm). At rest, and while only Town's column is open, the small map stands 3 × 2 in columns 3 to 5 with its tile (Map,
 // lit while it shows) in column 6. Close folds the whole row to one tile. G.hud: page (null at rest, 'jobs', 'town', 'war'), sub (Town:
 // 'build' or a build group; War: 'kinds', 'train', 'alarm'), map (the small map shown), shut (the row folded).
-const CTL = { cols: 7, map: [3, 5], back: [6, 2] }; // the map's columns; where Back stands on every page that has one
+const CTL = { cols: 7, map: [3, 5], back: [6, 2] }; // the map's columns; where Back stands on every page that has one; the Map tile is (7, 2)
 const at = (h, c, r) => h.replace('<button ', `<button style="grid-column:${c};grid-row:${r}" `); // a cell in its column and rank
 const badge = (h, n) => (n ? h.replace('</button>', `<span class="bd">${n}</span></button>`) : h); // a count on a tile's corner (idle villagers, soldiers)
 const wcell = (act, word, sub, cls = '', attrs = '') => `<button class="cell wc ${cls}" data-act="${act}"${attrs}><b>${word}</b>${sub ? `<small>${sub}</small>` : ''}</button>`; // a word cell: a building has a picture on the map, not an icon
@@ -31616,27 +31884,25 @@ function townCells(sub) {
 			at(pic('train:vil', ICON.people, ROW_WORD.people, 'vb' + (V.some(freeVil) ? ' go' : trainWhy(0, 'vil') ? ' dis' : ''), null, ' aria-label="People: train a villager"'), 2, 1) +
 			at(pic('ctlsub:build', ICON.hammer, ROW_WORD.build, 'vb' + (site ? ' work' : ''), null, site ? ` style="${toGo(1 - site.prog)}"` : ''), 2, 2)
 		);
-	if (sub === 'build') {
-		const rs = researchable();
-		return (
-			fill([
-				...MENUS.map((m) => pic(`ctlsub:${m.id}`, ICON[MENU_ICON[m.id]], MENU_WORD[m.id] || m.name, 'vo')),
-				pic('card:research', ICON.book, ROW_WORD.research, 'vo' + (rs ? '' : ' dis'), rs || null),
-				pic('relopen', ICON.ally, ROW_WORD.relations, 'vo'),
-			]) + backCell('vo')
-		);
-	}
-	const M = MENUS.find((m) => m.id === sub);
+	// Build (Albert, Nov 3, 13:13: "a button that brings up the full building menu"): every building of your age, in the groups' order, as word
+	// cells (name, and under it 'short' or 'all built'); eight a page, More › turning the page, Back; Research and Relations hold the first
+	// page's last two places. A building of a later age is not shown (it was a dim word; the Guide lists them). The groups page is cut.
+	const rs = researchable(),
+		all = MENUS.flatMap((m) => m.items).filter((k) => BLD[k].age <= p.age),
+		pageN = Math.max(1, Math.ceil((all.length + 2) / 8)),
+		pg = Math.min(G.hud.bpage || 0, pageN - 1),
+		fixed = pg === 0 ? [pic('card:research', ICON.book, ROW_WORD.research, 'vo' + (rs ? '' : ' dis'), rs || null), pic('relopen', ICON.ally, ROW_WORD.relations, 'vo')] : [],
+		from = pg === 0 ? 0 : 6 + (pg - 1) * 8,
+		here = all.slice(from, from + 8 - fixed.length),
+		cell = (k) => {
+			const B = BLD[k],
+				full = bldsOf(0, k).length >= capFor(0, k);
+			return wcell(`build:${k}`, B.short || bldName(0, k), full ? 'all built' : afford(p, B.cost) ? '' : 'short', 'v2' + (full ? ' dis' : ''), ` aria-label="${bldName(0, k)}: ${costText(B.cost)}"`);
+		};
 	return (
-		fill(
-			M.items.map((k) => {
-				const B = BLD[k],
-					lock = B.age > p.age,
-					cp = capFor(0, k),
-					full = !lock && bldsOf(0, k).length >= cp;
-				return wcell(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? 'all built' : afford(p, B.cost) ? '' : 'short', 'v2' + (lock || full ? ' dis' : ''), ` aria-label="${bldName(0, k)}: ${costText(B.cost)}"`);
-			}),
-		) + backCell('v2')
+		fill([...fixed, ...here.map(cell)]) +
+		(pageN > 1 ? at(pic('bpage', ICON.next, `${pg + 1} of ${pageN}`, 'v2'), 6, 1) : '') +
+		backCell('v2')
 	);
 }
 // War: Aim · Go (tap: the crosshair up; again: everyone goes; hold: everyone home), the three squads (tap: send; hold: its card), Kinds ›,
@@ -31696,8 +31962,10 @@ function warCells(sub) {
 }
 const researchable = () => [...G.rdy.values()].reduce((a, v) => a + v, 0); // research you can start now (the count the strip shows)
 const idleSoldiers = () => sendable().filter((u) => u.state === 'home');
-const MENU_WORD = { mil: 'Barracks' }; // a build group's word on the controller where the menu's own would clash with a tile (War)
+const MENU_WORD = { mil: 'Barracks' }; // (the groups page is cut, Nov 3; the words stay for the Guide) // a build group's word on the controller where the menu's own would clash with a tile (War)
 const MENU_ICON = { home: 'home', land: 'wood', mil: 'tent', def: 'def', shop: 'gold', cult: 'star' }; // a build group's picture
+const fullPage = () => (G.hud.page === 'town' ? !!G.hud.sub : !!G.hud.page); // a page that fills the five columns (not rest, not Town's column)
+const mapShown = () => (fullPage() ? G.hud.mapOn === G.hud.page + (G.hud.sub || '') : !!G.hud.map);
 function ctlHTML() {
 	const H = G.hud,
 		page = H.page,
@@ -31707,15 +31975,16 @@ function ctlHTML() {
 	let h =
 		at(badge(pic('ctl:jobs', ICON.basket, ROW_WORD.jobs, page === 'jobs' ? 'vo' : 'vb'), idle && `z ${idle}`), 1, 1) +
 		at(badge(pic('ctl:town', ICON.town, ROW_WORD.town, page === 'town' ? 'vo' : 'vb'), researchable() || null), 1, 2) +
-		at(badge(pic('ctl:war', ICON.swords, ROW_WORD.war, (page === 'war' ? 'wo' : 'wb') + (G.incoming ? ' raid' : '')), sol), 7, 1) +
-		at(sym('ctlshut', ICON.down, 'vb mb', 'Close the controls'), 7, 2);
+		at(badge(pic('ctl:war', ICON.swordup, ROW_WORD.war, (page === 'war' ? 'wo' : 'wb') + (G.incoming ? ' raid' : '')), sol), 7, 1) +
+		at(pic('mapt', ICON.map, ROW_WORD.map, 'vb mb' + (mapShown() ? ' on' : ''), null, ' data-hold="ctlshut"'), 7, 2);
 	if (page === 'jobs') h += jobsCells();
 	else if (page === 'town') h += townCells(H.sub);
 	else if (page === 'war') h += warCells(H.sub);
-	if (!page || (page === 'town' && !H.sub)) {
-		h += at(pic('mapt', ICON.map, ROW_WORD.map, 'vb mb' + (H.map ? ' on' : '')), 6, 1);
-		if (H.map) h += `<div class="mapb" style="grid-column:${CTL.map[0]} / ${CTL.map[1] + 1};grid-row:1 / 3"></div>`;
-	} // the small map, 3 × 2, at rest and beside Town's column; its tile lit while it shows (Albert, Nov 3)
+	if (mapShown()) h += `<div class="mapb" style="grid-column:${CTL.map[0]} / ${CTL.map[1] + 1};grid-row:1 / 3"></div>`;
+	// the Map tile in one spot on every page, under War (Albert, Nov 3, 13:13: "same spot always"; 11:00: "it can replace whatever icons it
+	// covers if a person wants"): at rest and beside Town's column the small map, 3 × 2, shows while H.map; on a full page it shows only
+	// where the person turned it on (H.mapOn names the page), over columns 3 to 5, covering what is under it. The tile took Close's place,
+	// so a hold on it folds the row
 	return h;
 }
 // a tile: its page opens, the lit one closes back to rest; a page's own step (Build, a group, Kinds, Train, Alarm), and Back one step up
@@ -31723,6 +31992,7 @@ function ctlOpen(page) {
 	const H = G.hud;
 	H.page = H.page === page ? null : page;
 	H.sub = null;
+	H.mapOn = null; // the map on a full page lasts while that page is open
 	H.aim = false; // the crosshair goes up only by Aim (war's first cell)
 	if (H.page) closeCard();
 }
@@ -32317,6 +32587,10 @@ window.__fk = {
 	coverNear,
 	AMBUSH,
 	CAMP,
+	SCALE,
+	CALTROPS,
+	STAKES,
+	lineKind,
 	campLayout,
 	campWhy,
 	campUnpack,

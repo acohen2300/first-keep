@@ -409,6 +409,18 @@ PLANTS = [
   ('38-camps.js', "d.supply = Math.min(CAMP.supply, (d.supply || 0) + S.food);", "d.supply = d.supply || 0;", 'tests/combat.py', 'p38: the caravan delivers nothing', 'did not deliver'),
   ('38-camps.js', "if (!wet) return;", "if (wet) return;", 'tests/combat.py', 'p38: clear weather wears the camp', 'wore'),
   ('37-events.js', "(keys.includes('#wagon') ? CAMP.wheelMud : 1)", "1", 'tests/combat.py', 'p38: a wagon walks through mud like a man', 'in mud is not slower'),
+  # Build 80 preview 39 and 40 (--only=p40): the Store and the Scale line
+  ('36-economy.js', "return o === undefined ? m : 1 + (m - 1) * fxv(o, 'band').m;", "return m;", 'tests/combat.py', 'p40: the Store does not steady prices', 'price swing'),
+  ('08-core.js', "if (n.kind === 'farm' && fxv(o, 'scale').a) m *= 1 + SCALE.per", "if (false) m *= 1 + SCALE.per", 'tests/combat.py', 'p40: Learning by doing teaches nothing', 'Learning by doing gives'),
+  ('38-camps.js', "!bldsOf(o, CAMP.need).some((b) => standing(b, o)))) return 0;", ")) return 0;", 'tests/combat.py', 'p40: a Camp wagon without a Store', 'with no Store standing'),
+  ('36-economy.js', "eats = (u) => shareOf(u) * per * fxv(o, 'eat', unitKeys(u.kind)).m;", "eats = (u) => shareOf(u) * per * fxv(o, 'eat').m;", 'tests/combat.py', "p40: the Store's ration feeds nobody", 'ration'),
+  # Build 80 preview 41 (--only=p41): field defences
+  ('38-natives.js', "if (horse) v.stuck = G.t + CALTROPS.stuck;", ";", 'tests/combat.py', 'p41: caltrops lame no horse', 'not hurt and stuck'),
+  ('38-natives.js', "if (b.hits >= CALTROPS.hits) {", "if (true) {", 'tests/combat.py', 'p41: one horse treads the caltrops flat', 'trod the caltrops flat'),
+  ('09-nav.js', "m = B.wallish || B.trap ? 0 : LANE;", "m = B.wallish ? 0 : LANE;", 'tests/combat.py', 'p41: a trap keeps a lane', 'keeps no lane'),
+  ('14-sim-troops.js', "&& G.P[o].techs.has('archerstakes');", "&& true;", 'tests/combat.py', 'p41: every shooter has a stake', 'without the research has a stake'),
+  ('16-sim-fight.js', "\t\ta.chg = 0;\n\t\tconst dx = a.x - t.x,", "\t\tconst dx = a.x - t.x,", 'tests/combat.py', "p41: the stake does not end the charge", 'not hurt, stopped and thrown back'),
+  ('08-core.js', "if (BLD[kind].tech && !G.P[o].techs.has(BLD[kind].tech))", "if (false)", 'tests/combat.py', 'p41: caltrops without the research', 'without the research'),
 ]
 
 def plant_check():

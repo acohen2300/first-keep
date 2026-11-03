@@ -693,7 +693,7 @@ function canPlace(o, kind, x, y) {
 	const B = BLD[kind],
 		n = B.fp,
 		sp = snapPos(kind, x, y),
-		m = B.wallish ? 0 : LANE;
+		m = B.wallish || B.trap ? 0 : LANE; // a trap keeps no lane: pits in a band, caltrops sown in a strip (Nov 3)
 	if (sp.gx < 1 || sp.gy < 1 || sp.gx + n > NC - 1 || sp.gy + n > NC - 1) return 'Too close to the edge';
 	const cw_ = capWhy(o, kind);
 	if (cw_) return cw_;
@@ -709,7 +709,7 @@ function canPlace(o, kind, x, y) {
 				return 'Something is in the way';
 			}
 			// a lane on every side (Build 63: "buildings need buffers"); walls, gates and crops may touch anything
-			if (!B.wallish && !B.crop && !BLD[q.kind].wallish && !BLD[q.kind].crop)
+			if (!B.wallish && !B.crop && !B.trap && !BLD[q.kind].wallish && !BLD[q.kind].crop && !BLD[q.kind].trap)
 				return 'Leave a gap: two squares round each building';
 			const touch = i === -1 || j === -1 || i === n || j === n; // the ring next to the footprint
 			if (touch && !BLD[q.kind].wallish && (TRAINERS.has(kind) || TRAINERS.has(q.kind)))

@@ -41,3 +41,6 @@ What each was, what it did, where it is written down, and what it would be in th
 ## The order I would build, if Albert says yes [2026-11-03 12:34]
 
 1. Stakes (a shooter's hold; the smallest, the oldest, and the answer to the Charge). 2. Abatis as the camp's free outer work by forest. 3. Caltrops as the Iron-age sown patch. 4. The lily-field as the Pit drawn in a band, if the Pit alone is not enough. 5. Chevaux de frise and the Wagenburg: parked. [2026-11-03 12:34]
+
+## Built (preview 41, Nov 3) [2026-11-03 13:34]
+- Stakes (automatic, Archer stakes at the Range), caltrops (a sown strip, Caltrops at the Smithy), the lily-field (pits drawn as a band), the abatis (a Camp's felled trees as its outer work). Parked: chevaux de frise, the Wagenburg. [2026-11-03 13:34]

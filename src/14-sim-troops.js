@@ -163,6 +163,8 @@ function solTick(u, dt, SP) {
 	u.kiting = kiteOf(u);
 	if (u.amb) ambushTick(u);
 	campSendHome(u); // by a medical tent, the badly hurt and the sick walk home to the Hospital (CAMP)
+	// the archers' stake (STAKES; the Agincourt stake): a shooter with the research that has stood STAKES.plant s has it in the ground; it comes up when it moves
+	u.staked = (UNIT[u.kind].tags || []).includes('ranged') && !hasTag(u.kind, 'mounted') && G.t - (u.mvT ?? -9) > STAKES.plant && !u.inside && G.P[o].techs.has('archerstakes');
 	if (u.goingHome && (u.state !== 'goto' || u.hp >= u.max * 0.95)) u.goingHome = false;
 	// a shooter steps back from a foe on top of it, unless it presses; a horse archer always rides away
 	if (u.state === 'school') {

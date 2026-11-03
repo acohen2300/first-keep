@@ -372,9 +372,15 @@ const ACT = {
 	ctlback() {
 		ctlBack();
 	},
+	bpage() {
+		G.hud.bpage = (G.hud.bpage || 0) + 1; // the Build page turned; it wraps in townCells
+		feel('tick');
+	},
 	mapt() {
-		G.hud.map = !G.hud.map;
-	}, // the small map on or off
+		const H = G.hud;
+		if (fullPage()) H.mapOn = mapShown() ? null : H.page + (H.sub || '');
+		else H.map = !H.map;
+	}, // the small map on or off: at rest for good; on a full page, for that page (it covers cells there)
 	ctlshut() {
 		G.hud.shut = !G.hud.shut;
 		if (G.hud.shut) G.hud.aim = false;

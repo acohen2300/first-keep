@@ -291,7 +291,7 @@ function hudReinforce(slot) {
 // (Kinds, Train, Alarm). At rest, and while only Town's column is open, the small map stands 3 × 2 in columns 3 to 5 with its tile (Map,
 // lit while it shows) in column 6. Close folds the whole row to one tile. G.hud: page (null at rest, 'jobs', 'town', 'war'), sub (Town:
 // 'build' or a build group; War: 'kinds', 'train', 'alarm'), map (the small map shown), shut (the row folded).
-const CTL = { cols: 7, map: [3, 5], back: [6, 2] }; // the map's columns; where Back stands on every page that has one
+const CTL = { cols: 7, map: [3, 5], back: [6, 2] }; // the map's columns; where Back stands on every page that has one; the Map tile is (7, 2)
 const at = (h, c, r) => h.replace('<button ', `<button style="grid-column:${c};grid-row:${r}" `); // a cell in its column and rank
 const badge = (h, n) => (n ? h.replace('</button>', `<span class="bd">${n}</span></button>`) : h); // a count on a tile's corner (idle villagers, soldiers)
 const wcell = (act, word, sub, cls = '', attrs = '') => `<button class="cell wc ${cls}" data-act="${act}"${attrs}><b>${word}</b>${sub ? `<small>${sub}</small>` : ''}</button>`; // a word cell: a building has a picture on the map, not an icon
@@ -326,27 +326,25 @@ function townCells(sub) {
 			at(pic('train:vil', ICON.people, ROW_WORD.people, 'vb' + (V.some(freeVil) ? ' go' : trainWhy(0, 'vil') ? ' dis' : ''), null, ' aria-label="People: train a villager"'), 2, 1) +
 			at(pic('ctlsub:build', ICON.hammer, ROW_WORD.build, 'vb' + (site ? ' work' : ''), null, site ? ` style="${toGo(1 - site.prog)}"` : ''), 2, 2)
 		);
-	if (sub === 'build') {
-		const rs = researchable();
-		return (
-			fill([
-				...MENUS.map((m) => pic(`ctlsub:${m.id}`, ICON[MENU_ICON[m.id]], MENU_WORD[m.id] || m.name, 'vo')),
-				pic('card:research', ICON.book, ROW_WORD.research, 'vo' + (rs ? '' : ' dis'), rs || null),
-				pic('relopen', ICON.ally, ROW_WORD.relations, 'vo'),
-			]) + backCell('vo')
-		);
-	}
-	const M = MENUS.find((m) => m.id === sub);
+	// Build (Albert, Nov 3, 13:13: "a button that brings up the full building menu"): every building of your age, in the groups' order, as word
+	// cells (name, and under it 'short' or 'all built'); eight a page, More › turning the page, Back; Research and Relations hold the first
+	// page's last two places. A building of a later age is not shown (it was a dim word; the Guide lists them). The groups page is cut.
+	const rs = researchable(),
+		all = MENUS.flatMap((m) => m.items).filter((k) => BLD[k].age <= p.age),
+		pageN = Math.max(1, Math.ceil((all.length + 2) / 8)),
+		pg = Math.min(G.hud.bpage || 0, pageN - 1),
+		fixed = pg === 0 ? [pic('card:research', ICON.book, ROW_WORD.research, 'vo' + (rs ? '' : ' dis'), rs || null), pic('relopen', ICON.ally, ROW_WORD.relations, 'vo')] : [],
+		from = pg === 0 ? 0 : 6 + (pg - 1) * 8,
+		here = all.slice(from, from + 8 - fixed.length),
+		cell = (k) => {
+			const B = BLD[k],
+				full = bldsOf(0, k).length >= capFor(0, k);
+			return wcell(`build:${k}`, B.short || bldName(0, k), full ? 'all built' : afford(p, B.cost) ? '' : 'short', 'v2' + (full ? ' dis' : ''), ` aria-label="${bldName(0, k)}: ${costText(B.cost)}"`);
+		};
 	return (
-		fill(
-			M.items.map((k) => {
-				const B = BLD[k],
-					lock = B.age > p.age,
-					cp = capFor(0, k),
-					full = !lock && bldsOf(0, k).length >= cp;
-				return wcell(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? 'all built' : afford(p, B.cost) ? '' : 'short', 'v2' + (lock || full ? ' dis' : ''), ` aria-label="${bldName(0, k)}: ${costText(B.cost)}"`);
-			}),
-		) + backCell('v2')
+		fill([...fixed, ...here.map(cell)]) +
+		(pageN > 1 ? at(pic('bpage', ICON.next, `${pg + 1} of ${pageN}`, 'v2'), 6, 1) : '') +
+		backCell('v2')
 	);
 }
 // War: Aim · Go (tap: the crosshair up; again: everyone goes; hold: everyone home), the three squads (tap: send; hold: its card), Kinds ›,
@@ -406,8 +404,10 @@ function warCells(sub) {
 }
 const researchable = () => [...G.rdy.values()].reduce((a, v) => a + v, 0); // research you can start now (the count the strip shows)
 const idleSoldiers = () => sendable().filter((u) => u.state === 'home');
-const MENU_WORD = { mil: 'Barracks' }; // a build group's word on the controller where the menu's own would clash with a tile (War)
+const MENU_WORD = { mil: 'Barracks' }; // (the groups page is cut, Nov 3; the words stay for the Guide) // a build group's word on the controller where the menu's own would clash with a tile (War)
 const MENU_ICON = { home: 'home', land: 'wood', mil: 'tent', def: 'def', shop: 'gold', cult: 'star' }; // a build group's picture
+const fullPage = () => (G.hud.page === 'town' ? !!G.hud.sub : !!G.hud.page); // a page that fills the five columns (not rest, not Town's column)
+const mapShown = () => (fullPage() ? G.hud.mapOn === G.hud.page + (G.hud.sub || '') : !!G.hud.map);
 function ctlHTML() {
 	const H = G.hud,
 		page = H.page,
@@ -417,15 +417,16 @@ function ctlHTML() {
 	let h =
 		at(badge(pic('ctl:jobs', ICON.basket, ROW_WORD.jobs, page === 'jobs' ? 'vo' : 'vb'), idle && `z ${idle}`), 1, 1) +
 		at(badge(pic('ctl:town', ICON.town, ROW_WORD.town, page === 'town' ? 'vo' : 'vb'), researchable() || null), 1, 2) +
-		at(badge(pic('ctl:war', ICON.swords, ROW_WORD.war, (page === 'war' ? 'wo' : 'wb') + (G.incoming ? ' raid' : '')), sol), 7, 1) +
-		at(sym('ctlshut', ICON.down, 'vb mb', 'Close the controls'), 7, 2);
+		at(badge(pic('ctl:war', ICON.swordup, ROW_WORD.war, (page === 'war' ? 'wo' : 'wb') + (G.incoming ? ' raid' : '')), sol), 7, 1) +
+		at(pic('mapt', ICON.map, ROW_WORD.map, 'vb mb' + (mapShown() ? ' on' : ''), null, ' data-hold="ctlshut"'), 7, 2);
 	if (page === 'jobs') h += jobsCells();
 	else if (page === 'town') h += townCells(H.sub);
 	else if (page === 'war') h += warCells(H.sub);
-	if (!page || (page === 'town' && !H.sub)) {
-		h += at(pic('mapt', ICON.map, ROW_WORD.map, 'vb mb' + (H.map ? ' on' : '')), 6, 1);
-		if (H.map) h += `<div class="mapb" style="grid-column:${CTL.map[0]} / ${CTL.map[1] + 1};grid-row:1 / 3"></div>`;
-	} // the small map, 3 × 2, at rest and beside Town's column; its tile lit while it shows (Albert, Nov 3)
+	if (mapShown()) h += `<div class="mapb" style="grid-column:${CTL.map[0]} / ${CTL.map[1] + 1};grid-row:1 / 3"></div>`;
+	// the Map tile in one spot on every page, under War (Albert, Nov 3, 13:13: "same spot always"; 11:00: "it can replace whatever icons it
+	// covers if a person wants"): at rest and beside Town's column the small map, 3 × 2, shows while H.map; on a full page it shows only
+	// where the person turned it on (H.mapOn names the page), over columns 3 to 5, covering what is under it. The tile took Close's place,
+	// so a hold on it folds the row
 	return h;
 }
 // a tile: its page opens, the lit one closes back to rest; a page's own step (Build, a group, Kinds, Train, Alarm), and Back one step up
@@ -433,6 +434,7 @@ function ctlOpen(page) {
 	const H = G.hud;
 	H.page = H.page === page ? null : page;
 	H.sub = null;
+	H.mapOn = null; // the map on a full page lasts while that page is open
 	H.aim = false; // the crosshair goes up only by Aim (war's first cell)
 	if (H.page) closeCard();
 }

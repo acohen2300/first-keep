@@ -7,6 +7,10 @@ const ICON = {
 		20,
 		'<circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 1v4M10 15v4M1 10h4M15 10h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="10" cy="10" r="1.6" fill="currentColor"/>',
 	),
+	next: SVG(
+		20,
+		'<path d="M8 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+	), // the next page (the Build menu)
 	back: SVG(
 		20,
 		'<path d="M9 5l-5 5 5 5M4 10h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
@@ -17,7 +21,6 @@ const ICON = {
 	// the controller's own (Albert, Nov 3, the icon review: one picture, one meaning, one line style at 20)
 	basket: SVG(20, '<path d="M3 8h14l-1.5 8h-11z M7 8l2-4.5 M13 8l-2-4.5 M7.5 11v3 M10 11v3 M12.5 11v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
 	town: SVG(20, '<path d="M2.5 17V9l3.5-3 3.5 3v8 M9.5 17V7.5L13 4l3.5 3.5V17 M2.5 17h15 M5 13h2 M12 10h2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
-	swords: SVG(20, '<path d="M3.5 3.5l9 9 M16.5 3.5l-9 9 M3.5 16.5l4-4 M16.5 16.5l-4-4 M3.5 3.5h2.5v2.5 M16.5 3.5H14v2.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
 	kinds: SVG(20, '<circle cx="5" cy="6.5" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="15" cy="6.5" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M1.5 16c0-3 1.6-4.5 3.5-4.5s3.5 1.5 3.5 4.5 M6.5 15c0-3.5 1.6-5 3.5-5s3.5 1.5 3.5 5 M11.5 16c0-3 1.6-4.5 3.5-4.5s3.5 1.5 3.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'),
 	train: SVG(20, '<path d="M10 2.5 L16 4.8 V10 C16 13.4 13.4 15.8 10 17.5 C6.6 15.8 4 13.4 4 10 V4.8 Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M10 7v6 M7 10h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'),
 	tent: SVG(20, '<path d="M2.5 16.5L10 3.5l7.5 13z M10 16.5V10 M7 16.5l3-6.5 3 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
@@ -108,6 +111,10 @@ const ICON = {
 		20,
 		'<path d="M4 17 V6 H6.5 V8.2 H8.6 V6 H11.4 V8.2 H13.5 V6 H16 V17 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 17 V13 H11.4 V17" fill="currentColor"/>',
 	),
+	swordup: SVG(
+		20,
+		'<path d="M10 1.5 L12 5 L12 12.5 L8 12.5 L8 5 Z" fill="currentColor"/><path d="M5 13.2 H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 13.5 V18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="10" cy="18.4" r="1.1" fill="currentColor"/>',
+	), // one sword, point up: the War tile (Nov 3: the crossed swords read as an X)
 	sword: SVG(
 		16,
 		'<path d="M13.5 2.5 L13.5 4.6 L6.6 11.5 L4.5 9.4 L11.4 2.5 Z" fill="currentColor"/><path d="M3.2 8.6 L7.4 12.8 M2.4 13.6 L5 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
@@ -621,16 +628,16 @@ function ui(force) {
 	if (G.place) {
 		const B = BLD[G.place.kind],
 			t = !G.place.at
-				? G.place.kind === 'wall'
-					? 'Tap where the wall starts'
+				? lineKind(G.place.kind)
+					? `Tap where the ${G.place.kind === 'wall' ? 'wall' : 'line'} starts`
 					: `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`
 				: G.place.why
 					? G.place.why
-					: G.place.kind === 'wall'
-						? `${G.place.cells.length} pieces: tap a corner to add, drag a corner or the wall, or Build`
+					: lineKind(G.place.kind)
+						? `${G.place.cells.length} pieces: tap a corner to add, drag a corner or the line, or Build`
 						: `${B.name}: tap Build, or drag it to move · drag empty ground to look`;
 		txt('placeT', t);
-		$('placeUndo').hidden = G.place.kind !== 'wall' || !G.place.pts.length;
+		$('placeUndo').hidden = !lineKind(G.place.kind) || !G.place.pts.length;
 		$('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why);
 	}
 	preview();
