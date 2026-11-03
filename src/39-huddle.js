@@ -284,14 +284,14 @@ function hudReinforce(slot) {
 	hudJoin(plan.go, m);
 	say(`${plan.go.length} reinforce ${m.name}.`, 'good', TOAST.short);
 }
-// ── The controller (Albert, Nov 3, "yes yes" 08:51; MENU-SPEC §6): the bottom row is seven columns, 6 at the screen's edges and 3 between,
-// two ranks of 44. Four tiles never move: Jobs over Town in column 1 (the villagers, brown), War over Close in column 7 (war, steel). The
-// five columns between show what the lit tile opens, one step at a time: Jobs, the five jobs with − and + under each (as before); Town,
-// one column (People over Build), and Build, the build groups, then a group's buildings; War, the war display, and its three pages
-// (Kinds, Train, Alarm). At rest, and while only Town's column is open, the small map stands 3 × 2 in columns 3 to 5 with its tile (Map,
-// lit while it shows) in column 6. Close folds the whole row to one tile. G.hud: page (null at rest, 'jobs', 'town', 'war'), sub (Town:
-// 'build' or a build group; War: 'kinds', 'train', 'alarm'), map (the small map shown), shut (the row folded).
-const CTL = { cols: 7, map: [3, 5], back: [6, 2] }; // the map's columns; where Back stands on every page that has one; the Map tile is (7, 2)
+// ── The controller (Albert, Nov 3, "yes yes" 08:51 and 14:00; MENU-SPEC §6): the bottom row is seven columns, 6 at the screen's edges and 3
+// between, two ranks of 44. Four tiles never move: Jobs over People in column 1 (the villagers, brown), War over Town in column 7 (war,
+// steel). The columns between show what the lit tile opens: Jobs, the five jobs with − and + under each; Town, Build at (2, 1) and
+// Research over Relations in column 6; War, the war display and its three pages (Kinds, Train, Alarm). At rest the small map stands
+// 3 × 2 in columns 3 to 5 with the Map tile at (6, 1) and the Food job at (2, 1); Town keeps the map as it is; a full page (Jobs, War) has
+// no map and no Map tile. The Hide button (#hideB, in the shell) folds the row away. G.hud: page (null at rest, 'jobs', 'town', 'war'),
+// sub (War: 'kinds', 'train', 'alarm'), map (the small map shown), shut (the row folded).
+const CTL = { cols: 7, map: [3, 5], back: [6, 2] }; // the map's columns; where Back stands on every page that has one
 const at = (h, c, r) => h.replace('<button ', `<button style="grid-column:${c};grid-row:${r}" `); // a cell in its column and rank
 const badge = (h, n) => (n ? h.replace('</button>', `<span class="bd">${n}</span></button>`) : h); // a count on a tile's corner (idle villagers, soldiers)
 const wcell = (act, word, sub, cls = '', attrs = '') => `<button class="cell wc ${cls}" data-act="${act}"${attrs}><b>${word}</b>${sub ? `<small>${sub}</small>` : ''}</button>`; // a word cell: a building has a picture on the map, not an icon
@@ -303,10 +303,10 @@ const fill = (cells, c0 = 2) =>
 const backCell = (cls) => at(pic('ctlback', ICON.back, 'Back', cls), ...CTL.back);
 const pmPair = (c, minus, plus, cls, on = true) =>
 	`<div class="pm" style="grid-column:${c};grid-row:2">${sym(minus, ICON.minus, `${cls} h${on ? '' : ' dis'}`, 'One fewer')}${sym(plus, ICON.plus, `${cls} h${on ? '' : ' dis'}`, 'One more')}</div>`;
-function jobsCells() {
+function jobsCells(only = JOBS) {
 	const p = G.P[0],
 		V = unitsOf(0, 'vil');
-	return JOBS.map((r, i) => {
+	return only.map((r, i) => {
 		const k = KEY[r],
 			on = resOn(k), // a job not open yet is locked, with no count (32-frame, resOn)
 			n = V.filter((v) => v.job === r).length;
@@ -316,16 +316,17 @@ function jobsCells() {
 		);
 	}).join('');
 }
-// Town: People over Build (column 2); Build: the six groups, Research, Relations; a group: its buildings, words only (name, cost)
+// People: train a villager (column 1, under Jobs)
+function peopleCell() {
+	const V = unitsOf(0, 'vil');
+	return at(pic('train:vil', ICON.people, ROW_WORD.people, 'vb' + (V.some(freeVil) ? ' go' : trainWhy(0, 'vil') ? ' dis' : ''), null, ' aria-label="People: train a villager"'), 1, 2);
+}
+// Town: Build (2, 1), Research over Relations (column 6), the small map between. Build opens the Build card, the six tabs of preview 33
 function townCells() {
-	// Town: People over Build (column 2), Research over Relations (column 6), the small map between. Build opens the Build card, the six tabs of
-	// preview 33 (Albert, Nov 3, 15:50: preview 33's card back, yes yes); the paged list in the row (preview 39) is cut
-	const V = unitsOf(0, 'vil'),
-		site = G.blds.find((b) => b.owner === 0 && b.hp > 0 && b.prog < 1),
+	const site = G.blds.find((b) => b.owner === 0 && b.hp > 0 && b.prog < 1),
 		rs = researchable();
 	return (
-		at(pic('train:vil', ICON.people, ROW_WORD.people, 'vb' + (V.some(freeVil) ? ' go' : trainWhy(0, 'vil') ? ' dis' : ''), null, ' aria-label="People: train a villager"'), 2, 1) +
-		at(pic('menu', ICON.hammer, ROW_WORD.build, 'vb' + (site ? ' work' : ''), null, site ? ` style="${toGo(1 - site.prog)}"` : ''), 2, 2) +
+		at(pic('menu', ICON.hammer, ROW_WORD.build, 'vb' + (site ? ' work' : ''), null, site ? ` style="${toGo(1 - site.prog)}"` : ''), 2, 1) +
 		at(pic('card:research', ICON.book, ROW_WORD.research, 'vb' + (rs ? '' : ' dis'), rs || null), 6, 1) +
 		at(pic('relopen', ICON.ally, ROW_WORD.relations, 'vb'), 6, 2)
 	);
@@ -387,27 +388,25 @@ function warCells(sub) {
 }
 const researchable = () => [...G.rdy.values()].reduce((a, v) => a + v, 0); // research you can start now (the count the strip shows)
 const idleSoldiers = () => sendable().filter((u) => u.state === 'home');
-const fullPage = () => (G.hud.page === 'town' ? false : !!G.hud.page); // a page that fills the five columns (not rest, not Town's columns)
-const mapShown = () => (fullPage() ? G.hud.mapOn === G.hud.page + (G.hud.sub || '') : !!G.hud.map);
+const fullPage = () => G.hud.page === 'jobs' || G.hud.page === 'war'; // a page that fills the five columns: no small map, no Map tile
+const mapShown = () => !fullPage() && !!G.hud.map;
 function ctlHTML() {
 	const H = G.hud,
 		page = H.page,
 		idle = unitsOf(0, 'vil').filter(freeVil).length + G.blds.filter(idlePost).length, // every Z on the map: idle people and empty posts (D-089)
 		sol = armyOf(0).filter((u) => u.kind !== 'spy').length;
-	if (H.shut) return at(sym('ctlshut', ICON.up, 'vb mb', 'Open the controls'), 7, 2);
+	if (H.shut) return '';
 	let h =
 		at(badge(pic('ctl:jobs', ICON.basket, ROW_WORD.jobs, page === 'jobs' ? 'vo' : 'vb'), idle && `z ${idle}`), 1, 1) +
-		at(badge(pic('ctl:town', ICON.town, ROW_WORD.town, page === 'town' ? 'vo' : 'vb'), researchable() || null), 1, 2) +
+		peopleCell() +
 		at(badge(pic('ctl:war', ICON.swordup, ROW_WORD.war, (page === 'war' ? 'wo' : 'wb') + (G.incoming ? ' raid' : '')), sol), 7, 1) +
-		at(pic('mapt', ICON.map, ROW_WORD.map, 'vb mb' + (mapShown() ? ' on' : ''), null, ' data-hold="ctlshut"'), 7, 2);
+		at(badge(pic('ctl:town', ICON.town, ROW_WORD.town, page === 'town' ? 'vo' : 'vb'), researchable() || null), 7, 2);
 	if (page === 'jobs') h += jobsCells();
 	else if (page === 'town') h += townCells();
 	else if (page === 'war') h += warCells(H.sub);
+	else h += jobsCells(JOBS.slice(0, 1)); // at rest, the Food job beside the map
+	if (!fullPage() && page !== 'town') h += at(pic('mapt', ICON.map, ROW_WORD.map, 'vb mb' + (H.map ? ' on' : '')), 6, 1); // the Map tile, right outside the map (Albert, Nov 3)
 	if (mapShown()) h += `<div class="mapb" style="grid-column:${CTL.map[0]} / ${CTL.map[1] + 1};grid-row:1 / 3"></div>`;
-	// the Map tile in one spot on every page, under War (Albert, Nov 3, 13:13: "same spot always"; 11:00: "it can replace whatever icons it
-	// covers if a person wants"): at rest and beside Town's column the small map, 3 × 2, shows while H.map; on a full page it shows only
-	// where the person turned it on (H.mapOn names the page), over columns 3 to 5, covering what is under it. The tile took Close's place,
-	// so a hold on it folds the row
 	return h;
 }
 // a tile: its page opens, the lit one closes back to rest; a page's own step (Build, a group, Kinds, Train, Alarm), and Back one step up
@@ -415,7 +414,6 @@ function ctlOpen(page) {
 	const H = G.hud;
 	H.page = H.page === page ? null : page;
 	H.sub = null;
-	H.mapOn = null; // the map on a full page lasts while that page is open
 	H.aim = false; // the crosshair goes up only by Aim (war's first cell)
 	if (H.page) closeCard();
 }
@@ -438,6 +436,9 @@ function rowUI() {
 	if (el.pg !== sig) {
 		el.pg = sig;
 		$('orders').className = 'ctl pg-' + (G.hud.page || 'rest');
+		$('hideB').innerHTML = G.hud.shut ? ICON.plus : ICON.minus; // one button: a minus over War; folded, a plus in the corner
+		$('hideB').classList.toggle('shut', !!G.hud.shut);
+		$('hideB').setAttribute('aria-label', G.hud.shut ? ROW_WORD.show : ROW_WORD.hide);
 		fit(); // the row is drawn anew: the map's bottom edge is measured again
 	}
 }

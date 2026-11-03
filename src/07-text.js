@@ -820,6 +820,8 @@ const ROW_WORD = {
 	research: 'Research',
 	relations: 'Relations',
 	map: 'Map',
+	hide: 'Hide the controls', // the Hide button's label, and when folded (Albert, Nov 3)
+	show: 'Open the controls',
 	ambush: 'Ambush',
 	choke: 'Choke',
 	emgW: [['Work', 'all clear'], ['Gather', 'at home'], ['Garrison', 'all in'], ['Shelter', 'hide']], // the Alarm page: each order's word and what it does, in the row's order (Albert, Nov 2: Age of Empires' Town Bell and Back to Work)
@@ -858,7 +860,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The screen',
-		`Top, one bar: food, wood, stone, gold, iron (tap one for the jobs), your people of your room (tap for them), the clock with the sky (tap for the Status page: the age, the season, your rank, the stores, the mail, the sound), and pause, the unread mail its badge. Bottom, the controller: ${ROW_WORD.jobs} over ${ROW_WORD.town} on the left, ${ROW_WORD.war} over Close on the right, the small map between; idle villagers a badge on ${ROW_WORD.jobs}, research ready on ${ROW_WORD.town}, your soldiers on ${ROW_WORD.war}. ${ROW_WORD.jobs}: the five jobs with − and +. ${ROW_WORD.town}: ${ROW_WORD.people} over ${ROW_WORD.build}; ${ROW_WORD.build} opens the build groups, ${ROW_WORD.research} and ${ROW_WORD.relations}. ${ROW_WORD.war}: ${ROW_WORD.aim} and ${ROW_WORD.go}, the three squads, ${ROW_WORD.kinds}, ${ROW_WORD.alarm}, ${ROW_WORD.rally}, the shape, ${ROW_WORD.train} and ${ROW_WORD.setup}. Tap a lit tile to close it; Close folds it all. Home shows when your Town Center is out of sight. A book on a building means research waits there.`,
+		`Top, one bar: food, wood, stone, gold, iron (tap one for the jobs), your people of your room (tap for them), the clock with the sky (tap for the Status page: the age, the season, your rank, the stores, the mail, the sound), and pause, the unread mail its badge. Bottom, the controller: ${ROW_WORD.jobs} over ${ROW_WORD.people} on the left, ${ROW_WORD.war} over ${ROW_WORD.town} on the right, the small map between with its ${ROW_WORD.map} tile beside it; idle villagers a badge on ${ROW_WORD.jobs}, research ready on ${ROW_WORD.town}, your soldiers on ${ROW_WORD.war}. ${ROW_WORD.jobs}: the five jobs with − and +. ${ROW_WORD.town}: ${ROW_WORD.build}, ${ROW_WORD.research} and ${ROW_WORD.relations}. ${ROW_WORD.war}: ${ROW_WORD.aim} and ${ROW_WORD.go}, the three squads, ${ROW_WORD.kinds}, ${ROW_WORD.alarm}, ${ROW_WORD.rally}, the shape, ${ROW_WORD.train} and ${ROW_WORD.setup}. Tap a lit tile to close it; the minus over ${ROW_WORD.war} hides it all, and the plus in the corner brings it back. Home shows when your Town Center is out of sight. A book on a building means research waits there.`,
 		'Only what you act on stays in sight; the rest is a tap away.',
 	],
 	[
