@@ -182,7 +182,7 @@ const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, 
 // massed volleys broke armies the same losses spread out would not (Crécy, Agincourt; from memory). charge: CHARGE. wheel: the riders ride
 // to the far side of the enemy nearest the crosshair and hit from behind (FLANK, MORALE.rear). bombard: the engines on the nearest enemy
 // building to the crosshair, burning once Burning shot is researched (FIREARMS). back: FALLBACK.
-const DIRECT = { wall: 12, loose: 6, wheel: 15, behind: 70, arc: 0.8 }; // arc: the archers' arc stands at 80% of the shortest bow's reach (Albert, Nov 3: 'fall back a bit, form an arc'); wall: seconds a shield wall stands; loose: seconds before the archers may volley again (an audit, Nov 2: with none, a tap a frame was a machine gun); wheel: seconds before riders may wheel again; behind: how far past the foe they ride, away from home
+const DIRECT = { wall: 12, loose: 6, arc: 0.8 }; // arc: the archers' arc stands at 80% of the shortest bow's reach (Albert, Nov 3: 'fall back a bit, form an arc'); wall: seconds a shield wall stands; loose: seconds before the archers may volley again (an audit, Nov 2: with none, a tap a frame was a machine gun)
 const TOAST = { short: 3, mid: 5, long: 8 };
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 

@@ -683,7 +683,7 @@ const MS_TEXT = {
 		'A fire: it spreads to wooden neighbours.',
 		'A fire grows as the square of its age and the heat falls with the gap between walls. Stone does not burn; rain damps it.',
 		'Who is on it',
-		'emgpage',
+		'alarmpg',
 	],
 	rout: [
 		'Your soldiers broke and ran: nerve.',
@@ -761,6 +761,16 @@ const ROW_WORD = {
 	army: 'The army',
 	pace: ['slow', 'medium', 'fast'], // a squad's pace, from its slowest member (paceWord)
 	emg: 'War', // the red button: the battle station (Albert, Nov 2)
+	town: 'Town', // the controller's tiles and cells (Albert, Nov 3)
+	aim: 'Aim',
+	go: 'Go',
+	kinds: 'Kinds',
+	alarm: 'Alarm',
+	rally: 'Rally',
+	idle: 'Idle',
+	research: 'Research',
+	relations: 'Relations',
+	map: 'Map',
 	emgW: [['Work', 'all clear'], ['Gather', 'at home'], ['Garrison', 'all in'], ['Shelter', 'hide']], // the Alarm page: each order's word and what it does, in the row's order (Albert, Nov 2: Age of Empires' Town Bell and Back to Work)
 };
 // a research step's why: its own key first ('tech:' + id) where a unit shares its id (F4: one WHY.legion served both)
@@ -797,7 +807,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The screen',
-		`Top, one bar: food, wood, stone, gold, iron, then sound, pause and play, and the map. Under it a thin strip: the age, the sky, the clock, your people and their room (tap for them), idle villagers (tap to see one), research you can start (tap for it), your rank (tap for the score) and your soldiers. Bottom, one row in three pages; the cycle button above it on the left turns ${ROW_WORD.jobs} → ${ROW_WORD.war} → ${ROW_WORD.train}, and ${ROW_WORD.emg} sits above it on the right. ${ROW_WORD.jobs}: ${ROW_WORD.people} (trains a villager) over ${ROW_WORD.build} (the hammer: building is a job), then each job with − and +. ${ROW_WORD.war}: ${ROW_WORD.target} over ${ROW_WORD.home}, the three squads with their time and pace, Go ✓ over Abort ✕. ${ROW_WORD.train}: ${ROW_WORD.orders} over the squad new soldiers join, the four kinds with − and +, ✓ over ✕. Home shows when your Town Center is out of sight. A book on a building means research waits there.`,
+		`Top, one bar: food, wood, stone, gold, iron, then sound, pause and play, and the mail. Under it a thin strip: the age, the sky, the clock, your people and their room (tap for them), idle villagers (tap to see one), research you can start (tap for it), your rank (tap for the score) and your soldiers. Bottom, the controller: ${ROW_WORD.jobs} over ${ROW_WORD.town} on the left, ${ROW_WORD.war} over Close on the right, the small map between. ${ROW_WORD.jobs}: the five jobs with − and +. ${ROW_WORD.town}: ${ROW_WORD.people} over ${ROW_WORD.build}; ${ROW_WORD.build} opens the build groups, ${ROW_WORD.research} and ${ROW_WORD.relations}. ${ROW_WORD.war}: ${ROW_WORD.aim} and ${ROW_WORD.go}, the three squads, ${ROW_WORD.kinds}, ${ROW_WORD.alarm}, ${ROW_WORD.rally}, the shape, ${ROW_WORD.train} and ${ROW_WORD.setup}. Tap a lit tile to close it; Close folds it all. Home shows when your Town Center is out of sight. A book on a building means research waits there.`,
 		'Only what you act on stays in sight; the rest is a tap away.',
 	],
 	[
@@ -1047,7 +1057,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The row, the squads and pausing',
-		`The cycle button above the first slot turns the row: Jobs, War, Train. On War sit the three squads (once Battalions is researched): tap one for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Out on a mission its card shows its health and standing. Opening a card you sit and read (${orList([...Object.values(READ_CARDS), 'the War Council', 'Relations'])}) pauses the game; a building, a unit or a field to glance at does not; closing it carries on (Help: Pause on cards, off if you like).`,
+		`On War sit the three squads (once Battalions is researched): tap one to send it to the crosshair, hold it for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Kinds picks every soldier of a kind (then tap where they go), and a hold is its drill. Opening a card you sit and read (${orList([...Object.values(READ_CARDS), 'the War Council', 'Relations'])}) pauses the game; a building, a unit or a field to glance at does not; closing it carries on (Help: Pause on cards, off if you like).`,
 		'Thumbs on the map, not in a menu: a phone is not a desk.',
 	],
 	[

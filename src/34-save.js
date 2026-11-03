@@ -363,7 +363,6 @@ function saveGame(force) {
 			gamesT: G.gamesT,
 			chron: G.chron,
 			chargeT: G.chargeT || {},
-			wheelT: G.wheelT || 0,
 			looseT: G.looseT || 0,
 			sand: G.sand || null,
 			mirage: G.mirage || null,
@@ -458,7 +457,7 @@ function loadGame(S) {
 		recruitSq: S.recruitSq ?? null,
 		form: S.form || BN.map(() => 0),
 		qs: { from: 'all', n: {} },
-		hud: { page: 'jobs' },
+		hud: { page: null, map: true },
 		msn: S.msn || [null, null, null, null],
 		emg: S.emg || null,
 		intel: S.intel || {},
@@ -573,7 +572,6 @@ function loadGame(S) {
 	G.gamesT = S.gamesT || 0;
 	G.chron = S.chron || [];
 	G.chargeT = S.chargeT || {};
-	G.wheelT = S.wheelT || 0;
 	G.looseT = S.looseT || 0;
 	G.sand = S.sand || null;
 	G.mirage = S.mirage || null;

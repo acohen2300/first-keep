@@ -140,8 +140,8 @@ function quickGo() {
 	order(S, { t: 'ground', e: { x: Q.x, y: Q.y } });
 	feel('thock');
 }
-// ── The War Director (06-rules-tuning, DIRECT): a tap on a kind in the station's middle is its move, a hold its second. Every soldier of
-// that kind that can be sent goes at once; the crosshair (G.hud.h) is where. Each returns what was said, or '' when nobody could go.
+// ── The War Director (06-rules-tuning, DIRECT): a hold on a kind in War · Kinds is its drill (a tap picks the kind, 33-verbs kpick). Every
+// soldier of that kind that can be sent goes at once; the crosshair (G.hud.h), or the camera's middle, is where. Each returns what was said.
 const ofKind = (t) => sendable().filter((u) => clsOf(u.kind) === t);
 const aimH = () => G.hud.h || { t: 'ground', e: { x: cam.x, y: cam.y } };
 // a drill's shape on the ground (Albert, Nov 3: "form a line", "a semi circle or arc"): every soldier of S to its place round the point at,
@@ -157,7 +157,7 @@ function dress(S, at, dir, shape, secs, arc) {
 		u.drill = { shape, fx: dir.x, fy: dir.y, until: G.t + secs, px: at.x, py: at.y, arc: arc || null };
 	}
 }
-const DIRECT_WHY = { none: 'Nobody of that kind.', wheel: 'Nobody to wheel round.' };
+const DIRECT_WHY = { none: 'Nobody of that kind.' };
 const DIRECTS = {
 	wall: (S) => {
 		const c = centreOf(S),
@@ -172,7 +172,6 @@ const DIRECTS = {
 		dress(S, c, { x: (to.x - c.x) / d, y: (to.y - c.y) / d }, 'line', DIRECT.wall);
 		return 'Shield wall!';
 	},
-	advance: (S) => (order(S, aimH()), 'Foot, advance!'),
 	loose: (S) => {
 		if (G.looseT > G.t) return `Reloading: ${Math.ceil(G.looseT - G.t)} s.`;
 		const c = centreOf(S),
@@ -188,28 +187,12 @@ const DIRECTS = {
 		G.looseT = G.t + DIRECT.loose;
 		return 'Archers, loose!';
 	},
-	back: (S, word) => (fallBack(0, S, undefined, true) ? word : 'Nowhere to fall back to.'),
 	charge: (S) => {
 		const why = chargeWhy(0, S);
 		if (why) return why; // winded: nobody moves (an audit, Nov 2: they were ordered off before the check)
 		order(S, aimH());
 		charge(0, S, undefined, true);
 		return 'Riders, charge!';
-	},
-	wheel: (S) => {
-		if ((G.wheelT || 0) > G.t) return `Winded: ${Math.ceil(G.wheelT - G.t)} s.`;
-		const h = aimH(),
-			foes = foesNear(h.e),
-			home = homeOf(0) || h.e;
-		if (!foes.length) return DIRECT_WHY.wheel;
-		const cx = foes.reduce((s, f) => s + f.x, 0) / foes.length,
-			cy = foes.reduce((s, f) => s + f.y, 0) / foes.length,
-			d = hyp(cx - home.x, cy - home.y) || 1, // the far side of the foe from home (an audit, Nov 2: the riders' own centre sat on the foe when they were split)
-			x = clamp(cx + ((cx - home.x) / d) * DIRECT.behind, 20, MAP - 20),
-			y = clamp(cy + ((cy - home.y) / d) * DIRECT.behind, 20, MAP - 20);
-		order(S, { t: 'ground', e: { x, y } });
-		G.wheelT = G.t + DIRECT.wheel;
-		return 'Riders, wheel!';
 	},
 	bombard: (S) => {
 		const h = aimH(),
@@ -219,14 +202,16 @@ const DIRECTS = {
 	},
 };
 // the four kinds' moves: [tap, hold], with the word each says, and the sound
+// the four kinds' drills (a hold on a kind in War · Kinds), with the word each says and its sound. The second moves (Advance, Fall back,
+// Wheel, Pull back) are cut (Albert, Nov 3): pick the kind, then tap where
 const DIRECT_OF = [
-	[['wall', 'Shield wall', 'hit'], ['advance', 'Advance', 'horn']],
-	[['loose', 'Loose!', 'arrow'], ['back', 'Archers, fall back!', 'horn']],
-	[['charge', 'Charge', 'horn'], ['wheel', 'Wheel', 'hooves']],
-	[['bombard', 'Bombard', 'boom'], ['back', 'Engines, pull back!', 'horn']],
+	['wall', 'Shield wall', 'hit'],
+	['loose', 'Loose!', 'arrow'],
+	['charge', 'Charge', 'horn'],
+	['bombard', 'Bombard', 'boom'],
 ];
-function direct(t, hold) {
-	const [id, word, snd] = DIRECT_OF[t][hold ? 1 : 0],
+function direct(t) {
+	const [id, word, snd] = DIRECT_OF[t],
 		S = ofKind(t);
 	if (!S.length) return say(DIRECT_WHY.none, '', TOAST.short);
 	const said = DIRECTS[id](S, word);

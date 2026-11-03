@@ -190,26 +190,15 @@ JS = r"""() => {
     H.prog = 0.4; F.ui(true); if (!$('#card .tb h3').classList.contains('work')) bad.push('the title box: a House going up does not wear the working ring');
     H.prog = 1; H.hp = F.BLD.house.hp; F.closeCard(); }
   } catch (e) { bad.push('the title box: the check could not run: ' + e.message); }
-  // the battle station (Albert, Nov 2): the red Alarm button turns the row to the station, the four orders on its left, the small map in its
-  // middle, Train · Squad / Orders · Attack on its right; Train and Squad turn the middle to their four and back; no state ring on it
+  // the controller (Albert, Nov 3): villager pages brown, war pages steel, Alarm brown inside War; the small map only in its box
   try {
-  { F.closeCard(); F.hudPage('jobs'); F.ui(true); $('#emgB').click(); F.ui(true);
-    if (G.hud.page !== 'war' || !$('#row [data-act="emg:square"]') || !$('#row .midb.map canvas') || !$('#row [data-act="wfire"]') || G.card) bad.push('the station: the Alarm button did not turn the row to the station (orders, the small map, Attack)');
-    F.act('wmid:train'); F.ui(true); if (!$('#row .midb [data-act="tq:0,+"]') || $('#row .midb [data-act="tq:0,+"]').dataset.hold !== 'tq:0,-') bad.push('the station: Train did not turn the middle to the four kinds, a hold one fewer');
-    F.act('wmid:train'); F.ui(true); if (!$('#row .midb.map canvas')) bad.push('the station: Train again did not bring the small map back');
-    F.act('wmid:squad'); F.ui(true); if (!$('#row .midb [data-act="wsq:0"]')) bad.push('the station: Squad did not turn the middle to the three squads'); if (!$('#row .midb [data-act="sqsetup"]')) bad.push('the station: Squad has no Set Up tile'); F.act('wmid:squad'); F.ui(true);
-    if ($('#row .go, #row .on, #row .warn, #row .work')) bad.push('the station wears a state ring: ' + $('#row .go, #row .on, #row .warn, #row .work').outerHTML.slice(0, 80));
-    if (getComputedStyle($('#emgB')).borderTopColor !== getComputedStyle(document.documentElement).getPropertyValue('--ring-r').trim().replace(/^#(..)(..)(..)$/, (m, r, g, b) => `rgb(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)})`)) bad.push('the station: the Alarm button is not red');
-    $('#emgB').click(); F.ui(true); if (G.hud.page !== 'jobs') bad.push(`the station: the Alarm button again went to ${G.hud.page}, not back to Jobs`); if ($('#mini').parentNode !== $('#stage')) bad.push('the station: the small map did not go back to its corner'); F.ui(true); }
-  } catch (e) { bad.push('the station: the check could not run: ' + e.message); }
-  // T2 (Albert, Nov 2): every Build tab is two slots a building, three a rank, a short rank filled with empty places
-  try {
-  for (const m of F.MENUS) { F.openCard({ type: 'menu', id: m.id }); F.ui(true);
-    const R = [...document.querySelectorAll('#card .fm.c3')];
-    if (!R.length) bad.push('T2: the ' + m.id + ' tab has no rank of three');
-    for (const r of R) if (r.children.length % 3) bad.push('T2: a rank of ' + r.children.length + ' on the ' + m.id + ' tab, not filled to three');
-    F.closeCard(); }
-  } catch (e) { bad.push('T2: the check could not run: ' + e.message); }
+  { F.closeCard(); F.hudPage('war'); F.ui(true); const bg = (sel) => $(sel) && getComputedStyle($(sel)).backgroundColor;
+    if (bg('#row [data-act="wsq:0"]') === bg('#row [data-act="ctl:jobs"]')) bad.push('the controller: a War cell is the colour of the villagers');
+    if (!$('#row [data-act="ctlsub:alarm"].vo')) bad.push('the controller: Alarm is not brown on the War page');
+    F.act('ctlsub:alarm'); F.ui(true); if (!$('#row [data-act="emg:square"].v2')) bad.push('the controller: the Alarm orders are not brown');
+    F.hudPage(null); F.ui(true); if ($('#mini').parentNode === $('#stage') || !$('#row .mapb #mini')) bad.push('the controller: the small map is not in its box at rest');
+    F.act('mapt'); F.ui(true); if ($('#mini').parentNode !== $('#stage')) bad.push('the controller: the small map did not go back to the stage when taken down'); F.act('mapt'); F.ui(true); }
+  } catch (e) { bad.push('the controller: the check could not run: ' + e.message); }
   // E6: a dim Train button says why it cannot (here the line is full), never its cost as if payable
   try {
   { const keep = F.keepOf(0); keep.q.length = 0; for (let i = 0; i < 12; i++) F.train(0, 'vil'); const why = F.trainWhy(0, 'vil'), d = document.createElement('div');
@@ -228,15 +217,11 @@ JS = r"""() => {
   { F.openCard({ type: 'bld', id: k.id }); F.ui(true); const l = $('#card [data-act^="qlock:"]');
     if (l && /^\+\d\s*research$/i.test(l.innerText.replace(/\n/g, ' ').trim())) bad.push('a locked place in the line says "' + l.innerText.replace(/\n/g, ' ') + '", not its research'); F.act('close'); }
   } catch (e) { bad.push('a locked place in the line names its res: the check could not run: ' + e.message); }
-  // the row: War a slot on its own rank above the row, at the right, its word under its icon; no chevron on the left (Nov 2); no panel behind the row
+  // the row (Nov 3): no War button and no chevron above it; the small map never on the stage itself; no panel behind the row
   try {
-  { F.hudPage('war'); F.ui(true); const e = $('#emgB').getBoundingClientRect(), r = $('#row button').getBoundingClientRect(), slot = (innerWidth - 7 * 6) / 6;
-    if (Math.abs(e.width - slot) > 0.6 || Math.abs(r.top - e.bottom - 6) > 1 || Math.abs(e.right - (innerWidth - 6)) > 0.6) bad.push(`the War button is ${e.width.toFixed(1)} wide, ${Math.round(r.top - e.bottom)} over the row, ${Math.round(innerWidth - e.right)} from the right: not a slot one gap above the row at the right`);
-    if ($('#hudB')) bad.push('the chevron is still on the left'); if ($('#stage > #mini') && getComputedStyle($('#stage > #mini')).display !== 'none') bad.push('the small map shows outside the station');
-    if (!$('#emgB svg') || $('#emgB .wd')) bad.push('the War button does not read ✕ while the station is up'); F.hudPage('jobs'); F.ui(true);
-    if (!$('#emgB .wd') || $('#emgB .wd').textContent !== F.ROW_WORD.emg) bad.push('the War button has no word under its icon');
-    if (getComputedStyle($('#orders'), '::before').content !== 'none') bad.push('a panel is drawn behind the row on the War page (Albert, Nov 2: none on any page)');
-    F.hudPage('jobs'); F.ui(true); }
+  { if ($('#emgB') || $('#hudB')) bad.push('a button is still on the rank above the row');
+    if ($('#stage > #mini') && getComputedStyle($('#stage > #mini')).display !== 'none') bad.push('the small map shows outside the controller');
+    if (getComputedStyle($('#orders'), '::before').content !== 'none') bad.push('a panel is drawn behind the row (Albert, Nov 2: none)'); }
   } catch (e) { bad.push('the row: the check could not run: ' + e.message); }
   // the map: a label is 12 at the starting zoom, larger zoomed in, 9 at the floor zoomed out
   try {

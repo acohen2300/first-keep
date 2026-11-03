@@ -44,14 +44,11 @@ function paceWord(S) {
 // ── the pages
 function hudPage(page) {
 	const H = G.hud;
-	H.page = page;
-	H.aim = page === 'war'; // the station puts the crosshair up: a tap on the map moves it
-	if (H.aim) {
-		H.aimT = performance.now();
-		if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
-		closeCard();
-	}
-}
+	H.page = page || null;
+	H.sub = null;
+	H.aim = false;
+	if (H.page) closeCard();
+} // a page by name (a milestone's button, the tests)
 // the kind a class trains from the Train page, and fills a muster with: the first its building trains in this age (a people's own unit in its place)
 const kindOf = (t) =>
 	ARMYK.filter((k) => !UNIT[k].civ && UNIT[k].cost && k !== 'spy')
@@ -83,6 +80,10 @@ const aimNear = (sx, sy) => {
 function aimAt(sx, sy) {
 	const H = G.hud;
 	aimSpot(sx, sy);
+	if (H.aim === 'rally') {
+		H.aim = false;
+		return setRally();
+	} // Rally (the controller): the tap is where new soldiers go
 	ripple(H.h.e.x, H.h.e.y, aimColor());
 	feel('tick');
 }
@@ -278,94 +279,176 @@ function hudReinforce(slot) {
 	hudJoin(plan.go, m);
 	say(`${plan.go.length} reinforce ${m.name}.`, 'good', TOAST.short);
 }
-// ── the row: three pages on one mold. Rank one is the page's six things, rank two what each is under it; grid order lays them
-// Jobs: People over the hammer; each job with its count (in its store's colour) and − + under it. People rings blue while people stand idle;
-// the hammer wears the working ring while a building goes up (the first site still going up: what is left of it); a job opens with its age.
-function jobsPage() {
+// ── The controller (Albert, Nov 3, "yes yes" 08:51; MENU-SPEC §6): the bottom row is seven columns, 6 at the screen's edges and 3 between,
+// two ranks of 44. Four tiles never move: Jobs over Town in column 1 (the villagers, brown), War over Close in column 7 (war, steel). The
+// five columns between show what the lit tile opens, one step at a time: Jobs, the five jobs with − and + under each (as before); Town,
+// one column (People over Build), and Build, the build groups, then a group's buildings; War, the war display, and its three pages
+// (Kinds, Train, Alarm). At rest, and while only Town's column is open, the small map stands 3 × 2 in columns 3 to 5 with its tile (Map,
+// lit while it shows) in column 6. Close folds the whole row to one tile. G.hud: page (null at rest, 'jobs', 'town', 'war'), sub (Town:
+// 'build' or a build group; War: 'kinds', 'train', 'alarm'), map (the small map shown), shut (the row folded).
+const CTL = { cols: 7, map: [3, 5], back: [6, 2] }; // the map's columns; where Back stands on every page that has one
+const at = (h, c, r) => h.replace('<button ', `<button style="grid-column:${c};grid-row:${r}" `); // a cell in its column and rank
+const badge = (h, n) => (n ? h.replace('</button>', `<span class="bd">${n}</span></button>`) : h); // a count on a tile's corner (idle villagers, soldiers)
+const wcell = (act, word, sub, cls = '', attrs = '') => `<button class="cell wc ${cls}" data-act="${act}"${attrs}><b>${word}</b>${sub ? `<small>${sub}</small>` : ''}</button>`; // a word cell: a building has a picture on the map, not an icon
+// the five between, from column 2: cells in rank order, ten at most, Back in its place
+const fill = (cells, c0 = 2) =>
+	cells
+		.map((h, i) => (h ? at(h, c0 + (i % 5), 1 + Math.floor(i / 5)) : ''))
+		.join('');
+const backCell = (cls) => at(pic('ctlback', ICON.back, 'Back', cls), ...CTL.back);
+const pmPair = (c, minus, plus, cls, on = true) =>
+	`<div class="pm" style="grid-column:${c};grid-row:2">${sym(minus, ICON.minus, `${cls} h${on ? '' : ' dis'}`, 'One fewer')}${sym(plus, ICON.plus, `${cls} h${on ? '' : ' dis'}`, 'One more')}</div>`;
+function jobsCells() {
 	const p = G.P[0],
-		V = unitsOf(0, 'vil'),
-		site = G.blds.find((b) => b.owner === 0 && b.hp > 0 && b.prog < 1);
-	let top = pic('train:vil', ICON.people, ROW_WORD.people, V.some(freeVil) ? 'go' : trainWhy(0, 'vil') ? 'dis' : '', null, ' aria-label="People: train a villager"'),
-		low = pic('buildrow', ICON.hammer, ROW_WORD.build, site ? 'work' : '', null, ` aria-label="The Build menu"${site ? ` style="${toGo(1 - site.prog)}"` : ''}`);
-	for (const r of JOBS) {
+		V = unitsOf(0, 'vil');
+	return JOBS.map((r, i) => {
 		const k = KEY[r],
 			on = resOn(k), // a job not open yet is locked, with no count (32-frame, resOn)
 			n = V.filter((v) => v.job === r).length;
-		top += on ? pic(`job:${r}`, ICON[r], RESOURCES[r].name, p.rally === r ? 'on' : '', n, ` style="--nc:${grad(velOf(p, k))}"`) : pic(`job:${r}`, ICON[r], RESOURCES[r].name, 'dis');
-		low += sym(`less:${r}`, ICON.minus, on ? 'h' : 'h dis', `One fewer on ${r}`) + sym(`move:${r}`, ICON.plus, on ? 'h' : 'h dis', `One more on ${r}`);
-	}
-	return top + low;
+		return (
+			at(on ? pic(`job:${r}`, ICON[r], RESOURCES[r].name, 'vb' + (p.rally === r ? ' on' : ''), n, ` style="--nc:${grad(velOf(p, k))}"`) : pic(`job:${r}`, ICON[r], RESOURCES[r].name, 'vb dis'), 2 + i, 1) +
+			pmPair(2 + i, `less:${r}`, `move:${r}`, 'vb', on)
+		);
+	}).join('');
 }
-// The battle station (Albert, Nov 2, his drawings: "the controller"; the War Director, 28-army-quick): one page in place of War and Train, the row's 6 x 2 as three 2 x 2
-// blocks. Left, the Alarm's four orders (40-emergency). Middle, one joined block that changes: the small map (tap: the camera goes there;
-// a drag sweeps it), or the three squads and Set Up (tap: send it to the crosshair; hold: its card), or the four kinds to train (tap:
-// one more; hold: one fewer), or the Director's four (tap: the kind's move; hold: its second). Right: Train (hold: new soldiers go to the
-// crosshair), Squad and Direct turn the middle, Attack sends every
-// ready squad there (hold: everyone home). The villagers' block brown (vb), the war block steel tinted red (wb), no state rings (EXCEPTIONS: a battle station is all live); a tap flashes red and
-// snaps off (the click handler, 33-verbs). The crosshair is up while it is open: a tap on the map moves it.
-const SMID = { map: 'map', squad: 'squad', train: 'train', direct: 'direct' }; // what the station's middle shows
-function stationPage() {
+// Town: People over Build (column 2); Build: the six groups, Research, Relations; a group: its buildings, words only (name, cost)
+function townCells(sub) {
+	const p = G.P[0],
+		V = unitsOf(0, 'vil'),
+		site = G.blds.find((b) => b.owner === 0 && b.hp > 0 && b.prog < 1);
+	if (!sub)
+		return (
+			at(pic('train:vil', ICON.people, ROW_WORD.people, 'vb' + (V.some(freeVil) ? ' go' : trainWhy(0, 'vil') ? ' dis' : ''), null, ' aria-label="People: train a villager"'), 2, 1) +
+			at(pic('ctlsub:build', ICON.hammer, ROW_WORD.build, 'vb' + (site ? ' work' : ''), null, site ? ` style="${toGo(1 - site.prog)}"` : ''), 2, 2)
+		);
+	if (sub === 'build') {
+		const rs = researchable();
+		return (
+			fill([
+				...MENUS.map((m) => pic(`ctlsub:${m.id}`, ICON[MENU_ICON[m.id]], MENU_WORD[m.id] || m.name, 'vo')),
+				pic('card:research', ICON.book, ROW_WORD.research, 'vo' + (rs ? '' : ' dis'), rs || null),
+				pic('relopen', ICON.ally, ROW_WORD.relations, 'vo'),
+			]) + backCell('vo')
+		);
+	}
+	const M = MENUS.find((m) => m.id === sub);
+	return (
+		fill(
+			M.items.map((k) => {
+				const B = BLD[k],
+					lock = B.age > p.age,
+					cp = capFor(0, k),
+					full = !lock && bldsOf(0, k).length >= cp;
+				return wcell(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? 'all built' : afford(p, B.cost) ? '' : 'short', 'v2' + (lock || full ? ' dis' : ''), ` aria-label="${bldName(0, k)}: ${costText(B.cost)}"`);
+			}),
+		) + backCell('v2')
+	);
+}
+// War: Aim · Go (tap: the crosshair up; again: everyone goes; hold: everyone home), the three squads (tap: send; hold: its card), Kinds ›,
+// then Alarm › (brown: the villagers' orders), Rally, Formation (steps the army's shape), Train ›, Set Up. Kinds: tap picks every soldier of
+// the kind, a hold is its drill (the War Director); Idle picks the soldiers standing at home. Train: the four kinds with − and +.
+function warCells(sub) {
 	const H = G.hud,
-		mid = H.mid || SMID.map,
-		V = unitsOf(0, 'vil').length,
-		on = (kind) => (G.emg && G.emg.kind === kind ? '●' : null),
 		W = ROW_WORD.emgW;
+	if (sub === 'kinds')
+		return (
+			fill([
+				...CLS.map((c, t) => {
+					const n = ofKind(t).length,
+						w = directWait(t),
+						tap = DIRECT_OF[t];
+					return pic(`kpick:${t}`, ICON.cls[c[0]], w ? `${w} s` : c[1], 'w2' + (n ? '' : ' dis'), n || null, ` data-hold="direct:${t}" aria-label="${c[1]}: pick them; hold: ${tap[1]}"`);
+				}),
+				pic('kidle', ICON.idle, ROW_WORD.idle, 'w2' + (idleSoldiers().length ? '' : ' dis'), idleSoldiers().length || null),
+			]) + backCell('w2')
+		);
+	if (sub === 'train')
+		return (
+			CLS.map((c, t) => {
+				const k = kindOf(t),
+					A = k ? readyAt(0, UNIT[k]) : [],
+					n = A.reduce((s, b) => s + b.q.filter((j) => j.kind === k).length, 0);
+				return at(pic(`tq:${t},+`, ICON.cls[c[0]], c[1], 'w2' + (A.length ? '' : ' dis'), A.length ? n : null), 2 + t, 1) + pmPair(2 + t, `tq:${t},-`, `tq:${t},+`, 'w2', A.length > 0);
+			}).join('') + backCell('w2')
+		);
+	if (sub === 'alarm') {
+		const on = (kind) => (G.emg && G.emg.kind === kind ? '●' : null);
+		return (
+			fill([
+				pic('emgstop', ICON.stop, W[0][0], 'v2' + (G.emg ? '' : ' dis')),
+				pic('emg:square', ICON.home, W[1][0], 'v2', on('square')),
+				pic('emg:hands', ICON.sword, W[2][0], 'v2', on('hands')),
+				pic('emg:shelter', ICON.shield, W[3][0], 'v2' + (unitsOf(0, 'vil').length ? '' : ' dis'), on('shelter')),
+			]) + backCell('v2')
+		);
+	}
+	const sh = dialOf('form', 'all');
+	return fill([
+		pic('aimgo', ICON.aim, H.aim ? ROW_WORD.go : ROW_WORD.aim, 'wo' + (H.aim ? ' on' : ''), null, ' data-hold="whome"'),
+		...BN.map((nm, i) => {
+			const m = sqOut(i) ? G.msn[i] : null,
+				S = m ? mUnits(m) : hasCmd() ? sqUnits(i) : [];
+			return pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, 'wo' + (hasCmd() || m ? '' : ' dis'), S.length, ` data-hold="sqcard:${i}"`);
+		}),
+		pic('ctlsub:kinds', ICON.sword, ROW_WORD.kinds, 'wo'),
+		pic('ctlsub:alarm', ICON.shield, ROW_WORD.alarm, 'vo' + (G.emg ? ' warn' : '')),
+		pic('rallyat', ICON.follow, ROW_WORD.rally, 'wo' + (H.aim === 'rally' ? ' on' : '')),
+		pic('shape:all', ICON.list, sh < 0 ? 'Mixed' : FORM[sh].name, 'wo' + (G.P[0].techs.has('formations') ? '' : ' dis')),
+		pic('ctlsub:train', ICON.mil, ROW_WORD.train, 'wo'),
+		pic('sqsetup', ICON.gear, ROW_WORD.setup, 'wo' + (hasCmd() ? '' : ' dis')),
+	]);
+}
+const researchable = () => [...G.rdy.values()].reduce((a, v) => a + v, 0); // research you can start now (the count the strip shows)
+const idleSoldiers = () => sendable().filter((u) => u.state === 'home');
+const MENU_WORD = { mil: 'Barracks' }; // a build group's word on the controller where the menu's own would clash with a tile (War)
+const MENU_ICON = { home: 'home', land: 'wood', mil: 'mil', def: 'def', shop: 'gold', cult: 'star' }; // a build group's picture
+function ctlHTML() {
+	const H = G.hud,
+		page = H.page,
+		idle = unitsOf(0, 'vil').filter(freeVil).length,
+		sol = armyOf(0).filter((u) => u.kind !== 'spy').length;
+	if (H.shut) return at(sym('ctlshut', ICON.up, 'wb', 'Open the controls'), 7, 2);
 	let h =
-		pic('emgstop', ICON.stop, W[0][0], 'vb' + (G.emg ? '' : ' dis')) +
-		pic('emg:square', ICON.home, W[1][0], 'vb', on('square')) +
-		`<div class="midb${mid === SMID.map ? ' map' : ''}">` +
-		(mid === SMID.squad
-			? BN.map((nm, i) => {
-					const m = sqOut(i) ? G.msn[i] : null,
-						S = m ? mUnits(m) : hasCmd() ? sqUnits(i) : [];
-					return pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, hasCmd() || m ? '' : 'dis', S.length, ` data-hold="sqcard:${i}"`);
-				}).join('') + pic('sqsetup', ICON.gear, ROW_WORD.setup, hasCmd() ? '' : 'dis')
-			: mid === SMID.direct
-				? CLS.map((c, t) => {
-						const n = ofKind(t).length,
-							w = directWait(t),
-							[tap, hold] = DIRECT_OF[t];
-						return pic(`direct:${t}`, ICON.cls[c[0]], w ? `${w} s` : tap[1], n && !w ? '' : 'dis', n || null, ` data-hold="directh:${t}" aria-label="${c[1]}: ${tap[1]}; hold: ${hold[1]}"`);
-					}).join('')
-				: mid === SMID.train
-				? CLS.map((c, t) => {
-						const k = kindOf(t),
-							at = k ? readyAt(0, UNIT[k]) : [],
-							n = at.reduce((s, b) => s + b.q.filter((j) => j.kind === k).length, 0);
-						return pic(`tq:${t},+`, ICON.cls[c[0]], c[1], at.length ? '' : 'dis', at.length ? n : null, ` data-hold="tq:${t},-"`);
-					}).join('')
-				: '') +
-		'</div>' +
-		pic('wmid:train', ICON.mil, ROW_WORD.train, 'wb', null, ' data-hold="tok"') +
-		pic('wmid:squad', ICON.squad, ROW_WORD.squad, 'wb') +
-		pic('emg:hands', ICON.sword, W[2][0], 'vb', on('hands')) +
-		pic('emg:shelter', ICON.shield, W[3][0], 'vb' + (V ? '' : ' dis'), on('shelter')) +
-		pic('wmid:direct', ICON.aim, ROW_WORD.direct, 'wb') +
-		pic('wfire', ICON.sword, ROW_WORD.attack, 'wb' + (H.h && free().length ? '' : ' dis'), null, ' data-hold="whome"');
+		at(badge(pic('ctl:jobs', ICON.head, ROW_WORD.jobs, page === 'jobs' ? 'vo' : 'vb'), idle && `z ${idle}`), 1, 1) +
+		at(pic('ctl:town', ICON.home, ROW_WORD.town, page === 'town' ? 'vo' : 'vb'), 1, 2) +
+		at(badge(pic('ctl:war', ICON.war, ROW_WORD.war, page === 'war' ? 'wo' : 'wb' + (G.incoming ? ' warn' : '')), sol), 7, 1) +
+		at(sym('ctlshut', ICON.down, 'wb', 'Close the controls'), 7, 2);
+	if (page === 'jobs') h += jobsCells();
+	else if (page === 'town') h += townCells(H.sub);
+	else if (page === 'war') h += warCells(H.sub);
+	if (!page || (page === 'town' && !H.sub)) {
+		h += at(pic('mapt', ICON.map, ROW_WORD.map, 'wb' + (H.map ? ' on' : '')), 6, 1);
+		if (H.map) h += `<div class="mapb" style="grid-column:${CTL.map[0]} / ${CTL.map[1] + 1};grid-row:1 / 3"></div>`;
+	} // the small map, 3 × 2, at rest and beside Town's column; its tile lit while it shows (Albert, Nov 3)
 	return h;
 }
-const ROWS = { jobs: jobsPage, war: stationPage };
-// the row on show, patched in place (a button under a finger stays the same button); the cycle button above slot 1 wears the page's name
-// and its tint
+// a tile: its page opens, the lit one closes back to rest; a page's own step (Build, a group, Kinds, Train, Alarm), and Back one step up
+function ctlOpen(page) {
+	const H = G.hud;
+	H.page = H.page === page ? null : page;
+	H.sub = null;
+	H.aim = false; // the crosshair goes up only by Aim (war's first cell)
+	if (H.page) closeCard();
+}
+function ctlBack() {
+	const H = G.hud;
+	H.sub = H.page === 'town' && H.sub && H.sub !== 'build' ? 'build' : null;
+}
+// the row on show, patched in place (a button under a finger stays the same button); the small map's one home is its box
 function rowUI() {
-	const page = G.hud.page,
-		el = $('row'),
-		h = ROWS[page](),
-		chip = $('emgB');
+	const el = $('row'),
+		h = ctlHTML();
 	if (el.sigH !== h) {
 		el.sigH = h;
 		patchHTML(el, h);
 	}
-	chip.classList.toggle('warn', !!G.incoming); // the red War button breathes while something is coming
-	const mb = el.querySelector('.midb.map');
-	if (mb && mini.parentNode !== mb) mb.appendChild(mini); // the small map's one home is the station's middle (Albert, Nov 2); it waits on the stage, hidden, between
+	const mb = el.querySelector('.mapb');
+	if (mb && mini.parentNode !== mb) mb.appendChild(mini);
 	else if (!mb && mini.parentNode !== $('stage')) $('stage').appendChild(mini);
-	if (chip.pg !== page) {
-		chip.pg = page;
-		$('orders').className = 'pg-' + page;
-		chip.innerHTML = page === 'war' ? ICON.close : topOf(ICON.def) + wd(ROW_WORD.emg); // War, the one button that turns the row; while the station is up it reads ✕ (Albert, Nov 2)
-		chip.classList.toggle('sym', page === 'war');
-		chip.setAttribute('aria-label', page === 'war' ? 'Close the battle station' : 'War: the battle station');
+	const sig = (G.hud.page || '') + (G.hud.shut ? 's' : '');
+	if (el.pg !== sig) {
+		el.pg = sig;
+		$('orders').className = 'ctl pg-' + (G.hud.page || 'rest');
 		fit(); // the row is drawn anew: the map's bottom edge is measured again
 	}
 }

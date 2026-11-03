@@ -146,3 +146,9 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - The other arm moves to help: the archers step behind the foot when the foot wall up, and the reverse. [2026-11-03 06:40]
 - Choke point formations; a front line formation; support formations. [2026-11-03 06:40]
 - Forward operating bases and support bases further back; war camps. [2026-11-03 06:40]
+
+## The controller, later (Albert, Nov 3) [2026-11-03 09:05]
+- A page builder: the player decides which doors stand in which places (Albert, 08:15). After the default layout has been played. [2026-11-03 09:05]
+- A real icon pass for the controller: Jobs, Town, Kinds, Train and War each their own picture (today's stand-ins share icons). [2026-11-03 09:05]
+- The slim strip under the top bar cut, a tap up top opening its place in the controller; Sound to the pause card, the Mail count on pause (preview 36). [2026-11-03 09:05]
+- The Map tile on the full pages too (Albert: "it can replace whatever icons it covers if a person wants"): today it stands at rest and beside Town's column only. [2026-11-03 09:05]

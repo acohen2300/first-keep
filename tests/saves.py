@@ -64,8 +64,8 @@ REST = """(raw) => {
   if (!F.voiceFree('horn', F.VOICES.max + 5)) bad.push('an alert waits for a voice when the air is full');
   if (F.voiceFree('hit', F.VOICES.max)) bad.push('an effect takes a voice the alerts keep');
   // All hands, when on, wears its ring on the Emergency page of the row
-  F.emgStart('hands'); F.hudPage('war'); F.ui(true); const h = document.querySelector('#row [data-act="emg:hands"]');
-  if (!h || !/●/.test(h.textContent)) bad.push('Garrison is on but its button on the station does not show it (a dot beside its icon)');
+  F.emgStart('hands'); F.hudPage('war'); F.G.hud.sub = 'alarm'; F.ui(true); const h = document.querySelector('#row [data-act="emg:hands"]');
+  if (!h || !/●/.test(h.textContent)) bad.push('Garrison is on but its button on War · Alarm does not show it (a dot beside its icon)');
   return bad;
 }"""
 def static():

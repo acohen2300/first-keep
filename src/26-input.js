@@ -269,6 +269,11 @@ cv.addEventListener(
 );
 ['gesturestart', 'gesturechange', 'gestureend'].forEach((t) => document.addEventListener(t, (e) => e.preventDefault()));
 let miniAt = null;
+// a finger on the small map to the world: the map is cut to its box's width, round the camera (drawMini, miniCut)
+function miniAt0(e, r) {
+	const c = miniCut(r);
+	return { x: ((e.clientX - r.left) / r.width) * MAP, y: c.y0 + ((e.clientY - r.top) / r.height) * c.h };
+}
 mini.addEventListener('pointerdown', (e) => {
 	e.stopPropagation();
 	if (G) G.follow = false;
@@ -276,8 +281,7 @@ mini.addEventListener('pointerdown', (e) => {
 		mini.setPointerCapture(e.pointerId);
 	} catch (err) {} // the finger stays the map's until it lifts, even off its edge (an audit, Nov 2)
 	const r = mini.getBoundingClientRect(),
-		x = ((e.clientX - r.left) / r.width) * MAP,
-		y = ((e.clientY - r.top) / r.height) * MAP;
+		{ x, y } = miniAt0(e, r);
 	camGo(x, y);
 	miniAt = { x: e.clientX, y: e.clientY, pan: false };
 });
@@ -289,8 +293,9 @@ mini.addEventListener('pointermove', (e) => {
 	if (miniAt.pan) {
 		const r = mini.getBoundingClientRect();
 		camStop();
-		cam.x = clamp(((e.clientX - r.left) / r.width) * MAP, 0, MAP);
-		cam.y = clamp(((e.clientY - r.top) / r.height) * MAP, 0, MAP);
+		const w = miniAt0(e, r);
+		cam.x = clamp(w.x, 0, MAP);
+		cam.y = clamp(w.y, 0, MAP);
 		clampCam();
 	} // and a drag on the small map sweeps the camera with it, no glide (Albert, Nov 2)
 });
@@ -602,9 +607,8 @@ function startPlace(kind) {
 	setPick([]);
 	G.place = { kind, at: null, pts: [], cells: null };
 	// start the ghost in the middle of the screen, snapped beside something of yours if it can be
-	const w = G.buildAt && G.buildAt.x !== undefined ? G.buildAt : toWorld(cw / 2, ch / 2);
-	G.buildAt = null;
-	if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200); // from the hammer on open ground: there; otherwise the middle of the screen
+	const w = toWorld(cw / 2, ch / 2);
+	if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200); // the middle of the screen
 	ui(true);
 }
 // you tapped Build: build what the ghost shows; houses, fields and gates offer the next spot beside it

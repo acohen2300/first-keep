@@ -36,7 +36,7 @@ function blankGame(seed) {
 		recruitSq: null, // the squad new soldiers join (the Train page)
 		form: BN.map(() => 0),
 		qs: { from: 'all', n: {} },
-		hud: { page: 'jobs' }, // the row's page and the crosshair (39-huddle); never saved: a game opens on Jobs
+		hud: { page: null, map: true }, // the controller's page, the small map, the crosshair (39-huddle); never saved: a game opens at rest, the map up
 		msn: [null, null, null, null],
 		emg: null,
 		intel: {},

@@ -596,11 +596,6 @@ function repairTick(u, dt, SP) {
 		// the site it was raising is done: the next unfinished piece of wall nearby, else back to what it was doing
 		u.building = false;
 		if (u.back) {
-			if (BLD[b.kind].drop && !u.plot && startWork(u, b)) {
-				u.back = false;
-				u.pn = u.pa = null;
-				return;
-			} // a mine, mill or lumber camp: its builder works the nearest find it serves (Albert, Nov 3, D-091 amended; Age of Empires II's camps)
 			backToWork(u);
 			return;
 		} // pulled off its work to raise this one (D-091): straight back to it

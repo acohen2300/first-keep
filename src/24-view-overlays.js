@@ -321,7 +321,16 @@ function miniIncoming(m, k) {
 	m.arc(x, y, 4, 0, Math.PI * 2);
 	m.fill();
 } // an attack on its way: a red dot that flashes on the small map; tap the map and you are there
+// the small map in a box wider than tall (the controller's 3 x 2): the whole width, a slice of the height round the camera; h the slice in
+// world units, y0 its top, f where the cut sits (0 the top, 1 the bottom) for the canvas's object-position
+function miniCut(r) {
+	const h = r.width > r.height ? (MAP * r.height) / r.width : MAP,
+		f = MAP > h ? clamp((cam.y - h / 2) / (MAP - h), 0, 1) : 0.5;
+	return { h, y0: f * (MAP - h), f };
+}
 function drawMini() {
+	const cut = miniCut({ width: mini.clientWidth || 1, height: mini.clientHeight || 1 });
+	mini.style.objectPosition = `50% ${(cut.f * 100).toFixed(1)}%`;
 	const m = mctx,
 		k = 172 / MAP;
 	m.clearRect(0, 0, 172, 172);

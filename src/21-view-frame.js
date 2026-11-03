@@ -234,6 +234,10 @@ function draw() {
 			);
 	};
 	layer(bg);
+	{
+		const yb = SY(MAP);
+		if (yb < ch) ctx.drawImage(bg, 0, bg.height - 9, bg.width, 1, SX(0), yb - 1, MAP * z, ch - yb + 1);
+	} // past the map's foot, under the controller, the ground runs on to the screen's edge: the map's last rows drawn down (Albert, Nov 3: off the map showed as a dark band between the tiles); nothing stands there, and nothing on the map hides under the row
 	if (z > 1.1 && grassPat) {
 		if (grassM.a !== z * 0.5 || grassM.e !== x0 || grassM.f !== y0) {
 			grassM.a = z * 0.5;
@@ -330,7 +334,7 @@ function draw() {
 	drawGhost();
 	{
 		const now = performance.now();
-		if (G.hud.page === 'war' && now - miniT > 150) {
+		if (mini.parentNode !== $('stage') && now - miniT > 150) {
 			miniT = now;
 			drawMini();
 		}

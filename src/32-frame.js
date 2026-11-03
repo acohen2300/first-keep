@@ -11,6 +11,9 @@ const ICON = {
 		20,
 		'<path d="M9 5l-5 5 5 5M4 10h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
 	),
+	up: SVG(20, '<path d="M5 12l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'),
+	down: SVG(20, '<path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'),
+	map: SVG(20, '<path d="M3 5l4.5-1.5 5 2L17 4v11l-4.5 1.5-5-2L3 16z M7.5 3.5v11 M12.5 5.5v11" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'),
 	gear: SVG(
 		20,
 		'<circle cx="10" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M15.8 4.2l-1.7 1.7M5.9 14.1l-1.7 1.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
@@ -194,8 +197,7 @@ function buildPanel() {
 			: `<span class="cell" id="${id}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></span>`;
 	$('status').innerHTML = STATUS.map(([id, act, label]) => sc(id, act, label)).join('');
 	$('homeB').innerHTML = ICON.home;
-	$('emgB').innerHTML = topOf(ICON.def) + wd(ROW_WORD.emg); // War, red on steel, on the rank above the row: the battle station; ✕ while it is up (rowUI)
-	mini.hidden = false; // the small map draws in the station's middle; on the stage between, the style sheet keeps it out of sight // a slot with its word under its icon, on the cycle button's rank (cold review of v70)
+	mini.hidden = false; // the small map draws in the controller's map box; on the stage between, the style sheet keeps it out of sight
 	$('pX').innerHTML = ICON.close;
 }
 const refresh = () => {

@@ -524,7 +524,7 @@ const CARDS = {
 							`<p data-act="ordpick:${O.id}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`,
 					)
 					.join(''); // tap a line: that group is picked, and the camera goes to it
-		h += acts(btn('emgpage', 'Alarm', 'gather · garrison · shelter', G.emg ? 'warn' : ''), 'c1');
+		h += acts(btn('alarmpg', 'Alarm', 'gather · garrison · shelter', G.emg ? 'warn' : ''), 'c1');
 		if (S.length && hasCmd())
 			h +=
 				sec('Orders go to') +
@@ -590,48 +590,6 @@ const CARDS = {
 				`<p>Tap open ground, then the sword: All or the idle ones go there, or + aims a mission there. A squad is built on its card (tap it on the War page); War sends squads with a time and odds; a gold ring marks the one picked here.</p><p><b>Temper:</b> ${TEMPER.map((s) => `${s.name}: ${s.note}`).join('. ')}.</p><p><b>Shape:</b> ${FORM.map((F) => `${F.name}: ${F.note}`).join('. ')}. On the march an army goes in column.</p>`,
 			) +
 			live
-		);
-	},
-	menu(c) {
-		// the Build menu (MENU-SPEC §8, picture Build Menu): six tabs, a folder; the buildings double-wide, three a rank, words only: the name,
-		// how many of how many, the cost. Blue: it fits where you tapped; dim: a later age, or all built. The page holds the height of the
-		// biggest tab, so the tabs never move under the finger
-		const p = G.P[0],
-			M = MENUS.find((m) => m.id === c.id);
-		G.lastMenu = c.id;
-		const item = (k) => {
-			const B = BLD[k],
-				lock = B.age > p.age,
-				cp = capFor(0, k),
-				n = bldsOf(0, k).length,
-				full = !lock && n >= cp,
-				fits = G.buildAt && G.buildAt.hint === k,
-				can = afford(p, B.cost);
-			return btn(
-				`build:${k}`,
-				B.short || bldName(0, k),
-				lock
-					? `${AGES[B.age].name} age`
-					: (cp < 99 ? `${n}/${cp} · ` : '') +
-							(full ? 'all built' : can ? costText(B.cost) : `short ${need(B.cost)}`) +
-							(fits ? ' · fits here' : ''),
-				lock || full ? 'dis' : fits ? 'go' : '',
-				lock || full ? undefined : can ? 1 : fillOf(B.cost),
-			);
-		};
-		return (
-			title('Build', G.buildAt && G.buildAt.x !== undefined ? 'here' : '') +
-			folder(
-				'menu',
-				MENUS.map((m) => {
-					const open = m.items.filter((k) => BLD[k].age <= p.age); // every building the age allows at its limit: the tab says so with a check (Build 61)
-					return [m.id, m.name, open.length && open.every((k) => bldsOf(0, k).length >= capFor(0, k)) ? '✓' : ''];
-				}),
-				c.id,
-				`<div class="hold" style="--n:${Math.ceil(Math.max(...MENUS.map((m) => m.items.length)) / 3)}">${grid3(M.items.map(item))}</div>`, // T2: double-wide, three a rank, a short rank filled
-				'c6',
-			) +
-			fold('menu', 'What each one does', M.items.map((k) => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''))
 		);
 	},
 	research: () => researchHTML(),

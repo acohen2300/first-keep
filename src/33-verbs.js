@@ -73,24 +73,12 @@ const ACT = {
 		refresh();
 	},
 	menu(a) {
-		const keep = G.card && G.card.type === 'menu';
-		openCard({ type: 'menu', id: a });
-		if (keep) $('card').scrollTop = 0;
-	},
-	buildrow() {
-		G.buildBy = null;
-		if (G.card && G.card.type === 'menu') {
-			G.buildAt = null;
-			closeCard();
-			return;
-		}
-		const sel = G.card && G.card.type === 'bld' && G.blds.find((b) => b.id === G.card.id && b.owner === 0),
-			w = sel || toWorld(cw / 2, ch / 2 + vy),
-			hint = suggestAt(w.x, w.y),
-			M = hint && MENUS.find((m) => m.items.includes(hint));
-		G.buildAt = hint ? { hint } : null;
-		openCard({ type: 'menu', id: M ? M.id : G.lastMenu || MENUS[0].id });
-	}, // Build opens on what fits the middle of the view   // Build opens the Build card on the menu last used; again, it closes
+		const H = G.hud;
+		H.page = 'town';
+		H.sub = a;
+		H.shut = false;
+		closeCard();
+	}, // a build group by name (a milestone's button, a villager's Build): the controller's Town page at that group
 	idlego() {
 		const u = unitsOf(0, 'vil').find(freeVil);
 		if (!u) return;
@@ -367,6 +355,35 @@ const ACT = {
 		const [type, id] = a.split(',');
 		openCard({ type, id: Number(id) });
 	},
+	ctl(a) {
+		ctlOpen(a);
+		feel('tick');
+	}, // a tile of the controller: its page; the lit one, back to rest (39-huddle)
+	ctlsub(a) {
+		G.hud.sub = a;
+		feel('tick');
+	},
+	ctlback() {
+		ctlBack();
+	},
+	mapt() {
+		G.hud.map = !G.hud.map;
+	}, // the small map on or off
+	ctlshut() {
+		G.hud.shut = !G.hud.shut;
+		if (G.hud.shut) G.hud.aim = false;
+		fit();
+	}, // Close: the row folds to its one tile; the tile opens it again
+	alarmpg() {
+		ACT.menu('build');
+		G.hud.page = 'war';
+		G.hud.sub = 'alarm';
+	}, // the villagers' Alarm, on the War page
+	relopen() {
+		G.ktab = 'rel';
+		const k = keepOf(0);
+		if (k) openCard({ type: 'bld', id: k.id });
+	}, // Relations: the Town Center's second tab
 };
 // a job is locked until its age (32-frame, resOn): a tap on it says when it opens
 const shut = (r) => !resOn(KEY[r]) && (say(`${RESOURCES[r].name} opens in the ${AGES[resAge(KEY[r])].name} age.`, '', TOAST.short), true);
@@ -431,10 +448,6 @@ const PLAY = {
 	emgstop() {
 		emgStop();
 	},
-	emgpage() {
-		hudPage(G.hud.page === 'war' ? 'jobs' : 'war');
-		feel('tick');
-	}, // the red button: the battle station, with the Alarm's orders on its left; again, Jobs
 	tq(a) {
 		const [t, d] = a.split(','),
 			k = kindOf(Number(t));
@@ -445,25 +458,42 @@ const PLAY = {
 			else train(0, k);
 		} else if (!unTrain(0, k)) say('Nothing of that kind is waiting.', '', TOAST.short);
 	}, // the Train page: one more or one fewer of a kind, at the building with the shortest line
-	tok() {
-		setRally();
-	},
 	intent(a) {
 		const [i, k] = a.split(',').map(Number);
 		G.bnIntent[i] = k;
 		feel('tick');
 	}, // a squad's intent: one of three, chosen
 	direct(a) {
-		direct(Number(a), false);
+		direct(Number(a));
 	}, // the War Director: a kind's move, every soldier of it at once
-	directh(a) {
-		direct(Number(a), true);
-	}, // held: the kind's second move
-	wmid(a) {
+	aimgo() {
 		const H = G.hud;
-		H.mid = H.mid === a ? SMID.map : a;
-		feel('tick');
-	}, // Train or Squad turns the station's middle to its four; again, back to the small map
+		if (!H.aim) {
+			H.aim = true;
+			H.aimT = performance.now();
+			if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
+			return say('Tap the map where they go, then Go.', 'tip', TOAST.short);
+		}
+		hudGo();
+		H.aim = false;
+	}, // War's first cell: the crosshair up (a tap on the map moves it); again, they go (hold: everyone home)
+	kpick(a) {
+		const S = ofKind(Number(a));
+		if (!S.length) return say(DIRECT_WHY.none, '', TOAST.short);
+		setPick(S.map((u) => ({ t: 'unit', id: u.id })));
+		say(`${S.length} picked: tap where they go.`, '', TOAST.short);
+	}, // a kind: every soldier of it picked; the next tap on the map is their order (Albert, Nov 3)
+	rallyat() {
+		const H = G.hud;
+		H.aim = H.aim === 'rally' ? false : 'rally';
+		H.aimT = performance.now();
+		if (H.aim) say('Tap the map where new soldiers go.', 'tip', TOAST.short);
+	}, // Rally: the next tap on the map is where new soldiers gather
+	kidle() {
+		const S = idleSoldiers();
+		if (!S.length) return say('No soldier stands idle.', '', TOAST.short);
+		setPick(S.map((u) => ({ t: 'unit', id: u.id })));
+	}, // every soldier standing at home, picked
 	sqpk(a) {
 		const [i, t, d] = a.split(',');
 		sqPlan(Number(i), CLS[t][0], d === '+' ? 1 : -1);
@@ -501,9 +531,6 @@ const PLAY = {
 		if (!hasCmd()) return say('Squads come with Battalions.', '', TOAST.short);
 		openCard({ type: 'sqsetup' });
 	}, // Set Up (Albert, Nov 2): the three squads in one rank, each opening its card where it is built
-	wfire() {
-		hudGo();
-	},
 	hdel(a) {
 		hudAbort(Number(a));
 	}, // Abort on a squad's card: they come home
@@ -614,7 +641,7 @@ const PLAY = {
 					.filter((u) => u.kind === 'vil')
 					.map((u) => u.id);
 		if (!a) setPick([]);
-		openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id });
+		ACT.menu('build');
 	}, // whatever you place next, the picked villagers raise it (or the villager whose card asked: its job picker's Build)
 	phold() {
 		for (const u of picked())
