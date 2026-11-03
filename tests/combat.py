@@ -242,6 +242,18 @@ JS = """() => {
     F.hurt(1, rd, a, 1); if (a.staked) bad.push('field: a shooter without the research has a stake'); P.techs.add('archerstakes'); F.step(T); if (!a.staked) bad.push('field: a shooter that has stood five seconds has no stake');
     const r0 = rd.hp, rx = rd.x; F.hurt(1, rd, a, 1); if (!(rd.hp < r0 - rd.max * F.STAKES.dmg * 0.9 && rd.chg <= G.t && Math.abs(rd.x - rx) > F.STAKES.shove * 0.5)) bad.push('field: a horse on the stake was not hurt, stopped and thrown back (' + (r0 - rd.hp).toFixed(1) + ', moved ' + Math.abs(rd.x - rx).toFixed(1) + ')');
     a.mvT = G.t; F.step(T); if (a.staked) bad.push('field: a shooter that moved kept its stake'); rd.hp = 0; a.hp = 0; });
+  // ── the Hall (Nov 3, Albert 13:15): one a side, named by the people; three specialities each, only for that people; the hooks the new fx need ──
+  T_(() => { const G = fresh(), k = F.keepOf(0), P = G.P[0]; P.age = 2; Object.assign(P.res, { f: 9999, w: 9999, s: 9999, g: 9999, i: 9999 });
+    const mine = F.TECH.filter((t) => t.at === 'hall'); if (mine.length !== 18 || Object.keys(F.CIVS).some((c) => mine.filter((t) => t.civ === c).length !== 3)) bad.push('hall: not three specialities for each of the six peoples (' + mine.length + ')');
+    if (Object.keys(F.CIVS).some((c) => !F.CIVS[c].hall)) bad.push('hall: a people has no name for its Hall');
+    P.civ = 'roman'; if (F.bldName(0, 'hall') !== 'Forum') bad.push('hall: the Roman Hall is not the Forum (' + F.bldName(0, 'hall') + ')');
+    const other = mine.find((t) => t.civ === 'han'); if (!/another people/.test(F.researchWhy ? F.researchWhy(0, other.id) || '' : 'another people')) bad.push('hall: a Han speciality is open to Rome');
+    const sp = F.findSpot(0, 'hall', k.x, k.y, 80, 300); if (!sp) { bad.push('hall: no ground'); return; } const h = F.mkBld(0, 'hall', sp.x, sp.y, 1); G.blds.push(h); F.navRebuild(); F.fxDirty();
+    if (!F.readyAt || !F.ready(0, 'hall').length) bad.push('hall: the Hall is not standing for research');
+    // the hooks: fx 'bld' on a blow at a building (Hastin), 'taxtake' and 'taxhate' (Satrapies, the sixth), 'spd' on foot (Via militaris)
+    P.civ = 'maurya'; const el = F.addUnit(0, 'elephant', k.x + 80, k.y), tw = F.mkBld(1, 'tower', k.x + 120, k.y, 1); G.blds.push(tw); const hp0 = tw.hp; F.hurt(0, el, tw, 10); const d0 = hp0 - tw.hp; tw.hp = hp0; P.techs.add('hastin'); F.fxDirty(); F.hurt(0, el, tw, 10); const d1 = hp0 - tw.hp;
+    if (!(Math.abs(d1 / d0 - 1.2) < 0.02)) bad.push('hall: Hastin does not make an elephant hit a building 20% harder (' + (d1 / d0).toFixed(2) + ')'); el.hp = 0; tw.hp = 0;
+    P.civ = 'roman'; const s0 = F.stats(0, 'spear').spd; P.techs.add('viamil'); F.fxDirty(); if (!(Math.abs(F.stats(0, 'spear').spd / s0 - 1.2) < 0.02)) bad.push('hall: Via militaris does not quicken foot 20%'); if (F.stats(0, 'chariot').spd !== F.stats(1, 'chariot').spd) bad.push('hall: Via militaris quickened a chariot'); });
   return bad;
 }"""
 async def main():

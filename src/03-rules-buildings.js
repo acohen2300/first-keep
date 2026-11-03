@@ -769,6 +769,22 @@ const BLD = {
 		drop: [],
 		desc: 'The old citadel in the middle of the world. Whoever holds it takes a tithe of the gathering of everyone else and climbs the score; hold it long enough and the game is won. It is taken, not broken: break it down and it is yours at a third of its strength.',
 	},
+	// the Hall (Albert, Nov 3, 13:15: "a special building that gives the tech for the very special Civ stuff"): one a side, Classical, named
+	// by the people (CIVS.hall: the Forum, the Taixue, the Satrap's Court, the Ordu, the Mantriparishad, Sankore); it holds that people's three
+	// specialities as research (TECH with civ, at 'hall'), each from history with its number (SCIENCE), and its card tells the history
+	hall: {
+		name: 'Hall',
+		fp: 3,
+		hp: 600,
+		h: 26,
+		cost: { w: 220, s: 160, g: 120 },
+		t: 45,
+		age: 2,
+		one: true,
+		invest: 3,
+		sab: 'stall',
+		desc: 'The seat of what makes your people themselves: it researches your three specialities, each from history.',
+	},
 	wonder: {
 		name: 'Wonder',
 		fp: 6,
@@ -827,6 +843,6 @@ const MENUS = [
 		id: 'cult',
 		name: 'Culture',
 		blurb: 'faith, law, learning, wonders',
-		items: ['school', 'library', 'hospital', 'temple', 'courthouse', 'baths', 'theatre', 'tavern', 'wonder'],
+		items: ['school', 'library', 'hospital', 'temple', 'courthouse', 'baths', 'theatre', 'tavern', 'hall', 'wonder'],
 	},
 ];

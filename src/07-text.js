@@ -219,6 +219,21 @@ const WHY = {
 	camps: 'Every Roman army dug a ditched camp each night; a fed, rested army was never surprised asleep.',
 	marching: 'Roman roads and Roman discipline moved a legion twenty miles a day with its baggage; Caesar did thirty.',
 	archerstakes: 'Henry V had every archer cut a six-foot stake before Agincourt (1415), after the Turkish stakes at Nicopolis; driven in at an angle, they impaled the horses of the French charge.',
+	viamil: 'Vegetius I.9: the recruit must march twenty miles in five summer hours at the common step and twenty-four at the full step; the roads made the pace possible.',
+	horrea: 'The Horrea Galbae had 140 ground-floor rooms; Rome had some 290 granaries, their floors raised on pillars against the damp and the rats.',
+	castra: 'Josephus and Vegetius: a legion dug its camp every night, ditch, bank and palisade, each man carrying his stakes; the camp was the army at rest and the fort when attacked.',
+	trigger: 'The Han arsenal at Luoyang listed 11,181 crossbows in 13 BC; the cast bronze trigger was made to one pattern in thousands, and the heavy bow took 159 kg to cock.',
+	changping: 'Geng Shouchang proposed the ever-normal granary in 54 BC: the state bought grain in good years and sold it in bad at a steady price; the Qing kept over two million tonnes in them.',
+	taixue: 'The Taixue, the imperial academy, trained the officials of the Han; by the second century it is said to have held thirty thousand students.',
+	satrapy: 'Herodotus III.89: Darius divided the empire into twenty satrapies and set each its tribute, 14,560 talents a year in all, India alone 360 talents of gold dust.',
+	immortals: 'Herodotus VII.83: the ten thousand were never more nor fewer, for a man lost was replaced at once from the waiting list.',
+	tumen: 'The Mongol army counted in tens: arban, zuun, mingghan, tumen; its composite bow shot aimed at 150 metres and volleyed to 400.',
+	sixth: 'The Arthashastra sets the share of the king at one sixth of the crop; the trade overseer capped the profit of merchants at five parts in a hundred on local goods and ten on foreign.',
+	hastin: 'Megasthenes counted 9,000 elephants, 8,000 chariots, 30,000 horse and 600,000 foot in the army of Chandragupta; elephants broke gates and walls.',
+	pataliputra: 'Pataliputra, Megasthenes says, ran eight miles by one and a half behind a moat 600 feet wide and 45 deep, with 570 towers and 64 gates in its wall.',
+	bambuk: 'Al-Umari: before Mansa Musa the mithqal of gold did not fall below 25 dirhams in Cairo; after his gifts of 1324 it did not rise above 22, and stayed so for twelve years.',
+	saltroad: 'Ibn Battuta in 1352: a slab of salt from Taghaza sold for four times its price by the time it reached the capital of Mali, two slabs to a camel.',
+	sankore: 'Leo Africanus on Timbuktu: there is more profit made from the trade in books than from all other merchandise; some 285,000 manuscripts survive from its libraries.',
 	learning: 'Wright (1936) measured it on aircraft: each doubling of what a shop had made cut the labour in a unit by a fixed share, about a fifth; the Romans knew it as the quarry gang and the mint team that struck a thousand coins a day.',
 	pinfactory: 'Adam Smith (1776): ten men dividing the work made 48,000 pins a day where one man alone made twenty; the mint and the workshops run on the same rule.',
 	campwagons: 'A Roman camp travelled on its baggage train: tents, tools, mills and grain, a mule to every eight men and carts behind; the Hussites went further and fought from the wagons.',
@@ -440,6 +455,8 @@ const WHY = {
 		'Scribal schools taught writing in Sumer by about 2000 BC; writing itself began as accounts at Uruk (about 3100 BC) and in Egypt soon after.',
 	library:
 		'The library of Ashurbanipal at Nineveh (7th century BC) and the Library of Alexandria (about 295 BC) gathered texts and scholars. Universities came later: Bologna in the 11th century, with al-Qarawiyyin (859) and Nalanda (5th century) older in their own traditions.',
+	hall:
+		'What a people was best at had a house: the Forum where Rome did its business, the Taixue where Han trained its officials, the court where the satraps paid in, the Ordu of the Khan, the council of Chandragupta, the schools of Timbuktu.',
 	store:
 		'Rome kept its grain in horrea raised on pillars against the damp, some 290 of them by the late empire; the Han ever-normal granary of Geng Shouchang (54 BC) bought in good years and sold in bad to hold the price.',
 	caltrops:

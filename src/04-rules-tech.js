@@ -3179,6 +3179,25 @@ const TECH = [
 		need: ['pumps'],
 		desc: 'Apartments hold 2 more; sickness strikes 20% less.',
 	},
+	// ── the peoples' specialities, researched at the Hall (Albert, Nov 3): three each, every number from an opened source (SCIENCE, the Hall row)
+	{ id: 'viamil', civ: 'roman', name: 'Via militaris', at: 'hall', line: 'Rome', age: 2, w: 6, when: '312 BC', cost: { w: 200, s: 150 }, t: 40, fx: [{ s: 'spd', k: '#infantry', m: 1.2 }], desc: 'The military road: foot soldiers march 20% faster (Vegetius: 20 miles in five hours at the common step, 24 at the full).' },
+	{ id: 'horrea', civ: 'roman', name: 'Horrea', at: 'hall', line: 'Rome', age: 2, w: 5, when: '100s', cost: { w: 220, s: 200 }, t: 42, fx: [{ s: 'spoil', m: 0.5 }], need: ['viamil'], desc: 'State granaries on raised floors, 290 of them in Rome: food spoils half as fast again.' },
+	{ id: 'castra', civ: 'roman', name: 'Castra', at: 'hall', line: 'Rome', age: 2, w: 6, when: '100s BC', cost: { w: 260, g: 140 }, t: 45, fx: [{ s: 'campbuild', m: 1.5 }, { s: 'bhp', k: ['palisade', 'camptower', 'abatis'], m: 1.5 }], need: ['horrea'], desc: 'Every legionary carried two stakes and dug the camp each night: soldiers raise a camp half again as fast, and its works stand half again as strong.' },
+	{ id: 'trigger', civ: 'han', name: 'Bronze trigger', at: 'hall', line: 'Han', age: 2, w: 6, when: '200s BC', cost: { w: 200, i: 120 }, t: 40, fx: [{ s: 'rng', k: ['crossbow', 'hanxbow'], a: 20 }], desc: 'The cast bronze trigger, made in thousands to one pattern: crossbows reach 20 farther (the Luoyang arsenal held 11,181 of them in 13 BC).' },
+	{ id: 'changping', civ: 'han', name: 'Ever-normal granary', at: 'hall', line: 'Han', age: 2, w: 5, when: '54 BC', cost: { w: 220, g: 140 }, t: 42, fx: [{ s: 'band', m: 0.5 }], need: ['trigger'], desc: 'Geng Shouchang: the state bought in good years and sold in bad; prices swing half as far again for you.' },
+	{ id: 'taixue', civ: 'han', name: 'Taixue', at: 'hall', line: 'Han', age: 2, w: 6, when: '124 BC', cost: { w: 260, g: 180 }, t: 45, fx: [{ s: 'research', m: 0.9 }], need: ['changping'], desc: 'The imperial academy, the first school of the state: every research 10% quicker.' },
+	{ id: 'royalroad', civ: 'persian', name: 'Royal Road', at: 'hall', line: 'Persia', age: 2, w: 6, when: '500 BC', cost: { w: 200, g: 150 }, t: 40, fx: [{ s: 'spd', k: ['caravan', 'outpostcart', 'campcart'], m: 1.2 }], desc: 'Herodotus: 111 stages from Sardis to Susa, ninety days on foot and nine by the royal couriers; caravans and wagons 20% faster.' },
+	{ id: 'satrapy', civ: 'persian', name: 'Satrapies', at: 'hall', line: 'Persia', age: 2, w: 5, when: '520 BC', cost: { w: 220, g: 180 }, t: 42, fx: [{ s: 'taxtake', m: 1.2 }], need: ['royalroad'], desc: 'Darius set twenty satrapies and a fixed tribute from each, 14,560 talents a year: your vassals pay 20% more.' },
+	{ id: 'immortals', civ: 'persian', name: 'The Immortals', at: 'hall', line: 'Persia', age: 2, w: 6, when: '480 BC', cost: { w: 260, g: 200 }, t: 45, fx: [{ s: 'train', k: 'immortal', m: 0.75 }], need: ['satrapy'], desc: 'Kept at ten thousand, never more nor fewer, a fallen man replaced at once: Immortals train 25% faster.' },
+	{ id: 'yam', civ: 'mongol', name: 'Yam', at: 'hall', line: 'Mongol', age: 3, w: 6, when: '1234', cost: { w: 200, f: 150 }, t: 40, fx: [{ s: 'sight', k: '#mounted', m: 1.2 }], desc: 'The relay of stations 20 to 40 miles apart, a rider 200 miles a day with spare horses: everything on horseback sees 20% farther.' },
+	{ id: 'remounts', civ: 'mongol', name: 'Remounts', at: 'hall', line: 'Mongol', age: 3, w: 5, when: '1241', cost: { f: 240, g: 140 }, t: 42, fx: [{ s: 'charge', m: 0.75 }], need: ['yam'], desc: 'Three or four horses to a rider, a hundred miles a day in Hungary: a charge comes round 25% sooner.' },
+	{ id: 'tumen', civ: 'mongol', name: 'Tumen', at: 'hall', line: 'Mongol', age: 3, w: 6, when: '1206', cost: { w: 260, g: 180 }, t: 45, fx: [{ s: 'rng', k: ['horsearcher', 'mongolha'], a: 15 }], need: ['remounts'], desc: 'Tens, hundreds, thousands, ten thousands, and the composite bow that volleyed to 400 metres: horse archers reach 15 farther.' },
+	{ id: 'sixth', civ: 'maurya', name: 'The sixth', at: 'hall', line: 'Maurya', age: 2, w: 6, when: '300 BC', cost: { w: 200, g: 150 }, t: 40, fx: [{ s: 'taxhate', m: 0.67 }], desc: 'The Arthashastra sets the share of the king at a sixth of the crop, and no more: the resentment a tax breeds falls by a third.' },
+	{ id: 'hastin', civ: 'maurya', name: 'Hastin', at: 'hall', line: 'Maurya', age: 2, w: 5, when: '305 BC', cost: { f: 260, g: 160 }, t: 42, fx: [{ s: 'bld', k: ['elephant', 'mauryael'], m: 1.2 }], need: ['sixth'], desc: 'Nine thousand elephants in the army Megasthenes saw: war elephants hit buildings 20% harder.' },
+	{ id: 'pataliputra', civ: 'maurya', name: 'Pataliputra', at: 'hall', line: 'Maurya', age: 2, w: 6, when: '300 BC', cost: { w: 280, s: 200 }, t: 45, fx: [{ s: 'bhp', k: ['tower', 'wall', 'gate'], m: 1.25 }], need: ['hastin'], desc: 'A capital of 570 towers and 64 gates behind a moat: your walls, gates and towers stand a quarter stronger.' },
+	{ id: 'bambuk', civ: 'mali', name: 'Bambuk gold', at: 'hall', line: 'Mali', age: 3, w: 6, when: '1324', cost: { w: 200, g: 100 }, t: 40, fx: [{ s: 'gather', k: ['gold', 'mint'], m: 1.12 }], desc: 'The gold of Bambuk and Bure; the gifts of Mansa Musa dropped the price of gold in Cairo 12% for twelve years: gold comes in 12% faster.' },
+	{ id: 'saltroad', civ: 'mali', name: 'Salt road', at: 'hall', line: 'Mali', age: 3, w: 5, when: '1352', cost: { w: 220, g: 160 }, t: 42, fx: [{ s: 'trade', m: 1.25 }], need: ['bambuk'], desc: 'Ibn Battuta: salt from Taghaza sold at four times its price by the time it reached the capital: caravans earn 25% more.' },
+	{ id: 'sankore', civ: 'mali', name: 'Sankore', at: 'hall', line: 'Mali', age: 3, w: 6, when: '1400s', cost: { w: 260, g: 200 }, t: 45, fx: [{ s: 'research', m: 0.9 }], need: ['saltroad'], desc: 'Timbuktu, where Leo Africanus found more profit in books than in any other trade: every research 10% quicker.' },
 ];
 // Elite ranks (Build 39): each people's unique soldier gains a top rank at the Castle in the Medieval age, as Age of Empires' Paladin crowns its cavalry.
 // Only that people can research it. Numbers first; the art (armour, a banner, a richer colour) comes in the look-and-sound build.
@@ -3216,6 +3235,7 @@ const CIVS = {
 		fx: [{ s: 'build', m: 0.85 }],
 		bonus: 'Engineers: buildings go up 15% faster.',
 		wonder: 'Colosseum',
+		hall: 'Forum',
 	},
 	han: {
 		name: 'Han',
@@ -3223,6 +3243,7 @@ const CIVS = {
 		fx: [{ s: 'crop', k: 'food', m: 1.1 }],
 		bonus: 'Iron ploughs and new field systems: fields give 10% more food.',
 		wonder: 'Weiyang Palace',
+		hall: 'Taixue',
 	},
 	persian: {
 		name: 'Persian',
@@ -3230,6 +3251,7 @@ const CIVS = {
 		fx: [{ s: 'trade', m: 1.2 }],
 		bonus: 'The Royal Road: caravans earn 20% more.',
 		wonder: 'Apadana of Persepolis',
+		hall: 'Satrapal Court',
 	},
 	mongol: {
 		name: 'Mongol',
@@ -3237,6 +3259,7 @@ const CIVS = {
 		fx: [{ s: 'spd', k: '#mounted', m: 1.1 }],
 		bonus: 'Every rider kept spare horses: everything on horseback is 10% faster.',
 		wonder: 'Karakorum and the Silver Tree',
+		hall: 'Ordu',
 	},
 	maurya: {
 		name: 'Maurya',
@@ -3244,6 +3267,7 @@ const CIVS = {
 		fx: [{ s: 'train', k: '#mounted', m: 0.75 }],
 		bonus: 'The king held all horses and elephants: everything on horseback trains 25% faster.',
 		wonder: 'Great Stupa at Sanchi',
+		hall: 'Mantriparishad',
 	},
 	mali: {
 		name: 'Mali',
@@ -3251,6 +3275,7 @@ const CIVS = {
 		fx: [{ s: 'gather', k: ['gold', 'mint'], m: 1.15 }],
 		bonus: 'The gold fields: gold gathered 15% faster.',
 		wonder: 'Djinguereber Mosque',
+		hall: 'Sankore',
 	},
 };
 const CIVK = Object.keys(CIVS);
