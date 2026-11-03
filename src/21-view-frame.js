@@ -336,6 +336,7 @@ function draw() {
 	drawEvents(z);
 	drawOrders(z);
 	drawReticle();
+	drawQuickFlash(); // the bullseye after a quick share (28-army-quick)
 	if (G.rally0) flagAt(SX(G.rally0.x), SY(G.rally0.y), G.P[0].color, z);
 	drawTracers();
 	drawLight(z, inView);

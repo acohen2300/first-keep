@@ -81,7 +81,7 @@ const ACT = {
 	menu(a) {
 		const id = MENUS.some((m) => m.id === a) ? a : G.lastMenu || 'land',
 			keep = G.card && G.card.type === 'menu';
-		openCard({ type: 'menu', id });
+		openCard({ type: 'menu', id, at: keep ? G.card.at : undefined }); // a tab turned keeps the spot a quick action gave
 		if (keep) $('card').scrollTop = 0;
 	}, // the Build card at a tab (a tab, Town's Build, a milestone's button, a villager's Build): the last tab opened, else Land (preview 33)
 	idlego() {
@@ -541,12 +541,9 @@ const PLAY = {
 		if (!hasCmd() && !sqOut(i)) return say('Squads come with Battalions.', '', TOAST.short);
 		openCard({ type: 'squad', i });
 	}, // hold a squad: its card, built at home, watched on its mission; an empty squad opens as a new one
-	qsword() {
-		quickGo();
-	}, // the sword: every soldier to the spot (28-army-quick)
-	qclose() {
-		hideQuick();
-	},
+	qa(a) {
+		quickDo(a);
+	}, // a cell of the quick action's block (28-army-quick)
 	sqsetup() {
 		if (!hasCmd()) return say('Squads come with Battalions.', '', TOAST.short);
 		openCard({ type: 'sqsetup' });

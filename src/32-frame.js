@@ -123,6 +123,7 @@ const ICON = {
 		20,
 		'<path d="M5.5 5.5 L14.5 14.5 M14.5 5.5 L5.5 14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
 	),
+	more: SVG(20, '<g fill="currentColor"><rect x="3.5" y="3.5" width="5.5" height="5.5" rx="1"/><rect x="11" y="3.5" width="5.5" height="5.5" rx="1"/><rect x="3.5" y="11" width="5.5" height="5.5" rx="1"/><rect x="11" y="11" width="5.5" height="5.5" rx="1"/></g>'), // four small squares: More (the quick action)
 	minus: SVG(20, '<path d="M4.5 10 H15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'),
 	plus: SVG(20, '<path d="M4.5 10 H15.5 M10 4.5 V15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'), // − and + drawn as the symbols they are, at 24 like ✓ and ✕ (MENU-SPEC §6)
 	hammer: SVG(

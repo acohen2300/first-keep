@@ -89,7 +89,7 @@ QUICK = """async () => { const F = window.__fk, G = F.G, out = [];   // the quic
   // the small map (Albert, Nov 2): a tap jumps the camera, a drag sweeps it with the finger and launches nobody (the hold launch is cut)
   { F.hudPage(null); F.ui(true); const m = document.getElementById('mini'), mr = m.getBoundingClientRect(), mev = (type, fx, fy) => m.dispatchEvent(new PointerEvent(type, { bubbles: true, clientX: mr.left + mr.width * fx, clientY: mr.top + mr.height * fy, pointerId: 2 }));
     mev('pointerdown', 0.2, 0.2); mev('pointermove', 0.6, 0.6); const cx = F.cam.x; mev('pointermove', 0.8, 0.8); if (!(F.cam.x > cx)) out.push('a drag on the small map did not sweep the camera');
-    await new Promise((r) => setTimeout(r, 420)); if (G.qa) out.push('a drag on the small map put the chips up'); mev('pointerup', 0.8, 0.8); F.hudPage(null); F.ui(true); }
+    await new Promise((r) => setTimeout(r, 420)); if (G.qa) out.push('a drag on the small map put the block up'); mev('pointerup', 0.8, 0.8); F.hudPage(null); F.ui(true); }
   return out; }"""
 def fixed_titles():
     import re, glob
@@ -164,24 +164,8 @@ PLAY = """async () => {
   F.act('qcancel:' + F.keepOf(0).id + ',' + q0); if (F.keepOf(0).q.length !== q0) out.push('a slot tap did not cancel the villager');
   F.hudPage('jobs'); F.ui(true); tap('[data-act="move:wood"]'); if (!F.G.units.some(u => u.owner === 0 && u.kind === 'vil' && u.job === 'wood')) out.push('+ under Wood put nobody on wood');
   
-  // the quick action (Albert, Nov 3: a tap is a right click): nothing picked, a tap on open ground puts the sword and X there and sends nobody;
-  // the sword sends every soldier; a tap anywhere else only closes them; with soldiers picked, a tap is their order and no chips come
-  { F.act('close'); G.fogOn = false; let p = null; for (let y = 260; y < 500 && !p; y += 23) for (let x = 60; x < 330 && !p; x += 23) if (F.hitAt(x, y).t === 'ground') p = [x, y];
-    const spot = F.hitAt(...p).e, qa = () => document.getElementById('qa'); F.tapAt(...p);
-    if (!G.qa || qa().hidden) out.push('a tap on open ground put no sword down'); else if (!qa().querySelector('[data-act="qsword"].dis')) out.push('with no soldiers the sword was not dim');
-    F.act('qsword'); if (G.qa || !qa().hidden) out.push('the sword with no soldiers left the chips up');
-    if (F.HOLD_WORD.attack) out.push('the words "Hold to launch attack" are still in the game');
-    const k = F.keepOf(0), S = [0, 1, 2].map((i) => F.addUnit(0, 'spear', k.x + 40 + i * 8, k.y + 40));
-    const o0 = JSON.stringify(G.ords || {}), p2 = [p[0] + 60, p[1]]; F.tapAt(...p2); if (!G.qa) out.push('a tap on open ground put no sword down'); if (G.card) out.push('a tap on the ground opened a card');
-    if (JSON.stringify(G.ords || {}) !== o0 || S.some((u) => u.state === 'goto')) out.push('the sword sent soldiers before it was tapped');
-    F.act('qsword'); if (G.qa) out.push('the sword left the chips up'); if (!S.every((u) => u.state === 'goto' || u.ord || u.tx !== undefined || u.focus || (G.ords && Object.keys(G.ords).length))) out.push('the sword did not send the army');
-    F.tapAt(...p); const n0 = !!G.qa; F.tapAt(p[0], p[1] + 60); if (n0 && G.qa) out.push('a tap elsewhere left the chips up (it only closes them)');
-    F.tapAt(...p); F.act('qclose'); if (G.qa) out.push('X did not close the chips');
-    for (const u of S) u.hp = 0;
-    const s1 = F.addUnit(0, 'spear', k.x + 30, k.y + 30); F.setPick([{ t: 'unit', id: s1.id }]); F.tapAt(...p2); if (G.qa) out.push('with a soldier picked, a tap on the ground put the chips up (it is the order)'); if (s1.state !== 'goto') out.push('with a soldier picked, a tap on the ground did not send it'); F.setPick([]); s1.hp = 0;
-    const e = F.addUnit(1, 'spear', spot.x, spot.y); G.rel[0][1] = G.rel[1][0] = 'war'; F.tapAt(F.SX(e.x), F.SY(e.y) - 6 * F.cam.z); if (G.qa) out.push('a tap on an enemy put the chips up (it opens its card)');
-    F.act('close'); e.hp = 0; G.rel[0][1] = G.rel[1][0] = 'neutral'; G.fogOn = true;
-    { const c2 = document.getElementById('cv').getContext('2d'), a0 = c2.arc.bind(c2), rs = []; c2.arc = (...a) => { rs.push(a[2]); return a0(...a); }; G.press = { x: 100, y: 300, t: performance.now() - 150 }; F.draw(); c2.arc = a0; G.press = null; if (rs.includes(26)) out.push("the hold's ring shows 150 ms into a touch (a tap must never see it)"); } }
+  // the quick action's block (Albert, Nov 3): tests/quick.py. The hold's ring stays here: a tap never sees it
+  { const c2 = document.getElementById('cv').getContext('2d'), a0 = c2.arc.bind(c2), rs = []; c2.arc = (...a) => { rs.push(a[2]); return a0(...a); }; G.press = { x: 100, y: 300, t: performance.now() - 150 }; F.draw(); c2.arc = a0; G.press = null; if (rs.includes(26)) out.push("the hold's ring shows 150 ms into a touch (a tap must never see it)"); }
   { const cx = document.getElementById('cv').getContext('2d'), f0 = cx.fillRect.bind(cx), seen = []; cx.fillRect = (...a) => { seen.push(a); return f0(...a); }; F.draw(); cx.fillRect = f0;   // the sky runs to the top (Albert, Nov 2)
     if (!seen.some((a) => a[1] === 0 && a[3] > 40 && a[3] < innerHeight * 0.4)) out.push('the sky does not run to the top of the screen'); }
   { const cv0 = document.getElementById('cv'), k0 = cv0.width / cv0.getBoundingClientRect().width; cv0.style.width = '200px'; await new Promise((r) => setTimeout(r, 250)); if (Math.abs(cv0.width / cv0.getBoundingClientRect().width - k0) > 0.05 || cv0.width > 200 * k0 + 4) out.push('the map did not measure itself again after its box changed'); cv0.style.width = ''; await new Promise((r) => setTimeout(r, 250));
@@ -330,7 +314,7 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
   return bad; }"""
 async def main():
     fails = 0
-    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/text81.py', 'tests/saves.py', 'tests/moves.py', 'tests/combat.py', 'tests/wild.py', 'tests/ai.py', 'tests/map.py', 'tests/palette.py', 'tests/cards.py', 'tests/verbs.py', 'tests/testfield.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
+    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/text81.py', 'tests/saves.py', 'tests/moves.py', 'tests/combat.py', 'tests/wild.py', 'tests/ai.py', 'tests/map.py', 'tests/palette.py', 'tests/cards.py', 'tests/quick.py', 'tests/verbs.py', 'tests/testfield.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
         r = subprocess.run([sys.executable, t], capture_output=True, text=True); print(r.stdout.strip() or ('FAIL ' + t + ' ' + r.stderr[-300:])); fails += r.returncode != 0
     w = subprocess.run([sys.executable, 'tests/words.py'], capture_output=True, text=True); print(('PASS ' if w.returncode == 0 else 'FAIL ') + 'toasts and tips: 10 words at most', w.stdout.strip() if w.returncode else ''); fails += w.returncode != 0
     async with async_playwright() as p:
