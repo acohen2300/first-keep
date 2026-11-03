@@ -404,8 +404,6 @@ function warCells(sub) {
 }
 const researchable = () => [...G.rdy.values()].reduce((a, v) => a + v, 0); // research you can start now (the count the strip shows)
 const idleSoldiers = () => sendable().filter((u) => u.state === 'home');
-const MENU_WORD = { mil: 'Barracks' }; // (the groups page is cut, Nov 3; the words stay for the Guide) // a build group's word on the controller where the menu's own would clash with a tile (War)
-const MENU_ICON = { home: 'home', land: 'wood', mil: 'tent', def: 'def', shop: 'gold', cult: 'star' }; // a build group's picture
 const fullPage = () => (G.hud.page === 'town' ? !!G.hud.sub : !!G.hud.page); // a page that fills the five columns (not rest, not Town's column)
 const mapShown = () => (fullPage() ? G.hud.mapOn === G.hud.page + (G.hud.sub || '') : !!G.hud.map);
 function ctlHTML() {

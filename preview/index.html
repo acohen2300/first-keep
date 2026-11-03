@@ -1897,6 +1897,22 @@ const BLD = {
 		drop: [],
 		desc: 'The old citadel in the middle of the world. Whoever holds it takes a tithe of the gathering of everyone else and climbs the score; hold it long enough and the game is won. It is taken, not broken: break it down and it is yours at a third of its strength.',
 	},
+	// the Hall (Albert, Nov 3, 13:15: "a special building that gives the tech for the very special Civ stuff"): one a side, Classical, named
+	// by the people (CIVS.hall: the Forum, the Taixue, the Satrap's Court, the Ordu, the Mantriparishad, Sankore); it holds that people's three
+	// specialities as research (TECH with civ, at 'hall'), each from history with its number (SCIENCE), and its card tells the history
+	hall: {
+		name: 'Hall',
+		fp: 3,
+		hp: 600,
+		h: 26,
+		cost: { w: 220, s: 160, g: 120 },
+		t: 45,
+		age: 2,
+		one: true,
+		invest: 3,
+		sab: 'stall',
+		desc: 'The seat of what makes your people themselves: it researches your three specialities, each from history.',
+	},
 	wonder: {
 		name: 'Wonder',
 		fp: 6,
@@ -1955,7 +1971,7 @@ const MENUS = [
 		id: 'cult',
 		name: 'Culture',
 		blurb: 'faith, law, learning, wonders',
-		items: ['school', 'library', 'hospital', 'temple', 'courthouse', 'baths', 'theatre', 'tavern', 'wonder'],
+		items: ['school', 'library', 'hospital', 'temple', 'courthouse', 'baths', 'theatre', 'tavern', 'hall', 'wonder'],
 	},
 ];
 // ═════ 04-rules-tech.js: the research tree from history, and the civilizations ═════
@@ -5139,6 +5155,25 @@ const TECH = [
 		need: ['pumps'],
 		desc: 'Apartments hold 2 more; sickness strikes 20% less.',
 	},
+	// ── the peoples' specialities, researched at the Hall (Albert, Nov 3): three each, every number from an opened source (SCIENCE, the Hall row)
+	{ id: 'viamil', civ: 'roman', name: 'Via militaris', at: 'hall', line: 'Rome', age: 2, w: 6, when: '312 BC', cost: { w: 200, s: 150 }, t: 40, fx: [{ s: 'spd', k: '#infantry', m: 1.2 }], desc: 'The military road: foot soldiers march 20% faster (Vegetius: 20 miles in five hours at the common step, 24 at the full).' },
+	{ id: 'horrea', civ: 'roman', name: 'Horrea', at: 'hall', line: 'Rome', age: 2, w: 5, when: '100s', cost: { w: 220, s: 200 }, t: 42, fx: [{ s: 'spoil', m: 0.5 }], need: ['viamil'], desc: 'State granaries on raised floors, 290 of them in Rome: food spoils half as fast again.' },
+	{ id: 'castra', civ: 'roman', name: 'Castra', at: 'hall', line: 'Rome', age: 2, w: 6, when: '100s BC', cost: { w: 260, g: 140 }, t: 45, fx: [{ s: 'campbuild', m: 1.5 }, { s: 'bhp', k: ['palisade', 'camptower', 'abatis'], m: 1.5 }], need: ['horrea'], desc: 'Every legionary carried two stakes and dug the camp each night: soldiers raise a camp half again as fast, and its works stand half again as strong.' },
+	{ id: 'trigger', civ: 'han', name: 'Bronze trigger', at: 'hall', line: 'Han', age: 2, w: 6, when: '200s BC', cost: { w: 200, i: 120 }, t: 40, fx: [{ s: 'rng', k: ['crossbow', 'hanxbow'], a: 20 }], desc: 'The cast bronze trigger, made in thousands to one pattern: crossbows reach 20 farther (the Luoyang arsenal held 11,181 of them in 13 BC).' },
+	{ id: 'changping', civ: 'han', name: 'Ever-normal granary', at: 'hall', line: 'Han', age: 2, w: 5, when: '54 BC', cost: { w: 220, g: 140 }, t: 42, fx: [{ s: 'band', m: 0.5 }], need: ['trigger'], desc: 'Geng Shouchang: the state bought in good years and sold in bad; prices swing half as far again for you.' },
+	{ id: 'taixue', civ: 'han', name: 'Taixue', at: 'hall', line: 'Han', age: 2, w: 6, when: '124 BC', cost: { w: 260, g: 180 }, t: 45, fx: [{ s: 'research', m: 0.9 }], need: ['changping'], desc: 'The imperial academy, the first school of the state: every research 10% quicker.' },
+	{ id: 'royalroad', civ: 'persian', name: 'Royal Road', at: 'hall', line: 'Persia', age: 2, w: 6, when: '500 BC', cost: { w: 200, g: 150 }, t: 40, fx: [{ s: 'spd', k: ['caravan', 'outpostcart', 'campcart'], m: 1.2 }], desc: 'Herodotus: 111 stages from Sardis to Susa, ninety days on foot and nine by the royal couriers; caravans and wagons 20% faster.' },
+	{ id: 'satrapy', civ: 'persian', name: 'Satrapies', at: 'hall', line: 'Persia', age: 2, w: 5, when: '520 BC', cost: { w: 220, g: 180 }, t: 42, fx: [{ s: 'taxtake', m: 1.2 }], need: ['royalroad'], desc: 'Darius set twenty satrapies and a fixed tribute from each, 14,560 talents a year: your vassals pay 20% more.' },
+	{ id: 'immortals', civ: 'persian', name: 'The Immortals', at: 'hall', line: 'Persia', age: 2, w: 6, when: '480 BC', cost: { w: 260, g: 200 }, t: 45, fx: [{ s: 'train', k: 'immortal', m: 0.75 }], need: ['satrapy'], desc: 'Kept at ten thousand, never more nor fewer, a fallen man replaced at once: Immortals train 25% faster.' },
+	{ id: 'yam', civ: 'mongol', name: 'Yam', at: 'hall', line: 'Mongol', age: 3, w: 6, when: '1234', cost: { w: 200, f: 150 }, t: 40, fx: [{ s: 'sight', k: '#mounted', m: 1.2 }], desc: 'The relay of stations 20 to 40 miles apart, a rider 200 miles a day with spare horses: everything on horseback sees 20% farther.' },
+	{ id: 'remounts', civ: 'mongol', name: 'Remounts', at: 'hall', line: 'Mongol', age: 3, w: 5, when: '1241', cost: { f: 240, g: 140 }, t: 42, fx: [{ s: 'charge', m: 0.75 }], need: ['yam'], desc: 'Three or four horses to a rider, a hundred miles a day in Hungary: a charge comes round 25% sooner.' },
+	{ id: 'tumen', civ: 'mongol', name: 'Tumen', at: 'hall', line: 'Mongol', age: 3, w: 6, when: '1206', cost: { w: 260, g: 180 }, t: 45, fx: [{ s: 'rng', k: ['horsearcher', 'mongolha'], a: 15 }], need: ['remounts'], desc: 'Tens, hundreds, thousands, ten thousands, and the composite bow that volleyed to 400 metres: horse archers reach 15 farther.' },
+	{ id: 'sixth', civ: 'maurya', name: 'The sixth', at: 'hall', line: 'Maurya', age: 2, w: 6, when: '300 BC', cost: { w: 200, g: 150 }, t: 40, fx: [{ s: 'taxhate', m: 0.67 }], desc: 'The Arthashastra sets the share of the king at a sixth of the crop, and no more: the resentment a tax breeds falls by a third.' },
+	{ id: 'hastin', civ: 'maurya', name: 'Hastin', at: 'hall', line: 'Maurya', age: 2, w: 5, when: '305 BC', cost: { f: 260, g: 160 }, t: 42, fx: [{ s: 'bld', k: ['elephant', 'mauryael'], m: 1.2 }], need: ['sixth'], desc: 'Nine thousand elephants in the army Megasthenes saw: war elephants hit buildings 20% harder.' },
+	{ id: 'pataliputra', civ: 'maurya', name: 'Pataliputra', at: 'hall', line: 'Maurya', age: 2, w: 6, when: '300 BC', cost: { w: 280, s: 200 }, t: 45, fx: [{ s: 'bhp', k: ['tower', 'wall', 'gate'], m: 1.25 }], need: ['hastin'], desc: 'A capital of 570 towers and 64 gates behind a moat: your walls, gates and towers stand a quarter stronger.' },
+	{ id: 'bambuk', civ: 'mali', name: 'Bambuk gold', at: 'hall', line: 'Mali', age: 3, w: 6, when: '1324', cost: { w: 200, g: 100 }, t: 40, fx: [{ s: 'gather', k: ['gold', 'mint'], m: 1.12 }], desc: 'The gold of Bambuk and Bure; the gifts of Mansa Musa dropped the price of gold in Cairo 12% for twelve years: gold comes in 12% faster.' },
+	{ id: 'saltroad', civ: 'mali', name: 'Salt road', at: 'hall', line: 'Mali', age: 3, w: 5, when: '1352', cost: { w: 220, g: 160 }, t: 42, fx: [{ s: 'trade', m: 1.25 }], need: ['bambuk'], desc: 'Ibn Battuta: salt from Taghaza sold at four times its price by the time it reached the capital: caravans earn 25% more.' },
+	{ id: 'sankore', civ: 'mali', name: 'Sankore', at: 'hall', line: 'Mali', age: 3, w: 6, when: '1400s', cost: { w: 260, g: 200 }, t: 45, fx: [{ s: 'research', m: 0.9 }], need: ['saltroad'], desc: 'Timbuktu, where Leo Africanus found more profit in books than in any other trade: every research 10% quicker.' },
 ];
 // Elite ranks (Build 39): each people's unique soldier gains a top rank at the Castle in the Medieval age, as Age of Empires' Paladin crowns its cavalry.
 // Only that people can research it. Numbers first; the art (armour, a banner, a richer colour) comes in the look-and-sound build.
@@ -5176,6 +5211,7 @@ const CIVS = {
 		fx: [{ s: 'build', m: 0.85 }],
 		bonus: 'Engineers: buildings go up 15% faster.',
 		wonder: 'Colosseum',
+		hall: 'Forum',
 	},
 	han: {
 		name: 'Han',
@@ -5183,6 +5219,7 @@ const CIVS = {
 		fx: [{ s: 'crop', k: 'food', m: 1.1 }],
 		bonus: 'Iron ploughs and new field systems: fields give 10% more food.',
 		wonder: 'Weiyang Palace',
+		hall: 'Taixue',
 	},
 	persian: {
 		name: 'Persian',
@@ -5190,6 +5227,7 @@ const CIVS = {
 		fx: [{ s: 'trade', m: 1.2 }],
 		bonus: 'The Royal Road: caravans earn 20% more.',
 		wonder: 'Apadana of Persepolis',
+		hall: 'Satrapal Court',
 	},
 	mongol: {
 		name: 'Mongol',
@@ -5197,6 +5235,7 @@ const CIVS = {
 		fx: [{ s: 'spd', k: '#mounted', m: 1.1 }],
 		bonus: 'Every rider kept spare horses: everything on horseback is 10% faster.',
 		wonder: 'Karakorum and the Silver Tree',
+		hall: 'Ordu',
 	},
 	maurya: {
 		name: 'Maurya',
@@ -5204,6 +5243,7 @@ const CIVS = {
 		fx: [{ s: 'train', k: '#mounted', m: 0.75 }],
 		bonus: 'The king held all horses and elephants: everything on horseback trains 25% faster.',
 		wonder: 'Great Stupa at Sanchi',
+		hall: 'Mantriparishad',
 	},
 	mali: {
 		name: 'Mali',
@@ -5211,6 +5251,7 @@ const CIVS = {
 		fx: [{ s: 'gather', k: ['gold', 'mint'], m: 1.15 }],
 		bonus: 'The gold fields: gold gathered 15% faster.',
 		wonder: 'Djinguereber Mosque',
+		hall: 'Sankore',
 	},
 };
 const CIVK = Object.keys(CIVS);
@@ -6324,6 +6365,21 @@ const WHY = {
 	camps: 'Every Roman army dug a ditched camp each night; a fed, rested army was never surprised asleep.',
 	marching: 'Roman roads and Roman discipline moved a legion twenty miles a day with its baggage; Caesar did thirty.',
 	archerstakes: 'Henry V had every archer cut a six-foot stake before Agincourt (1415), after the Turkish stakes at Nicopolis; driven in at an angle, they impaled the horses of the French charge.',
+	viamil: 'Vegetius I.9: the recruit must march twenty miles in five summer hours at the common step and twenty-four at the full step; the roads made the pace possible.',
+	horrea: 'The Horrea Galbae had 140 ground-floor rooms; Rome had some 290 granaries, their floors raised on pillars against the damp and the rats.',
+	castra: 'Josephus and Vegetius: a legion dug its camp every night, ditch, bank and palisade, each man carrying his stakes; the camp was the army at rest and the fort when attacked.',
+	trigger: 'The Han arsenal at Luoyang listed 11,181 crossbows in 13 BC; the cast bronze trigger was made to one pattern in thousands, and the heavy bow took 159 kg to cock.',
+	changping: 'Geng Shouchang proposed the ever-normal granary in 54 BC: the state bought grain in good years and sold it in bad at a steady price; the Qing kept over two million tonnes in them.',
+	taixue: 'The Taixue, the imperial academy, trained the officials of the Han; by the second century it is said to have held thirty thousand students.',
+	satrapy: 'Herodotus III.89: Darius divided the empire into twenty satrapies and set each its tribute, 14,560 talents a year in all, India alone 360 talents of gold dust.',
+	immortals: 'Herodotus VII.83: the ten thousand were never more nor fewer, for a man lost was replaced at once from the waiting list.',
+	tumen: 'The Mongol army counted in tens: arban, zuun, mingghan, tumen; its composite bow shot aimed at 150 metres and volleyed to 400.',
+	sixth: 'The Arthashastra sets the share of the king at one sixth of the crop; the trade overseer capped the profit of merchants at five parts in a hundred on local goods and ten on foreign.',
+	hastin: 'Megasthenes counted 9,000 elephants, 8,000 chariots, 30,000 horse and 600,000 foot in the army of Chandragupta; elephants broke gates and walls.',
+	pataliputra: 'Pataliputra, Megasthenes says, ran eight miles by one and a half behind a moat 600 feet wide and 45 deep, with 570 towers and 64 gates in its wall.',
+	bambuk: 'Al-Umari: before Mansa Musa the mithqal of gold did not fall below 25 dirhams in Cairo; after his gifts of 1324 it did not rise above 22, and stayed so for twelve years.',
+	saltroad: 'Ibn Battuta in 1352: a slab of salt from Taghaza sold for four times its price by the time it reached the capital of Mali, two slabs to a camel.',
+	sankore: 'Leo Africanus on Timbuktu: there is more profit made from the trade in books than from all other merchandise; some 285,000 manuscripts survive from its libraries.',
 	learning: 'Wright (1936) measured it on aircraft: each doubling of what a shop had made cut the labour in a unit by a fixed share, about a fifth; the Romans knew it as the quarry gang and the mint team that struck a thousand coins a day.',
 	pinfactory: 'Adam Smith (1776): ten men dividing the work made 48,000 pins a day where one man alone made twenty; the mint and the workshops run on the same rule.',
 	campwagons: 'A Roman camp travelled on its baggage train: tents, tools, mills and grain, a mule to every eight men and carts behind; the Hussites went further and fought from the wagons.',
@@ -6545,6 +6601,8 @@ const WHY = {
 		'Scribal schools taught writing in Sumer by about 2000 BC; writing itself began as accounts at Uruk (about 3100 BC) and in Egypt soon after.',
 	library:
 		'The library of Ashurbanipal at Nineveh (7th century BC) and the Library of Alexandria (about 295 BC) gathered texts and scholars. Universities came later: Bologna in the 11th century, with al-Qarawiyyin (859) and Nalanda (5th century) older in their own traditions.',
+	hall:
+		'What a people was best at had a house: the Forum where Rome did its business, the Taixue where Han trained its officials, the court where the satraps paid in, the Ordu of the Khan, the council of Chandragupta, the schools of Timbuktu.',
 	store:
 		'Rome kept its grain in horrea raised on pillars against the damp, some 290 of them by the late empire; the Han ever-normal granary of Geng Shouchang (54 BC) bought in good years and sold in bad to hold the price.',
 	caltrops:
@@ -7806,6 +7864,8 @@ const shelterOf = (o, kind) => (BLD[kind].shelter || 0) + (o === WILD ? 0 : fxv(
 const bldName = (o, kind) =>
 	kind === 'wonder' && civOf(o)
 		? civOf(o).wonder
+		: kind === 'hall' && civOf(o)
+			? civOf(o).hall
 		: btierOf(o, kind)
 			? BTIER[kind][btierOf(o, kind) - 1].btier.name
 			: BLD[kind].name3 && G.P[o].age >= 3
@@ -13561,7 +13621,7 @@ function hurt(o, a, t, base) {
 		from; // where the blow comes from, found once a blow (the damage and the nerve both read it)
 	const fromOf = () => (from ??= a ? fromWhere(t, a) : 1);
 	if (isB) {
-		d *= A.bld ?? 1;
+		d *= (A.bld ?? 1) * (a && o !== WILD ? fxv(o, 'bld', unitKeys(a.kind)).m : 1); // against buildings: the unit's own factor, and research keyed to it (Hastin)
 		if (a && o !== WILD && t.prog >= 1 && BLD[t.kind].wood && !t.fire) {
 			const keys = unitKeys(a.kind),
 				blast = A.gun && fxv(o, 'blast', keys).a >= 1;
@@ -17869,6 +17929,52 @@ const ART = {
 		E_(9, r.d / 2 - 3, 3, 2, '#d8c27a', LINE, 0.3);
 		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
 	},
+	hall(c, o, civ) {
+		// the people's Hall: one body, a roof and a front by people: the Forum's colonnade, the Taixue's upturned eaves, the Court's columns
+		// and tiled roof, the Ordu's great tent, the Mantriparishad's pillared hall, Sankore's mud-brick pylon
+		if (civ === 'mongol') {
+			const d = 30 * TILT,
+				f = d / 2;
+			E_(0, f, 15, 15 * TILT, lit('#e4d9c0', -0.1), LINE, 0.5);
+			P_(
+				[
+					[-15, f - 10],
+					[15, f - 10],
+					[0, f - 30],
+				],
+				lit('#e4d9c0', 0.08),
+				LINE,
+				0.5,
+			);
+			P_(
+				[
+					[-15, f - 10],
+					[15, f - 10],
+					[15, f - 2],
+					[-15, f - 2],
+				],
+				lit('#d8ccb0', -0.3),
+				LINE,
+				0.5,
+			);
+			door(0, f - 2, 5, 7);
+			banner(0, f - 31, c, 9);
+			return;
+		}
+		if (civ === 'mali') {
+			const r = block(30, 24, MUD, 'mud', 'flat', MUD, 2);
+			for (const x of [-10, 0, 10]) P_([[x - 3, r.d / 2 - 24], [x + 3, r.d / 2 - 24], [x + 2, r.d / 2 - 34], [x - 2, r.d / 2 - 34]], lit(MUD, 0.05), LINE, 0.4); // the pylons
+			for (let y = r.d / 2 - 6; y > r.d / 2 - 22; y -= 5) for (const x of [-12, -6, 0, 6, 12]) L_(x, y, x + 2.5, y, lit(MUD, -0.5), 1); // the toron beams
+			door(0, r.d / 2, 5, 9);
+			banner(0, r.d / 2 - 35, c, 8);
+			return;
+		}
+		const roof = civ === 'han' ? TILE : civ === 'persian' ? '#8a7a5a' : civ === 'maurya' ? '#b8954a' : TILE,
+			r = block(30, 22, civ === 'roman' ? PLASTER : civ === 'han' ? '#c9654a' : STONE, civ === 'roman' ? 'stone' : 'plank', civ === 'han' ? 'hip' : 'gable', roof, civ === 'han' ? 6 : 9);
+		for (const x of [-11, -5.5, 0, 5.5, 11]) P_([[x - 1.2, r.d / 2], [x + 1.2, r.d / 2], [x + 1.2, r.d / 2 - 16], [x - 1.2, r.d / 2 - 16]], lit(civ === 'roman' || civ === 'persian' ? PLASTER : PLANK, 0.1), LINE, 0.4); // the colonnade
+		door(0, r.d / 2, 4, 8);
+		banner(0, r.d / 2 - 24, c, 9);
+	},
 	store(c) {
 		// the storehouse: a long timber granary raised on stone staddles against damp and rats (the Roman horrea stood on pillars), a hip roof
 		// of tile, one wide door, air slits under the eaves; the side's banner at the gable
@@ -19593,7 +19699,9 @@ function bldSprite(b, s) {
 										? b.sheep || 0
 										: b.kind === 'tower'
 											? btierOf(o, 'tower')
-											: '';
+											: b.kind === 'hall'
+												? G.P[o].civ
+												: '';
 	const up = upTier(b.kind, G.P[o]),
 		key = b.kind + col + var_ + up + s;
 	let c = BSPR.get(key);
@@ -29744,7 +29852,7 @@ function loyaltyParts(p) {
 	const n = G.units.filter((u) => u.owner === L && isSoldier(u) && dist(u, k) < r).length,
 		garrison = Math.min(VASSAL.garrisonMax, n * VASSAL.garrison);
 	const protect = Math.round(p.protect || 0),
-		hate = TAX[p.tax || 'fair'].hate * fxv(L, 'hate').m; // a tavern in the lord's town: the tax grumbles less
+		hate = TAX[p.tax || 'fair'].hate * fxv(L, 'hate').m * fxv(L, 'taxhate').m; // a tavern in the lord's town: the tax grumbles less; the Mauryan sixth
 	return { invest, garrison, protect, hate, target: clamp(20 + invest + garrison + protect - hate, 0, 100) };
 }
 function makeVassal(q, L, tax) {
@@ -29864,7 +29972,7 @@ function vassalTick() {
 		for (const u of levyOf(L.id, p.id)) if (!keepOf(L.id)) releaseLevy(u); // a levy serves its lord while the lord stands
 		const d = Math.max(0, p.gathered - (p.taxBase || 0));
 		p.taxBase = p.gathered; // tax: a share of what they gathered, from their stores
-		let take = d * TAX[p.tax].take * (p.forced > G.t ? 2 : 1);
+		let take = d * TAX[p.tax].take * (p.forced > G.t ? 2 : 1) * (p.lord !== undefined && p.lord !== null ? fxv(p.lord, 'taxtake').m : 1); // the lord's Satrapies: a fifth more
 		const tot = p.res.f + p.res.w + p.res.s + p.res.g + p.res.i;
 		p.paid = 0;
 		if (tot > 0 && take > 0)
@@ -31962,8 +32070,6 @@ function warCells(sub) {
 }
 const researchable = () => [...G.rdy.values()].reduce((a, v) => a + v, 0); // research you can start now (the count the strip shows)
 const idleSoldiers = () => sendable().filter((u) => u.state === 'home');
-const MENU_WORD = { mil: 'Barracks' }; // (the groups page is cut, Nov 3; the words stay for the Guide) // a build group's word on the controller where the menu's own would clash with a tile (War)
-const MENU_ICON = { home: 'home', land: 'wood', mil: 'tent', def: 'def', shop: 'gold', cult: 'star' }; // a build group's picture
 const fullPage = () => (G.hud.page === 'town' ? !!G.hud.sub : !!G.hud.page); // a page that fills the five columns (not rest, not Town's column)
 const mapShown = () => (fullPage() ? G.hud.mapOn === G.hud.page + (G.hud.sub || '') : !!G.hud.map);
 function ctlHTML() {

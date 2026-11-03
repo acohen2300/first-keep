@@ -504,6 +504,8 @@ const shelterOf = (o, kind) => (BLD[kind].shelter || 0) + (o === WILD ? 0 : fxv(
 const bldName = (o, kind) =>
 	kind === 'wonder' && civOf(o)
 		? civOf(o).wonder
+		: kind === 'hall' && civOf(o)
+			? civOf(o).hall
 		: btierOf(o, kind)
 			? BTIER[kind][btierOf(o, kind) - 1].btier.name
 			: BLD[kind].name3 && G.P[o].age >= 3

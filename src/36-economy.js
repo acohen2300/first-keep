@@ -753,7 +753,7 @@ function loyaltyParts(p) {
 	const n = G.units.filter((u) => u.owner === L && isSoldier(u) && dist(u, k) < r).length,
 		garrison = Math.min(VASSAL.garrisonMax, n * VASSAL.garrison);
 	const protect = Math.round(p.protect || 0),
-		hate = TAX[p.tax || 'fair'].hate * fxv(L, 'hate').m; // a tavern in the lord's town: the tax grumbles less
+		hate = TAX[p.tax || 'fair'].hate * fxv(L, 'hate').m * fxv(L, 'taxhate').m; // a tavern in the lord's town: the tax grumbles less; the Mauryan sixth
 	return { invest, garrison, protect, hate, target: clamp(20 + invest + garrison + protect - hate, 0, 100) };
 }
 function makeVassal(q, L, tax) {
@@ -873,7 +873,7 @@ function vassalTick() {
 		for (const u of levyOf(L.id, p.id)) if (!keepOf(L.id)) releaseLevy(u); // a levy serves its lord while the lord stands
 		const d = Math.max(0, p.gathered - (p.taxBase || 0));
 		p.taxBase = p.gathered; // tax: a share of what they gathered, from their stores
-		let take = d * TAX[p.tax].take * (p.forced > G.t ? 2 : 1);
+		let take = d * TAX[p.tax].take * (p.forced > G.t ? 2 : 1) * (p.lord !== undefined && p.lord !== null ? fxv(p.lord, 'taxtake').m : 1); // the lord's Satrapies: a fifth more
 		const tot = p.res.f + p.res.w + p.res.s + p.res.g + p.res.i;
 		p.paid = 0;
 		if (tot > 0 && take > 0)

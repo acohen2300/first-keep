@@ -32,7 +32,7 @@ function hurt(o, a, t, base) {
 		from; // where the blow comes from, found once a blow (the damage and the nerve both read it)
 	const fromOf = () => (from ??= a ? fromWhere(t, a) : 1);
 	if (isB) {
-		d *= A.bld ?? 1;
+		d *= (A.bld ?? 1) * (a && o !== WILD ? fxv(o, 'bld', unitKeys(a.kind)).m : 1); // against buildings: the unit's own factor, and research keyed to it (Hastin)
 		if (a && o !== WILD && t.prog >= 1 && BLD[t.kind].wood && !t.fire) {
 			const keys = unitKeys(a.kind),
 				blast = A.gun && fxv(o, 'blast', keys).a >= 1;

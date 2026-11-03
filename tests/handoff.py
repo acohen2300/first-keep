@@ -421,6 +421,10 @@ PLANTS = [
   ('14-sim-troops.js', "&& G.P[o].techs.has('archerstakes');", "&& true;", 'tests/combat.py', 'p41: every shooter has a stake', 'without the research has a stake'),
   ('16-sim-fight.js', "\t\ta.chg = 0;\n\t\tconst dx = a.x - t.x,", "\t\tconst dx = a.x - t.x,", 'tests/combat.py', "p41: the stake does not end the charge", 'not hurt, stopped and thrown back'),
   ('08-core.js', "if (BLD[kind].tech && !G.P[o].techs.has(BLD[kind].tech))", "if (false)", 'tests/combat.py', 'p41: caltrops without the research', 'without the research'),
+  # Build 80 preview 42 (--only=p42): the Hall
+  ('16-sim-fight.js', "d *= (A.bld ?? 1) * (a && o !== WILD ? fxv(o, 'bld', unitKeys(a.kind)).m : 1);", "d *= A.bld ?? 1;", 'tests/combat.py', 'p42: research against buildings is not read', 'Hastin does not'),
+  ('11-orders.js', "if (T.civ && T.civ !== p.civ) return 'Belongs to another people.';", ";", 'tests/combat.py', "p42: another people's speciality is open to all", 'open to Rome'),
+  ('08-core.js', "\t\t: kind === 'hall' && civOf(o)\n\t\t\t? civOf(o).hall", "\t\t: false\n\t\t\t? civOf(o).hall", 'tests/combat.py', 'p42: the Hall is not named by its people', 'is not the Forum'),
 ]
 
 def plant_check():

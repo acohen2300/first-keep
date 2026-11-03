@@ -1065,6 +1065,52 @@ const ART = {
 		E_(9, r.d / 2 - 3, 3, 2, '#d8c27a', LINE, 0.3);
 		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
 	},
+	hall(c, o, civ) {
+		// the people's Hall: one body, a roof and a front by people: the Forum's colonnade, the Taixue's upturned eaves, the Court's columns
+		// and tiled roof, the Ordu's great tent, the Mantriparishad's pillared hall, Sankore's mud-brick pylon
+		if (civ === 'mongol') {
+			const d = 30 * TILT,
+				f = d / 2;
+			E_(0, f, 15, 15 * TILT, lit('#e4d9c0', -0.1), LINE, 0.5);
+			P_(
+				[
+					[-15, f - 10],
+					[15, f - 10],
+					[0, f - 30],
+				],
+				lit('#e4d9c0', 0.08),
+				LINE,
+				0.5,
+			);
+			P_(
+				[
+					[-15, f - 10],
+					[15, f - 10],
+					[15, f - 2],
+					[-15, f - 2],
+				],
+				lit('#d8ccb0', -0.3),
+				LINE,
+				0.5,
+			);
+			door(0, f - 2, 5, 7);
+			banner(0, f - 31, c, 9);
+			return;
+		}
+		if (civ === 'mali') {
+			const r = block(30, 24, MUD, 'mud', 'flat', MUD, 2);
+			for (const x of [-10, 0, 10]) P_([[x - 3, r.d / 2 - 24], [x + 3, r.d / 2 - 24], [x + 2, r.d / 2 - 34], [x - 2, r.d / 2 - 34]], lit(MUD, 0.05), LINE, 0.4); // the pylons
+			for (let y = r.d / 2 - 6; y > r.d / 2 - 22; y -= 5) for (const x of [-12, -6, 0, 6, 12]) L_(x, y, x + 2.5, y, lit(MUD, -0.5), 1); // the toron beams
+			door(0, r.d / 2, 5, 9);
+			banner(0, r.d / 2 - 35, c, 8);
+			return;
+		}
+		const roof = civ === 'han' ? TILE : civ === 'persian' ? '#8a7a5a' : civ === 'maurya' ? '#b8954a' : TILE,
+			r = block(30, 22, civ === 'roman' ? PLASTER : civ === 'han' ? '#c9654a' : STONE, civ === 'roman' ? 'stone' : 'plank', civ === 'han' ? 'hip' : 'gable', roof, civ === 'han' ? 6 : 9);
+		for (const x of [-11, -5.5, 0, 5.5, 11]) P_([[x - 1.2, r.d / 2], [x + 1.2, r.d / 2], [x + 1.2, r.d / 2 - 16], [x - 1.2, r.d / 2 - 16]], lit(civ === 'roman' || civ === 'persian' ? PLASTER : PLANK, 0.1), LINE, 0.4); // the colonnade
+		door(0, r.d / 2, 4, 8);
+		banner(0, r.d / 2 - 24, c, 9);
+	},
 	store(c) {
 		// the storehouse: a long timber granary raised on stone staddles against damp and rats (the Roman horrea stood on pillars), a hip roof
 		// of tile, one wide door, air slits under the eaves; the side's banner at the gable
@@ -2789,7 +2835,9 @@ function bldSprite(b, s) {
 										? b.sheep || 0
 										: b.kind === 'tower'
 											? btierOf(o, 'tower')
-											: '';
+											: b.kind === 'hall'
+												? G.P[o].civ
+												: '';
 	const up = upTier(b.kind, G.P[o]),
 		key = b.kind + col + var_ + up + s;
 	let c = BSPR.get(key);
