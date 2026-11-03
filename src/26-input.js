@@ -87,7 +87,7 @@ cv.addEventListener('pointerdown', (e) => {
 		if (G.qa) hideQuick(); // a pinch moves the map under the chips
 		return;
 	}
-	if (G.place && G.place.kind === 'wall') {
+	if (G.place && lineKind(G.place.kind)) {
 		const h = wallHit(G.place, p);
 		drag = h
 			? { ...h, p0: p, c0: toCell(toWorld(p.x, p.y)), pts0: G.place.pts.map((q) => ({ ...q })), touch: true }
@@ -249,7 +249,7 @@ cv.addEventListener('pointerup', (e) => {
 	const p = lp(e);
 	if (G.place) {
 		const pl = G.place;
-		if (pl.kind === 'wall') {
+		if (lineKind(pl.kind)) {
 			pl.pts.push(wallSnap(pl.pts[pl.pts.length - 1], toCell(toWorld(p.x, p.y)))); // a tap: the next corner, exactly where the finger is
 			wallSet(pl);
 		} else ghostAt(p, d.touch);

@@ -48,6 +48,15 @@ const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }
 // with 10 of fodder), and leaves it tired for tired s (CHARGE.tiredSpd): give many orders and the army slows. With no food in the store
 // the order still goes; the hunger rule (UPKEEP.hunger) is the price then
 const ORDER = { mins: 0.5, tired: 6 };
+// scale (the Store's Learning by doing; Wright 1936: unit labour falls a constant share per doubling of the quantity made; here a plot's
+// yield rises per standing plot of its kind past the first, to a cap): yield × (1 + per × min(cap, n − 1)) with fx 'scale'
+const SCALE = { per: 0.05, cap: 4 };
+// field defences (Albert, Nov 3, "yes" to the report docs/4 Now/Field defences.md): caltrops, a sown square takes `hits` before it is flat; a horse
+// loses `horse` of its health and is stuck `stuck` s, a foot soldier `foot`; one unit is spiked once in `again` s. The archers' stakes: a
+// shooter that has stood `plant` s with Archers' stakes researched has its stake in the ground; a horse that strikes it takes `dmg` of its
+// health, its charge ends and it is thrown back; the stake comes up when the shooter moves
+const CALTROPS = { hits: 3, horse: 0.3, foot: 0.08, stuck: 3, again: 2 };
+const STAKES = { plant: 5, dmg: 0.25, shove: 10 };
 // forming (Albert, Nov 3, 10:48; his outside note of 09:35): while soldiers walk to their places in a shape, the one of lower precedence
 // gives way (foot, then archers, then riders, then siege: CLS order), and the push between two forming is soft; past share of the drill's
 // time, one not share of the way to its place holds where it stands and fights from there (the x% by x% rule)

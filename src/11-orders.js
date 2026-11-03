@@ -776,8 +776,8 @@ function prisonersTick() {
 const LOT = (k) => (TRADE[k] ? 100 : 10);
 const worth = (k) => (TRADE[k] ? TRADE[k] / 100 : GOODS[k].buy || GOODS[k].base); // spice is worth what it costs at a stop
 const coinOf = (o) => (G.P[o].debased ? MINT.price : 1); // debased coin: dearer to buy, less for what you sell
-const sellPrice = (o, k) => Math.floor((LOT(k) * worth(k) * (SELL + fxv(o, 'sell').a) * mkt(k)) / coinOf(o));
-const buyPrice = (o, k) => Math.ceil(LOT(k) * worth(k) * BUY * mkt(k) * coinOf(o));
+const sellPrice = (o, k) => Math.floor((LOT(k) * worth(k) * (SELL + fxv(o, 'sell').a) * mkt(k, o)) / coinOf(o));
+const buyPrice = (o, k) => Math.ceil(LOT(k) * worth(k) * BUY * mkt(k, o) * coinOf(o));
 const haveOf = (p, k) => (TRADE[k] ? p.res[k] : p.goods[k] || 0);
 function marketTrade(o, k, dir) {
 	const p = G.P[o],
@@ -1015,7 +1015,7 @@ function commitPlace() {
 	const kind = pl.kind,
 		B = BLD[kind],
 		p = G.P[0];
-	if (kind === 'wall') {
+	if (lineKind(kind)) {
 		const cells = pl.cells && pl.cells.length ? pl.cells : [toCell(pl.at)];
 		let built = 0,
 			blocked = 0,
@@ -1026,15 +1026,15 @@ function commitPlace() {
 					broke = true;
 					break;
 				}
-				if (build(0, 'wall', c.gx * NAVC + 5, c.gy * NAVC + 5)) built++;
+				if (build(0, kind, c.gx * NAVC + 5, c.gy * NAVC + 5)) built++;
 				else blocked++;
 			}
 		});
 		say(
 			built
-				? `${built} wall piece${built > 1 ? 's' : ''} going up${blocked ? `; ${blocked} blocked` : ''}${broke ? '; out of stone' : ''}.`
+				? `${built} ${kind === 'wall' ? 'wall piece' : B.name.toLowerCase()}${built > 1 ? 's' : ''} going up${blocked ? `; ${blocked} blocked` : ''}${broke ? '; out of stone' : ''}.`
 				: broke
-					? `Not enough stone: ${B.cost.s} a piece.`
+					? `Not enough: ${costText(B.cost)} a piece.`
 					: 'Something is in the way.',
 			'',
 			TOAST.mid,

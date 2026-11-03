@@ -86,6 +86,19 @@ function hurt(o, a, t, base) {
 	}
 	t.hp -= d;
 	t.hurtT = G.t;
+	if (a && !isB && t.staked && !a.q && hasTag(a.kind, 'mounted') && G.t - (a.stakeT || -9) > 2) {
+		// a horse rides onto a shooter's stake (STAKES): it is hurt, its charge ends, and it is thrown back
+		a.stakeT = G.t;
+		a.hp -= a.max * STAKES.dmg;
+		a.hurtT = G.t;
+		a.flashT = G.t;
+		a.chg = 0;
+		const dx = a.x - t.x,
+			dy = a.y - t.y,
+			dd = hyp(dx, dy) || 1;
+		if (!blockedCell(gcell(a.x + (dx / dd) * STAKES.shove, a.y + (dy / dd) * STAKES.shove), a.owner)) stepTo(a, a.x + (dx / dd) * STAKES.shove, a.y + (dy / dd) * STAKES.shove);
+		if (t.owner === 0 && (G.tick + t.id) % 60 === 0) say('A horse on the stakes!', 'good', TOAST.short);
+	}
 	if (a && !isB && a.chg > G.t && isSoldier(t) && !t.inside && G.t - (t.shoveT || -9) > 1) {
 		const dx = t.x - a.x,
 			dy = t.y - a.y,

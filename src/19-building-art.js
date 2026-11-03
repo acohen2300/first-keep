@@ -943,6 +943,31 @@ const ART = {
 		L_(2, f, 2, f - 30, lit(PLANK, -0.6), 0.8); // the ladder
 		for (let y = f - 4; y > f - 30; y -= 4) L_(0.5, y, 3.5, y, lit(PLANK, -0.6), 0.8);
 	},
+	abatis(c) {
+		// a felled trunk laid across the square, its branches sharpened and pointing out
+		const d = 10 * TILT,
+			f = d / 2;
+		P_(
+			[
+				[-6, f - 1],
+				[6, f - 3],
+				[6, f - 6],
+				[-6, f - 4],
+			],
+			lit('#6b4a2a', -0.1),
+			LINE,
+			0.4,
+		); // the trunk
+		for (const [x, y] of [
+			[-4, f - 4],
+			[-1, f - 5],
+			[2, f - 5.5],
+			[5, f - 6],
+		]) {
+			L_(x, y, x + 1.5, y - 5, lit(PLANK, -0.4), 1);
+			L_(x + 1.5, y - 5, x + 3, y - 3, lit(PLANK, -0.4), 0.8);
+		}
+	},
 	palisade(c) {
 		// one square of stakes: four pointed posts of timber, lashed, the shaded side east
 		const d = 10 * TILT,
@@ -1039,6 +1064,17 @@ const ART = {
 		E_(-8, r.d / 2 - 3, 3, 2, '#d8c27a', LINE, 0.3);
 		E_(9, r.d / 2 - 3, 3, 2, '#d8c27a', LINE, 0.3);
 		L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2);
+	},
+	store(c) {
+		// the storehouse: a long timber granary raised on stone staddles against damp and rats (the Roman horrea stood on pillars), a hip roof
+		// of tile, one wide door, air slits under the eaves; the side's banner at the gable
+		const d = 30 * TILT,
+			f = d / 2;
+		for (const x of [-11, -4, 4, 11]) P_([[x - 1.5, f + 1], [x + 1.5, f + 1], [x + 1.5, f - 3], [x - 1.5, f - 3]], lit(STONE, -0.2), LINE, 0.4); // the staddle stones
+		const r = block(30, 20, PLANK, 'plank', 'hip', TILE, 7, 26);
+		door(0, r.d / 2 - 3, 7, 8);
+		for (const x of [-11, -7, 7, 11]) win(x, r.d / 2 - 14, 1.6, 1.2, '#2a2014'); // the air slits
+		banner(0, r.d / 2 - 22, c, 8);
 	},
 	lumber(c) {
 		const r = block(30, 12, PLANK, 'plank', 'gable', '#7a5634', 6, 20);

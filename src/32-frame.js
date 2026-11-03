@@ -7,6 +7,10 @@ const ICON = {
 		20,
 		'<circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 1v4M10 15v4M1 10h4M15 10h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="10" cy="10" r="1.6" fill="currentColor"/>',
 	),
+	next: SVG(
+		20,
+		'<path d="M8 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+	), // the next page (the Build menu)
 	back: SVG(
 		20,
 		'<path d="M9 5l-5 5 5 5M4 10h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
@@ -95,6 +99,10 @@ const ICON = {
 		20,
 		'<path d="M4 17 V6 H6.5 V8.2 H8.6 V6 H11.4 V8.2 H13.5 V6 H16 V17 Z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M8.6 17 V13 H11.4 V17" fill="currentColor"/>',
 	),
+	swordup: SVG(
+		20,
+		'<path d="M10 1.5 L12 5 L12 12.5 L8 12.5 L8 5 Z" fill="currentColor"/><path d="M5 13.2 H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 13.5 V18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="10" cy="18.4" r="1.1" fill="currentColor"/>',
+	), // one sword, point up: the War tile (Nov 3: the crossed swords read as an X)
 	sword: SVG(
 		16,
 		'<path d="M13.5 2.5 L13.5 4.6 L6.6 11.5 L4.5 9.4 L11.4 2.5 Z" fill="currentColor"/><path d="M3.2 8.6 L7.4 12.8 M2.4 13.6 L5 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
@@ -653,16 +661,16 @@ function ui(force) {
 	if (G.place) {
 		const B = BLD[G.place.kind],
 			t = !G.place.at
-				? G.place.kind === 'wall'
-					? 'Tap where the wall starts'
+				? lineKind(G.place.kind)
+					? `Tap where the ${G.place.kind === 'wall' ? 'wall' : 'line'} starts`
 					: `Press where the ${B.name.toLowerCase()} goes · drag empty ground to look around`
 				: G.place.why
 					? G.place.why
-					: G.place.kind === 'wall'
-						? `${G.place.cells.length} pieces: tap a corner to add, drag a corner or the wall, or Build`
+					: lineKind(G.place.kind)
+						? `${G.place.cells.length} pieces: tap a corner to add, drag a corner or the line, or Build`
 						: `${B.name}: tap Build, or drag it to move · drag empty ground to look`;
 		txt('placeT', t);
-		$('placeUndo').hidden = G.place.kind !== 'wall' || !G.place.pts.length;
+		$('placeUndo').hidden = !lineKind(G.place.kind) || !G.place.pts.length;
 		$('placeOk').classList.toggle('dis', !G.place.at || !!G.place.why);
 	}
 	preview();

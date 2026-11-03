@@ -28,6 +28,7 @@ const dist = (a, b) => {
 };
 // One home for four things written by hand in many places (Nov 2, the standardization check, M1 to M4):
 const byId = (L, id) => L.find((x) => x.id === id); // the thing in a list with this id (a building, a unit, a find, a node)
+const lineKind = (k) => k === 'wall' || !!(BLD[k] && BLD[k].trap); // laid as a line, corner to corner (walls; traps in a band, Nov 3: the lilia of Alesia)
 const standing = (b, o) => b.owner === o && b.prog >= 1 && b.hp > 0; // a building of this side, finished and standing
 // how many work a find, counted at once so the next worker this second sees the crowd (recount sets it true every second)
 const crowd = (n, d) => (n.wk = Math.max(0, (n.wk || 0) + d));
@@ -315,6 +316,7 @@ const atCap = (o, kind) => bldsOf(o, kind).length >= capFor(o, kind);
 function capWhy(o, kind) {
 	// why no more of this building, or null
 	if (kind === 'apartment' && !ready(o, 'aqueduct').length) return 'Needs an Aqueduct standing';
+	if (BLD[kind].tech && !G.P[o].techs.has(BLD[kind].tech)) return `Research ${TECH.find((t) => t.id === BLD[kind].tech).name} first`; // a building behind a research step (caltrops)
 	if (!atCap(o, kind)) return null;
 	const c = capFor(o, kind),
 		A = G.P[o].age,
@@ -703,6 +705,7 @@ function gatherMul(o, n) {
 		EVM.gather *
 		(WEATHER[G.wx].gather || 1) *
 		(season().name === 'Winter' ? 1 + fxv(o, 'warm').a : 1); // warm homes: better winter work
+	if (n.kind === 'farm' && fxv(o, 'scale').a) m *= 1 + SCALE.per * Math.min(SCALE.cap, Math.max(0, bldsOf(o, n.farm.kind).filter((b) => standing(b, o)).length - 1)); // Learning by doing (SCALE)
 	if (n.kind === 'farm') {
 		m *= fxv(o, 'crop', [n.type]).m;
 		if (n.type === 'food') {

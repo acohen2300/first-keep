@@ -165,7 +165,7 @@ PLAY = """async () => {
   // back (Build 70): a card opened by a tap inside another remembers it; back returns to it; on the first card back closes, and closing forgets the way
   F.openCard({ type: 'help' }); tap('#card [data-act="guide:bld"]'); if (!G.card || G.card.type !== 'guide' || !G.card.from || G.card.from.type !== 'help') out.push('a card opened from Help did not remember Help');
   tap('#card [data-act="guide:unit"]'); tap('#card [data-act="cardback"]'); if (!G.card || G.card.type !== 'help') out.push('back did not return to Help (a page turned in the Guide is the same card)');
-  tap('#card [data-act="cardback"]'); if (G.card) out.push('back on the first card did not close it');
+  if (document.querySelector('#card [data-act="cardback"]')) out.push('the first card shows a back arrow (Nov 3: back only on a card with a parent)'); tap('#card [data-act="close"]'); if (G.card) out.push('Close on the first card did not close it');
   tap('#pauseB'); if (!G.paused) out.push('Pause did not pause'); tap('#pauseB'); if (G.paused) out.push('Pause did not resume');
   for (let i = 0; i < 90; i++) F.step(1 / 30); const t = G.t; F.saveGame(true); const S = F.readSave(); if (!S) out.push('no save written'); else { F.loadGame(S); if (Math.abs(F.G.t - t) > 0.5) out.push('reload lost the clock'); }
   // the save chain (Build 63): every old shape has a step; the oldest shape walks every step without throwing; a broken save falls back to the one before

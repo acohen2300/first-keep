@@ -30,6 +30,23 @@ function drawBld(b, s) {
 				ctx.lineTo(x + 6 * z, y + i * z * 0.6);
 				ctx.stroke();
 			}
+		} else if (k === 'caltrops') {
+			// a scatter of four-spiked irons, one spike always up; the squares trodden flat lose them one by one
+			ctx.strokeStyle = own ? 'rgba(90,100,110,.95)' : 'rgba(200,60,40,.9)';
+			ctx.lineWidth = Math.max(0.8, 0.9 * z);
+			const left = Math.max(1, CALTROPS.hits - (b.hits || 0));
+			for (let i = 0; i < left + 1; i++) {
+				const px = x + ((i * 7) % 11 - 5) * z * 0.8,
+					py = y + ((i * 5) % 7 - 3) * z * 0.5;
+				ctx.beginPath();
+				ctx.moveTo(px, py);
+				ctx.lineTo(px, py - 3 * z);
+				ctx.moveTo(px - 2 * z, py + 1 * z);
+				ctx.lineTo(px + 2 * z, py + 1 * z);
+				ctx.moveTo(px, py);
+				ctx.lineTo(px + 1.5 * z, py + 2 * z);
+				ctx.stroke();
+			}
 		} else {
 			ctx.strokeStyle = own ? 'rgba(120,90,40,.9)' : 'rgba(200,60,40,.9)';
 			ctx.lineWidth = 1.2;
@@ -784,6 +801,20 @@ function drawUnit(u, s) {
 		ctx.beginPath();
 		ctx.ellipse(sx, sy, 3.4 * z + 1, 1.6 * z + 0.6, 0, 0, 7);
 		ctx.fill();
+	}
+	if (u.staked && z > 0.55) {
+		// the archer's stake (STAKES): two sharpened stakes leaning out in front of the shooter, the way it faces
+		const f = (u.fx || 1) < 0 ? -1 : 1;
+		ctx.strokeStyle = '#8a6644';
+		ctx.lineWidth = Math.max(1, 1.2 * z);
+		ctx.lineCap = 'round';
+		for (const o of [-3, 3]) {
+			ctx.beginPath();
+			ctx.moveTo(sx + f * 5 * z + o * z * 0.6, sy + 1.5 * z);
+			ctx.lineTo(sx + f * 9 * z + o * z * 0.6, sy - 4 * z);
+			ctx.stroke();
+		}
+		ctx.lineCap = 'butt';
 	}
 	// the body in motion (Build 52): a rise and fall with each step; a lunge into the blow and back; a shooter's kick on the release
 	const face = (u.fx || 1) < 0 ? -1 : 1,

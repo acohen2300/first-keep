@@ -240,7 +240,7 @@ function drawGhost() {
 	const z = cam.z,
 		kind = pl.kind,
 		B = BLD[kind];
-	if (kind === 'wall') {
+	if (lineKind(kind)) {
 		const cells = pl.cells || [toCell(pl.at)];
 		let bad = 0;
 		for (const c of cells) {

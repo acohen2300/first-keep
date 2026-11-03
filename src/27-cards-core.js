@@ -199,10 +199,10 @@ const title = (name, sub, look) => ((cardHead = [name, sub || '', look]), ''); /
 function titleBar([name, sub, look], book, bookOn) {
 	const t = TITLE_SHORT[name] || name,
 		s = t === name ? sub : [sub, name].filter(Boolean).join(' · ');
-	const lock = cardLocked() ? ' class="dis"' : '', // a card that must be answered: close is dim (back too on Resume, which has nowhere to go back to)
-		lockB = G.card && G.card.type === 'resume' ? lock : '';
+	const lock = cardLocked() ? ' class="dis"' : '', // a card that must be answered: close is dim
+		from = !!(G.card && G.card.from); // back only on a card with a parent (Albert, Nov 3: cards open from the controller, so most have nowhere to go back to); the name widens into its slot
 	return (
-		`<div class="tb fm"><button data-act="cardback"${lockB} aria-label="Back">${ICON.back}</button><h3 class="s3${look ? ` a${look.age}${look.work !== undefined ? ' work' : ' life'}` : ''}"${look ? ` style="${look.work !== undefined ? toGo(1 - look.work) : `--hp:${Math.round(look.hp * 100)}%;--hc:${grad(look.hp * 2 - 1)}`}"` : ''}>${t}</h3>` +
+		`<div class="tb fm">${from ? `<button data-act="cardback" aria-label="Back">${ICON.back}</button>` : ''}<h3 class="${from ? 's3' : 's4'}${look ? ` a${look.age}${look.work !== undefined ? ' work' : ' life'}` : ''}"${look ? ` style="${look.work !== undefined ? toGo(1 - look.work) : `--hp:${Math.round(look.hp * 100)}%;--hc:${grad(look.hp * 2 - 1)}`}"` : ''}>${t}</h3>` +
 		`<button data-act="info" class="${book ? (bookOn ? 'on' : '') : 'dis'}" aria-label="About this">${ICON.book}</button>` +
 		`<button data-act="close"${lock} aria-label="Close">${ICON.close}</button></div>${s ? `<div class="sub">${s}</div>` : ''}`
 	);

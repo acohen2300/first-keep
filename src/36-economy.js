@@ -87,7 +87,7 @@ function priceAt(o, good, place, from) {
 	let m = 1;
 	if (place.kind === 'stop' && good === 'spice') return 0; // a stop sells spice; it does not buy it
 	m = place.want === good ? POST.want : 1;
-	return baseOf(good) * m * mkt(good) * (from ? distF(dist(from, place)) : 1) * fxv(o, 'trade').m;
+	return baseOf(good) * m * mkt(good, o) * (from ? distF(dist(from, place)) : 1) * fxv(o, 'trade').m;
 }
 // Trade has two lanes. One: a caravan with a route carries goods to a trade stop, the world's old markets, and sells them.
 // Two: a caravan with no route runs between your Market and an ally's Market or Town Center, paid by distance.
@@ -533,17 +533,18 @@ function upkeepTick() {
 			const o = p.id;
 			// everyone eats: a share a person, more for soldiers and far more for horses
 			// a villager working a bush, a field, fish or game eats from it, not from the store (Albert, Nov 1)
-			const per = UPKEEP.share * fxv(o, 'eat').m; // cooked food feeds better (hearth)
+			const per = UPKEEP.share, // a share; what each eats of it is fx 'eat' by the unit's keys: cooked food feeds better (hearth, everyone), the Store's ration (soldiers)
+				eats = (u) => shareOf(u) * per * fxv(o, 'eat', unitKeys(u.kind)).m;
 			let sh = 0;
 			for (const u of G.units)
 				if (u.owner === o) {
 					const n = u.kind === 'vil' && u.job === 'food' && !u.inside ? u.node || u.hunt : null;
 					if (n && (n.amt > 0 || n.hp > 0)) {
-						if (n.amt > 0 && isFinite(n.amt)) n.amt = Math.max(0, n.amt - shareOf(u) * per);
-					} else sh += shareOf(u);
+						if (n.amt > 0 && isFinite(n.amt)) n.amt = Math.max(0, n.amt - eats(u));
+					} else sh += eats(u);
 				}
-			sh = Math.max(0, sh - campEat(o, per)); // the soldiers in a camp eat from its depot (CAMP)
-			const eat = sh * per;
+			sh = Math.max(0, sh - campEat(o, eats)); // the soldiers in a camp eat from its depot (CAMP)
+			const eat = sh;
 			p.eats = eat * 60;
 			starveTick(p);
 			if (p.res.f >= eat) {
@@ -662,7 +663,11 @@ function setMake(b, type) {
 		}
 	return true;
 }
-const mkt = (k) => (G.mkt ? clamp(Math.max(0.01, G.mkt[k] ?? 1) ** (-1 / PRICE.eps[k]), PRICE.floor, PRICE.cap) : 1); // the price multiplier from the stock
+const mkt = (k, o) => {
+	if (!G.mkt) return 1;
+	const m = clamp(Math.max(0.01, G.mkt[k] ?? 1) ** (-1 / PRICE.eps[k]), PRICE.floor, PRICE.cap);
+	return o === undefined ? m : 1 + (m - 1) * fxv(o, 'band').m; // the price multiplier from the stock; a side with a Store sees it swing less (fx 'band': the ever-normal granary)
+};
 function debase(o) {
 	// Rome's denarius: more coin at once, worth less for good
 	const p = G.P[o];

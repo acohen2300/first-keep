@@ -301,7 +301,7 @@ function marketPage(b) {
 		page:
 			acts(choice(MKT_SELL.map((g) => [`mpick:${g}`, `<b>${nm(g)}</b><small>${fmt(Math.floor(haveOf(p, g)))}</small>`, g === k]), 's6', true), 'c1') +
 			acts(
-				info(`×${mkt(k).toFixed(2)}`, 'price') +
+				info(`×${mkt(k, 0).toFixed(2)}`, 'price') +
 					btn(`trade:sell:${k}`, 'Sell', `${LOT(k)} for +${sellPrice(0, k)}g`, haveOf(p, k) < LOT(k) ? 'dis' : '') +
 					btn(`trade:buy:${k}`, 'Buy', buy ? `${LOT(k)} for ${buyPrice(0, k)}g` : 'not sold here', !buy || p.res.g < buyPrice(0, k) ? 'dis' : ''),
 				'c3',

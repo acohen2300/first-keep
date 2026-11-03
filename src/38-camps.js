@@ -97,6 +97,14 @@ function campUnpack(u) {
 		}
 	for (const n of burnt) n.amt = 0;
 	if (burnt.length) G.nodes = G.nodes.filter((n) => !burnt.includes(n));
+	// the abatis (Albert, Nov 3, field defences: yes): a Camp's felled trees outside the palisade are laid as its outer work, a wall of
+	// branches on the forest side, for nothing; a tree inside the square is burned and gone
+	const abatis = [];
+	if (kind === 'camp') {
+		const h = CAMP.side / 2,
+			inSquare = (n) => Math.abs(-f.y * (n.x - u.x) + f.x * (n.y - u.y)) < h * NAVC && Math.abs(f.x * (n.x - u.x) + f.y * (n.y - u.y)) < h * NAVC;
+		for (const n of burnt) if (!inSquare(n)) abatis.push(n);
+	}
 	const id = NID++;
 	navOnce(() => {
 		for (const p of L) {
@@ -106,12 +114,20 @@ function campUnpack(u) {
 			G.blds.push(b);
 			G.navDirty = true;
 		}
+		for (const n of abatis) {
+			const sp = snapPos('abatis', n.x, n.y);
+			if (cells.has(sp.gy * NC + sp.gx) || NAV.occ[sp.gy * NC + sp.gx] || G.blds.some((b) => b.camp === id && b.gx === sp.gx && b.gy === sp.gy)) continue;
+			const b = mkBld(o, 'abatis', n.x, n.y, 1);
+			b.camp = id;
+			b.campKind = kind;
+			G.blds.push(b);
+		}
 		navRebuild();
 	});
 	u.hp = 0;
 	u.gone = true;
 	if (o === 0) {
-		news('war', `${kind === 'camp' ? 'The camp' : 'The outpost'} is unpacked at ${coord(u.x, u.y)}: ${burnt.length ? burnt.length + ' trees burned; ' : ''}soldiers and villagers raise it.`, 'good', TOAST.mid, { x: u.x, y: u.y });
+		news('war', `${kind === 'camp' ? 'The camp' : 'The outpost'} is unpacked at ${coord(u.x, u.y)}: ${burnt.length ? burnt.length + ' trees felled' + (abatis.length ? ', an abatis laid' : '') + '; ' : ''}soldiers and villagers raise it.`, 'good', TOAST.mid, { x: u.x, y: u.y });
 		sfx('thock', u.x, u.y);
 	}
 	return true;
@@ -128,7 +144,7 @@ function wagonTick(u, dt, SP) {
 // how many camps of a kind a side may have out at once, wagons on the road and in the line counted: one, two from the age after
 const campCap = (o, kind) => {
 	const p = G.P[o];
-	if (kind === 'camp' && (!p.techs.has('campwagons') || !p.techs.has(CAMP.need))) return 0;
+	if (kind === 'camp' && (!p.techs.has('campwagons') || !bldsOf(o, CAMP.need).some((b) => standing(b, o)))) return 0; // a Store standing (the stores a camp draws on)
 	const first = kind === 'camp' ? 2 : 1;
 	return p.age < first ? 0 : p.age >= first + 1 ? 2 : 1;
 };
@@ -142,7 +158,7 @@ const campsOut = (o, kind) => {
 };
 const campWhyTrain = (o, kind) => {
 	const cap = campCap(o, kind);
-	if (!cap) return kind === 'camp' ? (G.P[o].age < 2 ? 'Camp wagons need the Classical age.' : !G.P[o].techs.has(CAMP.need) ? 'A camp needs a store to draw on: research Stone granary at the Mill first.' : 'Research Camp wagons at the Stable first.') : 'Outpost wagons need the Bronze age.';
+	if (!cap) return kind === 'camp' ? (G.P[o].age < 2 ? 'Camp wagons need the Classical age.' : !bldsOf(o, CAMP.need).some((b) => standing(b, o)) ? 'A camp draws on a Store: build one first.' : 'Research Camp wagons at the Stable first.') : 'Outpost wagons need the Bronze age.';
 	if (campsOut(o, kind) >= cap) return cap === 1 ? `One ${kind} at a time; a second comes with the next age.` : `Two ${kind}s at a time.`;
 	return null;
 };
@@ -204,8 +220,8 @@ function campSendHome(u) {
 // ── step 2: supplies, the caravan's run, wear and mending, the camp as a pool for sickness
 const depotsOf = (o) => G.blds.filter((b) => b.owner === o && b.kind === 'depot' && b.prog >= 1 && b.hp > 0);
 const depotNear = (u) => depotsOf(u.owner).find((b) => dist(b, u) < CAMP.reach) || null; // the depot a unit eats from
-// every second (36-economy upkeepTick): the soldiers in a camp's reach eat from its depot; with it empty they are unsupplied
-function campEat(o, per) {
+// every second (36-economy upkeepTick): the soldiers in a camp's reach eat from its depot (eats(u): the food a unit eats a second); with it empty they are unsupplied
+function campEat(o, eats) {
 	const D = depotsOf(o);
 	if (!D.length) return 0;
 	let fed = 0;
@@ -216,10 +232,10 @@ function campEat(o, per) {
 			u.unfed = 0;
 			continue;
 		}
-		const eat = shareOf(u) * per;
+		const eat = eats(u);
 		if ((d.supply || 0) >= eat) {
 			d.supply -= eat;
-			fed += shareOf(u);
+			fed += eat;
 			u.unfed = 0;
 		} else {
 			u.unfed = (u.unfed || 0) + 1;
@@ -230,7 +246,7 @@ function campEat(o, per) {
 			}
 		}
 	}
-	return fed; // the shares fed here, off the town's bill
+	return fed; // the food eaten here, off the town's bill
 }
 // a Market caravan with nothing to carry runs food to a depot under half (caravanTick): the food from the store and the carter's fee in gold
 function supplyRun(u, dt, SP) {

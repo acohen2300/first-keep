@@ -133,6 +133,30 @@ const BLD = {
 		wood: true,
 		desc: 'Drop-off for food. Put it by berries, fields or game.',
 	},
+	// the Store (Albert, Nov 3, 13:15: "a Store building the age before the wagons ... cheaper ... doesn't spoil ... feeds the army better"):
+	// the ever-normal granary of Geng Shouchang (54 BC) and the Roman horrea on raised floors. Its effects are fx on the side: food spoils half
+	// as fast (raised, sealed stores against the open pit: SCIENCE), the army eats 10% less (a measured ration, the annona's 5 modii a month),
+	// prices swing half as far for its owner (the granary bought cheap and sold at the set price). A Camp wagon needs one. The Scale line
+	// researches here.
+	store: {
+		cap: [0, 1, 1, 2, 2],
+		invest: 2,
+		name: 'Store',
+		fp: 3,
+		hp: 400,
+		h: 20,
+		cost: { w: 150, s: 80 },
+		t: 30,
+		age: 1,
+		drop: [...RES],
+		fx: [
+			{ s: 'spoil', m: 0.5 },
+			{ s: 'eat', k: '#soldier', m: 0.9 },
+			{ s: 'band', m: 0.5 },
+		],
+		sab: 'burn',
+		desc: 'A raised, sealed storehouse and a drop-off for everything. Food spoils half as fast, soldiers eat 10% less, and prices swing half as far for you. A Camp wagon needs one. Researches the Scale line.',
+	},
 	lumber: {
 		cap: [4, 4, 4, 4, 4],
 		short: 'Lumber',
@@ -223,6 +247,22 @@ const BLD = {
 		trap: 'stakes',
 		walk: true,
 		desc: 'Sharpened stakes hidden in the grass: a foe who runs onto them is hurt, horses worst. Your people walk round them.',
+	},
+	// caltrops (Albert, Nov 3, field defences: yes): the Roman tribulus, four spikes with one always up, sown against horse; a strip drawn
+	// like a wall, hidden until sprung; each square takes CALTROPS.hits before it is trodden flat; a foe on horse is hurt more and stuck (38-natives trapsTick)
+	caltrops: {
+		nocap: 1,
+		name: 'Caltrops',
+		fp: 1,
+		hp: 40,
+		h: 0,
+		cost: { i: 6 },
+		t: 4,
+		age: 2,
+		tech: 'caltrops',
+		trap: 'caltrops',
+		walk: true,
+		desc: 'Iron spikes sown on the ground, hidden: a horse that crosses is hurt and stuck, a foot soldier hurt a little; each square takes three before it is trodden flat. Drag to sow a strip. Needs Caltrops at the Smithy.',
 	},
 	gate: {
 		nocap: 1,
@@ -472,6 +512,20 @@ const BLD = {
 		cd: 1.4,
 		wood: true,
 		desc: 'A timber tower: shoots enemies in range and sounds the horn.',
+	},
+	abatis: {
+		nocap: 1,
+		camp: 1,
+		name: 'Abatis',
+		fp: 1,
+		hp: 80,
+		h: 10,
+		cost: {},
+		t: 1,
+		age: 1,
+		wallish: true,
+		wood: true,
+		desc: 'Felled trees laid toward the enemy, their branches sharpened: the trees that stood where a camp was cut, kept as its outer work. Blocks everyone.',
 	},
 	palisade: {
 		nocap: 1,
@@ -754,7 +808,7 @@ const MENUS = [
 		id: 'land',
 		name: 'Land',
 		blurb: 'food, wood, stone, gold',
-		items: ['farm', 'pasture', 'treefarm', 'quarry', 'mill', 'dock', 'lumber', 'mining'],
+		items: ['farm', 'pasture', 'treefarm', 'quarry', 'mill', 'store', 'dock', 'lumber', 'mining'],
 	},
 	{
 		id: 'mil',
@@ -766,7 +820,7 @@ const MENUS = [
 		id: 'def',
 		name: 'Walls',
 		blurb: 'towers, walls and gates',
-		items: ['tower', 'castle', 'wall', 'gate', 'pit', 'stakes'],
+		items: ['tower', 'castle', 'wall', 'gate', 'pit', 'stakes', 'caltrops'],
 	},
 	{ id: 'shop', name: 'Trade', blurb: 'markets, goods and caravans', items: ['market', 'workshop', 'mint', 'foundry'] },
 	{
