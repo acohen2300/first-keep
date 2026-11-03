@@ -461,6 +461,7 @@ function think(p) {
 	// war: attack only when the odds beat this personality's nerve; a rival's wonder is attacked at once
 	if (per.bold < 2) decideWar(p, per);
 	if (p.ab === 'B') chokeClaim(p); // the B side of the test holds a gap on the road to its nearest foe (AB)
+	for (const u of soldiersOf(o)) if (u.state === 'goto' && u.drill && u.drill.until <= G.t) u.state = 'home'; // a hold that ended: back in the pool (p44)
 	if (per.diplo) aiDiplomacy(p, per);
 	allyDuty(p);
 }

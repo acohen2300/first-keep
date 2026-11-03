@@ -669,15 +669,15 @@ const rangeOf = (o, kind) => rangeFrom(BLD[kind].bow, BLD[kind].h) + (o === WILD
 // shows it (Build 60: towers aimed with the research added while the screen did not, so spies died unseen)
 const spySeen = (o, from) => UNIT.spy.stealth[from.q ? 1 : 0] + (from.q && o !== WILD ? fxv(o, 'spysight').a : 0);
 const lookout = (kind) => Math.round(LOOKOUT.base + LOOKOUT.k * Math.sqrt(BLD[kind].h || 0)); // how far a building sees, from its height
+const sightFx = (e) => (e.owner !== undefined && e.owner !== WILD && e.owner !== null ? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]) : FX1);
 const sightClear = (e) =>
 	((UNIT[e.kind]
 		? (e.owner !== undefined && e.owner !== WILD && e.owner !== null
 				? stats(e.owner, e.kind).sight
 				: UNIT[e.kind].sight) || 100
 		: lookout(e.kind)) + // a tier can add sight (the mounted scout)
-		(e.owner !== undefined && e.owner !== WILD && e.owner !== null
-			? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]).a
-			: 0)) *
+		sightFx(e).a) *
+	sightFx(e).m * // a step can add (a) or multiply (m): the Yam's 20% farther on horseback (p44)
 	(1 -
 		(1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) *
 			G.night *
@@ -707,7 +707,7 @@ function gatherMul(o, n) {
 		EVM.gather *
 		(WEATHER[G.wx].gather || 1) *
 		(season().name === 'Winter' ? 1 + fxv(o, 'warm').a : 1); // warm homes: better winter work
-	if (n.kind === 'farm' && fxv(o, 'scale').a) m *= 1 + SCALE.per * Math.min(SCALE.cap, Math.max(0, bldsOf(o, n.farm.kind).filter((b) => standing(b, o)).length - 1)); // Learning by doing (SCALE)
+	if (n.kind === 'farm' && SCALE.kinds.includes(n.farm.kind) && fxv(o, 'scale').a) m *= 1 + SCALE.per * Math.min(SCALE.cap, Math.max(0, bldsOf(o, n.farm.kind).filter((b) => standing(b, o)).length - 1)); // Learning by doing (SCALE)
 	if (n.kind === 'farm') {
 		m *= fxv(o, 'crop', [n.type]).m;
 		if (n.type === 'food') {

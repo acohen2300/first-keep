@@ -63,14 +63,16 @@ function campWhy(o, kind, x, y) {
 			n = BLD[p.kind].fp;
 		if (sp.gx < 2 || sp.gy < 2 || sp.gx + n > NC - 2 || sp.gy + n > NC - 2) return 'Too near the edge of the map.';
 	}
-	for (const c of campCells(L)) {
+	const cells = campCells(L);
+	for (const c of cells) {
 		if (NAV.lake[c]) return 'A camp cannot stand in water.';
 		if (NAV.occ[c]) return 'A building stands there.';
 	}
+	for (const n of G.nodes) if (n.kind !== 'tree' && n.amt > 0 && cells.has(Math.floor(n.y / NAVC) * NC + Math.floor(n.x / NAVC))) return 'A resource lies there.'; // stone, ore, berries under the square: the trees burn, the rest stays (p44)
 	const cx = x,
 		cy = y,
 		reach = (kind === 'camp' ? CAMP.side / 2 + 1 : 9) * NAVC;
-	for (const f of G.finds) if (!f.gone && hyp(f.x - cx, f.y - cy) < reach + (FINDS[f.kind].r || 30)) return 'Too near a find.';
+	for (const f of G.finds) if (!f.done && hyp(f.x - cx, f.y - cy) < reach + (FINDS[f.kind].r || 30)) return 'Too near a find.';
 	return null;
 }
 // the wagon unpacks: the trees under the camp burn, the sites are laid, the wagon is gone
@@ -103,7 +105,8 @@ function campUnpack(u) {
 	if (kind === 'camp') {
 		const h = CAMP.side / 2,
 			inSquare = (n) => Math.abs(-f.y * (n.x - u.x) + f.x * (n.y - u.y)) < h * NAVC && Math.abs(f.x * (n.x - u.x) + f.y * (n.y - u.y)) < h * NAVC;
-		for (const n of burnt) if (!inSquare(n)) abatis.push(n);
+		const homeSide = (n) => f.x * (n.x - u.x) + f.y * (n.y - u.y) > (h - 1) * NAVC; // the gate side (toward home): no abatis across it, the way in stays open (p44)
+		for (const n of burnt) if (!inSquare(n) && !homeSide(n)) abatis.push(n);
 	}
 	const id = NID++;
 	navOnce(() => {
@@ -150,7 +153,7 @@ const campCap = (o, kind) => {
 };
 const campsOut = (o, kind) => {
 	const ids = new Set();
-	for (const b of G.blds) if (b.owner === o && b.hp > 0 && b.campKind === kind) ids.add(b.camp);
+	for (const b of G.blds) if (b.owner === o && b.hp > 0 && b.campKind === kind && !BLD[b.kind].wallish) ids.add(b.camp); // a camp is its tents, not a last palisade tile (p44)
 	let n = ids.size;
 	for (const u of G.units) if (u.owner === o && u.hp > 0 && UNIT[u.kind].camp === kind) n++;
 	for (const b of G.blds) if (b.owner === o && b.hp > 0) for (const j of b.q) if (j.kind && UNIT[j.kind].camp === kind) n++;
@@ -259,8 +262,8 @@ function supplyRun(u, dt, SP) {
 		const d = nearest(depotsOf(o), home, (b) => (b.supply || 0) < CAMP.supply / 2 && !G.units.some((v) => v.sup && v.sup.b === b.id && v.hp > 0));
 		if (!d) return false;
 		const fee = Math.ceil((CAMP.fee * dist(home, d)) / 100),
-			food = Math.min(CAMP.load, Math.floor(p.res.f - 50));
-		if (food < 20 || p.res.g < fee) return false;
+			food = Math.min(CAMP.load, Math.floor(p.res.f - CAMP.keep.f));
+		if (food < 20 || p.res.g < fee + CAMP.keep.g) return false; // the treasury keeps its floor: a supply run never spends the next age (p44)
 		u.sup = { b: d.id, h: home.id, leg: 'load', food, fee };
 		return true;
 	}

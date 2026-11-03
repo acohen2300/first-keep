@@ -50,7 +50,7 @@ const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }
 const ORDER = { mins: 0.5, tired: 6 };
 // scale (the Store's Learning by doing; Wright 1936: unit labour falls a constant share per doubling of the quantity made; here a plot's
 // yield rises per standing plot of its kind past the first, to a cap): yield × (1 + per × min(cap, n − 1)) with fx 'scale'
-const SCALE = { per: 0.05, cap: 4 };
+const SCALE = { per: 0.05, cap: 4, kinds: ['farm', 'treefarm', 'quarry', 'mint', 'foundry'] }; // kinds: the five the step names (p44)
 // field defences (Albert, Nov 3, "yes" to the report docs/4 Now/Field defences.md): caltrops, a sown square takes `hits` before it is flat; a horse
 // loses `horse` of its health and is stuck `stuck` s, a foot soldier `foot`; one unit is spiked once in `again` s. The archers' stakes: a
 // shooter that has stood `plant` s with Archers' stakes researched has its stake in the ground; a horse that strikes it takes `dmg` of its

@@ -425,6 +425,22 @@ PLANTS = [
   ('16-sim-fight.js', "d *= (A.bld ?? 1) * (a && o !== WILD ? fxv(o, 'bld', unitKeys(a.kind)).m : 1);", "d *= A.bld ?? 1;", 'tests/combat.py', 'p42: research against buildings is not read', 'Hastin does not'),
   ('11-orders.js', "if (T.civ && T.civ !== p.civ) return 'Belongs to another people.';", ";", 'tests/combat.py', "p42: another people's speciality is open to all", 'open to Rome'),
   ('08-core.js', "\t\t: kind === 'hall' && civOf(o)\n\t\t\t? civOf(o).hall", "\t\t: false\n\t\t\t? civOf(o).hall", 'tests/combat.py', 'p42: the Hall is not named by its people', 'is not the Forum'),
+  # Build 80 preview 44 (--only=p44): the audit of Nov 3 (every claim checked), argon's three amendments
+  ('04-rules-tech.js', "{ id: 'mongolyam', civ: 'mongol'", "{ id: 'yam', civ: 'mongol'", 'tests/tables.py', 'p44: a Hall step takes the id of a Keep step', 'yam'),
+  ('04-rules-tech.js', "k: ['harcher', 'mongolha']", "k: ['horsearcher', 'mongolha']", 'tests/tables.py', 'p44: a step names a unit that is not there', 'horsearcher'),
+  ('34-save.js', "\t'site', // the camp piece a soldier raises: a reference, found again after a load (p44)\n", '', 'tests/saves.py', 'p44: a soldier raises a copy of its camp piece after a load', 'detached copy'),
+  ('11-orders.js', "G.t + CHARGE.cd * fxv(o, 'chargecd').m;", 'G.t + CHARGE.cd;', 'tests/combat.py', 'p44: Remounts do not shorten the charge', 'Remounts'),
+  ('08-core.js', "\tsightFx(e).m * //", '\t1 * //', 'tests/combat.py', 'p44: the Yam gives no sight', 'Yam'),
+  ('10-world.js', "Math.cos(ang) * (lakeRAt(L, ang) - 8), //", 'Math.cos(ang) * (L.r - 8), //', 'tests/combat.py', 'p44: fish on dry land in a bay', 'fish'),
+  ('17-ai.js', "\tfor (const u of soldiersOf(o)) if (u.state === 'goto' && u.drill && u.drill.until <= G.t) u.state = 'home'; // a hold that ended: back in the pool (p44)\n", '', 'tests/combat.py', 'p44: the B side loses the soldiers it sent to a choke', 'B side'),
+  ('38-camps.js', "for (const f of G.finds) if (!f.done &&", "for (const f of G.finds) if (!f.gone &&", 'tests/combat.py', 'p44: a cleared find blocks a camp', 'cleared find'),
+  ('38-camps.js', "\tfor (const n of G.nodes) if (n.kind !== 'tree' && n.amt > 0 && cells.has(", "\tfor (const n of []) if (n.kind !== 'tree' && n.amt > 0 && cells.has(", 'tests/combat.py', 'p44: a camp on a stone find', 'stone find'),
+  ('38-camps.js', "&& b.campKind === kind && !BLD[b.kind].wallish) ids.add(b.camp);", '&& b.campKind === kind) ids.add(b.camp);', 'tests/combat.py', 'p44: a last palisade tile counts as a camp', 'palisade'),
+  ('26-input.js', "if (why) return say(why + ' Send the wagon elsewhere.', 'warn', TOAST.mid);", 'if (why) {}', 'tests/combat.py', 'p44: a wagon drives to a spot it cannot take', 'without a word'),
+  ('26-input.js', "\tif (sol.length) orderCost(0, sol); // an order by tap costs the same meals as one from the controller (p44)\n", '', 'tests/combat.py', 'p44: an order by tap is free', 'took no meals'),
+  ('14-sim-troops.js', "tgt.tgt.drill.py === u.drill.py ? GRID.gap : 0;", 'tgt.tgt.drill.py === u.drill.py ? 0 : 0;', 'tests/combat.py', 'p44: a drilled soldier stands under the arrows', 'step toward'),
+  ('04-rules-tech.js', "{ s: 'make', k: ['workshop'], m: 1.1 }, //", "{ s: 'make', k: '*', m: 1.1 }, //", 'tests/combat.py', 'p44: the mint takes Division of labour twice', 'Division'),
+  ('08-core.js', "if (n.kind === 'farm' && SCALE.kinds.includes(n.farm.kind) && fxv(o, 'scale').a)", "if (n.kind === 'farm' && fxv(o, 'scale').a)", 'tests/combat.py', 'p44: Learning by doing reaches the pasture', 'pasture'),
 ]
 
 def plant_check():

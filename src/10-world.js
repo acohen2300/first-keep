@@ -662,8 +662,8 @@ function makeMap() {
 		const n = Math.round(L.r / 10);
 		for (let a = 0; a < n; a++) {
 			const ang = (a / n) * Math.PI * 2;
-			const fx = L.x + Math.cos(ang) * (L.r - 8),
-				fy = L.y + Math.sin(ang) * (L.r - 8);
+			const fx = L.x + Math.cos(ang) * (lakeRAt(L, ang) - 8), // on the drawn shore, not the old circle (p44)
+				fy = L.y + Math.sin(ang) * (lakeRAt(L, ang) - 8);
 			if (!onLand(fx, fy)) N.push(node('fish', 'food', fx, fy, 350 * RICH)); // fish swim in water: none on the great lake's causeways (B15)
 		}
 	});

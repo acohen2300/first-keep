@@ -134,6 +134,7 @@ function hudFire(i) {
 	if (slot < 0) return say('Every slot is out.', '', TOAST.short);
 	if (!S.length) return say(i === null || i === undefined ? freeWhy() : `${BN[i]}: nobody idle in it.`, '', TOAST.short);
 	if (sqOut(slot)) hudAbort(slot, true);
+	orderCost(0, S); // a squad sent: its meals, and tired after (ORDER); before the ETA, which counts the tired pace (p44)
 	const before = G.ordN || 0;
 	order(S, H.h);
 	if ((G.ordN || 0) === before) return; // refused: the reason was said
@@ -157,7 +158,6 @@ function hudFire(i) {
 		odds: 0.5,
 	};
 	H.firedT = performance.now();
-	orderCost(0, S); // a squad sent: its meals, and tired after (ORDER)
 	feel('thock');
 }
 // Go (✓ on War): every squad at home and ready (its blue ring) marches on the crosshair, each its own mission; with none ready, or before

@@ -443,6 +443,10 @@ function bonusText(n, o) {
 	]) // the keys gatherMul asks each stat with
 		if (stat)
 			for (const f of c[stat] || []) if (fxFits(f, keys) && f.m && f.m !== 1) named.push(`${f.name || fxName(f)} ×${f.m}`);
+	if (n.kind === 'farm' && SCALE.kinds.includes(n.farm.kind) && fxv(o, 'scale').a) {
+		const k = Math.min(SCALE.cap, Math.max(0, bldsOf(o, n.farm.kind).filter((b) => standing(b, o)).length - 1));
+		if (k) named.push(`Learning by doing ×${(1 + SCALE.per * k).toFixed(2)}`); // the Store's line, as gatherMul counts it (p44)
+	}
 	if (n.kind === 'farm' && n.type === 'food') {
 		if (season().farm !== 1) named.push(`${season().name} ×${season().farm}`);
 		if ((G.harvest || 1) !== 1) named.push(`harvest ×${G.harvest}`);

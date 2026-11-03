@@ -63,6 +63,13 @@ REST = """(raw) => {
   // an alert never waits for a voice; an effect does when the air is full
   if (!F.voiceFree('horn', F.VOICES.max + 5)) bad.push('an alert waits for a voice when the air is full');
   if (F.voiceFree('hit', F.VOICES.max)) bad.push('an effect takes a voice the alerts keep');
+  // p44: no unit field comes back from a save as a detached copy of a building or a unit (u.site did: a soldier raised a copy of its camp
+  // piece forever); every object a unit holds with an id is the one in the lists, or dropped
+  { F.newGame(9); F.act('close'); F.step(0.25); const G = F.G, k = F.keepOf(0), P = G.P[0]; P.age = 3; P.techs.add('campwagons');
+    const b = F.mkBld(0, 'medtent', k.x + 90, k.y + 90, 0); b.camp = 7; b.campKind = 'camp'; G.blds.push(b); F.navRebuild(); const u = F.addUnit(0, 'spear', k.x + 100, k.y + 100); u.state = 'home';
+    for (let i = 0; i < 60 && !u.site; i++) F.step(1 / 30); if (!u.site) bad.push('p44: a soldier by an unraised camp piece took no site'); else { F.saveGame(true); const sv = F.readSave(); if (!sv) bad.push('p44: could not save with a site held'); else { F.loadGame(sv);
+      const ids = new Map(); for (const x of F.G.blds) ids.set(x.id, x); for (const x of F.G.units) ids.set(x.id, x);
+      for (const v of F.G.units) for (const key in v) { const o = v[key]; if (o && typeof o === 'object' && !Array.isArray(o) && o.id !== undefined && o.kind !== undefined && ids.has(o.id) && ids.get(o.id) !== o) { bad.push('p44: after a load, ' + v.kind + '.' + key + ' is a detached copy of ' + o.kind + ' ' + o.id); break; } } } } }
   // All hands, when on, wears its ring on the Emergency page of the row
   F.emgStart('hands'); F.hudPage('war'); F.G.hud.sub = 'alarm'; F.ui(true); const h = document.querySelector('#row [data-act="emg:hands"]');
   if (!h || !/●/.test(h.textContent)) bad.push('Garrison is on but its button on War · Alarm does not show it (a dot beside its icon)');

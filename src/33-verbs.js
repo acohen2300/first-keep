@@ -538,6 +538,7 @@ const PLAY = {
 	wsq(a) {
 		const i = Number(a);
 		if (!hasCmd()) return say('Squads come with Battalions.', '', TOAST.short);
+		if (!G.hud.aim || !G.hud.h) return say('Tap Aim, then the map, then the squad.', '', TOAST.short); // no march on a crosshair that is not up (p44)
 		hudFire(i);
 	}, // a squad on the station: tap, and it marches on the crosshair
 	sqcard(a) {

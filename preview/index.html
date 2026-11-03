@@ -379,7 +379,7 @@ const SEASONS = [
 // cart, Procopius' and Ammianus' complaint); a wagon's wheels sink `wheelMud` times as deep as a foot (Pandolf's terrain factor on a cart, design);
 // rain, snow and frost take `wear` of a piece's health a minute (the same weathers that take CLIMATE.wear off blades), and soldiers mend a
 // piece under `mend` of its health as they raise one; a camp is a pool for sickness and plague like the town (HEALTH, the SIR spread)
-const CAMP = { build: 0.6, extra: 0.25, extraLog: 0.1, sendHome: 0.5, hold: 32, side: 14, burn: 1, tentHeal: 2, tentRng: 70, supply: 600, load: 200, fee: 2, reach: 120, wheelMud: 2, wear: 0.03, mend: 0.6, need: 'store' }; // side: the Camp's palisade, squares; need: the building a Camp wagon draws on (the Store, Albert 13:15) // cover: forest within so many walking squares; find: how far from the tap cover is looked for
+const CAMP = { build: 0.6, extra: 0.25, extraLog: 0.1, sendHome: 0.5, hold: 32, side: 14, burn: 1, tentHeal: 2, tentRng: 70, supply: 600, load: 200, fee: 2, reach: 120, wheelMud: 2, wear: 0.03, mend: 0.6, need: 'store', keep: { f: 150, g: 50 } }; // keep: what a supply run leaves in the store (p44) // side: the Camp's palisade, squares; need: the building a Camp wagon draws on (the Store, Albert 13:15) // cover: forest within so many walking squares; find: how far from the tap cover is looked for
 const UNIT = {
 	vil: {
 		name: 'Villager',
@@ -3351,7 +3351,7 @@ const TECH = [
 		t: 55,
 		fx: [
 			{ s: 'gather', k: ['mint'], m: 1.2 },
-			{ s: 'make', k: '*', m: 1.1 },
+			{ s: 'make', k: ['workshop'], m: 1.1 }, // the workshops; the mint has its own line above, not both (p44)
 		],
 		need: ['learning'],
 		desc: 'Each hand one task: the mint strikes 20% more, the workshops make 10% more.',
@@ -5162,12 +5162,12 @@ const TECH = [
 	{ id: 'trigger', civ: 'han', name: 'Bronze trigger', at: 'hall', line: 'Han', age: 2, w: 6, when: '200s BC', cost: { w: 200, i: 120 }, t: 40, fx: [{ s: 'rng', k: ['crossbow', 'hanxbow'], a: 20 }], desc: 'The cast bronze trigger, made in thousands to one pattern: crossbows reach 20 farther (the Luoyang arsenal held 11,181 of them in 13 BC).' },
 	{ id: 'changping', civ: 'han', name: 'Ever-normal granary', at: 'hall', line: 'Han', age: 2, w: 5, when: '54 BC', cost: { w: 220, g: 140 }, t: 42, fx: [{ s: 'band', m: 0.5 }], need: ['trigger'], desc: 'Geng Shouchang: the state bought in good years and sold in bad; prices swing half as far again for you.' },
 	{ id: 'taixue', civ: 'han', name: 'Taixue', at: 'hall', line: 'Han', age: 2, w: 6, when: '124 BC', cost: { w: 260, g: 180 }, t: 45, fx: [{ s: 'research', m: 0.9 }], need: ['changping'], desc: 'The imperial academy, the first school of the state: every research 10% quicker.' },
-	{ id: 'royalroad', civ: 'persian', name: 'Royal Road', at: 'hall', line: 'Persia', age: 2, w: 6, when: '500 BC', cost: { w: 200, g: 150 }, t: 40, fx: [{ s: 'spd', k: ['caravan', 'outpostcart', 'campcart'], m: 1.2 }], desc: 'Herodotus: 111 stages from Sardis to Susa, ninety days on foot and nine by the royal couriers; caravans and wagons 20% faster.' },
+	{ id: 'persianroad', civ: 'persian', name: 'Royal Road', at: 'hall', line: 'Persia', age: 2, w: 6, when: '500 BC', cost: { w: 200, g: 150 }, t: 40, fx: [{ s: 'spd', k: ['caravan', 'outpostcart', 'campcart'], m: 1.2 }], desc: 'Herodotus: 111 stages from Sardis to Susa, ninety days on foot and nine by the royal couriers; caravans and wagons 20% faster.' },
 	{ id: 'satrapy', civ: 'persian', name: 'Satrapies', at: 'hall', line: 'Persia', age: 2, w: 5, when: '520 BC', cost: { w: 220, g: 180 }, t: 42, fx: [{ s: 'taxtake', m: 1.2 }], need: ['royalroad'], desc: 'Darius set twenty satrapies and a fixed tribute from each, 14,560 talents a year: your vassals pay 20% more.' },
 	{ id: 'immortals', civ: 'persian', name: 'The Immortals', at: 'hall', line: 'Persia', age: 2, w: 6, when: '480 BC', cost: { w: 260, g: 200 }, t: 45, fx: [{ s: 'train', k: 'immortal', m: 0.75 }], need: ['satrapy'], desc: 'Kept at ten thousand, never more nor fewer, a fallen man replaced at once: Immortals train 25% faster.' },
-	{ id: 'yam', civ: 'mongol', name: 'Yam', at: 'hall', line: 'Mongol', age: 3, w: 6, when: '1234', cost: { w: 200, f: 150 }, t: 40, fx: [{ s: 'sight', k: '#mounted', m: 1.2 }], desc: 'The relay of stations 20 to 40 miles apart, a rider 200 miles a day with spare horses: everything on horseback sees 20% farther.' },
-	{ id: 'remounts', civ: 'mongol', name: 'Remounts', at: 'hall', line: 'Mongol', age: 3, w: 5, when: '1241', cost: { f: 240, g: 140 }, t: 42, fx: [{ s: 'charge', m: 0.75 }], need: ['yam'], desc: 'Three or four horses to a rider, a hundred miles a day in Hungary: a charge comes round 25% sooner.' },
-	{ id: 'tumen', civ: 'mongol', name: 'Tumen', at: 'hall', line: 'Mongol', age: 3, w: 6, when: '1206', cost: { w: 260, g: 180 }, t: 45, fx: [{ s: 'rng', k: ['horsearcher', 'mongolha'], a: 15 }], need: ['remounts'], desc: 'Tens, hundreds, thousands, ten thousands, and the composite bow that volleyed to 400 metres: horse archers reach 15 farther.' },
+	{ id: 'mongolyam', civ: 'mongol', name: 'Yam', at: 'hall', line: 'Mongol', age: 3, w: 6, when: '1234', cost: { w: 200, f: 150 }, t: 40, fx: [{ s: 'sight', k: '#mounted', m: 1.2 }], desc: 'The relay of stations 20 to 40 miles apart, a rider 200 miles a day with spare horses: everything on horseback sees 20% farther.' },
+	{ id: 'mongolremounts', civ: 'mongol', name: 'Remounts', at: 'hall', line: 'Mongol', age: 3, w: 5, when: '1241', cost: { f: 240, g: 140 }, t: 42, fx: [{ s: 'chargecd', m: 0.75 }], need: ['mongolyam'], desc: 'Three or four horses to a rider, a hundred miles a day in Hungary: a charge comes round 25% sooner.' },
+	{ id: 'tumen', civ: 'mongol', name: 'Tumen', at: 'hall', line: 'Mongol', age: 3, w: 6, when: '1206', cost: { w: 260, g: 180 }, t: 45, fx: [{ s: 'rng', k: ['harcher', 'mongolha'], a: 15 }], need: ['mongolremounts'], desc: 'Tens, hundreds, thousands, ten thousands, and the composite bow that volleyed to 400 metres: horse archers reach 15 farther.' },
 	{ id: 'sixth', civ: 'maurya', name: 'The sixth', at: 'hall', line: 'Maurya', age: 2, w: 6, when: '300 BC', cost: { w: 200, g: 150 }, t: 40, fx: [{ s: 'taxhate', m: 0.67 }], desc: 'The Arthashastra sets the share of the king at a sixth of the crop, and no more: the resentment a tax breeds falls by a third.' },
 	{ id: 'hastin', civ: 'maurya', name: 'Hastin', at: 'hall', line: 'Maurya', age: 2, w: 5, when: '305 BC', cost: { f: 260, g: 160 }, t: 42, fx: [{ s: 'bld', k: ['elephant', 'mauryael'], m: 1.2 }], need: ['sixth'], desc: 'Nine thousand elephants in the army Megasthenes saw: war elephants hit buildings 20% harder.' },
 	{ id: 'pataliputra', civ: 'maurya', name: 'Pataliputra', at: 'hall', line: 'Maurya', age: 2, w: 6, when: '300 BC', cost: { w: 280, s: 200 }, t: 45, fx: [{ s: 'bhp', k: ['tower', 'wall', 'gate'], m: 1.25 }], need: ['hastin'], desc: 'A capital of 570 towers and 64 gates behind a moat: your walls, gates and towers stand a quarter stronger.' },
@@ -5680,7 +5680,7 @@ const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }
 const ORDER = { mins: 0.5, tired: 6 };
 // scale (the Store's Learning by doing; Wright 1936: unit labour falls a constant share per doubling of the quantity made; here a plot's
 // yield rises per standing plot of its kind past the first, to a cap): yield × (1 + per × min(cap, n − 1)) with fx 'scale'
-const SCALE = { per: 0.05, cap: 4 };
+const SCALE = { per: 0.05, cap: 4, kinds: ['farm', 'treefarm', 'quarry', 'mint', 'foundry'] }; // kinds: the five the step names (p44)
 // field defences (Albert, Nov 3, "yes" to the report docs/4 Now/Field defences.md): caltrops, a sown square takes `hits` before it is flat; a horse
 // loses `horse` of its health and is stuck `stuck` s, a foot soldier `foot`; one unit is spiked once in `again` s. The archers' stakes: a
 // shooter that has stood `plant` s with Archers' stakes researched has its stake in the ground; a horse that strikes it takes `dmg` of its
@@ -6177,6 +6177,8 @@ const TITLE_SHORT = {
 // the ledger's words (earn and spend, 08-core)
 const LEDGER_WORD = {
 	gather: 'gathered',
+	orders: 'marching orders',
+	camps: 'camp supply',
 	finds: 'finds',
 	trade: 'trade',
 	tithe: 'the Throne tithe',
@@ -6368,11 +6370,14 @@ const WHY = {
 	viamil: 'Vegetius I.9: the recruit must march twenty miles in five summer hours at the common step and twenty-four at the full step; the roads made the pace possible.',
 	horrea: 'The Horrea Galbae had 140 ground-floor rooms; Rome had some 290 granaries, their floors raised on pillars against the damp and the rats.',
 	castra: 'Josephus and Vegetius: a legion dug its camp every night, ditch, bank and palisade, each man carrying his stakes; the camp was the army at rest and the fort when attacked.',
-	trigger: 'The Han arsenal at Luoyang listed 11,181 crossbows in 13 BC; the cast bronze trigger was made to one pattern in thousands, and the heavy bow took 159 kg to cock.',
+	trigger: 'The arsenal of Donghai commandery listed 537,707 crossbows in 13 BC, 11,181 of them imperial (the Yinwan slips); the cast bronze trigger was made to one pattern in thousands, and the heavy bow took 159 kg to cock.',
 	changping: 'Geng Shouchang proposed the ever-normal granary in 54 BC: the state bought grain in good years and sold it in bad at a steady price; the Qing kept over two million tonnes in them.',
 	taixue: 'The Taixue, the imperial academy, trained the officials of the Han; by the second century it is said to have held thirty thousand students.',
 	satrapy: 'Herodotus III.89: Darius divided the empire into twenty satrapies and set each its tribute, 14,560 talents a year in all, India alone 360 talents of gold dust.',
 	immortals: 'Herodotus VII.83: the ten thousand were never more nor fewer, for a man lost was replaced at once from the waiting list.',
+	persianroad: 'Herodotus counted 111 stages from Sardis to Susa: ninety days on foot, nine for the royal couriers with a fresh horse at every station. Game: caravans and wagons 20% faster.',
+	mongolyam: 'The yam of 1234: stations 20 to 40 miles apart, a rider 200 miles a day on spare horses. Game: everything on horseback sees 20% farther.',
+	mongolremounts: 'Three or four horses to a rider; in Hungary in 1241 the army made a hundred miles a day. Game: a charge comes round 25% sooner.',
 	tumen: 'The Mongol army counted in tens: arban, zuun, mingghan, tumen; its composite bow shot aimed at 150 metres and volleyed to 400.',
 	sixth: 'The Arthashastra sets the share of the king at one sixth of the crop; the trade overseer capped the profit of merchants at five parts in a hundred on local goods and ten on foreign.',
 	hastin: 'Megasthenes counted 9,000 elephants, 8,000 chariots, 30,000 horse and 600,000 foot in the army of Chandragupta; elephants broke gates and walls.',
@@ -8029,15 +8034,15 @@ const rangeOf = (o, kind) => rangeFrom(BLD[kind].bow, BLD[kind].h) + (o === WILD
 // shows it (Build 60: towers aimed with the research added while the screen did not, so spies died unseen)
 const spySeen = (o, from) => UNIT.spy.stealth[from.q ? 1 : 0] + (from.q && o !== WILD ? fxv(o, 'spysight').a : 0);
 const lookout = (kind) => Math.round(LOOKOUT.base + LOOKOUT.k * Math.sqrt(BLD[kind].h || 0)); // how far a building sees, from its height
+const sightFx = (e) => (e.owner !== undefined && e.owner !== WILD && e.owner !== null ? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]) : FX1);
 const sightClear = (e) =>
 	((UNIT[e.kind]
 		? (e.owner !== undefined && e.owner !== WILD && e.owner !== null
 				? stats(e.owner, e.kind).sight
 				: UNIT[e.kind].sight) || 100
 		: lookout(e.kind)) + // a tier can add sight (the mounted scout)
-		(e.owner !== undefined && e.owner !== WILD && e.owner !== null
-			? fxv(e.owner, 'sight', ['*', ...(UNIT[e.kind] ? unitKeys(e.kind) : bldKeys(e.kind))]).a
-			: 0)) *
+		sightFx(e).a) *
+	sightFx(e).m * // a step can add (a) or multiply (m): the Yam's 20% farther on horseback (p44)
 	(1 -
 		(1 - NIGHT_SIGHT * (0.6 + 0.4 * moonLight())) *
 			G.night *
@@ -8067,7 +8072,7 @@ function gatherMul(o, n) {
 		EVM.gather *
 		(WEATHER[G.wx].gather || 1) *
 		(season().name === 'Winter' ? 1 + fxv(o, 'warm').a : 1); // warm homes: better winter work
-	if (n.kind === 'farm' && fxv(o, 'scale').a) m *= 1 + SCALE.per * Math.min(SCALE.cap, Math.max(0, bldsOf(o, n.farm.kind).filter((b) => standing(b, o)).length - 1)); // Learning by doing (SCALE)
+	if (n.kind === 'farm' && SCALE.kinds.includes(n.farm.kind) && fxv(o, 'scale').a) m *= 1 + SCALE.per * Math.min(SCALE.cap, Math.max(0, bldsOf(o, n.farm.kind).filter((b) => standing(b, o)).length - 1)); // Learning by doing (SCALE)
 	if (n.kind === 'farm') {
 		m *= fxv(o, 'crop', [n.type]).m;
 		if (n.type === 'food') {
@@ -8819,7 +8824,7 @@ function canPlace(o, kind, x, y) {
 				return 'Something is in the way';
 			}
 			// a lane on every side (Build 63: "buildings need buffers"); walls, gates and crops may touch anything
-			if (!B.wallish && !B.crop && !B.trap && !BLD[q.kind].wallish && !BLD[q.kind].crop && !BLD[q.kind].trap)
+			if (!B.wallish && !B.crop && !BLD[q.kind].wallish && !BLD[q.kind].crop && !BLD[q.kind].trap) // (a trap placed keeps no margin at all, above)
 				return 'Leave a gap: two squares round each building';
 			const touch = i === -1 || j === -1 || i === n || j === n; // the ring next to the footprint
 			if (touch && !BLD[q.kind].wallish && (TRAINERS.has(kind) || TRAINERS.has(q.kind)))
@@ -9631,8 +9636,8 @@ function makeMap() {
 		const n = Math.round(L.r / 10);
 		for (let a = 0; a < n; a++) {
 			const ang = (a / n) * Math.PI * 2;
-			const fx = L.x + Math.cos(ang) * (L.r - 8),
-				fy = L.y + Math.sin(ang) * (L.r - 8);
+			const fx = L.x + Math.cos(ang) * (lakeRAt(L, ang) - 8), // on the drawn shore, not the old circle (p44)
+				fy = L.y + Math.sin(ang) * (lakeRAt(L, ang) - 8);
 			if (!onLand(fx, fy)) N.push(node('fish', 'food', fx, fy, 350 * RICH)); // fish swim in water: none on the great lake's causeways (B15)
 		}
 	});
@@ -10472,7 +10477,7 @@ const chargeWhy = (o, S, bn) => {
 function charge(o, S, bn, quiet) {
 	// a burst of speed and blows for a few seconds, then tired; once a half minute a battalion
 	if (chargeWhy(o, S, bn)) return false;
-	(G.chargeT = G.chargeT || {})[o + ':' + (bn ?? 'all')] = G.t + CHARGE.cd;
+	(G.chargeT = G.chargeT || {})[o + ':' + (bn ?? 'all')] = G.t + CHARGE.cd * fxv(o, 'chargecd').m; // the Mongol Remounts: a charge comes round sooner (p44)
 	for (const u of S)
 		if (isSoldier(u) && !UNIT[u.kind].bonly) {
 			u.chg = G.t + CHARGE.secs;
@@ -10876,7 +10881,7 @@ function commitPlace() {
 		});
 		say(
 			built
-				? `${built} ${kind === 'wall' ? 'wall piece' : B.name.toLowerCase()}${built > 1 ? 's' : ''} going up${blocked ? `; ${blocked} blocked` : ''}${broke ? '; out of stone' : ''}.`
+				? `${built} ${kind === 'wall' ? 'wall piece' + (built > 1 ? 's' : '') : B.name.toLowerCase()} going up${blocked ? `; ${blocked} blocked` : ''}${broke ? '; out of ' + LONG[Object.keys(B.cost)[0]] : ''}.` // a trap is named by its plural already; its own resource runs out (p44)
 				: broke
 					? `Not enough: ${costText(B.cost)} a piece.`
 					: 'Something is in the way.',
@@ -13063,20 +13068,22 @@ function solTick(u, dt, SP) {
 			u.tgt = tgt;
 		} else u.focus = null;
 	} // told to hit this one
+	// in a drill, a foe striking this line is met one rank's step (GRID.gap) past the blade's reach, no farther (argon, Nov 3; p44)
+	const step = tgt && drillOn(u) && tgt.tgt && tgt.tgt.owner === o && tgt.tgt.drill && tgt.tgt.drill.px === u.drill.px && tgt.tgt.drill.py === u.drill.py ? GRID.gap : 0;
 	if (
 		tgt &&
 		o === 0 &&
 		u.state !== 'attack' &&
 		!u.focus &&
 		temperOf(u) === T_HOLD &&
-		edge(u, tgt) > reachOf(rngOf(u), tgt)
+		edge(u, tgt) > reachOf(rngOf(u), tgt) + step
 	)
 		tgt = null; // hold ground: fight only what comes within reach
 	if (drillOn(u)) drillHold(u);
 	if (tgt && drillOn(u)) {
-		const placed = u.gx !== undefined && hyp(u.px + u.gx - u.x, u.py + u.gy - u.y) < 6;
-		if (!placed || edge(u, tgt) > reachOf(rngOf(u), tgt)) tgt = null;
-	} // in a drill (the War Director): to its place in the line or the arc first, then it fights only what is in reach (Albert, Nov 3)
+		const placed = u.gx !== undefined && hyp(u.px + u.gx - u.x, u.py + u.gy - u.y) < 6 + step;
+		if (!placed || edge(u, tgt) > reachOf(rngOf(u), tgt) + step) tgt = null;
+	} // in a drill (the War Director): to its place in the line or the arc first, then it fights only what is in reach (Albert, Nov 3), plus the step
 	if (u.state === 'escort') {
 		escortPick(u);
 		if (!u.esc) u.state = 'home';
@@ -14503,6 +14510,7 @@ function think(p) {
 	// war: attack only when the odds beat this personality's nerve; a rival's wonder is attacked at once
 	if (per.bold < 2) decideWar(p, per);
 	if (p.ab === 'B') chokeClaim(p); // the B side of the test holds a gap on the road to its nearest foe (AB)
+	for (const u of soldiersOf(o)) if (u.state === 'goto' && u.drill && u.drill.until <= G.t) u.state = 'home'; // a hold that ended: back in the pool (p44)
 	if (per.diplo) aiDiplomacy(p, per);
 	allyDuty(p);
 }
@@ -22279,7 +22287,7 @@ function drawGhost() {
 		const cells = pl.cells || [toCell(pl.at)];
 		let bad = 0;
 		for (const c of cells) {
-			const ok = !canPlace(0, 'wall', c.gx * NAVC + 5, c.gy * NAVC + 5);
+			const ok = !canPlace(0, kind, c.gx * NAVC + 5, c.gy * NAVC + 5); // the line's own kind: a trap keeps no lane (p44)
 			if (!ok) bad++;
 			ctx.fillStyle = ok ? 'rgba(120,220,120,.55)' : 'rgba(222,90,68,.65)';
 			ctx.fillRect(SX(c.gx * NAVC), SY(c.gy * NAVC), NAVC * z, NAVC * z * TILT);
@@ -22297,7 +22305,7 @@ function drawGhost() {
 		const last = cells[cells.length - 1];
 		pl.why = bad === cells.length ? 'blocked' : null;
 		tag(
-			`${cells.length} × ${B.cost.s} stone${bad ? ' · ' + bad + ' blocked' : ''}`,
+			`${cells.length} × ${costText(B.cost)}${bad ? ' · ' + bad + ' blocked' : ''}`,
 			SX(last.gx * NAVC) + 12,
 			SY(last.gy * NAVC) - 14,
 		);
@@ -22473,7 +22481,7 @@ function drawLakeRipples(z) {
 			if (Math.abs(L.x - cam.x) > cw / cam.z / 2 + L.r || Math.abs(L.y - cam.y) > ch / cam.z / TILT / 2 + L.r) continue;
 			for (let i = 0; i < (L.river ? 2 : 18); i++) {
 				const a = i * 2.4 + G.t * 0.05,
-					r = L.r * (0.25 + 0.6 * ((i * 0.37 + G.t * 0.02) % 1));
+					r = lakeRAt(L, a) * (0.25 + 0.6 * ((i * 0.37 + G.t * 0.02) % 1)); // within the drawn shore (p44)
 				const lx = SX(L.x + Math.cos(a) * r),
 					ly = SY(L.y + Math.sin(a) * r);
 				ctx.beginPath();
@@ -23581,9 +23589,15 @@ function order(S, h) {
 		);
 		if (sol.length) march(sol, e, FINDS[e.kind].name);
 	} else {
+		for (const w of S)
+			if (UNIT[w.kind].camp) {
+				const why = campWhy(0, UNIT[w.kind].camp, e.x, e.y); // the wagon's spot is checked when it is sent, not after the drive (p44)
+				if (why) return say(why + ' Send the wagon elsewhere.', 'warn', TOAST.mid);
+			}
 		go(S, e.x, e.y);
 		if (sol.length) march(sol, e, coord(e.x, e.y));
 	}
+	if (sol.length) orderCost(0, sol); // an order by tap costs the same meals as one from the controller (p44)
 	ripple(e.x, e.y, '#ffd35e');
 	G.pickMore = false;
 }
@@ -24081,6 +24095,10 @@ function bonusText(n, o) {
 	]) // the keys gatherMul asks each stat with
 		if (stat)
 			for (const f of c[stat] || []) if (fxFits(f, keys) && f.m && f.m !== 1) named.push(`${f.name || fxName(f)} ×${f.m}`);
+	if (n.kind === 'farm' && SCALE.kinds.includes(n.farm.kind) && fxv(o, 'scale').a) {
+		const k = Math.min(SCALE.cap, Math.max(0, bldsOf(o, n.farm.kind).filter((b) => standing(b, o)).length - 1));
+		if (k) named.push(`Learning by doing ×${(1 + SCALE.per * k).toFixed(2)}`); // the Store's line, as gatherMul counts it (p44)
+	}
 	if (n.kind === 'farm' && n.type === 'food') {
 		if (season().farm !== 1) named.push(`${season().name} ×${season().farm}`);
 		if ((G.harvest || 1) !== 1) named.push(`harvest ×${G.harvest}`);
@@ -27469,6 +27487,7 @@ const PLAY = {
 	wsq(a) {
 		const i = Number(a);
 		if (!hasCmd()) return say('Squads come with Battalions.', '', TOAST.short);
+		if (!G.hud.aim || !G.hud.h) return say('Tap Aim, then the map, then the squad.', '', TOAST.short); // no march on a crosshair that is not up (p44)
 		hudFire(i);
 	}, // a squad on the station: tap, and it marches on the crosshair
 	sqcard(a) {
@@ -28310,6 +28329,7 @@ const evSave = () => {
 }; // no unit or node objects in the save
 let staleSave = 0; // the version of a save we could not open, so the setup card can say so
 const SKIP_U = new Set([
+	'site', // the camp piece a soldier raises: a reference, found again after a load (p44)
 	'fleeFrom',
 	'focus',
 	'tgt',
@@ -30930,14 +30950,16 @@ function campWhy(o, kind, x, y) {
 			n = BLD[p.kind].fp;
 		if (sp.gx < 2 || sp.gy < 2 || sp.gx + n > NC - 2 || sp.gy + n > NC - 2) return 'Too near the edge of the map.';
 	}
-	for (const c of campCells(L)) {
+	const cells = campCells(L);
+	for (const c of cells) {
 		if (NAV.lake[c]) return 'A camp cannot stand in water.';
 		if (NAV.occ[c]) return 'A building stands there.';
 	}
+	for (const n of G.nodes) if (n.kind !== 'tree' && n.amt > 0 && cells.has(Math.floor(n.y / NAVC) * NC + Math.floor(n.x / NAVC))) return 'A resource lies there.'; // stone, ore, berries under the square: the trees burn, the rest stays (p44)
 	const cx = x,
 		cy = y,
 		reach = (kind === 'camp' ? CAMP.side / 2 + 1 : 9) * NAVC;
-	for (const f of G.finds) if (!f.gone && hyp(f.x - cx, f.y - cy) < reach + (FINDS[f.kind].r || 30)) return 'Too near a find.';
+	for (const f of G.finds) if (!f.done && hyp(f.x - cx, f.y - cy) < reach + (FINDS[f.kind].r || 30)) return 'Too near a find.';
 	return null;
 }
 // the wagon unpacks: the trees under the camp burn, the sites are laid, the wagon is gone
@@ -30970,7 +30992,8 @@ function campUnpack(u) {
 	if (kind === 'camp') {
 		const h = CAMP.side / 2,
 			inSquare = (n) => Math.abs(-f.y * (n.x - u.x) + f.x * (n.y - u.y)) < h * NAVC && Math.abs(f.x * (n.x - u.x) + f.y * (n.y - u.y)) < h * NAVC;
-		for (const n of burnt) if (!inSquare(n)) abatis.push(n);
+		const homeSide = (n) => f.x * (n.x - u.x) + f.y * (n.y - u.y) > (h - 1) * NAVC; // the gate side (toward home): no abatis across it, the way in stays open (p44)
+		for (const n of burnt) if (!inSquare(n) && !homeSide(n)) abatis.push(n);
 	}
 	const id = NID++;
 	navOnce(() => {
@@ -31017,7 +31040,7 @@ const campCap = (o, kind) => {
 };
 const campsOut = (o, kind) => {
 	const ids = new Set();
-	for (const b of G.blds) if (b.owner === o && b.hp > 0 && b.campKind === kind) ids.add(b.camp);
+	for (const b of G.blds) if (b.owner === o && b.hp > 0 && b.campKind === kind && !BLD[b.kind].wallish) ids.add(b.camp); // a camp is its tents, not a last palisade tile (p44)
 	let n = ids.size;
 	for (const u of G.units) if (u.owner === o && u.hp > 0 && UNIT[u.kind].camp === kind) n++;
 	for (const b of G.blds) if (b.owner === o && b.hp > 0) for (const j of b.q) if (j.kind && UNIT[j.kind].camp === kind) n++;
@@ -31126,8 +31149,8 @@ function supplyRun(u, dt, SP) {
 		const d = nearest(depotsOf(o), home, (b) => (b.supply || 0) < CAMP.supply / 2 && !G.units.some((v) => v.sup && v.sup.b === b.id && v.hp > 0));
 		if (!d) return false;
 		const fee = Math.ceil((CAMP.fee * dist(home, d)) / 100),
-			food = Math.min(CAMP.load, Math.floor(p.res.f - 50));
-		if (food < 20 || p.res.g < fee) return false;
+			food = Math.min(CAMP.load, Math.floor(p.res.f - CAMP.keep.f));
+		if (food < 20 || p.res.g < fee + CAMP.keep.g) return false; // the treasury keeps its floor: a supply run never spends the next age (p44)
 		u.sup = { b: d.id, h: home.id, leg: 'load', food, fee };
 		return true;
 	}
@@ -31873,6 +31896,7 @@ function hudFire(i) {
 	if (slot < 0) return say('Every slot is out.', '', TOAST.short);
 	if (!S.length) return say(i === null || i === undefined ? freeWhy() : `${BN[i]}: nobody idle in it.`, '', TOAST.short);
 	if (sqOut(slot)) hudAbort(slot, true);
+	orderCost(0, S); // a squad sent: its meals, and tired after (ORDER); before the ETA, which counts the tired pace (p44)
 	const before = G.ordN || 0;
 	order(S, H.h);
 	if ((G.ordN || 0) === before) return; // refused: the reason was said
@@ -31896,7 +31920,6 @@ function hudFire(i) {
 		odds: 0.5,
 	};
 	H.firedT = performance.now();
-	orderCost(0, S); // a squad sent: its meals, and tired after (ORDER)
 	feel('thock');
 }
 // Go (✓ on War): every squad at home and ready (its blue ring) marches on the crosshair, each its own mission; with none ready, or before
@@ -32762,6 +32785,7 @@ window.__fk = {
 	orderCost,
 	drillHold,
 	chokeAt,
+	drillOn,
 	ambushAt,
 	coverNear,
 	AMBUSH,
