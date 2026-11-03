@@ -593,9 +593,15 @@ function order(S, h) {
 		);
 		if (sol.length) march(sol, e, FINDS[e.kind].name);
 	} else {
+		for (const w of S)
+			if (UNIT[w.kind].camp) {
+				const why = campWhy(0, UNIT[w.kind].camp, e.x, e.y); // the wagon's spot is checked when it is sent, not after the drive (p44)
+				if (why) return say(why + ' Send the wagon elsewhere.', 'warn', TOAST.mid);
+			}
 		go(S, e.x, e.y);
 		if (sol.length) march(sol, e, coord(e.x, e.y));
 	}
+	if (sol.length) orderCost(0, sol); // an order by tap costs the same meals as one from the controller (p44)
 	ripple(e.x, e.y, '#ffd35e');
 	G.pickMore = false;
 }

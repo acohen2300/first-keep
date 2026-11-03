@@ -6,6 +6,9 @@ from playwright.async_api import async_playwright
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JS = """() => {
   const F = window.__fk, bad = [];
+  // one step to an id, first of all: with two, TECHBY keeps the last and everything below reads the wrong step (p44: three Hall steps had
+  // taken the Keep's and the Stable's ids)
+  { const seen = new Set(); for (const t of F.TECH) { if (seen.has(t.id)) bad.push('two steps carry the id ' + t.id); seen.add(t.id); } if (bad.length) return { bad, steps: F.TECH.length, scen: 0 }; }
   // research: every need is a real step, and no chain comes back to itself
   for (const t of F.TECH) for (const n of F.needsOf(t)) if (!F.TECHBY[n]) bad.push(t.id + ' waits on ' + n + ', which is no step');
   const st = {};
@@ -16,6 +19,12 @@ JS = """() => {
   for (const [k, S] of Object.entries(F.SCENARIOS)) for (const t of S.techs || []) if (!F.TECHBY[t]) bad.push('scenario ' + k + ' names ' + t + ', which is no step');
   // a limit in every age
   F.newGame(1); F.act('close'); const G = F.G, P = G.P[0];
+  // every key an effect names is a real unit, building, node kind, type or tag (p44: Tumen named 'horsearcher'; the unit is 'harcher')
+  { const tags = new Set(); for (const k in F.UNIT) for (const g of F.UNIT[k].tags || []) tags.add('#' + g); tags.add('#soldier'); tags.add('#wallish'); tags.add('#guard'); tags.add('#bld'); tags.add('#research'); // the keys 08-core and 11-orders ask with
+    const kinds = new Set([...Object.keys(F.UNIT), ...Object.keys(F.BLD)]);
+    for (const k in F.BLD) { if (F.BLD[k].crop) kinds.add(F.BLD[k].crop); for (const m in F.BLD[k].makes || {}) { kinds.add(m); for (const r in F.BLD[k].makes[m].from || {}) kinds.add(r); } }
+    for (const n of F.G.nodes) { kinds.add(n.kind); if (n.type) kinds.add(n.type); } kinds.add('meat'); // a kill is a meat node (12-sim-core)
+    for (const t of F.TECH) for (const f of t.fx || []) for (const k of f.k === undefined || f.k === '*' ? [] : [].concat(f.k)) if (!(k === '*' || tags.has(k) || kinds.has(k))) bad.push(t.id + ' names ' + k + ', which is no unit, building, node, type or tag'); }
   for (let a = 0; a < F.AGES.length; a++) { P.age = a; for (const k in F.BLD) if (F.BLD[k].cap && !Number.isFinite(F.capFor(0, k))) bad.push(k + ' has no limit in the ' + F.AGES[a].name + ' age'); }
   P.age = 0;
   // a cancel gives back what was paid: with the Encyclopedie's discount on, research and cancel at the Town Center

@@ -327,20 +327,22 @@ function solTick(u, dt, SP) {
 			u.tgt = tgt;
 		} else u.focus = null;
 	} // told to hit this one
+	// in a drill, a foe striking this line is met one rank's step (GRID.gap) past the blade's reach, no farther (argon, Nov 3; p44)
+	const step = tgt && drillOn(u) && tgt.tgt && tgt.tgt.owner === o && tgt.tgt.drill && tgt.tgt.drill.px === u.drill.px && tgt.tgt.drill.py === u.drill.py ? GRID.gap : 0;
 	if (
 		tgt &&
 		o === 0 &&
 		u.state !== 'attack' &&
 		!u.focus &&
 		temperOf(u) === T_HOLD &&
-		edge(u, tgt) > reachOf(rngOf(u), tgt)
+		edge(u, tgt) > reachOf(rngOf(u), tgt) + step
 	)
 		tgt = null; // hold ground: fight only what comes within reach
 	if (drillOn(u)) drillHold(u);
 	if (tgt && drillOn(u)) {
-		const placed = u.gx !== undefined && hyp(u.px + u.gx - u.x, u.py + u.gy - u.y) < 6;
-		if (!placed || edge(u, tgt) > reachOf(rngOf(u), tgt)) tgt = null;
-	} // in a drill (the War Director): to its place in the line or the arc first, then it fights only what is in reach (Albert, Nov 3)
+		const placed = u.gx !== undefined && hyp(u.px + u.gx - u.x, u.py + u.gy - u.y) < 6 + step;
+		if (!placed || edge(u, tgt) > reachOf(rngOf(u), tgt) + step) tgt = null;
+	} // in a drill (the War Director): to its place in the line or the arc first, then it fights only what is in reach (Albert, Nov 3), plus the step
 	if (u.state === 'escort') {
 		escortPick(u);
 		if (!u.esc) u.state = 'home';

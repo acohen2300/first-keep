@@ -628,7 +628,7 @@ const chargeWhy = (o, S, bn) => {
 function charge(o, S, bn, quiet) {
 	// a burst of speed and blows for a few seconds, then tired; once a half minute a battalion
 	if (chargeWhy(o, S, bn)) return false;
-	(G.chargeT = G.chargeT || {})[o + ':' + (bn ?? 'all')] = G.t + CHARGE.cd;
+	(G.chargeT = G.chargeT || {})[o + ':' + (bn ?? 'all')] = G.t + CHARGE.cd * fxv(o, 'chargecd').m; // the Mongol Remounts: a charge comes round sooner (p44)
 	for (const u of S)
 		if (isSoldier(u) && !UNIT[u.kind].bonly) {
 			u.chg = G.t + CHARGE.secs;
@@ -1032,7 +1032,7 @@ function commitPlace() {
 		});
 		say(
 			built
-				? `${built} ${kind === 'wall' ? 'wall piece' : B.name.toLowerCase()}${built > 1 ? 's' : ''} going up${blocked ? `; ${blocked} blocked` : ''}${broke ? '; out of stone' : ''}.`
+				? `${built} ${kind === 'wall' ? 'wall piece' + (built > 1 ? 's' : '') : B.name.toLowerCase()} going up${blocked ? `; ${blocked} blocked` : ''}${broke ? '; out of ' + LONG[Object.keys(B.cost)[0]] : ''}.` // a trap is named by its plural already; its own resource runs out (p44)
 				: broke
 					? `Not enough: ${costText(B.cost)} a piece.`
 					: 'Something is in the way.',

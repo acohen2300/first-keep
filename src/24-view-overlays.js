@@ -244,7 +244,7 @@ function drawGhost() {
 		const cells = pl.cells || [toCell(pl.at)];
 		let bad = 0;
 		for (const c of cells) {
-			const ok = !canPlace(0, 'wall', c.gx * NAVC + 5, c.gy * NAVC + 5);
+			const ok = !canPlace(0, kind, c.gx * NAVC + 5, c.gy * NAVC + 5); // the line's own kind: a trap keeps no lane (p44)
 			if (!ok) bad++;
 			ctx.fillStyle = ok ? 'rgba(120,220,120,.55)' : 'rgba(222,90,68,.65)';
 			ctx.fillRect(SX(c.gx * NAVC), SY(c.gy * NAVC), NAVC * z, NAVC * z * TILT);
@@ -262,7 +262,7 @@ function drawGhost() {
 		const last = cells[cells.length - 1];
 		pl.why = bad === cells.length ? 'blocked' : null;
 		tag(
-			`${cells.length} × ${B.cost.s} stone${bad ? ' · ' + bad + ' blocked' : ''}`,
+			`${cells.length} × ${costText(B.cost)}${bad ? ' · ' + bad + ' blocked' : ''}`,
 			SX(last.gx * NAVC) + 12,
 			SY(last.gy * NAVC) - 14,
 		);
@@ -429,7 +429,7 @@ function drawLakeRipples(z) {
 			if (Math.abs(L.x - cam.x) > cw / cam.z / 2 + L.r || Math.abs(L.y - cam.y) > ch / cam.z / TILT / 2 + L.r) continue;
 			for (let i = 0; i < (L.river ? 2 : 18); i++) {
 				const a = i * 2.4 + G.t * 0.05,
-					r = L.r * (0.25 + 0.6 * ((i * 0.37 + G.t * 0.02) % 1));
+					r = lakeRAt(L, a) * (0.25 + 0.6 * ((i * 0.37 + G.t * 0.02) % 1)); // within the drawn shore (p44)
 				const lx = SX(L.x + Math.cos(a) * r),
 					ly = SY(L.y + Math.sin(a) * r);
 				ctx.beginPath();

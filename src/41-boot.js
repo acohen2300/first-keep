@@ -226,6 +226,7 @@ window.__fk = {
 	orderCost,
 	drillHold,
 	chokeAt,
+	drillOn,
 	ambushAt,
 	coverNear,
 	AMBUSH,

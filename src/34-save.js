@@ -224,6 +224,7 @@ const evSave = () => {
 }; // no unit or node objects in the save
 let staleSave = 0; // the version of a save we could not open, so the setup card can say so
 const SKIP_U = new Set([
+	'site', // the camp piece a soldier raises: a reference, found again after a load (p44)
 	'fleeFrom',
 	'focus',
 	'tgt',

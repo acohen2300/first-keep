@@ -12,7 +12,7 @@
 // cart, Procopius' and Ammianus' complaint); a wagon's wheels sink `wheelMud` times as deep as a foot (Pandolf's terrain factor on a cart, design);
 // rain, snow and frost take `wear` of a piece's health a minute (the same weathers that take CLIMATE.wear off blades), and soldiers mend a
 // piece under `mend` of its health as they raise one; a camp is a pool for sickness and plague like the town (HEALTH, the SIR spread)
-const CAMP = { build: 0.6, extra: 0.25, extraLog: 0.1, sendHome: 0.5, hold: 32, side: 14, burn: 1, tentHeal: 2, tentRng: 70, supply: 600, load: 200, fee: 2, reach: 120, wheelMud: 2, wear: 0.03, mend: 0.6, need: 'store' }; // side: the Camp's palisade, squares; need: the building a Camp wagon draws on (the Store, Albert 13:15) // cover: forest within so many walking squares; find: how far from the tap cover is looked for
+const CAMP = { build: 0.6, extra: 0.25, extraLog: 0.1, sendHome: 0.5, hold: 32, side: 14, burn: 1, tentHeal: 2, tentRng: 70, supply: 600, load: 200, fee: 2, reach: 120, wheelMud: 2, wear: 0.03, mend: 0.6, need: 'store', keep: { f: 150, g: 50 } }; // keep: what a supply run leaves in the store (p44) // side: the Camp's palisade, squares; need: the building a Camp wagon draws on (the Store, Albert 13:15) // cover: forest within so many walking squares; find: how far from the tap cover is looked for
 const UNIT = {
 	vil: {
 		name: 'Villager',
