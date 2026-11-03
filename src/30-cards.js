@@ -591,6 +591,45 @@ const CARDS = {
 			live
 		);
 	},
+	menu(c) {
+		// the Build card (preview 33, back by Albert's yes yes, Nov 3, 15:50; MENU-SPEC §8): six tabs, a folder; the buildings four a rank,
+		// words only: the name, how many of how many, the cost. Dim: a later age, or all built; short: the first thing it waits on, in red. The
+		// page holds the height of the biggest tab, so the tabs never move under the finger
+		const p = G.P[0],
+			M = MENUS.find((m) => m.id === c.id) || MENUS[0];
+		G.lastMenu = M.id;
+		const item = (k) => {
+			const B = BLD[k],
+				lock = B.age > p.age,
+				cp = capFor(0, k),
+				n = bldsOf(0, k).length,
+				full = !lock && n >= cp,
+				can = afford(p, B.cost),
+				short = need(B.cost).split(' ')[0]; // the first resource it waits on: every tile two lines
+			return btn(
+				`build:${k}`,
+				B.short || bldName(0, k),
+				lock ? `${AGES[B.age].name} age` : (cp > 1 && cp < 99 ? `${n}/${cp} · ` : '') + (full ? 'all built' : can ? costText(B.cost) : `short ${short}`), // one of a kind shows no count: two lines a tile
+				lock || full ? 'dis' : '',
+				lock || full ? undefined : can ? 1 : fillOf(B.cost),
+			);
+		},
+			grid4 = (cells) => acts(cells.join('') + empty().repeat((4 - (cells.length % 4)) % 4), 'c4');
+		return (
+			title('Build') +
+			folder(
+				'menu',
+				MENUS.map((m) => {
+					const open = m.items.filter((k) => BLD[k].age <= p.age); // every building the age allows at its limit: the tab says so with a check (Build 61)
+					return [m.id, m.name, open.length && open.every((k) => bldsOf(0, k).length >= capFor(0, k)) ? '✓' : ''];
+				}),
+				M.id,
+				`<div class="hold" style="--n:${Math.ceil(Math.max(...MENUS.map((m) => m.items.length)) / 4)}">${grid4(M.items.map(item))}</div>`,
+				'c6',
+			) +
+			fold('menu', 'What each one does', M.items.map((k) => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''))
+		);
+	},
 	research: () => researchHTML(),
 	// the mail (Build 64): every line kept, newest first, by group; a group can hide its previews here or from the preview's ×. Six lines a
 	// page, Previous and Next: the 30 kept are five pages, nothing scrolls (N13, Albert Oct 31: "a page system, nothing more")

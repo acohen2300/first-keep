@@ -25769,6 +25769,45 @@ const CARDS = {
 			live
 		);
 	},
+	menu(c) {
+		// the Build card (preview 33, back by Albert's yes yes, Nov 3, 15:50; MENU-SPEC §8): six tabs, a folder; the buildings four a rank,
+		// words only: the name, how many of how many, the cost. Dim: a later age, or all built; short: the first thing it waits on, in red. The
+		// page holds the height of the biggest tab, so the tabs never move under the finger
+		const p = G.P[0],
+			M = MENUS.find((m) => m.id === c.id) || MENUS[0];
+		G.lastMenu = M.id;
+		const item = (k) => {
+			const B = BLD[k],
+				lock = B.age > p.age,
+				cp = capFor(0, k),
+				n = bldsOf(0, k).length,
+				full = !lock && n >= cp,
+				can = afford(p, B.cost),
+				short = need(B.cost).split(' ')[0]; // the first resource it waits on: every tile two lines
+			return btn(
+				`build:${k}`,
+				B.short || bldName(0, k),
+				lock ? `${AGES[B.age].name} age` : (cp > 1 && cp < 99 ? `${n}/${cp} · ` : '') + (full ? 'all built' : can ? costText(B.cost) : `short ${short}`), // one of a kind shows no count: two lines a tile
+				lock || full ? 'dis' : '',
+				lock || full ? undefined : can ? 1 : fillOf(B.cost),
+			);
+		},
+			grid4 = (cells) => acts(cells.join('') + empty().repeat((4 - (cells.length % 4)) % 4), 'c4');
+		return (
+			title('Build') +
+			folder(
+				'menu',
+				MENUS.map((m) => {
+					const open = m.items.filter((k) => BLD[k].age <= p.age); // every building the age allows at its limit: the tab says so with a check (Build 61)
+					return [m.id, m.name, open.length && open.every((k) => bldsOf(0, k).length >= capFor(0, k)) ? '✓' : ''];
+				}),
+				M.id,
+				`<div class="hold" style="--n:${Math.ceil(Math.max(...MENUS.map((m) => m.items.length)) / 4)}">${grid4(M.items.map(item))}</div>`,
+				'c6',
+			) +
+			fold('menu', 'What each one does', M.items.map((k) => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''))
+		);
+	},
 	research: () => researchHTML(),
 	// the mail (Build 64): every line kept, newest first, by group; a group can hide its previews here or from the preview's ×. Six lines a
 	// page, Previous and Next: the 30 kept are five pages, nothing scrolls (N13, Albert Oct 31: "a page system, nothing more")
@@ -27028,12 +27067,11 @@ const ACT = {
 		refresh();
 	},
 	menu(a) {
-		const H = G.hud;
-		H.page = 'town';
-		H.sub = a;
-		H.shut = false;
-		closeCard();
-	}, // a build group by name (a milestone's button, a villager's Build): the controller's Town page at that group
+		const id = MENUS.some((m) => m.id === a) ? a : G.lastMenu || 'land',
+			keep = G.card && G.card.type === 'menu';
+		openCard({ type: 'menu', id });
+		if (keep) $('card').scrollTop = 0;
+	}, // the Build card at a tab (a tab, Town's Build, a milestone's button, a villager's Build): the last tab opened, else Land (preview 33)
 	idlego() {
 		const u = unitsOf(0, 'vil').find(freeVil);
 		if (!u) return;
@@ -27321,10 +27359,6 @@ const ACT = {
 	ctlback() {
 		ctlBack();
 	},
-	bpage() {
-		G.hud.bpage = (G.hud.bpage || 0) + 1; // the Build page turned; it wraps in townCells
-		feel('tick');
-	},
 	mapt() {
 		const H = G.hud;
 		if (fullPage()) H.mapOn = mapShown() ? null : H.page + (H.sub || '');
@@ -27336,7 +27370,7 @@ const ACT = {
 		fit();
 	}, // Close: the row folds to its one tile; the tile opens it again
 	alarmpg() {
-		ACT.menu('build');
+		closeCard();
 		G.hud.page = 'war';
 		G.hud.sub = 'alarm';
 	}, // the villagers' Alarm, on the War page
@@ -27615,7 +27649,7 @@ const PLAY = {
 					.filter((u) => u.kind === 'vil')
 					.map((u) => u.id);
 		if (!a) setPick([]);
-		ACT.menu('build');
+		ACT.menu();
 	}, // whatever you place next, the picked villagers raise it (or the villager whose card asked: its job picker's Build)
 	phold() {
 		for (const u of picked())
@@ -32079,34 +32113,17 @@ function jobsCells() {
 	}).join('');
 }
 // Town: People over Build (column 2); Build: the six groups, Research, Relations; a group: its buildings, words only (name, cost)
-function townCells(sub) {
-	const p = G.P[0],
-		V = unitsOf(0, 'vil'),
-		site = G.blds.find((b) => b.owner === 0 && b.hp > 0 && b.prog < 1);
-	if (!sub)
-		return (
-			at(pic('train:vil', ICON.people, ROW_WORD.people, 'vb' + (V.some(freeVil) ? ' go' : trainWhy(0, 'vil') ? ' dis' : ''), null, ' aria-label="People: train a villager"'), 2, 1) +
-			at(pic('ctlsub:build', ICON.hammer, ROW_WORD.build, 'vb' + (site ? ' work' : ''), null, site ? ` style="${toGo(1 - site.prog)}"` : ''), 2, 2)
-		);
-	// Build (Albert, Nov 3, 13:13: "a button that brings up the full building menu"): every building of your age, in the groups' order, as word
-	// cells (name, and under it 'short' or 'all built'); eight a page, More › turning the page, Back; Research and Relations hold the first
-	// page's last two places. A building of a later age is not shown (it was a dim word; the Guide lists them). The groups page is cut.
-	const rs = researchable(),
-		all = MENUS.flatMap((m) => m.items).filter((k) => BLD[k].age <= p.age),
-		pageN = Math.max(1, Math.ceil((all.length + 2) / 8)),
-		pg = Math.min(G.hud.bpage || 0, pageN - 1),
-		fixed = pg === 0 ? [pic('card:research', ICON.book, ROW_WORD.research, 'vo' + (rs ? '' : ' dis'), rs || null), pic('relopen', ICON.ally, ROW_WORD.relations, 'vo')] : [],
-		from = pg === 0 ? 0 : 6 + (pg - 1) * 8,
-		here = all.slice(from, from + 8 - fixed.length),
-		cell = (k) => {
-			const B = BLD[k],
-				full = bldsOf(0, k).length >= capFor(0, k);
-			return wcell(`build:${k}`, B.short || bldName(0, k), full ? 'all built' : afford(p, B.cost) ? '' : 'short', 'v2' + (full ? ' dis' : ''), ` aria-label="${bldName(0, k)}: ${costText(B.cost)}"`);
-		};
+function townCells() {
+	// Town: People over Build (column 2), Research over Relations (column 6), the small map between. Build opens the Build card, the six tabs of
+	// preview 33 (Albert, Nov 3, 15:50: preview 33's card back, yes yes); the paged list in the row (preview 39) is cut
+	const V = unitsOf(0, 'vil'),
+		site = G.blds.find((b) => b.owner === 0 && b.hp > 0 && b.prog < 1),
+		rs = researchable();
 	return (
-		fill([...fixed, ...here.map(cell)]) +
-		(pageN > 1 ? at(pic('bpage', ICON.next, `${pg + 1} of ${pageN}`, 'v2'), 6, 1) : '') +
-		backCell('v2')
+		at(pic('train:vil', ICON.people, ROW_WORD.people, 'vb' + (V.some(freeVil) ? ' go' : trainWhy(0, 'vil') ? ' dis' : ''), null, ' aria-label="People: train a villager"'), 2, 1) +
+		at(pic('menu', ICON.hammer, ROW_WORD.build, 'vb' + (site ? ' work' : ''), null, site ? ` style="${toGo(1 - site.prog)}"` : ''), 2, 2) +
+		at(pic('card:research', ICON.book, ROW_WORD.research, 'vb' + (rs ? '' : ' dis'), rs || null), 6, 1) +
+		at(pic('relopen', ICON.ally, ROW_WORD.relations, 'vb'), 6, 2)
 	);
 }
 // War: Aim · Go (tap: the crosshair up; again: everyone goes; hold: everyone home), the three squads (tap: send; hold: its card), Kinds ›,
@@ -32166,7 +32183,7 @@ function warCells(sub) {
 }
 const researchable = () => [...G.rdy.values()].reduce((a, v) => a + v, 0); // research you can start now (the count the strip shows)
 const idleSoldiers = () => sendable().filter((u) => u.state === 'home');
-const fullPage = () => (G.hud.page === 'town' ? !!G.hud.sub : !!G.hud.page); // a page that fills the five columns (not rest, not Town's column)
+const fullPage = () => (G.hud.page === 'town' ? false : !!G.hud.page); // a page that fills the five columns (not rest, not Town's columns)
 const mapShown = () => (fullPage() ? G.hud.mapOn === G.hud.page + (G.hud.sub || '') : !!G.hud.map);
 function ctlHTML() {
 	const H = G.hud,
@@ -32180,7 +32197,7 @@ function ctlHTML() {
 		at(badge(pic('ctl:war', ICON.swordup, ROW_WORD.war, (page === 'war' ? 'wo' : 'wb') + (G.incoming ? ' raid' : '')), sol), 7, 1) +
 		at(pic('mapt', ICON.map, ROW_WORD.map, 'vb mb' + (mapShown() ? ' on' : ''), null, ' data-hold="ctlshut"'), 7, 2);
 	if (page === 'jobs') h += jobsCells();
-	else if (page === 'town') h += townCells(H.sub);
+	else if (page === 'town') h += townCells();
 	else if (page === 'war') h += warCells(H.sub);
 	if (mapShown()) h += `<div class="mapb" style="grid-column:${CTL.map[0]} / ${CTL.map[1] + 1};grid-row:1 / 3"></div>`;
 	// the Map tile in one spot on every page, under War (Albert, Nov 3, 13:13: "same spot always"; 11:00: "it can replace whatever icons it
@@ -32200,7 +32217,7 @@ function ctlOpen(page) {
 }
 function ctlBack() {
 	const H = G.hud;
-	H.sub = H.page === 'town' && H.sub && H.sub !== 'build' ? 'build' : null;
+	H.sub = null;
 }
 // the row on show, patched in place (a button under a finger stays the same button); the small map's one home is its box
 function rowUI() {

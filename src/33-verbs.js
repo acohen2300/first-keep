@@ -79,12 +79,11 @@ const ACT = {
 		refresh();
 	},
 	menu(a) {
-		const H = G.hud;
-		H.page = 'town';
-		H.sub = a;
-		H.shut = false;
-		closeCard();
-	}, // a build group by name (a milestone's button, a villager's Build): the controller's Town page at that group
+		const id = MENUS.some((m) => m.id === a) ? a : G.lastMenu || 'land',
+			keep = G.card && G.card.type === 'menu';
+		openCard({ type: 'menu', id });
+		if (keep) $('card').scrollTop = 0;
+	}, // the Build card at a tab (a tab, Town's Build, a milestone's button, a villager's Build): the last tab opened, else Land (preview 33)
 	idlego() {
 		const u = unitsOf(0, 'vil').find(freeVil);
 		if (!u) return;
@@ -372,10 +371,6 @@ const ACT = {
 	ctlback() {
 		ctlBack();
 	},
-	bpage() {
-		G.hud.bpage = (G.hud.bpage || 0) + 1; // the Build page turned; it wraps in townCells
-		feel('tick');
-	},
 	mapt() {
 		const H = G.hud;
 		if (fullPage()) H.mapOn = mapShown() ? null : H.page + (H.sub || '');
@@ -387,7 +382,7 @@ const ACT = {
 		fit();
 	}, // Close: the row folds to its one tile; the tile opens it again
 	alarmpg() {
-		ACT.menu('build');
+		closeCard();
 		G.hud.page = 'war';
 		G.hud.sub = 'alarm';
 	}, // the villagers' Alarm, on the War page
@@ -666,7 +661,7 @@ const PLAY = {
 					.filter((u) => u.kind === 'vil')
 					.map((u) => u.id);
 		if (!a) setPick([]);
-		ACT.menu('build');
+		ACT.menu();
 	}, // whatever you place next, the picked villagers raise it (or the villager whose card asked: its job picker's Build)
 	phold() {
 		for (const u of picked())
