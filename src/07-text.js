@@ -218,6 +218,8 @@ const WHY = {
 	fieldcraft: 'Hunters read ground, wind and track long before there were soldiers; the first warriors were hunters.',
 	camps: 'Every Roman army dug a ditched camp each night; a fed, rested army was never surprised asleep.',
 	marching: 'Roman roads and Roman discipline moved a legion twenty miles a day with its baggage; Caesar did thirty.',
+	campwagons: 'A Roman camp travelled on its baggage train: tents, tools, mills and grain, a mule to every eight men and carts behind; the Hussites went further and fought from the wagons.',
+	fieldlog: 'Marius made his soldiers carry their own kit, the mules of Marius; a legion that fed and housed itself in the field outmarched one that waited on its train.',
 	warmclothes: 'The sagum, the wool cloak of the legions, kept the legions through Gaul; wet wool still warms.',
 	waterproof:
 		'Oiled linen and tarred canvas shed rain; sailors wore them first, then the armies that marched in the wet.',
@@ -435,6 +437,22 @@ const WHY = {
 		'Scribal schools taught writing in Sumer by about 2000 BC; writing itself began as accounts at Uruk (about 3100 BC) and in Egypt soon after.',
 	library:
 		'The library of Ashurbanipal at Nineveh (7th century BC) and the Library of Alexandria (about 295 BC) gathered texts and scholars. Universities came later: Bologna in the 11th century, with al-Qarawiyyin (859) and Nalanda (5th century) older in their own traditions.',
+	medtent:
+		'The Roman marching camp kept a hospital tent: Hyginus sets the valetudinarium away from the workshops so the convalescent could rest, and sized it for 200 men.',
+	traintent:
+		'Vegetius has recruits drilled twice a day in camp, at the post and on the field; the legion trained wherever it stood.',
+	messtent:
+		'Eight men to a tent and a cooking fire (the contubernium): the squad that ate together fought together.',
+	depot:
+		'The horrea of a Roman camp held grain for a season; an army lived off its depots and the carts that filled them.',
+	camptower:
+		'Timber towers on a camp rampart: at Alesia Caesar set them 80 feet apart along the works.',
+	palisade:
+		'Every legionary carried two stakes (pila muralia) and the camp was fenced with them each night; a ditch and a bank of turf behind.',
+	outpostcart:
+		'A century at rest was a file of tents 120 feet long (Hyginus): the outpost is that file, with a tower at its end.',
+	campcart:
+		'The Hussites (1420s) made a fort of wagons chained in a square; a Roman camp went by cart too, its tents, tools and grain on the baggage train.',
 	hospital:
 		'Roman forts had valetudinaria (military hospitals); the bimaristan of Baghdad (about 805) and Byzantine xenones cared for the sick. Rest and care near the camp saved more men than the field surgeon.',
 	baths:
@@ -771,6 +789,8 @@ const ROW_WORD = {
 	research: 'Research',
 	relations: 'Relations',
 	map: 'Map',
+	ambush: 'Ambush',
+	choke: 'Choke',
 	emgW: [['Work', 'all clear'], ['Gather', 'at home'], ['Garrison', 'all in'], ['Shelter', 'hide']], // the Alarm page: each order's word and what it does, in the row's order (Albert, Nov 2: Age of Empires' Town Bell and Back to Work)
 };
 // a research step's why: its own key first ('tech:' + id) where a unit shares its id (F4: one WHY.legion served both)
@@ -951,8 +971,13 @@ const TRIGGERS = () => [
 		'Soldiers hit walls slowly; real armies brought engines.',
 	],
 	[
+		'War camps',
+		`The Stable packs an outpost, then a camp, on wagons: pick the wagon and tap the ground, and where it stops it unpacks. An Outpost wagon (Bronze) is four tents and a timber tower in a strip: a Medical tent that binds wounds and sends the badly hurt and the sick home to the Hospital, a Training tent that trains foot soldiers and villagers at ${Math.round(CAMP.extra * 100)}% over the price, a Mess tent where soldiers mend as at the Barracks, a Supply depot that takes what villagers gather. A Camp wagon (Classical, Camp wagons researched) adds a palisade with a gate facing home, four towers and a yard for ${CAMP.hold}. Foot soldiers raise the pieces at ${Math.round(CAMP.build * 100)}% of the pace of a villager; Field logistics brings them to full and the price at the tent to ${Math.round(CAMP.extraLog * 100)}% over. The trees under a camp burn. One of each at a time, two from the age after; on the road anyone at war can kill the wagon.`,
+		'Hyginus, on the fortification of camps: eight men a tent, the hospital kept away from the workshops, a ditch and rampart round the whole. Roman armies dug a camp every night; a strip of tents in a file is a century at rest.',
+	],
+	[
 		'Temper and shape',
-		`Two dials in the Army card, for all of you or one battalion. Temper: ${TEMPER.map((t) => `${t.name}, ${t.note}`).join('. ')}. Once Engagement is researched, shooters under Hold or Guard step back from anyone who comes within ${KITE} while they reload; a horse archer always does. Shape, once Formations is researched: ${FORM.map((F) => `${F.name}, ${F.note}`).join('. ')}. An army marches in column (${Math.round((COLUMN.spd - 1) * 100)}% faster, ${Math.round((COLUMN.hit - 1) * 100)}% more damage taken) and stands to its shape when it meets a foe. The computers keep Guard.`,
+		`Two dials in the Army card, for all of you or one battalion. Temper: ${TEMPER.map((t) => `${t.name}, ${t.note}`).join('. ')}. Once Engagement is researched, shooters under Hold or Guard step back from anyone who comes within ${KITE} while they reload; a horse archer always does. Shape, once Formations is researched: ${FORM.map((F) => `${F.name}, ${F.note}`).join('. ')}. An army marches in column (${Math.round((COLUMN.spd - 1) * 100)}% faster, ${Math.round((COLUMN.hit - 1) * 100)}% more damage taken) and stands to its shape when it meets a foe. The computers keep Guard. Two tools on the War page: hold the shape and drag across a gap on the map, and the picked soldiers hold it as a Choke, as many files as the gap takes (${CHOKE.min} to ${CHOKE.max}); hold Rally and tap near forest, and they go to ground there in ambush: no foe takes them for a mark until one comes within ${AMBUSH.spring}, or a blow lands, and the whole ambush springs with a charge. Every order costs the meals of the soldiers for ${ORDER.mins * 60} seconds from the store and leaves them tired for ${ORDER.tired} seconds; a battalion forming up gives way by rank, foot before shooters before riders, and a soldier past ${Math.round(FORMING.share * 100)}% of its time and short of ${Math.round(FORMING.share * 100)}% of its way holds where it stands.`,
 		'Armies marched in column and deployed into line to fight: the Roman three lines and the medieval three battles, van, main body and rear, were the same idea. Skirmishers and horse archers fought by not being caught (Carrhae, 53 BC).',
 	],
 	[

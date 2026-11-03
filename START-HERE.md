@@ -44,6 +44,7 @@ This section is the start. Nothing else in the repo comes first; where another f
    3. `docs/4 Now/v81 List.md`: the next version (Albert, Nov 1). [2026-11-01 07:45]
    4. `docs/4 Now/Parked.md`: every parked idea and open question, with its source. [2026-11-01 07:45]
    5. `docs/4 Now/App prep.md`: from web page to App Store app. [2026-11-01 07:45]
+   6. `docs/4 Now/Field defences.md`: the report on stakes, caltrops, lilia, abatis, chevaux de frise and the Wagenburg, for Albert's yes or no on each. [2026-11-03 12:34]
 5. **Builds** (`docs/5 Builds/`): [2026-11-01 07:45]
    1. `docs/5 Builds/v80/What Happened, Builds 63 to 70 - v80 - Post Clean - Working.md`: what went wrong in 63 to 69 and the rules put in place. [2026-11-01 07:45]
    2. `docs/5 Builds/v80/CUTS.md`: every change and cut of v80, preview by preview. [2026-11-01 07:45]

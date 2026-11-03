@@ -20,9 +20,13 @@ JS = r"""() => {
   try {
   F.openCard({ type: 'setup' }); F.ui(true);
   { const ranks = $$('#card .cin > .fm').filter((r) => r.querySelector('.info.quiet') && r.querySelector('.bar.sel')), card = $('#card .tb').getBoundingClientRect();
-    if (ranks.length < 7) bad.push(`Setup: ${ranks.length} settings stand on their own rank with their name, not 7 (six and Daily)`);
-    for (const r of ranks) { const b = r.querySelector('.bar.sel').getBoundingClientRect(), n = r.querySelector('.info.quiet').getBoundingClientRect();
-      if (Math.abs(b.right - card.right) > 1 || n.left > b.left || r.children.length !== 2) bad.push('Setup: a setting is not its name on the left and its choices right-justified: ' + r.textContent.trim().slice(0, 20)); }
+    // Nov 3 (the start page on one screen): three settings on their own rank, the four two-choice settings two to a rank (name, choices, name, choices), the last selector at the card's right edge
+    const single = ranks.filter((r) => r.children.length === 2), paired = ranks.filter((r) => r.children.length === 4);
+    if (single.length !== 3 || paired.length !== 2) bad.push(`Setup: ${single.length} settings on their own rank and ${paired.length} paired ranks, not 3 and 2 (Nov 3: one screen)`);
+    for (const r of ranks) { const bars = r.querySelectorAll('.bar.sel'), b = bars[bars.length - 1].getBoundingClientRect(), n = r.querySelector('.info.quiet').getBoundingClientRect();
+      if (Math.abs(b.right - card.right) > 1 || n.left > b.left) bad.push('Setup: a setting is not its name on the left and its choices right-justified: ' + r.textContent.trim().slice(0, 20));
+      if (r.children.length === 4) { const c = [...r.children]; if (!(c[0].classList.contains('quiet') && c[2].classList.contains('quiet') && c[1].getBoundingClientRect().right <= c[2].getBoundingClientRect().left + 1)) bad.push('Setup: a paired rank is not name, choices, name, choices: ' + r.textContent.trim().slice(0, 24)); } }
+    { const c = $('#card'); if (c.scrollHeight > c.clientHeight + 1 && innerWidth <= 375) bad.push('Setup: the start page scrolls at ' + innerWidth + ' px (' + c.scrollHeight + ' of ' + c.clientHeight + ')'); }
     const words = $('#card .cin').innerText.split(/\s+/);
     for (const w of ['Fog', 'Daily']) if (words.filter((x) => x === w).length !== 1) bad.push(`Setup: ${w} says its word ${words.filter((x) => x === w).length} times`);
     if ($$('#card .tick').length) bad.push('Setup: the old tick boxes are still there'); }

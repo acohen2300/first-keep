@@ -149,6 +149,72 @@ JS = """() => {
     const on = new Map(); for (const v of V) { const t = v.hunt || v.node; if (t) on.set(t, (on.get(t) || 0) + 1); }
     for (const [t, n] of on) { const room = F.UNIT[t.kind] ? F.FORAGE.room.carcass : F.FORAGE.room[t.kind] || 1; if (t.kind !== 'farm' && n > 2 * room) bad.push('item 6: ' + n + ' waiting villagers sent to one ' + t.kind + ' (room ' + room + ')'); }
     if (V.some((v) => v.node === B)) bad.push('item 6: a waiting villager was sent to a find it cannot walk to'); });
+  // ── the juice pass (Nov 3): a charging blow shoves the one it lands on back and jolts the screen; a plain blow does not ──
+  T_(() => { const G = fresh(), P = open(G); clear(G, P, 300); G.rel[0][1] = G.rel[1][0] = 'war';
+    const a = F.addUnit(0, 'spear', P.x, P.y), t = F.addUnit(1, 'spear', P.x + 12, P.y); t.state = 'goto'; t.px = t.x; t.py = t.y;
+    const x0 = t.x; F.cam.x = P.x; F.cam.y = P.y; F.hurt(0, a, t, 1); if (t.x !== x0 || G.jolt > G.t) bad.push('juice: a plain blow shoved or jolted');
+    a.chg = G.t + 5; F.hurt(0, a, t, 1); if (!(t.x > x0 + F.JUICE.shove * 0.8)) bad.push('juice: a charging blow did not shove the one it hit back (' + (t.x - x0).toFixed(1) + ')'); if (!(G.jolt > G.t)) bad.push('juice: a charging blow on screen did not jolt');
+    const x1 = t.x; F.hurt(0, a, t, 1); if (t.x !== x1) bad.push('juice: a second blow within a second shoved again'); });
+  // ── the cost of an order (Nov 3, ORDER): a drill or a squad sent eats half a minute of the soldiers' shares and tires them ──
+  T_(() => { const G = fresh(), P = open(G); clear(G, P, 300); const S = [0, 1, 2, 3].map((i) => F.addUnit(0, 'spear', P.x + i * 8, P.y)), f0 = G.P[0].res.f;
+    const f = F.orderCost(0, S), want = Math.round(4 * 1.5 * F.UPKEEP.share * 60 * F.ORDER.mins);
+    if (f !== want || G.P[0].res.f !== f0 - want) bad.push('order: four foot soldiers cost ' + f + ' food, not ' + want);
+    if (!S.every((u) => u.tired > G.t)) bad.push('order: the soldiers are not tired after it');
+    G.P[0].res.f = 1; if (F.orderCost(0, S) !== 1 || G.P[0].res.f !== 0) bad.push('order: with one food in the store the order took more'); });
+  // ── war camps (Nov 3, CAMP): the wagon from the Stable, the strip and the square, trees burned, soldiers raising at 60%, the tent's price, the wounded sent home ──
+  T_(() => { const G = fresh(), k = F.keepOf(0); let P = null; for (let r = 220; r < 700 && !P; r += 20) for (let t = 0; t < 12 && !P; t++) { const x = k.x + Math.cos(t) * r, y = k.y + Math.sin(t) * r; if (Math.abs(x - F.MID) > 300 || Math.abs(y - F.MID) > 300) if (!F.campWhy(0, 'camp', x, y)) P = { x, y }; }   // room for the square, off the Throne's lake
+    if (!P) { bad.push('camp: no ground for a camp within 700 of the Town Center'); return; } clear(G, P, 300); G.P[0].age = 2; G.P[0].techs.add('campwagons'); G.P[0].techs.add('granary'); F.fxDirty();
+    const O = F.campLayout('outpost', P.x, P.y, 0, 1), C = F.campLayout('camp', P.x, P.y, 0, 1), cnt = (L, kind) => L.filter((p) => p.kind === kind).length;
+    if (O.length !== 5 || cnt(O, 'camptower') !== 1 || !['medtent', 'traintent', 'messtent', 'depot'].every((t) => cnt(O, t) === 1)) bad.push('camp: the outpost is not four tents and a tower (' + O.map((p) => p.kind).join() + ')');
+    if (Math.max(...O.map((p) => Math.abs(p.y - P.y))) > 1 || new Set(O.map((p) => Math.round(p.x))).size !== 5) bad.push('camp: the outpost is not one thin strip');
+    const side = F.CAMP.side, want = 4 * side - 4 - 2; if (cnt(C, 'palisade') !== want || cnt(C, 'gate') !== 2 || cnt(C, 'camptower') !== 4 || !['medtent', 'traintent', 'messtent', 'depot'].every((t) => cnt(C, t) === 1)) bad.push('camp: the camp is not a palisade of ' + want + ' with a gate of two, four towers and the four tents (' + cnt(C, 'palisade') + ' stakes, ' + cnt(C, 'gate') + ' gate, ' + cnt(C, 'camptower') + ' towers)');
+    const keys = new Set(C.map((p) => Math.round(p.x) + ',' + Math.round(p.y))); if (keys.size !== C.length) bad.push('camp: two pieces of the camp share a square');
+    if (!C.filter((p) => p.kind === 'gate').every((p) => p.y > P.y)) bad.push('camp: the gate is not on the side facing home');
+    const yard = C.filter((p) => p.kind !== 'palisade' && p.kind !== 'gate').map((p) => F.snapPos(p.kind, p.x, p.y)), inner = (side - 2) * (side - 2) - yard.length * 4, room = Math.floor(inner * 100 / (F.GRID.gap * F.GRID.gap)); if (room < F.CAMP.hold) bad.push('camp: the yard holds ' + room + ' at ' + F.GRID.gap + ' apart, not ' + F.CAMP.hold);
+    // the limit: one of each; the Outpost from Bronze, the Camp from Classical with the research; a second with the next age
+    G.P[0].age = 0; if (!F.campWhyTrain(0, 'outpost') || !F.campWhyTrain(0, 'camp')) bad.push('camp: a wagon is allowed in the Stone age'); G.P[0].age = 1; if (F.campWhyTrain(0, 'outpost') || !F.campWhyTrain(0, 'camp')) bad.push('camp: the Bronze age does not give the outpost alone');
+    G.P[0].age = 2; G.P[0].techs.delete('campwagons'); if (!F.campWhyTrain(0, 'camp')) bad.push('camp: a Camp wagon without the research'); G.P[0].techs.add('campwagons'); G.P[0].techs.delete('granary'); if (!F.campWhyTrain(0, 'camp')) bad.push('camp: a Camp wagon without the store (Stone granary)'); G.P[0].techs.add('granary'); if (F.campWhyTrain(0, 'camp')) bad.push('camp: a Camp wagon refused with the research');
+    // the wagon unpacks on open ground; the trees under it burn; it is gone
+    const w = F.addUnit(0, 'campcart', P.x, P.y); if (!F.campWhyTrain(0, 'camp')) bad.push('camp: a second Camp wagon allowed while one is out');
+    const before = G.nodes.filter((n) => n.kind === 'tree' && Math.hypot(n.x - P.x, n.y - P.y) < side * 5 + 20).length;
+    if (F.campWhy(0, 'camp', P.x, P.y)) bad.push('camp: open ground refused the camp: ' + F.campWhy(0, 'camp', P.x, P.y)); else {
+      w.state = 'goto'; w.px = w.x; w.py = w.y; run(1); const pieces = G.blds.filter((b) => b.owner === 0 && b.camp);
+      if (w.hp > 0 || pieces.length !== C.length) bad.push('camp: the wagon at its spot did not unpack into ' + C.length + ' sites (' + pieces.length + ', wagon ' + (w.hp > 0 ? 'still here' : 'gone') + ')');
+      const after = G.nodes.filter((n) => n.kind === 'tree' && n.amt > 0 && pieces.some((b) => Math.hypot(n.x - b.x, n.y - b.y) < 16)).length; if (after) bad.push('camp: ' + after + ' trees still stand under the camp (' + before + ' were near)');
+      if (!F.campWhyTrain(0, 'camp')) bad.push('camp: a second Camp wagon allowed while a camp stands');
+      // a foot soldier raises a site at CAMP.build of a villager; a rider does not; Field logistics brings it to full
+      const site = pieces.find((b) => b.kind === 'medtent'), s = F.addUnit(0, 'spear', site.x + 14, site.y), r = F.addUnit(0, 'chariot', site.x - 14, site.y); s.state = 'home'; r.state = 'home';
+      run(2); site.crew = 0; for (let i = 0; i < 30; i++) { F.step(T); } if (!s.site) bad.push('camp: the idle spearman did not take to the site'); if (r.site) bad.push('camp: the chariot took to the site');
+      const p0 = site.prog; run(4); const per = (site.prog - p0) / 4, vil = (1 / F.BLD.medtent.t) * Math.pow(F.CAMP.build, F.BUILDER_POW); if (!(Math.abs(per - vil) < vil * 0.25)) bad.push('camp: one spearman raises ' + per.toFixed(4) + ' a second, not about ' + vil.toFixed(4) + ' (60% of a villager)');
+      G.P[0].techs.add('fieldlog'); F.fxDirty(); const p1 = site.prog; run(4); const per2 = (site.prog - p1) / 4; if (!(per2 > per * 1.3)) bad.push('camp: Field logistics did not quicken the soldier (' + per2.toFixed(4) + ' against ' + per.toFixed(4) + ')');
+      for (const b of pieces) { b.prog = 1; F.built(b); } r.hp = 0;
+      // the training tent charges a quarter more (a tenth with Field logistics), and is a place to train foot and villagers
+      G.P[0].techs.delete('fieldlog'); F.fxDirty(); const tent = pieces.find((b) => b.kind === 'traintent'), c0 = F.unitCost(0, 'spear'), c1 = F.tentCost(0, tent, c0); if (c1.f !== Math.round(c0.f * (1 + F.CAMP.extra))) bad.push('camp: the tent charges ' + c1.f + ' food for ' + c0.f);
+      G.P[0].techs.add('fieldlog'); F.fxDirty(); const c2 = F.tentCost(0, tent, c0); if (c2.f !== Math.round(c0.f * (1 + F.CAMP.extraLog))) bad.push('camp: with Field logistics the tent charges ' + c2.f + ' food for ' + c0.f);
+      if (!F.readyAt(0, F.UNIT.spear).includes(tent) || !F.readyAt(0, F.UNIT.vil).includes(tent) || F.readyAt(0, F.UNIT.chariot).includes(tent)) bad.push('camp: the tent does not train foot and villagers, and only those');
+      // a badly hurt soldier by the medical tent walks home to the Hospital; one with no Hospital stays and is bound
+      s.hp = s.max * 0.3; s.state = 'home'; s.site = null; run(2); if (s.goingHome) bad.push('camp: a hurt soldier was sent home with no Hospital');
+      const h = F.mkBld(0, 'hospital', k.x + 60, k.y + 60, 1); G.blds.push(h); run(2); if (!s.goingHome || Math.hypot(s.px - h.x, s.py - h.y) > 60) bad.push('camp: a soldier at 30% by the medical tent was not sent home to the Hospital');
+      s.hp = s.max; run(2); if (s.goingHome) bad.push('camp: a healed soldier is still going home'); }
+    // step 2: the depot feeds the camp and an empty one leaves it unsupplied; a caravan runs food out for the food and a fee; weather wears a piece and a soldier mends it; a wagon sinks deeper in mud; a camp is a pool for sickness
+    if (G.blds.some((b) => b.owner === 0 && b.kind === 'depot' && b.prog >= 1)) { const dep = G.blds.find((b) => b.owner === 0 && b.kind === 'depot' && b.prog >= 1), S2 = [0, 1, 2].map((i) => F.addUnit(0, 'spear', dep.x + 20 + i * 8, dep.y + 20)); for (const u of S2) { u.state = 'home'; u.px = u.x; u.py = u.y; }
+      dep.supply = 100; const f0 = G.P[0].res.f, fed = F.campEat(0, F.UPKEEP.share); if (!(fed > 4 && dep.supply < 100 && G.P[0].res.f === f0)) bad.push('camp: three soldiers by the depot did not eat from it (' + fed + ' shares, supply ' + dep.supply.toFixed(1) + ')'); if (S2.some((u) => u.unfed)) bad.push('camp: a fed soldier counts as unsupplied');
+      dep.supply = 0; F.campEat(0, F.UPKEEP.share); if (!S2.every((u) => u.unfed > 0 && u.tired > G.t)) bad.push('camp: an empty depot left the soldiers supplied'); dep.supply = 50; F.campEat(0, F.UPKEEP.share); if (S2.some((u) => u.unfed)) bad.push('camp: a restocked depot did not feed');
+      // the caravan's run: a Market, a caravan, a depot under half; it loads at the Market for the food and the fee and unloads at the depot
+      const mk = F.mkBld(0, 'market', k.x + 70, k.y - 70, 1); G.blds.push(mk); const c = F.addUnit(0, 'caravan', mk.x, mk.y + 30); c.lastId = mk.id; dep.supply = 0; G.P[0].res.f = 1000; G.P[0].res.g = 500; const g0 = G.P[0].res.g, f1 = G.P[0].res.f;
+      run(2); if (!c.sup) bad.push('camp: the idle caravan did not take the supply run'); else { const fee = Math.ceil(F.CAMP.fee * Math.hypot(mk.x - dep.x, mk.y - dep.y) / 100); let secs = 0; while (c.sup && c.sup.leg === 'load' && secs < 60) { run(1); secs++; } const ate = secs * G.P[0].eats / 60 + 2;
+        if (!(c.sup && c.sup.leg === 'go' && c.sup.food === F.CAMP.load && G.P[0].res.g === g0 - fee && f1 - G.P[0].res.f >= F.CAMP.load && f1 - G.P[0].res.f <= F.CAMP.load + ate)) bad.push('camp: the run did not take ' + F.CAMP.load + ' food and ' + fee + ' gold at the Market (food ' + (f1 - G.P[0].res.f) + ', gold ' + (g0 - G.P[0].res.g) + ', leg ' + (c.sup && c.sup.leg) + ')');
+        secs = 0; while (dep.supply < F.CAMP.load - 1 && secs < 180) { run(1); secs++; } if (!(dep.supply >= F.CAMP.load - 1)) bad.push('camp: the caravan did not deliver (' + Math.round(dep.supply) + ' in the depot after 3 minutes, leg ' + (c.sup ? c.sup.leg : 'none') + ')'); }
+      // weather wears, a soldier mends
+      const pal = G.blds.find((b) => b.owner === 0 && b.kind === 'palisade' && b.prog >= 1), wx0 = G.wx; G.wx = 'rain'; const h0 = pal.hp; F.campWearTick(); if (!(pal.hp < h0)) bad.push('camp: a minute of rain wore nothing'); G.wx = 'clear'; F.campWearTick(); if (pal.hp !== h0 - F.CAMP.wear * F.maxHpB(0, 'palisade')) bad.push('camp: clear weather wore the palisade'); G.wx = wx0;
+      pal.hp = F.maxHpB(0, 'palisade') * 0.3; const m = F.addUnit(0, 'spear', pal.x + 12, pal.y); m.state = 'home'; m.px = m.x; m.py = m.y; dep.supply = 600; run(12); if (!(pal.hp > F.maxHpB(0, 'palisade') * 0.4)) bad.push('camp: an idle spearman did not mend the worn palisade (' + pal.hp.toFixed(0) + ' of ' + F.maxHpB(0, 'palisade') + ')');
+      // the wagon in mud: slower than a soldier by the wheels' share
+      G.clim.mud = 1; const sp = (kind) => F.groundSpd(0, F.unitKeys(kind), null); if (!(sp('outpostcart') < sp('spear') * 0.8)) bad.push('camp: a wagon in mud is not slower than a soldier (' + sp('outpostcart').toFixed(2) + ' against ' + sp('spear').toFixed(2) + ')'); G.clim.mud = 0;
+      // a camp is a pool for sickness: an outbreak far from home can take a soldier in camp
+      const q = F.addUnit(0, 'spear', dep.x + 30, dep.y); if (!F.depotNear(q)) bad.push('camp: a soldier by the depot is not in the camp pool'); if (F.depotNear(F.addUnit(0, 'spear', dep.x + F.CAMP.reach + 40, dep.y))) bad.push('camp: a soldier far from the depot is in the camp pool'); for (const u of [...S2, m, q]) u.hp = 0; }
+    else bad.push('camp: no depot standing for step 2');
+    // the wagon on the road is a mark: a foe kills it
+    const w2 = F.addUnit(0, 'outpostcart', P.x, P.y), e = F.addUnit(1, 'sword', P.x + 15, P.y); G.rel[0][1] = G.rel[1][0] = 'war'; if (F.nearestFoe(1, e, 50) !== w2) bad.push('camp: a foe beside the wagon does not take it for a mark'); F.hurt(1, e, w2, 10); if (!(w2.hp < F.UNIT.outpostcart.hp)) bad.push('camp: a blow on the wagon did nothing'); });
   return bad;
 }"""
 async def main():

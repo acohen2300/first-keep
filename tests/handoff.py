@@ -384,6 +384,31 @@ PLANTS = [
   ('36-economy.js', 'setRoute(c, t, true, false)', 'setRoute(c, t, true, true)', 'tests/ai.py', 'computer caravans buy spice', 'spice'),
   ('17-ai.js', 'short = Math.max(0, (cost[key] || 0) - (p.res[key] || 0));', 'short = (p.res[key] || 0) > 600 ? 0 : Math.max(0, (cost[key] || 0) - (p.res[key] || 0));', 'tests/ai.py', 'a store over 600 counts as not short', 'D4:'),
   ('17-ai.js', '((p.ai.save && p.ai.save.age === p.age + 1) ||', '((false) ||', 'tests/ai.py', 'a save for an age resets under the mark', 'D5:'),
+  # Build 80 preview 37 (--only=p37): the lakes' shore, the juice, the cost of orders, the forming traffic, the shapes and the two map tools
+  ('10-world.js', 'for (let k = 2; k <= WATER.harm; k++) L.w.push(', 'for (let k = 2; k <= 1; k++) L.w.push(', 'tests/map.py', 'p37: the lakes are circles again', 'shoreline development'),
+  ('16-sim-fight.js', "if (!blockedCell(gcell(t.x + (dx / dd) * JUICE.shove, t.y + (dy / dd) * JUICE.shove), t.owner)) stepTo(t, t.x + (dx / dd) * JUICE.shove, t.y + (dy / dd) * JUICE.shove);", ';', 'tests/combat.py', 'p37: a charge shoves nobody', 'did not shove'),
+  ('36-economy.js', 'if (isSoldier(u) && !(u.chg > G.t)) u.tired = Math.max(u.tired || 0, G.t + ORDER.tired);', ';', 'tests/combat.py', 'p37: an order tires nobody', 'not tired'),
+  ('16-sim-fight.js', 'ha = fa && fb ? (rankOf(a) > rankOf(b) ? 9 : rankOf(a) < rankOf(b) ? 1 : 3) : heft(a),', 'ha = heft(a),', 'tests/gate.py', 'p37: the ranks no longer give way to each other', 'did not give way'),
+  ('12-sim-core.js', "? n // one rank", '? Math.min(n, 3) // p37 plant', 'tests/gate.py', 'p37: the Front stands in column', 'more than one rank'),
+  ('08-core.js', "&& !(u.state === 'goto' && u.fanK === u.px + ',' + u.py);", ';', 'tests/gate.py', 'p37: the column snaps back while the shape forms', 'did not give the Front'),
+  ('14-sim-troops.js', "if (hyp(u.px + (u.gx || 0) - u.x, u.py + (u.gy || 0) - u.y) < 8) u.hid = true;", ';', 'tests/gate.py', 'p37: nobody goes to ground', 'did not go to ground'),
+  ('15-sim-spatial.js', '!v.inside && !v.hid && v.hp > 0', '!v.inside && v.hp > 0', 'tests/gate.py', 'p37: a hidden soldier is a mark', 'saw the ambush'),
+  ('28-army-quick.js', 'for (const u of U) u.drill.cols = cols;', 'for (const u of U) u.drill.cols = CHOKE.max;', 'tests/gate.py', 'p37: the choke ignores the width of the gap', 'files'),
+  # Build 80 preview 38 (--only=p38): war camps, step 1
+  ('38-camps.js', "[...CAMP_TENTS, 'camptower'].forEach((k, i) => put(k, (i - 2) * 3, 0));", "[...CAMP_TENTS, 'camptower'].forEach((k, i) => put(k, (i % 2) * 3, Math.floor(i / 2) * 3));", 'tests/combat.py', 'p38: the outpost is a block, not a strip', 'thin strip'),
+  ('38-camps.js', "put(g ? 'gate' : 'palisade', i + 0.5, h - 0.5); // the home side (toward home)", "put(g ? 'gate' : 'palisade', i + 0.5, -h + 0.5); put('palisade', i + 0.5, h - 0.5);", 'tests/combat.py', 'p38: the gate faces away from home', 'facing home'),
+  ('38-camps.js', "if (kind === 'camp' && (!p.techs.has('campwagons') || !p.techs.has(CAMP.need))) return 0;", ";", 'tests/combat.py', 'p38: a Camp wagon without the research', 'without the research'),
+  ('38-camps.js', "\tfor (const n of burnt) n.amt = 0;", "\tburnt.length = 0;", 'tests/combat.py', 'p38: the trees under a camp stand', 'still stand under'),
+  ('38-camps.js', "const hands = CAMP.build * fxv(u.owner, 'campbuild').m;", "const hands = 1;", 'tests/combat.py', "p38: a soldier raises a camp at a villager's pace", '60% of a villager'),
+  ('11-orders.js', "Math.round(v * (1 + CAMP.extra * fxv(o, 'tentcost').m))", "Math.round(v * (1 + CAMP.extra))", 'tests/combat.py', 'p38: Field logistics leaves the tent price', 'with Field logistics the tent charges'),
+  ('38-camps.js', "if (!(u.hp < u.max * CAMP.sendHome || u.sick > G.t)) return;", "if (!(u.hp < u.max * 0.1 || u.sick > G.t)) return;", 'tests/combat.py', 'p38: the badly hurt are kept by the tent', 'was not sent home'),
+  # Build 80 preview 38, step 2 (--only=p38)
+  ('38-camps.js', "d.supply -= eat;", "d.supply -= 0;", 'tests/combat.py', 'p38: the soldiers in camp eat nothing from the depot', 'did not eat from it'),
+  ('38-camps.js', "u.tired = Math.max(u.tired || 0, G.t + 2); // unsupplied", "// unsupplied", 'tests/combat.py', 'p38: an empty depot tires nobody', 'left the soldiers supplied'),
+  ('38-camps.js', "spend(p, 'g', S.fee, 'camps');", ";", 'tests/combat.py', 'p38: the carter goes unpaid', 'did not take'),
+  ('38-camps.js', "d.supply = Math.min(CAMP.supply, (d.supply || 0) + S.food);", "d.supply = d.supply || 0;", 'tests/combat.py', 'p38: the caravan delivers nothing', 'did not deliver'),
+  ('38-camps.js', "if (!wet) return;", "if (wet) return;", 'tests/combat.py', 'p38: clear weather wears the camp', 'wore'),
+  ('37-events.js', "(keys.includes('#wagon') ? CAMP.wheelMud : 1)", "1", 'tests/combat.py', 'p38: a wagon walks through mud like a man', 'in mud is not slower'),
 ]
 
 def plant_check():

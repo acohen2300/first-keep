@@ -160,3 +160,13 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - Civilisations with ways of their own on the land (walls, riders, rivers): a balance project, each with its own run. [2026-11-03 09:46]
 - Impact on a charge (a front rank pushed back a little, a short shake, a thud): with the juice pass. [2026-11-03 09:46]
 - The share's slider (built and cut Nov 3): kept here in case the tap cycle wants a fine step one day; it would need to sit away from the edge (Android's back gesture) and in the app (haptics). [2026-11-03 10:09]
+
+## Parked today (Albert, Nov 3, 11:00 to 11:17) [2026-11-03 13:30]
+- The three-person silent test (two foes on one screen, nobody talking): after the A/B run is read. [2026-11-03 13:30]
+- The page builder (the controller's doors where the player wants them): after the default layout has been played. [2026-11-03 13:30]
+- Some sky in the frame (Albert, 10:40: "do we want a way to see some sky?"): parked with the page builder. [2026-11-03 13:30]
+- The terrain pass (hills, the ground's colour by height): "Park, what's the next question?" [2026-11-03 13:30]
+- The Map tile on the full pages (Albert's inclination, 11:00: keep it in the same spot always; he decides tonight). [2026-11-03 13:30]
+- Field defences (stakes, caltrops, lilia, abatis, chevaux de frise, the Wagenburg): the report is `docs/4 Now/Field defences.md`; each waits for a yes. [2026-11-03 13:30]
+- Camps step 3: the computers' own camps and outposts, and the Wagenburg (a fort of wagons you do not unpack, Gunpowder). [2026-11-03 13:30]
+- Built and now open to a yes or no: the Camp wagon reads the Stone granary as the game's warehouse; Albert said "Warehouse", and the game has no building of that name. [2026-11-03 13:30]

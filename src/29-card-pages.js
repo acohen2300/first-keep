@@ -564,10 +564,13 @@ const SET_WHY = {
 };
 const settingsWhy = () =>
 	`<p>${[SET_WHY.diff[SET.diff], SET_WHY.fantasy[SET.fantasy ? 1 : 0], SET_WHY.fog[SET.fog !== false ? 1 : 0], SET_WHY.tension[SET.tension]].filter(Boolean).join(' ')}</p>`;
-const settingsHTML = () =>
+// two two-choice settings share a rank (Nov 3, Albert: the start page on one screen): name, its pair, name, its pair
+const pairRow = (a, b) => acts(lab(a[0], 's1') + choice(a[1].map(([act, w, v]) => [act, w, v === a[2]]), 's2', true) + lab(b[0], 's1') + choice(b[1].map(([act, w, v]) => [act, w, v === b[2]]), 's2', true), 'c6');
+const settingsHTML = (daily) =>
 	setRow('Difficulty', DIFK.map((k) => [`diff:${k}`, k, k]), SET.diff) +
 	setRow('Length', Object.entries(MODES).map(([k, m]) => [`mode:${k}`, m.name.replace('minutes', 'min'), k]), SET.mode) +
 	setRow('Scenario', Object.keys(SCENARIOS).map((k) => [`scen:${k}`, SCEN_TEXT[k][0].replace('The ', ''), k]), SET.scen || 'open') +
-	setRow('World', [['fantasy:0', 'Real', false], ['fantasy:1', 'Fantasy', true]], !!SET.fantasy) +
-	acts(lab('Fog', 's4') + choice(offOn('fog', SET.fog !== false), 's2', true), 'c6') +
-	setRow('Tension', [['tension:winner', 'Winner', 'winner'], ['tension:diplomacy', 'Diplomacy', 'diplomacy']], SET.tension);
+	pairRow(['World', [['fantasy:0', 'Real', false], ['fantasy:1', 'Fantasy', true]], !!SET.fantasy], ['Fog', offOn('fog', SET.fog !== false), true]) +
+	(daily
+		? pairRow(['Tension', [['tension:winner', 'Winner', 'winner'], ['tension:diplomacy', 'Diplomacy', 'diplomacy']], SET.tension], ['Daily', offOn('daily', !!SET.daily), true])
+		: setRow('Tension', [['tension:winner', 'Winner', 'winner'], ['tension:diplomacy', 'Diplomacy', 'diplomacy']], SET.tension));

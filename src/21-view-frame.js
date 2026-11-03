@@ -56,15 +56,24 @@ function makeBg() {
 		}
 		b.stroke();
 	};
+	// a lake's outline on a canvas, its shore's harmonics (lakeRAt) at a radius extra beyond the water's edge
+	const shorePath = (c, L, extra, k = 1) => {
+		c.beginPath();
+		for (let i = 0; i < 72; i++) {
+			const a = (i / 72) * Math.PI * 2,
+				r = (lakeRAt(L, a) + extra) * k;
+			c[i ? 'lineTo' : 'moveTo'](L.x * k + Math.cos(a) * r, L.y * k + Math.sin(a) * r);
+		}
+		c.closePath();
+	};
 	for (const L of G.lakes) {
 		if (L.river) continue;
-		const sand = b.createRadialGradient(L.x, L.y, L.r - 4, L.x, L.y, L.r + 26);
+		const sand = b.createRadialGradient(L.x, L.y, L.r - 4, L.x, L.y, L.r * (1 + WATER.amp) + 26);
 		sand.addColorStop(0, 'rgba(206,190,138,1)');
 		sand.addColorStop(0.5, 'rgba(196,180,128,.85)');
 		sand.addColorStop(1, 'rgba(196,180,128,0)');
 		b.fillStyle = sand;
-		b.beginPath();
-		b.arc(L.x, L.y, L.r + 26, 0, 7);
+		shorePath(b, L, 26);
 		b.fill();
 	} // every shore first, then every water
 	for (const run of runs) {
@@ -78,15 +87,17 @@ function makeBg() {
 	for (const run of runs) stream(run, -5, '#2a6488');
 	for (const L of G.lakes) {
 		if (L.river) continue;
-		const lg = b.createRadialGradient(L.x - L.r * 0.2, L.y - L.r * 0.2, 10, L.x, L.y, L.r + 2);
+		const lg = b.createRadialGradient(L.x - L.r * 0.2, L.y - L.r * 0.2, 10, L.x, L.y, L.r * (1 + WATER.amp * 0.6) + 2);
 		lg.addColorStop(0, '#1b4466');
 		lg.addColorStop(0.7, '#2a6488');
 		lg.addColorStop(0.95, '#4e93ad');
 		lg.addColorStop(1, '#79b2bf');
 		b.fillStyle = lg;
-		b.beginPath();
-		b.arc(L.x, L.y, L.r + 2, 0, 7);
+		shorePath(b, L, 2);
 		b.fill();
+		b.strokeStyle = '#79b2bf';
+		b.lineWidth = 3;
+		b.stroke(); // the shallows follow the shore's bays, not the gradient's circle
 	}
 	for (const run of runs) {
 		// where a river leaves its lake, the lake's shade covers the join
@@ -255,6 +266,7 @@ function draw() {
 		const k = (G.shake - G.t) * 3;
 		ctx.translate(rnd2() * k, rnd2() * k);
 	} // a sinkhole or a falling star: the whole view judders for a moment
+	if (G.jolt > G.t && !still()) ctx.translate(rnd2() * JUICE.jolt, rnd2() * JUICE.jolt); // a charge landing on screen: a jolt (the juice pass)
 	layer(scarCv);
 	drawFlood(z);
 	drawSand(z);
@@ -302,7 +314,9 @@ function draw() {
 				: t === 1
 					? drawBld(e, sB)
 					: t === 2
-						? drawUnit(e, sU)
+						? e.hid
+							? ((ctx.globalAlpha = 0.45), drawUnit(e, sU), (ctx.globalAlpha = 1)) // in ambush: half seen, so you know where they lie
+							: drawUnit(e, sU)
 						: t === 4
 							? drawFallen(e, sU)
 							: drawFind(e);

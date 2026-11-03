@@ -84,6 +84,10 @@ function aimAt(sx, sy) {
 		H.aim = false;
 		return setRally();
 	} // Rally (the controller): the tap is where new soldiers go
+	if (H.aim === 'ambush') {
+		H.aim = false;
+		return ambushAt(H.h); // the ambush tool: the tap is the cover
+	}
 	ripple(H.h.e.x, H.h.e.y, aimColor());
 	feel('tick');
 }
@@ -153,6 +157,7 @@ function hudFire(i) {
 		odds: 0.5,
 	};
 	H.firedT = performance.now();
+	orderCost(0, S); // a squad sent: its meals, and tired after (ORDER)
 	feel('thock');
 }
 // Go (✓ on War): every squad at home and ready (its blue ring) marches on the crosshair, each its own mission; with none ready, or before
@@ -393,8 +398,8 @@ function warCells(sub) {
 		}),
 		pic('ctlsub:kinds', ICON.kinds, ROW_WORD.kinds, 'wo'),
 		pic('ctlsub:alarm', ICON.bell, ROW_WORD.alarm, 'vo' + (G.emg ? ' warn' : '')),
-		pic('rallyat', ICON.flag, ROW_WORD.rally, 'wo' + (H.aim === 'rally' ? ' on' : '')),
-		pic('shape:all', ICON.list, sh < 0 ? 'Mixed' : FORM[sh].name, 'wo' + (G.P[0].techs.has('formations') ? '' : ' dis')),
+		pic('rallyat', ICON.flag, H.aim === 'ambush' ? ROW_WORD.ambush : ROW_WORD.rally, 'wo' + (H.aim === 'rally' || H.aim === 'ambush' ? ' on' : ''), null, ' data-hold="ambushtool"'),
+		pic('shape:all', ICON.list, H.aim === 'choke' ? ROW_WORD.choke : sh < 0 ? 'Mixed' : FORM[sh].name, 'wo' + (G.P[0].techs.has('formations') ? '' : ' dis') + (H.aim === 'choke' ? ' on' : ''), null, ' data-hold="choketool"'),
 		pic('ctlsub:train', ICON.train, ROW_WORD.train, 'wo'),
 		pic('sqsetup', ICON.gear, ROW_WORD.setup, 'wo' + (hasCmd() ? '' : ' dis')),
 	]);

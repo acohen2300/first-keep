@@ -22,25 +22,28 @@ const NAV = {
 let lakeFor = null,
 	lakeHi = false; // the lakes the grid was drawn for, and whether in flood
 const lakeR = (L) => L.r + (G.flood > G.t ? EVENTS.flood.rise : 0); // a lake in flood reaches farther up its shore
+// the shore at an angle from the lake's middle: the radius with its harmonics (WATER; 10-world lakeShape); a round pool has none
+const lakeRAt = (L, a) => (L.w ? L.r * Math.max(0.5, 1 + L.w.reduce((s, [k, amp, ph]) => s + amp * Math.cos(k * a + ph), 0)) : L.r); // never under half its radius
+const lakeRTo = (L, x, y) => lakeRAt(L, Math.atan2(y - L.y, x - L.x)) + (G.flood > G.t ? EVENTS.flood.rise : 0); // the shore toward a point, in flood too
 // how far a point stands from water (negative: in it). The great lake holds the Throne's island and four causeways, which are land.
 const onLand = (x, y) =>
 	((Math.abs(x - MID) < THRONE.cause / 2 || Math.abs(y - MID) < THRONE.cause / 2) &&
 		hyp(x - MID, y - MID) < LAKE0.r + 60) ||
 	hyp(x - MID, y - MID) < THRONE.isle;
 const lakeGap = (x, y) =>
-	onLand(x, y) ? 1e9 : G.lakes.reduce((m, L) => Math.min(m, hyp(x - L.x, y - L.y) - lakeR(L)), 1e9); // how far from the nearest lake's edge
+	onLand(x, y) ? 1e9 : G.lakes.reduce((m, L) => Math.min(m, hyp(x - L.x, y - L.y) - lakeRTo(L, x, y)), 1e9); // how far from the nearest lake's edge
 // lake cells: 1 water, 2 flood water only, which a side with levees wades
 function lakeGrid() {
 	NAV.lake.fill(0);
 	for (const L of G.lakes) {
-		const R = Math.ceil((lakeR(L) + 2) / NAVC) + 1,
+		const R = Math.ceil((lakeR(L) * (L.rmax || 1) + 2) / NAVC) + 1, // out to the farthest shore (lakeShape's rmax)
 			cx = Math.floor(L.x / NAVC),
 			cy = Math.floor(L.y / NAVC); // only the squares round each lake (Build 50: a river is many small pools)
 		for (let y = Math.max(0, cy - R); y <= Math.min(NC - 1, cy + R); y++)
 			for (let x = Math.max(0, cx - R); x <= Math.min(NC - 1, cx + R); x++)
-				if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeR(L) + 2 && !onLand(x * NAVC + 5, y * NAVC + 5)) {
+				if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeRTo(L, x * NAVC + 5, y * NAVC + 5) + 2 && !onLand(x * NAVC + 5, y * NAVC + 5)) {
 					const c = y * NC + x;
-					if (NAV.lake[c] !== 1) NAV.lake[c] = hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < L.r + 2 ? 1 : 2; // deep water stays deep where pools overlap
+					if (NAV.lake[c] !== 1) NAV.lake[c] = hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeRAt(L, Math.atan2(y * NAVC + 5 - L.y, x * NAVC + 5 - L.x)) + 2 ? 1 : 2; // deep water stays deep where pools overlap
 				}
 	}
 	NAV.shore.fill(0);

@@ -129,7 +129,7 @@ JS = """() => {
   // ── hunt A #3: a builder bitten by a boar fights back, then goes back to its site with its jobs kept ──
   T_('A3', () => { const G = fresh(3), k = F.keepOf(0), P = open(G); Object.assign(G.P[0].res, { f: 999, w: 999, s: 999, g: 999 });
     const v = F.unitsOf(0, 'vil')[0]; F.setJob(v, 'wood');
-    const site = F.build(0, 'barracks', k.x + 120, k.y + 60) || F.build(0, 'barracks', k.x - 120, k.y + 60) || F.build(0, 'barracks', P.x, P.y);
+    let site = F.build(0, 'barracks', k.x + 120, k.y + 60) || F.build(0, 'barracks', k.x - 120, k.y + 60) || F.build(0, 'barracks', P.x, P.y); if (!site) { const sp = F.findSpot(0, 'barracks', k.x, k.y, 80, 260); site = sp && F.build(0, 'barracks', sp.x, sp.y); } if (!site) { bad.push('A3: no ground for a barracks near the Town Center'); return; }
     for (const u of G.units) if (u.rep === site && u !== v) F.setJob(u, null);
     F.sendBuilder(v, site); const b = F.addUnit(W(), 'boar', v.x + 5, v.y); F.hurt(W(), b, v, 1);
     if (v.job !== 'repair' || v.rep !== site || v.pj !== 'wood' || v.hunt !== b) bad.push(`A3: a bitten builder is on ${v.job}, its old job ${v.pj}, its site ${v.rep === site ? 'kept' : 'lost'}, the beast ${v.hunt === b ? 'its target' : 'not fought'}`);

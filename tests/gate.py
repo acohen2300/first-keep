@@ -211,6 +211,9 @@ FINGERPRINT = """() => { const F = window.__fk; F.newGame(7); F.act('close'); co
   for (let i = 1; i <= 30 * 300; i++) { F.step(1 / 30); const t = i / 30; if (script[t]) script[t]();
     if (i % 1800 === 0) out.push(G.P.map(q => [Math.round(q.res.f), Math.round(q.res.w), Math.round(q.res.s), Math.round(q.res.g), G.units.filter(u => u.owner === q.id && u.hp > 0).length, G.blds.filter(b => b.owner === q.id && b.hp > 0).length, q.age].join('/')).join(' | ')); }
   return out; }"""
+def stamp():
+    import datetime, zoneinfo
+    return datetime.datetime.now(zoneinfo.ZoneInfo('America/New_York')).strftime('%Y-%m-%d %H:%M')
 async def fingerprint(br):
     pg = await br.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
     await pg.goto('file://' + os.path.abspath('first-keep.html')); await pg.wait_for_timeout(600)
@@ -219,7 +222,7 @@ async def fingerprint(br):
     accept = '--accept' in sys.argv
     if accept:
         why = sys.argv[sys.argv.index('--accept') + 1] if len(sys.argv) > sys.argv.index('--accept') + 1 else 'no reason given'
-        json.dump({'why': why, 'minutes': got}, open(BASELINE, 'w'), indent=1); open('docs/5 Builds/v80/CUTS.md', 'a').write(f'\n- **Play fingerprint accepted:** {why}\n'); return [], got
+        json.dump({'why': why, 'minutes': got}, open(BASELINE, 'w'), indent=1); open('docs/5 Builds/v80/CUTS.md', 'a').write(f'\n- **Play fingerprint accepted:** {why} [{stamp()}]\n'); return [], got   # stamped, as tests/docs.py asks of every living-doc line
     if not os.path.exists(BASELINE): return ['no baseline: run  python3 tests/gate.py --accept "first baseline"'], got
     want = json.load(open(BASELINE))['minutes']
     return [f'minute {i + 1}: {w}  now  {g}' for i, (w, g) in enumerate(zip(want, got)) if w != g] + (['length differs'] if len(want) != len(got) else []), got
@@ -264,10 +267,12 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
     for (const r of ['f', 'w', 's', 'g']) G.P[1].res[r] = 9999; const es = F.findSpot(1, 'house', k.x + 120, k.y + 300, 10, 200), eb = es && F.build(1, 'house', es.x, es.y); if (!eb) bad.push('director: the test could not place an enemy house'); if (eb) { eb.prog = 1; eb.hp = F.BLD.house.hp; F.built(eb); } // aside from the crosshair: only Bombard's search finds it
     F.hudPage('war'); G.hud.h = { t: 'ground', e: { x: k.x, y: k.y + 240 } }; F.act('ctlsub:kinds'); F.ui(true);
     if (!document.querySelector('#row [data-act="kpick:0"]') || document.querySelector('#row [data-act="kpick:1"]').dataset.hold !== 'direct:1') bad.push('director: War · Kinds has no kinds, or no drill on a hold');
+    const mid = (L) => ({ x: L.reduce((s, u) => s + u.x, 0) / L.length, y: L.reduce((s, u) => s + u.y, 0) / L.length }), ce0 = mid(foes), cf0 = mid(F.ofKind(0));   // where the foes stood when the wall was called, and every foot soldier the call takes
     F.act('direct:0'); if (!foot.every((u) => u.wall > G.t) || F.shapeOf(foot[0]).name !== 'Square' || F.temperOf(foot[0]) !== F.T_HOLD) bad.push('director: Shield wall did not stand the foot to the Square and hold');
     run(4); const D = foot[0].drill; if (!D || D.shape !== 'line') bad.push('director: Shield wall set no line'); else { const slot = (u) => [u.gx * D.fx + u.gy * D.fy, -u.gx * D.fy + u.gy * D.fx], P = foot.map(slot), along = P.map((q) => q[0]), across = P.map((q) => q[1]), span = (L) => Math.max(...L) - Math.min(...L);   // Nov 3: the wall is a line facing the foe
       if (span(along) > 2 || span(across) < 3 * F.GRID.gap * 0.9) bad.push('director: the shield wall is not one rank across the foe (deep ' + span(along).toFixed(0) + ', wide ' + span(across).toFixed(0) + ')');
-      const fd = Math.hypot(foes[0].x - foot[0].x, foes[0].y - foot[0].y); if (D && (D.fx * (foes[0].x - foot[0].x) + D.fy * (foes[0].y - foot[0].y)) / fd < 0.5) bad.push('director: the shield wall does not face the foe'); }
+      const fd = Math.hypot(ce0.x - cf0.x, ce0.y - cf0.y), dot = (D.fx * (ce0.x - cf0.x) + D.fy * (ce0.y - cf0.y)) / fd;
+      if (dot < 0.8) bad.push('director: the shield wall does not face the foe (dot ' + dot.toFixed(2) + ')'); }
     for (const u of arch) u.cd = 2; F.act('direct:1'); if (!arch.every((u) => u.cd === 0)) bad.push('director: Loose did not line up the reload'); const h0 = foes.reduce((s, f) => s + f.hp, 0); run(4); if (!(foes.reduce((s, f) => s + f.hp, 0) < h0)) bad.push('director: the volley hit nobody');
     { const D = arch[0].drill; if (!D || D.shape !== 'arc' || !D.arc) bad.push('director: Loose set no arc'); else { const off = arch.map((u) => Math.abs(Math.hypot(u.px + u.gx - D.arc.x, u.py + u.gy - D.arc.y) - D.arc.r)); if (Math.max(...off) > 1) bad.push('director: the places of the archers are not on one arc round the foe (off by ' + Math.max(...off).toFixed(1) + ')');
       if (!(D.arc.r <= F.stats(0, 'archer').rng)) bad.push('director: the arc stands out of reach of the bows'); } }
@@ -293,6 +298,28 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
     const a = F.addUnit(0, 'archer', k.x - 300, k.y + 120), R = F.stats(0, 'archer').rng; a.state = 'goto'; a.px = a.x; a.py = a.y; a.gx = 0; a.gy = 0; a.drill = { shape: 'arc', fx: 0, fy: 1, until: G.t + 30, px: a.px, py: a.py, arc: { x: a.x, y: a.y + R, r: R } };
     run(1); const f = F.addUnit(1, 'spear', a.x, a.y + R + 25); f.state = 'goto'; f.px = f.x; f.py = f.y; a.tgt = f; const x0 = a.x, y0 = a.y; run(1);
     if (Math.hypot(a.x - x0, a.y - y0) > 6) bad.push('director: an archer in the arc left its place to chase a foe past its reach'); }
+  // forming (Nov 3, FORMING): two soldiers forming push softly and the lower kind gives way; past 70% of a drill's time one under 70% of the way holds where it stands
+  { F.newGame(5); F.act('close'); const G = F.G; G.fogOn = false; F.setPause(false); F.step(1 / 30); const k = F.keepOf(0), run = (s) => { for (let i = 0; i < s * 30; i++) F.step(1 / 30); };
+    let o = null; for (let r = 60; r < 400 && !o; r += 20) for (let t = 0; t < 12 && !o; t++) { const x = k.x + Math.cos(t) * r, y = k.y + Math.sin(t) * r; if ([-12, 0, 12].every((e) => !F.blockedCell(F.gcell(x + e, y), 0) && !F.blockedCell(F.gcell(x, y + e), 0))) o = { x, y }; }   // open ground by the Town Center
+    const f = F.addUnit(0, 'spear', o.x, o.y), a = F.addUnit(0, 'archer', o.x + 2, o.y); for (const u of [f, a]) { u.state = 'goto'; u.px = u.x + 200; u.py = u.y; u.gx = 0; u.gy = 0; u.tgt = null; }
+    const fx = f.x, ax = a.x; F.pushApart(f, a); if (!(Math.abs(a.x - ax) > Math.abs(f.x - fx) * 2)) bad.push('forming: the archer did not give way to the foot soldier (foot moved ' + Math.abs(f.x - fx).toFixed(2) + ', archer ' + Math.abs(a.x - ax).toFixed(2) + ')');
+    const s = F.addUnit(0, 'spear', o.x, o.y + 30); s.state = 'goto'; s.px = s.x; s.py = s.y; s.gx = 300; s.gy = 0; s.drill = { shape: 'line', fx: 1, fy: 0, t0: G.t - 9, until: G.t + 1, px: s.px, py: s.py, from: { x: s.x, y: s.y } };   // 90% of its time gone, 0% of its way
+    F.drillHold(s); if (!s.drill.held || s.gx !== 0 || s.px !== s.x) bad.push('forming: past 70% of its time and short of 70% of its way, the soldier did not hold where it stands');
+    for (const u of [f, a, s]) u.hp = 0; }
+  // the shapes of Nov 3 (FORM: Front, Choke, Support) and the two map tools (the choke drawn, the ambush)
+  { F.newGame(5); F.act('close'); const G = F.G; G.fogOn = false; F.setPause(false); G.P[0].techs.add('formations'); G.P[0].techs.add('engage'); G.P[0].techs.add('command'); G.bnPlan[0] = { foot: 10, arch: 10 }; F.fxDirty(); F.step(1 / 30); const k = F.keepOf(0), run = (s) => { for (let i = 0; i < s * 30; i++) F.step(1 / 30); };
+    let o = null; for (let r = 80; r < 500 && !o; r += 20) for (let t = 0; t < 12 && !o; t++) { const x = k.x + Math.cos(t) * r, y = k.y + Math.sin(t) * r; if ([-60, -30, 0, 30, 60].every((e) => [-60, -30, 0, 30, 60].every((g) => !F.blockedCell(F.gcell(x + e, y + g), 0)))) o = { x, y }; }
+    const mk = (kind, n) => { const L = []; for (let i = 0; i < n; i++) { const u = F.addUnit(0, kind, o.x - 40 + (i % 5) * 9, o.y - 40 + ((i / 5) | 0) * 9); u.bn = 0; L.push(u); } return L; }, go = (L) => { for (const u of L) { u.state = 'goto'; u.px = o.x; u.py = o.y; u.idleT = 0; u.tgt = null; u.drill = null; } }, fk = { x: (o.x - k.x) / Math.hypot(o.x - k.x, o.y - k.y), y: (o.y - k.y) / Math.hypot(o.x - k.x, o.y - k.y) }, along = (u, f) => u.gx * f.x + u.gy * f.y;
+    const S = mk('spear', 6); G.form = G.form.map(() => 3); go(S); run(8); { const al = S.map((u) => along(u, fk)); if (F.shapeOf(S[0]).shape !== 'front') bad.push('front: the dial did not give the Front shape (' + F.shapeOf(S[0]).shape + ')'); if (Math.max(...al) - Math.min(...al) > 1) bad.push('front: six foot soldiers stand in more than one rank (' + al.map((v) => v.toFixed(0)).join() + ')'); }
+    G.form = G.form.map(() => 5); const A = mk('archer', 4); go([...S, ...A]); run(8); { const rr = (u) => Math.hypot(u.gx, u.gy); if (!(Math.min(...S.map(rr)) > Math.max(...A.map(rr)) + 1)) bad.push('support: the shooters do not stand inside the ring of foot (foot ' + S.map(rr).map((v) => v.toFixed(0)).join() + '; shooters ' + A.map(rr).map((v) => v.toFixed(0)).join() + ')'); }
+    G.form = G.form.map(() => 0); F.setPick([]); F.chokeAt({ x: o.x - 22, y: o.y }, { x: o.x + 22, y: o.y }); run(4);   // a gap three files wide, drawn across
+    { const D = S[0].drill, ac = S.map((u) => -u.gx * D.fy + u.gy * D.fx), files = new Set(ac.map((v) => Math.round(v / F.GRID.gap))).size; if (F.shapeOf(S[0]).shape !== 'choke') bad.push('choke: the drawn choke does not wear the Choke shape'); if (files > 3) bad.push('choke: a gap three files wide holds ' + files + ' files'); if (Math.abs(D.fy) < 0.9) bad.push('choke: the choke does not face across the gap'); }
+    for (const u of A) G.units.splice(G.units.indexOf(u), 1); G.rel[0][1] = G.rel[1][0] = 'war';   // the shooters leave, not die: four mates dead beside them would break the foot's nerve
+    const cov = F.coverNear(o.x, o.y); if (!cov) bad.push('ambush: no cover found within ' + F.AMBUSH.find + ' of open ground by the Town Center'); else {
+      F.ambushAt({ t: 'ground', e: { x: o.x, y: o.y } }); run(20); if (!S.every((u) => u.hid)) bad.push('ambush: the soldiers did not go to ground at the cover (' + S.filter((u) => u.hid).length + ' of 6 hid in 20 s)');
+      else { const e = F.addUnit(1, 'spear', cov.x + F.AMBUSH.spring + 30, cov.y); e.state = 'goto'; e.px = e.x; e.py = e.y; run(0.5); if (F.nearestFoe(1, e, 300) === S[0] || S.some((u) => !u.hid)) bad.push('ambush: a foe out of reach saw the ambush, or sprang it');
+        e.x = cov.x + F.AMBUSH.spring - 10; e.px = e.x; run(0.5); if (S.some((u) => u.hid) || !S.some((u) => u.chg > G.t)) bad.push('ambush: a foe within reach did not spring it with a charge'); e.hp = 0; } }
+    for (const u of S) u.hp = 0; }
   return bad; }"""
 async def main():
     fails = 0

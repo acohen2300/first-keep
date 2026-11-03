@@ -137,7 +137,7 @@ function drawBld(b, s) {
 	blaze(b, sx, sy, z);
 	if (idlePost(b)) idleMark(sx, sy, z * 1.2);
 	const M = maxHpB(b.owner, b.kind);
-	if (b.hp < M - 1) bar(sx, sy - c.ay * k - 4, Math.min(60 * z, B.fp * NAVC * z), b.hp / M, G.P[b.owner].color);
+	if (b.hp < M - 1 && !(B.camp && b.hp >= M * CAMP.mend)) bar(sx, sy - c.ay * k - 4, Math.min(60 * z, B.fp * NAVC * z), b.hp / M, G.P[b.owner].color); // a camp piece weathers a little every minute: its bar shows only once it wants mending (CAMP.mend)
 	if (G.wonder && G.wonder.id === b.id) {
 		ctx.font = mapFont(labelK());
 		ctx.fillStyle = '#ffd35e';
@@ -788,8 +788,11 @@ function drawUnit(u, s) {
 	// the body in motion (Build 52): a rise and fall with each step; a lunge into the blow and back; a shooter's kick on the release
 	const face = (u.fx || 1) < 0 ? -1 : 1,
 		ha = G.t - (u.hitT ?? -9),
+		hu = G.t - (u.hurtT ?? -9),
 		near = (U.rng || 0) <= 20,
-		bob = moving && !still() ? Math.abs(Math.sin(pace * Math.PI)) * 1.2 * z : 0,
+		low = isSoldier(u) && u.hp < u.max * JUICE.stagger && !still(), // the juice pass: a soldier badly hurt sways on its feet
+		bob = (moving && !still() ? Math.abs(Math.sin(pace * Math.PI)) * 1.2 * z : 0) + (low ? Math.sin(G.t * 4 + u.id) * 0.8 * z : 0),
+		recoil = still() || hu > JUICE.recoilS ? 0 : -JUICE.recoil * z * (1 - hu / JUICE.recoilS), // a blow landed: it gives a little, then stands
 		lunge =
 			still() || ha > 0.3
 				? 0
@@ -798,7 +801,7 @@ function drawUnit(u, s) {
 					: ha < 0.18
 						? -1.3 * z * (1 - ha / 0.18)
 						: 0,
-		bx = sx + face * lunge,
+		bx = sx + face * (lunge + recoil),
 		by = sy - bob;
 	stamp(c, bx, by, k * popC((G.t - (u.bornT ?? -9)) / 0.4), face < 0);
 	{

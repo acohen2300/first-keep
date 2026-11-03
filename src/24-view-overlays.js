@@ -405,11 +405,12 @@ function drawFlood(z) {
 	if (G.flood > G.t) {
 		ctx.fillStyle = 'rgba(42,100,136,.55)';
 		ctx.beginPath();
-		for (const L of G.lakes) {
-			const r = (L.r + EVENTS.flood.rise) * z;
-			ctx.moveTo(SX(L.x) + r, SY(L.y));
-			ctx.ellipse(SX(L.x), SY(L.y), r, r * TILT, 0, 0, 7);
-		}
+		for (const L of G.lakes)
+			for (let i = 0; i < 48; i++) {
+				const a = (i / 48) * Math.PI * 2,
+					r = lakeRAt(L, a) + EVENTS.flood.rise;
+				ctx[i ? 'lineTo' : 'moveTo'](SX(L.x + Math.cos(a) * r), SY(L.y + Math.sin(a) * r));
+			} // the flood follows each lake's own shore
 		ctx.fill(); // one shape, so a river's overlapping pools do not darken where they meet (Build 52)
 	} // the flood: water over the shore
 }
@@ -690,6 +691,21 @@ function drawTouch(z) {
 		ctx.arc(G.press.x, G.press.y, 26, -Math.PI / 2, -Math.PI / 2 + f * 6.2832);
 		ctx.stroke();
 	} // the ring fills only once the finger is plainly holding (Albert, Nov 3: it flashed on every tap): at full the box begins
+	if (G.chokeLine) {
+		const L = G.chokeLine,
+			n = Math.max(1, Math.round(hyp(L.b.x - L.a.x, L.b.y - L.a.y) / GRID.gap));
+		ctx.strokeStyle = '#ffd35e';
+		ctx.lineWidth = 3;
+		ctx.lineCap = 'round';
+		ctx.beginPath();
+		ctx.moveTo(SX(L.a.x), SY(L.a.y));
+		ctx.lineTo(SX(L.b.x), SY(L.b.y));
+		ctx.stroke();
+		ctx.font = mapFont();
+		ctx.textAlign = 'center';
+		ctx.fillStyle = '#ffd35e';
+		ctx.fillText(`${n} across`, SX((L.a.x + L.b.x) / 2), SY((L.a.y + L.b.y) / 2) - 12);
+	} // the choke being drawn: the gap and how many files it holds
 	if (G.box) {
 		const b = G.box;
 		ctx.fillStyle = 'rgba(255,211,94,.12)';

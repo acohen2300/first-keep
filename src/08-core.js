@@ -356,8 +356,18 @@ const selName = () => (G.sel === 'all' ? 'army' : BN[G.sel]);
 const hasCmd = () => G.P[0].techs.has('command');
 const formOf = (u) => (u.owner === 0 && u.bn !== undefined && G.P[0].techs.has('formations') ? G.form[u.bn] || 0 : 0);
 // Shape and temper, the two dials. On the march a side with Formations goes in column; on contact or at rest it stands to its chosen shape.
-const marching = (u) => !u.tgt && (u.state === 'goto' || u.state === 'attack') && G.t - (u.mvT ?? -9) < 0.6;
-const shapeOf = (u) => (u.wall > G.t ? FORM[2] : marching(u) && G.P[u.owner] && G.P[u.owner].techs.has('formations') ? COLUMN : FORM[formOf(u)]); // a shield wall (the Director) stands to the Square
+// (Nov 3: within the last GRID.fan of the spot it is deploying, not marching: a Front of six walking from column places to one rank snapped back
+// to column each step, and the two shapes chased each other for ever)
+const marching = (u) =>
+	!u.tgt && (u.state === 'goto' || u.state === 'attack') && G.t - (u.mvT ?? -9) < 0.6 && !(u.state === 'goto' && u.fanK === u.px + ',' + u.py);
+const shapeOf = (u) =>
+	u.wall > G.t
+		? FORM[2]
+		: u.drill && u.drill.until > G.t && u.drill.px === u.px && FORM.find((f) => f.shape === u.drill.shape) // a drill drawn on the map (the choke) wears its shape's trade
+			? FORM.find((f) => f.shape === u.drill.shape)
+			: marching(u) && G.P[u.owner] && G.P[u.owner].techs.has('formations')
+				? COLUMN
+				: FORM[formOf(u)]; // a shield wall (the Director) stands to the Square
 // a dial's setting for one battalion or for all of them (-1 when they differ), and one step round it
 const dialOf = (key, a) => (a === 'all' ? (G[key].every((x) => x === G[key][0]) ? G[key][0] : -1) : G[key][Number(a)]);
 const cycle = (key, a, n) => {

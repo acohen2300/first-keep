@@ -190,8 +190,93 @@ function dress(S, at, dir, shape, secs, arc) {
 		u.px = at.x;
 		u.py = at.y;
 		u.idleT = 0;
-		u.drill = { shape, fx: dir.x, fy: dir.y, until: G.t + secs, px: at.x, py: at.y, arc: arc || null };
+		u.drill = { shape, fx: dir.x, fy: dir.y, t0: G.t, until: G.t + secs, px: at.x, py: at.y, arc: arc || null, from: { x: u.x, y: u.y } };
 	}
+}
+// the x% by x% rule (FORMING.share): past that share of the drill's time, a soldier not that share of the way from where it started to its
+// place holds where it stands: in tight quarters they do the best they can as quick as they can (Albert, Nov 3)
+function drillHold(u) {
+	const D = u.drill;
+	if (!D || D.held || !D.from || u.gx === undefined || G.t - D.t0 < (D.until - D.t0) * FORMING.share) return; // a drill from before this rule (a save) has no start
+	const all = hyp(D.px + u.gx - D.from.x, D.py + u.gy - D.from.y) || 1,
+		left = hyp(D.px + u.gx - u.x, D.py + u.gy - u.y);
+	if (1 - left / all >= FORMING.share) return;
+	D.held = true;
+	u.px = D.px = u.x;
+	u.py = D.py = u.y; // its place is where it stands (its own spot now, no offset)
+	u.gx = u.gy = 0;
+}
+// ── The choke and the ambush (Albert, Nov 3, 11:08: "allowing the player to use the land to pick a formation that works")
+// the choke: a drag across a gap on the map (hold the shape on War); the picked soldiers, else everyone, stand in it as many files as
+// the gap holds (CHOKE), facing across it toward the nearest foes, else away from home; a standing order (a drill with no end)
+const toolSet = () => {
+	const P = picked().filter(isSoldier);
+	return P.length ? P : sendable();
+};
+function chokeAt(a, b) {
+	const U = toolSet();
+	if (!U.length) return say('No soldiers to hold it.', '', TOAST.short);
+	const w = hyp(b.x - a.x, b.y - a.y);
+	if (w < GRID.gap) return say('Drag across the gap, end to end.', '', TOAST.short);
+	const cols = clamp(Math.round(w / GRID.gap), CHOKE.min, CHOKE.max),
+		mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 },
+		F = foesNear(mid),
+		home = homeOf(0),
+		ref = F.length ? centreOf(F) : home ? { x: 2 * mid.x - home.x, y: 2 * mid.y - home.y } : null;
+	let fx = -(b.y - a.y) / w,
+		fy = (b.x - a.x) / w;
+	if (ref && fx * (ref.x - mid.x) + fy * (ref.y - mid.y) < 0) {
+		fx = -fx;
+		fy = -fy;
+	}
+	dress(U, mid, { x: fx, y: fy }, 'choke', 1e9);
+	for (const u of U) u.drill.cols = cols;
+	say(`${U.length} hold the gap, ${cols} across.`, 'good', TOAST.short);
+	sfx('horn');
+	feel('thock');
+}
+// the ambush: the nearest cover to the tap (an open square with forest within AMBUSH.cover squares, looked for within AMBUSH.find); the
+// soldiers go there and go to ground (u.hid once in place: no foe takes them for a mark, 15-sim-spatial); a foe within AMBUSH.spring, or a
+// blow, springs the whole ambush with a charge's burst (14-sim-troops)
+function coverNear(x, y) {
+	const cx = Math.floor(x / NAVC),
+		cy = Math.floor(y / NAVC),
+		R = Math.ceil(AMBUSH.find / NAVC),
+		tree = (gx, gy) => gx >= 0 && gy >= 0 && gx < NC && gy < NC && NAV.solid[gy * NC + gx] && !NAV.lake[gy * NC + gx] && !NAV.occ[gy * NC + gx];
+	let best = null,
+		bd = 1e9;
+	for (let gy = cy - R; gy <= cy + R; gy++)
+		for (let gx = cx - R; gx <= cx + R; gx++) {
+			if (gx < 0 || gy < 0 || gx >= NC || gy >= NC || NAV.solid[gy * NC + gx]) continue;
+			const d = hyp(gx * NAVC + 5 - x, gy * NAVC + 5 - y);
+			if (d >= bd || d > AMBUSH.find) continue;
+			let near = false;
+			for (let j = -AMBUSH.cover; j <= AMBUSH.cover && !near; j++) for (let i = -AMBUSH.cover; i <= AMBUSH.cover && !near; i++) if ((i || j) && tree(gx + i, gy + j)) near = true;
+			if (near) {
+				bd = d;
+				best = { x: gx * NAVC + 5, y: gy * NAVC + 5 };
+			}
+		}
+	return best;
+}
+function ambushAt(h) {
+	const U = toolSet();
+	if (!U.length) return say('No soldiers to hide.', '', TOAST.short);
+	const spot = coverNear(h.e.x, h.e.y);
+	if (!spot) return say('No cover there: an ambush wants forest.', '', TOAST.short);
+	for (const u of U) {
+		u.state = 'goto';
+		u.px = spot.x;
+		u.py = spot.y;
+		u.idleT = 0;
+		u.tgt = null;
+		u.focus = null;
+		u.drill = null;
+		u.amb = { x: spot.x, y: spot.y }; // bound for cover; hid once there
+		u.hid = false;
+	}
+	say(`${U.length} go to ground at ${coord(spot.x, spot.y)}.`, 'good', TOAST.short);
+	feel('thock');
 }
 const DIRECT_WHY = { none: 'Nobody of that kind.' };
 const DIRECTS = {
@@ -252,7 +337,8 @@ function direct(t) {
 	if (!S.length) return say(DIRECT_WHY.none, '', TOAST.short);
 	const said = DIRECTS[id](S, word);
 	if (!/!$/.test(said)) return say(said, '', TOAST.short); // a reason ends with a stop: nobody moved, no horn
-	say(said, 'good', TOAST.short);
+	const f = orderCost(0, S); // the drill's price (ORDER): their meals, and the tiredness after
+	say(f ? `${said} (${f} food)` : said, 'good', TOAST.short);
 	sfx(snd);
 	feel('snap');
 }

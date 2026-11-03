@@ -489,6 +489,18 @@ const PLAY = {
 		const n = sharePick(Number(a));
 		say(`${n} of ${S.length} picked: tap where they go.`, '', TOAST.short);
 	}, // a kind: every soldier of it picked; the next tap on the map is their order (Albert, Nov 3)
+	choketool() {
+		const H = G.hud;
+		H.aim = H.aim === 'choke' ? false : 'choke';
+		G.chokeLine = null;
+		if (H.aim) say('Drag across the gap: they hold it.', 'tip', TOAST.short);
+	}, // hold the shape: the choke tool (28-army-quick)
+	ambushtool() {
+		const H = G.hud;
+		H.aim = H.aim === 'ambush' ? false : 'ambush';
+		H.aimT = performance.now();
+		if (H.aim) say('Tap the cover where they hide.', 'tip', TOAST.short);
+	}, // hold Rally: the ambush tool
 	rallyat() {
 		const H = G.hud;
 		H.aim = H.aim === 'rally' ? false : 'rally';
