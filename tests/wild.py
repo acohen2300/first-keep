@@ -238,9 +238,9 @@ JS = """() => {
   // ── Albert's sighting (Nov 1, 08:13 and 08:18; QC D10): "z 0" while villagers showed Zs. One predicate (freeVil) for the Zs, the strip and idlego ──
   T_('D10', () => { const G = fresh(); G.nodes = G.nodes.filter((n) => n.type !== 'food'); for (const u of G.units) if (u.owner === W() && F.UNIT[u.kind].meat) u.hp = 0; G.units = G.units.filter((u) => u.hp > 0);
     const vs = F.unitsOf(0, 'vil'); for (const u of vs) F.setJob(u, 'food'); run(6); F.ui(true);
-    const waiting = vs.filter((u) => u.job && u.idle), z = document.getElementById('stIdl').innerText.replace(/\\s+/g, ' ').trim();
+    const waiting = vs.filter((u) => u.job && u.idle), z = ((document.querySelector('#row [data-act="ctl:jobs"] .bd') || {}).textContent || 'z 0').trim();
     if (!waiting.length) bad.push('D10: the check made no waiting villager');
-    if (z !== 'z ' + vs.filter((u) => !u.inside && (u.idle || !u.job)).length) bad.push(`D10: the strip reads "${z}" while ${waiting.length} villagers wait with Zs`);
+    if (z !== 'z ' + vs.filter((u) => !u.inside && (u.idle || !u.job)).length) bad.push(`D10: the Jobs badge reads "${z}" while ${waiting.length} villagers wait with Zs`);
     F.act('idlego'); const c = F.cam; if (!waiting.some((u) => Math.abs(c.tx - u.x) < 1 && Math.abs(c.ty - u.y) < 1)) bad.push('D10: the idle button does not go to a waiting villager'); });
 
   // ── gatherer caps (Albert, Nov 1, 12:57): a find holds as many as its working spots (a tree one feller); the next goes elsewhere ──
@@ -294,10 +294,9 @@ JS = """() => {
   // ── hunt B #10: art drawn into its own canvas gives the screen's ctx back, even when it throws ──
   T_('B10', () => { if (typeof F.drawOnce !== 'function') return bad.push('B10: no one home for art drawn into its own canvas'); const c0 = F.ctxNow; try { F.drawOnce(4, 4, () => { throw new Error('art'); }); } catch (e) {}
     if (F.ctxNow !== c0) bad.push('B10: a throw in sprite art left the screen drawing off screen'); });
-  // ── review fixes (Nov 1): the status strip keeps the soldiers; the squad's − and + split the tile; a jump closes the card; a locked control's switch is dim ──
-  T_('R1', () => { const G = fresh(); F.ui(true); const vis = (id) => [...document.getElementById(id).children].filter((e) => !e.hidden).length;
-    if (document.getElementById('stArm').hidden) bad.push('R1: the status strip drops the soldier count in the ' + G.P[0].age + ' age');
-    if (vis('status') !== vis('tally')) bad.push(`R1: the strip shows ${vis('status')} cells under ${vis('tally')}`); });
+  // ── review fixes (Nov 1; Nov 3 the strip cut): the soldier count is a badge on War in every age; a jump closes the card; a locked control's switch is dim ──
+  T_('R1', () => { const G = fresh(); F.ui(true); const k = F.keepOf(0); F.addUnit(0, 'spear', k.x + 40, k.y + 40); F.ui(true);
+    if (!document.querySelector('#row [data-act="ctl:war"] .bd')) bad.push('R1: War wears no soldier badge in the ' + G.P[0].age + ' age'); });
   T_('R2', () => { fresh(); F.openCard({ type: 'squad', i: 0 }); F.ui(true);
     const tile = document.querySelector('#card [data-act^="bldgo:"]'), m = document.querySelector('#card [data-act="sqpk:0,0,-"]'), p = document.querySelector('#card [data-act="sqpk:0,0,+"]');
     if (!tile || !m || !p) bad.push('R2: the squad card has no tile with − and + under it'); else { const t = tile.getBoundingClientRect(), a = m.getBoundingClientRect(), b = p.getBoundingClientRect();

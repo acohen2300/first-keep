@@ -10,12 +10,13 @@ Every colour the game uses has one name and one home: the style sheet's `:root` 
 | Brown 3 | `--brown-3` | #6b5230 | slot edge |
 | Gold 1 | `--gold-1` | #e6b947 | titles, the chosen ring, the tab folder |
 
-## The War and Train pages (Albert's ballot, V1: steel)
+## Steel and ember (Nov 3: the controller is one brown; steel stays for the queue's slots) [2026-11-03 11:24]
 | Name | Token | Colour | Used for |
 |---|---|---|---|
-| Steel 1 | `--steel-1` | #1e2329 | the page behind the row |
-| Steel 2 | `--steel-2` | #2a3038 | slot fill |
-| Steel 3 | `--steel-3` | #4d5a68 | slot edge |
+| Steel 1 | `--steel-1` | #1e2329 | an empty place in a line (the queue) | [2026-11-03 11:24]
+| Steel 2 | `--steel-2` | #2a3038 | a filled place in a line | [2026-11-03 11:24]
+| Steel 3 | `--steel-3` | #4d5a68 | the line's edge | [2026-11-03 11:24]
+| Ember | `--ember` | #d66030 | the war tiles' glow on the controller (whose a tile is, never a state); it breathes while an attack is coming | [2026-11-03 11:24]
 
 ## The colour code (kept from Build 64; the meaning is in `RULES.md`)
 | Name | Token | Colour | Means |

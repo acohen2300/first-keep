@@ -376,9 +376,9 @@ function warCells(sub) {
 		const on = (kind) => (G.emg && G.emg.kind === kind ? '●' : null);
 		return (
 			fill([
-				pic('emgstop', ICON.stop, W[0][0], 'v2' + (G.emg ? '' : ' dis')),
-				pic('emg:square', ICON.home, W[1][0], 'v2', on('square')),
-				pic('emg:hands', ICON.sword, W[2][0], 'v2', on('hands')),
+				pic('emgstop', ICON.ok, W[0][0], 'v2' + (G.emg ? '' : ' dis')),
+				pic('emg:square', ICON.gather, W[1][0], 'v2', on('square')),
+				pic('emg:hands', ICON.def, W[2][0], 'v2', on('hands')),
 				pic('emg:shelter', ICON.shield, W[3][0], 'v2' + (unitsOf(0, 'vil').length ? '' : ' dis'), on('shelter')),
 			]) + backCell('v2')
 		);
@@ -391,34 +391,34 @@ function warCells(sub) {
 				S = m ? mUnits(m) : hasCmd() ? sqUnits(i) : [];
 			return pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, 'wo' + (hasCmd() || m ? '' : ' dis'), S.length, ` data-hold="sqcard:${i}"`);
 		}),
-		pic('ctlsub:kinds', ICON.sword, ROW_WORD.kinds, 'wo'),
-		pic('ctlsub:alarm', ICON.shield, ROW_WORD.alarm, 'vo' + (G.emg ? ' warn' : '')),
-		pic('rallyat', ICON.follow, ROW_WORD.rally, 'wo' + (H.aim === 'rally' ? ' on' : '')),
+		pic('ctlsub:kinds', ICON.kinds, ROW_WORD.kinds, 'wo'),
+		pic('ctlsub:alarm', ICON.bell, ROW_WORD.alarm, 'vo' + (G.emg ? ' warn' : '')),
+		pic('rallyat', ICON.flag, ROW_WORD.rally, 'wo' + (H.aim === 'rally' ? ' on' : '')),
 		pic('shape:all', ICON.list, sh < 0 ? 'Mixed' : FORM[sh].name, 'wo' + (G.P[0].techs.has('formations') ? '' : ' dis')),
-		pic('ctlsub:train', ICON.mil, ROW_WORD.train, 'wo'),
+		pic('ctlsub:train', ICON.train, ROW_WORD.train, 'wo'),
 		pic('sqsetup', ICON.gear, ROW_WORD.setup, 'wo' + (hasCmd() ? '' : ' dis')),
 	]);
 }
 const researchable = () => [...G.rdy.values()].reduce((a, v) => a + v, 0); // research you can start now (the count the strip shows)
 const idleSoldiers = () => sendable().filter((u) => u.state === 'home');
 const MENU_WORD = { mil: 'Barracks' }; // a build group's word on the controller where the menu's own would clash with a tile (War)
-const MENU_ICON = { home: 'home', land: 'wood', mil: 'mil', def: 'def', shop: 'gold', cult: 'star' }; // a build group's picture
+const MENU_ICON = { home: 'home', land: 'wood', mil: 'tent', def: 'def', shop: 'gold', cult: 'star' }; // a build group's picture
 function ctlHTML() {
 	const H = G.hud,
 		page = H.page,
-		idle = unitsOf(0, 'vil').filter(freeVil).length,
+		idle = unitsOf(0, 'vil').filter(freeVil).length + G.blds.filter(idlePost).length, // every Z on the map: idle people and empty posts (D-089)
 		sol = armyOf(0).filter((u) => u.kind !== 'spy').length;
-	if (H.shut) return at(sym('ctlshut', ICON.up, 'wb', 'Open the controls'), 7, 2);
+	if (H.shut) return at(sym('ctlshut', ICON.up, 'vb mb', 'Open the controls'), 7, 2);
 	let h =
-		at(badge(pic('ctl:jobs', ICON.head, ROW_WORD.jobs, page === 'jobs' ? 'vo' : 'vb'), idle && `z ${idle}`), 1, 1) +
-		at(pic('ctl:town', ICON.home, ROW_WORD.town, page === 'town' ? 'vo' : 'vb'), 1, 2) +
-		at(badge(pic('ctl:war', ICON.war, ROW_WORD.war, page === 'war' ? 'wo' : 'wb' + (G.incoming ? ' warn' : '')), sol), 7, 1) +
-		at(sym('ctlshut', ICON.down, 'wb', 'Close the controls'), 7, 2);
+		at(badge(pic('ctl:jobs', ICON.basket, ROW_WORD.jobs, page === 'jobs' ? 'vo' : 'vb'), idle && `z ${idle}`), 1, 1) +
+		at(badge(pic('ctl:town', ICON.town, ROW_WORD.town, page === 'town' ? 'vo' : 'vb'), researchable() || null), 1, 2) +
+		at(badge(pic('ctl:war', ICON.swords, ROW_WORD.war, (page === 'war' ? 'wo' : 'wb') + (G.incoming ? ' raid' : '')), sol), 7, 1) +
+		at(sym('ctlshut', ICON.down, 'vb mb', 'Close the controls'), 7, 2);
 	if (page === 'jobs') h += jobsCells();
 	else if (page === 'town') h += townCells(H.sub);
 	else if (page === 'war') h += warCells(H.sub);
 	if (!page || (page === 'town' && !H.sub)) {
-		h += at(pic('mapt', ICON.map, ROW_WORD.map, 'wb' + (H.map ? ' on' : '')), 6, 1);
+		h += at(pic('mapt', ICON.map, ROW_WORD.map, 'vb mb' + (H.map ? ' on' : '')), 6, 1);
 		if (H.map) h += `<div class="mapb" style="grid-column:${CTL.map[0]} / ${CTL.map[1] + 1};grid-row:1 / 3"></div>`;
 	} // the small map, 3 × 2, at rest and beside Town's column; its tile lit while it shows (Albert, Nov 3)
 	return h;
@@ -453,73 +453,57 @@ function rowUI() {
 		fit(); // the row is drawn anew: the map's bottom edge is measured again
 	}
 }
-// the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; its colour says what is under it; green once fired
+// the crosshair (Albert, Nov 3: "a very basic one from best practices"; mock 24's chevrons, scan line and sonar ring cut): a thin cross with a
+// gap at the middle and a dot, a dark edge under it so it reads on any ground, its colour what is under it (aimColor), green once fired; the
+// arrival time and the place above it. Held (H.drag): a faint disc shows the finger has it.
 function drawReticle() {
 	const H = G.hud;
 	if (!H.aim || !H.h) return;
 	const x = SX(H.h.e.x),
 		y = SY(H.h.e.y),
 		L = performance.now() - (H.firedT || -1e9) < timeOf('settle') ? 1 : 0,
-		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
-		t = still() ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
+		R = Math.max(22, 12 * cam.z + 6),
+		g = 6, // the gap round the middle
 		eta = hudEta(),
-		line = (a, b, c, d) => (ctx.moveTo(x + a, y + b), ctx.lineTo(x + c, y + d));
+		cross = () => {
+			ctx.beginPath();
+			ctx.moveTo(x - R, y);
+			ctx.lineTo(x - g, y);
+			ctx.moveTo(x + g, y);
+			ctx.lineTo(x + R, y);
+			ctx.moveTo(x, y - R);
+			ctx.lineTo(x, y - g);
+			ctx.moveTo(x, y + g);
+			ctx.lineTo(x, y + R);
+			ctx.stroke();
+		};
 	ctx.save();
-	ctx.strokeStyle = ctx.fillStyle = L ? codeOf('g') : aimColor(H.h);
-	ctx.lineWidth = 1.5;
+	ctx.lineCap = 'round';
 	if (H.drag) {
 		ctx.globalAlpha = 0.14;
+		ctx.fillStyle = codeOf('w');
 		ctx.beginPath();
-		ctx.arc(x, y, R + 12, 0, 7);
+		ctx.arc(x, y, R + 10, 0, 7);
 		ctx.fill();
 		ctx.globalAlpha = 1;
 	}
+	ctx.strokeStyle = 'rgba(0,0,0,.6)';
+	ctx.lineWidth = 4;
+	cross();
+	ctx.strokeStyle = ctx.fillStyle = L ? codeOf('g') : aimColor(H.h);
+	ctx.lineWidth = 2;
+	cross();
 	ctx.beginPath();
-	const q = R * 0.4;
-	for (const [a, b] of [
-		[-1, -1],
-		[1, -1],
-		[1, 1],
-		[-1, 1],
-	]) {
-		line(a * R, b * (R - q), a * R, b * R);
-		line(a * R, b * R, a * (R - q), b * R);
-	}
-	ctx.stroke();
-	if (!L) {
-		const p = (t * 0.5) % 1,
-			ph = t * 1.2;
-		ctx.globalAlpha = Math.pow(1 - p, 1.4) * 0.8;
-		ctx.beginPath();
-		ctx.arc(x, y, 4 + p * R * 1.3, 0, 7);
-		ctx.stroke();
-		ctx.globalAlpha = 1;
-		ctx.beginPath();
-		for (let i = 0; i < 3; i++) {
-			const a = ph + (i * 2 * Math.PI) / 3,
-				c = Math.cos(a),
-				s = Math.sin(a),
-				rot = (u, v) => [u * c - v * s, u * s + v * c],
-				p0 = rot(R * 0.62, -5),
-				p1 = rot(R * 0.62 + 7, 0),
-				p2 = rot(R * 0.62, 5);
-			line(p0[0], p0[1], p1[0], p1[1]);
-			line(p2[0], p2[1], p1[0], p1[1]);
-		}
-		const sy = Math.sin(t * 3) * (R - 4);
-		line(-R + 3, sy, R - 3, sy);
-		ctx.stroke();
-	}
-	const g = 8;
-	ctx.beginPath();
-	line(-R - 14, 0, -g, 0);
-	line(g, 0, R + 14, 0);
-	line(0, -R - 14, 0, -g);
-	line(0, g, 0, R + 14);
-	ctx.stroke();
+	ctx.arc(x, y, 2, 0, 7);
+	ctx.fill();
 	ctx.font = mapFont(); // pinned to the screen
 	ctx.textAlign = 'center';
-	ctx.fillText(eta ? `${clock(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - R - 20); // above the scope line's end (it ran through the words, Nov 3)
+	ctx.lineJoin = 'round';
+	ctx.strokeStyle = 'rgba(0,0,0,.75)';
+	ctx.lineWidth = 3;
+	const w = eta ? `${clock(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y);
+	ctx.strokeText(w, x, y - R - 8);
+	ctx.fillText(w, x, y - R - 8);
 	ctx.restore();
 }
 // ── the squad card (MENU-SPEC §8, picture Mission Flow): the squad builder while it is home, the live view while it is out (Build 61, one card, two states)

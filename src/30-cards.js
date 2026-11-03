@@ -645,6 +645,25 @@ const CARDS = {
 			: '<p class="dim">None yet. Each first (a house, a field, a soldier, a squad, an age) and each hard moment (mud, snow, ice, hunger, fire, a rout) is one, with its why and its fix.</p>';
 		return h;
 	},
+	// the Status page (Albert, Nov 3: the thin strip cut; its state of the realm lives here): the age, the season and the sky, the clock, the rank, then the doors to the Stores, the Score, the Mail and the Sound
+	status() {
+		scoreAll();
+		const p = G.P[0],
+			rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length,
+			lim = MODES[G.mode].secs,
+			clk = G.wonder ? `${clock(Math.max(0, G.wonder.end - G.t))} to the wonder` : lim ? `${clock(Math.max(0, lim - G.t))} left` : clock(G.t),
+			sky = `${season().name}${WEATHER[G.wx] && G.wx !== 'clear' ? ', ' + WEATHER[G.wx].name.toLowerCase() : ''}${G.night > 0.5 ? ', night' : ''}`;
+		return (
+			title('Status', AGES[p.age].name + ' age') +
+			list([
+				btn('card:score', `★ ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, `${Math.round(p.score.total)} points`),
+				btn('card:stores', 'Stores', 'what you have, and why'),
+				btn('mail', 'Mail', G.mailN ? `${G.mailN} unread` : 'nothing new'),
+				btn('sound', 'Sound', SND.on ? 'on' : 'off', SND.on ? '' : 'on'),
+			]) +
+			`<p><b>${clk}</b> · ${sky}.</p>`
+		);
+	},
 	score() {
 		scoreAll();
 		const rows = G.P.filter((q) => q.id !== WILD),
@@ -739,6 +758,7 @@ const CARDS = {
 				btn('news', 'World news', SET.news !== false ? 'on' : 'off', SET.news !== false ? 'on' : ''),
 				btn('lights', 'Lights', SET.lights !== false ? 'on' : 'off', SET.lights !== false ? 'on' : ''),
 				btn('cardpause', 'Pause on cards', SET.cardPause !== false ? 'on' : 'off', SET.cardPause !== false ? 'on' : ''),
+				btn('perf', 'Speed counter', SET.perf ? 'on' : 'off', SET.perf ? 'on' : ''),
 				btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off'),
 				btn('card:taps', 'Tap counts', 'this phone only'),
 			]) +

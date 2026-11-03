@@ -9,7 +9,7 @@
 :root{
   --z-sticky:2;--z-float:3;--z-hud:4;--z-pop:5;--z-drop:7;--z-end:8;   /* the layers, bottom to top (hunt B #9): a card's title bar; the floating buttons and bars; the top bar; the preview and the quick action; the speed drop-down; the end card over all */
   --brown-1:#2a1d13;--brown-2:#33241a;--brown-3:#6b5230;--gold-1:#e6b947;   /* the materials: card, slot fill, slot edge; titles and the chosen ring */
-  --steel-1:#1e2329;--steel-2:#2a3038;--steel-3:#4d5a68;   /* the War and Train pages: the page, slot fill, slot edge */
+  --steel-1:#1e2329;--steel-2:#2a3038;--steel-3:#4d5a68;--ember:#d66030;   /* steel: the queue's slots; ember: the war tiles' glow (Albert, Nov 3) */
   --ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b;--ring-w:#ece5d3;   /* the colour code (RULES): blue available, green active, red wrong, white words and all is well */
   --dim:80%;--faint:35%;--white-dim:color-mix(in srgb,var(--ring-w) var(--dim),transparent);--white-faint:color-mix(in srgb,var(--ring-w) var(--faint),transparent);--glass:92%;   /* the levels (COLORS, Nov 2): a hue full, dim or faint, blended into what it sits on; glass: a card over the map, the map's shapes through it (no blur: it costs every frame) */
   --age-0:#9a9890;--age-1:#b5793a;--age-2:#c9c2a6;--age-3:#4d6b9e;--age-4:#8e2f2a;   /* the ages: a tech's top edge */
@@ -20,7 +20,7 @@
   --weight:600;   /* Barlow's one weight (MAYBE); the body and the map's words (mapFont) read it */
   --fs-s:12px;--fs-l:18px;   /* two text sizes (v80, Albert): 12 for every word and number in a tile, 18 for titles and the big moments */
   --t-quick:.15s;--t-sweep:.4s;--t-settle:1.2s;--t-long:2.4s;   /* the four timings (Build 66, SoRen's names): a state changes, a thing moves, a thing comes to rest, two rests. The code reads these too */
-  --hb:calc(env(safe-area-inset-top,0px) + var(--gap) * 2 + var(--slot) + var(--half));   /* the top: the bar at 6, gap 6, the strip */
+  --hb:calc(env(safe-area-inset-top,0px) + var(--gap) * 2 + var(--slot));   /* the top: the bar at 6, gap 6 (the thin strip cut, Albert, Nov 3) */
   --ob:100px;   /* the row's height, measured by fit() */
   --display:"IM Fell English SC",Georgia,"Times New Roman",serif;--ui:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
   color-scheme:dark}
@@ -85,13 +85,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 .cell .gl{position:absolute;left:50%;top:13px;transform:translate(-50%,-50%)}
 .cell .wd{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);text-align:center;font-size:var(--fs-s);line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
 .cell.one .gl,.cell.one .wd{top:50%}.cell.one .gl{width:18px;height:18px}
-#muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--white-dim)}
 #pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:var(--fs-s);color:var(--gold-1)}
-#status{height:var(--half);margin-top:calc(var(--gap) / -2);overflow:visible;align-items:flex-start}
-#status .cell{height:var(--slot);display:flex;flex-direction:row;align-items:flex-start;justify-content:center;gap:2px;padding:0 1px;overflow:hidden}
-#status .cell .gl,#status .cell .wd{position:static;transform:none;width:auto;height:var(--half);line-height:var(--half);font-size:var(--fs-s);white-space:nowrap}
-#status .cell span.gl{display:inline-flex;align-items:center}#status .cell .gl svg{width:12px;height:12px}#status .cell .gl:empty{display:none}
-#status .cell+.cell::before{top:4px;bottom:auto;height:11px}
 @keyframes glowb{0%,100%{text-shadow:0 0 3px color-mix(in srgb,var(--ring-b) var(--faint),transparent)}50%{text-shadow:0 0 12px var(--ring-b)}}
 /* The preview (Build 64): a message arrives over the map the way a phone shows a text, and fades; its left edge is the colour code */
 #pv{position:absolute;z-index:var(--z-pop);top:calc(var(--hb) + var(--gap));left:var(--gap);right:var(--gap);display:flex;align-items:stretch;min-height:var(--slot);box-sizing:border-box;border:1px solid var(--brown-3);border-left:5px solid var(--cc,var(--ring-w));border-radius:var(--rad);background:var(--brown-1);box-shadow:var(--shade);color:var(--ring-w);transition:opacity var(--t-sweep)}
@@ -111,6 +105,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 #homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap))}
 /* the cycle button and Emergency: a slot each, on their own rank above the row, slot 1 and slot 6 (MENU-SPEC §6; cold review of v70: Emergency
    was 44 wide a rank higher, with no word). Emergency steps aside while any card is open, where it would sit over the card's buttons */
+#perf{position:absolute;z-index:var(--z-hud);left:var(--gap);top:calc(var(--hb) + var(--gap) * 2 + var(--slot));padding:2px 6px;border-radius:var(--rad);background:color-mix(in srgb,var(--brown-1) var(--glass),transparent);color:var(--ring-w);font-size:var(--fs-s);font-variant-numeric:tabular-nums;pointer-events:none;white-space:pre}   /* the speed counter (Albert, Nov 3): on from Help, for the hour's test on a phone */
 #qa{position:absolute;z-index:var(--z-pop);display:flex;gap:var(--gap)}#qa.left{flex-direction:row-reverse}#qa .cell{width:var(--slot);height:var(--slot);flex:none;border-radius:50%;background:var(--brown-2);border:1px solid var(--brown-3);box-shadow:var(--shade)}#qa .cell svg{width:22px;height:22px}   /* the quick action: the sword and ✕, round chips, the sword under the finger (Albert, Nov 3) */
 #stage>#mini{display:none}   /* the small map shows only in the controller's map box */
 #stage.busy #homeB,#stage.picking #homeB{display:none}
@@ -125,12 +120,12 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 #orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--gap) calc(env(safe-area-inset-bottom,0px) + var(--gap));pointer-events:none}
 #row{pointer-events:auto}#row .info :is(b,small){white-space:nowrap}
 #row button{box-shadow:var(--shade)}   /* no panel behind the row on any page (Albert, Nov 2): the map shows between the slots */
-/* The controller (Albert, Nov 3; MENU-SPEC §6): seven columns, 6 at the edges and 3 between, two ranks of 44. Villagers brown (vb, the open page vo, a page under it v2), war steel (wb, wo, w2). The map box 3 x 2, the small map cut to its width round the camera (drawMini). */
+/* The controller (Albert, Nov 3; MENU-SPEC §6): seven columns, 6 at the edges and 3 between, two ranks of 44. One material, brown wood (Albert, 10:39: the steel felt dead). Whose a tile is: the war tiles wear a faint ember glow (--ember), the villagers' none, the map tile neither. What is open: the lit tile and its page a step lighter (vo, wo), a page under it a step darker (v2, w2). State stays the ring (RULES). An attack coming: the War tile's glow breathes (raid). */
 #orders.ctl #row{grid-template-columns:repeat(7,minmax(0,1fr));grid-auto-rows:var(--slot);gap:3px}#orders.ctl #row .cell{height:var(--slot);min-height:0}
-#row .vb{background:var(--brown-2);border-color:var(--brown-3)}#row .vo{background:color-mix(in srgb,var(--gold-1) 22%,var(--brown-2));border-color:var(--gold-1)}#row .v2{background:color-mix(in srgb,#000 22%,var(--brown-2));border-color:var(--brown-3)}
-#row .wb{background:var(--steel-1);border-color:var(--steel-3)}#row .wo{background:color-mix(in srgb,var(--ring-w) 14%,var(--steel-2));border-color:var(--white-dim)}#row .w2{background:var(--steel-2);border-color:var(--steel-3)}#row :is(.vb,.wb) :is(.wd,.gl,.c){color:var(--white-dim)}
+#row :is(.vb,.wb){background:var(--brown-2);border-color:var(--brown-3)}#row :is(.vo,.wo){background:color-mix(in srgb,var(--ring-w) 12%,var(--brown-2));border-color:color-mix(in srgb,var(--ring-w) 30%,var(--brown-3))}#row :is(.v2,.w2){background:color-mix(in srgb,#000 18%,var(--brown-2));border-color:var(--brown-3)}
+#row :is(.wb,.wo,.w2){box-shadow:0 0 6px 1px color-mix(in srgb,var(--ember) 45%,transparent),var(--shade)}#row :is(.vb,.wb) :is(.wd,.gl,.c){color:var(--white-dim)}#row :is(.vo,.wo,.v2,.w2) :is(.wd,.gl,.c){color:var(--ring-w)}#row .mb{box-shadow:var(--shade)}#row .raid{animation:ember var(--t-long) ease-in-out infinite}
 #row .pm{display:flex;gap:3px;min-width:0}#row .pm>.cell{flex:1 1 0}#row .wc{padding:0 2px}#row .wc b{font-size:var(--fs-s);line-height:1.05;white-space:normal;overflow:hidden;max-width:100%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-align:center}#row .wc small{font-size:var(--fs-s);line-height:1}
-#row .mapb{border:1px solid var(--ring-w);border-radius:var(--rad-o);overflow:hidden;background:var(--steel-1);box-shadow:var(--shade)}#row .mapb>canvas{display:block;width:100%;height:100%;object-fit:cover;border:0;border-radius:0;background:none}
+#row .mapb{border:1px solid var(--ring-w);border-radius:var(--rad-o);overflow:hidden;background:var(--brown-1);box-shadow:var(--shade)}#row .mapb>canvas{display:block;width:100%;height:100%;object-fit:cover;border:0;border-radius:0;background:none}
 #row .bd{position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;background:var(--ring-r);color:var(--brown-1);font-size:var(--fs-s);line-height:16px;text-align:center;pointer-events:none}
 /* a slot of icon and word (the row, the cycle button, a card's rank): the picture at 18 with its number at 12 beside it, the word at 12 in
    Cream 2 under it; a symbol alone at 24 */
@@ -138,7 +133,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 .cell .top :is(.gl,svg){position:static;transform:none;width:18px;height:18px}
 .cell .top .c{font-size:var(--fs-s);line-height:1;font-variant-numeric:tabular-nums;color:var(--nc,inherit)}
 .cell .top~.wd{color:var(--white-dim)}
-#mailB .top{top:50%;gap:0}#mailB .top .c{position:absolute;left:calc(50% + 2px);top:-7px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--ring-r);color:var(--brown-1)}#mailB.dis .top .c{display:none}   /* Mail (Albert, Nov 2): the icon dead centre of its slot, the unread a red count on its top right corner, none at 0 (the cell is dim then) */
+#pauseB .top{top:50%;gap:0}#pauseB .top .c{position:absolute;left:calc(50% + 2px);top:-7px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--ring-r);color:var(--brown-1)}#pauseB:not(.unread) .top .c{display:none}   /* pause (Albert, Nov 3): the icon dead centre, the unread mail a red count on its top right corner, none at 0 */
 .cell.sym .gl{top:50%;width:24px;height:24px}
 /* The card (MENU-SPEC §1, §4): its slots on the screen's own grid, 6 from the edge and 6 from the row, its frame an outline down the middle
    of that 6 (9, so the curves nest): a card of n ranks stands exactly n ranks tall. It rises from the row as tall as its content (Albert,
@@ -214,9 +209,10 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 :is(.on,.warn,.nope):not(.pill>*) :is(b,.wd),.segT .on{color:var(--rc)}
 .warn:not(.pill>*){animation:breathe var(--t-long) ease-in-out infinite}
 @keyframes breathe{50%{box-shadow:inset 0 0 0 1px var(--rc),0 0 8px 1px var(--rc)}}
+@keyframes ember{50%{box-shadow:0 0 16px 5px color-mix(in srgb,var(--ember) 85%,transparent),var(--shade)}}
 @media (prefers-reduced-motion:reduce){.warn:not(.pill>*){box-shadow:inset 0 0 0 2px var(--rc)}}   /* still, and 3 wide: never colour alone */
 .work:not(.warn,.nope)::after{content:'';position:absolute;inset:-1px;padding:2px;border-radius:var(--rad);background:conic-gradient(var(--ring-g) var(--p,100%),transparent 0);mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);pointer-events:none}
-.dis:not(.pill>*){background:var(--brown-1)}[data-act^="tech:"].dis:not(.pill>*){border-color:var(--white-faint)}#row :is(.wb,.wo,.w2).dis{background:var(--steel-1);opacity:.6}.dis,.dis :is(b,.wd){color:var(--white-dim)}
+.dis:not(.pill>*){background:var(--brown-1)}[data-act^="tech:"].dis:not(.pill>*){border-color:var(--white-faint)}#row :is(.wb,.wo,.w2).dis{background:var(--brown-1);opacity:.6}.dis,.dis :is(b,.wd){color:var(--white-dim)}
 .empty{background:var(--brown-1);border:1px solid var(--brown-2);border-radius:var(--rad);color:var(--white-dim)}
 /* inside a bar a chosen part is ringed inside the shape, and a selector's ring is the one that slides; the switch and the slider on are gold */
 .bar>.on{border-color:transparent;box-shadow:inset 0 0 0 4px var(--brown-2),inset 0 0 0 6px var(--gold-1)}.sel>.on{box-shadow:none}
@@ -235,7 +231,6 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 .main{background:linear-gradient(var(--fill-1),var(--fill-2)) var(--fill-1);border-color:var(--fill-1);color:var(--ink)}.main :is(b,small){color:var(--ink)}.main b{font-size:var(--fs-l)}
 /* the bar and the strip draw no frame round a cell: a chosen cell of the bar wears its ring inside, a cell of the strip says its state in its word */
 .pill>.on::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:var(--rad);box-shadow:inset 0 0 0 2px var(--rc)}
-#status>:is(.go,.warn) .wd{color:var(--rc)}#status>.go{animation:glowb var(--t-long) ease-in-out infinite}
 }
 </style>
 
@@ -245,12 +240,13 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
     <div id="vig"></div>
   <header id="hud">
     <div class="pill" id="tally"></div>
-    <div class="pill" id="status"></div>
+
   </header>
   <div id="pv" hidden></div>
   <section id="orders" class="ctl pg-rest"><div class="fm" id="row"></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="qa" hidden></div>
+    <div id="perf" hidden></div>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
 

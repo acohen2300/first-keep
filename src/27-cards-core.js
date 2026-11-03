@@ -21,7 +21,7 @@ function openCard(c, back) {
 	renderCard();
 	preview();
 } // a card pauses the game (Help: Pause on cards); closing it carries on
-const READ_CARDS = { research: 'Research', troops: 'the Army', guide: 'the Guide', help: 'Help', score: 'Score', stores: 'Stores', sound: 'Sound' }; // the cards you sit and read pause the game (named for the Rules page); a building, a unit or a field to glance at does not (Albert, Build 41). The War Council is a building card that pauses (Build 48: 'council' here never matched a card)
+const READ_CARDS = { research: 'Research', troops: 'the Army', guide: 'the Guide', help: 'Help', score: 'Score', stores: 'Stores', sound: 'Sound', status: 'Status' }; // the cards you sit and read pause the game (named for the Rules page); a building, a unit or a field to glance at does not (Albert, Build 41). The War Council is a building card that pauses (Build 48: 'council' here never matched a card)
 // whether the card on show pauses the game, decided each time what it shows changes (a card opened, back, a tab turned), never once at
 // open (E7: Relations paused when opened on its tab, not when the tab was turned; a building after Research stayed paused). Between
 // changes the player's own pause and play stand

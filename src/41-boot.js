@@ -42,6 +42,19 @@ function shed(work) {
 		}
 	} else DRAW.slow = DRAW.fast = 0;
 }
+// the speed counter (Albert, Nov 3): once a second, frames a second (the last second's count), the draw level (0 full detail; it climbs as a
+// phone sheds detail, 18-figures), the step's cost in ms, the units on the map, the memory where the browser tells it, the game clock
+const PERF = { n: 0, t0: 0, min: 99 };
+function perfTick(now, run) {
+	PERF.n++;
+	if (now - PERF.t0 < 1000) return;
+	const fps = Math.round((PERF.n * 1000) / (now - PERF.t0)),
+		mem = performance.memory ? ` · ${Math.round(performance.memory.usedJSHeapSize / 1048576)} MB` : '';
+	PERF.min = Math.min(PERF.min, fps);
+	PERF.n = 0;
+	PERF.t0 = now;
+	$('perf').textContent = `${fps} fps (low ${PERF.min}) · draw ${DRAW.lvl} · step ${DRAW.ema.toFixed(1)} ms · ${G.units.length} units${mem} · ${clock(G.t)}${run ? '' : ' · paused'}`;
+}
 // One frame. When nothing moves (paused, over, hidden, no touch for a second) it waits: 15 frames a second instead of 60.
 function frame(now) {
 	const run = !G.over && !G.paused && !document.hidden,
@@ -66,6 +79,7 @@ function frame(now) {
 			lastSave = now;
 			if (run) saveGame();
 		}
+		if (SET.perf) perfTick(now, run);
 		edgeScroll(d);
 		if (cv.width !== Math.round(cv.clientWidth * dpr) || cv.height !== Math.round(cv.clientHeight * dpr)) fit(); // the drawing no longer matches the map's box: measure again (the squashed map, Nov 2; the box observer misses a bad first measure)
 		draw();
@@ -87,6 +101,7 @@ for (const ev of ['pointerdown', 'pointermove', 'wheel'])
 	);
 window.addEventListener('resize', fit);
 buildPanel();
+$('perf').hidden = !SET.perf;
 fit();
 newGame();
 scoreAll();

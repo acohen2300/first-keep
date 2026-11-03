@@ -14,6 +14,16 @@ const ICON = {
 	up: SVG(20, '<path d="M5 12l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'),
 	down: SVG(20, '<path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'),
 	map: SVG(20, '<path d="M3 5l4.5-1.5 5 2L17 4v11l-4.5 1.5-5-2L3 16z M7.5 3.5v11 M12.5 5.5v11" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'),
+	// the controller's own (Albert, Nov 3, the icon review: one picture, one meaning, one line style at 20)
+	basket: SVG(20, '<path d="M3 8h14l-1.5 8h-11z M7 8l2-4.5 M13 8l-2-4.5 M7.5 11v3 M10 11v3 M12.5 11v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
+	town: SVG(20, '<path d="M2.5 17V9l3.5-3 3.5 3v8 M9.5 17V7.5L13 4l3.5 3.5V17 M2.5 17h15 M5 13h2 M12 10h2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
+	swords: SVG(20, '<path d="M3.5 3.5l9 9 M16.5 3.5l-9 9 M3.5 16.5l4-4 M16.5 16.5l-4-4 M3.5 3.5h2.5v2.5 M16.5 3.5H14v2.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
+	kinds: SVG(20, '<circle cx="5" cy="6.5" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="15" cy="6.5" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M1.5 16c0-3 1.6-4.5 3.5-4.5s3.5 1.5 3.5 4.5 M6.5 15c0-3.5 1.6-5 3.5-5s3.5 1.5 3.5 5 M11.5 16c0-3 1.6-4.5 3.5-4.5s3.5 1.5 3.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'),
+	train: SVG(20, '<path d="M10 2.5 L16 4.8 V10 C16 13.4 13.4 15.8 10 17.5 C6.6 15.8 4 13.4 4 10 V4.8 Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M10 7v6 M7 10h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'),
+	tent: SVG(20, '<path d="M2.5 16.5L10 3.5l7.5 13z M10 16.5V10 M7 16.5l3-6.5 3 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
+	bell: SVG(20, '<path d="M5 13.5V9a5 5 0 0 1 10 0v4.5l1.5 1.5h-13z M8.5 17.5a1.5 1.5 0 0 0 3 0 M10 2.5v1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
+	flag: SVG(20, '<path d="M5 17.5V3 M5 3.5h9.5l-2.5 3.5 2.5 3.5H5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
+	gather: SVG(20, '<path d="M3 10l7-6 7 6 M5 8.5V17h10V8.5 M10 11v4 M8 13l2 2 2-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
 	gear: SVG(
 		20,
 		'<circle cx="10" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M15.8 4.2l-1.7 1.7M5.9 14.1l-1.7 1.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
@@ -159,20 +169,9 @@ const topOf = (icon, n) =>
 const pic = (act, icon, word, cls = '', n, attrs = '') => cell(`data-act="${act}"${attrs}`, topOf(icon, n), wd(word), cls);
 const sym = (act, icon, cls = '', label = '') => cell(`data-act="${act}" aria-label="${label}"`, icon, '', 'sym ' + cls);
 const toGo = (f) => `--p:${Math.round(clamp(f, 0, 1) * 100)}%`; // the working ring: the share still to go, 1 when the work starts (MENU-SPEC §9)
-// The top: the tally (five counts, mute, pause, the map), then the status pill under it, cell for cell. The bottom: the row (39-huddle).
-const AGE_SHORT = ['Stone', 'Bronze', 'Classical', 'Medieval', 'Powder', 'Peace']; // the age in the strip: its name where it fits the 45 pt cell (measured: Medieval 42), short for the two that do not (Gunpowder 55, Enlightenment 70)
-const STATUS = [
-	['stAge', '', 'The age'],
-	['stSea', '', 'The season and the sky'],
-	['stClk', '', 'The clock'],
-	['stPeo', 'card:troops', 'Everyone you have, of the room your homes give'],
-	['stIdl', 'idlego', 'Idle villagers: show one'],
-	['stRes', 'card:research', 'Research you can start now'],
-	['scoreP', 'card:score', 'Score and rank'],
-	['stArm', '', 'Soldiers'],
-];
-const STATUS_CUT = ['stSea']; // the strip has a cell for each of the tally's (Iron hidden in the Stone age: 7): the cells it lets go first, the sky first (it is on the map itself); the soldiers stay
-
+// The top (Albert, Nov 3, 10:36: the thin strip cut): one bar. The five counts (tap: Jobs), your people of your room (tap: everyone), the
+// clock (tap: the Status page: the age, the season and the sky, the rank, the stores, the sound, the mail), then pause (the unread mail its
+// badge). What the strip showed lives on as badges: idle villagers on Jobs, research on Town, soldiers on War (39-huddle).
 function buildPanel() {
 	$('tally').innerHTML =
 		[
@@ -183,19 +182,12 @@ function buildPanel() {
 			['i', 'Iron'],
 		]
 			.map(([r, n]) =>
-				cell(`data-act="card:stores" aria-label="${n}: open the stores"`, ICON[n.toLowerCase()], wd('0', 'r' + r)),
+				cell(`data-act="ctl:jobs" aria-label="${n}: the jobs"`, ICON[n.toLowerCase()], wd('0', 'r' + r)),
 			)
 			.join('') +
-		cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') +
-		cell('id="pauseB" data-act="pause" aria-label="Pause"', ICON.pause, '', 'one') +
-		cell('id="mailB" data-act="mail" aria-label="The mail"', `<span class="top">${ICON.mail}<span class="c" id="mailN">0</span></span>`, '', 'one'); // one button for play, pause and speed (hold it); the last cell the mail, with what is unread beside it (Albert, Nov 2: the Mail's door, D-080; it was the small map, now in the battle station)
-	// the status pill: the state of the world, one cell under each column of the tally (Albert, Build 64: "age under Food, season under
-	// Wood"); the cells never move, and a narrow tally shows the first ones (the age, the season, the clock, the people come first)
-	const sc = (id, act, label) =>
-		act
-			? `<button class="cell" id="${id}" data-act="${act}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></button>`
-			: `<span class="cell" id="${id}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></span>`;
-	$('status').innerHTML = STATUS.map(([id, act, label]) => sc(id, act, label)).join('');
+		cell('id="peoB" data-act="card:troops" aria-label="Everyone you have, of the room your homes give"', ICON.people, wd('0', 'peoN')) +
+		cell('id="clkB" data-act="card:status" aria-label="The clock: the state of the realm"', '<span class="gl" id="clkG"></span>', wd('0:00', 'clkN')) +
+		cell('id="pauseB" data-act="pause" aria-label="Pause"', `<span class="top">${ICON.pause}<span class="c" id="mailN">0</span></span>`, '', 'one'); // paceBtn redraws it // one button for play, pause and speed (hold it); the unread mail a badge on it (Albert, Nov 3)
 	$('homeB').innerHTML = ICON.home;
 	mini.hidden = false; // the small map draws in the controller's map box; on the stage between, the style sheet keeps it out of sight
 	$('pX').innerHTML = ICON.close;
@@ -205,13 +197,11 @@ const refresh = () => {
 	ui(true);
 };
 function muteBtn() {
-	$('muteB').classList.toggle('off', !SND.on);
-	$('muteB').classList.toggle('on', !SND.on);
-	$('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on');
+	if (G && G.card && G.card.type === 'status') refresh(); // the Status page's Sound button reads SND.on
 }
 function paceBtn() {
 	const pb = $('pauseB');
-	pb.innerHTML = (G.paused ? ICON.play : ICON.pause) + (G.speed > 1 ? `<span class="spd">×${G.speed}</span>` : '');
+	pb.innerHTML = `<span class="top">${G.paused ? ICON.play : ICON.pause}<span class="c" id="mailN">${(G.mailN || 0) > 99 ? '99+' : G.mailN || 0}</span></span>` + (G.speed > 1 ? `<span class="spd">×${G.speed}</span>` : '');
 	pb.setAttribute('aria-label', G.paused ? 'Play' : 'Pause');
 	pb.classList.toggle('on', !!G.paused);
 }
@@ -552,40 +542,16 @@ function ui(force) {
 	} // a warning is said again while it holds (a repeat is a count, not a flash), a tip once: a tip is a message like any other
 	{
 		const lim = MODES[G.mode].secs,
-			clk = G.wonder ? clock(Math.max(0, G.wonder.end - G.t)) : lim ? clock(Math.max(0, lim - G.t)) : clock(G.t);
-		let ready = 0;
-		for (const v of G.rdy.values()) ready += v; // research you can start now (the age counts: it is research too)
-		const idleN = unitsOf(0, 'vil').filter(freeVil).length + G.blds.filter(idlePost).length, // every Z on the map: idle people and empty posts (D-089)
-			sol = armyOf(0).length,
-			rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length,
+			clk = G.wonder ? clock(Math.max(0, G.wonder.end - G.t)) : lim ? clock(Math.max(0, lim - G.t)) : clock(G.t),
 			sky = `${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''}`,
-			n = Math.min(STATUS.length, [...$('tally').children].filter((e) => !e.hidden).length),
-			cut = new Set(STATUS_CUT.slice(0, STATUS.length - n)),
-			put = (id, gl, word, cls) => {
-				const el = $(id),
-					off = cut.has(id),
-					sig = gl + '|' + word + '|' + cls + '|' + off;
-				if (el.sig === sig) return;
-				el.sig = sig;
-				el.hidden = off;
-				el.className = 'cell' + (cls ? ' ' + cls : '');
-				el.children[0].innerHTML = gl;
-				el.children[1].textContent = word;
-			};
-		const S = [
-			['', AGE_SHORT[p.age] || AGES[p.age].name, ''],
-			[sky, '', ''],
-			['', clk, ''],
-			['', `${popOf(0)}/${capOf(0)}`, popOf(0) >= capOf(0) && capOf(0) < POPMAX ? 'warn' : ''], // the number alone: 180/180 fits the 45 pt cell
-			['', `z ${idleN}`, idleN ? 'warn' : 'dis'],
-			[ICON.book, String(ready), ready ? 'go' : 'dis'],
-			['', `★ ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, ''], // the rank; the score itself is on the score card
-			[ICON.mil, String(sol), sol ? '' : 'dis'],
-		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
-		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2]));
-		txt('mailN', (G.mailN || 0) > 99 ? '99+' : String(G.mailN || 0)); // the unread, a badge on the envelope at the top (Albert, Nov 2); 99+ past 99
-		$('mailB').classList.toggle('dis', !(G.mailN || 0));
-	} // the colour code on the pill: blue research you can start, red the people at the roof or idle hands; dim is nothing to see
+			full = popOf(0) >= capOf(0) && capOf(0) < POPMAX;
+		txt('peoN', `${popOf(0)}/${capOf(0)}`);
+		$('peoB').classList.toggle('warn', full); // red: at the roof
+		txt('clkN', clk);
+		txt('clkG', sky);
+		txt('mailN', (G.mailN || 0) > 99 ? '99+' : String(G.mailN || 0)); // the unread, a badge on pause (Albert, Nov 3); 99+ past 99
+		$('pauseB').classList.toggle('unread', !!(G.mailN || 0));
+	}
 	rowUI();
 	{
 		const k = keepOf(0),

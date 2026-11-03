@@ -52,9 +52,11 @@ Three moves: **split** (a | b), **merge across**, **merge down**. Never split a 
 - **Nothing that doesn't fit this:** a gate test measures every title in slots 2–4 at 375 pt and refuses the publish if one overflows.
 - Measured: 375 pt 55.5 / 178.5 / 55.5 / 55.5 · 390 pt 58 / 186 / 58 / 58 · 430 pt 64.7 / 206 / 64.7 / 64.7.
 
-## 5. The top of the screen (AGREED Oct 31; picture `Top Bar`)
-- Today's design kept: one framed bar with dividers (five resources, mute, play, map), then the strip (age, sky, clock, people, idle, tech, rank). The outer edges land on the grid; the cells inside are free.
-- Snapped: bar **44** tall at **6** from the top (plus the safe area) · gap **6** · strip **19** (the half rank). Strip cells keep 44 of tap room round them.
+## 5. The top of the screen (Albert, Nov 3, 10:36: the thin strip cut) [2026-11-03 11:24]
+- One framed bar with dividers, 44 tall at 6 from the top (plus the safe area): the five counts (tap one: Jobs), your people of your room (tap: the Army; red at the roof), the clock with the season and the sky (tap: the Status page), pause (hold: the speeds; the unread mail a red badge on it). The outer edges land on the grid. [2026-11-03 11:24]
+- **The Status page** (a card): the age in the title, the rank and the score, Stores, Mail, Sound, and a line with the clock, the season and the sky. It pauses the game, as the cards you read do. [2026-11-03 11:24]
+- What the strip showed lives on as badges on the controller's tiles: idle villagers (and empty posts) on Jobs, research ready on Town, your soldiers on War. [2026-11-03 11:24]
+- Was (Oct 31): the strip under the bar, 19 tall: the age, the sky, the clock, the people, idle, research, the rank, the soldiers. [2026-11-03 11:24]
 
 ## 6. The controller (Albert, Nov 3, 07:01 to 08:51, "yes yes"; it replaces the row's pages, the War button and the cycle button) [2026-11-03 09:05]
 - **The grid:** seven columns, 6 at the screen's edges and 3 between, two ranks of 44 (`#orders.ctl #row`). On a 375-point phone a tile is 49 × 44, each − or + 23 × 44. [2026-11-03 09:05]
@@ -65,7 +67,7 @@ Three moves: **split** (a | b), **merge across**, **merge down**. Never split a 
 - **War:** Aim · Go (tap: the crosshair up; again: they go; hold: everyone home), Alpha, Bravo, Charlie (tap: send; hold: its card), Kinds ›, then Alarm › (brown), Rally (the next map tap is where new soldiers go), the shape, Train ›, Set Up. Kinds: Foot, Archers, Riders, Siege (tap: pick them all; hold: the drill), Idle. Train: the four kinds with − and +. Alarm: Work, Gather, Garrison, Shelter. Back in column 6, rank 2, on every page that has one. [2026-11-03 09:05]
 - **The share** (Albert, Nov 3, 10:06: a tap cycle; the edge slider cut): a tap on a kind in Kinds picks all of it, again half, again a quarter, again all; the tile shows the count and ½ or ¼. When the map is tapped, the ones nearest that spot go (till then the rings show the ones nearest the middle of the screen); the rest stay as they are. Strategy games run on these roles: all, half, a few. [2026-11-03 10:09]
 - **Close:** folds the controller to its one tile (⌃) in the corner; tap it to bring it back. [2026-11-03 09:05]
-- **Colour by side:** villager pages brown, war pages steel; the open tile and its page share a shade (vo, wo), a page under it a shade darker (v2, w2). The Alarm's orders stay brown inside War. Colours to be settled (Albert: "tbd but okay for now"). [2026-11-03 09:05]
+- **Colour (Albert, Nov 3, 10:39 and 10:42):** one material, brown wood. The war tiles wear a faint ember glow (`--ember`); the villagers' and the map tile none. The open tile and its page a step lighter (vo, wo), a page under it a step darker (v2, w2). State stays the ring. An attack coming: the War tile's glow breathes. "That's good, for now." [2026-11-03 09:05]
 - **The map's foot** runs under the controller to the screen's edge (no dark band between the tiles). [2026-11-03 09:05]
 - **Cut (Nov 3):** the War button, the cycle button, the station's middle and its three tabs (Train, Squad, Direct), the Build menu card, the Director's second moves (Advance, Fall back, Wheel, Pull back: pick the kind and tap where). Was: the row of Oct 31 (People over the hammer, the five jobs; the station of Nov 2). [2026-11-03 09:05]
 

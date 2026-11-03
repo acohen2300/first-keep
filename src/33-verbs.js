@@ -66,6 +66,12 @@ const ACT = {
 	reload() {
 		location.reload();
 	},
+	perf() {
+		SET.perf = !SET.perf;
+		saveSet();
+		$('perf').hidden = !SET.perf;
+		refresh();
+	}, // the speed counter (Albert, Nov 3: the hour on a phone): frames a second, the draw level, the units, the game time; off by default
 	vibe() {
 		SET.vibe = !SET.vibe;
 		saveSet();

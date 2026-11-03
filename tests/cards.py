@@ -190,12 +190,16 @@ JS = r"""() => {
     H.prog = 0.4; F.ui(true); if (!$('#card .tb h3').classList.contains('work')) bad.push('the title box: a House going up does not wear the working ring');
     H.prog = 1; H.hp = F.BLD.house.hp; F.closeCard(); }
   } catch (e) { bad.push('the title box: the check could not run: ' + e.message); }
-  // the controller (Albert, Nov 3): villager pages brown, war pages steel, Alarm brown inside War; the small map only in its box
+  // the controller (Albert, Nov 3): one brown; the war tiles glow ember, the villagers' and the map tile do not; the open page a step lighter; Alarm a villager page inside War; the small map only in its box
   try {
-  { F.closeCard(); F.hudPage('war'); F.ui(true); const bg = (sel) => $(sel) && getComputedStyle($(sel)).backgroundColor;
-    if (bg('#row [data-act="wsq:0"]') === bg('#row [data-act="ctl:jobs"]')) bad.push('the controller: a War cell is the colour of the villagers');
-    if (!$('#row [data-act="ctlsub:alarm"].vo')) bad.push('the controller: Alarm is not brown on the War page');
-    F.act('ctlsub:alarm'); F.ui(true); if (!$('#row [data-act="emg:square"].v2')) bad.push('the controller: the Alarm orders are not brown');
+  { F.closeCard(); F.hudPage('war'); F.ui(true); const cs = (sel, k) => $(sel) && getComputedStyle($(sel))[k], glow = (sel) => /0\.8\d+ 0\.3\d+ 0\.1\d+|214, 96, 48/.test(cs(sel, 'boxShadow'));
+    if (cs('#row [data-act="wsq:0"]', 'backgroundColor') === cs('#row [data-act="ctl:jobs"]', 'backgroundColor')) bad.push('the controller: the open War page is not a step lighter than a tile at rest');
+    if (!glow('#row [data-act="ctl:war"]') || !glow('#row [data-act="wsq:0"]')) bad.push('the controller: a war tile wears no ember glow');
+    if (glow('#row [data-act="ctl:jobs"]')) bad.push('the controller: a villager tile glows ember');
+    if (!$('#row [data-act="ctlsub:alarm"].vo')) bad.push('the controller: Alarm is not a villager page on the War page');
+    F.act('ctlsub:alarm'); F.ui(true); if (!$('#row [data-act="emg:square"].v2')) bad.push('the controller: the Alarm orders are not a page under War');
+    F.hudPage(null); F.ui(true); if (glow('#row [data-act="mapt"]')) bad.push('the controller: the map tile glows ember');
+    G.incoming = true; F.ui(true); if (cs('#row [data-act="ctl:war"]', 'animationName') !== 'ember') bad.push('the controller: an attack coming does not breathe the War glow'); G.incoming = false; F.ui(true); F.hudPage('war'); F.ui(true);
     F.hudPage(null); F.ui(true); if ($('#mini').parentNode === $('#stage') || !$('#row .mapb #mini')) bad.push('the controller: the small map is not in its box at rest');
     F.act('mapt'); F.ui(true); if ($('#mini').parentNode !== $('#stage')) bad.push('the controller: the small map did not go back to the stage when taken down'); F.act('mapt'); F.ui(true); }
   } catch (e) { bad.push('the controller: the check could not run: ' + e.message); }

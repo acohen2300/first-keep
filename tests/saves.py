@@ -87,7 +87,7 @@ async def main():
         await pg.reload(); await pg.wait_for_timeout(500)
         bad += await pg.evaluate(JS, raw)
         cam0 = await pg.evaluate("() => { const c = window.__fk.cam; window.__fk.G.follow = false; return [c.x, c.y, c.z]; }")
-        await pg.locator('#tally [data-act="card:stores"]').first.click(force=True); await pg.wait_for_timeout(100)
+        await pg.locator('#tally [data-act="ctl:jobs"]').first.click(force=True); await pg.wait_for_timeout(100)
         box = await pg.locator('#cv').bounding_box(); cx, cy = box['x'] + box['width'] / 2, box['y'] + 140
         await pg.mouse.click(cx, cy); await pg.wait_for_timeout(100)
         await pg.mouse.move(cx, cy); await pg.mouse.wheel(0, 400); await pg.wait_for_timeout(150)
