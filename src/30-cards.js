@@ -441,10 +441,9 @@ const CARDS = {
 		);
 		return (
 			title('A new game', '') +
-			settingsHTML() +
+			settingsHTML(true) +
 			acts(choice(CIVK.map((k) => [`civ:${k}`, CIVS[k].name, SET.civ === k]), 's6', true), 'c1') +
 			acts(info(short(SET.civ), C.bonus, 'left line'), 'c1') +
-			acts(lab(`Daily · level ${levelOf(TODAY_HZ)}`, 's4') + choice(offOn('daily', !!SET.daily), 's2', true), 'c6') +
 			acts(choice(HZK.map((k) => [`hz:${k}`, `<b>${HAZARDS[k].short || HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small>`, !!H[k]]), 's6'), 'c1') +
 			(staleSave
 				? acts(info(`Your last game ${staleSave === 'damaged' ? 'could not be read' : `came from an older version (${staleSave})`}`, 'kept aside, not deleted', 'left line'), 'c1')
@@ -453,7 +452,7 @@ const CARDS = {
 				btn(
 					SET.daily ? 'today' : 'fresh',
 					'Start',
-					`${C.name} · ${SET.daily ? 'daily challenge' : MODES[SET.mode].name.replace('minutes', 'min')} · ${lv ? `level ${lv} · score ×${(1 + lv / 10).toFixed(1)}` : 'hazards at random'}`,
+					`${C.name} · ${SET.daily ? `daily challenge, level ${levelOf(TODAY_HZ)}` : MODES[SET.mode].name.replace('minutes', 'min')} · ${lv ? `level ${lv} · score ×${(1 + lv / 10).toFixed(1)}` : 'hazards at random'}`,
 					'main',
 				),
 				'c1',

@@ -98,6 +98,7 @@ function mkPlayer(i, civ) {
 		wave: null,
 		killer: undefined,
 		ai: { t: 1 + i * 0.3, lastHelp: 0, cyc: 0, cool: {} }, // cool: side → until when a stalled wave leaves it alone (WAVE)
+		ab: (SET.ab && SET.ab[i]) || 'A', // the A/B test of the computers (tests/ab.py; AB in 17-ai): A as shipped, B without the handicap and with greed raids and choke claims
 		gathered: 0,
 		spent: 0,
 		flow: {},
@@ -140,8 +141,10 @@ function newGame(seed, carry, daily) {
 	skyTurn(); // 5 weather: the first sky from the season's chain, not always clear
 	navRebuild();
 	// EXCEPTIONS #16 (LIVE TEST IN PROCESS): each computer's handicap, built beside its Town Center by the placing rules (HANDICAP in 06)
+	G.kills = G.P.map(() => G.P.map(() => 0)); // who killed whose, side by side (16-sim-fight hurt; tests/ab.py reads it)
 	for (let o = 1; o < WILD; o++)
 		for (const kind of HANDICAP.blds) {
+			if (G.P[o].ab === 'B') break; // the B side of the test plays without the handicap
 			const k = keepOf(o),
 				s = k && findSpot(o, kind, k.x, k.y, HANDICAP.r[0], HANDICAP.r[1]);
 			if (!s) continue;
@@ -277,13 +280,43 @@ const LAYOUT = [
 // same rules, or keeps none when it finds no way or is too short for its two fords.
 // lakeSize: the power law cut to WATER.r and inverted, u from 0 to 1 giving the smallest to the largest: r = r0 (1 − u (1 − (r0/r1)^2c))^(−1/2c).
 const lakeSize = (u) => WATER.r[0] * (1 - u * (1 - (WATER.r[0] / WATER.r[1]) ** (2 * WATER.c))) ** (-1 / (2 * WATER.c));
+// a lake's shore (WATER.amp, H, harm): the harmonics drawn by the map's own dice, so one seed is one shore; a river's pools stay round
+function lakeShape(L) {
+	for (let t = 0; t < 12; t++) {
+		lakeHarm(L);
+		if (L.dl >= WATER.shore[0] && L.dl <= WATER.shore[1]) break; // drawn again until it is a lake with a bay or two, never a circle, never wild
+	}
+	return L;
+}
+function lakeHarm(L) {
+	L.w = [];
+	for (let k = 2; k <= WATER.harm; k++) L.w.push([k, WATER.amp * k ** -WATER.H * (rng() < 0.5 ? -1 : 1) * (0.6 + 0.4 * rng()), rng() * Math.PI * 2]);
+	let P = 0,
+		A = 0,
+		px = lakeRAt(L, 0),
+		py = 0;
+	L.rmax = 1;
+	for (let i = 1; i <= 72; i++) {
+		const a = (i / 72) * Math.PI * 2,
+			r = lakeRAt(L, a);
+		L.rmax = Math.max(L.rmax, r / L.r);
+		const x = Math.cos(a) * r,
+			y = Math.sin(a) * r;
+		P += hyp(x - px, y - py);
+		A += (px * y - x * py) / 2;
+		px = x;
+		py = y;
+	}
+	L.dl = P / (2 * Math.sqrt(Math.PI * Math.abs(A))); // the shoreline development: 1 is a circle
+	return L;
+}
 function makeWater() {
 	const keeps = PLAYERS.slice(0, WILD).map((d) => ({ x: d.keep[0], y: d.keep[1] })),
 		W = [],
 		dry = (x, y, r, from) =>
 			keeps.every((k) => hyp(x - k.x, y - k.y) >= CLEAR + r) &&
 			Math.min(Math.abs(x - MID), Math.abs(y - MID)) >= r + WATER.gap &&
-			hyp(x - MID, y - MID) >= r + LAKE0.r + WATER.shore &&
+			hyp(x - MID, y - MID) >= r + LAKE0.r + WATER.clear &&
 			W.every((q) => q === from || hyp(x - q.x, y - q.y) >= r + q.r + WATER.gap);
 	const n = WATER.lakes[0] + Math.floor(rng() * (WATER.lakes[1] - WATER.lakes[0] + 1));
 	for (let i = 0; i < n; i++) {
@@ -292,7 +325,7 @@ function makeWater() {
 			const x = rnd(r, MAP - r),
 				y = rnd(r, MAP - r);
 			if (!dry(x, y, r)) continue;
-			W.push({ x, y, r });
+			W.push(lakeShape({ x, y, r }));
 			break;
 		}
 	}

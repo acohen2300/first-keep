@@ -113,6 +113,12 @@ cv.addEventListener('pointerdown', (e) => {
 		drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, touch }; // away from the ghost: drag looks around; a tap moves the ghost there
 		return;
 	}
+	if (G.hud.aim === 'choke') {
+		const a = toWorld(p.x, p.y);
+		drag = { mode: 'choke', a };
+		G.chokeLine = { a, b: a };
+		return;
+	} // the choke tool (28-army-quick): the drag is the gap
 	drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, t0: performance.now() };
 	G.press = { x: p.x, y: p.y, t: performance.now() };
 	holdT = setTimeout(() => {
@@ -163,6 +169,10 @@ cv.addEventListener('pointermove', (e) => {
 		aimSpot(p.x, p.y);
 		return;
 	}
+	if (drag && drag.mode === 'choke') {
+		G.chokeLine = { a: drag.a, b: toWorld(p.x, p.y) };
+		return;
+	}
 	if (drag && drag.mode === 'box') {
 		drag.x1 = p.x;
 		drag.y1 = p.y;
@@ -209,6 +219,14 @@ cv.addEventListener('pointerup', (e) => {
 	drag = null;
 	if (!d) return;
 	EDGE = null;
+	if (d.mode === 'choke') {
+		const q = lp(e);
+		G.chokeLine = null;
+		G.hud.aim = G.hud.page === 'war'; // the station's crosshair stays up
+		chokeAt(d.a, toWorld(q.x, q.y));
+		ui(true);
+		return;
+	}
 	if (d.mode === 'ret') {
 		G.hud.drag = false;
 		ui(true);

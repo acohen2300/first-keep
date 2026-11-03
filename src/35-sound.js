@@ -232,6 +232,13 @@ const SFX = {
 		},
 	],
 	arrow: [0.07, (v) => hiss(0.12, 0.2 * v, 3000, 2, 1200)],
+	thud: [
+		0.12,
+		(v) => {
+			tone(70, 0.1, 'triangle', 0.38 * v, 40);
+			hiss(0.06, 0.25 * v, 400, 1);
+		},
+	], // a charge lands: wood and iron, low and short (the juice pass, Nov 3)
 	bhit: [
 		0.1,
 		(v) => {

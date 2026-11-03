@@ -2,6 +2,17 @@
 // Units. cls: which limit it counts toward (civ = the 60 villagers and workers, army = the 90). tick: which routine runs it.
 // tags say what it is; vs says what it beats (×, by tag or kind; the best match counts). bld: × against buildings.
 // rarmor: × it takes from arrows and bolts. tiers come from research (TECH.tier).
+// War camps (Albert, Nov 3, "build it today"): a wagon from the Stable drives to a spot and unpacks into tents of 2 × 2 squares; foot
+// soldiers raise them at `build` of a villager's pace (Field logistics: full); a tent trains at `extra` over the price (Field logistics: `extraLog`);
+// a wounded soldier under `sendHome` of full, or a sick one, by a medical tent walks home to the hospital; the yard of a Camp holds `hold`
+// (Hyginus §1: eight men a tent, four tents); the trees under a camp are burned. The wagon is a cart on the road: anyone at war can kill it.
+// Step 2 (Nov 3, 10:55: "supplies ... caravans ... mud and weather ... wear"): the depot holds `supply` food; soldiers within `reach` of it eat from
+// it, and with it empty they are unsupplied (tired, no mending); a Market caravan with nothing to do runs `load` food out to a depot under half,
+// for the food and a delivery fee of `fee` gold a hundred of the road (the carter's hire; the cursus clabularis moved an army's stores by ox
+// cart, Procopius' and Ammianus' complaint); a wagon's wheels sink `wheelMud` times as deep as a foot (Pandolf's terrain factor on a cart, design);
+// rain, snow and frost take `wear` of a piece's health a minute (the same weathers that take CLIMATE.wear off blades), and soldiers mend a
+// piece under `mend` of its health as they raise one; a camp is a pool for sickness and plague like the town (HEALTH, the SIR spread)
+const CAMP = { build: 0.6, extra: 0.25, extraLog: 0.1, sendHome: 0.5, hold: 32, side: 14, burn: 1, tentHeal: 2, tentRng: 70, supply: 600, load: 200, fee: 2, reach: 120, wheelMud: 2, wear: 0.03, mend: 0.6, need: 'granary' }; // side: the Camp's palisade, squares; need: the Camp wagon's research (the game's warehouse is the Stone granary) // cover: forest within so many walking squares; find: how far from the tap cover is looked for
 const UNIT = {
 	vil: {
 		name: 'Villager',
@@ -17,7 +28,7 @@ const UNIT = {
 		cost: { f: 50 },
 		t: 8,
 		at: 'keep',
-		also: ['town'],
+		also: ['town', 'traintent'],
 		age: 0,
 		look: 'vil',
 		desc: 'Gathers food, wood, stone and gold and carries it to the nearest drop-off. Hunts deer and boar with a javelin.',
@@ -54,6 +65,38 @@ const UNIT = {
 		age: 1,
 		look: 'envoy',
 		desc: 'Carries your offer of peace or alliance to another side. Killing one is an act of war.',
+	},
+	outpostcart: {
+		name: 'Outpost wagon',
+		cls: null, // a team and a cart, not a mouth: no room taken
+		tick: 'wagon',
+		tags: ['civ', 'wagon'],
+		hp: 60,
+		spd: 14,
+		sight: 90,
+		cost: { w: 200, f: 120, g: 60 },
+		t: 30,
+		at: 'stable',
+		age: 1,
+		camp: 'outpost',
+		look: 'caravan',
+		desc: 'A wagon and team from the Stable, packed with an outpost: send it to a spot and it unpacks into four tents and a tower in a strip; your foot soldiers raise them. One at a time; a second from the Classical age. On the road anyone at war with you can kill it.',
+	},
+	campcart: {
+		name: 'Camp wagon',
+		cls: null, // a team and a cart, not a mouth: no room taken
+		tick: 'wagon',
+		tags: ['civ', 'wagon'],
+		hp: 90,
+		spd: 12,
+		sight: 90,
+		cost: { w: 450, f: 250, g: 150 },
+		t: 45,
+		at: 'stable',
+		age: 2,
+		camp: 'camp',
+		look: 'caravan',
+		desc: 'Two wagons packed with a war camp: a palisade with a gate, four towers at the corners, the four tents inside and a yard for 32 soldiers. Needs Camp wagons researched at the Stable. One at a time; a second from the Medieval age.',
 	},
 	caravan: {
 		name: 'Caravan',
@@ -124,6 +167,7 @@ const UNIT = {
 		cls: 'army',
 		tick: 'sol',
 		tags: ['infantry', 'spear'],
+		also: ['traintent'],
 		hp: 60,
 		spd: 24,
 		sight: 130,
@@ -143,6 +187,7 @@ const UNIT = {
 		cls: 'army',
 		tick: 'sol',
 		tags: ['infantry'],
+		also: ['traintent'],
 		hp: 70,
 		spd: 24,
 		sight: 130,
@@ -163,6 +208,7 @@ const UNIT = {
 		cls: 'army',
 		tick: 'sol',
 		tags: ['infantry', 'archer', 'ranged'],
+		also: ['traintent'],
 		hp: 30,
 		spd: 24,
 		sight: 150,
@@ -183,6 +229,7 @@ const UNIT = {
 		cls: 'army',
 		tick: 'sol',
 		tags: ['infantry', 'ranged'],
+		also: ['traintent'],
 		hp: 40,
 		spd: 24,
 		sight: 140,
@@ -203,6 +250,7 @@ const UNIT = {
 		cls: 'army',
 		tick: 'sol',
 		tags: ['infantry', 'archer', 'ranged'],
+		also: ['traintent'],
 		hp: 35,
 		spd: 24,
 		sight: 150,
@@ -404,6 +452,7 @@ const UNIT = {
 		cls: 'army',
 		tick: 'sol',
 		tags: ['infantry', 'ranged', 'gun'],
+		also: ['traintent'],
 		hp: 40,
 		spd: 24,
 		sight: 150,
@@ -446,6 +495,7 @@ const UNIT = {
 		cls: 'army',
 		at: 'barracks', // never trained (no cost, no age): it says which kind of soldier it fights as, so a rebel taken into your army is Foot (Build 48)
 		tags: ['infantry'],
+		also: ['traintent'],
 		hp: 40,
 		spd: 24,
 		sight: 130,
@@ -667,6 +717,7 @@ const UNIT = {
 		cls: 'army',
 		at: 'barracks', // never trained: a warrior sworn to you is Foot in the army, the battalions and the huddle (Build 48: they were in none)
 		tags: ['infantry', 'spear', 'native'],
+		also: ['traintent'],
 		hp: 55,
 		spd: 32,
 		sight: 140,
@@ -683,6 +734,7 @@ const UNIT = {
 		cls: 'army',
 		at: 'range', // never trained: a sworn bowman is an archer
 		tags: ['infantry', 'archer', 'ranged', 'native'],
+		also: ['traintent'],
 		hp: 36,
 		spd: 32,
 		sight: 160,

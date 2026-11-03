@@ -324,7 +324,7 @@ function vilTick(u, dt, SP) {
 	}
 	if (!u.job) {
 		u.idle = true;
-		if (u.post) moveTo(u, u.post.x, u.post.y, dt, 2, SP, true);
+		if (u.post) moveTo(u, u.post.x, u.post.y, dt, 2, SP, !!u.post.b); // its own spot (a lattice place): within ARRIVE; a bare point shared with others (the Emergency's ring): within personal space, standing where it was pushed (10a; Nov 3: seven on one point shuffled for ever)
 		else if (kk) moveTo(u, kk.x + u.ox, kk.y + u.oy, dt, 2, SP);
 		return;
 	} // sent somewhere by the finger, it stands there; else it waits by the Town Center
@@ -764,6 +764,7 @@ function caravanTick(u, dt, SP) {
 		routeTick(u, dt, SP);
 		return;
 	}
+	if (supplyRun(u, dt, SP)) return; // food out to a camp's depot (CAMP)
 	const home =
 		G.blds.find((b) => b.id === u.lastId && b.hp > 0 && b.owner === o && b.kind === 'market') ||
 		nearest(G.blds, u, (b) => b.owner === o && b.kind === 'market' && b.prog >= 1 && b.hp > 0);

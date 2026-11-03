@@ -12,7 +12,7 @@
 :root{
   --z-sticky:2;--z-float:3;--z-hud:4;--z-pop:5;--z-drop:7;--z-end:8;   /* the layers, bottom to top (hunt B #9): a card's title bar; the floating buttons and bars; the top bar; the preview and the quick action; the speed drop-down; the end card over all */
   --brown-1:#2a1d13;--brown-2:#33241a;--brown-3:#6b5230;--gold-1:#e6b947;   /* the materials: card, slot fill, slot edge; titles and the chosen ring */
-  --steel-1:#1e2329;--steel-2:#2a3038;--steel-3:#4d5a68;   /* the War and Train pages: the page, slot fill, slot edge */
+  --steel-1:#1e2329;--steel-2:#2a3038;--steel-3:#4d5a68;--ember:#d66030;   /* steel: the queue's slots; ember: the war tiles' glow (Albert, Nov 3) */
   --ring-b:#6aaeff;--ring-g:#5fd08a;--ring-r:#ff6b5b;--ring-w:#ece5d3;   /* the colour code (RULES): blue available, green active, red wrong, white words and all is well */
   --dim:80%;--faint:35%;--white-dim:color-mix(in srgb,var(--ring-w) var(--dim),transparent);--white-faint:color-mix(in srgb,var(--ring-w) var(--faint),transparent);--glass:92%;   /* the levels (COLORS, Nov 2): a hue full, dim or faint, blended into what it sits on; glass: a card over the map, the map's shapes through it (no blur: it costs every frame) */
   --age-0:#9a9890;--age-1:#b5793a;--age-2:#c9c2a6;--age-3:#4d6b9e;--age-4:#8e2f2a;   /* the ages: a tech's top edge */
@@ -23,7 +23,7 @@
   --weight:600;   /* Barlow's one weight (MAYBE); the body and the map's words (mapFont) read it */
   --fs-s:12px;--fs-l:18px;   /* two text sizes (v80, Albert): 12 for every word and number in a tile, 18 for titles and the big moments */
   --t-quick:.15s;--t-sweep:.4s;--t-settle:1.2s;--t-long:2.4s;   /* the four timings (Build 66, SoRen's names): a state changes, a thing moves, a thing comes to rest, two rests. The code reads these too */
-  --hb:calc(env(safe-area-inset-top,0px) + var(--gap) * 2 + var(--slot) + var(--half));   /* the top: the bar at 6, gap 6, the strip */
+  --hb:calc(env(safe-area-inset-top,0px) + var(--gap) * 2 + var(--slot));   /* the top: the bar at 6, gap 6 (the thin strip cut, Albert, Nov 3) */
   --ob:100px;   /* the row's height, measured by fit() */
   --display:"IM Fell English SC",Georgia,"Times New Roman",serif;--ui:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
   color-scheme:dark}
@@ -88,13 +88,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 .cell .gl{position:absolute;left:50%;top:13px;transform:translate(-50%,-50%)}
 .cell .wd{position:absolute;left:0;right:0;top:33px;transform:translateY(-50%);text-align:center;font-size:var(--fs-s);line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
 .cell.one .gl,.cell.one .wd{top:50%}.cell.one .gl{width:18px;height:18px}
-#muteB .x,#muteB.off .w{display:none}#muteB.off .x{display:inline}#muteB.off{color:var(--white-dim)}
 #pauseB .spd{position:absolute;right:4px;bottom:3px;font-size:var(--fs-s);color:var(--gold-1)}
-#status{height:var(--half);margin-top:calc(var(--gap) / -2);overflow:visible;align-items:flex-start}
-#status .cell{height:var(--slot);display:flex;flex-direction:row;align-items:flex-start;justify-content:center;gap:2px;padding:0 1px;overflow:hidden}
-#status .cell .gl,#status .cell .wd{position:static;transform:none;width:auto;height:var(--half);line-height:var(--half);font-size:var(--fs-s);white-space:nowrap}
-#status .cell span.gl{display:inline-flex;align-items:center}#status .cell .gl svg{width:12px;height:12px}#status .cell .gl:empty{display:none}
-#status .cell+.cell::before{top:4px;bottom:auto;height:11px}
 @keyframes glowb{0%,100%{text-shadow:0 0 3px color-mix(in srgb,var(--ring-b) var(--faint),transparent)}50%{text-shadow:0 0 12px var(--ring-b)}}
 /* The preview (Build 64): a message arrives over the map the way a phone shows a text, and fades; its left edge is the colour code */
 #pv{position:absolute;z-index:var(--z-pop);top:calc(var(--hb) + var(--gap));left:var(--gap);right:var(--gap);display:flex;align-items:stretch;min-height:var(--slot);box-sizing:border-box;border:1px solid var(--brown-3);border-left:5px solid var(--cc,var(--ring-w));border-radius:var(--rad);background:var(--brown-1);box-shadow:var(--shade);color:var(--ring-w);transition:opacity var(--t-sweep)}
@@ -111,12 +105,13 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 #mini{width:86px;height:86px}
 .fab{position:absolute;z-index:var(--z-float);width:var(--slot);height:var(--slot);padding:0;bottom:calc(var(--ob) + var(--gap));box-shadow:var(--shade)}
 .fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}
-#homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap) + var(--rank))}
+#homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap))}
 /* the cycle button and Emergency: a slot each, on their own rank above the row, slot 1 and slot 6 (MENU-SPEC §6; cold review of v70: Emergency
    was 44 wide a rank higher, with no word). Emergency steps aside while any card is open, where it would sit over the card's buttons */
+#perf{position:absolute;z-index:var(--z-hud);left:var(--gap);top:calc(var(--hb) + var(--gap) * 2 + var(--slot));padding:2px 6px;border-radius:var(--rad);background:color-mix(in srgb,var(--brown-1) var(--glass),transparent);color:var(--ring-w);font-size:var(--fs-s);font-variant-numeric:tabular-nums;pointer-events:none;white-space:pre}   /* the speed counter (Albert, Nov 3): on from Help, for the hour's test on a phone */
 #qa{position:absolute;z-index:var(--z-pop);display:flex;gap:var(--gap)}#qa.left{flex-direction:row-reverse}#qa .cell{width:var(--slot);height:var(--slot);flex:none;border-radius:50%;background:var(--brown-2);border:1px solid var(--brown-3);box-shadow:var(--shade)}#qa .cell svg{width:22px;height:22px}   /* the quick action: the sword and ✕, round chips, the sword under the finger (Albert, Nov 3) */
-#emgB{width:calc((100% - 7 * var(--gap)) / 6);right:var(--gap)}#stage:has(#card:not([hidden])) #emgB{display:none}#stage>#mini{display:none}   /* War, the one button on the rank above the row (Albert, Nov 2); the small map shows only in the station */
-#stage.busy :is(#homeB,#emgB),#stage.picking #homeB{display:none}
+#stage>#mini{display:none}   /* the small map shows only in the controller's map box */
+#stage.busy #homeB,#stage.picking #homeB{display:none}
 #place,#pickbar{position:absolute;z-index:var(--z-float);left:var(--gap);right:var(--gap);bottom:calc(var(--ob) + var(--gap));box-sizing:border-box;display:flex;gap:var(--gap);padding:var(--gap);background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o)}
 #place{justify-content:space-between;align-items:center;padding-left:10px}#place span{flex:1;min-width:0;line-height:1.25}#place button{padding:0 12px}
 #pickbar{flex-direction:column;border-color:var(--ring-g)}#pickbar .pbTop,#pickbar .pbRow{display:flex;gap:var(--gap);align-items:center}#pickbar .pbRow:empty{display:none}#pickbar span{flex:1;min-width:0;line-height:1.25;padding-left:6px}#pickbar button{min-width:var(--slot);padding:0 10px}#pickbar .pbRow button{flex:1;padding:0 4px}#pickbar .gl{width:18px;height:18px}
@@ -128,19 +123,20 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 #orders{position:absolute;left:0;right:0;bottom:0;box-sizing:border-box;padding:0 var(--gap) calc(env(safe-area-inset-bottom,0px) + var(--gap));pointer-events:none}
 #row{pointer-events:auto}#row .info :is(b,small){white-space:nowrap}
 #row button{box-shadow:var(--shade)}   /* no panel behind the row on any page (Albert, Nov 2): the map shows between the slots */
-.pg-war #row button{background:var(--steel-1);border-color:var(--steel-3)}.pg-war #row :is(.wd,.gl,.c){color:var(--white-dim)}#emgB{background:var(--steel-1);border-color:var(--ring-r)}   /* the battle station (Albert, Nov 2): muted ends, the words dim; the War button red on steel */
-.pg-war #row .vb{background:var(--brown-2);border-color:var(--brown-3)}.pg-war #row .wb{background:color-mix(in srgb,var(--ring-r) var(--faint),var(--steel-1));border-color:color-mix(in srgb,var(--ring-r) var(--faint),var(--steel-3))}   /* the villagers' block brown, the war block steel tinted red at the faint level (Albert, Nov 2: the campaign desk) */
-.pg-war #row .midb{grid-column:span 4;grid-row:span 2;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--steel-3);border:1px solid var(--ring-w);border-radius:var(--rad-o);overflow:hidden}   /* the middle: one joined block, thin dividers, a white edge */
-.pg-war #row .midb>button{background:var(--steel-2);border:0;border-radius:0;box-shadow:none}.pg-war #row .midb :is(.wd,.gl,.c){color:var(--ring-w)}
-.pg-war #row .midb.map{display:flex;align-items:center;justify-content:center;background:var(--steel-1)}.pg-war #row .midb.map>canvas{position:static;height:calc(2 * var(--slot) + var(--gap) - 2px);width:auto;border:0;border-radius:0;background:none}
-.pg-war #row .cell.hit{--rc:var(--ring-r);border-color:var(--rc);box-shadow:inset 0 0 0 1px var(--rc)}   /* the station sets no state class (EXCEPTIONS); a tap flashes red and snaps off */
+/* The controller (Albert, Nov 3; MENU-SPEC §6): seven columns, 6 at the edges and 3 between, two ranks of 44. One material, brown wood (Albert, 10:39: the steel felt dead). Whose a tile is: the war tiles wear a faint ember glow (--ember), the villagers' none, the map tile neither. What is open: the lit tile and its page a step lighter (vo, wo), a page under it a step darker (v2, w2). State stays the ring (RULES). An attack coming: the War tile's glow breathes (raid). */
+#orders.ctl #row{grid-template-columns:repeat(7,minmax(0,1fr));grid-auto-rows:var(--slot);gap:3px}#orders.ctl #row .cell{height:var(--slot);min-height:0}
+#row :is(.vb,.wb){background:var(--brown-2);border-color:var(--brown-3)}#row :is(.vo,.wo){background:color-mix(in srgb,var(--ring-w) 12%,var(--brown-2));border-color:color-mix(in srgb,var(--ring-w) 30%,var(--brown-3))}#row :is(.v2,.w2){background:color-mix(in srgb,#000 18%,var(--brown-2));border-color:var(--brown-3)}
+#row :is(.wb,.wo,.w2){box-shadow:0 0 6px 1px color-mix(in srgb,var(--ember) 45%,transparent),var(--shade)}#row :is(.vb,.wb) :is(.wd,.gl,.c){color:var(--white-dim)}#row :is(.vo,.wo,.v2,.w2) :is(.wd,.gl,.c){color:var(--ring-w)}#row .mb{box-shadow:var(--shade)}#row .raid{animation:ember var(--t-long) ease-in-out infinite}
+#row .pm{display:flex;gap:3px;min-width:0}#row .pm>.cell{flex:1 1 0}#row .wc{padding:0 2px}#row .wc b{font-size:var(--fs-s);line-height:1.05;white-space:normal;overflow:hidden;max-width:100%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-align:center}#row .wc small{font-size:var(--fs-s);line-height:1}
+#row .mapb{border:1px solid var(--ring-w);border-radius:var(--rad-o);overflow:hidden;background:var(--brown-1);box-shadow:var(--shade)}#row .mapb>canvas{display:block;width:100%;height:100%;object-fit:cover;border:0;border-radius:0;background:none}
+#row .bd{position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;background:var(--ring-r);color:var(--brown-1);font-size:var(--fs-s);line-height:16px;text-align:center;pointer-events:none}
 /* a slot of icon and word (the row, the cycle button, a card's rank): the picture at 18 with its number at 12 beside it, the word at 12 in
    Cream 2 under it; a symbol alone at 24 */
 .cell .top{position:absolute;left:0;right:0;top:13px;transform:translateY(-50%);display:flex;justify-content:center;align-items:center;gap:4px}
 .cell .top :is(.gl,svg){position:static;transform:none;width:18px;height:18px}
 .cell .top .c{font-size:var(--fs-s);line-height:1;font-variant-numeric:tabular-nums;color:var(--nc,inherit)}
 .cell .top~.wd{color:var(--white-dim)}
-#mailB .top{top:50%;gap:0}#mailB .top .c{position:absolute;left:calc(50% + 2px);top:-7px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--ring-r);color:var(--brown-1)}#mailB.dis .top .c{display:none}   /* Mail (Albert, Nov 2): the icon dead centre of its slot, the unread a red count on its top right corner, none at 0 (the cell is dim then) */
+#pauseB .top{top:50%;gap:0}#pauseB .top .c{position:absolute;left:calc(50% + 2px);top:-7px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--ring-r);color:var(--brown-1)}#pauseB:not(.unread) .top .c{display:none}   /* pause (Albert, Nov 3): the icon dead centre, the unread mail a red count on its top right corner, none at 0 */
 .cell.sym .gl{top:50%;width:24px;height:24px}
 /* The card (MENU-SPEC §1, §4): its slots on the screen's own grid, 6 from the edge and 6 from the row, its frame an outline down the middle
    of that 6 (9, so the curves nest): a card of n ranks stands exactly n ranks tall. It rises from the row as tall as its content (Albert,
@@ -216,9 +212,10 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 :is(.on,.warn,.nope):not(.pill>*) :is(b,.wd),.segT .on{color:var(--rc)}
 .warn:not(.pill>*){animation:breathe var(--t-long) ease-in-out infinite}
 @keyframes breathe{50%{box-shadow:inset 0 0 0 1px var(--rc),0 0 8px 1px var(--rc)}}
+@keyframes ember{50%{box-shadow:0 0 16px 5px color-mix(in srgb,var(--ember) 85%,transparent),var(--shade)}}
 @media (prefers-reduced-motion:reduce){.warn:not(.pill>*){box-shadow:inset 0 0 0 2px var(--rc)}}   /* still, and 3 wide: never colour alone */
 .work:not(.warn,.nope)::after{content:'';position:absolute;inset:-1px;padding:2px;border-radius:var(--rad);background:conic-gradient(var(--ring-g) var(--p,100%),transparent 0);mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);pointer-events:none}
-.dis:not(.pill>*){background:var(--brown-1)}[data-act^="tech:"].dis:not(.pill>*){border-color:var(--white-faint)}.pg-war #row .dis{background:var(--steel-1)}.pg-war #row .vb.dis{background:var(--brown-1)}.pg-war #row .wb.dis{background:color-mix(in srgb,var(--ring-r) var(--faint),var(--steel-1));opacity:.6}.dis,.dis :is(b,.wd){color:var(--white-dim)}
+.dis:not(.pill>*){background:var(--brown-1)}[data-act^="tech:"].dis:not(.pill>*){border-color:var(--white-faint)}#row :is(.wb,.wo,.w2).dis{background:var(--brown-1);opacity:.6}.dis,.dis :is(b,.wd){color:var(--white-dim)}
 .empty{background:var(--brown-1);border:1px solid var(--brown-2);border-radius:var(--rad);color:var(--white-dim)}
 /* inside a bar a chosen part is ringed inside the shape, and a selector's ring is the one that slides; the switch and the slider on are gold */
 .bar>.on{border-color:transparent;box-shadow:inset 0 0 0 4px var(--brown-2),inset 0 0 0 6px var(--gold-1)}.sel>.on{box-shadow:none}
@@ -237,7 +234,6 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 .main{background:linear-gradient(var(--fill-1),var(--fill-2)) var(--fill-1);border-color:var(--fill-1);color:var(--ink)}.main :is(b,small){color:var(--ink)}.main b{font-size:var(--fs-l)}
 /* the bar and the strip draw no frame round a cell: a chosen cell of the bar wears its ring inside, a cell of the strip says its state in its word */
 .pill>.on::after{content:'';position:absolute;inset:5px;z-index:-1;border-radius:var(--rad);box-shadow:inset 0 0 0 2px var(--rc)}
-#status>:is(.go,.warn) .wd{color:var(--rc)}#status>.go{animation:glowb var(--t-long) ease-in-out infinite}
 }
 </style>
 
@@ -249,14 +245,14 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
     <div id="vig"></div>
   <header id="hud">
     <div class="pill" id="tally"></div>
-    <div class="pill" id="status"></div>
+
   </header>
   <div id="pv" hidden></div>
-  <section id="orders" class="pg-jobs"><div class="fm" id="row"></div></section>
+  <section id="orders" class="ctl pg-rest"><div class="fm" id="row"></div></section>
     <canvas id="mini" width="172" height="172"></canvas>
     <div id="qa" hidden></div>
+    <div id="perf" hidden></div>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
-    <button class="fab cell" id="emgB" data-act="emgpage" aria-label="Alarm"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
 
     <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>
@@ -373,6 +369,17 @@ const SEASONS = [
 // Units. cls: which limit it counts toward (civ = the 60 villagers and workers, army = the 90). tick: which routine runs it.
 // tags say what it is; vs says what it beats (×, by tag or kind; the best match counts). bld: × against buildings.
 // rarmor: × it takes from arrows and bolts. tiers come from research (TECH.tier).
+// War camps (Albert, Nov 3, "build it today"): a wagon from the Stable drives to a spot and unpacks into tents of 2 × 2 squares; foot
+// soldiers raise them at `build` of a villager's pace (Field logistics: full); a tent trains at `extra` over the price (Field logistics: `extraLog`);
+// a wounded soldier under `sendHome` of full, or a sick one, by a medical tent walks home to the hospital; the yard of a Camp holds `hold`
+// (Hyginus §1: eight men a tent, four tents); the trees under a camp are burned. The wagon is a cart on the road: anyone at war can kill it.
+// Step 2 (Nov 3, 10:55: "supplies ... caravans ... mud and weather ... wear"): the depot holds `supply` food; soldiers within `reach` of it eat from
+// it, and with it empty they are unsupplied (tired, no mending); a Market caravan with nothing to do runs `load` food out to a depot under half,
+// for the food and a delivery fee of `fee` gold a hundred of the road (the carter's hire; the cursus clabularis moved an army's stores by ox
+// cart, Procopius' and Ammianus' complaint); a wagon's wheels sink `wheelMud` times as deep as a foot (Pandolf's terrain factor on a cart, design);
+// rain, snow and frost take `wear` of a piece's health a minute (the same weathers that take CLIMATE.wear off blades), and soldiers mend a
+// piece under `mend` of its health as they raise one; a camp is a pool for sickness and plague like the town (HEALTH, the SIR spread)
+const CAMP = { build: 0.6, extra: 0.25, extraLog: 0.1, sendHome: 0.5, hold: 32, side: 14, burn: 1, tentHeal: 2, tentRng: 70, supply: 600, load: 200, fee: 2, reach: 120, wheelMud: 2, wear: 0.03, mend: 0.6, need: 'granary' }; // side: the Camp's palisade, squares; need: the Camp wagon's research (the game's warehouse is the Stone granary) // cover: forest within so many walking squares; find: how far from the tap cover is looked for
 const UNIT = {
 	vil: {
 		name: 'Villager',
@@ -388,7 +395,7 @@ const UNIT = {
 		cost: { f: 50 },
 		t: 8,
 		at: 'keep',
-		also: ['town'],
+		also: ['town', 'traintent'],
 		age: 0,
 		look: 'vil',
 		desc: 'Gathers food, wood, stone and gold and carries it to the nearest drop-off. Hunts deer and boar with a javelin.',
@@ -425,6 +432,38 @@ const UNIT = {
 		age: 1,
 		look: 'envoy',
 		desc: 'Carries your offer of peace or alliance to another side. Killing one is an act of war.',
+	},
+	outpostcart: {
+		name: 'Outpost wagon',
+		cls: null, // a team and a cart, not a mouth: no room taken
+		tick: 'wagon',
+		tags: ['civ', 'wagon'],
+		hp: 60,
+		spd: 14,
+		sight: 90,
+		cost: { w: 200, f: 120, g: 60 },
+		t: 30,
+		at: 'stable',
+		age: 1,
+		camp: 'outpost',
+		look: 'caravan',
+		desc: 'A wagon and team from the Stable, packed with an outpost: send it to a spot and it unpacks into four tents and a tower in a strip; your foot soldiers raise them. One at a time; a second from the Classical age. On the road anyone at war with you can kill it.',
+	},
+	campcart: {
+		name: 'Camp wagon',
+		cls: null, // a team and a cart, not a mouth: no room taken
+		tick: 'wagon',
+		tags: ['civ', 'wagon'],
+		hp: 90,
+		spd: 12,
+		sight: 90,
+		cost: { w: 450, f: 250, g: 150 },
+		t: 45,
+		at: 'stable',
+		age: 2,
+		camp: 'camp',
+		look: 'caravan',
+		desc: 'Two wagons packed with a war camp: a palisade with a gate, four towers at the corners, the four tents inside and a yard for 32 soldiers. Needs Camp wagons researched at the Stable. One at a time; a second from the Medieval age.',
 	},
 	caravan: {
 		name: 'Caravan',
@@ -495,6 +534,7 @@ const UNIT = {
 		cls: 'army',
 		tick: 'sol',
 		tags: ['infantry', 'spear'],
+		also: ['traintent'],
 		hp: 60,
 		spd: 24,
 		sight: 130,
@@ -514,6 +554,7 @@ const UNIT = {
 		cls: 'army',
 		tick: 'sol',
 		tags: ['infantry'],
+		also: ['traintent'],
 		hp: 70,
 		spd: 24,
 		sight: 130,
@@ -534,6 +575,7 @@ const UNIT = {
 		cls: 'army',
 		tick: 'sol',
 		tags: ['infantry', 'archer', 'ranged'],
+		also: ['traintent'],
 		hp: 30,
 		spd: 24,
 		sight: 150,
@@ -554,6 +596,7 @@ const UNIT = {
 		cls: 'army',
 		tick: 'sol',
 		tags: ['infantry', 'ranged'],
+		also: ['traintent'],
 		hp: 40,
 		spd: 24,
 		sight: 140,
@@ -574,6 +617,7 @@ const UNIT = {
 		cls: 'army',
 		tick: 'sol',
 		tags: ['infantry', 'archer', 'ranged'],
+		also: ['traintent'],
 		hp: 35,
 		spd: 24,
 		sight: 150,
@@ -775,6 +819,7 @@ const UNIT = {
 		cls: 'army',
 		tick: 'sol',
 		tags: ['infantry', 'ranged', 'gun'],
+		also: ['traintent'],
 		hp: 40,
 		spd: 24,
 		sight: 150,
@@ -817,6 +862,7 @@ const UNIT = {
 		cls: 'army',
 		at: 'barracks', // never trained (no cost, no age): it says which kind of soldier it fights as, so a rebel taken into your army is Foot (Build 48)
 		tags: ['infantry'],
+		also: ['traintent'],
 		hp: 40,
 		spd: 24,
 		sight: 130,
@@ -1038,6 +1084,7 @@ const UNIT = {
 		cls: 'army',
 		at: 'barracks', // never trained: a warrior sworn to you is Foot in the army, the battalions and the huddle (Build 48: they were in none)
 		tags: ['infantry', 'spear', 'native'],
+		also: ['traintent'],
 		hp: 55,
 		spd: 32,
 		sight: 140,
@@ -1054,6 +1101,7 @@ const UNIT = {
 		cls: 'army',
 		at: 'range', // never trained: a sworn bowman is an archer
 		tags: ['infantry', 'archer', 'ranged', 'native'],
+		also: ['traintent'],
 		hp: 36,
 		spd: 32,
 		sight: 160,
@@ -1476,6 +1524,96 @@ const BLD = {
 		room: 20,
 		sab: 'burn',
 		desc: 'A tall block with room for twenty more people. Costs stone, and a bigger target than a house.',
+	},
+	// the war camp's pieces (CAMP; 38-camps): never built by hand, they come off a wagon; the wagon's price paid for them
+	medtent: {
+		nocap: 1,
+		camp: 1,
+		name: 'Medical tent',
+		fp: 2,
+		hp: 120,
+		h: 14,
+		cost: {},
+		t: 20,
+		age: 1,
+		heal: 2,
+		hrng: 70,
+		sab: 'burn',
+		wood: true,
+		desc: 'Binds wounds within 70, 2 health a second, and sends the badly hurt and the sick home to the Hospital.',
+	},
+	traintent: {
+		nocap: 1,
+		camp: 1,
+		name: 'Training tent',
+		fp: 2,
+		hp: 120,
+		h: 14,
+		cost: {},
+		t: 20,
+		age: 1,
+		sab: 'stall',
+		wood: true,
+		desc: 'Trains foot soldiers and villagers in the field, at a quarter more than the price (Field logistics: a tenth).',
+	},
+	messtent: {
+		nocap: 1,
+		camp: 1,
+		name: 'Mess tent',
+		fp: 2,
+		hp: 120,
+		h: 14,
+		cost: {},
+		t: 20,
+		age: 1,
+		sab: 'burn',
+		wood: true,
+		desc: 'Soldiers resting by it mend as at the Barracks.',
+	},
+	depot: {
+		nocap: 1,
+		camp: 1,
+		name: 'Supply depot',
+		fp: 2,
+		hp: 150,
+		h: 14,
+		cost: {},
+		t: 20,
+		age: 1,
+		drop: [...RES],
+		sab: 'burn',
+		wood: true,
+		desc: 'A drop-off in the field: villagers near the camp bring what they gather here.',
+	},
+	camptower: {
+		nocap: 1,
+		camp: 1,
+		name: 'Camp tower',
+		fp: 2,
+		hp: 300,
+		h: 30,
+		cost: {},
+		t: 25,
+		age: 1,
+		dmg: 6,
+		bow: 90,
+		cd: 1.4,
+		wood: true,
+		desc: 'A timber tower: shoots enemies in range and sounds the horn.',
+	},
+	palisade: {
+		nocap: 1,
+		camp: 1,
+		name: 'Palisade',
+		fp: 1,
+		hp: 60,
+		h: 14,
+		cost: {},
+		t: 6,
+		age: 1,
+		wallish: true,
+		wood: true,
+		desc: 'One square of stakes round the camp. It blocks everyone, you too: the gate is the way in.',
 	},
 	hospital: {
 		name: 'Hospital',
@@ -3113,6 +3251,35 @@ const TECH = [
 		fx: [{ s: 'dmg', k: '#gun', a: 4 }],
 		need: ['musket'],
 		desc: 'Guns hit harder.',
+	},
+	{
+		id: 'campwagons',
+		name: 'Camp wagons',
+		at: 'stable',
+		line: 'Camps',
+		age: 2,
+		w: 6,
+		when: '100s BC',
+		cost: { w: 200, g: 120 },
+		t: 40,
+		desc: 'The Stable packs a whole war camp on two wagons: palisade, gate, four towers, the four tents, a yard for 32.',
+	},
+	{
+		id: 'fieldlog',
+		name: 'Field logistics',
+		at: 'stable',
+		line: 'Camps',
+		age: 2,
+		w: 5,
+		when: '100s BC',
+		cost: { f: 180, g: 120 },
+		t: 40,
+		fx: [
+			{ s: 'campbuild', m: 1 / CAMP.build },
+			{ s: 'tentcost', m: CAMP.extraLog / CAMP.extra },
+		],
+		need: ['campwagons'],
+		desc: 'Soldiers raise a camp as fast as villagers, and a tent trains at a tenth over the price, not a quarter.',
 	},
 	{
 		id: 'horses',
@@ -5350,6 +5517,19 @@ const MORALE = {
 	capAfter: 2, // seconds a runner has to get away before a hand may take it prisoner
 };
 const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }; // a burst, then tired
+// the juice pass (Albert, Nov 3; Bad North, Iron Marines: every blow felt): a charging blow shoves the one it lands on back shove units and
+// jolts the screen jolt px for joltS s with a thud; a soldier hit recoils recoil px for recoilS s; one under stagger of its health sways
+// the cost of an order (Albert, Nov 3, 11:14: "in real life you can't just move people around … it should cost something, a little extra
+// food, maybe makes them a little more tired"): a drill of the Director or a squad sent eats, for each soldier, mins minutes' worth of its
+// share (shareOf, 36-economy: a foot soldier 1.5 shares, a rider 3, as Engels has a soldier's grain at 3 to 4 lb a day and a horse's at 10
+// with 10 of fodder), and leaves it tired for tired s (CHARGE.tiredSpd): give many orders and the army slows. With no food in the store
+// the order still goes; the hunger rule (UPKEEP.hunger) is the price then
+const ORDER = { mins: 0.5, tired: 6 };
+// forming (Albert, Nov 3, 10:48; his outside note of 09:35): while soldiers walk to their places in a shape, the one of lower precedence
+// gives way (foot, then archers, then riders, then siege: CLS order), and the push between two forming is soft; past share of the drill's
+// time, one not share of the way to its place holds where it stands and fights from there (the x% by x% rule)
+const FORMING = { soft: 0.5, share: 0.7 };
+const JUICE = { shove: 5, jolt: 2, joltS: 0.08, recoil: 2.5, recoilS: 0.2, stagger: 0.3 };
 // ───────────────────────── The climate (Build 54): the whole game reads three numbers, the air's temperature, the ground's wetness and the sky's run ─────────────────────────
 // Temperature: a yearly swing and a daily swing round a mean (design: a temperate land about 45° north). The sky runs as a chain: whether the
 // next minute is wet depends on this one (Gabriel & Neumann, QJRMS 1962, Tel Aviv: P(wet|dry) 0.25, P(wet|wet) 0.66, rounded here; dry
@@ -5447,7 +5627,19 @@ const FORM = [
 		vsMounted: 0.7,
 		note: '10% less damage, 30% less from riders, 20% slower',
 	},
+	// three more (Albert, Nov 3, 11:06), each a trade the ground decides: a front line is one rank, every man at the blade, and a charge
+	// breaks it (the skirmish line; vsMounted); a choke is deep and narrow, hard to break, only its front fights (the phalanx in the pass at
+	// Thermopylae, from memory); support is a ring of foot with the shooters inside, slow, the inside safe (the Roman orbis, the hollow
+	// square against riders, from memory)
+	{ name: 'Front', shape: 'front', vsMounted: 1.3, note: 'one rank: every man fights, riders break it (30% more from them)' },
+	{ name: 'Choke', shape: 'choke', spd: 0.85, hit: 0.85, vsMounted: 0.8, note: 'deep and narrow: 15% less damage, 20% less from riders, 15% slower; only the front fights' },
+	{ name: 'Support', shape: 'support', spd: 0.85, hit: 0.95, note: 'foot round the shooters: 5% less damage, 15% slower; the inside is safe' },
 ];
+// the choke drawn on the map (hold the shape on War, then drag across the gap): as many files as the gap holds, GRID.gap apart, facing across
+// the drag; the ambush (hold Rally, then tap cover): the soldiers hide within cover of forest and spring on a foe within spring, with a
+// charge's burst; hidden, no foe takes them for a mark
+const CHOKE = { min: 1, max: 12 };
+const AMBUSH = { cover: 1, spring: 45, find: 90 };
 const COLUMN = { name: 'Column', shape: 'column', spd: 1.15, hit: 1.1 };
 const GRID = { gap: 15, rows: 2.0, fan: 90, share: 40 }; // an army stands in a grid: 15 apart, about twice as wide as deep; on the march it follows one way to the spot and opens into its shape in the last 90 (as real armies marched in column and deployed); a soldier within 40 of where a path began takes that path too
 const DOCKR = 150; // fish are caught only within 150 of a finished dock of yours
@@ -5492,7 +5684,7 @@ const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, 
 // massed volleys broke armies the same losses spread out would not (Crécy, Agincourt; from memory). charge: CHARGE. wheel: the riders ride
 // to the far side of the enemy nearest the crosshair and hit from behind (FLANK, MORALE.rear). bombard: the engines on the nearest enemy
 // building to the crosshair, burning once Burning shot is researched (FIREARMS). back: FALLBACK.
-const DIRECT = { wall: 12, loose: 6, wheel: 15, behind: 70, arc: 0.8 }; // arc: the archers' arc stands at 80% of the shortest bow's reach (Albert, Nov 3: 'fall back a bit, form an arc'); wall: seconds a shield wall stands; loose: seconds before the archers may volley again (an audit, Nov 2: with none, a tap a frame was a machine gun); wheel: seconds before riders may wheel again; behind: how far past the foe they ride, away from home
+const DIRECT = { wall: 12, loose: 6, arc: 0.8 }; // arc: the archers' arc stands at 80% of the shortest bow's reach (Albert, Nov 3: 'fall back a bit, form an arc'); wall: seconds a shield wall stands; loose: seconds before the archers may volley again (an audit, Nov 2: with none, a tap a frame was a machine gun)
 const TOAST = { short: 3, mid: 5, long: 8 };
 const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
 
@@ -5599,7 +5791,7 @@ const EVENTS = {
 		burn: 0.12,
 		most: 20,
 		season: ['Summer', 'Autumn'],
-		harm: 1,
+		harm: 12,
 	}, // most: trees alight at once; the dry seasons, drought or not
 	fog: { name: 'Fog', secs: 60, vis: 70 },
 	sinkhole: { name: 'Sinkhole', secs: 2, hit: 0.4 },
@@ -5718,10 +5910,18 @@ const BACK_MARGIN = { vils: 6, houses: 5 },
 // thirds, each at least ford of dry ground; a fish every third pool.
 const WATER = {
 	lakes: [4, 9],
+	// the shore (Albert, Nov 3: "lakes too circular"): a lake's edge is its radius times 1 + Σ a_k cos(kθ + φ_k), k from 2 to harm, the
+	// amplitudes a_k = amp · k^(−H) with H = 2 − D for a fractal shore of dimension D (Mandelbrot 1967, Science 156, a coast's D a little
+	// over 1; Britain's about 1.25, from memory). The shoreline development DL = P / 2√(πA) (Hutchinson 1957, opened on Wikipedia: 1 for a
+	// circle, higher the more bays) is computed for every lake and held in shore[]; the map test keeps it in the range
+	amp: 0.3,
+	H: 0.75,
+	harm: 12,
+	shore: [1.15, 1.6],
 	r: [50, 160],
 	c: 1.06,
 	gap: 70,
-	shore: 110,
+	clear: 110,
 	w: 0.25,
 	step: 0.9,
 	bend: 45,
@@ -6002,6 +6202,8 @@ const WHY = {
 	fieldcraft: 'Hunters read ground, wind and track long before there were soldiers; the first warriors were hunters.',
 	camps: 'Every Roman army dug a ditched camp each night; a fed, rested army was never surprised asleep.',
 	marching: 'Roman roads and Roman discipline moved a legion twenty miles a day with its baggage; Caesar did thirty.',
+	campwagons: 'A Roman camp travelled on its baggage train: tents, tools, mills and grain, a mule to every eight men and carts behind; the Hussites went further and fought from the wagons.',
+	fieldlog: 'Marius made his soldiers carry their own kit, the mules of Marius; a legion that fed and housed itself in the field outmarched one that waited on its train.',
 	warmclothes: 'The sagum, the wool cloak of the legions, kept the legions through Gaul; wet wool still warms.',
 	waterproof:
 		'Oiled linen and tarred canvas shed rain; sailors wore them first, then the armies that marched in the wet.',
@@ -6219,6 +6421,22 @@ const WHY = {
 		'Scribal schools taught writing in Sumer by about 2000 BC; writing itself began as accounts at Uruk (about 3100 BC) and in Egypt soon after.',
 	library:
 		'The library of Ashurbanipal at Nineveh (7th century BC) and the Library of Alexandria (about 295 BC) gathered texts and scholars. Universities came later: Bologna in the 11th century, with al-Qarawiyyin (859) and Nalanda (5th century) older in their own traditions.',
+	medtent:
+		'The Roman marching camp kept a hospital tent: Hyginus sets the valetudinarium away from the workshops so the convalescent could rest, and sized it for 200 men.',
+	traintent:
+		'Vegetius has recruits drilled twice a day in camp, at the post and on the field; the legion trained wherever it stood.',
+	messtent:
+		'Eight men to a tent and a cooking fire (the contubernium): the squad that ate together fought together.',
+	depot:
+		'The horrea of a Roman camp held grain for a season; an army lived off its depots and the carts that filled them.',
+	camptower:
+		'Timber towers on a camp rampart: at Alesia Caesar set them 80 feet apart along the works.',
+	palisade:
+		'Every legionary carried two stakes (pila muralia) and the camp was fenced with them each night; a ditch and a bank of turf behind.',
+	outpostcart:
+		'A century at rest was a file of tents 120 feet long (Hyginus): the outpost is that file, with a tower at its end.',
+	campcart:
+		'The Hussites (1420s) made a fort of wagons chained in a square; a Roman camp went by cart too, its tents, tools and grain on the baggage train.',
 	hospital:
 		'Roman forts had valetudinaria (military hospitals); the bimaristan of Baghdad (about 805) and Byzantine xenones cared for the sick. Rest and care near the camp saved more men than the field surgeon.',
 	baths:
@@ -6467,7 +6685,7 @@ const MS_TEXT = {
 		'A fire: it spreads to wooden neighbours.',
 		'A fire grows as the square of its age and the heat falls with the gap between walls. Stone does not burn; rain damps it.',
 		'Who is on it',
-		'emgpage',
+		'alarmpg',
 	],
 	rout: [
 		'Your soldiers broke and ran: nerve.',
@@ -6545,6 +6763,18 @@ const ROW_WORD = {
 	army: 'The army',
 	pace: ['slow', 'medium', 'fast'], // a squad's pace, from its slowest member (paceWord)
 	emg: 'War', // the red button: the battle station (Albert, Nov 2)
+	town: 'Town', // the controller's tiles and cells (Albert, Nov 3)
+	aim: 'Aim',
+	go: 'Go',
+	kinds: 'Kinds',
+	alarm: 'Alarm',
+	rally: 'Rally',
+	idle: 'Idle',
+	research: 'Research',
+	relations: 'Relations',
+	map: 'Map',
+	ambush: 'Ambush',
+	choke: 'Choke',
 	emgW: [['Work', 'all clear'], ['Gather', 'at home'], ['Garrison', 'all in'], ['Shelter', 'hide']], // the Alarm page: each order's word and what it does, in the row's order (Albert, Nov 2: Age of Empires' Town Bell and Back to Work)
 };
 // a research step's why: its own key first ('tech:' + id) where a unit shares its id (F4: one WHY.legion served both)
@@ -6581,7 +6811,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The screen',
-		`Top, one bar: food, wood, stone, gold, iron, then sound, pause and play, and the map. Under it a thin strip: the age, the sky, the clock, your people and their room (tap for them), idle villagers (tap to see one), research you can start (tap for it), your rank (tap for the score) and your soldiers. Bottom, one row in three pages; the cycle button above it on the left turns ${ROW_WORD.jobs} → ${ROW_WORD.war} → ${ROW_WORD.train}, and ${ROW_WORD.emg} sits above it on the right. ${ROW_WORD.jobs}: ${ROW_WORD.people} (trains a villager) over ${ROW_WORD.build} (the hammer: building is a job), then each job with − and +. ${ROW_WORD.war}: ${ROW_WORD.target} over ${ROW_WORD.home}, the three squads with their time and pace, Go ✓ over Abort ✕. ${ROW_WORD.train}: ${ROW_WORD.orders} over the squad new soldiers join, the four kinds with − and +, ✓ over ✕. Home shows when your Town Center is out of sight. A book on a building means research waits there.`,
+		`Top, one bar: food, wood, stone, gold, iron (tap one for the jobs), your people of your room (tap for them), the clock with the sky (tap for the Status page: the age, the season, your rank, the stores, the mail, the sound), and pause, the unread mail its badge. Bottom, the controller: ${ROW_WORD.jobs} over ${ROW_WORD.town} on the left, ${ROW_WORD.war} over Close on the right, the small map between; idle villagers a badge on ${ROW_WORD.jobs}, research ready on ${ROW_WORD.town}, your soldiers on ${ROW_WORD.war}. ${ROW_WORD.jobs}: the five jobs with − and +. ${ROW_WORD.town}: ${ROW_WORD.people} over ${ROW_WORD.build}; ${ROW_WORD.build} opens the build groups, ${ROW_WORD.research} and ${ROW_WORD.relations}. ${ROW_WORD.war}: ${ROW_WORD.aim} and ${ROW_WORD.go}, the three squads, ${ROW_WORD.kinds}, ${ROW_WORD.alarm}, ${ROW_WORD.rally}, the shape, ${ROW_WORD.train} and ${ROW_WORD.setup}. Tap a lit tile to close it; Close folds it all. Home shows when your Town Center is out of sight. A book on a building means research waits there.`,
 		'Only what you act on stays in sight; the rest is a tap away.',
 	],
 	[
@@ -6725,8 +6955,13 @@ const TRIGGERS = () => [
 		'Soldiers hit walls slowly; real armies brought engines.',
 	],
 	[
+		'War camps',
+		`The Stable packs an outpost, then a camp, on wagons: pick the wagon and tap the ground, and where it stops it unpacks. An Outpost wagon (Bronze) is four tents and a timber tower in a strip: a Medical tent that binds wounds and sends the badly hurt and the sick home to the Hospital, a Training tent that trains foot soldiers and villagers at ${Math.round(CAMP.extra * 100)}% over the price, a Mess tent where soldiers mend as at the Barracks, a Supply depot that takes what villagers gather. A Camp wagon (Classical, Camp wagons researched) adds a palisade with a gate facing home, four towers and a yard for ${CAMP.hold}. Foot soldiers raise the pieces at ${Math.round(CAMP.build * 100)}% of the pace of a villager; Field logistics brings them to full and the price at the tent to ${Math.round(CAMP.extraLog * 100)}% over. The trees under a camp burn. One of each at a time, two from the age after; on the road anyone at war can kill the wagon.`,
+		'Hyginus, on the fortification of camps: eight men a tent, the hospital kept away from the workshops, a ditch and rampart round the whole. Roman armies dug a camp every night; a strip of tents in a file is a century at rest.',
+	],
+	[
 		'Temper and shape',
-		`Two dials in the Army card, for all of you or one battalion. Temper: ${TEMPER.map((t) => `${t.name}, ${t.note}`).join('. ')}. Once Engagement is researched, shooters under Hold or Guard step back from anyone who comes within ${KITE} while they reload; a horse archer always does. Shape, once Formations is researched: ${FORM.map((F) => `${F.name}, ${F.note}`).join('. ')}. An army marches in column (${Math.round((COLUMN.spd - 1) * 100)}% faster, ${Math.round((COLUMN.hit - 1) * 100)}% more damage taken) and stands to its shape when it meets a foe. The computers keep Guard.`,
+		`Two dials in the Army card, for all of you or one battalion. Temper: ${TEMPER.map((t) => `${t.name}, ${t.note}`).join('. ')}. Once Engagement is researched, shooters under Hold or Guard step back from anyone who comes within ${KITE} while they reload; a horse archer always does. Shape, once Formations is researched: ${FORM.map((F) => `${F.name}, ${F.note}`).join('. ')}. An army marches in column (${Math.round((COLUMN.spd - 1) * 100)}% faster, ${Math.round((COLUMN.hit - 1) * 100)}% more damage taken) and stands to its shape when it meets a foe. The computers keep Guard. Two tools on the War page: hold the shape and drag across a gap on the map, and the picked soldiers hold it as a Choke, as many files as the gap takes (${CHOKE.min} to ${CHOKE.max}); hold Rally and tap near forest, and they go to ground there in ambush: no foe takes them for a mark until one comes within ${AMBUSH.spring}, or a blow lands, and the whole ambush springs with a charge. Every order costs the meals of the soldiers for ${ORDER.mins * 60} seconds from the store and leaves them tired for ${ORDER.tired} seconds; a battalion forming up gives way by rank, foot before shooters before riders, and a soldier past ${Math.round(FORMING.share * 100)}% of its time and short of ${Math.round(FORMING.share * 100)}% of its way holds where it stands.`,
 		'Armies marched in column and deployed into line to fight: the Roman three lines and the medieval three battles, van, main body and rear, were the same idea. Skirmishers and horse archers fought by not being caught (Carrhae, 53 BC).',
 	],
 	[
@@ -6831,7 +7066,7 @@ const TRIGGERS = () => [
 	],
 	[
 		'The row, the squads and pausing',
-		`The cycle button above the first slot turns the row: Jobs, War, Train. On War sit the three squads (once Battalions is researched): tap one for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Out on a mission its card shows its health and standing. Opening a card you sit and read (${orList([...Object.values(READ_CARDS), 'the War Council', 'Relations'])}) pauses the game; a building, a unit or a field to glance at does not; closing it carries on (Help: Pause on cards, off if you like).`,
+		`On War sit the three squads (once Battalions is researched): tap one to send it to the crosshair, hold it for its card, where − and + under Foot, Archers, Riders and Siege set what it holds, from the soldiers at home; an empty one is New. Kinds picks every soldier of a kind (then tap where they go), and a hold is its drill. Opening a card you sit and read (${orList([...Object.values(READ_CARDS), 'the War Council', 'Relations'])}) pauses the game; a building, a unit or a field to glance at does not; closing it carries on (Help: Pause on cards, off if you like).`,
 		'Thumbs on the map, not in a menu: a phone is not a desk.',
 	],
 	[
@@ -7293,8 +7528,18 @@ const selName = () => (G.sel === 'all' ? 'army' : BN[G.sel]);
 const hasCmd = () => G.P[0].techs.has('command');
 const formOf = (u) => (u.owner === 0 && u.bn !== undefined && G.P[0].techs.has('formations') ? G.form[u.bn] || 0 : 0);
 // Shape and temper, the two dials. On the march a side with Formations goes in column; on contact or at rest it stands to its chosen shape.
-const marching = (u) => !u.tgt && (u.state === 'goto' || u.state === 'attack') && G.t - (u.mvT ?? -9) < 0.6;
-const shapeOf = (u) => (u.wall > G.t ? FORM[2] : marching(u) && G.P[u.owner] && G.P[u.owner].techs.has('formations') ? COLUMN : FORM[formOf(u)]); // a shield wall (the Director) stands to the Square
+// (Nov 3: within the last GRID.fan of the spot it is deploying, not marching: a Front of six walking from column places to one rank snapped back
+// to column each step, and the two shapes chased each other for ever)
+const marching = (u) =>
+	!u.tgt && (u.state === 'goto' || u.state === 'attack') && G.t - (u.mvT ?? -9) < 0.6 && !(u.state === 'goto' && u.fanK === u.px + ',' + u.py);
+const shapeOf = (u) =>
+	u.wall > G.t
+		? FORM[2]
+		: u.drill && u.drill.until > G.t && u.drill.px === u.px && FORM.find((f) => f.shape === u.drill.shape) // a drill drawn on the map (the choke) wears its shape's trade
+			? FORM.find((f) => f.shape === u.drill.shape)
+			: marching(u) && G.P[u.owner] && G.P[u.owner].techs.has('formations')
+				? COLUMN
+				: FORM[formOf(u)]; // a shield wall (the Director) stands to the Square
 // a dial's setting for one battalion or for all of them (-1 when they differ), and one step round it
 const dialOf = (key, a) => (a === 'all' ? (G[key].every((x) => x === G[key][0]) ? G[key][0] : -1) : G[key][Number(a)]);
 const cycle = (key, a, n) => {
@@ -7694,25 +7939,28 @@ const NAV = {
 let lakeFor = null,
 	lakeHi = false; // the lakes the grid was drawn for, and whether in flood
 const lakeR = (L) => L.r + (G.flood > G.t ? EVENTS.flood.rise : 0); // a lake in flood reaches farther up its shore
+// the shore at an angle from the lake's middle: the radius with its harmonics (WATER; 10-world lakeShape); a round pool has none
+const lakeRAt = (L, a) => (L.w ? L.r * Math.max(0.5, 1 + L.w.reduce((s, [k, amp, ph]) => s + amp * Math.cos(k * a + ph), 0)) : L.r); // never under half its radius
+const lakeRTo = (L, x, y) => lakeRAt(L, Math.atan2(y - L.y, x - L.x)) + (G.flood > G.t ? EVENTS.flood.rise : 0); // the shore toward a point, in flood too
 // how far a point stands from water (negative: in it). The great lake holds the Throne's island and four causeways, which are land.
 const onLand = (x, y) =>
 	((Math.abs(x - MID) < THRONE.cause / 2 || Math.abs(y - MID) < THRONE.cause / 2) &&
 		hyp(x - MID, y - MID) < LAKE0.r + 60) ||
 	hyp(x - MID, y - MID) < THRONE.isle;
 const lakeGap = (x, y) =>
-	onLand(x, y) ? 1e9 : G.lakes.reduce((m, L) => Math.min(m, hyp(x - L.x, y - L.y) - lakeR(L)), 1e9); // how far from the nearest lake's edge
+	onLand(x, y) ? 1e9 : G.lakes.reduce((m, L) => Math.min(m, hyp(x - L.x, y - L.y) - lakeRTo(L, x, y)), 1e9); // how far from the nearest lake's edge
 // lake cells: 1 water, 2 flood water only, which a side with levees wades
 function lakeGrid() {
 	NAV.lake.fill(0);
 	for (const L of G.lakes) {
-		const R = Math.ceil((lakeR(L) + 2) / NAVC) + 1,
+		const R = Math.ceil((lakeR(L) * (L.rmax || 1) + 2) / NAVC) + 1, // out to the farthest shore (lakeShape's rmax)
 			cx = Math.floor(L.x / NAVC),
 			cy = Math.floor(L.y / NAVC); // only the squares round each lake (Build 50: a river is many small pools)
 		for (let y = Math.max(0, cy - R); y <= Math.min(NC - 1, cy + R); y++)
 			for (let x = Math.max(0, cx - R); x <= Math.min(NC - 1, cx + R); x++)
-				if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeR(L) + 2 && !onLand(x * NAVC + 5, y * NAVC + 5)) {
+				if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeRTo(L, x * NAVC + 5, y * NAVC + 5) + 2 && !onLand(x * NAVC + 5, y * NAVC + 5)) {
 					const c = y * NC + x;
-					if (NAV.lake[c] !== 1) NAV.lake[c] = hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < L.r + 2 ? 1 : 2; // deep water stays deep where pools overlap
+					if (NAV.lake[c] !== 1) NAV.lake[c] = hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeRAt(L, Math.atan2(y * NAVC + 5 - L.y, x * NAVC + 5 - L.x)) + 2 ? 1 : 2; // deep water stays deep where pools overlap
 				}
 	}
 	NAV.shore.fill(0);
@@ -8564,7 +8812,7 @@ function blankGame(seed) {
 		recruitSq: null, // the squad new soldiers join (the Train page)
 		form: BN.map(() => 0),
 		qs: { from: 'all', n: {} },
-		hud: { page: 'jobs' }, // the row's page and the crosshair (39-huddle); never saved: a game opens on Jobs
+		hud: { page: null, map: true }, // the controller's page, the small map, the crosshair (39-huddle); never saved: a game opens at rest, the map up
 		msn: [null, null, null, null],
 		emg: null,
 		intel: {},
@@ -8626,6 +8874,7 @@ function mkPlayer(i, civ) {
 		wave: null,
 		killer: undefined,
 		ai: { t: 1 + i * 0.3, lastHelp: 0, cyc: 0, cool: {} }, // cool: side → until when a stalled wave leaves it alone (WAVE)
+		ab: (SET.ab && SET.ab[i]) || 'A', // the A/B test of the computers (tests/ab.py; AB in 17-ai): A as shipped, B without the handicap and with greed raids and choke claims
 		gathered: 0,
 		spent: 0,
 		flow: {},
@@ -8668,8 +8917,10 @@ function newGame(seed, carry, daily) {
 	skyTurn(); // 5 weather: the first sky from the season's chain, not always clear
 	navRebuild();
 	// EXCEPTIONS #16 (LIVE TEST IN PROCESS): each computer's handicap, built beside its Town Center by the placing rules (HANDICAP in 06)
+	G.kills = G.P.map(() => G.P.map(() => 0)); // who killed whose, side by side (16-sim-fight hurt; tests/ab.py reads it)
 	for (let o = 1; o < WILD; o++)
 		for (const kind of HANDICAP.blds) {
+			if (G.P[o].ab === 'B') break; // the B side of the test plays without the handicap
 			const k = keepOf(o),
 				s = k && findSpot(o, kind, k.x, k.y, HANDICAP.r[0], HANDICAP.r[1]);
 			if (!s) continue;
@@ -8805,13 +9056,43 @@ const LAYOUT = [
 // same rules, or keeps none when it finds no way or is too short for its two fords.
 // lakeSize: the power law cut to WATER.r and inverted, u from 0 to 1 giving the smallest to the largest: r = r0 (1 − u (1 − (r0/r1)^2c))^(−1/2c).
 const lakeSize = (u) => WATER.r[0] * (1 - u * (1 - (WATER.r[0] / WATER.r[1]) ** (2 * WATER.c))) ** (-1 / (2 * WATER.c));
+// a lake's shore (WATER.amp, H, harm): the harmonics drawn by the map's own dice, so one seed is one shore; a river's pools stay round
+function lakeShape(L) {
+	for (let t = 0; t < 12; t++) {
+		lakeHarm(L);
+		if (L.dl >= WATER.shore[0] && L.dl <= WATER.shore[1]) break; // drawn again until it is a lake with a bay or two, never a circle, never wild
+	}
+	return L;
+}
+function lakeHarm(L) {
+	L.w = [];
+	for (let k = 2; k <= WATER.harm; k++) L.w.push([k, WATER.amp * k ** -WATER.H * (rng() < 0.5 ? -1 : 1) * (0.6 + 0.4 * rng()), rng() * Math.PI * 2]);
+	let P = 0,
+		A = 0,
+		px = lakeRAt(L, 0),
+		py = 0;
+	L.rmax = 1;
+	for (let i = 1; i <= 72; i++) {
+		const a = (i / 72) * Math.PI * 2,
+			r = lakeRAt(L, a);
+		L.rmax = Math.max(L.rmax, r / L.r);
+		const x = Math.cos(a) * r,
+			y = Math.sin(a) * r;
+		P += hyp(x - px, y - py);
+		A += (px * y - x * py) / 2;
+		px = x;
+		py = y;
+	}
+	L.dl = P / (2 * Math.sqrt(Math.PI * Math.abs(A))); // the shoreline development: 1 is a circle
+	return L;
+}
 function makeWater() {
 	const keeps = PLAYERS.slice(0, WILD).map((d) => ({ x: d.keep[0], y: d.keep[1] })),
 		W = [],
 		dry = (x, y, r, from) =>
 			keeps.every((k) => hyp(x - k.x, y - k.y) >= CLEAR + r) &&
 			Math.min(Math.abs(x - MID), Math.abs(y - MID)) >= r + WATER.gap &&
-			hyp(x - MID, y - MID) >= r + LAKE0.r + WATER.shore &&
+			hyp(x - MID, y - MID) >= r + LAKE0.r + WATER.clear &&
 			W.every((q) => q === from || hyp(x - q.x, y - q.y) >= r + q.r + WATER.gap);
 	const n = WATER.lakes[0] + Math.floor(rng() * (WATER.lakes[1] - WATER.lakes[0] + 1));
 	for (let i = 0; i < n; i++) {
@@ -8820,7 +9101,7 @@ function makeWater() {
 			const x = rnd(r, MAP - r),
 				y = rnd(r, MAP - r);
 			if (!dry(x, y, r)) continue;
-			W.push({ x, y, r });
+			W.push(lakeShape({ x, y, r }));
 			break;
 		}
 	}
@@ -9386,6 +9667,7 @@ function trainWhy(o, kind) {
 		p = G.P[o];
 	if (U.age > p.age) return `${plural(U.name)} need the ${AGES[U.age].name} age.`;
 	if (!readyAt(o, U).length) return `Build a ${BLD[U.at].name.toLowerCase()} first.`;
+	if (U.camp && campWhyTrain(o, U.camp)) return campWhyTrain(o, U.camp);
 	if (U.cls && clsCount(o, U.cls) >= clsMax(U.cls, o))
 		return U.cls === 'civ' ? `People at the ceiling: ${POPMAX}.` : armyFull(o);
 	if (p.hungry) return 'Your people are hungry: put villagers on Food.';
@@ -9398,13 +9680,16 @@ function train(o, kind) {
 	const k = civKind(o, kind),
 		U = UNIT[k],
 		p = G.P[o],
-		at = shortest(readyAt(o, U));
+		at = tentOrNot(o, U, k, shortest(readyAt(o, U)));
 	const t = U.t * stats(o, k).train,
-		c = unitCost(o, k);
+		c = tentCost(o, at, unitCost(o, k));
 	pay(p, c);
 	at.q.push({ kind: k, left: t, total: t, paid: c });
 	return true;
 }
+// a training tent charges CAMP.extra over the price (Field logistics: CAMP.extraLog); one that cannot be paid for gives way to a building that can
+const tentCost = (o, at, c) => (at && at.kind === 'traintent' ? Object.fromEntries(Object.entries(c).map(([k, v]) => [k, Math.round(v * (1 + CAMP.extra * fxv(o, 'tentcost').m))])) : c);
+const tentOrNot = (o, U, k, at) => (at && at.kind === 'traintent' && !afford(G.P[o], tentCost(o, at, unitCost(o, k))) ? shortest(readyAt(o, U).filter((b) => b.kind !== 'traintent')) || at : at);
 // cancel one order in a building's line: what was paid for it comes back in full, the way it went out (every order keeps what it paid)
 const whyOf = (j) => (j.tech || j.age ? 'research' : 'units');
 // what an order gives back when it goes: the purse, the ledger and the research spent, one home for a cancel and for an order an old save cannot keep
@@ -10826,9 +11111,13 @@ function formUp() {
 					? Math.min(n, 3)
 					: shape === 'square'
 						? Math.ceil(Math.sqrt(n))
-						: D && shape === 'line'
-							? n <= 6 ? n : Math.ceil(n / 2) // a shield wall: one rank, two past six
-							: clamp(Math.round(Math.sqrt(n * GRID.rows)), 1, 14),
+						: shape === 'front'
+							? n // one rank
+							: shape === 'choke'
+								? clamp((D && D.cols) || 3, CHOKE.min, CHOKE.max) // as many files as the gap holds
+								: D && shape === 'line'
+									? n <= 6 ? n : Math.ceil(n / 2) // a shield wall: one rank, two past six
+									: clamp(Math.round(Math.sqrt(n * GRID.rows)), 1, 14),
 			wr = (i) => Math.floor((Math.sqrt(8 * i + 1) - 1) / 2);
 		// the line faces along the march; ranks trail behind the first, and a unit standing at its place faces the same way
 		const t = { x: a[0].px, y: a[0].py },
@@ -10839,6 +11128,9 @@ function formUp() {
 			fy = fy0 / fl;
 		const cm = regionAt(t, a[0].owner),
 			mates = new Set(a); // the battalion's own stand in its shape: only others take a place
+		if (shape === 'support') a.sort((p, q) => (UNIT[p.kind].rng > 20) - (UNIT[q.kind].rng > 20) || p.id - q.id); // the foot first: they take the ring
+		const nf = shape === 'support' ? a.filter((u) => (UNIT[u.kind].rng || 0) <= 20).length : 0,
+			rOut = (Math.max(nf, 6) * GRID.gap) / (2 * Math.PI); // the ring's radius: the foot GRID.gap apart round it
 		for (let i = 0; i < n; i++) {
 			const ri = shape === 'wedge' ? wr(i) : Math.floor(i / cols),
 				c = (shape === 'wedge' ? i - (ri * (ri + 1)) / 2 - ri / 2 : (i % cols) - (cols - 1) / 2) * GRID.gap,
@@ -10850,6 +11142,15 @@ function formUp() {
 				// off the map or on someone else moves to the nearest free spot round it, on the spot's side (Build 48)
 				let gx = -fy * c + fx * r,
 					gy = fx * c + fy * r;
+				if (shape === 'support') {
+					const onRing = i < nf,
+						m = onRing ? nf : n - nf,
+						j = onRing ? i : i - nf,
+						th = (j / Math.max(1, m)) * 2 * Math.PI,
+						rr = onRing ? rOut : Math.max(0, rOut - GRID.gap) * Math.sqrt((j + 0.5) / Math.max(1, m)); // the shooters spread inside, denser at the middle
+					gx = Math.cos(th) * rr;
+					gy = Math.sin(th) * rr;
+				} // support: foot on the ring, shooters within
 				if (D && shape === 'arc') {
 					const A = D.arc,
 						ph = Math.atan2(t.y - A.y, t.x - A.x),
@@ -11699,7 +12000,7 @@ function vilTick(u, dt, SP) {
 	}
 	if (!u.job) {
 		u.idle = true;
-		if (u.post) moveTo(u, u.post.x, u.post.y, dt, 2, SP, true);
+		if (u.post) moveTo(u, u.post.x, u.post.y, dt, 2, SP, !!u.post.b); // its own spot (a lattice place): within ARRIVE; a bare point shared with others (the Emergency's ring): within personal space, standing where it was pushed (10a; Nov 3: seven on one point shuffled for ever)
 		else if (kk) moveTo(u, kk.x + u.ox, kk.y + u.oy, dt, 2, SP);
 		return;
 	} // sent somewhere by the finger, it stands there; else it waits by the Town Center
@@ -11971,11 +12272,6 @@ function repairTick(u, dt, SP) {
 		// the site it was raising is done: the next unfinished piece of wall nearby, else back to what it was doing
 		u.building = false;
 		if (u.back) {
-			if (BLD[b.kind].drop && !u.plot && startWork(u, b)) {
-				u.back = false;
-				u.pn = u.pa = null;
-				return;
-			} // a mine, mill or lumber camp: its builder works the nearest find it serves (Albert, Nov 3, D-091 amended; Age of Empires II's camps)
 			backToWork(u);
 			return;
 		} // pulled off its work to raise this one (D-091): straight back to it
@@ -12139,6 +12435,7 @@ function caravanTick(u, dt, SP) {
 		routeTick(u, dt, SP);
 		return;
 	}
+	if (supplyRun(u, dt, SP)) return; // food out to a camp's depot (CAMP)
 	const home =
 		G.blds.find((b) => b.id === u.lastId && b.hp > 0 && b.owner === o && b.kind === 'market') ||
 		nearest(G.blds, u, (b) => b.owner === o && b.kind === 'market' && b.prog >= 1 && b.hp > 0);
@@ -12374,12 +12671,43 @@ function shot(x1, y1, h1, x2, y2, fire) {
 const routSecs = (o) => MORALE.rout * (G.P[o].techs.has('engage') ? 0.5 : 1); // Engagement halves the run (C6: the grace no longer shrinks with it)
 const nearHome = (u, t, k) =>
 	(u.hax !== undefined && hyp(t.x - u.hax, t.y - u.hay) < YARD) || (!!k && dist(t, k) < YARD);
+// the ambush (AMBUSH; 28-army-quick ambushAt): bound for cover it walks; in place it goes to ground (hid); a foe within spring, or a blow
+// landed, springs every soldier of that ambush with a charge's burst; any other order (a new px) ends it
+function ambushTick(u) {
+	const A = u.amb;
+	if (u.state !== 'goto' || u.px !== A.x || u.py !== A.y) {
+		u.amb = null;
+		u.hid = false;
+		return;
+	}
+	if (!u.hid) {
+		if (hyp(u.px + (u.gx || 0) - u.x, u.py + (u.gy || 0) - u.y) < 8) u.hid = true; // at its own place round the cover
+		return;
+	}
+	const f = nearestFoe(u.owner, u, AMBUSH.spring);
+	if (!f && G.t - (u.hurtT ?? -9) > 0.5) return;
+	for (const v of G.units)
+		if (v.owner === u.owner && v.amb && v.amb.x === A.x && v.amb.y === A.y) {
+			v.amb = null;
+			v.hid = false;
+			v.chg = G.t + CHARGE.secs;
+			if (f) v.tgt = f;
+		}
+	if (u.owner === 0) {
+		say('Ambush!', 'good', TOAST.short);
+		sfx('horn', u.x, u.y);
+	}
+}
 function solTick(u, dt, SP) {
 	const U = UNIT[u.kind],
 		o = u.owner,
 		k = keepOf(o);
 	u.cd = Math.max(0, u.cd - dt);
-	u.kiting = kiteOf(u); // a shooter steps back from a foe on top of it, unless it presses; a horse archer always rides away
+	u.kiting = kiteOf(u);
+	if (u.amb) ambushTick(u);
+	campSendHome(u); // by a medical tent, the badly hurt and the sick walk home to the Hospital (CAMP)
+	if (u.goingHome && (u.state !== 'goto' || u.hp >= u.max * 0.95)) u.goingHome = false;
+	// a shooter steps back from a foe on top of it, unless it presses; a horse archer always rides away
 	if (u.state === 'school') {
 		u.idleT = 0;
 		if (G.t >= u.schoolT) graduate(u);
@@ -12413,7 +12741,7 @@ function solTick(u, dt, SP) {
 				b.owner === o &&
 				b.hp > 0 &&
 				b.prog >= 1 &&
-				(b.kind === 'castle' || b.kind === 'barracks' || b.kind === 'keep') &&
+				(b.kind === 'castle' || b.kind === 'barracks' || b.kind === 'keep' || (b.kind === 'messtent' && !(u.unfed > 0))) && // the mess tent: rest as at the Barracks, while the depot feeds (CAMP)
 				dist(b, u) < GARRISON.r,
 		)
 	)
@@ -12549,6 +12877,7 @@ function solTick(u, dt, SP) {
 		edge(u, tgt) > reachOf(rngOf(u), tgt)
 	)
 		tgt = null; // hold ground: fight only what comes within reach
+	if (drillOn(u)) drillHold(u);
 	if (tgt && drillOn(u)) {
 		const placed = u.gx !== undefined && hyp(u.px + u.gx - u.x, u.py + u.gy - u.y) < 6;
 		if (!placed || edge(u, tgt) > reachOf(rngOf(u), tgt)) tgt = null;
@@ -12633,6 +12962,7 @@ function solTick(u, dt, SP) {
 		moveTo(u, u.esc.x + u.ox * 0.5, u.esc.y + u.oy * 0.5, dt, 14, SP);
 		return;
 	}
+	if (campRaise(u, dt, SP)) return; // a foot soldier idle by its side's camp raises it (CAMP)
 	if (u.state === 'goto' || u.state === 'assist') {
 		const ak = u.px + ',' + u.py;
 		if (u.fanK !== ak && hyp(u.px - u.x, u.py - u.y) < GRID.fan) u.fanK = ak; // near the spot: from here to its own place in the shape
@@ -12902,7 +13232,7 @@ const ignorable = (v, o, me) => {
 	return U.flee || U.passive || U.tick === 'wayfarer' || U.tick === 'envoy';
 }; // a herald is sacred: nobody shoots at an emissary on its way (it dies only by a side's own order)
 // who a side strikes: a foe (isFoe), or anything attacking the one looking (at peace too), less what it leaves alone
-const strikes = (o, v, me) => !v.inside && v.hp > 0 && v.owner !== o && (isFoe(o, v, me) || onMe(v, me)) && !ignorable(v, o, me);
+const strikes = (o, v, me) => !v.inside && !v.hid && v.hp > 0 && v.owner !== o && (isFoe(o, v, me) || onMe(v, me)) && !ignorable(v, o, me); // one in ambush (hid) is no mark
 // every unit in the grid's squares within r of a (the unit grid, rebuilt each step), in the grid's own order; with no grid this step, every
 // unit, last to first. The one home of the scan nearestFoe, bestFoe, nearU and unitsNear each wrote out (Nov 2, M6)
 function scanNear(a, r, fn) {
@@ -13150,9 +13480,21 @@ function hurt(o, a, t, base) {
 	}
 	t.hp -= d;
 	t.hurtT = G.t;
+	if (a && !isB && a.chg > G.t && isSoldier(t) && !t.inside && G.t - (t.shoveT || -9) > 1) {
+		const dx = t.x - a.x,
+			dy = t.y - a.y,
+			dd = hyp(dx, dy) || 1;
+		t.shoveT = G.t;
+		if (!blockedCell(gcell(t.x + (dx / dd) * JUICE.shove, t.y + (dy / dd) * JUICE.shove), t.owner)) stepTo(t, t.x + (dx / dd) * JUICE.shove, t.y + (dy / dd) * JUICE.shove);
+		if (onScreen(t.x, t.y)) {
+			G.jolt = G.t + JUICE.joltS;
+			sfx('thud', t.x, t.y);
+		}
+	} // a charge lands (the juice pass): the one it hits is shoved back, the screen jolts, a thud
 	if (a && t.hp <= 0 && !isB && a.st) {
 		a.st.kills++;
 		warCredit(a.owner, t.owner, UNIT[t.kind].cost); // an animal costs nothing, so it counts nothing
+		if (G.kills && G.kills[a.owner] && G.kills[a.owner][t.owner] !== undefined) G.kills[a.owner][t.owner]++;
 		if (isSoldier(a)) a.mor = Math.min(1, a.mor + MORALE.kill);
 	}
 	const tg = o === WILD ? null : gangOf(t);
@@ -13218,6 +13560,9 @@ let CHNEXT = new Int32Array(1024);
 // Who gives way (Build 48; it was always half and half): one at work or in a fight hardly moves, one walking moves one standing about,
 // one standing gives way. Nobody is pushed into a tree, a wall or water.
 const heft = (u) => (u.tgt || G.t - (u.work ?? -9) < 0.5 ? 9 : G.t - (u.mvT ?? -9) < 0.25 ? 3 : 1);
+// forming (FORMING): walking to its place in a shape (its gx set, not there yet); the precedence of its kind, lower giving way
+const forming = (u) => u.state === 'goto' && u.gx !== undefined && !u.tgt && hyp(u.px + u.gx - u.x, u.py + u.gy - u.y) > 6,
+	rankOf = (u) => (isSoldier(u) ? 4 - Math.max(0, clsOf(u.kind)) : 0);
 function pushApart(a, b) {
 	let dx = b.x - a.x,
 		dy = b.y - a.y;
@@ -13231,9 +13576,11 @@ function pushApart(a, b) {
 	}
 	const d = hyp(dx, dy);
 	if (d > 0 && d < SPACE) {
-		const ha = heft(a),
-			hb = heft(b),
-			k = (SPACE - d) / d,
+		const fa = forming(a),
+			fb = forming(b),
+			ha = fa && fb ? (rankOf(a) > rankOf(b) ? 9 : rankOf(a) < rankOf(b) ? 1 : 3) : heft(a),
+			hb = fa && fb ? (rankOf(b) > rankOf(a) ? 9 : rankOf(b) < rankOf(a) ? 1 : 3) : heft(b),
+			k = ((SPACE - d) / d) * (fa && fb ? FORMING.soft : 1), // two forming: the lower kind gives way, and the push is soft
 			pa = (k * hb) / (ha + hb),
 			pb = (k * ha) / (ha + hb),
 			ax = a.x - dx * pa,
@@ -13287,9 +13634,9 @@ function collide() {
 	for (const u of U) {
 		if (u.inside) continue;
 		for (const L of G.lakes) {
-			if (Math.abs(u.x - L.x) > L.r + 60 || Math.abs(u.y - L.y) > L.r + 60) continue; // far from this one: the cheap test first
+			if (Math.abs(u.x - L.x) > L.r * 1.4 + 60 || Math.abs(u.y - L.y) > L.r * 1.4 + 60) continue; // far from this one: the cheap test first
 			const dl = dist(u, L),
-				lr = lakeR(L);
+				lr = lakeRTo(L, u.x, u.y);
 			if (dl < lr + 6 && !u.fly && !onLand(u.x, u.y)) {
 				const s = (lr + 6) / (dl || 1);
 				stepTo(u, L.x + (u.x - L.x) * s, L.y + (u.y - L.y) * s);
@@ -13450,6 +13797,7 @@ const TICK = {
 	scout: scoutTick,
 	envoy: envoyTick,
 	caravan: caravanTick,
+	wagon: wagonTick,
 	spy: spyTick,
 	priest: priestTick,
 	medic: medicTick,
@@ -13946,6 +14294,7 @@ function think(p) {
 	for (const f of G.finds) if (FINDS[f.kind].hire && !f.done && R.g >= 200) hire(o, f);
 	// war: attack only when the odds beat this personality's nerve; a rival's wonder is attacked at once
 	if (per.bold < 2) decideWar(p, per);
+	if (p.ab === 'B') chokeClaim(p); // the B side of the test holds a gap on the road to its nearest foe (AB)
 	if (per.diplo) aiDiplomacy(p, per);
 	allyDuty(p);
 }
@@ -14152,7 +14501,8 @@ function decideWar(p, per) {
 			const busy =
 				per.opportunist &&
 				G.P.some((x) => x.alive && x.id !== WILD && x.id !== o && x.id !== q.id && atWar(q.id, x.id)); // the opportunist: a side with another war on its hands
-			const pr = threat ? Math.max(prob, 0.75) : prob * (busy ? per.opportunist * DF().opp : 1);
+			const greed = p.ab === 'B' ? 1 + AB.greed * (storesOf(q.id) / Math.max(1, ...G.P.filter((x) => x.alive && x.id !== WILD && x.id !== o).map((x) => storesOf(x.id)))) : 1; // B: the richest foe draws it
+			const pr = (threat ? Math.max(prob, 0.75) : prob * (busy ? per.opportunist * DF().opp : 1)) * greed;
 			if (pr > bp) {
 				bp = pr;
 				best = q.id;
@@ -14169,15 +14519,19 @@ function decideWar(p, per) {
 			u.loot = null;
 		});
 		p.wave = newWave(go.length, best, W && W.owner === best ? W.id : TB ? TB.id : null);
-		if (per.raid) {
-			// a few riders go for the foe's lumber camps and mines instead of the Town Center: it draws the defence apart
+		if (per.raid || p.ab === 'B') {
+			// a few riders go for the foe's lumber camps and mines instead of the Town Center: it draws the defence apart (B: more of them, and
+			// the drop-off with the most villagers about it, where the loot is)
 			const fast = go
 					.filter((u) => (UNIT[u.kind].tags || []).includes('mounted'))
-					.slice(0, per.raid + (hz('hard') ? HARD.raid : 0)),
+					.slice(0, (per.raid || 0) + (hz('hard') ? HARD.raid : 0) + (p.ab === 'B' ? AB.raid : 0)),
 				k = keepOf(o);
+			const busyAt = (b) => G.units.reduce((n, v) => n + (v.owner === best && v.kind === 'vil' && dist(v, b) < 90 ? 1 : 0), 0);
 			const mark =
 				k &&
-				nearest(G.blds, k, (b) => standing(b, best) && b.kind !== 'keep' && BLD[b.kind].drop);
+				(p.ab === 'B'
+					? G.blds.filter((b) => standing(b, best) && b.kind !== 'keep' && BLD[b.kind].drop).sort((a, b) => busyAt(b) - busyAt(a))[0] || null
+					: nearest(G.blds, k, (b) => standing(b, best) && b.kind !== 'keep' && BLD[b.kind].drop));
 			if (mark)
 				fast.forEach((u) => {
 					u.bid = mark.id;
@@ -14214,6 +14568,48 @@ function leagueTick() {
 	}
 	G.navDirty = true;
 	if (fresh) news('realm', `${M.map((p) => p.name).join(', ')} unite against ${lead.name}, the leader.`, 'warn', TOAST.long);
+}
+
+// ── The A/B test of the computers (Albert, Nov 3, 11:10: "a b test this"): A plays as shipped, with the handicap (HANDICAP: a free mill and
+// farm); B plays without it and with pressure instead: AB.raid more riders on the drop-off where the villagers are, the richest foe weighed
+// by AB.greed, and a choke claim: with AB.foot foot soldiers idle at home it holds the narrowest gap on the road to its nearest foe (the
+// drawn choke of preview 37, dress 'choke'), AB.hold seconds at a time, every AB.every. tests/ab.py seats A and B by the seed and reports.
+const AB = { raid: 2, greed: 0.3, foot: 6, hold: 180, every: 240, gapMin: 2, gapMax: 10, step: 40 };
+const storesOf = (o) => Object.values(G.P[o].res).reduce((a, b) => a + b, 0);
+// the narrowest gap on the road: the point on the straight line to the foe where the open run across it is shortest (in squares)
+function gapOnRoad(o, q) {
+	const k = keepOf(o),
+		f = keepOf(q);
+	if (!k || !f) return null;
+	const d = dist(k, f),
+		ux = (f.x - k.x) / d,
+		uy = (f.y - k.y) / d;
+	let best = null;
+	for (let t = 150; t < d / 2; t += AB.step) {
+		const x = k.x + ux * t,
+			y = k.y + uy * t;
+		if (blockedCell(gcell(x, y), o)) continue;
+		let w = 1;
+		for (const sgn of [1, -1]) for (let i = 1; i <= AB.gapMax; i++) if (!blockedCell(gcell(x - uy * sgn * i * NAVC, y + ux * sgn * i * NAVC), o)) w++; else break;
+		if (w >= AB.gapMin && w <= AB.gapMax && (!best || w < best.w)) best = { x, y, w, fx: ux, fy: uy };
+	}
+	return best;
+}
+function chokeClaim(p) {
+	const o = p.id;
+	if ((p.ai.chokeT || 0) > G.t) return;
+	p.ai.chokeT = G.t + AB.every;
+	const k = keepOf(o),
+		foe = k && G.P.filter((q) => q.alive && q.id !== WILD && q.id !== o && atWar(o, q.id) && keepOf(q.id)).sort((a, b) => dist(k, keepOf(a.id)) - dist(k, keepOf(b.id)))[0];
+	if (!foe) return;
+	const foot = soldiersOf(o).filter((u) => u.state === 'home' && !u.tgt && !UNIT[u.kind].heal && !(UNIT[u.kind].tags || []).includes('mounted') && !(UNIT[u.kind].tags || []).includes('siege'));
+	if (foot.length < AB.foot) return;
+	const g = gapOnRoad(o, foe.id);
+	if (!g) return;
+	const S = foot.slice(0, Math.min(foot.length, g.w * 3));
+	dress(S, { x: g.x, y: g.y }, { x: g.fx, y: g.fy }, 'choke', AB.hold);
+	for (const u of S) u.drill.cols = clamp(g.w, CHOKE.min, CHOKE.max);
+	p.ai.chokes = (p.ai.chokes || 0) + 1;
 }
 // ═════ 18-figures.js: people and beasts, drawn from data ═════
 // ───────────────────────── Figures: every unit drawn once per look, colour, pose and zoom, then stamped ─────────────────────────
@@ -17062,6 +17458,168 @@ const ART = {
 		banner(0, d / 2 - 32, c, 14);
 		L_(-25, d / 2 - 1, 25, d / 2 - 1, c, 1.4);
 	},
+	// the camp's tents (CAMP): a ridge tent of canvas, pegged out, the side's colour on the flap; the mark on the ridge tells them apart
+	tent(c, mark) {
+		const CANVAS = { med: '#eeeae0', train: '#9fa9b4', mess: '#cdb98a', depot: '#a88a62' }[mark] || '#d9cfb4', // its own cloth: white, grey, tan, brown
+			d = 20 * TILT,
+			f = d / 2;
+		P_(
+			[
+				[-11, f + 1],
+				[11, f + 1],
+				[11, f - 3],
+				[-11, f - 3],
+			],
+			lit('#8a7a5a', -0.3),
+			null,
+			0,
+		); // the trodden ground at the door
+		P_(
+			[
+				[-10, f],
+				[10, f],
+				[0, f - 14],
+			],
+			lit(CANVAS, -0.08),
+			LINE,
+			0.5,
+		); // the front gable
+		P_(
+			[
+				[10, f],
+				[10 + 7, f - 7],
+				[7, f - 21],
+				[0, f - 14],
+			],
+			lit(CANVAS, -0.5),
+			LINE,
+			0.5,
+		); // the shaded east slope
+		P_(
+			[
+				[-10, f],
+				[-10 + 7, f - 7],
+				[7, f - 21],
+				[0, f - 14],
+			],
+			lit(CANVAS, 0.1),
+			LINE,
+			0.5,
+		); // the sunlit west slope
+		P_(
+			[
+				[-3, f],
+				[3, f],
+				[0, f - 6],
+			],
+			'#3a2a1a',
+			null,
+			0,
+		); // the door flap, open
+		L_(-3, f, -3, f - 6, c, 1.4); // the side's colour down the flap
+		L_(0, f - 14, 7, f - 21, '#6a5a4a', 1); // the ridge pole
+		if (mark === 'med') {
+			L_(-6, f - 8, -2, f - 8, '#b23a3a', 1.6);
+			L_(-4, f - 10, -4, f - 6, '#b23a3a', 1.6);
+		} else if (mark === 'train') L_(-7, f - 9, -2, f - 6, '#55657a', 1.6);
+		else if (mark === 'mess') E_(-4, f - 8, 2.4, 1.6, '#b8954a', LINE, 0.3);
+		else if (mark === 'depot') {
+			P_(
+				[
+					[-8, f - 6],
+					[-3, f - 6],
+					[-3, f - 10],
+					[-8, f - 10],
+				],
+				'#8a6644',
+				LINE,
+				0.3,
+			);
+		}
+	},
+	medtent(c) {
+		ART.tent(c, 'med');
+	},
+	traintent(c) {
+		ART.tent(c, 'train');
+	},
+	messtent(c) {
+		ART.tent(c, 'mess');
+	},
+	depot(c) {
+		ART.tent(c, 'depot');
+	},
+	camptower(c) {
+		// a timber tower: four posts, a platform with a rail, a ladder; the side's flag on top
+		const d = 20 * TILT,
+			f = d / 2;
+		for (const [x, k] of [
+			[-7, 0.05],
+			[7, -0.4],
+		]) {
+			P_(
+				[
+					[x - 1.5, f],
+					[x + 1.5, f],
+					[x + 1.5, f - 30],
+					[x - 1.5, f - 30],
+				],
+				lit(PLANK, k),
+				LINE,
+				0.4,
+			);
+		}
+		L_(-7, f - 6, 7, f - 18, lit(PLANK, -0.5), 1); // the cross brace
+		L_(7, f - 6, -7, f - 18, lit(PLANK, -0.5), 1);
+		P_(
+			[
+				[-10, f - 30],
+				[10, f - 30],
+				[10, f - 34],
+				[-10, f - 34],
+			],
+			lit(PLANK, 0.1),
+			LINE,
+			0.5,
+		); // the platform
+		P_(
+			[
+				[-10, f - 34],
+				[10, f - 34],
+				[10, f - 40],
+				[-10, f - 40],
+			],
+			lit('#8a7a5a', -0.2),
+			LINE,
+			0.5,
+		); // the parapet of wattle
+		L_(-9, f - 40, -9, f - 46, lit(PLANK, -0.3), 1);
+		L_(-9, f - 46, -2, f - 44, c, 2); // the flag
+		L_(-9, f - 44, -2, f - 44, c, 2);
+		L_(2, f, 2, f - 30, lit(PLANK, -0.6), 0.8); // the ladder
+		for (let y = f - 4; y > f - 30; y -= 4) L_(0.5, y, 3.5, y, lit(PLANK, -0.6), 0.8);
+	},
+	palisade(c) {
+		// one square of stakes: four pointed posts of timber, lashed, the shaded side east
+		const d = 10 * TILT,
+			f = d / 2;
+		for (let i = 0; i < 4; i++) {
+			const x = -4.5 + i * 3;
+			P_(
+				[
+					[x - 1.2, f],
+					[x + 1.2, f],
+					[x + 1.2, f - 13],
+					[x, f - 16],
+					[x - 1.2, f - 13],
+				],
+				lit(PLANK, i === 3 ? -0.45 : 0.05 - i * 0.08),
+				LINE,
+				0.4,
+			);
+		}
+		L_(-5.5, f - 9, 5.5, f - 9, lit(PLANK, -0.5), 1.2); // the lashing rail
+	},
 	house(c) {
 		const r = block(20, 12, PLASTER, 'timber', 'gable', THATCH, 9);
 		door(-4, r.d / 2, 4, 7);
@@ -19357,15 +19915,24 @@ function makeBg() {
 		}
 		b.stroke();
 	};
+	// a lake's outline on a canvas, its shore's harmonics (lakeRAt) at a radius extra beyond the water's edge
+	const shorePath = (c, L, extra, k = 1) => {
+		c.beginPath();
+		for (let i = 0; i < 72; i++) {
+			const a = (i / 72) * Math.PI * 2,
+				r = (lakeRAt(L, a) + extra) * k;
+			c[i ? 'lineTo' : 'moveTo'](L.x * k + Math.cos(a) * r, L.y * k + Math.sin(a) * r);
+		}
+		c.closePath();
+	};
 	for (const L of G.lakes) {
 		if (L.river) continue;
-		const sand = b.createRadialGradient(L.x, L.y, L.r - 4, L.x, L.y, L.r + 26);
+		const sand = b.createRadialGradient(L.x, L.y, L.r - 4, L.x, L.y, L.r * (1 + WATER.amp) + 26);
 		sand.addColorStop(0, 'rgba(206,190,138,1)');
 		sand.addColorStop(0.5, 'rgba(196,180,128,.85)');
 		sand.addColorStop(1, 'rgba(196,180,128,0)');
 		b.fillStyle = sand;
-		b.beginPath();
-		b.arc(L.x, L.y, L.r + 26, 0, 7);
+		shorePath(b, L, 26);
 		b.fill();
 	} // every shore first, then every water
 	for (const run of runs) {
@@ -19379,15 +19946,17 @@ function makeBg() {
 	for (const run of runs) stream(run, -5, '#2a6488');
 	for (const L of G.lakes) {
 		if (L.river) continue;
-		const lg = b.createRadialGradient(L.x - L.r * 0.2, L.y - L.r * 0.2, 10, L.x, L.y, L.r + 2);
+		const lg = b.createRadialGradient(L.x - L.r * 0.2, L.y - L.r * 0.2, 10, L.x, L.y, L.r * (1 + WATER.amp * 0.6) + 2);
 		lg.addColorStop(0, '#1b4466');
 		lg.addColorStop(0.7, '#2a6488');
 		lg.addColorStop(0.95, '#4e93ad');
 		lg.addColorStop(1, '#79b2bf');
 		b.fillStyle = lg;
-		b.beginPath();
-		b.arc(L.x, L.y, L.r + 2, 0, 7);
+		shorePath(b, L, 2);
 		b.fill();
+		b.strokeStyle = '#79b2bf';
+		b.lineWidth = 3;
+		b.stroke(); // the shallows follow the shore's bays, not the gradient's circle
 	}
 	for (const run of runs) {
 		// where a river leaves its lake, the lake's shade covers the join
@@ -19535,6 +20104,10 @@ function draw() {
 			);
 	};
 	layer(bg);
+	{
+		const yb = SY(MAP);
+		if (yb < ch) ctx.drawImage(bg, 0, bg.height - 9, bg.width, 1, SX(0), yb - 1, MAP * z, ch - yb + 1);
+	} // past the map's foot, under the controller, the ground runs on to the screen's edge: the map's last rows drawn down (Albert, Nov 3: off the map showed as a dark band between the tiles); nothing stands there, and nothing on the map hides under the row
 	if (z > 1.1 && grassPat) {
 		if (grassM.a !== z * 0.5 || grassM.e !== x0 || grassM.f !== y0) {
 			grassM.a = z * 0.5;
@@ -19552,6 +20125,7 @@ function draw() {
 		const k = (G.shake - G.t) * 3;
 		ctx.translate(rnd2() * k, rnd2() * k);
 	} // a sinkhole or a falling star: the whole view judders for a moment
+	if (G.jolt > G.t && !still()) ctx.translate(rnd2() * JUICE.jolt, rnd2() * JUICE.jolt); // a charge landing on screen: a jolt (the juice pass)
 	layer(scarCv);
 	drawFlood(z);
 	drawSand(z);
@@ -19599,7 +20173,9 @@ function draw() {
 				: t === 1
 					? drawBld(e, sB)
 					: t === 2
-						? drawUnit(e, sU)
+						? e.hid
+							? ((ctx.globalAlpha = 0.45), drawUnit(e, sU), (ctx.globalAlpha = 1)) // in ambush: half seen, so you know where they lie
+							: drawUnit(e, sU)
 						: t === 4
 							? drawFallen(e, sU)
 							: drawFind(e);
@@ -19631,7 +20207,7 @@ function draw() {
 	drawGhost();
 	{
 		const now = performance.now();
-		if (G.hud.page === 'war' && now - miniT > 150) {
+		if (mini.parentNode !== $('stage') && now - miniT > 150) {
 			miniT = now;
 			drawMini();
 		}
@@ -19944,7 +20520,7 @@ function drawBld(b, s) {
 	blaze(b, sx, sy, z);
 	if (idlePost(b)) idleMark(sx, sy, z * 1.2);
 	const M = maxHpB(b.owner, b.kind);
-	if (b.hp < M - 1) bar(sx, sy - c.ay * k - 4, Math.min(60 * z, B.fp * NAVC * z), b.hp / M, G.P[b.owner].color);
+	if (b.hp < M - 1 && !(B.camp && b.hp >= M * CAMP.mend)) bar(sx, sy - c.ay * k - 4, Math.min(60 * z, B.fp * NAVC * z), b.hp / M, G.P[b.owner].color); // a camp piece weathers a little every minute: its bar shows only once it wants mending (CAMP.mend)
 	if (G.wonder && G.wonder.id === b.id) {
 		ctx.font = mapFont(labelK());
 		ctx.fillStyle = '#ffd35e';
@@ -20595,8 +21171,11 @@ function drawUnit(u, s) {
 	// the body in motion (Build 52): a rise and fall with each step; a lunge into the blow and back; a shooter's kick on the release
 	const face = (u.fx || 1) < 0 ? -1 : 1,
 		ha = G.t - (u.hitT ?? -9),
+		hu = G.t - (u.hurtT ?? -9),
 		near = (U.rng || 0) <= 20,
-		bob = moving && !still() ? Math.abs(Math.sin(pace * Math.PI)) * 1.2 * z : 0,
+		low = isSoldier(u) && u.hp < u.max * JUICE.stagger && !still(), // the juice pass: a soldier badly hurt sways on its feet
+		bob = (moving && !still() ? Math.abs(Math.sin(pace * Math.PI)) * 1.2 * z : 0) + (low ? Math.sin(G.t * 4 + u.id) * 0.8 * z : 0),
+		recoil = still() || hu > JUICE.recoilS ? 0 : -JUICE.recoil * z * (1 - hu / JUICE.recoilS), // a blow landed: it gives a little, then stands
 		lunge =
 			still() || ha > 0.3
 				? 0
@@ -20605,7 +21184,7 @@ function drawUnit(u, s) {
 					: ha < 0.18
 						? -1.3 * z * (1 - ha / 0.18)
 						: 0,
-		bx = sx + face * lunge,
+		bx = sx + face * (lunge + recoil),
 		by = sy - bob;
 	stamp(c, bx, by, k * popC((G.t - (u.bornT ?? -9)) / 0.4), face < 0);
 	{
@@ -21381,7 +21960,16 @@ function miniIncoming(m, k) {
 	m.arc(x, y, 4, 0, Math.PI * 2);
 	m.fill();
 } // an attack on its way: a red dot that flashes on the small map; tap the map and you are there
+// the small map in a box wider than tall (the controller's 3 x 2): the whole width, a slice of the height round the camera; h the slice in
+// world units, y0 its top, f where the cut sits (0 the top, 1 the bottom) for the canvas's object-position
+function miniCut(r) {
+	const h = r.width > r.height ? (MAP * r.height) / r.width : MAP,
+		f = MAP > h ? clamp((cam.y - h / 2) / (MAP - h), 0, 1) : 0.5;
+	return { h, y0: f * (MAP - h), f };
+}
 function drawMini() {
+	const cut = miniCut({ width: mini.clientWidth || 1, height: mini.clientHeight || 1 });
+	mini.style.objectPosition = `50% ${(cut.f * 100).toFixed(1)}%`;
 	const m = mctx,
 		k = 172 / MAP;
 	m.clearRect(0, 0, 172, 172);
@@ -21456,11 +22044,12 @@ function drawFlood(z) {
 	if (G.flood > G.t) {
 		ctx.fillStyle = 'rgba(42,100,136,.55)';
 		ctx.beginPath();
-		for (const L of G.lakes) {
-			const r = (L.r + EVENTS.flood.rise) * z;
-			ctx.moveTo(SX(L.x) + r, SY(L.y));
-			ctx.ellipse(SX(L.x), SY(L.y), r, r * TILT, 0, 0, 7);
-		}
+		for (const L of G.lakes)
+			for (let i = 0; i < 48; i++) {
+				const a = (i / 48) * Math.PI * 2,
+					r = lakeRAt(L, a) + EVENTS.flood.rise;
+				ctx[i ? 'lineTo' : 'moveTo'](SX(L.x + Math.cos(a) * r), SY(L.y + Math.sin(a) * r));
+			} // the flood follows each lake's own shore
 		ctx.fill(); // one shape, so a river's overlapping pools do not darken where they meet (Build 52)
 	} // the flood: water over the shore
 }
@@ -21741,6 +22330,21 @@ function drawTouch(z) {
 		ctx.arc(G.press.x, G.press.y, 26, -Math.PI / 2, -Math.PI / 2 + f * 6.2832);
 		ctx.stroke();
 	} // the ring fills only once the finger is plainly holding (Albert, Nov 3: it flashed on every tap): at full the box begins
+	if (G.chokeLine) {
+		const L = G.chokeLine,
+			n = Math.max(1, Math.round(hyp(L.b.x - L.a.x, L.b.y - L.a.y) / GRID.gap));
+		ctx.strokeStyle = '#ffd35e';
+		ctx.lineWidth = 3;
+		ctx.lineCap = 'round';
+		ctx.beginPath();
+		ctx.moveTo(SX(L.a.x), SY(L.a.y));
+		ctx.lineTo(SX(L.b.x), SY(L.b.y));
+		ctx.stroke();
+		ctx.font = mapFont();
+		ctx.textAlign = 'center';
+		ctx.fillStyle = '#ffd35e';
+		ctx.fillText(`${n} across`, SX((L.a.x + L.b.x) / 2), SY((L.a.y + L.b.y) / 2) - 12);
+	} // the choke being drawn: the gap and how many files it holds
 	if (G.box) {
 		const b = G.box;
 		ctx.fillStyle = 'rgba(255,211,94,.12)';
@@ -22096,6 +22700,12 @@ cv.addEventListener('pointerdown', (e) => {
 		drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, touch }; // away from the ghost: drag looks around; a tap moves the ghost there
 		return;
 	}
+	if (G.hud.aim === 'choke') {
+		const a = toWorld(p.x, p.y);
+		drag = { mode: 'choke', a };
+		G.chokeLine = { a, b: a };
+		return;
+	} // the choke tool (28-army-quick): the drag is the gap
 	drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, t0: performance.now() };
 	G.press = { x: p.x, y: p.y, t: performance.now() };
 	holdT = setTimeout(() => {
@@ -22146,6 +22756,10 @@ cv.addEventListener('pointermove', (e) => {
 		aimSpot(p.x, p.y);
 		return;
 	}
+	if (drag && drag.mode === 'choke') {
+		G.chokeLine = { a: drag.a, b: toWorld(p.x, p.y) };
+		return;
+	}
 	if (drag && drag.mode === 'box') {
 		drag.x1 = p.x;
 		drag.y1 = p.y;
@@ -22192,6 +22806,14 @@ cv.addEventListener('pointerup', (e) => {
 	drag = null;
 	if (!d) return;
 	EDGE = null;
+	if (d.mode === 'choke') {
+		const q = lp(e);
+		G.chokeLine = null;
+		G.hud.aim = false;
+		chokeAt(d.a, toWorld(q.x, q.y));
+		ui(true);
+		return;
+	}
 	if (d.mode === 'ret') {
 		G.hud.drag = false;
 		ui(true);
@@ -22252,6 +22874,11 @@ cv.addEventListener(
 );
 ['gesturestart', 'gesturechange', 'gestureend'].forEach((t) => document.addEventListener(t, (e) => e.preventDefault()));
 let miniAt = null;
+// a finger on the small map to the world: the map is cut to its box's width, round the camera (drawMini, miniCut)
+function miniAt0(e, r) {
+	const c = miniCut(r);
+	return { x: ((e.clientX - r.left) / r.width) * MAP, y: c.y0 + ((e.clientY - r.top) / r.height) * c.h };
+}
 mini.addEventListener('pointerdown', (e) => {
 	e.stopPropagation();
 	if (G) G.follow = false;
@@ -22259,8 +22886,7 @@ mini.addEventListener('pointerdown', (e) => {
 		mini.setPointerCapture(e.pointerId);
 	} catch (err) {} // the finger stays the map's until it lifts, even off its edge (an audit, Nov 2)
 	const r = mini.getBoundingClientRect(),
-		x = ((e.clientX - r.left) / r.width) * MAP,
-		y = ((e.clientY - r.top) / r.height) * MAP;
+		{ x, y } = miniAt0(e, r);
 	camGo(x, y);
 	miniAt = { x: e.clientX, y: e.clientY, pan: false };
 });
@@ -22272,8 +22898,9 @@ mini.addEventListener('pointermove', (e) => {
 	if (miniAt.pan) {
 		const r = mini.getBoundingClientRect();
 		camStop();
-		cam.x = clamp(((e.clientX - r.left) / r.width) * MAP, 0, MAP);
-		cam.y = clamp(((e.clientY - r.top) / r.height) * MAP, 0, MAP);
+		const w = miniAt0(e, r);
+		cam.x = clamp(w.x, 0, MAP);
+		cam.y = clamp(w.y, 0, MAP);
 		clampCam();
 	} // and a drag on the small map sweeps the camera with it, no glide (Albert, Nov 2)
 });
@@ -22375,7 +23002,7 @@ function tapAt(sx, sy) {
 		pickToggle(h.e);
 		return;
 	}
-	const mine = picked();
+	const mine = shareFor(h) || picked(); // a share of a kind: the ones nearest this spot (28-army-quick)
 	if (mine.length) {
 		order(mine, h);
 		if (!mine.some(isSoldier)) setPick([]); // villagers given work are let go of; soldiers keep their orders coming (Build 61, Albert)
@@ -22585,9 +23212,8 @@ function startPlace(kind) {
 	setPick([]);
 	G.place = { kind, at: null, pts: [], cells: null };
 	// start the ghost in the middle of the screen, snapped beside something of yours if it can be
-	const w = G.buildAt && G.buildAt.x !== undefined ? G.buildAt : toWorld(cw / 2, ch / 2);
-	G.buildAt = null;
-	if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200); // from the hammer on open ground: there; otherwise the middle of the screen
+	const w = toWorld(cw / 2, ch / 2);
+	if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200); // the middle of the screen
 	ui(true);
 }
 // you tapped Build: build what the ghost shows; houses, fields and gates offer the next spot beside it
@@ -22637,7 +23263,7 @@ function openCard(c, back) {
 	renderCard();
 	preview();
 } // a card pauses the game (Help: Pause on cards); closing it carries on
-const READ_CARDS = { research: 'Research', troops: 'the Army', guide: 'the Guide', help: 'Help', score: 'Score', stores: 'Stores', sound: 'Sound' }; // the cards you sit and read pause the game (named for the Rules page); a building, a unit or a field to glance at does not (Albert, Build 41). The War Council is a building card that pauses (Build 48: 'council' here never matched a card)
+const READ_CARDS = { research: 'Research', troops: 'the Army', guide: 'the Guide', help: 'Help', score: 'Score', stores: 'Stores', sound: 'Sound', status: 'Status' }; // the cards you sit and read pause the game (named for the Rules page); a building, a unit or a field to glance at does not (Albert, Build 41). The War Council is a building card that pauses (Build 48: 'council' here never matched a card)
 // whether the card on show pauses the game, decided each time what it shows changes (a card opened, back, a tab turned), never once at
 // open (E7: Relations paused when opened on its tab, not when the tab was turned; a building after Research stayed paused). Between
 // changes the player's own pause and play stand
@@ -23266,6 +23892,42 @@ function hideQuick() {
 	$('qa').hidden = true;
 	G.qa = null;
 }
+// ── The share (Albert, Nov 3, 10:06: the tap cycle, the slider cut): a tap on a kind in War · Kinds picks all of it; tapping it again picks
+// half, then a quarter, then all again; its count shows on the tile. The ones that go are those nearest the target, chosen when the map is
+// tapped (shareFor); till then the rings show the ones nearest the middle of the screen. G.share: { t, ids, n }. Strategy games run on these
+// roles (all, half, a few): no slider, no edge gesture, no eyes off the battle.
+const SHARE = [1, 0.5, 0.25]; // the steps of the cycle
+const shareN = (N, i) => Math.max(1, Math.ceil(N * SHARE[i]));
+function sharePick(t) {
+	const S = ofKind(t),
+		Sh = G.share,
+		i = Sh && Sh.t === t && shareOn() ? (Sh.i + 1) % SHARE.length : 0,
+		c = toWorld(cw / 2, ch / 2 + vy),
+		near = (p) => (a, b) => hyp(a.x - p.x, a.y - p.y) - hyp(b.x - p.x, b.y - p.y);
+	if (!S.length) return 0;
+	const ids = S.slice().sort(near(c)).map((u) => u.id);
+	G.share = { t, i, ids, n: shareN(ids.length, i) };
+	setPick(ids.slice(0, G.share.n).map((id) => ({ t: 'unit', id })));
+	return G.share.n;
+}
+// the pick is the share's own (a new pick, a tap on one of yours, an empty pick: the share is over)
+const shareOn = () => {
+	const Sh = G.share;
+	if (!Sh) return false;
+	const P = G.pick.filter((k) => k.t === 'unit');
+	return P.length === Sh.n && P.every((k) => Sh.ids.includes(k.id));
+};
+// a tap on the map with the share picked: the n of the kind nearest that spot go, the rest stay as they are
+function shareFor(h) {
+	if (!shareOn()) return null;
+	const p = h.e,
+		U = G.share.ids.map((id) => byId(G.units, id)).filter((u) => u && u.hp > 0);
+	U.sort((a, b) => hyp(a.x - p.x, a.y - p.y) - hyp(b.x - p.x, b.y - p.y));
+	const go = U.slice(0, G.share.n);
+	setPick(go.map((u) => ({ t: 'unit', id: u.id })));
+	G.share.ids = go.map((u) => u.id).concat(G.share.ids.filter((id) => !go.some((u) => u.id === id)));
+	return go;
+}
 function quickGo() {
 	const Q = G.qa,
 		S = sendable();
@@ -23275,8 +23937,8 @@ function quickGo() {
 	order(S, { t: 'ground', e: { x: Q.x, y: Q.y } });
 	feel('thock');
 }
-// ── The War Director (06-rules-tuning, DIRECT): a tap on a kind in the station's middle is its move, a hold its second. Every soldier of
-// that kind that can be sent goes at once; the crosshair (G.hud.h) is where. Each returns what was said, or '' when nobody could go.
+// ── The War Director (06-rules-tuning, DIRECT): a hold on a kind in War · Kinds is its drill (a tap picks the kind, 33-verbs kpick). Every
+// soldier of that kind that can be sent goes at once; the crosshair (G.hud.h), or the camera's middle, is where. Each returns what was said.
 const ofKind = (t) => sendable().filter((u) => clsOf(u.kind) === t);
 const aimH = () => G.hud.h || { t: 'ground', e: { x: cam.x, y: cam.y } };
 // a drill's shape on the ground (Albert, Nov 3: "form a line", "a semi circle or arc"): every soldier of S to its place round the point at,
@@ -23289,10 +23951,95 @@ function dress(S, at, dir, shape, secs, arc) {
 		u.px = at.x;
 		u.py = at.y;
 		u.idleT = 0;
-		u.drill = { shape, fx: dir.x, fy: dir.y, until: G.t + secs, px: at.x, py: at.y, arc: arc || null };
+		u.drill = { shape, fx: dir.x, fy: dir.y, t0: G.t, until: G.t + secs, px: at.x, py: at.y, arc: arc || null, from: { x: u.x, y: u.y } };
 	}
 }
-const DIRECT_WHY = { none: 'Nobody of that kind.', wheel: 'Nobody to wheel round.' };
+// the x% by x% rule (FORMING.share): past that share of the drill's time, a soldier not that share of the way from where it started to its
+// place holds where it stands: in tight quarters they do the best they can as quick as they can (Albert, Nov 3)
+function drillHold(u) {
+	const D = u.drill;
+	if (!D || D.held || !D.from || u.gx === undefined || G.t - D.t0 < (D.until - D.t0) * FORMING.share) return; // a drill from before this rule (a save) has no start
+	const all = hyp(D.px + u.gx - D.from.x, D.py + u.gy - D.from.y) || 1,
+		left = hyp(D.px + u.gx - u.x, D.py + u.gy - u.y);
+	if (1 - left / all >= FORMING.share) return;
+	D.held = true;
+	u.px = D.px = u.x;
+	u.py = D.py = u.y; // its place is where it stands (its own spot now, no offset)
+	u.gx = u.gy = 0;
+}
+// ── The choke and the ambush (Albert, Nov 3, 11:08: "allowing the player to use the land to pick a formation that works")
+// the choke: a drag across a gap on the map (hold the shape on War); the picked soldiers, else everyone, stand in it as many files as
+// the gap holds (CHOKE), facing across it toward the nearest foes, else away from home; a standing order (a drill with no end)
+const toolSet = () => {
+	const P = picked().filter(isSoldier);
+	return P.length ? P : sendable();
+};
+function chokeAt(a, b) {
+	const U = toolSet();
+	if (!U.length) return say('No soldiers to hold it.', '', TOAST.short);
+	const w = hyp(b.x - a.x, b.y - a.y);
+	if (w < GRID.gap) return say('Drag across the gap, end to end.', '', TOAST.short);
+	const cols = clamp(Math.round(w / GRID.gap), CHOKE.min, CHOKE.max),
+		mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 },
+		F = foesNear(mid),
+		home = homeOf(0),
+		ref = F.length ? centreOf(F) : home ? { x: 2 * mid.x - home.x, y: 2 * mid.y - home.y } : null;
+	let fx = -(b.y - a.y) / w,
+		fy = (b.x - a.x) / w;
+	if (ref && fx * (ref.x - mid.x) + fy * (ref.y - mid.y) < 0) {
+		fx = -fx;
+		fy = -fy;
+	}
+	dress(U, mid, { x: fx, y: fy }, 'choke', 1e9);
+	for (const u of U) u.drill.cols = cols;
+	say(`${U.length} hold the gap, ${cols} across.`, 'good', TOAST.short);
+	sfx('horn');
+	feel('thock');
+}
+// the ambush: the nearest cover to the tap (an open square with forest within AMBUSH.cover squares, looked for within AMBUSH.find); the
+// soldiers go there and go to ground (u.hid once in place: no foe takes them for a mark, 15-sim-spatial); a foe within AMBUSH.spring, or a
+// blow, springs the whole ambush with a charge's burst (14-sim-troops)
+function coverNear(x, y) {
+	const cx = Math.floor(x / NAVC),
+		cy = Math.floor(y / NAVC),
+		R = Math.ceil(AMBUSH.find / NAVC),
+		tree = (gx, gy) => gx >= 0 && gy >= 0 && gx < NC && gy < NC && NAV.solid[gy * NC + gx] && !NAV.lake[gy * NC + gx] && !NAV.occ[gy * NC + gx];
+	let best = null,
+		bd = 1e9;
+	for (let gy = cy - R; gy <= cy + R; gy++)
+		for (let gx = cx - R; gx <= cx + R; gx++) {
+			if (gx < 0 || gy < 0 || gx >= NC || gy >= NC || NAV.solid[gy * NC + gx]) continue;
+			const d = hyp(gx * NAVC + 5 - x, gy * NAVC + 5 - y);
+			if (d >= bd || d > AMBUSH.find) continue;
+			let near = false;
+			for (let j = -AMBUSH.cover; j <= AMBUSH.cover && !near; j++) for (let i = -AMBUSH.cover; i <= AMBUSH.cover && !near; i++) if ((i || j) && tree(gx + i, gy + j)) near = true;
+			if (near) {
+				bd = d;
+				best = { x: gx * NAVC + 5, y: gy * NAVC + 5 };
+			}
+		}
+	return best;
+}
+function ambushAt(h) {
+	const U = toolSet();
+	if (!U.length) return say('No soldiers to hide.', '', TOAST.short);
+	const spot = coverNear(h.e.x, h.e.y);
+	if (!spot) return say('No cover there: an ambush wants forest.', '', TOAST.short);
+	for (const u of U) {
+		u.state = 'goto';
+		u.px = spot.x;
+		u.py = spot.y;
+		u.idleT = 0;
+		u.tgt = null;
+		u.focus = null;
+		u.drill = null;
+		u.amb = { x: spot.x, y: spot.y }; // bound for cover; hid once there
+		u.hid = false;
+	}
+	say(`${U.length} go to ground at ${coord(spot.x, spot.y)}.`, 'good', TOAST.short);
+	feel('thock');
+}
+const DIRECT_WHY = { none: 'Nobody of that kind.' };
 const DIRECTS = {
 	wall: (S) => {
 		const c = centreOf(S),
@@ -23307,7 +24054,6 @@ const DIRECTS = {
 		dress(S, c, { x: (to.x - c.x) / d, y: (to.y - c.y) / d }, 'line', DIRECT.wall);
 		return 'Shield wall!';
 	},
-	advance: (S) => (order(S, aimH()), 'Foot, advance!'),
 	loose: (S) => {
 		if (G.looseT > G.t) return `Reloading: ${Math.ceil(G.looseT - G.t)} s.`;
 		const c = centreOf(S),
@@ -23323,28 +24069,12 @@ const DIRECTS = {
 		G.looseT = G.t + DIRECT.loose;
 		return 'Archers, loose!';
 	},
-	back: (S, word) => (fallBack(0, S, undefined, true) ? word : 'Nowhere to fall back to.'),
 	charge: (S) => {
 		const why = chargeWhy(0, S);
 		if (why) return why; // winded: nobody moves (an audit, Nov 2: they were ordered off before the check)
 		order(S, aimH());
 		charge(0, S, undefined, true);
 		return 'Riders, charge!';
-	},
-	wheel: (S) => {
-		if ((G.wheelT || 0) > G.t) return `Winded: ${Math.ceil(G.wheelT - G.t)} s.`;
-		const h = aimH(),
-			foes = foesNear(h.e),
-			home = homeOf(0) || h.e;
-		if (!foes.length) return DIRECT_WHY.wheel;
-		const cx = foes.reduce((s, f) => s + f.x, 0) / foes.length,
-			cy = foes.reduce((s, f) => s + f.y, 0) / foes.length,
-			d = hyp(cx - home.x, cy - home.y) || 1, // the far side of the foe from home (an audit, Nov 2: the riders' own centre sat on the foe when they were split)
-			x = clamp(cx + ((cx - home.x) / d) * DIRECT.behind, 20, MAP - 20),
-			y = clamp(cy + ((cy - home.y) / d) * DIRECT.behind, 20, MAP - 20);
-		order(S, { t: 'ground', e: { x, y } });
-		G.wheelT = G.t + DIRECT.wheel;
-		return 'Riders, wheel!';
 	},
 	bombard: (S) => {
 		const h = aimH(),
@@ -23354,19 +24084,22 @@ const DIRECTS = {
 	},
 };
 // the four kinds' moves: [tap, hold], with the word each says, and the sound
+// the four kinds' drills (a hold on a kind in War · Kinds), with the word each says and its sound. The second moves (Advance, Fall back,
+// Wheel, Pull back) are cut (Albert, Nov 3): pick the kind, then tap where
 const DIRECT_OF = [
-	[['wall', 'Shield wall', 'hit'], ['advance', 'Advance', 'horn']],
-	[['loose', 'Loose!', 'arrow'], ['back', 'Archers, fall back!', 'horn']],
-	[['charge', 'Charge', 'horn'], ['wheel', 'Wheel', 'hooves']],
-	[['bombard', 'Bombard', 'boom'], ['back', 'Engines, pull back!', 'horn']],
+	['wall', 'Shield wall', 'hit'],
+	['loose', 'Loose!', 'arrow'],
+	['charge', 'Charge', 'horn'],
+	['bombard', 'Bombard', 'boom'],
 ];
-function direct(t, hold) {
-	const [id, word, snd] = DIRECT_OF[t][hold ? 1 : 0],
+function direct(t) {
+	const [id, word, snd] = DIRECT_OF[t],
 		S = ofKind(t);
 	if (!S.length) return say(DIRECT_WHY.none, '', TOAST.short);
 	const said = DIRECTS[id](S, word);
 	if (!/!$/.test(said)) return say(said, '', TOAST.short); // a reason ends with a stop: nobody moved, no horn
-	say(said, 'good', TOAST.short);
+	const f = orderCost(0, S); // the drill's price (ORDER): their meals, and the tiredness after
+	say(f ? `${said} (${f} food)` : said, 'good', TOAST.short);
 	sfx(snd);
 	feel('snap');
 }
@@ -24019,13 +24752,16 @@ const SET_WHY = {
 };
 const settingsWhy = () =>
 	`<p>${[SET_WHY.diff[SET.diff], SET_WHY.fantasy[SET.fantasy ? 1 : 0], SET_WHY.fog[SET.fog !== false ? 1 : 0], SET_WHY.tension[SET.tension]].filter(Boolean).join(' ')}</p>`;
-const settingsHTML = () =>
+// two two-choice settings share a rank (Nov 3, Albert: the start page on one screen): name, its pair, name, its pair
+const pairRow = (a, b) => acts(lab(a[0], 's1') + choice(a[1].map(([act, w, v]) => [act, w, v === a[2]]), 's2', true) + lab(b[0], 's1') + choice(b[1].map(([act, w, v]) => [act, w, v === b[2]]), 's2', true), 'c6');
+const settingsHTML = (daily) =>
 	setRow('Difficulty', DIFK.map((k) => [`diff:${k}`, k, k]), SET.diff) +
 	setRow('Length', Object.entries(MODES).map(([k, m]) => [`mode:${k}`, m.name.replace('minutes', 'min'), k]), SET.mode) +
 	setRow('Scenario', Object.keys(SCENARIOS).map((k) => [`scen:${k}`, SCEN_TEXT[k][0].replace('The ', ''), k]), SET.scen || 'open') +
-	setRow('World', [['fantasy:0', 'Real', false], ['fantasy:1', 'Fantasy', true]], !!SET.fantasy) +
-	acts(lab('Fog', 's4') + choice(offOn('fog', SET.fog !== false), 's2', true), 'c6') +
-	setRow('Tension', [['tension:winner', 'Winner', 'winner'], ['tension:diplomacy', 'Diplomacy', 'diplomacy']], SET.tension);
+	pairRow(['World', [['fantasy:0', 'Real', false], ['fantasy:1', 'Fantasy', true]], !!SET.fantasy], ['Fog', offOn('fog', SET.fog !== false), true]) +
+	(daily
+		? pairRow(['Tension', [['tension:winner', 'Winner', 'winner'], ['tension:diplomacy', 'Diplomacy', 'diplomacy']], SET.tension], ['Daily', offOn('daily', !!SET.daily), true])
+		: setRow('Tension', [['tension:winner', 'Winner', 'winner'], ['tension:diplomacy', 'Diplomacy', 'diplomacy']], SET.tension));
 // ═════ 30-cards.js: the CARDS table, one entry per card type, and renderCard ═════
 // ───────────────────────── The cards, one entry each ─────────────────────────
 // Each takes the card's description (G.card) and returns its page, or null when what it showed is gone.
@@ -24469,10 +25205,9 @@ const CARDS = {
 		);
 		return (
 			title('A new game', '') +
-			settingsHTML() +
+			settingsHTML(true) +
 			acts(choice(CIVK.map((k) => [`civ:${k}`, CIVS[k].name, SET.civ === k]), 's6', true), 'c1') +
 			acts(info(short(SET.civ), C.bonus, 'left line'), 'c1') +
-			acts(lab(`Daily · level ${levelOf(TODAY_HZ)}`, 's4') + choice(offOn('daily', !!SET.daily), 's2', true), 'c6') +
 			acts(choice(HZK.map((k) => [`hz:${k}`, `<b>${HAZARDS[k].short || HAZARDS[k].name}</b><small>${HAZARDS[k].pts}</small>`, !!H[k]]), 's6'), 'c1') +
 			(staleSave
 				? acts(info(`Your last game ${staleSave === 'damaged' ? 'could not be read' : `came from an older version (${staleSave})`}`, 'kept aside, not deleted', 'left line'), 'c1')
@@ -24481,7 +25216,7 @@ const CARDS = {
 				btn(
 					SET.daily ? 'today' : 'fresh',
 					'Start',
-					`${C.name} · ${SET.daily ? 'daily challenge' : MODES[SET.mode].name.replace('minutes', 'min')} · ${lv ? `level ${lv} · score ×${(1 + lv / 10).toFixed(1)}` : 'hazards at random'}`,
+					`${C.name} · ${SET.daily ? `daily challenge, level ${levelOf(TODAY_HZ)}` : MODES[SET.mode].name.replace('minutes', 'min')} · ${lv ? `level ${lv} · score ×${(1 + lv / 10).toFixed(1)}` : 'hazards at random'}`,
 					'main',
 				),
 				'c1',
@@ -24552,7 +25287,7 @@ const CARDS = {
 							`<p data-act="ordpick:${O.id}"><b>${O.n}</b> ${O.fight ? 'fighting near' : O.arrived ? 'at' : 'marching to'} ${O.label}${!O.arrived && O.eta ? ` · ${O.eta} s` : ''}</p>`,
 					)
 					.join(''); // tap a line: that group is picked, and the camera goes to it
-		h += acts(btn('emgpage', 'Alarm', 'gather · garrison · shelter', G.emg ? 'warn' : ''), 'c1');
+		h += acts(btn('alarmpg', 'Alarm', 'gather · garrison · shelter', G.emg ? 'warn' : ''), 'c1');
 		if (S.length && hasCmd())
 			h +=
 				sec('Orders go to') +
@@ -24620,48 +25355,6 @@ const CARDS = {
 			live
 		);
 	},
-	menu(c) {
-		// the Build menu (MENU-SPEC §8, picture Build Menu): six tabs, a folder; the buildings double-wide, three a rank, words only: the name,
-		// how many of how many, the cost. Blue: it fits where you tapped; dim: a later age, or all built. The page holds the height of the
-		// biggest tab, so the tabs never move under the finger
-		const p = G.P[0],
-			M = MENUS.find((m) => m.id === c.id);
-		G.lastMenu = c.id;
-		const item = (k) => {
-			const B = BLD[k],
-				lock = B.age > p.age,
-				cp = capFor(0, k),
-				n = bldsOf(0, k).length,
-				full = !lock && n >= cp,
-				fits = G.buildAt && G.buildAt.hint === k,
-				can = afford(p, B.cost);
-			return btn(
-				`build:${k}`,
-				B.short || bldName(0, k),
-				lock
-					? `${AGES[B.age].name} age`
-					: (cp < 99 ? `${n}/${cp} · ` : '') +
-							(full ? 'all built' : can ? costText(B.cost) : `short ${need(B.cost)}`) +
-							(fits ? ' · fits here' : ''),
-				lock || full ? 'dis' : fits ? 'go' : '',
-				lock || full ? undefined : can ? 1 : fillOf(B.cost),
-			);
-		};
-		return (
-			title('Build', G.buildAt && G.buildAt.x !== undefined ? 'here' : '') +
-			folder(
-				'menu',
-				MENUS.map((m) => {
-					const open = m.items.filter((k) => BLD[k].age <= p.age); // every building the age allows at its limit: the tab says so with a check (Build 61)
-					return [m.id, m.name, open.length && open.every((k) => bldsOf(0, k).length >= capFor(0, k)) ? '✓' : ''];
-				}),
-				c.id,
-				`<div class="hold" style="--n:${Math.ceil(Math.max(...MENUS.map((m) => m.items.length)) / 3)}">${grid3(M.items.map(item))}</div>`, // T2: double-wide, three a rank, a short rank filled
-				'c6',
-			) +
-			fold('menu', 'What each one does', M.items.map((k) => `<p><b>${bldName(0, k)}:</b> ${BLD[k].desc}</p>`).join(''))
-		);
-	},
 	research: () => researchHTML(),
 	// the mail (Build 64): every line kept, newest first, by group; a group can hide its previews here or from the preview's ×. Six lines a
 	// page, Previous and Next: the 30 kept are five pages, nothing scrolls (N13, Albert Oct 31: "a page system, nothing more")
@@ -24714,6 +25407,25 @@ const CARDS = {
 			? list(M.filter((m) => MS_TEXT[m.id]).map((m) => btn(`card:milestone,${m.id}`, MS_TEXT[m.id][0].split(':')[0].replace(/\.$/, ''), clock(m.t), m.id === id ? 'on' : '')), 2) // a slot each, two a rank (E8: chips were 22 tall taps); a milestone cut from the text is left out (N9)
 			: '<p class="dim">None yet. Each first (a house, a field, a soldier, a squad, an age) and each hard moment (mud, snow, ice, hunger, fire, a rout) is one, with its why and its fix.</p>';
 		return h;
+	},
+	// the Status page (Albert, Nov 3: the thin strip cut; its state of the realm lives here): the age, the season and the sky, the clock, the rank, then the doors to the Stores, the Score, the Mail and the Sound
+	status() {
+		scoreAll();
+		const p = G.P[0],
+			rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length,
+			lim = MODES[G.mode].secs,
+			clk = G.wonder ? `${clock(Math.max(0, G.wonder.end - G.t))} to the wonder` : lim ? `${clock(Math.max(0, lim - G.t))} left` : clock(G.t),
+			sky = `${season().name}${WEATHER[G.wx] && G.wx !== 'clear' ? ', ' + WEATHER[G.wx].name.toLowerCase() : ''}${G.night > 0.5 ? ', night' : ''}`;
+		return (
+			title('Status', AGES[p.age].name + ' age') +
+			list([
+				btn('card:score', `★ ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, `${Math.round(p.score.total)} points`),
+				btn('card:stores', 'Stores', 'what you have, and why'),
+				btn('mail', 'Mail', G.mailN ? `${G.mailN} unread` : 'nothing new'),
+				btn('sound', 'Sound', SND.on ? 'on' : 'off', SND.on ? '' : 'on'),
+			]) +
+			`<p><b>${clk}</b> · ${sky}.</p>`
+		);
 	},
 	score() {
 		scoreAll();
@@ -24809,6 +25521,7 @@ const CARDS = {
 				btn('news', 'World news', SET.news !== false ? 'on' : 'off', SET.news !== false ? 'on' : ''),
 				btn('lights', 'Lights', SET.lights !== false ? 'on' : 'off', SET.lights !== false ? 'on' : ''),
 				btn('cardpause', 'Pause on cards', SET.cardPause !== false ? 'on' : 'off', SET.cardPause !== false ? 'on' : ''),
+				btn('perf', 'Speed counter', SET.perf ? 'on' : 'off', SET.perf ? 'on' : ''),
 				btn('soundpage', 'Sound', SND.on ? Math.round(SND.vol * 100) + '%' : 'off'),
 				btn('card:taps', 'Tap counts', 'this phone only'),
 			]) +
@@ -25158,6 +25871,19 @@ const ICON = {
 		20,
 		'<path d="M9 5l-5 5 5 5M4 10h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
 	),
+	up: SVG(20, '<path d="M5 12l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'),
+	down: SVG(20, '<path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'),
+	map: SVG(20, '<path d="M3 5l4.5-1.5 5 2L17 4v11l-4.5 1.5-5-2L3 16z M7.5 3.5v11 M12.5 5.5v11" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'),
+	// the controller's own (Albert, Nov 3, the icon review: one picture, one meaning, one line style at 20)
+	basket: SVG(20, '<path d="M3 8h14l-1.5 8h-11z M7 8l2-4.5 M13 8l-2-4.5 M7.5 11v3 M10 11v3 M12.5 11v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
+	town: SVG(20, '<path d="M2.5 17V9l3.5-3 3.5 3v8 M9.5 17V7.5L13 4l3.5 3.5V17 M2.5 17h15 M5 13h2 M12 10h2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
+	swords: SVG(20, '<path d="M3.5 3.5l9 9 M16.5 3.5l-9 9 M3.5 16.5l4-4 M16.5 16.5l-4-4 M3.5 3.5h2.5v2.5 M16.5 3.5H14v2.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
+	kinds: SVG(20, '<circle cx="5" cy="6.5" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="15" cy="6.5" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M1.5 16c0-3 1.6-4.5 3.5-4.5s3.5 1.5 3.5 4.5 M6.5 15c0-3.5 1.6-5 3.5-5s3.5 1.5 3.5 5 M11.5 16c0-3 1.6-4.5 3.5-4.5s3.5 1.5 3.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'),
+	train: SVG(20, '<path d="M10 2.5 L16 4.8 V10 C16 13.4 13.4 15.8 10 17.5 C6.6 15.8 4 13.4 4 10 V4.8 Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M10 7v6 M7 10h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'),
+	tent: SVG(20, '<path d="M2.5 16.5L10 3.5l7.5 13z M10 16.5V10 M7 16.5l3-6.5 3 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
+	bell: SVG(20, '<path d="M5 13.5V9a5 5 0 0 1 10 0v4.5l1.5 1.5h-13z M8.5 17.5a1.5 1.5 0 0 0 3 0 M10 2.5v1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
+	flag: SVG(20, '<path d="M5 17.5V3 M5 3.5h9.5l-2.5 3.5 2.5 3.5H5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
+	gather: SVG(20, '<path d="M3 10l7-6 7 6 M5 8.5V17h10V8.5 M10 11v4 M8 13l2 2 2-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'),
 	gear: SVG(
 		20,
 		'<circle cx="10" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M15.8 4.2l-1.7 1.7M5.9 14.1l-1.7 1.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
@@ -25303,20 +26029,9 @@ const topOf = (icon, n) =>
 const pic = (act, icon, word, cls = '', n, attrs = '') => cell(`data-act="${act}"${attrs}`, topOf(icon, n), wd(word), cls);
 const sym = (act, icon, cls = '', label = '') => cell(`data-act="${act}" aria-label="${label}"`, icon, '', 'sym ' + cls);
 const toGo = (f) => `--p:${Math.round(clamp(f, 0, 1) * 100)}%`; // the working ring: the share still to go, 1 when the work starts (MENU-SPEC §9)
-// The top: the tally (five counts, mute, pause, the map), then the status pill under it, cell for cell. The bottom: the row (39-huddle).
-const AGE_SHORT = ['Stone', 'Bronze', 'Classical', 'Medieval', 'Powder', 'Peace']; // the age in the strip: its name where it fits the 45 pt cell (measured: Medieval 42), short for the two that do not (Gunpowder 55, Enlightenment 70)
-const STATUS = [
-	['stAge', '', 'The age'],
-	['stSea', '', 'The season and the sky'],
-	['stClk', '', 'The clock'],
-	['stPeo', 'card:troops', 'Everyone you have, of the room your homes give'],
-	['stIdl', 'idlego', 'Idle villagers: show one'],
-	['stRes', 'card:research', 'Research you can start now'],
-	['scoreP', 'card:score', 'Score and rank'],
-	['stArm', '', 'Soldiers'],
-];
-const STATUS_CUT = ['stSea']; // the strip has a cell for each of the tally's (Iron hidden in the Stone age: 7): the cells it lets go first, the sky first (it is on the map itself); the soldiers stay
-
+// The top (Albert, Nov 3, 10:36: the thin strip cut): one bar. The five counts (tap: Jobs), your people of your room (tap: everyone), the
+// clock (tap: the Status page: the age, the season and the sky, the rank, the stores, the sound, the mail), then pause (the unread mail its
+// badge). What the strip showed lives on as badges: idle villagers on Jobs, research on Town, soldiers on War (39-huddle).
 function buildPanel() {
 	$('tally').innerHTML =
 		[
@@ -25327,22 +26042,14 @@ function buildPanel() {
 			['i', 'Iron'],
 		]
 			.map(([r, n]) =>
-				cell(`data-act="card:stores" aria-label="${n}: open the stores"`, ICON[n.toLowerCase()], wd('0', 'r' + r)),
+				cell(`data-act="ctl:jobs" aria-label="${n}: the jobs"`, ICON[n.toLowerCase()], wd('0', 'r' + r)),
 			)
 			.join('') +
-		cell('id="muteB" data-act="sound" aria-label="Mute"', ICON.sound, '', 'one') +
-		cell('id="pauseB" data-act="pause" aria-label="Pause"', ICON.pause, '', 'one') +
-		cell('id="mailB" data-act="mail" aria-label="The mail"', `<span class="top">${ICON.mail}<span class="c" id="mailN">0</span></span>`, '', 'one'); // one button for play, pause and speed (hold it); the last cell the mail, with what is unread beside it (Albert, Nov 2: the Mail's door, D-080; it was the small map, now in the battle station)
-	// the status pill: the state of the world, one cell under each column of the tally (Albert, Build 64: "age under Food, season under
-	// Wood"); the cells never move, and a narrow tally shows the first ones (the age, the season, the clock, the people come first)
-	const sc = (id, act, label) =>
-		act
-			? `<button class="cell" id="${id}" data-act="${act}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></button>`
-			: `<span class="cell" id="${id}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></span>`;
-	$('status').innerHTML = STATUS.map(([id, act, label]) => sc(id, act, label)).join('');
+		cell('id="peoB" data-act="card:troops" aria-label="Everyone you have, of the room your homes give"', ICON.people, wd('0', 'peoN')) +
+		cell('id="clkB" data-act="card:status" aria-label="The clock: the state of the realm"', '<span class="gl" id="clkG"></span>', wd('0:00', 'clkN')) +
+		cell('id="pauseB" data-act="pause" aria-label="Pause"', `<span class="top">${ICON.pause}<span class="c" id="mailN">0</span></span>`, '', 'one'); // paceBtn redraws it // one button for play, pause and speed (hold it); the unread mail a badge on it (Albert, Nov 3)
 	$('homeB').innerHTML = ICON.home;
-	$('emgB').innerHTML = topOf(ICON.def) + wd(ROW_WORD.emg); // War, red on steel, on the rank above the row: the battle station; ✕ while it is up (rowUI)
-	mini.hidden = false; // the small map draws in the station's middle; on the stage between, the style sheet keeps it out of sight // a slot with its word under its icon, on the cycle button's rank (cold review of v70)
+	mini.hidden = false; // the small map draws in the controller's map box; on the stage between, the style sheet keeps it out of sight
 	$('pX').innerHTML = ICON.close;
 }
 const refresh = () => {
@@ -25350,13 +26057,11 @@ const refresh = () => {
 	ui(true);
 };
 function muteBtn() {
-	$('muteB').classList.toggle('off', !SND.on);
-	$('muteB').classList.toggle('on', !SND.on);
-	$('muteB').setAttribute('aria-label', SND.on ? 'Mute' : 'Sound on');
+	if (G && G.card && G.card.type === 'status') refresh(); // the Status page's Sound button reads SND.on
 }
 function paceBtn() {
 	const pb = $('pauseB');
-	pb.innerHTML = (G.paused ? ICON.play : ICON.pause) + (G.speed > 1 ? `<span class="spd">×${G.speed}</span>` : '');
+	pb.innerHTML = `<span class="top">${G.paused ? ICON.play : ICON.pause}<span class="c" id="mailN">${(G.mailN || 0) > 99 ? '99+' : G.mailN || 0}</span></span>` + (G.speed > 1 ? `<span class="spd">×${G.speed}</span>` : '');
 	pb.setAttribute('aria-label', G.paused ? 'Play' : 'Pause');
 	pb.classList.toggle('on', !!G.paused);
 }
@@ -25697,40 +26402,16 @@ function ui(force) {
 	} // a warning is said again while it holds (a repeat is a count, not a flash), a tip once: a tip is a message like any other
 	{
 		const lim = MODES[G.mode].secs,
-			clk = G.wonder ? clock(Math.max(0, G.wonder.end - G.t)) : lim ? clock(Math.max(0, lim - G.t)) : clock(G.t);
-		let ready = 0;
-		for (const v of G.rdy.values()) ready += v; // research you can start now (the age counts: it is research too)
-		const idleN = unitsOf(0, 'vil').filter(freeVil).length + G.blds.filter(idlePost).length, // every Z on the map: idle people and empty posts (D-089)
-			sol = armyOf(0).length,
-			rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length,
+			clk = G.wonder ? clock(Math.max(0, G.wonder.end - G.t)) : lim ? clock(Math.max(0, lim - G.t)) : clock(G.t),
 			sky = `${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''}`,
-			n = Math.min(STATUS.length, [...$('tally').children].filter((e) => !e.hidden).length),
-			cut = new Set(STATUS_CUT.slice(0, STATUS.length - n)),
-			put = (id, gl, word, cls) => {
-				const el = $(id),
-					off = cut.has(id),
-					sig = gl + '|' + word + '|' + cls + '|' + off;
-				if (el.sig === sig) return;
-				el.sig = sig;
-				el.hidden = off;
-				el.className = 'cell' + (cls ? ' ' + cls : '');
-				el.children[0].innerHTML = gl;
-				el.children[1].textContent = word;
-			};
-		const S = [
-			['', AGE_SHORT[p.age] || AGES[p.age].name, ''],
-			[sky, '', ''],
-			['', clk, ''],
-			['', `${popOf(0)}/${capOf(0)}`, popOf(0) >= capOf(0) && capOf(0) < POPMAX ? 'warn' : ''], // the number alone: 180/180 fits the 45 pt cell
-			['', `z ${idleN}`, idleN ? 'warn' : 'dis'],
-			[ICON.book, String(ready), ready ? 'go' : 'dis'],
-			['', `★ ${['1st', '2nd', '3rd', '4th', '5th'][rank - 1] || rank + 'th'}`, ''], // the rank; the score itself is on the score card
-			[ICON.mil, String(sol), sol ? '' : 'dis'],
-		]; // one line a cell: the strip stays thin (Albert: "It has to stay little")
-		STATUS.forEach(([id], i) => put(id, S[i][0], S[i][1], S[i][2]));
-		txt('mailN', (G.mailN || 0) > 99 ? '99+' : String(G.mailN || 0)); // the unread, a badge on the envelope at the top (Albert, Nov 2); 99+ past 99
-		$('mailB').classList.toggle('dis', !(G.mailN || 0));
-	} // the colour code on the pill: blue research you can start, red the people at the roof or idle hands; dim is nothing to see
+			full = popOf(0) >= capOf(0) && capOf(0) < POPMAX;
+		txt('peoN', `${popOf(0)}/${capOf(0)}`);
+		$('peoB').classList.toggle('warn', full); // red: at the roof
+		txt('clkN', clk);
+		txt('clkG', sky);
+		txt('mailN', (G.mailN || 0) > 99 ? '99+' : String(G.mailN || 0)); // the unread, a badge on pause (Albert, Nov 3); 99+ past 99
+		$('pauseB').classList.toggle('unread', !!(G.mailN || 0));
+	}
 	rowUI();
 	{
 		const k = keepOf(0),
@@ -25913,6 +26594,12 @@ const ACT = {
 	reload() {
 		location.reload();
 	},
+	perf() {
+		SET.perf = !SET.perf;
+		saveSet();
+		$('perf').hidden = !SET.perf;
+		refresh();
+	}, // the speed counter (Albert, Nov 3: the hour on a phone): frames a second, the draw level, the units, the game time; off by default
 	vibe() {
 		SET.vibe = !SET.vibe;
 		saveSet();
@@ -25920,24 +26607,12 @@ const ACT = {
 		refresh();
 	},
 	menu(a) {
-		const keep = G.card && G.card.type === 'menu';
-		openCard({ type: 'menu', id: a });
-		if (keep) $('card').scrollTop = 0;
-	},
-	buildrow() {
-		G.buildBy = null;
-		if (G.card && G.card.type === 'menu') {
-			G.buildAt = null;
-			closeCard();
-			return;
-		}
-		const sel = G.card && G.card.type === 'bld' && G.blds.find((b) => b.id === G.card.id && b.owner === 0),
-			w = sel || toWorld(cw / 2, ch / 2 + vy),
-			hint = suggestAt(w.x, w.y),
-			M = hint && MENUS.find((m) => m.items.includes(hint));
-		G.buildAt = hint ? { hint } : null;
-		openCard({ type: 'menu', id: M ? M.id : G.lastMenu || MENUS[0].id });
-	}, // Build opens on what fits the middle of the view   // Build opens the Build card on the menu last used; again, it closes
+		const H = G.hud;
+		H.page = 'town';
+		H.sub = a;
+		H.shut = false;
+		closeCard();
+	}, // a build group by name (a milestone's button, a villager's Build): the controller's Town page at that group
 	idlego() {
 		const u = unitsOf(0, 'vil').find(freeVil);
 		if (!u) return;
@@ -26214,6 +26889,35 @@ const ACT = {
 		const [type, id] = a.split(',');
 		openCard({ type, id: Number(id) });
 	},
+	ctl(a) {
+		ctlOpen(a);
+		feel('tick');
+	}, // a tile of the controller: its page; the lit one, back to rest (39-huddle)
+	ctlsub(a) {
+		G.hud.sub = a;
+		feel('tick');
+	},
+	ctlback() {
+		ctlBack();
+	},
+	mapt() {
+		G.hud.map = !G.hud.map;
+	}, // the small map on or off
+	ctlshut() {
+		G.hud.shut = !G.hud.shut;
+		if (G.hud.shut) G.hud.aim = false;
+		fit();
+	}, // Close: the row folds to its one tile; the tile opens it again
+	alarmpg() {
+		ACT.menu('build');
+		G.hud.page = 'war';
+		G.hud.sub = 'alarm';
+	}, // the villagers' Alarm, on the War page
+	relopen() {
+		G.ktab = 'rel';
+		const k = keepOf(0);
+		if (k) openCard({ type: 'bld', id: k.id });
+	}, // Relations: the Town Center's second tab
 };
 // a job is locked until its age (32-frame, resOn): a tap on it says when it opens
 const shut = (r) => !resOn(KEY[r]) && (say(`${RESOURCES[r].name} opens in the ${AGES[resAge(KEY[r])].name} age.`, '', TOAST.short), true);
@@ -26278,10 +26982,6 @@ const PLAY = {
 	emgstop() {
 		emgStop();
 	},
-	emgpage() {
-		hudPage(G.hud.page === 'war' ? 'jobs' : 'war');
-		feel('tick');
-	}, // the red button: the battle station, with the Alarm's orders on its left; again, Jobs
 	tq(a) {
 		const [t, d] = a.split(','),
 			k = kindOf(Number(t));
@@ -26292,25 +26992,54 @@ const PLAY = {
 			else train(0, k);
 		} else if (!unTrain(0, k)) say('Nothing of that kind is waiting.', '', TOAST.short);
 	}, // the Train page: one more or one fewer of a kind, at the building with the shortest line
-	tok() {
-		setRally();
-	},
 	intent(a) {
 		const [i, k] = a.split(',').map(Number);
 		G.bnIntent[i] = k;
 		feel('tick');
 	}, // a squad's intent: one of three, chosen
 	direct(a) {
-		direct(Number(a), false);
+		direct(Number(a));
 	}, // the War Director: a kind's move, every soldier of it at once
-	directh(a) {
-		direct(Number(a), true);
-	}, // held: the kind's second move
-	wmid(a) {
+	aimgo() {
 		const H = G.hud;
-		H.mid = H.mid === a ? SMID.map : a;
-		feel('tick');
-	}, // Train or Squad turns the station's middle to its four; again, back to the small map
+		if (!H.aim) {
+			H.aim = true;
+			H.aimT = performance.now();
+			if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
+			return say('Tap the map where they go, then Go.', 'tip', TOAST.short);
+		}
+		hudGo();
+		H.aim = false;
+	}, // War's first cell: the crosshair up (a tap on the map moves it); again, they go (hold: everyone home)
+	kpick(a) {
+		const S = ofKind(Number(a));
+		if (!S.length) return say(DIRECT_WHY.none, '', TOAST.short);
+		const n = sharePick(Number(a));
+		say(`${n} of ${S.length} picked: tap where they go.`, '', TOAST.short);
+	}, // a kind: every soldier of it picked; the next tap on the map is their order (Albert, Nov 3)
+	choketool() {
+		const H = G.hud;
+		H.aim = H.aim === 'choke' ? false : 'choke';
+		G.chokeLine = null;
+		if (H.aim) say('Drag across the gap: they hold it.', 'tip', TOAST.short);
+	}, // hold the shape: the choke tool (28-army-quick)
+	ambushtool() {
+		const H = G.hud;
+		H.aim = H.aim === 'ambush' ? false : 'ambush';
+		H.aimT = performance.now();
+		if (H.aim) say('Tap the cover where they hide.', 'tip', TOAST.short);
+	}, // hold Rally: the ambush tool
+	rallyat() {
+		const H = G.hud;
+		H.aim = H.aim === 'rally' ? false : 'rally';
+		H.aimT = performance.now();
+		if (H.aim) say('Tap the map where new soldiers go.', 'tip', TOAST.short);
+	}, // Rally: the next tap on the map is where new soldiers gather
+	kidle() {
+		const S = idleSoldiers();
+		if (!S.length) return say('No soldier stands idle.', '', TOAST.short);
+		setPick(S.map((u) => ({ t: 'unit', id: u.id })));
+	}, // every soldier standing at home, picked
 	sqpk(a) {
 		const [i, t, d] = a.split(',');
 		sqPlan(Number(i), CLS[t][0], d === '+' ? 1 : -1);
@@ -26348,9 +27077,6 @@ const PLAY = {
 		if (!hasCmd()) return say('Squads come with Battalions.', '', TOAST.short);
 		openCard({ type: 'sqsetup' });
 	}, // Set Up (Albert, Nov 2): the three squads in one rank, each opening its card where it is built
-	wfire() {
-		hudGo();
-	},
 	hdel(a) {
 		hudAbort(Number(a));
 	}, // Abort on a squad's card: they come home
@@ -26461,7 +27187,7 @@ const PLAY = {
 					.filter((u) => u.kind === 'vil')
 					.map((u) => u.id);
 		if (!a) setPick([]);
-		openCard({ type: 'menu', id: G.lastMenu || MENUS[0].id });
+		ACT.menu('build');
 	}, // whatever you place next, the picked villagers raise it (or the villager whose card asked: its job picker's Build)
 	phold() {
 		for (const u of picked())
@@ -27314,7 +28040,6 @@ function saveGame(force) {
 			gamesT: G.gamesT,
 			chron: G.chron,
 			chargeT: G.chargeT || {},
-			wheelT: G.wheelT || 0,
 			looseT: G.looseT || 0,
 			sand: G.sand || null,
 			mirage: G.mirage || null,
@@ -27409,7 +28134,7 @@ function loadGame(S) {
 		recruitSq: S.recruitSq ?? null,
 		form: S.form || BN.map(() => 0),
 		qs: { from: 'all', n: {} },
-		hud: { page: 'jobs' },
+		hud: { page: null, map: true },
 		msn: S.msn || [null, null, null, null],
 		emg: S.emg || null,
 		intel: S.intel || {},
@@ -27524,7 +28249,6 @@ function loadGame(S) {
 	G.gamesT = S.gamesT || 0;
 	G.chron = S.chron || [];
 	G.chargeT = S.chargeT || {};
-	G.wheelT = S.wheelT || 0;
 	G.looseT = S.looseT || 0;
 	G.sand = S.sand || null;
 	G.mirage = S.mirage || null;
@@ -27793,6 +28517,13 @@ const SFX = {
 		},
 	],
 	arrow: [0.07, (v) => hiss(0.12, 0.2 * v, 3000, 2, 1200)],
+	thud: [
+		0.12,
+		(v) => {
+			tone(70, 0.1, 'triangle', 0.38 * v, 40);
+			hiss(0.06, 0.25 * v, 400, 1);
+		},
+	], // a charge lands: wood and iron, low and short (the juice pass, Nov 3)
 	bhit: [
 		0.1,
 		(v) => {
@@ -28477,7 +29208,7 @@ function outbreak(o, share, plague, at) {
 		k = keepOf(o);
 	if (!k || p.alive === false) return;
 	const ppl = G.units.filter(
-		(u) => u.owner === o && UNIT[u.kind].cls && !u.inside && dist(u, k) < 500 && !(u.sick > G.t),
+		(u) => u.owner === o && UNIT[u.kind].cls && !u.inside && (dist(u, k) < 500 || depotNear(u)) && !(u.sick > G.t), // a camp is a town for sickness (CAMP)
 	);
 	const n = Math.max(1, Math.round(ppl.length * share * (plague ? fxv(o, 'plague').m : 1)));
 	for (let i = 0; i < n && ppl.length; i++) {
@@ -28511,7 +29242,7 @@ function healthTick() {
 		let I = 0,
 			plague = false;
 		for (const u of G.units)
-			if (u.owner === p.id && UNIT[u.kind].cls && !u.inside && dist(u, k) < 500) {
+			if (u.owner === p.id && UNIT[u.kind].cls && !u.inside && (dist(u, k) < 500 || depotNear(u))) {
 				if (u.sick > G.t) {
 					I++;
 					plague = plague || u.plague;
@@ -28574,6 +29305,7 @@ function upkeepTick() {
 						if (n.amt > 0 && isFinite(n.amt)) n.amt = Math.max(0, n.amt - shareOf(u) * per);
 					} else sh += shareOf(u);
 				}
+			sh = Math.max(0, sh - campEat(o, per)); // the soldiers in a camp eat from its depot (CAMP)
 			const eat = sh * per;
 			p.eats = eat * 60;
 			starveTick(p);
@@ -28597,6 +29329,7 @@ function econTick(dt) {
 	if (G.tick % 30 === 0) {
 		natureTick();
 		upkeepTick();
+		if (G.tick % 1800 === 0) campWearTick(); // a minute of weather on the camps
 	}
 	if (every(BEAT.health)) healthTick();
 	fireTick(dt);
@@ -28663,6 +29396,17 @@ function shareOf(u) {
 	if (!U.cls) return 0;
 	if (hasTag(u.kind, 'mounted') || hasTag(u.kind, 'elephant')) return UPKEEP.mounted;
 	return U.tick === 'sol' ? UPKEEP.foot : 1;
+}
+// an order's cost (ORDER): the soldiers' meals from the store, and the tiredness; what it ate, for the toast
+function orderCost(o, S) {
+	let f = 0;
+	for (const u of S) {
+		f += shareOf(u) * UPKEEP.share * 60 * ORDER.mins; // a share is UPKEEP.share food a second
+		if (isSoldier(u) && !(u.chg > G.t)) u.tired = Math.max(u.tired || 0, G.t + ORDER.tired);
+	}
+	f = Math.min(Math.round(f), Math.floor(G.P[o].res.f));
+	spend(G.P[o], 'f', f, 'orders');
+	return f;
 }
 const hungerOf = (o) => (G.P[o] && (G.P[o].famT || 0) >= STARVE.grace ? UPKEEP.hunger : 1); // full strength for the first two days of a famine
 
@@ -29625,7 +30369,7 @@ const groundSpd = (o, keys, at) => {
 	return (
 		(1 /
 			(1 +
-				CLIMATE.terrain.mud * Math.min(1, mudAt(at)) * fxv(o, 'mud', keys).m +
+				CLIMATE.terrain.mud * Math.min(1, mudAt(at)) * fxv(o, 'mud', keys).m * (keys.includes('#wagon') ? CAMP.wheelMud : 1) + // a wagon's wheels sink deeper (CAMP)
 				CLIMATE.terrain.snow * c.snow * (1 - fxv(o, 'snow', keys).a))) *
 		(1 - CLIMATE.mu.stride * c.ice * (studded(o, keys) ? strideShare(need, iceMu(true)) : 1))
 	);
@@ -29706,6 +30450,293 @@ function foodInReach(o) {
 		G.nodes.some((n) => n.type === 'food' && n.amt > 0 && (!n.farm || n.farm.owner === o) && (n.kind !== 'fish' || dockNear(o, n)) && reachFrom(n, cm, o)) || // a field only if it is your own
 		G.units.some((u) => u.owner === WILD && u.hp > 0 && UNIT[u.kind].meat && regionAt(u, o) === cm)
 	);
+}
+// ═════ 38-camps.js: war camps (Albert, Nov 3): the wagon, the strip and the square, the soldiers who raise them ═════
+// An Outpost is a thin strip: four tents and a tower in one file, broadside to the way home (Hyginus §1: a century's tents in one line).
+// A Camp is a square of CAMP.side squares: a palisade with a gate in the home side, a tower at each corner, the four tents inside along
+// the walls, the yard in the middle for CAMP.hold soldiers (§1: eight men a tent; §4: the hospital away from the workshops, here across
+// the yard). The pieces come off the wagon as sites; villagers and foot soldiers raise them (CAMP.build). Trees under the camp burn.
+const CAMP_TENTS = ['medtent', 'traintent', 'messtent', 'depot'];
+// the pieces of a camp of a kind at (x, y), facing fx, fy (toward home: the gate side): [{kind, x, y}]
+function campLayout(kind, x, y, fx, fy) {
+	const L = [],
+		R = (ax, ay) => ({ x: x + (-fy * ax + fx * ay) * NAVC, y: y + (fx * ax + fy * ay) * NAVC }), // across, along (toward home)
+		put = (k, ax, ay) => L.push({ kind: k, ...R(ax, ay) });
+	if (kind === 'outpost') {
+		[...CAMP_TENTS, 'camptower'].forEach((k, i) => put(k, (i - 2) * 3, 0)); // five 2 × 2 in a file, a square between each
+		return L;
+	}
+	const h = CAMP.side / 2; // the palisade on the square's edge, the gate the two middle squares of the home side
+	for (let i = -h; i < h; i++) {
+		const g = i === -1 || i === 0; // the gate's two squares
+		put(g ? 'gate' : 'palisade', i + 0.5, h - 0.5); // the home side (toward home)
+		put('palisade', i + 0.5, -h + 0.5);
+		if (i > -h && i < h - 1) {
+			put('palisade', -h + 0.5, i + 0.5); // the two sides, the corners already laid
+			put('palisade', h - 0.5, i + 0.5);
+		}
+	}
+	for (const [sx, sy] of [
+		[-1, -1],
+		[1, -1],
+		[-1, 1],
+		[1, 1],
+	])
+		put('camptower', sx * (h - 2), sy * (h - 2)); // the corners, inside the stakes
+	put('medtent', -(h - 2), 0); // the hospital on one side, the workshops' side across the yard (§4)
+	put('traintent', h - 2, 0);
+	put('messtent', 0, -(h - 2)); // the mess at the back
+	put('depot', 0, h - 4); // the depot inside the gate
+	return L;
+}
+// facing: from the spot toward the owner's Town Center (the gate side), else south
+function campFacing(o, x, y) {
+	const k = keepOf(o),
+		dx = k ? k.x - x : 0,
+		dy = k ? k.y - y : 1,
+		d = hyp(dx, dy) || 1;
+	return { x: dx / d, y: dy / d };
+}
+// the square of ground a camp takes: every piece's footprint plus a lane, as canPlace keeps for a building
+function campCells(L) {
+	const cells = new Set();
+	for (const p of L) {
+		const n = BLD[p.kind].fp,
+			sp = snapPos(p.kind, p.x, p.y),
+			m = BLD[p.kind].wallish ? 0 : 1;
+		for (let j = -m; j < n + m; j++) for (let i = -m; i < n + m; i++) cells.add((sp.gy + j) * NC + (sp.gx + i));
+	}
+	return cells;
+}
+// why a camp cannot stand here, or null: off the map, on water, on a building or a find; trees are allowed (they burn)
+function campWhy(o, kind, x, y) {
+	const L = campLayout(kind, x, y, ...Object.values(campFacing(o, x, y)));
+	for (const p of L) {
+		const sp = snapPos(p.kind, p.x, p.y),
+			n = BLD[p.kind].fp;
+		if (sp.gx < 2 || sp.gy < 2 || sp.gx + n > NC - 2 || sp.gy + n > NC - 2) return 'Too near the edge of the map.';
+	}
+	for (const c of campCells(L)) {
+		if (NAV.lake[c]) return 'A camp cannot stand in water.';
+		if (NAV.occ[c]) return 'A building stands there.';
+	}
+	const cx = x,
+		cy = y,
+		reach = (kind === 'camp' ? CAMP.side / 2 + 1 : 9) * NAVC;
+	for (const f of G.finds) if (!f.gone && hyp(f.x - cx, f.y - cy) < reach + (FINDS[f.kind].r || 30)) return 'Too near a find.';
+	return null;
+}
+// the wagon unpacks: the trees under the camp burn, the sites are laid, the wagon is gone
+function campUnpack(u) {
+	const o = u.owner,
+		kind = UNIT[u.kind].camp,
+		why = campWhy(o, kind, u.x, u.y);
+	if (why) {
+		if (o === 0) say(why + ' Send the wagon elsewhere.', 'warn', TOAST.mid);
+		u.state = 'home';
+		return false;
+	}
+	const f = campFacing(o, u.x, u.y),
+		L = campLayout(kind, u.x, u.y, f.x, f.y),
+		cells = campCells(L),
+		burnt = [];
+	for (const n of G.nodes)
+		if (n.kind === 'tree' && n.amt > 0) {
+			const cx = Math.floor(n.x / NAVC),
+				cy = Math.floor(n.y / NAVC);
+			let hit = false;
+			for (let j = -CAMP.burn; j <= CAMP.burn && !hit; j++) for (let i = -CAMP.burn; i <= CAMP.burn && !hit; i++) if (cells.has((cy + j) * NC + cx + i)) hit = true;
+			if (hit) burnt.push(n);
+		}
+	for (const n of burnt) n.amt = 0;
+	if (burnt.length) G.nodes = G.nodes.filter((n) => !burnt.includes(n));
+	const id = NID++;
+	navOnce(() => {
+		for (const p of L) {
+			const b = mkBld(o, p.kind, p.x, p.y, 0);
+			b.camp = id;
+			b.campKind = kind;
+			G.blds.push(b);
+			G.navDirty = true;
+		}
+		navRebuild();
+	});
+	u.hp = 0;
+	u.gone = true;
+	if (o === 0) {
+		news('war', `${kind === 'camp' ? 'The camp' : 'The outpost'} is unpacked at ${coord(u.x, u.y)}: ${burnt.length ? burnt.length + ' trees burned; ' : ''}soldiers and villagers raise it.`, 'good', TOAST.mid, { x: u.x, y: u.y });
+		sfx('thock', u.x, u.y);
+	}
+	return true;
+}
+// the wagon on the road: sent to a spot it drives there and unpacks; at home it waits by the Stable
+function wagonTick(u, dt, SP) {
+	if (u.state === 'goto') {
+		if (moveTo(u, u.px, u.py, dt, 6, SP)) campUnpack(u);
+		return;
+	}
+	const h = homeSpot(u, 90);
+	if (h) moveTo(u, h.x, h.y, dt, 3, SP);
+}
+// how many camps of a kind a side may have out at once, wagons on the road and in the line counted: one, two from the age after
+const campCap = (o, kind) => {
+	const p = G.P[o];
+	if (kind === 'camp' && (!p.techs.has('campwagons') || !p.techs.has(CAMP.need))) return 0;
+	const first = kind === 'camp' ? 2 : 1;
+	return p.age < first ? 0 : p.age >= first + 1 ? 2 : 1;
+};
+const campsOut = (o, kind) => {
+	const ids = new Set();
+	for (const b of G.blds) if (b.owner === o && b.hp > 0 && b.campKind === kind) ids.add(b.camp);
+	let n = ids.size;
+	for (const u of G.units) if (u.owner === o && u.hp > 0 && UNIT[u.kind].camp === kind) n++;
+	for (const b of G.blds) if (b.owner === o && b.hp > 0) for (const j of b.q) if (j.kind && UNIT[j.kind].camp === kind) n++;
+	return n;
+};
+const campWhyTrain = (o, kind) => {
+	const cap = campCap(o, kind);
+	if (!cap) return kind === 'camp' ? (G.P[o].age < 2 ? 'Camp wagons need the Classical age.' : !G.P[o].techs.has(CAMP.need) ? 'A camp needs a store to draw on: research Stone granary at the Mill first.' : 'Research Camp wagons at the Stable first.') : 'Outpost wagons need the Bronze age.';
+	if (campsOut(o, kind) >= cap) return cap === 1 ? `One ${kind} at a time; a second comes with the next age.` : `Two ${kind}s at a time.`;
+	return null;
+};
+// a foot soldier (unmounted, no engine) standing idle near an unraised piece of its own side's camp lends a hand (CAMP.build of a villager)
+const canRaise = (u) => isSoldier(u) && !UNIT[u.kind].tags.includes('mounted') && !UNIT[u.kind].tags.includes('siege') && !u.tgt && (u.state === 'home' || (u.state === 'goto' && hyp(u.px - u.x, u.py - u.y) < 60)) && !(u.chg > G.t) && !u.goingHome; // at home or arrived where it was sent
+function campRaise(u, dt, SP) {
+	const needs = (b) => b.prog < 1 || b.hp < maxHpB(b.owner, b.kind) * CAMP.mend; // unraised, or worn under CAMP.mend
+	if (u.site && (!needs(u.site) || u.site.hp <= 0)) u.site = null;
+	if (!u.site) {
+		if ((G.tick + u.id) % 15 !== 0 || !canRaise(u)) return false;
+		let best = null,
+			bd = 160;
+		const taken = new Map(); // who is already on each piece: the hands spread over the pieces (a crowd on one piece builds it little faster)
+		for (const v of G.units) if (v.site && v.owner === u.owner && v !== u) taken.set(v.site, (taken.get(v.site) || 0) + 1);
+		for (const b of G.blds)
+			if (b.owner === u.owner && b.camp && needs(b) && b.hp > 0) {
+				const d = dist(u, b) + 60 * (taken.get(b) || 0);
+				if (d < bd + 60 * 3 && (best === null || d < bd)) {
+					bd = d;
+					best = b;
+				}
+			}
+		u.site = best;
+		u.siteK = u.state + u.px + ',' + u.py; // a new order (a new spot) takes it off the work
+		if (!best) return false;
+	}
+	const b = u.site;
+	if (!b || !needs(b) || b.hp <= 0 || u.tgt || u.state === 'rout' || u.chg > G.t || u.goingHome || u.siteK !== u.state + u.px + ',' + u.py) {
+		u.site = null;
+		return false;
+	}
+	if (rectGap(u.x, u.y, b) > 7 && !moveTo(u, b.x, b.y, dt, 8, SP)) return true; // as a villager raising a site (13-sim-civil repairTick)
+	{
+		const hands = CAMP.build * fxv(u.owner, 'campbuild').m;
+		if (b.prog < 1) b.crew = (b.crew || 0) + hands;
+		else b.hp = Math.min(maxHpB(b.owner, b.kind), b.hp + ((maxHpB(b.owner, b.kind) * 0.9 * hands) / BLD[b.kind].t) * dt); // mending at the raising rate
+		u.work = G.t;
+	}
+	return true;
+}
+// a soldier by a medical tent that is badly hurt or sick walks home to the Hospital (none: it stays and is bound where it is)
+function campSendHome(u) {
+	if (u.owner === WILD || (G.tick + u.id) % 30 !== 0 || u.tgt || u.state === 'rout' || u.goingHome) return;
+	if (!(u.hp < u.max * CAMP.sendHome || u.sick > G.t)) return;
+	const tent = G.blds.find((b) => b.owner === u.owner && b.kind === 'medtent' && b.prog >= 1 && b.hp > 0 && dist(b, u) < BLD.medtent.hrng);
+	if (!tent) return;
+	const hosp = G.blds.find((b) => b.owner === u.owner && b.kind === 'hospital' && b.prog >= 1 && b.hp > 0);
+	if (!hosp) return;
+	u.state = 'goto';
+	u.px = hosp.x + 30;
+	u.py = hosp.y + 30;
+	u.goingHome = true;
+	u.drill = null;
+	u.amb = null;
+	u.focus = null;
+	if (u.owner === 0) say(`${UNIT[u.kind].name} sent home to the Hospital.`, '', TOAST.short);
+}
+
+// ── step 2: supplies, the caravan's run, wear and mending, the camp as a pool for sickness
+const depotsOf = (o) => G.blds.filter((b) => b.owner === o && b.kind === 'depot' && b.prog >= 1 && b.hp > 0);
+const depotNear = (u) => depotsOf(u.owner).find((b) => dist(b, u) < CAMP.reach) || null; // the depot a unit eats from
+// every second (36-economy upkeepTick): the soldiers in a camp's reach eat from its depot; with it empty they are unsupplied
+function campEat(o, per) {
+	const D = depotsOf(o);
+	if (!D.length) return 0;
+	let fed = 0;
+	for (const u of G.units) {
+		if (u.owner !== o || !isSoldier(u) || u.inside) continue;
+		const d = D.find((b) => dist(b, u) < CAMP.reach);
+		if (!d) {
+			u.unfed = 0;
+			continue;
+		}
+		const eat = shareOf(u) * per;
+		if ((d.supply || 0) >= eat) {
+			d.supply -= eat;
+			fed += shareOf(u);
+			u.unfed = 0;
+		} else {
+			u.unfed = (u.unfed || 0) + 1;
+			u.tired = Math.max(u.tired || 0, G.t + 2); // unsupplied: slow, and no mending (14-sim-troops)
+			if (o === 0 && !(G.unfedT > G.t - 60)) {
+				G.unfedT = G.t;
+				news('war', 'The camp is out of food: a caravan brings it.', 'warn', TOAST.long, d);
+			}
+		}
+	}
+	return fed; // the shares fed here, off the town's bill
+}
+// a Market caravan with nothing to carry runs food to a depot under half (caravanTick): the food from the store and the carter's fee in gold
+function supplyRun(u, dt, SP) {
+	const o = u.owner,
+		p = G.P[o];
+	if (!u.sup) {
+		if ((G.tick + u.id) % 30) return false;
+		const home = nearest(G.blds, u, (b) => b.owner === o && b.kind === 'market' && b.prog >= 1 && b.hp > 0);
+		if (!home) return false;
+		const d = nearest(depotsOf(o), home, (b) => (b.supply || 0) < CAMP.supply / 2 && !G.units.some((v) => v.sup && v.sup.b === b.id && v.hp > 0));
+		if (!d) return false;
+		const fee = Math.ceil((CAMP.fee * dist(home, d)) / 100),
+			food = Math.min(CAMP.load, Math.floor(p.res.f - 50));
+		if (food < 20 || p.res.g < fee) return false;
+		u.sup = { b: d.id, h: home.id, leg: 'load', food, fee };
+		return true;
+	}
+	const S = u.sup,
+		d = byId(G.blds, S.b),
+		h = byId(G.blds, S.h);
+	if (!d || d.hp <= 0 || !h || h.hp <= 0) {
+		u.sup = null;
+		return false;
+	}
+	if (S.leg === 'load') {
+		if (!moveTo(u, h.x, h.y, dt, halfOf(h) + 4, SP)) return true;
+		const food = Math.min(S.food, Math.floor(p.res.f));
+		if (food < 20 || p.res.g < S.fee) {
+			u.sup = null;
+			return false;
+		}
+		spend(p, 'f', food, 'camps');
+		spend(p, 'g', S.fee, 'camps');
+		S.food = food;
+		S.leg = 'go';
+		return true;
+	}
+	if (S.leg === 'go') {
+		if (!moveTo(u, d.x, d.y, dt, halfOf(d) + 14, SP)) return true;
+		d.supply = Math.min(CAMP.supply, (d.supply || 0) + S.food);
+		if (o === 0) say(`Depot stocked: ${S.food} food, ${S.fee} gold for the road.`, 'good', TOAST.short);
+		S.leg = 'back';
+		return true;
+	}
+	if (!moveTo(u, h.x, h.y, dt, halfOf(h) + 4, SP)) return true;
+	u.sup = null;
+	return false;
+}
+// a minute of rain, snow or frost takes CAMP.wear of a camp piece's health (every minute; 36-economy econTick)
+function campWearTick() {
+	const wet = G.wx === 'rain' || G.wx === 'snow' || G.wx === 'frost' || G.wx === 'blizzard';
+	if (!wet) return;
+	for (const b of G.blds) if (b.camp && b.prog >= 1 && b.hp > 0) b.hp = Math.max(1, b.hp - CAMP.wear * maxHpB(b.owner, b.kind));
 }
 // ═════ 38-natives.js: the Natives and the Throne ═════
 // ───────────────────────── The Natives: the fifth side's one brain, and the Throne ─────────────────────────
@@ -30303,14 +31334,11 @@ function paceWord(S) {
 // ── the pages
 function hudPage(page) {
 	const H = G.hud;
-	H.page = page;
-	H.aim = page === 'war'; // the station puts the crosshair up: a tap on the map moves it
-	if (H.aim) {
-		H.aimT = performance.now();
-		if (!H.h) H.h = { t: 'ground', e: { x: cam.x, y: cam.y } };
-		closeCard();
-	}
-}
+	H.page = page || null;
+	H.sub = null;
+	H.aim = false;
+	if (H.page) closeCard();
+} // a page by name (a milestone's button, the tests)
 // the kind a class trains from the Train page, and fills a muster with: the first its building trains in this age (a people's own unit in its place)
 const kindOf = (t) =>
 	ARMYK.filter((k) => !UNIT[k].civ && UNIT[k].cost && k !== 'spy')
@@ -30342,6 +31370,14 @@ const aimNear = (sx, sy) => {
 function aimAt(sx, sy) {
 	const H = G.hud;
 	aimSpot(sx, sy);
+	if (H.aim === 'rally') {
+		H.aim = false;
+		return setRally();
+	} // Rally (the controller): the tap is where new soldiers go
+	if (H.aim === 'ambush') {
+		H.aim = false;
+		return ambushAt(H.h); // the ambush tool: the tap is the cover
+	}
 	ripple(H.h.e.x, H.h.e.y, aimColor());
 	feel('tick');
 }
@@ -30411,6 +31447,7 @@ function hudFire(i) {
 		odds: 0.5,
 	};
 	H.firedT = performance.now();
+	orderCost(0, S); // a squad sent: its meals, and tired after (ORDER)
 	feel('thock');
 }
 // Go (✓ on War): every squad at home and ready (its blue ring) marches on the crosshair, each its own mission; with none ready, or before
@@ -30537,164 +31574,231 @@ function hudReinforce(slot) {
 	hudJoin(plan.go, m);
 	say(`${plan.go.length} reinforce ${m.name}.`, 'good', TOAST.short);
 }
-// ── the row: three pages on one mold. Rank one is the page's six things, rank two what each is under it; grid order lays them
-// Jobs: People over the hammer; each job with its count (in its store's colour) and − + under it. People rings blue while people stand idle;
-// the hammer wears the working ring while a building goes up (the first site still going up: what is left of it); a job opens with its age.
-function jobsPage() {
+// ── The controller (Albert, Nov 3, "yes yes" 08:51; MENU-SPEC §6): the bottom row is seven columns, 6 at the screen's edges and 3 between,
+// two ranks of 44. Four tiles never move: Jobs over Town in column 1 (the villagers, brown), War over Close in column 7 (war, steel). The
+// five columns between show what the lit tile opens, one step at a time: Jobs, the five jobs with − and + under each (as before); Town,
+// one column (People over Build), and Build, the build groups, then a group's buildings; War, the war display, and its three pages
+// (Kinds, Train, Alarm). At rest, and while only Town's column is open, the small map stands 3 × 2 in columns 3 to 5 with its tile (Map,
+// lit while it shows) in column 6. Close folds the whole row to one tile. G.hud: page (null at rest, 'jobs', 'town', 'war'), sub (Town:
+// 'build' or a build group; War: 'kinds', 'train', 'alarm'), map (the small map shown), shut (the row folded).
+const CTL = { cols: 7, map: [3, 5], back: [6, 2] }; // the map's columns; where Back stands on every page that has one
+const at = (h, c, r) => h.replace('<button ', `<button style="grid-column:${c};grid-row:${r}" `); // a cell in its column and rank
+const badge = (h, n) => (n ? h.replace('</button>', `<span class="bd">${n}</span></button>`) : h); // a count on a tile's corner (idle villagers, soldiers)
+const wcell = (act, word, sub, cls = '', attrs = '') => `<button class="cell wc ${cls}" data-act="${act}"${attrs}><b>${word}</b>${sub ? `<small>${sub}</small>` : ''}</button>`; // a word cell: a building has a picture on the map, not an icon
+// the five between, from column 2: cells in rank order, ten at most, Back in its place
+const fill = (cells, c0 = 2) =>
+	cells
+		.map((h, i) => (h ? at(h, c0 + (i % 5), 1 + Math.floor(i / 5)) : ''))
+		.join('');
+const backCell = (cls) => at(pic('ctlback', ICON.back, 'Back', cls), ...CTL.back);
+const pmPair = (c, minus, plus, cls, on = true) =>
+	`<div class="pm" style="grid-column:${c};grid-row:2">${sym(minus, ICON.minus, `${cls} h${on ? '' : ' dis'}`, 'One fewer')}${sym(plus, ICON.plus, `${cls} h${on ? '' : ' dis'}`, 'One more')}</div>`;
+function jobsCells() {
 	const p = G.P[0],
-		V = unitsOf(0, 'vil'),
-		site = G.blds.find((b) => b.owner === 0 && b.hp > 0 && b.prog < 1);
-	let top = pic('train:vil', ICON.people, ROW_WORD.people, V.some(freeVil) ? 'go' : trainWhy(0, 'vil') ? 'dis' : '', null, ' aria-label="People: train a villager"'),
-		low = pic('buildrow', ICON.hammer, ROW_WORD.build, site ? 'work' : '', null, ` aria-label="The Build menu"${site ? ` style="${toGo(1 - site.prog)}"` : ''}`);
-	for (const r of JOBS) {
+		V = unitsOf(0, 'vil');
+	return JOBS.map((r, i) => {
 		const k = KEY[r],
 			on = resOn(k), // a job not open yet is locked, with no count (32-frame, resOn)
 			n = V.filter((v) => v.job === r).length;
-		top += on ? pic(`job:${r}`, ICON[r], RESOURCES[r].name, p.rally === r ? 'on' : '', n, ` style="--nc:${grad(velOf(p, k))}"`) : pic(`job:${r}`, ICON[r], RESOURCES[r].name, 'dis');
-		low += sym(`less:${r}`, ICON.minus, on ? 'h' : 'h dis', `One fewer on ${r}`) + sym(`move:${r}`, ICON.plus, on ? 'h' : 'h dis', `One more on ${r}`);
-	}
-	return top + low;
+		return (
+			at(on ? pic(`job:${r}`, ICON[r], RESOURCES[r].name, 'vb' + (p.rally === r ? ' on' : ''), n, ` style="--nc:${grad(velOf(p, k))}"`) : pic(`job:${r}`, ICON[r], RESOURCES[r].name, 'vb dis'), 2 + i, 1) +
+			pmPair(2 + i, `less:${r}`, `move:${r}`, 'vb', on)
+		);
+	}).join('');
 }
-// The battle station (Albert, Nov 2, his drawings: "the controller"; the War Director, 28-army-quick): one page in place of War and Train, the row's 6 x 2 as three 2 x 2
-// blocks. Left, the Alarm's four orders (40-emergency). Middle, one joined block that changes: the small map (tap: the camera goes there;
-// a drag sweeps it), or the three squads and Set Up (tap: send it to the crosshair; hold: its card), or the four kinds to train (tap:
-// one more; hold: one fewer), or the Director's four (tap: the kind's move; hold: its second). Right: Train (hold: new soldiers go to the
-// crosshair), Squad and Direct turn the middle, Attack sends every
-// ready squad there (hold: everyone home). The villagers' block brown (vb), the war block steel tinted red (wb), no state rings (EXCEPTIONS: a battle station is all live); a tap flashes red and
-// snaps off (the click handler, 33-verbs). The crosshair is up while it is open: a tap on the map moves it.
-const SMID = { map: 'map', squad: 'squad', train: 'train', direct: 'direct' }; // what the station's middle shows
-function stationPage() {
+// Town: People over Build (column 2); Build: the six groups, Research, Relations; a group: its buildings, words only (name, cost)
+function townCells(sub) {
+	const p = G.P[0],
+		V = unitsOf(0, 'vil'),
+		site = G.blds.find((b) => b.owner === 0 && b.hp > 0 && b.prog < 1);
+	if (!sub)
+		return (
+			at(pic('train:vil', ICON.people, ROW_WORD.people, 'vb' + (V.some(freeVil) ? ' go' : trainWhy(0, 'vil') ? ' dis' : ''), null, ' aria-label="People: train a villager"'), 2, 1) +
+			at(pic('ctlsub:build', ICON.hammer, ROW_WORD.build, 'vb' + (site ? ' work' : ''), null, site ? ` style="${toGo(1 - site.prog)}"` : ''), 2, 2)
+		);
+	if (sub === 'build') {
+		const rs = researchable();
+		return (
+			fill([
+				...MENUS.map((m) => pic(`ctlsub:${m.id}`, ICON[MENU_ICON[m.id]], MENU_WORD[m.id] || m.name, 'vo')),
+				pic('card:research', ICON.book, ROW_WORD.research, 'vo' + (rs ? '' : ' dis'), rs || null),
+				pic('relopen', ICON.ally, ROW_WORD.relations, 'vo'),
+			]) + backCell('vo')
+		);
+	}
+	const M = MENUS.find((m) => m.id === sub);
+	return (
+		fill(
+			M.items.map((k) => {
+				const B = BLD[k],
+					lock = B.age > p.age,
+					cp = capFor(0, k),
+					full = !lock && bldsOf(0, k).length >= cp;
+				return wcell(`build:${k}`, B.short || bldName(0, k), lock ? AGES[B.age].name : full ? 'all built' : afford(p, B.cost) ? '' : 'short', 'v2' + (lock || full ? ' dis' : ''), ` aria-label="${bldName(0, k)}: ${costText(B.cost)}"`);
+			}),
+		) + backCell('v2')
+	);
+}
+// War: Aim · Go (tap: the crosshair up; again: everyone goes; hold: everyone home), the three squads (tap: send; hold: its card), Kinds ›,
+// then Alarm › (brown: the villagers' orders), Rally, Formation (steps the army's shape), Train ›, Set Up. Kinds: tap picks every soldier of
+// the kind, a hold is its drill (the War Director); Idle picks the soldiers standing at home. Train: the four kinds with − and +.
+function warCells(sub) {
 	const H = G.hud,
-		mid = H.mid || SMID.map,
-		V = unitsOf(0, 'vil').length,
-		on = (kind) => (G.emg && G.emg.kind === kind ? '●' : null),
 		W = ROW_WORD.emgW;
+	if (sub === 'kinds')
+		return (
+			fill([
+				...CLS.map((c, t) => {
+					const n = ofKind(t).length,
+						w = directWait(t),
+						tap = DIRECT_OF[t],
+						Sh = G.share && G.share.t === t && shareOn() ? G.share : null; // the share picked: its count, and the step it is on
+					return pic(`kpick:${t}`, ICON.cls[c[0]], w ? `${w} s` : Sh && Sh.i ? `${c[1]} ${['', '½', '¼'][Sh.i]}` : c[1], 'w2' + (n ? '' : ' dis') + (Sh ? ' on' : ''), Sh ? Sh.n : n || null, ` data-hold="direct:${t}" aria-label="${c[1]}: tap for all, half, a quarter; hold: ${tap[1]}"`);
+				}),
+				pic('kidle', ICON.idle, ROW_WORD.idle, 'w2' + (idleSoldiers().length ? '' : ' dis'), idleSoldiers().length || null),
+			]) + backCell('w2')
+		);
+	if (sub === 'train')
+		return (
+			CLS.map((c, t) => {
+				const k = kindOf(t),
+					A = k ? readyAt(0, UNIT[k]) : [],
+					n = A.reduce((s, b) => s + b.q.filter((j) => j.kind === k).length, 0);
+				return at(pic(`tq:${t},+`, ICON.cls[c[0]], c[1], 'w2' + (A.length ? '' : ' dis'), A.length ? n : null), 2 + t, 1) + pmPair(2 + t, `tq:${t},-`, `tq:${t},+`, 'w2', A.length > 0);
+			}).join('') + backCell('w2')
+		);
+	if (sub === 'alarm') {
+		const on = (kind) => (G.emg && G.emg.kind === kind ? '●' : null);
+		return (
+			fill([
+				pic('emgstop', ICON.ok, W[0][0], 'v2' + (G.emg ? '' : ' dis')),
+				pic('emg:square', ICON.gather, W[1][0], 'v2', on('square')),
+				pic('emg:hands', ICON.def, W[2][0], 'v2', on('hands')),
+				pic('emg:shelter', ICON.shield, W[3][0], 'v2' + (unitsOf(0, 'vil').length ? '' : ' dis'), on('shelter')),
+			]) + backCell('v2')
+		);
+	}
+	const sh = dialOf('form', 'all');
+	return fill([
+		pic('aimgo', ICON.aim, H.aim ? ROW_WORD.go : ROW_WORD.aim, 'wo' + (H.aim ? ' on' : ''), null, ' data-hold="whome"'),
+		...BN.map((nm, i) => {
+			const m = sqOut(i) ? G.msn[i] : null,
+				S = m ? mUnits(m) : hasCmd() ? sqUnits(i) : [];
+			return pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, 'wo' + (hasCmd() || m ? '' : ' dis'), S.length, ` data-hold="sqcard:${i}"`);
+		}),
+		pic('ctlsub:kinds', ICON.kinds, ROW_WORD.kinds, 'wo'),
+		pic('ctlsub:alarm', ICON.bell, ROW_WORD.alarm, 'vo' + (G.emg ? ' warn' : '')),
+		pic('rallyat', ICON.flag, H.aim === 'ambush' ? ROW_WORD.ambush : ROW_WORD.rally, 'wo' + (H.aim === 'rally' || H.aim === 'ambush' ? ' on' : ''), null, ' data-hold="ambushtool"'),
+		pic('shape:all', ICON.list, H.aim === 'choke' ? ROW_WORD.choke : sh < 0 ? 'Mixed' : FORM[sh].name, 'wo' + (G.P[0].techs.has('formations') ? '' : ' dis') + (H.aim === 'choke' ? ' on' : ''), null, ' data-hold="choketool"'),
+		pic('ctlsub:train', ICON.train, ROW_WORD.train, 'wo'),
+		pic('sqsetup', ICON.gear, ROW_WORD.setup, 'wo' + (hasCmd() ? '' : ' dis')),
+	]);
+}
+const researchable = () => [...G.rdy.values()].reduce((a, v) => a + v, 0); // research you can start now (the count the strip shows)
+const idleSoldiers = () => sendable().filter((u) => u.state === 'home');
+const MENU_WORD = { mil: 'Barracks' }; // a build group's word on the controller where the menu's own would clash with a tile (War)
+const MENU_ICON = { home: 'home', land: 'wood', mil: 'tent', def: 'def', shop: 'gold', cult: 'star' }; // a build group's picture
+function ctlHTML() {
+	const H = G.hud,
+		page = H.page,
+		idle = unitsOf(0, 'vil').filter(freeVil).length + G.blds.filter(idlePost).length, // every Z on the map: idle people and empty posts (D-089)
+		sol = armyOf(0).filter((u) => u.kind !== 'spy').length;
+	if (H.shut) return at(sym('ctlshut', ICON.up, 'vb mb', 'Open the controls'), 7, 2);
 	let h =
-		pic('emgstop', ICON.stop, W[0][0], 'vb' + (G.emg ? '' : ' dis')) +
-		pic('emg:square', ICON.home, W[1][0], 'vb', on('square')) +
-		`<div class="midb${mid === SMID.map ? ' map' : ''}">` +
-		(mid === SMID.squad
-			? BN.map((nm, i) => {
-					const m = sqOut(i) ? G.msn[i] : null,
-						S = m ? mUnits(m) : hasCmd() ? sqUnits(i) : [];
-					return pic(`wsq:${i}`, ICON.squad, m ? m.name : nm, hasCmd() || m ? '' : 'dis', S.length, ` data-hold="sqcard:${i}"`);
-				}).join('') + pic('sqsetup', ICON.gear, ROW_WORD.setup, hasCmd() ? '' : 'dis')
-			: mid === SMID.direct
-				? CLS.map((c, t) => {
-						const n = ofKind(t).length,
-							w = directWait(t),
-							[tap, hold] = DIRECT_OF[t];
-						return pic(`direct:${t}`, ICON.cls[c[0]], w ? `${w} s` : tap[1], n && !w ? '' : 'dis', n || null, ` data-hold="directh:${t}" aria-label="${c[1]}: ${tap[1]}; hold: ${hold[1]}"`);
-					}).join('')
-				: mid === SMID.train
-				? CLS.map((c, t) => {
-						const k = kindOf(t),
-							at = k ? readyAt(0, UNIT[k]) : [],
-							n = at.reduce((s, b) => s + b.q.filter((j) => j.kind === k).length, 0);
-						return pic(`tq:${t},+`, ICON.cls[c[0]], c[1], at.length ? '' : 'dis', at.length ? n : null, ` data-hold="tq:${t},-"`);
-					}).join('')
-				: '') +
-		'</div>' +
-		pic('wmid:train', ICON.mil, ROW_WORD.train, 'wb', null, ' data-hold="tok"') +
-		pic('wmid:squad', ICON.squad, ROW_WORD.squad, 'wb') +
-		pic('emg:hands', ICON.sword, W[2][0], 'vb', on('hands')) +
-		pic('emg:shelter', ICON.shield, W[3][0], 'vb' + (V ? '' : ' dis'), on('shelter')) +
-		pic('wmid:direct', ICON.aim, ROW_WORD.direct, 'wb') +
-		pic('wfire', ICON.sword, ROW_WORD.attack, 'wb' + (H.h && free().length ? '' : ' dis'), null, ' data-hold="whome"');
+		at(badge(pic('ctl:jobs', ICON.basket, ROW_WORD.jobs, page === 'jobs' ? 'vo' : 'vb'), idle && `z ${idle}`), 1, 1) +
+		at(badge(pic('ctl:town', ICON.town, ROW_WORD.town, page === 'town' ? 'vo' : 'vb'), researchable() || null), 1, 2) +
+		at(badge(pic('ctl:war', ICON.swords, ROW_WORD.war, (page === 'war' ? 'wo' : 'wb') + (G.incoming ? ' raid' : '')), sol), 7, 1) +
+		at(sym('ctlshut', ICON.down, 'vb mb', 'Close the controls'), 7, 2);
+	if (page === 'jobs') h += jobsCells();
+	else if (page === 'town') h += townCells(H.sub);
+	else if (page === 'war') h += warCells(H.sub);
+	if (!page || (page === 'town' && !H.sub)) {
+		h += at(pic('mapt', ICON.map, ROW_WORD.map, 'vb mb' + (H.map ? ' on' : '')), 6, 1);
+		if (H.map) h += `<div class="mapb" style="grid-column:${CTL.map[0]} / ${CTL.map[1] + 1};grid-row:1 / 3"></div>`;
+	} // the small map, 3 × 2, at rest and beside Town's column; its tile lit while it shows (Albert, Nov 3)
 	return h;
 }
-const ROWS = { jobs: jobsPage, war: stationPage };
-// the row on show, patched in place (a button under a finger stays the same button); the cycle button above slot 1 wears the page's name
-// and its tint
+// a tile: its page opens, the lit one closes back to rest; a page's own step (Build, a group, Kinds, Train, Alarm), and Back one step up
+function ctlOpen(page) {
+	const H = G.hud;
+	H.page = H.page === page ? null : page;
+	H.sub = null;
+	H.aim = false; // the crosshair goes up only by Aim (war's first cell)
+	if (H.page) closeCard();
+}
+function ctlBack() {
+	const H = G.hud;
+	H.sub = H.page === 'town' && H.sub && H.sub !== 'build' ? 'build' : null;
+}
+// the row on show, patched in place (a button under a finger stays the same button); the small map's one home is its box
 function rowUI() {
-	const page = G.hud.page,
-		el = $('row'),
-		h = ROWS[page](),
-		chip = $('emgB');
+	const el = $('row'),
+		h = ctlHTML();
 	if (el.sigH !== h) {
 		el.sigH = h;
 		patchHTML(el, h);
 	}
-	chip.classList.toggle('warn', !!G.incoming); // the red War button breathes while something is coming
-	const mb = el.querySelector('.midb.map');
-	if (mb && mini.parentNode !== mb) mb.appendChild(mini); // the small map's one home is the station's middle (Albert, Nov 2); it waits on the stage, hidden, between
+	const mb = el.querySelector('.mapb');
+	if (mb && mini.parentNode !== mb) mb.appendChild(mini);
 	else if (!mb && mini.parentNode !== $('stage')) $('stage').appendChild(mini);
-	if (chip.pg !== page) {
-		chip.pg = page;
-		$('orders').className = 'pg-' + page;
-		chip.innerHTML = page === 'war' ? ICON.close : topOf(ICON.def) + wd(ROW_WORD.emg); // War, the one button that turns the row; while the station is up it reads ✕ (Albert, Nov 2)
-		chip.classList.toggle('sym', page === 'war');
-		chip.setAttribute('aria-label', page === 'war' ? 'Close the battle station' : 'War: the battle station');
+	const sig = (G.hud.page || '') + (G.hud.shut ? 's' : '');
+	if (el.pg !== sig) {
+		el.pg = sig;
+		$('orders').className = 'ctl pg-' + (G.hud.page || 'rest');
 		fit(); // the row is drawn anew: the map's bottom edge is measured again
 	}
 }
-// the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; its colour says what is under it; green once fired
+// the crosshair (Albert, Nov 3: "a very basic one from best practices"; mock 24's chevrons, scan line and sonar ring cut): a thin cross with a
+// gap at the middle and a dot, a dark edge under it so it reads on any ground, its colour what is under it (aimColor), green once fired; the
+// arrival time and the place above it. Held (H.drag): a faint disc shows the finger has it.
 function drawReticle() {
 	const H = G.hud;
 	if (!H.aim || !H.h) return;
 	const x = SX(H.h.e.x),
 		y = SY(H.h.e.y),
 		L = performance.now() - (H.firedT || -1e9) < timeOf('settle') ? 1 : 0,
-		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
-		t = still() ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
+		R = Math.max(22, 12 * cam.z + 6),
+		g = 6, // the gap round the middle
 		eta = hudEta(),
-		line = (a, b, c, d) => (ctx.moveTo(x + a, y + b), ctx.lineTo(x + c, y + d));
+		cross = () => {
+			ctx.beginPath();
+			ctx.moveTo(x - R, y);
+			ctx.lineTo(x - g, y);
+			ctx.moveTo(x + g, y);
+			ctx.lineTo(x + R, y);
+			ctx.moveTo(x, y - R);
+			ctx.lineTo(x, y - g);
+			ctx.moveTo(x, y + g);
+			ctx.lineTo(x, y + R);
+			ctx.stroke();
+		};
 	ctx.save();
-	ctx.strokeStyle = ctx.fillStyle = L ? codeOf('g') : aimColor(H.h);
-	ctx.lineWidth = 1.5;
+	ctx.lineCap = 'round';
 	if (H.drag) {
 		ctx.globalAlpha = 0.14;
+		ctx.fillStyle = codeOf('w');
 		ctx.beginPath();
-		ctx.arc(x, y, R + 12, 0, 7);
+		ctx.arc(x, y, R + 10, 0, 7);
 		ctx.fill();
 		ctx.globalAlpha = 1;
 	}
+	ctx.strokeStyle = 'rgba(0,0,0,.6)';
+	ctx.lineWidth = 4;
+	cross();
+	ctx.strokeStyle = ctx.fillStyle = L ? codeOf('g') : aimColor(H.h);
+	ctx.lineWidth = 2;
+	cross();
 	ctx.beginPath();
-	const q = R * 0.4;
-	for (const [a, b] of [
-		[-1, -1],
-		[1, -1],
-		[1, 1],
-		[-1, 1],
-	]) {
-		line(a * R, b * (R - q), a * R, b * R);
-		line(a * R, b * R, a * (R - q), b * R);
-	}
-	ctx.stroke();
-	if (!L) {
-		const p = (t * 0.5) % 1,
-			ph = t * 1.2;
-		ctx.globalAlpha = Math.pow(1 - p, 1.4) * 0.8;
-		ctx.beginPath();
-		ctx.arc(x, y, 4 + p * R * 1.3, 0, 7);
-		ctx.stroke();
-		ctx.globalAlpha = 1;
-		ctx.beginPath();
-		for (let i = 0; i < 3; i++) {
-			const a = ph + (i * 2 * Math.PI) / 3,
-				c = Math.cos(a),
-				s = Math.sin(a),
-				rot = (u, v) => [u * c - v * s, u * s + v * c],
-				p0 = rot(R * 0.62, -5),
-				p1 = rot(R * 0.62 + 7, 0),
-				p2 = rot(R * 0.62, 5);
-			line(p0[0], p0[1], p1[0], p1[1]);
-			line(p2[0], p2[1], p1[0], p1[1]);
-		}
-		const sy = Math.sin(t * 3) * (R - 4);
-		line(-R + 3, sy, R - 3, sy);
-		ctx.stroke();
-	}
-	const g = 8;
-	ctx.beginPath();
-	line(-R - 14, 0, -g, 0);
-	line(g, 0, R + 14, 0);
-	line(0, -R - 14, 0, -g);
-	line(0, g, 0, R + 14);
-	ctx.stroke();
+	ctx.arc(x, y, 2, 0, 7);
+	ctx.fill();
 	ctx.font = mapFont(); // pinned to the screen
 	ctx.textAlign = 'center';
-	ctx.fillText(eta ? `${clock(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - R - 20); // above the scope line's end (it ran through the words, Nov 3)
+	ctx.lineJoin = 'round';
+	ctx.strokeStyle = 'rgba(0,0,0,.75)';
+	ctx.lineWidth = 3;
+	const w = eta ? `${clock(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y);
+	ctx.strokeText(w, x, y - R - 8);
+	ctx.fillText(w, x, y - R - 8);
 	ctx.restore();
 }
 // ── the squad card (MENU-SPEC §8, picture Mission Flow): the squad builder while it is home, the live view while it is out (Build 61, one card, two states)
@@ -31008,6 +32112,19 @@ function shed(work) {
 		}
 	} else DRAW.slow = DRAW.fast = 0;
 }
+// the speed counter (Albert, Nov 3): once a second, frames a second (the last second's count), the draw level (0 full detail; it climbs as a
+// phone sheds detail, 18-figures), the step's cost in ms, the units on the map, the memory where the browser tells it, the game clock
+const PERF = { n: 0, t0: 0, min: 99 };
+function perfTick(now, run) {
+	PERF.n++;
+	if (now - PERF.t0 < 1000) return;
+	const fps = Math.round((PERF.n * 1000) / (now - PERF.t0)),
+		mem = performance.memory ? ` · ${Math.round(performance.memory.usedJSHeapSize / 1048576)} MB` : '';
+	PERF.min = Math.min(PERF.min, fps);
+	PERF.n = 0;
+	PERF.t0 = now;
+	$('perf').textContent = `${fps} fps (low ${PERF.min}) · draw ${DRAW.lvl} · step ${DRAW.ema.toFixed(1)} ms · ${G.units.length} units${mem} · ${clock(G.t)}${run ? '' : ' · paused'}`;
+}
 // One frame. When nothing moves (paused, over, hidden, no touch for a second) it waits: 15 frames a second instead of 60.
 function frame(now) {
 	const run = !G.over && !G.paused && !document.hidden,
@@ -31032,6 +32149,7 @@ function frame(now) {
 			lastSave = now;
 			if (run) saveGame();
 		}
+		if (SET.perf) perfTick(now, run);
 		edgeScroll(d);
 		if (cv.width !== Math.round(cv.clientWidth * dpr) || cv.height !== Math.round(cv.clientHeight * dpr)) fit(); // the drawing no longer matches the map's box: measure again (the squashed map, Nov 2; the box observer misses a bad first measure)
 		draw();
@@ -31053,6 +32171,7 @@ for (const ev of ['pointerdown', 'pointermove', 'wheel'])
 	);
 window.addEventListener('resize', fit);
 buildPanel();
+$('perf').hidden = !SET.perf;
 fit();
 newGame();
 scoreAll();
@@ -31186,6 +32305,33 @@ window.__fk = {
 	wearMul,
 	say,
 	showQuick,
+	sharePick,
+	shareFor,
+	toWorld,
+	lakeRAt,
+	lakeRTo,
+	orderCost,
+	drillHold,
+	chokeAt,
+	ambushAt,
+	coverNear,
+	AMBUSH,
+	CAMP,
+	campLayout,
+	campWhy,
+	campUnpack,
+	campCap,
+	campsOut,
+	campWhyTrain,
+	campEat,
+	supplyRun,
+	campWearTick,
+	depotNear,
+	readyAt,
+	tentCost,
+	JUICE,
+	ORDER,
+	SHARE,
 	quickGo,
 	direct,
 	shapeOf,
@@ -31471,6 +32617,9 @@ window.__fk = {
 	START_VILS,
 	START_RES,
 	HANDICAP,
+	AB,
+	gapOnRoad,
+	chokeClaim,
 	SCEN_TEXT,
 	TRIGGERS,
 	techBook,

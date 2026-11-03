@@ -16,6 +16,7 @@ function trainWhy(o, kind) {
 		p = G.P[o];
 	if (U.age > p.age) return `${plural(U.name)} need the ${AGES[U.age].name} age.`;
 	if (!readyAt(o, U).length) return `Build a ${BLD[U.at].name.toLowerCase()} first.`;
+	if (U.camp && campWhyTrain(o, U.camp)) return campWhyTrain(o, U.camp);
 	if (U.cls && clsCount(o, U.cls) >= clsMax(U.cls, o))
 		return U.cls === 'civ' ? `People at the ceiling: ${POPMAX}.` : armyFull(o);
 	if (p.hungry) return 'Your people are hungry: put villagers on Food.';
@@ -28,13 +29,16 @@ function train(o, kind) {
 	const k = civKind(o, kind),
 		U = UNIT[k],
 		p = G.P[o],
-		at = shortest(readyAt(o, U));
+		at = tentOrNot(o, U, k, shortest(readyAt(o, U)));
 	const t = U.t * stats(o, k).train,
-		c = unitCost(o, k);
+		c = tentCost(o, at, unitCost(o, k));
 	pay(p, c);
 	at.q.push({ kind: k, left: t, total: t, paid: c });
 	return true;
 }
+// a training tent charges CAMP.extra over the price (Field logistics: CAMP.extraLog); one that cannot be paid for gives way to a building that can
+const tentCost = (o, at, c) => (at && at.kind === 'traintent' ? Object.fromEntries(Object.entries(c).map(([k, v]) => [k, Math.round(v * (1 + CAMP.extra * fxv(o, 'tentcost').m))])) : c);
+const tentOrNot = (o, U, k, at) => (at && at.kind === 'traintent' && !afford(G.P[o], tentCost(o, at, unitCost(o, k))) ? shortest(readyAt(o, U).filter((b) => b.kind !== 'traintent')) || at : at);
 // cancel one order in a building's line: what was paid for it comes back in full, the way it went out (every order keeps what it paid)
 const whyOf = (j) => (j.tech || j.age ? 'research' : 'units');
 // what an order gives back when it goes: the purse, the ledger and the research spent, one home for a cancel and for an order an old save cannot keep

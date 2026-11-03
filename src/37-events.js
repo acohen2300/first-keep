@@ -680,7 +680,7 @@ const groundSpd = (o, keys, at) => {
 	return (
 		(1 /
 			(1 +
-				CLIMATE.terrain.mud * Math.min(1, mudAt(at)) * fxv(o, 'mud', keys).m +
+				CLIMATE.terrain.mud * Math.min(1, mudAt(at)) * fxv(o, 'mud', keys).m * (keys.includes('#wagon') ? CAMP.wheelMud : 1) + // a wagon's wheels sink deeper (CAMP)
 				CLIMATE.terrain.snow * c.snow * (1 - fxv(o, 'snow', keys).a))) *
 		(1 - CLIMATE.mu.stride * c.ice * (studded(o, keys) ? strideShare(need, iceMu(true)) : 1))
 	);

@@ -243,9 +243,13 @@ function formUp() {
 					? Math.min(n, 3)
 					: shape === 'square'
 						? Math.ceil(Math.sqrt(n))
-						: D && shape === 'line'
-							? n <= 6 ? n : Math.ceil(n / 2) // a shield wall: one rank, two past six
-							: clamp(Math.round(Math.sqrt(n * GRID.rows)), 1, 14),
+						: shape === 'front'
+							? n // one rank
+							: shape === 'choke'
+								? clamp((D && D.cols) || 3, CHOKE.min, CHOKE.max) // as many files as the gap holds
+								: D && shape === 'line'
+									? n <= 6 ? n : Math.ceil(n / 2) // a shield wall: one rank, two past six
+									: clamp(Math.round(Math.sqrt(n * GRID.rows)), 1, 14),
 			wr = (i) => Math.floor((Math.sqrt(8 * i + 1) - 1) / 2);
 		// the line faces along the march; ranks trail behind the first, and a unit standing at its place faces the same way
 		const t = { x: a[0].px, y: a[0].py },
@@ -256,6 +260,9 @@ function formUp() {
 			fy = fy0 / fl;
 		const cm = regionAt(t, a[0].owner),
 			mates = new Set(a); // the battalion's own stand in its shape: only others take a place
+		if (shape === 'support') a.sort((p, q) => (UNIT[p.kind].rng > 20) - (UNIT[q.kind].rng > 20) || p.id - q.id); // the foot first: they take the ring
+		const nf = shape === 'support' ? a.filter((u) => (UNIT[u.kind].rng || 0) <= 20).length : 0,
+			rOut = (Math.max(nf, 6) * GRID.gap) / (2 * Math.PI); // the ring's radius: the foot GRID.gap apart round it
 		for (let i = 0; i < n; i++) {
 			const ri = shape === 'wedge' ? wr(i) : Math.floor(i / cols),
 				c = (shape === 'wedge' ? i - (ri * (ri + 1)) / 2 - ri / 2 : (i % cols) - (cols - 1) / 2) * GRID.gap,
@@ -267,6 +274,15 @@ function formUp() {
 				// off the map or on someone else moves to the nearest free spot round it, on the spot's side (Build 48)
 				let gx = -fy * c + fx * r,
 					gy = fx * c + fy * r;
+				if (shape === 'support') {
+					const onRing = i < nf,
+						m = onRing ? nf : n - nf,
+						j = onRing ? i : i - nf,
+						th = (j / Math.max(1, m)) * 2 * Math.PI,
+						rr = onRing ? rOut : Math.max(0, rOut - GRID.gap) * Math.sqrt((j + 0.5) / Math.max(1, m)); // the shooters spread inside, denser at the middle
+					gx = Math.cos(th) * rr;
+					gy = Math.sin(th) * rr;
+				} // support: foot on the ring, shooters within
 				if (D && shape === 'arc') {
 					const A = D.arc,
 						ph = Math.atan2(t.y - A.y, t.x - A.x),

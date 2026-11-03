@@ -83,6 +83,10 @@ const aimNear = (sx, sy) => {
 function aimAt(sx, sy) {
 	const H = G.hud;
 	aimSpot(sx, sy);
+	if (H.aim === 'ambush') {
+		H.aim = true;
+		return ambushAt(H.h); // the ambush tool (the Yard): the tap is the cover; the crosshair stays up
+	}
 	ripple(H.h.e.x, H.h.e.y, aimColor());
 	feel('tick');
 }
@@ -152,6 +156,7 @@ function hudFire(i) {
 		odds: 0.5,
 	};
 	H.firedT = performance.now();
+	orderCost(0, S); // a squad sent: its meals, and tired after (ORDER)
 	feel('thock');
 }
 // Go (✓ on War): every squad at home and ready (its blue ring) marches on the crosshair, each its own mission; with none ready, or before
@@ -344,6 +349,7 @@ function stationPage() {
 		pic('wfire', ICON.sword, ROW_WORD.attack, 'wb' + (H.h && free().length ? '' : ' dis'), null, ' data-hold="whome"');
 	return h;
 }
+const idleSoldiers = () => sendable().filter((u) => u.state === 'home');
 const ROWS = { jobs: jobsPage, war: stationPage };
 // the row on show, patched in place (a button under a finger stays the same button); the cycle button above slot 1 wears the page's name
 // and its tint

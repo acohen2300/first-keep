@@ -40,6 +40,19 @@ const MORALE = {
 	capAfter: 2, // seconds a runner has to get away before a hand may take it prisoner
 };
 const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }; // a burst, then tired
+// the juice pass (Albert, Nov 3; Bad North, Iron Marines: every blow felt): a charging blow shoves the one it lands on back shove units and
+// jolts the screen jolt px for joltS s with a thud; a soldier hit recoils recoil px for recoilS s; one under stagger of its health sways
+// the cost of an order (Albert, Nov 3, 11:14: "in real life you can't just move people around … it should cost something, a little extra
+// food, maybe makes them a little more tired"): a drill of the Director or a squad sent eats, for each soldier, mins minutes' worth of its
+// share (shareOf, 36-economy: a foot soldier 1.5 shares, a rider 3, as Engels has a soldier's grain at 3 to 4 lb a day and a horse's at 10
+// with 10 of fodder), and leaves it tired for tired s (CHARGE.tiredSpd): give many orders and the army slows. With no food in the store
+// the order still goes; the hunger rule (UPKEEP.hunger) is the price then
+const ORDER = { mins: 0.5, tired: 6 };
+// forming (Albert, Nov 3, 10:48; his outside note of 09:35): while soldiers walk to their places in a shape, the one of lower precedence
+// gives way (foot, then archers, then riders, then siege: CLS order), and the push between two forming is soft; past share of the drill's
+// time, one not share of the way to its place holds where it stands and fights from there (the x% by x% rule)
+const FORMING = { soft: 0.5, share: 0.7 };
+const JUICE = { shove: 5, jolt: 2, joltS: 0.08, recoil: 2.5, recoilS: 0.2, stagger: 0.3 };
 // ───────────────────────── The climate (Build 54): the whole game reads three numbers, the air's temperature, the ground's wetness and the sky's run ─────────────────────────
 // Temperature: a yearly swing and a daily swing round a mean (design: a temperate land about 45° north). The sky runs as a chain: whether the
 // next minute is wet depends on this one (Gabriel & Neumann, QJRMS 1962, Tel Aviv: P(wet|dry) 0.25, P(wet|wet) 0.66, rounded here; dry
@@ -137,7 +150,19 @@ const FORM = [
 		vsMounted: 0.7,
 		note: '10% less damage, 30% less from riders, 20% slower',
 	},
+	// three more (Albert, Nov 3, 11:06), each a trade the ground decides: a front line is one rank, every man at the blade, and a charge
+	// breaks it (the skirmish line; vsMounted); a choke is deep and narrow, hard to break, only its front fights (the phalanx in the pass at
+	// Thermopylae, from memory); support is a ring of foot with the shooters inside, slow, the inside safe (the Roman orbis, the hollow
+	// square against riders, from memory)
+	{ name: 'Front', shape: 'front', vsMounted: 1.3, note: 'one rank: every man fights, riders break it (30% more from them)' },
+	{ name: 'Choke', shape: 'choke', spd: 0.85, hit: 0.85, vsMounted: 0.8, note: 'deep and narrow: 15% less damage, 20% less from riders, 15% slower; only the front fights' },
+	{ name: 'Support', shape: 'support', spd: 0.85, hit: 0.95, note: 'foot round the shooters: 5% less damage, 15% slower; the inside is safe' },
 ];
+// the choke drawn on the map (hold the shape on War, then drag across the gap): as many files as the gap holds, GRID.gap apart, facing across
+// the drag; the ambush (hold Rally, then tap cover): the soldiers hide within cover of forest and spring on a foe within spring, with a
+// charge's burst; hidden, no foe takes them for a mark
+const CHOKE = { min: 1, max: 12 };
+const AMBUSH = { cover: 1, spring: 45, find: 90 };
 const COLUMN = { name: 'Column', shape: 'column', spd: 1.15, hit: 1.1 };
 const GRID = { gap: 15, rows: 2.0, fan: 90, share: 40 }; // an army stands in a grid: 15 apart, about twice as wide as deep; on the march it follows one way to the spot and opens into its shape in the last 90 (as real armies marched in column and deployed); a soldier within 40 of where a path began takes that path too
 const DOCKR = 150; // fish are caught only within 150 of a finished dock of yours
@@ -289,7 +314,7 @@ const EVENTS = {
 		burn: 0.12,
 		most: 20,
 		season: ['Summer', 'Autumn'],
-		harm: 1,
+		harm: 12,
 	}, // most: trees alight at once; the dry seasons, drought or not
 	fog: { name: 'Fog', secs: 60, vis: 70 },
 	sinkhole: { name: 'Sinkhole', secs: 2, hit: 0.4 },
@@ -408,10 +433,18 @@ const BACK_MARGIN = { vils: 6, houses: 5 },
 // thirds, each at least ford of dry ground; a fish every third pool.
 const WATER = {
 	lakes: [4, 9],
+	// the shore (Albert, Nov 3: "lakes too circular"): a lake's edge is its radius times 1 + Σ a_k cos(kθ + φ_k), k from 2 to harm, the
+	// amplitudes a_k = amp · k^(−H) with H = 2 − D for a fractal shore of dimension D (Mandelbrot 1967, Science 156, a coast's D a little
+	// over 1; Britain's about 1.25, from memory). The shoreline development DL = P / 2√(πA) (Hutchinson 1957, opened on Wikipedia: 1 for a
+	// circle, higher the more bays) is computed for every lake and held in shore[]; the map test keeps it in the range
+	amp: 0.3,
+	H: 0.75,
+	harm: 12,
+	shore: [1.15, 1.6],
 	r: [50, 160],
 	c: 1.06,
 	gap: 70,
-	shore: 110,
+	clear: 110,
 	w: 0.25,
 	step: 0.9,
 	bend: 45,

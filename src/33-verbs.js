@@ -464,6 +464,23 @@ const PLAY = {
 		H.mid = H.mid === a ? SMID.map : a;
 		feel('tick');
 	}, // Train or Squad turns the station's middle to its four; again, back to the small map
+	choketool() {
+		const H = G.hud;
+		H.aim = H.aim === 'choke' ? H.page === 'war' : 'choke';
+		G.chokeLine = null;
+		if (H.aim === 'choke') say('Drag across the gap: they hold it.', 'tip', TOAST.short);
+	}, // the choke tool (28-army-quick; the Yard)
+	ambushtool() {
+		const H = G.hud;
+		H.aim = H.aim === 'ambush' ? H.page === 'war' : 'ambush';
+		H.aimT = performance.now();
+		if (H.aim === 'ambush') say('Tap the cover where they hide.', 'tip', TOAST.short);
+	}, // the ambush tool (the Yard)
+	kidle() {
+		const S = idleSoldiers();
+		if (!S.length) return say('No soldier stands idle.', '', TOAST.short);
+		setPick(S.map((u) => ({ t: 'unit', id: u.id })));
+	}, // every soldier standing at home, picked (the Yard)
 	sqpk(a) {
 		const [i, t, d] = a.split(',');
 		sqPlan(Number(i), CLS[t][0], d === '+' ? 1 : -1);

@@ -32,7 +32,7 @@ const ignorable = (v, o, me) => {
 	return U.flee || U.passive || U.tick === 'wayfarer' || U.tick === 'envoy';
 }; // a herald is sacred: nobody shoots at an emissary on its way (it dies only by a side's own order)
 // who a side strikes: a foe (isFoe), or anything attacking the one looking (at peace too), less what it leaves alone
-const strikes = (o, v, me) => !v.inside && v.hp > 0 && v.owner !== o && (isFoe(o, v, me) || onMe(v, me)) && !ignorable(v, o, me);
+const strikes = (o, v, me) => !v.inside && !v.hid && v.hp > 0 && v.owner !== o && (isFoe(o, v, me) || onMe(v, me)) && !ignorable(v, o, me); // one in ambush (hid) is no mark
 // every unit in the grid's squares within r of a (the unit grid, rebuilt each step), in the grid's own order; with no grid this step, every
 // unit, last to first. The one home of the scan nearestFoe, bestFoe, nearU and unitsNear each wrote out (Nov 2, M6)
 function scanNear(a, r, fn) {

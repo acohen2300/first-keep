@@ -128,12 +128,43 @@ function shot(x1, y1, h1, x2, y2, fire) {
 const routSecs = (o) => MORALE.rout * (G.P[o].techs.has('engage') ? 0.5 : 1); // Engagement halves the run (C6: the grace no longer shrinks with it)
 const nearHome = (u, t, k) =>
 	(u.hax !== undefined && hyp(t.x - u.hax, t.y - u.hay) < YARD) || (!!k && dist(t, k) < YARD);
+// the ambush (AMBUSH; 28-army-quick ambushAt): bound for cover it walks; in place it goes to ground (hid); a foe within spring, or a blow
+// landed, springs every soldier of that ambush with a charge's burst; any other order (a new px) ends it
+function ambushTick(u) {
+	const A = u.amb;
+	if (u.state !== 'goto' || u.px !== A.x || u.py !== A.y) {
+		u.amb = null;
+		u.hid = false;
+		return;
+	}
+	if (!u.hid) {
+		if (hyp(u.px + (u.gx || 0) - u.x, u.py + (u.gy || 0) - u.y) < 8) u.hid = true; // at its own place round the cover
+		return;
+	}
+	const f = nearestFoe(u.owner, u, AMBUSH.spring);
+	if (!f && G.t - (u.hurtT ?? -9) > 0.5) return;
+	for (const v of G.units)
+		if (v.owner === u.owner && v.amb && v.amb.x === A.x && v.amb.y === A.y) {
+			v.amb = null;
+			v.hid = false;
+			v.chg = G.t + CHARGE.secs;
+			if (f) v.tgt = f;
+		}
+	if (u.owner === 0) {
+		say('Ambush!', 'good', TOAST.short);
+		sfx('horn', u.x, u.y);
+	}
+}
 function solTick(u, dt, SP) {
 	const U = UNIT[u.kind],
 		o = u.owner,
 		k = keepOf(o);
 	u.cd = Math.max(0, u.cd - dt);
-	u.kiting = kiteOf(u); // a shooter steps back from a foe on top of it, unless it presses; a horse archer always rides away
+	u.kiting = kiteOf(u);
+	if (u.amb) ambushTick(u);
+	campSendHome(u); // by a medical tent, the badly hurt and the sick walk home to the Hospital (CAMP)
+	if (u.goingHome && (u.state !== 'goto' || u.hp >= u.max * 0.95)) u.goingHome = false;
+	// a shooter steps back from a foe on top of it, unless it presses; a horse archer always rides away
 	if (u.state === 'school') {
 		u.idleT = 0;
 		if (G.t >= u.schoolT) graduate(u);
@@ -167,7 +198,7 @@ function solTick(u, dt, SP) {
 				b.owner === o &&
 				b.hp > 0 &&
 				b.prog >= 1 &&
-				(b.kind === 'castle' || b.kind === 'barracks' || b.kind === 'keep') &&
+				(b.kind === 'castle' || b.kind === 'barracks' || b.kind === 'keep' || (b.kind === 'messtent' && !(u.unfed > 0))) && // the mess tent: rest as at the Barracks, while the depot feeds (CAMP)
 				dist(b, u) < GARRISON.r,
 		)
 	)
@@ -303,6 +334,7 @@ function solTick(u, dt, SP) {
 		edge(u, tgt) > reachOf(rngOf(u), tgt)
 	)
 		tgt = null; // hold ground: fight only what comes within reach
+	if (drillOn(u)) drillHold(u);
 	if (tgt && drillOn(u)) {
 		const placed = u.gx !== undefined && hyp(u.px + u.gx - u.x, u.py + u.gy - u.y) < 6;
 		if (!placed || edge(u, tgt) > reachOf(rngOf(u), tgt)) tgt = null;
@@ -387,6 +419,7 @@ function solTick(u, dt, SP) {
 		moveTo(u, u.esc.x + u.ox * 0.5, u.esc.y + u.oy * 0.5, dt, 14, SP);
 		return;
 	}
+	if (campRaise(u, dt, SP)) return; // a foot soldier idle by its side's camp raises it (CAMP)
 	if (u.state === 'goto' || u.state === 'assist') {
 		const ak = u.px + ',' + u.py;
 		if (u.fanK !== ak && hyp(u.px - u.x, u.py - u.y) < GRID.fan) u.fanK = ak; // near the spot: from here to its own place in the shape

@@ -215,7 +215,7 @@ JS2 = """() => {
   { const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 260); if (d) {
     const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), C = bush(G, k, { cx: -d.cx, cy: -d.cy }, 120, 3000);
     for (const u of V) F.setJob(u, 'food', C); const w = V[0]; w.x = k.x + d.cx * 200; w.y = k.y + d.cy * 200; F.setJob(w, 'food', C, C);
-    const g = { id: id++, kind: 'gold', type: 'gold', x: k.x + d.cx * 240, y: k.y + d.cy * 240, amt: 800, max: 800 }; G.nodes.push(g); F.step(T);
+    const g = { id: id++, kind: 'gold', type: 'gold', x: k.x + d.cx * 240, y: k.y + d.cy * 240, amt: 800, max: 800 }; G.nodes = G.nodes.filter((n) => !((n.kind === 'stone' || n.kind === 'iron' || n.kind === 'gold') && Math.hypot(n.x - g.x, n.y - g.y) < 320)); G.nodes.push(g); F.step(T);   // the gold the only ore in reach: the builder works the nearest ore, and a map may put iron nearer
     const s = F.findSpot(0, 'mining', k.x + d.cx * 205, k.y + d.cy * 205, 10, 60), m = s && F.build(0, 'mining', s.x, s.y);
     if (!m) bad.push('D-091 amended: no ground for the mine');
     else { const b = G.units.find((u) => u.rep === m); run(120, () => m.prog >= 1 && b && b.job !== 'repair');

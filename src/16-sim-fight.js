@@ -86,9 +86,21 @@ function hurt(o, a, t, base) {
 	}
 	t.hp -= d;
 	t.hurtT = G.t;
+	if (a && !isB && a.chg > G.t && isSoldier(t) && !t.inside && G.t - (t.shoveT || -9) > 1) {
+		const dx = t.x - a.x,
+			dy = t.y - a.y,
+			dd = hyp(dx, dy) || 1;
+		t.shoveT = G.t;
+		if (!blockedCell(gcell(t.x + (dx / dd) * JUICE.shove, t.y + (dy / dd) * JUICE.shove), t.owner)) stepTo(t, t.x + (dx / dd) * JUICE.shove, t.y + (dy / dd) * JUICE.shove);
+		if (onScreen(t.x, t.y)) {
+			G.jolt = G.t + JUICE.joltS;
+			sfx('thud', t.x, t.y);
+		}
+	} // a charge lands (the juice pass): the one it hits is shoved back, the screen jolts, a thud
 	if (a && t.hp <= 0 && !isB && a.st) {
 		a.st.kills++;
 		warCredit(a.owner, t.owner, UNIT[t.kind].cost); // an animal costs nothing, so it counts nothing
+		if (G.kills && G.kills[a.owner] && G.kills[a.owner][t.owner] !== undefined) G.kills[a.owner][t.owner]++;
 		if (isSoldier(a)) a.mor = Math.min(1, a.mor + MORALE.kill);
 	}
 	const tg = o === WILD ? null : gangOf(t);
@@ -154,6 +166,9 @@ let CHNEXT = new Int32Array(1024);
 // Who gives way (Build 48; it was always half and half): one at work or in a fight hardly moves, one walking moves one standing about,
 // one standing gives way. Nobody is pushed into a tree, a wall or water.
 const heft = (u) => (u.tgt || G.t - (u.work ?? -9) < 0.5 ? 9 : G.t - (u.mvT ?? -9) < 0.25 ? 3 : 1);
+// forming (FORMING): walking to its place in a shape (its gx set, not there yet); the precedence of its kind, lower giving way
+const forming = (u) => u.state === 'goto' && u.gx !== undefined && !u.tgt && hyp(u.px + u.gx - u.x, u.py + u.gy - u.y) > 6,
+	rankOf = (u) => (isSoldier(u) ? 4 - Math.max(0, clsOf(u.kind)) : 0);
 function pushApart(a, b) {
 	let dx = b.x - a.x,
 		dy = b.y - a.y;
@@ -167,9 +182,11 @@ function pushApart(a, b) {
 	}
 	const d = hyp(dx, dy);
 	if (d > 0 && d < SPACE) {
-		const ha = heft(a),
-			hb = heft(b),
-			k = (SPACE - d) / d,
+		const fa = forming(a),
+			fb = forming(b),
+			ha = fa && fb ? (rankOf(a) > rankOf(b) ? 9 : rankOf(a) < rankOf(b) ? 1 : 3) : heft(a),
+			hb = fa && fb ? (rankOf(b) > rankOf(a) ? 9 : rankOf(b) < rankOf(a) ? 1 : 3) : heft(b),
+			k = ((SPACE - d) / d) * (fa && fb ? FORMING.soft : 1), // two forming: the lower kind gives way, and the push is soft
 			pa = (k * hb) / (ha + hb),
 			pb = (k * ha) / (ha + hb),
 			ax = a.x - dx * pa,
@@ -223,9 +240,9 @@ function collide() {
 	for (const u of U) {
 		if (u.inside) continue;
 		for (const L of G.lakes) {
-			if (Math.abs(u.x - L.x) > L.r + 60 || Math.abs(u.y - L.y) > L.r + 60) continue; // far from this one: the cheap test first
+			if (Math.abs(u.x - L.x) > L.r * 1.4 + 60 || Math.abs(u.y - L.y) > L.r * 1.4 + 60) continue; // far from this one: the cheap test first
 			const dl = dist(u, L),
-				lr = lakeR(L);
+				lr = lakeRTo(L, u.x, u.y);
 			if (dl < lr + 6 && !u.fly && !onLand(u.x, u.y)) {
 				const s = (lr + 6) / (dl || 1);
 				stepTo(u, L.x + (u.x - L.x) * s, L.y + (u.y - L.y) * s);
@@ -386,6 +403,7 @@ const TICK = {
 	scout: scoutTick,
 	envoy: envoyTick,
 	caravan: caravanTick,
+	wagon: wagonTick,
 	spy: spyTick,
 	priest: priestTick,
 	medic: medicTick,

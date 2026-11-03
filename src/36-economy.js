@@ -445,7 +445,7 @@ function outbreak(o, share, plague, at) {
 		k = keepOf(o);
 	if (!k || p.alive === false) return;
 	const ppl = G.units.filter(
-		(u) => u.owner === o && UNIT[u.kind].cls && !u.inside && dist(u, k) < 500 && !(u.sick > G.t),
+		(u) => u.owner === o && UNIT[u.kind].cls && !u.inside && (dist(u, k) < 500 || depotNear(u)) && !(u.sick > G.t), // a camp is a town for sickness (CAMP)
 	);
 	const n = Math.max(1, Math.round(ppl.length * share * (plague ? fxv(o, 'plague').m : 1)));
 	for (let i = 0; i < n && ppl.length; i++) {
@@ -479,7 +479,7 @@ function healthTick() {
 		let I = 0,
 			plague = false;
 		for (const u of G.units)
-			if (u.owner === p.id && UNIT[u.kind].cls && !u.inside && dist(u, k) < 500) {
+			if (u.owner === p.id && UNIT[u.kind].cls && !u.inside && (dist(u, k) < 500 || depotNear(u))) {
 				if (u.sick > G.t) {
 					I++;
 					plague = plague || u.plague;
@@ -542,6 +542,7 @@ function upkeepTick() {
 						if (n.amt > 0 && isFinite(n.amt)) n.amt = Math.max(0, n.amt - shareOf(u) * per);
 					} else sh += shareOf(u);
 				}
+			sh = Math.max(0, sh - campEat(o, per)); // the soldiers in a camp eat from its depot (CAMP)
 			const eat = sh * per;
 			p.eats = eat * 60;
 			starveTick(p);
@@ -565,6 +566,7 @@ function econTick(dt) {
 	if (G.tick % 30 === 0) {
 		natureTick();
 		upkeepTick();
+		if (G.tick % 1800 === 0) campWearTick(); // a minute of weather on the camps
 	}
 	if (every(BEAT.health)) healthTick();
 	fireTick(dt);
@@ -631,6 +633,17 @@ function shareOf(u) {
 	if (!U.cls) return 0;
 	if (hasTag(u.kind, 'mounted') || hasTag(u.kind, 'elephant')) return UPKEEP.mounted;
 	return U.tick === 'sol' ? UPKEEP.foot : 1;
+}
+// an order's cost (ORDER): the soldiers' meals from the store, and the tiredness; what it ate, for the toast
+function orderCost(o, S) {
+	let f = 0;
+	for (const u of S) {
+		f += shareOf(u) * UPKEEP.share * 60 * ORDER.mins; // a share is UPKEEP.share food a second
+		if (isSoldier(u) && !(u.chg > G.t)) u.tired = Math.max(u.tired || 0, G.t + ORDER.tired);
+	}
+	f = Math.min(Math.round(f), Math.floor(G.P[o].res.f));
+	spend(G.P[o], 'f', f, 'orders');
+	return f;
 }
 const hungerOf = (o) => (G.P[o] && (G.P[o].famT || 0) >= STARVE.grace ? UPKEEP.hunger : 1); // full strength for the first two days of a famine
 

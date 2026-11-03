@@ -802,6 +802,168 @@ const ART = {
 		banner(0, d / 2 - 32, c, 14);
 		L_(-25, d / 2 - 1, 25, d / 2 - 1, c, 1.4);
 	},
+	// the camp's tents (CAMP): a ridge tent of canvas, pegged out, the side's colour on the flap; the mark on the ridge tells them apart
+	tent(c, mark) {
+		const CANVAS = { med: '#eeeae0', train: '#9fa9b4', mess: '#cdb98a', depot: '#a88a62' }[mark] || '#d9cfb4', // its own cloth: white, grey, tan, brown
+			d = 20 * TILT,
+			f = d / 2;
+		P_(
+			[
+				[-11, f + 1],
+				[11, f + 1],
+				[11, f - 3],
+				[-11, f - 3],
+			],
+			lit('#8a7a5a', -0.3),
+			null,
+			0,
+		); // the trodden ground at the door
+		P_(
+			[
+				[-10, f],
+				[10, f],
+				[0, f - 14],
+			],
+			lit(CANVAS, -0.08),
+			LINE,
+			0.5,
+		); // the front gable
+		P_(
+			[
+				[10, f],
+				[10 + 7, f - 7],
+				[7, f - 21],
+				[0, f - 14],
+			],
+			lit(CANVAS, -0.5),
+			LINE,
+			0.5,
+		); // the shaded east slope
+		P_(
+			[
+				[-10, f],
+				[-10 + 7, f - 7],
+				[7, f - 21],
+				[0, f - 14],
+			],
+			lit(CANVAS, 0.1),
+			LINE,
+			0.5,
+		); // the sunlit west slope
+		P_(
+			[
+				[-3, f],
+				[3, f],
+				[0, f - 6],
+			],
+			'#3a2a1a',
+			null,
+			0,
+		); // the door flap, open
+		L_(-3, f, -3, f - 6, c, 1.4); // the side's colour down the flap
+		L_(0, f - 14, 7, f - 21, '#6a5a4a', 1); // the ridge pole
+		if (mark === 'med') {
+			L_(-6, f - 8, -2, f - 8, '#b23a3a', 1.6);
+			L_(-4, f - 10, -4, f - 6, '#b23a3a', 1.6);
+		} else if (mark === 'train') L_(-7, f - 9, -2, f - 6, '#55657a', 1.6);
+		else if (mark === 'mess') E_(-4, f - 8, 2.4, 1.6, '#b8954a', LINE, 0.3);
+		else if (mark === 'depot') {
+			P_(
+				[
+					[-8, f - 6],
+					[-3, f - 6],
+					[-3, f - 10],
+					[-8, f - 10],
+				],
+				'#8a6644',
+				LINE,
+				0.3,
+			);
+		}
+	},
+	medtent(c) {
+		ART.tent(c, 'med');
+	},
+	traintent(c) {
+		ART.tent(c, 'train');
+	},
+	messtent(c) {
+		ART.tent(c, 'mess');
+	},
+	depot(c) {
+		ART.tent(c, 'depot');
+	},
+	camptower(c) {
+		// a timber tower: four posts, a platform with a rail, a ladder; the side's flag on top
+		const d = 20 * TILT,
+			f = d / 2;
+		for (const [x, k] of [
+			[-7, 0.05],
+			[7, -0.4],
+		]) {
+			P_(
+				[
+					[x - 1.5, f],
+					[x + 1.5, f],
+					[x + 1.5, f - 30],
+					[x - 1.5, f - 30],
+				],
+				lit(PLANK, k),
+				LINE,
+				0.4,
+			);
+		}
+		L_(-7, f - 6, 7, f - 18, lit(PLANK, -0.5), 1); // the cross brace
+		L_(7, f - 6, -7, f - 18, lit(PLANK, -0.5), 1);
+		P_(
+			[
+				[-10, f - 30],
+				[10, f - 30],
+				[10, f - 34],
+				[-10, f - 34],
+			],
+			lit(PLANK, 0.1),
+			LINE,
+			0.5,
+		); // the platform
+		P_(
+			[
+				[-10, f - 34],
+				[10, f - 34],
+				[10, f - 40],
+				[-10, f - 40],
+			],
+			lit('#8a7a5a', -0.2),
+			LINE,
+			0.5,
+		); // the parapet of wattle
+		L_(-9, f - 40, -9, f - 46, lit(PLANK, -0.3), 1);
+		L_(-9, f - 46, -2, f - 44, c, 2); // the flag
+		L_(-9, f - 44, -2, f - 44, c, 2);
+		L_(2, f, 2, f - 30, lit(PLANK, -0.6), 0.8); // the ladder
+		for (let y = f - 4; y > f - 30; y -= 4) L_(0.5, y, 3.5, y, lit(PLANK, -0.6), 0.8);
+	},
+	palisade(c) {
+		// one square of stakes: four pointed posts of timber, lashed, the shaded side east
+		const d = 10 * TILT,
+			f = d / 2;
+		for (let i = 0; i < 4; i++) {
+			const x = -4.5 + i * 3;
+			P_(
+				[
+					[x - 1.2, f],
+					[x + 1.2, f],
+					[x + 1.2, f - 13],
+					[x, f - 16],
+					[x - 1.2, f - 13],
+				],
+				lit(PLANK, i === 3 ? -0.45 : 0.05 - i * 0.08),
+				LINE,
+				0.4,
+			);
+		}
+		L_(-5.5, f - 9, 5.5, f - 9, lit(PLANK, -0.5), 1.2); // the lashing rail
+	},
 	house(c) {
 		const r = block(20, 12, PLASTER, 'timber', 'gable', THATCH, 9);
 		door(-4, r.d / 2, 4, 7);

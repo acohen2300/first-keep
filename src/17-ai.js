@@ -460,6 +460,7 @@ function think(p) {
 	for (const f of G.finds) if (FINDS[f.kind].hire && !f.done && R.g >= 200) hire(o, f);
 	// war: attack only when the odds beat this personality's nerve; a rival's wonder is attacked at once
 	if (per.bold < 2) decideWar(p, per);
+	if (p.ab === 'B') chokeClaim(p); // the B side of the test holds a gap on the road to its nearest foe (AB)
 	if (per.diplo) aiDiplomacy(p, per);
 	allyDuty(p);
 }
@@ -666,7 +667,8 @@ function decideWar(p, per) {
 			const busy =
 				per.opportunist &&
 				G.P.some((x) => x.alive && x.id !== WILD && x.id !== o && x.id !== q.id && atWar(q.id, x.id)); // the opportunist: a side with another war on its hands
-			const pr = threat ? Math.max(prob, 0.75) : prob * (busy ? per.opportunist * DF().opp : 1);
+			const greed = p.ab === 'B' ? 1 + AB.greed * (storesOf(q.id) / Math.max(1, ...G.P.filter((x) => x.alive && x.id !== WILD && x.id !== o).map((x) => storesOf(x.id)))) : 1; // B: the richest foe draws it
+			const pr = (threat ? Math.max(prob, 0.75) : prob * (busy ? per.opportunist * DF().opp : 1)) * greed;
 			if (pr > bp) {
 				bp = pr;
 				best = q.id;
@@ -683,15 +685,19 @@ function decideWar(p, per) {
 			u.loot = null;
 		});
 		p.wave = newWave(go.length, best, W && W.owner === best ? W.id : TB ? TB.id : null);
-		if (per.raid) {
-			// a few riders go for the foe's lumber camps and mines instead of the Town Center: it draws the defence apart
+		if (per.raid || p.ab === 'B') {
+			// a few riders go for the foe's lumber camps and mines instead of the Town Center: it draws the defence apart (B: more of them, and
+			// the drop-off with the most villagers about it, where the loot is)
 			const fast = go
 					.filter((u) => (UNIT[u.kind].tags || []).includes('mounted'))
-					.slice(0, per.raid + (hz('hard') ? HARD.raid : 0)),
+					.slice(0, (per.raid || 0) + (hz('hard') ? HARD.raid : 0) + (p.ab === 'B' ? AB.raid : 0)),
 				k = keepOf(o);
+			const busyAt = (b) => G.units.reduce((n, v) => n + (v.owner === best && v.kind === 'vil' && dist(v, b) < 90 ? 1 : 0), 0);
 			const mark =
 				k &&
-				nearest(G.blds, k, (b) => standing(b, best) && b.kind !== 'keep' && BLD[b.kind].drop);
+				(p.ab === 'B'
+					? G.blds.filter((b) => standing(b, best) && b.kind !== 'keep' && BLD[b.kind].drop).sort((a, b) => busyAt(b) - busyAt(a))[0] || null
+					: nearest(G.blds, k, (b) => standing(b, best) && b.kind !== 'keep' && BLD[b.kind].drop));
 			if (mark)
 				fast.forEach((u) => {
 					u.bid = mark.id;
@@ -728,4 +734,46 @@ function leagueTick() {
 	}
 	G.navDirty = true;
 	if (fresh) news('realm', `${M.map((p) => p.name).join(', ')} unite against ${lead.name}, the leader.`, 'warn', TOAST.long);
+}
+
+// ── The A/B test of the computers (Albert, Nov 3, 11:10: "a b test this"): A plays as shipped, with the handicap (HANDICAP: a free mill and
+// farm); B plays without it and with pressure instead: AB.raid more riders on the drop-off where the villagers are, the richest foe weighed
+// by AB.greed, and a choke claim: with AB.foot foot soldiers idle at home it holds the narrowest gap on the road to its nearest foe (the
+// drawn choke of preview 37, dress 'choke'), AB.hold seconds at a time, every AB.every. tests/ab.py seats A and B by the seed and reports.
+const AB = { raid: 2, greed: 0.3, foot: 6, hold: 180, every: 240, gapMin: 2, gapMax: 10, step: 40 };
+const storesOf = (o) => Object.values(G.P[o].res).reduce((a, b) => a + b, 0);
+// the narrowest gap on the road: the point on the straight line to the foe where the open run across it is shortest (in squares)
+function gapOnRoad(o, q) {
+	const k = keepOf(o),
+		f = keepOf(q);
+	if (!k || !f) return null;
+	const d = dist(k, f),
+		ux = (f.x - k.x) / d,
+		uy = (f.y - k.y) / d;
+	let best = null;
+	for (let t = 150; t < d / 2; t += AB.step) {
+		const x = k.x + ux * t,
+			y = k.y + uy * t;
+		if (blockedCell(gcell(x, y), o)) continue;
+		let w = 1;
+		for (const sgn of [1, -1]) for (let i = 1; i <= AB.gapMax; i++) if (!blockedCell(gcell(x - uy * sgn * i * NAVC, y + ux * sgn * i * NAVC), o)) w++; else break;
+		if (w >= AB.gapMin && w <= AB.gapMax && (!best || w < best.w)) best = { x, y, w, fx: ux, fy: uy };
+	}
+	return best;
+}
+function chokeClaim(p) {
+	const o = p.id;
+	if ((p.ai.chokeT || 0) > G.t) return;
+	p.ai.chokeT = G.t + AB.every;
+	const k = keepOf(o),
+		foe = k && G.P.filter((q) => q.alive && q.id !== WILD && q.id !== o && atWar(o, q.id) && keepOf(q.id)).sort((a, b) => dist(k, keepOf(a.id)) - dist(k, keepOf(b.id)))[0];
+	if (!foe) return;
+	const foot = soldiersOf(o).filter((u) => u.state === 'home' && !u.tgt && !UNIT[u.kind].heal && !(UNIT[u.kind].tags || []).includes('mounted') && !(UNIT[u.kind].tags || []).includes('siege'));
+	if (foot.length < AB.foot) return;
+	const g = gapOnRoad(o, foe.id);
+	if (!g) return;
+	const S = foot.slice(0, Math.min(foot.length, g.w * 3));
+	dress(S, { x: g.x, y: g.y }, { x: g.fx, y: g.fy }, 'choke', AB.hold);
+	for (const u of S) u.drill.cols = clamp(g.w, CHOKE.min, CHOKE.max);
+	p.ai.chokes = (p.ai.chokes || 0) + 1;
 }
