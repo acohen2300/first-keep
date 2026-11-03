@@ -4,6 +4,8 @@ A mobile real-time strategy game in one HTML file.
 
 Play: https://acohen2300.github.io/first-keep
 
+Preview (the build being tested): https://acohen2300.github.io/first-keep/preview/ · the test field: https://acohen2300.github.io/first-keep/preview/?test
+
 **Where things stand (Albert's words):**
 - Up to 62 was great.
 - 63 to 69 was a mess.

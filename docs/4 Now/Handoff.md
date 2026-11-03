@@ -9,6 +9,12 @@
 - The A/B test ran (20 seeds): A 11, B 9, even; the finding is that the Raiders' seat won all twenty on score. `docs/6 Records/v80 Audit/AB test - Nov 3.md`. Nothing of B is on by default. [2026-11-03 13:58]
 - The planted-bug checks: p37 (9), p38 (13), p40 (4), p41 (5), p42 (3), p44 (15) all catch their bugs; the whole set (`python3 tests/handoff.py --plant`) was not run end to end today. [2026-11-03 15:20]
 
+## Next: Albert's notes of Nov 3, 16:23 to 16:53 (the next three previews) [2026-11-03 17:06]
+- His three handwritten pages and the screenshot are in `mockups/80/Nov 3 notes/`, with sixteen mockups drawn from them (1 to 16; `mockups.js` draws them). Answers he gave at 16:53: Jobs has − and + under every job (two separate tiles, 3 px apart, as the game has them: `pmPair`); More on the quick menu as drawn; the item card 3×3; quick menus always four tiles, tight (one outline, inner lines short of the edge); the map always the centre 3×2; the Start menu back as it was, every question its own line; every menu covers the controller, anchored to the bottom. [2026-11-03 17:06]
+- Start from MENU-SPEC §6 (the controller, worked out Nov 3) and change only what the notes change: People to (1,2), Town to (7,2), the Map tile in a slot right outside the map's top right, Hide a − on War (folded: + bottom right), Jobs the default page, ← in the top rank with the page number under it, the ground under the controller (the map to the screen edge, a no-build strip). Albert, 17:00: "we already have all this worked out"; do not redraw what §6 already says. [2026-11-03 17:06]
+- One question open (asked 17:01): the Map tile's slot is (6,1), but every page fills columns 2 to 6; while a page is open, does the tile stay at (6,1) and the page give up its sixth slot, or go to column 7 as §6 has it? Ask before building. [2026-11-03 17:06]
+- Mockups 3, 12 and 13 hold my choices, not his words (Status on Town, the nine cells of the item card, the building card's contents): his yes or no first. Mockup 2 shows the Map as a chip: wrong, it is a tile (Albert, 17:00). [2026-11-03 17:06]
+
 ## For Albert to decide (tonight) [2026-11-03 13:40]
 - The A/B result: the handicap can stay (even); the Raiders winning every 30-minute game on score is the question (the War crown's weight, or their nerve). [2026-11-03 13:58]
 - The hidden holds (Albert, 15:39: the one point the audit had right): eleven listed; a mark on the tile and the Help line proposed, waiting for a yes. [2026-11-03 16:00]
