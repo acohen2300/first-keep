@@ -210,6 +210,28 @@ JS2 = """() => {
         const back = nearest === w ? B : C;
         if (h.prog < 1) bad.push('the house was not raised in 90 s');
         else if (nearest.node !== back) bad.push('the builder did not go back to the very find it left (' + (nearest.node ? nearest.node.kind + ' ' + nearest.node.id : nearest.job) + ')'); } } } }
+  // ── D-091 amended (Albert, Nov 3): a mine raised by a villager pulled off its work is worked by it, the nearest gold it serves; a send to
+  // a find a wolf guards says why and sends nobody; your own order outlasts a fright remembered there, a computer's search does not ──
+  { const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 260); if (d) {
+    const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), C = bush(G, k, { cx: -d.cx, cy: -d.cy }, 120, 3000);
+    for (const u of V) F.setJob(u, 'food', C); const w = V[0]; w.x = k.x + d.cx * 200; w.y = k.y + d.cy * 200; F.setJob(w, 'food', C, C);
+    const g = { id: id++, kind: 'gold', type: 'gold', x: k.x + d.cx * 240, y: k.y + d.cy * 240, amt: 800, max: 800 }; G.nodes.push(g); F.step(T);
+    const s = F.findSpot(0, 'mining', k.x + d.cx * 205, k.y + d.cy * 205, 10, 60), m = s && F.build(0, 'mining', s.x, s.y);
+    if (!m) bad.push('D-091 amended: no ground for the mine');
+    else { const b = G.units.find((u) => u.rep === m); run(120, () => m.prog >= 1 && b && b.job !== 'repair');
+      if (m.prog < 1) bad.push('the mine was not raised in 120 s');
+      else if (!b || b.job !== 'gold' || !b.node || b.node.type !== 'gold') bad.push('the villager who raised the mine did not work the gold beside it (' + (b ? b.job + ' ' + (b.node ? b.node.kind : '') : 'no builder') + ')'); } } }
+  { const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) {
+    const g = { id: id++, kind: 'gold', type: 'gold', x: k.x + d.cx * 180, y: k.y + d.cy * 180, amt: 800, max: 800 }; G.nodes.push(g); g.seen = [true]; F.step(T);
+    const wolf = F.addUnit(W(), 'wolf', g.x + 20, g.y); G.threats = [wolf]; F.dangerMap();
+    G.mail = []; const ok = F.sendVil(0, g.id), said = G.mail.map((m) => m.text);
+    if (ok) bad.push('a villager was sent to gold a wolf stands by (it should say why and send nobody)');
+    if (!said.some((t) => /Wolf near/.test(t))) bad.push('the send to gold a wolf stands by did not say why (' + said.join(' | ') + ')');
+    wolf.hp = 0; G.units.splice(G.units.indexOf(wolf), 1); G.threats = [];
+    G.P[0].scares = [{ x: g.x, y: g.y, t: G.t + 40 }]; F.dangerMap();
+    if (!F.sendVil(0, g.id)) bad.push('a send to gold where someone was only frightened was refused');
+    const v = G.units.find((u) => u.owner === 0 && u.node === g); run(3);
+    if (!v || v.node !== g) bad.push('your own villager left the gold for a fright remembered there (your order outlasts it)'); } }
   // ── D-092: rest. A second villager posted to a full field waits on a spot of its own round it, still; two stopped on one point settle ──
   { const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) { const b = field(G, k, d); if (b) {
     const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), a = V[0], c = V[1];

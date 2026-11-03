@@ -236,18 +236,21 @@ function formUp() {
 		a.sort((p, q) => (p.bn ?? 9) - (q.bn ?? 9) || p.id - q.id);
 		const n = a.length,
 			k = keepOf(a[0].owner),
-			shape = shapeOf(a[0]).shape; // a battalion takes its shape: a narrow column on the march, then the line, the point-first wedge or the closed square
+			D = drillOn(a[0]) ? a[0].drill : null, // a drill of the War Director (28-army-quick: dress), until a new order
+			shape = D ? D.shape : shapeOf(a[0]).shape; // a battalion takes its shape: a narrow column on the march, then the line, the point-first wedge or the closed square
 		const cols =
 				shape === 'column'
 					? Math.min(n, 3)
 					: shape === 'square'
 						? Math.ceil(Math.sqrt(n))
-						: clamp(Math.round(Math.sqrt(n * GRID.rows)), 1, 14),
+						: D && shape === 'line'
+							? n <= 6 ? n : Math.ceil(n / 2) // a shield wall: one rank, two past six
+							: clamp(Math.round(Math.sqrt(n * GRID.rows)), 1, 14),
 			wr = (i) => Math.floor((Math.sqrt(8 * i + 1) - 1) / 2);
 		// the line faces along the march; ranks trail behind the first, and a unit standing at its place faces the same way
 		const t = { x: a[0].px, y: a[0].py },
-			fx0 = k ? t.x - k.x : 0,
-			fy0 = k ? t.y - k.y : 1,
+			fx0 = D ? D.fx : k ? t.x - k.x : 0,
+			fy0 = D ? D.fy : k ? t.y - k.y : 1,
 			fl = hyp(fx0, fy0) || 1,
 			fx = fx0 / fl,
 			fy = fy0 / fl;
@@ -258,12 +261,19 @@ function formUp() {
 				c = (shape === 'wedge' ? i - (ri * (ri + 1)) / 2 - ri / 2 : (i % cols) - (cols - 1) / 2) * GRID.gap,
 				r = -ri * GRID.gap,
 				u = a[i],
-				sk = t.x + ',' + t.y + ',' + i + ',' + n + ',' + shape + ',' + NAV.v;
+				sk = t.x + ',' + t.y + ',' + i + ',' + n + ',' + shape + ',' + fx.toFixed(2) + ',' + NAV.v;
 			if (u.sk !== sk) {
 				// a place in the shape goes through the one spot check (item 5): one that falls in a tree, a lake or a building, across a wall,
 				// off the map or on someone else moves to the nearest free spot round it, on the spot's side (Build 48)
 				let gx = -fy * c + fx * r,
 					gy = fx * c + fy * r;
+				if (D && shape === 'arc') {
+					const A = D.arc,
+						ph = Math.atan2(t.y - A.y, t.x - A.x),
+						th = ph + (i - (n - 1) / 2) * Math.min(GRID.gap / A.r, (2 * Math.PI) / 3 / Math.max(1, n - 1)); // GRID.gap apart along the arc, the whole within 120°
+					gx = A.x + Math.cos(th) * A.r - t.x;
+					gy = A.y + Math.sin(th) * A.r - t.y;
+				} // the archers' arc: one rank on the circle round the foe, all at the same reach
 				const p = { x: t.x + gx, y: t.y + gy };
 				if (!spotFree(p, u.owner, cm, mates)) {
 					const f = takeSpots([u], p, null, cm).get(u);

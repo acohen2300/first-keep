@@ -8,7 +8,7 @@
 let cardTap = false; // the tap being handled was inside a card (the click handler, 33-verbs)
 function openCard(c, back) {
 	if (!back) c.from = cardTap && G.card ? (G.card.type === c.type ? G.card.from : G.card) : null;
-	cancelStrike();
+	hideQuick();
 	G.techTip = null;
 	G.qs = { from: 'all', n: {} }; // the Attack-with counts start fresh on every card
 	G.relPick = {}; // and what was picked on Relations and not sent

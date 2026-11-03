@@ -292,6 +292,24 @@ function dangerMap() {
 		for (const s of p.scares) stampDanger(DANGER[o], s.x, s.y, DANGER_R.mem);
 	}
 }
+// why a spot is on a side's danger map, nearest cause first: { scare } when the only cause is a fright remembered there (DANGER_R.mem),
+// else { w: the words } (Albert, Nov 3: a villager that drops a find says why). The same causes and radii as dangerMap, in the same order.
+function dangerWhy(p, o) {
+	const near = (q, r) => hyp(q.x - p.x, q.y - p.y) <= r + NAVC;
+	for (const f of G.guarded || []) {
+		const F = FINDS[f.kind],
+			gk = F.guard && F.guard[G.fantasy ? 1 : 0];
+		if (near(f, ((gk && UNIT[gk].raid) || 90) + 40)) return { w: `${gk ? UNIT[gk].name + 's guard' : 'Guards near'} the ${F.name.toLowerCase()}` };
+	}
+	for (const v of G.threats || [])
+		if (!UNIT[v.kind].meat && near(v, DANGER_R.near)) return { w: `${UNIT[v.kind].name}${v.owner === WILD ? '' : ' (' + G.P[v.owner].name + ')'} near` };
+	for (const b of G.blds) {
+		if (b.hp <= 0) continue;
+		if (b.fire > 0 && near(b, DANGER_R.fire)) return { w: 'A fire near' };
+		if (BLD[b.kind].dmg && b.prog >= 1 && atWar(o, b.owner) && near(b, rangeOf(b.owner, b.kind) + DANGER_R.reach)) return { w: `In reach of ${G.P[b.owner].name}'s ${bldName(b.owner, b.kind).toLowerCase()}` };
+	}
+	return { scare: true };
+}
 const AS = {
 	g: new Float32Array(NC * NC),
 	from: new Int32Array(NC * NC),

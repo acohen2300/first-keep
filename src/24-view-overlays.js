@@ -673,14 +673,14 @@ function drawTouch(z) {
 			const r = u.patch;
 			ctx.strokeRect(SX(r.x0), SY(r.y0), (r.x1 - r.x0) * z, (r.y1 - r.y0) * z * TILT);
 		}
-	if (G.press && performance.now() - G.press.t > 90) {
-		const f = Math.min(1, (performance.now() - G.press.t) / HOLD_MS);
+	if (G.press && performance.now() - G.press.t > PRESS_SHOW) {
+		const f = Math.min(1, (performance.now() - G.press.t - PRESS_SHOW) / (HOLD_MS - PRESS_SHOW));
 		ctx.strokeStyle = 'rgba(255,211,94,.85)';
 		ctx.lineWidth = 3;
 		ctx.beginPath();
 		ctx.arc(G.press.x, G.press.y, 26, -Math.PI / 2, -Math.PI / 2 + f * 6.2832);
 		ctx.stroke();
-	} // the ring fills: let go and it is a tap, hold and drag and it is a box
+	} // the ring fills only once the finger is plainly holding (Albert, Nov 3: it flashed on every tap): at full the box begins
 	if (G.box) {
 		const b = G.box;
 		ctx.fillStyle = 'rgba(255,211,94,.12)';

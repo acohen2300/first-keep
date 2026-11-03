@@ -303,6 +303,10 @@ function solTick(u, dt, SP) {
 		edge(u, tgt) > reachOf(rngOf(u), tgt)
 	)
 		tgt = null; // hold ground: fight only what comes within reach
+	if (tgt && drillOn(u)) {
+		const placed = u.gx !== undefined && hyp(u.px + u.gx - u.x, u.py + u.gy - u.y) < 6;
+		if (!placed || edge(u, tgt) > reachOf(rngOf(u), tgt)) tgt = null;
+	} // in a drill (the War Director): to its place in the line or the arc first, then it fights only what is in reach (Albert, Nov 3)
 	if (u.state === 'escort') {
 		escortPick(u);
 		if (!u.esc) u.state = 'home';

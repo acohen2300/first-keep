@@ -284,7 +284,7 @@ const inFight = () => G.units.some((u) => u.owner === 0 && u.tgt && u.tgt.hp > 0
 let fightHold = 0;
 let saveFailT;
 function saveGame(force) {
-	if (!G || G.over || seenErr.size >= 2 || holdSave) return; // after a second error the last good save stands; while the Resume card waits, nothing overwrites it (force too)
+	if (!G || G.over || G.test || seenErr.size >= 2 || holdSave) return; // after a second error the last good save stands; while the Resume card waits, nothing overwrites it (force too)
 	if (!force && inFight() && (fightHold = fightHold || G.t) && G.t - fightHold < 60) return;
 	fightHold = 0; // the save stutters: not in the middle of a battle (at most a minute late)
 	try {

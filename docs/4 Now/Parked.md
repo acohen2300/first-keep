@@ -139,3 +139,10 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - Battle plans: missions, orders and squads as plans that play out; rehearsals on a life-size mock screen. The next layer after the Director. [2026-11-02 16:56]
 - Fog that drifts with the wind on the small map (Albert: "maybe too much"). [2026-11-02 16:56]
 
+
+## The Director's next layer (Albert, Nov 3, 06:33) [2026-11-03 06:40]
+- A drill in tight quarters does its best: a time limit, and if the soldiers are not x% of the way to their places within x% of the time, they stand where they are. Today a drill already ends on its own (the wall in 12 s, the arc in 18 s) and a blocked place moves to the nearest free spot; the x% rule is not built. [2026-11-03 06:40]
+- A countdown on the screen while a drill forms, so you see them trying. [2026-11-03 06:40]
+- The other arm moves to help: the archers step behind the foot when the foot wall up, and the reverse. [2026-11-03 06:40]
+- Choke point formations; a front line formation; support formations. [2026-11-03 06:40]
+- Forward operating bases and support bases further back; war camps. [2026-11-03 06:40]

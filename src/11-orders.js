@@ -895,6 +895,7 @@ function setJob(u, job, n, at) {
 	else if (n && n.farm) u.plot = n.farm.id; // given a building: posted to it until you tap it off or it falls
 	u.anchor = at ? { x: at.x, y: at.y } : null; // the spot it was placed: its search starts there and stays within the cap (decision 1)
 	u.wait = false;
+	u.sent = false; // set by your own orders after this (sendVil, order): it outlasts a fright (13-sim-civil)
 	if (job) u.post = null;
 	if (n && n.farm) crowd(n, 1);
 	if (job !== 'repair') u.rep = null;
@@ -949,7 +950,15 @@ function sendVil(o, id) {
 		if (o === 0) say(NO_HANDS, 'warn', TOAST.short);
 		return false;
 	}
+	if (o === 0 && !n.farm && unsafe(n, 0)) {
+		const why = dangerWhy(n, 0);
+		if (!why.scare) {
+			say(`${why.w}: nobody will work the ${nodeName(n).toLowerCase()} yet.`, 'warn', TOAST.mid);
+			return false;
+		}
+	} // a real danger there: said, and nobody sent (Albert, Nov 3: it went, then quietly came off)
 	setJob(v, job, n, n);
+	v.sent = o === 0;
 	if (o === 0) say(`A villager heads for the ${nodeName(n).toLowerCase()}.`, '', TOAST.short);
 	return true;
 }

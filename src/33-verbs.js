@@ -491,6 +491,12 @@ const PLAY = {
 		if (!hasCmd() && !sqOut(i)) return say('Squads come with Battalions.', '', TOAST.short);
 		openCard({ type: 'squad', i });
 	}, // hold a squad: its card, built at home, watched on its mission; an empty squad opens as a new one
+	qsword() {
+		quickGo();
+	}, // the sword: every soldier to the spot (28-army-quick)
+	qclose() {
+		hideQuick();
+	},
 	sqsetup() {
 		if (!hasCmd()) return say('Squads come with Battalions.', '', TOAST.short);
 		openCard({ type: 'sqsetup' });

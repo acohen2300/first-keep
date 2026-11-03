@@ -79,7 +79,7 @@ DOUBLES = """async (extra) => { await document.fonts.ready; const F = window.__f
 # The quick action (MENU-SPEC §7, Build 70), at every size: each of its four cells is the screen's slot (W − 42) ÷ 6 by 44; opened in the middle,
 # at the right edge, above the row and in that corner, its first icon (the sword) is right under the finger (its column on it, half a slot
 # below it; above it when flipped at the row); the sword turns it to All in the same place. Left open in the middle for the page's measures.
-QUICK = """async () => { const F = window.__fk, G = F.G, out = [];   // the strike (Albert, Nov 2) is tested in the main run; here the hold on a button and the small map
+QUICK = """async () => { const F = window.__fk, G = F.G, out = [];   // the quick action (Albert, Nov 3) is tested in the main run; here the hold on a button and the small map
   F.act('close'); const k = F.keepOf(0); F.addUnit(0, 'spear', k.x + 40, k.y + 40); 
   // a hold on a button (data-hold) survives a thumb that rolls a pixel or two (an audit, Nov 2); the lift after it is not a tap
   F.hudPage('war'); F.ui(true); const b = document.querySelector('#row [data-hold="whome"]'), r = b.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
@@ -90,7 +90,7 @@ QUICK = """async () => { const F = window.__fk, G = F.G, out = [];   // the stri
   // the small map (Albert, Nov 2): a tap jumps the camera, a drag sweeps it with the finger and launches nobody (the hold launch is cut)
   { F.hudPage('war'); F.ui(true); const m = document.getElementById('mini'), mr = m.getBoundingClientRect(), mev = (type, fx, fy) => m.dispatchEvent(new PointerEvent(type, { bubbles: true, clientX: mr.left + mr.width * fx, clientY: mr.top + mr.height * fy, pointerId: 2 }));
     mev('pointerdown', 0.2, 0.2); mev('pointermove', 0.6, 0.6); const cx = F.cam.x; mev('pointermove', 0.8, 0.8); if (!(F.cam.x > cx)) out.push('a drag on the small map did not sweep the camera');
-    await new Promise((r) => setTimeout(r, 420)); if (G.strike) out.push('a drag on the small map started a strike'); mev('pointerup', 0.8, 0.8); F.hudPage('jobs'); F.ui(true); }
+    await new Promise((r) => setTimeout(r, 420)); if (G.qa) out.push('a drag on the small map put the chips up'); mev('pointerup', 0.8, 0.8); F.hudPage('jobs'); F.ui(true); }
   return out; }"""
 def fixed_titles():
     import re, glob
@@ -130,23 +130,28 @@ PLAY = """async () => {
   F.act('qcancel:' + F.keepOf(0).id + ',' + q0); if (F.keepOf(0).q.length !== q0) out.push('a slot tap did not cancel the villager');
   tap('[data-act="move:wood"]'); if (!F.G.units.some(u => u.owner === 0 && u.kind === 'vil' && u.job === 'wood')) out.push('+ under Wood put nobody on wood');
   
-  // the strike (Albert, Nov 2, replaces the hold): a tap on open ground with no soldiers says "No soldiers yet"; with soldiers it puts a sword there
-  // (stage 1) and sends nobody; a tap on the sword makes it the reticle (stage 2); a tap on the reticle sends every soldier; a tap elsewhere moves the sword
+  // the quick action (Albert, Nov 3: a tap is a right click): nothing picked, a tap on open ground puts the sword and X there and sends nobody;
+  // the sword sends every soldier; a tap anywhere else only closes them; with soldiers picked, a tap is their order and no chips come
   { F.act('close'); G.fogOn = false; let p = null; for (let y = 260; y < 500 && !p; y += 23) for (let x = 60; x < 330 && !p; x += 23) if (F.hitAt(x, y).t === 'ground') p = [x, y];
-    const spot = F.hitAt(...p).e; F.tapAt(...p); if (!G.hint || G.hint.w !== F.HOLD_WORD.none) out.push('a tap on the ground with no soldiers did not say "No soldiers yet"'); if (G.strike) out.push('a tap with no soldiers put a sword down');
+    const spot = F.hitAt(...p).e, qa = () => document.getElementById('qa'); F.tapAt(...p);
+    if (!G.qa || qa().hidden) out.push('a tap on open ground put no sword down'); else if (!qa().querySelector('[data-act="qsword"].dis')) out.push('with no soldiers the sword was not dim');
+    F.act('qsword'); if (G.qa || !qa().hidden) out.push('the sword with no soldiers left the chips up');
     if (F.HOLD_WORD.attack) out.push('the words "Hold to launch attack" are still in the game');
-    const k = F.keepOf(0), S = [0, 1, 2].map((i) => F.addUnit(0, 'spear', k.x + 40 + i * 8, k.y + 40)); F.lastTapReset && F.lastTapReset();
-    const o0 = JSON.stringify(G.ords || {}), p2 = [p[0] + 60, p[1]]; F.tapAt(...p2); if (!G.strike || G.strike.stage !== 1) out.push('a tap on open ground did not put the sword down'); if (G.card) out.push('a tap on the ground opened a card');
-    const sx = F.SX(G.strike.x), sy = F.SY(G.strike.y); F.tapAt(sx, sy); if (!G.strike || G.strike.stage !== 2) out.push('a tap on the sword did not make it the reticle');
-    if (JSON.stringify(G.ords || {}) !== o0) out.push('the sword or the reticle sent soldiers before the last tap');
-    F.draw(); F.tapAt(sx, sy); if (G.strike) out.push('a tap on the reticle left it up'); if (!S.every((u) => u.ord || u.tx !== undefined || u.focus || (G.ords && Object.keys(G.ords).length))) out.push('a tap on the reticle did not send the army');
-    F.tapAt(...p); const q = [p[0], p[1] + 60]; if (F.hitAt(...q).t === 'ground') { F.tapAt(...q); if (!G.strike || Math.abs(F.SX(G.strike.x) - q[0]) > 2) out.push('a tap elsewhere did not move the sword'); }
-    for (const u of S) u.hp = 0; G.strike = null;
-    const e = F.addUnit(1, 'spear', spot.x, spot.y); G.rel[0][1] = G.rel[1][0] = 'war'; F.addUnit(0, 'spear', k.x + 30, k.y + 30); F.tapAt(F.SX(e.x), F.SY(e.y) - 6 * F.cam.z); if (G.strike) out.push('a tap on an enemy started a strike (it opens its card)');
-    e.hp = 0; G.rel[0][1] = G.rel[1][0] = 'neutral'; G.fogOn = true; }
+    const k = F.keepOf(0), S = [0, 1, 2].map((i) => F.addUnit(0, 'spear', k.x + 40 + i * 8, k.y + 40));
+    const o0 = JSON.stringify(G.ords || {}), p2 = [p[0] + 60, p[1]]; F.tapAt(...p2); if (!G.qa) out.push('a tap on open ground put no sword down'); if (G.card) out.push('a tap on the ground opened a card');
+    if (JSON.stringify(G.ords || {}) !== o0 || S.some((u) => u.state === 'goto')) out.push('the sword sent soldiers before it was tapped');
+    F.act('qsword'); if (G.qa) out.push('the sword left the chips up'); if (!S.every((u) => u.state === 'goto' || u.ord || u.tx !== undefined || u.focus || (G.ords && Object.keys(G.ords).length))) out.push('the sword did not send the army');
+    F.tapAt(...p); const n0 = !!G.qa; F.tapAt(p[0], p[1] + 60); if (n0 && G.qa) out.push('a tap elsewhere left the chips up (it only closes them)');
+    F.tapAt(...p); F.act('qclose'); if (G.qa) out.push('X did not close the chips');
+    for (const u of S) u.hp = 0;
+    const s1 = F.addUnit(0, 'spear', k.x + 30, k.y + 30); F.setPick([{ t: 'unit', id: s1.id }]); F.tapAt(...p2); if (G.qa) out.push('with a soldier picked, a tap on the ground put the chips up (it is the order)'); if (s1.state !== 'goto') out.push('with a soldier picked, a tap on the ground did not send it'); F.setPick([]); s1.hp = 0;
+    const e = F.addUnit(1, 'spear', spot.x, spot.y); G.rel[0][1] = G.rel[1][0] = 'war'; F.tapAt(F.SX(e.x), F.SY(e.y) - 6 * F.cam.z); if (G.qa) out.push('a tap on an enemy put the chips up (it opens its card)');
+    F.act('close'); e.hp = 0; G.rel[0][1] = G.rel[1][0] = 'neutral'; G.fogOn = true;
+    { const c2 = document.getElementById('cv').getContext('2d'), a0 = c2.arc.bind(c2), rs = []; c2.arc = (...a) => { rs.push(a[2]); return a0(...a); }; G.press = { x: 100, y: 300, t: performance.now() - 150 }; F.draw(); c2.arc = a0; G.press = null; if (rs.includes(26)) out.push("the hold's ring shows 150 ms into a touch (a tap must never see it)"); } }
   { const cx = document.getElementById('cv').getContext('2d'), f0 = cx.fillRect.bind(cx), seen = []; cx.fillRect = (...a) => { seen.push(a); return f0(...a); }; F.draw(); cx.fillRect = f0;   // the sky runs to the top (Albert, Nov 2)
     if (!seen.some((a) => a[1] === 0 && a[3] > 40 && a[3] < innerHeight * 0.4)) out.push('the sky does not run to the top of the screen'); }
-  { const cv0 = document.getElementById('cv'), k0 = cv0.width / cv0.getBoundingClientRect().width; cv0.style.width = '200px'; await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); if (Math.abs(cv0.width / cv0.getBoundingClientRect().width - k0) > 0.05 || cv0.width > 200 * k0 + 4) out.push('the map did not measure itself again after its box changed'); cv0.style.width = ''; await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); }
+  { const cv0 = document.getElementById('cv'), k0 = cv0.width / cv0.getBoundingClientRect().width; cv0.style.width = '200px'; await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); if (Math.abs(cv0.width / cv0.getBoundingClientRect().width - k0) > 0.05 || cv0.width > 200 * k0 + 4) out.push('the map did not measure itself again after its box changed'); cv0.style.width = ''; await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    const h0 = cv0.height; cv0.height = Math.round(h0 * 0.75); await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); if (cv0.height !== h0) out.push('a drawing measured wrong for its box (a quarter short) was not measured again on the next frame'); }
   // the cards (Build 70): Villager on the Town Center queues one in its line, and a tap on the queued one gives it back; the Market sells the
   // good picked; › on the Stores opens the book on its why; Build on a villager's job picker names it the builder of what is placed next
   { const k = F.keepOf(0), q0 = k.q.length; F.openCard({ type: 'bld', id: k.id }); tap('#card [data-act="train:vil"]'); if (k.q.length !== q0 + 1) out.push('Villager on the Town Center did not queue one');
@@ -233,8 +238,15 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
     F.hudPage('war'); G.hud.h = { t: 'ground', e: { x: k.x, y: k.y + 240 } }; F.act('wmid:direct'); F.ui(true);
     if (!document.querySelector('#row .midb [data-act="direct:0"]') || document.querySelector('#row .midb [data-act="direct:1"]').dataset.hold !== 'directh:1') bad.push('director: the middle has no moves, or no hold');
     F.act('direct:0'); if (!foot.every((u) => u.wall > G.t) || F.shapeOf(foot[0]).name !== 'Square' || F.temperOf(foot[0]) !== F.T_HOLD) bad.push('director: Shield wall did not stand the foot to the Square and hold');
-    for (const u of arch) u.cd = 2; F.act('direct:1'); if (!arch.every((u) => u.cd === 0)) bad.push('director: Loose did not line up the reload'); const h0 = foes.reduce((s, f) => s + f.hp, 0); run(3); if (!(foes.reduce((s, f) => s + f.hp, 0) < h0)) bad.push('director: the volley hit nobody');
+    run(4); { const D = foot[0].drill, slot = (u) => [u.gx * D.fx + u.gy * D.fy, -u.gx * D.fy + u.gy * D.fx], P = foot.map(slot), along = P.map((q) => q[0]), across = P.map((q) => q[1]), span = (L) => Math.max(...L) - Math.min(...L);   // Nov 3: the wall is a line facing the foe
+      if (!D || D.shape !== 'line') bad.push('director: Shield wall set no line'); else if (span(along) > 2 || span(across) < 3 * F.GRID.gap * 0.9) bad.push('director: the shield wall is not one rank across the foe (deep ' + span(along).toFixed(0) + ', wide ' + span(across).toFixed(0) + ')');
+      const fd = Math.hypot(foes[0].x - foot[0].x, foes[0].y - foot[0].y); if (D && (D.fx * (foes[0].x - foot[0].x) + D.fy * (foes[0].y - foot[0].y)) / fd < 0.5) bad.push('director: the shield wall does not face the foe'); }
+    for (const u of arch) u.cd = 2; F.act('direct:1'); if (!arch.every((u) => u.cd === 0)) bad.push('director: Loose did not line up the reload'); const h0 = foes.reduce((s, f) => s + f.hp, 0); run(4); if (!(foes.reduce((s, f) => s + f.hp, 0) < h0)) bad.push('director: the volley hit nobody');
+    { const D = arch[0].drill; if (!D || D.shape !== 'arc' || !D.arc) bad.push('director: Loose set no arc'); else { const off = arch.map((u) => Math.abs(Math.hypot(u.px + u.gx - D.arc.x, u.py + u.gy - D.arc.y) - D.arc.r)); if (Math.max(...off) > 1) bad.push('director: the places of the archers are not on one arc round the foe (off by ' + Math.max(...off).toFixed(1) + ')');
+      if (!(D.arc.r <= F.stats(0, 'archer').rng)) bad.push('director: the arc stands out of reach of the bows'); } }
     F.ui(true); if (!/[0-9]+ s/.test(document.querySelector('#row .midb [data-act="direct:1"]').innerText)) bad.push('director: the archers can volley again at once (no reload wait on the slot)');
+    { const a = F.addUnit(0, 'archer', k.x - 300, k.y + 120), R = F.stats(0, 'archer').rng; a.state = 'goto'; a.px = a.x; a.py = a.y; a.gx = 0; a.gy = 0; a.drill = { shape: 'arc', fx: 0, fy: 1, until: G.t + 30, px: a.px, py: a.py, arc: { x: a.x, y: a.y + R, r: R } };   // in its place, a foe in sight but past its reach: it stays in the arc
+      run(1); const f = F.addUnit(1, 'spear', a.x, a.y + R + 40); f.state = 'goto'; f.px = f.x; f.py = f.y; const x0 = a.x, y0 = a.y; run(1); if (Math.hypot(a.x - x0, a.y - y0) > 6) bad.push('director: an archer in the arc left its place to chase a foe past its reach'); a.hp = f.hp = 0; }
     { const n0 = G.mail.length; G.chargeT = { '0:all': G.t + 20 }; const was = horse.map((u) => [u.px, u.py].join()); F.act('direct:2'); if (horse.map((u) => [u.px, u.py].join()).join() !== was.join()) bad.push('director: winded riders were still sent'); G.chargeT = {}; }
     F.act('direct:2'); if (!horse.some((u) => u.chg > G.t)) bad.push('director: Charge did not set the riders charging'); F.ui(true); if (!/[0-9]+ s/.test(document.querySelector('#row .midb [data-act="direct:2"]').innerText)) bad.push('director: the wait of the riders is not on their slot');
     F.act('direct:3'); if (eb && !eng.every((u) => u.state === 'attack' && u.bid === eb.id)) bad.push('director: Bombard did not aim the engines at the enemy building'); run(20); if (eb && !(eb.hp < F.BLD.house.hp)) bad.push('director: Bombard did not hit the enemy building');
@@ -255,7 +267,7 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
   return bad; }"""
 async def main():
     fails = 0
-    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/text81.py', 'tests/saves.py', 'tests/moves.py', 'tests/combat.py', 'tests/wild.py', 'tests/ai.py', 'tests/map.py', 'tests/palette.py', 'tests/cards.py', 'tests/verbs.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
+    for t in ('tests/science.py', 'tests/history.py', 'tests/tables.py', 'tests/text81.py', 'tests/saves.py', 'tests/moves.py', 'tests/combat.py', 'tests/wild.py', 'tests/ai.py', 'tests/map.py', 'tests/palette.py', 'tests/cards.py', 'tests/verbs.py', 'tests/testfield.py'):   # the equations against their sources; every research step in its age (Builds 54 and 58); the tables hold together (Build 60)
         r = subprocess.run([sys.executable, t], capture_output=True, text=True); print(r.stdout.strip() or ('FAIL ' + t + ' ' + r.stderr[-300:])); fails += r.returncode != 0
     w = subprocess.run([sys.executable, 'tests/words.py'], capture_output=True, text=True); print(('PASS ' if w.returncode == 0 else 'FAIL ') + 'toasts and tips: 10 words at most', w.stdout.strip() if w.returncode else ''); fails += w.returncode != 0
     async with async_playwright() as p:

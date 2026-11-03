@@ -59,18 +59,18 @@ Three moves: **split** (a | b), **merge across**, **merge down**. Never split a 
 ## 6. The row (AGREED Oct 31; pictures `Slot 1 Gap`, `Row Pages` for Jobs and Train, `Mission Flow` for War)
 - **The cycle button** 🔄 sits on its own rank above slot 1 (one slot, 58 × 44, gap 6), the same icon on every page. The page shows by its tint. The cycle is **Jobs → War → Train**.
 - **Jobs:** slot 1 is People over the hammer, two whole slots with the 6 gap between; slots 2–6 the five jobs, each with − + under it. The hammer opens the Build menu: building is a job (Albert), the one way to build.
-- **War is the HUD:** slot 1 the target (aim) over Home; slots 2–5 the four squads, each showing its size and ETA, its pace under it as an info cell (fast, slow, fighting); slot 6 Go ✓ over Abort ✕. Tapping a squad opens its card, the squad builder (§8). An empty squad opens a new one.
+- **War is the HUD:** slot 1 the target (aim) over Home; the station's Squad page holds the three squads, Alpha, Bravo and Charlie, and Set Up (the three squads on one card, each opening its builder), each squad showing its size and ETA, its pace under it as an info cell (fast, slow, fighting). Tapping a squad sends it; holding it opens its card, the squad builder (§8). [2026-11-03 06:40]
 - **Train** as today: Orders over the squad recruits join; four kinds with − +; ✓ over ✕.
 - **Words under picture icons** (Oct 31; `Words Under Icons`, `In Game Jobs`, `In Game War`): an icon that pictures a thing carries its word: the 18 icon with its number beside it, the word at 12 under it (People, the jobs, Build, Target, Home, the squads, the cycle button's page name; on cards the stances and Gift). Symbols stand alone at 24: ✓ ✕ − + back × ☰, and the quick action (no words). A gate test measures every slot word at 375 pt and refuses the publish if one overflows, as for the titles.
 - **Tints:** Jobs as now; the battle station in Steel (`COLORS.md`), muted. [2026-11-02 16:56] Was: No panel behind the row on any page (Nov 2): the map shows between the slots. **The cycle button** is the same on every page: a chevron › over three page dots, the one you are on filled (↻ reads as reload). Cards are glass: Brown 1 at 92%, the map's shapes through it; no blur (it costs every frame). [2026-11-02 13:28]
 - **Cut:** the door, the Realm page, the Build page (two versions: Build 64's shuffling "what the town needs" page and the fixed two-rank draft, `Build Page (cut)`), the Squad page (its work moves into the squad card).
 
-## 7. The hold: launch an attack (Albert, Nov 2, 15:35; the quick action cut) [2026-11-02 15:41]
-- **Hold the ground or an enemy:** a point under the finger grows into a ring (34 across at full) over 1.5 s, white to red on the one gradient, a faint tint inside, "Hold to launch attack" over it. At full every soldier goes there and the ring snaps out (a little wider, gone). `LAUNCH` in `06-rules-tuning.js`. [2026-11-02 15:41]
-- **Let go, or drag, before it is full:** nothing is sent; a drag becomes the box. No soldiers: the words say "No soldiers yet" and no ring grows. [2026-11-02 15:41]
-- **A plain tap on the ground:** "Hold to launch attack" over the spot a moment, which teaches the hold; nothing else. **A double tap on the ground:** its Here card, as a double tap opens anything's card. With yours picked, a tap is their obvious order (Build 40). [2026-11-02 15:41]
-- Precedent: hold to confirm (games' high-stakes actions); a strike's radius growing (strategy games). [2026-11-02 15:41]
-- Cut (Nov 2): the quick action whole (the 2 × 2 block, then the sword, ✕, All, ☰, the bullseye), its verbs and its styles. [2026-11-02 15:41]
+## 7. The tap: a right click (Albert, Nov 3, 06:14) [2026-11-03 06:40]
+- **With yours picked, a tap is their obvious order:** villagers work a find, walk to ground, build a site; soldiers attack an enemy, walk to ground. A villager that cannot work a find says why ("Wolf near: nobody will work the gold yet"). [2026-11-03 06:40]
+- **With nothing picked, a tap on open ground** puts two round chips at the finger: the sword (every soldier goes there; dim, "No soldiers yet", with none) and ✕ toward the middle. A pan, a pinch, ✕ or a tap anywhere else closes them; that tap does nothing more. A tap on an enemy, a building or a find opens its card. [2026-11-03 06:40]
+- **A hold** (320 ms) on open ground starts the box; its ring shows only after 250 ms, so a tap never sees it. A double tap on the ground does nothing. [2026-11-03 06:40]
+- Precedent: the right click of a desktop strategy game; mobile strategy games (Rusted Warfare, Northgard) tap to order what is picked and confirm only the big order. [2026-11-03 06:40]
+- Cut (Nov 3): the strike (sword, reticle, send: three taps), and before it the hold that launched an attack (Nov 2). [2026-11-03 06:40]
 
 ## 8. Cards (pictures in `mockups/70/`)
 | Card | Layout | Picture |

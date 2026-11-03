@@ -4,6 +4,7 @@ const ptrs = new Map();
 let drag = null,
 	pinch = null;
 const HOLD_MS = 320,
+	PRESS_SHOW = 250, // ms before the hold's ring shows: a tap (under about 200 ms) never sees it (Albert, Nov 3)
 	DBL_MS = 320;
 let holdT = 0; // hold a finger: on one of yours, pick it and keep picking; on open ground, then drag: a box
 const holdStop = () => {
@@ -83,6 +84,7 @@ cv.addEventListener('pointerdown', (e) => {
 		dropDrag();
 		const [a, b] = [...ptrs.values()];
 		pinch = { d: dist(a, b) || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
+		if (G.qa) hideQuick(); // a pinch moves the map under the chips
 		return;
 	}
 	if (G.place && G.place.kind === 'wall') {
@@ -184,6 +186,7 @@ cv.addEventListener('pointermove', (e) => {
 		dy = e.clientY - drag.y;
 	if (!drag.moved && hyp(dx, dy) > 8) {
 		drag.moved = true;
+		if (G.qa) hideQuick(); // the map moved under the chips: they close
 		holdStop();
 	}
 	if (drag.moved) {
@@ -259,6 +262,7 @@ cv.addEventListener(
 		e.preventDefault();
 		const p = lp(e);
 		if (G) G.follow = false;
+		if (G && G.qa) hideQuick();
 		zoomAt(cam.z * Math.exp(-e.deltaY * 0.0015), p.x, p.y);
 	},
 	{ passive: false },
@@ -372,15 +376,13 @@ function tapAt(sx, sy) {
 		return;
 	}
 	if (G.hud.aim) return aimAt(sx, sy); // Aim: the next tap is the target
-	if (strikeTap(sx, sy)) return; // the sword, then the reticle, then the army goes (28-army-quick)
-	cancelStrike(); // a tap anywhere else: the sword goes (a tap on bare ground puts it down again, below)
+	if (G.qa) return hideQuick(); // the sword and ✕ are up: a tap anywhere else only closes them (28-army-quick)
 	const h = hitAt(sx, sy),
 		key = h.t === 'ground' ? 'ground' : h.t + h.e.id,
 		now = performance.now(),
 		dbl = key === lastTap.key && now - lastTap.t < DBL_MS && (key !== 'ground' || hyp(sx - lastTap.sx, sy - lastTap.sy) < 26);
-	lastTap = { key, t: now, sx, sy }; // a double tap on the ground opens the Here card for that spot (Albert, Nov 2), as on anything else
+	lastTap = { key, t: now, sx, sy };
 	if (dbl) {
-		G.hint = null;
 		if (h.t === 'ground') return; // the ground has no card (the Here card is cut, Nov 2)
 		setPick([]);
 		openCard(cardFor(h));
@@ -403,9 +405,9 @@ function tapAt(sx, sy) {
 			ACT.ordpick(String(O.id));
 			return;
 		} // the ring of a group on the march: tap it to pick the group
-		strikeAt(h.e.x, h.e.y);
+		showQuick(sx, sy, h.e.x, h.e.y);
 		return;
-	} // nothing picked: the sword appears there (Albert, Nov 2); with no soldiers, "No soldiers yet"
+	} // nothing picked: the sword and ✕ (Albert, Nov 3: a tap is a right click)
 	if (
 		h.t === 'bld' &&
 		h.e.owner === 0 &&
@@ -554,6 +556,7 @@ function order(S, h) {
 	} else if (h.t === 'node') {
 		vil.forEach((v) => {
 			setJob(v, e.type, e, e); // placed: the find is its anchor (decision 1)
+			v.sent = true; // your order: it outlasts a fright remembered there, and says why if it must leave
 			v.post = null;
 		});
 		go(sol, e.x, e.y + 14);

@@ -745,7 +745,7 @@ const EV_TEXT = {
 };
 // The row's words (MENU-SPEC §6): the word under each picture icon that is not a name from a table (RESOURCES, BN, CLS) or a pace (paceWord),
 // and the cycle button's page names. The gate measures every word a slot can show in its slot at 375 pt.
-const HOLD_WORD = { none: 'No soldiers yet' }; // over a tap on the ground with nobody to send (28-army-quick)
+const HOLD_WORD = { none: 'No soldiers yet' }; // the sword with nobody to send (28-army-quick)
 const ROW_WORD = {
 	jobs: 'Jobs',
 	war: 'War',

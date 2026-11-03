@@ -67,6 +67,7 @@ function frame(now) {
 			if (run) saveGame();
 		}
 		edgeScroll(d);
+		if (cv.width !== Math.round(cv.clientWidth * dpr) || cv.height !== Math.round(cv.clientHeight * dpr)) fit(); // the drawing no longer matches the map's box: measure again (the squashed map, Nov 2; the box observer misses a bad first measure)
 		draw();
 		ui();
 		if (run) shed(performance.now() - t0);
@@ -85,7 +86,6 @@ for (const ev of ['pointerdown', 'pointermove', 'wheel'])
 		{ passive: true, capture: true },
 	);
 window.addEventListener('resize', fit);
-if (window.ResizeObserver) new ResizeObserver(() => fit()).observe(cv); // a safety net: whenever the map's box changes size, its drawing is measured again (the squashed map, Nov 2)
 buildPanel();
 fit();
 newGame();
@@ -108,7 +108,75 @@ function spdPop(open) {
 		Math.max(4, Math.min(st.width - pop.offsetWidth - 4, r.left - st.left + r.width / 2 - pop.offsetWidth / 2)) +
 		'px';
 }
-{
+// The test field (Albert, Nov 3: "a test game where it's just me and one other enemy"): the page opened with ?test. You and one rival, at
+// war, no fog, no events, 5,000 of everything, the War Council's ladder researched, both armies on the field 600 apart, and a mine site
+// beside gold with a wolf at it. Never saved: your real game stays as it was.
+const TEST_FIELD = /[?&]test\b/.test(location.search);
+function testField() {
+	newGame(11);
+	G.test = true;
+	G.fogOn = false;
+	G.ev.next = 1e9;
+	for (let o = 1; o < WILD; o++)
+		if (o !== 1) {
+			G.P[o].alive = false;
+			G.units = G.units.filter((u) => u.owner !== o);
+			G.blds = G.blds.filter((b) => b.owner !== o);
+		}
+	G.rel[0][1] = G.rel[1][0] = 'war';
+	navRebuild();
+	const P = G.P[0],
+		k = keepOf(0),
+		open = (x, y) => x > 40 && y > 40 && x < MAP - 40 && y < MAP - 40 && !blockedCell(gcell(x, y), 0);
+	let ux = 0,
+		uy = 1,
+		best = -1;
+	for (let a = 0; a < 32; a++) {
+		const cx = Math.cos((a * Math.PI) / 16),
+			cy = Math.sin((a * Math.PI) / 16);
+		let n = 0;
+		for (let r = 100; r <= 820; r += 20) for (const sd of [-60, 0, 60]) n += open(k.x + cx * r - cy * sd, k.y + cy * r + cx * sd);
+		const sc = n + 20 * Math.abs(cy); // the most open way out, and up or down the screen so both armies fit on it
+		if (sc > best) [best, ux, uy] = [sc, cx, cy];
+	}
+	const at = (r, side) => ({ x: k.x + ux * r - uy * side, y: k.y + uy * r + ux * side });
+	for (const r of Object.keys(P.res)) P.res[r] = 5000;
+	P.age = Math.max(P.age, 2);
+	for (const t of ['engage', 'command', 'formations']) P.techs.add(t);
+	fxDirty();
+	const army = (o, r, list) =>
+		list.forEach(([kind, n], j) => {
+			for (let i = 0; i < n; i++) {
+				const p = at(r + j * 14, (i - (n - 1) / 2) * 12),
+					u = addUnit(o, kind, p.x, p.y);
+				if (u) {
+					u.state = 'goto';
+					u.px = p.x;
+					u.py = p.y;
+				}
+			}
+		});
+	army(0, 150, [['spear', 10], ['archer', 8], ['chariot', 4], ['catapult', 2]]);
+	army(1, 750, [['spear', 10], ['archer', 8], ['chariot', 4]]);
+	const g = at(140, 160),
+		gold = { id: NID++, kind: 'gold', type: 'gold', x: g.x, y: g.y, amt: 800, max: 800 };
+	G.nodes.push(gold);
+	const s = findSpot(0, 'mining', g.x - ux * 40, g.y - uy * 40, 10, 80);
+	if (s) build(0, 'mining', s.x, s.y);
+	addUnit(WILD, 'wolf', g.x + 24, g.y);
+	navRebuild();
+	const c = at(450, 0);
+	cam.x = c.x;
+	cam.y = c.y;
+	cam.z = 0.8;
+	clampCam();
+	say('Test field: one rival, both armies out. Never saved.', 'tip', TOAST.long);
+}
+if (TEST_FIELD) {
+	testField();
+	setPause(false);
+	lastSave = performance.now();
+} else {
 	const sv = readSave();
 	if (sv && sv.t > 20) {
 		holdSave = true;
@@ -151,8 +219,8 @@ window.__fk = {
 	groundSpd,
 	wearMul,
 	say,
-	strikeAt,
-	strikeTap,
+	showQuick,
+	quickGo,
 	direct,
 	shapeOf,
 	temperOf,
@@ -160,7 +228,7 @@ window.__fk = {
 	DIRECT_OF,
 	ofKind,
 	HOLD_WORD,
-	cancelStrike,
+	hideQuick,
 	capFor,
 	armyRoom,
 	capOf,
@@ -215,6 +283,7 @@ window.__fk = {
 	declareWar,
 	keepOf,
 	stats,
+	GRID,
 	fxv,
 	sendEnvoy,
 	canPlace,

@@ -227,7 +227,7 @@ function showEnd(won, text, all) {
 	$('endNext').hidden = $('endFree').hidden = !won;
 	$('end').hidden = false;
 	closeCard();
-	cancelStrike(); // the next game starts with nothing of this one open
+	hideQuick(); // the next game starts with nothing of this one open
 }
 // The page's own measures: how tall the orders are (the map's bottom edge) and where the map's middle sits between the bars
 function fit() {

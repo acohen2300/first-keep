@@ -334,9 +334,15 @@ function vilTick(u, dt, SP) {
 			(u.hunt && unsafe(u.hunt, u.owner)) ||
 			(u.node && u.node.kind === 'fish' && !dockNear(u.owner, u.node)))
 	) {
-		if (u.node && u.node.farm) crowd(u.node, -1);
-		u.node = null;
-		u.hunt = null;
+		const at = u.hunt || u.node,
+			why = u.node && u.node.kind === 'fish' && !dockNear(u.owner, u.node) ? { w: 'No dock near' } : dangerWhy(at, u.owner);
+		if (!(why.scare && u.sent && u.node && u.fn === u.node.id)) {
+			if (u.owner === 0 && u.sent) say(`${why.scare ? 'Someone was frightened here' : why.w}: a villager leaves the ${u.node ? nodeName(u.node).toLowerCase() : 'hunt'}.`, 'warn', TOAST.mid);
+			u.sent = false;
+			if (u.node && u.node.farm) crowd(u.node, -1);
+			u.node = null;
+			u.hunt = null;
+		} // your own order outlasts a fright remembered there (Albert, Nov 3); a real danger it does not, and it says why
 	} // work or game is on dangerous ground now, or a fisher's dock is gone (C15): leave it
 	if (u.hunt) {
 		huntTick(u, dt, SP);
@@ -590,6 +596,11 @@ function repairTick(u, dt, SP) {
 		// the site it was raising is done: the next unfinished piece of wall nearby, else back to what it was doing
 		u.building = false;
 		if (u.back) {
+			if (BLD[b.kind].drop && !u.plot && startWork(u, b)) {
+				u.back = false;
+				u.pn = u.pa = null;
+				return;
+			} // a mine, mill or lumber camp: its builder works the nearest find it serves (Albert, Nov 3, D-091 amended; Age of Empires II's camps)
 			backToWork(u);
 			return;
 		} // pulled off its work to raise this one (D-091): straight back to it

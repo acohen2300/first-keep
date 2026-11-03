@@ -298,7 +298,7 @@ function jobsPage() {
 }
 // The battle station (Albert, Nov 2, his drawings: "the controller"; the War Director, 28-army-quick): one page in place of War and Train, the row's 6 x 2 as three 2 x 2
 // blocks. Left, the Alarm's four orders (40-emergency). Middle, one joined block that changes: the small map (tap: the camera goes there;
-// hold: the army is launched there), or the four squads (tap: send it to the crosshair; hold: its card), or the four kinds to train (tap:
+// a drag sweeps it), or the three squads and Set Up (tap: send it to the crosshair; hold: its card), or the four kinds to train (tap:
 // one more; hold: one fewer), or the Director's four (tap: the kind's move; hold: its second). Right: Train (hold: new soldiers go to the
 // crosshair), Squad and Direct turn the middle, Attack sends every
 // ready squad there (hold: everyone home). The villagers' block brown (vb), the war block steel tinted red (wb), no state rings (EXCEPTIONS: a battle station is all live); a tap flashes red and
@@ -371,15 +371,14 @@ function rowUI() {
 }
 // the reticle (mock 24): brackets, three turning chevrons, a scan line, a sonar ring and short scope lines; its colour says what is under it; green once fired
 function drawReticle() {
-	const K = G.strike && G.strike.stage === 2 ? G.strike : null, // the strike's second stage is this same reticle (Albert, Nov 2)
-		H = K ? { h: { t: 'ground', e: K }, aimT: K.t0, drag: false } : G.hud;
-	if (!K && (!H.aim || !H.h)) return;
+	const H = G.hud;
+	if (!H.aim || !H.h) return;
 	const x = SX(H.h.e.x),
 		y = SY(H.h.e.y),
 		L = performance.now() - (H.firedT || -1e9) < timeOf('settle') ? 1 : 0,
 		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
 		t = still() ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
-		eta = K ? K.eta : hudEta(),
+		eta = hudEta(),
 		line = (a, b, c, d) => (ctx.moveTo(x + a, y + b), ctx.lineTo(x + c, y + d));
 	ctx.save();
 	ctx.strokeStyle = ctx.fillStyle = L ? codeOf('g') : aimColor(H.h);
@@ -436,7 +435,7 @@ function drawReticle() {
 	ctx.stroke();
 	ctx.font = mapFont(); // pinned to the screen
 	ctx.textAlign = 'center';
-	ctx.fillText(eta ? `${clock(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - R - 8);
+	ctx.fillText(eta ? `${clock(eta)} · ${coord(H.h.e.x, H.h.e.y)}` : coord(H.h.e.x, H.h.e.y), x, y - R - 20); // above the scope line's end (it ran through the words, Nov 3)
 	ctx.restore();
 }
 // ── the squad card (MENU-SPEC §8, picture Mission Flow): the squad builder while it is home, the live view while it is out (Build 61, one card, two states)

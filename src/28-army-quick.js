@@ -106,97 +106,84 @@ function guardRow(t, id) {
 		) + btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis'),
 	);
 }
-// an enemy the finger can send soldiers at: a beast that is not game (game is hunted from the bar) always; anyone else, the Natives and
-// their Throne too, while you are at war
-const foeOf = (e) =>
-	e.owner !== 0 && e.hp > 0 && (e.owner === WILD && !e.q && !e.native ? !UNIT[e.kind].meat : atWar(0, e.owner));
-// ── The strike (Albert, Nov 2, replaces the hold): tap empty ground and a sword shows there; tap the sword and it becomes the reticle;
-// tap the reticle and every soldier goes. A tap anywhere else moves the sword back to its first stage; a tap on an enemy opens its card.
-// G.strike: { x, y, stage: 1 sword | 2 reticle, eta }; G.hint: "No soldiers yet" over a tap with nobody to send
-const strikeNear = (sx, sy) => G.strike && hyp(sx - SX(G.strike.x), sy - SY(G.strike.y)) < 34;
-function strikeAt(x, y) {
-	if (!sendable().length) return (G.strike = null), (G.hint = { h: { e: { x, y } }, w: HOLD_WORD.none, t: performance.now() });
-	G.hint = null;
-	G.strike = { x, y, stage: 1 };
+// ── The quick action (Albert, Nov 3: "a tap on the ground like a right click"): with units picked, a tap is their order (26-input, order);
+// with nothing picked, a tap on open ground puts two chips there, the sword and ✕. The sword sends every soldier to the spot; ✕, a pan, or a
+// tap anywhere else closes them (that tap does nothing more). With no soldiers the sword is dim and says so. G.qa: the spot and the finger.
+function showQuick(sx, sy, x, y) {
+	const el = $('qa'),
+		r = $('stage').getBoundingClientRect(),
+		css = getComputedStyle(el),
+		gap = parseFloat(css.getPropertyValue('--gap')),
+		s = parseFloat(css.getPropertyValue('--slot')),
+		left = sx > r.width / 2, // the ✕ opens toward the middle
+		up = $('hud').getBoundingClientRect().bottom - r.top + gap,
+		down = $('orders').getBoundingClientRect().top - r.top - gap - s;
+	G.qa = { x, y };
+	el.hidden = false;
+	el.classList.toggle('left', left);
+	patchHTML(el, sym('qsword', ICON.sword, sendable().length ? 'go' : 'dis', 'Send every soldier here') + sym('qclose', ICON.close, '', 'Close'));
+	const w = el.offsetWidth;
+	el.style.left = clamp(left ? sx + s / 2 - w : sx - s / 2, gap, r.width - w - gap) + 'px';
+	el.style.top = clamp(sy - s / 2, up, down) + 'px';
 	feel('tick');
 }
-function strikeTap(sx, sy) {
-	const K = G.strike;
-	if (!K || !strikeNear(sx, sy)) return false;
-	if (K.stage === 1) {
-		K.stage = 2;
-		const S = sendable(), e = { x: K.x, y: K.y };
-		K.eta = S.length ? etaOf(S, e, routeK(centreOf(S), e)) : 0;
-		K.t0 = performance.now();
-		feel('snap');
-		return true;
-	}
-	const S = sendable();
-	if (S.length) order(S, { t: 'ground', e: { x: K.x, y: K.y } });
-	else say(freeWhy(), '', TOAST.mid);
-	G.strike = null;
-	feel('thock');
-	return true;
+function hideQuick() {
+	$('qa').hidden = true;
+	G.qa = null;
 }
-const cancelStrike = () => (G.strike = null);
-// the sword (a sword in a dark disc) at its spot, and the "No soldiers yet" words a tap with none left (the canvas, each frame; 21-view-frame)
-function drawStrike() {
-	const now = performance.now(), K = G.strike, I = G.hint;
-	if (I && now - I.t > timeOf('settle')) G.hint = null;
-	if (K && K.stage === 1) {
-		const x = SX(K.x), y = SY(K.y);
-		ctx.save();
-		ctx.globalAlpha = 0.7;
-		ctx.fillStyle = 'rgba(0,0,0,.7)';
-		ctx.beginPath();
-		ctx.arc(x, y, 18, 0, 7);
-		ctx.fill();
-		ctx.globalAlpha = 1;
-		ctx.strokeStyle = codeOf('w');
-		ctx.lineWidth = 2;
-		ctx.lineCap = 'round';
-		ctx.beginPath();
-		ctx.moveTo(x - 8, y + 8); ctx.lineTo(x + 8, y - 8); // the blade
-		ctx.moveTo(x - 6, y - 2); ctx.lineTo(x + 2, y + 6); // the guard
-		ctx.moveTo(x - 9, y + 9); ctx.lineTo(x - 11, y + 11); // the grip
-		ctx.stroke();
-		ctx.restore();
-	}
-	if (G.hint) {
-		ctx.save();
-		ctx.font = mapFont();
-		ctx.textAlign = 'center';
-		ctx.lineJoin = 'round';
-		ctx.globalAlpha = 1 - (now - I.t) / timeOf('settle');
-		ctx.strokeStyle = 'rgba(0,0,0,.75)';
-		ctx.lineWidth = 3;
-		ctx.strokeText(I.w, SX(I.h.e.x), SY(I.h.e.y) - 30);
-		ctx.fillStyle = codeOf('w');
-		ctx.fillText(I.w, SX(I.h.e.x), SY(I.h.e.y) - 30);
-		ctx.restore();
-	}
+function quickGo() {
+	const Q = G.qa,
+		S = sendable();
+	hideQuick();
+	if (!Q) return;
+	if (!S.length) return say(HOLD_WORD.none, '', TOAST.short);
+	order(S, { t: 'ground', e: { x: Q.x, y: Q.y } });
+	feel('thock');
 }
 // ── The War Director (06-rules-tuning, DIRECT): a tap on a kind in the station's middle is its move, a hold its second. Every soldier of
 // that kind that can be sent goes at once; the crosshair (G.hud.h) is where. Each returns what was said, or '' when nobody could go.
 const ofKind = (t) => sendable().filter((u) => clsOf(u.kind) === t);
 const aimH = () => G.hud.h || { t: 'ground', e: { x: cam.x, y: cam.y } };
+// a drill's shape on the ground (Albert, Nov 3: "form a line", "a semi circle or arc"): every soldier of S to its place round the point at,
+// facing dir, for secs; shape 'line' (one or two ranks across dir) or 'arc' (one rank on a circle round arc.x, arc.y of radius arc.r).
+// The shape lives on each soldier (u.drill) and is laid out by the army's own grid (12-sim-core), so any new order ends it.
+const drillOn = (u) => !!(u.drill && u.drill.until > G.t && u.drill.px === u.px && u.drill.py === u.py && u.state === 'goto');
+function dress(S, at, dir, shape, secs, arc) {
+	for (const u of S) {
+		u.state = 'goto';
+		u.px = at.x;
+		u.py = at.y;
+		u.idleT = 0;
+		u.drill = { shape, fx: dir.x, fy: dir.y, until: G.t + secs, px: at.x, py: at.y, arc: arc || null };
+	}
+}
 const DIRECT_WHY = { none: 'Nobody of that kind.', wheel: 'Nobody to wheel round.' };
 const DIRECTS = {
 	wall: (S) => {
+		const c = centreOf(S),
+			F = foesNear(c),
+			to = F.length ? centreOf(F) : aimH().e,
+			d = hyp(to.x - c.x, to.y - c.y) || 1;
 		for (const u of S) {
 			u.wall = G.t + DIRECT.wall;
-			u.state = 'goto';
-			u.px = u.x;
-			u.py = u.y;
 			u.focus = null;
 			u.tgt = null; // (an audit, Nov 2: a foe it was chasing would have pulled it out of the wall)
 		}
+		dress(S, c, { x: (to.x - c.x) / d, y: (to.y - c.y) / d }, 'line', DIRECT.wall);
 		return 'Shield wall!';
 	},
 	advance: (S) => (order(S, aimH()), 'Foot, advance!'),
 	loose: (S) => {
 		if (G.looseT > G.t) return `Reloading: ${Math.ceil(G.looseT - G.t)} s.`;
-		order(S, aimH());
+		const c = centreOf(S),
+			F = foesNear(c);
+		if (F.length) {
+			const f = centreOf(F),
+				d = hyp(c.x - f.x, c.y - f.y) || 1,
+				r = Math.min(...S.map((u) => stats(0, u.kind).rng)) * DIRECT.arc, // inside every bow's reach
+				at = { x: f.x + ((c.x - f.x) / d) * r, y: f.y + ((c.y - f.y) / d) * r };
+			dress(S, at, { x: -(c.x - f.x) / d, y: -(c.y - f.y) / d }, 'arc', DIRECT.loose * 3, { x: f.x, y: f.y, r });
+		} else order(S, aimH()); // no foe in sight: they go where the crosshair is, as before
 		for (const u of S) u.cd = 0; // the reload lined up: everyone in reach releases on the next step
 		G.looseT = G.t + DIRECT.loose;
 		return 'Archers, loose!';
