@@ -446,7 +446,7 @@ const UNIT = {
 		at: 'stable',
 		age: 1,
 		camp: 'outpost',
-		look: 'caravan',
+		look: 'wagon',
 		desc: 'A wagon and team from the Stable, packed with an outpost: send it to a spot and it unpacks into four tents and a tower in a strip; your foot soldiers raise them. One at a time; a second from the Classical age. On the road anyone at war with you can kill it.',
 	},
 	campcart: {
@@ -462,7 +462,7 @@ const UNIT = {
 		at: 'stable',
 		age: 2,
 		camp: 'camp',
-		look: 'caravan',
+		look: 'wagon',
 		desc: 'Two wagons packed with a war camp: a palisade with a gate, four towers at the corners, the four tents inside and a yard for 32 soldiers. Needs Camp wagons researched at the Stable. One at a time; a second from the Medieval age.',
 	},
 	caravan: {
@@ -16154,6 +16154,29 @@ const LOOKS = {
 		E_(-8.5, -18.6, 2.2, 2, c, INK, 0.3);
 		wheel(-7.5, -4.6, 4.4);
 	},
+	wagon: (c, t, fr) => {
+		// the camp wagon: two horses in file, a long bed, a canvas tilt on hoops with the side's colour along its edge, two wheels
+		horse({ coat: '#6a5a4a', saddle: false }, fr, 14);
+		horse({ coat: '#8a7a6a', saddle: false }, fr, 4);
+		L_(-6, -9, 2, -11, '#5a3a1c', 0.8);
+		planks(-22, -13, -4, -6, WOOD);
+		P_(
+			[
+				[-22, -13],
+				[-4, -13],
+				[-5, -22],
+				[-13, -25],
+				[-21, -22],
+			],
+			'#e4dcc6',
+			INK,
+			0.4,
+		); // the tilt
+		for (const x of [-18, -13, -8]) L_(x, -13, x, -22, '#d2c8ae', 0.6); // the hoops
+		L_(-21, -22, -5, -22, c, 1.4); // the side's colour
+		wheel(-17, -4.6, 4.6);
+		wheel(-8, -4.6, 4.6);
+	},
 	spy: (c, t, fr) =>
 		person(
 			{
@@ -16766,6 +16789,7 @@ const LOOKS = {
 const LOOKBOX = {
 	scout: [44, 34],
 	caravan: [36, 30],
+	wagon: [48, 32],
 	chariot: [36, 34],
 	cata: [58, 36],
 	malihorse: [58, 36],
@@ -17818,18 +17842,21 @@ const ART = {
 				[6, f - 6],
 				[-6, f - 4],
 			],
-			lit('#6b4a2a', -0.1),
+			lit('#4a3018', -0.2),
 			LINE,
 			0.4,
 		); // the trunk
+		E_(-7, f - 2, 2.2, 1.3, lit('#5a3c22', -0.3), LINE, 0.3); // the stump where the tree stood
 		for (const [x, y] of [
 			[-4, f - 4],
 			[-1, f - 5],
 			[2, f - 5.5],
 			[5, f - 6],
 		]) {
-			L_(x, y, x + 1.5, y - 5, lit(PLANK, -0.4), 1);
-			L_(x + 1.5, y - 5, x + 3, y - 3, lit(PLANK, -0.4), 0.8);
+			L_(x, y, x + 1.5, y - 5, lit('#4a3018', -0.1), 1.1);
+			L_(x + 1.5, y - 5, x + 3, y - 3, lit('#4a3018', -0.1), 0.9);
+			L_(x + 1.2, y - 4, x + 1.5, y - 5, '#e8dcc4', 0.9); // the sharpened point, pale
+			L_(x + 2.5, y - 3.6, x + 3, y - 3, '#e8dcc4', 0.8);
 		}
 	},
 	palisade(c) {
@@ -17973,7 +18000,8 @@ const ART = {
 			r = block(30, 22, civ === 'roman' ? PLASTER : civ === 'han' ? '#c9654a' : STONE, civ === 'roman' ? 'stone' : 'plank', civ === 'han' ? 'hip' : 'gable', roof, civ === 'han' ? 6 : 9);
 		for (const x of [-11, -5.5, 0, 5.5, 11]) P_([[x - 1.2, r.d / 2], [x + 1.2, r.d / 2], [x + 1.2, r.d / 2 - 16], [x - 1.2, r.d / 2 - 16]], lit(civ === 'roman' || civ === 'persian' ? PLASTER : PLANK, 0.1), LINE, 0.4); // the colonnade
 		door(0, r.d / 2, 4, 8);
-		banner(0, r.d / 2 - 24, c, 9);
+		L_(-14, r.d / 2 - 2, -14, r.d / 2 - 34, lit(PLANK, -0.4), 1.2); // the banner pole before the front
+		P_([[-14, r.d / 2 - 34], [-5, r.d / 2 - 31], [-14, r.d / 2 - 27]], c, LINE, 0.4);
 	},
 	store(c) {
 		// the storehouse: a long timber granary raised on stone staddles against damp and rats (the Roman horrea stood on pillars), a hip roof
@@ -20466,7 +20494,7 @@ function draw() {
 					? drawBld(e, sB)
 					: t === 2
 						? e.hid
-							? ((ctx.globalAlpha = 0.45), drawUnit(e, sU), (ctx.globalAlpha = 1)) // in ambush: half seen, so you know where they lie
+							? ((ctx.globalAlpha = 0.55), drawUnit(e, sU), (ctx.globalAlpha = 1), leavesOver(e)) // in ambush: half seen under a few leaves, so you know where they lie
 							: drawUnit(e, sU)
 						: t === 4
 							? drawFallen(e, sU)
@@ -20707,21 +20735,32 @@ function drawBld(b, s) {
 			}
 		} else if (k === 'caltrops') {
 			// a scatter of four-spiked irons, one spike always up; the squares trodden flat lose them one by one
-			ctx.strokeStyle = own ? 'rgba(90,100,110,.95)' : 'rgba(200,60,40,.9)';
-			ctx.lineWidth = Math.max(0.8, 0.9 * z);
-			const left = Math.max(1, CALTROPS.hits - (b.hits || 0));
+			const left = Math.max(1, CALTROPS.hits - (b.hits || 0)),
+				gl = 0.5 + 0.5 * Math.sin(G.t * 3 + b.id); // the glint of iron
+			ctx.lineCap = 'round';
 			for (let i = 0; i < left + 1; i++) {
-				const px = x + ((i * 7) % 11 - 5) * z * 0.8,
-					py = y + ((i * 5) % 7 - 3) * z * 0.5;
+				const px = x + ((i * 7) % 11 - 5) * z * 0.9,
+					py = y + ((i * 5) % 7 - 3) * z * 0.55;
+				ctx.strokeStyle = own ? 'rgba(30,34,40,.95)' : 'rgba(170,40,30,.95)';
+				ctx.lineWidth = Math.max(1, 1.3 * z);
 				ctx.beginPath();
 				ctx.moveTo(px, py);
-				ctx.lineTo(px, py - 3 * z);
-				ctx.moveTo(px - 2 * z, py + 1 * z);
-				ctx.lineTo(px + 2 * z, py + 1 * z);
+				ctx.lineTo(px, py - 3.5 * z);
+				ctx.moveTo(px - 2.2 * z, py + 1.2 * z);
+				ctx.lineTo(px + 2.2 * z, py + 1.2 * z);
 				ctx.moveTo(px, py);
-				ctx.lineTo(px + 1.5 * z, py + 2 * z);
+				ctx.lineTo(px + 1.8 * z, py + 2.2 * z);
 				ctx.stroke();
+				if (i === 0 && own) {
+					ctx.strokeStyle = `rgba(240,240,255,${0.3 + 0.6 * gl})`;
+					ctx.lineWidth = Math.max(0.6, 0.6 * z);
+					ctx.beginPath();
+					ctx.moveTo(px, py - 1.5 * z);
+					ctx.lineTo(px, py - 3.5 * z);
+					ctx.stroke();
+				}
 			}
+			ctx.lineCap = 'butt';
 		} else {
 			ctx.strokeStyle = own ? 'rgba(120,90,40,.9)' : 'rgba(200,60,40,.9)';
 			ctx.lineWidth = 1.2;
@@ -21082,6 +21121,8 @@ const PILE = {
 		['g', 'block', '#e0b83c'],
 	],
 	mill: [['f', 'sack', '#cdb27a']],
+	store: [['f', 'sack', '#cdb27a']],
+	depot: [['supply', 'sack', '#cdb27a']], // the camp's own stock (b.supply), not the town's
 };
 // the piles are drawn once per kind, counts and zoom into PSPR and stamped (Build 62: measured at 29% of a frame at a normal zoom as vector work)
 const PSPR = new Map();
@@ -21089,7 +21130,7 @@ function pileAt(b, sx, sy, z) {
 	if (b.prog < 1 || z < 0.45) return;
 	const w = BLD[b.kind].fp * NAVC * z,
 		R = G.P[b.owner].res,
-		ns = PILE[b.kind].map(([r]) => clamp(Math.round(Math.log10((R[r] || 0) + 1) * 1.9), 0, 6)), // a pyramid of 3, 2 and 1: full at about 1500
+		ns = PILE[b.kind].map(([r]) => clamp(Math.round(Math.log10((r === 'supply' ? b.supply || 0 : R[r] || 0) + 1) * 1.9), 0, 6)), // a pyramid of 3, 2 and 1: full at about 1500
 		key = `${b.kind}:${ns.join('')}:${z.toFixed(2)}`;
 	let c = PSPR.get(key);
 	if (!c) {
@@ -21407,6 +21448,22 @@ function drawFallen(f, s) {
 }
 const LEAN = new WeakMap(); // the view's own memory of each woodcutter's lean: the drawing never writes the game's units (Build 60)
 const PACED = new WeakMap(); // the view's memory of each unit's walk: when it last grew. A figure whose walk grew in the last 0.15 s is stepping
+// the leaves over a soldier in ambush (the visual pass, Nov 3): three leaf blobs in the wood's greens, swaying a little
+function leavesOver(u) {
+	const z = cam.z,
+		x = SX(u.x),
+		y = SY(u.y) - 8 * z,
+		t = G.t * 0.8 + u.id;
+	for (let i = 0; i < 3; i++) {
+		const a = t + i * 2.1,
+			px = x + (i - 1) * 4.5 * z + Math.sin(a) * z,
+			py = y + (i % 2) * 3 * z + Math.cos(a) * 0.6 * z;
+		ctx.fillStyle = i === 1 ? 'rgba(78,122,58,.9)' : 'rgba(96,142,66,.9)';
+		ctx.beginPath();
+		ctx.ellipse(px, py, 3.6 * z, 2.2 * z, 0.5 + i * 0.9, 0, 7);
+		ctx.fill();
+	}
+}
 function drawUnit(u, s) {
 	// a woodcutter leans in to its tree while it chops: the tree's ground keeps it 20 away, so it is drawn up to 12 closer (drawing only; the game does not move it)
 	const n = u.node,
@@ -21480,14 +21537,30 @@ function drawUnit(u, s) {
 	if (u.staked && z > 0.55) {
 		// the archer's stake (STAKES): two sharpened stakes leaning out in front of the shooter, the way it faces
 		const f = (u.fx || 1) < 0 ? -1 : 1;
-		ctx.strokeStyle = '#8a6644';
-		ctx.lineWidth = Math.max(1, 1.2 * z);
 		ctx.lineCap = 'round';
-		for (const o of [-3, 3]) {
+		for (const o of [-4, 0, 4]) {
+			const x0 = sx + f * 5 * z + o * z * 0.7,
+				y0 = sy + 1.5 * z + Math.abs(o) * 0.2 * z,
+				x1 = sx + f * 10 * z + o * z * 0.7,
+				y1 = sy - 5 * z;
+			ctx.strokeStyle = 'rgba(20,14,8,.35)';
+			ctx.lineWidth = Math.max(1.4, 1.8 * z);
 			ctx.beginPath();
-			ctx.moveTo(sx + f * 5 * z + o * z * 0.6, sy + 1.5 * z);
-			ctx.lineTo(sx + f * 9 * z + o * z * 0.6, sy - 4 * z);
+			ctx.moveTo(x0, y0 + 1);
+			ctx.lineTo(x1, y1 + 1);
+			ctx.stroke(); // the shadow
+			ctx.strokeStyle = '#a07a4c';
+			ctx.lineWidth = Math.max(1, 1.4 * z);
+			ctx.beginPath();
+			ctx.moveTo(x0, y0);
+			ctx.lineTo(x1, y1);
 			ctx.stroke();
+			ctx.strokeStyle = '#e8dcc4';
+			ctx.lineWidth = Math.max(0.8, 1 * z);
+			ctx.beginPath();
+			ctx.moveTo(x1 - f * 2 * z, y1 + 1.4 * z);
+			ctx.lineTo(x1, y1);
+			ctx.stroke(); // the pale point
 		}
 		ctx.lineCap = 'butt';
 	}
@@ -22595,7 +22668,7 @@ function drawLight(z, inView) {
 		flame(s.x, s.y - 30 * z, 'torch', z, s.o);
 	}
 }
-const HEARTH = new Set(['house', 'apartment', 'keep', 'town']); // where a fire is always lit after dark
+const HEARTH = new Set(['house', 'apartment', 'keep', 'town', 'messtent', 'hall']); // where a fire is always lit after dark (the mess tent's cooking fire, the Hall's lamps: Nov 3)
 // something of yours was hit: a red glow round the edge, fading over a second and a half
 function drawHitGlow() {
 	if (G.hitT !== undefined && G.t - G.hitT < 1.6) {

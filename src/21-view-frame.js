@@ -311,7 +311,7 @@ function draw() {
 					? drawBld(e, sB)
 					: t === 2
 						? e.hid
-							? ((ctx.globalAlpha = 0.45), drawUnit(e, sU), (ctx.globalAlpha = 1)) // in ambush: half seen, so you know where they lie
+							? ((ctx.globalAlpha = 0.55), drawUnit(e, sU), (ctx.globalAlpha = 1), leavesOver(e)) // in ambush: half seen under a few leaves, so you know where they lie
 							: drawUnit(e, sU)
 						: t === 4
 							? drawFallen(e, sU)

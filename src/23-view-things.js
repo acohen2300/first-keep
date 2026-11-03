@@ -32,21 +32,32 @@ function drawBld(b, s) {
 			}
 		} else if (k === 'caltrops') {
 			// a scatter of four-spiked irons, one spike always up; the squares trodden flat lose them one by one
-			ctx.strokeStyle = own ? 'rgba(90,100,110,.95)' : 'rgba(200,60,40,.9)';
-			ctx.lineWidth = Math.max(0.8, 0.9 * z);
-			const left = Math.max(1, CALTROPS.hits - (b.hits || 0));
+			const left = Math.max(1, CALTROPS.hits - (b.hits || 0)),
+				gl = 0.5 + 0.5 * Math.sin(G.t * 3 + b.id); // the glint of iron
+			ctx.lineCap = 'round';
 			for (let i = 0; i < left + 1; i++) {
-				const px = x + ((i * 7) % 11 - 5) * z * 0.8,
-					py = y + ((i * 5) % 7 - 3) * z * 0.5;
+				const px = x + ((i * 7) % 11 - 5) * z * 0.9,
+					py = y + ((i * 5) % 7 - 3) * z * 0.55;
+				ctx.strokeStyle = own ? 'rgba(30,34,40,.95)' : 'rgba(170,40,30,.95)';
+				ctx.lineWidth = Math.max(1, 1.3 * z);
 				ctx.beginPath();
 				ctx.moveTo(px, py);
-				ctx.lineTo(px, py - 3 * z);
-				ctx.moveTo(px - 2 * z, py + 1 * z);
-				ctx.lineTo(px + 2 * z, py + 1 * z);
+				ctx.lineTo(px, py - 3.5 * z);
+				ctx.moveTo(px - 2.2 * z, py + 1.2 * z);
+				ctx.lineTo(px + 2.2 * z, py + 1.2 * z);
 				ctx.moveTo(px, py);
-				ctx.lineTo(px + 1.5 * z, py + 2 * z);
+				ctx.lineTo(px + 1.8 * z, py + 2.2 * z);
 				ctx.stroke();
+				if (i === 0 && own) {
+					ctx.strokeStyle = `rgba(240,240,255,${0.3 + 0.6 * gl})`;
+					ctx.lineWidth = Math.max(0.6, 0.6 * z);
+					ctx.beginPath();
+					ctx.moveTo(px, py - 1.5 * z);
+					ctx.lineTo(px, py - 3.5 * z);
+					ctx.stroke();
+				}
 			}
+			ctx.lineCap = 'butt';
 		} else {
 			ctx.strokeStyle = own ? 'rgba(120,90,40,.9)' : 'rgba(200,60,40,.9)';
 			ctx.lineWidth = 1.2;
@@ -407,6 +418,8 @@ const PILE = {
 		['g', 'block', '#e0b83c'],
 	],
 	mill: [['f', 'sack', '#cdb27a']],
+	store: [['f', 'sack', '#cdb27a']],
+	depot: [['supply', 'sack', '#cdb27a']], // the camp's own stock (b.supply), not the town's
 };
 // the piles are drawn once per kind, counts and zoom into PSPR and stamped (Build 62: measured at 29% of a frame at a normal zoom as vector work)
 const PSPR = new Map();
@@ -414,7 +427,7 @@ function pileAt(b, sx, sy, z) {
 	if (b.prog < 1 || z < 0.45) return;
 	const w = BLD[b.kind].fp * NAVC * z,
 		R = G.P[b.owner].res,
-		ns = PILE[b.kind].map(([r]) => clamp(Math.round(Math.log10((R[r] || 0) + 1) * 1.9), 0, 6)), // a pyramid of 3, 2 and 1: full at about 1500
+		ns = PILE[b.kind].map(([r]) => clamp(Math.round(Math.log10((r === 'supply' ? b.supply || 0 : R[r] || 0) + 1) * 1.9), 0, 6)), // a pyramid of 3, 2 and 1: full at about 1500
 		key = `${b.kind}:${ns.join('')}:${z.toFixed(2)}`;
 	let c = PSPR.get(key);
 	if (!c) {
@@ -732,6 +745,22 @@ function drawFallen(f, s) {
 }
 const LEAN = new WeakMap(); // the view's own memory of each woodcutter's lean: the drawing never writes the game's units (Build 60)
 const PACED = new WeakMap(); // the view's memory of each unit's walk: when it last grew. A figure whose walk grew in the last 0.15 s is stepping
+// the leaves over a soldier in ambush (the visual pass, Nov 3): three leaf blobs in the wood's greens, swaying a little
+function leavesOver(u) {
+	const z = cam.z,
+		x = SX(u.x),
+		y = SY(u.y) - 8 * z,
+		t = G.t * 0.8 + u.id;
+	for (let i = 0; i < 3; i++) {
+		const a = t + i * 2.1,
+			px = x + (i - 1) * 4.5 * z + Math.sin(a) * z,
+			py = y + (i % 2) * 3 * z + Math.cos(a) * 0.6 * z;
+		ctx.fillStyle = i === 1 ? 'rgba(78,122,58,.9)' : 'rgba(96,142,66,.9)';
+		ctx.beginPath();
+		ctx.ellipse(px, py, 3.6 * z, 2.2 * z, 0.5 + i * 0.9, 0, 7);
+		ctx.fill();
+	}
+}
 function drawUnit(u, s) {
 	// a woodcutter leans in to its tree while it chops: the tree's ground keeps it 20 away, so it is drawn up to 12 closer (drawing only; the game does not move it)
 	const n = u.node,
@@ -805,14 +834,30 @@ function drawUnit(u, s) {
 	if (u.staked && z > 0.55) {
 		// the archer's stake (STAKES): two sharpened stakes leaning out in front of the shooter, the way it faces
 		const f = (u.fx || 1) < 0 ? -1 : 1;
-		ctx.strokeStyle = '#8a6644';
-		ctx.lineWidth = Math.max(1, 1.2 * z);
 		ctx.lineCap = 'round';
-		for (const o of [-3, 3]) {
+		for (const o of [-4, 0, 4]) {
+			const x0 = sx + f * 5 * z + o * z * 0.7,
+				y0 = sy + 1.5 * z + Math.abs(o) * 0.2 * z,
+				x1 = sx + f * 10 * z + o * z * 0.7,
+				y1 = sy - 5 * z;
+			ctx.strokeStyle = 'rgba(20,14,8,.35)';
+			ctx.lineWidth = Math.max(1.4, 1.8 * z);
 			ctx.beginPath();
-			ctx.moveTo(sx + f * 5 * z + o * z * 0.6, sy + 1.5 * z);
-			ctx.lineTo(sx + f * 9 * z + o * z * 0.6, sy - 4 * z);
+			ctx.moveTo(x0, y0 + 1);
+			ctx.lineTo(x1, y1 + 1);
+			ctx.stroke(); // the shadow
+			ctx.strokeStyle = '#a07a4c';
+			ctx.lineWidth = Math.max(1, 1.4 * z);
+			ctx.beginPath();
+			ctx.moveTo(x0, y0);
+			ctx.lineTo(x1, y1);
 			ctx.stroke();
+			ctx.strokeStyle = '#e8dcc4';
+			ctx.lineWidth = Math.max(0.8, 1 * z);
+			ctx.beginPath();
+			ctx.moveTo(x1 - f * 2 * z, y1 + 1.4 * z);
+			ctx.lineTo(x1, y1);
+			ctx.stroke(); // the pale point
 		}
 		ctx.lineCap = 'butt';
 	}
