@@ -709,7 +709,7 @@ function canPlace(o, kind, x, y) {
 				return 'Something is in the way';
 			}
 			// a lane on every side (Build 63: "buildings need buffers"); walls, gates and crops may touch anything
-			if (!B.wallish && !B.crop && !B.trap && !BLD[q.kind].wallish && !BLD[q.kind].crop && !BLD[q.kind].trap)
+			if (!B.wallish && !B.crop && !BLD[q.kind].wallish && !BLD[q.kind].crop && !BLD[q.kind].trap) // (a trap placed keeps no margin at all, above)
 				return 'Leave a gap: two squares round each building';
 			const touch = i === -1 || j === -1 || i === n || j === n; // the ring next to the footprint
 			if (touch && !BLD[q.kind].wallish && (TRAINERS.has(kind) || TRAINERS.has(q.kind)))
