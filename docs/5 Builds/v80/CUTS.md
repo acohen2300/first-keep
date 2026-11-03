@@ -401,3 +401,4 @@ Checks on main before publishing:
 - Built and cut the same morning (never published): the slider up the right edge (Albert, 09:40; cut 10:06 on his outside note: no haptics in Safari, Android's back gesture at the edge, the eyes off the battle; and it kept the ones nearest the middle of the screen, not the target). [2026-11-03 10:09]
 - Already in the game, out of date in the notes: prisoners and ransom; the hold-to-launch ring, Squads A to D, the battle station. [2026-11-03 10:09]
 - Tests: the controller's size check reads the tile's width (seven columns of 3), not the grid's track list (it counted an implicit column); the Town plant gives a page, not a crash; the drawing check waits 250 ms (the idle frame is 66 ms). [2026-11-03 10:09]
+- Test: the drilled archer's check moved to a fresh field at the end of the events test (in the busy field another foe pulled it, so its plant could not fail); now it fails on its plant. [2026-11-03 10:18]

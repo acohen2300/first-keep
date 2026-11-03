@@ -270,8 +270,6 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
     { const D = arch[0].drill; if (!D || D.shape !== 'arc' || !D.arc) bad.push('director: Loose set no arc'); else { const off = arch.map((u) => Math.abs(Math.hypot(u.px + u.gx - D.arc.x, u.py + u.gy - D.arc.y) - D.arc.r)); if (Math.max(...off) > 1) bad.push('director: the places of the archers are not on one arc round the foe (off by ' + Math.max(...off).toFixed(1) + ')');
       if (!(D.arc.r <= F.stats(0, 'archer').rng)) bad.push('director: the arc stands out of reach of the bows'); } }
     F.ui(true); if (!/[0-9]+ s/.test(document.querySelector('#row [data-act="kpick:1"]').innerText)) bad.push('director: the archers can volley again at once (no reload wait on the slot)');
-    { const a = F.addUnit(0, 'archer', k.x - 300, k.y + 120), R = F.stats(0, 'archer').rng; a.state = 'goto'; a.px = a.x; a.py = a.y; a.gx = 0; a.gy = 0; a.drill = { shape: 'arc', fx: 0, fy: 1, until: G.t + 30, px: a.px, py: a.py, arc: { x: a.x, y: a.y + R, r: R } };   // in its place, a foe in sight but past its reach: it stays in the arc
-      run(1); const f = F.addUnit(1, 'spear', a.x, a.y + R + 25); f.state = 'goto'; f.px = f.x; f.py = f.y; a.tgt = f; const x0 = a.x, y0 = a.y; run(1); if (Math.hypot(a.x - x0, a.y - y0) > 6) bad.push('director: an archer in the arc left its place to chase a foe past its reach'); a.hp = f.hp = 0; }
     { const n0 = G.mail.length; G.chargeT = { '0:all': G.t + 20 }; const was = horse.map((u) => [u.px, u.py].join()); F.act('direct:2'); if (horse.map((u) => [u.px, u.py].join()).join() !== was.join()) bad.push('director: winded riders were still sent'); G.chargeT = {}; }
     F.act('direct:2'); if (!horse.some((u) => u.chg > G.t)) bad.push('director: Charge did not set the riders charging'); F.ui(true); if (!/[0-9]+ s/.test(document.querySelector('#row [data-act="kpick:2"]').innerText)) bad.push('director: the wait of the riders is not on their slot');
     F.act('direct:3'); if (eb && !eng.every((u) => u.state === 'attack' && u.bid === eb.id)) bad.push('director: Bombard did not aim the engines at the enemy building'); run(20); if (eb && !(eb.hp < F.BLD.house.hp)) bad.push('director: Bombard did not hit the enemy building');
@@ -288,6 +286,11 @@ EVENTS_TEST = """() => { const F = window.__fk; F.SET.diff = 'normal'; F.newGame
     F.emgStart('hands'); run(15); const v = G.units.filter((u) => ids.has(u.id)), s2 = G.units.filter((u) => u.owner === 0 && u.state === 'garrison');
     if (!s2.length || !s2.every((u) => u.inside)) bad.push('emergency: soldiers did not garrison'); if (!v.every((u) => u.inside || u.safe)) bad.push('emergency: villagers are not under cover');
     F.emgStop(); run(10); if (v.some((u) => u.inside || u.emg)) bad.push('emergency: Stop left villagers inside'); if (v.map((u) => u.job).join(',') !== jobs) bad.push('emergency: Stop did not restore the jobs'); if (!s2.every((u) => u.inside)) bad.push('emergency: Stop moved the soldiers'); }
+  // the Director's drill (Nov 3), on a fresh field: an archer in its place in the arc, a foe in sight but past its reach: it stays in the arc
+  { F.newGame(5); F.act('close'); const G = F.G; G.fogOn = false; G.rel[0][1] = G.rel[1][0] = 'war'; F.setPause(false); F.step(1 / 30); const k = F.keepOf(0), run = (s) => { for (let i = 0; i < s * 30; i++) F.step(1 / 30); };
+    const a = F.addUnit(0, 'archer', k.x - 300, k.y + 120), R = F.stats(0, 'archer').rng; a.state = 'goto'; a.px = a.x; a.py = a.y; a.gx = 0; a.gy = 0; a.drill = { shape: 'arc', fx: 0, fy: 1, until: G.t + 30, px: a.px, py: a.py, arc: { x: a.x, y: a.y + R, r: R } };
+    run(1); const f = F.addUnit(1, 'spear', a.x, a.y + R + 25); f.state = 'goto'; f.px = f.x; f.py = f.y; a.tgt = f; const x0 = a.x, y0 = a.y; run(1);
+    if (Math.hypot(a.x - x0, a.y - y0) > 6) bad.push('director: an archer in the arc left its place to chase a foe past its reach'); }
   return bad; }"""
 async def main():
     fails = 0
