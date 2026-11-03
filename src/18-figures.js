@@ -1333,6 +1333,29 @@ const LOOKS = {
 		E_(-8.5, -18.6, 2.2, 2, c, INK, 0.3);
 		wheel(-7.5, -4.6, 4.4);
 	},
+	wagon: (c, t, fr) => {
+		// the camp wagon: two horses in file, a long bed, a canvas tilt on hoops with the side's colour along its edge, two wheels
+		horse({ coat: '#6a5a4a', saddle: false }, fr, 14);
+		horse({ coat: '#8a7a6a', saddle: false }, fr, 4);
+		L_(-6, -9, 2, -11, '#5a3a1c', 0.8);
+		planks(-22, -13, -4, -6, WOOD);
+		P_(
+			[
+				[-22, -13],
+				[-4, -13],
+				[-5, -22],
+				[-13, -25],
+				[-21, -22],
+			],
+			'#e4dcc6',
+			INK,
+			0.4,
+		); // the tilt
+		for (const x of [-18, -13, -8]) L_(x, -13, x, -22, '#d2c8ae', 0.6); // the hoops
+		L_(-21, -22, -5, -22, c, 1.4); // the side's colour
+		wheel(-17, -4.6, 4.6);
+		wheel(-8, -4.6, 4.6);
+	},
 	spy: (c, t, fr) =>
 		person(
 			{
@@ -1945,6 +1968,7 @@ const LOOKS = {
 const LOOKBOX = {
 	scout: [44, 34],
 	caravan: [36, 30],
+	wagon: [48, 32],
 	chariot: [36, 34],
 	cata: [58, 36],
 	malihorse: [58, 36],

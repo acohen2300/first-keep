@@ -954,18 +954,21 @@ const ART = {
 				[6, f - 6],
 				[-6, f - 4],
 			],
-			lit('#6b4a2a', -0.1),
+			lit('#4a3018', -0.2),
 			LINE,
 			0.4,
 		); // the trunk
+		E_(-7, f - 2, 2.2, 1.3, lit('#5a3c22', -0.3), LINE, 0.3); // the stump where the tree stood
 		for (const [x, y] of [
 			[-4, f - 4],
 			[-1, f - 5],
 			[2, f - 5.5],
 			[5, f - 6],
 		]) {
-			L_(x, y, x + 1.5, y - 5, lit(PLANK, -0.4), 1);
-			L_(x + 1.5, y - 5, x + 3, y - 3, lit(PLANK, -0.4), 0.8);
+			L_(x, y, x + 1.5, y - 5, lit('#4a3018', -0.1), 1.1);
+			L_(x + 1.5, y - 5, x + 3, y - 3, lit('#4a3018', -0.1), 0.9);
+			L_(x + 1.2, y - 4, x + 1.5, y - 5, '#e8dcc4', 0.9); // the sharpened point, pale
+			L_(x + 2.5, y - 3.6, x + 3, y - 3, '#e8dcc4', 0.8);
 		}
 	},
 	palisade(c) {
@@ -1109,7 +1112,8 @@ const ART = {
 			r = block(30, 22, civ === 'roman' ? PLASTER : civ === 'han' ? '#c9654a' : STONE, civ === 'roman' ? 'stone' : 'plank', civ === 'han' ? 'hip' : 'gable', roof, civ === 'han' ? 6 : 9);
 		for (const x of [-11, -5.5, 0, 5.5, 11]) P_([[x - 1.2, r.d / 2], [x + 1.2, r.d / 2], [x + 1.2, r.d / 2 - 16], [x - 1.2, r.d / 2 - 16]], lit(civ === 'roman' || civ === 'persian' ? PLASTER : PLANK, 0.1), LINE, 0.4); // the colonnade
 		door(0, r.d / 2, 4, 8);
-		banner(0, r.d / 2 - 24, c, 9);
+		L_(-14, r.d / 2 - 2, -14, r.d / 2 - 34, lit(PLANK, -0.4), 1.2); // the banner pole before the front
+		P_([[-14, r.d / 2 - 34], [-5, r.d / 2 - 31], [-14, r.d / 2 - 27]], c, LINE, 0.4);
 	},
 	store(c) {
 		// the storehouse: a long timber granary raised on stone staddles against damp and rats (the Roman horrea stood on pillars), a hip roof

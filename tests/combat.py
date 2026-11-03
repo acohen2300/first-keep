@@ -223,6 +223,9 @@ JS = """() => {
     if (F.campWhyTrain(0, 'camp')) bad.push('store: a Camp wagon refused with a Store standing: ' + F.campWhyTrain(0, 'camp'));
     if (Math.abs(F.fxv(0, 'spoil').m / s0 - 0.5) > 1e-6) bad.push('store: food does not spoil half as fast (' + (F.fxv(0, 'spoil').m / s0).toFixed(2) + ')');
     if (Math.abs(F.fxv(0, 'eat', F.unitKeys('spear')).m / e0 - 0.9) > 1e-6 || F.fxv(0, 'eat', F.unitKeys('vil')).m !== v0) bad.push('store: the ration is not a tenth off for soldiers alone');
+    { for (const u of G.units) if (u.owner === 0 && u.kind !== 'vil') u.hp = 0; for (let i = 0; i < 8; i++) { const u = F.addUnit(0, 'spear', k.x + 60 + i * 8, k.y + 60); u.state = 'goto'; u.px = u.x; u.py = u.y; } F.step(T);
+      const bill = () => { const f0 = P.res.f; P.res.f = 5000; F.upkeepTick(); const d = 5000 - P.res.f; P.res.f = f0; return d; }; const with_ = bill(); st.hp = 0; F.fxDirty(); const without = bill(); st.hp = 400; F.fxDirty();
+      const shares = 8 * 1.5 * F.UPKEEP.share * F.fxv(0, 'eat').m; if (!(Math.abs(without - with_ - shares * 0.1) < shares * 0.03)) bad.push('store: the upkeep did not fall by a tenth of the share of the soldiers (' + (without - with_).toFixed(3) + ' against ' + (shares * 0.1).toFixed(3) + ')'); }
     G.mkt = G.mkt || {}; G.mkt.f = 0.25; const m1 = F.mkt('f'), m0 = F.mkt('f', 0); if (!(m1 > 1.5 && Math.abs(m0 - 1 - (m1 - 1) * 0.5) < 1e-6)) bad.push('store: the price swing is not halved for its owner (' + m1.toFixed(2) + ' against ' + m0.toFixed(2) + ')'); G.mkt.f = 1;
     // Learning by doing: three farms standing, each yields 10% more; four, 15%; the cap at four past the first
     const farms = []; for (let i = 0; i < 6 && farms.length < 6; i++) { const q = F.findSpot(0, 'farm', k.x, k.y, 100, 400); if (!q) break; const b = F.mkBld(0, 'farm', q.x, q.y, 1); G.blds.push(b); F.navRebuild(); farms.push(b); }
@@ -239,7 +242,7 @@ JS = """() => {
     const ft = F.addUnit(1, 'spear', o.x, o.y); ft.state = 'goto'; ft.px = ft.x; ft.py = ft.y; const f0 = ft.hp; run(1); if (!(ft.hp < f0 && ft.hp > f0 - ft.max * F.CALTROPS.horse)) bad.push('field: a foot soldier on caltrops was hurt like a horse, or not at all'); e.hp = 0; ft.hp = 0;
     // the archers' stake: a shooter that has stood with the research; a horse that strikes it is hurt, its charge ends, it is thrown back
     const a = F.addUnit(0, 'archer', o.x + 60, o.y + 60), rd = F.addUnit(1, 'chariot', o.x + 66, o.y + 60); a.state = 'goto'; a.px = a.x; a.py = a.y; a.mvT = G.t - 10; rd.chg = G.t + 5;
-    F.hurt(1, rd, a, 1); if (a.staked) bad.push('field: a shooter without the research has a stake'); P.techs.add('archerstakes'); F.step(T); if (!a.staked) bad.push('field: a shooter that has stood five seconds has no stake');
+    F.step(T); a.mvT = G.t - 10; F.step(T); if (a.staked) bad.push('field: a shooter without the research has a stake'); P.techs.add('archerstakes'); F.step(T); if (!a.staked) bad.push('field: a shooter that has stood five seconds has no stake');
     const r0 = rd.hp, rx = rd.x; F.hurt(1, rd, a, 1); if (!(rd.hp < r0 - rd.max * F.STAKES.dmg * 0.9 && rd.chg <= G.t && Math.abs(rd.x - rx) > F.STAKES.shove * 0.5)) bad.push('field: a horse on the stake was not hurt, stopped and thrown back (' + (r0 - rd.hp).toFixed(1) + ', moved ' + Math.abs(rd.x - rx).toFixed(1) + ')');
     a.mvT = G.t; F.step(T); if (a.staked) bad.push('field: a shooter that moved kept its stake'); rd.hp = 0; a.hp = 0; });
   // ── the Hall (Nov 3, Albert 13:15): one a side, named by the people; three specialities each, only for that people; the hooks the new fx need ──

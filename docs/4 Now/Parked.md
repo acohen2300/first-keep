@@ -170,3 +170,4 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - Field defences (stakes, caltrops, lilia, abatis, chevaux de frise, the Wagenburg): the report is `docs/4 Now/Field defences.md`; each waits for a yes. [2026-11-03 13:30]
 - Camps step 3: the computers' own camps and outposts, and the Wagenburg (a fort of wagons you do not unpack, Gunpowder). [2026-11-03 13:30]
 - Built and now open to a yes or no: the Camp wagon reads the Stone granary as the game's warehouse; Albert said "Warehouse", and the game has no building of that name. [2026-11-03 13:30]
+- A burst of birds when an ambush springs, and a dust puff under a horse on a stake (the visual pass, Nov 3). [2026-11-03 14:12]

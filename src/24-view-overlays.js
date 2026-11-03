@@ -633,7 +633,7 @@ function drawLight(z, inView) {
 		flame(s.x, s.y - 30 * z, 'torch', z, s.o);
 	}
 }
-const HEARTH = new Set(['house', 'apartment', 'keep', 'town']); // where a fire is always lit after dark
+const HEARTH = new Set(['house', 'apartment', 'keep', 'town', 'messtent', 'hall']); // where a fire is always lit after dark (the mess tent's cooking fire, the Hall's lamps: Nov 3)
 // something of yours was hit: a red glow round the edge, fading over a second and a half
 function drawHitGlow() {
 	if (G.hitT !== undefined && G.t - G.hitT < 1.6) {

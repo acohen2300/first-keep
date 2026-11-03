@@ -79,7 +79,7 @@ const UNIT = {
 		at: 'stable',
 		age: 1,
 		camp: 'outpost',
-		look: 'caravan',
+		look: 'wagon',
 		desc: 'A wagon and team from the Stable, packed with an outpost: send it to a spot and it unpacks into four tents and a tower in a strip; your foot soldiers raise them. One at a time; a second from the Classical age. On the road anyone at war with you can kill it.',
 	},
 	campcart: {
@@ -95,7 +95,7 @@ const UNIT = {
 		at: 'stable',
 		age: 2,
 		camp: 'camp',
-		look: 'caravan',
+		look: 'wagon',
 		desc: 'Two wagons packed with a war camp: a palisade with a gate, four towers at the corners, the four tents inside and a yard for 32 soldiers. Needs Camp wagons researched at the Stable. One at a time; a second from the Medieval age.',
 	},
 	caravan: {
