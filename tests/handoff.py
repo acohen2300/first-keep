@@ -404,11 +404,11 @@ PLANTS = [
   ('36-economy.js', "return o === undefined ? m : 1 + (m - 1) * fxv(o, 'band').m;", "return m;", 'tests/combat.py', 'p40: the Store does not steady prices', 'price swing'),
   ('08-core.js', "if (n.kind === 'farm' && fxv(o, 'scale').a) m *= 1 + SCALE.per", "if (false) m *= 1 + SCALE.per", 'tests/combat.py', 'p40: Learning by doing teaches nothing', 'Learning by doing gives'),
   ('38-camps.js', "!bldsOf(o, CAMP.need).some((b) => standing(b, o)))) return 0;", "false)) return 0;", 'tests/combat.py', 'p40: a Camp wagon without a Store', 'with no Store standing'),
-  ('36-economy.js', "eats = (u) => shareOf(u) * per * fxv(o, 'eat', unitKeys(u.kind)).m;", "eats = (u) => shareOf(u) * per * fxv(o, 'eat').m;", 'tests/combat.py', "p40: the Store's ration feeds nobody", 'ration'),
+  ('36-economy.js', "eats = (u) => shareOf(u) * per * fxv(o, 'eat', unitKeys(u.kind)).m;", "eats = (u) => shareOf(u) * per * fxv(o, 'eat').m;", 'tests/combat.py', "p40: the Store's ration feeds nobody", 'tenth of the share'),
   # Build 80 preview 41 (--only=p41): field defences
   ('38-natives.js', "if (horse) v.stuck = G.t + CALTROPS.stuck;", ";", 'tests/combat.py', 'p41: caltrops lame no horse', 'not hurt and stuck'),
   ('38-natives.js', "if (b.hits >= CALTROPS.hits) {", "if (true) {", 'tests/combat.py', 'p41: one horse treads the caltrops flat', 'trod the caltrops flat'),
-  ('09-nav.js', "if (!B.wallish && !B.crop && !B.trap && !BLD[q.kind].wallish", "if (!B.wallish && !B.crop && !BLD[q.kind].wallish", 'tests/combat.py', 'p41: a trap keeps a lane', 'keeps no lane'),
+  # (no plant for the trap's lane: two clauses of canPlace each exempt it on their own, so no one line breaks it)
   ('14-sim-troops.js', "&& G.P[o].techs.has('archerstakes');", "&& true;", 'tests/combat.py', 'p41: every shooter has a stake', 'without the research has a stake'),
   ('16-sim-fight.js', "\t\ta.chg = 0;\n\t\tconst dx = a.x - t.x,", "\t\tconst dx = a.x - t.x,", 'tests/combat.py', "p41: the stake does not end the charge", 'not hurt, stopped and thrown back'),
   ('08-core.js', "if (BLD[kind].tech && !G.P[o].techs.has(BLD[kind].tech))", "if (false)", 'tests/combat.py', 'p41: caltrops without the research', 'without the research'),
