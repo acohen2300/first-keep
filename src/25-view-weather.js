@@ -90,8 +90,8 @@ function drawWeather() {
 			}
 			if (age > 0.45) continue;
 			const rr = NS_rng((b.seed * 1e6) | 1); // the same jagged path every frame
-			const x1 = SX(b.x),
-				y1 = SY(b.y),
+			const x1 = SX(b.x, b.y),
+				y1 = SY(b.y, 0, b.x),
 				paths = [],
 				main = [];
 			let x = x1 + (rr() - 0.5) * 80,

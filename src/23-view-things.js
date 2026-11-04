@@ -1,9 +1,95 @@
 // ═════ 23-view-things.js: buildings, smoke and fire, ripples and sparks, nodes, units, finds ═════
+// The wall mold (preview 50, Albert: "this solves the wall heft problems"): a wall, a gate or a palisade is not a stamped picture but a box
+// drawn in place on the turned ground: its top (a diamond, lit), its two near faces (south toward the screen's lower left, east toward the
+// lower right, the east in shade), and merlons along the top of each open face. A face shared with a wallish neighbour is not drawn, so a
+// run of walls reads as one wall; the sort by x + y lays them back to front. Three colours a kind, one shape for all.
+const WALL_LOOK = {
+	wall: { top: '#b5b0a3', s: '#a29d90', e: '#7d786d', merlon: true },
+	gate: { top: '#9a7a52', s: '#8a6a44', e: '#5a3a1c', door: true },
+	palisade: { top: '#9a7a52', s: '#8a6a44', e: '#5f4324', spike: true },
+};
+let WALL_KEYS = new Set(),
+	wallKeysAt = -1;
+const wkey = (x, y) => `${Math.round(x / NAVC)},${Math.round(y / NAVC)}`;
+function wallKeys() {
+	if (wallKeysAt === G.tick) return WALL_KEYS;
+	wallKeysAt = G.tick;
+	WALL_KEYS = new Set();
+	for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && WALL_LOOK[b.kind]) WALL_KEYS.add(wkey(b.x, b.y));
+	return WALL_KEYS;
+}
+function drawWallBox(b) {
+	const L = WALL_LOOK[b.kind],
+		K = wallKeys(),
+		H = BLD[b.kind].h * Math.min(1, Math.max(0.15, b.prog)),
+		x0 = b.x - 5,
+		x1 = b.x + 5,
+		y0 = b.y - 5,
+		y1 = b.y + 5,
+		c = (x, y, h = 0) => [SX(x, y), SY(y, h, x)],
+		poly = (pts, fill) => {
+			ctx.beginPath();
+			pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+			ctx.closePath();
+			ctx.fillStyle = fill;
+			ctx.fill();
+		},
+		openS = !K.has(wkey(b.x, b.y + NAVC)), // nothing wallish south: that face shows
+		openE = !K.has(wkey(b.x + NAVC, b.y)),
+		z = cam.z;
+	if (openS) poly([c(x0, y1), c(x1, y1), c(x1, y1, H), c(x0, y1, H)], L.s);
+	if (openE) poly([c(x1, y0), c(x1, y1), c(x1, y1, H), c(x1, y0, H)], L.e);
+	poly([c(x0, y0, H), c(x1, y0, H), c(x1, y1, H), c(x0, y1, H)], L.top);
+	if (L.merlon && z > 0.7) {
+		// merlons: two on each open face's top edge, and the walk's parapet line
+		const m = 3;
+		ctx.fillStyle = L.top;
+		if (openS) for (const t of [0.15, 0.6]) poly([c(x0 + 10 * t, y1, H), c(x0 + 10 * t + 2.5, y1, H), c(x0 + 10 * t + 2.5, y1, H + m), c(x0 + 10 * t, y1, H + m)], L.s);
+		if (openE) for (const t of [0.15, 0.6]) poly([c(x1, y0 + 10 * t, H), c(x1, y0 + 10 * t + 2.5, H), c(x1, y0 + 10 * t + 2.5, H + m), c(x1, y0 + 10 * t, H + m)], L.e);
+	}
+	if (L.door) {
+		ctx.fillStyle = '#2a1a0a';
+		if (openS) poly([c(b.x - 2.5, y1), c(b.x + 2.5, y1), c(b.x + 2.5, y1, H * 0.7), c(b.x - 2.5, y1, H * 0.7)], '#2a1a0a');
+		if (openE) poly([c(x1, b.y - 2.5), c(x1, b.y + 2.5), c(x1, b.y + 2.5, H * 0.7), c(x1, b.y - 2.5, H * 0.7)], '#1e1208');
+	}
+	if (L.spike) {
+		ctx.strokeStyle = '#3e2a14';
+		ctx.lineWidth = Math.max(0.6, 0.5 * z);
+		ctx.beginPath();
+		for (const t of [0.2, 0.5, 0.8]) {
+			const [ax, ay] = c(x0 + 10 * t, y1, H), [bx, by] = c(x0 + 10 * t, y1, H + 3);
+			ctx.moveTo(ax, ay);
+			ctx.lineTo(bx, by);
+		}
+		ctx.stroke();
+	}
+	// the edge where the top meets the faces, faint, so the box reads
+	ctx.strokeStyle = 'rgba(30,22,16,.35)';
+	ctx.lineWidth = Math.max(0.5, 0.4 * z);
+	ctx.beginPath();
+	const [tx, ty] = c(x1, y1, H);
+	if (openS) {
+		const [ax, ay] = c(x0, y1, H);
+		ctx.moveTo(ax, ay);
+		ctx.lineTo(tx, ty);
+	}
+	if (openE) {
+		const [ax, ay] = c(x1, y0, H);
+		ctx.moveTo(ax, ay);
+		ctx.lineTo(tx, ty);
+	}
+	ctx.stroke();
+}
 function drawBld(b, s) {
+	if (WALL_LOOK[b.kind] && b.prog >= 1) {
+		drawWallBox(b);
+		flagsOn(bldSprite(b, s), SX(b.x, b.y), SY(b.y, 0, b.x), cam.z, G.P[b.owner].color, b.id);
+		return;
+	}
 	if (BLD[b.kind].trap) {
 		const z = cam.z,
-			x = SX(b.x),
-			y = SY(b.y),
+			x = SX(b.x, b.y),
+			y = SY(b.y, 0, b.x),
 			k = BLD[b.kind].trap,
 			own = b.owner === 0 || friendly(0, b.owner);
 		if (b.prog < 1) {
@@ -71,8 +157,8 @@ function drawBld(b, s) {
 		return;
 	}
 	const z = cam.z,
-		sx = SX(b.x),
-		sy = SY(b.y),
+		sx = SX(b.x, b.y),
+		sy = SY(b.y, 0, b.x),
 		B = BLD[b.kind],
 		c = bldSprite(b, s),
 		k = z / s;
@@ -83,7 +169,7 @@ function drawBld(b, s) {
 		ctx.strokeStyle = '#d8c79c';
 		ctx.lineWidth = 1.5;
 		ctx.setLineDash([3, 3]);
-		ctx.strokeRect(sx - w / 2, sy - d / 2, w, d);
+		wrect(b.x - (B.fp * NAVC) / 2, b.y - (B.fp * NAVC) / 2, B.fp * NAVC, B.fp * NAVC, true); // the stakes round the footprint, on the turned ground (preview 50)
 		ctx.setLineDash([]);
 		const top = c.ay * k,
 			show = 0.15 + 0.85 * b.prog;
@@ -304,16 +390,16 @@ function sunShadows(N, list, z, far) {
 			const h = NODE_H[n.kind];
 			if (!h || n.amt <= 0 || deep.has(n.id) || (G.fogOn && fogAt(n.x, n.y) === 0)) continue;
 			const f = (0.6 + 0.4 * Math.min(1, n.amt / n.max)) * (n.kind === 'tree' ? 1.4 : 1);
-			shadowPath(SX(n.x), SY(n.y), h * f, (n.kind === 'tree' ? 7 : 5) * f * z, z);
+			shadowPath(SX(n.x, n.y), SY(n.y, 0, n.x), h * f, (n.kind === 'tree' ? 7 : 5) * f * z, z);
 		}
 	for (const [, t, e] of list) {
 		if (t === 1) {
 			const B = BLD[e.kind];
-			if (!B.crop) boxShadow(SX(e.x), SY(e.y), B.h * Math.min(1, e.prog), B.fp * NAVC * 0.5 * z, z);
+			if (!B.crop) boxShadow(SX(e.x, e.y), SY(e.y, 0, e.x), B.h * Math.min(1, e.prog), B.fp * NAVC * 0.5 * z, z);
 		} else if (t === 2) {
 			const U = UNIT[e.kind],
 				box = LOOKBOX[U.look] || [26, 30];
-			shadowPath(SX(e.x), SY(e.y), box[1] * FIG, box[0] * 0.28 * z * FIG + 2, z);
+			shadowPath(SX(e.x, e.y), SY(e.y, 0, e.x), box[1] * FIG, box[0] * 0.28 * z * FIG + 2, z);
 		}
 	}
 	ctx.fill();
@@ -533,7 +619,7 @@ function ripDraw() {
 		ctx.strokeStyle = RIPS[i].col;
 		ctx.globalAlpha = 1 - a;
 		ctx.lineWidth = 2;
-		ring(SX(RIPS[i].x), SY(RIPS[i].y), (6 + a * 18) * z, (6 + a * 18) * z * TILT);
+		ring(SX(RIPS[i].x, RIPS[i].y), SY(RIPS[i].y, 0, RIPS[i].x), (6 + a * 18) * z, (6 + a * 18) * z * TILT);
 		ctx.globalAlpha = 1;
 	}
 }
@@ -546,8 +632,8 @@ function sparkDraw() {
 	});
 	for (const k of SPARKS) {
 		const a = (G.t - k.t) / 0.3,
-			x = SX(k.x),
-			y = SY(k.y) - 6 * z;
+			x = SX(k.x, k.y),
+			y = SY(k.y, 0, k.x) - 6 * z;
 		ctx.strokeStyle = `rgba(255,${(200 - a * 80) | 0},90,${1 - a})`;
 		ctx.lineWidth = 1.4;
 		ctx.beginPath();
@@ -604,7 +690,7 @@ function viewNodes(a, b, far) {
 			y1 = (q(b.y) + 1) * 40;
 		NV.arr = G.nodes
 			.filter((n) => n.kind !== 'farm' && !(far && n.kind === 'tree') && n.x > x0 && n.x < x1 && n.y > y0 && n.y < y1)
-			.sort((p, r) => p.y - r.y);
+			.sort((p, r) => p.x + p.y - (r.x + r.y)); // back to front in the turned view (preview 50)
 		NV.ref = G.nodes;
 		NV.len = G.nodes.length;
 		NV.key = key;
@@ -613,8 +699,8 @@ function viewNodes(a, b, far) {
 }
 function drawNode(n, s) {
 	const z = cam.z,
-		sx = SX(n.x),
-		sy = SY(n.y);
+		sx = SX(n.x, n.y),
+		sy = SY(n.y, 0, n.x);
 	if (n.kind === 'fish') {
 		if (still()) return;
 		const ph = (G.t * 0.5 + n.id * 0.13) % 1;
@@ -678,8 +764,8 @@ function drawStandards(z, inView) {
 		if (g.n < 5) continue;
 		const c = { x: g.x / g.n, y: g.y / g.n };
 		if (!inView(c)) continue;
-		const x = SX(c.x),
-			y = SY(c.y),
+		const x = SX(c.x, c.y),
+			y = SY(c.y, 0, c.x),
 			h = 30 * z,
 			col = G.P[g.o].color,
 			r = 6 * z + 2,
@@ -737,7 +823,7 @@ function drawFallen(f, s) {
 		r = (still() ? 1 : Math.min(1, a / 0.35)) * (Math.PI / 2) * -f.face; // falls back, away from the way it faced
 	ctx.save();
 	ctx.globalAlpha = a < 0.7 ? 1 : 1 - (a - 0.7) / 0.7;
-	ctx.translate(SX(f.x), SY(f.y));
+	ctx.translate(SX(f.x, f.y), SY(f.y, 0, f.x));
 	ctx.rotate(r);
 	if (f.face < 0) ctx.scale(-1, 1);
 	ctx.drawImage(c, -c.ax * k, -c.ay * k, c.width * k, c.height * k);
@@ -748,8 +834,8 @@ const PACED = new WeakMap(); // the view's memory of each unit's walk: when it l
 // the leaves over a soldier in ambush (the visual pass, Nov 3): three leaf blobs in the wood's greens, swaying a little
 function leavesOver(u) {
 	const z = cam.z,
-		x = SX(u.x),
-		y = SY(u.y) - 8 * z,
+		x = SX(u.x, u.y),
+		y = SY(u.y, 0, u.x) - 8 * z,
 		t = G.t * 0.8 + u.id;
 	for (let i = 0; i < 3; i++) {
 		const a = t + i * 2.1,
@@ -774,8 +860,8 @@ function drawUnit(u, s) {
 		ux = u.node ? ix + (u.node.x - ix) * ln : ix,
 		uy = u.node ? iy + (u.node.y - iy) * ln : iy;
 	const z = cam.z,
-		sx = SX(ux),
-		sy = SY(uy) - (u.fly || 0) * z,
+		sx = SX(ux, uy),
+		sy = SY(uy, 0, ux) - (u.fly || 0) * z,
 		U = UNIT[u.kind],
 		col = G.P[u.owner].color,
 		st = u.owner === WILD ? null : stats(u.owner, u.kind);
@@ -977,8 +1063,8 @@ function drawUnit(u, s) {
 }
 function drawFind(f) {
 	const z = cam.z,
-		x = SX(f.x),
-		y = SY(f.y),
+		x = SX(f.x, f.y),
+		y = SY(f.y, 0, f.x),
 		F = FINDS[f.kind];
 	if (f.kind === 'camp' && !f.done) flame(x, y + 1.5 * z, 'campfire', z, f.id); // the robbers' fire, before the tents (the glow comes with the lights)
 	ctx.save();
@@ -1326,7 +1412,7 @@ function drawPicks(z) {
 		const own = e.owner,
 			r = e.q ? halfOf(e) + 6 : !e.kind || FINDS[e.kind] ? 18 : 9;
 		ctx.strokeStyle = own === 0 ? '#5ad27a' : own === undefined || own === null || own === WILD ? '#ffd35e' : '#ff6a52';
-		ring(SX(e.x), SY(e.y), r * z + 3, r * z * TILT + 2);
+		ring(SX(e.x, e.y), SY(e.y, 0, e.x), r * z + 3, r * z * TILT + 2);
 	}
 }
 const rnd2 = () => lookDice() * 2 - 1;

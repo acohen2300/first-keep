@@ -23,8 +23,8 @@ function drawRadar(wv, wv2) {
 	if (!near) return;
 	let n = 0;
 	for (const u of G.sol || []) if (u.owner === near.owner && u.hp > 0 && dist(u, near) < 150 && visibleTo0(u)) n++;
-	const px = SX(near.x),
-		py = SY(near.y),
+	const px = SX(near.x, near.y),
+		py = SY(near.y, 0, near.x),
 		dx = px - cw / 2,
 		dy = py - ch / 2,
 		m = 30,

@@ -130,7 +130,7 @@ JS = r"""() => {
   { F.act('close'); G.fogOn = true; const cell = (n) => Math.min(Math.max((n.y / 40) | 0, 0), Math.sqrt(G.fog.length) - 1) * Math.sqrt(G.fog.length) + Math.min(Math.max((n.x / 40) | 0, 0), Math.sqrt(G.fog.length) - 1);
     let done = false;
     for (const n of G.nodes.filter((x) => x.kind !== 'farm' && x.amt > 0 && F.fogAt(x.x, x.y) === 0)) {
-      const c = cell(n), was = G.fog[c]; F.cam.x = n.x; F.cam.y = n.y; const at = [F.SX(n.x), F.SY(n.y) - 6 * F.cam.z];
+      const c = cell(n), was = G.fog[c]; F.cam.x = n.x; F.cam.y = n.y; const at = [F.SX(n.x, n.y), F.SY(n.y, 0, n.x) - 6 * F.cam.z];
       G.fog[c] = 1; const seen = F.hitAt(...at); G.fog[c] = 0; const hid = F.hitAt(...at); G.fog[c] = was;
       if (seen.t !== 'node' || seen.e !== n) continue; // something else is under the finger there: try another
       done = true; if (hid.t === 'node' && hid.e === n) bad.push(`E4: a ${n.kind} under the fog was tapped open`); break; }

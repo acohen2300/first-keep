@@ -156,11 +156,17 @@ let vy = 0; // the map is full screen; the view centres on the band between the 
 /* fit() is in 32-frame.js: it reads the page's bars */
 let bandH = 0; // the height of the clear band between the top bars and the jobs (fit sets it)
 function clampCam() {
-	const hw = cw / 2 / cam.z,
-		half = (bandH || ch) / 2 / (cam.z * TILT);
-	cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID));
-	cam.y = clamp(cam.y, Math.min(half, MID), Math.max(MAP - half, MID));
-} // the map's edges can come up to the bars, never under them (Albert, Build 40)
+	// in the turned frame: u = x − y runs −MAP..MAP across the diamond, v = x + y runs 0..2MAP down it; the screen's half sizes in those units.
+	// The screen may reach RIM past the diamond's points (the sea and the cliffs fill its corners), never further (Albert, Build 40; Nov 4)
+	const hu = cw / 2 / (cam.z * TURN),
+		hv = (bandH || ch) / 2 / (cam.z * TURN * TILT),
+		u = cam.x - cam.y,
+		v = cam.x + cam.y,
+		cu = clamp(u, Math.min(-MAP + hu - RIM, 0), Math.max(MAP - hu + RIM, 0)),
+		cv_ = clamp(v, Math.min(hv - RIM, MAP), Math.max(2 * MAP - hv + RIM, MAP));
+	cam.x = (cu + cv_) / 2;
+	cam.y = (cv_ - cu) / 2;
+}
 // The camera glides as a critically damped spring (ζ = 1, no overshoot; the standard smoothing of a value toward a target, one ω for every
 // phone whatever its frame rate). camGo sets the target; the frame moves the camera. One home for every glide: Follow, Home, the small map,
 // a card's "go there", an alert. A drag or a pinch is yours and stops it.
@@ -207,15 +213,48 @@ function followCam(dt) {
 	clampCam();
 	if (!G.follow && Math.abs(cam.x - cam.tx) < 0.3 && Math.abs(cam.y - cam.ty) < 0.3) camStop();
 }
-const SX = (x) => (x - cam.x) * cam.z + cw / 2;
-const SY = (y, h) => (y - cam.y) * cam.z * TILT + ch / 2 + vy - (h || 0) * cam.z;
-const toWorld = (sx, sy) => ({ x: (sx - cw / 2) / cam.z + cam.x, y: (sy - ch / 2 - vy) / (cam.z * TILT) + cam.y });
-const minZ = () => Math.min(cw / MAP, ch / (MAP * TILT)) || 0.2;
+// The turned view (preview 50): a world point goes to the screen by u = (x − y) across and v = (x + y) down, each scaled by TURN (1/√2) so a
+// walk of d along either axis is d × z long on the screen's diagonal; v is squashed by TILT; a height h stands straight up, unsquashed.
+// DX and DY turn a world offset into a screen offset. wmat is the same map as a canvas matrix, for anything drawn flat on the ground in
+// world units (the ground's pictures, the fog, a footprint): set it, draw in world units, then flat puts the plain one back.
+const SX = (x, y = 0) => (x - y - (cam.x - cam.y)) * cam.z * TURN + cw / 2;
+const SY = (y, h, x = 0) => (x + y - (cam.x + cam.y)) * cam.z * TURN * TILT + ch / 2 + vy - (h || 0) * cam.z;
+const DX = (dx, dy) => (dx - dy) * cam.z * TURN,
+	DY = (dx, dy) => (dx + dy) * cam.z * TURN * TILT;
+const toWorld = (sx, sy) => {
+	const u = (sx - cw / 2) / (cam.z * TURN) + (cam.x - cam.y),
+		v = (sy - ch / 2 - vy) / (cam.z * TURN * TILT) + (cam.x + cam.y);
+	return { x: (u + v) / 2, y: (v - u) / 2 };
+};
+const dWorld = (sdx, sdy) => {
+	const du = sdx / (cam.z * TURN),
+		dv = sdy / (cam.z * TURN * TILT);
+	return { x: (du + dv) / 2, y: (dv - du) / 2 };
+}; // a screen drag as a world move
+const wmat = (c = ctx) => c.setTransform(dpr * cam.z * TURN, dpr * cam.z * TURN * TILT, -dpr * cam.z * TURN, dpr * cam.z * TURN * TILT, dpr * SX(0, 0), dpr * SY(0, 0, 0));
+const flat = (c = ctx) => c.setTransform(dpr, 0, 0, dpr, 0, 0);
+// the world box the screen sees: the four screen corners turned back; margin m in world units
+function viewBox(m = 0) {
+	const P = [toWorld(0, 0), toWorld(cw, 0), toWorld(0, ch), toWorld(cw, ch)];
+	return { x0: Math.min(...P.map((p) => p.x)) - m, y0: Math.min(...P.map((p) => p.y)) - m, x1: Math.max(...P.map((p) => p.x)) + m, y1: Math.max(...P.map((p) => p.y)) + m };
+}
+// a world rectangle flat on the ground, filled (or stroked) under the turned matrix: a footprint, a cell, a wall's square
+function wrect(x, y, w, h, stroke) {
+	wmat();
+	if (stroke) {
+		ctx.lineWidth = 1 / (cam.z * TURN);
+		ctx.strokeRect(x, y, w, h);
+	} else ctx.fillRect(x, y, w, h);
+	flat();
+}
+const DIAG = MAP * 2 * TURN; // the map's width on the screen at zoom 1 (its diagonal)
+const minZ = () => Math.min(cw / DIAG, ch / (DIAG * TILT)) || 0.2;
 function zoomAt(nz, sx, sy) {
 	const w = toWorld(sx, sy);
 	cam.z = clamp(nz, minZ(), ZOOM_MAX);
-	cam.x = w.x - (sx - cw / 2) / cam.z;
-	cam.y = w.y - (sy - ch / 2 - vy) / (cam.z * TILT);
+	const d = dWorld(sx - cw / 2, sy - ch / 2 - vy);
+	cam.x = w.x - d.x;
+	cam.y = w.y - d.y;
 	clampCam();
 }
 const quant = (v) => {

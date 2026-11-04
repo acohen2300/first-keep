@@ -22,8 +22,11 @@ function edgeScroll(dt) {
 		vx = EDGE.x < m ? -1 : EDGE.x > cw - m ? 1 : 0,
 		vy = EDGE.y < m ? -1 : EDGE.y > ch - m ? 1 : 0;
 	if (!vx && !vy) return;
-	cam.x += (vx * 320 * dt) / cam.z;
-	cam.y += (vy * 320 * dt) / (cam.z * TILT);
+	{
+		const d = dWorld(vx * 320 * dt, vy * 320 * dt); // the screen's push, turned into the world's (preview 50)
+		cam.x += d.x;
+		cam.y += d.y;
+	}
 	clampCam();
 	ghostAt(EDGE, drag.touch);
 }
@@ -42,7 +45,7 @@ function wallSet(pl) {
 	pl.cells = P.length > 1 ? P.slice(1).flatMap((c, i) => wallLine(P[i], c).slice(i ? 1 : 0)) : P.slice();
 	pl.at = P.length ? { x: P[P.length - 1].gx * NAVC + 5, y: P[P.length - 1].gy * NAVC + 5 } : null;
 }
-const wallXY = (c) => ({ x: SX(c.gx * NAVC + 5), y: SY(c.gy * NAVC + 5) });
+const wallXY = (c) => ({ x: SX(c.gx * NAVC + 5, c.gy * NAVC + 5), y: SY(c.gy * NAVC + 5, 0, c.gx * NAVC + 5) });
 function wallHit(pl, p) {
 	const R = 24,
 		P = pl.pts.map(wallXY);
@@ -97,8 +100,8 @@ cv.addEventListener('pointerdown', (e) => {
 	if (G.place) {
 		const touch = e.pointerType !== 'mouse',
 			at = G.place.at,
-			gx = at ? SX(at.x) : 0,
-			gy = at ? SY(at.y) : 0,
+			gx = at ? SX(at.x, at.y) : 0,
+			gy = at ? SY(at.y, 0, at.x) : 0,
 			nearGhost =
 				!at ||
 				Math.min(hyp(p.x - gx, p.y - gy), hyp(p.x - gx, p.y - (touch ? LIFT : 0) - gy)) <
@@ -157,8 +160,11 @@ cv.addEventListener('pointermove', (e) => {
 		if (G) G.follow = false; // a pinch is yours: the camera stops following
 		camStop();
 		zoomAt((cam.z * d) / pinch.d, mx, my);
-		cam.x -= (mx - pinch.mx) / cam.z;
-		cam.y -= (my - pinch.my) / (cam.z * TILT);
+		{
+			const d = dWorld(mx - pinch.mx, my - pinch.my);
+			cam.x -= d.x;
+			cam.y -= d.y;
+		}
 		clampCam();
 		pinch.d = d;
 		pinch.mx = mx;
@@ -202,8 +208,11 @@ cv.addEventListener('pointermove', (e) => {
 	if (drag.moved) {
 		if (G) G.follow = false; // a drag is yours too
 		camStop();
-		cam.x = drag.cx - dx / cam.z;
-		cam.y = drag.cy - dy / (cam.z * TILT);
+		{
+			const d = dWorld(dx, dy);
+			cam.x = drag.cx - d.x;
+			cam.y = drag.cy - d.y;
+		}
 		clampCam();
 	}
 });
@@ -294,8 +303,9 @@ mini.addEventListener('pointerdown', (e) => {
 		mini.setPointerCapture(e.pointerId);
 	} catch (err) {} // the finger stays the map's until it lifts, even off its edge (an audit, Nov 2)
 	const r = mini.getBoundingClientRect(),
-		x = ((e.clientX - r.left) / r.width) * MAP,
-		y = ((e.clientY - r.top) / r.height) * MAP;
+		w = miniWorld(((e.clientX - r.left) / r.width) * 172, ((e.clientY - r.top) / r.height) * 172),
+		x = clamp(w.x, 0, MAP),
+		y = clamp(w.y, 0, MAP);
 	camGo(x, y);
 	miniAt = { x: e.clientX, y: e.clientY, pan: false };
 });
@@ -307,8 +317,9 @@ mini.addEventListener('pointermove', (e) => {
 	if (miniAt.pan) {
 		const r = mini.getBoundingClientRect();
 		camStop();
-		cam.x = clamp(((e.clientX - r.left) / r.width) * MAP, 0, MAP);
-		cam.y = clamp(((e.clientY - r.top) / r.height) * MAP, 0, MAP);
+		const w = miniWorld(((e.clientX - r.left) / r.width) * 172, ((e.clientY - r.top) / r.height) * 172);
+		cam.x = clamp(w.x, 0, MAP);
+		cam.y = clamp(w.y, 0, MAP);
 		clampCam();
 	} // and a drag on the small map sweeps the camera with it, no glide (Albert, Nov 2)
 });
@@ -328,7 +339,7 @@ function hitAt(sx, sy) {
 			ud = Math.max(16, 9 * z);
 		for (const v of G.units)
 			if (!v.inside && visibleTo0(v)) {
-				const d = hyp(SX(v.x) - sx, SY(v.y) - 6 * z - sy);
+				const d = hyp(SX(v.x, v.y) - sx, SY(v.y, 0, v.x) - 6 * z - sy);
 				if (d < ud) {
 					ud = d;
 					u = v;
@@ -339,10 +350,10 @@ function hitAt(sx, sy) {
 	for (const b of G.blds) {
 		// footprint: the ground it stands on; roof: the height drawn above it
 		const B = BLD[b.kind],
-			w = Math.max(B.fp * NAVC * z, 22),
-			x = SX(b.x),
-			gy = SY(b.y),
-			d = B.fp * NAVC * z * TILT;
+			w = Math.max(B.fp * NAVC * z * 2 * TURN, 22),
+			x = SX(b.x, b.y),
+			gy = SY(b.y, 0, b.x),
+			d = B.fp * NAVC * z * 2 * TURN * TILT; // the footprint's box on the turned screen (preview 50)
 		if ((B.trap && !trapShown(b)) || !knownB(b)) continue;
 		if (sx <= x - w / 2 - 4 || sx >= x + w / 2 + 4 || sy >= gy + d / 2 + 4) continue;
 		if (sy > gy - d / 2 - 4) {
@@ -356,7 +367,7 @@ function hitAt(sx, sy) {
 		}
 	}
 	if (foot) return { t: 'bld', e: foot };
-	const near = (x, y, r) => hyp(SX(x) - sx, SY(y) - 6 * z - sy) < r;
+	const near = (x, y, r) => hyp(SX(x, y) - sx, SY(y, 0, x) - 6 * z - sy) < r;
 	const f = G.finds.find((f) => !(f.done && FINDS[f.kind].got) && known0(f) && near(f.x, f.y, Math.max(22, 14 * z)));
 	if (f) return { t: 'find', e: f };
 	if (roof) return { t: 'bld', e: roof };
@@ -365,7 +376,7 @@ function hitAt(sx, sy) {
 	for (const n of G.nodes)
 		if (n.kind !== 'farm' && (!G.fogOn || fogAt(n.x, n.y) > 0)) {
 			// a find under the fog is not there to tap: the same test the drawing uses (E4)
-			const d = hyp(SX(n.x) - sx, SY(n.y) - 6 * z - sy);
+			const d = hyp(SX(n.x, n.y) - sx, SY(n.y, 0, n.x) - 6 * z - sy);
 			if (d < nr) {
 				nr = d;
 				nd = n;
@@ -451,7 +462,7 @@ function ordAt(sx, sy) {
 		bd = 26;
 	for (const id in G.ords || {}) {
 		const O = G.ords[id],
-			d = hyp(SX(O.x) - sx, SY(O.y) - sy);
+			d = hyp(SX(O.x, O.y) - sx, SY(O.y, 0, O.x) - sy);
 		if (O.n && d < bd) {
 			bd = d;
 			best = O;

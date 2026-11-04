@@ -78,7 +78,7 @@ function aimSpot(sx, sy) {
 }
 const aimNear = (sx, sy) => {
 	const H = G.hud;
-	return H.aim && H.h && hyp(sx - SX(H.h.e.x), sy - SY(H.h.e.y)) < 56;
+	return H.aim && H.h && hyp(sx - SX(H.h.e.x, H.h.e.y), sy - SY(H.h.e.y, 0, H.h.e.x)) < 56;
 };
 function aimAt(sx, sy) {
 	const H = G.hud;
@@ -379,8 +379,8 @@ function rowUI() {
 function drawReticle() {
 	const H = G.hud;
 	if (!H.aim || !H.h) return;
-	const x = SX(H.h.e.x),
-		y = SY(H.h.e.y),
+	const x = SX(H.h.e.x, H.h.e.y),
+		y = SY(H.h.e.y, 0, H.h.e.x),
 		L = performance.now() - (H.firedT || -1e9) < timeOf('settle') ? 1 : 0,
 		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
 		t = still() ? 0 : (performance.now() - (H.aimT || 0)) / 1000,

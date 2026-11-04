@@ -237,7 +237,7 @@ CAMERA = """async (seeds) => {
     for (let o = 0; o < 4; o++) { const k = F.keepOf(o);
       for (const n of G.nodes) { if (n.farm || Math.hypot(n.x - k.x, n.y - k.y) > F.HOME.out || !(isHome(n) || isBack(n))) continue;
         F.cam.z = z; F.cam.x = n.x; F.cam.y = n.y; F.clampCam(); const V = F.view, top = V.ch / 2 + V.vy - V.bandH / 2, bot = top + V.bandH;
-        const x = F.SX(n.x), y = F.SY(n.y), m = Math.min(x, V.cw - x, y - top, bot - y); worst = Math.min(worst, m);
+        const x = F.SX(n.x, n.y), y = F.SY(n.y, 0, n.x), m = Math.min(x, V.cw - x, y - top, bot - y); worst = Math.min(worst, m);
         if (m < 22) { bad.push(s + '/' + o + ': a ' + n.kind + ' ' + Math.round(m) + ' px from the edge of the view'); break; } } } }
   return [bad, Math.round(worst)]; }"""
 

@@ -145,7 +145,7 @@ PLAY = """async () => {
     F.tapAt(...p); F.act('qclose'); if (G.qa) out.push('X did not close the chips');
     for (const u of S) u.hp = 0;
     const s1 = F.addUnit(0, 'spear', k.x + 30, k.y + 30); F.setPick([{ t: 'unit', id: s1.id }]); F.tapAt(...p2); if (G.qa) out.push('with a soldier picked, a tap on the ground put the chips up (it is the order)'); if (s1.state !== 'goto') out.push('with a soldier picked, a tap on the ground did not send it'); F.setPick([]); s1.hp = 0;
-    const e = F.addUnit(1, 'spear', spot.x, spot.y); G.rel[0][1] = G.rel[1][0] = 'war'; F.tapAt(F.SX(e.x), F.SY(e.y) - 6 * F.cam.z); if (G.qa) out.push('a tap on an enemy put the chips up (it opens its card)');
+    const e = F.addUnit(1, 'spear', spot.x, spot.y); G.rel[0][1] = G.rel[1][0] = 'war'; F.tapAt(F.SX(e.x, e.y), F.SY(e.y, 0, e.x) - 6 * F.cam.z); if (G.qa) out.push('a tap on an enemy put the chips up (it opens its card)');
     F.act('close'); e.hp = 0; G.rel[0][1] = G.rel[1][0] = 'neutral'; G.fogOn = true;
     { const c2 = document.getElementById('cv').getContext('2d'), a0 = c2.arc.bind(c2), rs = []; c2.arc = (...a) => { rs.push(a[2]); return a0(...a); }; G.press = { x: 100, y: 300, t: performance.now() - 150 }; F.draw(); c2.arc = a0; G.press = null; if (rs.includes(26)) out.push("the hold's ring shows 150 ms into a touch (a tap must never see it)"); } }
   { const cx = document.getElementById('cv').getContext('2d'), f0 = cx.fillRect.bind(cx), seen = []; cx.fillRect = (...a) => { seen.push(a); return f0(...a); }; F.draw(); cx.fillRect = f0;   // the sky runs to the top (Albert, Nov 2)

@@ -22,8 +22,8 @@ function drawGround() {
 				for (let gx = x0; gx <= x1; gx++) {
 					const r = T[gy * FOGN + gx];
 					if (!r || Math.min(4, Math.ceil(4 * Math.min(1, r / CLIMATE.rut.n0) ** 0.4)) !== q) continue;
-					const sx = SX(gx * FOG + FOG / 2),
-						sy = SY(gy * FOG + FOG / 2);
+					const sx = SX(gx * FOG + FOG / 2, gy * FOG + FOG / 2),
+						sy = SY(gy * FOG + FOG / 2, 0, gx * FOG + FOG / 2);
 					ctx.moveTo(sx + FOG * 0.6 * z, sy);
 					ctx.ellipse(sx, sy, FOG * 0.6 * z, FOG * 0.6 * z * TILT, 0, 0, 6.3);
 				}
@@ -51,8 +51,8 @@ function drawCracks(z) {
 		if (G.t - c.t0 >= 45) continue; // the events tick clears them; the drawing only reads
 		const age = G.t - c.t0,
 			fade = age < 30 ? 1 : (45 - age) / 15,
-			x = SX(c.x),
-			y = SY(c.y);
+			x = SX(c.x, c.y),
+			y = SY(c.y, 0, c.x);
 		if (x < -200 || x > cw + 200 || y < -200 || y > ch + 200) continue;
 		ctx.lineJoin = 'round';
 		for (const [col, w] of [
@@ -174,16 +174,16 @@ function drawSeal(pl) {
 	const P = pl.seal,
 		k = keepOf(0);
 	if (!P || !k) return;
-	if (!P.length) return tag('Sealed', SX(k.x) - 22, SY(k.y) - 40);
+	if (!P.length) return tag('Sealed', SX(k.x, k.y) - 22, SY(k.y, 0, k.x) - 40);
 	ctx.strokeStyle = '#de5a44';
 	ctx.lineWidth = 3;
 	ctx.setLineDash([8, 6]);
 	ctx.beginPath();
-	P.forEach((q, i) => (i ? ctx.lineTo(SX(q.x), SY(q.y)) : ctx.moveTo(SX(q.x), SY(q.y))));
+	P.forEach((q, i) => (i ? ctx.lineTo(SX(q.x, q.y), SY(q.y, 0, q.x)) : ctx.moveTo(SX(q.x, q.y), SY(q.y, 0, q.x))));
 	ctx.stroke();
 	ctx.setLineDash([]);
 	const e = P[0];
-	tag('Open: a foe walks in', SX(e.x) - 50, SY(e.y) - 10);
+	tag('Open: a foe walks in', SX(e.x, e.y) - 50, SY(e.y, 0, e.x) - 10);
 }
 // alignment guides (Build 63): a thin line from the ghost to every own building whose centre or edge sits on the same line, as a PDF
 // editor draws them while an element moves; the snap pull toward them is snapGhost's
@@ -213,8 +213,8 @@ function drawGuides(sp, h) {
 			if (Math.abs(gx - bx) < 0.5) {
 				const y0 = Math.min(sp.y - h, b.y - bh) - 12,
 					y1 = Math.max(sp.y + h, b.y + bh) + 12;
-				ctx.moveTo(SX(gx), SY(y0));
-				ctx.lineTo(SX(gx), SY(y1));
+				ctx.moveTo(SX(gx, y0), SY(y0, 0, gx));
+				ctx.lineTo(SX(gx, y1), SY(y1, 0, gx));
 			}
 		for (const [gy, by] of [
 			[sp.y, b.y],
@@ -226,8 +226,8 @@ function drawGuides(sp, h) {
 			if (Math.abs(gy - by) < 0.5) {
 				const x0 = Math.min(sp.x - h, b.x - bh) - 12,
 					x1 = Math.max(sp.x + h, b.x + bh) + 12;
-				ctx.moveTo(SX(x0), SY(gy));
-				ctx.lineTo(SX(x1), SY(gy));
+				ctx.moveTo(SX(x0, gy), SY(gy, 0, x0));
+				ctx.lineTo(SX(x1, gy), SY(gy, 0, x1));
 			}
 	}
 	ctx.stroke();
@@ -247,7 +247,7 @@ function drawGhost() {
 			const ok = !canPlace(0, kind, c.gx * NAVC + 5, c.gy * NAVC + 5); // the line's own kind: a trap keeps no lane (p44)
 			if (!ok) bad++;
 			ctx.fillStyle = ok ? 'rgba(120,220,120,.55)' : 'rgba(222,90,68,.65)';
-			ctx.fillRect(SX(c.gx * NAVC), SY(c.gy * NAVC), NAVC * z, NAVC * z * TILT);
+			wrect(c.gx * NAVC, c.gy * NAVC, NAVC, NAVC);
 		}
 		pl.pts.forEach((c, i) => {
 			const q = wallXY(c); // the corners: round handles, the first ringed green
@@ -263,8 +263,8 @@ function drawGhost() {
 		pl.why = bad === cells.length ? 'blocked' : null;
 		tag(
 			`${cells.length} × ${costText(B.cost)}${bad ? ' · ' + bad + ' blocked' : ''}`,
-			SX(last.gx * NAVC) + 12,
-			SY(last.gy * NAVC) - 14,
+			SX(last.gx * NAVC, last.gy * NAVC) + 12,
+			SY(last.gy * NAVC, 0, last.gx * NAVC) - 14,
 		);
 		return;
 	}
@@ -277,10 +277,10 @@ function drawGhost() {
 	const s = quant(z * dpr),
 		c = bldSprite({ kind, owner: 0 }, s);
 	ctx.globalAlpha = 0.6;
-	stamp(ghostTint(c, ok), SX(sp.x), SY(sp.y), z / s);
-	flagsOn(c, SX(sp.x), SY(sp.y), z, G.P[0].color, 0);
+	stamp(ghostTint(c, ok), SX(sp.x, sp.y), SY(sp.y, 0, sp.x), z / s);
+	flagsOn(c, SX(sp.x, sp.y), SY(sp.y, 0, sp.x), z, G.P[0].color, 0);
 	ctx.globalAlpha = 1;
-	tag(why || `${B.name} · ${costText(B.cost)}`, SX(sp.x - n / 2), SY(sp.y - n / 2) - 8 - (BLD[kind].h + 10) * z);
+	tag(why || `${B.name} · ${costText(B.cost)}`, SX(sp.x, sp.y) - 40, SY(sp.y, 0, sp.x) - DY(n / 2, n / 2) - 8 - (BLD[kind].h + 10) * z);
 }
 // The ghost's own art tinted green where it fits and red where it does not (Albert, Nov 1): no grid, no footprint box; the reason is in its label.
 // One tinted copy of each sprite for each answer, kept with the sprite.
@@ -308,8 +308,8 @@ function ghostTint(c, ok) {
 function miniIncoming(m, k) {
 	const I = G.incoming;
 	if (!I) return;
-	const x = I.x * k,
-		y = I.y * k,
+	const x = 86 + (I.x - I.y) * MINI_K,
+		y = (I.x + I.y) * MINI_K,
 		on = Math.floor(performance.now() / 350) % 2 === 0;
 	m.strokeStyle = '#ff3b2f';
 	m.lineWidth = 2;
@@ -321,27 +321,49 @@ function miniIncoming(m, k) {
 	m.arc(x, y, 4, 0, Math.PI * 2);
 	m.fill();
 } // an attack on its way: a red dot that flashes on the small map; tap the map and you are there
+// the small map, turned with the view (preview 50): the diamond fills its square; MINI_M maps world units to it; marks are drawn in the
+// turned frame (a mark's own shape is turned too; it is 3 px, nobody minds)
+const MINI_K = 172 / (2 * MAP),
+	miniMat = (m) => m.setTransform(MINI_K, MINI_K, -MINI_K, MINI_K, 86, 0),
+	miniWorld = (px, py) => {
+		const u = (px - 86) / MINI_K,
+			v = py / MINI_K;
+		return { x: (u + v) / 2, y: (v - u) / 2 };
+	}; // a point of the small map, in the world
 function drawMini() {
 	const m = mctx,
-		k = 172 / MAP;
+		k = 1;
+	m.setTransform(1, 0, 0, 1, 0, 0);
 	m.clearRect(0, 0, 172, 172);
-	m.drawImage(terrainMini, 0, 0);
-	m.drawImage(forestLayer(), 0, 0, 172, 172);
+	miniMat(m);
+	m.drawImage(terrainMini, 0, 0, 172, 172, 0, 0, MAP, MAP);
+	m.drawImage(forestLayer(), 0, 0, MAP, MAP);
 	if (G.fogOn) {
 		m.imageSmoothingEnabled = false;
-		m.drawImage(fogLayer(), 0, 0, 172, 172);
+		m.drawImage(fogLayer(), 0, 0, MAP, MAP);
 	}
+	m.imageSmoothingEnabled = true;
+	m.setTransform(1, 0, 0, 1, 0, 0);
+	m.save();
+	m.beginPath();
+	m.moveTo(86, 0);
+	m.lineTo(172, 86);
+	m.lineTo(86, 172);
+	m.lineTo(0, 86);
+	m.closePath();
+	m.clip();
+	const W = (x, y) => [86 + (x - y) * MINI_K, (x + y) * MINI_K]; // a world point on the small map
+	const P = (e) => W(e.x, e.y);
 	for (const f of G.finds)
 		if ((!f.done || FINDS[f.kind].capture) && known0(f)) {
 			m.fillStyle = f.owner !== null && FINDS[f.kind].capture ? G.P[f.owner].color : '#f2cf55';
-			m.fillRect(f.x * k - 1.5, f.y * k - 1.5, 3, 3);
+			{ const [fx, fy] = P(f); m.fillRect(fx - 1.5, fy - 1.5, 3, 3); }
 		}
 	for (const b of G.blds) {
 		// Town Centers are stars, castles diamonds, the rest small squares
 		if (!knownB(b)) continue;
 		m.fillStyle = G.P[b.owner].color;
-		const x = b.x * k,
-			y = b.y * k;
+		const [x, y] = P(b);
 		if (b.kind === 'keep' || b.kind === 'town') {
 			m.beginPath();
 			for (let i = 0; i < 10; i++) {
@@ -377,19 +399,25 @@ function drawMini() {
 	for (const u of G.units)
 		if (u.owner !== WILD ? visibleTo0(u) : !UNIT[u.kind].flee && !UNIT[u.kind].passive && (!G.fogOn || seen0(u))) {
 			m.fillStyle = G.P[u.owner].color;
-			m.fillRect(u.x * k - 1, u.y * k - 1, 2, 2);
+			{ const [ux, uy] = P(u); m.fillRect(ux - 1, uy - 1, 2, 2); }
 		}
 	if (G.mirage && G.mirage.until > G.t) {
 		m.fillStyle = '#de5a44';
 		for (let i = 0; i < G.mirage.n; i++)
-			m.fillRect((G.mirage.x + (i % 4) * 14 - 20) * k - 1, (G.mirage.y + Math.floor(i / 4) * 14 - 14) * k - 1, 2, 2);
+			{ const [mx, my] = W(G.mirage.x + (i % 4) * 14 - 20, G.mirage.y + Math.floor(i / 4) * 14 - 14); m.fillRect(mx - 1, my - 1, 2, 2); }
 	} // the mirage
 	miniIncoming(m, k);
-	const a = toWorld(0, 0),
-		b = toWorld(cw, ch);
-	m.strokeStyle = '#fff';
-	m.lineWidth = 1.5;
-	m.strokeRect(a.x * k, a.y * k, (b.x - a.x) * k, (b.y - a.y) * k);
+	m.restore();
+	{
+		// what the screen shows: the four screen corners, in the world, as a box on the small map
+		const Q = [toWorld(0, 0), toWorld(cw, 0), toWorld(cw, ch), toWorld(0, ch)].map((p) => W(p.x, p.y));
+		m.strokeStyle = '#fff';
+		m.lineWidth = 1.5;
+		m.beginPath();
+		Q.forEach(([x, y], i) => (i ? m.lineTo(x, y) : m.moveTo(x, y)));
+		m.closePath();
+		m.stroke();
+	}
 }
 // the flood: water over the shore
 function drawFlood(z) {
@@ -400,7 +428,7 @@ function drawFlood(z) {
 			for (let i = 0; i < 48; i++) {
 				const a = (i / 48) * Math.PI * 2,
 					r = lakeRAt(L, a) + EVENTS.flood.rise;
-				ctx[i ? 'lineTo' : 'moveTo'](SX(L.x + Math.cos(a) * r), SY(L.y + Math.sin(a) * r));
+				ctx[i ? 'lineTo' : 'moveTo'](SX(L.x + Math.cos(a) * r, L.y + Math.sin(a) * r), SY(L.y + Math.sin(a) * r, 0, L.x + Math.cos(a) * r));
 			} // the flood follows each lake's own shore
 		ctx.fill(); // one shape, so a river's overlapping pools do not darken where they meet (Build 52)
 	} // the flood: water over the shore
@@ -411,12 +439,12 @@ function drawSand(z) {
 		const s = G.sand;
 		ctx.fillStyle = 'rgba(200,180,120,.7)';
 		ctx.beginPath();
-		ctx.ellipse(SX(s.x), SY(s.y), s.r * z, s.r * z * TILT, 0, 0, 7);
+		ctx.ellipse(SX(s.x, s.y), SY(s.y, 0, s.x), s.r * z, s.r * z * TILT, 0, 0, 7);
 		ctx.fill();
 		ctx.strokeStyle = 'rgba(120,100,60,.5)';
 		ctx.lineWidth = 1;
 		for (let i = 1; i <= 3; i++) {
-			ring(SX(s.x), SY(s.y), (s.r * z * i) / 4, (s.r * z * TILT * i) / 4);
+			ring(SX(s.x, s.y), SY(s.y, 0, s.x), (s.r * z * i) / 4, (s.r * z * TILT * i) / 4);
 		}
 	} // quicksand: a pale patch with ripples
 }
@@ -430,8 +458,8 @@ function drawLakeRipples(z) {
 			for (let i = 0; i < (L.river ? 2 : 18); i++) {
 				const a = i * 2.4 + G.t * 0.05,
 					r = lakeRAt(L, a) * (0.25 + 0.6 * ((i * 0.37 + G.t * 0.02) % 1)); // within the drawn shore (p44)
-				const lx = SX(L.x + Math.cos(a) * r),
-					ly = SY(L.y + Math.sin(a) * r);
+				const lx = SX(L.x + Math.cos(a) * r, L.y + Math.sin(a) * r),
+					ly = SY(L.y + Math.sin(a) * r, 0, L.x + Math.cos(a) * r);
 				ctx.beginPath();
 				ctx.moveTo(lx - 6 * z, ly);
 				ctx.quadraticCurveTo(lx, ly - 2 * z, lx + 6 * z, ly);
@@ -457,8 +485,8 @@ function drawRainRings(z) {
 				if (h % 3) continue;
 				const ph = (t * 1.6 + ((h >> 8) & 255) / 256) % 1,
 					r = Math.min(10, (1 + ph * 4) * z),
-					px = SX((gx + (h & 255) / 256) * C),
-					py = SY((gy + ((h >> 16) & 255) / 256) * C);
+					px = SX((gx + (h & 255) / 256) * C, (gy + ((h >> 16) & 255) / 256) * C),
+					py = SY((gy + ((h >> 16) & 255) / 256) * C, 0, (gx + (h & 255) / 256) * C);
 				ctx.moveTo(px + r, py);
 				ctx.ellipse(px, py, r, r * TILT, 0, 0, 7);
 			}
@@ -470,8 +498,8 @@ function drawFire(z, inView) {
 	if (G.fire)
 		for (const n of G.fire)
 			if (inView(n)) {
-				const x = SX(n.x),
-					y = SY(n.y),
+				const x = SX(n.x, n.y),
+					y = SY(n.y, 0, n.x),
 					ph = (G.t * 5 + n.id) % 1;
 				ctx.fillStyle = 'rgba(250,150,40,.85)';
 				ctx.beginPath();
@@ -487,25 +515,17 @@ function drawFire(z, inView) {
 // the fog, soft, over everything standing
 function drawFogLayer(z) {
 	if (G.fogOn) {
-		const a1 = toWorld(0, 0),
-			b1 = toWorld(cw, ch),
-			sx0 = clamp(a1.x, 0, MAP),
-			sy0 = clamp(a1.y, 0, MAP),
-			sx1 = clamp(b1.x, 0, MAP),
-			sy1 = clamp(b1.y, 0, MAP);
+		const VB = viewBox(),
+			sx0 = clamp(VB.x0, 0, MAP),
+			sy0 = clamp(VB.y0, 0, MAP),
+			sx1 = clamp(VB.x1, 0, MAP),
+			sy1 = clamp(VB.y1, 0, MAP);
 		ctx.imageSmoothingEnabled = true;
-		if (sx1 > sx0 && sy1 > sy0)
-			ctx.drawImage(
-				fogLayer(),
-				sx0 / FOG,
-				sy0 / FOG,
-				(sx1 - sx0) / FOG,
-				(sy1 - sy0) / FOG,
-				SX(sx0),
-				SY(sy0),
-				(sx1 - sx0) * z,
-				(sy1 - sy0) * z * TILT,
-			);
+		if (sx1 > sx0 && sy1 > sy0) {
+			wmat();
+			ctx.drawImage(fogLayer(), sx0 / FOG, sy0 / FOG, (sx1 - sx0) / FOG, (sy1 - sy0) / FOG, sx0, sy0, sx1 - sx0, sy1 - sy0);
+			flat();
+		}
 	} // the fog, soft, over everything standing
 }
 // your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
@@ -520,8 +540,8 @@ function drawOrders(z) {
 	ctx.textAlign = 'center';
 	for (const id in G.ords) {
 		const O = G.ords[id];
-		const bx = SX(O.x),
-			by = SY(O.y),
+		const bx = SX(O.x, O.y),
+			by = SY(O.y, 0, O.x),
 			r = 14 * cam.z;
 		ctx.setLineDash([6, 6]);
 		ctx.lineWidth = 1.5;
@@ -529,7 +549,7 @@ function drawOrders(z) {
 			ctx.globalAlpha = 0.7;
 			ctx.lineDashOffset = -performance.now() / 60;
 			ctx.beginPath();
-			ctx.moveTo(SX(O.cx), SY(O.cy));
+			ctx.moveTo(SX(O.cx, O.cy), SY(O.cy, 0, O.cx));
 			ctx.lineTo(bx, by);
 			ctx.stroke();
 		}
@@ -553,8 +573,8 @@ function drawTracers() {
 		const p = 1 - t.life / t.dur,
 			q = Math.max(0, p - 0.12),
 			at = (f) => [
-				SX(t.x1 + (t.x2 - t.x1) * f),
-				SY(t.y1 + (t.y2 - t.y1) * f, t.h1 + (6 - t.h1) * f + 4 * t.arc * f * (1 - f)),
+				SX(t.x1 + (t.x2 - t.x1) * f, t.y1 + (t.y2 - t.y1) * f),
+				SY(t.y1 + (t.y2 - t.y1) * f, t.h1 + (6 - t.h1) * f + 4 * t.arc * f * (1 - f), t.x1 + (t.x2 - t.x1) * f),
 			];
 		const [ax, ay] = at(q),
 			[bx, by] = at(p);
@@ -586,17 +606,17 @@ function drawLight(z, inView) {
 				const fire = b.owner !== WILD && G.P[b.owner].techs.has('chimney'), // a fireplace flickers from inside
 					a = fire ? 0.6 + 0.3 * Math.sin(tnow * 9 + b.id) * Math.sin(tnow * 5.3 + b.id * 0.7) : 0.75;
 				ctx.fillStyle = `rgba(255,${fire ? 185 : 200},${fire ? 90 : 110},${a.toFixed(2)})`;
-				ctx.fillRect(SX(b.x) + 3 * z, SY(b.y + halfOf(b) * 0.9, 6), 2 * z, 2 * z);
+				ctx.fillRect(SX(b.x, b.y) + 3 * z, SY(b.y, 6, b.x) + DY(halfOf(b) * 0.9, halfOf(b) * 0.9) / 2, 2 * z, 2 * z);
 			}
 	if (!SET.lights || (nt < 0.05 && G.wx !== 'rain' && !G.blds.some((b) => b.fire > 0))) return;
 	for (const b of G.blds) {
 		if (!inView(b) || !knownB(b)) continue;
 		const B = BLD[b.kind];
-		if (b.fire > 0 || b.hp < maxHpB(b.owner, b.kind) * 0.5) glow(SX(b.x), SY(b.y), 'blaze', z);
+		if (b.fire > 0 || b.hp < maxHpB(b.owner, b.kind) * 0.5) glow(SX(b.x, b.y), SY(b.y, 0, b.x), 'blaze', z);
 		else if (b.prog >= 1 && HEARTH.has(b.kind))
 			glow(
-				SX(b.x),
-				SY(b.y) + halfOf(b) * TILT * 0.4,
+				SX(b.x, b.y),
+				SY(b.y, 0, b.x) + halfOf(b) * TILT * 0.4,
 				'hearth',
 				z,
 				1 +
@@ -604,19 +624,19 @@ function drawLight(z, inView) {
 						(b.owner === WILD ? 0 : upTier(b.kind === 'keep' || b.kind === 'town' ? 'house' : b.kind, G.P[b.owner])),
 			); // the Home line lights the hearth more
 		else if (b.prog >= 1 && !B.wallish && !B.crop && b.owner !== WILD && fxv(b.owner, 'lamp', bldKeys(b.kind)).a > 0) {
-			const x = SX(b.x) - halfOf(b) * z * 0.6,
-				y = SY(b.y) + halfOf(b) * TILT * z * 0.5;
+			const x = SX(b.x, b.y) - halfOf(b) * z * 0.6,
+				y = SY(b.y, 0, b.x) + halfOf(b) * TILT * z * 0.5;
 			glow(x, y, 'lantern', z);
 			flame(x, y - 3 * z, 'lantern', z * 0.7, b.id);
 		} // Lanterns: one at every door
 	}
 	for (const f of G.finds)
-		if (f.kind === 'camp' && !f.done && inView(f) && known0(f)) glow(SX(f.x), SY(f.y), 'campfire', z);
+		if (f.kind === 'camp' && !f.done && inView(f) && known0(f)) glow(SX(f.x, f.y), SY(f.y, 0, f.x), 'campfire', z);
 	for (const u of G.units)
 		if (u.kind === 'caravan' && u.hp > 0 && !u.inside && inView(u) && visibleTo0(u)) {
-			const x = SX(u.x) + 5 * z,
-				y = SY(u.y) - 9 * z;
-			glow(SX(u.x), SY(u.y), 'lantern', z);
+			const x = SX(u.x, u.y) + 5 * z,
+				y = SY(u.y, 0, u.x) - 9 * z;
+			glow(SX(u.x, u.y), SY(u.y, 0, u.x), 'lantern', z);
 			flame(x, y, 'lantern', z * 0.8, u.id);
 		}
 	for (const s of STANDARDS) {
@@ -672,7 +692,7 @@ function drawTouch(z) {
 		if (u.owner === 0 && u.patch && !seen.has(u.patch.x0)) {
 			seen.add(u.patch.x0);
 			const r = u.patch;
-			ctx.strokeRect(SX(r.x0), SY(r.y0), (r.x1 - r.x0) * z, (r.y1 - r.y0) * z * TILT);
+			wrect(r.x0, r.y0, r.x1 - r.x0, r.y1 - r.y0, true);
 		}
 	if (G.press && performance.now() - G.press.t > PRESS_SHOW) {
 		const f = Math.min(1, (performance.now() - G.press.t - PRESS_SHOW) / (HOLD_MS - PRESS_SHOW));
@@ -689,13 +709,13 @@ function drawTouch(z) {
 		ctx.lineWidth = 3;
 		ctx.lineCap = 'round';
 		ctx.beginPath();
-		ctx.moveTo(SX(L.a.x), SY(L.a.y));
-		ctx.lineTo(SX(L.b.x), SY(L.b.y));
+		ctx.moveTo(SX(L.a.x, L.a.y), SY(L.a.y, 0, L.a.x));
+		ctx.lineTo(SX(L.b.x, L.b.y), SY(L.b.y, 0, L.b.x));
 		ctx.stroke();
 		ctx.font = mapFont();
 		ctx.textAlign = 'center';
 		ctx.fillStyle = '#ffd35e';
-		ctx.fillText(`${n} across`, SX((L.a.x + L.b.x) / 2), SY((L.a.y + L.b.y) / 2) - 12);
+		ctx.fillText(`${n} across`, SX((L.a.x + L.b.x) / 2, (L.a.y + L.b.y) / 2), SY((L.a.y + L.b.y) / 2, 0, (L.a.x + L.b.x) / 2) - 12);
 	} // the choke being drawn: the gap and how many files it holds
 	if (G.box) {
 		const b = G.box;

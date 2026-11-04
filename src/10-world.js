@@ -156,8 +156,8 @@ function newGame(seed, carry, daily) {
 	dangerMap(); // a fresh danger map: the last game's must not steer the first second of this one
 	evmSet();
 	const k = G.P[0].keep;
-	cam.x = k[0] + 120;
-	cam.y = k[1] - 120;
+	cam.x = k[0] + 70;
+	cam.y = k[1] + 70; // a little toward the middle of the screen's height in the turned view (x + y is down): the Town Center sits just above centre (preview 50)
 	cam.z = ZOOM_START;
 	clampCam();
 	if (carry) {

@@ -206,56 +206,76 @@ function makeBg() {
 }
 let SPARKS = [],
 	miniT = 0;
+// The rim (preview 50, Albert: "I wanted water and cliffs and sky anyway"): the screen is a rectangle and the map a diamond, so when the view
+// meets an edge the corners show what lies beyond. The near sides (south and east, the bottom of the screen) are the sea with a strand; the
+// far sides (north and west, the top) are cliffs, and above the cliffs the sky. Drawn in world units under the turned matrix, RIM deep.
+const RIMC = { sea: '#2f6684', deep: '#214a63', sand: '#cdbb88', cliff: '#4f463d', cliffLit: '#847566', top: '#5e6a4e', skyLo: '#b9cad6', skyHi: '#6b93b4' },
+	CLIFF_H = 140; // the far edges rise this much above the map
+function drawRim(z) {
+	const VB = viewBox();
+	if (VB.x0 >= 0 && VB.y0 >= 0 && VB.x1 <= MAP && VB.y1 <= MAP) return; // the whole screen is on the map
+	const c = (x, y, h = 0) => [SX(x, y), SY(y, h, x)],
+		poly = (pts, fill) => {
+			ctx.beginPath();
+			pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+			ctx.closePath();
+			ctx.fillStyle = fill;
+			ctx.fill();
+		};
+	// the sky, behind everything
+	const g = ctx.createLinearGradient(0, 0, 0, ch);
+	g.addColorStop(0, RIMC.skyHi);
+	g.addColorStop(1, RIMC.skyLo);
+	ctx.fillStyle = g;
+	ctx.fillRect(0, 0, cw, ch);
+	// the sea, RIM out past the near edges (south: y = MAP; east: x = MAP), with its strand along the shore
+	const R = RIM;
+	poly([c(-R, MAP), c(MAP + 3 * R, MAP), c(MAP + 3 * R, MAP + 3 * R), c(-R, MAP + 3 * R)], RIMC.deep);
+	poly([c(MAP, -R), c(MAP + 3 * R, -R), c(MAP + 3 * R, MAP + 3 * R), c(MAP, MAP + 3 * R)], RIMC.deep);
+	poly([c(-R, MAP), c(MAP + R, MAP), c(MAP + R, MAP + 90), c(-R, MAP + 90)], RIMC.sea);
+	poly([c(MAP, -R), c(MAP + 90, -R), c(MAP + 90, MAP + 90), c(MAP, MAP + 90)], RIMC.sea);
+	poly([c(-R, MAP), c(MAP + 14, MAP), c(MAP + 14, MAP + 14), c(-R, MAP + 14)], RIMC.sand);
+	poly([c(MAP, -R), c(MAP + 14, -R), c(MAP + 14, MAP + 14), c(MAP, MAP + 14)], RIMC.sand);
+	// the plateau beyond the far edges (north: y = 0; west: x = 0), CLIFF_H up, then its face down to the map's edge: the lit face takes the sun (the north edge faces south)
+	const H = CLIFF_H;
+	poly([c(-R, -R, H), c(MAP, -R, H), c(MAP, 0, H), c(0, 0, H), c(0, MAP, H), c(-R, MAP, H)], RIMC.top);
+	poly([c(0, 0, 0), c(MAP, 0, 0), c(MAP, 0, H), c(0, 0, H)], RIMC.cliffLit);
+	poly([c(0, 0, 0), c(0, MAP, 0), c(0, MAP, H), c(0, 0, H)], RIMC.cliff);
+}
 function draw() {
 	followCam(Math.min(0.1, (performance.now() - (draw.last || performance.now())) / 1000));
 	draw.last = performance.now();
 	shadeFrame();
 	ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 	const z = cam.z,
-		x0 = SX(0),
-		y0 = SY(0),
+		x0 = SX(0, 0),
+		y0 = SY(0, 0, 0),
 		sn = season();
-	{
-		const a = toWorld(0, 0),
-			b = toWorld(cw, ch);
-		if (a.x < 0 || a.y < 0 || b.x > MAP || b.y > MAP) {
-			ctx.fillStyle = '#0b0f0d';
-			ctx.fillRect(0, 0, cw, ch);
-		}
-	} // beyond the map's edge: dark; the map itself is painted over in full
+	drawRim(z); // beyond the map's edge: the sea, the cliffs and the sky (preview 50); the map itself is painted over in full
 	ctx.imageSmoothingEnabled = true;
-	const layer = (img) => {
-		const a = toWorld(0, 0),
-			b2 = toWorld(cw, ch),
-			sx0 = clamp(a.x, 0, MAP),
-			sy0 = clamp(a.y, 0, MAP),
-			sx1 = clamp(b2.x, 0, MAP),
-			sy1 = clamp(b2.y, 0, MAP);
-		if (sx1 > sx0 && sy1 > sy0)
-			ctx.drawImage(
-				img,
-				sx0 * bgK,
-				sy0 * bgK,
-				(sx1 - sx0) * bgK,
-				(sy1 - sy0) * bgK,
-				SX(sx0),
-				SY(sy0),
-				(sx1 - sx0) * z,
-				(sy1 - sy0) * z * TILT,
-			);
-	};
+	const VB = viewBox(),
+		layer = (img) => {
+			// the picture of the land, drawn in world units under the turned matrix: the canvas turns it (preview 50)
+			const sx0 = clamp(VB.x0, 0, MAP),
+				sy0 = clamp(VB.y0, 0, MAP),
+				sx1 = clamp(VB.x1, 0, MAP),
+				sy1 = clamp(VB.y1, 0, MAP);
+			if (sx1 > sx0 && sy1 > sy0) {
+				wmat();
+				ctx.drawImage(img, sx0 * bgK, sy0 * bgK, (sx1 - sx0) * bgK, (sy1 - sy0) * bgK, sx0, sy0, sx1 - sx0, sy1 - sy0);
+				flat();
+			}
+		};
 	layer(bg);
 	if (z > 1.1 && grassPat) {
-		if (grassM.a !== z * 0.5 || grassM.e !== x0 || grassM.f !== y0) {
-			grassM.a = z * 0.5;
-			grassM.d = z * 0.5 * TILT;
-			grassM.e = x0;
-			grassM.f = y0;
+		if (grassM.a !== 0.5) {
+			grassM.a = 0.5;
+			grassM.d = 0.5; // the tufts in world units: the matrix turns and squashes them with the ground
 			grassPat.setTransform(grassM);
 		}
 		ctx.globalAlpha = Math.min(1, (z - 1.1) * 1.5);
 		ctx.fillStyle = grassPat;
-		ctx.fillRect(Math.max(0, x0), Math.max(0, y0), Math.min(cw, MAP * z), Math.min(ch, MAP * z * TILT));
+		wrect(0, 0, MAP, MAP);
 		ctx.globalAlpha = 1;
 	}
 	if (G.shake > G.t && !still()) {
@@ -269,30 +289,28 @@ function draw() {
 	drawLakeRipples(z);
 	if (sn.tint) {
 		ctx.fillStyle = sn.tint;
-		ctx.fillRect(x0, y0, MAP * z, MAP * z * TILT);
+		wrect(0, 0, MAP, MAP);
 	}
 	if (DRAW.lvl < 1) drawRainRings(z);
 	drawGround(); // the weather's mark on the land, under everything standing
 	drawPicks(z); // the pick rings lie on the ground, under the figure and the building (Albert, Build 40)
 	// everything standing, back to front
 	// what is on screen: margins in world units, wide enough for the widest building (its turned east wall) and the tallest (a wonder, standing just below the edge)
-	const a0 = toWorld(0, 0),
-		b0 = toWorld(cw, ch),
-		mx = Math.max(80 / z, 44),
-		wv = { x: a0.x - mx, y: a0.y - Math.max(120 / (z * TILT), 34) },
-		wv2 = { x: b0.x + mx, y: b0.y + Math.max(160 / (z * TILT), 115) },
+	const mx = Math.max(160 / z, 115),
+		wv = { x: VB.x0 - mx, y: VB.y0 - mx },
+		wv2 = { x: VB.x1 + mx, y: VB.y1 + mx },
 		inView = (e) => e.x > wv.x && e.x < wv2.x && e.y > wv.y && e.y < wv2.y;
-	const list = [];
+	const list = []; // back to front: by x + y, the screen's down axis in the turned view (preview 50)
 	for (const b of G.blds)
-		if (inView(b) && trapShown(b) && knownB(b)) list.push([BLD[b.kind].crop ? b.y - 60 : b.y + halfOf(b) * 0.4, 1, b]);
+		if (inView(b) && trapShown(b) && knownB(b)) list.push([b.x + b.y + (BLD[b.kind].crop ? -120 : halfOf(b) * 0.8), 1, b]);
 	const far = z < 0.55;
 	if (far) layer(forestLayer()); // zoomed out, the forest is one picture; close in, each tree
-	for (const f of G.finds) if (inView(f) && !(f.done && FINDS[f.kind].got)) list.push([f.y, 3, f]);
-	for (const u of G.units) if (!u.inside && inView(u) && visibleTo0(u)) list.push([u.y, 2, u]);
+	for (const f of G.finds) if (inView(f) && !(f.done && FINDS[f.kind].got)) list.push([f.x + f.y, 3, f]);
+	for (const u of G.units) if (!u.inside && inView(u) && visibleTo0(u)) list.push([u.x + u.y, 2, u]);
 	{
 		const now = performance.now();
 		while (FALL.length && now - FALL[0].t > 1400) FALL.shift();
-		for (const f of FALL) if (inView(f)) list.push([f.y, 4, f]);
+		for (const f of FALL) if (inView(f)) list.push([f.x + f.y, 4, f]);
 	}
 	list.sort((a, b) => a[0] - b[0]);
 	const N = viewNodes(wv, wv2, far),
@@ -301,7 +319,7 @@ function draw() {
 	sunShadows(N, list, z, far); // every sun shadow, one path, on the ground under everything standing (the trees' are the first shed under load)
 	// the standing nodes (about 2,000 trees, bushes and rocks) are kept sorted until the view moves a step; the few moving things are merged in
 	for (let i = 0, j = 0; i < N.length || j < list.length; ) {
-		const take = j >= list.length || (i < N.length && N[i].y < list[j][0]),
+		const take = j >= list.length || (i < N.length && N[i].x + N[i].y < list[j][0]),
 			e = take ? N[i++] : list[j][2],
 			t = take ? 0 : list[j++][1];
 		try {
@@ -332,7 +350,7 @@ function draw() {
 	drawEvents(z);
 	drawOrders(z);
 	drawReticle();
-	if (G.rally0) flagAt(SX(G.rally0.x), SY(G.rally0.y), G.P[0].color, z);
+	if (G.rally0) flagAt(SX(G.rally0.x, G.rally0.y), SY(G.rally0.y, 0, G.rally0.x), G.P[0].color, z);
 	drawTracers();
 	drawLight(z, inView);
 	drawHitGlow();

@@ -599,7 +599,7 @@ function ui(force) {
 	rowUI();
 	{
 		const k = keepOf(0),
-			away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20;
+			away = !k || SX(k.x, k.y) < -20 || SX(k.x, k.y) > cw + 20 || SY(k.y, 0, k.x) < -20 || SY(k.y, 0, k.x) > ch + 20;
 		if ($('homeB').hidden === away) $('homeB').hidden = !away;
 	} // home shows only when your Town Center is off the screen
 	$('stage').classList.toggle('busy', !!(G.card || G.place));

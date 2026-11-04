@@ -103,7 +103,7 @@ const EV = {
 		draw(e, z, t) {
 			if (still() || !Number.isFinite(e.x)) return; // no place yet in the first second
 			// a dark band of cloud walking east, rain under it
-			const x = SX(e.x),
+			const x = SX(e.x, e.y),
 				w = EVENTS.storm.band * z;
 			const gr = ctx.createLinearGradient(x - w, 0, x + w, 0);
 			gr.addColorStop(0, 'rgba(20,24,34,0)');
@@ -189,8 +189,8 @@ const EV = {
 	meteor: {
 		draw(e, z, t) {
 			const f = clamp((G.t - e.t0) / (e.until - e.t0), 0, 1),
-				x1 = SX(e.at.x),
-				y1 = SY(e.at.y),
+				x1 = SX(e.at.x, e.at.y),
+				y1 = SY(e.at.y, 0, e.at.x),
 				x0 = x1 - 420,
 				y0 = y1 - 560,
 				x = x0 + (x1 - x0) * f,
