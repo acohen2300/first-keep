@@ -88,9 +88,10 @@ const addRes = (a, c, f = 1) => {
 const sumCost = (c) => Object.values(c || {}).reduce((s, v) => s + v, 0);
 const fmt = (n) =>
 	n >= 10000 ? Math.round(n / 1000) + 'k' : n >= 1000 ? Math.floor(n / 100) / 10 + 'k' : String(Math.floor(n));
-const towardMid = (e, d) => {
-	const tx = MID - e.x,
-		ty = MID - e.y,
+const towardMid = (e, d, c = MID) => {
+	// d toward the middle (c: the world's, or the land's while the map-maker lays it)
+	const tx = c - e.x,
+		ty = c - e.y,
 		l = hyp(tx, ty) || 1;
 	return { x: e.x + (tx / l) * d, y: e.y + (ty / l) * d };
 };

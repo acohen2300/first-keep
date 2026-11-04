@@ -304,8 +304,8 @@ mini.addEventListener('pointerdown', (e) => {
 	} catch (err) {} // the finger stays the map's until it lifts, even off its edge (an audit, Nov 2)
 	const r = mini.getBoundingClientRect(),
 		w = miniWorld(((e.clientX - r.left) / r.width) * 172, ((e.clientY - r.top) / r.height) * 172),
-		x = clamp(w.x, 0, MAP),
-		y = clamp(w.y, 0, MAP);
+		x = w.x,
+		y = w.y;
 	camGo(x, y);
 	miniAt = { x: e.clientX, y: e.clientY, pan: false };
 });
@@ -318,8 +318,8 @@ mini.addEventListener('pointermove', (e) => {
 		const r = mini.getBoundingClientRect();
 		camStop();
 		const w = miniWorld(((e.clientX - r.left) / r.width) * 172, ((e.clientY - r.top) / r.height) * 172);
-		cam.x = clamp(w.x, 0, MAP);
-		cam.y = clamp(w.y, 0, MAP);
+		cam.x = w.x;
+		cam.y = w.y;
 		clampCam();
 	} // and a drag on the small map sweeps the camera with it, no glide (Albert, Nov 2)
 });

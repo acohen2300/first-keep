@@ -346,15 +346,19 @@ const EVK = Object.keys(EVENTS),
 // start: the first villagers stand this far from their Town Center toward the middle.
 const PLACES = { stop: [490, 320], lode: 270, camp: 160, scout: { mid: 300, edge: 420, keep: 215 }, start: 40 };
 const cross = (d) => [
-	[MID, MID - d],
-	[MID, MID + d],
-	[MID - d, MID],
-	[MID + d, MID],
+	[LMID, LMID - d],
+	[LMID, LMID + d],
+	[LMID - d, LMID],
+	[LMID + d, LMID],
 ]; // the four points d from the middle on the middle lines: north, south, west, east
 // two old trade routes, west to east and north to south, each with four stops; they bend around the great lake
-const ROUTES = [0, 1].map((ax) =>
-	[-PLACES.stop[0], -PLACES.stop[1], PLACES.stop[1], PLACES.stop[0]].map((d) => (ax ? [MID, MID + d] : [MID + d, MID])),
-);
+const ROUTES_L = [0, 1].map((ax) => [-PLACES.stop[0], -PLACES.stop[1], PLACES.stop[1], PLACES.stop[0]].map((d) => (ax ? [LMID, LMID + d] : [LMID + d, LMID]))), // in the land's frame, for the map-maker
+	ROUTES = ROUTES_L.map((r) =>
+		r.map(([x, y]) => {
+			const w = worldXY(x, y); // the same stops in the world's frame, for the game (preview 51)
+			return [w.x, w.y];
+		}),
+	);
 const POST = { all: 2, cut: [0, 0.2, 0.25, 0.3, 0.4], safe: 120, guard: 12, far: 2.5, want: 1.5 }; // each route has four stops. all: gold a second to whoever holds all four of a route; cut: of other sides' sales at a stop, by how many of its route you hold; guard: soldiers per stop or caravan
 // Sickness as the SIR model (Kermack & McKendrick 1927; Build 56): among a side's people, those who are well (S), sick (I) and over it (R, well
 // again after the course, as the game has no lasting immunity). New cases a tick = β S I / N, the mass-action law; the course lasts sickFor

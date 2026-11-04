@@ -156,16 +156,16 @@ let vy = 0; // the map is full screen; the view centres on the band between the 
 /* fit() is in 32-frame.js: it reads the page's bars */
 let bandH = 0; // the height of the clear band between the top bars and the jobs (fit sets it)
 function clampCam() {
-	// in the turned frame: u = x − y runs −MAP..MAP across the diamond, v = x + y runs 0..2MAP down it; the screen's half sizes in those units.
-	// The screen may reach RIM past the diamond's points (the sea and the cliffs fill its corners), never further (Albert, Build 40; Nov 4)
-	const hu = cw / 2 / (cam.z * TURN),
-		hv = (bandH || ch) / 2 / (cam.z * TURN * TILT),
-		u = cam.x - cam.y,
-		v = cam.x + cam.y,
-		cu = clamp(u, Math.min(-MAP + hu - RIM, 0), Math.max(MAP - hu + RIM, 0)),
-		cv_ = clamp(v, Math.min(hv - RIM, MAP), Math.max(2 * MAP - hv + RIM, MAP));
-	cam.x = (cu + cv_) / 2;
-	cam.y = (cv_ - cu) / 2;
+	// in the land's frame (preview 51), where the land is a square the screen sees upright: its edges may come up to the bars and RIM past them
+	// (the sea and the cliffs fill what is left), never further (Albert, Build 40)
+	const hw = cw / 2 / cam.z,
+		half = (bandH || ch) / 2 / (cam.z * TILT),
+		l = landXY(cam.x, cam.y),
+		lx = clamp(l.x, Math.min(hw - RIM, LMID), Math.max(SQUARE - hw + RIM, LMID)),
+		ly = clamp(l.y, Math.min(half - RIM, LMID), Math.max(SQUARE - half + RIM, LMID)),
+		w = worldXY(lx, ly);
+	cam.x = w.x;
+	cam.y = w.y;
 }
 // The camera glides as a critically damped spring (ζ = 1, no overshoot; the standard smoothing of a value toward a target, one ω for every
 // phone whatever its frame rate). camGo sets the target; the frame moves the camera. One home for every glide: Follow, Home, the small map,
@@ -247,8 +247,9 @@ function wrect(x, y, w, h, stroke) {
 	} else ctx.fillRect(x, y, w, h);
 	flat();
 }
-const DIAG = MAP * 2 * TURN; // the map's width on the screen at zoom 1 (its diagonal)
-const minZ = () => Math.min(cw / DIAG, ch / (DIAG * TILT)) || 0.2;
+const landMat = (c) => c.transform(TURN, -TURN, TURN, TURN, MID - 2 * LMID * TURN, MID); // the land's frame on a canvas already in world units (preview 51)
+const DIAG = SQUARE * 2 * TURN; // the land's width on the screen at zoom 1 // the map's width on the screen at zoom 1 (its diagonal)
+const minZ = () => Math.min(cw / SQUARE, ch / (SQUARE * TILT)) || 0.2; // the land stands square on the screen: SQUARE wide, SQUARE × TILT tall at zoom 1
 function zoomAt(nz, sx, sy) {
 	const w = toWorld(sx, sy);
 	cam.z = clamp(nz, minZ(), ZOOM_MAX);

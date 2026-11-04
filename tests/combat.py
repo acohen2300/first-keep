@@ -11,7 +11,7 @@ JS = """() => {
     for (const u of G.units) if (u.kind === 'vil') { u.job = null; u.node = null; u.hunt = null; u.post = { x: u.x, y: u.y }; }
     F.step(T); return G; };
   // open ground near home (150 to 400 from your Town Center, far from the Throne): the point farthest from every building and unit, off water
-  const open = (G) => { const k = F.keepOf(0); let best = 0, P = null; for (let x = 100; x < F.MAP - 100; x += 20) for (let y = 100; y < F.MAP - 100; y += 20) {
+  const open = (G) => { const k = F.keepOf(0); let best = 0, P = null; for (let x = 100; x < F.MAP - 100; x += 20) for (let y = 100; y < F.MAP - 100; y += 20) { if (!F.inLand(x, y, 100)) continue;
       const dk = Math.hypot(x - k.x, y - k.y); if (dk < 150 || dk > 400 || F.blockedCell(F.gcell(x, y), 0) || G.lakes.some((L) => Math.hypot(L.x - x, L.y - y) < L.r + 40)) continue; const m = Math.min(...G.blds.map((b) => Math.hypot(b.x - x, b.y - y)), ...G.units.map((u) => Math.hypot(u.x - x, u.y - y)));
       if (m > best) { best = m; P = { x, y }; } } return P; };
   const clear = (G, P, r) => { for (const u of G.units) if (Math.hypot(u.x - P.x, u.y - P.y) < r) { u.hp = 0; u.gone = true; } G.units = G.units.filter((u) => u.hp > 0); };
@@ -116,8 +116,8 @@ JS = """() => {
     const C1 = mk(6), C2 = mk(6, k.x + 70); F.postTo(C1, { x: P.x - 60, y: P.y - 60 }); F.postTo(C2, { x: P.x - 60, y: P.y - 60 }); // two taps on one point, nobody there yet
     const ck = [...C1, ...C2].map((u) => Math.round(u.post.x * 10) + ',' + Math.round(u.post.y * 10)); if (new Set(ck).size !== ck.length) bad.push("item 5: a second tap on a point takes the first one's spots");
     // the map's edge: a tap by the edge puts nobody within personal space of it
-    let E = null; for (let y = 200; y < F.MAP - 200 && !E; y += 10) { let ok = true; for (let x = 0; x < 60 && ok; x += 5) for (let dy = -40; dy <= 40 && ok; dy += 5) ok = !F.blockedCell(F.gcell(x, y + dy), 0); if (ok) E = { x: 4, y }; }
-    if (!E) bad.push('item 5: no open ground at the map edge to test on'); else { const M = mk(12); F.postTo(M, E); if (M.some((u) => u.post.x < F.SPACE)) bad.push('item 5: a post within personal space of the map edge'); }
+    let E = null; for (let y = 200; y < F.SQUARE - 200 && !E; y += 10) { let ok = true; for (let x = 12; x < 72 && ok; x += 5) for (let dy = -40; dy <= 40 && ok; dy += 5) { const w = F.worldXY(x, y + dy); ok = !F.blockedCell(F.gcell(w.x, w.y), 0); } if (ok) E = F.worldXY(16, y); }   // the land's west edge, in the world (preview 51)
+    if (!E) bad.push('item 5: no open ground at the map edge to test on'); else { const M = mk(12); F.postTo(M, E); if (M.some((u) => F.landXY(u.post.x, u.post.y).x < F.SPACE)) bad.push('item 5: a post within personal space of the map edge'); }
     // a ring of wall round a point: the spots stay on its side
     const Q = { x: P.x - 5, y: P.y + 105 }, q = { cx: Math.floor(Q.x / F.NAVC), cy: Math.floor(Q.y / F.NAVC) };
     for (let i = -3; i <= 3; i++) for (let j = -3; j <= 3; j++) if (Math.max(Math.abs(i), Math.abs(j)) === 3) G.blds.push(F.mkBld(0, 'wall', (q.cx + i) * F.NAVC + 5, (q.cy + j) * F.NAVC + 5, 1));

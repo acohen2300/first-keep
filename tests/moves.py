@@ -119,7 +119,7 @@ JS2 = """() => {
 
   // ── waiting spots round the whole building ──
   const spots = () => {
-    const G = fresh(), k = F.keepOf(0), V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil');
+    const G = fresh(), k = F.keepOf(0); for (let i = 0; i < 3; i++) F.addUnit(0, 'vil', k.x + 60, k.y + 60 + i * 8); /* six waiters: more than one side's spots (preview 51: three took one side) */ const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil');
     for (const u of V) { F.setJob(u, 'food'); u.was = 'bush'; u.lostT = G.t; u.node = null; only(u, []); }
     run(25); return V.map((u) => ({ u, s: u.spot }));
   };
@@ -264,7 +264,7 @@ JS2 = """() => {
     if (!(walk(a) > wa && walk(b) > wb)) bad.push('a push moves a villager without a step');
     const c = F.addUnit(1, 'cata', a.x - 20, a.y); wa = walk(a); const x0 = a.x; F.hurt(1, c, a, 1);
     if (a.x !== x0 && !(walk(a) > wa)) bad.push('a knockback moves a villager without a step');
-    const L = G.lakes[0]; if (L) { a.x = L.x + (L.r - 3) * 0.7071; a.y = L.y + (L.r - 3) * 0.7071; wa = walk(a); F.collide(); if (!(walk(a) > wa)) bad.push('the push out of the water is not a step'); }
+    const L = G.lakes[0]; if (L) { a.x = L.x + (L.r - 3); a.y = L.y; /* off the causeways, which run on the land's middle lines (45° in the world, preview 51) */ wa = walk(a); F.collide(); if (!(walk(a) > wa)) bad.push('the push out of the water is not a step'); }
     a.x = k.x; a.y = k.y; wa = walk(a); F.collide(); if (!(walk(a) > wa)) bad.push('the rescue out of a wall is not a step');
     const op = (() => { for (let x = 400; x < 1600; x += 10) if ([-30, 0, 30].every((e) => !F.blockedCell(F.gcell(x + e, x + e), 0))) return x; return 600; })();
     const dr = F.addUnit(W(), 'deer', op, op); G.tick = 1 - (dr.id % 6); dr.hurtT = undefined; dr.run = { x: 900, y: 600 }; const wd = walk(dr); F.wildTick(dr, 0.25, 1);

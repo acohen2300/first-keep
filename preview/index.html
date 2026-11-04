@@ -281,7 +281,15 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 // ───────────────────────── The rules: every number lives in a table ─────────────────────────
 const BUILD = 80; // written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
 const BUILD_NAME = 'Restoration'; // the version's name, shown as "v70 · Restoration" (Albert, Oct 31)
-const MAP = 2160, // decision 5a (Albert, Oct 31: LOCKED at +8%): 2000 to 2160, the walking grid 216 squares a side
+// The land and the world (preview 51, Albert's pictures of Nov 4: a square map on the screen, its tiles on the diagonal, sawtooth edges, the
+// homes in the corners). The map-maker lays the land as it always has, a square SQUARE a side with a home in each corner (decision 5a, LOCKED
+// at +8%); then turnLand (10-world) turns every laid thing −45° about the centre into the world, an array MAP a side (√2 larger) that the
+// walking grid, the fog and the view cover. Seen through the turned view (20-view-base), the land stands square on the screen again, with
+// the walking grid's squares on the diagonal; what the array holds outside the land is off-map (solid, sea and cliffs). worldXY and landXY
+// go between the two frames; inLand says whether a world point is on the land.
+const SQUARE = 2160, // the land's side, as the map-maker lays it
+	LMID = SQUARE / 2,
+	MAP = 3060, // the world: 306 walking squares a side (the land's diagonal is 3055); the middle, 1530, is a square's corner, where the 6-square Throne centres
 	MID = MAP / 2,
 	DT = 1 / 30;
 const BN = ['Alpha', 'Bravo', 'Charlie'], // three squads, slots 2 to 4 of the station's middle, the fourth tile Set Up (Albert, Nov 2; four before, six before that; Alpha to Charlie, the NATO names)
@@ -302,7 +310,7 @@ const RICH = 2.5,
 	CARRY = 10,
 	NAVC = 10, // NAVC: the walking grid, 10 units a square (never shown)
 	FOOT = 2.65; // world units a foot: a villager is drawn 22.1 figure units tall × FIG 0.66 = 14.6 units, taken as an adult of 5.5 ft (SCIENCE.md; tests/science.py holds it to the drawing)
-const LAKE0 = { x: MID, y: MID, r: 170 }; // the great lake in the middle, round the Throne's island; the other lakes and the rivers fall at random (G.lakes)
+const LAKE0 = { x: LMID, y: LMID, r: 170 }; // laid at the land's middle (turned to the world's middle, the same point) // the great lake in the middle, round the Throne's island; the other lakes and the rivers fall at random (G.lakes)
 const SEASON_LEN = 180, // seconds a season
 	YEAR = SEASON_LEN * 4,
 	DAY_LEN = 120, // seconds a day: six days a year
@@ -324,7 +332,24 @@ const ZOOM_MAX = 4,
 	TILT = 0.55, // the camera's pitch: the ground squashed to 0.55 (near AoE2's 2:1; was 0.66 to preview 49; at 0.5 two pairs of buildings read alike at half zoom)
 	TURN = Math.SQRT1_2, // the view turned 45° (Albert, Nov 4, 06:58: "take the whole map and rotate it. Like a picture"): world x runs down-right on the screen, world y down-left; the sim's square grid never knows (20-view-base, SX and SY)
 	RIM = 640, // the scenery beyond the map's edge, in world units: sea on the near sides, cliffs and sky on the far (fills the phone's corners when the view meets an edge)
-	SIDE = 0.4; // SIDE: how far right the back of a building sits, per unit of depth, so its east wall shows
+	SIDE = 0.4;
+// the land's frame and the world's (preview 51): a land point (lx, ly) stands in the world at the centre plus (lx − LMID, ly − LMID) turned −45°,
+// so that through the turned view the land's x runs across the screen and its y down it, as the straight view had them
+const worldXY = (x, y) => {
+	const dx = x - LMID,
+		dy = y - LMID;
+	return { x: MID + (dx + dy) * TURN, y: MID + (dy - dx) * TURN };
+};
+const landXY = (x, y) => {
+	const dx = x - MID,
+		dy = y - MID;
+	return { x: LMID + (dx - dy) * TURN, y: LMID + (dx + dy) * TURN };
+};
+const landAt = (lx, ly) => worldXY(lx, ly); // a land point as a world point, for the rules that name the land's edges and middle lines
+const inLand = (x, y, m = 0) => {
+	const l = landXY(x, y);
+	return l.x >= m && l.y >= m && l.x <= SQUARE - m && l.y <= SQUARE - m;
+}; // SIDE: how far right the back of a building sits, per unit of depth, so its east wall shows
 const FOG = 40,
 	FOGN = Math.ceil(MAP / 40); // fog of war: squares of 40; unseen, explored (stays lit, dim), in sight now
 const WILD = 4; // the fifth side: animals, bandits, robbers, monsters
@@ -344,18 +369,28 @@ const JOBS = RES; // a job for each resource
 
 // Relations: ally (friend) | peace (neutral) | war (foe). Peace holds until a side gives NOTICE; alliance needs the other side's yes.
 const REL_WORD = { war: 'Foe', peace: 'Neutral', ally: 'Friend' }; // the one home of the stance words (cold review of v70: friend, neutral, foe), in the Relations card's order
-// The four corners (a base rule): each Town Center CORNER from the middle on both axes, so the Throne is the same distance from all four.
-// Decision 5a: 695 to about 751 (+8%), the agreed figure, snapped here, in its one home: a 5-square Town Center centres on a half square,
-// so MID − CORNER must be one (751 gives 755: 329 snaps to 325). Every place laid from CORNER (the forest's frame, the trade stops' local
-// coordinates) is then on the grid. Neighbours 1,510 apart; 325 behind each Town Center.
-const CORNER = MID - (Math.round((MID - 751) / NAVC - 0.5) + 0.5) * NAVC;
-const PLAYERS = [
-	{ name: 'You', pers: 'human', color: '#4f93e6', keep: [MID - CORNER, MID + CORNER] },
-	{ name: 'Raiders', pers: 'aggr', color: '#de5a44', keep: [MID - CORNER, MID - CORNER] },
-	{ name: 'Rivals', pers: 'bal', color: '#b07ae6', keep: [MID + CORNER, MID - CORNER] },
-	{ name: 'Fortress', pers: 'fort', color: '#5fb08a', keep: [MID + CORNER, MID + CORNER] },
-	{ name: 'Natives', pers: 'wild', color: '#9b8b72', keep: [MID, MID] },
+// The four corners (a base rule): each Town Center about CORNER from the middle on both axes of the land, so the Throne is the same
+// distance from all four. Decision 5a: 695 to about 751 (+8%), the agreed figure; it was 755, snapped to the land's grid; since preview 51
+// the keeps are snapped in the world (KEEP_W below) and CORNER is 753.1. Neighbours about 1,506 apart; about 327 behind each Town Center.
+const CORNER = 1065 * Math.SQRT1_2; // in the land's frame: 753.1 (was 755); a keep stands about CORNER out on both axes
+// The keeps' places (preview 51): named in the world, where each must sit on the centre of its five squares (a coordinate ending in 5)
+// while the Throne, six squares, centres on the world's middle (ending in 0); so each keep stands 1,065 from the middle along one axis and
+// 5 to the side along the other, the four turned a quarter about the Throne, all the same distance from it. The land's frame sees them
+// about 3.5 off its diagonals, which the map-maker's margins allow.
+const KEEP_W = [
+	[MID + 5, MID + 1065], // You: the bottom of the screen
+	[MID - 1065, MID + 5], // Raiders: the left
+	[MID - 5, MID - 1065], // Rivals: the top
+	[MID + 1065, MID - 5], // Fortress: the right
 ];
+const PLAYERS = [
+	{ name: 'You', pers: 'human', color: '#4f93e6', keep: KEEP_W[0] },
+	{ name: 'Raiders', pers: 'aggr', color: '#de5a44', keep: KEEP_W[1] },
+	{ name: 'Rivals', pers: 'bal', color: '#b07ae6', keep: KEEP_W[2] },
+	{ name: 'Fortress', pers: 'fort', color: '#5fb08a', keep: KEEP_W[3] },
+	{ name: 'Natives', pers: 'wild', color: '#9b8b72', keep: [MID, MID] },
+]; // the keeps in the world's frame; the map-maker reads them in the land's (landXY)
+
 const FORT = 3; // a player like the others since Build 40: it defends first, and strikes whoever is weak or busy
 
 const AGES = [
@@ -5984,15 +6019,19 @@ const EVK = Object.keys(EVENTS),
 // start: the first villagers stand this far from their Town Center toward the middle.
 const PLACES = { stop: [490, 320], lode: 270, camp: 160, scout: { mid: 300, edge: 420, keep: 215 }, start: 40 };
 const cross = (d) => [
-	[MID, MID - d],
-	[MID, MID + d],
-	[MID - d, MID],
-	[MID + d, MID],
+	[LMID, LMID - d],
+	[LMID, LMID + d],
+	[LMID - d, LMID],
+	[LMID + d, LMID],
 ]; // the four points d from the middle on the middle lines: north, south, west, east
 // two old trade routes, west to east and north to south, each with four stops; they bend around the great lake
-const ROUTES = [0, 1].map((ax) =>
-	[-PLACES.stop[0], -PLACES.stop[1], PLACES.stop[1], PLACES.stop[0]].map((d) => (ax ? [MID, MID + d] : [MID + d, MID])),
-);
+const ROUTES_L = [0, 1].map((ax) => [-PLACES.stop[0], -PLACES.stop[1], PLACES.stop[1], PLACES.stop[0]].map((d) => (ax ? [LMID, LMID + d] : [LMID + d, LMID]))), // in the land's frame, for the map-maker
+	ROUTES = ROUTES_L.map((r) =>
+		r.map(([x, y]) => {
+			const w = worldXY(x, y); // the same stops in the world's frame, for the game (preview 51)
+			return [w.x, w.y];
+		}),
+	);
 const POST = { all: 2, cut: [0, 0.2, 0.25, 0.3, 0.4], safe: 120, guard: 12, far: 2.5, want: 1.5 }; // each route has four stops. all: gold a second to whoever holds all four of a route; cut: of other sides' sales at a stop, by how many of its route you hold; guard: soldiers per stop or caravan
 // Sickness as the SIR model (Kermack & McKendrick 1927; Build 56): among a side's people, those who are well (S), sick (I) and over it (R, well
 // again after the course, as the game has no lasting immunity). New cases a tick = β S I / N, the mass-action law; the course lasts sickFor
@@ -7453,9 +7492,10 @@ const addRes = (a, c, f = 1) => {
 const sumCost = (c) => Object.values(c || {}).reduce((s, v) => s + v, 0);
 const fmt = (n) =>
 	n >= 10000 ? Math.round(n / 1000) + 'k' : n >= 1000 ? Math.floor(n / 100) / 10 + 'k' : String(Math.floor(n));
-const towardMid = (e, d) => {
-	const tx = MID - e.x,
-		ty = MID - e.y,
+const towardMid = (e, d, c = MID) => {
+	// d toward the middle (c: the world's, or the land's while the map-maker lays it)
+	const tx = c - e.x,
+		ty = c - e.y,
 		l = hyp(tx, ty) || 1;
 	return { x: e.x + (tx / l) * d, y: e.y + (ty / l) * d };
 };
@@ -8142,10 +8182,10 @@ const lakeR = (L) => L.r + (G.flood > G.t ? EVENTS.flood.rise : 0); // a lake in
 const lakeRAt = (L, a) => (L.w ? L.r * Math.max(0.5, 1 + L.w.reduce((s, [k, amp, ph]) => s + amp * Math.cos(k * a + ph), 0)) : L.r); // never under half its radius
 const lakeRTo = (L, x, y) => lakeRAt(L, Math.atan2(y - L.y, x - L.x)) + (G.flood > G.t ? EVENTS.flood.rise : 0); // the shore toward a point, in flood too
 // how far a point stands from water (negative: in it). The great lake holds the Throne's island and four causeways, which are land.
-const onLand = (x, y) =>
-	((Math.abs(x - MID) < THRONE.cause / 2 || Math.abs(y - MID) < THRONE.cause / 2) &&
-		hyp(x - MID, y - MID) < LAKE0.r + 60) ||
-	hyp(x - MID, y - MID) < THRONE.isle;
+const onLand = (x, y) => {
+	const l = landXY(x, y); // the causeways run on the land's middle lines (preview 51)
+	return ((Math.abs(l.x - LMID) < THRONE.cause / 2 || Math.abs(l.y - LMID) < THRONE.cause / 2) && hyp(x - MID, y - MID) < LAKE0.r + 60) || hyp(x - MID, y - MID) < THRONE.isle;
+};
 const lakeGap = (x, y) =>
 	onLand(x, y) ? 1e9 : G.lakes.reduce((m, L) => Math.min(m, hyp(x - L.x, y - L.y) - lakeRTo(L, x, y)), 1e9); // how far from the nearest lake's edge
 // lake cells: 1 water, 2 flood water only, which a side with levees wades
@@ -8189,11 +8229,17 @@ function snapPos(kind, x, y) {
 		gy = Math.round(y / NAVC - n / 2);
 	return { gx, gy, x: (gx + n / 2) * NAVC, y: (gy + n / 2) * NAVC };
 }
+// off the land (preview 51): the world's squares whose middle lies outside the turned land are solid, the same in every rebuild
+function navOffLand() {
+	NAV.off = new Uint8Array(NC * NC);
+	for (let gy = 0; gy < NC; gy++) for (let gx = 0; gx < NC; gx++) if (!inLand(gx * NAVC + 5, gy * NAVC + 5)) NAV.off[gy * NC + gx] = 1;
+}
 function navRebuild() {
 	if (lakeFor !== G.lakes || lakeHi !== G.flood > G.t) lakeGrid();
 	NAV.prev.set(NAV.solid);
 	NAV.prevG.set(NAV.gate);
 	NAV.solid.set(NAV.lake);
+	if (NAV.off) for (let i = 0; i < NAV.off.length; i++) if (NAV.off[i]) NAV.solid[i] = 1;
 	NAV.gate.fill(0);
 	NAV.occ.fill(null);
 	// a tree fills the 3×3 squares round it: forest is a wall until it is cut
@@ -8235,13 +8281,14 @@ function navRebuild() {
 	// clearance (Albert, Build 63: "units need to know where they fit"): a figure is nearly a square wide, so a square it may stand on keeps
 	// three of its four sides open. A square walled on two sides (a corner pocket, a slit by a tree or the lake) is shut; an erosion, not a
 	// flood, so it is judged on the grid as it was and never eats inward. Gates are the exception: a gate is walled on both sides by design.
-	const was = NAV.prev === NAV.solid ? NAV.solid : NAV.solid.slice();
+	const was = NAV.prev === NAV.solid ? NAV.solid : NAV.solid.slice(),
+		off = NAV.off || new Uint8Array(0),
+		wall = (d) => (was[d] && !off[d] ? 1 : 0); // the land's own edge is not a wall: a square beside it keeps its sides (preview 51: the sawtooth edge would otherwise eat the strip along it)
 	for (let y = 1; y < NC - 1; y++)
 		for (let x = 1; x < NC - 1; x++) {
 			const c = y * NC + x;
 			if (was[c] || NAV.gate[c]) continue;
-			if ((was[c - 1] ? 1 : 0) + (was[c + 1] ? 1 : 0) + (was[c - NC] ? 1 : 0) + (was[c + NC] ? 1 : 0) >= 2)
-				NAV.solid[c] = 1;
+			if (wall(c - 1) + wall(c + 1) + wall(c - NC) + wall(c + NC) >= 2) NAV.solid[c] = 1;
 		}
 	// which squares are joined by open ground (gates counted open: the finest cut is made by the search itself)
 	const C = NAV.comp;
@@ -9050,7 +9097,10 @@ function mkPlayer(i, civ) {
 		name: d.name,
 		pers: d.pers,
 		color: d.color,
-		keep: d.keep.slice(),
+		keep: (() => {
+			const l = landXY(d.keep[0], d.keep[1]);
+			return [l.x, l.y];
+		})(), // in the land's frame while the map is laid; turnLand puts it in the world's (where PLAYERS names it)
 		civ,
 		res: { ...START_RES },
 		goods: Object.fromEntries(GOODK.map((k) => [k, 0])),
@@ -9104,7 +9154,9 @@ function newGame(seed, carry, daily) {
 		for (let b = 0; b <= WILD; b++)
 			G.rel[a][b] = a === b ? 'self' : a === WILD || b === WILD ? 'war' : a === FORT || b === FORT ? 'peace' : 'war';
 	}
-	makeMap();
+	const woods = makeMap();
+	turnLand(); // the land, laid square, turned into the world (preview 51)
+	openWays(woods); // nothing walled in, judged on the world's walking grid
 	initEconomy();
 	// the hazards, chosen here once for every side (Build 70, Albert's A): a pick decides (the day's challenge, a scenario's, the Setup
 	// ticks); with none picked each is drawn by lot. Drawn after the map, so the map is the same whatever was picked.
@@ -9286,19 +9338,19 @@ function lakeHarm(L) {
 	return L;
 }
 function makeWater() {
-	const keeps = PLAYERS.slice(0, WILD).map((d) => ({ x: d.keep[0], y: d.keep[1] })),
+	const keeps = PLAYERS.slice(0, WILD).map((d) => landXY(d.keep[0], d.keep[1])),
 		W = [],
 		dry = (x, y, r, from) =>
 			keeps.every((k) => hyp(x - k.x, y - k.y) >= CLEAR + r) &&
-			Math.min(Math.abs(x - MID), Math.abs(y - MID)) >= r + WATER.gap &&
-			hyp(x - MID, y - MID) >= r + LAKE0.r + WATER.clear &&
+			Math.min(Math.abs(x - LMID), Math.abs(y - LMID)) >= r + WATER.gap &&
+			hyp(x - LMID, y - LMID) >= r + LAKE0.r + WATER.clear &&
 			W.every((q) => q === from || hyp(x - q.x, y - q.y) >= r + q.r + WATER.gap);
 	const n = WATER.lakes[0] + Math.floor(rng() * (WATER.lakes[1] - WATER.lakes[0] + 1));
 	for (let i = 0; i < n; i++) {
 		const r = lakeSize(rng());
 		for (let t = 0; t < 60; t++) {
-			const x = rnd(r, MAP - r),
-				y = rnd(r, MAP - r);
+			const x = rnd(r, SQUARE - r),
+				y = rnd(r, SQUARE - r);
 			if (!dry(x, y, r)) continue;
 			W.push(lakeShape({ x, y, r }));
 			break;
@@ -9306,7 +9358,7 @@ function makeWater() {
 	}
 	for (const L of W.slice()) {
 		const w = WATER.w * L.r,
-			toX = Math.min(L.x, MAP - L.x) < Math.min(L.y, MAP - L.y);
+			toX = Math.min(L.x, SQUARE - L.x) < Math.min(L.y, SQUARE - L.y);
 		for (const ax of [toX, !toX]) {
 			const C = makeRiver(L, w, ax);
 			if (!C || !C.every((p) => dry(p.x, p.y, w, L))) continue;
@@ -9320,7 +9372,7 @@ function makeWater() {
 // Trees on a 26-unit lattice where an organic field runs high, thicker away from home; clear round the Town Center, the lakes, every find,
 // stop and camp, along the trade lanes, and along three winding paths: to each neighbour's nearest stop and to the great lake. Anything left
 // cut off is joined to home by a straight cut (openWays, on the walking grid). About 375 trees a corner.
-const FOREST = { step: 26, trees: 375, path: 18, cut: 30, lane: 45, edge: 15, clear: { stop: 80, camp: 90, lode: 60 } }; // clear round the Town Center: CLEAR (06); edge: no tree nearer the map's edge; clear: round each shared place; cut: half the width of a cut home (openWays): open ground three squares wide between trees that fill three
+const FOREST = { step: 26, trees: 375, path: 34, cut: 30, lane: 45, edge: 40, clear: { stop: 80, camp: 90, lode: 60 } }; // clear round the Town Center: CLEAR (06); edge: no tree nearer the map's edge; clear: round each shared place; cut: half the width of a cut home (openWays): open ground three squares wide between trees that fill three
 function makeForest(spot, loc, near) {
 	const ph = [0, 1, 2, 3].map(() => rnd(0, 6.28)),
 		field = (x, y) =>
@@ -9342,10 +9394,10 @@ function makeForest(spot, loc, near) {
 	];
 	const out = [0, 1].map((ax) =>
 		near.stop
-			.filter((l) => Math.abs((ax ? l.x : l.y) - CORNER) < 1)
+			.filter((l) => Math.abs((ax ? l.x : l.y) - CORNER) < 6) // a keep stands up to 3.5 off the land's diagonal (KEEP_W, 01)
 			.reduce((a, l) => (hyp(l.x, l.y) < hyp(a.x, a.y) ? l : a)),
 	); // the stop nearest home on each middle line: a neighbour's way
-	const camp = PLACES.camp - (MID - CORNER), // the trade lanes run in from the robbers' camp
+	const camp = PLACES.camp - (LMID - CORNER), // the trade lanes run in from the robbers' camp
 		lane = (x, y) => (y > CORNER - FOREST.lane && x > camp) || (x > CORNER - FOREST.lane && y > camp);
 	const wind = (a, b) => {
 		const pts = [a];
@@ -9384,10 +9436,10 @@ function makeForest(spot, loc, near) {
 			...Object.values(spot),
 		],
 		wet = (p) =>
-			Math.min(p.x, p.y) < CORNER - MID + 45 ||
+			Math.min(p.x, p.y) < CORNER - LMID + 45 ||
 			Math.max(p.x, p.y) > CORNER - 45 ||
 			held.some((l) => dist(p, l) < l.r + 45) ||
-			(p.x <= 45 && p.y <= 45 && hyp(p.x, p.y) < MID - CORNER + 45); // in this corner's quarter, never in or at the edge of a lake, a find or the home zones (QC 05 N5)
+			(p.x <= 45 && p.y <= 45 && hyp(p.x, p.y) < LMID - CORNER + 45); // in this corner's quarter, never in or at the edge of a lake, a find or the home zones (QC 05 N5)
 	const dep = [
 		['bush', 0, 0.45],
 		['stone', 0, 0.75],
@@ -9400,7 +9452,7 @@ function makeForest(spot, loc, near) {
 		for (let k = 1; k < 8 && wet(p); k++)
 			p = along(paths[pi], clamp(f + (k % 2 ? -1 : 1) * Math.ceil(k / 2) * 0.08, 0.2, 0.95)); // slide along the path
 		const p0 = p;
-		for (let r = SEEK.step; wet(p) && r < MID; r += SEEK.step)
+		for (let r = SEEK.step; wet(p) && r < LMID; r += SEEK.step)
 			for (let a = 0, n = Math.ceil((2 * Math.PI * r) / SEEK.step); a < n && wet(p); a++)
 				p = { x: p0.x + Math.cos((a / n) * 2 * Math.PI) * r, y: p0.y + Math.sin((a / n) * 2 * Math.PI) * r }; // then outward from it, ring by ring: every corner gets every deposit
 		held.push({ ...p, r: 0 });
@@ -9408,7 +9460,7 @@ function makeForest(spot, loc, near) {
 	});
 	keepOut.push(...dep.map((d) => ({ x: d.x, y: d.y, r: 45 })));
 	let T = [];
-	const x0 = CORNER - MID + FOREST.edge;
+	const x0 = CORNER - LMID + FOREST.edge;
 	for (let y = x0; y < CORNER; y += FOREST.step)
 		for (let x = x0; x < CORNER; x += FOREST.step) {
 			const tx = x + rnd(-6, 6),
@@ -9425,7 +9477,7 @@ function makeForest(spot, loc, near) {
 // that overlap (the water and the walking grid are made of circles already). Where the chain breaks there is a ford: two, about a third and two thirds down.
 // A river is water like any lake: nobody walks or builds on it; it is crossed at a ford, and fished and docked like a lake.
 function makeRiver(L, w, toX) {
-	const E = toX ? { x: L.x < MID ? 0 : MAP, y: L.y + rnd(-60, 60) } : { x: L.x + rnd(-60, 60), y: L.y < MID ? 0 : MAP },
+	const E = toX ? { x: L.x < LMID ? 0 : SQUARE, y: L.y + rnd(-60, 60) } : { x: L.x + rnd(-60, 60), y: L.y < LMID ? 0 : SQUARE },
 		dx = E.x - L.x,
 		dy = E.y - L.y,
 		len = hyp(dx, dy),
@@ -9457,13 +9509,13 @@ function makeRiver(L, w, toX) {
 // find's middle at its own walk (HOME.at), in a random direction, every node inside the clearing; any other find's nodes all past the wall
 // band (HOME.out); and no node but zone 1's in zone 1. Each
 // with its room clear of what was laid before and of the water, and inside this corner's quarter of the map (local: keep 0,0, edge at
-// CORNER − MID, the middle lines at CORNER). A find that has no room searches outward: its ring widens by a step every few tries, so every
+// CORNER − LMID, the middle lines at CORNER). A find that has no room searches outward: its ring widens by a step every few tries, so every
 // corner gets every find (equal content; tests/map.py holds it on 100 seeds). Zone 1 never searches outward: it fits, or the test fails.
 const SEEK = { tries: 50, step: 20, most: 4000 };
 function laySpots(lay, loc, spot, shape) {
 	const taken = Object.values(spot),
 		room = [{ x: CORNER, y: CORNER, r: LAKE0.r + 25 }, ...loc.map((l) => ({ x: l.x, y: l.y, r: l.r + 25 }))], // the great lake, the water in this corner
-		lo = CORNER - MID,
+		lo = CORNER - LMID,
 		gap = LANE * NAVC,
 		inBack = (x, y) => x <= 0 && y <= 0 && hyp(x, y) <= HOME.clear; // zone 1: between the Town Center and its corner, inside the clearing (D-090)
 	for (const [id, r0, r1, c0] of lay) {
@@ -9527,8 +9579,8 @@ function makeMap() {
 	for (const p of G.P) {
 		if (p.id === WILD) continue;
 		const [kx, ky] = p.keep,
-			sx = kx < MID ? 1 : -1,
-			sy = ky < MID ? 1 : -1,
+			sx = kx < LMID ? 1 : -1,
+			sy = ky < LMID ? 1 : -1,
 			at = (dx, dy) => [kx + dx * sx, ky + dy * sy],
 			loc = G.lakes
 				.slice(1)
@@ -9581,8 +9633,8 @@ function makeMap() {
 		laySpots(layWild, loc, spot, shape);
 		laySpots(layMove, loc, spot, shape);
 		const toLoc = ([X, Y]) => ({ x: (X - kx) * sx, y: (Y - ky) * sy }),
-			mine = (L) => L.map(toLoc).filter((l) => l.x <= CORNER && l.y <= CORNER),
-			near = { stop: mine(ROUTES.flat()), camp: mine(cross(MID - PLACES.camp)), lode: mine(cross(PLACES.lode)) };
+			mine = (L) => L.map(toLoc).filter((l) => l.x <= CORNER + 6 && l.y <= CORNER + 6), // this corner's quarter; a keep stands up to 3.5 off the diagonal (KEEP_W, 01)
+			near = { stop: mine(ROUTES_L.flat()), camp: mine(cross(LMID - PLACES.camp)), lode: mine(cross(PLACES.lode)) };
 		const { trees: forest, dep } = makeForest(spot, loc, near);
 		bunch('bushA', 'bush', 180 * RICH);
 		bunch('bushB', 'bush', 180 * RICH);
@@ -9602,12 +9654,12 @@ function makeMap() {
 			else for (const [ox, oy] of SHAPE.pair) N.push(node(d.kind, d.kind, ...at(d.x + ox, d.y + oy), 300 * RICH));
 		}
 		// 4 movables
-		const f = towardMid({ x: kx, y: ky }, PLACES.start);
+		const f = towardMid({ x: kx, y: ky }, PLACES.start, LMID);
 		for (let i = 0; i < START_VILS; i++) {
 			const v = addUnit(p.id, 'vil', f.x + (i - (START_VILS - 1) / 2) * 14, f.y + 6);
 			v.job = i === 1 ? 'wood' : 'food';
 		}
-		const sc = towardMid({ x: kx, y: ky }, 60);
+		const sc = towardMid({ x: kx, y: ky }, 60, LMID);
 		addUnit(p.id, 'scout', sc.x, sc.y);
 		// the wild near home: two herds of game, and danger a little farther out
 		for (const id of ['deerA', 'deerB'].filter((id) => spot[id]))
@@ -9617,10 +9669,10 @@ function makeMap() {
 			addFind(id, ...P(id, [0, 0]));
 	}
 	// shared ground: a robbers' camp at the middle of each map edge, at the end of a trade route; gold and stone near the great lake
-	for (const [x, y] of cross(MID - PLACES.camp)) addFind('camp', x, y);
+	for (const [x, y] of cross(LMID - PLACES.camp)) addFind('camp', x, y);
 	for (const [x, y] of cross(PLACES.lode)) {
-		const ux = Math.sign(x - MID),
-			uy = Math.sign(y - MID),
+		const ux = Math.sign(x - LMID),
+			uy = Math.sign(y - LMID),
 			at = (a, o) => [x + uy * a + ux * o, y + ux * a + uy * o]; // a: across its middle line, o: out from the middle; the same for both corners beside it
 		N.push(
 			node('gold', 'gold', ...at(-12, 0), 500 * RICH),
@@ -9639,7 +9691,7 @@ function makeMap() {
 			const ang = (a / n) * Math.PI * 2;
 			const fx = L.x + Math.cos(ang) * (lakeRAt(L, ang) - 8), // on the drawn shore, not the old circle (p44)
 				fy = L.y + Math.sin(ang) * (lakeRAt(L, ang) - 8);
-			if (!onLand(fx, fy)) N.push(node('fish', 'food', fx, fy, 350 * RICH)); // fish swim in water: none on the great lake's causeways (B15)
+			if (!onLand(worldXY(fx, fy).x, worldXY(fx, fy).y)) N.push(node('fish', 'food', fx, fy, 350 * RICH)); // onLand reads the world's frame (preview 51) // fish swim in water: none on the great lake's causeways (B15)
 		}
 	});
 	for (const n of N) {
@@ -9650,7 +9702,7 @@ function makeMap() {
 		}
 	} // what the land is rich and poor in
 	makeCitadel();
-	openWays(woods);
+	return woods; // openWays runs once the land is turned into the world: the walking grid is the world's (preview 51)
 }
 // Nothing may be walled in (B4): every find and every bush, rock and lode in a corner's quarter of the map is reached from its Town Center
 // on the real walking grid (navRebuild: trees, buildings, the slit and clearance rules); one cut off gets a cut home through that
@@ -9727,7 +9779,12 @@ function wayHome(g, C, home) {
 	return P;
 }
 // in the quarter of the map whose Town Center is k: what stands on a middle line (a stop, a camp, a lode) is in both quarters beside it
-const inQuarter = (q, k) => (k.x < MID ? q.x <= MID : q.x >= MID) && (k.y < MID ? q.y <= MID : q.y >= MID);
+const inQuarter = (q, k) => {
+	const lq = landXY(q.x, q.y),
+		lk = landXY(k.x, k.y),
+		e = 0.01; // the corner's quarter of the land, read in the world (preview 51)
+	return (lk.x < LMID ? lq.x <= LMID + e : lq.x >= LMID - e) && (lk.y < LMID ? lq.y <= LMID + e : lq.y >= LMID - e);
+};
 // how far a point stands from the segment a to b
 const segGap = (x, y, a, b) => {
 	const dx = b.x - a.x,
@@ -9740,7 +9797,7 @@ const segGap = (x, y, a, b) => {
 // from every Town Center (CORNER in 01); everything of the citadel is the same seen from every corner (Albert, Nov 1: four towers, the
 // shrine on the Throne's square; tests/map.py turns each piece a quarter round the Throne and looks for its twin).
 function makeCitadel() {
-	const c = MID / NAVC,
+	const c = LMID / NAVC,
 		E = THRONE.r / NAVC - 0.5, // the ring's squares, in squares from the middle: their centres at ±0.5 to ±E, the same on every side
 		put = (kind, x, y) => {
 			const b = mkBld(WILD, kind, x, y, 1);
@@ -9748,20 +9805,20 @@ function makeCitadel() {
 			G.blds.push(b);
 			return b;
 		};
-	const T = put('throne', MID, MID);
+	const T = put('throne', LMID, LMID);
 	for (const [sx, sy] of [
 		[-1, -1],
 		[1, -1],
 		[1, 1],
 		[-1, 1],
 	])
-		put('tower', MID + sx * (THRONE.r - NAVC), MID + sy * (THRONE.r - NAVC)); // a tower on each corner of the ring, its two squares by the corner its own
+		put('tower', LMID + sx * (THRONE.r - NAVC), LMID + sy * (THRONE.r - NAVC)); // a tower on each corner of the ring, its two squares by the corner its own
 	for (let i = -E; i <= E; i++)
 		for (let j = -E; j <= E; j++) {
 			if (Math.max(Math.abs(i), Math.abs(j)) !== E || Math.min(Math.abs(i), Math.abs(j)) >= E - 1) continue; // the ring, but not under a tower
 			put(Math.min(Math.abs(i), Math.abs(j)) === 0.5 ? 'gate' : 'wall', (c + i) * NAVC, (c + j) * NAVC); // a gate: the two middle squares of a side
-		} // symmetric about the Throne (QC 05 N1: it was laid on squares about MID + 5, so two gates stood 10 nearer the Throne than the others)
-	addFind('shrine', MID, MID); // in the Throne: taken by a priest at its foot (FINDS.shrine.r)
+		} // symmetric about the Throne (QC 05 N1: it was laid on squares about LMID + 5, so two gates stood 10 nearer the Throne than the others)
+	addFind('shrine', LMID, LMID); // in the Throne: taken by a priest at its foot (FINDS.shrine.r)
 	for (let i = 0; i < NATIVE.garrison; i++) natSpawn(T, i % 3 === 2 ? 'nativebow' : 'native');
 	G.throne = null;
 	G.prisoners = [];
@@ -9789,6 +9846,58 @@ function addFind(kind, x, y) {
 	if (F.hire) for (let i = 0; i < F.hire.n; i++) wildAt('vagabond', x + (i - 1) * 12, y + 14, f);
 	G.finds.push(f);
 	return f;
+}
+// The turn (preview 51): everything the map-maker laid in the land's frame goes to the world's. A point turns by worldXY; a lake's shore
+// harmonics turn with it (a land angle is the world angle plus 45°, so ph becomes ph + k·45°); a building is snapped to the world's
+// squares again, so its footprint sits on them; a field's node follows its building. The keeps' coordinates too, and the start camera reads
+// them after. The map-maker itself never knows: every rule it has is a distance or a ring, the same in both frames.
+function turnLand() {
+	const at = (e) => {
+		const w = worldXY(e.x, e.y);
+		e.x = w.x;
+		e.y = w.y;
+	};
+	for (const n of G.nodes) if (!n.farm) at(n);
+	for (const f of G.finds) at(f);
+	for (const L of G.lakes) {
+		at(L);
+		if (L.w) for (const h of L.w) h[2] += (h[0] * Math.PI) / 4; // cos(k·a + ph) in the land's frame is cos(k·a_w + ph + k·45°) in the world's (a = a_w + 45°)
+	}
+	for (const b of G.blds) {
+		const w = worldXY(b.x, b.y),
+			sp = snapPos(b.kind, w.x, w.y);
+		b.x = sp.x;
+		b.y = sp.y;
+		b.gx = sp.gx;
+		b.gy = sp.gy;
+		if (b.node) {
+			b.node.x = b.x;
+			b.node.y = b.y;
+		}
+	}
+	const PAIRS = [
+		['x', 'y'],
+		['px', 'py'],
+		['hx', 'hy'],
+		['hax', 'hay'],
+		['kx', 'ky'],
+	];
+	for (const u of G.units) {
+		for (const [a, b] of PAIRS)
+			if (typeof u[a] === 'number' && typeof u[b] === 'number' && (a === 'x' || u[a] || u[b])) {
+				const w = worldXY(u[a], u[b]);
+				u[a] = w.x;
+				u[b] = w.y;
+			}
+		for (const key of ['grazeAt', 'post', 'fpos', 'anchor']) if (u[key] && typeof u[key].x === 'number') at(u[key]);
+		if (Array.isArray(u.route)) for (const q of u.route) at(q);
+	}
+	for (const p of G.P) {
+		const w = worldXY(p.keep[0], p.keep[1]);
+		p.keep = [w.x, w.y];
+	}
+	lakeFor = null; // the lakes moved: the water grid is laid again at the next rebuild
+	navOffLand(); // the squares outside the land are solid for good
 }
 function mkBld(owner, kind, x, y, prog) {
 	const sp = snapPos(kind, x, y),
@@ -11969,7 +12078,7 @@ const regionAt = (p, o) => {
 // side of water and walls), and nobody but the units in skip stands within half of SPACE.
 function spotFree(p, o, cm, skip) {
 	const c = gcell(p.x, p.y);
-	if (p.x < SPACE || p.y < SPACE || p.x > MAP - SPACE || p.y > MAP - SPACE || blockedCell(c, o) || (cm && NAV.comp[c] !== cm)) return false;
+	if (!inLand(p.x, p.y, SPACE) || blockedCell(c, o) || (cm && NAV.comp[c] !== cm)) return false;
 	let stood = false;
 	unitsNear(p, SPACE / 2, (v) => {
 		if (!stood && !skip.has(v) && v.hp > 0 && !v.inside) stood = true;
@@ -12595,10 +12704,12 @@ function scoutTick(u, dt, SP) {
 		const S = PLACES.scout,
 			e = S.edge,
 			c = [
-				[MID, MAP - e],
-				[MAP - e, MID],
-				[MID, e],
-				[e, MID],
+				...[
+					[LMID, SQUARE - e],
+					[SQUARE - e, LMID],
+					[LMID, e],
+					[e, LMID],
+				].map(([x, y]) => [landAt(x, y).x, landAt(x, y).y]), // the land's four edges, in the world (preview 51)
 				...[1, 2, 3, 0].map((o) => G.P[o].keep.map((v) => v + Math.sign(MID - v) * S.keep)), // in front of each Town Center, where it stands
 				[MID - S.mid, MID - S.mid],
 				[MID + S.mid, MID + S.mid],
@@ -13306,11 +13417,11 @@ function wayfarers(dt) {
 	if (G.wayT > 0) return;
 	G.wayT = WAYFARER_EVERY;
 	const E = [
-			[MID, 60],
-			[MAP - 60, MID],
-			[MID, MAP - 60],
-			[60, MID],
-		],
+			[LMID, 60],
+			[SQUARE - 60, LMID],
+			[LMID, SQUARE - 60],
+			[60, LMID],
+		].map(([x, y]) => [landAt(x, y).x, landAt(x, y).y]), // the land's edges, in the world (preview 51)
 		i = G.wayI++ % 4,
 		a = E[i],
 		b = E[(i + 2) % 4];
@@ -20126,16 +20237,16 @@ let vy = 0; // the map is full screen; the view centres on the band between the 
 /* fit() is in 32-frame.js: it reads the page's bars */
 let bandH = 0; // the height of the clear band between the top bars and the jobs (fit sets it)
 function clampCam() {
-	// in the turned frame: u = x − y runs −MAP..MAP across the diamond, v = x + y runs 0..2MAP down it; the screen's half sizes in those units.
-	// The screen may reach RIM past the diamond's points (the sea and the cliffs fill its corners), never further (Albert, Build 40; Nov 4)
-	const hu = cw / 2 / (cam.z * TURN),
-		hv = (bandH || ch) / 2 / (cam.z * TURN * TILT),
-		u = cam.x - cam.y,
-		v = cam.x + cam.y,
-		cu = clamp(u, Math.min(-MAP + hu - RIM, 0), Math.max(MAP - hu + RIM, 0)),
-		cv_ = clamp(v, Math.min(hv - RIM, MAP), Math.max(2 * MAP - hv + RIM, MAP));
-	cam.x = (cu + cv_) / 2;
-	cam.y = (cv_ - cu) / 2;
+	// in the land's frame (preview 51), where the land is a square the screen sees upright: its edges may come up to the bars and RIM past them
+	// (the sea and the cliffs fill what is left), never further (Albert, Build 40)
+	const hw = cw / 2 / cam.z,
+		half = (bandH || ch) / 2 / (cam.z * TILT),
+		l = landXY(cam.x, cam.y),
+		lx = clamp(l.x, Math.min(hw - RIM, LMID), Math.max(SQUARE - hw + RIM, LMID)),
+		ly = clamp(l.y, Math.min(half - RIM, LMID), Math.max(SQUARE - half + RIM, LMID)),
+		w = worldXY(lx, ly);
+	cam.x = w.x;
+	cam.y = w.y;
 }
 // The camera glides as a critically damped spring (ζ = 1, no overshoot; the standard smoothing of a value toward a target, one ω for every
 // phone whatever its frame rate). camGo sets the target; the frame moves the camera. One home for every glide: Follow, Home, the small map,
@@ -20217,8 +20328,9 @@ function wrect(x, y, w, h, stroke) {
 	} else ctx.fillRect(x, y, w, h);
 	flat();
 }
-const DIAG = MAP * 2 * TURN; // the map's width on the screen at zoom 1 (its diagonal)
-const minZ = () => Math.min(cw / DIAG, ch / (DIAG * TILT)) || 0.2;
+const landMat = (c) => c.transform(TURN, -TURN, TURN, TURN, MID - 2 * LMID * TURN, MID); // the land's frame on a canvas already in world units (preview 51)
+const DIAG = SQUARE * 2 * TURN; // the land's width on the screen at zoom 1 // the map's width on the screen at zoom 1 (its diagonal)
+const minZ = () => Math.min(cw / SQUARE, ch / (SQUARE * TILT)) || 0.2; // the land stands square on the screen: SQUARE wide, SQUARE × TILT tall at zoom 1
 function zoomAt(nz, sx, sy) {
 	const w = toWorld(sx, sy);
 	cam.z = clamp(nz, minZ(), ZOOM_MAX);
@@ -20240,6 +20352,13 @@ function makeBg() {
 	const b = bg.getContext('2d');
 	b.scale(bgK, bgK);
 	const R = (a, z) => a + lookDice() * (z - a);
+	b.save();
+	landMat(b);
+	b.beginPath();
+	b.rect(0, 0, SQUARE, SQUARE);
+	b.restore();
+	b.save();
+	b.clip(); // the land's square, turned: everything painted for the land stays on it (preview 51)
 	b.fillStyle = '#4a6634';
 	b.fillRect(0, 0, MAP, MAP);
 	const blot = (n, cols, r0, r1) => {
@@ -20347,6 +20466,8 @@ function makeBg() {
 		b.fill();
 	}
 	{
+		b.save();
+		landMat(b); // the island and the causeways lie on the land's middle lines (preview 51)
 		const L = LAKE0,
 			R = THRONE.isle,
 			W = THRONE.cause; // the Throne's island and its four causeways: stone over the water
@@ -20388,6 +20509,7 @@ function makeBg() {
 			b.lineTo(L.x + i, L.y + R);
 			b.stroke();
 		}
+		b.restore();
 	}
 	// the old trade roads: a worn dirt track through each route's stops, bending round the great lake (drawn once, into the ground)
 	b.lineCap = 'round';
@@ -20417,6 +20539,24 @@ function makeBg() {
 		}
 		b.setLineDash([]);
 	}
+	b.restore(); // the land's clip
+	{
+		// outside the land (preview 51): every walking square whose middle is off the land, painted by which edge it lies past: the sea beyond the
+		// near edges (the land's south and east, the screen's bottom and right), the cliffs beyond the far; a strand of sand one square wide
+		// along the shore. Square by square, so the edge is the sawtooth of the diagonal squares (Albert's picture)
+		for (let gy = 0; gy < NC; gy++)
+			for (let gx = 0; gx < NC; gx++) {
+				const x = gx * NAVC,
+					y = gy * NAVC,
+					l = landXY(x + 5, y + 5);
+				if (l.x >= 0 && l.y >= 0 && l.x <= SQUARE && l.y <= SQUARE) continue;
+				const sea = l.x > SQUARE || l.y > SQUARE,
+					near = sea && l.x < SQUARE + 12 && l.y < SQUARE + 12;
+				if (!near) continue; // the sea and, past the far edges, the cliff face and its plateau are the frame's (drawRim); only the strand is painted here, one square wide, the sawtooth
+				b.fillStyle = '#cdbb88';
+				b.fillRect(x, y, NAVC, NAVC);
+			}
+	}
 	terrainMini = document.createElement('canvas');
 	terrainMini.width = terrainMini.height = 172;
 	terrainMini.getContext('2d').drawImage(bg, 0, 0, 172, 172);
@@ -20445,35 +20585,37 @@ let SPARKS = [],
 const RIMC = { sea: '#2f6684', deep: '#214a63', sand: '#cdbb88', cliff: '#4f463d', cliffLit: '#847566', top: '#5e6a4e', skyLo: '#b9cad6', skyHi: '#6b93b4' },
 	CLIFF_H = 140; // the far edges rise this much above the map
 function drawRim(z) {
-	const VB = viewBox();
-	if (VB.x0 >= 0 && VB.y0 >= 0 && VB.x1 <= MAP && VB.y1 <= MAP) return; // the whole screen is on the map
-	const c = (x, y, h = 0) => [SX(x, y), SY(y, h, x)],
+	const VB = viewBox(),
+		on = (x, y) => inLand(x, y);
+	if (on(VB.x0, VB.y0) && on(VB.x1, VB.y0) && on(VB.x0, VB.y1) && on(VB.x1, VB.y1)) return; // the whole screen is on the land
+	// a land point on the screen, h up; the land's edges: north and west at the top and left of the screen (the cliffs), south and east at the
+	// bottom and right (the sea). The ground's picture already paints the sawtooth band beside each edge; this is what lies beyond the array
+	const c = (lx, ly, h = 0) => {
+			const w = worldXY(lx, ly);
+			return [SX(w.x, w.y), SY(w.y, h, w.x)];
+		},
 		poly = (pts, fill) => {
 			ctx.beginPath();
 			pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
 			ctx.closePath();
 			ctx.fillStyle = fill;
 			ctx.fill();
-		};
-	// the sky, behind everything
+		},
+		S = SQUARE,
+		R = RIM,
+		H = CLIFF_H;
 	const g = ctx.createLinearGradient(0, 0, 0, ch);
 	g.addColorStop(0, RIMC.skyHi);
 	g.addColorStop(1, RIMC.skyLo);
 	ctx.fillStyle = g;
 	ctx.fillRect(0, 0, cw, ch);
-	// the sea, RIM out past the near edges (south: y = MAP; east: x = MAP), with its strand along the shore
-	const R = RIM;
-	poly([c(-R, MAP), c(MAP + 3 * R, MAP), c(MAP + 3 * R, MAP + 3 * R), c(-R, MAP + 3 * R)], RIMC.deep);
-	poly([c(MAP, -R), c(MAP + 3 * R, -R), c(MAP + 3 * R, MAP + 3 * R), c(MAP, MAP + 3 * R)], RIMC.deep);
-	poly([c(-R, MAP), c(MAP + R, MAP), c(MAP + R, MAP + 90), c(-R, MAP + 90)], RIMC.sea);
-	poly([c(MAP, -R), c(MAP + 90, -R), c(MAP + 90, MAP + 90), c(MAP, MAP + 90)], RIMC.sea);
-	poly([c(-R, MAP), c(MAP + 14, MAP), c(MAP + 14, MAP + 14), c(-R, MAP + 14)], RIMC.sand);
-	poly([c(MAP, -R), c(MAP + 14, -R), c(MAP + 14, MAP + 14), c(MAP, MAP + 14)], RIMC.sand);
-	// the plateau beyond the far edges (north: y = 0; west: x = 0), CLIFF_H up, then its face down to the map's edge: the lit face takes the sun (the north edge faces south)
-	const H = CLIFF_H;
-	poly([c(-R, -R, H), c(MAP, -R, H), c(MAP, 0, H), c(0, 0, H), c(0, MAP, H), c(-R, MAP, H)], RIMC.top);
-	poly([c(0, 0, 0), c(MAP, 0, 0), c(MAP, 0, H), c(0, 0, H)], RIMC.cliffLit);
-	poly([c(0, 0, 0), c(0, MAP, 0), c(0, MAP, H), c(0, 0, H)], RIMC.cliff);
+	poly([c(-3 * R, S), c(S + 3 * R, S), c(S + 3 * R, S + 3 * R), c(-3 * R, S + 3 * R)], RIMC.sea); // the sea south, to the horizon
+	poly([c(S, -R), c(S + 3 * R, -R), c(S + 3 * R, S + 3 * R), c(S, S + 3 * R)], RIMC.sea); // and east
+	poly([c(-3 * R, S + 180), c(S + 3 * R, S + 180), c(S + 3 * R, S + 3 * R), c(-3 * R, S + 3 * R)], RIMC.deep); // deeper water farther out
+	poly([c(S + 180, -R), c(S + 3 * R, -R), c(S + 3 * R, S + 3 * R), c(S + 180, S + 3 * R)], RIMC.deep);
+	poly([c(-R, -R, H), c(S, -R, H), c(S, 0, H), c(0, 0, H), c(0, S, H), c(-R, S, H)], RIMC.top); // the plateau north and west, H up
+	poly([c(0, 0, 0), c(S, 0, 0), c(S, 0, H), c(0, 0, H)], RIMC.cliffLit); // the north face, lit (it faces the sun)
+	poly([c(0, 0, 0), c(0, S, 0), c(0, S, H), c(0, 0, H)], RIMC.cliff); // the west face, in shade
 }
 function draw() {
 	followCam(Math.min(0.1, (performance.now() - (draw.last || performance.now())) / 1000));
@@ -20741,6 +20883,7 @@ function fogTick() {
 			if (b.prog >= 1) wearGround(b);
 		} // what your people and towers have seen, remembered, and the ground round it
 }
+let fogOff = null;
 function fogLayer() {
 	// the fog as one small picture, drawn soft over the world
 	if (!fogCv) {
@@ -20750,11 +20893,16 @@ function fogLayer() {
 	}
 	const d = fogImg.data,
 		F = G.fog;
+	if (!fogOff || fogOff.length !== F.length) {
+		// off the land (preview 51): the sea and the cliffs are never fogged
+		fogOff = new Uint8Array(F.length);
+		for (let i = 0; i < F.length; i++) fogOff[i] = inLand((i % FOGN) * 40 + 20, Math.floor(i / FOGN) * 40 + 20, -30) ? 0 : 1;
+	}
 	for (let i = 0; i < F.length; i++) {
 		d[i * 4] = 8;
 		d[i * 4 + 1] = 12;
 		d[i * 4 + 2] = 10;
-		d[i * 4 + 3] = F[i] === 2 ? 0 : F[i] === 1 ? 110 : 235;
+		d[i * 4 + 3] = fogOff[i] || F[i] === 2 ? 0 : F[i] === 1 ? 110 : 235;
 	}
 	fogCv.getContext('2d').putImageData(fogImg, 0, 0);
 	return fogCv;
@@ -22497,8 +22645,9 @@ function ghostTint(c, ok) {
 function miniIncoming(m, k) {
 	const I = G.incoming;
 	if (!I) return;
-	const x = 86 + (I.x - I.y) * MINI_K,
-		y = (I.x + I.y) * MINI_K,
+	const li = landXY(I.x, I.y),
+		x = li.x * MINI_K,
+		y = li.y * MINI_K,
 		on = Math.floor(performance.now() / 350) % 2 === 0;
 	m.strokeStyle = '#ff3b2f';
 	m.lineWidth = 2;
@@ -22512,13 +22661,9 @@ function miniIncoming(m, k) {
 } // an attack on its way: a red dot that flashes on the small map; tap the map and you are there
 // the small map, turned with the view (preview 50): the diamond fills its square; MINI_M maps world units to it; marks are drawn in the
 // turned frame (a mark's own shape is turned too; it is 3 px, nobody minds)
-const MINI_K = 172 / (2 * MAP),
-	miniMat = (m) => m.setTransform(MINI_K, MINI_K, -MINI_K, MINI_K, 86, 0),
-	miniWorld = (px, py) => {
-		const u = (px - 86) / MINI_K,
-			v = py / MINI_K;
-		return { x: (u + v) / 2, y: (v - u) / 2 };
-	}; // a point of the small map, in the world
+const MINI_K = 172 / SQUARE, // the land's square fills the small map (preview 51)
+	miniMat = (m) => m.setTransform(MINI_K * TURN, MINI_K * TURN, -MINI_K * TURN, MINI_K * TURN, MINI_K * LMID, MINI_K * (LMID - 2 * MID * TURN)), // world units to the small map, through the land's frame
+	miniWorld = (px, py) => worldXY(px / MINI_K, py / MINI_K); // a point of the small map, in the world
 function drawMini() {
 	const m = mctx,
 		k = 1;
@@ -22535,13 +22680,12 @@ function drawMini() {
 	m.setTransform(1, 0, 0, 1, 0, 0);
 	m.save();
 	m.beginPath();
-	m.moveTo(86, 0);
-	m.lineTo(172, 86);
-	m.lineTo(86, 172);
-	m.lineTo(0, 86);
-	m.closePath();
+	m.rect(0, 0, 172, 172);
 	m.clip();
-	const W = (x, y) => [86 + (x - y) * MINI_K, (x + y) * MINI_K]; // a world point on the small map
+	const W = (x, y) => {
+		const l = landXY(x, y);
+		return [l.x * MINI_K, l.y * MINI_K];
+	}; // a world point on the small map
 	const P = (e) => W(e.x, e.y);
 	for (const f of G.finds)
 		if ((!f.done || FINDS[f.kind].capture) && known0(f)) {
@@ -23452,8 +23596,8 @@ mini.addEventListener('pointerdown', (e) => {
 	} catch (err) {} // the finger stays the map's until it lifts, even off its edge (an audit, Nov 2)
 	const r = mini.getBoundingClientRect(),
 		w = miniWorld(((e.clientX - r.left) / r.width) * 172, ((e.clientY - r.top) / r.height) * 172),
-		x = clamp(w.x, 0, MAP),
-		y = clamp(w.y, 0, MAP);
+		x = w.x,
+		y = w.y;
 	camGo(x, y);
 	miniAt = { x: e.clientX, y: e.clientY, pan: false };
 });
@@ -23466,8 +23610,8 @@ mini.addEventListener('pointermove', (e) => {
 		const r = mini.getBoundingClientRect();
 		camStop();
 		const w = miniWorld(((e.clientX - r.left) / r.width) * 172, ((e.clientY - r.top) / r.height) * 172);
-		cam.x = clamp(w.x, 0, MAP);
-		cam.y = clamp(w.y, 0, MAP);
+		cam.x = w.x;
+		cam.y = w.y;
 		clampCam();
 	} // and a drag on the small map sweeps the camera with it, no glide (Albert, Nov 2)
 });
@@ -28278,7 +28422,7 @@ for (const ev of ['pointerup', 'touchend']) document.addEventListener(ev, sndIni
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 44; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 45; // 45: the land turned into the world (preview 51); a 44 save's places are off the land // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -28397,7 +28541,7 @@ const MIGRATE = {
 		return S;
 	}, // Build 70: Battle stations is cut; a game saved in it is in All hands (its soldiers' half), with no villager's work noted (it moved none)
 	39: (S) => {
-		const D = MID - 1000, // shape 39 was laid on the 2000 map (MID 1000): the old game is set down in the middle of the new one
+		const D = LMID - 1000, // shape 39 was laid on the 2000 map (MID 1000): the old game is set down in the middle of the land (the land's frame; shape 44 turns it into the world)
 			k = Math.round(D / FOG),
 			n0 = 2000 / FOG,
 			PAIRS = [
@@ -28413,11 +28557,12 @@ const MIGRATE = {
 				for (const [a, b] of PAIRS) if (typeof o[a] === 'number' && typeof o[b] === 'number') (o[a] += D), (o[b] += D);
 				for (const key in o) if (key !== 'fog' && key !== 'tread') walk(o[key]);
 			},
+			FL = Math.ceil(SQUARE / FOG), // the land's fog squares (shape 44 turns them into the world's)
 			grid = (b64, w) => {
 				const s = atob(b64),
-					o = new Uint8Array(FOGN * FOGN * w);
+					o = new Uint8Array(FL * FL * w);
 				for (let j = 0; j < n0; j++)
-					for (let i = 0; i < n0 * w; i++) o[((j + k) * FOGN + k) * w + i] = s.charCodeAt(j * n0 * w + i) || 0;
+					for (let i = 0; i < n0 * w; i++) o[((j + k) * FL + k) * w + i] = s.charCodeAt(j * n0 * w + i) || 0;
 				return btoa(String.fromCharCode(...o));
 			}; // the fog and the ruts, square for square
 		for (const u of S.units || [])
@@ -28492,7 +28637,74 @@ const MIGRATE = {
 		if (typeof S.sel === 'number' && S.sel >= BNS) S.sel = 'all';
 		S.v = 44;
 		return S;
-	}, // Nov 2 (Albert): three squads, Alpha, Bravo and Charlie, and the fourth tile of the row's middle is Set Up; the old fourth squad's soldiers fold into the reserve, as Epsilon and Zeta did in step 36
+	}, // Nov 2 (Albert): three squads,
+	44: (S) => {
+		// preview 51: the land turned into the world. Every place in the save was in the land's frame (the 2160 square); it goes through worldXY.
+		// A building is snapped to the world's squares again; a lake's shore harmonics turn with it; the fog and the ruts move square for square
+		// (an old square's middle finds its world square; what two old squares land on one is the lighter of them)
+		const PAIRS = [
+				['x', 'y'],
+				['px', 'py'],
+				['hx', 'hy'],
+				['hax', 'hay'],
+				['kx', 'ky'],
+			],
+			turn = (o, a, b) => {
+				const w = worldXY(o[a], o[b]);
+				o[a] = w.x;
+				o[b] = w.y;
+			},
+			walk = (o) => {
+				if (!o || typeof o !== 'object') return;
+				if (Array.isArray(o)) return o.forEach(walk);
+				for (const [a, b] of PAIRS) if (typeof o[a] === 'number' && typeof o[b] === 'number') turn(o, a, b);
+				for (const key in o) if (key !== 'fog' && key !== 'tread') walk(o[key]);
+			},
+			n0 = SQUARE / FOG,
+			grid = (b64, w) => {
+				const s = atob(b64),
+					o = new Uint8Array(FOGN * FOGN * w);
+				for (let j = 0; j < n0; j++)
+					for (let i = 0; i < n0; i++) {
+						const p = worldXY(i * FOG + FOG / 2, j * FOG + FOG / 2),
+							gi = Math.floor(p.x / FOG),
+							gj = Math.floor(p.y / FOG);
+						for (let c = 0; c < w; c++) o[(gj * FOGN + gi) * w + c] = Math.max(o[(gj * FOGN + gi) * w + c], s.charCodeAt((j * n0 + i) * w + c) || 0);
+					}
+				return btoa(String.fromCharCode(...o));
+			};
+		walk(S);
+		for (const n of S.nodes || [])
+			if (Array.isArray(n)) {
+				const w = worldXY(n[1], n[2]);
+				n[1] = w.x;
+				n[2] = w.y;
+			} // a tree: [id, x, y, amt, max]
+		for (const b of S.blds || []) {
+			const sp = snapPos(b.kind, b.x, b.y);
+			b.x = sp.x;
+			b.y = sp.y;
+			b.gx = sp.gx;
+			b.gy = sp.gy;
+		}
+		for (const L of S.lakes || []) if (L.w) for (const h of L.w) h[2] += (h[0] * Math.PI) / 4;
+		for (const p of S.P || []) {
+			if (p.keep) {
+				const w = worldXY(p.keep[0], p.keep[1]);
+				p.keep = [w.x, w.y];
+			}
+			if (p.ai) delete p.ai.wallPlan; // the wall plan is squares of the old frame: drawn again round the keep
+		}
+		if (S.cam) {
+			const w = worldXY(S.cam.x, S.cam.y);
+			S.cam.x = w.x;
+			S.cam.y = w.y;
+		}
+		if (S.fog) S.fog = grid(S.fog, 1);
+		if (S.tread) S.tread = grid(S.tread, 2);
+		S.v = 45;
+		return S;
+	}, // preview 51: the land turned into the world Alpha, Bravo and Charlie, and the fourth tile of the row's middle is Set Up; the old fourth squad's soldiers fold into the reserve, as Epsilon and Zeta did in step 36
 };
 const evSave = () => {
 	const V = G.ev || {},
@@ -29633,7 +29845,10 @@ function natureTick() {
 		G.seasonN = sn;
 		seasonTurn();
 	}
-	if (storm() && hazard(1 / 20)) strike(rnd(80, MAP - 80), rnd(80, MAP - 80)); // a strike on open ground, one every 20 s in a storm on average
+	if (storm() && hazard(1 / 20)) {
+		const s = landAt(rnd(80, SQUARE - 80), rnd(80, SQUARE - 80));
+		strike(s.x, s.y);
+	} // a strike on open ground, one every 20 s in a storm on average
 	for (const b of G.blds)
 		if (b.node && BLD[b.kind].crop && b.prog >= 1 && b.node.type === 'food') {
 			// soil tires when worked and rests when not
@@ -30314,20 +30529,15 @@ const levelOf = (h) => HZK.reduce((s, k) => s + (h && h[k] ? HAZARDS[k].pts : 0)
 const levelMul = () => (G.diff === 'easy' ? 1 : 1 + levelOf(G.hz) / 10); // the score's multiplier for the level played; Easy has no hazards, so no bonus (B8)
 const evOn = (kind) => !!(G.ev.cur && G.ev.cur.kind === kind);
 const edgeSpot = () => {
+	// a spot on one of the land's edges, in the world (preview 51)
 	const e = Math.floor(rng() * 4),
-		t = rnd(300, MAP - 300);
-	return e === 0
-		? { x: t, y: 40 }
-		: e === 1
-			? { x: MAP - 40, y: t }
-			: e === 2
-				? { x: t, y: MAP - 40 }
-				: { x: 40, y: t };
+		t = rnd(300, SQUARE - 300);
+	return landAt(...(e === 0 ? [t, 40] : e === 1 ? [SQUARE - 40, t] : e === 2 ? [t, SQUARE - 40] : [40, t]));
 };
-const across = (a) => ({ x: MAP - a.x, y: MAP - a.y }); // the far side of the map from a spot
+const across = (a) => ({ x: 2 * MID - a.x, y: 2 * MID - a.y }); // the far side of the land from a spot (through the middle)
 const wildSpot = () => {
 	for (let i = 0; i < 40; i++) {
-		const s = { x: rnd(200, MAP - 200), y: rnd(200, MAP - 200) };
+		const s = landAt(rnd(200, SQUARE - 200), rnd(200, SQUARE - 200));
 		if (
 			lakeGap(s.x, s.y) > 60 &&
 			!G.P.some((p) => p.id !== WILD && p.alive && keepOf(p.id) && dist(keepOf(p.id), s) < 420)
@@ -30426,18 +30636,20 @@ const EV = {
 			} // the cloud itself along the top of the glass
 		},
 		start(e) {
-			e.a = { x: -EVENTS.storm.band, y: MID };
-			e.b = { x: MAP + EVENTS.storm.band, y: MID };
+			e.a = landAt(-EVENTS.storm.band, LMID);
+			e.b = landAt(SQUARE + EVENTS.storm.band, LMID); // the storm crosses the land west to east (preview 51)
 			sfx('wind');
 		},
 		tick(e) {
 			const c = crossing(e);
 			e.x = c.x;
+			e.y = c.y;
 			if (e.s % 2 === 0) {
-				const x = clamp(e.x + rnd(-EVENTS.storm.band, EVENTS.storm.band), 40, MAP - 40),
-					y = rnd(80, MAP - 80),
+				const sp = landAt(clamp(landXY(e.x, e.y).x + rnd(-EVENTS.storm.band, EVENTS.storm.band), 40, SQUARE - 40), rnd(80, SQUARE - 80)),
+					x = sp.x,
+					y = sp.y,
 					W = G.blds.filter(
-						(b) => BLD[b.kind].wood && b.prog >= 1 && Math.abs(b.x - e.x) < EVENTS.storm.band && rng() < 0.3,
+						(b) => BLD[b.kind].wood && b.prog >= 1 && Math.abs(landXY(b.x, b.y).x - landXY(e.x, e.y).x) < EVENTS.storm.band && rng() < 0.3, // the storm's band, across the land (preview 51)
 					);
 				const b = W.length && rng() < 0.25 ? W[Math.floor(rng() * W.length)] : null;
 				strike(b ? b.x : x, b ? b.y : y, b);
@@ -30653,7 +30865,7 @@ const EV = {
 	mercs: {
 		start(e) {
 			const a = edgeSpot();
-			e.f = addFind('mercs', clamp(a.x, 120, MAP - 120), clamp(a.y, 120, MAP - 120));
+			e.f = addFind('mercs', a.x, a.y);
 			e.f.until = e.until;
 		},
 		end(e) {
@@ -33303,6 +33515,11 @@ window.__fk = {
 	BACK_MARGIN,
 	LANE,
 	LAND,
+	SQUARE,
+	LMID,
+	worldXY,
+	landXY,
+	inLand,
 	RICH,
 	LAYOUT,
 	WAVE,

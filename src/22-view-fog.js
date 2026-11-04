@@ -138,6 +138,7 @@ function fogTick() {
 			if (b.prog >= 1) wearGround(b);
 		} // what your people and towers have seen, remembered, and the ground round it
 }
+let fogOff = null;
 function fogLayer() {
 	// the fog as one small picture, drawn soft over the world
 	if (!fogCv) {
@@ -147,11 +148,16 @@ function fogLayer() {
 	}
 	const d = fogImg.data,
 		F = G.fog;
+	if (!fogOff || fogOff.length !== F.length) {
+		// off the land (preview 51): the sea and the cliffs are never fogged
+		fogOff = new Uint8Array(F.length);
+		for (let i = 0; i < F.length; i++) fogOff[i] = inLand((i % FOGN) * 40 + 20, Math.floor(i / FOGN) * 40 + 20, -30) ? 0 : 1;
+	}
 	for (let i = 0; i < F.length; i++) {
 		d[i * 4] = 8;
 		d[i * 4 + 1] = 12;
 		d[i * 4 + 2] = 10;
-		d[i * 4 + 3] = F[i] === 2 ? 0 : F[i] === 1 ? 110 : 235;
+		d[i * 4 + 3] = fogOff[i] || F[i] === 2 ? 0 : F[i] === 1 ? 110 : 235;
 	}
 	fogCv.getContext('2d').putImageData(fogImg, 0, 0);
 	return fogCv;

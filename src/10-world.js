@@ -75,7 +75,10 @@ function mkPlayer(i, civ) {
 		name: d.name,
 		pers: d.pers,
 		color: d.color,
-		keep: d.keep.slice(),
+		keep: (() => {
+			const l = landXY(d.keep[0], d.keep[1]);
+			return [l.x, l.y];
+		})(), // in the land's frame while the map is laid; turnLand puts it in the world's (where PLAYERS names it)
 		civ,
 		res: { ...START_RES },
 		goods: Object.fromEntries(GOODK.map((k) => [k, 0])),
@@ -129,7 +132,9 @@ function newGame(seed, carry, daily) {
 		for (let b = 0; b <= WILD; b++)
 			G.rel[a][b] = a === b ? 'self' : a === WILD || b === WILD ? 'war' : a === FORT || b === FORT ? 'peace' : 'war';
 	}
-	makeMap();
+	const woods = makeMap();
+	turnLand(); // the land, laid square, turned into the world (preview 51)
+	openWays(woods); // nothing walled in, judged on the world's walking grid
 	initEconomy();
 	// the hazards, chosen here once for every side (Build 70, Albert's A): a pick decides (the day's challenge, a scenario's, the Setup
 	// ticks); with none picked each is drawn by lot. Drawn after the map, so the map is the same whatever was picked.
@@ -311,19 +316,19 @@ function lakeHarm(L) {
 	return L;
 }
 function makeWater() {
-	const keeps = PLAYERS.slice(0, WILD).map((d) => ({ x: d.keep[0], y: d.keep[1] })),
+	const keeps = PLAYERS.slice(0, WILD).map((d) => landXY(d.keep[0], d.keep[1])),
 		W = [],
 		dry = (x, y, r, from) =>
 			keeps.every((k) => hyp(x - k.x, y - k.y) >= CLEAR + r) &&
-			Math.min(Math.abs(x - MID), Math.abs(y - MID)) >= r + WATER.gap &&
-			hyp(x - MID, y - MID) >= r + LAKE0.r + WATER.clear &&
+			Math.min(Math.abs(x - LMID), Math.abs(y - LMID)) >= r + WATER.gap &&
+			hyp(x - LMID, y - LMID) >= r + LAKE0.r + WATER.clear &&
 			W.every((q) => q === from || hyp(x - q.x, y - q.y) >= r + q.r + WATER.gap);
 	const n = WATER.lakes[0] + Math.floor(rng() * (WATER.lakes[1] - WATER.lakes[0] + 1));
 	for (let i = 0; i < n; i++) {
 		const r = lakeSize(rng());
 		for (let t = 0; t < 60; t++) {
-			const x = rnd(r, MAP - r),
-				y = rnd(r, MAP - r);
+			const x = rnd(r, SQUARE - r),
+				y = rnd(r, SQUARE - r);
 			if (!dry(x, y, r)) continue;
 			W.push(lakeShape({ x, y, r }));
 			break;
@@ -331,7 +336,7 @@ function makeWater() {
 	}
 	for (const L of W.slice()) {
 		const w = WATER.w * L.r,
-			toX = Math.min(L.x, MAP - L.x) < Math.min(L.y, MAP - L.y);
+			toX = Math.min(L.x, SQUARE - L.x) < Math.min(L.y, SQUARE - L.y);
 		for (const ax of [toX, !toX]) {
 			const C = makeRiver(L, w, ax);
 			if (!C || !C.every((p) => dry(p.x, p.y, w, L))) continue;
@@ -345,7 +350,7 @@ function makeWater() {
 // Trees on a 26-unit lattice where an organic field runs high, thicker away from home; clear round the Town Center, the lakes, every find,
 // stop and camp, along the trade lanes, and along three winding paths: to each neighbour's nearest stop and to the great lake. Anything left
 // cut off is joined to home by a straight cut (openWays, on the walking grid). About 375 trees a corner.
-const FOREST = { step: 26, trees: 375, path: 18, cut: 30, lane: 45, edge: 15, clear: { stop: 80, camp: 90, lode: 60 } }; // clear round the Town Center: CLEAR (06); edge: no tree nearer the map's edge; clear: round each shared place; cut: half the width of a cut home (openWays): open ground three squares wide between trees that fill three
+const FOREST = { step: 26, trees: 375, path: 34, cut: 30, lane: 45, edge: 40, clear: { stop: 80, camp: 90, lode: 60 } }; // clear round the Town Center: CLEAR (06); edge: no tree nearer the map's edge; clear: round each shared place; cut: half the width of a cut home (openWays): open ground three squares wide between trees that fill three
 function makeForest(spot, loc, near) {
 	const ph = [0, 1, 2, 3].map(() => rnd(0, 6.28)),
 		field = (x, y) =>
@@ -367,10 +372,10 @@ function makeForest(spot, loc, near) {
 	];
 	const out = [0, 1].map((ax) =>
 		near.stop
-			.filter((l) => Math.abs((ax ? l.x : l.y) - CORNER) < 1)
+			.filter((l) => Math.abs((ax ? l.x : l.y) - CORNER) < 6) // a keep stands up to 3.5 off the land's diagonal (KEEP_W, 01)
 			.reduce((a, l) => (hyp(l.x, l.y) < hyp(a.x, a.y) ? l : a)),
 	); // the stop nearest home on each middle line: a neighbour's way
-	const camp = PLACES.camp - (MID - CORNER), // the trade lanes run in from the robbers' camp
+	const camp = PLACES.camp - (LMID - CORNER), // the trade lanes run in from the robbers' camp
 		lane = (x, y) => (y > CORNER - FOREST.lane && x > camp) || (x > CORNER - FOREST.lane && y > camp);
 	const wind = (a, b) => {
 		const pts = [a];
@@ -409,10 +414,10 @@ function makeForest(spot, loc, near) {
 			...Object.values(spot),
 		],
 		wet = (p) =>
-			Math.min(p.x, p.y) < CORNER - MID + 45 ||
+			Math.min(p.x, p.y) < CORNER - LMID + 45 ||
 			Math.max(p.x, p.y) > CORNER - 45 ||
 			held.some((l) => dist(p, l) < l.r + 45) ||
-			(p.x <= 45 && p.y <= 45 && hyp(p.x, p.y) < MID - CORNER + 45); // in this corner's quarter, never in or at the edge of a lake, a find or the home zones (QC 05 N5)
+			(p.x <= 45 && p.y <= 45 && hyp(p.x, p.y) < LMID - CORNER + 45); // in this corner's quarter, never in or at the edge of a lake, a find or the home zones (QC 05 N5)
 	const dep = [
 		['bush', 0, 0.45],
 		['stone', 0, 0.75],
@@ -425,7 +430,7 @@ function makeForest(spot, loc, near) {
 		for (let k = 1; k < 8 && wet(p); k++)
 			p = along(paths[pi], clamp(f + (k % 2 ? -1 : 1) * Math.ceil(k / 2) * 0.08, 0.2, 0.95)); // slide along the path
 		const p0 = p;
-		for (let r = SEEK.step; wet(p) && r < MID; r += SEEK.step)
+		for (let r = SEEK.step; wet(p) && r < LMID; r += SEEK.step)
 			for (let a = 0, n = Math.ceil((2 * Math.PI * r) / SEEK.step); a < n && wet(p); a++)
 				p = { x: p0.x + Math.cos((a / n) * 2 * Math.PI) * r, y: p0.y + Math.sin((a / n) * 2 * Math.PI) * r }; // then outward from it, ring by ring: every corner gets every deposit
 		held.push({ ...p, r: 0 });
@@ -433,7 +438,7 @@ function makeForest(spot, loc, near) {
 	});
 	keepOut.push(...dep.map((d) => ({ x: d.x, y: d.y, r: 45 })));
 	let T = [];
-	const x0 = CORNER - MID + FOREST.edge;
+	const x0 = CORNER - LMID + FOREST.edge;
 	for (let y = x0; y < CORNER; y += FOREST.step)
 		for (let x = x0; x < CORNER; x += FOREST.step) {
 			const tx = x + rnd(-6, 6),
@@ -450,7 +455,7 @@ function makeForest(spot, loc, near) {
 // that overlap (the water and the walking grid are made of circles already). Where the chain breaks there is a ford: two, about a third and two thirds down.
 // A river is water like any lake: nobody walks or builds on it; it is crossed at a ford, and fished and docked like a lake.
 function makeRiver(L, w, toX) {
-	const E = toX ? { x: L.x < MID ? 0 : MAP, y: L.y + rnd(-60, 60) } : { x: L.x + rnd(-60, 60), y: L.y < MID ? 0 : MAP },
+	const E = toX ? { x: L.x < LMID ? 0 : SQUARE, y: L.y + rnd(-60, 60) } : { x: L.x + rnd(-60, 60), y: L.y < LMID ? 0 : SQUARE },
 		dx = E.x - L.x,
 		dy = E.y - L.y,
 		len = hyp(dx, dy),
@@ -482,13 +487,13 @@ function makeRiver(L, w, toX) {
 // find's middle at its own walk (HOME.at), in a random direction, every node inside the clearing; any other find's nodes all past the wall
 // band (HOME.out); and no node but zone 1's in zone 1. Each
 // with its room clear of what was laid before and of the water, and inside this corner's quarter of the map (local: keep 0,0, edge at
-// CORNER − MID, the middle lines at CORNER). A find that has no room searches outward: its ring widens by a step every few tries, so every
+// CORNER − LMID, the middle lines at CORNER). A find that has no room searches outward: its ring widens by a step every few tries, so every
 // corner gets every find (equal content; tests/map.py holds it on 100 seeds). Zone 1 never searches outward: it fits, or the test fails.
 const SEEK = { tries: 50, step: 20, most: 4000 };
 function laySpots(lay, loc, spot, shape) {
 	const taken = Object.values(spot),
 		room = [{ x: CORNER, y: CORNER, r: LAKE0.r + 25 }, ...loc.map((l) => ({ x: l.x, y: l.y, r: l.r + 25 }))], // the great lake, the water in this corner
-		lo = CORNER - MID,
+		lo = CORNER - LMID,
 		gap = LANE * NAVC,
 		inBack = (x, y) => x <= 0 && y <= 0 && hyp(x, y) <= HOME.clear; // zone 1: between the Town Center and its corner, inside the clearing (D-090)
 	for (const [id, r0, r1, c0] of lay) {
@@ -552,8 +557,8 @@ function makeMap() {
 	for (const p of G.P) {
 		if (p.id === WILD) continue;
 		const [kx, ky] = p.keep,
-			sx = kx < MID ? 1 : -1,
-			sy = ky < MID ? 1 : -1,
+			sx = kx < LMID ? 1 : -1,
+			sy = ky < LMID ? 1 : -1,
 			at = (dx, dy) => [kx + dx * sx, ky + dy * sy],
 			loc = G.lakes
 				.slice(1)
@@ -606,8 +611,8 @@ function makeMap() {
 		laySpots(layWild, loc, spot, shape);
 		laySpots(layMove, loc, spot, shape);
 		const toLoc = ([X, Y]) => ({ x: (X - kx) * sx, y: (Y - ky) * sy }),
-			mine = (L) => L.map(toLoc).filter((l) => l.x <= CORNER && l.y <= CORNER),
-			near = { stop: mine(ROUTES.flat()), camp: mine(cross(MID - PLACES.camp)), lode: mine(cross(PLACES.lode)) };
+			mine = (L) => L.map(toLoc).filter((l) => l.x <= CORNER + 6 && l.y <= CORNER + 6), // this corner's quarter; a keep stands up to 3.5 off the diagonal (KEEP_W, 01)
+			near = { stop: mine(ROUTES_L.flat()), camp: mine(cross(LMID - PLACES.camp)), lode: mine(cross(PLACES.lode)) };
 		const { trees: forest, dep } = makeForest(spot, loc, near);
 		bunch('bushA', 'bush', 180 * RICH);
 		bunch('bushB', 'bush', 180 * RICH);
@@ -627,12 +632,12 @@ function makeMap() {
 			else for (const [ox, oy] of SHAPE.pair) N.push(node(d.kind, d.kind, ...at(d.x + ox, d.y + oy), 300 * RICH));
 		}
 		// 4 movables
-		const f = towardMid({ x: kx, y: ky }, PLACES.start);
+		const f = towardMid({ x: kx, y: ky }, PLACES.start, LMID);
 		for (let i = 0; i < START_VILS; i++) {
 			const v = addUnit(p.id, 'vil', f.x + (i - (START_VILS - 1) / 2) * 14, f.y + 6);
 			v.job = i === 1 ? 'wood' : 'food';
 		}
-		const sc = towardMid({ x: kx, y: ky }, 60);
+		const sc = towardMid({ x: kx, y: ky }, 60, LMID);
 		addUnit(p.id, 'scout', sc.x, sc.y);
 		// the wild near home: two herds of game, and danger a little farther out
 		for (const id of ['deerA', 'deerB'].filter((id) => spot[id]))
@@ -642,10 +647,10 @@ function makeMap() {
 			addFind(id, ...P(id, [0, 0]));
 	}
 	// shared ground: a robbers' camp at the middle of each map edge, at the end of a trade route; gold and stone near the great lake
-	for (const [x, y] of cross(MID - PLACES.camp)) addFind('camp', x, y);
+	for (const [x, y] of cross(LMID - PLACES.camp)) addFind('camp', x, y);
 	for (const [x, y] of cross(PLACES.lode)) {
-		const ux = Math.sign(x - MID),
-			uy = Math.sign(y - MID),
+		const ux = Math.sign(x - LMID),
+			uy = Math.sign(y - LMID),
 			at = (a, o) => [x + uy * a + ux * o, y + ux * a + uy * o]; // a: across its middle line, o: out from the middle; the same for both corners beside it
 		N.push(
 			node('gold', 'gold', ...at(-12, 0), 500 * RICH),
@@ -664,7 +669,7 @@ function makeMap() {
 			const ang = (a / n) * Math.PI * 2;
 			const fx = L.x + Math.cos(ang) * (lakeRAt(L, ang) - 8), // on the drawn shore, not the old circle (p44)
 				fy = L.y + Math.sin(ang) * (lakeRAt(L, ang) - 8);
-			if (!onLand(fx, fy)) N.push(node('fish', 'food', fx, fy, 350 * RICH)); // fish swim in water: none on the great lake's causeways (B15)
+			if (!onLand(worldXY(fx, fy).x, worldXY(fx, fy).y)) N.push(node('fish', 'food', fx, fy, 350 * RICH)); // onLand reads the world's frame (preview 51) // fish swim in water: none on the great lake's causeways (B15)
 		}
 	});
 	for (const n of N) {
@@ -675,7 +680,7 @@ function makeMap() {
 		}
 	} // what the land is rich and poor in
 	makeCitadel();
-	openWays(woods);
+	return woods; // openWays runs once the land is turned into the world: the walking grid is the world's (preview 51)
 }
 // Nothing may be walled in (B4): every find and every bush, rock and lode in a corner's quarter of the map is reached from its Town Center
 // on the real walking grid (navRebuild: trees, buildings, the slit and clearance rules); one cut off gets a cut home through that
@@ -752,7 +757,12 @@ function wayHome(g, C, home) {
 	return P;
 }
 // in the quarter of the map whose Town Center is k: what stands on a middle line (a stop, a camp, a lode) is in both quarters beside it
-const inQuarter = (q, k) => (k.x < MID ? q.x <= MID : q.x >= MID) && (k.y < MID ? q.y <= MID : q.y >= MID);
+const inQuarter = (q, k) => {
+	const lq = landXY(q.x, q.y),
+		lk = landXY(k.x, k.y),
+		e = 0.01; // the corner's quarter of the land, read in the world (preview 51)
+	return (lk.x < LMID ? lq.x <= LMID + e : lq.x >= LMID - e) && (lk.y < LMID ? lq.y <= LMID + e : lq.y >= LMID - e);
+};
 // how far a point stands from the segment a to b
 const segGap = (x, y, a, b) => {
 	const dx = b.x - a.x,
@@ -765,7 +775,7 @@ const segGap = (x, y, a, b) => {
 // from every Town Center (CORNER in 01); everything of the citadel is the same seen from every corner (Albert, Nov 1: four towers, the
 // shrine on the Throne's square; tests/map.py turns each piece a quarter round the Throne and looks for its twin).
 function makeCitadel() {
-	const c = MID / NAVC,
+	const c = LMID / NAVC,
 		E = THRONE.r / NAVC - 0.5, // the ring's squares, in squares from the middle: their centres at ±0.5 to ±E, the same on every side
 		put = (kind, x, y) => {
 			const b = mkBld(WILD, kind, x, y, 1);
@@ -773,20 +783,20 @@ function makeCitadel() {
 			G.blds.push(b);
 			return b;
 		};
-	const T = put('throne', MID, MID);
+	const T = put('throne', LMID, LMID);
 	for (const [sx, sy] of [
 		[-1, -1],
 		[1, -1],
 		[1, 1],
 		[-1, 1],
 	])
-		put('tower', MID + sx * (THRONE.r - NAVC), MID + sy * (THRONE.r - NAVC)); // a tower on each corner of the ring, its two squares by the corner its own
+		put('tower', LMID + sx * (THRONE.r - NAVC), LMID + sy * (THRONE.r - NAVC)); // a tower on each corner of the ring, its two squares by the corner its own
 	for (let i = -E; i <= E; i++)
 		for (let j = -E; j <= E; j++) {
 			if (Math.max(Math.abs(i), Math.abs(j)) !== E || Math.min(Math.abs(i), Math.abs(j)) >= E - 1) continue; // the ring, but not under a tower
 			put(Math.min(Math.abs(i), Math.abs(j)) === 0.5 ? 'gate' : 'wall', (c + i) * NAVC, (c + j) * NAVC); // a gate: the two middle squares of a side
-		} // symmetric about the Throne (QC 05 N1: it was laid on squares about MID + 5, so two gates stood 10 nearer the Throne than the others)
-	addFind('shrine', MID, MID); // in the Throne: taken by a priest at its foot (FINDS.shrine.r)
+		} // symmetric about the Throne (QC 05 N1: it was laid on squares about LMID + 5, so two gates stood 10 nearer the Throne than the others)
+	addFind('shrine', LMID, LMID); // in the Throne: taken by a priest at its foot (FINDS.shrine.r)
 	for (let i = 0; i < NATIVE.garrison; i++) natSpawn(T, i % 3 === 2 ? 'nativebow' : 'native');
 	G.throne = null;
 	G.prisoners = [];
@@ -814,6 +824,58 @@ function addFind(kind, x, y) {
 	if (F.hire) for (let i = 0; i < F.hire.n; i++) wildAt('vagabond', x + (i - 1) * 12, y + 14, f);
 	G.finds.push(f);
 	return f;
+}
+// The turn (preview 51): everything the map-maker laid in the land's frame goes to the world's. A point turns by worldXY; a lake's shore
+// harmonics turn with it (a land angle is the world angle plus 45°, so ph becomes ph + k·45°); a building is snapped to the world's
+// squares again, so its footprint sits on them; a field's node follows its building. The keeps' coordinates too, and the start camera reads
+// them after. The map-maker itself never knows: every rule it has is a distance or a ring, the same in both frames.
+function turnLand() {
+	const at = (e) => {
+		const w = worldXY(e.x, e.y);
+		e.x = w.x;
+		e.y = w.y;
+	};
+	for (const n of G.nodes) if (!n.farm) at(n);
+	for (const f of G.finds) at(f);
+	for (const L of G.lakes) {
+		at(L);
+		if (L.w) for (const h of L.w) h[2] += (h[0] * Math.PI) / 4; // cos(k·a + ph) in the land's frame is cos(k·a_w + ph + k·45°) in the world's (a = a_w + 45°)
+	}
+	for (const b of G.blds) {
+		const w = worldXY(b.x, b.y),
+			sp = snapPos(b.kind, w.x, w.y);
+		b.x = sp.x;
+		b.y = sp.y;
+		b.gx = sp.gx;
+		b.gy = sp.gy;
+		if (b.node) {
+			b.node.x = b.x;
+			b.node.y = b.y;
+		}
+	}
+	const PAIRS = [
+		['x', 'y'],
+		['px', 'py'],
+		['hx', 'hy'],
+		['hax', 'hay'],
+		['kx', 'ky'],
+	];
+	for (const u of G.units) {
+		for (const [a, b] of PAIRS)
+			if (typeof u[a] === 'number' && typeof u[b] === 'number' && (a === 'x' || u[a] || u[b])) {
+				const w = worldXY(u[a], u[b]);
+				u[a] = w.x;
+				u[b] = w.y;
+			}
+		for (const key of ['grazeAt', 'post', 'fpos', 'anchor']) if (u[key] && typeof u[key].x === 'number') at(u[key]);
+		if (Array.isArray(u.route)) for (const q of u.route) at(q);
+	}
+	for (const p of G.P) {
+		const w = worldXY(p.keep[0], p.keep[1]);
+		p.keep = [w.x, w.y];
+	}
+	lakeFor = null; // the lakes moved: the water grid is laid again at the next rebuild
+	navOffLand(); // the squares outside the land are solid for good
 }
 function mkBld(owner, kind, x, y, prog) {
 	const sp = snapPos(kind, x, y),

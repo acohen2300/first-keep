@@ -558,11 +558,11 @@ function wayfarers(dt) {
 	if (G.wayT > 0) return;
 	G.wayT = WAYFARER_EVERY;
 	const E = [
-			[MID, 60],
-			[MAP - 60, MID],
-			[MID, MAP - 60],
-			[60, MID],
-		],
+			[LMID, 60],
+			[SQUARE - 60, LMID],
+			[LMID, SQUARE - 60],
+			[60, LMID],
+		].map(([x, y]) => [landAt(x, y).x, landAt(x, y).y]), // the land's edges, in the world (preview 51)
 		i = G.wayI++ % 4,
 		a = E[i],
 		b = E[(i + 2) % 4];

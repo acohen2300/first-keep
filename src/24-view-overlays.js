@@ -308,8 +308,9 @@ function ghostTint(c, ok) {
 function miniIncoming(m, k) {
 	const I = G.incoming;
 	if (!I) return;
-	const x = 86 + (I.x - I.y) * MINI_K,
-		y = (I.x + I.y) * MINI_K,
+	const li = landXY(I.x, I.y),
+		x = li.x * MINI_K,
+		y = li.y * MINI_K,
 		on = Math.floor(performance.now() / 350) % 2 === 0;
 	m.strokeStyle = '#ff3b2f';
 	m.lineWidth = 2;
@@ -323,13 +324,9 @@ function miniIncoming(m, k) {
 } // an attack on its way: a red dot that flashes on the small map; tap the map and you are there
 // the small map, turned with the view (preview 50): the diamond fills its square; MINI_M maps world units to it; marks are drawn in the
 // turned frame (a mark's own shape is turned too; it is 3 px, nobody minds)
-const MINI_K = 172 / (2 * MAP),
-	miniMat = (m) => m.setTransform(MINI_K, MINI_K, -MINI_K, MINI_K, 86, 0),
-	miniWorld = (px, py) => {
-		const u = (px - 86) / MINI_K,
-			v = py / MINI_K;
-		return { x: (u + v) / 2, y: (v - u) / 2 };
-	}; // a point of the small map, in the world
+const MINI_K = 172 / SQUARE, // the land's square fills the small map (preview 51)
+	miniMat = (m) => m.setTransform(MINI_K * TURN, MINI_K * TURN, -MINI_K * TURN, MINI_K * TURN, MINI_K * LMID, MINI_K * (LMID - 2 * MID * TURN)), // world units to the small map, through the land's frame
+	miniWorld = (px, py) => worldXY(px / MINI_K, py / MINI_K); // a point of the small map, in the world
 function drawMini() {
 	const m = mctx,
 		k = 1;
@@ -346,13 +343,12 @@ function drawMini() {
 	m.setTransform(1, 0, 0, 1, 0, 0);
 	m.save();
 	m.beginPath();
-	m.moveTo(86, 0);
-	m.lineTo(172, 86);
-	m.lineTo(86, 172);
-	m.lineTo(0, 86);
-	m.closePath();
+	m.rect(0, 0, 172, 172);
 	m.clip();
-	const W = (x, y) => [86 + (x - y) * MINI_K, (x + y) * MINI_K]; // a world point on the small map
+	const W = (x, y) => {
+		const l = landXY(x, y);
+		return [l.x * MINI_K, l.y * MINI_K];
+	}; // a world point on the small map
 	const P = (e) => W(e.x, e.y);
 	for (const f of G.finds)
 		if ((!f.done || FINDS[f.kind].capture) && known0(f)) {

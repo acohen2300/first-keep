@@ -26,10 +26,10 @@ const lakeR = (L) => L.r + (G.flood > G.t ? EVENTS.flood.rise : 0); // a lake in
 const lakeRAt = (L, a) => (L.w ? L.r * Math.max(0.5, 1 + L.w.reduce((s, [k, amp, ph]) => s + amp * Math.cos(k * a + ph), 0)) : L.r); // never under half its radius
 const lakeRTo = (L, x, y) => lakeRAt(L, Math.atan2(y - L.y, x - L.x)) + (G.flood > G.t ? EVENTS.flood.rise : 0); // the shore toward a point, in flood too
 // how far a point stands from water (negative: in it). The great lake holds the Throne's island and four causeways, which are land.
-const onLand = (x, y) =>
-	((Math.abs(x - MID) < THRONE.cause / 2 || Math.abs(y - MID) < THRONE.cause / 2) &&
-		hyp(x - MID, y - MID) < LAKE0.r + 60) ||
-	hyp(x - MID, y - MID) < THRONE.isle;
+const onLand = (x, y) => {
+	const l = landXY(x, y); // the causeways run on the land's middle lines (preview 51)
+	return ((Math.abs(l.x - LMID) < THRONE.cause / 2 || Math.abs(l.y - LMID) < THRONE.cause / 2) && hyp(x - MID, y - MID) < LAKE0.r + 60) || hyp(x - MID, y - MID) < THRONE.isle;
+};
 const lakeGap = (x, y) =>
 	onLand(x, y) ? 1e9 : G.lakes.reduce((m, L) => Math.min(m, hyp(x - L.x, y - L.y) - lakeRTo(L, x, y)), 1e9); // how far from the nearest lake's edge
 // lake cells: 1 water, 2 flood water only, which a side with levees wades
@@ -73,11 +73,17 @@ function snapPos(kind, x, y) {
 		gy = Math.round(y / NAVC - n / 2);
 	return { gx, gy, x: (gx + n / 2) * NAVC, y: (gy + n / 2) * NAVC };
 }
+// off the land (preview 51): the world's squares whose middle lies outside the turned land are solid, the same in every rebuild
+function navOffLand() {
+	NAV.off = new Uint8Array(NC * NC);
+	for (let gy = 0; gy < NC; gy++) for (let gx = 0; gx < NC; gx++) if (!inLand(gx * NAVC + 5, gy * NAVC + 5)) NAV.off[gy * NC + gx] = 1;
+}
 function navRebuild() {
 	if (lakeFor !== G.lakes || lakeHi !== G.flood > G.t) lakeGrid();
 	NAV.prev.set(NAV.solid);
 	NAV.prevG.set(NAV.gate);
 	NAV.solid.set(NAV.lake);
+	if (NAV.off) for (let i = 0; i < NAV.off.length; i++) if (NAV.off[i]) NAV.solid[i] = 1;
 	NAV.gate.fill(0);
 	NAV.occ.fill(null);
 	// a tree fills the 3×3 squares round it: forest is a wall until it is cut
@@ -119,13 +125,14 @@ function navRebuild() {
 	// clearance (Albert, Build 63: "units need to know where they fit"): a figure is nearly a square wide, so a square it may stand on keeps
 	// three of its four sides open. A square walled on two sides (a corner pocket, a slit by a tree or the lake) is shut; an erosion, not a
 	// flood, so it is judged on the grid as it was and never eats inward. Gates are the exception: a gate is walled on both sides by design.
-	const was = NAV.prev === NAV.solid ? NAV.solid : NAV.solid.slice();
+	const was = NAV.prev === NAV.solid ? NAV.solid : NAV.solid.slice(),
+		off = NAV.off || new Uint8Array(0),
+		wall = (d) => (was[d] && !off[d] ? 1 : 0); // the land's own edge is not a wall: a square beside it keeps its sides (preview 51: the sawtooth edge would otherwise eat the strip along it)
 	for (let y = 1; y < NC - 1; y++)
 		for (let x = 1; x < NC - 1; x++) {
 			const c = y * NC + x;
 			if (was[c] || NAV.gate[c]) continue;
-			if ((was[c - 1] ? 1 : 0) + (was[c + 1] ? 1 : 0) + (was[c - NC] ? 1 : 0) + (was[c + NC] ? 1 : 0) >= 2)
-				NAV.solid[c] = 1;
+			if (wall(c - 1) + wall(c + 1) + wall(c - NC) + wall(c + NC) >= 2) NAV.solid[c] = 1;
 		}
 	// which squares are joined by open ground (gates counted open: the finest cut is made by the search itself)
 	const C = NAV.comp;

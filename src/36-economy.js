@@ -265,7 +265,10 @@ function natureTick() {
 		G.seasonN = sn;
 		seasonTurn();
 	}
-	if (storm() && hazard(1 / 20)) strike(rnd(80, MAP - 80), rnd(80, MAP - 80)); // a strike on open ground, one every 20 s in a storm on average
+	if (storm() && hazard(1 / 20)) {
+		const s = landAt(rnd(80, SQUARE - 80), rnd(80, SQUARE - 80));
+		strike(s.x, s.y);
+	} // a strike on open ground, one every 20 s in a storm on average
 	for (const b of G.blds)
 		if (b.node && BLD[b.kind].crop && b.prog >= 1 && b.node.type === 'food') {
 			// soil tires when worked and rests when not

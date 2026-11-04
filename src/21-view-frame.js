@@ -7,6 +7,13 @@ function makeBg() {
 	const b = bg.getContext('2d');
 	b.scale(bgK, bgK);
 	const R = (a, z) => a + lookDice() * (z - a);
+	b.save();
+	landMat(b);
+	b.beginPath();
+	b.rect(0, 0, SQUARE, SQUARE);
+	b.restore();
+	b.save();
+	b.clip(); // the land's square, turned: everything painted for the land stays on it (preview 51)
 	b.fillStyle = '#4a6634';
 	b.fillRect(0, 0, MAP, MAP);
 	const blot = (n, cols, r0, r1) => {
@@ -114,6 +121,8 @@ function makeBg() {
 		b.fill();
 	}
 	{
+		b.save();
+		landMat(b); // the island and the causeways lie on the land's middle lines (preview 51)
 		const L = LAKE0,
 			R = THRONE.isle,
 			W = THRONE.cause; // the Throne's island and its four causeways: stone over the water
@@ -155,6 +164,7 @@ function makeBg() {
 			b.lineTo(L.x + i, L.y + R);
 			b.stroke();
 		}
+		b.restore();
 	}
 	// the old trade roads: a worn dirt track through each route's stops, bending round the great lake (drawn once, into the ground)
 	b.lineCap = 'round';
@@ -184,6 +194,24 @@ function makeBg() {
 		}
 		b.setLineDash([]);
 	}
+	b.restore(); // the land's clip
+	{
+		// outside the land (preview 51): every walking square whose middle is off the land, painted by which edge it lies past: the sea beyond the
+		// near edges (the land's south and east, the screen's bottom and right), the cliffs beyond the far; a strand of sand one square wide
+		// along the shore. Square by square, so the edge is the sawtooth of the diagonal squares (Albert's picture)
+		for (let gy = 0; gy < NC; gy++)
+			for (let gx = 0; gx < NC; gx++) {
+				const x = gx * NAVC,
+					y = gy * NAVC,
+					l = landXY(x + 5, y + 5);
+				if (l.x >= 0 && l.y >= 0 && l.x <= SQUARE && l.y <= SQUARE) continue;
+				const sea = l.x > SQUARE || l.y > SQUARE,
+					near = sea && l.x < SQUARE + 12 && l.y < SQUARE + 12;
+				if (!near) continue; // the sea and, past the far edges, the cliff face and its plateau are the frame's (drawRim); only the strand is painted here, one square wide, the sawtooth
+				b.fillStyle = '#cdbb88';
+				b.fillRect(x, y, NAVC, NAVC);
+			}
+	}
 	terrainMini = document.createElement('canvas');
 	terrainMini.width = terrainMini.height = 172;
 	terrainMini.getContext('2d').drawImage(bg, 0, 0, 172, 172);
@@ -212,35 +240,37 @@ let SPARKS = [],
 const RIMC = { sea: '#2f6684', deep: '#214a63', sand: '#cdbb88', cliff: '#4f463d', cliffLit: '#847566', top: '#5e6a4e', skyLo: '#b9cad6', skyHi: '#6b93b4' },
 	CLIFF_H = 140; // the far edges rise this much above the map
 function drawRim(z) {
-	const VB = viewBox();
-	if (VB.x0 >= 0 && VB.y0 >= 0 && VB.x1 <= MAP && VB.y1 <= MAP) return; // the whole screen is on the map
-	const c = (x, y, h = 0) => [SX(x, y), SY(y, h, x)],
+	const VB = viewBox(),
+		on = (x, y) => inLand(x, y);
+	if (on(VB.x0, VB.y0) && on(VB.x1, VB.y0) && on(VB.x0, VB.y1) && on(VB.x1, VB.y1)) return; // the whole screen is on the land
+	// a land point on the screen, h up; the land's edges: north and west at the top and left of the screen (the cliffs), south and east at the
+	// bottom and right (the sea). The ground's picture already paints the sawtooth band beside each edge; this is what lies beyond the array
+	const c = (lx, ly, h = 0) => {
+			const w = worldXY(lx, ly);
+			return [SX(w.x, w.y), SY(w.y, h, w.x)];
+		},
 		poly = (pts, fill) => {
 			ctx.beginPath();
 			pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
 			ctx.closePath();
 			ctx.fillStyle = fill;
 			ctx.fill();
-		};
-	// the sky, behind everything
+		},
+		S = SQUARE,
+		R = RIM,
+		H = CLIFF_H;
 	const g = ctx.createLinearGradient(0, 0, 0, ch);
 	g.addColorStop(0, RIMC.skyHi);
 	g.addColorStop(1, RIMC.skyLo);
 	ctx.fillStyle = g;
 	ctx.fillRect(0, 0, cw, ch);
-	// the sea, RIM out past the near edges (south: y = MAP; east: x = MAP), with its strand along the shore
-	const R = RIM;
-	poly([c(-R, MAP), c(MAP + 3 * R, MAP), c(MAP + 3 * R, MAP + 3 * R), c(-R, MAP + 3 * R)], RIMC.deep);
-	poly([c(MAP, -R), c(MAP + 3 * R, -R), c(MAP + 3 * R, MAP + 3 * R), c(MAP, MAP + 3 * R)], RIMC.deep);
-	poly([c(-R, MAP), c(MAP + R, MAP), c(MAP + R, MAP + 90), c(-R, MAP + 90)], RIMC.sea);
-	poly([c(MAP, -R), c(MAP + 90, -R), c(MAP + 90, MAP + 90), c(MAP, MAP + 90)], RIMC.sea);
-	poly([c(-R, MAP), c(MAP + 14, MAP), c(MAP + 14, MAP + 14), c(-R, MAP + 14)], RIMC.sand);
-	poly([c(MAP, -R), c(MAP + 14, -R), c(MAP + 14, MAP + 14), c(MAP, MAP + 14)], RIMC.sand);
-	// the plateau beyond the far edges (north: y = 0; west: x = 0), CLIFF_H up, then its face down to the map's edge: the lit face takes the sun (the north edge faces south)
-	const H = CLIFF_H;
-	poly([c(-R, -R, H), c(MAP, -R, H), c(MAP, 0, H), c(0, 0, H), c(0, MAP, H), c(-R, MAP, H)], RIMC.top);
-	poly([c(0, 0, 0), c(MAP, 0, 0), c(MAP, 0, H), c(0, 0, H)], RIMC.cliffLit);
-	poly([c(0, 0, 0), c(0, MAP, 0), c(0, MAP, H), c(0, 0, H)], RIMC.cliff);
+	poly([c(-3 * R, S), c(S + 3 * R, S), c(S + 3 * R, S + 3 * R), c(-3 * R, S + 3 * R)], RIMC.sea); // the sea south, to the horizon
+	poly([c(S, -R), c(S + 3 * R, -R), c(S + 3 * R, S + 3 * R), c(S, S + 3 * R)], RIMC.sea); // and east
+	poly([c(-3 * R, S + 180), c(S + 3 * R, S + 180), c(S + 3 * R, S + 3 * R), c(-3 * R, S + 3 * R)], RIMC.deep); // deeper water farther out
+	poly([c(S + 180, -R), c(S + 3 * R, -R), c(S + 3 * R, S + 3 * R), c(S + 180, S + 3 * R)], RIMC.deep);
+	poly([c(-R, -R, H), c(S, -R, H), c(S, 0, H), c(0, 0, H), c(0, S, H), c(-R, S, H)], RIMC.top); // the plateau north and west, H up
+	poly([c(0, 0, 0), c(S, 0, 0), c(S, 0, H), c(0, 0, H)], RIMC.cliffLit); // the north face, lit (it faces the sun)
+	poly([c(0, 0, 0), c(0, S, 0), c(0, S, H), c(0, 0, H)], RIMC.cliff); // the west face, in shade
 }
 function draw() {
 	followCam(Math.min(0.1, (performance.now() - (draw.last || performance.now())) / 1000));

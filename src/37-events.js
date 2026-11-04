@@ -15,20 +15,15 @@ const levelOf = (h) => HZK.reduce((s, k) => s + (h && h[k] ? HAZARDS[k].pts : 0)
 const levelMul = () => (G.diff === 'easy' ? 1 : 1 + levelOf(G.hz) / 10); // the score's multiplier for the level played; Easy has no hazards, so no bonus (B8)
 const evOn = (kind) => !!(G.ev.cur && G.ev.cur.kind === kind);
 const edgeSpot = () => {
+	// a spot on one of the land's edges, in the world (preview 51)
 	const e = Math.floor(rng() * 4),
-		t = rnd(300, MAP - 300);
-	return e === 0
-		? { x: t, y: 40 }
-		: e === 1
-			? { x: MAP - 40, y: t }
-			: e === 2
-				? { x: t, y: MAP - 40 }
-				: { x: 40, y: t };
+		t = rnd(300, SQUARE - 300);
+	return landAt(...(e === 0 ? [t, 40] : e === 1 ? [SQUARE - 40, t] : e === 2 ? [t, SQUARE - 40] : [40, t]));
 };
-const across = (a) => ({ x: MAP - a.x, y: MAP - a.y }); // the far side of the map from a spot
+const across = (a) => ({ x: 2 * MID - a.x, y: 2 * MID - a.y }); // the far side of the land from a spot (through the middle)
 const wildSpot = () => {
 	for (let i = 0; i < 40; i++) {
-		const s = { x: rnd(200, MAP - 200), y: rnd(200, MAP - 200) };
+		const s = landAt(rnd(200, SQUARE - 200), rnd(200, SQUARE - 200));
 		if (
 			lakeGap(s.x, s.y) > 60 &&
 			!G.P.some((p) => p.id !== WILD && p.alive && keepOf(p.id) && dist(keepOf(p.id), s) < 420)
@@ -127,18 +122,20 @@ const EV = {
 			} // the cloud itself along the top of the glass
 		},
 		start(e) {
-			e.a = { x: -EVENTS.storm.band, y: MID };
-			e.b = { x: MAP + EVENTS.storm.band, y: MID };
+			e.a = landAt(-EVENTS.storm.band, LMID);
+			e.b = landAt(SQUARE + EVENTS.storm.band, LMID); // the storm crosses the land west to east (preview 51)
 			sfx('wind');
 		},
 		tick(e) {
 			const c = crossing(e);
 			e.x = c.x;
+			e.y = c.y;
 			if (e.s % 2 === 0) {
-				const x = clamp(e.x + rnd(-EVENTS.storm.band, EVENTS.storm.band), 40, MAP - 40),
-					y = rnd(80, MAP - 80),
+				const sp = landAt(clamp(landXY(e.x, e.y).x + rnd(-EVENTS.storm.band, EVENTS.storm.band), 40, SQUARE - 40), rnd(80, SQUARE - 80)),
+					x = sp.x,
+					y = sp.y,
 					W = G.blds.filter(
-						(b) => BLD[b.kind].wood && b.prog >= 1 && Math.abs(b.x - e.x) < EVENTS.storm.band && rng() < 0.3,
+						(b) => BLD[b.kind].wood && b.prog >= 1 && Math.abs(landXY(b.x, b.y).x - landXY(e.x, e.y).x) < EVENTS.storm.band && rng() < 0.3, // the storm's band, across the land (preview 51)
 					);
 				const b = W.length && rng() < 0.25 ? W[Math.floor(rng() * W.length)] : null;
 				strike(b ? b.x : x, b ? b.y : y, b);
@@ -354,7 +351,7 @@ const EV = {
 	mercs: {
 		start(e) {
 			const a = edgeSpot();
-			e.f = addFind('mercs', clamp(a.x, 120, MAP - 120), clamp(a.y, 120, MAP - 120));
+			e.f = addFind('mercs', a.x, a.y);
 			e.f.until = e.until;
 		},
 		end(e) {

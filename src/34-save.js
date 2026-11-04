@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 44; // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 45; // 45: the land turned into the world (preview 51); a 44 save's places are off the land // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -120,7 +120,7 @@ const MIGRATE = {
 		return S;
 	}, // Build 70: Battle stations is cut; a game saved in it is in All hands (its soldiers' half), with no villager's work noted (it moved none)
 	39: (S) => {
-		const D = MID - 1000, // shape 39 was laid on the 2000 map (MID 1000): the old game is set down in the middle of the new one
+		const D = LMID - 1000, // shape 39 was laid on the 2000 map (MID 1000): the old game is set down in the middle of the land (the land's frame; shape 44 turns it into the world)
 			k = Math.round(D / FOG),
 			n0 = 2000 / FOG,
 			PAIRS = [
@@ -136,11 +136,12 @@ const MIGRATE = {
 				for (const [a, b] of PAIRS) if (typeof o[a] === 'number' && typeof o[b] === 'number') (o[a] += D), (o[b] += D);
 				for (const key in o) if (key !== 'fog' && key !== 'tread') walk(o[key]);
 			},
+			FL = Math.ceil(SQUARE / FOG), // the land's fog squares (shape 44 turns them into the world's)
 			grid = (b64, w) => {
 				const s = atob(b64),
-					o = new Uint8Array(FOGN * FOGN * w);
+					o = new Uint8Array(FL * FL * w);
 				for (let j = 0; j < n0; j++)
-					for (let i = 0; i < n0 * w; i++) o[((j + k) * FOGN + k) * w + i] = s.charCodeAt(j * n0 * w + i) || 0;
+					for (let i = 0; i < n0 * w; i++) o[((j + k) * FL + k) * w + i] = s.charCodeAt(j * n0 * w + i) || 0;
 				return btoa(String.fromCharCode(...o));
 			}; // the fog and the ruts, square for square
 		for (const u of S.units || [])
@@ -215,7 +216,74 @@ const MIGRATE = {
 		if (typeof S.sel === 'number' && S.sel >= BNS) S.sel = 'all';
 		S.v = 44;
 		return S;
-	}, // Nov 2 (Albert): three squads, Alpha, Bravo and Charlie, and the fourth tile of the row's middle is Set Up; the old fourth squad's soldiers fold into the reserve, as Epsilon and Zeta did in step 36
+	}, // Nov 2 (Albert): three squads,
+	44: (S) => {
+		// preview 51: the land turned into the world. Every place in the save was in the land's frame (the 2160 square); it goes through worldXY.
+		// A building is snapped to the world's squares again; a lake's shore harmonics turn with it; the fog and the ruts move square for square
+		// (an old square's middle finds its world square; what two old squares land on one is the lighter of them)
+		const PAIRS = [
+				['x', 'y'],
+				['px', 'py'],
+				['hx', 'hy'],
+				['hax', 'hay'],
+				['kx', 'ky'],
+			],
+			turn = (o, a, b) => {
+				const w = worldXY(o[a], o[b]);
+				o[a] = w.x;
+				o[b] = w.y;
+			},
+			walk = (o) => {
+				if (!o || typeof o !== 'object') return;
+				if (Array.isArray(o)) return o.forEach(walk);
+				for (const [a, b] of PAIRS) if (typeof o[a] === 'number' && typeof o[b] === 'number') turn(o, a, b);
+				for (const key in o) if (key !== 'fog' && key !== 'tread') walk(o[key]);
+			},
+			n0 = SQUARE / FOG,
+			grid = (b64, w) => {
+				const s = atob(b64),
+					o = new Uint8Array(FOGN * FOGN * w);
+				for (let j = 0; j < n0; j++)
+					for (let i = 0; i < n0; i++) {
+						const p = worldXY(i * FOG + FOG / 2, j * FOG + FOG / 2),
+							gi = Math.floor(p.x / FOG),
+							gj = Math.floor(p.y / FOG);
+						for (let c = 0; c < w; c++) o[(gj * FOGN + gi) * w + c] = Math.max(o[(gj * FOGN + gi) * w + c], s.charCodeAt((j * n0 + i) * w + c) || 0);
+					}
+				return btoa(String.fromCharCode(...o));
+			};
+		walk(S);
+		for (const n of S.nodes || [])
+			if (Array.isArray(n)) {
+				const w = worldXY(n[1], n[2]);
+				n[1] = w.x;
+				n[2] = w.y;
+			} // a tree: [id, x, y, amt, max]
+		for (const b of S.blds || []) {
+			const sp = snapPos(b.kind, b.x, b.y);
+			b.x = sp.x;
+			b.y = sp.y;
+			b.gx = sp.gx;
+			b.gy = sp.gy;
+		}
+		for (const L of S.lakes || []) if (L.w) for (const h of L.w) h[2] += (h[0] * Math.PI) / 4;
+		for (const p of S.P || []) {
+			if (p.keep) {
+				const w = worldXY(p.keep[0], p.keep[1]);
+				p.keep = [w.x, w.y];
+			}
+			if (p.ai) delete p.ai.wallPlan; // the wall plan is squares of the old frame: drawn again round the keep
+		}
+		if (S.cam) {
+			const w = worldXY(S.cam.x, S.cam.y);
+			S.cam.x = w.x;
+			S.cam.y = w.y;
+		}
+		if (S.fog) S.fog = grid(S.fog, 1);
+		if (S.tread) S.tread = grid(S.tread, 2);
+		S.v = 45;
+		return S;
+	}, // preview 51: the land turned into the world Alpha, Bravo and Charlie, and the fourth tile of the row's middle is Set Up; the old fourth squad's soldiers fold into the reserve, as Epsilon and Zeta did in step 36
 };
 const evSave = () => {
 	const V = G.ev || {},

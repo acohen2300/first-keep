@@ -76,14 +76,14 @@ ZONE = """(seeds) => {
     const isHome = (n) => base[n.kind] && Math.abs(n.max - base[n.kind] * F.RICH * H.rich * (amt[type[n.kind] || n.kind] || 1)) < 1e-6;
     const comp = (x, y, id) => { const cx = Math.floor(x / F.NAVC), cy = Math.floor(y / F.NAVC); let best = 0; for (let j = -2; j <= 2; j++) for (let i = -2; i <= 2; i++) { const a = cx + i, b = cy + j; if (a < 0 || b < 0 || a >= NC || b >= NC) continue; const c = N.comp[b * NC + a]; if (c && (id ? c === id : N.size[c] > N.size[best])) best = c; } return best; };
     for (let o = 0; o < 4; o++) {
-      const k = F.keepOf(o), d = (q) => Math.hypot(q.x - k.x, q.y - k.y), mine = (q) => (k.x < F.MID ? q.x <= F.MID : q.x >= F.MID) && (k.y < F.MID ? q.y <= F.MID : q.y >= F.MID);
-      const sx = k.x < F.MID ? 1 : -1, sy = k.y < F.MID ? 1 : -1, inBack = (q) => (q.x - k.x) * sx <= 0 && (q.y - k.y) * sy <= 0 && d(q) <= H.clear;
+      const kb = F.keepOf(o), k = { x: G.P[o].keep[0], y: G.P[o].keep[1] }, d = (q) => Math.hypot(q.x - k.x, q.y - k.y), L = (q) => F.landXY(q.x, q.y), lk = L(k), /* from the keep's laid place: the building is snapped to the world's squares after the turn (preview 51) */ mine = (q) => { const l = L(q), e = 0.01; return (lk.x < F.LMID ? l.x <= F.LMID + e : l.x >= F.LMID - e) && (lk.y < F.LMID ? l.y <= F.LMID + e : l.y >= F.LMID - e); };   // the corner's quarter, in the land's frame (preview 51)
+      const sx = lk.x < F.LMID ? 1 : -1, sy = lk.y < F.LMID ? 1 : -1, inBack = (q) => { const l = L(q); return (l.x - lk.x) * sx <= 0 && (l.y - lk.y) * sy <= 0 && d(q) <= H.clear; };
       const back = G.nodes.filter((n) => !n.farm && mine(n) && d(n) < F.CLEAR && isBack(n)), other = G.nodes.filter((n) => !n.farm && mine(n) && d(n) < F.CLEAR + 100 && !isBack(n)), tot = {};
       W.corners++;
       for (const kd in count) { const L = back.filter((n) => n.kind === kd); tot[kd] = L.reduce((a, n) => a + n.max, 0); if (L.length !== count[kd]) bad.push(s + '/' + o + ': zone 1 holds ' + L.length + ' of ' + count[kd] + ' ' + kd + (kd === 'bush' ? 'es' : 's') + ': it does not fit'); }
       if (back.length === B.bushes + B.trees) W.fit++;
       if (Math.abs(tot.bush - need.bush) > 1e-6 || Math.abs(tot.tree - need.tree) > 1e-6 || need.bush < F.AGES[1].cost.f || need.tree < F.AGES[1].cost.w) bad.push(s + '/' + o + ': zone 1 holds ' + Math.round(tot.bush) + ' food and ' + Math.round(tot.tree) + " wood, not Bronze's cost and its margin (" + need.bush + ', ' + need.tree + ')');
-      for (const n of back) { const r = d(n), e = Math.min(n.x, n.y, F.MAP - n.x, F.MAP - n.y), g = Math.min(...other.map((q) => Math.hypot(q.x - n.x, q.y - n.y)), ...back.filter((q) => q.kind !== n.kind).map((q) => Math.hypot(q.x - n.x, q.y - n.y)));
+      for (const n of back) { const r = d(n), ln = L(n), e = Math.min(ln.x, ln.y, F.SQUARE - ln.x, F.SQUARE - ln.y), g = Math.min(...other.map((q) => Math.hypot(q.x - n.x, q.y - n.y)), ...back.filter((q) => q.kind !== n.kind).map((q) => Math.hypot(q.x - n.x, q.y - n.y)));
         W.back = [Math.min(W.back[0], r), Math.max(W.back[1], r)]; W.bedge = Math.min(W.bedge, e); W.bgap = Math.min(W.bgap, g);
         if (!inBack(n) || r < b0 || r > H.clear) { bad.push(s + '/' + o + ': a zone 1 ' + n.kind + ' out of zone 1, at ' + Math.round(r) + ' and ' + Math.round((n.x - k.x) * sx) + ',' + Math.round((n.y - k.y) * sy) + ' from its Town Center'); break; }
         if (e < B.edge) { bad.push(s + '/' + o + ': a zone 1 ' + n.kind + ' ' + Math.round(e) + ' from the map edge'); break; }
@@ -105,7 +105,7 @@ ZONE = """(seeds) => {
       for (const L of G.lakes) if (!L.river && L !== G.lakes[0]) { if (!(L.dl >= F.WATER.shore[0] && L.dl <= F.WATER.shore[1])) bad.push(s + ': a lake with shoreline development ' + (L.dl || 1).toFixed(2) + ', outside ' + F.WATER.shore.join(' to ') + ' (Nov 3: no circles)');   // the shore (Nov 3): every lake a bay or two, none wild; the shore the walking grid sees is the shore drawn
         const a = (s * 1.3) % 6.28, r = F.lakeRAt(L, a), at = (q) => { const x = L.x + Math.cos(a) * q, y = L.y + Math.sin(a) * q, cx = Math.floor(x / 10) * 10 + 5, cy = Math.floor(y / 10) * 10 + 5; return { wet: F.NAV.lake[F.gcell(x, y)] === 1, own: Math.hypot(cx - L.x, cy - L.y) - F.lakeRAt(L, Math.atan2(cy - L.y, cx - L.x)), other: G.lakes.some((Q) => Q !== L && Math.hypot(cx - Q.x, cy - Q.y) < Q.r * (Q.rmax || 1) + 30) }; }, i = at(r - 12), o = at(r + 14);
         if ((i.own < -2 && !i.wet) || (o.own > 2 && o.wet && !o.other)) bad.push(s + ': the walking grid and the drawn shore disagree'); }   // read at the cell centres, as the grid is laid; a river pool may lie just outside   // this lake's own edge (a river pool may lie just outside it)
-      for (const n of home) W.edge = Math.min(W.edge, n.x, n.y, F.MAP - n.x, F.MAP - n.y);
+      for (const n of home) { const ln = L(n); W.edge = Math.min(W.edge, ln.x, ln.y, F.SQUARE - ln.x, F.SQUARE - ln.y); }
       const content = {}; for (const n of G.nodes) if (mine(n) && !n.farm && n.kind !== 'tree' && n.kind !== 'fish') { const key = n.kind + ' ' + Math.round(n.max); content[key] = (content[key] || 0) + 1; }
       for (const f of G.finds) if (mine(f) && f.kind !== 'shrine') content[f.kind] = (content[f.kind] || 0) + 1;
       sig.push(JSON.stringify(Object.keys(content).sort().map((key) => [key, content[key]])));
@@ -140,22 +140,23 @@ CITADEL = """() => {
 # buildings and their squares, trees, finds, lakes, Town Centers, an animal's graze point, a scout's loop; the fog and the ruts square for
 # square; an old wave gets its progress fields. Then the game loads and plays 90 s with nothing off the map and no error.
 MIGRATE = """(O) => {
-  const F = window.__fk, bad = [], D = F.MID - 1000, n0 = 2000 / 40, FN = Math.ceil(F.MAP / 40), near = (a, b) => Math.abs(a - b) < 0.02;
-  const M = F.MIGRATE[39](JSON.parse(JSON.stringify(O)));
-  if (M.v !== 40) bad.push('the step leaves shape ' + M.v);
+  const F = window.__fk, bad = [], D = F.LMID - 1000, n0 = 2000 / 40, FN = Math.ceil(F.MAP / 40), near = (a, b) => Math.abs(a - b) < 0.02,
+    T = (x, y) => F.worldXY(x + D, y + D), nx = (x, y) => near(x, T(x, y).x), tn = (p, q) => near(p.x, T(q.x, q.y).x) && near(p.y, T(q.x, q.y).y);   // an old place: set down in the land (39), turned into the world (44)
+  let M = F.MIGRATE[39](JSON.parse(JSON.stringify(O))); while (M.v < 44 && F.MIGRATE[M.v]) M = F.MIGRATE[M.v](M); M = F.MIGRATE[44](M);
+  if (M.v !== 45) bad.push('the steps leave shape ' + M.v);
   if (M.P.some((p) => p.ai && p.ai.wallPlan)) bad.push("a computer keeps its wall plan's old squares");
-  if (!M.units.every((u, i) => near(u.x, O.units[i].x + D) && near(u.y, O.units[i].y + D) && (u.px === undefined || near(u.px, O.units[i].px + D)))) bad.push('a unit is not moved');
+  if (!M.units.every((u, i) => tn(u, O.units[i]) && (u.px === undefined || near(u.px, T(O.units[i].px, O.units[i].py).x)))) bad.push('a unit is not moved');
   const an = M.units.filter((u, i) => O.units[i].graze !== undefined && O.units[i].gx !== undefined);
-  if (!an.length || !an.every((u) => { const o = O.units[M.units.indexOf(u)]; return u.grazeAt && near(u.grazeAt.x, o.gx + D) && near(u.grazeAt.y, o.gy + D) && u.gx === undefined; })) bad.push('an animal grazes where it did on the old map');
-  const sc = M.units.filter((u) => u.route); if (!sc.length || !sc.every((u) => { const o = O.units[M.units.indexOf(u)]; return u.route.every((w, i) => near(w.x, o.route[i].x + D) && near(w.y, o.route[i].y + D)); })) bad.push("a scout's loop is not moved");
-  if (!M.blds.every((b, i) => near(b.x, O.blds[i].x + D) && b.gx === O.blds[i].gx + D / F.NAVC && b.gy === O.blds[i].gy + D / F.NAVC)) bad.push('a building is not on its squares');
-  if (!M.nodes.every((n, i) => (Array.isArray(n) ? near(n[1], O.nodes[i][1] + D) && near(n[2], O.nodes[i][2] + D) : near(n.x, O.nodes[i].x + D)))) bad.push('a find is not moved');
-  if (!M.finds.every((f, i) => near(f.x, O.finds[i].x + D)) || !M.lakes.every((L, i) => near(L.x, O.lakes[i].x + D))) bad.push('a find or a lake is not moved');
-  if (!M.P.every((p, i) => near(p.keep[0], O.P[i].keep[0] + D) && p.ai.cool)) bad.push('a side has no Town Center place or no cool-downs');
+  if (!an.length || !an.every((u) => { const o = O.units[M.units.indexOf(u)]; return u.grazeAt && tn(u.grazeAt, { x: o.gx, y: o.gy }) && u.gx === undefined; })) bad.push('an animal grazes where it did on the old map');
+  const sc = M.units.filter((u) => u.route); if (!sc.length || !sc.every((u) => { const o = O.units[M.units.indexOf(u)]; return u.route.every((w, i) => tn(w, o.route[i])); })) bad.push("a scout's loop is not moved");
+  if (!M.blds.every((b, i) => { const sp = F.snapPos(b.kind, T(O.blds[i].x, O.blds[i].y).x, T(O.blds[i].x, O.blds[i].y).y); return near(b.x, sp.x) && b.gx === sp.gx && b.gy === sp.gy; })) bad.push('a building is not on its squares');
+  if (!M.nodes.every((n, i) => (Array.isArray(n) ? near(n[1], T(O.nodes[i][1], O.nodes[i][2]).x) && near(n[2], T(O.nodes[i][1], O.nodes[i][2]).y) : tn(n, O.nodes[i])))) bad.push('a find is not moved');
+  if (!M.finds.every((f, i) => tn(f, O.finds[i])) || !M.lakes.every((L, i) => tn(L, O.lakes[i]))) bad.push('a find or a lake is not moved');
+  if (!M.P.every((p, i) => near(p.keep[0], T(O.P[i].keep[0], O.P[i].keep[1]).x) && p.ai.cool)) bad.push('a side has no Town Center place or no cool-downs');
   if (!(M.P[1].wave && M.P[1].wave.pt === O.t && M.P[1].wave.d > 1e8 && M.P[1].wave.to === 0)) bad.push('an old wave has no progress fields');
   const sq = (b64, w) => { const s = atob(b64), out = []; for (let i = 0; i < s.length; i++) out.push(s.charCodeAt(i)); return out; }, k = D / 40;
   for (const [key, w] of [['fog', 1], ['tread', 2]]) { const a = sq(O[key], w), b = sq(M[key], w); let ok = b.length === FN * FN * w && a.some(Boolean);
-    for (let j = 0; j < n0 && ok; j++) for (let i = 0; i < n0 * w && ok; i++) ok = b[((j + k) * FN + k) * w + i] === a[j * n0 * w + i];
+    for (let j = 0; j < n0 && ok; j++) for (let i = 0; i < n0 && ok; i++) { const p = F.worldXY((i + k) * 40 + 20, (j + k) * 40 + 20), gi = Math.floor(p.x / 40), gj = Math.floor(p.y / 40); for (let c = 0; c < w && ok; c++) ok = b[(gj * FN + gi) * w + c] >= a[(j * n0 + i) * w + c]; }
     if (!ok) bad.push('the ' + (key === 'fog' ? 'fog' : 'ruts') + ' are not moved square for square'); }
   F.loadGame(M); F.act('close'); F.setPause(true); const G = F.G; for (let i = 0; i < 30 * 90; i++) F.step(1 / 30);
   const off = G.units.filter((u) => !(u.x >= 0 && u.y >= 0 && u.x <= F.MAP && u.y <= F.MAP)).length; if (off) bad.push(off + ' units off the map after 90 s');

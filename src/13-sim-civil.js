@@ -93,7 +93,7 @@ const regionAt = (p, o) => {
 // side of water and walls), and nobody but the units in skip stands within half of SPACE.
 function spotFree(p, o, cm, skip) {
 	const c = gcell(p.x, p.y);
-	if (p.x < SPACE || p.y < SPACE || p.x > MAP - SPACE || p.y > MAP - SPACE || blockedCell(c, o) || (cm && NAV.comp[c] !== cm)) return false;
+	if (!inLand(p.x, p.y, SPACE) || blockedCell(c, o) || (cm && NAV.comp[c] !== cm)) return false;
 	let stood = false;
 	unitsNear(p, SPACE / 2, (v) => {
 		if (!stood && !skip.has(v) && v.hp > 0 && !v.inside) stood = true;
@@ -719,10 +719,12 @@ function scoutTick(u, dt, SP) {
 		const S = PLACES.scout,
 			e = S.edge,
 			c = [
-				[MID, MAP - e],
-				[MAP - e, MID],
-				[MID, e],
-				[e, MID],
+				...[
+					[LMID, SQUARE - e],
+					[SQUARE - e, LMID],
+					[LMID, e],
+					[e, LMID],
+				].map(([x, y]) => [landAt(x, y).x, landAt(x, y).y]), // the land's four edges, in the world (preview 51)
 				...[1, 2, 3, 0].map((o) => G.P[o].keep.map((v) => v + Math.sign(MID - v) * S.keep)), // in front of each Town Center, where it stands
 				[MID - S.mid, MID - S.mid],
 				[MID + S.mid, MID + S.mid],
