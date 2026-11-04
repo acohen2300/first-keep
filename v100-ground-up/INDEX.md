@@ -60,6 +60,8 @@ QBD The view → N66
 QBE Slope or face → N64
 QBF The dice → N65
 QBG Headlands and bays → N67
+QBH A lake's size drawn from the power law (QBA) → N61
+QBI Roads cross rivers at fords → N68
 
 ## By citation
 N1 Spherical astronomy, the altitude formula (standard) → QA
@@ -122,12 +124,13 @@ N57 Damped harmonic oscillator (standard) → QAW
 N58 ISO 9613-2, sound outdoors → QAX
 N59 Klatzky, Pai & Krotkov (2000), Presence 9 → QAY
 N60 Mandelbrot (1967), Science 156 → QAZ
-N61 Downing et al. (2006), lake sizes → QBA
+N61 Downing et al. (2006), lake sizes → QBA, QBH
 N62 Leopold & Maddock (1953), USGS Paper 252 → QBB
 N63 Hutchinson (1957), shoreline development → QBC
 N64 Angle of repose, dry sand about 34° (Al-Hashemi & Al-Amoudi 2018, Powder Technology 330, a review; from memory, to open) → QBE
 N65 Ettinger (2017), Mulberry32, a 32-bit generator; the seed of the day is the game's own rule → QBF
 N66 Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the ground (from memory: Age of Empires II's tiles are 2:1) → QBD
 N67 Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology, standard; Bird, Coastal Geomorphology, 2008; from memory) → QBG
+N68 Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory → QBI
 
-57 calculations, 67 citations.
+59 calculations, 68 citations.

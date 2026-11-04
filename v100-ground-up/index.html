@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>First Keep v100 · Ground</title>
+<title>First Keep v100 · Terrain</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600&family=IM+Fell+English+SC&display=swap">
 <style>
 :root { --ui: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif; --display: "IM Fell English SC", Georgia, serif; --slot: 44px; --gap: 6px; }
@@ -19,12 +19,15 @@ canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: non
 </head>
 <body>
 <canvas id="map"></canvas>
-<div id="top"><b>First Keep</b><span>v100 · floor 1 · Ground</span><span id="seed"></span></div>
+<div id="top"><b>First Keep</b><span>v100 · floor 2 · Terrain</span><span id="seed"></span></div>
 <div id="bar"><button data-t="grid">Grid</button><button data-t="zones" class="on">Zones</button><button data-t="edge" class="on">Edge</button><button id="new">New map</button></div>
 <script>
 'use strict';
 // First Keep v100 · floor 1: the ground. Every number below points at the dictionary (DICTIONARY.md); no number is written twice.
-const D = { site: 3060, board: 2160, zone: [300, 600, 900], edge: 60, tile: 10, land: 24, sandTop: 12, dirtTop: 20, beach: 80, cliff: 4, wander: 24, sea: 60 }; // D1, D2, D3–D6, D7, D12–D19
+const D = { site: 3060, board: 2160, zone: [300, 600, 900], edge: 60, tile: 10, land: 24, sandTop: 12, dirtTop: 20, beach: 80, cliff: 4, wander: 24, sea: 60, // D1, D2, D3–D6, D7, D12–D19
+  bare: 12, wade: 4, lakes: [3, 6], lakeR: [50, 160], lakeDeep: 12, shore: 0.25, riverDeep: 8, riverW: 0.25, riverWander: 80, bank: 40, ford: 40, stream: 6, streamDeep: 2, // D23–D35
+  hills: [2, 4], hillR: [80, 160], hillH: 14, rocks: [3, 6], rockR: [15, 35], rockH: 18, crevices: [1, 2], creviceW: 8, creviceFloor: 13, creviceL: [150, 300], lane: 50, middle: 150, // D36–D47
+  forestScale: 500, forestShare: 0.1, wall: [920, 1080], pond: [700, 450], pondR: 50 }; // D48–D52
 const A = { turn: 15, rise: 30, repose: 34 }; // A1 the grid's turn, A2 the camera's rise, A3 the angle of repose
 const C = { water: '#2a6488', sand: '#cdbb88', dirt: '#785c3a', grass: '#4a6634', red: '#ff6b5b', white: '#ece5d3', gold: '#e6b947' }; // C1–C4, C7, C8, C10
 
@@ -33,6 +36,7 @@ const RAD = Math.PI / 180, N = D.site / D.tile, MID = D.site / 2, B0 = (D.site -
 const COS = Math.cos(A.turn * RAD), SIN = Math.sin(A.turn * RAD), TILT = Math.sin(A.rise * RAD), UP = Math.cos(A.rise * RAD);
 const REPOSE = Math.tan(A.repose * RAD) * D.tile; // QBE: the most a tile may step up or down over its own width and still be a slope
 const toBoard = (sx, sy) => { const x = sx - MID, y = sy - MID; return [MID + x * COS - y * SIN, MID + x * SIN + y * COS]; };
+const fromBoard = (bx, by) => { const x = bx - MID, y = by - MID; return [MID + x * COS + y * SIN, MID - x * SIN + y * COS]; };
 const toView = (bx, by, h) => [bx, by * TILT - h * UP];
 const V = (sx, sy, h) => { const [bx, by] = toBoard(sx, sy); return toView(bx, by, h); };
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
@@ -42,6 +46,9 @@ const shade = (hex, f) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(hex.sli
 function dice(seed) { let a = seed >>> 0; return () => { a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), a | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 // QAZ a fractal line (N60): K waves, the k-th of amplitude k^(−H), H = 2 − Dim; a coast's Dim is about 1.25. Returns a function of the way along, in radians, giving −1 to 1.
 function fractal(roll, K, Dim) { const H = 2 - Dim, ph = Array.from({ length: K }, () => roll() * 2 * Math.PI); let norm = 0; for (let k = 1; k <= K; k++) norm += k ** -H; return (t) => { let v = 0; for (let k = 1; k <= K; k++) v += k ** -H * Math.sin(k * t + ph[k - 1]); return v / norm; }; }
+
+// QAZ as a surface: K plane waves in rolled directions, the same amplitudes; scale is the longest wave in units. Returns a function of (x, y) giving about −1 to 1.
+function fractal2(roll, K, Dim, scale) { const H = 2 - Dim, w = Array.from({ length: K }, (_, k) => [roll() * 2 * Math.PI, roll() * 2 * Math.PI, (k + 1) ** -H, ((k + 1) / scale) * 2 * Math.PI]); let norm = 0; for (const q of w) norm += q[2]; return (x, y) => { let v = 0; for (const [th, ph, a, f] of w) v += a * Math.sin((x * Math.cos(th) + y * Math.sin(th)) * f + ph); return v / norm; }; }
 
 // ── The coast (L2 Cut at the board's edge; L4 Edge). Where it stands out it is a headland and a cliff, where it bends in a bay and a beach (QBG).
 // The roll: Who the map · What how far the coast wanders in and out · Where the coast only; within D5 of every corner the same wander (L12), free along the middle of each side · When the map is made · Why no two maps share a coast, and every home gets the same one · How QAZ on the dice.
@@ -55,38 +62,120 @@ function makeCoast(roll) {
 }
 
 // ── The ground: one height a tile. Depth is the way in from the coast (negative at sea). Land stands at D13; a beach falls to the water over D16, a cliff over D17 (L4); the sea deepens with distance. The stratum a tile shows is whichever its height reaches (L1).
-const H = new Float32Array(N * N), DEP = new Float32Array(N * N), CH = new Float32Array(N * N * 4); // height, depth, the four drawn corner heights
+const H = new Float32Array(N * N), DEP = new Float32Array(N * N), CH = new Float32Array(N * N * 4), FOR = new Uint8Array(N * N); // height, depth from the coast, the four drawn corner heights, the forest floor
 let coast, seed;
+function depthAt(bx, by) { // the way in from the coast at a board point, and the coast's cliffness there
+  const dl = bx - B0, dr = B1 - bx, dt = by - B0, db = B1 - by, dx = Math.min(dl, dr), dy = Math.min(dt, db);
+  const side = dx < dy ? (dl < dr ? 0 : 1) : dt < db ? 2 : 3, pos = clamp(dx < dy ? by - B0 : bx - B0, 0, D.board);
+  const [wander, e] = coast(side, pos);
+  return [Math.min(dx, dy) - wander, e];
+}
 function makeGround(sd) {
-  seed = sd; coast = makeCoast(dice(sd));
+  seed = sd; const roll = dice(sd); coast = makeCoast(roll);
   for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
-    const [bx, by] = toBoard((i + 0.5) * D.tile, (j + 0.5) * D.tile);
-    const dl = bx - B0, dr = B1 - bx, dt = by - B0, db = B1 - by, dx = Math.min(dl, dr), dy = Math.min(dt, db);
-    const side = dx < dy ? (dl < dr ? 0 : 1) : dt < db ? 2 : 3, pos = clamp(dx < dy ? by - B0 : bx - B0, 0, D.board), d0 = Math.min(dx, dy);
-    const [wander, e] = coast(side, pos), depth = d0 - wander, run = D.beach + (D.cliff - D.beach) * e;
+    const [bx, by] = toBoard((i + 0.5) * D.tile, (j + 0.5) * D.tile), [depth, e] = depthAt(bx, by), run = D.beach + (D.cliff - D.beach) * e;
     DEP[j * N + i] = depth;
     H[j * N + i] = depth >= run ? D.land : depth > 0 ? (D.land * depth) / run : depth;
   }
-  // the drawn corners: a tile meets its neighbours as a slope when the step is within the angle of repose, else it keeps its own height and a face shows (QBE)
+  makeTerrain(roll);
+  // the drawn corners (QBE): at every grid corner the tiles round it are sorted by height and split where a step passes the angle of repose; each group shares one height, so a slope meets without a crack and a face stands where it should
   const dh = (i, j) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : Math.max(0, H[j * N + i]));
-  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
-    const me = dh(i, j), k = (j * N + i) * 4;
-    [[i, j], [i + 1, j], [i, j + 1], [i + 1, j + 1]].forEach(([ci, cj], c) => { // the corner at grid point (ci, cj): the four tiles round it
-      let sum = 0, n = 0;
-      for (const [ti, tj] of [[ci - 1, cj - 1], [ci, cj - 1], [ci - 1, cj], [ci, cj]]) { const h = dh(ti, tj); if (Math.abs(h - me) <= REPOSE) { sum += h; n++; } }
-      CH[k + c] = sum / n;
-    });
+  for (let cj = 0; cj <= N; cj++) for (let ci = 0; ci <= N; ci++) {
+    const round = [[ci - 1, cj - 1, 3], [ci, cj - 1, 2], [ci - 1, cj, 1], [ci, cj, 0]].filter(([i, j]) => i >= 0 && j >= 0 && i < N && j < N).map(([i, j, slot]) => [dh(i, j), (j * N + i) * 4 + slot]).sort((a, b) => a[0] - b[0]);
+    for (let a = 0; a < round.length; ) { let b = a + 1; while (b < round.length && round[b][0] - round[b - 1][0] <= REPOSE) b++; let sum = 0; for (let q = a; q < b; q++) sum += round[q][0]; for (let q = a; q < b; q++) CH[round[q][1]] = sum / (b - a); a = b; }
   }
   renderGround();
   document.getElementById('seed').textContent = 'map ' + sd;
 }
-const stratum = (h) => (h <= 0 ? 0 : h < D.sandTop ? 1 : h < D.dirtTop ? 2 : 3); // 0 water, 1 sand, 2 dirt, 3 grass
+
+// ── Floor 2, terrain (layer 90): every piece is a Cut or a Raise on the one height field (L2, L3); the layer that shows follows (L1), a step past the angle of repose is a face (QBE).
+const CORNERS = [[B0, B0], [B1, B0], [B1, B1], [B0, B1]], MIDB = [MID, MID];
+const cornerDist = (bx, by) => Math.min(...CORNERS.map(([cx, cy]) => Math.hypot(bx - cx, by - cy)));
+const segDist = (px, py, ax, ay, bx, by) => { const vx = bx - ax, vy = by - ay, t = clamp(((px - ax) * vx + (py - ay) * vy) / (vx * vx + vy * vy), 0, 1); return Math.hypot(px - ax - t * vx, py - ay - t * vy); };
+const laneDist = (bx, by) => Math.min(...CORNERS.map(([cx, cy]) => segDist(bx, by, cx, cy, MID, MID))); // the four roads: corner to middle
+const tileAt = (bx, by) => { const [sx, sy] = fromBoard(bx, by); const i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile); return i < 0 || j < 0 || i >= N || j >= N ? -1 : j * N + i; };
+const landAt = (bx, by) => { const k = tileAt(bx, by); return k >= 0 && H[k] >= D.land && FOR[k] === 0; };
+const inZ4 = (bx, by, r) => cornerDist(bx, by) >= D.zone[2] + r && depthAt(bx, by)[0] >= D.edge + r && Math.hypot(bx - MID, by - MID) >= D.middle + r && laneDist(bx, by) >= D.lane + r;
+function stamp(bx, by, r, fn) { // every tile whose middle lies within r of a board point: fn(k, d, dx, dy)
+  const box = [[bx - r, by - r], [bx + r, by - r], [bx - r, by + r], [bx + r, by + r]].map(([x, y]) => fromBoard(x, y));
+  const i0 = Math.max(0, Math.floor(Math.min(...box.map((p) => p[0])) / D.tile)), i1 = Math.min(N - 1, Math.ceil(Math.max(...box.map((p) => p[0])) / D.tile));
+  const j0 = Math.max(0, Math.floor(Math.min(...box.map((p) => p[1])) / D.tile)), j1 = Math.min(N - 1, Math.ceil(Math.max(...box.map((p) => p[1])) / D.tile));
+  for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) { const [tx, ty] = toBoard((i + 0.5) * D.tile, (j + 0.5) * D.tile), dx = tx - bx, dy = ty - by, d = Math.hypot(dx, dy); if (d <= r) fn(j * N + i, d, dx, dy); }
+}
+const between = (roll, [lo, hi]) => lo + roll() * (hi - lo), count = (roll, [lo, hi]) => Math.floor(between(roll, [lo, hi + 1]));
+// a lake: a bowl (deep at the middle, D27) inside a fractal shore (QAZ, D28); where the land stands out into it the shore is a face, where it bends back a bank (QBG); a lake's bank falls over D32, the sea's beach over D16 (L4)
+function lake(bx, by, r, rim, deep) {
+  stamp(bx, by, r * (1 + D.shore) + D.bank, (k, d, dx, dy) => {
+    const out = rim(Math.atan2(dy, dx)), edge = r * (1 + D.shore * out), cliff = clamp((-out - 0.2) / 0.3, 0, 1), run = D.bank + (D.cliff - D.bank) * cliff;
+    const h = d < edge ? -deep * (1 - (d / edge) ** 2) : (D.land * (d - edge)) / run;
+    H[k] = Math.min(H[k], h);
+  });
+}
+// a wandering line (QAZ) from a to b, pinned at both ends; null when any point fails ok
+function wanderLine(roll, a, b, wander, ok) {
+  const len = Math.hypot(b[0] - a[0], b[1] - a[1]), nx = -(b[1] - a[1]) / len, ny = (b[0] - a[0]) / len, f = fractal(roll, 6, 1.3), pts = [];
+  for (let t = 0; t <= 1; t += 4 / len) { const s = wander * f(t * Math.PI) * Math.sin(t * Math.PI); pts.push([a[0] + (b[0] - a[0]) * t + nx * s, a[1] + (b[1] - a[1]) * t + ny * s]); }
+  return ok && !pts.every(([x, y]) => ok(x, y)) ? null : pts;
+}
+// a channel: discs along a line; w the half-width, deep the bed; the bank falls over D32
+const channel = (pts, w, deep) => { for (const [x, y] of pts) stamp(x, y, w + D.bank, (k, d) => { H[k] = Math.min(H[k], d < w ? -deep * (1 - (d / w) ** 2) : (D.land * (d - w)) / D.bank); }); };
+const dome = (bx, by, r, hgt) => stamp(bx, by, r, (k, d) => { H[k] = Math.max(H[k], D.land + hgt * (1 - (d / r) ** 2) ** 2); }); // a smooth hill: its steepest slope is 0.77 h / r, under the angle of repose at these numbers
+function makeTerrain(roll) {
+  // The home pond: Who every corner · What one small lake · Where Z3, the same spot in each corner's own frame (D51, D52, L12) · When the map is made · Why a home has water to fish and to sail, and the same water for all · How one shore rolled once (QAZ), shared
+  const pondRim = fractal(roll, 8, 1.3);
+  for (let c = 0; c < 4; c++) { const [cx, cy] = CORNERS[c], a = (c * 90 + 45) * RAD, ux = Math.cos(a - 45 * RAD), uy = Math.sin(a - 45 * RAD), vx = Math.cos(a + 45 * RAD), vy = Math.sin(a + 45 * RAD);
+    lake(cx + ux * D.pond[0] + vx * D.pond[1], cy + uy * D.pond[0] + vy * D.pond[1], D.pondR, pondRim, D.lakeDeep); }
+  // Lakes: Who the map · What their number, size and place · Where Z4, off the roads and the middle, inside the play edge · When the map is made · Why no two maps share their water · How a count between D25, sizes on the power law of lakes (QBA, Pareto draw), places uniform, each shore QAZ
+  const lakes = [], c = 1.06, amin = Math.PI * D.lakeR[0] ** 2, amax = Math.PI * D.lakeR[1] ** 2;
+  for (let n = count(roll, D.lakes), tries = 0; lakes.length < n && tries < 200; tries++) {
+    const r = Math.sqrt(Math.min(amax, amin * roll() ** (-1 / c)) / Math.PI), bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), room = r * (1 + D.shore) + D.bank;
+    if (!inZ4(bx, by, room) || lakes.some((L) => Math.hypot(L.x - bx, L.y - by) < L.r + room + 2 * D.beach)) continue;
+    lakes.push({ x: bx, y: by, r }); lake(bx, by, r, fractal(roll, 8, 1.3), D.lakeDeep);
+  }
+  // Rivers: Who the map · What one from each lake big enough, to the nearest free coast · Where Z4 only; a river never enters a home (L12) · When the map is made · Why water that moves, a way to sail out, a line to hold · How the path wanders (QAZ), the width grows with the lake (QBB)
+  const mouths = (bx, by) => { let best = null; for (const [sx, sy, ex, ey] of [[B0, B0 + 900, B0, B1 - 900], [B1, B0 + 900, B1, B1 - 900], [B0 + 900, B0, B1 - 900, B0], [B0 + 900, B1, B1 - 900, B1]]) { const t = clamp(((bx - sx) * (ex - sx) + (by - sy) * (ey - sy)) / ((ex - sx) ** 2 + (ey - sy) ** 2), 0, 1), px = sx + (ex - sx) * t, py = sy + (ey - sy) * t, d = Math.hypot(px - bx, py - by); if (!best || d < best[2]) best = [px, py, d]; } return best; };
+  const rivers = [];
+  for (const L of lakes) if (L.r >= D.lakeR[0] * 1.5) {
+    const [mx, my] = mouths(L.x, L.y), w = D.riverW * L.r, dx = mx - L.x, dy = my - L.y, len = Math.hypot(dx, dy);
+    const pts = wanderLine(roll, [L.x, L.y], [mx + (dx / len) * (D.wander + D.beach), my + (dy / len) * (D.wander + D.beach)], D.riverWander, (x, y) => cornerDist(x, y) >= D.zone[2] + w + D.bank && Math.hypot(x - MID, y - MID) >= D.middle);
+    if (pts) { channel(pts, w, D.riverDeep); rivers.push({ pts, w }); }
+  }
+  // Fords (TC4): Who every river · What a shallow crossing · Where wherever a river crosses one of the four roads, and once more at a rolled spot · When with the river · Why towns grew at fords: a road meets water where it can be waded · How the bed raised to wading depth over D33
+  for (const R of rivers) {
+    const spots = R.pts.filter(([x, y]) => laneDist(x, y) < D.lane); const one = R.pts[Math.floor(between(roll, [R.pts.length * 0.3, R.pts.length * 0.7]))];
+    for (const [x, y] of [...spots.filter((p, n) => n % 10 === 0), one]) stamp(x, y, R.w + D.ford / 2, (k) => { if (H[k] < -D.wade / 2) H[k] = -D.wade / 2; });
+  }
+  // Hills (TR1): Who the map · What a few smooth rises · Where Z4, clear of water and roads · When the map is made · Why high ground to hold and to see from · How count D36, radius D37, a dome of D38
+  const hills = [];
+  for (let n = count(roll, D.hills), tries = 0; hills.length < n && tries < 100; tries++) { const r = between(roll, D.hillR), bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]);
+    if (!inZ4(bx, by, r) || !landAt(bx, by) || !landAt(bx + r, by) || !landAt(bx - r, by) || !landAt(bx, by + r) || !landAt(bx, by - r)) continue; hills.push([bx, by, r]); dome(bx, by, r, D.hillH); }
+  // Streams (TC3): Who each hill · What a thin, wadeable run to the nearest lake · Where Z4 · When with the hills · Why water springs where ground rises · How a channel of D34 by D35
+  for (const [hx, hy, hr] of hills) { let best = null; for (const L of lakes) { const d = Math.hypot(L.x - hx, L.y - hy); if (!best || d < best[1]) best = [L, d]; }
+    if (best) { const L = best[0], dx = L.x - hx, dy = L.y - hy, len = Math.hypot(dx, dy), pts = wanderLine(roll, [hx + (dx / len) * hr, hy + (dy / len) * hr], [L.x, L.y], D.riverWander / 2, (x, y) => cornerDist(x, y) >= D.zone[2]); if (pts) channel(pts, D.stream, D.streamDeep); } }
+  // Rock (TR2): Who the map · What outcrops nothing walks over or through · Where Z4, on dry land, off the roads · When the map is made · Why cover and chokepoints inland · How count D39, radius D40, raised D41 in one step so every edge is a face (QBE); its top is bare (D23)
+  for (let n = count(roll, D.rocks), tries = 0, made = 0; made < n && tries < 100; tries++) { const r = between(roll, D.rockR), bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), rim = fractal(roll, 5, 1.4);
+    if (!inZ4(bx, by, r * 1.3) || !landAt(bx, by)) continue; made++; stamp(bx, by, r * 1.3, (k, d, dx, dy) => { if (d < r * (1 + 0.3 * rim(Math.atan2(dy, dx)))) H[k] = Math.max(H[k], D.land + D.rockH); }); }
+  // Crevices (TC5): Who the map · What a dry trench nothing crosses · Where Z4, off the roads and water · When the map is made · Why a line that cannot be walked, without water · How count D42, a wandering line of D45, cut to D44 so both walls are faces
+  for (let n = count(roll, D.crevices), tries = 0, made = 0; made < n && tries < 60; tries++) { const L = between(roll, D.creviceL), a = roll() * 2 * Math.PI, bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), ex = bx + Math.cos(a) * L, ey = by + Math.sin(a) * L;
+    if (!inZ4(bx, by, D.creviceW) || !inZ4(ex, ey, D.creviceW) || !landAt(bx, by) || !landAt(ex, ey)) continue; made++;
+    const pts = wanderLine(roll, [bx, by], [ex, ey], D.riverWander / 3, (x, y) => inZ4(x, y, D.creviceW) && landAt(x, y)); if (pts) for (const [x, y] of pts) stamp(x, y, D.creviceW, (k) => { H[k] = Math.min(H[k], D.creviceFloor); }); }
+  // Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor 3) · Where a wall round every home at D50 with the road through it (the same for all, L12), and patches over Z4 by a rolled surface; never on water, slopes or roads · When the map is made · Why woods to cut, to hide in, to go round · How QAZ as a surface, scale D48, standing where it rises past D49
+  const woods = fractal2(roll, 6, 1.3, D.forestScale);
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { const k = j * N + i; if (H[k] !== D.land) continue;
+    const [bx, by] = toBoard((i + 0.5) * D.tile, (j + 0.5) * D.tile), cd = cornerDist(bx, by);
+    if (laneDist(bx, by) < D.lane || Math.hypot(bx - MID, by - MID) < D.middle || DEP[k] < D.edge + D.tile) continue;
+    const wall = cd >= D.wall[0] && cd <= D.wall[1], patch = cd > D.wall[1] && woods(bx, by) > D.forestShare;
+    if (wall || patch) FOR[k] = 1; }
+  for (let j = 1; j < N - 1; j++) for (let i = 1; i < N - 1; i++) { const k = j * N + i; if (FOR[k] && [k - 1, k + 1, k - N, k + N].some((q) => H[q] !== D.land)) FOR[k] = 2; } // the wood's edge keeps one tile from any slope or water
+  for (let k = 0; k < N * N; k++) if (FOR[k] === 2) FOR[k] = 0;
+}
+const stratum = (h) => (h <= 0 ? 0 : h < D.sandTop ? 1 : h < D.dirtTop || h >= D.land + D.bare ? 2 : 3); // 0 water, 1 sand, 2 dirt, 3 grass; bare dirt again high over the land (D23)
 const BANDS = 6, deepest = shade(C.water, 0.6);
-const waterBand = (h) => Math.min(BANDS - 1, Math.floor(-h / (D.sea / BANDS)));
+const waterBand = (h) => (h > -D.wade ? 0 : 1 + Math.min(BANDS - 2, Math.floor((-h - D.wade) / ((D.sea - D.wade) / (BANDS - 1))))); // the first band is what can be waded (D24)
 const mix = (a, b, f) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - f) + parseInt(b.slice(i, i + 2), 16) * f).toString(16).padStart(2, '0')).join('');
 const WATER = Array.from({ length: BANDS }, (_, k) => mix(C.water, deepest, k / (BANDS - 1)));
-const TOP = [null, C.sand, C.dirt, C.grass], FACE = [null, shade(C.sand, 0.72), shade(C.dirt, 0.72), shade(C.grass, 0.72)];
-const STRATA = [[0, D.sandTop, 1], [D.sandTop, D.dirtTop, 2], [D.dirtTop, 1e9, 3]]; // what a face shows between two heights (L1)
+const TOP = [null, C.sand, C.dirt, C.grass], FACE = [null, shade(C.sand, 0.72), shade(C.dirt, 0.72), shade(C.grass, 0.72)], FLOOR = shade(C.grass, 0.8); // the forest floor: the grass, shaded
+const STRATA = [[0, D.sandTop, 1], [D.sandTop, D.dirtTop, 2], [D.dirtTop, D.land, 3], [D.land, 1e9, 2]]; // what a face shows between two heights (L1): the grass is the land's top skin; anything raised above it shows bare earth
 
 // ── Drawn once in the view frame: every tile a lifted quad, a face where it steps down toward the camera. Then every frame is one picture, moved and scaled.
 let ground, gw, gh, ox, oy;
@@ -98,11 +187,13 @@ function renderGround() {
   const g = ground.getContext('2d');
   g.fillStyle = deepest; g.fillRect(0, 0, gw, gh);
   const P = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return [x + ox, y + oy]; };
-  g.lineWidth = 1; g.lineJoin = 'round';
-  const quad = (a, b, c, d, fill) => { g.fillStyle = g.strokeStyle = fill; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.lineTo(c[0], c[1]); g.lineTo(d[0], d[1]); g.closePath(); g.fill(); g.stroke(); }; // the stroke covers the hairline seams between quads
+  // a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right and down, so the next tile's edge lands on solid paint and no seam shows
+  const quad = (a, b, c, d, fill) => { g.fillStyle = fill; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0] + 0.5, b[1]); g.lineTo(c[0] + 0.5, c[1] + 0.5); g.lineTo(d[0], d[1] + 0.5); g.closePath(); g.fill(); };
   const T = D.tile, ch = (i, j, c) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : CH[(j * N + i) * 4 + c]);
-  const colour = (i, j) => { const h = H[j * N + i], s = stratum(h); return s ? TOP[s] : WATER[waterBand(h)]; };
   const flat = (i, j) => { const k = (j * N + i) * 4; return CH[k] === CH[k + 1] && CH[k] === CH[k + 2] && CH[k] === CH[k + 3]; };
+  const LIT = 0.03; // the light stands high to the left and in front: ground leaning that way is lit, ground leaning away is shaded, 3% a unit of lean over a tile
+  const colour = (i, j) => { const k = j * N + i, h = H[k], s = stratum(h), base = FOR[k] ? FLOOR : s ? TOP[s] : WATER[waterBand(h)]; if (!s || flat(i, j)) return base;
+    const c = k * 4, lean = (CH[c] + CH[c + 2] - CH[c + 1] - CH[c + 3]) / 2 + (CH[c + 2] + CH[c + 3] - CH[c] - CH[c + 1]) / 2; return shade(base, clamp(1 + LIT * lean, 0.7, 1.3)); };
   for (let j = 0; j < N; j++) {
     for (let i = 0; i < N; ) { // runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
       const col = colour(i, j), h0 = CH[(j * N + i) * 4]; let i1 = i;
@@ -198,7 +289,7 @@ for (const b of document.querySelectorAll('#bar [data-t]')) b.onclick = () => { 
 document.getElementById('new').onclick = () => { location.hash = String(Math.floor(Math.random() * 4294967296)); };
 // The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a seed in the address overrides it.
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
-function start() { edgeSegs = null; playPoly = null; makeGround(Number(location.hash.slice(1)) || today()); dirty(); }
+function start() { edgeSegs = null; playPoly = null; FOR.fill(0); makeGround(Number(location.hash.slice(1)) || today()); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
 resize(); start();
 window.fk = { D, A, C, cam, show, dirty, fit, H, DEP, N, V, toView, B0, B1, seed: () => seed, coast: (s, p) => coast(s, p) }; // the test hook

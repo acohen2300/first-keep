@@ -67,6 +67,8 @@ QBD The view: the grid turned by A1 about the site's middle; a point's depth on 
 QBE Slope or face: a step between two tiles steeper than the angle of repose (A3) is a face; gentler, the tiles meet as a slope · N64
 QBF The dice: one seed; Mulberry32; the seed of the day is the date YYYYMMDD · N65
 QBG Headlands and bays: where the coast stands out the waves gather and cut a cliff; where it bends in they spread and lay a beach · N67
+QBH A lake's size drawn from the power law (QBA): area = a_min · U^(−1/c), U uniform, capped at a_max (the Pareto draw) · N61
+QBI Roads cross rivers at fords: where a river meets one of the four roads its bed rises to wading depth · N68
 
 ## N Citations
 N1 Spherical astronomy, the altitude formula (standard)
@@ -136,6 +138,7 @@ N64 Angle of repose, dry sand about 34° (Al-Hashemi & Al-Amoudi 2018, Powder Te
 N65 Ettinger (2017), Mulberry32, a 32-bit generator; the seed of the day is the game's own rule
 N66 Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the ground (from memory: Age of Empires II's tiles are 2:1)
 N67 Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology, standard; Bird, Coastal Geomorphology, 2008; from memory)
+N68 Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory
 
 ## Values these use (numbers; floor 1's are in D now, the rest go to D at their floor)
 Day 120 s, season 180 s, year 12 min · gather rates · fire 20 s · melt 0.004 · ice 500 °C·s · ruts 300 and 600 s · wet 20 s, dry 50 s · mud 0.8, snow 0.6 · friction 0.7, 0.45, 0.3, 0.08–0.25 · personal space 3 ft · spoilage 5% a year · eating 30 food in 8 min · R0 2 · rain-chain odds · crew 0.7 · move-on 18% (fog sight comes from QK, not typed)
