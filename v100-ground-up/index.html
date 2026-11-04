@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>First Keep v100 · Ground</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600&family=IM+Fell+English+SC&display=swap">
+<style>
+:root { --ui: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif; --display: "IM Fell English SC", Georgia, serif; --slot: 44px; --gap: 6px; }
+html, body { margin: 0; height: 100%; background: #214a63; overflow: hidden; -webkit-user-select: none; user-select: none; font-family: var(--ui); font-weight: 600; font-size: 14px; color: #ece5d3; }
+canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: none; }
+#top { position: fixed; left: var(--gap); right: var(--gap); top: calc(env(safe-area-inset-top, 0px) + var(--gap)); display: flex; align-items: center; gap: 12px; height: var(--slot); padding: 0 12px; box-sizing: border-box; background: #2a1d13; border: 1px solid #785c3a; border-radius: 6px; }
+#top b { font-family: var(--display); font-weight: 400; font-size: 18px; color: #e6b947; }
+#top span { opacity: .75; }
+#bar { position: fixed; left: var(--gap); right: var(--gap); bottom: calc(env(safe-area-inset-bottom, 0px) + var(--gap)); display: flex; gap: var(--gap); }
+#bar button { flex: 1; height: var(--slot); background: #2a1d13; color: #ece5d3; border: 1px solid #785c3a; border-radius: 6px; font: inherit; padding: 0; }
+#bar button.on { border: 2px solid #e6b947; color: #e6b947; }
+</style>
+</head>
+<body>
+<canvas id="map"></canvas>
+<div id="top"><b>First Keep</b><span>v100 · floor 1 · Ground</span><span id="seed"></span></div>
+<div id="bar"><button data-t="grid">Grid</button><button data-t="zones" class="on">Zones</button><button data-t="edge" class="on">Edge</button><button id="new">New map</button></div>
+<script>
+'use strict';
+// First Keep v100 · floor 1: the ground. Every number below points at the dictionary (DICTIONARY.md); no number is written twice.
+const D = { site: 3060, board: 2160, zone: [300, 600, 900], edge: 60, tile: 10, land: 24, sandTop: 12, dirtTop: 20, beach: 80, cliff: 4, wander: 24, sea: 60 }; // D1, D2, D3–D6, D7, D12–D19
+const A = { turn: 15, rise: 30, repose: 34 }; // A1 the grid's turn, A2 the camera's rise, A3 the angle of repose
+const C = { water: '#2a6488', sand: '#cdbb88', dirt: '#785c3a', grass: '#4a6634', red: '#ff6b5b', white: '#ece5d3', gold: '#e6b947' }; // C1–C4, C7, C8, C10
+
+// ── The frames (QBD). The grid is square in its own frame; the board frame is the grid turned A1 about the site's middle; the view foreshortens depth by sin A2 and shows height by cos A2.
+const RAD = Math.PI / 180, N = D.site / D.tile, MID = D.site / 2, B0 = (D.site - D.board) / 2, B1 = B0 + D.board;
+const COS = Math.cos(A.turn * RAD), SIN = Math.sin(A.turn * RAD), TILT = Math.sin(A.rise * RAD), UP = Math.cos(A.rise * RAD);
+const REPOSE = Math.tan(A.repose * RAD) * D.tile; // QBE: the most a tile may step up or down over its own width and still be a slope
+const toBoard = (sx, sy) => { const x = sx - MID, y = sy - MID; return [MID + x * COS - y * SIN, MID + x * SIN + y * COS]; };
+const toView = (bx, by, h) => [bx, by * TILT - h * UP];
+const V = (sx, sy, h) => { const [bx, by] = toBoard(sx, sy); return toView(bx, by, h); };
+const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+const shade = (hex, f) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(hex.slice(i, i + 2), 16) * f).toString(16).padStart(2, '0')).join('');
+
+// ── QBF the dice (N65): one seed, Mulberry32. Every roll names Who, What, Where, When, Why and How beside it (L13).
+function dice(seed) { let a = seed >>> 0; return () => { a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), a | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+// QAZ a fractal line (N60): K waves, the k-th of amplitude k^(−H), H = 2 − Dim; a coast's Dim is about 1.25. Returns a function of the way along, in radians, giving −1 to 1.
+function fractal(roll, K, Dim) { const H = 2 - Dim, ph = Array.from({ length: K }, () => roll() * 2 * Math.PI); let norm = 0; for (let k = 1; k <= K; k++) norm += k ** -H; return (t) => { let v = 0; for (let k = 1; k <= K; k++) v += k ** -H * Math.sin(k * t + ph[k - 1]); return v / norm; }; }
+
+// ── The coast (L2 Cut at the board's edge; L4 Edge). Where it stands out it is a headland and a cliff, where it bends in a bay and a beach (QBG).
+// The roll: Who the map · What how far the coast wanders in and out · Where the coast only; within D5 of every corner the same wander (L12), free along the middle of each side · When the map is made · Why no two maps share a coast, and every home gets the same one · How QAZ on the dice.
+function makeCoast(roll) {
+  const home = fractal(roll, 10, 1.25), free = [0, 1, 2, 3].map(() => fractal(roll, 10, 1.25)), Z3 = D.zone[2], BLEND = D.edge;
+  return (side, pos) => { // pos: the way along the side from its start; returns [wander, cliffness]
+    const s = Math.min(pos, D.board - pos), w = clamp((s - Z3) / BLEND, 0, 1);
+    const out = (1 - w) * home((s / Z3) * Math.PI) + w * free[side]((pos / D.board) * 2 * Math.PI); // −1 bay to 1 headland
+    return [D.wander * out, clamp((out - 0.2) / 0.3, 0, 1)];
+  };
+}
+
+// ── The ground: one height a tile. Depth is the way in from the coast (negative at sea). Land stands at D13; a beach falls to the water over D16, a cliff over D17 (L4); the sea deepens with distance. The stratum a tile shows is whichever its height reaches (L1).
+const H = new Float32Array(N * N), DEP = new Float32Array(N * N), CH = new Float32Array(N * N * 4); // height, depth, the four drawn corner heights
+let coast, seed;
+function makeGround(sd) {
+  seed = sd; coast = makeCoast(dice(sd));
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+    const [bx, by] = toBoard((i + 0.5) * D.tile, (j + 0.5) * D.tile);
+    const dl = bx - B0, dr = B1 - bx, dt = by - B0, db = B1 - by, dx = Math.min(dl, dr), dy = Math.min(dt, db);
+    const side = dx < dy ? (dl < dr ? 0 : 1) : dt < db ? 2 : 3, pos = clamp(dx < dy ? by - B0 : bx - B0, 0, D.board), d0 = Math.min(dx, dy);
+    const [wander, e] = coast(side, pos), depth = d0 - wander, run = D.beach + (D.cliff - D.beach) * e;
+    DEP[j * N + i] = depth;
+    H[j * N + i] = depth >= run ? D.land : depth > 0 ? (D.land * depth) / run : depth;
+  }
+  // the drawn corners: a tile meets its neighbours as a slope when the step is within the angle of repose, else it keeps its own height and a face shows (QBE)
+  const dh = (i, j) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : Math.max(0, H[j * N + i]));
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+    const me = dh(i, j), k = (j * N + i) * 4;
+    [[i, j], [i + 1, j], [i, j + 1], [i + 1, j + 1]].forEach(([ci, cj], c) => { // the corner at grid point (ci, cj): the four tiles round it
+      let sum = 0, n = 0;
+      for (const [ti, tj] of [[ci - 1, cj - 1], [ci, cj - 1], [ci - 1, cj], [ci, cj]]) { const h = dh(ti, tj); if (Math.abs(h - me) <= REPOSE) { sum += h; n++; } }
+      CH[k + c] = sum / n;
+    });
+  }
+  renderGround();
+  document.getElementById('seed').textContent = 'map ' + sd;
+}
+const stratum = (h) => (h <= 0 ? 0 : h < D.sandTop ? 1 : h < D.dirtTop ? 2 : 3); // 0 water, 1 sand, 2 dirt, 3 grass
+const BANDS = 6, deepest = shade(C.water, 0.6);
+const waterBand = (h) => Math.min(BANDS - 1, Math.floor(-h / (D.sea / BANDS)));
+const mix = (a, b, f) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - f) + parseInt(b.slice(i, i + 2), 16) * f).toString(16).padStart(2, '0')).join('');
+const WATER = Array.from({ length: BANDS }, (_, k) => mix(C.water, deepest, k / (BANDS - 1)));
+const TOP = [null, C.sand, C.dirt, C.grass], FACE = [null, shade(C.sand, 0.72), shade(C.dirt, 0.72), shade(C.grass, 0.72)];
+const STRATA = [[0, D.sandTop, 1], [D.sandTop, D.dirtTop, 2], [D.dirtTop, 1e9, 3]]; // what a face shows between two heights (L1)
+
+// ── Drawn once in the view frame: every tile a lifted quad, a face where it steps down toward the camera. Then every frame is one picture, moved and scaled.
+let ground, gw, gh, ox, oy;
+function renderGround() {
+  const pts = []; for (const [x, y] of [[0, 0], [D.site, 0], [0, D.site], [D.site, D.site]]) for (const h of [0, D.land]) pts.push(V(x, y, h));
+  const minX = Math.min(...pts.map((p) => p[0])), maxX = Math.max(...pts.map((p) => p[0])), minY = Math.min(...pts.map((p) => p[1])), maxY = Math.max(...pts.map((p) => p[1]));
+  gw = Math.ceil(maxX - minX) + 2; gh = Math.ceil(maxY - minY) + 2; ox = 1 - minX; oy = 1 - minY;
+  ground = document.createElement('canvas'); ground.width = gw; ground.height = gh;
+  const g = ground.getContext('2d');
+  g.fillStyle = deepest; g.fillRect(0, 0, gw, gh);
+  const P = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return [x + ox, y + oy]; };
+  g.lineWidth = 1; g.lineJoin = 'round';
+  const quad = (a, b, c, d, fill) => { g.fillStyle = g.strokeStyle = fill; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.lineTo(c[0], c[1]); g.lineTo(d[0], d[1]); g.closePath(); g.fill(); g.stroke(); }; // the stroke covers the hairline seams between quads
+  const T = D.tile, ch = (i, j, c) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : CH[(j * N + i) * 4 + c]);
+  const colour = (i, j) => { const h = H[j * N + i], s = stratum(h); return s ? TOP[s] : WATER[waterBand(h)]; };
+  const flat = (i, j) => { const k = (j * N + i) * 4; return CH[k] === CH[k + 1] && CH[k] === CH[k + 2] && CH[k] === CH[k + 3]; };
+  for (let j = 0; j < N; j++) {
+    for (let i = 0; i < N; ) { // runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
+      const col = colour(i, j), h0 = CH[(j * N + i) * 4]; let i1 = i;
+      if (flat(i, j)) while (i1 + 1 < N && flat(i1 + 1, j) && colour(i1 + 1, j) === col && CH[(j * N + i1 + 1) * 4] === h0) i1++;
+      const k = (j * N + i) * 4, k1 = (j * N + i1) * 4;
+      quad(P(i * T, j * T, CH[k]), P((i1 + 1) * T, j * T, CH[k1 + 1]), P((i1 + 1) * T, (j + 1) * T, CH[k1 + 3]), P(i * T, (j + 1) * T, CH[k + 2]), col);
+      i = i1 + 1;
+    }
+    for (let i = 0; i < N; i++) { // faces: the +y edge and the +x edge face the camera (the turn is under 45°)
+      const k = (j * N + i) * 4;
+      face(i * T, (j + 1) * T, (i + 1) * T, (j + 1) * T, CH[k + 2], CH[k + 3], ch(i, j + 1, 0), ch(i, j + 1, 1));
+      face((i + 1) * T, j * T, (i + 1) * T, (j + 1) * T, CH[k + 1], CH[k + 3], ch(i + 1, j, 0), ch(i + 1, j, 2));
+    }
+  }
+  function face(x1, y1, x2, y2, topL, topR, botL, botR) {
+    if (topL <= botL && topR <= botR) return;
+    for (const [lo, hi, s] of STRATA) {
+      const tl = clamp(topL, lo, hi), bl = clamp(botL, lo, hi), tr = clamp(topR, lo, hi), br = clamp(botR, lo, hi);
+      if (tl - bl < 0.01 && tr - br < 0.01) continue;
+      quad(P(x1, y1, tl), P(x2, y2, tr), P(x2, y2, br), P(x1, y1, bl), FACE[s]);
+    }
+  }
+}
+
+// ── The view (layer 140): one camera, drag to pan, pinch or wheel to zoom; the overlays are drawn each frame over the one picture.
+const canvas = document.getElementById('map'), ctx = canvas.getContext('2d');
+const cam = { x: 0, y: 0, z: 1 }, show = { grid: false, zones: true, edge: true };
+let cw, ch, dpr, zmin, zmax = 6, queued = false;
+const toScreen = (vx, vy) => [(vx - cam.x) * cam.z + cw / 2, (vy - cam.y) * cam.z + ch / 2];
+const S = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return toScreen(x, y); };
+function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 0); cam.x = (l + r) / 2; cam.y = (t + b) / 2; cam.z = Math.min((cw - 24) / (r - l), (ch - 200) / (b - t)); zmin = cam.z / 2; }
+function resize() { dpr = Math.min(2, devicePixelRatio || 1); cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; fit(); dirty(); }
+function dirty() { if (!queued) { queued = true; requestAnimationFrame(draw); } }
+function draw() {
+  queued = false;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = deepest; ctx.fillRect(0, 0, cw, ch);
+  const [gx, gy] = toScreen(-ox, -oy); ctx.drawImage(ground, gx, gy, gw * cam.z, gh * cam.z);
+  if (show.grid && cam.z * D.tile >= 5) drawGrid();
+  if (show.zones) drawZones();
+  if (show.edge) drawEdge();
+}
+function path(points) { ctx.beginPath(); points.forEach((p, n) => (n ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); }
+let playPoly = null;
+function drawGrid() { // the walking grid, at the land's height, clipped to the played ground: the coast's line brought D7 in (L6)
+  if (!playPoly) { playPoly = []; const inset = (side, pos) => D.edge + coast(side, pos)[0];
+    for (let p = 80; p <= D.board - 80; p += 20) playPoly.push([B0 + inset(0, p), B0 + p]);
+    for (let p = 80; p <= D.board - 80; p += 20) playPoly.push([B0 + p, B1 - inset(3, p)]);
+    for (let p = D.board - 80; p >= 80; p -= 20) playPoly.push([B1 - inset(1, p), B0 + p]);
+    for (let p = D.board - 80; p >= 80; p -= 20) playPoly.push([B0 + p, B0 + inset(2, p)]); }
+  ctx.save(); path(playPoly.map(([bx, by]) => toScreen(...toView(bx, by, D.land)))); ctx.clip();
+  ctx.strokeStyle = C.white; ctx.globalAlpha = 0.18; ctx.lineWidth = 1; ctx.beginPath();
+  for (let n = 0; n <= N; n++) { const a = S(n * D.tile, 0, D.land), b = S(n * D.tile, D.site, D.land), c = S(0, n * D.tile, D.land), d = S(D.site, n * D.tile, D.land); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.moveTo(c[0], c[1]); ctx.lineTo(d[0], d[1]); }
+  ctx.stroke(); ctx.restore();
+}
+function drawZones() { // Z1 to Z4 from each corner (D3 to D6), at the land's height (L11: a rule drawn on the ground, not ground)
+  ctx.save(); ctx.strokeStyle = C.white; ctx.fillStyle = C.white; ctx.globalAlpha = 0.4; ctx.lineWidth = 1; ctx.setLineDash([6, 6]); ctx.font = '14px "Barlow Semi Condensed", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  for (const [cx, cy, a0] of [[B0, B0, 0], [B1, B0, 90], [B1, B1, 180], [B0, B1, 270]]) {
+    for (const r of D.zone) { const pts = []; for (let a = a0; a <= a0 + 90; a += 3) pts.push(toScreen(...toView(cx + r * Math.cos(a * RAD), cy + r * Math.sin(a * RAD), D.land))); path(pts); ctx.stroke(); }
+    const ux = Math.cos((a0 + 45) * RAD), uy = Math.sin((a0 + 45) * RAD);
+    [150, 450, 750, 1050].forEach((r, n) => { const [x, y] = toScreen(...toView(cx + r * ux, cy + r * uy, D.land)); ctx.fillText('Z' + (n + 1), x, y); });
+  }
+  ctx.restore();
+}
+let edgeSegs = null;
+function drawEdge() { // L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tiles' own edges
+  if (!edgeSegs) {
+    edgeSegs = []; const T = D.tile, ok = (i, j) => i >= 0 && j >= 0 && i < N && j < N && DEP[j * N + i] >= D.edge;
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { const k = (j * N + i) * 4;
+      if (ok(i, j) !== ok(i + 1, j)) edgeSegs.push([(i + 1) * T, j * T, CH[k + 1], (i + 1) * T, (j + 1) * T, CH[k + 3]]);
+      if (ok(i, j) !== ok(i, j + 1)) edgeSegs.push([i * T, (j + 1) * T, CH[k + 2], (i + 1) * T, (j + 1) * T, CH[k + 3]]); }
+  }
+  ctx.save(); ctx.strokeStyle = C.red; ctx.globalAlpha = 0.6; ctx.lineWidth = 1.5; ctx.beginPath();
+  for (const [x1, y1, h1, x2, y2, h2] of edgeSegs) { const a = S(x1, y1, h1), b = S(x2, y2, h2); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); }
+  ctx.stroke(); ctx.restore();
+}
+
+// ── Touch: one finger pans, two pinch; a wheel zooms about the pointer.
+const ptrs = new Map();
+function zoomAt(px, py, f) { const vx = cam.x + (px - cw / 2) / cam.z, vy = cam.y + (py - ch / 2) / cam.z; cam.z = clamp(cam.z * f, zmin, zmax); cam.x = vx - (px - cw / 2) / cam.z; cam.y = vy - (py - ch / 2) / cam.z; }
+canvas.addEventListener('pointerdown', (e) => { canvas.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); });
+canvas.addEventListener('pointermove', (e) => {
+  if (!ptrs.has(e.pointerId)) return;
+  const was = ptrs.get(e.pointerId);
+  if (ptrs.size === 1) { cam.x -= (e.clientX - was[0]) / cam.z; cam.y -= (e.clientY - was[1]) / cam.z; }
+  else { const other = [...ptrs].find(([id]) => id !== e.pointerId)[1], d0 = Math.hypot(was[0] - other[0], was[1] - other[1]), d1 = Math.hypot(e.clientX - other[0], e.clientY - other[1]);
+    cam.x -= (e.clientX - was[0]) / 2 / cam.z; cam.y -= (e.clientY - was[1]) / 2 / cam.z; if (d0 > 0) zoomAt((e.clientX + other[0]) / 2, (e.clientY + other[1]) / 2, d1 / d0); }
+  ptrs.set(e.pointerId, [e.clientX, e.clientY]); dirty();
+});
+for (const ev of ['pointerup', 'pointercancel']) canvas.addEventListener(ev, (e) => ptrs.delete(e.pointerId));
+canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0015)); dirty(); }, { passive: false });
+for (const b of document.querySelectorAll('#bar [data-t]')) b.onclick = () => { show[b.dataset.t] = !show[b.dataset.t]; b.classList.toggle('on', show[b.dataset.t]); dirty(); };
+document.getElementById('new').onclick = () => { location.hash = String(Math.floor(Math.random() * 4294967296)); };
+// The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a seed in the address overrides it.
+const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
+function start() { edgeSegs = null; playPoly = null; makeGround(Number(location.hash.slice(1)) || today()); dirty(); }
+addEventListener('hashchange', start); addEventListener('resize', resize);
+resize(); start();
+window.fk = { D, A, C, cam, show, dirty, fit, H, DEP, N, V, toView, B0, B1, seed: () => seed, coast: (s, p) => coast(s, p) }; // the test hook
+</script>
+</body>
+</html>

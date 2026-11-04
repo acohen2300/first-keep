@@ -195,3 +195,11 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - Held: field defences merged into one (Albert hasn't tested them); palisade, Courthouse into Hall, Apartment into House (skipped: palisade is a camp piece, the Hall comes an age later, no upgrade-in-place).
 - Later: Yard homes; 34–36 / 45–46 list; brown war colour; stronger walls with archer cover; lock and two-homes; water as shape + overlay; the art redo with fields; the docs and repo tidy (and the regression pictures).
 - Open: fields never run out today (only tree farms do); Albert asked fields and tree farms to last the same 36 minutes. Fields left endless until he says.
+
+## v100 Ground Up (Nov 4, Albert's cuts while writing the dictionary; the build lives in `v100-ground-up/`)
+- Cut: Town (a Town Center stage; "I don't know what town is so kill it").
+- Cut: Wind, with its sounds and the snowdrift ("I cut wind in this game bc it's too much to manage"). SoRen's wind science (Ornstein–Uhlenbeck, Kaimal, Saffir–Simpson) stays there.
+- Cut: Satellites from the sky ("it's the Stone Age").
+- Cut from v100's pull: the fantasy events (dragon, troll, mirage, circus), the hand-drawn arrow arc, the no-drag range formula (drag wins), the flat +5% learning (Wright's curve wins), typed fog sight numbers (Koschmieder wins).
+- Held: merging the field defences (untested); palisade into the wall; Courthouse into the Hall; Apartment into the House (no upgrade-in-place).
+- Held: Z4's placement by the Randomizer (needs its six answers); the six formations' definitions; the "from memory" citations to open; the control sheets as a catalog with the used forms marked.
