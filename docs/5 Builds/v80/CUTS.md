@@ -544,3 +544,7 @@ Checks on main before publishing:
 - **Play fingerprint accepted:** preview 54: the view angle 15 (one home, VIEW.angle); every map lays on new squares; the computers' wall ring on or past WALL_R [2026-11-04 13:12]
 
 - **Play fingerprint accepted:** preview 54: the view angle 15 (one home, VIEW.angle); every map lays on new squares; the first villagers stand at the keep's door, past its footprint; the computers' wall ring on or past WALL_R [2026-11-04 13:30]
+
+- **Play fingerprint accepted:** Preview 55: the economy list (bigger finds, wider search, danger as a level, focus moves on, mint at Classical, Midwives, the bank, the pasture cull, fish by lake, 36-minute tree farms), Albert, Nov 4 [2026-11-04 15:06]
+
+- **Play fingerprint accepted:** Preview 55: the economy list (bigger finds, wider search, danger as a level, focus moves on, mint at Classical, Midwives, the bank, the pasture cull, fish by lake, 36-minute tree farms), Albert, Nov 4 [2026-11-04 15:14]

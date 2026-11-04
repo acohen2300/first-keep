@@ -174,6 +174,10 @@ const WHY = {
 	tally: 'Notched bones counted the days of the moon before there was writing; the Ishango bone is 20,000 years old.',
 	baskets:
 		'Woven baskets and carrying frames let one gatherer bring home more per trip; the oldest found are 10,000 years old.',
+	midwives:
+		'Egyptian midwives are named in the Ebers papyrus (about 1550 BC); safer births meant more children lived to work.',
+	bank:
+		'The Medici bank (1397) paid interest on deposits and lent them on; gold held at a bank earned while it waited.',
 	census:
 		'Rome counted its people every five years to tax and to levy; a state that knows its numbers can feed and house more.',
 	charter:

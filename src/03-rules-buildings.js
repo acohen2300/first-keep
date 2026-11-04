@@ -113,11 +113,11 @@ const BLD = {
 		t: 12,
 		age: 0,
 		crop: 'wood',
-		reserve: 500,
+		reserve: 1200, // about 36 minutes of one worker at 1x (0.55 a second; Albert, Nov 4: "36 and 12")
 		rate: 0.55,
 		walk: true,
 		sab: 'burn',
-		desc: 'A coppice plot: 500 wood, then it is cut out; tap it to replant for half the cost and it regrows from the stumps. One villager tends it. Slower than a wild forest, but safe at home.',
+		desc: 'A coppice plot: 1,200 wood, then it is cut out; tap it to replant for half the cost and it regrows from the stumps. One villager tends it. Slower than a wild forest, but safe at home.',
 	},
 	mill: {
 		cap: [3, 3, 3, 3, 3],
@@ -711,7 +711,7 @@ const BLD = {
 		desc: 'Spins and weaves wool into cloth (2 wool make 1), or brews ale from your grain (3 food make 1 beer): goods to trade. One villager works it; the card picks what it makes.',
 	},
 	mint: {
-		cap: [0, 0, 0, 6, 12],
+		cap: [0, 0, 2, 6, 12], // two in Classical (Albert, Nov 4: the mint at the third age; rate and cost tuned after play)
 		invest: 6,
 		name: 'Mint',
 		fp: 3,
@@ -719,7 +719,7 @@ const BLD = {
 		h: 22,
 		cost: { s: 300, g: 200 },
 		t: 45,
-		age: 3,
+		age: 2,
 		crop: 'gold',
 		makes: { gold: { from: { s: 1 }, rate: 0.2 } },
 		fx: [{ s: 'gather', k: ['gold', 'mint'], m: 1.15 }],

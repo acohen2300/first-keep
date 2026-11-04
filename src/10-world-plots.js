@@ -223,7 +223,7 @@ function makeMap() {
 	}
 	layFish(N); // 2 water: the fish
 	for (const n of N) {
-		const m = fixed.has(n) ? 1 : Ld.amt[n.type] || 1;
+		const m = fixed.has(n) ? 1 : (Ld.amt[n.type] || 1) * (FIND_SIZE[n.kind] || 1); // zone 1 is Bronze's cost, worked out: left as it is
 		if (m !== 1) {
 			n.amt *= m;
 			n.max *= m;

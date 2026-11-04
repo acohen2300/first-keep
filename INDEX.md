@@ -101,15 +101,15 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `TRAINERS` 818: buildings that send people out keep a free square round them; the rest may touch
 - `MENUS` 821: The build menus. "soon" is on the list but not built: it stays visible until built or deliberately dropped (an…
 
-**`04-rules-tech.js`** (3346 lines): the research tree from history, and the civilizations
+**`04-rules-tech.js`** (3376 lines): the research tree from history, and the civilizations
 
 - `MEASURED` 8: Research. fx: what it changes, by stat; k narrows it (a resource, a unit kind or #tag, a building kind or #wal…
 - `TECH` 19
-- `TECHBY` 3228
-- `CIVS` 3231: Six civilisations: one unique unit (replaces a common one, same role, a little better), one small bonus, one w…
-- `CIVK` 3281
-- `ARMYK` 3344
-- `SOLDIERK` 3345: counted once every unit, the peoples' own included, is in the table
+- `TECHBY` 3258
+- `CIVS` 3261: Six civilisations: one unique unit (replaces a common one, same role, a little better), one small bonus, one w…
+- `CIVK` 3311
+- `ARMYK` 3374
+- `SOLDIERK` 3375: counted once every unit, the peoples' own included, is in the table
 
 **`05-rules-wild.js`** (310 lines): finds in the wild, the Natives, the Throne, the computers' personalities
 
@@ -123,7 +123,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `WAVE` 122: A wave is judged by its progress (D1, docs/6 Records/v80 Audit/ai.md): it goes home when beaten (under broke o…
 - `PERS` 126: The three computer personalities: one brain, three settings
 
-**`06-rules-tuning.js`** (521 lines): combat, morale, weather, hazards, events, routes, market and land numbers
+**`06-rules-tuning.js`** (524 lines): combat, morale, weather, hazards, events, routes, market and land numbers
 
 - `TRADE` 2
 - `TRADE_CAP` 3
@@ -205,23 +205,24 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `MKT_BUY` 381: wool goes to a Workshop, not to market; spice is the only good not made here
 - `MKTK` 382
 - `RATE_OF` 383: what a villager gathers a second from each kind of find (fields carry their own rate)
-- `LAND` 387: The land's character: each game rolls one, the same for all four corners (fair), so no two games share a map. …
-- `LANDK` 393
-- `SPREAD` 394
-- `CLEAR` 397: The map's base rules (Albert, Build 70): a flat page, four corners (CORNER), the same zones and home finds in …
-- `LANE` 400: Between two buildings (decision 2, Albert, Oct 31)
-- `HOME` 411: The four zones (Albert, Nov 2, 07:07 to 07:14, D-090; the same in every corner), measured on the finds' own no…
-- `WALL_R` 416: The computers' wall ring (wallPlan in 17): the clearing, then the margin a ring square can reach (its diagonal…
-- `REACH` 422: Reach (D-088, Albert's sighting of Nov 1: villagers asleep at the mill with full bushes in sight
-- `SEARCH` 423
-- `searchR` 424
-- `BACK_MARGIN` 431: Zone 1 (Albert, Nov 1; on, Nov 2: "Close was supposed to have enough to get you to the first age between you a…
-- `BACK` 432
-- `WATER` 447: Lakes and rivers (Build 70: random; it was one lake and one river of one width a corner). lakes: how many besi…
-- `START_VILS` 474: Scenarios (Build 58, item 41): three set starts on the same rules, each a table of what differs, read by apply…
-- `START_RES` 476: the stores every side starts with (Albert, Nov 1 14:18): 200 of food, wood, stone and gold, no iron
-- `HANDICAP` 481: EXCEPTIONS #16, LIVE TEST IN PROCESS (Albert, Nov 1 14:23): each computer starts with these already built besi…
-- `SCENARIOS` 482
+- `FIND_SIZE` 387: Bigger finds (Albert, Nov 4, C): a patch lasts long enough that villagers are not moved every few minutes, and…
+- `LAND` 390: The land's character: each game rolls one, the same for all four corners (fair), so no two games share a map. …
+- `LANDK` 396
+- `SPREAD` 397
+- `CLEAR` 400: The map's base rules (Albert, Build 70): a flat page, four corners (CORNER), the same zones and home finds in …
+- `LANE` 403: Between two buildings (decision 2, Albert, Oct 31)
+- `HOME` 414: The four zones (Albert, Nov 2, 07:07 to 07:14, D-090; the same in every corner), measured on the finds' own no…
+- `WALL_R` 419: The computers' wall ring (wallPlan in 17): the clearing, then the margin a ring square can reach (its diagonal…
+- `REACH` 425: Reach (D-088, Albert's sighting of Nov 1: villagers asleep at the mill with full bushes in sight
+- `SEARCH` 426: B (Nov 4): the look grows from half the ring to twice it over 20 s; the drop-off leash and the forager's rate …
+- `searchR` 427
+- `BACK_MARGIN` 434: Zone 1 (Albert, Nov 1; on, Nov 2: "Close was supposed to have enough to get you to the first age between you a…
+- `BACK` 435
+- `WATER` 450: Lakes and rivers (Build 70: random; it was one lake and one river of one width a corner). lakes: how many besi…
+- `START_VILS` 477: Scenarios (Build 58, item 41): three set starts on the same rules, each a table of what differs, read by apply…
+- `START_RES` 479: the stores every side starts with (Albert, Nov 1 14:18): 200 of food, wood, stone and gold, no iron
+- `HANDICAP` 484: EXCEPTIONS #16, LIVE TEST IN PROCESS (Albert, Nov 1 14:23): each computer starts with these already built besi…
+- `SCENARIOS` 485
 
 ### World
 
@@ -246,7 +247,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `turnLand` 39: Everything the map-maker laid in the land's frame goes to the world's
 - `navOffLand` 88: off the land: the world's squares whose middle lies outside the turned land are solid, the same in every rebui…
 
-**`10-world-water.js`** (196 lines): layer 2, Water: the great lake, the lakes, the rivers and their fords, the fish
+**`10-world-water.js`** (197 lines): layer 2, Water: the great lake, the lakes, the rivers and their fords, the fish
 
 - `SHORE` 8: squares from water that count as its shore
 - `lakeFor` 9
@@ -305,7 +306,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 
 - `makeCitadel` 6: The Throne: a walled citadel on the great lake's island, four gates at the four causeways, a tower at each cor…
 
-**`09-nav.js`** (845 lines): paths
+**`09-nav.js`** (847 lines): paths
 
 - `NC` 6: Squares of 10, never shown
 - `POCKET` 7: a joined region smaller than this many squares is a pocket: closed in by trees, buildings or water
@@ -326,36 +327,36 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `DANGER` 213: Where workers will not go: one map for each side, redrawn every second, the one home for danger (Build 48)
 - `DISC` 215: a disc of radius R squares, as the half-width of each row (dy from -R to R), worked out once per R (hunt A #2:…
 - `discRows` 216
-- `stampDanger` 218
-- `dangerMap` 230
-- `dangerWhy` 263: why a spot is on a side's danger map, nearest cause first: { scare } when the only cause is a fright remembere…
-- `AS` 279
-- `DX8` 289
-- `DY8` 290
-- `wayLen` 292: how far the way really is from one place to another: along the path, round water and walls (a straight line if…
-- `astar` 304: A*: the shortest way round, no cutting corners
-- `halfOf` 435
-- `rectGap` 436
-- `edge` 440
-- `reachOf` 442: a blow's reach, measured once against edge (C9: the wild added a building's half on top of the gap to its wall…
-- `closeIn` 443
-- `findBlocker` 444
-- `standOff` 466
-- `route` 480: where to head next on the way to (tx, ty)
-- `paceOf` 566: one step toward (x, y); true once within r
-- `stepTo` 578: One home for "a unit moved" (Build 80 preview 9): every change of place, a walk, a run, a push, a knock, a res…
-- `moveTo` 585
-- `canPlace` 655: Every building keeps LANE free squares from the next (decision 2: a one-square lane is shut by the slit rule, …
-- `GUIDE_R` 705: how far a building reaches with its alignment lines
-- `GUIDE_ON` 706: how near the line a snapped centre must come to count as on it: at 45° the squares put it exactly on, at other…
-- `snapGhost` 707
-- `findSpot` 765: The computers' way of finding a spot: rings out from a centre, the first place that fits.
-- `wallLine` 780: a straight run of squares from a to b, four-connected so nothing can slip through; near-straight drags snap to…
-- `SEAL` 800: Is your keep walled in? A walk outward from the keep over every square a foe can stand on (walls, shut gates, …
-- `sealSeen` 801
-- `sealFrom` 802
-- `sealGen` 803
-- `sealPath` 804
+- `stampDanger` 220: B (Albert, Nov 4: "the danger rule is too strict"): danger is a level, not yes or no: 3 a live foe, a tower's …
+- `dangerMap` 232
+- `dangerWhy` 265: why a spot is on a side's danger map, nearest cause first: { scare } when the only cause is a fright remembere…
+- `AS` 281
+- `DX8` 291
+- `DY8` 292
+- `wayLen` 294: how far the way really is from one place to another: along the path, round water and walls (a straight line if…
+- `astar` 306: A*: the shortest way round, no cutting corners
+- `halfOf` 437
+- `rectGap` 438
+- `edge` 442
+- `reachOf` 444: a blow's reach, measured once against edge (C9: the wild added a building's half on top of the gap to its wall…
+- `closeIn` 445
+- `findBlocker` 446
+- `standOff` 468
+- `route` 482: where to head next on the way to (tx, ty)
+- `paceOf` 568: one step toward (x, y); true once within r
+- `stepTo` 580: One home for "a unit moved" (Build 80 preview 9): every change of place, a walk, a run, a push, a knock, a res…
+- `moveTo` 587
+- `canPlace` 657: Every building keeps LANE free squares from the next (decision 2: a one-square lane is shut by the slit rule, …
+- `GUIDE_R` 707: how far a building reaches with its alignment lines
+- `GUIDE_ON` 708: how near the line a snapped centre must come to count as on it: at 45° the squares put it exactly on, at other…
+- `snapGhost` 709
+- `findSpot` 767: The computers' way of finding a spot: rings out from a centre, the first place that fits.
+- `wallLine` 782: a straight run of squares from a to b, four-connected so nothing can slip through; near-straight drags snap to…
+- `SEAL` 802: Is your keep walled in? A walk outward from the keep over every square a foe can stand on (walls, shut gates, …
+- `sealSeen` 803
+- `sealFrom` 804
+- `sealGen` 805
+- `sealPath` 806
 
 ### Sim
 
@@ -519,7 +520,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `powerOf` 760
 - `lanchester` 763: the square law as odds: with a power ratio r, the chance is r² / (1 + r²) (Lanchester, Aircraft in Warfare, 19…
 
-**`11-orders.js`** (1218 lines): what a side can do, and why not
+**`11-orders.js`** (1233 lines): what a side can do, and why not
 
 - `scaled` 4: what an order costs this side now: one scaling for units (Informers make spies cheaper) and research (the Ency…
 - `unitCost` 10
@@ -548,91 +549,93 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `sendBuild` 233: Send one more to a site
 - `replantWhy` 246: Replant a plot that is cut out or worked out (Build 61, Albert): half its cost, and it is full again; a coppic…
 - `replant` 253
-- `shellBack` 264: Take a building down: half its cost back (all of it in the first 15% of the build); every order waiting inside…
-- `refundOf` 270
-- `demolish` 275
-- `declareWar` 297: Relations are ally, peace (neutral) or war (hostile), the same for every side
-- `makePeace` 311
-- `makeAlly` 325
-- `noticeLeft` 333
-- `gangKey` 339: why a side cannot take this stance toward another right now, or null a misfit group (GANG) on a Relations row,…
-- `relWhy` 340
-- `envoyWhy` 362: what stops an emissary going: one for courts and groups alike
-- `setRel` 369
-- `noticeTick` 401
-- `sendEnvoy` 408
-- `oddsOf` 424: the square law on strength, bent by who counters whom: the odds q gives itself against o
-- `judgeEnvoy` 429
-- `reply` 486
-- `sendHelp` 491: an ally sends half of what stands at home to a friend's town under attack (every computer does this for its al…
-- `overlordWhy` 506: an ally twice your strength may be offered overlordship: they become your vassal at a light tax
-- `offerOverlord` 512
-- `breakTies` 519: ── A lord's hand on a vassal: cut them loose, demand, force tribute, call up their soldiers (Assyria taxed at …
-- `demandCost` 529
-- `demandWhy` 530
-- `demand` 536
-- `menAt` 548
-- `tributeWhy` 552
-- `forceTribute` 559
-- `levyOf` 567
-- `levyRoom` 569: how many more may be called up: half of all their soldiers, counting those already marching for you (Build 48:…
-- `levyWhy` 573
-- `levy` 581
-- `releaseLevy` 604
-- `releaseAll` 614
-- `chargeWhy` 622
-- `charge` 628
-- `fallBack` 643
-- `takePrisoner` 668: Prisoners: a runner touched by a foe, or a man netted by the Natives
-- `prisonersOf` 687
-- `payRansom` 688
-- `teachTo` 703: ── Teach: a soldier of an older kind learns a newer one at the School
-- `teachGap` 707
-- `teachCost` 708
-- `teachSecs` 716
-- `schooling` 717
-- `teachWhy` 718
-- `teach` 731
-- `graduate` 741
-- `prisonersTick` 752
-- `LOT` 776: The Market, one rule for everything it trades: resources by the 100, goods by the 10; it pays 80% of worth (90…
-- `worth` 777: spice is worth what it costs at a stop
-- `coinOf` 778: debased coin: dearer to buy, less for what you sell
-- `sellPrice` 779
-- `buyPrice` 780
-- `haveOf` 781
-- `marketTrade` 782
-- `zealCost` 805
-- `zealWhy` 806
-- `zeal` 816
-- `watchtower` 829: a spy stands unseen beyond 45 of soldiers and 140 of towers, the Town Center and Courthouses
-- `guarded` 830
-- `sabotage` 832
-- `intel` 855
-- `hireWhy` 862
-- `hire` 870
-- `setJob` 888
-- `atShop` 909: a villager at a workshop, a mint or a foundry, walking there or working inside: + and the computers leave it b…
-- `NO_HANDS` 912: the + and − under a job (D-089): + takes an idle villager, else the roaming one earning least on another job; …
-- `moveVil` 913
-- `stopVil` 927: Stop: a villager drops its job and stands where it is (or where it is sent), ready for a new order (Build 61)
-- `sendOut` 937: Send out (a field, a pasture or a shop's card): the last villager sent there goes home; a shop worker steps ou…
-- `sendVil` 944
-- `sendHunt` 969
-- `sendRepair` 983
-- `repairCost` 996
-- `nodeName` 1002
-- `commitPlace` 1012: ── the player's placing and box orders (the finger's work is in 26-input.js; what it orders is here)
-- `boxCut` 1075
-- `centreOf` 1100: ── Orders you can follow: a group sent somewhere is stamped with its order; the map draws a line to where it i…
-- `routeK` 1104
-- `etaOf` 1112
-- `march` 1114
-- `sendHome` 1133: soldiers called home: off whatever they were doing and off their order
-- `incomingTick` 1142
-- `ordersTick` 1175
+- `cutOut` 263: Replant all (Albert, Nov 4): from a drop-off, every cut-out plot of what it takes, as many as can be paid for,…
+- `replantAll` 265
+- `shellBack` 279: Take a building down: half its cost back (all of it in the first 15% of the build); every order waiting inside…
+- `refundOf` 285
+- `demolish` 290
+- `declareWar` 312: Relations are ally, peace (neutral) or war (hostile), the same for every side
+- `makePeace` 326
+- `makeAlly` 340
+- `noticeLeft` 348
+- `gangKey` 354: why a side cannot take this stance toward another right now, or null a misfit group (GANG) on a Relations row,…
+- `relWhy` 355
+- `envoyWhy` 377: what stops an emissary going: one for courts and groups alike
+- `setRel` 384
+- `noticeTick` 416
+- `sendEnvoy` 423
+- `oddsOf` 439: the square law on strength, bent by who counters whom: the odds q gives itself against o
+- `judgeEnvoy` 444
+- `reply` 501
+- `sendHelp` 506: an ally sends half of what stands at home to a friend's town under attack (every computer does this for its al…
+- `overlordWhy` 521: an ally twice your strength may be offered overlordship: they become your vassal at a light tax
+- `offerOverlord` 527
+- `breakTies` 534: ── A lord's hand on a vassal: cut them loose, demand, force tribute, call up their soldiers (Assyria taxed at …
+- `demandCost` 544
+- `demandWhy` 545
+- `demand` 551
+- `menAt` 563
+- `tributeWhy` 567
+- `forceTribute` 574
+- `levyOf` 582
+- `levyRoom` 584: how many more may be called up: half of all their soldiers, counting those already marching for you (Build 48:…
+- `levyWhy` 588
+- `levy` 596
+- `releaseLevy` 619
+- `releaseAll` 629
+- `chargeWhy` 637
+- `charge` 643
+- `fallBack` 658
+- `takePrisoner` 683: Prisoners: a runner touched by a foe, or a man netted by the Natives
+- `prisonersOf` 702
+- `payRansom` 703
+- `teachTo` 718: ── Teach: a soldier of an older kind learns a newer one at the School
+- `teachGap` 722
+- `teachCost` 723
+- `teachSecs` 731
+- `schooling` 732
+- `teachWhy` 733
+- `teach` 746
+- `graduate` 756
+- `prisonersTick` 767
+- `LOT` 791: The Market, one rule for everything it trades: resources by the 100, goods by the 10; it pays 80% of worth (90…
+- `worth` 792: spice is worth what it costs at a stop
+- `coinOf` 793: debased coin: dearer to buy, less for what you sell
+- `sellPrice` 794
+- `buyPrice` 795
+- `haveOf` 796
+- `marketTrade` 797
+- `zealCost` 820
+- `zealWhy` 821
+- `zeal` 831
+- `watchtower` 844: a spy stands unseen beyond 45 of soldiers and 140 of towers, the Town Center and Courthouses
+- `guarded` 845
+- `sabotage` 847
+- `intel` 870
+- `hireWhy` 877
+- `hire` 885
+- `setJob` 903
+- `atShop` 924: a villager at a workshop, a mint or a foundry, walking there or working inside: + and the computers leave it b…
+- `NO_HANDS` 927: the + and − under a job (D-089): + takes an idle villager, else the roaming one earning least on another job; …
+- `moveVil` 928
+- `stopVil` 942: Stop: a villager drops its job and stands where it is (or where it is sent), ready for a new order (Build 61)
+- `sendOut` 952: Send out (a field, a pasture or a shop's card): the last villager sent there goes home; a shop worker steps ou…
+- `sendVil` 959
+- `sendHunt` 984
+- `sendRepair` 998
+- `repairCost` 1011
+- `nodeName` 1017
+- `commitPlace` 1027: ── the player's placing and box orders (the finger's work is in 26-input.js; what it orders is here)
+- `boxCut` 1090
+- `centreOf` 1115: ── Orders you can follow: a group sent somewhere is stamped with its order; the map draws a line to where it i…
+- `routeK` 1119
+- `etaOf` 1127
+- `march` 1129
+- `sendHome` 1148: soldiers called home: off whatever they were doing and off their order
+- `incomingTick` 1157
+- `ordersTick` 1190
 
-**`12-sim-core.js`** (810 lines): the step, formations, deaths, victory, buildings built, research learned
+**`12-sim-core.js`** (816 lines): the step, formations, deaths, victory, buildings built, research learned
 
 - `isThreat` 3
 - `recount` 8: once a second, and at once after a load: finds with live guards (villagers keep away from work beside them), a…
@@ -647,24 +650,24 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `died` 337
 - `judge` 373
 - `bldTick` 435
-- `built` 488
-- `jobDone` 520
-- `learnTech` 576
-- `dropFor` 603
-- `dockNear` 610
-- `nodeFits` 621
-- `unsafe` 622: on the side's danger map (09-nav: dangerMap); a field is never left for it
-- `FORAGE` 634: move when 18% better (Albert, Oct 29); a field's life counts as 20 loads; room is design
-- `forage` 635
-- `turtlePlan` 659: The turtle plan (Albert, Build 63): what the next age costs in villager-minutes from this Town Center, with th…
-- `forageNow` 689: the rate a worker earns where it is now: 0 idle or off gathering
-- `bestNode` 701: the best find for this worker and its rate: fields, berries, trees, stone, gold, iron, fish, a carcass, or gam…
-- `reachFrom` 779: cm: when given, only a find whose foot (an open square within two of it) lies in that walking region counts: a…
-- `nearestNode` 780: the one find a worker should take now
-- `pickVil` 784: who to send: an idle villager first, the nearest; with strict (your orders to a building, D-089) nobody else
-- `typesOf` 806: the resource a building serves: a field its crop, a drop-off what it takes in
+- `built` 494
+- `jobDone` 526
+- `learnTech` 582
+- `dropFor` 609
+- `dockNear` 616
+- `nodeFits` 627
+- `unsafe` 628: on the side's danger map (09-nav: dangerMap); a field is never left for it
+- `FORAGE` 640: move when 18% better (Albert, Oct 29); a field's life counts as 20 loads; room is design
+- `forage` 641
+- `turtlePlan` 665: The turtle plan (Albert, Build 63): what the next age costs in villager-minutes from this Town Center, with th…
+- `forageNow` 695: the rate a worker earns where it is now: 0 idle or off gathering
+- `bestNode` 707: the best find for this worker and its rate: fields, berries, trees, stone, gold, iron, fish, a carcass, or gam…
+- `reachFrom` 785: cm: when given, only a find whose foot (an open square within two of it) lies in that walking region counts: a…
+- `nearestNode` 786: the one find a worker should take now
+- `pickVil` 790: who to send: an idle villager first, the nearest; with strict (your orders to a building, D-089) nobody else
+- `typesOf` 812: the resource a building serves: a field its crop, a drop-off what it takes in
 
-**`13-sim-civil.js`** (875 lines): villagers, hunters, repairers, scouts, envoys, caravans, spies
+**`13-sim-civil.js`** (877 lines): villagers, hunters, repairers, scouts, envoys, caravans, spies
 
 - `shopTick` 6: A worker at a workshop, a mint or a foundry works inside it (Build 53, Albert: "a worker who works in a shop s…
 - `workMul` 22: what a worker's own state does to its work: sick, weakened by a famine (hungerOf), cheered by the circus (one …
@@ -679,15 +682,15 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `stepOut` 157: out of a building: onto the nearest free spot of its outline (item 5; it was set down 30 below the middle, wha…
 - `waitAt` 166: A waiter takes the free spot nearest it at its drop-off, once, and keeps it until it has a find again.
 - `vilTick` 199
-- `leaveWork` 552: the way to this work ended short of it: there is no way there
-- `huntTick` 560
-- `backToWork` 580: Mending: three times the build time for a full repair, a quarter of the cost, paid as the work goes. every way…
-- `repairTick` 591
-- `homeSpot` 688
-- `scoutTick` 695
-- `envoyTick` 740
-- `caravanTick` 757: a caravan with no route trades with an ally: out from your Market to theirs, paid by distance on arrival, then…
-- `spyTick` 801
+- `leaveWork` 554: the way to this work ended short of it: there is no way there
+- `huntTick` 562
+- `backToWork` 582: Mending: three times the build time for a full repair, a quarter of the cost, paid as the work goes. every way…
+- `repairTick` 593
+- `homeSpot` 690
+- `scoutTick` 697
+- `envoyTick` 742
+- `caravanTick` 759: a caravan with no route trades with an ally: out from your Market to theirs, paid by distance on arrival, then…
+- `spyTick` 803
 
 **`14-sim-troops.js`** (662 lines): priests, medics, soldiers, wild animals, wayfarers, finds
 
@@ -764,74 +767,78 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `slotsOf` 430: one worker to a field, a quarry, a workshop
 - `startWork` 431
 
-**`36-economy.js`** (935 lines): trade, weather, fire, sickness, vassals, the computers' economy
+**`36-economy.js`** (956 lines): trade, weather, fire, sickness, vassals, the computers' economy
 
 - `FLEECE` 4: Real ratios on a compressed calendar: one year is 12 minutes, and every rate below is set against that clock.
 - `LAMBS` 5
 - `FLOCK` 6: wool per sheep at the spring shearing; a flock grows by logistic growth (Verhulst), r = 0.6 a spring toward a …
-- `stopsAll` 8
-- `postAt` 9
-- `stopsHeld` 10: of one route's four stops
-- `stash` 11
-- `flowOf` 28: what came in over the last minute, by resource and good: kept for the stores card (the flow is counted as it i…
-- `outOf` 30: what went out a minute (a computer's crew per resource reads it, 17-ai)
-- `netOf` 31
-- `VEL` 34: a store's velocity on the one gradient: its net flow a minute over VEL.ref (tanh: a gentle middle, a firm end)…
-- `velOf` 35
-- `flowTick` 40
-- `initEconomy` 54
-- `distF` 76: ── prices: base, more where it is wanted, more the farther it travels
-- `baseOf` 77: a made good's price, or a raw find's (the Market's lot price ÷ 100)
-- `nameOf` 78
-- `colOf` 79: a cart's load shows its colour: a good's own, or the resource's
-- `loadable` 80: what a caravan may take: all of a made good, a raw find's surplus
-- `takeFrom` 83: a load taken up or put down: raw through the money home (spent on, or back from, trade; a load is not gathered…
-- `giveTo` 84
-- `priceAt` 86
-- `tradeTargets` 94: Trade has two lanes
-- `allyMarket` 96
-- `targetOf` 117
-- `homeBiz` 118: the Market stores goods and loads caravans
-- `estPay` 119
-- `setRoute` 129
-- `bestTarget` 135
-- `routeTick` 151: A caravan on a route: load at the Market, sell at the far end (and buy spice at a stop), bring the spice home,…
-- `guardedCart` 241: caravans within reach of a trade post or tower of yours, or with a soldier of yours close by, are left alone b…
-- `robbed` 253: a robbed caravan's load goes into the nearest robbers' camp, and comes back to whoever breaks the camp
-- `natureTick` 262: ── the calendar: weather every minute, the seasons' work, the year's harvest
-- `seasonTurn` 304
-- `fireHeat` 360: ── fire: wood and thatch burn, catch from their neighbours, and villagers put it out the heat a neighbour rece…
-- `FIRE_SMOKE` 361: a second, for each villager fighting a big fire (spread, or the building below half): about one death in three…
-- `ignite` 362
-- `storm` 391: Summer storms: lightning strikes open ground now and then, and sometimes a wooden building; bakeries and smith…
-- `strike` 392
-- `lightning` 398
-- `fireTick` 415
-- `sickRisk` 437: ── sickness: a few fall ill now and then, more in summer and winter; clean water, sewers and quarantine lower …
-- `outbreak` 446
-- `healthTick` 463
-- `upkeepTick` 532: ── food upkeep: everyone eats, every second, wherever they are
-- `econTick` 569
-- `aiEconomy` 581: ── the computers: a Market, one workshop each, caravans with routes, posts on the free stops near them
-- `shareOf` 634: ── food upkeep
-- `orderCost` 642: an order's cost (ORDER): the soldiers' meals from the store, and the tiredness; what it ate, for the toast
-- `hungerOf` 652: full strength for the first two days of a famine
-- `setMake` 656: ── prices float with what is sold and bought, and drift back a workshop's choice: what it makes now (the node'…
-- `mkt` 669
-- `debase` 674
-- `mktHit` 683
-- `spiceCost` 688
-- `priceDrift` 689
-- `venture` 703: ventures: gold put into a merchant voyage; a year later it comes back with 40% more, or not at all
-- `ventureTick` 713
-- `vassalsOf` 731: ── vassals: tax, loyalty, unrest, rebellion and coalition
-- `shareUp` 733: a loyal vassal shares a quarter of its trade profit with its lord
-- `loyaltyParts` 740
-- `makeVassal` 762
-- `surrenderWhy` 790: can this side be made to surrender? Their army is beaten and yours stands at their Town Center.
-- `demandSurrender` 800
-- `rebel` 809
-- `vassalTick` 842
+- `FISH` 7: I (Albert, Nov 4): a spot's stock at a lake of radius r0; fish regrow each spring by Verhulst's law, r a year,…
+- `MUTTON` 8: H (Albert, Nov 4): food a sheep gives at slaughter (from memory
+- `stopsAll` 10
+- `postAt` 11
+- `stopsHeld` 12: of one route's four stops
+- `stash` 13
+- `flowOf` 30: what came in over the last minute, by resource and good: kept for the stores card (the flow is counted as it i…
+- `outOf` 32: what went out a minute (a computer's crew per resource reads it, 17-ai)
+- `netOf` 33
+- `VEL` 36: a store's velocity on the one gradient: its net flow a minute over VEL.ref (tanh: a gentle middle, a firm end)…
+- `velOf` 37
+- `flowTick` 42
+- `initEconomy` 56
+- `distF` 78: ── prices: base, more where it is wanted, more the farther it travels
+- `baseOf` 79: a made good's price, or a raw find's (the Market's lot price ÷ 100)
+- `nameOf` 80
+- `colOf` 81: a cart's load shows its colour: a good's own, or the resource's
+- `loadable` 82: what a caravan may take: all of a made good, a raw find's surplus
+- `takeFrom` 85: a load taken up or put down: raw through the money home (spent on, or back from, trade; a load is not gathered…
+- `giveTo` 86
+- `priceAt` 88
+- `tradeTargets` 96: Trade has two lanes
+- `allyMarket` 98
+- `targetOf` 119
+- `homeBiz` 120: the Market stores goods and loads caravans
+- `estPay` 121
+- `setRoute` 131
+- `bestTarget` 137
+- `routeTick` 153: A caravan on a route: load at the Market, sell at the far end (and buy spice at a stop), bring the spice home,…
+- `guardedCart` 243: caravans within reach of a trade post or tower of yours, or with a soldier of yours close by, are left alone b…
+- `robbed` 255: a robbed caravan's load goes into the nearest robbers' camp, and comes back to whoever breaks the camp
+- `natureTick` 264: ── the calendar: weather every minute, the seasons' work, the year's harvest
+- `seasonTurn` 306
+- `fireHeat` 369: ── fire: wood and thatch burn, catch from their neighbours, and villagers put it out the heat a neighbour rece…
+- `FIRE_SMOKE` 370: a second, for each villager fighting a big fire (spread, or the building below half): about one death in three…
+- `ignite` 371
+- `storm` 400: Summer storms: lightning strikes open ground now and then, and sometimes a wooden building; bakeries and smith…
+- `strike` 401
+- `lightning` 407
+- `fireTick` 424
+- `sickRisk` 446: ── sickness: a few fall ill now and then, more in summer and winter; clean water, sewers and quarantine lower …
+- `outbreak` 455
+- `healthTick` 472
+- `upkeepTick` 541: ── food upkeep: everyone eats, every second, wherever they are
+- `BANK_CAP` 579: the Bank (G): once a minute, interest on the gold held, to BANK_CAP
+- `bankTick` 580
+- `econTick` 587
+- `aiEconomy` 602: ── the computers: a Market, one workshop each, caravans with routes, posts on the free stops near them
+- `shareOf` 655: ── food upkeep
+- `orderCost` 663: an order's cost (ORDER): the soldiers' meals from the store, and the tiredness; what it ate, for the toast
+- `hungerOf` 673: full strength for the first two days of a famine
+- `setMake` 677: ── prices float with what is sold and bought, and drift back a workshop's choice: what it makes now (the node'…
+- `mkt` 690
+- `debase` 695
+- `mktHit` 704
+- `spiceCost` 709
+- `priceDrift` 710
+- `venture` 724: ventures: gold put into a merchant voyage; a year later it comes back with 40% more, or not at all
+- `ventureTick` 734
+- `vassalsOf` 752: ── vassals: tax, loyalty, unrest, rebellion and coalition
+- `shareUp` 754: a loyal vassal shares a quarter of its trade profit with its lord
+- `loyaltyParts` 761
+- `makeVassal` 783
+- `surrenderWhy` 811: can this side be made to surrender? Their army is beaten and yours stands at their Town Center.
+- `demandSurrender` 821
+- `rebel` 830
+- `vassalTick` 863
 
 **`37-events.js`** (762 lines): the event scheduler and what each event does
 
@@ -965,7 +972,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `clearSave` 597
 - `loadGame` 603
 
-**`41-boot.js`** (750 lines): start-up, and closes the one scope
+**`41-boot.js`** (751 lines): start-up, and closes the one scope
 
 - `last` 3
 - `acc` 4
@@ -1301,7 +1308,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 
 ### Menus
 
-**`26-input.js`** (669 lines): the finger: tap, hold, box, pick
+**`26-input.js`** (670 lines): the finger: tap, hold, box, pick
 
 - `ptrs` 3
 - `drag` 4
@@ -1335,9 +1342,9 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `pickToggle` 488
 - `pickSound` 501: the sound a picked unit answers with: by what it is made of and how it moves (35-sound)
 - `order` 511
-- `startPlace` 619
-- `cancelPlace` 646: you tapped Build: build what the ghost shows; houses, fields and gates offer the next spot beside it
-- `boxPick` 651: The box: your people inside it are picked; a box of trees and nobody is a road to cut
+- `startPlace` 620
+- `cancelPlace` 647: you tapped Build: build what the ghost shows; houses, fields and gates offer the next spot beside it
+- `boxPick` 652: The box: your people inside it are picked; a box of trees and nobody is a road to cut
 
 **`27-cards-core.js`** (527 lines): the card engine (open, close, patch) and the pieces cards are made of
 
@@ -1401,7 +1408,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `knownPower` 512: the odds the computers use (17-ai.js): the square law on strength, bent by who counters whom, against their ar…
 - `oddsText` 520
 
-**`28-army-quick.js`** (407 lines): the army: who can be sent, how many, and the sends; the quick action
+**`28-army-quick.js`** (410 lines): the army: who can be sent, how many, and the sends; the quick action
 
 - `qsPool` 3: ── Attack with: on an enemy or a find card, from the whole army or one battalion, how many of each type, then go
 - `qsPick` 5
@@ -1410,31 +1417,31 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `ARMY_STILL` 63: What each soldier is doing, in one word (Albert, Build 42), worked out from the soldier alone: rally (just tra…
 - `armyStatus` 64
 - `idleSoldier` 76
-- `free` 81: Rest: idle soldiers only, so a group on the march is never pulled off its way
-- `freeWhy` 83: why nobody can be sent: nobody exists, or who is busy doing what
-- `guardsOf` 94
-- `guardRow` 96
-- `showQuick` 112: ── The quick action (Albert, Nov 3: "a tap on the ground like a right click"): with units picked, a tap is the…
-- `hideQuick` 130
-- `quickGo` 134
-- `ofKind` 145: ── The War Director (06-rules-tuning, DIRECT): a tap on a kind in the station's middle is its move, a hold its…
-- `aimH` 146
-- `drillOn` 150: a drill's shape on the ground (Albert, Nov 3: "form a line", "a semi circle or arc"): every soldier of S to it…
-- `dress` 151
-- `drillHold` 162: the x% by x% rule (FORMING.share): past that share of the drill's time, a soldier not that share of the way fr…
-- `toolSet` 176: ── The choke and the ambush (Albert, Nov 3, 11:08: "allowing the player to use the land to pick a formation th…
-- `chokeAt` 180
-- `coverNear` 205: the ambush: the nearest cover to the tap (an open square with forest within AMBUSH.cover squares, looked for w…
-- `ambushAt` 226
-- `DIRECT_WHY` 245
-- `DIRECTS` 246
-- `DIRECT_OF` 307: the four kinds' moves: [tap, hold], with the word each says, and the sound
-- `direct` 313
-- `directWait` 325: the wait a kind's tap still has to sit out, in seconds (0 when it is ready): the archers' reload, the riders' …
-- `SUGGEST` 329: what the game thinks fits a spot (Albert, Build 41): each reason scores a kind, the best one is marked and its…
-- `suggestAt` 330
-- `dialBtns` 380: The two dials of an army or one battalion (a: 'all' or its number): temper, and shape once Formations is resea…
-- `musterGap` 389: ── Muster for a squad: what it still lacks, by soldier kind to train
+- `free` 82: Rest: idle soldiers only, so a group on the march is never pulled off its way
+- `freeWhy` 84: why nobody can be sent: nobody exists, or who is busy doing what
+- `guardsOf` 95
+- `guardRow` 97
+- `showQuick` 113: ── The quick action (Albert, Nov 3: "a tap on the ground like a right click"): with units picked, a tap is the…
+- `hideQuick` 131
+- `quickGo` 135
+- `ofKind` 146: ── The War Director (06-rules-tuning, DIRECT): a tap on a kind in the station's middle is its move, a hold its…
+- `aimH` 147
+- `drillOn` 151: a drill's shape on the ground (Albert, Nov 3: "form a line", "a semi circle or arc"): every soldier of S to it…
+- `dress` 152
+- `drillHold` 164: the x% by x% rule (FORMING.share): past that share of the drill's time, a soldier not that share of the way fr…
+- `toolSet` 178: ── The choke and the ambush (Albert, Nov 3, 11:08: "allowing the player to use the land to pick a formation th…
+- `chokeAt` 182
+- `coverNear` 207: the ambush: the nearest cover to the tap (an open square with forest within AMBUSH.cover squares, looked for w…
+- `ambushAt` 228
+- `DIRECT_WHY` 248
+- `DIRECTS` 249
+- `DIRECT_OF` 310: the four kinds' moves: [tap, hold], with the word each says, and the sound
+- `direct` 316
+- `directWait` 328: the wait a kind's tap still has to sit out, in seconds (0 when it is ready): the archers' reload, the riders' …
+- `SUGGEST` 332: what the game thinks fits a spot (Albert, Build 41): each reason scores a kind, the best one is marked and its…
+- `suggestAt` 333
+- `dialBtns` 383: The two dials of an army or one battalion (a: 'all' or its number): temper, and shape once Formations is resea…
+- `musterGap` 392: ── Muster for a squad: what it still lacks, by soldier kind to train
 
 **`29-card-pages.js`** (577 lines): what a building adds to its card: market, council, workshop and the rest
 
@@ -1468,13 +1475,13 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `pairRow` 568: two two-choice settings share a rank (Nov 3, Albert: the start page on one screen): name, its pair, name, its …
 - `settingsHTML` 569
 
-**`30-cards.js`** (844 lines): the CARDS table, one entry per card type, and renderCard
+**`30-cards.js`** (847 lines): the CARDS table, one entry per card type, and renderCard
 
 - `CARDS` 4: Each takes the card's description (G.card) and returns its page, or null when what it showed is gone.
-- `GUIDE_PG` 796: the Guide's page, built once a page (CARDS.guide)
-- `FULL` 797: the cards that take the whole height; the Army card with Battalions needs 11 ranks (E8)
-- `SIZE_OF` 800: three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet: lg every rank that fits ab…
-- `renderCard` 806
+- `GUIDE_PG` 799: the Guide's page, built once a page (CARDS.guide)
+- `FULL` 800: the cards that take the whole height; the Army card with Battalions needs 11 ranks (E8)
+- `SIZE_OF` 803: three sizes, one mold each (Albert, Build 63), counted in ranks in the style sheet: lg every rank that fits ab…
+- `renderCard` 809
 
 **`32-frame.js`** (713 lines): the frame: the bars, the preview and the mail, the page
 
@@ -1530,23 +1537,23 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `shownMsg` 687: The preview (Build 64): the newest live line, or the question that hides its group; paused says so when nothin…
 - `preview` 688
 
-**`33-verbs.js`** (1135 lines): every button verb
+**`33-verbs.js`** (1139 lines): every button verb
 
 - `ACT` 4: every button's verb, in one table
 - `shut` 380: a job is locked until its age (32-frame, resOn): a tap on it says when it opens
 - `PLAY` 382: orders that change the game: refused once it is over
-- `act` 1030
-- `L` 1042: Hints retire once learned: each counts the times you did what it teaches, kept on this phone; at 3 it is not s…
-- `learn` 1043
-- `learnAct` 1049
-- `lpT` 1060
-- `lpDone` 1061
-- `lpAt` 1062
-- `lpStop` 1063
-- `TAPS` 1085: Tap counts (Build 59, from the Google audit): how often each button is used, and tapped while it could not act
-- `tapCount` 1089
+- `act` 1034
+- `L` 1046: Hints retire once learned: each counts the times you did what it teaches, kept on this phone; at 3 it is not s…
+- `learn` 1047
+- `learnAct` 1053
+- `lpT` 1064
+- `lpDone` 1065
+- `lpAt` 1066
+- `lpStop` 1067
+- `TAPS` 1089: Tap counts (Build 59, from the Google audit): how often each button is used, and tapped while it could not act
+- `tapCount` 1093
 
-**`39-huddle.js`** (630 lines): the row below the map and its three pages, the War HUD's missions, the squad card
+**`39-huddle.js`** (639 lines): the row below the map and its three pages, the War HUD's missions, the squad card
 
 - `HUD` 8: The row (MENU-SPEC §6, Albert's drawings of Oct 30 and 31): one Formation two ranks tall, the same six columns…
 - `mUnits` 16
@@ -1593,9 +1600,9 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `squadOutHTML` 488: Out: how it stands, what it lost, send more from the idle reserve, its shape and intent, where it is, Abort
 - `YARD_LIST` 537: The Yard (Albert, Nov 3, preview 47 "Restore and Fix"): the staging ground
 - `matchLog` 566: ── The match log (Albert, Nov 3, 22:34: "If I play a game can you analyze it?"; preview 49, preview only, YARD…
-- `matchLogText` 596
-- `copyLog` 601
-- `fallbackCopy` 614
+- `matchLogText` 605
+- `copyLog` 610
+- `fallbackCopy` 623
 
 **`shell-head.html`** (273 lines): 
 
@@ -1642,7 +1649,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 
 ### Text
 
-**`07-text.js`** (1212 lines): every line of wording the game says
+**`07-text.js`** (1216 lines): every line of wording the game says
 
 - `slowPct` 3: how much slower a full cover of mud or snow makes a march, in percent
 - `orList` 5: 'a, b or c'
@@ -1651,16 +1658,16 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `LEDGER_WORD` 32: the ledger's words (earn and spend, 08-core)
 - `SCEN_TEXT` 56: the scenarios' words (SCENARIOS in 06)
 - `WHY` 68
-- `NEWS` 625: World news: a line from the rest of history now and then, matched to your age
-- `SONG` 669: What each spectacle says: the warning, then the event itself why an event happened, under its line in the list…
-- `MS_TEXT` 670
-- `EV_WHY` 756
-- `EV_TEXT` 775
-- `HOLD_WORD` 797: the sword with nobody to send (28-army-quick)
-- `ROW_WORD` 798
-- `techWhy` 820: a research step's why: its own key first ('tech:' + id) where a unit shares its id (F4: one WHY.legion served …
-- `tierLines` 822: the upgrade lines, read from the research table (F3): each unit and the ranks its research gives it, in order;…
-- `TRIGGERS` 830: What triggers what: when, then, why
+- `NEWS` 629: World news: a line from the rest of history now and then, matched to your age
+- `SONG` 673: What each spectacle says: the warning, then the event itself why an event happened, under its line in the list…
+- `MS_TEXT` 674
+- `EV_WHY` 760
+- `EV_TEXT` 779
+- `HOLD_WORD` 801: the sword with nobody to send (28-army-quick)
+- `ROW_WORD` 802
+- `techWhy` 824: a research step's why: its own key first ('tech:' + id) where a unit shares its id (F4: one WHY.legion served …
+- `tierLines` 826: the upgrade lines, read from the research table (F3): each unit and the ranks its research gives it, in order;…
+- `TRIGGERS` 834: What triggers what: when, then, why
 
 **`31-guide.js`** (270 lines): the Guide, written from the tables
 
@@ -1757,4 +1764,4 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 |---|---|---|---|---|---|---|---|---|---|---|
 | `gather` | `vilTick`, `makeNow`, `forage`, `bestNode`, `nearestNode`, `pickVil`, `setJob`, `leaveWork`, `waitAt`, `backToWork` | `person`, `WORKTOOL`, `LOOKS`, `drawUnit` | `keep`, `mill`, `lumber`, `mining`, `dock` | `lakeGrid`, `makeWater`, `drawFlood` | `food`, `wood`, `stone`, `gold`, `iron`, `bush`, `tree`, `fish` | `units` | `moveTo`, `astar`, `dropFor`, `carryOf`, `gatherMul`, `forageNow`, `findCap`, `crowd`, `unsafe`, `dangerWhy`, `SEARCH`, `REACH`, `WORK_R`, `RATE_OF`, `FORAGE`, `CARRY`, `SHELTER` | `forage`, `SEARCH`, `UPKEEP` | `job`, `sendvil`, `vstop`, `vfocus`, `vhome`, `idlego`, `pjob` | `popOf`, `freeVil` |
 
-53 files, 1556 names, 1 cards.
+53 files, 1563 names, 1 cards.

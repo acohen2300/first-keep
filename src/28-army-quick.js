@@ -74,6 +74,7 @@ function armyStatus(u) {
 	return 'other';
 }
 const idleSoldier = (u) => {
+	if (u.sent && u.bn == null) return false; // placed by hand: it outranks the idle call (A, Nov 4); All still takes it, and a squad its own
 	const s = armyStatus(u);
 	return s === 'hold' || s === 'rally';
 };
@@ -154,6 +155,7 @@ function dress(S, at, dir, shape, secs, arc) {
 		u.px = at.x;
 		u.py = at.y;
 		u.idleT = 0;
+		u.sent = false;
 		u.drill = { shape, fx: dir.x, fy: dir.y, t0: G.t, until: G.t + secs, px: at.x, py: at.y, arc: arc || null, from: { x: u.x, y: u.y } };
 	}
 }
@@ -233,6 +235,7 @@ function ambushAt(h) {
 		u.px = spot.x;
 		u.py = spot.y;
 		u.idleT = 0;
+		u.sent = false;
 		u.tgt = null;
 		u.focus = null;
 		u.drill = null;

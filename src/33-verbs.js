@@ -612,6 +612,10 @@ const PLAY = {
 		if (why) say(why, '', TOAST.short);
 		else replant(0, b.id);
 	},
+	replantall(a) {
+		const b = G.blds.find((x) => x.id === Number(a) && x.owner === 0);
+		if (b) replantAll(0, b);
+	},
 	boxcut(a) {
 		if (G.card && G.card.type === 'box') boxCut(G.card.r, Number(a));
 		closeCard();

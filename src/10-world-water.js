@@ -184,12 +184,13 @@ const riverRuns = () => {
 function layFish(N) {
 	G.lakes.forEach((L, i) => {
 		if (L.river) {
-			if (i % WATER.fish === 0) N.push(node('fish', 'food', L.x, L.y, 350 * RICH));
+			if (i % WATER.fish === 0) N.push(node('fish', 'food', L.x, L.y, FISH.amt * RICH));
 			return;
 		}
-		const n = Math.round(L.r / 10);
+		const n = Math.round(L.r / 10),
+			a = Math.round(FISH.amt * RICH * (L.r / FISH.r0)); // I (Nov 4): the spots go with the shore (r), each spot's stock with r too, so a lake's stock goes with its area (r²)
 		shoreWalk(L, -8, n, (fx, fy) => {
-			if (!onLand(worldXY(fx, fy).x, worldXY(fx, fy).y)) N.push(node('fish', 'food', fx, fy, 350 * RICH)); // onLand reads the world's frame (preview 51)
+			if (!onLand(worldXY(fx, fy).x, worldXY(fx, fy).y)) N.push(node('fish', 'food', fx, fy, a)); // onLand reads the world's frame (preview 51)
 		});
 	});
 }

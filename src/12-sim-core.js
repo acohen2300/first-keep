@@ -455,9 +455,15 @@ function bldTick(b, dt) {
 		else {
 			b.blocked = false;
 			j.left -= dt;
+			const j2 = b.q[1]; // Midwives (J2): a second villager in the line trains alongside the first, room allowing
+			if (j2 && j.kind === 'vil' && j2.kind === 'vil' && fxv(o, 'twin', ['vil']).a > 0 && popOf(o) + 1 < capOf(o)) j2.left -= dt;
 			if (j.left <= 0) {
 				b.q.shift();
 				jobDone(b, j);
+				if (j2 && j2.left <= 0) {
+					b.q.shift();
+					jobDone(b, j2);
+				}
 			}
 		}
 	} else if (!j) b.blocked = false;
@@ -619,7 +625,7 @@ const dockNear = (o, n) =>
 			dist(b, n) < DOCKR,
 	);
 const nodeFits = (n, job) => n.type === job;
-const unsafe = (p, o) => !!DANGER[o][gcell(p.x, p.y)]; // on the side's danger map (09-nav: dangerMap); a field is never left for it
+const unsafe = (p, o) => DANGER[o][gcell(p.x, p.y)] >= 2; // on the side's danger map (09-nav: dangerMap); a field is never left for it
 // ───────────────────────── Where a worker gathers: the forager's rate (Build 59)
 // A villager is a forager, and nature's rule is the rate of return (Holling 1959; Charnov 1976, the marginal value theorem): over the rest
 // of a find's life, what it brings home a second. With c the load, g the gathering rate, d the walk from the find to its drop-off, v the
@@ -787,7 +793,7 @@ function pickVil(o, to, types, site, strict) {
 	if (idle.length) return nearest(idle, to);
 	if (strict) return null;
 	const T = types ? [].concat(types) : null,
-		free = V.filter((u) => u.job && u.job !== 'repair' && !GOODK.includes(u.job)),
+		free = V.filter((u) => u.job && u.job !== 'repair' && !GOODK.includes(u.job) && !u.sent), // A (Albert, Nov 4): one you placed by hand stays placed
 		same = T ? free.filter((u) => T.includes(u.job)) : [],
 		pool = same.length ? same : free;
 	if (!pool.length) return null; // nobody is pulled off a site or a post: with all hands busy, the order waits

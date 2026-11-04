@@ -191,12 +191,12 @@ JS2 = """() => {
     for (const u of V) F.setJob(u, 'food', B); run(2);
     if (F.sendVil(0, b.node.id)) bad.push('a free field took a villager who was at work (the building flow takes the idle only)');
     F.setJob(V[0], null); run(1); if (!F.sendVil(0, b.node.id) || V[0].node !== b.node) bad.push('a free field did not take the idle villager'); } } }
-  { // the strip counts every Z: an empty field is one
+  { // the strip counts idle villagers only: an empty field is a + on the field, not a z (Nov 4)
     const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) { const b = field(G, k, d); if (b) {
     const V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), B = bush(G, k, { cx: -d.cx, cy: -d.cy }, 80, 3000);
     for (const u of V) F.setJob(u, 'food', B); run(2); F.ui(true);
     const z = (document.body.innerText.match(/z (\\d+)/) || [])[1];
-    if (z !== '1') bad.push('the strip shows z ' + z + ' with every villager at work and one empty field (want z 1)'); } } }
+    if (z !== '0') bad.push('the strip shows z ' + z + ' with every villager at work and one empty field (want z 0)'); } } }
 
   // ── D-091: with nobody idle, the nearest villager raises a site you place, then goes back to the very find it left ──
   { const G = fresh(), k = F.keepOf(0), d = ray(G, k, 60, 200); if (d) {
@@ -253,8 +253,7 @@ JS2 = """() => {
     F.moveVil(0, 'wood', false); if (u.job !== 'food') bad.push('+ on Wood took a focused villager');
     F.moveVil(0, 'food', true); if (u.job !== 'food') bad.push('− on Food took a focused villager');
     if (!run(60, () => B.amt <= 0)) bad.push('the focus test bush was not spent in 60 s'); run(40); // it delivers, then comes back to its spot
-    if (u.node === R) bad.push('a focused villager whose bush ran out took another bush');
-    else if (!u.idle || Math.hypot(u.x - B.x, u.y - B.y) > 20) bad.push('a focused villager whose bush ran out is not waiting at it (' + Math.round(Math.hypot(u.x - B.x, u.y - B.y)) + ' away)'); } }
+    if (u.node !== R || u.focus) bad.push('a focused villager whose bush ran out did not move on to the next bush (B, Nov 4)'); } }
 
   // ── any real move is a step ──
   { const G = fresh(), k = F.keepOf(0), V = G.units.filter((u) => u.owner === 0 && u.kind === 'vil'), a = V[0], b = V[1];

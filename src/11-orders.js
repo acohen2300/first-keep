@@ -259,6 +259,21 @@ function replant(o, id) {
 	if (o === 0) say(`${bldName(0, b.kind)} replanted.`, 'good', TOAST.short);
 	return true;
 }
+// Replant all (Albert, Nov 4): from a drop-off, every cut-out plot of what it takes, as many as can be paid for, nearest first
+const cutOut = (o, types) =>
+	G.blds.filter((b) => b.owner === o && b.hp > 0 && b.node && BLD[b.kind].reserve && b.node.amt <= 0 && types.includes(b.node.type));
+function replantAll(o, at) {
+	let n = 0;
+	for (const b of cutOut(o, BLD[at.kind].drop || []).sort((a, c) => dist(a, at) - dist(c, at)))
+		if (!replantWhy(o, b)) {
+			pay(G.P[o], scaled(BLD[b.kind].cost, 0.5), 'buildings');
+			b.node.amt = b.node.max = BLD[b.kind].reserve;
+			n++;
+		}
+	if (n) G.treeV = (G.treeV || 0) + 1;
+	if (o === 0) say(n ? `${n} replanted.` : 'Not enough to replant.', n ? 'good' : '', TOAST.short);
+	return n;
+}
 // Take a building down: half its cost back (all of it in the first 15% of the build); every order waiting inside is cancelled, so what
 // was paid for it comes back in full (a muster's too: before, a muster in the line was lost). Never the Town Center.
 function shellBack(b) {

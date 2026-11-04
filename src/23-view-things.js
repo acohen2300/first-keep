@@ -432,7 +432,7 @@ function drawBld(b, s) {
 		smoke(sx + dx * z, sy - h * z, b.id, z);
 	} // a hearth always; a forge, a foundry or a Town Center only while it works (Build 52: smoke shows who is busy)
 	blaze(b, sx, sy, z);
-	if (idlePost(b)) idleMark(sx, sy, z * 1.2);
+	if (idlePost(b)) idleMark(sx, sy, z * 1.2, '+'); // an empty post: + (wants a worker), not the idle villager's z
 	const M = maxHpB(b.owner, b.kind);
 	if (b.hp < M - 1 && !(B.camp && b.hp >= M * CAMP.mend)) bar(sx, sy - c.ay * k - 4, Math.min(60 * z, B.fp * NAVC * z), b.hp / M, G.P[b.owner].color); // a camp piece weathers a little every minute: its bar shows only once it wants mending (CAMP.mend)
 	if (G.wonder && G.wonder.id === b.id) {

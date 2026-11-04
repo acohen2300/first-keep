@@ -383,10 +383,12 @@ function vilTick(u, dt, SP) {
 			if (u.node !== n) crowd(n, 1);
 			u.node = n;
 		} else {
+			// B (Albert, Nov 4: "when they finish they don't know what to do"): its find is gone, so the focus ends and it looks for the
+			// next find of the same kind, as any worker does (was: it waited on the spot for ever, D-093)
+			if (u.node && !u.node.farm) u.was = u.node.kind;
+			u.focus = null;
+			u.fn = null;
 			u.node = null;
-			u.idle = true;
-			if (u.fpos) moveTo(u, u.fpos.x, u.fpos.y, dt, WORK_R.other, SP);
-			return;
 		}
 	}
 	if (u.plot && !u.node && !u.hunt && u.job) {

@@ -574,6 +574,14 @@ function matchLog() {
 		if (sol < L.seen.sol) L.lost.sol += L.seen.sol - sol;
 	}
 	L.seen = { vil, sol };
+	// L (Albert, Nov 4): a line when a find runs dry (not trees: a forest has thousands), with who worked it last
+	const dry = L.dry || (L.dry = []),
+		gone = new Set(dry.map((d) => d.id)); // rebuilt each time: a Set does not survive a save
+	for (const n of G.nodes)
+		if (n.amt <= 0 && !n.farm && n.kind !== 'tree' && !gone.has(n.id)) {
+			gone.add(n.id);
+			dry.push({ id: n.id, t: Math.round(G.t), kind: n.kind, at: coord(n.x, n.y) });
+		}
 	if (Math.floor(G.t) % 60 > 1 && L.rows.length) return;
 	const m = Math.round(G.t / 60);
 	if (L.rows.length && L.rows[L.rows.length - 1].m === m) return;
@@ -581,6 +589,7 @@ function matchLog() {
 	L.rows.push({
 		m,
 		tcIdle: L.idle,
+		jobs: unitsOf(0, 'vil').reduce((a, u) => ((a[freeVil(u) ? 'idle' : u.job || 'none'] = (a[freeVil(u) ? 'idle' : u.job || 'none'] || 0) + 1), a), {}), // your villagers by job (L)
 		lost: { ...L.lost },
 		// a side a line, short so a long game stays small: [age, villagers, idle, soldiers, food, wood, stone, gold, iron, gathered this minute], or 0 once it fell
 		s: G.P.slice(0, 4).map((p, i) =>
@@ -596,7 +605,7 @@ function matchLog() {
 function matchLogText() {
 	const L = G.mlog || { rows: [] },
 		mail = (G.mail || []).filter((x) => x.grp === 'war' || x.grp === 'realm' || x.grp === 'home').map((x) => `${clock(x.t)} ${x.text}${x.n > 1 ? ' ×' + x.n : ''}`);
-	return JSON.stringify({ build: BUILD, seed: G.seed, sides: G.P.slice(0, 4).map((p) => p.name), cols: 'age vil idle sol f w s g i got', tcIdle: 'seconds your Town Center trained nothing, that minute', lost: 'your villagers and soldiers lost, that minute', civ: G.P[0].civ, diff: G.diff, end: clock(G.t), over: G.over || null, rows: L.rows, ms: G.ms || [], mail });
+	return JSON.stringify({ build: BUILD, seed: G.seed, sides: G.P.slice(0, 4).map((p) => p.name), cols: 'age vil idle sol f w s g i got', tcIdle: 'seconds your Town Center trained nothing, that minute', lost: 'your villagers and soldiers lost, that minute', civ: G.P[0].civ, diff: G.diff, end: clock(G.t), over: G.over || null, jobs: 'your villagers by job, that minute', dry: (L.dry || []).map(({ t, kind, at }) => `${clock(t)} ${kind} ran dry at ${at}`), rows: L.rows, ms: G.ms || [], mail });
 }
 function copyLog() {
 	const t = matchLogText(),

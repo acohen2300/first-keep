@@ -123,7 +123,7 @@ JS = """() => {
     for (let k = 0; k < 60; k++) { const px = rnd() * F.MAP, py = rnd() * F.MAP, rr = 10 + rnd() * 300; A.fill(0); B.fill(0); F.stampDanger(A, px, py, rr);
       const R = Math.ceil(rr / F.NAVC), cx = Math.floor(px / F.NAVC), cy = Math.floor(py / F.NAVC);
       for (let y = Math.max(0, cy - R); y <= Math.min(N - 1, cy + R); y++) for (let x = Math.max(0, cx - R); x <= Math.min(N - 1, cx + R); x++) if ((x - cx) ** 2 + (y - cy) ** 2 <= R * R) B[y * N + x] = 1;
-      for (let i = 0; i < A.length; i++) if (A[i] !== B[i]) diff++; }
+      for (let i = 0; i < A.length; i++) if (+(A[i] > 0) !== B[i]) diff++; }
     if (diff) bad.push(`A2 (an equivalence test: it passes on main too, and guards the speed-up): the row-stamped danger disc differs from the disc in ${diff} squares`); });
 
   // ── hunt A #3: a builder bitten by a boar fights back, then goes back to its site with its jobs kept ──

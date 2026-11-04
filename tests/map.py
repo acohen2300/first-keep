@@ -73,7 +73,7 @@ ZONE = """(seeds) => {
   if (!B) return [['no zone 1 (BACK) to lay'], W];
   for (let s = 1; s <= seeds; s++) {
     F.SET.scen = 'open'; F.newGame(s); const G = F.G, N = F.NAV, NC = F.NC, amt = F.LAND[G.land].amt, sig = [];
-    const isHome = (n) => base[n.kind] && Math.abs(n.max - base[n.kind] * F.RICH * H.rich * (amt[type[n.kind] || n.kind] || 1)) < 1e-6;
+    const isHome = (n) => base[n.kind] && Math.abs(n.max - base[n.kind] * F.RICH * H.rich * (amt[type[n.kind] || n.kind] || 1) * (F.FIND_SIZE[n.kind] || 1)) < 1e-6;
     const comp = (x, y, id) => { const cx = Math.floor(x / F.NAVC), cy = Math.floor(y / F.NAVC); let best = 0; for (let j = -2; j <= 2; j++) for (let i = -2; i <= 2; i++) { const a = cx + i, b = cy + j; if (a < 0 || b < 0 || a >= NC || b >= NC) continue; const c = N.comp[b * NC + a]; if (c && (id ? c === id : N.size[c] > N.size[best])) best = c; } return best; };
     for (let o = 0; o < 4; o++) {
       const kb = F.keepOf(o), k = { x: G.P[o].keep[0], y: G.P[o].keep[1] }, d = (q) => Math.hypot(q.x - k.x, q.y - k.y), L = (q) => F.landXY(q.x, q.y), lk = L(k), /* from the keep's laid place: the building is snapped to the world's squares after the turn (preview 51) */ mine = (q) => { const l = L(q), e = 0.01; return (lk.x < F.LMID ? l.x <= F.LMID + e : l.x >= F.LMID - e) && (lk.y < F.LMID ? l.y <= F.LMID + e : l.y >= F.LMID - e); };   // the corner's quarter, in the land's frame (preview 51)
@@ -234,7 +234,7 @@ CAMERA = """async (seeds) => {
   const base = { bush: 180, tree: 120, stone: 300, gold: 300, iron: 300 }, type = { bush: 'food', tree: 'wood' }, BK = F.BACK || {}, count = { bush: BK.bushes, tree: BK.trees },
     isBack = (n) => count[n.kind] && Math.abs(n.max - (n.kind === 'bush' ? BK.food : BK.wood) / count[n.kind]) < 1e-6;
     for (let s = 1; s <= seeds; s++) { F.newGame(s); F.act('close'); F.ui(true); const G = F.G, z = F.cam.z, H = F.HOME, amt = F.LAND[G.land].amt;
-    const isHome = (n) => base[n.kind] && Math.abs(n.max - base[n.kind] * F.RICH * H.rich * (amt[type[n.kind] || n.kind] || 1)) < 1e-6;
+    const isHome = (n) => base[n.kind] && Math.abs(n.max - base[n.kind] * F.RICH * H.rich * (amt[type[n.kind] || n.kind] || 1) * (F.FIND_SIZE[n.kind] || 1)) < 1e-6;
     for (let o = 0; o < 4; o++) { const k = F.keepOf(o);
       for (const n of G.nodes) { if (n.farm || Math.hypot(n.x - k.x, n.y - k.y) > F.HOME.out || !(isHome(n) || isBack(n))) continue;
         F.cam.z = z; F.cam.x = n.x; F.cam.y = n.y; F.clampCam(); const V = F.view, top = V.ch / 2 + V.vy - V.bandH / 2, bot = top + V.bandH;
@@ -266,10 +266,11 @@ MOLD = """() => {
   const h = put('house', 70, -60); if (!h) return ['no ground for the test house']; F.navRebuild();
   // the screen's line, with the house the only building near: a spot straight down the screen from it (the same land x), the finger a little to
   // the side; the ghost snaps onto the line (within GUIDE_ON: the squares are turned to it)
-  const lh = F.landXY(h.x, h.y); let p = null;
-  for (const d of [200, -200, 240, -240]) { const q = F.landAt(lh.x, lh.y + d); const lq = F.landXY(q.x, q.y); if (!F.canPlace(0, 'house', q.x, q.y) && !G.blds.some((b) => { const l = F.landXY(b.x, b.y); return b !== h && Math.hypot(b.x - q.x, b.y - q.y) < F.GUIDE_R && (Math.abs(l.x - lh.x) < 20 || Math.abs(l.y - lq.y) < 20); })) { p = q; break; } }   // no other building's screen line near the spot
+  const WXY = (x, y) => ({ x, y }); // the guides run on the world's squares since Nov 4
+  const lh = WXY(h.x, h.y); let p = null;
+  for (const d of [200, -200, 240, -240]) { const q = WXY(lh.x, lh.y + d); const lq = WXY(q.x, q.y); if (!F.canPlace(0, 'house', q.x, q.y) && !G.blds.some((b) => { const l = WXY(b.x, b.y); return b !== h && Math.hypot(b.x - q.x, b.y - q.y) < F.GUIDE_R && (Math.abs(l.x - lh.x) < 20 || Math.abs(l.y - lq.y) < 20); })) { p = q; break; } }   // no other building's screen line near the spot
   if (!p) return bad.concat(["no open ground on the house's screen line"]);
-  const fg = F.landAt(lh.x + 9, F.landXY(p.x, p.y).y), s = F.snapGhost(0, 'house', fg.x, fg.y, 30), off = F.landXY(s.x, s.y).x - lh.x;
+  const fg = WXY(lh.x + 9, WXY(p.x, p.y).y), s = F.snapGhost(0, 'house', fg.x, fg.y, 30), off = WXY(s.x, s.y).x - lh.x;
   if (Math.abs(off) > F.GUIDE_ON) bad.push(`the ghost did not snap onto the house's land x (off by ${off.toFixed(1)})`);
   // the boxes' ghost: no picture stamped, the box drawn
   { G.place = { kind: 'house', at: s, pts: [], cells: null }; let imgs = 0, lines = 0; const oi = F.ctx.drawImage, ol = F.ctx.lineTo; F.ctx.drawImage = function (...a) { if (a[0] && a[0].ax !== undefined) imgs++; return oi.apply(this, a); }; F.ctx.lineTo = function (...a) { lines++; return ol.apply(this, a); };

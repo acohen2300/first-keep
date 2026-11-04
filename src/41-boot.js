@@ -590,6 +590,7 @@ window.__fk = {
 	landXY,
 	inLand,
 	RICH,
+	FIND_SIZE,
 	LAYOUT,
 	WAVE,
 	scoreAll,

@@ -87,6 +87,9 @@ const CARDS = {
 								replantWhy(0, b) ? 'dis' : 'go',
 							)
 						: '',
+					done && B.drop && cutOut(0, B.drop).length
+						? btn(`replantall:${b.id}`, 'Replant all', `${cutOut(0, B.drop).length} cut out`, 'go')
+						: '',
 					!done
 						? btn(
 								`sendbld:${b.id}`,

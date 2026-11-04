@@ -382,6 +382,9 @@ const MKT_SELL = ['f', 'w', 's', 'i', ...WARES],
 const MKTK = [...GOODK, 'f', 'w', 's', 'i'];
 const RATE_OF = { bush: 0.9, fish: 0.8, tree: 0.75, stone: 0.55, gold: 0.6, iron: 0.5, meat: 1.2 }; // what a villager gathers a second from each kind of find (fields carry their own rate)
 
+// Bigger finds (Albert, Nov 4, C): a patch lasts long enough that villagers are not moved every few minutes, and gold lasts into the late
+// game instead of running dry; one multiplier a kind, on every find of that kind (fish keep their own law, layFish). Tuned after play.
+const FIND_SIZE = { bush: 3, tree: 2, gold: 2.5, stone: 1.5, iron: 1.5 };
 // The land's character: each game rolls one, the same for all four corners (fair), so no two games share a map. amt: what each resource
 // is worth there; extra: one more deposit of its specialty, farther out; spread: how far the rings may stretch.
 const LAND = {
@@ -420,7 +423,7 @@ HOME.out = Math.ceil((WALL_R + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC;
 // looks for work, and is leashed, within the wall ring of its drop-off. Every home find's every node lies inside it (HOME.clear < WALL_R),
 // the wild past it is reached from a drop-off built out there. r(t) keeps its form (decision 1): half of REACH at the loss, all from tau on.
 const REACH = WALL_R;
-const SEARCH = { x: REACH / 2, y: REACH / 2, tau: 10, again: 2 };
+const SEARCH = { x: REACH / 2, y: REACH * 1.5, tau: 20, again: 2 }; // B (Nov 4): the look grows from half the ring to twice it over 20 s; the drop-off leash and the forager's rate still decide
 const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
 // Zone 1 (Albert, Nov 1; on, Nov 2: "Close was supposed to have enough to get you to the first age between you and the corner"): a berry
 // patch and a small grove that hold Bronze's cost with a margin for the villagers and houses on the way (600 food, 250 wood), worked out from

@@ -1318,11 +1318,11 @@ const BLD = {
 		t: 12,
 		age: 0,
 		crop: 'wood',
-		reserve: 500,
+		reserve: 1200, // about 36 minutes of one worker at 1x (0.55 a second; Albert, Nov 4: "36 and 12")
 		rate: 0.55,
 		walk: true,
 		sab: 'burn',
-		desc: 'A coppice plot: 500 wood, then it is cut out; tap it to replant for half the cost and it regrows from the stumps. One villager tends it. Slower than a wild forest, but safe at home.',
+		desc: 'A coppice plot: 1,200 wood, then it is cut out; tap it to replant for half the cost and it regrows from the stumps. One villager tends it. Slower than a wild forest, but safe at home.',
 	},
 	mill: {
 		cap: [3, 3, 3, 3, 3],
@@ -1916,7 +1916,7 @@ const BLD = {
 		desc: 'Spins and weaves wool into cloth (2 wool make 1), or brews ale from your grain (3 food make 1 beer): goods to trade. One villager works it; the card picks what it makes.',
 	},
 	mint: {
-		cap: [0, 0, 0, 6, 12],
+		cap: [0, 0, 2, 6, 12], // two in Classical (Albert, Nov 4: the mint at the third age; rate and cost tuned after play)
 		invest: 6,
 		name: 'Mint',
 		fp: 3,
@@ -1924,7 +1924,7 @@ const BLD = {
 		h: 22,
 		cost: { s: 300, g: 200 },
 		t: 45,
-		age: 3,
+		age: 2,
 		crop: 'gold',
 		makes: { gold: { from: { s: 1 }, rate: 0.2 } },
 		fx: [{ s: 'gather', k: ['gold', 'mint'], m: 1.15 }],
@@ -2846,6 +2846,20 @@ const TECH = [
 		t: 15,
 		fx: [{ s: 'carry', a: 3 }],
 		desc: 'Villagers carry 3 more.',
+	},
+	{
+		// J2 (Albert, Nov 4): the Town Center trains two villagers at once, so a player can keep pace with a side that never stops training
+		id: 'midwives',
+		name: 'Midwives',
+		at: 'keep',
+		line: 'Household',
+		age: 1,
+		w: 4,
+		when: '1550 BC',
+		cost: { f: 150, g: 50 },
+		t: 30,
+		fx: [{ s: 'twin', k: 'vil', a: 1 }],
+		desc: 'The Town Center trains two villagers at once.',
 	},
 	{
 		id: 'census',
@@ -4865,6 +4879,22 @@ const TECH = [
 		desc: 'Trade pays 25% more.',
 	},
 	{
+		// G, the bank (Albert, Nov 4): gold held earns interest, to a cap, so a rich side stays rich after the mines run dry. Florentine deposits
+		// paid about 8 to 10 in the hundred a year (from memory); a game year is 12 minutes, so about 1 in the hundred a minute
+		id: 'bank',
+		name: 'Bank',
+		at: 'market',
+		line: 'Trade',
+		age: 3,
+		w: 6,
+		when: '1397',
+		cost: { g: 300, s: 200 },
+		t: 56,
+		fx: [{ s: 'interest', a: 0.01 }],
+		need: ['credit'],
+		desc: 'Gold in your treasury earns 1% a minute, up to 40 gold a minute.',
+	},
+	{
 		id: 'banking',
 		name: 'Banking',
 		at: 'market',
@@ -6089,6 +6119,9 @@ const MKT_SELL = ['f', 'w', 's', 'i', ...WARES],
 const MKTK = [...GOODK, 'f', 'w', 's', 'i'];
 const RATE_OF = { bush: 0.9, fish: 0.8, tree: 0.75, stone: 0.55, gold: 0.6, iron: 0.5, meat: 1.2 }; // what a villager gathers a second from each kind of find (fields carry their own rate)
 
+// Bigger finds (Albert, Nov 4, C): a patch lasts long enough that villagers are not moved every few minutes, and gold lasts into the late
+// game instead of running dry; one multiplier a kind, on every find of that kind (fish keep their own law, layFish). Tuned after play.
+const FIND_SIZE = { bush: 3, tree: 2, gold: 2.5, stone: 1.5, iron: 1.5 };
 // The land's character: each game rolls one, the same for all four corners (fair), so no two games share a map. amt: what each resource
 // is worth there; extra: one more deposit of its specialty, farther out; spread: how far the rings may stretch.
 const LAND = {
@@ -6127,7 +6160,7 @@ HOME.out = Math.ceil((WALL_R + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC;
 // looks for work, and is leashed, within the wall ring of its drop-off. Every home find's every node lies inside it (HOME.clear < WALL_R),
 // the wild past it is reached from a drop-off built out there. r(t) keeps its form (decision 1): half of REACH at the loss, all from tau on.
 const REACH = WALL_R;
-const SEARCH = { x: REACH / 2, y: REACH / 2, tau: 10, again: 2 };
+const SEARCH = { x: REACH / 2, y: REACH * 1.5, tau: 20, again: 2 }; // B (Nov 4): the look grows from half the ring to twice it over 20 s; the drop-off leash and the forager's rate still decide
 const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
 // Zone 1 (Albert, Nov 1; on, Nov 2: "Close was supposed to have enough to get you to the first age between you and the corner"): a berry
 // patch and a small grove that hold Bronze's cost with a margin for the villagers and houses on the way (600 food, 250 wood), worked out from
@@ -6401,6 +6434,10 @@ const WHY = {
 	tally: 'Notched bones counted the days of the moon before there was writing; the Ishango bone is 20,000 years old.',
 	baskets:
 		'Woven baskets and carrying frames let one gatherer bring home more per trip; the oldest found are 10,000 years old.',
+	midwives:
+		'Egyptian midwives are named in the Ebers papyrus (about 1550 BC); safer births meant more children lived to work.',
+	bank:
+		'The Medici bank (1397) paid interest on deposits and lent them on; gold held at a bank earned while it waited.',
 	census:
 		'Rome counted its people every five years to tax and to levy; a state that knows its numbers can feed and house more.',
 	charter:
@@ -8416,7 +8453,9 @@ const DANGER = [0, 1, 2, 3, 4].map(() => new Uint8Array(NC * NC));
 const DISC = [];
 const discRows = (R) =>
 	DISC[R] || (DISC[R] = Array.from({ length: 2 * R + 1 }, (_, i) => Math.floor(Math.sqrt(R * R - (i - R) ** 2))));
-function stampDanger(D, px, py, r) {
+// B (Albert, Nov 4: "the danger rule is too strict"): danger is a level, not yes or no: 3 a live foe, a tower's reach or a fire; 2 a guarded find;
+// 1 a fright remembered. Walking keeps off any of it; work is given up only at 2 or more (unsafe), so a remembered fright no longer empties a find
+function stampDanger(D, px, py, r, lv = 3) {
 	const R = Math.ceil(r / NAVC),
 		cx = Math.floor(px / NAVC),
 		cy = Math.floor(py / NAVC),
@@ -8425,7 +8464,7 @@ function stampDanger(D, px, py, r) {
 		const w = W[y - cy + R],
 			a = Math.max(0, cx - w),
 			b = Math.min(NC - 1, cx + w);
-		if (a <= b) D.fill(1, y * NC + a, y * NC + b + 1);
+		for (let i = y * NC + a; i <= y * NC + b; i++) if (D[i] < lv) D[i] = lv;
 	}
 }
 function dangerMap() {
@@ -8437,7 +8476,7 @@ function dangerMap() {
 			r = ((gk && UNIT[gk].raid) || 90) + 40;
 		for (const o of sides)
 			if (!gk || isFoe(WILD, { owner: o, id: -1, x: f.x, y: f.y }, { owner: WILD, kind: gk, find: f.id, hx: f.x, hy: f.y }))
-				stampDanger(DANGER[o], f.x, f.y, r); // only where its guards would fight that side: the same test the guards use (a group at peace, 4b)
+				stampDanger(DANGER[o], f.x, f.y, r, 2); // only where its guards would fight that side: the same test the guards use (a group at peace, 4b)
 	}
 	for (const v of G.threats || []) {
 		if (UNIT[v.kind].meat) continue;
@@ -8456,7 +8495,7 @@ function dangerMap() {
 	for (const o of sides) {
 		const p = G.P[o];
 		p.scares = (p.scares || []).filter((s) => s.t > G.t);
-		for (const s of p.scares) stampDanger(DANGER[o], s.x, s.y, DANGER_R.mem);
+		for (const s of p.scares) stampDanger(DANGER[o], s.x, s.y, DANGER_R.mem, 1);
 	}
 }
 // why a spot is on a side's danger map, nearest cause first: { scare } when the only cause is a fright remembered there (DANGER_R.mem),
@@ -8928,10 +8967,10 @@ function snapGhost(o, kind, x, y, tol) {
 			// other (Build 63, Albert: "when a PDF sees you moving an element it brings up alignment lines, with a light snap pull"; preview 54:
 			// the screen's lines, since the world's axes read as diagonals). The land's frame is the screen's: the point of the ghost's land
 			// column or row nearest the building's centre; the world's squares allow it when the snapped centre lands on the line
-			const lb = landXY(b.x, b.y),
-				lg = landXY(x, y),
-				u = landAt(lb.x, lg.y),
-				v = landAt(lg.x, lb.y);
+			// Nov 4 (Albert: "the grid lines are out of alignment because of the rotation of the map"): the guides run along the world's squares,
+			// the grid every building stands on, so they turn with the map (they were the screen's since preview 54)
+			const u = { x: b.x, y },
+				v = { x, y: b.y };
 			consider(u.x, u.y, 'u');
 			consider(v.x, v.y, 'v');
 		}
@@ -8941,11 +8980,11 @@ function snapGhost(o, kind, x, y, tol) {
 		if (axis) {
 			// the line's point snapped to a square may sit a few units off the line (the squares are turned to it): of the squares round it, the
 			// ones near enough the line are candidates; none near enough, no pull
-			const lc = landXY(cx, cy);
+			const lc = { x: cx, y: cy };
 			for (let j = -1; j <= 1; j++)
 				for (let i = -1; i <= 1; i++) {
 					const s = { gx: s0.gx + i, gy: s0.gy + j, x: s0.x + i * NAVC, y: s0.y + j * NAVC },
-						ls = landXY(s.x, s.y);
+						ls = s;
 					if (Math.abs(axis === 'u' ? ls.x - lc.x : ls.y - lc.y) > GUIDE_ON) continue;
 					take(s);
 				}
@@ -9639,7 +9678,7 @@ function makeMap() {
 	}
 	layFish(N); // 2 water: the fish
 	for (const n of N) {
-		const m = fixed.has(n) ? 1 : Ld.amt[n.type] || 1;
+		const m = fixed.has(n) ? 1 : (Ld.amt[n.type] || 1) * (FIND_SIZE[n.kind] || 1); // zone 1 is Bronze's cost, worked out: left as it is
 		if (m !== 1) {
 			n.amt *= m;
 			n.max *= m;
@@ -9834,12 +9873,13 @@ const riverRuns = () => {
 function layFish(N) {
 	G.lakes.forEach((L, i) => {
 		if (L.river) {
-			if (i % WATER.fish === 0) N.push(node('fish', 'food', L.x, L.y, 350 * RICH));
+			if (i % WATER.fish === 0) N.push(node('fish', 'food', L.x, L.y, FISH.amt * RICH));
 			return;
 		}
-		const n = Math.round(L.r / 10);
+		const n = Math.round(L.r / 10),
+			a = Math.round(FISH.amt * RICH * (L.r / FISH.r0)); // I (Nov 4): the spots go with the shore (r), each spot's stock with r too, so a lake's stock goes with its area (r²)
 		shoreWalk(L, -8, n, (fx, fy) => {
-			if (!onLand(worldXY(fx, fy).x, worldXY(fx, fy).y)) N.push(node('fish', 'food', fx, fy, 350 * RICH)); // onLand reads the world's frame (preview 51)
+			if (!onLand(worldXY(fx, fy).x, worldXY(fx, fy).y)) N.push(node('fish', 'food', fx, fy, a)); // onLand reads the world's frame (preview 51)
 		});
 	});
 }
@@ -10397,6 +10437,21 @@ function replant(o, id) {
 	G.treeV = (G.treeV || 0) + 1;
 	if (o === 0) say(`${bldName(0, b.kind)} replanted.`, 'good', TOAST.short);
 	return true;
+}
+// Replant all (Albert, Nov 4): from a drop-off, every cut-out plot of what it takes, as many as can be paid for, nearest first
+const cutOut = (o, types) =>
+	G.blds.filter((b) => b.owner === o && b.hp > 0 && b.node && BLD[b.kind].reserve && b.node.amt <= 0 && types.includes(b.node.type));
+function replantAll(o, at) {
+	let n = 0;
+	for (const b of cutOut(o, BLD[at.kind].drop || []).sort((a, c) => dist(a, at) - dist(c, at)))
+		if (!replantWhy(o, b)) {
+			pay(G.P[o], scaled(BLD[b.kind].cost, 0.5), 'buildings');
+			b.node.amt = b.node.max = BLD[b.kind].reserve;
+			n++;
+		}
+	if (n) G.treeV = (G.treeV || 0) + 1;
+	if (o === 0) say(n ? `${n} replanted.` : 'Not enough to replant.', n ? 'good' : '', TOAST.short);
+	return n;
 }
 // Take a building down: half its cost back (all of it in the first 15% of the build); every order waiting inside is cancelled, so what
 // was paid for it comes back in full (a muster's too: before, a muster in the line was lost). Never the Town Center.
@@ -11811,9 +11866,15 @@ function bldTick(b, dt) {
 		else {
 			b.blocked = false;
 			j.left -= dt;
+			const j2 = b.q[1]; // Midwives (J2): a second villager in the line trains alongside the first, room allowing
+			if (j2 && j.kind === 'vil' && j2.kind === 'vil' && fxv(o, 'twin', ['vil']).a > 0 && popOf(o) + 1 < capOf(o)) j2.left -= dt;
 			if (j.left <= 0) {
 				b.q.shift();
 				jobDone(b, j);
+				if (j2 && j2.left <= 0) {
+					b.q.shift();
+					jobDone(b, j2);
+				}
 			}
 		}
 	} else if (!j) b.blocked = false;
@@ -11975,7 +12036,7 @@ const dockNear = (o, n) =>
 			dist(b, n) < DOCKR,
 	);
 const nodeFits = (n, job) => n.type === job;
-const unsafe = (p, o) => !!DANGER[o][gcell(p.x, p.y)]; // on the side's danger map (09-nav: dangerMap); a field is never left for it
+const unsafe = (p, o) => DANGER[o][gcell(p.x, p.y)] >= 2; // on the side's danger map (09-nav: dangerMap); a field is never left for it
 // ───────────────────────── Where a worker gathers: the forager's rate (Build 59)
 // A villager is a forager, and nature's rule is the rate of return (Holling 1959; Charnov 1976, the marginal value theorem): over the rest
 // of a find's life, what it brings home a second. With c the load, g the gathering rate, d the walk from the find to its drop-off, v the
@@ -12143,7 +12204,7 @@ function pickVil(o, to, types, site, strict) {
 	if (idle.length) return nearest(idle, to);
 	if (strict) return null;
 	const T = types ? [].concat(types) : null,
-		free = V.filter((u) => u.job && u.job !== 'repair' && !GOODK.includes(u.job)),
+		free = V.filter((u) => u.job && u.job !== 'repair' && !GOODK.includes(u.job) && !u.sent), // A (Albert, Nov 4): one you placed by hand stays placed
 		same = T ? free.filter((u) => T.includes(u.job)) : [],
 		pool = same.length ? same : free;
 	if (!pool.length) return null; // nobody is pulled off a site or a post: with all hands busy, the order waits
@@ -12548,10 +12609,12 @@ function vilTick(u, dt, SP) {
 			if (u.node !== n) crowd(n, 1);
 			u.node = n;
 		} else {
+			// B (Albert, Nov 4: "when they finish they don't know what to do"): its find is gone, so the focus ends and it looks for the
+			// next find of the same kind, as any worker does (was: it waited on the spot for ever, D-093)
+			if (u.node && !u.node.farm) u.was = u.node.kind;
+			u.focus = null;
+			u.fn = null;
 			u.node = null;
-			u.idle = true;
-			if (u.fpos) moveTo(u, u.fpos.x, u.fpos.y, dt, WORK_R.other, SP);
-			return;
 		}
 	}
 	if (u.plot && !u.node && !u.hunt && u.job) {
@@ -21516,7 +21579,7 @@ function drawBld(b, s) {
 		smoke(sx + dx * z, sy - h * z, b.id, z);
 	} // a hearth always; a forge, a foundry or a Town Center only while it works (Build 52: smoke shows who is busy)
 	blaze(b, sx, sy, z);
-	if (idlePost(b)) idleMark(sx, sy, z * 1.2);
+	if (idlePost(b)) idleMark(sx, sy, z * 1.2, '+'); // an empty post: + (wants a worker), not the idle villager's z
 	const M = maxHpB(b.owner, b.kind);
 	if (b.hp < M - 1 && !(B.camp && b.hp >= M * CAMP.mend)) bar(sx, sy - c.ay * k - 4, Math.min(60 * z, B.fp * NAVC * z), b.hp / M, G.P[b.owner].color); // a camp piece weathers a little every minute: its bar shows only once it wants mending (CAMP.mend)
 	if (G.wonder && G.wonder.id === b.id) {
@@ -22880,8 +22943,8 @@ function drawGuides(sp, h) {
 	for (const b of G.blds) {
 		if (b.owner !== 0 || b.hp <= 0 || BLD[b.kind].wallish || Math.abs(b.x - sp.x) >= GUIDE_R || Math.abs(b.y - sp.y) >= GUIDE_R) continue;
 		const bh = halfOf(b),
-			ls = landXY(sp.x, sp.y),
-			lb = landXY(b.x, b.y);
+			ls = sp,
+			lb = b; // the world's squares, turned with the map (Nov 4), as snapGhost pulls
 		for (const [same, ax] of [
 			[Math.abs(ls.x - lb.x) < GUIDE_ON, 'y'],
 			[Math.abs(ls.y - lb.y) < GUIDE_ON, 'x'],
@@ -22890,8 +22953,8 @@ function drawGuides(sp, h) {
 				// the line through both, in the land's frame, a little past each
 				const lo = Math.min(ls[ax], lb[ax]) - 12 - h - bh,
 					hi = Math.max(ls[ax], lb[ax]) + 12 + h + bh,
-					p0 = landAt(ax === 'x' ? lo : ls.x, ax === 'y' ? lo : ls.y),
-					p1 = landAt(ax === 'x' ? hi : ls.x, ax === 'y' ? hi : ls.y);
+					p0 = { x: ax === 'x' ? lo : ls.x, y: ax === 'y' ? lo : ls.y },
+					p1 = { x: ax === 'x' ? hi : ls.x, y: ax === 'y' ? hi : ls.y };
 				ctx.moveTo(SX(p0.x, p0.y), SY(p0.y, 0, p0.x));
 				ctx.lineTo(SX(p1.x, p1.y), SY(p1.y, 0, p1.x));
 			}
@@ -24157,6 +24220,7 @@ function order(S, h) {
 					u.py = y;
 					u.idleT = 0;
 					u.focus = null;
+					u.sent = true; // A (Albert, Nov 4): placed by hand, it is not one of the idle ones the sword sends
 				}
 			});
 		};
@@ -24900,6 +24964,7 @@ function armyStatus(u) {
 	return 'other';
 }
 const idleSoldier = (u) => {
+	if (u.sent && u.bn == null) return false; // placed by hand: it outranks the idle call (A, Nov 4); All still takes it, and a squad its own
 	const s = armyStatus(u);
 	return s === 'hold' || s === 'rally';
 };
@@ -24980,6 +25045,7 @@ function dress(S, at, dir, shape, secs, arc) {
 		u.px = at.x;
 		u.py = at.y;
 		u.idleT = 0;
+		u.sent = false;
 		u.drill = { shape, fx: dir.x, fy: dir.y, t0: G.t, until: G.t + secs, px: at.x, py: at.y, arc: arc || null, from: { x: u.x, y: u.y } };
 	}
 }
@@ -25059,6 +25125,7 @@ function ambushAt(h) {
 		u.px = spot.x;
 		u.py = spot.y;
 		u.idleT = 0;
+		u.sent = false;
 		u.tgt = null;
 		u.focus = null;
 		u.drill = null;
@@ -25894,6 +25961,9 @@ const CARDS = {
 									: `${costText(scaled(B.cost, 0.5))} · half the cost`,
 								replantWhy(0, b) ? 'dis' : 'go',
 							)
+						: '',
+					done && B.drop && cutOut(0, B.drop).length
+						? btn(`replantall:${b.id}`, 'Replant all', `${cutOut(0, B.drop).length} cut out`, 'go')
 						: '',
 					!done
 						? btn(
@@ -27485,7 +27555,7 @@ function ui(force) {
 			clk = G.wonder ? clock(Math.max(0, G.wonder.end - G.t)) : lim ? clock(Math.max(0, lim - G.t)) : clock(G.t);
 		let ready = 0;
 		for (const v of G.rdy.values()) ready += v; // research you can start now (the age counts: it is research too)
-		const idleN = unitsOf(0, 'vil').filter(freeVil).length + G.blds.filter(idlePost).length, // every Z on the map: idle people and empty posts (D-089)
+		const idleN = unitsOf(0, 'vil').filter(freeVil).length, // idle people only (Albert, Nov 4: an empty building is not an idle villager; it shows its own +)
 			sol = armyOf(0).length,
 			rank = 1 + G.P.filter((q) => q.id && q.id !== WILD && q.score.total > p.score.total).length,
 			sky = `${SEASON_ICON[season().name]}${WX_ICON[G.wx] || ''}${G.night > 0.5 ? (moonLight() < 0.25 ? '🌑' : '🌙') : ''}`,
@@ -28243,6 +28313,10 @@ const PLAY = {
 		const why = replantWhy(0, b);
 		if (why) say(why, '', TOAST.short);
 		else replant(0, b.id);
+	},
+	replantall(a) {
+		const b = G.blds.find((x) => x.id === Number(a) && x.owner === 0);
+		if (b) replantAll(0, b);
 	},
 	boxcut(a) {
 		if (G.card && G.card.type === 'box') boxCut(G.card.r, Number(a));
@@ -30018,7 +30092,9 @@ const onScreen = (x, y) => Math.abs(x - cam.x) < cw / 2 / cam.z && Math.abs(y - 
 // Real ratios on a compressed calendar: one year is 12 minutes, and every rate below is set against that clock.
 const FLEECE = 7,
 	LAMBS = 0.6,
-	FLOCK = 12; // wool per sheep at the spring shearing; a flock grows by logistic growth (Verhulst), r = 0.6 a spring toward a pasture that carries 12 (Build 56)
+	FLOCK = 12, // wool per sheep at the spring shearing; a flock grows by logistic growth (Verhulst), r = 0.6 a spring toward a pasture that carries 12 (Build 56)
+	FISH = { amt: 350, r0: 60, r: 0.5 }, // I (Albert, Nov 4): a spot's stock at a lake of radius r0; fish regrow each spring by Verhulst's law, r a year, to the spot's own K: fished past half they come back slower, fished out they are gone (Schaefer 1954)
+	MUTTON = 100; // H (Albert, Nov 4): food a sheep gives at slaughter (from memory: AoE's sheep 100); the take is Schaefer's (1954): the flock held at half the pasture, K/2, where it regrows fastest, so the yield, rK/4 a year, lasts for ever
 
 const stopsAll = () => G.finds.filter((f) => f.kind === 'stop');
 const postAt = (f) => G.blds.find((b) => b.kind === 'tpost' && b.sid === f.id && b.hp > 0);
@@ -30327,11 +30403,18 @@ function seasonTurn() {
 				if (p.id === 0 && lost >= 20) news('home', `${lost} food spoiled in store this season.`, 'soft', TOAST.mid);
 			}
 		}
+	if (s === 'Spring') for (const n of G.nodes) if (n.kind === 'fish' && n.amt > 0 && n.amt < n.max) n.amt = Math.min(n.max, logistic(n.amt, FISH.r, n.max));
 	for (const b of G.blds)
 		if (b.kind === 'pasture' && b.prog >= 1 && b.hp > 0) {
 			if (s === 'Spring') {
 				b.node.amt += (b.sheep || 0) * FLEECE;
 				b.sheep = Math.min(FLOCK, Math.round(logistic(b.sheep || 0, LAMBS, FLOCK))); // Verhulst: fast while the pasture is empty, slowing as it fills
+				const cull = b.node.wk > 0 ? Math.max(0, b.sheep - FLOCK / 2) : 0; // a shepherd culls the flock back to half: meat, and the most lambs next spring
+				if (cull) {
+					b.sheep -= cull;
+					stash(b.owner, 'food', cull * MUTTON);
+					if (b.owner === 0) news('land', `${cull} sheep to the butcher: ${cull * MUTTON} food.`, 'good', TOAST.short, b);
+				}
 			}
 			const wolf = G.units.find(
 				(v) =>
@@ -30581,11 +30664,23 @@ function upkeepTick() {
 		}
 }
 
+// the Bank (G): once a minute, interest on the gold held, to BANK_CAP
+const BANK_CAP = 40;
+function bankTick() {
+	for (const p of G.P) {
+		if (p.id === WILD || !p.alive) continue;
+		const r = fxv(p.id, 'interest').a;
+		if (r > 0 && p.res.g > 0) stash(p.id, 'gold', Math.min(BANK_CAP, Math.floor(p.res.g * r)));
+	}
+}
 function econTick(dt) {
 	if (G.tick % 30 === 0) {
 		natureTick();
 		upkeepTick();
-		if (G.tick % 1800 === 0) campWearTick(); // a minute of weather on the camps
+		if (G.tick % 1800 === 0) {
+			campWearTick(); // a minute of weather on the camps
+			bankTick();
+		}
 	}
 	if (every(BEAT.health)) healthTick();
 	fireTick(dt);
@@ -33159,6 +33254,14 @@ function matchLog() {
 		if (sol < L.seen.sol) L.lost.sol += L.seen.sol - sol;
 	}
 	L.seen = { vil, sol };
+	// L (Albert, Nov 4): a line when a find runs dry (not trees: a forest has thousands), with who worked it last
+	const dry = L.dry || (L.dry = []),
+		gone = new Set(dry.map((d) => d.id)); // rebuilt each time: a Set does not survive a save
+	for (const n of G.nodes)
+		if (n.amt <= 0 && !n.farm && n.kind !== 'tree' && !gone.has(n.id)) {
+			gone.add(n.id);
+			dry.push({ id: n.id, t: Math.round(G.t), kind: n.kind, at: coord(n.x, n.y) });
+		}
 	if (Math.floor(G.t) % 60 > 1 && L.rows.length) return;
 	const m = Math.round(G.t / 60);
 	if (L.rows.length && L.rows[L.rows.length - 1].m === m) return;
@@ -33166,6 +33269,7 @@ function matchLog() {
 	L.rows.push({
 		m,
 		tcIdle: L.idle,
+		jobs: unitsOf(0, 'vil').reduce((a, u) => ((a[freeVil(u) ? 'idle' : u.job || 'none'] = (a[freeVil(u) ? 'idle' : u.job || 'none'] || 0) + 1), a), {}), // your villagers by job (L)
 		lost: { ...L.lost },
 		// a side a line, short so a long game stays small: [age, villagers, idle, soldiers, food, wood, stone, gold, iron, gathered this minute], or 0 once it fell
 		s: G.P.slice(0, 4).map((p, i) =>
@@ -33181,7 +33285,7 @@ function matchLog() {
 function matchLogText() {
 	const L = G.mlog || { rows: [] },
 		mail = (G.mail || []).filter((x) => x.grp === 'war' || x.grp === 'realm' || x.grp === 'home').map((x) => `${clock(x.t)} ${x.text}${x.n > 1 ? ' ×' + x.n : ''}`);
-	return JSON.stringify({ build: BUILD, seed: G.seed, sides: G.P.slice(0, 4).map((p) => p.name), cols: 'age vil idle sol f w s g i got', tcIdle: 'seconds your Town Center trained nothing, that minute', lost: 'your villagers and soldiers lost, that minute', civ: G.P[0].civ, diff: G.diff, end: clock(G.t), over: G.over || null, rows: L.rows, ms: G.ms || [], mail });
+	return JSON.stringify({ build: BUILD, seed: G.seed, sides: G.P.slice(0, 4).map((p) => p.name), cols: 'age vil idle sol f w s g i got', tcIdle: 'seconds your Town Center trained nothing, that minute', lost: 'your villagers and soldiers lost, that minute', civ: G.P[0].civ, diff: G.diff, end: clock(G.t), over: G.over || null, jobs: 'your villagers by job, that minute', dry: (L.dry || []).map(({ t, kind, at }) => `${clock(t)} ${kind} ran dry at ${at}`), rows: L.rows, ms: G.ms || [], mail });
 }
 function copyLog() {
 	const t = matchLogText(),
@@ -33970,6 +34074,7 @@ window.__fk = {
 	landXY,
 	inLand,
 	RICH,
+	FIND_SIZE,
 	LAYOUT,
 	WAVE,
 	scoreAll,

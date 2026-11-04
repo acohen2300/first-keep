@@ -215,7 +215,9 @@ const DANGER = [0, 1, 2, 3, 4].map(() => new Uint8Array(NC * NC));
 const DISC = [];
 const discRows = (R) =>
 	DISC[R] || (DISC[R] = Array.from({ length: 2 * R + 1 }, (_, i) => Math.floor(Math.sqrt(R * R - (i - R) ** 2))));
-function stampDanger(D, px, py, r) {
+// B (Albert, Nov 4: "the danger rule is too strict"): danger is a level, not yes or no: 3 a live foe, a tower's reach or a fire; 2 a guarded find;
+// 1 a fright remembered. Walking keeps off any of it; work is given up only at 2 or more (unsafe), so a remembered fright no longer empties a find
+function stampDanger(D, px, py, r, lv = 3) {
 	const R = Math.ceil(r / NAVC),
 		cx = Math.floor(px / NAVC),
 		cy = Math.floor(py / NAVC),
@@ -224,7 +226,7 @@ function stampDanger(D, px, py, r) {
 		const w = W[y - cy + R],
 			a = Math.max(0, cx - w),
 			b = Math.min(NC - 1, cx + w);
-		if (a <= b) D.fill(1, y * NC + a, y * NC + b + 1);
+		for (let i = y * NC + a; i <= y * NC + b; i++) if (D[i] < lv) D[i] = lv;
 	}
 }
 function dangerMap() {
@@ -236,7 +238,7 @@ function dangerMap() {
 			r = ((gk && UNIT[gk].raid) || 90) + 40;
 		for (const o of sides)
 			if (!gk || isFoe(WILD, { owner: o, id: -1, x: f.x, y: f.y }, { owner: WILD, kind: gk, find: f.id, hx: f.x, hy: f.y }))
-				stampDanger(DANGER[o], f.x, f.y, r); // only where its guards would fight that side: the same test the guards use (a group at peace, 4b)
+				stampDanger(DANGER[o], f.x, f.y, r, 2); // only where its guards would fight that side: the same test the guards use (a group at peace, 4b)
 	}
 	for (const v of G.threats || []) {
 		if (UNIT[v.kind].meat) continue;
@@ -255,7 +257,7 @@ function dangerMap() {
 	for (const o of sides) {
 		const p = G.P[o];
 		p.scares = (p.scares || []).filter((s) => s.t > G.t);
-		for (const s of p.scares) stampDanger(DANGER[o], s.x, s.y, DANGER_R.mem);
+		for (const s of p.scares) stampDanger(DANGER[o], s.x, s.y, DANGER_R.mem, 1);
 	}
 }
 // why a spot is on a side's danger map, nearest cause first: { scare } when the only cause is a fright remembered there (DANGER_R.mem),
@@ -727,10 +729,10 @@ function snapGhost(o, kind, x, y, tol) {
 			// other (Build 63, Albert: "when a PDF sees you moving an element it brings up alignment lines, with a light snap pull"; preview 54:
 			// the screen's lines, since the world's axes read as diagonals). The land's frame is the screen's: the point of the ghost's land
 			// column or row nearest the building's centre; the world's squares allow it when the snapped centre lands on the line
-			const lb = landXY(b.x, b.y),
-				lg = landXY(x, y),
-				u = landAt(lb.x, lg.y),
-				v = landAt(lg.x, lb.y);
+			// Nov 4 (Albert: "the grid lines are out of alignment because of the rotation of the map"): the guides run along the world's squares,
+			// the grid every building stands on, so they turn with the map (they were the screen's since preview 54)
+			const u = { x: b.x, y },
+				v = { x, y: b.y };
 			consider(u.x, u.y, 'u');
 			consider(v.x, v.y, 'v');
 		}
@@ -740,11 +742,11 @@ function snapGhost(o, kind, x, y, tol) {
 		if (axis) {
 			// the line's point snapped to a square may sit a few units off the line (the squares are turned to it): of the squares round it, the
 			// ones near enough the line are candidates; none near enough, no pull
-			const lc = landXY(cx, cy);
+			const lc = { x: cx, y: cy };
 			for (let j = -1; j <= 1; j++)
 				for (let i = -1; i <= 1; i++) {
 					const s = { gx: s0.gx + i, gy: s0.gy + j, x: s0.x + i * NAVC, y: s0.y + j * NAVC },
-						ls = landXY(s.x, s.y);
+						ls = s;
 					if (Math.abs(axis === 'u' ? ls.x - lc.x : ls.y - lc.y) > GUIDE_ON) continue;
 					take(s);
 				}

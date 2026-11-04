@@ -3,7 +3,9 @@
 // Real ratios on a compressed calendar: one year is 12 minutes, and every rate below is set against that clock.
 const FLEECE = 7,
 	LAMBS = 0.6,
-	FLOCK = 12; // wool per sheep at the spring shearing; a flock grows by logistic growth (Verhulst), r = 0.6 a spring toward a pasture that carries 12 (Build 56)
+	FLOCK = 12, // wool per sheep at the spring shearing; a flock grows by logistic growth (Verhulst), r = 0.6 a spring toward a pasture that carries 12 (Build 56)
+	FISH = { amt: 350, r0: 60, r: 0.5 }, // I (Albert, Nov 4): a spot's stock at a lake of radius r0; fish regrow each spring by Verhulst's law, r a year, to the spot's own K: fished past half they come back slower, fished out they are gone (Schaefer 1954)
+	MUTTON = 100; // H (Albert, Nov 4): food a sheep gives at slaughter (from memory: AoE's sheep 100); the take is Schaefer's (1954): the flock held at half the pasture, K/2, where it regrows fastest, so the yield, rK/4 a year, lasts for ever
 
 const stopsAll = () => G.finds.filter((f) => f.kind === 'stop');
 const postAt = (f) => G.blds.find((b) => b.kind === 'tpost' && b.sid === f.id && b.hp > 0);
@@ -312,11 +314,18 @@ function seasonTurn() {
 				if (p.id === 0 && lost >= 20) news('home', `${lost} food spoiled in store this season.`, 'soft', TOAST.mid);
 			}
 		}
+	if (s === 'Spring') for (const n of G.nodes) if (n.kind === 'fish' && n.amt > 0 && n.amt < n.max) n.amt = Math.min(n.max, logistic(n.amt, FISH.r, n.max));
 	for (const b of G.blds)
 		if (b.kind === 'pasture' && b.prog >= 1 && b.hp > 0) {
 			if (s === 'Spring') {
 				b.node.amt += (b.sheep || 0) * FLEECE;
 				b.sheep = Math.min(FLOCK, Math.round(logistic(b.sheep || 0, LAMBS, FLOCK))); // Verhulst: fast while the pasture is empty, slowing as it fills
+				const cull = b.node.wk > 0 ? Math.max(0, b.sheep - FLOCK / 2) : 0; // a shepherd culls the flock back to half: meat, and the most lambs next spring
+				if (cull) {
+					b.sheep -= cull;
+					stash(b.owner, 'food', cull * MUTTON);
+					if (b.owner === 0) news('land', `${cull} sheep to the butcher: ${cull * MUTTON} food.`, 'good', TOAST.short, b);
+				}
 			}
 			const wolf = G.units.find(
 				(v) =>
@@ -566,11 +575,23 @@ function upkeepTick() {
 		}
 }
 
+// the Bank (G): once a minute, interest on the gold held, to BANK_CAP
+const BANK_CAP = 40;
+function bankTick() {
+	for (const p of G.P) {
+		if (p.id === WILD || !p.alive) continue;
+		const r = fxv(p.id, 'interest').a;
+		if (r > 0 && p.res.g > 0) stash(p.id, 'gold', Math.min(BANK_CAP, Math.floor(p.res.g * r)));
+	}
+}
 function econTick(dt) {
 	if (G.tick % 30 === 0) {
 		natureTick();
 		upkeepTick();
-		if (G.tick % 1800 === 0) campWearTick(); // a minute of weather on the camps
+		if (G.tick % 1800 === 0) {
+			campWearTick(); // a minute of weather on the camps
+			bankTick();
+		}
 	}
 	if (every(BEAT.health)) healthTick();
 	fireTick(dt);

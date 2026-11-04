@@ -525,6 +525,7 @@ function order(S, h) {
 					u.py = y;
 					u.idleT = 0;
 					u.focus = null;
+					u.sent = true; // A (Albert, Nov 4): placed by hand, it is not one of the idle ones the sword sends
 				}
 			});
 		};

@@ -189,3 +189,9 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - "Flames on buildings should be in stages." [2026-11-04 12:05]
 - "The rings' counters should be clockwise." [2026-11-04 12:05]
 - "The Indexes and their Books, aka definitions, equations, math, physics, rules, science: how to lay it out? How to lock it down? Locking could also mean locking the definition but not its use." The proposal is in `docs/0 Index/00 Books.md` §4. [2026-11-04 12:05]
+
+## Cut or held, Nov 4 (preview 55's list)
+- Out: E tax ("not looking to add taxes"), F surplus sells itself, J auto-queue, K computers keep training, Homes raising villagers ("kill homes, stick with J2").
+- Held: field defences merged into one (Albert hasn't tested them); palisade, Courthouse into Hall, Apartment into House (skipped: palisade is a camp piece, the Hall comes an age later, no upgrade-in-place).
+- Later: Yard homes; 34–36 / 45–46 list; brown war colour; stronger walls with archer cover; lock and two-homes; water as shape + overlay; the art redo with fields; the docs and repo tidy (and the regression pictures).
+- Open: fields never run out today (only tree farms do); Albert asked fields and tree farms to last the same 36 minutes. Fields left endless until he says.

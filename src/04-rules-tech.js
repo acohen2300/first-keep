@@ -795,6 +795,20 @@ const TECH = [
 		desc: 'Villagers carry 3 more.',
 	},
 	{
+		// J2 (Albert, Nov 4): the Town Center trains two villagers at once, so a player can keep pace with a side that never stops training
+		id: 'midwives',
+		name: 'Midwives',
+		at: 'keep',
+		line: 'Household',
+		age: 1,
+		w: 4,
+		when: '1550 BC',
+		cost: { f: 150, g: 50 },
+		t: 30,
+		fx: [{ s: 'twin', k: 'vil', a: 1 }],
+		desc: 'The Town Center trains two villagers at once.',
+	},
+	{
 		id: 'census',
 		name: 'Census',
 		at: 'keep',
@@ -2810,6 +2824,22 @@ const TECH = [
 		fx: [{ s: 'trade', m: 1.25 }],
 		need: ['coinage'],
 		desc: 'Trade pays 25% more.',
+	},
+	{
+		// G, the bank (Albert, Nov 4): gold held earns interest, to a cap, so a rich side stays rich after the mines run dry. Florentine deposits
+		// paid about 8 to 10 in the hundred a year (from memory); a game year is 12 minutes, so about 1 in the hundred a minute
+		id: 'bank',
+		name: 'Bank',
+		at: 'market',
+		line: 'Trade',
+		age: 3,
+		w: 6,
+		when: '1397',
+		cost: { g: 300, s: 200 },
+		t: 56,
+		fx: [{ s: 'interest', a: 0.01 }],
+		need: ['credit'],
+		desc: 'Gold in your treasury earns 1% a minute, up to 40 gold a minute.',
 	},
 	{
 		id: 'banking',

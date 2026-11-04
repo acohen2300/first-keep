@@ -198,8 +198,8 @@ function drawGuides(sp, h) {
 	for (const b of G.blds) {
 		if (b.owner !== 0 || b.hp <= 0 || BLD[b.kind].wallish || Math.abs(b.x - sp.x) >= GUIDE_R || Math.abs(b.y - sp.y) >= GUIDE_R) continue;
 		const bh = halfOf(b),
-			ls = landXY(sp.x, sp.y),
-			lb = landXY(b.x, b.y);
+			ls = sp,
+			lb = b; // the world's squares, turned with the map (Nov 4), as snapGhost pulls
 		for (const [same, ax] of [
 			[Math.abs(ls.x - lb.x) < GUIDE_ON, 'y'],
 			[Math.abs(ls.y - lb.y) < GUIDE_ON, 'x'],
@@ -208,8 +208,8 @@ function drawGuides(sp, h) {
 				// the line through both, in the land's frame, a little past each
 				const lo = Math.min(ls[ax], lb[ax]) - 12 - h - bh,
 					hi = Math.max(ls[ax], lb[ax]) + 12 + h + bh,
-					p0 = landAt(ax === 'x' ? lo : ls.x, ax === 'y' ? lo : ls.y),
-					p1 = landAt(ax === 'x' ? hi : ls.x, ax === 'y' ? hi : ls.y);
+					p0 = { x: ax === 'x' ? lo : ls.x, y: ax === 'y' ? lo : ls.y },
+					p1 = { x: ax === 'x' ? hi : ls.x, y: ax === 'y' ? hi : ls.y };
 				ctx.moveTo(SX(p0.x, p0.y), SY(p0.y, 0, p0.x));
 				ctx.lineTo(SX(p1.x, p1.y), SY(p1.y, 0, p1.x));
 			}
