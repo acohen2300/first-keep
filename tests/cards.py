@@ -1,6 +1,8 @@
 # The cards of v80 (Albert's pictures, Oct 31; the audit's group E): each check below failed on the code before it and passes now. Run by the
 # gate:  python3 tests/cards.py
 #   Setup: each setting its own rank, its name quiet on the left, its choices one selector right-justified; Fog and Daily say their word once
+#   p46 (Nov 3): the floor (every card's last rank at the screen's foot over the controller; New game and Welcome back may rise over the top bar);
+#     New game, every question its own line, the Hazards label, the one info line; the villager and item mold (footprint, nine cells, outside tap)
 #   Relations: a rank a side, the gift a slider with its switch, the stance three icons in two slots, a ✓ a row that sends that row only;
 #     a friend's gift locked; the words friend, neutral, foe
 #   Mail: six lines a page, Previous and Next, the 30 kept are five pages; the Market's goods one selector
@@ -20,12 +22,11 @@ JS = r"""() => {
   try {
   F.openCard({ type: 'setup' }); F.ui(true);
   { const ranks = $$('#card .cin > .fm').filter((r) => r.querySelector('.info.quiet') && r.querySelector('.bar.sel')), card = $('#card .tb').getBoundingClientRect();
-    // Nov 3 (the start page on one screen): three settings on their own rank, the four two-choice settings two to a rank (name, choices, name, choices), the last selector at the card's right edge
+    // Nov 3 (Albert: "all to be on their own line"): all seven settings on their own rank (name, choices), the last selector at the card's right edge
     const single = ranks.filter((r) => r.children.length === 2), paired = ranks.filter((r) => r.children.length === 4);
-    if (single.length !== 3 || paired.length !== 2) bad.push(`Setup: ${single.length} settings on their own rank and ${paired.length} paired ranks, not 3 and 2 (Nov 3: one screen)`);
+    if (single.length !== 7 || paired.length !== 0) bad.push(`Setup: ${single.length} settings on their own rank and ${paired.length} paired ranks, not 7 and 0 (Nov 3: every question its own line)`);
     for (const r of ranks) { const bars = r.querySelectorAll('.bar.sel'), b = bars[bars.length - 1].getBoundingClientRect(), n = r.querySelector('.info.quiet').getBoundingClientRect();
-      if (Math.abs(b.right - card.right) > 1 || n.left > b.left) bad.push('Setup: a setting is not its name on the left and its choices right-justified: ' + r.textContent.trim().slice(0, 20));
-      if (r.children.length === 4) { const c = [...r.children]; if (!(c[0].classList.contains('quiet') && c[2].classList.contains('quiet') && c[1].getBoundingClientRect().right <= c[2].getBoundingClientRect().left + 1)) bad.push('Setup: a paired rank is not name, choices, name, choices: ' + r.textContent.trim().slice(0, 24)); } }
+      if (Math.abs(b.right - card.right) > 1 || n.left > b.left) bad.push('Setup: a setting is not its name on the left and its choices right-justified: ' + r.textContent.trim().slice(0, 20)); }
     { const c = $('#card'); if (c.scrollHeight > c.clientHeight + 1 && innerWidth <= 375) bad.push('Setup: the start page scrolls at ' + innerWidth + ' px (' + c.scrollHeight + ' of ' + c.clientHeight + ')'); }
     const words = $('#card .cin').innerText.split(/\s+/);
     for (const w of ['Fog', 'Daily']) if (words.filter((x) => x === w).length !== 1) bad.push(`Setup: ${w} says its word ${words.filter((x) => x === w).length} times`);
@@ -177,14 +178,100 @@ JS = r"""() => {
     if (!a || !b) bad.push('the levels: no dim tech and dim Train button on the Town Center card'); else if (ec(a) === ec(b)) bad.push(`the levels: a dim tech's edge (${ec(a)}) is the same as a dim Train button's`);
     keep.q.length = 0; F.closeCard(); }
   } catch (e) { bad.push('the levels: the check could not run: ' + e.message); }
-  // card sizes (Albert, Nov 2): a card rises from the row as tall as it holds; on the House, the Barracks and the Town Center the last
-  // button sits one gap above the row, nothing scrolls, and the next card does not keep the last one's height
+  // card sizes (Albert, Nov 2; Nov 3: on the floor): a card is as tall as it holds; on the House, the Barracks and the Town Center the last
+  // button sits one gap above the screen's foot (over the controller), nothing scrolls, and the next card does not keep the last one's height
   try {
   for (const kind of ['house', 'barracks', 'keep']) { const b = G.blds.find((x) => x.owner === 0 && x.kind === kind && x.prog >= 1) || put(kind); F.openCard({ type: 'bld', id: b.id }); F.ui(true);
-    const c = $('#card'), last = Math.max(...[...c.querySelectorAll('button')].map((x) => x.getBoundingClientRect().bottom)), row = $('#row button').getBoundingClientRect().top;
-    if (Math.abs(row - last - 6) > 1.5 || c.scrollHeight > c.clientHeight + 1) bad.push(`card sizes: on the ${kind} the last button is ${Math.round(row - last)} px above the row (one gap is 6)${c.scrollHeight > c.clientHeight + 1 ? ', and it scrolls' : ''}`);
+    const c = $('#card'), last = Math.max(...[...c.querySelectorAll('button')].map((x) => x.getBoundingClientRect().bottom));
+    if (Math.abs(innerHeight - last - 6) > 1.5 || c.scrollHeight > c.clientHeight + 1) bad.push(`card sizes: on the ${kind} the last button is ${Math.round(innerHeight - last)} px above the screen's foot (one gap is 6)${c.scrollHeight > c.clientHeight + 1 ? ', and it scrolls' : ''}`);
     F.closeCard(); }
   } catch (e) { bad.push('card sizes: the check could not run: ' + e.message); }
+  // the floor (Albert, Nov 3, "scooch this down 2 rows to start at the floor"): a card's last rank is at the screen's foot, over the controller;
+  // the Build card and a building's keep the top bar in sight, New game and Welcome back may rise over it; #app wears cardUp while a card shows
+  try {
+  for (const [name, open, over] of [['the Build card', () => F.act('menu:land'), false], ['a House', () => F.openCard({ type: 'bld', id: put('house').id }), false], ['New game', () => F.openCard({ type: 'setup' }), true], ['Welcome back', () => F.openCard({ type: 'resume', t: 300, age: 1, civ: P.civ }), true]]) {
+    open(); F.ui(true); const r = $('#card').getBoundingClientRect(), t = $('#tally').getBoundingClientRect(), e = document.elementFromPoint(r.left + r.width / 2, innerHeight - 20);
+    if (Math.abs(innerHeight - r.bottom - 3) > 1.5) bad.push(`floor: ${name} stands ${Math.round(innerHeight - r.bottom)} px above the screen's foot, not 3 (it sits on the controller)`);
+    if (!e || !e.closest('#card')) bad.push(`floor: ${name} is drawn under the controller`);
+    if (!$('#app').classList.contains('cardUp')) bad.push(`floor: #app does not wear cardUp while ${name} shows`);
+    if (!over && r.top < t.bottom - 1) bad.push(`floor: ${name} covers the top bar (its top ${Math.round(r.top)}, the bar's foot ${Math.round(t.bottom)})`);
+    F.closeCard(); if ($('#app').classList.contains('cardUp')) bad.push(`floor: #app keeps cardUp after ${name} closed`); }
+  } catch (e) { bad.push('floor: the check could not run: ' + e.message); }
+  // New game (Albert, Nov 3): every question its own line, the hazards under a label line, the people with none, ONE info line above Start: the last
+  // option tapped says what it means (its sentence from SET_WHY, a hazard's desc, a people's bonus); nothing tapped, the picked people's bonus
+  try {
+  F.openCard({ type: 'setup' }); F.ui(true);
+  { const rows = [...$$('#card .cin > .fm')], names = ['Difficulty', 'Length', 'Scenario', 'World', 'Fog', 'Tension', 'Daily'], q = rows.filter((r) => r.querySelector('.info.quiet') && r.querySelector('.bar.sel')), lefts = q.map((r) => Math.round(r.querySelector('.info.quiet').getBoundingClientRect().left));
+    if (q.map((r) => r.querySelector('.info.quiet').textContent.trim()).join() !== names.join()) bad.push('newgame: the lines are ' + q.map((r) => r.querySelector('.info.quiet').textContent.trim()).join() + ', not ' + names.join());
+    if (new Set(lefts).size !== 1) bad.push('newgame: the labels do not start at one indent: ' + lefts.join());
+    const hz = $('#card [data-act^="hz:"]').closest('.fm'), lab = hz.previousElementSibling, ppl = $('#card [data-act^="civ:"]').closest('.fm');
+    if (!lab || !/^Hazards/.test(lab.textContent.trim()) || !lab.querySelector('.quiet')) bad.push('newgame: the hazards have no label line saying what the numbers are');
+    else if (!/point/.test(lab.textContent)) bad.push('newgame: the hazards label does not say the numbers are points');
+    if (ppl.children.length !== 1 || ppl.querySelector('.quiet')) bad.push('newgame: the people row has a label');
+    if ($$('#card .info.say').length !== 1) bad.push('newgame: ' + $$('#card .info.say').length + ' info lines, not one');
+    const line = () => $('#card .info.say').innerText.replace(/\s+/g, ' ').trim(), bt = (a) => { const b = $(`#card [data-act="${a}"]`); if (!b) bad.push('newgame: no option ' + a); else b.click(); };
+    if (!line().includes(F.CIVS[F.SET.civ].bonus)) bad.push('newgame: with nothing tapped the info line is "' + line() + '", not the people\'s bonus');
+    if (!($('#card .info.say').compareDocumentPosition($('#card [data-act="fresh"], #card [data-act="today"]')) & Node.DOCUMENT_POSITION_FOLLOWING) || $('#card .info.say').closest('.fm').nextElementSibling !== $('#card [data-act="fresh"], #card [data-act="today"]').closest('.fm')) bad.push('newgame: the info line is not just above Start');
+    for (const [a, want] of [['diff:hard', F.SET_WHY.diff.hard], ['mode:t15', F.SET_WHY.mode.t15], ['scen:siege', F.SET_WHY.scen.siege], ['fantasy:1', F.SET_WHY.fantasy[1]], ['fog:0', F.SET_WHY.fog[0]], ['tension:winner', F.SET_WHY.tension.winner], ['daily:1', F.SET_WHY.daily[1]], ['hz:plague', F.HAZARDS.plague.desc], ['civ:han', F.CIVS.han.bonus]]) {
+      bt(a); F.ui(true); if (!line().includes(want)) bad.push(`newgame: after ${a} the info line is "${line().slice(0, 50)}", not "${want.slice(0, 40)}"`); }
+    if (F.SET.diff !== 'hard' || F.SET.mode !== 't15' || !F.SET.fantasy) bad.push('newgame: a tapped option was not selected');
+    for (const s of Object.values(F.SET_WHY).flatMap((o) => Object.values(o))) { if (s.split(/\s+/).length > 10) bad.push('newgame: a sentence over ten words: ' + s); if (/'/.test(s)) bad.push('newgame: an apostrophe in a sentence: ' + s); }
+    F.act('diff:normal'); F.act('mode:t60'); F.act('fantasy:0'); F.act('daily:0'); F.act('hz:plague'); F.act('civ:roman'); F.openCard({ type: 'setup' }); F.ui(true);
+    if (F.G.card.tip) bad.push('newgame: a new card kept the last card\'s tap'); }
+  F.closeCard();
+  } catch (e) { bad.push('newgame: the check could not run: ' + e.message); }
+  // the villager's card and the item cards, one mold (Albert, Nov 3): columns 3 to 5 of the controller's seven, a tab over column 3 holding the kind's
+  // icon, nine cells; no title, no close; a tap anywhere outside closes it; Go picks the villager, so the next tap on the ground is their order
+  const foot = () => { const c = $('#card'), col = (innerWidth - 30) / 7; return { m: c.querySelector('.mb').getBoundingClientRect(), t: c.querySelector('.mt').getBoundingClientRect(), col }; };
+  const acts9 = () => [...$$('#card .mb > *')].map((c) => (c.dataset.act ? c.dataset.act.split(':')[0] : c.classList.contains('empty') ? '_' : '-')).join();
+  const outside = () => $('#tally').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 9 }));
+  try {
+  const v = G.units.find((u) => u.owner === 0 && u.kind === 'vil'); F.openCard({ type: 'unit', id: v.id }); F.ui(true); v.carry = 8; v.carryType = 'wood'; F.ui(true);
+  { const { m, t, col } = foot(), cells = [...$$('#card .mb > *')], one = JSON.stringify([m.left, m.width, innerHeight - m.bottom].map(Math.round));
+    if (!$('#card').classList.contains('mold') || cells.length !== 9) bad.push(`villager: ${cells.length} cells, not a 3 x 3 mold`);
+    if ($('#card .tb') || $('#card [data-act="close"]') || $('#card .sub') || $('#card h3')) bad.push('villager: a title bar, a close button or a title is still on the card');
+    if (Math.abs(m.left - (6 + 2 * (col + 3))) > 1 || Math.abs(m.width - (3 * col + 6)) > 1.5 || Math.abs(innerHeight - m.bottom - 6) > 1.5) bad.push(`villager: the footprint is x ${Math.round(m.left)} w ${Math.round(m.width)} foot ${Math.round(innerHeight - m.bottom)}, not columns 3 to 5 on the floor`);
+    if (Math.abs(t.left - m.left) > 1 || Math.abs(t.width - col) > 1.5 || !$('#card .mt svg') || $('#card .mt button')) bad.push('villager: the tab is not one plain icon cell over column 3');
+    if (cells.some((c) => Math.abs(c.getBoundingClientRect().height - 44) > 0.5 || Math.abs(c.getBoundingClientRect().width - col) > 1.5)) bad.push('villager: a cell is not one column wide and 44 tall');
+    if (Math.abs(cells[1].getBoundingClientRect().left - cells[0].getBoundingClientRect().right - 3) > 0.6) bad.push('villager: the gap between cells is not 3');
+    if (acts9() !== 'vwalk,pbuild,vjob,-,-,-,vstop,vhome,vgo') bad.push('villager: the cells are ' + acts9() + ', not Go, Build, Job, Doing, Health, Carrying, Stop, Home, Dismiss');
+    const tx = (i) => cells[i].innerText.replace(/\s+/g, ' ').trim();
+    if (/\s/.test(tx(3).replace(/ doing$/, ''))) bad.push('villager: Doing is more than one word: ' + tx(3));
+    if (tx(4) !== `${Math.round(v.hp)}/${Math.round(v.max)} health`) bad.push('villager: Health reads "' + tx(4) + '"');
+    if (tx(5) !== '8 Wood') bad.push('villager: Carrying reads "' + tx(5) + '", not "8 Wood"'); v.carry = 0; F.ui(true); if (tx(5) !== 'Nothing carrying') bad.push('villager: nothing carried reads "' + tx(5) + '"'); v.carry = 8; F.ui(true);
+    if (/\b(age|speed)\b/i.test($('#card').innerText)) bad.push('villager: age or speed is still on the card');
+    const cs = (e, p) => getComputedStyle(e)[p];
+    if (cs(cells[0], 'backgroundColor') === cs(cells[3], 'backgroundColor') || cs(cells[0], 'borderTopColor') === cs(cells[3], 'borderTopColor')) bad.push('villager: a tap cell and an info cell look alike');
+    const o = getComputedStyle($('#card .mb'), '::before'); if (o.borderTopColor !== getComputedStyle($('#card .mt'), '::before').borderTopColor || o.borderTopRightRadius !== '9px' || o.borderTopLeftRadius !== '0px') bad.push('villager: the gold outline is not one radius-9 outline round the tab and the body');
+    const j0 = v.job; $('#card [data-act^="vjob:"]').click(); F.ui(true); if (v.job !== F.RES[(F.RES.indexOf(j0) + 1) % F.RES.length]) bad.push('villager: Job did not take the next job');
+    if (G.pickSet && G.pickSet.has('unit' + v.id)) bad.push('villager: picked before Go');
+    $('#card [data-act^="vwalk:"]').click(); F.ui(true); if (!G.pickSet.has('unit' + v.id) || !G.card) bad.push('villager: Go did not pick them and keep the card');
+    outside(); if (G.card) bad.push('villager: a tap outside the card did not close it');
+    // with them picked a tap on open ground is their order: it orders and the card is gone
+    F.setPick([]); v.post = null; G.fogOn = false;
+    let p = null; for (let y = 260; y < 500 && !p; y += 23) for (let x = 60; x < 330 && !p; x += 23) if (F.hitAt(x, y).t === 'ground') p = [x, y];
+    F.openCard({ type: 'unit', id: v.id }); F.ui(true); $('#card [data-act^="vwalk:"]').click(); outside(); F.tapAt(...p); if (!v.post || G.card) bad.push('villager: a tap on open ground with them picked was not their order and a close');
+    F.openCard({ type: 'unit', id: v.id }); F.ui(true); $('#card .mb').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 9 })); if (!G.card) bad.push('villager: a tap inside the card closed it');
+    $('#card [data-act^="vgo:"]').click(); F.ui(true); if (!$('#card [data-act^="vgo:"]').classList.contains('warn') || v.hp <= 0) bad.push('villager: Dismiss did not ask first');
+    F.closeCard(); G.confirm = null;
+    // item cards: the same footprint, the same nine cells (a berry bush, a tree, a bear)
+    const k = F.keepOf(0), near = (kind) => G.nodes.filter((n) => n.kind === kind && n.amt > 0).sort((a, c) => Math.hypot(a.x - k.x, a.y - k.y) - Math.hypot(c.x - k.x, c.y - k.y))[0];
+    for (const kind of ['bush', 'tree']) { const n = near(kind); F.openCard({ type: 'node', id: n.id }); F.ui(true); const w = JSON.stringify([foot().m.left, foot().m.width, innerHeight - foot().m.bottom].map(Math.round)), cl = [...$$('#card .mb > *')], tt = (i) => cl[i].innerText.replace(/\s+/g, ' ').trim();
+      if (w !== one) bad.push(`items: the ${kind} card's footprint ${w} is not the villager's ${one}`);
+      if (acts9() !== 'sendvil,jump,info,-,-,-,-,-,-' || cl.length !== 9 || $('#card .tb') || $('#card [data-act="close"]')) bad.push(`items: the ${kind} cells are ${acts9()}, not Send, Locate, Info, then six info cells, no title bar`);
+      const dr = F.dropFor(0, n.type, n), mul = F.gatherMul(0, n);
+      if (tt(3) !== `${Math.round(n.amt)} left`) bad.push(`items: Left reads "${tt(3)}" for ${Math.round(n.amt)}`);
+      if (tt(4) !== `${dr ? Math.round(Math.hypot(dr.x - n.x, dr.y - n.y)) : 'none'} drop-off`) bad.push(`items: Drop reads "${tt(4)}", not the nearest drop-off's distance`);
+      if (tt(7) !== `${Math.round((n.rate || F.RATE_OF[n.kind]) * mul * 60)} a minute` || tt(8) !== `${F.carryOf(0)} a trip` || !/^\d+\/\d+ working$/.test(tt(6))) bad.push(`items: the ${kind}'s last rank reads "${tt(6)}", "${tt(7)}", "${tt(8)}"`);
+      $('#card [data-act="info"]').click(); F.ui(true); if (!$('#card .infoP') || !$('#card .infoP').innerText.includes(F.nodeName(n))) bad.push(`items: Info on the ${kind} did not open its book`); F.act('info'); F.closeCard(); }
+    { const b = F.addUnit(F.WILD, 'bear', k.x + 80, k.y + 80); F.openCard({ type: 'unit', id: b.id }); F.ui(true); const cl = [...$$('#card .mb > *')], tt = (i) => cl[i].innerText.replace(/\s+/g, ' ').trim();
+      if (acts9() !== 'hunt,jump,info,_,-,_,-,-,-') bad.push('items: the bear cells are ' + acts9() + ', not Send a hunter, Locate, Info, an empty Left, Drop, an empty Bonus, then three');
+      if (tt(6) !== '150/150 health' || tt(7) !== `${Math.round(F.UNIT.bear.dmg)} danger` || tt(8) !== `${F.UNIT.bear.meat} meat`) bad.push(`items: the bear's last rank reads "${tt(6)}", "${tt(7)}", "${tt(8)}"`);
+      const w = JSON.stringify([foot().m.left, foot().m.width, innerHeight - foot().m.bottom].map(Math.round)); if (w !== one) bad.push(`items: the bear card's footprint ${w} is not the villager's ${one}`);
+      F.closeCard(); b.hp = 0; }
+    const d = F.addUnit(F.WILD, 'deer', k.x + 90, k.y + 90); F.openCard({ type: 'unit', id: d.id }); F.ui(true); if (acts9() !== 'hunt,jump,info,_,-,_,-,_,-') bad.push('items: the deer cells are ' + acts9() + ', a deer has no danger'); F.closeCard(); d.hp = 0;
+  }
+  } catch (e) { bad.push('villager: the check could not run: ' + e.message); }
   // the title box (Albert, Nov 2): a building's health a bar under its name and its age the top edge; no second line on your own House;
   // a building going up wears the working ring instead
   try {
@@ -250,6 +337,15 @@ MAILPAGES = r"""() => { const F = window.__fk; F.newGame(5); F.act('close'); con
   if (new Set(at).size > 1) out.push(`Next moves between pages: ${at.join(' / ')}`);
   if (!document.querySelector('#card [data-act^="mailtog:"]')) out.push('the preview switch is not on the card');
   return out; }"""
+SMALL = r"""() => { const F = window.__fk, out = [], $ = (s) => document.querySelector(s); F.newGame(5); F.act('close'); const G = F.G;
+  for (const [name, c] of [['New game', { type: 'setup' }], ['Welcome back', { type: 'resume', t: 300, age: 1, civ: G.P[0].civ }]]) { F.openCard(c); F.ui(true);
+    const el = $('#card'), r = el.getBoundingClientRect(), t = $('#tally').getBoundingClientRect(), last = Math.max(...[...el.querySelectorAll('button')].map((x) => x.getBoundingClientRect().bottom));
+    if (name === 'New game' && r.top >= t.bottom) out.push(name + ' does not rise over the top bar (its top ' + Math.round(r.top) + ', the bar\'s foot ' + Math.round(t.bottom) + ')');
+    if (el.scrollHeight > el.clientHeight + 1) out.push(name + ' scrolls (' + el.scrollHeight + ' of ' + el.clientHeight + '): it is more than one page');
+    if (Math.abs(innerHeight - last - 6) > 1.5) out.push(name + ' last rank is ' + Math.round(innerHeight - last) + ' px above the foot'); F.closeCard(); }
+  const v = G.units.find((u) => u.owner === 0 && u.kind === 'vil'); F.openCard({ type: 'unit', id: v.id }); F.ui(true);
+  for (const w of ['Quarrying', 'Butchery', 'Hiding', 'Guarding', 'Chopping', 'Standing', 'Working', 'Learning', 'Fighting', 'Carrying', 'Tending', 'Running']) { const b = $('#card .mb > .info b'); b.textContent = w; if (b.scrollWidth > b.clientWidth) out.push('the word ' + w + ' is cut in its cell (' + b.scrollWidth + ' over ' + b.clientWidth + ')'); }
+  F.closeCard(); return out; }"""
 async def main():
     async with async_playwright() as p:
         br = await p.chromium.launch(); pg = await br.new_page(viewport={'width': 390, 'height': 844}); errs = []
@@ -275,6 +371,12 @@ async def main():
                 if W >= 390: bad += [f'Mail with a filter at {W}x{H}: {x}' for x in r]
                 elif any(x.startswith('Next moves') or 'switch' in x for x in r): bad += [f'Mail with a filter at {W}x{H}: {x}' for x in r if not x.startswith('page')]
         except Exception as e: bad.append('the mail pages could not run: ' + str(e)[:200])
+        # the floor on the smallest phone (Albert, Nov 3): New game and Welcome back rise over the top bar, one page, their last rank at the screen's
+        # foot; the villager's widest words fit their cell at 375
+        try:
+            await pg.set_viewport_size({'width': 375, 'height': 667}); await pg.wait_for_timeout(150)
+            r = await pg.evaluate(SMALL); bad += [f'floor at 375x667: {x}' for x in r]
+        except Exception as e: bad.append('the small-phone floor could not run: ' + str(e)[:200])
         await br.close()
     bad = bad + errs
     print(('PASS ' if not bad else 'FAIL ') + 'the cards of v80 (Setup stacked, Relations final, Mail pages, Market selector, E1 to E11, Emergency, no panel, map labels)', '' if not bad else bad)

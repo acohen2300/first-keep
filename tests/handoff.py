@@ -448,6 +448,13 @@ PLANTS = [
   ('14-sim-troops.js', "tgt.tgt.drill.py === u.drill.py ? GRID.gap : 0;", 'tgt.tgt.drill.py === u.drill.py ? 0 : 0;', 'tests/combat.py', 'p44: a drilled soldier stands under the arrows', 'step toward'),
   ('04-rules-tech.js', "{ s: 'make', k: ['workshop'], m: 1.1 }, //", "{ s: 'make', k: '*', m: 1.1 }, //", 'tests/combat.py', 'p44: the mint takes Division of labour twice', 'Division'),
   ('08-core.js', "if (n.kind === 'farm' && SCALE.kinds.includes(n.farm.kind) && fxv(o, 'scale').a)", "if (n.kind === 'farm' && fxv(o, 'scale').a)", 'tests/combat.py', 'p44: Learning by doing reaches the pasture', 'pasture'),
+  # Build 80 preview 46 (--only=floor, newgame, villager, items): the cards on the floor, New game one question a line, the villager and item mold (Albert, Nov 3)
+  ('shell-head.html', "bottom:calc(env(safe-area-inset-bottom,0px) + var(--gap) / 2);box-sizing:border-box;padding:calc(var(--gap) / 2);", "bottom:calc(var(--ob) + var(--gap) / 2);box-sizing:border-box;padding:calc(var(--gap) / 2);", 'tests/cards.py', 'p46 floor: a card stands on the controller, not on the floor', 'floor:'),
+  ('shell-head.html', "#card.up{--top:calc(env(safe-area-inset-top,0px) + var(--gap))}", "#card.up{--top:var(--hb)}", 'tests/cards.py', 'p46 floor: New game stops under the top bar', 'does not rise over the top bar'),
+  ('30-cards.js', "acts(lab(SET_WORD.hazards, 's6'), 'c6') +", "'' +", 'tests/cards.py', 'p46 newgame: the hazards have no label line', 'newgame:'),
+  ('29-card-pages.js', "G.card.tip = b.dataset.act; //", "void 0; //", 'tests/cards.py', 'p46 newgame: a tapped option says nothing in the info line', 'newgame:'),
+  ('27-cards-core.js', "if (G && G.card && cardMold && !e.target.closest('#card')) closeCard();", "if (false) closeCard();", 'tests/cards.py', 'p46 villager: a tap outside the card leaves it open', 'villager:'),
+  ('30-cards.js', "info(far === null ? MOLD_WORD.none : far, MOLD_WORD.drop),", "info(0, MOLD_WORD.drop),", 'tests/cards.py', 'p46 items: Drop says a distance that is not true', 'items:'),
 ]
 
 def plant_check():

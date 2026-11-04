@@ -611,6 +611,9 @@ const PLAY = {
 		}
 		say(u.focus ? 'Focus: it stays where you put it.' : 'Focus off.', '', TOAST.short);
 	}, // Focus (D-093): a stance, as Stand Ground is; your next order re-aims it, only this turns it off
+	vwalk(a) {
+		setPick([{ t: 'unit', id: Number(a) }]);
+	}, // the villager card's Go: they are picked, so the next tap on the ground is their order and closes the card (the right-click rule, MENU-SPEC §7)
 	vhome(a) {
 		const u = unitsOf(0, 'vil').find((x) => x.id === Number(a)),
 			k = keepOf(0);
