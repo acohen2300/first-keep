@@ -172,7 +172,8 @@ const SET = {
 // never move the live game's aside, nor the live game theirs. The first time one runs it copies (never moves) what the live game kept.
 const PLACE = location.pathname.match(/\/(preview|v\d+-[a-z-]+)\//),
 	STORE = 'firstkeep.' + (PLACE ? PLACE[1] + '.' : ''),
-	keyOf = (k) => STORE + k;
+	keyOf = (k) => STORE + k,
+	YARD_ON = !!PLACE || location.protocol !== 'https:'; // the Yard (preview 47): on every preview, test and frozen version; never on the live game
 try {
 	if (STORE !== 'firstkeep.' && localStorage.getItem(keyOf('settings')) === null) {
 		for (const k of ['settings', 'taps', 'best']) {

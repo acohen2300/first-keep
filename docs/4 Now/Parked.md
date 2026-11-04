@@ -172,3 +172,8 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - Built and now open to a yes or no: the Camp wagon reads the Stone granary as the game's warehouse; Albert said "Warehouse", and the game has no building of that name. [2026-11-03 13:30]
 - A burst of birds when an ambush springs, and a dust puff under a horse on a stake (the visual pass, Nov 3). [2026-11-03 14:12]
 - From the Nov 3 audit, as opinions for Albert, not bugs: the flat Build pages (four by Gunpowder; the six category tiles were cut in preview 39); the hidden holds (Rally → Ambush, Shape → Choke, Kinds → Direct) with no hint on the tile; a ghost of the camp's square before the wagon is sent (the spot is now checked at dispatch); the auto supply runs with no word to the player (now floored by CAMP.keep). A second outside voice (15:09) adds: a feature freeze, a 180-second phone test with a stranger, softening the order fatigue (ORDER.tired). Albert's calls. [2026-11-03 15:16]
+
+## Parked at preview 47, Restore and Fix (Albert, Nov 3, 19:49) [2026-11-03 20:30]
+- The controller of previews 34 to 36 and 45 to 46, whole, on the branch `p46-controller`: the seven columns, the Map tile, Kinds, the share tap cycle, the Status page, the floor cards, the 3 × 3 cards, the joined quick action. Albert: "driving me nuts". Nothing of it comes back without his word. [2026-11-03 20:30]
+- The Yard's three (Choke, Ambush, Idle soldiers) each want a home on preview 33's screens; the Yard goes when they have one. [2026-11-03 20:30]
+- Open with it: Rally by a tap on the map (preview 38's `rallyat`); the hold on Train still sets the rally at the crosshair. [2026-11-03 20:30]

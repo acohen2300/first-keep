@@ -1,10 +1,10 @@
-# First Keep: start here [2026-11-01 07:45]
+# First Keep: start here [2026-11-03 20:40]
 
 **Where things stand (Albert's words):**
 - Up to 62 was great.
 - 63 to 69 was a mess.
 - 70 is restored (frozen at `/v70-restoration/`, stamp `v70`).
-- 80 is current.
+- 80 is current. Preview 47 "Restore and Fix" (Nov 3) is preview 33 with 37 to 44 on it; 34 to 36 and 45 to 46 live on the branch `p46-controller`. [2026-11-03 20:40]
 
 ## 1. The one start: how we work (Albert, Nov 2) [2026-11-02 13:54]
 

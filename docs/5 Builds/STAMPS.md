@@ -11,3 +11,5 @@
 | v65 | `5e83812011d6b62dddfb7db5c4b404cfca5b8d4a` | Oct 30, 15:47 | Part of the mess (63 to 69) |
 | v66 | `8d0247339294888d1bd45881fb7e1ad5d95ca944` | Oct 30, 18:13 | Never published; part of the mess |
 | v70 | `88b2cb259d4ed7979d06774e2ae8ffac43618f1d` | Oct 31, 11:01 | **v70 · Restoration**, frozen at `/v70-restoration/` |
+| v80 p33 | `1cf47ab2` (preview 33, Nov 3, 06:47) | Nov 3 | The base of preview 47 ("33 is good") |
+| v80 p46 | `8b44259` (branch `p46-controller`) | Nov 3, 19:14 | The controller line, 34 to 46, cut whole at preview 47 |

@@ -464,6 +464,10 @@ const PLAY = {
 		H.mid = H.mid === a ? SMID.map : a;
 		feel('tick');
 	}, // Train or Squad turns the station's middle to its four; again, back to the small map
+	ytool(a) {
+		closeCard();
+		PLAY[a]();
+	}, // the Yard: a tool armed, the card out of the way of the map
 	choketool() {
 		const H = G.hud;
 		H.aim = H.aim === 'choke' ? H.page === 'war' : 'choke';

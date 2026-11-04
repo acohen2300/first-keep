@@ -84,8 +84,8 @@ function aimAt(sx, sy) {
 	const H = G.hud;
 	aimSpot(sx, sy);
 	if (H.aim === 'ambush') {
-		H.aim = true;
-		return ambushAt(H.h); // the ambush tool (the Yard): the tap is the cover; the crosshair stays up
+		H.aim = H.page === 'war'; // the station's crosshair stays up
+		return ambushAt(H.h); // the ambush tool (the Yard): the tap is the cover
 	}
 	ripple(H.h.e.x, H.h.e.y, aimColor());
 	feel('tick');
@@ -531,6 +531,17 @@ function squadOutHTML(i, m) {
 CARDS.squad = (c) => {
 	c.was = c.was || { plan: { ...G.bnPlan[c.i] }, intent: G.bnIntent[c.i] || 0 }; // what Cancel goes back to: the squad as the card found it
 	return sqOut(c.i) ? squadOutHTML(c.i, G.msn[c.i]) : squadHomeHTML(c);
+};
+// The Yard (Albert, Nov 3, preview 47 "Restore and Fix"): the staging ground. Preview 33's screens stay as they are; the controls of 37 to 44
+// that lived on the controller (34 to 36, cut) wait here until each has a home. Preview only (YARD_ON). Empty it, then delete it.
+const YARD_LIST = [
+	['ytool:choketool', 'Choke', 'drag across a gap'],
+	['ytool:ambushtool', 'Ambush', 'tap the cover'],
+	['ytool:kidle', 'Idle soldiers', 'pick them'],
+];
+CARDS.yard = () => {
+	title(ROW_WORD.yard, 'controls waiting for a home');
+	return list(YARD_LIST.map(([a, w, sub]) => btn(a, w, sub))) + `<p>Preview only. Each of these needs a place on the screen; this card goes when they have one.</p>`;
 };
 // Set Up (Albert, Nov 2): the Squad page's fourth tile. The three squads in one rank, each with what it is set to hold; a tap opens that squad's card, where it is built.
 CARDS.sqsetup = () => {

@@ -113,7 +113,8 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
    was 44 wide a rank higher, with no word). Emergency steps aside while any card is open, where it would sit over the card's buttons */
 #qa{position:absolute;z-index:var(--z-pop);display:flex;gap:var(--gap)}#qa.left{flex-direction:row-reverse}#qa .cell{width:var(--slot);height:var(--slot);flex:none;border-radius:50%;background:var(--brown-2);border:1px solid var(--brown-3);box-shadow:var(--shade)}#qa .cell svg{width:22px;height:22px}   /* the quick action: the sword and ✕, round chips, the sword under the finger (Albert, Nov 3) */
 #emgB{width:calc((100% - 7 * var(--gap)) / 6);right:var(--gap)}#stage:has(#card:not([hidden])) #emgB{display:none}#stage>#mini{display:none}   /* War, the one button on the rank above the row (Albert, Nov 2); the small map shows only in the station */
-#stage.busy :is(#homeB,#emgB),#stage.picking #homeB{display:none}
+#yardB{width:calc((100% - 7 * var(--gap)) / 6);left:var(--gap)}#stage:has(#card:not([hidden])) #yardB{display:none}   /* the Yard (preview 47): the left end of War's rank; gone with the live game */
+#stage.busy :is(#homeB,#emgB,#yardB),#stage.picking #homeB{display:none}
 #place,#pickbar{position:absolute;z-index:var(--z-float);left:var(--gap);right:var(--gap);bottom:calc(var(--ob) + var(--gap));box-sizing:border-box;display:flex;gap:var(--gap);padding:var(--gap);background:var(--brown-1);border:1px solid var(--gold-1);border-radius:var(--rad-o)}
 #place{justify-content:space-between;align-items:center;padding-left:10px}#place span{flex:1;min-width:0;line-height:1.25}#place button{padding:0 12px}
 #pickbar{flex-direction:column;border-color:var(--ring-g)}#pickbar .pbTop,#pickbar .pbRow{display:flex;gap:var(--gap);align-items:center}#pickbar .pbRow:empty{display:none}#pickbar span{flex:1;min-width:0;line-height:1.25;padding-left:6px}#pickbar button{min-width:var(--slot);padding:0 10px}#pickbar .pbRow button{flex:1;padding:0 4px}#pickbar .gl{width:18px;height:18px}
@@ -253,6 +254,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
     <button class="fab cell" id="emgB" data-act="emgpage" aria-label="Alarm"></button>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
+    <button class="fab cell" id="yardB" data-act="card:yard" aria-label="The Yard: controls waiting for a home" hidden></button>
 
     <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="wundo" id="placeUndo" hidden><b>Undo</b></button><button data-act="cancel"><b>Cancel</b></button></div>

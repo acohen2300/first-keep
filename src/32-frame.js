@@ -202,6 +202,8 @@ function buildPanel() {
 			: `<span class="cell" id="${id}" aria-label="${label}"><span class="gl"></span><span class="wd"></span></span>`;
 	$('status').innerHTML = STATUS.map(([id, act, label]) => sc(id, act, label)).join('');
 	$('homeB').innerHTML = ICON.home;
+	$('yardB').innerHTML = topOf(ICON.gear) + wd(ROW_WORD.yard); // the Yard (preview 47): the controls of 37 to 44 that have no slot on 33's screens yet
+	$('yardB').hidden = !YARD_ON;
 	$('emgB').innerHTML = topOf(ICON.def) + wd(ROW_WORD.emg); // War, red on steel, on the rank above the row: the battle station; ✕ while it is up (rowUI)
 	mini.hidden = false; // the small map draws in the station's middle; on the stage between, the style sheet keeps it out of sight // a slot with its word under its icon, on the cycle button's rank (cold review of v70)
 	$('pX').innerHTML = ICON.close;
