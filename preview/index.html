@@ -321,7 +321,9 @@ const DIFK = Object.keys(DIFF);
 const ZOOM_MAX = 4,
 	ZOOM_START = 1.3, // the camera's zoom when a game opens: a map label is LABEL.px there (labelK, 24-view-overlays)
 	LABEL = { px: 12, floor: 9 }, // a map label: 12 at the starting zoom, never under 9 zoomed out (Albert, Oct 31: "base 3"); what is pinned to the screen stays 12
-	TILT = 0.66,
+	TILT = 0.55, // the camera's pitch: the ground squashed to 0.55 (near AoE2's 2:1; was 0.66 to preview 49; at 0.5 two pairs of buildings read alike at half zoom)
+	TURN = Math.SQRT1_2, // the view turned 45° (Albert, Nov 4, 06:58: "take the whole map and rotate it. Like a picture"): world x runs down-right on the screen, world y down-left; the sim's square grid never knows (20-view-base, SX and SY)
+	RIM = 640, // the scenery beyond the map's edge, in world units: sea on the near sides, cliffs and sky on the far (fills the phone's corners when the view meets an edge)
 	SIDE = 0.4; // SIDE: how far right the back of a building sits, per unit of depth, so its east wall shows
 const FOG = 40,
 	FOGN = Math.ceil(MAP / 40); // fog of war: squares of 40; unseen, explored (stays lit, dim), in sight now
@@ -9129,8 +9131,8 @@ function newGame(seed, carry, daily) {
 	dangerMap(); // a fresh danger map: the last game's must not steer the first second of this one
 	evmSet();
 	const k = G.P[0].keep;
-	cam.x = k[0] + 120;
-	cam.y = k[1] - 120;
+	cam.x = k[0] + 70;
+	cam.y = k[1] + 70; // a little toward the middle of the screen's height in the turned view (x + y is down): the Town Center sits just above centre (preview 50)
 	cam.z = ZOOM_START;
 	clampCam();
 	if (carry) {
@@ -20124,11 +20126,17 @@ let vy = 0; // the map is full screen; the view centres on the band between the 
 /* fit() is in 32-frame.js: it reads the page's bars */
 let bandH = 0; // the height of the clear band between the top bars and the jobs (fit sets it)
 function clampCam() {
-	const hw = cw / 2 / cam.z,
-		half = (bandH || ch) / 2 / (cam.z * TILT);
-	cam.x = clamp(cam.x, Math.min(hw, MID), Math.max(MAP - hw, MID));
-	cam.y = clamp(cam.y, Math.min(half, MID), Math.max(MAP - half, MID));
-} // the map's edges can come up to the bars, never under them (Albert, Build 40)
+	// in the turned frame: u = x − y runs −MAP..MAP across the diamond, v = x + y runs 0..2MAP down it; the screen's half sizes in those units.
+	// The screen may reach RIM past the diamond's points (the sea and the cliffs fill its corners), never further (Albert, Build 40; Nov 4)
+	const hu = cw / 2 / (cam.z * TURN),
+		hv = (bandH || ch) / 2 / (cam.z * TURN * TILT),
+		u = cam.x - cam.y,
+		v = cam.x + cam.y,
+		cu = clamp(u, Math.min(-MAP + hu - RIM, 0), Math.max(MAP - hu + RIM, 0)),
+		cv_ = clamp(v, Math.min(hv - RIM, MAP), Math.max(2 * MAP - hv + RIM, MAP));
+	cam.x = (cu + cv_) / 2;
+	cam.y = (cv_ - cu) / 2;
+}
 // The camera glides as a critically damped spring (ζ = 1, no overshoot; the standard smoothing of a value toward a target, one ω for every
 // phone whatever its frame rate). camGo sets the target; the frame moves the camera. One home for every glide: Follow, Home, the small map,
 // a card's "go there", an alert. A drag or a pinch is yours and stops it.
@@ -20175,15 +20183,48 @@ function followCam(dt) {
 	clampCam();
 	if (!G.follow && Math.abs(cam.x - cam.tx) < 0.3 && Math.abs(cam.y - cam.ty) < 0.3) camStop();
 }
-const SX = (x) => (x - cam.x) * cam.z + cw / 2;
-const SY = (y, h) => (y - cam.y) * cam.z * TILT + ch / 2 + vy - (h || 0) * cam.z;
-const toWorld = (sx, sy) => ({ x: (sx - cw / 2) / cam.z + cam.x, y: (sy - ch / 2 - vy) / (cam.z * TILT) + cam.y });
-const minZ = () => Math.min(cw / MAP, ch / (MAP * TILT)) || 0.2;
+// The turned view (preview 50): a world point goes to the screen by u = (x − y) across and v = (x + y) down, each scaled by TURN (1/√2) so a
+// walk of d along either axis is d × z long on the screen's diagonal; v is squashed by TILT; a height h stands straight up, unsquashed.
+// DX and DY turn a world offset into a screen offset. wmat is the same map as a canvas matrix, for anything drawn flat on the ground in
+// world units (the ground's pictures, the fog, a footprint): set it, draw in world units, then flat puts the plain one back.
+const SX = (x, y = 0) => (x - y - (cam.x - cam.y)) * cam.z * TURN + cw / 2;
+const SY = (y, h, x = 0) => (x + y - (cam.x + cam.y)) * cam.z * TURN * TILT + ch / 2 + vy - (h || 0) * cam.z;
+const DX = (dx, dy) => (dx - dy) * cam.z * TURN,
+	DY = (dx, dy) => (dx + dy) * cam.z * TURN * TILT;
+const toWorld = (sx, sy) => {
+	const u = (sx - cw / 2) / (cam.z * TURN) + (cam.x - cam.y),
+		v = (sy - ch / 2 - vy) / (cam.z * TURN * TILT) + (cam.x + cam.y);
+	return { x: (u + v) / 2, y: (v - u) / 2 };
+};
+const dWorld = (sdx, sdy) => {
+	const du = sdx / (cam.z * TURN),
+		dv = sdy / (cam.z * TURN * TILT);
+	return { x: (du + dv) / 2, y: (dv - du) / 2 };
+}; // a screen drag as a world move
+const wmat = (c = ctx) => c.setTransform(dpr * cam.z * TURN, dpr * cam.z * TURN * TILT, -dpr * cam.z * TURN, dpr * cam.z * TURN * TILT, dpr * SX(0, 0), dpr * SY(0, 0, 0));
+const flat = (c = ctx) => c.setTransform(dpr, 0, 0, dpr, 0, 0);
+// the world box the screen sees: the four screen corners turned back; margin m in world units
+function viewBox(m = 0) {
+	const P = [toWorld(0, 0), toWorld(cw, 0), toWorld(0, ch), toWorld(cw, ch)];
+	return { x0: Math.min(...P.map((p) => p.x)) - m, y0: Math.min(...P.map((p) => p.y)) - m, x1: Math.max(...P.map((p) => p.x)) + m, y1: Math.max(...P.map((p) => p.y)) + m };
+}
+// a world rectangle flat on the ground, filled (or stroked) under the turned matrix: a footprint, a cell, a wall's square
+function wrect(x, y, w, h, stroke) {
+	wmat();
+	if (stroke) {
+		ctx.lineWidth = 1 / (cam.z * TURN);
+		ctx.strokeRect(x, y, w, h);
+	} else ctx.fillRect(x, y, w, h);
+	flat();
+}
+const DIAG = MAP * 2 * TURN; // the map's width on the screen at zoom 1 (its diagonal)
+const minZ = () => Math.min(cw / DIAG, ch / (DIAG * TILT)) || 0.2;
 function zoomAt(nz, sx, sy) {
 	const w = toWorld(sx, sy);
 	cam.z = clamp(nz, minZ(), ZOOM_MAX);
-	cam.x = w.x - (sx - cw / 2) / cam.z;
-	cam.y = w.y - (sy - ch / 2 - vy) / (cam.z * TILT);
+	const d = dWorld(sx - cw / 2, sy - ch / 2 - vy);
+	cam.x = w.x - d.x;
+	cam.y = w.y - d.y;
 	clampCam();
 }
 const quant = (v) => {
@@ -20398,56 +20439,76 @@ function makeBg() {
 }
 let SPARKS = [],
 	miniT = 0;
+// The rim (preview 50, Albert: "I wanted water and cliffs and sky anyway"): the screen is a rectangle and the map a diamond, so when the view
+// meets an edge the corners show what lies beyond. The near sides (south and east, the bottom of the screen) are the sea with a strand; the
+// far sides (north and west, the top) are cliffs, and above the cliffs the sky. Drawn in world units under the turned matrix, RIM deep.
+const RIMC = { sea: '#2f6684', deep: '#214a63', sand: '#cdbb88', cliff: '#4f463d', cliffLit: '#847566', top: '#5e6a4e', skyLo: '#b9cad6', skyHi: '#6b93b4' },
+	CLIFF_H = 140; // the far edges rise this much above the map
+function drawRim(z) {
+	const VB = viewBox();
+	if (VB.x0 >= 0 && VB.y0 >= 0 && VB.x1 <= MAP && VB.y1 <= MAP) return; // the whole screen is on the map
+	const c = (x, y, h = 0) => [SX(x, y), SY(y, h, x)],
+		poly = (pts, fill) => {
+			ctx.beginPath();
+			pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+			ctx.closePath();
+			ctx.fillStyle = fill;
+			ctx.fill();
+		};
+	// the sky, behind everything
+	const g = ctx.createLinearGradient(0, 0, 0, ch);
+	g.addColorStop(0, RIMC.skyHi);
+	g.addColorStop(1, RIMC.skyLo);
+	ctx.fillStyle = g;
+	ctx.fillRect(0, 0, cw, ch);
+	// the sea, RIM out past the near edges (south: y = MAP; east: x = MAP), with its strand along the shore
+	const R = RIM;
+	poly([c(-R, MAP), c(MAP + 3 * R, MAP), c(MAP + 3 * R, MAP + 3 * R), c(-R, MAP + 3 * R)], RIMC.deep);
+	poly([c(MAP, -R), c(MAP + 3 * R, -R), c(MAP + 3 * R, MAP + 3 * R), c(MAP, MAP + 3 * R)], RIMC.deep);
+	poly([c(-R, MAP), c(MAP + R, MAP), c(MAP + R, MAP + 90), c(-R, MAP + 90)], RIMC.sea);
+	poly([c(MAP, -R), c(MAP + 90, -R), c(MAP + 90, MAP + 90), c(MAP, MAP + 90)], RIMC.sea);
+	poly([c(-R, MAP), c(MAP + 14, MAP), c(MAP + 14, MAP + 14), c(-R, MAP + 14)], RIMC.sand);
+	poly([c(MAP, -R), c(MAP + 14, -R), c(MAP + 14, MAP + 14), c(MAP, MAP + 14)], RIMC.sand);
+	// the plateau beyond the far edges (north: y = 0; west: x = 0), CLIFF_H up, then its face down to the map's edge: the lit face takes the sun (the north edge faces south)
+	const H = CLIFF_H;
+	poly([c(-R, -R, H), c(MAP, -R, H), c(MAP, 0, H), c(0, 0, H), c(0, MAP, H), c(-R, MAP, H)], RIMC.top);
+	poly([c(0, 0, 0), c(MAP, 0, 0), c(MAP, 0, H), c(0, 0, H)], RIMC.cliffLit);
+	poly([c(0, 0, 0), c(0, MAP, 0), c(0, MAP, H), c(0, 0, H)], RIMC.cliff);
+}
 function draw() {
 	followCam(Math.min(0.1, (performance.now() - (draw.last || performance.now())) / 1000));
 	draw.last = performance.now();
 	shadeFrame();
 	ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 	const z = cam.z,
-		x0 = SX(0),
-		y0 = SY(0),
+		x0 = SX(0, 0),
+		y0 = SY(0, 0, 0),
 		sn = season();
-	{
-		const a = toWorld(0, 0),
-			b = toWorld(cw, ch);
-		if (a.x < 0 || a.y < 0 || b.x > MAP || b.y > MAP) {
-			ctx.fillStyle = '#0b0f0d';
-			ctx.fillRect(0, 0, cw, ch);
-		}
-	} // beyond the map's edge: dark; the map itself is painted over in full
+	drawRim(z); // beyond the map's edge: the sea, the cliffs and the sky (preview 50); the map itself is painted over in full
 	ctx.imageSmoothingEnabled = true;
-	const layer = (img) => {
-		const a = toWorld(0, 0),
-			b2 = toWorld(cw, ch),
-			sx0 = clamp(a.x, 0, MAP),
-			sy0 = clamp(a.y, 0, MAP),
-			sx1 = clamp(b2.x, 0, MAP),
-			sy1 = clamp(b2.y, 0, MAP);
-		if (sx1 > sx0 && sy1 > sy0)
-			ctx.drawImage(
-				img,
-				sx0 * bgK,
-				sy0 * bgK,
-				(sx1 - sx0) * bgK,
-				(sy1 - sy0) * bgK,
-				SX(sx0),
-				SY(sy0),
-				(sx1 - sx0) * z,
-				(sy1 - sy0) * z * TILT,
-			);
-	};
+	const VB = viewBox(),
+		layer = (img) => {
+			// the picture of the land, drawn in world units under the turned matrix: the canvas turns it (preview 50)
+			const sx0 = clamp(VB.x0, 0, MAP),
+				sy0 = clamp(VB.y0, 0, MAP),
+				sx1 = clamp(VB.x1, 0, MAP),
+				sy1 = clamp(VB.y1, 0, MAP);
+			if (sx1 > sx0 && sy1 > sy0) {
+				wmat();
+				ctx.drawImage(img, sx0 * bgK, sy0 * bgK, (sx1 - sx0) * bgK, (sy1 - sy0) * bgK, sx0, sy0, sx1 - sx0, sy1 - sy0);
+				flat();
+			}
+		};
 	layer(bg);
 	if (z > 1.1 && grassPat) {
-		if (grassM.a !== z * 0.5 || grassM.e !== x0 || grassM.f !== y0) {
-			grassM.a = z * 0.5;
-			grassM.d = z * 0.5 * TILT;
-			grassM.e = x0;
-			grassM.f = y0;
+		if (grassM.a !== 0.5) {
+			grassM.a = 0.5;
+			grassM.d = 0.5; // the tufts in world units: the matrix turns and squashes them with the ground
 			grassPat.setTransform(grassM);
 		}
 		ctx.globalAlpha = Math.min(1, (z - 1.1) * 1.5);
 		ctx.fillStyle = grassPat;
-		ctx.fillRect(Math.max(0, x0), Math.max(0, y0), Math.min(cw, MAP * z), Math.min(ch, MAP * z * TILT));
+		wrect(0, 0, MAP, MAP);
 		ctx.globalAlpha = 1;
 	}
 	if (G.shake > G.t && !still()) {
@@ -20461,30 +20522,28 @@ function draw() {
 	drawLakeRipples(z);
 	if (sn.tint) {
 		ctx.fillStyle = sn.tint;
-		ctx.fillRect(x0, y0, MAP * z, MAP * z * TILT);
+		wrect(0, 0, MAP, MAP);
 	}
 	if (DRAW.lvl < 1) drawRainRings(z);
 	drawGround(); // the weather's mark on the land, under everything standing
 	drawPicks(z); // the pick rings lie on the ground, under the figure and the building (Albert, Build 40)
 	// everything standing, back to front
 	// what is on screen: margins in world units, wide enough for the widest building (its turned east wall) and the tallest (a wonder, standing just below the edge)
-	const a0 = toWorld(0, 0),
-		b0 = toWorld(cw, ch),
-		mx = Math.max(80 / z, 44),
-		wv = { x: a0.x - mx, y: a0.y - Math.max(120 / (z * TILT), 34) },
-		wv2 = { x: b0.x + mx, y: b0.y + Math.max(160 / (z * TILT), 115) },
+	const mx = Math.max(160 / z, 115),
+		wv = { x: VB.x0 - mx, y: VB.y0 - mx },
+		wv2 = { x: VB.x1 + mx, y: VB.y1 + mx },
 		inView = (e) => e.x > wv.x && e.x < wv2.x && e.y > wv.y && e.y < wv2.y;
-	const list = [];
+	const list = []; // back to front: by x + y, the screen's down axis in the turned view (preview 50)
 	for (const b of G.blds)
-		if (inView(b) && trapShown(b) && knownB(b)) list.push([BLD[b.kind].crop ? b.y - 60 : b.y + halfOf(b) * 0.4, 1, b]);
+		if (inView(b) && trapShown(b) && knownB(b)) list.push([b.x + b.y + (BLD[b.kind].crop ? -120 : halfOf(b) * 0.8), 1, b]);
 	const far = z < 0.55;
 	if (far) layer(forestLayer()); // zoomed out, the forest is one picture; close in, each tree
-	for (const f of G.finds) if (inView(f) && !(f.done && FINDS[f.kind].got)) list.push([f.y, 3, f]);
-	for (const u of G.units) if (!u.inside && inView(u) && visibleTo0(u)) list.push([u.y, 2, u]);
+	for (const f of G.finds) if (inView(f) && !(f.done && FINDS[f.kind].got)) list.push([f.x + f.y, 3, f]);
+	for (const u of G.units) if (!u.inside && inView(u) && visibleTo0(u)) list.push([u.x + u.y, 2, u]);
 	{
 		const now = performance.now();
 		while (FALL.length && now - FALL[0].t > 1400) FALL.shift();
-		for (const f of FALL) if (inView(f)) list.push([f.y, 4, f]);
+		for (const f of FALL) if (inView(f)) list.push([f.x + f.y, 4, f]);
 	}
 	list.sort((a, b) => a[0] - b[0]);
 	const N = viewNodes(wv, wv2, far),
@@ -20493,7 +20552,7 @@ function draw() {
 	sunShadows(N, list, z, far); // every sun shadow, one path, on the ground under everything standing (the trees' are the first shed under load)
 	// the standing nodes (about 2,000 trees, bushes and rocks) are kept sorted until the view moves a step; the few moving things are merged in
 	for (let i = 0, j = 0; i < N.length || j < list.length; ) {
-		const take = j >= list.length || (i < N.length && N[i].y < list[j][0]),
+		const take = j >= list.length || (i < N.length && N[i].x + N[i].y < list[j][0]),
 			e = take ? N[i++] : list[j][2],
 			t = take ? 0 : list[j++][1];
 		try {
@@ -20524,7 +20583,7 @@ function draw() {
 	drawEvents(z);
 	drawOrders(z);
 	drawReticle();
-	if (G.rally0) flagAt(SX(G.rally0.x), SY(G.rally0.y), G.P[0].color, z);
+	if (G.rally0) flagAt(SX(G.rally0.x, G.rally0.y), SY(G.rally0.y, 0, G.rally0.x), G.P[0].color, z);
 	drawTracers();
 	drawLight(z, inView);
 	drawHitGlow();
@@ -20567,8 +20626,8 @@ function drawRadar(wv, wv2) {
 	if (!near) return;
 	let n = 0;
 	for (const u of G.sol || []) if (u.owner === near.owner && u.hp > 0 && dist(u, near) < 150 && visibleTo0(u)) n++;
-	const px = SX(near.x),
-		py = SY(near.y),
+	const px = SX(near.x, near.y),
+		py = SY(near.y, 0, near.x),
 		dx = px - cw / 2,
 		dy = py - ch / 2,
 		m = 30,
@@ -20711,11 +20770,97 @@ function stamp(c, sx, sy, k, flip) {
 }
 const trapShown = (b) => !BLD[b.kind].trap || b.owner === 0 || friendly(0, b.owner) || (b.seen && b.seen[0]); // a hidden trap shows only to its side, its allies, and a side whose scout found it
 // ═════ 23-view-things.js: buildings, smoke and fire, ripples and sparks, nodes, units, finds ═════
+// The wall mold (preview 50, Albert: "this solves the wall heft problems"): a wall, a gate or a palisade is not a stamped picture but a box
+// drawn in place on the turned ground: its top (a diamond, lit), its two near faces (south toward the screen's lower left, east toward the
+// lower right, the east in shade), and merlons along the top of each open face. A face shared with a wallish neighbour is not drawn, so a
+// run of walls reads as one wall; the sort by x + y lays them back to front. Three colours a kind, one shape for all.
+const WALL_LOOK = {
+	wall: { top: '#b5b0a3', s: '#a29d90', e: '#7d786d', merlon: true },
+	gate: { top: '#9a7a52', s: '#8a6a44', e: '#5a3a1c', door: true },
+	palisade: { top: '#9a7a52', s: '#8a6a44', e: '#5f4324', spike: true },
+};
+let WALL_KEYS = new Set(),
+	wallKeysAt = -1;
+const wkey = (x, y) => `${Math.round(x / NAVC)},${Math.round(y / NAVC)}`;
+function wallKeys() {
+	if (wallKeysAt === G.tick) return WALL_KEYS;
+	wallKeysAt = G.tick;
+	WALL_KEYS = new Set();
+	for (const b of G.blds) if (b.hp > 0 && b.prog >= 1 && WALL_LOOK[b.kind]) WALL_KEYS.add(wkey(b.x, b.y));
+	return WALL_KEYS;
+}
+function drawWallBox(b) {
+	const L = WALL_LOOK[b.kind],
+		K = wallKeys(),
+		H = BLD[b.kind].h * Math.min(1, Math.max(0.15, b.prog)),
+		x0 = b.x - 5,
+		x1 = b.x + 5,
+		y0 = b.y - 5,
+		y1 = b.y + 5,
+		c = (x, y, h = 0) => [SX(x, y), SY(y, h, x)],
+		poly = (pts, fill) => {
+			ctx.beginPath();
+			pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+			ctx.closePath();
+			ctx.fillStyle = fill;
+			ctx.fill();
+		},
+		openS = !K.has(wkey(b.x, b.y + NAVC)), // nothing wallish south: that face shows
+		openE = !K.has(wkey(b.x + NAVC, b.y)),
+		z = cam.z;
+	if (openS) poly([c(x0, y1), c(x1, y1), c(x1, y1, H), c(x0, y1, H)], L.s);
+	if (openE) poly([c(x1, y0), c(x1, y1), c(x1, y1, H), c(x1, y0, H)], L.e);
+	poly([c(x0, y0, H), c(x1, y0, H), c(x1, y1, H), c(x0, y1, H)], L.top);
+	if (L.merlon && z > 0.7) {
+		// merlons: two on each open face's top edge, and the walk's parapet line
+		const m = 3;
+		ctx.fillStyle = L.top;
+		if (openS) for (const t of [0.15, 0.6]) poly([c(x0 + 10 * t, y1, H), c(x0 + 10 * t + 2.5, y1, H), c(x0 + 10 * t + 2.5, y1, H + m), c(x0 + 10 * t, y1, H + m)], L.s);
+		if (openE) for (const t of [0.15, 0.6]) poly([c(x1, y0 + 10 * t, H), c(x1, y0 + 10 * t + 2.5, H), c(x1, y0 + 10 * t + 2.5, H + m), c(x1, y0 + 10 * t, H + m)], L.e);
+	}
+	if (L.door) {
+		ctx.fillStyle = '#2a1a0a';
+		if (openS) poly([c(b.x - 2.5, y1), c(b.x + 2.5, y1), c(b.x + 2.5, y1, H * 0.7), c(b.x - 2.5, y1, H * 0.7)], '#2a1a0a');
+		if (openE) poly([c(x1, b.y - 2.5), c(x1, b.y + 2.5), c(x1, b.y + 2.5, H * 0.7), c(x1, b.y - 2.5, H * 0.7)], '#1e1208');
+	}
+	if (L.spike) {
+		ctx.strokeStyle = '#3e2a14';
+		ctx.lineWidth = Math.max(0.6, 0.5 * z);
+		ctx.beginPath();
+		for (const t of [0.2, 0.5, 0.8]) {
+			const [ax, ay] = c(x0 + 10 * t, y1, H), [bx, by] = c(x0 + 10 * t, y1, H + 3);
+			ctx.moveTo(ax, ay);
+			ctx.lineTo(bx, by);
+		}
+		ctx.stroke();
+	}
+	// the edge where the top meets the faces, faint, so the box reads
+	ctx.strokeStyle = 'rgba(30,22,16,.35)';
+	ctx.lineWidth = Math.max(0.5, 0.4 * z);
+	ctx.beginPath();
+	const [tx, ty] = c(x1, y1, H);
+	if (openS) {
+		const [ax, ay] = c(x0, y1, H);
+		ctx.moveTo(ax, ay);
+		ctx.lineTo(tx, ty);
+	}
+	if (openE) {
+		const [ax, ay] = c(x1, y0, H);
+		ctx.moveTo(ax, ay);
+		ctx.lineTo(tx, ty);
+	}
+	ctx.stroke();
+}
 function drawBld(b, s) {
+	if (WALL_LOOK[b.kind] && b.prog >= 1) {
+		drawWallBox(b);
+		flagsOn(bldSprite(b, s), SX(b.x, b.y), SY(b.y, 0, b.x), cam.z, G.P[b.owner].color, b.id);
+		return;
+	}
 	if (BLD[b.kind].trap) {
 		const z = cam.z,
-			x = SX(b.x),
-			y = SY(b.y),
+			x = SX(b.x, b.y),
+			y = SY(b.y, 0, b.x),
 			k = BLD[b.kind].trap,
 			own = b.owner === 0 || friendly(0, b.owner);
 		if (b.prog < 1) {
@@ -20783,8 +20928,8 @@ function drawBld(b, s) {
 		return;
 	}
 	const z = cam.z,
-		sx = SX(b.x),
-		sy = SY(b.y),
+		sx = SX(b.x, b.y),
+		sy = SY(b.y, 0, b.x),
 		B = BLD[b.kind],
 		c = bldSprite(b, s),
 		k = z / s;
@@ -20795,7 +20940,7 @@ function drawBld(b, s) {
 		ctx.strokeStyle = '#d8c79c';
 		ctx.lineWidth = 1.5;
 		ctx.setLineDash([3, 3]);
-		ctx.strokeRect(sx - w / 2, sy - d / 2, w, d);
+		wrect(b.x - (B.fp * NAVC) / 2, b.y - (B.fp * NAVC) / 2, B.fp * NAVC, B.fp * NAVC, true); // the stakes round the footprint, on the turned ground (preview 50)
 		ctx.setLineDash([]);
 		const top = c.ay * k,
 			show = 0.15 + 0.85 * b.prog;
@@ -21016,16 +21161,16 @@ function sunShadows(N, list, z, far) {
 			const h = NODE_H[n.kind];
 			if (!h || n.amt <= 0 || deep.has(n.id) || (G.fogOn && fogAt(n.x, n.y) === 0)) continue;
 			const f = (0.6 + 0.4 * Math.min(1, n.amt / n.max)) * (n.kind === 'tree' ? 1.4 : 1);
-			shadowPath(SX(n.x), SY(n.y), h * f, (n.kind === 'tree' ? 7 : 5) * f * z, z);
+			shadowPath(SX(n.x, n.y), SY(n.y, 0, n.x), h * f, (n.kind === 'tree' ? 7 : 5) * f * z, z);
 		}
 	for (const [, t, e] of list) {
 		if (t === 1) {
 			const B = BLD[e.kind];
-			if (!B.crop) boxShadow(SX(e.x), SY(e.y), B.h * Math.min(1, e.prog), B.fp * NAVC * 0.5 * z, z);
+			if (!B.crop) boxShadow(SX(e.x, e.y), SY(e.y, 0, e.x), B.h * Math.min(1, e.prog), B.fp * NAVC * 0.5 * z, z);
 		} else if (t === 2) {
 			const U = UNIT[e.kind],
 				box = LOOKBOX[U.look] || [26, 30];
-			shadowPath(SX(e.x), SY(e.y), box[1] * FIG, box[0] * 0.28 * z * FIG + 2, z);
+			shadowPath(SX(e.x, e.y), SY(e.y, 0, e.x), box[1] * FIG, box[0] * 0.28 * z * FIG + 2, z);
 		}
 	}
 	ctx.fill();
@@ -21245,7 +21390,7 @@ function ripDraw() {
 		ctx.strokeStyle = RIPS[i].col;
 		ctx.globalAlpha = 1 - a;
 		ctx.lineWidth = 2;
-		ring(SX(RIPS[i].x), SY(RIPS[i].y), (6 + a * 18) * z, (6 + a * 18) * z * TILT);
+		ring(SX(RIPS[i].x, RIPS[i].y), SY(RIPS[i].y, 0, RIPS[i].x), (6 + a * 18) * z, (6 + a * 18) * z * TILT);
 		ctx.globalAlpha = 1;
 	}
 }
@@ -21258,8 +21403,8 @@ function sparkDraw() {
 	});
 	for (const k of SPARKS) {
 		const a = (G.t - k.t) / 0.3,
-			x = SX(k.x),
-			y = SY(k.y) - 6 * z;
+			x = SX(k.x, k.y),
+			y = SY(k.y, 0, k.x) - 6 * z;
 		ctx.strokeStyle = `rgba(255,${(200 - a * 80) | 0},90,${1 - a})`;
 		ctx.lineWidth = 1.4;
 		ctx.beginPath();
@@ -21316,7 +21461,7 @@ function viewNodes(a, b, far) {
 			y1 = (q(b.y) + 1) * 40;
 		NV.arr = G.nodes
 			.filter((n) => n.kind !== 'farm' && !(far && n.kind === 'tree') && n.x > x0 && n.x < x1 && n.y > y0 && n.y < y1)
-			.sort((p, r) => p.y - r.y);
+			.sort((p, r) => p.x + p.y - (r.x + r.y)); // back to front in the turned view (preview 50)
 		NV.ref = G.nodes;
 		NV.len = G.nodes.length;
 		NV.key = key;
@@ -21325,8 +21470,8 @@ function viewNodes(a, b, far) {
 }
 function drawNode(n, s) {
 	const z = cam.z,
-		sx = SX(n.x),
-		sy = SY(n.y);
+		sx = SX(n.x, n.y),
+		sy = SY(n.y, 0, n.x);
 	if (n.kind === 'fish') {
 		if (still()) return;
 		const ph = (G.t * 0.5 + n.id * 0.13) % 1;
@@ -21390,8 +21535,8 @@ function drawStandards(z, inView) {
 		if (g.n < 5) continue;
 		const c = { x: g.x / g.n, y: g.y / g.n };
 		if (!inView(c)) continue;
-		const x = SX(c.x),
-			y = SY(c.y),
+		const x = SX(c.x, c.y),
+			y = SY(c.y, 0, c.x),
 			h = 30 * z,
 			col = G.P[g.o].color,
 			r = 6 * z + 2,
@@ -21449,7 +21594,7 @@ function drawFallen(f, s) {
 		r = (still() ? 1 : Math.min(1, a / 0.35)) * (Math.PI / 2) * -f.face; // falls back, away from the way it faced
 	ctx.save();
 	ctx.globalAlpha = a < 0.7 ? 1 : 1 - (a - 0.7) / 0.7;
-	ctx.translate(SX(f.x), SY(f.y));
+	ctx.translate(SX(f.x, f.y), SY(f.y, 0, f.x));
 	ctx.rotate(r);
 	if (f.face < 0) ctx.scale(-1, 1);
 	ctx.drawImage(c, -c.ax * k, -c.ay * k, c.width * k, c.height * k);
@@ -21460,8 +21605,8 @@ const PACED = new WeakMap(); // the view's memory of each unit's walk: when it l
 // the leaves over a soldier in ambush (the visual pass, Nov 3): three leaf blobs in the wood's greens, swaying a little
 function leavesOver(u) {
 	const z = cam.z,
-		x = SX(u.x),
-		y = SY(u.y) - 8 * z,
+		x = SX(u.x, u.y),
+		y = SY(u.y, 0, u.x) - 8 * z,
 		t = G.t * 0.8 + u.id;
 	for (let i = 0; i < 3; i++) {
 		const a = t + i * 2.1,
@@ -21486,8 +21631,8 @@ function drawUnit(u, s) {
 		ux = u.node ? ix + (u.node.x - ix) * ln : ix,
 		uy = u.node ? iy + (u.node.y - iy) * ln : iy;
 	const z = cam.z,
-		sx = SX(ux),
-		sy = SY(uy) - (u.fly || 0) * z,
+		sx = SX(ux, uy),
+		sy = SY(uy, 0, ux) - (u.fly || 0) * z,
 		U = UNIT[u.kind],
 		col = G.P[u.owner].color,
 		st = u.owner === WILD ? null : stats(u.owner, u.kind);
@@ -21689,8 +21834,8 @@ function drawUnit(u, s) {
 }
 function drawFind(f) {
 	const z = cam.z,
-		x = SX(f.x),
-		y = SY(f.y),
+		x = SX(f.x, f.y),
+		y = SY(f.y, 0, f.x),
 		F = FINDS[f.kind];
 	if (f.kind === 'camp' && !f.done) flame(x, y + 1.5 * z, 'campfire', z, f.id); // the robbers' fire, before the tents (the glow comes with the lights)
 	ctx.save();
@@ -22038,7 +22183,7 @@ function drawPicks(z) {
 		const own = e.owner,
 			r = e.q ? halfOf(e) + 6 : !e.kind || FINDS[e.kind] ? 18 : 9;
 		ctx.strokeStyle = own === 0 ? '#5ad27a' : own === undefined || own === null || own === WILD ? '#ffd35e' : '#ff6a52';
-		ring(SX(e.x), SY(e.y), r * z + 3, r * z * TILT + 2);
+		ring(SX(e.x, e.y), SY(e.y, 0, e.x), r * z + 3, r * z * TILT + 2);
 	}
 }
 const rnd2 = () => lookDice() * 2 - 1;
@@ -22066,8 +22211,8 @@ function drawGround() {
 				for (let gx = x0; gx <= x1; gx++) {
 					const r = T[gy * FOGN + gx];
 					if (!r || Math.min(4, Math.ceil(4 * Math.min(1, r / CLIMATE.rut.n0) ** 0.4)) !== q) continue;
-					const sx = SX(gx * FOG + FOG / 2),
-						sy = SY(gy * FOG + FOG / 2);
+					const sx = SX(gx * FOG + FOG / 2, gy * FOG + FOG / 2),
+						sy = SY(gy * FOG + FOG / 2, 0, gx * FOG + FOG / 2);
 					ctx.moveTo(sx + FOG * 0.6 * z, sy);
 					ctx.ellipse(sx, sy, FOG * 0.6 * z, FOG * 0.6 * z * TILT, 0, 0, 6.3);
 				}
@@ -22095,8 +22240,8 @@ function drawCracks(z) {
 		if (G.t - c.t0 >= 45) continue; // the events tick clears them; the drawing only reads
 		const age = G.t - c.t0,
 			fade = age < 30 ? 1 : (45 - age) / 15,
-			x = SX(c.x),
-			y = SY(c.y);
+			x = SX(c.x, c.y),
+			y = SY(c.y, 0, c.x);
 		if (x < -200 || x > cw + 200 || y < -200 || y > ch + 200) continue;
 		ctx.lineJoin = 'round';
 		for (const [col, w] of [
@@ -22218,16 +22363,16 @@ function drawSeal(pl) {
 	const P = pl.seal,
 		k = keepOf(0);
 	if (!P || !k) return;
-	if (!P.length) return tag('Sealed', SX(k.x) - 22, SY(k.y) - 40);
+	if (!P.length) return tag('Sealed', SX(k.x, k.y) - 22, SY(k.y, 0, k.x) - 40);
 	ctx.strokeStyle = '#de5a44';
 	ctx.lineWidth = 3;
 	ctx.setLineDash([8, 6]);
 	ctx.beginPath();
-	P.forEach((q, i) => (i ? ctx.lineTo(SX(q.x), SY(q.y)) : ctx.moveTo(SX(q.x), SY(q.y))));
+	P.forEach((q, i) => (i ? ctx.lineTo(SX(q.x, q.y), SY(q.y, 0, q.x)) : ctx.moveTo(SX(q.x, q.y), SY(q.y, 0, q.x))));
 	ctx.stroke();
 	ctx.setLineDash([]);
 	const e = P[0];
-	tag('Open: a foe walks in', SX(e.x) - 50, SY(e.y) - 10);
+	tag('Open: a foe walks in', SX(e.x, e.y) - 50, SY(e.y, 0, e.x) - 10);
 }
 // alignment guides (Build 63): a thin line from the ghost to every own building whose centre or edge sits on the same line, as a PDF
 // editor draws them while an element moves; the snap pull toward them is snapGhost's
@@ -22257,8 +22402,8 @@ function drawGuides(sp, h) {
 			if (Math.abs(gx - bx) < 0.5) {
 				const y0 = Math.min(sp.y - h, b.y - bh) - 12,
 					y1 = Math.max(sp.y + h, b.y + bh) + 12;
-				ctx.moveTo(SX(gx), SY(y0));
-				ctx.lineTo(SX(gx), SY(y1));
+				ctx.moveTo(SX(gx, y0), SY(y0, 0, gx));
+				ctx.lineTo(SX(gx, y1), SY(y1, 0, gx));
 			}
 		for (const [gy, by] of [
 			[sp.y, b.y],
@@ -22270,8 +22415,8 @@ function drawGuides(sp, h) {
 			if (Math.abs(gy - by) < 0.5) {
 				const x0 = Math.min(sp.x - h, b.x - bh) - 12,
 					x1 = Math.max(sp.x + h, b.x + bh) + 12;
-				ctx.moveTo(SX(x0), SY(gy));
-				ctx.lineTo(SX(x1), SY(gy));
+				ctx.moveTo(SX(x0, gy), SY(gy, 0, x0));
+				ctx.lineTo(SX(x1, gy), SY(gy, 0, x1));
 			}
 	}
 	ctx.stroke();
@@ -22291,7 +22436,7 @@ function drawGhost() {
 			const ok = !canPlace(0, kind, c.gx * NAVC + 5, c.gy * NAVC + 5); // the line's own kind: a trap keeps no lane (p44)
 			if (!ok) bad++;
 			ctx.fillStyle = ok ? 'rgba(120,220,120,.55)' : 'rgba(222,90,68,.65)';
-			ctx.fillRect(SX(c.gx * NAVC), SY(c.gy * NAVC), NAVC * z, NAVC * z * TILT);
+			wrect(c.gx * NAVC, c.gy * NAVC, NAVC, NAVC);
 		}
 		pl.pts.forEach((c, i) => {
 			const q = wallXY(c); // the corners: round handles, the first ringed green
@@ -22307,8 +22452,8 @@ function drawGhost() {
 		pl.why = bad === cells.length ? 'blocked' : null;
 		tag(
 			`${cells.length} × ${costText(B.cost)}${bad ? ' · ' + bad + ' blocked' : ''}`,
-			SX(last.gx * NAVC) + 12,
-			SY(last.gy * NAVC) - 14,
+			SX(last.gx * NAVC, last.gy * NAVC) + 12,
+			SY(last.gy * NAVC, 0, last.gx * NAVC) - 14,
 		);
 		return;
 	}
@@ -22321,10 +22466,10 @@ function drawGhost() {
 	const s = quant(z * dpr),
 		c = bldSprite({ kind, owner: 0 }, s);
 	ctx.globalAlpha = 0.6;
-	stamp(ghostTint(c, ok), SX(sp.x), SY(sp.y), z / s);
-	flagsOn(c, SX(sp.x), SY(sp.y), z, G.P[0].color, 0);
+	stamp(ghostTint(c, ok), SX(sp.x, sp.y), SY(sp.y, 0, sp.x), z / s);
+	flagsOn(c, SX(sp.x, sp.y), SY(sp.y, 0, sp.x), z, G.P[0].color, 0);
 	ctx.globalAlpha = 1;
-	tag(why || `${B.name} · ${costText(B.cost)}`, SX(sp.x - n / 2), SY(sp.y - n / 2) - 8 - (BLD[kind].h + 10) * z);
+	tag(why || `${B.name} · ${costText(B.cost)}`, SX(sp.x, sp.y) - 40, SY(sp.y, 0, sp.x) - DY(n / 2, n / 2) - 8 - (BLD[kind].h + 10) * z);
 }
 // The ghost's own art tinted green where it fits and red where it does not (Albert, Nov 1): no grid, no footprint box; the reason is in its label.
 // One tinted copy of each sprite for each answer, kept with the sprite.
@@ -22352,8 +22497,8 @@ function ghostTint(c, ok) {
 function miniIncoming(m, k) {
 	const I = G.incoming;
 	if (!I) return;
-	const x = I.x * k,
-		y = I.y * k,
+	const x = 86 + (I.x - I.y) * MINI_K,
+		y = (I.x + I.y) * MINI_K,
 		on = Math.floor(performance.now() / 350) % 2 === 0;
 	m.strokeStyle = '#ff3b2f';
 	m.lineWidth = 2;
@@ -22365,27 +22510,49 @@ function miniIncoming(m, k) {
 	m.arc(x, y, 4, 0, Math.PI * 2);
 	m.fill();
 } // an attack on its way: a red dot that flashes on the small map; tap the map and you are there
+// the small map, turned with the view (preview 50): the diamond fills its square; MINI_M maps world units to it; marks are drawn in the
+// turned frame (a mark's own shape is turned too; it is 3 px, nobody minds)
+const MINI_K = 172 / (2 * MAP),
+	miniMat = (m) => m.setTransform(MINI_K, MINI_K, -MINI_K, MINI_K, 86, 0),
+	miniWorld = (px, py) => {
+		const u = (px - 86) / MINI_K,
+			v = py / MINI_K;
+		return { x: (u + v) / 2, y: (v - u) / 2 };
+	}; // a point of the small map, in the world
 function drawMini() {
 	const m = mctx,
-		k = 172 / MAP;
+		k = 1;
+	m.setTransform(1, 0, 0, 1, 0, 0);
 	m.clearRect(0, 0, 172, 172);
-	m.drawImage(terrainMini, 0, 0);
-	m.drawImage(forestLayer(), 0, 0, 172, 172);
+	miniMat(m);
+	m.drawImage(terrainMini, 0, 0, 172, 172, 0, 0, MAP, MAP);
+	m.drawImage(forestLayer(), 0, 0, MAP, MAP);
 	if (G.fogOn) {
 		m.imageSmoothingEnabled = false;
-		m.drawImage(fogLayer(), 0, 0, 172, 172);
+		m.drawImage(fogLayer(), 0, 0, MAP, MAP);
 	}
+	m.imageSmoothingEnabled = true;
+	m.setTransform(1, 0, 0, 1, 0, 0);
+	m.save();
+	m.beginPath();
+	m.moveTo(86, 0);
+	m.lineTo(172, 86);
+	m.lineTo(86, 172);
+	m.lineTo(0, 86);
+	m.closePath();
+	m.clip();
+	const W = (x, y) => [86 + (x - y) * MINI_K, (x + y) * MINI_K]; // a world point on the small map
+	const P = (e) => W(e.x, e.y);
 	for (const f of G.finds)
 		if ((!f.done || FINDS[f.kind].capture) && known0(f)) {
 			m.fillStyle = f.owner !== null && FINDS[f.kind].capture ? G.P[f.owner].color : '#f2cf55';
-			m.fillRect(f.x * k - 1.5, f.y * k - 1.5, 3, 3);
+			{ const [fx, fy] = P(f); m.fillRect(fx - 1.5, fy - 1.5, 3, 3); }
 		}
 	for (const b of G.blds) {
 		// Town Centers are stars, castles diamonds, the rest small squares
 		if (!knownB(b)) continue;
 		m.fillStyle = G.P[b.owner].color;
-		const x = b.x * k,
-			y = b.y * k;
+		const [x, y] = P(b);
 		if (b.kind === 'keep' || b.kind === 'town') {
 			m.beginPath();
 			for (let i = 0; i < 10; i++) {
@@ -22421,19 +22588,25 @@ function drawMini() {
 	for (const u of G.units)
 		if (u.owner !== WILD ? visibleTo0(u) : !UNIT[u.kind].flee && !UNIT[u.kind].passive && (!G.fogOn || seen0(u))) {
 			m.fillStyle = G.P[u.owner].color;
-			m.fillRect(u.x * k - 1, u.y * k - 1, 2, 2);
+			{ const [ux, uy] = P(u); m.fillRect(ux - 1, uy - 1, 2, 2); }
 		}
 	if (G.mirage && G.mirage.until > G.t) {
 		m.fillStyle = '#de5a44';
 		for (let i = 0; i < G.mirage.n; i++)
-			m.fillRect((G.mirage.x + (i % 4) * 14 - 20) * k - 1, (G.mirage.y + Math.floor(i / 4) * 14 - 14) * k - 1, 2, 2);
+			{ const [mx, my] = W(G.mirage.x + (i % 4) * 14 - 20, G.mirage.y + Math.floor(i / 4) * 14 - 14); m.fillRect(mx - 1, my - 1, 2, 2); }
 	} // the mirage
 	miniIncoming(m, k);
-	const a = toWorld(0, 0),
-		b = toWorld(cw, ch);
-	m.strokeStyle = '#fff';
-	m.lineWidth = 1.5;
-	m.strokeRect(a.x * k, a.y * k, (b.x - a.x) * k, (b.y - a.y) * k);
+	m.restore();
+	{
+		// what the screen shows: the four screen corners, in the world, as a box on the small map
+		const Q = [toWorld(0, 0), toWorld(cw, 0), toWorld(cw, ch), toWorld(0, ch)].map((p) => W(p.x, p.y));
+		m.strokeStyle = '#fff';
+		m.lineWidth = 1.5;
+		m.beginPath();
+		Q.forEach(([x, y], i) => (i ? m.lineTo(x, y) : m.moveTo(x, y)));
+		m.closePath();
+		m.stroke();
+	}
 }
 // the flood: water over the shore
 function drawFlood(z) {
@@ -22444,7 +22617,7 @@ function drawFlood(z) {
 			for (let i = 0; i < 48; i++) {
 				const a = (i / 48) * Math.PI * 2,
 					r = lakeRAt(L, a) + EVENTS.flood.rise;
-				ctx[i ? 'lineTo' : 'moveTo'](SX(L.x + Math.cos(a) * r), SY(L.y + Math.sin(a) * r));
+				ctx[i ? 'lineTo' : 'moveTo'](SX(L.x + Math.cos(a) * r, L.y + Math.sin(a) * r), SY(L.y + Math.sin(a) * r, 0, L.x + Math.cos(a) * r));
 			} // the flood follows each lake's own shore
 		ctx.fill(); // one shape, so a river's overlapping pools do not darken where they meet (Build 52)
 	} // the flood: water over the shore
@@ -22455,12 +22628,12 @@ function drawSand(z) {
 		const s = G.sand;
 		ctx.fillStyle = 'rgba(200,180,120,.7)';
 		ctx.beginPath();
-		ctx.ellipse(SX(s.x), SY(s.y), s.r * z, s.r * z * TILT, 0, 0, 7);
+		ctx.ellipse(SX(s.x, s.y), SY(s.y, 0, s.x), s.r * z, s.r * z * TILT, 0, 0, 7);
 		ctx.fill();
 		ctx.strokeStyle = 'rgba(120,100,60,.5)';
 		ctx.lineWidth = 1;
 		for (let i = 1; i <= 3; i++) {
-			ring(SX(s.x), SY(s.y), (s.r * z * i) / 4, (s.r * z * TILT * i) / 4);
+			ring(SX(s.x, s.y), SY(s.y, 0, s.x), (s.r * z * i) / 4, (s.r * z * TILT * i) / 4);
 		}
 	} // quicksand: a pale patch with ripples
 }
@@ -22474,8 +22647,8 @@ function drawLakeRipples(z) {
 			for (let i = 0; i < (L.river ? 2 : 18); i++) {
 				const a = i * 2.4 + G.t * 0.05,
 					r = lakeRAt(L, a) * (0.25 + 0.6 * ((i * 0.37 + G.t * 0.02) % 1)); // within the drawn shore (p44)
-				const lx = SX(L.x + Math.cos(a) * r),
-					ly = SY(L.y + Math.sin(a) * r);
+				const lx = SX(L.x + Math.cos(a) * r, L.y + Math.sin(a) * r),
+					ly = SY(L.y + Math.sin(a) * r, 0, L.x + Math.cos(a) * r);
 				ctx.beginPath();
 				ctx.moveTo(lx - 6 * z, ly);
 				ctx.quadraticCurveTo(lx, ly - 2 * z, lx + 6 * z, ly);
@@ -22501,8 +22674,8 @@ function drawRainRings(z) {
 				if (h % 3) continue;
 				const ph = (t * 1.6 + ((h >> 8) & 255) / 256) % 1,
 					r = Math.min(10, (1 + ph * 4) * z),
-					px = SX((gx + (h & 255) / 256) * C),
-					py = SY((gy + ((h >> 16) & 255) / 256) * C);
+					px = SX((gx + (h & 255) / 256) * C, (gy + ((h >> 16) & 255) / 256) * C),
+					py = SY((gy + ((h >> 16) & 255) / 256) * C, 0, (gx + (h & 255) / 256) * C);
 				ctx.moveTo(px + r, py);
 				ctx.ellipse(px, py, r, r * TILT, 0, 0, 7);
 			}
@@ -22514,8 +22687,8 @@ function drawFire(z, inView) {
 	if (G.fire)
 		for (const n of G.fire)
 			if (inView(n)) {
-				const x = SX(n.x),
-					y = SY(n.y),
+				const x = SX(n.x, n.y),
+					y = SY(n.y, 0, n.x),
 					ph = (G.t * 5 + n.id) % 1;
 				ctx.fillStyle = 'rgba(250,150,40,.85)';
 				ctx.beginPath();
@@ -22531,25 +22704,17 @@ function drawFire(z, inView) {
 // the fog, soft, over everything standing
 function drawFogLayer(z) {
 	if (G.fogOn) {
-		const a1 = toWorld(0, 0),
-			b1 = toWorld(cw, ch),
-			sx0 = clamp(a1.x, 0, MAP),
-			sy0 = clamp(a1.y, 0, MAP),
-			sx1 = clamp(b1.x, 0, MAP),
-			sy1 = clamp(b1.y, 0, MAP);
+		const VB = viewBox(),
+			sx0 = clamp(VB.x0, 0, MAP),
+			sy0 = clamp(VB.y0, 0, MAP),
+			sx1 = clamp(VB.x1, 0, MAP),
+			sy1 = clamp(VB.y1, 0, MAP);
 		ctx.imageSmoothingEnabled = true;
-		if (sx1 > sx0 && sy1 > sy0)
-			ctx.drawImage(
-				fogLayer(),
-				sx0 / FOG,
-				sy0 / FOG,
-				(sx1 - sx0) / FOG,
-				(sy1 - sy0) / FOG,
-				SX(sx0),
-				SY(sy0),
-				(sx1 - sx0) * z,
-				(sy1 - sy0) * z * TILT,
-			);
+		if (sx1 > sx0 && sy1 > sy0) {
+			wmat();
+			ctx.drawImage(fogLayer(), sx0 / FOG, sy0 / FOG, (sx1 - sx0) / FOG, (sy1 - sy0) / FOG, sx0, sy0, sx1 - sx0, sy1 - sy0);
+			flat();
+		}
 	} // the fog, soft, over everything standing
 }
 // your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
@@ -22564,8 +22729,8 @@ function drawOrders(z) {
 	ctx.textAlign = 'center';
 	for (const id in G.ords) {
 		const O = G.ords[id];
-		const bx = SX(O.x),
-			by = SY(O.y),
+		const bx = SX(O.x, O.y),
+			by = SY(O.y, 0, O.x),
 			r = 14 * cam.z;
 		ctx.setLineDash([6, 6]);
 		ctx.lineWidth = 1.5;
@@ -22573,7 +22738,7 @@ function drawOrders(z) {
 			ctx.globalAlpha = 0.7;
 			ctx.lineDashOffset = -performance.now() / 60;
 			ctx.beginPath();
-			ctx.moveTo(SX(O.cx), SY(O.cy));
+			ctx.moveTo(SX(O.cx, O.cy), SY(O.cy, 0, O.cx));
 			ctx.lineTo(bx, by);
 			ctx.stroke();
 		}
@@ -22597,8 +22762,8 @@ function drawTracers() {
 		const p = 1 - t.life / t.dur,
 			q = Math.max(0, p - 0.12),
 			at = (f) => [
-				SX(t.x1 + (t.x2 - t.x1) * f),
-				SY(t.y1 + (t.y2 - t.y1) * f, t.h1 + (6 - t.h1) * f + 4 * t.arc * f * (1 - f)),
+				SX(t.x1 + (t.x2 - t.x1) * f, t.y1 + (t.y2 - t.y1) * f),
+				SY(t.y1 + (t.y2 - t.y1) * f, t.h1 + (6 - t.h1) * f + 4 * t.arc * f * (1 - f), t.x1 + (t.x2 - t.x1) * f),
 			];
 		const [ax, ay] = at(q),
 			[bx, by] = at(p);
@@ -22630,17 +22795,17 @@ function drawLight(z, inView) {
 				const fire = b.owner !== WILD && G.P[b.owner].techs.has('chimney'), // a fireplace flickers from inside
 					a = fire ? 0.6 + 0.3 * Math.sin(tnow * 9 + b.id) * Math.sin(tnow * 5.3 + b.id * 0.7) : 0.75;
 				ctx.fillStyle = `rgba(255,${fire ? 185 : 200},${fire ? 90 : 110},${a.toFixed(2)})`;
-				ctx.fillRect(SX(b.x) + 3 * z, SY(b.y + halfOf(b) * 0.9, 6), 2 * z, 2 * z);
+				ctx.fillRect(SX(b.x, b.y) + 3 * z, SY(b.y, 6, b.x) + DY(halfOf(b) * 0.9, halfOf(b) * 0.9) / 2, 2 * z, 2 * z);
 			}
 	if (!SET.lights || (nt < 0.05 && G.wx !== 'rain' && !G.blds.some((b) => b.fire > 0))) return;
 	for (const b of G.blds) {
 		if (!inView(b) || !knownB(b)) continue;
 		const B = BLD[b.kind];
-		if (b.fire > 0 || b.hp < maxHpB(b.owner, b.kind) * 0.5) glow(SX(b.x), SY(b.y), 'blaze', z);
+		if (b.fire > 0 || b.hp < maxHpB(b.owner, b.kind) * 0.5) glow(SX(b.x, b.y), SY(b.y, 0, b.x), 'blaze', z);
 		else if (b.prog >= 1 && HEARTH.has(b.kind))
 			glow(
-				SX(b.x),
-				SY(b.y) + halfOf(b) * TILT * 0.4,
+				SX(b.x, b.y),
+				SY(b.y, 0, b.x) + halfOf(b) * TILT * 0.4,
 				'hearth',
 				z,
 				1 +
@@ -22648,19 +22813,19 @@ function drawLight(z, inView) {
 						(b.owner === WILD ? 0 : upTier(b.kind === 'keep' || b.kind === 'town' ? 'house' : b.kind, G.P[b.owner])),
 			); // the Home line lights the hearth more
 		else if (b.prog >= 1 && !B.wallish && !B.crop && b.owner !== WILD && fxv(b.owner, 'lamp', bldKeys(b.kind)).a > 0) {
-			const x = SX(b.x) - halfOf(b) * z * 0.6,
-				y = SY(b.y) + halfOf(b) * TILT * z * 0.5;
+			const x = SX(b.x, b.y) - halfOf(b) * z * 0.6,
+				y = SY(b.y, 0, b.x) + halfOf(b) * TILT * z * 0.5;
 			glow(x, y, 'lantern', z);
 			flame(x, y - 3 * z, 'lantern', z * 0.7, b.id);
 		} // Lanterns: one at every door
 	}
 	for (const f of G.finds)
-		if (f.kind === 'camp' && !f.done && inView(f) && known0(f)) glow(SX(f.x), SY(f.y), 'campfire', z);
+		if (f.kind === 'camp' && !f.done && inView(f) && known0(f)) glow(SX(f.x, f.y), SY(f.y, 0, f.x), 'campfire', z);
 	for (const u of G.units)
 		if (u.kind === 'caravan' && u.hp > 0 && !u.inside && inView(u) && visibleTo0(u)) {
-			const x = SX(u.x) + 5 * z,
-				y = SY(u.y) - 9 * z;
-			glow(SX(u.x), SY(u.y), 'lantern', z);
+			const x = SX(u.x, u.y) + 5 * z,
+				y = SY(u.y, 0, u.x) - 9 * z;
+			glow(SX(u.x, u.y), SY(u.y, 0, u.x), 'lantern', z);
 			flame(x, y, 'lantern', z * 0.8, u.id);
 		}
 	for (const s of STANDARDS) {
@@ -22716,7 +22881,7 @@ function drawTouch(z) {
 		if (u.owner === 0 && u.patch && !seen.has(u.patch.x0)) {
 			seen.add(u.patch.x0);
 			const r = u.patch;
-			ctx.strokeRect(SX(r.x0), SY(r.y0), (r.x1 - r.x0) * z, (r.y1 - r.y0) * z * TILT);
+			wrect(r.x0, r.y0, r.x1 - r.x0, r.y1 - r.y0, true);
 		}
 	if (G.press && performance.now() - G.press.t > PRESS_SHOW) {
 		const f = Math.min(1, (performance.now() - G.press.t - PRESS_SHOW) / (HOLD_MS - PRESS_SHOW));
@@ -22733,13 +22898,13 @@ function drawTouch(z) {
 		ctx.lineWidth = 3;
 		ctx.lineCap = 'round';
 		ctx.beginPath();
-		ctx.moveTo(SX(L.a.x), SY(L.a.y));
-		ctx.lineTo(SX(L.b.x), SY(L.b.y));
+		ctx.moveTo(SX(L.a.x, L.a.y), SY(L.a.y, 0, L.a.x));
+		ctx.lineTo(SX(L.b.x, L.b.y), SY(L.b.y, 0, L.b.x));
 		ctx.stroke();
 		ctx.font = mapFont();
 		ctx.textAlign = 'center';
 		ctx.fillStyle = '#ffd35e';
-		ctx.fillText(`${n} across`, SX((L.a.x + L.b.x) / 2), SY((L.a.y + L.b.y) / 2) - 12);
+		ctx.fillText(`${n} across`, SX((L.a.x + L.b.x) / 2, (L.a.y + L.b.y) / 2), SY((L.a.y + L.b.y) / 2, 0, (L.a.x + L.b.x) / 2) - 12);
 	} // the choke being drawn: the gap and how many files it holds
 	if (G.box) {
 		const b = G.box;
@@ -22843,8 +23008,8 @@ function drawWeather() {
 			}
 			if (age > 0.45) continue;
 			const rr = NS_rng((b.seed * 1e6) | 1); // the same jagged path every frame
-			const x1 = SX(b.x),
-				y1 = SY(b.y),
+			const x1 = SX(b.x, b.y),
+				y1 = SY(b.y, 0, b.x),
 				paths = [],
 				main = [];
 			let x = x1 + (rr() - 0.5) * 80,
@@ -23005,8 +23170,11 @@ function edgeScroll(dt) {
 		vx = EDGE.x < m ? -1 : EDGE.x > cw - m ? 1 : 0,
 		vy = EDGE.y < m ? -1 : EDGE.y > ch - m ? 1 : 0;
 	if (!vx && !vy) return;
-	cam.x += (vx * 320 * dt) / cam.z;
-	cam.y += (vy * 320 * dt) / (cam.z * TILT);
+	{
+		const d = dWorld(vx * 320 * dt, vy * 320 * dt); // the screen's push, turned into the world's (preview 50)
+		cam.x += d.x;
+		cam.y += d.y;
+	}
 	clampCam();
 	ghostAt(EDGE, drag.touch);
 }
@@ -23025,7 +23193,7 @@ function wallSet(pl) {
 	pl.cells = P.length > 1 ? P.slice(1).flatMap((c, i) => wallLine(P[i], c).slice(i ? 1 : 0)) : P.slice();
 	pl.at = P.length ? { x: P[P.length - 1].gx * NAVC + 5, y: P[P.length - 1].gy * NAVC + 5 } : null;
 }
-const wallXY = (c) => ({ x: SX(c.gx * NAVC + 5), y: SY(c.gy * NAVC + 5) });
+const wallXY = (c) => ({ x: SX(c.gx * NAVC + 5, c.gy * NAVC + 5), y: SY(c.gy * NAVC + 5, 0, c.gx * NAVC + 5) });
 function wallHit(pl, p) {
 	const R = 24,
 		P = pl.pts.map(wallXY);
@@ -23080,8 +23248,8 @@ cv.addEventListener('pointerdown', (e) => {
 	if (G.place) {
 		const touch = e.pointerType !== 'mouse',
 			at = G.place.at,
-			gx = at ? SX(at.x) : 0,
-			gy = at ? SY(at.y) : 0,
+			gx = at ? SX(at.x, at.y) : 0,
+			gy = at ? SY(at.y, 0, at.x) : 0,
 			nearGhost =
 				!at ||
 				Math.min(hyp(p.x - gx, p.y - gy), hyp(p.x - gx, p.y - (touch ? LIFT : 0) - gy)) <
@@ -23140,8 +23308,11 @@ cv.addEventListener('pointermove', (e) => {
 		if (G) G.follow = false; // a pinch is yours: the camera stops following
 		camStop();
 		zoomAt((cam.z * d) / pinch.d, mx, my);
-		cam.x -= (mx - pinch.mx) / cam.z;
-		cam.y -= (my - pinch.my) / (cam.z * TILT);
+		{
+			const d = dWorld(mx - pinch.mx, my - pinch.my);
+			cam.x -= d.x;
+			cam.y -= d.y;
+		}
 		clampCam();
 		pinch.d = d;
 		pinch.mx = mx;
@@ -23185,8 +23356,11 @@ cv.addEventListener('pointermove', (e) => {
 	if (drag.moved) {
 		if (G) G.follow = false; // a drag is yours too
 		camStop();
-		cam.x = drag.cx - dx / cam.z;
-		cam.y = drag.cy - dy / (cam.z * TILT);
+		{
+			const d = dWorld(dx, dy);
+			cam.x = drag.cx - d.x;
+			cam.y = drag.cy - d.y;
+		}
 		clampCam();
 	}
 });
@@ -23277,8 +23451,9 @@ mini.addEventListener('pointerdown', (e) => {
 		mini.setPointerCapture(e.pointerId);
 	} catch (err) {} // the finger stays the map's until it lifts, even off its edge (an audit, Nov 2)
 	const r = mini.getBoundingClientRect(),
-		x = ((e.clientX - r.left) / r.width) * MAP,
-		y = ((e.clientY - r.top) / r.height) * MAP;
+		w = miniWorld(((e.clientX - r.left) / r.width) * 172, ((e.clientY - r.top) / r.height) * 172),
+		x = clamp(w.x, 0, MAP),
+		y = clamp(w.y, 0, MAP);
 	camGo(x, y);
 	miniAt = { x: e.clientX, y: e.clientY, pan: false };
 });
@@ -23290,8 +23465,9 @@ mini.addEventListener('pointermove', (e) => {
 	if (miniAt.pan) {
 		const r = mini.getBoundingClientRect();
 		camStop();
-		cam.x = clamp(((e.clientX - r.left) / r.width) * MAP, 0, MAP);
-		cam.y = clamp(((e.clientY - r.top) / r.height) * MAP, 0, MAP);
+		const w = miniWorld(((e.clientX - r.left) / r.width) * 172, ((e.clientY - r.top) / r.height) * 172);
+		cam.x = clamp(w.x, 0, MAP);
+		cam.y = clamp(w.y, 0, MAP);
 		clampCam();
 	} // and a drag on the small map sweeps the camera with it, no glide (Albert, Nov 2)
 });
@@ -23311,7 +23487,7 @@ function hitAt(sx, sy) {
 			ud = Math.max(16, 9 * z);
 		for (const v of G.units)
 			if (!v.inside && visibleTo0(v)) {
-				const d = hyp(SX(v.x) - sx, SY(v.y) - 6 * z - sy);
+				const d = hyp(SX(v.x, v.y) - sx, SY(v.y, 0, v.x) - 6 * z - sy);
 				if (d < ud) {
 					ud = d;
 					u = v;
@@ -23322,10 +23498,10 @@ function hitAt(sx, sy) {
 	for (const b of G.blds) {
 		// footprint: the ground it stands on; roof: the height drawn above it
 		const B = BLD[b.kind],
-			w = Math.max(B.fp * NAVC * z, 22),
-			x = SX(b.x),
-			gy = SY(b.y),
-			d = B.fp * NAVC * z * TILT;
+			w = Math.max(B.fp * NAVC * z * 2 * TURN, 22),
+			x = SX(b.x, b.y),
+			gy = SY(b.y, 0, b.x),
+			d = B.fp * NAVC * z * 2 * TURN * TILT; // the footprint's box on the turned screen (preview 50)
 		if ((B.trap && !trapShown(b)) || !knownB(b)) continue;
 		if (sx <= x - w / 2 - 4 || sx >= x + w / 2 + 4 || sy >= gy + d / 2 + 4) continue;
 		if (sy > gy - d / 2 - 4) {
@@ -23339,7 +23515,7 @@ function hitAt(sx, sy) {
 		}
 	}
 	if (foot) return { t: 'bld', e: foot };
-	const near = (x, y, r) => hyp(SX(x) - sx, SY(y) - 6 * z - sy) < r;
+	const near = (x, y, r) => hyp(SX(x, y) - sx, SY(y, 0, x) - 6 * z - sy) < r;
 	const f = G.finds.find((f) => !(f.done && FINDS[f.kind].got) && known0(f) && near(f.x, f.y, Math.max(22, 14 * z)));
 	if (f) return { t: 'find', e: f };
 	if (roof) return { t: 'bld', e: roof };
@@ -23348,7 +23524,7 @@ function hitAt(sx, sy) {
 	for (const n of G.nodes)
 		if (n.kind !== 'farm' && (!G.fogOn || fogAt(n.x, n.y) > 0)) {
 			// a find under the fog is not there to tap: the same test the drawing uses (E4)
-			const d = hyp(SX(n.x) - sx, SY(n.y) - 6 * z - sy);
+			const d = hyp(SX(n.x, n.y) - sx, SY(n.y, 0, n.x) - 6 * z - sy);
 			if (d < nr) {
 				nr = d;
 				nd = n;
@@ -23434,7 +23610,7 @@ function ordAt(sx, sy) {
 		bd = 26;
 	for (const id in G.ords || {}) {
 		const O = G.ords[id],
-			d = hyp(SX(O.x) - sx, SY(O.y) - sy);
+			d = hyp(SX(O.x, O.y) - sx, SY(O.y, 0, O.x) - sy);
 		if (O.n && d < bd) {
 			bd = d;
 			best = O;
@@ -26859,7 +27035,7 @@ function ui(force) {
 	rowUI();
 	{
 		const k = keepOf(0),
-			away = !k || SX(k.x) < -20 || SX(k.x) > cw + 20 || SY(k.y) < -20 || SY(k.y) > ch + 20;
+			away = !k || SX(k.x, k.y) < -20 || SX(k.x, k.y) > cw + 20 || SY(k.y, 0, k.x) < -20 || SY(k.y, 0, k.x) > ch + 20;
 		if ($('homeB').hidden === away) $('homeB').hidden = !away;
 	} // home shows only when your Town Center is off the screen
 	$('stage').classList.toggle('busy', !!(G.card || G.place));
@@ -30226,7 +30402,7 @@ const EV = {
 		draw(e, z, t) {
 			if (still() || !Number.isFinite(e.x)) return; // no place yet in the first second
 			// a dark band of cloud walking east, rain under it
-			const x = SX(e.x),
+			const x = SX(e.x, e.y),
 				w = EVENTS.storm.band * z;
 			const gr = ctx.createLinearGradient(x - w, 0, x + w, 0);
 			gr.addColorStop(0, 'rgba(20,24,34,0)');
@@ -30312,8 +30488,8 @@ const EV = {
 	meteor: {
 		draw(e, z, t) {
 			const f = clamp((G.t - e.t0) / (e.until - e.t0), 0, 1),
-				x1 = SX(e.at.x),
-				y1 = SY(e.at.y),
+				x1 = SX(e.at.x, e.at.y),
+				y1 = SY(e.at.y, 0, e.at.x),
 				x0 = x1 - 420,
 				y0 = y1 - 560,
 				x = x0 + (x1 - x0) * f,
@@ -31840,7 +32016,7 @@ function aimSpot(sx, sy) {
 }
 const aimNear = (sx, sy) => {
 	const H = G.hud;
-	return H.aim && H.h && hyp(sx - SX(H.h.e.x), sy - SY(H.h.e.y)) < 56;
+	return H.aim && H.h && hyp(sx - SX(H.h.e.x, H.h.e.y), sy - SY(H.h.e.y, 0, H.h.e.x)) < 56;
 };
 function aimAt(sx, sy) {
 	const H = G.hud;
@@ -32141,8 +32317,8 @@ function rowUI() {
 function drawReticle() {
 	const H = G.hud;
 	if (!H.aim || !H.h) return;
-	const x = SX(H.h.e.x),
-		y = SY(H.h.e.y),
+	const x = SX(H.h.e.x, H.h.e.y),
+		y = SY(H.h.e.y, 0, H.h.e.x),
 		L = performance.now() - (H.firedT || -1e9) < timeOf('settle') ? 1 : 0,
 		R = Math.max(30, 16 * cam.z + 6) * (L ? 0.8 : 1),
 		t = still() ? 0 : (performance.now() - (H.aimT || 0)) / 1000,
