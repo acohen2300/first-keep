@@ -113,13 +113,8 @@ const CARDS = {
 			const page =
 				(tr.length || b.q.length ? slotsHTML(b) : '') + // the queue first, in its steel box (Q1, Albert Nov 2): what is training over what you can train
 				grid3(trainButtons(tr)) +
-				grid3(
-					[
-						kp && !rel ? keepAgeBtn() : '',
-						...techs.map((t) => techBtn(t)),
-						kp && !rel ? btn('card:research', 'All tech', '›') : '',
-					].filter(Boolean),
-				) +
+				(kp && !rel ? acts(keepAgeBtn('s4') + btn('card:research', 'All tech', '›'), 'c3') : '') + // the next age double-wide (its four costs, preview 48), All tech beside it
+				grid3(techs.map((t) => techBtn(t))) +
 				(X.page || '');
 			if (kp)
 				h += folder(
@@ -554,7 +549,7 @@ const CARDS = {
 						btn(
 							'charge',
 							'Charge',
-							cw ? cw.replace(/\.$/, '') : `${CHARGE.secs} s of speed and blows, then tired`,
+							cw ? cw.replace(/\.$/, '') : `${CHARGE.secs} s of fury, then tired`,
 							cw ? 'dis' : 'warn',
 						) + btn('fallback', 'Fall back', `withdraw ${FALLBACK.back}, fewer losses`),
 					) +
@@ -608,13 +603,12 @@ const CARDS = {
 				can = afford(p, B.cost);
 			return btn(
 				`build:${k}`,
-				B.short || bldName(0, k),
+				(B.short || bldName(0, k)) + (!lock && cp < 99 ? ` ${n}/${cp}` : ''), // the count beside the name (preview 48: the cost line is full at 14 px)
 				lock
 					? `${AGES[B.age].name} age`
-					: (cp < 99 ? `${n}/${cp} · ` : '') +
-							(full ? 'all built' : can ? costText(B.cost) : `short ${need(B.cost)}`) +
+					: (full ? 'all built' : can ? costText(B.cost) : `short ${need(B.cost)}`) +
 							(fits ? ' · fits here' : ''),
-				lock || full ? 'dis' : fits ? 'go' : '',
+				(lock || full ? 'dis' : fits ? 'go' : '') + (Object.keys(B.cost).length >= 4 ? ' s4' : ''), // four costs: double-wide (the Colosseum; preview 48)
 				lock || full ? undefined : can ? 1 : fillOf(B.cost),
 			);
 		};
@@ -705,7 +699,7 @@ const CARDS = {
 			) +
 			`<table><tr><th></th>${rows.map((q) => `<th style="border-bottom:3px solid ${q.color}">${q.id === 0 ? 'You' : `<button class="lnk" data-act="seek:${q.id}">${q.name}</button>`}</th>`).join('')}</tr>${cats.map(([k, n]) => `<tr><td>${n}</td>${rows.map((q) => `<td>${q.alive || k === 'total' ? fmt(q.score[k]) : '–'}</td>`).join('')}</tr>`).join('')}</table>` +
 			`<p>People and Army: what you hold, cost ÷ ${SCORE.unit}. Tech: research and ages paid ÷ ${SCORE.tech}. Buildings: standing, cost ÷ ${SCORE.bld}. Wealth: everything gathered, traded, found and plundered ÷ ${SCORE.wealth}. ${G.wonder ? `A wonder stands: ${clock(Math.max(0, G.wonder.end - G.t))} left.` : ''}</p>` +
-			acts(btn('card:milestone', 'Milestones', `${(G.ms || []).length} of ${Object.keys(MS_TEXT).length}`) + btn('help', 'How to play', 'the guide, the rules, the settings')) // Milestones' door (D-080, Nov 2)
+			acts(btn('card:milestone', 'Milestones', `${(G.ms || []).length} of ${Object.keys(MS_TEXT).length}`) + btn('help', 'How to play', 'guide, rules, settings')) // Milestones' door (D-080, Nov 2)
 		);
 	},
 	guide(c) {

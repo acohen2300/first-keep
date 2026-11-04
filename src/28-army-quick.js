@@ -305,7 +305,7 @@ const DIRECTS = {
 };
 // the four kinds' moves: [tap, hold], with the word each says, and the sound
 const DIRECT_OF = [
-	[['wall', 'Shield wall', 'hit'], ['advance', 'Advance', 'horn']],
+	[['wall', 'Wall', 'hit'], ['advance', 'Advance', 'horn']], // 'Wall': 'Shield wall' is the one row word that does not fit a slot at 14 px (the gate, preview 48)
 	[['loose', 'Loose!', 'arrow'], ['back', 'Archers, fall back!', 'horn']],
 	[['charge', 'Charge', 'horn'], ['wheel', 'Wheel', 'hooves']],
 	[['bombard', 'Bombard', 'boom'], ['back', 'Engines, pull back!', 'horn']],

@@ -2,7 +2,7 @@
 # names is defined once, in the style sheet's :root, with the value the index gives; the retired names are gone; nothing else in the style
 # sheet, and nothing in the interface's code, writes a named colour by hand (the code colours not even the map's art); the words are readable
 # on the wood and the steel, and the ink on the gold fill (WCAG 2.1 contrast, 4.5:1; working is a ring on the edge since Build 70, so no fill
-# lies behind the words); the style sheet uses the two text sizes only (v80: 12 and 18), two fonts (IM Fell English SC for titles, Barlow
+# lies behind the words); the style sheet uses the two text sizes only (v80: 12 and 18; 14 and 18 since preview 48), two fonts (IM Fell English SC for titles, Barlow
 # Semi Condensed for the rest, the map included), and Barlow at one weight, 600, from one file; every word on the map is drawn through one
 # helper (mapFont, its size from labelK: 12 at the starting zoom, a floor of 9); every transition and animation names one of the four timings.
 import re, glob, os, sys
@@ -52,7 +52,7 @@ for g in ['brown-1', 'brown-2', 'steel-2']:
 r = ratio(rgb(named['ink']), mix('fill-1', 'fill-2', 0.5))
 if r < 4.5: bad.append(f'the ink on the gold fill: {r:.1f}:1, under 4.5')
 sizes = {k: v.strip() for k, v in V.items() if k.startswith('fs-')}
-if sizes != {'fs-s': '12px', 'fs-l': '18px'}: bad.append(f'the text sizes are {sizes}, not the two: 12 and 18')
+if sizes != {'fs-s': '14px', 'fs-l': '18px'}: bad.append(f'the text sizes are {sizes}, not the two: 14 and 18')
 for m in re.finditer(r'font-size:([^;}]+)|font:([^;}]+)', rest):
     v = (m.group(1) or m.group(2)).strip()
     if v != 'inherit' and not re.fullmatch(r'(400 )?var\(--fs-[sl]\)(/\S+)?( var\(--display\))?', v): bad.append(f'a text size outside the two: {m.group(0)[:50]}')

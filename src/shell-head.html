@@ -18,7 +18,7 @@
   --gap:6px;--slot:44px;--rad:6px;   /* the grid (MENU-SPEC §1): one number, 6; every slot 44 tall; corners 6 */
   --rank:calc(var(--slot) + var(--gap));--half:calc((var(--slot) - var(--gap)) / 2);--rad-o:calc(var(--rad) + var(--gap) / 2);   /* a rank 50; a half rank 19; an outline round slots 9, so the curves nest */
   --weight:600;   /* Barlow's one weight (MAYBE); the body and the map's words (mapFont) read it */
-  --fs-s:12px;--fs-l:18px;   /* two text sizes (v80, Albert): 12 for every word and number in a tile, 18 for titles and the big moments */
+  --fs-s:14px;--fs-l:18px;   /* two text sizes (v80, Albert; 14 since preview 48, Nov 3: "it's so small"): 14 for every word and number in a tile, 18 for titles and the big moments */
   --t-quick:.15s;--t-sweep:.4s;--t-settle:1.2s;--t-long:2.4s;   /* the four timings (Build 66, SoRen's names): a state changes, a thing moves, a thing comes to rest, two rests. The code reads these too */
   --hb:calc(env(safe-area-inset-top,0px) + var(--gap) * 2 + var(--slot) + var(--half));   /* the top: the bar at 6, gap 6, the strip */
   --ob:100px;   /* the row's height, measured by fit() */
@@ -51,7 +51,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 .info{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.2;min-width:0}
 .info b{font-size:var(--fs-s);color:var(--ring-w)}.info small{font-size:var(--fs-s);color:var(--white-dim)}
 .info.left{align-items:flex-start;text-align:left}
-.info.line{padding:0 8px}.info.line.s1{padding:0 0 0 var(--gap)}.info.line :is(b,small){max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* a line of a card (line): inset from the edge, and it keeps to its rank */
+.info.line{padding:0 8px}.info.line.s1{padding:0 0 0 2px;line-height:1}   /* the one-slot line (Misfits): 2 px in, so "Neutral→" fits at 14 (preview 48) */.info.line :is(b,small){max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* a line of a card (line): inset from the edge, and it keeps to its rank */
 .info.gain b{color:var(--ring-g)}.info.loss b{color:var(--ring-r)}   /* in and out on the stores: green came in, red went out; the sign says it too */
 .info.quiet b{color:var(--white-dim)}   /* a setting's name: quiet */
 .stance-war{color:var(--ring-r)}.stance-peace{color:var(--ring-w)}.stance-ally{color:var(--ring-g)}   /* the three stances wear their colour on their icon and their word (EXCEPTIONS #14) */

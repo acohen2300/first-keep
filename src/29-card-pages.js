@@ -171,7 +171,7 @@ function relRow(q) {
 		line =
 			want && !lord && !war
 				? g
-					? `<small class="chg">${sw(rel)} →</small><small class="chg">${sw(want)}</small>`
+					? `<small class="chg">${sw(rel)}→</small><small class="chg">${sw(want)}</small>` // no space before the arrow: "Neutral→" fits the one slot at 14 px (preview 48)
 					: `<small class="chg">${sw(rel)} → ${sw(want)}</small>`
 				: `<small class="${lord ? '' : 'stance-' + (war ? 'war' : rel)}">${word}</small>`;
 	return acts(

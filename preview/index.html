@@ -21,7 +21,7 @@
   --gap:6px;--slot:44px;--rad:6px;   /* the grid (MENU-SPEC §1): one number, 6; every slot 44 tall; corners 6 */
   --rank:calc(var(--slot) + var(--gap));--half:calc((var(--slot) - var(--gap)) / 2);--rad-o:calc(var(--rad) + var(--gap) / 2);   /* a rank 50; a half rank 19; an outline round slots 9, so the curves nest */
   --weight:600;   /* Barlow's one weight (MAYBE); the body and the map's words (mapFont) read it */
-  --fs-s:12px;--fs-l:18px;   /* two text sizes (v80, Albert): 12 for every word and number in a tile, 18 for titles and the big moments */
+  --fs-s:14px;--fs-l:18px;   /* two text sizes (v80, Albert; 14 since preview 48, Nov 3: "it's so small"): 14 for every word and number in a tile, 18 for titles and the big moments */
   --t-quick:.15s;--t-sweep:.4s;--t-settle:1.2s;--t-long:2.4s;   /* the four timings (Build 66, SoRen's names): a state changes, a thing moves, a thing comes to rest, two rests. The code reads these too */
   --hb:calc(env(safe-area-inset-top,0px) + var(--gap) * 2 + var(--slot) + var(--half));   /* the top: the bar at 6, gap 6, the strip */
   --ob:100px;   /* the row's height, measured by fit() */
@@ -54,7 +54,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 .info{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.2;min-width:0}
 .info b{font-size:var(--fs-s);color:var(--ring-w)}.info small{font-size:var(--fs-s);color:var(--white-dim)}
 .info.left{align-items:flex-start;text-align:left}
-.info.line{padding:0 8px}.info.line.s1{padding:0 0 0 var(--gap)}.info.line :is(b,small){max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* a line of a card (line): inset from the edge, and it keeps to its rank */
+.info.line{padding:0 8px}.info.line.s1{padding:0 0 0 2px;line-height:1}   /* the one-slot line (Misfits): 2 px in, so "Neutral→" fits at 14 (preview 48) */.info.line :is(b,small){max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* a line of a card (line): inset from the edge, and it keeps to its rank */
 .info.gain b{color:var(--ring-g)}.info.loss b{color:var(--ring-r)}   /* in and out on the stores: green came in, red went out; the sign says it too */
 .info.quiet b{color:var(--white-dim)}   /* a setting's name: quiet */
 .stance-war{color:var(--ring-r)}.stance-peace{color:var(--ring-w)}.stance-ally{color:var(--ring-g)}   /* the three stances wear their colour on their icon and their word (EXCEPTIONS #14) */
@@ -5166,7 +5166,7 @@ const TECH = [
 	{ id: 'horrea', civ: 'roman', name: 'Horrea', at: 'hall', line: 'Rome', age: 2, w: 5, when: '100s', cost: { w: 220, s: 200 }, t: 42, fx: [{ s: 'spoil', m: 0.5 }], need: ['viamil'], desc: 'State granaries on raised floors, 290 of them in Rome: food spoils half as fast again.' },
 	{ id: 'castra', civ: 'roman', name: 'Castra', at: 'hall', line: 'Rome', age: 2, w: 6, when: '100s BC', cost: { w: 260, g: 140 }, t: 45, fx: [{ s: 'campbuild', m: 1.5 }, { s: 'bhp', k: ['palisade', 'camptower', 'abatis'], m: 1.5 }], need: ['horrea'], desc: 'Every legionary carried two stakes and dug the camp each night: soldiers raise a camp half again as fast, and its works stand half again as strong.' },
 	{ id: 'trigger', civ: 'han', name: 'Bronze trigger', at: 'hall', line: 'Han', age: 2, w: 6, when: '200s BC', cost: { w: 200, i: 120 }, t: 40, fx: [{ s: 'rng', k: ['crossbow', 'hanxbow'], a: 20 }], desc: 'The cast bronze trigger, made in thousands to one pattern: crossbows reach 20 farther (the Luoyang arsenal held 11,181 of them in 13 BC).' },
-	{ id: 'changping', civ: 'han', name: 'Ever-normal granary', at: 'hall', line: 'Han', age: 2, w: 5, when: '54 BC', cost: { w: 220, g: 140 }, t: 42, fx: [{ s: 'band', m: 0.5 }], need: ['trigger'], desc: 'Geng Shouchang: the state bought in good years and sold in bad; prices swing half as far again for you.' },
+	{ id: 'changping', civ: 'han', name: 'Ever-normal granary', short: 'Granary', at: 'hall', line: 'Han', age: 2, w: 5, when: '54 BC', cost: { w: 220, g: 140 }, t: 42, fx: [{ s: 'band', m: 0.5 }], need: ['trigger'], desc: 'Geng Shouchang: the state bought in good years and sold in bad; prices swing half as far again for you.' },
 	{ id: 'taixue', civ: 'han', name: 'Taixue', at: 'hall', line: 'Han', age: 2, w: 6, when: '124 BC', cost: { w: 260, g: 180 }, t: 45, fx: [{ s: 'research', m: 0.9 }], need: ['changping'], desc: 'The imperial academy, the first school of the state: every research 10% quicker.' },
 	{ id: 'persianroad', civ: 'persian', name: 'Royal Road', at: 'hall', line: 'Persia', age: 2, w: 6, when: '500 BC', cost: { w: 200, g: 150 }, t: 40, fx: [{ s: 'spd', k: ['caravan', 'outpostcart', 'campcart'], m: 1.2 }], desc: 'Herodotus: 111 stages from Sardis to Susa, ninety days on foot and nine by the royal couriers; caravans and wagons 20% faster.' },
 	{ id: 'satrapy', civ: 'persian', name: 'Satrapies', at: 'hall', line: 'Persia', age: 2, w: 5, when: '520 BC', cost: { w: 220, g: 180 }, t: 42, fx: [{ s: 'taxtake', m: 1.2 }], need: ['royalroad'], desc: 'Darius set twenty satrapies and a fixed tribute from each, 14,560 talents a year: your vassals pay 20% more.' },
@@ -6777,39 +6777,39 @@ const WHY = {
 const NEWS = [
 	[
 		'Someone has tamed a horse. Opinions are divided.',
-		'Jericho builds a wall. Neighbours unimpressed, for now.',
-		'Çatalhöyük: 8,000 people, no streets. Walk across the roofs.',
-		'Sumer invents writing. First document: a grain receipt.',
-		'Ötzi crosses the Alps with a copper axe. Weather fine.',
+		'Jericho builds a wall. Neighbours unimpressed.',
+		'Çatalhöyük: no streets. Walk across the roofs.',
+		'Sumer invents writing. First: a grain receipt.',
+		'Ötzi crosses the Alps, copper axe. Weather fine.',
 	],
 	[
-		'Great Pyramid done: 2.3 million blocks, no complaints.',
+		'Great Pyramid done: 2.3 million blocks, no fuss.',
 		'Hammurabi publishes 282 laws: an eye for an eye.',
 		'Knossos installs flushing toilets. Guests astonished.',
 		'Thera erupts. Minoan shipping advises patience.',
 		'Tin is scarce again. Bronze prices climb.',
 	],
 	[
-		'Rome opens public baths. Attendance socially mandatory.',
-		'Caesar stabbed in the Senate, 23 times. Politics continues.',
-		'Alexander reaches the Indus. His army wants to go home.',
-		'Library of Alexandria now the largest. Late scrolls pursued.',
-		'Qin Shi Huang unites China. Also standardises axle widths.',
-		'Eratosthenes measures the Earth with a stick. Close enough.',
+		'Rome opens public baths. Attendance mandatory.',
+		'Caesar stabbed 23 times. Politics continues.',
+		'Alexander reaches the Indus. His army wants home.',
+		"Alexandria's library opens. Late scrolls pursued.",
+		'Qin unites China. Also standardises axle widths.',
+		'Eratosthenes measures the Earth. With a stick.',
 	],
 	[
-		'The wall of China, previously just okay, is becoming great.',
-		'The Black Death reaches the ports. Hospitals advised.',
-		'Charlemagne crowned at Christmas. He claims surprise.',
-		'Vikings reach Newfoundland. Will not be writing home.',
-		'Mansa Musa passes Cairo. Gold prices fall for a decade.',
-		'Oxford founded. Students already complaining about rent.',
+		"China's wall, previously just okay, is now great.",
+		'Plague reaches the ports. Hospitals advised.',
+		'Charlemagne crowned at Christmas. Acts surprised.',
+		"Vikings reach Newfoundland. Won't write home.",
+		'Mansa Musa in Cairo. Gold falls for a decade.',
+		'Oxford founded. Students complain about rent.',
 	],
 	[
-		'Constantinople falls to cannon. Wall builders reconsider.',
+		'Cannon take Constantinople. Walls reconsider.',
 		'Gutenberg prints a Bible. Scribes start a union.',
 		'Columbus lands, insists it is Asia.',
-		'The arquebus at Pavia: knights advised to reconsider.',
+		'The arquebus at Pavia. Knights reconsider.',
 		'The ship of Magellan returns. Magellan does not.',
 	],
 ];
@@ -10401,7 +10401,7 @@ function tributeWhy(L, q) {
 	const Q = G.P[q];
 	if (Q.lord !== L || Q.rebel) return 'Not now.';
 	if (Q.forced > G.t) return `Already forced: ${Math.ceil(Q.forced - G.t)} s.`;
-	if (menAt(L, q) < DEMAND.tributeMen) return `Stand ${DEMAND.tributeMen} soldiers at their town first.`;
+	if (menAt(L, q) < DEMAND.tributeMen) return `${DEMAND.tributeMen} soldiers at their town first.`;
 	return null;
 }
 function forceTribute(L, q) {
@@ -23755,7 +23755,10 @@ const acts = (h, cls = 'c2') => `<div class="fm ${cls}">${h}</div>`;
 // five three and two. Things you do are double-wide; a list of one is the whole rank. per: at most two a rank, for words that need three slots
 // Train and Research on a building card (MENU-SPEC §8, Albert Nov 2, T1): every button double-wide, three a rank; a short rank is filled with
 // empty places (faint outlines), so the rank keeps its shape and nothing moves when a button comes or goes
-const grid3 = (cells) => (cells.length ? acts(cells.join('') + empty().repeat((3 - (cells.length % 3)) % 3), 'c3') : '');
+const grid3 = (cells) => {
+	const n = cells.reduce((s, c) => s + (/class="[^"]*\bs4\b/.test(c) ? 2 : 1), 0); // a double-wide cell (s4) takes two of the three places (preview 48: a four-resource cost)
+	return n ? acts(cells.join('') + empty().repeat((3 - (n % 3)) % 3), 'c3') : '';
+};
 const list = (cells, per = 3) => {
 	let h = '',
 		i = 0;
@@ -23935,7 +23938,7 @@ function techBtn(t, withAt) {
 	return btn(
 		`tech:${t.id}`,
 		TITLE_SHORT[t.short] || t.short || t.name, // its short name on a double-wide slot (an elite rank's, the soldier's short one)
-		sub + (withAt && st !== 'locked' ? ` · ${BLD[t.at].short || BLD[t.at].name}` : ''), // a locked step says what it lacks; its › goes to the building
+		sub, // a locked step says what it lacks; its › goes to the building (the building's word left the line at 14 px, preview 48; withAt is kept for the call)
 		`a${t.age} ` + (st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock'),
 		st === 'short' ? fillOf(c) : st === 'ready' ? 1 : undefined,
 	); // a${age}: the top edge wears the age's colour
@@ -23944,7 +23947,7 @@ const trainsAt = (kind) =>
 	Object.keys(UNIT).filter(
 		(k) => (UNIT[k].at === kind || (UNIT[k].also || []).includes(kind)) && !UNIT[k].civ && UNIT[k].cost,
 	);
-function keepAgeBtn() {
+function keepAgeBtn(cls = '') {
 	// the next age, as one research button; the reason waits behind the book
 	const p = G.P[0],
 		A = nextAge(0);
@@ -23954,7 +23957,7 @@ function keepAgeBtn() {
 		'age',
 		`${A.name} age`,
 		p.aging ? 'advancing' : !afford(p, A.cost) ? `short ${need(A.cost)}` : costText(A.cost),
-		p.aging || !afford(p, A.cost) ? 'dis' : 'go',
+		(p.aging || !afford(p, A.cost) ? 'dis' : 'go') + (cls ? ' ' + cls : ''),
 		p.aging ? undefined : afford(p, A.cost) ? 1 : fillOf(A.cost),
 	);
 }
@@ -24467,7 +24470,7 @@ const DIRECTS = {
 };
 // the four kinds' moves: [tap, hold], with the word each says, and the sound
 const DIRECT_OF = [
-	[['wall', 'Shield wall', 'hit'], ['advance', 'Advance', 'horn']],
+	[['wall', 'Wall', 'hit'], ['advance', 'Advance', 'horn']], // 'Wall': 'Shield wall' is the one row word that does not fit a slot at 14 px (the gate, preview 48)
 	[['loose', 'Loose!', 'arrow'], ['back', 'Archers, fall back!', 'horn']],
 	[['charge', 'Charge', 'horn'], ['wheel', 'Wheel', 'hooves']],
 	[['bombard', 'Bombard', 'boom'], ['back', 'Engines, pull back!', 'horn']],
@@ -24739,7 +24742,7 @@ function relRow(q) {
 		line =
 			want && !lord && !war
 				? g
-					? `<small class="chg">${sw(rel)} →</small><small class="chg">${sw(want)}</small>`
+					? `<small class="chg">${sw(rel)}→</small><small class="chg">${sw(want)}</small>` // no space before the arrow: "Neutral→" fits the one slot at 14 px (preview 48)
 					: `<small class="chg">${sw(rel)} → ${sw(want)}</small>`
 				: `<small class="${lord ? '' : 'stance-' + (war ? 'war' : rel)}">${word}</small>`;
 	return acts(
@@ -25257,13 +25260,8 @@ const CARDS = {
 			const page =
 				(tr.length || b.q.length ? slotsHTML(b) : '') + // the queue first, in its steel box (Q1, Albert Nov 2): what is training over what you can train
 				grid3(trainButtons(tr)) +
-				grid3(
-					[
-						kp && !rel ? keepAgeBtn() : '',
-						...techs.map((t) => techBtn(t)),
-						kp && !rel ? btn('card:research', 'All tech', '›') : '',
-					].filter(Boolean),
-				) +
+				(kp && !rel ? acts(keepAgeBtn('s4') + btn('card:research', 'All tech', '›'), 'c3') : '') + // the next age double-wide (its four costs, preview 48), All tech beside it
+				grid3(techs.map((t) => techBtn(t))) +
 				(X.page || '');
 			if (kp)
 				h += folder(
@@ -25698,7 +25696,7 @@ const CARDS = {
 						btn(
 							'charge',
 							'Charge',
-							cw ? cw.replace(/\.$/, '') : `${CHARGE.secs} s of speed and blows, then tired`,
+							cw ? cw.replace(/\.$/, '') : `${CHARGE.secs} s of fury, then tired`,
 							cw ? 'dis' : 'warn',
 						) + btn('fallback', 'Fall back', `withdraw ${FALLBACK.back}, fewer losses`),
 					) +
@@ -25752,13 +25750,12 @@ const CARDS = {
 				can = afford(p, B.cost);
 			return btn(
 				`build:${k}`,
-				B.short || bldName(0, k),
+				(B.short || bldName(0, k)) + (!lock && cp < 99 ? ` ${n}/${cp}` : ''), // the count beside the name (preview 48: the cost line is full at 14 px)
 				lock
 					? `${AGES[B.age].name} age`
-					: (cp < 99 ? `${n}/${cp} · ` : '') +
-							(full ? 'all built' : can ? costText(B.cost) : `short ${need(B.cost)}`) +
+					: (full ? 'all built' : can ? costText(B.cost) : `short ${need(B.cost)}`) +
 							(fits ? ' · fits here' : ''),
-				lock || full ? 'dis' : fits ? 'go' : '',
+				(lock || full ? 'dis' : fits ? 'go' : '') + (Object.keys(B.cost).length >= 4 ? ' s4' : ''), // four costs: double-wide (the Colosseum; preview 48)
 				lock || full ? undefined : can ? 1 : fillOf(B.cost),
 			);
 		};
@@ -25849,7 +25846,7 @@ const CARDS = {
 			) +
 			`<table><tr><th></th>${rows.map((q) => `<th style="border-bottom:3px solid ${q.color}">${q.id === 0 ? 'You' : `<button class="lnk" data-act="seek:${q.id}">${q.name}</button>`}</th>`).join('')}</tr>${cats.map(([k, n]) => `<tr><td>${n}</td>${rows.map((q) => `<td>${q.alive || k === 'total' ? fmt(q.score[k]) : '–'}</td>`).join('')}</tr>`).join('')}</table>` +
 			`<p>People and Army: what you hold, cost ÷ ${SCORE.unit}. Tech: research and ages paid ÷ ${SCORE.tech}. Buildings: standing, cost ÷ ${SCORE.bld}. Wealth: everything gathered, traded, found and plundered ÷ ${SCORE.wealth}. ${G.wonder ? `A wonder stands: ${clock(Math.max(0, G.wonder.end - G.t))} left.` : ''}</p>` +
-			acts(btn('card:milestone', 'Milestones', `${(G.ms || []).length} of ${Object.keys(MS_TEXT).length}`) + btn('help', 'How to play', 'the guide, the rules, the settings')) // Milestones' door (D-080, Nov 2)
+			acts(btn('card:milestone', 'Milestones', `${(G.ms || []).length} of ${Object.keys(MS_TEXT).length}`) + btn('help', 'How to play', 'guide, rules, settings')) // Milestones' door (D-080, Nov 2)
 		);
 	},
 	guide(c) {
@@ -32206,7 +32203,7 @@ function drawReticle() {
 // three intents (the doctrine's words): Engage fights what it meets, soldiers before buildings; No pursuit walks to the spot and fights only
 // what comes within reach; Buildings first takes the nearest building and leaves the soldiers to the rest
 const INTENT = [
-	{ name: 'Engage', note: 'fight what you meet' },
+	{ name: 'Engage', note: "fight what's met" },
 	{ name: 'No pursuit', note: 'fight what blocks' },
 	{ name: 'Buildings first', note: 'then the soldiers' },
 ]; // each note one line under its name, so the rank keeps its 44 (MENU-SPEC §1)

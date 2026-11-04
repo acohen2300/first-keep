@@ -553,7 +553,7 @@ function tributeWhy(L, q) {
 	const Q = G.P[q];
 	if (Q.lord !== L || Q.rebel) return 'Not now.';
 	if (Q.forced > G.t) return `Already forced: ${Math.ceil(Q.forced - G.t)} s.`;
-	if (menAt(L, q) < DEMAND.tributeMen) return `Stand ${DEMAND.tributeMen} soldiers at their town first.`;
+	if (menAt(L, q) < DEMAND.tributeMen) return `${DEMAND.tributeMen} soldiers at their town first.`;
 	return null;
 }
 function forceTribute(L, q) {

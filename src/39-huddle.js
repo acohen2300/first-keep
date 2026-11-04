@@ -449,7 +449,7 @@ function drawReticle() {
 // three intents (the doctrine's words): Engage fights what it meets, soldiers before buildings; No pursuit walks to the spot and fights only
 // what comes within reach; Buildings first takes the nearest building and leaves the soldiers to the rest
 const INTENT = [
-	{ name: 'Engage', note: 'fight what you meet' },
+	{ name: 'Engage', note: "fight what's met" },
 	{ name: 'No pursuit', note: 'fight what blocks' },
 	{ name: 'Buildings first', note: 'then the soldiers' },
 ]; // each note one line under its name, so the rank keeps its 44 (MENU-SPEC §1)

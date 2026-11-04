@@ -116,7 +116,10 @@ const acts = (h, cls = 'c2') => `<div class="fm ${cls}">${h}</div>`;
 // five three and two. Things you do are double-wide; a list of one is the whole rank. per: at most two a rank, for words that need three slots
 // Train and Research on a building card (MENU-SPEC §8, Albert Nov 2, T1): every button double-wide, three a rank; a short rank is filled with
 // empty places (faint outlines), so the rank keeps its shape and nothing moves when a button comes or goes
-const grid3 = (cells) => (cells.length ? acts(cells.join('') + empty().repeat((3 - (cells.length % 3)) % 3), 'c3') : '');
+const grid3 = (cells) => {
+	const n = cells.reduce((s, c) => s + (/class="[^"]*\bs4\b/.test(c) ? 2 : 1), 0); // a double-wide cell (s4) takes two of the three places (preview 48: a four-resource cost)
+	return n ? acts(cells.join('') + empty().repeat((3 - (n % 3)) % 3), 'c3') : '';
+};
 const list = (cells, per = 3) => {
 	let h = '',
 		i = 0;
@@ -296,7 +299,7 @@ function techBtn(t, withAt) {
 	return btn(
 		`tech:${t.id}`,
 		TITLE_SHORT[t.short] || t.short || t.name, // its short name on a double-wide slot (an elite rank's, the soldier's short one)
-		sub + (withAt && st !== 'locked' ? ` · ${BLD[t.at].short || BLD[t.at].name}` : ''), // a locked step says what it lacks; its › goes to the building
+		sub, // a locked step says what it lacks; its › goes to the building (the building's word left the line at 14 px, preview 48; withAt is kept for the call)
 		`a${t.age} ` + (st === 'ready' ? 'go' : st === 'short' ? 'dis short' : st === 'busy' ? 'dis' : 'dis lock'),
 		st === 'short' ? fillOf(c) : st === 'ready' ? 1 : undefined,
 	); // a${age}: the top edge wears the age's colour
@@ -305,7 +308,7 @@ const trainsAt = (kind) =>
 	Object.keys(UNIT).filter(
 		(k) => (UNIT[k].at === kind || (UNIT[k].also || []).includes(kind)) && !UNIT[k].civ && UNIT[k].cost,
 	);
-function keepAgeBtn() {
+function keepAgeBtn(cls = '') {
 	// the next age, as one research button; the reason waits behind the book
 	const p = G.P[0],
 		A = nextAge(0);
@@ -315,7 +318,7 @@ function keepAgeBtn() {
 		'age',
 		`${A.name} age`,
 		p.aging ? 'advancing' : !afford(p, A.cost) ? `short ${need(A.cost)}` : costText(A.cost),
-		p.aging || !afford(p, A.cost) ? 'dis' : 'go',
+		(p.aging || !afford(p, A.cost) ? 'dis' : 'go') + (cls ? ' ' + cls : ''),
 		p.aging ? undefined : afford(p, A.cost) ? 1 : fillOf(A.cost),
 	);
 }

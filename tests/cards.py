@@ -211,7 +211,7 @@ JS = r"""() => {
   for (const m of F.MENUS) { F.openCard({ type: 'menu', id: m.id }); F.ui(true);
     const R = [...document.querySelectorAll('#card .fm.c3')];
     if (!R.length) bad.push('T2: the ' + m.id + ' tab has no rank of three');
-    for (const r of R) if (r.children.length % 3) bad.push('T2: a rank of ' + r.children.length + ' on the ' + m.id + ' tab, not filled to three');
+    for (const r of R) { const n = [...r.children].reduce((s, c) => s + (c.classList.contains('s4') ? 2 : 1), 0); if (n % 3) bad.push('T2: a rank of ' + n + ' places on the ' + m.id + ' tab, not filled to three'); }   // a double-wide cell (s4, a four-cost building) is two places (preview 48)
     F.closeCard(); }
   } catch (e) { bad.push('T2: the check could not run: ' + e.message); }
   // E6: a dim Train button says why it cannot (here the line is full), never its cost as if payable

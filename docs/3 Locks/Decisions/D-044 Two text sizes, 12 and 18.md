@@ -1,7 +1,7 @@
 # D-044 Two text sizes, 12 and 18 [2026-11-01 07:45]
 
 - Date: 2026-10-31 09:00 [2026-11-01 07:45]
-- Status: locked (built in Build 80) [2026-11-01 07:45]
+- Status: locked (built in Build 80); amended Nov 3, 20:46: the small size is 14 (Albert, 20:18: "It's so small"; measured at 375 pt by the gate's three fit checks: the row loses two words, Shield wall and Ever-normal granary, now Wall and Granary; nineteen ticker lines and eight sub lines were written shorter; the Relations arrow stays). Still two sizes: 14 and 18. Preview 48; the CUTS section has every line. [2026-11-03 20:50]
 - Albert's words: in the quote below [2026-11-01 07:45]
 - The rule: the record below [2026-11-01 07:45]
 - Its source: none named in the record [2026-11-01 07:45]
