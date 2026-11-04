@@ -437,6 +437,10 @@ PLANTS = [
   ('10-world-water.js', "for (const p of C) p.src = W.indexOf(L) + 1;", "for (const p of C) p.src = -1;", 'tests/map.py', 'p52: a river pool that names no lake', 'names no lake'),
   ('13-sim-civil.js', "function vilTick(u, dt, SP) {", "function vilTick(u, dt, SP) { // lakeGrid", 'tests/elements.py', "p52: a card's exempt name used where its act lives", 'exempt lakeGrid'),
   ('00-elements.js', "'vfocus', 'vhome'", "'vfocuss', 'vhome'", 'tests/elements.py', 'p52: a card orders a verb that is not there', 'no verb'),
+  # Build 80 preview 53 (--only=p53): the building mold, the screen's alignment lines
+  ('23-view-things.js', "mining: 'stone', smith: 'stone', house: 'plaster',", "mining: 'stone', smith: 'stone',", 'tests/map.py', 'p53: a house without a mold', 'house is not boxed'),
+  ('23-view-things.js', "const boxed = (b) => SET.boxes !== false &&", "const boxed = (b) => true &&", 'tests/map.py', 'p53: the toggle off still boxes', 'toggle off'),
+  ('09-nav.js', "\t\t\tconsider(x + u, y - u, 'u');\n", '', 'tests/map.py', "p53: no snap onto a building's screen line", 'did not snap'),
 ]
 
 def plant_check():

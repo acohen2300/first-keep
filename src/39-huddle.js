@@ -539,6 +539,7 @@ const YARD_LIST = [
 	['ytool:ambushtool', 'Ambush', 'tap the cover'],
 	['ytool:kidle', 'Idle soldiers', 'pick them'],
 	['copylog', 'Match log', 'copy for Claude'],
+	['boxes', 'Buildings', 'boxes or old pictures'],
 ];
 CARDS.yard = () => {
 	title(ROW_WORD.yard, 'controls waiting for a home');

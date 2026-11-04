@@ -726,12 +726,21 @@ function snapGhost(o, kind, x, y, tol) {
 			// "when a PDF sees you moving an element it brings up alignment lines, with a light snap pull"); the guide is drawn by drawGhost
 			for (const cx of alignX) consider(cx, y, 'x');
 			for (const cy of alignY) consider(x, cy, 'y');
+			// and in line with it on the screen (preview 53, Albert: the lines "are now out of alignment because of the rotation"): centres on the
+			// same land x (world x − y) or land y (world x + y), the ghost moved along the other diagonal; the world's squares allow it when the
+			// snapped centre lands on the line
+			const u = (b.x - b.y - (x - y)) / 2,
+				v = (b.x + b.y - (x + y)) / 2;
+			consider(x + u, y - u, 'u');
+			consider(x + v, y + v, 'v');
 		}
 	}
 	function consider(cx, cy, axis) {
 		const s = snapPos(kind, cx, cy),
 			d = hyp(s.x - x, s.y - y);
-		if (axis && Math.abs((axis === 'x' ? s.x : s.y) - (axis === 'x' ? cx : cy)) > 0.5) return; // the grid could not keep it on the line: no pull
+		if (axis === 'x' || axis === 'y') {
+			if (Math.abs((axis === 'x' ? s.x : s.y) - (axis === 'x' ? cx : cy)) > 0.5) return; // the grid could not keep it on the line: no pull
+		} else if (axis && Math.abs(axis === 'u' ? s.x - s.y - (cx - cy) : s.x + s.y - (cx + cy)) > 0.5) return;
 		if (d < bd && !canPlace(o, kind, s.x, s.y)) {
 			bd = d;
 			best = s;

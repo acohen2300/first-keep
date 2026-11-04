@@ -229,6 +229,16 @@ function drawGuides(sp, h) {
 				ctx.moveTo(SX(x0, gy), SY(gy, 0, x0));
 				ctx.lineTo(SX(x1, gy), SY(gy, 0, x1));
 			}
+		// the screen's lines (preview 53): the centres on one land x (upright on the screen) or one land y (level), as a PDF editor's
+		for (const [same, dx, dy] of [
+			[Math.abs(sp.x - sp.y - (b.x - b.y)) < 0.5, 1, 1],
+			[Math.abs(sp.x + sp.y - (b.x + b.y)) < 0.5, 1, -1],
+		])
+			if (same) {
+				const r = (Math.abs(b.x - sp.x) + 12 + h + bh) / 1;
+				ctx.moveTo(SX(sp.x - dx * r, sp.y - dy * r), SY(sp.y - dy * r, 0, sp.x - dx * r));
+				ctx.lineTo(SX(sp.x + dx * r, sp.y + dy * r), SY(sp.y + dy * r, 0, sp.x + dx * r));
+			}
 	}
 	ctx.stroke();
 	ctx.restore();

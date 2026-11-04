@@ -247,6 +247,11 @@ const ACT = {
 		saveSet();
 		refresh();
 	},
+	boxes() {
+		SET.boxes = SET.boxes === false;
+		saveSet();
+		refresh();
+	}, // the building mold or the old pictures (preview 53, the Yard; BOX_LOOK in 23)
 	cardpause() {
 		SET.cardPause = SET.cardPause === false;
 		saveSet();

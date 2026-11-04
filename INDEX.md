@@ -300,7 +300,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 
 - `makeCitadel` 6: The Throne: a walled citadel on the great lake's island, four gates at the four causeways, a tower at each cor…
 
-**`09-nav.js`** (823 lines): paths
+**`09-nav.js`** (832 lines): paths
 
 - `NC` 6: Squares of 10, never shown
 - `POCKET` 7: a joined region smaller than this many squares is a pocket: closed in by trees, buildings or water
@@ -343,13 +343,13 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `canPlace` 655: Every building keeps LANE free squares from the next (decision 2: a one-square lane is shut by the slit rule, …
 - `GUIDE_R` 705: how far a building reaches with its alignment lines
 - `snapGhost` 706
-- `findSpot` 743: The computers' way of finding a spot: rings out from a centre, the first place that fits.
-- `wallLine` 758: a straight run of squares from a to b, four-connected so nothing can slip through; near-straight drags snap to…
-- `SEAL` 778: Is your keep walled in? A walk outward from the keep over every square a foe can stand on (walls, shut gates, …
-- `sealSeen` 779
-- `sealFrom` 780
-- `sealGen` 781
-- `sealPath` 782
+- `findSpot` 752: The computers' way of finding a spot: rings out from a centre, the first place that fits.
+- `wallLine` 767: a straight run of squares from a to b, four-connected so nothing can slip through; near-straight drags snap to…
+- `SEAL` 787: Is your keep walled in? A walk outward from the keep over every square a foe can stand on (walls, shut gates, …
+- `sealSeen` 788
+- `sealFrom` 789
+- `sealGen` 790
+- `sealPath` 791
 
 ### Sim
 
@@ -957,7 +957,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `clearSave` 524
 - `loadGame` 530
 
-**`41-boot.js`** (741 lines): start-up, and closes the one scope
+**`41-boot.js`** (742 lines): start-up, and closes the one scope
 
 - `last` 3
 - `acc` 4
@@ -1163,7 +1163,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `stamp` 165
 - `trapShown` 174: a hidden trap shows only to its side, its allies, and a side whose scout found it
 
-**`23-view-things.js`** (1399 lines): buildings, smoke and fire, ripples and sparks, nodes, units, finds
+**`23-view-things.js`** (1502 lines): buildings, smoke and fire, ripples and sparks, nodes, units, finds
 
 - `WALL_LOOK` 6: The wall mold (preview 50, Albert: "this solves the wall heft problems"): a wall, a gate or a palisade is not …
 - `WALL_KEYS` 11
@@ -1171,60 +1171,63 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `wkey` 13
 - `wallKeys` 14
 - `drawWallBox` 21
-- `drawBld` 83
-- `CHIMNEY` 263
-- `FLAME` 268: ── Fire (Build 55): one element for every flame in the game
-- `LIGHT` 276: reach in world units per √power; what rain leaves of an open flame; the glow's strength
-- `CAST` 281: ── Shadows (Build 55, Albert: shadows match the light)
-- `SHADE` 282: the shadow's direction on the glass (unit), its length per unit of height (world units), its darkness
-- `shadeFrame` 283
-- `shadowPath` 306: the shadows of the trees, bushes and rocks you can see, cast from the sun like everything else (Build 61, Albe…
-- `BOX` 325: A building's shadow is its own shape, not an oval (decision 14, Albert, Oct 31: we invented the shape, so the …
-- `HEX` 331
-- `hexOf` 332
-- `boxShadow` 347
-- `sunShadows` 362
-- `flameShadow` 388: a flame's shadow of a thing near it: away from the fire, long, fading as the light does (1/d²)
-- `kelvinRGB` 406
-- `FLAME_RGB` 414
-- `flameLife` 415: what the weather leaves of a flame
-- `flame` 417: the flame itself: a teardrop that leans with the wind and flickers; its heart whiter than its edge
-- `glow` 438: the light a flame throws on the ground: a disc that fades as the inverse square, drawn additively, only when t…
-- `flagsOn` 457: a building's flags fly with the wind: a cloth from the pole top, its tip lifting and falling, longer in a stro…
-- `PILE` 480: what a side has in store shows as a pile by the camp that takes it in: logs by the lumber camp, cut stone and …
-- `PSPR` 491: the piles are drawn once per kind, counts and zoom into PSPR and stamped (Build 62: measured at 29% of a frame…
-- `pileAt` 492
-- `pileArt` 508
-- `smoke` 538: a chimney's plume (Build 62): bent over by the wind, its height goes with the downwind distance to the two-thi…
-- `blaze` 552: fire when a building is badly hurt, dark smoke when sabotage has stalled it
-- `RIPS` 568
-- `ripple` 569
-- `popC` 573: swell and settle; a runs 0 to 1
-- `celebrate` 574
-- `ripDraw` 590
-- `sparkDraw` 606
-- `WX_TINT` 629: Three translucent casts (warm dusk, blue night, the weather) laid one over another come to one colour: compute…
-- `tintC` 635
-- `tintOf` 636
-- `NV` 661
-- `viewNodes` 662
-- `drawNode` 680
-- `workOf` 706
-- `STRIDE` 722: ground covered by one step, in world units
-- `STANDARDS` 725: the poles drawn this frame (screen x, y, side): the lights put a torch on each after dark
-- `drawStandards` 726
-- `FALL` 781: the fallen (Build 52): a figure that dies where you can see it topples over in a third of a second and fades, …
-- `fallen` 782
-- `drawFallen` 797
-- `LEAN` 812: the view's own memory of each woodcutter's lean: the drawing never writes the game's units (Build 60)
-- `PACED` 813: the view's memory of each unit's walk: when it last grew
-- `leavesOver` 815: the leaves over a soldier in ambush (the visual pass, Nov 3): three leaf blobs in the wood's greens, swaying a…
-- `drawUnit` 830
-- `drawFind` 1044
-- `drawPicks` 1384: what the finger holds: a ring on the ground under each, green for yours, red for a foe's, gold for the wild an…
-- `rnd2` 1398
+- `BOX_LOOK` 89: The building mold (preview 53, Albert, Nov 4: "I just want to see the front of a building, the side, and the top
+- `boxed` 103
+- `drawBldBox` 104
+- `drawBld` 183
+- `CHIMNEY` 366
+- `FLAME` 371: ── Fire (Build 55): one element for every flame in the game
+- `LIGHT` 379: reach in world units per √power; what rain leaves of an open flame; the glow's strength
+- `CAST` 384: ── Shadows (Build 55, Albert: shadows match the light)
+- `SHADE` 385: the shadow's direction on the glass (unit), its length per unit of height (world units), its darkness
+- `shadeFrame` 386
+- `shadowPath` 409: the shadows of the trees, bushes and rocks you can see, cast from the sun like everything else (Build 61, Albe…
+- `BOX` 428: A building's shadow is its own shape, not an oval (decision 14, Albert, Oct 31: we invented the shape, so the …
+- `HEX` 434
+- `hexOf` 435
+- `boxShadow` 450
+- `sunShadows` 465
+- `flameShadow` 491: a flame's shadow of a thing near it: away from the fire, long, fading as the light does (1/d²)
+- `kelvinRGB` 509
+- `FLAME_RGB` 517
+- `flameLife` 518: what the weather leaves of a flame
+- `flame` 520: the flame itself: a teardrop that leans with the wind and flickers; its heart whiter than its edge
+- `glow` 541: the light a flame throws on the ground: a disc that fades as the inverse square, drawn additively, only when t…
+- `flagsOn` 560: a building's flags fly with the wind: a cloth from the pole top, its tip lifting and falling, longer in a stro…
+- `PILE` 583: what a side has in store shows as a pile by the camp that takes it in: logs by the lumber camp, cut stone and …
+- `PSPR` 594: the piles are drawn once per kind, counts and zoom into PSPR and stamped (Build 62: measured at 29% of a frame…
+- `pileAt` 595
+- `pileArt` 611
+- `smoke` 641: a chimney's plume (Build 62): bent over by the wind, its height goes with the downwind distance to the two-thi…
+- `blaze` 655: fire when a building is badly hurt, dark smoke when sabotage has stalled it
+- `RIPS` 671
+- `ripple` 672
+- `popC` 676: swell and settle; a runs 0 to 1
+- `celebrate` 677
+- `ripDraw` 693
+- `sparkDraw` 709
+- `WX_TINT` 732: Three translucent casts (warm dusk, blue night, the weather) laid one over another come to one colour: compute…
+- `tintC` 738
+- `tintOf` 739
+- `NV` 764
+- `viewNodes` 765
+- `drawNode` 783
+- `workOf` 809
+- `STRIDE` 825: ground covered by one step, in world units
+- `STANDARDS` 828: the poles drawn this frame (screen x, y, side): the lights put a torch on each after dark
+- `drawStandards` 829
+- `FALL` 884: the fallen (Build 52): a figure that dies where you can see it topples over in a third of a second and fades, …
+- `fallen` 885
+- `drawFallen` 900
+- `LEAN` 915: the view's own memory of each woodcutter's lean: the drawing never writes the game's units (Build 60)
+- `PACED` 916: the view's memory of each unit's walk: when it last grew
+- `leavesOver` 918: the leaves over a soldier in ambush (the visual pass, Nov 3): three leaf blobs in the wood's greens, swaying a…
+- `drawUnit` 933
+- `drawFind` 1147
+- `drawPicks` 1487: what the finger holds: a ring on the ground under each, green for yours, red for a foe's, gold for the wild an…
+- `rnd2` 1501
 
-**`24-view-overlays.js`** (722 lines): ground, event effects, bars, flags, ghost building, minimap
+**`24-view-overlays.js`** (732 lines): ground, event effects, bars, flags, ghost building, minimap
 
 - `drawGround` 4: Spectacle on the glass: each event's picture, drawn over the world
 - `drawCracks` 48: the cracks of a sinkhole: dark jagged arms with a pale edge, and a puff of dust that rises and thins over four…
@@ -1241,28 +1244,28 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `tag` 153
 - `drawSeal` 165: the building you are placing: its footprint green where it fits and red where it does not, and the reason the …
 - `drawGuides` 190: alignment guides (Build 63): a thin line from the ghost to every own building whose centre or edge sits on the…
-- `drawGhost` 236
-- `GHOST_TINT` 287: The ghost's own art tinted green where it fits and red where it does not (Albert, Nov 1): no grid, no footprin…
-- `ghostTints` 288
-- `ghostTint` 289
-- `miniIncoming` 308
-- `MINI_K` 327: the land's square fills the small map (preview 51)
-- `miniMat` 328: world units to the small map, through the land's frame
-- `miniWorld` 329: a point of the small map, in the world
-- `drawMini` 330
-- `drawFlood` 419: the flood: water over the shore
-- `drawSand` 429: quicksand: a pale patch with ripples
-- `drawLakeRipples` 444: small ripples drift on the lakes
-- `drawRainRings` 464: rain rings sit on the ground, fixed to the world, under buildings and people
-- `drawFire` 489: the wildfire
-- `drawFogLayer` 508: the fog, soft, over everything standing
-- `drawOrders` 524: your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
-- `drawTracers` 560: arrows and shots: a short streak along the curve
-- `drawLight` 581: the light: warm at dusk and dawn, blue at night, darker toward the edges; lit windows
-- `HEARTH` 639: where a fire is always lit after dark (the mess tent's cooking fire, the Hall's lamps
-- `drawHitGlow` 641: something of yours was hit: a red glow round the edge, fading over a second and a half
-- `drawFlash` 669: a new age, a wonder, a victory: a pale flash
-- `drawTouch` 678: boxes of trees being cut, the hold ring, the selection box
+- `drawGhost` 246
+- `GHOST_TINT` 297: The ghost's own art tinted green where it fits and red where it does not (Albert, Nov 1): no grid, no footprin…
+- `ghostTints` 298
+- `ghostTint` 299
+- `miniIncoming` 318
+- `MINI_K` 337: the land's square fills the small map (preview 51)
+- `miniMat` 338: world units to the small map, through the land's frame
+- `miniWorld` 339: a point of the small map, in the world
+- `drawMini` 340
+- `drawFlood` 429: the flood: water over the shore
+- `drawSand` 439: quicksand: a pale patch with ripples
+- `drawLakeRipples` 454: small ripples drift on the lakes
+- `drawRainRings` 474: rain rings sit on the ground, fixed to the world, under buildings and people
+- `drawFire` 499: the wildfire
+- `drawFogLayer` 518: the fog, soft, over everything standing
+- `drawOrders` 534: your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
+- `drawTracers` 570: arrows and shots: a short streak along the curve
+- `drawLight` 591: the light: warm at dusk and dawn, blue at night, darker toward the edges; lit windows
+- `HEARTH` 649: where a fire is always lit after dark (the mess tent's cooking fire, the Hall's lamps
+- `drawHitGlow` 651: something of yours was hit: a red glow round the edge, fading over a second and a half
+- `drawFlash` 679: a new age, a wonder, a victory: a pale flash
+- `drawTouch` 688: boxes of trees being cut, the hold ring, the selection box
 
 **`25-view-weather.js`** (231 lines): rain, wind, lightning, sky, forest
 
@@ -1516,23 +1519,23 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `shownMsg` 687: The preview (Build 64): the newest live line, or the question that hides its group; paused says so when nothin…
 - `preview` 688
 
-**`33-verbs.js`** (1130 lines): every button verb
+**`33-verbs.js`** (1135 lines): every button verb
 
 - `ACT` 4: every button's verb, in one table
-- `shut` 375: a job is locked until its age (32-frame, resOn): a tap on it says when it opens
-- `PLAY` 377: orders that change the game: refused once it is over
-- `act` 1025
-- `L` 1037: Hints retire once learned: each counts the times you did what it teaches, kept on this phone; at 3 it is not s…
-- `learn` 1038
-- `learnAct` 1044
-- `lpT` 1055
-- `lpDone` 1056
-- `lpAt` 1057
-- `lpStop` 1058
-- `TAPS` 1080: Tap counts (Build 59, from the Google audit): how often each button is used, and tapped while it could not act
-- `tapCount` 1084
+- `shut` 380: a job is locked until its age (32-frame, resOn): a tap on it says when it opens
+- `PLAY` 382: orders that change the game: refused once it is over
+- `act` 1030
+- `L` 1042: Hints retire once learned: each counts the times you did what it teaches, kept on this phone; at 3 it is not s…
+- `learn` 1043
+- `learnAct` 1049
+- `lpT` 1060
+- `lpDone` 1061
+- `lpAt` 1062
+- `lpStop` 1063
+- `TAPS` 1085: Tap counts (Build 59, from the Google audit): how often each button is used, and tapped while it could not act
+- `tapCount` 1089
 
-**`39-huddle.js`** (629 lines): the row below the map and its three pages, the War HUD's missions, the squad card
+**`39-huddle.js`** (630 lines): the row below the map and its three pages, the War HUD's missions, the squad card
 
 - `HUD` 8: The row (MENU-SPEC §6, Albert's drawings of Oct 30 and 31): one Formation two ranks tall, the same six columns…
 - `mUnits` 16
@@ -1578,10 +1581,10 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `squadHomeHTML` 461: At home: the four kinds, each with how many the squad holds and − + under it (soldiers at home step in by them…
 - `squadOutHTML` 488: Out: how it stands, what it lost, send more from the idle reserve, its shape and intent, where it is, Abort
 - `YARD_LIST` 537: The Yard (Albert, Nov 3, preview 47 "Restore and Fix"): the staging ground
-- `matchLog` 565: ── The match log (Albert, Nov 3, 22:34: "If I play a game can you analyze it?"; preview 49, preview only, YARD…
-- `matchLogText` 595
-- `copyLog` 600
-- `fallbackCopy` 613
+- `matchLog` 566: ── The match log (Albert, Nov 3, 22:34: "If I play a game can you analyze it?"; preview 49, preview only, YARD…
+- `matchLogText` 596
+- `copyLog` 601
+- `fallbackCopy` 614
 
 **`shell-head.html`** (273 lines): 
 
@@ -1743,4 +1746,4 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 |---|---|---|---|---|---|---|---|---|---|---|
 | `gather` | `vilTick`, `makeNow`, `forage`, `bestNode`, `nearestNode`, `pickVil`, `setJob`, `leaveWork`, `waitAt`, `backToWork` | `person`, `WORKTOOL`, `LOOKS`, `drawUnit` | `keep`, `mill`, `lumber`, `mining`, `dock` | `lakeGrid`, `makeWater`, `drawFlood` | `food`, `wood`, `stone`, `gold`, `iron`, `bush`, `tree`, `fish` | `units` | `moveTo`, `astar`, `dropFor`, `carryOf`, `gatherMul`, `forageNow`, `findCap`, `crowd`, `unsafe`, `dangerWhy`, `SEARCH`, `REACH`, `WORK_R`, `RATE_OF`, `FORAGE`, `CARRY`, `SHELTER` | `forage`, `SEARCH`, `UPKEEP` | `job`, `sendvil`, `vstop`, `vfocus`, `vhome`, `idlego`, `pjob` | `popOf`, `freeVil` |
 
-53 files, 1542 names, 1 cards.
+53 files, 1545 names, 1 cards.

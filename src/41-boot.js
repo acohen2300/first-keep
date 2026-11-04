@@ -205,6 +205,7 @@ const clip = (text) => {
 	}
 };
 window.__fk = {
+	boxed,
 	ELEMENTS,
 	LAYERS,
 	ACT,

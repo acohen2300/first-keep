@@ -257,6 +257,25 @@ WATER = """(seeds) => {
   }
   return bad; }"""
 
+# The building mold and the screen's alignment lines (preview 53): a standing house, barracks and tower draw as boxes (BOX_LOOK) and a field
+# does not; the old pictures draw with the toggle off; a ghost on another building's land x (world x − y) snaps onto that line.
+MOLD = """() => {
+  const F = window.__fk, bad = []; F.SET.scen = 'open'; F.SET.boxes = true; F.newGame(5); F.act('close'); const G = F.G, k = F.keepOf(0);
+  Object.assign(G.P[0].res, { f: 9999, w: 9999, s: 9999, g: 9999, i: 9999 });
+  const put = (kind, dx, dy) => { const sp = F.findSpot(0, kind, k.x + dx, k.y + dy, 0, 80); const b = sp && F.build(0, kind, sp.x, sp.y); if (b) { b.prog = 1; F.built(b); } return b; };
+  const h = put('house', 70, -60), f = put('farm', -90, 70), t = put('tower', 60, 90);
+  if (!h || !t) return ['no ground for the test buildings'];
+  for (const [b, want] of [[h, true], [t, true], [f, false]]) if (b && !!F.boxed(b) !== want) bad.push(`${b.kind} ${want ? 'is not boxed' : 'is boxed'}`);
+  F.SET.boxes = false; if (F.boxed(h)) bad.push('the toggle off still boxes a house'); F.SET.boxes = true;
+  F.navRebuild(); F.cam.x = k.x; F.cam.y = k.y; F.cam.z = 1.6; F.clampCam();
+  try { F.draw(); } catch (e) { bad.push('a frame with boxes threw: ' + e.message); }
+  // the screen's line: a spot 60 along the land's y from the house (world x + 60·√½·... : the same land x means the same world x − y)
+  let p = null; for (const d of [200, -200, 240, -240]) if (!F.canPlace(0, 'house', h.x + d, h.y + d)) { p = { x: h.x + d, y: h.y + d }; break; }   // far enough that only the screen's line can pull it, on open ground
+  if (!p) return bad.concat(["no open ground on the house's screen line"]);
+  const s = F.snapGhost(0, 'house', p.x + 8, p.y - 8, 30);
+  if (Math.abs(s.x - s.y - (h.x - h.y)) > 0.5) bad.push(`the ghost did not snap onto the house's land x (off by ${(s.x - s.y - (h.x - h.y)).toFixed(1)})`);
+  return bad; }"""
+
 async def main():
     async with async_playwright() as p:
         br = await p.chromium.launch(); fails = 0
@@ -285,6 +304,8 @@ async def main():
             pg = await br.new_page(viewport={'width': w, 'height': h}); await pg.goto('file://' + os.path.join(ROOT, 'first-keep.html')); await pg.wait_for_timeout(400)
             bad, worst = await pg.evaluate(CAMERA, CAM_SEEDS); await pg.close()
             print(('PASS ' if not bad else 'FAIL ') + f'every home node can be seen and tapped in its corner at {w} x {h} (nearest {worst} px from the view\'s edge)', '' if not bad else bad[:6]); fails += bool(bad)
+        bad, errs = await run(MOLD); bad += errs
+        print(('PASS ' if not bad else 'FAIL ') + 'the building mold: boxes for what stands, pictures behind the toggle, the ghost snaps onto a building\'s screen line', '' if not bad else bad[:6]); fails += bool(bad)
         bad, errs = await run(WATER, SEEDS); bad += errs
         print(('PASS ' if not bad else 'FAIL ') + f'the one shore on {SEEDS} seeds: nothing but fish in the water, every fish in it, every river pool with its stretch and lake', '' if not bad else bad[:6]); fails += bool(bad)
         res, errs = await run(ZONE, SEEDS); bad, W = res if len(res) == 2 and isinstance(res[1], dict) else (res, {'near': [0, 0], 'far': 0, 'any': 0, 'wild': 0, 'edge': 0, 'fit': 0, 'corners': 0, 'back': [0, 0], 'bedge': 0, 'bgap': 0}); bad += errs

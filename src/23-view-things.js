@@ -80,6 +80,106 @@ function drawWallBox(b) {
 	}
 	ctx.stroke();
 }
+// The building mold (preview 53, Albert, Nov 4: "I just want to see the front of a building, the side, and the top. Do it in the cheapest
+// way possible"): every standing building is the wall's box grown to its footprint and height: its two near faces (south lit, east in shade),
+// a roof on top (a gable along the longer run, a flat top for towers and keeps, a canvas peak for tents), a door on the south face, windows
+// on both, and the owner's pennant at the roof's end. One shape for every kind; BOX_LOOK says only the walls' and roof's stuff. The old
+// pictures (ART, 19-building-art) stay behind the toggle SET.boxes (the Yard: "Old art") until Albert has seen the boxes and said which.
+// Fields, pastures, traps and the rest that lie flat keep their pictures: a box is for a thing that stands.
+const BOX_LOOK = {
+	stone: { wall: STONE, roof: SLATE, form: 'gable' },
+	plaster: { wall: PLASTER, roof: TILE, form: 'gable' },
+	timber: { wall: PLANK, roof: THATCH, form: 'gable' },
+	keep: { wall: STONE, roof: STONE, form: 'flat', merlon: true },
+	tent: { wall: MUD, roof: PLASTER, form: 'peak' },
+	of: {
+		keep: 'keep', town: 'keep', castle: 'keep', tower: 'keep', throne: 'keep', camptower: 'keep', wonder: 'stone', hall: 'stone', council: 'stone',
+		courthouse: 'stone', temple: 'stone', library: 'stone', baths: 'stone', hospital: 'stone', aqueduct: 'stone', mint: 'stone', foundry: 'stone', quarry: 'stone',
+		mining: 'stone', smith: 'stone', house: 'plaster', apartment: 'plaster', school: 'plaster', theatre: 'plaster', tavern: 'plaster', market: 'plaster',
+		barracks: 'timber', range: 'timber', stable: 'timber', lumber: 'timber', mill: 'timber', store: 'timber', workshop: 'timber', siege: 'timber', dock: 'timber',
+		depot: 'timber', medtent: 'tent', traintent: 'tent', messtent: 'tent',
+	},
+};
+const boxed = (b) => SET.boxes !== false && BOX_LOOK.of[b.kind] && b.prog >= 1 && !BLD[b.kind].crop;
+function drawBldBox(b) {
+	const L = BOX_LOOK[BOX_LOOK.of[b.kind]],
+		B = BLD[b.kind],
+		half = (B.fp * NAVC) / 2,
+		H = B.h * 0.75, // the walls; the roof takes the rest
+		R = B.h - H,
+		x0 = b.x - half,
+		x1 = b.x + half,
+		y0 = b.y - half,
+		y1 = b.y + half,
+		z = cam.z,
+		c = (x, y, h = 0) => [SX(x, y), SY(y, h, x)],
+		poly = (pts, fill) => {
+			ctx.beginPath();
+			pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+			ctx.closePath();
+			ctx.fillStyle = fill;
+			ctx.fill();
+		},
+		S = lit(L.wall, 0.08),
+		E = lit(L.wall, -0.35),
+		T = lit(L.roof, 0.18),
+		T2 = lit(L.roof, -0.25);
+	poly([c(x0, y1), c(x1, y1), c(x1, y1, H), c(x0, y1, H)], S); // the south face, toward the screen's lower left
+	poly([c(x1, y0), c(x1, y1), c(x1, y1, H), c(x1, y0, H)], E); // the east face, toward the lower right, in shade
+	if (z > 0.7) {
+		// the door, the windows: on the south face a door at the middle and a window each side; on the east a window a square
+		const d = Math.min(6, half * 0.4),
+			dk = lit(L.wall, -0.7);
+		poly([c(b.x - d / 2, y1), c(b.x + d / 2, y1), c(b.x + d / 2, y1, Math.min(H * 0.6, 12)), c(b.x - d / 2, y1, Math.min(H * 0.6, 12))], dk);
+		const wh = Math.min(5, H * 0.3),
+			wy = H * 0.45;
+		for (let x = x0 + 5; x < x1 - 4; x += 10)
+			if (Math.abs(x + 2 - b.x) > d) poly([c(x, y1, wy), c(x + 4, y1, wy), c(x + 4, y1, wy + wh), c(x, y1, wy + wh)], dk);
+		for (let y = y0 + 5; y < y1 - 4; y += 10) poly([c(x1, y, wy), c(x1, y + 4, wy), c(x1, y + 4, wy + wh), c(x1, y, wy + wh)], dk);
+	}
+	if (L.form === 'flat') {
+		poly([c(x0, y0, H), c(x1, y0, H), c(x1, y1, H), c(x0, y1, H)], T);
+		if (L.merlon && z > 0.7) {
+			const m = 3;
+			for (let x = x0 + 1.5; x < x1; x += 5) poly([c(x, y1, H), c(x + 2.5, y1, H), c(x + 2.5, y1, H + m), c(x, y1, H + m)], S);
+			for (let y = y0 + 1.5; y < y1; y += 5) poly([c(x1, y, H), c(x1, y + 2.5, H), c(x1, y + 2.5, H + m), c(x1, y, H + m)], E);
+		}
+	} else if (L.form === 'peak') {
+		// a tent: four slopes to one peak
+		const [px, py] = c(b.x, b.y, H + R);
+		poly([c(x0, y1, H), c(x1, y1, H), [px, py]], T);
+		poly([c(x1, y0, H), c(x1, y1, H), [px, py]], T2);
+		poly([c(x0, y0, H), c(x1, y0, H), [px, py]], lit(L.roof, 0.3));
+		poly([c(x0, y0, H), c(x0, y1, H), [px, py]], lit(L.roof, 0.3));
+	} else {
+		// a gable: the ridge runs along x (the screen's down-right), the south slope lit, the gable end on the east face
+		poly([c(x1, y0, H), c(x1, y1, H), c(x1, b.y, H + R)], E); // the gable end
+		poly([c(x0, b.y, H + R), c(x1, b.y, H + R), c(x1, y1, H), c(x0, y1, H)], T); // the south slope
+		poly([c(x0, y0, H), c(x1, y0, H), c(x1, b.y, H + R), c(x0, b.y, H + R)], T2); // the north slope, the far one, just showing over the ridge
+	}
+	// the owner's pennant at the roof's east end
+	{
+		const top = L.form === 'flat' ? H + (L.merlon ? 3 : 0) : H + R,
+			[fx, fy] = c(x1 - 2, L.form === 'gable' ? b.y : y0 + 2, top),
+			[tx, ty] = c(x1 - 2, L.form === 'gable' ? b.y : y0 + 2, top + 9);
+		ctx.strokeStyle = '#3a2c1c';
+		ctx.lineWidth = Math.max(0.6, 0.5 * z);
+		ctx.beginPath();
+		ctx.moveTo(fx, fy);
+		ctx.lineTo(tx, ty);
+		ctx.stroke();
+		poly([[tx, ty], [tx + 5 * z, ty + 1.5 * z], [tx, ty + 3.5 * z]], G.P[b.owner].color);
+	}
+	// the edge where the top meets the faces, faint, so the box reads
+	ctx.strokeStyle = LINE;
+	ctx.lineWidth = Math.max(0.5, 0.4 * z);
+	ctx.beginPath();
+	const [ax, ay] = c(x0, y1, H), [bx, by] = c(x1, y1, H), [cx, cy] = c(x1, y0, H);
+	ctx.moveTo(ax, ay);
+	ctx.lineTo(bx, by);
+	ctx.lineTo(cx, cy);
+	ctx.stroke();
+}
 function drawBld(b, s) {
 	if (WALL_LOOK[b.kind] && b.prog >= 1) {
 		drawWallBox(b);
@@ -195,10 +295,13 @@ function drawBld(b, s) {
 		return;
 	}
 	const fa = G.t - (b.doneT ?? -99);
-	stamp(c, sx, sy, k * popC(fa / 0.6));
-	flagsOn(c, sx, sy, z, G.P[b.owner].color, b.id);
+	if (boxed(b)) drawBldBox(b);
+	else {
+		stamp(c, sx, sy, k * popC(fa / 0.6));
+		flagsOn(c, sx, sy, z, G.P[b.owner].color, b.id);
+	}
 	if (PILE[b.kind] && friendly(0, b.owner)) pileAt(b, sx, sy, z);
-	if (fa < 8 && !still()) {
+	if (fa < 8 && !still() && !boxed(b)) {
 		ctx.globalCompositeOperation = 'lighter';
 		ctx.globalAlpha = 0.32 * (1 - fa / 8);
 		stamp(c, sx, sy, k);
