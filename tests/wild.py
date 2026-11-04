@@ -7,7 +7,7 @@ JS = """() => {
   const F = window.__fk, bad = [], T = 1 / 30, W = () => F.G.P.length - 1;
   const T_ = (n, f) => { try { f(); } catch (e) { bad.push(n + ': a check stopped: ' + e.message + ' @ ' + String(e.stack).split(String.fromCharCode(10)).slice(1,4).join(' | ')); } };
   const run = (secs) => { for (let i = 0; i < secs * 30; i++) F.step(T); };
-  const fresh = (seed = 7) => { F.newGame(seed); F.act('close'); F.setPause(false); const G = F.G; G.fogOn = false; G.ev.next = 1e9; G.ev.cur = null; F.step(T); return G; };
+  const fresh = (seed = 7) => { F.newGame(seed); F.act('close'); F.setPause(false); const G = F.G; G.fogOn = false; G.ev.next = 1e9; G.ev.cur = null; G.wx = 'clear'; G.clim.wet = false; G.clim.snow = 0; G.clim.mud = 0; G.clim.ice = 0; F.step(T); return G; };   // a clear sky: the walking speed is not the test's subject (preview 52: seed 3 opened in a blizzard and the builder arrived late)
   const open = (G) => { const k = F.keepOf(0); let best = 0, P = null; for (let x = 100; x < F.MAP - 100; x += 20) for (let y = 100; y < F.MAP - 100; y += 20) {
       const dk = Math.hypot(x - k.x, y - k.y); if (dk < 150 || dk > 400 || F.blockedCell(F.gcell(x, y), 0) || G.lakes.some((L) => Math.hypot(L.x - x, L.y - y) < L.r + 40)) continue; const m = Math.min(...G.blds.map((b) => Math.hypot(b.x - x, b.y - y)), ...G.units.map((u) => Math.hypot(u.x - x, u.y - y)));
       if (m > best) { best = m; P = { x, y }; } } return P; };

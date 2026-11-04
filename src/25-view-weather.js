@@ -211,8 +211,8 @@ function forestLayer() {
 	f.setTransform(bgK, 0, 0, bgK, 0, 0);
 	f.clearRect(0, 0, MAP, MAP);
 	for (const [col, r] of [
-		['#1c3a1c', 15],
-		['#2b5427', 11],
+		['#1c3a1c', TREE.crown[0]],
+		['#2b5427', TREE.crown[1]],
 	]) {
 		f.fillStyle = col;
 		f.beginPath();

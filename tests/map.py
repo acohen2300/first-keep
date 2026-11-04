@@ -242,6 +242,21 @@ CAMERA = """async (seeds) => {
         if (m < 22) { bad.push(s + '/' + o + ': a ' + n.kind + ' ' + Math.round(m) + ' px from the edge of the view'); break; } } } }
   return [bad, Math.round(worst)]; }"""
 
+# The one shore (preview 52, Albert's layers): nothing laid stands in water but the fish (the map-maker kept trees out of lakes as circles while the
+# grid used the true shore: 20 trees in water over 20 seeds); every fish is in water; every river pool carries its stretch and its lake.
+WATER = """(seeds) => {
+  const F = window.__fk, bad = []; F.SET.scen = 'open';
+  for (const s of [...Array(seeds).keys()].map((i) => i + 1).concat(seeds < 55 ? [55] : [])) {   // seed 55: the one where a bush find stood in a bay (Nov 4)
+    F.newGame(s); F.act('close'); const G = F.G;
+    for (const n of G.nodes) { if (n.farm) continue; const g = F.lakeGap(n.x, n.y);
+      if (n.kind === 'fish' ? g > 0 : g < 0) { bad.push(`seed ${s}: a ${n.kind} ${n.kind === 'fish' ? 'on dry land' : 'in the water'} at ${Math.round(n.x)},${Math.round(n.y)} (${g.toFixed(1)} from the shore)`); if (bad.length > 5) return bad; } }
+    G.lakes.forEach((L, i) => { if (!L.river) return;
+      if (!(L.run >= 0 && L.run <= 2)) bad.push(`seed ${s}: river pool ${i} carries no stretch`);
+      const src = G.lakes[L.src]; if (!src || src.river) bad.push(`seed ${s}: river pool ${i} names no lake`); });
+    if (bad.length > 5) return bad;
+  }
+  return bad; }"""
+
 async def main():
     async with async_playwright() as p:
         br = await p.chromium.launch(); fails = 0
@@ -270,6 +285,8 @@ async def main():
             pg = await br.new_page(viewport={'width': w, 'height': h}); await pg.goto('file://' + os.path.join(ROOT, 'first-keep.html')); await pg.wait_for_timeout(400)
             bad, worst = await pg.evaluate(CAMERA, CAM_SEEDS); await pg.close()
             print(('PASS ' if not bad else 'FAIL ') + f'every home node can be seen and tapped in its corner at {w} x {h} (nearest {worst} px from the view\'s edge)', '' if not bad else bad[:6]); fails += bool(bad)
+        bad, errs = await run(WATER, SEEDS); bad += errs
+        print(('PASS ' if not bad else 'FAIL ') + f'the one shore on {SEEDS} seeds: nothing but fish in the water, every fish in it, every river pool with its stretch and lake', '' if not bad else bad[:6]); fails += bool(bad)
         res, errs = await run(ZONE, SEEDS); bad, W = res if len(res) == 2 and isinstance(res[1], dict) else (res, {'near': [0, 0], 'far': 0, 'any': 0, 'wild': 0, 'edge': 0, 'fit': 0, 'corners': 0, 'back': [0, 0], 'bedge': 0, 'bgap': 0}); bad += errs
         print(('PASS ' if not bad else 'FAIL ') + f'the home zones on {SEEDS} seeds: nothing in the clearing, zone 1 behind with Bronze\'s cost (fits {W["fit"]} of {W["corners"]} corners), the home finds in the band, the same content in every corner, all reached (5a, B4)', '' if not bad else bad[:int(os.environ.get("SHOW", 8))] + [f'... {len(bad)} in all'])
         print(f'  worst case: a home find\'s nearest node {W["near"][0]} to {W["near"][1]} from its Town Center (its farthest {W["far"]}); nearest node of any find {W["any"]}; nearest node not of the zone {W["wild"]}; nearest home node to the map edge {W["edge"]}; zone 1 nodes {W["back"][0]} to {W["back"][1]} from the Town Center, {W["bedge"]} from the edge, {W["bgap"]} from another find'); fails += bool(bad)

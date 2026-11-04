@@ -29,7 +29,7 @@ function makeBg() {
 	for (const n of G.nodes)
 		if (n.kind === 'tree') {
 			b.beginPath();
-			b.ellipse(n.x + 2, n.y + 3, 17, 12, 0, 0, 7);
+			b.ellipse(n.x + 2, n.y + 3, TREE.floor[0], TREE.floor[1], 0, 0, 7);
 			b.fill();
 		} // the floor of a wood is darker, needles and leaf litter, and stays when the trees are cut (Build 52)
 	blot(220, ['rgba(122,100,62,.16)', 'rgba(140,118,76,.12)'], 10, 34);
@@ -42,13 +42,7 @@ function makeBg() {
 	// A river is drawn as one stream (Build 53): each unbroken run of pools is a smooth curve through their centres, stroked three times
 	// (the outer bank, the inner bank, the water) with round ends, so it leaves its lake and reaches a ford as one body of water. The pools
 	// themselves stay the walking grid's truth; the curve through their centres covers the same ground (a pool every 0.9 of its radius).
-	const runs = [];
-	for (const L of G.lakes) {
-		const last = runs.length ? runs[runs.length - 1] : null,
-			tail = last && last[last.length - 1];
-		if (L.river && tail && tail.river && dist(L, tail) < 2.2 * L.r) last.push(L);
-		else if (L.river) runs.push([L]);
-	}
+	const runs = riverRuns(); // each stretch of river (its pools between two fords), from the water layer
 	const stream = (run, extra, col) => {
 		b.strokeStyle = col;
 		b.lineWidth = 2 * (run[0].r + extra);
@@ -62,16 +56,6 @@ function makeBg() {
 			else b.lineTo(q.x, q.y);
 		}
 		b.stroke();
-	};
-	// a lake's outline on a canvas, its shore's harmonics (lakeRAt) at a radius extra beyond the water's edge
-	const shorePath = (c, L, extra, k = 1) => {
-		c.beginPath();
-		for (let i = 0; i < 72; i++) {
-			const a = (i / 72) * Math.PI * 2,
-				r = (lakeRAt(L, a) + extra) * k;
-			c[i ? 'lineTo' : 'moveTo'](L.x * k + Math.cos(a) * r, L.y * k + Math.sin(a) * r);
-		}
-		c.closePath();
 	};
 	for (const L of G.lakes) {
 		if (L.river) continue;
@@ -110,8 +94,8 @@ function makeBg() {
 		// where a river leaves its lake, the lake's shade covers the join
 		const L = run[0];
 		if (!L.river) continue;
-		const src = G.lakes.find((q) => !q.river && dist(q, L) < q.r + L.r + 20);
-		if (!src) continue;
+		const src = G.lakes[L.src]; // the lake it leaves (makeRiver)
+		if (!src || L.run) continue; // only the first stretch leaves the lake
 		const lg = b.createRadialGradient(src.x, src.y, src.r - 6, src.x, src.y, src.r + 14);
 		lg.addColorStop(0, '#2a6488');
 		lg.addColorStop(1, 'rgba(42,100,136,0)');
@@ -125,7 +109,7 @@ function makeBg() {
 		landMat(b); // the island and the causeways lie on the land's middle lines (preview 51)
 		const L = LAKE0,
 			R = THRONE.isle,
-			W = THRONE.cause; // the Throne's island and its four causeways: stone over the water
+			W = THRONE.cause; // the Throne's island and its four causeways: stone over the water, the shape the walking grid holds (onLand: isle, cause, causeTo), with a sand edge of 10 round the island and 4 each side of a causeway
 		b.fillStyle = 'rgba(206,190,138,1)';
 		b.beginPath();
 		b.arc(L.x, L.y, R + 10, 0, 7);
@@ -136,7 +120,7 @@ function makeBg() {
 			[0, 1],
 			[0, -1],
 		]) {
-			const len = L.r + 30;
+			const len = THRONE.causeTo;
 			b.fillStyle = '#9a917e';
 			b.fillRect(
 				L.x + (dx < 0 ? -len : dy ? -W / 2 - 4 : 0),

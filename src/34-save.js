@@ -1,7 +1,7 @@
 // ═════ 34-save.js: save and load ═════
 // ───────────────────────── Saving: on this phone, every 10 seconds and when you leave ─────────────────────────
 const SAVEKEY = keyOf('save'),
-	SAVEV = 45; // 45: the land turned into the world (preview 51); a 44 save's places are off the land // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
+	SAVEV = 46; // 46: a river's pools carry their stretch and lake (preview 52); 45: the land turned into the world (preview 51); a 44 save's places are off the land // the save's shape, not the build: raise it only when the shape changes, and add a step to MIGRATE for the old one
 const MIGRATE = {
 	// { 24: S => S-in-the-shape-of-25 }, run in order
 	27: (S) => {
@@ -283,7 +283,24 @@ const MIGRATE = {
 		if (S.tread) S.tread = grid(S.tread, 2);
 		S.v = 45;
 		return S;
-	}, // preview 51: the land turned into the world Alpha, Bravo and Charlie, and the fourth tile of the row's middle is Set Up; the old fourth squad's soldiers fold into the reserve, as Epsilon and Zeta did in step 36
+	}, // preview 51: the land turned into the world
+	45: (S) => {
+		// a river's pools carry their lake (src) and stretch (run) since preview 52; before, the painting guessed them from the gaps: the same guess, once
+		let run = -1,
+			tail = null;
+		(S.lakes || []).forEach((L) => {
+			if (!L.river) {
+				tail = null;
+				return;
+			}
+			if (!(tail && dist(L, tail) < 2.2 * L.r)) run++;
+			L.run = run;
+			L.src = Math.max(0, S.lakes.findIndex((q) => !q.river && dist(q, L) < q.r + L.r + 20));
+			tail = L;
+		});
+		S.v = 46;
+		return S;
+	},
 };
 const evSave = () => {
 	const V = G.ev || {},

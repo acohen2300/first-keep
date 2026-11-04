@@ -205,6 +205,10 @@ const clip = (text) => {
 	}
 };
 window.__fk = {
+	ELEMENTS,
+	LAYERS,
+	ACT,
+	PLAY, // the cards and the verbs (ACT the screen's, PLAY the orders that change the game), for tests/elements.py (preview 52)
 	suggestAt,
 	whoIs,
 	isNext,

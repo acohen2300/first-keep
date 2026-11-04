@@ -22,6 +22,8 @@ This section is the start. Nothing else in the repo comes first; where another f
 
 ## 2. Read in this order [2026-11-01 07:45]
 
+0. **The Index** (`INDEX.md` at the root, written from the code at every publish; its key `docs/0 Index/00 Books.md`): where everything lives, by Albert's five Books (Truth, Look, Words, Minds, Binder), and the cards (`src/00-elements.js`), one an element. Look things up there before grepping. [2026-11-04 11:08]
+
 1. **How we work** (`docs/1 How we work/`): [2026-11-01 07:45]
    1. `docs/1 How we work/01 Working with Albert.md`: tone, the list and the double yes, preview only, his sightings, weakness and real-world check, the real math, overnight audits. [2026-11-01 07:45]
    2. `docs/1 How we work/02 SOP.md`: list, mockup, yes yes, builders in worktrees, fresh eyes, merge, QC, preview, live; what goes in a preview's docs; the line stamps. [2026-11-01 07:45]

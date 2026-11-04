@@ -1,8 +1,9 @@
 // ═════ 09-nav.js: paths ═════
+// The water's shape and its squares on the grid are the water layer's (10-world-water: lakeRAt, lakeGap, onLand, lakeGrid); the squares
+// off the land are the ground layer's (10-world-ground: navOffLand). This file is the grid itself and the ways across it.
 // ───────────────────────── The walking grid: where things stand, and how people get around ─────────────────────────
 // Squares of 10, never shown. Buildings fill whole squares and leave LANE (two) free between them. Walls are one square each.
 const NC = MAP / NAVC;
-const SHORE = 5; // squares from water that count as its shore
 const POCKET = 300; // a joined region smaller than this many squares is a pocket: closed in by trees, buildings or water
 const NAV = {
 	share: {},
@@ -19,46 +20,6 @@ const NAV = {
 	v: 0,
 	budget: 4,
 };
-let lakeFor = null,
-	lakeHi = false; // the lakes the grid was drawn for, and whether in flood
-const lakeR = (L) => L.r + (G.flood > G.t ? EVENTS.flood.rise : 0); // a lake in flood reaches farther up its shore
-// the shore at an angle from the lake's middle: the radius with its harmonics (WATER; 10-world lakeShape); a round pool has none
-const lakeRAt = (L, a) => (L.w ? L.r * Math.max(0.5, 1 + L.w.reduce((s, [k, amp, ph]) => s + amp * Math.cos(k * a + ph), 0)) : L.r); // never under half its radius
-const lakeRTo = (L, x, y) => lakeRAt(L, Math.atan2(y - L.y, x - L.x)) + (G.flood > G.t ? EVENTS.flood.rise : 0); // the shore toward a point, in flood too
-// how far a point stands from water (negative: in it). The great lake holds the Throne's island and four causeways, which are land.
-const onLand = (x, y) => {
-	const l = landXY(x, y); // the causeways run on the land's middle lines (preview 51)
-	return ((Math.abs(l.x - LMID) < THRONE.cause / 2 || Math.abs(l.y - LMID) < THRONE.cause / 2) && hyp(x - MID, y - MID) < LAKE0.r + 60) || hyp(x - MID, y - MID) < THRONE.isle;
-};
-const lakeGap = (x, y) =>
-	onLand(x, y) ? 1e9 : G.lakes.reduce((m, L) => Math.min(m, hyp(x - L.x, y - L.y) - lakeRTo(L, x, y)), 1e9); // how far from the nearest lake's edge
-// lake cells: 1 water, 2 flood water only, which a side with levees wades
-function lakeGrid() {
-	NAV.lake.fill(0);
-	for (const L of G.lakes) {
-		const R = Math.ceil((lakeR(L) * (L.rmax || 1) + 2) / NAVC) + 1, // out to the farthest shore (lakeShape's rmax)
-			cx = Math.floor(L.x / NAVC),
-			cy = Math.floor(L.y / NAVC); // only the squares round each lake (Build 50: a river is many small pools)
-		for (let y = Math.max(0, cy - R); y <= Math.min(NC - 1, cy + R); y++)
-			for (let x = Math.max(0, cx - R); x <= Math.min(NC - 1, cx + R); x++)
-				if (hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeRTo(L, x * NAVC + 5, y * NAVC + 5) + 2 && !onLand(x * NAVC + 5, y * NAVC + 5)) {
-					const c = y * NC + x;
-					if (NAV.lake[c] !== 1) NAV.lake[c] = hyp(x * NAVC + 5 - L.x, y * NAVC + 5 - L.y) < lakeRAt(L, Math.atan2(y * NAVC + 5 - L.y, x * NAVC + 5 - L.x)) + 2 ? 1 : 2; // deep water stays deep where pools overlap
-				}
-	}
-	NAV.shore.fill(0);
-	for (let y = 0; y < NC; y++)
-		for (let x = 0; x < NC; x++)
-			if (NAV.lake[y * NC + x])
-				for (let j = -SHORE; j <= SHORE; j++)
-					for (let i = -SHORE; i <= SHORE; i++) {
-						const X = x + i,
-							Y = y + j;
-						if (X >= 0 && Y >= 0 && X < NC && Y < NC) NAV.shore[Y * NC + X] = 1;
-					} // the ground by water: mud pools here first (Build 54)
-	lakeFor = G.lakes;
-	lakeHi = G.flood > G.t;
-}
 const gcell = (x, y) => clamp(Math.floor(y / NAVC), 0, NC - 1) * NC + clamp(Math.floor(x / NAVC), 0, NC - 1);
 const toCell = (w) => ({ gx: clamp(Math.floor(w.x / NAVC), 0, NC - 1), gy: clamp(Math.floor(w.y / NAVC), 0, NC - 1) });
 // a place as the map's lettered squares: COORD units a square, letters across and numbers down (A1 to V22 on the 2160 map)
@@ -73,11 +34,6 @@ function snapPos(kind, x, y) {
 		gy = Math.round(y / NAVC - n / 2);
 	return { gx, gy, x: (gx + n / 2) * NAVC, y: (gy + n / 2) * NAVC };
 }
-// off the land (preview 51): the world's squares whose middle lies outside the turned land are solid, the same in every rebuild
-function navOffLand() {
-	NAV.off = new Uint8Array(NC * NC);
-	for (let gy = 0; gy < NC; gy++) for (let gx = 0; gx < NC; gx++) if (!inLand(gx * NAVC + 5, gy * NAVC + 5)) NAV.off[gy * NC + gx] = 1;
-}
 function navRebuild() {
 	if (lakeFor !== G.lakes || lakeHi !== G.flood > G.t) lakeGrid();
 	NAV.prev.set(NAV.solid);
@@ -86,13 +42,13 @@ function navRebuild() {
 	if (NAV.off) for (let i = 0; i < NAV.off.length; i++) if (NAV.off[i]) NAV.solid[i] = 1;
 	NAV.gate.fill(0);
 	NAV.occ.fill(null);
-	// a tree fills the 3×3 squares round it: forest is a wall until it is cut
+	// a tree fills the squares round it (TREE.block each way, the 3 × 3): forest is a wall until it is cut
 	const T = G.nodes.filter((n) => n.kind === 'tree' && n.amt > 0);
 	for (const n of T) {
 		const cx = Math.floor(n.x / NAVC),
 			cy = Math.floor(n.y / NAVC);
-		for (let j = -1; j <= 1; j++)
-			for (let i = -1; i <= 1; i++) {
+		for (let j = -TREE.block; j <= TREE.block; j++)
+			for (let i = -TREE.block; i <= TREE.block; i++) {
 				const x = cx + i,
 					y = cy + j;
 				if (x >= 0 && y >= 0 && x < NC && y < NC) NAV.solid[y * NC + x] = 1;

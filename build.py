@@ -6,12 +6,32 @@ files = sorted(glob.glob('src/[0-9][0-9]-*.js'))
 js = ''.join(open(f).read() for f in files)
 names = {}
 for f in files:
+    prev = ''
     for n, line in enumerate(open(f), 1):
         m = re.match(r'(?:function\s+([A-Za-z_$][\w$]*)|(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=)', line)
+        if not m and n > 1 and re.sub(r'//.*$', '', prev).rstrip().endswith(','): m = re.match(r'\t([A-Za-z_$][\w$]*)\s*=\s', line)   # a second name in one const statement ("\tLMID = SQUARE / 2,"), counted since preview 52 (the cards name them)
+        prev = line
         if m:
-            k = m.group(1) or m.group(2)
+            k = m.group(1) or (m.group(2) if m.re.groups > 1 else None)
             if k in names: sys.exit(f'build refused: {k} declared twice ({names[k]} and {f}:{n})')
             names[k] = f'{f}:{n}'
+# the cards (src/00-elements.js, Albert, Nov 4): every slot present, every name in acts, logic, pings and art a top-level name declared once
+# (names above), every layer one of LAYERS. A hole refuses the build: the builder who left it fixes it, not the player. The rest of a card
+# (impacts, math, orders, buildings, exempt) is checked against the running game by tests/elements.py in the gate.
+import json
+SLOTS = ['impacts', 'acts', 'logic', 'math', 'orders', 'pings', 'buildings', 'layers', 'art', 'exempt']
+r = subprocess.run(['node', '-e', open('src/00-elements.js').read() + '\nconsole.log(JSON.stringify([LAYERS, ELEMENTS]))'], capture_output=True, text=True)
+if r.returncode: sys.exit('build refused: src/00-elements.js does not run alone: ' + r.stderr.strip()[:200])
+LAYERS, ELEMENTS = json.loads(r.stdout.strip().splitlines()[-1])
+for el, card in ELEMENTS.items():
+    for slot in SLOTS:
+        if slot not in card or not isinstance(card[slot], list) or (not card[slot] and slot != 'exempt'): sys.exit(f'build refused: the card {el} has no {slot} (every slot is a list of names; only exempt may be empty)')
+    for slot in ('acts', 'logic', 'pings', 'art', 'exempt'):
+        for n in card[slot]:
+            if n not in names: sys.exit(f'build refused: the card {el} names {n} in {slot}, which is not a top-level name declared once in src/')
+    for n in card['layers']:
+        if n not in LAYERS: sys.exit(f'build refused: the card {el} writes a layer that is not in LAYERS: {n}')
+    if len(set(card['acts']) & set(card['exempt'])): sys.exit(f'build refused: the card {el} both acts with and is exempt from {set(card["acts"]) & set(card["exempt"])}')
 # a research id used twice would make the second unreachable (Build 57 found 'inoculation' and 'rotation' twice): refuse it
 ids = {}
 for n, line in enumerate(open('src/04-rules-tech.js'), 1):

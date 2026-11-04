@@ -113,7 +113,7 @@ const NATIVE = {
 	handoverMen: 8,
 	struck: 60, // decision 4b: how long a camp remembers a computer's unit that struck it (s)
 };
-const THRONE = { hold: 900, tithe: 0.1, score: 50, r: 80, isle: 100, cause: 30 }; // hold: seconds to win in a 60-minute game (scaled to the game's length); tithe of every other side's gathering; score a minute
+const THRONE = { hold: 900, tithe: 0.1, score: 50, r: 80, isle: 100, cause: 30, causeTo: LAKE0.r + 60 }; // isle: the island's radius; cause: a causeway's width, causeTo: how far from the middle it runs (over the great lake's shore): the walking grid and the ground picture read the same (preview 52) // hold: seconds to win in a 60-minute game (scaled to the game's length); tithe of every other side's gathering; score a minute
 
 // A wave is judged by its progress (D1, docs/6 Records/v80 Audit/ai.md): it goes home when beaten (under broke of the soldiers it set out with), or
 // when for stall seconds it has neither come step nearer its goal (the mean of its soldiers' distances) nor fought (a blow within fight

@@ -299,27 +299,7 @@ function shadeFrame() {
 	SHADE.a = a;
 }
 // the shadows of the trees, bushes and rocks you can see, cast from the sun like everything else (Build 61, Albert: only the trees you can see,
-// not the deep woods). A tree with six or more standing neighbours on the forest lattice is deep: its shadow would lie under the canopy, so
-// none is drawn; the fog's dark hides the rest. All of them go into one path, filled once.
-let DEEP = { v: -1, G: null, set: null };
-function deepTrees() {
-	if (DEEP.G === G && DEEP.v === G.treeV) return DEEP.set;
-	const cell = new Map(),
-		k = (x, y) => `${Math.round(x / FOREST.step)},${Math.round(y / FOREST.step)}`;
-	for (const n of G.nodes) if (n.kind === 'tree' && n.amt > 0) cell.set(k(n.x, n.y), (cell.get(k(n.x, n.y)) || 0) + 1);
-	const deep = new Set();
-	for (const n of G.nodes)
-		if (n.kind === 'tree' && n.amt > 0) {
-			const cx = Math.round(n.x / FOREST.step),
-				cy = Math.round(n.y / FOREST.step);
-			let m = 0;
-			for (let dy = -1; dy <= 1; dy++)
-				for (let dx = -1; dx <= 1; dx++) if ((dx || dy) && cell.get(`${cx + dx},${cy + dy}`)) m++;
-			if (m >= 6) deep.add(n.id);
-		}
-	DEEP = { v: G.treeV, G, set: deep };
-	return deep;
-}
+// not the deep woods: deepTrees, in the forest layer); the fog's dark hides the rest. All of them go into one path, filled once.
 // Every sun shadow on the ground is one path and one fill (Build 62: trees, buildings and people together; measured, the per-thing fills were
 // the dearest pass of the frame, 28% at a normal zoom and 53% close in, headless). One path also means two shadows that overlap darken once, as real ones do.
 // The shadow of a thing h tall with a footprint r wide at (sx, sy): an ellipse laid along the shadow, from the foot outward; a soft pool under it with no light.
@@ -389,7 +369,7 @@ function sunShadows(N, list, z, far) {
 		for (const n of N) {
 			const h = NODE_H[n.kind];
 			if (!h || n.amt <= 0 || deep.has(n.id) || (G.fogOn && fogAt(n.x, n.y) === 0)) continue;
-			const f = (0.6 + 0.4 * Math.min(1, n.amt / n.max)) * (n.kind === 'tree' ? 1.4 : 1);
+			const f = nodeScale(n);
 			shadowPath(SX(n.x, n.y), SY(n.y, 0, n.x), h * f, (n.kind === 'tree' ? 7 : 5) * f * z, z);
 		}
 	for (const [, t, e] of list) {
@@ -718,7 +698,7 @@ function drawNode(n, s) {
 		ctx.fillRect(sx - 1 * z, sy - 3 * z, 2 * z, 3 * z);
 		return;
 	}
-	const f = (0.6 + 0.4 * Math.min(1, n.amt / n.max)) * (n.kind === 'tree' ? 1.4 : 1),
+	const f = nodeScale(n),
 		c = nodeSprite(n, s),
 		k = (z / s) * f; // trees drawn as wide as the ground they block
 	stamp(c, sx, sy, k);

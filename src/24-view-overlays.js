@@ -417,17 +417,13 @@ function drawMini() {
 }
 // the flood: water over the shore
 function drawFlood(z) {
-	if (G.flood > G.t) {
-		ctx.fillStyle = 'rgba(42,100,136,.55)';
-		ctx.beginPath();
-		for (const L of G.lakes)
-			for (let i = 0; i < 48; i++) {
-				const a = (i / 48) * Math.PI * 2,
-					r = lakeRAt(L, a) + EVENTS.flood.rise;
-				ctx[i ? 'lineTo' : 'moveTo'](SX(L.x + Math.cos(a) * r, L.y + Math.sin(a) * r), SY(L.y + Math.sin(a) * r, 0, L.x + Math.cos(a) * r));
-			} // the flood follows each lake's own shore
-		ctx.fill(); // one shape, so a river's overlapping pools do not darken where they meet (Build 52)
-	} // the flood: water over the shore
+	if (!inFlood()) return;
+	ctx.fillStyle = 'rgba(42,100,136,.55)';
+	wmat();
+	ctx.beginPath();
+	for (const L of G.lakes) shoreWalk(L, floodRise(), 48, (x, y, r, a) => ctx[a ? 'lineTo' : 'moveTo'](x, y)); // the flood follows each lake's own shore, risen (the one shore: 10-world-water)
+	flat();
+	ctx.fill(); // one shape, so a river's overlapping pools do not darken where they meet (Build 52)
 }
 // quicksand: a pale patch with ripples
 function drawSand(z) {

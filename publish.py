@@ -33,6 +33,7 @@ def guide():   # GUIDE.md, written by the game from its own tables at every publ
             md = await pg.evaluate('() => window.__fk.guideMd()'); await br.close(); return md
     open('GUIDE.md', 'w').write(asyncio.run(go()).rstrip('\n') + '\n')
 guide()
+subprocess.run([sys.executable, 'tests/index.py'], check=True)   # INDEX.md, written from the code at every publish (Albert, Nov 4: the Index and the Books)
 if not PREVIEW: open(STAMP, 'w').write(sha('first-keep.html') + '\n')   # a preview does not touch the stamp, so the hook keeps checking the live index.html
 for dst in (('preview/index.html',) if PREVIEW else ('index.html', 'preview/index.html')): open(dst, 'wb').write(open('first-keep.html', 'rb').read())
 trailer = os.environ.get('TRAILER', '')
