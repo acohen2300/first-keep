@@ -130,7 +130,7 @@ function makeMap() {
 			at = (dx, dy) => [kx + dx * sx, ky + dy * sy],
 			toLoc = ([X, Y]) => ({ x: (X - kx) * sx, y: (Y - ky) * sy });
 		// the taken list of this corner: the home zones and the wall band, the great lake, this corner's water (by its true shore), the shared
-		// places on its two middle lines (a keep stands up to 3.5 off the diagonal, KEEP_W: the quarter read 6 wide); then what is laid
+		// places on its two middle lines (a keep stands a little off the diagonal, KEEP_OFF: the quarter read that much wider); then what is laid
 		const taken = [
 			{ x: 0, y: 0, r: HOME.out, k: 'home' },
 			{ x: CORNER, y: CORNER, r: LAKE0.r, k: 'lake0' },
@@ -142,7 +142,7 @@ function makeMap() {
 				['stop', ROUTES_L.flat()],
 				['camp', cross(LMID - PLACES.camp)],
 				['lode', cross(PLACES.lode)],
-			].flatMap(([k, L]) => L.map(toLoc).filter((l) => inQuarterL(l.x, l.y, -6)).map((l) => ({ ...l, r: 0, k }))),
+			].flatMap(([k, L]) => L.map(toLoc).filter((l) => inQuarterL(l.x, l.y, -(KEEP_OFF + 2))).map((l) => ({ ...l, r: 0, k }))),
 		];
 		// every find's shape first (its nodes from its middle), so it is laid by its nodes
 		const lattice = (n, cols, gap) =>

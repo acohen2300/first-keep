@@ -8,7 +8,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 
 **`00-pre.js`** (3 lines): 
 
-**`01-rules-basics.js`** (132 lines): the map, speeds, difficulty, resources, jobs, players, ages, seasons
+**`01-rules-basics.js`** (141 lines): the map, speeds, difficulty, resources, jobs, players, ages, seasons
 
 - `BUILD` 3: written by build.py from the latest "## Build NN" in CUTS.md: the number has one home
 - `BUILD_NAME` 4: the version's name, shown as "v70 · Restoration" (Albert, Oct 31)
@@ -43,28 +43,33 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `ZOOM_START` 51: the camera's zoom when a game opens: a map label is LABEL.px there (labelK, 24-view-overlays)
 - `LABEL` 52: a map label: 12 at the starting zoom, never under 9 zoomed out (Albert, Oct 31: "base 3"); what is pinned to t…
 - `TILT` 53: the camera's pitch: the ground squashed to 0.55 (near AoE2's 2:1; was 0.66 to preview 49; at 0.5 two pairs of …
-- `TURN` 54: the view turned 45° (Albert, Nov 4, 06:58: "take the whole map and rotate it
-- `RIM` 55: the scenery beyond the map's edge, in world units: sea on the near sides, cliffs and sky on the far (fills the…
-- `SIDE` 56
-- `worldXY` 59: the land's frame and the world's (preview 51): a land point (lx, ly) stands in the world at the centre plus (l…
-- `landXY` 64
-- `landAt` 69: a land point as a world point, for the rules that name the land's edges and middle lines
-- `inLand` 70
-- `FOG` 74
-- `FOGN` 75: fog of war: squares of 40; unseen, explored (stays lit, dim), in sight now
-- `WILD` 76: the fifth side: animals, bandits, robbers, monsters
-- `RESOURCES` 79: One table for the four resources: short key, colour, name, where it is dropped off.
-- `RES` 86
-- `KEY` 87
-- `LONG` 88
-- `JOBS` 89: a job for each resource
-- `REL_WORD` 92: the one home of the stance words (cold review of v70: friend, neutral, foe), in the Relations card's order
-- `CORNER` 96: in the land's frame: 753.1 (was 755); a keep stands about CORNER out on both axes
-- `KEEP_W` 101: The keeps' places (preview 51): named in the world, where each must sit on the centre of its five squares (a c…
-- `PLAYERS` 107
-- `FORT` 115: a player like the others since Build 40: it defends first, and strikes whoever is weak or busy
-- `AGES` 117
-- `SEASONS` 125
+- `VIEW` 54: the camera's turn in degrees, the one home (Albert, Nov 4, 12:31: "Angle index: from 45 to 30"; 12:47: "30 sti…
+- `TA` 55
+- `TC` 56
+- `TS` 57: the turn's cosine and sine (20-view-base
+- `TURN` 58: how wide a world square's diagonal reads across the screen at zoom 1 (√2 at 45°; was 1/√2, the one number of a…
+- `RIM` 59: the scenery beyond the map's edge, in world units: sea on the near sides, cliffs and sky on the far (fills the…
+- `SIDE` 60
+- `worldXY` 63: the land's frame and the world's (preview 51): a land point (lx, ly) stands in the world at the centre plus (l…
+- `landXY` 68
+- `landAt` 73: a land point as a world point, for the rules that name the land's edges and middle lines
+- `inLand` 74
+- `FOG` 78
+- `FOGN` 79: fog of war: squares of 40; unseen, explored (stays lit, dim), in sight now
+- `WILD` 80: the fifth side: animals, bandits, robbers, monsters
+- `RESOURCES` 83: One table for the four resources: short key, colour, name, where it is dropped off.
+- `RES` 90
+- `KEY` 91
+- `LONG` 92
+- `JOBS` 93: a job for each resource
+- `REL_WORD` 96: the one home of the stance words (cold review of v70: friend, neutral, foe), in the Relations card's order
+- `CORNER` 100: in the land's frame: 753.1 (was 755); a keep stands about CORNER out on both axes
+- `KEEP_W` 104: The keeps' places (preview 51): named in the world, where each must sit on the centre of its five squares (a c…
+- `KEEP_OFF` 115: how far a keep stands off the land's diagonal once snapped (3.5 at 45°; more at other angles): the map-maker's…
+- `PLAYERS` 116
+- `FORT` 124: a player like the others since Build 40: it defends first, and strikes whoever is weak or busy
+- `AGES` 126
+- `SEASONS` 134
 
 **`02-rules-units.js`** (762 lines): every unit: cost, strength, speed, what it counters
 
@@ -190,7 +195,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `EVENTS` 312
 - `EVK` 340
 - `NEWS_EVERY` 341
-- `PLACES` 347: Where the shared places stand, each from what it belongs to (5a step 1: no map coordinate typed by hand)
+- `PLACES` 347: start: how far past the Town Center's footprint its first people stand, toward the middle (doorOf, 08; it was …
 - `cross` 348
 - `ROUTES_L` 355: in the land's frame, for the map-maker
 - `ROUTES` 356
@@ -289,18 +294,18 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `cluster` 93: a cluster of nodes of one kind: the shape's offsets round a middle, each with amt (the one placer; it was bunc…
 - `makeMap` 105: The map in layers (Albert, Build 63 and Nov 4), on the base rules (CLEAR and HOME in 06), laid once from the s…
 
-**`10-world-movers.js`** (42 lines): layer 5, Movers: the first people, the game, the boar, the finds that walk or are carried off, the camps
+**`10-world-movers.js`** (44 lines): layer 5, Movers: the first people, the game, the boar, the finds that walk or are carried off, the camps
 
 - `layMovers` 3: Their spots were claimed before the forest (laySpots in makeMap, so the trees leave them their clearings); her…
-- `layCamps` 17: a robbers' camp at the middle of each map edge, at the end of a trade route
-- `wildAt` 20
-- `addFind` 27
+- `layCamps` 19: a robbers' camp at the middle of each map edge, at the end of a trade route
+- `wildAt` 22
+- `addFind` 29
 
 **`10-world-citadel.js`** (35 lines): the Throne, its ring, the island and the causeways
 
 - `makeCitadel` 6: The Throne: a walled citadel on the great lake's island, four gates at the four causeways, a tower at each cor…
 
-**`09-nav.js`** (832 lines): paths
+**`09-nav.js`** (845 lines): paths
 
 - `NC` 6: Squares of 10, never shown
 - `POCKET` 7: a joined region smaller than this many squares is a pocket: closed in by trees, buildings or water
@@ -342,18 +347,19 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `moveTo` 585
 - `canPlace` 655: Every building keeps LANE free squares from the next (decision 2: a one-square lane is shut by the slit rule, …
 - `GUIDE_R` 705: how far a building reaches with its alignment lines
-- `snapGhost` 706
-- `findSpot` 752: The computers' way of finding a spot: rings out from a centre, the first place that fits.
-- `wallLine` 767: a straight run of squares from a to b, four-connected so nothing can slip through; near-straight drags snap to…
-- `SEAL` 787: Is your keep walled in? A walk outward from the keep over every square a foe can stand on (walls, shut gates, …
-- `sealSeen` 788
-- `sealFrom` 789
-- `sealGen` 790
-- `sealPath` 791
+- `GUIDE_ON` 706: how near the line a snapped centre must come to count as on it: at 45° the squares put it exactly on, at other…
+- `snapGhost` 707
+- `findSpot` 765: The computers' way of finding a spot: rings out from a centre, the first place that fits.
+- `wallLine` 780: a straight run of squares from a to b, four-connected so nothing can slip through; near-straight drags snap to…
+- `SEAL` 800: Is your keep walled in? A walk outward from the keep over every square a foe can stand on (walls, shut gates, …
+- `sealSeen` 801
+- `sealFrom` 802
+- `sealGen` 803
+- `sealPath` 804
 
 ### Sim
 
-**`08-core.js`** (753 lines): shared helpers and the game state
+**`08-core.js`** (764 lines): shared helpers and the game state
 
 - `$` 3
 - `clamp` 4
@@ -382,135 +388,136 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `addRes` 84
 - `sumCost` 88
 - `fmt` 89
-- `towardMid` 91
-- `nearest` 98
-- `rng` 112: The simulation's dice are seeded, so a game can be replayed and tested; looks use lookDice (08-core).
-- `rnd` 118
-- `roulette` 120: one weighted draw on the seeded dice: index i with probability w_i / Σw (roulette-wheel selection
-- `nextIn` 129: Random events are a Poisson process, the established model of independent rare events (Poisson 1837
-- `hazard` 130
-- `relax` 134: One home for a thing that settles toward a level, the first-order lag: x(t) = L + (x0 − L) e^(−dt/τ) (Build 62…
-- `logistic` 136: One home for growth with room (Verhulst 1838): one step of ΔN = r N (1 − N/K), fast while there is room, slowi…
-- `NID` 137
-- `plural` 139: one wolf, two wolves; one spearman, two spearmen; one man-at-arms, two men-at-arms
-- `some` 151
-- `SET` 154: Settings remembered on this phone.
-- `PLACE` 174: ),
-- `keyOf` 176
-- `YARD_ON` 177: the Yard (preview 47): on every preview, test and frozen version; never on the live game
-- `saveSet` 211
-- `lineOf` 217: Research lines: the steps of one line at one building come in table order; a step waits on the one before it a…
-- `prevOf` 218
-- `needsOf` 223
-- `nextStep` 227
-- `isNext` 231
-- `todaySeed` 232
-- `MODES` 236
-- `QC` 245: The Town Center, the head count and the room of each side are asked for by every unit every step: answered onc…
-- `qc` 246
-- `keepOf` 256
-- `qcDrop` 262
-- `bldsOf` 265
-- `ready` 266
-- `readyAt` 267: where a unit can be trained: its building, and any other that also trains it
-- `unitsOf` 268: the living: the dead leave the list only at the end of a step
-- `isSoldier` 269
-- `soldiersOf` 270
-- `armyOf` 271: the army: the fighters, the spy, the priest, the medic
-- `BUSY` 273: One home for "your army less who is busy" (Nov 2, O2: four filters wrote it four ways)
-- `armyFree` 281
-- `popOf` 282
-- `roomOf` 291: people one home shelters, after research
-- `capOf` 292
-- `armyRoom` 304: One population (Albert, Build 63): only homes cap it (capOf), and any mix is yours, all workers or all soldiers
-- `clsMax` 305
-- `armyFull` 306: the phone's limit, wherever it bites
-- `qMax` 307: orders one building's line holds (Written records, Guilds add to it)
-- `shortest` 309: of the buildings that can take an order, the one with the shortest line (training, research and muster alike
-- `lineFree` 310
-- `capAt` 314: how many of a building you may have now: by age, plus research a cap table lists the ages it changes in; an ag…
-- `capFor` 315
-- `atCap` 317
-- `capWhy` 318
-- `clsCount` 329
-- `queuedOf` 348
-- `orderSet` 357
-- `selName` 359
-- `hasCmd` 360
-- `formOf` 361
-- `marching` 365: Shape and temper, the two dials
-- `shapeOf` 367
-- `dialOf` 376: a dial's setting for one battalion or for all of them (-1 when they differ), and one step round it
-- `cycle` 377
-- `temperOf` 382: a shield wall holds: no chase
-- `kiteOf` 383
-- `clsOf` 391: a soldier's kind, from the building that trains it; −1 for none of the four
-- `rebattalion` 392
-- `every` 418: a slow tick's turn (BEAT)
-- `atWar` 419
-- `gangOf` 425: The one hostility test (decision 8, C1; answer 1b): sides by their relations; animals are everyone's foe, alwa…
-- `gangRel` 436: a side's stance with a group: the Natives' is the fifth side's place in G.rel; the other groups' live with the…
-- `calm4b` 440: Decision 4b (an experiment, EXCEPTIONS #15, until the computers can buy peace): the wild's people start nothin…
-- `campOf` 441
-- `groundOf` 442
-- `struckBy` 446
-- `isFoe` 452
-- `friendly` 462
-- `season` 463
-- `skyVec` 469: ── The sky (Build 55): the sun's height from the calendar and the land's latitude, by the standard sunrise ari…
-- `sunDecl` 477: the sun's declination on day N (the standard approximation)
-- `dayN` 478: the day of the real year, held through a game day (six a year: each spans two real months)
-- `hourH` 479: the hour angle: 0 at solar noon
-- `sunAltAt` 480: degrees above the horizon on day N at fraction f of the day
-- `sunAlt` 481
-- `sunVec` 482
-- `moonVec` 485: the moon's place, to first order (design, said in SCIENCE.md): it runs ahead of the sun by its phase (a full m…
-- `nightOf` 490: 0 with the sun up, 1 from nautical twilight on
-- `nightness` 491
-- `moonPhase` 492: 0 new, 0.5 full
-- `moonLight` 493: the lit fraction k = (1 − cos i) / 2 (Meeus 48.1), 1 at full moon
-- `civOf` 494
-- `civKind` 496: the kind a side actually trains for a common unit (its civilisation's own, if it has one)
-- `baseKind` 500
-- `BTIER` 502: research that raises every building of a kind in place (btier in the research table)
-- `btierOf` 504
-- `shelterOf` 505: how many villagers a building takes in, after research
-- `bldName` 506
-- `fxList` 519: Each side keeps a small cache of its active effects; it is rebuilt when research finishes or a building with e…
-- `FX1` 539: the combined effect on one stat for something with these keys: m multiplies, a adds, min keeps the lowest
-- `fxFits` 541: whether an effect reaches something with these keys: no k or '*' reaches all; k names one key, or a list of th…
-- `fxv` 543
-- `fxDirty` 563
-- `keepHealth` 568: a finished building keeps its share of full health when research moves the full health (B7
-- `freeVil` 580: Two words for two things (Build 62): a villager is FREE when it has no job and can be given one (the tile's co…
-- `posted` 585: Posted and roaming (Albert, Nov 2, D-089: "a farm is a farm"): a villager given a building (a field, a tree fa…
-- `hand` 589: a plot of yours with no worker on it: the Z on the field (23-view-things) and its count in the strip (32-frame…
-- `idlePost` 590
-- `unitKeys` 591
-- `bldKeys` 598
-- `stats` 607: what a side's unit of this kind is, after its research: name, health, damage, reach, speed, what it beats
-- `maxHpU` 650
-- `maxHpB` 651
-- `dmgOf` 652
-- `rngOf` 662
-- `rangeFrom` 668: how far a building shoots: a shot at 45° from height h with the range r0 it would have from the ground lands a…
-- `rangeOf` 669
-- `spySeen` 672: how far a side's unit or building sees a hidden spy (research adds to a building's): one home for who may shoo…
-- `lookout` 673: how far a building sees, from its height
-- `sightFx` 674
-- `sightClear` 675
-- `visCap` 689: in fog, snow or a blizzard nobody sees past the visibility, a tower no farther than a man (Build 61; before, a…
-- `sightOf` 694
-- `groupSees` 698: the many eyes (decision 8b
-- `carryOf` 701
-- `nodeKey` 705: what gather research is keyed to: the find itself (tree, bush, fish, meat, stone, gold, iron), or the building…
-- `gatherMul` 706
-- `makeOf` 727: what a workshop makes now: from what, how fast
-- `rehealth` 729: after research or a new building: every unit and building of that side takes its new health at once (same shar…
-- `hawkP` 747: Hawk-Dove (Maynard Smith and Price 1973): with the prize V under the cost of injury C, the stable mix plays Ha…
-- `unitPower` 748
-- `powerOf` 749
-- `lanchester` 752: the square law as odds: with a power ratio r, the chance is r² / (1 + r²) (Lanchester, Aircraft in Warfare, 19…
+- `doorOf` 93: the door of a keep: where its first people stand, PLACES.start past the edge of its footprint toward the middl…
+- `towardMid` 102
+- `nearest` 109
+- `rng` 123: The simulation's dice are seeded, so a game can be replayed and tested; looks use lookDice (08-core).
+- `rnd` 129
+- `roulette` 131: one weighted draw on the seeded dice: index i with probability w_i / Σw (roulette-wheel selection
+- `nextIn` 140: Random events are a Poisson process, the established model of independent rare events (Poisson 1837
+- `hazard` 141
+- `relax` 145: One home for a thing that settles toward a level, the first-order lag: x(t) = L + (x0 − L) e^(−dt/τ) (Build 62…
+- `logistic` 147: One home for growth with room (Verhulst 1838): one step of ΔN = r N (1 − N/K), fast while there is room, slowi…
+- `NID` 148
+- `plural` 150: one wolf, two wolves; one spearman, two spearmen; one man-at-arms, two men-at-arms
+- `some` 162
+- `SET` 165: Settings remembered on this phone.
+- `PLACE` 185: ),
+- `keyOf` 187
+- `YARD_ON` 188: the Yard (preview 47): on every preview, test and frozen version; never on the live game
+- `saveSet` 222
+- `lineOf` 228: Research lines: the steps of one line at one building come in table order; a step waits on the one before it a…
+- `prevOf` 229
+- `needsOf` 234
+- `nextStep` 238
+- `isNext` 242
+- `todaySeed` 243
+- `MODES` 247
+- `QC` 256: The Town Center, the head count and the room of each side are asked for by every unit every step: answered onc…
+- `qc` 257
+- `keepOf` 267
+- `qcDrop` 273
+- `bldsOf` 276
+- `ready` 277
+- `readyAt` 278: where a unit can be trained: its building, and any other that also trains it
+- `unitsOf` 279: the living: the dead leave the list only at the end of a step
+- `isSoldier` 280
+- `soldiersOf` 281
+- `armyOf` 282: the army: the fighters, the spy, the priest, the medic
+- `BUSY` 284: One home for "your army less who is busy" (Nov 2, O2: four filters wrote it four ways)
+- `armyFree` 292
+- `popOf` 293
+- `roomOf` 302: people one home shelters, after research
+- `capOf` 303
+- `armyRoom` 315: One population (Albert, Build 63): only homes cap it (capOf), and any mix is yours, all workers or all soldiers
+- `clsMax` 316
+- `armyFull` 317: the phone's limit, wherever it bites
+- `qMax` 318: orders one building's line holds (Written records, Guilds add to it)
+- `shortest` 320: of the buildings that can take an order, the one with the shortest line (training, research and muster alike
+- `lineFree` 321
+- `capAt` 325: how many of a building you may have now: by age, plus research a cap table lists the ages it changes in; an ag…
+- `capFor` 326
+- `atCap` 328
+- `capWhy` 329
+- `clsCount` 340
+- `queuedOf` 359
+- `orderSet` 368
+- `selName` 370
+- `hasCmd` 371
+- `formOf` 372
+- `marching` 376: Shape and temper, the two dials
+- `shapeOf` 378
+- `dialOf` 387: a dial's setting for one battalion or for all of them (-1 when they differ), and one step round it
+- `cycle` 388
+- `temperOf` 393: a shield wall holds: no chase
+- `kiteOf` 394
+- `clsOf` 402: a soldier's kind, from the building that trains it; −1 for none of the four
+- `rebattalion` 403
+- `every` 429: a slow tick's turn (BEAT)
+- `atWar` 430
+- `gangOf` 436: The one hostility test (decision 8, C1; answer 1b): sides by their relations; animals are everyone's foe, alwa…
+- `gangRel` 447: a side's stance with a group: the Natives' is the fifth side's place in G.rel; the other groups' live with the…
+- `calm4b` 451: Decision 4b (an experiment, EXCEPTIONS #15, until the computers can buy peace): the wild's people start nothin…
+- `campOf` 452
+- `groundOf` 453
+- `struckBy` 457
+- `isFoe` 463
+- `friendly` 473
+- `season` 474
+- `skyVec` 480: ── The sky (Build 55): the sun's height from the calendar and the land's latitude, by the standard sunrise ari…
+- `sunDecl` 488: the sun's declination on day N (the standard approximation)
+- `dayN` 489: the day of the real year, held through a game day (six a year: each spans two real months)
+- `hourH` 490: the hour angle: 0 at solar noon
+- `sunAltAt` 491: degrees above the horizon on day N at fraction f of the day
+- `sunAlt` 492
+- `sunVec` 493
+- `moonVec` 496: the moon's place, to first order (design, said in SCIENCE.md): it runs ahead of the sun by its phase (a full m…
+- `nightOf` 501: 0 with the sun up, 1 from nautical twilight on
+- `nightness` 502
+- `moonPhase` 503: 0 new, 0.5 full
+- `moonLight` 504: the lit fraction k = (1 − cos i) / 2 (Meeus 48.1), 1 at full moon
+- `civOf` 505
+- `civKind` 507: the kind a side actually trains for a common unit (its civilisation's own, if it has one)
+- `baseKind` 511
+- `BTIER` 513: research that raises every building of a kind in place (btier in the research table)
+- `btierOf` 515
+- `shelterOf` 516: how many villagers a building takes in, after research
+- `bldName` 517
+- `fxList` 530: Each side keeps a small cache of its active effects; it is rebuilt when research finishes or a building with e…
+- `FX1` 550: the combined effect on one stat for something with these keys: m multiplies, a adds, min keeps the lowest
+- `fxFits` 552: whether an effect reaches something with these keys: no k or '*' reaches all; k names one key, or a list of th…
+- `fxv` 554
+- `fxDirty` 574
+- `keepHealth` 579: a finished building keeps its share of full health when research moves the full health (B7
+- `freeVil` 591: Two words for two things (Build 62): a villager is FREE when it has no job and can be given one (the tile's co…
+- `posted` 596: Posted and roaming (Albert, Nov 2, D-089: "a farm is a farm"): a villager given a building (a field, a tree fa…
+- `hand` 600: a plot of yours with no worker on it: the Z on the field (23-view-things) and its count in the strip (32-frame…
+- `idlePost` 601
+- `unitKeys` 602
+- `bldKeys` 609
+- `stats` 618: what a side's unit of this kind is, after its research: name, health, damage, reach, speed, what it beats
+- `maxHpU` 661
+- `maxHpB` 662
+- `dmgOf` 663
+- `rngOf` 673
+- `rangeFrom` 679: how far a building shoots: a shot at 45° from height h with the range r0 it would have from the ground lands a…
+- `rangeOf` 680
+- `spySeen` 683: how far a side's unit or building sees a hidden spy (research adds to a building's): one home for who may shoo…
+- `lookout` 684: how far a building sees, from its height
+- `sightFx` 685
+- `sightClear` 686
+- `visCap` 700: in fog, snow or a blizzard nobody sees past the visibility, a tower no farther than a man (Build 61; before, a…
+- `sightOf` 705
+- `groupSees` 709: the many eyes (decision 8b
+- `carryOf` 712
+- `nodeKey` 716: what gather research is keyed to: the find itself (tree, bush, fish, meat, stone, gold, iron), or the building…
+- `gatherMul` 717
+- `makeOf` 738: what a workshop makes now: from what, how fast
+- `rehealth` 740: after research or a new building: every unit and building of that side takes its new health at once (same shar…
+- `hawkP` 758: Hawk-Dove (Maynard Smith and Price 1973): with the prize V under the cost of injury C, the stable mix plays Ha…
+- `unitPower` 759
+- `powerOf` 760
+- `lanchester` 763: the square law as odds: with a power ratio r, the chance is r² / (1 + r²) (Lanchester, Aircraft in Warfare, 19…
 
 **`11-orders.js`** (1218 lines): what a side can do, and why not
 
@@ -937,27 +944,28 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 
 ### Save and boot
 
-**`34-save.js`** (699 lines): save and load
+**`34-save.js`** (772 lines): save and load
 
 - `SAVEKEY` 3
 - `SAVEV` 4: 46: a river's pools carry their stretch and lake (preview 52); 45: the land turned into the world (preview 51)…
 - `MIGRATE` 5
-- `evSave` 305
-- `staleSave` 310: the version of a save we could not open, so the setup card can say so
-- `SKIP_U` 311
-- `cardLocked` 352: the Resume card, and the setup card while a save waits behind it, must be answered: closing either would start…
-- `freshSlate` 362: a deliberate new game starts clean: no leftover fight hold, save-failure clock, stale note or error count from…
-- `holdSave` 368: while the Resume card waits, nothing may overwrite the save it offers
-- `inFight` 369
-- `fightHold` 370
-- `saveGame` 372
-- `readSave` 493
-- `keepAside` 510
-- `migrateChain` 519: every old shape has a step to the next: a save from any build since the chain began opens (the gate checks this)
-- `clearSave` 524
-- `loadGame` 530
+- `reTurn` 308: A save laid at another view angle (VIEW.angle, 01; 45 before preview 54) is turned about the world's middle by…
+- `evSave` 376
+- `staleSave` 381: the version of a save we could not open, so the setup card can say so
+- `SKIP_U` 382
+- `cardLocked` 423: the Resume card, and the setup card while a save waits behind it, must be answered: closing either would start…
+- `freshSlate` 433: a deliberate new game starts clean: no leftover fight hold, save-failure clock, stale note or error count from…
+- `holdSave` 439: while the Resume card waits, nothing may overwrite the save it offers
+- `inFight` 440
+- `fightHold` 441
+- `saveGame` 443
+- `readSave` 565
+- `keepAside` 583
+- `migrateChain` 592: every old shape has a step to the next: a save from any build since the chain began opens (the gate checks this)
+- `clearSave` 597
+- `loadGame` 603
 
-**`41-boot.js`** (742 lines): start-up, and closes the one scope
+**`41-boot.js`** (750 lines): start-up, and closes the one scope
 
 - `last` 3
 - `acc` 4
@@ -1080,7 +1088,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 
 ### View
 
-**`20-view-base.js`** (265 lines): canvas, camera, scars on the ground, tracks, zoom
+**`20-view-base.js`** (264 lines): canvas, camera, scars on the ground, tracks, zoom
 
 - `cv` 3
 - `mini` 4
@@ -1116,7 +1124,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `camGo` 180
 - `camStop` 190
 - `followCam` 195: Follow (the pick bar): the target is the middle of what is picked, until you drag, pinch or tap the small map,…
-- `SX` 220: The turned view (preview 50): a world point goes to the screen by u = (x − y) across and v = (x + y) down, eac…
+- `SX` 220: The turned view (preview 50; one angle since preview 54, VIEW.angle in 01): a world point goes to the screen b…
 - `SY` 221
 - `DX` 222
 - `DY` 223
@@ -1126,11 +1134,10 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `flat` 235
 - `viewBox` 237: the world box the screen sees: the four screen corners turned back; margin m in world units
 - `wrect` 242: a world rectangle flat on the ground, filled (or stroked) under the turned matrix: a footprint, a cell, a wall…
-- `landMat` 250: the land's frame on a canvas already in world units (preview 51)
-- `DIAG` 251: the land's width on the screen at zoom 1 // the map's width on the screen at zoom 1 (its diagonal)
-- `minZ` 252: the land stands square on the screen
-- `zoomAt` 253
-- `quant` 261
+- `landMat` 250: the land's frame on a canvas already in world units (preview 51): a land point turned −angle about the centre
+- `minZ` 251: the land stands square on the screen
+- `zoomAt` 252
+- `quant` 260
 
 **`21-view-frame.js`** (385 lines): the ground texture and the draw of one frame
 
@@ -1163,7 +1170,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `stamp` 165
 - `trapShown` 174: a hidden trap shows only to its side, its allies, and a side whose scout found it
 
-**`23-view-things.js`** (1502 lines): buildings, smoke and fire, ripples and sparks, nodes, units, finds
+**`23-view-things.js`** (1599 lines): buildings, smoke and fire, ripples and sparks, nodes, units, finds
 
 - `WALL_LOOK` 6: The wall mold (preview 50, Albert: "this solves the wall heft problems"): a wall, a gate or a palisade is not …
 - `WALL_KEYS` 11
@@ -1172,62 +1179,66 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `wallKeys` 14
 - `drawWallBox` 21
 - `BOX_LOOK` 89: The building mold (preview 53, Albert, Nov 4: "I just want to see the front of a building, the side, and the top
-- `boxed` 103
-- `drawBldBox` 104
-- `drawBld` 183
-- `CHIMNEY` 366
-- `FLAME` 371: ── Fire (Build 55): one element for every flame in the game
-- `LIGHT` 379: reach in world units per √power; what rain leaves of an open flame; the glow's strength
-- `CAST` 384: ── Shadows (Build 55, Albert: shadows match the light)
-- `SHADE` 385: the shadow's direction on the glass (unit), its length per unit of height (world units), its darkness
-- `shadeFrame` 386
-- `shadowPath` 409: the shadows of the trees, bushes and rocks you can see, cast from the sun like everything else (Build 61, Albe…
-- `BOX` 428: A building's shadow is its own shape, not an oval (decision 14, Albert, Oct 31: we invented the shape, so the …
-- `HEX` 434
-- `hexOf` 435
-- `boxShadow` 450
-- `sunShadows` 465
-- `flameShadow` 491: a flame's shadow of a thing near it: away from the fire, long, fading as the light does (1/d²)
-- `kelvinRGB` 509
-- `FLAME_RGB` 517
-- `flameLife` 518: what the weather leaves of a flame
-- `flame` 520: the flame itself: a teardrop that leans with the wind and flickers; its heart whiter than its edge
-- `glow` 541: the light a flame throws on the ground: a disc that fades as the inverse square, drawn additively, only when t…
-- `flagsOn` 560: a building's flags fly with the wind: a cloth from the pole top, its tip lifting and falling, longer in a stro…
-- `PILE` 583: what a side has in store shows as a pile by the camp that takes it in: logs by the lumber camp, cut stone and …
-- `PSPR` 594: the piles are drawn once per kind, counts and zoom into PSPR and stamped (Build 62: measured at 29% of a frame…
-- `pileAt` 595
-- `pileArt` 611
-- `smoke` 641: a chimney's plume (Build 62): bent over by the wind, its height goes with the downwind distance to the two-thi…
-- `blaze` 655: fire when a building is badly hurt, dark smoke when sabotage has stalled it
-- `RIPS` 671
-- `ripple` 672
-- `popC` 676: swell and settle; a runs 0 to 1
-- `celebrate` 677
-- `ripDraw` 693
-- `sparkDraw` 709
-- `WX_TINT` 732: Three translucent casts (warm dusk, blue night, the weather) laid one over another come to one colour: compute…
-- `tintC` 738
-- `tintOf` 739
-- `NV` 764
-- `viewNodes` 765
-- `drawNode` 783
-- `workOf` 809
-- `STRIDE` 825: ground covered by one step, in world units
-- `STANDARDS` 828: the poles drawn this frame (screen x, y, side): the lights put a torch on each after dark
-- `drawStandards` 829
-- `FALL` 884: the fallen (Build 52): a figure that dies where you can see it topples over in a third of a second and fades, …
-- `fallen` 885
-- `drawFallen` 900
-- `LEAN` 915: the view's own memory of each woodcutter's lean: the drawing never writes the game's units (Build 60)
-- `PACED` 916: the view's memory of each unit's walk: when it last grew
-- `leavesOver` 918: the leaves over a soldier in ambush (the visual pass, Nov 3): three leaf blobs in the wood's greens, swaying a…
-- `drawUnit` 933
-- `drawFind` 1147
-- `drawPicks` 1487: what the finger holds: a ring on the ground under each, green for yours, red for a foe's, gold for the wild an…
-- `rnd2` 1501
+- `FLAT` 103: what lies on the ground: a plot, not a box (drawPlot)
+- `boxed` 104
+- `flat_` 105
+- `drawPlot` 110: The plot mold (preview 54, Albert: "if the land rotated, the buildings and pastures and EVERYTHING needs to ro…
+- `drawBldBox` 161
+- `drawBld` 241
+- `CHIMNEY` 446
+- `FLAME` 451: ── Fire (Build 55): one element for every flame in the game
+- `LIGHT` 459: reach in world units per √power; what rain leaves of an open flame; the glow's strength
+- `CAST` 464: ── Shadows (Build 55, Albert: shadows match the light)
+- `SHADE` 465: the shadow's direction on the glass (unit), its length per unit of height (world units), its darkness
+- `shadeFrame` 466
+- `shadowPath` 489: the shadows of the trees, bushes and rocks you can see, cast from the sun like everything else (Build 61, Albe…
+- `BOX` 510: A building's shadow is its own shape, not an oval (decision 14, Albert, Oct 31: we invented the shape, so the …
+- `corners` 516: on the glass, per unit of half-side and zoom
+- `HEX` 517
+- `hexOf` 518
+- `boxShadow` 548
+- `sunShadows` 562
+- `flameShadow` 588: a flame's shadow of a thing near it: away from the fire, long, fading as the light does (1/d²)
+- `kelvinRGB` 606
+- `FLAME_RGB` 614
+- `flameLife` 615: what the weather leaves of a flame
+- `flame` 617: the flame itself: a teardrop that leans with the wind and flickers; its heart whiter than its edge
+- `glow` 638: the light a flame throws on the ground: a disc that fades as the inverse square, drawn additively, only when t…
+- `flagsOn` 657: a building's flags fly with the wind: a cloth from the pole top, its tip lifting and falling, longer in a stro…
+- `PILE` 680: what a side has in store shows as a pile by the camp that takes it in: logs by the lumber camp, cut stone and …
+- `PSPR` 691: the piles are drawn once per kind, counts and zoom into PSPR and stamped (Build 62: measured at 29% of a frame…
+- `pileAt` 692
+- `pileArt` 708
+- `smoke` 738: a chimney's plume (Build 62): bent over by the wind, its height goes with the downwind distance to the two-thi…
+- `blaze` 752: fire when a building is badly hurt, dark smoke when sabotage has stalled it
+- `RIPS` 768
+- `ripple` 769
+- `popC` 773: swell and settle; a runs 0 to 1
+- `celebrate` 774
+- `ripDraw` 790
+- `sparkDraw` 806
+- `WX_TINT` 829: Three translucent casts (warm dusk, blue night, the weather) laid one over another come to one colour: compute…
+- `tintC` 835
+- `tintOf` 836
+- `NV` 861
+- `viewNodes` 862
+- `drawNode` 880
+- `workOf` 906
+- `STRIDE` 922: ground covered by one step, in world units
+- `STANDARDS` 925: the poles drawn this frame (screen x, y, side): the lights put a torch on each after dark
+- `drawStandards` 926
+- `FALL` 981: the fallen (Build 52): a figure that dies where you can see it topples over in a third of a second and fades, …
+- `fallen` 982
+- `drawFallen` 997
+- `LEAN` 1012: the view's own memory of each woodcutter's lean: the drawing never writes the game's units (Build 60)
+- `PACED` 1013: the view's memory of each unit's walk: when it last grew
+- `leavesOver` 1015: the leaves over a soldier in ambush (the visual pass, Nov 3): three leaf blobs in the wood's greens, swaying a…
+- `drawUnit` 1030
+- `drawFind` 1244
+- `drawPicks` 1584: what the finger holds: a ring on the ground under each, green for yours, red for a foe's, gold for the wild an…
+- `rnd2` 1598
 
-**`24-view-overlays.js`** (732 lines): ground, event effects, bars, flags, ghost building, minimap
+**`24-view-overlays.js`** (721 lines): ground, event effects, bars, flags, ghost building, minimap
 
 - `drawGround` 4: Spectacle on the glass: each event's picture, drawn over the world
 - `drawCracks` 48: the cracks of a sinkhole: dark jagged arms with a pale edge, and a puff of dust that rises and thins over four…
@@ -1243,29 +1254,29 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `idleMark` 145
 - `tag` 153
 - `drawSeal` 165: the building you are placing: its footprint green where it fits and red where it does not, and the reason the …
-- `drawGuides` 190: alignment guides (Build 63): a thin line from the ghost to every own building whose centre or edge sits on the…
-- `drawGhost` 246
-- `GHOST_TINT` 297: The ghost's own art tinted green where it fits and red where it does not (Albert, Nov 1): no grid, no footprin…
-- `ghostTints` 298
-- `ghostTint` 299
-- `miniIncoming` 318
-- `MINI_K` 337: the land's square fills the small map (preview 51)
-- `miniMat` 338: world units to the small map, through the land's frame
-- `miniWorld` 339: a point of the small map, in the world
-- `drawMini` 340
-- `drawFlood` 429: the flood: water over the shore
-- `drawSand` 439: quicksand: a pale patch with ripples
-- `drawLakeRipples` 454: small ripples drift on the lakes
-- `drawRainRings` 474: rain rings sit on the ground, fixed to the world, under buildings and people
-- `drawFire` 499: the wildfire
-- `drawFogLayer` 518: the fog, soft, over everything standing
-- `drawOrders` 534: your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
-- `drawTracers` 570: arrows and shots: a short streak along the curve
-- `drawLight` 591: the light: warm at dusk and dawn, blue at night, darker toward the edges; lit windows
-- `HEARTH` 649: where a fire is always lit after dark (the mess tent's cooking fire, the Hall's lamps
-- `drawHitGlow` 651: something of yours was hit: a red glow round the edge, fading over a second and a half
-- `drawFlash` 679: a new age, a wonder, a victory: a pale flash
-- `drawTouch` 688: boxes of trees being cut, the hold ring, the selection box
+- `drawGuides` 192: alignment guides (Build 63): a thin line from the ghost to every own building whose centre sits on the same li…
+- `drawGhost` 220
+- `GHOST_TINT` 286: The ghost's own art tinted green where it fits and red where it does not (Albert, Nov 1): no grid, no footprin…
+- `ghostTints` 287
+- `ghostTint` 288
+- `miniIncoming` 307
+- `MINI_K` 326: the land's square fills the small map (preview 51)
+- `miniMat` 327: world units to the small map, through the land's frame
+- `miniWorld` 328: a point of the small map, in the world
+- `drawMini` 329
+- `drawFlood` 418: the flood: water over the shore
+- `drawSand` 428: quicksand: a pale patch with ripples
+- `drawLakeRipples` 443: small ripples drift on the lakes
+- `drawRainRings` 463: rain rings sit on the ground, fixed to the world, under buildings and people
+- `drawFire` 488: the wildfire
+- `drawFogLayer` 507: the fog, soft, over everything standing
+- `drawOrders` 523: your groups on the march: a dashed line from the group to where it is going, a ring where it will stand
+- `drawTracers` 559: arrows and shots: a short streak along the curve
+- `drawLight` 580: the light: warm at dusk and dawn, blue at night, darker toward the edges; lit windows
+- `HEARTH` 638: where a fire is always lit after dark (the mess tent's cooking fire, the Hall's lamps
+- `drawHitGlow` 640: something of yours was hit: a red glow round the edge, fading over a second and a half
+- `drawFlash` 668: a new age, a wonder, a victory: a pale flash
+- `drawTouch` 677: boxes of trees being cut, the hold ring, the selection box
 
 **`25-view-weather.js`** (231 lines): rain, wind, lightning, sky, forest
 
@@ -1667,7 +1678,7 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 
 ### Minds
 
-**`17-ai.js`** (781 lines): the computers' minds
+**`17-ai.js`** (783 lines): the computers' minds
 
 - `powerFrom` 5: a side's strength: its soldiers, its towers, its people
 - `estPower` 6
@@ -1692,15 +1703,15 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 - `lootRun` 525
 - `throneRun` 560: the Throne: from the Medieval age a side with siege and a big army marches on the citadel, or walks in as the …
 - `wallPlan` 583
-- `matchup` 612: how the two armies' units fare against each other: spearmen against horse, archers against spearmen
-- `newWave` 626: a wave: how many set out, at whom, its mark (a building id or null: the Town Center), its best distance so far…
-- `decideWar` 627
-- `LEAGUE` 714: the leader's score against the next best: it forms above lead, and breaks up below release
-- `leagueTick` 715
-- `AB` 744: ── The A/B test of the computers (Albert, Nov 3, 11:10: "a b test this")
-- `storesOf` 745
-- `gapOnRoad` 747: the narrowest gap on the road: the point on the straight line to the foe where the open run across it is short…
-- `chokeClaim` 765
+- `matchup` 614: how the two armies' units fare against each other: spearmen against horse, archers against spearmen
+- `newWave` 628: a wave: how many set out, at whom, its mark (a building id or null: the Town Center), its best distance so far…
+- `decideWar` 629
+- `LEAGUE` 716: the leader's score against the next best: it forms above lead, and breaks up below release
+- `leagueTick` 717
+- `AB` 746: ── The A/B test of the computers (Albert, Nov 3, 11:10: "a b test this")
+- `storesOf` 747
+- `gapOnRoad` 749: the narrowest gap on the road: the point on the straight line to the foe where the open run across it is short…
+- `chokeClaim` 767
 
 **`38-natives.js`** (363 lines): the Natives and the Throne
 
@@ -1746,4 +1757,4 @@ Written from the code by `tests/index.py` at every publish (like `GUIDE.md`); ne
 |---|---|---|---|---|---|---|---|---|---|---|
 | `gather` | `vilTick`, `makeNow`, `forage`, `bestNode`, `nearestNode`, `pickVil`, `setJob`, `leaveWork`, `waitAt`, `backToWork` | `person`, `WORKTOOL`, `LOOKS`, `drawUnit` | `keep`, `mill`, `lumber`, `mining`, `dock` | `lakeGrid`, `makeWater`, `drawFlood` | `food`, `wood`, `stone`, `gold`, `iron`, `bush`, `tree`, `fish` | `units` | `moveTo`, `astar`, `dropFor`, `carryOf`, `gatherMul`, `forageNow`, `findCap`, `crowd`, `unsafe`, `dangerWhy`, `SEARCH`, `REACH`, `WORK_R`, `RATE_OF`, `FORAGE`, `CARRY`, `SHELTER` | `forage`, `SEARCH`, `UPKEEP` | `job`, `sendvil`, `vstop`, `vfocus`, `vhome`, `idlego`, `pjob` | `popOf`, `freeVil` |
 
-53 files, 1545 names, 1 cards.
+53 files, 1556 names, 1 cards.

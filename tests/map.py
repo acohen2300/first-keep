@@ -208,7 +208,7 @@ START = """(seeds) => {
 # label's), and the ghost's own art is tinted green where canPlace says it fits and red where it does not. Driven through the real
 # drawGhost, away from your buildings so no line-up guide is due, with the glass's drawing calls counted.
 GHOST = """() => {
-  const F = window.__fk, bad = []; F.SET.scen = 'open'; F.newGame(5); F.act('close'); F.ui(true); const G = F.G, k = F.keepOf(0), ctx = F.ctx, calls = { line: 0, rect: 0, img: [] };
+  const F = window.__fk, bad = []; F.SET.scen = 'open'; F.SET.boxes = false; F.newGame(5); F.act('close'); F.ui(true); const G = F.G, k = F.keepOf(0), ctx = F.ctx, calls = { line: 0, rect: 0, img: [] };   // the pictures' ghost (the boxes' is in MOLD)
   const spy = (m, f) => { const o = ctx[m]; ctx[m] = function (...a) { f(a); return o.apply(this, a); }; return () => { ctx[m] = o; }; };
   const shade = (c) => { const g = c.getContext('2d'), d = g.getImageData(0, 0, c.width, c.height).data; let r = 0, gr = 0; for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 200) { r += d[i]; gr += d[i + 1]; } return gr - r; };
   const look = (x, y) => { G.place = { kind: 'house', at: { x, y }, pts: [], cells: null }; F.cam.x = x; F.cam.y = y; F.clampCam(); calls.line = 0; calls.rect = 0; calls.img = [];
@@ -263,17 +263,38 @@ MOLD = """() => {
   const F = window.__fk, bad = []; F.SET.scen = 'open'; F.SET.boxes = true; F.newGame(5); F.act('close'); const G = F.G, k = F.keepOf(0);
   Object.assign(G.P[0].res, { f: 9999, w: 9999, s: 9999, g: 9999, i: 9999 });
   const put = (kind, dx, dy) => { const sp = F.findSpot(0, kind, k.x + dx, k.y + dy, 0, 80); const b = sp && F.build(0, kind, sp.x, sp.y); if (b) { b.prog = 1; F.built(b); } return b; };
-  const h = put('house', 70, -60), f = put('farm', -90, 70), t = put('tower', 60, 90);
-  if (!h || !t) return ['no ground for the test buildings'];
+  const h = put('house', 70, -60); if (!h) return ['no ground for the test house']; F.navRebuild();
+  // the screen's line, with the house the only building near: a spot straight down the screen from it (the same land x), the finger a little to
+  // the side; the ghost snaps onto the line (within GUIDE_ON: the squares are turned to it)
+  const lh = F.landXY(h.x, h.y); let p = null;
+  for (const d of [200, -200, 240, -240]) { const q = F.landAt(lh.x, lh.y + d); const lq = F.landXY(q.x, q.y); if (!F.canPlace(0, 'house', q.x, q.y) && !G.blds.some((b) => { const l = F.landXY(b.x, b.y); return b !== h && Math.hypot(b.x - q.x, b.y - q.y) < F.GUIDE_R && (Math.abs(l.x - lh.x) < 20 || Math.abs(l.y - lq.y) < 20); })) { p = q; break; } }   // no other building's screen line near the spot
+  if (!p) return bad.concat(["no open ground on the house's screen line"]);
+  const fg = F.landAt(lh.x + 9, F.landXY(p.x, p.y).y), s = F.snapGhost(0, 'house', fg.x, fg.y, 30), off = F.landXY(s.x, s.y).x - lh.x;
+  if (Math.abs(off) > F.GUIDE_ON) bad.push(`the ghost did not snap onto the house's land x (off by ${off.toFixed(1)})`);
+  // the boxes' ghost: no picture stamped, the box drawn
+  { G.place = { kind: 'house', at: s, pts: [], cells: null }; let imgs = 0, lines = 0; const oi = F.ctx.drawImage, ol = F.ctx.lineTo; F.ctx.drawImage = function (...a) { if (a[0] && a[0].ax !== undefined) imgs++; return oi.apply(this, a); }; F.ctx.lineTo = function (...a) { lines++; return ol.apply(this, a); };
+    try { F.drawGhost(); } finally { F.ctx.drawImage = oi; F.ctx.lineTo = ol; } G.place = null;
+    if (imgs) bad.push("the boxes' ghost stamps the old picture"); if (!lines) bad.push("the boxes' ghost draws no box"); }
+  // what stands is a box, what lies flat a plot; the toggle off puts the pictures back; a frame draws
+  const f = put('farm', -90, 70), t = put('tower', 60, 90); if (!t) return bad.concat(['no ground for the test tower']);
   for (const [b, want] of [[h, true], [t, true], [f, false]]) if (b && !!F.boxed(b) !== want) bad.push(`${b.kind} ${want ? 'is not boxed' : 'is boxed'}`);
-  F.SET.boxes = false; if (F.boxed(h)) bad.push('the toggle off still boxes a house'); F.SET.boxes = true;
+  if (f && !F.flat_(f)) bad.push('a field is not a plot');
+  F.SET.boxes = false; if (F.boxed(h) || (f && F.flat_(f))) bad.push('the toggle off still boxes a house or a field'); F.SET.boxes = true;
   F.navRebuild(); F.cam.x = k.x; F.cam.y = k.y; F.cam.z = 1.6; F.clampCam();
   try { F.draw(); } catch (e) { bad.push('a frame with boxes threw: ' + e.message); }
-  // the screen's line: a spot 60 along the land's y from the house (world x + 60·√½·... : the same land x means the same world x − y)
-  let p = null; for (const d of [200, -200, 240, -240]) if (!F.canPlace(0, 'house', h.x + d, h.y + d)) { p = { x: h.x + d, y: h.y + d }; break; }   // far enough that only the screen's line can pull it, on open ground
-  if (!p) return bad.concat(["no open ground on the house's screen line"]);
-  const s = F.snapGhost(0, 'house', p.x + 8, p.y - 8, 30);
-  if (Math.abs(s.x - s.y - (h.x - h.y)) > 0.5) bad.push(`the ghost did not snap onto the house's land x (off by ${(s.x - s.y - (h.x - h.y)).toFixed(1)})`);
+  return bad; }"""
+
+# A save laid at another view angle (preview 54: VIEW.angle, one home; the fixture is a preview 53 save at 45°) opens turned to this one: its
+# keeps on this angle's keeps' squares, nothing off the land, the lakes' shores turned with them (a fish stays in its water).
+ANGLE = """(raw) => {
+  const F = window.__fk, bad = []; localStorage.setItem(F.SAVEKEY, JSON.stringify(raw)); const S = F.readSave(F.SAVEKEY); localStorage.removeItem(F.SAVEKEY);
+  if (!S) return ['the 45° save did not open'];
+  if (S.angle !== F.VIEW.angle) bad.push(`the save still says angle ${S.angle}`);
+  for (const b of S.blds.filter((b) => b.kind === 'keep')) { const [kx, ky] = F.PLAYERS[b.owner].keep; if (Math.hypot(b.x - kx, b.y - ky) > F.NAVC * 1.5) bad.push(`${F.PLAYERS[b.owner].name}'s keep opened ${Math.round(Math.hypot(b.x - kx, b.y - ky))} from its square`); }
+  const off = S.nodes.filter((n) => !Array.isArray(n) && n.kind !== 'farm' && !F.inLand(n.x, n.y)).length; if (off) bad.push(`${off} nodes opened off the land`);
+  const G0 = F.G; F.G = Object.assign({}, G0, { lakes: S.lakes, flood: 0, t: 1 }); let dry = 0;
+  try { for (const n of S.nodes) if (!Array.isArray(n) && n.kind === 'fish' && F.lakeGap(n.x, n.y) > 0) dry++; } finally { F.G = G0; }
+  if (dry) bad.push(`${dry} fish opened on dry land: the shores did not turn with the water`);
   return bad; }"""
 
 async def main():
@@ -299,6 +320,9 @@ async def main():
         bad, errs = await run(CITADEL); bad += errs
         print(('PASS ' if not bad else 'FAIL ') + 'the citadel the same seen from every corner: four towers, the shrine on the Throne', '' if not bad else bad); fails += bool(bad)
         bad, errs = await run(MIGRATE, json.load(open(os.path.join(ROOT, 'tests', 'fixtures', 'save-v39.json')))); bad += errs
+        bad, errs = await run(ANGLE, json.load(open(os.path.join(ROOT, 'tests', 'fixtures', 'save-v46-angle45.json')))); bad += errs
+        print(('PASS ' if not bad else 'FAIL ') + 'a game saved at another view angle opens turned to this one (keeps, land, shores)', '' if not bad else bad)
+        fails += bool(bad)
         print(('PASS ' if not bad else 'FAIL ') + 'a game saved on the 2000 map opens in the middle of this one', '' if not bad else bad); fails += bool(bad)
         for w, h in SIZES:
             pg = await br.new_page(viewport={'width': w, 'height': h}); await pg.goto('file://' + os.path.join(ROOT, 'first-keep.html')); await pg.wait_for_timeout(400)

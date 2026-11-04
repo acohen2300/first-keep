@@ -312,13 +312,13 @@ JS2 = """() => {
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); let miss = 0;
     for (const [lx, ly] of [[1, 0], [0.6, 0.6], [0, 1], [-0.7, 0.5], [-1, 0], [-0.5, -0.8], [0, -1], [0.8, -0.4]]) {
       S.a = 0.3; S.x = lx; S.y = ly; S.len = 1.4; const w = 20, h = 30, sx = 200, sy = 200, d = w * F.TILT, vx = lx * h * 1.4, vy = ly * h * 1.4, P = [];
-      for (const [cx, cy] of [[-w, -d], [w, -d], [w, d], [-w, d]]) P.push([sx + cx, sy + cy], [sx + cx + vx, sy + cy + vy]);
+      for (const [cx, cy] of [[-w, -w], [w, -w], [w, w], [-w, w]].map(([x, y]) => [F.DX(x, y) / F.cam.z, F.DY(x, y) / F.cam.z])) P.push([sx + cx, sy + cy], [sx + cx + vx, sy + cy + vy]);   // the turned footprint (preview 54)
       const H = hull(P); ctx.beginPath(); F.boxShadow(sx, sy, h, w, 1);
       for (let x = 120; x < 280; x += 1.5) for (let y = 130; y < 270; y += 1.5) if (!edge(H, x, y) && ctx.isPointInPath(x, y) !== inside(H, x, y)) miss++;
     }
     ctx.restore();
     if (miss) bad.push('a building shadow is not the footprint swept along the light (' + miss + ' points differ from the hull)');
-    if (F.hexOf(1, 1) !== F.hexOf(1, 1)) bad.push('the shadow shape is made again for the same light instead of kept');
+    if (F.hexOf(0.6, 0.6) !== F.hexOf(0.6, 0.6)) bad.push('the shadow shape is made again for the same light instead of kept');
     const k = F.keepOf(0), cam = F.cam; cam.x = k.x; cam.y = k.y; cam.z = 1; F.draw();
     const area = (prog) => { S.a = 0.5; S.x = 0.7; S.y = 0.5; S.len = 2; ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); ctx.restore();
       F.sunShadows([], [[0, 1, { kind: 'tower', x: k.x, y: k.y, prog }]], 1, true);

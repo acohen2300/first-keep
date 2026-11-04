@@ -702,7 +702,8 @@ function canPlace(o, kind, x, y) {
 	return null;
 }
 // Where the ghost lands: the nearest spot that lines up with a building of yours, touching or with one lane between, else where the finger is.
-const GUIDE_R = 260; // how far a building reaches with its alignment lines
+const GUIDE_R = 260, // how far a building reaches with its alignment lines
+	GUIDE_ON = 3; // how near the line a snapped centre must come to count as on it: at 45° the squares put it exactly on, at other angles the nearest square is within 2.5 (half a square's turned pitch), unseen at any zoom
 function snapGhost(o, kind, x, y, tol) {
 	const B = BLD[kind],
 		h = (B.fp * NAVC) / 2,
@@ -722,25 +723,37 @@ function snapGhost(o, kind, x, y, tol) {
 				for (const cy of [b.y - gap, b.y + gap]) for (const cx of alignX.concat([x])) consider(cx, cy);
 			}
 		if (Math.abs(b.x - x) < GUIDE_R && Math.abs(b.y - y) < GUIDE_R) {
-			// in line with it, farther off: a centre or an edge on the same line, the other axis left where the finger is (Build 63, Albert:
-			// "when a PDF sees you moving an element it brings up alignment lines, with a light snap pull"); the guide is drawn by drawGhost
-			for (const cx of alignX) consider(cx, y, 'x');
-			for (const cy of alignY) consider(x, cy, 'y');
-			// and in line with it on the screen (preview 53, Albert: the lines "are now out of alignment because of the rotation"): centres on the
-			// same land x (world x − y) or land y (world x + y), the ghost moved along the other diagonal; the world's squares allow it when the
-			// snapped centre lands on the line
-			const u = (b.x - b.y - (x - y)) / 2,
-				v = (b.x + b.y - (x + y)) / 2;
-			consider(x + u, y - u, 'u');
-			consider(x + v, y + v, 'v');
+			// in line with it on the screen, farther off: its centre on the same line of the screen, upright or level, the ghost moved along the
+			// other (Build 63, Albert: "when a PDF sees you moving an element it brings up alignment lines, with a light snap pull"; preview 54:
+			// the screen's lines, since the world's axes read as diagonals). The land's frame is the screen's: the point of the ghost's land
+			// column or row nearest the building's centre; the world's squares allow it when the snapped centre lands on the line
+			const lb = landXY(b.x, b.y),
+				lg = landXY(x, y),
+				u = landAt(lb.x, lg.y),
+				v = landAt(lg.x, lb.y);
+			consider(u.x, u.y, 'u');
+			consider(v.x, v.y, 'v');
 		}
 	}
 	function consider(cx, cy, axis) {
-		const s = snapPos(kind, cx, cy),
-			d = hyp(s.x - x, s.y - y);
-		if (axis === 'x' || axis === 'y') {
-			if (Math.abs((axis === 'x' ? s.x : s.y) - (axis === 'x' ? cx : cy)) > 0.5) return; // the grid could not keep it on the line: no pull
-		} else if (axis && Math.abs(axis === 'u' ? s.x - s.y - (cx - cy) : s.x + s.y - (cx + cy)) > 0.5) return;
+		const s0 = snapPos(kind, cx, cy);
+		if (axis) {
+			// the line's point snapped to a square may sit a few units off the line (the squares are turned to it): of the squares round it, the
+			// ones near enough the line are candidates; none near enough, no pull
+			const lc = landXY(cx, cy);
+			for (let j = -1; j <= 1; j++)
+				for (let i = -1; i <= 1; i++) {
+					const s = { gx: s0.gx + i, gy: s0.gy + j, x: s0.x + i * NAVC, y: s0.y + j * NAVC },
+						ls = landXY(s.x, s.y);
+					if (Math.abs(axis === 'u' ? ls.x - lc.x : ls.y - lc.y) > GUIDE_ON) continue;
+					take(s);
+				}
+			return;
+		}
+		take(s0);
+	}
+	function take(s) {
+		const d = hyp(s.x - x, s.y - y);
 		if (d < bd && !canPlace(o, kind, s.x, s.y)) {
 			bd = d;
 			best = s;

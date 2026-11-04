@@ -66,3 +66,9 @@ Albert asked how AoE2 DE handles gatherers per resource. No opened source states
 - From preview 15 (Nov 2): the Grower test needs 60 to 90 minute games (in 30 minutes it plays as the balanced brain); S (the re-think at each age-up, for every personality but the aggressive control) waits on it. [2026-11-02 09:16]
 - The code size (Albert, Nov 2: "far too large"; a surface check, report only): the shipped file is 1.24 MB; the script 1,098 KB, 371 KB over the wire (gzip); comments are 19% of the source and ship in the file (2,353 of them); stripping comments and indentation at build time, the source untouched, gives about 809 KB and 263 KB over the wire (rough measure, Nov 2); a full minifier would cut more but could not be installed here (the registry was refused). No dead top-level names (1,306 checked). Largest files: 07-text 93 KB, 19-building-art 68, 04-rules-tech 62. Waits on Albert's yes. [2026-11-02 09:16]
 - The parts map (`docs/4 Now/Parts map.md`, Nov 2): 13 base parts, their homes and what goes around them; the proposed order. Each fix waits on Albert's list and yes yes. [2026-11-02 10:19]
+
+## Owed from Nov 4 (previews 52 to 54) [2026-11-04 13:40]
+- The planted-bug set end to end on 54 (the run on 52 reached 80 of 381 in its 2 hours); the four plants that need a look (`docs/4 Now/Handoff.md`, Testing). [2026-11-04 13:40]
+- The gate's one failure on 53's first publish, not yet identified. [2026-11-04 13:40]
+- A balance run on the 15° map (every map lays on new squares since 54). [2026-11-04 13:40]
+- The state of the modules page; more cards, element by element, once their pointers are named (the villager's states first). [2026-11-04 13:40]

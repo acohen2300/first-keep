@@ -206,6 +206,12 @@ const clip = (text) => {
 };
 window.__fk = {
 	boxed,
+	flat_,
+	GUIDE_ON,
+	landAt,
+	KEEP_OFF,
+	VIEW,
+	PLAYERS,
 	ELEMENTS,
 	LAYERS,
 	ACT,
@@ -412,6 +418,8 @@ window.__fk = {
 	stepTo,
 	boxShadow,
 	hexOf,
+	DX,
+	DY,
 	SHADE,
 	cardLocked,
 	get ctx() {

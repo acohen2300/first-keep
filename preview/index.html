@@ -355,21 +355,25 @@ const ZOOM_MAX = 4,
 	ZOOM_START = 1.3, // the camera's zoom when a game opens: a map label is LABEL.px there (labelK, 24-view-overlays)
 	LABEL = { px: 12, floor: 9 }, // a map label: 12 at the starting zoom, never under 9 zoomed out (Albert, Oct 31: "base 3"); what is pinned to the screen stays 12
 	TILT = 0.55, // the camera's pitch: the ground squashed to 0.55 (near AoE2's 2:1; was 0.66 to preview 49; at 0.5 two pairs of buildings read alike at half zoom)
-	TURN = Math.SQRT1_2, // the view turned 45° (Albert, Nov 4, 06:58: "take the whole map and rotate it. Like a picture"): world x runs down-right on the screen, world y down-left; the sim's square grid never knows (20-view-base, SX and SY)
+	VIEW = { angle: 15 }, // the camera's turn in degrees, the one home (Albert, Nov 4, 12:31: "Angle index: from 45 to 30"; 12:47: "30 still too much. Go to 15 or 10"; 45 from preview 50 to 53). The view turns the world +angle; the land is laid turned −angle into the world, so it stands square on the screen whatever the angle. Everything below derives from it; the sim's square grid never knows
+	TA = (VIEW.angle * Math.PI) / 180,
+	TC = Math.cos(TA),
+	TS = Math.sin(TA), // the turn's cosine and sine (20-view-base: SX, SY, wmat; the small map; the ghost's box)
+	TURN = TC + TS, // how wide a world square's diagonal reads across the screen at zoom 1 (√2 at 45°; was 1/√2, the one number of a 45° turn)
 	RIM = 640, // the scenery beyond the map's edge, in world units: sea on the near sides, cliffs and sky on the far (fills the phone's corners when the view meets an edge)
 	SIDE = 0.4;
-// the land's frame and the world's (preview 51): a land point (lx, ly) stands in the world at the centre plus (lx − LMID, ly − LMID) turned −45°,
-// so that through the turned view the land's x runs across the screen and its y down it, as the straight view had them
+// the land's frame and the world's (preview 51): a land point (lx, ly) stands in the world at the centre plus (lx − LMID, ly − LMID) turned −angle,
+// so that through the view turned +angle the land's x runs across the screen and its y down it, as the straight view had them
 const worldXY = (x, y) => {
 	const dx = x - LMID,
 		dy = y - LMID;
-	return { x: MID + (dx + dy) * TURN, y: MID + (dy - dx) * TURN };
-};
+	return { x: MID + dx * TC + dy * TS, y: MID - dx * TS + dy * TC };
+}; // turned −angle about the centre
 const landXY = (x, y) => {
 	const dx = x - MID,
 		dy = y - MID;
-	return { x: LMID + (dx - dy) * TURN, y: LMID + (dx + dy) * TURN };
-};
+	return { x: LMID + dx * TC - dy * TS, y: LMID + dx * TS + dy * TC };
+}; // and back
 const landAt = (lx, ly) => worldXY(lx, ly); // a land point as a world point, for the rules that name the land's edges and middle lines
 const inLand = (x, y, m = 0) => {
 	const l = landXY(x, y);
@@ -399,15 +403,20 @@ const REL_WORD = { war: 'Foe', peace: 'Neutral', ally: 'Friend' }; // the one ho
 // the keeps are snapped in the world (KEEP_W below) and CORNER is 753.1. Neighbours about 1,506 apart; about 327 behind each Town Center.
 const CORNER = 1065 * Math.SQRT1_2; // in the land's frame: 753.1 (was 755); a keep stands about CORNER out on both axes
 // The keeps' places (preview 51): named in the world, where each must sit on the centre of its five squares (a coordinate ending in 5)
-// while the Throne, six squares, centres on the world's middle (ending in 0); so each keep stands 1,065 from the middle along one axis and
-// 5 to the side along the other, the four turned a quarter about the Throne, all the same distance from it. The land's frame sees them
-// about 3.5 off its diagonals, which the map-maker's margins allow.
-const KEEP_W = [
-	[MID + 5, MID + 1065], // You: the bottom of the screen
-	[MID - 1065, MID + 5], // Raiders: the left
-	[MID - 5, MID - 1065], // Rivals: the top
-	[MID + 1065, MID - 5], // Fortress: the right
-];
+// while the Throne, six squares, centres on the world's middle (ending in 0); the four a quarter turn apart about the Throne, all the same
+// distance from it. The land's frame sees them a little off its diagonals (KEEP_OFF), which the map-maker's margins allow.
+const KEEP_W = (() => {
+	// You at the land's bottom-left corner (the bottom of the screen), then the others a quarter turn apart round the Throne (Raiders left, Rivals top,
+	// Fortress right): the first is the land corner turned into the world and snapped to the centre of a five-square footprint (each coordinate
+	// ending in 5), the rest are that point turned a quarter about MID, which keeps the ending (MID ends in 0). At 45° this is the old table.
+	const w = worldXY(LMID - CORNER, LMID + CORNER),
+		on5 = (v) => Math.round((v - 5) / NAVC) * NAVC + 5,
+		K = [[on5(w.x), on5(w.y)]];
+	for (let i = 1; i < 4; i++) K.push([MID - (K[i - 1][1] - MID), MID + (K[i - 1][0] - MID)]);
+	return K;
+})();
+// how far a keep stands off the land's diagonal once snapped (3.5 at 45°; more at other angles): the map-maker's margins read it
+const KEEP_OFF = Math.max(...KEEP_W.map(([x, y]) => { const l = landXY(x, y); return Math.max(Math.abs(Math.abs(l.x - LMID) - CORNER), Math.abs(Math.abs(l.y - LMID) - CORNER)); })) + 0.5;
 const PLAYERS = [
 	{ name: 'You', pers: 'human', color: '#4f93e6', keep: KEEP_W[0] },
 	{ name: 'Raiders', pers: 'aggr', color: '#de5a44', keep: KEEP_W[1] },
@@ -6042,7 +6051,7 @@ const EVK = Object.keys(EVENTS),
 // From the edge: camp, the robbers' camp at the end of each trade route; scout, its loop's points on the middle lines. From a Town Center,
 // toward the middle on both axes: scout, its loop's corner points.
 // start: the first villagers stand this far from their Town Center toward the middle.
-const PLACES = { stop: [490, 320], lode: 270, camp: 160, scout: { mid: 300, edge: 420, keep: 215 }, start: 40 };
+const PLACES = { stop: [490, 320], lode: 270, camp: 160, scout: { mid: 300, edge: 420, keep: 215 }, start: 15 }; // start: how far past the Town Center's footprint its first people stand, toward the middle (doorOf, 08; it was 40 from the centre, the same point at 45°)
 const cross = (d) => [
 	[LMID, LMID - d],
 	[LMID, LMID + d],
@@ -7517,6 +7526,17 @@ const addRes = (a, c, f = 1) => {
 const sumCost = (c) => Object.values(c || {}).reduce((s, v) => s + v, 0);
 const fmt = (n) =>
 	n >= 10000 ? Math.round(n / 1000) + 'k' : n >= 1000 ? Math.floor(n / 100) / 10 + 'k' : String(Math.floor(n));
+// the door of a keep: where its first people stand, PLACES.start past the edge of its footprint toward the middle of the map, in the world
+// (preview 54: at a view angle off 45° the way to the middle crosses the footprint's corner, and a spot measured from the centre fell on it)
+const doorOf = (k) => {
+	const tx = MID - k.x,
+		ty = MID - k.y,
+		l = hyp(tx, ty) || 1,
+		ux = tx / l,
+		uy = ty / l,
+		t = (BLD.keep.fp * NAVC) / 2 / Math.max(Math.abs(ux), Math.abs(uy)) + PLACES.start;
+	return { x: k.x + ux * t, y: k.y + uy * t };
+};
 const towardMid = (e, d, c = MID) => {
 	// d toward the middle (c: the world's, or the land's while the map-maker lays it)
 	const tx = c - e.x,
@@ -8883,7 +8903,8 @@ function canPlace(o, kind, x, y) {
 	return null;
 }
 // Where the ghost lands: the nearest spot that lines up with a building of yours, touching or with one lane between, else where the finger is.
-const GUIDE_R = 260; // how far a building reaches with its alignment lines
+const GUIDE_R = 260, // how far a building reaches with its alignment lines
+	GUIDE_ON = 3; // how near the line a snapped centre must come to count as on it: at 45° the squares put it exactly on, at other angles the nearest square is within 2.5 (half a square's turned pitch), unseen at any zoom
 function snapGhost(o, kind, x, y, tol) {
 	const B = BLD[kind],
 		h = (B.fp * NAVC) / 2,
@@ -8903,25 +8924,37 @@ function snapGhost(o, kind, x, y, tol) {
 				for (const cy of [b.y - gap, b.y + gap]) for (const cx of alignX.concat([x])) consider(cx, cy);
 			}
 		if (Math.abs(b.x - x) < GUIDE_R && Math.abs(b.y - y) < GUIDE_R) {
-			// in line with it, farther off: a centre or an edge on the same line, the other axis left where the finger is (Build 63, Albert:
-			// "when a PDF sees you moving an element it brings up alignment lines, with a light snap pull"); the guide is drawn by drawGhost
-			for (const cx of alignX) consider(cx, y, 'x');
-			for (const cy of alignY) consider(x, cy, 'y');
-			// and in line with it on the screen (preview 53, Albert: the lines "are now out of alignment because of the rotation"): centres on the
-			// same land x (world x − y) or land y (world x + y), the ghost moved along the other diagonal; the world's squares allow it when the
-			// snapped centre lands on the line
-			const u = (b.x - b.y - (x - y)) / 2,
-				v = (b.x + b.y - (x + y)) / 2;
-			consider(x + u, y - u, 'u');
-			consider(x + v, y + v, 'v');
+			// in line with it on the screen, farther off: its centre on the same line of the screen, upright or level, the ghost moved along the
+			// other (Build 63, Albert: "when a PDF sees you moving an element it brings up alignment lines, with a light snap pull"; preview 54:
+			// the screen's lines, since the world's axes read as diagonals). The land's frame is the screen's: the point of the ghost's land
+			// column or row nearest the building's centre; the world's squares allow it when the snapped centre lands on the line
+			const lb = landXY(b.x, b.y),
+				lg = landXY(x, y),
+				u = landAt(lb.x, lg.y),
+				v = landAt(lg.x, lb.y);
+			consider(u.x, u.y, 'u');
+			consider(v.x, v.y, 'v');
 		}
 	}
 	function consider(cx, cy, axis) {
-		const s = snapPos(kind, cx, cy),
-			d = hyp(s.x - x, s.y - y);
-		if (axis === 'x' || axis === 'y') {
-			if (Math.abs((axis === 'x' ? s.x : s.y) - (axis === 'x' ? cx : cy)) > 0.5) return; // the grid could not keep it on the line: no pull
-		} else if (axis && Math.abs(axis === 'u' ? s.x - s.y - (cx - cy) : s.x + s.y - (cx + cy)) > 0.5) return;
+		const s0 = snapPos(kind, cx, cy);
+		if (axis) {
+			// the line's point snapped to a square may sit a few units off the line (the squares are turned to it): of the squares round it, the
+			// ones near enough the line are candidates; none near enough, no pull
+			const lc = landXY(cx, cy);
+			for (let j = -1; j <= 1; j++)
+				for (let i = -1; i <= 1; i++) {
+					const s = { gx: s0.gx + i, gy: s0.gy + j, x: s0.x + i * NAVC, y: s0.y + j * NAVC },
+						ls = landXY(s.x, s.y);
+					if (Math.abs(axis === 'u' ? ls.x - lc.x : ls.y - lc.y) > GUIDE_ON) continue;
+					take(s);
+				}
+			return;
+		}
+		take(s0);
+	}
+	function take(s) {
+		const d = hyp(s.x - x, s.y - y);
 		if (d < bd && !canPlace(o, kind, s.x, s.y)) {
 			bd = d;
 			best = s;
@@ -9074,7 +9107,7 @@ function makeForest(taken) {
 		);
 	const out = [0, 1].map((ax) =>
 		taken
-			.filter((l) => l.k === 'stop' && Math.abs((ax ? l.x : l.y) - CORNER) < 6) // a keep stands up to 3.5 off the land's diagonal (KEEP_W, 01)
+			.filter((l) => l.k === 'stop' && Math.abs((ax ? l.x : l.y) - CORNER) < KEEP_OFF + 2) // a keep stands a little off the land's diagonal (KEEP_OFF, 01)
 			.reduce((a, l) => (hyp(l.x, l.y) < hyp(a.x, a.y) ? l : a)),
 	); // the stop nearest home on each middle line: a neighbour's way
 	const camp = PLACES.camp - (LMID - CORNER), // the trade lanes run in from the robbers' camp
@@ -9182,7 +9215,7 @@ function openWays(woods) {
 		const C = NAV.comp,
 			cut = new Set();
 		for (const w of ways) {
-			const home = near(towardMid(w.k, PLACES.start), C); // where the first villagers stand
+			const home = near(doorOf(w.k), C); // where the first villagers stand: the keep's door
 			if (near(w.g, C, home)) continue;
 			const P = wayHome(w.g, C, home);
 			for (const [o, t] of woods) if (o === w.o && P.some((q) => dist(q, t) < FOREST.cut)) cut.add(t);
@@ -9295,7 +9328,7 @@ function turnLand() {
 	for (const f of G.finds) at(f);
 	for (const L of G.lakes) {
 		at(L);
-		if (L.w) for (const h of L.w) h[2] += (h[0] * Math.PI) / 4; // cos(k·a + ph) in the land's frame is cos(k·a_w + ph + k·45°) in the world's (a = a_w + 45°)
+		if (L.w) for (const h of L.w) h[2] += h[0] * TA; // cos(k·a + ph) in the land's frame is cos(k·a_w + ph + k·angle) in the world's (a = a_w + angle)
 	}
 	for (const b of G.blds) {
 		const w = worldXY(b.x, b.y),
@@ -9341,7 +9374,9 @@ function navOffLand() {
 // ═════ 10-world-movers.js: layer 5, Movers: the first people, the game, the boar, the finds that walk or are carried off, the camps ═════
 // Their spots were claimed before the forest (laySpots in makeMap, so the trees leave them their clearings); here they are placed in them.
 function layMovers(p, kx, ky, spot, shape, P) {
-	const f = towardMid({ x: kx, y: ky }, PLACES.start, LMID);
+	const kw = snapPos('keep', worldXY(kx, ky).x, worldXY(kx, ky).y), // where the keep will stand once turned and snapped (turnLand)
+		dw = doorOf(kw),
+		f = landXY(dw.x, dw.y); // the keep's door, found in the world (where the footprint is a square) and laid in the land's frame
 	for (let i = 0; i < START_VILS; i++) {
 		const v = addUnit(p.id, 'vil', f.x + (i - (START_VILS - 1) / 2) * 14, f.y + 6);
 		v.job = i === 1 ? 'wood' : 'food';
@@ -9511,7 +9546,7 @@ function makeMap() {
 			at = (dx, dy) => [kx + dx * sx, ky + dy * sy],
 			toLoc = ([X, Y]) => ({ x: (X - kx) * sx, y: (Y - ky) * sy });
 		// the taken list of this corner: the home zones and the wall band, the great lake, this corner's water (by its true shore), the shared
-		// places on its two middle lines (a keep stands up to 3.5 off the diagonal, KEEP_W: the quarter read 6 wide); then what is laid
+		// places on its two middle lines (a keep stands a little off the diagonal, KEEP_OFF: the quarter read that much wider); then what is laid
 		const taken = [
 			{ x: 0, y: 0, r: HOME.out, k: 'home' },
 			{ x: CORNER, y: CORNER, r: LAKE0.r, k: 'lake0' },
@@ -9523,7 +9558,7 @@ function makeMap() {
 				['stop', ROUTES_L.flat()],
 				['camp', cross(LMID - PLACES.camp)],
 				['lode', cross(PLACES.lode)],
-			].flatMap(([k, L]) => L.map(toLoc).filter((l) => inQuarterL(l.x, l.y, -6)).map((l) => ({ ...l, r: 0, k }))),
+			].flatMap(([k, L]) => L.map(toLoc).filter((l) => inQuarterL(l.x, l.y, -(KEEP_OFF + 2))).map((l) => ({ ...l, r: 0, k }))),
 		];
 		// every find's shape first (its nodes from its middle), so it is laid by its nodes
 		const lattice = (n, cols, gap) =>
@@ -14906,9 +14941,11 @@ function wallPlan(k) {
 		cells.push({ gx, gy, kind: 'wall', da: Math.abs(Math.atan2(Math.sin(a - base), Math.cos(a - base))) });
 	};
 	for (let i = -66; i <= 66; i++) {
+		// the squares whose middles lie on or past WALL_R (preview 54: on the arc itself, a square's middle fell up to 7 inside it and a home
+		// find's rock sat within two squares of it; the ring is sized so that never happens, 06)
 		const a = base + i * 0.019,
-			gx = Math.floor((k.x + Math.cos(a) * WALL_R) / NAVC),
-			gy = Math.floor((k.y + Math.sin(a) * WALL_R) / NAVC);
+			gx = Math.floor((k.x + Math.cos(a) * (WALL_R + NAVC / 2)) / NAVC),
+			gy = Math.floor((k.y + Math.sin(a) * (WALL_R + NAVC / 2)) / NAVC);
 		if (pc && gx !== pc.gx && gy !== pc.gy) add(gx, pc.gy); // four-connected: no gap to slip through
 		add(gx, gy);
 		pc = { gx, gy };
@@ -20439,25 +20476,25 @@ function followCam(dt) {
 	clampCam();
 	if (!G.follow && Math.abs(cam.x - cam.tx) < 0.3 && Math.abs(cam.y - cam.ty) < 0.3) camStop();
 }
-// The turned view (preview 50): a world point goes to the screen by u = (x − y) across and v = (x + y) down, each scaled by TURN (1/√2) so a
-// walk of d along either axis is d × z long on the screen's diagonal; v is squashed by TILT; a height h stands straight up, unsquashed.
-// DX and DY turn a world offset into a screen offset. wmat is the same map as a canvas matrix, for anything drawn flat on the ground in
-// world units (the ground's pictures, the fog, a footprint): set it, draw in world units, then flat puts the plain one back.
-const SX = (x, y = 0) => (x - y - (cam.x - cam.y)) * cam.z * TURN + cw / 2;
-const SY = (y, h, x = 0) => (x + y - (cam.x + cam.y)) * cam.z * TURN * TILT + ch / 2 + vy - (h || 0) * cam.z;
-const DX = (dx, dy) => (dx - dy) * cam.z * TURN,
-	DY = (dx, dy) => (dx + dy) * cam.z * TURN * TILT;
+// The turned view (preview 50; one angle since preview 54, VIEW.angle in 01): a world point goes to the screen by u = x·cos − y·sin across
+// and v = x·sin + y·cos down (TC, TS), scaled by the zoom; v is squashed by TILT; a height h stands straight up, unsquashed. DX and DY turn
+// a world offset into a screen offset. wmat is the same map as a canvas matrix, for anything drawn flat on the ground in world units (the
+// ground's pictures, the fog, a footprint): set it, draw in world units, then flat puts the plain one back.
+const SX = (x, y = 0) => ((x - cam.x) * TC - (y - cam.y) * TS) * cam.z + cw / 2;
+const SY = (y, h, x = 0) => ((x - cam.x) * TS + (y - cam.y) * TC) * cam.z * TILT + ch / 2 + vy - (h || 0) * cam.z;
+const DX = (dx, dy) => (dx * TC - dy * TS) * cam.z,
+	DY = (dx, dy) => (dx * TS + dy * TC) * cam.z * TILT;
 const toWorld = (sx, sy) => {
-	const u = (sx - cw / 2) / (cam.z * TURN) + (cam.x - cam.y),
-		v = (sy - ch / 2 - vy) / (cam.z * TURN * TILT) + (cam.x + cam.y);
-	return { x: (u + v) / 2, y: (v - u) / 2 };
+	const u = (sx - cw / 2) / cam.z,
+		v = (sy - ch / 2 - vy) / (cam.z * TILT);
+	return { x: cam.x + u * TC + v * TS, y: cam.y - u * TS + v * TC };
 };
 const dWorld = (sdx, sdy) => {
-	const du = sdx / (cam.z * TURN),
-		dv = sdy / (cam.z * TURN * TILT);
-	return { x: (du + dv) / 2, y: (dv - du) / 2 };
+	const du = sdx / cam.z,
+		dv = sdy / (cam.z * TILT);
+	return { x: du * TC + dv * TS, y: -du * TS + dv * TC };
 }; // a screen drag as a world move
-const wmat = (c = ctx) => c.setTransform(dpr * cam.z * TURN, dpr * cam.z * TURN * TILT, -dpr * cam.z * TURN, dpr * cam.z * TURN * TILT, dpr * SX(0, 0), dpr * SY(0, 0, 0));
+const wmat = (c = ctx) => c.setTransform(dpr * cam.z * TC, dpr * cam.z * TS * TILT, -dpr * cam.z * TS, dpr * cam.z * TC * TILT, dpr * SX(0, 0), dpr * SY(0, 0, 0));
 const flat = (c = ctx) => c.setTransform(dpr, 0, 0, dpr, 0, 0);
 // the world box the screen sees: the four screen corners turned back; margin m in world units
 function viewBox(m = 0) {
@@ -20468,13 +20505,12 @@ function viewBox(m = 0) {
 function wrect(x, y, w, h, stroke) {
 	wmat();
 	if (stroke) {
-		ctx.lineWidth = 1 / (cam.z * TURN);
+		ctx.lineWidth = 1 / cam.z;
 		ctx.strokeRect(x, y, w, h);
 	} else ctx.fillRect(x, y, w, h);
 	flat();
 }
-const landMat = (c) => c.transform(TURN, -TURN, TURN, TURN, MID - 2 * LMID * TURN, MID); // the land's frame on a canvas already in world units (preview 51)
-const DIAG = SQUARE * 2 * TURN; // the land's width on the screen at zoom 1 // the map's width on the screen at zoom 1 (its diagonal)
+const landMat = (c) => c.transform(TC, -TS, TS, TC, MID - LMID * (TC + TS), MID - LMID * (TC - TS)); // the land's frame on a canvas already in world units (preview 51): a land point turned −angle about the centre
 const minZ = () => Math.min(cw / SQUARE, ch / (SQUARE * TILT)) || 0.2; // the land stands square on the screen: SQUARE wide, SQUARE × TILT tall at zoom 1
 function zoomAt(nz, sx, sy) {
 	const w = toWorld(sx, sy);
@@ -21148,13 +21184,71 @@ const BOX_LOOK = {
 		depot: 'timber', medtent: 'tent', traintent: 'tent', messtent: 'tent',
 	},
 };
-const boxed = (b) => SET.boxes !== false && BOX_LOOK.of[b.kind] && b.prog >= 1 && !BLD[b.kind].crop;
+const FLAT = { farm: 1, treefarm: 1, pasture: 1 }; // what lies on the ground: a plot, not a box (drawPlot)
+const boxed = (b) => SET.boxes !== false && !!BOX_LOOK.of[b.kind] && !FLAT[b.kind];
+const flat_ = (b) => SET.boxes !== false && !!FLAT[b.kind];
+// The plot mold (preview 54, Albert: "if the land rotated, the buildings and pastures and EVERYTHING needs to rotate with it"): a field, an
+// orchard or a pasture is drawn flat on the turned ground in world units (wmat), so it turns with the land: the soil, the rows along the
+// plot (a field's crop by the season, an orchard's young trees, a pasture's grass and its sheep), a worn edge. A plot being made shows its
+// soil alone, growing with the work.
+function drawPlot(b) {
+	const B = BLD[b.kind],
+		half = (B.fp * NAVC) / 2,
+		x0 = b.x - half,
+		y0 = b.y - half,
+		w = half * 2,
+		sn = season().name,
+		p = Math.min(1, Math.max(0.1, b.prog)),
+		spent = b.spent || (b.node && b.node.amt <= 0),
+		z = cam.z;
+	wmat();
+	ctx.fillStyle = b.kind === 'pasture' ? '#86ae5c' : '#7a5e36';
+	ctx.fillRect(x0, y0, w, w);
+	if (b.prog >= 1 && !spent) {
+		if (b.kind === 'farm') {
+			const crop = { Spring: '#8fb84a', Summer: '#e0c266', Autumn: '#d9a93e', Winter: '#a39a86' }[sn],
+				dark = { Spring: '#5f8a2e', Summer: '#b8962e', Autumn: '#a67a22', Winter: '#7a7262' }[sn],
+				rows = 7,
+				rh = w / rows;
+			for (let i = 0; i < rows; i++) {
+				ctx.fillStyle = i % 2 ? crop : dark;
+				ctx.fillRect(x0 + 1, y0 + i * rh + rh * 0.12, w - 2, rh * 0.76);
+			}
+		} else if (b.kind === 'treefarm') {
+			ctx.fillStyle = '#3f6b2a';
+			for (let j = 0; j < 3; j++)
+				for (let i = 0; i < 3; i++) {
+					ctx.beginPath();
+					ctx.arc(x0 + ((i + 0.5) * w) / 3, y0 + ((j + 0.5) * w) / 3, w / 9, 0, 7);
+					ctx.fill();
+				}
+		} else {
+			ctx.fillStyle = '#5a8a3a';
+			for (let i = 0; i < 14; i++) ctx.fillRect(x0 + ((i * 37) % w), y0 + ((i * 53) % w), 2, 3); // tufts
+			ctx.fillStyle = '#f2efe6';
+			for (let i = 0; i < (b.sheep || 0); i++) {
+				ctx.beginPath();
+				ctx.ellipse(x0 + 6 + ((i * 29) % (w - 12)), y0 + 6 + ((i * 17) % (w - 12)), 3.2, 2.2, 0, 0, 7);
+				ctx.fill();
+			}
+		}
+	}
+	if (p < 1) {
+		ctx.fillStyle = 'rgba(0,0,0,.18)';
+		ctx.fillRect(x0, y0 + w * p, w, w * (1 - p)); // the part not yet dug
+	}
+	ctx.strokeStyle = 'rgba(60,45,25,.5)';
+	ctx.lineWidth = 1 / z;
+	ctx.strokeRect(x0, y0, w, w);
+	flat();
+}
 function drawBldBox(b) {
 	const L = BOX_LOOK[BOX_LOOK.of[b.kind]],
 		B = BLD[b.kind],
 		half = (B.fp * NAVC) / 2,
-		H = B.h * 0.75, // the walls; the roof takes the rest
-		R = B.h - H,
+		up = Math.min(1, Math.max(0.15, b.prog)), // a site rises with the work, as a wall does
+		H = B.h * 0.75 * up, // the walls; the roof takes the rest
+		R = (B.h - B.h * 0.75) * up,
 		x0 = b.x - half,
 		x1 = b.x + half,
 		y0 = b.y - half,
@@ -21310,6 +21404,27 @@ function drawBld(b, s) {
 		B = BLD[b.kind],
 		c = bldSprite(b, s),
 		k = z / s;
+	if (flat_(b)) {
+		drawPlot(b);
+		if (b.prog < 1) {
+			bar(sx, sy - DY(B.fp * NAVC / 2, B.fp * NAVC / 2) - 4, Math.min(60 * z, B.fp * NAVC * z), b.prog, '#e6b947');
+			if (b.owner === 0 && !G.units.some((u) => u.rep === b && u.job === 'repair')) idleMark(sx, sy - 8 * z, z * 1.2);
+			return;
+		}
+	} else if (boxed(b) && b.prog < 1) {
+		// a site: the outline staked out, the box rising with the work
+		ctx.strokeStyle = '#d8c79c';
+		ctx.lineWidth = 1.5;
+		ctx.setLineDash([3, 3]);
+		wrect(b.x - (B.fp * NAVC) / 2, b.y - (B.fp * NAVC) / 2, B.fp * NAVC, B.fp * NAVC, true);
+		ctx.setLineDash([]);
+		ctx.globalAlpha = 0.85;
+		drawBldBox(b);
+		ctx.globalAlpha = 1;
+		bar(sx, sy - (B.h * Math.max(0.15, b.prog) + 6) * z, Math.min(60 * z, B.fp * NAVC * z), b.prog, '#e6b947');
+		if (b.owner === 0 && !G.units.some((u) => u.rep === b && u.job === 'repair')) idleMark(sx, sy - (B.h * Math.max(0.15, b.prog) + 10) * z, z * 1.2);
+		return;
+	}
 	if (b.prog < 1) {
 		// a building site: the outline staked out, the walls rising with the work
 		const w = B.fp * NAVC * z,
@@ -21344,12 +21459,13 @@ function drawBld(b, s) {
 	}
 	const fa = G.t - (b.doneT ?? -99);
 	if (boxed(b)) drawBldBox(b);
+	else if (flat_(b)); // drawn above
 	else {
 		stamp(c, sx, sy, k * popC(fa / 0.6));
 		flagsOn(c, sx, sy, z, G.P[b.owner].color, b.id);
 	}
 	if (PILE[b.kind] && friendly(0, b.owner)) pileAt(b, sx, sy, z);
-	if (fa < 8 && !still() && !boxed(b)) {
+	if (fa < 8 && !still() && !boxed(b) && !flat_(b)) {
 		ctx.globalCompositeOperation = 'lighter';
 		ctx.globalAlpha = 0.32 * (1 - fa / 8);
 		stamp(c, sx, sy, k);
@@ -21470,26 +21586,44 @@ function shadowPath(sx, sy, h, r, z) {
 }
 // A building's shadow is its own shape, not an oval (decision 14, Albert, Oct 31: we invented the shape, so the shadow is that fixed shape
 // thrown away from the light). A box of footprint half-side w (BLD fp) and height h casts its footprint swept by L = h cot(altitude) along the
-// light (a planar projection; Blinn 1988, from memory): a hexagon whose corners are the footprint's, each kept, moved by L, or both. Which
-// corners lead is fixed by the way the light falls, so the shape is made once for that (HEX) and every building only moves and stretches it
-// by its w and L: no hull, no sorting, no arrays per building. Same turning as the ovals, so the frame keeps one path and one fill.
+// light (a planar projection; Blinn 1988, from memory): a hexagon whose corners are the footprint's, each kept, moved by L, or both. The
+// footprint's corners on the glass are the turned square's (DX, DY: a diamond since preview 50; preview 54: the shadow was still cast from an
+// upright square, Albert's sighting). Which corners lead is fixed by the way the light falls, so the shape is made once for that (HEX) and
+// every building only moves and stretches it by its w and L: no hull, no sorting, no arrays per building. One path and one fill a frame.
+// (corners() reads the zoom, so the key carries it; the light's direction too, since a turned footprint's silhouette depends on more than its quadrant.)
 const BOX = [
 	[-1, -1],
 	[1, -1],
 	[1, 1],
 	[-1, 1],
-]; // the footprint's corners, clockwise on the glass
+]; // the footprint's corners in the world, clockwise
+const corners = () => BOX.map(([x, y]) => [DX(x, y) / cam.z, DY(x, y) / cam.z]); // on the glass, per unit of half-side and zoom
 let HEX = { k: '', pts: null };
 function hexOf(gx, gy) {
-	const k = gx + ',' + gy;
+	// gx, gy: the light's direction on the glass (its sign was enough for an upright box; a turned footprint needs the direction itself)
+	const k = gx.toFixed(3) + ',' + gy.toFixed(3) + ',' + cam.z.toFixed(2);
 	if (HEX.k === k) return HEX.pts;
-	const lead = (c) => gx * c[0] + gy * c[1], // ahead of the light (> 0: moved), behind it (< 0: kept), across it (0: both, in turn)
+	// an edge of the footprint faces the sweep when its outward normal points along it; a corner is kept where a back edge meets it, moved where
+	// a front edge does, both at the silhouette (one of each), in the order the walk round the polygon meets them
+	const C = corners(),
+		mx = C.reduce((m, c) => m + c[0], 0) / 4,
+		my = C.reduce((m, c) => m + c[1], 0) / 4,
+		front = C.map((c, i) => {
+			const d = C[(i + 1) % 4],
+				ex = d[0] - c[0],
+				ey = d[1] - c[1],
+				nx = ey,
+				ny = -ex, // one normal; made outward by the middle
+				out = (nx * (c[0] - mx) + ny * (c[1] - my)) > 0 ? [nx, ny] : [-nx, -ny];
+			return Math.round((out[0] * gx + out[1] * gy) * 1e6) > 0;
+		}),
 		pts = [];
-	BOX.forEach((c, i) => {
-		const f = lead(c);
-		if (f < 0) pts.push([c[0], c[1], 0]);
-		else if (f > 0) pts.push([c[0], c[1], 1]);
-		else if (lead(BOX[(i + 1) % 4]) > 0) pts.push([c[0], c[1], 0], [c[0], c[1], 1]);
+	C.forEach((c, i) => {
+		const before = front[(i + 3) % 4],
+			after = front[i];
+		if (before && after) pts.push([c[0], c[1], 1]);
+		else if (!before && !after) pts.push([c[0], c[1], 0]);
+		else if (after) pts.push([c[0], c[1], 0], [c[0], c[1], 1]);
 		else pts.push([c[0], c[1], 1], [c[0], c[1], 0]);
 	});
 	HEX = { k, pts };
@@ -21499,12 +21633,11 @@ function boxShadow(sx, sy, h, w, z) {
 	const L = SHADE.a < 0.02 ? 0 : h * SHADE.len * z,
 		vx = SHADE.x * L,
 		vy = SHADE.y * L,
-		d = w * TILT,
-		H = hexOf(Math.sign(vx), Math.sign(vy));
+		H = hexOf(SHADE.x, SHADE.y);
 	for (let i = 0; i < H.length; i++) {
 		const [cx, cy, m] = H[i],
 			x = sx + cx * w + m * vx,
-			y = sy + cy * d + m * vy;
+			y = sy + cy * w + m * vy;
 		if (i) ctx.lineTo(x, y);
 		else ctx.moveTo(x, y);
 	}
@@ -22734,8 +22867,10 @@ function drawSeal(pl) {
 	const e = P[0];
 	tag('Open: a foe walks in', SX(e.x, e.y) - 50, SY(e.y, 0, e.x) - 10);
 }
-// alignment guides (Build 63): a thin line from the ghost to every own building whose centre or edge sits on the same line, as a PDF
-// editor draws them while an element moves; the snap pull toward them is snapGhost's
+// alignment guides (Build 63): a thin line from the ghost to every own building whose centre sits on the same line of the screen, upright or
+// level, as a PDF editor draws them while an element moves; the snap pull toward them is snapGhost's. On the screen's lines only since
+// preview 54 (Albert: the world's axes read as diagonals once the view turned, "out of alignment"); a centre on one land x is one world x − y,
+// on one land y one world x + y (the land is turned −angle in the world: 01)
 function drawGuides(sp, h) {
 	ctx.save();
 	ctx.strokeStyle = 'rgba(120,220,255,.8)';
@@ -22743,50 +22878,22 @@ function drawGuides(sp, h) {
 	ctx.setLineDash([4, 4]);
 	ctx.beginPath();
 	for (const b of G.blds) {
-		if (
-			b.owner !== 0 ||
-			b.hp <= 0 ||
-			BLD[b.kind].wallish ||
-			Math.abs(b.x - sp.x) >= GUIDE_R ||
-			Math.abs(b.y - sp.y) >= GUIDE_R
-		)
-			continue;
-		const bh = halfOf(b);
-		for (const [gx, bx] of [
-			[sp.x, b.x],
-			[sp.x - h, b.x - bh],
-			[sp.x + h, b.x + bh],
-			[sp.x - h, b.x + bh],
-			[sp.x + h, b.x - bh],
-		])
-			if (Math.abs(gx - bx) < 0.5) {
-				const y0 = Math.min(sp.y - h, b.y - bh) - 12,
-					y1 = Math.max(sp.y + h, b.y + bh) + 12;
-				ctx.moveTo(SX(gx, y0), SY(y0, 0, gx));
-				ctx.lineTo(SX(gx, y1), SY(y1, 0, gx));
-			}
-		for (const [gy, by] of [
-			[sp.y, b.y],
-			[sp.y - h, b.y - bh],
-			[sp.y + h, b.y + bh],
-			[sp.y - h, b.y + bh],
-			[sp.y + h, b.y - bh],
-		])
-			if (Math.abs(gy - by) < 0.5) {
-				const x0 = Math.min(sp.x - h, b.x - bh) - 12,
-					x1 = Math.max(sp.x + h, b.x + bh) + 12;
-				ctx.moveTo(SX(x0, gy), SY(gy, 0, x0));
-				ctx.lineTo(SX(x1, gy), SY(gy, 0, x1));
-			}
-		// the screen's lines (preview 53): the centres on one land x (upright on the screen) or one land y (level), as a PDF editor's
-		for (const [same, dx, dy] of [
-			[Math.abs(sp.x - sp.y - (b.x - b.y)) < 0.5, 1, 1],
-			[Math.abs(sp.x + sp.y - (b.x + b.y)) < 0.5, 1, -1],
+		if (b.owner !== 0 || b.hp <= 0 || BLD[b.kind].wallish || Math.abs(b.x - sp.x) >= GUIDE_R || Math.abs(b.y - sp.y) >= GUIDE_R) continue;
+		const bh = halfOf(b),
+			ls = landXY(sp.x, sp.y),
+			lb = landXY(b.x, b.y);
+		for (const [same, ax] of [
+			[Math.abs(ls.x - lb.x) < GUIDE_ON, 'y'],
+			[Math.abs(ls.y - lb.y) < GUIDE_ON, 'x'],
 		])
 			if (same) {
-				const r = (Math.abs(b.x - sp.x) + 12 + h + bh) / 1;
-				ctx.moveTo(SX(sp.x - dx * r, sp.y - dy * r), SY(sp.y - dy * r, 0, sp.x - dx * r));
-				ctx.lineTo(SX(sp.x + dx * r, sp.y + dy * r), SY(sp.y + dy * r, 0, sp.x + dx * r));
+				// the line through both, in the land's frame, a little past each
+				const lo = Math.min(ls[ax], lb[ax]) - 12 - h - bh,
+					hi = Math.max(ls[ax], lb[ax]) + 12 + h + bh,
+					p0 = landAt(ax === 'x' ? lo : ls.x, ax === 'y' ? lo : ls.y),
+					p1 = landAt(ax === 'x' ? hi : ls.x, ax === 'y' ? hi : ls.y);
+				ctx.moveTo(SX(p0.x, p0.y), SY(p0.y, 0, p0.x));
+				ctx.lineTo(SX(p1.x, p1.y), SY(p1.y, 0, p1.x));
 			}
 	}
 	ctx.stroke();
@@ -22833,11 +22940,26 @@ function drawGhost() {
 		ok = !why;
 	pl.why = why;
 	drawGuides(sp, n / 2);
-	const s = quant(z * dpr),
-		c = bldSprite({ kind, owner: 0 }, s);
+	const ghost = { kind, owner: 0, x: sp.x, y: sp.y, prog: 1, id: 0 };
 	ctx.globalAlpha = 0.6;
-	stamp(ghostTint(c, ok), SX(sp.x, sp.y), SY(sp.y, 0, sp.x), z / s);
-	flagsOn(c, SX(sp.x, sp.y), SY(sp.y, 0, sp.x), z, G.P[0].color, 0);
+	if (boxed(ghost)) {
+		// the box itself, washed green where it fits and red where not (preview 54: the ghost turns with the ground as the buildings do)
+		drawBldBox(ghost);
+		ctx.globalAlpha = 0.35;
+		ctx.fillStyle = ok ? '#4ade80' : '#ef4444';
+		const half = n / 2,
+			c = (x, y, h = 0) => [SX(x, y), SY(y, h, x)],
+			H = B.h; // the box's whole outline: the roof's top edge and the two near faces
+		ctx.beginPath();
+		for (const [x, y] of [c(sp.x - half, sp.y - half, H), c(sp.x + half, sp.y - half, H), c(sp.x + half, sp.y - half, 0), c(sp.x + half, sp.y + half, 0), c(sp.x - half, sp.y + half, 0), c(sp.x - half, sp.y + half, H)]) ctx.lineTo(x, y);
+		ctx.closePath();
+		ctx.fill();
+	} else {
+		const s = quant(z * dpr),
+			c = bldSprite(ghost, s);
+		stamp(ghostTint(c, ok), SX(sp.x, sp.y), SY(sp.y, 0, sp.x), z / s);
+		flagsOn(c, SX(sp.x, sp.y), SY(sp.y, 0, sp.x), z, G.P[0].color, 0);
+	}
 	ctx.globalAlpha = 1;
 	tag(why || `${B.name} · ${costText(B.cost)}`, SX(sp.x, sp.y) - 40, SY(sp.y, 0, sp.x) - DY(n / 2, n / 2) - 8 - (BLD[kind].h + 10) * z);
 }
@@ -22884,7 +23006,7 @@ function miniIncoming(m, k) {
 // the small map, turned with the view (preview 50): the diamond fills its square; MINI_M maps world units to it; marks are drawn in the
 // turned frame (a mark's own shape is turned too; it is 3 px, nobody minds)
 const MINI_K = 172 / SQUARE, // the land's square fills the small map (preview 51)
-	miniMat = (m) => m.setTransform(MINI_K * TURN, MINI_K * TURN, -MINI_K * TURN, MINI_K * TURN, MINI_K * LMID, MINI_K * (LMID - 2 * MID * TURN)), // world units to the small map, through the land's frame
+	miniMat = (m) => m.setTransform(MINI_K * TC, MINI_K * TS, -MINI_K * TS, MINI_K * TC, MINI_K * (LMID - MID * (TC - TS)), MINI_K * (LMID - MID * (TC + TS))), // world units to the small map, through the land's frame
 	miniWorld = (px, py) => worldXY(px / MINI_K, py / MINI_K); // a point of the small map, in the world
 function drawMini() {
 	const m = mctx,
@@ -23860,10 +23982,10 @@ function hitAt(sx, sy) {
 	for (const b of G.blds) {
 		// footprint: the ground it stands on; roof: the height drawn above it
 		const B = BLD[b.kind],
-			w = Math.max(B.fp * NAVC * z * 2 * TURN, 22),
+			w = Math.max(B.fp * NAVC * z * TURN, 22),
 			x = SX(b.x, b.y),
 			gy = SY(b.y, 0, b.x),
-			d = B.fp * NAVC * z * 2 * TURN * TILT; // the footprint's box on the turned screen (preview 50)
+			d = B.fp * NAVC * z * TURN * TILT; // the footprint's box on the turned screen (preview 50): TURN is the diagonal's width per unit
 		if ((B.trap && !trapShown(b)) || !knownB(b)) continue;
 		if (sx <= x - w / 2 - 4 || sx >= x + w / 2 + 4 || sy >= gy + d / 2 + 4) continue;
 		if (sy > gy - d / 2 - 4) {
@@ -28946,6 +29068,77 @@ const MIGRATE = {
 		return S;
 	},
 };
+// A save laid at another view angle (VIEW.angle, 01; 45 before preview 54) is turned about the world's middle by the difference: every place
+// (as MIGRATE[44] walks them), the lakes' shore harmonics (ph + k·Δ), the buildings snapped to the world's squares again, the fog and the ruts
+// square for square. The land itself never moved; only its turn in the world did.
+function reTurn(S) {
+	const was = ((S.angle ?? 45) * Math.PI) / 180,
+		d = was - TA, // world_now = R(was − now) · world_was about the middle (R the plain turn: worldXY is R(−angle) of the land)
+		c = Math.cos(d),
+		n = Math.sin(d),
+		turn = (o, a, b) => {
+			const dx = o[a] - MID,
+				dy = o[b] - MID;
+			o[a] = MID + dx * c - dy * n;
+			o[b] = MID + dx * n + dy * c;
+		},
+		PAIRS = [
+			['x', 'y'],
+			['px', 'py'],
+			['hx', 'hy'],
+			['hax', 'hay'],
+			['kx', 'ky'],
+		],
+		walk = (o) => {
+			if (!o || typeof o !== 'object') return;
+			if (Array.isArray(o)) return o.forEach(walk);
+			for (const [a, b] of PAIRS) if (typeof o[a] === 'number' && typeof o[b] === 'number') turn(o, a, b);
+			for (const key in o) if (key !== 'fog' && key !== 'tread') walk(o[key]);
+		},
+		grid = (b64, w) => {
+			const src = atob(b64),
+				o = new Uint8Array(FOGN * FOGN * w);
+			for (let j = 0; j < FOGN; j++)
+				for (let i = 0; i < FOGN; i++) {
+					const p = { x: i * FOG + FOG / 2, y: j * FOG + FOG / 2 };
+					turn(p, 'x', 'y');
+					const gi = Math.floor(p.x / FOG),
+						gj = Math.floor(p.y / FOG);
+					if (gi < 0 || gj < 0 || gi >= FOGN || gj >= FOGN) continue;
+					for (let k = 0; k < w; k++) o[(gj * FOGN + gi) * w + k] = Math.max(o[(gj * FOGN + gi) * w + k], src.charCodeAt((j * FOGN + i) * w + k) || 0);
+				}
+			return btoa(String.fromCharCode(...o));
+		};
+	walk(S);
+	for (const q of S.nodes || [])
+		if (Array.isArray(q)) {
+			const p = { x: q[1], y: q[2] };
+			turn(p, 'x', 'y');
+			q[1] = p.x;
+			q[2] = p.y;
+		} // a tree: [id, x, y, amt, max]
+	for (const b of S.blds || []) {
+		const sp = snapPos(b.kind, b.x, b.y);
+		b.x = sp.x;
+		b.y = sp.y;
+		b.gx = sp.gx;
+		b.gy = sp.gy;
+	}
+	for (const L of S.lakes || []) if (L.w) for (const h of L.w) h[2] += h[0] * (TA - was);
+	for (const p of S.P || []) {
+		if (p.keep) {
+			const k = { x: p.keep[0], y: p.keep[1] };
+			turn(k, 'x', 'y');
+			p.keep = [k.x, k.y];
+		}
+		if (p.ai) delete p.ai.wallPlan;
+	}
+	if (S.cam) turn(S.cam, 'x', 'y');
+	if (S.fog) S.fog = grid(S.fog, 1);
+	if (S.tread) S.tread = grid(S.tread, 2);
+	S.angle = VIEW.angle;
+	return S;
+}
 const evSave = () => {
 	const V = G.ev || {},
 		e = V.cur;
@@ -29037,6 +29230,7 @@ function saveGame(force) {
 		});
 		const S = {
 			v: SAVEV,
+			angle: VIEW.angle, // the view's turn the world was laid at (preview 54): a save opened at another angle is turned to it (reTurn)
 			at: Date.now(),
 			t: G.t,
 			tick: G.tick,
@@ -29139,6 +29333,7 @@ function readSave(key = SAVEKEY) {
 		let S = JSON.parse(localStorage.getItem(key) || 'null');
 		if (!S || !S.units || !S.P) return key === SAVEKEY ? readSave(SAVEKEY + '.bak') : null; // the last save failed: the one before it
 		while (S.v < SAVEV && MIGRATE[S.v]) S = MIGRATE[S.v](S);
+		if (S.v === SAVEV && (S.angle ?? 45) !== VIEW.angle) S = reTurn(S); // laid at another angle: every place turned about the middle to this one
 		if (S.v !== SAVEV) {
 			localStorage.setItem(SAVEKEY + '.old' + S.v, JSON.stringify(S)); // one slot per shape: a second stale save never overwrites the first
 			localStorage.removeItem(SAVEKEY);
@@ -33391,6 +33586,12 @@ const clip = (text) => {
 };
 window.__fk = {
 	boxed,
+	flat_,
+	GUIDE_ON,
+	landAt,
+	KEEP_OFF,
+	VIEW,
+	PLAYERS,
 	ELEMENTS,
 	LAYERS,
 	ACT,
@@ -33597,6 +33798,8 @@ window.__fk = {
 	stepTo,
 	boxShadow,
 	hexOf,
+	DX,
+	DY,
 	SHADE,
 	cardLocked,
 	get ctx() {

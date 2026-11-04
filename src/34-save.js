@@ -302,6 +302,77 @@ const MIGRATE = {
 		return S;
 	},
 };
+// A save laid at another view angle (VIEW.angle, 01; 45 before preview 54) is turned about the world's middle by the difference: every place
+// (as MIGRATE[44] walks them), the lakes' shore harmonics (ph + k·Δ), the buildings snapped to the world's squares again, the fog and the ruts
+// square for square. The land itself never moved; only its turn in the world did.
+function reTurn(S) {
+	const was = ((S.angle ?? 45) * Math.PI) / 180,
+		d = was - TA, // world_now = R(was − now) · world_was about the middle (R the plain turn: worldXY is R(−angle) of the land)
+		c = Math.cos(d),
+		n = Math.sin(d),
+		turn = (o, a, b) => {
+			const dx = o[a] - MID,
+				dy = o[b] - MID;
+			o[a] = MID + dx * c - dy * n;
+			o[b] = MID + dx * n + dy * c;
+		},
+		PAIRS = [
+			['x', 'y'],
+			['px', 'py'],
+			['hx', 'hy'],
+			['hax', 'hay'],
+			['kx', 'ky'],
+		],
+		walk = (o) => {
+			if (!o || typeof o !== 'object') return;
+			if (Array.isArray(o)) return o.forEach(walk);
+			for (const [a, b] of PAIRS) if (typeof o[a] === 'number' && typeof o[b] === 'number') turn(o, a, b);
+			for (const key in o) if (key !== 'fog' && key !== 'tread') walk(o[key]);
+		},
+		grid = (b64, w) => {
+			const src = atob(b64),
+				o = new Uint8Array(FOGN * FOGN * w);
+			for (let j = 0; j < FOGN; j++)
+				for (let i = 0; i < FOGN; i++) {
+					const p = { x: i * FOG + FOG / 2, y: j * FOG + FOG / 2 };
+					turn(p, 'x', 'y');
+					const gi = Math.floor(p.x / FOG),
+						gj = Math.floor(p.y / FOG);
+					if (gi < 0 || gj < 0 || gi >= FOGN || gj >= FOGN) continue;
+					for (let k = 0; k < w; k++) o[(gj * FOGN + gi) * w + k] = Math.max(o[(gj * FOGN + gi) * w + k], src.charCodeAt((j * FOGN + i) * w + k) || 0);
+				}
+			return btoa(String.fromCharCode(...o));
+		};
+	walk(S);
+	for (const q of S.nodes || [])
+		if (Array.isArray(q)) {
+			const p = { x: q[1], y: q[2] };
+			turn(p, 'x', 'y');
+			q[1] = p.x;
+			q[2] = p.y;
+		} // a tree: [id, x, y, amt, max]
+	for (const b of S.blds || []) {
+		const sp = snapPos(b.kind, b.x, b.y);
+		b.x = sp.x;
+		b.y = sp.y;
+		b.gx = sp.gx;
+		b.gy = sp.gy;
+	}
+	for (const L of S.lakes || []) if (L.w) for (const h of L.w) h[2] += h[0] * (TA - was);
+	for (const p of S.P || []) {
+		if (p.keep) {
+			const k = { x: p.keep[0], y: p.keep[1] };
+			turn(k, 'x', 'y');
+			p.keep = [k.x, k.y];
+		}
+		if (p.ai) delete p.ai.wallPlan;
+	}
+	if (S.cam) turn(S.cam, 'x', 'y');
+	if (S.fog) S.fog = grid(S.fog, 1);
+	if (S.tread) S.tread = grid(S.tread, 2);
+	S.angle = VIEW.angle;
+	return S;
+}
 const evSave = () => {
 	const V = G.ev || {},
 		e = V.cur;
@@ -393,6 +464,7 @@ function saveGame(force) {
 		});
 		const S = {
 			v: SAVEV,
+			angle: VIEW.angle, // the view's turn the world was laid at (preview 54): a save opened at another angle is turned to it (reTurn)
 			at: Date.now(),
 			t: G.t,
 			tick: G.tick,
@@ -495,6 +567,7 @@ function readSave(key = SAVEKEY) {
 		let S = JSON.parse(localStorage.getItem(key) || 'null');
 		if (!S || !S.units || !S.P) return key === SAVEKEY ? readSave(SAVEKEY + '.bak') : null; // the last save failed: the one before it
 		while (S.v < SAVEV && MIGRATE[S.v]) S = MIGRATE[S.v](S);
+		if (S.v === SAVEV && (S.angle ?? 45) !== VIEW.angle) S = reTurn(S); // laid at another angle: every place turned about the middle to this one
 		if (S.v !== SAVEV) {
 			localStorage.setItem(SAVEKEY + '.old' + S.v, JSON.stringify(S)); // one slot per shape: a second stale save never overwrites the first
 			localStorage.removeItem(SAVEKEY);

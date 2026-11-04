@@ -1,7 +1,9 @@
 // ═════ 10-world-movers.js: layer 5, Movers: the first people, the game, the boar, the finds that walk or are carried off, the camps ═════
 // Their spots were claimed before the forest (laySpots in makeMap, so the trees leave them their clearings); here they are placed in them.
 function layMovers(p, kx, ky, spot, shape, P) {
-	const f = towardMid({ x: kx, y: ky }, PLACES.start, LMID);
+	const kw = snapPos('keep', worldXY(kx, ky).x, worldXY(kx, ky).y), // where the keep will stand once turned and snapped (turnLand)
+		dw = doorOf(kw),
+		f = landXY(dw.x, dw.y); // the keep's door, found in the world (where the footprint is a square) and laid in the land's frame
 	for (let i = 0; i < START_VILS; i++) {
 		const v = addUnit(p.id, 'vil', f.x + (i - (START_VILS - 1) / 2) * 14, f.y + 6);
 		v.job = i === 1 ? 'wood' : 'food';

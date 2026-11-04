@@ -213,25 +213,25 @@ function followCam(dt) {
 	clampCam();
 	if (!G.follow && Math.abs(cam.x - cam.tx) < 0.3 && Math.abs(cam.y - cam.ty) < 0.3) camStop();
 }
-// The turned view (preview 50): a world point goes to the screen by u = (x − y) across and v = (x + y) down, each scaled by TURN (1/√2) so a
-// walk of d along either axis is d × z long on the screen's diagonal; v is squashed by TILT; a height h stands straight up, unsquashed.
-// DX and DY turn a world offset into a screen offset. wmat is the same map as a canvas matrix, for anything drawn flat on the ground in
-// world units (the ground's pictures, the fog, a footprint): set it, draw in world units, then flat puts the plain one back.
-const SX = (x, y = 0) => (x - y - (cam.x - cam.y)) * cam.z * TURN + cw / 2;
-const SY = (y, h, x = 0) => (x + y - (cam.x + cam.y)) * cam.z * TURN * TILT + ch / 2 + vy - (h || 0) * cam.z;
-const DX = (dx, dy) => (dx - dy) * cam.z * TURN,
-	DY = (dx, dy) => (dx + dy) * cam.z * TURN * TILT;
+// The turned view (preview 50; one angle since preview 54, VIEW.angle in 01): a world point goes to the screen by u = x·cos − y·sin across
+// and v = x·sin + y·cos down (TC, TS), scaled by the zoom; v is squashed by TILT; a height h stands straight up, unsquashed. DX and DY turn
+// a world offset into a screen offset. wmat is the same map as a canvas matrix, for anything drawn flat on the ground in world units (the
+// ground's pictures, the fog, a footprint): set it, draw in world units, then flat puts the plain one back.
+const SX = (x, y = 0) => ((x - cam.x) * TC - (y - cam.y) * TS) * cam.z + cw / 2;
+const SY = (y, h, x = 0) => ((x - cam.x) * TS + (y - cam.y) * TC) * cam.z * TILT + ch / 2 + vy - (h || 0) * cam.z;
+const DX = (dx, dy) => (dx * TC - dy * TS) * cam.z,
+	DY = (dx, dy) => (dx * TS + dy * TC) * cam.z * TILT;
 const toWorld = (sx, sy) => {
-	const u = (sx - cw / 2) / (cam.z * TURN) + (cam.x - cam.y),
-		v = (sy - ch / 2 - vy) / (cam.z * TURN * TILT) + (cam.x + cam.y);
-	return { x: (u + v) / 2, y: (v - u) / 2 };
+	const u = (sx - cw / 2) / cam.z,
+		v = (sy - ch / 2 - vy) / (cam.z * TILT);
+	return { x: cam.x + u * TC + v * TS, y: cam.y - u * TS + v * TC };
 };
 const dWorld = (sdx, sdy) => {
-	const du = sdx / (cam.z * TURN),
-		dv = sdy / (cam.z * TURN * TILT);
-	return { x: (du + dv) / 2, y: (dv - du) / 2 };
+	const du = sdx / cam.z,
+		dv = sdy / (cam.z * TILT);
+	return { x: du * TC + dv * TS, y: -du * TS + dv * TC };
 }; // a screen drag as a world move
-const wmat = (c = ctx) => c.setTransform(dpr * cam.z * TURN, dpr * cam.z * TURN * TILT, -dpr * cam.z * TURN, dpr * cam.z * TURN * TILT, dpr * SX(0, 0), dpr * SY(0, 0, 0));
+const wmat = (c = ctx) => c.setTransform(dpr * cam.z * TC, dpr * cam.z * TS * TILT, -dpr * cam.z * TS, dpr * cam.z * TC * TILT, dpr * SX(0, 0), dpr * SY(0, 0, 0));
 const flat = (c = ctx) => c.setTransform(dpr, 0, 0, dpr, 0, 0);
 // the world box the screen sees: the four screen corners turned back; margin m in world units
 function viewBox(m = 0) {
@@ -242,13 +242,12 @@ function viewBox(m = 0) {
 function wrect(x, y, w, h, stroke) {
 	wmat();
 	if (stroke) {
-		ctx.lineWidth = 1 / (cam.z * TURN);
+		ctx.lineWidth = 1 / cam.z;
 		ctx.strokeRect(x, y, w, h);
 	} else ctx.fillRect(x, y, w, h);
 	flat();
 }
-const landMat = (c) => c.transform(TURN, -TURN, TURN, TURN, MID - 2 * LMID * TURN, MID); // the land's frame on a canvas already in world units (preview 51)
-const DIAG = SQUARE * 2 * TURN; // the land's width on the screen at zoom 1 // the map's width on the screen at zoom 1 (its diagonal)
+const landMat = (c) => c.transform(TC, -TS, TS, TC, MID - LMID * (TC + TS), MID - LMID * (TC - TS)); // the land's frame on a canvas already in world units (preview 51): a land point turned −angle about the centre
 const minZ = () => Math.min(cw / SQUARE, ch / (SQUARE * TILT)) || 0.2; // the land stands square on the screen: SQUARE wide, SQUARE × TILT tall at zoom 1
 function zoomAt(nz, sx, sy) {
 	const w = toWorld(sx, sy);

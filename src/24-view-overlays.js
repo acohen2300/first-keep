@@ -185,8 +185,10 @@ function drawSeal(pl) {
 	const e = P[0];
 	tag('Open: a foe walks in', SX(e.x, e.y) - 50, SY(e.y, 0, e.x) - 10);
 }
-// alignment guides (Build 63): a thin line from the ghost to every own building whose centre or edge sits on the same line, as a PDF
-// editor draws them while an element moves; the snap pull toward them is snapGhost's
+// alignment guides (Build 63): a thin line from the ghost to every own building whose centre sits on the same line of the screen, upright or
+// level, as a PDF editor draws them while an element moves; the snap pull toward them is snapGhost's. On the screen's lines only since
+// preview 54 (Albert: the world's axes read as diagonals once the view turned, "out of alignment"); a centre on one land x is one world x − y,
+// on one land y one world x + y (the land is turned −angle in the world: 01)
 function drawGuides(sp, h) {
 	ctx.save();
 	ctx.strokeStyle = 'rgba(120,220,255,.8)';
@@ -194,50 +196,22 @@ function drawGuides(sp, h) {
 	ctx.setLineDash([4, 4]);
 	ctx.beginPath();
 	for (const b of G.blds) {
-		if (
-			b.owner !== 0 ||
-			b.hp <= 0 ||
-			BLD[b.kind].wallish ||
-			Math.abs(b.x - sp.x) >= GUIDE_R ||
-			Math.abs(b.y - sp.y) >= GUIDE_R
-		)
-			continue;
-		const bh = halfOf(b);
-		for (const [gx, bx] of [
-			[sp.x, b.x],
-			[sp.x - h, b.x - bh],
-			[sp.x + h, b.x + bh],
-			[sp.x - h, b.x + bh],
-			[sp.x + h, b.x - bh],
-		])
-			if (Math.abs(gx - bx) < 0.5) {
-				const y0 = Math.min(sp.y - h, b.y - bh) - 12,
-					y1 = Math.max(sp.y + h, b.y + bh) + 12;
-				ctx.moveTo(SX(gx, y0), SY(y0, 0, gx));
-				ctx.lineTo(SX(gx, y1), SY(y1, 0, gx));
-			}
-		for (const [gy, by] of [
-			[sp.y, b.y],
-			[sp.y - h, b.y - bh],
-			[sp.y + h, b.y + bh],
-			[sp.y - h, b.y + bh],
-			[sp.y + h, b.y - bh],
-		])
-			if (Math.abs(gy - by) < 0.5) {
-				const x0 = Math.min(sp.x - h, b.x - bh) - 12,
-					x1 = Math.max(sp.x + h, b.x + bh) + 12;
-				ctx.moveTo(SX(x0, gy), SY(gy, 0, x0));
-				ctx.lineTo(SX(x1, gy), SY(gy, 0, x1));
-			}
-		// the screen's lines (preview 53): the centres on one land x (upright on the screen) or one land y (level), as a PDF editor's
-		for (const [same, dx, dy] of [
-			[Math.abs(sp.x - sp.y - (b.x - b.y)) < 0.5, 1, 1],
-			[Math.abs(sp.x + sp.y - (b.x + b.y)) < 0.5, 1, -1],
+		if (b.owner !== 0 || b.hp <= 0 || BLD[b.kind].wallish || Math.abs(b.x - sp.x) >= GUIDE_R || Math.abs(b.y - sp.y) >= GUIDE_R) continue;
+		const bh = halfOf(b),
+			ls = landXY(sp.x, sp.y),
+			lb = landXY(b.x, b.y);
+		for (const [same, ax] of [
+			[Math.abs(ls.x - lb.x) < GUIDE_ON, 'y'],
+			[Math.abs(ls.y - lb.y) < GUIDE_ON, 'x'],
 		])
 			if (same) {
-				const r = (Math.abs(b.x - sp.x) + 12 + h + bh) / 1;
-				ctx.moveTo(SX(sp.x - dx * r, sp.y - dy * r), SY(sp.y - dy * r, 0, sp.x - dx * r));
-				ctx.lineTo(SX(sp.x + dx * r, sp.y + dy * r), SY(sp.y + dy * r, 0, sp.x + dx * r));
+				// the line through both, in the land's frame, a little past each
+				const lo = Math.min(ls[ax], lb[ax]) - 12 - h - bh,
+					hi = Math.max(ls[ax], lb[ax]) + 12 + h + bh,
+					p0 = landAt(ax === 'x' ? lo : ls.x, ax === 'y' ? lo : ls.y),
+					p1 = landAt(ax === 'x' ? hi : ls.x, ax === 'y' ? hi : ls.y);
+				ctx.moveTo(SX(p0.x, p0.y), SY(p0.y, 0, p0.x));
+				ctx.lineTo(SX(p1.x, p1.y), SY(p1.y, 0, p1.x));
 			}
 	}
 	ctx.stroke();
@@ -284,11 +258,26 @@ function drawGhost() {
 		ok = !why;
 	pl.why = why;
 	drawGuides(sp, n / 2);
-	const s = quant(z * dpr),
-		c = bldSprite({ kind, owner: 0 }, s);
+	const ghost = { kind, owner: 0, x: sp.x, y: sp.y, prog: 1, id: 0 };
 	ctx.globalAlpha = 0.6;
-	stamp(ghostTint(c, ok), SX(sp.x, sp.y), SY(sp.y, 0, sp.x), z / s);
-	flagsOn(c, SX(sp.x, sp.y), SY(sp.y, 0, sp.x), z, G.P[0].color, 0);
+	if (boxed(ghost)) {
+		// the box itself, washed green where it fits and red where not (preview 54: the ghost turns with the ground as the buildings do)
+		drawBldBox(ghost);
+		ctx.globalAlpha = 0.35;
+		ctx.fillStyle = ok ? '#4ade80' : '#ef4444';
+		const half = n / 2,
+			c = (x, y, h = 0) => [SX(x, y), SY(y, h, x)],
+			H = B.h; // the box's whole outline: the roof's top edge and the two near faces
+		ctx.beginPath();
+		for (const [x, y] of [c(sp.x - half, sp.y - half, H), c(sp.x + half, sp.y - half, H), c(sp.x + half, sp.y - half, 0), c(sp.x + half, sp.y + half, 0), c(sp.x - half, sp.y + half, 0), c(sp.x - half, sp.y + half, H)]) ctx.lineTo(x, y);
+		ctx.closePath();
+		ctx.fill();
+	} else {
+		const s = quant(z * dpr),
+			c = bldSprite(ghost, s);
+		stamp(ghostTint(c, ok), SX(sp.x, sp.y), SY(sp.y, 0, sp.x), z / s);
+		flagsOn(c, SX(sp.x, sp.y), SY(sp.y, 0, sp.x), z, G.P[0].color, 0);
+	}
 	ctx.globalAlpha = 1;
 	tag(why || `${B.name} · ${costText(B.cost)}`, SX(sp.x, sp.y) - 40, SY(sp.y, 0, sp.x) - DY(n / 2, n / 2) - 8 - (BLD[kind].h + 10) * z);
 }
@@ -335,7 +324,7 @@ function miniIncoming(m, k) {
 // the small map, turned with the view (preview 50): the diamond fills its square; MINI_M maps world units to it; marks are drawn in the
 // turned frame (a mark's own shape is turned too; it is 3 px, nobody minds)
 const MINI_K = 172 / SQUARE, // the land's square fills the small map (preview 51)
-	miniMat = (m) => m.setTransform(MINI_K * TURN, MINI_K * TURN, -MINI_K * TURN, MINI_K * TURN, MINI_K * LMID, MINI_K * (LMID - 2 * MID * TURN)), // world units to the small map, through the land's frame
+	miniMat = (m) => m.setTransform(MINI_K * TC, MINI_K * TS, -MINI_K * TS, MINI_K * TC, MINI_K * (LMID - MID * (TC - TS)), MINI_K * (LMID - MID * (TC + TS))), // world units to the small map, through the land's frame
 	miniWorld = (px, py) => worldXY(px / MINI_K, py / MINI_K); // a point of the small map, in the world
 function drawMini() {
 	const m = mctx,

@@ -100,13 +100,71 @@ const BOX_LOOK = {
 		depot: 'timber', medtent: 'tent', traintent: 'tent', messtent: 'tent',
 	},
 };
-const boxed = (b) => SET.boxes !== false && BOX_LOOK.of[b.kind] && b.prog >= 1 && !BLD[b.kind].crop;
+const FLAT = { farm: 1, treefarm: 1, pasture: 1 }; // what lies on the ground: a plot, not a box (drawPlot)
+const boxed = (b) => SET.boxes !== false && !!BOX_LOOK.of[b.kind] && !FLAT[b.kind];
+const flat_ = (b) => SET.boxes !== false && !!FLAT[b.kind];
+// The plot mold (preview 54, Albert: "if the land rotated, the buildings and pastures and EVERYTHING needs to rotate with it"): a field, an
+// orchard or a pasture is drawn flat on the turned ground in world units (wmat), so it turns with the land: the soil, the rows along the
+// plot (a field's crop by the season, an orchard's young trees, a pasture's grass and its sheep), a worn edge. A plot being made shows its
+// soil alone, growing with the work.
+function drawPlot(b) {
+	const B = BLD[b.kind],
+		half = (B.fp * NAVC) / 2,
+		x0 = b.x - half,
+		y0 = b.y - half,
+		w = half * 2,
+		sn = season().name,
+		p = Math.min(1, Math.max(0.1, b.prog)),
+		spent = b.spent || (b.node && b.node.amt <= 0),
+		z = cam.z;
+	wmat();
+	ctx.fillStyle = b.kind === 'pasture' ? '#86ae5c' : '#7a5e36';
+	ctx.fillRect(x0, y0, w, w);
+	if (b.prog >= 1 && !spent) {
+		if (b.kind === 'farm') {
+			const crop = { Spring: '#8fb84a', Summer: '#e0c266', Autumn: '#d9a93e', Winter: '#a39a86' }[sn],
+				dark = { Spring: '#5f8a2e', Summer: '#b8962e', Autumn: '#a67a22', Winter: '#7a7262' }[sn],
+				rows = 7,
+				rh = w / rows;
+			for (let i = 0; i < rows; i++) {
+				ctx.fillStyle = i % 2 ? crop : dark;
+				ctx.fillRect(x0 + 1, y0 + i * rh + rh * 0.12, w - 2, rh * 0.76);
+			}
+		} else if (b.kind === 'treefarm') {
+			ctx.fillStyle = '#3f6b2a';
+			for (let j = 0; j < 3; j++)
+				for (let i = 0; i < 3; i++) {
+					ctx.beginPath();
+					ctx.arc(x0 + ((i + 0.5) * w) / 3, y0 + ((j + 0.5) * w) / 3, w / 9, 0, 7);
+					ctx.fill();
+				}
+		} else {
+			ctx.fillStyle = '#5a8a3a';
+			for (let i = 0; i < 14; i++) ctx.fillRect(x0 + ((i * 37) % w), y0 + ((i * 53) % w), 2, 3); // tufts
+			ctx.fillStyle = '#f2efe6';
+			for (let i = 0; i < (b.sheep || 0); i++) {
+				ctx.beginPath();
+				ctx.ellipse(x0 + 6 + ((i * 29) % (w - 12)), y0 + 6 + ((i * 17) % (w - 12)), 3.2, 2.2, 0, 0, 7);
+				ctx.fill();
+			}
+		}
+	}
+	if (p < 1) {
+		ctx.fillStyle = 'rgba(0,0,0,.18)';
+		ctx.fillRect(x0, y0 + w * p, w, w * (1 - p)); // the part not yet dug
+	}
+	ctx.strokeStyle = 'rgba(60,45,25,.5)';
+	ctx.lineWidth = 1 / z;
+	ctx.strokeRect(x0, y0, w, w);
+	flat();
+}
 function drawBldBox(b) {
 	const L = BOX_LOOK[BOX_LOOK.of[b.kind]],
 		B = BLD[b.kind],
 		half = (B.fp * NAVC) / 2,
-		H = B.h * 0.75, // the walls; the roof takes the rest
-		R = B.h - H,
+		up = Math.min(1, Math.max(0.15, b.prog)), // a site rises with the work, as a wall does
+		H = B.h * 0.75 * up, // the walls; the roof takes the rest
+		R = (B.h - B.h * 0.75) * up,
 		x0 = b.x - half,
 		x1 = b.x + half,
 		y0 = b.y - half,
@@ -262,6 +320,27 @@ function drawBld(b, s) {
 		B = BLD[b.kind],
 		c = bldSprite(b, s),
 		k = z / s;
+	if (flat_(b)) {
+		drawPlot(b);
+		if (b.prog < 1) {
+			bar(sx, sy - DY(B.fp * NAVC / 2, B.fp * NAVC / 2) - 4, Math.min(60 * z, B.fp * NAVC * z), b.prog, '#e6b947');
+			if (b.owner === 0 && !G.units.some((u) => u.rep === b && u.job === 'repair')) idleMark(sx, sy - 8 * z, z * 1.2);
+			return;
+		}
+	} else if (boxed(b) && b.prog < 1) {
+		// a site: the outline staked out, the box rising with the work
+		ctx.strokeStyle = '#d8c79c';
+		ctx.lineWidth = 1.5;
+		ctx.setLineDash([3, 3]);
+		wrect(b.x - (B.fp * NAVC) / 2, b.y - (B.fp * NAVC) / 2, B.fp * NAVC, B.fp * NAVC, true);
+		ctx.setLineDash([]);
+		ctx.globalAlpha = 0.85;
+		drawBldBox(b);
+		ctx.globalAlpha = 1;
+		bar(sx, sy - (B.h * Math.max(0.15, b.prog) + 6) * z, Math.min(60 * z, B.fp * NAVC * z), b.prog, '#e6b947');
+		if (b.owner === 0 && !G.units.some((u) => u.rep === b && u.job === 'repair')) idleMark(sx, sy - (B.h * Math.max(0.15, b.prog) + 10) * z, z * 1.2);
+		return;
+	}
 	if (b.prog < 1) {
 		// a building site: the outline staked out, the walls rising with the work
 		const w = B.fp * NAVC * z,
@@ -296,12 +375,13 @@ function drawBld(b, s) {
 	}
 	const fa = G.t - (b.doneT ?? -99);
 	if (boxed(b)) drawBldBox(b);
+	else if (flat_(b)); // drawn above
 	else {
 		stamp(c, sx, sy, k * popC(fa / 0.6));
 		flagsOn(c, sx, sy, z, G.P[b.owner].color, b.id);
 	}
 	if (PILE[b.kind] && friendly(0, b.owner)) pileAt(b, sx, sy, z);
-	if (fa < 8 && !still() && !boxed(b)) {
+	if (fa < 8 && !still() && !boxed(b) && !flat_(b)) {
 		ctx.globalCompositeOperation = 'lighter';
 		ctx.globalAlpha = 0.32 * (1 - fa / 8);
 		stamp(c, sx, sy, k);
@@ -422,26 +502,44 @@ function shadowPath(sx, sy, h, r, z) {
 }
 // A building's shadow is its own shape, not an oval (decision 14, Albert, Oct 31: we invented the shape, so the shadow is that fixed shape
 // thrown away from the light). A box of footprint half-side w (BLD fp) and height h casts its footprint swept by L = h cot(altitude) along the
-// light (a planar projection; Blinn 1988, from memory): a hexagon whose corners are the footprint's, each kept, moved by L, or both. Which
-// corners lead is fixed by the way the light falls, so the shape is made once for that (HEX) and every building only moves and stretches it
-// by its w and L: no hull, no sorting, no arrays per building. Same turning as the ovals, so the frame keeps one path and one fill.
+// light (a planar projection; Blinn 1988, from memory): a hexagon whose corners are the footprint's, each kept, moved by L, or both. The
+// footprint's corners on the glass are the turned square's (DX, DY: a diamond since preview 50; preview 54: the shadow was still cast from an
+// upright square, Albert's sighting). Which corners lead is fixed by the way the light falls, so the shape is made once for that (HEX) and
+// every building only moves and stretches it by its w and L: no hull, no sorting, no arrays per building. One path and one fill a frame.
+// (corners() reads the zoom, so the key carries it; the light's direction too, since a turned footprint's silhouette depends on more than its quadrant.)
 const BOX = [
 	[-1, -1],
 	[1, -1],
 	[1, 1],
 	[-1, 1],
-]; // the footprint's corners, clockwise on the glass
+]; // the footprint's corners in the world, clockwise
+const corners = () => BOX.map(([x, y]) => [DX(x, y) / cam.z, DY(x, y) / cam.z]); // on the glass, per unit of half-side and zoom
 let HEX = { k: '', pts: null };
 function hexOf(gx, gy) {
-	const k = gx + ',' + gy;
+	// gx, gy: the light's direction on the glass (its sign was enough for an upright box; a turned footprint needs the direction itself)
+	const k = gx.toFixed(3) + ',' + gy.toFixed(3) + ',' + cam.z.toFixed(2);
 	if (HEX.k === k) return HEX.pts;
-	const lead = (c) => gx * c[0] + gy * c[1], // ahead of the light (> 0: moved), behind it (< 0: kept), across it (0: both, in turn)
+	// an edge of the footprint faces the sweep when its outward normal points along it; a corner is kept where a back edge meets it, moved where
+	// a front edge does, both at the silhouette (one of each), in the order the walk round the polygon meets them
+	const C = corners(),
+		mx = C.reduce((m, c) => m + c[0], 0) / 4,
+		my = C.reduce((m, c) => m + c[1], 0) / 4,
+		front = C.map((c, i) => {
+			const d = C[(i + 1) % 4],
+				ex = d[0] - c[0],
+				ey = d[1] - c[1],
+				nx = ey,
+				ny = -ex, // one normal; made outward by the middle
+				out = (nx * (c[0] - mx) + ny * (c[1] - my)) > 0 ? [nx, ny] : [-nx, -ny];
+			return Math.round((out[0] * gx + out[1] * gy) * 1e6) > 0;
+		}),
 		pts = [];
-	BOX.forEach((c, i) => {
-		const f = lead(c);
-		if (f < 0) pts.push([c[0], c[1], 0]);
-		else if (f > 0) pts.push([c[0], c[1], 1]);
-		else if (lead(BOX[(i + 1) % 4]) > 0) pts.push([c[0], c[1], 0], [c[0], c[1], 1]);
+	C.forEach((c, i) => {
+		const before = front[(i + 3) % 4],
+			after = front[i];
+		if (before && after) pts.push([c[0], c[1], 1]);
+		else if (!before && !after) pts.push([c[0], c[1], 0]);
+		else if (after) pts.push([c[0], c[1], 0], [c[0], c[1], 1]);
 		else pts.push([c[0], c[1], 1], [c[0], c[1], 0]);
 	});
 	HEX = { k, pts };
@@ -451,12 +549,11 @@ function boxShadow(sx, sy, h, w, z) {
 	const L = SHADE.a < 0.02 ? 0 : h * SHADE.len * z,
 		vx = SHADE.x * L,
 		vy = SHADE.y * L,
-		d = w * TILT,
-		H = hexOf(Math.sign(vx), Math.sign(vy));
+		H = hexOf(SHADE.x, SHADE.y);
 	for (let i = 0; i < H.length; i++) {
 		const [cx, cy, m] = H[i],
 			x = sx + cx * w + m * vx,
-			y = sy + cy * d + m * vy;
+			y = sy + cy * w + m * vy;
 		if (i) ctx.lineTo(x, y);
 		else ctx.moveTo(x, y);
 	}

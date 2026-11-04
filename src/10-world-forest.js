@@ -28,7 +28,7 @@ function makeForest(taken) {
 		);
 	const out = [0, 1].map((ax) =>
 		taken
-			.filter((l) => l.k === 'stop' && Math.abs((ax ? l.x : l.y) - CORNER) < 6) // a keep stands up to 3.5 off the land's diagonal (KEEP_W, 01)
+			.filter((l) => l.k === 'stop' && Math.abs((ax ? l.x : l.y) - CORNER) < KEEP_OFF + 2) // a keep stands a little off the land's diagonal (KEEP_OFF, 01)
 			.reduce((a, l) => (hyp(l.x, l.y) < hyp(a.x, a.y) ? l : a)),
 	); // the stop nearest home on each middle line: a neighbour's way
 	const camp = PLACES.camp - (LMID - CORNER), // the trade lanes run in from the robbers' camp
@@ -136,7 +136,7 @@ function openWays(woods) {
 		const C = NAV.comp,
 			cut = new Set();
 		for (const w of ways) {
-			const home = near(towardMid(w.k, PLACES.start), C); // where the first villagers stand
+			const home = near(doorOf(w.k), C); // where the first villagers stand: the keep's door
 			if (near(w.g, C, home)) continue;
 			const P = wayHome(w.g, C, home);
 			for (const [o, t] of woods) if (o === w.o && P.some((q) => dist(q, t) < FOREST.cut)) cut.add(t);

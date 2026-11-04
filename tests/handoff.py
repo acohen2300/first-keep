@@ -440,7 +440,12 @@ PLANTS = [
   # Build 80 preview 53 (--only=p53): the building mold, the screen's alignment lines
   ('23-view-things.js', "mining: 'stone', smith: 'stone', house: 'plaster',", "mining: 'stone', smith: 'stone',", 'tests/map.py', 'p53: a house without a mold', 'house is not boxed'),
   ('23-view-things.js', "const boxed = (b) => SET.boxes !== false &&", "const boxed = (b) => true &&", 'tests/map.py', 'p53: the toggle off still boxes', 'toggle off'),
-  ('09-nav.js', "\t\t\tconsider(x + u, y - u, 'u');\n", '', 'tests/map.py', "p53: no snap onto a building's screen line", 'did not snap'),
+  ('09-nav.js', "\t\t\tconsider(u.x, u.y, 'u');\n", '', 'tests/map.py', "p53: no snap onto a building's screen line", 'did not snap'),
+  # Build 80 preview 54 (--only=p54): one view angle, the plots on the turned ground, the shadow from the turned footprint, saves turned
+  ('23-view-things.js', "const FLAT = { farm: 1, treefarm: 1, pasture: 1 };", "const FLAT = { treefarm: 1, pasture: 1 };", 'tests/map.py', 'p54: a field drawn as a picture, not a plot', 'not a plot'),
+  ('23-view-things.js', "const corners = () => BOX.map(([x, y]) => [DX(x, y) / cam.z, DY(x, y) / cam.z]);", "const corners = () => BOX.map(([x, y]) => [x, y * TILT]);", 'tests/moves.py', 'p54: the shadow cast from an upright square again', 'swept along the light'),
+  ('34-save.js', "\twalk(S);\n\tfor (const q of S.nodes || [])", "\tfor (const q of S.nodes || [])", 'tests/map.py', "p54: a save from another angle opens with its places unturned", 'off the land'),
+  ('34-save.js', "for (const L of S.lakes || []) if (L.w) for (const h of L.w) h[2] += h[0] * (TA - was);", "", 'tests/map.py', "p54: a save from another angle keeps its shores unturned", 'dry land'),
 ]
 
 def plant_check():

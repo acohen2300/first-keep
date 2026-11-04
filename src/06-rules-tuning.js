@@ -344,7 +344,7 @@ const EVK = Object.keys(EVENTS),
 // From the edge: camp, the robbers' camp at the end of each trade route; scout, its loop's points on the middle lines. From a Town Center,
 // toward the middle on both axes: scout, its loop's corner points.
 // start: the first villagers stand this far from their Town Center toward the middle.
-const PLACES = { stop: [490, 320], lode: 270, camp: 160, scout: { mid: 300, edge: 420, keep: 215 }, start: 40 };
+const PLACES = { stop: [490, 320], lode: 270, camp: 160, scout: { mid: 300, edge: 420, keep: 215 }, start: 15 }; // start: how far past the Town Center's footprint its first people stand, toward the middle (doorOf, 08; it was 40 from the centre, the same point at 45°)
 const cross = (d) => [
 	[LMID, LMID - d],
 	[LMID, LMID + d],

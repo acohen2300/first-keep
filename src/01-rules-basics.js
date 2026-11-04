@@ -51,21 +51,25 @@ const ZOOM_MAX = 4,
 	ZOOM_START = 1.3, // the camera's zoom when a game opens: a map label is LABEL.px there (labelK, 24-view-overlays)
 	LABEL = { px: 12, floor: 9 }, // a map label: 12 at the starting zoom, never under 9 zoomed out (Albert, Oct 31: "base 3"); what is pinned to the screen stays 12
 	TILT = 0.55, // the camera's pitch: the ground squashed to 0.55 (near AoE2's 2:1; was 0.66 to preview 49; at 0.5 two pairs of buildings read alike at half zoom)
-	TURN = Math.SQRT1_2, // the view turned 45° (Albert, Nov 4, 06:58: "take the whole map and rotate it. Like a picture"): world x runs down-right on the screen, world y down-left; the sim's square grid never knows (20-view-base, SX and SY)
+	VIEW = { angle: 15 }, // the camera's turn in degrees, the one home (Albert, Nov 4, 12:31: "Angle index: from 45 to 30"; 12:47: "30 still too much. Go to 15 or 10"; 45 from preview 50 to 53). The view turns the world +angle; the land is laid turned −angle into the world, so it stands square on the screen whatever the angle. Everything below derives from it; the sim's square grid never knows
+	TA = (VIEW.angle * Math.PI) / 180,
+	TC = Math.cos(TA),
+	TS = Math.sin(TA), // the turn's cosine and sine (20-view-base: SX, SY, wmat; the small map; the ghost's box)
+	TURN = TC + TS, // how wide a world square's diagonal reads across the screen at zoom 1 (√2 at 45°; was 1/√2, the one number of a 45° turn)
 	RIM = 640, // the scenery beyond the map's edge, in world units: sea on the near sides, cliffs and sky on the far (fills the phone's corners when the view meets an edge)
 	SIDE = 0.4;
-// the land's frame and the world's (preview 51): a land point (lx, ly) stands in the world at the centre plus (lx − LMID, ly − LMID) turned −45°,
-// so that through the turned view the land's x runs across the screen and its y down it, as the straight view had them
+// the land's frame and the world's (preview 51): a land point (lx, ly) stands in the world at the centre plus (lx − LMID, ly − LMID) turned −angle,
+// so that through the view turned +angle the land's x runs across the screen and its y down it, as the straight view had them
 const worldXY = (x, y) => {
 	const dx = x - LMID,
 		dy = y - LMID;
-	return { x: MID + (dx + dy) * TURN, y: MID + (dy - dx) * TURN };
-};
+	return { x: MID + dx * TC + dy * TS, y: MID - dx * TS + dy * TC };
+}; // turned −angle about the centre
 const landXY = (x, y) => {
 	const dx = x - MID,
 		dy = y - MID;
-	return { x: LMID + (dx - dy) * TURN, y: LMID + (dx + dy) * TURN };
-};
+	return { x: LMID + dx * TC - dy * TS, y: LMID + dx * TS + dy * TC };
+}; // and back
 const landAt = (lx, ly) => worldXY(lx, ly); // a land point as a world point, for the rules that name the land's edges and middle lines
 const inLand = (x, y, m = 0) => {
 	const l = landXY(x, y);
@@ -95,15 +99,20 @@ const REL_WORD = { war: 'Foe', peace: 'Neutral', ally: 'Friend' }; // the one ho
 // the keeps are snapped in the world (KEEP_W below) and CORNER is 753.1. Neighbours about 1,506 apart; about 327 behind each Town Center.
 const CORNER = 1065 * Math.SQRT1_2; // in the land's frame: 753.1 (was 755); a keep stands about CORNER out on both axes
 // The keeps' places (preview 51): named in the world, where each must sit on the centre of its five squares (a coordinate ending in 5)
-// while the Throne, six squares, centres on the world's middle (ending in 0); so each keep stands 1,065 from the middle along one axis and
-// 5 to the side along the other, the four turned a quarter about the Throne, all the same distance from it. The land's frame sees them
-// about 3.5 off its diagonals, which the map-maker's margins allow.
-const KEEP_W = [
-	[MID + 5, MID + 1065], // You: the bottom of the screen
-	[MID - 1065, MID + 5], // Raiders: the left
-	[MID - 5, MID - 1065], // Rivals: the top
-	[MID + 1065, MID - 5], // Fortress: the right
-];
+// while the Throne, six squares, centres on the world's middle (ending in 0); the four a quarter turn apart about the Throne, all the same
+// distance from it. The land's frame sees them a little off its diagonals (KEEP_OFF), which the map-maker's margins allow.
+const KEEP_W = (() => {
+	// You at the land's bottom-left corner (the bottom of the screen), then the others a quarter turn apart round the Throne (Raiders left, Rivals top,
+	// Fortress right): the first is the land corner turned into the world and snapped to the centre of a five-square footprint (each coordinate
+	// ending in 5), the rest are that point turned a quarter about MID, which keeps the ending (MID ends in 0). At 45° this is the old table.
+	const w = worldXY(LMID - CORNER, LMID + CORNER),
+		on5 = (v) => Math.round((v - 5) / NAVC) * NAVC + 5,
+		K = [[on5(w.x), on5(w.y)]];
+	for (let i = 1; i < 4; i++) K.push([MID - (K[i - 1][1] - MID), MID + (K[i - 1][0] - MID)]);
+	return K;
+})();
+// how far a keep stands off the land's diagonal once snapped (3.5 at 45°; more at other angles): the map-maker's margins read it
+const KEEP_OFF = Math.max(...KEEP_W.map(([x, y]) => { const l = landXY(x, y); return Math.max(Math.abs(Math.abs(l.x - LMID) - CORNER), Math.abs(Math.abs(l.y - LMID) - CORNER)); })) + 0.5;
 const PLAYERS = [
 	{ name: 'You', pers: 'human', color: '#4f93e6', keep: KEEP_W[0] },
 	{ name: 'Raiders', pers: 'aggr', color: '#de5a44', keep: KEEP_W[1] },

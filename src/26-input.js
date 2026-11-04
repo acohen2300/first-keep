@@ -350,10 +350,10 @@ function hitAt(sx, sy) {
 	for (const b of G.blds) {
 		// footprint: the ground it stands on; roof: the height drawn above it
 		const B = BLD[b.kind],
-			w = Math.max(B.fp * NAVC * z * 2 * TURN, 22),
+			w = Math.max(B.fp * NAVC * z * TURN, 22),
 			x = SX(b.x, b.y),
 			gy = SY(b.y, 0, b.x),
-			d = B.fp * NAVC * z * 2 * TURN * TILT; // the footprint's box on the turned screen (preview 50)
+			d = B.fp * NAVC * z * TURN * TILT; // the footprint's box on the turned screen (preview 50): TURN is the diagonal's width per unit
 		if ((B.trap && !trapShown(b)) || !knownB(b)) continue;
 		if (sx <= x - w / 2 - 4 || sx >= x + w / 2 + 4 || sy >= gy + d / 2 + 4) continue;
 		if (sy > gy - d / 2 - 4) {

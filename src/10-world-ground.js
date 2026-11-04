@@ -46,7 +46,7 @@ function turnLand() {
 	for (const f of G.finds) at(f);
 	for (const L of G.lakes) {
 		at(L);
-		if (L.w) for (const h of L.w) h[2] += (h[0] * Math.PI) / 4; // cos(k·a + ph) in the land's frame is cos(k·a_w + ph + k·45°) in the world's (a = a_w + 45°)
+		if (L.w) for (const h of L.w) h[2] += h[0] * TA; // cos(k·a + ph) in the land's frame is cos(k·a_w + ph + k·angle) in the world's (a = a_w + angle)
 	}
 	for (const b of G.blds) {
 		const w = worldXY(b.x, b.y),

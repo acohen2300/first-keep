@@ -594,9 +594,11 @@ function wallPlan(k) {
 		cells.push({ gx, gy, kind: 'wall', da: Math.abs(Math.atan2(Math.sin(a - base), Math.cos(a - base))) });
 	};
 	for (let i = -66; i <= 66; i++) {
+		// the squares whose middles lie on or past WALL_R (preview 54: on the arc itself, a square's middle fell up to 7 inside it and a home
+		// find's rock sat within two squares of it; the ring is sized so that never happens, 06)
 		const a = base + i * 0.019,
-			gx = Math.floor((k.x + Math.cos(a) * WALL_R) / NAVC),
-			gy = Math.floor((k.y + Math.sin(a) * WALL_R) / NAVC);
+			gx = Math.floor((k.x + Math.cos(a) * (WALL_R + NAVC / 2)) / NAVC),
+			gy = Math.floor((k.y + Math.sin(a) * (WALL_R + NAVC / 2)) / NAVC);
 		if (pc && gx !== pc.gx && gy !== pc.gy) add(gx, pc.gy); // four-connected: no gap to slip through
 		add(gx, gy);
 		pc = { gx, gy };

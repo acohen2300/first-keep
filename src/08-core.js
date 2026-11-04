@@ -88,6 +88,17 @@ const addRes = (a, c, f = 1) => {
 const sumCost = (c) => Object.values(c || {}).reduce((s, v) => s + v, 0);
 const fmt = (n) =>
 	n >= 10000 ? Math.round(n / 1000) + 'k' : n >= 1000 ? Math.floor(n / 100) / 10 + 'k' : String(Math.floor(n));
+// the door of a keep: where its first people stand, PLACES.start past the edge of its footprint toward the middle of the map, in the world
+// (preview 54: at a view angle off 45° the way to the middle crosses the footprint's corner, and a spot measured from the centre fell on it)
+const doorOf = (k) => {
+	const tx = MID - k.x,
+		ty = MID - k.y,
+		l = hyp(tx, ty) || 1,
+		ux = tx / l,
+		uy = ty / l,
+		t = (BLD.keep.fp * NAVC) / 2 / Math.max(Math.abs(ux), Math.abs(uy)) + PLACES.start;
+	return { x: k.x + ux * t, y: k.y + uy * t };
+};
 const towardMid = (e, d, c = MID) => {
 	// d toward the middle (c: the world's, or the land's while the map-maker lays it)
 	const tx = c - e.x,
