@@ -103,6 +103,8 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
 .fab{position:absolute;z-index:var(--z-float);width:var(--slot);height:var(--slot);padding:0;bottom:calc(var(--ob) + var(--gap));box-shadow:var(--shade)}
 .fab svg{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%)}
 #homeB{left:var(--gap);bottom:calc(var(--ob) + var(--gap))}
+#hideB{right:var(--gap);bottom:calc(var(--ob) + var(--gap))}#hideB.shut{bottom:var(--ob)}   /* Hide: a minus over War; folded, a plus in the corner, where the row's bottom edge was (--ob is then only the gap) */
+.cardUp .fab{visibility:hidden}   /* a card over the controller hides the floating buttons (Albert, Nov 3) */
 /* the cycle button and Emergency: a slot each, on their own rank above the row, slot 1 and slot 6 (MENU-SPEC §6; cold review of v70: Emergency
    was 44 wide a rank higher, with no word). Emergency steps aside while any card is open, where it would sit over the card's buttons */
 #perf{position:absolute;z-index:var(--z-hud);left:var(--gap);top:calc(var(--hb) + var(--gap) * 2 + var(--slot));padding:2px 6px;border-radius:var(--rad);background:color-mix(in srgb,var(--brown-1) var(--glass),transparent);color:var(--ring-w);font-size:var(--fs-s);font-variant-numeric:tabular-nums;pointer-events:none;white-space:pre}   /* the speed counter (Albert, Nov 3): on from Help, for the hour's test on a phone */
@@ -249,6 +251,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
     <div id="perf" hidden></div>
     <div id="spdPop" hidden><button data-act="spd:1"><b>×1</b></button><button data-act="spd:2"><b>×2</b></button><button data-act="spd:3"><b>×3</b></button></div>
     <button class="fab" id="homeB" data-act="home" aria-label="Back to your Town Center" hidden></button>
+    <button class="fab" id="hideB" data-act="ctlshut"></button>
 
     <div id="pickbar" hidden><div class="pbTop"><span id="pickT"></span><button data-act="unpick" id="pX" aria-label="Let go"></button></div><div class="pbRow" id="pickRow"></div></div>
     <div id="place" hidden><span id="placeT">Press where it goes</span><button data-act="placeok" id="placeOk" class="go"><b>Build</b></button><button data-act="wundo" id="placeUndo" hidden><b>Undo</b></button><button data-act="cancel"><b>Cancel</b></button></div>

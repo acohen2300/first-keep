@@ -372,15 +372,13 @@ const ACT = {
 		ctlBack();
 	},
 	mapt() {
-		const H = G.hud;
-		if (fullPage()) H.mapOn = mapShown() ? null : H.page + (H.sub || '');
-		else H.map = !H.map;
-	}, // the small map on or off: at rest for good; on a full page, for that page (it covers cells there)
+		G.hud.map = !G.hud.map;
+	}, // the small map on or off (the Map tile, at rest)
 	ctlshut() {
 		G.hud.shut = !G.hud.shut;
 		if (G.hud.shut) G.hud.aim = false;
 		fit();
-	}, // Close: the row folds to its one tile; the tile opens it again
+	}, // Hide (#hideB): the controller folds away, the button drops to the corner; again, it comes back
 	alarmpg() {
 		closeCard();
 		G.hud.page = 'war';
