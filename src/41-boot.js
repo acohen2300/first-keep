@@ -534,6 +534,7 @@ window.__fk = {
 	START_VILS,
 	START_RES,
 	HANDICAP,
+	matchLogText,
 	AB,
 	gapOnRoad,
 	chokeClaim,

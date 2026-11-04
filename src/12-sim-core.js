@@ -49,6 +49,7 @@ function step(dt) {
 	if (G.tick % 30 === 1) {
 		recount();
 		ordersTick();
+		if (YARD_ON) matchLog();
 		noticeTick();
 	}
 	if (G.tick % 30 === 2) {

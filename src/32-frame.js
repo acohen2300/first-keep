@@ -235,6 +235,8 @@ function showEnd(won, text, all) {
 	G.chronP = 0;
 	$('endX').innerHTML = crownsHTML(); // the three crowns and the overall, then the chronicle, its newest page
 	$('endNext').hidden = $('endFree').hidden = !won;
+	$('endLog').hidden = !YARD_ON; // the match log (preview 49): preview only
+	$('endLog').innerHTML = '<b>Copy match log</b><small>paste it to Claude</small>';
 	$('end').hidden = false;
 	closeCard();
 	hideQuick(); // the next game starts with nothing of this one open

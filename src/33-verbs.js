@@ -72,6 +72,9 @@ const ACT = {
 		feel('snap');
 		refresh();
 	},
+	copylog() {
+		copyLog();
+	}, // the match log to the clipboard (preview 49; 39-huddle): in ACT, so it works on the end screen, where play verbs stop
 	menu(a) {
 		const keep = G.card && G.card.type === 'menu';
 		openCard({ type: 'menu', id: a });

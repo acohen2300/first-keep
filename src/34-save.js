@@ -321,6 +321,7 @@ function saveGame(force) {
 			bnPlan: G.bnPlan,
 			bnIntent: G.bnIntent,
 			ms: G.ms || [],
+			mlog: G.mlog || null, // the match log (preview 49)
 			recruitSq: G.recruitSq,
 			form: G.form,
 			intel: G.intel,
@@ -456,6 +457,7 @@ function loadGame(S) {
 		bnPlan: S.bnPlan || BN.map(() => ({})),
 		bnIntent: S.bnIntent || BN.map(() => 0),
 		ms: S.ms || [],
+		mlog: S.mlog || null,
 		recruitSq: S.recruitSq ?? null,
 		form: S.form || BN.map(() => 0),
 		qs: { from: 'all', n: {} },

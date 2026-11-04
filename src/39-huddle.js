@@ -538,6 +538,7 @@ const YARD_LIST = [
 	['ytool:choketool', 'Choke', 'drag across a gap'],
 	['ytool:ambushtool', 'Ambush', 'tap the cover'],
 	['ytool:kidle', 'Idle soldiers', 'pick them'],
+	['copylog', 'Match log', 'copy for Claude'],
 ];
 CARDS.yard = () => {
 	title(ROW_WORD.yard, 'controls waiting for a home');
@@ -556,3 +557,72 @@ CARDS.sqsetup = () => {
 		) + `<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve.</p>`
 	);
 };
+
+// ── The match log (Albert, Nov 3, 22:34: "If I play a game can you analyze it?"; preview 49, preview only, YARD_ON). Once a second it counts
+// your Town Center idle (nothing training) and your soldiers and villagers lost; once a minute a row for every side: age, villagers (idle),
+// soldiers, what each store holds, and what was gathered that minute by resource. At the end, Copy log puts it all on the clipboard, with
+// the realm and war lines of the mail and the milestones, for Claude to read.
+function matchLog() {
+	const L = G.mlog || (G.mlog = { v: 1, rows: [], idle: 0, lost: { vil: 0, sol: 0 }, seen: null, got: null });
+	const k = keepOf(0);
+	if (k && k.prog >= 1 && !k.q.length) L.idle++;
+	const vil = unitsOf(0, 'vil').length,
+		sol = soldiersOf(0).length;
+	if (L.seen) {
+		if (vil < L.seen.vil) L.lost.vil += L.seen.vil - vil;
+		if (sol < L.seen.sol) L.lost.sol += L.seen.sol - sol;
+	}
+	L.seen = { vil, sol };
+	if (Math.floor(G.t) % 60 > 1 && L.rows.length) return;
+	const m = Math.round(G.t / 60);
+	if (L.rows.length && L.rows[L.rows.length - 1].m === m) return;
+	const got = G.P.slice(0, 4).map((p) => ({ ...(p.gotBy || {}), all: Math.round(p.gathered || 0) }));
+	L.rows.push({
+		m,
+		tcIdle: L.idle,
+		lost: { ...L.lost },
+		// a side a line, short so a long game stays small: [age, villagers, idle, soldiers, food, wood, stone, gold, iron, gathered this minute], or 0 once it fell
+		s: G.P.slice(0, 4).map((p, i) =>
+			p.alive
+				? [p.age, unitsOf(i, 'vil').length, unitsOf(i, 'vil').filter(freeVil).length, soldiersOf(i).length, ...['f', 'w', 's', 'g', 'i'].map((r) => Math.round(p.res[r] || 0)), got[i].all - ((L.got && L.got[i]) || 0)]
+				: 0,
+		),
+	});
+	L.got = got.map((g) => g.all);
+	L.idle = 0;
+	L.lost = { vil: 0, sol: 0 };
+}
+function matchLogText() {
+	const L = G.mlog || { rows: [] },
+		mail = (G.mail || []).filter((x) => x.grp === 'war' || x.grp === 'realm' || x.grp === 'home').map((x) => `${clock(x.t)} ${x.text}${x.n > 1 ? ' ×' + x.n : ''}`);
+	return JSON.stringify({ build: BUILD, seed: G.seed, sides: G.P.slice(0, 4).map((p) => p.name), cols: 'age vil idle sol f w s g i got', tcIdle: 'seconds your Town Center trained nothing, that minute', lost: 'your villagers and soldiers lost, that minute', civ: G.P[0].civ, diff: G.diff, end: clock(G.t), over: G.over || null, rows: L.rows, ms: G.ms || [], mail });
+}
+function copyLog() {
+	const t = matchLogText(),
+		done = () => {
+			say('Match log copied: paste it to Claude.', 'good', TOAST.short);
+			const e = $('endLog');
+			if (e && !e.hidden) e.innerHTML = '<b>Copied</b><small>paste it to Claude</small>'; // the end screen covers the toast: the button says so itself
+		};
+	try {
+		navigator.clipboard.writeText(t).then(done, () => fallbackCopy(t, done));
+	} catch (e) {
+		fallbackCopy(t, done);
+	}
+}
+function fallbackCopy(t, done) {
+	const a = document.createElement('textarea');
+	a.value = t;
+	a.setAttribute('readonly', '');
+	a.style.cssText = 'position:fixed;left:-9999px;top:0';
+	document.body.appendChild(a);
+	a.select();
+	a.setSelectionRange(0, t.length);
+	try {
+		document.execCommand('copy');
+		done();
+	} catch (e) {
+		say('Could not copy the log.', '', TOAST.short);
+	}
+	a.remove();
+}

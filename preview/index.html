@@ -268,7 +268,7 @@ button small{font-size:var(--fs-s);color:var(--white-dim);font-variant-numeric:t
       <h2 id="endT">Victory</h2>
       <p id="endP"></p>
       <div id="endX"></div>
-      <div id="endActs"><button data-act="next" id="endNext" class="go"><b>Add another conquest</b><small>new map · keeps your age and research</small></button><button data-act="free" id="endFree"><b>Continue as free play</b><small>no clock, no victory</small></button><button data-act="again"><b>New game</b></button></div>
+      <div id="endActs"><button data-act="next" id="endNext" class="go"><b>Add another conquest</b><small>new map · keeps your age and research</small></button><button data-act="free" id="endFree"><b>Continue as free play</b><small>no clock, no victory</small></button><button data-act="copylog" id="endLog" hidden><b>Copy match log</b><small>paste it to Claude</small></button><button data-act="again"><b>New game</b></button></div>
     </div>
   </div>
 
@@ -11114,6 +11114,7 @@ function step(dt) {
 	if (G.tick % 30 === 1) {
 		recount();
 		ordersTick();
+		if (YARD_ON) matchLog();
 		noticeTick();
 	}
 	if (G.tick % 30 === 2) {
@@ -26494,6 +26495,8 @@ function showEnd(won, text, all) {
 	G.chronP = 0;
 	$('endX').innerHTML = crownsHTML(); // the three crowns and the overall, then the chronicle, its newest page
 	$('endNext').hidden = $('endFree').hidden = !won;
+	$('endLog').hidden = !YARD_ON; // the match log (preview 49): preview only
+	$('endLog').innerHTML = '<b>Copy match log</b><small>paste it to Claude</small>';
 	$('end').hidden = false;
 	closeCard();
 	hideQuick(); // the next game starts with nothing of this one open
@@ -27041,6 +27044,9 @@ const ACT = {
 		feel('snap');
 		refresh();
 	},
+	copylog() {
+		copyLog();
+	}, // the match log to the clipboard (preview 49; 39-huddle): in ACT, so it works on the end screen, where play verbs stop
 	menu(a) {
 		const keep = G.card && G.card.type === 'menu';
 		openCard({ type: 'menu', id: a });
@@ -28416,6 +28422,7 @@ function saveGame(force) {
 			bnPlan: G.bnPlan,
 			bnIntent: G.bnIntent,
 			ms: G.ms || [],
+			mlog: G.mlog || null, // the match log (preview 49)
 			recruitSq: G.recruitSq,
 			form: G.form,
 			intel: G.intel,
@@ -28551,6 +28558,7 @@ function loadGame(S) {
 		bnPlan: S.bnPlan || BN.map(() => ({})),
 		bnIntent: S.bnIntent || BN.map(() => 0),
 		ms: S.ms || [],
+		mlog: S.mlog || null,
 		recruitSq: S.recruitSq ?? null,
 		form: S.form || BN.map(() => 0),
 		qs: { from: 'all', n: {} },
@@ -32292,6 +32300,7 @@ const YARD_LIST = [
 	['ytool:choketool', 'Choke', 'drag across a gap'],
 	['ytool:ambushtool', 'Ambush', 'tap the cover'],
 	['ytool:kidle', 'Idle soldiers', 'pick them'],
+	['copylog', 'Match log', 'copy for Claude'],
 ];
 CARDS.yard = () => {
 	title(ROW_WORD.yard, 'controls waiting for a home');
@@ -32310,6 +32319,75 @@ CARDS.sqsetup = () => {
 		) + `<p>New soldiers fill each squad up to what you set on its card; the rest are the reserve.</p>`
 	);
 };
+
+// ── The match log (Albert, Nov 3, 22:34: "If I play a game can you analyze it?"; preview 49, preview only, YARD_ON). Once a second it counts
+// your Town Center idle (nothing training) and your soldiers and villagers lost; once a minute a row for every side: age, villagers (idle),
+// soldiers, what each store holds, and what was gathered that minute by resource. At the end, Copy log puts it all on the clipboard, with
+// the realm and war lines of the mail and the milestones, for Claude to read.
+function matchLog() {
+	const L = G.mlog || (G.mlog = { v: 1, rows: [], idle: 0, lost: { vil: 0, sol: 0 }, seen: null, got: null });
+	const k = keepOf(0);
+	if (k && k.prog >= 1 && !k.q.length) L.idle++;
+	const vil = unitsOf(0, 'vil').length,
+		sol = soldiersOf(0).length;
+	if (L.seen) {
+		if (vil < L.seen.vil) L.lost.vil += L.seen.vil - vil;
+		if (sol < L.seen.sol) L.lost.sol += L.seen.sol - sol;
+	}
+	L.seen = { vil, sol };
+	if (Math.floor(G.t) % 60 > 1 && L.rows.length) return;
+	const m = Math.round(G.t / 60);
+	if (L.rows.length && L.rows[L.rows.length - 1].m === m) return;
+	const got = G.P.slice(0, 4).map((p) => ({ ...(p.gotBy || {}), all: Math.round(p.gathered || 0) }));
+	L.rows.push({
+		m,
+		tcIdle: L.idle,
+		lost: { ...L.lost },
+		// a side a line, short so a long game stays small: [age, villagers, idle, soldiers, food, wood, stone, gold, iron, gathered this minute], or 0 once it fell
+		s: G.P.slice(0, 4).map((p, i) =>
+			p.alive
+				? [p.age, unitsOf(i, 'vil').length, unitsOf(i, 'vil').filter(freeVil).length, soldiersOf(i).length, ...['f', 'w', 's', 'g', 'i'].map((r) => Math.round(p.res[r] || 0)), got[i].all - ((L.got && L.got[i]) || 0)]
+				: 0,
+		),
+	});
+	L.got = got.map((g) => g.all);
+	L.idle = 0;
+	L.lost = { vil: 0, sol: 0 };
+}
+function matchLogText() {
+	const L = G.mlog || { rows: [] },
+		mail = (G.mail || []).filter((x) => x.grp === 'war' || x.grp === 'realm' || x.grp === 'home').map((x) => `${clock(x.t)} ${x.text}${x.n > 1 ? ' ×' + x.n : ''}`);
+	return JSON.stringify({ build: BUILD, seed: G.seed, sides: G.P.slice(0, 4).map((p) => p.name), cols: 'age vil idle sol f w s g i got', tcIdle: 'seconds your Town Center trained nothing, that minute', lost: 'your villagers and soldiers lost, that minute', civ: G.P[0].civ, diff: G.diff, end: clock(G.t), over: G.over || null, rows: L.rows, ms: G.ms || [], mail });
+}
+function copyLog() {
+	const t = matchLogText(),
+		done = () => {
+			say('Match log copied: paste it to Claude.', 'good', TOAST.short);
+			const e = $('endLog');
+			if (e && !e.hidden) e.innerHTML = '<b>Copied</b><small>paste it to Claude</small>'; // the end screen covers the toast: the button says so itself
+		};
+	try {
+		navigator.clipboard.writeText(t).then(done, () => fallbackCopy(t, done));
+	} catch (e) {
+		fallbackCopy(t, done);
+	}
+}
+function fallbackCopy(t, done) {
+	const a = document.createElement('textarea');
+	a.value = t;
+	a.setAttribute('readonly', '');
+	a.style.cssText = 'position:fixed;left:-9999px;top:0';
+	document.body.appendChild(a);
+	a.select();
+	a.setSelectionRange(0, t.length);
+	try {
+		document.execCommand('copy');
+		done();
+	} catch (e) {
+		say('Could not copy the log.', '', TOAST.short);
+	}
+	a.remove();
+}
 // ═════ 40-emergency.js: Emergency: Stop, Town square, All hands, Shelter ═════
 // Four orders (MENU-SPEC §8, picture Easy Cards). At the first of them the game notes the picture Stop goes back to: every villager's work
 // and spot, and the squads' tempers. Town square: everyone, villagers and soldiers, gathers round the Town Center, each on its own side of
@@ -33012,6 +33090,7 @@ window.__fk = {
 	START_VILS,
 	START_RES,
 	HANDICAP,
+	matchLogText,
 	AB,
 	gapOnRoad,
 	chokeClaim,
