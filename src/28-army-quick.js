@@ -106,30 +106,105 @@ function guardRow(t, id) {
 		) + btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis'),
 	);
 }
-// ── The quick action (Albert, Nov 3: "a tap on the ground like a right click"): with units picked, a tap is their order (26-input, order);
-// with nothing picked, a tap on open ground puts two chips there, the sword and ✕. The sword sends every soldier to the spot; ✕, a pan, or a
-// tap anywhere else closes them (that tap does nothing more). With no soldiers the sword is dim and says so. G.qa: the spot and the finger.
-function showQuick(sx, sy, x, y) {
+// ── The quick action (Albert, Nov 3, "yes yes": a tap on the ground or on a foe is a right click): with units picked, a tap is their order (26-input, order);
+// with nothing picked, a tap puts ONE joined block of four cells at the finger (2 columns of the controller wide, 2 ranks tall, one outline, short
+// dividers like the top bar's). Open ground: Sword · Close / Build · Rally. A foe: Sword · Close / Squad · More. Sword opens the share
+// (All · 1/2 · 1/4 · More): the third tap sends that share of the nearest idle soldiers, at once, and the bullseye shows on the spot a second.
+// A pan, a pinch, Close or a tap anywhere else closes it (that tap does nothing more). G.qa: { x, y, step, h }; step: 'top' | 'share' | 'squads'.
+const QUICK_FLASH = 1000; // ms the bullseye shows after a share is sent
+const quickCells = () => {
+	const Q = G.qa,
+		idle = free().length,
+		cell = (a, icon, word, cls, n) => pic('qa:' + a, icon, word, cls, n);
+	if (Q.step === 'share')
+		return QUICK_WORD.share.map((w, i) => cell('s' + i, ICON.sword, w, '', shareN(idle, i))).join('') + cell('more', ICON.more, QUICK_WORD.more, '');
+	if (Q.step === 'squads')
+		return BN.map((n, i) => cell('q' + i, ICON.squad, n, sqFree(i).length ? '' : 'dis', sqFree(i).length)).join('') + cell('close', ICON.close, QUICK_WORD.close, '');
+	return (
+		cell('sword', ICON.sword, QUICK_WORD.sword, idle ? '' : 'dis') +
+		cell('close', ICON.close, QUICK_WORD.close, '') +
+		(Q.h
+			? cell('squad', ICON.squad, ROW_WORD.squad, hasCmd() ? '' : 'dis') + cell('more', ICON.more, QUICK_WORD.more, '')
+			: cell('build', ICON.hammer, ROW_WORD.build, '') + cell('rally', ICON.flag, ROW_WORD.rally, ''))
+	);
+};
+// the block at the finger: its corner cell under it, kept on the screen, below the top bar and above the controller
+function showQuick(sx, sy, x, y, h) {
 	const el = $('qa'),
 		r = $('stage').getBoundingClientRect(),
-		css = getComputedStyle(el),
-		gap = parseFloat(css.getPropertyValue('--gap')),
-		s = parseFloat(css.getPropertyValue('--slot')),
-		left = sx > r.width / 2, // the ✕ opens toward the middle
+		gap = parseFloat(getComputedStyle(el).getPropertyValue('--gap')),
+		col = (r.width - 30) / 7, // a controller column: (screen - 12 - 18) / 7
+		w = col * 2,
 		up = $('hud').getBoundingClientRect().bottom - r.top + gap,
-		down = $('orders').getBoundingClientRect().top - r.top - gap - s;
-	G.qa = { x, y };
+		down = $('orders').getBoundingClientRect().top - r.top - gap - 88;
+	G.qa = { x, y, step: 'top', h: h || null };
 	el.hidden = false;
-	el.classList.toggle('left', left);
-	patchHTML(el, sym('qsword', ICON.sword, sendable().length ? 'go' : 'dis', 'Send every soldier here') + sym('qclose', ICON.close, '', 'Close'));
-	const w = el.offsetWidth;
-	el.style.left = clamp(left ? sx + s / 2 - w : sx - s / 2, gap, r.width - w - gap) + 'px';
-	el.style.top = clamp(sy - s / 2, up, down) + 'px';
+	el.style.setProperty('--col', col + 'px');
+	patchHTML(el, quickCells());
+	el.style.left = clamp(sx - col / 2, gap, r.width - w - gap) + 'px';
+	el.style.top = clamp(sy - 22, up, down) + 'px';
 	feel('tick');
 }
 function hideQuick() {
 	$('qa').hidden = true;
 	G.qa = null;
+}
+// a cell was tapped (33-verbs qa)
+function quickDo(a) {
+	const Q = G.qa;
+	if (!Q) return;
+	const step = (s) => {
+		Q.step = s;
+		patchHTML($('qa'), quickCells());
+		feel('tick');
+	};
+	if (a === 'close') return hideQuick();
+	if (a === 'sword') return Q.h ? quickSend(free(), Q.h) : free().length ? step('share') : (hideQuick(), say(freeWhy(), '', TOAST.short)); // a foe: attack now; the ground: the share
+	if (a === 'squad') return hasCmd() ? step('squads') : (hideQuick(), say('Squads come with Battalions.', '', TOAST.short));
+	if (a === 'more') {
+		const h = Q.h;
+		hideQuick();
+		if (!h) return say(QUICK_WORD.later, '', TOAST.short); // the spot's larger menu: Albert will design it
+		setPick([]);
+		return openCard(cardFor(h));
+	}
+	if (a === 'build') {
+		const at = { x: Q.x, y: Q.y };
+		hideQuick();
+		return openCard({ type: 'menu', id: G.lastMenu || 'land', at }); // startPlace sets the ghost on that spot
+	}
+	if (a === 'rally') {
+		hideQuick();
+		G.hud.h = { t: 'ground', e: { x: Q.x, y: Q.y } };
+		return setRally();
+	}
+	if (a[0] === 'q') return quickSend(sqFree(Number(a[1])), Q.h); // a squad attacks the foe
+	const U = nearestTo(free(), Q); // s0 s1 s2: a share of the idle soldiers, the nearest, goes to the spot
+	quickSend(U.slice(0, shareN(U.length, Number(a[1]))), { t: 'ground', e: { x: Q.x, y: Q.y } });
+}
+// send S at once to h (the spot or the foe); the bullseye shows there a second
+function quickSend(S, h) {
+	hideQuick();
+	if (!S.length) return say(freeWhy(), '', TOAST.short);
+	order(S, h);
+	feel('thock');
+	G.qFlash = { h: { t: 'ground', e: { x: h.e.x, y: h.e.y } }, until: performance.now() + QUICK_FLASH };
+}
+// the bullseye (the Aim crosshair, drawReticle) on the spot just sent to: drawn from the frame (21-view-frame)
+function drawQuickFlash() {
+	const F = G.qFlash,
+		H = G.hud;
+	if (!F) return;
+	if (performance.now() > F.until) {
+		G.qFlash = null;
+		return;
+	}
+	const was = { aim: H.aim, h: H.h, firedT: H.firedT };
+	H.aim = true;
+	H.h = F.h;
+	H.firedT = performance.now(); // green: fired
+	drawReticle();
+	Object.assign(H, was);
 }
 // ── The share (Albert, Nov 3, 10:06: the tap cycle, the slider cut): a tap on a kind in War · Kinds picks all of it; tapping it again picks
 // half, then a quarter, then all again; its count shows on the tile. The ones that go are those nearest the target, chosen when the map is
@@ -156,25 +231,15 @@ const shareOn = () => {
 	const P = G.pick.filter((k) => k.t === 'unit');
 	return P.length === Sh.n && P.every((k) => Sh.ids.includes(k.id));
 };
+const nearestTo = (U, p) => U.slice().sort((a, b) => hyp(a.x - p.x, a.y - p.y) - hyp(b.x - p.x, b.y - p.y)); // the soldiers nearest a spot, first
 // a tap on the map with the share picked: the n of the kind nearest that spot go, the rest stay as they are
 function shareFor(h) {
 	if (!shareOn()) return null;
-	const p = h.e,
-		U = G.share.ids.map((id) => byId(G.units, id)).filter((u) => u && u.hp > 0);
-	U.sort((a, b) => hyp(a.x - p.x, a.y - p.y) - hyp(b.x - p.x, b.y - p.y));
-	const go = U.slice(0, G.share.n);
+	const U = nearestTo(G.share.ids.map((id) => byId(G.units, id)).filter((u) => u && u.hp > 0), h.e),
+		go = U.slice(0, G.share.n);
 	setPick(go.map((u) => ({ t: 'unit', id: u.id })));
 	G.share.ids = go.map((u) => u.id).concat(G.share.ids.filter((id) => !go.some((u) => u.id === id)));
 	return go;
-}
-function quickGo() {
-	const Q = G.qa,
-		S = sendable();
-	hideQuick();
-	if (!Q) return;
-	if (!S.length) return say(HOLD_WORD.none, '', TOAST.short);
-	order(S, { t: 'ground', e: { x: Q.x, y: Q.y } });
-	feel('thock');
 }
 // ── The War Director (06-rules-tuning, DIRECT): a hold on a kind in War · Kinds is its drill (a tap picks the kind, 33-verbs kpick). Every
 // soldier of that kind that can be sent goes at once; the crosshair (G.hud.h), or the camera's middle, is where. Each returns what was said.

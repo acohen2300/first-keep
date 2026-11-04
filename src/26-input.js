@@ -84,7 +84,7 @@ cv.addEventListener('pointerdown', (e) => {
 		dropDrag();
 		const [a, b] = [...ptrs.values()];
 		pinch = { d: dist(a, b) || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
-		if (G.qa) hideQuick(); // a pinch moves the map under the chips
+		if (G.qa) hideQuick(); // a pinch moves the map under the block
 		return;
 	}
 	if (G.place && lineKind(G.place.kind)) {
@@ -196,7 +196,7 @@ cv.addEventListener('pointermove', (e) => {
 		dy = e.clientY - drag.y;
 	if (!drag.moved && hyp(dx, dy) > 8) {
 		drag.moved = true;
-		if (G.qa) hideQuick(); // the map moved under the chips: they close
+		if (G.qa) hideQuick(); // the map moved under the block: they close
 		holdStop();
 	}
 	if (drag.moved) {
@@ -379,6 +379,9 @@ function hitAt(sx, sy) {
 	if (nd) return { t: 'node', e: nd };
 	return { t: 'ground', e: toWorld(sx, sy) };
 }
+// a foe to attack (Albert, Nov 3): a rival's unit or building you are at war with, a wild beast, or a find with guards
+const isEnemy = (h) =>
+	h.t === 'find' ? !!FINDS[h.e.kind].guard && !h.e.done : (h.t === 'unit' || h.t === 'bld') && h.e.owner !== 0 && isFoe(0, h.e);
 const cardFor = (h) =>
 	h.t === 'bld'
 		? { type: 'bld', id: h.e.id }
@@ -399,7 +402,7 @@ function tapAt(sx, sy) {
 		return;
 	}
 	if (G.hud.aim) return aimAt(sx, sy); // Aim: the next tap is the target
-	if (G.qa) return hideQuick(); // the sword and ✕ are up: a tap anywhere else only closes them (28-army-quick)
+	if (G.qa) return hideQuick(); // the block is up: a tap anywhere else only closes it (28-army-quick)
 	const h = hitAt(sx, sy),
 		key = h.t === 'ground' ? 'ground' : h.t + h.e.id,
 		now = performance.now(),
@@ -430,7 +433,11 @@ function tapAt(sx, sy) {
 		} // the ring of a group on the march: tap it to pick the group
 		showQuick(sx, sy, h.e.x, h.e.y);
 		return;
-	} // nothing picked: the sword and ✕ (Albert, Nov 3: a tap is a right click)
+	} // nothing picked: the joined block (Albert, Nov 3: a tap is a right click)
+	if (isEnemy(h)) {
+		showQuick(sx, sy, h.e.x, h.e.y, h); // a foe: the same block, Sword · Close / Squad · More
+		return;
+	}
 	if (
 		h.t === 'bld' &&
 		h.e.owner === 0 &&
@@ -627,11 +634,12 @@ function startPlace(kind) {
 		sfx('err');
 		return;
 	}
+	const spot = G.card && G.card.type === 'menu' && G.card.at; // the Build card opened from a quick action's spot (28-army-quick)
 	closeCard();
 	setPick([]);
 	G.place = { kind, at: null, pts: [], cells: null };
-	// start the ghost in the middle of the screen, snapped beside something of yours if it can be
-	const w = toWorld(cw / 2, ch / 2);
+	// start the ghost on that spot, else in the middle of the screen, snapped beside something of yours if it can be
+	const w = spot || toWorld(cw / 2, ch / 2);
 	if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200); // the middle of the screen
 	ui(true);
 }

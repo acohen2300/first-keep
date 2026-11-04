@@ -794,8 +794,9 @@ const EV_TEXT = {
 };
 // The row's words (MENU-SPEC §6): the word under each picture icon that is not a name from a table (RESOURCES, BN, CLS) or a pace (paceWord),
 // and the cycle button's page names. The gate measures every word a slot can show in its slot at 375 pt.
-const HOLD_WORD = { none: 'No soldiers yet' }; // the sword with nobody to send (28-army-quick)
 const HIDE_WORD = { hide: 'Hide the controls', show: 'Open the controls' }; // the Hide button's label unfolded and folded (Albert, Nov 3); not a slot word
+// the quick action's block (28-army-quick; Build, Rally and Squad are ROW_WORD's): the sword, Close, the share a tap sends, More
+const QUICK_WORD = { sword: 'Sword', close: 'Close', share: ['All', '1/2', '1/4'], more: 'More', later: 'More comes later.' };
 const ROW_WORD = {
 	jobs: 'Jobs',
 	war: 'War',
