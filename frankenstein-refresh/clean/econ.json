@@ -454,12 +454,12 @@
    "F14: econ.js tick: every find's crowd (wk) recounted each tick (guarded finds wait for M-hazards)"
   ],
   "insulate": [
-   "bring",
-   "cold and wet, layers in series (QAP)"
+   "in v100",
+   "F17: Oiled cloaks' share on the storm's toll, -0.5 (insulate(1)), added by QCA (O83)"
   ],
   "sideSpd": [
-   "bring",
-   "the season and weather slow a side's march, less with gear (QAP); v100 has mud and snow (QN)"
+   "in v100",
+   "F17: index.html floor 5, pace(u): the weather's term (a snow storm, Mid's blizzard, D224 storm less Oiled cloaks); the season's own speeds left out (F16)"
   ],
   "step": [
    "in v100",

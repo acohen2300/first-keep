@@ -515,7 +515,50 @@ async def ai(b):   # the computer's army building, on a page of its own on the s
     pg, errs = await fresh(b)
     got = await pg.evaluate("(() => { FK.reset(); for (let i = 0; i < 6000; i++) FK.sim(0.1); const first = FK.D.ai.raise[0].code; return [FK.seed(), FK.things().some((t) => t.side === FK.D.players[1] && t.code === first)]; })()")
     ok('t-ai', got[1] and not errs, [got, errs[:2]]); await pg.close()
-PAGED = {'t-food': food, 't-ai': ai, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+# The pace (F17, QCB): five kinds of v100 walker and a wolf, each under dry ground, mud, snow, ice just under and just over freezing, a snow storm and all at once, plain, loaded and sick,
+# with no research, Roads, Field drains, Snow clearing + Oiled cloaks + Forced marches, Crampons, and Roads with Field drains: each one's pace over its walk and its chance of a slip
+# are Mid's frozen paceOf (its season at rest: the season's own speeds are out) and slipChance with the shares added (Albert, Nov 5 11:40), and the two drains stacked are not Mid's
+# compounded; the ground ice of a winter and a summer is Mid's frozen groundTick's, fed the same air and wetness; and on the page a walker in mud steps at its pace and one on ice slips and stands
+PKINDS = [('UV', 'vil', 0), ('UM1', 'spear', 0), ('UM2', 'archer', 0), ('UM3', 'cata', 0), ('UM4', 'ram', 0), ('MW4', 'wolf', -1)]
+PCLIMS = [dict(mud=0, snow=0, ice=0, T=10, storm=0), dict(mud=0.6, snow=0, ice=0, T=10, storm=0), dict(mud=0, snow=0.7, ice=0, T=-2, storm=0), dict(mud=0, snow=0, ice=0.8, T=-5, storm=0),
+          dict(mud=0, snow=0, ice=0.5, T=1, storm=0), dict(mud=0, snow=0, ice=0, T=-4, storm=1), dict(mud=0.4, snow=0.3, ice=0.6, T=-3, storm=1)]
+PSTATES = [dict(load=0, sick=0), dict(load=5, sick=0), dict(load=0, sick=1)]
+PSETS = [[], ['roads'], ['drainage'], ['snowclear', 'waterproof', 'marching'], ['crampons'], ['roads', 'drainage']]
+PACE = """(() => { const D = FK.D, K = FK.K, TK = Object.fromEntries(Object.entries(BOOKS.tech).map(([c, e]) => [e.key, c])), out = [];
+  for (const set of SETS) { FK.reset(); for (const k of set) FK.learn(0, TK[k]); const hk = FK.tileAt(FK.seatOf(0).bx, FK.seatOf(0).by); let k0 = -1;
+    for (let d = 3; k0 < 0 && d < 60; d++) for (const q of [hk + d, hk - d, hk + d * FK.N, hk - d * FK.N]) if (k0 < 0 && FK.walkable(q) && !FK.MARSH[q]) k0 = q;
+    for (const [code, , side] of KINDS) { const u = FK.spawn(code, side, k0, FK.rng);
+      for (const C of CLIMS) for (const st of STATES) { if (st.load && !FK.has(u, 'Gather')) continue; Object.assign(K, { wet: C.mud, snow: C.snow * 5, gfd: C.ice * C.ice * D.groundIce.fdd, temp: C.T, snowing: C.storm, storm: C.storm }); u.load = st.load; u.sick = st.sick;
+        out.push([FK.pace(u) / FK.ref(FK.SH[code].pace), side < 0 ? null : FK.slips(FK.footing(u))]); } } }
+  FK.reset(); const rec = [], share = () => Math.sqrt(K.gfd / D.groundIce.fdd); K.t = D.season * 3 + 5; K.wet = 1;
+  for (let i = 0; i < 1800; i++) { if (i === 900) K.t = D.season + 10; FK.sim(0.1); rec.push([K.temp, K.wet, share()]); }
+  FK.reset(); const u = ECON.villagersOf(0)[0], far = [6, -6, 6 * FK.N, -6 * FK.N].map((d) => u.k + d).find(FK.walkable); let told = 0, stuck = 0, still = 0; FK.on('event', (e) => { told += e === 'slip'; });
+  Object.assign(K, { wet: 0.7, snow: 0, gfd: 0, temp: 5, snowing: 0, storm: 0 }); u.load = 0; FK.go(u, far); FK.step(0.1); const mud = [u.mps, FK.pace(u), FK.ref(FK.SH[u.code].pace)];
+  Object.assign(K, { wet: 0, gfd: D.groundIce.fdd, temp: -5 }); for (let i = 0; i < 100; i++) { K.t += 0.1; const s = u.stuck > K.t; FK.step(0.1); if (s) { stuck++; still += u.mps === 0; } if (!u.path) FK.go(u, far); }
+  return { cases: out, rec, mud, stuck, still, told }; })()"""
+MIDPACE = r"""const fx = cut(core, 'function fxList', '// Two words'), add = fx.replace('if (f.m) m *= f.m;', 'if (f.m) m += f.m - 1;');
+const run = (law) => box([basics, units, blds, tech, tuning, law, cut(core, 'const clamp', 'const hyp'), cut(core, 'const baseKind', '\n'), cut(core, 'const unitKeys', 'const dmgOf'), cut(nav, 'const paceOf', '// One home'), cut(sim, 'const insulate', 'function step'),
+  cut(events, 'const precip', '\n'), cut(events, 'const groundNeed', '// fire against'), cut(events, 'function groundTick', '// Traffic'),
+  `const standing = () => false, EVM = { spd: 1 }, shapeOf = () => ({}), season = () => ({ name: 'Summer', spd: 1 }), hz = () => false, mudAt = () => G.clim.mud, relax = (x) => x;
+  const G = { t: 0, fxv: 0, wx: 'clear', clim: {}, P: [{ techs: new Set() }], blds: [] }; var OUT = { cases: [], ice: [] };
+  for (const set of RUN.sets) { G.P[0] = { techs: new Set(set) }; G.fxv++;
+    for (const [, kind, side] of RUN.kinds) for (const C of RUN.clims) for (const st of RUN.states) { if (st.load && kind !== 'vil') continue; G.clim = { mud: C.mud, snow: C.snow, ice: C.ice, T: C.T }; G.wx = C.storm ? 'blizzard' : 'clear';
+      const o = side < 0 ? WILD : 0, u = { owner: o, kind, x: 0, y: 0, carry: st.load, sick: st.sick }, keys = unitKeys(kind);
+      OUT.cases.push([paceOf(u, sideSpd(o)) / UNIT[kind].spd, o === WILD ? null : slipChance(u, groundNeed(keys), studded(o, keys))]); } }
+  const c = { W: 0, snow: 0, ice: 0, fdd: 0 }; for (const [T, W] of RUN.rec) { c.T = T; c.W = W; groundTick(c, 'clear', 0.1); OUT.ice.push(c.ice); }`]);
+return { added: run(add), compounded: run(fx) };"""
+async def pace(b):   # same walkers, same ground and weather, same pace and slips as Mid's frozen code with its shares added; ground ice as Mid's; a walk in mud and a slip on ice on the page
+    pg, errs = await fresh(b)
+    v = await pg.evaluate(PACE.replace('SETS', json.dumps(PSETS)).replace('KINDS', json.dumps(PKINDS)).replace('CLIMS', json.dumps(PCLIMS)).replace('STATES', json.dumps(PSTATES))); await pg.close()
+    mid, err = frozen({'basics': '01-rules-basics', 'units': '02-rules-units', 'blds': '03-rules-buildings', 'tech': '04-rules-tech', 'tuning': '06-rules-tuning', 'core': '08-core', 'nav': '09-nav', 'sim': '12-sim-core', 'events': '37-events'},
+                      MIDPACE, {'sets': PSETS, 'kinds': PKINDS, 'clims': PCLIMS, 'states': PSTATES, 'rec': [r[:2] for r in v['rec']]}); mid = mid or {}
+    add, comp = mid.get('added', {}), mid.get('compounded', {}); n = len(v['cases']) // len(PSETS); last = slice(n * (len(PSETS) - 1), None)
+    ice = [r[2] for r in v['rec']]
+    got = [bool(add) and close(v['cases'], add['cases']), bool(comp) and not close(v['cases'][last], comp['cases'][last]) and close(v['cases'][:n], comp['cases'][:n]),
+           bool(add) and close(ice, add['ice']) and max(ice[:900]) > 0.2 and ice[-1] < max(ice), len({round(c[0], 6) for c in v['cases']}) > 20,
+           close(v['mud'][0], v['mud'][1]) and v['mud'][1] < v['mud'][2], v['stuck'] > 0 and v['still'] == v['stuck'] and v['told'] == 1, not errs]
+    ok('t-pace', all(got), [got, v['mud'], v['stuck'], v['still'], v['told'], errs[:2], err[-400:]])
+PAGED = {'t-pace': pace, 't-food': food, 't-ai': ai, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

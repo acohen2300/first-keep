@@ -91,7 +91,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E85 | index.html#floor-5-movables | the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book (PN1 tool), the one home econ.js reads |
 | E86 | index.html#floor-5-movables | walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step past the angle of repose is not |
 | E87 | index.html#floor-5-movables | inland water bearing ice (QQ): walked as if flat |
-| E88 | index.html#floor-5-movables | QN: mud and snow cost a walker |
+| E88 | index.html#floor-5-movables | the pace's books (QCB): what slows a walker besides the ground (D224), the grip a step needs (G9), slipping (G10); the player's side, told when its people slip |
 | E89 | index.html#floor-5-movables | QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile will do; returns the tiles to walk, or null |
 | E90 | index.html#floor-5-movables | most: the tiles it may open before giving up |
 | E91 | index.html#floor-5-movables | no cutting a corner |
@@ -103,7 +103,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E97 | index.html#floor-5-movables | to a tile along a building's edge (the ring of tiles round it, byB) |
 | E98 | index.html#floor-5-movables | a find used up is gone; its tile is free again |
 | E99 | index.html#floor-5-movables | one tick for every unit |
-| E100 | index.html#floor-5-movables | walking: toward the next point at the shell's speed: a tile's middle, or the spot a path ends on; true when it gets there |
+| E100 | index.html#floor-5-movables | walking: toward the next point at the walker's pace (QCB): a tile's middle, or the spot a path ends on; true when it gets there |
 | E101 | index.html#floor-5-movables | metres walked, which turn the stride (QBU); its speed now, which a blow carries (QBT) |
 | E102 | index.html#floor-5-movables | wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 |
 | E103 | index.html#floor-5-movables | M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking, buildings by D186; a new unit is filed as it comes. A search looks only nearby |
@@ -135,7 +135,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E129 | index.html#floor-6-climate | rain comes and goes over tens of seconds (SoRen) |
 | E130 | index.html#floor-6-climate | QP settle: wet in D104, dry in D105 |
 | E131 | index.html#floor-6-climate | QO degree-day melt, rain on snow twice as fast |
-| E132 | index.html#floor-6-climate | QQ: ice grows with the freezing degree-seconds and bears at D109 |
+| E132 | index.html#floor-6-climate | QQ: lake ice grows with the freezing degree-seconds and bears at D109; ice on the ground grows the same way while the ground is wet, full at D225 |
 | E133 | index.html#floor-6-climate | QM: fog comes on a Poisson wait (D110) and stays D111 |
 | E134 | index.html#floor-6-climate | fog, or mist after rain at dawn and dusk (KW8) |
 | E135 | index.html#floor-6-climate | QL, QM: strikes on Poisson waits in a storm |
@@ -363,3 +363,9 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E357 | menu.js | hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from theirs |
 | E358 | menu.js | a pasture's card counts its sheep |
 | E359 | menu.js | the town is told what food, the seasons and the flock do, in the Words book's news |
+| E360 | index.html#floor-5-movables | the ground under a side's walker (QN, QR): its mud (the marsh always), its snow cover, its ice (D225), the grip its step needs by what steps (G9), the bare ice's grip by the air (G8: slickest just above freezing, better in deep cold), and what is offered, the studs' if iron bites (G10) |
+| E361 | index.html#floor-5-movables | QCB the pace: the walk with its research (QCA), × each state the walker is in (D224), less the snow storm's share less the cloaks' (QAP); a side's own walker then ÷ the ground's cost (QN, D106, its research and wheels) and less the stride lost on ice by the share of the grip it lacks (QR); wild things only the weather, as in Mid |
+| E362 | index.html#floor-5-movables | QR the chance of a slip: the grip offered, dry to mud to snow to ice by their shares, against the need, a logistic step over G10's soft, only where there is ice |
+| E363 | index.html#floor-5-movables | a slipped walker stands G10's seconds; each walker on ice is checked once a second as it walks |
+| E364 | index.html#floor-6-climate | above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the degree (D225) and its degree-seconds are set to match what is left |
+| E365 | index.html#floor-6-climate | the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ, Stefan) |

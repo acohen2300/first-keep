@@ -150,7 +150,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E86** walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step pa
 - **E87** inland water bearing ice (QQ): walked as if flat · QQ (N17)
 - **E328** a gate is walkable only to those its owner does not count a foe: asked of combat.js by the
-- **E88** QN: mud and snow cost a walker · QN (N13)
+- **E88** the pace's books (QCB): what slows a walker besides the ground (D224), the grip a step nee · QCB (N13, N19, N46, N173) · D224 (N173) · G9 (N19, N173) · G10 (N19, N174, N173)
+- **E360** the ground under a side's walker (QN, QR): its mud (the marsh always), its snow cover, its · QN (N13) · QR (N18, N19, N174, N175) · D225 (N17, N173) · G9 (N19, N173) · G8 (N107, N18, N175) · G10 (N19, N174, N173)
+- **E361** QCB the pace: the walk with its research (QCA), × each state the walker is in (D224), less · QCB (N13, N19, N46, N173) · QCA (N154, N155, N156) · D224 (N173) · QAP (N46) · QN (N13) · D106 (N112) · QR (N18, N19, N174, N175)
+- **E362** QR the chance of a slip: the grip offered, dry to mud to snow to ice by their shares, agai · QR (N18, N19, N174, N175) · G10 (N19, N174, N173)
 - **E89** QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic t · QBL (N74) · D198 (N74) · N74
 - **E90** most: the tiles it may open before giving up
 - **E91** no cutting a corner
@@ -168,7 +171,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E301** the spot u keeps at c, else the free one nearest u (round a point, the nearest the point)
 - **E302** walk to a spot of its own at c: the path's last tile becomes the spot itself; false when n
 - **E98** a find used up is gone; its tile is free again
-- **E100** walking: toward the next point at the shell's speed: a tile's middle, or the spot a path e
+- **E100** walking: toward the next point at the walker's pace (QCB): a tile's middle, or the spot a  · QCB (N13, N19, N46, N173)
+- **E363** a slipped walker stands G10's seconds; each walker on ice is checked once a second as it w · G10 (N19, N174, N173)
 - **E101** metres walked, which turn the stride (QBU); its speed now, which a blow carries (QBT) · QBU (N79) · QBT (N81, N82, N83, N18)
 - **E99** one tick for every unit
 - **E303** a path's last point is reached within near-enough (D196), any point within a pace when the · D196 (N164, N165, N166, N167)
@@ -208,13 +212,15 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E123** QA the sun: sin a = sin φ sin δ + cos φ cos δ cos H; φ D99, δ swings ±23.44° over the year · QA (N1, N2) · D99 (N112)
 - **E124** light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD) · QD (N2)
 - **E125** QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mi · QP (N16) · N16
+- **E365** the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ,  · D225 (N17, N173) · QQ (N17)
 - **E126** QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet | dry) and P( · QH (N7) · D102 (N7) · D103 (N112) · QI (N8)
 - **E127** the season's mean, eased into the next
 - **E128** what falls
 - **E129** rain comes and goes over tens of seconds (SoRen)
 - **E130** QP settle: wet in D104, dry in D105 · QP (N16) · D104 (N112) · D105 (N112)
 - **E131** QO degree-day melt, rain on snow twice as fast · QO (N14, N15)
-- **E132** QQ: ice grows with the freezing degree-seconds and bears at D109 · QQ (N17) · D109 (N112)
+- **E132** QQ: lake ice grows with the freezing degree-seconds and bears at D109; ice on the ground g · QQ (N17) · D109 (N112) · D225 (N17, N173)
+- **E364** above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the  · D225 (N17, N173)
 - **E133** QM: fog comes on a Poisson wait (D110) and stays D111 · QM (N12) · D110 (N112) · D111 (N112)
 - **E134** fog, or mist after rain at dawn and dusk (KW8)
 - **E135** QL, QM: strikes on Poisson waits in a storm · QL (N11) · QM (N12)

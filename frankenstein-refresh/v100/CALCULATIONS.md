@@ -22,7 +22,7 @@ QN Walking cost: speed = 1 / η, η = 1 + a·mud + b·snow · N13
 QO Melt: degree-day, melt = k (T − 0); rain on snow faster · N14, N15
 QP Settle: x(t) = L + (x0 − L) e^(−t/τ) (wetness, healing, decay, nerve, loyalty) · N16
 QQ Ice growth: thickness ∝ √(freezing degree-seconds) · N17
-QR Slip: chance rises as a step needs more grip than the ground gives · N18, N19
+QR Slip: on ground ice a walker is checked each second (G10) and slips with chance ice ÷ (1 + e^((offered − need) ÷ soft)), the logistic step; offered is the ground's grip blended by its cover, dry to mud by the mud, to snow by the snow, to the ice's (or the studs') by the ice (G5–G10); a slip holds it G10's seconds · N18, N19, N174, N175
 QS Ruts: depth ∝ passes^0.4 · N20
 QT Fire vs wetness: η = 1 − 2.59r + 5.11r² − 3.52r³ · N21
 QU Fire growth ∝ t²; heat to a neighbour ∝ (near / (gap + near))² · N22
@@ -38,6 +38,7 @@ QAC Crew: n builders work n^p times as fast · N31
 QAD Spoilage: Q = Q0 e^(−k t); at each season's turn the store loses ⌊Q (1 − e^(−k))⌋, k = −ln(1 − D217's year) × season ÷ year × (1 + Σ research shares) · N32, N33
 QAE Price: P = P0 (Q / Q0)^(−1/ε) · N34
 QCA Effects: a kind's number = (base + Σ flat adds) × (1 + Σ research shares), the shares added, never multiplied, and applied once to the base; a "lowest" effect keeps the minimum; a price rounds to the whole unit. The base is the book's: walking D86 (3.4 mph), a unit's D138, a building's health D139, a price D123. When the shares move, every unit and building of the side keeps its share of health · N154, N155, N156
+QCB Pace: a walker's speed = the walk (D86, 1.52 m/s, 3.4 mph) × (1 + Σ research shares) (QCA) × each state it is in (D224: a load, sickness) × (1 − the snow storm's share (D224) × (1 + Σ cloak shares) × the storm) (QAP, Mid's blizzard); a side's own walker then ÷ (1 + mud's cost (D106) × how deep it sinks (D224) × (1 + Σ shares) × the mud + snow's cost × (1 + Σ shares) × the snow cover) (QN) × (1 − the stride (G10) × the ground's ice (D225, QQ) × (max(need, offered) − offered) ÷ (need − bare ice)), the need by what steps (G9), offered the bare ice's grip (G8) or, where iron bites, the studs' if more (G10) (QR). One law, every slowing a term of it: the season reaches a walker only through the ground and the weather · N13, N19, N46, N173
 QCI Standing spots: each stands on a spot of its own a pace d apart: n of them on the hex lattice round a point fill a disc R ≈ 0.525·d·√n (packing density π/(2√3)); round a building on its outline, k = ⌊2R ÷ d⌋ a side; round a find on its working ring, m spots at radius r ≥ d ÷ (2 sin(π/m)) · N165
 QCJ Separation: two closer than d part along the line between them to d, each moved by the other's share of their mass (m_b ÷ (m_a + m_b)), so their centre of mass stays, and as much again × D196's pass to each one's right, so two who meet head-on slip by (pedestrians' side preference) rather than stall; two on one point part along a direction fixed by their places in the roll; none is pushed onto ground it cannot walk · N163, N167
 QCK Mending: each villager mends M ÷ (k × T) health a second, M the building's health, T its build time (D125), k D201's time; it pays D201's cost × the price × the health mended ÷ M as it goes, the fractions carried; short of any part, it stops and goes back to its work · N168

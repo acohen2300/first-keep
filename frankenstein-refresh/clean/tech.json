@@ -338,24 +338,24 @@
      "Bayonet (barracks, Gunpowder): Musketeers hit harder."
     ],
     "fieldcraft": [
-     "bring",
-     "Fieldcraft (barracks, Stone): Infantry see farther."
+     "in v100",
+     "F17: books/tech.js O80 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "camps": [
      "bring",
      "Marching camps (barracks, Classical): Resting soldiers recover nerve 30% faster."
     ],
     "marching": [
-     "bring",
-     "Forced marches (barracks, Classical): Infantry march 8% faster. See misfits."
+     "in v100",
+     "F17: books/tech.js O81 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "warmclothes": [
-     "bring",
-     "Wool cloaks (barracks, Medieval): Winter slows soldiers half as much."
+     "in v100",
+     "F17: books/tech.js O82 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "waterproof": [
-     "bring",
-     "Oiled cloaks (barracks, Gunpowder): Blizzards slow soldiers half as much."
+     "in v100",
+     "F17: books/tech.js O83 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "drillyard": [
      "bring",
@@ -678,24 +678,24 @@
      "Vaccination (library, Enlightenment): Half as much sickness. The last step: the match ends and the crowns are given."
     ],
     "roads": [
-     "bring",
-     "Roads (library, Classical): Mud slows half as much; trade pays 15% more."
+     "in v100",
+     "F17: books/tech.js O84 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "drainage": [
-     "bring",
-     "Field drains (library, Classical): Mud slows 30% less."
+     "in v100",
+     "F17: books/tech.js O85 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "levees": [
      "bring",
      "Levees (library, Medieval): Floods stop short of your buildings. See misfits."
     ],
     "snowclear": [
-     "bring",
-     "Snow clearing (library, Medieval): Snow slows half as much."
+     "in v100",
+     "F17: books/tech.js O86 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "crampons": [
-     "bring",
-     "Crampons (library, Medieval): Iron spikes on the boot bite the ice: men on foot slip less."
+     "in v100",
+     "F17: books/tech.js O87 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "meteorology": [
      "bring",

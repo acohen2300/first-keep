@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,886 | 251,258 | 251,390 |
-| Books | 1136 | 0 | 199,633 | 199,937 |
-| Laws | 78 | 0 | 9,951 | 10,259 |
-| Tools | 4 | 813 | 111,396 | 111,547 |
+| Game code | 28 | 1,902 | 253,011 | 253,143 |
+| Books | 1158 | 0 | 207,910 | 208,230 |
+| Laws | 79 | 0 | 10,957 | 11,299 |
+| Tools | 4 | 856 | 117,834 | 117,985 |
 
 ## The trades (code)
 
@@ -23,19 +23,19 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 45 | 4,943 | 4,947 | 82 |
 | index.html#drawn-once-in-the-view-frame | 47 | 4,130 | 4,134 | 123 |
 | index.html#the-view | 9 | 916 | 920 | 14 |
-| index.html#the-door | 54 | 5,163 | 5,167 | 69 |
+| index.html#the-door | 55 | 5,312 | 5,316 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 324 | 50,704 | 50,708 | 4096 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
 | index.html#the-figures | 144 | 23,202 | 23,206 | 1610 |
 | index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
-| index.html#floor-5-movables | 107 | 11,172 | 11,176 | 96 |
+| index.html#floor-5-movables | 120 | 12,460 | 12,464 | 95 |
 | index.html#the-body-s-laws | 30 | 2,348 | 2,352 | 35 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,282 | 3,286 | 92 |
-| index.html#floor-6-climate | 63 | 7,867 | 7,879 | 288 |
+| index.html#floor-6-climate | 65 | 8,139 | 8,151 | 288 |
 | index.html#floor-7-display | 28 | 2,927 | 2,931 | 75 |
 | index.html#the-woods-cache | 51 | 4,849 | 4,853 | 79 |
-| index.html#touch | 40 | 4,505 | 4,509 | 59 |
+| index.html#touch | 40 | 4,549 | 4,553 | 59 |
 | menu.js | 303 | 50,935 | 50,975 | 595 |
 | econ.js | 213 | 31,127 | 31,127 | 79 |
 | combat.js | 63 | 9,411 | 9,411 | 101 |
@@ -48,20 +48,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 4 | 583 |
 | capabilities | 31 | 7,877 |
-| citations | 172 | 22,612 |
+| citations | 175 | 23,654 |
 | colours | 9 | 951 |
-| comments | 359 | 53,641 |
-| ground | 4 | 640 |
+| comments | 365 | 55,122 |
+| ground | 6 | 1,634 |
 | mass | 18 | 2,663 |
-| measure | 217 | 37,659 |
-| rules | 53 | 12,080 |
+| measure | 219 | 38,486 |
+| rules | 54 | 12,824 |
 | screen | 10 | 2,689 |
 | shells | 78 | 13,536 |
 | sides | 4 | 1,202 |
 | sound | 51 | 11,159 |
 | sprites | 38 | 8,372 |
-| tech | 79 | 22,636 |
-| words | 9 | 15,176 |
+| tech | 87 | 24,980 |
+| words | 9 | 16,193 |
 
 ## The shells
 
@@ -128,5 +128,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X51 | t-gather | page | ten villagers sent to one bush patch each stand on a spot of their own on its ring, the spots and the bodies a pace apart, never more on a find than Mid's frozen findCap; each one's crowd share and forager's rate are Mid's frozen forage for the same load, walk, crowd and walked length; Mid's frozen makeNow on the same five minutes of work gathers the same food within 2% (the walk is v100's: paths, and the push by mass) |
 | X52 | t-walls | page | builders, repair, limits, placing and walls are Mid's frozen code for the same actions: a crew's build time and a site's health (bldTick, n^0.7), a repair's time and stores spent (repairTick) and its price (repairCost), every price Mid's BLD and UNIT cost, the refund taken down (shellBack), every building's limit by age with research (capFor, capWhy), placing's refusals (canPlace), a wall laid corner to corner (wallLine) and the seal's gap (sealPath); on the page the nearest free villager is sent and one pulled off its work goes back to it, the ghost snaps a lane apart, a gate opens to its own and an ally and shuts to a foe, and the computer lays its ring |
 | X53 | t-food | page | a year and a season of food is Mid's frozen code for the same town (20 villagers, five at bushes, 5 foot, 5 riders, 4 farms worked and resting, a tended pasture of 11 with a wolf at two turns, half-fished fish, the hearth, the ice house and seed selection known, the store run dry and fed again): what is eaten (shareOf, upkeepTick, starveTick, foodInReach, hungerOf), spoiled and regrown at each turn (seasonTurn), the soil left (natureTick), the flock and its mutton, and the fields' harvest by season, soil and the year's roll (gatherMul) all equal Mid's; an order's meals are Mid's orderCost; a boar hunted falls as its meat and is butchered; fish are worked only near a dock |
+| X54 | t-pace | page | a walker's pace is one law (QCB) and Mid's frozen paceOf for the same walkers: the walk with its research added once (Forced marches), a load and sickness, a snow storm less Oiled cloaks, mud less Roads and Field drains (their shares added, never compounded), snow less Snow clearing, and the stride lost on ground ice by the grip a step lacks, Crampons giving their grip; wild things slowed only by the weather; the chance of a slip is Mid's slipChance; ground ice grows and thaws as Mid's groundTick; on the page a walker in mud steps at its pace and one on ice slips, stands and the town is told once |
 
-1246 items sealed · 1136 book entries · 78 laws · 172 citations, 24 still to open · 7 known
+1269 items sealed · 1158 book entries · 79 laws · 175 citations, 26 still to open · 7 known

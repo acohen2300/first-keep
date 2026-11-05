@@ -204,32 +204,32 @@
    "(Albert 11:16: bring, clean) the mud at a place: v100's footing (QN, D106) reads the wet and the marsh; Mid's extra by the shore (pooling, KI3) and the ruts (KI15) are held, see misfits"
   ],
   "groundNeed": [
-   "bring",
-   "the grip a step needs, by foot, horse or engine (Hanson 1999); part of slipping on ice (QR), see misfits"
+   "in v100",
+   "F17: books/ground.js G9 step, read by footing(u) by mount or body"
   ],
   "studded": [
-   "bring",
-   "whether iron bites the ice (Horseshoes, Crampons research)"
+   "in v100",
+   "F17: FK.stat(code, side, 'studs') (base D224 bare, Crampons O87 a 1), read by footing(u)"
   ],
   "iceMu": [
-   "bring",
-   "the ice's friction now, slickest just under freezing; studs give theirs; see misfits"
+   "in v100",
+   "F17: index.html floor 5, footing(u): bare (G8: grip at freezing to cold, its melt film above) and on (studs G10)"
   ],
   "strideShare": [
-   "bring",
-   "the stride lost on ice by the grip a step lacks"
+   "in v100",
+   "F17: index.html floor 5, pace(u): (max(need, on) - on) / (need - bare), the stride G10"
   ],
   "groundSpd": [
-   "bring",
-   "what the ground takes off a march; v100's footing (QN, D106) already slows by mud and snow; to bring: the ice's lost stride, the wagon's wheels in mud, research on mud and snow"
+   "in v100",
+   "F17: index.html floor 5, pace(u): the ground's term (QN, D106 by research and the wagon's sink D224) and the ice's lost stride (QR, G10)"
   ],
   "muOf": [
-   "bring",
-   "the friction the ground offers at a place, a blend of ice, snow, mud, dry; v100's Ground book holds friction (G) for QBT's slide"
+   "in v100",
+   "F17: index.html floor 5, slips(g): dry to mud to snow to ice by their shares (G5 to G8 grip)"
   ],
   "slipChance": [
-   "bring",
-   "the chance of a slip on ice (QR, logistic); see misfits"
+   "in v100",
+   "F17: index.html floor 5, slips(g) and stride(): checked each second on ground ice, a slip stands G10 secs, the town told (J8 slip)"
   ],
   "rothermel": [
    "bring",

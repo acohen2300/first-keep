@@ -1574,3 +1574,49 @@ MODIFIED (118):
 LOCKED (1128 of 1246): byte for byte as sealed, 239,977 bytes
 Tests: 27/27 rules hold
 Inventory: 1246 items sealed · 1136 book entries · 78 laws · 172 citations, 24 still to open · 7 known
+
+## F17 · pace: load, weather, ground and ice · 2026-11-05 17:54
+Albert, Nov 5 11:40: yes yes F10–F39; 11:16 (3): 3.4 mph the base, research raises it, weather, ground and load change it
+Opened: code:index.html, code:econ.js, code:combat.js, book:measure, book:ground, book:mass, book:shells, book:comments, book:rules, book:citations, tool:test.py, book:tech, book:words, law:QCB, law:QR
+MODIFIED (38):
+- book:citations:N173 · added
+- book:citations:N174 · added
+- book:citations:N175 · added
+- book:comments:E100 · 133 → 139 bytes
+- book:comments:E132 · 76 → 157 bytes
+- book:comments:E360 · added
+- book:comments:E361 · added
+- book:comments:E362 · added
+- book:comments:E363 · added
+- book:comments:E364 · added
+- book:comments:E365 · added
+- book:comments:E88 · 42 → 171 bytes
+- book:ground:G10 · added
+- book:ground:G5 · 94 → 157 bytes
+- book:ground:G6 · 107 → 163 bytes
+- book:ground:G7 · 101 → 158 bytes
+- book:ground:G8 · 112 → 300 bytes
+- book:ground:G9 · added
+- book:measure:D224 · added
+- book:measure:D225 · added
+- book:rules:X54 · added
+- book:tech:O80 · added
+- book:tech:O81 · added
+- book:tech:O82 · added
+- book:tech:O83 · added
+- book:tech:O84 · added
+- book:tech:O85 · added
+- book:tech:O86 · added
+- book:tech:O87 · added
+- book:words:J7 · 12,235 → 13,174 bytes
+- book:words:J8 · 642 → 720 bytes
+- code:index.html#floor-5-movables · 11,176 → 12,464 bytes
+- code:index.html#floor-6-climate · 7,879 → 8,151 bytes
+- code:index.html#the-door · 5,167 → 5,316 bytes
+- code:index.html#touch · 4,509 → 4,553 bytes
+- law:QCB · added
+- law:QR · 81 → 347 bytes
+- tool:test.py · 82,720 → 89,158 bytes
+LOCKED (1231 of 1269): byte for byte as sealed, 448,059 bytes
+Tests: 28/28 rules hold
+Inventory: 1269 items sealed · 1158 book entries · 79 laws · 175 citations, 26 still to open · 7 known

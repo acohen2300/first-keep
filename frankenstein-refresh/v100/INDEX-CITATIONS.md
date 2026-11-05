@@ -16,11 +16,11 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QK** Visibility → N10
 - **QL** Lightning → N11 · used by D112
 - **QM** Random events → N12 · used by SC9, D110, D181, HX4
-- **QN** Walking cost → N13 · used by D106
+- **QN** Walking cost → N13 · used by D106, X54
 - **QO** Melt → N14, N15 · used by D108
 - **QP** Settle → N16 · used by D104
-- **QQ** Ice growth → N17 · used by D109
-- **QR** Slip → N18, N19
+- **QQ** Ice growth → N17 · used by D109, D225, X54
+- **QR** Slip → N18, N19, N174, N175 · used by G5, G6, G7, G8, G9, G10, X54
 - **QS** Ruts → N20
 - **QT** Fire vs wetness → N21
 - **QU** Fire growth ∝ t²; heat to a neighbour ∝ (near / (gap + near))² · N22 → N22
@@ -34,7 +34,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAC** Crew → N31 · used by SC4, D126, X52
 - **QAD** Spoilage → N32, N33 · used by D217, X53
 - **QAE** Price → N34
-- **QCA** Effects → N154, N155, N156 · used by SC15, D199, X47, X50, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79
+- **QCA** Effects → N154, N155, N156 · used by SC15, D199, X47, X50, X54, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87
+- **QCB** Pace → N13, N19, N46, N173 · used by G9, G10, D224, X54, O81, O82, O83, O84, O85, O86, O87
 - **QCI** Standing spots → N165 · used by SC2, D196, X51
 - **QCJ** Separation → N163, N167 · used by D196, X51
 - **QCK** Mending → N168 · used by SC5, D201, X52
@@ -47,7 +48,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAM** Line of sight → N42
 - **QAN** Many eyes → N43, N44
 - **QAO** Flee → N45
-- **QAP** Cold and wet → N46
+- **QAP** Cold and wet → N46 · used by X54
 - **QAQ** Sickness → N47, N48
 - **QAR** Weighted pick → N49
 - **QAS** Breaking → N50, N51, N52
@@ -85,10 +86,10 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 
 ## By citation
 
-- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCI, QCJ, QCK, QBP, QBT
+- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QBP, QBT
 - **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QS, QT, QU, QV, QW, QX, QY, QZ, QAA
 - **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
-- **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
+- **N4** Mallama & Hilton (2018), colour indices → QF, QCB, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
 - **N5** Ballesteros (2012), colour index to temperature → QF, QAS, QAT, QAU, QAV, QAW, QAX, QAY
 - **N6** (retired: satellites cut, Stone Age) → QAZ, QBA, QBB, QBC, QBD, QBE, QBF, QBG, QBH, QBI, QBK, QBJ, QBO
 - **N7** Gabriel & Neumann (1962), QJRMS 88 → QH, QBL, QBM, QBN, QBQ, QBR, QBS, QBU, D102
@@ -97,13 +98,13 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N10** Koschmieder (1924) → QK
 - **N11** WCAG 2.3.1, three flashes → QL
 - **N12** Poisson (1837); Feller, An Introduction to Probability Theory, vol. 1 → QM, HX4
-- **N13** Pandolf, Givoni & Goldman (1977) → QN
+- **N13** Pandolf, Givoni & Goldman (1977) → QN, QCB
 - **N14** Hock (2003), degree-day melt → QO
 - **N15** US Army Corps of Engineers (1956), Snow Hydrology → QO, QCA
 - **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ, QCK
-- **N17** Stefan (1891) → QQ, QBP
-- **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QBT, G7, G8
-- **N19** Hanson et al. (1999), slip and the grip a step needs → QR
+- **N17** Stefan (1891) → QQ, QR, QCB, QBP, D225
+- **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QBT, G5, G6, G7, G8
+- **N19** Hanson et al. (1999), slip and the grip a step needs → QR, QCB, G9, G10
 - **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS
 - **N21** Rothermel (1972); USDA RMRS-GTR-371 → QT
 - **N22** Heskestad (1984); NFPA 72, the t² fire → QU
@@ -130,7 +131,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N43** Pulliam (1973) → QAN
 - **N44** Lima (1995) → QAN
 - **N45** Ydenberg & Dill (1986) → QAO
-- **N46** Thermal resistance in series (standard) → QAP
+- **N46** Thermal resistance in series (standard) → QCB, QAP
 - **N47** Kermack & McKendrick (1927), Proc. R. Soc. A 115 → QAQ
 - **N48** Bootsma & Ferguson (2007), PNAS 104(18) → QAQ
 - **N49** Goldberg (1989), roulette-wheel selection → QAR
@@ -216,7 +217,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N129** Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it) → X41
 - **N130** Design: Albert, Nov 5 09:49 (Frankenstein 4: the match test) → X42
 - **N131** Design: Albert, Nov 5 09:47 (sort every piece) → X43
-- **N132** Design: Albert, Nov 5 11:40 (Frankenstein F10) → D188, D189, D190, D191, X44, X46, X53, J1, J2, J3, J4, J5, J6
+- **N132** Design: Albert, Nov 5 11:40 (Frankenstein F10) → D188, D189, D190, D191, X44, X46, X53, X54, J1, J2, J3, J4, J5, J6
 - **N133** Design: Albert, the Rank Ribbon (Oct 30) and the Formation → SN1
 - **N134** Design: Albert, Nov 5 07:13–07:15 (his Land list; six tabs of up to nine) → SN2
 - **N135** Design: Albert, Nov 5 07:30 → SN3
@@ -244,8 +245,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N157** Design: Mid's battle odds (08-core.js unitPower, powerOf, lanchester; 17-ai.js powerFrom, estPower, matchup; 3 → D177, D192, D193, D194, X48
 - **N158** Design: Mid's one hostility test (08-core.js atWar, gangOf, gangRel, isFoe, friendly; decision 8, C1, answer 1 → X49, I1, I2, I3, I4
 - **N159** (to open) Vienna Convention on the Law of Treaties (1969), art. 34: a treaty creates neither obligations nor rights for  → I1
-- **N160** Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning line → SC15, D129, D130, X50, PB3, PB4, PB6, PB12, PB13, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, J7
-- **N161** (to open) Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written → O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, J7
+- **N160** Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning line → SC15, D129, D130, X50, PB3, PB4, PB6, PB12, PB13, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, J7
+- **N161** (to open) Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written → O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, J7
 - **N162** Design: Albert, Nov 5 13:30: one build carries a whole module (or a few small ones), never split; the cap of t → X17
 - **N163** (to open) Reynolds, C. W. (1987), Flocks, herds and schools: a distributed behavioral model, Computer Graphics 21(4) (SI → QCJ
 - **N164** Design: Mid's gathering and standing spots (12-sim-core.js recount, FORAGE, forage, forageNow; 13-sim-civil.js → SC2, SC16, D88, D132, D195, D196, D197, X51, PN1
@@ -257,6 +258,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N170** Design: Mid's food, farms, seasons, hunting and fishing (36-economy.js shareOf, orderCost, hungerOf, upkeepTic → QBP, A4, SC03, SC10, SC16, SC23, SC24, SC25, SC26, W17, W18, D86, D131, D138, D139, D211, D212, D213, D214, D215, D216, D217, D218, D219, D220, D221, D222, D223, X53, SN4, R6, MW1, BCL1, BCL2, BCL3, BCT2, UV, UM1, UM2, UM3, UM4, UM4b, US1, US2, US3, US4, UT1, MW3, MW7, MW8, I4, PN1, P20, P21, PB14, PB15, PB16, O46, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, J7, J8, J9
 - **N171** (to open) Keys, Brožek, Henschel, Mickelsen & Taylor (1950), The Biology of Human Starvation (the Minnesota study): grip → QBP, D212
 - **N172** Design: Albert, Nov 5 16:07: the Palisade comes only with the war camp, as in Mid (free there); it leaves the  → SN3
+- **N173** Design: Mid's pace (09-nav.js paceOf; 12-sim-core.js sideSpd, insulate; 37-events.js groundNeed, studded, iceM → QCB, G5, G6, G7, G9, G10, D224, D225, X54, O80, O81, O82, O83, O84, O85, O86, O87, J8
+- **N174** (to open) Ichihara & Mizoguchi, studded tyres on ice and snow, Highway Research Board Special Report 115, Table 2 (Mid's → QR, G10
+- **N175** (to open) Hsu, Li, Bagheri, Fernie & Dutta (2016), Ergonomics 59: bare boots on wet ice 0.08, on cold dry ice 0.20 (Mid' → QR, G8
 
 ## Named exceptions
 

@@ -223,6 +223,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N170 |  | Design: Mid's food, farms, seasons, hunting and fishing (36-economy.js shareOf, orderCost, hungerOf, upkeepTick, natureTick, seasonTurn, FLE | opened |
 | N171 |  | Keys, Brožek, Henschel, Mickelsen & Taylor (1950), The Biology of Human Starvation (the Minnesota study): grip strength fell from 58.2 to 41 | to open |
 | N172 |  | Design: Albert, Nov 5 16:07: the Palisade comes only with the war camp, as in Mid (free there); it leaves the Walls tab | opened |
+| N173 |  | Design: Mid's pace (09-nav.js paceOf; 12-sim-core.js sideSpd, insulate; 37-events.js groundNeed, studded, iceMu, strideShare, groundSpd, muO | opened |
+| N174 |  | Ichihara & Mizoguchi, studded tyres on ice and snow, Highway Research Board Special Report 115, Table 2 (Mid's cite for studs' grip, 0.28 at | to open |
+| N175 |  | Hsu, Li, Bagheri, Fernie & Dutta (2016), Ergonomics 59: bare boots on wet ice 0.08, on cold dry ice 0.20 (Mid's cite); from memory, to open | to open |
 
 ## colours
 
@@ -329,7 +332,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E85 |  | the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book (PN1 tool), the one home econ.js reads |  |
 | E86 |  | walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step past the angle of repose is not |  |
 | E87 |  | inland water bearing ice (QQ): walked as if flat |  |
-| E88 |  | QN: mud and snow cost a walker |  |
+| E88 |  | the pace's books (QCB): what slows a walker besides the ground (D224), the grip a step needs (G9), slipping (G10); the player's side, told w |  |
 | E89 |  | QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile |  |
 | E90 |  | most: the tiles it may open before giving up |  |
 | E91 |  | no cutting a corner |  |
@@ -341,7 +344,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E97 |  | to a tile along a building's edge (the ring of tiles round it, byB) |  |
 | E98 |  | a find used up is gone; its tile is free again |  |
 | E99 |  | one tick for every unit |  |
-| E100 |  | walking: toward the next point at the shell's speed: a tile's middle, or the spot a path ends on; true when it gets there |  |
+| E100 |  | walking: toward the next point at the walker's pace (QCB): a tile's middle, or the spot a path ends on; true when it gets there |  |
 | E101 |  | metres walked, which turn the stride (QBU); its speed now, which a blow carries (QBT) |  |
 | E102 |  | wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 |  |
 | E103 |  | M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking, buildings by D186; a new unit is filed as it com |  |
@@ -373,7 +376,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E129 |  | rain comes and goes over tens of seconds (SoRen) |  |
 | E130 |  | QP settle: wet in D104, dry in D105 |  |
 | E131 |  | QO degree-day melt, rain on snow twice as fast |  |
-| E132 |  | QQ: ice grows with the freezing degree-seconds and bears at D109 |  |
+| E132 |  | QQ: lake ice grows with the freezing degree-seconds and bears at D109; ice on the ground grows the same way while the ground is wet, full at |  |
 | E133 |  | QM: fog comes on a Poisson wait (D110) and stays D111 |  |
 | E134 |  | fog, or mist after rain at dawn and dusk (KW8) |  |
 | E135 |  | QL, QM: strikes on Poisson waits in a storm |  |
@@ -601,15 +604,23 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E357 |  | hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from theirs |  |
 | E358 |  | a pasture's card counts its sheep |  |
 | E359 |  | the town is told what food, the seasons and the flock do, in the Words book's news |  |
+| E360 |  | the ground under a side's walker (QN, QR): its mud (the marsh always), its snow cover, its ice (D225), the grip its step needs by what steps |  |
+| E361 |  | QCB the pace: the walk with its research (QCA), × each state the walker is in (D224), less the snow storm's share less the cloaks' (QAP); a  |  |
+| E362 |  | QR the chance of a slip: the grip offered, dry to mud to snow to ice by their shares, against the need, a logistic step over G10's soft, onl |  |
+| E363 |  | a slipped walker stands G10's seconds; each walker on ice is checked once a second as it walks |  |
+| E364 |  | above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the degree (D225) and its degree-seconds are set to ma |  |
+| E365 |  | the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ, Stefan) |  |
 
 ## ground
 
 | Code | Name | Value | Cited |
 |---|---|---|---|
-| G5 | dry grass | {mu: 0.35} | N104 |
-| G6 | mud: wet ground or marsh | {mu: 0.25} | N105 |
-| G7 | snow cover | {mu: 0.14} | N106; N18 |
-| G8 | ice that bears a walker | {mu: 0.1} | N107; N18 |
+| G5 | dry grass; a boot's grip on dry ground | {mu: 0.35, grip: 0.7} | N104; N18; N173 |
+| G6 | mud: wet ground or marsh; a boot's grip on it | {mu: 0.25, grip: 0.45} | N105; N18; N173 |
+| G7 | snow cover; a boot's grip on packed snow | {mu: 0.14, grip: 0.3} | N106; N18; N173 |
+| G8 | ice that bears a walker; a boot's grip on it 0.08 at freezing, rising to cold at at °C under, melt above freezing (its film, Mid's 0.6 of 0.08) | {mu: 0.1, grip: 0.08, cold: 0.25, at: 20, melt: 0.048} | N107; N18; N175 |
+| G9 | the grip a step needs, by what steps: a man (Hanson), a horse and an engine's haulers (Mid's design) | {person: 0.2, horse: 0.25, engine: 0.3} | N19; N173 |
+| G10 | slipping on ice: iron studs give at least studs; a slip's chance rises over soft as a step needs more grip than is offered; stride the most a step loses on ice; a slip holds a walker secs; each walker is checked every second; the town is told at most every tell seconds | {studs: 0.28, soft: 0.03, stride: 0.25, secs: 1.5, every: 1, tell: 20} | N19; N174; N173 |
 
 ## mass
 
@@ -855,6 +866,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D221 | a villager's javelin strikes game at blow times its blow (Mid's huntTick) | {blow: 5} | N170 |
 | D222 | a tree farm: amount wood at rate a second, then cut out; replanted at replant × its price (Mid's treefarm, Albert's 36 and 12) | {amount: 1200, rate: 0.55, replant: 0.5} | N170 |
 | D223 | the boar of each corner and its spot in the corner's frame, about 300 from the Town Center and clear of the home pond (Mid's boar, 280 to 380 from the keep) | {code: MW7, at: [470, 660]} | N170 |
+| D224 | what slows a walker besides the ground: each state it is in, by the field that holds it (a load 0.9, sickness 0.8); the share a snow storm takes off a march before cloaks (Mid's blizzard, 0.6 kept); a boot with no iron has no studs; how deep each sinks in mud, a foot 1 and the camp wagon's wheels 2 (Mid's wheelMud) | {state: {load: 0.9, sick: 0.8}, storm: 0.4, bare: 0, sink: {foot: 1, UT2: 2}} | N173 |
+| D225 | ice on the ground: it grows while the ground is wetter than wet and the air below freezing, full at fdd freezing °C·s (thickness ∝ √), and thaws melt a °C·s above freezing (Mid's CLIMATE.ice) | {wet: 0.225, fdd: 500, melt: 0.0064} | N17; N173 |
 
 ## rules
 
@@ -913,6 +926,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X51 | ten villagers sent to one bush patch each stand on a spot of their own on its ring, the spots and the bodies a pace apart, never more on a find than Mid's frozen findCap; each one's crowd share and forager's rate are Mid's frozen forage for the same load, walk, crowd and walked length; Mid's frozen makeNow on the same five minutes of work gathers the same food within 2% (the walk is v100's: paths, and the push by mass) | {stage: page} | N164 |
 | X52 | builders, repair, limits, placing and walls are Mid's frozen code for the same actions: a crew's build time and a site's health (bldTick, n^0.7), a repair's time and stores spent (repairTick) and its price (repairCost), every price Mid's BLD and UNIT cost, the refund taken down (shellBack), every building's limit by age with research (capFor, capWhy), placing's refusals (canPlace), a wall laid corner to corner (wallLine) and the seal's gap (sealPath); on the page the nearest free villager is sent and one pulled off its work goes back to it, the ghost snaps a lane apart, a gate opens to its own and an ally and shuts to a foe, and the computer lays its ring | {stage: page} | N168 |
 | X53 | a year and a season of food is Mid's frozen code for the same town (20 villagers, five at bushes, 5 foot, 5 riders, 4 farms worked and resting, a tended pasture of 11 with a wolf at two turns, half-fished fish, the hearth, the ice house and seed selection known, the store run dry and fed again): what is eaten (shareOf, upkeepTick, starveTick, foodInReach, hungerOf), spoiled and regrown at each turn (seasonTurn), the soil left (natureTick), the flock and its mutton, and the fields' harvest by season, soil and the year's roll (gatherMul) all equal Mid's; an order's meals are Mid's orderCost; a boar hunted falls as its meat and is butchered; fish are worked only near a dock | {stage: page} | N132; N170 |
+| X54 | a walker's pace is one law (QCB) and Mid's frozen paceOf for the same walkers: the walk with its research added once (Forced marches), a load and sickness, a snow storm less Oiled cloaks, mud less Roads and Field drains (their shares added, never compounded), snow less Snow clearing, and the stride lost on ground ice by the grip a step lacks, Crampons giving their grip; wild things slowed only by the weather; the chance of a slip is Mid's slipChance; ground ice grows and thaws as Mid's groundTick; on the page a walker in mud steps at its pace and one on ice slips, stands and the town is told once | {stage: page} | N132; N173 |
 
 ## screen
 
@@ -1203,6 +1217,14 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O77 | Harbour works | {at: BCT2, line: Harbour, age: 2, cost: {wood: 170, food: 110}, time: 38, fx: [{s: hp, k: BCT2, p: 0.5}], need: [masonry], when: 300 BC, w:  | N160; N161; N170 |
 | O78 | Compass | {at: BCT2, line: Harbour, age: 3, cost: {wood: 320, food: 210}, time: 60, fx: [{s: sight, k: [UV, US4, UT1], a: 3}], when: 1100s, w: 7} | N160; N161; N170 |
 | O79 | Lighthouse | {at: BCT2, line: Harbour, age: 4, cost: {wood: 310, food: 210}, time: 55, fx: [{s: sight, k: BCT2, a: 6}], when: 1500s, w: 3} | N160; N161; N170 |
+| O80 | Fieldcraft | {at: BM1, line: March, age: 0, cost: {food: 40, gold: 30}, time: 15, fx: [{s: sight, k: [UM1, UM2], a: 1}], when: Stone age, w: 3} | N160; N161; N173 |
+| O81 | Forced marches | {at: BM1, line: March, age: 2, cost: {food: 170, gold: 110}, time: 38, fx: [{s: spd, k: [UM1, UM2], p: 0.08}], when: 200 BC, w: 5} | N160; N161; N173 |
+| O82 | Wool cloaks | {at: BM1, line: March, age: 3, cost: {food: 240, gold: 160}, time: 48, fx: [{s: cold, p: -0.5}], need: [spinwheel], when: 1000s, w: 4} | N160; N161; N173 |
+| O83 | Oiled cloaks | {at: BM1, line: March, age: 4, cost: {food: 310, gold: 210}, time: 55, fx: [{s: wet, p: -0.5}], need: [warmclothes], when: 1500s, w: 3} | N160; N161; N173 |
+| O84 | Roads | {at: BP2, line: Weather, age: 2, cost: {gold: 200, stone: 130}, time: 44, fx: [{s: mud, p: -0.5}, {s: trade, p: 0.15}], when: 300 BC, w: 7} | N160; N161; N173 |
+| O85 | Field drains | {at: BP2, line: Weather, age: 2, cost: {gold: 170, stone: 110}, time: 38, fx: [{s: mud, p: -0.3}], when: 100 BC, w: 5} | N160; N161; N173 |
+| O86 | Snow clearing | {at: BP2, line: Weather, age: 3, cost: {gold: 240, stone: 160}, time: 48, fx: [{s: snow, p: -0.5}], when: 1200s, w: 4} | N160; N161; N173 |
+| O87 | Crampons | {at: BP2, line: Weather, age: 3, cost: {gold: 240, stone: 160}, time: 48, fx: [{s: studs, k: [UV, UM1, UM2, UM4, UM4b, US1, US2, US3], a: 1} | N160; N161; N173 |
 
 ## words
 
@@ -1215,6 +1237,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J5 | one, two: the first ending that fits, as [pattern, flags, ending] (a man-at-arms, men-at-arms; a spearman; a wolf; an ally; a ditch; the rest take s) | [[^(m)an(-at-arms)$, i, $1en$2], [man$, , men], [(wol)f$, i, $1ves], [([^aeiou])y$, , $1ies], [(s/x/ch/sh)$, , $1es], [$, , s]] | N132 |
 | J6 | the map's lettered squares: a letter across, a number down (A1 to V22 on the board, D190) | ABCDEFGHIJKLMNOPQRSTUVWXYZ | N132 |
 | J7 | the history line of each age (age0 to age4) and each research step, by its key: what it was and when (Mid's WHY) | {age0: Farming villages of the Neolithic (from about 10,000 years ago): fields, houses, a wall. Jericho had a stone wall and tower about 800 | N160; N161; N170 |
-| J8 | what the town is told when food, the seasons and the flock turn, by the event that tells it (Mid's news; {n}, {m} and {at} filled in) | {hungry: Food stores empty: put villagers on food., fed: Your people are fed again., famine: Famine: no food in reach. Two days to recover., | N170 |
+| J8 | what the town is told when food, the seasons and the flock turn, or its people slip on ice, by the event that tells it (Mid's news; {n}, {m} and {at} filled in) | {hungry: Food stores empty: put villagers on food., fed: Your people are fed again., famine: Famine: no food in reach. Two days to recover., | N170; N173 |
 | J9 | what a refusal or an order says for plots, the dock and the hunt (Mid's words) | {replanted: {n} replanted., broke: Not enough to replant., hands: No free hands: train more villagers., hunt: A villager goes hunting., shor | N170 |
 
