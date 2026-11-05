@@ -122,3 +122,12 @@ MODIFIED (37):
 LOCKED (564 of 601): byte for byte as sealed, 316,620 bytes
 Tests: 11/11 rules hold
 Inventory: 601 items sealed · 496 book entries · 73 laws · 88 citations, 17 still to open · 25 known
+
+## v100 · 11.1, publish rewrites the pages after the seal · 2026-11-05 08:17
+Albert, Nov 5 08:13 (the gate rebuild): fixing its own defect, found by GitHub's gate: INVENTORY.md was written before the seal, so its brackets went stale
+Opened: tool:publish.py
+MODIFIED (1):
+- tool:publish.py · 2,046 → 2,163 bytes
+LOCKED (600 of 601): byte for byte as sealed, 342,202 bytes
+Tests: 11/11 rules hold
+Inventory: 601 items sealed · 496 book entries · 73 laws · 88 citations, 17 still to open · 25 known

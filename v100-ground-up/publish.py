@@ -14,6 +14,7 @@ with open('BUILDS.md', 'a') as f:   # the record, appended, never edited
     f.write(f"\n## {permit['build']} · {datetime.datetime.now():%Y-%m-%d %H:%M}\n{permit['agreed']}\nOpened: {', '.join(permit['opens'])}\n"
             + '\n'.join(l for l in gate.splitlines() if l.startswith(('- ', 'MODIFIED', 'LOCKED'))) + f'\nTests: {tests}\nInventory: {total}\n')
 print(run(sys.executable, 'index.py', '--seal').stdout)
+run(sys.executable, 'index.py')   # the pages again, against the new seal: GitHub checks them as they stand after it
 json.dump({'build': '', 'agreed': '', 'opens': []}, open('permit.json', 'w'), indent=1)   # the next build starts with nothing open
 msg = f"{sys.argv[1]}\n\n{os.environ.get('TRAILER', '').replace(chr(92) + 'n', chr(10))}"
 for a in (['git', 'add', '-A', '.', '../.github', '../docs/4 Now/Parked.md'], ['git', '-c', 'user.name=Albert', '-c', 'user.email=acohen2300@users.noreply.github.com', 'commit', '-q', '-m', msg],
