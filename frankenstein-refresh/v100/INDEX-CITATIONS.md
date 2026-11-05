@@ -1,0 +1,252 @@
+# First Keep v100 · 3. Index and Citations (the cross-check)
+
+Written by `index.py`, never by hand. Every law and every entry matched to its citations, and every citation to what uses it.
+
+## By law
+
+- **QA** Sun height → N1, N2 · used by D99
+- **QB** True sun, moon and planets → N2, N3
+- **QC** Moon lit fraction → N2
+- **QD** Day's edges → N2
+- **QE** Eclipses, by geometry · N2 → N2
+- **QF** Colour from temperature → N4, N5, N54
+- **QH** Rain or dry → N7 · used by D102
+- **QI** Snow line → N8
+- **QJ** Raindrop speed → N9
+- **QK** Visibility → N10
+- **QL** Lightning → N11 · used by D112
+- **QM** Random events → N12 · used by SC9, D110, D181, HX4
+- **QN** Walking cost → N13 · used by D106
+- **QO** Melt → N14, N15 · used by D108
+- **QP** Settle → N16 · used by D104
+- **QQ** Ice growth → N17 · used by D109
+- **QR** Slip → N18, N19
+- **QS** Ruts → N20
+- **QT** Fire vs wetness → N21
+- **QU** Fire growth ∝ t²; heat to a neighbour ∝ (near / (gap + near))² · N22 → N22
+- **QV** Forager's rate → N23, N24
+- **QW** Move on → N24 · used by SC2, D132
+- **QX** Crowding → N25, N26
+- **QY** Growth → N27
+- **QZ** Sustainable take → N28
+- **QAA** Soil → N29
+- **QAB** Learning curve → N30
+- **QAC** Crew → N31 · used by SC4, SC5, D126
+- **QAD** Spoilage → N32, N33
+- **QAE** Price → N34
+- **QAF** Battle odds → N35 · used by D155, D177
+- **QAG** Who to fight → N36, N37 · used by SC6
+- **QAH** Fight or not → N38
+- **QAI** Nerve → design
+- **QAJ** Arrow flight → N39, N40
+- **QAL** Sight from height → N41 · used by SC7, D143
+- **QAM** Line of sight → N42
+- **QAN** Many eyes → N43, N44
+- **QAO** Flee → N45
+- **QAP** Cold and wet → N46
+- **QAQ** Sickness → N47, N48
+- **QAR** Weighted pick → N49
+- **QAS** Breaking → N50, N51, N52
+- **QAT** Shadow → N53 · used by D120
+- **QAU** Light reach ∝ √power (flame colour uses QF, colour from temperature) · N54 → N54
+- **QAV** Smoke → N55, N56
+- **QAW** Camera → N57
+- **QAX** Sound → N58 · used by HA3, HX1
+- **QAY** Material sound by decay rate · N59 → N59 · used by HM1, HM2, HM3, HU4, HU11, HU12, HU14, HW2, HW3, HW4
+- **QAZ** Coastline → N60
+- **QBA** Lake sizes → N61
+- **QBB** River width grows with the lake as a power · N62 → N62
+- **QBC** Shoreline index → N63
+- **QBD** The view → N66 · used by A1, A2
+- **QBE** Slope or face → N64 · used by A3
+- **QBF** The dice → N65 · used by D187
+- **QBG** Headlands and bays → N67
+- **QBH** A lake's size drawn from the power law (QBA) → N61
+- **QBI** Roads cross rivers at fords → N68
+- **QBK** The art frame → N66
+- **QBL** The way → N74 · used by SC1
+- **QBM** Walking → N71, N72, N73, N79 · used by SC1
+- **QBN** Gathering → N70 · used by SC2, SC3, SC12, SC16, SC17
+- **QBJ** Z1's store → N69 · used by D61
+- **QBO** The blow → N69 · used by SC6, D140, D141
+- **QBP** Upkeep → design · used by D131
+- **QBQ** The break → N76 · used by D142
+- **QBR** The score → N75 · used by D135
+- **QBS** Wounded balance → N77, N78, N80 · used by SC8, W1, W3, W4, W5, D167, D168
+- **QBT** Impact → N81, N82, N83, N18 · used by SC6, G5, G6, G7, G8, W1, W2, W3, W4, W5, W6, W7, W8, W9, W10, W11, W13, W14, D166, D168, HC3
+- **QBU** The stride → N79 · used by SC1, W1, W2, W3, W4, W5, W6, D96
+- **QBW** The opening view → design · used by SC11, D165
+- **QBX** The air's top → N88 · used by HX5
+- **QBY** How far a sound carries → N89 · used by HX7
+
+## By citation
+
+- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QBT
+- **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QS, QT, QU, QV, QW, QX, QY, QZ, QAA
+- **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
+- **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
+- **N5** Ballesteros (2012), colour index to temperature → QF, QAS, QAT, QAU, QAV, QAW, QAX, QAY
+- **N6** (retired: satellites cut, Stone Age) → QAZ, QBA, QBB, QBC, QBD, QBE, QBF, QBG, QBH, QBI, QBK, QBJ, QBO
+- **N7** Gabriel & Neumann (1962), QJRMS 88 → QH, QBL, QBM, QBN, QBQ, QBR, QBS, QBU, D102
+- **N8** Jennings, Winchell, Livneh & Molotch (2018), Nature Communications 9:1148 → QI, QBS, QBT, QBX, QBY
+- **N9** Atlas, Srivastava & Sekhon (1973); Gunn & Kinzer (1949) → QJ
+- **N10** Koschmieder (1924) → QK
+- **N11** WCAG 2.3.1, three flashes → QL
+- **N12** Poisson (1837); Feller, An Introduction to Probability Theory, vol. 1 → QM, HX4
+- **N13** Pandolf, Givoni & Goldman (1977) → QN
+- **N14** Hock (2003), degree-day melt → QO
+- **N15** US Army Corps of Engineers (1956), Snow Hydrology → QO
+- **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP
+- **N17** Stefan (1891) → QQ
+- **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QBT, G7, G8
+- **N19** Hanson et al. (1999), slip and the grip a step needs → QR
+- **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS
+- **N21** Rothermel (1972); USDA RMRS-GTR-371 → QT
+- **N22** Heskestad (1984); NFPA 72, the t² fire → QU
+- **N23** Holling (1959), Can. Entomol. 91 → QV
+- **N24** Charnov (1976), Theor. Pop. Biol. 9 → QV, QW
+- **N25** Fretwell & Lucas (1970) → QX
+- **N26** Sutherland (1983) → QX
+- **N27** Verhulst (1838) → QY
+- **N28** Schaefer (1954) → QZ
+- **N29** (to open) White (1962), Medieval Technology and Social Change: three-field rotation raised the sown share from 1/2 to 2/ → QAA
+- **N30** Wright (1936), learning curve → QAB
+- **N31** Thomas & Smith (1990), overmanning → QAC
+- **N32** Labuza, first-order food loss → QAD
+- **N33** FAO, Grain storage techniques, ch. 6 → QAD
+- **N34** Andreyeva, Long & Brownell (2010), food price elasticities → QAE
+- **N35** Lanchester (1916), Aircraft in Warfare → QAF
+- **N36** Churchill, Saffidine & Buro (2012), AIIDE → QAG
+- **N37** Cox & Smith (1961), Queues → QAG
+- **N38** Maynard Smith & Price (1973), hawk–dove → QAH
+- **N39** Projectile motion from a height (standard) → QAJ
+- **N40** Drag on a sphere (standard fluid dynamics) → QAJ
+- **N41** Horizon from a height, √(2Rh) (standard) → QAL
+- **N42** Bresenham (1965), grid line → QAM
+- **N43** Pulliam (1973) → QAN
+- **N44** Lima (1995) → QAN
+- **N45** Ydenberg & Dill (1986) → QAO
+- **N46** Thermal resistance in series (standard) → QAP
+- **N47** Kermack & McKendrick (1927), Proc. R. Soc. A 115 → QAQ
+- **N48** Bootsma & Ferguson (2007), PNAS 104(18) → QAQ
+- **N49** Goldberg (1989), roulette-wheel selection → QAR
+- **N50** Hertz (1882), contact → QAS
+- **N51** Auerbach (1891), crack threshold → QAS
+- **N52** Weibull (1951), strength by size → QAS
+- **N53** Plane geometry, shadow length → QAT
+- **N54** Black-body colour; inverse-square light → QF, QAU
+- **N55** Briggs (1969), plume rise → QAV
+- **N56** Pasquill–Gifford dispersion → QAV
+- **N57** Damped harmonic oscillator (standard) → QAW
+- **N58** ISO 9613-2, sound outdoors → QAX, HX1
+- **N59** Klatzky, Pai & Krotkov (2000), Presence 9 → QAY, HM1, HM2, HM3
+- **N60** Mandelbrot (1967), Science 156 → QAZ
+- **N61** Downing et al. (2006), lake sizes → QBA, QBH
+- **N62** Leopold & Maddock (1953), USGS Paper 252 → QBB
+- **N63** Hutchinson (1957), shoreline development → QBC
+- **N64** (to open) Angle of repose, dry sand about 34° (Al-Hashemi & Al-Amoudi 2018, Powder Technology 330, a review; from memory → QBE, A3
+- **N65** Ettinger (2017), Mulberry32, a 32-bit generator; the seed of the day is the game's own rule → QBF
+- **N66** (to open) Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the gro → QBD, QBK
+- **N67** (to open) Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology,  → QBG
+- **N68** (to open) Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory → QBI
+- **N69** (to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house → QBJ, QBO, D61, D123, D124, D125, D127, D128, D136, D138, D139, D143
+- **N70** First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6,  → QBN, D88
+- **N71** (to open) Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) → QBM, D86
+- **N72** (to open) Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) → QBM, D86
+- **N73** (to open) Travel speeds of deer, wolf and bear at a walk or trot (natural history, standard; from memory, to open) → QBM, D86
+- **N74** Hart, Nilsson & Raphael (1968), IEEE Trans. SSC 4: A* → QBL
+- **N75** First Keep Build 42 (Oct 28), the old game's SCORE: unit 5, bld 5, tech 5, wealth 10 (its weights, kept) → QBR, D135
+- **N76** (to open) Dupuy (1987), Understanding War: forces break at losses well short of annihilation; the classic breakpoint nea → QBQ, D142
+- **N77** Ranger Medic Handbook (2025), p. 45, the classes of haemorrhagic shock: I up to 15% blood lost, slightly anxio → QBS, D167
+- **N78** FBI Academy, Handgun Wounding Factors and Effectiveness (Patrick, 1989): short of a hit to the brain or upper  → QBS, D167
+- **N79** NAVMC 2691, Marine Corps Drill and Ceremonies Manual: quick time is 120 steps a minute at 30 inches a step (3. → QBM, QBU, D86
+- **N80** (to open) Winter (1995), Human balance and posture control during standing and walking, Gait & Posture 3: quiet standing → QBS
+- **N81** Engineering ToolBox, Friction coefficients for common materials: rubber on dry concrete 0.6–0.85, on wet 0.45– → QBT
+- **N82** Conservation of momentum; the perfectly inelastic collision v = m₁v₁ / (m₁ + m₂) (standard mechanics) → QBT
+- **N83** Sliding to rest under Coulomb friction: d = v² / (2 μ g) (standard mechanics) → QBT
+- **N84** (to open) ICRP Publication 23 (1975), Reference Man: 70 kg (from memory, to open) → unused
+- **N85** (to open) Masses of animals and arms: horse about 500 kg, deer 70, wolf 40, bear 200; spear 2.5 kg, shield 5, scale armo → W2, W3, W4, W5, W7, W8, W9, W10, W11, W13
+- **N86** (to open) Rossing, The Science of Sound: the modes of a free bar at 1 : 2.756 : 5.404 (from memory, to open; carried fro → HM1, HM2, HM3
+- **N87** (to open) Densities: timber about 600 kg/m³, stone about 2,400, iron 7,870 (standard tables, from memory, to open) → W12, W15, W16
+- **N88** (to open) Fresh snow is porous and absorbs sound, high frequencies most: a snowy landscape sounds muffled (acoustics of  → QBX, HX5
+- **N89** National Weather Service, Understanding Lightning: Thunder (weather.gov/safety/lightning-science-thunder): thu → QBY, HX7
+- **N90** Design: Albert, Nov 4 (the turned grid, "B") → A1
+- **N91** Design: Albert, Nov 5: matched to Base's squash of 0.66 (sin 41.3°), the look he played and liked → A2
+- **N92** Design: Albert, Nov 5 (the mold) → SC0, SC01, SC02, SC03
+- **N93** Design: Albert, Nov 5 (menus are shells) → SC04
+- **N94** Design: v100 floor 5, Nov 4 → SC1, SC9, SC10
+- **N95** Design: v100 floor 9, Nov 5 → SC2, SC3, SC4, SC5, SC11, SC13, SC14, SC15, SC16
+- **N96** Design: v100 floor 10, Nov 5 → SC6, SC7
+- **N97** Design, Nov 5 → SC8, W14, HE1, HX5
+- **N98** Design: v100 floor 4, Nov 4 → SC12
+- **N99** Design: v100 floor 3, Nov 4 → SC17
+- **N100** Design: dictionary SC → SC18, SC19
+- **N101** Design: Albert, Nov 5 07:35 → SC20
+- **N102** Design: v100 floor 1, Nov 4 → C1, C2, C3, C4
+- **N103** Design: v100, Nov 4 → C5, C6, C7, C8, C10
+- **N104** N81 (car tyre on dry grass, 0.35: the nearest measured pair) → G5
+- **N105** Design, Nov 5: no measured value found; set between grass and snow → G6
+- **N106** N81 (waxed wood on wet snow, 0.14 static) → G7
+- **N107** N81 (ice on ice, 0.1 static) → G8
+- **N108** N84 (70 kg) → W1
+- **N109** N79 (stride: two steps of 30 in) → W1
+- **N110** N80 (centre of mass 0.55 of height; foot) → W1
+- **N111** Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn → W6
+- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D49, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D62, D63, D64, D65, D66, D67, D68, D69, D70, D71, D72, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D109, D110, D111, D112, D113, D114, D115, D116, D117, D118, D119, D120, D121, D169, D170
+- **N113** Design: the figures' four-frame walk (preview 49) → D96
+- **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D129, D130, D131, D132, D133, D134, D137, D140, D141, D144, D145, D146, D147, D148, D149, D150, D151, D152, D153, D154, D155, D156, D157, D160, D161, D162, D163, D164
+- **N115** Design: Albert, Nov 5 (his screenshot of Base) → D165
+- **N116** Design: the juice pass of Nov 3 (Base: 2 px, 0.08 s) → D166
+- **N117** Standard gravity (standard) → D168
+- **N118** Design: the build log (README) → D171
+- **N119** Design: Albert, Nov 1 14:18 (the old game's START_RES: 200 of food, wood, stone and gold, no iron) → D172
+- **N120** Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, Build A) → D173, D174, D175, D176, D177, D178, D179, D180
+- **N121** Design: v100 floor 5, Nov 4 (deer herds D90–D91, wolf packs D92–D93) → D181
+- **N122** Design: Mid's BEAT (numbers.js), brought by Albert's yes, Nov 5 11:40 (Frankenstein F10) → D182, D183, D184
+- **N123** Design: Mid's UG (15-sim-spatial.js), brought by Albert's yes, Nov 5 11:40 (Frankenstein F10) → D185
+- **N124** Design: Mid's SGC (15-sim-spatial.js), brought by Albert's yes, Nov 5 11:40 (Frankenstein F10) → D186
+- **N125** Design: Albert's randomizer rule, Nov 5 (Frankenstein F10): no Math.random in the world, looks included → D187
+- **N126** Design: Albert, Nov 5 (the gate) → X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13, X14, X15, X16, X17, X18, X19, X20, X21, X22, X23, X24, X25, X26, X27, X28, X29, X30, X31, X32, X33
+- **N127** Design: the audit of Nov 5, Build A: a test for each fix → X34, X35, X36, X37, X38, X39
+- **N128** Design: Albert, Nov 5 (Frankenstein Refresh: map Mid with our tests) → X40
+- **N129** Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it) → X41
+- **N130** Design: Albert, Nov 5 09:49 (Frankenstein 4: the match test) → X42
+- **N131** Design: Albert, Nov 5 09:47 (sort every piece) → X43
+- **N132** Design: Albert, Nov 5 11:40 (Frankenstein F10) → X44
+- **N133** Design: Albert, the Rank Ribbon (Oct 30) and the Formation → SN1
+- **N134** Design: Albert, Nov 5 07:13–07:15 (his Land list; six tabs of up to nine) → SN2
+- **N135** Design: Albert, Nov 5 07:30 → SN3
+- **N136** Design: Albert, Nov 5 07:30 (the Inspector precedent) → SN4
+- **N137** Design: Albert's Build 30 top bar → SN5
+- **N138** Design: Albert, Nov 5 07:36 → SN6
+- **N139** Design: Albert, Nov 4 (the setup screen its own height) → SN10
+- **N140** Design: Albert, Nov 5 → SN11
+- **N141** Design: Albert, Nov 5 07:34 → SN12
+- **N142** Design: v100 floor 8, Nov 5 → SN13
+- **N143** Design: Albert, Nov 5 10:28 (Tall for the volume row: keep for now) → SN13
+- **N144** Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) → R1, R5, R2, R3, R4, MG1, MG2, MG3, MG4, BTC1, BTC2, BTC5, BTC6, BTC7, BTC8, BR1, BR2, BCR1, BCR2, BCL1, BCL2, BCL3, BCL4, BCT1, BCT2, BP1, BP2, BP3, BP4, BP5, BP6, BP7, BP8, BP9, BP10, BI1, BI2, BI3, BI4, BI5, BI6, BI7, BI8, BI9, BM1, BM2, BM3, BM4, BW1, BW2, BW3, BW4, BF5, BS1, BS2, UV, UM1, UM2, UM3, UM4, UM4b, US1, US2, US3, US4, UT1, UT2, MH1, MH3, MH4, MH5, MW3, MW4, MW6
+- **N145** Art: Base → HU1, HU2, HU3, HU4, HU5, HU6, HU7, HU8, HU9, HU10, HU11, HU12, HU13, HU14, HW1, HW2, HW3, HW4, HC1, HC2, HC4, HC5, HC6, HA1, HA2, HA3, HX2, HX3, HX4, HX6
+- **N146** Art: Mid (35-sound.js), Nov 5 → HU15, HU16, HU17, HU18, HW5, HC7, HC8, HA4, HA6, HA7, HX2, HX9
+- **N147** Art: Base (the juice pass, Nov 3) → HC3
+- **N148** Design: Apple's ambient audio session for games, carried from Mid (35-sound.js) → HX8
+- **N149** Design: Albert, Nov 5 09:47 (three volumes) → HX10
+- **N150** Art: preview 49 (18-figures.js), the last build before the camera turn → P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19
+- **N151** Art: preview 49 (19-building-art.js) → PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9, PB10, PB11
+- **N152** Art: preview 49 → PN1
+
+## Named exceptions
+
+- Tall: Start, Hall, Layers
+- Off the Build menu: BS1, BTC5, BTC6, BTC7, BTC8
+
+## Sounds waiting for a feature
+
+- **tribute** (HU15) waits for tribute from vassals and allies
+- **zeal** (HU16) waits for religion and zeal
+- **jingle** (HU17) waits for the travelling show (an event)
+- **roar** (HU18) waits for a beast in the land (an event)
+- **shot** (HC7) waits for hand guns
+- **boom** (HC8) waits for siege guns and blasts
+- **wind** (HA4) waits for the wind (cut Nov 4; the sound kept, Albert Nov 5 10:27)
+- **hooves** (HA6) waits for the stampede (an event)
+- **rumble** (HA7) waits for the earthquake (an event)

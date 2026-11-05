@@ -17,7 +17,7 @@ Z3 Homestead: the clearing, more resources
 Z4 The rest of the board: laid by the Randomizer (L13)
 
 ## D Measurements (the book `books/measure.js`)
-Every measured number lives in `books/measure.js`, one entry a code, with its name, value, citation and law; BOOKS.md shows it, INDEX.md cross-checks it. Nothing here repeats a value. (Was "D Dimensions"; renamed Nov 5 for what it holds: sizes, times, prices, speeds, counts.)
+Every measured number lives in `books/measure.js`, one entry a code, with its name, value, citation and law; INDEX.md shows it, INDEX-CITATIONS.md cross-checks it. Nothing here repeats a value. (Was "D Dimensions"; renamed Nov 5 for what it holds: sizes, times, prices, speeds, counts.)
 
 ## Y Year (time)
 Y1 a day (D20) · Y2 a season (D21) · Y3 a year (D22) (four seasons; the old values, kept because they are clean). The clock runs from the map's making; Fast (D116) for testing.

@@ -5,9 +5,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
 | Game code | 28 | 1,623 | 235,899 | 236,206 |
-| Books | 601 | 0 | 87,420 | 87,638 |
+| Books | 601 | 0 | 81,691 | 81,761 |
 | Laws | 74 | 0 | 7,375 | 7,617 |
-| Tools | 4 | 354 | 39,000 | 39,072 |
+| Tools | 4 | 356 | 39,747 | 39,820 |
 
 ## The trades (code)
 
@@ -53,11 +53,11 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | ground | 4 | 640 |
 | mass | 16 | 2,354 |
 | measure | 182 | 23,539 |
-| rules | 44 | 7,398 |
+| rules | 44 | 7,451 |
 | screen | 10 | 2,597 |
-| shells | 74 | 15,958 |
-| sound | 51 | 11,772 |
-| sprites | 31 | 7,102 |
+| shells | 74 | 12,258 |
+| sound | 51 | 11,159 |
+| sprites | 31 | 5,485 |
 
 ## The shells
 
@@ -72,7 +72,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Code | Rule | Stage | Stops |
 |---|---|---|---|
 | X1 | home | books | a code that has two homes (two books) |
-| X2 | cited | books | a book entry with no citation, or citing an N not in the Citations book |
+| X2 | cited | books | an entry with no citation, a citation not in the Citations book, or one typed as text instead of its code |
 | X3 | laws | books | an entry or a law naming a Q or an N that does not exist |
 | X4 | mold | books | a shell lacking what its layer's mold needs |
 | X5 | needs | books | a shell ticking what it cannot back |
@@ -91,7 +91,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X18 | seals | seal | a locked item differing from its seal by a single byte |
 | X19 | ratchet | seal | opened code typing more numbers or colours than when sealed |
 | X20 | budget | seal | opened code growing past its sealed size without growth the permit grants |
-| X21 | pages | seal | INDEX.md, BOOKS.md or INVENTORY.md not what the books say (on GitHub) |
+| X21 | pages | seal | a page (INDEX, CITATIONS, INDEX-CITATIONS, INVENTORY) not what the books say (on GitHub) |
 | X22 | rules | seal | a rule in this book that nothing runs |
 | X23 | t-version | page | the page shows the version from the book |
 | X24 | t-top | page | the top is one ribbon of the cells the Screen book names |

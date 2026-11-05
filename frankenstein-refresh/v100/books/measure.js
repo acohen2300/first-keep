@@ -1,4 +1,4 @@
-// Book · D Measurements: every measured number, one entry a code. The game reads it; BOOKS.md is written from it. Edit here only.
+// Book · D Measurements: every measured number, one entry a code. The game reads it; INDEX.md is written from it. Edit here only.
 BOOK("measure", {
  "D1": {"key": "site", "value": 3060, "name": "the site, the whole world", "cite": ["N112"], "law": []},
  "D2": {"key": "board", "value": 2160, "name": "the board, the played land", "cite": ["N112"], "law": []},

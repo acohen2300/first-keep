@@ -1,5 +1,5 @@
 # The gate. Every check is an entry in books/rules.js; this file runs each by its key, in three stages: the books, the code, the seal.
-#   python3 index.py          check; write INDEX.md, BOOKS.md and INVENTORY.md; report what changed against the seal and what stayed locked
+#   python3 index.py          check; write the pages (INDEX, CITATIONS, INDEX-CITATIONS) and INVENTORY.md; report what changed against the seal and what stayed locked
 #   python3 index.py --seal   after a passing build: seal every item (fingerprint, bytes, typed numbers) for the next permit
 #   python3 index.py --ci     on GitHub: write nothing; the pages must already match, and nothing may differ from the seal
 #   python3 index.py --survey ../mid ../map   (paths from this folder) read another game (Mid) with the same measures; hold it to its seal; write its map
@@ -93,6 +93,7 @@ for b, es in BOOKS.items():
     if b == 'citations': continue
     for c, e in es.items():
         rule('cited', e.get('cite'), f'{c} ({b}) has no citation')
+        for t in e.get('cite', []): rule('cited', re.fullmatch(r'N\d+', t), f'{c} ({b}) cites by typed text, not by code: {t[:60]}')   # every citation is an entry in the Citations book
         for n in re.findall(r'N\d+', ' '.join(e.get('cite', []))): rule('cited', n in N, f'{c} cites {n}, not in the Citations book')
         for q in e.get('law', []): rule('laws', q in LAWS, f'{c} names law {q}, not in CALCULATIONS.md')
 for q, line in LAWS.items():
@@ -164,12 +165,12 @@ uses = {}
 for b, es in BOOKS.items():
     for c, e in es.items():
         for r in e.get('law', []) + re.findall(r'N\d+', ' '.join(e.get('cite', []))): uses.setdefault(r, []).append(c)
-idx = ['# First Keep v100 · the Index', '', 'Written by `index.py`, never by hand.', '', '## By law', ''] + [f'- **{q}** {l[len(q) + 1:].split(":")[0]} → {", ".join(re.findall(r"N\d+", l.split(" · ")[-1])) or "design"}' + (f' · used by {", ".join(uses[q])}' if q in uses else '') for q, l in LAWS.items()]
-idx += ['', '## By citation', ''] + [f'- **{n}** {"" if e["opened"] else "(to open) "}{e["text"][:110]} → {", ".join([q for q, l in LAWS.items() if n in l] + uses.get(n, [])) or "unused"}' for n, e in N.items()]
-idx += ['', '## Named exceptions', '', f'- Tall: {", ".join(e["key"] for e in BOOKS["screen"].values() if "Tall" in (e["value"].get("ticks", []) if isinstance(e["value"], dict) else []))}', f'- Off the Build menu: {", ".join(SN["offmenu"])}']
-idx += ['', '## Sounds waiting for a feature', ''] + [f'- **{e["key"]}** ({c}) waits for {e["waits"]}' for c, e in BOOKS['sound'].items() if e.get('waits')]
+xc = ['# First Keep v100 · 3. Index and Citations (the cross-check)', '', 'Written by `index.py`, never by hand. Every law and every entry matched to its citations, and every citation to what uses it.', '', '## By law', ''] + [f'- **{q}** {l[len(q) + 1:].split(":")[0]} → {", ".join(re.findall(r"N\d+", l.split(" · ")[-1])) or "design"}' + (f' · used by {", ".join(uses[q])}' if q in uses else '') for q, l in LAWS.items()]
+xc += ['', '## By citation', ''] + [f'- **{n}** {"" if e["opened"] else "(to open) "}{e["text"][:110]} → {", ".join([q for q, l in LAWS.items() if n in l] + uses.get(n, [])) or "unused"}' for n, e in N.items()]
+xc += ['', '## Named exceptions', '', f'- Tall: {", ".join(e["key"] for e in BOOKS["screen"].values() if "Tall" in (e["value"].get("ticks", []) if isinstance(e["value"], dict) else []))}', f'- Off the Build menu: {", ".join(SN["offmenu"])}']
+xc += ['', '## Sounds waiting for a feature', ''] + [f'- **{e["key"]}** ({c}) waits for {e["waits"]}' for c, e in BOOKS['sound'].items() if e.get('waits')]
 cell = lambda v: json.dumps(v, ensure_ascii=False).replace('"', '').replace('|', '/')[:140]
-pg = ['# First Keep v100 · the Books', '', 'Written by `index.py` from `books/*.js`, never by hand.', '']
+pg = ['# First Keep v100 · 1. the Index', '', 'Written by `index.py` from `books/*.js`, never by hand: every entry of every book by its code, and the codes it cites.', '']
 for b, es in BOOKS.items():
     pg += [f'## {b}', '', '| Code | Name | Value | Cited |', '|---|---|---|---|'] + [f'| {c} | {e.get("name", "")} | {cell(e.get("value", e.get("text", e.get("ticks"))))} | {"; ".join(e.get("cite", []))[:80] if b != "citations" else ("opened" if e["opened"] else "to open")} |' for c, e in es.items()] + ['']
 def size(k): t = NOW[k]; return t.count('\n'), len(t), len(t.encode())
@@ -183,7 +184,8 @@ inv += ['', '## The books', '', '| Book | Entries | Bytes |', '|---|---|---|'] +
 inv += ['', '## The shells', '', '| Layer | Shells | Ticking nothing yet |', '|---|---|---|'] + [f'| {L} | {sum(1 for s in BOOKS["shells"].values() if s["layer"] == L)} | {sum(1 for s in BOOKS["shells"].values() if s["layer"] == L and not s["ticks"])} |' for L in (100, 110, 120)]
 inv += ['', '## The rules', '', '| Code | Rule | Stage | Stops |', '|---|---|---|---|'] + [f'| {c} | {e["key"]} | {e["value"]["stage"]} | {e["name"]} |' for c, e in BOOKS['rules'].items()]
 inv += ['', f'{len(STAMP)} items sealed · {sum(len(es) for es in BOOKS.values())} book entries · {len(LAWS)} laws · {len(N)} citations, {sum(1 for e in N.values() if not e["opened"])} still to open · {len(known)} known']
-PAGES = {'INDEX.md': idx, 'BOOKS.md': pg, 'INVENTORY.md': inv}
+ci = ['# First Keep v100 · 2. the Citations', '', 'Written by `index.py` from `books/citations.js`, never by hand: every source by its code.', '', '| Code | Kind | Opened | Source |', '|---|---|---|---|'] + [f'| {n} | {e.get("kind", "source")} | {"yes" if e["opened"] else "to open"} | {e["text"]} |' for n, e in N.items()]
+PAGES = {'INDEX.md': pg, 'CITATIONS.md': ci, 'INDEX-CITATIONS.md': xc, 'INVENTORY.md': inv}
 for f, lines in PAGES.items():
     t = '\n'.join(lines) + '\n'
     if CI: rule('pages', text(f) == t, f'{f} is not what the books say: written by hand, or not rebuilt')

@@ -1,6 +1,6 @@
 # First Keep v100 · Book 1, Laws: Q Calculations
 
-Q is letters only, so a calculation can never be mistaken for a number. N is a letter and a number. INDEX.md matches the two both ways and is written from this page, never by hand. Pulled from the old game and SoRen on Nov 4, cleaned: no wind, no fantasy, no made-up arrow arc, no duplicates; every decay, wetness, wound and loyalty is one calculation, QP.
+Q is letters only, so a calculation can never be mistaken for a number. N is a letter and a number. INDEX-CITATIONS.md matches the two both ways and is written from this page, never by hand. Pulled from the old game and SoRen on Nov 4, cleaned: no wind, no fantasy, no made-up arrow arc, no duplicates; every decay, wetness, wound and loyalty is one calculation, QP.
 
 ## Q Calculations
 Sky and time
@@ -86,7 +86,7 @@ QBX The air's top: snow cover lowers the highest pitch that carries, from HX5's 
 QBY How far a sound carries: a sound with a reach R (HX7) is heard at full within floor × R and falls as 1 ÷ distance beyond (the inverse-square law in amplitude, as QAX), so it fades to the quietest heard exactly at R; thunder's R is about 10 miles, so it is heard across the whole board · N89
 
 ## N Citations
-The citations have their own book: `books/citations.js` (N1 to N88), shown in BOOKS.md. A Q here names its N; INDEX.md matches the two both ways.
+The citations have their own book: `books/citations.js` (N1 to N88), shown in INDEX.md. A Q here names its N; INDEX-CITATIONS.md matches the two both ways.
 
 ## Old values, for reference only (the game never reads these; each moves into a book when its law is built)
 Day 120 s, season 180 s, year 12 min · gather rates · fire 20 s · melt 0.004 · ice 500 °C·s · ruts 300 and 600 s · wet 20 s, dry 50 s · mud 0.8, snow 0.6 · friction 0.7, 0.45, 0.3, 0.08–0.25 · personal space 3 ft · spoilage 5% a year · eating 30 food in 8 min · R0 2 · rain-chain odds · crew 0.7 · move-on 18% (fog sight comes from QK, not typed)

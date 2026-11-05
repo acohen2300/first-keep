@@ -1,7 +1,7 @@
 // Book · X Rules: every check that holds the building, one entry each. stage books, code and seal run in the gate (index.py); stage page runs in the tests (test.py), each test named by its key. A rule nothing runs stops the gate. Edit here only.
 BOOK("rules", {
  "X1": {"key": "home", "value": {"stage": "books"}, "name": "a code that has two homes (two books)", "cite": ["N126"], "law": []},
- "X2": {"key": "cited", "value": {"stage": "books"}, "name": "a book entry with no citation, or citing an N not in the Citations book", "cite": ["N126"], "law": []},
+ "X2": {"key": "cited", "value": {"stage": "books"}, "name": "an entry with no citation, a citation not in the Citations book, or one typed as text instead of its code", "cite": ["N126"], "law": []},
  "X3": {"key": "laws", "value": {"stage": "books"}, "name": "an entry or a law naming a Q or an N that does not exist", "cite": ["N126"], "law": []},
  "X4": {"key": "mold", "value": {"stage": "books"}, "name": "a shell lacking what its layer's mold needs", "cite": ["N126"], "law": []},
  "X5": {"key": "needs", "value": {"stage": "books"}, "name": "a shell ticking what it cannot back", "cite": ["N126"], "law": []},
@@ -20,7 +20,7 @@ BOOK("rules", {
  "X18": {"key": "seals", "value": {"stage": "seal"}, "name": "a locked item differing from its seal by a single byte", "cite": ["N126"], "law": []},
  "X19": {"key": "ratchet", "value": {"stage": "seal"}, "name": "opened code typing more numbers or colours than when sealed", "cite": ["N126"], "law": []},
  "X20": {"key": "budget", "value": {"stage": "seal"}, "name": "opened code growing past its sealed size without growth the permit grants", "cite": ["N126"], "law": []},
- "X21": {"key": "pages", "value": {"stage": "seal"}, "name": "INDEX.md, BOOKS.md or INVENTORY.md not what the books say (on GitHub)", "cite": ["N126"], "law": []},
+ "X21": {"key": "pages", "value": {"stage": "seal"}, "name": "a page (INDEX, CITATIONS, INDEX-CITATIONS, INVENTORY) not what the books say (on GitHub)", "cite": ["N126"], "law": []},
  "X22": {"key": "rules", "value": {"stage": "seal"}, "name": "a rule in this book that nothing runs", "cite": ["N126"], "law": []},
  "X23": {"key": "t-version", "value": {"stage": "page"}, "name": "the page shows the version from the book", "cite": ["N126"], "law": []},
  "X24": {"key": "t-top", "value": {"stage": "page"}, "name": "the top is one ribbon of the cells the Screen book names", "cite": ["N126"], "law": []},
