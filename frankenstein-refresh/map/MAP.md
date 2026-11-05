@@ -253,16 +253,16 @@ Typed numbers: numbers and colours typed into code (they belong in a book). Asks
 | words.js | Words | 1 | 1,215 | 103,803 | 104,005 | 1 in v100, 15 bring, 1 cut, 0 parked |
 | core.js | Core | 2 | 957 | 47,164 | 47,714 | 38 in v100, 127 bring, 12 cut, 0 parked |
 | paths.js | Walking grid | 1 | 846 | 34,215 | 34,437 | 16 in v100, 20 bring, 9 cut, 0 parked |
-| world.js | World | 7 | 1,095 | 52,496 | 53,361 | 5 in v100, 12 bring, 39 cut, 0 parked |
+| world.js | World | 7 | 1,095 | 52,496 | 53,361 | 5 in v100, 14 bring, 37 cut, 0 parked |
 | econ.js | Orders and economy | 4 | 3,878 | 151,377 | 152,607 | 29 in v100, 189 bring, 10 cut, 0 parked |
 | combat.js | War | 3 | 1,523 | 61,958 | 62,375 | 1 in v100, 65 bring, 1 cut, 0 parked |
 | ai.js | Computers | 1 | 782 | 36,855 | 37,048 | 2 in v100, 29 bring, 0 cut, 0 parked |
 | sprites.js | Art | 2 | 5,134 | 122,368 | 122,642 | 59 in v100, 21 bring, 3 cut, 0 parked |
-| display.js | View | 6 | 3,369 | 127,181 | 127,457 | 37 in v100, 92 bring, 38 cut, 0 parked |
-| touch.js | Touch | 1 | 669 | 21,388 | 21,512 | 3 in v100, 26 bring, 3 cut, 0 parked |
-| menu.js | Menus | 8 | 4,871 | 212,969 | 214,200 | not yet |
+| display.js | View | 6 | 3,369 | 127,181 | 127,457 | 37 in v100, 96 bring, 34 cut, 0 parked |
+| touch.js | Touch | 1 | 669 | 21,388 | 21,512 | 3 in v100, 27 bring, 2 cut, 0 parked |
+| menu.js | Menus | 8 | 4,871 | 212,969 | 214,200 | 36 in v100, 167 bring, 21 cut, 0 parked |
 | save.js | Saving | 1 | 771 | 27,462 | 27,595 | 0 in v100, 17 bring, 1 cut, 0 parked |
 | sound.js | Sound | 1 | 478 | 14,907 | 15,043 | 19 in v100, 2 bring, 2 cut, 5 parked |
-| events.js | Events, camps, natives, peace | 4 | 1,636 | 67,062 | 67,392 | 0 in v100, 93 bring, 12 cut, 0 parked |
+| events.js | Events, camps, natives, peace | 4 | 1,636 | 67,062 | 67,392 | 0 in v100, 99 bring, 6 cut, 0 parked |
 | start.js | Start | 1 | 750 | 12,347 | 12,467 | 2 in v100, 7 bring, 1 cut, 0 parked |
-| **all** | 18 temp books | 51 | 33,957 | 1,272,150 | 1,279,351 | 1211 of 1,435 pieces |
+| **all** | 18 temp books | 51 | 33,957 | 1,272,150 | 1,279,351 | 1435 of 1,435 pieces |

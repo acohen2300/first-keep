@@ -114,8 +114,8 @@
    "index.html cluster()"
   ],
   "makeMap": [
-   "cut",
-   "Mid's map-maker; v100's makeGround, makeTerrain, makeThings. The land's character per game: see misfits"
+   "bring",
+   "(Albert to call: see misfits) Mid's map-maker; v100's makeGround, makeTerrain, makeThings. The land's character per game: see misfits"
   ],
   "SHORE": [
    "cut",
@@ -158,8 +158,8 @@
    "distance to the nearest lake; v100's terrain keeps its own rules (between())"
   ],
   "lakeGrid": [
-   "cut",
-   "water on the walking grid, flood water wadeable with levees; v100's walkable() reads the height (L5). The flood: see misfits"
+   "bring",
+   "(Albert to call: see misfits) water on the walking grid, flood water wadeable with levees; v100's walkable() reads the height (L5). The flood: see misfits"
   ],
   "lakeSize": [
    "cut",

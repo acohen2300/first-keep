@@ -1,0 +1,1759 @@
+{
+ "about": "Step 6, temp book staging/menu.js (Mid's 27-cards-core, 29-card-pages, 30-cards, 31-guide, 32-frame, 33-verbs, 39-huddle, 40-emergency): every piece, and what becomes of it. in v100: already home (menu.js, the Screen book SN1-SN13). bring: Mid has it, v100 does not; it comes in as book entries and laws with its feature, its card rows picked by ticks (SN4). cut: v100 does it another way (mostly Mid's DOM patching and card plumbing, replaced by menu.js read, act, VERBS and render). The big tables (BLD_PAGE, CARDS, ACT, PLAY) carry a line per row. By the 10:31 rule, what comes over keeps Mid's values.",
+ "pieces": {
+  "cardTap": [
+   "cut",
+   "marks a tap inside a card; plumbing for the back chain"
+  ],
+  "openCard": [
+   "bring",
+   "open a card; Back returns to the card it came from (MENU-SPEC 4); v100 opens pages by S.tab and has Back on Start only"
+  ],
+  "READ_CARDS": [
+   "bring",
+   "the cards you sit and read (Research, Army, Guide, Help, Score, Stores, Sound) pause the game; with pause"
+  ],
+  "cardPK": [
+   "bring",
+   "the card's pause key; with card pause"
+  ],
+  "cardPause": [
+   "bring",
+   "a reading card pauses the game, decided each time what it shows changes; with pause"
+  ],
+  "closeCard": [
+   "in v100",
+   "menu.js VERBS.close"
+  ],
+  "cardSig": [
+   "cut",
+   "the card's last text; v100's render keeps S.last"
+  ],
+  "sig": [
+   "cut",
+   "node signature for the patch; v100 rewrites the panel when its signature changes (menu.js render)"
+  ],
+  "patchKids": [
+   "cut",
+   "DOM patch plumbing; v100's render"
+  ],
+  "patch": [
+   "cut",
+   "DOM patch plumbing; v100's render"
+  ],
+  "tpl": [
+   "cut",
+   "DOM patch plumbing; v100's render"
+  ],
+  "patchHTML": [
+   "cut",
+   "DOM patch plumbing; v100's render"
+  ],
+  "cardIn": [
+   "cut",
+   "the card's node; v100's #card"
+  ],
+  "cap1": [
+   "cut",
+   "sentence case at run time; v100's labels are written cased"
+  ],
+  "btn": [
+   "in v100",
+   "menu.js cell() and vcell() (a slot: word, small line, state class)"
+  ],
+  "acts": [
+   "in v100",
+   "menu.js row() (six-slot rank, SN1)"
+  ],
+  "grid3": [
+   "in v100",
+   "menu.js frame() (three double-wide a row, SN2)"
+  ],
+  "list": [
+   "in v100",
+   "menu.js frame() and row()"
+  ],
+  "info": [
+   "cut",
+   "a card's value line; v100's card rows are <p> lines (menu.js ROWS)"
+  ],
+  "empty": [
+   "in v100",
+   "menu.js the empty slot <i> (faint outline, the rank keeps its shape)"
+  ],
+  "pager": [
+   "bring",
+   "six rows a page with Previous and Next (N13); part of the Mail and the Chronicle"
+  ],
+  "choice": [
+   "in v100",
+   "menu.js part() (a segmented choice, one lit)"
+  ],
+  "lab": [
+   "in v100",
+   "menu.js .lab, a setting's name on the row"
+  ],
+  "slt": [
+   "bring",
+   "(Albert to call: see misfits) the slider with its switch, used for a gift's amount on Relations; see misfits"
+  ],
+  "FOLD": [
+   "bring",
+   "which folds the player opened; with the book (explanations behind the book icon)"
+  ],
+  "techBook": [
+   "bring",
+   "a research step's entry: date, what it changed, its weight of 10; with the tech tree (the Content pull)"
+  ],
+  "folder": [
+   "in v100",
+   "menu.js .tabs and .frame (tabs as a file folder, one gold outline)"
+  ],
+  "INFO": [
+   "bring",
+   "which folds go behind the book icon; with the book"
+  ],
+  "infoBuf": [
+   "bring",
+   "the card's explaining text behind the book; v100 has the book on the Hall (S.info), Later elsewhere"
+  ],
+  "fold": [
+   "bring",
+   "an explanation behind the book icon; v100 has the Hall's book (menu.js VERBS.info)"
+  ],
+  "hpBar": [
+   "in v100",
+   "menu.js bar() (health on the title)"
+  ],
+  "sec": [
+   "cut",
+   "a section label in a card; v100's pages carry no labels (DICTIONARY Screen)"
+  ],
+  "rowHTML": [
+   "in v100",
+   "menu.js row() with tab()/ic() cells (icon over word)"
+  ],
+  "cardHead": [
+   "in v100",
+   "menu.js head() and ROWS.title"
+  ],
+  "title": [
+   "in v100",
+   "menu.js head() and ROWS.title (name; the Hall's age and health bars in its title)"
+  ],
+  "titleBar": [
+   "in v100",
+   "menu.js head(): back, the name, the book, close (MENU-SPEC 4)"
+  ],
+  "unitLine": [
+   "bring",
+   "a trained kind's stats line on its building's card; with the three tiers"
+  ],
+  "VS_WORD": [
+   "bring",
+   "words for what a kind is strong against; with the matchups (tiers)"
+  ],
+  "beatsText": [
+   "bring",
+   "what a kind beats, in words; with the matchups"
+  ],
+  "trainButtons": [
+   "bring",
+   "a building's train cells with the age lock and the people's own kind; v100 has menu.js ROWS.train and VERBS.train"
+  ],
+  "techState": [
+   "bring",
+   "research ready, short, busy, locked; with the tech tree"
+  ],
+  "lockedWhy": [
+   "bring",
+   "why a research is locked, in a slot's words; with the tech tree"
+  ],
+  "techBtn": [
+   "bring",
+   "a research cell; with the tech tree (v100 shows Tech as Later on the Hall)"
+  ],
+  "trainsAt": [
+   "in v100",
+   "books: D.trains (who each building trains), read by menu.js"
+  ],
+  "keepAgeBtn": [
+   "in v100",
+   "menu.js VERBS.ageUp (the next age as one cell, its price, the rise)"
+  ],
+  "statusOf": [
+   "bring",
+   "what one of yours is doing, in words, every state; v100's card says the job (menu.js ROWS.load, ROWS.health)"
+  ],
+  "lifeText": [
+   "bring",
+   "a unit's life: age, kills, work done; on its card"
+  ],
+  "yieldText": [
+   "bring",
+   "a find's math: a worker a minute, how many on it, how long it lasts; v100's card says what is left (ROWS.store)"
+  ],
+  "bonusText": [
+   "bring",
+   "what raises a find's rate (research, soil, season, the walk); with the tech tree and the seasons"
+  ],
+  "fxName": [
+   "bring",
+   "the research or building an effect came from; with the tech tree"
+  ],
+  "goodsText": [
+   "bring",
+   "a cart's goods and load in words; with the Market and trade (Later)"
+  ],
+  "ownTech": [
+   "bring",
+   "research your people may do (civ's own ranks hidden); with the civilizations (Later)"
+  ],
+  "fillOf": [
+   "in v100",
+   "menu.js price() (the share of a price you hold, its colour)"
+  ],
+  "need": [
+   "in v100",
+   "menu.js price() (Short 20w 10g)"
+  ],
+  "slotText": [
+   "bring",
+   "workers on a field, n of m; with field slots"
+  ],
+  "qName": [
+   "bring",
+   "a queue job's name, a unit or a research; v100's queue names units only (queue6)"
+  ],
+  "foeNearest": [
+   "bring",
+   "the side at war whose Town Center is nearest; for Attack nearest"
+  ],
+  "knownPower": [
+   "bring",
+   "what you know of a side's strength: all without fog, a spy's fresh report, else what you see"
+  ],
+  "oddsText": [
+   "bring",
+   "the odds line before an attack; with the odds (combat.js has the strength, QAF)"
+  ],
+  "BLD_PAGE": [
+   "bring",
+   "what a building's card adds, by kind; each page comes as card rows picked by a tick (SN4)",
+   {
+    "castle": [
+     "bring",
+     "soldiers mending near it, the garrison"
+    ],
+    "school": [
+     "bring",
+     "teaching soldiers"
+    ],
+    "farm": [
+     "bring",
+     "the field's crop and season"
+    ],
+    "treefarm": [
+     "bring",
+     "the tree farm's wood left, replant"
+    ],
+    "pasture": [
+     "bring",
+     "the herd (ML1, ML2 Later)"
+    ],
+    "throne": [
+     "bring",
+     "(Albert to call: see misfits) the Throne's page; see misfits"
+    ],
+    "tpost": [
+     "bring",
+     "the trade post's cut of the stop"
+    ],
+    "council": [
+     "bring",
+     "the War Council: squads, Battalions"
+    ],
+    "market": [
+     "bring",
+     "the Market (Later)"
+    ],
+    "mint": [
+     "bring",
+     "the Mint: coin, debase"
+    ]
+   }
+  ],
+  "factOf": [
+   "bring",
+   "a building's first fact: rising %, burning, a wonder's clock, the room it gives; v100 says the site's % (ROWS.health)"
+  ],
+  "slotsHTML": [
+   "bring",
+   "the queue's six slots: past six the last reads +n, short of six a locked place a research adds; v100 has the six slots and +n (menu.js queue6), bring the locked places"
+  ],
+  "relSides": [
+   "bring",
+   "the sides on Relations; with diplomacy (Later; v100 draws the tabs, menu.js stances)"
+  ],
+  "MISFITS": [
+   "in v100",
+   "menu.js PEOPLE.Misfits (Natives, Outlaws, Bandits, Robbers)"
+  ],
+  "relKey": [
+   "bring",
+   "a Relations row's key; with diplomacy"
+  ],
+  "relLord": [
+   "bring",
+   "a vassal or overlord's stance is not picked here; with vassals"
+  ],
+  "relName": [
+   "bring",
+   "a side's or a group's name; with diplomacy"
+  ],
+  "stanceOff": [
+   "bring",
+   "a stance a row cannot take; with diplomacy"
+  ],
+  "relOf": [
+   "bring",
+   "the stance held now; with diplomacy"
+  ],
+  "giftLock": [
+   "bring",
+   "why a gift is locked; with diplomacy"
+  ],
+  "relDraft": [
+   "bring",
+   "what a row's check would send, and why not; with diplomacy"
+  ],
+  "relPickOf": [
+   "bring",
+   "the row being drafted; with diplomacy"
+  ],
+  "relRow": [
+   "bring",
+   "a Relations row: who, where they stand, the gift, the three stances, the check; v100 draws it (menu.js stances), Later"
+  ],
+  "relStatus": [
+   "bring",
+   "what the last check will do; truce, the Games, the Natives' regard; with diplomacy"
+  ],
+  "relHTML": [
+   "bring",
+   "the Relations and Misfits tabs; v100 draws them on the Hall (Later)"
+  ],
+  "workshopPage": [
+   "bring",
+   "a workshop's card: what it makes, its share to go, the count; with the Workshop (BI8)"
+  ],
+  "marketPage": [
+   "bring",
+   "the Market's card: goods, Sell, Buy, ventures; with the Market (Later)"
+  ],
+  "keepMoreHTML": [
+   "bring",
+   "the Town Center's More: your people, goods, the whole research tree; behind the Hall's book"
+  ],
+  "vassalHTML": [
+   "bring",
+   "a vassal's page: loyalty, revolt, tax, levy, release; with vassals (Later). Tax: see misfits"
+  ],
+  "stopHTML": [
+   "bring",
+   "a trade stop's card; with trade (Later)"
+  ],
+  "caravanHTML": [
+   "bring",
+   "a caravan's route card; with the Caravan (UT1, Later)"
+  ],
+  "researchHTML": [
+   "bring",
+   "the Research card: every research, ready, short, locked; with the tech tree (v100: All tech is Later on the Hall)"
+  ],
+  "setRow": [
+   "in v100",
+   "menu.js part() rows on the Start page"
+  ],
+  "offOn": [
+   "in v100",
+   "menu.js OPTS fog and daily (Off, On)"
+  ],
+  "SET_WHY": [
+   "bring",
+   "each setting's why, behind the Start page's book: Easy, Normal, Hard, the fog, the tension (the Fantasy line: see misfits)"
+  ],
+  "settingsWhy": [
+   "bring",
+   "the settings' whys in one line; with SET_WHY"
+  ],
+  "pairRow": [
+   "in v100",
+   "menu.js Start: two two-choice settings share a row (World, Fog; Tension, Daily)"
+  ],
+  "settingsHTML": [
+   "in v100",
+   "menu.js SCREENS.Start (SN10): Difficulty, Length, Scenario, World and Fog, Tension and Daily"
+  ],
+  "CARDS": [
+   "bring",
+   "the cards, one a type; v100 has the subject's card (rows by tick, SN4) and the pages Start, Build, Hall, Yard",
+   {
+    "bld": [
+     "bring",
+     "a building's card: title with age and health, facts, send a villager, replant, the queue, train, tech, the Hall's three tabs, Help Repair Raze, a spy's report, Demand surrender, Offer overlordship, Sabotage, Attack with; v100 has title, health, queue, train, tech, raise and scrap (SN4)"
+    ],
+    "find": [
+     "bring",
+     "a gift's card (MG1-MG6: guards, take, hire, shrine)"
+    ],
+    "unit": [
+     "bring",
+     "a unit's card: status, life, orders, focus, home, teach, dismiss; v100 has title, health, job, stop or recall (SN4)"
+    ],
+    "info": [
+     "bring",
+     "a building not yet open: what it is, its age and price"
+    ],
+    "box": [
+     "bring",
+     "the trees in a box: cut a road"
+    ],
+    "stores": [
+     "bring",
+     "the stores: each resource, in and out a minute, who is on it (Parked 27 was a Warehouse view; this is Mid's)"
+    ],
+    "fault": [
+     "bring",
+     "something went wrong: restart from the save or carry on; with Saving"
+    ],
+    "resume": [
+     "bring",
+     "welcome back: resume the saved game; with Saving"
+    ],
+    "setup": [
+     "in v100",
+     "menu.js SCREENS.Start (SN10, Tall); civ, hazards, the day's level and the whys come with their features"
+    ],
+    "node": [
+     "bring",
+     "a resource's card: who is on it, its drop-off, its math; v100 says what is left (ROWS.store)"
+    ],
+    "troops": [
+     "bring",
+     "the Army card: soldiers by kind and squad, temper, Charge, Fall back, Attack, Recall"
+    ],
+    "menu": [
+     "in v100",
+     "menu.js SCREENS.Build (SN2: six tabs, three a row); bring each cell's count of its cap, the age lock, fits here, and What each one does"
+    ],
+    "research": [
+     "bring",
+     "the Research card"
+    ],
+    "mail": [
+     "bring",
+     "the Mail: every line kept, by group, six a page (SN5 has its cell, Later)"
+    ],
+    "milestone": [
+     "bring",
+     "the Milestones card"
+    ],
+    "score": [
+     "bring",
+     "the Score card: every side by category, seek; v100 has econ.js score()"
+    ],
+    "guide": [
+     "bring",
+     "the Guide card"
+    ],
+    "sound": [
+     "in v100",
+     "menu.js the Yard's three volumes (SN13, VERBS.vol, HX10)"
+    ],
+    "taps": [
+     "bring",
+     "Tap counts: what you tap, on this phone"
+    ],
+    "help": [
+     "bring",
+     "How to play: Guide, History, settings, tap counts"
+    ]
+   }
+  ],
+  "GUIDE_PG": [
+   "cut",
+   "the Guide page's cache; plumbing"
+  ],
+  "FULL": [
+   "bring",
+   "(Albert to call: see misfits) which cards take the whole height; see misfits"
+  ],
+  "SIZE_OF": [
+   "bring",
+   "(Albert to call: see misfits) three card heights (whole, medium, short); see misfits"
+  ],
+  "renderCard": [
+   "cut",
+   "draws the card with its title bar and book; v100's render() and cardText()"
+  ],
+  "guideModel": [
+   "bring",
+   "the Guide written from the tables (what leads to what, and why)"
+  ],
+  "guideHTML": [
+   "bring",
+   "the Guide's pages"
+  ],
+  "HIST_NOTE": [
+   "bring",
+   "History's caveat line; with History (beta)"
+  ],
+  "HIST_ASK": [
+   "bring",
+   "History's ask for corrections; with History"
+  ],
+  "yearOf": [
+   "bring",
+   "a date's year for History's order"
+  ],
+  "histRows": [
+   "bring",
+   "History's rows from the research"
+  ],
+  "histText": [
+   "bring",
+   "a History row as text to copy"
+  ],
+  "histHTML": [
+   "bring",
+   "History, searchable"
+  ],
+  "guideMd": [
+   "bring",
+   "the Guide as Markdown (the GUIDE snapshot docs)"
+  ],
+  "SVG": [
+   "in v100",
+   "menu.js svg()"
+  ],
+  "ICON": [
+   "bring",
+   "Mid's 37 icons; v100's menu.js SVG has the bar's, the stores', the war cells' and the seasons'; the rest (aim, gear, idle, peace, ally, follow, list, pause and the like) come with their features"
+  ],
+  "cell": [
+   "in v100",
+   "menu.js cell()"
+  ],
+  "wd": [
+   "in v100",
+   "menu.js a cell's word (tab(), ic())"
+  ],
+  "topOf": [
+   "in v100",
+   "menu.js the icon with its count (span.t)"
+  ],
+  "pic": [
+   "in v100",
+   "menu.js tab() and ic() (icon over word)"
+  ],
+  "sym": [
+   "in v100",
+   "menu.js the − + and close cells (VERBS.job, close)"
+  ],
+  "toGo": [
+   "cut",
+   "the receding working ring; v100 shows work as a fill (menu.js bar(), queue6)"
+  ],
+  "AGE_SHORT": [
+   "bring",
+   "(Albert to call: see misfits) short age names for the status strip; only for the cut strip (see misfits)"
+  ],
+  "STATUS": [
+   "bring",
+   "(Albert to call: see misfits) the status strip under the top bar; see misfits"
+  ],
+  "STATUS_CUT": [
+   "cut",
+   "which strip cells go first on a narrow screen; with the cut strip"
+  ],
+  "buildPanel": [
+   "in v100",
+   "menu.js topbar() (SN5: the five stores, sound, play, mail); bring a store's tap opening Stores and the mail's count; the strip it also builds is in misfits"
+  ],
+  "refresh": [
+   "cut",
+   "menu.js render(true)"
+  ],
+  "muteBtn": [
+   "in v100",
+   "menu.js VERBS.mute"
+  ],
+  "paceBtn": [
+   "bring",
+   "pause and play, the speed ×2 ×3 on it; SN5's play cell (Later)"
+  ],
+  "setPause": [
+   "bring",
+   "pause; with play"
+  ],
+  "showEnd": [
+   "bring",
+   "the end: Victory, Defeat, Everyone wins, the chronicle, Again, Free play, Next; v100 has the end card (menu.js render, r.result)"
+  ],
+  "fit": [
+   "cut",
+   "the page's measures and the map's middle between the bars; index.html resize() and fit(), the camera rule (Later)"
+  ],
+  "whoIs": [
+   "bring",
+   "who a unit not yours belongs to and how you stand; on its card"
+  ],
+  "MSG": [
+   "bring",
+   "the mail's measures: a line 4 s, merged within 30 s, 30 kept, 6 a page (N13)"
+  ],
+  "GROUPS": [
+   "bring",
+   "the mail's groups (War, Home, Land, Trade, Realm...); with the Mail"
+  ],
+  "MAIL_FILTERS": [
+   "bring",
+   "the Mail card's filters; with the Mail"
+  ],
+  "QUIET": [
+   "bring",
+   "quiet lines never preview; with the Mail"
+  ],
+  "urgentCls": [
+   "bring",
+   "a warning line; with the Mail"
+  ],
+  "ccOf": [
+   "bring",
+   "a line's colour; with the Mail"
+  ],
+  "hiddenG": [
+   "bring",
+   "a group whose previews are hidden; with the Mail"
+  ],
+  "news": [
+   "bring",
+   "say a line in a group; with the Mail"
+  ],
+  "DIR8": [
+   "bring",
+   "news by messenger: a line from out of sight arrives late, with its direction (TELL); with the fog"
+  ],
+  "tell": [
+   "bring",
+   "how news reaches you: seen now, heard, or brought; with the fog"
+  ],
+  "postTick": [
+   "bring",
+   "the messengers arrive; with tell"
+  ],
+  "say": [
+   "bring",
+   "a line on the screen and into the mail; v100 has menu.js toast()"
+  ],
+  "hushKey": [
+   "bring",
+   "a line's kind, numbers aside, for merging; with the Mail"
+  ],
+  "MS_TEST": [
+   "bring",
+   "the milestones' tests (first house, field, drop, soldier, squad, age, mud, snow, ice, hunger, fire, rout, trade, winter)"
+  ],
+  "msFill": [
+   "bring",
+   "fills a milestone's numbers"
+  ],
+  "milestoneTick": [
+   "bring",
+   "fires each milestone once a game"
+  ],
+  "goldTight": [
+   "bring",
+   "gold short while another store is full; a tip"
+  ],
+  "NEEDS": [
+   "bring",
+   "the tips' tests (house, barracks, lumber, farm, market, hospital); teaching"
+  ],
+  "advise": [
+   "bring",
+   "the next tip, a warning first; teaching (Parked 15: hand holding)"
+  ],
+  "SEASON_ICON": [
+   "in v100",
+   "menu.js SVG spring, summer, autumn, winter; where the season shows waits in SN6. Its weather icons (rain, drought, frost, snow, blizzard) come with the weather words"
+  ],
+  "uiAt": [
+   "cut",
+   "ui()'s throttle; v100's D.beatUi"
+  ],
+  "txt": [
+   "cut",
+   "set a node's text if changed; v100's render"
+  ],
+  "FIRST": [
+   "bring",
+   "the age each resource is first needed; with the job lock"
+  ],
+  "firstAge": [
+   "bring",
+   "works out each resource's first age; a job opens with its age"
+  ],
+  "resAge": [
+   "bring",
+   "a resource's first age; with the job lock"
+  ],
+  "ui": [
+   "bring",
+   "the screen's refresh: night tint, the counts coloured by their gain a minute, research ready marks, milestones, tips; v100's render() does the frame; the strip part is in misfits"
+  ],
+  "linkOf": [
+   "bring",
+   "where a message's tap goes; with the Mail"
+  ],
+  "shownMsg": [
+   "bring",
+   "the line on show, red first; with the preview"
+  ],
+  "preview": [
+   "bring",
+   "the newest line under the top bar, its x and hide-this-group; with the Mail"
+  ],
+  "ACT": [
+   "bring",
+   "Mid's verbs that work even when the game is over; v100's VERBS (menu.js) hold the ones built, each with its whyNot",
+   {
+    "pause": [
+     "bring",
+     "pause and play; SN5's play cell"
+    ],
+    "spd": [
+     "bring",
+     "speed ×1 to ×3"
+    ],
+    "again": [
+     "bring",
+     "end: a new game"
+    ],
+    "free": [
+     "bring",
+     "end: play on"
+    ],
+    "next": [
+     "bring",
+     "end: next game keeping age and research"
+    ],
+    "close": [
+     "in v100",
+     "menu.js VERBS.close"
+    ],
+    "cardback": [
+     "bring",
+     "Back to the card it came from"
+    ],
+    "cancel": [
+     "in v100",
+     "menu.js VERBS.close (drops the ghost)"
+    ],
+    "placeok": [
+     "in v100",
+     "menu.js VERBS.build"
+    ],
+    "wundo": [
+     "bring",
+     "a wall's last corner undone; walls as lines"
+    ],
+    "help": [
+     "bring",
+     "the Help card"
+    ],
+    "reload": [
+     "bring",
+     "restart from the save; Saving"
+    ],
+    "vibe": [
+     "bring",
+     "the buzz on or off (v100 HX6 buzz)"
+    ],
+    "copylog": [
+     "bring",
+     "copy the match log"
+    ],
+    "menu": [
+     "in v100",
+     "menu.js VERBS.group (a Build tab)"
+    ],
+    "buildrow": [
+     "bring",
+     "the Build menu from a tapped spot (fits here)"
+    ],
+    "idlego": [
+     "bring",
+     "show an idle villager; the idle reading waits in SN6"
+    ],
+    "seek": [
+     "bring",
+     "camera to a side's Town Center"
+    ],
+    "guide": [
+     "bring",
+     "the Guide"
+    ],
+    "copy": [
+     "bring",
+     "copy a History row"
+    ],
+    "copyhist": [
+     "bring",
+     "copy History"
+    ],
+    "info": [
+     "in v100",
+     "menu.js VERBS.info (the book)"
+    ],
+    "home": [
+     "bring",
+     "camera to your Town Center"
+    ],
+    "resume": [
+     "bring",
+     "resume the save; Saving"
+    ],
+    "fresh": [
+     "in v100",
+     "menu.js VERBS.start"
+    ],
+    "newgame": [
+     "in v100",
+     "menu.js VERBS.new"
+    ],
+    "civ": [
+     "bring",
+     "pick your people; v100's Start shows it Later"
+    ],
+    "tension": [
+     "bring",
+     "Winner or Diplomacy; Later on v100's Start"
+    ],
+    "diff": [
+     "bring",
+     "Easy, Normal, Hard; Later on v100's Start"
+    ],
+    "mode": [
+     "in v100",
+     "menu.js VERBS.opt len (the bell, D134)"
+    ],
+    "scen": [
+     "bring",
+     "the scenario; Later on v100's Start"
+    ],
+    "fantasy": [
+     "bring",
+     "(Albert to call: see misfits) World Real or Fantasy; see misfits"
+    ],
+    "daily": [
+     "in v100",
+     "menu.js VERBS.opt daily"
+    ],
+    "hz": [
+     "bring",
+     "tick a hazard; Later on v100's Start"
+    ],
+    "today": [
+     "in v100",
+     "menu.js VERBS.start with Daily on"
+    ],
+    "tips": [
+     "bring",
+     "tips on or off"
+    ],
+    "msgs": [
+     "bring",
+     "messages on or off"
+    ],
+    "news": [
+     "bring",
+     "news lines on or off"
+    ],
+    "fog": [
+     "in v100",
+     "menu.js VERBS.opt fog"
+    ],
+    "lights": [
+     "bring",
+     "flames light the ground after dark, on or off"
+    ],
+    "boxes": [
+     "cut",
+     "buildings as boxes or the old pictures, a test switch; v100 draws preview 49's pictures"
+    ],
+    "cardpause": [
+     "bring",
+     "reading cards pause, on or off"
+    ],
+    "qlock": [
+     "bring",
+     "a locked queue place says which research opens it"
+    ],
+    "page": [
+     "in v100",
+     "menu.js VERBS.war (the base or War)"
+    ],
+    "pvx": [
+     "bring",
+     "close the previewed line"
+    ],
+    "pvhide": [
+     "bring",
+     "hide a group's previews"
+    ],
+    "pvkeep": [
+     "bring",
+     "keep them"
+    ],
+    "mail": [
+     "bring",
+     "open the Mail"
+    ],
+    "mailg": [
+     "bring",
+     "the Mail's filter"
+    ],
+    "chronp": [
+     "bring",
+     "the chronicle's pages on the end card"
+    ],
+    "mailp": [
+     "bring",
+     "the Mail's pages"
+    ],
+    "mailtog": [
+     "bring",
+     "hide or show a group"
+    ],
+    "mailall": [
+     "bring",
+     "show every group"
+    ],
+    "sound": [
+     "in v100",
+     "menu.js VERBS.mute"
+    ],
+    "soundpage": [
+     "in v100",
+     "menu.js the Yard (SN13)"
+    ],
+    "vol": [
+     "in v100",
+     "menu.js VERBS.vol (a step a tap, HX10)"
+    ],
+    "ordpick": [
+     "bring",
+     "pick a marching group by its ring"
+    ],
+    "pfollow": [
+     "bring",
+     "the camera follows what is picked"
+    ],
+    "techgo": [
+     "bring",
+     "to the building where a research is learned"
+    ],
+    "bldgo": [
+     "bring",
+     "to your nearest building of a kind, its card open"
+    ],
+    "jump": [
+     "bring",
+     "camera to a message's place"
+    ],
+    "card": [
+     "cut",
+     "open a card by type; plumbing, v100's tabs"
+    ],
+    "storesk": [
+     "bring",
+     "a store's why on Stores"
+    ],
+    "open": [
+     "cut",
+     "open a card by id; plumbing, v100's subject"
+    ]
+   }
+  ],
+  "shut": [
+   "bring",
+   "a job is locked until its age; tap says when"
+  ],
+  "PLAY": [
+   "bring",
+   "Mid's verbs that change the game; v100's VERBS (menu.js) hold the ones built, each with its whyNot",
+   {
+    "job": [
+     "in v100",
+     "menu.js VERBS.yield (the rally job)"
+    ],
+    "move": [
+     "in v100",
+     "menu.js VERBS.job +"
+    ],
+    "less": [
+     "in v100",
+     "menu.js VERBS.job −"
+    ],
+    "ktab": [
+     "in v100",
+     "menu.js VERBS.htab"
+    ],
+    "relwant": [
+     "bring",
+     "pick a stance; diplomacy"
+    ],
+    "relgift": [
+     "bring",
+     "a gift's amount; diplomacy"
+    ],
+    "relon": [
+     "bring",
+     "a gift on or off; diplomacy"
+    ],
+    "mpick": [
+     "bring",
+     "the Market's good"
+    ],
+    "sel": [
+     "bring",
+     "the Army card's squad"
+    ],
+    "emg": [
+     "bring",
+     "an Emergency order (Gather, Garrison, Shelter); v100's War base shows those cells Later"
+    ],
+    "emgstop": [
+     "bring",
+     "Stop: back to work"
+    ],
+    "emgpage": [
+     "in v100",
+     "menu.js VERBS.war"
+    ],
+    "tq": [
+     "in v100",
+     "menu.js VERBS.kind (train a kind at its nearest building)"
+    ],
+    "tok": [
+     "bring",
+     "set the rally at the crosshair"
+    ],
+    "intent": [
+     "bring",
+     "a squad's intent"
+    ],
+    "direct": [
+     "bring",
+     "the Director: a kind's move (v100 shows Wall, Loose!, Charge, Bombard Later)"
+    ],
+    "directh": [
+     "bring",
+     "held: the kind's second move"
+    ],
+    "wmid": [
+     "in v100",
+     "menu.js VERBS.mid"
+    ],
+    "ytool": [
+     "bring",
+     "arm a Yard tool; see misfits"
+    ],
+    "choketool": [
+     "bring",
+     "Choke: drag across a gap; see misfits"
+    ],
+    "ambushtool": [
+     "bring",
+     "Ambush: tap the cover; see misfits"
+    ],
+    "kidle": [
+     "bring",
+     "pick the idle soldiers; see misfits"
+    ],
+    "sqpk": [
+     "bring",
+     "a squad's − +"
+    ],
+    "sqcancel": [
+     "bring",
+     "squad Cancel"
+    ],
+    "sqsave": [
+     "bring",
+     "squad Save"
+    ],
+    "whome": [
+     "in v100",
+     "menu.js VERBS.recall"
+    ],
+    "wsq": [
+     "bring",
+     "send a squad at the crosshair"
+    ],
+    "sqcard": [
+     "bring",
+     "a squad's card"
+    ],
+    "qsword": [
+     "bring",
+     "the sword: soldiers to the spot (quick action)"
+    ],
+    "qclose": [
+     "bring",
+     "close the quick action"
+    ],
+    "sqsetup": [
+     "bring",
+     "Set up the squads (v100 shows Set up Later)"
+    ],
+    "wfire": [
+     "bring",
+     "Go: the squads march"
+    ],
+    "hdel": [
+     "bring",
+     "Abort a mission"
+    ],
+    "hudrein": [
+     "bring",
+     "send more to a mission"
+    ],
+    "qsfrom": [
+     "bring",
+     "Attack with: from which squad"
+    ],
+    "qsn": [
+     "bring",
+     "Attack with: how many of a kind"
+    ],
+    "qgo": [
+     "bring",
+     "Attack with: to a spot"
+    ],
+    "qatk": [
+     "bring",
+     "Attack with: a building"
+    ],
+    "qfoe": [
+     "bring",
+     "Attack with: a unit"
+    ],
+    "muster": [
+     "bring",
+     "train a squad's gap at once (research)"
+    ],
+    "shape": [
+     "bring",
+     "(Albert to call: see misfits) a squad's formation; see misfits"
+    ],
+    "temper": [
+     "bring",
+     "a squad's temper (Stance, SM)"
+    ],
+    "sendvil": [
+     "bring",
+     "a villager to a field; v100 sends one to a find (VERBS.send)"
+    ],
+    "sendout": [
+     "bring",
+     "one off a field"
+    ],
+    "vstop": [
+     "in v100",
+     "menu.js VERBS.stop"
+    ],
+    "vfocus": [
+     "bring",
+     "a villager keeps to one find (Focus, SM)"
+    ],
+    "vhome": [
+     "bring",
+     "a villager home (Home, SM)"
+    ],
+    "replant": [
+     "bring",
+     "replant a spent plot"
+    ],
+    "replantall": [
+     "bring",
+     "replant every spent plot"
+    ],
+    "boxcut": [
+     "bring",
+     "cut a road through the trees in a box"
+    ],
+    "unpick": [
+     "bring",
+     "let go of the picked"
+    ],
+    "look": [
+     "bring",
+     "camera to a unit"
+    ],
+    "pjob": [
+     "bring",
+     "the picked villagers to a job"
+    ],
+    "pbuild": [
+     "bring",
+     "the picked villagers build"
+    ],
+    "phold": [
+     "bring",
+     "the picked soldiers hold"
+    ],
+    "precall": [
+     "bring",
+     "the picked soldiers home"
+    ],
+    "pvil": [
+     "bring",
+     "keep only the villagers picked"
+    ],
+    "pcharge": [
+     "bring",
+     "the picked charge"
+    ],
+    "pfall": [
+     "bring",
+     "the picked fall back"
+    ],
+    "pteach": [
+     "bring",
+     "the picked go to school"
+    ],
+    "teach": [
+     "bring",
+     "a soldier to school"
+    ],
+    "charge": [
+     "bring",
+     "Charge"
+    ],
+    "fallback": [
+     "bring",
+     "Fall back"
+    ],
+    "relok": [
+     "bring",
+     "send a Relations row; diplomacy"
+    ],
+    "breakties": [
+     "bring",
+     "break ties; diplomacy"
+    ],
+    "demand": [
+     "bring",
+     "demand a good; diplomacy"
+    ],
+    "tribute": [
+     "bring",
+     "force tribute; vassals"
+    ],
+    "levy": [
+     "bring",
+     "levy a vassal's soldiers"
+    ],
+    "release": [
+     "bring",
+     "release a vassal"
+    ],
+    "qcancel": [
+     "bring",
+     "cancel one queue place; v100 takes the last off (VERBS.untrain)"
+    ],
+    "sellat": [
+     "bring",
+     "sell at a trade stop"
+    ],
+    "debase": [
+     "bring",
+     "debase the coin (Mint)"
+    ],
+    "surrender": [
+     "bring",
+     "demand surrender; vassals"
+    ],
+    "overlord": [
+     "bring",
+     "offer overlordship; vassals"
+    ],
+    "tax": [
+     "bring",
+     "a vassal's tax, light, fair, heavy; see misfits"
+    ],
+    "venture": [
+     "bring",
+     "a venture (Market, Medieval)"
+    ],
+    "douse": [
+     "bring",
+     "send help to a fire"
+    ],
+    "tpost": [
+     "bring",
+     "build a trade post on a stop"
+    ],
+    "want": [
+     "bring",
+     "a stop's wanted ware"
+    ],
+    "route": [
+     "bring",
+     "a caravan's route"
+    ],
+    "make": [
+     "bring",
+     "what a workshop makes"
+    ],
+    "routeto": [
+     "bring",
+     "a caravan to a stop"
+    ],
+    "rrep": [
+     "bring",
+     "a route repeats"
+    ],
+    "rsp": [
+     "bring",
+     "a route carries spice"
+    ],
+    "rclr": [
+     "bring",
+     "clear a route"
+    ],
+    "sendbld": [
+     "in v100",
+     "menu.js VERBS.raise (and Build sends a villager)"
+    ],
+    "hunt3": [
+     "bring",
+     "three hunters at a beast; hunting (Later)"
+    ],
+    "hunt": [
+     "bring",
+     "a hunter at a beast; hunting (Later)"
+    ],
+    "repair": [
+     "bring",
+     "Repair at Mid's price; v100's repair is free (menu.js VERBS.raise, Parked)"
+    ],
+    "takedown": [
+     "bring",
+     "Cancel or Raze, Sure?, with the refund; v100 has menu.js VERBS.scrap (refund on a site only)"
+    ],
+    "train": [
+     "in v100",
+     "menu.js VERBS.train"
+    ],
+    "tech": [
+     "bring",
+     "research"
+    ],
+    "age": [
+     "in v100",
+     "menu.js VERBS.ageUp"
+    ],
+    "build": [
+     "in v100",
+     "menu.js VERBS.pick"
+    ],
+    "scoutgo": [
+     "bring",
+     "send the scout to a spot"
+    ],
+    "recall": [
+     "in v100",
+     "menu.js VERBS.recall"
+    ],
+    "attack": [
+     "bring",
+     "attack a side or the nearest foe; v100 Attack aims by a tap (VERBS.attack)"
+    ],
+    "ransom": [
+     "bring",
+     "pay a ransom"
+    ],
+    "stand": [
+     "bring",
+     "stand soldiers down"
+    ],
+    "vjob": [
+     "bring",
+     "a villager's job from its card"
+    ],
+    "vgo": [
+     "bring",
+     "send a villager home for good, Sure?"
+    ],
+    "dismiss": [
+     "bring",
+     "dismiss a villager"
+    ],
+    "sab": [
+     "bring",
+     "Sabotage (Spy, Later)"
+    ],
+    "shrine": [
+     "bring",
+     "a priest to a shrine (Priest, Later)"
+    ],
+    "hire": [
+     "bring",
+     "hire at a find"
+    ],
+    "guard": [
+     "bring",
+     "guard a find or a unit"
+    ],
+    "unguard": [
+     "bring",
+     "stop guarding"
+    ],
+    "trade": [
+     "bring",
+     "Sell and Buy at the Market"
+    ],
+    "zeal": [
+     "bring",
+     "a priest's zeal (Priest, Later)"
+    ]
+   }
+  ],
+  "act": [
+   "in v100",
+   "menu.js act() (VERBS, whyNot first)"
+  ],
+  "L": [
+   "bring",
+   "a hint learned (3 times) is not shown again; teaching"
+  ],
+  "learn": [
+   "bring",
+   "counts what a hint teaches; teaching"
+  ],
+  "learnAct": [
+   "bring",
+   "which taps teach which hint; teaching"
+  ],
+  "lpT": [
+   "bring",
+   "hold a button for its second move (Rally to Ambush, Attack to Home, a kind to its second move)"
+  ],
+  "lpStop": [
+   "bring",
+   "ends a button's hold; with the hold"
+  ],
+  "TAPS": [
+   "bring",
+   "tap counts, kept on this phone"
+  ],
+  "tapCount": [
+   "bring",
+   "counts a tap and a tap on a dim cell; Tap counts card"
+  ],
+  "HUD": [
+   "bring",
+   "the missions' measures (a fight's reach 140, losing below 0.4 ...); with squads and missions"
+  ],
+  "mUnits": [
+   "bring",
+   "a mission's soldiers; missions"
+  ],
+  "sqUnits": [
+   "bring",
+   "a squad's soldiers; squads"
+  ],
+  "sqOut": [
+   "bring",
+   "a squad is out; squads"
+  ],
+  "hostile": [
+   "bring",
+   "a foe for a mission; missions"
+  ],
+  "foesNear": [
+   "bring",
+   "foes your people see near a group; missions"
+  ],
+  "powerSum": [
+   "bring",
+   "a group's power; the odds"
+  ],
+  "chance": [
+   "bring",
+   "the chance to win, r²/(1+r²) of power and matchup; the odds (combat.js has strength, QAF)"
+  ],
+  "dpsOf": [
+   "bring",
+   "a group's blows a second; the odds"
+  ],
+  "wxWord": [
+   "bring",
+   "the weather or season in a word; on the squad card"
+  ],
+  "paceWord": [
+   "bring",
+   "a squad's pace in a word, from its slowest; on the squad card"
+  ],
+  "hudPage": [
+   "in v100",
+   "menu.js VERBS.war (the base or the War rows)"
+  ],
+  "kindOf": [
+   "bring",
+   "the kind a class trains now (the age, the people's own); with the ages and civs"
+  ],
+  "sqPlan": [
+   "bring",
+   "what a squad holds, up to BNSIZE; squads (v100 shows Alpha, Bravo, Charlie Later)"
+  ],
+  "aimSpot": [
+   "bring",
+   "the crosshair moved by a tap, what it is on; v100 aims by a tap once (menu.js S.arming)"
+  ],
+  "aimNear": [
+   "bring",
+   "the finger on the crosshair (56 px) to drag it"
+  ],
+  "aimAt": [
+   "bring",
+   "a tap moves the crosshair while War is open"
+  ],
+  "aimColor": [
+   "bring",
+   "the crosshair's colour: green yours, blue ally, white nature, red foe or hazard"
+  ],
+  "hazardAt": [
+   "bring",
+   "a hazard at a spot (sand, a fire); for the crosshair"
+  ],
+  "sqFree": [
+   "bring",
+   "who a squad sends; missions"
+  ],
+  "hudEta": [
+   "bring",
+   "a squad's time to the crosshair"
+  ],
+  "hudFire": [
+   "bring",
+   "a squad marches on the crosshair and takes its slot"
+  ],
+  "hudGo": [
+   "bring",
+   "Go: every ready squad, else every idle soldier; v100's Attack sends every idle soldier (menu.js VERBS.attack)"
+  ],
+  "hudAbort": [
+   "bring",
+   "a mission comes home"
+  ],
+  "hudAbortAll": [
+   "bring",
+   "every mission home"
+  ],
+  "hudHome": [
+   "in v100",
+   "combat.js recall(), menu.js VERBS.recall"
+  ],
+  "setRally": [
+   "bring",
+   "where new soldiers go and which squad they join"
+  ],
+  "missionsTick": [
+   "bring",
+   "each second: where a mission is, how it goes, what to say"
+  ],
+  "reinforcePlan": [
+   "bring",
+   "who can reach a fight in time, by arrival"
+  ],
+  "waveLine": [
+   "bring",
+   "the reinforcement in words"
+  ],
+  "hudJoin": [
+   "bring",
+   "reinforcements join a mission"
+  ],
+  "hudReinforce": [
+   "bring",
+   "send more to a mission"
+  ],
+  "jobsPage": [
+   "bring",
+   "the base's Jobs rows: v100 has them (menu.js base(): People, the yields, − +, Build); bring the hammer's working fill and a job locked until its age"
+  ],
+  "SMID": [
+   "in v100",
+   "menu.js MID (map, train, squad, direct)"
+  ],
+  "stationPage": [
+   "bring",
+   "the War rows working: Work, Gather, Garrison, Shelter, the middle box, Train, Squad, Direct, Attack; v100 draws them (menu.js warBase), most Later"
+  ],
+  "idleSoldiers": [
+   "bring",
+   "the idle soldiers; see misfits (the Yard's Idle soldiers)"
+  ],
+  "ROWS": [
+   "cut",
+   "which page the row shows; menu.js S.war and base()"
+  ],
+  "rowUI": [
+   "cut",
+   "patches the row; menu.js render() and base()"
+  ],
+  "drawReticle": [
+   "bring",
+   "the crosshair's art: brackets, chevrons, scan line, sonar ring"
+  ],
+  "INTENT": [
+   "bring",
+   "a squad's intents: Engage, No pursuit, Buildings first"
+  ],
+  "intentsHTML": [
+   "bring",
+   "the intents on the squad card"
+  ],
+  "squadHomeHTML": [
+   "bring",
+   "the squad card at home: the four kinds with − +, intents, Train new, Cancel, Save; see misfits"
+  ],
+  "squadOutHTML": [
+   "bring",
+   "the squad card out: health, lost, Send more, intent, where, Abort; its Formation button and table: see misfits"
+  ],
+  "YARD_LIST": [
+   "bring",
+   "(Albert to call: see misfits) Mid's Yard, a holding pen for controls without a home; see misfits"
+  ],
+  "matchLog": [
+   "bring",
+   "the match log a second and a minute, for Claude to read (preview only)"
+  ],
+  "matchLogText": [
+   "bring",
+   "the match log as text"
+  ],
+  "copyLog": [
+   "bring",
+   "copy the match log"
+  ],
+  "fallbackCopy": [
+   "bring",
+   "copy where the clipboard is refused"
+  ],
+  "EMERGENCY": [
+   "bring",
+   "Emergency: Gather (everyone to the Town Center), Garrison, Shelter; v100's War base draws Gather, Garrison, Shelter, Work as Later"
+  ],
+  "EMG": [
+   "bring",
+   "Emergency's measures (lines, rows, the square's 20)"
+  ],
+  "shelterRank": [
+   "bring",
+   "the buildings that shelter, ranked; Emergency"
+  ],
+  "roomIn": [
+   "bring",
+   "room left in a shelter; Emergency"
+  ],
+  "troops": [
+   "bring",
+   "the soldiers an emergency moves; Emergency"
+  ],
+  "stand": [
+   "bring",
+   "a soldier stands at a spot and fights; Emergency"
+  ],
+  "threatDir": [
+   "bring",
+   "the way the danger lies; Emergency"
+  ],
+  "fillRank": [
+   "bring",
+   "fill shelters with the nearest; Emergency"
+  ],
+  "emgSnap": [
+   "bring",
+   "what Stop goes back to; Emergency"
+  ],
+  "release": [
+   "bring",
+   "a villager let go; Emergency"
+  ],
+  "villagersIn": [
+   "bring",
+   "villagers inside (Shelter)"
+  ],
+  "soldiersIn": [
+   "bring",
+   "soldiers into the buildings (Garrison)"
+  ],
+  "townSquare": [
+   "bring",
+   "everyone to the Town Center's square (Gather)"
+  ],
+  "emgStart": [
+   "bring",
+   "starts an emergency"
+  ],
+  "emgStop": [
+   "bring",
+   "Stop: back to work (v100's Work cell)"
+  ]
+ },
+ "misfits": [
+  [
+   "STATUS (with STATUS_CUT, AGE_SHORT, and the strip in buildPanel and ui)",
+   "Mid has a second row under the top bar: the age, season and sky, the clock, people and room, idle villagers, research ready, score and rank, soldiers. You cut that row for v100 (SN5 one top ribbon); its readings wait in SN6. Where does each reading go (the suggestion: idle and people on the People cell, the clock on the Town Center page, rank and army on War)? Research ready and the age have no suggested home yet."
+  ],
+  [
+   "FULL, SIZE_OF",
+   "Mid's cards come in three heights: the whole screen for Setup, Help, Guide, Score, Research, the Build menu and the Army; medium for a thing's card; short. In v100 every page shares one height and only Start, the Town Center (Hall) and the Yard keep their own (Tall). Do Help, Guide, Score, Research and Army become Tall pages, or fit the one height with pages or tabs?"
+  ],
+  [
+   "squadHomeHTML, squadOutHTML",
+   "The squad card lays the four soldier kinds four to a row (quarter-width cells) and shows losses as a table. v100's mold is six slots a row (SN1). How should four kinds sit on six slots (Parked item 34 asks the same)?"
+  ],
+  [
+   "PLAY.shape, the Formation button on squadOutHTML",
+   "Mid's squads cycle a formation. In v100 formations are held: names only, the six to be defined later. Bring Mid's formations now, or leave the button out until the six are defined?"
+  ],
+  [
+   "YARD_LIST, PLAY.ytool, choketool, ambushtool, kidle, idleSoldiers",
+   "Mid's Yard is a holding pen for controls with no home: Choke (drag across a gap), Ambush (tap the cover), Idle soldiers, the match log, the building boxes switch. In v100 the Yard is now the Layers page. Where do Choke, Ambush and Idle soldiers live (Parked: each wants a home)? The match log could go on Help."
+  ],
+  [
+   "ACT.fantasy, SET_WHY.fantasy",
+   "Mid's World: Fantasy means trolls guard the finds, which pay half again. You cut trolls and the fantasy events. v100's Start page still shows World: Real or Fantasy (Later). Drop the World switch?"
+  ],
+  [
+   "PLAY.tax, vassalHTML's tax",
+   "Mid's vassals pay you a tax you set light, fair or heavy. Your preview-55 list says Out: E tax ('not looking to add taxes'). Does that cut cover the vassal's tax, or only a tax on your own people?"
+  ],
+  [
+   "BLD_PAGE.throne",
+   "Mid has a page for the Throne. You said the Throne and the great lake come back reimagined once you describe them. Leave Mid's Throne page behind?"
+  ],
+  [
+   "slt",
+   "Relations sets a gift's amount with a slider. You cut the share's slider on Nov 3, and v100's volumes step a tap. Should the gift step a tap too (− and +)?"
+  ]
+ ]
+}
