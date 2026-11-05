@@ -156,3 +156,4 @@ Written by `index.py` from `books/citations.js`, never by hand: every source by 
 | N150 | art | yes | Art: preview 49 (18-figures.js), the last build before the camera turn |
 | N151 | art | yes | Art: preview 49 (19-building-art.js) |
 | N152 | art | yes | Art: preview 49 |
+| N153 | design | yes | Design: Albert, Nov 5 12:21: comments in their own book, by letter code; five pages: 1 Index, 2 Citations, 3 Index and Citations, 4 Comments, 5 Index, Citations and Comments |

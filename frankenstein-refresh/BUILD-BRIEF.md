@@ -16,7 +16,7 @@ Albert's yes yes (Nov 5, 11:40) covers builds F10 to F39, in the order of `clean
 - **The permit**: write `v100/permit.json` first: `{"build": "F10 · …", "agreed": "Albert, Nov 5 11:40: yes yes F10–F39", "opens": [...]}`, at most 10 items (an item is `code:file`, `code:index.html#section`, `book:name` or `book:name:CODE`, `law:Qxx`, `tool:file`). Anything changed outside the permit stops the gate. Growth of a code item past its seal needs `"grow": {"code:…": bytes}` with a `"why"`.
 - **One home**: every number, colour and name lives in a book. Code may not type more numbers than its seal (the ratchet); colours belong in the Colours book. Code never names a shell (`'BTC1'`, `B.BTC1`): it asks by tick (`has(t, 'Fight')`) or reads a book.
 - **Laws**: new math is one line in `CALCULATIONS.md`, `Qxx Name: the equation in words · Nxx`, and the book entries that use it name it in `law`. A source is an entry in `books/citations.js`: `"opened": true` only if you opened it this session; otherwise the text says "from memory, to open".
-- **No swallowed code**: a `//` comment never ends in a statement.
+- **Citations and comments by code**: a book entry cites only N codes (a new source or a new call of Albert's is a new entry in `books/citations.js`). A comment in code is only its code, `// E12` (a floor's header keeps its title: `// ── Floor 5, movables (E40)`); the why is written once in `books/comments.js`. The gate stops words in a comment, a code that isn't in its book, and an entry no code uses. So `book:comments` (and `book:citations` when a source is added) go on the permit.
 - **The pages** (`INDEX.md`, `BOOKS.md`, `INVENTORY.md`) are written by `index.py`, never by hand.
 
 ## Style

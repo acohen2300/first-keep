@@ -233,6 +233,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N150** Art: preview 49 (18-figures.js), the last build before the camera turn → P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19
 - **N151** Art: preview 49 (19-building-art.js) → PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9, PB10, PB11
 - **N152** Art: preview 49 → PN1
+- **N153** Design: Albert, Nov 5 12:21: comments in their own book, by letter code; five pages: 1 Index, 2 Citations, 3 I → X45
 
 ## Named exceptions
 

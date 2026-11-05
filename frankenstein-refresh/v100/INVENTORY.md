@@ -4,43 +4,43 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,623 | 235,899 | 236,206 |
-| Books | 601 | 0 | 81,691 | 81,761 |
+| Game code | 28 | 1,623 | 208,898 | 209,028 |
+| Books | 869 | 0 | 113,491 | 113,738 |
 | Laws | 74 | 0 | 7,375 | 7,617 |
-| Tools | 4 | 356 | 39,747 | 39,820 |
+| Tools | 4 | 373 | 41,880 | 41,961 |
 
 ## The trades (code)
 
 | Item | Lines | Characters | Bytes | Typed numbers |
 |---|---|---|---|---|
 | index.html#page | 27 | 1,620 | 1,620 | 11 |
-| index.html#frames | 13 | 1,525 | 1,526 | 3 |
-| index.html#the-frames | 12 | 1,462 | 1,466 | 13 |
-| index.html#qbf-the-dice | 10 | 1,659 | 1,671 | 31 |
-| index.html#the-coast | 11 | 965 | 976 | 19 |
-| index.html#the-ground | 28 | 2,447 | 2,451 | 38 |
-| index.html#floor-2-terrain | 81 | 11,224 | 11,273 | 134 |
-| index.html#floor-3-non-movables | 41 | 6,322 | 6,347 | 89 |
-| index.html#drawn-once-in-the-view-frame | 47 | 4,860 | 4,865 | 126 |
-| index.html#the-view | 9 | 1,076 | 1,080 | 16 |
-| index.html#the-door | 41 | 3,841 | 3,847 | 70 |
-| index.html#the-brushes | 10 | 1,196 | 1,200 | 28 |
-| index.html#the-building-art | 314 | 49,445 | 49,449 | 4101 |
-| index.html#the-node-art | 26 | 3,893 | 3,897 | 244 |
-| index.html#the-figures | 144 | 23,445 | 23,451 | 1620 |
-| index.html#b-the-buildings | 15 | 1,856 | 1,868 | 23 |
-| index.html#floor-5-movables | 77 | 9,704 | 9,724 | 102 |
-| index.html#the-body-s-laws | 30 | 2,996 | 3,006 | 37 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,644 | 3,649 | 92 |
-| index.html#floor-6-climate | 63 | 10,106 | 10,147 | 297 |
-| index.html#floor-7-display | 28 | 3,972 | 3,977 | 77 |
-| index.html#the-woods-cache | 51 | 5,372 | 5,377 | 89 |
-| index.html#touch | 40 | 4,827 | 4,831 | 59 |
-| menu.js | 251 | 44,253 | 44,296 | 643 |
-| econ.js | 77 | 12,313 | 12,318 | 104 |
-| combat.js | 53 | 8,828 | 8,834 | 102 |
-| ai.js | 44 | 6,164 | 6,167 | 43 |
-| sound.js | 56 | 6,884 | 6,893 | 68 |
+| index.html#frames | 13 | 1,035 | 1,035 | 3 |
+| index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
+| index.html#qbf-the-dice | 10 | 1,071 | 1,075 | 25 |
+| index.html#the-coast | 11 | 472 | 476 | 17 |
+| index.html#the-ground | 28 | 1,803 | 1,807 | 38 |
+| index.html#floor-2-terrain | 81 | 7,995 | 7,999 | 131 |
+| index.html#floor-3-non-movables | 41 | 4,171 | 4,175 | 82 |
+| index.html#drawn-once-in-the-view-frame | 47 | 4,130 | 4,134 | 123 |
+| index.html#the-view | 9 | 916 | 920 | 14 |
+| index.html#the-door | 41 | 3,247 | 3,251 | 69 |
+| index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
+| index.html#the-building-art | 314 | 49,153 | 49,157 | 4096 |
+| index.html#the-node-art | 26 | 3,804 | 3,808 | 244 |
+| index.html#the-figures | 144 | 23,020 | 23,024 | 1610 |
+| index.html#b-the-buildings | 15 | 1,290 | 1,294 | 20 |
+| index.html#floor-5-movables | 77 | 7,498 | 7,502 | 97 |
+| index.html#the-body-s-laws | 30 | 2,342 | 2,346 | 36 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,188 | 3,192 | 92 |
+| index.html#floor-6-climate | 63 | 7,867 | 7,879 | 288 |
+| index.html#floor-7-display | 28 | 2,927 | 2,931 | 75 |
+| index.html#the-woods-cache | 51 | 4,814 | 4,818 | 89 |
+| index.html#touch | 40 | 4,348 | 4,352 | 59 |
+| menu.js | 251 | 40,564 | 40,602 | 641 |
+| econ.js | 77 | 11,017 | 11,017 | 102 |
+| combat.js | 53 | 7,637 | 7,637 | 101 |
+| ai.js | 44 | 5,217 | 5,217 | 41 |
+| sound.js | 56 | 5,632 | 5,632 | 66 |
 
 ## The books
 
@@ -48,12 +48,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 3 | 461 |
 | capabilities | 25 | 5,321 |
-| citations | 152 | 16,248 |
+| citations | 153 | 16,473 |
 | colours | 9 | 951 |
+| comments | 266 | 34,604 |
 | ground | 4 | 640 |
 | mass | 16 | 2,354 |
 | measure | 182 | 23,539 |
-| rules | 44 | 7,451 |
+| rules | 45 | 7,671 |
 | screen | 10 | 2,597 |
 | shells | 74 | 12,258 |
 | sound | 51 | 11,159 |
@@ -115,5 +116,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X42 | t-match | page | a sound brought from Mid makes the same parts as Mid's own code makes it (same action, same result) |
 | X43 | sorted | survey | a temp book being sorted leaves a piece of Mid without its line (in v100, bring, cut or parked) |
 | X44 | t-same | page | same seed, same game: two pages on one seed draw alike and stand alike after 300 s with the weather in it; the rules' dice are Mid's rng draw for draw, BEAT and the grid squares Mid's; unitsNear finds exactly what a full scan finds, bldsNear every building a scan finds |
+| X45 | comments | code | a comment in code written in words instead of its code, a code not in the Comments book, or a Comments entry no code names |
 
-707 items sealed · 601 book entries · 74 laws · 152 citations, 17 still to open · 9 known
+975 items sealed · 869 book entries · 74 laws · 153 citations, 17 still to open · 7 known

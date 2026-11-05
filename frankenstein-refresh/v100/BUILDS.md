@@ -769,3 +769,307 @@ MODIFIED (154):
 LOCKED (553 of 707): byte for byte as sealed, 314,575 bytes
 Tests: 19/19 rules hold
 Inventory: 707 items sealed · 601 book entries · 74 laws · 152 citations, 17 still to open · 9 known
+
+## C3 · comments by code · 2026-11-05 12:28
+Albert, Nov 5 12:21: yes yes: comments in their own book with their own letter codes; 4 Comments, 5 Index, Citations and Comments (QC)
+Opened: code:index.html, code:menu.js, code:econ.js, code:combat.js, code:ai.js, code:sound.js, book:comments, book:rules, tool:index.py, book:citations
+MODIFIED (296):
+- book:citations:N153 · added
+- book:comments:E1 · added
+- book:comments:E10 · added
+- book:comments:E100 · added
+- book:comments:E101 · added
+- book:comments:E102 · added
+- book:comments:E103 · added
+- book:comments:E104 · added
+- book:comments:E105 · added
+- book:comments:E106 · added
+- book:comments:E107 · added
+- book:comments:E108 · added
+- book:comments:E109 · added
+- book:comments:E11 · added
+- book:comments:E110 · added
+- book:comments:E111 · added
+- book:comments:E112 · added
+- book:comments:E113 · added
+- book:comments:E114 · added
+- book:comments:E115 · added
+- book:comments:E116 · added
+- book:comments:E117 · added
+- book:comments:E118 · added
+- book:comments:E119 · added
+- book:comments:E12 · added
+- book:comments:E120 · added
+- book:comments:E121 · added
+- book:comments:E122 · added
+- book:comments:E123 · added
+- book:comments:E124 · added
+- book:comments:E125 · added
+- book:comments:E126 · added
+- book:comments:E127 · added
+- book:comments:E128 · added
+- book:comments:E129 · added
+- book:comments:E13 · added
+- book:comments:E130 · added
+- book:comments:E131 · added
+- book:comments:E132 · added
+- book:comments:E133 · added
+- book:comments:E134 · added
+- book:comments:E135 · added
+- book:comments:E136 · added
+- book:comments:E137 · added
+- book:comments:E138 · added
+- book:comments:E139 · added
+- book:comments:E14 · added
+- book:comments:E140 · added
+- book:comments:E141 · added
+- book:comments:E142 · added
+- book:comments:E143 · added
+- book:comments:E144 · added
+- book:comments:E145 · added
+- book:comments:E146 · added
+- book:comments:E147 · added
+- book:comments:E148 · added
+- book:comments:E149 · added
+- book:comments:E15 · added
+- book:comments:E150 · added
+- book:comments:E151 · added
+- book:comments:E152 · added
+- book:comments:E153 · added
+- book:comments:E154 · added
+- book:comments:E155 · added
+- book:comments:E156 · added
+- book:comments:E157 · added
+- book:comments:E158 · added
+- book:comments:E159 · added
+- book:comments:E16 · added
+- book:comments:E160 · added
+- book:comments:E161 · added
+- book:comments:E162 · added
+- book:comments:E163 · added
+- book:comments:E164 · added
+- book:comments:E165 · added
+- book:comments:E166 · added
+- book:comments:E167 · added
+- book:comments:E168 · added
+- book:comments:E169 · added
+- book:comments:E17 · added
+- book:comments:E170 · added
+- book:comments:E171 · added
+- book:comments:E172 · added
+- book:comments:E173 · added
+- book:comments:E174 · added
+- book:comments:E175 · added
+- book:comments:E176 · added
+- book:comments:E177 · added
+- book:comments:E178 · added
+- book:comments:E179 · added
+- book:comments:E18 · added
+- book:comments:E180 · added
+- book:comments:E181 · added
+- book:comments:E182 · added
+- book:comments:E183 · added
+- book:comments:E184 · added
+- book:comments:E185 · added
+- book:comments:E186 · added
+- book:comments:E187 · added
+- book:comments:E188 · added
+- book:comments:E189 · added
+- book:comments:E19 · added
+- book:comments:E190 · added
+- book:comments:E191 · added
+- book:comments:E192 · added
+- book:comments:E193 · added
+- book:comments:E194 · added
+- book:comments:E195 · added
+- book:comments:E196 · added
+- book:comments:E197 · added
+- book:comments:E198 · added
+- book:comments:E199 · added
+- book:comments:E2 · added
+- book:comments:E20 · added
+- book:comments:E200 · added
+- book:comments:E201 · added
+- book:comments:E202 · added
+- book:comments:E203 · added
+- book:comments:E204 · added
+- book:comments:E205 · added
+- book:comments:E206 · added
+- book:comments:E207 · added
+- book:comments:E208 · added
+- book:comments:E209 · added
+- book:comments:E21 · added
+- book:comments:E210 · added
+- book:comments:E211 · added
+- book:comments:E212 · added
+- book:comments:E213 · added
+- book:comments:E214 · added
+- book:comments:E215 · added
+- book:comments:E216 · added
+- book:comments:E217 · added
+- book:comments:E218 · added
+- book:comments:E219 · added
+- book:comments:E22 · added
+- book:comments:E220 · added
+- book:comments:E221 · added
+- book:comments:E222 · added
+- book:comments:E223 · added
+- book:comments:E224 · added
+- book:comments:E225 · added
+- book:comments:E226 · added
+- book:comments:E227 · added
+- book:comments:E228 · added
+- book:comments:E229 · added
+- book:comments:E23 · added
+- book:comments:E230 · added
+- book:comments:E231 · added
+- book:comments:E232 · added
+- book:comments:E233 · added
+- book:comments:E234 · added
+- book:comments:E235 · added
+- book:comments:E236 · added
+- book:comments:E237 · added
+- book:comments:E238 · added
+- book:comments:E239 · added
+- book:comments:E24 · added
+- book:comments:E240 · added
+- book:comments:E241 · added
+- book:comments:E242 · added
+- book:comments:E243 · added
+- book:comments:E244 · added
+- book:comments:E245 · added
+- book:comments:E246 · added
+- book:comments:E247 · added
+- book:comments:E248 · added
+- book:comments:E249 · added
+- book:comments:E25 · added
+- book:comments:E250 · added
+- book:comments:E251 · added
+- book:comments:E252 · added
+- book:comments:E253 · added
+- book:comments:E254 · added
+- book:comments:E255 · added
+- book:comments:E256 · added
+- book:comments:E257 · added
+- book:comments:E258 · added
+- book:comments:E259 · added
+- book:comments:E26 · added
+- book:comments:E260 · added
+- book:comments:E261 · added
+- book:comments:E262 · added
+- book:comments:E263 · added
+- book:comments:E264 · added
+- book:comments:E265 · added
+- book:comments:E266 · added
+- book:comments:E27 · added
+- book:comments:E28 · added
+- book:comments:E29 · added
+- book:comments:E3 · added
+- book:comments:E30 · added
+- book:comments:E31 · added
+- book:comments:E32 · added
+- book:comments:E33 · added
+- book:comments:E34 · added
+- book:comments:E35 · added
+- book:comments:E36 · added
+- book:comments:E37 · added
+- book:comments:E38 · added
+- book:comments:E39 · added
+- book:comments:E4 · added
+- book:comments:E40 · added
+- book:comments:E41 · added
+- book:comments:E42 · added
+- book:comments:E43 · added
+- book:comments:E44 · added
+- book:comments:E45 · added
+- book:comments:E46 · added
+- book:comments:E47 · added
+- book:comments:E48 · added
+- book:comments:E49 · added
+- book:comments:E5 · added
+- book:comments:E50 · added
+- book:comments:E51 · added
+- book:comments:E52 · added
+- book:comments:E53 · added
+- book:comments:E54 · added
+- book:comments:E55 · added
+- book:comments:E56 · added
+- book:comments:E57 · added
+- book:comments:E58 · added
+- book:comments:E59 · added
+- book:comments:E6 · added
+- book:comments:E60 · added
+- book:comments:E61 · added
+- book:comments:E62 · added
+- book:comments:E63 · added
+- book:comments:E64 · added
+- book:comments:E65 · added
+- book:comments:E66 · added
+- book:comments:E67 · added
+- book:comments:E68 · added
+- book:comments:E69 · added
+- book:comments:E7 · added
+- book:comments:E70 · added
+- book:comments:E71 · added
+- book:comments:E72 · added
+- book:comments:E73 · added
+- book:comments:E74 · added
+- book:comments:E75 · added
+- book:comments:E76 · added
+- book:comments:E77 · added
+- book:comments:E78 · added
+- book:comments:E79 · added
+- book:comments:E8 · added
+- book:comments:E80 · added
+- book:comments:E81 · added
+- book:comments:E82 · added
+- book:comments:E83 · added
+- book:comments:E84 · added
+- book:comments:E85 · added
+- book:comments:E86 · added
+- book:comments:E87 · added
+- book:comments:E88 · added
+- book:comments:E89 · added
+- book:comments:E9 · added
+- book:comments:E90 · added
+- book:comments:E91 · added
+- book:comments:E92 · added
+- book:comments:E93 · added
+- book:comments:E94 · added
+- book:comments:E95 · added
+- book:comments:E96 · added
+- book:comments:E97 · added
+- book:comments:E98 · added
+- book:comments:E99 · added
+- book:rules:X45 · added
+- code:ai.js · 6,167 → 5,217 bytes
+- code:combat.js · 8,834 → 7,637 bytes
+- code:econ.js · 12,318 → 11,017 bytes
+- code:index.html#b-the-buildings · 1,868 → 1,294 bytes
+- code:index.html#drawn-once-in-the-view-frame · 4,865 → 4,134 bytes
+- code:index.html#floor-2-terrain · 11,273 → 7,999 bytes
+- code:index.html#floor-3-non-movables · 6,347 → 4,175 bytes
+- code:index.html#floor-5-movables · 9,724 → 7,502 bytes
+- code:index.html#floor-6-climate · 10,147 → 7,879 bytes
+- code:index.html#floor-7-display · 3,977 → 2,931 bytes
+- code:index.html#frames · 1,526 → 1,035 bytes
+- code:index.html#qbf-the-dice · 1,671 → 1,075 bytes
+- code:index.html#the-body-s-laws · 3,006 → 2,346 bytes
+- code:index.html#the-brushes · 1,200 → 1,101 bytes
+- code:index.html#the-building-art · 49,449 → 49,157 bytes
+- code:index.html#the-coast · 976 → 476 bytes
+- code:index.html#the-door · 3,847 → 3,251 bytes
+- code:index.html#the-figures · 23,451 → 23,024 bytes
+- code:index.html#the-frames · 1,466 → 1,027 bytes
+- code:index.html#the-ground · 2,451 → 1,807 bytes
+- code:index.html#the-node-art · 3,897 → 3,808 bytes
+- code:index.html#the-things-drawn-each-frame-back-to-fr · 3,649 → 3,192 bytes
+- code:index.html#the-view · 1,080 → 920 bytes
+- code:index.html#the-woods-cache · 5,377 → 4,818 bytes
+- code:index.html#touch · 4,831 → 4,352 bytes
+- code:menu.js · 44,296 → 40,602 bytes
+- code:sound.js · 6,893 → 5,632 bytes
+- tool:index.py · 23,305 → 25,446 bytes
+LOCKED (679 of 975): byte for byte as sealed, 107,513 bytes
+Tests: 19/19 rules hold
+Inventory: 975 items sealed · 869 book entries · 74 laws · 153 citations, 17 still to open · 7 known

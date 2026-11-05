@@ -90,7 +90,7 @@ for b, es in BOOKS.items():
     for c in es: rule('home', c not in HOME, f'{c} is in {HOME.get(c)} and {b}'); HOME[c] = b
 N = BOOKS['citations']
 for b, es in BOOKS.items():
-    if b == 'citations': continue
+    if b in ('citations', 'comments'): continue   # the two books of words: sources and whys
     for c, e in es.items():
         rule('cited', e.get('cite'), f'{c} ({b}) has no citation')
         for t in e.get('cite', []): rule('cited', re.fullmatch(r'N\d+', t), f'{c} ({b}) cites by typed text, not by code: {t[:60]}')   # every citation is an entry in the Citations book
@@ -141,6 +141,16 @@ script = lambda f: '\n'.join(re.findall(r'<script>([\s\S]*?)</script>', text(f))
 for f in CODE:
     for ln, line in enumerate(script(f).split('\n'), 1):
         rule('swallowed', not SWALLOW(line), f'{f}:{ln} a comment ends in a statement')
+EC = BOOKS['comments']; EUSE = {}   # a comment in code is only its code: the why lives once in the Comments book
+for k, t in NOW.items():
+    if not k.startswith('code:'): continue
+    for line in (script(k[5:].split('#')[0]) if '#' not in k else t).split('\n'):
+        c = re.search(r'(?<![:"\'\\])//(.*)$', line)
+        if not c: continue
+        m = re.fullmatch(r'\s*(?:── [^(]*\((E\d+)\)|(E\d+))\s*', c.group(1))
+        rule('comments', m, f'{k} comments in words, not by code: {c.group(1).strip()[:50]}')
+        if m: e = m.group(1) or m.group(2); EUSE.setdefault(e, []).append(k); rule('comments', e in EC, f'{k} names {e}, not in the Comments book')
+for e in EC: rule('comments', e in EUSE, f'{e} is in the Comments book but no code names it')
 rule('version', not re.search(r'v100 · \d', text('index.html')), 'index.html types the version; it lives in D171')
 def parses(key, name, js):
     with tempfile.NamedTemporaryFile('w', suffix='.js', delete=False) as t: t.write(js)
@@ -185,7 +195,14 @@ inv += ['', '## The shells', '', '| Layer | Shells | Ticking nothing yet |', '|-
 inv += ['', '## The rules', '', '| Code | Rule | Stage | Stops |', '|---|---|---|---|'] + [f'| {c} | {e["key"]} | {e["value"]["stage"]} | {e["name"]} |' for c, e in BOOKS['rules'].items()]
 inv += ['', f'{len(STAMP)} items sealed · {sum(len(es) for es in BOOKS.values())} book entries · {len(LAWS)} laws · {len(N)} citations, {sum(1 for e in N.values() if not e["opened"])} still to open · {len(known)} known']
 ci = ['# First Keep v100 · 2. the Citations', '', 'Written by `index.py` from `books/citations.js`, never by hand: every source by its code.', '', '| Code | Kind | Opened | Source |', '|---|---|---|---|'] + [f'| {n} | {e.get("kind", "source")} | {"yes" if e["opened"] else "to open"} | {e["text"]} |' for n, e in N.items()]
-PAGES = {'INDEX.md': pg, 'CITATIONS.md': ci, 'INDEX-CITATIONS.md': xc, 'INVENTORY.md': inv}
+KNOWN_CODES = set(HOME) | set(LAWS); codes_in = lambda t: [x for x in dict.fromkeys(re.findall(r'\b[A-Z]{1,3}\d*[A-Z]?\d*\b', t)) if x in KNOWN_CODES]
+cm = ['# First Keep v100 · 4. the Comments', '', 'Written by `index.py` from `books/comments.js`, never by hand: every why, by its code, and where the code names it.', '', '| Code | In | Why |', '|---|---|---|'] + [f'| {e} | {", ".join(dict.fromkeys(x[5:] for x in EUSE.get(e, [])))} | {v["text"].replace("|", "/")} |' for e, v in EC.items()]
+cites = lambda c: ', '.join(re.findall(r'N\d+', LAWS[c].split(' · ')[-1])) if c in LAWS else ', '.join(BOOKS[HOME[c]][c].get('cite', [])) if c in HOME and HOME[c] not in ('citations', 'comments') else ''
+ms = ['# First Keep v100 · 5. the Master (index, citations and comments)', '', 'Written by `index.py`, never by hand: each part of the code, the whys it carries (E), and the laws (Q) and book entries each why names, with their citations (N). From any line: why, by what math, from what source.', '']
+for k in [k for k in NOW if k.startswith('code:')]:
+    es = [e for e, ks in EUSE.items() if k in ks]
+    ms += ['', f'## {k[5:]}', ''] + [f'- **{e}** {EC[e]["text"][:90]}' + ''.join(f' · {c}{" (" + cites(c) + ")" if cites(c) else ""}' for c in codes_in(EC[e]['text'])) for e in es]
+PAGES = {'INDEX.md': pg, 'COMMENTS.md': cm, 'MASTER.md': ms, 'CITATIONS.md': ci, 'INDEX-CITATIONS.md': xc, 'INVENTORY.md': inv}
 for f, lines in PAGES.items():
     t = '\n'.join(lines) + '\n'
     if CI: rule('pages', text(f) == t, f'{f} is not what the books say: written by hand, or not rebuilt')

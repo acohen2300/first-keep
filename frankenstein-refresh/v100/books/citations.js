@@ -151,5 +151,6 @@ BOOK("citations", {
  "N149": {"text":"Design: Albert, Nov 5 09:47 (three volumes)","opened":true,"kind":"design"},
  "N150": {"text":"Art: preview 49 (18-figures.js), the last build before the camera turn","opened":true,"kind":"art"},
  "N151": {"text":"Art: preview 49 (19-building-art.js)","opened":true,"kind":"art"},
- "N152": {"text":"Art: preview 49","opened":true,"kind":"art"}
+ "N152": {"text":"Art: preview 49","opened":true,"kind":"art"},
+ "N153": {"text":"Design: Albert, Nov 5 12:21: comments in their own book, by letter code; five pages: 1 Index, 2 Citations, 3 Index and Citations, 4 Comments, 5 Index, Citations and Comments","opened":true,"kind":"design"}
 });

@@ -27,22 +27,22 @@ canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: non
 <script src="books/screen.js"></script>
 <script>
 'use strict';
-// First Keep v100 · the world reads its numbers from the Books (books/*.js), never from here: one home each.
-// A Book entry is { key, value, name, cite, law } under its code; the game sees each book as one object by key (D, A, C, W, G), and a shell's slot points at a code (D53, D86.walk).
+// E1
+// E2
 function fromBook(name) { const o = {}; for (const e of Object.values(BOOKS[name])) { const p = e.key.split('.'); let t = o; for (let i = 0; i < p.length - 1; i++) t = t[p[i]] = t[p[i]] || {}; t[p[p.length - 1]] = e.value; } return o; }
 const D = fromBook('measure'), A = fromBook('angles'), C = fromBook('colours'), W = fromBook('mass'), G = fromBook('ground'), HB = fromBook('sound'), SPRITE = fromBook('sprites');
-const CODE = {}; for (const b of Object.values(BOOKS)) for (const [c, e] of Object.entries(b)) CODE[c] = e.value; // every code in every book
-const ref = (p) => { if (p == null) return null; const [c, k] = p.split('.'); const v = CODE[c]; if (v === undefined) throw new Error('no book entry ' + c); return k ? v[k] : v; }; // a slot's pointer, read
-// S the shells (books/shells.js): a row names its layer, ticks its capabilities (SC) and points each slot at a book. has() is the one way the code asks what a thing can do.
+const CODE = {}; for (const b of Object.values(BOOKS)) for (const [c, e] of Object.entries(b)) CODE[c] = e.value; // E3
+const ref = (p) => { if (p == null) return null; const [c, k] = p.split('.'); const v = CODE[c]; if (v === undefined) throw new Error('no book entry ' + c); return k ? v[k] : v; }; // E4
+// E5
 const SH = BOOKS.shells, SHELLS = Object.keys(SH);
 const ticked = (cap) => SHELLS.filter((c) => SH[c].ticks.includes(cap));
 const has = (t, cap) => { const c = t && (t.code || (KIND[t.kind] && KIND[t.kind].code)); return !!(c && SH[c] && SH[c].ticks.includes(cap)); };
 
-// ── The frames (QBD). The grid is square in its own frame; the board frame is the grid turned A1 about the site's middle; the view foreshortens depth by sin A2 and shows height by cos A2.
+// ── The frames (E6)
 const RAD = Math.PI / 180, N = D.site / D.tile, MID = D.site / 2, B0 = (D.site - D.board) / 2, B1 = B0 + D.board;
 const COS = Math.cos(A.turn * RAD), SIN = Math.sin(A.turn * RAD), TILT = Math.sin(A.rise * RAD), UP = Math.cos(A.rise * RAD);
-const REPOSE = Math.tan(A.repose * RAD) * D.tile; // QBE: the most a tile may step up or down over its own width and still be a slope
-const SKEW = TILT * SIN, ART_T = TILT * COS + SKEW * SIN, ART_S = SIN / ART_T; // QBK the art frame: a building is painted with its front along x and sheared by SKEW so that edge follows the grid; its depth is ART_T a unit of width, the back standing ART_S of that to the right
+const REPOSE = Math.tan(A.repose * RAD) * D.tile; // E7
+const SKEW = TILT * SIN, ART_T = TILT * COS + SKEW * SIN, ART_S = SIN / ART_T; // E8
 const toBoard = (sx, sy) => { const x = sx - MID, y = sy - MID; return [MID + x * COS - y * SIN, MID + x * SIN + y * COS]; };
 const fromBoard = (bx, by) => { const x = bx - MID, y = by - MID; return [MID + x * COS + y * SIN, MID - x * SIN + y * COS]; };
 const toView = (bx, by, h) => [bx, by * TILT - h * UP];
@@ -50,31 +50,31 @@ const V = (sx, sy, h) => { const [bx, by] = toBoard(sx, sy); return toView(bx, b
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 const shade = (hex, f) => '#' + [1, 3, 5].map((i) => clamp(Math.round(parseInt(hex.slice(i, i + 2), 16) * f), 0, 255).toString(16).padStart(2, '0')).join('');
 
-// ── QBF the dice (N65): one seed, Mulberry32. Every roll names Who, What, Where, When, Why and How beside it (L13).
+// ── QBF the dice (E9)
 function dice(seed) { let a = seed >>> 0; return () => { a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), a | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
-// two streams from the map's seed, dealt fresh at makeUnits: the rules' (M1), so the same seed plays the same game, and the looks' (D187), so a look never shifts a rule roll
+// E10
 let play = null, shown = null; const rng = () => play(), glance = () => shown(), rnd = (a, b) => a + rng() * (b - a);
-// QAZ a fractal line (N60): K waves, the k-th of amplitude k^(−H), H = 2 − Dim; a coast's Dim is about 1.25. Returns a function of the way along, in radians, giving −1 to 1.
+// E11
 function fractal(roll, K, Dim) { const H = 2 - Dim, ph = Array.from({ length: K }, () => roll() * 2 * Math.PI); let norm = 0; for (let k = 1; k <= K; k++) norm += k ** -H; return (t) => { let v = 0; for (let k = 1; k <= K; k++) v += k ** -H * Math.sin(k * t + ph[k - 1]); return v / norm; }; }
 
-// QAZ as a surface: K plane waves in rolled directions, the same amplitudes; scale is the longest wave in units. Returns a function of (x, y) giving about −1 to 1.
+// E12
 function fractal2(roll, K, Dim, scale) { const H = 2 - Dim, w = Array.from({ length: K }, (_, k) => [roll() * 2 * Math.PI, roll() * 2 * Math.PI, (k + 1) ** -H, ((k + 1) / scale) * 2 * Math.PI]); let norm = 0; for (const q of w) norm += q[2]; return (x, y) => { let v = 0; for (const [th, ph, a, f] of w) v += a * Math.sin((x * Math.cos(th) + y * Math.sin(th)) * f + ph); return v / norm; }; }
 
-// ── The coast (L2 Cut at the board's edge; L4 Edge). Where it stands out it is a headland and a cliff, where it bends in a bay and a beach (QBG).
-// The roll: Who the map · What how far the coast wanders in and out · Where the coast only; within D5 of every corner the same wander (L12), free along the middle of each side · When the map is made · Why no two maps share a coast, and every home gets the same one · How QAZ on the dice.
+// ── The coast (E13)
+// E14
 function makeCoast(roll) {
   const home = fractal(roll, 10, 1.25), free = [0, 1, 2, 3].map(() => fractal(roll, 10, 1.25)), Z3 = D.zone[2], BLEND = D.edge;
-  return (side, pos) => { // pos: the way along the side from its start; returns [wander, cliffness]
+  return (side, pos) => { // E15
     const s = Math.min(pos, D.board - pos), w = clamp((s - Z3) / BLEND, 0, 1);
-    const out = (1 - w) * home((s / Z3) * Math.PI) + w * free[side]((pos / D.board) * 2 * Math.PI); // −1 bay to 1 headland
+    const out = (1 - w) * home((s / Z3) * Math.PI) + w * free[side]((pos / D.board) * 2 * Math.PI); // E16
     return [D.wander * out, clamp((out - 0.2) / 0.3, 0, 1)];
   };
 }
 
-// ── The ground: one height a tile. Depth is the way in from the coast (negative at sea). Land stands at D13; a beach falls to the water over D16, a cliff over D17 (L4); the sea deepens with distance. The stratum a tile shows is whichever its height reaches (L1).
-const H = new Float32Array(N * N), DEP = new Float32Array(N * N), CH = new Float32Array(N * N * 4), FOR = new Uint8Array(N * N); // height, depth from the coast, the four drawn corner heights, the forest floor
-let coast, seed, lakes = []; const MARSH = new Uint8Array(N * N); // marsh (TW1): always wet (KI1)
-function depthAt(bx, by) { // the way in from the coast at a board point, and the coast's cliffness there
+// ── The ground (E17)
+const H = new Float32Array(N * N), DEP = new Float32Array(N * N), CH = new Float32Array(N * N * 4), FOR = new Uint8Array(N * N); // E18
+let coast, seed, lakes = []; const MARSH = new Uint8Array(N * N); // E19
+function depthAt(bx, by) { // E20
   const dl = bx - B0, dr = B1 - bx, dt = by - B0, db = B1 - by, dx = Math.min(dl, dr), dy = Math.min(dt, db);
   const side = dx < dy ? (dl < dr ? 0 : 1) : dt < db ? 2 : 3, pos = clamp(dx < dy ? by - B0 : bx - B0, 0, D.board);
   const [wander, e] = coast(side, pos);
@@ -88,7 +88,7 @@ function makeGround(sd) {
     H[j * N + i] = depth >= run ? D.land : depth > 0 ? (D.land * depth) / run : depth;
   }
   makeTerrain(roll);
-  // the drawn corners (QBE): at every grid corner the tiles round it are sorted by height and split where a step passes the angle of repose; each group shares one height, so a slope meets without a crack and a face stands where it should
+  // E21
   const dh = (i, j) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : Math.max(0, H[j * N + i]));
   for (let cj = 0; cj <= N; cj++) for (let ci = 0; ci <= N; ci++) {
     const round = [[ci - 1, cj - 1, 3], [ci, cj - 1, 2], [ci - 1, cj, 1], [ci, cj, 0]].filter(([i, j]) => i >= 0 && j >= 0 && i < N && j < N).map(([i, j, slot]) => [dh(i, j), (j * N + i) * 4 + slot]).sort((a, b) => a[0] - b[0]);
@@ -99,23 +99,23 @@ function makeGround(sd) {
   document.getElementById('seed').textContent = 'map ' + sd;
 }
 
-// ── Floor 2, terrain (layer 90): every piece is a Cut or a Raise on the one height field (L2, L3); the layer that shows follows (L1), a step past the angle of repose is a face (QBE).
+// ── Floor 2, terrain (E22)
 const CORNERS = [[B0, B0], [B1, B0], [B1, B1], [B0, B1]];
-const corner = (c, u, v) => { const [cx, cy] = CORNERS[c], a = c * 90 * RAD; return [cx + u * Math.cos(a) - v * Math.sin(a), cy + u * Math.sin(a) + v * Math.cos(a)]; }; // a spot in a corner's own frame (u along one edge, v along the other), the same in all four (L12)
+const corner = (c, u, v) => { const [cx, cy] = CORNERS[c], a = c * 90 * RAD; return [cx + u * Math.cos(a) - v * Math.sin(a), cy + u * Math.sin(a) + v * Math.cos(a)]; }; // E23
 const cornerDist = (bx, by) => Math.min(...CORNERS.map(([cx, cy]) => Math.hypot(bx - cx, by - cy)));
 const segDist = (px, py, ax, ay, bx, by) => { const vx = bx - ax, vy = by - ay, t = clamp(((px - ax) * vx + (py - ay) * vy) / (vx * vx + vy * vy), 0, 1); return Math.hypot(px - ax - t * vx, py - ay - t * vy); };
-const laneDist = (bx, by) => Math.min(...CORNERS.map(([cx, cy]) => segDist(bx, by, cx, cy, MID, MID))); // the four roads: corner to middle
+const laneDist = (bx, by) => Math.min(...CORNERS.map(([cx, cy]) => segDist(bx, by, cx, cy, MID, MID))); // E24
 const tileAt = (bx, by) => { const [sx, sy] = fromBoard(bx, by); const i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile); return i < 0 || j < 0 || i >= N || j >= N ? -1 : j * N + i; };
 const landAt = (bx, by) => { const k = tileAt(bx, by); return k >= 0 && H[k] >= D.land && FOR[k] === 0; };
 const inZ4 = (bx, by, r) => cornerDist(bx, by) >= D.zone[2] + r && depthAt(bx, by)[0] >= D.edge + r && Math.hypot(bx - MID, by - MID) >= D.middle + r && laneDist(bx, by) >= D.lane + r;
-function stamp(bx, by, r, fn) { // every tile whose middle lies within r of a board point: fn(k, d, dx, dy)
+function stamp(bx, by, r, fn) { // E25
   const box = [[bx - r, by - r], [bx + r, by - r], [bx - r, by + r], [bx + r, by + r]].map(([x, y]) => fromBoard(x, y));
   const i0 = Math.max(0, Math.floor(Math.min(...box.map((p) => p[0])) / D.tile)), i1 = Math.min(N - 1, Math.ceil(Math.max(...box.map((p) => p[0])) / D.tile));
   const j0 = Math.max(0, Math.floor(Math.min(...box.map((p) => p[1])) / D.tile)), j1 = Math.min(N - 1, Math.ceil(Math.max(...box.map((p) => p[1])) / D.tile));
   for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) { const [tx, ty] = toBoard((i + 0.5) * D.tile, (j + 0.5) * D.tile), dx = tx - bx, dy = ty - by, d = Math.hypot(dx, dy); if (d <= r) fn(j * N + i, d, dx, dy); }
 }
 const between = (roll, [lo, hi]) => lo + roll() * (hi - lo), count = (roll, [lo, hi]) => Math.floor(between(roll, [lo, hi + 1]));
-// a lake: a bowl (deep at the middle, D27) inside a fractal shore (QAZ, D28); where the land stands out into it the shore is a face, where it bends back a bank (QBG); a lake's bank falls over D32, the sea's beach over D16 (L4)
+// E26
 function lake(bx, by, r, rim, deep) {
   stamp(bx, by, r * (1 + D.shore) + D.bank, (k, d, dx, dy) => {
     const out = rim(Math.atan2(dy, dx)), edge = r * (1 + D.shore * out), cliff = clamp((-out - 0.2) / 0.3, 0, 1), run = D.bank + (D.cliff - D.bank) * cliff;
@@ -123,27 +123,27 @@ function lake(bx, by, r, rim, deep) {
     H[k] = Math.min(H[k], h);
   });
 }
-// a wandering line (QAZ) from a to b, pinned at both ends; null when any point fails ok
+// E27
 function wanderLine(roll, a, b, wander, ok) {
   const len = Math.hypot(b[0] - a[0], b[1] - a[1]), nx = -(b[1] - a[1]) / len, ny = (b[0] - a[0]) / len, f = fractal(roll, 6, 1.3), pts = [];
   for (let t = 0; t <= 1; t += 4 / len) { const s = wander * f(t * Math.PI) * Math.sin(t * Math.PI); pts.push([a[0] + (b[0] - a[0]) * t + nx * s, a[1] + (b[1] - a[1]) * t + ny * s]); }
   return ok && !pts.every(([x, y]) => ok(x, y)) ? null : pts;
 }
-// a channel: discs along a line; w the half-width, deep the bed; the bank falls over D32
+// E28
 const channel = (pts, w, deep) => { for (const [x, y] of pts) stamp(x, y, w + D.bank, (k, d) => { H[k] = Math.min(H[k], d < w ? -deep * (1 - (d / w) ** 2) : (D.land * (d - w)) / D.bank); }); };
-const dome = (bx, by, r, hgt) => stamp(bx, by, r, (k, d) => { H[k] = Math.max(H[k], D.land + hgt * (1 - (d / r) ** 2) ** 2); }); // a smooth hill: its steepest slope is 0.77 h / r, under the angle of repose at these numbers
+const dome = (bx, by, r, hgt) => stamp(bx, by, r, (k, d) => { H[k] = Math.max(H[k], D.land + hgt * (1 - (d / r) ** 2) ** 2); }); // E29
 function makeTerrain(roll) {
-  // The home pond: Who every corner · What one small lake · Where Z3, the same spot in each corner's own frame (D51, D52, L12) · When the map is made · Why a home has water to fish and to sail, and the same water for all · How one shore rolled once (QAZ), shared
+  // E30
   const pondRim = fractal(roll, 8, 1.3);
   for (let c = 0; c < 4; c++) lake(...corner(c, ...D.pond), D.pondR, pondRim, D.lakeDeep);
-  // Lakes: Who the map · What their number, size and place · Where Z4, off the roads and the middle, inside the play edge · When the map is made · Why no two maps share their water · How a count between D25, sizes on the power law of lakes (QBA, Pareto draw), places uniform, each shore QAZ
+  // E31
   lakes = []; const c = 1.06, amin = Math.PI * D.lakeR[0] ** 2, amax = Math.PI * D.lakeR[1] ** 2;
   for (let n = count(roll, D.lakes), tries = 0; lakes.length < n && tries < 200; tries++) {
     const r = Math.sqrt(Math.min(amax, amin * roll() ** (-1 / c)) / Math.PI), bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), room = r * (1 + D.shore) + D.bank;
     if (!inZ4(bx, by, room) || lakes.some((L) => Math.hypot(L.x - bx, L.y - by) < L.r + room + 2 * D.beach)) continue;
     lakes.push({ x: bx, y: by, r }); lake(bx, by, r, fractal(roll, 8, 1.3), D.lakeDeep);
   }
-  // Rivers: Who the map · What one from each lake big enough, to the nearest free coast · Where Z4 only; a river never enters a home (L12) · When the map is made · Why water that moves, a way to sail out, a line to hold · How the path wanders (QAZ), the width grows with the lake (QBB)
+  // E32
   const mouths = (bx, by) => { let best = null; for (const [sx, sy, ex, ey] of [[B0, B0 + 900, B0, B1 - 900], [B1, B0 + 900, B1, B1 - 900], [B0 + 900, B0, B1 - 900, B0], [B0 + 900, B1, B1 - 900, B1]]) { const t = clamp(((bx - sx) * (ex - sx) + (by - sy) * (ey - sy)) / ((ex - sx) ** 2 + (ey - sy) ** 2), 0, 1), px = sx + (ex - sx) * t, py = sy + (ey - sy) * t, d = Math.hypot(px - bx, py - by); if (!best || d < best[2]) best = [px, py, d]; } return best; };
   const rivers = [];
   for (const L of lakes) if (L.r >= D.lakeR[0] * 1.5) {
@@ -151,77 +151,77 @@ function makeTerrain(roll) {
     const pts = wanderLine(roll, [L.x, L.y], [mx + (dx / len) * (D.wander + D.beach), my + (dy / len) * (D.wander + D.beach)], D.riverWander, (x, y) => cornerDist(x, y) >= D.zone[2] + w + D.bank && Math.hypot(x - MID, y - MID) >= D.middle);
     if (pts) { channel(pts, w, D.riverDeep); rivers.push({ pts, w }); }
   }
-  // Fords (TC4): Who every river · What a shallow crossing · Where wherever a river crosses one of the four roads, and once more at a rolled spot · When with the river · Why towns grew at fords: a road meets water where it can be waded · How the bed raised to wading depth over D33
+  // E33
   for (const R of rivers) {
     const spots = R.pts.filter(([x, y]) => laneDist(x, y) < D.lane); const one = R.pts[Math.floor(between(roll, [R.pts.length * 0.3, R.pts.length * 0.7]))];
     for (const [x, y] of [...spots.filter((p, n) => n % 10 === 0), one]) stamp(x, y, R.w + D.ford / 2, (k) => { if (H[k] < -D.wade / 2) H[k] = -D.wade / 2; });
   }
-  // Hills (TR1): Who the map · What a few smooth rises · Where Z4, clear of water and roads · When the map is made · Why high ground to hold and to see from · How count D36, radius D37, a dome of D38
+  // E34
   const hills = [];
   for (let n = count(roll, D.hills), tries = 0; hills.length < n && tries < 100; tries++) { const r = between(roll, D.hillR), bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]);
     if (!inZ4(bx, by, r) || !landAt(bx, by) || !landAt(bx + r, by) || !landAt(bx - r, by) || !landAt(bx, by + r) || !landAt(bx, by - r)) continue; hills.push([bx, by, r]); dome(bx, by, r, D.hillH); }
-  // Streams (TC3): Who each hill · What a thin, wadeable run to the nearest lake · Where Z4 · When with the hills · Why water springs where ground rises · How a channel of D34 by D35
+  // E35
   for (const [hx, hy, hr] of hills) { let best = null; for (const L of lakes) { const d = Math.hypot(L.x - hx, L.y - hy); if (!best || d < best[1]) best = [L, d]; }
     if (best) { const L = best[0], dx = L.x - hx, dy = L.y - hy, len = Math.hypot(dx, dy), pts = wanderLine(roll, [hx + (dx / len) * hr, hy + (dy / len) * hr], [L.x, L.y], D.riverWander / 2, (x, y) => cornerDist(x, y) >= D.zone[2]); if (pts) channel(pts, D.stream, D.streamDeep); } }
-  // Rock (TR2): Who the map · What outcrops nothing walks over or through · Where Z4, on dry land, off the roads · When the map is made · Why cover and chokepoints inland · How count D39, radius D40, raised D41 in one step so every edge is a face (QBE); its top is bare (D23)
+  // E36
   for (let n = count(roll, D.rocks), tries = 0, made = 0; made < n && tries < 100; tries++) { const r = between(roll, D.rockR), bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), rim = fractal(roll, 5, 1.4);
     if (!inZ4(bx, by, r * 1.3) || !landAt(bx, by)) continue; made++; stamp(bx, by, r * 1.3, (k, d, dx, dy) => { if (d < r * (1 + 0.3 * rim(Math.atan2(dy, dx)))) H[k] = Math.max(H[k], D.land + D.rockH); }); }
-  // Crevices (TC5): Who the map · What a dry trench nothing crosses · Where Z4, off the roads and water · When the map is made · Why a line that cannot be walked, without water · How count D42, a wandering line of D45, cut to D44 so both walls are faces
+  // E37
   for (let n = count(roll, D.crevices), tries = 0, made = 0; made < n && tries < 60; tries++) { const L = between(roll, D.creviceL), a = roll() * 2 * Math.PI, bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), ex = bx + Math.cos(a) * L, ey = by + Math.sin(a) * L;
     if (!inZ4(bx, by, D.creviceW) || !inZ4(ex, ey, D.creviceW) || !landAt(bx, by) || !landAt(ex, ey)) continue; made++;
     const pts = wanderLine(roll, [bx, by], [ex, ey], D.riverWander / 3, (x, y) => inZ4(x, y, D.creviceW) && landAt(x, y)); if (pts) for (const [x, y] of pts) stamp(x, y, D.creviceW, (k) => { H[k] = Math.min(H[k], D.creviceFloor); }); }
-  // Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor 3) · Where a wall round every home at D50 with the road through it (the same for all, L12), and patches over Z4 by a rolled surface; never on water, slopes or roads · When the map is made · Why woods to cut, to hide in, to go round · How QAZ as a surface, scale D48, standing where it rises past D49
+  // E38
   const woods = fractal2(roll, 6, 1.3, D.forestScale);
   for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { const k = j * N + i; if (H[k] !== D.land) continue;
     const [bx, by] = toBoard((i + 0.5) * D.tile, (j + 0.5) * D.tile), cd = cornerDist(bx, by);
     if (laneDist(bx, by) < D.lane || Math.hypot(bx - MID, by - MID) < D.middle || DEP[k] < D.edge + D.tile) continue;
     const wall = cd >= D.wall[0] && cd <= D.wall[1], patch = cd > D.wall[1] && woods(bx, by) > D.forestShare;
     if (wall || patch) FOR[k] = 1; }
-  for (let j = 1; j < N - 1; j++) for (let i = 1; i < N - 1; i++) { const k = j * N + i; if (FOR[k] && [k - 1, k + 1, k - N, k + N].some((q) => H[q] !== D.land)) FOR[k] = 2; } // the wood's edge keeps one tile from any slope or water
+  for (let j = 1; j < N - 1; j++) for (let i = 1; i < N - 1; i++) { const k = j * N + i; if (FOR[k] && [k - 1, k + 1, k - N, k + N].some((q) => H[q] !== D.land)) FOR[k] = 2; } // E39
   for (let k = 0; k < N * N; k++) if (FOR[k] === 2) FOR[k] = 0;
 }
-// ── Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each stands on one flat tile of land; a big one takes the tiles under it. Nothing here moves; floor 5 takes from the amounts.
-const KIND = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 100) KIND[e.find] = { code: c, yield: e.yield || null, amount: e.amount ? ref(e.amount) : 0, r: e.room ? ref(e.room) : 0 }; } // the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clear
-// QBJ Z1's store, from what one age up costs (Albert's rule): food for the age and the villagers, wood for the mill, the lumber camp, the homes and the barracks, each with a margin (D61–D69)
+// ── Floor 3, non-movables (E40)
+const KIND = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 100) KIND[e.find] = { code: c, yield: e.yield || null, amount: e.amount ? ref(e.amount) : 0, r: e.room ? ref(e.room) : 0 }; } // E41
+// E42
 const Z1 = { food: (D.ageUp + D.villagers * D.villager) * (1 + D.margin), wood: (D.mill + D.lumber + D.homes * D.home + D.barracks) * (1 + D.margin) };
 const z1 = { bush: Math.ceil(Z1.food / D.bushFood), tree: Math.ceil(Z1.wood / D.treeWood) };
-const OCC = new Uint8Array(N * N); let things = []; // what stands on each tile, and the shells themselves
+const OCC = new Uint8Array(N * N); let things = []; // E43
 const flatAt = (k) => k >= 0 && H[k] >= D.land && CH[k * 4] === CH[k * 4 + 1] && CH[k * 4] === CH[k * 4 + 2] && CH[k * 4] === CH[k * 4 + 3];
 const free = (k) => flatAt(k) && !OCC[k] && !FOR[k];
 const clear = (bx, by, r) => { let ok = true; stamp(bx, by, r, (k) => { if (!free(k)) ok = false; }); return ok; };
-const nearest = (bx, by, r) => { let best = null; stamp(bx, by, r, (k, d) => { if (free(k) && (!best || d < best[0])) best = [d, k]; }); return best ? best[1] : -1; }; // the free tile nearest a spot
-function put(kind, k, roll, size = 1, v = Math.floor(roll() * 3)) { // a shell on a tile; its stand wanders within the tile by D82 on the dice, so no wood is a grid
+const nearest = (bx, by, r) => { let best = null; stamp(bx, by, r, (k, d) => { if (free(k) && (!best || d < best[0])) best = [d, k]; }); return best ? best[1] : -1; }; // E44
+function put(kind, k, roll, size = 1, v = Math.floor(roll() * 3)) { // E45
   const i = k % N, j = (k - i) / N, [bx, by] = toBoard((i + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter, (j + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter), [vx, vy] = toView(bx, by, H[k]);
   things.push({ kind, k, bx, by, vx, vy, amount: KIND[kind].amount, size, v }); OCC[k] = 1; if (KIND[kind].r) stamp(bx, by, KIND[kind].r, (q) => { OCC[q] = 1; });
 }
-function cluster(kind, bx, by, n, roll) { // the n free tiles nearest a spot: a grove (marked as woods, the trees follow) or a berry patch
+function cluster(kind, bx, by, n, roll) { // E46
   const got = []; stamp(bx, by, Math.sqrt(n / Math.PI) * D.tile + 1.5 * D.tile, (k, d) => { if (free(k)) got.push([d, k]); });
   for (const [, k] of got.sort((a, b) => a[0] - b[0]).slice(0, n)) kind === 'tree' ? (FOR[k] = 1) : put(kind, k, roll);
 }
 function makeThings(roll) {
-  // The home finds: Who every corner · What Z1's berries, grove, gold and stone, sized by QBJ; Z3's the same at D72 times, with iron · Where fixed spots in the corner's frame (D70, D71), the same in all four (L12) · When the map is made · Why every player starts with the same ground and the same means to the next age · How one home dice (QBF), restarted at each corner, so the four are alike to the stand of each bush
+  // E47
   for (let c = 0; c < 4; c++) { const hr = dice(seed ^ 0x9e3779b9), at = (z, key) => corner(c, ...D[z][key]), one = (kind, z) => { const k = nearest(...at(z, kind), 3 * D.tile); if (k >= 0) put(kind, k, hr); };
     cluster('bush', ...at('z1', 'bush'), z1.bush, hr); cluster('tree', ...at('z1', 'tree'), z1.tree, hr); one('gold', 'z1'); one('stone', 'z1');
     cluster('bush', ...at('z3', 'bush'), z1.bush * D.z3x, hr); cluster('tree', ...at('z3', 'tree'), z1.tree * D.z3x, hr); one('gold', 'z3'); one('stone', 'z3'); one('iron', 'z3'); }
-  // Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts: ruins, cemeteries, campfires, treasure · Where Z4, on flat free land, off the roads, the middle and the play edge · When the map is made · Why the game beyond the homestead is to be found, not known · How counts D73–D81, places uniform until one is clear, each a roll
+  // E48
   const spot = (r) => { for (let t = 0; t < 200; t++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (inZ4(bx, by, r + D.tile) && free(k) && clear(bx, by, r)) return [bx, by, k]; } return null; };
   for (const [kind, n] of [['gold', 'goldZ4'], ['stone', 'stoneZ4'], ['iron', 'ironZ4'], ['ruins', 'ruins'], ['cemetery', 'cemeteries'], ['campfire', 'campfires'], ['treasure', 'treasures']])
     for (let m = count(roll, D[n]); m > 0; m--) { const s = spot(KIND[kind].r); if (s) put(kind, s[2], roll); }
   for (let m = count(roll, D.patches); m > 0; m--) { const s = spot(2 * D.tile); if (s) cluster('bush', s[0], s[1], count(roll, D.patch), roll); }
-  // The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size and shade · Where its tile · When the map is made · Why the woods are what is cut for wood (R1) · How three rolls a tile
+  // E49
   for (let k = 0; k < N * N; k++) if (FOR[k]) put('tree', k, roll, 0.85 + roll() * 0.3, Math.floor(roll() * 6));
-  things.sort((a, b) => a.vy - b.vy); // drawn back to front
-  for (const t of things) if (t.kind === 'tree') deepen(t); // a tree with trees on all eight sides is deep: nothing can stand between it and its neighbours, so the deep woods are painted once a chunk (see the woods cache)
+  things.sort((a, b) => a.vy - b.vy); // E50
+  for (const t of things) if (t.kind === 'tree') deepen(t); // E51
 }
-const stratum = (h) => (h <= 0 ? 0 : h < D.sandTop ? 1 : h < D.dirtTop || h >= D.land + D.bare ? 2 : 3); // 0 water, 1 sand, 2 dirt, 3 grass; bare dirt again high over the land (D23)
+const stratum = (h) => (h <= 0 ? 0 : h < D.sandTop ? 1 : h < D.dirtTop || h >= D.land + D.bare ? 2 : 3); // E52
 const BANDS = 6, deepest = shade(C.water, 0.6);
-const waterBand = (h) => (h > -D.wade ? 0 : 1 + Math.min(BANDS - 2, Math.floor((-h - D.wade) / ((D.sea - D.wade) / (BANDS - 1))))); // the first band is what can be waded (D24)
+const waterBand = (h) => (h > -D.wade ? 0 : 1 + Math.min(BANDS - 2, Math.floor((-h - D.wade) / ((D.sea - D.wade) / (BANDS - 1))))); // E53
 const blend = (a, b, f) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - f) + parseInt(b.slice(i, i + 2), 16) * f).toString(16).padStart(2, '0')).join('');
 const WATER = Array.from({ length: BANDS }, (_, k) => blend(C.water, deepest, k / (BANDS - 1)));
-const TOP = [null, C.sand, C.dirt, C.grass], FACE = [null, shade(C.sand, 0.72), shade(C.dirt, 0.72), shade(C.grass, 0.72)], FLOOR = shade(C.grass, 0.8), REED = blend(C.grass, C.water, 0.3); // the forest floor: the grass, shaded; the marsh: the grass, toward the water
-const STRATA = [[0, D.sandTop, 1], [D.sandTop, D.dirtTop, 2], [D.dirtTop, D.land, 3], [D.land, 1e9, 2]]; // what a face shows between two heights (L1): the grass is the land's top skin; anything raised above it shows bare earth
+const TOP = [null, C.sand, C.dirt, C.grass], FACE = [null, shade(C.sand, 0.72), shade(C.dirt, 0.72), shade(C.grass, 0.72)], FLOOR = shade(C.grass, 0.8), REED = blend(C.grass, C.water, 0.3); // E54
+const STRATA = [[0, D.sandTop, 1], [D.sandTop, D.dirtTop, 2], [D.dirtTop, D.land, 3], [D.land, 1e9, 2]]; // E55
 
-// ── Drawn once in the view frame: every tile a lifted quad, a face where it steps down toward the camera. Then every frame is one picture, moved and scaled.
+// ── Drawn once in the view frame (E56)
 let ground, gw, gh, ox, oy; const maskLand = document.createElement('canvas'), maskDark = document.createElement('canvas'), maskLake = document.createElement('canvas');
 function renderGround() {
   const pts = []; for (const [x, y] of [[0, 0], [D.site, 0], [0, D.site], [D.site, D.site]]) for (const h of [0, D.land]) pts.push(V(x, y, h));
@@ -230,20 +230,20 @@ function renderGround() {
   ground = document.createElement('canvas'); ground.width = gw; ground.height = gh;
   const g = ground.getContext('2d');
   g.fillStyle = deepest; g.fillRect(0, 0, gw, gh);
-  for (const m of [maskLand, maskDark, maskLake]) { m.width = Math.ceil(gw / 4); m.height = Math.ceil(gh / 4); const q = m.getContext('2d'); q.scale(0.25, 0.25); q.fillStyle = m === maskDark ? '#404a52' : '#fff'; } // the masks at a quarter scale: the land in white and in shadow, the inland water
+  for (const m of [maskLand, maskDark, maskLake]) { m.width = Math.ceil(gw / 4); m.height = Math.ceil(gh / 4); const q = m.getContext('2d'); q.scale(0.25, 0.25); q.fillStyle = m === maskDark ? '#404a52' : '#fff'; } // E57
   const P = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return [x + ox, y + oy]; };
-  // a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right and down, so the next tile's edge lands on solid paint and no seam shows
+  // E58
   const quad = (a, b, c, d, fill) => { g.fillStyle = fill; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0] + 1, b[1]); g.lineTo(c[0] + 1, c[1] + 1); g.lineTo(d[0], d[1] + 1); g.closePath(); g.fill(); };
-  const bladeTile = document.createElement('canvas'); bladeTile.width = bladeTile.height = 64; { const q = bladeTile.getContext('2d'), r = NS_rng(7); q.lineCap = 'round'; q.lineWidth = 1; // the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (preview 49's)
+  const bladeTile = document.createElement('canvas'); bladeTile.width = bladeTile.height = 64; { const q = bladeTile.getContext('2d'), r = NS_rng(7); q.lineCap = 'round'; q.lineWidth = 1; // E59
     for (let i = 0; i < 90; i++) { const x = r() * 64, y = r() * 64; q.strokeStyle = r() < 0.5 ? shade(C.grass, 0.55) : shade(C.grass, 1.35); q.beginPath(); q.moveTo(x, y); q.lineTo(x + (r() - 0.5) * 3, y - 3 - r() * 4); q.stroke(); } }
   const blades = g.createPattern(bladeTile, 'repeat');
   const T = D.tile, ch = (i, j, c) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : CH[(j * N + i) * 4 + c]);
   const flat = (i, j) => { const k = (j * N + i) * 4; return CH[k] === CH[k + 1] && CH[k] === CH[k + 2] && CH[k] === CH[k + 3]; };
-  const LIT = 0.03; // the light stands high to the left and in front: ground leaning that way is lit, ground leaning away is shaded, 3% a unit of lean over a tile
+  const LIT = 0.03; // E60
   const colour = (i, j) => { const k = j * N + i, h = H[k], s = stratum(h), base = FOR[k] ? FLOOR : MARSH[k] ? REED : s ? TOP[s] : WATER[waterBand(h)]; if (!s || flat(i, j)) return base;
     const c = k * 4, lean = (CH[c] + CH[c + 2] - CH[c + 1] - CH[c + 3]) / 2 + (CH[c + 2] + CH[c + 3] - CH[c] - CH[c + 1]) / 2; return shade(base, clamp(1 + LIT * lean, 0.7, 1.3)); };
   for (let j = 0; j < N; j++) {
-    for (let i = 0; i < N; ) { // runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
+    for (let i = 0; i < N; ) { // E61
       const col = colour(i, j), h0 = CH[(j * N + i) * 4]; let i1 = i;
       if (flat(i, j)) while (i1 + 1 < N && flat(i1 + 1, j) && colour(i1 + 1, j) === col && CH[(j * N + i1 + 1) * 4] === h0) i1++;
       const k = (j * N + i) * 4, k1 = (j * N + i1) * 4;
@@ -252,7 +252,7 @@ function renderGround() {
       const h = H[j * N + i]; for (const m of h > 0 ? [maskLand, maskDark] : DEP[j * N + i] >= D.edge ? [maskLake] : []) { const q = m.getContext('2d'); q.beginPath(); q.moveTo(a[0], a[1]); q.lineTo(b[0] + 2, b[1]); q.lineTo(c[0] + 2, c[1] + 2); q.lineTo(d[0], d[1] + 2); q.fill(); }
       i = i1 + 1;
     }
-    for (let i = 0; i < N; i++) { // faces: the +y edge and the +x edge face the camera (the turn is under 45°)
+    for (let i = 0; i < N; i++) { // E62
       const k = (j * N + i) * 4;
       face(i * T, (j + 1) * T, (i + 1) * T, (j + 1) * T, CH[k + 2], CH[k + 3], ch(i, j + 1, 0), ch(i, j + 1, 1));
       face((i + 1) * T, j * T, (i + 1) * T, (j + 1) * T, CH[k + 1], CH[k + 3], ch(i + 1, j, 0), ch(i + 1, j, 2));
@@ -268,25 +268,25 @@ function renderGround() {
   }
 }
 
-// ── The view (layer 140): one camera, drag to pan, pinch or wheel to zoom; the overlays are drawn each frame over the one picture.
+// ── The view (E63)
 const canvas = document.getElementById('map'), ctx = canvas.getContext('2d');
-const cam = { x: 0, y: 0, z: 1 }, show = { G: false, Z: true, T: true, R: true, B: true, U: true, K: true, V: true, fast: false }; // one flag a layer code (the panel, floor 8) and Fast
+const cam = { x: 0, y: 0, z: 1 }, show = { G: false, Z: true, T: true, R: true, B: true, U: true, K: true, V: true, fast: false }; // E64
 let cw, ch, dpr, zmin, zmax = 6, queued = false;
 const toScreen = (vx, vy) => [(vx - cam.x) * cam.z + cw / 2, (vy - cam.y) * cam.z + ch / 2];
 const S = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return toScreen(x, y); };
 function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 0); cam.x = (l + r) / 2; cam.y = (t + b) / 2; cam.z = Math.min((cw - 24) / (r - l), (ch - 200) / (b - t)); zmin = cam.z / 2; }
 function resize() { dpr = Math.min(2, devicePixelRatio || 1); cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; fit(); dirty(); }
 function dirty() { if (!queued) { queued = true; requestAnimationFrame(draw); } }
-// ── The door (floor 8): the modules (menu, econ, combat, ai) hang on these hooks and read the world through FK; nothing else of theirs touches this file
-const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], spawn: [], gone: [], event: [] }; // event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by the names in books/sound.js HE1
+// ── The door (E65)
+const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], spawn: [], gone: [], event: [] }; // E66
 const on = (ev, fn) => HOOK[ev].push(fn), fire = (ev, ...a) => { for (const f of HOOK[ev]) if (f(...a)) return true; return false; };
 let last = 0, frameDt = 0;
-const every = ([secs, ph]) => Math.floor((K.t - ph / D.fps) / secs) > Math.floor((K.t0 - ph / D.fps) / secs); // a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's frames (D98)
+const every = ([secs, ph]) => Math.floor((K.t - ph / D.fps) / secs) > Math.floor((K.t0 - ph / D.fps) / secs); // E67
 function loop(now) { if (now - last >= 1000 / D.fps) { const dt = Math.min(0.1, (now - last) / 1000 || 0) * (show.fast ? D.fast : 1); last = now; frameDt = dt; if (!document.hidden) { climate(dt); step(dt); fire('tick', dt); look(dt); draw(); } } requestAnimationFrame(loop); }
 function draw() {
   queued = false;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((glance() * 2 - 1) * jolt.px, (glance() * 2 - 1) * jolt.px); } // the screen jolts with a heavy impact (QBT)
+  if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((glance() * 2 - 1) * jolt.px, (glance() * 2 - 1) * jolt.px); } // E68
   ctx.fillStyle = deepest; ctx.fillRect(0, 0, cw, ch);
   const [gx, gy] = toScreen(-ox, -oy); ctx.drawImage(ground, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin();
   if (show.G && cam.z * D.tile >= D.lod) drawGrid();
@@ -298,7 +298,7 @@ function draw() {
 }
 function path(points) { ctx.beginPath(); points.forEach((p, n) => (n ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); }
 let playPoly = null;
-function drawGrid() { // the walking grid, at the land's height, clipped to the played ground: the coast's line brought D7 in (L6)
+function drawGrid() { // E69
   if (!playPoly) { playPoly = []; const inset = (side, pos) => D.edge + coast(side, pos)[0];
     for (let p = 80; p <= D.board - 80; p += 20) playPoly.push([B0 + inset(0, p), B0 + p]);
     for (let p = 80; p <= D.board - 80; p += 20) playPoly.push([B0 + p, B1 - inset(3, p)]);
@@ -309,7 +309,7 @@ function drawGrid() { // the walking grid, at the land's height, clipped to the 
   for (let n = 0; n <= N; n++) { const a = S(n * D.tile, 0, D.land), b = S(n * D.tile, D.site, D.land), c = S(0, n * D.tile, D.land), d = S(D.site, n * D.tile, D.land); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.moveTo(c[0], c[1]); ctx.lineTo(d[0], d[1]); }
   ctx.stroke(); ctx.restore();
 }
-function drawZones() { // Z1 to Z4 from each corner (D3 to D6), at the land's height (L11: a rule drawn on the ground, not ground)
+function drawZones() { // E70
   ctx.save(); ctx.strokeStyle = C.white; ctx.fillStyle = C.white; ctx.globalAlpha = 0.4; ctx.lineWidth = 1; ctx.setLineDash([6, 6]); ctx.font = '14px "Barlow Semi Condensed", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   for (const [cx, cy, a0] of [[B0, B0, 0], [B1, B0, 90], [B1, B1, 180], [B0, B1, 270]]) {
     for (const r of D.zone) { const pts = []; for (let a = a0; a <= a0 + 90; a += 3) pts.push(toScreen(...toView(cx + r * Math.cos(a * RAD), cy + r * Math.sin(a * RAD), D.land))); path(pts); ctx.stroke(); }
@@ -318,7 +318,7 @@ function drawZones() { // Z1 to Z4 from each corner (D3 to D6), at the land's he
   }
   ctx.restore();
 }
-// ── The brushes (preview 49, 18-figures.js): a polygon, an ellipse, a line, two gradients; g is the canvas being painted
+// ── The brushes (E71)
 let g = null;
 const P_ = (pts, f, s, w) => { g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]))); g.closePath(); if (f) { g.fillStyle = f; g.fill(); } if (s) { g.strokeStyle = s;
 g.lineWidth = w || 0.5; g.stroke(); } };
@@ -328,7 +328,7 @@ const L_ = (x1, y1, x2, y2, c, w) => { g.strokeStyle = c; g.lineWidth = w; g.beg
 const LG = (x0, y0, x1, y1, stops) => { const q = g.createLinearGradient(x0, y0, x1, y1); stops.forEach((c, i) => q.addColorStop(i / (stops.length - 1), c)); return q; };
 function wheel(x, y, r) { E_(x, y, r, r, null, '#3a2814', 1); g.strokeStyle = '#5a3a1c'; g.lineWidth = 0.5; for (let i = 0; i < 6; i++) { const a = (i * Math.PI) / 3; g.beginPath(); g.moveTo(x, y);
 g.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r); g.stroke(); } E_(x, y, 0.8, 0.8, '#3a2814'); }
-// ── The building art (preview 49, 19-building-art.js; Nov 3, the last build before the camera turn): every piece drawn from its own point lists, in units, feet at (0, 0), the front edge along x, the back up and to the right. Research tiers, ages, civs, seasons and flags are cut.
+// ── The building art (E72)
 const TOWER_LOOK = [ { w: 8, h: 44, wall: '#a29d90', flag: 7 }, { w: 10, h: 52, wall: '#9a9486', flag: 9, hoard: true }, { w: 12, h: 38, wall: '#8e8a80', flag: 10, batter: true, guns: true }, ];
 const STONE = '#a29d90',
 PLASTER = '#e2d6bb',
@@ -426,7 +426,7 @@ P_(C, LG(-w / 2, d / 2, w / 2 + k, -d / 2, [lit(soil, 0.12), soil, lit(soil, -0.
 post(C[2][0], C[2][1], 3.8); rail(C[1], C[2]); rail(C[0], C[1]); for (let i = 1; i < 3; i++) { const [x, y] = gpt(w, i / 3, 0); post(x, y, 2.8, '#5a3a1e', 0.5); } post(C[0][0], C[0][1], 3.8);
 post(C[1][0], C[1][1], 3.8); } L_(-w / 2, d / 2, w / 2, d / 2, c, 1); }
 const RG = (x, y, r0, r1, stops) => { const q = g.createRadialGradient(x, y, r0, x, y, r1); stops.forEach((c, i) => q.addColorStop(i / (stops.length - 1), c)); return q; };
-const BLDTOP = Object.fromEntries(Object.entries(SPRITE).filter(([, v]) => v.top).map(([k, v]) => [k, v.top])); // a building picture's height, from its look
+const BLDTOP = Object.fromEntries(Object.entries(SPRITE).filter(([, v]) => v.top).map(([k, v]) => [k, v.top])); // E73
 const ART = {
 keep(c, o, v) { const r = block(50, 22, PLASTER, 'timber', 'gable', TILE, 12); const d = r.d; P_( [ [-26, d / 2 + 1], [26, d / 2 + 1], [26, d / 2 - 4], [-26, d / 2 - 4], ], STONE, LINE, 0.5, );
 texture('stone', -26, d / 2 - 4, 26, d / 2 + 1, STONE); g.save(); g.translate(15, d / 2 - 4); const tk = sides(-5, 5, 0, 40, 10 * ART_T, STONE); P_( [ [-5, 0], [5, 0], [5, -40], [-5, -40], ],
@@ -642,7 +642,7 @@ g.lineTo(-30, y0 - 10); g.ellipse(0, y0 - 10, 30, 30 * ART_T, 0, Math.PI, 0, tru
 g.lineWidth = 0.5; g.stroke(); g.restore(); if (lv < 3) for (let a = 0.12; a < Math.PI; a += 0.2) { const x = Math.cos(a) * 30, y = Math.sin(a) * 30 * ART_T + y0; g.beginPath();
 g.arc(x, y - 6, 1.5, Math.PI, 0); g.lineTo(x + 1.5, y - 2); g.lineTo(x - 1.5, y - 2); g.closePath(); g.fillStyle = '#4a3e2e'; g.fill(); } } E_(0, -40, 30, 30 * ART_T, '#d8cdb4', LINE, 0.5);
 E_(0, -40, 19, 19 * ART_T, '#c8a878', LINE, 0.5); banner(-24, -40, c, 8); banner(24, -40, c, 8); };
-// ── The node art (the same file): six trees, three bushes, stone, gold and iron; r is a dice for the leaf blobs
+// ── The node art (E74)
 const NS_c = (hex, f) => { const n = parseInt(hex.slice(1), 16), k = (v) => Math.max(0, Math.min(255, Math.round(v * f))); return `rgb(${k(n >> 16)},${k((n >> 8) & 255)},${k(n & 255)})`; };
 const NS_poly = (pts, fill, stroke, lw) => { g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.closePath(); if (fill) { g.fillStyle = fill; g.fill(); } if (stroke) {
 g.strokeStyle = stroke; g.lineWidth = lw; g.stroke(); } };
@@ -668,7 +668,7 @@ NS_poly([P[1], P[2], P[3], P[4], [3, -6.5], [-3, -5]], top, 'rgba(0,0,0,.25)', 0
 g.strokeStyle = 'rgba(10,12,14,.5)'; g.lineWidth = 0.4; g.beginPath(); g.moveTo(-2, -5); g.lineTo(-1, -1); g.moveTo(4, -6); g.lineTo(5, -9); g.stroke(); if (gold || iron) for (const [x, y] of [
 [-1, -7], [3, -5], [-5, -4], ]) { g.fillStyle = gold ? '#fff6c8' : '#d5e2ee'; NS_poly([ [x, y - 1.1], [x + 0.9, y], [x, y + 1.1], [x - 0.9, y], ]); g.fill(); } } }
 
-// ── The figures (preview 49, 18-figures.js): people and beasts drawn from data, feet at (0, 0), facing right, a person about 21 tall; fr 0–3 the walk, 10 and up at work (the tool, two poses). One look a code; the rest of the roster stays in preview 49 as skins.
+// ── The figures (E75)
 const INK = '#141210',
 SKIN = '#e0b48e',
 STEEL = '#aeb6be',
@@ -789,7 +789,7 @@ L_(-L * 0.2 + i * L * 0.08, -o.legH - H, -L * 0.22 + i * L * 0.08, -o.legH - H -
 function planks(x0, y0, x1, y1, col) { P_( [ [x0, y0], [x1, y0], [x1, y1], [x0, y1], ], LG(x0, 0, x1, 0, [shade(col, 1.15), col, shade(col, 0.75)]), INK, 0.5, ); g.strokeStyle = 'rgba(40,24,10,.45)';
 g.lineWidth = 0.35; for (let y = y0 + 2; y < y1; y += 2.2) { g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke(); } }
 const WORKTOOL = ['axe', 'none', 'pick', 'none', 'rod', 'hammer'];
-// the brushes: one drawing routine a shape; a look in books/sprites.js names its brush and the brush's settings ($side the owner's colour, $side*0.6 a tint of it)
+// E76
 const paintOf = (o, c) => Object.fromEntries(Object.entries(o || {}).map(([k, v]) => [k, v === '$side' ? c : typeof v === 'string' && v.startsWith('$side*') ? shade(c, +v.slice(6)) : v]));
 const BRUSH = {
 person: (o, c, fr) => person(paintOf(o, c), fr),
@@ -811,10 +811,10 @@ wagon: (o, c, fr) => { horse({ coat: '#6a5a4a', saddle: false }, fr, 14); horse(
 wheel(-17, -4.6, 4.6); wheel(-8, -4.6, 4.6); },
 };
 const LOOKS = Object.fromEntries(Object.entries(SPRITE).filter(([, v]) => v.brush).map(([k, v]) => [k, (c, t, fr) => BRUSH[v.brush](v.o, c, fr)]));
-const LOOKBOX = Object.fromEntries(Object.entries(SPRITE).filter(([, v]) => v.box).map(([k, v]) => [k, v.box])); // a figure's frame, from its look
-// ── B the buildings (layer 110; shells without Walk): the size in tiles (D8–D11; a wall piece is one tile, D12), Open or Closed (S Styles), the picture it wears. Health, prices and times come with the Content pull.
-const B = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 110) B[c] = [e.name, ref(e.size), e.style === 'Open' ? 1 : 0, e.look, e.drop]; } // the buildings (layer 110), from their shells: name, size in tiles, Open, the picture, what it takes in
-// a building stands on n × n flat free tiles from (i, j); Closed takes them (OCC 2), Open leaves them walkable (OCC 3)
+const LOOKBOX = Object.fromEntries(Object.entries(SPRITE).filter(([, v]) => v.box).map(([k, v]) => [k, v.box])); // E77
+// ── B the buildings (E78)
+const B = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 110) B[c] = [e.name, ref(e.size), e.style === 'Open' ? 1 : 0, e.look, e.drop]; } // E79
+// E80
 function build(code, i, j, col = C.blue) {
   const [, n] = B[code]; if (i < 0 || j < 0 || i + n > N || j + n > N) return null;
   for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) if (!free(y * N + x) || H[y * N + x] !== H[j * N + i]) return null;
@@ -823,24 +823,24 @@ function build(code, i, j, col = C.blue) {
   things.push(t); things.sort((a, b) => a.vy - b.vy); return t;
 }
 function unbuild(t) { for (let y = t.j; y < t.j + t.n; y++) for (let x = t.i; x < t.i + t.n; x++) OCC[y * N + x] = 0; things.splice(things.indexOf(t), 1); fire('gone', t); }
-function makeBuildings() { // The Town Center: Who every corner · What one · Where Z2 on the road at D84, the same in all four (L12) · When the map is made · Why the game starts with a hall to gather at · How no roll: fixed
-  for (let c = 0; c < 4; c++) { const [sx, sy] = fromBoard(...corner(c, ...D.tc)), n = B.BTC1[1]; build('BTC1', Math.round(sx / D.tile - n / 2), Math.round(sy / D.tile - n / 2), SIDES[c].col); }
+function makeBuildings() { // E81
+  for (let c = 0; c < 4; c++) { const seat = ticked('Seat')[0], [sx, sy] = fromBoard(...corner(c, ...D.tc)), n = B[seat][1]; build(seat, Math.round(sx / D.tile - n / 2), Math.round(sy / D.tile - n / 2), SIDES[c].col); }
 }
 
-// ── Floor 5, movables (layer 120): U units and M moveables are shells that walk. Each stands at a board point, walks tile to tile along a path (QBL), and does one thing at a time.
-const SIDES = [{ col: C.blue }, { col: C.green }, { col: C.red }, { col: C.white }].map((q) => ({ ...q, store: { ...D.start } })); // one a corner (C5–C8); the player is 0
-const U = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 120) U[c] = [e.name, e.look, e.pace.split('.')[1]]; } // the units and moveables (layer 120), from their shells: name, look, pace (a D86 key)
+// ── Floor 5, movables (E82)
+const SIDES = [{ col: C.blue }, { col: C.green }, { col: C.red }, { col: C.white }].map((q) => ({ ...q, store: { ...D.start } })); // E83
+const U = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 120) U[c] = [e.name, e.look, e.pace.split('.')[1]]; } // E84
 let units = [], sel = null;
-const WORK = { tree: 0, bush: 1, gold: 2, stone: 2, iron: 2 }; // the tool a villager works a find with (WORKTOOL): axe, hands, pick
+const WORK = { tree: 0, bush: 1, gold: 2, stone: 2, iron: 2 }; // E85
 const YIELD = (t) => KIND[t.kind].yield;
-// walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step past the angle of repose is not
-const iced = (k) => K.ice && H[k] <= 0 && DEP[k] >= D.edge; // inland water bearing ice (QQ): walked as if flat
+// E86
+const iced = (k) => K.ice && H[k] <= 0 && DEP[k] >= D.edge; // E87
 const hAt = (k) => (iced(k) ? 0 : H[k]);
 const walkable = (k) => k >= 0 && (H[k] > -D.wade / 2 || iced(k)) && (OCC[k] === 0 || OCC[k] === 3);
 const stepOk = (a, b) => walkable(b) && Math.abs(hAt(a) - hAt(b)) <= REPOSE;
-const footing = (k) => 1 / (1 + D.walkCost.mud * (MARSH[k] ? 1 : K.wet) + D.walkCost.snow * Math.min(1, K.snow / 5)); // QN: mud and snow cost a walker
-// QBL A* over the tiles, eight ways, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile will do; returns the tiles to walk, or null
-function findPath(from, goal, near, most = 20000) { // most: the tiles it may open before giving up
+const footing = (k) => 1 / (1 + D.walkCost.mud * (MARSH[k] ? 1 : K.wet) + D.walkCost.snow * Math.min(1, K.snow / 5)); // E88
+// E89
+function findPath(from, goal, near, most = 20000) { // E90
   const open = [from], gs = new Map([[from, 0]]), came = new Map(), done = new Set(), fs = new Map([[from, 0]]), hx = (k) => { const dx = Math.abs((k % N) - (near % N)), dy = Math.abs(Math.floor(k / N) - Math.floor(near / N)); return Math.max(dx, dy) + (Math.SQRT2 - 1) * Math.min(dx, dy); };
   const push = (k) => { open.push(k); let i = open.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (fs.get(open[p]) <= fs.get(open[i])) break; [open[p], open[i]] = [open[i], open[p]]; i = p; } };
   const pop = () => { const top = open[0], last = open.pop(); if (open.length) { open[0] = last; let i = 0; for (;;) { const l = 2 * i + 1, r = l + 1; let m = i; if (l < open.length && fs.get(open[l]) < fs.get(open[m])) m = l; if (r < open.length && fs.get(open[r]) < fs.get(open[m])) m = r; if (m === i) break; [open[m], open[i]] = [open[i], open[m]]; i = m; } } return top; };
@@ -850,7 +850,7 @@ function findPath(from, goal, near, most = 20000) { // most: the tiles it may op
     const i = k % N, j = (k - i) / N;
     for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]) {
       const x = i + dx, y = j + dy; if (x < 0 || y < 0 || x >= N || y >= N) continue; const q = y * N + x; if (done.has(q) || !stepOk(k, q)) continue;
-      if (dx && dy && !(walkable(j * N + x) && walkable(y * N + i))) continue; // no cutting a corner
+      if (dx && dy && !(walkable(j * N + x) && walkable(y * N + i))) continue; // E91
       const g = gs.get(k) + (dx && dy ? Math.SQRT2 : 1); if (g >= (gs.get(q) ?? 1e9)) continue; gs.set(q, g); fs.set(q, g + hx(q)); came.set(q, k); push(q);
     }
   }
@@ -858,58 +858,58 @@ function findPath(from, goal, near, most = 20000) { // most: the tiles it may op
 }
 const tileMid = (k) => { const i = k % N; return toBoard((i + 0.5) * D.tile, ((k - i) / N + 0.5) * D.tile); };
 const nextTo = (k) => (q) => Math.abs((q % N) - (k % N)) <= 1 && Math.abs(Math.floor(q / N) - Math.floor(k / N)) <= 1 && q !== k;
-function spawn(code, side, k, roll) { // a unit on a tile; its stand wanders in the tile (D82)
+function spawn(code, side, k, roll) { // E92
   const [bx, by] = tileMid(k), u = { kind: 'unit', code, side, bx: bx + (roll() * 2 - 1) * D.jitter, by: by + (roll() * 2 - 1) * D.jitter, k, vx: 0, vy: 0, path: null, at: 0, job: 'idle', target: null, load: 0, carry: null, face: 1, t: roll() * 10, wait: 0 };
   place(u); units.push(u); file(UG, D.grid.unit, u); fire('spawn', u); return u;
 }
 const place = (u) => { u.k = tileAt(u.bx, u.by); [u.vx, u.vy] = toView(u.bx, u.by, Math.max(0, H[u.k])); };
-function walkTo(u, goal, near, most) { const p = findPath(u.k, goal, near, most); if (!p) return false; u.path = p; u.at = Math.min(1, p.length - 1); return true; } // a path of one tile (already there) walks to its middle: no step past the end
-function go(u, k) { return walkTo(u, (q) => q === k, k); } // to a tile
-function goBeside(u, k) { return walkTo(u, nextTo(k), k); } // to a tile beside one
-// the drop-off for a yield: the side's nearest building that takes it in (SC Drop-off, B's fifth field)
+function walkTo(u, goal, near, most) { const p = findPath(u.k, goal, near, most); if (!p) return false; u.path = p; u.at = Math.min(1, p.length - 1); return true; } // E93
+function go(u, k) { return walkTo(u, (q) => q === k, k); } // E94
+function goBeside(u, k) { return walkTo(u, nextTo(k), k); } // E95
+// E96
 const dropFor = (u, y) => { let best = null; for (const t of things) if (t.kind === 'bld' && t.side === u.side && (B[t.code][4] || []).includes(y)) { const d = Math.hypot(t.bx - u.bx, t.by - u.by); if (!best || d < best[1]) best = [t, d]; } return best && best[0]; };
 const findNear = (u, kind) => { let best = null; for (const t of things) if (t.kind === kind && t.amount > 0) { const d = Math.hypot(t.bx - u.bx, t.by - u.by); if (d <= D.next && (!best || d < best[1])) best = [t, d]; } return best && best[0]; };
-const goBy = (u, b) => walkTo(u, (q) => { const i = q % N, j = (q - i) / N; return i >= b.i - 1 && i <= b.i + b.n && j >= b.j - 1 && j <= b.j + b.n; }, tileAt(b.bx, b.by)); // to a tile along a building's edge
-function take(t, n) { t.amount -= n; if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); if (t.kind === 'tree') wake(t); fire('gone', t); } } // a find used up is gone; its tile is free again
-function step(dt) { // one tick for every unit
+const goBy = (u, b) => walkTo(u, (q) => { const i = q % N, j = (q - i) / N; return i >= b.i - 1 && i <= b.i + b.n && j >= b.j - 1 && j <= b.j + b.n; }, tileAt(b.bx, b.by)); // E97
+function take(t, n) { t.amount -= n; if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); if (t.kind === 'tree') wake(t); fire('gone', t); } } // E98
+function step(dt) { // E99
   for (const u of units) {
     u.t += dt; u.mps = 0;
     if (u.slide) slide(u, dt);
-    if (u.path) { // walking: toward the next tile's middle at the shell's speed
+    if (u.path) { // E100
       const [tx, ty] = tileMid(u.path[u.at]), dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy), v = D.speed[U[u.code][2]] * D.upm * footing(u.k) * dt;
-      u.walked = (u.walked || 0) + Math.min(d, v) / D.upm; u.mps = v / D.upm / dt; // metres walked, which turn the stride (QBU); its speed now, which a blow carries (QBT)
+      u.walked = (u.walked || 0) + Math.min(d, v) / D.upm; u.mps = v / D.upm / dt; // E101
       if (d <= v) { u.bx = tx; u.by = ty; if (++u.at >= u.path.length) { u.path = null; u.job = u.then || 'idle'; } } else { u.bx += (dx / d) * v; u.by += (dy / d) * v; u.face = dx < 0 ? -1 : 1; }
       place(u); continue;
     }
-    if (has(u, 'Wander') && u.job === 'idle') { // wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95
+    if (has(u, 'Wander') && u.job === 'idle') { // E102
       if (u.wait <= 0) { u.wait = -D.wait * Math.log(1 - rng()); const k = tileAt(u.bx + rnd(-D.reach, D.reach), u.by + rnd(-D.reach, D.reach)); if (walkable(k)) go(u, k); } else u.wait -= dt; }
   }
   regrid();
 }
-// M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking, buildings by D186; a new unit is filed as it comes. A search looks only nearby
+// E103
 const file = (g, size, t) => { const c = Math.floor(t.bx / size) + ',' + Math.floor(t.by / size); (g.get(c) || g.set(c, []).get(c)).push(t); }, grid = (list, size) => { const g = new Map(); for (const t of list) file(g, size, t); return g; };
 function near(g, size, x, y, r, fn) { for (let cy = Math.floor((y - r) / size); cy <= Math.floor((y + r) / size); cy++) for (let cx = Math.floor((x - r) / size); cx <= Math.floor((x + r) / size); cx++) for (const t of g.get(cx + ',' + cy) || []) if (!t.gone && fn(t)) return true; return false; }
 let UG = new Map(), SG = new Map(), SGn; const regrid = () => { UG = grid(units, D.grid.unit); SG = grid(things.filter((t) => t.kind === 'bld'), D.grid.bld); SGn = things.length; };
-const unitsNear = (from, r, fn) => { near(UG, D.grid.unit, from.bx, from.by, r, (v) => { if (v !== from && Math.abs(v.bx - from.bx) < r && Math.abs(v.by - from.by) < r) fn(v); }); }; // every unit within r of from (a square), never itself
-const bldsNear = (x, y, r, fn) => { if (SGn !== things.length) regrid(); return near(SG, D.grid.bld, x, y, r, fn); }; // the buildings within r of (x, y) by their squares, a little beyond on the edges; refiled when one comes or goes (Mid's rule); stops when fn says true
+const unitsNear = (from, r, fn) => { near(UG, D.grid.unit, from.bx, from.by, r, (v) => { if (v !== from && Math.abs(v.bx - from.bx) < r && Math.abs(v.by - from.by) < r) fn(v); }); }; // E104
+const bldsNear = (x, y, r, fn) => { if (SGn !== things.length) regrid(); return near(SG, D.grid.bld, x, y, r, fn); }; // E105
 function makeUnits(roll) {
-  play = dice(~seed); shown = dice(seed ^ D.looks); // the rules' dice and the looks', from the map's seed but not its stream
-  // The villagers: Who every side · What D67 villagers · Where round its Town Center · When the game starts · Why hands to gather and build · How the free tiles nearest the hall
+  play = dice(~seed); shown = dice(seed ^ D.looks); // E106
+  // E107
   for (const t of things) if (has(t, 'Seat') && D.players.includes(t.side)) { const got = []; stamp(t.bx, t.by, (t.n / 2 + 3) * D.tile, (k, d) => { if (walkable(k)) got.push([d, k]); }); got.sort((a, b) => a[0] - b[0]); for (const [, k] of got.slice(0, D.villagers)) spawn(D.trains[t.code][0], t.side, k, roll); }
-  // The wildlife: Who the map · What herds of deer and packs of wolves · Where Z4, on walkable ground · When the map is made · Why food to hunt, teeth to fear · How counts D90–D93, places uniform until one walks
-  for (const w of D.wildlife) for (let m = count(roll, D[w.groups]); m > 0; m--) { // which walkers, how many groups and how big: the book's (D181)
+  // E108
+  for (const w of D.wildlife) for (let m = count(roll, D[w.groups]); m > 0; m--) { // E109
     for (let tries = 0; tries < 100; tries++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (!inZ4(bx, by, 2 * D.tile) || !walkable(k)) continue;
       const got = []; stamp(bx, by, 3 * D.tile, (q, d) => { if (walkable(q)) got.push([d, q]); }); got.sort((a, b) => a[0] - b[0]); for (const [, q] of got.slice(0, count(roll, D[w.size]))) spawn(w.code, -1, q, roll); break; } }
   regrid();
 }
-const gait = (code) => W[SH[code].mount || SH[code].body]; // what carries a walker: its mount, else its own body (W)
+const gait = (code) => W[SH[code].mount || SH[code].body]; // E110
 const bodyOf = (code) => W[SH[code].body];
-// ── The body's laws (Book 1): mass from what a shell is made of (W), the blow that sends a body off (QBT), the slide to rest on the ground under it (G), the sway of the wounded (QBS)
+// ── The body's laws (E111)
 const massOf = (code) => { const e = SH[code]; let m = W[e.body].kg + (e.mount ? W[e.mount].kg : 0); for (const k of e.kit || []) m += W[k].kg; return m; };
 const blowOf = (code) => { for (const k of SH[code].kit || []) if (W[k].blow && W[k].blow.mps) return W[k].blow; return null; };
 const groundAt = (k) => (iced(k) ? G.ice : K.snow > 0.5 ? G.snow : MARSH[k] || K.wet > 0.5 ? G.mud : G.grass);
 let jolt = { t: 0, px: 0 };
-function impact(a, t) { // QBT: the whole striker when it moves, else its weapon; the struck one is sent off at v = m·v ÷ (m + M)
+function impact(a, t) { // E112
   if (t.kind !== 'unit') { fire('event', 'hitBld', t); return 0; }
   const b = blowOf(a.code), moving = a.mps > 0.1, ms = moving || !b ? massOf(a.code) : b.kg, vs = moving ? a.mps : b ? b.mps : D.speed[U[a.code][2]];
   const v = (ms * vs) / (ms + massOf(t.code)), dx = t.bx - a.bx, dy = t.by - a.by, dd = Math.hypot(dx, dy) || 1;
@@ -917,32 +917,32 @@ function impact(a, t) { // QBT: the whole striker when it moves, else its weapon
   if (v >= D.jolt.from && (t.side === 0 || inSight(t.k))) jolt = { t: D.jolt.s, px: Math.min(D.jolt.max, v * D.jolt.px) };
   fire('event', v >= D.jolt.from ? 'impact' : 'hit', t); return v;
 }
-function slide(u, dt) { // QBT: friction slows it by μ g a second until it rests; anything it cannot stand on stops it
+function slide(u, dt) { // E113
   const sp = Math.hypot(u.slide.vx, u.slide.vy), dec = groundAt(u.k).mu * D.g * dt;
   if (sp <= dec) { u.slide = null; return; }
-  const f = (sp - dec) / sp, m = ((1 + f) / 2) * dt * D.upm, nx = u.bx + u.slide.vx * m, ny = u.by + u.slide.vy * m, k = tileAt(nx, ny); // the mean speed over the step, so the slide ends where v² ÷ 2μg says
+  const f = (sp - dec) / sp, m = ((1 + f) / 2) * dt * D.upm, nx = u.bx + u.slide.vx * m, ny = u.by + u.slide.vy * m, k = tileAt(nx, ny); // E114
   if (!walkable(k)) { u.slide = null; return; }
   u.bx = nx; u.by = ny; u.slide.vx *= f; u.slide.vy *= f; place(u);
 }
-function swayOf(u) { // QBS: none while the body holds (classes I, II); grows over class III to the tipping angle; there in class IV. Its rhythm the body's pendulum
+function swayOf(u) { // E115
   const b = gait(u.code); if (u.hp == null || !u.hpMax || !b.com) return 0;
   const lost = 1 - u.hp / u.hpMax, [, c3, c4] = D.shock; if (lost <= c3) return 0;
   const tip = Math.atan(b.foot / 2 / b.com), f = Math.sqrt(D.g / b.com) / (2 * Math.PI);
   return tip * Math.min(1, (lost - c3) / (c4 - c3)) * Math.sin(2 * Math.PI * f * u.t);
 }
-// a unit's picture: the look at its frame, facing right, painted once per look, colour and frame (LOOKBOX gives the box)
+// E116
 function unitSprite(u, s) { const look = U[u.code][1], col = u.side >= 0 ? SIDES[u.side].col : C.white, [bw, bh] = LOOKBOX[look] || [26, 30], pad = 3;
   const fr = u.path ? Math.floor((D.strideFrames * u.walked) / gait(u.code).stride) % D.strideFrames : u.tool != null ? 10 + u.tool * 2 + (Math.floor(u.t / D.beat) % 2) : 0;
   return sprite(look + col + fr, bw + 2 * pad, bh + 2 * pad, bw / 2 + pad, bh + pad - 1, bw / 2 + pad, bh + pad - 1, 0, s, () => LOOKS[look](col, 0, fr)); }
-// ── The things, drawn each frame back to front, only those on the screen. A picture is painted once per look and zoom step, then stamped (the sprite cache); far out (D83) a node is a dot. The gifts are drawn direct, as tints of C.
+// ── The things, drawn each frame back to fro (E117)
 const SPR = new Map(), STEP = Math.SQRT2;
-function sprite(key, W, H, tx, ty, ax, ay, skew, s, paint) { // W × H units, the art's origin at (tx, ty), its anchor (the point stamped at the thing's stand) at (ax, ay)
+function sprite(key, W, H, tx, ty, ax, ay, skew, s, paint) { // E118
   const q = STEP ** Math.round(Math.log(s) / Math.log(STEP)), k = key + '@' + q; let c = SPR.get(k); if (c) return c;
   c = document.createElement('canvas'); c.width = Math.ceil(W * q); c.height = Math.ceil(H * q); g = c.getContext('2d'); g.scale(q, q); g.translate(tx, ty); if (skew) g.transform(1, skew, 0, 1, 0, 0); g.lineJoin = 'round'; g.lineCap = 'round'; paint(); g = null;
   c.ax = ax; c.ay = ay; c.q = q; if (SPR.size > 400) SPR.delete(SPR.keys().next().value); SPR.set(k, c); return c;
 }
 const blit = (c, x, y, s, into = ctx) => { const f = s / c.q; into.drawImage(c, x - c.ax * s, y - c.ay * s, c.width * f, c.height * f); };
-const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647; // the node art's own small dice, seeded by the variant, so a tree's leaves fall the same each paint
+const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647; // E119
 const NODE_SCALE = SPRITE.nodes.scale;
 const nodeSprite = (kind, v, s) => sprite(kind + v, 46, 58, 17, 54, 17, 54, 0, s, () => { const f = NODE_SCALE[kind] || 1.25; g.scale(f, f); nodeArt(kind, v, NS_rng(11 + v * 7 + kind.length)); });
 function bldSprite(code, col, s) { const [, n, , art] = B[code], w = n * D.tile, top = BLDTOP[art] || 40, pad = 12, k = w * ART_T * ART_S, W = w + pad * 2 + 10 + 2 * k, H = (w * ART_T) / 2 + top + pad * 2 + SKEW * W;
@@ -950,119 +950,119 @@ function bldSprite(code, col, s) { const [, n, , art] = B[code], w = n * D.tile,
 const ROCK = shade(C.white, 0.62), ROCKLIT = shade(C.white, 0.82), RUIN = shade(C.sand, 0.85), RUINFACE = shade(C.sand, 0.6), CHEST = shade(C.dirt, 0.9), LID = shade(C.dirt, 0.65);
 const disc = (x, y, r, fill) => { ctx.fillStyle = fill; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill(); };
 const rect = (x, y, w, h, fill) => { ctx.fillStyle = fill; ctx.fillRect(x, y, w, h); };
-const GIFT = { // each drawn at its stand (x, y on the screen), s pixels a unit
+const GIFT = { // E120
   ruins: (x, y, s) => { for (const [dx, w, h] of [[-9, 5, 7], [-2, 4, 4], [4, 5, 9]]) { rect(x + dx * s, y - h * s, w * s, h * s, RUIN); rect(x + (dx + w) * s, y - h * s, 1.2 * s, h * s, RUINFACE); } disc(x + 1 * s, y + 1.5 * s, 1.6 * s, RUIN); },
   cemetery: (x, y, s) => { for (let n = 0; n < 4; n++) { const gx = x - 6.5 * s + n * 4 * s, gy = y - (n % 2) * 1.5 * s; rect(gx, gy - 4 * s, 2.2 * s, 4 * s, ROCKLIT); disc(gx + 1.1 * s, gy - 4 * s, 1.1 * s, ROCKLIT); } },
   campfire: (x, y, s) => { for (let n = 0; n < 6; n++) disc(x + 3.2 * s * Math.cos((n * Math.PI) / 3), y - 1.2 * s + 1.6 * s * Math.sin((n * Math.PI) / 3), 0.9 * s, ROCK);
     ctx.fillStyle = C.gold; ctx.beginPath(); ctx.moveTo(x - 1.6 * s, y - 1 * s); ctx.lineTo(x + 1.6 * s, y - 1 * s); ctx.lineTo(x, y - 6 * s); ctx.fill(); ctx.fillStyle = C.red; ctx.beginPath(); ctx.moveTo(x - 0.8 * s, y - 1 * s); ctx.lineTo(x + 0.8 * s, y - 1 * s); ctx.lineTo(x, y - 3.5 * s); ctx.fill(); },
   treasure: (x, y, s) => { rect(x - 3 * s, y - 4 * s, 6 * s, 4 * s, CHEST); rect(x - 3 * s, y - 5.2 * s, 6 * s, 1.5 * s, LID); rect(x - 0.6 * s, y - 5.2 * s, 1.2 * s, 5.2 * s, C.gold); },
 };
-const DOT = Object.fromEntries(Object.entries(SPRITE.nodes.dot).map(([k, v]) => [k, { gold: C.gold, rock: ROCK, ruin: RUIN, rocklit: ROCKLIT }[v] || v])); // a find far out, from its look
-// ── Floor 6, climate (layer 130): one sky over the whole board (185 m across: one weather), acting on everything below (L7). The clock is Y: a day D20, a season D21, a year D22.
+const DOT = Object.fromEntries(Object.entries(SPRITE.nodes.dot).map(([k, v]) => [k, { gold: C.gold, rock: ROCK, ruin: RUIN, rocklit: ROCKLIT }[v] || v])); // E121
+// ── Floor 6, climate (E122)
 const K = { t: 0, alt: 0, light: 1, temp: 10, wet: 0, rain: 0, snowing: 0, snow: 0, fds: 0, ice: false, fog: 0, fogT: 0, storm: 0, flash: 0, flashT: -9, strikeT: 0, bolts: [], hour: 0, wetHour: false };
 const SEASONS = ['Spring', 'Summer', 'Autumn', 'Winter'];
 const season = () => Math.floor(K.t / D.season) % 4, dayPhase = () => (K.t % D.day) / D.day;
-// QA the sun: sin a = sin φ sin δ + cos φ cos δ cos H; φ D99, δ swings ±23.44° over the year from the spring equinox, H turns with the day (noon at the day's middle)
+// E123
 function sunAlt() { const phi = D.lat * RAD, dec = 23.44 * RAD * Math.sin(((K.t / D.year) * 2 * Math.PI)), Hh = (dayPhase() - 0.5) * 2 * Math.PI; return Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(Hh)) / RAD; }
-const RAMP = [[-18, 0.18], [-12, 0.3], [-6, 0.45], [0, 0.62], [6, 0.85], [20, 1]]; // light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD)
+const RAMP = [[-18, 0.18], [-12, 0.3], [-6, 0.45], [0, 0.62], [6, 0.85], [20, 1]]; // E124
 function lightAt(a) { if (a <= RAMP[0][0]) return RAMP[0][1]; for (let i = 1; i < RAMP.length; i++) if (a <= RAMP[i][0]) { const [a0, l0] = RAMP[i - 1], [a1, l1] = RAMP[i]; return l0 + ((l1 - l0) * (a - a0)) / (a1 - a0); } return 1; }
-// QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mid's relax: wetness here, and the market, nerve, healing, loyalty to come)
+// E125
 const relax = (x, L, tau, dt) => L + (x - L) * Math.exp(-dt / tau);
-// QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet | dry) and P(wet | wet) are D102; a wet hour is a storm with D103. Snow falls instead when the air is at or under 1 °C (QI)
+// E126
 function climate(dt) {
-  K.t0 = K.t; K.t += dt; const sn = season(), f = (K.t / D.season) % 1, mean = D.temps[sn] + (D.temps[(sn + 1) % 4] - D.temps[sn]) * (0.5 - 0.5 * Math.cos(f * Math.PI)); // the season's mean, eased into the next
+  K.t0 = K.t; K.t += dt; const sn = season(), f = (K.t / D.season) % 1, mean = D.temps[sn] + (D.temps[(sn + 1) % 4] - D.temps[sn]) * (0.5 - 0.5 * Math.cos(f * Math.PI)); // E127
   K.alt = sunAlt(); K.light = lightAt(K.alt); K.temp = mean + D.swing * (K.light - 0.6);
   const hour = Math.floor(K.t / (D.day / 24)); if (hour !== K.hour) { K.hour = hour; K.wetHour = rng() < D.chain[K.wetHour ? 1 : 0]; K.storm = K.wetHour && rng() < D.stormShare ? 1 : 0; }
-  const falling = K.wetHour ? (K.temp <= 1 ? 'snow' : 'rain') : null; // what falls
-  K.rain += ((falling === 'rain' ? (K.storm ? 1 : 0.6) : 0) - K.rain) * Math.min(1, dt / 12); K.snowing += ((falling === 'snow' ? 1 : 0) - K.snowing) * Math.min(1, dt / 12); // rain comes and goes over tens of seconds (SoRen)
-  K.wet = relax(K.wet, K.rain > 0.1 ? 1 : 0, K.rain > 0.1 ? D.wetUp : D.dryOut, dt); // QP settle: wet in D104, dry in D105
-  if (K.snowing > 0.1) K.snow += D.snowfall * K.snowing * dt; if (K.temp > 0) K.snow = Math.max(0, K.snow - D.melt * K.temp * (K.rain > 0.1 ? 2 : 1) * dt); // QO degree-day melt, rain on snow twice as fast
-  if (K.temp < 0) K.fds += -K.temp * dt; else K.fds = Math.max(0, K.fds - K.temp * dt * 4); K.ice = K.fds >= D.bears; // QQ: ice grows with the freezing degree-seconds and bears at D109
-  if (K.fogT > 0) K.fogT -= dt; else if (rng() < dt / D.fogWait) K.fogT = D.fogLast; // QM: fog comes on a Poisson wait (D110) and stays D111
-  K.fog += ((K.fogT > 0 ? 0.6 : K.wet > 0.5 && K.rain < 0.1 && K.alt > -6 && K.alt < 10 ? 0.3 : 0) - K.fog) * Math.min(1, dt / 15); // fog, or mist after rain at dawn and dusk (KW8)
-  if (K.storm && K.rain > 0.5) { K.strikeT -= dt; if (K.strikeT <= 0) { K.strikeT = -D.strike * Math.log(1 - rng()); strike(); } } // QL, QM: strikes on Poisson waits in a storm
+  const falling = K.wetHour ? (K.temp <= 1 ? 'snow' : 'rain') : null; // E128
+  K.rain += ((falling === 'rain' ? (K.storm ? 1 : 0.6) : 0) - K.rain) * Math.min(1, dt / 12); K.snowing += ((falling === 'snow' ? 1 : 0) - K.snowing) * Math.min(1, dt / 12); // E129
+  K.wet = relax(K.wet, K.rain > 0.1 ? 1 : 0, K.rain > 0.1 ? D.wetUp : D.dryOut, dt); // E130
+  if (K.snowing > 0.1) K.snow += D.snowfall * K.snowing * dt; if (K.temp > 0) K.snow = Math.max(0, K.snow - D.melt * K.temp * (K.rain > 0.1 ? 2 : 1) * dt); // E131
+  if (K.temp < 0) K.fds += -K.temp * dt; else K.fds = Math.max(0, K.fds - K.temp * dt * 4); K.ice = K.fds >= D.bears; // E132
+  if (K.fogT > 0) K.fogT -= dt; else if (rng() < dt / D.fogWait) K.fogT = D.fogLast; // E133
+  K.fog += ((K.fogT > 0 ? 0.6 : K.wet > 0.5 && K.rain < 0.1 && K.alt > -6 && K.alt < 10 ? 0.3 : 0) - K.fog) * Math.min(1, dt / 15); // E134
+  if (K.storm && K.rain > 0.5) { K.strikeT -= dt; if (K.strikeT <= 0) { K.strikeT = -D.strike * Math.log(1 - rng()); strike(); } } // E135
   K.bolts = K.bolts.filter((b) => K.t - b.t < 0.5); K.flash *= Math.exp(-dt / 0.09);
   document.getElementById('clock').textContent = SEASONS[sn] + ' ' + String(Math.floor(dayPhase() * 24)).padStart(2, '0') + ':' + String(Math.floor((dayPhase() * 24 * 60) % 60)).padStart(2, '0') + (falling ? (falling === 'snow' ? ' ❄' : K.storm ? ' ⚡' : ' ☂') : K.fog > 0.3 ? ' ≈' : '');
 }
-// a strike: on the ground in view when close, a sheet flash when far; the flash never comes within D112 of the last (QL, WCAG 2.3.1), and the bolt is pinned to the ground it hits
+// E136
 function strike() { if (K.t - K.flashT < D.flashGap) return; const close = glance(); K.flashT = K.t;
   if (close > 0.4) { const vx = cam.x + (glance() - 0.5) * (cw / cam.z), vy = cam.y + (glance() - 0.5) * (ch / cam.z); K.bolts.push({ vx, vy, t: K.t, seed: glance() }); K.flash = Math.max(K.flash, 0.5 + 0.3 * close); fire('event', 'strike', { vx, vy }); }
-  else { K.flash = Math.max(K.flash, 0.2 + 0.3 * close); fire('event', 'strike', { vx: cam.x + (glance() - 0.5) * 4 * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // a far flash: its thunder from beyond the screen
-// the rain: a pool of drops whose size sets its speed (Marshall–Palmer sizes, QJ Atlas's fall speed), leaning a little; the snow: flakes that drift
+  else { K.flash = Math.max(K.flash, 0.2 + 0.3 * close); fire('event', 'strike', { vx: cam.x + (glance() - 0.5) * 4 * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // E137
+// E138
 const RAINP = { n: 240, lambda: 4.1 * 5 ** -0.21, dMin: 0.5, dMax: 4 }, fallV = (Dd) => 9.65 - 10.3 * Math.exp(-0.6 * Dd);
 const RAIN = Array.from({ length: RAINP.n }, (_, i) => { const Dd = Math.min(RAINP.dMax, RAINP.dMin - Math.log(1 - ((i * 0.618) % 1 || 0.5)) / RAINP.lambda), d = clamp(0.4 + (0.6 * (Dd - RAINP.dMin)) / 2.5, 0.4, 1); return { x: (i * 97.3) % 1000, y: (i * 53.7) % 1000, d, v: (9.6 * fallV(Dd)) / fallV(2) }; });
-function drawSkin() { // on the ground, under everything: snow whitens the land (screen), wet darkens it (multiply), ice whitens the inland water
+function drawSkin() { // E139
   const [gx, gy] = toScreen(-ox, -oy), w = gw * cam.z, h = gh * cam.z, snow = Math.min(0.85, K.snow / 5);
   if (snow > 0.01) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = snow; ctx.drawImage(maskLand, gx, gy, w, h); ctx.restore(); }
   if (K.wet > 0.05) { ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = 0.45 * K.wet; ctx.drawImage(maskDark, gx, gy, w, h); ctx.restore(); }
   if (K.ice) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = 0.6; ctx.drawImage(maskLake, gx, gy, w, h); ctx.restore(); }
 }
-function drawSky(dt) { // over everything: what falls, the strikes, the flash, the night and the fog
+function drawSky(dt) { // E140
   const now = K.t;
   if (K.rain > 0.05) { const n = Math.round(RAINP.n * K.rain), slant = 0.2, fall = 420 * dt; ctx.lineCap = 'round';
     for (let i = 0; i < n; i++) { const m = RAIN[i]; m.y += m.v * fall; if (m.y > ch + 12) { m.y = -12; m.x = glance() * cw; } const len = 8 + 12 * m.d; ctx.strokeStyle = `rgba(205,232,250,${(0.2 + 0.4 * m.d).toFixed(2)})`; ctx.lineWidth = 0.8 + 0.8 * m.d; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x - slant * len, m.y + len); ctx.stroke(); } }
   if (K.snowing > 0.05) { const n = Math.round(140 * K.snowing); ctx.fillStyle = 'rgba(245,248,252,.85)'; for (let i = 0; i < n; i++) { const y = ((i * 71.9 + now * 34) % (ch + 20)) - 10, x = (i * 113.7 + Math.sin(now * 0.8 + i) * 14) % cw; ctx.fillRect(x < 0 ? x + cw : x, y, 2 + (i % 3 === 0), 2 + (i % 3 === 0)); } }
-  for (const b of K.bolts) { // SoRen's bolt: a channel from the top of the sky to the ground with a fork or two, three strokes from a soft glow to a bright core; its foot lights the ground round it
+  for (const b of K.bolts) { // E141
     const age = now - b.t, a = clamp(1 - age / 0.45, 0, 1), rr = NS_rng((b.seed * 1e6) | 1), [x1, y1] = toScreen(b.vx, b.vy), main = []; let x = x1 + (rr() - 0.5) * 80, y = Math.min(0, y1 - 300); main.push([x, y]);
-    while (y < y1) { y += 9 + rr() * 15; x += (rr() - 0.5) * 34 + (x1 - x) * 0.12; main.push([x, y]); } main[main.length - 1] = [x1, y1]; const paths = [main]; // the channel wanders but leans home to its foot
+    while (y < y1) { y += 9 + rr() * 15; x += (rr() - 0.5) * 34 + (x1 - x) * 0.12; main.push([x, y]); } main[main.length - 1] = [x1, y1]; const paths = [main]; // E142
     for (let f = 0, nf = 1 + ((rr() * 3) | 0); f < nf; f++) { const fk = main[1 + Math.floor(rr() * (main.length - 3))], dir = rr() < 0.5 ? -1 : 1, br = [fk]; for (let k = 1, kn = 3 + ((rr() * 3) | 0); k <= kn; k++) br.push([fk[0] + dir * k * (7 + rr() * 9), fk[1] + k * (8 + rr() * 9)]); paths.push(br); }
     ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.globalCompositeOperation = 'lighter';
     const foot = ctx.createRadialGradient(x1, y1, 0, x1, y1, 60 * cam.z); foot.addColorStop(0, `rgba(220,235,255,${(0.7 * a).toFixed(2)})`); foot.addColorStop(1, 'rgba(220,235,255,0)'); ctx.fillStyle = foot; ctx.beginPath(); ctx.ellipse(x1, y1, 60 * cam.z, 30 * cam.z, 0, 0, 7); ctx.fill();
     for (const [lw, col] of [[12, `rgba(170,200,255,${(0.18 * a).toFixed(2)})`], [4.6, `rgba(210,228,255,${(0.45 * a).toFixed(2)})`], [1.9, `rgba(255,255,255,${a.toFixed(2)})`]]) { ctx.strokeStyle = col; paths.forEach((p, i) => { ctx.lineWidth = i ? lw * 0.55 : lw; ctx.beginPath(); p.forEach(([px, py], j) => (j ? ctx.lineTo(px, py) : ctx.moveTo(px, py))); ctx.stroke(); }); }
     ctx.restore(); }
   if (K.flash > 0.005) { ctx.fillStyle = `rgba(190,210,255,${Math.min(0.75, K.flash).toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
-  const gloom = 0.25 * Math.max(K.rain, K.snowing), night = (1 - K.light) * 0.7, dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // the light: the sun's by the ramp, clouds take a quarter, the horizon's warmth within 8° of it
+  const gloom = 0.25 * Math.max(K.rain, K.snowing), night = (1 - K.light) * 0.7, dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
   if (gloom > 0.01) { ctx.fillStyle = `rgba(60,70,80,${gloom.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
   if (dusk > 0.01) { ctx.fillStyle = `rgba(255,140,60,${dusk.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
   if (night > 0.01) { ctx.fillStyle = `rgba(10,18,48,${night.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
-  if (K.fog > 0.02) { ctx.fillStyle = `rgba(200,205,210,${(K.fog * 0.8).toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); } // KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze
+  if (K.fog > 0.02) { ctx.fillStyle = `rgba(200,205,210,${(K.fog * 0.8).toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); } // E144
 }
-function makeMarsh(roll) { // Marsh (TW1): Who the map · What a wet margin round a lake or two · Where Z4's lakes, the land D115 out from the water · When the map is made · Why ground that is always mud (KI2), slow to cross, never built on · How count D114, lakes picked by the dice
+function makeMarsh(roll) { // E145
   const picks = lakes.slice().sort(() => roll() - 0.5).slice(0, count(roll, D.marshes));
   for (const L of picks) stamp(L.x, L.y, L.r * (1 + D.shore) + D.marshW, (k) => { if (H[k] > 0 && H[k] <= D.land && OCC[k] === 0 && !FOR[k]) MARSH[k] = 1; });
 }
-// ── Floor 7, display (layer 140): what the player sees. The fog of war: every tile is unseen, seen once, or in sight now (the player's units see D117, its buildings further; fog in the air shortens sight, QK); the unseen is dark, the remembered dim (D118). Shadows fall from the sun (QAT).
+// ── Floor 7, display (E146)
 const SEEN = new Uint8Array(N * N), fogCv = document.createElement('canvas'); fogCv.width = fogCv.height = N; const fogG = fogCv.getContext('2d'), fogPx = fogG.createImageData(N, N); let fogT = 0;
-function look(dt) { // the player's sight, every D119: what was in sight is remembered; what the units and buildings of side 0 reach now is seen
+function look(dt) { // E147
   fogT -= dt; if (fogT > 0) return; fogT = D.fogTick; const reach = 1 - 0.6 * K.fog;
   for (let k = 0; k < N * N; k++) if (SEEN[k] === 2) SEEN[k] = 1;
   const see = (bx, by, r) => stamp(bx, by, r * reach, (k) => { SEEN[k] = 2; });
   for (const u of units) if (u.side === 0) see(u.bx, u.by, D.sight.unit);
   for (const t of things) if (t.kind === 'bld' && t.side === 0) see(t.bx, t.by, D.sight.bld + (t.n * D.tile) / 2);
-  const px = fogPx.data; for (let k = 0; k < N * N; k++) { px[k * 4 + 3] = DEP[k] < 0 || SEEN[k] === 2 ? 0 : SEEN[k] === 1 ? 255 * D.fogDim[1] : 255 * D.fogDim[0]; } fogG.putImageData(fogPx, 0, 0); // the sea is never fogged
+  const px = fogPx.data; for (let k = 0; k < N * N; k++) { px[k * 4 + 3] = DEP[k] < 0 || SEEN[k] === 2 ? 0 : SEEN[k] === 1 ? 255 * D.fogDim[1] : 255 * D.fogDim[0]; } fogG.putImageData(fogPx, 0, 0); // E148
 }
-function drawFog() { // the fog image is one tile a pixel in the grid's frame; one affine lays it on the ground (QBD): the turn, the tilt and the camera together
+function drawFog() { // E149
   const z = cam.z, a = z * COS, bb = z * SIN * TILT, c = -z * SIN, d = z * COS * TILT, e = (MID - MID * COS + MID * SIN - cam.x) * z + cw / 2, f = ((MID - MID * SIN - MID * COS) * TILT - D.land * UP - cam.y) * z + ch / 2;
   ctx.save(); ctx.setTransform(dpr * a, dpr * bb, dpr * c, dpr * d, dpr * e, dpr * f); ctx.drawImage(fogCv, 0, 0, D.site, D.site); ctx.restore();
 }
 const inSight = (k) => !show.fog || SEEN[k] === 2;
-// QAT the shadow: length = height × cot(the sun's height), capped at D120 heights, thrown away from the sun; the sun rises on the right, stands over the bottom of the screen at noon (the camera looks north), sets on the left
-function shadowVec(h) { const alt = Math.max(K.alt, 2) * RAD, len = Math.min(D.shadowMax, 1 / Math.tan(alt)) * h, th = 2 * Math.PI * dayPhase() + Math.PI / 2; return [Math.cos(th) * len, Math.sin(th) * len * TILT, clamp(K.alt / 10, 0, 1) * 0.35 * K.light]; } // left at sunrise, up at noon, right at sunset
-function drawShadows(s) { // under the buildings and units: a building's footprint thrown by its height, a unit's foot by its own; none under the trees (the woods are their own shade)
+// E150
+function shadowVec(h) { const alt = Math.max(K.alt, 2) * RAD, len = Math.min(D.shadowMax, 1 / Math.tan(alt)) * h, th = 2 * Math.PI * dayPhase() + Math.PI / 2; return [Math.cos(th) * len, Math.sin(th) * len * TILT, clamp(K.alt / 10, 0, 1) * 0.35 * K.light]; } // E151
+function drawShadows(s) { // E152
   const [dx, dy, a] = shadowVec(1); if (a < 0.02) return; ctx.save(); ctx.fillStyle = `rgba(10,20,30,${a.toFixed(2)})`;
   for (const t of things) if (t.kind === 'bld') { const h = (BLDTOP[B[t.code][3]] || 40) * 0.7, [x, y] = toScreen(t.vx, t.vy); if (x < -200 * s || x > cw + 200 * s || y < -200 * s || y > ch + 200 * s) continue;
     const n = t.n * D.tile, pts = [[t.i * D.tile, t.j * D.tile], [t.i * D.tile + n, t.j * D.tile], [t.i * D.tile + n, t.j * D.tile + n], [t.i * D.tile, t.j * D.tile + n]].map(([sx, sy]) => S(sx, sy, H[t.j * N + t.i]));
-    const sh = pts.map(([px, py]) => [px + dx * h * s, py + dy * h * s]); ctx.beginPath(); // the box's shadow: its top thrown, joined to its foot along every edge, one fill so the overlaps stay one shade
+    const sh = pts.map(([px, py]) => [px + dx * h * s, py + dy * h * s]); ctx.beginPath(); // E153
     for (const q of [pts, sh, [pts[0], pts[1], sh[1], sh[0]], [pts[1], pts[2], sh[2], sh[1]], [pts[2], pts[3], sh[3], sh[2]], [pts[3], pts[0], sh[0], sh[3]]]) q.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py)));
     ctx.fill(); }
   for (const u of units) { if (!inSight(u.k)) continue; const [x, y] = toScreen(u.vx, u.vy); if (x < -40 * s || x > cw + 40 * s || y < -40 * s || y > ch + 40 * s) continue; const h = 18;
     ctx.beginPath(); ctx.ellipse(x + (dx * h * s) / 2, y + (dy * h * s) / 2, Math.max(4 * s, (Math.hypot(dx, dy) * h * s) / 2), 2.5 * s, Math.atan2(dy, dx), 0, 7); ctx.fill(); }
   ctx.restore();
 }
-// ── The woods cache: the deep trees (eight tree neighbours) are painted once per chunk of the board and zoom step; the rest of the things are stamped each frame. Cutting a tree wakes its neighbours and repaints the chunk.
-const CS = 32, NC = Math.ceil(N / CS), WOODS = new Map(), DEEP = Array.from({ length: NC * NC }, () => []); // chunks of CS × CS tiles
+// ── The woods cache (E154)
+const CS = 32, NC = Math.ceil(N / CS), WOODS = new Map(), DEEP = Array.from({ length: NC * NC }, () => []); // E155
 const chunkOf = (k) => Math.floor((k % N) / CS) + Math.floor(k / N / CS) * NC;
 const treeAt = (k) => OCC[k] === 1 && FOR[k];
 function deepen(t) { const i = t.k % N, j = (t.k - i) / N; if (i < 1 || j < 1 || i >= N - 1 || j >= N - 1) return; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]) if (!treeAt((j + dy) * N + i + dx)) return; t.deep = true; DEEP[chunkOf(t.k)].push(t); }
-function wake(t) { // a tree cut: its chunk is stale, and its neighbours stand at an edge now
+function wake(t) { // E156
   const c = chunkOf(t.k); for (const k of WOODS.keys()) if (k.startsWith(c + '@')) WOODS.delete(k);
   if (t.deep) { t.deep = false; DEEP[c].splice(DEEP[c].indexOf(t), 1); }
   const i = t.k % N, j = (t.k - i) / N; for (const q of things) if (q.deep && Math.abs((q.k % N) - i) <= 1 && Math.abs(Math.floor(q.k / N) - j) <= 1) { q.deep = false; const d = DEEP[chunkOf(q.k)]; d.splice(d.indexOf(q), 1); for (const k of WOODS.keys()) if (k.startsWith(chunkOf(q.k) + '@')) WOODS.delete(k); }
 }
 const BOX = Array.from({ length: NC * NC }, (_, c) => { const ci = c % NC, cj = (c - ci) / NC, pts = []; for (const [x, y] of [[ci, cj], [ci + 1, cj], [ci, cj + 1], [ci + 1, cj + 1]]) pts.push(V(x * CS * D.tile, y * CS * D.tile, D.land));
-  return [Math.min(...pts.map((p) => p[0])) - 12, Math.min(...pts.map((p) => p[1])) - 30, Math.max(...pts.map((p) => p[0])) + 12, Math.max(...pts.map((p) => p[1])) + 6]; }); // each chunk's box in the view frame, with room above for the trees' height
-function woodsChunk(c, q) { // the chunk's deep trees on one canvas
-  const key = c + '@' + q; let w = WOODS.get(key); if (w) { WOODS.delete(key); WOODS.set(key, w); return w; } // a hit moves to the back: the oldest goes first
+  return [Math.min(...pts.map((p) => p[0])) - 12, Math.min(...pts.map((p) => p[1])) - 30, Math.max(...pts.map((p) => p[0])) + 12, Math.max(...pts.map((p) => p[1])) + 6]; }); // E157
+function woodsChunk(c, q) { // E158
+  const key = c + '@' + q; let w = WOODS.get(key); if (w) { WOODS.delete(key); WOODS.set(key, w); return w; } // E159
   const [x0, y0, x1, y1] = BOX[c], cv = document.createElement('canvas'); cv.width = Math.ceil((x1 - x0) * q); cv.height = Math.ceil((y1 - y0) * q); const g2 = cv.getContext('2d');
   for (const t of DEEP[c]) blit(nodeSprite(t.kind, t.v, q * t.size), (t.vx - x0) * q, (t.vy - y0) * q, q * t.size, g2);
   w = { cv, q }; if (WOODS.size > D.woodsKeep) WOODS.delete(WOODS.keys().next().value); WOODS.set(key, w); return w;
@@ -1074,7 +1074,7 @@ function drawThings() {
   const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s, us = units.slice().sort((a, b) => a.vy - b.vy); let n = 0;
   const unit = (u) => { if (!show.U || (u.side !== 0 && !inSight(u.k))) return; const [x, y] = toScreen(u.vx, u.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) return;
     if (!dots) { ctx.strokeStyle = u === sel ? C.gold : u.side >= 0 ? SIDES[u.side].col : C.white; ctx.globalAlpha = u === sel ? 1 : 0.5; ctx.lineWidth = u === sel ? 1.5 : 1; ctx.beginPath(); ctx.ellipse(x, y, 7 * s, 3.5 * s, 0, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
-    if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else { const th = swayOf(u); ctx.save(); ctx.translate(x, y); if (th) ctx.rotate(th); if (u.face < 0) ctx.scale(-1, 1); blit(unitSprite(u, s), 0, 0, s); ctx.restore(); } }; // a wounded one sways about its feet (QBS)
+    if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else { const th = swayOf(u); ctx.save(); ctx.translate(x, y); if (th) ctx.rotate(th); if (u.face < 0) ctx.scale(-1, 1); blit(unitSprite(u, s), 0, 0, s); ctx.restore(); } }; // E160
   if (!dots) { drawWoods(s); drawShadows(s); }
   for (const t of things) {
     while (n < us.length && us[n].vy <= t.vy) unit(us[n++]);
@@ -1088,7 +1088,7 @@ function drawThings() {
   while (n < us.length) unit(us[n++]);
 }
 let edgeSegs = null;
-function drawEdge() { // L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tiles' own edges
+function drawEdge() { // E161
   if (!edgeSegs) {
     edgeSegs = []; const T = D.tile, ok = (i, j) => i >= 0 && j >= 0 && i < N && j < N && DEP[j * N + i] >= D.edge;
     for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { const k = (j * N + i) * 4;
@@ -1100,10 +1100,10 @@ function drawEdge() { // L6 the play edge: the line between tiles D7 in from the
   ctx.stroke(); ctx.restore();
 }
 
-// ── Touch: one finger pans, two pinch; a wheel zooms about the pointer.
+// ── Touch (E162)
 const ptrs = new Map();
 function zoomAt(px, py, f) { const vx = cam.x + (px - cw / 2) / cam.z, vy = cam.y + (py - ch / 2) / cam.z; cam.z = clamp(cam.z * f, zmin, zmax); cam.x = vx - (px - cw / 2) / cam.z; cam.y = vy - (py - ch / 2) / cam.z; }
-function keepOn() { // the camera rule: the board never leaves the screen's middle; a board smaller than the screen sits centred
+function keepOn() { // E163
   const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 0), hw = cw / 2 / cam.z, hh = ch / 2 / cam.z;
   cam.x = r - l < 2 * hw ? (l + r) / 2 : clamp(cam.x, l + hw, r - hw); cam.y = b - t < 2 * hh ? (t + b) / 2 : clamp(cam.y, t + hh, b - hh); }
 canvas.addEventListener('pointerdown', (e) => { canvas.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY, e.clientX, e.clientY]); });
@@ -1116,7 +1116,7 @@ canvas.addEventListener('pointermove', (e) => {
   keepOn(); ptrs.set(e.pointerId, [e.clientX, e.clientY, was[2], was[3]]); dirty();
 });
 for (const ev of ['pointerup', 'pointercancel']) canvas.addEventListener(ev, (e) => { const p = ptrs.get(e.pointerId); ptrs.delete(e.pointerId); if (ev === 'pointerup' && p && Math.hypot(e.clientX - p[2], e.clientY - p[3]) < 6) tap(e.clientX, e.clientY); });
-function tap(px, py) { // the tile under a tap, at the land's height, and the player's unit nearest it; the modules answer first (menu), else a tap picks a villager or sends the picked one walking
+function tap(px, py) { // E164
   const vx = cam.x + (px - cw / 2) / cam.z, vy = cam.y + (py - ch / 2) / cam.z, [sx, sy] = fromBoard(vx, (vy + D.land * UP) / TILT), i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile), k = i < 0 || j < 0 || i >= N || j >= N ? -1 : j * N + i;
   let near = null; for (const u of units) if (u.side === 0) { const [x, y] = toScreen(u.vx, u.vy), d = Math.hypot(x - px, y - py + 8 * cam.z); if (d < 16 && (!near || d < near[1])) near = [u, d]; }
   if (fire('tap', k, near && near[0], px, py)) { dirty(); return; }
@@ -1124,13 +1124,13 @@ function tap(px, py) { // the tile under a tap, at the land's height, and the pl
   dirty();
 }
 canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0015)); keepOn(); dirty(); }, { passive: false });
-// The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a seed in the address overrides it.
+// E165
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
 function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); fogT = 0; K.t = K.snow = K.fds = K.wet = K.rain = K.snowing = K.fog = K.fogT = K.storm = K.flash = K.hour = K.strikeT = jolt.t = 0; K.wetHour = false; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
 window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1,
-  rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, sel: () => sel, select: (u) => (sel = u), seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // the door: what the modules may touch
-window.fk = FK; // the test hook
+  rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, sel: () => sel, select: (u) => (sel = u), seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
+window.fk = FK; // E167
 </script>
 <script src="menu.js"></script>
 <script src="econ.js"></script>

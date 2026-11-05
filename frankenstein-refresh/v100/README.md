@@ -9,7 +9,7 @@ Everything you can tap is a shell: a row in the Shells book that names its layer
 ## The pages
 - `books/`: the Books. measure (D), angles (A), colours (C), ground (G), mass (W), shells (S), capabilities (SC, with the molds), screen (SN: the menus as shells), rules (X: every check), sprites (P), sound (H), citations (N). Each entry: code, name, value, citation, law.
 - `CALCULATIONS.md`: Book 1, the Laws (Q), each with its citations.
-- `index.py`: the gate (above); writes `INDEX-CITATIONS.md`, `INDEX.md` and `INVENTORY.md` (the building's scaffolding, with its change at every build).
+- `index.py`: the gate (above); writes the five pages (`INDEX.md` 1 the Index, `CITATIONS.md` 2 the Citations, `INDEX-CITATIONS.md` 3 the cross-check, `COMMENTS.md` 4 the Comments, `MASTER.md` 5 the Master) and `INVENTORY.md` (the building's scaffolding, with its change at every build).
 - `DICTIONARY.md`: the words: layers, zones, logic, the shell mold, what is held for later.
 - `EXTRACT.md`: what was pulled from the old game and SoRen, for reference only.
 - `index.html`: the world (floors 1 to 7) and the body's laws, one door `FK`; `menu.js`, `econ.js`, `combat.js`, `ai.js`, `sound.js`: one module a file, each touching the world only through `FK`.
