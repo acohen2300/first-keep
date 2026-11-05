@@ -10,7 +10,7 @@ Every thing has one code and one home. Numbers live in D, colours in C, angles i
 - `CALCULATIONS.md`: Q, the equations (letters only), and N, their citations.
 - `INDEX.md`: Q and N matched both ways; written by `index.py`, never by hand.
 - `EXTRACT.md`: what was pulled from the old game and SoRen, for reference only.
-- `index.html`: the game, one file. Floors 1 to 5 so far.
+- `index.html`: the game, one file. Floors 1 to 6 so far.
 
 ## The floors, in build order
 0 Dictionary · 1 Ground (layers 10 to 80) · 2 Terrain (90) · 3 Non-movables (100) · 4 Buildings (110) · 5 Movables (120) · 6 Climate (130) · 7 Display (140) · 8 Menu (150) · Sound beside the stack
@@ -25,4 +25,5 @@ Open `index.html` in a phone browser, or the preview link. Drag to pan, pinch or
 - [x] 3 Non-movables: a tree on every tile of woods; at home the berries, grove, gold and stone of Z1 sized from one age up (QBJ), Z3 the same three times over with iron; Z4's piles, patches, ruins, cemeteries, campfires and treasure by the dice; every one a shell with an amount and a yield, drawn as tints of C. Set on this floor for Albert to confirm: D53 to D83 (the prices D61 to D66 are the genre's stand-ins).
 - [x] 4 Buildings: the B table, four sizes, Open or Closed, standing on flat free tiles; the pictures pulled from preview 49 (the last build before the camera turn), point lists only, packed to 350 lines, painted once per look and zoom step and stamped; the trees, bushes and rock the same way; the Town Center in Z2 on the road; a Build toggle to place and remove for testing. Set on this floor for Albert to confirm: D84.
 - [x] 5 Movables: U and M as shells that walk (A*, QBL) at speeds from life (D85, D86); the figures from preview 49, one look a code; villagers round every Town Center, Gather to the nearest drop-off at the old game's rates (D88), the stores shown; deer and wolves wander in Z4 (QM); tap a villager to pick it, a find to send it gathering, the ground to walk; the deep woods painted once a chunk; 30 frames a second. Set on this floor for Albert to confirm: D85 to D98.
-- [ ] 6 Climate
+- [x] 6 Climate: the clock (Y), the sun by the equation (QA) and the light by SoRen's ramp, rain by the two-state chain (QH) with snow under 1 °C (QI), SoRen's weather on the glass and First Keep's lightning pinned to the ground it hits, wet and mud (QP, QN), snow cover and its melt (QO), ice that bears (QQ), fog and mist, the marsh; one weather for the whole board. Fast for testing. Set on this floor for Albert to confirm: D99 to D116.
+- [ ] 7 Display

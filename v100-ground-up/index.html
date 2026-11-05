@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>First Keep v100 · Movables</title>
+<title>First Keep v100 · Climate</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600&family=IM+Fell+English+SC&display=swap">
 <style>
 :root { --ui: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif; --display: "IM Fell English SC", Georgia, serif; --slot: 44px; --gap: 6px; }
 html, body { margin: 0; height: 100%; background: #214a63; overflow: hidden; -webkit-user-select: none; user-select: none; font-family: var(--ui); font-weight: 600; font-size: 14px; color: #ece5d3; }
 canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: none; }
-#top { position: fixed; left: var(--gap); right: var(--gap); top: calc(env(safe-area-inset-top, 0px) + var(--gap)); display: flex; align-items: center; gap: 12px; height: var(--slot); padding: 0 12px; box-sizing: border-box; background: #2a1d13; border: 1px solid #785c3a; border-radius: 6px; }
+#top { position: fixed; left: var(--gap); right: var(--gap); top: calc(env(safe-area-inset-top, 0px) + var(--gap)); display: flex; align-items: center; gap: 10px; font-size: 12px; height: var(--slot); padding: 0 12px; box-sizing: border-box; background: #2a1d13; border: 1px solid #785c3a; border-radius: 6px; }
 #top b { font-family: var(--display); font-weight: 400; font-size: 18px; color: #e6b947; }
 #top span { opacity: .75; }
 #store { margin-left: auto; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 12px; }
@@ -24,13 +24,13 @@ canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: non
 </head>
 <body>
 <canvas id="map"></canvas>
-<div id="top"><b>First Keep</b><span style="white-space:nowrap">v100 · 5 · Movables</span><span id="store"></span><span id="seed"></span></div>
+<div id="top"><b>First Keep</b><span style="white-space:nowrap">v100 · 6</span><span id="clock" style="white-space:nowrap"></span><span id="store"></span><span id="seed"></span></div>
 <div id="pick"></div>
-<div id="bar"><button data-t="grid">Grid</button><button data-t="zones" class="on">Zones</button><button data-t="edge" class="on">Edge</button><button data-t="build">Build</button><button id="new">New map</button></div>
+<div id="bar"><button data-t="grid">Grid</button><button data-t="zones" class="on">Zones</button><button data-t="edge" class="on">Edge</button><button data-t="build">Build</button><button data-t="fast">Fast</button><button id="new">New</button></div>
 <script>
 'use strict';
 // First Keep v100 · floor 1: the ground. Every number below points at the dictionary (DICTIONARY.md); no number is written twice.
-const D = { site: 3060, board: 2160, zone: [300, 600, 900], edge: 60, tile: 10, land: 24, sandTop: 12, dirtTop: 20, beach: 80, cliff: 4, wander: 24, sea: 60, // D1, D2, D3–D6, D7, D12–D19
+const D = { site: 3060, board: 2160, zone: [300, 600, 900], edge: 60, tile: 10, land: 24, sandTop: 12, dirtTop: 20, beach: 80, cliff: 4, wander: 24, sea: 60, day: 120, season: 180, year: 720, // D1, D2, D3–D6, D7, D12–D22
   bare: 12, wade: 4, lakes: [3, 6], lakeR: [50, 160], lakeDeep: 12, shore: 0.25, riverDeep: 8, riverW: 0.25, riverWander: 80, bank: 40, ford: 40, stream: 6, streamDeep: 2, // D23–D35
   hills: [2, 4], hillR: [80, 160], hillH: 14, rocks: [3, 6], rockR: [15, 35], rockH: 18, crevices: [1, 2], creviceW: 8, creviceFloor: 13, creviceL: [150, 300], lane: 50, middle: 150, // D36–D47
   forestScale: 500, forestShare: 0.1, wall: [920, 1080], pond: [700, 450], pondR: 50, // D48–D52
@@ -41,7 +41,9 @@ const D = { site: 3060, board: 2160, zone: [300, 600, 900], edge: 60, tile: 10, 
   jitter: 3, lod: 5, // D82 a thing's stand wanders in its tile by this much, D83 under this many pixels a tile things are dots and the grid is off
   tc: [380, 380], // D84 the Town Center's spot in the corner's frame (Z2, on the road)
   upm: 11.7, speed: { walk: 1.4, trot: 3.6, horse: 1.7, push: 0.7, deer: 1.5, wolf: 2.5, bear: 1.5 }, carry: 10, rate: { bush: 0.9, tree: 0.75, gold: 0.6, stone: 0.55, iron: 0.5 }, // D85 units a metre, D86 speeds in m/s, D87 a load, D88 gathering a second
-  next: 100, herds: [3, 5], herd: [3, 5], packs: [2, 3], pack: [2, 3], wait: 6, reach: 60, steps: 6, beat: 0.4, fps: 30 }; // D89 the next find within, D90–D93 the wildlife, D94 a wander's mean wait, D95 its reach, D96 walk frames a second, D97 a work beat, D98 frames a second
+  next: 100, herds: [3, 5], herd: [3, 5], packs: [2, 3], pack: [2, 3], wait: 6, reach: 60, steps: 6, beat: 0.4, fps: 30, // D89 the next find within, D90–D93 the wildlife, D94 a wander's mean wait, D95 its reach, D96 walk frames a second, D97 a work beat, D98 frames a second
+  lat: 45, temps: [10, 22, 12, -6], swing: 6, chain: [0.12, 0.65], stormShare: 0.25, wetUp: 20, dryOut: 50, mud: 0.8, snowCost: 0.6, // D99 the latitude, D100 the seasons' mean °C, D101 the day's swing, D102 P(wet|dry), P(wet|wet) an hour, D103 storms among wet hours, D104–D105 wet and dry settle, D106 walking costs
+  snowfall: 0.03, melt: 0.004, bears: 200, fogWait: 240, fogLast: 40, flashGap: 0.34, strike: 6, marshes: [1, 2], marshW: 40, fast: 8 }; // D107 snow a second, D108 melt a °C·s, D109 ice bears at this many °C·s, D110–D111 fog's wait and stay, D112 between flashes, D113 between strikes, D114 marshy lakes, D115 a marsh's width, D116 Fast
 const A = { turn: 15, rise: 30, repose: 34 }; // A1 the grid's turn, A2 the camera's rise, A3 the angle of repose
 const C = { water: '#2a6488', sand: '#cdbb88', dirt: '#785c3a', grass: '#4a6634', blue: '#6aaeff', green: '#5fd08a', red: '#ff6b5b', white: '#ece5d3', gold: '#e6b947' }; // C1–C8, C10
 
@@ -78,7 +80,7 @@ function makeCoast(roll) {
 
 // ── The ground: one height a tile. Depth is the way in from the coast (negative at sea). Land stands at D13; a beach falls to the water over D16, a cliff over D17 (L4); the sea deepens with distance. The stratum a tile shows is whichever its height reaches (L1).
 const H = new Float32Array(N * N), DEP = new Float32Array(N * N), CH = new Float32Array(N * N * 4), FOR = new Uint8Array(N * N); // height, depth from the coast, the four drawn corner heights, the forest floor
-let coast, seed;
+let coast, seed, lakes = []; const MARSH = new Uint8Array(N * N); // marsh (TW1): always wet (KI1)
 function depthAt(bx, by) { // the way in from the coast at a board point, and the coast's cliffness there
   const dl = bx - B0, dr = B1 - bx, dt = by - B0, db = B1 - by, dx = Math.min(dl, dr), dy = Math.min(dt, db);
   const side = dx < dy ? (dl < dr ? 0 : 1) : dt < db ? 2 : 3, pos = clamp(dx < dy ? by - B0 : bx - B0, 0, D.board);
@@ -99,7 +101,7 @@ function makeGround(sd) {
     const round = [[ci - 1, cj - 1, 3], [ci, cj - 1, 2], [ci - 1, cj, 1], [ci, cj, 0]].filter(([i, j]) => i >= 0 && j >= 0 && i < N && j < N).map(([i, j, slot]) => [dh(i, j), (j * N + i) * 4 + slot]).sort((a, b) => a[0] - b[0]);
     for (let a = 0; a < round.length; ) { let b = a + 1; while (b < round.length && round[b][0] - round[b - 1][0] <= REPOSE) b++; let sum = 0; for (let q = a; q < b; q++) sum += round[q][0]; for (let q = a; q < b; q++) CH[round[q][1]] = sum / (b - a); a = b; }
   }
-  makeThings(roll); makeBuildings();
+  makeThings(roll); makeBuildings(); makeMarsh(roll);
   renderGround();
   document.getElementById('seed').textContent = 'map ' + sd;
 }
@@ -142,7 +144,7 @@ function makeTerrain(roll) {
   const pondRim = fractal(roll, 8, 1.3);
   for (let c = 0; c < 4; c++) lake(...corner(c, ...D.pond), D.pondR, pondRim, D.lakeDeep);
   // Lakes: Who the map · What their number, size and place · Where Z4, off the roads and the middle, inside the play edge · When the map is made · Why no two maps share their water · How a count between D25, sizes on the power law of lakes (QBA, Pareto draw), places uniform, each shore QAZ
-  const lakes = [], c = 1.06, amin = Math.PI * D.lakeR[0] ** 2, amax = Math.PI * D.lakeR[1] ** 2;
+  lakes = []; const c = 1.06, amin = Math.PI * D.lakeR[0] ** 2, amax = Math.PI * D.lakeR[1] ** 2;
   for (let n = count(roll, D.lakes), tries = 0; lakes.length < n && tries < 200; tries++) {
     const r = Math.sqrt(Math.min(amax, amin * roll() ** (-1 / c)) / Math.PI), bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), room = r * (1 + D.shore) + D.bank;
     if (!inZ4(bx, by, room) || lakes.some((L) => Math.hypot(L.x - bx, L.y - by) < L.r + room + 2 * D.beach)) continue;
@@ -227,11 +229,11 @@ const BANDS = 6, deepest = shade(C.water, 0.6);
 const waterBand = (h) => (h > -D.wade ? 0 : 1 + Math.min(BANDS - 2, Math.floor((-h - D.wade) / ((D.sea - D.wade) / (BANDS - 1))))); // the first band is what can be waded (D24)
 const blend = (a, b, f) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - f) + parseInt(b.slice(i, i + 2), 16) * f).toString(16).padStart(2, '0')).join('');
 const WATER = Array.from({ length: BANDS }, (_, k) => blend(C.water, deepest, k / (BANDS - 1)));
-const TOP = [null, C.sand, C.dirt, C.grass], FACE = [null, shade(C.sand, 0.72), shade(C.dirt, 0.72), shade(C.grass, 0.72)], FLOOR = shade(C.grass, 0.8); // the forest floor: the grass, shaded
+const TOP = [null, C.sand, C.dirt, C.grass], FACE = [null, shade(C.sand, 0.72), shade(C.dirt, 0.72), shade(C.grass, 0.72)], FLOOR = shade(C.grass, 0.8), REED = blend(C.grass, C.water, 0.3); // the forest floor: the grass, shaded; the marsh: the grass, toward the water
 const STRATA = [[0, D.sandTop, 1], [D.sandTop, D.dirtTop, 2], [D.dirtTop, D.land, 3], [D.land, 1e9, 2]]; // what a face shows between two heights (L1): the grass is the land's top skin; anything raised above it shows bare earth
 
 // ── Drawn once in the view frame: every tile a lifted quad, a face where it steps down toward the camera. Then every frame is one picture, moved and scaled.
-let ground, gw, gh, ox, oy;
+let ground, gw, gh, ox, oy; const maskLand = document.createElement('canvas'), maskDark = document.createElement('canvas'), maskLake = document.createElement('canvas');
 function renderGround() {
   const pts = []; for (const [x, y] of [[0, 0], [D.site, 0], [0, D.site], [D.site, D.site]]) for (const h of [0, D.land]) pts.push(V(x, y, h));
   const minX = Math.min(...pts.map((p) => p[0])), maxX = Math.max(...pts.map((p) => p[0])), minY = Math.min(...pts.map((p) => p[1])), maxY = Math.max(...pts.map((p) => p[1]));
@@ -239,20 +241,22 @@ function renderGround() {
   ground = document.createElement('canvas'); ground.width = gw; ground.height = gh;
   const g = ground.getContext('2d');
   g.fillStyle = deepest; g.fillRect(0, 0, gw, gh);
+  for (const m of [maskLand, maskDark, maskLake]) { m.width = Math.ceil(gw / 4); m.height = Math.ceil(gh / 4); const q = m.getContext('2d'); q.scale(0.25, 0.25); q.fillStyle = m === maskDark ? '#404a52' : '#fff'; } // the masks at a quarter scale: the land in white and in shadow, the inland water
   const P = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return [x + ox, y + oy]; };
   // a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right and down, so the next tile's edge lands on solid paint and no seam shows
   const quad = (a, b, c, d, fill) => { g.fillStyle = fill; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0] + 0.5, b[1]); g.lineTo(c[0] + 0.5, c[1] + 0.5); g.lineTo(d[0], d[1] + 0.5); g.closePath(); g.fill(); };
   const T = D.tile, ch = (i, j, c) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : CH[(j * N + i) * 4 + c]);
   const flat = (i, j) => { const k = (j * N + i) * 4; return CH[k] === CH[k + 1] && CH[k] === CH[k + 2] && CH[k] === CH[k + 3]; };
   const LIT = 0.03; // the light stands high to the left and in front: ground leaning that way is lit, ground leaning away is shaded, 3% a unit of lean over a tile
-  const colour = (i, j) => { const k = j * N + i, h = H[k], s = stratum(h), base = FOR[k] ? FLOOR : s ? TOP[s] : WATER[waterBand(h)]; if (!s || flat(i, j)) return base;
+  const colour = (i, j) => { const k = j * N + i, h = H[k], s = stratum(h), base = FOR[k] ? FLOOR : MARSH[k] ? REED : s ? TOP[s] : WATER[waterBand(h)]; if (!s || flat(i, j)) return base;
     const c = k * 4, lean = (CH[c] + CH[c + 2] - CH[c + 1] - CH[c + 3]) / 2 + (CH[c + 2] + CH[c + 3] - CH[c] - CH[c + 1]) / 2; return shade(base, clamp(1 + LIT * lean, 0.7, 1.3)); };
   for (let j = 0; j < N; j++) {
     for (let i = 0; i < N; ) { // runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
       const col = colour(i, j), h0 = CH[(j * N + i) * 4]; let i1 = i;
       if (flat(i, j)) while (i1 + 1 < N && flat(i1 + 1, j) && colour(i1 + 1, j) === col && CH[(j * N + i1 + 1) * 4] === h0) i1++;
       const k = (j * N + i) * 4, k1 = (j * N + i1) * 4;
-      quad(P(i * T, j * T, CH[k]), P((i1 + 1) * T, j * T, CH[k1 + 1]), P((i1 + 1) * T, (j + 1) * T, CH[k1 + 3]), P(i * T, (j + 1) * T, CH[k + 2]), col);
+      const a = P(i * T, j * T, CH[k]), b = P((i1 + 1) * T, j * T, CH[k1 + 1]), c = P((i1 + 1) * T, (j + 1) * T, CH[k1 + 3]), d = P(i * T, (j + 1) * T, CH[k + 2]); quad(a, b, c, d, col);
+      const h = H[j * N + i]; for (const m of h > 0 ? [maskLand, maskDark] : DEP[j * N + i] >= D.edge ? [maskLake] : []) { const q = m.getContext('2d'); q.beginPath(); q.moveTo(a[0], a[1]); q.lineTo(b[0] + 2, b[1]); q.lineTo(c[0] + 2, c[1] + 2); q.lineTo(d[0], d[1] + 2); q.fill(); }
       i = i1 + 1;
     }
     for (let i = 0; i < N; i++) { // faces: the +y edge and the +x edge face the camera (the turn is under 45°)
@@ -273,24 +277,25 @@ function renderGround() {
 
 // ── The view (layer 140): one camera, drag to pan, pinch or wheel to zoom; the overlays are drawn each frame over the one picture.
 const canvas = document.getElementById('map'), ctx = canvas.getContext('2d');
-const cam = { x: 0, y: 0, z: 1 }, show = { grid: false, zones: true, edge: true, build: false }; let pick = 'BR1';
+const cam = { x: 0, y: 0, z: 1 }, show = { grid: false, zones: true, edge: true, build: false, fast: false }; let pick = 'BR1';
 let cw, ch, dpr, zmin, zmax = 6, queued = false;
 const toScreen = (vx, vy) => [(vx - cam.x) * cam.z + cw / 2, (vy - cam.y) * cam.z + ch / 2];
 const S = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return toScreen(x, y); };
 function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 0); cam.x = (l + r) / 2; cam.y = (t + b) / 2; cam.z = Math.min((cw - 24) / (r - l), (ch - 200) / (b - t)); zmin = cam.z / 2; }
 function resize() { dpr = Math.min(2, devicePixelRatio || 1); cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; fit(); dirty(); }
 function dirty() { if (!queued) { queued = true; requestAnimationFrame(draw); } }
-let last = 0;
-function loop(now) { if (now - last >= 1000 / D.fps) { const dt = Math.min(0.1, (now - last) / 1000 || 0); last = now; if (!document.hidden) { step(dt); draw(); } } requestAnimationFrame(loop); }
+let last = 0, frameDt = 0;
+function loop(now) { if (now - last >= 1000 / D.fps) { const dt = Math.min(0.1, (now - last) / 1000 || 0) * (show.fast ? D.fast : 1); last = now; frameDt = dt; if (!document.hidden) { climate(dt); step(dt); draw(); } } requestAnimationFrame(loop); }
 function draw() {
   queued = false;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.fillStyle = deepest; ctx.fillRect(0, 0, cw, ch);
-  const [gx, gy] = toScreen(-ox, -oy); ctx.drawImage(ground, gx, gy, gw * cam.z, gh * cam.z);
+  const [gx, gy] = toScreen(-ox, -oy); ctx.drawImage(ground, gx, gy, gw * cam.z, gh * cam.z); drawSkin();
   if (show.grid && cam.z * D.tile >= D.lod) drawGrid();
   drawThings();
   if (show.zones) drawZones();
   if (show.edge) drawEdge();
+  drawSky(frameDt);
 }
 function path(points) { ctx.beginPath(); points.forEach((p, n) => (n ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); }
 let playPoly = null;
@@ -854,8 +859,11 @@ let units = [], sel = null;
 const WORK = { tree: 0, bush: 1, gold: 2, stone: 2, iron: 2 }; // the tool a villager works a find with (WORKTOOL): axe, hands, pick
 const YIELD = (t) => KIND[t.kind].yield;
 // walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step past the angle of repose is not
-const walkable = (k) => k >= 0 && H[k] > -D.wade / 2 && (OCC[k] === 0 || OCC[k] === 3);
-const stepOk = (a, b) => walkable(b) && Math.abs(H[a] - H[b]) <= REPOSE;
+const iced = (k) => K.ice && H[k] <= 0 && DEP[k] >= D.edge; // inland water bearing ice (QQ): walked as if flat
+const hAt = (k) => (iced(k) ? 0 : H[k]);
+const walkable = (k) => k >= 0 && (H[k] > -D.wade / 2 || iced(k)) && (OCC[k] === 0 || OCC[k] === 3);
+const stepOk = (a, b) => walkable(b) && Math.abs(hAt(a) - hAt(b)) <= REPOSE;
+const footing = (k) => 1 / (1 + D.mud * (MARSH[k] ? 1 : K.wet) + D.snowCost * Math.min(1, K.snow / 5)); // QN: mud and snow cost a walker
 // QBL A* over the tiles, eight ways, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile will do; returns the tiles to walk, or null
 function findPath(from, goal, near) {
   const open = [from], gs = new Map([[from, 0]]), came = new Map(), done = new Set(), fs = new Map([[from, 0]]), hx = (k) => { const dx = Math.abs((k % N) - (near % N)), dy = Math.abs(Math.floor(k / N) - Math.floor(near / N)); return Math.max(dx, dy) + (Math.SQRT2 - 1) * Math.min(dx, dy); };
@@ -893,7 +901,7 @@ function step(dt) { // one tick for every unit
   for (const u of units) {
     u.t += dt;
     if (u.path) { // walking: toward the next tile's middle at the shell's speed
-      const [tx, ty] = tileMid(u.path[u.at]), dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy), v = D.speed[U[u.code][2]] * D.upm * dt;
+      const [tx, ty] = tileMid(u.path[u.at]), dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy), v = D.speed[U[u.code][2]] * D.upm * footing(u.k) * dt;
       if (d <= v) { u.bx = tx; u.by = ty; if (++u.at >= u.path.length) { u.path = null; u.job = u.then || 'idle'; } } else { u.bx += (dx / d) * v; u.by += (dy / d) * v; u.face = dx < 0 ? -1 : 1; }
       place(u); continue;
     }
@@ -943,6 +951,67 @@ const GIFT = { // each drawn at its stand (x, y on the screen), s pixels a unit
   treasure: (x, y, s) => { rect(x - 3 * s, y - 4 * s, 6 * s, 4 * s, CHEST); rect(x - 3 * s, y - 5.2 * s, 6 * s, 1.5 * s, LID); rect(x - 0.6 * s, y - 5.2 * s, 1.2 * s, 5.2 * s, C.gold); },
 };
 const DOT = { tree: '#3c6c32', bush: '#3f6b33', gold: C.gold, stone: ROCK, iron: RUIN, ruins: RUIN, cemetery: ROCKLIT, campfire: C.gold, treasure: C.gold };
+// ── Floor 6, climate (layer 130): one sky over the whole board (185 m across: one weather), acting on everything below (L7). The clock is Y: a day D20, a season D21, a year D22.
+const K = { t: 0, alt: 0, light: 1, temp: 10, wet: 0, rain: 0, snowing: 0, snow: 0, fds: 0, ice: false, fog: 0, fogT: 0, storm: 0, flash: 0, flashT: -9, strikeT: 0, bolts: [], hour: 0, wetHour: false };
+const SEASONS = ['Spring', 'Summer', 'Autumn', 'Winter'];
+const season = () => Math.floor(K.t / D.season) % 4, dayPhase = () => (K.t % D.day) / D.day;
+// QA the sun: sin a = sin φ sin δ + cos φ cos δ cos H; φ D99, δ swings ±23.44° over the year from the spring equinox, H turns with the day (noon at the day's middle)
+function sunAlt() { const phi = D.lat * RAD, dec = 23.44 * RAD * Math.sin(((K.t / D.year) * 2 * Math.PI)), Hh = (dayPhase() - 0.5) * 2 * Math.PI; return Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(Hh)) / RAD; }
+const RAMP = [[-18, 0.18], [-12, 0.3], [-6, 0.45], [0, 0.62], [6, 0.85], [20, 1]]; // light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD)
+function lightAt(a) { if (a <= RAMP[0][0]) return RAMP[0][1]; for (let i = 1; i < RAMP.length; i++) if (a <= RAMP[i][0]) { const [a0, l0] = RAMP[i - 1], [a1, l1] = RAMP[i]; return l0 + ((l1 - l0) * (a - a0)) / (a1 - a0); } return 1; }
+// QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet | dry) and P(wet | wet) are D102; a wet hour is a storm with D103. Snow falls instead when the air is at or under 1 °C (QI)
+function climate(dt) {
+  K.t += dt; const sn = season(), f = (K.t / D.season) % 1, mean = D.temps[sn] + (D.temps[(sn + 1) % 4] - D.temps[sn]) * (0.5 - 0.5 * Math.cos(f * Math.PI)); // the season's mean, eased into the next
+  K.alt = sunAlt(); K.light = lightAt(K.alt); K.temp = mean + D.swing * (K.light - 0.6);
+  const hour = Math.floor(K.t / (D.day / 24)); if (hour !== K.hour) { K.hour = hour; K.wetHour = Math.random() < D.chain[K.wetHour ? 1 : 0]; K.storm = K.wetHour && Math.random() < D.stormShare ? 1 : 0; }
+  const falling = K.wetHour ? (K.temp <= 1 ? 'snow' : 'rain') : null; // what falls
+  K.rain += ((falling === 'rain' ? (K.storm ? 1 : 0.6) : 0) - K.rain) * Math.min(1, dt / 12); K.snowing += ((falling === 'snow' ? 1 : 0) - K.snowing) * Math.min(1, dt / 12); // rain comes and goes over tens of seconds (SoRen)
+  K.wet += (((K.rain > 0.1 ? 1 : 0) - K.wet) * dt) / (K.rain > 0.1 ? D.wetUp : D.dryOut); // QP settle: wet in D104, dry in D105
+  if (K.snowing > 0.1) K.snow += D.snowfall * K.snowing * dt; if (K.temp > 0) K.snow = Math.max(0, K.snow - D.melt * K.temp * (K.rain > 0.1 ? 2 : 1) * dt); // QO degree-day melt, rain on snow twice as fast
+  if (K.temp < 0) K.fds += -K.temp * dt; else K.fds = Math.max(0, K.fds - K.temp * dt * 4); K.ice = K.fds >= D.bears; // QQ: ice grows with the freezing degree-seconds and bears at D109
+  if (K.fogT > 0) K.fogT -= dt; else if (Math.random() < dt / D.fogWait) K.fogT = D.fogLast; // QM: fog comes on a Poisson wait (D110) and stays D111
+  K.fog += ((K.fogT > 0 ? 0.6 : K.wet > 0.5 && K.rain < 0.1 && K.alt > -6 && K.alt < 10 ? 0.3 : 0) - K.fog) * Math.min(1, dt / 15); // fog, or mist after rain at dawn and dusk (KW8)
+  if (K.storm && K.rain > 0.5) { K.strikeT -= dt; if (K.strikeT <= 0) { K.strikeT = -D.strike * Math.log(1 - Math.random()); strike(); } } // QL, QM: strikes on Poisson waits in a storm
+  K.bolts = K.bolts.filter((b) => K.t - b.t < 0.5); K.flash *= Math.exp(-dt / 0.09);
+  document.getElementById('clock').textContent = SEASONS[sn] + ' ' + String(Math.floor(dayPhase() * 24)).padStart(2, '0') + ':' + String(Math.floor((dayPhase() * 24 * 60) % 60)).padStart(2, '0') + (falling ? (falling === 'snow' ? ' ❄' : K.storm ? ' ⚡' : ' ☂') : K.fog > 0.3 ? ' ≈' : '');
+}
+// a strike: on the ground in view when close, a sheet flash when far; the flash never comes within D112 of the last (QL, WCAG 2.3.1), and the bolt is pinned to the ground it hits
+function strike() { if (K.t - K.flashT < D.flashGap) return; const close = Math.random(); K.flashT = K.t;
+  if (close > 0.4) { const vx = cam.x + (Math.random() - 0.5) * (cw / cam.z), vy = cam.y + (Math.random() - 0.5) * (ch / cam.z); K.bolts.push({ vx, vy, t: K.t, seed: Math.random() }); K.flash = Math.max(K.flash, 0.5 + 0.3 * close); }
+  else K.flash = Math.max(K.flash, 0.2 + 0.3 * close); }
+// the rain: a pool of drops whose size sets its speed (Marshall–Palmer sizes, QJ Atlas's fall speed), leaning a little; the snow: flakes that drift
+const RAINP = { n: 240, lambda: 4.1 * 5 ** -0.21, dMin: 0.5, dMax: 4 }, fallV = (Dd) => 9.65 - 10.3 * Math.exp(-0.6 * Dd);
+const RAIN = Array.from({ length: RAINP.n }, (_, i) => { const Dd = Math.min(RAINP.dMax, RAINP.dMin - Math.log(1 - ((i * 0.618) % 1 || 0.5)) / RAINP.lambda), d = clamp(0.4 + (0.6 * (Dd - RAINP.dMin)) / 2.5, 0.4, 1); return { x: (i * 97.3) % 1000, y: (i * 53.7) % 1000, d, v: (9.6 * fallV(Dd)) / fallV(2) }; });
+function drawSkin() { // on the ground, under everything: snow whitens the land (screen), wet darkens it (multiply), ice whitens the inland water
+  const [gx, gy] = toScreen(-ox, -oy), w = gw * cam.z, h = gh * cam.z, snow = Math.min(0.85, K.snow / 5);
+  if (snow > 0.01) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = snow; ctx.drawImage(maskLand, gx, gy, w, h); ctx.restore(); }
+  if (K.wet > 0.05) { ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = 0.45 * K.wet; ctx.drawImage(maskDark, gx, gy, w, h); ctx.restore(); }
+  if (K.ice) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = 0.6; ctx.drawImage(maskLake, gx, gy, w, h); ctx.restore(); }
+}
+function drawSky(dt) { // over everything: what falls, the strikes, the flash, the night and the fog
+  const now = K.t;
+  if (K.rain > 0.05) { const n = Math.round(RAINP.n * K.rain), slant = 0.2, fall = 420 * dt; ctx.lineCap = 'round';
+    for (let i = 0; i < n; i++) { const m = RAIN[i]; m.y += m.v * fall; if (m.y > ch + 12) { m.y = -12; m.x = Math.random() * cw; } const len = 8 + 12 * m.d; ctx.strokeStyle = `rgba(205,232,250,${(0.2 + 0.4 * m.d).toFixed(2)})`; ctx.lineWidth = 0.8 + 0.8 * m.d; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x - slant * len, m.y + len); ctx.stroke(); } }
+  if (K.snowing > 0.05) { const n = Math.round(140 * K.snowing); ctx.fillStyle = 'rgba(245,248,252,.85)'; for (let i = 0; i < n; i++) { const y = ((i * 71.9 + now * 34) % (ch + 20)) - 10, x = (i * 113.7 + Math.sin(now * 0.8 + i) * 14) % cw; ctx.fillRect(x < 0 ? x + cw : x, y, 2 + (i % 3 === 0), 2 + (i % 3 === 0)); } }
+  for (const b of K.bolts) { // SoRen's bolt: a channel from the top of the sky to the ground with a fork or two, three strokes from a soft glow to a bright core; its foot lights the ground round it
+    const age = now - b.t, a = clamp(1 - age / 0.45, 0, 1), rr = NS_rng((b.seed * 1e6) | 1), [x1, y1] = toScreen(b.vx, b.vy), main = []; let x = x1 + (rr() - 0.5) * 80, y = Math.min(0, y1 - 300); main.push([x, y]);
+    while (y < y1) { y += 9 + rr() * 15; x += (rr() - 0.5) * 34 + (x1 - x) * 0.12; main.push([x, y]); } main[main.length - 1] = [x1, y1]; const paths = [main]; // the channel wanders but leans home to its foot
+    for (let f = 0, nf = 1 + ((rr() * 3) | 0); f < nf; f++) { const fk = main[1 + Math.floor(rr() * (main.length - 3))], dir = rr() < 0.5 ? -1 : 1, br = [fk]; for (let k = 1, kn = 3 + ((rr() * 3) | 0); k <= kn; k++) br.push([fk[0] + dir * k * (7 + rr() * 9), fk[1] + k * (8 + rr() * 9)]); paths.push(br); }
+    ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.globalCompositeOperation = 'lighter';
+    const foot = ctx.createRadialGradient(x1, y1, 0, x1, y1, 60 * cam.z); foot.addColorStop(0, `rgba(220,235,255,${(0.7 * a).toFixed(2)})`); foot.addColorStop(1, 'rgba(220,235,255,0)'); ctx.fillStyle = foot; ctx.beginPath(); ctx.ellipse(x1, y1, 60 * cam.z, 30 * cam.z, 0, 0, 7); ctx.fill();
+    for (const [lw, col] of [[12, `rgba(170,200,255,${(0.18 * a).toFixed(2)})`], [4.6, `rgba(210,228,255,${(0.45 * a).toFixed(2)})`], [1.9, `rgba(255,255,255,${a.toFixed(2)})`]]) { ctx.strokeStyle = col; paths.forEach((p, i) => { ctx.lineWidth = i ? lw * 0.55 : lw; ctx.beginPath(); p.forEach(([px, py], j) => (j ? ctx.lineTo(px, py) : ctx.moveTo(px, py))); ctx.stroke(); }); }
+    ctx.restore(); }
+  if (K.flash > 0.005) { ctx.fillStyle = `rgba(190,210,255,${Math.min(0.75, K.flash).toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
+  const gloom = 0.25 * Math.max(K.rain, K.snowing), night = (1 - K.light) * 0.7, dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // the light: the sun's by the ramp, clouds take a quarter, the horizon's warmth within 8° of it
+  if (gloom > 0.01) { ctx.fillStyle = `rgba(60,70,80,${gloom.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
+  if (dusk > 0.01) { ctx.fillStyle = `rgba(255,140,60,${dusk.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
+  if (night > 0.01) { ctx.fillStyle = `rgba(10,18,48,${night.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
+  if (K.fog > 0.02) { ctx.fillStyle = `rgba(200,205,210,${(K.fog * 0.8).toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); } // KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze
+}
+function makeMarsh(roll) { // Marsh (TW1): Who the map · What a wet margin round a lake or two · Where Z4's lakes, the land D115 out from the water · When the map is made · Why ground that is always mud (KI2), slow to cross, never built on · How count D114, lakes picked by the dice
+  const picks = lakes.slice().sort(() => roll() - 0.5).slice(0, count(roll, D.marshes));
+  for (const L of picks) stamp(L.x, L.y, L.r * (1 + D.shore) + D.marshW, (k) => { if (H[k] > 0 && H[k] <= D.land && OCC[k] === 0 && !FOR[k]) MARSH[k] = 1; });
+}
 // ── The woods cache: the deep trees (eight tree neighbours) are painted once per chunk of the board and zoom step; the rest of the things are stamped each frame. Cutting a tree wakes its neighbours and repaints the chunk.
 const CS = 32, NC = Math.ceil(N / CS), WOODS = new Map(), DEEP = Array.from({ length: NC * NC }, () => []); // chunks of CS × CS tiles
 const chunkOf = (k) => Math.floor((k % N) / CS) + Math.floor(k / N / CS) * NC;
@@ -1020,10 +1089,10 @@ for (const b of document.querySelectorAll('#bar [data-t]')) b.onclick = () => { 
 document.getElementById('new').onclick = () => { location.hash = String(Math.floor(Math.random() * 4294967296)); };
 // The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a seed in the address overrides it.
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
-function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); showStore(); dirty(); }
+function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); K.t = 0; K.snow = 0; K.fds = 0; K.wet = 0; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); showStore(); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
 resize(); start(); requestAnimationFrame(loop);
-window.fk = { D, A, C, B, U, SIDES, cam, show, dirty, fit, H, DEP, FOR, OCC, N, V, toView, fromBoard, corner, B0, B1, KIND, Z1, z1, build, unbuild, gather, go, step, findPath, tileAt, walkable, select: (u) => (sel = u), seed: () => seed, things: () => things, units: () => units, coast: (s, p) => coast(s, p) }; // the test hook
+window.fk = { D, A, C, B, U, K, SIDES, climate, MARSH, cam, show, dirty, fit, H, DEP, FOR, OCC, N, V, toView, fromBoard, corner, B0, B1, KIND, Z1, z1, build, unbuild, gather, go, step, findPath, tileAt, walkable, select: (u) => (sel = u), seed: () => seed, things: () => things, units: () => units, coast: (s, p) => coast(s, p) }; // the test hook
 </script>
 </body>
 </html>
