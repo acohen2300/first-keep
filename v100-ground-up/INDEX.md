@@ -64,6 +64,8 @@ QBH A lake's size drawn from the power law (QBA) → N61
 QBI Roads cross rivers at fords → N68
 QBK The art frame → N66
 QBL The way → N74
+QBM Walking → N71, N72, N73
+QBN Gathering → N70
 QBJ Z1's store → N69
 
 ## By citation
@@ -136,10 +138,10 @@ N66 Parallel (dimetric) projection; the classic turned-view RTS draws the ground
 N67 Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology, standard; Bird, Coastal Geomorphology, 2008; from memory) → QBG
 N68 Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory → QBI
 N69 Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house 25 wood, the mill and the lumber camp 100 wood, the barracks 175 wood; a tree 100 wood, a forage bush 125 food, a gold tile 800, a stone tile 350 (from memory, to open; stand-ins) → QBJ
-N70 First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6, stone 0.55, iron 0.5 (its time values, kept) → (unused)
-N71 Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) → (unused)
-N72 Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) → (unused)
-N73 Travel speeds of deer, wolf and bear at a walk or trot (natural history, standard; from memory, to open) → (unused)
+N70 First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6, stone 0.55, iron 0.5 (its time values, kept) → QBN
+N71 Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) → QBM
+N72 Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) → QBM
+N73 Travel speeds of deer, wolf and bear at a walk or trot (natural history, standard; from memory, to open) → QBM
 N74 Hart, Nilsson & Raphael (1968), IEEE Trans. SSC 4: A* → QBL
 
-62 calculations, 74 citations.
+64 calculations, 74 citations.

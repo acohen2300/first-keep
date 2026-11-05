@@ -71,6 +71,8 @@ QBH A lake's size drawn from the power law (QBA): area = a_min · U^(−1/c), U 
 QBI Roads cross rivers at fords: where a river meets one of the four roads its bed rises to wading depth · N68
 QBK The art frame: a building's picture is painted with its front edge along x and sheared by sin A2 · sin A1 so that edge follows the turned grid; its depth is (sin A2 · cos A1 + shear · sin A1) a unit of width, the back standing sin A1 to the right (QBD worked for a picture painted flat) · N66
 QBL The way: A* over the tiles, eight neighbours, a straight step 1 and a diagonal √2, the octile distance as the heuristic; a diagonal never cuts a blocked corner · N74
+QBM Walking: a shell moves its speed in metres a second (D86) times the units a metre (D85) along its way, tile middle to tile middle · N71, N72, N73
+QBN Gathering: a load fills at the find's rate a second (D88) until it holds D87 or the find is gone; then the walk to the nearest drop-off of the side, and back to the find or the nearest of its kind within D89 · N70
 QBJ Z1's store: food = (age up + villagers × a villager) × (1 + margin); wood = (mill + lumber camp + homes × a home + barracks) × (1 + margin); bushes = ⌈food / a bush⌉, trees = ⌈wood / a tree⌉ (Albert's rule; the prices are the genre's until the Content pull) · N69
 
 ## N Citations
