@@ -43,7 +43,7 @@
   ],
   [
    "Nov 5 11:16 (3)",
-   "speed: 3.4 mph is the base; research improves it and its steps stack (made clear 11:36: whether the percents add or compound is Albert's next call); weather, ground and load change it, each mapped to its law"
+   "speed: 3.4 mph is the base; research improves it; weather, ground and load change it, each mapped to its law"
   ],
   [
    "Nov 5 11:16 (4)",
@@ -72,6 +72,14 @@
   [
    "Nov 5 11:16 (10)",
    "figures drawn smaller, as Mid's"
+  ],
+  [
+   "Nov 5 11:40",
+   "research stacks and its percents add, applied once to the base: 3.0 with +10% and +8% is 3.0 × 1.18 = 3.54, not 3.0 × 1.10 × 1.08 = 3.564"
+  ],
+  [
+   "Nov 5 11:40",
+   "yes yes: builds F10 to F39, in order, each through the gate and its match test; stop only for what doesn't fit; previews after F17, F25 and F37"
   ]
  ]
 }

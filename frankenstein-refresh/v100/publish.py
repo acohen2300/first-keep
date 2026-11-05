@@ -1,4 +1,4 @@
-# The one way v100 is published: the gate, then the tests; if both pass, the build is logged in BUILDS.md, sealed for the next permit,
+# The one way the Frankenstein copy of v100 is published (its whole folder, with the sorts and the map): the gate, then the tests; if both pass, the build is logged in BUILDS.md, sealed for the next permit,
 # the permit cleared, and the whole committed as Albert's no-reply address and pushed. If either fails, nothing is committed.
 #   TRAILER="Co-Authored-By: …\nClaude-Session: …" python3 publish.py "what the build is"
 import os, sys, json, subprocess, datetime
@@ -17,7 +17,7 @@ print(run(sys.executable, 'index.py', '--seal').stdout)
 run(sys.executable, 'index.py')   # the pages again, against the new seal: GitHub checks them as they stand after it
 json.dump({'build': '', 'agreed': '', 'opens': []}, open('permit.json', 'w'), indent=1)   # the next build starts with nothing open
 msg = f"{sys.argv[1]}\n\n{os.environ.get('TRAILER', '').replace(chr(92) + 'n', chr(10))}"
-for a in (['git', 'add', '-A', '.', '../.github', '../docs/4 Now/Parked.md'], ['git', '-c', 'user.name=Albert', '-c', 'user.email=acohen2300@users.noreply.github.com', 'commit', '-q', '-m', msg],
+for a in (['git', 'add', '-A', '..', '../../docs/4 Now/Parked.md'], ['git', '-c', 'user.name=Albert', '-c', 'user.email=acohen2300@users.noreply.github.com', 'commit', '-q', '-m', msg],
           ['git', 'pull', '-q', '--rebase', 'origin', 'main'], ['git', 'push', '-q', 'origin', 'HEAD:main']):
     r = run(*a)
     if r.returncode: sys.exit(f'STOP at {" ".join(a[:2])}: {r.stderr.strip()[:300]}')
