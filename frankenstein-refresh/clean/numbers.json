@@ -946,6 +946,10 @@
   [
    "Albert, Nov 5 10:06",
    "build and train times: Mid's; health: v100's"
+  ],
+  [
+   "Albert, Nov 5 10:08",
+   "damage: left open; Albert tests it in play (damage and health are separate calls)"
   ]
  ]
 }
