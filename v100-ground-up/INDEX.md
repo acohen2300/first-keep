@@ -15,7 +15,7 @@ Written by `index.py`, never by hand.
 - **QJ** Raindrop speed → N9
 - **QK** Visibility → N10
 - **QL** Lightning → N11 · used by D112
-- **QM** Random events → N12 · used by SC9, D110, HX4
+- **QM** Random events → N12 · used by SC9, D110, D181, HX4
 - **QN** Walking cost → N13 · used by D106
 - **QO** Melt → N14, N15 · used by D108
 - **QP** Settle → N16 · used by D104
@@ -34,7 +34,7 @@ Written by `index.py`, never by hand.
 - **QAC** Crew → N31 · used by SC4, SC5, D126
 - **QAD** Spoilage → N32, N33
 - **QAE** Price → N34
-- **QAF** Battle odds → N35 · used by D155
+- **QAF** Battle odds → N35 · used by D155, D177
 - **QAG** Who to fight → N36, N37 · used by SC6
 - **QAH** Fight or not → N38
 - **QAI** Nerve → design

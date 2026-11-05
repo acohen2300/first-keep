@@ -131,3 +131,36 @@ MODIFIED (1):
 LOCKED (600 of 601): byte for byte as sealed, 342,202 bytes
 Tests: 11/11 rules hold
 Inventory: 601 items sealed · 496 book entries · 73 laws · 88 citations, 17 still to open · 25 known
+
+## v100 · 12, Build A: the audit's bugs and High items, and the starting stores · 2026-11-05 08:42
+Albert, Nov 5 08:37: "Ok let's do it. We do 10 per update" + start with resources, as the old game did
+Opened: code:econ.js, code:ai.js, code:combat.js, code:menu.js, code:index.html#the-door, code:index.html#floor-5-movables, code:index.html#touch, book:measure, book:rules, tool:test.py
+MODIFIED (25):
+- book:measure:D171 · 151 → 151 bytes
+- book:measure:D172 · added
+- book:measure:D173 · added
+- book:measure:D174 · added
+- book:measure:D175 · added
+- book:measure:D176 · added
+- book:measure:D177 · added
+- book:measure:D178 · added
+- book:measure:D179 · added
+- book:measure:D180 · added
+- book:measure:D181 · added
+- book:rules:X34 · added
+- book:rules:X35 · added
+- book:rules:X36 · added
+- book:rules:X37 · added
+- book:rules:X38 · added
+- book:rules:X39 · added
+- code:ai.js · 6,194 → 6,167 bytes
+- code:combat.js · 8,742 → 8,714 bytes
+- code:econ.js · 12,010 → 12,312 bytes
+- code:index.html#floor-5-movables · 8,084 → 8,068 bytes
+- code:index.html#the-door · 3,626 → 3,638 bytes
+- code:index.html#touch · 4,615 → 4,746 bytes
+- code:menu.js · 44,005 → 44,001 bytes
+- tool:test.py · 5,799 → 8,315 bytes
+LOCKED (592 of 617): byte for byte as sealed, 251,139 bytes
+Tests: 17/17 rules hold
+Inventory: 617 items sealed · 512 book entries · 73 laws · 88 citations, 17 still to open · 9 known

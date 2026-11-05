@@ -237,3 +237,9 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - Cut: `seal-numbers.json`, merged into `seal.json` (one seal: fingerprint, bytes, typed numbers). [2026-11-05 09:10]
 - Cut from test.py: the six tab-count tests and the every-building-once test, which the gate already proves from the books; the Build tabs are now one rendering test. 21 tests → 11 rules (with the planted-break proof run five ways). [2026-11-05 09:10]
 - Added: INVENTORY.md written by the gate at every build, with the change against the last seal; a byte budget per code item (it may shrink freely, grow only by what the permit grants). [2026-11-05 09:10]
+
+## v100 · 12, Build A: the audit's bugs and High items (Nov 5, Albert 08:37) [2026-11-05 10:05]
+- Changed: every side starts with 200 food, wood, stone and gold, no iron (D172, Albert's Nov 1 rule from the old game); a new game resets the stores and the weather. [2026-11-05 10:05]
+- Changed: the fog is drawn only when Start turns it on; the bell is a setting (ECON.setBell), the book's 900 s the default and Start's choice kept across a restart; a paid unit with no room waits in the queue; a thing leaving the map is marked gone (no search of the whole map per tree, the audit's slowest spot); one seat finder (FK.seatOf); the computer asks by tick and reads its numbers from the book (D173–D180); the wildlife placer reads its list from the book (D181). [2026-11-05 10:05]
+- Cut: combat's dead branch (an empty wave was already recalled). [2026-11-05 10:05]
+- Held for Build B and C (the audit's list): one yield list, colours only in the Colours book, ticks instead of code tables (towers, drop-offs, housing), the hidden fallbacks, the dead code, the false comments, the duplicate helpers, named fields; a building's side from its colour. [2026-11-05 10:05]

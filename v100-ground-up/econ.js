@@ -5,11 +5,11 @@ const { D, B, U, KIND, SIDES, OCC, H, N } = FK;
 // its numbers live in books/measure.js (D); nothing is typed here
 const YIELDS = ['food', 'wood', 'gold', 'stone', 'iron'];
 for (const s of SIDES) Object.assign(s, { age: 0, aging: 0, gathered: 0, spent: 0, rally: null });
-let result = null, bell = 0;
+let result = null, bell = 0, limit = D.bell; // seconds played, and when the bell rings
 const things = FK.things, units = FK.units;
 const yieldOf = (t) => (t.kind === 'bld' ? (FK.has(t, 'Field') && t.done >= 1 ? FK.SH[t.code].yield : null) : KIND[t.kind].yield);
 const rateOf = (t) => (t.kind === 'bld' ? FK.ref(FK.SH[t.code].rate) : D.rate[t.kind]);
-const alive = (t) => things().indexOf(t) >= 0 && (t.kind === 'bld' || t.amount > 0);
+const alive = (t) => !t.gone && (t.kind === 'bld' || t.amount > 0); // gone: marked when it leaves the map (below)
 const dist = (a, b) => Math.hypot(a.bx - b.bx, a.by - b.by);
 const beside = (u, t) => (t.kind === 'bld' ? Math.abs(u.k % N - (t.i + t.n / 2)) <= t.n / 2 + 1 && Math.abs(Math.floor(u.k / N) - (t.j + t.n / 2)) <= t.n / 2 + 1 : FK.nextTo(t.k)(u.k));
 const sumCost = (c) => Object.values(c || {}).reduce((a, b) => a + b, 0);
@@ -49,7 +49,7 @@ function assign(side, y, n) { const vs = villagersOf(side);
 FK.on('tick', (dt) => {
   if (result) return; bell += dt;
   for (const s of SIDES) if (s.aging) { s.aging -= dt; if (s.aging <= 0) { s.aging = 0; s.age++; if (s === SIDES[0]) FK.fire('event', 'age', null); } }
-  for (const t of things()) if (t.kind === 'bld' && t.q && t.q.length && t.done >= 1) { t.qt -= dt; if (t.qt <= 0) { const code = t.q.shift(), u = spawnBy(t, code); if (u && t.side === 0) FK.fire('event', FK.has(u, 'Gather') ? 'trained' : 'trainedSol', u); const r = SIDES[t.side].rally; if (u && FK.has(u, 'Gather') && r) { const f = bestFind(u, r, FK.dropFor(u, r)) || bestFind(u, r); if (f) gatherAt(u, f); } if (t.q.length) t.qt = D.train[t.q[0]]; } }
+  for (const t of things()) if (t.kind === 'bld' && t.q && t.q.length && t.done >= 1) { t.qt -= dt; if (t.qt <= 0) { const code = t.q[0], u = spawnBy(t, code); if (!u) continue; t.q.shift(); if (u && t.side === 0) FK.fire('event', FK.has(u, 'Gather') ? 'trained' : 'trainedSol', u); const r = SIDES[t.side].rally; if (u && FK.has(u, 'Gather') && r) { const f = bestFind(u, r, FK.dropFor(u, r)) || bestFind(u, r); if (f) gatherAt(u, f); } if (t.q.length) t.qt = D.train[t.q[0]]; } }
   for (const side of D.players) { const s = SIDES[side]; s.store.food = Math.max(0, s.store.food - units().filter((u) => u.side === side).length * D.upkeep / D.day * dt); }
   for (const t of things()) if (t.kind === 'bld') t.crew = 0;
   for (const u of units()) { if (!FK.has(u, 'Gather') || u.path) continue; const t = u.target;
@@ -62,15 +62,16 @@ FK.on('tick', (dt) => {
     else if (u.job === 'wait') { u.wait -= dt; if (u.wait <= 0) { if (u.load) carry(u); else idle(u); } }
     else if (u.job === 'idle' && u.load) carry(u);
   }
-  if (bell >= D.bell) { const sc = D.players.map((p) => [score(p).total, p]).sort((a, b) => b[0] - a[0]); result = { winner: sc[0][1], how: 'bell' }; FK.fire('event', result.winner === 0 ? 'win' : 'lose', null); }
+  if (bell >= limit) { const sc = D.players.map((p) => [score(p).total, p]).sort((a, b) => b[0] - a[0]); result = { winner: sc[0][1], how: 'bell' }; FK.fire('event', result.winner === 0 ? 'win' : 'lose', null); }
 });
+FK.on('gone', (t) => { t.gone = true; });
 FK.on('gone', (t) => { if (result || !FK.has(t, 'Seat') || !D.players.includes(t.side)) return; if (!things().some((q) => FK.has(q, 'Seat') && q.side === t.side)) { result = { winner: D.players.find((p) => p !== t.side), how: 'conquest' }; FK.fire('event', result.winner === 0 ? 'win' : 'lose', null); } });
-FK.on('start', () => { result = null; bell = 0; for (const s of SIDES) Object.assign(s, { age: 0, aging: 0, gathered: 0, spent: 0, rally: null }); });
+FK.on('start', () => { result = null; bell = 0; for (const s of SIDES) Object.assign(s, { age: 0, aging: 0, gathered: 0, spent: 0, rally: null, store: { ...D.start } }); }); // a new game: the book's stores (D172); the bell stays as Start set it
 // the score (QBR): what a side holds, cost ÷ D135, and everything it gathered ÷ D135
 function score(side) { const s = { people: 0, army: 0, tech: ageSpent(side) / D.score.tech, bld: 0, wealth: SIDES[side].gathered / D.score.wealth };
   for (const u of units()) if (u.side === side) s[FK.has(u, 'Gather') || !FK.has(u, 'Fight') ? 'people' : 'army'] += sumCost(D.cost[u.code]) / D.score.unit;
   for (const t of things()) if (t.kind === 'bld' && t.side === side && t.done >= 1) s.bld += sumCost(D.cost[t.code]) / D.score.bld;
   s.total = Math.floor(s.people + s.army + s.tech + s.bld + s.wealth); return s; }
 const ageSpent = (side) => { let n = 0; for (let a = 1; a <= SIDES[side].age; a++) n += D.age.food * a + D.age.gold * (a - 1); return n; };
-return { plan, cancel, canPlace, canPay, pay, queue, unqueue, ageUp, ageCost, assign, jobs, jobOf, popOf, popCap, villagersOf, gatherAt, buildAt, carry, idle, bestFind, yieldOf, score, time: () => bell, result: () => result, YIELDS };
+return { setBell: (s) => { limit = s; }, bell: () => limit, plan, cancel, canPlace, canPay, pay, queue, unqueue, ageUp, ageCost, assign, jobs, jobOf, popOf, popCap, villagersOf, gatherAt, buildAt, carry, idle, bestFind, yieldOf, score, time: () => bell, result: () => result, YIELDS };
 })();

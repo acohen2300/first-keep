@@ -1,13 +1,13 @@
 # First Keep v100 · Inventory
 
-Written by `index.py` at every build, never by hand. Version 100 · 11; the change in brackets is against the last seal.
+Written by `index.py` at every build, never by hand. Version 100 · 12; the change in brackets is against the last seal.
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,604 | 232,003 | 232,301 |
-| Books | 496 | 0 | 81,406 | 81,618 |
+| Game code | 28 | 1,605 | 232,373 | 232,671 |
+| Books | 512 | 0 | 85,162 | 85,378 |
 | Laws | 73 | 0 | 7,081 | 7,320 |
-| Tools | 4 | 249 | 23,068 | 23,126 |
+| Tools | 4 | 267 | 25,584 | 25,642 |
 
 ## The trades (code)
 
@@ -23,23 +23,23 @@ Written by `index.py` at every build, never by hand. Version 100 · 11; the chan
 | index.html#floor-3-non-movables | 41 | 6,322 | 6,347 | 89 |
 | index.html#drawn-once-in-the-view-frame | 47 | 4,860 | 4,865 | 126 |
 | index.html#the-view | 9 | 1,076 | 1,080 | 16 |
-| index.html#the-door | 40 | 3,622 | 3,626 | 70 |
+| index.html#the-door | 40 | 3,634 | 3,638 | 70 |
 | index.html#the-brushes | 10 | 1,196 | 1,200 | 28 |
 | index.html#the-building-art | 314 | 49,445 | 49,449 | 4101 |
 | index.html#the-node-art | 26 | 3,893 | 3,897 | 244 |
 | index.html#the-figures | 144 | 23,445 | 23,451 | 1620 |
 | index.html#b-the-buildings | 15 | 1,856 | 1,868 | 23 |
-| index.html#floor-5-movables | 68 | 8,064 | 8,084 | 110 |
+| index.html#floor-5-movables | 68 | 8,048 | 8,068 | 105 |
 | index.html#the-body-s-laws | 30 | 2,996 | 3,006 | 37 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,644 | 3,649 | 92 |
 | index.html#floor-6-climate | 61 | 9,926 | 9,961 | 297 |
 | index.html#floor-7-display | 28 | 3,972 | 3,977 | 77 |
 | index.html#the-woods-cache | 51 | 5,372 | 5,377 | 89 |
-| index.html#touch | 40 | 4,611 | 4,615 | 62 |
-| menu.js | 250 | 43,962 | 44,005 | 643 |
-| econ.js | 76 | 12,005 | 12,010 | 104 |
-| combat.js | 53 | 8,736 | 8,742 | 105 |
-| ai.js | 44 | 6,191 | 6,194 | 55 |
+| index.html#touch | 40 | 4,742 | 4,746 | 59 |
+| menu.js | 250 | 43,958 | 44,001 | 643 |
+| econ.js | 77 | 12,307 | 12,312 | 104 |
+| combat.js | 53 | 8,708 | 8,714 | 103 |
+| ai.js | 44 | 6,164 | 6,167 | 43 |
 | sound.js | 53 | 6,200 | 6,208 | 69 |
 
 ## The books
@@ -52,8 +52,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 11; the chan
 | colours | 9 | 1,118 |
 | ground | 4 | 819 |
 | mass | 16 | 2,515 |
-| measure | 166 | 27,046 |
-| rules | 33 | 6,193 |
+| measure | 176 | 29,691 |
+| rules | 39 | 7,478 |
 | screen | 10 | 2,928 |
 | shells | 74 | 15,941 |
 | sound | 37 | 7,884 |
@@ -104,5 +104,11 @@ Written by `index.py` at every build, never by hand. Version 100 · 11; the chan
 | X31 | t-place | page | a building picked from Build is placed as a site |
 | X32 | t-errors | page | the page runs with no errors |
 | X33 | t-proof | page | the gate stops each planted break: a second home, a bad tick, a shell named in code, swallowed code, one byte of a locked law |
+| X34 | t-start | page | a new game starts with the book's stores (D172), and a restart resets them and the weather |
+| X35 | t-fog | page | the fog is drawn only when the Start page turns it on |
+| X36 | t-wait | page | a paid unit with no room to stand waits in the queue, then appears |
+| X37 | t-bell | page | the bell rings at the length chosen at Start; the default is the book's |
+| X38 | t-gone | page | a find used up is gone at once, and never chosen again |
+| X39 | t-ai | page | the computer raises its army buildings in the book's order (D179) |
 
-601 items sealed · 496 book entries · 73 laws · 88 citations, 17 still to open · 25 known
+617 items sealed · 512 book entries · 73 laws · 88 citations, 17 still to open · 9 known

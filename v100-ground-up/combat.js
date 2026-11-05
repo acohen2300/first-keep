@@ -9,16 +9,16 @@ const hpMax = (t) => (t.kind === 'bld' ? D.bldHp[t.code] || 400 : stat(t).hp);
 const armed = (u) => u.side >= 0 && FK.has(u, 'Fight') && !FK.has(u, 'Gather');
 const enemies = (a, b) => a.side !== b.side && (a.side >= 0 ? b.side >= 0 || FK.has(b, 'Fight') : b.side >= 0);
 const edgeDist = (u, t) => { if (t.kind !== 'bld') return Math.hypot(u.bx - t.bx, u.by - t.by) / T; const [sx, sy] = FK.fromBoard(u.bx, u.by); return Math.hypot(Math.max(0, t.i * T - sx, sx - (t.i + t.n) * T), Math.max(0, t.j * T - sy, sy - (t.j + t.n) * T)) / T; }; // tiles from a unit to a thing: to a building's footprint, in the grid's frame
-const alive = (t) => t.hp > 0 && (t.kind === 'bld' ? things().indexOf(t) >= 0 : units().indexOf(t) >= 0);
+const alive = (t) => t.hp > 0 && !t.gone; // gone: pulled down (econ marks it) or dead (die marks it)
 // QBO the blow: base × counter × flank − armour, one at least; engines strike buildings with their own blow
 function damage(a, t) { const s = stat(a); let d = t.kind === 'bld' ? s.bld || s.atk : s.atk; if (t.kind !== 'bld') { const ts = stat(t); if (s.vs && ts.cls === s.vs) d *= D.counter; if ((a.bx - t.bx) * (t.face || 1) < 0) d *= D.flank; d -= ts.arm; } return Math.max(1, d); }
 function hit(a, t) { t.hp -= damage(a, t); FK.impact(a, t); if (t.hp <= 0) die(t, a); } // the blow (QBO), and the body it moves (QBT)
-function die(t, by) { if (t.kind === 'bld') { FK.fire('event', 'fell', t); FK.unbuild(t); return; } const us = units(), i = us.indexOf(t); if (i >= 0) us.splice(i, 1); if (FK.sel() === t) FK.select(null); for (const u of us) if (u.target === t) u.target = null; }
+function die(t, by) { if (t.kind === 'bld') { FK.fire('event', 'fell', t); FK.unbuild(t); return; } t.gone = true; const us = units(), i = us.indexOf(t); if (i >= 0) us.splice(i, 1); if (FK.sel() === t) FK.select(null); for (const u of us) if (u.target === t) u.target = null; }
 // QAG the target: the most harm a second for its health left, discounted by distance; wildlife only when it is biting
 function choose(u, r) { const s = stat(u); let best = null; const look = (t) => { if (!enemies(u, t) || !alive(t)) return; const d = edgeDist(u, t); if (d > r) return; if (t.side < 0 && t.target !== u) return; const v = damage(u, t) / s.rof / Math.max(1, t.hp) / (1 + d / D.aggro); if (!best || v > best[1]) best = [t, v]; };
   for (const t of units()) if (t !== u) look(t); for (const t of things()) if (t.kind === 'bld' && t.side >= 0) look(t); return best && best[0]; }
 const toward = (u, t) => { const r = Math.max(1, stat(u).rng); return FK.walkTo(u, t.kind === 'bld' ? (q) => { const i = q % N, j = (q - i) / N; return i >= t.i - r && i <= t.i + t.n + r - 1 && j >= t.j - r && j <= t.j + t.n + r - 1; } : (q) => q !== t.k && nearK(q, t.k, r), t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k, D.chase); }; // to within reach of a thing, with a short search (D147)
-const home = (side) => things().find((t) => t.kind === 'bld' && t.side === side && FK.has(t, 'Seat')) || things().find((t) => t.kind === 'bld' && t.side === side);
+const home = (side) => FK.seatOf(side) || things().find((t) => t.kind === 'bld' && t.side === side); // a wave falls back to its seat, else to any building of its side
 const waves = SIDES.map(() => null); // a side's wave in the field: its soldiers at the start, so nerve can be read (QBQ)
 function fight(u, t) { u.job = 'fight'; u.target = t; u.then = null; }
 const nearK = (q, k, r) => Math.abs(q % N - k % N) <= r && Math.abs(Math.floor(q / N) - Math.floor(k / N)) <= r;
@@ -40,7 +40,7 @@ FK.on('tick', (dt) => {
     else if (u.job === 'rout' && !u.path) u.job = 'idle';
     if (u.job !== 'fight') continue; const t = u.target; if (!t || !alive(t)) { u.target = null; u.path = null; if (u.was != null && armed(u)) march(u, u.was); else u.job = 'idle'; continue; }
     if (edgeDist(u, t) <= s.rng + 0.5) { u.path = null; u.face = t.bx < u.bx ? -1 : 1; if (u.cd <= 0) { hit(u, t); u.cd = s.rof; } } else if (!u.path && u.rp <= 0) { u.rp = D.repath; if (!toward(u, t)) { u.target = null; u.job = 'idle'; u.rp = 3 * D.repath; } } }
-  for (let side = 0; side < SIDES.length; side++) { const w = waves[side]; if (!w) continue; w.t += dt; const army = armyOf(side).filter((u) => u.job !== 'rout'); if (army.length < D.breakAt * w.n0) recall(side); else if (!army.length) waves[side] = null; }
+  for (let side = 0; side < SIDES.length; side++) { const w = waves[side]; if (!w) continue; w.t += dt; const army = armyOf(side).filter((u) => u.job !== 'rout'); if (army.length < D.breakAt * w.n0) recall(side); }
 });
 // the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of the player's wave
 FK.on('draw', (ctx, s) => { if (!FK.show.U) return; const [cw, ch] = FK.size();

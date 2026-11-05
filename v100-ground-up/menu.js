@@ -80,7 +80,7 @@ const ui = document.createElement('div'); ui.id = 'ui'; ui.innerHTML = '<div id=
 const topEl = document.createElement('div'); topEl.className = 'topbar'; document.body.appendChild(topEl);
 const toastEl = document.createElement('div'); toastEl.id = 'toast'; document.body.appendChild(toastEl);
 const $ = (id) => document.getElementById(id);
-const S = { tab: 'Start', prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: 0, scen: 0, world: 0, fog: 0, tension: 1, daily: 0, civ: 0, hazard: -1 }, group: 'Home', ghost: null, arming: false, subject: null, lock: {}, last: '', toastT: 0 }; // the glass's own state, nothing of the world's
+const S = { tab: 'Start', prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, world: 0, fog: 0, tension: 1, daily: 0, civ: 0, hazard: -1 }, group: 'Home', ghost: null, arming: false, subject: null, lock: {}, last: '', toastT: 0 }; // the glass's own state, nothing of the world's
 try { Object.assign(S.lock, JSON.parse(localStorage.getItem('fk.lock') || '{}')); } catch (e) {}
 const toast = (msg) => { toastEl.textContent = msg; toastEl.style.opacity = 1; S.toastT = D.toast; };
 const mixc = (a, b, t) => '#' + [0, 2, 4].map((i) => Math.round(parseInt(a.substr(i + 1, 2), 16) * (1 - t) + parseInt(b.substr(i + 1, 2), 16) * t).toString(16).padStart(2, '0')).join('');
@@ -91,7 +91,7 @@ const costText = (c) => Object.entries(c || {}).filter(([, n]) => n > 0).map(([y
 const own = (t) => t && t.side === 0;
 const isVil = (u) => u && u.kind === 'unit' && FK.has(u, 'Gather') && own(u);
 const isSoldier = (u) => u && u.kind === 'unit' && own(u) && WAR.armed(u);
-const hall = () => things().find((t) => t.side === 0 && FK.has(t, 'Seat') && t.done >= 1);
+const hall = () => { const h = FK.seatOf(0); return h && h.done >= 1 ? h : null; };
 const trainer = (c) => things().find((t) => t.kind === 'bld' && t.side === 0 && t.done >= 1 && (D.trains[t.code] || []).includes(c));
 const count = (c) => things().filter((t) => t.kind === 'bld' && t.side === 0 && t.code === c).length, picked = (c) => S.ghost && S.ghost.code === c;
 const summary = () => `${OPTS.len[S.opt.len][0]} · Fog ${OPTS.fog[S.opt.fog][0].toLowerCase()} · Daily ${OPTS.daily[S.opt.daily][0].toLowerCase()}`;
@@ -116,7 +116,7 @@ const VERBS = {
   info: { label: () => SVG.book, whyNot: () => '', run: () => { S.info = !S.info; } },
   mute: { label: () => `<span class="t" style="opacity:${window.SOUND && SOUND.on() ? 1 : 0.35}">${SVG.sound}</span>`, whyNot: () => '', run: () => SOUND.toggle() }, // sound on or off
   later: { label: (t) => SVG[t] || `${t}<small>Later</small>`, whyNot: () => 'Not built yet', run: () => {} }, // a cell for what is drawn but not yet built: Albert's reminder
-  start: { label: () => `Start<small>${summary()}</small>`, whyNot: () => '', run: () => { const o = (k) => OPTS[k][S.opt[k]][1]; D.bell = o('len') || Infinity; show.fog = o('fog'); S.tab = null; if (!o('daily')) FK.restart(); else if (location.hash.length > 1) location.hash = ''; else FK.reset(); } }, // the new game: the bell (D134), fog, the day's map or a fresh one
+  start: { label: () => `Start<small>${summary()}</small>`, whyNot: () => '', run: () => { const o = (k) => OPTS[k][S.opt[k]][1]; ECON.setBell(o('len') || Infinity); show.fog = o('fog'); S.tab = null; if (!o('daily')) FK.restart(); else if (location.hash.length > 1) location.hash = ''; else FK.reset(); } }, // the new game: the bell (D134), fog, the day's map or a fresh one
   job: { label: (y, n) => (n > 0 ? '+' : '−'), whyNot: (y, n) => (n > 0 && !ECON.villagersOf(0).length ? 'No villagers' : n < 0 && !ECON.jobs(0)[y] ? `No one on ${y}` : ''), run: (y, n) => { if (!ECON.assign(0, y, n)) toast(n > 0 ? `No ${y} within reach` : `No one on ${y}`); } },
   people: { label: () => `<span class="t">${SVG.people}</span>People`, whyNot: () => { const h = hall(); return !h ? 'No hall' : VERBS.train.whyNot(born(), h); }, run: () => ECON.queue(hall(), born()) },
   yield: { label: (y) => `<span class="t">${SVG[y]}${ECON.jobs(0)[y]}</span>${NAME[y]}`, whyNot: () => '', run: (y) => { SIDES[0].rally = SIDES[0].rally === y ? null : y; } }, // tap a yield: new villagers go there (the ring)
@@ -244,7 +244,7 @@ FK.on('tick', (dt) => { acc += dt / (show.fast ? D.fast : 1); if (S.toastT > 0) 
 // one height for every page but the Tall ones: each is laid out once, the tallest sets the panel, the others fill it (Albert: menus never move)
 let PANEL = 0; function sizePanel() { const el = $('panel'), keep = S.tab; PANEL = 0; let h = 0; const keepH = S.htab; for (const t of Object.keys(SCREENS)) if (!tall(t)) for (const g of t === 'Build' ? Object.keys(GROUPS) : [S.group]) { const kg = S.group; S.tab = t; S.group = g; render(true); h = Math.max(h, el.offsetHeight); S.group = kg; } S.htab = keepH; PANEL = h; S.tab = keep; render(true); } // the tallest of the pages that are not Tall sets the one height
 addEventListener('resize', sizePanel); let sized = false; // sized once the modules and fonts are in (the first start)
-FK.on('start', () => { if (!sized) { sized = true; (document.fonts ? document.fonts.ready : Promise.resolve()).then(sizePanel); } S.subject = null; S.ghost = null; S.arming = false; S.target = null; S.last = ''; const h = things().find((t) => t.side === 0 && FK.has(t, 'Seat')); if (h) { const [cw] = FK.size(); FK.cam.x = h.vx; FK.cam.y = h.vy; FK.cam.z = (cw * D.openShare) / (h.n * D.tile); FK.keepOn(); } render(true); }); // the game opens on the player's hall
+FK.on('start', () => { if (!sized) { sized = true; (document.fonts ? document.fonts.ready : Promise.resolve()).then(sizePanel); } S.subject = null; S.ghost = null; S.arming = false; S.target = null; S.last = ''; const h = FK.seatOf(0); if (h) { const [cw] = FK.size(); FK.cam.x = h.vx; FK.cam.y = h.vy; FK.cam.z = (cw * D.openShare) / (h.n * D.tile); FK.keepOn(); } render(true); }); // the game opens on the player's hall
 $('ver').textContent = 'v' + D.version; document.title = 'First Keep v' + D.version; // the version, said once (D171)
 return { read, act, VERBS, S, render, SCR };
 })();

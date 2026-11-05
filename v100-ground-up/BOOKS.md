@@ -346,7 +346,17 @@ Written by `index.py` from `books/*.js`, never by hand.
 | D168 | gravity, m/s² | 9.81 | Standard gravity (standard) |
 | D169 | the ground a find keeps clear round it, in units | {gold: 9, stone: 9, iron: 9, ruins: 14, cemetery: 12, campfire: 6, treasure: 4} | Design: v100 floors, Nov 4 (Albert to confirm) |
 | D170 | a wall piece: one tile | 1 | Design: v100 floors, Nov 4 (Albert to confirm) |
-| D171 | the build: First Keep v100, the build number | 100 · 11 | Design: the build log (README) |
+| D171 | the build: First Keep v100, the build number | 100 · 12 | Design: the build log (README) |
+| D172 | the stores every side starts with | {food: 200, wood: 200, stone: 200, gold: 200, iron: 0} | Design: Albert, Nov 1 14:18 (the old game's START_RES: 200 of food, wood, stone  |
+| D173 | tiles a site is searched for, ring by ring | 30 | Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, |
+| D174 | a villager moves to the neediest yield when its share is this far under | 0.15 | Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, |
+| D175 | villagers on a yield before it gets its own camp | 3 | Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, |
+| D176 | the share of wanted villagers before it ages up | 0.8 | Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, |
+| D177 | a tower counts as this much strength in the wave's odds | 100 | Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, |
+| D178 | the ring a home, a camp and a field keep from the hall | {home: 5, camp: 2, field: 4} | Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, |
+| D179 | the army buildings it raises, in order: when (villagers, age) and how far out | [{code: BM1, vils: 8, age: 0, ring: 5}, {code: BM2, vils: 0, age: 2, ring: 5}, {code: BM3, vils: 0, age: 3, ring: 6}] | Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, |
+| D180 | the soldiers it trains, the first by default; the best counter first | [UM1, UM2, UM3] | Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, |
+| D181 | the wildlife laid on the map: which walker, how many groups (a D key) and how big (a D key) | [{code: MW3, groups: herds, size: herd}, {code: MW4, groups: packs, size: pack}] | Design: v100 floor 5, Nov 4 (deer herds D90–D91, wolf packs D92–D93) |
 
 ## rules
 
@@ -385,6 +395,12 @@ Written by `index.py` from `books/*.js`, never by hand.
 | X31 | a building picked from Build is placed as a site | {stage: page} | Design: Albert, Nov 5 (the gate) |
 | X32 | the page runs with no errors | {stage: page} | Design: Albert, Nov 5 (the gate) |
 | X33 | the gate stops each planted break: a second home, a bad tick, a shell named in code, swallowed code, one byte of a locked law | {stage: page} | Design: Albert, Nov 5 (the gate) |
+| X34 | a new game starts with the book's stores (D172), and a restart resets them and the weather | {stage: page} | Design: the audit of Nov 5, Build A: a test for each fix |
+| X35 | the fog is drawn only when the Start page turns it on | {stage: page} | Design: the audit of Nov 5, Build A: a test for each fix |
+| X36 | a paid unit with no room to stand waits in the queue, then appears | {stage: page} | Design: the audit of Nov 5, Build A: a test for each fix |
+| X37 | the bell rings at the length chosen at Start; the default is the book's | {stage: page} | Design: the audit of Nov 5, Build A: a test for each fix |
+| X38 | a find used up is gone at once, and never chosen again | {stage: page} | Design: the audit of Nov 5, Build A: a test for each fix |
+| X39 | the computer raises its army buildings in the book's order (D179) | {stage: page} | Design: the audit of Nov 5, Build A: a test for each fix |
 
 ## screen
 

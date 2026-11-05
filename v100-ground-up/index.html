@@ -290,7 +290,7 @@ function draw() {
   drawThings(); fire('draw', ctx, cam.z);
   if (show.Z) drawZones();
   if (show.R) drawEdge();
-  if (show.V) drawFog();
+  if (show.V && show.fog) drawFog();
   if (show.K) drawSky(frameDt); fire('over', ctx, cam.z);
 }
 function path(points) { ctx.beginPath(); points.forEach((p, n) => (n ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); }
@@ -825,7 +825,7 @@ function makeBuildings() { // The Town Center: Who every corner · What one · W
 }
 
 // ── Floor 5, movables (layer 120): U units and M moveables are shells that walk. Each stands at a board point, walks tile to tile along a path (QBL), and does one thing at a time.
-const SIDES = [{ col: C.blue }, { col: C.green }, { col: C.red }, { col: C.white }].map((q) => ({ ...q, store: { food: 0, wood: 0, gold: 0, stone: 0, iron: 0 } })); // one a corner (C5–C8); the player is 0
+const SIDES = [{ col: C.blue }, { col: C.green }, { col: C.red }, { col: C.white }].map((q) => ({ ...q, store: { ...D.start } })); // one a corner (C5–C8); the player is 0
 const U = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 120) U[c] = [e.name, e.look, e.pace.split('.')[1]]; } // the units and moveables (layer 120), from their shells: name, look, pace (a D86 key)
 let units = [], sel = null;
 const WORK = { tree: 0, bush: 1, gold: 2, stone: 2, iron: 2 }; // the tool a villager works a find with (WORKTOOL): axe, hands, pick
@@ -886,9 +886,9 @@ function makeUnits(roll) {
   // The villagers: Who every side · What D67 villagers · Where round its Town Center · When the game starts · Why hands to gather and build · How the free tiles nearest the hall
   for (const t of things) if (has(t, 'Seat') && D.players.includes(t.side)) { const got = []; stamp(t.bx, t.by, (t.n / 2 + 3) * D.tile, (k, d) => { if (walkable(k)) got.push([d, k]); }); got.sort((a, b) => a[0] - b[0]); for (const [, k] of got.slice(0, D.villagers)) spawn(D.trains[t.code][0], t.side, k, roll); }
   // The wildlife: Who the map · What herds of deer and packs of wolves · Where Z4, on walkable ground · When the map is made · Why food to hunt, teeth to fear · How counts D90–D93, places uniform until one walks
-  for (const [code, herds, herd] of [['MW3', D.herds, D.herd], ['MW4', D.packs, D.pack]]) for (let m = count(roll, herds); m > 0; m--) {
+  for (const w of D.wildlife) for (let m = count(roll, D[w.groups]); m > 0; m--) { // which walkers, how many groups and how big: the book's (D181)
     for (let tries = 0; tries < 100; tries++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (!inZ4(bx, by, 2 * D.tile) || !walkable(k)) continue;
-      const got = []; stamp(bx, by, 3 * D.tile, (q, d) => { if (walkable(q)) got.push([d, q]); }); got.sort((a, b) => a[0] - b[0]); for (const [, q] of got.slice(0, count(roll, herd))) spawn(code, -1, q, roll); break; } }
+      const got = []; stamp(bx, by, 3 * D.tile, (q, d) => { if (walkable(q)) got.push([d, q]); }); got.sort((a, b) => a[0] - b[0]); for (const [, q] of got.slice(0, count(roll, D[w.size]))) spawn(w.code, -1, q, roll); break; } }
 }
 const gait = (code) => W[SH[code].mount || SH[code].body]; // what carries a walker: its mount, else its own body (W)
 const bodyOf = (code) => W[SH[code].body];
@@ -1112,9 +1112,9 @@ function tap(px, py) { // the tile under a tap, at the land's height, and the pl
 canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0015)); keepOn(); dirty(); }, { passive: false });
 // The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a seed in the address overrides it.
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
-function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); fogT = 0; K.t = 0; K.snow = 0; K.fds = 0; K.wet = 0; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
+function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); fogT = 0; K.t = K.snow = K.fds = K.wet = K.rain = K.snowing = K.fog = K.fogT = K.storm = K.flash = jolt.t = 0; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
-window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, has, ticked, fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1,
+window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1,
   things: () => things, units: () => units, sel: () => sel, select: (u) => (sel = u), seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // the door: what the modules may touch
 window.fk = FK; // the test hook
 </script>
