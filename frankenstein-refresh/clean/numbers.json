@@ -135,11 +135,11 @@
     ],
     "outpostcart": [
      "bring",
-     "Outpost wagon"
+     "the war camp's wagon, two sizes (Albert 11:16): the outpost is the small war camp; the large holds an army like a wall, a safe zone"
     ],
     "campcart": [
-     "in v100",
-     "Camp wagon → Camp wagon"
+     "bring",
+     "the war camp's wagon, two sizes (Albert 11:16): the outpost is the small war camp; the large holds an army like a wall, a safe zone"
     ],
     "caravan": [
      "in v100",
@@ -320,12 +320,12 @@
    "food per person by kind (foot, mounted, cart) and hunger: v100 has one rate (D131); Albert's call · by the 10:31 rule: Mid's"
   ],
   "TAX": [
-   "bring",
-   "with vassals"
+   "parked",
+   "the vassal's tax rate: Albert 11:16, tax parked for later (tribute instead)"
   ],
   "VASSAL": [
    "bring",
-   "vassals: tax, loyalty, unrest, rebellion"
+   "vassals: loyalty, unrest, rebellion, tribute (Albert 11:16); the tax rate is parked"
   ],
   "VENTURE": [
    "bring",
@@ -926,8 +926,8 @@
    "D172 start (the same: 200 each, no iron)"
   ],
   "HANDICAP": [
-   "bring",
-   "Easy's head start"
+   "cut",
+   "the computers' free mill and farm: Albert 11:16, killed (they win enough)"
   ],
   "SCENARIOS": [
    "bring",
@@ -941,27 +941,5 @@
    "in v100",
    "a job for each store: v100's Gather tick and its yield"
   ]
- },
- "decisions": [
-  [
-   "Albert, Nov 5 10:26",
-   "soldiers: Shell: Unit. Its attributes (Age, Class, Level (evolution), Behavior, Attitude, Sprite, Motion, Speed, Health and the rest) = the output. Every kind of Mid's (spearman, swordsman, archer, javelineer...) is the Unit shell with its own settings; evolution is the Level and the next one it learns into"
-  ],
-  [
-   "Albert, Nov 5 10:06-10:28",
-   "build and train times: Mid's. Every building's health: v100's (Age of Empires II's; walls that hold)"
-  ],
-  [
-   "Albert, Nov 5 10:08-10:28",
-   "damage: still open (Albert tests it in play); units' health is open with it until he says otherwise"
-  ],
-  [
-   "Albert, Nov 5 10:30",
-   "ages: Mid's names (Stone, Bronze, Classical, Medieval, Gunpowder, and the hidden Enlightenment); their times Mid's by the 10:06 call; their prices still open"
-  ],
-  [
-   "Albert, Nov 5 10:31",
-   "the rule for every number: Mid's gameplay comes over as it is (its values), unless it meets a call Albert already made for v100 (the camera's 15° and 41°, walking at 3.4 mph, every building's health v100's, damage open). Only those meetings come to him"
-  ]
- ]
+ }
 }

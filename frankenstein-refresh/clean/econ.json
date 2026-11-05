@@ -911,7 +911,7 @@
   ],
   "vassalTick": [
    "bring",
-   "vassals (demand, tribute, levy; kept for after the core): tax, loyalty, unrest"
+   "vassals: demand, tribute, levy, loyalty, unrest (Albert 11:16: tribute; the tax rate parked)"
   ]
  },
  "misfits": [

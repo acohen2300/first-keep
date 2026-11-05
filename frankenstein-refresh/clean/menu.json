@@ -95,7 +95,7 @@
   ],
   "slt": [
    "bring",
-   "(Albert to call: see misfits) the slider with its switch, used for a gift's amount on Relations; see misfits"
+   "(Albert 11:16: bring, clean) the slider with its switch, used for a gift's amount on Relations; see misfits"
   ],
   "FOLD": [
    "bring",
@@ -263,7 +263,7 @@
     ],
     "throne": [
      "bring",
-     "(Albert to call: see misfits) the Throne's page; see misfits"
+     "(Albert 11:16: bring, clean) the Throne's page; see misfits"
     ],
     "tpost": [
      "bring",
@@ -357,7 +357,7 @@
   ],
   "vassalHTML": [
    "bring",
-   "a vassal's page: loyalty, revolt, tax, levy, release; with vassals (Later). Tax: see misfits"
+   "a vassal's page: loyalty, revolt, tribute, levy, release; the tax rate parked (Albert 11:16)"
   ],
   "stopHTML": [
    "bring",
@@ -487,11 +487,11 @@
   ],
   "FULL": [
    "bring",
-   "(Albert to call: see misfits) which cards take the whole height; see misfits"
+   "(Albert 11:16: bring, clean) which cards take the whole height; see misfits"
   ],
   "SIZE_OF": [
    "bring",
-   "(Albert to call: see misfits) three card heights (whole, medium, short); see misfits"
+   "(Albert 11:16: bring, clean) three card heights (whole, medium, short); see misfits"
   ],
   "renderCard": [
    "cut",
@@ -567,11 +567,11 @@
   ],
   "AGE_SHORT": [
    "bring",
-   "(Albert to call: see misfits) short age names for the status strip; only for the cut strip (see misfits)"
+   "(Albert 11:16: bring, clean) short age names for the status strip; only for the cut strip (see misfits)"
   ],
   "STATUS": [
    "bring",
-   "(Albert to call: see misfits) the status strip under the top bar; see misfits"
+   "(Albert 11:16: bring, clean) the status strip under the top bar; see misfits"
   ],
   "STATUS_CUT": [
    "cut",
@@ -855,7 +855,7 @@
     ],
     "fantasy": [
      "bring",
-     "(Albert to call: see misfits) World Real or Fantasy; see misfits"
+     "(Albert 11:16: bring, clean) World Real or Fantasy; see misfits"
     ],
     "daily": [
      "in v100",
@@ -1157,7 +1157,7 @@
     ],
     "shape": [
      "bring",
-     "(Albert to call: see misfits) a squad's formation; see misfits"
+     "(Albert 11:16: bring, clean) a squad's formation; see misfits"
     ],
     "temper": [
      "bring",
@@ -1292,8 +1292,8 @@
      "offer overlordship; vassals"
     ],
     "tax": [
-     "bring",
-     "a vassal's tax, light, fair, heavy; see misfits"
+     "parked",
+     "a vassal's tax, light, fair, heavy: Albert 11:16, parked"
     ],
     "venture": [
      "bring",
@@ -1639,7 +1639,7 @@
   ],
   "YARD_LIST": [
    "bring",
-   "(Albert to call: see misfits) Mid's Yard, a holding pen for controls without a home; see misfits"
+   "(Albert 11:16: bring, clean) Mid's Yard, a holding pen for controls without a home; see misfits"
   ],
   "matchLog": [
    "bring",

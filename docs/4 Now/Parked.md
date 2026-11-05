@@ -250,3 +250,8 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 
 ## Frankenstein 6 · the eclipse (Nov 5, Albert 10:27)
 - Cut: the eclipse's sound (hush), with the eclipse itself (cut Nov 4). The wind's sound is kept, waiting for the wind.
+
+## Frankenstein Refresh: Albert's calls on Mid's misfits (Nov 5, 11:16)
+- Parked: a tax rate on vassals (light, fair, heavy), and the two tax research steps (the Sixth, Satrapy). Vassals pay tribute instead.
+- Cut: surplus selling, for every side: the computers' selling a surplus at the Market while saving for an age, and any automatic selling. The idea and its code. (A player's own Sell and Buy at the Market is not surplus selling.)
+- Cut: the computers' free mill and farm at the start (EXCEPTIONS #16), and the A/B test that would have replaced it with pressure. "They win enough."
