@@ -27,9 +27,9 @@ QS Ruts: depth ∝ passes^0.4 · N20
 QT Fire vs wetness: η = 1 − 2.59r + 5.11r² − 3.52r³ · N21
 QU Fire growth ∝ t²; heat to a neighbour ∝ (near / (gap + near))² · N22
 Work and economy
-QV Forager's rate: R = c(1 − δ) / (c/g + 2d/v + w·c/(A·v)) · N23, N24
-QW Move on: only when the new find pays enough more · N24
-QX Crowding: g ÷ (1 + others / room) · N25, N26
+QV Forager's rate: R = c(1 − δ) / (c/g + 2d/v + w·c/(A·v)), d the walked length from the find to its drop-off (A*, QBL), w the straight walk out, A what is left up to D195's life in loads; a villager takes the find of best R · N23, N24
+QW Move on: only when the new find pays enough more (D132) · N24
+QX Crowding: g ÷ (1 + others / room), room D195's hold; a find takes as many as its ring has spots a pace apart, ⌊2π·r ÷ d⌋, a tree one · N25, N26
 QY Growth: ΔN = r N (1 − N/K) · N27
 QZ Sustainable take: hold the stock at K/2, yield r K / 4 · N28
 QAA Soil: wears when worked, rests back, never below a floor · N29
@@ -38,6 +38,8 @@ QAC Crew: n builders work n^p times as fast · N31
 QAD Spoilage: Q = Q0 e^(−k t) · N32, N33
 QAE Price: P = P0 (Q / Q0)^(−1/ε) · N34
 QCA Effects: a kind's number = (base + Σ flat adds) × (1 + Σ research shares), the shares added, never multiplied, and applied once to the base; a "lowest" effect keeps the minimum; a price rounds to the whole unit. The base is the book's: walking D86 (3.4 mph), a unit's D138, a building's health D139, a price D123. When the shares move, every unit and building of the side keeps its share of health · N154, N155, N156
+QCI Standing spots: each stands on a spot of its own a pace d apart: n of them on the hex lattice round a point fill a disc R ≈ 0.525·d·√n (packing density π/(2√3)); round a building on its outline, k = ⌊2R ÷ d⌋ a side; round a find on its working ring, m spots at radius r ≥ d ÷ (2 sin(π/m)) · N165
+QCJ Separation: two closer than d part along the line between them to d, each moved by the other's share of their mass (m_b ÷ (m_a + m_b)), so their centre of mass stays, and as much again × D196's pass to each one's right, so two who meet head-on slip by (pedestrians' side preference) rather than stall; two on one point part along a direction fixed by their places in the roll; none is pushed onto ground it cannot walk · N163, N167
 Combat and behaviour
 QAF Battle odds: r² / (1 + r²) · N35
 QAG Who to fight: damage a second ÷ (time to kill + time to reach) · N36, N37
@@ -73,7 +75,7 @@ QBI Roads cross rivers at fords: where a river meets one of the four roads its b
 QBK The art frame: a building's picture is painted with its front edge along x and sheared by sin A2 · sin A1 so that edge follows the turned grid; its depth is (sin A2 · cos A1 + shear · sin A1) a unit of width, the back standing sin A1 to the right (QBD worked for a picture painted flat) · N66
 QBL The way: A* over the tiles, eight neighbours, a straight step 1 and a diagonal √2, the octile distance as the heuristic; a diagonal never cuts a blocked corner · N74
 QBM Walking: a shell moves its speed in metres a second (D86) times the units a metre (D85) along its way, tile middle to tile middle; a person walks at quick time, 120 steps of 30 in a minute, 1.52 m/s · N71, N72, N73, N79
-QBN Gathering: a load fills at the find's rate a second (D88) until it holds D87 or the find is gone; then the walk to the nearest drop-off of the side, and back to the find or the nearest of its kind within D89 · N70
+QBN Gathering: a load fills at the find's rate a second (D88) until it holds D87 or the find is gone; then the walk to the nearest drop-off of the side, and back to the find or the one of best rate (QV) within D197, the look widening while it waits at the drop-off · N70
 QBJ Z1's store: food = (age up + villagers × a villager) × (1 + margin); wood = (mill + lumber camp + homes × a home + barracks) × (1 + margin); bushes = ⌈food / a bush⌉, trees = ⌈wood / a tree⌉ (Albert's rule; the prices are the genre's until the Content pull) · N69
 QBO The blow: damage = max(1, base × counter × flank − armour); counter D140 when the striker's kind counters the struck's, flank D141 from behind; an engine strikes a building with its own blow · N69
 QBP Upkeep: every unit of a side eats D131 food a day from its store, never below nothing · design

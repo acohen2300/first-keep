@@ -94,8 +94,8 @@
    "A*'s eight ways; v100's findPath has its own"
   ],
   "wayLen": [
-   "bring",
-   "the real walking length round water and walls, for the forager's rate (QV) and arrival times; v100 uses the straight line"
+   "in v100",
+   "F14: index.html wayLen(): the A* path's length from a tile to beside a building (QBL)"
   ],
   "astar": [
    "in v100",

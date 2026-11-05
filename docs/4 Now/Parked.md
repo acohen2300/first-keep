@@ -260,3 +260,11 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - Waiting: the ledger's word for the Throne's tithe ('the Throne tithe'): it comes into the Words book (J1) with the Throne.
 - Parked, with the vassals' tax (11:16): the ledger's word for tax ('tax').
 - Cut: v100's `spent` total on each side (nothing read it; the ledger's out is the one home now).
+
+## Frankenstein F14 · gathering, standing spots and crowd spacing (Nov 5, Albert 11:40)
+- Cut: Mid's hand weights for who gives way in a crowd (heft: 9 at work or fighting, 3 walking, 1 standing) and the soft push between two forming a shape (FORMING.soft, rankOf). Body mass decides now (Albert's call: real physics replaces hand-tuned shoves); formations are not in v100 yet.
+- Cut: Mid's group pairing for a group sent to one point (far side first, takeSpots); v100 sends one unit at a time, each to the nearest free spot. Back with group orders.
+- Cut: Mid's step-out onto the lattice when a building's whole outline is taken; v100's queue waits instead (t-wait).
+- Waiting: the hold-and-drag box over trees and its card (boxCut's order is in econ.js), the Send out button on a field's card (sendOut is in econ.js), the idle reading (SN6) and the 'Every bush is full: one waits at the mill' notice: each with its screen, from a mock-up.
+- Waiting: the Guide row 'Trees stand in the way' (words TRIGGERS), with the Guide.
+- Added, not Mid's: two who meet part with half as much again to each one's right (D196 pass, QCJ; pedestrians' side preference, N167), so two walkers head-on never stall; a walker pushed off its way takes the next point within a pace (Mid's own arrival within SPACE when pushed). Albert to confirm.

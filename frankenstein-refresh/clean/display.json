@@ -438,8 +438,8 @@
    "v100's drawThings and woods cache"
   ],
   "drawNode": [
-   "bring",
-   "a tree, bush or rock drawn smaller as it is used up (nodeScale); v100 stamps nodes at a fixed size (nodeSprite)"
+   "in v100",
+   "F14: index.html drawThings: a live find's size by what is left (E305)"
   ],
   "workOf": [
    "in v100",

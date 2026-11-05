@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,695 | 218,816 | 218,946 |
-| Books | 994 | 0 | 156,293 | 156,561 |
-| Laws | 75 | 0 | 7,795 | 8,041 |
-| Tools | 4 | 610 | 77,648 | 77,737 |
+| Game code | 28 | 1,756 | 225,934 | 226,064 |
+| Books | 1021 | 0 | 164,420 | 164,710 |
+| Laws | 77 | 0 | 8,854 | 9,129 |
+| Tools | 4 | 657 | 85,181 | 85,270 |
 
 ## The trades (code)
 
@@ -29,15 +29,15 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-node-art | 26 | 3,804 | 3,808 | 244 |
 | index.html#the-figures | 144 | 23,020 | 23,024 | 1610 |
 | index.html#b-the-buildings | 15 | 1,290 | 1,294 | 20 |
-| index.html#floor-5-movables | 77 | 7,504 | 7,508 | 96 |
+| index.html#floor-5-movables | 106 | 10,939 | 10,943 | 96 |
 | index.html#the-body-s-laws | 30 | 2,348 | 2,352 | 35 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,237 | 3,241 | 92 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,271 | 3,275 | 92 |
 | index.html#floor-6-climate | 63 | 7,867 | 7,879 | 288 |
 | index.html#floor-7-display | 28 | 2,927 | 2,931 | 75 |
-| index.html#the-woods-cache | 51 | 4,829 | 4,833 | 89 |
-| index.html#touch | 40 | 4,382 | 4,386 | 59 |
+| index.html#the-woods-cache | 51 | 4,832 | 4,836 | 79 |
+| index.html#touch | 40 | 4,477 | 4,481 | 59 |
 | menu.js | 259 | 41,765 | 41,803 | 639 |
-| econ.js | 106 | 14,862 | 14,862 | 100 |
+| econ.js | 138 | 18,413 | 18,413 | 94 |
 | combat.js | 62 | 9,043 | 9,043 | 101 |
 | ai.js | 44 | 5,054 | 5,054 | 39 |
 | sound.js | 56 | 5,632 | 5,632 | 66 |
@@ -47,19 +47,19 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 3 | 461 |
-| capabilities | 25 | 5,503 |
-| citations | 162 | 18,987 |
+| capabilities | 25 | 5,709 |
+| citations | 167 | 20,489 |
 | colours | 9 | 951 |
-| comments | 295 | 41,235 |
+| comments | 312 | 45,538 |
 | ground | 4 | 640 |
 | mass | 16 | 2,354 |
-| measure | 188 | 25,451 |
-| rules | 50 | 9,936 |
+| measure | 192 | 27,073 |
+| rules | 51 | 10,487 |
 | screen | 10 | 2,597 |
 | shells | 74 | 12,258 |
 | sides | 4 | 1,180 |
 | sound | 51 | 11,159 |
-| sprites | 33 | 6,627 |
+| sprites | 33 | 6,858 |
 | tech | 63 | 18,224 |
 | words | 7 | 11,284 |
 
@@ -125,5 +125,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X48 | t-odds | page | the odds of a battle are Mid's frozen unitPower, powerOf, powerFrom, matchup and lanchester for the same armies and towers (Mid's values, a tower 120, the people 250); a villager walled in from every find does not crash and ends idle or waiting |
 | X49 | t-foe | page | who is a foe is Mid's frozen isFoe, gangOf, atWar and friendly for the same sides, groups and stances: animals everyone's foe, each wild group by its own stance, a treaty binding only its signers; a soldier and a tower strike only a foe |
 | X50 | t-research | page | ages and research are Mid's frozen code for the same orders: the age queued at the seat at its price and wait, the seat training nothing while it rises, the lines in order at each step's price and time (research-speed steps applied), a step out of order, queued, before its age or its needs refused; after each step the wood rate, the load, a home's room and the camp's footing Mid's with its shares added; the Hall names a step and an age, the age button and info card the next age and its own wait, the hidden age never next, the keep's level at Gunpowder drawn, Z1 from Mid's first age |
+| X51 | t-gather | page | ten villagers sent to one bush patch each stand on a spot of their own on its ring, the spots and the bodies a pace apart, never more on a find than Mid's frozen findCap; each one's crowd share and forager's rate are Mid's frozen forage for the same load, walk, crowd and walked length; Mid's frozen makeNow on the same five minutes of work gathers the same food within 2% (the walk is v100's: paths, and the push by mass) |
 
-1101 items sealed · 994 book entries · 75 laws · 162 citations, 19 still to open · 7 known
+1130 items sealed · 1021 book entries · 77 laws · 167 citations, 23 still to open · 7 known

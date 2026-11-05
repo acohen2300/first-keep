@@ -55,6 +55,7 @@ async def page():
         await odds(b)
         await foe(b)
         await research(b)
+        await gather(b)
         await b.close()
 SAME = """(() => { FK.reset(); let beats = 0, wet = 0; for (let i = 0; i < 3000; i++) { FK.sim(0.1); beats += FK.every(FK.D.beats.slow); wet += FK.K.wetHour; }   // 300 s of play, the weather in it
   const r = (x) => Math.round(x * 1e6), state = [FK.units().map((u) => [u.code, u.side, r(u.bx), r(u.by), u.hp, r(u.cd), u.job]), FK.SIDES.map((s) => s.store), r(FK.K.wet), FK.K.fogT, ECON.score(0).total];
@@ -304,6 +305,52 @@ async def research(b):   # same orders, same prices, times, refusals, line, rate
            f"{first[0]} age" in x['start'][0] and f"{first[1]}s to rise" in x['start'][1] and 'Classical age' in x['bronze'][0],
            x['gun'][:3] == ['Last age', mid.get('gun', [0])[0], 1] and x['gun'][3] and x['gun'][4], close(x['z1'], (mid.get('z1food', 0) + MEASURE['villagers'] * MEASURE['villager']) * (1 + MEASURE['margin'])), not errs]
     ok('t-research', all(got), [got, v['out'], mid.get('out'), x, errs[:2], r.stderr[-400:]])
+# Gathering and standing spots (F14): ten villagers sent to one bush of the home patch (its bushes given ten times their food, so the patch lasts the five minutes) with a mill beside it.
+# Each stands on a spot of its own on its find's ring, the spots and the bodies a pace apart, never more on a find than Mid's frozen findCap. Each one's crowd share and its forager's rate R are
+# Mid's frozen forage for the same load, walk, crowd and walked length d; and in five minutes each gathers Mid's frozen makeNow's food within 2%: Mid's worker fills its load
+# without a break, then walks to the drop-off and back as long as the v100 villager did between those loads. The walk is v100's own (the A* paths, and the push by mass, QCJ, where Mid
+# shoved by hand weights 9, 3, 1, so one at work hardly moved); a v100 worker pushed off its work mid-load loses that time, and the 2% holds that loss small
+GATHER = """(() => { FK.reset(); const D = FK.D, h = FK.seatOf(0), vil = D.trains[h.code][0], dt = 0.1, upm = D.upm, SP = FK.SP / upm;
+  const ring = []; for (let y = h.j - 1; y <= h.j + h.n; y++) for (let x = h.i - 1; x <= h.i + h.n; x++) if (FK.walkable(y * FK.N + x)) ring.push(y * FK.N + x);
+  while (ECON.villagersOf(0).length < 10) FK.spawn(vil, 0, ring[ECON.villagersOf(0).length * 3], FK.rng);
+  const vs = ECON.villagersOf(0), bushes = FK.things().filter((t) => t.kind === 'bush'), bush = bushes.slice().sort((a, b) => Math.hypot(a.bx - h.bx, a.by - h.by) - Math.hypot(b.bx - h.bx, b.by - h.by))[0];
+  const mill = Object.keys(FK.SH).find((c) => (FK.SH[c].drop || []).join() === 'food'); let m = null;
+  for (let d = 3; d < 20 && !m; d++) for (let a = 0; a < 16 && !m; a++) { const k = FK.tileAt(bush.bx + Math.cos(a * Math.PI / 8) * d * D.tile, bush.by + Math.sin(a * Math.PI / 8) * d * D.tile), i = k % FK.N, j = (k - i) / FK.N; if (k >= 0 && ECON.canPlace(mill, i - 1, j - 1)) m = FK.build(mill, i - 1, j - 1, FK.SIDES[0].col); }
+  for (const t of bushes) t.amount *= 10; const amt = new Map(bushes.map((t) => [t, t.amount]));
+  for (const u of vs) ECON.gatherAt(u, bush);
+  const load = vs.map(() => 0), work = vs.map(() => []), came = vs.map(() => null); let first = null, food = 0;
+  for (let i = 0; i < 3000; i++) { FK.step(dt); FK.fire('tick', dt);
+    vs.forEach((u, n) => { if (u.load > load[n] + 1e-9) { work[n].push(i); food += u.load - load[n]; if (!came[n]) came[n] = [Math.hypot(u.spot.x - u.bx, u.spot.y - u.by) / upm, u.spot.c === u.target]; } else if (u.load < load[n]) work[n].push(-i); load[n] = u.load; });
+    if (!first && came.every(Boolean)) { const R = vs.map((u) => ECON.forage(u, u.target, m)), pair = (f) => Math.min(...vs.flatMap((u, a) => vs.slice(a + 1).map((v) => f(u, v)))) / upm;
+      first = { R, spots: pair((u, v) => Math.hypot(u.spot.x - v.spot.x, u.spot.y - v.spot.y)), bodies: pair((u, v) => Math.hypot(u.bx - v.bx, u.by - v.by)),
+        crowd: vs.map((u) => [u.target.wk, ECON.capOf(u.target)]), share: vs.map((u) => ECON.forage({ ...u, bx: u.target.bx, by: u.target.by }, u.target, null) / FK.stat(FK.KIND.bush.code, 0, 'rate')),
+        mid: vs.map((u) => ({ u: [u.bx / upm, u.by / upm], n: [u.target.bx / upm, u.target.by / upm], amt: u.target.amount, wk: u.target.wk, d: u.target.way.d / upm })) }; } }
+  const one = FK.things().find((t) => t.kind === 'tree');
+  return { first, came, work, SP, arrive: D.space.arrive, cap: [ECON.capOf(bush), ECON.capOf(one)], c: FK.stat(vil, 0, 'carry'), v: FK.stat(vil, 0, 'spd'), rate: FK.stat(FK.KIND.bush.code, 0, 'rate'),
+    food, taken: bushes.reduce((s, t) => s + amt.get(t) - t.amount, 0), mill: !!m, ten: vs.length }; })()"""
+MIDGATHER = r"""const vm = require('vm'), fs = require('fs'), [basics, tuning, core, civil] = process.argv.slice(1).map((f) => fs.readFileSync(f, 'utf8')), run = JSON.parse(fs.readFileSync(0, 'utf8'));
+const cut = (t, a, b) => t.slice(t.indexOf(a), t.indexOf(b, t.indexOf(a))), ctx = { RUN: run }; vm.createContext(ctx);
+vm.runInContext([`const FOOT = ${basics.match(/FOOT = ([\d.]+)/)[1]}`, tuning.match(/const RATE_OF = \{[^}]*\};/)[0], tuning.match(/const WORK_R = \{[^}]*\};/)[0], 'const SPACE = ' + tuning.match(/SPACE = ([^,;]+)/)[1],
+  `const G = { t: 0 }, UNIT = {}, carryOf = () => RUN.c, stats = () => ({ spd: RUN.v }), groundSpd = () => 1, unitKeys = () => [], gatherMul = () => 1, workMul = () => 1, makeOf = () => null, keepOf = () => null, dropFor = () => null;
+  const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y), nearest = (list) => list[0]`,
+  cut(core, 'const FORAGE', '// The turtle plan'), cut(civil, 'function makeNow', '// Where each one stands'), cut(civil, 'const findCap', '// the walking region'),
+  `const bushOf = (c) => ({ kind: 'bush', type: 'food', amt: c.amt, wk: c.wk, x: c.n[0], y: c.n[1] });
+  var OUT = { cap: [findCap({ kind: 'bush' }), findCap({ kind: 'tree' })], R: RUN.mid.map((c) => { const n = bushOf(c); return forage({ owner: 0, x: c.u[0], y: c.u[1], node: n }, n, [{ x: n.x + c.d, y: n.y }]); }),
+    share: RUN.mid.map((c) => { const n = bushOf(c); return forage({ owner: 0, x: n.x, y: n.y, node: n }, n, [n]) / RATE_OF.bush; }), rate: RATE_OF.bush, food: 0 };
+  for (const w of RUN.work) { const gaps = [], u = { owner: 0 }, n = { kind: 'bush', amt: 1e9 }; let last = 0, out = false, carry = 0;
+    for (const i of w) if (i < 0) out = true; else { if (out) gaps.push(i - last - 1); out = false; last = i; }
+    for (let i = w[0], k = 0; i < RUN.steps; i++) { const g = makeNow(u, n, RUN.dt, RUN.c - carry); carry += g; OUT.food += g; if (carry >= RUN.c - 1e-6) { carry = 0; i += gaps[Math.min(k++, gaps.length - 1)] || 0; } } }`].join(';\n'), ctx);
+console.log(JSON.stringify(vm.runInContext('OUT', ctx)));"""
+async def gather(b):   # ten villagers to one bush patch: their own spots a pace apart, Mid's findCap, crowd share and rate, and Mid's makeNow's food on the same five minutes of work
+    pg = await b.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e))); await pg.goto(URL); await pg.wait_for_timeout(800)
+    v = await pg.evaluate(GATHER); await pg.close(); f = v['first'] or {}
+    mids = [os.path.join(HERE, '../mid/src', p) for p in ('01-rules-basics.js', '06-rules-tuning.js', '12-sim-core.js', '13-sim-civil.js')]
+    r = subprocess.run(['node', '-e', MIDGATHER] + mids, input=json.dumps({'mid': f.get('mid', []), 'work': v['work'], 'c': v['c'], 'v': v['v'], 'dt': 0.1, 'steps': 3000}), capture_output=True, text=True)
+    mid = json.loads(r.stdout or 'null') or {}; same = lambda a, b: len(a) == len(b) and all(abs(x - y) <= 1e-9 * max(1, abs(y)) for x, y in zip(a, b))
+    got = [v['mill'] and v['ten'] == 10 and bool(f), all(c[1] and c[0] <= v['SP'] + 1e-9 for c in v['came']), f.get('spots', 0) >= v['SP'] - v['arrive'] - 1e-9 and f.get('bodies', 0) >= v['SP'] - v['arrive'] - 1e-9,
+           v['cap'] == mid.get('cap') and all(c[0] <= c[1] for c in f.get('crowd', [[1, 0]])), same(f.get('R', []), mid.get('R', [0])) and same(f.get('share', []), mid.get('share', [0])) and v['rate'] == mid.get('rate'),
+           v['food'] > 0 and v['taken'] >= v['food'] - 1e-6 and abs(v['food'] - mid.get('food', 0)) <= 0.02 * mid.get('food', 1), not errs]
+    ok('t-gather', all(got), [got, v['came'], {k: f.get(k) for k in ('R', 'share', 'spots', 'bodies', 'crowd')}, {k: mid.get(k) for k in ('cap', 'R', 'share', 'food')}, v['food'], errs[:2], r.stderr[-400:]])
 REC = """const vm = require('vm'), ctx = { window: {}, navigator: {}, document: {}, performance: { now: () => 0 }, Math }; vm.createContext(ctx);
 vm.runInContext(require('fs').readFileSync(process.argv[1], 'utf8') + `;var REC = []; tone = (f, dur, type, vol, f2, at) => REC.push(['tone', f, dur, type, vol, f2 || 0, at || 0, panV]);
 hiss = (dur, vol, fq, q, f2, at) => REC.push(['hiss', dur, vol, fq, q || 1, f2 || 0, at || 0]); knock = (mat, f, vol, at = 0, snap = 1) => REC.push(['knock', mat, f, vol, at, snap]);

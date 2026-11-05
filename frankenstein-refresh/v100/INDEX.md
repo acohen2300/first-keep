@@ -20,7 +20,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC03 | the mold of a walker (layer 120) | {by: shells (units, moveables), law: [], needs: [look, pace, body], may: []} | N92 |
 | SC04 | the mold of a page (the Screen book) | {by: books/screen.js, law: [], needs: [], may: [rows]} | N93 |
 | SC1 | walks the tiles at its pace | {by: index.html floor 5: step, findPath, law: [QBL, QBM, QBU], needs: [pace, body], may: [mount, kit, voice]} | N94 |
-| SC2 | works a find and fills a load; also counts it among the people | {by: econ.js, law: [QBN, QW], needs: [body], may: []} | N95 |
+| SC2 | works a find of best rate from a spot of its own on its ring, as many as the find takes (D195), and fills a load; also counts it among the people | {by: econ.js, law: [QBN, QV, QW, QX, QCI], needs: [body], may: []} | N95; N164 |
 | SC3 | takes a load to the nearest drop-off of its side | {by: econ.js, law: [QBN], needs: [body], may: []} | N95 |
 | SC4 | raises a site | {by: econ.js, law: [QAC], needs: [body], may: []} | N95 |
 | SC5 | mends a hurt building | {by: econ.js, law: [QAC], needs: [body], may: []} | N95 |
@@ -34,7 +34,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC13 | trains the units D133 gives it | {by: econ.js, law: [], needs: [D133], may: []} | N95 |
 | SC14 | houses the people D127 gives it | {by: econ.js, ai.js, law: [], needs: [D127], may: []} | N95 |
 | SC15 | where the ages are reached; the queue holds research as well as units: a step of the Research book is learned at the building its row names, after the one before it in its line and its needs | {by: menu.js, econ.js, law: [QCA], needs: [], may: []} | N95; N160 |
-| SC16 | a building that yields, at the rate its row points to | {by: econ.js, ai.js, law: [QBN], needs: [yield, rate], may: []} | N95 |
+| SC16 | a building that yields, at the rate its row points to, to one worker at a time (D195); its builder takes it up | {by: econ.js, ai.js, law: [QBN, QX], needs: [yield, rate], may: []} | N95; N164 |
 | SC17 | a find: holds an amount of a yield | {by: econ.js, law: [QBN], needs: [yield, amount], may: []} | N99 |
 | SC18 | scouts (not built yet) | {by: waiting, law: [], needs: [], may: []} | N100 |
 | SC19 | trades (not built yet) | {by: waiting, law: [], needs: [], may: []} | N100 |
@@ -206,6 +206,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N160 |  | Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning lines; 08-core.js lineOf, prevOf,  | opened |
 | N161 |  | Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written for Mid from general history; | to open |
 | N162 |  | Design: Albert, Nov 5 13:30: one build carries a whole module (or a few small ones), never split; the cap of ten lifted for the refresh; the | opened |
+| N163 |  | Reynolds, C. W. (1987), Flocks, herds and schools: a distributed behavioral model, Computer Graphics 21(4) (SIGGRAPH '87): separation, steer | to open |
+| N164 |  | Design: Mid's gathering and standing spots (12-sim-core.js recount, FORAGE, forage, forageNow; 13-sim-civil.js findCap, LATTICE, spotAt, tak | opened |
+| N165 |  | Hall, E. T. (1966), The Hidden Dimension: personal distance, 1.5 to 4 ft; and hexagonal circle packing, density π/(2√3) (Lagrange 1773; Thue | to open |
+| N166 |  | OSHA 29 CFR 1910.266(d)(6)(ii), fellers at least two tree lengths apart; 29 CFR 1910.142, beds at least 36 in apart; Mid's cites, from memor | to open |
+| N167 |  | Moussaïd, Helbing, Garnier, Johansson, Combe & Theraulaz (2009), Experimental study of the behavioural mechanisms underlying self-organizati | to open |
 
 ## colours
 
@@ -309,11 +314,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E82 |  | Floor 5, movables (layer 120): U units and M moveables are shells that walk. Each stands at a board point, walks tile to tile along a path ( |  |
 | E83 |  | one a corner (C5–C8); the player is 0 |  |
 | E84 |  | the units and moveables (layer 120), from their shells: name, look, pace (a D86 key) |  |
-| E85 |  | the tool a villager works a find with (WORKTOOL): axe, hands, pick |  |
+| E85 |  | the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book (PN1 tool), the one home econ.js reads |  |
 | E86 |  | walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step past the angle of repose is not |  |
 | E87 |  | inland water bearing ice (QQ): walked as if flat |  |
 | E88 |  | QN: mud and snow cost a walker |  |
-| E89 |  | QBL A* over the tiles, eight ways, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile will do; re |  |
+| E89 |  | QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile |  |
 | E90 |  | most: the tiles it may open before giving up |  |
 | E91 |  | no cutting a corner |  |
 | E92 |  | a unit on a tile; its stand wanders in the tile (D82) |  |
@@ -321,10 +326,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E94 |  | to a tile |  |
 | E95 |  | to a tile beside one |  |
 | E96 |  | the drop-off for a yield: the side's nearest building that takes it in (SC Drop-off, B's fifth field) |  |
-| E97 |  | to a tile along a building's edge |  |
+| E97 |  | to a tile along a building's edge (the ring of tiles round it, byB) |  |
 | E98 |  | a find used up is gone; its tile is free again |  |
 | E99 |  | one tick for every unit |  |
-| E100 |  | walking: toward the next tile's middle at the shell's speed |  |
+| E100 |  | walking: toward the next point at the shell's speed: a tile's middle, or the spot a path ends on; true when it gets there |  |
 | E101 |  | metres walked, which turn the stride (QBU); its speed now, which a blow carries (QBT) |  |
 | E102 |  | wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 |  |
 | E103 |  | M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking, buildings by D186; a new unit is filed as it com |  |
@@ -445,9 +450,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E218 |  | training, research and the age: one queue at the building, as long as the mold's six and what research adds (QCA); the head trains, is learn |  |
 | E219 |  | the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid at its price (D129, the ages of D130) and queued  |  |
 | E220 |  | the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept |  |
-| E221 |  | QW: the find of a yield that keeps the round trip shortest: nearest the drop-off among those within D89 of the villager, else nearest the vi |  |
-| E222 |  | a find no path reaches is left alone a while (D137), and the next beat chooses again among the finds near (D89): one walled in tries one fin |  |
-| E223 |  | assign: + sends the nearest idle villager (else one from the fullest other job) to the yield's best find; − sets one of the job's villagers  |  |
+| E221 |  | QV: the find of a yield whose rate of return R is best (the walk out, the walk home and the crowd counted), of those not full (D195), not le |  |
+| E222 |  | a find no path reaches, or with no spot free on its ring, is left alone a while (D137), and the next beat chooses again: one walled in tries |  |
+| E223 |  | assign: + sends an idle or waiting villager (else the one earning least, QV, on another job, never one posted to a field) to the yield's bes |  |
 | E224 |  | the tick: training and research, ages, upkeep, the villagers, the bell |  |
 | E225 |  | a new game: the book's stores (D172); the bell stays as Start set it |  |
 | E226 |  | the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what it paid for research and ages (the ledger's researc |  |
@@ -520,6 +525,23 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E293 |  | research (Mid's researchWhy and research): a step is refused when known, before its age, before its needs, already queued, with no finished  |  |
 | E294 |  | research shows on its building (Mid's UP, PB12): the steps learned of those its row names, none, some, or half or more; a building's level ( |  |
 | E295 |  | the keep at its level: the bastion from its points in the Sprites book (PB13) |  |
+| E296 |  | the walked length (QBL) from a tile to beside a building: a straight step one tile, a diagonal √2; no way, infinitely far |  |
+| E297 |  | QCI standing spots: everyone stands on a spot of its own a pace (D196) apart. A point's spots lie on the hex lattice, nearest first, rings e |  |
+| E298 |  | a find's working ring (Mid's WORK_R, D196): as many spots as fit a pace apart round it, ⌊2π·r ÷ pace⌋ (Mid's findCap), laid on a ring wide e |  |
+| E299 |  | spot i of c: round a find on its ring; round a building on its outline, the lane of tiles beside it, k a side, at least a pace apart, corner |  |
+| E300 |  | a spot is free when its tile is walked and nobody stands on it or has claimed one within a pace less near-enough (D196); the push settles th |  |
+| E301 |  | the spot u keeps at c, else the free one nearest u (round a point, the nearest the point) |  |
+| E302 |  | walk to a spot of its own at c: the path's last tile becomes the spot itself; false when none is free or none is reached |  |
+| E303 |  | a path's last point is reached within near-enough (D196), any point within a pace when the crowd has pushed it this step: a walker held off  |  |
+| E304 |  | QCJ separation, neighbours only (the M3 grid): two closer than a pace part to a pace, each moved by the other's share of their mass (the Mas |  |
+| E305 |  | a find drawn smaller as it is used: PN1's left share and the rest by what is left (Mid's nodeScale) |  |
+| E306 |  | the forager (QV, QX): a find takes D195's cap (a tree one feller, a field one worker) or as many as its ring has spots; the others on it cro |  |
+| E307 |  | QV R = c / (c/g + 2d/v + w·c/(A·v)): c the load, g the rate crowded (QX), v the walk, d the walked length to the drop-off (cached per find), |  |
+| E308 |  | a lost find (Mid's decision 1): it delivers what it carries, then looks from where the find ran out within the look (D197), widening over ta |  |
+| E309 |  | builders who finish a place of work take it up (Mid's startWork): a field if nobody works it; a camp (a drop-off that takes fewer than every |  |
+| E310 |  | a box over finds (Mid's boxCut): n villagers, idle first then the nearest, cut the finds in it, from the nearest open one outside when none  |  |
+| E311 |  | a trained unit steps out onto the free spot of its building's outline nearest the middle (Mid's stepOut); none free, the queue waits |  |
+| E312 |  | nudged off its spot, it gives way while pushed and steps back once the crowd lets go: no tug of war with a walker, no shuffle between two on |  |
 
 ## ground
 
@@ -638,7 +660,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D85 | units a metre, from the figure | 11.7 | N112 |
 | D86 | speeds in metres a second (walk: quick time, 120 steps of 30 in a minute) | {walk: 1.52, trot: 3.6, horse: 1.7, push: 0.7, deer: 1.5, wolf: 2.5, bear: 1.5} | N71; N72; N73; N79 |
 | D87 | a load | 10 | N112 |
-| D88 | gathering a second, the old game's own | {bush: 0.9, tree: 0.75, gold: 0.6, stone: 0.55, iron: 0.5} | N70 |
+| D88 | gathering a second, the old game's own (fish and meat Mid's, for when they come) | {bush: 0.9, tree: 0.75, gold: 0.6, stone: 0.55, iron: 0.5, fish: 0.8, meat: 1.2} | N70; N164 |
 | D89 | the next find within | 100 | N112 |
 | D90 | deer herds | [3, 5] | N112 |
 | D91 | a herd | [3, 5] | N112 |
@@ -682,7 +704,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D129 | each age's price and its wait in seconds, by the ages of D130 (Mid's AGES); the sixth is hidden until a year of peace opens it; the first age up sizes Z1's food (Mid's pocket) | {cost: [{}, {food: 300, wood: 100}, {food: 600, gold: 200}, {food: 1000, gold: 500, stone: 200}, {food: 1600, gold: 900, stone: 300, iron: 4 | N160 |
 | D130 | the six ages (Mid's names; Albert, Nov 5 10:30) | [Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment] | N160 |
 | D131 | a unit's food a day | 1 | N114 |
-| D132 | move on when another find is this much nearer the drop-off | 0.18 | N114 |
+| D132 | move on when another find pays this much more (Mid's 1.18) | 0.18 | N114; N164 |
 | D133 | who trains whom | {BTC1: [UV], BM1: [UM1], BM2: [UM2], BM3: [UM3, US4], BM4: [UM4]} | N114 |
 | D134 | the bell | 900 | N114 |
 | D135 | the score's divisors | {unit: 5, bld: 5, tech: 5, wealth: 10} | N75 |
@@ -743,6 +765,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D192 | a side's people count as this much strength in the odds | 250 | N157 |
 | D193 | the odds: a unit's power is its health × its blow ÷ per; who counters whom is weighed over the first look of each army, held between lo and hi | {per: 6, look: 10, lo: 0.6, hi: 1.6} | N157 |
 | D194 | a blow does at least this, and a unit's power counts at least this blow | 1 | N69; N157 |
+| D195 | the forager: a field (or a tree begun) counts as life loads; how many a find holds before they crowd (QX); the finds one works at a time: a tree one feller, a field one worker (the Open style) | {life: 20, hold: {tree: 1, bush: 2, fish: 2, stone: 3, gold: 3, iron: 3, carcass: 2, other: 2}, cap: {tree: 1, bld: 1}} | N164; N166 |
+| D196 | standing, in metres: a pace apart (3 ft), near enough a spot to stand on it (a quarter pace), the ring a find is worked from (Mid's WORK_R); the lattice's rings, pack × √(D128) and spare more, its second axis at 60° (hex, QCI); two who meet part with pass as much again to the side, each to its right, so they slip by (QCJ) | {apart: 0.9144, arrive: 0.2286, work: {fish: 1.495, other: 1.035}, pack: 0.525, spare: 2, hex: [0.5, 0.866025], pass: 0.5} | N164; N165; N166; N167 |
+| D197 | a worker whose find is gone looks from metres, widening by grow over tau seconds (Mid's REACH ÷ 2 and × 1.5), waits at its drop-off and looks again every again seconds | {from: 14.95, grow: 44.86, tau: 20, again: 2} | N164 |
+| D198 | the eight ways from a tile, the four straight first | [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]] | N74 |
 
 ## rules
 
@@ -798,6 +824,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X48 | the odds of a battle are Mid's frozen unitPower, powerOf, powerFrom, matchup and lanchester for the same armies and towers (Mid's values, a tower 120, the people 250); a villager walled in from every find does not crash and ends idle or waiting | {stage: page} | N157 |
 | X49 | who is a foe is Mid's frozen isFoe, gangOf, atWar and friendly for the same sides, groups and stances: animals everyone's foe, each wild group by its own stance, a treaty binding only its signers; a soldier and a tower strike only a foe | {stage: page} | N158 |
 | X50 | ages and research are Mid's frozen code for the same orders: the age queued at the seat at its price and wait, the seat training nothing while it rises, the lines in order at each step's price and time (research-speed steps applied), a step out of order, queued, before its age or its needs refused; after each step the wood rate, the load, a home's room and the camp's footing Mid's with its shares added; the Hall names a step and an age, the age button and info card the next age and its own wait, the hidden age never next, the keep's level at Gunpowder drawn, Z1 from Mid's first age | {stage: page} | N160 |
+| X51 | ten villagers sent to one bush patch each stand on a spot of their own on its ring, the spots and the bodies a pace apart, never more on a find than Mid's frozen findCap; each one's crowd share and forager's rate are Mid's frozen forage for the same load, walk, crowd and walked length; Mid's frozen makeNow on the same five minutes of work gathers the same food within 2% (the walk is v100's: paths, and the push by mass) | {stage: page} | N164 |
 
 ## screen
 
@@ -994,7 +1021,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | PB11 | the siege building picture | {top: 40} | N151 |
 | PB12 | research on its building (Mid's UP): 1 when a step of its own is learned sets it on a stone footing (foot tall, its side in shade); 2, half its steps or more, adds corner stones (w, h, every gap, clear of the eaves by edge) and a gilded ridge | {half: 0.5, top: 2, foot: 3, shade: -0.45, line: 0.4, stone: [3.4, 3, 6, 2], lift: 0.15, rim: 0.3, ridge: #e6c75a, ridgeW: 1.6} | N151; N160 |
 | PB13 | the keep at its level (Gunpowder): an angled stone bastion with a gun on it, from the keep's front corner | {at: [-27, -1], face: [[-9, -1], [0, 6], [9, -1], [9, -10], [0, -4], [-9, -10]], top: [[-9, -10], [0, -16], [9, -10], [0, -4]], shade: [0.08 | N151; N160 |
-| PN1 | the finds: their scale, and their dot far out | {scale: {tree: 0.88, bush: 1.45, other: 1.25}, dot: {tree: #3c6c32, bush: #3f6b33, gold: gold, stone: rock, iron: ruin, ruins: ruin, cemeter | N152 |
+| PN1 | the finds: their scale, drawn smaller as they are used (left[0] + left[1] × the share left, Mid's nodeScale), the tool each is worked with (the figure's work frames: axe, hands, pick), and their dot far out | {scale: {tree: 0.88, bush: 1.45, other: 1.25}, left: [0.6, 0.4], tool: {tree: 0, bush: 1, bld: 1, other: 2}, dot: {tree: #3c6c32, bush: #3f6 | N152; N164 |
 
 ## tech
 

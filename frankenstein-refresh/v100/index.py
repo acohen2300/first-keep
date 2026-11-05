@@ -159,7 +159,7 @@ def parses(key, name, js):
 for f in CODE: parses('parse', f, script(f))
 parses('joined', 'the whole game, joined', '\n'.join(text(p) for p in sorted(glob.glob('books/*.js'))) + '\n' + '\n'.join(script(f) for f in CODE))
 # ── 3. The seal
-report = []
+report = []; ran.add('permit')   # the permit's check runs on every change below, and on none when nothing changed
 for k in changed:
     was, now = SEALED.get(k), STAMP.get(k); what = 'added' if not was else 'removed' if not now else f'{was["bytes"]:,} → {now["bytes"]:,} bytes'
     report.append(f'- {k} · {what}' + ('' if opened(k) else '  ← NOT ON THE PERMIT')); rule('permit', opened(k), f'{k} changed without a permit ({what})')

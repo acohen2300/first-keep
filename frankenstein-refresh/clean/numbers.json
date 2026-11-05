@@ -762,12 +762,12 @@
    "a building sees 60 + 24 × √height (the horizon grows with the square root of height): real math where v100 gives every building 100 (D117); Albert's call · by the 10:31 rule: Mid's"
   ],
   "WORK_R": [
-   "bring",
-   "how near a worker stands to work"
+   "in v100",
+   "F14: D196 space.work (metres)"
   ],
   "SPACE": [
-   "bring",
-   "how far apart people stand"
+   "in v100",
+   "F14: D196 space.apart (3 ft) and space.arrive (a quarter of it)"
   ],
   "DANGER_R": [
    "bring",
@@ -866,8 +866,8 @@
    "with MKT_SELL"
   ],
   "RATE_OF": [
-   "bring",
-   "gathering a second: bush, tree, gold, stone are D88 (check the same at step 7); fish and meat to bring"
+   "in v100",
+   "F14: D88 rate, fish and meat added (Mid's)"
   ],
   "FIND_SIZE": [
    "in v100",
@@ -902,12 +902,12 @@
    "with WALL_R"
   ],
   "SEARCH": [
-   "bring",
-   "a lost worker's look grows over 20 s (Albert's B, Nov 4)"
+   "in v100",
+   "F14: D197 search (metres, seconds)"
   ],
   "searchR": [
-   "bring",
-   "with SEARCH"
+   "in v100",
+   "F14: econ.js searchR()"
   ],
   "BACK_MARGIN": [
    "bring",

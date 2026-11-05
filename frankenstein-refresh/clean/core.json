@@ -62,8 +62,8 @@
    "a building finished and standing: v100's done and gone"
   ],
   "crowd": [
-   "bring",
-   "how many work a find: the crowd at a find"
+   "in v100",
+   "F14: econ.js: each find's wk, counted every tick and at once when a worker takes it (QX)"
   ],
   "NS_rng": [
    "in v100",
@@ -518,16 +518,16 @@
    "F12a: index.html keysOf(): the same keys for a building (B is every building)"
   ],
   "freeVil": [
-   "bring",
-   "free and idle villagers: the idle reading waits for its home (SN6)"
+   "in v100",
+   "F14: econ.js jobs() counts the idle and the waiting (Mid's freeVil); assign sends one first; its reading on the screen still waits for SN6"
   ],
   "posted": [
-   "bring",
-   "a villager posted to its plot (Albert's D-089: a farm is a farm)"
+   "in v100",
+   "F14: econ.js posted(): a villager on a field keeps it (no move-on, never pulled by assign or a box)"
   ],
   "idlePost": [
-   "bring",
-   "a villager posted to its plot (Albert's D-089: a farm is a farm)"
+   "in v100",
+   "F14: econ.js idlePost(): a finished field nobody works (for the field's card)"
   ],
   "hand": [
    "cut",

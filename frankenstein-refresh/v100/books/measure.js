@@ -83,7 +83,7 @@ BOOK("measure", {
  "D85": {"key": "upm", "value": 11.7, "name": "units a metre, from the figure", "cite": ["N112"], "law": []},
  "D86": {"key": "speed", "value": {"walk": 1.52, "trot": 3.6, "horse": 1.7, "push": 0.7, "deer": 1.5, "wolf": 2.5, "bear": 1.5}, "name": "speeds in metres a second (walk: quick time, 120 steps of 30 in a minute)", "cite": ["N71", "N72", "N73", "N79"], "law": []},
  "D87": {"key": "carry", "value": 10, "name": "a load", "cite": ["N112"], "law": []},
- "D88": {"key": "rate", "value": {"bush": 0.9, "tree": 0.75, "gold": 0.6, "stone": 0.55, "iron": 0.5}, "name": "gathering a second, the old game's own", "cite": ["N70"], "law": []},
+ "D88": {"key": "rate", "value": {"bush": 0.9, "tree": 0.75, "gold": 0.6, "stone": 0.55, "iron": 0.5, "fish": 0.8, "meat": 1.2}, "name": "gathering a second, the old game's own (fish and meat Mid's, for when they come)", "cite": ["N70", "N164"], "law": ["QBN", "QV"]},
  "D89": {"key": "next", "value": 100, "name": "the next find within", "cite": ["N112"], "law": []},
  "D90": {"key": "herds", "value": [3, 5], "name": "deer herds", "cite": ["N112"], "law": []},
  "D91": {"key": "herd", "value": [3, 5], "name": "a herd", "cite": ["N112"], "law": []},
@@ -127,7 +127,7 @@ BOOK("measure", {
  "D129": {"key": "age", "value": {"cost": [{}, {"food": 300, "wood": 100}, {"food": 600, "gold": 200}, {"food": 1000, "gold": 500, "stone": 200}, {"food": 1600, "gold": 900, "stone": 300, "iron": 400}, {"food": 2000, "gold": 1400, "stone": 400, "iron": 400}], "time": [0, 40, 60, 80, 100, 120], "hidden": 5}, "name": "each age's price and its wait in seconds, by the ages of D130 (Mid's AGES); the sixth is hidden until a year of peace opens it; the first age up sizes Z1's food (Mid's pocket)", "cite": ["N160"], "law": ["QBJ"]},
  "D130": {"key": "ages", "value": ["Stone", "Bronze", "Classical", "Medieval", "Gunpowder", "Enlightenment"], "name": "the six ages (Mid's names; Albert, Nov 5 10:30)", "cite": ["N160"], "law": []},
  "D131": {"key": "upkeep", "value": 1, "name": "a unit's food a day", "cite": ["N114"], "law": ["QBP"]},
- "D132": {"key": "moveOn", "value": 0.18, "name": "move on when another find is this much nearer the drop-off", "cite": ["N114"], "law": ["QW"]},
+ "D132": {"key": "moveOn", "value": 0.18, "name": "move on when another find pays this much more (Mid's 1.18)", "cite": ["N114", "N164"], "law": ["QW"]},
  "D133": {"key": "trains", "value": {"BTC1": ["UV"], "BM1": ["UM1"], "BM2": ["UM2"], "BM3": ["UM3", "US4"], "BM4": ["UM4"]}, "name": "who trains whom", "cite": ["N114"], "law": []},
  "D134": {"key": "bell", "value": 900, "name": "the bell", "cite": ["N114"], "law": []},
  "D135": {"key": "score", "value": {"unit": 5, "bld": 5, "tech": 5, "wealth": 10}, "name": "the score's divisors", "cite": ["N75"], "law": ["QBR"]},
@@ -187,5 +187,9 @@ BOOK("measure", {
  "D191": {"key": "say", "value": {"tenth": 100, "thousand": 1000, "whole": 10000, "percent": 100}, "name": "numbers said: from a thousand shortened to tenths of a k (1.2k), from ten thousand to whole k (12k); a share said in percent", "cite": ["N132"], "law": []},
  "D192": {"key": "ai.peopleWorth", "value": 250, "name": "a side's people count as this much strength in the odds", "cite": ["N157"], "law": ["QAF"]},
  "D193": {"key": "odds", "value": {"per": 6, "look": 10, "lo": 0.6, "hi": 1.6}, "name": "the odds: a unit's power is its health × its blow ÷ per; who counters whom is weighed over the first look of each army, held between lo and hi", "cite": ["N157"], "law": ["QAF"]},
- "D194": {"key": "leastBlow", "value": 1, "name": "a blow does at least this, and a unit's power counts at least this blow", "cite": ["N69", "N157"], "law": ["QBO", "QAF"]}
+ "D194": {"key": "leastBlow", "value": 1, "name": "a blow does at least this, and a unit's power counts at least this blow", "cite": ["N69", "N157"], "law": ["QBO", "QAF"]},
+ "D195": {"key": "forage", "value": {"life": 20, "hold": {"tree": 1, "bush": 2, "fish": 2, "stone": 3, "gold": 3, "iron": 3, "carcass": 2, "other": 2}, "cap": {"tree": 1, "bld": 1}}, "name": "the forager: a field (or a tree begun) counts as life loads; how many a find holds before they crowd (QX); the finds one works at a time: a tree one feller, a field one worker (the Open style)", "cite": ["N164", "N166"], "law": ["QV", "QX"]},
+ "D196": {"key": "space", "value": {"apart": 0.9144, "arrive": 0.2286, "work": {"fish": 1.495, "other": 1.035}, "pack": 0.525, "spare": 2, "hex": [0.5, 0.866025], "pass": 0.5}, "name": "standing, in metres: a pace apart (3 ft), near enough a spot to stand on it (a quarter pace), the ring a find is worked from (Mid's WORK_R); the lattice's rings, pack × √(D128) and spare more, its second axis at 60° (hex, QCI); two who meet part with pass as much again to the side, each to its right, so they slip by (QCJ)", "cite": ["N164", "N165", "N166", "N167"], "law": ["QCI", "QCJ"]},
+ "D197": {"key": "search", "value": {"from": 14.95, "grow": 44.86, "tau": 20, "again": 2}, "name": "a worker whose find is gone looks from metres, widening by grow over tau seconds (Mid's REACH ÷ 2 and × 1.5), waits at its drop-off and looks again every again seconds", "cite": ["N164"], "law": ["QBN"]},
+ "D198": {"key": "ways", "value": [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]], "name": "the eight ways from a tile, the four straight first", "cite": ["N74"], "law": ["QBL"]}
 });

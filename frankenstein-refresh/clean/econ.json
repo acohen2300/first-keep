@@ -386,8 +386,8 @@
    "menu.js VERBS.stop"
   ],
   "sendOut": [
-   "bring",
-   "Send out: the last villager posted to a field, pasture or shop goes home"
+   "in v100",
+   "F14: econ.js sendOut(field): the last villager on it goes idle; its button waits for the field's card (menu build)"
   ],
   "sendVil": [
    "in v100",
@@ -414,8 +414,8 @@
    "placing: walls as a dragged line, many pieces at once; v100's Build places one (menu.js build)"
   ],
   "boxCut": [
-   "bring",
-   "a box over trees sends villagers to cut them, then back to work"
+   "in v100",
+   "F14: econ.js boxCut(side, box, n) and the patch: cut the box's finds, cut in from outside, then back to work; the hold-and-drag box and its card wait for the menu build"
   ],
   "centreOf": [
    "bring",
@@ -450,8 +450,8 @@
    "who counts as a threat, for the danger map and warnings"
   ],
   "recount": [
-   "bring",
-   "once a second: guarded finds, and how many work each find (crowding, QX)"
+   "in v100",
+   "F14: econ.js tick: every find's crowd (wk) recounted each tick (guarded finds wait for M-hazards)"
   ],
   "insulate": [
    "bring",
@@ -526,20 +526,20 @@
    "with the danger map"
   ],
   "FORAGE": [
-   "bring",
-   "the forager's numbers: move on at 18% better (v100 has QW D.moveOn), a field's life, room a find holds (QX)"
+   "in v100",
+   "F14: D195 forage (life, hold) and D132 moveOn (18%)"
   ],
   "forage": [
-   "bring",
-   "the forager's rate R (QV); v100's bestFind picks by distance (QW)"
+   "in v100",
+   "F14: econ.js forage(): QV with d the walked length (wayLen), w the straight walk, A up to the life; bestFind takes the best R"
   ],
   "turtlePlan": [
    "bring",
    "the next age in villager-minutes, on the Town Center card"
   ],
   "forageNow": [
-   "bring",
-   "the forager's rate where a worker is now (QV)"
+   "in v100",
+   "F14: econ.js forageNow(): R where a worker is now; assign pulls the one earning least"
   ],
   "bestNode": [
    "in v100",
@@ -574,40 +574,40 @@
    "econ.js tick, the gather branch (D88 to D87); a workshop's inputs and research's gather bonus come with them"
   ],
   "LATTICE": [
-   "bring",
-   "standing spots: every one its own spot a pace apart, round a building or a point (hex packing)"
+   "in v100",
+   "F14: index.html LAT: the hex lattice nearest first, rings by D196 pack × √D128 + spare (QCI)"
   ],
   "spotAt": [
-   "bring",
-   "standing spots"
+   "in v100",
+   "F14: index.html spotAt(): a find's ring, a building's outline, a point's lattice"
   ],
   "findCap": [
-   "bring",
-   "how many can work a find at once (a tree one feller, OSHA)"
+   "in v100",
+   "F14: econ.js capOf(): D195's cap (a tree one feller, a field one) or the ring's spots ⌊2π·r ÷ pace⌋ (index.html ring)"
   ],
   "regionAt": [
-   "bring",
-   "standing spots: the walking region of a point"
+   "in v100",
+   "F14: index.html toSpot(): a spot no path reaches is not taken (findPath); no region map needed"
   ],
   "spotFree": [
-   "bring",
-   "standing spots"
+   "in v100",
+   "F14: index.html vacant(): walked, nobody standing or claimed within a pace less near-enough"
   ],
   "takeSpots": [
-   "bring",
-   "standing spots: each unit its own, cheapest walk first"
+   "in v100",
+   "F14: index.html spotFor(): each its own, the nearest free (round a point, the nearest the point); one at a time, as v100 sends one at a time"
   ],
   "postTo": [
-   "bring",
-   "villagers sent to a point each stand on their own spot"
+   "in v100",
+   "F14: index.html tap: the picked one walks to a spot of its own at the tapped tile"
   ],
   "stepOut": [
-   "bring",
-   "out of a building onto a free spot"
+   "in v100",
+   "F14: econ.js spawnBy(): a trained unit steps out onto its building's free outline spot nearest the middle; none free, the queue waits (t-wait)"
   ],
   "waitAt": [
-   "bring",
-   "a waiter keeps its own spot at the drop-off"
+   "in v100",
+   "F14: econ.js look(): a worker with nothing in its look waits on a spot of its own at its drop-off and looks again every D197 again s"
   ],
   "vilTick": [
    "in v100",

@@ -88,11 +88,11 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E82 | index.html#floor-5-movables | Floor 5, movables (layer 120): U units and M moveables are shells that walk. Each stands at a board point, walks tile to tile along a path (QBL), and does one thing at a time. |
 | E83 | index.html#floor-5-movables | one a corner (C5–C8); the player is 0 |
 | E84 | index.html#floor-5-movables | the units and moveables (layer 120), from their shells: name, look, pace (a D86 key) |
-| E85 | index.html#floor-5-movables | the tool a villager works a find with (WORKTOOL): axe, hands, pick |
+| E85 | index.html#floor-5-movables | the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book (PN1 tool), the one home econ.js reads |
 | E86 | index.html#floor-5-movables | walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step past the angle of repose is not |
 | E87 | index.html#floor-5-movables | inland water bearing ice (QQ): walked as if flat |
 | E88 | index.html#floor-5-movables | QN: mud and snow cost a walker |
-| E89 | index.html#floor-5-movables | QBL A* over the tiles, eight ways, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile will do; returns the tiles to walk, or null |
+| E89 | index.html#floor-5-movables | QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile will do; returns the tiles to walk, or null |
 | E90 | index.html#floor-5-movables | most: the tiles it may open before giving up |
 | E91 | index.html#floor-5-movables | no cutting a corner |
 | E92 | index.html#floor-5-movables | a unit on a tile; its stand wanders in the tile (D82) |
@@ -100,10 +100,10 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E94 | index.html#floor-5-movables | to a tile |
 | E95 | index.html#floor-5-movables | to a tile beside one |
 | E96 | index.html#floor-5-movables | the drop-off for a yield: the side's nearest building that takes it in (SC Drop-off, B's fifth field) |
-| E97 | index.html#floor-5-movables | to a tile along a building's edge |
+| E97 | index.html#floor-5-movables | to a tile along a building's edge (the ring of tiles round it, byB) |
 | E98 | index.html#floor-5-movables | a find used up is gone; its tile is free again |
 | E99 | index.html#floor-5-movables | one tick for every unit |
-| E100 | index.html#floor-5-movables | walking: toward the next tile's middle at the shell's speed |
+| E100 | index.html#floor-5-movables | walking: toward the next point at the shell's speed: a tile's middle, or the spot a path ends on; true when it gets there |
 | E101 | index.html#floor-5-movables | metres walked, which turn the stride (QBU); its speed now, which a blow carries (QBT) |
 | E102 | index.html#floor-5-movables | wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 |
 | E103 | index.html#floor-5-movables | M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking, buildings by D186; a new unit is filed as it comes. A search looks only nearby |
@@ -167,7 +167,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E161 | index.html#the-woods-cache | L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tiles' own edges |
 | E162 | index.html#touch | Touch: one finger pans, two pinch; a wheel zooms about the pointer. |
 | E163 | index.html#touch | the camera rule: the board never leaves the screen's middle; a board smaller than the screen sits centred |
-| E164 | index.html#touch | the tile under a tap, at the land's height, and the player's unit nearest it; the modules answer first (menu), else a tap picks a villager or sends the picked one walking |
+| E164 | index.html#touch | the tile under a tap, at the land's height, and the player's unit nearest it; the modules answer first (menu), else a tap picks a villager or sends the picked one to a spot of its own at that tile (QCI) |
 | E165 | index.html#touch | The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a seed in the address overrides it. |
 | E166 | index.html#touch | the door: what the modules may touch |
 | E167 | index.html#touch | the test hook |
@@ -224,9 +224,9 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E218 | econ.js | training, research and the age: one queue at the building, as long as the mold's six and what research adds (QCA); the head trains, is learned or rises, in its own time after research (D124, the step's own, or the age's, D129); a price is the book's after research (QCA), an age's D129; a new unit stands on a free tile beside and takes the side's rally job; a step or an age in the queue is no person |
 | E219 | econ.js | the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid at its price (D129, the ages of D130) and queued at the seat, which trains nothing else while it rises; the side's aging is its time left |
 | E220 | econ.js | the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept |
-| E221 | econ.js | QW: the find of a yield that keeps the round trip shortest: nearest the drop-off among those within D89 of the villager, else nearest the villager |
-| E222 | econ.js | a find no path reaches is left alone a while (D137), and the next beat chooses again among the finds near (D89): one walled in tries one find a beat and ends idle, never every find on the map at once |
-| E223 | econ.js | assign: + sends the nearest idle villager (else one from the fullest other job) to the yield's best find; − sets one of the job's villagers idle |
+| E221 | econ.js | QV: the find of a yield whose rate of return R is best (the walk out, the walk home and the crowd counted), of those not full (D195), not left alone for no path (D137), in the box it was sent to cut, and within the look (D197) of the point given; the straight line under-counts the walk home, so finds are weighed by it first and walked (wayLen) best first until none can beat the best |
+| E222 | econ.js | a find no path reaches, or with no spot free on its ring, is left alone a while (D137), and the next beat chooses again: one walled in tries one find a beat and waits, never every find on the map at once |
+| E223 | econ.js | assign: + sends an idle or waiting villager (else the one earning least, QV, on another job, never one posted to a field) to the yield's best find; − sets one of the job's villagers idle |
 | E224 | econ.js | the tick: training and research, ages, upkeep, the villagers, the bell |
 | E225 | econ.js | a new game: the book's stores (D172); the bell stays as Start set it |
 | E226 | econ.js | the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what it paid for research and ages (the ledger's research, Mid's spent) ÷ D135 |
@@ -299,3 +299,20 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E293 | econ.js | research (Mid's researchWhy and research): a step is refused when known, before its age, before its needs, already queued, with no finished building of its row, the shortest queue there full, or not paid for (the reason as a word for the menu); else paid and queued at that building; learned when it leaves the queue, its effects applied once (FK.learn) |
 | E294 | index.html#the-building-art | research shows on its building (Mid's UP, PB12): the steps learned of those its row names, none, some, or half or more; a building's level (PB3, PB4, PB6): the side's age against the look's, or how many steps that raise it the side knows; the footing drawn under the walls |
 | E295 | index.html#the-building-art | the keep at its level: the bastion from its points in the Sprites book (PB13) |
+| E296 | index.html#floor-5-movables | the walked length (QBL) from a tile to beside a building: a straight step one tile, a diagonal √2; no way, infinitely far |
+| E297 | index.html#floor-5-movables | QCI standing spots: everyone stands on a spot of its own a pace (D196) apart. A point's spots lie on the hex lattice, nearest first, rings enough for D128 people and D196's spare |
+| E298 | index.html#floor-5-movables | a find's working ring (Mid's WORK_R, D196): as many spots as fit a pace apart round it, ⌊2π·r ÷ pace⌋ (Mid's findCap), laid on a ring wide enough that the chord between two is a pace, and clear of the ground the find keeps (D169) |
+| E299 | index.html#floor-5-movables | spot i of c: round a find on its ring; round a building on its outline, the lane of tiles beside it, k a side, at least a pace apart, corners too, clockwise from the top-left (Mid's spotAt, in tile coordinates); round a point on the lattice; null past the last |
+| E300 | index.html#floor-5-movables | a spot is free when its tile is walked and nobody stands on it or has claimed one within a pace less near-enough (D196); the push settles the rest |
+| E301 | index.html#floor-5-movables | the spot u keeps at c, else the free one nearest u (round a point, the nearest the point) |
+| E302 | index.html#floor-5-movables | walk to a spot of its own at c: the path's last tile becomes the spot itself; false when none is free or none is reached |
+| E303 | index.html#floor-5-movables | a path's last point is reached within near-enough (D196), any point within a pace when the crowd has pushed it this step: a walker held off its way by people takes the next point |
+| E304 | index.html#floor-5-movables | QCJ separation, neighbours only (the M3 grid): two closer than a pace part to a pace, each moved by the other's share of their mass (the Mass book, QBT's bodies), the lighter further; two on one point part along a direction fixed by their places in the roll; nobody is pushed into a tree, a wall or water |
+| E305 | index.html#the-woods-cache | a find drawn smaller as it is used: PN1's left share and the rest by what is left (Mid's nodeScale) |
+| E306 | econ.js | the forager (QV, QX): a find takes D195's cap (a tree one feller, a field one worker) or as many as its ring has spots; the others on it crowd its rate by D195's hold; span: how far a find or a building reaches, so the straight line less both spans never over-counts the walk |
+| E307 | econ.js | QV R = c / (c/g + 2d/v + w·c/(A·v)): c the load, g the rate crowded (QX), v the walk, d the walked length to the drop-off (cached per find), w the straight walk out, A what is left up to a field's life (a tree begun counts as worth finishing); low: d by the straight line, a bound. A find with no free spot pays nothing |
+| E308 | econ.js | a lost find (Mid's decision 1): it delivers what it carries, then looks from where the find ran out within the look (D197), widening over tau; nothing found, it waits on a spot at its drop-off and looks again every few seconds, with no end; a box that is done sends it back to its work |
+| E309 | econ.js | builders who finish a place of work take it up (Mid's startWork): a field if nobody works it; a camp (a drop-off that takes fewer than every yield) sends them to the best find it takes |
+| E310 | econ.js | a box over finds (Mid's boxCut): n villagers, idle first then the nearest, cut the finds in it, from the nearest open one outside when none inside is open, then go back to the work they left; Send out: the last villager on a field goes idle; posted: on a field; idlePost: a finished field nobody works |
+| E311 | econ.js | a trained unit steps out onto the free spot of its building's outline nearest the middle (Mid's stepOut); none free, the queue waits |
+| E312 | index.html#floor-5-movables | nudged off its spot, it gives way while pushed and steps back once the crowd lets go: no tug of war with a walker, no shuffle between two on their spots (a push moves each less than near-enough) |

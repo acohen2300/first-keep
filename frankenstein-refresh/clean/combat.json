@@ -74,32 +74,32 @@
    "the whole blow: v100 combat.js damage and hit (QBO, D140, D141) has base, counter, flank, armour; to bring: research factors, roofed armour, gun on hide shields, nerve from the blow, villagers turning on a beast, plunder and war credit, regard. Its three hand shoves (stakes, the charge's JUICE.shove, a unit's knock) are cut: QBT (FK.impact) does it"
   ],
   "CHS": [
-   "bring",
-   "the crowd grid's square size (personal space); part of crowd spacing, see misfits"
+   "in v100",
+   "F14: index.html collide() over the M3 unit grid (unitsNear, D185)"
   ],
   "CHNEXT": [
-   "bring",
-   "the crowd grid's linked list; part of crowd spacing, see misfits"
+   "in v100",
+   "F14: index.html collide() over the M3 unit grid (unitsNear)"
   ],
   "heft": [
-   "bring",
-   "who gives way in a crowd (9, 3, 1 by work, walk, stand); part of crowd spacing, see misfits"
+   "in v100",
+   "F14: index.html collide(): who gives way by body mass (the Mass book, massOf), not the hand weights 9, 3, 1 (Albert's call)"
   ],
   "forming": [
    "bring",
    "a soldier walking to its place in a shape, lower ranks giving way; part of drills (FORMING)"
   ],
   "pushApart": [
-   "bring",
-   "two units too close part (Reynolds separation, personal space); v100 has no crowd spacing, see misfits"
+   "in v100",
+   "F14: index.html collide(): QCJ, apart to a pace, each by the other's share of the mass, with D196's pass to the right; a blocked one's share goes to the other"
   ],
   "atRest": [
-   "bring",
-   "a nudged villager or grazer settles where it was nudged (no shuffle); part of crowd spacing"
+   "in v100",
+   "F14: index.html step: nudged, it gives way while pushed and steps back to its spot once free; one without a spot stays where nudged"
   ],
   "collide": [
-   "bring",
-   "the crowd pass each step over the grid; part of crowd spacing, see misfits"
+   "in v100",
+   "F14: index.html step: collide() after every step"
   ],
   "plunder": [
    "bring",
@@ -134,12 +134,12 @@
    "the table of each kind's tick; v100 runs each capability's tick through FK.on('tick') and asks by tick (SC)"
   ],
   "slotsOf": [
-   "bring",
-   "one worker to a field, a quarry, a workshop (the Open style's one worker); v100 econ.js does not hold a field to one"
+   "in v100",
+   "F14: D195 cap.bld: a field takes one worker (econ.js capOf)"
   ],
   "startWork": [
-   "bring",
-   "builders who finish a place of work take it up: a field, a dock sets them fishing, a camp sends them to its job"
+   "in v100",
+   "F14: econ.js startWork(): a field's builder works it; a camp's builder goes to the best find it takes"
   ],
   "qsPool": [
    "bring",

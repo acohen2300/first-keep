@@ -14,8 +14,8 @@
    "a tree blocking 3 × 3 squares, deep at 6 neighbours; v100: one tree a tile of woods, deep at eight (deepen)"
   ],
   "nodeScale": [
-   "bring",
-   "a tree, bush or rock drawn smaller as it is used up"
+   "in v100",
+   "F14: PN1 left: a find drawn left[0] + left[1] × the share left"
   ],
   "findRoom": [
    "cut",

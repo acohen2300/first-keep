@@ -1304,3 +1304,64 @@ MODIFIED (28):
 LOCKED (1074 of 1101): byte for byte as sealed, 252,618 bytes
 Tests: 24/24 rules hold
 Inventory: 1101 items sealed · 994 book entries · 75 laws · 162 citations, 19 still to open · 7 known
+
+## F14 · gathering, standing spots and crowd spacing · 2026-11-05 15:00
+Albert, Nov 5 11:40: yes yes F10–F39; 13:30: one module a build
+Opened: code:index.html, code:econ.js, code:combat.js, code:menu.js, book:measure, book:shells, book:mass, book:words, book:sprites, book:capabilities, book:comments, book:rules, book:citations, law:QV, law:QW, law:QX, law:QBN, law:QCI, law:QCJ, tool:test.py, tool:index.py
+MODIFIED (53):
+- book:capabilities:SC16 · 204 → 281 bytes
+- book:capabilities:SC2 · 210 → 339 bytes
+- book:citations:N163 · added
+- book:citations:N164 · added
+- book:citations:N165 · added
+- book:citations:N166 · added
+- book:citations:N167 · added
+- book:comments:E100 · 71 → 133 bytes
+- book:comments:E164 · 182 → 214 bytes
+- book:comments:E221 · 158 → 397 bytes
+- book:comments:E222 · 211 → 215 bytes
+- book:comments:E223 · 158 → 200 bytes
+- book:comments:E296 · added
+- book:comments:E297 · added
+- book:comments:E298 · added
+- book:comments:E299 · added
+- book:comments:E300 · added
+- book:comments:E301 · added
+- book:comments:E302 · added
+- book:comments:E303 · added
+- book:comments:E304 · added
+- book:comments:E305 · added
+- book:comments:E306 · added
+- book:comments:E307 · added
+- book:comments:E308 · added
+- book:comments:E309 · added
+- book:comments:E310 · added
+- book:comments:E311 · added
+- book:comments:E312 · added
+- book:comments:E85 · 78 → 140 bytes
+- book:comments:E89 · 186 → 198 bytes
+- book:comments:E97 · 45 → 79 bytes
+- book:measure:D132 · 135 → 143 bytes
+- book:measure:D195 · added
+- book:measure:D196 · added
+- book:measure:D197 · added
+- book:measure:D198 · added
+- book:measure:D88 · 172 → 259 bytes
+- book:rules:X51 · added
+- book:sprites:PN1 · 343 → 587 bytes
+- code:econ.js · 14,862 → 18,413 bytes
+- code:index.html#floor-5-movables · 7,508 → 10,943 bytes
+- code:index.html#the-things-drawn-each-frame-back-to-fr · 3,241 → 3,275 bytes
+- code:index.html#the-woods-cache · 4,833 → 4,836 bytes
+- code:index.html#touch · 4,386 → 4,481 bytes
+- law:QBN · 218 → 271 bytes
+- law:QCI · added
+- law:QCJ · added
+- law:QV · 75 → 241 bytes
+- law:QW · 58 → 65 bytes
+- law:QX · 49 → 155 bytes
+- tool:index.py · 25,362 → 25,465 bytes
+- tool:test.py · 49,013 → 56,443 bytes
+LOCKED (1077 of 1130): byte for byte as sealed, 349,527 bytes
+Tests: 25/25 rules hold
+Inventory: 1130 items sealed · 1021 book entries · 77 laws · 167 citations, 23 still to open · 7 known

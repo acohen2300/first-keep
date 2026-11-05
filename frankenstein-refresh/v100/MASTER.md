@@ -144,11 +144,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E82** Floor 5, movables (layer 120): U units and M moveables are shells that walk. Each stands a · QBL (N74)
 - **E83** one a corner (C5–C8); the player is 0 · C5 (N103) · C8 (N103)
 - **E84** the units and moveables (layer 120), from their shells: name, look, pace (a D86 key) · D86 (N71, N72, N73, N79)
-- **E85** the tool a villager works a find with (WORKTOOL): axe, hands, pick
+- **E85** the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book  · PN1 (N152, N164)
 - **E86** walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step pa
 - **E87** inland water bearing ice (QQ): walked as if flat · QQ (N17)
 - **E88** QN: mud and snow cost a walker · QN (N13)
-- **E89** QBL A* over the tiles, eight ways, straight 1 and diagonal √2, the heuristic the octile di · QBL (N74) · N74
+- **E89** QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic t · QBL (N74) · D198 (N74) · N74
 - **E90** most: the tiles it may open before giving up
 - **E91** no cutting a corner
 - **E92** a unit on a tile; its stand wanders in the tile (D82) · D82 (N112)
@@ -156,12 +156,22 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E94** to a tile
 - **E95** to a tile beside one
 - **E96** the drop-off for a yield: the side's nearest building that takes it in (SC Drop-off, B's f
-- **E97** to a tile along a building's edge
+- **E97** to a tile along a building's edge (the ring of tiles round it, byB)
+- **E296** the walked length (QBL) from a tile to beside a building: a straight step one tile, a diag · QBL (N74)
+- **E297** QCI standing spots: everyone stands on a spot of its own a pace (D196) apart. A point's sp · QCI (N165) · D196 (N164, N165, N166, N167) · D128 (N69)
+- **E298** a find's working ring (Mid's WORK_R, D196): as many spots as fit a pace apart round it, ⌊2 · D196 (N164, N165, N166, N167) · D169 (N112)
+- **E299** spot i of c: round a find on its ring; round a building on its outline, the lane of tiles 
+- **E300** a spot is free when its tile is walked and nobody stands on it or has claimed one within a · D196 (N164, N165, N166, N167)
+- **E301** the spot u keeps at c, else the free one nearest u (round a point, the nearest the point)
+- **E302** walk to a spot of its own at c: the path's last tile becomes the spot itself; false when n
 - **E98** a find used up is gone; its tile is free again
-- **E99** one tick for every unit
-- **E100** walking: toward the next tile's middle at the shell's speed
+- **E100** walking: toward the next point at the shell's speed: a tile's middle, or the spot a path e
 - **E101** metres walked, which turn the stride (QBU); its speed now, which a blow carries (QBT) · QBU (N79) · QBT (N81, N82, N83, N18)
+- **E99** one tick for every unit
+- **E303** a path's last point is reached within near-enough (D196), any point within a pace when the · D196 (N164, N165, N166, N167)
+- **E312** nudged off its spot, it gives way while pushed and steps back once the crowd lets go: no t
 - **E102** wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 · QM (N12) · D94 (N112) · D95 (N112)
+- **E304** QCJ separation, neighbours only (the M3 grid): two closer than a pace part to a pace, each · QCJ (N163, N167) · QBT (N81, N82, N83, N18)
 - **E103** M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking · D185 (N123) · D186 (N124)
 - **E104** every unit within r of from (a square), never itself
 - **E105** the buildings within r of (x, y) by their squares, a little beyond on the edges; refiled w
@@ -235,13 +245,14 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E158** the chunk's deep trees on one canvas
 - **E159** a hit moves to the back: the oldest goes first
 - **E160** a wounded one sways about its feet (QBS) · QBS (N77, N78, N80)
+- **E305** a find drawn smaller as it is used: PN1's left share and the rest by what is left (Mid's n · PN1 (N152, N164)
 - **E161** L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tile · D7 (N112)
 
 ## index.html#touch
 
 - **E162** Touch: one finger pans, two pinch; a wheel zooms about the pointer.
 - **E163** the camera rule: the board never leaves the screen's middle; a board smaller than the scre
-- **E164** the tile under a tap, at the land's height, and the player's unit nearest it; the modules 
+- **E164** the tile under a tap, at the land's height, and the player's unit nearest it; the modules  · QCI (N165)
 - **E165** The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a see · QBF (N65)
 - **E166** the door: what the modules may touch
 - **E167** the test hook
@@ -306,7 +317,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E290** the Research book (O) by code and by key
 - **E267** a side's economy, fresh: its age, the steps it knows, its gathered total, the rally, and t
 - **E214** seconds played, and when the bell rings
-- **E291** a find's or a field's rate after the side's research (QCA): the one window, D88 or the row · QCA (N154, N155, N156) · D88 (N70)
+- **E291** a find's or a field's rate after the side's research (QCA): the one window, D88 or the row · QCA (N154, N155, N156) · D88 (N70, N164)
 - **E215** gone: marked when it leaves the map (below)
 - **E216** paying: a side pays all of a cost or none of it (SB Cost)
 - **E268** earn and spend: every store in or out goes through these two, the one home for the stores, · J1 (N132)
@@ -315,13 +326,19 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E271** each minute (D188) the minute's in and out become the last minute's · D188 (N132)
 - **E217** a site: a building paid for and placed at done 0; villagers raise it. canPlace mirrors bui
 - **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156) · D124 (N69) · D129 (N160)
+- **E311** a trained unit steps out onto the free spot of its building's outline nearest the middle (
 - **E219** the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid · D129 (N160) · D130 (N160)
 - **E292** Mid's research lines: a line is the steps of one line at one building, in the book's order
 - **E293** research (Mid's researchWhy and research): a step is refused when known, before its age, b
 - **E220** the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept
-- **E221** QW: the find of a yield that keeps the round trip shortest: nearest the drop-off among tho · QW (N24) · D89 (N112)
-- **E222** a find no path reaches is left alone a while (D137), and the next beat chooses again among · D137 (N114) · D89 (N112)
-- **E223** assign: + sends the nearest idle villager (else one from the fullest other job) to the yie
+- **E306** the forager (QV, QX): a find takes D195's cap (a tree one feller, a field one worker) or a · QV (N23, N24) · QX (N25, N26) · D195 (N164, N166)
+- **E307** QV R = c / (c/g + 2d/v + w·c/(A·v)): c the load, g the rate crowded (QX), v the walk, d th · QV (N23, N24) · QX (N25, N26)
+- **E221** QV: the find of a yield whose rate of return R is best (the walk out, the walk home and th · QV (N23, N24) · D195 (N164, N166) · D137 (N114) · D197 (N164)
+- **E222** a find no path reaches, or with no spot free on its ring, is left alone a while (D137), an · D137 (N114)
+- **E308** a lost find (Mid's decision 1): it delivers what it carries, then looks from where the fin · D197 (N164)
+- **E309** builders who finish a place of work take it up (Mid's startWork): a field if nobody works 
+- **E310** a box over finds (Mid's boxCut): n villagers, idle first then the nearest, cut the finds i
+- **E223** assign: + sends an idle or waiting villager (else the one earning least, QV, on another jo · QV (N23, N24)
 - **E224** the tick: training and research, ages, upkeep, the villagers, the bell
 - **E225** a new game: the book's stores (D172); the bell stays as Start set it · D172 (N119)
 - **E226** the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what i · QBR (N75) · D135 (N75)
