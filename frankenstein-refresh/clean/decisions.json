@@ -96,6 +96,10 @@
   [
    "Nov 5 15:12",
    "the tests: one shared loader for Mid's frozen code, a build runs only the tests its permit touches, the full set at publish; done as a tools build after F15"
+  ],
+  [
+   "Nov 5 16:07",
+   "the Palisade comes only with the war camp, as in Mid (free there); it leaves the Walls tab"
   ]
  ]
 }

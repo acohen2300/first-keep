@@ -1439,3 +1439,12 @@ MODIFIED (66):
 LOCKED (1113 of 1179): byte for byte as sealed, 321,651 bytes
 Tests: 26/26 rules hold
 Inventory: 1179 items sealed · 1069 book entries · 78 laws · 169 citations, 23 still to open · 7 known
+
+## T1 · the tests slimmed · 2026-11-05 16:28
+Albert, Nov 5 15:12: one shared loader for Mid's code; a build runs only the tests it touches; the full set at publish
+Opened: tool:test.py
+MODIFIED (1):
+- tool:test.py · 76,118 → 72,332 bytes
+LOCKED (1178 of 1179): byte for byte as sealed, 459,648 bytes
+Tests: 26/26 rules hold
+Inventory: 1179 items sealed · 1069 book entries · 78 laws · 169 citations, 23 still to open · 7 known

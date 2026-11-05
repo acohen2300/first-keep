@@ -7,7 +7,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Game code | 28 | 1,848 | 243,157 | 243,289 |
 | Books | 1069 | 0 | 177,821 | 178,119 |
 | Laws | 78 | 0 | 9,132 | 9,413 |
-| Tools | 4 | 769 | 104,802 | 104,945 |
+| Tools | 4 | 752 | 101,016 | 101,159 |
 
 ## The trades (code)
 
