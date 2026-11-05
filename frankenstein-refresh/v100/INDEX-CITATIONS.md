@@ -239,6 +239,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N155** Design: Albert, Nov 5 11:16 (3) and (4): walking's base is 3.4 mph and research improves it; building-health r → QCA
 - **N156** Design: Mid's effects (08-core.js fxList, fxFits, fxv, keepHealth, rehealth, stats, maxHpB; 11-orders.js scale → QCA
 - **N157** Design: Mid's battle odds (08-core.js unitPower, powerOf, lanchester; 17-ai.js powerFrom, estPower, matchup; 3 → D177, D192, D193, D194, X48
+- **N158** Design: Mid's one hostility test (08-core.js atWar, gangOf, gangRel, isFoe, friendly; decision 8, C1, answer 1 → X49, I1, I2, I3, I4
+- **N159** (to open) Vienna Convention on the Law of Treaties (1969), art. 34: a treaty creates neither obligations nor rights for  → I1
 
 ## Named exceptions
 

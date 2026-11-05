@@ -366,20 +366,20 @@
    "F10: index.html, the door: every([secs, phase]) fires in the step whose seconds played (K.t) cross the beat, phase ÷ D98; no caller yet (market, health, Natives)"
   ],
   "atWar": [
-   "bring",
-   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+   "in v100",
+   "F12c: combat.js WAR.atWar, on the stance (books/sides.js I2 start, a treaty's own)"
   ],
   "gangOf": [
-   "bring",
-   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+   "in v100",
+   "F12c: combat.js groupOf, by kind from the Sides book (I3 groups, I4 animals); the horde's 'out' comes with the hordes"
   ],
   "gangRel": [
-   "bring",
-   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+   "in v100",
+   "F12c: combat.js WAR.stance(side, group): every group's stance with each side in one table, the Natives' included"
   ],
   "calm4b": [
-   "bring",
-   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+   "in v100",
+   "F12c: combat.js isFoe, a wild group starts nothing with a computer (the struck memory, struckBy, comes with the camps)"
   ],
   "campOf": [
    "bring",
@@ -394,12 +394,12 @@
    "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
   ],
   "isFoe": [
-   "bring",
-   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+   "in v100",
+   "F12c: combat.js WAR.isFoe; choose (through enemies), the towers and ai.js's enemy read it"
   ],
   "friendly": [
-   "bring",
-   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+   "in v100",
+   "F12c: combat.js WAR.friendly"
   ],
   "season": [
    "in v100",

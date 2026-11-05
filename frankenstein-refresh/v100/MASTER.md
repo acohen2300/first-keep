@@ -324,6 +324,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
 - **E227** First Keep v100 · combat.js (floor 10): health, one blow (QBO), target choice (QAG), nerve · QBO (N69) · QAG (N36, N37) · QBQ (N76) · QAL (N41)
+- **E285** the Sides book (I) and the stances made in play, each pair's own; a new game forgets them
+- **E286** who belongs (the kind decides): a side's own are no group; an animal (I4) is a beast; a ki · I4 (N158) · I3 (N158)
+- **E287** a stance is the pair's own, or the book's start (I2); a treaty sets it both ways between i · I2 (N158) · N159
+- **E288** the one hostility test (Mid's isFoe): never one's own; an animal is everyone's foe; one of
+- **E289** the wild looking at a side: an animal fights everyone; a group fights a side at war with i
 - **E228** tiles from a unit to a thing: to a building's footprint, in the grid's frame
 - **E229** gone: pulled down (econ marks it) or dead (die marks it)
 - **E230** QBO the blow: base × counter × flank − armour, one at least; engines strike buildings with · QBO (N69)
@@ -351,7 +356,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E245** a spot: the nearest free footprint to a point, searched in rings, kept off the home's own 
 - **E246** jobs by need: the yield whose share is most under its wanted share takes an idle villager,
 - **E247** people, homes, drop-offs, plots, the age
-- **E248** the army: the best counter to what the enemy fields most, until the age's count stands
+- **E248** the army: the best counter to what the enemy (the first side in play it is at war with) fi
 - **E249** the wave: it sets out at the odds (QAF, combat.js) of D155 or better against the other sid · QAF (N35) · D155 (N114)
 
 ## sound.js

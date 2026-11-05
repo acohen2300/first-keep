@@ -247,7 +247,7 @@ BOOK("comments", {
  "E245": {"text": "a spot: the nearest free footprint to a point, searched in rings, kept off the home's own ring so the roads stay open"},
  "E246": {"text": "jobs by need: the yield whose share is most under its wanted share takes an idle villager, or one from the yield most over"},
  "E247": {"text": "people, homes, drop-offs, plots, the age"},
- "E248": {"text": "the army: the best counter to what the enemy fields most, until the age's count stands"},
+ "E248": {"text": "the army: the best counter to what the enemy (the first side in play it is at war with) fields most, until the age's count stands"},
  "E249": {"text": "the wave: it sets out at the odds (QAF, combat.js) of D155 or better against the other side; a stalled wave goes home"},
  "E250": {"text": "First Keep v100 · sound.js (beside the stack): one player for every recipe in books/sound.js (H). Lives alone; hears the world only through FK's 'event' hook."},
  "E251": {"text": "The ear is the camera, at a height (QAX); a struck thing rings by its material (QAY); snow lowers the air's top and rain masks the quiet (QBX). No sound is typed here."},
@@ -283,5 +283,10 @@ BOOK("comments", {
  "E281": {"text": "learning a step puts its effects in force for that side; every unit and building of the side keeps its share of health as the most it can have moves"},
  "E282": {"text": "who counters whom: the counter's edge (D140) when the striker's class is the one it counters, else even; the one home the blow (QBO) and the odds (QAF) both read"},
  "E283": {"text": "QAF the odds an army gives itself against a side, the one home the computers read: the counters summed both ways over the first of each army, their ratio held in D193 (Mid's matchup) bending my power"},
- "E284": {"text": "against theirs: its soldiers, its towers (not its seat) at D177 each, its people at D192 (Mid's powerFrom); the square law as odds, p² ÷ (p² + q²), which is r² ÷ (1 + r²) with r = p ÷ q"}
+ "E284": {"text": "against theirs: its soldiers, its towers (not its seat) at D177 each, its people at D192 (Mid's powerFrom); the square law as odds, p² ÷ (p² + q²), which is r² ÷ (1 + r²) with r = p ÷ q"},
+ "E285": {"text": "the Sides book (I) and the stances made in play, each pair's own; a new game forgets them"},
+ "E286": {"text": "who belongs (the kind decides): a side's own are no group; an animal (I4) is a beast; a kind of the wild in a group's list (I3) is that group's; the rest of the wild is the Natives' (Mid's gangOf)"},
+ "E287": {"text": "a stance is the pair's own, or the book's start (I2); a treaty sets it both ways between its signers only, never for a third (pacta tertiis, N159)"},
+ "E288": {"text": "the one hostility test (Mid's isFoe): never one's own; an animal is everyone's foe; one of a wild group is a foe when the side is at war with that group; between sides, war"},
+ "E289": {"text": "the wild looking at a side: an animal fights everyone; a group fights a side at war with it, but starts nothing with a computer (decision 4b: a camp fights a computer only once struck on its ground, which comes with the camps)"}
 });

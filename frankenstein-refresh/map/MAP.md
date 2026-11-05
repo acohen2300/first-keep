@@ -251,7 +251,7 @@ Typed numbers: numbers and colours typed into code (they belong in a book). Asks
 | numbers.js | Numbers | 5 | 2,581 | 103,299 | 104,141 | 20 in v100, 105 bring, 13 cut, 1 parked |
 | tech.js | Ages and tech | 1 | 3,375 | 73,123 | 73,159 | 0 in v100, 4 bring, 2 cut, 0 parked |
 | words.js | Words | 1 | 1,215 | 103,803 | 104,005 | 4 in v100, 12 bring, 1 cut, 0 parked |
-| core.js | Core | 2 | 957 | 47,164 | 47,714 | 80 in v100, 85 bring, 12 cut, 0 parked |
+| core.js | Core | 2 | 957 | 47,164 | 47,714 | 86 in v100, 79 bring, 12 cut, 0 parked |
 | paths.js | Walking grid | 1 | 846 | 34,215 | 34,437 | 18 in v100, 18 bring, 9 cut, 0 parked |
 | world.js | World | 7 | 1,095 | 52,496 | 53,361 | 5 in v100, 14 bring, 37 cut, 0 parked |
 | econ.js | Orders and economy | 4 | 3,878 | 151,377 | 152,607 | 39 in v100, 179 bring, 10 cut, 0 parked |

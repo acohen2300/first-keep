@@ -1154,3 +1154,28 @@ MODIFIED (16):
 LOCKED (998 of 1014): byte for byte as sealed, 344,824 bytes
 Tests: 22/22 rules hold
 Inventory: 1014 items sealed · 907 book entries · 75 laws · 157 citations, 17 still to open · 7 known
+
+## F12c · who is a foe · 2026-11-05 13:22
+Albert, Nov 5 11:40: yes yes F10–F39
+Opened: code:index.html, code:combat.js, code:econ.js, code:ai.js, book:sides, book:comments, book:rules, book:citations, tool:test.py
+MODIFIED (17):
+- book:citations:N158 · added
+- book:citations:N159 · added
+- book:comments:E248 · 98 → 141 bytes
+- book:comments:E285 · added
+- book:comments:E286 · added
+- book:comments:E287 · added
+- book:comments:E288 · added
+- book:comments:E289 · added
+- book:rules:X49 · added
+- book:sides:I1 · added
+- book:sides:I2 · added
+- book:sides:I3 · added
+- book:sides:I4 · added
+- code:ai.js · 5,046 → 5,054 bytes
+- code:combat.js · 8,211 → 9,043 bytes
+- code:index.html#page · 1,697 → 1,736 bytes
+- tool:test.py · 33,443 → 37,849 bytes
+LOCKED (1009 of 1026): byte for byte as sealed, 358,123 bytes
+Tests: 23/23 rules hold
+Inventory: 1026 items sealed · 919 book entries · 75 laws · 159 citations, 18 still to open · 7 known

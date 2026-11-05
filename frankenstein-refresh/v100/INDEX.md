@@ -201,6 +201,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N155 |  | Design: Albert, Nov 5 11:16 (3) and (4): walking's base is 3.4 mph and research improves it; building-health research is a share on top of v | opened |
 | N156 |  | Design: Mid's effects (08-core.js fxList, fxFits, fxv, keepHealth, rehealth, stats, maxHpB; 11-orders.js scaled, unitCost, techCost), brough | opened |
 | N157 |  | Design: Mid's battle odds (08-core.js unitPower, powerOf, lanchester; 17-ai.js powerFrom, estPower, matchup; 36-economy.js oddsOf) with its  | opened |
+| N158 |  | Design: Mid's one hostility test (08-core.js atWar, gangOf, gangRel, isFoe, friendly; decision 8, C1, answer 1b; 10-world.js every side at w | opened |
+| N159 |  | Vienna Convention on the Law of Treaties (1969), art. 34: a treaty creates neither obligations nor rights for a third state without its cons | to open |
 
 ## colours
 
@@ -467,7 +469,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E245 |  | a spot: the nearest free footprint to a point, searched in rings, kept off the home's own ring so the roads stay open |  |
 | E246 |  | jobs by need: the yield whose share is most under its wanted share takes an idle villager, or one from the yield most over |  |
 | E247 |  | people, homes, drop-offs, plots, the age |  |
-| E248 |  | the army: the best counter to what the enemy fields most, until the age's count stands |  |
+| E248 |  | the army: the best counter to what the enemy (the first side in play it is at war with) fields most, until the age's count stands |  |
 | E249 |  | the wave: it sets out at the odds (QAF, combat.js) of D155 or better against the other side; a stalled wave goes home |  |
 | E250 |  | First Keep v100 · sound.js (beside the stack): one player for every recipe in books/sound.js (H). Lives alone; hears the world only through  |  |
 | E251 |  | The ear is the camera, at a height (QAX); a struck thing rings by its material (QAY); snow lowers the air's top and rain masks the quiet (QB |  |
@@ -504,6 +506,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E282 |  | who counters whom: the counter's edge (D140) when the striker's class is the one it counters, else even; the one home the blow (QBO) and the |  |
 | E283 |  | QAF the odds an army gives itself against a side, the one home the computers read: the counters summed both ways over the first of each army |  |
 | E284 |  | against theirs: its soldiers, its towers (not its seat) at D177 each, its people at D192 (Mid's powerFrom); the square law as odds, p² ÷ (p² |  |
+| E285 |  | the Sides book (I) and the stances made in play, each pair's own; a new game forgets them |  |
+| E286 |  | who belongs (the kind decides): a side's own are no group; an animal (I4) is a beast; a kind of the wild in a group's list (I3) is that grou |  |
+| E287 |  | a stance is the pair's own, or the book's start (I2); a treaty sets it both ways between its signers only, never for a third (pacta tertiis, |  |
+| E288 |  | the one hostility test (Mid's isFoe): never one's own; an animal is everyone's foe; one of a wild group is a foe when the side is at war wit |  |
+| E289 |  | the wild looking at a side: an animal fights everyone; a group fights a side at war with it, but starts nothing with a computer (decision 4b |  |
 
 ## ground
 
@@ -781,6 +788,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X46 | every store in or out goes through earn and spend: an earning, a Home built and scrapped at 10%, a villager queued and taken back, an age, the people eating, a spend and the minute's turn leave the stores, the minute's flow, its velocity and the ledger and its lines as Mid's frozen code leaves them; fmt, plural, some, orList, slowPct and coord read as Mid's; 300 s of four sides' play balance the ledger to the unit | {stage: page} | N132 |
 | X47 | a kind's numbers after research are Mid's stats(), maxHpB, unitCost, techCost and rehealth with its shares added, not multiplied (QCA); a Home's health is D139 × (1 + Σ shares); the lowest is kept; a find's rate and the walk read the law | {stage: page} | N154 |
 | X48 | the odds of a battle are Mid's frozen unitPower, powerOf, powerFrom, matchup and lanchester for the same armies and towers (Mid's values, a tower 120, the people 250); a villager walled in from every find does not crash and ends idle or waiting | {stage: page} | N157 |
+| X49 | who is a foe is Mid's frozen isFoe, gangOf, atWar and friendly for the same sides, groups and stances: animals everyone's foe, each wild group by its own stance, a treaty binding only its signers; a soldier and a tower strike only a foe | {stage: page} | N158 |
 
 ## screen
 
@@ -875,6 +883,15 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | MW3 | Deer | [Walk, Wander, Prey, Health] | N144 |
 | MW4 | Wolf | [Walk, Wander, Fight, Health] | N144 |
 | MW6 | Bear | [Walk, Wander, Fight, Health] | N144 |
+
+## sides
+
+| Code | Name | Value | Cited |
+|---|---|---|---|
+| I1 | the stances two sides, or a side and a group, may hold; a treaty binds only its signers (vassal comes later) | [war, peace, ally] | N158; N159 |
+| I2 | every side starts at this stance with every other side and with each of the wild's groups (Mid's start) | war | N158 |
+| I3 | the wild's four groups (the Natives, the outlaws, the bandits, the robbers) and their kinds, each holding its own stance with each side; a kind of the wild in none is the Natives'; the horde is the outlaws' (comes with the hordes) | {nat: [], out: [], ban: [MH1], rob: [MH3]} | N158 |
+| I4 | the animals: everyone's foe, always, bound by no stance | [MW3, MW4, MW6] | N158 |
 
 ## sound
 

@@ -19,6 +19,8 @@ Albert's yes yes (Nov 5, 11:40) covers builds F10 to F39, in the order of `clean
 - **Citations and comments by code**: a book entry cites only N codes (a new source or a new call of Albert's is a new entry in `books/citations.js`). A comment in code is only its code, `// E12` (a floor's header keeps its title: `// ── Floor 5, movables (E40)`); the why is written once in `books/comments.js`. The gate stops words in a comment, a code that isn't in its book, and an entry no code uses. So `book:comments` (and `book:citations` when a source is added) go on the permit.
 - **The pages** (`INDEX.md`, `BOOKS.md`, `INVENTORY.md`) are written by `index.py`, never by hand.
 
+- **A new book** is loaded by the page: its `<script src="books/….js">` goes among the books in index.html's head (`code:index.html#page`), so a build that adds a book opens that item too.
+
 ## Style
 v100's own: compact lines, a short comment that says why in plain words, one rule per capability, layers and floors in build order. Lean: no fixes on fixes, no second way to do what v100 does. Mid's code is the reference for what happens, never for how it is written.
 

@@ -4,16 +4,16 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,662 | 213,793 | 213,923 |
-| Books | 907 | 0 | 122,136 | 122,403 |
+| Game code | 28 | 1,669 | 214,672 | 214,802 |
+| Books | 919 | 0 | 124,814 | 125,081 |
 | Laws | 75 | 0 | 7,795 | 8,041 |
-| Tools | 4 | 509 | 62,164 | 62,251 |
+| Tools | 4 | 542 | 66,570 | 66,657 |
 
 ## The trades (code)
 
 | Item | Lines | Characters | Bytes | Typed numbers |
 |---|---|---|---|---|
-| index.html#page | 29 | 1,697 | 1,697 | 11 |
+| index.html#page | 30 | 1,736 | 1,736 | 11 |
 | index.html#frames | 13 | 1,035 | 1,035 | 3 |
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,071 | 1,075 | 25 |
@@ -38,8 +38,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#touch | 40 | 4,369 | 4,373 | 59 |
 | menu.js | 259 | 41,707 | 41,745 | 641 |
 | econ.js | 91 | 12,654 | 12,654 | 102 |
-| combat.js | 56 | 8,211 | 8,211 | 101 |
-| ai.js | 44 | 5,046 | 5,046 | 39 |
+| combat.js | 62 | 9,043 | 9,043 | 101 |
+| ai.js | 44 | 5,054 | 5,054 | 39 |
 | sound.js | 56 | 5,632 | 5,632 | 66 |
 
 ## The books
@@ -48,15 +48,16 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 3 | 461 |
 | capabilities | 25 | 5,321 |
-| citations | 157 | 17,473 |
+| citations | 159 | 18,028 |
 | colours | 9 | 951 |
-| comments | 284 | 38,213 |
+| comments | 289 | 39,200 |
 | ground | 4 | 640 |
 | mass | 16 | 2,354 |
 | measure | 189 | 25,135 |
-| rules | 48 | 8,874 |
+| rules | 49 | 9,205 |
 | screen | 10 | 2,597 |
 | shells | 74 | 12,258 |
+| sides | 4 | 1,180 |
 | sound | 51 | 11,159 |
 | sprites | 31 | 5,485 |
 | tech | 0 | 509 |
@@ -122,5 +123,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X46 | t-ledger | page | every store in or out goes through earn and spend: an earning, a Home built and scrapped at 10%, a villager queued and taken back, an age, the people eating, a spend and the minute's turn leave the stores, the minute's flow, its velocity and the ledger and its lines as Mid's frozen code leaves them; fmt, plural, some, orList, slowPct and coord read as Mid's; 300 s of four sides' play balance the ledger to the unit |
 | X47 | t-effects | page | a kind's numbers after research are Mid's stats(), maxHpB, unitCost, techCost and rehealth with its shares added, not multiplied (QCA); a Home's health is D139 × (1 + Σ shares); the lowest is kept; a find's rate and the walk read the law |
 | X48 | t-odds | page | the odds of a battle are Mid's frozen unitPower, powerOf, powerFrom, matchup and lanchester for the same armies and towers (Mid's values, a tower 120, the people 250); a villager walled in from every find does not crash and ends idle or waiting |
+| X49 | t-foe | page | who is a foe is Mid's frozen isFoe, gangOf, atWar and friendly for the same sides, groups and stances: animals everyone's foe, each wild group by its own stance, a treaty binding only its signers; a soldier and a tower strike only a foe |
 
-1014 items sealed · 907 book entries · 75 laws · 157 citations, 17 still to open · 7 known
+1026 items sealed · 919 book entries · 75 laws · 159 citations, 18 still to open · 7 known
