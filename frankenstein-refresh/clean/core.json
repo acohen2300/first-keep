@@ -610,16 +610,16 @@
    "the computers' odds: Hawk-Dove and Lanchester's square law (v100's D155 is a plain ratio)"
   ],
   "unitPower": [
-   "bring",
-   "the computers' odds: Hawk-Dove and Lanchester's square law (v100's D155 is a plain ratio)"
+   "in v100",
+   "F12b: combat.js WAR.power (a list of one), health × blow after research (FK.stat) ÷ D193 per, the blow at least D194; Mid's bonly 0.3 waits for a building-only unit (v100 has none)"
   ],
   "powerOf": [
-   "bring",
-   "the computers' odds: Hawk-Dove and Lanchester's square law (v100's D155 is a plain ratio)"
+   "in v100",
+   "F12b: combat.js WAR.power, over the army the caller gives (armyOf)"
   ],
   "lanchester": [
-   "bring",
-   "the computers' odds: Hawk-Dove and Lanchester's square law (v100's D155 is a plain ratio)"
+   "in v100",
+   "F12b: combat.js WAR.odds, p² ÷ (p² + q²) (QAF)"
   ],
   "UG": [
    "in v100",

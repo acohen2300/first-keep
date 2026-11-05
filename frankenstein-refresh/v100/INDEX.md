@@ -200,6 +200,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N154 |  | Design: Albert, Nov 5 11:40: research stacks and its percents add, applied once to the base (3.0 with +10% and +8% is 3.0 × 1.18 = 3.54, not | opened |
 | N155 |  | Design: Albert, Nov 5 11:16 (3) and (4): walking's base is 3.4 mph and research improves it; building-health research is a share on top of v | opened |
 | N156 |  | Design: Mid's effects (08-core.js fxList, fxFits, fxv, keepHealth, rehealth, stats, maxHpB; 11-orders.js scaled, unitCost, techCost), brough | opened |
+| N157 |  | Design: Mid's battle odds (08-core.js unitPower, powerOf, lanchester; 17-ai.js powerFrom, estPower, matchup; 36-economy.js oddsOf) with its  | opened |
 
 ## colours
 
@@ -440,7 +441,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E219 |  | the age: paid, then a wait at the Town Center (D129) |  |
 | E220 |  | the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept |  |
 | E221 |  | QW: the find of a yield that keeps the round trip shortest: nearest the drop-off among those within D89 of the villager, else nearest the vi |  |
-| E222 |  | a find no path reaches is left alone a while (D137) |  |
+| E222 |  | a find no path reaches is left alone a while (D137), and the next beat chooses again among the finds near (D89): one walled in tries one fin |  |
 | E223 |  | assign: + sends the nearest idle villager (else one from the fullest other job) to the yield's best find; − sets one of the job's villagers  |  |
 | E224 |  | the tick: training, ages, upkeep, the villagers, the bell |  |
 | E225 |  | a new game: the book's stores (D172); the bell stays as Start set it |  |
@@ -456,7 +457,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E235 |  | a wave falls back to its seat, else to any building of its side |  |
 | E236 |  | a side's wave in the field: its soldiers at the start, so nerve can be read (QBQ) |  |
 | E237 |  | to a tile, or near one that cannot be stood on (a building's) |  |
-| E238 |  | QAF Lanchester: blows a second × health |  |
+| E238 |  | QAF a group's power: each one's health × its blow after research, the blow at least D194, over D193 per (Mid's unitPower and powerOf, one ho |  |
 | E239 |  | a villager fights back only when bitten |  |
 | E240 |  | the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of the player's wave |  |
 | E241 |  | First Keep v100 · ai.js (floor 11): one brain for the computer's side, one personality (balanced). Lives alone; acts only through ECON and W |  |
@@ -467,7 +468,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E246 |  | jobs by need: the yield whose share is most under its wanted share takes an idle villager, or one from the yield most over |  |
 | E247 |  | people, homes, drop-offs, plots, the age |  |
 | E248 |  | the army: the best counter to what the enemy fields most, until the age's count stands |  |
-| E249 |  | the wave: Lanchester odds r²/(1+r²) (QAF) of my strength over theirs with their towers counted as soldiers; a stalled wave goes home |  |
+| E249 |  | the wave: it sets out at the odds (QAF, combat.js) of D155 or better against the other side; a stalled wave goes home |  |
 | E250 |  | First Keep v100 · sound.js (beside the stack): one player for every recipe in books/sound.js (H). Lives alone; hears the world only through  |  |
 | E251 |  | The ear is the camera, at a height (QAX); a struck thing rings by its material (QAY); snow lowers the air's top and rain masks the quiet (QB |  |
 | E252 |  | each channel's volume steps, the one in use first (HX10) |  |
@@ -500,6 +501,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E279 |  | a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's (D138), a find's or a field's rate, a price (D123 |  |
 | E280 |  | the one window for a kind's number after research (QCA): flat adds first, then the shares summed and applied once to that (Albert, Nov 5 11: |  |
 | E281 |  | learning a step puts its effects in force for that side; every unit and building of the side keeps its share of health as the most it can ha |  |
+| E282 |  | who counters whom: the counter's edge (D140) when the striker's class is the one it counters, else even; the one home the blow (QBO) and the |  |
+| E283 |  | QAF the odds an army gives itself against a side, the one home the computers read: the counters summed both ways over the first of each army |  |
+| E284 |  | against theirs: its soldiers, its towers (not its seat) at D177 each, its people at D192 (Mid's powerFrom); the square law as odds, p² ÷ (p² |  |
 
 ## ground
 
@@ -706,7 +710,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D174 | a villager moves to the neediest yield when its share is this far under | 0.15 | N120 |
 | D175 | villagers on a yield before it gets its own camp | 3 | N120 |
 | D176 | the share of wanted villagers before it ages up | 0.8 | N120 |
-| D177 | a tower counts as this much strength in the wave's odds | 100 | N120 |
+| D177 | a tower counts as this much strength in the odds (Mid's 120; v100 held 100) | 120 | N157 |
 | D178 | the ring a home, a camp and a field keep from the hall | {home: 5, camp: 2, field: 4} | N120 |
 | D179 | the army buildings it raises, in order: when (villagers, age) and how far out | [{code: BM1, vils: 8, age: 0, ring: 5}, {code: BM2, vils: 0, age: 2, ring: 5}, {code: BM3, vils: 0, age: 3, ring: 6}] | N120 |
 | D180 | the soldiers it trains, the first by default; the best counter first | [UM1, UM2, UM3] | N120 |
@@ -721,6 +725,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D189 | the stores' flow: a first minute scaled from at least this many seconds; a store's velocity is tanh(net a minute ÷ ref); under half a unit is nothing; falling with under this many minutes left is the worst (Mid's VEL) | {least: 10, ref: 40, half: 0.5, short: 2} | N132 |
 | D190 | the map's lettered square, in units (J6): A1 to V22 across the board | 100 | N132 |
 | D191 | numbers said: from a thousand shortened to tenths of a k (1.2k), from ten thousand to whole k (12k); a share said in percent | {tenth: 100, thousand: 1000, whole: 10000, percent: 100} | N132 |
+| D192 | a side's people count as this much strength in the odds | 250 | N157 |
+| D193 | the odds: a unit's power is its health × its blow ÷ per; who counters whom is weighed over the first look of each army, held between lo and hi | {per: 6, look: 10, lo: 0.6, hi: 1.6} | N157 |
+| D194 | a blow does at least this, and a unit's power counts at least this blow | 1 | N69; N157 |
 
 ## rules
 
@@ -773,6 +780,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X45 | a comment in code written in words instead of its code, a code not in the Comments book, or a Comments entry no code names | {stage: code} | N153 |
 | X46 | every store in or out goes through earn and spend: an earning, a Home built and scrapped at 10%, a villager queued and taken back, an age, the people eating, a spend and the minute's turn leave the stores, the minute's flow, its velocity and the ledger and its lines as Mid's frozen code leaves them; fmt, plural, some, orList, slowPct and coord read as Mid's; 300 s of four sides' play balance the ledger to the unit | {stage: page} | N132 |
 | X47 | a kind's numbers after research are Mid's stats(), maxHpB, unitCost, techCost and rehealth with its shares added, not multiplied (QCA); a Home's health is D139 × (1 + Σ shares); the lowest is kept; a find's rate and the walk read the law | {stage: page} | N154 |
+| X48 | the odds of a battle are Mid's frozen unitPower, powerOf, powerFrom, matchup and lanchester for the same armies and towers (Mid's values, a tower 120, the people 250); a villager walled in from every find does not crash and ends idle or waiting | {stage: page} | N157 |
 
 ## screen
 

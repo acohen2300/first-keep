@@ -314,7 +314,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E219** the age: paid, then a wait at the Town Center (D129) · D129 (N114)
 - **E220** the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept
 - **E221** QW: the find of a yield that keeps the round trip shortest: nearest the drop-off among tho · QW (N24) · D89 (N112)
-- **E222** a find no path reaches is left alone a while (D137) · D137 (N114)
+- **E222** a find no path reaches is left alone a while (D137), and the next beat chooses again among · D137 (N114) · D89 (N112)
 - **E223** assign: + sends the nearest idle villager (else one from the fullest other job) to the yie
 - **E224** the tick: training, ages, upkeep, the villagers, the bell
 - **E225** a new game: the book's stores (D172); the bell stays as Start set it · D172 (N119)
@@ -334,7 +334,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E235** a wave falls back to its seat, else to any building of its side
 - **E236** a side's wave in the field: its soldiers at the start, so nerve can be read (QBQ) · QBQ (N76)
 - **E237** to a tile, or near one that cannot be stood on (a building's)
-- **E238** QAF Lanchester: blows a second × health · QAF (N35)
+- **E282** who counters whom: the counter's edge (D140) when the striker's class is the one it counte · D140 (N114) · QBO (N69) · QAF (N35)
+- **E238** QAF a group's power: each one's health × its blow after research, the blow at least D194,  · QAF (N35) · D194 (N69, N157) · D193 (N157)
+- **E283** QAF the odds an army gives itself against a side, the one home the computers read: the cou · QAF (N35) · D193 (N157)
+- **E284** against theirs: its soldiers, its towers (not its seat) at D177 each, its people at D192 ( · D177 (N157) · D192 (N157)
 - **E239** a villager fights back only when bitten
 - **E240** the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of th
 
@@ -349,7 +352,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E246** jobs by need: the yield whose share is most under its wanted share takes an idle villager,
 - **E247** people, homes, drop-offs, plots, the age
 - **E248** the army: the best counter to what the enemy fields most, until the age's count stands
-- **E249** the wave: Lanchester odds r²/(1+r²) (QAF) of my strength over theirs with their towers cou · QAF (N35)
+- **E249** the wave: it sets out at the odds (QAF, combat.js) of D155 or better against the other sid · QAF (N35) · D155 (N114)
 
 ## sound.js
 

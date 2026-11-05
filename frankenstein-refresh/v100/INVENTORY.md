@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,659 | 213,468 | 213,598 |
-| Books | 899 | 0 | 120,104 | 120,363 |
+| Game code | 28 | 1,662 | 213,793 | 213,923 |
+| Books | 907 | 0 | 122,136 | 122,403 |
 | Laws | 75 | 0 | 7,795 | 8,041 |
-| Tools | 4 | 472 | 56,453 | 56,538 |
+| Tools | 4 | 509 | 62,164 | 62,251 |
 
 ## The trades (code)
 
@@ -37,9 +37,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-woods-cache | 51 | 4,814 | 4,818 | 89 |
 | index.html#touch | 40 | 4,369 | 4,373 | 59 |
 | menu.js | 259 | 41,707 | 41,745 | 641 |
-| econ.js | 91 | 12,732 | 12,732 | 102 |
-| combat.js | 53 | 7,637 | 7,637 | 101 |
-| ai.js | 44 | 5,217 | 5,217 | 41 |
+| econ.js | 91 | 12,654 | 12,654 | 102 |
+| combat.js | 56 | 8,211 | 8,211 | 101 |
+| ai.js | 44 | 5,046 | 5,046 | 39 |
 | sound.js | 56 | 5,632 | 5,632 | 66 |
 
 ## The books
@@ -48,13 +48,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 3 | 461 |
 | capabilities | 25 | 5,321 |
-| citations | 156 | 17,169 |
+| citations | 157 | 17,473 |
 | colours | 9 | 951 |
-| comments | 281 | 37,356 |
+| comments | 284 | 38,213 |
 | ground | 4 | 640 |
 | mass | 16 | 2,354 |
-| measure | 186 | 24,519 |
-| rules | 47 | 8,529 |
+| measure | 189 | 25,135 |
+| rules | 48 | 8,874 |
 | screen | 10 | 2,597 |
 | shells | 74 | 12,258 |
 | sound | 51 | 11,159 |
@@ -121,5 +121,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X45 | comments | code | a comment in code written in words instead of its code, a code not in the Comments book, or a Comments entry no code names |
 | X46 | t-ledger | page | every store in or out goes through earn and spend: an earning, a Home built and scrapped at 10%, a villager queued and taken back, an age, the people eating, a spend and the minute's turn leave the stores, the minute's flow, its velocity and the ledger and its lines as Mid's frozen code leaves them; fmt, plural, some, orList, slowPct and coord read as Mid's; 300 s of four sides' play balance the ledger to the unit |
 | X47 | t-effects | page | a kind's numbers after research are Mid's stats(), maxHpB, unitCost, techCost and rehealth with its shares added, not multiplied (QCA); a Home's health is D139 × (1 + Σ shares); the lowest is kept; a find's rate and the walk read the law |
+| X48 | t-odds | page | the odds of a battle are Mid's frozen unitPower, powerOf, powerFrom, matchup and lanchester for the same armies and towers (Mid's values, a tower 120, the people 250); a villager walled in from every find does not crash and ends idle or waiting |
 
-1006 items sealed · 899 book entries · 75 laws · 156 citations, 17 still to open · 7 known
+1014 items sealed · 907 book entries · 75 laws · 157 citations, 17 still to open · 7 known

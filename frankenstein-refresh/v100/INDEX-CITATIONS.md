@@ -35,7 +35,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAD** Spoilage → N32, N33
 - **QAE** Price → N34
 - **QCA** Effects → N154, N155, N156 · used by X47
-- **QAF** Battle odds → N35 · used by D155, D177
+- **QAF** Battle odds → N35 · used by D155, D177, D192, D193, D194, X48
 - **QAG** Who to fight → N36, N37 · used by SC6
 - **QAH** Fight or not → N38
 - **QAI** Nerve → design
@@ -69,7 +69,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QBM** Walking → N71, N72, N73, N79 · used by SC1
 - **QBN** Gathering → N70 · used by SC2, SC3, SC12, SC16, SC17
 - **QBJ** Z1's store → N69 · used by D61
-- **QBO** The blow → N69 · used by SC6, D140, D141
+- **QBO** The blow → N69 · used by SC6, D140, D141, D194
 - **QBP** Upkeep → design · used by D131
 - **QBQ** The break → N76 · used by D142
 - **QBR** The score → N75 · used by D135
@@ -150,7 +150,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N66** (to open) Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the gro → QBD, QBK
 - **N67** (to open) Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology,  → QBG
 - **N68** (to open) Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory → QBI
-- **N69** (to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house → QBJ, QBO, D61, D123, D124, D125, D127, D128, D136, D138, D139, D143
+- **N69** (to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house → QBJ, QBO, D61, D123, D124, D125, D127, D128, D136, D138, D139, D143, D194
 - **N70** First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6,  → QBN, D88
 - **N71** (to open) Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) → QBM, D86
 - **N72** (to open) Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) → QBM, D86
@@ -201,7 +201,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N117** Standard gravity (standard) → D168
 - **N118** Design: the build log (README) → D171
 - **N119** Design: Albert, Nov 1 14:18 (the old game's START_RES: 200 of food, wood, stone and gold, no iron) → D172
-- **N120** Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, Build A) → D173, D174, D175, D176, D177, D178, D179, D180
+- **N120** Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, Build A) → D173, D174, D175, D176, D178, D179, D180
 - **N121** Design: v100 floor 5, Nov 4 (deer herds D90–D91, wolf packs D92–D93) → D181
 - **N122** Design: Mid's BEAT (numbers.js), brought by Albert's yes, Nov 5 11:40 (Frankenstein F10) → D182, D183, D184
 - **N123** Design: Mid's UG (15-sim-spatial.js), brought by Albert's yes, Nov 5 11:40 (Frankenstein F10) → D185
@@ -238,6 +238,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N154** Design: Albert, Nov 5 11:40: research stacks and its percents add, applied once to the base (3.0 with +10% and → QCA, X47
 - **N155** Design: Albert, Nov 5 11:16 (3) and (4): walking's base is 3.4 mph and research improves it; building-health r → QCA
 - **N156** Design: Mid's effects (08-core.js fxList, fxFits, fxv, keepHealth, rehealth, stats, maxHpB; 11-orders.js scale → QCA
+- **N157** Design: Mid's battle odds (08-core.js unitPower, powerOf, lanchester; 17-ai.js powerFrom, estPower, matchup; 3 → D177, D192, D193, D194, X48
 
 ## Named exceptions
 

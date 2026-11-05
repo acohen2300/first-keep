@@ -1490,8 +1490,8 @@
    "foes your people see near a group; missions"
   ],
   "powerSum": [
-   "bring",
-   "a group's power; the odds"
+   "in v100",
+   "F12b: combat.js WAR.power"
   ],
   "chance": [
    "bring",

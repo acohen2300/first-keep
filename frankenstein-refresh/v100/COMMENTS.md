@@ -225,7 +225,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E219 | econ.js | the age: paid, then a wait at the Town Center (D129) |
 | E220 | econ.js | the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept |
 | E221 | econ.js | QW: the find of a yield that keeps the round trip shortest: nearest the drop-off among those within D89 of the villager, else nearest the villager |
-| E222 | econ.js | a find no path reaches is left alone a while (D137) |
+| E222 | econ.js | a find no path reaches is left alone a while (D137), and the next beat chooses again among the finds near (D89): one walled in tries one find a beat and ends idle, never every find on the map at once |
 | E223 | econ.js | assign: + sends the nearest idle villager (else one from the fullest other job) to the yield's best find; − sets one of the job's villagers idle |
 | E224 | econ.js | the tick: training, ages, upkeep, the villagers, the bell |
 | E225 | econ.js | a new game: the book's stores (D172); the bell stays as Start set it |
@@ -241,7 +241,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E235 | combat.js | a wave falls back to its seat, else to any building of its side |
 | E236 | combat.js | a side's wave in the field: its soldiers at the start, so nerve can be read (QBQ) |
 | E237 | combat.js | to a tile, or near one that cannot be stood on (a building's) |
-| E238 | combat.js | QAF Lanchester: blows a second × health |
+| E238 | combat.js | QAF a group's power: each one's health × its blow after research, the blow at least D194, over D193 per (Mid's unitPower and powerOf, one home) |
 | E239 | combat.js | a villager fights back only when bitten |
 | E240 | combat.js | the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of the player's wave |
 | E241 | ai.js | First Keep v100 · ai.js (floor 11): one brain for the computer's side, one personality (balanced). Lives alone; acts only through ECON and WAR, the same doors the menu uses. Every D.ai.beat it looks and does one round: jobs by need, people, homes, drop-offs, plots, the age, the army, the wave. |
@@ -252,7 +252,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E246 | ai.js | jobs by need: the yield whose share is most under its wanted share takes an idle villager, or one from the yield most over |
 | E247 | ai.js | people, homes, drop-offs, plots, the age |
 | E248 | ai.js | the army: the best counter to what the enemy fields most, until the age's count stands |
-| E249 | ai.js | the wave: Lanchester odds r²/(1+r²) (QAF) of my strength over theirs with their towers counted as soldiers; a stalled wave goes home |
+| E249 | ai.js | the wave: it sets out at the odds (QAF, combat.js) of D155 or better against the other side; a stalled wave goes home |
 | E250 | sound.js | First Keep v100 · sound.js (beside the stack): one player for every recipe in books/sound.js (H). Lives alone; hears the world only through FK's 'event' hook. |
 | E251 | sound.js | The ear is the camera, at a height (QAX); a struck thing rings by its material (QAY); snow lowers the air's top and rain masks the quiet (QBX). No sound is typed here. |
 | E252 | sound.js | each channel's volume steps, the one in use first (HX10) |
@@ -285,3 +285,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E279 | index.html#the-door | a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's (D138), a find's or a field's rate, a price (D123, or the step's own); any other key is the unit's D138 entry |
 | E280 | index.html#the-door | the one window for a kind's number after research (QCA): flat adds first, then the shares summed and applied once to that (Albert, Nov 5 11:40), then the lowest kept; a price rounds each yield to the whole unit |
 | E281 | index.html#the-door | learning a step puts its effects in force for that side; every unit and building of the side keeps its share of health as the most it can have moves |
+| E282 | combat.js | who counters whom: the counter's edge (D140) when the striker's class is the one it counters, else even; the one home the blow (QBO) and the odds (QAF) both read |
+| E283 | combat.js | QAF the odds an army gives itself against a side, the one home the computers read: the counters summed both ways over the first of each army, their ratio held in D193 (Mid's matchup) bending my power |
+| E284 | combat.js | against theirs: its soldiers, its towers (not its seat) at D177 each, its people at D192 (Mid's powerFrom); the square law as odds, p² ÷ (p² + q²), which is r² ÷ (1 + r²) with r = p ÷ q |

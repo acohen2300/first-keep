@@ -2,12 +2,12 @@
  "about": "Step 6, temp book staging/ai.js (Mid's 17-ai, the computers): every piece. v100's ai.js is one balanced computer on two sides (D122), asking by tick, its numbers D149–D180. Mid has four computers with personalities, relations, waves: they come over as they are (bring), asking by tick and with their numbers in the books, never by kind names. in v100: already home. cut: v100 does it another way.",
  "pieces": {
   "powerFrom": [
-   "bring",
-   "a side's strength: soldiers, towers 120 each, 250 for its people; v100 has WAR.strength (combat.js, QAF) with a tower worth D177 = 100: Mid's 120 and the 250 to bring, Albert's call on the values"
+   "in v100",
+   "F12b: combat.js WAR.odds, a tower D177 (Mid's 120), the people D192 (250); towers by D143 less the seat"
   ],
   "estPower": [
-   "bring",
-   "a side's strength from its soldiers and towers: with powerFrom"
+   "in v100",
+   "F12b: combat.js WAR.odds, the other side's army and towers"
   ],
   "nearestType": [
    "in v100",
@@ -90,8 +90,8 @@
    "the computer's wall ring: an arc facing the middle, its gate the two squares nearest the middle: with the walls (BW1, BW2)"
   ],
   "matchup": [
-   "bring",
-   "how two armies fare, by who counters whom, bending the Lanchester odds: v100 has a counter bonus in a blow (combat.js damage, D138 \"vs\"), not in the odds"
+   "in v100",
+   "F12b: combat.js WAR.odds, the counters summed both ways over the first D193 look, the ratio held in D193 lo–hi; the counter test is vs(), which the blow reads too"
   ],
   "newWave": [
    "in v100",

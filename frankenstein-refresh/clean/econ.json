@@ -166,8 +166,8 @@
    "diplomacy (ally, peace, war, envoys; kept for after the core)"
   ],
   "oddsOf": [
-   "bring",
-   "the square law bent by who counters whom, for envoys' answers; v100 has QAF in ai.js round without the counters"
+   "in v100",
+   "F12b: combat.js WAR.odds(army, side); ai.js round reads it (D155)"
   ],
   "judgeEnvoy": [
    "bring",

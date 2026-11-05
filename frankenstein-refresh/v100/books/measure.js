@@ -171,7 +171,7 @@ BOOK("measure", {
  "D174": {"key": "ai.shift", "value": 0.15, "name": "a villager moves to the neediest yield when its share is this far under", "cite": ["N120"], "law": []},
  "D175": {"key": "ai.campCrew", "value": 3, "name": "villagers on a yield before it gets its own camp", "cite": ["N120"], "law": []},
  "D176": {"key": "ai.ageAt", "value": 0.8, "name": "the share of wanted villagers before it ages up", "cite": ["N120"], "law": []},
- "D177": {"key": "ai.towerWorth", "value": 100, "name": "a tower counts as this much strength in the wave's odds", "cite": ["N120"], "law": ["QAF"]},
+ "D177": {"key": "ai.towerWorth", "value": 120, "name": "a tower counts as this much strength in the odds (Mid's 120; v100 held 100)", "cite": ["N157"], "law": ["QAF"]},
  "D178": {"key": "ai.ring", "value": {"home": 5, "camp": 2, "field": 4}, "name": "the ring a home, a camp and a field keep from the hall", "cite": ["N120"], "law": []},
  "D179": {"key": "ai.raise", "value": [{"code": "BM1", "vils": 8, "age": 0, "ring": 5}, {"code": "BM2", "vils": 0, "age": 2, "ring": 5}, {"code": "BM3", "vils": 0, "age": 3, "ring": 6}], "name": "the army buildings it raises, in order: when (villagers, age) and how far out", "cite": ["N120"], "law": []},
  "D180": {"key": "ai.troops", "value": ["UM1", "UM2", "UM3"], "name": "the soldiers it trains, the first by default; the best counter first", "cite": ["N120"], "law": []},
@@ -185,5 +185,8 @@ BOOK("measure", {
  "D188": {"key": "minute", "value": [60, 0], "name": "the minute's beat: the stores' flow turns over, the last minute's in and out kept (Mid's flowTick, every 1,800 frames from the start)", "cite": ["N132"], "law": []},
  "D189": {"key": "flow", "value": {"least": 10, "ref": 40, "half": 0.5, "short": 2}, "name": "the stores' flow: a first minute scaled from at least this many seconds; a store's velocity is tanh(net a minute ÷ ref); under half a unit is nothing; falling with under this many minutes left is the worst (Mid's VEL)", "cite": ["N132"], "law": []},
  "D190": {"key": "coord", "value": 100, "name": "the map's lettered square, in units (J6): A1 to V22 across the board", "cite": ["N132"], "law": []},
- "D191": {"key": "say", "value": {"tenth": 100, "thousand": 1000, "whole": 10000, "percent": 100}, "name": "numbers said: from a thousand shortened to tenths of a k (1.2k), from ten thousand to whole k (12k); a share said in percent", "cite": ["N132"], "law": []}
+ "D191": {"key": "say", "value": {"tenth": 100, "thousand": 1000, "whole": 10000, "percent": 100}, "name": "numbers said: from a thousand shortened to tenths of a k (1.2k), from ten thousand to whole k (12k); a share said in percent", "cite": ["N132"], "law": []},
+ "D192": {"key": "ai.peopleWorth", "value": 250, "name": "a side's people count as this much strength in the odds", "cite": ["N157"], "law": ["QAF"]},
+ "D193": {"key": "odds", "value": {"per": 6, "look": 10, "lo": 0.6, "hi": 1.6}, "name": "the odds: a unit's power is its health × its blow ÷ per; who counters whom is weighed over the first look of each army, held between lo and hi", "cite": ["N157"], "law": ["QAF"]},
+ "D194": {"key": "leastBlow", "value": 1, "name": "a blow does at least this, and a unit's power counts at least this blow", "cite": ["N69", "N157"], "law": ["QBO", "QAF"]}
 });

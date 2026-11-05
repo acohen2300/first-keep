@@ -137,7 +137,7 @@
      "measure: none new"
     ],
     "laws": [
-     "QCA Effects: stat = (base + Σa) × Πm, a \"lowest\" effect takes min; speed takes only the single best research share, never a product (Albert Nov 5 11:16 (3)); a building's health = v100's health × (1 + Σ research share) (11:16 (4)); a kind's health kept in share when its most moves (keepHealth). Source: Mid 08-core.js fxv (design), Albert's calls"
+     "QCA Effects: stat = (base + Σa) × Πm, a \"lowest\" effect takes min; speed adds its research shares, applied once to the base (Albert 11:40) (Albert Nov 5 11:16 (3)); a building's health = v100's health × (1 + Σ research share) (11:16 (4)); a kind's health kept in share when its most moves (keepHealth). Source: Mid 08-core.js fxv (design), Albert's calls"
     ],
     "code": [
      "index.html floor \"the door\": stat(shell, side, key) the one window every module reads; nothing reads D for a kind's stat directly"
@@ -840,7 +840,7 @@
   {
    "id": "M17",
    "name": "Pace: load, weather, ground and ice",
-   "what": "A walker starts at 3.4 mph and is slowed by its load, sickness, the season and weather, mud, snow and ice, each by its own law; research speeds it once, never stacking.",
+   "what": "A walker starts at 3.4 mph and is slowed by its load, sickness, the season and weather, mud, snow and ice, each by its own law; research speeds it once, the shares add, applied once (Albert 11:40).",
    "pieces": [
     "paths.paceOf",
     "econ.sideSpd",
@@ -878,7 +878,7 @@
      "tech: the march, roads and weather rows"
     ],
     "laws": [
-     "QCB Pace: v = D86 (1.52 m/s, 3.4 mph) × best research share (QCA, never stacking) × load × sickness × 1/η ground (QN, Pandolf 1977, N13) × cold and wet (QAP, N46) × ice stride by the grip lacking (QR, Hanson 1999, N19)"
+     "QCB Pace: v = D86 (1.52 m/s, 3.4 mph) × (1 + Σ research shares) (QCA: the shares add, applied once; Albert 11:40) × load × sickness × 1/η ground (QN, Pandolf 1977, N13) × cold and wet (QAP, N46) × ice stride by the grip lacking (QR, Hanson 1999, N19)"
     ],
     "code": [
      "index.html floor \"Floor 5, movables\": step() multiplies by pace(u) only"

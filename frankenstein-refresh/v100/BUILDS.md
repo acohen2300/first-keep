@@ -1130,3 +1130,27 @@ MODIFIED (16):
 LOCKED (990 of 1006): byte for byte as sealed, 347,711 bytes
 Tests: 21/21 rules hold
 Inventory: 1006 items sealed · 899 book entries · 75 laws · 156 citations, 17 still to open · 7 known
+
+## F12b · who is a foe, the odds of a battle · 2026-11-05 13:12
+Albert, Nov 5 11:40: yes yes F10–F39
+Opened: code:combat.js, code:ai.js, code:econ.js, code:menu.js, book:sides, book:measure, book:rules, book:comments, book:citations, tool:test.py
+MODIFIED (16):
+- book:citations:N157 · added
+- book:comments:E222 · 63 → 211 bytes
+- book:comments:E238 · 52 → 156 bytes
+- book:comments:E249 · 146 → 129 bytes
+- book:comments:E282 · added
+- book:comments:E283 · added
+- book:comments:E284 · added
+- book:measure:D177 · 139 → 159 bytes
+- book:measure:D192 · added
+- book:measure:D193 · added
+- book:measure:D194 · added
+- book:rules:X48 · added
+- code:ai.js · 5,217 → 5,046 bytes
+- code:combat.js · 7,637 → 8,211 bytes
+- code:econ.js · 12,732 → 12,654 bytes
+- tool:test.py · 27,730 → 33,443 bytes
+LOCKED (998 of 1014): byte for byte as sealed, 344,824 bytes
+Tests: 22/22 rules hold
+Inventory: 1014 items sealed · 907 book entries · 75 laws · 157 citations, 17 still to open · 7 known

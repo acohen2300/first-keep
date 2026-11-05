@@ -35,7 +35,7 @@ function round(side) { const s = SIDES[side], h = home(side); if (!h) return; co
     for (const code of [best, ...T]) { const b = trainer(side, code); if (b && ECON.queue(b, code)) break; } }
   // E249
   const eh = home(enemy), w = WAR.waves[side];
-  if (!w && mine.length >= D.ai.army[Math.max(1, age)] && eh) { const r = WAR.strength(mine) / Math.max(1, WAR.strength(theirs) + things().filter((t) => t.kind === 'bld' && t.side === enemy && D.tower[t.code]).length * D.ai.towerWorth); if (r * r / (1 + r * r) >= D.ai.odds) WAR.attack(side, FK.tileAt(eh.bx, eh.by)); }
+  if (!w && mine.length >= D.ai.army[Math.max(1, age)] && eh) { if (WAR.odds(mine, enemy) >= D.ai.odds) WAR.attack(side, FK.tileAt(eh.bx, eh.by)); }
   else if (w && eh) { const hp = things().filter((t) => t.kind === 'bld' && t.side === enemy).reduce((n, t) => n + t.hp, 0) + theirs.reduce((n, u) => n + u.hp, 0); if (hp < seen[side].hp) seen[side].t = 0; else seen[side].t += D.ai.beat; seen[side].hp = hp; if (seen[side].t > D.ai.stall) { WAR.recall(side); seen[side].t = 0; } }
 }
 FK.on('start', () => { clock.fill(0); for (const q of seen) { q.hp = 0; q.t = 0; } });

@@ -5,13 +5,13 @@ const { D, B, U, SIDES, N } = FK;
 // E170
 const things = FK.things, units = FK.units, T = D.tile;
 const stat = (u) => D.stats[u.code] || D.stats.UV;
-const hpMax = (t) => (t.kind === 'bld' ? D.bldHp[t.code] || 400 : stat(t).hp);
+const hpMax = (t) => FK.stat(t.code, t.side, 'hp') ?? 400;
 const armed = (u) => u.side >= 0 && FK.has(u, 'Fight') && !FK.has(u, 'Gather');
 const enemies = (a, b) => a.side !== b.side && (a.side >= 0 ? b.side >= 0 || FK.has(b, 'Fight') : b.side >= 0);
 const edgeDist = (u, t) => { if (t.kind !== 'bld') return Math.hypot(u.bx - t.bx, u.by - t.by) / T; const [sx, sy] = FK.fromBoard(u.bx, u.by); return Math.hypot(Math.max(0, t.i * T - sx, sx - (t.i + t.n) * T), Math.max(0, t.j * T - sy, sy - (t.j + t.n) * T)) / T; }; // E228
 const alive = (t) => t.hp > 0 && !t.gone; // E229
 // E230
-function damage(a, t) { const s = stat(a); let d = t.kind === 'bld' ? s.bld || s.atk : s.atk; if (t.kind !== 'bld') { const ts = stat(t); if (s.vs && ts.cls === s.vs) d *= D.counter; if ((a.bx - t.bx) * (t.face || 1) < 0) d *= D.flank; d -= ts.arm; } return Math.max(1, d); }
+function damage(a, t) { const s = stat(a); let d = t.kind === 'bld' ? s.bld || s.atk : s.atk; if (t.kind !== 'bld') { const ts = stat(t); d *= vs(a, t); if ((a.bx - t.bx) * (t.face || 1) < 0) d *= D.flank; d -= ts.arm; } return Math.max(D.leastBlow, d); }
 function hit(a, t) { t.hp -= damage(a, t); FK.impact(a, t); if (t.hp <= 0) die(t, a); } // E231
 function die(t, by) { if (t.kind === 'bld') { FK.fire('event', 'fell', t); FK.unbuild(t); return; } t.gone = true; const us = units(), i = us.indexOf(t); if (i >= 0) us.splice(i, 1); if (FK.sel() === t) FK.select(null); for (const u of us) if (u.target === t) u.target = null; }
 // E232
@@ -26,13 +26,16 @@ function march(u, k) { u.job = 'march'; u.goal = k; u.target = null; u.then = 'm
 function recall(side) { waves[side] = null; const h = home(side); for (const u of units()) if (u.side === side && armed(u)) { u.job = 'rout'; u.target = null; u.goal = null; u.then = 'idle'; if (!h || !FK.goBy(u, h)) u.job = 'idle'; } }
 function attack(side, k) { const army = units().filter((u) => u.side === side && armed(u) && u.job !== 'rout'); if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; for (const u of army) march(u, k); if (side === 0) FK.fire('event', 'march', army[0]); return army.length; }
 const armyOf = (side) => units().filter((u) => u.side === side && armed(u));
-const strength = (us) => us.reduce((n, u) => n + stat(u).atk / stat(u).rof * u.hp, 0); // E238
+const vs = (a, t) => D.counter ** (stat(a).vs === stat(t).cls); // E282
+const power = (us) => us.reduce((n, u) => n + u.hp * Math.max(D.leastBlow, FK.stat(u.code, u.side, 'atk')) / D.odds.per, 0); // E238
+function odds(S, side) { const F = armyOf(side), a = S.slice(0, D.odds.look), b = F.slice(0, D.odds.look); let x = 0, y = 0, p = power(S); for (const u of a) for (const v of b) { x += vs(u, v); y += vs(v, u); } // E283
+  if (x) p *= Math.min(D.odds.hi, Math.max(D.odds.lo, x / y)); const q = power(F) + things().filter((t) => t.side === side && D.tower[t.code] && !FK.has(t, 'Seat') && alive(t)).length * D.ai.towerWorth + D.ai.peopleWorth; return p * p / (p * p + q * q); } // E284
 FK.on('spawn', (u) => { u.hp = u.hpMax = hpMax(u); u.cd = FK.rng(); u.rp = 0; });
 FK.on('start', () => { waves.fill(null); for (const u of units()) if (u.hp == null) { u.hp = u.hpMax = hpMax(u); u.cd = 0; u.rp = 0; } for (const t of things()) if (t.kind === 'bld') { t.hpMax = hpMax(t); t.hp = t.done >= 1 ? t.hpMax : 1; } });
 FK.on('tick', (dt) => {
   if (ECON.result()) return;
   for (const t of things()) if (t.kind === 'bld') { if (t.hpMax == null) { t.hpMax = hpMax(t); t.hp = t.done >= 1 ? t.hpMax : 1; }
-    const tw = D.tower[t.code], [, reach] = tw || []; if (!tw || t.done < 1) continue; t.cd = (t.cd || 0) - dt; if (t.cd > 0) continue; let best = null; FK.unitsNear(t, (reach + t.n) * T, (u) => { if (u.side < 0 || u.side === t.side) return; const d = edgeDist(u, t); if (d <= reach && (!best || d < best[1])) best = [u, d]; }); if (best) { FK.fire('event', 'shot', t); best[0].hp -= Math.max(1, tw[0] - stat(best[0]).arm); if (best[0].hp <= 0) die(best[0]); t.cd = tw[2]; } }
+    const tw = D.tower[t.code], [blow, reach, pace] = tw || []; if (!tw || t.done < 1) continue; t.cd = (t.cd || 0) - dt; if (t.cd > 0) continue; let best = null; FK.unitsNear(t, (reach + t.n) * T, (u) => { if (u.side < 0 || u.side === t.side) return; const d = edgeDist(u, t); if (d <= reach && (!best || d < best[1])) best = [u, d]; }); if (best) { FK.fire('event', 'shot', t); best[0].hp -= Math.max(D.leastBlow, blow - stat(best[0]).arm); if (best[0].hp <= 0) die(best[0]); t.cd = pace; } }
   for (const u of units().slice()) { if (!alive(u)) continue; const s = stat(u); u.cd -= dt; u.rp -= dt; u.sc = (u.sc || 0) - dt; const look = u.sc <= 0; if (look) u.sc = D.scan;
     if (u.side < 0) { if (s.atk && (u.job === 'idle' || u.job === 'fight') && !u.path) { if (u.job === 'idle' && look) { const t = choose(u, D.wildAggro); if (t && t.kind !== 'bld') fight(u, t); } } }
     else if (!armed(u)) { if (u.job !== 'fight') { const w = units().find((b) => b.side < 0 && b.job === 'fight' && b.target === u); if (w) fight(u, w); else continue; } } // E239
@@ -49,5 +52,5 @@ FK.on('draw', (ctx, s) => { if (!FK.show.U) return; const [cw, ch] = FK.size();
   for (const t of things()) if (t.kind === 'bld' && t.hp != null && t.hp < t.hpMax && t.done >= 1 && (t.side === 0 || FK.inSight(t.k ?? FK.tileAt(t.bx, t.by)))) { const [x, y] = FK.toScreen(t.vx, t.vy); if (x > -40 && x < cw + 40 && y > -40 && y < ch + 40) bar(x, y - (t.n * 12 + 20) * s, t.n * 10 * s, t.hp / t.hpMax, SIDES[t.side].col); }
   const w = waves[0]; if (w) { const [bx, by] = FK.tileMid(w.k), [vx, vy] = FK.toView(bx, by, Math.max(0, FK.H[w.k])), [x, y] = FK.toScreen(vx, vy); ctx.strokeStyle = '#ff6b5b'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(x, y, 14 * s, 7 * s, 0, 0, 7); ctx.moveTo(x - 20 * s, y); ctx.lineTo(x + 20 * s, y); ctx.moveTo(x, y - 10 * s); ctx.lineTo(x, y + 10 * s); ctx.stroke(); }
 });
-return { attack, recall, fight, march, hit, damage, die, armyOf, strength, waves, armed, enemies, hpMax, stat };
+return { attack, recall, fight, march, hit, damage, die, armyOf, power, odds, waves, armed, enemies, hpMax, stat };
 })();
