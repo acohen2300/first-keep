@@ -35,7 +35,7 @@
   ],
   "refund": [
    "in v100",
-   "econ.js pay(side, cost, -1)"
+   "econ.js payBack(side, cost, 'units') (F11; was pay(side, cost, -1))"
   ],
   "cancelOrder": [
    "in v100",
@@ -670,28 +670,28 @@
    "econ.js carry branch (store, gathered); Mid's flow ledger comes with flowOf"
   ],
   "flowOf": [
-   "bring",
-   "the stores' flow a minute (the stores card, the computers' crews)"
+   "in v100",
+   "F11: econ.js, flowOf(side, y, last, now): the first minute scaled from at least D189's seconds, by the clock K.t"
   ],
   "outOf": [
-   "bring",
-   "the stores' flow"
+   "in v100",
+   "F11: econ.js, outOf(side, y)"
   ],
   "netOf": [
-   "bring",
-   "the stores' flow"
+   "in v100",
+   "F11: econ.js, netOf(side, y)"
   ],
   "VEL": [
-   "bring",
-   "the stores' flow"
+   "in v100",
+   "F11: measure D189 (ref 40, with the half unit and the two minutes)"
   ],
   "velOf": [
-   "bring",
-   "the stores' flow"
+   "in v100",
+   "F11: econ.js, velOf(side, y): tanh of the net over D189's ref, −1 when falling with under two minutes left"
   ],
   "flowTick": [
-   "bring",
-   "the stores' flow"
+   "in v100",
+   "F11: econ.js, on the minute's beat (D188, FK.every): the minute's in and out become the last minute's"
   ],
   "initEconomy": [
    "bring",

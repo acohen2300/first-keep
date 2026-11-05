@@ -270,3 +270,13 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E264 | sound.js | the player's volume for this channel |
 | E265 | sound.js | ambience as events: a bird from a tree in view by day, a cricket in the dark, never in winter; when one sings is a Poisson process (HX4) |
 | E266 | sound.js | QBX: the air's top falls with snow cover, on a log scale |
+| E267 | econ.js | a side's economy, fresh: its age, its gathered total, the rally, and the stores' flow (this minute's in and out, the last minute's, each by reason) and the ledger of the whole game |
+| E268 | econ.js | earn and spend: every store in or out goes through these two, the one home for the stores, the minute's flow (by resource and by reason) and the ledger of where it came from and went (its words in the Words book, J1); a gain from gathering counts toward the score's wealth |
+| E269 | econ.js | what was paid comes back the way it went out: the store, the minute's spending and the ledger step back, so a cancel is as if the order never was |
+| E270 | econ.js | the stores' flow a minute: the last full minute, or before there is one the minute so far scaled up (from at least D189 seconds); net is in less out; a store's velocity runs −1 to +1 by tanh, and falling with under two minutes left is the worst there is (D189) |
+| E271 | econ.js | each minute (D188) the minute's in and out become the last minute's |
+| E272 | menu.js | the words helpers: numbers shortened (1.2k, 12k), plurals, 'a, b or c', a percent slower, a place as its lettered square, a ledger line; their words in the Words book (J), their numbers in D191 |
+| E273 | menu.js | the first ending in the Words book (J5) that fits the name |
+| E274 | menu.js | how much slower a full cover of mud or snow makes a march, in percent, from its terrain factor f: 1 − 1 ÷ (1 + f) (QN) |
+| E275 | menu.js | a place as the map's lettered squares, measured from the board's corner: D190 units a square, letters across, numbers down (A1 to V22); off the board, the nearest square |
+| E276 | menu.js | a ledger line: its reasons largest first, each in its word and shortened, apart by a dot; under half a unit is left out |

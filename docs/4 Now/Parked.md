@@ -255,3 +255,8 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - Parked: a tax rate on vassals (light, fair, heavy), and the two tax research steps (the Sixth, Satrapy). Vassals pay tribute instead.
 - Cut: surplus selling, for every side: the computers' selling a surplus at the Market while saving for an age, and any automatic selling. The idea and its code. (A player's own Sell and Buy at the Market is not surplus selling.)
 - Cut: the computers' free mill and farm at the start (EXCEPTIONS #16), and the A/B test that would have replaced it with pressure. "They win enough."
+
+## Frankenstein F11 · earn and spend, the words helpers (Nov 5, Albert 11:40)
+- Waiting: the ledger's word for the Throne's tithe ('the Throne tithe'): it comes into the Words book (J1) with the Throne.
+- Parked, with the vassals' tax (11:16): the ledger's word for tax ('tax').
+- Cut: v100's `spent` total on each side (nothing read it; the ledger's out is the one home now).

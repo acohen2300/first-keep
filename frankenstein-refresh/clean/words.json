@@ -2,12 +2,12 @@
  "about": "Step 6, temp book staging/words.js (Mid's 07-text.js): every line of wording the game says, and the history behind each row. in v100: v100 already shows it (mostly menu.js). bring: comes as entries in a new Words book with its feature. cut: v100 does it another way. The big tables (WHY, MS_TEXT, EV_WHY, EV_TEXT, ROW_WORD, TRIGGERS) carry a line per row; misfits go to Albert.",
  "pieces": {
   "slowPct": [
-   "bring",
-   "percent slower in mud or snow for the wording; the factor is v100's QN (Pandolf, N13)"
+   "in v100",
+   "F11: menu.js, slowPct: f ÷ (1 + f) in percent (D191)"
   ],
   "orList": [
-   "bring",
-   "'a, b or c' for the wording, with the Words book"
+   "in v100",
+   "F11: menu.js, orList: its words J3"
   ],
   "investText": [
    "bring",
@@ -18,8 +18,8 @@
    "short card titles for long names (wonders, civ soldiers, the error card), with civilisations and the cards"
   ],
   "LEDGER_WORD": [
-   "bring",
-   "the ledger's earn and spend words, with the ledger; 'the Throne tithe' waits on the Throne (misfits)"
+   "in v100",
+   "F11: Words book J1 (the tithe waits on the Throne; tax parked); menu.js ledgerLine says a ledger in them, 'nothing yet' J2"
   ],
   "SCEN_TEXT": [
    "bring",

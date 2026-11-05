@@ -4,16 +4,16 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,623 | 208,898 | 209,028 |
-| Books | 869 | 0 | 113,491 | 113,738 |
+| Game code | 28 | 1,646 | 211,795 | 211,925 |
+| Books | 890 | 0 | 118,217 | 118,471 |
 | Laws | 74 | 0 | 7,375 | 7,617 |
-| Tools | 4 | 373 | 41,880 | 41,961 |
+| Tools | 4 | 425 | 49,105 | 49,186 |
 
 ## The trades (code)
 
 | Item | Lines | Characters | Bytes | Typed numbers |
 |---|---|---|---|---|
-| index.html#page | 27 | 1,620 | 1,620 | 11 |
+| index.html#page | 28 | 1,659 | 1,659 | 11 |
 | index.html#frames | 13 | 1,035 | 1,035 | 3 |
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,071 | 1,075 | 25 |
@@ -36,8 +36,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-7-display | 28 | 2,927 | 2,931 | 75 |
 | index.html#the-woods-cache | 51 | 4,814 | 4,818 | 89 |
 | index.html#touch | 40 | 4,348 | 4,352 | 59 |
-| menu.js | 251 | 40,564 | 40,602 | 641 |
-| econ.js | 77 | 11,017 | 11,017 | 102 |
+| menu.js | 259 | 41,707 | 41,745 | 641 |
+| econ.js | 91 | 12,732 | 12,732 | 102 |
 | combat.js | 53 | 7,637 | 7,637 | 101 |
 | ai.js | 44 | 5,217 | 5,217 | 41 |
 | sound.js | 56 | 5,632 | 5,632 | 66 |
@@ -50,15 +50,16 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 25 | 5,321 |
 | citations | 153 | 16,473 |
 | colours | 9 | 951 |
-| comments | 266 | 34,604 |
+| comments | 276 | 36,420 |
 | ground | 4 | 640 |
 | mass | 16 | 2,354 |
-| measure | 182 | 23,539 |
-| rules | 45 | 7,671 |
+| measure | 186 | 24,519 |
+| rules | 46 | 8,186 |
 | screen | 10 | 2,597 |
 | shells | 74 | 12,258 |
 | sound | 51 | 11,159 |
 | sprites | 31 | 5,485 |
+| words | 6 | 1,881 |
 
 ## The shells
 
@@ -117,5 +118,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X43 | sorted | survey | a temp book being sorted leaves a piece of Mid without its line (in v100, bring, cut or parked) |
 | X44 | t-same | page | same seed, same game: two pages on one seed draw alike and stand alike after 300 s with the weather in it; the rules' dice are Mid's rng draw for draw, BEAT and the grid squares Mid's; unitsNear finds exactly what a full scan finds, bldsNear every building a scan finds |
 | X45 | comments | code | a comment in code written in words instead of its code, a code not in the Comments book, or a Comments entry no code names |
+| X46 | t-ledger | page | every store in or out goes through earn and spend: an earning, a Home built and scrapped at 10%, a villager queued and taken back, an age, the people eating, a spend and the minute's turn leave the stores, the minute's flow, its velocity and the ledger and its lines as Mid's frozen code leaves them; fmt, plural, some, orList, slowPct and coord read as Mid's; 300 s of four sides' play balance the ledger to the unit |
 
-975 items sealed · 869 book entries · 74 laws · 153 citations, 17 still to open · 7 known
+996 items sealed · 890 book entries · 74 laws · 153 citations, 17 still to open · 7 known

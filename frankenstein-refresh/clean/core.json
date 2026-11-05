@@ -86,40 +86,40 @@
    "menu.js's costText and whyNot"
   ],
   "earn": [
-   "bring",
-   "one home for every store in or out, with the last minute's flow and the ledger of where it came from and went (v100 writes the stores directly)"
+   "in v100",
+   "F11: econ.js, earn(side, y, n, why): the store, the minute's flow by resource and reason, the ledger's in, the gathered total; the drop-off earns 'gather'"
   ],
   "spend": [
-   "bring",
-   "one home for every store in or out, with the last minute's flow and the ledger of where it came from and went (v100 writes the stores directly)"
+   "in v100",
+   "F11: econ.js, spend(side, y, n, why): the store, the minute's spending by resource and reason, the ledger's out; the people eating spend 'upkeep'"
   ],
   "pay": [
-   "bring",
-   "one home for every store in or out, with the last minute's flow and the ledger of where it came from and went (v100 writes the stores directly)"
+   "in v100",
+   "F11: econ.js, pay(side, cost, why): a cost spent line by line; plan 'buildings', queue 'units', the age 'research'"
   ],
   "payBack": [
-   "bring",
-   "one home for every store in or out, with the last minute's flow and the ledger of where it came from and went (v100 writes the stores directly)"
+   "in v100",
+   "F11: econ.js, payBack(side, cost, why): a site cancelled and a queue taken back step the store, the minute and the ledger back"
   ],
   "addRes": [
-   "bring",
-   "one home for every store in or out, with the last minute's flow and the ledger of where it came from and went (v100 writes the stores directly)"
+   "in v100",
+   "F11: econ.js, addRes(a, c, f) beside sumCost (M10's refunds sum with it)"
   ],
   "sumCost": [
-   "bring",
-   "one home for every store in or out, with the last minute's flow and the ledger of where it came from and went (v100 writes the stores directly)"
+   "in v100",
+   "F11: econ.js, sumCost (was there for the score; now beside addRes)"
   ],
   "fmt": [
-   "bring",
-   "numbers shortened (1.2k): with the Words"
+   "in v100",
+   "F11: menu.js, fmt beside toast(): its thresholds D191, its 'k' J4; the top bar reads it, as Mid's"
   ],
   "plural": [
-   "bring",
-   "numbers shortened (1.2k): with the Words"
+   "in v100",
+   "F11: menu.js, plural: the first ending in the Words book (J5) that fits"
   ],
   "some": [
-   "bring",
-   "numbers shortened (1.2k): with the Words"
+   "in v100",
+   "F11: menu.js, some(k, n) beside plural"
   ],
   "doorOf": [
    "in v100",

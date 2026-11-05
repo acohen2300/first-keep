@@ -83,6 +83,14 @@ const $ = (id) => document.getElementById(id);
 const S = { tab: 'Start', prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, world: 0, fog: 0, tension: 1, daily: 0, civ: 0, hazard: -1 }, group: 'Home', ghost: null, arming: false, subject: null, lock: {}, last: '', toastT: 0 }; // E182
 try { Object.assign(S.lock, JSON.parse(localStorage.getItem('fk.lock') || '{}')); } catch (e) {}
 const toast = (msg) => { toastEl.textContent = msg; toastEl.style.opacity = 1; S.toastT = D.toast; };
+const WD = fromBook('words'), SAY = D.say; // E272
+const fmt = (n) => (n >= SAY.whole ? Math.round(n / SAY.thousand) + WD.thousand : n >= SAY.thousand ? Math.floor(n / SAY.tenth) / (SAY.thousand / SAY.tenth) + WD.thousand : String(Math.floor(n)));
+const plural = (n) => { for (const [p, f, e] of WD.plural) { const re = new RegExp(p, f); if (re.test(n)) return n.replace(re, e); } }; // E273
+const some = (k, n) => (k === 1 ? n : plural(n));
+const orList = (L) => { const head = [...L], last = head.pop(); return [head.join(WD.list.and), last].filter(Boolean).join(WD.list.or); };
+const slowPct = (f) => Math.round((f / (1 + f)) * SAY.percent); // E274
+const coord = (bx, by) => { const n = Math.ceil(D.board / D.coord), at = (v) => Math.min(n - 1, Math.max(0, Math.floor((v - FK.B0) / D.coord))); return WD.squares[at(bx)] + (at(by) + 1); }; // E275
+const ledgerLine = (o) => Object.entries(o || {}).filter(([, v]) => v >= D.flow.half).sort(([, a], [, b]) => b - a).map(([w, v]) => `${WD.ledger[w] || w} ${fmt(v)}`).join(WD.list.dot) || WD.none; // E276
 const mixc = (a, b, t) => '#' + [0, 2, 4].map((i) => Math.round(parseInt(a.substr(i + 1, 2), 16) * (1 - t) + parseInt(b.substr(i + 1, 2), 16) * t).toString(16).padStart(2, '0')).join('');
 const price = (c) => { const st = SIDES[0].store, miss = Object.entries(c || {}).map(([y, n]) => [y, Math.ceil(n - (st[y] || 0)), n]).filter(([, m]) => m > 0); if (!miss.length) return `<small class="c">${costText(c)}</small>`;
   const f = Math.min(...miss.map(([, m, n]) => 1 - m / n)); return `<small style="color:${f < 0.5 ? mixc(COL.rr, COL.rw, f * 2) : mixc(COL.rw, COL.rg, f * 2 - 1)};opacity:1">Short ${miss.map(([y, m]) => m + y[0]).join(' ')}</small>`; };
@@ -151,11 +159,11 @@ const row = (...items) => `<div class="row6">${items.join('')}</div>`;
 const span = (n, html) => html.replace('class="', `style="grid-column:span ${n}" class="`);
 const part = (label, l, k, n) => `${label ? `<span class="lab" style="grid-column:span ${l}">${label}</span>` : ''}<div class="cells seg" style="grid-column:span ${n};--n:${OPTS[k].length}">${OPTS[k].map((o, i) => vcell('opt', k, i, '', S.opt[k] === i)).join('')}</div>`;
 const frame = (cells) => `<div class="frame">${cells.join('')}</div>`;
-const bar = (f, col, top) => `<span class="bar" style="${top ? 'top' : 'bottom'}:6px;background:linear-gradient(90deg,${col} ${f * 100}%,var(--wfaint) ${f * 100}%)"></span>`;
+const bar = (f, col, top) => `<span class="bar" style="${top ? 'top' : 'bottom'}:6px;background:linear-gradient(90deg,${col} ${f * SAY.percent}%,var(--wfaint) ${f * SAY.percent}%)"></span>`;
 const gap = (n) => `<i class="gap" style="grid-column:span ${n}"></i>`;
 const head = (title, back) => row(back ? vcell('back') : '', span(back ? 3 : 4, cell(title, 'title')), vcell('later', 'book'), vcell('close'));
 const queue6 = (q, done, more) => { const n = SCR.mold.slots, shown = more ? q.slice(0, n - 1) : q.slice(0, n);
-  return [...shown.map(([name, t], i) => cell(`${name}<small>${clock(t)}</small>`, 'q').replace('class="', i ? 'class="' : `style="background:linear-gradient(90deg,color-mix(in srgb,var(--rg) 35%,var(--s2)) ${done * 100}%,var(--s2) ${done * 100}%)" class="`)), ...(more ? [cell(`+${more}`, 'q')] : []), ...Array(n - shown.length - (more ? 1 : 0)).fill('<i class="q"></i>')]; };
+  return [...shown.map(([name, t], i) => cell(`${name}<small>${clock(t)}</small>`, 'q').replace('class="', i ? 'class="' : `style="background:linear-gradient(90deg,color-mix(in srgb,var(--rg) 35%,var(--s2)) ${done * SAY.percent}%,var(--s2) ${done * SAY.percent}%)" class="`)), ...(more ? [cell(`+${more}`, 'q')] : []), ...Array(n - shown.length - (more ? 1 : 0)).fill('<i class="q"></i>')]; };
 const SCREENS = {
   Start: () => [head('A new game', !!S.prev), row(part('Difficulty', 3, 'diff', 3)), row(part('Length', 2, 'len', 4)), row(part('Scenario', 2, 'scen', 4)),
     row(part('World', 1, 'world', 2), part('Fog', 1, 'fog', 2)), row(part('Tension', 1, 'tension', 2), part('Daily', 1, 'daily', 2)), row(part('', 0, 'civ', 6)),
@@ -177,7 +185,7 @@ const page = () => (S.tab && SCREENS[S.tab] ? SCREENS[S.tab]().join('') : '');
 const codeOf = (t) => t.code || FK.KIND[t.kind].code, nameOf = (t) => FK.SH[codeOf(t)].name;
 const ROWS = { // E199
   title: (t) => `<h2>${nameOf(t)}${t.side >= 0 && !own(t) ? ' (theirs)' : ''}</h2>`,
-  health: (t) => (t.hp == null ? '' : `<p>${t.done < 1 ? `site · ${Math.floor(t.done * 100)}% raised` : `${Math.ceil(t.hp)}/${t.hpMax} health`}${t.kind === 'unit' && !FK.has(t, 'Gather') ? ` · ${t.job}` : ''}</p>`),
+  health: (t) => (t.hp == null ? '' : `<p>${t.done < 1 ? `site · ${Math.floor(t.done * SAY.percent)}% raised` : `${Math.ceil(t.hp)}/${t.hpMax} health`}${t.kind === 'unit' && !FK.has(t, 'Gather') ? ` · ${t.job}` : ''}</p>`),
   load: (t) => `<p>${ECON.jobOf(t) || t.job}${t.load ? `, carrying ${Math.floor(t.load)}` : ''}</p>`,
   store: (t) => `<p>${Math.floor(t.amount)} ${ECON.yieldOf(t)} left</p>`,
   queue: (t) => (own(t) && t.q && t.q.length ? row(...queue6(t.q.map((c, i) => [U[c][0], i ? D.train[c] : t.qt]), 1 - t.qt / D.train[t.q[0]], Math.max(0, t.q.length - SCR.mold.slots + 1))) : ''),
@@ -206,7 +214,7 @@ const sword = svg('<path d="M14 4l6-1-1 6-9 9-3-3zM7 15l-3 3 2 2 3-3"/>').replac
 const PEOPLE = { Relations: ['Raiders', 'Rivals', 'Fortress'], Misfits: ['Natives', 'Outlaws', 'Bandits', 'Robbers'] };
 const stances = (t) => `<div class="frame f6">${PEOPLE[t].map((n) => `<span class="lab two-l" style="grid-column:span ${t === 'Misfits' ? 1 : 3}">${n}<br><span style="color:var(--rr)">Foe</span></span>${t === 'Misfits' ? span(2, vcell('later', 'Bribe', null, 'two')) : ''}<div class="cells seg dim" style="grid-column:span 2;--n:3">${cell(sword, 'dim on')}${cell(scales, 'dim')}${cell(hands, 'dim')}</div>${vcell('later', 'check', null, '')}`).join('')}<p class="blurb" style="grid-column:span 6">${t === 'Misfits' ? 'Pick a bribe or a stance, then its ✓' : 'Pick a stance, then its ✓'} · not built yet</p></div>`;
 const TOPCELL = { mute: () => vcell('mute'), play: () => vcell('later', 'play'), mail: () => vcell('later', 'mail') };
-const topbar = (r) => `<div class="strip big">${SCR.top.map((c) => (TOPCELL[c] ? TOPCELL[c]() : cell(`<span class="t">${SVG[c]}</span>${Math.floor(r.store[c])}`))).join('')}</div>`; // E204
+const topbar = (r) => `<div class="strip big">${SCR.top.map((c) => (TOPCELL[c] ? TOPCELL[c]() : cell(`<span class="t">${SVG[c]}</span>${fmt(r.store[c])}`))).join('')}</div>`; // E204
 let acc = 0;
 function render(force) { const r = read();
   const tb = topbar(r); if (tb !== S.lastTop) { topEl.innerHTML = tb; S.lastTop = tb; }
@@ -247,5 +255,5 @@ let PANEL = 0; function sizePanel() { const el = $('panel'), keep = S.tab; PANEL
 addEventListener('resize', sizePanel); let sized = false; // E210
 FK.on('start', () => { if (!sized) { sized = true; (document.fonts ? document.fonts.ready : Promise.resolve()).then(sizePanel); } S.subject = null; S.ghost = null; S.arming = false; S.target = null; S.last = ''; const h = FK.seatOf(0); if (h) { const [cw] = FK.size(); FK.cam.x = h.vx; FK.cam.y = h.vy; FK.cam.z = (cw * D.openShare) / (h.n * D.tile); FK.keepOn(); } render(true); }); // E211
 $('ver').textContent = 'v' + D.version; document.title = 'First Keep v' + D.version; // E212
-return { read, act, VERBS, S, render, SCR };
+return { read, act, VERBS, S, render, SCR, fmt, plural, some, orList, slowPct, coord, ledgerLine };
 })();

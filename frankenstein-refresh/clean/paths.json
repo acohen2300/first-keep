@@ -22,12 +22,12 @@
    "index.html tileAt"
   ],
   "COORD": [
-   "bring",
-   "the map's lettered squares (A1 to V22), for messages that say where (Words, Menus)"
+   "in v100",
+   "F11: measure D190 (100), the letters J6"
   ],
   "coord": [
-   "bring",
-   "with COORD"
+   "in v100",
+   "F11: menu.js, coord(bx, by) beside the other words helpers (not index.html's frames: a words helper, and the frames hold no room for its numbers): measured from the board's corner B0, A1 to V22"
   ],
   "snapPos": [
    "in v100",

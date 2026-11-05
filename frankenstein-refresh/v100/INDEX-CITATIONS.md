@@ -212,7 +212,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N129** Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it) → X41
 - **N130** Design: Albert, Nov 5 09:49 (Frankenstein 4: the match test) → X42
 - **N131** Design: Albert, Nov 5 09:47 (sort every piece) → X43
-- **N132** Design: Albert, Nov 5 11:40 (Frankenstein F10) → X44
+- **N132** Design: Albert, Nov 5 11:40 (Frankenstein F10) → D188, D189, D190, D191, X44, X46, J1, J2, J3, J4, J5, J6
 - **N133** Design: Albert, the Rank Ribbon (Oct 30) and the Formation → SN1
 - **N134** Design: Albert, Nov 5 07:13–07:15 (his Land list; six tabs of up to nine) → SN2
 - **N135** Design: Albert, Nov 5 07:30 → SN3

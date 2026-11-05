@@ -250,11 +250,11 @@ Typed numbers: numbers and colours typed into code (they belong in a book). Asks
 | capabilities.js | Element cards | 2 | 27 | 2,176 | 2,196 | 2 in v100, 0 bring, 0 cut, 0 parked |
 | numbers.js | Numbers | 5 | 2,581 | 103,299 | 104,141 | 20 in v100, 105 bring, 13 cut, 1 parked |
 | tech.js | Ages and tech | 1 | 3,375 | 73,123 | 73,159 | 0 in v100, 4 bring, 2 cut, 0 parked |
-| words.js | Words | 1 | 1,215 | 103,803 | 104,005 | 1 in v100, 15 bring, 1 cut, 0 parked |
-| core.js | Core | 2 | 957 | 47,164 | 47,714 | 52 in v100, 113 bring, 12 cut, 0 parked |
-| paths.js | Walking grid | 1 | 846 | 34,215 | 34,437 | 16 in v100, 20 bring, 9 cut, 0 parked |
+| words.js | Words | 1 | 1,215 | 103,803 | 104,005 | 4 in v100, 12 bring, 1 cut, 0 parked |
+| core.js | Core | 2 | 957 | 47,164 | 47,714 | 61 in v100, 104 bring, 12 cut, 0 parked |
+| paths.js | Walking grid | 1 | 846 | 34,215 | 34,437 | 18 in v100, 18 bring, 9 cut, 0 parked |
 | world.js | World | 7 | 1,095 | 52,496 | 53,361 | 5 in v100, 14 bring, 37 cut, 0 parked |
-| econ.js | Orders and economy | 4 | 3,878 | 151,377 | 152,607 | 29 in v100, 189 bring, 10 cut, 0 parked |
+| econ.js | Orders and economy | 4 | 3,878 | 151,377 | 152,607 | 35 in v100, 183 bring, 10 cut, 0 parked |
 | combat.js | War | 3 | 1,523 | 61,958 | 62,375 | 1 in v100, 65 bring, 1 cut, 0 parked |
 | ai.js | Computers | 1 | 782 | 36,855 | 37,048 | 2 in v100, 28 bring, 1 cut, 0 parked |
 | sprites.js | Art | 2 | 5,134 | 122,368 | 122,642 | 59 in v100, 21 bring, 3 cut, 0 parked |

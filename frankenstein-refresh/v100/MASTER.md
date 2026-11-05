@@ -256,6 +256,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E180** the resources in their colours (COLORS.md)
 - **E181** the colours: COLORS.md, one name each, set once on :root; nothing below uses a colour that
 - **E182** the glass's own state, nothing of the world's
+- **E272** the words helpers: numbers shortened (1.2k, 12k), plurals, 'a, b or c', a percent slower,  · D191 (N132)
+- **E273** the first ending in the Words book (J5) that fits the name · J5 (N132)
+- **E274** how much slower a full cover of mud or snow makes a march, in percent, from its terrain fa · QN (N13)
+- **E275** a place as the map's lettered squares, measured from the board's corner: D190 units a squa · D190 (N132) · A1 (N90)
+- **E276** a ledger line: its reasons largest first, each in its word and shortened, apart by a dot; 
 - **E183** 60w 60f, as Albert's Build menu
 - **E184** read: the one window onto the world the glass draws from
 - **E185** VERBS: every way the player may act, each with its reason not to. act() asks whyNot first;
@@ -291,9 +296,14 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
 - **E213** First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only thro
+- **E267** a side's economy, fresh: its age, its gathered total, the rally, and the stores' flow (thi
 - **E214** seconds played, and when the bell rings
 - **E215** gone: marked when it leaves the map (below)
 - **E216** paying: a side pays all of a cost or none of it (SB Cost)
+- **E268** earn and spend: every store in or out goes through these two, the one home for the stores, · J1 (N132)
+- **E269** what was paid comes back the way it went out: the store, the minute's spending and the led
+- **E270** the stores' flow a minute: the last full minute, or before there is one the minute so far  · D189 (N132)
+- **E271** each minute (D188) the minute's in and out become the last minute's · D188 (N132)
 - **E217** a site: a building paid for and placed at done 0; villagers raise it. canPlace mirrors bui
 - **E218** training: a queue at the building; the head trains; a new unit stands on a free tile besid
 - **E219** the age: paid, then a wait at the Town Center (D129) · D129 (N114)

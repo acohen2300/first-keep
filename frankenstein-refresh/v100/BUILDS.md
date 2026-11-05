@@ -1073,3 +1073,36 @@ MODIFIED (296):
 LOCKED (679 of 975): byte for byte as sealed, 107,513 bytes
 Tests: 19/19 rules hold
 Inventory: 975 items sealed · 869 book entries · 74 laws · 153 citations, 17 still to open · 7 known
+
+## F11 · earn and spend, the words helpers · 2026-11-05 12:42
+Albert, Nov 5 11:40: yes yes F10–F39
+Opened: code:econ.js, code:combat.js, code:ai.js, code:menu.js, code:index.html, book:words, book:measure, book:comments, book:rules, tool:test.py
+MODIFIED (25):
+- book:comments:E267 · added
+- book:comments:E268 · added
+- book:comments:E269 · added
+- book:comments:E270 · added
+- book:comments:E271 · added
+- book:comments:E272 · added
+- book:comments:E273 · added
+- book:comments:E274 · added
+- book:comments:E275 · added
+- book:comments:E276 · added
+- book:measure:D188 · added
+- book:measure:D189 · added
+- book:measure:D190 · added
+- book:measure:D191 · added
+- book:rules:X46 · added
+- book:words:J1 · added
+- book:words:J2 · added
+- book:words:J3 · added
+- book:words:J4 · added
+- book:words:J5 · added
+- book:words:J6 · added
+- code:econ.js · 11,017 → 12,732 bytes
+- code:index.html#page · 1,620 → 1,659 bytes
+- code:menu.js · 40,602 → 41,745 bytes
+- tool:test.py · 13,153 → 20,378 bytes
+LOCKED (971 of 996): byte for byte as sealed, 305,952 bytes
+Tests: 20/20 rules hold
+Inventory: 996 items sealed · 890 book entries · 74 laws · 153 citations, 17 still to open · 7 known

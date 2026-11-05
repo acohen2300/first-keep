@@ -482,6 +482,16 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E264 |  | the player's volume for this channel |  |
 | E265 |  | ambience as events: a bird from a tree in view by day, a cricket in the dark, never in winter; when one sings is a Poisson process (HX4) |  |
 | E266 |  | QBX: the air's top falls with snow cover, on a log scale |  |
+| E267 |  | a side's economy, fresh: its age, its gathered total, the rally, and the stores' flow (this minute's in and out, the last minute's, each by  |  |
+| E268 |  | earn and spend: every store in or out goes through these two, the one home for the stores, the minute's flow (by resource and by reason) and |  |
+| E269 |  | what was paid comes back the way it went out: the store, the minute's spending and the ledger step back, so a cancel is as if the order neve |  |
+| E270 |  | the stores' flow a minute: the last full minute, or before there is one the minute so far scaled up (from at least D189 seconds); net is in  |  |
+| E271 |  | each minute (D188) the minute's in and out become the last minute's |  |
+| E272 |  | the words helpers: numbers shortened (1.2k, 12k), plurals, 'a, b or c', a percent slower, a place as its lettered square, a ledger line; the |  |
+| E273 |  | the first ending in the Words book (J5) that fits the name |  |
+| E274 |  | how much slower a full cover of mud or snow makes a march, in percent, from its terrain factor f: 1 − 1 ÷ (1 + f) (QN) |  |
+| E275 |  | a place as the map's lettered squares, measured from the board's corner: D190 units a square, letters across, numbers down (A1 to V22); off  |  |
+| E276 |  | a ledger line: its reasons largest first, each in its word and shortened, apart by a dot; under half a unit is left out |  |
 
 ## ground
 
@@ -699,6 +709,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D185 | the unit grid's square, in units: units are filed by it after each step, so a search looks only nearby | 48 | N123 |
 | D186 | the building grid's square, in units | 100 | N124 |
 | D187 | the looks' dice: the map's seed XOR this, a stream apart from the map's and the rules' (QBF) | 1013904223 | N125 |
+| D188 | the minute's beat: the stores' flow turns over, the last minute's in and out kept (Mid's flowTick, every 1,800 frames from the start) | [60, 0] | N132 |
+| D189 | the stores' flow: a first minute scaled from at least this many seconds; a store's velocity is tanh(net a minute ÷ ref); under half a unit is nothing; falling with under this many minutes left is the worst (Mid's VEL) | {least: 10, ref: 40, half: 0.5, short: 2} | N132 |
+| D190 | the map's lettered square, in units (J6): A1 to V22 across the board | 100 | N132 |
+| D191 | numbers said: from a thousand shortened to tenths of a k (1.2k), from ten thousand to whole k (12k); a share said in percent | {tenth: 100, thousand: 1000, whole: 10000, percent: 100} | N132 |
 
 ## rules
 
@@ -749,6 +763,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X43 | a temp book being sorted leaves a piece of Mid without its line (in v100, bring, cut or parked) | {stage: survey} | N131 |
 | X44 | same seed, same game: two pages on one seed draw alike and stand alike after 300 s with the weather in it; the rules' dice are Mid's rng draw for draw, BEAT and the grid squares Mid's; unitsNear finds exactly what a full scan finds, bldsNear every building a scan finds | {stage: page} | N132 |
 | X45 | a comment in code written in words instead of its code, a code not in the Comments book, or a Comments entry no code names | {stage: code} | N153 |
+| X46 | every store in or out goes through earn and spend: an earning, a Home built and scrapped at 10%, a villager queued and taken back, an age, the people eating, a spend and the minute's turn leave the stores, the minute's flow, its velocity and the ledger and its lines as Mid's frozen code leaves them; fmt, plural, some, orList, slowPct and coord read as Mid's; 300 s of four sides' play balance the ledger to the unit | {stage: page} | N132 |
 
 ## screen
 
@@ -935,4 +950,15 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | PB10 | the aqueduct building picture | {top: 40} | N151 |
 | PB11 | the siege building picture | {top: 40} | N151 |
 | PN1 | the finds: their scale, and their dot far out | {scale: {tree: 0.88, bush: 1.45, other: 1.25}, dot: {tree: #3c6c32, bush: #3f6b33, gold: gold, stone: rock, iron: ruin, ruins: ruin, cemeter | N152 |
+
+## words
+
+| Code | Name | Value | Cited |
+|---|---|---|---|
+| J1 | the ledger's word for each reason a store goes in or out (Mid's LEDGER_WORD; the Throne's tithe waits on the Throne, the vassals' tax is parked) | {gather: gathered, orders: marching orders, camps: camp supply, finds: finds, trade: trade, tribute: tribute, ransom: ransoms, market: the M | N132 |
+| J2 | a ledger line with nothing on it | nothing yet | N132 |
+| J3 | a list said: 'a, b or c'; a ledger line's items apart | {and: , , or:  or , dot:  · } | N132 |
+| J4 | a number shortened: 1.2k | k | N132 |
+| J5 | one, two: the first ending that fits, as [pattern, flags, ending] (a man-at-arms, men-at-arms; a spearman; a wolf; an ally; a ditch; the rest take s) | [[^(m)an(-at-arms)$, i, $1en$2], [man$, , men], [(wol)f$, i, $1ves], [([^aeiou])y$, , $1ies], [(s/x/ch/sh)$, , $1es], [$, , s]] | N132 |
+| J6 | the map's lettered squares: a letter across, a number down (A1 to V22 on the board, D190) | ABCDEFGHIJKLMNOPQRSTUVWXYZ | N132 |
 

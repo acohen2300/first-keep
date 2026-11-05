@@ -1,0 +1,9 @@
+// Book · J Words: the fixed words the game puts together (a ledger's reasons, a list, a plural, a number shortened, a square on the map), one entry a code. The game reads it; INDEX.md is written from it. Edit here only.
+BOOK("words", {
+ "J1": {"key": "ledger", "value": {"gather": "gathered", "orders": "marching orders", "camps": "camp supply", "finds": "finds", "trade": "trade", "tribute": "tribute", "ransom": "ransoms", "market": "the Market", "loot": "loot", "mint": "the Mint", "venture": "ventures", "units": "people and soldiers", "buildings": "buildings", "research": "research and ages", "upkeep": "eaten", "shops": "used by shops", "spoiled": "spoiled", "zeal": "zeal", "repairs": "repairs"}, "name": "the ledger's word for each reason a store goes in or out (Mid's LEDGER_WORD; the Throne's tithe waits on the Throne, the vassals' tax is parked)", "cite": ["N132"], "law": []},
+ "J2": {"key": "none", "value": "nothing yet", "name": "a ledger line with nothing on it", "cite": ["N132"], "law": []},
+ "J3": {"key": "list", "value": {"and": ", ", "or": " or ", "dot": " · "}, "name": "a list said: 'a, b or c'; a ledger line's items apart", "cite": ["N132"], "law": []},
+ "J4": {"key": "thousand", "value": "k", "name": "a number shortened: 1.2k", "cite": ["N132"], "law": []},
+ "J5": {"key": "plural", "value": [["^(m)an(-at-arms)$", "i", "$1en$2"], ["man$", "", "men"], ["(wol)f$", "i", "$1ves"], ["([^aeiou])y$", "", "$1ies"], ["(s|x|ch|sh)$", "", "$1es"], ["$", "", "s"]], "name": "one, two: the first ending that fits, as [pattern, flags, ending] (a man-at-arms, men-at-arms; a spearman; a wolf; an ally; a ditch; the rest take s)", "cite": ["N132"], "law": []},
+ "J6": {"key": "squares", "value": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "name": "the map's lettered squares: a letter across, a number down (A1 to V22 on the board, D190)", "cite": ["N132"], "law": []}
+});

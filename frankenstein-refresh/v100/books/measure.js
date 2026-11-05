@@ -181,5 +181,9 @@ BOOK("measure", {
  "D184": {"key": "beats.natives", "value": [5, 7], "name": "the Natives' beat: every 5 s, phase 7 frames", "cite": ["N122"], "law": []},
  "D185": {"key": "grid.unit", "value": 48, "name": "the unit grid's square, in units: units are filed by it after each step, so a search looks only nearby", "cite": ["N123"], "law": []},
  "D186": {"key": "grid.bld", "value": 100, "name": "the building grid's square, in units", "cite": ["N124"], "law": []},
- "D187": {"key": "looks", "value": 1013904223, "name": "the looks' dice: the map's seed XOR this, a stream apart from the map's and the rules' (QBF)", "cite": ["N125"], "law": ["QBF"]}
+ "D187": {"key": "looks", "value": 1013904223, "name": "the looks' dice: the map's seed XOR this, a stream apart from the map's and the rules' (QBF)", "cite": ["N125"], "law": ["QBF"]},
+ "D188": {"key": "minute", "value": [60, 0], "name": "the minute's beat: the stores' flow turns over, the last minute's in and out kept (Mid's flowTick, every 1,800 frames from the start)", "cite": ["N132"], "law": []},
+ "D189": {"key": "flow", "value": {"least": 10, "ref": 40, "half": 0.5, "short": 2}, "name": "the stores' flow: a first minute scaled from at least this many seconds; a store's velocity is tanh(net a minute ÷ ref); under half a unit is nothing; falling with under this many minutes left is the worst (Mid's VEL)", "cite": ["N132"], "law": []},
+ "D190": {"key": "coord", "value": 100, "name": "the map's lettered square, in units (J6): A1 to V22 across the board", "cite": ["N132"], "law": []},
+ "D191": {"key": "say", "value": {"tenth": 100, "thousand": 1000, "whole": 10000, "percent": 100}, "name": "numbers said: from a thousand shortened to tenths of a k (1.2k), from ten thousand to whole k (12k); a share said in percent", "cite": ["N132"], "law": []}
 });

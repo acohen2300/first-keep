@@ -1879,9 +1879,59 @@
 "bytes": 68,
 "numbers": 0
 },
+"book:comments:E267": {
+"sha": "165fa855ee308d5967b93c623ddd32f96b31761414ca5b4a72bedacc135b06f8",
+"bytes": 192,
+"numbers": 0
+},
+"book:comments:E268": {
+"sha": "8f8766cdbc970248f4b9e084be594a45c16c72693210bc2c73ad497cadf3e636",
+"bytes": 284,
+"numbers": 0
+},
+"book:comments:E269": {
+"sha": "3e366826ac2f665624677b3ba61c9c96a9cd93daabdcaad4ab0151fe1f56dfe0",
+"bytes": 157,
+"numbers": 0
+},
 "book:comments:E27": {
 "sha": "bbce464cc4e2e288325f2f59df8e963f491f607f3a5c4d3c751093bab5b9a6a3",
 "bytes": 97,
+"numbers": 0
+},
+"book:comments:E270": {
+"sha": "d36f0839f031db29772901977f545bdd206d736b19c82e4032d246867f647f50",
+"bytes": 274,
+"numbers": 0
+},
+"book:comments:E271": {
+"sha": "0e6bcdddd495f7af5ea55fa4d75889b409e2af009df9bb04791b1f53144b1dbe",
+"bytes": 79,
+"numbers": 0
+},
+"book:comments:E272": {
+"sha": "05dd658bd4baae721711a145aafa69f81d2b87a7efaed308d4f0fb541dbe3f1b",
+"bytes": 205,
+"numbers": 0
+},
+"book:comments:E273": {
+"sha": "a33d93b21ce3030e1f261db53c6fd03bb64739f619921b0d26a371be5dbd319d",
+"bytes": 70,
+"numbers": 0
+},
+"book:comments:E274": {
+"sha": "74b5b9e996acf47211dceda243118a4bbbc1adc81602f1b9dc13a499ee7b3823",
+"bytes": 133,
+"numbers": 0
+},
+"book:comments:E275": {
+"sha": "7d0e2f01cc48956f3c16b2fdcf8dc3cc637ed2bfabde14bd2c4112231340445a",
+"bytes": 181,
+"numbers": 0
+},
+"book:comments:E276": {
+"sha": "d5eb290ca74e004bd4375e47231bc9e743716d0edc05ba828999cba7c5b48167",
+"bytes": 131,
 "numbers": 0
 },
 "book:comments:E28": {
@@ -2859,9 +2909,29 @@
 "bytes": 175,
 "numbers": 0
 },
+"book:measure:D188": {
+"sha": "70b2ae616c0d4404e2efa904c53f9cbd4508724f7386164e53dc9098c38b7d6a",
+"bytes": 209,
+"numbers": 0
+},
+"book:measure:D189": {
+"sha": "d0910f604b00a8922900eb2e42a3633663940bdfd58bfc7629e4858dc0092a75",
+"bytes": 334,
+"numbers": 0
+},
 "book:measure:D19": {
 "sha": "7e062770a3ff36a198b087ca276d5cc6d5f912c80c8539e7dfcde0ffa35f4bae",
 "bytes": 99,
+"numbers": 0
+},
+"book:measure:D190": {
+"sha": "855db0e4edba76cd8a079d3f12ac68a86da95f3b413d0c57fb8805eb1326658c",
+"bytes": 139,
+"numbers": 0
+},
+"book:measure:D191": {
+"sha": "98440c45df2b9a1b803f52995dbdf21ab0590cb24fb4e51b70ebe5ff09fd3634",
+"bytes": 254,
 "numbers": 0
 },
 "book:measure:D2": {
@@ -3487,6 +3557,11 @@
 "book:rules:X45": {
 "sha": "b58d8944161d8186b47d573ec2853cf570c608d67b731086bb409cc6c74b8c91",
 "bytes": 210,
+"numbers": 0
+},
+"book:rules:X46": {
+"sha": "6ae5d1f171d42c6803df3f508bf36ead221fe8440ff5adab26089529dcbcb880",
+"bytes": 505,
 "numbers": 0
 },
 "book:rules:X5": {
@@ -4344,6 +4419,36 @@
 "bytes": 343,
 "numbers": 0
 },
+"book:words:J1": {
+"sha": "531963694b27f61a6f962e91508e566c7fcc837ec2d173b9d1943d3144d9a267",
+"bytes": 646,
+"numbers": 0
+},
+"book:words:J2": {
+"sha": "88caf5f9e40194d8244dd692535be76e6a3062813d50c24f8bc06f9ed736fcaf",
+"bytes": 112,
+"numbers": 0
+},
+"book:words:J3": {
+"sha": "2af25e876414234c82f4194d9c9634de82655721bb70fbab19943b18f53663a7",
+"bytes": 162,
+"numbers": 0
+},
+"book:words:J4": {
+"sha": "2d45ea4e73e2da1257df4805fa5e5415a45576fe54c1738ac66fbaadc0ec2735",
+"bytes": 98,
+"numbers": 0
+},
+"book:words:J5": {
+"sha": "8dea989f87327d07321996042d871facc45d05dba5af8e1498f3a48b4a03b289",
+"bytes": 381,
+"numbers": 0
+},
+"book:words:J6": {
+"sha": "5d3c373090eb4cb48194efd0b656d05de5735319f2dffeaad8784e2466fdf29d",
+"bytes": 187,
+"numbers": 0
+},
 "code:ai.js": {
 "sha": "92f60c853fed0e855c169940cc797cea6184323153d6b4d19b043c7d5e532c4e",
 "bytes": 5217,
@@ -4355,8 +4460,8 @@
 "numbers": 101
 },
 "code:econ.js": {
-"sha": "960ed4d5fcf321dd958857efd474dc17c27b04b104678da3f3e50701114e7a10",
-"bytes": 11017,
+"sha": "5a78daebf929a36767051121e7e45428f62f07d6f8495f285ea05fc6008f66a5",
+"bytes": 12732,
 "numbers": 102
 },
 "code:index.html#b-the-buildings": {
@@ -4400,8 +4505,8 @@
 "numbers": 3
 },
 "code:index.html#page": {
-"sha": "5976f482e2f3f08f46dc8ff788cd439e4761f477c8cb6ccbd109f999c6deb9d0",
-"bytes": 1620,
+"sha": "5105bf0df5989a75a3324e961e29d19a6b1c3918ea0c97c068eae87dea9fb1a5",
+"bytes": 1659,
 "numbers": 11
 },
 "code:index.html#qbf-the-dice": {
@@ -4475,8 +4580,8 @@
 "numbers": 59
 },
 "code:menu.js": {
-"sha": "5007cc23da52cb2fc22ea928158acc4ea3127f1bfec86d44ac6cea1f3e6d80de",
-"bytes": 40602,
+"sha": "e2b01856c46558fab4796fbc30f97570c5b6d2d1b272ddcb8939e0af021d97e5",
+"bytes": 41745,
 "numbers": 641
 },
 "code:sound.js": {
@@ -4870,8 +4975,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "7b3ec0178dd7ec58d164c57a836516e717bb0692de03f85cb99532986aad7d06",
-"bytes": 13153,
+"sha": "53da87037542148d797dc4aba7943bfa67772befd779faacc911095fd0d8b28d",
+"bytes": 20378,
 "numbers": 0
 }
 }
