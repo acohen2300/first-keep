@@ -74,6 +74,10 @@ QBL The way: A* over the tiles, eight neighbours, a straight step 1 and a diagon
 QBM Walking: a shell moves its speed in metres a second (D86) times the units a metre (D85) along its way, tile middle to tile middle · N71, N72, N73
 QBN Gathering: a load fills at the find's rate a second (D88) until it holds D87 or the find is gone; then the walk to the nearest drop-off of the side, and back to the find or the nearest of its kind within D89 · N70
 QBJ Z1's store: food = (age up + villagers × a villager) × (1 + margin); wood = (mill + lumber camp + homes × a home + barracks) × (1 + margin); bushes = ⌈food / a bush⌉, trees = ⌈wood / a tree⌉ (Albert's rule; the prices are the genre's until the Content pull) · N69
+QBO The blow: damage = max(1, base × counter × flank − armour); counter D140 when the striker's kind counters the struck's, flank D141 from behind; an engine strikes a building with its own blow · N69
+QBP Upkeep: every unit of a side eats D131 food a day from its store, never below nothing · design
+QBQ The break: a wave goes home when fewer than D142 of the soldiers it set out with still stand · N76
+QBR The score: people and army held at cost ÷ 5, buildings standing at cost ÷ 5, ages paid ÷ 5, everything gathered ÷ 10 · N75
 
 ## N Citations
 N1 Spherical astronomy, the altitude formula (standard)
@@ -150,6 +154,8 @@ N72 Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from m
 N73 Travel speeds of deer, wolf and bear at a walk or trot (natural history, standard; from memory, to open)
 N74 Hart, Nilsson & Raphael (1968), IEEE Trans. SSC 4: A*
 N69 Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house 25 wood, the mill and the lumber camp 100 wood, the barracks 175 wood; a tree 100 wood, a forage bush 125 food, a gold tile 800, a stone tile 350 (from memory, to open; stand-ins)
+N75 First Keep Build 42 (Oct 28), the old game's SCORE: unit 5, bld 5, tech 5, wealth 10 (its weights, kept)
+N76 Dupuy (1987), Understanding War: forces break at losses well short of annihilation; the classic breakpoint near 30% (from memory, to open)
 
 ## Values these use (numbers; floor 1's are in D now, the rest go to D at their floor)
 Day 120 s, season 180 s, year 12 min · gather rates · fire 20 s · melt 0.004 · ice 500 °C·s · ruts 300 and 600 s · wet 20 s, dry 50 s · mud 0.8, snow 0.6 · friction 0.7, 0.45, 0.3, 0.08–0.25 · personal space 3 ft · spoilage 5% a year · eating 30 food in 8 min · R0 2 · rain-chain odds · crew 0.7 · move-on 18% (fog sight comes from QK, not typed)

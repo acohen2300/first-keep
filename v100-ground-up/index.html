@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>First Keep v100 · Display</title>
+<title>First Keep v100</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600&family=IM+Fell+English+SC&display=swap">
 <style>
 :root { --ui: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif; --display: "IM Fell English SC", Georgia, serif; --slot: 44px; --gap: 6px; }
@@ -13,20 +13,11 @@ canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: non
 #top b { font-family: var(--display); font-weight: 400; font-size: 18px; color: #e6b947; }
 #top span { opacity: .75; }
 #store { margin-left: auto; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 12px; }
-#bar { position: fixed; left: var(--gap); right: var(--gap); bottom: calc(env(safe-area-inset-bottom, 0px) + var(--gap)); display: flex; gap: var(--gap); }
-#bar button { flex: 1; height: var(--slot); background: #2a1d13; color: #ece5d3; border: 1px solid #785c3a; border-radius: 6px; font: inherit; font-size: 13px; padding: 0; }
-#bar button.on { border: 2px solid #e6b947; color: #e6b947; }
-#pick { position: fixed; left: var(--gap); right: var(--gap); bottom: calc(env(safe-area-inset-bottom, 0px) + var(--slot) + 2 * var(--gap)); display: none; gap: var(--gap); overflow-x: auto; scrollbar-width: none; }
-#pick.on { display: flex; }
-#pick button { flex: 0 0 auto; height: 36px; padding: 0 10px; background: #2a1d13; color: #ece5d3; border: 1px solid #785c3a; border-radius: 6px; font: inherit; }
-#pick button.on { border: 2px solid #e6b947; color: #e6b947; }
 </style>
 </head>
 <body>
 <canvas id="map"></canvas>
-<div id="top"><b>First Keep</b><span style="white-space:nowrap">v100 · 7</span><span id="clock" style="white-space:nowrap"></span><span id="store"></span><span id="seed"></span></div>
-<div id="pick"></div>
-<div id="bar"><button data-t="grid">Grid</button><button data-t="zones" class="on">Zones</button><button data-t="edge" class="on">Edge</button><button data-t="build">Build</button><button data-t="fog" class="on">Fog</button><button data-t="fast">Fast</button><button id="new">New</button></div>
+<div id="top"><b>First Keep</b><span style="white-space:nowrap">v100 · 8</span><span id="clock" style="white-space:nowrap"></span><span id="store"></span><span id="seed"></span></div>
 <script>
 'use strict';
 // First Keep v100 · floor 1: the ground. Every number below points at the dictionary (DICTIONARY.md); no number is written twice.
@@ -44,7 +35,8 @@ const D = { site: 3060, board: 2160, zone: [300, 600, 900], edge: 60, tile: 10, 
   next: 100, herds: [3, 5], herd: [3, 5], packs: [2, 3], pack: [2, 3], wait: 6, reach: 60, steps: 6, beat: 0.4, fps: 30, // D89 the next find within, D90–D93 the wildlife, D94 a wander's mean wait, D95 its reach, D96 walk frames a second, D97 a work beat, D98 frames a second
   lat: 45, temps: [10, 22, 12, -6], swing: 6, chain: [0.12, 0.65], stormShare: 0.25, wetUp: 20, dryOut: 50, mud: 0.8, snowCost: 0.6, // D99 the latitude, D100 the seasons' mean °C, D101 the day's swing, D102 P(wet|dry), P(wet|wet) an hour, D103 storms among wet hours, D104–D105 wet and dry settle, D106 walking costs
   snowfall: 0.03, melt: 0.004, bears: 200, fogWait: 240, fogLast: 40, flashGap: 0.34, strike: 6, marshes: [1, 2], marshW: 40, fast: 8, // D107 snow a second, D108 melt a °C·s, D109 ice bears at this many °C·s, D110–D111 fog's wait and stay, D112 between flashes, D113 between strikes, D114 marshy lakes, D115 a marsh's width, D116 Fast
-  sight: { unit: 60, bld: 100 }, fogDim: [0.75, 0.4], fogTick: 0.5, shadowMax: 3, blades: 0.45 }; // D117 how far a unit and a building see, D118 the fog's dark over the unseen and the seen, D119 the fog's beat, D120 a shadow at most this many heights, D121 the blades' strength
+  sight: { unit: 60, bld: 100 }, fogDim: [0.75, 0.4], fogTick: 0.5, shadowMax: 3, blades: 0.45,
+  players: [0, 2], woodsKeep: 64 }; // D122 the sides in play: you and one computer, opposite corners; D164 woods chunks kept drawn (more than a screen shows at any zoom) // D117 how far a unit and a building see, D118 the fog's dark over the unseen and the seen, D119 the fog's beat, D120 a shadow at most this many heights, D121 the blades' strength
 const A = { turn: 15, rise: 30, repose: 34 }; // A1 the grid's turn, A2 the camera's rise, A3 the angle of repose
 const C = { water: '#2a6488', sand: '#cdbb88', dirt: '#785c3a', grass: '#4a6634', blue: '#6aaeff', green: '#5fd08a', red: '#ff6b5b', white: '#ece5d3', gold: '#e6b947' }; // C1–C8, C10
 
@@ -282,26 +274,29 @@ function renderGround() {
 
 // ── The view (layer 140): one camera, drag to pan, pinch or wheel to zoom; the overlays are drawn each frame over the one picture.
 const canvas = document.getElementById('map'), ctx = canvas.getContext('2d');
-const cam = { x: 0, y: 0, z: 1 }, show = { grid: false, zones: true, edge: true, build: false, fast: false, fog: true }; let pick = 'BR1';
+const cam = { x: 0, y: 0, z: 1 }, show = { G: false, Z: true, T: true, R: true, B: true, U: true, K: true, V: true, fast: false }; // one flag a layer code (the panel, floor 8) and Fast
 let cw, ch, dpr, zmin, zmax = 6, queued = false;
 const toScreen = (vx, vy) => [(vx - cam.x) * cam.z + cw / 2, (vy - cam.y) * cam.z + ch / 2];
 const S = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return toScreen(x, y); };
 function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 0); cam.x = (l + r) / 2; cam.y = (t + b) / 2; cam.z = Math.min((cw - 24) / (r - l), (ch - 200) / (b - t)); zmin = cam.z / 2; }
 function resize() { dpr = Math.min(2, devicePixelRatio || 1); cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; fit(); dirty(); }
 function dirty() { if (!queued) { queued = true; requestAnimationFrame(draw); } }
+// ── The door (floor 8): the modules (menu, econ, combat, ai) hang on these hooks and read the world through FK; nothing else of theirs touches this file
+const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], spawn: [], gone: [] };
+const on = (ev, fn) => HOOK[ev].push(fn), fire = (ev, ...a) => { for (const f of HOOK[ev]) if (f(...a)) return true; return false; };
 let last = 0, frameDt = 0;
-function loop(now) { if (now - last >= 1000 / D.fps) { const dt = Math.min(0.1, (now - last) / 1000 || 0) * (show.fast ? D.fast : 1); last = now; frameDt = dt; if (!document.hidden) { climate(dt); step(dt); look(dt); draw(); } } requestAnimationFrame(loop); }
+function loop(now) { if (now - last >= 1000 / D.fps) { const dt = Math.min(0.1, (now - last) / 1000 || 0) * (show.fast ? D.fast : 1); last = now; frameDt = dt; if (!document.hidden) { climate(dt); step(dt); fire('tick', dt); look(dt); draw(); } } requestAnimationFrame(loop); }
 function draw() {
   queued = false;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.fillStyle = deepest; ctx.fillRect(0, 0, cw, ch);
-  const [gx, gy] = toScreen(-ox, -oy); ctx.drawImage(ground, gx, gy, gw * cam.z, gh * cam.z); drawSkin();
-  if (show.grid && cam.z * D.tile >= D.lod) drawGrid();
-  drawThings();
-  if (show.zones) drawZones();
-  if (show.edge) drawEdge();
-  if (show.fog) drawFog();
-  drawSky(frameDt);
+  const [gx, gy] = toScreen(-ox, -oy); ctx.drawImage(ground, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin();
+  if (show.G && cam.z * D.tile >= D.lod) drawGrid();
+  drawThings(); fire('draw', ctx, cam.z);
+  if (show.Z) drawZones();
+  if (show.R) drawEdge();
+  if (show.V) drawFog();
+  if (show.K) drawSky(frameDt); fire('over', ctx, cam.z);
 }
 function path(points) { ctx.beginPath(); points.forEach((p, n) => (n ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); }
 let playPoly = null;
@@ -846,10 +841,10 @@ function build(code, i, j, col = C.blue) {
   const [, n] = B[code]; if (i < 0 || j < 0 || i + n > N || j + n > N) return null;
   for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) if (!free(y * N + x) || H[y * N + x] !== H[j * N + i]) return null;
   for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) OCC[y * N + x] = B[code][2] ? 3 : 2;
-  const [bx, by] = toBoard((i + n / 2) * D.tile, (j + n / 2) * D.tile), [vx, vy] = toView(bx, by, H[j * N + i]), t = { kind: 'bld', code, i, j, n, bx, by, vx, vy, col, side: SIDES.findIndex((q) => q.col === col), size: 1 };
+  const [bx, by] = toBoard((i + n / 2) * D.tile, (j + n / 2) * D.tile), [vx, vy] = toView(bx, by, H[j * N + i]), t = { kind: 'bld', code, i, j, n, bx, by, vx, vy, col, side: SIDES.findIndex((q) => q.col === col), size: 1, done: 1 };
   things.push(t); things.sort((a, b) => a.vy - b.vy); return t;
 }
-function unbuild(t) { for (let y = t.j; y < t.j + t.n; y++) for (let x = t.i; x < t.i + t.n; x++) OCC[y * N + x] = 0; things.splice(things.indexOf(t), 1); }
+function unbuild(t) { for (let y = t.j; y < t.j + t.n; y++) for (let x = t.i; x < t.i + t.n; x++) OCC[y * N + x] = 0; things.splice(things.indexOf(t), 1); fire('gone', t); }
 function makeBuildings() { // The Town Center: Who every corner · What one · Where Z2 on the road at D84, the same in all four (L12) · When the map is made · Why the game starts with a hall to gather at · How no roll: fixed
   for (let c = 0; c < 4; c++) { const [sx, sy] = fromBoard(...corner(c, ...D.tc)), n = B.BTC1[1]; build('BTC1', Math.round(sx / D.tile - n / 2), Math.round(sy / D.tile - n / 2), SIDES[c].col); }
 }
@@ -871,11 +866,11 @@ const walkable = (k) => k >= 0 && (H[k] > -D.wade / 2 || iced(k)) && (OCC[k] ===
 const stepOk = (a, b) => walkable(b) && Math.abs(hAt(a) - hAt(b)) <= REPOSE;
 const footing = (k) => 1 / (1 + D.mud * (MARSH[k] ? 1 : K.wet) + D.snowCost * Math.min(1, K.snow / 5)); // QN: mud and snow cost a walker
 // QBL A* over the tiles, eight ways, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile will do; returns the tiles to walk, or null
-function findPath(from, goal, near) {
+function findPath(from, goal, near, most = 20000) { // most: the tiles it may open before giving up
   const open = [from], gs = new Map([[from, 0]]), came = new Map(), done = new Set(), fs = new Map([[from, 0]]), hx = (k) => { const dx = Math.abs((k % N) - (near % N)), dy = Math.abs(Math.floor(k / N) - Math.floor(near / N)); return Math.max(dx, dy) + (Math.SQRT2 - 1) * Math.min(dx, dy); };
   const push = (k) => { open.push(k); let i = open.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (fs.get(open[p]) <= fs.get(open[i])) break; [open[p], open[i]] = [open[i], open[p]]; i = p; } };
   const pop = () => { const top = open[0], last = open.pop(); if (open.length) { open[0] = last; let i = 0; for (;;) { const l = 2 * i + 1, r = l + 1; let m = i; if (l < open.length && fs.get(open[l]) < fs.get(open[m])) m = l; if (r < open.length && fs.get(open[r]) < fs.get(open[m])) m = r; if (m === i) break; [open[m], open[i]] = [open[i], open[m]]; i = m; } } return top; };
-  for (let n = 0; open.length && n < 20000; n++) {
+  for (let n = 0; open.length && n < most; n++) {
     const k = pop(); if (done.has(k)) continue; done.add(k);
     if (goal(k)) { const path = [k]; let q = k; while (came.has(q)) { q = came.get(q); path.push(q); } return path.reverse(); }
     const i = k % N, j = (k - i) / N;
@@ -891,18 +886,17 @@ const tileMid = (k) => { const i = k % N; return toBoard((i + 0.5) * D.tile, ((k
 const nextTo = (k) => (q) => Math.abs((q % N) - (k % N)) <= 1 && Math.abs(Math.floor(q / N) - Math.floor(k / N)) <= 1 && q !== k;
 function spawn(code, side, k, roll) { // a unit on a tile; its stand wanders in the tile (D82)
   const [bx, by] = tileMid(k), u = { kind: 'unit', code, side, bx: bx + (roll() * 2 - 1) * D.jitter, by: by + (roll() * 2 - 1) * D.jitter, k, vx: 0, vy: 0, path: null, at: 0, job: 'idle', target: null, load: 0, carry: null, face: 1, t: roll() * 10, wait: 0 };
-  place(u); units.push(u); return u;
+  place(u); units.push(u); fire('spawn', u); return u;
 }
 const place = (u) => { u.k = tileAt(u.bx, u.by); [u.vx, u.vy] = toView(u.bx, u.by, Math.max(0, H[u.k])); };
-function walkTo(u, goal, near) { const p = findPath(u.k, goal, near); if (!p) return false; u.path = p; u.at = 1; return true; }
+function walkTo(u, goal, near, most) { const p = findPath(u.k, goal, near, most); if (!p) return false; u.path = p; u.at = 1; return true; }
 function go(u, k) { return walkTo(u, (q) => q === k, k); } // to a tile
 function goBeside(u, k) { return walkTo(u, nextTo(k), k); } // to a tile beside one
 // the drop-off for a yield: the side's nearest building that takes it in (SC Drop-off, B's fifth field)
 const dropFor = (u, y) => { let best = null; for (const t of things) if (t.kind === 'bld' && t.side === u.side && (B[t.code][4] || []).includes(y)) { const d = Math.hypot(t.bx - u.bx, t.by - u.by); if (!best || d < best[1]) best = [t, d]; } return best && best[0]; };
 const findNear = (u, kind) => { let best = null; for (const t of things) if (t.kind === kind && t.amount > 0) { const d = Math.hypot(t.bx - u.bx, t.by - u.by); if (d <= D.next && (!best || d < best[1])) best = [t, d]; } return best && best[0]; };
-function gather(u, t) { u.job = 'go'; u.then = 'gather'; u.target = t; if (!goBeside(u, t.k)) u.job = 'idle'; }
-function deliver(u) { const b = dropFor(u, u.carry); if (!b) { u.job = 'idle'; return; } u.job = 'go'; u.then = 'drop'; u.drop = b; if (!walkTo(u, (q) => { const i = q % N, j = (q - i) / N; return i >= b.i - 1 && i <= b.i + b.n && j >= b.j - 1 && j <= b.j + b.n; }, tileAt(b.bx, b.by))) u.job = 'idle'; }
-function take(t, n) { t.amount -= n; if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); if (t.kind === 'tree') wake(t); } } // a find used up is gone; its tile is free again
+const goBy = (u, b) => walkTo(u, (q) => { const i = q % N, j = (q - i) / N; return i >= b.i - 1 && i <= b.i + b.n && j >= b.j - 1 && j <= b.j + b.n; }, tileAt(b.bx, b.by)); // to a tile along a building's edge
+function take(t, n) { t.amount -= n; if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); if (t.kind === 'tree') wake(t); fire('gone', t); } } // a find used up is gone; its tile is free again
 function step(dt) { // one tick for every unit
   for (const u of units) {
     u.t += dt;
@@ -911,19 +905,13 @@ function step(dt) { // one tick for every unit
       if (d <= v) { u.bx = tx; u.by = ty; if (++u.at >= u.path.length) { u.path = null; u.job = u.then || 'idle'; } } else { u.bx += (dx / d) * v; u.by += (dy / d) * v; u.face = dx < 0 ? -1 : 1; }
       place(u); continue;
     }
-    if (u.job === 'gather') { const t = u.target; if (!t || t.amount <= 0 || things.indexOf(t) < 0) { const n = t && findNear(u, t.kind); u.job = 'idle'; if (n) gather(u, n); else if (u.load) deliver(u); continue; }
-      const y = YIELD(t); if (u.carry && u.carry !== y) { deliver(u); continue; } u.carry = y; u.face = t.bx < u.bx ? -1 : 1;
-      const n = Math.min(D.rate[t.kind] * dt, t.amount, D.carry - u.load); u.load += n; take(t, n); if (u.load >= D.carry - 1e-6) deliver(u); }
-    else if (u.job === 'drop') { SIDES[u.side].store[u.carry] += u.load; u.load = 0; const t = u.target, n = t && things.indexOf(t) >= 0 && t.amount > 0 ? t : t && findNear(u, t.kind); u.job = 'idle'; if (n) gather(u, n); }
-    else if (u.code[0] === 'M' && u.job === 'idle') { // wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95
+    if (u.code[0] === 'M' && u.job === 'idle') { // wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95
       if (u.wait <= 0) { u.wait = -D.wait * Math.log(1 - Math.random()); const k = tileAt(u.bx + (Math.random() * 2 - 1) * D.reach, u.by + (Math.random() * 2 - 1) * D.reach); if (walkable(k)) go(u, k); } else u.wait -= dt; }
   }
-  if (sel) showStore();
 }
-function showStore() { const st = SIDES[0].store; document.getElementById('store').textContent = ['food', 'wood', 'gold', 'stone', 'iron'].map((y) => Math.floor(st[y])).join(' · '); }
 function makeUnits(roll) {
   // The villagers: Who every side · What D67 villagers · Where round its Town Center · When the game starts · Why hands to gather and build · How the free tiles nearest the hall
-  for (const t of things) if (t.kind === 'bld' && t.code === 'BTC1') { const got = []; stamp(t.bx, t.by, (t.n / 2 + 3) * D.tile, (k, d) => { if (walkable(k)) got.push([d, k]); }); got.sort((a, b) => a[0] - b[0]); for (const [, k] of got.slice(0, D.villagers)) spawn('UV', t.side, k, roll); }
+  for (const t of things) if (t.kind === 'bld' && t.code === 'BTC1' && D.players.includes(t.side)) { const got = []; stamp(t.bx, t.by, (t.n / 2 + 3) * D.tile, (k, d) => { if (walkable(k)) got.push([d, k]); }); got.sort((a, b) => a[0] - b[0]); for (const [, k] of got.slice(0, D.villagers)) spawn('UV', t.side, k, roll); }
   // The wildlife: Who the map · What herds of deer and packs of wolves · Where Z4, on walkable ground · When the map is made · Why food to hunt, teeth to fear · How counts D90–D93, places uniform until one walks
   for (const [code, herds, herd] of [['MW3', D.herds, D.herd], ['MW4', D.packs, D.pack]]) for (let m = count(roll, herds); m > 0; m--) {
     for (let tries = 0; tries < 100; tries++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (!inZ4(bx, by, 2 * D.tile) || !walkable(k)) continue;
@@ -931,7 +919,7 @@ function makeUnits(roll) {
 }
 // a unit's picture: the look at its frame, facing right, painted once per look, colour and frame (LOOKBOX gives the box)
 function unitSprite(u, s) { const look = U[u.code][1], col = u.side >= 0 ? SIDES[u.side].col : C.white, [bw, bh] = LOOKBOX[look] || [26, 30], pad = 3;
-  const fr = u.path ? Math.floor(u.t * D.steps) % 4 : u.job === 'gather' ? 10 + WORK[u.target.kind] * 2 + (Math.floor(u.t / D.beat) % 2) : 0;
+  const fr = u.path ? Math.floor(u.t * D.steps) % 4 : u.tool != null ? 10 + u.tool * 2 + (Math.floor(u.t / D.beat) % 2) : 0;
   return sprite(look + col + fr, bw + 2 * pad, bh + 2 * pad, bw / 2 + pad, bh + pad - 1, bw / 2 + pad, bh + pad - 1, 0, s, () => LOOKS[look](col, 0, fr)); }
 // ── The things, drawn each frame back to front, only those on the screen. A picture is painted once per look and zoom step, then stamped (the sprite cache); far out (D83) a node is a dot. The gifts are drawn direct, as tints of C.
 const SPR = new Map(), STEP = Math.SQRT2;
@@ -1059,17 +1047,17 @@ function wake(t) { // a tree cut: its chunk is stale, and its neighbours stand a
 const BOX = Array.from({ length: NC * NC }, (_, c) => { const ci = c % NC, cj = (c - ci) / NC, pts = []; for (const [x, y] of [[ci, cj], [ci + 1, cj], [ci, cj + 1], [ci + 1, cj + 1]]) pts.push(V(x * CS * D.tile, y * CS * D.tile, D.land));
   return [Math.min(...pts.map((p) => p[0])) - 12, Math.min(...pts.map((p) => p[1])) - 30, Math.max(...pts.map((p) => p[0])) + 12, Math.max(...pts.map((p) => p[1])) + 6]; }); // each chunk's box in the view frame, with room above for the trees' height
 function woodsChunk(c, q) { // the chunk's deep trees on one canvas
-  const key = c + '@' + q; let w = WOODS.get(key); if (w) return w;
+  const key = c + '@' + q; let w = WOODS.get(key); if (w) { WOODS.delete(key); WOODS.set(key, w); return w; } // a hit moves to the back: the oldest goes first
   const [x0, y0, x1, y1] = BOX[c], cv = document.createElement('canvas'); cv.width = Math.ceil((x1 - x0) * q); cv.height = Math.ceil((y1 - y0) * q); const g2 = cv.getContext('2d');
   for (const t of DEEP[c]) blit(nodeSprite(t.kind, t.v, q * t.size), (t.vx - x0) * q, (t.vy - y0) * q, q * t.size, g2);
-  w = { cv, q }; if (WOODS.size > 24) WOODS.delete(WOODS.keys().next().value); WOODS.set(key, w); return w;
+  w = { cv, q }; if (WOODS.size > D.woodsKeep) WOODS.delete(WOODS.keys().next().value); WOODS.set(key, w); return w;
 }
 function drawWoods(s) { const q = STEP ** Math.round(Math.log(s) / Math.log(STEP));
   for (let c = 0; c < NC * NC; c++) { if (!DEEP[c].length) continue; const [x0, y0, x1, y1] = BOX[c], [x, y] = toScreen(x0, y0), ww = (x1 - x0) * s, hh = (y1 - y0) * s; if (x > cw || y > ch || x + ww < 0 || y + hh < 0) continue; ctx.drawImage(woodsChunk(c, q).cv, x, y, ww, hh); }
 }
 function drawThings() {
   const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s, us = units.slice().sort((a, b) => a.vy - b.vy); let n = 0;
-  const unit = (u) => { if (u.side !== 0 && !inSight(u.k)) return; const [x, y] = toScreen(u.vx, u.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) return;
+  const unit = (u) => { if (!show.U || (u.side !== 0 && !inSight(u.k))) return; const [x, y] = toScreen(u.vx, u.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) return;
     if (!dots) { ctx.strokeStyle = u === sel ? C.gold : u.side >= 0 ? SIDES[u.side].col : C.white; ctx.globalAlpha = u === sel ? 1 : 0.5; ctx.lineWidth = u === sel ? 1.5 : 1; ctx.beginPath(); ctx.ellipse(x, y, 7 * s, 3.5 * s, 0, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
     if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else if (u.face < 0) { ctx.save(); ctx.translate(x, y); ctx.scale(-1, 1); blit(unitSprite(u, s), 0, 0, s); ctx.restore(); } else blit(unitSprite(u, s), x, y, s); };
   if (!dots) { drawWoods(s); drawShadows(s); }
@@ -1077,7 +1065,8 @@ function drawThings() {
     while (n < us.length && us[n].vy <= t.vy) unit(us[n++]);
     if (t.deep && !dots) continue;
     const [x, y] = toScreen(t.vx, t.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) continue;
-    if (t.kind === 'bld') blit(bldSprite(t.code, t.col, s), x, y, s);
+    if (t.kind === 'bld') { if (!show.B) continue; if (t.done < 1) ctx.globalAlpha = 0.3 + 0.7 * t.done; blit(bldSprite(t.code, t.col, s), x, y, s); ctx.globalAlpha = 1; }
+    else if (!show.T) continue;
     else if (GIFT[t.kind]) { if (!dots) GIFT[t.kind](x, y, s); }
     else if (dots) rect(x - 1, y - 1, 2, 2, DOT[t.kind]); else blit(nodeSprite(t.kind, t.v, s * t.size), x, y, s * t.size);
   }
@@ -1112,24 +1101,26 @@ canvas.addEventListener('pointermove', (e) => {
   keepOn(); ptrs.set(e.pointerId, [e.clientX, e.clientY, was[2], was[3]]); dirty();
 });
 for (const ev of ['pointerup', 'pointercancel']) canvas.addEventListener(ev, (e) => { const p = ptrs.get(e.pointerId); ptrs.delete(e.pointerId); if (ev === 'pointerup' && p && Math.hypot(e.clientX - p[2], e.clientY - p[3]) < 6) tap(e.clientX, e.clientY); });
-function tap(px, py) { // the tile under a tap, at the land's height. Build on: a building there comes down, else the picked one goes up. Otherwise (SM Select, Move): a villager of the player's is picked; a find sends the picked one gathering, the ground sends it walking
-  const vx = cam.x + (px - cw / 2) / cam.z, vy = cam.y + (py - ch / 2) / cam.z, [sx, sy] = fromBoard(vx, (vy + D.land * UP) / TILT), i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile), k = j * N + i;
-  if (show.build) { const hit = things.find((t) => t.kind === 'bld' && i >= t.i && i < t.i + t.n && j >= t.j && j < t.j + t.n); if (hit) unbuild(hit); else build(pick, i - Math.floor(B[pick][1] / 2), j - Math.floor(B[pick][1] / 2)); dirty(); return; }
+function tap(px, py) { // the tile under a tap, at the land's height, and the player's unit nearest it; the modules answer first (menu), else a tap picks a villager or sends the picked one walking
+  const vx = cam.x + (px - cw / 2) / cam.z, vy = cam.y + (py - ch / 2) / cam.z, [sx, sy] = fromBoard(vx, (vy + D.land * UP) / TILT), i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile), k = i < 0 || j < 0 || i >= N || j >= N ? -1 : j * N + i;
   let near = null; for (const u of units) if (u.side === 0) { const [x, y] = toScreen(u.vx, u.vy), d = Math.hypot(x - px, y - py + 8 * cam.z); if (d < 16 && (!near || d < near[1])) near = [u, d]; }
-  if (near) sel = near[0]; else if (sel) { const t = things.find((q) => q.k === k && KIND[q.kind] && KIND[q.kind].yield); if (t) gather(sel, t); else if (walkable(k)) { sel.job = 'go'; sel.then = 'idle'; sel.target = null; if (!go(sel, k)) sel.job = 'idle'; } }
+  if (fire('tap', k, near && near[0], px, py)) { dirty(); return; }
+  if (near) sel = near[0]; else if (sel && walkable(k)) { sel.job = 'walk'; sel.then = 'idle'; sel.target = null; if (!go(sel, k)) sel.job = 'idle'; }
   dirty();
 }
-const pickBar = document.getElementById('pick');
-for (const code of Object.keys(B)) { const b = document.createElement('button'); b.textContent = B[code][0]; b.classList.toggle('on', code === pick); b.onclick = () => { pick = code; for (const q of pickBar.children) q.classList.toggle('on', q === b); }; pickBar.appendChild(b); }
 canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0015)); keepOn(); dirty(); }, { passive: false });
-for (const b of document.querySelectorAll('#bar [data-t]')) b.onclick = () => { show[b.dataset.t] = !show[b.dataset.t]; b.classList.toggle('on', show[b.dataset.t]); pickBar.classList.toggle('on', show.build); dirty(); };
-document.getElementById('new').onclick = () => { location.hash = String(Math.floor(Math.random() * 4294967296)); };
 // The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a seed in the address overrides it.
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
-function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); fogT = 0; K.t = 0; K.snow = 0; K.fds = 0; K.wet = 0; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); showStore(); dirty(); }
+function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); fogT = 0; K.t = 0; K.snow = 0; K.fds = 0; K.wet = 0; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
-resize(); start(); requestAnimationFrame(loop);
-window.fk = { D, A, C, B, U, K, SIDES, climate, MARSH, SEEN, look, cam, show, dirty, fit, H, DEP, FOR, OCC, N, V, toView, fromBoard, corner, B0, B1, KIND, Z1, z1, build, unbuild, gather, go, step, findPath, tileAt, walkable, select: (u) => (sel = u), seed: () => seed, things: () => things, units: () => units, coast: (s, p) => coast(s, p) }; // the test hook
+window.FK = { D, A, C, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1,
+  things: () => things, units: () => units, sel: () => sel, select: (u) => (sel = u), seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // the door: what the modules may touch
+window.fk = FK; // the test hook
 </script>
+<script src="menu.js"></script>
+<script src="econ.js"></script>
+<script src="combat.js"></script>
+<script src="ai.js"></script>
+<script>resize(); start(); requestAnimationFrame(loop);</script>
 </body>
 </html>
