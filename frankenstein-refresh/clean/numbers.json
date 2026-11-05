@@ -107,7 +107,7 @@
   ],
   "AGES": [
    "bring",
-   "six ages with their own prices and times, the last hidden behind a year of peace: v100 has six names (D130: Camp, Village, Town, City, Kingdom, Empire; Mid: Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment) and one price (D129). Names differ: Albert's call"
+   "six ages with their own prices and times, the last hidden behind a year of peace: v100 has six names (D130: Camp, Village, Town, City, Kingdom, Empire; Mid: Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment) and one price (D129). Names differ: Albert's call · Albert, Nov 5 10:30: Mid's names"
   ],
   "SEASONS": [
    "bring",
@@ -954,6 +954,10 @@
   [
    "Albert, Nov 5 10:08-10:28",
    "damage: still open (Albert tests it in play); units' health is open with it until he says otherwise"
+  ],
+  [
+   "Albert, Nov 5 10:30",
+   "ages: Mid's names (Stone, Bronze, Classical, Medieval, Gunpowder, and the hidden Enlightenment); their times Mid's by the 10:06 call; their prices still open"
   ]
  ]
 }
