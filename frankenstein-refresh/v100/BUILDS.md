@@ -1179,3 +1179,92 @@ MODIFIED (17):
 LOCKED (1009 of 1026): byte for byte as sealed, 358,123 bytes
 Tests: 23/23 rules hold
 Inventory: 1026 items sealed · 919 book entries · 75 laws · 159 citations, 18 still to open · 7 known
+
+## F13a · ages and research · 2026-11-05 13:42
+Albert, Nov 5 11:40: yes yes F10–F39; Mid's age names (10:30)
+Opened: code:econ.js, book:tech, book:measure, book:capabilities, book:words, book:comments, book:rules, book:citations, tool:test.py
+MODIFIED (81):
+- book:capabilities:SC15 · 157 → 339 bytes
+- book:citations:N160 · added
+- book:citations:N161 · added
+- book:comments:E218 · 134 → 319 bytes
+- book:comments:E219 · 64 → 144 bytes
+- book:comments:E224 · 69 → 82 bytes
+- book:comments:E226 · 96 → 177 bytes
+- book:comments:E267 · 192 → 212 bytes
+- book:comments:E290 · added
+- book:comments:E291 · added
+- book:comments:E292 · added
+- book:comments:E293 · added
+- book:measure:D129 · 162 → 466 bytes
+- book:measure:D130 · 135 → 188 bytes
+- book:rules:X50 · added
+- book:tech:O1 · added
+- book:tech:O10 · added
+- book:tech:O11 · added
+- book:tech:O12 · added
+- book:tech:O13 · added
+- book:tech:O14 · added
+- book:tech:O15 · added
+- book:tech:O16 · added
+- book:tech:O17 · added
+- book:tech:O18 · added
+- book:tech:O19 · added
+- book:tech:O2 · added
+- book:tech:O20 · added
+- book:tech:O21 · added
+- book:tech:O22 · added
+- book:tech:O23 · added
+- book:tech:O24 · added
+- book:tech:O25 · added
+- book:tech:O26 · added
+- book:tech:O27 · added
+- book:tech:O28 · added
+- book:tech:O29 · added
+- book:tech:O3 · added
+- book:tech:O30 · added
+- book:tech:O31 · added
+- book:tech:O32 · added
+- book:tech:O33 · added
+- book:tech:O34 · added
+- book:tech:O35 · added
+- book:tech:O36 · added
+- book:tech:O37 · added
+- book:tech:O38 · added
+- book:tech:O39 · added
+- book:tech:O4 · added
+- book:tech:O40 · added
+- book:tech:O41 · added
+- book:tech:O42 · added
+- book:tech:O43 · added
+- book:tech:O44 · added
+- book:tech:O45 · added
+- book:tech:O46 · added
+- book:tech:O47 · added
+- book:tech:O48 · added
+- book:tech:O49 · added
+- book:tech:O5 · added
+- book:tech:O50 · added
+- book:tech:O51 · added
+- book:tech:O52 · added
+- book:tech:O53 · added
+- book:tech:O54 · added
+- book:tech:O55 · added
+- book:tech:O56 · added
+- book:tech:O57 · added
+- book:tech:O58 · added
+- book:tech:O59 · added
+- book:tech:O6 · added
+- book:tech:O60 · added
+- book:tech:O61 · added
+- book:tech:O62 · added
+- book:tech:O63 · added
+- book:tech:O7 · added
+- book:tech:O8 · added
+- book:tech:O9 · added
+- book:words:J7 · added
+- code:econ.js · 12,654 → 14,325 bytes
+- tool:test.py · 37,849 → 45,189 bytes
+LOCKED (1016 of 1097): byte for byte as sealed, 363,069 bytes
+Tests: 24/24 rules hold
+Inventory: 1097 items sealed · 990 book entries · 75 laws · 161 citations, 19 still to open · 7 known

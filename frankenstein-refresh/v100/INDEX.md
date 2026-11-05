@@ -33,7 +33,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC12 | takes in the yields its row lists | {by: index.html dropFor, ai.js, law: [QBN], needs: [drop], may: []} | N98 |
 | SC13 | trains the units D133 gives it | {by: econ.js, law: [], needs: [D133], may: []} | N95 |
 | SC14 | houses the people D127 gives it | {by: econ.js, ai.js, law: [], needs: [D127], may: []} | N95 |
-| SC15 | where the ages are reached | {by: menu.js, econ.js, law: [], needs: [], may: []} | N95 |
+| SC15 | where the ages are reached; the queue holds research as well as units: a step of the Research book is learned at the building its row names, after the one before it in its line and its needs | {by: menu.js, econ.js, law: [QCA], needs: [], may: []} | N95; N160 |
 | SC16 | a building that yields, at the rate its row points to | {by: econ.js, ai.js, law: [QBN], needs: [yield, rate], may: []} | N95 |
 | SC17 | a find: holds an amount of a yield | {by: econ.js, law: [QBN], needs: [yield, amount], may: []} | N99 |
 | SC18 | scouts (not built yet) | {by: waiting, law: [], needs: [], may: []} | N100 |
@@ -203,6 +203,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N157 |  | Design: Mid's battle odds (08-core.js unitPower, powerOf, lanchester; 17-ai.js powerFrom, estPower, matchup; 36-economy.js oddsOf) with its  | opened |
 | N158 |  | Design: Mid's one hostility test (08-core.js atWar, gangOf, gangRel, isFoe, friendly; decision 8, C1, answer 1b; 10-world.js every side at w | opened |
 | N159 |  | Vienna Convention on the Law of Treaties (1969), art. 34: a treaty creates neither obligations nor rights for a third state without its cons | to open |
+| N160 |  | Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning lines; 08-core.js lineOf, prevOf,  | opened |
+| N161 |  | Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written for Mid from general history; | to open |
 
 ## colours
 
@@ -439,15 +441,15 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E215 |  | gone: marked when it leaves the map (below) |  |
 | E216 |  | paying: a side pays all of a cost or none of it (SB Cost) |  |
 | E217 |  | a site: a building paid for and placed at done 0; villagers raise it. canPlace mirrors build's rule without building |  |
-| E218 |  | training: a queue at the building; the head trains; a new unit stands on a free tile beside and takes the side's rally job |  |
-| E219 |  | the age: paid, then a wait at the Town Center (D129) |  |
+| E218 |  | training and research: a queue at the building, at most the mold's six (SN1); the head trains or is learned, in the time of its row (D124, o |  |
+| E219 |  | the age: Mid's price and wait for each age (D129, the ages of D130), paid, then the wait; the hidden sixth opens only with the peace |  |
 | E220 |  | the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept |  |
 | E221 |  | QW: the find of a yield that keeps the round trip shortest: nearest the drop-off among those within D89 of the villager, else nearest the vi |  |
 | E222 |  | a find no path reaches is left alone a while (D137), and the next beat chooses again among the finds near (D89): one walled in tries one fin |  |
 | E223 |  | assign: + sends the nearest idle villager (else one from the fullest other job) to the yield's best find; − sets one of the job's villagers  |  |
-| E224 |  | the tick: training, ages, upkeep, the villagers, the bell |  |
+| E224 |  | the tick: training and research, ages, upkeep, the villagers, the bell |  |
 | E225 |  | a new game: the book's stores (D172); the bell stays as Start set it |  |
-| E226 |  | the score (QBR): what a side holds, cost ÷ D135, and everything it gathered ÷ D135 |  |
+| E226 |  | the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what it paid for research and ages (the ledger's researc |  |
 | E227 |  | First Keep v100 · combat.js (floor 10): health, one blow (QBO), target choice (QAG), nerve (QBQ), towers (QAL). Lives alone; touches the wor |  |
 | E228 |  | tiles from a unit to a thing: to a building's footprint, in the grid's frame |  |
 | E229 |  | gone: pulled down (econ marks it) or dead (die marks it) |  |
@@ -488,7 +490,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E264 |  | the player's volume for this channel |  |
 | E265 |  | ambience as events: a bird from a tree in view by day, a cricket in the dark, never in winter; when one sings is a Poisson process (HX4) |  |
 | E266 |  | QBX: the air's top falls with snow cover, on a log scale |  |
-| E267 |  | a side's economy, fresh: its age, its gathered total, the rally, and the stores' flow (this minute's in and out, the last minute's, each by  |  |
+| E267 |  | a side's economy, fresh: its age, the steps it knows, its gathered total, the rally, and the stores' flow (this minute's in and out, the las |  |
 | E268 |  | earn and spend: every store in or out goes through these two, the one home for the stores, the minute's flow (by resource and by reason) and |  |
 | E269 |  | what was paid comes back the way it went out: the store, the minute's spending and the ledger step back, so a cancel is as if the order neve |  |
 | E270 |  | the stores' flow a minute: the last full minute, or before there is one the minute so far scaled up (from at least D189 seconds); net is in  |  |
@@ -511,6 +513,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E287 |  | a stance is the pair's own, or the book's start (I2); a treaty sets it both ways between its signers only, never for a third (pacta tertiis, |  |
 | E288 |  | the one hostility test (Mid's isFoe): never one's own; an animal is everyone's foe; one of a wild group is a foe when the side is at war wit |  |
 | E289 |  | the wild looking at a side: an animal fights everyone; a group fights a side at war with it, but starts nothing with a computer (decision 4b |  |
+| E290 |  | the Research book (O) by code and by key, and the queue's length, the mold's six (SN1) |  |
+| E291 |  | a find's or a field's rate after the side's research (QCA): the one window, D88 or the row's own rate as the base |  |
+| E292 |  | Mid's research lines: a line is the steps of one line at one building, in the book's order; a step waits on the one before it and on its nee |  |
+| E293 |  | research (Mid's researchWhy and research): a step is refused when known, before its age, before its needs, already queued, with no finished  |  |
 
 ## ground
 
@@ -671,8 +677,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D126 | n villagers raise it at n^this | 0.7 | N114 |
 | D127 | the people a building houses | {BTC1: 10, BR1: 5} | N69 |
 | D128 | the most people | 200 | N69 |
-| D129 | an age's price: n × food, (n − 1) × gold, and its wait | {food: 500, gold: 200, time: 90} | N114 |
-| D130 | the six ages | [Camp, Village, Town, City, Kingdom, Empire] | N114 |
+| D129 | each age's price and its wait in seconds, by the ages of D130 (Mid's AGES); the sixth is hidden until a year of peace opens it | {cost: [{}, {food: 300, wood: 100}, {food: 600, gold: 200}, {food: 1000, gold: 500, stone: 200}, {food: 1600, gold: 900, stone: 300, iron: 4 | N160 |
+| D130 | the six ages (Mid's names; Albert, Nov 5 10:30) | [Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment] | N160 |
 | D131 | a unit's food a day | 1 | N114 |
 | D132 | move on when another find is this much nearer the drop-off | 0.18 | N114 |
 | D133 | who trains whom | {BTC1: [UV], BM1: [UM1], BM2: [UM2], BM3: [UM3, US4], BM4: [UM4]} | N114 |
@@ -789,6 +795,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X47 | a kind's numbers after research are Mid's stats(), maxHpB, unitCost, techCost and rehealth with its shares added, not multiplied (QCA); a Home's health is D139 × (1 + Σ shares); the lowest is kept; a find's rate and the walk read the law | {stage: page} | N154 |
 | X48 | the odds of a battle are Mid's frozen unitPower, powerOf, powerFrom, matchup and lanchester for the same armies and towers (Mid's values, a tower 120, the people 250); a villager walled in from every find does not crash and ends idle or waiting | {stage: page} | N157 |
 | X49 | who is a foe is Mid's frozen isFoe, gangOf, atWar and friendly for the same sides, groups and stances: animals everyone's foe, each wild group by its own stance, a treaty binding only its signers; a soldier and a tower strike only a foe | {stage: page} | N158 |
+| X50 | ages and research are Mid's frozen code for the same orders: the age up Stone to Bronze at its price and wait, the woodcutting line in order at each step's price and time, a step out of order, already queued, before its age or before its needs refused, and the rate wood is cut at after each step the base × (1 + the shares added) | {stage: page} | N160 |
 
 ## screen
 
@@ -989,6 +996,69 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 
 | Code | Name | Value | Cited |
 |---|---|---|---|
+| O1 | Hafted axes | {at: BI2, line: Felling, age: 0, cost: {food: 50, wood: 40}, time: 18, fx: [{s: rate, k: [R1, BCL2], p: 0.1}], when: 6000 BC, w: 5} | N160; N161 |
+| O2 | Bronze axes | {at: BI2, line: Felling, age: 1, cost: {food: 100, wood: 70}, time: 28, fx: [{s: rate, k: [R1, BCL2], p: 0.15}], when: 3000 BC, w: 5} | N160; N161 |
+| O3 | Iron axes | {at: BI2, line: Felling, age: 1, cost: {food: 180, wood: 120}, time: 41, fx: [{s: rate, k: [R1, BCL2], p: 0.15}], need: [iron], when: 1000 B | N160; N161 |
+| O4 | Saw pits | {at: BI2, line: Felling, age: 2, cost: {food: 130, wood: 90}, time: 32, fx: [{s: rate, k: [R1, BCL2], p: 0.1}], when: Roman, w: 3} | N160; N161 |
+| O5 | Crosscut saw | {at: BI2, line: Felling, age: 3, cost: {food: 240, wood: 160}, time: 48, fx: [{s: rate, k: [R1, BCL2], p: 0.15}], when: 1400s, w: 4} | N160; N161 |
+| O6 | Sawmill | {at: BI2, line: Felling, age: 4, cost: {food: 470, wood: 310}, time: 77, fx: [{s: rate, k: BCL2, p: 0.3}], need: [windmill], when: 1500s, w: | N160; N161 |
+| O7 | Coppicing | {at: BI2, line: Woodland, age: 0, cost: {food: 50, wood: 30}, time: 17, fx: [{s: rate, k: BCL2, p: 0.25}], when: 4000 BC, w: 4} | N160; N161 |
+| O8 | Pollarding | {at: BI2, line: Woodland, age: 1, cost: {food: 70, wood: 50}, time: 21, fx: [{s: rate, k: BCL2, p: 0.1}], when: Bronze age, w: 2} | N160; N161 |
+| O9 | Forest law | {at: BI2, line: Woodland, age: 3, cost: {food: 240, wood: 160}, time: 48, fx: [{s: limit, k: BCL2, a: 2}], when: 1100s, w: 4} | N160; N161 |
+| O10 | Plantations | {at: BI2, line: Woodland, age: 4, cost: {food: 350, wood: 230}, time: 61, fx: [{s: rate, k: BCL2, p: 0.2}], when: 1600s, w: 4} | N160; N161 |
+| O11 | Timber framing | {at: BI2, line: Carpentry, age: 1, cost: {food: 100, wood: 70}, time: 28, fx: [{s: room, k: BR1, a: 1}], when: 2000 BC, w: 5} | N160; N161 |
+| O12 | Charcoal burning | {at: BI2, line: Carpentry, age: 3, cost: {food: 260, wood: 180}, time: 52, fx: [{s: rate, k: BI7, p: 0.15}], when: 1000 BC, w: 5} | N160; N161 |
+| O13 | Wagons | {at: BI2, line: Carpentry, age: 3, cost: {food: 260, wood: 180}, time: 52, fx: [{s: carry, k: UV, a: 3}], when: 1000s, w: 5} | N160; N161 |
+| O14 | Log driving | {at: BI2, line: Carpentry, age: 4, cost: {food: 310, wood: 210}, time: 55, fx: [{s: rate, k: BCL2, p: 0.15}], when: 1500s, w: 3} | N160; N161 |
+| O15 | Sickles | {at: BI1, line: Harvest, age: 0, cost: {food: 50, wood: 40}, time: 18, fx: [{s: rate, k: BCL1, p: 0.1}], when: 9000 BC, w: 5} | N160; N161 |
+| O16 | Threshing sledge | {at: BI1, line: Harvest, age: 0, cost: {food: 80, wood: 50}, time: 24, fx: [{s: rate, k: BCL1, p: 0.1}], when: 6000 BC, w: 3} | N160; N161 |
+| O17 | Plough | {at: BI1, line: Harvest, age: 0, cost: {food: 140, wood: 100}, time: 37, fx: [{s: rate, k: BCL1, p: 0.2}], when: 3500 BC, w: 9} | N160; N161 |
+| O18 | Water wheel | {at: BI1, line: Harvest, age: 2, cost: {food: 180, wood: 120}, time: 41, fx: [{s: rate, k: BCL1, p: 0.1}], when: 300 BC, w: 6} | N160; N161 |
+| O19 | Horse collar | {at: BI1, line: Harvest, age: 3, cost: {food: 320, wood: 210}, time: 60, fx: [{s: rate, k: BCL1, p: 0.15}], need: [horses], when: 900s, w: 7 | N160; N161 |
+| O20 | Heavy plough | {at: BI1, line: Harvest, age: 3, cost: {food: 340, wood: 230}, time: 64, fx: [{s: rate, k: BCL1, p: 0.15}], when: 1000s, w: 8} | N160; N161 |
+| O21 | Windmill | {at: BI1, line: Harvest, age: 3, cost: {food: 430, wood: 290}, time: 71, fx: [{s: rate, k: BCL1, p: 0.1}], when: 1180s, w: 6} | N160; N161 |
+| O22 | Seed drill | {at: BI1, line: Harvest, age: 4, cost: {food: 430, wood: 290}, time: 71, fx: [{s: rate, k: BCL1, p: 0.15}], when: 1701, w: 6} | N160; N161 |
+| O23 | Bread ovens | {at: BI1, line: Stores, age: 1, cost: {food: 90, wood: 60}, time: 26, fx: [{s: rate, k: BCL1, p: 0.1}], when: 3000 BC, w: 4} | N160; N161 |
+| O24 | Stone granary | {at: BI1, line: Stores, age: 1, cost: {food: 110, wood: 70}, time: 30, fx: [{s: plague, p: -0.5}], need: [masonry], when: 2500 BC, w: 6} | N160; N161 |
+| O25 | Wheelbarrow | {at: BI1, line: Stores, age: 3, cost: {food: 240, wood: 160}, time: 48, fx: [{s: carry, k: UV, a: 5}], when: 1100s, w: 4} | N160; N161 |
+| O26 | Antler picks | {at: BI3, line: Digging, age: 0, cost: {food: 50, stone: 30}, time: 17, fx: [{s: rate, k: R3, p: 0.2}, {s: rate, k: R2, p: 0.2}], when: 4000 | N160; N161 |
+| O27 | Fire-setting | {at: BI3, line: Digging, age: 1, cost: {food: 90, stone: 60}, time: 26, fx: [{s: rate, k: R3, p: 0.1}, {s: rate, k: R2, p: 0.1}], when: 3000 | N160; N161 |
+| O28 | Deep shafts | {at: BI3, line: Digging, age: 2, cost: {food: 170, stone: 110}, time: 38, fx: [{s: rate, k: R3, p: 0.2}, {s: rate, k: R2, p: 0.2}], when: 50 | N160; N161 |
+| O29 | Mine pumps | {at: BI3, line: Digging, age: 3, cost: {food: 260, stone: 180}, time: 52, fx: [{s: rate, k: R3, p: 0.15}, {s: rate, k: R2, p: 0.15}, {s: rat | N160; N161 |
+| O30 | Mine wagons | {at: BI3, line: Digging, age: 4, cost: {food: 350, stone: 230}, time: 61, fx: [{s: carry, k: UV, a: 3}], when: 1500s, w: 4} | N160; N161 |
+| O31 | Blasting | {at: BI3, line: Digging, age: 4, cost: {food: 470, stone: 310}, time: 77, fx: [{s: rate, k: R3, p: 0.25}, {s: rate, k: R4, p: 0.25}], need:  | N160; N161 |
+| O32 | Fired brick | {at: BI3, line: Building, age: 1, cost: {food: 170, stone: 110}, time: 38, fx: [{s: room, k: BR1, a: 1}, {s: room, k: BR2, a: 4}], when: 300 | N160; N161 |
+| O33 | Masonry | {at: BI3, line: Building, age: 1, cost: {food: 120, stone: 80}, time: 32, fx: [{s: hp, k: B, p: 0.3}], when: 2600 BC, w: 7} | N160; N161 |
+| O34 | Ventilation | {at: BI3, line: Building, age: 4, cost: {food: 310, stone: 210}, time: 55, fx: [{s: rate, k: R4, p: 0.2}], when: 1500s, w: 3} | N160; N161 |
+| O35 | Iron wedges | {at: BCL4, line: Cutting, age: 2, cost: {wood: 150, iron: 100}, time: 35, fx: [{s: rate, k: BCL4, p: 0.2}], need: [iron], when: 500 BC, w: 4 | N160; N161 |
+| O36 | Steel chisels | {at: BCL4, line: Cutting, age: 3, cost: {wood: 210, iron: 140}, time: 44, fx: [{s: rate, k: BCL4, p: 0.15}], when: 1200s, w: 3} | N160; N161 |
+| O37 | Stone saws | {at: BCL4, line: Cutting, age: 4, cost: {wood: 350, iron: 230}, time: 61, fx: [{s: rate, k: BCL4, p: 0.2}], need: [sawmill], when: 1500s, w: | N160; N161 |
+| O38 | Rollers and sledges | {at: BCL4, line: Hauling, age: 2, cost: {wood: 130, iron: 90}, time: 32, fx: [{s: carry, k: UV, a: 2}], when: 2500 BC, w: 3} | N160; N161 |
+| O39 | Treadwheel crane | {at: BCL4, line: Hauling, age: 3, cost: {wood: 290, iron: 190}, time: 56, fx: [{s: rate, k: BCL4, p: 0.2}], when: 1200s, w: 6} | N160; N161 |
+| O40 | Tally sticks | {at: BTC1, line: Household, age: 0, cost: {food: 40, gold: 30}, time: 15, fx: [{s: time, k: O, p: -0.05}], when: 20,000 BC, w: 3} | N160; N161 |
+| O41 | Baskets | {at: BTC1, line: Household, age: 0, cost: {food: 40, gold: 30}, time: 15, fx: [{s: carry, k: UV, a: 3}], when: 8000 BC, w: 3} | N160; N161 |
+| O42 | Midwives | {at: BTC1, line: Household, age: 1, cost: {food: 150, gold: 50}, time: 30, fx: [{s: twin, k: UV, a: 1}], when: 1550 BC, w: 4} | N160; N161 |
+| O43 | Census | {at: BTC1, line: Household, age: 2, cost: {food: 170, gold: 110}, time: 38, fx: [{s: train, k: UV, p: -0.2}], need: [writing], when: 500 BC, | N160; N161 |
+| O44 | Town charter | {at: BTC1, line: Household, age: 3, cost: {food: 290, gold: 190}, time: 56, fx: [{s: room, k: BR1, a: 1}], when: 1100s, w: 6} | N160; N161 |
+| O45 | Hearth and pot | {at: BR1, line: Home, age: 0, cost: {wood: 40, food: 30}, time: 20, fx: [{s: eat, p: -0.1}], when: about 8000 BC, w: 4} | N160; N161 |
+| O46 | Ice house | {at: BR1, line: Home, age: 2, cost: {stone: 120, wood: 80}, time: 32, fx: [{s: rate, k: fish, p: 0.15}, {s: rate, k: Prey, p: 0.15}, {s: spo | N160; N161 |
+| O47 | Chimney and fireplace | {at: BR1, line: Home, age: 3, cost: {stone: 180, wood: 120}, time: 40, fx: [{s: warm, a: 0.05}, {s: chill, p: -0.5}], when: 1100s, w: 5} | N160; N161 |
+| O48 | Calendar | {at: BTC1, line: Watch, age: 2, cost: {food: 180, gold: 120}, time: 41, fx: [{s: rate, k: BCL1, p: 0.05}, {s: time, k: O, p: -0.05}], need:  | N160; N161 |
+| O49 | Town watch | {at: BTC1, line: Watch, age: 3, cost: {food: 90, gold: 60}, time: 26, fx: [{s: rng, k: BTC1, a: 1.5}, {s: rng, k: BTC1, a: 1.5}], when: 1200 | N160; N161 |
+| O50 | Civic pride | {at: BTC1, line: Watch, age: 3, cost: {food: 240, gold: 160}, time: 48, fx: [{s: shelter, p: 1}], when: 1300s, w: 4} | N160; N161 |
+| O51 | Lanterns | {at: BTC1, line: Watch, age: 3, cost: {wood: 200, gold: 120}, time: 40, fx: [{s: lamp, k: B, a: 0.6}], when: 1417, w: 4} | N160; N161 |
+| O52 | Writing | {at: BP1, line: Letters, age: 1, cost: {wood: 150, gold: 100}, time: 39, fx: [{s: time, k: O, p: -0.15}], when: 3200 BC, w: 10} | N160; N161 |
+| O53 | Record keeping | {at: BP1, line: Letters, age: 1, cost: {wood: 100, gold: 70}, time: 28, fx: [{s: queue, a: 1}], when: 3000 BC, w: 5} | N160; N161 |
+| O54 | Rhetoric | {at: BP1, line: Letters, age: 2, cost: {wood: 170, gold: 110}, time: 38, fx: [{s: diplo, a: 0.1}], when: 400 BC, w: 5} | N160; N161 |
+| O55 | Universities | {at: BP1, line: Letters, age: 3, cost: {wood: 320, gold: 210}, time: 60, fx: [{s: time, k: O, p: -0.1}], when: 1088, w: 7} | N160; N161 |
+| O56 | Natural philosophy | {at: BP1, line: Letters, age: 4, cost: {wood: 550, gold: 360}, time: 87, fx: [{s: time, k: O, p: -0.15}], need: [press], when: 1600s, w: 9} | N160; N161 |
+| O57 | Geometry | {at: BP1, line: Numbers, age: 2, cost: {wood: 110, gold: 70}, time: 30, fx: [{s: atk, k: [BTC1, BW3, BTC8], a: 2}], when: 300 BC, w: 6} | N160; N161 |
+| O58 | Algebra | {at: BP1, line: Numbers, age: 3, cost: {wood: 290, gold: 190}, time: 56, fx: [{s: rng, k: [UM4, UM4b], a: 1.0}], when: 820, w: 6} | N160; N161 |
+| O59 | Ballistics | {at: BP1, line: Numbers, age: 4, cost: {wood: 430, gold: 290}, time: 71, fx: [{s: atk, k: [UM4, UM4b], a: 5}], need: [algebra], when: 1537,  | N160; N161 |
+| O60 | Architecture | {at: BP2, line: Learning, age: 2, cost: {gold: 180, stone: 120}, time: 41, fx: [{s: build, p: -0.2}], need: [masonry], when: 25 BC, w: 6} | N160; N161 |
+| O61 | Guilds | {at: BP2, line: Learning, age: 3, cost: {gold: 260, stone: 180}, time: 52, fx: [{s: queue, a: 2}], when: 1100s, w: 5} | N160; N161 |
+| O62 | Printing press | {at: BP2, line: Learning, age: 4, cost: {gold: 550, stone: 360}, time: 87, fx: [{s: time, k: O, p: -0.32}], when: 1450s, w: 9} | N160; N161 |
+| O63 | Optics | {at: BP2, line: Learning, age: 4, cost: {gold: 430, stone: 290}, time: 71, fx: [{s: sight, k: *, a: 2.0}], need: [press], when: 1608, w: 6} | N160; N161 |
 
 ## words
 
@@ -1000,4 +1070,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J4 | a number shortened: 1.2k | k | N132 |
 | J5 | one, two: the first ending that fits, as [pattern, flags, ending] (a man-at-arms, men-at-arms; a spearman; a wolf; an ally; a ditch; the rest take s) | [[^(m)an(-at-arms)$, i, $1en$2], [man$, , men], [(wol)f$, i, $1ves], [([^aeiou])y$, , $1ies], [(s/x/ch/sh)$, , $1es], [$, , s]] | N132 |
 | J6 | the map's lettered squares: a letter across, a number down (A1 to V22 on the board, D190) | ABCDEFGHIJKLMNOPQRSTUVWXYZ | N132 |
+| J7 | the history line of each age (age0 to age4) and each research step, by its key: what it was and when (Mid's WHY) | {age0: Farming villages of the Neolithic (from about 10,000 years ago): fields, houses, a wall. Jericho had a stone wall and tower about 800 | N160; N161 |
 

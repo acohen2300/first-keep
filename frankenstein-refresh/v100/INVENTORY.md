@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,669 | 214,672 | 214,802 |
-| Books | 919 | 0 | 124,814 | 125,081 |
+| Game code | 28 | 1,682 | 216,343 | 216,473 |
+| Books | 990 | 0 | 153,819 | 154,088 |
 | Laws | 75 | 0 | 7,795 | 8,041 |
-| Tools | 4 | 542 | 66,570 | 66,657 |
+| Tools | 4 | 587 | 73,908 | 73,997 |
 
 ## The trades (code)
 
@@ -37,7 +37,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-woods-cache | 51 | 4,814 | 4,818 | 89 |
 | index.html#touch | 40 | 4,369 | 4,373 | 59 |
 | menu.js | 259 | 41,707 | 41,745 | 641 |
-| econ.js | 91 | 12,654 | 12,654 | 102 |
+| econ.js | 104 | 14,325 | 14,325 | 102 |
 | combat.js | 62 | 9,043 | 9,043 | 101 |
 | ai.js | 44 | 5,054 | 5,054 | 39 |
 | sound.js | 56 | 5,632 | 5,632 | 66 |
@@ -47,21 +47,21 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 3 | 461 |
-| capabilities | 25 | 5,321 |
-| citations | 159 | 18,028 |
+| capabilities | 25 | 5,503 |
+| citations | 161 | 18,737 |
 | colours | 9 | 951 |
-| comments | 289 | 39,200 |
+| comments | 293 | 40,463 |
 | ground | 4 | 640 |
 | mass | 16 | 2,354 |
-| measure | 189 | 25,135 |
-| rules | 49 | 9,205 |
+| measure | 189 | 25,492 |
+| rules | 50 | 9,641 |
 | screen | 10 | 2,597 |
 | shells | 74 | 12,258 |
 | sides | 4 | 1,180 |
 | sound | 51 | 11,159 |
 | sprites | 31 | 5,485 |
-| tech | 0 | 509 |
-| words | 6 | 1,881 |
+| tech | 63 | 18,122 |
+| words | 7 | 11,284 |
 
 ## The shells
 
@@ -124,5 +124,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X47 | t-effects | page | a kind's numbers after research are Mid's stats(), maxHpB, unitCost, techCost and rehealth with its shares added, not multiplied (QCA); a Home's health is D139 × (1 + Σ shares); the lowest is kept; a find's rate and the walk read the law |
 | X48 | t-odds | page | the odds of a battle are Mid's frozen unitPower, powerOf, powerFrom, matchup and lanchester for the same armies and towers (Mid's values, a tower 120, the people 250); a villager walled in from every find does not crash and ends idle or waiting |
 | X49 | t-foe | page | who is a foe is Mid's frozen isFoe, gangOf, atWar and friendly for the same sides, groups and stances: animals everyone's foe, each wild group by its own stance, a treaty binding only its signers; a soldier and a tower strike only a foe |
+| X50 | t-research | page | ages and research are Mid's frozen code for the same orders: the age up Stone to Bronze at its price and wait, the woodcutting line in order at each step's price and time, a step out of order, already queued, before its age or before its needs refused, and the rate wood is cut at after each step the base × (1 + the shares added) |
 
-1026 items sealed · 919 book entries · 75 laws · 159 citations, 18 still to open · 7 known
+1097 items sealed · 990 book entries · 75 laws · 161 citations, 19 still to open · 7 known

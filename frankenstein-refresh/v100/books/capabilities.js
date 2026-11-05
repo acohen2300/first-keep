@@ -19,7 +19,7 @@ BOOK("capabilities", {
  "SC12": {"key": "Drop-off", "value": {"by": "index.html dropFor, ai.js", "law": ["QBN"], "needs": ["drop"], "may": []}, "name": "takes in the yields its row lists", "cite": ["N98"], "law": ["QBN"]},
  "SC13": {"key": "Spawn", "value": {"by": "econ.js", "law": [], "needs": ["D133"], "may": []}, "name": "trains the units D133 gives it", "cite": ["N95"], "law": []},
  "SC14": {"key": "House", "value": {"by": "econ.js, ai.js", "law": [], "needs": ["D127"], "may": []}, "name": "houses the people D127 gives it", "cite": ["N95"], "law": []},
- "SC15": {"key": "Research", "value": {"by": "menu.js, econ.js", "law": [], "needs": [], "may": []}, "name": "where the ages are reached", "cite": ["N95"], "law": []},
+ "SC15": {"key": "Research", "value": {"by": "menu.js, econ.js", "law": ["QCA"], "needs": [], "may": []}, "name": "where the ages are reached; the queue holds research as well as units: a step of the Research book is learned at the building its row names, after the one before it in its line and its needs", "cite": ["N95", "N160"], "law": ["QCA"]},
  "SC16": {"key": "Field", "value": {"by": "econ.js, ai.js", "law": ["QBN"], "needs": ["yield", "rate"], "may": []}, "name": "a building that yields, at the rate its row points to", "cite": ["N95"], "law": ["QBN"]},
  "SC17": {"key": "Yield", "value": {"by": "econ.js", "law": ["QBN"], "needs": ["yield", "amount"], "may": []}, "name": "a find: holds an amount of a yield", "cite": ["N99"], "law": ["QBN"]},
  "SC18": {"key": "Scout", "value": {"by": "waiting", "law": [], "needs": [], "may": []}, "name": "scouts (not built yet)", "cite": ["N100"], "law": []},

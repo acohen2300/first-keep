@@ -221,15 +221,15 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E215 | econ.js | gone: marked when it leaves the map (below) |
 | E216 | econ.js | paying: a side pays all of a cost or none of it (SB Cost) |
 | E217 | econ.js | a site: a building paid for and placed at done 0; villagers raise it. canPlace mirrors build's rule without building |
-| E218 | econ.js | training: a queue at the building; the head trains; a new unit stands on a free tile beside and takes the side's rally job |
-| E219 | econ.js | the age: paid, then a wait at the Town Center (D129) |
+| E218 | econ.js | training and research: a queue at the building, at most the mold's six (SN1); the head trains or is learned, in the time of its row (D124, or the step's own); a price is the book's after research (QCA); a new unit stands on a free tile beside and takes the side's rally job; a step in the queue is no person |
+| E219 | econ.js | the age: Mid's price and wait for each age (D129, the ages of D130), paid, then the wait; the hidden sixth opens only with the peace |
 | E220 | econ.js | the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept |
 | E221 | econ.js | QW: the find of a yield that keeps the round trip shortest: nearest the drop-off among those within D89 of the villager, else nearest the villager |
 | E222 | econ.js | a find no path reaches is left alone a while (D137), and the next beat chooses again among the finds near (D89): one walled in tries one find a beat and ends idle, never every find on the map at once |
 | E223 | econ.js | assign: + sends the nearest idle villager (else one from the fullest other job) to the yield's best find; − sets one of the job's villagers idle |
-| E224 | econ.js | the tick: training, ages, upkeep, the villagers, the bell |
+| E224 | econ.js | the tick: training and research, ages, upkeep, the villagers, the bell |
 | E225 | econ.js | a new game: the book's stores (D172); the bell stays as Start set it |
-| E226 | econ.js | the score (QBR): what a side holds, cost ÷ D135, and everything it gathered ÷ D135 |
+| E226 | econ.js | the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what it paid for research and ages (the ledger's research, Mid's spent) ÷ D135 |
 | E227 | combat.js | First Keep v100 · combat.js (floor 10): health, one blow (QBO), target choice (QAG), nerve (QBQ), towers (QAL). Lives alone; touches the world only through FK. A soldier's jobs: idle, walk, fight, march (to a point, fighting what it meets), rout (home, fighting nothing). |
 | E228 | combat.js | tiles from a unit to a thing: to a building's footprint, in the grid's frame |
 | E229 | combat.js | gone: pulled down (econ marks it) or dead (die marks it) |
@@ -270,7 +270,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E264 | sound.js | the player's volume for this channel |
 | E265 | sound.js | ambience as events: a bird from a tree in view by day, a cricket in the dark, never in winter; when one sings is a Poisson process (HX4) |
 | E266 | sound.js | QBX: the air's top falls with snow cover, on a log scale |
-| E267 | econ.js | a side's economy, fresh: its age, its gathered total, the rally, and the stores' flow (this minute's in and out, the last minute's, each by reason) and the ledger of the whole game |
+| E267 | econ.js | a side's economy, fresh: its age, the steps it knows, its gathered total, the rally, and the stores' flow (this minute's in and out, the last minute's, each by reason) and the ledger of the whole game |
 | E268 | econ.js | earn and spend: every store in or out goes through these two, the one home for the stores, the minute's flow (by resource and by reason) and the ledger of where it came from and went (its words in the Words book, J1); a gain from gathering counts toward the score's wealth |
 | E269 | econ.js | what was paid comes back the way it went out: the store, the minute's spending and the ledger step back, so a cancel is as if the order never was |
 | E270 | econ.js | the stores' flow a minute: the last full minute, or before there is one the minute so far scaled up (from at least D189 seconds); net is in less out; a store's velocity runs −1 to +1 by tanh, and falling with under two minutes left is the worst there is (D189) |
@@ -293,3 +293,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E287 | combat.js | a stance is the pair's own, or the book's start (I2); a treaty sets it both ways between its signers only, never for a third (pacta tertiis, N159) |
 | E288 | combat.js | the one hostility test (Mid's isFoe): never one's own; an animal is everyone's foe; one of a wild group is a foe when the side is at war with that group; between sides, war |
 | E289 | combat.js | the wild looking at a side: an animal fights everyone; a group fights a side at war with it, but starts nothing with a computer (decision 4b: a camp fights a computer only once struck on its ground, which comes with the camps) |
+| E290 | econ.js | the Research book (O) by code and by key, and the queue's length, the mold's six (SN1) |
+| E291 | econ.js | a find's or a field's rate after the side's research (QCA): the one window, D88 or the row's own rate as the base |
+| E292 | econ.js | Mid's research lines: a line is the steps of one line at one building, in the book's order; a step waits on the one before it and on its needs (by key; a need not yet in the book is never met); the next is the first unknown step of the line |
+| E293 | econ.js | research (Mid's researchWhy and research): a step is refused when known, before its age, before its needs, already queued, with no finished building of its row, the shortest queue there full, or not paid for (the reason as a word for the menu); else paid and queued at that building; learned when it leaves the queue, its effects applied once (FK.learn) |

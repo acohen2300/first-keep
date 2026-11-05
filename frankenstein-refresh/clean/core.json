@@ -174,24 +174,24 @@
    "the settings kept on the phone: with Saving"
   ],
   "lineOf": [
-   "bring",
-   "research lines, each step after the one before: with Ages and tech"
+   "in v100",
+   "F13a: econ.js lineOf(code): the Research book's steps of one line at one building, in the book's order"
   ],
   "prevOf": [
-   "bring",
-   "research lines, each step after the one before: with Ages and tech"
+   "in v100",
+   "F13a: econ.js prevOf(code)"
   ],
   "needsOf": [
-   "bring",
-   "research lines, each step after the one before: with Ages and tech"
+   "in v100",
+   "F13a: econ.js needsOf(code): the step before and the row's needs by key, once each (a need not yet in the book is never met)"
   ],
   "nextStep": [
-   "bring",
-   "research lines, each step after the one before: with Ages and tech"
+   "in v100",
+   "F13a: econ.js nextStep(side, code): the first unknown step of the line"
   ],
   "isNext": [
-   "bring",
-   "research lines, each step after the one before: with Ages and tech"
+   "in v100",
+   "F13a: folded into nextStep: nextStep(side, c) === c"
   ],
   "todaySeed": [
    "bring",

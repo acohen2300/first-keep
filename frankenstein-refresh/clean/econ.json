@@ -62,12 +62,12 @@
    "Muster"
   ],
   "researchWhy": [
-   "bring",
-   "research at a building; the tech tree (Content pull)"
+   "in v100",
+   "F13a: econ.js researchWhy(side, code): Mid's refusals in Mid's order, each a word for the menu (known, age, need, busy, at, full, cost); its sentences come with the menu builds"
   ],
   "research": [
-   "bring",
-   "research; the tech tree"
+   "in v100",
+   "F13a: econ.js research(side, code): paid at the book's price after research (FK.stat, QCA) into the shortest queue at the row's building, beside the units (SC15); the queue is the mold's six; its time the row's (research-speed steps wait for a base in index.html's stat)"
   ],
   "ageUp": [
    "in v100",
@@ -506,8 +506,8 @@
    "econ.js tick: the new unit beside its building, the rally job; muster, squads and the rally point come with them"
   ],
   "learnTech": [
-   "bring",
-   "research learned (tech tree)"
+   "in v100",
+   "F13a: econ.js learn(side, code), when a step leaves the queue: the side's steps and FK.learn (QCA, health kept); its news, sound and celebration come with the menu builds"
   ],
   "dropFor": [
    "in v100",

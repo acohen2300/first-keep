@@ -106,8 +106,8 @@
    "with PLAYERS"
   ],
   "AGES": [
-   "bring",
-   "six ages with their own prices and times, the last hidden behind a year of peace: v100 has six names (D130: Camp, Village, Town, City, Kingdom, Empire; Mid: Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment) and one price (D129). Names differ: Albert's call · Albert, Nov 5 10:30: Mid's names · by the 10:31 rule: Mid's"
+   "in v100",
+   "F13a: measure D130 (Mid's six names) and D129 (each age's price and wait, Mid's; the sixth hidden); econ.js ageCost and ageUp read them; the peace that opens the sixth comes with the peace age"
   ],
   "SEASONS": [
    "bring",

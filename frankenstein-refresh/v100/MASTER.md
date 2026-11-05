@@ -301,8 +301,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
 - **E213** First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only thro
-- **E267** a side's economy, fresh: its age, its gathered total, the rally, and the stores' flow (thi
+- **E290** the Research book (O) by code and by key, and the queue's length, the mold's six (SN1) · SN1 (N133)
+- **E267** a side's economy, fresh: its age, the steps it knows, its gathered total, the rally, and t
 - **E214** seconds played, and when the bell rings
+- **E291** a find's or a field's rate after the side's research (QCA): the one window, D88 or the row · QCA (N154, N155, N156) · D88 (N70)
 - **E215** gone: marked when it leaves the map (below)
 - **E216** paying: a side pays all of a cost or none of it (SB Cost)
 - **E268** earn and spend: every store in or out goes through these two, the one home for the stores, · J1 (N132)
@@ -310,15 +312,17 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E270** the stores' flow a minute: the last full minute, or before there is one the minute so far  · D189 (N132)
 - **E271** each minute (D188) the minute's in and out become the last minute's · D188 (N132)
 - **E217** a site: a building paid for and placed at done 0; villagers raise it. canPlace mirrors bui
-- **E218** training: a queue at the building; the head trains; a new unit stands on a free tile besid
-- **E219** the age: paid, then a wait at the Town Center (D129) · D129 (N114)
+- **E218** training and research: a queue at the building, at most the mold's six (SN1); the head tra · SN1 (N133) · D124 (N69) · QCA (N154, N155, N156)
+- **E219** the age: Mid's price and wait for each age (D129, the ages of D130), paid, then the wait;  · D129 (N160) · D130 (N160)
+- **E292** Mid's research lines: a line is the steps of one line at one building, in the book's order
+- **E293** research (Mid's researchWhy and research): a step is refused when known, before its age, b
 - **E220** the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept
 - **E221** QW: the find of a yield that keeps the round trip shortest: nearest the drop-off among tho · QW (N24) · D89 (N112)
 - **E222** a find no path reaches is left alone a while (D137), and the next beat chooses again among · D137 (N114) · D89 (N112)
 - **E223** assign: + sends the nearest idle villager (else one from the fullest other job) to the yie
-- **E224** the tick: training, ages, upkeep, the villagers, the bell
+- **E224** the tick: training and research, ages, upkeep, the villagers, the bell
 - **E225** a new game: the book's stores (D172); the bell stays as Start set it · D172 (N119)
-- **E226** the score (QBR): what a side holds, cost ÷ D135, and everything it gathered ÷ D135 · QBR (N75) · D135 (N75)
+- **E226** the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what i · QBR (N75) · D135 (N75)
 
 ## combat.js
 

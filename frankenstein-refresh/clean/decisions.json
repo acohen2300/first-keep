@@ -80,6 +80,10 @@
   [
    "Nov 5 11:40",
    "yes yes: builds F10 to F39, in order, each through the gate and its match test; stop only for what doesn't fit; previews after F17, F25 and F37"
+  ],
+  [
+   "Nov 5 13:30",
+   "the permit's cap of ten is lifted for the refresh: one build carries a whole module (or a few small ones), never split; the byte budget with its why, the gate and the match test hold every build; from F13b on"
   ]
  ]
 }

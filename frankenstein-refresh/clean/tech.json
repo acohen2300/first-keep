@@ -10,92 +10,92 @@
    "the research tree from history, 255 steps by building, line and age, each with cost, time and its effects as data (fx: a stat, what it narrows to, multiply, add or the lowest); comes as the new Tech book, applied by one law. Its kinds and tags (tree, #mounted) become v100 shell codes and ticks. Rows below",
    {
     "hafting": [
-     "bring",
-     "Hafted axes (lumber, Stone): Wood comes in 10% faster."
+     "in v100",
+     "F13a: books/tech.js O1 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "axes": [
-     "bring",
-     "Bronze axes (lumber, Bronze): Wood comes in 15% faster."
+     "in v100",
+     "F13a: books/tech.js O2 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "ironaxe": [
-     "bring",
-     "Iron axes (lumber, Bronze): Wood comes in 15% faster."
+     "in v100",
+     "F13a: books/tech.js O3 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "sawpits": [
-     "bring",
-     "Saw pits (lumber, Classical): Wood comes in 10% faster."
+     "in v100",
+     "F13a: books/tech.js O4 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "twosaw": [
-     "bring",
-     "Crosscut saw (lumber, Medieval): Wood comes in 15% faster."
+     "in v100",
+     "F13a: books/tech.js O5 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "sawmill": [
-     "bring",
-     "Sawmill (lumber, Gunpowder): Tree farms give 30% more."
+     "in v100",
+     "F13a: books/tech.js O6 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "coppice": [
-     "bring",
-     "Coppicing (lumber, Stone): Tree farms give 25% more."
+     "in v100",
+     "F13a: books/tech.js O7 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "pollard": [
-     "bring",
-     "Pollarding (lumber, Bronze): Tree farms give 10% more."
+     "in v100",
+     "F13a: books/tech.js O8 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "forestry": [
-     "bring",
-     "Forest law (lumber, Medieval): Two more tree farms."
+     "in v100",
+     "F13a: books/tech.js O9 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "plantation": [
-     "bring",
-     "Plantations (lumber, Gunpowder): Tree farms give 20% more."
+     "in v100",
+     "F13a: books/tech.js O10 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "timber": [
-     "bring",
-     "Timber framing (lumber, Bronze): Houses hold one more."
+     "in v100",
+     "F13a: books/tech.js O11 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "charcoal": [
-     "bring",
-     "Charcoal burning (lumber, Bronze): Foundries make 15% more iron."
+     "in v100",
+     "F13a: books/tech.js O12 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "carts": [
-     "bring",
-     "Wagons (lumber, Medieval): Villagers carry 3 more."
+     "in v100",
+     "F13a: books/tech.js O13 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "logdrive": [
-     "bring",
-     "Log driving (lumber, Gunpowder): Tree farms give 15% more."
+     "in v100",
+     "F13a: books/tech.js O14 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "sickles": [
-     "bring",
-     "Sickles (mill, Stone): Fields yield 10% faster."
+     "in v100",
+     "F13a: books/tech.js O15 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "threshing": [
-     "bring",
-     "Threshing sledge (mill, Stone): Fields yield 10% faster."
+     "in v100",
+     "F13a: books/tech.js O16 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "plough": [
-     "bring",
-     "Plough (mill, Stone): Fields yield 20% faster."
+     "in v100",
+     "F13a: books/tech.js O17 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "noria": [
-     "bring",
-     "Water wheel (mill, Classical): Farms give 10% more."
+     "in v100",
+     "F13a: books/tech.js O18 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "horsecollar": [
-     "bring",
-     "Horse collar (mill, Medieval): Fields yield 15% faster."
+     "in v100",
+     "F13a: books/tech.js O19 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "heavyplough": [
-     "bring",
-     "Heavy plough (mill, Medieval): Farms give 15% more."
+     "in v100",
+     "F13a: books/tech.js O20 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "windmill": [
-     "bring",
-     "Windmill (mill, Medieval): Farms give 10% more."
+     "in v100",
+     "F13a: books/tech.js O21 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "seeddrill": [
-     "bring",
-     "Seed drill (mill, Gunpowder): Farms give 15% more."
+     "in v100",
+     "F13a: books/tech.js O22 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "seedstore": [
      "bring",
@@ -122,72 +122,72 @@
      "New World crops (mill, Gunpowder): Farms give 20% more."
     ],
     "ovens": [
-     "bring",
-     "Bread ovens (mill, Bronze): Farms give 10% more."
+     "in v100",
+     "F13a: books/tech.js O23 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "granary": [
-     "bring",
-     "Stone granary (mill, Bronze): Plague brings half as many cases."
+     "in v100",
+     "F13a: books/tech.js O24 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "wheelbarrow": [
-     "bring",
-     "Wheelbarrow (mill, Medieval): Villagers carry 5 more."
+     "in v100",
+     "F13a: books/tech.js O25 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "picks": [
-     "bring",
-     "Antler picks (mining, Stone): Stone and gold come in 20% faster."
+     "in v100",
+     "F13a: books/tech.js O26 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "firesetting": [
-     "bring",
-     "Fire-setting (mining, Bronze): Stone and gold come in 10% faster."
+     "in v100",
+     "F13a: books/tech.js O27 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "deep": [
-     "bring",
-     "Deep shafts (mining, Classical): Stone and gold come in 20% faster."
+     "in v100",
+     "F13a: books/tech.js O28 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "pumps": [
-     "bring",
-     "Mine pumps (mining, Medieval): Every ore comes in 15% faster."
+     "in v100",
+     "F13a: books/tech.js O29 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "rails": [
-     "bring",
-     "Mine wagons (mining, Gunpowder): Villagers carry 3 more."
+     "in v100",
+     "F13a: books/tech.js O30 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "blasting": [
-     "bring",
-     "Blasting (mining, Gunpowder): Stone and iron come in 25% faster."
+     "in v100",
+     "F13a: books/tech.js O31 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "brick": [
-     "bring",
-     "Fired brick (mining, Bronze): Houses hold 1 more, apartments 4."
+     "in v100",
+     "F13a: books/tech.js O32 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "masonry": [
-     "bring",
-     "Masonry (mining, Bronze): Buildings are 30% tougher. See misfits."
+     "in v100",
+     "F13a: books/tech.js O33 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "ventilation": [
-     "bring",
-     "Ventilation (mining, Gunpowder): Iron comes in 20% faster."
+     "in v100",
+     "F13a: books/tech.js O34 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "wedges": [
-     "bring",
-     "Iron wedges (quarry, Classical): Quarries give 20% more."
+     "in v100",
+     "F13a: books/tech.js O35 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "chisels": [
-     "bring",
-     "Steel chisels (quarry, Medieval): Quarries give 15% more."
+     "in v100",
+     "F13a: books/tech.js O36 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "stonesaw": [
-     "bring",
-     "Stone saws (quarry, Gunpowder): Quarries give 20% more."
+     "in v100",
+     "F13a: books/tech.js O37 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "rollers": [
-     "bring",
-     "Rollers and sledges (quarry, Classical): Villagers carry 2 more."
+     "in v100",
+     "F13a: books/tech.js O38 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "cranes": [
-     "bring",
-     "Treadwheel crane (quarry, Medieval): Quarries give 20% more."
+     "in v100",
+     "F13a: books/tech.js O39 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "fishtraps": [
      "bring",
@@ -230,48 +230,48 @@
      "Lighthouse (dock, Gunpowder): Docks see farther."
     ],
     "tally": [
-     "bring",
-     "Tally sticks (keep, Stone): Research is 5% faster."
+     "in v100",
+     "F13a: books/tech.js O40 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "baskets": [
-     "bring",
-     "Baskets (keep, Stone): Villagers carry 3 more."
+     "in v100",
+     "F13a: books/tech.js O41 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "midwives": [
-     "bring",
-     "Midwives (keep, Bronze): The Town Center trains two villagers at once."
+     "in v100",
+     "F13a: books/tech.js O42 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "census": [
-     "bring",
-     "Census (keep, Classical): Villagers train 20% faster."
+     "in v100",
+     "F13a: books/tech.js O43 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "charter": [
-     "bring",
-     "Town charter (keep, Medieval): Houses hold one more."
+     "in v100",
+     "F13a: books/tech.js O44 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "hearth": [
-     "bring",
-     "Hearth and pot (house, Stone): Cooked food feeds better: your people eat 10% less."
+     "in v100",
+     "F13a: books/tech.js O45 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "icehouse": [
-     "bring",
-     "Ice house (house, Classical): Fish and game keep: 15% more of each reaches the table, and food in store spoils half as fast."
+     "in v100",
+     "F13a: books/tech.js O46 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "chimney": [
-     "bring",
-     "Chimney and fireplace (house, Medieval): Warm homes: winter sickness halves and winter work is 5% better."
+     "in v100",
+     "F13a: books/tech.js O47 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "calendar": [
-     "bring",
-     "Calendar (keep, Classical): Farms give 5% more; research 5% faster."
+     "in v100",
+     "F13a: books/tech.js O48 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "townwatch": [
-     "bring",
-     "Town watch (keep, Medieval): The Town Center shoots farther."
+     "in v100",
+     "F13a: books/tech.js O49 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "pride": [
-     "bring",
-     "Civic pride (keep, Medieval): Walls and towers steady nerve twice as much."
+     "in v100",
+     "F13a: books/tech.js O50 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "runners": [
      "bring",
@@ -294,8 +294,8 @@
      "News sheets (keep, Gunpowder): A printed digest: every court that enters a new age is in it."
     ],
     "lanterns": [
-     "bring",
-     "Lanterns (keep, Medieval): Lanterns hung at every door: the town is lit, and its buildings keep 60% of their lost night sight."
+     "in v100",
+     "F13a: books/tech.js O51 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "shields": [
      "bring",
@@ -586,36 +586,36 @@
      "Weather signs (school, Classical): The next sky is told a minute ahead."
     ],
     "writing": [
-     "bring",
-     "Writing (school, Bronze): Research is 15% faster."
+     "in v100",
+     "F13a: books/tech.js O52 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "records": [
-     "bring",
-     "Record keeping (school, Bronze): One more order in every queue."
+     "in v100",
+     "F13a: books/tech.js O53 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "rhetoric": [
-     "bring",
-     "Rhetoric (school, Classical): Emissaries are heard more readily."
+     "in v100",
+     "F13a: books/tech.js O54 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "universities": [
-     "bring",
-     "Universities (school, Medieval): Research is 10% faster."
+     "in v100",
+     "F13a: books/tech.js O55 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "science": [
-     "bring",
-     "Natural philosophy (school, Gunpowder): Research is 15% faster."
+     "in v100",
+     "F13a: books/tech.js O56 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "maths": [
-     "bring",
-     "Geometry (school, Classical): Towers hit harder."
+     "in v100",
+     "F13a: books/tech.js O57 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "algebra": [
-     "bring",
-     "Algebra (school, Medieval): Engines reach farther."
+     "in v100",
+     "F13a: books/tech.js O58 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "ballistics": [
-     "bring",
-     "Ballistics (school, Gunpowder): Engines hit harder."
+     "in v100",
+     "F13a: books/tech.js O59 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "apprentices": [
      "bring",
@@ -634,24 +634,24 @@
      "Medicine (library, Classical): Healing is 50% faster."
     ],
     "architecture": [
-     "bring",
-     "Architecture (library, Classical): Building is 20% faster."
+     "in v100",
+     "F13a: books/tech.js O60 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "medschool": [
      "bring",
      "Medical school (library, Medieval): Half as many die of plague; cures twice as fast."
     ],
     "guilds": [
-     "bring",
-     "Guilds (library, Medieval): Two more orders in every queue."
+     "in v100",
+     "F13a: books/tech.js O61 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "press": [
-     "bring",
-     "Printing press (library, Gunpowder): Research is 32% faster."
+     "in v100",
+     "F13a: books/tech.js O62 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "optics": [
-     "bring",
-     "Optics (library, Gunpowder): Everyone sees farther."
+     "in v100",
+     "F13a: books/tech.js O63 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "method": [
      "bring",
