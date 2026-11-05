@@ -98,28 +98,28 @@
      "F13a: books/tech.js O22 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "seedstore": [
-     "bring",
-     "Seed selection (mill, Stone): Soil tires less."
+     "in v100",
+     "F16: books/tech.js O64"
     ],
     "irrigation": [
-     "bring",
-     "Irrigation (mill, Bronze): Soil tires less still."
+     "in v100",
+     "F16: books/tech.js O65"
     ],
     "manure": [
-     "bring",
-     "Manuring (mill, Bronze): Soil tires less."
+     "in v100",
+     "F16: books/tech.js O66"
     ],
     "rotation": [
-     "bring",
-     "Crop rotation (mill, Medieval): Farms give 20% more; three more farms."
+     "in v100",
+     "F16: books/tech.js O67"
     ],
     "enclosure": [
-     "bring",
-     "Enclosure (mill, Gunpowder): Three more farms."
+     "in v100",
+     "F16: books/tech.js O68"
     ],
     "potato": [
-     "bring",
-     "New World crops (mill, Gunpowder): Farms give 20% more."
+     "in v100",
+     "F16: books/tech.js O69"
     ],
     "ovens": [
      "in v100",
@@ -190,44 +190,44 @@
      "F13a: books/tech.js O39 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "fishtraps": [
-     "bring",
-     "Fish traps (dock, Stone): Fish come in 15% faster."
+     "in v100",
+     "F16: books/tech.js O70"
     ],
     "nets": [
-     "bring",
-     "Nets (dock, Stone): Fish come in 30% faster."
+     "in v100",
+     "F16: books/tech.js O71"
     ],
     "salting": [
-     "bring",
-     "Salting (dock, Classical): Fish come in 20% faster; food in store spoils half as fast."
+     "in v100",
+     "F16: books/tech.js O72"
     ],
     "deepboats": [
-     "bring",
-     "Decked boats (dock, Medieval): Fish come in 30% faster."
+     "in v100",
+     "F16: books/tech.js O73"
     ],
     "trawl": [
-     "bring",
-     "Trawl nets (dock, Gunpowder): Fish come in 20% faster."
+     "in v100",
+     "F16: books/tech.js O74"
     ],
     "dugouts": [
-     "bring",
-     "Dugout canoes (dock, Stone): Fish come in 10% faster."
+     "in v100",
+     "F16: books/tech.js O75"
     ],
     "sails": [
-     "bring",
-     "Sails (dock, Bronze): Fish come in 15% faster."
+     "in v100",
+     "F16: books/tech.js O76"
     ],
     "harbours": [
-     "bring",
-     "Harbour works (dock, Classical): Docks are 50% tougher. See misfits."
+     "in v100",
+     "F16: books/tech.js O77"
     ],
     "compass": [
-     "bring",
-     "Compass (dock, Medieval): Villagers, scouts and caravans see farther."
+     "in v100",
+     "F16: books/tech.js O78"
     ],
     "lighthouse": [
-     "bring",
-     "Lighthouse (dock, Gunpowder): Docks see farther."
+     "in v100",
+     "F16: books/tech.js O79"
     ],
     "tally": [
      "in v100",

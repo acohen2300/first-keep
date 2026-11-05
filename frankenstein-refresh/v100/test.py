@@ -59,8 +59,6 @@ async def main(b):   # the screen and Build A's fixes, on one page in turn
     ok('t-bell', bells == [True, 900, True], bells)
     gone = await ev("(() => { const t = FK.things().find((x) => x.kind === 'tree'), u = ECON.villagersOf(0)[0]; FK.take(t, t.amount); return [t.gone === true, ECON.bestFind(u, 'wood') !== t]; })()")
     ok('t-gone', gone == [True, True], gone)
-    ai = await ev("(() => { for (let i = 0; i < 6000; i++) FK.sim(0.1); const first = FK.D.ai.raise[0].code; return FK.things().some((t) => t.side === FK.D.players[1] && t.code === first); })()")
-    ok('t-ai', ai)
     ok('t-errors', not errs, errs[:3]); await pg.close()
 SAME = """(() => { FK.reset(); let beats = 0, wet = 0; for (let i = 0; i < 3000; i++) { FK.sim(0.1); beats += FK.every(FK.D.beats.slow); wet += FK.K.wetHour; }   // 300 s of play, the weather in it
   const r = (x) => Math.round(x * 1e6), state = [FK.units().map((u) => [u.code, u.side, r(u.bx), r(u.by), u.hp, r(u.cd), u.job]), FK.SIDES.map((s) => s.store), r(FK.K.wet), FK.K.fogT, ECON.score(0).total];
@@ -445,6 +443,65 @@ async def walls(b):   # builders, repair, limits, placing and walls: the same an
     build = [v['free']['one'], v['free']['sent'], v['free']['others'] == 1] + list(v['pulled'].values())
     got = [all(crew) and len(crew) == 3, all(repair), all(refund) and len(refund) == 5, not caps and len(mid.get('caps', [])) > 2000, not probes and len(v['place']['probes']) > 500, not snaps and len(v['place']['snaps']) > 300, not lines, all(seal), all(gate), all(rings), all(build), not price, not errs]
     ok('t-walls', all(got), [got, crew, repair, refund, caps[:4], len(caps), probes[:4], len(probes), snaps[:4], len(snaps), lines, seal, gate, rings, build, price, errs[:2], err[-600:]])
+# Food, farms, seasons, hunting and fishing (F16, M14 to M16): one town played a year and a season, second by second, through v100's own nature (soil, the season's turn, upkeep) beside
+# Mid's frozen natureTick, seasonTurn, upkeepTick, shareOf, hungerOf, starveTick, foodInReach and gatherMul (36-economy, 37-events, 08-core) with Mid's own numbers (01, 03, 06) and its
+# own research rows read as added shares; the dice are one list both draw from. Then an order's meals against Mid's orderCost, a boar hunted to its carcass, and fish only near a dock
+FOOD = """(() => { FK.reset(); const D = FK.D, E = ECON, s = FK.SIDES[0], h = FK.seatOf(0), R = RUN, T = BOOKS.tech, key = (k) => Object.keys(T).find((c) => T[c].key === k), out = { snaps: [] };
+  for (const k of R.techs) FK.learn(0, key(k)); s.store.food = R.food; s.store.wood = s.store.stone = 9999; let n = 0;
+  const placed = (code) => { for (let d = 8; d < 60; d++) for (let a = 0; a < 16; a++) { const i = Math.round(h.i + d * Math.cos(a * 0.3927)), j = Math.round(h.j + d * Math.sin(a * 0.3927)); if (E.canPlace(code, i, j)) { const t = E.plan(0, code, i, j); t.done = 1; t.hp = t.hpMax; return t; } } };
+  const farms = R.fert.map((f) => Object.assign(placed('BCL1'), { fert: f })), pen = Object.assign(placed('BCL3'), { sheep: R.sheep, wk: 1 }), fish = FK.things().find((t) => t.kind === 'fish');
+  s.store.food = R.food; fish.amount = fish.max / 2; const free = (q) => FK.walkable(q) && !FK.units().some((u) => u.k === q), near = (k) => { for (let d = 1; ; d++) for (const q of [k + d, k - d, k + d * FK.N, k - d * FK.N]) if (free(q)) return q; };
+  while (E.villagersOf(0).length < 20) FK.spawn('UV', 0, near(h.k ?? FK.tileAt(h.bx, h.by)), Math.random);
+  for (const c of ['UM1', 'UM1', 'UM1', 'UM1', 'UM1', 'UM3', 'UM3', 'UM3', 'UM3', 'UM3']) FK.spawn(c, 0, near(FK.tileAt(h.bx, h.by)), Math.random);
+  for (const u of FK.units()) if (u.side === 0) { u.job = 'idle'; u.target = u.path = null; }
+  const bushes = FK.things().filter((t) => t.kind === 'bush').slice(0, 5); E.villagersOf(0).slice(0, 5).forEach((u, i) => Object.assign(u, { job: 'gather', target: bushes[i], carry: 'food' }));
+  const wolf = FK.spawn('MW4', -1, near(FK.tileAt(h.bx, h.by)), Math.random), away = [pen.bx + 2 * D.flock.wolf, pen.by], base = FK.stat('BCL1', 0, 'rate'); let got = 0;
+  out.units = FK.units().filter((u) => u.side === 0).map((u) => u.code); out.base = base; const rng = FK.rng; FK.rng = () => R.draws[n++];
+  for (let t = 1; t <= R.secs; t++) { FK.K.t = t; const w = R.wolfAt.includes(t); wolf.bx = w ? pen.bx : away[0]; wolf.by = w ? pen.by : away[1];
+    for (const f of farms.slice(0, R.worked)) f.workT = E.time(); E.nature(1); for (const f of farms.slice(0, R.worked)) got += (E.rateOf(f, 0) * E.hungerOf(0)) / base;
+    if (t % 60 === 0) out.snaps.push([t, s.store.food, !!s.hungry, farms.map((f) => f.fert), pen.sheep, fish.amount, got, bushes.map((b) => b.amount), s.ledger.out.upkeep || 0, s.ledger.out.spoiled || 0, E.harvest()]); }
+  out.draws = n; FK.rng = rng; FK.reset(); const S = FK.units().filter((u) => u.side === 0).slice(0, 3).concat(FK.spawn('UM3', 0, near(FK.tileAt(h.bx, h.by)), Math.random), FK.spawn('UM1', 0, near(FK.tileAt(h.bx, h.by)), Math.random));
+  const f0 = FK.SIDES[0].store.food; out.order = [S.map((u) => u.code), E.orderCost(0, S), f0 - FK.SIDES[0].store.food];
+  FK.reset(); const H = FK.seatOf(0), boar = FK.units().filter((u) => FK.has(u, 'Prey') && u.code === D.boar.code).sort((a, b) => Math.hypot(a.bx - H.bx, a.by - H.by) - Math.hypot(b.bx - H.bx, b.by - H.by))[0], v = E.villagersOf(0)[0];
+  E.hunt(0, boar, v); for (let i = 0; i < 1500 && !boar.gone; i++) FK.sim(0.1); const meat = FK.things().find((t) => t.kind === 'meat');
+  out.hunt = [boar.gone === true, !!meat && meat.amount === D.meat[boar.code], v.target === meat, E.jobOf(v)];
+  const fsh = FK.things().find((t) => t.kind === 'fish'), u = E.villagersOf(0)[0], dock = { side: 0, code: 'BCT2', done: 1, kind: 'bld', bx: fsh.bx, by: fsh.by };
+  out.dock = [E.docked(0, fsh), (FK.things().push(dock), E.docked(0, fsh)), E.docked(1, fsh)]; FK.things().pop(); return out; })()"""
+MIDFOOD = r"""const ev = cut(events, 'function starveTick');
+return box([cut(basics, 'const SEASON_LEN', 'const EASY_SAFE'), basics.match(/const SEASONS = \[[\s\S]*?\];/)[0], blds.match(/const UPKEEP = [^;]*;/)[0], blds.match(/const SPOIL = [^;]*;/)[0],
+  tuning.match(/const FERT = [^;]*;/)[0], tuning.match(/const HARVEST = \[[\s\S]*?\];/)[0], tuning.match(/const STARVE = [\s\S]*?;/)[0], tuning.match(/const ORDER = [^;]*;/)[0], core.match(/const clamp = [^\n]*/)[0], core.match(/const logistic = [^\n]*/)[0],
+  core.match(/const season = [^\n]*/)[0], cut(core, 'const nodeKey', 'const makeOf'), cut(eco, 'const FLEECE', 'const stopsAll'), cut(eco, 'function natureTick', '// ── fire'), cut(eco, 'function upkeepTick', '// the Bank'), cut(eco, 'function shareOf', '// ── prices'), ev,
+  `const WILD = -1, R = RUN; let n = 0, ledger = { upkeep: 0, spoiled: 0, orders: 0 }; const rng = () => R.draws[n++], fxv = (o, s, keys) => { let m = 1, a = 0; for (const f of R.fx) if (f.s === s && (!f.k || [].concat(f.k).some((k) => (keys || []).includes(k)))) { if (f.m) m += f.m - 1; if (f.a) a += f.a; } return { m, a }; };
+  const unitKeys = (k) => [k], hasTag = (k, t) => (R.tags[k] || []).includes(t), UNIT = { vil: { cls: 'civ', tick: 'vil' }, spear: { cls: 'army', tick: 'sol' }, cata: { cls: 'army', tick: 'sol' }, wolf: { cls: null, meat: 0 } };
+  const BLD = { farm: { crop: 'food' }, pasture: { crop: 'wool', sheep: 6 } }, campEat = () => 0, news = () => {}, storm = () => false, hazard = () => false, stopsAll = () => [], ROUTES = [], every = () => false, BEAT = {}, flowTick = () => {}, hz = () => false;
+  const unitsOf = () => [], HEALTH = {}, TOAST = {}, coord = () => '', keepOf = () => ({}), regionAt = () => 1, reachFrom = () => true, dockNear = () => true, EVM = { gather: 1 }, WEATHER = { clear: {} }, SCALE = { kinds: [] }, isSoldier = (u) => u.kind !== 'vil', dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+  const spend = (p, k, x, why) => { p.res[k] -= x; ledger[why] = (ledger[why] || 0) + x; }, stash = (o, k, x) => { G.P[o].res.f += x; };
+  const p = { id: 0, alive: true, res: { f: R.food } }, G = { t: 0, tick: 0, seasonN: 0, wx: 'clear', P: [p], units: [], blds: [], nodes: [] };
+  const farms = R.fert.map((f, i) => ({ kind: 'farm', owner: 0, prog: 1, hp: 1, fert: f })); for (const b of farms) { b.node = { kind: 'farm', type: 'food', farm: b, amt: Infinity }; G.blds.push(b); G.nodes.push(b.node); }
+  const pen = { kind: 'pasture', owner: 0, prog: 1, hp: 1, x: 0, y: 0, sheep: R.sheep, node: { kind: 'farm', type: 'wool', amt: 0, wk: 1 } }; G.blds.push(pen); const fish = { kind: 'fish', type: 'food', amt: R.fishMax / 2, max: R.fishMax }; G.nodes.push(fish);
+  const bushes = R.bushes.map((a) => ({ kind: 'bush', type: 'food', amt: a })); G.nodes.push(...bushes);
+  R.units.forEach((c, i) => G.units.push({ owner: 0, kind: { UV: 'vil', UM1: 'spear', UM3: 'cata' }[c], job: i < 5 ? 'food' : null, node: i < 5 ? bushes[i] : null }));
+  const wolf = { owner: WILD, kind: 'wolf', hp: 1, x: 9999, y: 9999 }; G.units.push(wolf); let got = 0; var OUT = { snaps: [] };
+  for (let t = 1; t <= R.secs; t++) { G.t = t; G.tick = t * 30 + 1; wolf.x = wolf.y = R.wolfAt.includes(t) ? 0 : 9999; for (const b of farms.slice(0, R.worked)) b.node.workT = t;
+    natureTick(); upkeepTick(); for (const b of farms.slice(0, R.worked)) got += gatherMul(0, b.node) * hungerOf(0);
+    if (t % 60 === 0) OUT.snaps.push([t, p.res.f, !!p.hungry, farms.map((b) => b.fert), pen.sheep, fish.amt, got, bushes.map((b) => b.amt), ledger.upkeep, ledger.spoiled, G.harvest || 1]); }
+  OUT.draws = n; const P2 = { id: 0, res: { f: 1e6 } }; G.P = [P2]; OUT.order = orderCost(0, R.order.map((c) => ({ kind: { UV: 'vil', UM1: 'spear', UM3: 'cata' }[c] })));`]);"""
+async def food(b):   # a year and a season of food, the same as Mid's frozen code; an order's meals; a boar hunted; fish only near a dock
+    pg, errs = await fresh(b)
+    tech = open(os.path.join(HERE, '../mid/src/04-rules-tech.js')).read(); TECHS = ['hearth', 'icehouse', 'seedstore']
+    fx = [f for k in TECHS for f in json.loads(json.dumps(eval(re.sub(r'(\w+):', r'"\1":', re.search(r"id: '%s',[\s\S]*?fx: (\[[\s\S]*?\]),\n" % k, tech).group(1)).replace("'", '"'))))]
+    run = {'techs': TECHS, 'food': 1300, 'draws': [0.7, 0.3, 0.1], 'fert': [1, 0.705, 0.65, 1], 'worked': 2, 'sheep': 11, 'wolfAt': [540, 720], 'secs': 900}
+    v = await pg.evaluate(FOOD.replace('RUN', json.dumps(run)))
+    fishMax = await pg.evaluate("FK.things().find((t) => t.kind === 'fish').max"); await pg.close()
+    v0 = v['snaps'][0]
+    mid, err = frozen({'basics': '01-rules-basics', 'blds': '03-rules-buildings', 'tuning': '06-rules-tuning', 'core': '08-core', 'eco': '36-economy', 'events': '37-events'}, MIDFOOD,
+                      {**run, 'fx': fx, 'tags': {'cata': ['mounted']}, 'units': v['units'], 'fishMax': fishMax, 'bushes': [MEASURE['bushFood']] * 5, 'order': v['order'][0]})
+    m0 = MEASURE['rate'] and 0.8   # Mid's farm rate: v100's harvest is read against its own base, Mid's against its gatherMul alone
+    same = bool(mid) and len(mid['snaps']) == len(v['snaps']) and all(close(a, b) for a, b in zip(v['snaps'], mid['snaps']))
+    flips = bool(mid) and any(x[2] for x in v['snaps']) and not v['snaps'][-1][2] and v['snaps'][-1][4] < run['sheep']   # it went hungry, was fed again by the cull, and the wolf took sheep
+    got = [same, flips, v['draws'] == (mid or {}).get('draws'), bool(mid) and v['order'][1] == mid['order'] == v['order'][2], v['hunt'][:3] == [True, True, True] and v['hunt'][3] == 'food', v['dock'] == [False, True, False], not errs]
+    off = [i for i, (a, c) in enumerate(zip(v['snaps'], (mid or {}).get('snaps', []))) if not close(a, c)][:2]
+    ok('t-food', all(got), [got, off, [v['snaps'][i] for i in off], [mid['snaps'][i] for i in off] if mid and off else '', v['order'], (mid or {}).get('order'), v['hunt'], v['dock'], err[-400:], errs[:2]])
 def proof():   # each planted break in a copy of the build must stop the gate, named by the rule it breaks
     plants = {'home': ('books/angles.js', '"A3":', '"D1":'), 'needs': ('books/shells.js', '"ticks": ["Yield"]', '"ticks": ["Yeld"]'),
               'names': ('menu.js', "FK.has(u, 'Gather') && own(u)", "u.code === 'UV' && own(u)"), 'swallowed': ('menu.js', 'S.htab = keepH; PANEL = h;', 'S.htab = keepH; // swallowed PANEL = h;'),
@@ -454,7 +511,11 @@ def proof():   # each planted break in a copy of the build must stop the gate, n
         assert a in s, f'plant {key}: {a} not found'; open(f'{t}/v/{f}', 'w').write(s.replace(a, b, 1))
         r = subprocess.run([sys.executable, t + '/v/index.py'], capture_output=True, text=True); shutil.rmtree(t)
         ok('t-proof', r.returncode == 1 and (f'[{key}]' in r.stdout or (key == 'seals' and '[permit] law:QA' in r.stdout)), f'{key}: {r.stdout[-200:]}')
-PAGED = {'t-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+async def ai(b):   # the computer's army building, on a page of its own on the seed: the bell test before restarts the shared page, so this game starts clean (F16)
+    pg, errs = await fresh(b)
+    got = await pg.evaluate("(() => { FK.reset(); for (let i = 0; i < 6000; i++) FK.sim(0.1); const first = FK.D.ai.raise[0].code; return [FK.seed(), FK.things().some((t) => t.side === FK.D.players[1] && t.code === first)]; })()")
+    ok('t-ai', got[1] and not errs, [got, errs[:2]]); await pg.close()
+PAGED = {'t-food': food, 't-ai': ai, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

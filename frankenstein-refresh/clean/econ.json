@@ -98,20 +98,20 @@
    "menu.js VERBS.send and raise: one more to a site"
   ],
   "replantWhy": [
-   "bring",
-   "replant a worked-out field or tree farm at half its cost (BCL1, BCL2)"
+   "in v100",
+   "F16: econ.js replantWhy"
   ],
   "replant": [
-   "bring",
-   "replant"
+   "in v100",
+   "F16: econ.js replant; menu.js Replant"
   ],
   "cutOut": [
-   "bring",
-   "replant"
+   "in v100",
+   "F16: econ.js cutOut"
   ],
   "replantAll": [
-   "bring",
-   "replant every worked-out plot from a drop-off"
+   "in v100",
+   "F16: econ.js replantAll; menu.js Replant all on a drop-off"
   ],
   "shellBack": [
    "in v100",
@@ -394,8 +394,8 @@
    "econ.js gatherAt (menu gather and send); one-to-a-field comes with fields' slots"
   ],
   "sendHunt": [
-   "bring",
-   "hunting: tap game, send a hunter (Later)"
+   "in v100",
+   "F16: econ.js hunt; menu.js Hunt and the tap on game"
   ],
   "sendRepair": [
    "in v100",
@@ -514,8 +514,8 @@
    "index.html dropFor (SC12)"
   ],
   "dockNear": [
-   "bring",
-   "fish worked from a Dock (BCT2): fish as a resource (Later)"
+   "in v100",
+   "F16: econ.js docked (a Catch find near a finished Shore building)"
   ],
   "nodeFits": [
    "cut",
@@ -566,8 +566,8 @@
    "a worker inside a workshop makes goods into the stores (Make)"
   ],
   "workMul": [
-   "bring",
-   "sickness halves work, a famine weakens it"
+   "in v100",
+   "F16: econ.js hungerOf in the gather beat (sickness and the circus come with their modules)"
   ],
   "makeNow": [
    "in v100",
@@ -618,8 +618,8 @@
    "econ.js gatherAt: a find no path reaches is left a while (D137)"
   ],
   "huntTick": [
-   "bring",
-   "hunting (Later)"
+   "in v100",
+   "F16: combat.js: the javelin (damage, D221), the carcass (die), the boar strikes back (hit)"
   ],
   "backToWork": [
    "in v100",
@@ -650,8 +650,8 @@
    "the Spy (US3)"
   ],
   "FLEECE": [
-   "bring",
-   "sheep and fish: wool a sheep, flock growth (QY), fish stock, mutton (QZ); the Pasture (BCL3) and livestock"
+   "in v100",
+   "F16: books/measure.js D218 (fish stock) and D219 (the flock, mutton); the wool waits for the goods (Parked)"
   ],
   "stopsAll": [
    "bring",
@@ -770,12 +770,12 @@
    "trade: caravans (UT1) on routes to trade stops and allies' markets: a robbed load goes to the robbers' camp"
   ],
   "natureTick": [
-   "bring",
-   "soil tires and rests (QAA), held trade routes pay, the slow beats; v100's climate has the weather"
+   "in v100",
+   "F16: econ.js nature: the soil (QAA) and the season's turn (trade, storms and the slow beats come with their modules)"
   ],
   "seasonTurn": [
-   "bring",
-   "each season: food spoils (QAD), fish regrow (QY), lambs and the cull (QY, QZ), the harvest's luck, plague on the roads"
+   "in v100",
+   "F16: econ.js seasonTurn: spoilage (QAD), fish and lambs (QY), the cull (QZ), wolves, the harvest; the wool and the plague wait (Parked)"
   ],
   "fireHeat": [
    "bring",
@@ -838,16 +838,16 @@
    "the computers' Market, workshops, caravans and trade posts (Computers)"
   ],
   "shareOf": [
-   "bring",
-   "upkeep shares: soldiers eat more, horses far more, carts"
+   "in v100",
+   "F16: each unit shell's upkeep (D211), read by the effects law's eat (index.html, the door), econ.js eats"
   ],
   "orderCost": [
-   "bring",
-   "an order costs the soldiers' meals and tiredness"
+   "in v100",
+   "F16: econ.js orderCost, charged by menu.js for your orders (the tiredness waits for the charge's slowing)"
   ],
   "hungerOf": [
-   "bring",
-   "a famine weakens work after its grace (parked: hungry sides)"
+   "in v100",
+   "F16: econ.js hungerOf (work in the gather beat, blows in combat.js damage)"
   ],
   "setMake": [
    "bring",

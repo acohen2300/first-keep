@@ -30,12 +30,12 @@ Work and economy
 QV Forager's rate: R = c(1 − δ) / (c/g + 2d/v + w·c/(A·v)), d the walked length from the find to its drop-off (A*, QBL), w the straight walk out, A what is left up to D195's life in loads; a villager takes the find of best R · N23, N24
 QW Move on: only when the new find pays enough more (D132) · N24
 QX Crowding: g ÷ (1 + others / room), room D195's hold; a find takes as many as its ring has spots a pace apart, ⌊2π·r ÷ d⌋, a tree one · N25, N26
-QY Growth: ΔN = r N (1 − N/K) · N27
-QZ Sustainable take: hold the stock at K/2, yield r K / 4 · N28
-QAA Soil: wears when worked, rests back, never below a floor · N29
+QY Growth: ΔN = r N (K − N) ÷ K, once a spring: fish toward their spot's own stock (D218), lambs toward the pasture's most (D219, rounded) · N27
+QZ Sustainable take: hold the stock at K/2, yield r K / 4; a tended flock is culled to K/2 each spring, mutton a sheep (D219) · N28
+QAA Soil: a field's fertility f falls loss ÷ a year each second it is worked and rises rest ÷ a season each second at rest, held within floor + Σ research adds and 1 (D214); the field gives its rate × f × the season's yield (D216) × the year's harvest (D215) · N29
 QAB Learning curve: labour falls a set share per doubling · N30
 QAC Crew: n builders work n^p times as fast · N31
-QAD Spoilage: Q = Q0 e^(−k t) · N32, N33
+QAD Spoilage: Q = Q0 e^(−k t); at each season's turn the store loses ⌊Q (1 − e^(−k))⌋, k = −ln(1 − D217's year) × season ÷ year × (1 + Σ research shares) · N32, N33
 QAE Price: P = P0 (Q / Q0)^(−1/ε) · N34
 QCA Effects: a kind's number = (base + Σ flat adds) × (1 + Σ research shares), the shares added, never multiplied, and applied once to the base; a "lowest" effect keeps the minimum; a price rounds to the whole unit. The base is the book's: walking D86 (3.4 mph), a unit's D138, a building's health D139, a price D123. When the shares move, every unit and building of the side keeps its share of health · N154, N155, N156
 QCI Standing spots: each stands on a spot of its own a pace d apart: n of them on the hex lattice round a point fill a disc R ≈ 0.525·d·√n (packing density π/(2√3)); round a building on its outline, k = ⌊2R ÷ d⌋ a side; round a find on its working ring, m spots at radius r ≥ d ÷ (2 sin(π/m)) · N165
@@ -79,7 +79,7 @@ QBM Walking: a shell moves its speed in metres a second (D86) times the units a 
 QBN Gathering: a load fills at the find's rate a second (D88) until it holds D87 or the find is gone; then the walk to the nearest drop-off of the side, and back to the find or the one of best rate (QV) within D197, the look widening while it waits at the drop-off · N70
 QBJ Z1's store: food = (age up + villagers × a villager) × (1 + margin); wood = (mill + lumber camp + homes × a home + barracks) × (1 + margin); bushes = ⌈food / a bush⌉, trees = ⌈wood / a tree⌉ (Albert's rule; the prices are the genre's until the Content pull) · N69
 QBO The blow: damage = max(1, base × counter × flank − armour); counter D140 when the striker's kind counters the struck's, flank D141 from behind; an engine strikes a building with its own blow · N69
-QBP Upkeep: every unit of a side eats D131 food a day from its store, never below nothing · design
+QBP Upkeep: every unit of a side eats D131 × its share (its Upkeep, D211, × (1 + Σ research shares), QCA) a day from its store, never below nothing; a villager working food eats from its find instead (a field and game for nothing); with the store empty and no food in reach (a famine), after D212's days its work and blows are × D212's work; an order of yours costs its soldiers' shares for D213's seconds · N170, N171
 QBQ The break: a wave goes home when fewer than D142 of the soldiers it set out with still stand · N76
 QBR The score: people and army held at cost ÷ 5, buildings standing at cost ÷ 5, ages paid ÷ 5, everything gathered ÷ 10 · N75
 QBS Wounded balance: lost = 1 − health ÷ most health, read as blood lost. Under D167's class III edge (0.30) the body holds: no sway (classes I and II, compensated). From 0.30 to 0.40 the sway grows from nothing to the tipping angle; past 0.40 (class IV) it stays there. Tipping angle θ = atan((foot ÷ 2) ÷ centre of mass); its rhythm f = √(g ÷ centre of mass) ÷ 2π (a standing body as an inverted pendulum); both from the body (W) · N77, N78, N80

@@ -252,12 +252,12 @@
    "a crossing herd: bison trample, performers pass, a dragon flies; the performers and the dragon are cut fantasy, see misfits"
   ],
   "starveTick": [
-   "bring",
-   "hunger and famine: with no food in reach the work weakens, under the Famine hazard people leave; v100's upkeep (QBP) only stops the store at nothing (hungry sides parked)"
+   "in v100",
+   "F16: econ.js upkeep: hunger and the famine, timed from its start; people leaving under the Famine hazard waits for the hazards (Parked)"
   ],
   "foodInReach": [
-   "bring",
-   "whether a side still has food it can walk to"
+   "in v100",
+   "F16: econ.js inReach (any food find, own field, docked fish or game; the walking grid's region waits)"
   ],
   "CAMP_TENTS": [
    "bring",

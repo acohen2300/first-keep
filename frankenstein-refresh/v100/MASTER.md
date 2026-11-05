@@ -9,7 +9,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#frames
 
 - **E1** First Keep v100 · the world reads its numbers from the Books (books/*.js), never from here
-- **E2** A Book entry is { key, value, name, cite, law } under its code; the game sees each book as · D53 (N112) · D86 (N71, N72, N73, N79)
+- **E2** A Book entry is { key, value, name, cite, law } under its code; the game sees each book as · D53 (N112) · D86 (N71, N72, N73, N79, N170)
 - **E3** every code in every book
 - **E4** a slot's pointer, read
 - **E5** S the shells (books/shells.js): a row names its layer, ticks its capabilities (SC) and poi
@@ -77,6 +77,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E49** The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size  · R1 (N144)
 - **E50** drawn back to front
 - **E51** a tree with trees on all eight sides is deep: nothing can stand between it and its neighbo
+- **E344** fish round every lake: a spot every D218 per of its radius, walked out from the middle to  · D218 (N27, N28, N170)
+- **E345** a find laid where something falls (game becomes a carcass where it stood); a lake near eno
 - **E52** 0 water, 1 sand, 2 dirt, 3 grass; bare dirt again high over the land (D23) · D23 (N112)
 - **E53** the first band is what can be waded (D24) · D24 (N112)
 - **E54** the forest floor: the grass, shaded; the marsh: the grass, toward the water
@@ -103,7 +105,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
 - **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156)
 - **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144)
-- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79) · D139 (N69) · D138 (N69) · D123 (N168) · D124 (N69) · D125 (N169, N168) · SN1 (N133) · D87 (N112) · D127 (N69)
+- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170) · D139 (N69, N170) · D138 (N69, N170) · D123 (N168) · D124 (N69) · D125 (N169, N168) · SN1 (N133) · D87 (N112) · D127 (N69)
 - **E280** the one window for a kind's number after research (QCA): flat adds first, then the shares  · QCA (N154, N155, N156)
 - **E281** learning a step puts its effects in force for that side; every unit and building of the si
 - **E67** a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's · D182 (N122) · D184 (N122) · D98 (N112)
@@ -143,8 +145,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E82** Floor 5, movables (layer 120): U units and M moveables are shells that walk. Each stands a · QBL (N74)
 - **E83** one a corner (C5–C8); the player is 0 · C5 (N103) · C8 (N103)
-- **E84** the units and moveables (layer 120), from their shells: name, look, pace (a D86 key) · D86 (N71, N72, N73, N79)
-- **E85** the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book  · PN1 (N152, N164)
+- **E84** the units and moveables (layer 120), from their shells: name, look, pace (a D86 key) · D86 (N71, N72, N73, N79, N170)
+- **E85** the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book  · PN1 (N152, N164, N170)
 - **E86** walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step pa
 - **E87** inland water bearing ice (QQ): walked as if flat · QQ (N17)
 - **E328** a gate is walkable only to those its owner does not count a foe: asked of combat.js by the
@@ -178,6 +180,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E105** the buildings within r of (x, y) by their squares, a little beyond on the edges; refiled w
 - **E106** the rules' dice and the looks', from the map's seed but not its stream
 - **E107** The villagers: Who every side · What D67 villagers · Where round its Town Center · When th · D67 (N112)
+- **E346** a boar near every Town Center, at the book's spot in each corner (Mid's boar)
 - **E108** The wildlife: Who the map · What herds of deer and packs of wolves · Where Z4, on walkable · D90 (N112) · D93 (N112)
 - **E109** which walkers, how many groups and how big: the book's (D181) · D181 (N121)
 - **E110** what carries a walker: its mount, else its own body (W)
@@ -246,7 +249,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E158** the chunk's deep trees on one canvas
 - **E159** a hit moves to the back: the oldest goes first
 - **E160** a wounded one sways about its feet (QBS) · QBS (N77, N78, N80)
-- **E305** a find drawn smaller as it is used: PN1's left share and the rest by what is left (Mid's n · PN1 (N152, N164)
+- **E305** a find drawn smaller as it is used: PN1's left share and the rest by what is left (Mid's n · PN1 (N152, N164, N170)
 - **E161** L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tile · D7 (N112)
 
 ## index.html#touch
@@ -291,13 +294,15 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E190** the new game: the bell (D134), fog, the day's map or a fresh one · D134 (N114)
 - **E191** tap a yield: new villagers go there (the ring)
 - **E192** tap picks, slide places the ghost, tap again builds
+- **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
 - **E193** the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only say
 - **E194** a cell's object arguments live here by key, since the DOM holds strings
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
 - **E198** Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) · SN13 (N142, N143)
-- **E199** one row a name in SN4; each answers for the subject t, or says nothing · SN4 (N136)
+- **E199** one row a name in SN4; each answers for the subject t, or says nothing · SN4 (N136, N170)
+- **E358** a pasture's card counts its sheep
 - **E200** the base: Albert's template. Corners Yard and War; who works where; Build and − + under ea
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads, orders
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
@@ -316,6 +321,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E207** the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing und
 - **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
 - **E341** a tap on open ground while the Build page is open: what fits there is picked and its ghost
+- **E359** the town is told what food, the seasons and the flock do, in the Words book's news
 - **E342** dragging the ghost near the screen's edge scrolls the map (Mid's edgeScroll)
 - **E208** one height for every page but the Tall ones: each is laid out once, the tallest sets the p
 - **E209** the tallest of the pages that are not Tall sets the one height
@@ -366,7 +372,15 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E309** builders who finish a place of work take it up (Mid's startWork): a field if nobody works 
 - **E310** a box over finds (Mid's boxCut): n villagers, idle first then the nearest, cut the finds i
 - **E223** assign: + sends an idle or waiting villager (else the one earning least, QV, on another jo · QV (N23, N24)
+- **E348** what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day
+- **E349** everyone eats, every moment: a villager working food eats from its find, not the store (a 
+- **E350** an order of yours costs its soldiers' meals for D213's seconds, never more than the store  · D213 (N170)
+- **E351** the year's work: everyone eats; a field's soil wears while worked and rests back, never un · QAA (N29)
+- **E352** each season's turn: food in store spoils (QAD); in spring fish regrow (QY), lambs come (QY · QAD (N32, N33) · QY (N27) · QZ (N28)
+- **E353** a cut-out plot is replanted at D222's share of its price and is full again; from a drop-of · D222 (N170)
+- **E354** send a hunter: the given villager, or the nearest idle one, else the nearest from other wo
 - **E224** the tick: training and research, ages, upkeep, the villagers, the bell
+- **E347** the gather beat: the field is worked now (its soil wears); a flock's food goes straight to
 - **E326** a crew of n raises a site at n^0.7 (QAC), counted once a tick; frost slows stone work; the · QAC (N31)
 - **E225** a new game: the book's stores (D172); the bell stays as Start set it · D172 (N119)
 - **E226** the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what i · QBR (N75) · D135 (N75)
@@ -376,14 +390,16 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
 - **E227** First Keep v100 · combat.js (floor 10): health, one blow (QBO), target choice (QAG), nerve · QBO (N69) · QAG (N36, N37) · QBQ (N76) · QAL (N41)
 - **E285** the Sides book (I) and the stances made in play, each pair's own; a new game forgets them
-- **E286** who belongs (the kind decides): a side's own are no group; an animal (I4) is a beast; a ki · I4 (N158) · I3 (N158)
+- **E286** who belongs (the kind decides): a side's own are no group; an animal (I4) is a beast; a ki · I4 (N158, N170) · I3 (N158)
 - **E287** a stance is the pair's own, or the book's start (I2); a treaty sets it both ways between i · I2 (N158) · N159
 - **E288** the one hostility test (Mid's isFoe): never one's own; an animal is everyone's foe; one of
 - **E289** the wild looking at a side: an animal fights everyone; a group fights a side at war with i
 - **E228** tiles from a unit to a thing: to a building's footprint, in the grid's frame
 - **E229** gone: pulled down (econ marks it) or dead (die marks it)
 - **E230** QBO the blow: base × counter × flank − armour, one at least; engines strike buildings with · QBO (N69)
+- **E355** a villager's javelin strikes game at D221's blow; a famine weakens every blow of its side  · D221 (N170)
 - **E231** the blow (QBO), and the body it moves (QBT) · QBO (N69) · QBT (N81, N82, N83, N18)
+- **E356** game falls as a carcass of its meat where it stood, and its hunters butcher it (Mid's kill
 - **E232** QAG the target: the most harm a second for its health left, discounted by distance; wildli · QAG (N36, N37)
 - **E233** by the grids: a building by its middle, so the widest one's reach (D11) is added · D11 (N112)
 - **E234** to within reach of a thing, with a short search (D147) · D147 (N114)

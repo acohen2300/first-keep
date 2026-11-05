@@ -17,9 +17,9 @@ const enemies = (a, b) => isFoe(a.side, b, a);
 const edgeDist = (u, t) => { if (t.kind !== 'bld') return Math.hypot(u.bx - t.bx, u.by - t.by) / T; const [sx, sy] = FK.fromBoard(u.bx, u.by); return Math.hypot(Math.max(0, t.i * T - sx, sx - (t.i + t.n) * T), Math.max(0, t.j * T - sy, sy - (t.j + t.n) * T)) / T; }; // E228
 const alive = (t) => t.hp > 0 && !t.gone; // E229
 // E230
-function damage(a, t) { const s = stat(a); let d = t.kind === 'bld' ? s.bld || s.atk : s.atk; if (t.kind !== 'bld') { const ts = stat(t); d *= vs(a, t); if ((a.bx - t.bx) * (t.face || 1) < 0) d *= D.flank; d -= ts.arm; } return Math.max(D.leastBlow, d); }
-function hit(a, t) { t.hp -= damage(a, t); FK.impact(a, t); if (t.hp <= 0) die(t, a); } // E231
-function die(t, by) { if (t.kind === 'bld') { FK.fire('event', 'fell', t); FK.unbuild(t); return; } t.gone = true; const us = units(), i = us.indexOf(t); if (i >= 0) us.splice(i, 1); if (FK.sel() === t) FK.select(null); for (const u of us) if (u.target === t) u.target = null; }
+function damage(a, t) { const s = stat(a); let d = t.kind === 'bld' ? s.bld || s.atk : s.atk; if (t.kind !== 'bld') { const ts = stat(t); d *= vs(a, t); if ((a.bx - t.bx) * (t.face || 1) < 0) d *= D.flank; if (FK.has(t, 'Prey') && FK.has(a, 'Gather')) d *= D.hunt.blow; d -= ts.arm; } return Math.max(D.leastBlow, d * ECON.hungerOf(a.side)); } // E355
+function hit(a, t) { t.hp -= damage(a, t); FK.impact(a, t); if (!SIDES[t.side] && t.job !== 'fight' && stat(t).atk) fight(t, a); if (t.hp <= 0) die(t, a); } // E231
+function die(t, by) { if (t.kind === 'bld') { FK.fire('event', 'fell', t); FK.unbuild(t); return; } t.gone = true; const us = units(), i = us.indexOf(t), c = FK.has(t, 'Prey') && FK.lay('meat', t.bx, t.by, D.meat[t.code]); if (i >= 0) us.splice(i, 1); if (FK.sel() === t) FK.select(null); for (const u of us) if (u.target === t) { u.target = null; if (c && FK.has(u, 'Gather')) ECON.gatherAt(u, c); } } // E356
 // E232
 function choose(u, r) { const s = stat(u); let best = null; const look = (t) => { if (!enemies(u, t) || !alive(t)) return; const d = edgeDist(u, t); if (d > r) return; if (t.side < 0 && t.target !== u) return; const v = damage(u, t) / s.rof / Math.max(1, t.hp) / (1 + d / D.aggro); if (!best || v > best[1]) best = [t, v]; };
   FK.unitsNear(u, r * T, look); FK.bldsNear(u.bx, u.by, (r + D.large) * T, (t) => { if (t.side >= 0) look(t); }); return best && best[0]; } // E233
@@ -43,7 +43,7 @@ FK.on('tick', (dt) => {
   for (const t of things()) if (t.kind === 'bld') { if (t.hpMax == null) { t.hpMax = hpMax(t); t.hp = t.done >= 1 ? t.hpMax : 1; }
     const tw = D.tower[t.code], [blow, reach, pace] = tw || []; if (!tw || t.done < 1) continue; t.cd = (t.cd || 0) - dt; if (t.cd > 0) continue; let best = null; FK.unitsNear(t, (reach + t.n) * T, (u) => { if (u.side < 0 || !isFoe(t.side, u, t)) return; const d = edgeDist(u, t); if (d <= reach && (!best || d < best[1])) best = [u, d]; }); if (best) { FK.fire('event', 'shot', t); best[0].hp -= Math.max(D.leastBlow, blow - stat(best[0]).arm); if (best[0].hp <= 0) die(best[0]); t.cd = pace; } }
   for (const u of units().slice()) { if (!alive(u)) continue; const s = stat(u); u.cd -= dt; u.rp -= dt; u.sc = (u.sc || 0) - dt; const look = u.sc <= 0; if (look) u.sc = D.scan;
-    if (u.side < 0) { if (s.atk && (u.job === 'idle' || u.job === 'fight') && !u.path) { if (u.job === 'idle' && look) { const t = choose(u, D.wildAggro); if (t && t.kind !== 'bld') fight(u, t); } } }
+    if (u.side < 0) { if (FK.has(u, 'Fight') && (u.job === 'idle' || u.job === 'fight') && !u.path) { if (u.job === 'idle' && look) { const t = choose(u, D.wildAggro); if (t && t.kind !== 'bld') fight(u, t); } } }
     else if (!armed(u)) { if (u.job !== 'fight') { const w = units().find((b) => b.side < 0 && b.job === 'fight' && b.target === u); if (w) fight(u, w); else continue; } } // E239
     else if (u.job === 'idle' || u.job === 'march' || (u.job === 'walk' && u.then === 'march')) { const t = look ? choose(u, D.aggro) : null; if (t) { u.was = u.job === 'idle' ? null : u.goal; fight(u, t); } else if (u.job === 'march' && !u.path) { if (u.goal == null || nearK(u.k, u.goal, FK.walkable(u.goal) ? 1 : 4)) u.job = 'idle'; else if (u.rp <= 0) { u.rp = D.repath; if (!FK.go(u, u.goal)) u.job = 'idle'; } } }
     else if (u.job === 'rout' && !u.path) u.job = 'idle';

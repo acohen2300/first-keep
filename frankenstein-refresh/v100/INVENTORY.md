@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,848 | 243,157 | 243,289 |
-| Books | 1069 | 0 | 177,821 | 178,119 |
-| Laws | 78 | 0 | 9,132 | 9,413 |
-| Tools | 4 | 752 | 101,016 | 101,159 |
+| Game code | 28 | 1,886 | 251,258 | 251,390 |
+| Books | 1136 | 0 | 199,633 | 199,937 |
+| Laws | 78 | 0 | 9,951 | 10,259 |
+| Tools | 4 | 813 | 111,396 | 111,547 |
 
 ## The trades (code)
 
@@ -20,56 +20,56 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,803 | 1,807 | 38 |
 | index.html#floor-2-terrain | 81 | 7,995 | 7,999 | 131 |
-| index.html#floor-3-non-movables | 41 | 4,196 | 4,200 | 82 |
+| index.html#floor-3-non-movables | 45 | 4,943 | 4,947 | 82 |
 | index.html#drawn-once-in-the-view-frame | 47 | 4,130 | 4,134 | 123 |
 | index.html#the-view | 9 | 916 | 920 | 14 |
-| index.html#the-door | 54 | 5,079 | 5,083 | 69 |
+| index.html#the-door | 54 | 5,163 | 5,167 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
-| index.html#the-building-art | 324 | 50,734 | 50,738 | 4096 |
-| index.html#the-node-art | 26 | 3,804 | 3,808 | 244 |
-| index.html#the-figures | 144 | 23,020 | 23,024 | 1610 |
+| index.html#the-building-art | 324 | 50,704 | 50,708 | 4096 |
+| index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
+| index.html#the-figures | 144 | 23,202 | 23,206 | 1610 |
 | index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
-| index.html#floor-5-movables | 107 | 11,063 | 11,067 | 96 |
+| index.html#floor-5-movables | 107 | 11,172 | 11,176 | 96 |
 | index.html#the-body-s-laws | 30 | 2,348 | 2,352 | 35 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,271 | 3,275 | 92 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,282 | 3,286 | 92 |
 | index.html#floor-6-climate | 63 | 7,867 | 7,879 | 288 |
 | index.html#floor-7-display | 28 | 2,927 | 2,931 | 75 |
-| index.html#the-woods-cache | 51 | 4,832 | 4,836 | 79 |
-| index.html#touch | 40 | 4,492 | 4,496 | 59 |
-| menu.js | 299 | 49,796 | 49,836 | 595 |
-| econ.js | 183 | 25,924 | 25,924 | 89 |
-| combat.js | 63 | 9,101 | 9,101 | 101 |
-| ai.js | 49 | 6,424 | 6,424 | 37 |
+| index.html#the-woods-cache | 51 | 4,849 | 4,853 | 79 |
+| index.html#touch | 40 | 4,505 | 4,509 | 59 |
+| menu.js | 303 | 50,935 | 50,975 | 595 |
+| econ.js | 213 | 31,127 | 31,127 | 79 |
+| combat.js | 63 | 9,411 | 9,411 | 101 |
+| ai.js | 49 | 6,459 | 6,459 | 37 |
 | sound.js | 56 | 5,632 | 5,632 | 66 |
 
 ## The books
 
 | Book | Entries | Bytes |
 |---|---|---|
-| angles | 3 | 461 |
-| capabilities | 27 | 6,397 |
-| citations | 169 | 21,382 |
+| angles | 4 | 583 |
+| capabilities | 31 | 7,877 |
+| citations | 172 | 22,612 |
 | colours | 9 | 951 |
-| comments | 343 | 50,718 |
+| comments | 359 | 53,641 |
 | ground | 4 | 640 |
-| mass | 16 | 2,354 |
-| measure | 204 | 33,195 |
-| rules | 52 | 11,266 |
-| screen | 10 | 2,597 |
-| shells | 74 | 12,282 |
-| sides | 4 | 1,180 |
+| mass | 18 | 2,663 |
+| measure | 217 | 37,659 |
+| rules | 53 | 12,080 |
+| screen | 10 | 2,689 |
+| shells | 78 | 13,536 |
+| sides | 4 | 1,202 |
 | sound | 51 | 11,159 |
-| sprites | 33 | 6,858 |
-| tech | 63 | 18,224 |
-| words | 7 | 11,524 |
+| sprites | 38 | 8,372 |
+| tech | 79 | 22,636 |
+| words | 9 | 15,176 |
 
 ## The shells
 
 | Layer | Shells | Ticking nothing yet |
 |---|---|---|
-| 100 | 9 | 1 |
-| 110 | 46 | 31 |
-| 120 | 19 | 0 |
+| 100 | 11 | 1 |
+| 110 | 46 | 28 |
+| 120 | 21 | 0 |
 
 ## The rules
 
@@ -127,5 +127,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X50 | t-research | page | ages and research are Mid's frozen code for the same orders: the age queued at the seat at its price and wait, the seat training nothing while it rises, the lines in order at each step's price and time (research-speed steps applied), a step out of order, queued, before its age or its needs refused; after each step the wood rate, the load, a home's room and the camp's footing Mid's with its shares added; the Hall names a step and an age, the age button and info card the next age and its own wait, the hidden age never next, the keep's level at Gunpowder drawn, Z1 from Mid's first age |
 | X51 | t-gather | page | ten villagers sent to one bush patch each stand on a spot of their own on its ring, the spots and the bodies a pace apart, never more on a find than Mid's frozen findCap; each one's crowd share and forager's rate are Mid's frozen forage for the same load, walk, crowd and walked length; Mid's frozen makeNow on the same five minutes of work gathers the same food within 2% (the walk is v100's: paths, and the push by mass) |
 | X52 | t-walls | page | builders, repair, limits, placing and walls are Mid's frozen code for the same actions: a crew's build time and a site's health (bldTick, n^0.7), a repair's time and stores spent (repairTick) and its price (repairCost), every price Mid's BLD and UNIT cost, the refund taken down (shellBack), every building's limit by age with research (capFor, capWhy), placing's refusals (canPlace), a wall laid corner to corner (wallLine) and the seal's gap (sealPath); on the page the nearest free villager is sent and one pulled off its work goes back to it, the ghost snaps a lane apart, a gate opens to its own and an ally and shuts to a foe, and the computer lays its ring |
+| X53 | t-food | page | a year and a season of food is Mid's frozen code for the same town (20 villagers, five at bushes, 5 foot, 5 riders, 4 farms worked and resting, a tended pasture of 11 with a wolf at two turns, half-fished fish, the hearth, the ice house and seed selection known, the store run dry and fed again): what is eaten (shareOf, upkeepTick, starveTick, foodInReach, hungerOf), spoiled and regrown at each turn (seasonTurn), the soil left (natureTick), the flock and its mutton, and the fields' harvest by season, soil and the year's roll (gatherMul) all equal Mid's; an order's meals are Mid's orderCost; a boar hunted falls as its meat and is butchered; fish are worked only near a dock |
 
-1179 items sealed · 1069 book entries · 78 laws · 169 citations, 23 still to open · 7 known
+1246 items sealed · 1136 book entries · 78 laws · 172 citations, 24 still to open · 7 known

@@ -266,8 +266,8 @@
    "v100 draws buildings as preview 49 pictures (bldSprite, ART); Mid's box mold is another look: see misfits"
   ],
   "FLAT": [
-   "bring",
-   "which buildings lie flat as plots: farm, tree farm, pasture (with drawPlot)"
+   "in v100",
+   "F16: the farm, tree farm and pasture pictures (v100's own, flat already) take their level from the Sprites book (PB14-PB16)"
   ],
   "boxed": [
    "cut",
@@ -278,8 +278,8 @@
    "the same switch for plots; v100 has one look a building"
   ],
   "drawPlot": [
-   "bring",
-   "fields, orchards and pastures drawn flat, turning with the land: crop by the season, young trees, grass and sheep, soil growing with the work; v100 has farm, tree farm and pasture pictures (ART): see misfits"
+   "in v100",
+   "F16: index.html the building art: the farm's crop by the season, the spent tree farm, the flock on the pasture, by levelOf"
   ],
   "drawBldBox": [
    "in v100",

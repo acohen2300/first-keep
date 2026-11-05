@@ -174,28 +174,28 @@
      "F13a: Words book J7 (why), by its key"
     ],
     "seedstore": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "manure": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "irrigation": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "rotation": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "enclosure": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "potato": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "ovens": [
      "in v100",
@@ -266,44 +266,44 @@
      "F13a: Words book J7 (why), by its key"
     ],
     "fishtraps": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "nets": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "salting": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "deepboats": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "trawl": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "dugouts": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "sails": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "harbours": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "compass": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "lighthouse": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "tally": [
      "in v100",
@@ -1078,12 +1078,12 @@
      "the history card for Aqueduct (BP7), with its building"
     ],
     "farm": [
-     "bring",
-     "the history card for Farm (BCL1), with its building"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "treefarm": [
-     "bring",
-     "the history card for Tree farm (BCL2), with its building"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "mill": [
      "bring",
@@ -1206,8 +1206,8 @@
      "the history card for Temple (BP3), with its building"
     ],
     "pasture": [
-     "bring",
-     "the history card for Pasture (BCL3), with its building"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "tpost": [
      "bring",
@@ -1250,8 +1250,8 @@
      "a trade stop's spice, with trade routes"
     ],
     "dock": [
-     "bring",
-     "the history card for Dock (BCT2), with its building"
+     "in v100",
+     "F16: Words book J7 (why), by its key"
     ],
     "tower": [
      "bring",
@@ -1857,7 +1857,7 @@
     ],
     "Hunting": [
      "bring",
-     "hunting deer and boar, with hunting (v100 says 'Hunting is not built yet')"
+     "hunting deer and boar, with hunting (v100 says 'Hunting is not built yet'); F16: the feature is in, its Guide entry waits for the Guide (no Guide in v100 yet)"
     ],
     "You build": [
      "bring",
@@ -1865,7 +1865,7 @@
     ],
     "Everyone eats": [
      "bring",
-     "everyone eats, shares by kind, hunger: with upkeep"
+     "everyone eats, shares by kind, hunger: with upkeep; F16: the feature is in, its Guide entry waits for the Guide (no Guide in v100 yet)"
     ],
     "You hold a vassal": [
      "bring",
@@ -2053,7 +2053,7 @@
     ],
     "The seasons turn": [
      "bring",
-     "the seasons' effects and the harvest roll, with seasons"
+     "the seasons' effects and the harvest roll, with seasons; F16: the feature is in, its Guide entry waits for the Guide (no Guide in v100 yet)"
     ],
     "The weather runs in spells": [
      "bring",

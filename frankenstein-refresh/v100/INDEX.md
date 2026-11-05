@@ -9,6 +9,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | A1 | the grid's turn on the screen | 15 | N90 |
 | A2 | the camera's rise over the ground | 41 | N91 |
 | A3 | the angle of repose, dry sand: steeper is a face, not a slope | 34 | N64 |
+| A4 | a full turn: the fish spots go round a lake's shore | 360 | N170 |
 
 ## capabilities
 
@@ -17,7 +18,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC0 | what every shell has: a name, its ticks, its citation | {by: every book of shells, law: [], needs: [name, ticks, cite], may: [layer]} | N92 |
 | SC01 | the mold of a find (layer 100) | {by: shells (finds), law: [], needs: [find, look], may: [room, sound]} | N92 |
 | SC02 | the mold of a building (layer 110) | {by: shells (buildings), law: [], needs: [size, style, look, material], may: []} | N92 |
-| SC03 | the mold of a walker (layer 120) | {by: shells (units, moveables), law: [], needs: [look, pace, body], may: []} | N92 |
+| SC03 | the mold of a walker (layer 120); one of a side eats its Upkeep (D211) | {by: shells (units, moveables), law: [], needs: [look, pace, body], may: [upkeep]} | N92; N170 |
 | SC04 | the mold of a page (the Screen book) | {by: books/screen.js, law: [], needs: [], may: [rows]} | N93 |
 | SC1 | walks the tiles at its pace | {by: index.html floor 5: step, findPath, law: [QBL, QBM, QBU], needs: [pace, body], may: [mount, kit, voice]} | N94 |
 | SC2 | works a find of best rate from a spot of its own on its ring, as many as the find takes (D195), and fills a load; also counts it among the people | {by: econ.js, law: [QBN, QV, QW, QX, QCI], needs: [body], may: []} | N95; N164 |
@@ -28,19 +29,23 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC7 | looses at range (a building that shoots reads D143) | {by: combat.js, law: [QAL], needs: [D143/D138], may: []} | N96 |
 | SC8 | has health, and sways when badly hurt | {by: combat.js, index.html, law: [QBS], needs: [D138/D139], may: []} | N97 |
 | SC9 | wanders when idle (a Poisson wait) | {by: index.html step, law: [QM], needs: [pace], may: []} | N94 |
-| SC10 | can be hunted | {by: menu.js (hunting not built yet), law: [], needs: [], may: []} | N94 |
+| SC10 | can be hunted: a villager sent to it (or tapped on it) strikes at D221's blow; it falls as a carcass of D220's food where it stood, which its hunters butcher; one with a blow strikes back (Mid's sendHunt, huntTick, the boar's temper) | {by: econ.js, combat.js, menu.js: hunting, law: [QBO], needs: [D220], may: []} | N94; N170 |
 | SC11 | a side's seat: the game opens on it, and a side falls with its last | {by: econ.js, ai.js, menu.js, law: [QBW], needs: [], may: []} | N95 |
 | SC12 | takes in the yields its row lists | {by: index.html dropFor, ai.js, law: [QBN], needs: [drop], may: []} | N98 |
 | SC13 | trains the units D133 gives it | {by: econ.js, law: [], needs: [D133], may: []} | N95 |
 | SC14 | houses the people D127 gives it | {by: econ.js, ai.js, law: [], needs: [D127], may: []} | N95 |
 | SC15 | where the ages are reached; the queue holds research as well as units: a step of the Research book is learned at the building its row names, after the one before it in its line and its needs | {by: menu.js, econ.js, law: [QCA], needs: [], may: []} | N95; N160 |
-| SC16 | a building that yields, at the rate its row points to, to one worker at a time (D195); its builder takes it up | {by: econ.js, ai.js, law: [QBN, QX], needs: [yield, rate], may: []} | N95; N164 |
+| SC16 | a building that yields, at the rate its row points to, to one worker at a time (D195); its builder takes it up; one with an amount runs out and is replanted at D222's share of its price (Mid's replant) | {by: econ.js, ai.js, law: [QBN, QX], needs: [yield, rate], may: [amount]} | N95; N164; N170 |
 | SC17 | a find: holds an amount of a yield | {by: econ.js, law: [QBN], needs: [yield, amount], may: []} | N99 |
 | SC18 | scouts (not built yet) | {by: waiting, law: [], needs: [], may: []} | N100 |
 | SC19 | trades (not built yet) | {by: waiting, law: [], needs: [], may: []} | N100 |
 | SC20 | a page that keeps its own height (the Town Center, the Start page); every other page shares the tallest of the rest | {by: menu.js, law: [], needs: [], may: []} | N101 |
 | SC21 | laid as a line, corner to corner, one piece a tile, four-connected; touches any building, keeps no lane (Mid's lineKind) | {by: econ.js, menu.js, law: [], needs: [], may: []} | N168 |
 | SC22 | shut to a foe of its owner, open to the rest; laid on its owner's wall, it takes the piece's place (Mid's blockedCell) | {by: index.html walkable, combat.js, law: [], needs: [], may: []} | N168 |
+| SC23 | stands by a lake, within D218's shore past its beach (Mid's dock) | {by: econ.js placeWhy, ai.js, law: [], needs: [], may: []} | N170 |
+| SC24 | a find worked only within D218's near of a finished Shore building of the side; it regrows each spring toward its own stock (QY) | {by: econ.js, law: [QY], needs: [], may: []} | N170 |
+| SC25 | keeps a flock (D219): its shepherd's food goes straight to the stores, a sheep's rate times the sheep; lambs each spring (QY), a tended flock culled to half (QZ); wolves take sheep | {by: econ.js, law: [QY, QZ], needs: [], may: []} | N170 |
+| SC26 | its soil wears when worked and rests back (QAA, D214); its yield follows the season (D216) and the year's harvest (D215) | {by: econ.js, law: [QAA], needs: [], may: []} | N170 |
 
 ## citations
 
@@ -215,6 +220,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N167 |  | Moussaïd, Helbing, Garnier, Johansson, Combe & Theraulaz (2009), Experimental study of the behavioural mechanisms underlying self-organizati | to open |
 | N168 |  | Design: Mid's builders, repair, limits, taking down, placing and walls (11-orders.js autoBuilder, sendBuilder, repairCost, shellBack, refund | opened |
 | N169 |  | Design: Albert, Nov 5 10:06–10:28: build and train times Mid's; every building's health v100's | opened |
+| N170 |  | Design: Mid's food, farms, seasons, hunting and fishing (36-economy.js shareOf, orderCost, hungerOf, upkeepTick, natureTick, seasonTurn, FLE | opened |
+| N171 |  | Keys, Brožek, Henschel, Mickelsen & Taylor (1950), The Biology of Human Starvation (the Minnesota study): grip strength fell from 58.2 to 41 | to open |
+| N172 |  | Design: Albert, Nov 5 16:07: the Palisade comes only with the war camp, as in Mid (free there); it leaves the Walls tab | opened |
 
 ## colours
 
@@ -577,6 +585,22 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E341 |  | a tap on open ground while the Build page is open: what fits there is picked and its ghost put there (Mid's suggestAt) |  |
 | E342 |  | dragging the ghost near the screen's edge scrolls the map (Mid's edgeScroll) |  |
 | E343 |  | what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a wall in a narrow way (a gate beside your wall), a h |  |
+| E344 |  | fish round every lake: a spot every D218 per of its radius, walked out from the middle to the shore and set inset back into the water, each  |  |
+| E345 |  | a find laid where something falls (game becomes a carcass where it stood); a lake near enough to stand a dock by, past its beach |  |
+| E346 |  | a boar near every Town Center, at the book's spot in each corner (Mid's boar) |  |
+| E347 |  | the gather beat: the field is worked now (its soil wears); a flock's food goes straight to the store; a plot with an amount runs down and it |  |
+| E348 |  | what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day; a famine past its grace weakens work and blows ( |  |
+| E349 |  | everyone eats, every moment: a villager working food eats from its find, not the store (a field and game for nothing, a shepherd from the st |  |
+| E350 |  | an order of yours costs its soldiers' meals for D213's seconds, never more than the store holds (Mid's orderCost; the tiredness comes with t |  |
+| E351 |  | the year's work: everyone eats; a field's soil wears while worked and rests back, never under its floor (QAA, Mid's natureTick); each season |  |
+| E352 |  | each season's turn: food in store spoils (QAD); in spring fish regrow (QY), lambs come (QY) and a tended flock is culled to half for mutton  |  |
+| E353 |  | a cut-out plot is replanted at D222's share of its price and is full again; from a drop-off, every cut-out plot of what it takes, nearest fi |  |
+| E354 |  | send a hunter: the given villager, or the nearest idle one, else the nearest from other work (not a builder or a posted worker); it fights t |  |
+| E355 |  | a villager's javelin strikes game at D221's blow; a famine weakens every blow of its side (Mid's huntTick, hungerOf) |  |
+| E356 |  | game falls as a carcass of its meat where it stood, and its hunters butcher it (Mid's kill) |  |
+| E357 |  | hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from theirs |  |
+| E358 |  | a pasture's card counts its sheep |  |
+| E359 |  | the town is told what food, the seasons and the flock do, in the Words book's news |  |
 
 ## ground
 
@@ -607,6 +631,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | W12 | timber | {density: 600} | N87 |
 | W15 | stone | {density: 2400} | N87 |
 | W16 | iron | {density: 7870} | N87 |
+| W17 | a boar | {kg: 80, height: 0.9, com: 0.5, foot: 0.3, stride: 1.2} | N85; N170 |
+| W18 | a bison | {kg: 700, height: 1.8, com: 1.1, foot: 0.6, stride: 2.2} | N85; N170 |
 
 ## measure
 
@@ -693,7 +719,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D83 | under this many pixels a tile things are dots and the grid is off | 5 | N112 |
 | D84 | the Town Center's spot in the corner's frame, Z2 on the road | [380, 380] | N112 |
 | D85 | units a metre, from the figure | 11.7 | N112 |
-| D86 | speeds in metres a second (walk: quick time, 120 steps of 30 in a minute) | {walk: 1.52, trot: 3.6, horse: 1.7, push: 0.7, deer: 1.5, wolf: 2.5, bear: 1.5} | N71; N72; N73; N79 |
+| D86 | speeds in metres a second (walk: quick time, 120 steps of 30 in a minute); boar and bison Mid's, by its own villager: 30 and 70 to 24 | {walk: 1.52, trot: 3.6, horse: 1.7, push: 0.7, deer: 1.5, wolf: 2.5, bear: 1.5, boar: 1.9, bison: 4.43} | N71; N72; N73; N79; N170 |
 | D87 | a load | 10 | N112 |
 | D88 | gathering a second, the old game's own (fish and meat Mid's, for when they come) | {bush: 0.9, tree: 0.75, gold: 0.6, stone: 0.55, iron: 0.5, fish: 0.8, meat: 1.2} | N70; N164 |
 | D89 | the next find within | 100 | N112 |
@@ -732,21 +758,21 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D122 | the sides in play | [0, 2] | N114 |
 | D123 | what a thing costs (Mid's BLD and UNIT cost, by the 10:31 rule; a second Town Center Mid's town, each unit the Mid kind it wears) | {BTC1: {wood: 400, stone: 300, food: 200}, BR1: {wood: 30}, BI1: {wood: 80}, BI2: {wood: 80}, BI3: {wood: 80}, BCL1: {wood: 60}, BM1: {wood: | N168 |
 | D124 | seconds to train | {UV: 25, UM1: 21, UM2: 35, UM3: 30, UM4: 36, US4: 30} | N69 |
-| D125 | one villager's seconds to raise a site (Mid's build times, BLD t; the Town Center a second one, Mid's town) | {BTC1: 60, BR1: 12, BI1: 15, BI2: 15, BI3: 15, BCL1: 10, BM1: 25, BM2: 25, BM3: 25, BM4: 30, BW1: 10, BW2: 12, BW3: 25, BW4: 6} | N169; N168 |
+| D125 | one villager's seconds to raise a site (Mid's build times, BLD t; the Town Center a second one, Mid's town) | {BTC1: 60, BR1: 12, BI1: 15, BI2: 15, BI3: 15, BCL1: 10, BM1: 25, BM2: 25, BM3: 25, BM4: 30, BW1: 10, BW2: 12, BW3: 25, BW4: 6, BCL2: 12, BC | N169; N168 |
 | D126 | n villagers raise it at n^this | 0.7 | N114 |
 | D127 | the people a building houses | {BTC1: 10, BR1: 5} | N69 |
 | D128 | the most people | 200 | N69 |
 | D129 | each age's price and its wait in seconds, by the ages of D130 (Mid's AGES); the sixth is hidden until a year of peace opens it; the first age up sizes Z1's food (Mid's pocket) | {cost: [{}, {food: 300, wood: 100}, {food: 600, gold: 200}, {food: 1000, gold: 500, stone: 200}, {food: 1600, gold: 900, stone: 300, iron: 4 | N160 |
 | D130 | the six ages (Mid's names; Albert, Nov 5 10:30) | [Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment] | N160 |
-| D131 | a unit's food a day | 1 | N114 |
+| D131 | a share: what one person eats a day (Mid's UPKEEP.share, 30 food a minute feeding eight) | 7.5 | N170 |
 | D132 | move on when another find pays this much more (Mid's 1.18) | 0.18 | N114; N164 |
 | D133 | who trains whom | {BTC1: [UV], BM1: [UM1], BM2: [UM2], BM3: [UM3, US4], BM4: [UM4]} | N114 |
 | D134 | the bell | 900 | N114 |
 | D135 | the score's divisors | {unit: 5, bld: 5, tech: 5, wealth: 10} | N75 |
 | D136 | a farm's food a second | 0.4 | N69 |
 | D137 | a find no path reached is left alone for | 60 | N114 |
-| D138 | a unit's health, blow, reach, pace, armour, class and counter | {UV: {hp: 25, atk: 3, rng: 1, rof: 1.5, arm: 0, cls: foot}, UM1: {hp: 45, atk: 8, rng: 1, rof: 1, arm: 1, cls: foot, vs: horse}, UM2: {hp: 3 | N69 |
-| D139 | a building's health | {BTC1: 2400, BR1: 550, BI1: 600, BI2: 600, BI3: 600, BCL1: 480, BM1: 1200, BM2: 1200, BM3: 1200, BM4: 1500, BW1: 1800, BW2: 2750, BW3: 1020, | N69 |
+| D138 | a unit's health, blow, reach, pace, armour, class and counter; the boar and the bison Mid's | {UV: {hp: 25, atk: 3, rng: 1, rof: 1.5, arm: 0, cls: foot}, UM1: {hp: 45, atk: 8, rng: 1, rof: 1, arm: 1, cls: foot, vs: horse}, UM2: {hp: 3 | N69; N170 |
+| D139 | a building's health; the tree farm and the pasture a farm's, the dock Age of Empires II's | {BTC1: 2400, BR1: 550, BI1: 600, BI2: 600, BI3: 600, BCL1: 480, BM1: 1200, BM2: 1200, BM3: 1200, BM4: 1500, BW1: 1800, BW2: 2750, BW3: 1020, | N69; N170 |
 | D140 | a counter's edge | 1.5 | N114 |
 | D141 | a blow from behind | 1.3 | N114 |
 | D142 | a wave breaks under this share of its start | 0.3 | N76 |
@@ -816,6 +842,19 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D208 | the computer's wall ring: ring tiles out from its Town Center, an arc of ± steps of step rad facing the middle, its gates the two squares nearest the middle and laid first; from age, with stone, up to pieces a round while it keeps that much stone (Mid's WALL_R, 260 units in its 10-unit squares, and wallPlan; the balanced computer walls) | {ring: 26, steps: 66, step: 0.019, gates: 2, age: 1, stone: 60, keep: 40, pieces: 3} | N168 |
 | D209 | what fits a tapped spot, in tiles and scores: a drop-off for finds within near × r with none within dropR; more of what stands within r (a home: a home; a field: a mill, then a field; an army building: the one you lack; a wall: a gate; the Town Center: a home, keep); a narrow way, its disc of area tiles between choke solid: a wall, or a gate beside your wall; a home when room is short (Mid's SUGGEST) | {r: 14, near: 0.85, dropR: 11, drop: 3, kin: 3.5, keep: 1, area: 4, choke: {lo: 0.35, hi: 0.75}, chokeW: 4, room: 2, short: 1.5} | N168 |
 | D210 | a building that needs another of its side standing first (Mid's: the Apartment an Aqueduct) | {BR2: BP7} | N168 |
+| D211 | the shares a kind eats, its Upkeep: a person one, a foot soldier 1.5, a rider 3 (its horse's fodder), a cart 2; a wagon none (Mid's UPKEEP) | {person: 1, foot: 1.5, mounted: 3, cart: 2} | N170 |
+| D212 | a famine (the store empty, no food in reach): full strength for days, then work and blows at work (the Minnesota study's grip, 58.2 to 41.8 kg); fed again with more than fed in store (Mid's STARVE, UPKEEP.hunger) | {days: 2, work: 0.72, fed: 20} | N170; N171 |
+| D213 | an order you give costs its soldiers' meals for this many seconds (Mid's ORDER, half a minute) | 30 | N170 |
+| D214 | a field's soil: it loses loss a year while worked (worked within the last worked seconds) and wins back rest a season at rest, never under floor nor over full (Mid's FERT) | {loss: 0.1, rest: 0.4, floor: 0.6, worked: 2, full: 1} | N29; N170 |
+| D215 | the year's harvest, rolled each spring: the first row whose upTo passes the roll gives the fields' m; one year in 20 fails (half), one in 6 is poor (30% less), the rest normal (Mid's HARVEST, its chances summed) | [{upTo: 0.05, m: 0.5}, {upTo: 0.21666666666666667, m: 0.7}, {upTo: 1, m: 1}] | N170 |
+| D216 | each season's field yield, spring to winter (Mid's SEASONS) | {farm: [1, 1.1, 1.25, 0.4]} | N170 |
+| D217 | food in store spoils this share a year, taken at each season's turn; a loss of say or more is told (Mid's SPOIL; the FAO's 2 to 10%) | {year: 0.05, say: 20} | N32; N33; N170 |
+| D218 | fish: a spot every per of a lake's radius, inset into the water from its shore, each holding amt × the radius ÷ r0 (Mid's 350 × its RICH 2.5); they regrow each spring at r a year toward that (QY), and are worked only within near of a finished dock of the side; a dock stands within shore of a lake past its beach (Mid's FISH, DOCKR, lakeGap) | {amt: 875, r0: 60, r: 0.5, per: 10, inset: 8, near: 150, shore: 70} | N27; N28; N170 |
+| D219 | a pasture's flock: start sheep, at most max; lambs each spring at lambs toward max (QY); a tended flock is culled to hold (half the most) each spring for mutton food a sheep (QZ); its shepherd takes milk food a second a sheep; a wolf or bear within wolf takes up to take sheep a season (Mid's pasture, LAMBS, FLOCK, MUTTON) | {start: 6, max: 12, lambs: 0.6, milk: 0.03, mutton: 100, wolf: 260, take: 2, takers: [MW4, MW6], hold: 6} | N27; N28; N170 |
+| D220 | the food game gives when it falls (Mid's meat × its RICH 2.5) | {MW3: 500, MW7: 850, MW8: 1000} | N170 |
+| D221 | a villager's javelin strikes game at blow times its blow (Mid's huntTick) | {blow: 5} | N170 |
+| D222 | a tree farm: amount wood at rate a second, then cut out; replanted at replant × its price (Mid's treefarm, Albert's 36 and 12) | {amount: 1200, rate: 0.55, replant: 0.5} | N170 |
+| D223 | the boar of each corner and its spot in the corner's frame, about 300 from the Town Center and clear of the home pond (Mid's boar, 280 to 380 from the keep) | {code: MW7, at: [470, 660]} | N170 |
 
 ## rules
 
@@ -873,6 +912,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X50 | ages and research are Mid's frozen code for the same orders: the age queued at the seat at its price and wait, the seat training nothing while it rises, the lines in order at each step's price and time (research-speed steps applied), a step out of order, queued, before its age or its needs refused; after each step the wood rate, the load, a home's room and the camp's footing Mid's with its shares added; the Hall names a step and an age, the age button and info card the next age and its own wait, the hidden age never next, the keep's level at Gunpowder drawn, Z1 from Mid's first age | {stage: page} | N160 |
 | X51 | ten villagers sent to one bush patch each stand on a spot of their own on its ring, the spots and the bodies a pace apart, never more on a find than Mid's frozen findCap; each one's crowd share and forager's rate are Mid's frozen forage for the same load, walk, crowd and walked length; Mid's frozen makeNow on the same five minutes of work gathers the same food within 2% (the walk is v100's: paths, and the push by mass) | {stage: page} | N164 |
 | X52 | builders, repair, limits, placing and walls are Mid's frozen code for the same actions: a crew's build time and a site's health (bldTick, n^0.7), a repair's time and stores spent (repairTick) and its price (repairCost), every price Mid's BLD and UNIT cost, the refund taken down (shellBack), every building's limit by age with research (capFor, capWhy), placing's refusals (canPlace), a wall laid corner to corner (wallLine) and the seal's gap (sealPath); on the page the nearest free villager is sent and one pulled off its work goes back to it, the ghost snaps a lane apart, a gate opens to its own and an ally and shuts to a foe, and the computer lays its ring | {stage: page} | N168 |
+| X53 | a year and a season of food is Mid's frozen code for the same town (20 villagers, five at bushes, 5 foot, 5 riders, 4 farms worked and resting, a tended pasture of 11 with a wolf at two turns, half-fished fish, the hearth, the ice house and seed selection known, the store run dry and fed again): what is eaten (shareOf, upkeepTick, starveTick, foodInReach, hungerOf), spoiled and regrown at each turn (seasonTurn), the soil left (natureTick), the flock and its mutton, and the fields' harvest by season, soil and the year's roll (gatherMul) all equal Mid's; an order's meals are Mid's orderCost; a boar hunted falls as its meat and is butchered; fish are worked only near a dock | {stage: page} | N132; N170 |
 
 ## screen
 
@@ -880,8 +920,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 |---|---|---|---|
 | SN1 | the mold: six slots a row, a slot 44 tall (Apple's least touch target), gaps and edges 6 | {slots: 6, slot: 44, gap: 6} | N133 |
 | SN2 | the Build tabs: six, up to nine buildings each, three to a row (each cell two slots wide) | {Home: [BTC1, BR1, BR2, BCR2, BP4, BP6, BP7], Land: [BCL1, BI1, BCL2, BI3, BCT2, BI2, BCL3, BCL4, BI5], Trade: [BCR1, BCT1, BI6, BI4, BI7, B | N134 |
-| SN3 | buildings not on the Build menu: the Throne is the map's; the camp tents come with the camp wagon | [BS1, BTC5, BTC6, BTC7, BTC8] | N135 |
-| SN4 | a card's rows, in order: a row shows when the subject ticks what it names (none: always) | [[title, null], [health, Health], [load, Gather], [store, Yield], [queue, Spawn], [train, Spawn], [tech, Research], [acts, null]] | N136 |
+| SN3 | buildings not on the Build menu: the Throne is the map's; the camp tents come with the camp wagon; the Palisade comes with the war camp (Albert, Nov 5 16:07) | [BS1, BTC5, BTC6, BTC7, BTC8, BW4] | N135; N172 |
+| SN4 | a card's rows, in order: a row shows when the subject ticks what it names (none: always) | [[title, null], [health, Health], [load, Gather], [store, Yield], [flock, Flock], [queue, Spawn], [train, Spawn], [tech, Research], [acts, n | N136; N170 |
 | SN5 | the top ribbon: the five stores, sound, play, mail | [food, wood, stone, gold, iron, mute, play, mail] | N137 |
 | SN6 | readings with no row: the second top row was cut, each waits for its new home | [season and time of day, the clock to the bell, people and room, idle villagers, records, rank, army] | N138 |
 | SN10 | the Start page | {ticks: [Tall], rows: the new game's choices} | N139 |
@@ -895,6 +935,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 |---|---|---|---|
 | R1 | Tree | [Yield] | N144 |
 | R5 | Bush | [Yield] | N144 |
+| R6 | Carcass | [Yield] | N170 |
+| MW1 | Fish | [Yield, Catch] | N170 |
 | R2 | Gold | [Yield] | N144 |
 | R3 | Stone | [Yield] | N144 |
 | R4 | Iron | [Yield] | N144 |
@@ -912,12 +954,12 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BR2 | Apartment | [] | N144 |
 | BCR1 | Market | [] | N144 |
 | BCR2 | Tavern | [] | N144 |
-| BCL1 | Farm | [Field, Health] | N144 |
-| BCL2 | Tree farm | [] | N144 |
-| BCL3 | Pasture | [] | N144 |
+| BCL1 | Farm | [Field, Health, Soil] | N144; N170 |
+| BCL2 | Tree farm | [Field, Health] | N144; N170 |
+| BCL3 | Pasture | [Field, Health, Flock] | N144; N170 |
 | BCL4 | Quarry | [] | N144 |
 | BCT1 | Trade post | [] | N144 |
-| BCT2 | Dock | [] | N144 |
+| BCT2 | Dock | [Drop-off, Health, Shore] | N144; N170 |
 | BP1 | School | [] | N144 |
 | BP2 | Library | [] | N144 |
 | BP3 | Temple | [] | N144 |
@@ -948,25 +990,27 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BF5 | Abatis | [] | N144 |
 | BS1 | Throne | [] | N144 |
 | BS2 | Wonder | [] | N144 |
-| UV | Villager | [Walk, Gather, Carry, Build, Repair, Fight, Health] | N144 |
-| UM1 | Foot | [Walk, Fight, Health] | N144 |
-| UM2 | Archers | [Walk, Fight, Shoot, Health] | N144 |
-| UM3 | Riders | [Walk, Fight, Health] | N144 |
-| UM4 | Engines | [Walk, Fight, Health] | N144 |
-| UM4b | Engines | [Walk] | N144 |
-| US1 | Priest | [Walk] | N144 |
-| US2 | Medic | [Walk] | N144 |
-| US3 | Spy | [Walk] | N144 |
-| US4 | Scout | [Walk, Fight, Scout, Health] | N144 |
-| UT1 | Caravan | [Walk, Carry, Trade] | N144 |
+| UV | Villager | [Walk, Gather, Carry, Build, Repair, Fight, Health] | N144; N170 |
+| UM1 | Foot | [Walk, Fight, Health] | N144; N170 |
+| UM2 | Archers | [Walk, Fight, Shoot, Health] | N144; N170 |
+| UM3 | Riders | [Walk, Fight, Health] | N144; N170 |
+| UM4 | Engines | [Walk, Fight, Health] | N144; N170 |
+| UM4b | Engines | [Walk] | N144; N170 |
+| US1 | Priest | [Walk] | N144; N170 |
+| US2 | Medic | [Walk] | N144; N170 |
+| US3 | Spy | [Walk] | N144; N170 |
+| US4 | Scout | [Walk, Fight, Scout, Health] | N144; N170 |
+| UT1 | Caravan | [Walk, Carry, Trade] | N144; N170 |
 | UT2 | Camp wagon | [Walk, Carry] | N144 |
 | MH1 | Outlaws | [Walk] | N144 |
 | MH3 | Robbers | [Walk] | N144 |
 | MH4 | Vagabonds | [Walk] | N144 |
 | MH5 | Wayfarers | [Walk] | N144 |
-| MW3 | Deer | [Walk, Wander, Prey, Health] | N144 |
+| MW3 | Deer | [Walk, Wander, Prey, Health] | N144; N170 |
 | MW4 | Wolf | [Walk, Wander, Fight, Health] | N144 |
 | MW6 | Bear | [Walk, Wander, Fight, Health] | N144 |
+| MW7 | Boar | [Walk, Wander, Prey, Health] | N170 |
+| MW8 | Bison | [Walk, Wander, Prey, Health] | N170 |
 
 ## sides
 
@@ -975,7 +1019,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | I1 | the stances two sides, or a side and a group, may hold; a treaty binds only its signers (vassal comes later) | [war, peace, ally] | N158; N159 |
 | I2 | every side starts at this stance with every other side and with each of the wild's groups (Mid's start) | war | N158 |
 | I3 | the wild's four groups (the Natives, the outlaws, the bandits, the robbers) and their kinds, each holding its own stance with each side; a kind of the wild in none is the Natives'; the horde is the outlaws' (comes with the hordes) | {nat: [], out: [], ban: [MH1], rob: [MH3]} | N158 |
-| I4 | the animals: everyone's foe, always, bound by no stance | [MW3, MW4, MW6] | N158 |
+| I4 | the animals: everyone's foe, always, bound by no stance | [MW3, MW4, MW6, MW7, MW8] | N158; N170 |
 
 ## sound
 
@@ -1069,7 +1113,12 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | PB11 | the siege building picture | {top: 40} | N151 |
 | PB12 | research on its building (Mid's UP): 1 when a step of its own is learned sets it on a stone footing (foot tall, its side in shade); 2, half its steps or more, adds corner stones (w, h, every gap, clear of the eaves by edge) and a gilded ridge | {half: 0.5, top: 2, foot: 3, shade: -0.45, line: 0.4, stone: [3.4, 3, 6, 2], lift: 0.15, rim: 0.3, ridge: #e6c75a, ridgeW: 1.6} | N151; N160 |
 | PB13 | the keep at its level (Gunpowder): an angled stone bastion with a gun on it, from the keep's front corner | {at: [-27, -1], face: [[-9, -1], [0, 6], [9, -1], [9, -10], [0, -4], [-9, -10]], top: [[-9, -10], [0, -16], [9, -10], [0, -4]], shade: [0.08 | N151; N160 |
-| PN1 | the finds: their scale, drawn smaller as they are used (left[0] + left[1] × the share left, Mid's nodeScale), the tool each is worked with (the figure's work frames: axe, hands, pick), and their dot far out | {scale: {tree: 0.88, bush: 1.45, other: 1.25}, left: [0.6, 0.4], tool: {tree: 0, bush: 1, bld: 1, other: 2}, dot: {tree: #3c6c32, bush: #3f6 | N152; N164 |
+| PN1 | the finds: their scale, drawn smaller as they are used (left[0] + left[1] × the share left, Mid's nodeScale), the tool each is worked with (the figure's work frames: axe, hands, pick), and their dot far out; the trees' leaves by the season (autumn's two, winter's snow), the carcass and the fish's ripple (Mid's nodeSprite, drawNode) | {scale: {tree: 0.88, bush: 1.45, other: 1.25}, left: [0.6, 0.4], tool: {tree: 0, bush: 1, bld: 1, other: 2, fish: 1, meat: 1}, dot: {tree: # | N152; N164; N170 |
+| P20 | the boar figure | {brush: quad, o: {col: #4a3a2e, len: 13, h: 7, legH: 3.4, legW: 1, head: 2.8, headY: 0.55, tusk: true, bristle: true, tail: 0.6}, box: [24,  | N150; N170 |
+| P21 | the bison figure: the hump, a shaggy mane and a short horn | {brush: quad, o: {col: #3e2a1c, len: 20, h: 10, legH: 6, legW: 1.4, head: 3.4, headY: 0.4, hump: true, bristle: true, tail: 0.8, horn: {col: | N150; N170 |
+| PB14 | the farm building picture; its level is the season: the crop's colours spring to winter | {level: {season: true}} | N151; N170 |
+| PB15 | the tree farm building picture; its level 1 when cut out: stumps | {level: {spent: true}} | N151; N170 |
+| PB16 | the pasture building picture; its level is the flock: a sheep drawn for each | {level: {flock: true}} | N151; N170 |
 
 ## tech
 
@@ -1120,7 +1169,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O43 | Census | {at: BTC1, line: Household, age: 2, cost: {food: 170, gold: 110}, time: 38, fx: [{s: train, k: UV, p: -0.2}], need: [writing], when: 500 BC, | N160; N161 |
 | O44 | Town charter | {at: BTC1, line: Household, age: 3, cost: {food: 290, gold: 190}, time: 56, fx: [{s: room, k: BR1, a: 1}], when: 1100s, w: 6} | N160; N161 |
 | O45 | Hearth and pot | {at: BR1, line: Home, age: 0, cost: {wood: 40, food: 30}, time: 20, fx: [{s: eat, p: -0.1}], when: about 8000 BC, w: 4} | N160; N161 |
-| O46 | Ice house | {at: BR1, line: Home, age: 2, cost: {stone: 120, wood: 80}, time: 32, fx: [{s: rate, k: fish, p: 0.15}, {s: rate, k: Prey, p: 0.15}, {s: spo | N160; N161 |
+| O46 | Ice house | {at: BR1, line: Home, age: 2, cost: {stone: 120, wood: 80}, time: 32, fx: [{s: rate, k: MW1, p: 0.15}, {s: rate, k: R6, p: 0.15}, {s: spoil, | N160; N161; N170 |
 | O47 | Chimney and fireplace | {at: BR1, line: Home, age: 3, cost: {stone: 180, wood: 120}, time: 40, fx: [{s: warm, a: 0.05}, {s: chill, p: -0.5}], when: 1100s, w: 5} | N160; N161 |
 | O48 | Calendar | {at: BTC1, line: Watch, age: 2, cost: {food: 180, gold: 120}, time: 41, fx: [{s: rate, k: BCL1, p: 0.05}, {s: time, k: O, p: -0.05}], need:  | N160; N161 |
 | O49 | Town watch | {at: BTC1, line: Watch, age: 3, cost: {food: 90, gold: 60}, time: 26, fx: [{s: rng, k: BTC1, a: 1.5}, {s: rng, k: BTC1, a: 1.5}], when: 1200 | N160; N161 |
@@ -1138,6 +1187,22 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O61 | Guilds | {at: BP2, line: Learning, age: 3, cost: {gold: 260, stone: 180}, time: 52, fx: [{s: queue, a: 2}], when: 1100s, w: 5} | N160; N161 |
 | O62 | Printing press | {at: BP2, line: Learning, age: 4, cost: {gold: 550, stone: 360}, time: 87, fx: [{s: time, k: O, p: -0.32}], when: 1450s, w: 9} | N160; N161 |
 | O63 | Optics | {at: BP2, line: Learning, age: 4, cost: {gold: 430, stone: 290}, time: 71, fx: [{s: sight, k: *, a: 2.0}], need: [press], when: 1608, w: 6} | N160; N161 |
+| O64 | Seed selection | {at: BI1, line: Soil, age: 0, cost: {food: 60, wood: 40}, time: 19, fx: [{s: soil, a: 0.1}], when: 8000 BC, w: 6} | N160; N161; N170 |
+| O65 | Irrigation | {at: BI1, line: Soil, age: 1, cost: {food: 200, wood: 130}, time: 44, fx: [{s: soil, a: 0.15}], when: 3000 BC, w: 7} | N160; N161; N170 |
+| O66 | Manuring | {at: BI1, line: Soil, age: 1, cost: {food: 90, wood: 60}, time: 26, fx: [{s: soil, a: 0.1}], when: 2000 BC, w: 4} | N160; N161; N170 |
+| O67 | Crop rotation | {at: BI1, line: Soil, age: 3, cost: {food: 340, wood: 230}, time: 64, fx: [{s: rate, k: BCL1, p: 0.2}, {s: limit, k: BCL1, a: 3}], when: 800 | N160; N161; N170 |
+| O68 | Enclosure | {at: BI1, line: Soil, age: 4, cost: {food: 390, wood: 260}, time: 66, fx: [{s: limit, k: BCL1, a: 3}], when: 1500s, w: 5} | N160; N161; N170 |
+| O69 | New World crops | {at: BI1, line: Crops, age: 0, cost: {wood: 290, iron: 190}, time: 56, fx: [{s: rate, k: BCL4, p: 0.2}], when: 1200s, w: 6} | N160; N161; N170 |
+| O70 | Fish traps | {at: BCT2, line: Fishing, age: 0, cost: {wood: 40, food: 30}, time: 15, fx: [{s: rate, k: MW1, p: 0.15}], when: 8000 BC, w: 3} | N160; N161; N170 |
+| O71 | Nets | {at: BCT2, line: Fishing, age: 0, cost: {wood: 100, food: 70}, time: 28, fx: [{s: rate, k: MW1, p: 0.3}], when: 6000 BC, w: 5} | N160; N161; N170 |
+| O72 | Salting | {at: BCT2, line: Fishing, age: 2, cost: {wood: 170, food: 110}, time: 38, fx: [{s: rate, k: MW1, p: 0.2}, {s: spoil, p: -0.5}], when: 300 BC | N160; N161; N170 |
+| O73 | Decked boats | {at: BCT2, line: Fishing, age: 3, cost: {wood: 290, food: 190}, time: 56, fx: [{s: rate, k: MW1, p: 0.3}], when: 1300s, w: 6} | N160; N161; N170 |
+| O74 | Trawl nets | {at: BCT2, line: Fishing, age: 4, cost: {wood: 350, food: 230}, time: 61, fx: [{s: rate, k: MW1, p: 0.2}], when: 1376, w: 4} | N160; N161; N170 |
+| O75 | Dugout canoes | {at: BCT2, line: Harbour, age: 0, cost: {wood: 50, food: 30}, time: 17, fx: [{s: rate, k: MW1, p: 0.1}], when: 8000 BC, w: 4} | N160; N161; N170 |
+| O76 | Sails | {at: BCT2, line: Harbour, age: 1, cost: {wood: 120, food: 80}, time: 32, fx: [{s: rate, k: MW1, p: 0.15}], when: 3000 BC, w: 7} | N160; N161; N170 |
+| O77 | Harbour works | {at: BCT2, line: Harbour, age: 2, cost: {wood: 170, food: 110}, time: 38, fx: [{s: hp, k: BCT2, p: 0.5}], need: [masonry], when: 300 BC, w:  | N160; N161; N170 |
+| O78 | Compass | {at: BCT2, line: Harbour, age: 3, cost: {wood: 320, food: 210}, time: 60, fx: [{s: sight, k: [UV, US4, UT1], a: 3}], when: 1100s, w: 7} | N160; N161; N170 |
+| O79 | Lighthouse | {at: BCT2, line: Harbour, age: 4, cost: {wood: 310, food: 210}, time: 55, fx: [{s: sight, k: BCT2, a: 6}], when: 1500s, w: 3} | N160; N161; N170 |
 
 ## words
 
@@ -1149,5 +1214,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J4 | a number shortened: 1.2k | k | N132 |
 | J5 | one, two: the first ending that fits, as [pattern, flags, ending] (a man-at-arms, men-at-arms; a spearman; a wolf; an ally; a ditch; the rest take s) | [[^(m)an(-at-arms)$, i, $1en$2], [man$, , men], [(wol)f$, i, $1ves], [([^aeiou])y$, , $1ies], [(s/x/ch/sh)$, , $1es], [$, , s]] | N132 |
 | J6 | the map's lettered squares: a letter across, a number down (A1 to V22 on the board, D190) | ABCDEFGHIJKLMNOPQRSTUVWXYZ | N132 |
-| J7 | the history line of each age (age0 to age4) and each research step, by its key: what it was and when (Mid's WHY) | {age0: Farming villages of the Neolithic (from about 10,000 years ago): fields, houses, a wall. Jericho had a stone wall and tower about 800 | N160; N161 |
+| J7 | the history line of each age (age0 to age4) and each research step, by its key: what it was and when (Mid's WHY) | {age0: Farming villages of the Neolithic (from about 10,000 years ago): fields, houses, a wall. Jericho had a stone wall and tower about 800 | N160; N161; N170 |
+| J8 | what the town is told when food, the seasons and the flock turn, by the event that tells it (Mid's news; {n}, {m} and {at} filled in) | {hungry: Food stores empty: put villagers on food., fed: Your people are fed again., famine: Famine: no food in reach. Two days to recover., | N170 |
+| J9 | what a refusal or an order says for plots, the dock and the hunt (Mid's words) | {replanted: {n} replanted., broke: Not enough to replant., hands: No free hands: train more villagers., hunt: A villager goes hunting., shor | N170 |
 

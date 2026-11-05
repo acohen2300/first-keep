@@ -96,7 +96,7 @@ const price = (c) => { const st = SIDES[ME].store, miss = Object.entries(c || {}
   const f = Math.min(...miss.map(([, m, n]) => 1 - m / n)); return `<small style="color:${f < 0.5 ? mixc(COL.rr, COL.rw, f * 2) : mixc(COL.rw, COL.rg, f * 2 - 1)};opacity:1">Short ${miss.map(([y, m]) => m + y[0]).join(' ')}</small>`; };
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.ceil(t % 60) % 60).padStart(2, '0')}`;
 const costText = (c) => Object.entries(c || {}).filter(([, n]) => n > 0).map(([y, n]) => `${n}${y[0]}`).join(' ') || 'free'; // E183
-const own = (t) => t && t.side === ME;
+const own = (t) => t && t.side === ME, NEWS = WD.news, TELL = WD.say;
 const isVil = (u) => u && u.kind === 'unit' && FK.has(u, 'Gather') && own(u);
 const isSoldier = (u) => u && u.kind === 'unit' && own(u) && WAR.armed(u);
 const hall = () => { const h = FK.seatOf(ME); return h && h.done >= 1 ? h : null; };
@@ -144,8 +144,11 @@ const VERBS = {
   send: { label: () => 'Send one', whyNot: (t) => (!ECON.villagersOf(ME).some((v) => v.job === 'idle' || v.job === 'wait') ? 'No idle villager' : ''), run: (t) => { const u = ECON.villagersOf(ME).filter((v) => v.job === 'idle' || v.job === 'wait').sort((a, b) => Math.hypot(a.bx - t.bx, a.by - t.by) - Math.hypot(b.bx - t.bx, b.by - t.by))[0]; ECON.gatherAt(u, t); } },
   raise: { label: (t) => (t.done < 1 ? 'Raise' : `Repair${price(ECON.repairCost(t))}`), whyNot: (t) => (!isVil(FK.sel()) ? 'Pick a villager' : t.done >= 1 && t.hp >= t.hpMax - D.repair.within ? 'Not hurt' : ''), run: (t) => ECON.buildAt(FK.sel(), t) },
   scrap: { label: (t) => (t.done < 1 ? 'Cancel site' : 'Demolish'), whyNot: (t) => (FK.has(t, 'Seat') && t.done >= 1 ? 'The hall stays' : ''), run: (t) => { toast(`${B[t.code][0]} ${t.done < D.refund.first ? 'cancelled' : 'taken down'}: ${costText(ECON.refund(t))} back`); ECON.cancel(t); S.subject = null; } },
-  fight: { label: () => 'Attack this', whyNot: (t) => (!isSoldier(FK.sel()) ? 'Pick a soldier' : ''), run: (t) => WAR.fight(FK.sel(), t) },
-  here: { label: () => 'Soldiers here', whyNot: (t) => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: (t) => WAR.attack(ME, t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k) },
+  fight: { label: () => 'Attack this', whyNot: (t) => (!isSoldier(FK.sel()) ? 'Pick a soldier' : ''), run: (t) => { ECON.orderCost(ME, [FK.sel()]); WAR.fight(FK.sel(), t); } },
+  here: { label: () => 'Soldiers here', whyNot: (t) => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: (t) => { ECON.orderCost(ME, WAR.armyOf(ME)); WAR.attack(ME, t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k); } },
+  hunt: { label: () => 'Hunt', whyNot: () => (!ECON.villagersOf(ME).length ? 'No villagers' : ''), run: (t) => toast(ECON.hunt(ME, t) ? TELL.hunt : TELL.hands) }, // E357
+  replant: { label: (t) => `Replant${price(ECON.replantCost(t))}`, whyNot: (t) => { const w = ECON.replantWhy(ME, t); return w === 'cost' ? `Needs ${costText(ECON.replantCost(t))}` : w; }, run: (t) => ECON.replant(ME, t) },
+  replantAll: { label: () => 'Replant all', whyNot: () => '', run: (t) => { const n = ECON.replantAll(ME, t); toast(n ? TELL.replanted.replace('{n}', n) : TELL.broke); } },
 };
 function act(verb, arg, arg2) { const v = VERBS[verb], why = v.whyNot(arg, arg2); if (why) { FK.fire('event', 'err', null); toast(why); return false; } FK.fire('event', verb === 'build' ? 'place' : 'tap', null); v.run(arg, arg2); render(true); return true; }
 // E193
@@ -188,11 +191,12 @@ const ROWS = { // E199
   health: (t) => (t.hp == null ? '' : `<p>${t.done < 1 ? `site · ${Math.floor(t.done * SAY.percent)}% raised` : `${Math.ceil(t.hp)}/${t.hpMax} health`}${t.kind === 'unit' && !FK.has(t, 'Gather') ? ` · ${t.job}` : ''}</p>`),
   load: (t) => `<p>${ECON.jobOf(t) || t.job}${t.load ? `, carrying ${Math.floor(t.load)}` : ''}</p>`,
   store: (t) => `<p>${Math.floor(t.amount)} ${ECON.yieldOf(t)} left</p>`,
+  flock: (t) => `<p>${t.sheep} sheep</p>`, // E358
   queue: (t) => (own(t) && t.q && t.q.length ? row(...queue6(t.q.map((c, i) => [ECON.nameOf(c), i ? ECON.timeOf(t.side, c) : t.qt]), 1 - t.qt / ECON.timeOf(t.side, t.q[0]), Math.max(0, t.q.length - SCR.mold.slots + 1))) : ''),
   train: (t) => (own(t) && t.done >= 1 ? `<div class="row">${(D.trains[t.code] || []).map((c) => vcell('train', c, key(t))).join('')}${t.q && t.q.length ? vcell('untrain', key(t), null, 'w1') : ''}</div>` : ''),
   tech: (t) => (own(t) && t.done >= 1 ? `<div class="row">${vcell('ageUp', null, null, '', !!read().aging)}</div>` : ''),
-  acts: (t, r) => { const k = key(t), a = t.kind === 'unit' ? (own(t) ? (FK.has(t, 'Gather') ? vcell('stop', k) : vcell('recall')) : isSoldier(r.sel) ? vcell('fight', k) : WAR.armed(t) || t.side < 0 ? vcell('here', k) : '')
-      : t.kind === 'bld' ? (own(t) ? vcell('raise', k) + vcell('scrap', k) : (isSoldier(r.sel) ? vcell('fight', k) : '') + vcell('here', k)) : vcell('gather', k) + vcell('send', k);
+  acts: (t, r) => { const k = key(t), a = t.kind === 'unit' ? (own(t) ? (FK.has(t, 'Gather') ? vcell('stop', k) : vcell('recall')) : isSoldier(r.sel) ? vcell('fight', k) : FK.has(t, 'Prey') ? vcell('hunt', k) : WAR.armed(t) || t.side < 0 ? vcell('here', k) : '')
+      : t.kind === 'bld' ? (own(t) ? (t.max ? vcell('replant', k) : ECON.cutOut(ME, t).length ? vcell('replantAll', k) : '') + vcell('raise', k) + vcell('scrap', k) : (isSoldier(r.sel) ? vcell('fight', k) : '') + vcell('here', k)) : vcell('gather', k) + vcell('send', k);
     return a ? `<div class="row">${a}</div>` : ''; },
 };
 function cardText(r) { const t = S.subject; if (!t) return ''; return SCR.card.filter(([, tick]) => !tick || FK.has(t, tick)).map(([name]) => ROWS[name](t, r)).join(''); }
@@ -261,7 +265,7 @@ FK.on('draw', (ctx, s) => { const g = S.ghost; if (!g) return; const [, n] = B[g
   else if (g.i > -50) { const ci = g.i + n * P.half, cj = g.j + n * P.half, seg = (a, z) => { ctx.moveTo(...at(...a)); ctx.lineTo(...at(...z)); }; ctx.strokeStyle = COL.rb; ctx.lineWidth = P.width.guide; ctx.setLineDash(P.dash.guide); ctx.beginPath();
     for (const b of things()) if (b.kind === 'bld' && b.side === ME && !ECON.wallish(b)) { const mi = b.i + b.n * P.half, mj = b.j + b.n * P.half, pad = P.pad + (n + b.n) * P.half; if (Math.abs(mi - ci) >= P.guide || Math.abs(mj - cj) >= P.guide) continue;
       if (mi === ci) seg([ci, Math.min(mj, cj) - pad], [ci, Math.max(mj, cj) + pad]); if (mj === cj) seg([Math.min(mi, ci) - pad, cj], [Math.max(mi, ci) + pad, cj]); }
-    ctx.stroke(); ctx.globalAlpha = P.ghost; FK.blit(tinted(FK.bldSprite(g.code, SIDES[ME].col, s), g.ok ? COL.rg : COL.rr), ...at(ci, cj), s); }
+    ctx.stroke(); ctx.globalAlpha = P.ghost; FK.blit(tinted(FK.bldSprite(g.code, SIDES[ME].col, s, ...FK.levelOf({ code: g.code, side: ME })), g.ok ? COL.rg : COL.rr), ...at(ci, cj), s); }
   ctx.restore(); });
 // E207
 function suggest(k) { const G = D.suggest, [bx, by] = FK.tileMid(k), [ki, kj] = ECON.at(k), R = G.r * D.tile, sc = {}, far = (t) => Math.hypot(t.bx - bx, t.by - by), add = (c, v) => { if (c && D.cost[c] && !ECON.capWhy(ME, c)) sc[c] = (sc[c] || 0) + v; }; // E343
@@ -276,18 +280,18 @@ function suggest(k) { const G = D.suggest, [bx, by] = FK.tileMid(k), [ki, kj] = 
 const under = (k) => things().find((t) => t.kind === 'bld' ? k % N >= t.i && k % N < t.i + t.n && Math.floor(k / N) >= t.j && Math.floor(k / N) < t.j + t.n : t.k === k && !t.deep);
 FK.on('tap', (k, mine, px, py) => {
   if (S.ghost) { if (!line(S.ghost.code)) ghostTo(px, py); else if (k >= 0) { S.ghost.pts.push(wallSnap(S.ghost.pts.at(-1), k)); wallSet(S.ghost); render(true); } return true; }
-  if (S.arming) { if (k < 0) return true; S.target = k; S.arming = false; if (WAR.armyOf(ME).length) WAR.attack(ME, k); toast('Attacking'); render(true); return true; }
+  if (S.arming) { if (k < 0) return true; S.target = k; S.arming = false; if (WAR.armyOf(ME).length) { ECON.orderCost(ME, WAR.armyOf(ME)); WAR.attack(ME, k); } toast('Attacking'); render(true); return true; }
   const hint = S.tab === 'Build' && !mine && k >= 0 && !under(k) && suggest(k); // E341
   if (hint) { S.group = Object.keys(GROUPS).find((g) => GROUPS[g].includes(hint)); VERBS.pick.run(hint); if (line(hint)) { S.ghost.pts.push(k); wallSet(S.ghost); } else ghostTo(px, py, P.start); render(true); return true; }
   let other = null; for (const u of units()) if (u.side !== ME && FK.inSight(u.k)) { const [x, y] = FK.toScreen(u.vx, u.vy), d = Math.hypot(x - px, y - py + 8 * FK.cam.z); if (d < 16 && (!other || d < other[1])) other = [u, d]; }
   const sel = FK.sel(), t = mine || (other && other[0]) || (k >= 0 && FK.inSight(k) ? under(k) : null);
   if (mine) { FK.select(mine); FK.fire('event', 'pick', mine); S.subject = mine; render(true); return true; }
-  if (t && t.kind === 'unit') { if (isSoldier(sel) && WAR.enemies(sel, t)) { WAR.fight(sel, t); return true; } if (isVil(sel) && t.side < 0 && FK.has(t, 'Prey')) { toast('Hunting is not built yet'); } S.subject = t; render(true); return true; }
+  if (t && t.kind === 'unit') { if (isSoldier(sel) && WAR.enemies(sel, t)) { WAR.fight(sel, t); return true; } if (isVil(sel) && t.side < 0 && FK.has(t, 'Prey')) { ECON.hunt(ME, t, sel); return true; } S.subject = t; render(true); return true; }
   if (t) { if (isVil(sel)) { if (isFind(t)) { ECON.gatherAt(sel, t); return true; } if (t.kind === 'bld' && own(t) && (t.done < 1 || t.hp < t.hpMax)) { ECON.buildAt(sel, t); return true; } } if (isSoldier(sel) && t.kind === 'bld' && !own(t)) { WAR.fight(sel, t); return true; } S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; render(true); return true; }
-  if (!sel) S.subject = null; else if (isSoldier(sel) && k >= 0 && FK.walkable(k)) { WAR.march(sel, k); return true; }
+  if (!sel) S.subject = null; else if (isSoldier(sel) && k >= 0 && FK.walkable(k)) { ECON.orderCost(ME, [sel]); WAR.march(sel, k); return true; }
   render(true); return false;
 });
-FK.on('event', (e) => { if (e === 'short') toast('Not enough to pay for repairs'); });
+FK.on('event', (e, t, n) => { if (e === 'short') toast('Not enough to pay for repairs'); const w = NEWS[e]; if (w) toast((Array.isArray(w) ? w[n] : w).replace('{n}', n).replace('{m}', n * D.flock.mutton).replace('{at}', t && coord(t.bx, t.by))); }); // E359
 FK.on('tick', (dt) => { const real = dt / (show.fast ? D.fast : 1); if (edge && drag && S.ghost) { const [w, h] = FK.size(), vx = (edge.x > w - P.edge) - (edge.x < P.edge), vy = (edge.y > h - P.edge) - (edge.y < P.edge), f = (P.scroll * real) / FK.cam.z; if (vx || vy) { FK.cam.x += vx * f; FK.cam.y += vy * f; FK.keepOn(); ghostTo(edge.x, edge.y - drag.lift); } } // E342
   acc += real; if (S.toastT > 0) { S.toastT -= real; if (S.toastT <= 0) toastEl.style.opacity = 0; } if (acc >= D.beatUi) { acc = 0; render(); } });
 // E208

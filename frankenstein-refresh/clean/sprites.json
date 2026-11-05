@@ -234,16 +234,16 @@
      "the trebuchet, with Engines; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
     ],
     "boar": [
-     "bring",
-     "the boar, with the wildlife and hunting; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F16: books/sprites.js P20 (quad)"
     ],
     "direwolf": [
      "cut",
      "fantasy, cut by Albert Nov 4 (the World: Fantasy switch goes with it)"
     ],
     "bison": [
-     "bring",
-     "the bison, with the wildlife and hunting; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F16: books/sprites.js P21 (quad, its horn in index.html the figures)"
     ],
     "performer": [
      "bring",
@@ -620,16 +620,16 @@
      "F13b: index.html ART.tower's TOWER_LOOK tier by its level (PB4: the steps that raise it; their rows with M21)"
     ],
     "farm": [
-     "bring",
-     "index.html, the building art floor has ART.farm; the farm by season and crop comes with the seasons, held as a skin in preview 49 (Parked, Nov 4)"
+     "in v100",
+     "F16: ART.farm by the season (PB14)"
     ],
     "pasture": [
-     "bring",
-     "index.html, the building art floor has ART.pasture; sheep on it by count come with livestock (ML1), held as a skin in preview 49 (Parked, Nov 4)"
+     "in v100",
+     "F16: ART.pasture by the flock (PB16)"
     ],
     "treefarm": [
-     "bring",
-     "index.html, the building art floor has ART.treefarm; the spent tree farm comes with its amount running out, held as a skin in preview 49 (Parked, Nov 4)"
+     "in v100",
+     "F16: ART.treefarm spent (PB15)"
     ],
     "wonder": [
      "bring",
@@ -728,8 +728,8 @@
    "how tall each find stands, for its shadow (tree 22, bush 8, rock 7): with the shadows (QAT)"
   ],
   "nodeSprite": [
-   "bring",
-   "v100 has nodeArt and nodeSprite; trees by season (autumn, winter) come with the seasons, held as a skin in preview 49 (Parked, Nov 4)"
+   "in v100",
+   "F16: index.html the node art: trees by the season (PN1 leaves), the carcass and the fish; the woods cache keyed by the season"
   ]
  },
  "misfits": [

@@ -8,7 +8,7 @@ const clock = SIDES.map(() => 0), seen = SIDES.map(() => ({ hp: 0, t: 0 }));
 const home = FK.seatOf, born = (h) => D.trains[h.code][0]; // E242
 const bought = (cap) => FK.ticked(cap).filter((c) => !FK.ticked('Seat').includes(c) && D.cost[c]); // E243
 const [HOUSE] = bought('House'), [FIELD] = bought('Field'), [WALL] = bought('Line'), [GATE] = bought('Gate'), WP = D.ai.walls, rings = new Map();
-const camps = Object.fromEntries(Y.map((y) => [y, bought('Drop-off').find((c) => (FK.SH[c].drop || []).includes(y))])); // E244
+const camps = Object.fromEntries(Y.map((y) => [y, bought('Drop-off').find((c) => !FK.ticked('Shore').includes(c) && (FK.SH[c].drop || []).includes(y))])); // E244
 const dist = (a, b) => Math.hypot(a.bx - b.bx, a.by - b.by);
 // E245
 function spot(code, bx, by, rmin = 0, side) { const n = B[code][1], [sx, sy] = FK.fromBoard(bx, by), ci = Math.floor(sx / D.tile - n / 2), cj = Math.floor(sy / D.tile - n / 2);

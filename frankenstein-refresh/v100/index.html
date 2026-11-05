@@ -215,7 +215,11 @@ function makeThings(roll) {
   for (let k = 0; k < N * N; k++) if (FOR[k]) put('tree', k, roll, 0.85 + roll() * 0.3, Math.floor(roll() * 6));
   things.sort((a, b) => a.vy - b.vy); // E50
   for (const t of things) if (t.kind === 'tree') deepen(t); // E51
+  for (const L of lakes) for (let m = Math.round(L.r / D.fish.per), n = m; m--; ) { const a = (m / n) * A.round * RAD, [cx, cy] = [Math.cos(a), Math.sin(a)]; let d = D.fish.inset; // E344
+    while (d < L.r + D.beach && !stratum(H[tileAt(L.x + cx * d, L.y + cy * d)])) d += D.fish.inset; const k = tileAt(L.x + cx * (d - D.fish.inset), L.y + cy * (d - D.fish.inset)); if (!OCC[k] && !stratum(H[k])) { put('fish', k, roll); things.at(-1).amount = things.at(-1).max = Math.round((D.fish.amt * L.r) / D.fish.r0); } }
 }
+const lay = (kind, bx, by, amount) => { put(kind, tileAt(bx, by), rng); return Object.assign(things.at(-1), { amount }); }; // E345
+const byLake = (bx, by, r) => lakes.some((L) => Math.hypot(L.x - bx, L.y - by) < L.r + D.beach + r);
 const stratum = (h) => (h <= 0 ? 0 : h < D.sandTop ? 1 : h < D.dirtTop || h >= D.land + D.bare ? 2 : 3); // E52
 const BANDS = 6, deepest = shade(C.water, 0.6);
 const waterBand = (h) => (h > -D.wade ? 0 : 1 + Math.min(BANDS - 2, Math.floor((-h - D.wade) / ((D.sea - D.wade) / (BANDS - 1))))); // E53
@@ -287,7 +291,7 @@ const on = (ev, fn) => HOOK[ev].push(fn), fire = (ev, ...a) => { for (const f of
 const known = new Map(), FXC = new Map(); on('start', () => { known.clear(); FXC.clear(); });
 const keysOf = (code) => { let p = ''; const [L] = code.match(/^[A-Z]*/); return [...L].map((c) => (p += c)).concat(code, SH[code] ? SH[code].ticks : []); }; // E278
 const BASE = { spd: (c) => ref(SH[c].pace), hp: (c) => D.bldHp[c] ?? (D.stats[c] || {}).hp, rate: (c) => (SH[c].rate ? ref(SH[c].rate) : D.rate[SH[c].find]), cost: (c) => D.cost[c] || (BOOKS.tech[c] || {}).value?.cost,
-  time: (c) => (BOOKS.tech[c] || {}).value?.time, train: (c) => D.train[c], build: (c) => D.buildTime[c], queue: () => fromBook('screen').mold.slots, carry: () => D.carry, room: (c) => D.pop[c], limit: (c) => D.caps[c] }; // E279
+  time: (c) => (BOOKS.tech[c] || {}).value?.time, train: (c) => D.train[c], build: (c) => D.buildTime[c], queue: () => fromBook('screen').mold.slots, carry: () => D.carry, room: (c) => D.pop[c], limit: (c) => D.caps[c], eat: (c) => ref(SH[c].upkeep), spoil: () => D.spoil.year, soil: () => D.soil.floor }; // E279
 function stat(code, side, key) { // E280
   const memo = FXC.get(side) || FXC.set(side, new Map()).get(side), id = code + ' ' + key; if (memo.has(id)) return memo.get(id);
   const ks = keysOf(code), fx = [...(known.get(side) || [])].flatMap((t) => BOOKS.tech[t].value.fx).filter((f) => f.s === key && (!f.k || [].concat(f.k).some((k) => k === '*' || ks.includes(k))));
@@ -383,7 +387,7 @@ return { ...r, top: ry }; } return r; }
 // E294
 let RES = null; const UPA = SPRITE.up, TECHAT = {}; for (const [c, e] of Object.entries(BOOKS.tech)) (TECHAT[e.value.at] = TECHAT[e.value.at] || []).push(c);
 const levelOf = (t) => { const [, , , art] = B[t.code], L = SPRITE[art]?.level, k = known.get(t.side) || new Set(), at = TECHAT[t.code] || [], n = at.filter((c) => k.has(c)).length;
-  return [!L ? L : L.age ? +((SIDES[t.side] || {}).age >= L.age) : [...k].filter((c) => BOOKS.tech[c].value.tier === art).length, +!!n + +(!!n && n >= at.length * UPA.half)]; };
+  return [!L ? L : L.season ? season() : L.spent ? +!t.amount : L.flock ? t.sheep : L.age ? +((SIDES[t.side] || {}).age >= L.age) : [...k].filter((c) => BOOKS.tech[c].value.tier === art).length, +!!n + +(!!n && n >= at.length * UPA.half)]; };
 function plinth(x0, x1, yf, h, d, k) { if (!RES) return; const { foot: F, shade, line, top, stone: [sw, sh, gap, edge], lift, rim: rl } = UPA;
   P_([[x0, yf], [x1, yf], [x1, yf - F], [x0, yf - F]], STONE, LINE, line); P_([[x1, yf], [x1 + k, yf - d], [x1 + k, yf - d - F], [x1, yf - F]], lit(STONE, shade), LINE, line);
   if (RES === top) for (let y = yf - gap; y > yf - h + edge; y -= gap) for (const x of [x0, x1 - sw]) P_([[x, y], [x + sw, y], [x + sw, y - sh], [x, y - sh]], lit(STONE, lift), LINE, rl); }
@@ -605,8 +609,8 @@ texture('stone', -5, d / 2 - 18, 5, d / 2, STONE); P_( [ [-5, d / 2 - 18], [5, d
 [-2, d / 2 - 18], [-2, d / 2 - 20.5], [-5, d / 2 - 20.5], ], STONE, LINE, 0.3, ); P_( [ [1, d / 2 - 18], [4, d / 2 - 18], [4, d / 2 - 20.5], [1, d / 2 - 20.5], ], STONE, LINE, 0.3, ); },
 gate(c) { const d = 10 * ART_T; P_( [ [-5, d / 2], [5, d / 2], [5, d / 2 - 20], [-5, d / 2 - 20], ], LG(-5, 0, 5, 0, ['#8a6a44', '#5a3a1c']), LINE, 0.5, );
 L_(-5, d / 2 - 6, 5, d / 2 - 6, '#2a1a0a', 0.7); L_(-5, d / 2 - 14, 5, d / 2 - 14, '#2a1a0a', 0.7); P_( [ [-2, d / 2 - 20], [2, d / 2 - 20], [2, d / 2 - 23], [-2, d / 2 - 23], ], c, ); },
-farm(c, o, v) { const w = 30, crop = { Spring: '#8fb84a', Summer: '#e0c266', Autumn: '#d9a93e', Winter: '#a39a86' }.Summer,
-dark = { Spring: '#5f8a2e', Summer: '#b8962e', Autumn: '#a67a22', Winter: '#7a7262' }.Summer; field(w, '#7a5e36', c, () => { for (let i = 0; i < 7; i++) { const t0 = (i + 0.08) / 7,
+farm(c, o, v) { const w = 30, crop = ['#8fb84a', '#e0c266', '#d9a93e', '#a39a86'][v],
+dark = ['#5f8a2e', '#b8962e', '#a67a22', '#7a7262'][v]; field(w, '#7a5e36', c, () => { for (let i = 0; i < 7; i++) { const t0 = (i + 0.08) / 7,
 t1 = (i + 0.92) / 7, a = gpt(w, 0.03, t0), b = gpt(w, 0.97, t0), c2 = gpt(w, 0.97, t1), d2 = gpt(w, 0.03, t1); P_([a, b, c2, d2], LG(0, a[1], 0, d2[1], [i % 2 ? crop : lit(crop, 0.12), dark]));
 for (let j = 0; j < 10; j++) { const [x, y] = gpt(w, 0.05 + j * 0.095, (i + 0.5) / 7); L_(x, y, x + 0.2, y - 1.5, 'rgba(255,240,170,.55)', 0.25);
 L_(x + 0.6, y, x + 1, y - 1.2, 'rgba(120,80,20,.4)', 0.22); } } }); hay(w * 0.36, w * ART_T * 0.46, 1); },
@@ -619,7 +623,7 @@ L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2); },
 tpost(c) { const d = 20 * ART_T; block(20, 14, STONE, 'stone', 'flat'); P_( [ [-12, d / 2 - 12], [12, d / 2 - 12], [9, d / 2 - 18], [-9, d / 2 - 18], ], '#b2563a', LINE, 0.4, );
 for (let i = 0; i < 5; i++) P_( [ [-11 + i * 4.6, d / 2 - 12], [-9 + i * 4.6, d / 2 - 12], [-9 + i * 4.6, d / 2 - 10.6], [-11 + i * 4.6, d / 2 - 10.6], ], i % 2 ? '#f0e6d0' : c, );
 door(0, d / 2, 5, 8); banner(8, d / 2 - 18, c, 10); },
-treefarm(c, o, v) { const w = 30, spent = v === 'spent'; field(w, '#6a5636', c, () => { for (let j = 2; j >= 0; j--) for (let i = 0; i < 3; i++) { const [x, y] = gpt(w, (i + 0.5) / 3, (j + 0.5) / 3);
+treefarm(c, o, spent) { const w = 30; field(w, '#6a5636', c, () => { for (let j = 2; j >= 0; j--) for (let i = 0; i < 3; i++) { const [x, y] = gpt(w, (i + 0.5) / 3, (j + 0.5) / 3);
 E_(x, y, 3.4, 1.3, 'rgba(80,60,30,.45)'); if (spent) stump(x, y); else smallTree(x, y, 1.05, j === 1 ? '#4a9a40' : '#3e8a3c'); } const [lx, ly] = gpt(w, 0.07, 0.07); for (let i = 0; i < 3; i++) P_( [
 [lx + i * 0.4, ly - i * 1.2], [lx + 5.5 + i * 0.4, ly - i * 1.2], [lx + 5.5 + i * 0.4, ly - 1.1 - i * 1.2], [lx + i * 0.4, ly - 1.1 - i * 1.2], ],
 LG(0, ly - i * 1.2, 0, ly - 1.1 - i * 1.2, ['#8a6a3a', '#c9a46a']), ); }); },
@@ -675,15 +679,15 @@ g.strokeStyle = stroke; g.lineWidth = lw; g.stroke(); } };
 const NS_blob = (cx, cy, rx, ry, n, jit, r) =>
 Array.from({ length: n }, (_, i) => { const a = (i / n) * 6.283, k = 1 - jit + r() * jit * 2; return [cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k]; });
 const NS_INK = 'rgba(14,20,12,.34)';
-function nodeArt(kind, v, r) { const n = { kind }; g.lineJoin = 'round'; g.scale( n.kind === 'tree' ? 0.88 : n.kind === 'bush' ? 1.45 : 1.25,
-n.kind === 'tree' ? 0.88 : n.kind === 'bush' ? 1.45 : 1.25, ); if (n.kind === 'tree') { const TC = ['#2f5a2a', '#3c6c32', '#2a5428', '#3a6a38', '#2f6048', '#4a7430'][v], col = TC; NS_poly( [
+function nodeArt(kind, v, r) { const n = { kind }, L = SPRITE.nodes.leaves[season()], M = SPRITE.nodes[kind]; g.lineJoin = 'round'; if (M && M.e) { g.beginPath(); g.ellipse(...M.e); if (M.ring) { g.strokeStyle = M.ring; g.lineWidth = M.w; g.stroke(); return; } g.fillStyle = M.body; g.fill(); g.fillStyle = M.bone; g.fillRect(...M.r); return; } g.scale( n.kind === 'tree' ? 0.88 : n.kind === 'bush' ? 1.45 : 1.25,
+n.kind === 'tree' ? 0.88 : n.kind === 'bush' ? 1.45 : 1.25, ); if (n.kind === 'tree') { const TC = ['#2f5a2a', '#3c6c32', '#2a5428', '#3a6a38', '#2f6048', '#4a7430'][v], col = L[v] || TC; NS_poly( [
 [-2.4, 0], [2.4, 0], [1.3, -8], [0.7, -14], [-0.7, -14], [-1.4, -8], ], '#4d3823', NS_INK, 0.3, ); if (v === 3 || v === 4) { const T = v === 4 ? 6 : 5, dy = v === 4 ? 4.6 : 4.8,
 w0 = v === 4 ? 10 : 12.5; for (let i = 0; i < T; i++) { const y = -4 - i * dy, w = w0 - i * (w0 / T) * 0.86, pts = [[-w, y + 2.4]];
 for (let k = 1; k < 7; k++) pts.push([-w + (2 * w * k) / 7, y + 2.6 + (k % 2 ? 0.1 : 1.7) * (0.6 + r())]); pts.push([w, y + 2.4], [w * 0.4, y - 1.5], [0, y - 6], [-w * 0.4, y - 1.5]);
 NS_poly(pts, NS_c(col, 0.78 + i * 0.07), NS_INK, 0.35); NS_poly( [ [0, y - 6], [w * 0.4, y - 1.5], [w * 0.1, y + 0.4], [-w * 0.15, y - 1], ], NS_c(col, 1.32), ); } } else {
 NS_poly(NS_blob(0, -16, 11, 8.8, 24, 0.15, r), NS_c(col, 0.68), NS_INK, 0.35); const L = [ [-5, -13.5, 5.4, 4.3], [4.6, -14, 5.2, 4.1], [0, -20, 5.8, 4.5], [-5.4, -19, 3.8, 3.1], [5.6, -19.4, 4, 3.2],
 ]; L.forEach(([x, y, rx, ry], i) => { NS_poly(NS_blob(x, y, rx, ry, 13, 0.22, r), NS_c(col, 1 + i * 0.06), 'rgba(14,20,12,.3)', 0.25);
-NS_poly(NS_blob(x - rx * 0.25, y - ry * 0.35, rx * 0.5, ry * 0.4, 8, 0.2, r), NS_c(col, 1.45)); }); } if (false) { NS_poly(NS_blob(-2, -22, 5, 1.6, 8, 0.2, r), '#e8eef0');
+NS_poly(NS_blob(x - rx * 0.25, y - ry * 0.35, rx * 0.5, ry * 0.4, 8, 0.2, r), NS_c(col, 1.45)); }); } if (L.snow) { NS_poly(NS_blob(-2, -22, 5, 1.6, 8, 0.2, r), '#e8eef0');
 NS_poly(NS_blob(3.4, -17.6, 3, 1.1, 8, 0.2, r), '#e8eef0'); } } else if (n.kind === 'bush') { [ [-4, -3.5, 4.8, 3.4, 0.8], [4, -3.5, 4.6, 3.2, 0.85], [0, -6, 5, 3.6, 1],
 ].forEach(([x, y, rx, ry, f]) => { NS_poly(NS_blob(x, y, rx, ry, 10, 0.2, r), NS_c('#3f6b33', f), NS_INK, 0.3);
 NS_poly(NS_blob(x - rx * 0.25, y - ry * 0.35, rx * 0.5, ry * 0.4, 8, 0.2, r), NS_c('#3f6b33', f * 1.4)); }); for (const [a, b] of [ [-3, -6], [3, -4], [0, -3], [-5, -3], [5, -6.5], [1, -8], ]) {
@@ -811,7 +815,7 @@ E_(hx + o.head * 0.4, hy, o.head, o.head * 0.8, shade(c, 1.05), INK, 0.35); E_(h
 g.lineTo(hx - 1.2, hy - o.head - 4); g.moveTo(hx - 0.7, hy - o.head - 2.4); g.lineTo(hx + 1.2, hy - o.head - 3.6); g.moveTo(hx - 1.1, hy - o.head - 3.6); g.lineTo(hx - 3, hy - o.head - 4.6);
 g.stroke(); } if (o.tusk) { g.strokeStyle = '#efe6cf'; g.lineWidth = 0.6; g.beginPath(); g.moveTo(hx + o.head * 1.2, hy + o.head * 0.4);
 g.quadraticCurveTo(hx + o.head * 1.8, hy, hx + o.head * 1.4, hy - o.head * 0.5); g.stroke(); } if (o.bristle) { g.strokeStyle = shade(c, 0.5); g.lineWidth = 0.4; for (let i = 0; i < 6; i++)
-L_(-L * 0.2 + i * L * 0.08, -o.legH - H, -L * 0.22 + i * L * 0.08, -o.legH - H - 1.2, shade(c, 0.5), 0.4); } leg(-L * 0.22, 0.3 * sw, c); leg(L * 0.38, -0.3 * sw, c); }
+L_(-L * 0.2 + i * L * 0.08, -o.legH - H, -L * 0.22 + i * L * 0.08, -o.legH - H - 1.2, shade(c, 0.5), 0.4); } leg(-L * 0.22, 0.3 * sw, c); leg(L * 0.38, -0.3 * sw, c); if (o.horn) { const [a, b, x, y, e, f] = o.horn.pts; g.strokeStyle = o.horn.col; g.lineWidth = o.horn.w; g.beginPath(); g.moveTo(a, b); g.quadraticCurveTo(x, y, e, f); g.stroke(); } }
 function planks(x0, y0, x1, y1, col) { P_( [ [x0, y0], [x1, y0], [x1, y1], [x0, y1], ], LG(x0, 0, x1, 0, [shade(col, 1.15), col, shade(col, 0.75)]), INK, 0.5, ); g.strokeStyle = 'rgba(40,24,10,.45)';
 g.lineWidth = 0.35; for (let y = y0 + 2; y < y1; y += 2.2) { g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke(); } }
 const WORKTOOL = ['axe', 'none', 'pick', 'none', 'rod', 'hammer'];
@@ -951,7 +955,7 @@ const bldsNear = (x, y, r, fn) => { if (SGn !== things.length) regrid(); return 
 function makeUnits(roll) {
   play = dice(~seed); shown = dice(seed ^ D.looks); // E106
   // E107
-  for (const t of things) if (has(t, 'Seat') && D.players.includes(t.side)) { const got = []; stamp(t.bx, t.by, (t.n / 2 + 3) * D.tile, (k, d) => { if (walkable(k)) got.push([d, k]); }); got.sort((a, b) => a[0] - b[0]); for (const [, k] of got.slice(0, D.villagers)) spawn(D.trains[t.code][0], t.side, k, roll); }
+  for (const t of things) if (has(t, 'Seat') && D.players.includes(t.side)) { const got = []; stamp(t.bx, t.by, (t.n / 2 + 3) * D.tile, (k, d) => { if (walkable(k)) got.push([d, k]); }); got.sort((a, b) => a[0] - b[0]); for (const [, k] of got.slice(0, D.villagers)) spawn(D.trains[t.code][0], t.side, k, roll); const b = tileAt(...corner(t.side, ...D.boar.at)); if (walkable(b)) spawn(D.boar.code, -1, b, roll); } // E346
   // E108
   for (const w of D.wildlife) for (let m = count(roll, D[w.groups]); m > 0; m--) { // E109
     for (let tries = 0; tries < 100; tries++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (!inZ4(bx, by, 2 * D.tile) || !walkable(k)) continue;
@@ -1000,7 +1004,7 @@ function sprite(key, W, H, tx, ty, ax, ay, skew, s, paint) { // E118
 const blit = (c, x, y, s, into = ctx) => { const f = s / c.q; into.drawImage(c, x - c.ax * s, y - c.ay * s, c.width * f, c.height * f); };
 const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647; // E119
 const NODE_SCALE = SPRITE.nodes.scale, [LEFT, GROW] = SPRITE.nodes.left;
-const nodeSprite = (kind, v, s) => sprite(kind + v, 46, 58, 17, 54, 17, 54, 0, s, () => { const f = NODE_SCALE[kind] || 1.25; g.scale(f, f); nodeArt(kind, v, NS_rng(11 + v * 7 + kind.length)); });
+const nodeSprite = (kind, v, s) => sprite(kind + v + season(), 46, 58, 17, 54, 17, 54, 0, s, () => { const f = NODE_SCALE[kind] || 1.25; g.scale(f, f); nodeArt(kind, v, NS_rng(11 + v * 7 + kind.length)); });
 function bldSprite(code, col, s, lv, up) { const [, n, , art] = B[code], w = n * D.tile, top = BLDTOP[art] || 40, pad = 12, k = w * ART_T * ART_S, W = w + pad * 2 + 10 + 2 * k, H = (w * ART_T) / 2 + top + pad * 2 + SKEW * W;
   return sprite(code + col + lv + up, W, H, W / 2, top + pad, W / 2 + k / 2, top + pad + (SKEW * k) / 2, SKEW, s, () => { RES = up; ART[art](col, 0, lv); RES = null; }); }
 const ROCK = shade(C.white, 0.62), ROCKLIT = shade(C.white, 0.82), RUIN = shade(C.sand, 0.85), RUINFACE = shade(C.sand, 0.6), CHEST = shade(C.dirt, 0.9), LID = shade(C.dirt, 0.65);
@@ -1118,7 +1122,7 @@ function wake(t) { // E156
 const BOX = Array.from({ length: NC * NC }, (_, c) => { const ci = c % NC, cj = (c - ci) / NC, pts = []; for (const [x, y] of [[ci, cj], [ci + 1, cj], [ci, cj + 1], [ci + 1, cj + 1]]) pts.push(V(x * CS * D.tile, y * CS * D.tile, D.land));
   return [Math.min(...pts.map((p) => p[0])) - 12, Math.min(...pts.map((p) => p[1])) - 30, Math.max(...pts.map((p) => p[0])) + 12, Math.max(...pts.map((p) => p[1])) + 6]; }); // E157
 function woodsChunk(c, q) { // E158
-  const key = c + '@' + q; let w = WOODS.get(key); if (w) { WOODS.delete(key); WOODS.set(key, w); return w; } // E159
+  const key = c + '@' + q + '@' + season(); let w = WOODS.get(key); if (w) { WOODS.delete(key); WOODS.set(key, w); return w; } // E159
   const [x0, y0, x1, y1] = BOX[c], cv = document.createElement('canvas'); cv.width = Math.ceil((x1 - x0) * q); cv.height = Math.ceil((y1 - y0) * q); const g2 = cv.getContext('2d');
   for (const t of DEEP[c]) blit(nodeSprite(t.kind, t.v, q * t.size), (t.vx - x0) * q, (t.vy - y0) * q, q * t.size, g2);
   w = { cv, q }; if (WOODS.size > D.woodsKeep) WOODS.delete(WOODS.keys().next().value); WOODS.set(key, w); return w;
@@ -1184,7 +1188,7 @@ canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, 
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
 function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); GATES.clear(); fogT = 0; K.t = K.snow = K.fds = K.wet = K.rain = K.snowing = K.fog = K.fogT = K.storm = K.flash = K.hour = K.strikeT = jolt.t = 0; K.wetHour = false; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
-window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
+window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, lay, byLake, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
   rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, sel: () => sel, select: (u) => (sel = u), seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>

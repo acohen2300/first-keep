@@ -110,8 +110,8 @@
    "F13a: measure D130 (Mid's six names) and D129 (each age's price and wait, Mid's; the sixth hidden); econ.js ageCost and ageUp read them; the peace that opens the sixth comes with the peace age"
   ],
   "SEASONS": [
-   "bring",
-   "each season's walking speed, farm yield and tint: v100 has the seasons' temperatures (D100) only"
+   "in v100",
+   "F16: books/measure.js D216 (the field yield); its walking and tints parked: the climate's mud, snow and snow cover carry them (Parked)"
   ],
   "CAMP": [
    "bring",
@@ -230,8 +230,8 @@
      "Deer → Deer; hp Mid 30 v100 20"
     ],
     "boar": [
-     "bring",
-     "Boar"
+     "in v100",
+     "F16: Boar: shell MW7, D138, D86, D220, the Mass and Sprites books"
     ],
     "wolf": [
      "in v100",
@@ -258,8 +258,8 @@
      "Wagon train"
     ],
     "bison": [
-     "bring",
-     "Bison"
+     "in v100",
+     "F16: Bison: shell MW8, D138, D86, D220, the Mass and Sprites books (its herd comes with the stampede)"
     ],
     "performer": [
      "bring",
@@ -316,8 +316,8 @@
    "a caravan's load and the wares: with trade"
   ],
   "UPKEEP": [
-   "bring",
-   "food per person by kind (foot, mounted, cart) and hunger: v100 has one rate (D131); Albert's call · by the 10:31 rule: Mid's"
+   "in v100",
+   "F16: books/measure.js D131 (a share a day) and D211 (the shares, each unit shell's upkeep); hunger in D212"
   ],
   "TAX": [
    "parked",
@@ -332,8 +332,8 @@
    "trade ventures"
   ],
   "SPOIL": [
-   "bring",
-   "food spoils, 5% a year"
+   "in v100",
+   "F16: books/measure.js D217, law QAD"
   ],
   "PRICE": [
    "bring",
@@ -738,8 +738,8 @@
    "an army stands in a grid"
   ],
   "DOCKR": [
-   "bring",
-   "fish only near a dock"
+   "in v100",
+   "F16: books/measure.js D218 near (and shore for the dock)"
   ],
   "KITE": [
    "bring",
@@ -786,12 +786,12 @@
    "D135 score (the same)"
   ],
   "FERT": [
-   "bring",
-   "soil wears and rests"
+   "in v100",
+   "F16: books/measure.js D214, law QAA"
   ],
   "HARVEST": [
-   "bring",
-   "the year's harvest"
+   "in v100",
+   "F16: books/measure.js D215 (its chances summed), its words in J8"
   ],
   "WEATHER": [
    "bring",
@@ -810,8 +810,8 @@
    "with HAZARDS"
   ],
   "STARVE": [
-   "bring",
-   "starving, Hard, the horde"
+   "in v100",
+   "F16: books/measure.js D212 (grace in days, the work); the Famine hazard's leaving (every) waits for the hazards (Parked)"
   ],
   "TELL": [
    "bring",

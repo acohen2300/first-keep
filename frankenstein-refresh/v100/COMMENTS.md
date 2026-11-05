@@ -347,3 +347,19 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E341 | menu.js | a tap on open ground while the Build page is open: what fits there is picked and its ghost put there (Mid's suggestAt) |
 | E342 | menu.js | dragging the ghost near the screen's edge scrolls the map (Mid's edgeScroll) |
 | E343 | menu.js | what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a wall in a narrow way (a gate beside your wall), a home when room is short; the best score wins (Mid's suggestAt) |
+| E344 | index.html#floor-3-non-movables | fish round every lake: a spot every D218 per of its radius, walked out from the middle to the shore and set inset back into the water, each holding its share of the lake (Mid's layFish) |
+| E345 | index.html#floor-3-non-movables | a find laid where something falls (game becomes a carcass where it stood); a lake near enough to stand a dock by, past its beach |
+| E346 | index.html#floor-5-movables | a boar near every Town Center, at the book's spot in each corner (Mid's boar) |
+| E347 | econ.js | the gather beat: the field is worked now (its soil wears); a flock's food goes straight to the store; a plot with an amount runs down and its worker waits by it when it is cut out (Mid's replant wait); a famine weakens the work (hungerOf) |
+| E348 | econ.js | what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day; a famine past its grace weakens work and blows (Mid's shareOf, hungerOf); fish are worked only near a finished dock of the side (Mid's dockNear); food in reach is any find, field of one's own or game (Mid's foodInReach) |
+| E349 | econ.js | everyone eats, every moment: a villager working food eats from its find, not the store (a field and game for nothing, a shepherd from the store); the store empty is hunger, and with no food in reach a famine, timed from its start (Mid's upkeepTick, starveTick) |
+| E350 | econ.js | an order of yours costs its soldiers' meals for D213's seconds, never more than the store holds (Mid's orderCost; the tiredness comes with the charge) |
+| E351 | econ.js | the year's work: everyone eats; a field's soil wears while worked and rests back, never under its floor (QAA, Mid's natureTick); each season's turn once |
+| E352 | econ.js | each season's turn: food in store spoils (QAD); in spring fish regrow (QY), lambs come (QY) and a tended flock is culled to half for mutton (QZ); wolves near a pasture take sheep every season; the harvest of the year is rolled in spring (Mid's seasonTurn) |
+| E353 | econ.js | a cut-out plot is replanted at D222's share of its price and is full again; from a drop-off, every cut-out plot of what it takes, nearest first, as many as can be paid for (Mid's replantWhy, replant, cutOut, replantAll) |
+| E354 | econ.js | send a hunter: the given villager, or the nearest idle one, else the nearest from other work (not a builder or a posted worker); it fights the game (Mid's sendHunt) |
+| E355 | combat.js | a villager's javelin strikes game at D221's blow; a famine weakens every blow of its side (Mid's huntTick, hungerOf) |
+| E356 | combat.js | game falls as a carcass of its meat where it stood, and its hunters butcher it (Mid's kill) |
+| E357 | menu.js | hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from theirs |
+| E358 | menu.js | a pasture's card counts its sheep |
+| E359 | menu.js | the town is told what food, the seasons and the flock do, in the Words book's news |
