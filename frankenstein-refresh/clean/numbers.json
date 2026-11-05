@@ -119,7 +119,7 @@
   ],
   "UNIT": [
    "bring",
-   "44 kinds; v100's shells hold 27 of them as 15 (soldiers by class); 17 to bring. Rows below · Albert, Nov 5 10:06: Mid's build and train times, v100's health",
+   "44 kinds; v100's shells hold 27 of them as 15 (soldiers by class); 17 to bring. Rows below · Albert, Nov 5 10:09: Mid's build and train times; v100's health for homes and walls; damage to review",
    {
     "vil": [
      "in v100",
@@ -341,7 +341,7 @@
   ],
   "BLD": [
    "bring",
-   "51 kinds: 47 are v100 shells (some with numbers, most without), 4 traps to bring (pit, net, stakes, caltrops). Where both have numbers they differ widely (rows below): Albert's call · Albert, Nov 5 10:06: Mid's build and train times, v100's health",
+   "51 kinds: 47 are v100 shells (some with numbers, most without), 4 traps to bring (pit, net, stakes, caltrops). Where both have numbers they differ widely (rows below): Albert's call · Albert, Nov 5 10:09: Mid's build and train times; v100's health for homes and walls; damage to review",
    {
     "keep": [
      "in v100",
@@ -944,12 +944,12 @@
  },
  "decisions": [
   [
-   "Albert, Nov 5 10:06",
-   "build and train times: Mid's; health: v100's"
+   "Albert, Nov 5 10:06, made clear 10:09",
+   "build and train times: Mid's; health of homes and walls: v100's"
   ],
   [
-   "Albert, Nov 5 10:08",
-   "damage: left open; Albert tests it in play (damage and health are separate calls)"
+   "Albert, Nov 5 10:08, 10:09",
+   "damage in general: to review later (Albert tests it in play)"
   ]
  ]
 }
