@@ -241,3 +241,12 @@ MODIFIED (1):
 LOCKED (636 of 637): byte for byte as sealed, 368,085 bytes
 Tests: not run (a citation only)
 Inventory: 637 items sealed · 531 book entries · 74 laws · 89 citations, 17 still to open · 9 known
+
+## F9 · the copy's publish step · 2026-11-05 11:44
+Albert (START-HERE: commits only through publish.py); Nov 5
+Opened: tool:publish.py
+MODIFIED (1):
+- tool:publish.py · 2,163 → 2,225 bytes
+LOCKED (636 of 637): byte for byte as sealed, 366,174 bytes
+Tests: 18/18 rules hold
+Inventory: 637 items sealed · 531 book entries · 74 laws · 89 citations, 17 still to open · 9 known
