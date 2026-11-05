@@ -2,7 +2,7 @@
 // First Keep v100 · menu.js (floor 8): everything on the glass. Lives alone; it reads the world through one function, read(), and acts through one, act(verb, arg), backed by VERBS, where every verb carries its own whyNot. A dim button never runs: it says why. One cell mold (slot 44, gap 6), the dictionary's fonts.
 window.MENU = (() => {
 const { D, B, U, SIDES, N, show } = FK, things = FK.things, units = FK.units;
-Object.assign(D, { beatUi: 0.25, toast: 2.5 }); // D162 the glass redraws this often, D163 a reason stays this long
+// its numbers live in books/measure.js (D); nothing is typed here
 const LAYERS = [['G', 'Grid'], ['Z', 'Zones'], ['T', 'Things'], ['R', 'Rim'], ['B', 'Buildings'], ['U', 'Units'], ['K', 'Climate'], ['V', 'View']]; // the codes and their floors; Lock is a mark for us (no floor is locked yet)
 const GROUPS = { Home: ['BTC1', 'BR1', 'BR2'], Land: ['BCL1', 'BCL3', 'BCL2', 'BCL4', 'BI1', 'BI4', 'BCT2', 'BI2', 'BI3'], War: ['BM1', 'BM2', 'BM3', 'BM4'], Walls: ['BW1', 'BW2', 'BW3', 'BW4', 'BF5'], Trade: ['BCR1', 'BCT1', 'BCR2', 'BI6'], Culture: ['BP1', 'BP2', 'BP3', 'BP4', 'BP5', 'BP6', 'BP7', 'BP8', 'BP9', 'BP10'] }; // Albert's six tabs; a building shows once econ prices it, a tab once it holds one
 const built = (g) => GROUPS[g].filter((c) => D.cost[c]);
@@ -86,16 +86,16 @@ const price = (c) => { const st = SIDES[0].store, miss = Object.entries(c || {})
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.ceil(t % 60) % 60).padStart(2, '0')}`;
 const costText = (c) => Object.entries(c || {}).filter(([, n]) => n > 0).map(([y, n]) => `${n}${y[0]}`).join(' ') || 'free'; // 60w 60f, as Albert's Build menu
 const own = (t) => t && t.side === 0;
-const isVil = (u) => u && u.kind === 'unit' && u.code === 'UV' && own(u);
+const isVil = (u) => u && u.kind === 'unit' && FK.has(u, 'Gather') && own(u);
 const isSoldier = (u) => u && u.kind === 'unit' && own(u) && WAR.armed(u);
-const hall = () => things().find((t) => t.kind === 'bld' && t.side === 0 && t.code === 'BTC1' && t.done >= 1);
+const hall = () => things().find((t) => t.side === 0 && FK.has(t, 'Seat') && t.done >= 1);
 const trainer = (c) => things().find((t) => t.kind === 'bld' && t.side === 0 && t.done >= 1 && (D.trains[t.code] || []).includes(c));
 const count = (c) => things().filter((t) => t.kind === 'bld' && t.side === 0 && t.code === c).length, picked = (c) => S.ghost && S.ghost.code === c;
 const summary = () => `${OPTS.len[S.opt.len][0]} · Fog ${OPTS.fog[S.opt.fog][0].toLowerCase()} · Daily ${OPTS.daily[S.opt.daily][0].toLowerCase()}`;
 const isFind = (t) => t && t.kind !== 'unit' && t.kind !== 'bld' && ECON.yieldOf(t);
 // read: the one window onto the world the glass draws from
 function read() { const s = SIDES[0], r = ECON.result(); return { store: s.store, pop: ECON.popOf(0), cap: ECON.popCap(0), age: D.ages[s.age], aging: s.aging, ageCost: ECON.ageCost(0), jobs: ECON.jobs(0), rally: s.rally, army: WAR.armyOf(0).length, wave: WAR.waves[0], sel: FK.sel(), subject: S.subject, time: ECON.time(), left: Math.max(0, D.bell - ECON.time()), score: ECON.score(0), theirs: ECON.score(D.players[1]), result: r, next: s.age + 1 < D.ages.length ? D.ages[s.age + 1] : null, hall: hallRead() }; }
-function hallRead() { const h = (S.subject && S.subject.code === 'BTC1' && own(S.subject) ? S.subject : hall()) || null; if (!h) return null; const q = h.q || []; let at = h.qt || 0;
+function hallRead() { const h = (S.subject && FK.has(S.subject, 'Seat') && own(S.subject) ? S.subject : hall()) || null; if (!h) return null; const q = h.q || []; let at = h.qt || 0;
   return { k: key(h), hp: h.hp, hpMax: h.hpMax, life: h.hp / h.hpMax, done: q.length ? 1 - h.qt / D.train[q[0]] : 0, queue: q.slice(0, 5).map((c, i) => [U[c][0], i ? (at += D.train[c]) : at]), more: Math.max(0, q.length - 5) }; }
 // VERBS: every way the player may act, each with its reason not to. act() asks whyNot first; a reason stops it and is said
 const VERBS = {
@@ -111,6 +111,7 @@ const VERBS = {
   kind: { label: (c) => `<span class="t">${SVG[c]}</span>${U[c][0]}`, whyNot: (c) => { const b = trainer(c); return !b ? `Build a ${B[Object.keys(D.trains).find((x) => D.trains[x].includes(c))][0]}` : VERBS.train.whyNot(c, b); }, run: (c) => ECON.queue(trainer(c), c) }, // Train a kind: the nearest finished building that trains it
   htab: { label: (t) => t, whyNot: () => '', run: (t) => { S.htab = t; } },
   info: { label: () => SVG.book, whyNot: () => '', run: () => { S.info = !S.info; } },
+  mute: { label: () => `<span class="t" style="opacity:${window.SOUND && SOUND.on() ? 1 : 0.35}">${SVG.sound}</span>`, whyNot: () => '', run: () => SOUND.toggle() }, // sound on or off
   later: { label: (t) => SVG[t] || `${t}<small>Later</small>`, whyNot: () => 'Not built yet', run: () => {} }, // a cell for what is drawn but not yet built: Albert's reminder
   start: { label: () => `Start<small>${summary()}</small>`, whyNot: () => '', run: () => { const o = (k) => OPTS[k][S.opt[k]][1]; D.bell = o('len') || Infinity; show.fog = o('fog'); S.tab = null; if (!o('daily')) FK.restart(); else if (location.hash.length > 1) location.hash = ''; else FK.reset(); } }, // the new game: the bell (D134), fog, the day's map or a fresh one
   job: { label: (y, n) => (n > 0 ? '+' : '−'), whyNot: (y, n) => (n > 0 && !ECON.villagersOf(0).length ? 'No villagers' : n < 0 && !ECON.jobs(0)[y] ? `No one on ${y}` : ''), run: (y, n) => { if (!ECON.assign(0, y, n)) toast(n > 0 ? `No ${y} within reach` : `No one on ${y}`); } },
@@ -130,11 +131,11 @@ const VERBS = {
   gather: { label: () => 'Gather', whyNot: (t) => (!isVil(FK.sel()) ? 'Pick a villager' : ''), run: (t) => ECON.gatherAt(FK.sel(), t) },
   send: { label: () => 'Send one', whyNot: (t) => (!ECON.villagersOf(0).some((v) => v.job === 'idle' || v.job === 'wait') ? 'No idle villager' : ''), run: (t) => { const u = ECON.villagersOf(0).filter((v) => v.job === 'idle' || v.job === 'wait').sort((a, b) => Math.hypot(a.bx - t.bx, a.by - t.by) - Math.hypot(b.bx - t.bx, b.by - t.by))[0]; ECON.gatherAt(u, t); } },
   raise: { label: (t) => (t.done < 1 ? 'Raise' : 'Repair'), whyNot: (t) => (!isVil(FK.sel()) ? 'Pick a villager' : t.done >= 1 && t.hp >= t.hpMax ? 'Not hurt' : ''), run: (t) => ECON.buildAt(FK.sel(), t) },
-  scrap: { label: (t) => (t.done < 1 ? 'Cancel site' : 'Demolish'), whyNot: (t) => (t.code === 'BTC1' && t.done >= 1 ? 'The hall stays' : ''), run: (t) => { ECON.cancel(t); S.subject = null; } },
+  scrap: { label: (t) => (t.done < 1 ? 'Cancel site' : 'Demolish'), whyNot: (t) => (FK.has(t, 'Seat') && t.done >= 1 ? 'The hall stays' : ''), run: (t) => { ECON.cancel(t); S.subject = null; } },
   fight: { label: () => 'Attack this', whyNot: (t) => (!isSoldier(FK.sel()) ? 'Pick a soldier' : ''), run: (t) => WAR.fight(FK.sel(), t) },
   here: { label: () => 'Soldiers here', whyNot: (t) => (!WAR.armyOf(0).length ? 'No soldiers' : ''), run: (t) => WAR.attack(0, t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k) },
 };
-function act(verb, arg, arg2) { const v = VERBS[verb], why = v.whyNot(arg, arg2); if (why) { toast(why); return false; } v.run(arg, arg2); render(true); return true; }
+function act(verb, arg, arg2) { const v = VERBS[verb], why = v.whyNot(arg, arg2); if (why) { FK.fire('event', 'err', null); toast(why); return false; } FK.fire('event', verb === 'build' ? 'place' : 'tap', null); v.run(arg, arg2); render(true); return true; }
 // the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only says why
 const cell = (text, cls = '', on = null) => `<button class="cell ${cls}" ${on ? `data-v="${on.join('|')}"` : ''}>${text}</button>`;
 const vcell = (verb, arg, arg2, cls = '', on = false) => { const v = VERBS[verb], a = ARGS[arg] ?? arg, a2 = ARGS[arg2] ?? arg2, why = v.whyNot(a, a2); return cell(v.label(a, a2), `${cls} ${why && !why.startsWith('Needs ') ? 'dim' : ''} ${on ? 'on' : ''}`, [verb, String(arg ?? ''), String(arg2 ?? '')]); };
@@ -169,13 +170,13 @@ const SCREENS = {
 };
 const page = () => (S.tab && SCREENS[S.tab] ? SCREENS[S.tab]().join('') : '');
 function cardText(r) { const t = S.subject; if (!t) return '';
-  if (t.kind === 'unit') { const st = WAR.stat(t), facts = `${t.hp != null ? Math.ceil(t.hp) + '/' + t.hpMax + ' health' : ''}${t.code === 'UV' ? ` · ${ECON.jobOf(t) || t.job}${t.load ? `, carrying ${Math.floor(t.load)}` : ''}` : ` · ${t.job}`}`;
-    const acts = own(t) ? (t.code === 'UV' ? vcell('stop', key(t)) : `${vcell('recall')}`) : isSoldier(r.sel) ? vcell('fight', key(t)) : WAR.armed(t) || t.side < 0 ? vcell('here', key(t)) : '';
+  if (t.kind === 'unit') { const st = WAR.stat(t), facts = `${t.hp != null ? Math.ceil(t.hp) + '/' + t.hpMax + ' health' : ''}${FK.has(t, 'Gather') ? ` · ${ECON.jobOf(t) || t.job}${t.load ? `, carrying ${Math.floor(t.load)}` : ''}` : ` · ${t.job}`}`;
+    const acts = own(t) ? (FK.has(t, 'Gather') ? vcell('stop', key(t)) : `${vcell('recall')}`) : isSoldier(r.sel) ? vcell('fight', key(t)) : WAR.armed(t) || t.side < 0 ? vcell('here', key(t)) : '';
     return `<h2>${U[t.code][0]}${t.side >= 0 && !own(t) ? ' (theirs)' : ''}</h2><p>${facts}</p>${acts ? `<div class="row">${acts}</div>` : ''}`; }
   if (t.kind === 'bld') { const name = B[t.code][0], k = key(t), facts = t.done < 1 ? `site · ${Math.floor(t.done * 100)}% raised` : `${Math.ceil(t.hp)}/${t.hpMax} health${t.q && t.q.length ? ` · training ${t.q.map((c) => U[c][0]).join(', ')} (${Math.ceil(t.qt)}s)` : ''}`;
     if (!own(t)) return `<h2>${name} (theirs)</h2><p>${facts}</p><div class="row">${isSoldier(r.sel) ? vcell('fight', k) : ''}${vcell('here', k)}</div>`;
     const trains = (D.trains[t.code] || []).map((c) => vcell('train', c, k)).join('');
-    return `<h2>${name}</h2><p>${facts}</p>${trains ? `<div class="row">${trains}${t.q && t.q.length ? vcell('untrain', k, null, 'w1') : ''}</div>` : ''}<div class="row">${t.code === 'BTC1' && t.done >= 1 ? vcell('ageUp', null, null, '', !!r.aging) : ''}${vcell('raise', k)}${vcell('scrap', k)}</div>`; }
+    return `<h2>${name}</h2><p>${facts}</p>${trains ? `<div class="row">${trains}${t.q && t.q.length ? vcell('untrain', k, null, 'w1') : ''}</div>` : ''}<div class="row">${FK.has(t, 'Research') && t.done >= 1 ? vcell('ageUp', null, null, '', !!r.aging) : ''}${vcell('raise', k)}${vcell('scrap', k)}</div>`; }
   return `<h2>${t.kind}</h2><p>${Math.floor(t.amount)} ${ECON.yieldOf(t)} left</p><div class="row">${vcell('gather', key(t))}${vcell('send', key(t))}</div>`;
 }
 // the base: Albert's template. Corners Yard and War; who works where; Build and − + under each yield
@@ -196,7 +197,7 @@ const sword = svg('<path d="M14 4l6-1-1 6-9 9-3-3zM7 15l-3 3 2 2 3-3"/>').replac
 const PEOPLE = { Relations: ['Raiders', 'Rivals', 'Fortress'], Misfits: ['Natives', 'Outlaws', 'Bandits', 'Robbers'] };
 const stances = (t) => `<div class="frame f6">${PEOPLE[t].map((n) => `<span class="lab two-l" style="grid-column:span ${t === 'Misfits' ? 1 : 3}">${n}<br><span style="color:var(--rr)">Foe</span></span>${t === 'Misfits' ? span(2, vcell('later', 'Bribe', null, 'two')) : ''}<div class="cells seg dim" style="grid-column:span 2;--n:3">${cell(sword, 'dim on')}${cell(scales, 'dim')}${cell(hands, 'dim')}</div>${vcell('later', 'check', null, '')}`).join('')}<p class="blurb" style="grid-column:span 6">${t === 'Misfits' ? 'Pick a bribe or a stance, then its ✓' : 'Pick a stance, then its ✓'} · not built yet</p></div>`;
 const topbar = (r) => { const sc = D.players.map((p) => [ECON.score(p).total, p]).sort((a, b) => b[0] - a[0]), rank = sc.findIndex(([, p]) => p === 0) + 1, t = isFinite(r.left) ? r.left : r.time;
-  return `<div class="strip big">${['food', 'wood', 'stone', 'gold', 'iron'].map((y) => cell(`<span class="t">${SVG[y]}</span>${Math.floor(r.store[y])}`)).join('')}${vcell('later', 'sound')}${vcell('later', 'play')}${vcell('later', 'mail')}</div>`
+  return `<div class="strip big">${['food', 'wood', 'stone', 'gold', 'iron'].map((y) => cell(`<span class="t">${SVG[y]}</span>${Math.floor(r.store[y])}`)).join('')}${vcell('mute')}${vcell('later', 'play')}${vcell('later', 'mail')}</div>`
     + `<div class="strip">${span(2, cell(`<span class="t">${SVG[['spring', 'summer', 'autumn', 'winter'][Math.floor(FK.K.t / D.season) % 4]]}</span>${String(Math.floor((FK.K.t % D.day) / D.day * 24)).padStart(2, '0')}:00`))}${cell(`${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`)}${cell(`${r.pop}/${r.cap}`)}${cell(`z ${r.jobs.idle}`)}${vcell('later', 'book')}${cell(`<span class="t">${SVG.star}</span>${rank}${['st', 'nd', 'rd'][rank - 1] || 'th'}`)}${cell(`<span class="t">${SVG.shield}</span>${r.army}`)}</div>`; };
 let acc = 0;
 function render(force) { const r = read();
@@ -226,9 +227,9 @@ FK.on('tap', (k, mine, px, py) => {
   if (S.arming) { if (k < 0) return true; S.target = k; S.arming = false; if (WAR.armyOf(0).length) WAR.attack(0, k); toast('Attacking'); render(true); return true; }
   let other = null; for (const u of units()) if (u.side !== 0 && FK.inSight(u.k)) { const [x, y] = FK.toScreen(u.vx, u.vy), d = Math.hypot(x - px, y - py + 8 * FK.cam.z); if (d < 16 && (!other || d < other[1])) other = [u, d]; }
   const sel = FK.sel(), t = mine || (other && other[0]) || (k >= 0 && FK.inSight(k) ? under(k) : null);
-  if (mine) { FK.select(mine); S.subject = mine; render(true); return true; }
-  if (t && t.kind === 'unit') { if (isSoldier(sel) && WAR.enemies(sel, t)) { WAR.fight(sel, t); return true; } if (isVil(sel) && t.side < 0 && t.code === 'MW3') { toast('Hunting is not built yet'); } S.subject = t; render(true); return true; }
-  if (t) { if (isVil(sel)) { if (isFind(t)) { ECON.gatherAt(sel, t); return true; } if (t.kind === 'bld' && own(t) && (t.done < 1 || t.hp < t.hpMax)) { ECON.buildAt(sel, t); return true; } } if (isSoldier(sel) && t.kind === 'bld' && !own(t)) { WAR.fight(sel, t); return true; } S.subject = t; if (own(t) && t.code === 'BTC1') S.tab = 'Hall'; render(true); return true; }
+  if (mine) { FK.select(mine); FK.fire('event', 'pick', mine); S.subject = mine; render(true); return true; }
+  if (t && t.kind === 'unit') { if (isSoldier(sel) && WAR.enemies(sel, t)) { WAR.fight(sel, t); return true; } if (isVil(sel) && t.side < 0 && FK.has(t, 'Prey')) { toast('Hunting is not built yet'); } S.subject = t; render(true); return true; }
+  if (t) { if (isVil(sel)) { if (isFind(t)) { ECON.gatherAt(sel, t); return true; } if (t.kind === 'bld' && own(t) && (t.done < 1 || t.hp < t.hpMax)) { ECON.buildAt(sel, t); return true; } } if (isSoldier(sel) && t.kind === 'bld' && !own(t)) { WAR.fight(sel, t); return true; } S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; render(true); return true; }
   if (!sel) S.subject = null; else if (isSoldier(sel) && k >= 0 && FK.walkable(k)) { WAR.march(sel, k); return true; }
   render(true); return false;
 });
@@ -236,6 +237,6 @@ FK.on('tick', (dt) => { acc += dt / (show.fast ? D.fast : 1); if (S.toastT > 0) 
 // one height for every page: each is laid out once, the tallest sets the panel, the others fill it (Albert: menus never move)
 let PANEL = 0; function sizePanel() { const el = $('panel'), keep = S.tab; PANEL = 0; let h = 0; const keepH = S.htab; for (const t of Object.keys(SCREENS)) if (t !== 'Start') for (const ht of t === 'Hall' ? ['Town', 'Relations', 'Misfits'] : [S.htab]) { S.tab = t; S.htab = ht; render(true); h = Math.max(h, el.offsetHeight); } S.htab = keepH; PANEL = h; S.tab = keep; render(true); }
 addEventListener('resize', sizePanel); let sized = false; // sized once the modules and fonts are in (the first start)
-FK.on('start', () => { if (!sized) { sized = true; (document.fonts ? document.fonts.ready : Promise.resolve()).then(sizePanel); } S.subject = null; S.ghost = null; S.arming = false; S.target = null; S.last = ''; const h = things().find((t) => t.kind === 'bld' && t.side === 0 && t.code === 'BTC1'); if (h) { FK.cam.x = h.vx; FK.cam.y = h.vy + 40; FK.cam.z = 2.2; FK.keepOn(); } render(true); }); // the game opens on the player's hall
+FK.on('start', () => { if (!sized) { sized = true; (document.fonts ? document.fonts.ready : Promise.resolve()).then(sizePanel); } S.subject = null; S.ghost = null; S.arming = false; S.target = null; S.last = ''; const h = things().find((t) => t.side === 0 && FK.has(t, 'Seat')); if (h) { const [cw] = FK.size(); FK.cam.x = h.vx; FK.cam.y = h.vy; FK.cam.z = (cw * D.openShare) / (h.n * D.tile); FK.keepOn(); } render(true); }); // the game opens on the player's hall
 return { read, act, VERBS, S, render };
 })();

@@ -1,4 +1,4 @@
-# First Keep v100 · Q Calculations and N Citations
+# First Keep v100 · Book 1, Laws: Q Calculations
 
 Q is letters only, so a calculation can never be mistaken for a number. N is a letter and a number. INDEX.md matches the two both ways and is written from this page, never by hand. Pulled from the old game and SoRen on Nov 4, cleaned: no wind, no fantasy, no made-up arrow arc, no duplicates; every decay, wetness, wound and loyalty is one calculation, QP.
 
@@ -71,91 +71,21 @@ QBH A lake's size drawn from the power law (QBA): area = a_min · U^(−1/c), U 
 QBI Roads cross rivers at fords: where a river meets one of the four roads its bed rises to wading depth · N68
 QBK The art frame: a building's picture is painted with its front edge along x and sheared by sin A2 · sin A1 so that edge follows the turned grid; its depth is (sin A2 · cos A1 + shear · sin A1) a unit of width, the back standing sin A1 to the right (QBD worked for a picture painted flat) · N66
 QBL The way: A* over the tiles, eight neighbours, a straight step 1 and a diagonal √2, the octile distance as the heuristic; a diagonal never cuts a blocked corner · N74
-QBM Walking: a shell moves its speed in metres a second (D86) times the units a metre (D85) along its way, tile middle to tile middle · N71, N72, N73
+QBM Walking: a shell moves its speed in metres a second (D86) times the units a metre (D85) along its way, tile middle to tile middle; a person walks at quick time, 120 steps of 30 in a minute, 1.52 m/s · N71, N72, N73, N79
 QBN Gathering: a load fills at the find's rate a second (D88) until it holds D87 or the find is gone; then the walk to the nearest drop-off of the side, and back to the find or the nearest of its kind within D89 · N70
 QBJ Z1's store: food = (age up + villagers × a villager) × (1 + margin); wood = (mill + lumber camp + homes × a home + barracks) × (1 + margin); bushes = ⌈food / a bush⌉, trees = ⌈wood / a tree⌉ (Albert's rule; the prices are the genre's until the Content pull) · N69
 QBO The blow: damage = max(1, base × counter × flank − armour); counter D140 when the striker's kind counters the struck's, flank D141 from behind; an engine strikes a building with its own blow · N69
 QBP Upkeep: every unit of a side eats D131 food a day from its store, never below nothing · design
 QBQ The break: a wave goes home when fewer than D142 of the soldiers it set out with still stand · N76
 QBR The score: people and army held at cost ÷ 5, buildings standing at cost ÷ 5, ages paid ÷ 5, everything gathered ÷ 10 · N75
+QBS Wounded balance: lost = 1 − health ÷ most health, read as blood lost. Under D167's class III edge (0.30) the body holds: no sway (classes I and II, compensated). From 0.30 to 0.40 the sway grows from nothing to the tipping angle; past 0.40 (class IV) it stays there. Tipping angle θ = atan((foot ÷ 2) ÷ centre of mass); its rhythm f = √(g ÷ centre of mass) ÷ 2π (a standing body as an inverted pendulum); both from the body (W) · N77, N78, N80
+QBT Impact: a blow sends the struck one off at v = m_s · v_s ÷ (m_s + m_t), the perfectly inelastic collision, where m_s and v_s are the whole moving striker (body, mount and kit) at its speed when it moves, else its weapon's striking mass and speed (W); m_t is the struck one's mass. It slides to rest over d = v² ÷ (2 μ g), μ the ground under it (G), and stops at anything it cannot stand on. The screen jolts with v when it passes D166's least, and the thud sounds · N81, N82, N83, N18
+QBU The stride: a walker's frame = ⌊frames a stride (D96) × metres walked ÷ its stride (W)⌋ mod D96, the stride its mount's if it rides; the picture turns with the ground covered, so the feet never slide, and in mud it steps slower · N79
+QBW The opening view: the game opens on the player's Town Center, the camera's zoom set so the Town Center spans D165 of the screen's width · design (Albert, Nov 5)
+QBX The air's top: snow cover lowers the highest pitch that carries, from HX5's open to its snow value (fresh snow soaks up the high sounds); rain masks a quiet sound by HX5's share of its strength · N88
 
 ## N Citations
-N1 Spherical astronomy, the altitude formula (standard)
-N2 Meeus, Astronomical Algorithms, 2nd ed. (1998)
-N3 JPL, Approximate Positions of the Planets (1800–2050)
-N4 Mallama & Hilton (2018), colour indices
-N5 Ballesteros (2012), colour index to temperature
-N6 (retired: satellites cut, Stone Age)
-N7 Gabriel & Neumann (1962), QJRMS 88
-N8 Jennings, Winchell, Livneh & Molotch (2018), Nature Communications 9:1148
-N9 Atlas, Srivastava & Sekhon (1973); Gunn & Kinzer (1949)
-N10 Koschmieder (1924)
-N11 WCAG 2.3.1, three flashes
-N12 Poisson (1837); Feller, An Introduction to Probability Theory, vol. 1
-N13 Pandolf, Givoni & Goldman (1977)
-N14 Hock (2003), degree-day melt
-N15 US Army Corps of Engineers (1956), Snow Hydrology
-N16 First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001)
-N17 Stefan (1891)
-N18 Bowden & Hughes (1939), friction on ice and snow
-N19 Hanson et al. (1999), slip and the grip a step needs
-N20 Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles (multi-pass) — from memory, to open; Botta et al. (2009), Soil & Tillage Research 103: rut depth grows with passes (opened, abstract only)
-N21 Rothermel (1972); USDA RMRS-GTR-371
-N22 Heskestad (1984); NFPA 72, the t² fire
-N23 Holling (1959), Can. Entomol. 91
-N24 Charnov (1976), Theor. Pop. Biol. 9
-N25 Fretwell & Lucas (1970)
-N26 Sutherland (1983)
-N27 Verhulst (1838)
-N28 Schaefer (1954)
-N29 White (1962), Medieval Technology and Social Change: three-field rotation raised the sown share from 1/2 to 2/3 — from memory; Rothamsted Broadbalk (since 1843): unfertilised wheat falls to a low, stable yield, the floor — from memory, to open
-N30 Wright (1936), learning curve
-N31 Thomas & Smith (1990), overmanning
-N32 Labuza, first-order food loss
-N33 FAO, Grain storage techniques, ch. 6
-N34 Andreyeva, Long & Brownell (2010), food price elasticities
-N35 Lanchester (1916), Aircraft in Warfare
-N36 Churchill, Saffidine & Buro (2012), AIIDE
-N37 Cox & Smith (1961), Queues
-N38 Maynard Smith & Price (1973), hawk–dove
-N39 Projectile motion from a height (standard)
-N40 Drag on a sphere (standard fluid dynamics)
-N41 Horizon from a height, √(2Rh) (standard)
-N42 Bresenham (1965), grid line
-N43 Pulliam (1973)
-N44 Lima (1995)
-N45 Ydenberg & Dill (1986)
-N46 Thermal resistance in series (standard)
-N47 Kermack & McKendrick (1927), Proc. R. Soc. A 115
-N48 Bootsma & Ferguson (2007), PNAS 104(18)
-N49 Goldberg (1989), roulette-wheel selection
-N50 Hertz (1882), contact
-N51 Auerbach (1891), crack threshold
-N52 Weibull (1951), strength by size
-N53 Plane geometry, shadow length
-N54 Black-body colour; inverse-square light
-N55 Briggs (1969), plume rise
-N56 Pasquill–Gifford dispersion
-N57 Damped harmonic oscillator (standard)
-N58 ISO 9613-2, sound outdoors
-N59 Klatzky, Pai & Krotkov (2000), Presence 9
-N60 Mandelbrot (1967), Science 156
-N61 Downing et al. (2006), lake sizes
-N62 Leopold & Maddock (1953), USGS Paper 252
-N63 Hutchinson (1957), shoreline development
-N64 Angle of repose, dry sand about 34° (Al-Hashemi & Al-Amoudi 2018, Powder Technology 330, a review; from memory, to open)
-N65 Ettinger (2017), Mulberry32, a 32-bit generator; the seed of the day is the game's own rule
-N66 Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the ground (from memory: Age of Empires II's tiles are 2:1)
-N67 Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology, standard; Bird, Coastal Geomorphology, 2008; from memory)
-N68 Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory
-N70 First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6, stone 0.55, iron 0.5 (its time values, kept)
-N71 Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open)
-N72 Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory)
-N73 Travel speeds of deer, wolf and bear at a walk or trot (natural history, standard; from memory, to open)
-N74 Hart, Nilsson & Raphael (1968), IEEE Trans. SSC 4: A*
-N69 Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house 25 wood, the mill and the lumber camp 100 wood, the barracks 175 wood; a tree 100 wood, a forage bush 125 food, a gold tile 800, a stone tile 350 (from memory, to open; stand-ins)
-N75 First Keep Build 42 (Oct 28), the old game's SCORE: unit 5, bld 5, tech 5, wealth 10 (its weights, kept)
-N76 Dupuy (1987), Understanding War: forces break at losses well short of annihilation; the classic breakpoint near 30% (from memory, to open)
+The citations have their own book: `books/citations.js` (N1 to N88), shown in BOOKS.md. A Q here names its N; INDEX.md matches the two both ways.
 
-## Values these use (numbers; floor 1's are in D now, the rest go to D at their floor)
+## Old values, for reference only (the game never reads these; each moves into a book when its law is built)
 Day 120 s, season 180 s, year 12 min · gather rates · fire 20 s · melt 0.004 · ice 500 °C·s · ruts 300 and 600 s · wet 20 s, dry 50 s · mud 0.8, snow 0.6 · friction 0.7, 0.45, 0.3, 0.08–0.25 · personal space 3 ft · spoilage 5% a year · eating 30 food in 8 min · R0 2 · rain-chain odds · crew 0.7 · move-on 18% (fog sight comes from QK, not typed)

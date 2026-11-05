@@ -3,18 +3,19 @@
 A clean build, poured from the foundation, in this folder only. The old game (`src/`, `index.html`, `preview/`) stays as reference and is never copied: a value crosses over only through the dictionary, an equation only through the calculations.
 
 ## The rule
-Every thing has one code and one home. Numbers live in D, colours in C, angles in A, equations in Q with their citations in N. Everything else points there. Change the source and its users follow. A floor is built, checked, then locked.
+Everything has one home, and the homes are Books (`books/*.js`), split by subject. The game reads the Books; it never types a number, an angle, a colour or a sound.
+Everything you can tap is a shell: a row in the Shells book that names its layer, ticks its capabilities, and points each slot at another book (`"amount": "D53"`, `"body": "person"`, `"look": "vil"`). Laws (CALCULATIONS.md) run on whatever has the slots they need, and the code asks `has(thing, 'Fight')`, never a shell's code. Change a book entry and everything that reads it follows. A floor is built, checked, then locked: its books, its shells and its laws together.
 
 ## The pages
-- `DICTIONARY.md`: every thing, group and rule, by code.
-- `CALCULATIONS.md`: Q, the equations (letters only), and N, their citations.
-- `INDEX.md`: Q and N matched both ways; written by `index.py`, never by hand.
+- `books/`: the Books. measure (D), angles (A), colours (C), ground (G), mass (W), shells (S), capabilities (SC), sprites (P), sound (H), citations (N). Each entry: code, name, value, citation, law.
+- `CALCULATIONS.md`: Book 1, the Laws (Q), each with its citations.
+- `index.py`: writes `INDEX.md` (by book, by law, by citation) and `BOOKS.md` (every book as a page), and stops on a second home, a missing citation or law, a slot pointing nowhere, a tick nothing answers, a number typed into D, or a shell named in the code. Run it after any edit.
+- `DICTIONARY.md`: the words: layers, zones, logic, the shell mold, what is held for later.
 - `EXTRACT.md`: what was pulled from the old game and SoRen, for reference only.
-- `index.html`: the world, one file (floors 1 to 7), with one door, `FK`, that the modules hang on.
-- `menu.js`, `econ.js`, `combat.js`, `ai.js`: floors 8 to 11, one file each, loaded by one script tag each; each lives alone and touches the world only through `FK` (and the menu and the computer act only through `ECON` and `WAR`, the same doors).
+- `index.html`: the world (floors 1 to 7) and the body's laws, one door `FK`; `menu.js`, `econ.js`, `combat.js`, `ai.js`, `sound.js`: one module a file, each touching the world only through `FK`.
 
 ## The floors, in build order
-0 Dictionary · 1 Ground (layers 10 to 80) · 2 Terrain (90) · 3 Non-movables (100) · 4 Buildings (110) · 5 Movables (120) · 6 Climate (130) · 7 Display (140) · 8 Menu (150) · 9 Economy · 10 Combat · 11 The computer · Sound beside the stack
+0 Dictionary and the Books · 1 Ground (layers 10 to 80) · 2 Terrain (90) · 3 Non-movables (100) · 4 Buildings (110) · 5 Movables (120) · 6 Climate (130) · 7 Display (140) · 8 Menu (150) · 9 Economy · 10 Combat · 11 The computer · Sound beside the stack
 
 ## How to work it
 Open `index.html` in a phone browser, or the preview link. Drag to pan, pinch or scroll to zoom. Tap a villager, then a bush or a tree, and it gathers; Jobs puts villagers on yields with − and +; Build raises a ghost you slide into place; the hall trains villagers; War aims and sends the soldiers. You hold the blue corner; the computer holds the opposite one and is always at war with you. The game ends when a hall falls, or at the bell (15 minutes) on score. Layers shows and hides each floor; Fast runs the clock ×8; New rolls another map. No build step: the files are the game.
@@ -32,4 +33,5 @@ Open `index.html` in a phone browser, or the preview link. Drag to pan, pinch or
 - [x] 9 Economy (`econ.js`): costs, training queues, sites that villagers raise at n^0.7 (QAC), homes and room, six ages, food upkeep (QBP), the villager as one state machine (idle, walk, gather, carry, build, repair, wait) with Charnov's move-on (QW), the score (QBR), the bell and the fall of a hall. Set on this floor for Albert to confirm: D122 to D137 (the prices D123 are the genre's stand-ins, N69).
 - [x] 10 Combat (`combat.js`): health, one blow (QBO: base × counter × flank − armour), the target by harm a second over health left (QAG), nerve (QBQ: a wave below 0.3 of its start goes home, N76), towers and the hall shoot (QAL), march and rout, health bars, the crosshair. Set on this floor for Albert to confirm: D138 to D148.
 - [x] 11 The computer (`ai.js`): one brain, balanced: villagers by need, homes ahead of room, camps by the finds, farms when the bushes are gone, the barracks, the age when it can pay, the army as the best counter, a wave at Lanchester odds (QAF), home when it stalls. Normal only. Set on this floor for Albert to confirm: D149 to D161.
+- [x] 0 The Books (Nov 5): every number, angle, colour, look and sound out of the code into `books/`; shells as rows with ticks; the policing index. Camera rise 41° (A2); opens on the Town Center at a fifth of the screen (D165); walk at quick time, 1.52 m/s (D86); sound as recipes with one player (`sound.js`: distance, pan, snow muffle, rain mask, birds and crickets); impact by momentum and friction (QBT), the wounded sway (QBS), the stride by metres walked (QBU).
 - [ ] 12 The look pass, then the lock of floors 1 and 2

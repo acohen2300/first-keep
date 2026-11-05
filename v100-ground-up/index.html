@@ -17,28 +17,28 @@ canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: non
 </head>
 <body>
 <canvas id="map"></canvas>
-<div id="top"><b>First Keep</b><span style="white-space:nowrap">v100 · 8</span><span id="clock" style="white-space:nowrap"></span><span id="store"></span><span id="seed"></span></div>
+<div id="top"><b>First Keep</b><span style="white-space:nowrap">v100 · 9</span><span id="clock" style="white-space:nowrap"></span><span id="store"></span><span id="seed"></span></div>
+<script>'use strict'; const BOOKS = {}; function BOOK(name, entries) { BOOKS[name] = entries; }</script>
+<script src="books/measure.js"></script>
+<script src="books/angles.js"></script>
+<script src="books/colours.js"></script>
+<script src="books/ground.js"></script>
+<script src="books/mass.js"></script>
+<script src="books/shells.js"></script>
+<script src="books/sprites.js"></script>
+<script src="books/sound.js"></script>
 <script>
 'use strict';
-// First Keep v100 · floor 1: the ground. Every number below points at the dictionary (DICTIONARY.md); no number is written twice.
-const D = { site: 3060, board: 2160, zone: [300, 600, 900], edge: 60, tile: 10, land: 24, sandTop: 12, dirtTop: 20, beach: 80, cliff: 4, wander: 24, sea: 60, day: 120, season: 180, year: 720, // D1, D2, D3–D6, D7, D12–D22
-  bare: 12, wade: 4, lakes: [3, 6], lakeR: [50, 160], lakeDeep: 12, shore: 0.25, riverDeep: 8, riverW: 0.25, riverWander: 80, bank: 40, ford: 40, stream: 6, streamDeep: 2, // D23–D35
-  hills: [2, 4], hillR: [80, 160], hillH: 14, rocks: [3, 6], rockR: [15, 35], rockH: 18, crevices: [1, 2], creviceW: 8, creviceFloor: 13, creviceL: [150, 300], lane: 50, middle: 150, // D36–D47
-  forestScale: 500, forestShare: 0.1, wall: [920, 1080], pond: [700, 450], pondR: 50, // D48–D52
-  treeWood: 100, bushFood: 125, goldPile: 800, stonePile: 350, ironPile: 350, ruinStone: 200, fireFood: 100, chestGold: 300, // D53–D60 what a shell holds
-  ageUp: 500, villager: 50, mill: 100, lumber: 100, home: 25, barracks: 175, villagers: 6, homes: 2, margin: 0.25, // D61–D69 the prices Z1 is sized from (stand-ins until the Content pull)
-  z1: { bush: [250, 140], tree: [140, 250], gold: [200, 120], stone: [120, 200] }, z3: { bush: [820, 300], tree: [300, 820], iron: [560, 680], stone: [450, 750], gold: [680, 560] }, z3x: 3, // D70–D72 the home spots, in the corner's frame
-  goldZ4: [4, 6], stoneZ4: [3, 5], ironZ4: [3, 5], patches: [6, 10], patch: [4, 6], ruins: [2, 2], cemeteries: [1, 2], campfires: [2, 3], treasures: [1, 2], // D73–D81 Z4's finds
-  jitter: 3, lod: 5, // D82 a thing's stand wanders in its tile by this much, D83 under this many pixels a tile things are dots and the grid is off
-  tc: [380, 380], // D84 the Town Center's spot in the corner's frame (Z2, on the road)
-  upm: 11.7, speed: { walk: 1.4, trot: 3.6, horse: 1.7, push: 0.7, deer: 1.5, wolf: 2.5, bear: 1.5 }, carry: 10, rate: { bush: 0.9, tree: 0.75, gold: 0.6, stone: 0.55, iron: 0.5 }, // D85 units a metre, D86 speeds in m/s, D87 a load, D88 gathering a second
-  next: 100, herds: [3, 5], herd: [3, 5], packs: [2, 3], pack: [2, 3], wait: 6, reach: 60, steps: 6, beat: 0.4, fps: 30, // D89 the next find within, D90–D93 the wildlife, D94 a wander's mean wait, D95 its reach, D96 walk frames a second, D97 a work beat, D98 frames a second
-  lat: 45, temps: [10, 22, 12, -6], swing: 6, chain: [0.12, 0.65], stormShare: 0.25, wetUp: 20, dryOut: 50, mud: 0.8, snowCost: 0.6, // D99 the latitude, D100 the seasons' mean °C, D101 the day's swing, D102 P(wet|dry), P(wet|wet) an hour, D103 storms among wet hours, D104–D105 wet and dry settle, D106 walking costs
-  snowfall: 0.03, melt: 0.004, bears: 200, fogWait: 240, fogLast: 40, flashGap: 0.34, strike: 6, marshes: [1, 2], marshW: 40, fast: 8, // D107 snow a second, D108 melt a °C·s, D109 ice bears at this many °C·s, D110–D111 fog's wait and stay, D112 between flashes, D113 between strikes, D114 marshy lakes, D115 a marsh's width, D116 Fast
-  sight: { unit: 60, bld: 100 }, fogDim: [0.75, 0.4], fogTick: 0.5, shadowMax: 3, blades: 0.45,
-  players: [0, 2], woodsKeep: 64 }; // D122 the sides in play: you and one computer, opposite corners; D164 woods chunks kept drawn (more than a screen shows at any zoom) // D117 how far a unit and a building see, D118 the fog's dark over the unseen and the seen, D119 the fog's beat, D120 a shadow at most this many heights, D121 the blades' strength
-const A = { turn: 15, rise: 30, repose: 34 }; // A1 the grid's turn, A2 the camera's rise, A3 the angle of repose
-const C = { water: '#2a6488', sand: '#cdbb88', dirt: '#785c3a', grass: '#4a6634', blue: '#6aaeff', green: '#5fd08a', red: '#ff6b5b', white: '#ece5d3', gold: '#e6b947' }; // C1–C8, C10
+// First Keep v100 · the world reads its numbers from the Books (books/*.js), never from here: one home each.
+// A Book entry is { key, value, name, cite, law } under its code; the game sees each book as one object by key (D, A, C, W, G), and a shell's slot points at a code (D53, D86.walk).
+function fromBook(name) { const o = {}; for (const e of Object.values(BOOKS[name])) { const p = e.key.split('.'); let t = o; for (let i = 0; i < p.length - 1; i++) t = t[p[i]] = t[p[i]] || {}; t[p[p.length - 1]] = e.value; } return o; }
+const D = fromBook('measure'), A = fromBook('angles'), C = fromBook('colours'), W = fromBook('mass'), G = fromBook('ground'), HB = fromBook('sound'), SPRITE = fromBook('sprites');
+const CODE = {}; for (const b of Object.values(BOOKS)) for (const [c, e] of Object.entries(b)) CODE[c] = e.value; // every code in every book
+const ref = (p) => { if (p == null) return null; const [c, k] = p.split('.'); const v = CODE[c]; if (v === undefined) throw new Error('no book entry ' + c); return k ? v[k] : v; }; // a slot's pointer, read
+// S the shells (books/shells.js): a row names its layer, ticks its capabilities (SC) and points each slot at a book. has() is the one way the code asks what a thing can do.
+const SH = BOOKS.shells, SHELLS = Object.keys(SH);
+const ticked = (cap) => SHELLS.filter((c) => SH[c].ticks.includes(cap));
+const has = (t, cap) => { const c = t && (t.code || (KIND[t.kind] && KIND[t.kind].code)); return !!(c && SH[c] && SH[c].ticks.includes(cap)); };
 
 // ── The frames (QBD). The grid is square in its own frame; the board frame is the grid turned A1 about the site's middle; the view foreshortens depth by sin A2 and shows height by cos A2.
 const RAD = Math.PI / 180, N = D.site / D.tile, MID = D.site / 2, B0 = (D.site - D.board) / 2, B1 = B0 + D.board;
@@ -181,11 +181,7 @@ function makeTerrain(roll) {
   for (let k = 0; k < N * N; k++) if (FOR[k] === 2) FOR[k] = 0;
 }
 // ── Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each stands on one flat tile of land; a big one takes the tiles under it. Nothing here moves; floor 5 takes from the amounts.
-const KIND = { // code → what it yields (SA Yield → R), how much (SA Amount → D53–D60), the ground it takes (units)
-  tree: { code: 'R1', yield: 'wood', amount: D.treeWood, r: 0 }, bush: { code: 'R5', yield: 'food', amount: D.bushFood, r: 0 },
-  gold: { code: 'R2', yield: 'gold', amount: D.goldPile, r: 9 }, stone: { code: 'R3', yield: 'stone', amount: D.stonePile, r: 9 }, iron: { code: 'R4', yield: 'iron', amount: D.ironPile, r: 9 },
-  ruins: { code: 'MG1', yield: 'stone', amount: D.ruinStone, r: 14 }, cemetery: { code: 'MG2', yield: null, amount: 0, r: 12 }, campfire: { code: 'MG3', yield: 'food', amount: D.fireFood, r: 6 }, treasure: { code: 'MG4', yield: 'gold', amount: D.chestGold, r: 4 },
-};
+const KIND = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 100) KIND[e.find] = { code: c, yield: e.yield || null, amount: e.amount ? ref(e.amount) : 0, r: e.room ? ref(e.room) : 0 }; } // the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clear
 // QBJ Z1's store, from what one age up costs (Albert's rule): food for the age and the villagers, wood for the mill, the lumber camp, the homes and the barracks, each with a margin (D61–D69)
 const Z1 = { food: (D.ageUp + D.villagers * D.villager) * (1 + D.margin), wood: (D.mill + D.lumber + D.homes * D.home + D.barracks) * (1 + D.margin) };
 const z1 = { bush: Math.ceil(Z1.food / D.bushFood), tree: Math.ceil(Z1.wood / D.treeWood) };
@@ -282,13 +278,14 @@ function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 
 function resize() { dpr = Math.min(2, devicePixelRatio || 1); cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; fit(); dirty(); }
 function dirty() { if (!queued) { queued = true; requestAnimationFrame(draw); } }
 // ── The door (floor 8): the modules (menu, econ, combat, ai) hang on these hooks and read the world through FK; nothing else of theirs touches this file
-const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], spawn: [], gone: [] };
+const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], spawn: [], gone: [], event: [] }; // event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by the names in books/sound.js HE1
 const on = (ev, fn) => HOOK[ev].push(fn), fire = (ev, ...a) => { for (const f of HOOK[ev]) if (f(...a)) return true; return false; };
 let last = 0, frameDt = 0;
 function loop(now) { if (now - last >= 1000 / D.fps) { const dt = Math.min(0.1, (now - last) / 1000 || 0) * (show.fast ? D.fast : 1); last = now; frameDt = dt; if (!document.hidden) { climate(dt); step(dt); fire('tick', dt); look(dt); draw(); } } requestAnimationFrame(loop); }
 function draw() {
   queued = false;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((Math.random() * 2 - 1) * jolt.px, (Math.random() * 2 - 1) * jolt.px); } // the screen jolts with a heavy impact (QBT)
   ctx.fillStyle = deepest; ctx.fillRect(0, 0, cw, ch);
   const [gx, gy] = toScreen(-ox, -oy); ctx.drawImage(ground, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin();
   if (show.G && cam.z * D.tile >= D.lod) drawGrid();
@@ -428,7 +425,7 @@ P_(C, LG(-w / 2, d / 2, w / 2 + k, -d / 2, [lit(soil, 0.12), soil, lit(soil, -0.
 post(C[2][0], C[2][1], 3.8); rail(C[1], C[2]); rail(C[0], C[1]); for (let i = 1; i < 3; i++) { const [x, y] = gpt(w, i / 3, 0); post(x, y, 2.8, '#5a3a1e', 0.5); } post(C[0][0], C[0][1], 3.8);
 post(C[1][0], C[1][1], 3.8); } L_(-w / 2, d / 2, w / 2, d / 2, c, 1); }
 const RG = (x, y, r0, r1, stops) => { const q = g.createRadialGradient(x, y, r0, x, y, r1); stops.forEach((c, i) => q.addColorStop(i / (stops.length - 1), c)); return q; };
-const BLDTOP = { castle: 66, town: 52, keep: 62, tower: 84, wonder: 72, library: 56, temple: 50, theatre: 44, apartment: 46, aqueduct: 40, siege: 40, };
+const BLDTOP = Object.fromEntries(Object.entries(SPRITE).filter(([, v]) => v.top).map(([k, v]) => [k, v.top])); // a building picture's height, from its look
 const ART = {
 keep(c, o, v) { const r = block(50, 22, PLASTER, 'timber', 'gable', TILE, 12); const d = r.d; P_( [ [-26, d / 2 + 1], [26, d / 2 + 1], [26, d / 2 - 4], [-26, d / 2 - 4], ], STONE, LINE, 0.5, );
 texture('stone', -26, d / 2 - 4, 26, d / 2 + 1, STONE); g.save(); g.translate(15, d / 2 - 4); const tk = sides(-5, 5, 0, 40, 10 * ART_T, STONE); P_( [ [-5, 0], [5, 0], [5, -40], [-5, -40], ],
@@ -791,51 +788,31 @@ L_(-L * 0.2 + i * L * 0.08, -o.legH - H, -L * 0.22 + i * L * 0.08, -o.legH - H -
 function planks(x0, y0, x1, y1, col) { P_( [ [x0, y0], [x1, y0], [x1, y1], [x0, y1], ], LG(x0, 0, x1, 0, [shade(col, 1.15), col, shade(col, 0.75)]), INK, 0.5, ); g.strokeStyle = 'rgba(40,24,10,.45)';
 g.lineWidth = 0.35; for (let y = y0 + 2; y < y1; y += 2.2) { g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke(); } }
 const WORKTOOL = ['axe', 'none', 'pick', 'none', 'rod', 'hammer'];
-const LOOKS = {
-vil: (c, t, fr) => { const wk = fr >= 10 ? (fr - 10) >> 1 : -1, ph = fr >= 10 ? (fr - 10) & 1 : 0; return person( { tunic: '#8a6a44', trim: c, sash: c, head: 'bare',
-weapon: wk < 0 ? 'axe' : WORKTOOL[wk], lean: wk === 1 || wk === 3 ? (ph ? 0.62 : 0.4) : 0, legs: '#5a4a38', beard: '#6b4a2c', }, wk < 0 ? fr : ph ? 3 : 0, ); },
-spear: (c, t, fr) => person({ tunic: c, head: 'bare', shield: 'round', weapon: 'spear', legs: '#6b5a40', beard: '#4a3420' }, fr),
-archer: (c, t, fr) => person({ tunic: c, head: 'hood', weapon: 'bow', legs: '#5a4a38' }, fr),
-cata: (c, t, fr) => (() => { horse({ coat: '#5a3a24', barding: 'scale' }, fr); g.save(); g.translate(-0.6, -1); person( { tunic: c, body: 'scale', head: 'conical', helmCol: STEEL, weapon: 'lance',
+// the brushes: one drawing routine a shape; a look in books/sprites.js names its brush and the brush's settings ($side the owner's colour, $side*0.6 a tint of it)
+const paintOf = (o, c) => Object.fromEntries(Object.entries(o || {}).map(([k, v]) => [k, v === '$side' ? c : typeof v === 'string' && v.startsWith('$side*') ? shade(c, +v.slice(6)) : v]));
+const BRUSH = {
+person: (o, c, fr) => person(paintOf(o, c), fr),
+quad: (o, c, fr) => quad(paintOf(o, c), fr),
+worker: (o, c, fr) => { const wk = fr >= 10 ? (fr - 10) >> 1 : -1, ph = fr >= 10 ? (fr - 10) & 1 : 0; return person({ ...paintOf(o, c), weapon: wk < 0 ? 'axe' : WORKTOOL[wk], lean: wk === 1 || wk === 3 ? (ph ? 0.62 : 0.4) : 0 }, wk < 0 ? fr : ph ? 3 : 0); },
+cata: (o, c, fr) => (() => { horse({ coat: '#5a3a24', barding: 'scale' }, fr); g.save(); g.translate(-0.6, -1); person( { tunic: c, body: 'scale', head: 'conical', helmCol: STEEL, weapon: 'lance',
 seated: true, legs: '#9aa2a8', }, fr, ); g.restore(); })(),
-ram: (c, t, fr) => { L_(-17 + (fr === 3 ? 4 : 0), -8, 15 + (fr === 3 ? 4 : 0), -8, '#6b4a2c', 3); P_( [ [15 + (fr === 3 ? 4 : 0), -10], [19 + (fr === 3 ? 4 : 0), -8], [15 + (fr === 3 ? 4 : 0), -6], ],
+ram: (o, c, fr) => { L_(-17 + (fr === 3 ? 4 : 0), -8, 15 + (fr === 3 ? 4 : 0), -8, '#6b4a2c', 3); P_( [ [15 + (fr === 3 ? 4 : 0), -10], [19 + (fr === 3 ? 4 : 0), -8], [15 + (fr === 3 ? 4 : 0), -6], ],
 '#5d6670', INK, 0.4, ); P_( [ [-13, -6], [13, -6], [13, -12], [0, -19], [-13, -12], ], LG(0, -19, 0, -6, ['#8a6a44', '#6b4a2c']), INK, 0.6, ); g.strokeStyle = 'rgba(30,20,10,.5)'; g.lineWidth = 0.4;
 for (let i = -11; i < 13; i += 3) { g.beginPath(); g.moveTo(i, -6); g.lineTo(i, -12 + Math.abs(i) * 0); g.stroke(); } P_( [ [-13, -12], [0, -19], [13, -12], [0, -14], ], '#7a8a5a', INK, 0.4, );
 g.fillStyle = c; g.fillRect(-1, -19, 2, -5); P_( [ [1, -24], [6, -22.6], [1, -21.2], ], c, ); wheel(-9, -3.2, 3.2); wheel(0, -3.2, 3.2); wheel(9, -3.2, 3.2); },
-catapult: (c, t, fr) => { planks(-11, -6, 11, -3, WOOD); P_( [ [-2, -6], [0, -14], [2, -6], ], WOOD, INK, 0.5, ); const a = fr === 3 ? -1.2 : -0.35; g.save(); g.translate(0, -12); g.rotate(a);
+catapult: (o, c, fr) => { planks(-11, -6, 11, -3, WOOD); P_( [ [-2, -6], [0, -14], [2, -6], ], WOOD, INK, 0.5, ); const a = fr === 3 ? -1.2 : -0.35; g.save(); g.translate(0, -12); g.rotate(a);
 L_(-14, 0, 6, 0, '#6b4a2c', 1.6); E_(-14, 0, 2.6, 1.6, '#4a3020', INK, 0.4); if (fr !== 3) E_(-14, -1.6, 1.4, 1.4, '#8a8a8a'); g.restore(); L_(-8, -6, -11, -9, '#6b4a2c', 0.8); g.fillStyle = c;
 g.fillRect(8, -6, 3, -4); wheel(-7, -2.6, 2.8); wheel(7, -2.6, 2.8); },
-priest: (c, t, fr) => person( { tunic: '#efe6cf', trim: '#c9a227', body: 'robe', head: 'bare', weapon: 'staff', sash: c, legs: '#d8cdb2', beard: '#d8d0c0', }, fr, ),
-medic: (c, t, fr) => person( { tunic: '#e4dccb', trim: c, head: 'cap', capCol: '#e4dccb', weapon: 'bag', sash: '#c23a30', legs: '#6b5a48' }, fr, ),
-spy: (c, t, fr) => person( { tunic: '#2a2a30', trim: c, body: 'robe', head: 'hood', hoodCol: '#1c1c22', weapon: 'dagger', cape: '#1c1c22', legs: '#22222a', }, fr, ),
-scout: (c, t, fr) => { person({ tunic: c, head: 'cap', capCol: shade(c, 0.6), weapon: 'staff', cape: shade(c, 0.6) }, fr); },
-caravan: (c, t, fr) => { horse({ coat: '#8a7a6a', saddle: false }, fr, 9); L_(-2, -9, 6, -11, '#5a3a1c', 0.8); planks(-14, -13, -1, -6, WOOD); E_(-11, -16, 2.6, 2.4, '#c9a96a', INK, 0.3);
+caravan: (o, c, fr) => { horse({ coat: '#8a7a6a', saddle: false }, fr, 9); L_(-2, -9, 6, -11, '#5a3a1c', 0.8); planks(-14, -13, -1, -6, WOOD); E_(-11, -16, 2.6, 2.4, '#c9a96a', INK, 0.3);
 E_(-6.5, -16.4, 2.6, 2.6, '#d8c27a', INK, 0.3); E_(-8.5, -18.6, 2.2, 2, c, INK, 0.3); wheel(-7.5, -4.6, 4.4); },
-wagon: (c, t, fr) => { horse({ coat: '#6a5a4a', saddle: false }, fr, 14); horse({ coat: '#8a7a6a', saddle: false }, fr, 4); L_(-6, -9, 2, -11, '#5a3a1c', 0.8); planks(-22, -13, -4, -6, WOOD); P_( [
+wagon: (o, c, fr) => { horse({ coat: '#6a5a4a', saddle: false }, fr, 14); horse({ coat: '#8a7a6a', saddle: false }, fr, 4); L_(-6, -9, 2, -11, '#5a3a1c', 0.8); planks(-22, -13, -4, -6, WOOD); P_( [
 [-22, -13], [-4, -13], [-5, -22], [-13, -25], [-21, -22], ], '#e4dcc6', INK, 0.4, ); for (const x of [-18, -13, -8]) L_(x, -13, x, -22, '#d2c8ae', 0.6); L_(-21, -22, -5, -22, c, 1.4);
 wheel(-17, -4.6, 4.6); wheel(-8, -4.6, 4.6); },
-bandit: (c, t, fr) => person( { tunic: '#5a5040', head: 'hood', hoodCol: '#4a3e2e', weapon: 'club', legs: '#3a3228', beard: '#3a2a1a' }, fr, ),
-robber: (c, t, fr) => person({ tunic: '#4a3a30', head: 'mask', weapon: 'sword', shield: 'round', trim: '#6b3a2a', legs: '#2e2620' }, fr),
-vagabond: (c, t, fr) => person({ tunic: '#6a5e4e', head: 'bare', weapon: 'none', legs: '#4a4038', beard: '#4a3a2a', sash: '#8a3a2a' }, fr),
-wayfarer: (c, t, fr) => person( { tunic: '#7a6a50', head: 'straw', weapon: 'crook', legs: '#5a4a38', beard: '#8a8070', cape: '#6b5a40' }, fr, ),
-deer: (c, t, fr) => quad( { col: '#a0703e', len: 13, h: 5.6, legH: 7.4, legW: 0.6, head: 2.2, headY: 1.8, antlers: true, tail: 0.8 }, fr, ),
-wolf: (c, t, fr) => quad({ col: '#7a7570', len: 13, h: 5, legH: 5.2, legW: 0.7, head: 2.2, headY: 1.0, tail: 1.6 }, fr),
-bear: (c, t, fr) => quad({ col: '#4e3524', len: 17, h: 9, legH: 4.5, legW: 1.5, head: 3.2, headY: 0.8, hump: true, tail: 0 }, fr),
 };
-const LOOKBOX = { scout: [44, 34], caravan: [36, 30], wagon: [48, 32], chariot: [36, 34], cata: [58, 36], malihorse: [58, 36], harcher: [36, 36], elephant: [48, 44], ram: [42, 30], stower: [24, 58],
-catapult: [32, 26], ballista: [30, 24], treb: [48, 50], deer: [26, 22], boar: [24, 16], wolf: [24, 16], direwolf: [36, 24], bear: [30, 22], bison: [40, 26], dragon: [48, 24], troll: [26, 46],
-spear: [52, 34], vil: [30, 30], legion: [30, 30], immortal: [44, 30], sword: [30, 30], jav: [34, 30], crossbow: [34, 30], arquebus: [40, 30], bombard: [44, 30], };
+const LOOKS = Object.fromEntries(Object.entries(SPRITE).filter(([, v]) => v.brush).map(([k, v]) => [k, (c, t, fr) => BRUSH[v.brush](v.o, c, fr)]));
+const LOOKBOX = Object.fromEntries(Object.entries(SPRITE).filter(([, v]) => v.box).map(([k, v]) => [k, v.box])); // a figure's frame, from its look
 // ── B the buildings (layer 110; shells without Walk): the size in tiles (D8–D11; a wall piece is one tile, D12), Open or Closed (S Styles), the picture it wears. Health, prices and times come with the Content pull.
-const B = {
-  BTC1: ['Town Center', 6, 0, 'keep', ['food', 'wood', 'gold', 'stone', 'iron']], BTC2: ['Castle', 6, 0, 'castle'], BTC5: ['Medical tent', 2, 0, 'medtent'], BTC6: ['Training tent', 2, 0, 'traintent'], BTC7: ['Mess tent', 2, 0, 'messtent'], BTC8: ['Camp tower', 2, 0, 'camptower'],
-  BR1: ['Home', 2, 0, 'house'], BR2: ['Apartment', 3, 0, 'apartment'],
-  BCR1: ['Market', 3, 1, 'market'], BCR2: ['Tavern', 2, 0, 'tavern'], BCL1: ['Farm', 3, 1, 'farm'], BCL2: ['Tree farm', 3, 1, 'treefarm'], BCL3: ['Pasture', 3, 1, 'pasture'], BCL4: ['Quarry', 3, 1, 'quarry'], BCT1: ['Trade post', 2, 1, 'tpost'], BCT2: ['Dock', 2, 1, 'dock'],
-  BP1: ['School', 3, 0, 'school'], BP2: ['Library', 4, 0, 'library'], BP3: ['Temple', 4, 0, 'temple'], BP4: ['Baths', 3, 0, 'baths'], BP5: ['Theatre', 4, 0, 'theatre'], BP6: ['Hospital', 3, 0, 'hospital'], BP7: ['Aqueduct', 3, 0, 'aqueduct'], BP8: ['Courthouse', 3, 0, 'courthouse'], BP9: ['Hall', 3, 0, 'hall'], BP10: ['War Council', 3, 0, 'council'],
-  BI1: ['Mill', 3, 0, 'mill', ['food']], BI2: ['Lumber camp', 3, 0, 'lumber', ['wood']], BI3: ['Mining camp', 3, 0, 'mining', ['gold', 'stone', 'iron']], BI4: ['Store', 3, 0, 'store'], BI5: ['Depot', 2, 0, 'depot'], BI6: ['Mint', 3, 0, 'mint'], BI7: ['Foundry', 3, 0, 'foundry'], BI8: ['Workshop', 3, 0, 'workshop'], BI9: ['Smith', 3, 0, 'smith'],
-  BM1: ['Barracks', 4, 0, 'barracks'], BM2: ['Range', 4, 1, 'range'], BM3: ['Stable', 4, 0, 'stable'], BM4: ['Siege workshop', 4, 0, 'siege'],
-  BW1: ['Wall', 1, 0, 'wall'], BW2: ['Gate', 1, 0, 'gate'], BW3: ['Tower', 2, 0, 'tower'], BW4: ['Palisade', 1, 0, 'palisade'], BF5: ['Abatis', 1, 0, 'abatis'],
-  BS1: ['Throne', 6, 0, 'throne'], BS2: ['Wonder', 6, 0, 'wonder'],
-};
+const B = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 110) B[c] = [e.name, ref(e.size), e.style === 'Open' ? 1 : 0, e.look, e.drop]; } // the buildings (layer 110), from their shells: name, size in tiles, Open, the picture, what it takes in
 // a building stands on n × n flat free tiles from (i, j); Closed takes them (OCC 2), Open leaves them walkable (OCC 3)
 function build(code, i, j, col = C.blue) {
   const [, n] = B[code]; if (i < 0 || j < 0 || i + n > N || j + n > N) return null;
@@ -851,11 +828,7 @@ function makeBuildings() { // The Town Center: Who every corner · What one · W
 
 // ── Floor 5, movables (layer 120): U units and M moveables are shells that walk. Each stands at a board point, walks tile to tile along a path (QBL), and does one thing at a time.
 const SIDES = [{ col: C.blue }, { col: C.green }, { col: C.red }, { col: C.white }].map((q) => ({ ...q, store: { food: 0, wood: 0, gold: 0, stone: 0, iron: 0 } })); // one a corner (C5–C8); the player is 0
-const U = { // code → name, look (preview 49), speed (D86, m/s → units by D85), what it is
-  UV: ['Villager', 'vil', 'walk'], UM1: ['Foot', 'spear', 'walk'], UM2: ['Archers', 'archer', 'walk'], UM3: ['Riders', 'cata', 'trot'], UM4: ['Engines', 'ram', 'push'], UM4b: ['Engines', 'catapult', 'push'],
-  US1: ['Priest', 'priest', 'walk'], US2: ['Medic', 'medic', 'walk'], US3: ['Spy', 'spy', 'walk'], US4: ['Scout', 'scout', 'walk'], UT1: ['Caravan', 'caravan', 'horse'], UT2: ['Camp wagon', 'wagon', 'horse'],
-  MH1: ['Outlaws', 'bandit', 'walk'], MH3: ['Robbers', 'robber', 'walk'], MH4: ['Vagabonds', 'vagabond', 'walk'], MH5: ['Wayfarers', 'wayfarer', 'walk'], MW3: ['Deer', 'deer', 'deer'], MW4: ['Wolf', 'wolf', 'wolf'], MW6: ['Bear', 'bear', 'bear'],
-};
+const U = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 120) U[c] = [e.name, e.look, e.pace.split('.')[1]]; } // the units and moveables (layer 120), from their shells: name, look, pace (a D86 key)
 let units = [], sel = null;
 const WORK = { tree: 0, bush: 1, gold: 2, stone: 2, iron: 2 }; // the tool a villager works a find with (WORKTOOL): axe, hands, pick
 const YIELD = (t) => KIND[t.kind].yield;
@@ -864,7 +837,7 @@ const iced = (k) => K.ice && H[k] <= 0 && DEP[k] >= D.edge; // inland water bear
 const hAt = (k) => (iced(k) ? 0 : H[k]);
 const walkable = (k) => k >= 0 && (H[k] > -D.wade / 2 || iced(k)) && (OCC[k] === 0 || OCC[k] === 3);
 const stepOk = (a, b) => walkable(b) && Math.abs(hAt(a) - hAt(b)) <= REPOSE;
-const footing = (k) => 1 / (1 + D.mud * (MARSH[k] ? 1 : K.wet) + D.snowCost * Math.min(1, K.snow / 5)); // QN: mud and snow cost a walker
+const footing = (k) => 1 / (1 + D.walkCost.mud * (MARSH[k] ? 1 : K.wet) + D.walkCost.snow * Math.min(1, K.snow / 5)); // QN: mud and snow cost a walker
 // QBL A* over the tiles, eight ways, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile will do; returns the tiles to walk, or null
 function findPath(from, goal, near, most = 20000) { // most: the tiles it may open before giving up
   const open = [from], gs = new Map([[from, 0]]), came = new Map(), done = new Set(), fs = new Map([[from, 0]]), hx = (k) => { const dx = Math.abs((k % N) - (near % N)), dy = Math.abs(Math.floor(k / N) - Math.floor(near / N)); return Math.max(dx, dy) + (Math.SQRT2 - 1) * Math.min(dx, dy); };
@@ -899,27 +872,57 @@ const goBy = (u, b) => walkTo(u, (q) => { const i = q % N, j = (q - i) / N; retu
 function take(t, n) { t.amount -= n; if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); if (t.kind === 'tree') wake(t); fire('gone', t); } } // a find used up is gone; its tile is free again
 function step(dt) { // one tick for every unit
   for (const u of units) {
-    u.t += dt;
+    u.t += dt; u.mps = 0;
+    if (u.slide) slide(u, dt);
     if (u.path) { // walking: toward the next tile's middle at the shell's speed
       const [tx, ty] = tileMid(u.path[u.at]), dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy), v = D.speed[U[u.code][2]] * D.upm * footing(u.k) * dt;
+      u.walked = (u.walked || 0) + Math.min(d, v) / D.upm; u.mps = v / D.upm / dt; // metres walked, which turn the stride (QBU); its speed now, which a blow carries (QBT)
       if (d <= v) { u.bx = tx; u.by = ty; if (++u.at >= u.path.length) { u.path = null; u.job = u.then || 'idle'; } } else { u.bx += (dx / d) * v; u.by += (dy / d) * v; u.face = dx < 0 ? -1 : 1; }
       place(u); continue;
     }
-    if (u.code[0] === 'M' && u.job === 'idle') { // wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95
+    if (has(u, 'Wander') && u.job === 'idle') { // wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95
       if (u.wait <= 0) { u.wait = -D.wait * Math.log(1 - Math.random()); const k = tileAt(u.bx + (Math.random() * 2 - 1) * D.reach, u.by + (Math.random() * 2 - 1) * D.reach); if (walkable(k)) go(u, k); } else u.wait -= dt; }
   }
 }
 function makeUnits(roll) {
   // The villagers: Who every side · What D67 villagers · Where round its Town Center · When the game starts · Why hands to gather and build · How the free tiles nearest the hall
-  for (const t of things) if (t.kind === 'bld' && t.code === 'BTC1' && D.players.includes(t.side)) { const got = []; stamp(t.bx, t.by, (t.n / 2 + 3) * D.tile, (k, d) => { if (walkable(k)) got.push([d, k]); }); got.sort((a, b) => a[0] - b[0]); for (const [, k] of got.slice(0, D.villagers)) spawn('UV', t.side, k, roll); }
+  for (const t of things) if (has(t, 'Seat') && D.players.includes(t.side)) { const got = []; stamp(t.bx, t.by, (t.n / 2 + 3) * D.tile, (k, d) => { if (walkable(k)) got.push([d, k]); }); got.sort((a, b) => a[0] - b[0]); for (const [, k] of got.slice(0, D.villagers)) spawn(D.trains[t.code][0], t.side, k, roll); }
   // The wildlife: Who the map · What herds of deer and packs of wolves · Where Z4, on walkable ground · When the map is made · Why food to hunt, teeth to fear · How counts D90–D93, places uniform until one walks
   for (const [code, herds, herd] of [['MW3', D.herds, D.herd], ['MW4', D.packs, D.pack]]) for (let m = count(roll, herds); m > 0; m--) {
     for (let tries = 0; tries < 100; tries++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (!inZ4(bx, by, 2 * D.tile) || !walkable(k)) continue;
       const got = []; stamp(bx, by, 3 * D.tile, (q, d) => { if (walkable(q)) got.push([d, q]); }); got.sort((a, b) => a[0] - b[0]); for (const [, q] of got.slice(0, count(roll, herd))) spawn(code, -1, q, roll); break; } }
 }
+const gait = (code) => W[SH[code].mount || SH[code].body]; // what carries a walker: its mount, else its own body (W)
+const bodyOf = (code) => W[SH[code].body];
+// ── The body's laws (Book 1): mass from what a shell is made of (W), the blow that sends a body off (QBT), the slide to rest on the ground under it (G), the sway of the wounded (QBS)
+const massOf = (code) => { const e = SH[code]; let m = W[e.body].kg + (e.mount ? W[e.mount].kg : 0); for (const k of e.kit || []) m += W[k].kg; return m; };
+const blowOf = (code) => { for (const k of SH[code].kit || []) if (W[k].blow && W[k].blow.mps) return W[k].blow; return null; };
+const groundAt = (k) => (iced(k) ? G.ice : K.snow > 0.5 ? G.snow : MARSH[k] || K.wet > 0.5 ? G.mud : G.grass);
+let jolt = { t: 0, px: 0 };
+function impact(a, t) { // QBT: the whole striker when it moves, else its weapon; the struck one is sent off at v = m·v ÷ (m + M)
+  if (t.kind !== 'unit') { fire('event', 'hitBld', t); return 0; }
+  const b = blowOf(a.code), moving = a.mps > 0.1, ms = moving || !b ? massOf(a.code) : b.kg, vs = moving ? a.mps : b ? b.mps : D.speed[U[a.code][2]];
+  const v = (ms * vs) / (ms + massOf(t.code)), dx = t.bx - a.bx, dy = t.by - a.by, dd = Math.hypot(dx, dy) || 1;
+  t.slide = { vx: (dx / dd) * v, vy: (dy / dd) * v };
+  if (v >= D.jolt.from && (t.side === 0 || inSight(t.k))) jolt = { t: D.jolt.s, px: Math.min(D.jolt.max, v * D.jolt.px) };
+  fire('event', v >= D.jolt.from ? 'impact' : 'hit', t); return v;
+}
+function slide(u, dt) { // QBT: friction slows it by μ g a second until it rests; anything it cannot stand on stops it
+  const sp = Math.hypot(u.slide.vx, u.slide.vy), dec = groundAt(u.k).mu * D.g * dt;
+  if (sp <= dec) { u.slide = null; return; }
+  const f = (sp - dec) / sp, m = ((1 + f) / 2) * dt * D.upm, nx = u.bx + u.slide.vx * m, ny = u.by + u.slide.vy * m, k = tileAt(nx, ny); // the mean speed over the step, so the slide ends where v² ÷ 2μg says
+  if (!walkable(k)) { u.slide = null; return; }
+  u.bx = nx; u.by = ny; u.slide.vx *= f; u.slide.vy *= f; place(u);
+}
+function swayOf(u) { // QBS: none while the body holds (classes I, II); grows over class III to the tipping angle; there in class IV. Its rhythm the body's pendulum
+  const b = gait(u.code); if (u.hp == null || !u.hpMax || !b.com) return 0;
+  const lost = 1 - u.hp / u.hpMax, [, c3, c4] = D.shock; if (lost <= c3) return 0;
+  const tip = Math.atan(b.foot / 2 / b.com), f = Math.sqrt(D.g / b.com) / (2 * Math.PI);
+  return tip * Math.min(1, (lost - c3) / (c4 - c3)) * Math.sin(2 * Math.PI * f * u.t);
+}
 // a unit's picture: the look at its frame, facing right, painted once per look, colour and frame (LOOKBOX gives the box)
 function unitSprite(u, s) { const look = U[u.code][1], col = u.side >= 0 ? SIDES[u.side].col : C.white, [bw, bh] = LOOKBOX[look] || [26, 30], pad = 3;
-  const fr = u.path ? Math.floor(u.t * D.steps) % 4 : u.tool != null ? 10 + u.tool * 2 + (Math.floor(u.t / D.beat) % 2) : 0;
+  const fr = u.path ? Math.floor((D.strideFrames * u.walked) / gait(u.code).stride) % D.strideFrames : u.tool != null ? 10 + u.tool * 2 + (Math.floor(u.t / D.beat) % 2) : 0;
   return sprite(look + col + fr, bw + 2 * pad, bh + 2 * pad, bw / 2 + pad, bh + pad - 1, bw / 2 + pad, bh + pad - 1, 0, s, () => LOOKS[look](col, 0, fr)); }
 // ── The things, drawn each frame back to front, only those on the screen. A picture is painted once per look and zoom step, then stamped (the sprite cache); far out (D83) a node is a dot. The gifts are drawn direct, as tints of C.
 const SPR = new Map(), STEP = Math.SQRT2;
@@ -930,7 +933,7 @@ function sprite(key, W, H, tx, ty, ax, ay, skew, s, paint) { // W × H units, th
 }
 const blit = (c, x, y, s, into = ctx) => { const f = s / c.q; into.drawImage(c, x - c.ax * s, y - c.ay * s, c.width * f, c.height * f); };
 const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647; // the node art's own small dice, seeded by the variant, so a tree's leaves fall the same each paint
-const NODE_SCALE = { tree: 0.88, bush: 1.45 };
+const NODE_SCALE = SPRITE.nodes.scale;
 const nodeSprite = (kind, v, s) => sprite(kind + v, 46, 58, 17, 54, 17, 54, 0, s, () => { const f = NODE_SCALE[kind] || 1.25; g.scale(f, f); nodeArt(kind, v, NS_rng(11 + v * 7 + kind.length)); });
 function bldSprite(code, col, s) { const [, n, , art] = B[code], w = n * D.tile, top = BLDTOP[art] || 40, pad = 12, k = w * ART_T * ART_S, W = w + pad * 2 + 10 + 2 * k, H = (w * ART_T) / 2 + top + pad * 2 + SKEW * W;
   return sprite(code + col, W, H, W / 2, top + pad, W / 2 + k / 2, top + pad + (SKEW * k) / 2, SKEW, s, () => ART[art](col, 0)); }
@@ -944,7 +947,7 @@ const GIFT = { // each drawn at its stand (x, y on the screen), s pixels a unit
     ctx.fillStyle = C.gold; ctx.beginPath(); ctx.moveTo(x - 1.6 * s, y - 1 * s); ctx.lineTo(x + 1.6 * s, y - 1 * s); ctx.lineTo(x, y - 6 * s); ctx.fill(); ctx.fillStyle = C.red; ctx.beginPath(); ctx.moveTo(x - 0.8 * s, y - 1 * s); ctx.lineTo(x + 0.8 * s, y - 1 * s); ctx.lineTo(x, y - 3.5 * s); ctx.fill(); },
   treasure: (x, y, s) => { rect(x - 3 * s, y - 4 * s, 6 * s, 4 * s, CHEST); rect(x - 3 * s, y - 5.2 * s, 6 * s, 1.5 * s, LID); rect(x - 0.6 * s, y - 5.2 * s, 1.2 * s, 5.2 * s, C.gold); },
 };
-const DOT = { tree: '#3c6c32', bush: '#3f6b33', gold: C.gold, stone: ROCK, iron: RUIN, ruins: RUIN, cemetery: ROCKLIT, campfire: C.gold, treasure: C.gold };
+const DOT = Object.fromEntries(Object.entries(SPRITE.nodes.dot).map(([k, v]) => [k, { gold: C.gold, rock: ROCK, ruin: RUIN, rocklit: ROCKLIT }[v] || v])); // a find far out, from its look
 // ── Floor 6, climate (layer 130): one sky over the whole board (185 m across: one weather), acting on everything below (L7). The clock is Y: a day D20, a season D21, a year D22.
 const K = { t: 0, alt: 0, light: 1, temp: 10, wet: 0, rain: 0, snowing: 0, snow: 0, fds: 0, ice: false, fog: 0, fogT: 0, storm: 0, flash: 0, flashT: -9, strikeT: 0, bolts: [], hour: 0, wetHour: false };
 const SEASONS = ['Spring', 'Summer', 'Autumn', 'Winter'];
@@ -971,8 +974,8 @@ function climate(dt) {
 }
 // a strike: on the ground in view when close, a sheet flash when far; the flash never comes within D112 of the last (QL, WCAG 2.3.1), and the bolt is pinned to the ground it hits
 function strike() { if (K.t - K.flashT < D.flashGap) return; const close = Math.random(); K.flashT = K.t;
-  if (close > 0.4) { const vx = cam.x + (Math.random() - 0.5) * (cw / cam.z), vy = cam.y + (Math.random() - 0.5) * (ch / cam.z); K.bolts.push({ vx, vy, t: K.t, seed: Math.random() }); K.flash = Math.max(K.flash, 0.5 + 0.3 * close); }
-  else K.flash = Math.max(K.flash, 0.2 + 0.3 * close); }
+  if (close > 0.4) { const vx = cam.x + (Math.random() - 0.5) * (cw / cam.z), vy = cam.y + (Math.random() - 0.5) * (ch / cam.z); K.bolts.push({ vx, vy, t: K.t, seed: Math.random() }); K.flash = Math.max(K.flash, 0.5 + 0.3 * close); fire('event', 'strike', { vx, vy }); }
+  else { K.flash = Math.max(K.flash, 0.2 + 0.3 * close); fire('event', 'strike', { vx: cam.x + (Math.random() - 0.5) * 4 * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // a far flash: its thunder from beyond the screen
 // the rain: a pool of drops whose size sets its speed (Marshall–Palmer sizes, QJ Atlas's fall speed), leaning a little; the snow: flakes that drift
 const RAINP = { n: 240, lambda: 4.1 * 5 ** -0.21, dMin: 0.5, dMax: 4 }, fallV = (Dd) => 9.65 - 10.3 * Math.exp(-0.6 * Dd);
 const RAIN = Array.from({ length: RAINP.n }, (_, i) => { const Dd = Math.min(RAINP.dMax, RAINP.dMin - Math.log(1 - ((i * 0.618) % 1 || 0.5)) / RAINP.lambda), d = clamp(0.4 + (0.6 * (Dd - RAINP.dMin)) / 2.5, 0.4, 1); return { x: (i * 97.3) % 1000, y: (i * 53.7) % 1000, d, v: (9.6 * fallV(Dd)) / fallV(2) }; });
@@ -1059,7 +1062,7 @@ function drawThings() {
   const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s, us = units.slice().sort((a, b) => a.vy - b.vy); let n = 0;
   const unit = (u) => { if (!show.U || (u.side !== 0 && !inSight(u.k))) return; const [x, y] = toScreen(u.vx, u.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) return;
     if (!dots) { ctx.strokeStyle = u === sel ? C.gold : u.side >= 0 ? SIDES[u.side].col : C.white; ctx.globalAlpha = u === sel ? 1 : 0.5; ctx.lineWidth = u === sel ? 1.5 : 1; ctx.beginPath(); ctx.ellipse(x, y, 7 * s, 3.5 * s, 0, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
-    if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else if (u.face < 0) { ctx.save(); ctx.translate(x, y); ctx.scale(-1, 1); blit(unitSprite(u, s), 0, 0, s); ctx.restore(); } else blit(unitSprite(u, s), x, y, s); };
+    if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else { const th = swayOf(u); ctx.save(); ctx.translate(x, y); if (th) ctx.rotate(th); if (u.face < 0) ctx.scale(-1, 1); blit(unitSprite(u, s), 0, 0, s); ctx.restore(); } }; // a wounded one sways about its feet (QBS)
   if (!dots) { drawWoods(s); drawShadows(s); }
   for (const t of things) {
     while (n < us.length && us[n].vy <= t.vy) unit(us[n++]);
@@ -1113,7 +1116,7 @@ canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, 
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
 function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); fogT = 0; K.t = 0; K.snow = 0; K.fds = 0; K.wet = 0; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
-window.FK = { D, A, C, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1,
+window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, has, ticked, fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1,
   things: () => things, units: () => units, sel: () => sel, select: (u) => (sel = u), seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // the door: what the modules may touch
 window.fk = FK; // the test hook
 </script>
@@ -1121,6 +1124,7 @@ window.fk = FK; // the test hook
 <script src="econ.js"></script>
 <script src="combat.js"></script>
 <script src="ai.js"></script>
+<script src="sound.js"></script>
 <script>resize(); start(); requestAnimationFrame(loop);</script>
 </body>
 </html>
