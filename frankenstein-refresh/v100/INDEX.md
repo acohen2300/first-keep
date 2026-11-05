@@ -18,7 +18,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC0 | what every shell has: a name, its ticks, its citation | {by: every book of shells, law: [], needs: [name, ticks, cite], may: [layer]} | N92 |
 | SC01 | the mold of a find (layer 100) | {by: shells (finds), law: [], needs: [find, look], may: [room, sound]} | N92 |
 | SC02 | the mold of a building (layer 110) | {by: shells (buildings), law: [], needs: [size, style, look, material], may: []} | N92 |
-| SC03 | the mold of a walker (layer 120); one of a side eats its Upkeep (D211) | {by: shells (units, moveables), law: [], needs: [look, pace, body], may: [upkeep]} | N92; N170 |
+| SC03 | the mold of a walker (layer 120); one of a side eats its Upkeep (D211). The Unit shell: a soldier kind fills its class (Foot, Archers, Riders, Engines: the building D133 names for it), the age it opens in (D130) and the kind it learns into (teach, Mid's TEACH_TO) | {by: shells (units, moveables), law: [], needs: [look, pace, body], may: [upkeep, class, age, teach]} | N92; N170; N176 |
 | SC04 | the mold of a page (the Screen book) | {by: books/screen.js, law: [], needs: [], may: [rows]} | N93 |
 | SC1 | walks the tiles at its pace | {by: index.html floor 5: step, findPath, law: [QBL, QBM, QBU], needs: [pace, body], may: [mount, kit, voice]} | N94 |
 | SC2 | works a find of best rate from a spot of its own on its ring, as many as the find takes (D195), and fills a load; also counts it among the people | {by: econ.js, law: [QBN, QV, QW, QX, QCI], needs: [body], may: []} | N95; N164 |
@@ -32,7 +32,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC10 | can be hunted: a villager sent to it (or tapped on it) strikes at D221's blow; it falls as a carcass of D220's food where it stood, which its hunters butcher; one with a blow strikes back (Mid's sendHunt, huntTick, the boar's temper) | {by: econ.js, combat.js, menu.js: hunting, law: [QBO], needs: [D220], may: []} | N94; N170 |
 | SC11 | a side's seat: the game opens on it, and a side falls with its last | {by: econ.js, ai.js, menu.js, law: [QBW], needs: [], may: []} | N95 |
 | SC12 | takes in the yields its row lists | {by: index.html dropFor, ai.js, law: [QBN], needs: [drop], may: []} | N98 |
-| SC13 | trains the units D133 gives it | {by: econ.js, law: [], needs: [D133], may: []} | N95 |
+| SC13 | trains the units D133 gives it: a shell, or a class, every kind of it from that kind's age | {by: econ.js, law: [], needs: [D133], may: []} | N95; N176 |
 | SC14 | houses the people D127 gives it | {by: econ.js, ai.js, law: [], needs: [D127], may: []} | N95 |
 | SC15 | where the ages are reached; the queue holds research as well as units: a step of the Research book is learned at the building its row names, after the one before it in its line and its needs | {by: menu.js, econ.js, law: [QCA], needs: [], may: []} | N95; N160 |
 | SC16 | a building that yields, at the rate its row points to, to one worker at a time (D195); its builder takes it up; one with an amount runs out and is replanted at D222's share of its price (Mid's replant) | {by: econ.js, ai.js, law: [QBN, QX], needs: [yield, rate], may: [amount]} | N95; N164; N170 |
@@ -226,6 +226,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N173 |  | Design: Mid's pace (09-nav.js paceOf; 12-sim-core.js sideSpd, insulate; 37-events.js groundNeed, studded, iceMu, strideShare, groundSpd, muO | opened |
 | N174 |  | Ichihara & Mizoguchi, studded tyres on ice and snow, Highway Research Board Special Report 115, Table 2 (Mid's cite for studs' grip, 0.28 at | to open |
 | N175 |  | Hsu, Li, Bagheri, Fernie & Dutta (2016), Ergonomics 59: bare boots on wet ice 0.08, on cold dry ice 0.20 (Mid's cite); from memory, to open | to open |
+| N176 |  | Design: Mid's soldiers (02-rules-units.js UNIT, spear to treb; 04-rules-tech.js the barracks, range, stable, smith and siege lines and their | opened |
+| N177 |  | Masses of arms and of the war elephant: a sword about 1.2 kg, a javelin 1 kg thrown at about 20 m/s, a crossbow 5 kg and its bolt 80 g at 45 | to open |
 
 ## colours
 
@@ -360,7 +362,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E113 |  | QBT: friction slows it by μ g a second until it rests; anything it cannot stand on stops it |  |
 | E114 |  | the mean speed over the step, so the slide ends where v² ÷ 2μg says |  |
 | E115 |  | QBS: none while the body holds (classes I, II); grows over class III to the tipping angle; there in class IV. Its rhythm the body's pendulum |  |
-| E116 |  | a unit's picture: the look at its frame, facing right, painted once per look, colour and frame (LOOKBOX gives the box) |  |
+| E116 |  | a unit's picture: its look at its frame, its rank and its side's armour kit, facing right, painted once per look, colour, rank, kit and fram |  |
 | E117 |  | The things, drawn each frame back to front, only those on the screen. A picture is painted once per look and zoom step, then stamped (the sp |  |
 | E118 |  | W × H units, the art's origin at (tx, ty), its anchor (the point stamped at the thing's stand) at (ax, ay) |  |
 | E119 |  | the node art's own small dice, seeded by the variant, so a tree's leaves fall the same each paint |  |
@@ -418,7 +420,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E171 |  | the codes and their floors; Lock is a mark for us (no floor is locked yet) |  |
 | E172 |  | the Screen book: the Build tabs are its; a building shows priced once econ prices it, else Later |  |
 | E173 |  | the seat, and who it trains first: asked of the books, never named |  |
-| E174 |  | the kinds War's Train box offers |  |
+| E174 |  | the classes War's Train box offers (D133), each as the first kind of it open at this age (Mid's kindOf) |  |
 | E175 |  | a page that keeps its own height (SC20) |  |
 | E176 |  | the new game's choices: the first is the label's row in Albert's template; built ones set the game, the rest wait (dim, they say why) |  |
 | E177 |  | which choices are floors yet |  |
@@ -430,7 +432,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E183 |  | 60w 60f, as Albert's Build menu |  |
 | E184 |  | read: the one window onto the world the glass draws from |  |
 | E185 |  | VERBS: every way the player may act, each with its reason not to. act() asks whyNot first; a reason stops it and is said |  |
-| E186 |  | Train a kind: the nearest finished building that trains it |  |
+| E186 |  | Train a kind: the nearest finished building that trains it; a kind before its age says which age it waits for |  |
 | E187 |  | a channel's volume, a step a tap (HX10) |  |
 | E188 |  | sound on or off |  |
 | E189 |  | a cell for what is drawn but not yet built: Albert's reminder |  |
@@ -522,7 +524,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E275 |  | a place as the map's lettered squares, measured from the board's corner: D190 units a square, letters across, numbers down (A1 to V22); off  |  |
 | E276 |  | a ledger line: its reasons largest first, each in its word and shortened, apart by a dot; under half a unit is left out |  |
 | E277 |  | QCA, the effects: what each side has learned, and each side's numbers worked out once until its learning changes; a new game forgets both |  |
-| E278 |  | a thing's keys, the names an effect may reach it by: every head of its code's letters (B, BR for BR1), its code, and its ticks |  |
+| E278 |  | a thing's keys, the names an effect may reach it by: every head of its code's letters (B, BR for BR1), its code, its ticks and a soldier's c |  |
 | E279 |  | a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's (D138), a find's or a field's rate, a price (D123 |  |
 | E280 |  | the one window for a kind's number after research (QCA): flat adds first, then the shares summed and applied once to that (Albert, Nov 5 11: |  |
 | E281 |  | learning a step puts its effects in force for that side; every unit and building of the side keeps its share of health as the most it can ha |  |
@@ -610,6 +612,14 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E363 |  | a slipped walker stands G10's seconds; each walker on ice is checked once a second as it walks |  |
 | E364 |  | above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the degree (D225) and its degree-seconds are set to ma |  |
 | E365 |  | the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ, Stefan) |  |
+| E366 |  | the armour kit a side has learned (Mid's KIT): 0 to 3 steps of the Sprites book's kit, each turning a person's slots (mail and a steel helm, |  |
+| E367 |  | one drawing list for every figure that is not a person or a beast (the engines, the chariot, the elephant, the riders, the elite pennant): e |  |
+| E368 |  | a look by its rank: level 0 the look itself, level n the nth of its rank list, past the list its last (Mid's LOOKS by tier) |  |
+| E369 |  | the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a shell, or a class's kinds); a kind is open from its |  |
+| E370 |  | a kind's ranks (Mid's tiers): the steps whose rank names it, learned, in book order, give its level and its name; the kit is how many armour |  |
+| E371 |  | the army's ceiling: soldiers (a kind with a class), queued ones counted, against D226 (Mid's ARMYMAX; a fallen side's share, capA, joins it  |  |
+| E372 |  | the army: a side's soldiers, the kinds with a class (Mid's armyOf); BUSY names who keeps to its own work and armyFree leaves them out (the r |  |
+| E373 |  | why a kind waits: the age it opens in (Mid's trainWhy) |  |
 
 ## ground
 
@@ -644,6 +654,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | W16 | iron | {density: 7870} | N87 |
 | W17 | a boar | {kg: 80, height: 0.9, com: 0.5, foot: 0.3, stride: 1.2} | N85; N170 |
 | W18 | a bison | {kg: 700, height: 1.8, com: 1.1, foot: 0.6, stride: 2.2} | N85; N170 |
+| W19 | a sword | {kg: 1.2, blow: {kg: 1.2, mps: 8}} | N177 |
+| W20 | a javelin, its blow thrown | {kg: 1, blow: {kg: 1, mps: 20}} | N177 |
+| W21 | a crossbow, its blow a bolt | {kg: 5, blow: {kg: 0.08, mps: 45}} | N177 |
+| W22 | a matchlock gun, its blow a ball | {kg: 5, blow: {kg: 0.02, mps: 350}} | N177 |
+| W23 | a war elephant | {kg: 4000, height: 2.7, com: 1.5, foot: 0.45, stride: 2.5} | N177 |
 
 ## measure
 
@@ -730,7 +745,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D83 | under this many pixels a tile things are dots and the grid is off | 5 | N112 |
 | D84 | the Town Center's spot in the corner's frame, Z2 on the road | [380, 380] | N112 |
 | D85 | units a metre, from the figure | 11.7 | N112 |
-| D86 | speeds in metres a second (walk: quick time, 120 steps of 30 in a minute); boar and bison Mid's, by its own villager: 30 and 70 to 24 | {walk: 1.52, trot: 3.6, horse: 1.7, push: 0.7, deer: 1.5, wolf: 2.5, bear: 1.5, boar: 1.9, bison: 4.43} | N71; N72; N73; N79; N170 |
+| D86 | speeds in metres a second (walk: quick time, 120 steps of 30 in a minute, 3.4 mph); Mid's own by its walker's 24: a rider 36 (ride), an elephant 22, an engine 12 (push), the bombard 10 (drag), the boar 30 and the bison 70 | {walk: 1.52, ride: 2.28, horse: 1.7, push: 0.76, drag: 0.6333, deer: 1.5, wolf: 2.5, bear: 1.5, boar: 1.9, bison: 4.43, elephant: 1.3933} | N71; N72; N73; N79; N170; N176 |
 | D87 | a load | 10 | N112 |
 | D88 | gathering a second, the old game's own (fish and meat Mid's, for when they come) | {bush: 0.9, tree: 0.75, gold: 0.6, stone: 0.55, iron: 0.5, fish: 0.8, meat: 1.2} | N70; N164 |
 | D89 | the next find within | 100 | N112 |
@@ -767,22 +782,22 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D120 | a shadow at most this many heights | 3 | N112 |
 | D121 | the blades' strength | 0.45 | N112 |
 | D122 | the sides in play | [0, 2] | N114 |
-| D123 | what a thing costs (Mid's BLD and UNIT cost, by the 10:31 rule; a second Town Center Mid's town, each unit the Mid kind it wears) | {BTC1: {wood: 400, stone: 300, food: 200}, BR1: {wood: 30}, BI1: {wood: 80}, BI2: {wood: 80}, BI3: {wood: 80}, BCL1: {wood: 60}, BM1: {wood: | N168 |
-| D124 | seconds to train | {UV: 25, UM1: 21, UM2: 35, UM3: 30, UM4: 36, US4: 30} | N69 |
+| D123 | what a thing costs (Mid's BLD and UNIT cost, by the 10:31 rule; a second Town Center Mid's town, each unit the Mid kind it wears) | {BTC1: {wood: 400, stone: 300, food: 200}, BR1: {wood: 30}, BI1: {wood: 80}, BI2: {wood: 80}, BI3: {wood: 80}, BCL1: {wood: 60}, BM1: {wood: | N168; N176 |
+| D124 | seconds to train (Mid's UNIT t for every unit, Albert, Nov 5 10:06) | {UV: 8, UM1: 10, UM6: 12, UM2: 10, UM7: 9, UM8: 12, UM9: 14, UM10: 12, UM3: 16, UM11: 14, UM12: 28, UM4: 20, UM13: 24, UM5: 25, UM14: 40, UM | N169; N176 |
 | D125 | one villager's seconds to raise a site (Mid's build times, BLD t; the Town Center a second one, Mid's town) | {BTC1: 60, BR1: 12, BI1: 15, BI2: 15, BI3: 15, BCL1: 10, BM1: 25, BM2: 25, BM3: 25, BM4: 30, BW1: 10, BW2: 12, BW3: 25, BW4: 6, BCL2: 12, BC | N169; N168 |
 | D126 | n villagers raise it at n^this | 0.7 | N114 |
 | D127 | the people a building houses | {BTC1: 10, BR1: 5} | N69 |
-| D128 | the most people | 200 | N69 |
+| D128 | the most people, soldiers among them (Mid's POPMAX, by the 10:31 rule) | 180 | N176 |
 | D129 | each age's price and its wait in seconds, by the ages of D130 (Mid's AGES); the sixth is hidden until a year of peace opens it; the first age up sizes Z1's food (Mid's pocket) | {cost: [{}, {food: 300, wood: 100}, {food: 600, gold: 200}, {food: 1000, gold: 500, stone: 200}, {food: 1600, gold: 900, stone: 300, iron: 4 | N160 |
 | D130 | the six ages (Mid's names; Albert, Nov 5 10:30) | [Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment] | N160 |
 | D131 | a share: what one person eats a day (Mid's UPKEEP.share, 30 food a minute feeding eight) | 7.5 | N170 |
 | D132 | move on when another find pays this much more (Mid's 1.18) | 0.18 | N114; N164 |
-| D133 | who trains whom | {BTC1: [UV], BM1: [UM1], BM2: [UM2], BM3: [UM3, US4], BM4: [UM4]} | N114 |
+| D133 | who trains whom: a shell, or a class (every kind of it, each from its age); the scout at the Town Center (Mid's keep) | {BTC1: [UV, US4], BM1: [Foot], BM2: [Archers], BM3: [Riders], BM4: [Engines]} | N114; N176 |
 | D134 | the bell | 900 | N114 |
 | D135 | the score's divisors | {unit: 5, bld: 5, tech: 5, wealth: 10} | N75 |
 | D136 | a farm's food a second | 0.4 | N69 |
 | D137 | a find no path reached is left alone for | 60 | N114 |
-| D138 | a unit's health, blow, reach, pace, armour, class and counter; the boar and the bison Mid's | {UV: {hp: 25, atk: 3, rng: 1, rof: 1.5, arm: 0, cls: foot}, UM1: {hp: 45, atk: 8, rng: 1, rof: 1, arm: 1, cls: foot, vs: horse}, UM2: {hp: 3 | N69; N170 |
+| D138 | a unit's health, blow, reach and sight in tiles (Mid's ÷ D12), pace, armour, class and counter; each soldier kind Mid's (its health and blow open for Albert's play test), its armour and counter its class's (v100's, until the blow, M19); the boar and the bison Mid's | {UV: {hp: 25, atk: 3, rng: 1, rof: 1.5, arm: 0, cls: foot}, UM1: {hp: 60, atk: 6, rng: 1.2, rof: 1.2, arm: 1, sight: 13, cls: foot, vs: hors | N69; N170; N176 |
 | D139 | a building's health; the tree farm and the pasture a farm's, the dock Age of Empires II's | {BTC1: 2400, BR1: 550, BI1: 600, BI2: 600, BI3: 600, BCL1: 480, BM1: 1200, BM2: 1200, BM3: 1200, BM4: 1500, BW1: 1800, BW2: 2750, BW3: 1020, | N69; N170 |
 | D140 | a counter's edge | 1.5 | N114 |
 | D141 | a blow from behind | 1.3 | N114 |
@@ -868,6 +883,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D223 | the boar of each corner and its spot in the corner's frame, about 300 from the Town Center and clear of the home pond (Mid's boar, 280 to 380 from the keep) | {code: MW7, at: [470, 660]} | N170 |
 | D224 | what slows a walker besides the ground: each state it is in, by the field that holds it (a load 0.9, sickness 0.8); the share a snow storm takes off a march before cloaks (Mid's blizzard, 0.6 kept); a boot with no iron has no studs; how deep each sinks in mud, a foot 1 and the camp wagon's wheels 2 (Mid's wheelMud) | {state: {load: 0.9, sick: 0.8}, storm: 0.4, bare: 0, sink: {foot: 1, UT2: 2}} | N173 |
 | D225 | ice on the ground: it grows while the ground is wetter than wet and the air below freezing, full at fdd freezing °C·s (thickness ∝ √), and thaws melt a °C·s above freezing (Mid's CLIMATE.ice) | {wet: 0.225, fdd: 500, melt: 0.0064} | N17; N173 |
+| D226 | the most soldiers a side may have, queued ones counted (Mid's ARMYMAX: the phone's ceiling); a fallen side's share adds to it | 120 | N176 |
+| D227 | the most soldiers a squad holds (Mid's BNSIZE), with the squads | 40 | N176 |
+| D228 | the share of a blow a soldier takes before its armour research, which keeps the lowest share it reaches (Mid's stats armor) | 1 | N176 |
 
 ## rules
 
@@ -927,6 +945,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X52 | builders, repair, limits, placing and walls are Mid's frozen code for the same actions: a crew's build time and a site's health (bldTick, n^0.7), a repair's time and stores spent (repairTick) and its price (repairCost), every price Mid's BLD and UNIT cost, the refund taken down (shellBack), every building's limit by age with research (capFor, capWhy), placing's refusals (canPlace), a wall laid corner to corner (wallLine) and the seal's gap (sealPath); on the page the nearest free villager is sent and one pulled off its work goes back to it, the ghost snaps a lane apart, a gate opens to its own and an ally and shuts to a foe, and the computer lays its ring | {stage: page} | N168 |
 | X53 | a year and a season of food is Mid's frozen code for the same town (20 villagers, five at bushes, 5 foot, 5 riders, 4 farms worked and resting, a tended pasture of 11 with a wolf at two turns, half-fished fish, the hearth, the ice house and seed selection known, the store run dry and fed again): what is eaten (shareOf, upkeepTick, starveTick, foodInReach, hungerOf), spoiled and regrown at each turn (seasonTurn), the soil left (natureTick), the flock and its mutton, and the fields' harvest by season, soil and the year's roll (gatherMul) all equal Mid's; an order's meals are Mid's orderCost; a boar hunted falls as its meat and is butchered; fish are worked only near a dock | {stage: page} | N132; N170 |
 | X54 | a walker's pace is one law (QCB) and Mid's frozen paceOf for the same walkers: the walk with its research added once (Forced marches), a load and sickness, a snow storm less Oiled cloaks, mud less Roads and Field drains (their shares added, never compounded), snow less Snow clearing, and the stride lost on ground ice by the grip a step lacks, Crampons giving their grip; wild things slowed only by the weather; the chance of a slip is Mid's slipChance; ground ice grows and thaws as Mid's groundTick; on the page a walker in mud steps at its pace and one on ice slips, stands and the town is told once | {stage: page} | N132; N173 |
+| X55 | every soldier is the Unit shell with Mid's settings: each kind's class, age, look, teach, price, train time, health, blow, reach, sight and speed (by the foot's 3.4 mph) are Mid's UNIT and TEACH_TO; with research its name, rank, kit, health, blow, reach, speed, sight, armour and train time are Mid's frozen stats() with the shares added; each army building trains exactly its class's kinds, each from its age, and the army stops at the ceiling; every kind's figure at each rank and kit is Mid's own, pixel for pixel | {stage: page} | N132; N176 |
 
 ## screen
 
@@ -1005,11 +1024,22 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BS1 | Throne | [] | N144 |
 | BS2 | Wonder | [] | N144 |
 | UV | Villager | [Walk, Gather, Carry, Build, Repair, Fight, Health] | N144; N170 |
-| UM1 | Foot | [Walk, Fight, Health] | N144; N170 |
-| UM2 | Archers | [Walk, Fight, Shoot, Health] | N144; N170 |
-| UM3 | Riders | [Walk, Fight, Health] | N144; N170 |
-| UM4 | Engines | [Walk, Fight, Health] | N144; N170 |
-| UM4b | Engines | [Walk] | N144; N170 |
+| UM1 | Spearman | [Walk, Fight, Health] | N144; N170; N176 |
+| UM6 | Swordsman | [Walk, Fight, Health] | N144; N170; N176 |
+| UM2 | Archer | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
+| UM7 | Javelineer | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
+| UM8 | Crossbowman | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
+| UM9 | Arquebusier | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
+| UM10 | Chariot | [Walk, Fight, Health] | N144; N170; N176 |
+| UM3 | Cataphract | [Walk, Fight, Health] | N144; N170; N176 |
+| UM11 | Horse archer | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
+| UM12 | War elephant | [Walk, Fight, Health] | N144; N170; N176 |
+| UM4 | Ram | [Walk, Fight, Health] | N144; N170; N176 |
+| UM13 | Siege tower | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
+| UM5 | Catapult | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
+| UM14 | Bombard | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
+| UM15 | Ballista | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
+| UM16 | Trebuchet | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
 | US1 | Priest | [Walk] | N144; N170 |
 | US2 | Medic | [Walk] | N144; N170 |
 | US3 | Spy | [Walk] | N144; N170 |
@@ -1096,15 +1126,15 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | Code | Name | Value | Cited |
 |---|---|---|---|
 | P1 | the vil figure | {brush: worker, o: {tunic: #8a6a44, trim: $side, sash: $side, head: bare, legs: #5a4a38, beard: #6b4a2c}, box: [30, 30]} | N150 |
-| P2 | the spear figure | {brush: person, o: {tunic: $side, head: bare, shield: round, weapon: spear, legs: #6b5a40, beard: #4a3420}, box: [52, 34]} | N150 |
-| P3 | the archer figure | {brush: person, o: {tunic: $side, head: hood, weapon: bow, legs: #5a4a38}, box: [26, 30]} | N150 |
-| P4 | the cata figure | {brush: cata, box: [58, 36]} | N150 |
-| P5 | the ram figure | {brush: ram, box: [42, 30]} | N150 |
-| P6 | the catapult figure | {brush: catapult, box: [32, 26]} | N150 |
+| P2 | the spear figure; the Hoplite and the Pikeman by rank | {brush: person, o: {tunic: $side, head: bare, shield: round, weapon: spear, legs: #6b5a40, beard: #4a3420}, box: [52, 34], rank: [{brush: pe | N150; N176 |
+| P3 | the archer figure; the Longbowman by rank | {brush: person, o: {tunic: $side, head: hood, weapon: bow, legs: #5a4a38}, box: [26, 30], rank: [{brush: person, o: {tunic: $side, head: cap | N150; N176 |
+| P4 | the cata figure, on its barded horse; the Knight by rank | {brush: draw, parts: [[horse, {coat: #5a3a24, barding: scale}], [at, -0.6, -1, 0, [[person, {tunic: $side, body: scale, head: conical, helmC | N150; N176 |
+| P5 | the ram figure | {brush: draw, parts: [[L, {atk: [-17, -13]}, -8, {atk: [15, 19]}, -8, #6b4a2c, 3], [P, [[{atk: [15, 19]}, -10], [{atk: [19, 23]}, -8], [{atk | N150; N176 |
+| P6 | the catapult figure | {brush: draw, parts: [[planks, -11, -6, 11, -3, #8a5d34], [P, [[-2, -6], [0, -14], [2, -6]], #8a5d34, #141210, 0.5], [at, 0, -12, {atk: [-0. | N150; N176 |
 | P7 | the priest figure | {brush: person, o: {tunic: #efe6cf, trim: #c9a227, body: robe, head: bare, weapon: staff, sash: $side, legs: #d8cdb2, beard: #d8d0c0}, box:  | N150 |
 | P8 | the medic figure | {brush: person, o: {tunic: #e4dccb, trim: $side, head: cap, capCol: #e4dccb, weapon: bag, sash: #c23a30, legs: #6b5a48}, box: [26, 30]} | N150 |
 | P9 | the spy figure | {brush: person, o: {tunic: #2a2a30, trim: $side, body: robe, head: hood, hoodCol: #1c1c22, weapon: dagger, cape: #1c1c22, legs: #22222a}, bo | N150 |
-| P10 | the scout figure | {brush: person, o: {tunic: $side, head: cap, capCol: $side*0.6, weapon: staff, cape: $side*0.6}, box: [44, 34]} | N150 |
+| P10 | the scout figure, a runner; mounted by rank (Horse breeding) | {brush: person, o: {tunic: $side, head: cap, capCol: $side*0.6, weapon: staff, cape: $side*0.6}, box: [44, 34], rank: [{brush: draw, parts:  | N150; N176 |
 | P11 | the caravan figure | {brush: caravan, box: [36, 30]} | N150 |
 | P12 | the wagon figure | {brush: wagon, box: [48, 32]} | N150 |
 | P13 | the bandit figure | {brush: person, o: {tunic: #5a5040, head: hood, hoodCol: #4a3e2e, weapon: club, legs: #3a3228, beard: #3a2a1a}, box: [26, 30]} | N150 |
@@ -1133,6 +1163,19 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | PB14 | the farm building picture; its level is the season: the crop's colours spring to winter | {level: {season: true}} | N151; N170 |
 | PB15 | the tree farm building picture; its level 1 when cut out: stumps | {level: {spent: true}} | N151; N170 |
 | PB16 | the pasture building picture; its level is the flock: a sheep drawn for each | {level: {flock: true}} | N151; N170 |
+| P22 | the sword figure; the Man-at-arms by rank | {brush: person, o: {tunic: $side, body: scale, head: conical, helmCol: #c08a3a, shield: round, weapon: sword, legs: #6b5a40}, box: [30, 30], | N150; N176 |
+| P23 | the jav figure | {brush: person, o: {tunic: $side, head: bare, shield: round, weapon: jav, legs: #6b5a40, beard: #6b4a2c}, box: [34, 30]} | N150; N176 |
+| P24 | the crossbow figure | {brush: person, o: {tunic: $side, body: mail, head: kettle, weapon: xbow, legs: #5a4a38}, box: [34, 30], elite: true} | N150; N176 |
+| P25 | the arquebus figure | {brush: person, o: {tunic: $side, trim: $side, body: mail, head: morion, weapon: gun, sash: #e6d9b0, legs: #7a3a2e, boots: #6b4a2c}, box: [4 | N150; N176 |
+| P26 | the chariot figure, a bowman behind a horse (its car's edges black, as Mid draws a tint of a tint); the Horseman by rank | {brush: draw, parts: [[horse, {coat: #a0703a, saddle: false}, 9], [L, -2, -10, 7, -11, #5a3a1c, 1], [at, -7, -4, 0, [[person, {tunic: $side, | N150; N176 |
+| P27 | the harcher figure | {brush: draw, parts: [[horse, {coat: #b08a5a}], [at, -0.6, -1, 0, [[person, {tunic: $side, head: fur, helmCol: $side*0.6, weapon: bow, legs: | N150; N176 |
+| P28 | the war elephant figure (its back feet black, as Mid draws a tint of a tint) | {brush: draw, parts: [[at, -8, -9, {sway: -0.15}, [[P, [[-2.4, 0], [2.4, 0], [2.2, 9], [-2.2, 9]], #8d8a86*0.75, #141210, 0.4], [E, 0, 8.8,  | N150; N176 |
+| P29 | the stower figure | {brush: draw, parts: [[planks, -8, -42, 8, -3, #8a6a44], [P, [[2, -38], [6, -38], [6, -35], [2, -35]], #1a120a], [P, [[2, -29], [6, -29], [6 | N150; N176 |
+| P30 | the ballista figure | {brush: draw, parts: [[L, -6, 0, 0, -9, #8a5d34, 1], [L, 6, 0, 0, -9, #8a5d34, 1], [L, 0, 0, 0, -9, #8a5d34, 1], [planks, -8, -12, 9, -9, #8 | N150; N176 |
+| P31 | the bombard figure | {brush: draw, parts: [[planks, -13, -6, 13, -3, #8a5d34], [at, {atk: [0, -2.5]}, 0, 0, [[P, [[-11, -9], [11, -11.4], [13, -9.6], [13, -5.4], | N150; N176 |
+| P32 | the treb figure | {brush: draw, parts: [[planks, -14, -5, 14, -2, #8a5d34], [P, [[-6, -5], [0, -30], [6, -5]], null, #8a5d34, 1.6], [L, -3, -18, 3, -18, #8a5d | N150; N176 |
+| P33 | the armour a side's research puts on its soldiers (Mid's KIT): leather a shoulder guard, chain mail and a steel helm, plate with a great helm, its crest and a cape in the figure's own colours ($side the trim) | [{}, {body: {: mail, scale: mail}, head: {bare: kettle, hood: kettle, cap: kettle, straw: kettle}}, {body: {: plate, mail: plate, scale: pla | N150; N176 |
+| P34 | the elite rank's gold pennant on a staff, for a look marked elite at a rank (Mid's elitePennant, ELITE_LOOK) | {parts: [[L, 8, -4, 8, -30, #5a3a1c, 0.9], [P, [[8, -30], [16, -27.5], [8, -25]], #e6b947, #8a6a1a, 0.4], [P, [[8.6, -29], [13.5, -27.5], [8 | N150; N176 |
 
 ## tech
 
@@ -1195,8 +1238,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O55 | Universities | {at: BP1, line: Letters, age: 3, cost: {wood: 320, gold: 210}, time: 60, fx: [{s: time, k: O, p: -0.1}], when: 1088, w: 7} | N160; N161 |
 | O56 | Natural philosophy | {at: BP1, line: Letters, age: 4, cost: {wood: 550, gold: 360}, time: 87, fx: [{s: time, k: O, p: -0.15}], need: [press], when: 1600s, w: 9} | N160; N161 |
 | O57 | Geometry | {at: BP1, line: Numbers, age: 2, cost: {wood: 110, gold: 70}, time: 30, fx: [{s: atk, k: [BTC1, BW3, BTC8], a: 2}], when: 300 BC, w: 6} | N160; N161 |
-| O58 | Algebra | {at: BP1, line: Numbers, age: 3, cost: {wood: 290, gold: 190}, time: 56, fx: [{s: rng, k: [UM4, UM4b], a: 1.0}], when: 820, w: 6} | N160; N161 |
-| O59 | Ballistics | {at: BP1, line: Numbers, age: 4, cost: {wood: 430, gold: 290}, time: 71, fx: [{s: atk, k: [UM4, UM4b], a: 5}], need: [algebra], when: 1537,  | N160; N161 |
+| O58 | Algebra | {at: BP1, line: Numbers, age: 3, cost: {wood: 290, gold: 190}, time: 56, fx: [{s: rng, k: Engines, a: 1.0}], when: 820, w: 6} | N160; N161 |
+| O59 | Ballistics | {at: BP1, line: Numbers, age: 4, cost: {wood: 430, gold: 290}, time: 71, fx: [{s: atk, k: Engines, a: 5}], need: [algebra], when: 1537, w: 6 | N160; N161 |
 | O60 | Architecture | {at: BP2, line: Learning, age: 2, cost: {gold: 180, stone: 120}, time: 41, fx: [{s: build, p: -0.2}], need: [masonry], when: 25 BC, w: 6} | N160; N161 |
 | O61 | Guilds | {at: BP2, line: Learning, age: 3, cost: {gold: 260, stone: 180}, time: 52, fx: [{s: queue, a: 2}], when: 1100s, w: 5} | N160; N161 |
 | O62 | Printing press | {at: BP2, line: Learning, age: 4, cost: {gold: 550, stone: 360}, time: 87, fx: [{s: time, k: O, p: -0.32}], when: 1450s, w: 9} | N160; N161 |
@@ -1217,14 +1260,59 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O77 | Harbour works | {at: BCT2, line: Harbour, age: 2, cost: {wood: 170, food: 110}, time: 38, fx: [{s: hp, k: BCT2, p: 0.5}], need: [masonry], when: 300 BC, w:  | N160; N161; N170 |
 | O78 | Compass | {at: BCT2, line: Harbour, age: 3, cost: {wood: 320, food: 210}, time: 60, fx: [{s: sight, k: [UV, US4, UT1], a: 3}], when: 1100s, w: 7} | N160; N161; N170 |
 | O79 | Lighthouse | {at: BCT2, line: Harbour, age: 4, cost: {wood: 310, food: 210}, time: 55, fx: [{s: sight, k: BCT2, a: 6}], when: 1500s, w: 3} | N160; N161; N170 |
-| O80 | Fieldcraft | {at: BM1, line: March, age: 0, cost: {food: 40, gold: 30}, time: 15, fx: [{s: sight, k: [UM1, UM2], a: 1}], when: Stone age, w: 3} | N160; N161; N173 |
-| O81 | Forced marches | {at: BM1, line: March, age: 2, cost: {food: 170, gold: 110}, time: 38, fx: [{s: spd, k: [UM1, UM2], p: 0.08}], when: 200 BC, w: 5} | N160; N161; N173 |
+| O80 | Fieldcraft | {at: BM1, line: March, age: 0, cost: {food: 40, gold: 30}, time: 15, fx: [{s: sight, k: [Foot, Archers], a: 1}], when: Stone age, w: 3} | N160; N161; N173 |
+| O81 | Forced marches | {at: BM1, line: March, age: 2, cost: {food: 170, gold: 110}, time: 38, fx: [{s: spd, k: [Foot, Archers], p: 0.08}], when: 200 BC, w: 5} | N160; N161; N173 |
 | O82 | Wool cloaks | {at: BM1, line: March, age: 3, cost: {food: 240, gold: 160}, time: 48, fx: [{s: cold, p: -0.5}], need: [spinwheel], when: 1000s, w: 4} | N160; N161; N173 |
 | O83 | Oiled cloaks | {at: BM1, line: March, age: 4, cost: {food: 310, gold: 210}, time: 55, fx: [{s: wet, p: -0.5}], need: [warmclothes], when: 1500s, w: 3} | N160; N161; N173 |
 | O84 | Roads | {at: BP2, line: Weather, age: 2, cost: {gold: 200, stone: 130}, time: 44, fx: [{s: mud, p: -0.5}, {s: trade, p: 0.15}], when: 300 BC, w: 7} | N160; N161; N173 |
 | O85 | Field drains | {at: BP2, line: Weather, age: 2, cost: {gold: 170, stone: 110}, time: 38, fx: [{s: mud, p: -0.3}], when: 100 BC, w: 5} | N160; N161; N173 |
 | O86 | Snow clearing | {at: BP2, line: Weather, age: 3, cost: {gold: 240, stone: 160}, time: 48, fx: [{s: snow, p: -0.5}], when: 1200s, w: 4} | N160; N161; N173 |
-| O87 | Crampons | {at: BP2, line: Weather, age: 3, cost: {gold: 240, stone: 160}, time: 48, fx: [{s: studs, k: [UV, UM1, UM2, UM4, UM4b, US1, US2, US3], a: 1} | N160; N161; N173 |
+| O87 | Crampons | {at: BP2, line: Weather, age: 3, cost: {gold: 240, stone: 160}, time: 48, fx: [{s: studs, k: [UV, Foot, Archers, Engines, US1, US2, US3], a: | N160; N161; N173 |
+| O88 | Shields | {at: BM1, line: Ranks, age: 1, cost: {food: 50, gold: 40}, time: 18, fx: [{s: armor, k: [Foot, Archers], min: 0.92}], when: 3000 BC, w: 5} | N160; N161; N176 |
+| O89 | Spear wall | {at: BM1, line: Ranks, age: 1, cost: {food: 100, gold: 70}, time: 28, fx: [{s: hp, k: UM1, p: 0.1}], when: 2500 BC, w: 5} | N160; N161; N176 |
+| O90 | Drill | {at: BM1, line: Ranks, age: 1, cost: {food: 110, gold: 70}, time: 30, fx: [{s: hp, k: UM, p: 0.15}], when: 700 BC, w: 6} | N160; N161; N176 |
+| O91 | Phalanx | {at: BM1, line: Ranks, age: 2, cost: {food: 200, gold: 130}, time: 44, fx: [{s: hp, k: UM1, p: 0.25}, {s: atk, k: UM1, a: 2}], rank: {k: UM1 | N160; N161; N176 |
+| O92 | Legion | {at: BM1, line: Ranks, age: 2, cost: {food: 220, gold: 150}, time: 47, fx: [{s: hp, k: [Foot, Archers], p: 0.1}, {s: atk, k: [Foot, Archers] | N160; N161; N176 |
+| O93 | Pike square | {at: BM1, line: Ranks, age: 3, cost: {food: 320, gold: 210}, time: 60, fx: [{s: hp, k: UM1, p: 0.15}, {s: atk, k: UM1, a: 1}], rank: {k: UM1 | N160; N161; N176 |
+| O94 | Men-at-arms | {at: BM1, line: Ranks, age: 3, cost: {food: 260, gold: 180}, time: 52, fx: [{s: hp, k: UM6, p: 0.3}, {s: atk, k: UM6, a: 3}], rank: {k: UM6, | N160; N161; N176 |
+| O95 | Halberd | {at: BM1, line: Ranks, age: 4, cost: {food: 390, gold: 260}, time: 66, fx: [{s: hp, k: UM1, p: 0.1}, {s: atk, k: UM1, a: 2}], rank: {k: UM1, | N160; N161; N176 |
+| O96 | Tercio | {at: BM1, line: Ranks, age: 4, cost: {food: 470, gold: 310}, time: 77, fx: [{s: hp, k: [Foot, Archers], p: 0.15}], need: [volley], when: 153 | N160; N161; N176 |
+| O97 | Bayonet | {at: BM1, line: Ranks, age: 4, cost: {food: 430, gold: 290}, time: 71, fx: [{s: atk, k: UM9, a: 3}], need: [musket], when: 1670s, w: 6} | N160; N161; N176 |
+| O98 | Slings | {at: BM2, line: Shot, age: 1, cost: {wood: 80, gold: 50}, time: 24, fx: [{s: atk, k: UM7, a: 1}], when: 7000 BC, w: 3} | N160; N161; N176 |
+| O99 | Composite bow | {at: BM2, line: Shot, age: 1, cost: {wood: 120, gold: 80}, time: 32, fx: [{s: rng, k: [UM2, UM8, UM11], a: 1.5}], when: 2000 BC, w: 7} | N160; N161; N176 |
+| O100 | Fire arrows | {at: BM2, line: Shot, age: 3, cost: {wood: 170, gold: 110}, time: 38, fx: [{s: fire, k: [UM2, UM8, UM11], a: 1}], need: [composite], when: 9 | N160; N161; N176 |
+| O101 | Bodkin points | {at: BM2, line: Shot, age: 3, cost: {wood: 150, gold: 100}, time: 35, fx: [{s: atk, k: [UM2, UM8, UM11], a: 1}], need: [iron], when: 1000s,  | N160; N161; N176 |
+| O102 | Crossbow drill | {at: BM2, line: Shot, age: 3, cost: {wood: 240, gold: 160}, time: 48, fx: [{s: atk, k: UM8, a: 2}], when: 1200s, w: 4} | N160; N161; N176 |
+| O103 | Longbow | {at: BM2, line: Shot, age: 3, cost: {wood: 290, gold: 190}, time: 56, fx: [{s: atk, k: UM2, a: 1}, {s: rng, k: UM2, a: 2.0}], rank: {k: UM2, | N160; N161; N176 |
+| O104 | Musket | {at: BM2, line: Shot, age: 4, cost: {wood: 510, gold: 340}, time: 82, fx: [{s: hp, k: UM9, p: 0.1}, {s: atk, k: UM9, a: 4}, {s: rng, k: UM9, | N160; N161; N176 |
+| O105 | Volley fire | {at: BM2, line: Shot, age: 4, cost: {wood: 470, gold: 310}, time: 77, fx: [{s: atk, k: [UM9, UM14], a: 4}], need: [musket], when: 1590s, w:  | N160; N161; N176 |
+| O106 | Horse breeding | {at: BM3, line: Horse, age: 1, cost: {food: 130, gold: 90}, time: 35, fx: [{s: spd, k: Riders, p: 0.12}, {s: spd, k: US4, p: 0.35}, {s: sigh | N160; N161; N176 |
+| O107 | Bits and bridles | {at: BM3, line: Horse, age: 1, cost: {food: 80, gold: 50}, time: 24, fx: [{s: spd, k: Riders, p: 0.05}], when: 2000 BC, w: 3} | N160; N161; N176 |
+| O108 | Saddles | {at: BM3, line: Horse, age: 2, cost: {food: 150, gold: 100}, time: 35, fx: [{s: hp, k: Riders, p: 0.1}], when: 200 BC, w: 4} | N160; N161; N176 |
+| O109 | Stirrups | {at: BM3, line: Horse, age: 2, cost: {food: 220, gold: 150}, time: 47, fx: [{s: atk, k: Riders, a: 1}], need: [saddles], when: 300s, w: 8} | N160; N161; N176 |
+| O110 | Horseshoes | {at: BM3, line: Horse, age: 3, cost: {food: 260, gold: 180}, time: 52, fx: [{s: studs, k: Riders, a: 1}, {s: mud, k: Riders, p: -0.2}], when | N160; N161; N176 |
+| O111 | Stud farms | {at: BM3, line: Horse, age: 4, cost: {food: 350, gold: 230}, time: 61, fx: [{s: train, k: Riders, p: -0.2}], when: 1500s, w: 4} | N160; N161; N176 |
+| O112 | Cavalry | {at: BM3, line: Rider, age: 2, cost: {food: 200, gold: 130}, time: 44, fx: [{s: hp, k: UM10, p: 0.15}, {s: spd, k: UM10, p: 0.12}], rank: {k | N160; N161; N176 |
+| O113 | Knighthood | {at: BM3, line: Rider, age: 3, cost: {food: 320, gold: 210}, time: 60, fx: [{s: hp, k: UM3, p: 0.2}, {s: atk, k: UM3, a: 2}, {s: spd, k: UM3 | N160; N161; N176 |
+| O114 | Dragoons | {at: BM3, line: Rider, age: 4, cost: {food: 390, gold: 260}, time: 66, fx: [{s: spd, k: Riders, p: 0.1}], need: [musket], when: 1600s, w: 5} | N160; N161; N176 |
+| O115 | Bronze | {at: BI9, line: Blades, age: 1, cost: {gold: 100}, time: 37, fx: [{s: atk, k: UM, a: 1}, {s: atk, k: [BTC1, BW3, BTC8], a: 1}], when: 3300 B | N160; N161; N176 |
+| O116 | Socketed heads | {at: BI9, line: Blades, age: 1, cost: {gold: 60}, time: 26, fx: [{s: atk, k: UM1, a: 1}], when: 2000 BC, w: 4} | N160; N161; N176 |
+| O117 | Iron working | {at: BI9, line: Blades, age: 1, cost: {gold: 240, iron: 160}, time: 50, fx: [{s: atk, k: UM, a: 2}, {s: atk, k: [BTC1, BW3, BTC8], a: 2}], w | N160; N161; N176 |
+| O118 | Tempering | {at: BI9, line: Blades, age: 3, cost: {gold: 290, iron: 190}, time: 56, fx: [{s: wear, a: 0.5}], when: 1200s, w: 6} | N160; N161; N176 |
+| O119 | Case hardening | {at: BI9, line: Blades, age: 4, cost: {gold: 350, iron: 230}, time: 61, fx: [{s: atk, k: UM, a: 1}], when: 1500s, w: 4} | N160; N161; N176 |
+| O120 | Helmets | {at: BI9, line: Armour, age: 1, cost: {gold: 60}, time: 26, fx: [{s: armor, k: [Foot, Archers], min: 0.9}], when: 2500 BC, w: 4} | N160; N161; N176 |
+| O121 | Leather armour | {at: BI9, line: Armour, age: 1, cost: {gold: 60}, time: 26, fx: [{s: armor, k: UM, min: 0.85}], kit: true, when: 2000 BC, w: 4} | N160; N161; N176 |
+| O122 | Scale armour | {at: BI9, line: Armour, age: 2, cost: {gold: 150, iron: 100}, time: 35, fx: [{s: armor, k: Riders, min: 0.8}], when: 900 BC, w: 4} | N160; N161; N176 |
+| O123 | Chain mail | {at: BI9, line: Armour, age: 2, cost: {gold: 180, iron: 120}, time: 41, fx: [{s: armor, k: UM, min: 0.7}], kit: true, need: [iron], when: 30 | N160; N161; N176 |
+| O124 | Plate armour | {at: BI9, line: Armour, age: 3, cost: {gold: 320, iron: 210}, time: 60, fx: [{s: armor, k: UM, min: 0.6}], kit: true, need: [chain, bellows] | N160; N161; N176 |
+| O125 | Oiled steel | {at: BI9, line: Armour, age: 4, cost: {gold: 310, iron: 210}, time: 55, fx: [{s: wear, a: 0.5}], need: [tempering], when: 1500s, w: 3} | N160; N161; N176 |
+| O126 | Torsion springs | {at: BM4, line: Engines, age: 2, cost: {wood: 180, gold: 120}, time: 41, fx: [{s: rng, k: UM5, a: 1.5}, {s: rng, k: UM15, a: 1.5}], when: 33 | N160; N161; N176 |
+| O127 | Siege engineers | {at: BM4, line: Engines, age: 2, cost: {wood: 170, gold: 110}, time: 38, fx: [{s: train, k: Engines, p: -0.25}], when: 300 BC, w: 5} | N160; N161; N176 |
+| O128 | Burning shot | {at: BM4, line: Engines, age: 3, cost: {wood: 260, gold: 180}, time: 52, fx: [{s: fire, k: Engines, a: 1}], need: [firearrows], when: 600s,  | N160; N161; N176 |
+| O129 | Counterweight | {at: BM4, line: Engines, age: 3, cost: {wood: 320, gold: 210}, time: 60, fx: [{s: atk, k: UM16, a: 10}], when: 1100s, w: 7} | N160; N161; N176 |
+| O130 | Corned powder | {at: BM4, line: Engines, age: 4, cost: {wood: 510, gold: 340}, time: 82, fx: [{s: atk, k: UM14, a: 20}], when: 1420s, w: 8} | N160; N161; N176 |
+| O131 | Gun carriages | {at: BM4, line: Engines, age: 4, cost: {wood: 430, gold: 290}, time: 71, fx: [{s: spd, k: Engines, p: 0.25}], need: [corned], when: 1470s, w | N160; N161; N176 |
+| O132 | Petards | {at: BM4, line: Engines, age: 4, cost: {wood: 390, gold: 260}, time: 66, fx: [{s: blast, k: [UM9, UM14], a: 1}], need: [corned], when: 1570s | N160; N161; N176 |
 
 ## words
 
@@ -1236,7 +1324,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J4 | a number shortened: 1.2k | k | N132 |
 | J5 | one, two: the first ending that fits, as [pattern, flags, ending] (a man-at-arms, men-at-arms; a spearman; a wolf; an ally; a ditch; the rest take s) | [[^(m)an(-at-arms)$, i, $1en$2], [man$, , men], [(wol)f$, i, $1ves], [([^aeiou])y$, , $1ies], [(s/x/ch/sh)$, , $1es], [$, , s]] | N132 |
 | J6 | the map's lettered squares: a letter across, a number down (A1 to V22 on the board, D190) | ABCDEFGHIJKLMNOPQRSTUVWXYZ | N132 |
-| J7 | the history line of each age (age0 to age4) and each research step, by its key: what it was and when (Mid's WHY) | {age0: Farming villages of the Neolithic (from about 10,000 years ago): fields, houses, a wall. Jericho had a stone wall and tower about 800 | N160; N161; N170 |
+| J7 | the history line of each age (age0 to age4), each research step and each soldier kind, by its key (a step that shares a kind's key: tech:key): what it was and when (Mid's WHY) | {age0: Farming villages of the Neolithic (from about 10,000 years ago): fields, houses, a wall. Jericho had a stone wall and tower about 800 | N160; N161; N170; N176 |
 | J8 | what the town is told when food, the seasons and the flock turn, or its people slip on ice, by the event that tells it (Mid's news; {n}, {m} and {at} filled in) | {hungry: Food stores empty: put villagers on food., fed: Your people are fed again., famine: Famine: no food in reach. Two days to recover., | N170; N173 |
 | J9 | what a refusal or an order says for plots, the dock and the hunt (Mid's words) | {replanted: {n} replanted., broke: Not enough to replant., hands: No free hands: train more villagers., hunt: A villager goes hunting., shor | N170 |
 

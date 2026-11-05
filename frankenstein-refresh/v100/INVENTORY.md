@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,902 | 253,011 | 253,143 |
-| Books | 1158 | 0 | 207,910 | 208,230 |
-| Laws | 79 | 0 | 10,957 | 11,299 |
-| Tools | 4 | 856 | 117,834 | 117,985 |
+| Game code | 28 | 1,908 | 254,860 | 254,992 |
+| Books | 1246 | 0 | 251,901 | 252,227 |
+| Laws | 79 | 0 | 11,256 | 11,603 |
+| Tools | 4 | 917 | 127,507 | 127,659 |
 
 ## The trades (code)
 
@@ -23,23 +23,23 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 45 | 4,943 | 4,947 | 82 |
 | index.html#drawn-once-in-the-view-frame | 47 | 4,130 | 4,134 | 123 |
 | index.html#the-view | 9 | 916 | 920 | 14 |
-| index.html#the-door | 55 | 5,312 | 5,316 | 69 |
+| index.html#the-door | 59 | 6,192 | 6,196 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 324 | 50,704 | 50,708 | 4096 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
-| index.html#the-figures | 144 | 23,202 | 23,206 | 1610 |
+| index.html#the-figures | 143 | 23,309 | 23,313 | 1543 |
 | index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
-| index.html#floor-5-movables | 120 | 12,460 | 12,464 | 95 |
-| index.html#the-body-s-laws | 30 | 2,348 | 2,352 | 35 |
+| index.html#floor-5-movables | 120 | 12,458 | 12,462 | 95 |
+| index.html#the-body-s-laws | 31 | 2,581 | 2,585 | 35 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,282 | 3,286 | 92 |
 | index.html#floor-6-climate | 65 | 8,139 | 8,151 | 288 |
 | index.html#floor-7-display | 28 | 2,927 | 2,931 | 75 |
 | index.html#the-woods-cache | 51 | 4,849 | 4,853 | 79 |
-| index.html#touch | 40 | 4,549 | 4,553 | 59 |
-| menu.js | 303 | 50,935 | 50,975 | 595 |
-| econ.js | 213 | 31,127 | 31,127 | 79 |
-| combat.js | 63 | 9,411 | 9,411 | 101 |
-| ai.js | 49 | 6,459 | 6,459 | 37 |
+| index.html#touch | 40 | 4,603 | 4,607 | 59 |
+| menu.js | 304 | 51,216 | 51,256 | 595 |
+| econ.js | 214 | 31,357 | 31,357 | 79 |
+| combat.js | 63 | 9,483 | 9,483 | 101 |
+| ai.js | 49 | 6,453 | 6,453 | 37 |
 | sound.js | 56 | 5,632 | 5,632 | 66 |
 
 ## The books
@@ -47,21 +47,21 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 4 | 583 |
-| capabilities | 31 | 7,877 |
-| citations | 175 | 23,654 |
+| capabilities | 31 | 8,171 |
+| citations | 177 | 24,573 |
 | colours | 9 | 951 |
-| comments | 365 | 55,122 |
+| comments | 373 | 57,230 |
 | ground | 6 | 1,634 |
-| mass | 18 | 2,663 |
-| measure | 219 | 38,486 |
-| rules | 54 | 12,824 |
+| mass | 23 | 3,358 |
+| measure | 222 | 41,465 |
+| rules | 55 | 13,450 |
 | screen | 10 | 2,689 |
-| shells | 78 | 13,536 |
+| shells | 89 | 17,013 |
 | sides | 4 | 1,202 |
 | sound | 51 | 11,159 |
-| sprites | 38 | 8,372 |
-| tech | 87 | 24,980 |
-| words | 9 | 16,193 |
+| sprites | 51 | 18,368 |
+| tech | 132 | 39,011 |
+| words | 9 | 24,731 |
 
 ## The shells
 
@@ -69,7 +69,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | 100 | 11 | 1 |
 | 110 | 46 | 28 |
-| 120 | 21 | 0 |
+| 120 | 32 | 0 |
 
 ## The rules
 
@@ -129,5 +129,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X52 | t-walls | page | builders, repair, limits, placing and walls are Mid's frozen code for the same actions: a crew's build time and a site's health (bldTick, n^0.7), a repair's time and stores spent (repairTick) and its price (repairCost), every price Mid's BLD and UNIT cost, the refund taken down (shellBack), every building's limit by age with research (capFor, capWhy), placing's refusals (canPlace), a wall laid corner to corner (wallLine) and the seal's gap (sealPath); on the page the nearest free villager is sent and one pulled off its work goes back to it, the ghost snaps a lane apart, a gate opens to its own and an ally and shuts to a foe, and the computer lays its ring |
 | X53 | t-food | page | a year and a season of food is Mid's frozen code for the same town (20 villagers, five at bushes, 5 foot, 5 riders, 4 farms worked and resting, a tended pasture of 11 with a wolf at two turns, half-fished fish, the hearth, the ice house and seed selection known, the store run dry and fed again): what is eaten (shareOf, upkeepTick, starveTick, foodInReach, hungerOf), spoiled and regrown at each turn (seasonTurn), the soil left (natureTick), the flock and its mutton, and the fields' harvest by season, soil and the year's roll (gatherMul) all equal Mid's; an order's meals are Mid's orderCost; a boar hunted falls as its meat and is butchered; fish are worked only near a dock |
 | X54 | t-pace | page | a walker's pace is one law (QCB) and Mid's frozen paceOf for the same walkers: the walk with its research added once (Forced marches), a load and sickness, a snow storm less Oiled cloaks, mud less Roads and Field drains (their shares added, never compounded), snow less Snow clearing, and the stride lost on ground ice by the grip a step lacks, Crampons giving their grip; wild things slowed only by the weather; the chance of a slip is Mid's slipChance; ground ice grows and thaws as Mid's groundTick; on the page a walker in mud steps at its pace and one on ice slips, stands and the town is told once |
+| X55 | t-kinds | page | every soldier is the Unit shell with Mid's settings: each kind's class, age, look, teach, price, train time, health, blow, reach, sight and speed (by the foot's 3.4 mph) are Mid's UNIT and TEACH_TO; with research its name, rank, kit, health, blow, reach, speed, sight, armour and train time are Mid's frozen stats() with the shares added; each army building trains exactly its class's kinds, each from its age, and the army stops at the ceiling; every kind's figure at each rank and kit is Mid's own, pixel for pixel |
 
-1269 items sealed · 1158 book entries · 79 laws · 175 citations, 26 still to open · 7 known
+1357 items sealed · 1246 book entries · 79 laws · 177 citations, 27 still to open · 7 known

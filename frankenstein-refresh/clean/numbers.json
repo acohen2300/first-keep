@@ -22,8 +22,8 @@
    "the four soldier classes and their buildings: shells UM1 Foot, UM2 Archers, UM3 Riders, UM4 Engines, trained per D133"
   ],
   "POPMAX": [
-   "bring",
-   "POPMAX 180 is D128 popMax, but v100 has 200 (differs, Albert's call); ARMYMAX 120, BNSIZE 40, SHARE_FALLEN 0.5 to bring with the army and the fallen side · by the 10:31 rule: Mid's"
+   "in v100",
+   "F18: D128 popMax 180, D226 armyMax 120, D227 squad 40 (BNSIZE, read with the squads); SHARE_FALLEN with the fallen side (M30)"
   ],
   "RICH": [
    "bring",
@@ -127,7 +127,7 @@
     ],
     "scout": [
      "in v100",
-     "Scout → Scout; train Mid 12 v100 30; F15: D123 holds Mid's cost for the shell that wears it"
+     "Scout → Scout; train Mid 12 v100 30; F15: D123 holds Mid's cost for the shell that wears it; F18: trained at the Town Center (Mid's keep); its rank by Horse breeding (Rider scout)"
     ],
     "envoy": [
      "bring",
@@ -159,67 +159,67 @@
     ],
     "spear": [
      "in v100",
-     "Spearman → Foot; hp Mid 60 v100 45; train Mid 10 v100 21; F15: D123 holds Mid's cost for the shell that wears it"
+     "F18: shell UM1 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look spear"
     ],
     "sword": [
      "in v100",
-     "Swordsman → Foot; hp Mid 70 v100 45; train Mid 12 v100 21"
+     "F18: shell UM6 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look sword"
     ],
     "archer": [
      "in v100",
-     "Archer → Archers; train Mid 10 v100 35; F15: D123 holds Mid's cost for the shell that wears it"
+     "F18: shell UM2 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look archer"
     ],
     "jav": [
      "in v100",
-     "Javelineer → Archers; hp Mid 40 v100 30; train Mid 9 v100 35"
+     "F18: shell UM7 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look jav"
     ],
     "crossbow": [
      "in v100",
-     "Crossbowman → Archers; hp Mid 35 v100 30; train Mid 12 v100 35"
+     "F18: shell UM8 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look crossbow"
     ],
     "chariot": [
      "in v100",
-     "Chariot → Riders; hp Mid 70 v100 100; train Mid 12 v100 30"
+     "F18: shell UM10 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look chariot"
     ],
     "cata": [
      "in v100",
-     "Cataphract → Riders; hp Mid 120 v100 100; train Mid 16 v100 30; F15: D123 holds Mid's cost for the shell that wears it"
+     "F18: shell UM3 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look cata"
     ],
     "harcher": [
      "in v100",
-     "Horse archer → Riders; hp Mid 55 v100 100; train Mid 14 v100 30"
+     "F18: shell UM11 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look harcher"
     ],
     "elephant": [
      "in v100",
-     "War elephant → Riders; hp Mid 260 v100 100; train Mid 28 v100 30"
+     "F18: shell UM12 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look elephant"
     ],
     "ram": [
      "in v100",
-     "Ram → Engines; hp Mid 200 v100 175; train Mid 20 v100 36; F15: D123 holds Mid's cost for the shell that wears it"
+     "F18: shell UM4 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look ram"
     ],
     "stower": [
      "in v100",
-     "Siege tower → Engines; hp Mid 260 v100 175; train Mid 24 v100 36"
+     "F18: shell UM13 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look stower"
     ],
     "catapult": [
      "in v100",
-     "Catapult → Engines"
+     "F18: shell UM5 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look catapult"
     ],
     "bombard": [
      "in v100",
-     "Bombard → Engines"
+     "F18: shell UM14 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look bombard"
     ],
     "ballista": [
      "in v100",
-     "Ballista → Engines"
+     "F18: shell UM15 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look ballista"
     ],
     "arquebus": [
      "in v100",
-     "Arquebusier → Archers; hp Mid 40 v100 30; train Mid 14 v100 35"
+     "F18: shell UM9 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look arquebus"
     ],
     "treb": [
      "in v100",
-     "Trebuchet → Engines"
+     "F18: shell UM16 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look treb"
     ],
     "rebel": [
      "bring",
@@ -699,7 +699,7 @@
   ],
   "TEACH_TO": [
    "bring",
-   "with TEACH"
+   "with TEACH; F18: each kind's teach slot holds it (shells), the School's lesson comes with M26"
   ],
   "FALLBACK": [
    "bring",

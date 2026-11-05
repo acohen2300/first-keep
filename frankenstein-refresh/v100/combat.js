@@ -30,8 +30,8 @@ function fight(u, t) { u.job = 'fight'; u.target = t; u.then = null; }
 const nearK = (q, k, r) => Math.abs(q % N - k % N) <= r && Math.abs(Math.floor(q / N) - Math.floor(k / N)) <= r;
 function march(u, k) { u.job = 'march'; u.goal = k; u.target = null; u.then = 'march'; if (!FK.walkTo(u, (q) => q === k || nearK(q, k, FK.walkable(k) ? 0 : 4), k)) u.job = 'idle'; } // E237
 function recall(side) { waves[side] = null; const h = home(side); for (const u of units()) if (u.side === side && armed(u)) { u.job = 'rout'; u.target = null; u.goal = null; u.then = 'idle'; if (!h || !FK.goBy(u, h)) u.job = 'idle'; } }
-function attack(side, k) { const army = units().filter((u) => u.side === side && armed(u) && u.job !== 'rout'); if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; for (const u of army) march(u, k); if (side === 0) FK.fire('event', 'march', army[0]); return army.length; }
-const armyOf = (side) => units().filter((u) => u.side === side && armed(u));
+function attack(side, k) { const army = armyFree(side, 'rout'); if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; for (const u of army) march(u, k); if (side === 0) FK.fire('event', 'march', army[0]); return army.length; }
+const armyOf = (side) => units().filter((u) => u.side === side && ECON.soldier(u.code)), BUSY = { rout: (u) => u.job === 'rout' }, armyFree = (side, ...skip) => armyOf(side).filter((u) => !skip.some((k) => BUSY[k](u))); // E372
 const vs = (a, t) => D.counter ** (stat(a).vs === stat(t).cls); // E282
 const power = (us) => us.reduce((n, u) => n + u.hp * Math.max(D.leastBlow, FK.stat(u.code, u.side, 'atk')) / D.odds.per, 0); // E238
 function odds(S, side) { const F = armyOf(side), a = S.slice(0, D.odds.look), b = F.slice(0, D.odds.look); let x = 0, y = 0, p = power(S); for (const u of a) for (const v of b) { x += vs(u, v); y += vs(v, u); } // E283
@@ -49,7 +49,7 @@ FK.on('tick', (dt) => {
     else if (u.job === 'rout' && !u.path) u.job = 'idle';
     if (u.job !== 'fight') continue; const t = u.target; if (!t || !alive(t)) { u.target = null; u.path = null; if (u.was != null && armed(u)) march(u, u.was); else u.job = 'idle'; continue; }
     if (edgeDist(u, t) <= s.rng + 0.5) { u.path = null; u.face = t.bx < u.bx ? -1 : 1; if (u.cd <= 0) { hit(u, t); u.cd = s.rof; } } else if (!u.path && u.rp <= 0) { u.rp = D.repath; if (!toward(u, t)) { u.target = null; u.job = 'idle'; u.rp = 3 * D.repath; } } }
-  for (let side = 0; side < SIDES.length; side++) { const w = waves[side]; if (!w) continue; w.t += dt; const army = armyOf(side).filter((u) => u.job !== 'rout'); if (army.length < D.breakAt * w.n0) recall(side); }
+  for (let side = 0; side < SIDES.length; side++) { const w = waves[side]; if (!w) continue; w.t += dt; if (armyFree(side, 'rout').length < D.breakAt * w.n0) recall(side); }
 });
 // E240
 FK.on('draw', (ctx, s) => { if (!FK.show.U) return; const [cw, ch] = FK.size();
@@ -59,5 +59,5 @@ FK.on('draw', (ctx, s) => { if (!FK.show.U) return; const [cw, ch] = FK.size();
   const w = waves[0]; if (w) { const [bx, by] = FK.tileMid(w.k), [vx, vy] = FK.toView(bx, by, Math.max(0, FK.H[w.k])), [x, y] = FK.toScreen(vx, vy); ctx.strokeStyle = '#ff6b5b'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(x, y, 14 * s, 7 * s, 0, 0, 7); ctx.moveTo(x - 20 * s, y); ctx.lineTo(x + 20 * s, y); ctx.moveTo(x, y - 10 * s); ctx.lineTo(x, y + 10 * s); ctx.stroke(); }
 });
 FK.on('shut', (side, u) => !u || isFoe(side, u)); // E329
-return { attack, recall, fight, march, hit, damage, die, armyOf, power, odds, waves, armed, enemies, isFoe, groupOf, stance, treaty, atWar, friendly, hpMax, stat };
+return { attack, recall, fight, march, hit, damage, die, armyOf, armyFree, power, odds, waves, armed, enemies, isFoe, groupOf, stance, treaty, atWar, friendly, hpMax, stat };
 })();

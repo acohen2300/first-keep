@@ -298,44 +298,44 @@
      "F13a: books/tech.js O51 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "shields": [
-     "bring",
-     "Shields (barracks, Bronze): Infantry take 8% less harm."
+     "in v100",
+     "F18: Research book O88"
     ],
     "spearwall": [
-     "bring",
-     "Spear wall (barracks, Bronze): Spearmen are 10% tougher."
+     "in v100",
+     "F18: Research book O89"
     ],
     "drill": [
-     "bring",
-     "Drill (barracks, Bronze): Soldiers are 15% tougher."
+     "in v100",
+     "F18: Research book O90"
     ],
     "phalanx": [
-     "bring",
-     "Phalanx (barracks, Classical): Spearmen become Hoplites. Upgrades the spear in place (the Unit shell's Level)."
+     "in v100",
+     "F18: Research book O91 (its rank: the kind raised and renamed)"
     ],
     "legion": [
-     "bring",
-     "Legion (barracks, Classical): Infantry 10% tougher, hit harder."
+     "in v100",
+     "F18: Research book O92"
     ],
     "pikesquare": [
-     "bring",
-     "Pike square (barracks, Medieval): Spearmen become Pikemen: death to horse. Upgrades the spear in place (the Unit shell's Level)."
+     "in v100",
+     "F18: Research book O93 (its rank: the kind raised and renamed)"
     ],
     "arms": [
-     "bring",
-     "Men-at-arms (barracks, Medieval): Swordsmen become Men-at-arms. Upgrades the sword in place (the Unit shell's Level)."
+     "in v100",
+     "F18: Research book O94 (its rank: the kind raised and renamed)"
     ],
     "halberd": [
-     "bring",
-     "Halberd (barracks, Gunpowder): Spearmen become Halberdiers. Upgrades the spear in place (the Unit shell's Level)."
+     "in v100",
+     "F18: Research book O95 (its rank: the kind raised and renamed)"
     ],
     "tercio": [
-     "bring",
-     "Tercio (barracks, Gunpowder): Infantry are 15% tougher."
+     "in v100",
+     "F18: Research book O96"
     ],
     "bayonet": [
-     "bring",
-     "Bayonet (barracks, Gunpowder): Musketeers hit harder."
+     "in v100",
+     "F18: Research book O97"
     ],
     "fieldcraft": [
      "in v100",
@@ -370,36 +370,36 @@
      "Feudal levy (barracks, Medieval): Infantry cost 10% less."
     ],
     "slings": [
-     "bring",
-     "Slings (range, Bronze): Javelineers hit harder."
+     "in v100",
+     "F18: Research book O98"
     ],
     "composite": [
-     "bring",
-     "Composite bow (range, Bronze): Archers reach farther."
+     "in v100",
+     "F18: Research book O99"
     ],
     "firearrows": [
-     "bring",
-     "Fire arrows (range, Medieval): Archers set wooden buildings alight."
+     "in v100",
+     "F18: Research book O100"
     ],
     "bodkin": [
-     "bring",
-     "Bodkin points (range, Medieval): Archers hit harder."
+     "in v100",
+     "F18: Research book O101"
     ],
     "xbowdrill": [
-     "bring",
-     "Crossbow drill (range, Medieval): Crossbowmen hit harder."
+     "in v100",
+     "F18: Research book O102"
     ],
     "longbow": [
-     "bring",
-     "Longbow (range, Medieval): Archers become Longbowmen. Upgrades the archer in place (the Unit shell's Level)."
+     "in v100",
+     "F18: Research book O103 (its rank: the kind raised and renamed)"
     ],
     "musket": [
-     "bring",
-     "Musket (range, Gunpowder): Arquebusiers become Musketeers. Upgrades the arquebus in place (the Unit shell's Level)."
+     "in v100",
+     "F18: Research book O104 (its rank: the kind raised and renamed)"
     ],
     "volley": [
-     "bring",
-     "Volley fire (range, Gunpowder): Guns hit harder."
+     "in v100",
+     "F18: Research book O105"
     ],
     "learning": [
      "bring",
@@ -426,84 +426,84 @@
      "Archer stakes (range, Medieval): A shooter who has stood five seconds plants a stake: a horse that charges it is hurt and thrown back."
     ],
     "horses": [
-     "bring",
-     "Horse breeding (stable, Bronze): Mounted units are 12% faster; the scout rides. Upgrades the scout in place (the Unit shell's Level). See misfits."
+     "in v100",
+     "F18: Research book O106 (its rank: the kind raised and renamed)"
     ],
     "bridles": [
-     "bring",
-     "Bits and bridles (stable, Bronze): Mounted units are 5% faster. See misfits."
+     "in v100",
+     "F18: Research book O107"
     ],
     "saddles": [
-     "bring",
-     "Saddles (stable, Classical): Mounted units are 10% tougher."
+     "in v100",
+     "F18: Research book O108"
     ],
     "stirrups": [
-     "bring",
-     "Stirrups (stable, Classical): Mounted units hit harder."
+     "in v100",
+     "F18: Research book O109"
     ],
     "horseshoes": [
-     "bring",
-     "Horseshoes (stable, Medieval): Shod hooves bite the ice; horses bog down less."
+     "in v100",
+     "F18: Research book O110"
     ],
     "remounts": [
-     "bring",
-     "Stud farms (stable, Gunpowder): Mounted units train 20% faster."
+     "in v100",
+     "F18: Research book O111"
     ],
     "cavalry": [
-     "bring",
-     "Cavalry (stable, Classical): Chariots become Horsemen. Upgrades the chariot in place (the Unit shell's Level). See misfits."
+     "in v100",
+     "F18: Research book O112 (its rank: the kind raised and renamed)"
     ],
     "knighthood": [
-     "bring",
-     "Knighthood (stable, Medieval): Cataphracts become Knights. Upgrades the cata in place (the Unit shell's Level). See misfits."
+     "in v100",
+     "F18: Research book O113 (its rank: the kind raised and renamed)"
     ],
     "dragoons": [
-     "bring",
-     "Dragoons (stable, Gunpowder): Mounted units are 10% faster. See misfits."
+     "in v100",
+     "F18: Research book O114"
     ],
     "bronze": [
-     "bring",
-     "Bronze (smith, Bronze): Soldiers and towers hit harder."
+     "in v100",
+     "F18: Research book O115"
     ],
     "spearheads": [
-     "bring",
-     "Socketed heads (smith, Bronze): Spearmen hit harder."
+     "in v100",
+     "F18: Research book O116"
     ],
     "iron": [
-     "bring",
-     "Iron working (smith, Bronze): Soldiers and towers hit harder still."
+     "in v100",
+     "F18: Research book O117"
     ],
     "tempering": [
-     "bring",
-     "Tempering (smith, Medieval): Blades do not go brittle in frost."
+     "in v100",
+     "F18: Research book O118"
     ],
     "casehard": [
-     "bring",
-     "Case hardening (smith, Gunpowder): Soldiers hit harder."
+     "in v100",
+     "F18: Research book O119"
     ],
     "helmets": [
-     "bring",
-     "Helmets (smith, Bronze): Infantry take 10% less harm."
+     "in v100",
+     "F18: Research book O120"
     ],
     "leather": [
-     "bring",
-     "Leather armour (smith, Bronze): Soldiers take 15% less harm."
+     "in v100",
+     "F18: Research book O121"
     ],
     "scale": [
-     "bring",
-     "Scale armour (smith, Classical): Mounted units take 20% less harm."
+     "in v100",
+     "F18: Research book O122"
     ],
     "chain": [
-     "bring",
-     "Chain mail (smith, Classical): Soldiers take 30% less harm."
+     "in v100",
+     "F18: Research book O123"
     ],
     "plate": [
-     "bring",
-     "Plate armour (smith, Medieval): Soldiers take 40% less harm."
+     "in v100",
+     "F18: Research book O124"
     ],
     "oiling": [
-     "bring",
-     "Oiled steel (smith, Gunpowder): Blades and armour do not rust in rain."
+     "in v100",
+     "F18: Research book O125"
     ],
     "slits": [
      "bring",
@@ -538,32 +538,32 @@
      "Gun towers (tower, Gunpowder): Every great tower cut down and thickened for cannon: 40% tougher again, +10 damage, +30 reach, +20 sight, 3 more inside. Upgrades every tower in place. See misfits."
     ],
     "torsion": [
-     "bring",
-     "Torsion springs (siege, Classical): Catapults and ballistae reach farther."
+     "in v100",
+     "F18: Research book O126"
     ],
     "engineers": [
-     "bring",
-     "Siege engineers (siege, Classical): Engines build 25% faster."
+     "in v100",
+     "F18: Research book O127"
     ],
     "burningshot": [
-     "bring",
-     "Burning shot (siege, Medieval): Engines set buildings alight."
+     "in v100",
+     "F18: Research book O128"
     ],
     "counterweight": [
-     "bring",
-     "Counterweight (siege, Medieval): Trebuchets hit harder."
+     "in v100",
+     "F18: Research book O129"
     ],
     "corned": [
-     "bring",
-     "Corned powder (siege, Gunpowder): Bombards hit harder."
+     "in v100",
+     "F18: Research book O130"
     ],
     "limbers": [
-     "bring",
-     "Gun carriages (siege, Gunpowder): Engines move 25% faster. See misfits."
+     "in v100",
+     "F18: Research book O131"
     ],
     "petards": [
-     "bring",
-     "Petards (siege, Gunpowder): Bombards set what they hit alight."
+     "in v100",
+     "F18: Research book O132"
     ],
     "drawbridge": [
      "bring",

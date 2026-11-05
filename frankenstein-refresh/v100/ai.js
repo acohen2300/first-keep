@@ -5,7 +5,7 @@ const { D, B, SIDES, N } = FK;
 // E170
 const things = FK.things, units = FK.units, Y = ECON.YIELDS;
 const clock = SIDES.map(() => 0), seen = SIDES.map(() => ({ hp: 0, t: 0 }));
-const home = FK.seatOf, born = (h) => D.trains[h.code][0]; // E242
+const home = FK.seatOf, born = (h) => FK.trains(h.code)[0]; // E242
 const bought = (cap) => FK.ticked(cap).filter((c) => !FK.ticked('Seat').includes(c) && D.cost[c]); // E243
 const [HOUSE] = bought('House'), [FIELD] = bought('Field'), [WALL] = bought('Line'), [GATE] = bought('Gate'), WP = D.ai.walls, rings = new Map();
 const camps = Object.fromEntries(Y.map((y) => [y, bought('Drop-off').find((c) => !FK.ticked('Shore').includes(c) && (FK.SH[c].drop || []).includes(y))])); // E244
@@ -19,7 +19,7 @@ function wallPlan(h) { const H = D.place.half, R = WP.ring + H, ci = h.i + h.n *
   for (let s = -WP.steps; s <= WP.steps; s++) { const a = base + s * WP.step, i = Math.floor(ci + Math.cos(a) * R), j = Math.floor(cj + Math.sin(a) * R); if (pi !== null && i !== pi && j !== pj) add(i, pj); add(i, j); [pi, pj] = [i, j]; }
   const ks = [...off.keys()], gates = ks.slice().sort((a, b) => off.get(a) - off.get(b)).filter((k, n) => n < WP.gates); return [...gates.map((k) => [k, GATE]), ...ks.filter((k) => !gates.includes(k)).map((k) => [k, WALL])]; }
 const count = (side, code) => things().filter((t) => t.kind === 'bld' && t.side === side && t.code === code).length;
-const trainer = (side, code) => things().find((t) => t.kind === 'bld' && t.side === side && t.done >= 1 && (D.trains[t.code] || []).includes(code) && !(t.q && t.q.length));
+const trainer = (side, code) => things().find((t) => t.kind === 'bld' && t.side === side && t.done >= 1 && FK.trains(t.code).includes(code) && !(t.q && t.q.length));
 function round(side) { const s = SIDES[side], h = home(side); if (!h) return; const age = s.age, jobs = ECON.jobs(side), vs = ECON.villagersOf(side), want = D.ai.people[age], mix = D.ai.mix[age], sites = things().filter((t) => t.kind === 'bld' && t.side === side && t.done < 1);
   // E246
   const onJobs = Y.reduce((n, y) => n + jobs[y], 0) || 1, gap = (y) => mix[Y.indexOf(y)] - jobs[y] / onJobs, need = Y.slice().sort((a, b) => gap(b) - gap(a))[0], over = Y.slice().sort((a, b) => gap(a) - gap(b))[0];

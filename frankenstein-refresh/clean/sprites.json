@@ -22,8 +22,8 @@
    "index.html, the brushes floor, g"
   ],
   "KIT": [
-   "bring",
-   "the armour kits (leather, chain, plate) a side's research puts on its soldiers: with the tech tree, held as a skin in preview 49 (Parked, Nov 4); as a Sprites book entry read by a Level attribute"
+   "in v100",
+   "F18: Sprites book kit (three steps), index.html the figures: person's KIT and its shoulder guard, kitOf"
   ],
   "P_": [
    "in v100",
@@ -54,12 +54,12 @@
    "index.html, the figures floor, bronzeG"
   ],
   "person": [
-   "bring",
-   "index.html, the figures floor has person; the armour kit's overrides (KIT) and the helmet crest to bring with KIT"
+   "in v100",
+   "F18: index.html the figures, person with the kit"
   ],
   "helm": [
-   "bring",
-   "index.html, the figures floor has helm with every helmet kind; the crest colour (o.crest) to bring with KIT"
+   "in v100",
+   "F18: index.html the figures, helm with the crest colour (o.crest)"
   ],
   "weapon": [
    "in v100",
@@ -78,8 +78,8 @@
    "index.html, the figures floor, quad (deer, wolf, bear and the held beasts)"
   ],
   "elephant": [
-   "bring",
-   "the elephant's brush: with the Maurya war elephant look (held)"
+   "in v100",
+   "F18: Sprites book elephant, a drawing list (index.html sketch)"
   ],
   "wheel": [
    "in v100",
@@ -103,23 +103,23 @@
     ],
     "spear": [
      "in v100",
-     "Sprites book entry with key \"spear\" (P1–P19), drawn by its brush in index.html, the figures floor"
+     "Sprites book entry with key \"spear\"; F18: its ranks and drawing list, Mid's pixels (t-kinds)"
     ],
     "archer": [
      "in v100",
-     "Sprites book entry with key \"archer\" (P1–P19), drawn by its brush in index.html, the figures floor"
+     "Sprites book entry with key \"archer\"; F18: its ranks and drawing list, Mid's pixels (t-kinds)"
     ],
     "cata": [
      "in v100",
-     "Sprites book entry with key \"cata\" (P1–P19), drawn by its brush in index.html, the figures floor"
+     "Sprites book entry with key \"cata\"; F18: its ranks and drawing list, Mid's pixels (t-kinds)"
     ],
     "ram": [
      "in v100",
-     "Sprites book entry with key \"ram\" (P1–P19), drawn by its brush in index.html, the figures floor"
+     "Sprites book entry with key \"ram\"; F18: its ranks and drawing list, Mid's pixels (t-kinds)"
     ],
     "catapult": [
      "in v100",
-     "Sprites book entry with key \"catapult\" (P1–P19), drawn by its brush in index.html, the figures floor"
+     "Sprites book entry with key \"catapult\"; F18: its ranks and drawing list, Mid's pixels (t-kinds)"
     ],
     "priest": [
      "in v100",
@@ -135,7 +135,7 @@
     ],
     "scout": [
      "in v100",
-     "Sprites book entry with key \"scout\" (P1–P19), drawn by its brush in index.html, the figures floor"
+     "Sprites book entry with key \"scout\"; F18: its ranks and drawing list, Mid's pixels (t-kinds)"
     ],
     "caravan": [
      "in v100",
@@ -178,8 +178,8 @@
      "the envoy, with diplomacy; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
     ],
     "sword": [
-     "bring",
-     "the swordsman, with his shell; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F18: Sprites book entry with key \"sword\", Mid's pixels (t-kinds)"
     ],
     "legion": [
      "bring",
@@ -190,48 +190,48 @@
      "the Persian Immortal (civ elite), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
     ],
     "jav": [
-     "bring",
-     "the javelin thrower, with his shell; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F18: Sprites book entry with key \"jav\", Mid's pixels (t-kinds)"
     ],
     "crossbow": [
-     "bring",
-     "the crossbowman, with his shell; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F18: Sprites book entry with key \"crossbow\", Mid's pixels (t-kinds)"
     ],
     "arquebus": [
-     "bring",
-     "the arquebusier, a gunpowder soldier (see misfits); held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F18: Sprites book entry with key \"arquebus\", Mid's pixels (t-kinds)"
     ],
     "bombard": [
-     "bring",
-     "the bombard, a gunpowder engine (see misfits); held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F18: Sprites book entry with key \"bombard\", Mid's pixels (t-kinds)"
     ],
     "chariot": [
-     "bring",
-     "the Han chariot (civ unit), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F18: Sprites book entry with key \"chariot\", Mid's pixels (t-kinds)"
     ],
     "malihorse": [
      "bring",
      "the Mali horseman (civ elite), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
     ],
     "harcher": [
-     "bring",
-     "the horse archer (Mongol elite), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F18: Sprites book entry with key \"harcher\", Mid's pixels (t-kinds)"
     ],
     "elephant": [
-     "bring",
-     "the Maurya war elephant (civ elite), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F18: Sprites book entry with key \"elephant\", Mid's pixels (t-kinds)"
     ],
     "stower": [
-     "bring",
-     "the siege tower, with Engines; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F18: Sprites book entry with key \"stower\", Mid's pixels (t-kinds)"
     ],
     "ballista": [
-     "bring",
-     "the ballista, with Engines; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F18: Sprites book entry with key \"ballista\", Mid's pixels (t-kinds)"
     ],
     "treb": [
-     "bring",
-     "the trebuchet, with Engines; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F18: Sprites book entry with key \"treb\", Mid's pixels (t-kinds)"
     ],
     "boar": [
      "in v100",
@@ -292,16 +292,16 @@
    "zoom steps for the cache: v100's sprite() snaps to steps of √2 (STEP)"
   ],
   "ELITE_LOOK": [
-   "bring",
-   "which looks wear the elite rank: with the civs' elites and the tech tree, held as skins; as a Sprites book entry, not a list in code"
+   "in v100",
+   "F18: Sprites book: a look marked elite (crossbow, harcher, elephant); the peoples' elites come with M58"
   ],
   "elitePennant": [
-   "bring",
-   "the elite rank's gold pennant on a staff: with ELITE_LOOK"
+   "in v100",
+   "F18: Sprites book pennant, drawn by index.html sketch"
   ],
   "sprite": [
-   "bring",
-   "v100 has sprite() and unitSprite() (look, colour, pose, zoom); the tier and the armour kit in the key come with ELITE_LOOK and KIT"
+   "in v100",
+   "F18: index.html figure(): the rank and the kit in the key"
   ],
   "TOWER_LOOK": [
    "in v100",

@@ -289,10 +289,10 @@ const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], spawn: [], gone
 const on = (ev, fn) => HOOK[ev].push(fn), fire = (ev, ...a) => { for (const f of HOOK[ev]) if (f(...a)) return true; return false; };
 // E277
 const known = new Map(), FXC = new Map(); on('start', () => { known.clear(); FXC.clear(); });
-const keysOf = (code) => { let p = ''; const [L] = code.match(/^[A-Z]*/); return [...L].map((c) => (p += c)).concat(code, SH[code] ? SH[code].ticks : []); }; // E278
+const keysOf = (code) => { let p = ''; const [L] = code.match(/^[A-Z]*/); return [...L].map((c) => (p += c)).concat(code, SH[code] ? SH[code].ticks.concat(SH[code].class || []) : []); }; // E278
 const BASE = { spd: (c) => ref(SH[c].pace), hp: (c) => D.bldHp[c] ?? (D.stats[c] || {}).hp, rate: (c) => (SH[c].rate ? ref(SH[c].rate) : D.rate[SH[c].find]), cost: (c) => D.cost[c] || (BOOKS.tech[c] || {}).value?.cost,
   time: (c) => (BOOKS.tech[c] || {}).value?.time, train: (c) => D.train[c], build: (c) => D.buildTime[c], queue: () => fromBook('screen').mold.slots, carry: () => D.carry, room: (c) => D.pop[c], limit: (c) => D.caps[c], eat: (c) => ref(SH[c].upkeep), spoil: () => D.spoil.year, soil: () => D.soil.floor,
-  mud: (c) => D.walkCost.mud * (D.pace.sink[c] ?? D.pace.sink.foot), snow: () => D.walkCost.snow, wet: () => D.pace.storm, studs: () => D.pace.bare }; // E279
+  mud: (c) => D.walkCost.mud * (D.pace.sink[c] ?? D.pace.sink.foot), snow: () => D.walkCost.snow, wet: () => D.pace.storm, studs: () => D.pace.bare, armor: () => D.harm }; // E279
 function stat(code, side, key) { // E280
   const memo = FXC.get(side) || FXC.set(side, new Map()).get(side), id = code + ' ' + key; if (memo.has(id)) return memo.get(id);
   const ks = keysOf(code), fx = [...(known.get(side) || [])].flatMap((t) => BOOKS.tech[t].value.fx).filter((f) => f.s === key && (!f.k || [].concat(f.k).some((k) => k === '*' || ks.includes(k))));
@@ -300,6 +300,10 @@ function stat(code, side, key) { // E280
   const base = (BASE[key] || ((c) => (D.stats[c] || {})[key]))(code), v = base == null ? base : typeof base === 'object' ? Object.fromEntries(Object.entries(base).map(([y, n]) => [y, Math.round(law(n))])) : law(base);
   memo.set(id, v); return v;
 }
+const kinds = (cls) => SHELLS.filter((c) => SH[c].class === cls), trains = (c) => (D.trains[c] || []).flatMap((k) => (SH[k] ? [k] : kinds(k))), aged = (c, side) => D.ages.indexOf(SH[c].age) <= SIDES[side].age; // E369
+const RANKS = {}, KITS = []; for (const [c, e] of Object.entries(BOOKS.tech)) { if (e.value.rank) (RANKS[e.value.rank.k] = RANKS[e.value.rank.k] || []).push(c); if (e.value.kit) KITS.push(c); } // E370
+const ranks = (code, side) => (RANKS[code] || []).filter((c) => (known.get(side) || new Set()).has(c)), rankOf = (code, side) => ranks(code, side).length, kitOf = (side, code) => KITS.filter((c) => SH[code].class && (known.get(side) || new Set()).has(c)).length;
+const rankName = (code, side) => { const r = ranks(code, side); return r.length ? BOOKS.tech[r.at(-1)].value.rank.name : (SH[code] || {}).name; };
 function learn(side, id) { (known.get(side) || known.set(side, new Set()).get(side)).add(id); FXC.delete(side); for (const t of [...units, ...things]) if (t.side === side && t.hpMax) { const M = stat(t.code, side, 'hp'); t.hp *= M / t.hpMax; t.hpMax = M; } } // E281
 let last = 0, frameDt = 0;
 const every = ([secs, ph]) => Math.floor((K.t - ph / D.fps) / secs) > Math.floor((K.t0 - ph / D.fps) / secs); // E67
@@ -708,7 +712,8 @@ WOOD = '#8a5d34',
 LEATHER = '#6b4a2c';
 const steel = (x0, y0, x1, y1) => LG(x0, y0, x1, y1, ['#eef2f5', '#a9b2bb', '#66707a']);
 const bronzeG = (x0, y0, x1, y1) => LG(x0, y0, x1, y1, ['#f0c477', '#c08a3a', '#7d5420']);
-function person(o, fr) { const tunic = o.tunic, trim = o.trim || tunic, sk = o.skin || SKIN, hip = o.seated ? -13 : -9, sh = hip - 7.5; const sw = fr === 1 ? 3 : fr === 2 ? -3 : 0, atk = fr === 3;
+let KIT = 0; // E366
+function person(o, fr) { if (KIT) { o = { ...o }; const tr = o.trim || o.tunic; for (const st of SPRITE.kit.slice(0, KIT)) for (const [k, m] of Object.entries(st)) o[k] = paintOf(m, tr)[o[k] || ''] || o[k]; } const tunic = o.tunic, trim = o.trim || tunic, sk = o.skin || SKIN, hip = o.seated ? -13 : -9, sh = hip - 7.5; const sw = fr === 1 ? 3 : fr === 2 ? -3 : 0, atk = fr === 3;
 const leg = (x0, dx, c) => { if (o.seated) { P_( [ [x0 - 1.4, hip], [x0 + 1.4, hip], [x0 + 4.4, hip + 1.6], [x0 + 3, hip + 3], ], c, INK, 0.4, ); P_( [ [x0 + 3, hip + 1.5], [x0 + 4.6, hip + 1.5],
 [x0 + 4.2, hip + 7], [x0 + 2.8, hip + 7], ], c, INK, 0.4, ); E_(x0 + 3.9, hip + 7.4, 1.4, 0.8, o.boots || '#2c2118'); return; } P_( [ [x0 - 1.3, hip], [x0 + 1.3, hip], [x0 + dx * 0.6 + 1.1, hip + 5],
 [x0 + dx - 0.2 + 1, -0.6], [x0 + dx - 1.4, -0.6], [x0 + dx * 0.6 - 1.2, hip + 5], ], c, INK, 0.4, ); P_( [ [x0 + dx - 1.6, -1.8], [x0 + dx + 1.4, -1.8], [x0 + dx + 2.8, 0], [x0 + dx - 1.6, 0], ],
@@ -723,7 +728,7 @@ for (let x = -3; x < 3.5; x += 1.2) g.fillRect(x + ((y * 3) % 1.2), y, 0.45, 0.4
 for (let y = sh + 1.6; y < hip; y += 1.3) for (let x = -3; x < 3.5; x += 1.4) { g.beginPath(); g.arc(x, y, 0.7, 0, Math.PI); g.stroke(); } } if (o.body === 'segm') { P_( [ [-3.4, hip + 0.4],
 [3.6, hip + 0.4], [4, sh + 0.8], [-3.6, sh + 0.8], ], steel(-4, 0, 4, 0), INK, 0.5, ); for (let y = sh + 2; y < hip; y += 1.4) L_(-3.5, y, 3.8, y - 0.1, '#5d6670', 0.45); }
 if (o.body === 'plate' || o.body === 'segm' || o.body === 'mail' || o.body === 'scale') P_( [ [-3.2, hip - 2.6], [3.4, hip - 2.6], [3.6, hip + 2.2], [-3.4, hip + 2.2], ],
-LG(0, hip - 3, 0, hip + 2, [shade(trim, 1.15), trim]), INK, 0.4, ); if (o.sash) L_(-3, sh + 1.2, 3.4, hip - 0.6, o.sash, 1.3); L_(-3.5, hip - 0.4, 3.8, hip - 0.5, '#3b2a14', 1); if (o.cross) { P_( [
+LG(0, hip - 3, 0, hip + 2, [shade(trim, 1.15), trim]), INK, 0.4, ); if (o.sash) L_(-3, sh + 1.2, 3.4, hip - 0.6, o.sash, 1.3); if (KIT) { E_(0.6, sh + 1.4, 2.5, 1.5, KIT >= 3 ? steel(-2, sh, 3, sh + 3) : KIT === 2 ? '#9aa2a8' : LEATHER, INK, 0.4); if (KIT >= 3) L_(-1.6, sh + 0.7, 2.8, sh + 0.9, 'rgba(255,255,255,.7)', 0.4); } L_(-3.5, hip - 0.4, 3.8, hip - 0.5, '#3b2a14', 1); if (o.cross) { P_( [
 [-0.6, sh + 1.5], [0.6, sh + 1.5], [0.6, hip - 1.2], [-0.6, hip - 1.2], ], o.cross, ); P_( [ [-2.5, sh + 3.4], [2.7, sh + 3.4], [2.7, sh + 4.5], [-2.5, sh + 4.5], ], o.cross, ); } const hx = 0.5,
 hy = sh - 2.9; P_( [ [-0.6, sh + 0.6], [1.4, sh + 0.6], [1.2, sh - 1], [-0.4, sh - 1], ], shade(sk, 0.85), );
 E_(hx, hy, 2.6, 2.7, LG(hx - 2, hy - 2, hx + 2, hy + 2, [shade(sk, 1.08), sk, shade(sk, 0.82)]), shade(sk, 0.5), 0.4); if (o.beard) P_( [ [hx - 0.4, hy + 1], [hx + 2.4, hy + 0.8],
@@ -821,27 +826,25 @@ function planks(x0, y0, x1, y1, col) { P_( [ [x0, y0], [x1, y0], [x1, y1], [x0, 
 g.lineWidth = 0.35; for (let y = y0 + 2; y < y1; y += 2.2) { g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke(); } }
 const WORKTOOL = ['axe', 'none', 'pick', 'none', 'rod', 'hammer'];
 // E76
-const paintOf = (o, c) => Object.fromEntries(Object.entries(o || {}).map(([k, v]) => [k, v === '$side' ? c : typeof v === 'string' && v.startsWith('$side*') ? shade(c, +v.slice(6)) : v]));
+const paintOf = (o, c) => Object.fromEntries(Object.entries(o || {}).map(([k, v]) => [k, v === '$side' ? c : typeof v === 'string' && v.includes('*') ? shade(...v.replace('$side', c).split('*')) : v]));
+const SWAY = (fr) => (fr === 1 ? 1 : fr === 2 ? -1 : 0);
+function sketch(parts, c, fr) { // E367
+  const val = (x) => (typeof x === 'string' ? paintOf({ x }, c).x : Array.isArray(x) ? (x[0] === 'LG' ? LG(...x.slice(1, -1), x.at(-1).map(val)) : x.map(val)) : x && typeof x === 'object' ? ('sway' in x ? x.sway * SWAY(fr) : 'atk' in x ? x.atk[+(fr === 3)] : paintOf(x, c)) : x);
+  const OPS = { P: P_, E: E_, L: L_, wheel, planks, helm, rect: (x, y, w, h, f) => { g.fillStyle = f; g.fillRect(x, y, w, h); }, Q: (x0, y0, x1, y1, x2, y2, s, w) => { g.strokeStyle = s; g.lineWidth = w; g.beginPath(); g.moveTo(x0, y0); g.quadraticCurveTo(x1, y1, x2, y2); g.stroke(); }, horse: (o, dx) => horse(o, fr, dx), person: (o) => person(o, fr) };
+  for (const [op, ...a] of parts) if (op === 'at') { g.save(); g.translate(val(a[0]), val(a[1])); if (a[2]) g.rotate(val(a[2])); sketch(a[3], c, fr); g.restore(); } else if (op === 'atk' || op === 'rest') { if ((fr === 3) === (op === 'atk')) sketch(a[0], c, fr); } else OPS[op](...a.map(val));
+}
 const BRUSH = {
-person: (o, c, fr) => person(paintOf(o, c), fr),
-quad: (o, c, fr) => quad(paintOf(o, c), fr),
-worker: (o, c, fr) => { const wk = fr >= 10 ? (fr - 10) >> 1 : -1, ph = fr >= 10 ? (fr - 10) & 1 : 0; return person({ ...paintOf(o, c), weapon: wk < 0 ? 'axe' : WORKTOOL[wk], lean: wk === 1 || wk === 3 ? (ph ? 0.62 : 0.4) : 0 }, wk < 0 ? fr : ph ? 3 : 0); },
-cata: (o, c, fr) => (() => { horse({ coat: '#5a3a24', barding: 'scale' }, fr); g.save(); g.translate(-0.6, -1); person( { tunic: c, body: 'scale', head: 'conical', helmCol: STEEL, weapon: 'lance',
-seated: true, legs: '#9aa2a8', }, fr, ); g.restore(); })(),
-ram: (o, c, fr) => { L_(-17 + (fr === 3 ? 4 : 0), -8, 15 + (fr === 3 ? 4 : 0), -8, '#6b4a2c', 3); P_( [ [15 + (fr === 3 ? 4 : 0), -10], [19 + (fr === 3 ? 4 : 0), -8], [15 + (fr === 3 ? 4 : 0), -6], ],
-'#5d6670', INK, 0.4, ); P_( [ [-13, -6], [13, -6], [13, -12], [0, -19], [-13, -12], ], LG(0, -19, 0, -6, ['#8a6a44', '#6b4a2c']), INK, 0.6, ); g.strokeStyle = 'rgba(30,20,10,.5)'; g.lineWidth = 0.4;
-for (let i = -11; i < 13; i += 3) { g.beginPath(); g.moveTo(i, -6); g.lineTo(i, -12 + Math.abs(i) * 0); g.stroke(); } P_( [ [-13, -12], [0, -19], [13, -12], [0, -14], ], '#7a8a5a', INK, 0.4, );
-g.fillStyle = c; g.fillRect(-1, -19, 2, -5); P_( [ [1, -24], [6, -22.6], [1, -21.2], ], c, ); wheel(-9, -3.2, 3.2); wheel(0, -3.2, 3.2); wheel(9, -3.2, 3.2); },
-catapult: (o, c, fr) => { planks(-11, -6, 11, -3, WOOD); P_( [ [-2, -6], [0, -14], [2, -6], ], WOOD, INK, 0.5, ); const a = fr === 3 ? -1.2 : -0.35; g.save(); g.translate(0, -12); g.rotate(a);
-L_(-14, 0, 6, 0, '#6b4a2c', 1.6); E_(-14, 0, 2.6, 1.6, '#4a3020', INK, 0.4); if (fr !== 3) E_(-14, -1.6, 1.4, 1.4, '#8a8a8a'); g.restore(); L_(-8, -6, -11, -9, '#6b4a2c', 0.8); g.fillStyle = c;
-g.fillRect(8, -6, 3, -4); wheel(-7, -2.6, 2.8); wheel(7, -2.6, 2.8); },
-caravan: (o, c, fr) => { horse({ coat: '#8a7a6a', saddle: false }, fr, 9); L_(-2, -9, 6, -11, '#5a3a1c', 0.8); planks(-14, -13, -1, -6, WOOD); E_(-11, -16, 2.6, 2.4, '#c9a96a', INK, 0.3);
+person: (v, c, fr) => person(paintOf(v.o, c), fr),
+quad: (v, c, fr) => quad(paintOf(v.o, c), fr),
+worker: (v, c, fr) => { const wk = fr >= 10 ? (fr - 10) >> 1 : -1, ph = fr >= 10 ? (fr - 10) & 1 : 0; return person({ ...paintOf(v.o, c), weapon: wk < 0 ? 'axe' : WORKTOOL[wk], lean: wk === 1 || wk === 3 ? (ph ? 0.62 : 0.4) : 0 }, wk < 0 ? fr : ph ? 3 : 0); },
+draw: (v, c, fr) => sketch(v.parts, c, fr),
+caravan: (v, c, fr) => { horse({ coat: '#8a7a6a', saddle: false }, fr, 9); L_(-2, -9, 6, -11, '#5a3a1c', 0.8); planks(-14, -13, -1, -6, WOOD); E_(-11, -16, 2.6, 2.4, '#c9a96a', INK, 0.3);
 E_(-6.5, -16.4, 2.6, 2.6, '#d8c27a', INK, 0.3); E_(-8.5, -18.6, 2.2, 2, c, INK, 0.3); wheel(-7.5, -4.6, 4.4); },
-wagon: (o, c, fr) => { horse({ coat: '#6a5a4a', saddle: false }, fr, 14); horse({ coat: '#8a7a6a', saddle: false }, fr, 4); L_(-6, -9, 2, -11, '#5a3a1c', 0.8); planks(-22, -13, -4, -6, WOOD); P_( [
+wagon: (v, c, fr) => { horse({ coat: '#6a5a4a', saddle: false }, fr, 14); horse({ coat: '#8a7a6a', saddle: false }, fr, 4); L_(-6, -9, 2, -11, '#5a3a1c', 0.8); planks(-22, -13, -4, -6, WOOD); P_( [
 [-22, -13], [-4, -13], [-5, -22], [-13, -25], [-21, -22], ], '#e4dcc6', INK, 0.4, ); for (const x of [-18, -13, -8]) L_(x, -13, x, -22, '#d2c8ae', 0.6); L_(-21, -22, -5, -22, c, 1.4);
 wheel(-17, -4.6, 4.6); wheel(-8, -4.6, 4.6); },
 };
-const LOOKS = Object.fromEntries(Object.entries(SPRITE).filter(([, v]) => v.brush).map(([k, v]) => [k, (c, t, fr) => BRUSH[v.brush](v.o, c, fr)]));
+const LOOKS = Object.fromEntries(Object.entries(SPRITE).filter(([, v]) => v.brush).map(([k, v]) => [k, (c, t, fr) => { const r = t && v.rank ? v.rank[Math.min(t, v.rank.length) - 1] : v; BRUSH[r.brush](r, c, fr); }])); // E368
 const LOOKBOX = Object.fromEntries(Object.entries(SPRITE).filter(([, v]) => v.box).map(([k, v]) => [k, v.box])); // E77
 // ── B the buildings (E78)
 const B = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 110) B[c] = [e.name, ref(e.size), e.style === 'Open' ? 1 : 0, e.look, e.drop]; } // E79
@@ -969,7 +972,7 @@ const bldsNear = (x, y, r, fn) => { if (SGn !== things.length) regrid(); return 
 function makeUnits(roll) {
   play = dice(~seed); shown = dice(seed ^ D.looks); // E106
   // E107
-  for (const t of things) if (has(t, 'Seat') && D.players.includes(t.side)) { const got = []; stamp(t.bx, t.by, (t.n / 2 + 3) * D.tile, (k, d) => { if (walkable(k)) got.push([d, k]); }); got.sort((a, b) => a[0] - b[0]); for (const [, k] of got.slice(0, D.villagers)) spawn(D.trains[t.code][0], t.side, k, roll); const b = tileAt(...corner(t.side, ...D.boar.at)); if (walkable(b)) spawn(D.boar.code, -1, b, roll); } // E346
+  for (const t of things) if (has(t, 'Seat') && D.players.includes(t.side)) { const got = []; stamp(t.bx, t.by, (t.n / 2 + 3) * D.tile, (k, d) => { if (walkable(k)) got.push([d, k]); }); got.sort((a, b) => a[0] - b[0]); for (const [, k] of got.slice(0, D.villagers)) spawn(trains(t.code)[0], t.side, k, roll); const b = tileAt(...corner(t.side, ...D.boar.at)); if (walkable(b)) spawn(D.boar.code, -1, b, roll); } // E346
   // E108
   for (const w of D.wildlife) for (let m = count(roll, D[w.groups]); m > 0; m--) { // E109
     for (let tries = 0; tries < 100; tries++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (!inZ4(bx, by, 2 * D.tile) || !walkable(k)) continue;
@@ -1005,9 +1008,10 @@ function swayOf(u) { // E115
   return tip * Math.min(1, (lost - c3) / (c4 - c3)) * Math.sin(2 * Math.PI * f * u.t);
 }
 // E116
-function unitSprite(u, s) { const look = U[u.code][1], col = u.side >= 0 ? SIDES[u.side].col : C.white, [bw, bh] = LOOKBOX[look] || [26, 30], pad = 3;
-  const fr = u.path ? Math.floor((D.strideFrames * u.walked) / gait(u.code).stride) % D.strideFrames : u.tool != null ? 10 + u.tool * 2 + (Math.floor(u.t / D.beat) % 2) : 0;
-  return sprite(look + col + fr, bw + 2 * pad, bh + 2 * pad, bw / 2 + pad, bh + pad - 1, bw / 2 + pad, bh + pad - 1, 0, s, () => LOOKS[look](col, 0, fr)); }
+const figure = (look, col, lv, fr, s, kit) => { const [bw, bh] = LOOKBOX[look] || [26, 30], pad = 3;
+  return sprite(look + col + lv + kit + fr, bw + 2 * pad, bh + 2 * pad, bw / 2 + pad, bh + pad - 1, bw / 2 + pad, bh + pad - 1, 0, s, () => { KIT = kit; try { LOOKS[look](col, lv, fr); if (lv && SPRITE[look].elite) sketch(SPRITE.pennant.parts, col, fr); } finally { KIT = 0; } }); };
+function unitSprite(u, s) { const fr = u.path ? Math.floor((D.strideFrames * u.walked) / gait(u.code).stride) % D.strideFrames : u.tool != null ? 10 + u.tool * 2 + (Math.floor(u.t / D.beat) % 2) : 0;
+  return figure(U[u.code][1], u.side >= 0 ? SIDES[u.side].col : C.white, rankOf(u.code, u.side), fr, s, kitOf(u.side, u.code)); }
 // ── The things, drawn each frame back to fro (E117)
 const SPR = new Map(), STEP = Math.SQRT2;
 function sprite(key, W, H, tx, ty, ax, ay, skew, s, paint) { // E118
@@ -1204,7 +1208,7 @@ canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, 
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
 function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); GATES.clear(); fogT = 0; K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.fogT = K.storm = K.flash = K.hour = K.strikeT = jolt.t = 0; K.wetHour = false; K.told = NaN; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
-window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, lay, byLake, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, slips, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
+window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, lay, byLake, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, slips, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, kinds, trains, aged, rankOf, rankName, kitOf, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
   rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, sel: () => sel, select: (u) => (sel = u), seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>

@@ -6,8 +6,8 @@ const { D, B, U, SIDES, N, show } = FK, things = FK.things, units = FK.units, [M
 // E170
 const LAYERS = [['G', 'Grid'], ['Z', 'Zones'], ['T', 'Things'], ['R', 'Rim'], ['B', 'Buildings'], ['U', 'Units'], ['K', 'Climate'], ['V', 'View']]; // E171
 const SCR = fromBook('screen'), GROUPS = SCR.tabs; // E172
-const seatCode = () => FK.ticked('Seat')[0], born = () => D.trains[seatCode()][0]; // E173
-const soldiers = () => [...new Set(Object.values(D.trains).flat())].filter((c) => FK.SH[c].ticks.includes('Fight') && !FK.SH[c].ticks.includes('Gather') && !FK.SH[c].ticks.includes('Scout')); // E174
+const seatCode = () => FK.ticked('Seat')[0], born = () => FK.trains(seatCode())[0]; // E173
+const classes = () => Object.values(D.trains).flat().filter((k) => !FK.SH[k]), kindOf = (cls) => FK.kinds(cls).find((c) => FK.aged(c, ME)) || FK.kinds(cls)[0]; // E174
 const tall = (page) => !!(SCR[page] && SCR[page].ticks.includes('Tall')); // E175
 const OPTS = { // E176
   diff: [['Easy'], ['Normal'], ['Hard']], len: [['Conquest', 0], ['15 min', 900], ['30 min', 1800], ['60 min', 3600]], scen: [['Open'], ['Siege'], ['Silk Road'], ['Last Keep']],
@@ -103,6 +103,7 @@ const hall = () => { const h = FK.seatOf(ME); return h && h.done >= 1 ? h : null
 const trainer = (c) => ECON.lineFor(ME, c), P = D.place, line = (c) => FK.SH[c].ticks.includes('Line'), walled = (c) => line(c) || FK.SH[c].ticks.includes('Gate'); // E332
 const count = (c) => things().filter((t) => t.kind === 'bld' && t.side === ME && t.code === c).length, picked = (c) => S.ghost && S.ghost.code === c;
 const summary = () => `${OPTS.len[S.opt.len][0]} · Fog ${OPTS.fog[S.opt.fog][0].toLowerCase()} · Daily ${OPTS.daily[S.opt.daily][0].toLowerCase()}`;
+const aging = (c) => `${plural(U[c][0])} need the ${FK.SH[c].age} age`; // E373
 const isFind = (t) => t && t.kind !== 'unit' && t.kind !== 'bld' && ECON.yieldOf(t);
 // E184
 function read() { const s = SIDES[ME], r = ECON.result(); return { store: s.store, pop: ECON.popOf(ME), cap: ECON.popCap(ME), age: D.ages[s.age], aging: s.aging, ageCost: ECON.ageCost(ME), jobs: ECON.jobs(ME), rally: s.rally, army: WAR.armyOf(ME).length, wave: WAR.waves[0], sel: FK.sel(), subject: S.subject, time: ECON.time(), left: Math.max(0, D.bell - ECON.time()), score: ECON.score(ME), theirs: ECON.score(D.players[1]), result: r, next: D.ages[ECON.nextAge(ME)] || null, hall: hallRead() }; }
@@ -119,7 +120,7 @@ const VERBS = {
   opt: { label: (k, i) => OPTS[k][i][0], whyNot: (k) => (BUILT[k] ? '' : 'Not built yet'), run: (k, i) => { S.opt[k] = i; } },
   war: { label: () => '', whyNot: () => '', run: () => { S.war = !S.war; S.mid = 'map'; S.tab = null; S.arming = false; } },
   mid: { label: (m) => `<span class="t">${SVG[m]}</span>${{ train: 'Train', squad: 'Squad', direct: 'Direct' }[m]}`, whyNot: () => '', run: (m) => { S.mid = S.mid === m ? 'map' : m; } },
-  kind: { label: (c) => `<span class="t">${SVG[FK.SH[c].look]}</span>${U[c][0]}`, whyNot: (c) => { const b = trainer(c); return !b ? `Build a ${B[Object.keys(D.trains).find((x) => D.trains[x].includes(c))][0]}` : VERBS.train.whyNot(c, b); }, run: (c) => ECON.queue(trainer(c), c) }, // E186
+  kind: { label: (c) => `<span class="t">${SVG[FK.kinds(FK.SH[c].class).map((k) => FK.SH[k].look).find((l) => SVG[l])]}</span>${FK.rankName(c, ME)}`, whyNot: (c) => { const b = trainer(c); return !FK.aged(c, ME) ? aging(c) : !b ? `Build a ${B[Object.keys(D.trains).find((x) => FK.trains(x).includes(c))][0]}` : VERBS.train.whyNot(c, b); }, run: (c) => ECON.queue(trainer(c), c) }, // E186
   htab: { label: (t) => t, whyNot: () => '', run: (t) => { S.htab = t; } },
   info: { label: () => SVG.book, whyNot: () => '', run: () => { S.info = !S.info; } },
   vol: { label: (c) => `${FK.HB.mix.names[c]} <small>${SOUND.mix(c)}</small>`, whyNot: () => '', run: (c) => SOUND.step(c) }, // E187
@@ -137,7 +138,7 @@ const VERBS = {
   target: { label: () => 'Set target', whyNot: () => '', run: () => { S.arming = !S.arming; S.ghost = null; if (S.arming) toast('Tap the map to aim'); } },
   attack: { label: () => `<span class="t">${SVG.attack}</span>Attack`, whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => { S.arming = true; S.ghost = null; toast('Tap the map where they go'); } },
   recall: { label: () => 'Recall', whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => WAR.recall(ME) },
-  train: { label: (c) => `${U[c][0]}${price(D.cost[c])}`, whyNot: (c, b) => (b.done < 1 ? 'Not built yet' : !ECON.room(b) ? 'That line is full' : !ECON.canPay(ME, D.cost[c]) ? `Needs ${costText(D.cost[c])}` : ECON.popOf(ME) >= ECON.popCap(ME) ? 'No room: build a home' : ''), run: (c, b) => ECON.queue(b, c) },
+  train: { label: (c) => `${FK.rankName(c, ME)}${price(D.cost[c])}`, whyNot: (c, b) => (b.done < 1 ? 'Not built yet' : !FK.aged(c, ME) ? aging(c) : !ECON.room(b) ? 'That line is full' : !ECON.canPay(ME, D.cost[c]) ? `Needs ${costText(D.cost[c])}` : ECON.popOf(ME) >= ECON.popCap(ME) ? 'No room: build a home' : ECON.soldier(c) && ECON.armyFull(ME) ? `Army at the ceiling: ${ECON.armyRoom(ME)}` : ''), run: (c, b) => ECON.queue(b, c) },
   untrain: { label: () => '−', whyNot: (b) => (!b.q || !b.q.length ? 'Nothing queued' : ''), run: (b) => ECON.unqueue(b) },
   stop: { label: () => 'Stop', whyNot: (u) => (u.job === 'idle' ? 'Already idle' : ''), run: (u) => { if (u.load) ECON.carry(u); else ECON.idle(u); } },
   gather: { label: () => 'Gather', whyNot: (t) => (!isVil(FK.sel()) ? 'Pick a villager' : ''), run: (t) => ECON.gatherAt(FK.sel(), t) },
@@ -185,7 +186,7 @@ const SCREENS = {
   Layers: () => [row(span(2, cell('Yard', 'title')), vcell('fast', null, null, '', show.fast), vcell('new'), vcell('later', 'book'), vcell('close')), ...[0, 2, 4, 6].map((i) => row(...LAYERS.slice(i, i + 2).map(([c, name]) => `<span class="lab" title="${name}">${c}</span><div class="cells seg" style="grid-column:span 2;--n:2">${vcell('show', c, null, '', show[c])}${vcell('lock', c, null, '', S.lock[c])}</div>`))), row(...Object.keys(FK.HB.mix.names).map((c, _, all) => span(SCR.mold.slots / all.length, vcell('vol', c))))], // E198
 };
 const page = () => (S.tab && SCREENS[S.tab] ? SCREENS[S.tab]().join('') : '');
-const codeOf = (t) => t.code || FK.KIND[t.kind].code, nameOf = (t) => FK.SH[codeOf(t)].name;
+const codeOf = (t) => t.code || FK.KIND[t.kind].code, nameOf = (t) => FK.rankName(codeOf(t), t.side);
 const ROWS = { // E199
   title: (t) => `<h2>${nameOf(t)}${t.side >= 0 && !own(t) ? ' (theirs)' : ''}</h2>`,
   health: (t) => (t.hp == null ? '' : `<p>${t.done < 1 ? `site · ${Math.floor(t.done * SAY.percent)}% raised` : `${Math.ceil(t.hp)}/${t.hpMax} health`}${t.kind === 'unit' && !FK.has(t, 'Gather') ? ` · ${t.job}` : ''}</p>`),
@@ -193,7 +194,7 @@ const ROWS = { // E199
   store: (t) => `<p>${Math.floor(t.amount)} ${ECON.yieldOf(t)} left</p>`,
   flock: (t) => `<p>${t.sheep} sheep</p>`, // E358
   queue: (t) => (own(t) && t.q && t.q.length ? row(...queue6(t.q.map((c, i) => [ECON.nameOf(c), i ? ECON.timeOf(t.side, c) : t.qt]), 1 - t.qt / ECON.timeOf(t.side, t.q[0]), Math.max(0, t.q.length - SCR.mold.slots + 1))) : ''),
-  train: (t) => (own(t) && t.done >= 1 ? `<div class="row">${(D.trains[t.code] || []).map((c) => vcell('train', c, key(t))).join('')}${t.q && t.q.length ? vcell('untrain', key(t), null, 'w1') : ''}</div>` : ''),
+  train: (t) => (own(t) && t.done >= 1 ? `<div class="row">${FK.trains(t.code).map((c) => vcell('train', c, key(t))).join('')}${t.q && t.q.length ? vcell('untrain', key(t), null, 'w1') : ''}</div>` : ''),
   tech: (t) => (own(t) && t.done >= 1 ? `<div class="row">${vcell('ageUp', null, null, '', !!read().aging)}</div>` : ''),
   acts: (t, r) => { const k = key(t), a = t.kind === 'unit' ? (own(t) ? (FK.has(t, 'Gather') ? vcell('stop', k) : vcell('recall')) : isSoldier(r.sel) ? vcell('fight', k) : FK.has(t, 'Prey') ? vcell('hunt', k) : WAR.armed(t) || t.side < 0 ? vcell('here', k) : '')
       : t.kind === 'bld' ? (own(t) ? (t.max ? vcell('replant', k) : ECON.cutOut(ME, t).length ? vcell('replantAll', k) : '') + vcell('raise', k) + vcell('scrap', k) : (isSoldier(r.sel) ? vcell('fight', k) : '') + vcell('here', k)) : vcell('gather', k) + vcell('send', k);
@@ -207,7 +208,7 @@ const base = (r) => S.war ? row(tab('Layers', 'Yard', 'yard'), gap(4), vcell('wa
   + row(vcell('people', null, null, 'ic'), ...ORDER.map((y) => vcell('yield', y, null, 'ic', r.rally === y)))
   + row(tab('Build', 'Build', 'build'), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
 // E201
-const MID = { map: () => vcell('later', 'Map', null, 'two whole'), train: () => soldiers().map((c) => vcell('kind', c, null, 'ic')).join(''),
+const MID = { map: () => vcell('later', 'Map', null, 'two whole'), train: () => classes().map((k) => vcell('kind', kindOf(k), null, 'ic')).join(''),
   squad: () => ['Alpha', 'Bravo', 'Charlie', 'Set up'].map((n) => vcell('later', n, null, 'two')).join(''), direct: () => ['Wall', 'Loose!', 'Charge', 'Bombard'].map((n) => vcell('later', n, null, 'two')).join('') };
 const ic = (name, icon) => vcell('later', name, null, 'ic').replace(/>[^<]*<small>Later<\/small>/, `><span class="t">${SVG[icon]}</span>${name}`);
 const warBase = () => `<div class="warbase">${ic('Work', 'work')}${ic('Gather', 'gather')}<div class="mid">${MID[S.mid]()}</div>${vcell('mid', 'train', null, 'ic red', S.mid === 'train')}${vcell('mid', 'squad', null, 'ic red', S.mid === 'squad')}`

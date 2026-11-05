@@ -242,16 +242,16 @@
    "where a kind trains: D133 trains"
   ],
   "armyOf": [
-   "bring",
-   "the army (soldiers, spy, priest, medic) and who is busy: with the squads"
+   "in v100",
+   "F18: combat.js armyOf: the side's soldiers, the kinds with a class (the spy, priest and medic join with their modules)"
   ],
   "BUSY": [
-   "bring",
-   "the army (soldiers, spy, priest, medic) and who is busy: with the squads"
+   "in v100",
+   "F18: combat.js BUSY: the routed now; the spy, the shrine, the escort and the school with their modules"
   ],
   "armyFree": [
-   "bring",
-   "the army (soldiers, spy, priest, medic) and who is busy: with the squads"
+   "in v100",
+   "F18: combat.js armyFree (a wave sets out and breaks by it)"
   ],
   "popOf": [
    "in v100",
@@ -266,16 +266,16 @@
    "econ.js popOf, the House tick and D127"
   ],
   "armyRoom": [
-   "bring",
-   "the army's ceiling"
+   "in v100",
+   "F18: econ.js armyRoom, D226 armyMax (a fallen side's share, capA, with M30)"
   ],
   "clsMax": [
-   "bring",
-   "the army's ceiling"
+   "in v100",
+   "F18: econ.js armyFull for the army; the people's side is popCap's D128 (180)"
   ],
   "armyFull": [
-   "bring",
-   "the army's ceiling"
+   "in v100",
+   "F18: econ.js armyFull; menu.js train says 'Army at the ceiling: 120'"
   ],
   "qMax": [
    "in v100",

@@ -153,7 +153,7 @@ async def effects(b):   # same effects, same numbers as Mid's frozen code with i
     pg, _ = await fresh(b)
     v = await pg.evaluate(EFF.replace('SOLDIER', json.dumps(SOLDIER)).replace('HOME', json.dumps(HOME)).replace('TREE', json.dumps(TREE)).replace('STEP', json.dumps(STEP)).replace('FX', json.dumps([a for a, _ in FX]))); await pg.close()
     kinds = v['kinds']; run = {'kinds': kinds, 'stats': MEASURE['stats'], 'spd': {k: MEASURE['speed'][SHELLS[k]['pace'].split('.')[1]] for k in kinds}, 'cost': {k: MEASURE['cost'].get(k) for k in kinds},
-        'tags': {k: heads(k) + SHELLS[k]['ticks'] for k in kinds}, 'bhp': MEASURE['bldHp'], 'home': HOME, 'seat': SEAT, 'soldier': SOLDIER, 'step': STEP, 'fx': [m for _, m in FX if m]}
+        'tags': {k: heads(k) + SHELLS[k]['ticks'] + SHELLS[k].get('class', '').split() for k in kinds}, 'bhp': MEASURE['bldHp'], 'home': HOME, 'seat': SEAT, 'soldier': SOLDIER, 'step': STEP, 'fx': [m for _, m in FX if m]}
     mid, err = frozen({'core': '08-core', 'orders': '11-orders'}, MIDFX, run); add = mid and mid['added']
     walk = MEASURE['speed'][SHELLS['UV']['pace'].split('.')[1]] * (1 + 0.10 + 0.08)
     got = [bool(add) and all(close(v[k], add[k]) for k in ('mine', 'wild', 'cost', 'tech', 'home', 'seat', 'sol')),
@@ -558,7 +558,68 @@ async def pace(b):   # same walkers, same ground and weather, same pace and slip
            bool(add) and close(ice, add['ice']) and max(ice[:900]) > 0.2 and ice[-1] < max(ice), len({round(c[0], 6) for c in v['cases']}) > 20,
            close(v['mud'][0], v['mud'][1]) and v['mud'][1] < v['mud'][2], v['stuck'] > 0 and v['still'] == v['stuck'] and v['told'] == 1, not errs]
     ok('t-pace', all(got), [got, v['mud'], v['stuck'], v['still'], v['told'], errs[:2], err[-400:]])
-PAGED = {'t-pace': pace, 't-food': food, 't-ai': ai, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+# The soldier kinds (F18, Albert's Unit shell, Nov 5 10:26): every kind a row of the one Unit shell, its settings Mid's UNIT and TEACH_TO (02-rules-units, 06-rules-tuning); after each
+# set of research its numbers are Mid's frozen stats() (08-core) with every share added, its tiers' too (Albert, Nov 5 11:40), and its sight Mid's with sightFx's adds; the scout's rank
+# its name and its pace; each army building trains exactly its class's kinds, each from its age; the army stops at ARMYMAX; and each figure at each rank and kit is Mid's sprite()'s pixels
+TECH = book('tech'); KSHELL = [c for c, e in SHELLS.items() if 'class' in e]; RANKED = sorted({e['value']['rank']['k'] for e in TECH.values() if 'rank' in e['value']} - set(KSHELL))
+KSETS = [[], ['shields', 'spearwall', 'drill', 'bronze', 'spearheads', 'leather', 'helmets', 'slings', 'composite', 'horses', 'bridles', 'fieldcraft'],
+         ['phalanx', 'legion', 'saddles', 'stirrups', 'cavalry', 'iron', 'chain', 'scale', 'torsion', 'engineers', 'marching'],
+         ['pikesquare', 'arms', 'plate', 'bodkin', 'xbowdrill', 'longbow', 'knighthood', 'horseshoes', 'counterweight', 'firearrows', 'burningshot', 'tempering'],
+         ['halberd', 'tercio', 'bayonet', 'musket', 'volley', 'remounts', 'dragoons', 'casehard', 'oiling', 'corned', 'limbers', 'petards']]
+KINDJS = """(() => { const D = FK.D, TK = Object.fromEntries(Object.entries(BOOKS.tech).map(([c, e]) => [e.key, c])), s0 = FK.SIDES[0], out = { sets: [], trains: [], wrong: [] }, keys = ['hp', 'atk', 'rng', 'spd', 'sight', 'armor', 'train'];
+  let got = []; for (const set of SETS) { got = got.concat(set); FK.reset(); for (const k of got) FK.learn(0, TK[k]); out.sets.push(CODES.map((c) => [FK.rankOf(c, 0), FK.rankName(c, 0), FK.kitOf(0, c), ...keys.map((y) => FK.stat(c, 0, y))])); }
+  const rich = () => { for (const y of ECON.YIELDS) s0.store[y] = 1e6; }, room = D.pop[FK.seatOf(0).code]; D.pop[FK.seatOf(0).code] = D.popMax; FK.reset(); rich(); s0.age = D.ages.length - 2; const h = FK.seatOf(0), blds = [];
+  for (const code of Object.keys(D.trains).filter((c) => c !== h.code)) { let t = null; for (let d = 8; d < 60 && !t; d++) for (const [i, j] of [[h.i + d, h.j], [h.i - d, h.j], [h.i, h.j + d], [h.i, h.j - d]]) if (!t && ECON.canPlace(code, i, j)) t = FK.build(code, i, j, s0.col); blds.push(t); }
+  for (let a = 0; a < D.ages.length - 1; a++) { s0.age = a; out.trains.push(blds.map((b) => [b.code, FK.trains(b.code).filter((c) => { const ok = ECON.queue(b, c); if (ok) ECON.unqueue(b); return ok; })]));
+    for (const b of blds) for (const c of CODES) if (!FK.trains(b.code).includes(c) && ECON.queue(b, c)) { out.wrong.push([b.code, c]); ECON.unqueue(b); } }
+  const b = blds.find((x) => FK.trains(x.code).length), c = FK.trains(b.code)[0]; while (ECON.popOf(0, ECON.soldier) < D.armyMax - 1) FK.spawn(c, 0, FK.units().find((u) => u.side === 0).k, FK.rng);
+  out.ceiling = [ECON.queue(b, c), ECON.queue(b, c), MENU.VERBS.train.whyNot(c, b), ECON.popOf(0, ECON.soldier), WAR.armyOf(0).length]; D.pop[h.code] = room; return out; })()"""
+ARTJS = """((src) => { const M = new Function('clamp', 'fault', src + '\\nreturn { sprite };')((v, lo, hi) => Math.max(lo, Math.min(hi, v)), (e) => { throw e; }), col = FK.SIDES[0].col, q = Math.SQRT2 ** 2, out = [];
+  for (const [look, lvs, kits] of CASES) for (let lv = 0; lv <= lvs; lv++) for (let kit = 0; kit <= kits; kit++) for (const fr of [0, 1, 3]) { const a = FK.figure(look, col, lv, fr, 2, kit), b = M.sprite(look, col, lv, fr, q, kit);
+    const da = a.getContext('2d').getImageData(0, 0, a.width, a.height).data, db = b.width === a.width && b.height === a.height ? b.getContext('2d').getImageData(0, 0, b.width, b.height).data : []; let off = da.length === db.length ? 0 : -1, ink = 0;
+    for (let i = 3; off >= 0 && i < da.length; i += 4) { if (da[i]) ink++; if (Math.abs(da[i - 3] - db[i - 3]) + Math.abs(da[i - 2] - db[i - 2]) + Math.abs(da[i - 1] - db[i - 1]) + Math.abs(da[i] - db[i]) > 8) off++; }
+    out.push([look, lv, kit, fr, off, ink]); }
+  return out; })"""
+MIDKINDS = r"""const fx = cut(core, 'function fxList', '// Two words').replace('if (f.m) m *= f.m;', 'if (f.m) m += f.m - 1;');
+const st = cut(core, 'const unitKeys', 'const dmgOf').replace('tier = 0;', 'tier = 0, hpS = 0, spdS = 0;').replace('hp *= R.hp || 1;', 'hpS += (R.hp || 1) - 1;').replace('spd *= R.spd || 1;', 'spdS += (R.spd || 1) - 1;')
+  .replace("hp: hp * fxv(o, 'uhp', keys).m", "hp: hp * (fxv(o, 'uhp', keys).m + hpS)").replace("spd: spd * fxv(o, 'spd', keys).m", "spd: spd * (fxv(o, 'spd', keys).m + spdS)");
+return box([basics, units, blds, tech, tuning, fx, st, cut(core, 'const baseKind', '\n'), cut(core, 'const armyRoom', 'const qMax'),
+  `const standing = () => false, G = { t: 0, fxv: 0, P: [{ techs: new Set(), uc: {} }], blds: [] }, hasT = (k, t) => (UNIT[k].tags || []).includes(t), AT = ['barracks', 'range', 'stable', 'siege'];
+  const SOL = Object.keys(UNIT).filter((k) => UNIT[k].tick === 'sol' && UNIT[k].cost && AT.includes(UNIT[k].at) && !UNIT[k].civ && !UNIT[k].replaces);
+  var OUT = { sol: SOL, unit: Object.fromEntries(SOL.map((k) => [k, UNIT[k]])), t: Object.fromEntries(Object.keys(UNIT).map((k) => [k, UNIT[k].t])), teach: TEACH_TO, max: [POPMAX, ARMYMAX, BNSIZE], full: armyFull(0), sets: [] }; let got = [];
+  for (const set of RUN.sets) { got = got.concat(set); G.P[0] = { techs: new Set(got), uc: {} }; G.fxv++;
+    OUT.sets.push(RUN.looks.map((k) => { const S = stats(0, k); return [S.tier, S.name, S.kit, S.hp, S.dmg, S.rng, S.spd, S.sight + fxv(0, 'sight', ['*', ...unitKeys(k)]).a, S.armor, UNIT[k].t * S.train]; })); }`]);"""
+async def kinds(b):   # same kinds, same settings and same numbers after research as Mid's frozen code; trains by class and age; the ceiling; the figures pixel for pixel
+    codes = KSHELL + RANKED; look = {c: SHELLS[c]['look'] for c in codes}; cls = {c: SHELLS[c].get('class') for c in codes}
+    pg, errs = await fresh(b)
+    v = await pg.evaluate(KINDJS.replace('SETS', json.dumps(KSETS)).replace('CODES', json.dumps(codes)))
+    ranks = {}
+    for e in TECH.values():
+        if 'rank' in e['value']: ranks[e['value']['rank']['k']] = ranks.get(e['value']['rank']['k'], 0) + 1
+    SPR = keyed('sprites'); cases = [[look[c], len(SPR[look[c]].get('rank', [])) or (1 if SPR[look[c]].get('elite') else 0), 3 if cls[c] else 0] for c in codes] + [[l, 0, 0] for l in ('vil', 'wolf', 'caravan', 'wagon')]
+    art = await pg.evaluate(ARTJS.replace('CASES', json.dumps(cases)), open(os.path.join(HERE, '../mid/src/18-figures.js')).read()); await pg.close()
+    mid, err = frozen({'basics': '01-rules-basics', 'units': '02-rules-units', 'blds': '03-rules-buildings', 'tech': '04-rules-tech', 'tuning': '06-rules-tuning', 'core': '08-core'}, MIDKINDS, {'sets': KSETS, 'looks': [look[c] for c in codes]}); mid = mid or {}
+    U, walk, ages = mid.get('unit', {}), MEASURE['speed']['walk'], MEASURE['ages']; Y = {'f': 'food', 'w': 'wood', 'g': 'gold', 'i': 'iron', 's': 'stone'}; at = {SHELLS[c]['look']: c for c in MEASURE['trains']}
+    near = lambda a, b, r=1e-6: abs(a - b) <= r * max(1, abs(a), abs(b))
+    def same(c):   # a kind's settings, Mid's
+        u, e, s = U.get(look[c], {}), SHELLS[c], MEASURE['stats'][c]
+        return (u.get('name') == e['name'] and ages.index(e['age']) == u.get('age') and at.get(u.get('at')) in MEASURE['trains'] and MEASURE['trains'][at[u['at']]] == [e['class']]
+                and look.get(e.get('teach')) == mid['teach'].get(look[c]) and MEASURE['cost'][c] == {Y[k]: n for k, n in u['cost'].items()} and MEASURE['train'][c] == u['t']
+                and [s['hp'], s['atk'], s['rof']] == [u['hp'], u['dmg'], u['cd']] and near(s['rng'], u['rng'] / 10) and near(s['sight'], u['sight'] / 10) and near(MEASURE['speed'][e['pace'].split('.')[1]], walk * u['spd'] / 24, 1e-4))
+    def numbers(i, j, c):   # after research: v100 [level, name, kit, hp, atk, rng, spd, sight, armor, train] against Mid's [tier, name, kit, hp, dmg, rng, spd, sight + sightFx, armor, t × train]
+        a, m = v['sets'][i][j], mid['sets'][i][j]
+        if not cls[c]: return a[:2] == m[:2] and near(a[6] / v['sets'][0][j][6], m[6] / mid['sets'][0][j][6])
+        return (a[:3] == m[:3] and near(a[3], m[3]) and near(a[4], m[4]) and near(a[5], m[5] / 10) and near(a[6], walk * m[6] / 24, 1e-4) and near(a[7], m[7] / 10) and near(a[8], m[8]) and near(a[9], m[9]))
+    trained = [[[b, sorted(look[c] for c in ks)] for b, ks in age] for age in v['trains']]
+    want = [[[b, sorted(k for k in mid.get('sol', []) if at.get(U[k]['at']) == b and U[k]['age'] <= a)] for b, _ in age] for a, age in enumerate(v['trains'])]
+    bad = [x for x in art if x[4] != 0 or x[5] < 20]
+    got = [bool(mid) and sorted(look[c] for c in KSHELL) == sorted(mid['sol']) and all(same(c) for c in KSHELL),
+           bool(mid) and all(numbers(i, j, c) for i in range(len(KSETS)) for j, c in enumerate(codes)) and len({str(r) for r in v['sets']}) == len(KSETS),
+           trained == want and not v['wrong'] and any(len(ks) > 1 for age in trained for _, ks in age),
+           bool(mid) and [MEASURE['popMax'], MEASURE['armyMax'], MEASURE['squad']] == mid['max'] and v['ceiling'][:2] == [True, False] and v['ceiling'][2] == mid['full'].rstrip('.') and v['ceiling'][3:] == [MEASURE['armyMax'], MEASURE['armyMax'] - 1],
+           not bad and len(art) > 300, not errs, bool(mid) and all(n == mid['t'].get(SHELLS[c]['look']) for c, n in MEASURE['train'].items())]
+    ok('t-kinds', all(got), [got, bad[:6], v['ceiling'], v['wrong'][:4], [x for x in zip(trained, want) if x[0] != x[1]][:1], errs[:2], err[-400:]])
+PAGED = {'t-kinds': kinds, 't-pace': pace, 't-food': food, 't-ai': ai, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

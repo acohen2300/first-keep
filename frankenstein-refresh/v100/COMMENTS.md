@@ -78,8 +78,8 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E72 | index.html#the-building-art | The building art (preview 49, 19-building-art.js; Nov 3, the last build before the camera turn): every piece drawn from its own point lists, in units, feet at (0, 0), the front edge along x, the back up and to the right. A building's level and its research footing are skins (PB3, PB4, PB6, PB12); civs, seasons and flags are cut. |
 | E73 | index.html#the-building-art | a building picture's height, from its look |
 | E74 | index.html#the-node-art | The node art (the same file): six trees, three bushes, stone, gold and iron; r is a dice for the leaf blobs |
-| E75 | index.html#the-figures | The figures (preview 49, 18-figures.js): people and beasts drawn from data, feet at (0, 0), facing right, a person about 21 tall; fr 0–3 the walk, 10 and up at work (the tool, two poses). One look a code; the rest of the roster stays in preview 49 as skins. |
-| E76 | index.html#the-figures | the brushes: one drawing routine a shape; a look in books/sprites.js names its brush and the brush's settings ($side the owner's colour, $side*0.6 a tint of it) |
+| E75 | index.html#the-figures | The figures (preview 49, 18-figures.js): people and beasts drawn from data, feet at (0, 0), facing right, a person about 21 tall; fr 0–3 the walk, 10 and up at work (the tool, two poses). One look a code; the soldiers' looks are Mid's own (F18), the rest of the roster stays in preview 49 as skins. |
+| E76 | index.html#the-figures | the brushes: one drawing routine a shape; a look in books/sprites.js names its brush and the brush's settings ($side the owner's colour, $side*0.6 a tint of it, any colour*0.6 a tint of that) |
 | E77 | index.html#the-figures | a figure's frame, from its look |
 | E78 | index.html#b-the-buildings | B the buildings (layer 110; shells without Walk): the size in tiles (D8–D11; a wall piece is one tile, D12), Open or Closed (S Styles), the picture it wears. Health, prices and times come with the Content pull. |
 | E79 | index.html#b-the-buildings | the buildings (layer 110), from their shells: name, size in tiles, Open, the picture, what it takes in |
@@ -119,7 +119,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E113 | index.html#the-body-s-laws | QBT: friction slows it by μ g a second until it rests; anything it cannot stand on stops it |
 | E114 | index.html#the-body-s-laws | the mean speed over the step, so the slide ends where v² ÷ 2μg says |
 | E115 | index.html#the-body-s-laws | QBS: none while the body holds (classes I, II); grows over class III to the tipping angle; there in class IV. Its rhythm the body's pendulum |
-| E116 | index.html#the-body-s-laws | a unit's picture: the look at its frame, facing right, painted once per look, colour and frame (LOOKBOX gives the box) |
+| E116 | index.html#the-body-s-laws | a unit's picture: its look at its frame, its rank and its side's armour kit, facing right, painted once per look, colour, rank, kit and frame (LOOKBOX gives the box); a look marked elite carries the gold pennant at a rank (Mid's sprite) |
 | E117 | index.html#the-things-drawn-each-frame-back-to-fr | The things, drawn each frame back to front, only those on the screen. A picture is painted once per look and zoom step, then stamped (the sprite cache); far out (D83) a node is a dot. The gifts are drawn direct, as tints of C. |
 | E118 | index.html#the-things-drawn-each-frame-back-to-fr | W × H units, the art's origin at (tx, ty), its anchor (the point stamped at the thing's stand) at (ax, ay) |
 | E119 | index.html#the-things-drawn-each-frame-back-to-fr | the node art's own small dice, seeded by the variant, so a tree's leaves fall the same each paint |
@@ -177,7 +177,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E171 | menu.js | the codes and their floors; Lock is a mark for us (no floor is locked yet) |
 | E172 | menu.js | the Screen book: the Build tabs are its; a building shows priced once econ prices it, else Later |
 | E173 | menu.js | the seat, and who it trains first: asked of the books, never named |
-| E174 | menu.js | the kinds War's Train box offers |
+| E174 | menu.js | the classes War's Train box offers (D133), each as the first kind of it open at this age (Mid's kindOf) |
 | E175 | menu.js | a page that keeps its own height (SC20) |
 | E176 | menu.js | the new game's choices: the first is the label's row in Albert's template; built ones set the game, the rest wait (dim, they say why) |
 | E177 | menu.js | which choices are floors yet |
@@ -189,7 +189,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E183 | menu.js | 60w 60f, as Albert's Build menu |
 | E184 | menu.js | read: the one window onto the world the glass draws from |
 | E185 | menu.js | VERBS: every way the player may act, each with its reason not to. act() asks whyNot first; a reason stops it and is said |
-| E186 | menu.js | Train a kind: the nearest finished building that trains it |
+| E186 | menu.js | Train a kind: the nearest finished building that trains it; a kind before its age says which age it waits for |
 | E187 | menu.js | a channel's volume, a step a tap (HX10) |
 | E188 | menu.js | sound on or off |
 | E189 | menu.js | a cell for what is drawn but not yet built: Albert's reminder |
@@ -281,8 +281,8 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E275 | menu.js | a place as the map's lettered squares, measured from the board's corner: D190 units a square, letters across, numbers down (A1 to V22); off the board, the nearest square |
 | E276 | menu.js | a ledger line: its reasons largest first, each in its word and shortened, apart by a dot; under half a unit is left out |
 | E277 | index.html#the-door | QCA, the effects: what each side has learned, and each side's numbers worked out once until its learning changes; a new game forgets both |
-| E278 | index.html#the-door | a thing's keys, the names an effect may reach it by: every head of its code's letters (B, BR for BR1), its code, and its ticks |
-| E279 | index.html#the-door | a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's (D138), a find's or a field's rate, a price (D123, or the step's own), a step's time (its own), a unit's training (D124), a site's raising (D125), a queue's length (the mold's six, SN1), a load (D87), a home's room (D127); any other key is the unit's D138 entry |
+| E278 | index.html#the-door | a thing's keys, the names an effect may reach it by: every head of its code's letters (B, BR for BR1), its code, its ticks and a soldier's class |
+| E279 | index.html#the-door | a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's (D138), a find's or a field's rate, a price (D123, or the step's own), a step's time (its own), a unit's training (D124), a site's raising (D125), a queue's length (the mold's six, SN1), a load (D87), a home's room (D127), a soldier's share of a blow before armour (D228); any other key is the unit's D138 entry |
 | E280 | index.html#the-door | the one window for a kind's number after research (QCA): flat adds first, then the shares summed and applied once to that (Albert, Nov 5 11:40), then the lowest kept; a price rounds each yield to the whole unit |
 | E281 | index.html#the-door | learning a step puts its effects in force for that side; every unit and building of the side keeps its share of health as the most it can have moves |
 | E282 | combat.js | who counters whom: the counter's edge (D140) when the striker's class is the one it counters, else even; the one home the blow (QBO) and the odds (QAF) both read |
@@ -369,3 +369,11 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E363 | index.html#floor-5-movables | a slipped walker stands G10's seconds; each walker on ice is checked once a second as it walks |
 | E364 | index.html#floor-6-climate | above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the degree (D225) and its degree-seconds are set to match what is left |
 | E365 | index.html#floor-6-climate | the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ, Stefan) |
+| E366 | index.html#the-figures | the armour kit a side has learned (Mid's KIT): 0 to 3 steps of the Sprites book's kit, each turning a person's slots (mail and a steel helm, then plate, the great helm, its crest and a cape in the figure's own colours), with a shoulder guard of leather, mail or steel |
+| E367 | index.html#the-figures | one drawing list for every figure that is not a person or a beast (the engines, the chariot, the elephant, the riders, the elite pennant): each part a brush (P, E, L, Q, rect, wheel, planks, helm, horse, person), in a frame moved and turned (at), or drawn only in the blow's frame (atk) or out of it (rest); a value may sway with the stride or change in the blow's frame. The numbers live in the Sprites book |
+| E368 | index.html#the-figures | a look by its rank: level 0 the look itself, level n the nth of its rank list, past the list its last (Mid's LOOKS by tier) |
+| E369 | index.html#the-door | the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a shell, or a class's kinds); a kind is open from its age (D130) |
+| E370 | index.html#the-door | a kind's ranks (Mid's tiers): the steps whose rank names it, learned, in book order, give its level and its name; the kit is how many armour steps a soldier's side has learned |
+| E371 | econ.js | the army's ceiling: soldiers (a kind with a class), queued ones counted, against D226 (Mid's ARMYMAX; a fallen side's share, capA, joins it with M30) |
+| E372 | combat.js | the army: a side's soldiers, the kinds with a class (Mid's armyOf); BUSY names who keeps to its own work and armyFree leaves them out (the routed now; the spy, the shrine, the escort and the school with their modules) |
+| E373 | menu.js | why a kind waits: the age it opens in (Mid's trainWhy) |

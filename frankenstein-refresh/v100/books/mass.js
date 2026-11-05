@@ -17,5 +17,10 @@ BOOK("mass", {
  "W15": {"key":"stone","value":{"density":2400},"name":"stone","cite":["N87"],"law":[]},
  "W16": {"key":"iron","value":{"density":7870},"name":"iron","cite":["N87"],"law":[]},
  "W17": {"key":"boar","value":{"kg":80,"height":0.9,"com":0.5,"foot":0.3,"stride":1.2},"name":"a boar","cite":["N85","N170"],"law":["QBS","QBT","QBU"]},
- "W18": {"key":"bison","value":{"kg":700,"height":1.8,"com":1.1,"foot":0.6,"stride":2.2},"name":"a bison","cite":["N85","N170"],"law":["QBS","QBT","QBU"]}
+ "W18": {"key":"bison","value":{"kg":700,"height":1.8,"com":1.1,"foot":0.6,"stride":2.2},"name":"a bison","cite":["N85","N170"],"law":["QBS","QBT","QBU"]},
+ "W19": {"key":"sword","value":{"kg":1.2,"blow":{"kg":1.2,"mps":8}},"name":"a sword","cite":["N177"],"law":["QBT"]},
+ "W20": {"key":"javelin","value":{"kg":1,"blow":{"kg":1,"mps":20}},"name":"a javelin, its blow thrown","cite":["N177"],"law":["QBT"]},
+ "W21": {"key":"crossbow","value":{"kg":5,"blow":{"kg":0.08,"mps":45}},"name":"a crossbow, its blow a bolt","cite":["N177"],"law":["QBT"]},
+ "W22": {"key":"gun","value":{"kg":5,"blow":{"kg":0.02,"mps":350}},"name":"a matchlock gun, its blow a ball","cite":["N177"],"law":["QBT"]},
+ "W23": {"key":"elephant","value":{"kg":4000,"height":2.7,"com":1.5,"foot":0.45,"stride":2.5},"name":"a war elephant","cite":["N177"],"law":["QBS","QBT","QBU"]}
 });

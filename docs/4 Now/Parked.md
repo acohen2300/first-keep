@@ -312,3 +312,18 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
   - The stride lost on ice follows Mid's own design line (none when the ice offers what a step needs) for every walker; Mid's code took the full stride from walkers without studs even then. They differ only at about −16 °C and colder, which v100's air never reaches.
   - Roads and Field drains add, as the 11:40 call has it: together they take 80% off mud (Mid compounded them to 65%). With Horseshoes (M18, −20% for riders) a rider's mud would reach nothing: shares of a cut that add to the whole. For Albert: keep adding, or keep a floor.
 - An idea, not built (breaks the plan's "only lakes freeze" line): a walker on a frozen lake (iced tiles) walks on ice whatever the ground ice is, so it would slip and lose stride there too.
+
+## Frankenstein F18 · soldier kinds, ranks and kits (Nov 5, Albert 11:40; the Unit shell 10:26)
+- Built: the sixteen kinds are rows of the one Unit shell (UM1–UM16, each its class, age, look, pace, teach), trained by class (D133) from their age; 45 research steps with their ranks and the armour kit; the army's ceiling (D226); every figure is Mid's own, pixel for pixel (t-kinds). The old rows UM1 Foot, UM2 Archers, UM3 Riders, UM4 Engines and UM4b keep their codes as the spearman, archer, cataphract, ram and catapult (UM5).
+- For Albert's yes, not Mid's:
+  - Health and damage are Mid's for now (spearman 60 and 6, cataphract 120 and 10, ram 200 and 25, and so on), open for your play test.
+  - Ranks add, as the 11:40 call has it: a Halberdier's health is 60 × (1 + 0.25 + 0.15 + 0.10) = 90 with no other research; Mid multiplied its tiers to 94.9 (QCA).
+  - Each kind keeps v100's flat armour and counter by its class (D138 arm, cls and vs with D140) until the blow (M19). Mid has no flat armour (its armour is the research share, now 'armor', D228) and its counters are per kind (vs, bld, rarmor, bonly, knock, kite, gun): those come with M19 and M21. Until then the ram, catapult, bombard and trebuchet also strike soldiers, and the ram hits a building with its own blow, 25 (v100's 60 for it is cut).
+  - New masses (N177, from memory): a sword 1.2 kg, a javelin 1 kg, a crossbow 5 kg, a matchlock 5 kg, a war elephant 4 t.
+  - The plate kit sets a crest on any helm without one; Mid set it only on the great helm. Only the great helm and the crested ancient helms read a crest, so every picture is the same.
+  - Kept as Mid draws it: the chariot's car edges and the elephant's back feet come out black (Mid tints a tint, which its shade() turns black). A fix would be a skin.
+  - The scout's own numbers (health, reach, pace) stay v100's: not a soldier, not this module. It now trains at the Town Center, as in Mid.
+  - No Attitude per kind: Mid has none (its temper is a battalion's). The dictionary's forms (Steady, Bold) wait for nerve (M20).
+- Waiting, each with its module: Plate armour needs Bellows (the Foundry, M34), and Men-at-arms needs Plate; the effects fire, blast and wear (Fire arrows, Burning shot, Petards, Tempering, Oiled steel) wait for fire (M40) and the weather's wear (M42); a rank's counter (vs) for the blow (M19); BNSIZE (D227) for the squads (M22); a fallen side's room (capA) for M30; BUSY's spy, shrine, escort and school for M29, M28, M35 and M26; the Guide row 'Unit lines and tiers' (words TRIGGERS) for the Guide; each kind's teach slot for the School (M26).
+- Cut: the ram, catapult and cataphract brushes as code. They are drawing lists in the Sprites book now, with the new engines, the chariot, the elephant and the pennant, so the figures' typed numbers fell.
+- Not updated (not on the permit): DICTIONARY.md's U section still names UM1–UM4 as Foot, Archers, Riders, Engines.

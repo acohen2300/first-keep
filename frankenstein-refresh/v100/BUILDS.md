@@ -1620,3 +1620,143 @@ MODIFIED (38):
 LOCKED (1231 of 1269): byte for byte as sealed, 448,059 bytes
 Tests: 28/28 rules hold
 Inventory: 1269 items sealed · 1158 book entries · 79 laws · 175 citations, 26 still to open · 7 known
+
+## F18 · soldier kinds, ranks and kits · 2026-11-05 18:50
+Albert, Nov 5 11:40: yes yes F10–F39; 10:26: the Unit shell, each kind its settings
+Opened: code:index.html, code:econ.js, code:combat.js, code:menu.js, code:ai.js, book:measure, book:shells, book:capabilities, book:screen, book:sprites, book:mass, book:tech, book:words, book:comments, book:rules, book:citations, tool:test.py, law:QCA
+MODIFIED (132):
+- book:capabilities:SC03 · 248 → 474 bytes
+- book:capabilities:SC13 · 155 → 223 bytes
+- book:citations:N176 · added
+- book:citations:N177 · added
+- book:comments:E116 · 130 → 248 bytes
+- book:comments:E174 · 44 → 115 bytes
+- book:comments:E186 · 70 → 121 bytes
+- book:comments:E278 · 138 → 156 bytes
+- book:comments:E279 · 364 → 414 bytes
+- book:comments:E366 · added
+- book:comments:E367 · added
+- book:comments:E368 · added
+- book:comments:E369 · added
+- book:comments:E370 · added
+- book:comments:E371 · added
+- book:comments:E372 · added
+- book:comments:E373 · added
+- book:comments:E75 · 271 → 312 bytes
+- book:comments:E76 · 172 → 203 bytes
+- book:mass:W19 · added
+- book:mass:W20 · added
+- book:mass:W21 · added
+- book:mass:W22 · added
+- book:mass:W23 · added
+- book:measure:D123 · 820 → 1,290 bytes
+- book:measure:D124 · 148 → 345 bytes
+- book:measure:D128 · 86 → 142 bytes
+- book:measure:D133 · 171 → 293 bytes
+- book:measure:D138 · 1,054 → 2,494 bytes
+- book:measure:D226 · added
+- book:measure:D227 · added
+- book:measure:D228 · added
+- book:measure:D86 · 350 → 484 bytes
+- book:rules:X55 · added
+- book:shells:UM1 · 222 → 283 bytes
+- book:shells:UM10 · added
+- book:shells:UM11 · added
+- book:shells:UM12 · added
+- book:shells:UM13 · added
+- book:shells:UM14 · added
+- book:shells:UM15 · added
+- book:shells:UM16 · added
+- book:shells:UM2 · 223 → 283 bytes
+- book:shells:UM3 · 242 → 293 bytes
+- book:shells:UM4 · 194 → 238 bytes
+- book:shells:UM4b · removed
+- book:shells:UM5 · added
+- book:shells:UM6 · added
+- book:shells:UM7 · added
+- book:shells:UM8 · added
+- book:shells:UM9 · added
+- book:sprites:P10 · 223 → 496 bytes
+- book:sprites:P2 · 238 → 624 bytes
+- book:sprites:P22 · added
+- book:sprites:P23 · added
+- book:sprites:P24 · added
+- book:sprites:P25 · added
+- book:sprites:P26 · added
+- book:sprites:P27 · added
+- book:sprites:P28 · added
+- book:sprites:P29 · added
+- book:sprites:P3 · 199 → 382 bytes
+- book:sprites:P30 · added
+- book:sprites:P31 · added
+- book:sprites:P32 · added
+- book:sprites:P33 · added
+- book:sprites:P34 · added
+- book:sprites:P4 · 116 → 684 bytes
+- book:sprites:P5 · 113 → 1,078 bytes
+- book:sprites:P6 · 128 → 554 bytes
+- book:tech:O100 · added
+- book:tech:O101 · added
+- book:tech:O102 · added
+- book:tech:O103 · added
+- book:tech:O104 · added
+- book:tech:O105 · added
+- book:tech:O106 · added
+- book:tech:O107 · added
+- book:tech:O108 · added
+- book:tech:O109 · added
+- book:tech:O110 · added
+- book:tech:O111 · added
+- book:tech:O112 · added
+- book:tech:O113 · added
+- book:tech:O114 · added
+- book:tech:O115 · added
+- book:tech:O116 · added
+- book:tech:O117 · added
+- book:tech:O118 · added
+- book:tech:O119 · added
+- book:tech:O120 · added
+- book:tech:O121 · added
+- book:tech:O122 · added
+- book:tech:O123 · added
+- book:tech:O124 · added
+- book:tech:O125 · added
+- book:tech:O126 · added
+- book:tech:O127 · added
+- book:tech:O128 · added
+- book:tech:O129 · added
+- book:tech:O130 · added
+- book:tech:O131 · added
+- book:tech:O132 · added
+- book:tech:O58 · 257 → 251 bytes
+- book:tech:O59 · 283 → 277 bytes
+- book:tech:O80 · 272 → 277 bytes
+- book:tech:O81 · 281 → 286 bytes
+- book:tech:O87 · 342 → 343 bytes
+- book:tech:O88 · added
+- book:tech:O89 · added
+- book:tech:O90 · added
+- book:tech:O91 · added
+- book:tech:O92 · added
+- book:tech:O93 · added
+- book:tech:O94 · added
+- book:tech:O95 · added
+- book:tech:O96 · added
+- book:tech:O97 · added
+- book:tech:O98 · added
+- book:tech:O99 · added
+- book:words:J7 · 13,174 → 21,712 bytes
+- code:ai.js · 6,459 → 6,453 bytes
+- code:combat.js · 9,411 → 9,483 bytes
+- code:econ.js · 31,127 → 31,357 bytes
+- code:index.html#floor-5-movables · 12,464 → 12,462 bytes
+- code:index.html#the-body-s-laws · 2,352 → 2,585 bytes
+- code:index.html#the-door · 5,316 → 6,196 bytes
+- code:index.html#the-figures · 23,206 → 23,313 bytes
+- code:index.html#touch · 4,553 → 4,607 bytes
+- code:menu.js · 50,975 → 51,256 bytes
+- law:QCA · 424 → 728 bytes
+- tool:test.py · 89,158 → 98,832 bytes
+LOCKED (1226 of 1357): byte for byte as sealed, 334,304 bytes
+Tests: 29/29 rules hold
+Inventory: 1357 items sealed · 1246 book entries · 79 laws · 177 citations, 27 still to open · 7 known

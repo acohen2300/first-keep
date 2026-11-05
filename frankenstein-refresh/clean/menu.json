@@ -1514,8 +1514,8 @@
    "menu.js VERBS.war (the base or the War rows)"
   ],
   "kindOf": [
-   "bring",
-   "the kind a class trains now (the age, the people's own); with the ages and civs"
+   "in v100",
+   "F18: menu.js kindOf: War's Train box, one cell a class, the first kind open at this age (the people's own with the civs)"
   ],
   "sqPlan": [
    "bring",
