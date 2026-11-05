@@ -1780,8 +1780,8 @@
 "numbers": 0
 },
 "book:rules:X41": {
-"sha": "ac120d78796274e42596a2a173c232daf998f7fd85e721d1984d1ea4d0d909cb",
-"bytes": 240,
+"sha": "2eab409234c1a41eb367bb20f3a08aa7fd87a7839f678e198c50439fd9784283",
+"bytes": 283,
 "numbers": 0
 },
 "book:rules:X5": {
@@ -3075,8 +3075,8 @@
 "numbers": 0
 },
 "tool:index.py": {
-"sha": "193fadfcc544b6257ab2df7ffd928d2a3e56f282fd9a8c81e7edb50802ace17d",
-"bytes": 19542,
+"sha": "737ec09b87babf69f58b96d0c658cabf855a661f79f4037e436af1048ab82abc",
+"bytes": 21461,
 "numbers": 0
 },
 "tool:pages.yml": {

@@ -1,5 +1,5 @@
 {
- "about": "Step 3 (Albert, Nov 5): each part of Mid in a group, and the v100 home it is meant for. The survey reads this; edit here only.",
+ "about": "Step 3 (Albert, Nov 5): each part of Mid in a group, the v100 home it is meant for, and its temp book in staging/ (step 4). The survey reads this; edit here only.",
  "homes": {
   "Element cards": "Capabilities book (Mid's cards are the first form of ticks)",
   "Numbers": "Measurements, Shells, Mass, Ground books",
@@ -72,5 +72,25 @@
   "38-natives.js": "Events, camps, natives, peace",
   "39-games.js": "Events, camps, natives, peace",
   "41-boot.js": "Start"
+ },
+ "staging": {
+  "Element cards": "capabilities.js",
+  "Numbers": "numbers.js",
+  "Ages and tech": "tech.js",
+  "Words": "words.js",
+  "Core": "core.js",
+  "Walking grid": "paths.js",
+  "World": "world.js",
+  "Orders and economy": "econ.js",
+  "War": "combat.js",
+  "Computers": "ai.js",
+  "Art": "sprites.js",
+  "View": "display.js",
+  "Touch": "touch.js",
+  "Menus": "menu.js",
+  "Saving": "save.js",
+  "Sound": "sound.js",
+  "Events, camps, natives, peace": "events.js",
+  "Start": "start.js"
  }
 }

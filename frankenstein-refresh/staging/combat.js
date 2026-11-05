@@ -1,0 +1,1523 @@
+// ═════ 14-sim-troops.js: priests, medics, soldiers, wild animals, wayfarers, finds ═════
+// priests and medics walk with the battalion that is out; a priest sent to a shrine stands there
+function followArmy(u, dt, SP) {
+	const o = u.owner;
+	let a = null,
+		ad = 260;
+	for (const v of G.sol) {
+		if (
+			v.owner !== o ||
+			(u.bn !== undefined && v.bn !== u.bn) ||
+			(v.state !== 'attack' && v.state !== 'goto' && v.state !== 'escort' && v.state !== 'assist')
+		)
+			continue;
+		const d = dist(u, v);
+		if (d < ad) {
+			ad = d;
+			a = v;
+		}
+	}
+	if (a) {
+		moveTo(u, a.x - (a.fx || 0) * 24 + u.ox * 0.3, a.y - (a.fy || 0) * 24 + u.oy * 0.3, dt, 10, SP);
+		return true;
+	}
+	return false;
+}
+function priestTick(u, dt, SP) {
+	if (u.state === 'convert') {
+		// beside an enemy for a spell, the priest turns them; the counter is to kill the priest
+		const t = G.units.find(
+				(v) => v.id === u.cv && v.hp > 0 && !v.inside && atWar(u.owner, v.owner) && UNIT[v.kind].cls,
+			),
+			full = !!t && clsCount(u.owner, UNIT[t.kind].cls) >= clsMax(UNIT[t.kind].cls, u.owner); // the ceiling holds for a convert as for a recruit (C8): with no room the spell stops
+		if (full && u.owner === 0) say('At Maximum Occupancy Capacity', '', TOAST.short); // answer 11, Albert's words
+		if (!t || full || u.cvCd > G.t) {
+			u.state = 'home';
+			u.cv = null;
+			return;
+		}
+		if (dist(u, t) <= CONVERT.r) {
+			u.cvT = (u.cvT || 0) + dt;
+			u.work = G.t;
+			if (u.cvT >= CONVERT.secs * fxv(u.owner, 'convert').m) {
+				const was = t.owner;
+				t.owner = u.owner;
+				t.state = 'home';
+				t.tgt = null;
+				t.focus = null;
+				t.bn = undefined;
+				t.hb = undefined;
+				setJob(t, t.kind === 'vil' ? G.P[u.owner].rally : null);
+				t.levy = undefined;
+				t.native = false; // a Native turned is the side's own now: no ground of theirs, no regard for a blow on it (C8)
+				t.max = maxHpU(u.owner, t.kind);
+				t.hp = Math.min(t.hp, t.max);
+				u.cvCd = G.t + CONVERT.cd;
+				u.cvT = 0;
+				u.state = 'home';
+				if (u.owner === 0) news('war', `Converted: their ${UNIT[t.kind].name.toLowerCase()} is yours.`, 'good', TOAST.mid, t);
+				else if (was === 0) news('war', `A priest turned your ${UNIT[t.kind].name.toLowerCase()}!`, 'warn', TOAST.mid, t);
+			}
+		} else {
+			u.cvT = Math.max(0, (u.cvT || 0) - dt);
+			moveTo(u, t.x, t.y, dt, CONVERT.r - 6, SP);
+		}
+		return;
+	}
+	if (u.state === 'shrine') {
+		const f = byId(G.finds, u.fid);
+		if (f) {
+			const d = dist(u, f) || 1,
+				r = FINDS[f.kind].r - 10; // the foot of the Throne on the priest's own side
+			moveTo(u, f.x + ((u.x - f.x) / d) * r, f.y + ((u.y - f.y) / d) * r, dt, 4, SP);
+			return;
+		}
+		u.state = 'home';
+	}
+	if (followArmy(u, dt, SP)) return;
+	if (u.state === 'goto' || u.state === 'assist') {
+		moveTo(u, u.px + u.ox * 0.6, u.py + u.oy * 0.6, dt, 3, SP);
+		return;
+	}
+	const h = homeSpot(u, 90);
+	if (h) moveTo(u, h.x, h.y, dt, 3, SP);
+}
+function medicTick(u, dt, SP) {
+	if (followArmy(u, dt, SP)) return;
+	if (u.state === 'goto' || u.state === 'assist') {
+		moveTo(u, u.px + u.ox * 0.6, u.py + u.oy * 0.6, dt, 3, SP);
+		return;
+	}
+	const h = homeSpot(u, 90);
+	if (h) moveTo(u, h.x, h.y, dt, 3, SP);
+}
+// Healing: a hospital or a medic heals your own soldiers within reach. The best one in reach counts; they do not add up. A wound closes
+// toward full as the first-order lag (the delayed exponential of Cukjati, Reberšek & Miklavčič 2001: fast while the wound is wide, slowing
+// as it closes): HP(t) = max − (max − HP0)·e^(−t/τ), τ = max / heal, `heal` the hit points a second at the start. Closing a share f of the
+// gap takes −τ ln(1 − f): 95% takes 2.996 τ. A half-dead swordsman (70, heal 3: τ 23.3 s) is at 95% of full in τ ln 10 = 53.7 s, 99% in
+// τ ln 50 = 91.3 s (N5: the old note's 11.7 s was the linear time, 35 / 3). The garrison's heal (solTick) runs on top, as decided.
+function healTick(dt) {
+	if (G.tick % 3) return;
+	const H = [];
+	for (const b of G.blds) {
+		const h = BLD[b.kind].heal;
+		if (h && b.prog >= 1 && b.hp > 0) H.push(b.x, b.y, BLD[b.kind].hrng, h, b.owner);
+	}
+	for (const u of G.units) {
+		const h = UNIT[u.kind].heal;
+		if (h && !u.inside) H.push(u.x, u.y, UNIT[u.kind].hrng, h, u.owner);
+	}
+	if (!H.length) return;
+	for (const u of G.units) {
+		if (u.hp >= u.max - 0.01 || UNIT[u.kind].cls !== 'army') continue;
+		let best = 0;
+		for (let i = 0; i < H.length; i += 5)
+			if (H[i + 4] === u.owner && H[i + 3] > best && hyp(H[i] - u.x, H[i + 1] - u.y) < H[i + 2]) best = H[i + 3];
+		if (best) u.hp = relax(u.hp, u.max, u.max / (best * fxv(u.owner, 'heal').m), dt * 3);
+	}
+}
+
+// ───────────────────────── Soldiers ─────────────────────────
+// a missile in the air: it flies for a time that grows with the distance, on a curve that rises with it
+function shot(x1, y1, h1, x2, y2, fire) {
+	const d = hyp(x2 - x1, y2 - y1),
+		dur = 0.12 + d / 600;
+	G.tracers.push({ x1, y1, h1, x2, y2, life: dur, dur, arc: 4 + d * 0.16, fire: !!fire });
+}
+// a soldier at home guards the ground round its own yard and round the Town Center (Build 39 review: a yard far from the Town Center was left undefended)
+const routSecs = (o) => MORALE.rout * (G.P[o].techs.has('engage') ? 0.5 : 1); // Engagement halves the run (C6: the grace no longer shrinks with it)
+const nearHome = (u, t, k) =>
+	(u.hax !== undefined && hyp(t.x - u.hax, t.y - u.hay) < YARD) || (!!k && dist(t, k) < YARD);
+// the ambush (AMBUSH; 28-army-quick ambushAt): bound for cover it walks; in place it goes to ground (hid); a foe within spring, or a blow
+// landed, springs every soldier of that ambush with a charge's burst; any other order (a new px) ends it
+function ambushTick(u) {
+	const A = u.amb;
+	if (u.state !== 'goto' || u.px !== A.x || u.py !== A.y) {
+		u.amb = null;
+		u.hid = false;
+		return;
+	}
+	if (!u.hid) {
+		if (hyp(u.px + (u.gx || 0) - u.x, u.py + (u.gy || 0) - u.y) < 8) u.hid = true; // at its own place round the cover
+		return;
+	}
+	const f = nearestFoe(u.owner, u, AMBUSH.spring);
+	if (!f && G.t - (u.hurtT ?? -9) > 0.5) return;
+	for (const v of G.units)
+		if (v.owner === u.owner && v.amb && v.amb.x === A.x && v.amb.y === A.y) {
+			v.amb = null;
+			v.hid = false;
+			v.chg = G.t + CHARGE.secs;
+			if (f) v.tgt = f;
+		}
+	if (u.owner === 0) {
+		say('Ambush!', 'good', TOAST.short);
+		sfx('horn', u.x, u.y);
+	}
+}
+function solTick(u, dt, SP) {
+	const U = UNIT[u.kind],
+		o = u.owner,
+		k = keepOf(o);
+	u.cd = Math.max(0, u.cd - dt);
+	u.kiting = kiteOf(u);
+	if (u.amb) ambushTick(u);
+	campSendHome(u); // by a medical tent, the badly hurt and the sick walk home to the Hospital (CAMP)
+	// the archers' stake (STAKES; the Agincourt stake): a shooter with the research that has stood STAKES.plant s has it in the ground; it comes up when it moves
+	u.staked = (UNIT[u.kind].tags || []).includes('ranged') && !hasTag(u.kind, 'mounted') && G.t - (u.mvT ?? -9) > STAKES.plant && !u.inside && G.P[o].techs.has('archerstakes');
+	if (u.goingHome && (u.state !== 'goto' || u.hp >= u.max * 0.95)) u.goingHome = false;
+	// a shooter steps back from a foe on top of it, unless it presses; a horse archer always rides away
+	if (u.state === 'school') {
+		u.idleT = 0;
+		if (G.t >= u.schoolT) graduate(u);
+		return;
+	} // at the School: it stands, learns, and comes out a newer soldier
+	if (u.state === 'garrison') {
+		// All hands (Emergency): it walks to its building, goes inside and adds an arrow, and stays until given a new order
+		const b = G.blds.find((x) => x.id === u.gar && x.hp > 0 && x.prog >= 1);
+		if (!b) u.state = 'home';
+		else {
+			u.idleT = 0;
+			if (!u.inside && moveTo(u, b.x, b.y, dt, BLD[b.kind].fp * 5 + 4, SP)) {
+				u.inside = true;
+				u.hid = b.id;
+			}
+			return;
+		}
+	}
+	if (u.inside) {
+		// a new order: out of the building
+		stepOut(u, byId(G.blds, u.hid));
+		u.hid = 0;
+	}
+	if (
+		u.hp < u.max &&
+		!u.tgt &&
+		o !== WILD &&
+		(G.tick + u.id) % 30 === 0 &&
+		G.blds.some(
+			(b) =>
+				b.owner === o &&
+				b.hp > 0 &&
+				b.prog >= 1 &&
+				(b.kind === 'castle' || b.kind === 'barracks' || b.kind === 'keep' || (b.kind === 'messtent' && !(u.unfed > 0))) && // the mess tent: rest as at the Barracks, while the depot feeds (CAMP)
+				dist(b, u) < GARRISON.r,
+		)
+	)
+		u.hp = relax(u.hp, u.max, u.max / (GARRISON.heal * fxv(o, 'garrison').m), 1); // garrisoned: the wound closes, once a second
+	if (u.state === 'rout') {
+		// broken: it runs from the nearest foe toward home, then comes to itself
+		if (G.t > u.routAt + routSecs(o)) {
+			u.state = 'home';
+			u.mor = MORALE.after;
+			u.fleeFrom = null;
+			return;
+		}
+		const f = (G.tick + u.id) % 6 === 0 || !u.fleeFrom ? (u.fleeFrom = nearestFoe(o, u, 220)) : u.fleeFrom,
+			h = homeOf(o) || u;
+		const dx = f ? u.x - f.x : h.x - u.x,
+			dy = f ? u.y - f.y : h.y - u.y,
+			dd = hyp(dx, dy) || 1;
+		moveTo(
+			u,
+			clamp(u.x + (dx / dd) * 60, 20, MAP - 20),
+			clamp(u.y + (dy / dd) * 60, 20, MAP - 20),
+			dt,
+			3,
+			SP * MORALE.routSpd,
+		);
+		u.idleT = 0;
+		return;
+	}
+	if ((G.tick + u.id) % 4 === 0) {
+		// the nerve breathes, four times a second: quiet lets it settle back toward 1 (the first-order lag, MORALE.tau), faster by a wall or
+		// tower of its own and by a priest; being outnumbered drains it
+		const d4 = dt * 4;
+		let m = u.mor;
+		if (!u.tgt) {
+			let rate = fxv(o, 'rest').m;
+			if (
+				bldsNear(
+					u.x,
+					u.y,
+					60,
+					(b) =>
+						standing(b, o) && (BLD[b.kind].dmg || BLD[b.kind].wallish) && dist(b, u) < 60,
+				)
+			)
+				rate *= MORALE.shelter * fxv(o, 'shelter').m;
+			if (
+				G.priests.some(
+					(p) => p.owner === o && Math.abs(p.x - u.x) < MORALE.priestR && Math.abs(p.y - u.y) < MORALE.priestR,
+				)
+			)
+				rate *= MORALE.priest;
+			m = relax(m, 1, MORALE.tau / rate, d4);
+		}
+		if (u.tgt) {
+			let us = 0,
+				them = 0;
+			unitsNear(u, 100, (v) => {
+				if (!isSoldier(v) || v.hp <= 0 || v.inside) return;
+				if (v.owner === o) us++;
+				else if (atWar(o, v.owner)) them++;
+			});
+			if (them > (us + 1) * 1.5) m -= MORALE.odds * d4;
+		}
+		u.mor = clamp(m, 0, 1);
+		if (u.mor <= 0 && !(u.fb > G.t) && !U.bonly) {
+			u.state = 'rout';
+			u.routAt = G.t; // when it broke: the run's end and the grace before a hand may take it both count from here (C6)
+			u.tgt = null;
+			u.focus = null;
+			u.fleeFrom = null;
+			if (o === 0 && G.t - (G.routSay || -99) > 8) {
+				G.routSay = G.t;
+				news('war', `${u.bn !== undefined ? BN[u.bn] : 'Your soldiers'} break and run!`, 'warn', TOAST.mid, u);
+			}
+			return;
+		}
+		if (u.chg && G.t > u.chg) {
+			u.tired = G.t + CHARGE.tired;
+			u.chg = 0;
+		}
+	}
+	let tgt = u.tgt; // looks for the best foe a few times a second (bestFoe), and keeps the one it has unless another is clearly better
+	if (
+		tgt &&
+		!(
+			tgt.hp > 0 &&
+			!tgt.inside &&
+			(isFoe(o, tgt, u) || onMe(tgt, u)) &&
+			(edge(u, tgt) < sightOf(u) * 1.4 * (TEMPER[temperOf(u)].chase || 1) ||
+				(u.state === 'home' && nearHome(u, tgt, k)))
+		)
+	)
+		tgt = u.tgt = null; // the one it had is gone; a soldier at home keeps a foe it was sent after near the Town Center (Build 38: dropping it the next step made new soldiers spin)
+	if ((G.tick + u.id) % 4 === 0) {
+		// its turn to look, about seven times a second: with a foe or without. Commander's intent (Build 63, your squads): Engage looks as far
+		// as it sees; No pursuit only to the reach of its blade while it walks; Priority: buildings takes the nearest building first
+		const it = o === 0 && u.bn !== undefined && G.bnIntent ? G.bnIntent[u.bn] || 0 : 0,
+			look = it === 1 && u.state === 'goto' ? rngOf(u) + 10 : sightOf(u);
+		if (U.bonly || (it === 2 && nearestFoeBld(o, u, undefined, look))) tgt = nearestFoeBld(o, u, undefined, look);
+		else {
+			// the best foe in sight by the attack-value rule; the one it is fighting is kept unless the new one is FORAGE.move better
+			const c = bestFoe(o, u, look),
+				cur = u.tgt && !u.tgt.q ? u.tgt : null,
+				inReach = cur && edge(u, cur) <= rngOf(u) + 8, // a foe already at the blade is never dropped for one farther off (Build 63)
+				keep =
+					cur &&
+					(!c ||
+						inReach ||
+						(canBeat(u, cur) >= canBeat(u, c) &&
+							foeValue(u, c, dist(u, c)) < FORAGE.move * foeValue(u, cur, dist(u, cur))));
+			tgt = keep ? cur : c;
+		}
+		if (u.state === 'home' && tgt && !nearHome(u, tgt, k) && !onMe(tgt, u)) tgt = null; // one on it is fought wherever it stands
+		if (!tgt && u.state === 'home' && !U.bonly)
+			tgt =
+				(u.hax !== undefined && nearestFoe(o, u, YARD, { x: u.hax, y: u.hay })) ||
+				(k && nearestFoe(o, u, YARD, k)) ||
+				null; // a foe near its own yard first, then near the Town Center
+		u.tgt = tgt;
+	}
+	if (u.focus) {
+		if (u.focus.hp > 0 && !u.focus.inside && isFoe(o, u.focus, u)) {
+			tgt = u.focus;
+			u.tgt = tgt;
+		} else u.focus = null;
+	} // told to hit this one
+	// in a drill, a foe striking this line is met one rank's step (GRID.gap) past the blade's reach, no farther (argon, Nov 3; p44)
+	const step = tgt && drillOn(u) && tgt.tgt && tgt.tgt.owner === o && tgt.tgt.drill && tgt.tgt.drill.px === u.drill.px && tgt.tgt.drill.py === u.drill.py ? GRID.gap : 0;
+	if (
+		tgt &&
+		o === 0 &&
+		u.state !== 'attack' &&
+		!u.focus &&
+		temperOf(u) === T_HOLD &&
+		edge(u, tgt) > reachOf(rngOf(u), tgt) + step
+	)
+		tgt = null; // hold ground: fight only what comes within reach
+	if (drillOn(u)) drillHold(u);
+	if (tgt && drillOn(u)) {
+		const placed = u.gx !== undefined && hyp(u.px + u.gx - u.x, u.py + u.gy - u.y) < 6 + step;
+		if (!placed || edge(u, tgt) > reachOf(rngOf(u), tgt) + step) tgt = null;
+	} // in a drill (the War Director): to its place in the line or the arc first, then it fights only what is in reach (Albert, Nov 3), plus the step
+	if (u.state === 'escort') {
+		escortPick(u);
+		if (!u.esc) u.state = 'home';
+		else if (tgt && dist(tgt, u.esc) > 110) tgt = nearestFoe(o, u, 110, u.esc);
+	}
+	if (!tgt && u.blocker && u.blocker.hp > 0 && atWar(o, u.blocker.owner) && G.t - u.blockT < 1) tgt = u.blocker;
+	if (!tgt && u.state === 'attack') {
+		if (!(u.bt && u.bt.hp > 0 && u.bt.owner === u.target && atWar(o, u.bt.owner)) || (G.tick + u.id) % 5 === 0)
+			u.bt =
+				(u.bid && G.blds.find((b) => b.id === u.bid && b.hp > 0 && atWar(o, b.owner))) ||
+				nearestFoeBld(o, u, u.target, 260); // a mark that changed hands is no mark
+		tgt = u.bt;
+		if (!tgt) {
+			const kp = keepOf(u.target);
+			if (kp && edge(u, kp) > 40) {
+				moveTo(u, kp.x + u.ox * 0.5, kp.y + u.oy * 0.5, dt, 20, SP);
+				return;
+			}
+			tgt = nearestFoeBld(o, u, u.target);
+			if (!tgt) u.state = 'home';
+		}
+	}
+	if (tgt) {
+		const reach = reachOf(rngOf(u), tgt);
+		if (
+			!tgt.q &&
+			tgt.state === 'rout' &&
+			G.t - tgt.routAt > MORALE.capAfter &&
+			dist(u, tgt) <= MORALE.capR &&
+			!U.bonly
+		) {
+			takePrisoner(o, tgt);
+			u.tgt = null;
+			return;
+		} // a hand on a runner who did not get away: a prisoner (riders catch the foot)
+		if (edge(u, tgt) <= reach) {
+			const fd = dist(u, tgt) || 1;
+			u.fx = (tgt.x - u.x) / fd;
+			u.fy = (tgt.y - u.y) / fd;
+			if (u.kiting && u.cd > 0 && (G.tick + u.id) % 3 === 0) {
+				// reloading with a foe on top of it: step back
+				const f = nearestFoe(o, u, KITE);
+				if (f && !f.q && UNIT[f.kind].rng <= 20) {
+					const dx = u.x - f.x,
+						dy = u.y - f.y,
+						dd = hyp(dx, dy) || 1;
+					const kx = clamp(u.x + (dx / dd) * 28, 15, MAP - 15),
+						ky = clamp(u.y + (dy / dd) * 28, 15, MAP - 15);
+					if (!blockedCell(gcell(kx, ky), o)) {
+						u.kx = kx;
+						u.ky = ky;
+						u.kT = G.t;
+					}
+				}
+			}
+			if (u.kT > G.t - 0.5 && u.cd > 0) {
+				moveTo(u, u.kx, u.ky, dt, 2, SP);
+				return;
+			}
+			if (u.cd <= 0) {
+				u.cd = U.cd;
+				u.hitT = G.t;
+				if (hasTag(u.kind, 'siege') && G.clim.snow > 0 && rng() < CLIMATE.miss * G.clim.snow * (1 - fxv(o, 'snow').a)) {
+					u.hp -= u.max * CLIMATE.missHurt;
+					scarStrike(u.x + u.fx * 30, u.y + u.fy * 30);
+					if (o === 0 && (G.tick + u.id) % 90 < 3) news('war', 'Snow: the engine slid, shot short.', 'warn', TOAST.mid, u);
+				} // an engine on snow
+				else {
+					hurt(o, u, tgt, dmgOf(u));
+					if (U.rng > 20) shot(u.x, u.y, 9, tgt.x, tgt.y, fxv(o, 'fire', unitKeys(u.kind)).a >= 1); // fire arrows burn on the way
+				}
+			}
+		} else closeIn(u, tgt, reach, dt, SP);
+		u.idleT = 0;
+		return;
+	}
+	if (u.state === 'escort' && u.esc) {
+		moveTo(u, u.esc.x + u.ox * 0.5, u.esc.y + u.oy * 0.5, dt, 14, SP);
+		return;
+	}
+	if (campRaise(u, dt, SP)) return; // a foot soldier idle by its side's camp raises it (CAMP)
+	if (u.state === 'goto' || u.state === 'assist') {
+		const ak = u.px + ',' + u.py;
+		if (u.fanK !== ak && hyp(u.px - u.x, u.py - u.y) < GRID.fan) u.fanK = ak; // near the spot: from here to its own place in the shape
+		const fan = u.fanK === ak; // (Build 48: each soldier walked its own way to its own place, and the army split round woods)
+		if (moveTo(u, u.px + (fan ? (u.gx ?? u.ox * 0.6) : 0), u.py + (fan ? (u.gy ?? u.oy * 0.6) : 0), dt, 3, SP)) {
+			u.idleT += dt;
+			if (u.state === 'assist' && u.idleT > 20) u.state = 'home';
+		}
+		return;
+	}
+	const h = homeSpot(u, 90);
+	if (h) moveTo(u, h.x, h.y, dt, 3, SP);
+}
+// a guard keeps to what it guards: a caravan (escort) or a trade stop you hold (garrison); when that is gone, it goes home
+function escortPick(u) {
+	if (u.escF !== undefined) {
+		const f = byId(G.finds, u.escF);
+		u.esc = f && f.owner === u.owner ? f : null;
+		if (!u.esc) u.escF = undefined;
+		return;
+	}
+	if (u.esc && u.esc.hp > 0 && (G.tick + u.id) % 20) return;
+	u.esc =
+		u.escId !== undefined
+			? G.units.find((v) => v.id === u.escId && v.hp > 0) || null
+			: nearest(G.units, u, (v) => v.kind === 'caravan' && v.owner === u.owner);
+	if (!u.esc) u.escId = undefined;
+}
+
+// ───────────────────────── The wild ─────────────────────────
+const wildLeash = (u) => (u.horde ? 1e9 : (UNIT[u.kind].raid || 120) + 60); // how far from home a beast or a guard follows a foe: the camp's ground
+// Guards stay by what they guard and attack whoever comes close; game grazes and runs; robbers raid within their reach.
+function wildTick(u, dt, SP) {
+	const U = UNIT[u.kind];
+	if (U.passive) return;
+	if (U.flee) {
+		const hurtNow = G.t - (u.hurtT || -99) < 6; // game ignores villagers (they are the hunters) until hit; soldiers always scare it
+		if ((G.tick + u.id) % 6 === 0) {
+			const t = nearU(u, 70, (v) => v.owner !== WILD && !v.inside && (hurtNow || v.kind !== 'vil'));
+			u.run = t ? { x: u.x + (u.x - t.x), y: u.y + (u.y - t.y) } : null;
+		}
+		if (u.run) {
+			const nx = clamp(u.run.x, 20, MAP - 20),
+				ny = clamp(u.run.y, 20, MAP - 20);
+			const sp = U.spd * (hurtNow ? 0.45 : 1);
+			// a step that slides along a wall, as moveTo does (Build 63: the old step walked into the building and jumped out: the glitch)
+			// one unit direction, so a diagonal is no faster than a straight run; against a wall it keeps only the part along it, v' = v - (v.n)n,
+			// and a run that slows below half its speed is given up (decision 12)
+			const rd = hyp(nx - u.x, ny - u.y) || 1,
+				sx = ((nx - u.x) / rd) * sp * dt,
+				sy = ((ny - u.y) / rd) * sp * dt;
+			let x1 = u.x + sx,
+				y1 = u.y + sy;
+			if (blockedCell(gcell(x1, y1), WILD)) {
+				if (!blockedCell(gcell(x1, u.y), WILD)) {
+					y1 = u.y;
+					if (Math.abs(sx) < 0.5 * hyp(sx, sy)) u.run = null;
+				} else if (!blockedCell(gcell(u.x, y1), WILD)) {
+					x1 = u.x;
+					if (Math.abs(sy) < 0.5 * hyp(sx, sy)) u.run = null;
+				} else {
+					x1 = u.x;
+					y1 = u.y;
+					u.run = null; // cornered: it stops, and picks a new way off next look
+				}
+			}
+			u.fx = Math.sign(nx - u.x) || u.fx;
+			stepTo(u, x1, y1);
+			u.mvT = G.t;
+		} else if (G.t > (u.graze || 0)) {
+			u.graze = G.t + rnd(3, 8);
+			const gx = u.hx + rnd(-40, 40),
+				gy = u.hy + rnd(-30, 30),
+				f = blockedCell(gcell(gx, gy), WILD)
+					? freeNear(Math.floor(gx / NAVC), Math.floor(gy / NAVC), WILD, 3, gx, gy)
+					: { x: gx, y: gy };
+			if (f) u.grazeAt = { x: f.x, y: f.y }; // graze only where it fits: a spot inside a building had it nosing the wall (Build 63)
+		} else if (u.grazeAt) moveTo(u, u.grazeAt.x, u.grazeAt.y, dt * 0.3, 3, 1);
+		return;
+	}
+	u.cd = Math.max(0, u.cd - dt);
+	const home = { x: u.hx, y: u.hy },
+		leash = wildLeash(u);
+	let t = u.tgt;
+	if ((G.tick + u.id) % 5 === 0 || (t && !(t.hp > 0 && !t.inside))) {
+		// a look every fifth tick, or at once when the foe it held is lost (hunt A #4: with none held it looked every tick)
+		t = null;
+		if (u.aggro && u.aggro.hp > 0 && !u.aggro.inside && dist(u.aggro, home) < leash) t = u.aggro;
+		if (!t)
+			t = nearU(
+				u,
+				U.raid ? U.raid + 40 : WILD_LOOK,
+				(v) =>
+					v.owner !== WILD &&
+					!v.inside &&
+					v.kind !== 'envoy' &&
+					isFoe(WILD, v, u) && // a group at peace with the side leaves it be (answer 1b); a computer only if it struck (4b)
+					(u.horde || dist(v, home) < (U.raid && hasTag(v.kind, 'civ') ? U.raid : 90)) &&
+					!(U.raid && guardedCart(v)),
+			);
+		if (!t && u.horde) {
+			const b = nearestFoeBld(WILD, u, undefined, 200);
+			if (b) t = b;
+		} // the horde breaks buildings too
+		if (t && U.temper === 'defend' && !(u.aggro && u.aggro.id === t.id)) {
+			// a defender weighs a stranger once in ten seconds: fight with probability V/C, V the stake (1), C the intruder's strength over its own
+			if (!u.hd || u.hd.id !== t.id || G.t > u.hd.t) u.hd = { id: t.id, t: G.t + 10, fight: rng() < hawkP(1, unitPower(t) / Math.max(1e-6, unitPower(u))) };
+			if (!u.hd.fight) t = null;
+		}
+		u.tgt = t;
+	}
+	if (t && dist(t, home) > leash) {
+		t = u.tgt = null;
+		u.aggro = null;
+	}
+	if (t) {
+		const reach = reachOf(U.rng, t);
+		if (edge(u, t) <= reach) {
+			u.fx = Math.sign(t.x - u.x) || u.fx;
+			if (u.cd <= 0) {
+				hurt(WILD, u, t, U.dmg);
+				u.cd = U.cd;
+				u.hitT = G.t;
+			}
+		} else closeIn(u, t, reach, dt, SP);
+		return;
+	}
+	if (dist(u, home) > 30) moveTo(u, u.hx + u.ox * 0.5, u.hy + u.oy * 0.5, dt, 6, SP);
+}
+function wayfarers(dt) {
+	G.wayT -= dt;
+	if (G.wayT > 0) return;
+	G.wayT = WAYFARER_EVERY;
+	const E = [
+			[LMID, 60],
+			[SQUARE - 60, LMID],
+			[LMID, SQUARE - 60],
+			[60, LMID],
+		].map(([x, y]) => [landAt(x, y).x, landAt(x, y).y]), // the land's edges, in the world (preview 51)
+		i = G.wayI++ % 4,
+		a = E[i],
+		b = E[(i + 2) % 4];
+	const w = addUnit(WILD, 'wayfarer', a[0], a[1]);
+	w.px = b[0];
+	w.py = b[1];
+	news('realm', 'A wayfarer: reach him first to gain him.', '', TOAST.mid, w);
+}
+function wayfarerTick(u, dt, SP) {
+	if ((G.tick + u.id) % 6 === 0) {
+		const m = nearU(u, 22, (v) => v.owner !== WILD && v.kind !== 'envoy' && !v.inside);
+		if (m) {
+			const o = m.owner;
+			u.hp = 0;
+			u.gone = true;
+			for (let i = 0; i < (UNIT[u.kind].joins || 1); i++)
+				if (clsCount(o, 'civ') < clsMax('civ', o)) {
+					const v = addUnit(o, 'vil', u.x + i * 6, u.y);
+					v.job = o === 0 ? G.P[0].rally : null;
+				} else earn(G.P[o], 'f', 50, 'finds'); // no room: what it carried
+			if (o === 0)
+				news('realm', UNIT[u.kind].joins > 1 ? 'The settlers join your people.' : 'A wayfarer joins your people.', 'good', TOAST.mid);
+			return;
+		}
+	}
+	if (moveTo(u, u.px, u.py, dt, 10, SP)) {
+		u.hp = 0;
+		u.gone = true;
+	}
+}
+const guardsLeft = (f) =>
+	f.guards.length && G.units.some((v) => v.find === f.id && v.owner === WILD && v.hp > 0 && v.kind !== 'vagabond');
+function findsTick(dt) {
+	for (const f of G.finds) {
+		if (f.done && !FINDS[f.kind].capture) continue;
+		const F = FINDS[f.kind];
+		if (F.capture) {
+			// a holy site: priests take it, it pays its keeper
+			const here = G.units.filter((u) => u.kind === 'priest' && dist(u, f) < F.r),
+				sides = [...new Set(here.map((u) => u.owner))];
+			if (sides.length === 1 && sides[0] !== f.owner) {
+				const o = sides[0];
+				if (!f.cap || f.cap.o !== o) f.cap = { o, t: 0 };
+				f.cap.t += dt;
+				if (f.cap.t >= F.capture) {
+					const was = f.owner;
+					f.owner = o;
+					f.cap = null;
+					if (o === 0) news('realm', 'Your priest holds the shrine.', 'good', TOAST.mid);
+					else if (was === 0) news('realm', `${G.P[o].name} took your shrine.`, 'warn', TOAST.mid, f);
+				}
+			} else if (!sides.length) f.cap = null;
+			if (f.owner !== null && G.P[f.owner].alive) {
+				f.acc = (f.acc || 0) + F.pay * dt;
+				if (f.acc >= 1) {
+					const g = Math.floor(f.acc);
+					f.acc -= g;
+					earn(G.P[f.owner], 'g', g, 'loot');
+				}
+			}
+			continue;
+		}
+		if (!F.got || guardsLeft(f)) continue;
+		const m = nearU(f, 26, (v) => v.owner !== WILD && v.kind !== 'envoy' && !v.inside);
+		if (!m) continue;
+		const o = m.owner,
+			got = {};
+		addRes(got, F.got, G.fantasy ? 1.5 : 1);
+		if (f.hoard) got.g = (got.g || 0) + f.hoard;
+		for (const k in got) got[k] = Math.round(got[k]);
+		f.done = true;
+		f.owner = o;
+		for (const k in got) earn(G.P[o], k, got[k], 'finds');
+		let extra = '';
+		if (F.tech) {
+			const T = TECH.find(
+				(T) =>
+					!G.P[o].techs.has(T.id) &&
+					T.age <= G.P[o].age &&
+					(!T.civ || T.civ === G.P[o].civ) &&
+					isNext(o, T) &&
+					needsOf(T).every((n) => G.P[o].techs.has(n)) &&
+					!T.tier &&
+					!G.blds.some((b) => b.owner === o && b.q.some((j) => j.tech === T.id)),
+			);
+			if (T) {
+				learnTech(o, T.id);
+				extra = ` and a scroll: ${T.name}`;
+			}
+		}
+		if (o === 0) {
+			news('trade', `${F.name}: ${costText(got)}${extra}.`, 'good', TOAST.mid);
+			sfx('coin');
+		}
+	}
+}
+// ═════ 16-sim-fight.js: damage, pushing apart, plunder, falling, scoring, finishing ═════
+// where a blow comes from, as the cosine between the line's facing and the attacker: 1 from the front, 0 from the side, −1 from behind.
+// The front, whenever the man can turn to meet it or a comrade stands in the way (FLANKING).
+function fromWhere(t, a) {
+	if (t.fx === undefined) return 1;
+	if (!((t.tgt && t.tgt !== a) || t.stuck > G.t || t.state === 'rout')) return 1; // free to turn: no blow is from behind
+	const dx = a.x - t.x,
+		dy = a.y - t.y,
+		d = hyp(dx, dy) || 1;
+	let covered = false,
+		fx = t.fx, // its own facing first, then its group's (C3: a lone man summed nothing and took every blow from the side)
+		fy = t.fy || 0;
+	unitsNear(t, FLANKING.line, (v) => {
+		if (v.owner !== t.owner || !isSoldier(v) || v.hp <= 0 || v.inside) return;
+		fx += v.fx || 0;
+		fy += v.fy || 0;
+		if (covered) return;
+		const ex = v.x - t.x,
+			ey = v.y - t.y,
+			e = hyp(ex, ey) || 1;
+		if (e < FLANKING.cover && (ex * dx + ey * dy) / (e * d) > 0.5) covered = true;
+	});
+	if (covered) return 1;
+	const f = hyp(fx, fy) || 1;
+	return (dx * (fx / f) + dy * (fy / f)) / d;
+}
+function hurt(o, a, t, base) {
+	const A = a ? UNIT[a.kind] : {},
+		isB = !!t.q,
+		beast = !!a && hasTag(a.kind, 'animal'); // the kind, not the owner (N4): a Native, an outlaw or a citadel tower hits full and shakes the nerve
+	let d = base,
+		from; // where the blow comes from, found once a blow (the damage and the nerve both read it)
+	const fromOf = () => (from ??= a ? fromWhere(t, a) : 1);
+	if (isB) {
+		d *= (A.bld ?? 1) * (a && o !== WILD ? fxv(o, 'bld', unitKeys(a.kind)).m : 1); // against buildings: the unit's own factor, and research keyed to it (Hastin)
+		if (a && o !== WILD && t.prog >= 1 && BLD[t.kind].wood && !t.fire) {
+			const keys = unitKeys(a.kind),
+				blast = A.gun && fxv(o, 'blast', keys).a >= 1;
+			if ((blast || fxv(o, 'fire', keys).a >= 1) && rng() < (blast ? FIREARMS.blast : FIREARMS.chance) * fireMul())
+				ignite(t, 'a shot');
+		} // fire arrows, burning shot, petards
+		if (a && A.gun && fxv(o, 'blast', unitKeys(a.kind)).a >= 1)
+			for (const n of G.blds)
+				if (n !== t && n.hp > 0 && n.owner === t.owner && dist(n, t) < FIREARMS.splash) {
+					n.hp -= d * FIREARMS.splashHit;
+					n.by = o;
+					n.byT = G.t;
+				} // the blast shakes the neighbours, and a neighbour it brings down pays its plunder (C9)
+	} else {
+		if (a) d *= vsMul(a, t);
+		if (a && o === WILD && t.kind === 'vil' && t.owner !== WILD && UNIT[a.kind].meat && !t.hunt) {
+			// an animal attacks a villager: it and the two nearest villagers who can see it turn on the beast, kill it and butcher it, then go back to work (Build 61)
+			const helpers = unitsOf(t.owner, 'vil')
+				.filter((v) => v !== t && !v.inside && !v.hunt && v.job !== 'repair' && dist(v, a) < sightOf(v))
+				.sort((p, q) => dist(p, a) - dist(q, a))
+				.slice(0, 2);
+			for (const v of [t, ...helpers]) {
+				v.hunt = a;
+				if (v.job === 'repair') continue; // a builder fights back on its own job, then goes back to its site (hunt A #3: it lost both)
+				v.pj = v.job === 'food' ? null : v.job;
+				setJob(v, 'food');
+			}
+		}
+		if (isSoldier(t)) {
+			if (beast) d *= MORALE.wild;
+			if (t.state === 'rout') d *= MORALE.routHit;
+			else if (t.fb > G.t) d *= FALLBACK.hit;
+		}
+		if (a && A.gun && hasTag(t.kind, 'native')) d *= NATIVE.gunHit; // gunpowder against hide shields
+		if (isSoldier(t) && t.owner !== WILD) {
+			d *= stats(t.owner, t.kind).armor;
+			{
+				const F = shapeOf(t);
+				d *= F.hit || 1;
+				if (F.vsMounted && a && hasTag(a.kind, 'mounted')) d *= F.vsMounted;
+			} // the battalion's shape
+			if (a && A.rng <= 20 && fromOf() < -0.5) d *= FLANK; // from behind the line it holds
+		}
+		if (UNIT[t.kind].rarmor && (!a || A.rng > 20)) d *= UNIT[t.kind].rarmor; // roofed: arrows and bolts glance off
+		if (isSoldier(t) && !beast) {
+			const dot = fromOf();
+			t.mor -=
+				((MORALE.hit * d * (TEMPER[temperOf(t)].nerve || 1)) / t.max) *
+				(dot < -0.5 ? MORALE.rear : dot < 0.5 ? MORALE.side : 1);
+		} // nerve, from the blow that lands (C5: after armour, the shape and the flank); from the side half again, from behind twice; an animal does not shake it
+	}
+	t.hp -= d;
+	t.hurtT = G.t;
+	if (a && !isB && t.staked && !a.q && hasTag(a.kind, 'mounted') && G.t - (a.stakeT || -9) > 2) {
+		// a horse rides onto a shooter's stake (STAKES): it is hurt, its charge ends, and it is thrown back
+		a.stakeT = G.t;
+		a.hp -= a.max * STAKES.dmg;
+		a.hurtT = G.t;
+		a.flashT = G.t;
+		a.chg = 0;
+		const dx = a.x - t.x,
+			dy = a.y - t.y,
+			dd = hyp(dx, dy) || 1;
+		if (!blockedCell(gcell(a.x + (dx / dd) * STAKES.shove, a.y + (dy / dd) * STAKES.shove), a.owner)) stepTo(a, a.x + (dx / dd) * STAKES.shove, a.y + (dy / dd) * STAKES.shove);
+		if (t.owner === 0 && (G.tick + t.id) % 60 === 0) say('A horse on the stakes!', 'good', TOAST.short);
+	}
+	if (a && !isB && a.chg > G.t && isSoldier(t) && !t.inside && G.t - (t.shoveT || -9) > 1) {
+		const dx = t.x - a.x,
+			dy = t.y - a.y,
+			dd = hyp(dx, dy) || 1;
+		t.shoveT = G.t;
+		if (!blockedCell(gcell(t.x + (dx / dd) * JUICE.shove, t.y + (dy / dd) * JUICE.shove), t.owner)) stepTo(t, t.x + (dx / dd) * JUICE.shove, t.y + (dy / dd) * JUICE.shove);
+		if (onScreen(t.x, t.y)) {
+			G.jolt = G.t + JUICE.joltS;
+			sfx('thud', t.x, t.y);
+		}
+	} // a charge lands (the juice pass): the one it hits is shoved back, the screen jolts, a thud
+	if (a && t.hp <= 0 && !isB && a.st) {
+		a.st.kills++;
+		warCredit(a.owner, t.owner, UNIT[t.kind].cost); // an animal costs nothing, so it counts nothing
+		if (G.kills && G.kills[a.owner] && G.kills[a.owner][t.owner] !== undefined) G.kills[a.owner][t.owner]++;
+		if (isSoldier(a)) a.mor = Math.min(1, a.mor + MORALE.kill);
+	}
+	const tg = o === WILD ? null : gangOf(t);
+	if (tg && tg !== 'beast') {
+		if (a && calm4b(o) && (tg !== 'nat' || t.native || !UNIT[t.kind])) ((G.struck ??= {})[campOf(t)] ??= {})[a.id] = G.t; // 4b: the camp remembers who struck it
+		const R = gangState(tg);
+		if ((tg !== 'nat' || t.native) && G.t - (R.hitT[o] ?? -9) > 3) {
+			R.hitT[o] = G.t;
+			addRegard(o, tg, -REGARD.hitCost);
+		}
+	} // blows on a group (a Native warrior, a bandit, a robber, the horde) cost that group's regard
+	if (a && A.knock && !isB && t.hp > 0 && t.kind !== 'caravan') {
+		// a heavy blow drives the target back and flashes it
+		const dx = t.x - a.x,
+			dy = t.y - a.y,
+			dd = hyp(dx, dy) || 1,
+			nx = t.x + (dx / dd) * A.knock,
+			ny = t.y + (dy / dd) * A.knock;
+		if (!blockedCell(gcell(nx, ny), t.owner)) stepTo(t, clamp(nx, 8, MAP - 8), clamp(ny, 8, MAP - 8));
+		t.flashT = G.t;
+	}
+	if (isB || t.kind === 'caravan') {
+		if (o !== t.owner) {
+			t.by = o;
+			t.byT = G.t;
+		}
+	} else if (t.owner === WILD) {
+		t.aggro = a;
+		t.by = o;
+	}
+	if (!lessMotion && SPARKS.length < 40) SPARKS.push({ x: t.x, y: t.y, t: G.t });
+	sfx(
+		A.gun ? (hasTag(a.kind, 'siege') ? 'boom' : 'shot') : isB ? 'bhit' : A.rng > 20 || !a ? 'arrow' : 'hit',
+		t.x,
+		t.y,
+	);
+	if (o !== WILD && t.owner !== WILD && !atWar(o, t.owner) && o !== t.owner)
+		declareWar(o, t.owner, o === 0 ? 'you attacked them' : `${G.P[o].name} attacked`);
+	if (t.owner === 0 && o !== 0) {
+		G.hitT = G.t;
+		G.hitWild = o === WILD;
+		if (G.t - G.alertT > 12) {
+			G.alertT = G.t;
+			if (o !== WILD) sfx('horn');
+			news('war', 
+				o === WILD
+					? `${plural(UNIT[a ? a.kind : 'wolf'].name)} attack at ${coord(t.x, t.y)}`
+					: `Under attack at ${coord(t.x, t.y)}`,
+				'warn',
+				TOAST.long,
+				t,
+			);
+		}
+	}
+}
+// Crowd spacing, neighbours only: units are sorted into squares as wide as personal space (no push reaches past the next square) and each is
+// compared with the units in its own and the next squares.
+const CHS = Math.ceil(SPACE),
+	CHW = Math.ceil(MAP / CHS) + 1,
+	CHEAD = new Int32Array(CHW * CHW),
+	CHCELL = [];
+let CHNEXT = new Int32Array(1024);
+// Who gives way (Build 48; it was always half and half): one at work or in a fight hardly moves, one walking moves one standing about,
+// one standing gives way. Nobody is pushed into a tree, a wall or water.
+const heft = (u) => (u.tgt || G.t - (u.work ?? -9) < 0.5 ? 9 : G.t - (u.mvT ?? -9) < 0.25 ? 3 : 1);
+// forming (FORMING): walking to its place in a shape (its gx set, not there yet); the precedence of its kind, lower giving way
+const forming = (u) => u.state === 'goto' && u.gx !== undefined && !u.tgt && hyp(u.px + u.gx - u.x, u.py + u.gy - u.y) > 6,
+	rankOf = (u) => (isSoldier(u) ? 4 - Math.max(0, clsOf(u.kind)) : 0);
+function pushApart(a, b) {
+	let dx = b.x - a.x,
+		dy = b.y - a.y;
+	if (dx > SPACE || dx < -SPACE || dy > SPACE || dy < -SPACE) return;
+	if (a.post && b.post && a.post.b != null && a.post.b === b.post.b && !a.job && !b.job) return; // two of one group sent to their own spots round a point (item 5): the spots keep them SPACE apart, so neither shoves the other off its way
+	if (dx === 0 && dy === 0) {
+		// two on one spot part along a direction fixed by their ids, the same every time (decision 10, Reynolds separation)
+		const g = ((a.id * 31 + b.id * 17) % 360) * (Math.PI / 180);
+		dx = Math.cos(g) * 0.01;
+		dy = Math.sin(g) * 0.01;
+	}
+	const d = hyp(dx, dy);
+	if (d > 0 && d < SPACE) {
+		const fa = forming(a),
+			fb = forming(b),
+			ha = fa && fb ? (rankOf(a) > rankOf(b) ? 9 : rankOf(a) < rankOf(b) ? 1 : 3) : heft(a),
+			hb = fa && fb ? (rankOf(b) > rankOf(a) ? 9 : rankOf(b) < rankOf(a) ? 1 : 3) : heft(b),
+			k = ((SPACE - d) / d) * (fa && fb ? FORMING.soft : 1), // two forming: the lower kind gives way, and the push is soft
+			pa = (k * hb) / (ha + hb),
+			pb = (k * ha) / (ha + hb),
+			ax = a.x - dx * pa,
+			ay = a.y - dy * pa,
+			bx = b.x + dx * pb,
+			by = b.y + dy * pb,
+			ra = atRest(a),
+			rb = atRest(b);
+		if (!blockedCell(gcell(ax, ay), a.owner)) stepTo(a, ax, ay);
+		if (!blockedCell(gcell(bx, by), b.owner)) stepTo(b, bx, by);
+		if (ra) settle(a);
+		if (rb) settle(b);
+	}
+}
+// at rest (D-092): a stopped villager on a point of its own (not a group's spot), or a grazer between bites. Nudged, it stays where it was
+// nudged instead of walking back and being nudged again (the shuffle): a crowd at rest settles, as people standing in a room shift and stay
+const atRest = (u) => (u.kind === 'vil' ? !u.job && u.post && u.post.b == null : !!u.grazeAt && !u.run) && G.t - (u.mvT ?? -9) >= 0.25,
+	settle = (u) => {
+		if (u.kind === 'vil') u.post = { x: u.x, y: u.y };
+		else u.grazeAt = { x: u.x, y: u.y };
+	};
+function collide() {
+	const U = G.units,
+		n = U.length;
+	if (CHNEXT.length < n) CHNEXT = new Int32Array(n * 2);
+	CHEAD.fill(-1);
+	for (let i = 0; i < n; i++) {
+		const u = U[i];
+		if (u.inside) {
+			CHCELL[i] = -1;
+			continue;
+		}
+		const c = clamp((u.y / CHS) | 0, 0, CHW - 1) * CHW + clamp((u.x / CHS) | 0, 0, CHW - 1);
+		CHCELL[i] = c;
+		CHNEXT[i] = CHEAD[c];
+		CHEAD[c] = i;
+	}
+	for (let i = 0; i < n; i++) {
+		const c = CHCELL[i];
+		if (c < 0) continue;
+		const a = U[i],
+			cx = c % CHW;
+		for (let j = CHNEXT[i]; j >= 0; j = CHNEXT[j]) pushApart(a, U[j]);
+		if (cx + 1 < CHW) for (let j = CHEAD[c + 1]; j >= 0; j = CHNEXT[j]) pushApart(a, U[j]);
+		if (c + CHW < CHW * CHW) {
+			for (let j = CHEAD[c + CHW]; j >= 0; j = CHNEXT[j]) pushApart(a, U[j]);
+			if (cx + 1 < CHW) for (let j = CHEAD[c + CHW + 1]; j >= 0; j = CHNEXT[j]) pushApart(a, U[j]);
+			if (cx > 0) for (let j = CHEAD[c + CHW - 1]; j >= 0; j = CHNEXT[j]) pushApart(a, U[j]);
+		}
+	}
+	for (const u of U) {
+		if (u.inside) continue;
+		for (const L of G.lakes) {
+			if (Math.abs(u.x - L.x) > L.r * 1.4 + 60 || Math.abs(u.y - L.y) > L.r * 1.4 + 60) continue; // far from this one: the cheap test first
+			const dl = dist(u, L),
+				lr = lakeRTo(L, u.x, u.y);
+			if (dl < lr + 6 && !u.fly && !onLand(u.x, u.y)) {
+				const s = (lr + 6) / (dl || 1);
+				stepTo(u, L.x + (u.x - L.x) * s, L.y + (u.y - L.y) * s);
+			}
+		}
+		stepTo(u, clamp(u.x, 6, MAP - 6), clamp(u.y, 6, MAP - 6));
+		if (blockedCell(gcell(u.x, u.y), u.owner)) {
+			const f = freeNear(Math.floor(u.x / NAVC), Math.floor(u.y / NAVC), u.owner, 8, u.x, u.y);
+			if (f) {
+				stepTo(u, f.x, f.y);
+				u.path = null;
+			}
+		}
+	}
+}
+
+// ───────────────────────── Plunder, falls, the score ─────────────────────────
+// A destroyed building pays its destroyer a quarter of its cost; a fallen Town Center pays the whole stockpile and a quarter of everything left standing.
+function plunder(to, got) {
+	const P = G.P[to];
+	let any = false;
+	for (const [k, v] of Object.entries(got))
+		if (v > 0) {
+			earn(P, k, v, 'loot');
+			any = true;
+			if (to === 0) G.loot[k] = (G.loot[k] || 0) + v;
+		}
+	if (to === 0 && any) {
+		G.lootT = G.t;
+		sfx('coin');
+	}
+}
+// the War crown (N6): the cost value of an enemy's people or building destroyed, to the side that destroyed it; animals are not counted
+function warCredit(to, from, cost) {
+	if (to === from || to === WILD || !G.P[to]) return;
+	G.P[to].war = (G.P[to].war || 0) + sumCost(cost);
+}
+function plunderBld(b) {
+	const to = b.by;
+	b.by = undefined;
+	warCredit(to, b.owner, BLD[b.kind].cost);
+	if (to === b.owner || !G.P[to] || to === WILD) return;
+	if (b.kind === 'keep') G.P[b.owner].killer = to;
+	const got = {};
+	for (const [k, v] of Object.entries(BLD[b.kind].cost || {})) got[k] = Math.floor(v * PLUNDER);
+	plunder(to, got);
+	sfx('crash', b.x, b.y);
+}
+function fall(p) {
+	p.alive = false;
+	const to = p.killer;
+	if (to !== undefined && G.P[to] && to !== WILD) {
+		const got = { ...p.res };
+		for (const b of G.blds)
+			if (b.owner === p.id && b.hp > 0) {
+				for (const [k, v] of Object.entries(BLD[b.kind].cost || {})) got[k] = (got[k] || 0) + Math.floor(v * PLUNDER);
+				b.by = undefined;
+			}
+		plunder(to, got);
+		for (const k of Object.keys(p.res)) spend(p, k, p.res[k], 'loot'); // the fallen side's stores go with it
+	}
+	{
+		// a fallen holder hands the Throne back to the Natives: it is not deleted with the rest, and the game does not name a dead side its holder (B5)
+		const T = G.blds.find((b) => b.kind === 'throne' && b.owner === p.id && !b.gone);
+		if (T) {
+			for (const b of G.blds)
+				if (b.owner === p.id && (b === T || b.citadel)) {
+					b.owner = WILD;
+					b.by = undefined;
+				}
+			T.hp = Math.max(T.hp, maxHpB(WILD, 'throne') / 3);
+			G.throne = { owner: WILD, since: G.t };
+			G.navDirty = true;
+		}
+	}
+	G.units.forEach((u) => {
+		if (u.owner === p.id) {
+			u.hp = 0;
+			u.gone = true;
+		}
+	});
+	G.blds.forEach((b) => {
+		if (b.owner === p.id) {
+			b.hp = 0;
+			b.gone = true;
+		}
+	});
+	{
+		const left = G.P.filter((q) => q.alive && q.id !== WILD);
+		for (const q of left) {
+			q.capA = (q.capA || 0) + Math.floor((ARMYMAX * SHARE_FALLEN) / left.length);
+		}
+		if (left.some((q) => q.id === 0))
+			news('realm', 
+				`Shared out: the ceiling rises by ${Math.floor((ARMYMAX * SHARE_FALLEN) / left.length)} soldiers.`,
+				'good',
+				TOAST.long,
+			);
+	} // a fallen side's room is shared
+	for (const f of G.finds) if (f.owner === p.id && FINDS[f.kind].capture) f.owner = null;
+	if (p.ally !== null) {
+		const q = G.P[p.ally];
+		if (q.ally === p.id) q.ally = null;
+	}
+	if (p.id) news('war', `${p.name} has fallen.`, 'good', TOAST.long);
+	chron(`${p.id === 0 ? 'Your keep' : p.name} fell.`);
+}
+function scoreAll() {
+	for (const p of G.P) {
+		if (p.id === WILD) continue;
+		const s = { people: 0, army: 0, tech: p.spent / SCORE.tech, bld: 0, wealth: p.gathered / SCORE.wealth };
+		if (p.alive) {
+			for (const u of G.units)
+				if (u.owner === p.id && UNIT[u.kind].cls)
+					s[UNIT[u.kind].cls === 'army' ? 'army' : 'people'] += sumCost(UNIT[u.kind].cost) / SCORE.unit;
+			for (const b of G.blds)
+				if (standing(b, p.id)) s.bld += sumCost(BLD[b.kind].cost) / SCORE.bld;
+		}
+		for (const k in s) s[k] = Math.round(s[k]);
+		s.total = s.people + s.army + s.tech + s.bld + s.wealth;
+		p.score = s;
+	}
+}
+function watchHome() {
+	const k = keepOf(0);
+	if (!k || G.tick % 15) return;
+	const near = G.units.find((u) => atWar(0, u.owner) && u.owner !== WILD && isSoldier(u) && dist(u, k) < 340);
+	if (near && G.t - G.warnT > 20) {
+		G.warnT = G.t;
+		news('war', 'Enemies at your town!', 'warn', TOAST.long, near);
+	}
+}
+function finish(won, text, all) {
+	G.over = won ? 'won' : 'lost';
+	if (!all) chron(won ? 'Victory.' : 'Defeat.');
+	clearSave();
+	sfx(won ? 'win' : 'lose');
+	scoreAll();
+	if (won) {
+		const k = keepOf(0);
+		if (k) celebrate(3, k.x, k.y);
+	}
+	let best = null;
+	try {
+		best = Number(localStorage.getItem(keyOf('best'))) || null;
+	} catch (e) {}
+	const sc = Math.round(G.P[0].score.total * levelMul()); // the level played multiplies the score
+	if (won && (!best || sc > best)) {
+		best = sc;
+		try {
+			localStorage.setItem(keyOf('best'), String(sc));
+		} catch (e) {}
+	}
+	showEnd(won, `${text} Score ${fmt(sc)}${best ? ' · best ' + fmt(best) : ''}.`, all);
+}
+const TICK = {
+	vil: vilTick,
+	scout: scoutTick,
+	envoy: envoyTick,
+	caravan: caravanTick,
+	wagon: wagonTick,
+	spy: spyTick,
+	priest: priestTick,
+	medic: medicTick,
+	sol: solTick,
+	wild: wildTick,
+	wayfarer: wayfarerTick,
+	herd: herdTick,
+};
+
+// builders who finish a place of work start on it: fields and workshops take them up to their places, a dock sets them fishing, a camp sends them to what it is for
+const slotsOf = () => 1; // one worker to a field, a quarry, a workshop
+function startWork(u, b) {
+	const B = BLD[b.kind],
+		take = (job, n) => {
+			u.pj = null;
+			setJob(u, job, n);
+			return true;
+		};
+	if (B.crop && b.node) return (b.node.wk || 0) < slotsOf(b.node) && take(b.node.type, b.node);
+	if (b.kind === 'dock') {
+		const f = nearest(G.nodes, b, (n) => n.kind === 'fish' && n.amt > 0, DOCKR);
+		return !!f && take('food', f);
+	}
+	if (B.drop && B.drop.length <= 3) {
+		const n = nearest(
+			G.nodes,
+			b,
+			(n) => B.drop.includes(n.type) && n.kind !== 'farm' && n.amt > 0 && (n.kind !== 'tree' || n.open),
+			220,
+		);
+		return !!n && take(n.type, n);
+	}
+	return false;
+}
+// ═════ 28-army-quick.js: the army: who can be sent, how many, and the sends; the quick action ═════
+// ── Attack with: on an enemy or a find card, from the whole army or one battalion, how many of each type, then go. The nearest of each type go.
+const qsPool = () =>
+	armyFree(0, 'spy', 'shrine').filter((u) => G.qs.from === 'all' || u.bn === G.qs.from);
+function qsPick(to) {
+	const by = {};
+	for (const u of qsPool()) (by[u.kind] = by[u.kind] || []).push(u);
+	const out = [],
+		key = (u) => (idleSoldier(u) ? 0 : 1e6) + dist(u, to); // idle soldiers first, then the nearest busy ones
+	for (const k in by) {
+		by[k].sort((a, b) => key(a) - key(b));
+		out.push(...by[k].slice(0, Math.min(by[k].length, G.qs.n[k] ?? by[k].length)));
+	}
+	return out;
+}
+function qsHTML(verb, label, to) {
+	if (!hasCmd()) G.qs.from = 'all';
+	let h = hasCmd()
+		? list(
+				[['all', 'All'], ...BN.map((n, i) => [i, n])].map(([k, n]) =>
+					btn(
+						`qsfrom:${k}`,
+						n,
+						String(armyOf(0).filter((u) => u.kind !== 'spy' && (k === 'all' || u.bn === k)).length),
+						G.qs.from === k ? 'on' : '',
+					),
+				),
+			)
+		: '';
+	const by = {};
+	for (const u of qsPool()) by[u.kind] = (by[u.kind] || 0) + 1;
+	if (!Object.keys(by).length)
+		return verb.startsWith('qgo')
+			? h // a find with no soldiers to send: nothing to say
+			: h +
+					`<p>No soldiers${G.qs.from === 'all' ? ' yet: train them at a Barracks, Range or Stable' : ' in ' + BN[G.qs.from]}.</p>`;
+	h += Object.entries(by)
+		.map(
+			([k, have]) =>
+				`<div class="qs"><b>${stats(0, k).name}</b>${btn(`qsn:${k},-`, '−')}<span>${Math.min(have, G.qs.n[k] ?? have)} of ${have}</span>${btn(`qsn:${k},+`, '+')}</div>`,
+		)
+		.join('');
+	const S = qsPick(to),
+		foe = to.owner !== undefined && to.owner !== 0 && to.owner !== WILD ? to.owner : null;
+	return (
+		h +
+		acts(
+			btn(
+				verb,
+				`${label} ${S.length}`,
+				foe !== null ? oddsText(S, foe) : '',
+				S.length ? (foe !== null ? 'warn' : 'go') : 'dis',
+			),
+			'c1',
+		)
+	);
+}
+// ── who can be sent
+const sendable = () => armyFree(0, 'spy', 'shrine', 'escort', 'school'); // guards keep to what they guard
+// What each soldier is doing, in one word (Albert, Build 42), worked out from the soldier alone:
+// rally (just trained or called home, walking to its place), march (on your order), fight, hold (stopped: at its place or at the spot you sent it), rout (nerve broke, running).
+// 'other' is a guard, a priest at a shrine, a student, a spy. A soldier that has not moved for two and a half seconds is holding, even if it never got there.
+const ARMY_STILL = 2.5;
+function armyStatus(u) {
+	if (u.state === 'rout') return 'rout';
+	if (u.state === 'garrison') return 'hold'; // defending inside a building
+	if (u.tgt && u.tgt.hp > 0) return 'fight';
+	if (u.state === 'attack') return 'march';
+	if (u.state === 'goto') {
+		if (u.idleT > 1 || G.t - (u.mvT ?? -9) > ARMY_STILL) return 'hold';
+		return !u.ord && G.rally0 && hyp(u.px - G.rally0.x, u.py - G.rally0.y) < 4 ? 'rally' : 'march'; // a new soldier walking to your rally flag is rallying
+	}
+	if (u.state === 'home') return u.hax !== undefined && hyp(u.x - u.hax, u.y - u.hay) > 14 ? 'rally' : 'hold';
+	return 'other';
+}
+const idleSoldier = (u) => {
+	if (u.sent && u.bn == null) return false; // placed by hand: it outranks the idle call (A, Nov 4); All still takes it, and a squad its own
+	const s = armyStatus(u);
+	return s === 'hold' || s === 'rally';
+};
+// Rest: idle soldiers only, so a group on the march is never pulled off its way. All is everyone but guards (Build 44)
+const free = () => sendable().filter(idleSoldier);
+// why nobody can be sent: nobody exists, or who is busy doing what
+function freeWhy() {
+	if (!sendable().length) return 'No soldiers yet. Train some.';
+	const c = { march: 0, fight: 0, rout: 0 };
+	for (const u of sendable()) if (c[armyStatus(u)] !== undefined) c[armyStatus(u)]++;
+	const parts = [
+		c.march && `${c.march} marching`,
+		c.fight && `${c.fight} fighting`,
+		c.rout && `${c.rout} routed`,
+	].filter(Boolean);
+	return `None idle: ${parts.slice(0, 2).join(', ') || 'all are guarding'}.`;
+}
+const guardsOf = (t, id) =>
+	armyOf(0).filter((u) => u.state === 'escort' && (t === 'f' ? u.escF === id : u.escId === id)); // up to 12 soldiers escort one caravan or garrison one trade stop
+function guardRow(t, id) {
+	const n = guardsOf(t, id).length,
+		free = sendable().length,
+		verb = t === 'f' ? 'Garrison' : 'Escort';
+	return acts(
+		btn(
+			`guard:${t},${id}`,
+			`${verb} +4`,
+			n >= POST.guard ? `full: ${n}/${POST.guard}` : free ? `${n}/${POST.guard} · ${free} free` : 'no free soldiers',
+			n < POST.guard && free ? '' : 'dis',
+		) + btn(`unguard:${t},${id}`, 'Release', n ? `${n} go home` : 'none here', n ? '' : 'dis'),
+	);
+}
+// ── The quick action (Albert, Nov 3: "a tap on the ground like a right click"): with units picked, a tap is their order (26-input, order);
+// with nothing picked, a tap on open ground puts two chips there, the sword and ✕. The sword sends every soldier to the spot; ✕, a pan, or a
+// tap anywhere else closes them (that tap does nothing more). With no soldiers the sword is dim and says so. G.qa: the spot and the finger.
+function showQuick(sx, sy, x, y) {
+	const el = $('qa'),
+		r = $('stage').getBoundingClientRect(),
+		css = getComputedStyle(el),
+		gap = parseFloat(css.getPropertyValue('--gap')),
+		s = parseFloat(css.getPropertyValue('--slot')),
+		left = sx > r.width / 2, // the ✕ opens toward the middle
+		up = $('hud').getBoundingClientRect().bottom - r.top + gap,
+		down = $('orders').getBoundingClientRect().top - r.top - gap - s;
+	G.qa = { x, y };
+	el.hidden = false;
+	el.classList.toggle('left', left);
+	patchHTML(el, sym('qsword', ICON.sword, sendable().length ? 'go' : 'dis', 'Send every soldier here') + sym('qclose', ICON.close, '', 'Close'));
+	const w = el.offsetWidth;
+	el.style.left = clamp(left ? sx + s / 2 - w : sx - s / 2, gap, r.width - w - gap) + 'px';
+	el.style.top = clamp(sy - s / 2, up, down) + 'px';
+	feel('tick');
+}
+function hideQuick() {
+	$('qa').hidden = true;
+	G.qa = null;
+}
+function quickGo() {
+	const Q = G.qa,
+		S = sendable();
+	hideQuick();
+	if (!Q) return;
+	if (!S.length) return say(HOLD_WORD.none, '', TOAST.short);
+	order(S, { t: 'ground', e: { x: Q.x, y: Q.y } });
+	feel('thock');
+}
+// ── The War Director (06-rules-tuning, DIRECT): a tap on a kind in the station's middle is its move, a hold its second. Every soldier of
+// that kind that can be sent goes at once; the crosshair (G.hud.h) is where. Each returns what was said, or '' when nobody could go.
+const ofKind = (t) => sendable().filter((u) => clsOf(u.kind) === t);
+const aimH = () => G.hud.h || { t: 'ground', e: { x: cam.x, y: cam.y } };
+// a drill's shape on the ground (Albert, Nov 3: "form a line", "a semi circle or arc"): every soldier of S to its place round the point at,
+// facing dir, for secs; shape 'line' (one or two ranks across dir) or 'arc' (one rank on a circle round arc.x, arc.y of radius arc.r).
+// The shape lives on each soldier (u.drill) and is laid out by the army's own grid (12-sim-core), so any new order ends it.
+const drillOn = (u) => !!(u.drill && u.drill.until > G.t && u.drill.px === u.px && u.drill.py === u.py && u.state === 'goto');
+function dress(S, at, dir, shape, secs, arc) {
+	for (const u of S) {
+		u.state = 'goto';
+		u.px = at.x;
+		u.py = at.y;
+		u.idleT = 0;
+		u.sent = false;
+		u.drill = { shape, fx: dir.x, fy: dir.y, t0: G.t, until: G.t + secs, px: at.x, py: at.y, arc: arc || null, from: { x: u.x, y: u.y } };
+	}
+}
+// the x% by x% rule (FORMING.share): past that share of the drill's time, a soldier not that share of the way from where it started to its
+// place holds where it stands: in tight quarters they do the best they can as quick as they can (Albert, Nov 3)
+function drillHold(u) {
+	const D = u.drill;
+	if (!D || D.held || !D.from || u.gx === undefined || G.t - D.t0 < (D.until - D.t0) * FORMING.share) return; // a drill from before this rule (a save) has no start
+	const all = hyp(D.px + u.gx - D.from.x, D.py + u.gy - D.from.y) || 1,
+		left = hyp(D.px + u.gx - u.x, D.py + u.gy - u.y);
+	if (1 - left / all >= FORMING.share) return;
+	D.held = true;
+	u.px = D.px = u.x;
+	u.py = D.py = u.y; // its place is where it stands (its own spot now, no offset)
+	u.gx = u.gy = 0;
+}
+// ── The choke and the ambush (Albert, Nov 3, 11:08: "allowing the player to use the land to pick a formation that works")
+// the choke: a drag across a gap on the map (hold the shape on War); the picked soldiers, else everyone, stand in it as many files as
+// the gap holds (CHOKE), facing across it toward the nearest foes, else away from home; a standing order (a drill with no end)
+const toolSet = () => {
+	const P = picked().filter(isSoldier);
+	return P.length ? P : sendable();
+};
+function chokeAt(a, b) {
+	const U = toolSet();
+	if (!U.length) return say('No soldiers to hold it.', '', TOAST.short);
+	const w = hyp(b.x - a.x, b.y - a.y);
+	if (w < GRID.gap) return say('Drag across the gap, end to end.', '', TOAST.short);
+	const cols = clamp(Math.round(w / GRID.gap), CHOKE.min, CHOKE.max),
+		mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 },
+		F = foesNear(mid),
+		home = homeOf(0),
+		ref = F.length ? centreOf(F) : home ? { x: 2 * mid.x - home.x, y: 2 * mid.y - home.y } : null;
+	let fx = -(b.y - a.y) / w,
+		fy = (b.x - a.x) / w;
+	if (ref && fx * (ref.x - mid.x) + fy * (ref.y - mid.y) < 0) {
+		fx = -fx;
+		fy = -fy;
+	}
+	dress(U, mid, { x: fx, y: fy }, 'choke', 1e9);
+	for (const u of U) u.drill.cols = cols;
+	say(`${U.length} hold the gap, ${cols} across.`, 'good', TOAST.short);
+	sfx('horn');
+	feel('thock');
+}
+// the ambush: the nearest cover to the tap (an open square with forest within AMBUSH.cover squares, looked for within AMBUSH.find); the
+// soldiers go there and go to ground (u.hid once in place: no foe takes them for a mark, 15-sim-spatial); a foe within AMBUSH.spring, or a
+// blow, springs the whole ambush with a charge's burst (14-sim-troops)
+function coverNear(x, y) {
+	const cx = Math.floor(x / NAVC),
+		cy = Math.floor(y / NAVC),
+		R = Math.ceil(AMBUSH.find / NAVC),
+		tree = (gx, gy) => gx >= 0 && gy >= 0 && gx < NC && gy < NC && NAV.solid[gy * NC + gx] && !NAV.lake[gy * NC + gx] && !NAV.occ[gy * NC + gx];
+	let best = null,
+		bd = 1e9;
+	for (let gy = cy - R; gy <= cy + R; gy++)
+		for (let gx = cx - R; gx <= cx + R; gx++) {
+			if (gx < 0 || gy < 0 || gx >= NC || gy >= NC || NAV.solid[gy * NC + gx]) continue;
+			const d = hyp(gx * NAVC + 5 - x, gy * NAVC + 5 - y);
+			if (d >= bd || d > AMBUSH.find) continue;
+			let near = false;
+			for (let j = -AMBUSH.cover; j <= AMBUSH.cover && !near; j++) for (let i = -AMBUSH.cover; i <= AMBUSH.cover && !near; i++) if ((i || j) && tree(gx + i, gy + j)) near = true;
+			if (near) {
+				bd = d;
+				best = { x: gx * NAVC + 5, y: gy * NAVC + 5 };
+			}
+		}
+	return best;
+}
+function ambushAt(h) {
+	const U = toolSet();
+	if (!U.length) return say('No soldiers to hide.', '', TOAST.short);
+	const spot = coverNear(h.e.x, h.e.y);
+	if (!spot) return say('No cover there: an ambush wants forest.', '', TOAST.short);
+	for (const u of U) {
+		u.state = 'goto';
+		u.px = spot.x;
+		u.py = spot.y;
+		u.idleT = 0;
+		u.sent = false;
+		u.tgt = null;
+		u.focus = null;
+		u.drill = null;
+		u.amb = { x: spot.x, y: spot.y }; // bound for cover; hid once there
+		u.hid = false;
+	}
+	say(`${U.length} go to ground at ${coord(spot.x, spot.y)}.`, 'good', TOAST.short);
+	feel('thock');
+}
+const DIRECT_WHY = { none: 'Nobody of that kind.', wheel: 'Nobody to wheel round.' };
+const DIRECTS = {
+	wall: (S) => {
+		const c = centreOf(S),
+			F = foesNear(c),
+			to = F.length ? centreOf(F) : aimH().e,
+			d = hyp(to.x - c.x, to.y - c.y) || 1;
+		for (const u of S) {
+			u.wall = G.t + DIRECT.wall;
+			u.focus = null;
+			u.tgt = null; // (an audit, Nov 2: a foe it was chasing would have pulled it out of the wall)
+		}
+		dress(S, c, { x: (to.x - c.x) / d, y: (to.y - c.y) / d }, 'line', DIRECT.wall);
+		return 'Shield wall!';
+	},
+	advance: (S) => (order(S, aimH()), 'Foot, advance!'),
+	loose: (S) => {
+		if (G.looseT > G.t) return `Reloading: ${Math.ceil(G.looseT - G.t)} s.`;
+		const c = centreOf(S),
+			F = foesNear(c);
+		if (F.length) {
+			const f = centreOf(F),
+				d = hyp(c.x - f.x, c.y - f.y) || 1,
+				r = Math.min(...S.map((u) => stats(0, u.kind).rng)) * DIRECT.arc, // inside every bow's reach
+				at = { x: f.x + ((c.x - f.x) / d) * r, y: f.y + ((c.y - f.y) / d) * r };
+			dress(S, at, { x: -(c.x - f.x) / d, y: -(c.y - f.y) / d }, 'arc', DIRECT.loose * 3, { x: f.x, y: f.y, r });
+		} else order(S, aimH()); // no foe in sight: they go where the crosshair is, as before
+		for (const u of S) u.cd = 0; // the reload lined up: everyone in reach releases on the next step
+		G.looseT = G.t + DIRECT.loose;
+		return 'Archers, loose!';
+	},
+	back: (S, word) => (fallBack(0, S, undefined, true) ? word : 'Nowhere to fall back to.'),
+	charge: (S) => {
+		const why = chargeWhy(0, S);
+		if (why) return why; // winded: nobody moves (an audit, Nov 2: they were ordered off before the check)
+		order(S, aimH());
+		charge(0, S, undefined, true);
+		return 'Riders, charge!';
+	},
+	wheel: (S) => {
+		if ((G.wheelT || 0) > G.t) return `Winded: ${Math.ceil(G.wheelT - G.t)} s.`;
+		const h = aimH(),
+			foes = foesNear(h.e),
+			home = homeOf(0) || h.e;
+		if (!foes.length) return DIRECT_WHY.wheel;
+		const cx = foes.reduce((s, f) => s + f.x, 0) / foes.length,
+			cy = foes.reduce((s, f) => s + f.y, 0) / foes.length,
+			d = hyp(cx - home.x, cy - home.y) || 1, // the far side of the foe from home (an audit, Nov 2: the riders' own centre sat on the foe when they were split)
+			x = clamp(cx + ((cx - home.x) / d) * DIRECT.behind, 20, MAP - 20),
+			y = clamp(cy + ((cy - home.y) / d) * DIRECT.behind, 20, MAP - 20);
+		order(S, { t: 'ground', e: { x, y } });
+		G.wheelT = G.t + DIRECT.wheel;
+		return 'Riders, wheel!';
+	},
+	bombard: (S) => {
+		const h = aimH(),
+			b = nearestFoeBld(0, h.e, undefined, 300);
+		order(S, b ? { t: 'bld', e: b } : h);
+		return b ? `Bombard the ${bldName(b.owner, b.kind).toLowerCase()}!` : 'Engines, forward!';
+	},
+};
+// the four kinds' moves: [tap, hold], with the word each says, and the sound
+const DIRECT_OF = [
+	[['wall', 'Wall', 'hit'], ['advance', 'Advance', 'horn']], // 'Wall': 'Shield wall' is the one row word that does not fit a slot at 14 px (the gate, preview 48)
+	[['loose', 'Loose!', 'arrow'], ['back', 'Archers, fall back!', 'horn']],
+	[['charge', 'Charge', 'horn'], ['wheel', 'Wheel', 'hooves']],
+	[['bombard', 'Bombard', 'boom'], ['back', 'Engines, pull back!', 'horn']],
+];
+function direct(t, hold) {
+	const [id, word, snd] = DIRECT_OF[t][hold ? 1 : 0],
+		S = ofKind(t);
+	if (!S.length) return say(DIRECT_WHY.none, '', TOAST.short);
+	const said = DIRECTS[id](S, word);
+	if (!/!$/.test(said)) return say(said, '', TOAST.short); // a reason ends with a stop: nobody moved, no horn
+	const f = orderCost(0, S); // the drill's price (ORDER): their meals, and the tiredness after
+	say(f ? `${said} (${f} food)` : said, 'good', TOAST.short);
+	sfx(snd);
+	feel('snap');
+}
+// the wait a kind's tap still has to sit out, in seconds (0 when it is ready): the archers' reload, the riders' charge; the hold keeps its own
+const directWait = (t) => Math.max(0, Math.ceil((t === 1 ? G.looseT || 0 : t === 2 ? (G.chargeT || {})['0:all'] || 0 : 0) - G.t));
+// what the game thinks fits a spot (Albert, Build 41): each reason scores a kind, the best one is marked and its menu opens.
+// A drop-off for what grows there with none near; more of what stands around you (houses: a house; fields: a mill, then a field; army buildings: the one you lack);
+// a narrow way between forest, water or buildings: a wall, or a gate beside your wall; and a house when room is short.
+const SUGGEST = { r: 140, drop: 3, kin: 3.5, choke: [0.35, 0.75], chokeW: 4, room: 2 };
+function suggestAt(x, y) {
+	const p = G.P[0],
+		sc = {},
+		add = (k, v) => {
+			if (k && BLD[k] && BLD[k].age <= p.age && !capWhy(0, k)) sc[k] = (sc[k] || 0) + v;
+		};
+	{
+		const drops = new Set();
+		for (const nd of G.nodes)
+			if (nd.amt > 0 && !nd.farm && hyp(nd.x - x, nd.y - y) < SUGGEST.r * 0.85) {
+				const k = nd.kind === 'fish' ? 'dock' : nd.type === 'wood' ? 'lumber' : nd.type === 'food' ? 'mill' : 'mining',
+					d = dropFor(0, nd.type, nd);
+				if (!d || dist(d, nd) > 110) drops.add(k);
+			}
+		for (const k of drops) add(k, SUGGEST.drop);
+	} // each drop-off it lacks counts once
+	const near = G.blds.filter((b) => b.owner === 0 && b.hp > 0 && hyp(b.x - x, b.y - y) < SUGGEST.r),
+		has = (k) => near.some((b) => b.kind === k);
+	for (const b of near) {
+		const m = MENUS.find((M) => M.items.includes(b.kind));
+		if (!m) continue;
+		if (m.id === 'home') add(b.kind === 'apartment' ? 'apartment' : 'house', SUGGEST.kin);
+		else if (b.kind === 'farm' || b.kind === 'pasture') add(has('mill') ? 'farm' : 'mill', SUGGEST.kin);
+		else if (m.id === 'mil')
+			add(m.items.find((k) => !bldsOf(0, k).length && BLD[k].age <= p.age) || b.kind, SUGGEST.kin);
+		else if (b.kind === 'wall') add('gate', SUGGEST.kin);
+		else add(b.kind === 'keep' ? 'house' : null, 1);
+	}
+	{
+		const cx = Math.floor(x / NAVC),
+			cy = Math.floor(y / NAVC);
+		let solid = 0,
+			n = 0;
+		for (let j = -4; j <= 4; j++)
+			for (let i = -4; i <= 4; i++) {
+				const gx = cx + i,
+					gy = cy + j;
+				if (gx < 0 || gy < 0 || gx >= NC || gy >= NC || i * i + j * j > 16) continue;
+				n++;
+				if (NAV.solid[gy * NC + gx]) solid++;
+			}
+		const f = solid / (n || 1);
+		if (f > SUGGEST.choke[0] && f < SUGGEST.choke[1] && !NAV.solid[cy * NC + cx])
+			add(has('wall') ? 'gate' : 'wall', SUGGEST.chokeW);
+	}
+	if (capOf(0) - popOf(0) - queuedOf(0) <= SUGGEST.room) add('house', 1.5);
+	const best = Object.entries(sc).sort((a, b) => b[1] - a[1])[0];
+	return best ? best[0] : null;
+}
+// The two dials of an army or one battalion (a: 'all' or its number): temper, and shape once Formations is researched. One button each, a tap steps round; a gold ring marks what is not the plain setting.
+const dialBtns = (a) => {
+	const tm = dialOf('temper', a),
+		sh = dialOf('form', a);
+	return [
+		btn(`temper:${a}`, 'Temper: ' + (tm < 0 ? 'mixed' : TEMPER[tm].name), '', tm >= 0 && tm !== T_GUARD ? 'on' : ''),
+		G.P[0].techs.has('formations') ? btn(`shape:${a}`, 'Shape: ' + (sh < 0 ? 'mixed' : FORM[sh].name), '', sh > 0 ? 'on' : '') : '',
+	].filter(Boolean); // the cells, for a list: one is the whole rank
+};
+// ── Muster for a squad: what it still lacks, by soldier kind to train
+function musterGap(i) {
+	// its plan by kind (Foot, Archers, Riders, Siege), less the members it has and the soldiers already mustering for it, trained as each
+	// kind's soldier of this age (kindOf, 39-huddle)
+	const gap = { ...G.bnPlan[i] },
+		less = (k, n) => {
+			const c = CLS[clsOf(k)];
+			if (c && gap[c[0]]) gap[c[0]] -= n;
+		};
+	for (const u of armyOf(0)) if (u.bn === i) less(u.kind, 1);
+	for (const b of G.blds)
+		if (b.owner === 0) for (const j of b.q) if (j.muster && j.bn === i) for (const k in j.muster) less(k, j.muster[k]);
+	const out = {};
+	CLS.forEach((c, t) => {
+		const k = kindOf(t);
+		if (gap[c[0]] > 0 && k) out[k] = gap[c[0]];
+	});
+	return out;
+}

@@ -55,6 +55,21 @@ def survey(ref, out):   # Frankenstein Refresh: the reference game (Mid) read wi
     m += ['', '## By section', '', '| Part | Section ' + HEAD, '|---' * 10 + '|'] + [f'| {f} | {s} ' + fmt('', row(ps))[3:] for (f, s), ps in by(lambda p: (p[0], p[1])).items()]
     n = ['# Mid · every piece', '', 'Written by `v100/index.py --survey`, never by hand: every top-level name in Mid, in order.', '', '| Part | Section | Name | Lines | Bytes | Typed numbers | Asks by name | Swallowed | Used elsewhere |', '|---' * 9 + '|']
     n += [f'| {p[0]} | {p[1]} | {p[2] or "(before the first name)"} | {p[3].count(chr(10)):,} | {len(p[3].encode()):,} | ' + ' | '.join(map(str, dirt(p[3]))) + f' | {max(words.get(p[2], 0) - 1, 0) if p[2] else ""} |' for p in pieces]
+    stage, temp, raw = f'{ref}/../staging', groups.get('staging', {}), lambda f: open(f, 'rb').read()
+    bookof = lambda f: temp[groups['files'][os.path.basename(f)]]
+    if '--stage' in sys.argv and not os.path.exists(stage):   # step 5, once: every part into its group's temp book, exactly as it is, in Mid's order
+        os.makedirs(stage); json.dump([[bookof(f), os.path.basename(f), len(raw(f))] for f in files], open(f'{stage}/order.json', 'w'), indent=0)
+        for b in dict.fromkeys(map(bookof, files)): open(f'{stage}/{b}', 'wb').write(b''.join(raw(f) for f in files if bookof(f) == b))
+    if os.path.exists(stage):   # ever after: the temp books, read back in Mid's order, are Mid's parts byte for byte, with nothing left over
+        order, at, tb = json.load(open(f'{stage}/order.json')), {}, {}
+        for b, part, size in order:
+            tb.setdefault(b, raw(f'{stage}/{b}')); got = tb[b][at.get(b, 0):at.get(b, 0) + size]; at[b] = at.get(b, 0) + size
+            if got != raw(f'{ref}/src/{part}'): bad.append(f'[frozen] staging/{b} does not give back {part} byte for byte')
+        bad += [f'[frozen] staging/{b} holds {len(t) - at[b]:,} bytes Mid does not' for b, t in tb.items() if len(t) != at[b]]
+        bad += [f'[frozen] staging/{f} is not in the order' for f in os.listdir(stage) if f not in tb and f != 'order.json']
+        m += ['', '## Staging (steps 4 and 5): the temp books, every line of Mid as it is', '', '| Temp book | Group | Parts | Lines | Characters | Bytes |', '|---|---|---|---|---|---|']
+        m += [f'| {b} | {next(g for g, x in temp.items() if x == b)} | {sum(1 for o in order if o[0] == b)} | {t.count(10):,} | {len(t.decode()):,} | {len(t):,} |' for b, t in tb.items()]
+        m += [f'| **all** | {len(tb)} temp books | {len(order)} | {sum(t.count(10) for t in tb.values()):,} | {sum(len(t.decode()) for t in tb.values()):,} | {sum(map(len, tb.values())):,} |']
     os.makedirs(out, exist_ok=True); open(f'{out}/MAP.md', 'w').write('\n'.join(m) + '\n'); open(f'{out}/PIECES.md', 'w').write('\n'.join(n) + '\n')
     print(f'Mid: {len(files)} parts, {len(pieces):,} pieces, {sum(s["lines"] for f, s in stamp.items() if f != "index.html"):,} lines; map written to {out}'); [print('BROKEN', x) for x in bad]
     print('PASS' if not bad else f'STOP: {len(bad)} broken'); sys.exit(1 if bad else 0)

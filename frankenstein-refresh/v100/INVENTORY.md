@@ -5,9 +5,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
 | Game code | 28 | 1,605 | 232,373 | 232,671 |
-| Books | 514 | 0 | 85,631 | 85,847 |
+| Books | 514 | 0 | 85,674 | 85,890 |
 | Laws | 73 | 0 | 7,081 | 7,320 |
-| Tools | 4 | 305 | 31,085 | 31,157 |
+| Tools | 4 | 320 | 33,004 | 33,076 |
 
 ## The trades (code)
 
@@ -53,7 +53,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | ground | 4 | 819 |
 | mass | 16 | 2,515 |
 | measure | 176 | 29,691 |
-| rules | 41 | 7,967 |
+| rules | 41 | 8,010 |
 | screen | 10 | 2,928 |
 | shells | 74 | 15,941 |
 | sound | 37 | 7,884 |
@@ -111,6 +111,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X38 | t-gone | page | a find used up is gone at once, and never chosen again |
 | X39 | t-ai | page | the computer raises its army buildings in the book's order (D179) |
 | X40 | byname | survey | code that asks what a thing is by a typed name (kind === 'tree'): ask by tick |
-| X41 | frozen | survey | the reference copy differs from its seal, or its parts do not rebuild it byte for byte |
+| X41 | frozen | survey | the reference copy differs from its seal, or its parts, or the temp books read back in its order, do not rebuild it byte for byte |
 
 619 items sealed · 514 book entries · 73 laws · 88 citations, 17 still to open · 9 known

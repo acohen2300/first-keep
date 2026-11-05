@@ -175,3 +175,13 @@ MODIFIED (3):
 LOCKED (616 of 619): byte for byte as sealed, 336,984 bytes
 Tests: 17/17 rules hold
 Inventory: 619 items sealed · 514 book entries · 73 laws · 88 citations, 17 still to open · 9 known
+
+## Frankenstein 2 · 2026-11-05 09:29
+Albert, Nov 5 09:27: steps 4 and 5, the temp books with every line of Mid in them as it is, and the rebuild check
+Opened: tool:index.py, book:rules:X41
+MODIFIED (2):
+- book:rules:X41 · 240 → 283 bytes
+- tool:index.py · 19,542 → 21,461 bytes
+LOCKED (617 of 619): byte for byte as sealed, 337,213 bytes
+Tests: 17/17 rules hold
+Inventory: 619 items sealed · 514 book entries · 73 laws · 88 citations, 17 still to open · 9 known

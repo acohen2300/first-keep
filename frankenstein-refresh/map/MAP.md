@@ -242,3 +242,27 @@ Typed numbers: numbers and colours typed into code (they belong in a book). Asks
 | 40-emergency.js | (top of the file) | 16 | 166 | 6,691 | 6,712 | 58 | 4 | 0 | 0 |
 | 41-boot.js | (top of the file) | 1 | 1 | 62 | 82 | 1 | 0 | 0 | 0 |
 | 41-boot.js | The loop and the start | 11 | 749 | 12,285 | 12,385 | 110 | 0 | 0 | 0 |
+
+## Staging (steps 4 and 5): the temp books, every line of Mid as it is
+
+| Temp book | Group | Parts | Lines | Characters | Bytes |
+|---|---|---|---|---|---|
+| capabilities.js | Element cards | 2 | 27 | 2,176 | 2,196 |
+| numbers.js | Numbers | 5 | 2,581 | 103,299 | 104,141 |
+| tech.js | Ages and tech | 1 | 3,375 | 73,123 | 73,159 |
+| words.js | Words | 1 | 1,215 | 103,803 | 104,005 |
+| core.js | Core | 2 | 957 | 47,164 | 47,714 |
+| paths.js | Walking grid | 1 | 846 | 34,215 | 34,437 |
+| world.js | World | 7 | 1,095 | 52,496 | 53,361 |
+| econ.js | Orders and economy | 4 | 3,878 | 151,377 | 152,607 |
+| combat.js | War | 3 | 1,523 | 61,958 | 62,375 |
+| ai.js | Computers | 1 | 782 | 36,855 | 37,048 |
+| sprites.js | Art | 2 | 5,134 | 122,368 | 122,642 |
+| display.js | View | 6 | 3,369 | 127,181 | 127,457 |
+| touch.js | Touch | 1 | 669 | 21,388 | 21,512 |
+| menu.js | Menus | 8 | 4,871 | 212,969 | 214,200 |
+| save.js | Saving | 1 | 771 | 27,462 | 27,595 |
+| sound.js | Sound | 1 | 478 | 14,907 | 15,043 |
+| events.js | Events, camps, natives, peace | 4 | 1,636 | 67,062 | 67,392 |
+| start.js | Start | 1 | 750 | 12,347 | 12,467 |
+| **all** | 18 temp books | 51 | 33,957 | 1,272,150 | 1,279,351 |

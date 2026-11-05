@@ -402,7 +402,7 @@ Written by `index.py` from `books/*.js`, never by hand.
 | X38 | a find used up is gone at once, and never chosen again | {stage: page} | Design: the audit of Nov 5, Build A: a test for each fix |
 | X39 | the computer raises its army buildings in the book's order (D179) | {stage: page} | Design: the audit of Nov 5, Build A: a test for each fix |
 | X40 | code that asks what a thing is by a typed name (kind === 'tree'): ask by tick | {stage: survey} | Design: Albert, Nov 5 (Frankenstein Refresh: map Mid with our tests) |
-| X41 | the reference copy differs from its seal, or its parts do not rebuild it byte for byte | {stage: survey} | Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it) |
+| X41 | the reference copy differs from its seal, or its parts, or the temp books read back in its order, do not rebuild it byte for byte | {stage: survey} | Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it) |
 
 ## screen
 
