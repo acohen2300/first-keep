@@ -69,6 +69,7 @@ QBF The dice: one seed; Mulberry32; the seed of the day is the date YYYYMMDD · 
 QBG Headlands and bays: where the coast stands out the waves gather and cut a cliff; where it bends in they spread and lay a beach · N67
 QBH A lake's size drawn from the power law (QBA): area = a_min · U^(−1/c), U uniform, capped at a_max (the Pareto draw) · N61
 QBI Roads cross rivers at fords: where a river meets one of the four roads its bed rises to wading depth · N68
+QBK The art frame: a building's picture is painted with its front edge along x and sheared by sin A2 · sin A1 so that edge follows the turned grid; its depth is (sin A2 · cos A1 + shear · sin A1) a unit of width, the back standing sin A1 to the right (QBD worked for a picture painted flat) · N66
 QBJ Z1's store: food = (age up + villagers × a villager) × (1 + margin); wood = (mill + lumber camp + homes × a home + barracks) × (1 + margin); bushes = ⌈food / a bush⌉, trees = ⌈wood / a tree⌉ (Albert's rule; the prices are the genre's until the Content pull) · N69
 
 ## N Citations

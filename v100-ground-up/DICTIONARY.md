@@ -27,11 +27,13 @@ D53 100 · D54 125 · D55 800 · D56 350 · D57 350 · D58 200 · D59 100 · D60
 D61 500 · D62 50 · D63 100 · D64 100 · D65 25 · D66 175 · D67 6 · D68 2 · D69 0.25
 D70 berries 250, 140 · grove 140, 250 · gold 200, 120 · stone 120, 200 · D71 berries 820, 300 · grove 300, 820 · iron 560, 680 · stone 450, 750 · gold 680, 560 · D72 3
 D73 4–6 · D74 3–5 · D75 3–5 · D76 6–10 · D77 4–6 · D78 2 · D79 1–2 · D80 2–3 · D81 1–2 · D82 3 · D83 5
+D84 380, 380
 Pointers: G1 (the site) → D1 · the board → D2 · Z1 → D3 · Z2 → D4 · Z3 → D5 · Z4 → D6 · play edge → D7 · Small → D8 · Standard → D9 · Medium → D10 · Large → D11
 Floor 1 (set Nov 4 for the build; Albert to confirm): a tile → D12 · the land's height over the water → D13 · the sand's top → D14 · the dirt's top (grass above it) → D15 · a beach falls to the water over → D16 · a cliff falls over → D17 · the coast wanders in and out by → D18 · the sea is darkest this far out → D19
 Time → Y
 Floor 2 (set Nov 4 for the build; Albert to confirm): bare ground this high over the land → D23 · water deeper than this is not waded → D24 · lakes, how many → D25 · a lake's radius → D26 · a lake's depth at the middle → D27 · a shore's wander as a share of the radius → D28 · a river's depth → D29 · a river's half-width as a share of its lake's radius → D30 · a river's wander → D31 · a bank falls over → D32 · a ford's length → D33 · a stream's half-width → D34 · a stream's depth → D35 · hills, how many → D36 · a hill's radius → D37 · a hill's height → D38 · rocks, how many → D39 · a rock's radius → D40 · a rock's height → D41 · crevices, how many → D42 · a crevice's half-width → D43 · a crevice's floor → D44 · a crevice's length → D45 · a road's clear half-width → D46 · the middle kept clear → D47 · the woods' longest wave → D48 · the woods stand where the surface rises past → D49 · the forest wall round a home, from and to → D50 · the home pond's spot in the corner's frame → D51 · the home pond's radius → D52
 Floor 3 (set Nov 4 for the build; Albert to confirm): a tree's wood → D53 · a bush's food → D54 · a gold pile → D55 · a stone pile → D56 · an iron pile → D57 · a ruin's stone → D58 · a campfire's food → D59 · a treasure's gold → D60 · the prices Z1 is sized from (QBJ; stand-ins from the genre, N69, until the Content pull): one age up → D61 · a villager → D62 · the mill → D63 · the lumber camp → D64 · a home → D65 · the barracks → D66 · villagers counted → D67 · homes counted → D68 · the margin → D69 · Z1's spots in the corner's frame → D70 · Z3's spots → D71 · Z3 holds this many times Z1 → D72 · Z4's gold piles → D73 · stone piles → D74 · iron piles → D75 · berry patches → D76 · bushes a patch → D77 · ruins → D78 · cemeteries → D79 · campfires → D80 · treasures → D81 · a thing's stand wanders in its tile by → D82 · under this many pixels a tile things are dots and the grid is off → D83
+Floor 4 (set Nov 4 for the build; Albert to confirm): the Town Center's spot in the corner's frame, Z2 on the road → D84
 
 ## Y Year (time)
 Y1 a day → D20 · Y2 a season → D21 · Y3 a year → D22 (four seasons; the old values, kept because they are clean)
@@ -44,6 +46,7 @@ A3 34°: the angle of repose, dry sand (QBE): a slope steeper than this is a fac
 ## C Colours
 C1 Water #2a6488 · C2 Sand #cdbb88 · C3 Dirt #785c3a · C4 Grass #4a6634 (depth, faces and shade are tints of these, never new colours)
 C5 Ring blue #6aaeff · C6 Ring green #5fd08a · C7 Ring red #ff6b5b · C8 Ring white #ece5d3 · C9 Background brown #2a1d13 · C10 Gold #e6b947 (on)
+The art's paints (the building and node pictures pulled from preview 49) stay inside the pictures, as a picture's pixels do: 231 hex paints and 55 tints, in one block of the code, none used outside it. C is the game's palette; the owner's colour (C5–C8) is passed into every picture.
 
 ## L Logic
 L1 Stack: G1 → G4, bottom up, as strata by height (D14, D15)
@@ -100,17 +103,20 @@ MG Gifts (layer 100; floor 3 places MG1–MG4 in Z4 by the dice, D78–D81): MG1
 R1 Trees (yield wood, amount D53; one on every tile of woods, TF1, and in the groves) · R2 Gold (gold, D55) · R3 Stone (stone, D56) · R4 Iron (iron, D57) · R5 Berries (food, D54)
 Where (floor 3): Z1 a berry patch, a grove, one gold, one stone at D70, counts from QBJ · Z3 the same at D71, D72 times, with iron · Z4 by the dice, D73–D77 · the same in every corner (L12) · a thing stands on one flat tile of land, its stand wandering by D82; a pile takes the tiles under it
 
-## B Buildings (shells without Walk, layer 110)
-BTC Anchors: Town Center · Castle · War camp large · War camp small (its parts point to BW Palisade, BF Abatis and its tents: no second copies)
-BR Residential: BR1 Home · BR2 Apartment
-BC Commercial: BCR Retail (Market, Tavern) · BCL Land (Farm, Tree farm, Pasture, Quarry) · BCT Trade (Trade post, Dock)
-BP Public: School · Library · Temple · Baths · Theatre · Hospital · Aqueduct · Courthouse · Hall · War Council
-BI Industry: Mill · Lumber camp · Mining camp · Store · Depot · Mint · Foundry · Workshop · Smith
-BM Military: Barracks · Range · Stable · Siege workshop
-BW Walls and towers: Wall · Gate · Tower · Palisade (one-tile segments, laid as lines)
-BF Field defences (untested): Pit · Net · Stakes · Caltrops · Abatis
-BS Special: Throne · Wonder
-Sizes: Small (D8) · Standard (D9) · Medium (D10) · Large (D11)
+## B Buildings (shells without Walk, layer 110; floor 4)
+Each: a size in tiles (D8–D11; a wall piece one tile, D12) · Open or Closed · the picture it wears (preview 49's art, pulled Nov 4). Health, prices and times come with the Content pull.
+BTC Anchors: BTC1 Town Center (Large, Closed) · BTC2 Castle (Large) · BTC3 War camp large · BTC4 War camp small (compositions of the parts below with BW4 and BF5: no second copies; composed later) · BTC5 Medical tent (Small) · BTC6 Training tent (Small) · BTC7 Mess tent (Small) · BTC8 Camp tower (Small)
+BR Residential: BR1 Home (Small) · BR2 Apartment (Standard)
+BC Commercial: BCR1 Market (Standard, Open) · BCR2 Tavern (Small) · BCL1 Farm (Standard, Open) · BCL2 Tree farm (Standard, Open) · BCL3 Pasture (Standard, Open) · BCL4 Quarry (Standard, Open) · BCT1 Trade post (Small, Open) · BCT2 Dock (Small, Open)
+BP Public: BP1 School (Standard) · BP2 Library (Medium) · BP3 Temple (Medium) · BP4 Baths (Standard) · BP5 Theatre (Medium) · BP6 Hospital (Standard) · BP7 Aqueduct (Standard) · BP8 Courthouse (Standard) · BP9 Hall (Standard) · BP10 War Council (Standard)
+BI Industry: BI1 Mill (Standard) · BI2 Lumber camp (Standard) · BI3 Mining camp (Standard) · BI4 Store (Standard) · BI5 Depot (Small) · BI6 Mint (Standard) · BI7 Foundry (Standard) · BI8 Workshop (Standard) · BI9 Smith (Standard)
+BM Military: BM1 Barracks (Medium) · BM2 Range (Medium, Open) · BM3 Stable (Medium) · BM4 Siege workshop (Medium)
+BW Walls and towers: BW1 Wall · BW2 Gate · BW4 Palisade (one tile each, laid as lines) · BW3 Tower (Small)
+BF Field defences (untested; merge held): BF1 Pit · BF2 Net · BF3 Stakes · BF4 Caltrops (no pictures yet) · BF5 Abatis (one tile)
+BS Special: BS1 Throne (Large) · BS2 Wonder (Large)
+Sizes: Small (D8) · Standard (D9) · Medium (D10) · Large (D11). Closed by default; Open where marked.
+Where (floor 4): the Town Center in Z2 on the road at D84, the same in every corner (L12). Everything else is placed by the player (the Menu floor); until then the Build toggle places the picked building on a tap and removes one on a tap, for fit and look.
+Stands on: n × n flat, free tiles of land at one height; Closed takes them, Open leaves them walkable (L5).
 
 ## Forms (first fill, Albert to mark up)
 Villager: Walk Gather Carry Build Repair Shelter | Wary | Place Focus Shelter
@@ -146,4 +152,4 @@ The control sheets 1 and 2 (v80), the Formation Templates and the Slot Kit (v70)
 Type: UI Barlow Semi Condensed, display IM Fell English SC; two sizes, 14 and 18; one weight; slot 44, gap 6; timings 0.15, 0.4, 1.2, 2.4 s.
 
 ## Later
-Behaviours, one rule a capability (most point at a Q) · shell values in three tiers · the Content pull (tech tree first) · the six formations defined · the "from memory" citations opened · the gather rates (floor 5) · a cemetery's gift · natives · the Throne and the middle · the Town Center's spot in Z2 · the camera rule (the play edge never under the controls) · water depth · fish as a resource · colours for T, R, M, B
+Behaviours, one rule a capability (most point at a Q) · shell values in three tiers · the Content pull (tech tree first) · the six formations defined · the "from memory" citations opened · the gather rates (floor 5) · a cemetery's gift · the war camps composed · the art's skins held in preview 49 (see Parked) · natives · the Throne and the middle · the Town Center's spot in Z2 · the camera rule (the play edge never under the controls) · water depth · fish as a resource · colours for T, R, M, B
