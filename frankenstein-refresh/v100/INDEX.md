@@ -205,6 +205,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N159 |  | Vienna Convention on the Law of Treaties (1969), art. 34: a treaty creates neither obligations nor rights for a third state without its cons | to open |
 | N160 |  | Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning lines; 08-core.js lineOf, prevOf,  | opened |
 | N161 |  | Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written for Mid from general history; | to open |
+| N162 |  | Design: Albert, Nov 5 13:30: one build carries a whole module (or a few small ones), never split; the cap of ten lifted for the refresh; the | opened |
 
 ## colours
 
@@ -265,7 +266,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E39 |  | the wood's edge keeps one tile from any slope or water |  |
 | E40 |  | Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each stands on one flat tile of land; a big one takes the |  |
 | E41 |  | the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clear |  |
-| E42 |  | QBJ Z1's store, from what one age up costs (Albert's rule): food for the age and the villagers, wood for the mill, the lumber camp, the home |  |
+| E42 |  | QBJ Z1's store, from what the first age up costs (D129, Mid's Bronze; Albert's rule): food for the age and the villagers, wood for the mill, |  |
 | E43 |  | what stands on each tile, and the shells themselves |  |
 | E44 |  | the free tile nearest a spot |  |
 | E45 |  | a shell on a tile; its stand wanders within the tile by D82 on the dice, so no wood is a grid |  |
@@ -441,8 +442,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E215 |  | gone: marked when it leaves the map (below) |  |
 | E216 |  | paying: a side pays all of a cost or none of it (SB Cost) |  |
 | E217 |  | a site: a building paid for and placed at done 0; villagers raise it. canPlace mirrors build's rule without building |  |
-| E218 |  | training and research: a queue at the building, at most the mold's six (SN1); the head trains or is learned, in the time of its row (D124, o |  |
-| E219 |  | the age: Mid's price and wait for each age (D129, the ages of D130), paid, then the wait; the hidden sixth opens only with the peace |  |
+| E218 |  | training, research and the age: one queue at the building, as long as the mold's six and what research adds (QCA); the head trains, is learn |  |
+| E219 |  | the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid at its price (D129, the ages of D130) and queued  |  |
 | E220 |  | the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept |  |
 | E221 |  | QW: the find of a yield that keeps the round trip shortest: nearest the drop-off among those within D89 of the villager, else nearest the vi |  |
 | E222 |  | a find no path reaches is left alone a while (D137), and the next beat chooses again among the finds near (D89): one walled in tries one fin |  |
@@ -513,10 +514,12 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E287 |  | a stance is the pair's own, or the book's start (I2); a treaty sets it both ways between its signers only, never for a third (pacta tertiis, |  |
 | E288 |  | the one hostility test (Mid's isFoe): never one's own; an animal is everyone's foe; one of a wild group is a foe when the side is at war wit |  |
 | E289 |  | the wild looking at a side: an animal fights everyone; a group fights a side at war with it, but starts nothing with a computer (decision 4b |  |
-| E290 |  | the Research book (O) by code and by key, and the queue's length, the mold's six (SN1) |  |
+| E290 |  | the Research book (O) by code and by key |  |
 | E291 |  | a find's or a field's rate after the side's research (QCA): the one window, D88 or the row's own rate as the base |  |
 | E292 |  | Mid's research lines: a line is the steps of one line at one building, in the book's order; a step waits on the one before it and on its nee |  |
 | E293 |  | research (Mid's researchWhy and research): a step is refused when known, before its age, before its needs, already queued, with no finished  |  |
+| E294 |  | research shows on its building (Mid's UP, PB12): the steps learned of those its row names, none, some, or half or more; a building's level ( |  |
+| E295 |  | the keep at its level: the bastion from its points in the Sprites book (PB13) |  |
 
 ## ground
 
@@ -609,7 +612,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D58 | a ruin's stone | 200 | N112 |
 | D59 | a campfire's food | 100 | N112 |
 | D60 | a treasure's gold | 300 | N112 |
-| D61 | one age up | 500 | N69 |
 | D62 | a villager | 50 | N112 |
 | D63 | the mill | 100 | N112 |
 | D64 | the lumber camp | 100 | N112 |
@@ -677,7 +679,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D126 | n villagers raise it at n^this | 0.7 | N114 |
 | D127 | the people a building houses | {BTC1: 10, BR1: 5} | N69 |
 | D128 | the most people | 200 | N69 |
-| D129 | each age's price and its wait in seconds, by the ages of D130 (Mid's AGES); the sixth is hidden until a year of peace opens it | {cost: [{}, {food: 300, wood: 100}, {food: 600, gold: 200}, {food: 1000, gold: 500, stone: 200}, {food: 1600, gold: 900, stone: 300, iron: 4 | N160 |
+| D129 | each age's price and its wait in seconds, by the ages of D130 (Mid's AGES); the sixth is hidden until a year of peace opens it; the first age up sizes Z1's food (Mid's pocket) | {cost: [{}, {food: 300, wood: 100}, {food: 600, gold: 200}, {food: 1000, gold: 500, stone: 200}, {food: 1600, gold: 900, stone: 300, iron: 4 | N160 |
 | D130 | the six ages (Mid's names; Albert, Nov 5 10:30) | [Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment] | N160 |
 | D131 | a unit's food a day | 1 | N114 |
 | D132 | move on when another find is this much nearer the drop-off | 0.18 | N114 |
@@ -762,7 +764,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X14 | the version typed into the page instead of read from D171 | {stage: code} | N126 |
 | X15 | a code file that does not parse on its own | {stage: code} | N126 |
 | X16 | the whole game, joined, not parsing (a name declared twice) | {stage: code} | N126 |
-| X17 | a permit opening more than ten items, or a change it does not open | {stage: seal} | N126 |
+| X17 | a change the permit does not open (a build carries one whole module: Albert, Nov 5 13:30) | {stage: seal} | N126; N162 |
 | X18 | a locked item differing from its seal by a single byte | {stage: seal} | N126 |
 | X19 | opened code typing more numbers or colours than when sealed | {stage: seal} | N126 |
 | X20 | opened code growing past its sealed size without growth the permit grants | {stage: seal} | N126 |
@@ -795,7 +797,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X47 | a kind's numbers after research are Mid's stats(), maxHpB, unitCost, techCost and rehealth with its shares added, not multiplied (QCA); a Home's health is D139 × (1 + Σ shares); the lowest is kept; a find's rate and the walk read the law | {stage: page} | N154 |
 | X48 | the odds of a battle are Mid's frozen unitPower, powerOf, powerFrom, matchup and lanchester for the same armies and towers (Mid's values, a tower 120, the people 250); a villager walled in from every find does not crash and ends idle or waiting | {stage: page} | N157 |
 | X49 | who is a foe is Mid's frozen isFoe, gangOf, atWar and friendly for the same sides, groups and stances: animals everyone's foe, each wild group by its own stance, a treaty binding only its signers; a soldier and a tower strike only a foe | {stage: page} | N158 |
-| X50 | ages and research are Mid's frozen code for the same orders: the age up Stone to Bronze at its price and wait, the woodcutting line in order at each step's price and time, a step out of order, already queued, before its age or before its needs refused, and the rate wood is cut at after each step the base × (1 + the shares added) | {stage: page} | N160 |
+| X50 | ages and research are Mid's frozen code for the same orders: the age queued at the seat at its price and wait, the seat training nothing while it rises, the lines in order at each step's price and time (research-speed steps applied), a step out of order, queued, before its age or its needs refused; after each step the wood rate, the load, a home's room and the camp's footing Mid's with its shares added; the Hall names a step and an age, the age button and info card the next age and its own wait, the hidden age never next, the keep's level at Gunpowder drawn, Z1 from Mid's first age | {stage: page} | N160 |
 
 ## screen
 
@@ -981,15 +983,17 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | P19 | the bear figure | {brush: quad, o: {col: #4e3524, len: 17, h: 9, legH: 4.5, legW: 1.5, head: 3.2, headY: 0.8, hump: true, tail: 0}, box: [30, 22]} | N150 |
 | PB1 | the castle building picture | {top: 66} | N151 |
 | PB2 | the town building picture | {top: 52} | N151 |
-| PB3 | the keep building picture | {top: 62} | N151 |
-| PB4 | the tower building picture | {top: 84} | N151 |
+| PB3 | the keep building picture; its level (Mid's fourth age, Gunpowder) adds the bastion, PB13 | {top: 62, level: {age: 4}} | N151; N160 |
+| PB4 | the tower building picture; its level is how many steps that raise it (a Research row's tier) the side knows: TOWER_LOOK's three | {top: 84, level: {steps: tier}} | N151; N160 |
 | PB5 | the wonder building picture | {top: 72} | N151 |
-| PB6 | the library building picture | {top: 56} | N151 |
+| PB6 | the library building picture; its level (Mid's Medieval age) makes it a university | {top: 56, level: {age: 3}} | N151; N160 |
 | PB7 | the temple building picture | {top: 50} | N151 |
 | PB8 | the theatre building picture | {top: 44} | N151 |
 | PB9 | the apartment building picture | {top: 46} | N151 |
 | PB10 | the aqueduct building picture | {top: 40} | N151 |
 | PB11 | the siege building picture | {top: 40} | N151 |
+| PB12 | research on its building (Mid's UP): 1 when a step of its own is learned sets it on a stone footing (foot tall, its side in shade); 2, half its steps or more, adds corner stones (w, h, every gap, clear of the eaves by edge) and a gilded ridge | {half: 0.5, top: 2, foot: 3, shade: -0.45, line: 0.4, stone: [3.4, 3, 6, 2], lift: 0.15, rim: 0.3, ridge: #e6c75a, ridgeW: 1.6} | N151; N160 |
+| PB13 | the keep at its level (Gunpowder): an angled stone bastion with a gun on it, from the keep's front corner | {at: [-27, -1], face: [[-9, -1], [0, 6], [9, -1], [9, -10], [0, -4], [-9, -10]], top: [[-9, -10], [0, -16], [9, -10], [0, -4]], shade: [0.08 | N151; N160 |
 | PN1 | the finds: their scale, and their dot far out | {scale: {tree: 0.88, bush: 1.45, other: 1.25}, dot: {tree: #3c6c32, bush: #3f6b33, gold: gold, stone: rock, iron: ruin, ruins: ruin, cemeter | N152 |
 
 ## tech

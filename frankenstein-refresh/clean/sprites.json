@@ -344,16 +344,16 @@
    "index.html, the building art floor, sides"
   ],
   "UP": [
-   "bring",
-   "the research footing and corner stones on a building (0, 1, 2): with the tech tree, held as a skin in preview 49 (Parked, Nov 4)"
+   "in v100",
+   "F13b: index.html building art, plinth() under block's walls from the Sprites book PB12 (footing, corner stones, gilded ridge)"
   ],
   "TECHAT": [
-   "bring",
-   "which research belongs to which building: with UP and the tech tree (the Tech book)"
+   "in v100",
+   "F13b: index.html building art, TECHAT from the Research book's at"
   ],
   "upTier": [
-   "bring",
-   "a building's research tier from the side's research: with UP"
+   "in v100",
+   "F13b: index.html levelOf(t)[1]: none, some, or half or more (PB12 half) of its building's steps"
   ],
   "block": [
    "in v100",
@@ -596,8 +596,8 @@
      "index.html, the building art floor, ART.mint"
     ],
     "keep": [
-     "bring",
-     "index.html, the building art floor has ART.keep; its fourth-age banner (v) comes with the ages, held as a skin in preview 49 (Parked, Nov 4)"
+     "in v100",
+     "F13b: index.html ART.keep's bastion at its level (Gunpowder, PB3 level, PB13 points)"
     ],
     "town": [
      "bring",
@@ -612,12 +612,12 @@
      "index.html, the building art floor has ART.hall (Roman front); the other five civ fronts come with the civs, held as a skin in preview 49 (Parked, Nov 4)"
     ],
     "library": [
-     "bring",
-     "index.html, the building art floor has ART.library with uni = false; the university look at the fourth age comes with the ages"
+     "in v100",
+     "F13b: index.html ART.library's university at its level (Medieval, PB6 level)"
     ],
     "tower": [
-     "bring",
-     "index.html, the building art floor has ART.tower and TOWER_LOOK; the three tiers by research come with the tech tree, held as a skin in preview 49 (Parked, Nov 4)"
+     "in v100",
+     "F13b: index.html ART.tower's TOWER_LOOK tier by its level (PB4: the steps that raise it; their rows with M21)"
     ],
     "farm": [
      "bring",

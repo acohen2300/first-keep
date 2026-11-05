@@ -105,9 +105,9 @@ const count = (c) => things().filter((t) => t.kind === 'bld' && t.side === 0 && 
 const summary = () => `${OPTS.len[S.opt.len][0]} · Fog ${OPTS.fog[S.opt.fog][0].toLowerCase()} · Daily ${OPTS.daily[S.opt.daily][0].toLowerCase()}`;
 const isFind = (t) => t && t.kind !== 'unit' && t.kind !== 'bld' && ECON.yieldOf(t);
 // E184
-function read() { const s = SIDES[0], r = ECON.result(); return { store: s.store, pop: ECON.popOf(0), cap: ECON.popCap(0), age: D.ages[s.age], aging: s.aging, ageCost: ECON.ageCost(0), jobs: ECON.jobs(0), rally: s.rally, army: WAR.armyOf(0).length, wave: WAR.waves[0], sel: FK.sel(), subject: S.subject, time: ECON.time(), left: Math.max(0, D.bell - ECON.time()), score: ECON.score(0), theirs: ECON.score(D.players[1]), result: r, next: s.age + 1 < D.ages.length ? D.ages[s.age + 1] : null, hall: hallRead() }; }
+function read() { const s = SIDES[0], r = ECON.result(); return { store: s.store, pop: ECON.popOf(0), cap: ECON.popCap(0), age: D.ages[s.age], aging: s.aging, ageCost: ECON.ageCost(0), jobs: ECON.jobs(0), rally: s.rally, army: WAR.armyOf(0).length, wave: WAR.waves[0], sel: FK.sel(), subject: S.subject, time: ECON.time(), left: Math.max(0, D.bell - ECON.time()), score: ECON.score(0), theirs: ECON.score(D.players[1]), result: r, next: D.ages[ECON.nextAge(0)] || null, hall: hallRead() }; }
 function hallRead() { const h = (S.subject && FK.has(S.subject, 'Seat') && own(S.subject) ? S.subject : hall()) || null; if (!h) return null; const q = h.q || []; let at = h.qt || 0;
-  return { k: key(h), hp: h.hp, hpMax: h.hpMax, life: h.hp / h.hpMax, done: q.length ? 1 - h.qt / D.train[q[0]] : 0, queue: q.slice(0, SCR.mold.slots).map((c, i) => [U[c][0], i ? (at += D.train[c]) : at]), more: Math.max(0, q.length - SCR.mold.slots + 1) }; }
+  return { k: key(h), hp: h.hp, hpMax: h.hpMax, life: h.hp / h.hpMax, done: q.length ? 1 - h.qt / ECON.timeOf(h.side, q[0]) : 0, queue: q.slice(0, SCR.mold.slots).map((c, i) => [ECON.nameOf(c), i ? (at += ECON.timeOf(h.side, c)) : at]), more: Math.max(0, q.length - SCR.mold.slots + 1) }; }
 // E185
 const VERBS = {
   show: { label: (c) => 'Show', whyNot: () => '', run: (c) => { show[c] = !show[c]; FK.dirty(); } },
@@ -174,7 +174,7 @@ const SCREENS = {
       `<div class="frame">${g.map((c) => (D.cost[c] ? vcell('pick', c, null, `two ${picked(c) ? 'blue' : ''}`) : vcell('later', B[c][0], null, 'two'))).join('')}</div>`]; },
   Hall: () => { const r = read(), h = r.hall || {}; // E197
     const title = row(span(4, cell(`${bar(1, `var(--age${Math.min(4, SIDES[0].age)})`, 1)}${FK.SH[seatCode()].name}${h.hp != null ? bar(h.life, h.life > 0.5 ? 'var(--rg)' : 'var(--rr)') : ''}`, 'title')), vcell('info', null, null, '', S.info), vcell('close'));
-    if (S.info) return [title, `<div class="info"><p>Health ${h.hp != null ? `${Math.ceil(h.hp)}/${h.hpMax}` : '–'} · ${r.age} age · room for ${Math.max(0, r.cap - r.pop)}.</p><p><b>Food:</b> your people eat ${Math.round(r.pop * D.upkeep * 600 / D.day) / 10} a minute.</p><p><b>${r.next ? r.next + ' age' : 'Last age'}:</b> ${r.next ? `${costText(r.ageCost)}, ${D.age.time}s to rise` : 'reached'}.</p><p><b>Later:</b> the age's history, tech, the civilization, goods wanted by others.</p></div>`];
+    if (S.info) return [title, `<div class="info"><p>Health ${h.hp != null ? `${Math.ceil(h.hp)}/${h.hpMax}` : '–'} · ${r.age} age · room for ${Math.max(0, r.cap - r.pop)}.</p><p><b>Food:</b> your people eat ${Math.round(r.pop * D.upkeep * 600 / D.day) / 10} a minute.</p><p><b>${r.next ? r.next + ' age' : 'Last age'}:</b> ${r.next ? `${costText(r.ageCost)}, ${D.age.time[ECON.nextAge(0)]}s to rise` : 'reached'}.</p><p><b>Later:</b> the age's history, tech, the civilization, goods wanted by others.</p></div>`];
     const tabs = `<div class="row6 tabs">${['Town', 'Relations', 'Misfits'].map((t) => span(2, vcell('htab', t, null, '', S.htab === t))).join('')}</div>`;
     if (S.htab !== 'Town') return [title, tabs, stances(S.htab)];
     return [title, tabs, row(...queue6(h.queue || [], h.done, h.more)), frame([h.k ? vcell('train', born(), h.k, 'two') : '<i></i>', vcell('later', 'Scout', null, 'two'), '<i></i>',
@@ -188,7 +188,7 @@ const ROWS = { // E199
   health: (t) => (t.hp == null ? '' : `<p>${t.done < 1 ? `site · ${Math.floor(t.done * SAY.percent)}% raised` : `${Math.ceil(t.hp)}/${t.hpMax} health`}${t.kind === 'unit' && !FK.has(t, 'Gather') ? ` · ${t.job}` : ''}</p>`),
   load: (t) => `<p>${ECON.jobOf(t) || t.job}${t.load ? `, carrying ${Math.floor(t.load)}` : ''}</p>`,
   store: (t) => `<p>${Math.floor(t.amount)} ${ECON.yieldOf(t)} left</p>`,
-  queue: (t) => (own(t) && t.q && t.q.length ? row(...queue6(t.q.map((c, i) => [U[c][0], i ? D.train[c] : t.qt]), 1 - t.qt / D.train[t.q[0]], Math.max(0, t.q.length - SCR.mold.slots + 1))) : ''),
+  queue: (t) => (own(t) && t.q && t.q.length ? row(...queue6(t.q.map((c, i) => [ECON.nameOf(c), i ? ECON.timeOf(t.side, c) : t.qt]), 1 - t.qt / ECON.timeOf(t.side, t.q[0]), Math.max(0, t.q.length - SCR.mold.slots + 1))) : ''),
   train: (t) => (own(t) && t.done >= 1 ? `<div class="row">${(D.trains[t.code] || []).map((c) => vcell('train', c, key(t))).join('')}${t.q && t.q.length ? vcell('untrain', key(t), null, 'w1') : ''}</div>` : ''),
   tech: (t) => (own(t) && t.done >= 1 ? `<div class="row">${vcell('ageUp', null, null, '', !!read().aging)}</div>` : ''),
   acts: (t, r) => { const k = key(t), a = t.kind === 'unit' ? (own(t) ? (FK.has(t, 'Gather') ? vcell('stop', k) : vcell('recall')) : isSoldier(r.sel) ? vcell('fight', k) : WAR.armed(t) || t.side < 0 ? vcell('here', k) : '')

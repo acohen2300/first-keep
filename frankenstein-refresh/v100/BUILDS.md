@@ -1268,3 +1268,39 @@ MODIFIED (81):
 LOCKED (1016 of 1097): byte for byte as sealed, 363,069 bytes
 Tests: 24/24 rules hold
 Inventory: 1097 items sealed · 990 book entries · 75 laws · 161 citations, 19 still to open · 7 known
+
+## F13b · ages and research, finished; one module a build · 2026-11-05 14:03
+Albert, Nov 5 11:40: yes yes F10–F39; 13:30: one build carries a whole module, the cap of ten lifted
+Opened: code:index.html, code:menu.js, code:econ.js, book:sprites, book:shells, book:measure, book:tech, book:words, book:comments, book:rules, book:citations, tool:index.py, tool:test.py
+MODIFIED (28):
+- book:citations:N162 · added
+- book:comments:E218 · 319 → 413 bytes
+- book:comments:E219 · 144 → 240 bytes
+- book:comments:E279 · 212 → 364 bytes
+- book:comments:E290 · 98 → 52 bytes
+- book:comments:E294 · added
+- book:comments:E295 · added
+- book:comments:E42 · 202 → 228 bytes
+- book:comments:E72 · 287 → 342 bytes
+- book:measure:D129 · 466 → 520 bytes
+- book:measure:D61 · removed
+- book:rules:X17 · 152 → 183 bytes
+- book:rules:X50 · 426 → 690 bytes
+- book:sprites:PB12 · added
+- book:sprites:PB13 · added
+- book:sprites:PB3 · 103 → 196 bytes
+- book:sprites:PB4 · 105 → 243 bytes
+- book:sprites:PB6 · 109 → 192 bytes
+- code:econ.js · 14,325 → 14,862 bytes
+- code:index.html#floor-3-non-movables · 4,175 → 4,200 bytes
+- code:index.html#the-building-art · 49,157 → 50,738 bytes
+- code:index.html#the-door · 4,853 → 5,048 bytes
+- code:index.html#the-things-drawn-each-frame-back-to-fr · 3,192 → 3,241 bytes
+- code:index.html#the-woods-cache · 4,818 → 4,833 bytes
+- code:index.html#touch · 4,373 → 4,386 bytes
+- code:menu.js · 41,745 → 41,803 bytes
+- tool:index.py · 25,446 → 25,362 bytes
+- tool:test.py · 45,189 → 49,013 bytes
+LOCKED (1074 of 1101): byte for byte as sealed, 252,618 bytes
+Tests: 24/24 rules hold
+Inventory: 1101 items sealed · 994 book entries · 75 laws · 162 citations, 19 still to open · 7 known

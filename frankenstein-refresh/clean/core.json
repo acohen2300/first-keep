@@ -466,12 +466,12 @@
    "the peoples (civilisations) and their own kinds"
   ],
   "BTIER": [
-   "bring",
-   "research that raises a building in place (Watchtower, Great tower, Bastion)"
+   "in v100",
+   "F13b: index.html levelOf(t)[0]: the steps whose row's tier names the look (the tower's rows come with M21)"
   ],
   "btierOf": [
-   "bring",
-   "research that raises a building in place (Watchtower, Great tower, Bastion)"
+   "in v100",
+   "F13b: index.html levelOf(t)[0], how many of those the side knows; the look's level in the Sprites book (PB4)"
   ],
   "bldName": [
    "bring",

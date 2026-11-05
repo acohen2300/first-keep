@@ -251,13 +251,13 @@ Typed numbers: numbers and colours typed into code (they belong in a book). Asks
 | numbers.js | Numbers | 5 | 2,581 | 103,299 | 104,141 | 21 in v100, 104 bring, 13 cut, 1 parked |
 | tech.js | Ages and tech | 1 | 3,375 | 73,123 | 73,159 | 0 in v100, 4 bring, 2 cut, 0 parked |
 | words.js | Words | 1 | 1,215 | 103,803 | 104,005 | 4 in v100, 12 bring, 1 cut, 0 parked |
-| core.js | Core | 2 | 957 | 47,164 | 47,714 | 91 in v100, 74 bring, 12 cut, 0 parked |
+| core.js | Core | 2 | 957 | 47,164 | 47,714 | 93 in v100, 72 bring, 12 cut, 0 parked |
 | paths.js | Walking grid | 1 | 846 | 34,215 | 34,437 | 18 in v100, 18 bring, 9 cut, 0 parked |
 | world.js | World | 7 | 1,095 | 52,496 | 53,361 | 5 in v100, 14 bring, 37 cut, 0 parked |
 | econ.js | Orders and economy | 4 | 3,878 | 151,377 | 152,607 | 42 in v100, 176 bring, 10 cut, 0 parked |
 | combat.js | War | 3 | 1,523 | 61,958 | 62,375 | 1 in v100, 65 bring, 1 cut, 0 parked |
 | ai.js | Computers | 1 | 782 | 36,855 | 37,048 | 5 in v100, 25 bring, 1 cut, 0 parked |
-| sprites.js | Art | 2 | 5,134 | 122,368 | 122,642 | 59 in v100, 21 bring, 3 cut, 0 parked |
+| sprites.js | Art | 2 | 5,134 | 122,368 | 122,642 | 62 in v100, 18 bring, 3 cut, 0 parked |
 | display.js | View | 6 | 3,369 | 127,181 | 127,457 | 37 in v100, 96 bring, 34 cut, 0 parked |
 | touch.js | Touch | 1 | 669 | 21,388 | 21,512 | 3 in v100, 27 bring, 2 cut, 0 parked |
 | menu.js | Menus | 8 | 4,871 | 212,969 | 214,200 | 37 in v100, 166 bring, 21 cut, 0 parked |

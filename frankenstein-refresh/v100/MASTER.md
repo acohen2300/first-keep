@@ -67,7 +67,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E40** Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each st
 - **E41** the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clea
-- **E42** QBJ Z1's store, from what one age up costs (Albert's rule): food for the age and the villa · QBJ (N69) · D61 (N69) · D69 (N112)
+- **E42** QBJ Z1's store, from what the first age up costs (D129, Mid's Bronze; Albert's rule): food · QBJ (N69) · D129 (N160) · D62 (N112) · D69 (N112)
 - **E43** what stands on each tile, and the shells themselves
 - **E44** the free tile nearest a spot
 - **E45** a shell on a tile; its stand wanders within the tile by D82 on the dice, so no wood is a g · D82 (N112)
@@ -103,7 +103,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
 - **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156)
 - **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144)
-- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79) · D139 (N69) · D138 (N69) · D123 (N69)
+- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79) · D139 (N69) · D138 (N69) · D123 (N69) · D124 (N69) · D125 (N69) · SN1 (N133) · D87 (N112) · D127 (N69)
 - **E280** the one window for a kind's number after research (QCA): flat adds first, then the shares  · QCA (N154, N155, N156)
 - **E281** learning a step puts its effects in force for that side; every unit and building of the si
 - **E67** a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's · D182 (N122) · D184 (N122) · D98 (N112)
@@ -117,7 +117,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 ## index.html#the-building-art
 
-- **E72** The building art (preview 49, 19-building-art.js; Nov 3, the last build before the camera 
+- **E72** The building art (preview 49, 19-building-art.js; Nov 3, the last build before the camera  · PB3 (N151, N160) · PB4 (N151, N160) · PB6 (N151, N160) · PB12 (N151, N160)
+- **E294** research shows on its building (Mid's UP, PB12): the steps learned of those its row names, · PB12 (N151, N160) · PB3 (N151, N160) · PB4 (N151, N160) · PB6 (N151, N160)
+- **E295** the keep at its level: the bastion from its points in the Sprites book (PB13) · PB13 (N151, N160)
 - **E73** a building picture's height, from its look
 
 ## index.html#the-node-art
@@ -301,7 +303,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
 - **E213** First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only thro
-- **E290** the Research book (O) by code and by key, and the queue's length, the mold's six (SN1) · SN1 (N133)
+- **E290** the Research book (O) by code and by key
 - **E267** a side's economy, fresh: its age, the steps it knows, its gathered total, the rally, and t
 - **E214** seconds played, and when the bell rings
 - **E291** a find's or a field's rate after the side's research (QCA): the one window, D88 or the row · QCA (N154, N155, N156) · D88 (N70)
@@ -312,8 +314,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E270** the stores' flow a minute: the last full minute, or before there is one the minute so far  · D189 (N132)
 - **E271** each minute (D188) the minute's in and out become the last minute's · D188 (N132)
 - **E217** a site: a building paid for and placed at done 0; villagers raise it. canPlace mirrors bui
-- **E218** training and research: a queue at the building, at most the mold's six (SN1); the head tra · SN1 (N133) · D124 (N69) · QCA (N154, N155, N156)
-- **E219** the age: Mid's price and wait for each age (D129, the ages of D130), paid, then the wait;  · D129 (N160) · D130 (N160)
+- **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156) · D124 (N69) · D129 (N160)
+- **E219** the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid · D129 (N160) · D130 (N160)
 - **E292** Mid's research lines: a line is the steps of one line at one building, in the book's order
 - **E293** research (Mid's researchWhy and research): a step is refused when known, before its age, b
 - **E220** the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept

@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,682 | 216,343 | 216,473 |
-| Books | 990 | 0 | 153,819 | 154,088 |
+| Game code | 28 | 1,695 | 218,816 | 218,946 |
+| Books | 994 | 0 | 156,293 | 156,561 |
 | Laws | 75 | 0 | 7,795 | 8,041 |
-| Tools | 4 | 587 | 73,908 | 73,997 |
+| Tools | 4 | 610 | 77,648 | 77,737 |
 
 ## The trades (code)
 
@@ -20,24 +20,24 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,803 | 1,807 | 38 |
 | index.html#floor-2-terrain | 81 | 7,995 | 7,999 | 131 |
-| index.html#floor-3-non-movables | 41 | 4,171 | 4,175 | 82 |
+| index.html#floor-3-non-movables | 41 | 4,196 | 4,200 | 82 |
 | index.html#drawn-once-in-the-view-frame | 47 | 4,130 | 4,134 | 123 |
 | index.html#the-view | 9 | 916 | 920 | 14 |
-| index.html#the-door | 53 | 4,849 | 4,853 | 69 |
+| index.html#the-door | 54 | 5,044 | 5,048 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
-| index.html#the-building-art | 314 | 49,153 | 49,157 | 4096 |
+| index.html#the-building-art | 324 | 50,734 | 50,738 | 4096 |
 | index.html#the-node-art | 26 | 3,804 | 3,808 | 244 |
 | index.html#the-figures | 144 | 23,020 | 23,024 | 1610 |
 | index.html#b-the-buildings | 15 | 1,290 | 1,294 | 20 |
 | index.html#floor-5-movables | 77 | 7,504 | 7,508 | 96 |
 | index.html#the-body-s-laws | 30 | 2,348 | 2,352 | 35 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,188 | 3,192 | 92 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,237 | 3,241 | 92 |
 | index.html#floor-6-climate | 63 | 7,867 | 7,879 | 288 |
 | index.html#floor-7-display | 28 | 2,927 | 2,931 | 75 |
-| index.html#the-woods-cache | 51 | 4,814 | 4,818 | 89 |
-| index.html#touch | 40 | 4,369 | 4,373 | 59 |
-| menu.js | 259 | 41,707 | 41,745 | 641 |
-| econ.js | 104 | 14,325 | 14,325 | 102 |
+| index.html#the-woods-cache | 51 | 4,829 | 4,833 | 89 |
+| index.html#touch | 40 | 4,382 | 4,386 | 59 |
+| menu.js | 259 | 41,765 | 41,803 | 639 |
+| econ.js | 106 | 14,862 | 14,862 | 100 |
 | combat.js | 62 | 9,043 | 9,043 | 101 |
 | ai.js | 44 | 5,054 | 5,054 | 39 |
 | sound.js | 56 | 5,632 | 5,632 | 66 |
@@ -48,19 +48,19 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 3 | 461 |
 | capabilities | 25 | 5,503 |
-| citations | 161 | 18,737 |
+| citations | 162 | 18,987 |
 | colours | 9 | 951 |
-| comments | 293 | 40,463 |
+| comments | 295 | 41,235 |
 | ground | 4 | 640 |
 | mass | 16 | 2,354 |
-| measure | 189 | 25,492 |
-| rules | 50 | 9,641 |
+| measure | 188 | 25,451 |
+| rules | 50 | 9,936 |
 | screen | 10 | 2,597 |
 | shells | 74 | 12,258 |
 | sides | 4 | 1,180 |
 | sound | 51 | 11,159 |
-| sprites | 31 | 5,485 |
-| tech | 63 | 18,122 |
+| sprites | 33 | 6,627 |
+| tech | 63 | 18,224 |
 | words | 7 | 11,284 |
 
 ## The shells
@@ -91,7 +91,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X14 | version | code | the version typed into the page instead of read from D171 |
 | X15 | parse | code | a code file that does not parse on its own |
 | X16 | joined | code | the whole game, joined, not parsing (a name declared twice) |
-| X17 | permit | seal | a permit opening more than ten items, or a change it does not open |
+| X17 | permit | seal | a change the permit does not open (a build carries one whole module: Albert, Nov 5 13:30) |
 | X18 | seals | seal | a locked item differing from its seal by a single byte |
 | X19 | ratchet | seal | opened code typing more numbers or colours than when sealed |
 | X20 | budget | seal | opened code growing past its sealed size without growth the permit grants |
@@ -124,6 +124,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X47 | t-effects | page | a kind's numbers after research are Mid's stats(), maxHpB, unitCost, techCost and rehealth with its shares added, not multiplied (QCA); a Home's health is D139 × (1 + Σ shares); the lowest is kept; a find's rate and the walk read the law |
 | X48 | t-odds | page | the odds of a battle are Mid's frozen unitPower, powerOf, powerFrom, matchup and lanchester for the same armies and towers (Mid's values, a tower 120, the people 250); a villager walled in from every find does not crash and ends idle or waiting |
 | X49 | t-foe | page | who is a foe is Mid's frozen isFoe, gangOf, atWar and friendly for the same sides, groups and stances: animals everyone's foe, each wild group by its own stance, a treaty binding only its signers; a soldier and a tower strike only a foe |
-| X50 | t-research | page | ages and research are Mid's frozen code for the same orders: the age up Stone to Bronze at its price and wait, the woodcutting line in order at each step's price and time, a step out of order, already queued, before its age or before its needs refused, and the rate wood is cut at after each step the base × (1 + the shares added) |
+| X50 | t-research | page | ages and research are Mid's frozen code for the same orders: the age queued at the seat at its price and wait, the seat training nothing while it rises, the lines in order at each step's price and time (research-speed steps applied), a step out of order, queued, before its age or its needs refused; after each step the wood rate, the load, a home's room and the camp's footing Mid's with its shares added; the Hall names a step and an age, the age button and info card the next age and its own wait, the hidden age never next, the keep's level at Gunpowder drawn, Z1 from Mid's first age |
 
-1097 items sealed · 990 book entries · 75 laws · 161 citations, 19 still to open · 7 known
+1101 items sealed · 994 book entries · 75 laws · 162 citations, 19 still to open · 7 known

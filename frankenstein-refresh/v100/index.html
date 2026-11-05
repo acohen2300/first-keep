@@ -186,7 +186,7 @@ function makeTerrain(roll) {
 // ── Floor 3, non-movables (E40)
 const KIND = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 100) KIND[e.find] = { code: c, yield: e.yield || null, amount: e.amount ? ref(e.amount) : 0, r: e.room ? ref(e.room) : 0 }; } // E41
 // E42
-const Z1 = { food: (D.ageUp + D.villagers * D.villager) * (1 + D.margin), wood: (D.mill + D.lumber + D.homes * D.home + D.barracks) * (1 + D.margin) };
+const [, AGE1] = D.age.cost, Z1 = { food: (AGE1.food + D.villagers * D.villager) * (1 + D.margin), wood: (D.mill + D.lumber + D.homes * D.home + D.barracks) * (1 + D.margin) };
 const z1 = { bush: Math.ceil(Z1.food / D.bushFood), tree: Math.ceil(Z1.wood / D.treeWood) };
 const OCC = new Uint8Array(N * N); let things = []; // E43
 const flatAt = (k) => k >= 0 && H[k] >= D.land && CH[k * 4] === CH[k * 4 + 1] && CH[k * 4] === CH[k * 4 + 2] && CH[k * 4] === CH[k * 4 + 3];
@@ -286,7 +286,8 @@ const on = (ev, fn) => HOOK[ev].push(fn), fire = (ev, ...a) => { for (const f of
 // E277
 const known = new Map(), FXC = new Map(); on('start', () => { known.clear(); FXC.clear(); });
 const keysOf = (code) => { let p = ''; const [L] = code.match(/^[A-Z]*/); return [...L].map((c) => (p += c)).concat(code, SH[code] ? SH[code].ticks : []); }; // E278
-const BASE = { spd: (c) => ref(SH[c].pace), hp: (c) => D.bldHp[c] ?? (D.stats[c] || {}).hp, rate: (c) => (SH[c].rate ? ref(SH[c].rate) : D.rate[SH[c].find]), cost: (c) => D.cost[c] || (BOOKS.tech[c] || {}).value?.cost }; // E279
+const BASE = { spd: (c) => ref(SH[c].pace), hp: (c) => D.bldHp[c] ?? (D.stats[c] || {}).hp, rate: (c) => (SH[c].rate ? ref(SH[c].rate) : D.rate[SH[c].find]), cost: (c) => D.cost[c] || (BOOKS.tech[c] || {}).value?.cost,
+  time: (c) => (BOOKS.tech[c] || {}).value?.time, train: (c) => D.train[c], build: (c) => D.buildTime[c], queue: () => fromBook('screen').mold.slots, carry: () => D.carry, room: (c) => D.pop[c] }; // E279
 function stat(code, side, key) { // E280
   const memo = FXC.get(side) || FXC.set(side, new Map()).get(side), id = code + ' ' + key; if (memo.has(id)) return memo.get(id);
   const ks = keysOf(code), fx = [...(known.get(side) || [])].flatMap((t) => BOOKS.tech[t].value.fx).filter((f) => f.s === key && (!f.k || [].concat(f.k).some((k) => k === '*' || ks.includes(k))));
@@ -369,16 +370,26 @@ over = roof && roof !== 'flat' ? Math.min(2.6, w * 0.08) : 0, far = lit(roofCol 
 [x1 + over * 0.5 + k, yb - h + 0.6], [x1 - w * 0.25 + m, ry], [x0 + w * 0.25 + m, ry], ] : [ [x0 - over * 0.5 + k, yb - h + 0.6], [x1 + over * 0.5 + k, yb - h + 0.6], [x1 + over * 0.5 + m, ry],
 [x0 - over * 0.5 + m, ry], ], far, LINE, 0.4, ); sides(x0, x1, yf, h, d, wall, roof === 'flat' || !roof); P_( [ [x0, yf], [x1, yf], [x1, yf - h], [x0, yf - h], ],
 LG(x0, 0, x1, 0, [lit(wall, 0.18), wall, lit(wall, -0.12)]), LINE, 0.45, ); texture(tex, x0, yf - h, x1, yf, wall); ao( [ [x0, yf], [x1, yf], [x1, yf - h], [x0, yf - h], ], yf, h * 0.45, ); ao( [
-[x1, yf], [x1 + k, yf - d], [x1 + k, yf - d - h], [x1, yf - h], ], yf, h * 0.45, ); if (roof === 'flat' || !roof) rim(x0, yf - h, x1, yf - h, 0.45); const r = { top: yb - h, d, h, k };
+[x1, yf], [x1 + k, yf - d], [x1 + k, yf - d - h], [x1, yf - h], ], yf, h * 0.45, ); if (roof === 'flat' || !roof) rim(x0, yf - h, x1, yf - h, 0.45); plinth(x0, x1, yf, h, d, k); const r = { top: yb - h, d, h, k, yf };
 if (roof === 'flat' || !roof) return r; const sag = Math.min(1.4, w * 0.045), rc = roofCol || wall, near = LG(0, yf - h, 0, ry, [lit(rc, -0.15), lit(rc, 0.25)]); if (roof === 'gable') { P_( [
 [x1, yf - h], [x1 + k, yb - h], [x1 + m, ry], ], lit(wall, -0.5), LINE, 0.4, ); const e0 = [x0 - over, yf - h + 0.8], e1 = [x1 + over, yf - h + 0.8], r0 = [x0 - over * 0.5 + m, ry],
 r1 = [x1 + over * 0.5 + m, ry]; g.beginPath(); g.moveTo(e0[0], e0[1]); g.quadraticCurveTo((e0[0] + e1[0]) / 2, e0[1] + sag, e1[0], e1[1]); g.lineTo(r1[0], r1[1]);
 g.quadraticCurveTo((r0[0] + r1[0]) / 2, ry + sag * 0.4, r0[0], r0[1]); g.closePath(); g.fillStyle = near; g.fill(); g.strokeStyle = LINE; g.lineWidth = 0.45; g.stroke();
-roofGrain(rc, e0, e1, r0, r1, sag); L_(r0[0], r0[1], r1[0], r1[1], lit(rc, -0.4), 0.9); rim(r0[0], r0[1], r1[0], r1[1], 0.5); return { ...r, top: ry }; } if (roof === 'hip') { P_( [
+roofGrain(rc, e0, e1, r0, r1, sag); L_(r0[0], r0[1], r1[0], r1[1], RES === UPA.top ? UPA.ridge : lit(rc, -0.4), RES === UPA.top ? UPA.ridgeW : 0.9); rim(r0[0], r0[1], r1[0], r1[1], 0.5); return { ...r, top: ry }; } if (roof === 'hip') { P_( [
 [x1 + over, yf - h + 0.8], [x1 + over * 0.5 + k, yb - h + 0.6], [x1 - w * 0.25 + m, ry], ], lit(rc, -0.55), LINE, 0.4, ); const e0 = [x0 - over, yf - h + 0.8], e1 = [x1 + over, yf - h + 0.8],
 r0 = [x0 + w * 0.25 + m, ry], r1 = [x1 - w * 0.25 + m, ry]; g.beginPath(); g.moveTo(e0[0], e0[1]); g.quadraticCurveTo((e0[0] + e1[0]) / 2, e0[1] + sag, e1[0], e1[1]); g.lineTo(r1[0], r1[1]);
 g.lineTo(r0[0], r0[1]); g.closePath(); g.fillStyle = near; g.fill(); g.strokeStyle = LINE; g.lineWidth = 0.45; g.stroke(); roofGrain(rc, e0, e1, r0, r1, sag); rim(r0[0], r0[1], r1[0], r1[1], 0.5);
 return { ...r, top: ry }; } return r; }
+// E294
+let RES = null; const UPA = SPRITE.up, TECHAT = {}; for (const [c, e] of Object.entries(BOOKS.tech)) (TECHAT[e.value.at] = TECHAT[e.value.at] || []).push(c);
+const levelOf = (t) => { const [, , , art] = B[t.code], L = SPRITE[art]?.level, k = known.get(t.side) || new Set(), at = TECHAT[t.code] || [], n = at.filter((c) => k.has(c)).length;
+  return [!L ? L : L.age ? +((SIDES[t.side] || {}).age >= L.age) : [...k].filter((c) => BOOKS.tech[c].value.tier === art).length, +!!n + +(!!n && n >= at.length * UPA.half)]; };
+function plinth(x0, x1, yf, h, d, k) { if (!RES) return; const { foot: F, shade, line, top, stone: [sw, sh, gap, edge], lift, rim: rl } = UPA;
+  P_([[x0, yf], [x1, yf], [x1, yf - F], [x0, yf - F]], STONE, LINE, line); P_([[x1, yf], [x1 + k, yf - d], [x1 + k, yf - d - F], [x1, yf - F]], lit(STONE, shade), LINE, line);
+  if (RES === top) for (let y = yf - gap; y > yf - h + edge; y -= gap) for (const x of [x0, x1 - sw]) P_([[x, y], [x + sw, y], [x + sw, y - sh], [x, y - sh]], lit(STONE, lift), LINE, rl); }
+// E295
+function bastion(yf) { const { at: [ax, ay], face, top, shade: [s0, s1, s2], gun: [[a, b, c, e, gc, gw], [ex, ey, er, ec]], line } = SPRITE.bastion, [[fx]] = face, y = yf + ay, p = (L) => L.map(([x, q]) => [ax + x, y + q]);
+  P_(p(face), LG(ax + fx, y, ax - fx, y, [lit(STONE, s0), lit(STONE, s1)]), LINE, line); P_(p(top), lit(STONE, s2), LINE, line); L_(ax + a, y + b, ax + c, y + e, gc, gw); E_(ax + ex, y + ey, er, er, ec); }
 function roofGrain(rc, e0, e1, r0, r1, sag) { const thatch = rc === THATCH, rows = Math.max(3, Math.round(Math.abs(e0[1] - r0[1]) / (thatch ? 1.7 : 1.3))); g.lineWidth = 0.3;
 for (let i = 1; i < rows; i++) { const u = i / rows, xa = e0[0] + (r0[0] - e0[0]) * u, xb = e1[0] + (r1[0] - e1[0]) * u, y = e0[1] + (r0[1] - e0[1]) * u + sag * (1 - u) * 0.5;
 g.strokeStyle = thatch ? `rgba(90,60,20,${0.2 + 0.1 * u})` : 'rgba(40,20,10,.3)'; g.beginPath(); g.moveTo(xa, y); const n = Math.max(2, Math.round((xb - xa) / (thatch ? 2.4 : 1.9)));
@@ -447,7 +458,7 @@ keep(c, o, v) { const r = block(50, 22, PLASTER, 'timber', 'gable', TILE, 12); c
 texture('stone', -26, d / 2 - 4, 26, d / 2 + 1, STONE); g.save(); g.translate(15, d / 2 - 4); const tk = sides(-5, 5, 0, 40, 10 * ART_T, STONE); P_( [ [-5, 0], [5, 0], [5, -40], [-5, -40], ],
 LG(-5, 0, 5, 0, [lit(STONE, -0.08), lit(STONE, -0.45)]), LINE, 0.5, ); texture('stone', -5, -40, 5, 0, STONE); P_( [ [-4, -30], [4, -30], [4, -36], [-4, -36], ], '#14100c', );
 E_(0, -32.6, 1.6, 1.9, '#c9a227'); P_( [ [-6.5, -40], [6.5 + tk, -40 - 10 * ART_T], [tk / 2, -52], ], lit(TILE, -0.6), LINE, 0.5, ); P_( [ [-6.5, -40], [6.5, -40], [tk / 2, -52], ], TILE, LINE, 0.5, );
-g.restore(); door(-6, d / 2 - 4, 8, 12, '#4a2e16'); for (const x of [-18, 4]) win(x, d / 2 - 11, 2.4, 3.4); banner(-22, d / 2 - 22, c, 12); L_(-25, d / 2 - 1, 25, d / 2 - 1, c, 1.4); },
+g.restore(); door(-6, d / 2 - 4, 8, 12, '#4a2e16'); for (const x of [-18, 4]) win(x, d / 2 - 11, 2.4, 3.4); banner(-22, d / 2 - 22, c, 12); L_(-25, d / 2 - 1, 25, d / 2 - 1, c, 1.4); if (v) bastion(r.yf); },
 castle(c, o) { const w = 50, d = w * ART_T; block(w, 30, STONE, 'stone', 'flat'); crenels(-25, 25, d / 2 - 30, STONE); for (const sx of [-1, 1]) { g.save(); g.translate(sx * 20, d / 2 - 2);
 const tk = sides(-6, 6, 0, 42, 12 * ART_T, STONE); P_( [ [-6, 0], [6, 0], [6, -42], [-6, -42], ], LG(-6, 0, 6, 0, [lit(STONE, -0.08), lit(STONE, -0.48)]), LINE, 0.6, );
 texture('stone', -6, -42, 6, 0, STONE); crenels(-6, 6, -42, STONE); { P_( [ [-7, -44], [7 + tk, -44 - 12 * ART_T], [tk / 2, -56], ], lit(SLATE, -0.6), LINE, 0.5, ); P_( [ [-7, -44], [7, -44],
@@ -531,7 +542,7 @@ for (const dx of [-3.6, 3.6]) post(x + dx, y - 2.6, 4.8, '#5a3a1e', 0.4); for (l
 rim(x - 4.6, y - 8.4, x + 4.6, y - 8.4, 0.4); } crate(...gpt(w, 0.5, 0.86)); sack(...gpt(w, 0.58, 0.9)); barrel(...gpt(w, 0.5, 0.1)); lantern(...gpt(w, 0.96, 0.5)); }, true, ); },
 school(c) { const r = block(30, 16, PLASTER, null, 'gable', SLATE, 8); door(0, r.d / 2, 5, 9); win(-8, r.d / 2 - 5); win(8, r.d / 2 - 5); P_( [ [-1.4 + r.k / 2, -24], [1.4 + r.k / 2, -24],
 [1.4 + r.k / 2, -28], [-1.4 + r.k / 2, -28], ], '#5a4a3a', ); E_(r.k / 2, -26, 1, 1.2, '#e6c75a'); L_(-15, r.d / 2 - 0.5, 15, r.d / 2 - 0.5, c, 1.2); },
-library(c, o) { const d = 40 * ART_T, uni = false; P_( [ [-21, d / 2 + 1], [21, d / 2 + 1], [21, d / 2 - 2], [-21, d / 2 - 2], ], '#d8cdb4', LINE, 0.5, ); block(40, 22, PLASTER, null, 'flat');
+library(c, o, uni) { const d = 40 * ART_T; P_( [ [-21, d / 2 + 1], [21, d / 2 + 1], [21, d / 2 - 2], [-21, d / 2 - 2], ], '#d8cdb4', LINE, 0.5, ); block(40, 22, PLASTER, null, 'flat');
 for (let x = -16; x <= 16; x += 6.4) column(x, d / 2 - 2, d / 2 - 21); const k = d * ART_S; if (uni) { P_( [ [20, d / 2 - 22], [20 + k, d / 2 - 22 - d], [14 + k / 2, d / 2 - 34 - d / 2], ],
 lit(SLATE, -0.6), LINE, 0.5, ); P_( [ [-20, d / 2 - 22], [20, d / 2 - 22], [14 + k / 2, d / 2 - 34 - d / 2], [-14 + k / 2, d / 2 - 34 - d / 2], ], SLATE, LINE, 0.6, ); P_( [ [-3, d / 2 - 34],
 [3, d / 2 - 34], [3, d / 2 - 44], [0, d / 2 - 48], [-3, d / 2 - 44], ], STONE, LINE, 0.5, ); } else (ridgeRoof(21, d / 2 - 22, d / 2 - 31, d, '#efe6d4'), P_( [ [-21, d / 2 - 22], [21, d / 2 - 22],
@@ -960,8 +971,8 @@ const blit = (c, x, y, s, into = ctx) => { const f = s / c.q; into.drawImage(c, 
 const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647; // E119
 const NODE_SCALE = SPRITE.nodes.scale;
 const nodeSprite = (kind, v, s) => sprite(kind + v, 46, 58, 17, 54, 17, 54, 0, s, () => { const f = NODE_SCALE[kind] || 1.25; g.scale(f, f); nodeArt(kind, v, NS_rng(11 + v * 7 + kind.length)); });
-function bldSprite(code, col, s) { const [, n, , art] = B[code], w = n * D.tile, top = BLDTOP[art] || 40, pad = 12, k = w * ART_T * ART_S, W = w + pad * 2 + 10 + 2 * k, H = (w * ART_T) / 2 + top + pad * 2 + SKEW * W;
-  return sprite(code + col, W, H, W / 2, top + pad, W / 2 + k / 2, top + pad + (SKEW * k) / 2, SKEW, s, () => ART[art](col, 0)); }
+function bldSprite(code, col, s, lv, up) { const [, n, , art] = B[code], w = n * D.tile, top = BLDTOP[art] || 40, pad = 12, k = w * ART_T * ART_S, W = w + pad * 2 + 10 + 2 * k, H = (w * ART_T) / 2 + top + pad * 2 + SKEW * W;
+  return sprite(code + col + lv + up, W, H, W / 2, top + pad, W / 2 + k / 2, top + pad + (SKEW * k) / 2, SKEW, s, () => { RES = up; ART[art](col, 0, lv); RES = null; }); }
 const ROCK = shade(C.white, 0.62), ROCKLIT = shade(C.white, 0.82), RUIN = shade(C.sand, 0.85), RUINFACE = shade(C.sand, 0.6), CHEST = shade(C.dirt, 0.9), LID = shade(C.dirt, 0.65);
 const disc = (x, y, r, fill) => { ctx.fillStyle = fill; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill(); };
 const rect = (x, y, w, h, fill) => { ctx.fillStyle = fill; ctx.fillRect(x, y, w, h); };
@@ -1095,7 +1106,7 @@ function drawThings() {
     while (n < us.length && us[n].vy <= t.vy) unit(us[n++]);
     if (t.deep && !dots) continue;
     const [x, y] = toScreen(t.vx, t.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) continue;
-    if (t.kind === 'bld') { if (!show.B) continue; if (t.done < 1) ctx.globalAlpha = 0.3 + 0.7 * t.done; blit(bldSprite(t.code, t.col, s), x, y, s); ctx.globalAlpha = 1; }
+    if (t.kind === 'bld') { if (!show.B) continue; if (t.done < 1) ctx.globalAlpha = 0.3 + 0.7 * t.done; blit(bldSprite(t.code, t.col, s, ...levelOf(t)), x, y, s); ctx.globalAlpha = 1; }
     else if (!show.T) continue;
     else if (GIFT[t.kind]) { if (!dots) GIFT[t.kind](x, y, s); }
     else if (dots) rect(x - 1, y - 1, 2, 2, DOT[t.kind]); else blit(nodeSprite(t.kind, t.v, s * t.size), x, y, s * t.size);
@@ -1143,7 +1154,7 @@ canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, 
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
 function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); fogT = 0; K.t = K.snow = K.fds = K.wet = K.rain = K.snowing = K.fog = K.fogT = K.storm = K.flash = K.hour = K.strikeT = jolt.t = 0; K.wetHour = false; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
-window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1,
+window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1,
   rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, sel: () => sel, select: (u) => (sel = u), seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>

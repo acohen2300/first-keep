@@ -236,50 +236,74 @@ async def foe(b):   # same sides, same stances, same foes as Mid's frozen isFoe;
     mid = json.loads(r.stdout or 'null')
     off = [x for k in ('foe', 'war', 'friend') for x, y in zip(v[k], (mid or {}).get(k, [])) if x != y]
     ok('t-foe', mid and not off and len(set(x[-1] for x in v['foe'])) == 2 and keep == [True, True] and not errs, [off[:6], keep, errs[:2], r.stderr[-300:]])
-# Ages and research (F13a): the same orders, the same answers as Mid's frozen code: the age up Stone to Bronze (its price and wait, 01-rules-basics AGES, 11-orders ageUp) and
-# the woodcutting line in order (04-rules-tech TECH; 08-core lineOf, prevOf, needsOf, nextStep; 11-orders researchWhy, research, techCost), each step's price, time and
-# refusal, and the rate a villager cuts wood at after each step against Mid's gatherMul with its shares added (Albert, Nov 5 11:40: m += f.m − 1). A finished order is
-# Mid's own completion (12-sim-core: p.age = j.age; learnTech adds the step and dirties the effects), its words and sounds left out
-ORDERS = [['age'], ['done'], ['tech', 'axes'], ['tech', 'hafting'], ['tech', 'hafting'], ['done'], ['tech', 'sawpits'], ['tech', 'axes'], ['done'], ['tech', 'ironaxe'], ['tech', 'hafting']]
-RES = """(() => { FK.reset(); const s = FK.SIDES[0], st = s.store, T = BOOKS.tech, key = (k) => Object.keys(T).find((c) => T[c].key === k), H = key('hafting'), at = T[H].value.at, h = FK.seatOf(0), out = [];
+# Ages and research (F13a, F13b): the same orders, the same answers as Mid's frozen code. The age goes into the seat's queue (01-rules-basics AGES, 11-orders ageUp, 39-games
+# ageOpen and nextAge: the hidden sixth never next); the research lines in order (04-rules-tech TECH; 08-core lineOf, prevOf, needsOf, nextStep; 11-orders researchWhy, research,
+# techCost), each step's price, time (after Tally sticks, 0.95 of it) and refusal; after each step the rate wood is cut at (gatherMul), the load (carryOf), a home's room (roomOf),
+# all with Mid's shares added (Albert, Nov 5 11:40: m += f.m − 1), and the lumber camp's footing (19-building-art upTier). A finished order is Mid's own completion (12-sim-core:
+# p.age = j.age; learnTech adds the step and dirties the effects). On the page: the Hall names a step and an age in its queue, a villager ordered behind the age waits for it, the
+# age button and the info card name the next age and its own wait, Gunpowder's next is none (Mid's nextAge), the keep at Gunpowder takes its level (Mid's bldSprite: age 4 or more) and draws
+# differently, as a camp with research does; Z1's food is from Mid's first age's price
+ORDERS = [['tech', 'tally'], ['hall'], ['done'], ['tech', 'baskets'], ['done'], ['age'], ['train'], ['hall'], ['done'], ['tech', 'axes'], ['tech', 'hafting'], ['tech', 'hafting'], ['done'],
+          ['tech', 'sawpits'], ['tech', 'axes'], ['done'], ['tech', 'timber'], ['done'], ['tech', 'ironaxe'], ['tech', 'hafting']]
+RES = """(() => { FK.reset(); const D = FK.D, s = FK.SIDES[0], st = s.store, T = BOOKS.tech, key = (k) => Object.keys(T).find((c) => T[c].key === k), H = key('hafting'), at = T[H].value.at, h = FK.seatOf(0), out = [], x = { hall: [], held: [] };
   for (const y of ECON.YIELDS) st[y] = 5000; let lab = null;
   for (let d = 6; d < 40 && !lab; d++) for (const [i, j] of [[h.i + d, h.j], [h.i - d, h.j], [h.i, h.j + d], [h.i, h.j - d]]) if (!lab && ECON.canPlace(at, i, j)) lab = FK.build(at, i, j, s.col);
   const u = ECON.villagersOf(0)[0], tree = FK.things().filter((t) => t.kind === 'tree').sort((a, b) => Math.hypot(a.bx - u.bx, a.by - u.by) - Math.hypot(b.bx - u.bx, b.by - u.by))[0];
-  const cut = () => { u.load = 0; u.carry = null; ECON.gatherAt(u, tree); for (let k = 0; k < 3000 && !(u.job === 'gather' && !u.path); k++) FK.sim(0.1); u.load = 0; FK.sim(0.1); const r = [u.load / 0.1, FK.stat(TREE, 0, 'rate')]; ECON.idle(u); return r; };
-  const base = cut(); let last = null;
+  const cut = () => { u.load = 0; u.carry = null; ECON.gatherAt(u, tree); for (let k = 0; k < 3000 && !(u.job === 'gather' && !u.path); k++) FK.sim(0.1); u.load = 0; FK.sim(0.1); const r = [u.load / 0.1, FK.stat(TREE, 0, 'rate')];
+    u.load = D.carry + 0.5; FK.sim(0.1); r.push(u.job === 'gather'); u.load = 0; ECON.idle(u); return r; };
+  const cells = () => { MENU.S.subject = null; MENU.S.tab = 'Hall'; MENU.S.htab = 'Town'; MENU.render(true); const r = [...[...document.querySelectorAll('#panel .row6')].find((q) => q.querySelectorAll('.q').length).querySelectorAll('.q')].map((c) => c.textContent.replace(/\\d+:\\d+/, '')); MENU.S.tab = null; return r; };
+  const words = () => { MENU.S.info = true; MENU.S.tab = 'Hall'; MENU.S.htab = 'Town'; MENU.render(true); const r = [MENU.VERBS.ageUp.label(), document.getElementById('panel').textContent]; MENU.S.info = false; MENU.S.tab = null; return r; };
+  x.start = words(); const base = cut(); let last = null, people = 0;
   for (const [o, k] of ORDERS) { const before = { ...st };
-    if (o === 'age') { const c = ECON.ageCost(0), ok = ECON.ageUp(0); last = ['age', s.aging]; out.push([o, k, ok, '', c, s.aging]); }
-    else if (o === 'tech') { const c = key(k), why = ECON.researchWhy(0, c), ok = ECON.research(0, c); if (ok) last = ['tech', c]; out.push([o, k, ok, why, Object.fromEntries(ECON.YIELDS.map((y) => [y, before[y] - st[y]]).filter(([, n]) => n)), ok ? lab.q.length === 1 ? lab.qt : null : null]); }
-    else { let n = 0; if (last[0] === 'age') while (s.age < 1 && n < 9999) { FK.sim(0.1); n++; } else while (ECON.researchWhy(0, last[1]) !== 'known' && n < 9999) { FK.sim(0.1); n++; } const [got, stat] = cut(); out.push([o, last[0], s.age, n, got / base[0], stat / base[1]]); } }
-  return { out, line: ECON.lineOf(H).map((c) => T[c].key), next: T[ECON.nextStep(0, H)].key, needs: ECON.needsOf(key('ironaxe')).map((c) => (T[c] ? T[c].key : c)), queued: lab.q.length }; })()"""
-MIDRES = r"""const vm = require('vm'), fs = require('fs'), [basics, units, blds, tech, core, orders, run] = process.argv.slice(1).map((f, i) => (i < 6 ? fs.readFileSync(f, 'utf8') : JSON.parse(f)));
+    if (o === 'age') { const c = ECON.ageCost(0), ok = ECON.ageUp(0); last = ['age']; out.push([o, k, ok, '', c, s.aging]); x.aged = [h.q.slice(), h.qt]; }
+    else if (o === 'train') { x.train = ECON.queue(h, D.trains[h.code][0]); people = FK.units().filter((v) => v.side === 0).length; }
+    else if (o === 'hall') x.hall.push(cells());
+    else if (o === 'tech') { const c = key(k), why = ECON.researchWhy(0, c), ok = ECON.research(0, c); if (ok) last = ['tech', c]; const b = FK.things().find((t) => t.side === 0 && (t.q || []).includes(c));
+      out.push([o, k, ok, why, Object.fromEntries(ECON.YIELDS.map((y) => [y, before[y] - st[y]]).filter(([, n]) => n)), ok && b.q.length === 1 ? b.qt : null]); }
+    else { let n = 0; if (last[0] === 'age') { while (s.age < 1 && n < 9999) { FK.sim(0.1); n++; x.held.push(FK.units().filter((v) => v.side === 0).length === people); } x.held.push(h.q.length === 1 && !!FK.SH[h.q[0]]); }
+      else while (ECON.researchWhy(0, last[1]) !== 'known' && n < 9999) { FK.sim(0.1); n++; }
+      const [got, stat, keeps] = cut(); out.push([o, last[0], s.age, n, got / base[0], stat / base[1], keeps, FK.stat('UV', 0, 'carry'), FK.stat(HOME, 0, 'room') - D.pop[HOME], FK.levelOf(lab)[1]]); } }
+  x.bronze = words(); const spr = (code, lv, up) => { const c = FK.bldSprite(code, s.col, 1, lv, up), d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 4) n += d[i] * (i % 97); return n; };
+  s.age = 4; s.aging = 0; x.gun = [MENU.VERBS.ageUp.label(), ECON.nextAge(0), FK.levelOf(h)[0], spr(h.code, 0, 0) !== spr(h.code, FK.levelOf(h)[0], 0), spr(lab.code, 0, 0) !== spr(lab.code, 0, FK.levelOf(lab)[1])];
+  x.z1 = FK.Z1.food;
+  return { out, x, line: ECON.lineOf(H).map((c) => T[c].key), next: T[ECON.nextStep(0, H)].key, needs: ECON.needsOf(key('ironaxe')).map((c) => (T[c] ? T[c].key : c)), queued: lab.q.length }; })()"""
+MIDRES = r"""const vm = require('vm'), fs = require('fs'), [basics, units, blds, tech, core, orders, games, art, run] = process.argv.slice(1).map((f, i) => (i < 8 ? fs.readFileSync(f, 'utf8') : JSON.parse(f)));
 const cut = (t, a, b) => t.slice(t.indexOf(a), t.indexOf(b, t.indexOf(a))), ctx = { RUN: run }; vm.createContext(ctx);
 const fx = cut(core, 'function fxList', '// Two words').replace('if (f.m) m *= f.m;', 'if (f.m) m += f.m - 1;');
 vm.runInContext([basics, units, blds, tech, fx, cut(core, 'const costText', 'const afford'), cut(core, 'const afford', '// Every'), cut(core, 'const sumCost', 'const fmt'), cut(core, 'const bldsOf', 'const readyAt'),
-  cut(core, 'const qMax', 'const lineFree'), cut(core, 'const lineOf', 'const todaySeed'), cut(core, 'const nodeKey', 'const makeOf'), cut(orders, 'const scaled', 'const unitCost'), cut(orders, 'const techCost', 'function trainWhy'),
-  cut(orders, 'function researchWhy', 'let navHold'),
-  `const standing = (b, o) => b.owner === o && b.prog >= 1 && b.hp > 0, keepOf = (o) => G.blds.find((b) => b.owner === o && b.kind === 'keep'), nextAge = (o) => AGES[G.P[o].age + 1] || null, pay = (p, c) => { for (const k in c) p.res[k] -= c[k]; };
+  cut(core, 'const roomOf', '\n'), cut(core, 'const qMax', 'const lineFree'), cut(core, 'const lineOf', 'const todaySeed'), cut(core, 'const carryOf', '\n'), cut(core, 'const nodeKey', 'const makeOf'),
+  cut(orders, 'const scaled', 'const unitCost'), cut(orders, 'const techCost', 'function trainWhy'), cut(orders, 'function researchWhy', 'let navHold'), cut(games, 'const ageOpen', '\n'), cut(games, 'const nextAge', '\n'),
+  cut(art, 'const TECHAT', '// a block'),
+  `const standing = (b, o) => b.owner === o && b.prog >= 1 && b.hp > 0, keepOf = (o) => G.blds.find((b) => b.owner === o && b.kind === 'keep'), pay = (p, c) => { for (const k in c) p.res[k] -= c[k]; };
   const EVM = { gather: 1 }, WEATHER = [{}], season = () => ({ name: 'Summer', farm: 1 }), SCALE = { kinds: [] }, hz = () => false;
   const G = { fxv: 0, wx: 0, P: [{ id: 0, res: { f: 5000, w: 5000, g: 5000, s: 5000, i: 5000 }, techs: new Set(), age: 0, spent: 0 }], blds: [{ owner: 0, kind: 'keep', prog: 1, hp: 1, q: [] }, { owner: 0, kind: 'lumber', prog: 1, hp: 1, q: [] }] };
   const p = G.P[0], why = (w) => (!w ? '' : w === 'Already known.' ? 'known' : w.startsWith('Needs the ') ? 'age' : w === 'Being researched.' ? 'busy' : w.startsWith('Needs a ') ? 'at' : w === 'That line is full.' ? 'full' : w.startsWith('Not enough') ? 'cost' : 'need');
   const Y = { f: 'food', w: 'wood', g: 'gold', s: 'stone', i: 'iron' }, named = (c) => Object.fromEntries(Object.entries(c).map(([k, n]) => [Y[k], n])), base = gatherMul(0, { kind: 'tree' });
-  var OUT = { out: [] }; let last = null;
+  var OUT = { out: [], first: [AGES[1].name, AGES[1].t], names: { tally: TECHBY.tally.name, age: AGES[1].name } }; let last = null;
   for (const [o, k] of RUN.orders) { const before = { ...p.res };
-    if (o === 'age') { const c = nextAge(0).cost, ok = ageUp(0), j = G.blds[0].q[0]; last = j; OUT.out.push([o, k, ok, '', named(c), j.total]); }
-    else if (o === 'tech') { const w = why(researchWhy(0, k)), ok = research(0, k), q = G.blds[1].q, j = ok ? q[q.length - 1] : null; if (ok) last = j; OUT.out.push([o, k, ok, w, named(Object.fromEntries(Object.keys(before).map((y) => [y, before[y] - p.res[y]]).filter(([, n]) => n))), ok && q.length === 1 ? j.total : null]); }
-    else { const b = G.blds.find((x) => x.q[0] === last); b.q.shift(); if (last.age) { p.age = last.age; p.aging = false; } else p.techs.add(last.tech); G.fxv++; const m = gatherMul(0, { kind: 'tree' }) / base; OUT.out.push([o, last.age ? 'age' : 'tech', p.age, Math.round(last.total / 0.1), m, m]); } }
+    if (o === 'age') { const c = nextAge(0).cost, ok = ageUp(0), j = G.blds[0].q[G.blds[0].q.length - 1]; last = j; OUT.out.push([o, k, ok, '', named(c), j.total]); }
+    else if (o === 'tech') { const w = why(researchWhy(0, k)), ok = research(0, k), b = G.blds.find((x) => x.q.some((j) => j.tech === k)), j = ok ? b.q[b.q.length - 1] : null; if (ok) last = j; OUT.out.push([o, k, ok, w, named(Object.fromEntries(Object.keys(before).map((y) => [y, before[y] - p.res[y]]).filter(([, n]) => n))), ok && b.q.length === 1 ? j.total : null]); }
+    else if (o === 'done') { const b = G.blds.find((x) => x.q[0] === last); b.q.shift(); if (last.age) { p.age = last.age; p.aging = false; } else p.techs.add(last.tech); G.fxv++; const m = gatherMul(0, { kind: 'tree' }) / base;
+      OUT.out.push([o, last.age ? 'age' : 'tech', p.age, Math.round(last.total / 0.1), m, m, RUN.carry + 0.5 < carryOf(0), carryOf(0), roomOf(0, 'house') - BLD.house.room, upTier('lumber', p)]); } }
+  p.age = 4; OUT.gun = [nextAge(0)]; OUT.z1food = AGES[1].cost.f;
   OUT.line = lineOf(TECHBY.hafting).map((t) => t.id); OUT.next = nextStep(0, TECHBY.hafting).id; OUT.needs = needsOf(TECHBY.ironaxe); OUT.queued = G.blds[1].q.length;`].join(';\n'), ctx);
 console.log(JSON.stringify(ctx.OUT));"""
-async def research(b):   # same orders, same prices, times, refusals, line and rate as Mid's frozen code, with its shares added
+async def research(b):   # same orders, same prices, times, refusals, line, rate, load, room and footing as Mid's frozen code, with its shares added; the screen and the art follow
     pg = await b.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e))); await pg.goto(URL); await pg.wait_for_timeout(800)
-    v = await pg.evaluate(RES.replace('ORDERS', json.dumps(ORDERS)).replace('TREE', json.dumps(TREE))); await pg.close()
-    r = subprocess.run(['node', '-e', MIDRES] + [os.path.join(HERE, '../mid/src', f) for f in ('01-rules-basics.js', '02-rules-units.js', '03-rules-buildings.js', '04-rules-tech.js', '08-core.js', '11-orders.js')] + [json.dumps({'orders': ORDERS})], capture_output=True, text=True)
-    mid = json.loads(r.stdout or 'null')
+    v = await pg.evaluate(RES.replace('ORDERS', json.dumps(ORDERS)).replace('TREE', json.dumps(TREE)).replace('HOME', json.dumps(HOME))); await pg.close()
+    mids = [os.path.join(HERE, '../mid/src', f) for f in ('01-rules-basics.js', '02-rules-units.js', '03-rules-buildings.js', '04-rules-tech.js', '08-core.js', '11-orders.js', '39-games.js', '19-building-art.js')]
+    r = subprocess.run(['node', '-e', MIDRES] + mids + [json.dumps({'orders': [o for o in ORDERS if o[0] in ('age', 'tech', 'done')], 'carry': MEASURE['carry']})], capture_output=True, text=True)
+    mid = json.loads(r.stdout or 'null') or {}
     steps = lambda o: [x[:3] + x[4:] if x[0] == 'done' else x for x in o]   # a wait is held to Mid's time within a tick, below
-    waits = [abs(a[3] - m[3]) <= 1 for a, m in zip(v['out'], (mid or {}).get('out', [])) if a[0] == 'done']
-    got = [bool(mid) and close(steps(v['out']), steps(mid['out'])) and all(waits) and len(waits) == 3, bool(mid) and all(v[k] == mid[k] for k in ('line', 'next', 'needs', 'queued')),
-           [x[3] for x in v['out'] if x[0] == 'tech'] == ['need', '', 'busy', 'age', '', 'need', 'known'], close(v['out'][-3][4], 1.25) and not errs]
-    ok('t-research', all(got), [got, v['out'], (mid or {}).get('out'), errs[:2], r.stderr[-400:]])
+    waits = [abs(a[3] - m[3]) <= 1 for a, m in zip(v['out'], mid.get('out', [])) if a[0] == 'done']
+    x, nm, first = v['x'], mid.get('names', {}), mid.get('first', ['', 0])
+    got = [bool(mid) and len(v['out']) == len(mid['out']) and close(steps(v['out']), steps(mid['out'])) and all(waits) and len(waits) == 6,
+           bool(mid) and all(v[k] == mid[k] for k in ('line', 'next', 'needs', 'queued')),
+           [y[3] for y in v['out'] if y[0] == 'tech'] == ['', '', 'need', '', 'busy', 'age', '', '', 'need', 'known'] and close(v['out'][7][5], 18 * 0.95) and v['out'][-3][7] == MEASURE['carry'] + 3 and v['out'][-3][8] == 1,
+           [[c for c in q if c] for q in x['hall']] == [[nm.get('tally')], [nm.get('age'), SHELLS['UV']['name']]] and x['train'] and x['aged'][1] == first[1] and len(x['held']) > 300 and all(x['held']),
+           f"{first[0]} age" in x['start'][0] and f"{first[1]}s to rise" in x['start'][1] and 'Classical age' in x['bronze'][0],
+           x['gun'][:3] == ['Last age', mid.get('gun', [0])[0], 1] and x['gun'][3] and x['gun'][4], close(x['z1'], (mid.get('z1food', 0) + MEASURE['villagers'] * MEASURE['villager']) * (1 + MEASURE['margin'])), not errs]
+    ok('t-research', all(got), [got, v['out'], mid.get('out'), x, errs[:2], r.stderr[-400:]])
 REC = """const vm = require('vm'), ctx = { window: {}, navigator: {}, document: {}, performance: { now: () => 0 }, Math }; vm.createContext(ctx);
 vm.runInContext(require('fs').readFileSync(process.argv[1], 'utf8') + `;var REC = []; tone = (f, dur, type, vol, f2, at) => REC.push(['tone', f, dur, type, vol, f2 || 0, at || 0, panV]);
 hiss = (dur, vol, fq, q, f2, at) => REC.push(['hiss', dur, vol, fq, q || 1, f2 || 0, at || 0]); knock = (mat, f, vol, at = 0, snap = 1) => REC.push(['knock', mat, f, vol, at, snap]);

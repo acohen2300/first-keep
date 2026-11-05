@@ -159,7 +159,6 @@ def parses(key, name, js):
 for f in CODE: parses('parse', f, script(f))
 parses('joined', 'the whole game, joined', '\n'.join(text(p) for p in sorted(glob.glob('books/*.js'))) + '\n' + '\n'.join(script(f) for f in CODE))
 # ── 3. The seal
-rule('permit', len(OPEN) <= 10, f'the permit opens {len(OPEN)} items: ten at most')
 report = []
 for k in changed:
     was, now = SEALED.get(k), STAMP.get(k); what = 'added' if not was else 'removed' if not now else f'{was["bytes"]:,} → {now["bytes"]:,} bytes'

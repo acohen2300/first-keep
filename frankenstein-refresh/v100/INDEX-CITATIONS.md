@@ -68,7 +68,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QBL** The way → N74 · used by SC1
 - **QBM** Walking → N71, N72, N73, N79 · used by SC1
 - **QBN** Gathering → N70 · used by SC2, SC3, SC12, SC16, SC17
-- **QBJ** Z1's store → N69 · used by D61
+- **QBJ** Z1's store → N69 · used by D129, X50
 - **QBO** The blow → N69 · used by SC6, D140, D141, D194
 - **QBP** Upkeep → design · used by D131
 - **QBQ** The break → N76 · used by D142
@@ -150,7 +150,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N66** (to open) Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the gro → QBD, QBK
 - **N67** (to open) Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology,  → QBG
 - **N68** (to open) Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory → QBI
-- **N69** (to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house → QBJ, QBO, D61, D123, D124, D125, D127, D128, D136, D138, D139, D143, D194
+- **N69** (to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house → QBJ, QBO, D123, D124, D125, D127, D128, D136, D138, D139, D143, D194
 - **N70** First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6,  → QBN, D88
 - **N71** (to open) Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) → QBM, D86
 - **N72** (to open) Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) → QBM, D86
@@ -232,7 +232,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N148** Design: Apple's ambient audio session for games, carried from Mid (35-sound.js) → HX8
 - **N149** Design: Albert, Nov 5 09:47 (three volumes) → HX10
 - **N150** Art: preview 49 (18-figures.js), the last build before the camera turn → P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19
-- **N151** Art: preview 49 (19-building-art.js) → PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9, PB10, PB11
+- **N151** Art: preview 49 (19-building-art.js) → PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9, PB10, PB11, PB12, PB13
 - **N152** Art: preview 49 → PN1
 - **N153** Design: Albert, Nov 5 12:21: comments in their own book, by letter code; five pages: 1 Index, 2 Citations, 3 I → X45
 - **N154** Design: Albert, Nov 5 11:40: research stacks and its percents add, applied once to the base (3.0 with +10% and → QCA, X47
@@ -241,8 +241,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N157** Design: Mid's battle odds (08-core.js unitPower, powerOf, lanchester; 17-ai.js powerFrom, estPower, matchup; 3 → D177, D192, D193, D194, X48
 - **N158** Design: Mid's one hostility test (08-core.js atWar, gangOf, gangRel, isFoe, friendly; decision 8, C1, answer 1 → X49, I1, I2, I3, I4
 - **N159** (to open) Vienna Convention on the Law of Treaties (1969), art. 34: a treaty creates neither obligations nor rights for  → I1
-- **N160** Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning line → SC15, D129, D130, X50, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, J7
+- **N160** Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning line → SC15, D129, D130, X50, PB3, PB4, PB6, PB12, PB13, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, J7
 - **N161** (to open) Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written → O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, J7
+- **N162** Design: Albert, Nov 5 13:30: one build carries a whole module (or a few small ones), never split; the cap of t → X17
 
 ## Named exceptions
 
