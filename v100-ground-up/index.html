@@ -3,21 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>First Keep v100</title>
+<title>First Keep</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600&family=IM+Fell+English+SC&display=swap">
 <style>
-:root { --ui: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif; --display: "IM Fell English SC", Georgia, serif; --slot: 44px; --gap: 6px; }
+:root { --ui: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif; --display: "IM Fell English SC", Georgia, serif; } /* the slot and the gap come from the Screen book (SN1), set by menu.js */
 html, body { margin: 0; height: 100%; background: #214a63; overflow: hidden; -webkit-user-select: none; user-select: none; font-family: var(--ui); font-weight: 600; font-size: 14px; color: #ece5d3; }
 canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: none; }
-#top { position: fixed; left: var(--gap); right: var(--gap); top: calc(env(safe-area-inset-top, 0px) + var(--gap)); display: flex; align-items: center; gap: 10px; font-size: 12px; height: var(--slot); padding: 0 12px; box-sizing: border-box; background: #2a1d13; border: 1px solid #785c3a; border-radius: 6px; }
-#top b { font-family: var(--display); font-weight: 400; font-size: 18px; color: #e6b947; }
-#top span { opacity: .75; }
-#store { margin-left: auto; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 12px; }
+#top { display: none; } /* the floors' own readout, kept for the tests; the glass (menu.js) is what is seen */
 </style>
 </head>
 <body>
 <canvas id="map"></canvas>
-<div id="top"><b>First Keep</b><span style="white-space:nowrap">v100 · 9</span><span id="clock" style="white-space:nowrap"></span><span id="store"></span><span id="seed"></span></div>
+<div id="top"><b>First Keep</b><span id="ver"></span><span id="clock" style="white-space:nowrap"></span><span id="store"></span><span id="seed"></span></div>
 <script>'use strict'; const BOOKS = {}; function BOOK(name, entries) { BOOKS[name] = entries; }</script>
 <script src="books/measure.js"></script>
 <script src="books/angles.js"></script>
@@ -27,6 +24,7 @@ canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: non
 <script src="books/shells.js"></script>
 <script src="books/sprites.js"></script>
 <script src="books/sound.js"></script>
+<script src="books/screen.js"></script>
 <script>
 'use strict';
 // First Keep v100 · the world reads its numbers from the Books (books/*.js), never from here: one home each.

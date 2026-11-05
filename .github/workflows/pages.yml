@@ -1,0 +1,38 @@
+# The lock on GitHub's side: every push runs v100's gate; the site is deployed only when it passes. A failed gate deploys nothing,
+# so the last good site keeps serving (live, preview, v70 and v100 alike). Needs Settings › Pages › Source: GitHub Actions.
+name: gate and pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: v100's gate (books, molds, seals, parse, swallowed code, the pages written by hand)
+        run: python3 v100-ground-up/index.py --ci
+  deploy:
+    needs: gate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -7,12 +7,18 @@ Everything has one home, and the homes are Books (`books/*.js`), split by subjec
 Everything you can tap is a shell: a row in the Shells book that names its layer, ticks its capabilities, and points each slot at another book (`"amount": "D53"`, `"body": "person"`, `"look": "vil"`). Laws (CALCULATIONS.md) run on whatever has the slots they need, and the code asks `has(thing, 'Fight')`, never a shell's code. Change a book entry and everything that reads it follows. A floor is built, checked, then locked: its books, its shells and its laws together.
 
 ## The pages
-- `books/`: the Books. measure (D), angles (A), colours (C), ground (G), mass (W), shells (S), capabilities (SC), sprites (P), sound (H), citations (N). Each entry: code, name, value, citation, law.
+- `books/`: the Books. measure (D), angles (A), colours (C), ground (G), mass (W), shells (S), capabilities (SC, with the molds), screen (SN: the menus as shells), sprites (P), sound (H), citations (N). Each entry: code, name, value, citation, law.
 - `CALCULATIONS.md`: Book 1, the Laws (Q), each with its citations.
 - `index.py`: writes `INDEX.md` (by book, by law, by citation) and `BOOKS.md` (every book as a page), and stops on a second home, a missing citation or law, a slot pointing nowhere, a tick nothing answers, a number typed into D, or a shell named in the code. Run it after any edit.
 - `DICTIONARY.md`: the words: layers, zones, logic, the shell mold, what is held for later.
 - `EXTRACT.md`: what was pulled from the old game and SoRen, for reference only.
 - `index.html`: the world (floors 1 to 7) and the body's laws, one door `FK`; `menu.js`, `econ.js`, `combat.js`, `ai.js`, `sound.js`: one module a file, each touching the world only through `FK`.
+
+## How a build runs (Nov 5)
+1. **The permit** (`permit.json`): the agreed list opens at most ten items (a book entry, a shell row, a law, a code section, a tool). Everything else is sealed (`seal.json`).
+2. **The gate** (`python3 index.py`): every book entry cited, every law real, every shell meets its mold (books/capabilities.js), every Build tab within the mold, no shell named in opened code, no new typed number or colour in opened code, every file parses alone and joined, no comment that swallows code, the version said once. It prints what changed and where, and that everything else matched its seal byte for byte. Anything changed without a permit stops it.
+3. **The tests** (`python3 test.py`): one a fix, driven as a player drives the page; about seven seconds.
+4. **Publish** (`python3 publish.py "what it is"`): runs 2 and 3, logs the build in BUILDS.md, seals the new state, clears the permit, commits as Albert's no-reply address and pushes. On GitHub the same gate runs before the site deploys (`.github/workflows/pages.yml`); a failed gate deploys nothing.
 
 ## The floors, in build order
 0 Dictionary and the Books · 1 Ground (layers 10 to 80) · 2 Terrain (90) · 3 Non-movables (100) · 4 Buildings (110) · 5 Movables (120) · 6 Climate (130) · 7 Display (140) · 8 Menu (150) · 9 Economy · 10 Combat · 11 The computer · Sound beside the stack
@@ -34,4 +40,5 @@ Open `index.html` in a phone browser, or the preview link. Drag to pan, pinch or
 - [x] 10 Combat (`combat.js`): health, one blow (QBO: base × counter × flank − armour), the target by harm a second over health left (QAG), nerve (QBQ: a wave below 0.3 of its start goes home, N76), towers and the hall shoot (QAL), march and rout, health bars, the crosshair. Set on this floor for Albert to confirm: D138 to D148.
 - [x] 11 The computer (`ai.js`): one brain, balanced: villagers by need, homes ahead of room, camps by the finds, farms when the bushes are gone, the barracks, the age when it can pay, the army as the best counter, a wave at Lanchester odds (QAF), home when it stalls. Normal only. Set on this floor for Albert to confirm: D149 to D161.
 - [x] 0 The Books (Nov 5): every number, angle, colour, look and sound out of the code into `books/`; shells as rows with ticks; the policing index. Camera rise 41° (A2); opens on the Town Center at a fifth of the screen (D165); walk at quick time, 1.52 m/s (D86); sound as recipes with one player (`sound.js`: distance, pan, snow muffle, rain mask, birds and crickets); impact by momentum and friction (QBT), the wounded sway (QBS), the stride by metres walked (QBU).
+- [x] 0b The Screen book and the gate (Nov 5): menus as shells (six-slot rows; the subject's ticks pick a card's rows; Tall pages), six Build tabs of up to nine, the second top row cut, a solid panel; the permit, the seals, the molds, the tests, publish, and the gate on GitHub.
 - [ ] 12 The look pass, then the lock of floors 1 and 2

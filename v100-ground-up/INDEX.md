@@ -1,21 +1,22 @@
 # First Keep v100 · the Index
 
-Written by `index.py` from the Books and the Laws, never by hand. If a code ever goes missing or doubles, the run stops and says where.
+Written by `index.py` from the Books and the Laws, never by hand.
 
 ## The Books
 
-| Book | Entries | Codes |
-|---|---|---|
-| angles | 3 | A1, A2, A3… |
-| capabilities | 19 | SC1, SC2, SC3… |
-| citations | 88 | N1, N2, N3… |
-| colours | 9 | C1, C2, C3… |
-| ground | 4 | G5, G6, G7… |
-| mass | 16 | W1, W2, W3… |
-| measure | 165 | D1, D2, D3… |
-| shells | 74 | R1, R5, R2… |
-| sound | 37 | HM1, HM2, HM3… |
-| sprites | 31 | P1, P2, P3… |
+| Book | Entries |
+|---|---|
+| angles | 3 |
+| capabilities | 25 |
+| citations | 88 |
+| colours | 9 |
+| ground | 4 |
+| mass | 16 |
+| measure | 166 |
+| screen | 10 |
+| shells | 74 |
+| sound | 37 |
+| sprites | 31 |
 
 ## By law (Book 1, CALCULATIONS.md)
 
@@ -184,4 +185,37 @@ Written by `index.py` from the Books and the Laws, never by hand. If a code ever
 - **N87** (from memory, to open) Densities: timber about 600 kg/m³, stone about 2,400, iron 7,870 (standard tables, from memory, to open) → W12, W15, W16
 - **N88** (from memory, to open) Fresh snow is porous and absorbs sound, high frequencies most: a snowy landscape sounds muffled (acoustics of snow, from → QBX, HX5
 
-446 entries in 10 books · 73 laws · 88 citations, 17 still to open.
+## Exceptions, named
+
+- Tall (their own height): Start, Hall
+- Off the Build menu: BS1, BTC5, BTC6, BTC7, BTC8
+
+463 entries in 11 books · 73 laws · 88 citations, 17 still to open · 568 items sealed.
+
+## Waiting
+
+- season and time of day: a reading waiting for its new home (the second top row was cut, Nov 5)
+- the clock to the bell: a reading waiting for its new home (the second top row was cut, Nov 5)
+- people and room: a reading waiting for its new home (the second top row was cut, Nov 5)
+- idle villagers: a reading waiting for its new home (the second top row was cut, Nov 5)
+- records: a reading waiting for its new home (the second top row was cut, Nov 5)
+- rank: a reading waiting for its new home (the second top row was cut, Nov 5)
+- army: a reading waiting for its new home (the second top row was cut, Nov 5)
+- code:ai.js: names 'UV' (locked; clean it when a permit opens it)
+- code:ai.js: names 'BM1' (locked; clean it when a permit opens it)
+- code:ai.js: names 'BM1' (locked; clean it when a permit opens it)
+- code:ai.js: names 'BM2' (locked; clean it when a permit opens it)
+- code:ai.js: names 'BM2' (locked; clean it when a permit opens it)
+- code:ai.js: names 'BM3' (locked; clean it when a permit opens it)
+- code:ai.js: names 'BM3' (locked; clean it when a permit opens it)
+- code:ai.js: names 'UM1' (locked; clean it when a permit opens it)
+- code:ai.js: names 'UM2' (locked; clean it when a permit opens it)
+- code:ai.js: names 'UM3' (locked; clean it when a permit opens it)
+- code:ai.js: names 'UM1' (locked; clean it when a permit opens it)
+- code:ai.js: names 'UM1' (locked; clean it when a permit opens it)
+- code:ai.js: names 'UM2' (locked; clean it when a permit opens it)
+- code:ai.js: names 'UM3' (locked; clean it when a permit opens it)
+- code:index.html#b-the-buildings: names B.BTC1 (locked; clean it when a permit opens it)
+- code:index.html#b-the-buildings: names 'BTC1' (locked; clean it when a permit opens it)
+- code:index.html#floor-5-movables: names 'MW3' (locked; clean it when a permit opens it)
+- code:index.html#floor-5-movables: names 'MW4' (locked; clean it when a permit opens it)

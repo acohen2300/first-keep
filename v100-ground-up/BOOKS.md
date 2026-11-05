@@ -14,25 +14,31 @@ Written by `index.py` from `books/*.js`, never by hand. Each book is the one hom
 
 | Code | Name | Value | Cited |
 |---|---|---|---|
-| SC1 | walks the tiles at its pace | {by: index.html floor 5: step, findPath, law: [QBL, QBM, QBU]} | Design: v100 floor 5, Nov 4 |
-| SC2 | works a find and fills a load; also counts it among the people | {by: econ.js, law: [QBN, QW]} | Design: v100 floor 9, Nov 5 |
-| SC3 | takes a load to the nearest drop-off of its side | {by: econ.js, law: [QBN]} | Design: v100 floor 9, Nov 5 |
-| SC4 | raises a site | {by: econ.js, law: [QAC]} | Design: v100 floor 9, Nov 5 |
-| SC5 | mends a hurt building | {by: econ.js, law: [QAC]} | Design: v100 floor 9, Nov 5 |
-| SC6 | strikes; without Gather it is a soldier; a wild one with it bites | {by: combat.js, law: [QBO, QAG, QBT]} | Design: v100 floor 10, Nov 5 |
-| SC7 | looses at range (a building that shoots reads D143) | {by: combat.js, law: [QAL]} | Design: v100 floor 10, Nov 5 |
-| SC8 | has health, and sways when badly hurt | {by: combat.js, index.html, law: [QBS]} | Design, Nov 5 |
-| SC9 | wanders when idle (a Poisson wait) | {by: index.html step, law: [QM]} | Design: v100 floor 5, Nov 4 |
-| SC10 | can be hunted | {by: menu.js (hunting not built yet), law: []} | Design: v100 floor 5, Nov 4 |
-| SC11 | a side's seat: the game opens on it, and a side falls with its last | {by: econ.js, ai.js, menu.js, law: [QBW]} | Design: v100 floor 9, Nov 5 |
-| SC12 | takes in the yields its row lists | {by: index.html dropFor, ai.js, law: [QBN]} | Design: v100 floor 4, Nov 4 |
-| SC13 | trains the units D133 gives it | {by: econ.js, law: []} | Design: v100 floor 9, Nov 5 |
-| SC14 | houses the people D127 gives it | {by: econ.js, ai.js, law: []} | Design: v100 floor 9, Nov 5 |
-| SC15 | where the ages are reached | {by: menu.js, econ.js, law: []} | Design: v100 floor 9, Nov 5 |
-| SC16 | a building that yields, at the rate its row points to | {by: econ.js, ai.js, law: [QBN]} | Design: v100 floor 9, Nov 5 |
-| SC17 | a find: holds an amount of a yield | {by: econ.js, law: [QBN]} | Design: v100 floor 3, Nov 4 |
-| SC18 | scouts (not built yet) | {by: waiting, law: []} | Design: dictionary SC |
-| SC19 | trades (not built yet) | {by: waiting, law: []} | Design: dictionary SC |
+| SC0 | what every shell has: a name, its ticks, its citation | {by: every book of shells, law: [], needs: [name, ticks, cite], may: [layer]} | Design: Albert, Nov 5 (the mold) |
+| SC01 | the mold of a find (layer 100) | {by: shells (finds), law: [], needs: [find, look], may: [room, sound]} | Design: Albert, Nov 5 (the mold) |
+| SC02 | the mold of a building (layer 110) | {by: shells (buildings), law: [], needs: [size, style, look, material], may: []} | Design: Albert, Nov 5 (the mold) |
+| SC03 | the mold of a walker (layer 120) | {by: shells (units, moveables), law: [], needs: [look, pace, body], may: []} | Design: Albert, Nov 5 (the mold) |
+| SC04 | the mold of a page (the Screen book) | {by: books/screen.js, law: [], needs: [], may: [rows]} | Design: Albert, Nov 5 (menus are shells) |
+| SC1 | walks the tiles at its pace | {by: index.html floor 5: step, findPath, law: [QBL, QBM, QBU], needs: [pace, body], may: [mount, kit, voice]} | Design: v100 floor 5, Nov 4 |
+| SC2 | works a find and fills a load; also counts it among the people | {by: econ.js, law: [QBN, QW], needs: [body], may: []} | Design: v100 floor 9, Nov 5 |
+| SC3 | takes a load to the nearest drop-off of its side | {by: econ.js, law: [QBN], needs: [body], may: []} | Design: v100 floor 9, Nov 5 |
+| SC4 | raises a site | {by: econ.js, law: [QAC], needs: [body], may: []} | Design: v100 floor 9, Nov 5 |
+| SC5 | mends a hurt building | {by: econ.js, law: [QAC], needs: [body], may: []} | Design: v100 floor 9, Nov 5 |
+| SC6 | strikes; without Gather it is a soldier; a wild one with it bites | {by: combat.js, law: [QBO, QAG, QBT], needs: [D138], may: []} | Design: v100 floor 10, Nov 5 |
+| SC7 | looses at range (a building that shoots reads D143) | {by: combat.js, law: [QAL], needs: [D143/D138], may: []} | Design: v100 floor 10, Nov 5 |
+| SC8 | has health, and sways when badly hurt | {by: combat.js, index.html, law: [QBS], needs: [D138/D139], may: []} | Design, Nov 5 |
+| SC9 | wanders when idle (a Poisson wait) | {by: index.html step, law: [QM], needs: [pace], may: []} | Design: v100 floor 5, Nov 4 |
+| SC10 | can be hunted | {by: menu.js (hunting not built yet), law: [], needs: [], may: []} | Design: v100 floor 5, Nov 4 |
+| SC11 | a side's seat: the game opens on it, and a side falls with its last | {by: econ.js, ai.js, menu.js, law: [QBW], needs: [], may: []} | Design: v100 floor 9, Nov 5 |
+| SC12 | takes in the yields its row lists | {by: index.html dropFor, ai.js, law: [QBN], needs: [drop], may: []} | Design: v100 floor 4, Nov 4 |
+| SC13 | trains the units D133 gives it | {by: econ.js, law: [], needs: [D133], may: []} | Design: v100 floor 9, Nov 5 |
+| SC14 | houses the people D127 gives it | {by: econ.js, ai.js, law: [], needs: [D127], may: []} | Design: v100 floor 9, Nov 5 |
+| SC15 | where the ages are reached | {by: menu.js, econ.js, law: [], needs: [], may: []} | Design: v100 floor 9, Nov 5 |
+| SC16 | a building that yields, at the rate its row points to | {by: econ.js, ai.js, law: [QBN], needs: [yield, rate], may: []} | Design: v100 floor 9, Nov 5 |
+| SC17 | a find: holds an amount of a yield | {by: econ.js, law: [QBN], needs: [yield, amount], may: []} | Design: v100 floor 3, Nov 4 |
+| SC18 | scouts (not built yet) | {by: waiting, law: [], needs: [], may: []} | Design: dictionary SC |
+| SC19 | trades (not built yet) | {by: waiting, law: [], needs: [], may: []} | Design: dictionary SC |
+| SC20 | a page that keeps its own height (the Town Center, the Start page); every other page shares the tallest of the rest | {by: menu.js, law: [], needs: [], may: []} | Design: Albert, Nov 5 07:35 |
 
 ## citations
 
@@ -340,6 +346,22 @@ Written by `index.py` from `books/*.js`, never by hand. Each book is the one hom
 | D168 | gravity, m/s² | 9.81 | Standard gravity (standard) |
 | D169 | the ground a find keeps clear round it, in units | {gold: 9, stone: 9, iron: 9, ruins: 14, cemetery: 12, campfire: 6, treasure: 4} | Design: v100 floors, Nov 4 (Albert to confirm) |
 | D170 | a wall piece: one tile | 1 | Design: v100 floors, Nov 4 (Albert to confirm) |
+| D171 | the build: First Keep v100, the build number | 100 · 10 | Design: the build log (README) |
+
+## screen
+
+| Code | Name | Value | Cited |
+|---|---|---|---|
+| SN1 | the mold: six slots a row, a slot 44 tall (Apple's least touch target), gaps and edges 6 | {slots: 6, slot: 44, gap: 6} | Design: Albert, the Rank Ribbon (Oct 30) and the Formation |
+| SN2 | the Build tabs: six, up to nine buildings each, three to a row (each cell two slots wide) | {Home: [BTC1, BR1, BR2, BCR2, BP4, BP6, BP7], Land: [BCL1, BI1, BCL2, BI3, BCT2, BI2, BCL3, BCL4, BI5], Trade: [BCR1, BCT1, BI6, BI4, BI7, B | Design: Albert, Nov 5 07:13–07:15 (his Land list; six tabs of up to nine) |
+| SN3 | buildings not on the Build menu: the Throne is the map's; the camp tents come with the camp wagon | [BS1, BTC5, BTC6, BTC7, BTC8] | Design: Albert, Nov 5 07:30 |
+| SN4 | a card's rows, in order: a row shows when the subject ticks what it names (none: always) | [[title, null], [health, Health], [load, Gather], [store, Yield], [queue, Spawn], [train, Spawn], [tech, Research], [acts, null]] | Design: Albert, Nov 5 07:30 (the Inspector precedent) |
+| SN5 | the top ribbon: the five stores, sound, play, mail | [food, wood, stone, gold, iron, mute, play, mail] | Design: Albert's Build 30 top bar |
+| SN6 | readings with no row: the second top row was cut, each waits for its new home | [season and time of day, the clock to the bell, people and room, idle villagers, records, rank, army] | Design: Albert, Nov 5 07:36 |
+| SN10 | the Start page | {ticks: [Tall], rows: the new game's choices} | Design: Albert, Nov 4 (the setup screen its own height) |
+| SN11 | the Build page | {ticks: [], rows: title, the six tabs, the tab's grid} | Design: Albert, Nov 5 |
+| SN12 | the Town Center page | {ticks: [Tall], rows: title, three tabs, the queue, train, tech} | Design: Albert, Nov 5 07:34 |
+| SN13 | the Yard | {ticks: [], rows: title, the layers, Fast and New} | Design: v100 floor 8, Nov 5 |
 
 ## shells
 
@@ -354,17 +376,17 @@ Written by `index.py` from `books/*.js`, never by hand. Each book is the one hom
 | MG2 | Cemetery | layer 100 · no ticks | |
 | MG3 | Campfire | layer 100 · Yield | |
 | MG4 | Treasure | layer 100 · Yield | |
-| BTC1 | Town Center | layer 110 · Seat, Drop-off, Spawn, Shoot, House, Research | |
+| BTC1 | Town Center | layer 110 · Seat, Drop-off, Spawn, Shoot, House, Research, Health | |
 | BTC2 | Castle | layer 110 · no ticks | |
 | BTC5 | Medical tent | layer 110 · no ticks | |
 | BTC6 | Training tent | layer 110 · no ticks | |
 | BTC7 | Mess tent | layer 110 · no ticks | |
 | BTC8 | Camp tower | layer 110 · Shoot | |
-| BR1 | Home | layer 110 · House | |
-| BR2 | Apartment | layer 110 · House | |
+| BR1 | Home | layer 110 · House, Health | |
+| BR2 | Apartment | layer 110 · no ticks | |
 | BCR1 | Market | layer 110 · no ticks | |
 | BCR2 | Tavern | layer 110 · no ticks | |
-| BCL1 | Farm | layer 110 · Field | |
+| BCL1 | Farm | layer 110 · Field, Health | |
 | BCL2 | Tree farm | layer 110 · no ticks | |
 | BCL3 | Pasture | layer 110 · no ticks | |
 | BCL4 | Quarry | layer 110 · no ticks | |
@@ -380,23 +402,23 @@ Written by `index.py` from `books/*.js`, never by hand. Each book is the one hom
 | BP8 | Courthouse | layer 110 · no ticks | |
 | BP9 | Hall | layer 110 · no ticks | |
 | BP10 | War Council | layer 110 · no ticks | |
-| BI1 | Mill | layer 110 · Drop-off | |
-| BI2 | Lumber camp | layer 110 · Drop-off | |
-| BI3 | Mining camp | layer 110 · Drop-off | |
+| BI1 | Mill | layer 110 · Drop-off, Health | |
+| BI2 | Lumber camp | layer 110 · Drop-off, Health | |
+| BI3 | Mining camp | layer 110 · Drop-off, Health | |
 | BI4 | Store | layer 110 · no ticks | |
 | BI5 | Depot | layer 110 · no ticks | |
 | BI6 | Mint | layer 110 · no ticks | |
 | BI7 | Foundry | layer 110 · no ticks | |
 | BI8 | Workshop | layer 110 · no ticks | |
 | BI9 | Smith | layer 110 · no ticks | |
-| BM1 | Barracks | layer 110 · Spawn | |
-| BM2 | Range | layer 110 · Spawn | |
-| BM3 | Stable | layer 110 · Spawn | |
-| BM4 | Siege workshop | layer 110 · Spawn | |
-| BW1 | Wall | layer 110 · no ticks | |
-| BW2 | Gate | layer 110 · no ticks | |
-| BW3 | Tower | layer 110 · Shoot | |
-| BW4 | Palisade | layer 110 · no ticks | |
+| BM1 | Barracks | layer 110 · Spawn, Health | |
+| BM2 | Range | layer 110 · Spawn, Health | |
+| BM3 | Stable | layer 110 · Spawn, Health | |
+| BM4 | Siege workshop | layer 110 · Spawn, Health | |
+| BW1 | Wall | layer 110 · Health | |
+| BW2 | Gate | layer 110 · Health | |
+| BW3 | Tower | layer 110 · Shoot, Health | |
+| BW4 | Palisade | layer 110 · Health | |
 | BF5 | Abatis | layer 110 · no ticks | |
 | BS1 | Throne | layer 110 · no ticks | |
 | BS2 | Wonder | layer 110 · no ticks | |
@@ -405,17 +427,17 @@ Written by `index.py` from `books/*.js`, never by hand. Each book is the one hom
 | UM2 | Archers | layer 120 · Walk, Fight, Shoot, Health | |
 | UM3 | Riders | layer 120 · Walk, Fight, Health | |
 | UM4 | Engines | layer 120 · Walk, Fight, Health | |
-| UM4b | Engines | layer 120 · Walk, Fight, Health | |
-| US1 | Priest | layer 120 · Walk, Health | |
-| US2 | Medic | layer 120 · Walk, Health | |
-| US3 | Spy | layer 120 · Walk, Health | |
+| UM4b | Engines | layer 120 · Walk | |
+| US1 | Priest | layer 120 · Walk | |
+| US2 | Medic | layer 120 · Walk | |
+| US3 | Spy | layer 120 · Walk | |
 | US4 | Scout | layer 120 · Walk, Fight, Scout, Health | |
-| UT1 | Caravan | layer 120 · Walk, Carry, Trade, Health | |
-| UT2 | Camp wagon | layer 120 · Walk, Carry, Health | |
-| MH1 | Outlaws | layer 120 · Walk, Health | |
-| MH3 | Robbers | layer 120 · Walk, Health | |
-| MH4 | Vagabonds | layer 120 · Walk, Health | |
-| MH5 | Wayfarers | layer 120 · Walk, Health | |
+| UT1 | Caravan | layer 120 · Walk, Carry, Trade | |
+| UT2 | Camp wagon | layer 120 · Walk, Carry | |
+| MH1 | Outlaws | layer 120 · Walk | |
+| MH3 | Robbers | layer 120 · Walk | |
+| MH4 | Vagabonds | layer 120 · Walk | |
+| MH5 | Wayfarers | layer 120 · Walk | |
 | MW3 | Deer | layer 120 · Walk, Wander, Prey, Health | |
 | MW4 | Wolf | layer 120 · Walk, Wander, Fight, Health | |
 | MW6 | Bear | layer 120 · Walk, Wander, Fight, Health | |

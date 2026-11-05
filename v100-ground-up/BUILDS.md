@@ -1,0 +1,79 @@
+
+## v100 · 10, the Screen book and the gate · 2026-11-05 07:58
+Albert, Nov 5 07:49: yes yes
+Opened: code:menu.js, book:screen, book:capabilities, book:shells, book:measure:D171, code:index.html#page, tool:index.py, tool:publish.py, tool:pages.yml, tool:test.py
+MODIFIED (72):
+- book:capabilities:SC0 · books/capabilities.js · added
+- book:capabilities:SC01 · books/capabilities.js · added
+- book:capabilities:SC02 · books/capabilities.js · added
+- book:capabilities:SC03 · books/capabilities.js · added
+- book:capabilities:SC04 · books/capabilities.js · added
+- book:capabilities:SC1 · books/capabilities.js · changed 210 → 271 bytes
+- book:capabilities:SC10 · books/capabilities.js · changed 155 → 179 bytes
+- book:capabilities:SC11 · books/capabilities.js · changed 211 → 235 bytes
+- book:capabilities:SC12 · books/capabilities.js · changed 183 → 213 bytes
+- book:capabilities:SC13 · books/capabilities.js · changed 149 → 179 bytes
+- book:capabilities:SC14 · books/capabilities.js · changed 157 → 187 bytes
+- book:capabilities:SC15 · books/capabilities.js · changed 157 → 181 bytes
+- book:capabilities:SC16 · books/capabilities.js · changed 189 → 228 bytes
+- book:capabilities:SC17 · books/capabilities.js · changed 163 → 204 bytes
+- book:capabilities:SC18 · books/capabilities.js · changed 135 → 159 bytes
+- book:capabilities:SC19 · books/capabilities.js · changed 135 → 159 bytes
+- book:capabilities:SC2 · books/capabilities.js · changed 204 → 234 bytes
+- book:capabilities:SC20 · books/capabilities.js · added
+- book:capabilities:SC3 · books/capabilities.js · changed 177 → 207 bytes
+- book:capabilities:SC4 · books/capabilities.js · changed 142 → 172 bytes
+- book:capabilities:SC5 · books/capabilities.js · changed 151 → 181 bytes
+- book:capabilities:SC6 · books/capabilities.js · changed 225 → 255 bytes
+- book:capabilities:SC7 · books/capabilities.js · changed 183 → 218 bytes
+- book:capabilities:SC8 · books/capabilities.js · changed 167 → 202 bytes
+- book:capabilities:SC9 · books/capabilities.js · changed 170 → 200 bytes
+- book:measure:D171 · books/measure.js · added
+- book:screen:SN1 · books/screen.js · added
+- book:screen:SN10 · books/screen.js · added
+- book:screen:SN11 · books/screen.js · added
+- book:screen:SN12 · books/screen.js · added
+- book:screen:SN13 · books/screen.js · added
+- book:screen:SN2 · books/screen.js · added
+- book:screen:SN3 · books/screen.js · added
+- book:screen:SN4 · books/screen.js · added
+- book:screen:SN5 · books/screen.js · added
+- book:screen:SN6 · books/screen.js · added
+- book:shells:BCL1 · books/shells.js · changed 220 → 230 bytes
+- book:shells:BI1 · books/shells.js · changed 210 → 220 bytes
+- book:shells:BI2 · books/shells.js · changed 219 → 229 bytes
+- book:shells:BI3 · books/shells.js · changed 236 → 246 bytes
+- book:shells:BM1 · books/shells.js · changed 198 → 208 bytes
+- book:shells:BM2 · books/shells.js · changed 190 → 200 bytes
+- book:shells:BM3 · books/shells.js · changed 194 → 204 bytes
+- book:shells:BM4 · books/shells.js · changed 201 → 211 bytes
+- book:shells:BR1 · books/shells.js · changed 190 → 200 bytes
+- book:shells:BR2 · books/shells.js · changed 199 → 192 bytes
+- book:shells:BTC1 · books/shells.js · changed 297 → 307 bytes
+- book:shells:BW1 · books/shells.js · changed 183 → 191 bytes
+- book:shells:BW2 · books/shells.js · changed 183 → 191 bytes
+- book:shells:BW3 · books/shells.js · changed 190 → 200 bytes
+- book:shells:BW4 · books/shells.js · changed 192 → 200 bytes
+- book:shells:MG2 · books/shells.js · changed 195 → 180 bytes
+- book:shells:MG3 · books/shells.js · changed 236 → 221 bytes
+- book:shells:MG4 · books/shells.js · changed 236 → 221 bytes
+- book:shells:MH1 · books/shells.js · changed 186 → 176 bytes
+- book:shells:MH3 · books/shells.js · changed 186 → 176 bytes
+- book:shells:MH4 · books/shells.js · changed 190 → 180 bytes
+- book:shells:MH5 · books/shells.js · changed 190 → 180 bytes
+- book:shells:R1 · books/shells.js · changed 215 → 201 bytes
+- book:shells:R5 · books/shells.js · changed 213 → 184 bytes
+- book:shells:UM4b · books/shells.js · changed 218 → 199 bytes
+- book:shells:US1 · books/shells.js · changed 185 → 175 bytes
+- book:shells:US2 · books/shells.js · changed 183 → 173 bytes
+- book:shells:US3 · books/shells.js · changed 179 → 169 bytes
+- book:shells:UT1 · books/shells.js · changed 262 → 252 bytes
+- book:shells:UT2 · books/shells.js · changed 254 → 244 bytes
+- code:index.html#page · index.html · changed 1987 → 1620 bytes
+- code:menu.js · menu.js · changed 43775 → 44005 bytes
+- tool:index.py · index.py · changed 6902 → 15151 bytes
+- tool:pages.yml · pages.yml · added
+- tool:publish.py · publish.py · added
+- tool:test.py · test.py · added
+LOCKED (496 of 568): byte for byte as sealed, 255,852 bytes
+Tests: 21/21 passed
