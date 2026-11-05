@@ -1,0 +1,967 @@
+{
+ "about": "Step 6, temp book staging/econ.js (Mid's 11-orders, 12-sim-core, 13-sim-civil, 36-economy): every piece. in v100: already home (a part v100 lacks is noted). bring: Mid has it, v100 does not; it comes with its feature, as book entries and laws, with Mid's values. cut: v100 does it another way. Building health is always v100's D139 wherever Mid read its own.",
+ "pieces": {
+  "scaled": [
+   "bring",
+   "a price after research's effects; with the tech tree (Content pull)"
+  ],
+  "unitCost": [
+   "bring",
+   "a unit's price after research; v100 has the flat prices D123"
+  ],
+  "techCost": [
+   "bring",
+   "research's price after research; with the tech tree"
+  ],
+  "trainWhy": [
+   "in v100",
+   "menu.js VERBS.train.whyNot (built, paid, room); Mid's army-room reasons come with the army cap"
+  ],
+  "train": [
+   "in v100",
+   "econ.js queue (D133 who trains where, D123 price, room D127)"
+  ],
+  "tentCost": [
+   "bring",
+   "a training tent's surcharge; the Camp buildings (BTC6)"
+  ],
+  "tentOrNot": [
+   "bring",
+   "a training tent gives way to a building when it can't be paid; Camp buildings"
+  ],
+  "whyOf": [
+   "cut",
+   "a refund's ledger line; v100's pay has no ledger"
+  ],
+  "refund": [
+   "in v100",
+   "econ.js pay(side, cost, -1)"
+  ],
+  "cancelOrder": [
+   "in v100",
+   "econ.js unqueue (v100 takes the last in line; Mid any one)"
+  ],
+  "unTrain": [
+   "in v100",
+   "econ.js unqueue"
+  ],
+  "musterN": [
+   "bring",
+   "Muster: a whole battalion in one order at the War Council (BP10)"
+  ],
+  "musterCost": [
+   "bring",
+   "Muster: twice the cost, a quarter longer"
+  ],
+  "musterWhy": [
+   "bring",
+   "Muster"
+  ],
+  "muster": [
+   "bring",
+   "Muster"
+  ],
+  "researchWhy": [
+   "bring",
+   "research at a building; the tech tree (Content pull)"
+  ],
+  "research": [
+   "bring",
+   "research; the tech tree"
+  ],
+  "ageUp": [
+   "in v100",
+   "econ.js ageUp (D129)"
+  ],
+  "navHold": [
+   "cut",
+   "v100 updates OCC at each build: no grid rebuild to hold"
+  ],
+  "navOnce": [
+   "cut",
+   "v100 updates OCC at each build"
+  ],
+  "build": [
+   "in v100",
+   "econ.js plan: paid, a site at done 0"
+  ],
+  "autoBuilder": [
+   "bring",
+   "the nearest free villager goes to a new site at once; a wall line gets two who work down it; v100's Build sends one, the computer's raise D.ai.builders"
+  ],
+  "sendBuilder": [
+   "bring",
+   "a builder remembers its old job and goes back after; v100's buildAt leaves it idle"
+  ],
+  "sendBuild": [
+   "in v100",
+   "menu.js VERBS.send and raise: one more to a site"
+  ],
+  "replantWhy": [
+   "bring",
+   "replant a worked-out field or tree farm at half its cost (BCL1, BCL2)"
+  ],
+  "replant": [
+   "bring",
+   "replant"
+  ],
+  "cutOut": [
+   "bring",
+   "replant"
+  ],
+  "replantAll": [
+   "bring",
+   "replant every worked-out plot from a drop-off"
+  ],
+  "shellBack": [
+   "bring",
+   "taking a building down gives half its cost back (all in the first 15%); v100's scrap refunds a site in full, a building nothing"
+  ],
+  "refundOf": [
+   "bring",
+   "with shellBack: the orders inside paid back too"
+  ],
+  "demolish": [
+   "bring",
+   "take a building down with the refund; v100 has scrap (econ.js cancel), never the hall"
+  ],
+  "declareWar": [
+   "bring",
+   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+  ],
+  "makePeace": [
+   "bring",
+   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+  ],
+  "makeAlly": [
+   "bring",
+   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+  ],
+  "noticeLeft": [
+   "bring",
+   "diplomacy (ally, peace, war, envoys; kept for after the core): war's notice"
+  ],
+  "gangKey": [
+   "bring",
+   "diplomacy (ally, peace, war, envoys; kept for after the core): the outlaw groups and the Natives on the Relations rows"
+  ],
+  "relWhy": [
+   "bring",
+   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+  ],
+  "envoyWhy": [
+   "bring",
+   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+  ],
+  "setRel": [
+   "bring",
+   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+  ],
+  "noticeTick": [
+   "bring",
+   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+  ],
+  "sendEnvoy": [
+   "bring",
+   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+  ],
+  "oddsOf": [
+   "bring",
+   "the square law bent by who counters whom, for envoys' answers; v100 has QAF in ai.js round without the counters"
+  ],
+  "judgeEnvoy": [
+   "bring",
+   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+  ],
+  "reply": [
+   "bring",
+   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+  ],
+  "sendHelp": [
+   "bring",
+   "an ally sends half its army to a friend under attack; diplomacy"
+  ],
+  "overlordWhy": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "offerOverlord": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "breakTies": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "demandCost": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "demandWhy": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "demand": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "menAt": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "tributeWhy": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "forceTribute": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "levyOf": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "levyRoom": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "levyWhy": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "levy": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "releaseLevy": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "releaseAll": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "chargeWhy": [
+   "bring",
+   "Charge, a command you steer (War); v100 has Attack and Recall"
+  ],
+  "charge": [
+   "bring",
+   "Charge: faster, then tired (War)"
+  ],
+  "fallBack": [
+   "bring",
+   "Fall back, a command you steer (War)"
+  ],
+  "takePrisoner": [
+   "bring",
+   "prisoners: taken by a foe, ransomed back or they serve the captor"
+  ],
+  "prisonersOf": [
+   "bring",
+   "prisoners"
+  ],
+  "payRansom": [
+   "bring",
+   "prisoners: ransom"
+  ],
+  "teachTo": [
+   "bring",
+   "Teach: an older soldier learns a newer kind at the School (BP1), the unit's Level"
+  ],
+  "teachGap": [
+   "bring",
+   "Teach"
+  ],
+  "teachCost": [
+   "bring",
+   "Teach"
+  ],
+  "teachSecs": [
+   "bring",
+   "Teach"
+  ],
+  "schooling": [
+   "bring",
+   "Teach"
+  ],
+  "teachWhy": [
+   "bring",
+   "Teach"
+  ],
+  "teach": [
+   "bring",
+   "Teach"
+  ],
+  "graduate": [
+   "bring",
+   "Teach"
+  ],
+  "prisonersTick": [
+   "bring",
+   "prisoners"
+  ],
+  "LOT": [
+   "bring",
+   "the Market (BCR1) and its prices (QAE): sold by the 100 or the 10"
+  ],
+  "worth": [
+   "bring",
+   "the Market (BCR1) and its prices (QAE)"
+  ],
+  "coinOf": [
+   "bring",
+   "the Market (BCR1) and its prices (QAE): debased coin (the Mint)"
+  ],
+  "sellPrice": [
+   "bring",
+   "the Market (BCR1) and its prices (QAE)"
+  ],
+  "buyPrice": [
+   "bring",
+   "the Market (BCR1) and its prices (QAE)"
+  ],
+  "haveOf": [
+   "bring",
+   "the Market (BCR1) and its prices (QAE)"
+  ],
+  "marketTrade": [
+   "bring",
+   "the Market (BCR1) and its prices (QAE)"
+  ],
+  "zealCost": [
+   "bring",
+   "Zeal at the Temple (BP3)"
+  ],
+  "zealWhy": [
+   "bring",
+   "Zeal"
+  ],
+  "zeal": [
+   "bring",
+   "Zeal"
+  ],
+  "watchtower": [
+   "bring",
+   "spies (US3): what sees a spy"
+  ],
+  "guarded": [
+   "bring",
+   "spies: a building under a tower's eye"
+  ],
+  "sabotage": [
+   "bring",
+   "spies: sabotage"
+  ],
+  "intel": [
+   "bring",
+   "spies: what a spy reports"
+  ],
+  "hireWhy": [
+   "bring",
+   "hiring soldiers at a find on the map"
+  ],
+  "hire": [
+   "bring",
+   "hiring"
+  ],
+  "setJob": [
+   "in v100",
+   "econ.js gatherAt and jobOf: a villager's job is the yield it works"
+  ],
+  "atShop": [
+   "bring",
+   "a worker inside a workshop, Mint or Foundry (Make)"
+  ],
+  "NO_HANDS": [
+   "cut",
+   "a message; v100's verbs carry their own reasons (menu.js whyNot)"
+  ],
+  "moveVil": [
+   "in v100",
+   "econ.js assign (+ and −, QW); Mid never takes a posted villager, which comes with posts"
+  ],
+  "stopVil": [
+   "in v100",
+   "menu.js VERBS.stop"
+  ],
+  "sendOut": [
+   "bring",
+   "Send out: the last villager posted to a field, pasture or shop goes home"
+  ],
+  "sendVil": [
+   "in v100",
+   "econ.js gatherAt (menu gather and send); one-to-a-field comes with fields' slots"
+  ],
+  "sendHunt": [
+   "bring",
+   "hunting: tap game, send a hunter (Later)"
+  ],
+  "sendRepair": [
+   "in v100",
+   "menu.js VERBS.raise (Repair) and econ.js buildAt"
+  ],
+  "repairCost": [
+   "bring",
+   "repair costs a quarter of the price by the damage; v100's repair is free (parked: repair's cost)"
+  ],
+  "nodeName": [
+   "cut",
+   "a find's name comes from its shell (books/shells.js)"
+  ],
+  "commitPlace": [
+   "bring",
+   "placing: walls as a dragged line, many pieces at once; v100's Build places one (menu.js build)"
+  ],
+  "boxCut": [
+   "bring",
+   "a box over trees sends villagers to cut them, then back to work"
+  ],
+  "centreOf": [
+   "bring",
+   "orders you can follow: a group's line, ring, count and time"
+  ],
+  "routeK": [
+   "bring",
+   "orders you can follow: the walk's length over the straight line"
+  ],
+  "etaOf": [
+   "bring",
+   "orders you can follow: the slowest marcher's time"
+  ],
+  "march": [
+   "bring",
+   "a group order with its line and arrival time; v100 has combat.js march and attack without them"
+  ],
+  "sendHome": [
+   "in v100",
+   "combat.js recall"
+  ],
+  "incomingTick": [
+   "bring",
+   "a warning: a foe's group heading for you, how many and how soon"
+  ],
+  "ordersTick": [
+   "bring",
+   "orders you can follow: who is still walking, a message when all have stopped"
+  ],
+  "isThreat": [
+   "bring",
+   "who counts as a threat, for the danger map and warnings"
+  ],
+  "recount": [
+   "bring",
+   "once a second: guarded finds, and how many work each find (crowding, QX)"
+  ],
+  "insulate": [
+   "bring",
+   "cold and wet, layers in series (QAP)"
+  ],
+  "sideSpd": [
+   "bring",
+   "the season and weather slow a side's march, less with gear (QAP); v100 has mud and snow (QN)"
+  ],
+  "step": [
+   "in v100",
+   "index.html loop: climate, step, the modules' tick; Mid's eclipse line goes (eclipse cut), its other parts are their own pieces"
+  ],
+  "reap": [
+   "bring",
+   "the fallen stay a while as bodies, burned or spent buildings go; v100's combat.js die removes them at once"
+  ],
+  "sidesTick": [
+   "in v100",
+   "ai.js tick (D.ai.beat) and econ.js conquest on the last Seat; the Natives come with events"
+  ],
+  "formUp": [
+   "bring",
+   "an army stands in ranks at home and where it is sent, battalion beside battalion"
+  ],
+  "DF": [
+   "bring",
+   "difficulty (Easy, Hard: later)"
+  ],
+  "react": [
+   "bring",
+   "difficulty: seconds between a computer's decisions; v100 has D.ai.beat"
+  ],
+  "died": [
+   "bring",
+   "nerve: a loss nearby drains the others (QAI); v100 has the wave's break (QBQ)"
+  ],
+  "judge": [
+   "bring",
+   "the wins: every rival fallen and the bell are in v100 (econ.js); holding the Throne, ruling every rival as vassals, a Wonder standing, the bell's warnings to bring"
+  ],
+  "bldTick": [
+   "bring",
+   "v100 has the crew (QAC), the training line and towers (D143); frost slows stone work, Midwives train two villagers, a spy-watch tower, sheltered men add to a tower's shot; health from D139"
+  ],
+  "built": [
+   "bring",
+   "v100 marks a building done in econ.js; Mid's worn ground, the Wonder's clock and a new flock to bring; health from D139"
+  ],
+  "jobDone": [
+   "in v100",
+   "econ.js tick: the new unit beside its building, the rally job; muster, squads and the rally point come with them"
+  ],
+  "learnTech": [
+   "bring",
+   "research learned (tech tree)"
+  ],
+  "dropFor": [
+   "in v100",
+   "index.html dropFor (SC12)"
+  ],
+  "dockNear": [
+   "bring",
+   "fish worked from a Dock (BCT2): fish as a resource (Later)"
+  ],
+  "nodeFits": [
+   "cut",
+   "v100 asks yieldOf"
+  ],
+  "unsafe": [
+   "bring",
+   "with the danger map"
+  ],
+  "FORAGE": [
+   "bring",
+   "the forager's numbers: move on at 18% better (v100 has QW D.moveOn), a field's life, room a find holds (QX)"
+  ],
+  "forage": [
+   "bring",
+   "the forager's rate R (QV); v100's bestFind picks by distance (QW)"
+  ],
+  "turtlePlan": [
+   "bring",
+   "the next age in villager-minutes, on the Town Center card"
+  ],
+  "forageNow": [
+   "bring",
+   "the forager's rate where a worker is now (QV)"
+  ],
+  "bestNode": [
+   "in v100",
+   "econ.js bestFind (QW); Mid's choice by the forager's rate comes with forage"
+  ],
+  "reachFrom": [
+   "cut",
+   "v100 leaves a find no path reaches for D137"
+  ],
+  "nearestNode": [
+   "in v100",
+   "econ.js bestFind"
+  ],
+  "pickVil": [
+   "in v100",
+   "econ.js assign (idle first, else from the fullest other job); Mid takes the least-earning, with forage"
+  ],
+  "typesOf": [
+   "cut",
+   "v100 reads the drop list from the shell (SC12)"
+  ],
+  "shopTick": [
+   "bring",
+   "a worker inside a workshop makes goods into the stores (Make)"
+  ],
+  "workMul": [
+   "bring",
+   "sickness halves work, a famine weakens it"
+  ],
+  "makeNow": [
+   "in v100",
+   "econ.js tick, the gather branch (D88 to D87); a workshop's inputs and research's gather bonus come with them"
+  ],
+  "LATTICE": [
+   "bring",
+   "standing spots: every one its own spot a pace apart, round a building or a point (hex packing)"
+  ],
+  "spotAt": [
+   "bring",
+   "standing spots"
+  ],
+  "findCap": [
+   "bring",
+   "how many can work a find at once (a tree one feller, OSHA)"
+  ],
+  "regionAt": [
+   "bring",
+   "standing spots: the walking region of a point"
+  ],
+  "spotFree": [
+   "bring",
+   "standing spots"
+  ],
+  "takeSpots": [
+   "bring",
+   "standing spots: each unit its own, cheapest walk first"
+  ],
+  "postTo": [
+   "bring",
+   "villagers sent to a point each stand on their own spot"
+  ],
+  "stepOut": [
+   "bring",
+   "out of a building onto a free spot"
+  ],
+  "waitAt": [
+   "bring",
+   "a waiter keeps its own spot at the drop-off"
+  ],
+  "vilTick": [
+   "in v100",
+   "econ.js tick, the villager's states (idle, walk, gather, carry, build, repair, wait); Mid's shelter from raids, flight, posts and fields come with them"
+  ],
+  "leaveWork": [
+   "in v100",
+   "econ.js gatherAt: a find no path reaches is left a while (D137)"
+  ],
+  "huntTick": [
+   "bring",
+   "hunting (Later)"
+  ],
+  "backToWork": [
+   "bring",
+   "after building or mending, back to the old job"
+  ],
+  "repairTick": [
+   "bring",
+   "mending at three times the build time for a quarter of the cost, and fighting fires; v100 mends at the build rate, free"
+  ],
+  "homeSpot": [
+   "bring",
+   "where a soldier stands at home (with formUp)"
+  ],
+  "scoutTick": [
+   "bring",
+   "the Scout (US4, SC18): treasure first, then a loop of the map"
+  ],
+  "envoyTick": [
+   "bring",
+   "diplomacy (ally, peace, war, envoys; kept for after the core): the envoy's walk"
+  ],
+  "caravanTick": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "spyTick": [
+   "bring",
+   "the Spy (US3)"
+  ],
+  "FLEECE": [
+   "bring",
+   "sheep and fish: wool a sheep, flock growth (QY), fish stock, mutton (QZ); the Pasture (BCL3) and livestock"
+  ],
+  "stopsAll": [
+   "bring",
+   "trade stops and the Trade post (BCT1)"
+  ],
+  "postAt": [
+   "bring",
+   "trade stops"
+  ],
+  "stopsHeld": [
+   "bring",
+   "trade stops"
+  ],
+  "stash": [
+   "in v100",
+   "econ.js carry branch (store, gathered); Mid's flow ledger comes with flowOf"
+  ],
+  "flowOf": [
+   "bring",
+   "the stores' flow a minute (the stores card, the computers' crews)"
+  ],
+  "outOf": [
+   "bring",
+   "the stores' flow"
+  ],
+  "netOf": [
+   "bring",
+   "the stores' flow"
+  ],
+  "VEL": [
+   "bring",
+   "the stores' flow"
+  ],
+  "velOf": [
+   "bring",
+   "the stores' flow"
+  ],
+  "flowTick": [
+   "bring",
+   "the stores' flow"
+  ],
+  "initEconomy": [
+   "bring",
+   "a new game's weather, harvest, prices and routes; v100's start resets the stores and the weather"
+  ],
+  "distF": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "baseOf": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "nameOf": [
+   "cut",
+   "a good's name comes from its shell"
+  ],
+  "colOf": [
+   "cut",
+   "a load's colour comes from the Colours book"
+  ],
+  "loadable": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "takeFrom": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "giveTo": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "priceAt": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "tradeTargets": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "allyMarket": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "targetOf": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "homeBiz": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "estPay": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "setRoute": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "bestTarget": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "routeTick": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+  ],
+  "guardedCart": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets: robbers leave a guarded cart"
+  ],
+  "robbed": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets: a robbed load goes to the robbers' camp"
+  ],
+  "natureTick": [
+   "bring",
+   "soil tires and rests (QAA), held trade routes pay, the slow beats; v100's climate has the weather"
+  ],
+  "seasonTurn": [
+   "bring",
+   "each season: food spoils (QAD), fish regrow (QY), lambs and the cull (QY, QZ), the harvest's luck, plague on the roads"
+  ],
+  "fireHeat": [
+   "bring",
+   "fire: t² growth and heat to a neighbour (QU)"
+  ],
+  "FIRE_SMOKE": [
+   "bring",
+   "fire: smoke kills a firefighter now and then"
+  ],
+  "ignite": [
+   "bring",
+   "fire: wood and thatch catch"
+  ],
+  "storm": [
+   "in v100",
+   "index.html climate, K.storm (D103)"
+  ],
+  "strike": [
+   "in v100",
+   "index.html climate: the bolt pinned to the ground it hits, its foot lit (KW6, QL); the fire it starts is held"
+  ],
+  "lightning": [
+   "bring",
+   "summer storms strike wooden buildings and set them on fire"
+  ],
+  "fireTick": [
+   "bring",
+   "fire: spread, burn and put out"
+  ],
+  "sickRisk": [
+   "bring",
+   "sickness (QAQ): more in summer and winter, less with clean water"
+  ],
+  "outbreak": [
+   "bring",
+   "sickness"
+  ],
+  "healthTick": [
+   "bring",
+   "sickness and healing (Hospital BP6, Medic US2)"
+  ],
+  "upkeepTick": [
+   "in v100",
+   "econ.js tick: everyone eats (QBP, D131); Mid's shares, eating at the find, camp depots and famine come with shareOf and hungerOf"
+  ],
+  "BANK_CAP": [
+   "bring",
+   "the Bank: interest on gold, to a cap (a research)"
+  ],
+  "bankTick": [
+   "bring",
+   "the Bank"
+  ],
+  "econTick": [
+   "in v100",
+   "econ.js FK.on('tick')"
+  ],
+  "aiEconomy": [
+   "bring",
+   "the computers' Market, workshops, caravans and trade posts (Computers)"
+  ],
+  "shareOf": [
+   "bring",
+   "upkeep shares: soldiers eat more, horses far more, carts"
+  ],
+  "orderCost": [
+   "bring",
+   "an order costs the soldiers' meals and tiredness"
+  ],
+  "hungerOf": [
+   "bring",
+   "a famine weakens work after its grace (parked: hungry sides)"
+  ],
+  "setMake": [
+   "bring",
+   "a workshop's choice of what it makes (Make)"
+  ],
+  "mkt": [
+   "bring",
+   "the Market (BCR1) and its prices (QAE): prices float with what is sold and bought"
+  ],
+  "debase": [
+   "bring",
+   "the Mint debases the coin: gold now, dearer prices for good"
+  ],
+  "mktHit": [
+   "bring",
+   "the Market (BCR1) and its prices (QAE)"
+  ],
+  "spiceCost": [
+   "bring",
+   "trade: caravans (UT1) on routes to trade stops and allies' markets: spice"
+  ],
+  "priceDrift": [
+   "bring",
+   "the Market (BCR1) and its prices (QAE): prices drift back"
+  ],
+  "venture": [
+   "bring",
+   "ventures: gold sent on a voyage, back in a year with 40% more or lost"
+  ],
+  "ventureTick": [
+   "bring",
+   "ventures"
+  ],
+  "vassalsOf": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "shareUp": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core): a loyal vassal shares its trade"
+  ],
+  "loyaltyParts": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core): loyalty"
+  ],
+  "makeVassal": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "surrenderWhy": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core): a beaten side surrenders"
+  ],
+  "demandSurrender": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core)"
+  ],
+  "rebel": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core): unrest and rebellion"
+  ],
+  "vassalTick": [
+   "bring",
+   "vassals (demand, tribute, levy; kept for after the core): tax, loyalty, unrest"
+  ]
+ },
+ "misfits": [
+  [
+   "lightning",
+   "In Mid a summer storm's lightning sets wooden buildings on fire. You held 'fire from a strike' for later (Dictionary, Climate). Bring it now with fire, or keep it held?"
+  ],
+  [
+   "strike",
+   "Same call as lightning: v100 already draws the bolt; only the fire it starts is held."
+  ],
+  [
+   "natureTick",
+   "Mid throws a lightning strike on open ground every 20 s of a summer storm from here. v100 already has its own strikes on a timer (D113), so this part would be a second one; the rest (tired soil, trade routes paying) is fine."
+  ],
+  [
+   "workMul",
+   "Mid's villagers also work faster when 'cheered by the circus'. You cut the circus (fantasy events, Nov 4), so that part drops; sickness and famine stay. OK?"
+  ],
+  [
+   "step",
+   "Mid's step turns night on during an eclipse. You cut the eclipse, so that line drops. Just confirming."
+  ],
+  [
+   "seasonTurn",
+   "Food spoiling in store each season: your v70 list held 'spoiling stockpiles' for later, but the v100 Dictionary lists spoilage under Later (kept). Bring it with the seasons, or keep it held?"
+  ],
+  [
+   "vassalTick",
+   "Vassals pay their lord a tax (light, fair or heavy), and heavy tax breeds unrest. You said 'not looking to add taxes' (Nov 4). Does that cover a vassal's tax to you, or only taxing your own people?"
+  ],
+  [
+   "makeVassal",
+   "Same tax question: a new vassal is made with a tax rate."
+  ],
+  [
+   "judge",
+   "Mid has a win by holding the Throne for some minutes. You want the Throne reimagined before it comes back. Keep this win for the new Throne, or wait until you describe it?"
+  ],
+  [
+   "formUp",
+   "Mid stands the army in ranks (foot in front, shooters behind, battalions side by side), which is a formation. You held the formations' definitions for yourself. Use Mid's ranks as the at-home stand, or wait for your formations?"
+  ],
+  [
+   "setRel",
+   "Relations between sides (ally, peace, war) and vassal ties belong to the sides, not to any one shell, and v100 has no home for side-to-side state yet. Where should it live: a new Sides book, or the Rules book?"
+  ],
+  [
+   "paceOf",
+   "Mid slows walkers for load, sickness, season, weather and more, on top of each unit's base speed. In v100 the base walk is 1.52 m/s (D86); these would only slow it from there. OK to bring the slow-downs as they are?"
+  ]
+ ]
+}
