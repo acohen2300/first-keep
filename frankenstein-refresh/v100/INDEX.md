@@ -77,6 +77,7 @@ Written by `index.py`, never by hand.
 - **QBU** The stride → N79 · used by SC1, W1, W2, W3, W4, W5, W6, D96
 - **QBW** The opening view → design · used by SC11, D165
 - **QBX** The air's top → N88 · used by HX5
+- **QBY** How far a sound carries → N89 · used by HX7
 
 ## By citation
 
@@ -87,7 +88,7 @@ Written by `index.py`, never by hand.
 - **N5** Ballesteros (2012), colour index to temperature → QF, QAS, QAT, QAU, QAV, QAW, QAX, QAY
 - **N6** (retired: satellites cut, Stone Age) → QAZ, QBA, QBB, QBC, QBD, QBE, QBF, QBG, QBH, QBI, QBK, QBJ, QBO
 - **N7** Gabriel & Neumann (1962), QJRMS 88 → QH, QBL, QBM, QBN, QBQ, QBR, QBS, QBU, D102
-- **N8** Jennings, Winchell, Livneh & Molotch (2018), Nature Communications 9:1148 → QI, QBS, QBT, QBX
+- **N8** Jennings, Winchell, Livneh & Molotch (2018), Nature Communications 9:1148 → QI, QBS, QBT, QBX, QBY
 - **N9** Atlas, Srivastava & Sekhon (1973); Gunn & Kinzer (1949) → QJ
 - **N10** Koschmieder (1924) → QK
 - **N11** WCAG 2.3.1, three flashes → QL
@@ -168,8 +169,22 @@ Written by `index.py`, never by hand.
 - **N86** (to open) Rossing, The Science of Sound: the modes of a free bar at 1 : 2.756 : 5.404 (from memory, to open; carried fro → HM1, HM2, HM3
 - **N87** (to open) Densities: timber about 600 kg/m³, stone about 2,400, iron 7,870 (standard tables, from memory, to open) → W12, W15, W16
 - **N88** (to open) Fresh snow is porous and absorbs sound, high frequencies most: a snowy landscape sounds muffled (acoustics of  → QBX, HX5
+- **N89** National Weather Service, Understanding Lightning: Thunder (weather.gov/safety/lightning-science-thunder): thu → QBY, HX7
 
 ## Named exceptions
 
-- Tall: Start, Hall
+- Tall: Start, Hall, Layers
 - Off the Build menu: BS1, BTC5, BTC6, BTC7, BTC8
+
+## Sounds waiting for a feature
+
+- **tribute** (HU15) waits for tribute from vassals and allies
+- **zeal** (HU16) waits for religion and zeal
+- **jingle** (HU17) waits for the travelling show (an event)
+- **roar** (HU18) waits for a beast in the land (an event)
+- **shot** (HC7) waits for hand guns
+- **boom** (HC8) waits for siege guns and blasts
+- **wind** (HA4) waits for the wind
+- **hush** (HA5) waits for the eclipse (an event)
+- **hooves** (HA6) waits for the stampede (an event)
+- **rumble** (HA7) waits for the earthquake (an event)

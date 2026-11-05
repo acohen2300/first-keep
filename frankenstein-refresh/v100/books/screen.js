@@ -10,5 +10,5 @@ BOOK("screen", {
  "SN10": {"key":"Start","value":{"ticks":["Tall"],"rows":"the new game's choices"},"name":"the Start page","cite":["Design: Albert, Nov 4 (the setup screen its own height)"],"law":[]},
  "SN11": {"key":"Build","value":{"ticks":[],"rows":"title, the six tabs, the tab's grid"},"name":"the Build page","cite":["Design: Albert, Nov 5"],"law":[]},
  "SN12": {"key":"Hall","value":{"ticks":["Tall"],"rows":"title, three tabs, the queue, train, tech"},"name":"the Town Center page","cite":["Design: Albert, Nov 5 07:34"],"law":[]},
- "SN13": {"key":"Layers","value":{"ticks":[],"rows":"title, the layers, Fast and New"},"name":"the Yard","cite":["Design: v100 floor 8, Nov 5"],"law":[]}
+ "SN13": {"key":"Layers","value":{"ticks":["Tall"],"rows":"title, the layers, Fast and New, the three volumes"},"name":"the Yard","cite":["Design: v100 floor 8, Nov 5"],"law":[]}
 });

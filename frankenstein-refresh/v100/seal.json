@@ -574,6 +574,11 @@
 "bytes": 166,
 "numbers": 0
 },
+"book:citations:N89": {
+"sha": "6bae031a2f8b49a7d0abcbe6c7d97f7b2b60e50755f0da553899739417aea277",
+"bytes": 227,
+"numbers": 0
+},
 "book:citations:N9": {
 "sha": "da6ec12ad618b73bb85cfc2888689aa764e98ad12ee52a696c0c0e351a7f9e8e",
 "bytes": 83,
@@ -1784,6 +1789,16 @@
 "bytes": 283,
 "numbers": 0
 },
+"book:rules:X42": {
+"sha": "c9abe6535475d0217b2ddf1b169c5f561a01669c5a3f416002417c6022d48b6a",
+"bytes": 242,
+"numbers": 0
+},
+"book:rules:X43": {
+"sha": "76635336a0b59f2fde8def505039b9c543ddbd3cd8ba7536f5cd0f20138c0755",
+"bytes": 225,
+"numbers": 0
+},
 "book:rules:X5": {
 "sha": "500b71a25013c9c628f6bd9e422a3930df55afa772064996cda4cebe75e156ab",
 "bytes": 149,
@@ -1830,8 +1845,8 @@
 "numbers": 0
 },
 "book:screen:SN13": {
-"sha": "0b725b6775fb1a1b696e21abcafc8248c6df9624e78fbe1f765f616dda0eba9b",
-"bytes": 156,
+"sha": "49b6d6a826bbb0222860df94cf0d58694aff958af3980947331e10c91fc8d971",
+"bytes": 181,
 "numbers": 0
 },
 "book:screen:SN2": {
@@ -2165,8 +2180,8 @@
 "numbers": 0
 },
 "book:shells:R5": {
-"sha": "b643cd8b26ff1384642bb45b2397e0a4be8ddf5af11ae770035cf2c3845dcfc6",
-"bytes": 184,
+"sha": "f18b4fa4641ffa37f010509db0018f4618c42d3467204b7107aec81c9bd4ef85",
+"bytes": 201,
 "numbers": 0
 },
 "book:shells:UM1": {
@@ -2244,6 +2259,26 @@
 "bytes": 241,
 "numbers": 0
 },
+"book:sound:HA4": {
+"sha": "5072c5b3cd1bd5c4c99acf96cfc5fdbc68539cc258bf6e940c7f0655c89a08a2",
+"bytes": 181,
+"numbers": 0
+},
+"book:sound:HA5": {
+"sha": "652a42e53fc7d01756ad84631b87dcd972059768b42df1fc7d9eed3588d5ee7e",
+"bytes": 246,
+"numbers": 0
+},
+"book:sound:HA6": {
+"sha": "a84584515544ef7af6ac6be3ce9db11bd25fd443700e87b703e6bb783851ef66",
+"bytes": 829,
+"numbers": 0
+},
+"book:sound:HA7": {
+"sha": "be533a5f44337f5014c269f7b28964b664dbb9edb2d1ef327caf02793597241d",
+"bytes": 224,
+"numbers": 0
+},
 "book:sound:HC1": {
 "sha": "7e8d102ef51d426852f7aa9df697d0cbb8ac876cfeb6c909d4dd7751492c7b80",
 "bytes": 162,
@@ -2272,6 +2307,16 @@
 "book:sound:HC6": {
 "sha": "1d32fe8ff8c010c5f67feed77a32d8b0863a621cce545e419dbde93fafad0751",
 "bytes": 218,
+"numbers": 0
+},
+"book:sound:HC7": {
+"sha": "ab9461adbeeb648b9887a9951c1e6739f51bf219e047eda8cf4570eb1b0a0be7",
+"bytes": 207,
+"numbers": 0
+},
+"book:sound:HC8": {
+"sha": "63550234ca11247bc3953d9e871a9d71fcbf55102eafe685a1048c08cb6a7376",
+"bytes": 228,
 "numbers": 0
 },
 "book:sound:HE1": {
@@ -2324,6 +2369,26 @@
 "bytes": 199,
 "numbers": 0
 },
+"book:sound:HU15": {
+"sha": "d34f40b3edac432006938bcd0a33199900b1ecb7c7474c027358c4dfff4a829f",
+"bytes": 268,
+"numbers": 0
+},
+"book:sound:HU16": {
+"sha": "68107476bb625a616389a3f0651b29383aa9eb0b29399d5741f08eb4942d2c4b",
+"bytes": 266,
+"numbers": 0
+},
+"book:sound:HU17": {
+"sha": "11df34860611d7ea179bb1d16e2b52fd2347f214407ce565cb89fc9cbe6ebcf7",
+"bytes": 381,
+"numbers": 0
+},
+"book:sound:HU18": {
+"sha": "78daab61a3dfa636c00cbe4642008f70a453660e03a0ce48c93c924bc5fd4c82",
+"bytes": 221,
+"numbers": 0
+},
 "book:sound:HU2": {
 "sha": "fe79b25b7ebb9f7d5b9472bc959cd68fb01406341e218aae0f6cdf2b36c04569",
 "bytes": 185,
@@ -2355,8 +2420,8 @@
 "numbers": 0
 },
 "book:sound:HU8": {
-"sha": "ffb63108eeac78adedcc055866e6141d0a9135c513cd9558479088c39a7808e1",
-"bytes": 330,
+"sha": "6ea226d3de20cf9dc221fb333f1ed7ec2781c9db70d2fd5590798897158ffff5",
+"bytes": 334,
 "numbers": 0
 },
 "book:sound:HU9": {
@@ -2384,14 +2449,24 @@
 "bytes": 193,
 "numbers": 0
 },
+"book:sound:HW5": {
+"sha": "0ac1429f3f24859a6807fcd8c5f34f10b9fbd024301fb49a950147ec82819051",
+"bytes": 167,
+"numbers": 0
+},
 "book:sound:HX1": {
 "sha": "3989ec364caedcd55a4f873ae5fc967de795a39d54597dc89b06c0bccef4a5ad",
 "bytes": 227,
 "numbers": 0
 },
+"book:sound:HX10": {
+"sha": "78d7c8bc6615863c3fefeaddcf5a5755b4434651f12c045fff5c813c23d47a24",
+"bytes": 269,
+"numbers": 0
+},
 "book:sound:HX2": {
-"sha": "2bdf1c8a43bae39f9990778b579bb7778e96a50e54b6694a423c3a77cd1637ae",
-"bytes": 265,
+"sha": "bf2830bd7be804dd8d5b28d37a0e32e3f6938a67a189a757d09d359764d6c388",
+"bytes": 371,
 "numbers": 0
 },
 "book:sound:HX3": {
@@ -2412,6 +2487,21 @@
 "book:sound:HX6": {
 "sha": "7fff8ba59e7cca1470d62754416d094c3c87998fc24906804016e225c9dab0b9",
 "bytes": 211,
+"numbers": 0
+},
+"book:sound:HX7": {
+"sha": "ed2f62bb7dcca952596cf1ba04cb65cafc7d73af0a9061c38f46c0833fd7dfe4",
+"bytes": 183,
+"numbers": 0
+},
+"book:sound:HX8": {
+"sha": "ef4d9bb6000d6bb58ae8811062f46782aa916e50a9119a26c49422f14ece79d7",
+"bytes": 256,
+"numbers": 0
+},
+"book:sound:HX9": {
+"sha": "60aa4de1dfa11e235148a0ba49ba506c005733ba3c188b08d22909d457398d93",
+"bytes": 265,
 "numbers": 0
 },
 "book:sprites:P1": {
@@ -2700,14 +2790,14 @@
 "numbers": 59
 },
 "code:menu.js": {
-"sha": "abbed266fa4a1174401cf57cd5c911d2885634174e87de4e7699d74bb6cf1080",
-"bytes": 44001,
+"sha": "c001e88e61a17aa4440e60cae4410ac64f019837011172a66036ad215033ff8e",
+"bytes": 44296,
 "numbers": 643
 },
 "code:sound.js": {
-"sha": "2b1a38eb7457304c3bc9f71cdbaabeb469a06826f8fd4895de6456bd8a4ab91e",
-"bytes": 6208,
-"numbers": 69
+"sha": "a3f629bfd4e90d45b4a307e6e249a8fd5b7cbc54436d0f3bd9354742e5f44c8c",
+"bytes": 6893,
+"numbers": 68
 },
 "law:QA": {
 "sha": "bc8bfe48ec6df6e3f364540f84239ca9a5875991726f4bf69ff0f97031e79c36",
@@ -2959,6 +3049,11 @@
 "bytes": 204,
 "numbers": 0
 },
+"law:QBY": {
+"sha": "9f7f5b9ffce1c0e5819ef719e6d305428bbbd6443d2f0c4532140017338a6ed4",
+"bytes": 297,
+"numbers": 0
+},
 "law:QC": {
 "sha": "891859d095ba01425eb526707af477de5796318c4e572b008658d156c3a3c670",
 "bytes": 45,
@@ -3075,8 +3170,8 @@
 "numbers": 0
 },
 "tool:index.py": {
-"sha": "737ec09b87babf69f58b96d0c658cabf855a661f79f4037e436af1048ab82abc",
-"bytes": 21461,
+"sha": "cb089d2e6dea9c3fc9228a3158a5249d1282562abb45498e57c6bead06d7994f",
+"bytes": 22557,
 "numbers": 0
 },
 "tool:pages.yml": {
@@ -3090,8 +3185,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "6840dbadc80c6daa3e6343ae37e025464ef011a974819f1237a224b14da3853c",
-"bytes": 8315,
+"sha": "45f754fa8aee7964808acdfbb7269fafd860c658f9ab5681a7b42dde873acb9b",
+"bytes": 10233,
 "numbers": 0
 }
 }

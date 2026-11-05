@@ -83,6 +83,7 @@ QBT Impact: a blow sends the struck one off at v = m_s · v_s ÷ (m_s + m_t), th
 QBU The stride: a walker's frame = ⌊frames a stride (D96) × metres walked ÷ its stride (W)⌋ mod D96, the stride its mount's if it rides; the picture turns with the ground covered, so the feet never slide, and in mud it steps slower · N79
 QBW The opening view: the game opens on the player's Town Center, the camera's zoom set so the Town Center spans D165 of the screen's width · design (Albert, Nov 5)
 QBX The air's top: snow cover lowers the highest pitch that carries, from HX5's open to its snow value (fresh snow soaks up the high sounds); rain masks a quiet sound by HX5's share of its strength · N88
+QBY How far a sound carries: a sound with a reach R (HX7) is heard at full within floor × R and falls as 1 ÷ distance beyond (the inverse-square law in amplitude, as QAX), so it fades to the quietest heard exactly at R; thunder's R is about 10 miles, so it is heard across the whole board · N89
 
 ## N Citations
 The citations have their own book: `books/citations.js` (N1 to N88), shown in BOOKS.md. A Q here names its N; INDEX.md matches the two both ways.

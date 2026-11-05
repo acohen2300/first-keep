@@ -1,7 +1,7 @@
 // Book · S Shells: everything you can tap, one row a code. A row names its layer, ticks its capabilities, and fills each slot with a pointer into another book (D measurements, W mass, sprites, sound). No number lives here.
 BOOK("shells", {
  "R1": {"name": "Tree", "layer": 100, "find": "tree", "look": "tree", "ticks": ["Yield"], "yield": "wood", "amount": "D53", "sound": "chop", "cite": ["Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B)"]},
- "R5": {"name": "Bush", "layer": 100, "find": "bush", "look": "bush", "ticks": ["Yield"], "yield": "food", "amount": "D54", "cite": ["Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B)"]},
+ "R5": {"name": "Bush", "layer": 100, "find": "bush", "look": "bush", "ticks": ["Yield"], "yield": "food", "amount": "D54", "sound": "pick", "cite": ["Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B)"]},
  "R2": {"name": "Gold", "layer": 100, "find": "gold", "look": "gold", "ticks": ["Yield"], "yield": "gold", "amount": "D55", "room": "D169.gold", "sound": "mine", "cite": ["Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B)"]},
  "R3": {"name": "Stone", "layer": 100, "find": "stone", "look": "stone", "ticks": ["Yield"], "yield": "stone", "amount": "D56", "room": "D169.stone", "sound": "mine", "cite": ["Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B)"]},
  "R4": {"name": "Iron", "layer": 100, "find": "iron", "look": "iron", "ticks": ["Yield"], "yield": "iron", "amount": "D57", "room": "D169.iron", "sound": "mine", "cite": ["Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B)"]},

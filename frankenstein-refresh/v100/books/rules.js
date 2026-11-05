@@ -40,5 +40,7 @@ BOOK("rules", {
  "X38": {"key": "t-gone", "value": {"stage": "page"}, "name": "a find used up is gone at once, and never chosen again", "cite": ["Design: the audit of Nov 5, Build A: a test for each fix"], "law": []},
  "X39": {"key": "t-ai", "value": {"stage": "page"}, "name": "the computer raises its army buildings in the book's order (D179)", "cite": ["Design: the audit of Nov 5, Build A: a test for each fix"], "law": []},
  "X40": {"key": "byname", "value": {"stage": "survey"}, "name": "code that asks what a thing is by a typed name (kind === 'tree'): ask by tick", "cite": ["Design: Albert, Nov 5 (Frankenstein Refresh: map Mid with our tests)"], "law": []},
- "X41": {"key": "frozen", "value": {"stage": "survey"}, "name": "the reference copy differs from its seal, or its parts, or the temp books read back in its order, do not rebuild it byte for byte", "cite": ["Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it)"], "law": []}
+ "X41": {"key": "frozen", "value": {"stage": "survey"}, "name": "the reference copy differs from its seal, or its parts, or the temp books read back in its order, do not rebuild it byte for byte", "cite": ["Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it)"], "law": []},
+ "X42": {"key": "t-match", "value": {"stage": "page"}, "name": "a sound brought from Mid makes the same parts as Mid's own code makes it (same action, same result)", "cite": ["Design: Albert, Nov 5 09:49 (Frankenstein 4: the match test)"], "law": []},
+ "X43": {"key": "sorted", "value": {"stage": "survey"}, "name": "a temp book being sorted leaves a piece of Mid without its line (in v100, bring, cut or parked)", "cite": ["Design: Albert, Nov 5 09:47 (sort every piece)"], "law": []}
 });

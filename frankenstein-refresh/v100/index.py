@@ -56,7 +56,7 @@ def survey(ref, out):   # Frankenstein Refresh: the reference game (Mid) read wi
     n = ['# Mid · every piece', '', 'Written by `v100/index.py --survey`, never by hand: every top-level name in Mid, in order.', '', '| Part | Section | Name | Lines | Bytes | Typed numbers | Asks by name | Swallowed | Used elsewhere |', '|---' * 9 + '|']
     n += [f'| {p[0]} | {p[1]} | {p[2] or "(before the first name)"} | {p[3].count(chr(10)):,} | {len(p[3].encode()):,} | ' + ' | '.join(map(str, dirt(p[3]))) + f' | {max(words.get(p[2], 0) - 1, 0) if p[2] else ""} |' for p in pieces]
     stage, temp, raw = f'{ref}/../staging', groups.get('staging', {}), lambda f: open(f, 'rb').read()
-    bookof = lambda f: temp[groups['files'][os.path.basename(f)]]
+    bookof = lambda f: temp[groups['files'][os.path.basename(f)]]   # a part's temp book
     if '--stage' in sys.argv and not os.path.exists(stage):   # step 5, once: every part into its group's temp book, exactly as it is, in Mid's order
         os.makedirs(stage); json.dump([[bookof(f), os.path.basename(f), len(raw(f))] for f in files], open(f'{stage}/order.json', 'w'), indent=0)
         for b in dict.fromkeys(map(bookof, files)): open(f'{stage}/{b}', 'wb').write(b''.join(raw(f) for f in files if bookof(f) == b))
@@ -67,9 +67,13 @@ def survey(ref, out):   # Frankenstein Refresh: the reference game (Mid) read wi
             if got != raw(f'{ref}/src/{part}'): bad.append(f'[frozen] staging/{b} does not give back {part} byte for byte')
         bad += [f'[frozen] staging/{b} holds {len(t) - at[b]:,} bytes Mid does not' for b, t in tb.items() if len(t) != at[b]]
         bad += [f'[frozen] staging/{f} is not in the order' for f in os.listdir(stage) if f not in tb and f != 'order.json']
-        m += ['', '## Staging (steps 4 and 5): the temp books, every line of Mid as it is', '', '| Temp book | Group | Parts | Lines | Characters | Bytes |', '|---|---|---|---|---|---|']
-        m += [f'| {b} | {next(g for g, x in temp.items() if x == b)} | {sum(1 for o in order if o[0] == b)} | {t.count(10):,} | {len(t.decode()):,} | {len(t):,} |' for b, t in tb.items()]
-        m += [f'| **all** | {len(tb)} temp books | {len(order)} | {sum(t.count(10) for t in tb.values()):,} | {sum(len(t.decode()) for t in tb.values()):,} | {sum(map(len, tb.values())):,} |']
+        sorts = {b: json.load(open(f'{ref}/../clean/{b[:-3]}.json'))['pieces'] for b in tb if os.path.exists(f'{ref}/../clean/{b[:-3]}.json')}   # step 6: each piece's line in its temp book's sort (X43)
+        names = {b: [p[2] for p in pieces if p[2] and bookof(p[0]) == b] for b in tb}
+        for b, L in sorts.items(): bad += [f'[sorted] staging/{b}: {n} has no line' for n in names[b] if n not in L] + [f'[sorted] staging/{b}: {n} is not one of its pieces' for n in L if n not in names[b]] + [f'[sorted] staging/{b}: {n} is "{L[n][0]}"' for n in L if L[n][0] not in ('in v100', 'bring', 'cut', 'parked')]
+        tally = lambda b: ', '.join(f'{sum(1 for v in sorts[b].values() if v[0] == s)} {s}' for s in ('in v100', 'bring', 'cut', 'parked')) if b in sorts else 'not yet'
+        m += ['', '## Staging (steps 4 and 5): the temp books, every line of Mid as it is; and the sort (step 6)', '', '| Temp book | Group | Parts | Lines | Characters | Bytes | Sorted (step 6) |', '|---|---|---|---|---|---|---|']
+        m += [f'| {b} | {next(g for g, x in temp.items() if x == b)} | {sum(1 for o in order if o[0] == b)} | {t.count(10):,} | {len(t.decode()):,} | {len(t):,} | {tally(b)} |' for b, t in tb.items()]
+        m += [f'| **all** | {len(tb)} temp books | {len(order)} | {sum(t.count(10) for t in tb.values()):,} | {sum(len(t.decode()) for t in tb.values()):,} | {sum(map(len, tb.values())):,} | {sum(map(len, sorts.values()))} of {sum(map(len, names.values())):,} pieces |']
     os.makedirs(out, exist_ok=True); open(f'{out}/MAP.md', 'w').write('\n'.join(m) + '\n'); open(f'{out}/PIECES.md', 'w').write('\n'.join(n) + '\n')
     print(f'Mid: {len(files)} parts, {len(pieces):,} pieces, {sum(s["lines"] for f, s in stamp.items() if f != "index.html"):,} lines; map written to {out}'); [print('BROKEN', x) for x in bad]
     print('PASS' if not bad else f'STOP: {len(bad)} broken'); sys.exit(1 if bad else 0)
@@ -163,6 +167,7 @@ for b, es in BOOKS.items():
 idx = ['# First Keep v100 · the Index', '', 'Written by `index.py`, never by hand.', '', '## By law', ''] + [f'- **{q}** {l[len(q) + 1:].split(":")[0]} → {", ".join(re.findall(r"N\d+", l.split(" · ")[-1])) or "design"}' + (f' · used by {", ".join(uses[q])}' if q in uses else '') for q, l in LAWS.items()]
 idx += ['', '## By citation', ''] + [f'- **{n}** {"" if e["opened"] else "(to open) "}{e["text"][:110]} → {", ".join([q for q, l in LAWS.items() if n in l] + uses.get(n, [])) or "unused"}' for n, e in N.items()]
 idx += ['', '## Named exceptions', '', f'- Tall: {", ".join(e["key"] for e in BOOKS["screen"].values() if "Tall" in (e["value"].get("ticks", []) if isinstance(e["value"], dict) else []))}', f'- Off the Build menu: {", ".join(SN["offmenu"])}']
+idx += ['', '## Sounds waiting for a feature', ''] + [f'- **{e["key"]}** ({c}) waits for {e["waits"]}' for c, e in BOOKS['sound'].items() if e.get('waits')]
 cell = lambda v: json.dumps(v, ensure_ascii=False).replace('"', '').replace('|', '/')[:140]
 pg = ['# First Keep v100 · the Books', '', 'Written by `index.py` from `books/*.js`, never by hand.', '']
 for b, es in BOOKS.items():

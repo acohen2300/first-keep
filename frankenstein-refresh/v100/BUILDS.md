@@ -185,3 +185,38 @@ MODIFIED (2):
 LOCKED (617 of 619): byte for byte as sealed, 337,213 bytes
 Tests: 17/17 rules hold
 Inventory: 619 items sealed · 514 book entries · 73 laws · 88 citations, 17 still to open · 9 known
+
+## Frankenstein 4 · Sound · 2026-11-05 09:55
+Albert, Nov 5 09:49: the first migration from Mid: the mute switch, three volumes, thunder's real reach, the limiter in the book, the 11 sounds (pick plays now; 10 wait for their features), the match test, every piece sorted
+Opened: code:sound.js, code:menu.js, book:sound, book:shells:R5, book:citations:N89, law:QBY, book:screen, book:rules, tool:test.py, tool:index.py
+MODIFIED (27):
+- book:citations:N89 · added
+- book:rules:X42 · added
+- book:rules:X43 · added
+- book:screen:SN13 · 156 → 181 bytes
+- book:shells:R5 · 184 → 201 bytes
+- book:sound:HA4 · added
+- book:sound:HA5 · added
+- book:sound:HA6 · added
+- book:sound:HA7 · added
+- book:sound:HC7 · added
+- book:sound:HC8 · added
+- book:sound:HU15 · added
+- book:sound:HU16 · added
+- book:sound:HU17 · added
+- book:sound:HU18 · added
+- book:sound:HU8 · 330 → 334 bytes
+- book:sound:HW5 · added
+- book:sound:HX10 · added
+- book:sound:HX2 · 265 → 371 bytes
+- book:sound:HX7 · added
+- book:sound:HX8 · added
+- book:sound:HX9 · added
+- code:menu.js · 44,001 → 44,296 bytes
+- code:sound.js · 6,208 → 6,893 bytes
+- law:QBY · added
+- tool:index.py · 21,461 → 22,557 bytes
+- tool:test.py · 8,315 → 10,233 bytes
+LOCKED (611 of 638): byte for byte as sealed, 278,037 bytes
+Tests: 18/18 rules hold
+Inventory: 638 items sealed · 532 book entries · 74 laws · 89 citations, 17 still to open · 9 known

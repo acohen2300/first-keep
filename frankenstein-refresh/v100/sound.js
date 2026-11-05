@@ -4,11 +4,13 @@
 window.SOUND = (() => {
 const { HB, D, SH, KIND, cam } = FK;
 let AC = null, master = null, air = null, NOISE = null, voices = 0, on = true, ambT = 0;
+const mix = Object.fromEntries(Object.keys(HB.mix.names).map((c) => [c, [...HB.mix.steps]])); // each channel's volume steps, the one in use first (HX10)
 const last = {}, chan = (n) => (HB.chan.amb.includes(n) ? 'amb' : HB.chan.alert.includes(n) ? 'alert' : 'fx');
 function wake() { // a phone opens its audio only on a touch
   if (AC) { if (AC.state !== 'running') AC.resume().catch(() => {}); return; }
+  try { if (navigator.audioSession) navigator.audioSession.type = HB.session; } catch (e) {} // the Ring/Silent switch silences the game; the player's music plays on (HX8)
   try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
-  const lim = AC.createDynamicsCompressor(); lim.threshold.value = -3; lim.ratio.value = 4; lim.connect(AC.destination); // a battle's many blows never clip a phone speaker
+  const lim = AC.createDynamicsCompressor(); for (const [k, v] of Object.entries(HB.limiter)) lim[k].value = v; lim.connect(AC.destination); // a battle's many blows never clip a phone speaker
   air = AC.createBiquadFilter(); air.type = 'lowpass'; air.frequency.value = HB.muffle.open; air.connect(lim);
   master = AC.createGain(); master.gain.value = 0.5; master.connect(air);
   NOISE = AC.createBuffer(1, AC.sampleRate, AC.sampleRate); const d = NOISE.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
@@ -24,15 +26,16 @@ const PART = { tone, hiss, knock };
 // QAX: the ear sits over the screen's middle at the height a lens of HX1's field of view needs to see the screen; a sound d along the ground is √(d² + h²) away,
 // full within the closest zoom's height, then falling as 1 ÷ distance (the inverse-square law in amplitude), less the air's loss
 const camH = (z) => FK.size()[0] / z / 2 / Math.tan((HB.ear.fov * Math.PI) / 360) / D.upm; // metres
-function hearing(w) { const dx = w.vx - cam.x, dy = (w.vy - cam.y) / Math.sin(FK.A.rise * Math.PI / 180), d = Math.hypot(dx, dy) / D.upm, s = Math.hypot(d, camH(cam.z)), d0 = camH(FK.zmax());
+function hearing(w, name) { const dx = w.vx - cam.x, dy = (w.vy - cam.y) / Math.sin(FK.A.rise * Math.PI / 180), d = Math.hypot(dx, dy) / D.upm, s = Math.hypot(d, camH(cam.z)), d0 = HB.reach[name] ? HB.ear.floor * HB.reach[name] : camH(FK.zmax()); // QBY: a sound with a reach is full within floor × reach
   return { v: Math.min(1, d0 / Math.max(0.1, s)) * 10 ** ((-HB.ear.alphaKm * s) / 1000 / 20), s, pan: Math.max(-1, Math.min(1, dx / (FK.size()[0] / 2 / cam.z))) * 0.8 }; }
 function play(name, where, delay = 0) {
   const r = HB[name]; if (!on || !AC || AC.state !== 'running' || document.hidden || !r) return;
   const c = chan(name); if (c !== 'alert' && voices > HB.voices.max - HB.voices.keep[c]) return; // the air is full: an alert never waits
   if (AC.currentTime - (last[name] ?? -9) < r[0]) return;
   let v = 1, pan = 0;
-  if (where && where.vx != null) { const h = hearing(where); v = h.v; pan = h.pan; if (name === 'thunder') delay += h.s / HB.ear.c; } // thunder comes after its flash by the distance ÷ the speed of sound
+  if (where && where.vx != null) { const h = hearing(where, name); v = h.v; pan = h.pan; if (name === 'thunder') delay += h.s / HB.ear.c; } // thunder comes after its flash by the distance ÷ the speed of sound
   v -= HB.muffle.rainMask * FK.K.rain * (1 - v); if (v < HB.ear.floor) return; // QBX: rain drowns the far and quiet first
+  const [[vol]] = mix[c]; v *= vol; if (!v) return; // the player's volume for this channel
   last[name] = AC.currentTime; const at = AC.currentTime + delay;
   for (const [kind, ...a] of r.slice(1)) { if (kind === 'tone') a[3] *= v; else if (kind === 'hiss') a[1] *= v; else a[2] *= v; PART[kind](at, pan, ...a); }
 }
@@ -49,5 +52,5 @@ FK.on('tick', (dt) => { if (!AC || (ambT -= dt) > 0) return; ambT = 1;
     if (T.length && Math.random() < 1 - Math.exp(-HB.amb.bird * T.length)) play('bird', T[Math.floor(Math.random() * T.length)]); }
   else if (Math.random() < 1 - Math.exp(-HB.amb.cricket * HB.amb.singers)) play('cricket', { vx: cam.x + (Math.random() - 0.5) * cw / z, vy: cam.y + (Math.random() - 0.5) * ch / z });
 });
-return { play, toggle: () => { on = !on; wake(); return on; }, on: () => on };
+return { play, toggle: () => { on = !on; wake(); return on; }, on: () => on, mix: (c) => { const [[, word]] = mix[c]; return word; }, step: (c) => { const [s, ...rest] = mix[c]; mix[c] = [...rest, s]; } };
 })();

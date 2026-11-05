@@ -1,33 +1,118 @@
 {
- "about": "Step 6, temp book staging/sound.js (Mid's 35-sound.js): every piece, and what becomes of it. in v100: already home, nothing to bring. bring: Mid has it, v100 does not; it comes in as book entries and one law, never as Mid's code. cut: v100 does it another way; logged in Parked.md when Albert agrees.",
+ "about": "Step 6, temp book staging/sound.js (Mid's 35-sound.js): every piece, and what becomes of it. in v100: already home, nothing to bring. bring: Mid has it, v100 does not; it comes in as book entries and one law, never as Mid's code. cut: v100 does it another way. parked: Albert's call, logged in docs/4 Now/Parked.md.",
  "pieces": {
-  "SND": ["cut", "on/off and volume as getters over Mid's settings; v100's SOUND.toggle/on does on/off", "bring the volume with 'mix' below"],
-  "saveSnd": ["cut", "saves Mid's settings; Saving is its own temp book"],
-  "AC": ["in v100", "sound.js: AC, master, NOISE, voices; panV becomes a pan argument"],
-  "sfxLast": ["in v100", "sound.js: last"],
-  "sink": ["in v100", "sound.js: out()"],
-  "sndInit": ["bring", "two things v100 lacks: navigator.audioSession 'ambient' (the iPhone mute switch silences the game) and the limiter's knee 10, attack 0.005, release 0.25 (v100 sets threshold and ratio only); the numbers go in the Sound book"],
-  "tone": ["in v100", "sound.js: tone(), envelope shared as env()"],
-  "hiss": ["in v100", "sound.js: hiss()"],
-  "MAT": ["in v100", "Sound book HM1-HM3, law QAY"],
-  "knock": ["in v100", "sound.js: knock(), law QAY"],
-  "SFX": ["bring", "27 of 38 recipes are in the Sound book (HU, HW, HC, HA). 11 are not: shot, boom, pick, tribute, zeal, wind, hush, hooves, rumble, jingle, roar. Each comes with the feature that plays it (cannon, tribute, zeal, weather, events), as a book entry"],
-  "CHAN": ["in v100", "Sound book HX2 chan; the 11 above join it when they come"],
-  "chanVol": ["bring", "three volumes (effects, alerts, ambience) set by the player; v100 has on/off only. A 'mix' entry in the Sound book and one slider row"],
-  "VOICES": ["in v100", "Sound book HX3"],
-  "voiceFree": ["in v100", "sound.js: play()"],
-  "sfx": ["in v100", "sound.js: play(), heard through the event hook"],
-  "camH": ["in v100", "sound.js: camH(), law QAX; v100's is in metres, Mid's in units"],
-  "hearing": ["in v100", "sound.js: hearing(), law QAX; v100 also undoes the 41° squash"],
-  "AMB": ["bring", "bird and cricket are in HX4; the wind (heard when it blows harder than 0.35) is not: it comes with the wind"],
-  "ambT": ["in v100", "sound.js: ambT"],
-  "ambience": ["bring", "the wind line, with the wind; Mid's bird also waits for a tree with wood left (v100 sings from any tree)"],
-  "thunder": ["bring", "Mid makes a strike loud enough to carry the map (at least 4 × the floor, heard as if a quarter as far); v100's far thunder can fall silent. One number in HX1"],
-  "APP": ["bring", "the native app's haptics (Apple's taptic engine through Capacitor); only when there is a native app"],
-  "FEEL": ["bring", "three strengths (light, medium, heavy) for the native engine; v100's HX6 has milliseconds only, which iPhone Safari ignores"],
-  "HAPTIC": ["in v100", "Sound book HX6, by event"],
-  "feltT": ["bring", "never felt more often than every 50 ms; v100 has no limit"],
-  "feel": ["bring", "with APP and FEEL"],
-  "onScreen": ["in v100", "the hearing law keeps off-screen sounds quiet; Mid also felt only what is on screen: comes with feel"]
+  "SND": [
+   "cut",
+   "on/off and volume as getters over Mid's settings; v100's SOUND.toggle/on does on/off",
+   "bring the volume with 'mix' below"
+  ],
+  "saveSnd": [
+   "cut",
+   "saves Mid's settings; Saving is its own temp book"
+  ],
+  "AC": [
+   "in v100",
+   "sound.js: AC, master, NOISE, voices; panV becomes a pan argument"
+  ],
+  "sfxLast": [
+   "in v100",
+   "sound.js: last"
+  ],
+  "sink": [
+   "in v100",
+   "sound.js: out()"
+  ],
+  "sndInit": [
+   "in v100",
+   "Frankenstein 4: the Ring/Silent switch (HX8) and the whole limiter (HX9) in sound.js wake()"
+  ],
+  "tone": [
+   "in v100",
+   "sound.js: tone(), envelope shared as env()"
+  ],
+  "hiss": [
+   "in v100",
+   "sound.js: hiss()"
+  ],
+  "MAT": [
+   "in v100",
+   "Sound book HM1-HM3, law QAY"
+  ],
+  "knock": [
+   "in v100",
+   "sound.js: knock(), law QAY"
+  ],
+  "SFX": [
+   "in v100",
+   "Frankenstein 4: all 38 recipes in the Sound book; pick plays at the Bush; 10 wait for their features (each names it); t-match proves each makes Mid's parts"
+  ],
+  "CHAN": [
+   "in v100",
+   "Sound book HX2, with the 8 new ones on Mid's channels"
+  ],
+  "chanVol": [
+   "in v100",
+   "Frankenstein 4: three volumes (HX10), a step a tap on the Yard"
+  ],
+  "VOICES": [
+   "in v100",
+   "Sound book HX3"
+  ],
+  "voiceFree": [
+   "in v100",
+   "sound.js: play()"
+  ],
+  "sfx": [
+   "in v100",
+   "sound.js: play(), heard through the event hook"
+  ],
+  "camH": [
+   "in v100",
+   "sound.js: camH(), law QAX; v100's is in metres, Mid's in units"
+  ],
+  "hearing": [
+   "in v100",
+   "sound.js: hearing(), law QAX; v100 also undoes the 41° squash"
+  ],
+  "AMB": [
+   "bring",
+   "bird and cricket are in HX4; the wind (heard when it blows harder than 0.35) is not: it comes with the wind"
+  ],
+  "ambT": [
+   "in v100",
+   "sound.js: ambT"
+  ],
+  "ambience": [
+   "bring",
+   "the wind line, with the wind; Mid's bird also waits for a tree with wood left (v100 sings from any tree)"
+  ],
+  "thunder": [
+   "in v100",
+   "Frankenstein 4: thunder's real reach, about 10 miles (HX7, law QBY, N89): heard across the whole board"
+  ],
+  "APP": [
+   "parked",
+   "Albert, Nov 5 09:47: native-app haptics, three strengths and the 50 ms limit, not yet"
+  ],
+  "FEEL": [
+   "parked",
+   "Albert, Nov 5 09:47: native-app haptics, three strengths and the 50 ms limit, not yet"
+  ],
+  "HAPTIC": [
+   "in v100",
+   "Sound book HX6, by event"
+  ],
+  "feltT": [
+   "parked",
+   "Albert, Nov 5 09:47: native-app haptics, three strengths and the 50 ms limit, not yet"
+  ],
+  "feel": [
+   "parked",
+   "Albert, Nov 5 09:47: native-app haptics, three strengths and the 50 ms limit, not yet"
+  ],
+  "onScreen": [
+   "parked",
+   "felt only on screen: comes with the haptics, parked"
+  ]
  }
 }

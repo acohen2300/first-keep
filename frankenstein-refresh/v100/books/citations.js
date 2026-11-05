@@ -87,5 +87,6 @@ BOOK("citations", {
  "N85": {"text":"Masses of animals and arms: horse about 500 kg, deer 70, wolf 40, bear 200; spear 2.5 kg, shield 5, scale armour 12, lance 4; strides and blow speeds (natural history and arms, from memory, to open)","opened":false},
  "N86": {"text":"Rossing, The Science of Sound: the modes of a free bar at 1 : 2.756 : 5.404 (from memory, to open; carried from Base)","opened":false},
  "N87": {"text":"Densities: timber about 600 kg/m³, stone about 2,400, iron 7,870 (standard tables, from memory, to open)","opened":false},
- "N88": {"text":"Fresh snow is porous and absorbs sound, high frequencies most: a snowy landscape sounds muffled (acoustics of snow, from memory, to open)","opened":false}
+ "N88": {"text":"Fresh snow is porous and absorbs sound, high frequencies most: a snowy landscape sounds muffled (acoustics of snow, from memory, to open)","opened":false},
+ "N89": {"text":"National Weather Service, Understanding Lightning: Thunder (weather.gov/safety/lightning-science-thunder): thunder can be heard only about 10 miles from the strike; sound takes about 5 seconds a mile","opened":true}
 });

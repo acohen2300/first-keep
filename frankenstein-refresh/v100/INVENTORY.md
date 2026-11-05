@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,605 | 232,373 | 232,671 |
-| Books | 514 | 0 | 85,674 | 85,890 |
-| Laws | 73 | 0 | 7,081 | 7,320 |
-| Tools | 4 | 320 | 33,004 | 33,076 |
+| Game code | 28 | 1,609 | 233,352 | 233,651 |
+| Books | 532 | 0 | 90,711 | 90,927 |
+| Laws | 74 | 0 | 7,375 | 7,617 |
+| Tools | 4 | 337 | 36,018 | 36,090 |
 
 ## The trades (code)
 
@@ -36,11 +36,11 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-7-display | 28 | 3,972 | 3,977 | 77 |
 | index.html#the-woods-cache | 51 | 5,372 | 5,377 | 89 |
 | index.html#touch | 40 | 4,742 | 4,746 | 59 |
-| menu.js | 250 | 43,958 | 44,001 | 643 |
+| menu.js | 251 | 44,253 | 44,296 | 643 |
 | econ.js | 77 | 12,307 | 12,312 | 104 |
 | combat.js | 53 | 8,708 | 8,714 | 103 |
 | ai.js | 44 | 6,164 | 6,167 | 43 |
-| sound.js | 53 | 6,200 | 6,208 | 69 |
+| sound.js | 56 | 6,884 | 6,893 | 68 |
 
 ## The books
 
@@ -48,15 +48,15 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 3 | 599 |
 | capabilities | 25 | 5,927 |
-| citations | 88 | 9,705 |
+| citations | 89 | 9,939 |
 | colours | 9 | 1,118 |
 | ground | 4 | 819 |
 | mass | 16 | 2,515 |
 | measure | 176 | 29,691 |
-| rules | 41 | 8,010 |
-| screen | 10 | 2,928 |
-| shells | 74 | 15,941 |
-| sound | 37 | 7,884 |
+| rules | 43 | 8,497 |
+| screen | 10 | 2,953 |
+| shells | 74 | 15,958 |
+| sound | 52 | 11,964 |
 | sprites | 31 | 7,102 |
 
 ## The shells
@@ -112,5 +112,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X39 | t-ai | page | the computer raises its army buildings in the book's order (D179) |
 | X40 | byname | survey | code that asks what a thing is by a typed name (kind === 'tree'): ask by tick |
 | X41 | frozen | survey | the reference copy differs from its seal, or its parts, or the temp books read back in its order, do not rebuild it byte for byte |
+| X42 | t-match | page | a sound brought from Mid makes the same parts as Mid's own code makes it (same action, same result) |
+| X43 | sorted | survey | a temp book being sorted leaves a piece of Mid without its line (in v100, bring, cut or parked) |
 
-619 items sealed · 514 book entries · 73 laws · 88 citations, 17 still to open · 9 known
+638 items sealed · 532 book entries · 74 laws · 89 citations, 17 still to open · 9 known

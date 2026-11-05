@@ -132,6 +132,7 @@ Written by `index.py` from `books/*.js`, never by hand.
 | N86 |  | Rossing, The Science of Sound: the modes of a free bar at 1 : 2.756 : 5.404 (from memory, to open; carried from Base) | to open |
 | N87 |  | Densities: timber about 600 kg/m³, stone about 2,400, iron 7,870 (standard tables, from memory, to open) | to open |
 | N88 |  | Fresh snow is porous and absorbs sound, high frequencies most: a snowy landscape sounds muffled (acoustics of snow, from memory, to open) | to open |
+| N89 |  | National Weather Service, Understanding Lightning: Thunder (weather.gov/safety/lightning-science-thunder): thunder can be heard only about 1 | opened |
 
 ## colours
 
@@ -403,6 +404,8 @@ Written by `index.py` from `books/*.js`, never by hand.
 | X39 | the computer raises its army buildings in the book's order (D179) | {stage: page} | Design: the audit of Nov 5, Build A: a test for each fix |
 | X40 | code that asks what a thing is by a typed name (kind === 'tree'): ask by tick | {stage: survey} | Design: Albert, Nov 5 (Frankenstein Refresh: map Mid with our tests) |
 | X41 | the reference copy differs from its seal, or its parts, or the temp books read back in its order, do not rebuild it byte for byte | {stage: survey} | Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it) |
+| X42 | a sound brought from Mid makes the same parts as Mid's own code makes it (same action, same result) | {stage: page} | Design: Albert, Nov 5 09:49 (Frankenstein 4: the match test) |
+| X43 | a temp book being sorted leaves a piece of Mid without its line (in v100, bring, cut or parked) | {stage: survey} | Design: Albert, Nov 5 09:47 (sort every piece) |
 
 ## screen
 
@@ -417,7 +420,7 @@ Written by `index.py` from `books/*.js`, never by hand.
 | SN10 | the Start page | {ticks: [Tall], rows: the new game's choices} | Design: Albert, Nov 4 (the setup screen its own height) |
 | SN11 | the Build page | {ticks: [], rows: title, the six tabs, the tab's grid} | Design: Albert, Nov 5 |
 | SN12 | the Town Center page | {ticks: [Tall], rows: title, three tabs, the queue, train, tech} | Design: Albert, Nov 5 07:34 |
-| SN13 | the Yard | {ticks: [], rows: title, the layers, Fast and New} | Design: v100 floor 8, Nov 5 |
+| SN13 | the Yard | {ticks: [Tall], rows: title, the layers, Fast and New, the three volumes} | Design: v100 floor 8, Nov 5 |
 
 ## shells
 
@@ -512,33 +515,48 @@ Written by `index.py` from `books/*.js`, never by hand.
 | HU5 | a place of war raised: a drum, then a horn | [0.2, [hiss, 0.08, 0.35, 180, 1, 90], [tone, 80, 0.25, sine, 0.35, 55], [tone, 196, 0.5, sawtooth, 0.09, 220, 0.2], [tone, 262, 0.6, sawtoot | Art: Base |
 | HU6 | a villager trained: a light chime | [0.34, [tone, 440, 0.08, sine, 0.2], [tone, 587, 0.14, sine, 0.2, 0, 0.08]] | Art: Base |
 | HU7 | a soldier trained: a short brass call | [0.34, [tone, 294, 0.12, sawtooth, 0.08], [tone, 392, 0.12, sawtooth, 0.08, 0, 0.11], [tone, 440, 0.3, sawtooth, 0.09, 0, 0.22]] | Art: Base |
-| HU8 | a new age: the chord spreads across the ears | [1, [tone, 523, 0.3, triangle, 0.22, 0, 0, -0.68], [tone, 659, 0.3, triangle, 0.22, 0, 0.14, -0.23], [tone, 784, 0.3, triangle, 0.22, 0, 0.2 | Art: Base |
+| HU8 | a new age: the chord spreads across the ears | [1, [tone, 523, 0.3, triangle, 0.22, 0, 0, -0.675], [tone, 659, 0.3, triangle, 0.22, 0, 0.14, -0.225], [tone, 784, 0.3, triangle, 0.22, 0, 0 | Art: Base |
 | HU9 | the game won | [1, [tone, 392, 0.4, triangle, 0.22], [tone, 523, 0.4, triangle, 0.22, 0, 0.16], [tone, 659, 0.4, triangle, 0.22, 0, 0.32], [tone, 784, 0.4, | Art: Base |
 | HU10 | the game lost | [1, [tone, 392, 0.55, triangle, 0.22], [tone, 349, 0.55, triangle, 0.22, 0, 0.3], [tone, 311, 0.55, triangle, 0.22, 0, 0.6], [tone, 262, 0.5 | Art: Base |
 | HU11 | a unit picked: its tool creaks | [0.15, [knock, wood, 330, 0.18, 0, 0.6]] | Art: Base |
 | HU12 | a unit picked: a blade clinks | [0.15, [knock, metal, 1800, 0.08, 0, 0.4]] | Art: Base |
 | HU13 | a unit picked: a bowstring, its fundamental and two harmonics | [0.15, [tone, 180, 0.18, triangle, 0.12], [tone, 360, 0.09, triangle, 0.06], [tone, 540, 0.06, triangle, 0.04]] | Art: Base |
 | HU14 | a unit picked: a horse stamps twice | [0.15, [knock, wood, 90, 0.22, 0, 0.3], [knock, wood, 90, 0.22, 0.11, 0.3]] | Art: Base |
+| HU15 | gold from anything but your own mint: a soft bell | [3, [tone, 523, 0.45, sine, 0.1], [tone, 784, 0.6, sine, 0.08, 0, 0.12]] | Art: Mid (35-sound.js), Nov 5 |
+| HU16 | zeal: a rising call | [2, [tone, 262, 0.5, triangle, 0.18, 523], [tone, 392, 0.5, sine, 0.12, 784, 0.1], [hiss, 0.4, 0.1, 2000, 1, 5000]] | Art: Mid (35-sound.js), Nov 5 |
+| HU17 | a travelling show | [2, [tone, 784, 0.12, triangle, 0.1], [tone, 988, 0.12, triangle, 0.1, 0, 0.1], [tone, 1175, 0.12, triangle, 0.1, 0, 0.2], [tone, 988, 0.12, | Art: Mid (35-sound.js), Nov 5 |
+| HU18 | a beast | [4, [tone, 90, 0.9, sawtooth, 0.14, 60], [hiss, 0.9, 0.3, 500, 0.8, 150]] | Art: Mid (35-sound.js), Nov 5 |
 | HW1 | a site raised, a blow | [0.25, [hiss, 0.04, 0.3, 2200, 3], [tone, 900, 0.05, square, 0.06, 500]] | Art: Base |
 | HW2 | an axe in a trunk | [0.18, [knock, wood, 220, 0.3]] | Art: Base |
 | HW3 | a pick on rock | [0.18, [knock, stone, 1400, 0.12]] | Art: Base |
 | HW4 | gold into the store: two coins | [0.1, [knock, metal, 1319, 0.08, 0, 0.3], [knock, metal, 1760, 0.08, 0.07, 0]] | Art: Base |
+| HW5 | hands at a bush: a light pluck | [0.3, [tone, 520, 0.05, sine, 0.07, 700]] | Art: Mid (35-sound.js), Nov 5 |
 | HC1 | a blow lands | [0.07, [hiss, 0.05, 0.28, 900, 1], [tone, 160, 0.06, sawtooth, 0.12, 90]] | Art: Base |
 | HC2 | a blow on a building | [0.1, [tone, 90, 0.12, triangle, 0.3, 60], [hiss, 0.08, 0.2, 300, 1]] | Art: Base |
 | HC3 | a heavy impact: the struck one is sent back | [0.12, [tone, 70, 0.1, triangle, 0.38, 40], [hiss, 0.06, 0.25, 400, 1]] | Art: Base (the juice pass, Nov 3) |
 | HC4 | an arrow loosed | [0.07, [hiss, 0.12, 0.2, 3000, 2, 1200]] | Art: Base |
 | HC5 | a building falls | [0.3, [hiss, 0.7, 0.45, 400, 0.7, 100], [tone, 70, 0.5, sawtooth, 0.22, 35]] | Art: Base |
 | HC6 | a wave sets out | [8, [tone, 196, 0.35, sawtooth, 0.1, 220], [tone, 220, 0.55, sawtooth, 0.1, 262, 0.35], [tone, 98, 0.9, triangle, 0.2]] | Art: Base |
+| HC7 | a hand gun | [0.12, [hiss, 0.16, 0.5, 900, 1, 200], [tone, 120, 0.16, sawtooth, 0.26, 50]] | Art: Mid (35-sound.js), Nov 5 |
+| HC8 | a siege gun, a blast | [0.25, [hiss, 0.55, 0.6, 320, 0.8, 80], [tone, 62, 0.5, sawtooth, 0.36, 30]] | Art: Mid (35-sound.js), Nov 5 |
 | HA1 | a bird in a tree you can see, by day, not in winter | [1, [tone, 2600, 0.07, sine, 0.04, 3400], [tone, 3000, 0.08, sine, 0.04, 3600, 0.12]] | Art: Base |
 | HA2 | a cricket at night, not in winter | [1, [tone, 4300, 0.03, square, 0.012], [tone, 4300, 0.03, square, 0.012, 0, 0.06], [tone, 4300, 0.03, square, 0.012, 0, 0.12], [tone, 4300,  | Art: Base |
 | HA3 | thunder, after the flash by the real delay | [0.5, [hiss, 0.12, 0.5, 2500, 0.8, 600], [hiss, 2.2, 0.4, 160, 0.5, 50, 0.05], [tone, 45, 1.8, sine, 0.25, 30]] | Art: Base |
+| HA4 | the wind, as hard as it blows | [4, [hiss, 2.4, 0.08, 500, 0.6, 280]] | Art: Mid (35-sound.js), Nov 5 |
+| HA5 | an eclipse: the wind drops, a low note holds | [5, [hiss, 3, 0.06, 300, 0.5, 120], [tone, 110, 2.5, sine, 0.08, 55]] | Art: Mid (35-sound.js), Nov 5 |
+| HA6 | a stampede: a rolling drum of hooves | [1, [tone, 70, 0.08, sine, 0.3, 40], [hiss, 0.05, 0.18, 400, 1, 200], [tone, 70, 0.08, sine, 0.3, 40, 0.13], [hiss, 0.05, 0.18, 400, 1, 200, | Art: Mid (35-sound.js), Nov 5 |
+| HA7 | the ground shakes | [1.5, [tone, 38, 1.6, sine, 0.4, 28], [hiss, 1.4, 0.3, 120, 0.6, 60]] | Art: Mid (35-sound.js), Nov 5 |
 | HE1 | which event plays which sound (a find's own sound and a unit's voice sit on its shell) | {tap: tap, err: err, place: place, built: done, builtWar: doneWar, trained: ready, trainedSol: readySol, age: age, win: win, lose: lose, rai | Design, Nov 5 |
 | HX1 | the ear: the lens's field of view, the air's loss in dB a km, the quietest heard, the speed of sound in m/s | {fov: 60, alphaKm: 5, floor: 0.03, c: 340} | N58 |
-| HX2 | which sounds are ambience and which alerts (the rest are effects) | {amb: [bird, cricket, thunder], alert: [age, win, lose, done, doneWar, ready, readySol, coin, horn]} | Art: Base |
+| HX2 | which sounds are ambience and which alerts (the rest are effects) | {amb: [bird, cricket, thunder, wind, hush, hooves, rumble], alert: [age, win, lose, done, doneWar, ready, readySol, coin, horn, tribute, zea | Art: Base; Art: Mid (35-sound.js), Nov 5 |
 | HX3 | voices at once; how many each kind leaves free | {max: 14, keep: {alert: 0, fx: 2, amb: 5}} | Art: Base |
 | HX4 | songs a second a singer in view (a Poisson rate), and the most singers counted | {bird: 0.025, cricket: 0.04, singers: 12} | N12; Art: Base |
 | HX5 | the air's top: Hz with no snow, Hz under full snow; how much rain masks a quiet sound | {open: 16000, snow: 2500, rainMask: 0.5} | N88; Design, Nov 5 |
 | HX6 | which events are also felt, milliseconds of buzz | {place: 8, done: 25, doneWar: 25, impact: 25, fell: 40, strike: 40, err: 8} | Art: Base |
+| HX7 | how far a sound carries before it fades to the quietest heard, metres: thunder about 10 miles | {thunder: 16093} | N89 |
+| HX8 | the phone's audio session: ambient obeys the Ring/Silent switch and plays under the player's own music | ambient | Design: Apple's ambient audio session for games, carried from Mid (35-sound.js) |
+| HX9 | the limiter: a battle's many blows never clip a phone speaker (dB, dB, ratio, seconds, seconds) | {threshold: -3, knee: 10, ratio: 4, attack: 0.005, release: 0.25} | Art: Mid (35-sound.js), Nov 5 |
+| HX10 | the three volumes the player sets, a step a tap | {steps: [[1, Full], [0.5, Half], [0, Off]], names: {fx: Effects, alert: Alerts, amb: Ambience}} | Design: Albert, Nov 5 09:47 (three volumes) |
 
 ## sprites
 
