@@ -1,0 +1,91 @@
+{
+ "about": "Step 6, temp book staging/save.js (Mid's 34-save): every piece. v100 has no save yet; its home is new: a save module. in v100: already home. bring: comes with the save module, as v100's own code and book entries, never Mid's field names. cut: v100 does it another way.",
+ "pieces": {
+  "SAVEKEY": [
+   "bring",
+   "the save's key on the phone and its shape number (SAVEV): with the save module"
+  ],
+  "MIGRATE": [
+   "bring",
+   "twenty steps that open Mid's older save shapes; the way (a step per old shape) comes with the save module, Mid's steps only if old saves must open (see misfits)"
+  ],
+  "reTurn": [
+   "cut",
+   "turns a save laid at another view angle; v100 keeps places on its square grid apart from the turn (index.html, the frames floor, toBoard / fromBoard, QBD), so a save never needs turning"
+  ],
+  "evSave": [
+   "bring",
+   "the running event saved without its objects: with the events module and the save"
+  ],
+  "staleSave": [
+   "bring",
+   "remembers a save that could not open, so the setup card can say so: with the save and Start"
+  ],
+  "SKIP_U": [
+   "bring",
+   "what of a unit is not saved (passing things: paths, targets, drawing marks): with the save, as v100's own list"
+  ],
+  "cardLocked": [
+   "bring",
+   "the Resume card holds the whole screen until answered, so no game starts unsaved: with the save and the Resume card (menu)"
+  ],
+  "freshSlate": [
+   "bring",
+   "a new game starts clean of the last game's save holds and error count: with the save"
+  ],
+  "holdSave": [
+   "bring",
+   "while the Resume card waits, nothing overwrites the save it offers: with the save"
+  ],
+  "inFight": [
+   "bring",
+   "is the player in a fight: the save waits out a battle (at most a minute): with saveGame"
+  ],
+  "fightHold": [
+   "bring",
+   "when the save began waiting for a battle: with saveGame"
+  ],
+  "saveFailT": [
+   "bring",
+   "a failed save says so once a minute (\"Storage may be full\"): with saveGame"
+  ],
+  "saveGame": [
+   "bring",
+   "the save every 10 s and on leaving: everything that changes, trees as five numbers, hundredths, the save before kept as .bak; v100's save writes v100's own state, not Mid's field list (some of its fields are for cut features: see misfits)"
+  ],
+  "readSave": [
+   "bring",
+   "opens the save, falls back to .bak, sets aside one it cannot open (never lost): with the save"
+  ],
+  "keepAside": [
+   "bring",
+   "a damaged save is kept aside, never written over: with the save"
+  ],
+  "migrateChain": [
+   "bring",
+   "the check that every old shape has a step to the next: with MIGRATE"
+  ],
+  "clearSave": [
+   "bring",
+   "a finished game clears the save and its backup: with the save"
+  ],
+  "loadGame": [
+   "bring",
+   "rebuilds the game from a save (links between units, finds and buildings restored by id; a damaged unit or building left out, not the whole save): with the save"
+  ]
+ },
+ "misfits": [
+  [
+   "MIGRATE, migrateChain",
+   "These open saves from older builds of the old game. v100 is a new game. Should a player's save from the live game open in v100 (it needs a bridge), or does v100 start fresh?"
+  ],
+  [
+   "saveGame, readSave",
+   "The save is kept twice (the one before is kept as a backup). The old list says you never voted on this (a save kept twice, V16). Keep the backup?"
+  ],
+  [
+   "saveGame, loadGame",
+   "The old save writes fields for features you cut: the fantasy events and the mirage. They are left out of v100's save. Confirm."
+  ]
+ ]
+}

@@ -1,0 +1,749 @@
+{
+ "about": "Step 6, temp book staging/sprites.js (Mid's 18-figures and 19-building-art): every piece. in v100: already home (v100 took preview 49's figures and building art, Nov 4). bring: Mid has it, v100 does not; it comes as Sprites book entries with its feature (most are the skins held in preview 49). cut: v100 does it another way, or Albert cut it (then also in misfits). LOOKS, ART and WONDERART carry a line per row.",
+ "pieces": {
+  "lessMotion": [
+   "bring",
+   "the player's Reduce motion setting, read from the phone; v100 has none: with the View (it stills the moving extras)"
+  ],
+  "DRAW": [
+   "bring",
+   "the draw budget: a phone that falls behind sheds cosmetic passes in one order (tree shadows, rain rings, motion, half pixels); with the View"
+  ],
+  "still": [
+   "bring",
+   "is motion off (Reduce motion or the draw budget): with lessMotion and DRAW"
+  ],
+  "shade": [
+   "in v100",
+   "index.html, the frames floor, shade (hex out)"
+  ],
+  "g": [
+   "in v100",
+   "index.html, the brushes floor, g"
+  ],
+  "KIT": [
+   "bring",
+   "the armour kits (leather, chain, plate) a side's research puts on its soldiers: with the tech tree, held as a skin in preview 49 (Parked, Nov 4); as a Sprites book entry read by a Level attribute"
+  ],
+  "P_": [
+   "in v100",
+   "index.html, the brushes floor, P_"
+  ],
+  "E_": [
+   "in v100",
+   "index.html, the brushes floor, E_"
+  ],
+  "L_": [
+   "in v100",
+   "index.html, the brushes floor, L_"
+  ],
+  "LG": [
+   "in v100",
+   "index.html, the brushes floor, LG"
+  ],
+  "INK": [
+   "in v100",
+   "index.html, the figures floor, INK (with SKIN, STEEL, BRONZE, WOOD, LEATHER)"
+  ],
+  "steel": [
+   "in v100",
+   "index.html, the figures floor, steel"
+  ],
+  "bronzeG": [
+   "in v100",
+   "index.html, the figures floor, bronzeG"
+  ],
+  "person": [
+   "bring",
+   "index.html, the figures floor has person; the armour kit's overrides (KIT) and the helmet crest to bring with KIT"
+  ],
+  "helm": [
+   "bring",
+   "index.html, the figures floor has helm with every helmet kind; the crest colour (o.crest) to bring with KIT"
+  ],
+  "weapon": [
+   "in v100",
+   "index.html, the figures floor, weapon: every weapon kind is there"
+  ],
+  "shield": [
+   "in v100",
+   "index.html, the figures floor, shield: round, aspis, kite, scutum, wicker"
+  ],
+  "horse": [
+   "in v100",
+   "index.html, the figures floor, horse"
+  ],
+  "quad": [
+   "in v100",
+   "index.html, the figures floor, quad (deer, wolf, bear and the held beasts)"
+  ],
+  "elephant": [
+   "bring",
+   "the elephant's brush: with the Maurya war elephant look (held)"
+  ],
+  "wheel": [
+   "in v100",
+   "index.html, the brushes floor, wheel"
+  ],
+  "planks": [
+   "in v100",
+   "index.html, the figures floor, planks"
+  ],
+  "WORKTOOL": [
+   "in v100",
+   "index.html, the figures floor, WORKTOOL"
+  ],
+  "LOOKS": [
+   "bring",
+   "44 looks: 19 are in v100's Sprites book (P1–P19, one a U or M code, drawn by BRUSH); 21 held as skins to bring with their shells; 4 fantasy cut. Rows below",
+   {
+    "vil": [
+     "in v100",
+     "Sprites book entry with key \"vil\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "spear": [
+     "in v100",
+     "Sprites book entry with key \"spear\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "archer": [
+     "in v100",
+     "Sprites book entry with key \"archer\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "cata": [
+     "in v100",
+     "Sprites book entry with key \"cata\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "ram": [
+     "in v100",
+     "Sprites book entry with key \"ram\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "catapult": [
+     "in v100",
+     "Sprites book entry with key \"catapult\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "priest": [
+     "in v100",
+     "Sprites book entry with key \"priest\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "medic": [
+     "in v100",
+     "Sprites book entry with key \"medic\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "spy": [
+     "in v100",
+     "Sprites book entry with key \"spy\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "scout": [
+     "in v100",
+     "Sprites book entry with key \"scout\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "caravan": [
+     "in v100",
+     "Sprites book entry with key \"caravan\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "wagon": [
+     "in v100",
+     "Sprites book entry with key \"wagon\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "bandit": [
+     "in v100",
+     "Sprites book entry with key \"bandit\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "robber": [
+     "in v100",
+     "Sprites book entry with key \"robber\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "vagabond": [
+     "in v100",
+     "Sprites book entry with key \"vagabond\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "wayfarer": [
+     "in v100",
+     "Sprites book entry with key \"wayfarer\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "deer": [
+     "in v100",
+     "Sprites book entry with key \"deer\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "wolf": [
+     "in v100",
+     "Sprites book entry with key \"wolf\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "bear": [
+     "in v100",
+     "Sprites book entry with key \"bear\" (P1–P19), drawn by its brush in index.html, the figures floor"
+    ],
+    "envoy": [
+     "bring",
+     "the envoy, with diplomacy; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "sword": [
+     "bring",
+     "the swordsman, with his shell; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "legion": [
+     "bring",
+     "the Roman legionary (civ elite), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "immortal": [
+     "bring",
+     "the Persian Immortal (civ elite), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "jav": [
+     "bring",
+     "the javelin thrower, with his shell; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "crossbow": [
+     "bring",
+     "the crossbowman, with his shell; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "arquebus": [
+     "bring",
+     "the arquebusier, a gunpowder soldier (see misfits); held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "bombard": [
+     "bring",
+     "the bombard, a gunpowder engine (see misfits); held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "chariot": [
+     "bring",
+     "the Han chariot (civ unit), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "malihorse": [
+     "bring",
+     "the Mali horseman (civ elite), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "harcher": [
+     "bring",
+     "the horse archer (Mongol elite), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "elephant": [
+     "bring",
+     "the Maurya war elephant (civ elite), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "stower": [
+     "bring",
+     "the siege tower, with Engines; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "ballista": [
+     "bring",
+     "the ballista, with Engines; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "treb": [
+     "bring",
+     "the trebuchet, with Engines; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "boar": [
+     "bring",
+     "the boar, with the wildlife and hunting; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "direwolf": [
+     "bring",
+     "the big wolf, with the wildlife; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "bison": [
+     "bring",
+     "the bison, with the wildlife and hunting; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "performer": [
+     "bring",
+     "the travelling show's performer, with the Games; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "native": [
+     "bring",
+     "the native, with the natives; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "nativebow": [
+     "bring",
+     "the native archer, with the natives; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+    ],
+    "dragon": [
+     "cut",
+     "fantasy: Albert cut it (Parked, Nov 4, \"cut: dragon, goblin, skeleton, troll\"); see misfits"
+    ],
+    "goblin": [
+     "cut",
+     "fantasy: Albert cut it (Parked, Nov 4, \"cut: dragon, goblin, skeleton, troll\"); see misfits"
+    ],
+    "skeleton": [
+     "cut",
+     "fantasy: Albert cut it (Parked, Nov 4, \"cut: dragon, goblin, skeleton, troll\"); see misfits"
+    ],
+    "troll": [
+     "cut",
+     "fantasy: Albert cut it (Parked, Nov 4, \"cut: dragon, goblin, skeleton, troll\"); see misfits"
+    ]
+   }
+  ],
+  "LOOKBOX": [
+   "in v100",
+   "each look's frame is its \"box\" in the Sprites book (index.html LOOKBOX reads it); the boxes of the held looks come with their looks (Parked, Nov 5)"
+  ],
+  "SPR": [
+   "in v100",
+   "index.html, the things floor, SPR (one sprite cache)"
+  ],
+  "trim": [
+   "bring",
+   "v100's sprite() drops the oldest past 400; Mid also zeroes the dropped canvas to give the memory back at once (iPhone drops pages that hold too much): to bring with the cache"
+  ],
+  "SCALES": [
+   "cut",
+   "zoom steps for the cache: v100's sprite() snaps to steps of √2 (STEP)"
+  ],
+  "ELITE_LOOK": [
+   "bring",
+   "which looks wear the elite rank: with the civs' elites and the tech tree, held as skins; as a Sprites book entry, not a list in code"
+  ],
+  "elitePennant": [
+   "bring",
+   "the elite rank's gold pennant on a staff: with ELITE_LOOK"
+  ],
+  "sprite": [
+   "bring",
+   "v100 has sprite() and unitSprite() (look, colour, pose, zoom); the tier and the armour kit in the key come with ELITE_LOOK and KIT"
+  ],
+  "TOWER_LOOK": [
+   "in v100",
+   "index.html, the building art floor, TOWER_LOOK"
+  ],
+  "STONE": [
+   "in v100",
+   "index.html, the building art floor, STONE (and PLASTER, PLANK, MUD, THATCH, TILE, SLATE, SHADOW)"
+  ],
+  "SUN": [
+   "in v100",
+   "index.html, the building art floor, SUN"
+  ],
+  "hexRGB": [
+   "in v100",
+   "index.html, the building art floor, hexRGB"
+  ],
+  "mix": [
+   "in v100",
+   "index.html, the building art floor, mix"
+  ],
+  "lit": [
+   "in v100",
+   "index.html, the building art floor, lit"
+  ],
+  "LINE": [
+   "in v100",
+   "index.html, the building art floor, LINE"
+  ],
+  "ao": [
+   "in v100",
+   "index.html, the building art floor, ao"
+  ],
+  "rim": [
+   "in v100",
+   "index.html, the building art floor, rim"
+  ],
+  "sides": [
+   "in v100",
+   "index.html, the building art floor, sides"
+  ],
+  "UP": [
+   "bring",
+   "the research footing and corner stones on a building (0, 1, 2): with the tech tree, held as a skin in preview 49 (Parked, Nov 4)"
+  ],
+  "TECHAT": [
+   "bring",
+   "which research belongs to which building: with UP and the tech tree (the Tech book)"
+  ],
+  "upTier": [
+   "bring",
+   "a building's research tier from the side's research: with UP"
+  ],
+  "block": [
+   "in v100",
+   "index.html, the building art floor, block"
+  ],
+  "roofGrain": [
+   "in v100",
+   "index.html, the building art floor, roofGrain"
+  ],
+  "texture": [
+   "in v100",
+   "index.html, the building art floor, texture"
+  ],
+  "ridgeRoof": [
+   "in v100",
+   "index.html, the building art floor, ridgeRoof"
+  ],
+  "door": [
+   "in v100",
+   "index.html, the building art floor, door"
+  ],
+  "win": [
+   "in v100",
+   "index.html, the building art floor, win"
+  ],
+  "FLAGS": [
+   "bring",
+   "the pennant slots: a building's flags drawn live over it and waving; held as a skin in preview 49 (Parked, Nov 4)"
+  ],
+  "banner": [
+   "in v100",
+   "index.html, the building art floor, banner (still flags; the live ones come with FLAGS)"
+  ],
+  "crenels": [
+   "in v100",
+   "index.html, the building art floor, crenels"
+  ],
+  "column": [
+   "in v100",
+   "index.html, the building art floor, column"
+  ],
+  "smallTree": [
+   "in v100",
+   "index.html, the building art floor, smallTree"
+  ],
+  "stump": [
+   "in v100",
+   "index.html, the building art floor, stump"
+  ],
+  "grassTufts": [
+   "in v100",
+   "index.html, the building art floor, grassTufts"
+  ],
+  "hay": [
+   "in v100",
+   "index.html, the building art floor, hay"
+  ],
+  "barrel": [
+   "in v100",
+   "index.html, the building art floor, barrel"
+  ],
+  "crate": [
+   "in v100",
+   "index.html, the building art floor, crate"
+  ],
+  "sack": [
+   "in v100",
+   "index.html, the building art floor, sack"
+  ],
+  "lantern": [
+   "in v100",
+   "index.html, the building art floor, lantern"
+  ],
+  "sheep": [
+   "in v100",
+   "index.html, the building art floor, sheep"
+  ],
+  "pony": [
+   "in v100",
+   "index.html, the building art floor, pony"
+  ],
+  "leanto": [
+   "in v100",
+   "index.html, the building art floor, leanto"
+  ],
+  "ART": [
+   "bring",
+   "48 building pictures: 38 in v100 as they are, 9 in v100 less a variant held as a skin (ages, civs, seasons, tiers), the Town cut. Rows below",
+   {
+    "castle": [
+     "in v100",
+     "index.html, the building art floor, ART.castle"
+    ],
+    "medtent": [
+     "in v100",
+     "index.html, the building art floor, ART.medtent"
+    ],
+    "traintent": [
+     "in v100",
+     "index.html, the building art floor, ART.traintent"
+    ],
+    "messtent": [
+     "in v100",
+     "index.html, the building art floor, ART.messtent"
+    ],
+    "depot": [
+     "in v100",
+     "index.html, the building art floor, ART.depot"
+    ],
+    "camptower": [
+     "in v100",
+     "index.html, the building art floor, ART.camptower"
+    ],
+    "abatis": [
+     "in v100",
+     "index.html, the building art floor, ART.abatis"
+    ],
+    "palisade": [
+     "in v100",
+     "index.html, the building art floor, ART.palisade"
+    ],
+    "house": [
+     "in v100",
+     "index.html, the building art floor, ART.house"
+    ],
+    "apartment": [
+     "in v100",
+     "index.html, the building art floor, ART.apartment"
+    ],
+    "aqueduct": [
+     "in v100",
+     "index.html, the building art floor, ART.aqueduct"
+    ],
+    "mill": [
+     "in v100",
+     "index.html, the building art floor, ART.mill"
+    ],
+    "store": [
+     "in v100",
+     "index.html, the building art floor, ART.store"
+    ],
+    "lumber": [
+     "in v100",
+     "index.html, the building art floor, ART.lumber"
+    ],
+    "mining": [
+     "in v100",
+     "index.html, the building art floor, ART.mining"
+    ],
+    "barracks": [
+     "in v100",
+     "index.html, the building art floor, ART.barracks"
+    ],
+    "range": [
+     "in v100",
+     "index.html, the building art floor, ART.range"
+    ],
+    "stable": [
+     "in v100",
+     "index.html, the building art floor, ART.stable"
+    ],
+    "smith": [
+     "in v100",
+     "index.html, the building art floor, ART.smith"
+    ],
+    "market": [
+     "in v100",
+     "index.html, the building art floor, ART.market"
+    ],
+    "school": [
+     "in v100",
+     "index.html, the building art floor, ART.school"
+    ],
+    "hospital": [
+     "in v100",
+     "index.html, the building art floor, ART.hospital"
+    ],
+    "baths": [
+     "in v100",
+     "index.html, the building art floor, ART.baths"
+    ],
+    "theatre": [
+     "in v100",
+     "index.html, the building art floor, ART.theatre"
+    ],
+    "tavern": [
+     "in v100",
+     "index.html, the building art floor, ART.tavern"
+    ],
+    "temple": [
+     "in v100",
+     "index.html, the building art floor, ART.temple"
+    ],
+    "courthouse": [
+     "in v100",
+     "index.html, the building art floor, ART.courthouse"
+    ],
+    "siege": [
+     "in v100",
+     "index.html, the building art floor, ART.siege"
+    ],
+    "dock": [
+     "in v100",
+     "index.html, the building art floor, ART.dock"
+    ],
+    "wall": [
+     "in v100",
+     "index.html, the building art floor, ART.wall"
+    ],
+    "gate": [
+     "in v100",
+     "index.html, the building art floor, ART.gate"
+    ],
+    "council": [
+     "in v100",
+     "index.html, the building art floor, ART.council"
+    ],
+    "tpost": [
+     "in v100",
+     "index.html, the building art floor, ART.tpost"
+    ],
+    "throne": [
+     "in v100",
+     "index.html, the building art floor, ART.throne"
+    ],
+    "workshop": [
+     "in v100",
+     "index.html, the building art floor, ART.workshop"
+    ],
+    "foundry": [
+     "in v100",
+     "index.html, the building art floor, ART.foundry"
+    ],
+    "quarry": [
+     "in v100",
+     "index.html, the building art floor, ART.quarry"
+    ],
+    "mint": [
+     "in v100",
+     "index.html, the building art floor, ART.mint"
+    ],
+    "keep": [
+     "bring",
+     "index.html, the building art floor has ART.keep; its fourth-age banner (v) comes with the ages, held as a skin in preview 49 (Parked, Nov 4)"
+    ],
+    "town": [
+     "cut",
+     "the drawn Town: Albert cut Town (\"kill it\", Nov 4); see misfits"
+    ],
+    "tent": [
+     "bring",
+     "index.html, the building art floor has the tent; its own mark (the tent's sign) comes with the camps, held as a skin in preview 49 (Parked, Nov 4)"
+    ],
+    "hall": [
+     "bring",
+     "index.html, the building art floor has ART.hall (Roman front); the other five civ fronts come with the civs, held as a skin in preview 49 (Parked, Nov 4)"
+    ],
+    "library": [
+     "bring",
+     "index.html, the building art floor has ART.library with uni = false; the university look at the fourth age comes with the ages"
+    ],
+    "tower": [
+     "bring",
+     "index.html, the building art floor has ART.tower and TOWER_LOOK; the three tiers by research come with the tech tree, held as a skin in preview 49 (Parked, Nov 4)"
+    ],
+    "farm": [
+     "bring",
+     "index.html, the building art floor has ART.farm; the farm by season and crop comes with the seasons, held as a skin in preview 49 (Parked, Nov 4)"
+    ],
+    "pasture": [
+     "bring",
+     "index.html, the building art floor has ART.pasture; sheep on it by count come with livestock (ML1), held as a skin in preview 49 (Parked, Nov 4)"
+    ],
+    "treefarm": [
+     "bring",
+     "index.html, the building art floor has ART.treefarm; the spent tree farm comes with its amount running out, held as a skin in preview 49 (Parked, Nov 4)"
+    ],
+    "wonder": [
+     "bring",
+     "index.html, the building art floor has ART.wonder (wonderArt, the Roman); the civ fronts come with WONDERART"
+    ]
+   }
+  ],
+  "plotPts": [
+   "in v100",
+   "index.html, the building art floor, plotPts"
+  ],
+  "gpt": [
+   "in v100",
+   "index.html, the building art floor, gpt"
+  ],
+  "post": [
+   "in v100",
+   "index.html, the building art floor, post"
+  ],
+  "rail": [
+   "in v100",
+   "index.html, the building art floor, rail"
+  ],
+  "field": [
+   "in v100",
+   "index.html, the building art floor, field"
+  ],
+  "RG": [
+   "in v100",
+   "index.html, the building art floor, RG"
+  ],
+  "WONDERART": [
+   "bring",
+   "the Wonder's six civ fronts: the Roman in v100, five to bring with the civs. Rows below",
+   {
+    "roman": [
+     "in v100",
+     "index.html, the building art floor, wonderArt"
+    ],
+    "han": [
+     "bring",
+     "the Han Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4)"
+    ],
+    "persian": [
+     "bring",
+     "the Persian Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4)"
+    ],
+    "mongol": [
+     "bring",
+     "the Mongol Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4)"
+    ],
+    "maurya": [
+     "bring",
+     "the Maurya Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4)"
+    ],
+    "mali": [
+     "bring",
+     "the Mali Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4)"
+    ]
+   }
+  ],
+  "BLDTOP": [
+   "in v100",
+   "Sprites book PB1–PB11 \"top\" (index.html BLDTOP reads it)"
+  ],
+  "BSPR": [
+   "cut",
+   "the buildings' own cache: v100 has one cache for every picture (SPR)"
+  ],
+  "bldSprite": [
+   "bring",
+   "v100 has bldSprite (index.html, the things floor); Mid's choice of variant (age, civ, season, spent, sheep, tower tier, research tier) and the flags come with those skins, as Sprite entries, not kind checks"
+  ],
+  "NSPR": [
+   "cut",
+   "the finds' own cache: v100 has one cache for every picture (SPR)"
+  ],
+  "NS_c": [
+   "in v100",
+   "index.html, the node art floor, NS_c"
+  ],
+  "NS_poly": [
+   "in v100",
+   "index.html, the node art floor, NS_poly"
+  ],
+  "NS_blob": [
+   "in v100",
+   "index.html, the node art floor, NS_blob"
+  ],
+  "NS_INK": [
+   "in v100",
+   "index.html, the node art floor, NS_INK"
+  ],
+  "NODE_H": [
+   "bring",
+   "how tall each find stands, for its shadow (tree 22, bush 8, rock 7): with the shadows (QAT)"
+  ],
+  "nodeSprite": [
+   "bring",
+   "v100 has nodeArt and nodeSprite; trees by season (autumn, winter) come with the seasons, held as a skin in preview 49 (Parked, Nov 4)"
+  ]
+ },
+ "misfits": [
+  [
+   "LOOKS: dragon, goblin, skeleton, troll",
+   "Fantasy figures. You cut fantasy on Nov 4, so they are marked cut and stay out. Confirm."
+  ],
+  [
+   "LOOKS: arquebus, bombard",
+   "Gun soldiers. The old list held Gunpowder (a fifth age) for later. Bring their looks with the rest of the held soldiers, or leave guns out?"
+  ],
+  [
+   "ART: town",
+   "The drawn Town. You cut Town on Nov 4 (\"kill it\"), so it is marked cut. Confirm."
+  ]
+ ]
+}
