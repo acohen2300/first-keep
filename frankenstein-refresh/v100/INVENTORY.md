@@ -5,9 +5,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
 | Game code | 28 | 1,609 | 233,352 | 233,651 |
-| Books | 532 | 0 | 90,711 | 90,927 |
+| Books | 531 | 0 | 90,505 | 90,721 |
 | Laws | 74 | 0 | 7,375 | 7,617 |
-| Tools | 4 | 337 | 36,018 | 36,090 |
+| Tools | 4 | 338 | 36,205 | 36,277 |
 
 ## The trades (code)
 
@@ -56,7 +56,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | rules | 43 | 8,497 |
 | screen | 10 | 2,953 |
 | shells | 74 | 15,958 |
-| sound | 52 | 11,964 |
+| sound | 51 | 11,772 |
 | sprites | 31 | 7,102 |
 
 ## The shells
@@ -115,4 +115,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X42 | t-match | page | a sound brought from Mid makes the same parts as Mid's own code makes it (same action, same result) |
 | X43 | sorted | survey | a temp book being sorted leaves a piece of Mid without its line (in v100, bring, cut or parked) |
 
-638 items sealed · 532 book entries · 74 laws · 89 citations, 17 still to open · 9 known
+637 items sealed · 531 book entries · 74 laws · 89 citations, 17 still to open · 9 known

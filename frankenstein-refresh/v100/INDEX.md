@@ -184,7 +184,6 @@ Written by `index.py`, never by hand.
 - **roar** (HU18) waits for a beast in the land (an event)
 - **shot** (HC7) waits for hand guns
 - **boom** (HC8) waits for siege guns and blasts
-- **wind** (HA4) waits for the wind
-- **hush** (HA5) waits for the eclipse (an event)
+- **wind** (HA4) waits for the wind (cut Nov 4; the sound kept, Albert Nov 5 10:27)
 - **hooves** (HA6) waits for the stampede (an event)
 - **rumble** (HA7) waits for the earthquake (an event)

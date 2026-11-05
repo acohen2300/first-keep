@@ -247,3 +247,6 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 ## Frankenstein 4 · Sound: the first migration from Mid (Nov 5, Albert 09:47)
 - Parked: Mid's native-app haptics (Apple's taptic engine through Capacitor), its three strengths (light, medium, heavy), the 50 ms limit between two buzzes, and feeling only what is on screen (35-sound.js: APP, FEEL, feltT, feel, onScreen). Not yet: there is no native app. v100's simple buzz (HX6) stays.
 - Waiting, kept in the Sound book: shot (hand guns), boom (siege guns, blasts), tribute, zeal, jingle (the travelling show), roar (a beast), wind, hush (the eclipse), hooves (the stampede), rumble (the earthquake). Each plays when its feature is built; the Index lists them.
+
+## Frankenstein 6 · the eclipse (Nov 5, Albert 10:27)
+- Cut: the eclipse's sound (hush), with the eclipse itself (cut Nov 4). The wind's sound is kept, waiting for the wind.

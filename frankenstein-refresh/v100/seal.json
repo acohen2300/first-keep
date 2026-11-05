@@ -2260,13 +2260,8 @@
 "numbers": 0
 },
 "book:sound:HA4": {
-"sha": "5072c5b3cd1bd5c4c99acf96cfc5fdbc68539cc258bf6e940c7f0655c89a08a2",
-"bytes": 181,
-"numbers": 0
-},
-"book:sound:HA5": {
-"sha": "652a42e53fc7d01756ad84631b87dcd972059768b42df1fc7d9eed3588d5ee7e",
-"bytes": 246,
+"sha": "c49162ff86780acc7e43652bcc79957287ed2ef2c5c58d465fbf5db8e8a41f00",
+"bytes": 229,
 "numbers": 0
 },
 "book:sound:HA6": {
@@ -2465,8 +2460,8 @@
 "numbers": 0
 },
 "book:sound:HX2": {
-"sha": "bf2830bd7be804dd8d5b28d37a0e32e3f6938a67a189a757d09d359764d6c388",
-"bytes": 371,
+"sha": "5c251b555623904fef40fcc0aa6f24fd092e4dbdb085a58a02f706c455f03cfa",
+"bytes": 363,
 "numbers": 0
 },
 "book:sound:HX3": {
@@ -3185,8 +3180,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "45f754fa8aee7964808acdfbb7269fafd860c658f9ab5681a7b42dde873acb9b",
-"bytes": 10233,
+"sha": "378dfb63352c25efcfd4f7f5c9e91127a8ec71117989f1349c7a17c7f27d2a25",
+"bytes": 10420,
 "numbers": 0
 }
 }

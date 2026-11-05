@@ -220,3 +220,15 @@ MODIFIED (27):
 LOCKED (611 of 638): byte for byte as sealed, 278,037 bytes
 Tests: 18/18 rules hold
 Inventory: 638 items sealed · 532 book entries · 74 laws · 89 citations, 17 still to open · 9 known
+
+## Frankenstein 6 · the eclipse · 2026-11-05 10:28
+Albert, Nov 5 10:27: wind sound keep; eclipse kill
+Opened: book:sound, tool:test.py
+MODIFIED (4):
+- book:sound:HA4 · 181 → 229 bytes
+- book:sound:HA5 · removed
+- book:sound:HX2 · 371 → 363 bytes
+- tool:test.py · 10,233 → 10,420 bytes
+LOCKED (634 of 637): byte for byte as sealed, 357,254 bytes
+Tests: 18/18 rules hold
+Inventory: 637 items sealed · 531 book entries · 74 laws · 89 citations, 17 still to open · 9 known
