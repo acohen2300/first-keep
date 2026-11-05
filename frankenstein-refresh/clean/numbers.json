@@ -119,7 +119,7 @@
   ],
   "UNIT": [
    "bring",
-   "44 kinds; v100's shells hold 27 of them as 15 (soldiers by class); 17 to bring. Rows below · Albert, Nov 5 10:09: Mid's build and train times; v100's health for homes and walls; damage to review",
+   "44 kinds; v100's shells hold 27 of them as 15 (soldiers by class); 17 to bring. Rows below · Albert, Nov 5 10:11: Mid's build and train times; v100's health for every building; damage and units' health to review; 17 soldier kinds as shells in their class",
    {
     "vil": [
      "in v100",
@@ -341,7 +341,7 @@
   ],
   "BLD": [
    "bring",
-   "51 kinds: 47 are v100 shells (some with numbers, most without), 4 traps to bring (pit, net, stakes, caltrops). Where both have numbers they differ widely (rows below): Albert's call · Albert, Nov 5 10:09: Mid's build and train times; v100's health for homes and walls; damage to review",
+   "51 kinds: 47 are v100 shells (some with numbers, most without), 4 traps to bring (pit, net, stakes, caltrops). Where both have numbers they differ widely (rows below): Albert's call · Albert, Nov 5 10:11: Mid's build and train times; v100's health for every building; damage and units' health to review",
    {
     "keep": [
      "in v100",
@@ -944,12 +944,16 @@
  },
  "decisions": [
   [
-   "Albert, Nov 5 10:06, made clear 10:09",
-   "build and train times: Mid's; health of homes and walls: v100's"
+   "Albert, Nov 5 10:06-10:11",
+   "build and train times: Mid's. Buildings' health: v100's (Age of Empires II's, one source for every building; the aim: walls that hold, Mid's broke too quickly)"
   ],
   [
-   "Albert, Nov 5 10:08, 10:09",
-   "damage in general: to review later (Albert tests it in play)"
+   "Albert, Nov 5 10:08-10:11",
+   "damage, and units' health: to review later (Albert tests them in play)"
+  ],
+  [
+   "Albert, Nov 5 10:11",
+   "soldiers: Mid's 17 kinds, each its own shell ticking into its class (Foot, Archers, Riders, Engines) as the mold; each kind's sprite, speed, damage, health and rates from the books"
   ]
  ]
 }
