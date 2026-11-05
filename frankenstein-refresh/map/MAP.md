@@ -251,7 +251,7 @@ Typed numbers: numbers and colours typed into code (they belong in a book). Asks
 | numbers.js | Numbers | 5 | 2,581 | 103,299 | 104,141 | 19 in v100, 108 bring, 12 cut, 0 parked |
 | tech.js | Ages and tech | 1 | 3,375 | 73,123 | 73,159 | not yet |
 | words.js | Words | 1 | 1,215 | 103,803 | 104,005 | not yet |
-| core.js | Core | 2 | 957 | 47,164 | 47,714 | not yet |
+| core.js | Core | 2 | 957 | 47,164 | 47,714 | 38 in v100, 127 bring, 12 cut, 0 parked |
 | paths.js | Walking grid | 1 | 846 | 34,215 | 34,437 | not yet |
 | world.js | World | 7 | 1,095 | 52,496 | 53,361 | not yet |
 | econ.js | Orders and economy | 4 | 3,878 | 151,377 | 152,607 | not yet |
@@ -265,4 +265,4 @@ Typed numbers: numbers and colours typed into code (they belong in a book). Asks
 | sound.js | Sound | 1 | 478 | 14,907 | 15,043 | 19 in v100, 2 bring, 2 cut, 5 parked |
 | events.js | Events, camps, natives, peace | 4 | 1,636 | 67,062 | 67,392 | not yet |
 | start.js | Start | 1 | 750 | 12,347 | 12,467 | not yet |
-| **all** | 18 temp books | 51 | 33,957 | 1,272,150 | 1,279,351 | 167 of 1,435 pieces |
+| **all** | 18 temp books | 51 | 33,957 | 1,272,150 | 1,279,351 | 344 of 1,435 pieces |

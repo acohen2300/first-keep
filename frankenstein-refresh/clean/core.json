@@ -1,0 +1,713 @@
+{
+ "about": "Step 6, temp book staging/core.js (Mid's 08-core and 15-sim-spatial): every piece. in v100: already home. bring: comes with its feature, as book entries and laws. cut: v100 does it another way. By the 10:31 rule, what comes over keeps Mid's values.",
+ "pieces": {
+  "$": [
+   "in v100",
+   "menu.js has $"
+  ],
+  "clamp": [
+   "in v100",
+   "index.html's clamp"
+  ],
+  "hyp": [
+   "cut",
+   "Math.hypot does it"
+  ],
+  "dist": [
+   "cut",
+   "Math.hypot does it"
+  ],
+  "CODE": [
+   "cut",
+   "Mid read its ring colours from the style sheet; v100's colours live in the Colours book"
+  ],
+  "codeOf": [
+   "cut",
+   "Mid read its ring colours from the style sheet; v100's colours live in the Colours book"
+  ],
+  "TIME": [
+   "cut",
+   "Mid read its timings from the style sheet; v100's live in the Measurements book"
+  ],
+  "timeOf": [
+   "cut",
+   "Mid read its timings from the style sheet; v100's live in the Measurements book"
+  ],
+  "rgbOf": [
+   "in v100",
+   "menu.js mixes the Colours book's red, white and green (mixc, price)"
+  ],
+  "grad": [
+   "in v100",
+   "menu.js mixes the Colours book's red, white and green (mixc, price)"
+  ],
+  "costCol": [
+   "in v100",
+   "menu.js mixes the Colours book's red, white and green (mixc, price)"
+  ],
+  "byId": [
+   "cut",
+   "a lookup by id: v100 holds the things themselves"
+  ],
+  "NID": [
+   "cut",
+   "a lookup by id: v100 holds the things themselves"
+  ],
+  "lineKind": [
+   "bring",
+   "walls and traps laid as a line, corner to corner: with the walls"
+  ],
+  "standing": [
+   "in v100",
+   "a building finished and standing: v100's done and gone"
+  ],
+  "crowd": [
+   "bring",
+   "how many work a find: the crowd at a find"
+  ],
+  "NS_rng": [
+   "in v100",
+   "seeded dice for the looks: v100's map is laid by its seeded roll"
+  ],
+  "lookDice": [
+   "in v100",
+   "seeded dice for the looks: v100's map is laid by its seeded roll"
+  ],
+  "clock": [
+   "bring",
+   "the clock m:ss: the clock to the bell waits for its home (SN6)"
+  ],
+  "costText": [
+   "in v100",
+   "menu.js's costText and whyNot"
+  ],
+  "afford": [
+   "in v100",
+   "menu.js's costText and whyNot"
+  ],
+  "earn": [
+   "bring",
+   "one home for every store in or out, with the last minute's flow and the ledger of where it came from and went (v100 writes the stores directly)"
+  ],
+  "spend": [
+   "bring",
+   "one home for every store in or out, with the last minute's flow and the ledger of where it came from and went (v100 writes the stores directly)"
+  ],
+  "pay": [
+   "bring",
+   "one home for every store in or out, with the last minute's flow and the ledger of where it came from and went (v100 writes the stores directly)"
+  ],
+  "payBack": [
+   "bring",
+   "one home for every store in or out, with the last minute's flow and the ledger of where it came from and went (v100 writes the stores directly)"
+  ],
+  "addRes": [
+   "bring",
+   "one home for every store in or out, with the last minute's flow and the ledger of where it came from and went (v100 writes the stores directly)"
+  ],
+  "sumCost": [
+   "bring",
+   "one home for every store in or out, with the last minute's flow and the ledger of where it came from and went (v100 writes the stores directly)"
+  ],
+  "fmt": [
+   "bring",
+   "numbers shortened (1.2k): with the Words"
+  ],
+  "plural": [
+   "bring",
+   "numbers shortened (1.2k): with the Words"
+  ],
+  "some": [
+   "bring",
+   "numbers shortened (1.2k): with the Words"
+  ],
+  "doorOf": [
+   "in v100",
+   "v100 stands the first people round the Town Center (L12)"
+  ],
+  "towardMid": [
+   "in v100",
+   "v100 stands the first people round the Town Center (L12)"
+  ],
+  "nearest": [
+   "in v100",
+   "index.html's findNear"
+  ],
+  "rng": [
+   "bring",
+   "the game's own seeded dice, so a game can be replayed and tested (v100's rules roll Math.random in 12 places)"
+  ],
+  "rnd": [
+   "bring",
+   "the game's own seeded dice, so a game can be replayed and tested (v100's rules roll Math.random in 12 places)"
+  ],
+  "roulette": [
+   "bring",
+   "the game's own seeded dice, so a game can be replayed and tested (v100's rules roll Math.random in 12 places)"
+  ],
+  "nextIn": [
+   "in v100",
+   "the Poisson wait and chance (law QM)"
+  ],
+  "hazard": [
+   "in v100",
+   "the Poisson wait and chance (law QM)"
+  ],
+  "relax": [
+   "bring",
+   "the one first-order lag, x to its level over τ: v100 writes its lags inside its laws; Mid's market, nerve, healing and loyalty use this one"
+  ],
+  "logistic": [
+   "bring",
+   "growth with room (Verhulst): flocks"
+  ],
+  "SET": [
+   "bring",
+   "the settings kept on the phone: with Saving"
+  ],
+  "PLACE": [
+   "bring",
+   "the settings kept on the phone: with Saving"
+  ],
+  "saveSet": [
+   "bring",
+   "the settings kept on the phone: with Saving"
+  ],
+  "lineOf": [
+   "bring",
+   "research lines, each step after the one before: with Ages and tech"
+  ],
+  "prevOf": [
+   "bring",
+   "research lines, each step after the one before: with Ages and tech"
+  ],
+  "needsOf": [
+   "bring",
+   "research lines, each step after the one before: with Ages and tech"
+  ],
+  "nextStep": [
+   "bring",
+   "research lines, each step after the one before: with Ages and tech"
+  ],
+  "isNext": [
+   "bring",
+   "research lines, each step after the one before: with Ages and tech"
+  ],
+  "todaySeed": [
+   "bring",
+   "the day's challenge seed and the game's modes"
+  ],
+  "MODES": [
+   "bring",
+   "the day's challenge seed and the game's modes"
+  ],
+  "QC": [
+   "cut",
+   "a cache of each side's seat, people and room per step: v100 asks seatOf and popOf directly (back only if speed needs it)"
+  ],
+  "qc": [
+   "cut",
+   "a cache of each side's seat, people and room per step: v100 asks seatOf and popOf directly (back only if speed needs it)"
+  ],
+  "qcDrop": [
+   "cut",
+   "a cache of each side's seat, people and room per step: v100 asks seatOf and popOf directly (back only if speed needs it)"
+  ],
+  "keepOf": [
+   "in v100",
+   "FK.seatOf"
+  ],
+  "bldsOf": [
+   "in v100",
+   "v100 asks things() and units() by side, code and tick"
+  ],
+  "ready": [
+   "in v100",
+   "v100 asks things() and units() by side, code and tick"
+  ],
+  "unitsOf": [
+   "in v100",
+   "v100 asks things() and units() by side, code and tick"
+  ],
+  "isSoldier": [
+   "in v100",
+   "v100 asks things() and units() by side, code and tick"
+  ],
+  "soldiersOf": [
+   "in v100",
+   "v100 asks things() and units() by side, code and tick"
+  ],
+  "readyAt": [
+   "in v100",
+   "where a kind trains: D133 trains"
+  ],
+  "armyOf": [
+   "bring",
+   "the army (soldiers, spy, priest, medic) and who is busy: with the squads"
+  ],
+  "BUSY": [
+   "bring",
+   "the army (soldiers, spy, priest, medic) and who is busy: with the squads"
+  ],
+  "armyFree": [
+   "bring",
+   "the army (soldiers, spy, priest, medic) and who is busy: with the squads"
+  ],
+  "popOf": [
+   "in v100",
+   "econ.js popOf, the House tick and D127"
+  ],
+  "roomOf": [
+   "in v100",
+   "econ.js popOf, the House tick and D127"
+  ],
+  "capOf": [
+   "in v100",
+   "econ.js popOf, the House tick and D127"
+  ],
+  "armyRoom": [
+   "bring",
+   "the army's ceiling"
+  ],
+  "clsMax": [
+   "bring",
+   "the army's ceiling"
+  ],
+  "armyFull": [
+   "bring",
+   "the army's ceiling"
+  ],
+  "qMax": [
+   "in v100",
+   "the queue is the mold's six (SN1); research that lengthens it comes with tech"
+  ],
+  "shortest": [
+   "bring",
+   "the building with the shortest line takes the order"
+  ],
+  "lineFree": [
+   "bring",
+   "the building with the shortest line takes the order"
+  ],
+  "queuedOf": [
+   "bring",
+   "the building with the shortest line takes the order"
+  ],
+  "capAt": [
+   "bring",
+   "how many of a building a side may have, by age"
+  ],
+  "capFor": [
+   "bring",
+   "how many of a building a side may have, by age"
+  ],
+  "atCap": [
+   "bring",
+   "how many of a building a side may have, by age"
+  ],
+  "capWhy": [
+   "bring",
+   "how many of a building a side may have, by age"
+  ],
+  "clsCount": [
+   "bring",
+   "how many of a building a side may have, by age"
+  ],
+  "orderSet": [
+   "bring",
+   "squads, formations, the two dials (shape, temper), kiting: with War"
+  ],
+  "selName": [
+   "bring",
+   "squads, formations, the two dials (shape, temper), kiting: with War"
+  ],
+  "hasCmd": [
+   "bring",
+   "squads, formations, the two dials (shape, temper), kiting: with War"
+  ],
+  "formOf": [
+   "bring",
+   "squads, formations, the two dials (shape, temper), kiting: with War"
+  ],
+  "marching": [
+   "bring",
+   "squads, formations, the two dials (shape, temper), kiting: with War"
+  ],
+  "shapeOf": [
+   "bring",
+   "squads, formations, the two dials (shape, temper), kiting: with War"
+  ],
+  "dialOf": [
+   "bring",
+   "squads, formations, the two dials (shape, temper), kiting: with War"
+  ],
+  "cycle": [
+   "bring",
+   "squads, formations, the two dials (shape, temper), kiting: with War"
+  ],
+  "temperOf": [
+   "bring",
+   "squads, formations, the two dials (shape, temper), kiting: with War"
+  ],
+  "kiteOf": [
+   "bring",
+   "squads, formations, the two dials (shape, temper), kiting: with War"
+  ],
+  "clsOf": [
+   "bring",
+   "squads, formations, the two dials (shape, temper), kiting: with War"
+  ],
+  "rebattalion": [
+   "bring",
+   "squads, formations, the two dials (shape, temper), kiting: with War"
+  ],
+  "every": [
+   "bring",
+   "the slow ticks (BEAT)"
+  ],
+  "atWar": [
+   "bring",
+   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+  ],
+  "gangOf": [
+   "bring",
+   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+  ],
+  "gangRel": [
+   "bring",
+   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+  ],
+  "calm4b": [
+   "bring",
+   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+  ],
+  "campOf": [
+   "bring",
+   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+  ],
+  "groundOf": [
+   "bring",
+   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+  ],
+  "struckBy": [
+   "bring",
+   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+  ],
+  "isFoe": [
+   "bring",
+   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+  ],
+  "friendly": [
+   "bring",
+   "relations and the one hostility test (sides, animals, the four wild groups, treaties bind only their signers)"
+  ],
+  "season": [
+   "in v100",
+   "FK.season; each season's effects come with SEASONS"
+  ],
+  "skyVec": [
+   "in v100",
+   "the sun's height and direction (laws QA, QAT) and the night from it"
+  ],
+  "sunDecl": [
+   "in v100",
+   "the sun's height and direction (laws QA, QAT) and the night from it"
+  ],
+  "dayN": [
+   "in v100",
+   "the sun's height and direction (laws QA, QAT) and the night from it"
+  ],
+  "hourH": [
+   "in v100",
+   "the sun's height and direction (laws QA, QAT) and the night from it"
+  ],
+  "sunAltAt": [
+   "in v100",
+   "the sun's height and direction (laws QA, QAT) and the night from it"
+  ],
+  "sunAlt": [
+   "in v100",
+   "the sun's height and direction (laws QA, QAT) and the night from it"
+  ],
+  "sunVec": [
+   "in v100",
+   "the sun's height and direction (laws QA, QAT) and the night from it"
+  ],
+  "nightOf": [
+   "in v100",
+   "the sun's height and direction (laws QA, QAT) and the night from it"
+  ],
+  "nightness": [
+   "in v100",
+   "the sun's height and direction (laws QA, QAT) and the night from it"
+  ],
+  "moonVec": [
+   "bring",
+   "the moon: its place, phase and light (Meeus)"
+  ],
+  "moonPhase": [
+   "bring",
+   "the moon: its place, phase and light (Meeus)"
+  ],
+  "moonLight": [
+   "bring",
+   "the moon: its place, phase and light (Meeus)"
+  ],
+  "civOf": [
+   "bring",
+   "the peoples (civilisations) and their own kinds"
+  ],
+  "civKind": [
+   "bring",
+   "the peoples (civilisations) and their own kinds"
+  ],
+  "baseKind": [
+   "bring",
+   "the peoples (civilisations) and their own kinds"
+  ],
+  "BTIER": [
+   "bring",
+   "research that raises a building in place (Watchtower, Great tower, Bastion)"
+  ],
+  "btierOf": [
+   "bring",
+   "research that raises a building in place (Watchtower, Great tower, Bastion)"
+  ],
+  "bldName": [
+   "bring",
+   "research that raises a building in place (Watchtower, Great tower, Bastion)"
+  ],
+  "shelterOf": [
+   "bring",
+   "how many a building shelters"
+  ],
+  "fxList": [
+   "bring",
+   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+  ],
+  "FX1": [
+   "bring",
+   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+  ],
+  "fxFits": [
+   "bring",
+   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+  ],
+  "fxv": [
+   "bring",
+   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+  ],
+  "fxDirty": [
+   "bring",
+   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+  ],
+  "keepHealth": [
+   "bring",
+   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+  ],
+  "rehealth": [
+   "bring",
+   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+  ],
+  "unitKeys": [
+   "bring",
+   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+  ],
+  "bldKeys": [
+   "bring",
+   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+  ],
+  "freeVil": [
+   "bring",
+   "free and idle villagers: the idle reading waits for its home (SN6)"
+  ],
+  "posted": [
+   "bring",
+   "a villager posted to its plot (Albert's D-089: a farm is a farm)"
+  ],
+  "idlePost": [
+   "bring",
+   "a villager posted to its plot (Albert's D-089: a farm is a farm)"
+  ],
+  "hand": [
+   "cut",
+   "the test harness's seat: v100's tests play the page"
+  ],
+  "stats": [
+   "bring",
+   "a kind's numbers after research"
+  ],
+  "maxHpU": [
+   "bring",
+   "a kind's numbers after research"
+  ],
+  "maxHpB": [
+   "bring",
+   "a kind's numbers after research"
+  ],
+  "dmgOf": [
+   "bring",
+   "a kind's numbers after research"
+  ],
+  "rngOf": [
+   "bring",
+   "a kind's numbers after research"
+  ],
+  "rangeFrom": [
+   "bring",
+   "how far a building shoots from its height (the projectile range from a height)"
+  ],
+  "rangeOf": [
+   "bring",
+   "how far a building shoots from its height (the projectile range from a height)"
+  ],
+  "spySeen": [
+   "bring",
+   "who sees a hidden spy"
+  ],
+  "lookout": [
+   "bring",
+   "sight: a building's from its height (√height), night, fog and snow shrink it"
+  ],
+  "sightFx": [
+   "bring",
+   "sight: a building's from its height (√height), night, fog and snow shrink it"
+  ],
+  "sightClear": [
+   "bring",
+   "sight: a building's from its height (√height), night, fog and snow shrink it"
+  ],
+  "visCap": [
+   "bring",
+   "sight: a building's from its height (√height), night, fog and snow shrink it"
+  ],
+  "sightOf": [
+   "bring",
+   "sight: a building's from its height (√height), night, fog and snow shrink it"
+  ],
+  "groupSees": [
+   "in v100",
+   "a side sees what any of its eyes sees: v100's fog (inSight)"
+  ],
+  "carryOf": [
+   "in v100",
+   "D87 carry; research that adds comes with tech"
+  ],
+  "nodeKey": [
+   "bring",
+   "research on gathering, by the find"
+  ],
+  "gatherMul": [
+   "bring",
+   "research on gathering, by the find"
+  ],
+  "makeOf": [
+   "bring",
+   "what a workshop makes"
+  ],
+  "hawkP": [
+   "bring",
+   "the computers' odds: Hawk-Dove and Lanchester's square law (v100's D155 is a plain ratio)"
+  ],
+  "unitPower": [
+   "bring",
+   "the computers' odds: Hawk-Dove and Lanchester's square law (v100's D155 is a plain ratio)"
+  ],
+  "powerOf": [
+   "bring",
+   "the computers' odds: Hawk-Dove and Lanchester's square law (v100's D155 is a plain ratio)"
+  ],
+  "lanchester": [
+   "bring",
+   "the computers' odds: Hawk-Dove and Lanchester's square law (v100's D155 is a plain ratio)"
+  ],
+  "UG": [
+   "bring",
+   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+  ],
+  "UGX": [
+   "bring",
+   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+  ],
+  "buildGrid": [
+   "bring",
+   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+  ],
+  "SGC": [
+   "bring",
+   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+  ],
+  "SG": [
+   "bring",
+   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+  ],
+  "sgrid": [
+   "bring",
+   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+  ],
+  "sgNear": [
+   "bring",
+   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+  ],
+  "bldsNear": [
+   "bring",
+   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+  ],
+  "unitsNear": [
+   "bring",
+   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+  ],
+  "nearU": [
+   "bring",
+   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+  ],
+  "scanNear": [
+   "bring",
+   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+  ],
+  "onMe": [
+   "bring",
+   "who strikes whom: animals, drifters and spies left alone, self-defence always"
+  ],
+  "ignorable": [
+   "bring",
+   "who strikes whom: animals, drifters and spies left alone, self-defence always"
+  ],
+  "strikes": [
+   "bring",
+   "who strikes whom: animals, drifters and spies left alone, self-defence always"
+  ],
+  "nearestFoe": [
+   "bring",
+   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+  ],
+  "foeValue": [
+   "bring",
+   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+  ],
+  "GROUP_R": [
+   "bring",
+   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+  ],
+  "groupPower": [
+   "bring",
+   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+  ],
+  "canBeat": [
+   "bring",
+   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+  ],
+  "bestFoe": [
+   "bring",
+   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+  ],
+  "nearestFoeBld": [
+   "bring",
+   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+  ],
+  "vsMul": [
+   "bring",
+   "what beats what, by kind: v100 has one counter (D140)"
+  ]
+ }
+}
