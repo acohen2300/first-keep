@@ -49,7 +49,23 @@ async def page():
         ai = await ev("(() => { for (let i = 0; i < 6000; i++) FK.sim(0.1); const first = FK.D.ai.raise[0].code; return FK.things().some((t) => t.side === FK.D.players[1] && t.code === first); })()")
         ok('t-ai', ai)
         ok('t-errors', not errs, errs[:3])
+        await same(b)
         await b.close()
+SAME = """(() => { FK.reset(); let beats = 0, wet = 0; for (let i = 0; i < 3000; i++) { FK.sim(0.1); beats += FK.every(FK.D.beats.slow); wet += FK.K.wetHour; }   // 300 s of play, the weather in it
+  const r = (x) => Math.round(x * 1e6), state = [FK.units().map((u) => [u.code, u.side, r(u.bx), r(u.by), u.hp, r(u.cd), u.job]), FK.SIDES.map((s) => s.store), r(FK.K.wet), FK.K.fogT, ECON.score(0).total];
+  const near = [], us = FK.units(); for (const u of us.slice(0, 60)) for (const R of [30, 80, 200]) { const got = []; FK.unitsNear(u, R, (v) => got.push(us.indexOf(v))); near.push(JSON.stringify(got.sort((a, b) => a - b)) === JSON.stringify(us.map((v, i) => (v !== u && Math.abs(v.bx - u.bx) < R && Math.abs(v.by - u.by) < R ? i : -1)).filter((i) => i >= 0)));
+    const bs = []; FK.bldsNear(u.bx, u.by, R, (t) => { bs.push(t); }); near.push(FK.things().every((t) => t.kind !== 'bld' || Math.abs(t.bx - u.bx) >= R || Math.abs(t.by - u.by) >= R || bs.includes(t))); }
+  return { state: JSON.stringify(state), draws: Array.from({ length: 20 }, FK.rng), beats, wet, near: near.every(Boolean) && near.length > 0, mine: Array.from({ length: 1000 }, dice(20261105)), book: [FK.D.beats, FK.D.grid] }; })()"""
+MIDRNG = """const vm = require('vm'), src = require('fs').readFileSync(process.argv[1], 'utf8'), sp = require('fs').readFileSync(process.argv[2], 'utf8'), sg = require('fs').readFileSync(process.argv[3], 'utf8'), ctx = { G: { rs: 20261105 } }; vm.createContext(ctx);
+vm.runInContext(src.match(/function rng\\(\\) \\{[\\s\\S]*?\\n\\}/)[0] + ';' + sp.match(/const BEAT = [^;]*;/)[0] + ';var OUT = { draws: Array.from({ length: 1000 }, rng), book: [BEAT, { unit: ' + sg.match(/const UG = (\\d+)/)[1] + ', bld: ' + sg.match(/const SGC = (\\d+)/)[1] + ' }] };', ctx); console.log(JSON.stringify(ctx.OUT));"""
+async def same(b):   # same seed, same game: two pages on one seed play 300 s alike and draw alike; the dice are Mid's own rng draw for draw; the grids find what a full scan finds
+    mid = subprocess.run(['node', '-e', MIDRNG, os.path.join(HERE, '../mid/src/08-core.js'), os.path.join(HERE, '../mid/src/06-rules-tuning.js'), os.path.join(HERE, '../mid/src/15-sim-spatial.js')], capture_output=True, text=True)
+    mid = json.loads(mid.stdout or 'null')
+    runs = []
+    for _ in range(2):
+        pg = await b.new_page(viewport={'width': 390, 'height': 844}); await pg.goto(URL); await pg.wait_for_timeout(800); runs.append(await pg.evaluate(SAME)); await pg.close()
+    a, c = runs; got = [a['state'] == c['state'], a['draws'] == c['draws'], a['wet'] > 0, a['beats'] == 30, a['near'], bool(mid) and a['mine'] == mid['draws'], bool(mid) and a['book'] == mid['book']]
+    ok('t-same', all(got), got)
 REC = """const vm = require('vm'), ctx = { window: {}, navigator: {}, document: {}, performance: { now: () => 0 }, Math }; vm.createContext(ctx);
 vm.runInContext(require('fs').readFileSync(process.argv[1], 'utf8') + `;var REC = []; tone = (f, dur, type, vol, f2, at) => REC.push(['tone', f, dur, type, vol, f2 || 0, at || 0, panV]);
 hiss = (dur, vol, fq, q, f2, at) => REC.push(['hiss', dur, vol, fq, q || 1, f2 || 0, at || 0]); knock = (mat, f, vol, at = 0, snap = 1) => REC.push(['knock', mat, f, vol, at, snap]);

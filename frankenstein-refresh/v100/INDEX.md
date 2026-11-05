@@ -59,7 +59,7 @@ Written by `index.py`, never by hand.
 - **QBC** Shoreline index → N63
 - **QBD** The view → N66 · used by A1, A2
 - **QBE** Slope or face → N64 · used by A3
-- **QBF** The dice → N65
+- **QBF** The dice → N65 · used by D187
 - **QBG** Headlands and bays → N67
 - **QBH** A lake's size drawn from the power law (QBA) → N61
 - **QBI** Roads cross rivers at fords → N68

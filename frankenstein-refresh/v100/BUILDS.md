@@ -250,3 +250,26 @@ MODIFIED (1):
 LOCKED (636 of 637): byte for byte as sealed, 366,174 bytes
 Tests: 18/18 rules hold
 Inventory: 637 items sealed · 531 book entries · 74 laws · 89 citations, 17 still to open · 9 known
+
+## F10 · the dice and the grids · 2026-11-05 12:03
+Albert, Nov 5 11:40: yes yes F10–F39
+Opened: code:index.html, code:econ.js, code:combat.js, code:ai.js, book:measure, book:rules, tool:test.py
+MODIFIED (15):
+- book:measure:D182 · added
+- book:measure:D183 · added
+- book:measure:D184 · added
+- book:measure:D185 · added
+- book:measure:D186 · added
+- book:measure:D187 · added
+- book:rules:X44 · added
+- code:combat.js · 8,714 → 8,834 bytes
+- code:econ.js · 12,312 → 12,318 bytes
+- code:index.html#floor-5-movables · 8,068 → 9,724 bytes
+- code:index.html#floor-6-climate · 9,961 → 10,147 bytes
+- code:index.html#qbf-the-dice · 1,378 → 1,671 bytes
+- code:index.html#the-door · 3,638 → 3,847 bytes
+- code:index.html#touch · 4,746 → 4,831 bytes
+- tool:test.py · 10,420 → 13,153 bytes
+LOCKED (629 of 644): byte for byte as sealed, 309,162 bytes
+Tests: 19/19 rules hold
+Inventory: 644 items sealed · 538 book entries · 74 laws · 89 citations, 17 still to open · 9 known

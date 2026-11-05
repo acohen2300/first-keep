@@ -16,7 +16,7 @@ function hit(a, t) { t.hp -= damage(a, t); FK.impact(a, t); if (t.hp <= 0) die(t
 function die(t, by) { if (t.kind === 'bld') { FK.fire('event', 'fell', t); FK.unbuild(t); return; } t.gone = true; const us = units(), i = us.indexOf(t); if (i >= 0) us.splice(i, 1); if (FK.sel() === t) FK.select(null); for (const u of us) if (u.target === t) u.target = null; }
 // QAG the target: the most harm a second for its health left, discounted by distance; wildlife only when it is biting
 function choose(u, r) { const s = stat(u); let best = null; const look = (t) => { if (!enemies(u, t) || !alive(t)) return; const d = edgeDist(u, t); if (d > r) return; if (t.side < 0 && t.target !== u) return; const v = damage(u, t) / s.rof / Math.max(1, t.hp) / (1 + d / D.aggro); if (!best || v > best[1]) best = [t, v]; };
-  for (const t of units()) if (t !== u) look(t); for (const t of things()) if (t.kind === 'bld' && t.side >= 0) look(t); return best && best[0]; }
+  FK.unitsNear(u, r * T, look); FK.bldsNear(u.bx, u.by, (r + D.large) * T, (t) => { if (t.side >= 0) look(t); }); return best && best[0]; } // by the grids: a building by its middle, so the widest one's reach (D11) is added
 const toward = (u, t) => { const r = Math.max(1, stat(u).rng); return FK.walkTo(u, t.kind === 'bld' ? (q) => { const i = q % N, j = (q - i) / N; return i >= t.i - r && i <= t.i + t.n + r - 1 && j >= t.j - r && j <= t.j + t.n + r - 1; } : (q) => q !== t.k && nearK(q, t.k, r), t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k, D.chase); }; // to within reach of a thing, with a short search (D147)
 const home = (side) => FK.seatOf(side) || things().find((t) => t.kind === 'bld' && t.side === side); // a wave falls back to its seat, else to any building of its side
 const waves = SIDES.map(() => null); // a side's wave in the field: its soldiers at the start, so nerve can be read (QBQ)
@@ -27,12 +27,12 @@ function recall(side) { waves[side] = null; const h = home(side); for (const u o
 function attack(side, k) { const army = units().filter((u) => u.side === side && armed(u) && u.job !== 'rout'); if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; for (const u of army) march(u, k); if (side === 0) FK.fire('event', 'march', army[0]); return army.length; }
 const armyOf = (side) => units().filter((u) => u.side === side && armed(u));
 const strength = (us) => us.reduce((n, u) => n + stat(u).atk / stat(u).rof * u.hp, 0); // QAF Lanchester: blows a second × health
-FK.on('spawn', (u) => { u.hp = u.hpMax = hpMax(u); u.cd = Math.random(); u.rp = 0; });
+FK.on('spawn', (u) => { u.hp = u.hpMax = hpMax(u); u.cd = FK.rng(); u.rp = 0; });
 FK.on('start', () => { waves.fill(null); for (const u of units()) if (u.hp == null) { u.hp = u.hpMax = hpMax(u); u.cd = 0; u.rp = 0; } for (const t of things()) if (t.kind === 'bld') { t.hpMax = hpMax(t); t.hp = t.done >= 1 ? t.hpMax : 1; } });
 FK.on('tick', (dt) => {
   if (ECON.result()) return;
   for (const t of things()) if (t.kind === 'bld') { if (t.hpMax == null) { t.hpMax = hpMax(t); t.hp = t.done >= 1 ? t.hpMax : 1; }
-    const tw = D.tower[t.code]; if (!tw || t.done < 1) continue; t.cd = (t.cd || 0) - dt; if (t.cd > 0) continue; let best = null; for (const u of units()) if (u.side >= 0 && u.side !== t.side) { const d = edgeDist(u, t); if (d <= tw[1] && (!best || d < best[1])) best = [u, d]; } if (best) { FK.fire('event', 'shot', t); best[0].hp -= Math.max(1, tw[0] - stat(best[0]).arm); if (best[0].hp <= 0) die(best[0]); t.cd = tw[2]; } }
+    const tw = D.tower[t.code], [, reach] = tw || []; if (!tw || t.done < 1) continue; t.cd = (t.cd || 0) - dt; if (t.cd > 0) continue; let best = null; FK.unitsNear(t, (reach + t.n) * T, (u) => { if (u.side < 0 || u.side === t.side) return; const d = edgeDist(u, t); if (d <= reach && (!best || d < best[1])) best = [u, d]; }); if (best) { FK.fire('event', 'shot', t); best[0].hp -= Math.max(1, tw[0] - stat(best[0]).arm); if (best[0].hp <= 0) die(best[0]); t.cd = tw[2]; } }
   for (const u of units().slice()) { if (!alive(u)) continue; const s = stat(u); u.cd -= dt; u.rp -= dt; u.sc = (u.sc || 0) - dt; const look = u.sc <= 0; if (look) u.sc = D.scan;
     if (u.side < 0) { if (s.atk && (u.job === 'idle' || u.job === 'fight') && !u.path) { if (u.job === 'idle' && look) { const t = choose(u, D.wildAggro); if (t && t.kind !== 'bld') fight(u, t); } } }
     else if (!armed(u)) { if (u.job !== 'fight') { const w = units().find((b) => b.side < 0 && b.job === 'fight' && b.target === u); if (w) fight(u, w); else continue; } } // a villager fights back only when bitten

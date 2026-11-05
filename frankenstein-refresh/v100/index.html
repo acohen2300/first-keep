@@ -52,6 +52,8 @@ const shade = (hex, f) => '#' + [1, 3, 5].map((i) => clamp(Math.round(parseInt(h
 
 // ── QBF the dice (N65): one seed, Mulberry32. Every roll names Who, What, Where, When, Why and How beside it (L13).
 function dice(seed) { let a = seed >>> 0; return () => { a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), a | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+// two streams from the map's seed, dealt fresh at makeUnits: the rules' (M1), so the same seed plays the same game, and the looks' (D187), so a look never shifts a rule roll
+let play = null, shown = null; const rng = () => play(), glance = () => shown(), rnd = (a, b) => a + rng() * (b - a);
 // QAZ a fractal line (N60): K waves, the k-th of amplitude k^(−H), H = 2 − Dim; a coast's Dim is about 1.25. Returns a function of the way along, in radians, giving −1 to 1.
 function fractal(roll, K, Dim) { const H = 2 - Dim, ph = Array.from({ length: K }, () => roll() * 2 * Math.PI); let norm = 0; for (let k = 1; k <= K; k++) norm += k ** -H; return (t) => { let v = 0; for (let k = 1; k <= K; k++) v += k ** -H * Math.sin(k * t + ph[k - 1]); return v / norm; }; }
 
@@ -279,11 +281,12 @@ function dirty() { if (!queued) { queued = true; requestAnimationFrame(draw); } 
 const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], spawn: [], gone: [], event: [] }; // event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by the names in books/sound.js HE1
 const on = (ev, fn) => HOOK[ev].push(fn), fire = (ev, ...a) => { for (const f of HOOK[ev]) if (f(...a)) return true; return false; };
 let last = 0, frameDt = 0;
+const every = ([secs, ph]) => Math.floor((K.t - ph / D.fps) / secs) > Math.floor((K.t0 - ph / D.fps) / secs); // a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's frames (D98)
 function loop(now) { if (now - last >= 1000 / D.fps) { const dt = Math.min(0.1, (now - last) / 1000 || 0) * (show.fast ? D.fast : 1); last = now; frameDt = dt; if (!document.hidden) { climate(dt); step(dt); fire('tick', dt); look(dt); draw(); } } requestAnimationFrame(loop); }
 function draw() {
   queued = false;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((Math.random() * 2 - 1) * jolt.px, (Math.random() * 2 - 1) * jolt.px); } // the screen jolts with a heavy impact (QBT)
+  if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((glance() * 2 - 1) * jolt.px, (glance() * 2 - 1) * jolt.px); } // the screen jolts with a heavy impact (QBT)
   ctx.fillStyle = deepest; ctx.fillRect(0, 0, cw, ch);
   const [gx, gy] = toScreen(-ox, -oy); ctx.drawImage(ground, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin();
   if (show.G && cam.z * D.tile >= D.lod) drawGrid();
@@ -857,10 +860,10 @@ const tileMid = (k) => { const i = k % N; return toBoard((i + 0.5) * D.tile, ((k
 const nextTo = (k) => (q) => Math.abs((q % N) - (k % N)) <= 1 && Math.abs(Math.floor(q / N) - Math.floor(k / N)) <= 1 && q !== k;
 function spawn(code, side, k, roll) { // a unit on a tile; its stand wanders in the tile (D82)
   const [bx, by] = tileMid(k), u = { kind: 'unit', code, side, bx: bx + (roll() * 2 - 1) * D.jitter, by: by + (roll() * 2 - 1) * D.jitter, k, vx: 0, vy: 0, path: null, at: 0, job: 'idle', target: null, load: 0, carry: null, face: 1, t: roll() * 10, wait: 0 };
-  place(u); units.push(u); fire('spawn', u); return u;
+  place(u); units.push(u); file(UG, D.grid.unit, u); fire('spawn', u); return u;
 }
 const place = (u) => { u.k = tileAt(u.bx, u.by); [u.vx, u.vy] = toView(u.bx, u.by, Math.max(0, H[u.k])); };
-function walkTo(u, goal, near, most) { const p = findPath(u.k, goal, near, most); if (!p) return false; u.path = p; u.at = 1; return true; }
+function walkTo(u, goal, near, most) { const p = findPath(u.k, goal, near, most); if (!p) return false; u.path = p; u.at = Math.min(1, p.length - 1); return true; } // a path of one tile (already there) walks to its middle: no step past the end
 function go(u, k) { return walkTo(u, (q) => q === k, k); } // to a tile
 function goBeside(u, k) { return walkTo(u, nextTo(k), k); } // to a tile beside one
 // the drop-off for a yield: the side's nearest building that takes it in (SC Drop-off, B's fifth field)
@@ -879,16 +882,25 @@ function step(dt) { // one tick for every unit
       place(u); continue;
     }
     if (has(u, 'Wander') && u.job === 'idle') { // wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95
-      if (u.wait <= 0) { u.wait = -D.wait * Math.log(1 - Math.random()); const k = tileAt(u.bx + (Math.random() * 2 - 1) * D.reach, u.by + (Math.random() * 2 - 1) * D.reach); if (walkable(k)) go(u, k); } else u.wait -= dt; }
+      if (u.wait <= 0) { u.wait = -D.wait * Math.log(1 - rng()); const k = tileAt(u.bx + rnd(-D.reach, D.reach), u.by + rnd(-D.reach, D.reach)); if (walkable(k)) go(u, k); } else u.wait -= dt; }
   }
+  regrid();
 }
+// M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking, buildings by D186; a new unit is filed as it comes. A search looks only nearby
+const file = (g, size, t) => { const c = Math.floor(t.bx / size) + ',' + Math.floor(t.by / size); (g.get(c) || g.set(c, []).get(c)).push(t); }, grid = (list, size) => { const g = new Map(); for (const t of list) file(g, size, t); return g; };
+function near(g, size, x, y, r, fn) { for (let cy = Math.floor((y - r) / size); cy <= Math.floor((y + r) / size); cy++) for (let cx = Math.floor((x - r) / size); cx <= Math.floor((x + r) / size); cx++) for (const t of g.get(cx + ',' + cy) || []) if (!t.gone && fn(t)) return true; return false; }
+let UG = new Map(), SG = new Map(), SGn; const regrid = () => { UG = grid(units, D.grid.unit); SG = grid(things.filter((t) => t.kind === 'bld'), D.grid.bld); SGn = things.length; };
+const unitsNear = (from, r, fn) => { near(UG, D.grid.unit, from.bx, from.by, r, (v) => { if (v !== from && Math.abs(v.bx - from.bx) < r && Math.abs(v.by - from.by) < r) fn(v); }); }; // every unit within r of from (a square), never itself
+const bldsNear = (x, y, r, fn) => { if (SGn !== things.length) regrid(); return near(SG, D.grid.bld, x, y, r, fn); }; // the buildings within r of (x, y) by their squares, a little beyond on the edges; refiled when one comes or goes (Mid's rule); stops when fn says true
 function makeUnits(roll) {
+  play = dice(~seed); shown = dice(seed ^ D.looks); // the rules' dice and the looks', from the map's seed but not its stream
   // The villagers: Who every side · What D67 villagers · Where round its Town Center · When the game starts · Why hands to gather and build · How the free tiles nearest the hall
   for (const t of things) if (has(t, 'Seat') && D.players.includes(t.side)) { const got = []; stamp(t.bx, t.by, (t.n / 2 + 3) * D.tile, (k, d) => { if (walkable(k)) got.push([d, k]); }); got.sort((a, b) => a[0] - b[0]); for (const [, k] of got.slice(0, D.villagers)) spawn(D.trains[t.code][0], t.side, k, roll); }
   // The wildlife: Who the map · What herds of deer and packs of wolves · Where Z4, on walkable ground · When the map is made · Why food to hunt, teeth to fear · How counts D90–D93, places uniform until one walks
   for (const w of D.wildlife) for (let m = count(roll, D[w.groups]); m > 0; m--) { // which walkers, how many groups and how big: the book's (D181)
     for (let tries = 0; tries < 100; tries++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (!inZ4(bx, by, 2 * D.tile) || !walkable(k)) continue;
       const got = []; stamp(bx, by, 3 * D.tile, (q, d) => { if (walkable(q)) got.push([d, q]); }); got.sort((a, b) => a[0] - b[0]); for (const [, q] of got.slice(0, count(roll, D[w.size]))) spawn(w.code, -1, q, roll); break; } }
+  regrid();
 }
 const gait = (code) => W[SH[code].mount || SH[code].body]; // what carries a walker: its mount, else its own body (W)
 const bodyOf = (code) => W[SH[code].body];
@@ -954,26 +966,28 @@ const season = () => Math.floor(K.t / D.season) % 4, dayPhase = () => (K.t % D.d
 function sunAlt() { const phi = D.lat * RAD, dec = 23.44 * RAD * Math.sin(((K.t / D.year) * 2 * Math.PI)), Hh = (dayPhase() - 0.5) * 2 * Math.PI; return Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(Hh)) / RAD; }
 const RAMP = [[-18, 0.18], [-12, 0.3], [-6, 0.45], [0, 0.62], [6, 0.85], [20, 1]]; // light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD)
 function lightAt(a) { if (a <= RAMP[0][0]) return RAMP[0][1]; for (let i = 1; i < RAMP.length; i++) if (a <= RAMP[i][0]) { const [a0, l0] = RAMP[i - 1], [a1, l1] = RAMP[i]; return l0 + ((l1 - l0) * (a - a0)) / (a1 - a0); } return 1; }
+// QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mid's relax: wetness here, and the market, nerve, healing, loyalty to come)
+const relax = (x, L, tau, dt) => L + (x - L) * Math.exp(-dt / tau);
 // QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet | dry) and P(wet | wet) are D102; a wet hour is a storm with D103. Snow falls instead when the air is at or under 1 °C (QI)
 function climate(dt) {
-  K.t += dt; const sn = season(), f = (K.t / D.season) % 1, mean = D.temps[sn] + (D.temps[(sn + 1) % 4] - D.temps[sn]) * (0.5 - 0.5 * Math.cos(f * Math.PI)); // the season's mean, eased into the next
+  K.t0 = K.t; K.t += dt; const sn = season(), f = (K.t / D.season) % 1, mean = D.temps[sn] + (D.temps[(sn + 1) % 4] - D.temps[sn]) * (0.5 - 0.5 * Math.cos(f * Math.PI)); // the season's mean, eased into the next
   K.alt = sunAlt(); K.light = lightAt(K.alt); K.temp = mean + D.swing * (K.light - 0.6);
-  const hour = Math.floor(K.t / (D.day / 24)); if (hour !== K.hour) { K.hour = hour; K.wetHour = Math.random() < D.chain[K.wetHour ? 1 : 0]; K.storm = K.wetHour && Math.random() < D.stormShare ? 1 : 0; }
+  const hour = Math.floor(K.t / (D.day / 24)); if (hour !== K.hour) { K.hour = hour; K.wetHour = rng() < D.chain[K.wetHour ? 1 : 0]; K.storm = K.wetHour && rng() < D.stormShare ? 1 : 0; }
   const falling = K.wetHour ? (K.temp <= 1 ? 'snow' : 'rain') : null; // what falls
   K.rain += ((falling === 'rain' ? (K.storm ? 1 : 0.6) : 0) - K.rain) * Math.min(1, dt / 12); K.snowing += ((falling === 'snow' ? 1 : 0) - K.snowing) * Math.min(1, dt / 12); // rain comes and goes over tens of seconds (SoRen)
-  K.wet += (((K.rain > 0.1 ? 1 : 0) - K.wet) * dt) / (K.rain > 0.1 ? D.wetUp : D.dryOut); // QP settle: wet in D104, dry in D105
+  K.wet = relax(K.wet, K.rain > 0.1 ? 1 : 0, K.rain > 0.1 ? D.wetUp : D.dryOut, dt); // QP settle: wet in D104, dry in D105
   if (K.snowing > 0.1) K.snow += D.snowfall * K.snowing * dt; if (K.temp > 0) K.snow = Math.max(0, K.snow - D.melt * K.temp * (K.rain > 0.1 ? 2 : 1) * dt); // QO degree-day melt, rain on snow twice as fast
   if (K.temp < 0) K.fds += -K.temp * dt; else K.fds = Math.max(0, K.fds - K.temp * dt * 4); K.ice = K.fds >= D.bears; // QQ: ice grows with the freezing degree-seconds and bears at D109
-  if (K.fogT > 0) K.fogT -= dt; else if (Math.random() < dt / D.fogWait) K.fogT = D.fogLast; // QM: fog comes on a Poisson wait (D110) and stays D111
+  if (K.fogT > 0) K.fogT -= dt; else if (rng() < dt / D.fogWait) K.fogT = D.fogLast; // QM: fog comes on a Poisson wait (D110) and stays D111
   K.fog += ((K.fogT > 0 ? 0.6 : K.wet > 0.5 && K.rain < 0.1 && K.alt > -6 && K.alt < 10 ? 0.3 : 0) - K.fog) * Math.min(1, dt / 15); // fog, or mist after rain at dawn and dusk (KW8)
-  if (K.storm && K.rain > 0.5) { K.strikeT -= dt; if (K.strikeT <= 0) { K.strikeT = -D.strike * Math.log(1 - Math.random()); strike(); } } // QL, QM: strikes on Poisson waits in a storm
+  if (K.storm && K.rain > 0.5) { K.strikeT -= dt; if (K.strikeT <= 0) { K.strikeT = -D.strike * Math.log(1 - rng()); strike(); } } // QL, QM: strikes on Poisson waits in a storm
   K.bolts = K.bolts.filter((b) => K.t - b.t < 0.5); K.flash *= Math.exp(-dt / 0.09);
   document.getElementById('clock').textContent = SEASONS[sn] + ' ' + String(Math.floor(dayPhase() * 24)).padStart(2, '0') + ':' + String(Math.floor((dayPhase() * 24 * 60) % 60)).padStart(2, '0') + (falling ? (falling === 'snow' ? ' ❄' : K.storm ? ' ⚡' : ' ☂') : K.fog > 0.3 ? ' ≈' : '');
 }
 // a strike: on the ground in view when close, a sheet flash when far; the flash never comes within D112 of the last (QL, WCAG 2.3.1), and the bolt is pinned to the ground it hits
-function strike() { if (K.t - K.flashT < D.flashGap) return; const close = Math.random(); K.flashT = K.t;
-  if (close > 0.4) { const vx = cam.x + (Math.random() - 0.5) * (cw / cam.z), vy = cam.y + (Math.random() - 0.5) * (ch / cam.z); K.bolts.push({ vx, vy, t: K.t, seed: Math.random() }); K.flash = Math.max(K.flash, 0.5 + 0.3 * close); fire('event', 'strike', { vx, vy }); }
-  else { K.flash = Math.max(K.flash, 0.2 + 0.3 * close); fire('event', 'strike', { vx: cam.x + (Math.random() - 0.5) * 4 * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // a far flash: its thunder from beyond the screen
+function strike() { if (K.t - K.flashT < D.flashGap) return; const close = glance(); K.flashT = K.t;
+  if (close > 0.4) { const vx = cam.x + (glance() - 0.5) * (cw / cam.z), vy = cam.y + (glance() - 0.5) * (ch / cam.z); K.bolts.push({ vx, vy, t: K.t, seed: glance() }); K.flash = Math.max(K.flash, 0.5 + 0.3 * close); fire('event', 'strike', { vx, vy }); }
+  else { K.flash = Math.max(K.flash, 0.2 + 0.3 * close); fire('event', 'strike', { vx: cam.x + (glance() - 0.5) * 4 * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // a far flash: its thunder from beyond the screen
 // the rain: a pool of drops whose size sets its speed (Marshall–Palmer sizes, QJ Atlas's fall speed), leaning a little; the snow: flakes that drift
 const RAINP = { n: 240, lambda: 4.1 * 5 ** -0.21, dMin: 0.5, dMax: 4 }, fallV = (Dd) => 9.65 - 10.3 * Math.exp(-0.6 * Dd);
 const RAIN = Array.from({ length: RAINP.n }, (_, i) => { const Dd = Math.min(RAINP.dMax, RAINP.dMin - Math.log(1 - ((i * 0.618) % 1 || 0.5)) / RAINP.lambda), d = clamp(0.4 + (0.6 * (Dd - RAINP.dMin)) / 2.5, 0.4, 1); return { x: (i * 97.3) % 1000, y: (i * 53.7) % 1000, d, v: (9.6 * fallV(Dd)) / fallV(2) }; });
@@ -986,7 +1000,7 @@ function drawSkin() { // on the ground, under everything: snow whitens the land 
 function drawSky(dt) { // over everything: what falls, the strikes, the flash, the night and the fog
   const now = K.t;
   if (K.rain > 0.05) { const n = Math.round(RAINP.n * K.rain), slant = 0.2, fall = 420 * dt; ctx.lineCap = 'round';
-    for (let i = 0; i < n; i++) { const m = RAIN[i]; m.y += m.v * fall; if (m.y > ch + 12) { m.y = -12; m.x = Math.random() * cw; } const len = 8 + 12 * m.d; ctx.strokeStyle = `rgba(205,232,250,${(0.2 + 0.4 * m.d).toFixed(2)})`; ctx.lineWidth = 0.8 + 0.8 * m.d; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x - slant * len, m.y + len); ctx.stroke(); } }
+    for (let i = 0; i < n; i++) { const m = RAIN[i]; m.y += m.v * fall; if (m.y > ch + 12) { m.y = -12; m.x = glance() * cw; } const len = 8 + 12 * m.d; ctx.strokeStyle = `rgba(205,232,250,${(0.2 + 0.4 * m.d).toFixed(2)})`; ctx.lineWidth = 0.8 + 0.8 * m.d; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x - slant * len, m.y + len); ctx.stroke(); } }
   if (K.snowing > 0.05) { const n = Math.round(140 * K.snowing); ctx.fillStyle = 'rgba(245,248,252,.85)'; for (let i = 0; i < n; i++) { const y = ((i * 71.9 + now * 34) % (ch + 20)) - 10, x = (i * 113.7 + Math.sin(now * 0.8 + i) * 14) % cw; ctx.fillRect(x < 0 ? x + cw : x, y, 2 + (i % 3 === 0), 2 + (i % 3 === 0)); } }
   for (const b of K.bolts) { // SoRen's bolt: a channel from the top of the sky to the ground with a fork or two, three strokes from a soft glow to a bright core; its foot lights the ground round it
     const age = now - b.t, a = clamp(1 - age / 0.45, 0, 1), rr = NS_rng((b.seed * 1e6) | 1), [x1, y1] = toScreen(b.vx, b.vy), main = []; let x = x1 + (rr() - 0.5) * 80, y = Math.min(0, y1 - 300); main.push([x, y]);
@@ -1112,10 +1126,10 @@ function tap(px, py) { // the tile under a tap, at the land's height, and the pl
 canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0015)); keepOn(); dirty(); }, { passive: false });
 // The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a seed in the address overrides it.
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
-function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); fogT = 0; K.t = K.snow = K.fds = K.wet = K.rain = K.snowing = K.fog = K.fogT = K.storm = K.flash = jolt.t = 0; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
+function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); fogT = 0; K.t = K.snow = K.fds = K.wet = K.rain = K.snowing = K.fog = K.fogT = K.storm = K.flash = K.hour = K.strikeT = jolt.t = 0; K.wetHour = false; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
 window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1,
-  things: () => things, units: () => units, sel: () => sel, select: (u) => (sel = u), seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // the door: what the modules may touch
+  rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, sel: () => sel, select: (u) => (sel = u), seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // the door: what the modules may touch
 window.fk = FK; // the test hook
 </script>
 <script src="menu.js"></script>

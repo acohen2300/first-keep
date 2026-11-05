@@ -358,6 +358,12 @@ Written by `index.py` from `books/*.js`, never by hand.
 | D179 | the army buildings it raises, in order: when (villagers, age) and how far out | [{code: BM1, vils: 8, age: 0, ring: 5}, {code: BM2, vils: 0, age: 2, ring: 5}, {code: BM3, vils: 0, age: 3, ring: 6}] | Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, |
 | D180 | the soldiers it trains, the first by default; the best counter first | [UM1, UM2, UM3] | Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, |
 | D181 | the wildlife laid on the map: which walker, how many groups (a D key) and how big (a D key) | [{code: MW3, groups: herds, size: herd}, {code: MW4, groups: packs, size: pack}] | Design: v100 floor 5, Nov 4 (deer herds D90–D91, wolf packs D92–D93) |
+| D182 | the slow beat: every 10 s, its phase 150 frames (D98) in: the market, loyalty, the computers' slow looks | [10, 150] | Design: Mid's BEAT (numbers.js), brought by Albert's yes, Nov 5 11:40 (Frankenst |
+| D183 | the health beat: every 5 s, phase 75 frames | [5, 75] | Design: Mid's BEAT (numbers.js), brought by Albert's yes, Nov 5 11:40 (Frankenst |
+| D184 | the Natives' beat: every 5 s, phase 7 frames | [5, 7] | Design: Mid's BEAT (numbers.js), brought by Albert's yes, Nov 5 11:40 (Frankenst |
+| D185 | the unit grid's square, in units: units are filed by it after each step, so a search looks only nearby | 48 | Design: Mid's UG (15-sim-spatial.js), brought by Albert's yes, Nov 5 11:40 (Fran |
+| D186 | the building grid's square, in units | 100 | Design: Mid's SGC (15-sim-spatial.js), brought by Albert's yes, Nov 5 11:40 (Fra |
+| D187 | the looks' dice: the map's seed XOR this, a stream apart from the map's and the rules' (QBF) | 1013904223 | Design: Albert's randomizer rule, Nov 5 (Frankenstein F10): no Math.random in th |
 
 ## rules
 
@@ -406,6 +412,7 @@ Written by `index.py` from `books/*.js`, never by hand.
 | X41 | the reference copy differs from its seal, or its parts, or the temp books read back in its order, do not rebuild it byte for byte | {stage: survey} | Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it) |
 | X42 | a sound brought from Mid makes the same parts as Mid's own code makes it (same action, same result) | {stage: page} | Design: Albert, Nov 5 09:49 (Frankenstein 4: the match test) |
 | X43 | a temp book being sorted leaves a piece of Mid without its line (in v100, bring, cut or parked) | {stage: survey} | Design: Albert, Nov 5 09:47 (sort every piece) |
+| X44 | same seed, same game: two pages on one seed draw alike and stand alike after 300 s with the weather in it; the rules' dice are Mid's rng draw for draw, BEAT and the grid squares Mid's; unitsNear finds exactly what a full scan finds, bldsNear every building a scan finds | {stage: page} | Design: Albert, Nov 5 11:40 (Frankenstein F10) |
 
 ## screen
 

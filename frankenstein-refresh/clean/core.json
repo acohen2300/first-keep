@@ -134,16 +134,16 @@
    "index.html's findNear"
   ],
   "rng": [
-   "bring",
-   "the game's own seeded dice, so a game can be replayed and tested (v100's rules roll Math.random in 12 places)"
+   "in v100",
+   "F10: index.html, the dice: rng(), the rules' stream dice(~seed) dealt at makeUnits (Mid's Mulberry32 draw for draw); econ, combat and the climate ask FK.rng"
   ],
   "rnd": [
-   "bring",
-   "the game's own seeded dice, so a game can be replayed and tested (v100's rules roll Math.random in 12 places)"
+   "in v100",
+   "F10: index.html, the dice: rnd(a, b); the wildlife's wander"
   ],
   "roulette": [
    "bring",
-   "the game's own seeded dice, so a game can be replayed and tested (v100's rules roll Math.random in 12 places)"
+   "the game's own seeded dice, so a game can be replayed and tested (v100's rules roll Math.random in 12 places); F10 left it for its first caller: v100 has no weighted pick yet, and it would type numbers into the dice floor"
   ],
   "nextIn": [
    "in v100",
@@ -154,12 +154,12 @@
    "the Poisson wait and chance (law QM)"
   ],
   "relax": [
-   "bring",
-   "the one first-order lag, x to its level over τ: v100 writes its lags inside its laws; Mid's market, nerve, healing and loyalty use this one"
+   "in v100",
+   "F10: index.html, floor 6: relax(x, L, τ, dt) (QP); the wetness settles by it"
   ],
   "logistic": [
    "bring",
-   "growth with room (Verhulst): flocks"
+   "growth with room (Verhulst): flocks; F10 left it for the flocks, its first caller"
   ],
   "SET": [
    "bring",
@@ -362,8 +362,8 @@
    "squads, formations, the two dials (shape, temper), kiting: with War"
   ],
   "every": [
-   "bring",
-   "the slow ticks (BEAT)"
+   "in v100",
+   "F10: index.html, the door: every([secs, phase]) fires in the step whose seconds played (K.t) cross the beat, phase ÷ D98; no caller yet (market, health, Natives)"
   ],
   "atWar": [
    "bring",
@@ -622,48 +622,48 @@
    "the computers' odds: Hawk-Dove and Lanchester's square law (v100's D155 is a plain ratio)"
   ],
   "UG": [
-   "bring",
-   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+   "in v100",
+   "F10: index.html, floor 5: the unit grid UG, squares of D185"
   ],
   "UGX": [
-   "bring",
-   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+   "in v100",
+   "F10: index.html, floor 5: folded into the one grid mold (grid/file), a Map of squares holding the things themselves"
   ],
   "buildGrid": [
-   "bring",
-   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+   "in v100",
+   "F10: index.html, floor 5: regrid() after each step's walking and at makeUnits; spawn files a newcomer at once"
   ],
   "SGC": [
-   "bring",
-   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+   "in v100",
+   "F10: books/measure.js D186 (grid.bld)"
   ],
   "SG": [
-   "bring",
-   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+   "in v100",
+   "F10: index.html, floor 5: the building grid SG, squares of D186; build files a building at once"
   ],
   "sgrid": [
-   "bring",
-   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+   "in v100",
+   "F10: index.html, floor 5: the same grid mold as the units' (grid/file)"
   ],
   "sgNear": [
-   "bring",
-   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+   "in v100",
+   "F10: index.html, floor 5: near(), one search for both grids; stops when fn says true"
   ],
   "bldsNear": [
-   "bring",
-   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+   "in v100",
+   "F10: index.html, floor 5: bldsNear (FK); econ's site search and combat's target choice ask it"
   ],
   "unitsNear": [
-   "bring",
-   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+   "in v100",
+   "F10: index.html, floor 5: unitsNear (FK); combat's target choice and the towers ask it"
   ],
   "nearU": [
    "bring",
-   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing); F10 left it for its first caller: a line on unitsNear"
   ],
   "scanNear": [
-   "bring",
-   "a unit grid and a building grid, so a search looks only nearby (v100 looks at every thing)"
+   "in v100",
+   "F10: index.html, floor 5: near(), the one scan of the squares"
   ],
   "onMe": [
    "bring",
