@@ -22,8 +22,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC1 | walks the tiles at its pace | {by: index.html floor 5: step, findPath, law: [QBL, QBM, QBU], needs: [pace, body], may: [mount, kit, voice]} | N94 |
 | SC2 | works a find of best rate from a spot of its own on its ring, as many as the find takes (D195), and fills a load; also counts it among the people | {by: econ.js, law: [QBN, QV, QW, QX, QCI], needs: [body], may: []} | N95; N164 |
 | SC3 | takes a load to the nearest drop-off of its side | {by: econ.js, law: [QBN], needs: [body], may: []} | N95 |
-| SC4 | raises a site | {by: econ.js, law: [QAC], needs: [body], may: []} | N95 |
-| SC5 | mends a hurt building | {by: econ.js, law: [QAC], needs: [body], may: []} | N95 |
+| SC4 | raises a site; a builder remembers its work and goes back to it after (Mid's) | {by: econ.js, law: [QAC], needs: [body], may: []} | N95; N168 |
+| SC5 | mends a hurt building at D201's time and price, paid as it goes, then goes back to its work (Mid's) | {by: econ.js, law: [QCK], needs: [body], may: []} | N95; N168 |
 | SC6 | strikes; without Gather it is a soldier; a wild one with it bites | {by: combat.js, law: [QBO, QAG, QBT], needs: [D138], may: []} | N96 |
 | SC7 | looses at range (a building that shoots reads D143) | {by: combat.js, law: [QAL], needs: [D143/D138], may: []} | N96 |
 | SC8 | has health, and sways when badly hurt | {by: combat.js, index.html, law: [QBS], needs: [D138/D139], may: []} | N97 |
@@ -39,6 +39,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC18 | scouts (not built yet) | {by: waiting, law: [], needs: [], may: []} | N100 |
 | SC19 | trades (not built yet) | {by: waiting, law: [], needs: [], may: []} | N100 |
 | SC20 | a page that keeps its own height (the Town Center, the Start page); every other page shares the tallest of the rest | {by: menu.js, law: [], needs: [], may: []} | N101 |
+| SC21 | laid as a line, corner to corner, one piece a tile, four-connected; touches any building, keeps no lane (Mid's lineKind) | {by: econ.js, menu.js, law: [], needs: [], may: []} | N168 |
+| SC22 | shut to a foe of its owner, open to the rest; laid on its owner's wall, it takes the piece's place (Mid's blockedCell) | {by: index.html walkable, combat.js, law: [], needs: [], may: []} | N168 |
 
 ## citations
 
@@ -211,6 +213,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N165 |  | Hall, E. T. (1966), The Hidden Dimension: personal distance, 1.5 to 4 ft; and hexagonal circle packing, density π/(2√3) (Lagrange 1773; Thue | to open |
 | N166 |  | OSHA 29 CFR 1910.266(d)(6)(ii), fellers at least two tree lengths apart; 29 CFR 1910.142, beds at least 36 in apart; Mid's cites, from memor | to open |
 | N167 |  | Moussaïd, Helbing, Garnier, Johansson, Combe & Theraulaz (2009), Experimental study of the behavioural mechanisms underlying self-organizati | to open |
+| N168 |  | Design: Mid's builders, repair, limits, taking down, placing and walls (11-orders.js autoBuilder, sendBuilder, repairCost, shellBack, refund | opened |
+| N169 |  | Design: Albert, Nov 5 10:06–10:28: build and train times Mid's; every building's health v100's | opened |
 
 ## colours
 
@@ -542,6 +546,37 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E310 |  | a box over finds (Mid's boxCut): n villagers, idle first then the nearest, cut the finds in it, from the nearest open one outside when none  |  |
 | E311 |  | a trained unit steps out onto the free spot of its building's outline nearest the middle (Mid's stepOut); none free, the queue waits |  |
 | E312 |  | nudged off its spot, it gives way while pushed and steps back once the crowd lets go: no tug of war with a walker, no shuffle between two on |  |
+| E313 |  | how many of a building a side may have now: its age's limit with research added (D199), none before its age (D200); why not, in Mid's words  |  |
+| E314 |  | why a building may not stand here, Mid's rules in order: the edge, the limit, the ground under it (a gate may take its owner's wall piece),  |  |
+| E315 |  | two squares from every find too, measured from the footprint's edge to the find's middle (Mid's nodesNear) |  |
+| E316 |  | the ghost snaps to the nearest spot that fits beside one of yours (touching, or a lane apart, edges or middles in line) or in line with one  |  |
+| E317 |  | taking a building down pays back half its price, all of it early in the build; its line is paid back in full first (Mid's shellBack, refundO |  |
+| E318 |  | a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing slips through a diagonal (Mid's wallLine); laid pie |  |
+| E319 |  | the walk starts on the Town Center's own floor; walls being laid count as built; everything is put back after |  |
+| E320 |  | a builder remembers the work it left (its find and yield, and whether it was pulled off it) so it can go back (Mid's sendBuilder) |  |
+| E321 |  | a new site gets the nearest free villager; with none free, your nearest worker is pulled off and goes back after, a computer's lowest earner |  |
+| E322 |  | back to the very find it left if it still stands, else the best of its yield, else idle (Mid's backToWork) |  |
+| E323 |  | the next site for a builder done: a wall piece close by, else a site nobody raises (Mid's repairTick) |  |
+| E324 |  | a site finished: a drop-off or field puts its builder to work there, unless it was pulled off other work; else the next site, else back to w |  |
+| E325 |  | mending, Mid's: three times the build time for a whole building, a quarter of its price paid as it goes; short of any part, it stops (QCK) |  |
+| E326 |  | a crew of n raises a site at n^0.7 (QAC), counted once a tick; frost slows stone work; the site's health rises with it |  |
+| E327 |  | of the buildings that can take an order, the one with the shortest line (Mid's shortest) |  |
+| E328 |  | a gate is walkable only to those its owner does not count a foe: asked of combat.js by the shut hook, for the walker on the path in hand; no |  |
+| E329 |  | a gate is shut to a foe of its owner, and to an unknown walker (the seal's foe) |  |
+| E330 |  | the computer's wall ring: from its age, with stone, a few pieces a round, gates first, while it keeps its stone (Mid's decide) |  |
+| E331 |  | an arc of wall round the Town Center facing the middle, four-connected; its two squares nearest the middle are the gate (Mid's wallPlan) |  |
+| E332 |  | who trains a kind: the building with the shortest line; walls are laid as lines; walls and gates show the seal |  |
+| E333 |  | the ghost to the finger, lifted above it on a phone, snapped beside yours; the reason it may not stand is kept for the label |  |
+| E334 |  | a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid's wallSnap, wallSet) |  |
+| E335 |  | a finger on a wall's corner moves it, on its line slides the whole wall; elsewhere it looks around and a tap adds a corner (Mid's wallHit, w |  |
+| E336 |  | Build: a wall line laid while the stores last, said in one toast; a building sent its nearest free villager (or the one picked), then the gh |  |
+| E337 |  | while placing, the finger moves the ghost (a wall's corner or line), not the map |  |
+| E338 |  | the ghost's own art tinted green where it fits and red where not, one tinted copy a sprite and colour (Mid's ghostTint) |  |
+| E339 |  | while a wall or gate is placed: a red line where a foe could walk in, or Sealed over the Town Center (Mid's drawSeal) |  |
+| E340 |  | the ghost: a wall's tiles green or red with its corners, the first ringed green; a building's guides to yours in line and its tinted art, no |  |
+| E341 |  | a tap on open ground while the Build page is open: what fits there is picked and its ghost put there (Mid's suggestAt) |  |
+| E342 |  | dragging the ghost near the screen's edge scrolls the map (Mid's edgeScroll) |  |
+| E343 |  | what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a wall in a narrow way (a gate beside your wall), a h |  |
 
 ## ground
 
@@ -695,9 +730,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D120 | a shadow at most this many heights | 3 | N112 |
 | D121 | the blades' strength | 0.45 | N112 |
 | D122 | the sides in play | [0, 2] | N114 |
-| D123 | what a thing costs | {BTC1: {wood: 275, stone: 100}, BR1: {wood: 25}, BI1: {wood: 100}, BI2: {wood: 100}, BI3: {wood: 100}, BCL1: {wood: 60}, BM1: {wood: 175}, B | N69 |
+| D123 | what a thing costs (Mid's BLD and UNIT cost, by the 10:31 rule; a second Town Center Mid's town, each unit the Mid kind it wears) | {BTC1: {wood: 400, stone: 300, food: 200}, BR1: {wood: 30}, BI1: {wood: 80}, BI2: {wood: 80}, BI3: {wood: 80}, BCL1: {wood: 60}, BM1: {wood: | N168 |
 | D124 | seconds to train | {UV: 25, UM1: 21, UM2: 35, UM3: 30, UM4: 36, US4: 30} | N69 |
-| D125 | one villager's seconds to raise a site | {BTC1: 150, BR1: 25, BI1: 35, BI2: 35, BI3: 35, BCL1: 15, BM1: 50, BM2: 50, BM3: 50, BM4: 40, BW1: 10, BW2: 70, BW3: 80, BW4: 5} | N69 |
+| D125 | one villager's seconds to raise a site (Mid's build times, BLD t; the Town Center a second one, Mid's town) | {BTC1: 60, BR1: 12, BI1: 15, BI2: 15, BI3: 15, BCL1: 10, BM1: 25, BM2: 25, BM3: 25, BM4: 30, BW1: 10, BW2: 12, BW3: 25, BW4: 6} | N169; N168 |
 | D126 | n villagers raise it at n^this | 0.7 | N114 |
 | D127 | the people a building houses | {BTC1: 10, BR1: 5} | N69 |
 | D128 | the most people | 200 | N69 |
@@ -769,6 +804,18 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D196 | standing, in metres: a pace apart (3 ft), near enough a spot to stand on it (a quarter pace), the ring a find is worked from (Mid's WORK_R); the lattice's rings, pack × √(D128) and spare more, its second axis at 60° (hex, QCI); two who meet part with pass as much again to the side, each to its right, so they slip by (QCJ) | {apart: 0.9144, arrive: 0.2286, work: {fish: 1.495, other: 1.035}, pack: 0.525, spare: 2, hex: [0.5, 0.866025], pass: 0.5} | N164; N165; N166; N167 |
 | D197 | a worker whose find is gone looks from metres, widening by grow over tau seconds (Mid's REACH ÷ 2 and × 1.5), waits at its drop-off and looks again every again seconds | {from: 14.95, grow: 44.86, tau: 20, again: 2} | N164 |
 | D198 | the eight ways from a tile, the four straight first | [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]] | N74 |
+| D199 | how many of a building a side may have, by age (Stone to Gunpowder; a later age keeps the last), research adding to each (Forest law, QCA); null: no limit; the Town Center counts the ones past the seat (Mid's cap, its town's for a second one) | {BTC1: [0, 0, 1, 2, 2], BTC2: [0, 0, 0, 1, 2], BTC5: null, BTC6: null, BTC7: null, BTC8: null, BR1: null, BR2: null, BCR1: [1], BCR2: [1], B | N168 |
+| D200 | the age a building opens in (Mid's BLD age; the rest from the first) | {BTC1: 2, BTC2: 3, BTC5: 1, BTC6: 1, BTC7: 1, BTC8: 1, BR2: 2, BCR2: 3, BCL4: 2, BCT1: 1, BP1: 1, BP2: 2, BP3: 1, BP4: 2, BP5: 2, BP6: 2, BP | N168 |
+| D201 | a villager mends a whole building in time × its build time, for cost × its price, paid as it goes; within this much of its health it is whole (Mid's) | {time: 3, cost: 0.25, within: 0.5} | N168 |
+| D202 | a building taken down pays back share of its price, early (all of it) while the site is under first raised; what waits in its line comes back in full (Mid's shellBack) | {share: 0.5, first: 0.15, early: 1} | N168 |
+| D203 | a line of wall gets crew builders at most, who work down it; a builder done takes the next wall piece within wall tiles, else a site nobody raises within site tiles, else goes back to its work (Mid's 60 and 220 units in its 10-unit squares) | {crew: 2, wall: 6, site: 22} | N168 |
+| D204 | a site stands at start of its health and gains rise of it as it is raised (Mid's mkBld and bldTick) | {start: 0.1, rise: 0.9} | N168 |
+| D205 | a building that costs stone rises at share in frost, the air at or under at °C: mortar will not set (Mid's frost weather) | {share: 0.5, at: 0} | N168 |
+| D206 | placing, in tiles unless said: lane tiles round every building and from every find (walls, gates and fields may touch; nothing touches one that trains); the ghost snaps beside one of yours, touching or a lane apart (gaps), within near, or in line with one within guide (the guide drawn pad past both), to the nearest spot within tol (least, or zoom ÷ the zoom), start from the screen's middle; a find stands half a tile in; on a phone the ghost waits lift px above the finger; within edge px of the screen the map scrolls scroll px a second; a wall corner is caught within hit px, and a drag nearly flat or upright, under 1 in flat, is made so; after a building the next spot is its size and next for its material away (timber leaves a gap for fire); the tint and the ghost's alpha; a corner's knob, the lines' widths and dashes in px; a tile's corners in order (Mid's) | {lane: 2, gaps: [0, 2], near: 4, half: 0.5, guide: 26, pad: 1.2, tol: {least: 1.4, zoom: 2.6}, start: 20, lift: 64, edge: 48, scroll: 320, h | N168 |
+| D207 | while walls are laid: a foe's walk out from the Town Center reaching reach tiles is a way in, shown, else Sealed; looked again every seconds (Mid's SEAL) | {reach: 38, every: 0.3} | N168 |
+| D208 | the computer's wall ring: ring tiles out from its Town Center, an arc of ± steps of step rad facing the middle, its gates the two squares nearest the middle and laid first; from age, with stone, up to pieces a round while it keeps that much stone (Mid's WALL_R, 260 units in its 10-unit squares, and wallPlan; the balanced computer walls) | {ring: 26, steps: 66, step: 0.019, gates: 2, age: 1, stone: 60, keep: 40, pieces: 3} | N168 |
+| D209 | what fits a tapped spot, in tiles and scores: a drop-off for finds within near × r with none within dropR; more of what stands within r (a home: a home; a field: a mill, then a field; an army building: the one you lack; a wall: a gate; the Town Center: a home, keep); a narrow way, its disc of area tiles between choke solid: a wall, or a gate beside your wall; a home when room is short (Mid's SUGGEST) | {r: 14, near: 0.85, dropR: 11, drop: 3, kin: 3.5, keep: 1, area: 4, choke: {lo: 0.35, hi: 0.75}, chokeW: 4, room: 2, short: 1.5} | N168 |
+| D210 | a building that needs another of its side standing first (Mid's: the Apartment an Aqueduct) | {BR2: BP7} | N168 |
 
 ## rules
 
@@ -825,6 +872,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X49 | who is a foe is Mid's frozen isFoe, gangOf, atWar and friendly for the same sides, groups and stances: animals everyone's foe, each wild group by its own stance, a treaty binding only its signers; a soldier and a tower strike only a foe | {stage: page} | N158 |
 | X50 | ages and research are Mid's frozen code for the same orders: the age queued at the seat at its price and wait, the seat training nothing while it rises, the lines in order at each step's price and time (research-speed steps applied), a step out of order, queued, before its age or its needs refused; after each step the wood rate, the load, a home's room and the camp's footing Mid's with its shares added; the Hall names a step and an age, the age button and info card the next age and its own wait, the hidden age never next, the keep's level at Gunpowder drawn, Z1 from Mid's first age | {stage: page} | N160 |
 | X51 | ten villagers sent to one bush patch each stand on a spot of their own on its ring, the spots and the bodies a pace apart, never more on a find than Mid's frozen findCap; each one's crowd share and forager's rate are Mid's frozen forage for the same load, walk, crowd and walked length; Mid's frozen makeNow on the same five minutes of work gathers the same food within 2% (the walk is v100's: paths, and the push by mass) | {stage: page} | N164 |
+| X52 | builders, repair, limits, placing and walls are Mid's frozen code for the same actions: a crew's build time and a site's health (bldTick, n^0.7), a repair's time and stores spent (repairTick) and its price (repairCost), every price Mid's BLD and UNIT cost, the refund taken down (shellBack), every building's limit by age with research (capFor, capWhy), placing's refusals (canPlace), a wall laid corner to corner (wallLine) and the seal's gap (sealPath); on the page the nearest free villager is sent and one pulled off its work goes back to it, the ghost snaps a lane apart, a gate opens to its own and an ally and shuts to a foe, and the computer lays its ring | {stage: page} | N168 |
 
 ## screen
 
@@ -893,10 +941,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BM2 | Range | [Spawn, Health] | N144 |
 | BM3 | Stable | [Spawn, Health] | N144 |
 | BM4 | Siege workshop | [Spawn, Health] | N144 |
-| BW1 | Wall | [Health] | N144 |
-| BW2 | Gate | [Health] | N144 |
+| BW1 | Wall | [Health, Line] | N144 |
+| BW2 | Gate | [Health, Gate] | N144 |
 | BW3 | Tower | [Shoot, Health] | N144 |
-| BW4 | Palisade | [Health] | N144 |
+| BW4 | Palisade | [Health, Line] | N144 |
 | BF5 | Abatis | [] | N144 |
 | BS1 | Throne | [] | N144 |
 | BS2 | Wonder | [] | N144 |

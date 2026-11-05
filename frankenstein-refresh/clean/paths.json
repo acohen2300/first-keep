@@ -38,8 +38,8 @@
    "v100 keeps OCC up to date at each build, unbuild and take: no grid to rebuild"
   ],
   "blockedCell": [
-   "bring",
-   "a gate is shut only to those at war with its owner; v100's walkable (index.html) does the rest, gates are a closed tile today"
+   "in v100",
+   "F15: index.html walkable asks the shut hook for a gate (GATES), combat.js answers by isFoe; the Gate tick (SC22)"
   ],
   "COMPS": [
    "cut",
@@ -146,40 +146,40 @@
    "index.html step and walkTo; Mid's slip on ice (QR) and ruts (KI15, held) are not in v100"
   ],
   "canPlace": [
-   "bring",
-   "two clear squares round every building and from every find, a lane round buildings that train, trade posts only on a trade stop; v100's econ.js canPlace has the flat free tiles at one height"
+   "in v100",
+   "F15: econ.js placeWhy (D206): two squares round buildings and from finds, a lane round trainers, Mid's words; a trade post on a stop and a dock by a lake wait for trade stops and water (neither is priced in v100)"
   ],
   "GUIDE_R": [
-   "bring",
-   "how far a building's alignment lines reach (with snapGhost)"
+   "in v100",
+   "F15: D206 guide (26 tiles)"
   ],
   "snapGhost": [
-   "bring",
-   "the ghost snaps in line with your buildings, touching or one lane apart; v100's ghost follows the finger"
+   "in v100",
+   "F15: econ.js snap"
   ],
   "findSpot": [
    "in v100",
    "ai.js spot: rings out from a centre"
   ],
   "wallLine": [
-   "bring",
-   "a wall dragged as a straight line of pieces (BW1 laid as lines); v100 places one piece a tap"
+   "in v100",
+   "F15: econ.js wallLine"
   ],
   "SEAL": [
-   "bring",
-   "is your keep walled in: the walk outward and the gap shown (Walls)"
+   "in v100",
+   "F15: D207 seal"
   ],
   "sealSeen": [
-   "bring",
-   "part of the walled-in check"
+   "in v100",
+   "F15: econ.js sealPath walks by findPath (QBL), which keeps its own"
   ],
   "sealGen": [
-   "bring",
-   "part of the walled-in check"
+   "in v100",
+   "F15: econ.js sealPath walks by findPath (QBL), which keeps its own"
   ],
   "sealPath": [
-   "bring",
-   "is your keep walled in, and the shortest way in shown while placing walls"
+   "in v100",
+   "F15: econ.js sealPath: a foe's walk out from the Town Center's floor by findPath (QBL), the walls being laid counted"
   ]
  },
  "misfits": []

@@ -247,15 +247,15 @@
   ],
   "WALL_KEYS": [
    "bring",
-   "walls next to each other join into one run (with the wall look)"
+   "F15: not brought: walls joined into one run are art (the building art floor); waits for it (Parked)"
   ],
   "wkey": [
    "bring",
-   "a wall's square key (with WALL_KEYS)"
+   "F15: not brought, with WALL_KEYS (Parked)"
   ],
   "wallKeys": [
    "bring",
-   "which squares hold wall, once a tick (with WALL_KEYS)"
+   "F15: not brought, with WALL_KEYS (Parked)"
   ],
   "drawWallBox": [
    "in v100",
@@ -546,24 +546,24 @@
    "held: a label pill on the map (DICTIONARY V, labels); see misfits"
   ],
   "drawSeal": [
-   "bring",
-   "while laying walls: a red line where a foe could walk in, or Sealed over the Town Center"
+   "in v100",
+   "F15: menu.js drawSeal"
   ],
   "drawGuides": [
-   "bring",
-   "alignment lines from the ghost to buildings in line with it"
+   "in v100",
+   "F15: menu.js draw hook: the guides to yours in line (D206 guide, pad)"
   ],
   "drawGhost": [
-   "bring",
-   "the building being placed: its art tinted, the reason, the guides, the seal; v100's ghost (menu.js) is the picture half seen with a green or red outline"
+   "in v100",
+   "F15: menu.js draw hook: the ghost's tinted art, no footprint box; a wall's tiles and corners; the reason in the Build cell"
   ],
   "GHOST_TINT": [
-   "bring",
-   "the ghost's green and red tints (Colours)"
+   "in v100",
+   "F15: the menu's green and red (C6, C7) at D206 tint"
   ],
   "ghostTint": [
-   "bring",
-   "tints the ghost's own art (with drawGhost)"
+   "in v100",
+   "F15: menu.js tinted()"
   ],
   "miniIncoming": [
    "bring",

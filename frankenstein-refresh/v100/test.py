@@ -56,6 +56,7 @@ async def page():
         await foe(b)
         await research(b)
         await gather(b)
+        await walls(b)
         await b.close()
 SAME = """(() => { FK.reset(); let beats = 0, wet = 0; for (let i = 0; i < 3000; i++) { FK.sim(0.1); beats += FK.every(FK.D.beats.slow); wet += FK.K.wetHour; }   // 300 s of play, the weather in it
   const r = (x) => Math.round(x * 1e6), state = [FK.units().map((u) => [u.code, u.side, r(u.bx), r(u.by), u.hp, r(u.cd), u.job]), FK.SIDES.map((s) => s.store), r(FK.K.wet), FK.K.fogT, ECON.score(0).total];
@@ -183,7 +184,7 @@ WAROD = """(() => { const D = FK.D, [me, foe] = D.players, tw = Object.keys(D.to
   return out; })()"""
 WALLED = """(() => { FK.reset(); const u = ECON.villagersOf(0).find((v) => !v.load), ring = []; for (let y = -2; y <= 2; y++) for (let x = -2; x <= 2; x++) { const k = u.k + y * FK.N + x; if ((x || y) && FK.OCC[k] === 0) { FK.OCC[k] = 1; ring.push(k); } }
   const marks = () => FK.things().filter((t) => t.noPath != null).length, tree = FK.things().filter((t) => t.kind === 'tree').sort((a, b) => Math.hypot(a.bx - u.bx, a.by - u.by) - Math.hypot(b.bx - u.bx, b.by - u.by))[0];
-  let err = '', one = -1; try { const m0 = marks(); ECON.gatherAt(u, tree); one = marks() - m0; for (let i = 0; i < 600; i++) FK.sim(0.1); } catch (e) { err = String(e); }
+  let err = '', one = -1; try { const m0 = marks(); ECON.gatherAt(u, tree); one = marks() - m0; for (let i = 0; i < 600 || (u.job === 'gather' && !u.target && i < 650); i++) FK.sim(0.1); } catch (e) { err = String(e); }   // F15: read past the one tick between two tries (a find whose path failed, the next looked for)
   for (const k of ring) FK.OCC[k] = 0; return [err, one, u.job]; })()"""
 MIDODDS = r"""const vm = require('vm'), fs = require('fs'), [core, spatial, ai, orders, run] = process.argv.slice(1).map((f, i) => (i < 4 ? fs.readFileSync(f, 'utf8') : JSON.parse(f)));
 const cut = (t, a, b) => t.slice(t.indexOf(a), t.indexOf(b, t.indexOf(a))), out = [];
@@ -315,7 +316,7 @@ GATHER = """(() => { FK.reset(); const D = FK.D, h = FK.seatOf(0), vil = D.train
   while (ECON.villagersOf(0).length < 10) FK.spawn(vil, 0, ring[ECON.villagersOf(0).length * 3], FK.rng);
   const vs = ECON.villagersOf(0), bushes = FK.things().filter((t) => t.kind === 'bush'), bush = bushes.slice().sort((a, b) => Math.hypot(a.bx - h.bx, a.by - h.by) - Math.hypot(b.bx - h.bx, b.by - h.by))[0];
   const mill = Object.keys(FK.SH).find((c) => (FK.SH[c].drop || []).join() === 'food'); let m = null;
-  for (let d = 3; d < 20 && !m; d++) for (let a = 0; a < 16 && !m; a++) { const k = FK.tileAt(bush.bx + Math.cos(a * Math.PI / 8) * d * D.tile, bush.by + Math.sin(a * Math.PI / 8) * d * D.tile), i = k % FK.N, j = (k - i) / FK.N; if (k >= 0 && ECON.canPlace(mill, i - 1, j - 1)) m = FK.build(mill, i - 1, j - 1, FK.SIDES[0].col); }
+  for (let d = 3; d < 20 && !m; d++) for (let a = 0; a < 16 && !m; a++) { const k = FK.tileAt(bush.bx + Math.cos(a * Math.PI / 8) * d * D.tile, bush.by + Math.sin(a * Math.PI / 8) * d * D.tile), i = k % FK.N, j = (k - i) / FK.N; if (k >= 0) m = FK.build(mill, i - 1, j - 1, FK.SIDES[0].col); }   // laid as the map lays a building (flat, free ground), not by the player's placing rule (F15: two squares from finds)
   for (const t of bushes) t.amount *= 10; const amt = new Map(bushes.map((t) => [t, t.amount]));
   for (const u of vs) ECON.gatherAt(u, bush);
   const load = vs.map(() => 0), work = vs.map(() => []), came = vs.map(() => null); let first = null, food = 0;
@@ -363,6 +364,117 @@ def match():   # same action, same result: each of Mid's sounds, made by Mid's o
     cut = {k for k, v in json.load(open(os.path.join(HERE, '../clean/sound.json')))['pieces']['SFX'][2].items() if v[0] == 'cut'}   # a sound Albert cut is not brought
     off = [k for k, r in mid.items() if k not in cut and (k not in hb or not (same(r[:1], hb[k][:1]) and len(r) == len(hb[k]) and all(same(full(a), full(b)) for a, b in zip(r[1:], hb[k][1:]))))]
     ok('t-match', mid and not off, off)
+# Builders, repair, limits, placing and walls (F15): the same actions, the same answers as Mid's frozen code, each run in node's vm with Mid's own tables (01, 02, 03 rules) and cut
+# from 06-rules-tuning (BUILDER_POW, LANE, HOME, WALL_R), 08-core (capAt, capFor, atCap, capWhy), 09-nav (snapPos, canPlace, GUIDE_R, snapGhost, wallLine, SEAL, sealPath), 11-orders
+# (shellBack, repairCost), 12-sim-core (bldTick), 13-sim-civil (repairTick) and 17-ai (wallPlan). On the page: a crew of 1 to 3 raises a Barracks (each tick's crew Mid's bldTick's),
+# a villager mends a Home from half (Mid's repairTick on the same building: the ticks, the stores spent, back to work), every building's limit at every age and count (and with Forest law),
+# Mid's canPlace on a copy of the ground round a Home and a Barracks (the same buildings, every find a node; probes whose footprint is free and flat in v100), the snapped spot (snapGhost),
+# a wall laid corner to corner, the seal shut by a ring round the Town Center and open through its one gap, the computer's wall ring; and behaviour Mid's code shows only in play: a gate
+# opens to its own side, an ally and a side at peace and shuts to a side at war and to a beast; the nearest free villager is sent, and one pulled off its work goes back to its find after
+WALLS = """(() => { const D = FK.D, E = ECON, N = FK.N, out = {}, [ME, FOE] = D.players, at = E.at, us = FK.SIDES[ME];
+  const priced = (tick, no) => Object.keys(D.cost).filter((c) => FK.SH[c].layer === 110 && FK.SH[c].ticks.includes(tick) && !(no && FK.SH[c].ticks.includes(no)));
+  const [BAR] = Object.keys(D.trains).filter((c) => !FK.SH[c].ticks.includes('Seat')), [HOME] = priced('House', 'Seat'), [WALL] = priced('Line'), [GATE] = priced('Gate'), [FIELD] = priced('Field'), MILL = priced('Drop-off', 'Seat').find((c) => FK.SH[c].drop.join() === 'food');
+  const fill = () => { for (const y of E.YIELDS) us.store[y] = 9000; }, flat = (i, j, n) => { for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) if (!FK.free(y * N + x) || FK.H[y * N + x] !== FK.H[j * N + i]) return false; return true; };
+  const spot = (c, from, dmin, away = []) => { for (let d = dmin; d < 70; d++) for (let a = 0; a < 48; a++) { const i = Math.round(from.i + from.n / 2 + Math.cos(a * Math.PI / 24) * d), j = Math.round(from.j + from.n / 2 + Math.sin(a * Math.PI / 24) * d);
+    if (E.canPlace(c, i, j) && away.every(([t, r]) => Math.max(Math.abs(t.i - i), Math.abs(t.j - j)) >= r)) return [i, j]; } return null; };
+  const beside = (t, u, q) => { [u.bx, u.by] = FK.tileMid((t.j + q) * N + t.i - 1); u.path = null; u.spot = null; FK.place(u); };
+  out.crew = [1, 2, 3].map((n) => { FK.reset(); fill(); const h = FK.seatOf(ME), [i, j] = spot(BAR, h, 12), t = E.plan(ME, BAR, i, j), vs = E.villagersOf(ME).slice(0, n), hp = [];
+    vs.forEach((u, q) => { beside(t, u, q); E.buildAt(u, t); }); const job = vs.every((u) => u.job === 'build'); let steps = 0;
+    while (t.done < 1 && steps < 9000) { FK.sim(0.1); steps++; if (steps % 20 === 0 && t.done < 1) hp.push(t.hp); }
+    return { n, steps, hp, job, M: t.hpMax, T: FK.stat(BAR, ME, 'build'), full: t.hp === t.hpMax }; });
+  { FK.reset(); fill(); const h = FK.seatOf(ME), [i, j] = spot(HOME, h, 12), t = FK.build(HOME, i, j, us.col), M = (t.hpMax = FK.stat(HOME, ME, 'hp'));
+    t.hp = M / 2; const half = E.repairCost(t); t.hp = M * 0.3; const low = E.repairCost(t); t.hp = M / 2;
+    const [u] = E.villagersOf(ME); beside(t, u, 0); E.buildAt(u, t); let steps = 0, ticks = 0; while (u.target === t && ticks++ < 9000) { const was = t.hp; FK.sim(0.1); if (t.hp > was) steps++; }
+    out.repair = { steps, hp: t.hp, M, spent: us.ledger.out.repairs || 0, half, low, T: D.buildTime[HOME], cost: D.cost[HOME], job: u.job, was: u.was }; }
+  out.refund = [0.1, 0.149, 0.15, 0.5, 1].map((done) => [done, E.refund({ code: BAR, done })]); out.cost = D.cost[BAR];
+  { FK.reset(); const L = FK.things(), rows = [], counts = [0, 1, 2, 3, 4, 6, 8, 12, 13], ask = (c, a, r) => { us.age = a; for (const n of counts) { for (let q = 0; q < n; q++) L.push({ kind: 'bld', side: ME, code: c, done: 1 }); rows.push([c, a, n, r, E.capWhy(ME, c)]); L.splice(L.length - n, n); } };
+    for (const c of Object.keys(D.caps)) for (let a = 0; a < 5; a++) ask(c, a, 0);
+    const law = Object.keys(BOOKS.tech).find((c) => BOOKS.tech[c].value.fx.some((f) => f.s === 'limit')), fx = BOOKS.tech[law].value.fx.find((f) => f.s === 'limit'); FK.learn(ME, law);
+    for (let a = 0; a < 5; a++) ask(fx.k, a, fx.a); us.age = 0; out.caps = rows; }
+  { FK.reset(); us.age = 1; const h = FK.seatOf(ME), H = FK.build(HOME, ...spot(HOME, h, 16), us.col), B = FK.build(BAR, ...spot(BAR, h, 16, [[H, 20]]), us.col), probes = [], finds = new Set(), rough = new Set(), snaps = [];
+    for (const X of [H, B]) for (let dj = -8; dj <= 8; dj++) for (let di = -8; di <= 8; di++) for (const c of [HOME, BAR, FIELD, MILL, WALL]) { const i = X.i + di, j = X.j + dj; if (flat(i, j, FK.B[c][1])) probes.push([c, i, j, E.placeWhy(ME, c, i, j)]); }
+    for (const X of [H, B]) for (let y = X.j - 16; y <= X.j + 16; y++) for (let x = X.i - 16; x <= X.i + 16; x++) if (FK.OCC[y * N + x] === 1) finds.add(y * N + x); else if (!FK.OCC[y * N + x] && !FK.free(y * N + x)) rough.add(y * N + x);
+    for (const X of [H, B]) for (let dj = -9; dj <= 9; dj += 2) for (let di = -9; di <= 9; di += 2) for (const c of [HOME, FIELD]) snaps.push([c, X.i + di, X.j + dj, ...E.snap(ME, c, X.i + di, X.j + dj, D.place.tol.zoom)]);
+    out.place = { probes, snaps, finds: [...finds].map(at), rough: [...rough].map(at), blds: FK.things().filter((t) => t.kind === 'bld').map((t) => [t.code, t.i, t.j, t.n]), tol: D.place.tol.zoom }; us.age = 0; }
+  out.lines = [[0, 0, 7, 3], [0, 0, 3, 7], [5, 5, 0, 0], [0, 0, -6, 2], [2, 2, 2, 9], [0, 0, 4, 4], [0, 0, -5, -8], [3, 1, 3, 1], [0, 0, 9, 1], [4, 0, 0, 11]].map(([a, b, c, d]) => [a, b, c, d, E.wallLine((100 + b) * N + 100 + a, (100 + d) * N + 100 + c).map((k) => at(k).map((v) => v - 100))]);
+  { FK.reset(); const h = FK.seatOf(ME), m = 5, lo = [h.i - m, h.j - m], hi = [h.i + h.n - 1 + m, h.j + h.n - 1 + m], c = [[lo[0], lo[1]], [hi[0], lo[1]], [hi[0], hi[1]], [lo[0], hi[1]]].map(([i, j]) => j * N + i);
+    const ring = [...new Set(c.flatMap((k, q) => E.wallLine(k, c[(q + 1) % 4])))], g = hi[1] * N + h.i + Math.floor(h.n / 2), shut = E.sealPath(ME, ring), open = E.sealPath(ME, ring.filter((k) => k !== g));
+    out.seal = { h: [h.i, h.j, h.n], ring: ring.map(at), gap: at(g), inRing: ring.includes(g), shut: shut.length, through: open.includes(g), open: open.length }; }
+  { FK.reset(); const h = FK.seatOf(ME); let c = null; for (let d = 10; d < 60 && !c; d++) for (let a = 0; a < 48 && !c; a++) { const i = Math.round(h.i + h.n / 2 + Math.cos(a * Math.PI / 24) * d), j = Math.round(h.j + h.n / 2 + Math.sin(a * Math.PI / 24) * d); if (flat(i - 3, j - 3, 7)) c = [i, j]; }
+    const [ci, cj] = c; for (let y = cj - 1; y <= cj + 1; y++) for (let x = ci - 1; x <= ci + 1; x++) if (x !== ci || y !== cj) FK.build(x === ci + 1 && y === cj ? GATE : WALL, x, y, us.col);
+    const k = cj * N + ci, far = (cj + 3) * N + ci, go = (code, side) => { const u = FK.spawn(code, side, k, FK.rng), r = FK.go(u, far); u.path = null; return r; }, sol = D.trains[BAR][0], beast = fromBook('sides').beasts.find((b) => FK.SH[b].ticks.includes('Walk'));
+    out.gate = { mine: go(D.trains[h.code][0], ME), war: go(sol, FOE), beast: go(beast, -1) }; WAR.treaty(ME, FOE, 'ally'); out.gate.ally = go(sol, FOE); WAR.treaty(ME, FOE, 'peace'); out.gate.peace = go(sol, FOE); WAR.treaty(ME, FOE, 'war'); out.gate.again = go(sol, FOE); }
+  { FK.reset(); fill(); const h = FK.seatOf(ME), vs = E.villagersOf(ME); for (let q = 1; q < vs.length; q++) E.assign(ME, 'wood', 1); const free = vs.find((v) => v.job === 'idle' || v.job === 'wait');
+    const t = E.plan(ME, HOME, ...spot(HOME, h, 8)); E.autoBuilder(ME, t); out.free = { one: !!free, sent: !!free && free.target === t && !free.was.back, others: vs.filter((v) => v.target === t).length }; }
+  { FK.reset(); fill(); const h = FK.seatOf(ME), vs = E.villagersOf(ME); for (let q = 0; q < vs.length; q++) E.assign(ME, 'wood', 1); for (let q = 0; q < 300; q++) FK.sim(0.1); const none = vs.every((v) => v.job !== 'idle' && v.job !== 'wait');
+    const t = E.plan(ME, HOME, ...spot(HOME, h, 8)), near = vs.filter((v) => E.jobOf(v) && E.jobOf(v) !== 'build').sort((a, b) => Math.hypot(a.bx - t.bx, a.by - t.by) - Math.hypot(b.bx - t.bx, b.by - t.by))[0], old = near.target;
+    E.autoBuilder(ME, t); const sent = near.target === t && near.was.back && near.was.t === old; let q = 0; while (t.done < 1 && q++ < 9000) FK.sim(0.1); FK.sim(0.1);
+    out.pulled = { sent, built: t.done >= 1, back: near.target === old || E.jobOf(near) === 'wood', clear: near.was === null, none }; }
+  { FK.reset(); const s = FK.SIDES[FOE], h = FK.seatOf(FOE); s.age = 1; s.store.stone = 5000; s.store.wood = 5000; const plan = AI.wallPlan(h); AI.round(FOE);
+    out.ring = { h: [h.i, h.j, h.n], mid: FK.MID / D.tile, plan: plan.map(([k, c]) => [...at(k), c === GATE ? 'gate' : 'wall']), laid: FK.things().filter((t) => t.side === FOE && E.wallish(t)).map((t) => [t.i, t.j, FK.has(t, 'Gate') ? 'gate' : 'wall']), pieces: D.ai.walls.pieces }; }
+  out.N = N; return out; })()"""
+MIDWALLS = r"""const vm = require('vm'), fs = require('fs'), dir = process.argv[1], src = (f) => fs.readFileSync(dir + '/' + f, 'utf8'), run = JSON.parse(fs.readFileSync(0, 'utf8')), ctx = { RUN: run, Math, console }; vm.createContext(ctx);
+const cut = (t, a, b) => t.slice(t.indexOf(a), b ? t.indexOf(b, t.indexOf(a)) : undefined), [tuning, core, nav, orders, simc, civil, ai] = ['06-rules-tuning.js', '08-core.js', '09-nav.js', '11-orders.js', '12-sim-core.js', '13-sim-civil.js', '17-ai.js'].map(src);
+for (const f of ['01-rules-basics.js', '02-rules-units.js', '03-rules-buildings.js']) vm.runInContext(src(f), ctx);
+vm.runInContext([tuning.match(/const BUILDER_POW = [\d.]+;/)[0], tuning.match(/const LANE = \d+;/)[0], tuning.match(/const HOME = \{[^}]*\};/)[0], cut(tuning, 'const WALL_R', '\n'),
+  `const NC = RUN.N, HERE_MID = RUN.mid * NAVC, G = { P: [{ age: 0, techs: new Set(), res: {} }], blds: [], finds: [], nodes: [], t: 0, tick: 0, wx: 'clear' }, NAV = { occ: [], lake: [], solid: new Uint8Array(NC * NC), gate: new Uint8Array(NC * NC) };
+  const hyp = Math.hypot, clamp = (v, a, b) => Math.max(a, Math.min(b, v)), sfx = () => {}, say = () => {}, news = () => {}, rng = () => 0.5, TOAST = {}, WEATHER = { clear: {} }; let FX = 0, MAXHP = 1, KEEP = null, NODES = [];
+  const fxv = (o, s) => ({ m: 1, a: s === 'limit' ? FX : 0 }), maxHpB = () => MAXHP, keepOf = () => KEEP, nodesNear = (x, y, r, fn) => NODES.some(fn), guardsLeft = () => 0, postAt = () => null, lakeGap = () => 0`,
+  cut(core, 'const addRes', 'const sumCost'), cut(core, 'const bldsOf', 'const ready'), 'const ready = (o, kind) => bldsOf(o, kind).filter((b) => b.prog >= 1)', cut(core, 'const capAt', 'const clsCount'),
+  cut(nav, 'const toCell', '\n'), cut(nav, 'function snapPos', 'function navRebuild'), cut(nav, 'function canPlace', 'function findSpot'), cut(nav, 'function wallLine', '// Is your keep'), cut(nav, 'const SEAL', ''),
+  'const halfOf = (b) => (b.n * NAVC) / 2', cut(orders, 'function shellBack', 'function refundOf'), cut(orders, 'const repairCost', 'const nodeName'), cut(simc, 'function bldTick', 'function built('), cut(civil, 'function repairTick', '// ───────────────────────── Other people'),
+  cut(ai, 'function wallPlan', '// how the two armies').replace(/\bMID\b/g, 'HERE_MID'),   // the map's middle is v100's
+  `function freeNear(cx, cy) { for (let r = 0; r < 9; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) if (!NAV.solid[(cy + dy) * NC + cx + dx]) return { cx: cx + dx, cy: cy + dy }; return null; }
+  const KIND = RUN.kind, RES_OF = { f: 'food', w: 'wood', g: 'gold', s: 'stone', i: 'iron' }, OUT = {}, wood = (c) => Object.fromEntries(Object.entries(c).map(([y, n]) => [y[0], n]));
+  OUT.prices = RUN.prices.map(([c, k, unit]) => Object.fromEntries(Object.entries((unit ? UNIT : BLD)[k].cost || {}).map(([y, n]) => [RES_OF[y], n])));   // read before anything below sets a cost
+  OUT.crew = RUN.crew.map((c) => { BLD.barracks.t = c.T; MAXHP = c.M; const b = { kind: 'barracks', owner: 0, prog: 0, hp: c.M * 0.1, q: [] }, hp = []; let steps = 0; built = () => {};
+    while (b.prog < 1 && steps < 9000) { b.crew = c.n; bldTick(b, 0.1); steps++; if (steps % 20 === 0 && b.prog < 1) hp.push(b.hp); } return { steps, hp }; });
+  var built;
+  { const r = RUN.repair; MAXHP = r.M; BLD.house.t = r.T; BLD.house.cost = wood(r.cost); const p = G.P[0], b = { kind: 'house', owner: 0, prog: 1, hp: r.M / 2, fire: 0 }, u = { owner: 0, rep: b, building: false, x: 0, y: 0 }; p.res = { w: 9000, f: 9000, s: 9000, g: 9000, i: 9000 };
+    let spent = 0, steps = 0, back = false; spend = (pp, k, n) => { pp.res[k] -= n; spent += n; }; backToWork = () => { back = true; }; rectGap = () => 0; moveTo = () => true;
+    while (!back && steps < 9000) { const was = b.hp; repairTick(u, 0.1, 0); if (b.hp > was) steps++; } b.hp = r.M / 2; const half = repairCost(0, b); b.hp = r.M * 0.3; OUT.repair = { steps, spent, hp: null, half, low: repairCost(0, b) }; b.hp = r.M / 2; }
+  var spend, backToWork, rectGap, moveTo;
+  OUT.refund = RUN.refund.map(([done]) => { BLD.barracks.cost = wood(RUN.cost); return shellBack({ kind: 'barracks', prog: done }); });
+  OUT.caps = RUN.caps.map(([c, a, n, r]) => { const kind = KIND[c]; if (!kind) return null; G.P[0].age = a; FX = r; G.blds = Array.from({ length: n }, () => ({ owner: 0, kind, hp: 1, prog: 1 })); const w = BLD[kind].age > a ? 'A later age allows it' : capWhy(0, kind) || ''; G.blds = []; FX = 0; return w; });
+  { const P = RUN.place; G.P[0].age = 1; for (const [c, i, j, n] of P.blds) { const B = { owner: 0, kind: KIND[c], n, x: (i + n / 2) * NAVC, y: (j + n / 2) * NAVC, hp: 1, prog: 1 }; G.blds.push(B); for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) NAV.occ[y * NC + x] = B; }
+    NODES = P.finds.map(([i, j]) => ({ kind: 'tree', x: (i + 0.5) * NAVC, y: (j + 0.5) * NAVC })); capWhy = () => null; for (const [i, j] of P.rough) NAV.lake[j * NC + i] = 1;   // ground v100 cannot build on (water, slope, woods' floor) as Mid's lake
+    const mid = (k, i, j) => [(i + BLD[k].fp / 2) * NAVC, (j + BLD[k].fp / 2) * NAVC];
+    OUT.probes = P.probes.map(([c, i, j]) => canPlace(0, KIND[c], ...mid(KIND[c], i, j)) || '');
+    OUT.snaps = P.snaps.map(([c, i, j]) => { const s = snapGhost(0, KIND[c], ...mid(KIND[c], i, j), P.tol * NAVC); return [s.gx, s.gy]; }); G.blds = []; NAV.occ = []; NODES = []; }
+  var capWhy;
+  OUT.lines = RUN.lines.map(([a, b, c, d]) => wallLine({ gx: a, gy: b }, { gx: c, gy: d }).map((q) => [q.gx, q.gy]));
+  { const [hi, hj, hn] = RUN.seal.h; for (let y = hj; y < hj + hn; y++) for (let x = hi; x < hi + hn; x++) NAV.solid[y * NC + x] = 1; KEEP = { x: (hi + hn / 2) * NAVC, y: (hj + hn / 2) * NAVC };
+    const ring = RUN.seal.ring.map(([gx, gy]) => ({ gx, gy })), [gi, gj] = RUN.seal.gap, shut = sealPath(ring), open = sealPath(ring.filter((c) => c.gx !== gi || c.gy !== gj));
+    OUT.seal = { shut: shut && shut.length, through: !!open && open.some((p) => Math.floor(p.x / NAVC) === gi && Math.floor(p.y / NAVC) === gj), open: open && open.length }; NAV.solid.fill(0); }
+  { const [hi, hj, hn] = RUN.ring.h; OUT.ring = wallPlan({ x: (hi + hn / 2) * NAVC, y: (hj + hn / 2) * NAVC }).map((c) => [c.gx, c.gy, c.kind]); }`].join(';\n'), ctx);
+console.log(JSON.stringify(vm.runInContext('OUT', ctx)));"""
+async def walls(b):   # builders, repair, limits, placing and walls: the same answers as Mid's frozen code; a gate, the builders sent and the way back to work on the page
+    pg = await b.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e))); await pg.goto(URL); await pg.wait_for_timeout(800)
+    v = await pg.evaluate(WALLS); await pg.close()
+    kind = {}   # each v100 building as the Mid kind it is, from the sort (clean/numbers.json, BLD: "Mid's name → v100's name"); a second Town Center is Mid's town
+    names = {e['name']: c for c, e in json.loads(re.search(r'BOOK\("shells", ([\s\S]*)\);', open(os.path.join(HERE, 'books/shells.js')).read()).group(1)).items() if e['layer'] == 110}
+    for k, row in json.load(open(os.path.join(HERE, '../clean/numbers.json')))['pieces']['BLD'][2].items():
+        m = re.search(r'→ ([^;]+)', row[1]); c = m and names.get(m.group(1).strip())
+        if c and k != 'keep': kind[c] = k
+    kind.setdefault('BTC1', 'town')
+    prices = [[c, kind[c], False] for c in MEASURE['cost'] if c in kind] + [[c, SHELLS[c]['look'], True] for c in MEASURE['cost'] if SHELLS[c]['layer'] == 120]   # a unit is the Mid kind it wears (its look)
+    r = subprocess.run(['node', '-e', MIDWALLS, os.path.join(HERE, '../mid/src')], input=json.dumps({**v, 'kind': kind, 'N': v['N'], 'mid': v['ring']['mid'], 'prices': prices}), capture_output=True, text=True)
+    mid = json.loads(r.stdout or 'null') or {}; near = lambda a, b: abs(a - b) <= 1e-6 * max(1, abs(b))
+    crew = [c['job'] and c['full'] and c['steps'] == m['steps'] and len(c['hp']) == len(m['hp']) and all(map(near, c['hp'], m['hp'])) for c, m in zip(v['crew'], mid.get('crew', []))]
+    rep = v['repair']; mr = mid.get('repair', {}); wood = lambda c: {y[0]: n for y, n in c.items()}
+    repair = [rep['steps'] == mr.get('steps'), near(rep['spent'], mr.get('spent', -1)), wood(rep['half']) == mr.get('half'), wood(rep['low']) == mr.get('low'), rep['hp'] >= rep['M'] - 0.5, rep['job'] != 'build' and rep['was'] is None]
+    refund = [wood(x[1]) == m for x, m in zip(v['refund'], mid.get('refund', []))]
+    caps = [(row, m) for row, m in zip(v['caps'], mid.get('caps', [])) if m is not None and row[4] != m]
+    probes = [(p, m) for p, m in zip(v['place']['probes'], mid.get('probes', [])) if p[3] != m]
+    snaps = [(s, m) for s, m in zip(v['place']['snaps'], mid.get('snaps', [])) if s[3:] != m]
+    lines = [x[:4] for x, m in zip(v['lines'], mid.get('lines', [])) if x[4] != m]
+    s, ms = v['seal'], mid.get('seal', {}); seal = [s['inRing'], s['shut'] == 0 == ms.get('shut'), s['through'] and ms.get('through'), s['open'] > 0 and ms.get('open', 0) > 0]
+    g = v['gate']; gate = [g['mine'], not g['war'], not g['beast'], g['ally'], g['peace'], not g['again']]
+    ring = v['ring']; rings = [ring['plan'] == mid.get('ring'), 0 < len(ring['laid']) <= ring['pieces'], all(x in ring['plan'] for x in ring['laid']), any(x[2] == 'gate' for x in ring['laid'])]
+    price = [p[0] for p, m in zip(prices, mid.get('prices', [])) if MEASURE['cost'][p[0]] != m] + ([] if len(prices) == len(MEASURE['cost']) else ['unmapped'])
+    build = [v['free']['one'], v['free']['sent'], v['free']['others'] == 1] + list(v['pulled'].values())
+    got = [all(crew) and len(crew) == 3, all(repair), all(refund) and len(refund) == 5, not caps and len(mid.get('caps', [])) > 2000, not probes and len(v['place']['probes']) > 500, not snaps and len(v['place']['snaps']) > 300, not lines, all(seal), all(gate), all(rings), all(build), not price, not errs]
+    ok('t-walls', all(got), [got, crew, repair, refund, caps[:4], len(caps), probes[:4], len(probes), snaps[:4], len(snaps), lines, seal, gate, rings, build, price, errs[:2], r.stderr[-600:]])
 def proof():   # each planted break in a copy of the build must stop the gate, named by the rule it breaks
     plants = {'home': ('books/angles.js', '"A3":', '"D1":'), 'needs': ('books/shells.js', '"ticks": ["Yield"]', '"ticks": ["Yeld"]'),
               'names': ('menu.js', "FK.has(u, 'Gather') && own(u)", "u.code === 'UV' && own(u)"), 'swallowed': ('menu.js', 'S.htab = keepH; PANEL = h;', 'S.htab = keepH; // swallowed PANEL = h;'),

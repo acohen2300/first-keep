@@ -26,40 +26,40 @@
    "the finger's point in the canvas; v100's canvas is the whole screen and reads clientX/Y"
   ],
   "EDGE": [
-   "bring",
-   "where the finger is while it drags the ghost; with edge scroll"
+   "in v100",
+   "F15: menu.js edge (the finger while it drags the ghost)"
   ],
   "edgeScroll": [
-   "bring",
-   "the map scrolls when the ghost is dragged within 48 px of the screen's edge (320 px a second); part of placing a building"
+   "in v100",
+   "F15: menu.js tick: within D206 edge px the map scrolls D206 scroll px a second"
   ],
   "LIFT": [
-   "bring",
-   "the ghost waits 64 px above the finger on a phone so it is not hidden; v100 puts the ghost's middle under the finger (menu.js ghostTo)"
+   "in v100",
+   "F15: D206 lift: the ghost waits above the finger on a touch screen"
   ],
   "wallSnap": [
-   "bring",
-   "a wall's next corner snaps flat or upright when nearly so; part of laying walls as lines (BW1, BW2, BW4)"
+   "in v100",
+   "F15: menu.js wallSnap (D206 flat)"
   ],
   "wallSet": [
-   "bring",
-   "a wall's squares from its corners; walls as lines"
+   "in v100",
+   "F15: menu.js wallSet"
   ],
   "wallXY": [
-   "bring",
-   "a wall corner's place on screen; walls as lines"
+   "in v100",
+   "F15: menu.js onMap"
   ],
   "wallHit": [
-   "bring",
-   "a finger on a wall's corner or its line (24 px); walls as lines"
+   "in v100",
+   "F15: menu.js wallHit (D206 hit)"
   ],
   "ghostAt": [
-   "bring",
-   "the ghost to the finger, snapped beside something of yours; v100 has menu.js ghostTo (tile under the finger), bring the lift and the snap"
+   "in v100",
+   "F15: menu.js ghostTo: lifted, snapped, its reason kept"
   ],
   "wallDrag": [
-   "bring",
-   "drag a wall corner, or slide the whole wall; walls as lines"
+   "in v100",
+   "F15: menu.js wallDrag"
   ],
   "foeFirst": [
    "bring",
@@ -118,8 +118,8 @@
    "the obvious order by tap for what is picked: attack, hunt, convert, gather, build, mend, work, walk, each villager to its own spot, the wagon's spot checked, the order's meal cost, the gold ripple; v100 has menu.js tap (gather, raise, fight, march), bring the rest"
   ],
   "startPlace": [
-   "bring",
-   "pick a building to place: a later age opens its info, a full count says why, the ghost starts mid-screen snapped beside yours; v100 has menu.js VERBS.pick"
+   "in v100",
+   "F15: menu.js VERBS.pick: the ghost starts mid-screen snapped beside yours (D206 start); a full count or a later age dims it with the reason"
   ],
   "cancelPlace": [
    "in v100",

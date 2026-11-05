@@ -31,12 +31,13 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QZ** Sustainable take → N28
 - **QAA** Soil → N29
 - **QAB** Learning curve → N30
-- **QAC** Crew → N31 · used by SC4, SC5, D126
+- **QAC** Crew → N31 · used by SC4, D126, X52
 - **QAD** Spoilage → N32, N33
 - **QAE** Price → N34
-- **QCA** Effects → N154, N155, N156 · used by SC15, X47, X50, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63
+- **QCA** Effects → N154, N155, N156 · used by SC15, D199, X47, X50, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63
 - **QCI** Standing spots → N165 · used by SC2, D196, X51
 - **QCJ** Separation → N163, N167 · used by D196, X51
+- **QCK** Mending → N168 · used by SC5, D201, X52
 - **QAF** Battle odds → N35 · used by D155, D177, D192, D193, D194, X48
 - **QAG** Who to fight → N36, N37 · used by SC6
 - **QAH** Fight or not → N38
@@ -67,7 +68,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QBH** A lake's size drawn from the power law (QBA) → N61
 - **QBI** Roads cross rivers at fords → N68
 - **QBK** The art frame → N66
-- **QBL** The way → N74 · used by SC1, D198
+- **QBL** The way → N74 · used by SC1, D198, D207, X52
 - **QBM** Walking → N71, N72, N73, N79 · used by SC1
 - **QBN** Gathering → N70 · used by SC2, SC3, SC12, SC16, SC17, D88, D197, X51
 - **QBJ** Z1's store → N69 · used by D129, X50
@@ -84,7 +85,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 
 ## By citation
 
-- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCI, QCJ, QBT
+- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCI, QCJ, QCK, QBT
 - **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QS, QT, QU, QV, QW, QX, QY, QZ, QAA
 - **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
 - **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
@@ -99,7 +100,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N13** Pandolf, Givoni & Goldman (1977) → QN
 - **N14** Hock (2003), degree-day melt → QO
 - **N15** US Army Corps of Engineers (1956), Snow Hydrology → QO, QCA
-- **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ
+- **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ, QCK
 - **N17** Stefan (1891) → QQ
 - **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QBT, G7, G8
 - **N19** Hanson et al. (1999), slip and the grip a step needs → QR
@@ -152,7 +153,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N66** (to open) Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the gro → QBD, QBK
 - **N67** (to open) Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology,  → QBG
 - **N68** (to open) Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory → QBI
-- **N69** (to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house → QBJ, QBO, D123, D124, D125, D127, D128, D136, D138, D139, D143, D194
+- **N69** (to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house → QBJ, QBO, D124, D127, D128, D136, D138, D139, D143, D194
 - **N70** First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6,  → QBN, D88
 - **N71** (to open) Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) → QBM, D86
 - **N72** (to open) Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) → QBM, D86
@@ -251,6 +252,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N165** (to open) Hall, E. T. (1966), The Hidden Dimension: personal distance, 1.5 to 4 ft; and hexagonal circle packing, densit → QCI, D196
 - **N166** (to open) OSHA 29 CFR 1910.266(d)(6)(ii), fellers at least two tree lengths apart; 29 CFR 1910.142, beds at least 36 in  → D195, D196
 - **N167** (to open) Moussaïd, Helbing, Garnier, Johansson, Combe & Theraulaz (2009), Experimental study of the behavioural mechani → QCJ, D196
+- **N168** Design: Mid's builders, repair, limits, taking down, placing and walls (11-orders.js autoBuilder, sendBuilder, → QCK, SC4, SC5, SC21, SC22, D123, D125, D199, D200, D201, D202, D203, D204, D205, D206, D207, D208, D209, D210, X52
+- **N169** Design: Albert, Nov 5 10:06–10:28: build and train times Mid's; every building's health v100's → D125
 
 ## Named exceptions
 

@@ -54,8 +54,8 @@
    "a lookup by id: v100 holds the things themselves"
   ],
   "lineKind": [
-   "bring",
-   "walls and traps laid as a line, corner to corner: with the walls"
+   "in v100",
+   "F15: the Line tick (SC21) on BW1 and BW4"
   ],
   "standing": [
    "in v100",
@@ -282,36 +282,36 @@
    "the queue is the mold's six (SN1); research that lengthens it comes with tech"
   ],
   "shortest": [
-   "bring",
-   "the building with the shortest line takes the order"
+   "in v100",
+   "F15: econ.js lines(): the shortest line takes the order (lineFor for training, labOf for research)"
   ],
   "lineFree": [
-   "bring",
-   "the building with the shortest line takes the order"
+   "in v100",
+   "F15: menu.js train whyNot: 'That line is full' (ECON.room)"
   ],
   "queuedOf": [
-   "bring",
-   "the building with the shortest line takes the order"
+   "in v100",
+   "in v100 already: econ.js popOf counts the queued"
   ],
   "capAt": [
-   "bring",
-   "how many of a building a side may have, by age"
+   "in v100",
+   "F15: econ.js capWhy: the age's limit, the last age's past the table (D199)"
   ],
   "capFor": [
-   "bring",
-   "how many of a building a side may have, by age"
+   "in v100",
+   "F15: econ.js capWhy: D199 through FK.stat 'limit' (research adds, QCA)"
   ],
   "atCap": [
-   "bring",
-   "how many of a building a side may have, by age"
+   "in v100",
+   "F15: econ.js capWhy (the count past the seat)"
   ],
   "capWhy": [
-   "bring",
-   "how many of a building a side may have, by age"
+   "in v100",
+   "F15: econ.js capWhy, Mid's words; the age a building opens in (D200) and the Apartment's Aqueduct (D210)"
   ],
   "clsCount": [
-   "bring",
-   "how many of a building a side may have, by age"
+   "in v100",
+   "in v100 already: econ.js popOf counts people and soldiers with those queued (one population)"
   ],
   "orderSet": [
    "bring",

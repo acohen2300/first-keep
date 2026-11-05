@@ -36,9 +36,39 @@ const popOf = (side) => units().filter((u) => u.side === side).length + things()
 const popCap = (side) => Math.min(D.popMax, things().filter((t) => t.kind === 'bld' && t.side === side && t.done >= 1).reduce((n, t) => n + (FK.stat(t.code, side, 'room') || 0), 0));
 const villagersOf = (side) => units().filter((u) => u.side === side && FK.has(u, 'Gather'));
 // E217
-const canPlace = (code, i, j) => { const n = B[code][1]; if (i < 0 || j < 0 || i + n > N || j + n > N) return false; for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) if (!FK.free(y * N + x) || H[y * N + x] !== H[j * N + i]) return false; return true; };
-function plan(side, code, i, j) { const cost = D.cost[code] || {}; if (!canPay(side, cost) || !canPlace(code, i, j)) return null; const t = FK.build(code, i, j, SIDES[side].col); if (!t) return null; pay(side, cost, 'buildings'); t.done = 0; t.crew = 0; return t; }
-function cancel(t) { if (t.done < 1) payBack(t.side, D.cost[t.code] || {}, 'buildings'); FK.unbuild(t); }
+const P = D.place, [ME] = D.players, at = (k) => [k % N, (k - (k % N)) / N], is = (c, tick) => FK.has({ code: c }, tick), wallish = (t) => FK.has(t, 'Line') || FK.has(t, 'Gate'), wallAt = (k) => things().find((t) => t.kind === 'bld' && FK.has(t, 'Line') && t.j * N + t.i === k);
+const many = (side, c) => things().filter((t) => t.kind === 'bld' && t.side === side && t.code === c && t !== FK.seatOf(side)).length;
+function capWhy(side, c) { const cp = Object.values(FK.stat(c, side, 'limit') || {}), age = SIDES[side].age, n = cp[age] ?? cp.at(-1); // E313
+  if (D.bldAge[c] > age) return 'A later age allows it'; if (D.bldNeeds[c] && !things().some((t) => t.side === side && t.code === D.bldNeeds[c] && t.done >= 1)) return `Needs an ${FK.SH[D.bldNeeds[c]].name} standing`; if (cp.length && !n) return 'A later age allows it'; return !cp.length || many(side, c) < n ? '' : `At the limit of ${n}` + (cp[age + 1] > n ? '. A new age allows more' : ''); }
+function placeWhy(side, c, i, j) { const [, n] = B[c], crop = is(c, 'Field'); let why = capWhy(side, c); // E314
+  if (i < 0 || j < 0 || i + n > N || j + n > N) return 'Too close to the edge'; if (why) return why;
+  for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) { const k = y * N + x; if (is(c, 'Gate') && (wallAt(k) || {}).side === side) continue; if (OCC[k] || FK.FOR[k]) return 'Something is in the way'; if (!FK.free(k) || H[k] !== H[j * N + i]) return 'It needs flat, open ground'; }
+  if (!wallish({ code: c })) FK.bldsNear(...FK.toBoard((i + n * P.half) * D.tile, (j + n * P.half) * D.tile), (n + P.near + P.lane) * D.tile, (b) => { const gap = Math.max(b.i - i - n, i - b.i - b.n, b.j - j - n, j - b.j - b.n); if (gap >= P.lane) return;
+    const on = (s, v) => v >= s && v < s + b.n, touch = on(b.i, i - 1) || on(b.i, i + n) || on(b.j, j - 1) || on(b.j, j + n);
+    why = !crop && !wallish(b) && !FK.has(b, 'Field') ? 'Leave a gap: two squares round each building' : touch && !wallish(b) && (D.trains[c] || D.trains[b.code]) ? 'Leave a lane around buildings that train people' : ''; return !!why; });
+  const off = (v, lo, hi) => Math.max(lo - v - P.half, v + P.half - hi, 0); // E315
+  for (let y = j - P.lane; y < j + n + P.lane && !why; y++) for (let x = i - P.lane; x < i + n + P.lane; x++) if (OCC[y * N + x] === 1 && Math.hypot(off(x, i, i + n), off(y, j, j + n)) < P.lane) return 'Leave two squares from trees and rocks';
+  return why; }
+const canPlace = (code, i, j, side = ME) => !placeWhy(side, code, i, j);
+const around = [...new Set(D.ways.flat())].sort((a, b) => a - b);
+function snap(side, c, i, j, tol) { const [, n] = B[c]; let best = [i, j], bd = tol; if (wallish({ code: c })) return best; // E316
+  const take = (x, y) => { const d = Math.hypot(x - i, y - j); if (d < bd && canPlace(c, x, y, side)) [best, bd] = [[x, y], d]; };
+  for (const b of things()) if (b.kind === 'bld' && b.side === side && !wallish(b)) { const h = (b.n - n) * P.half, ci = b.i + h, cj = b.j + h, R = (b.n + n) * P.half + tol + P.near;
+    if (Math.abs(ci - i) <= R && Math.abs(cj - j) <= R) for (const g of P.gaps) { for (const x of [b.i - n - g, b.i + b.n + g]) for (const y of [Math.round(cj), b.j, b.j + b.n - n, j]) take(x, y); for (const y of [b.j - n - g, b.j + b.n + g]) for (const x of [Math.round(ci), b.i, b.i + b.n - n, i]) take(x, y); }
+    if (Number.isInteger(h) && Math.abs(ci - i) < P.guide && Math.abs(cj - j) < P.guide) { for (const d of around) take(ci, j + d); for (const d of around) take(i + d, cj); } }
+  return best; }
+function plan(side, code, i, j) { const cost = D.cost[code] || {}; if (!canPay(side, cost) || placeWhy(side, code, i, j)) return null; if (is(code, 'Gate') && wallAt(j * N + i)) FK.unbuild(wallAt(j * N + i)); const t = FK.build(code, i, j, SIDES[side].col); if (!t) return null; pay(side, cost, 'buildings'); t.done = t.crew = 0; const M = FK.stat(code, side, 'hp'); if (M) { t.hpMax = M; t.hp = M * D.rising.start; } return t; }
+const refund = (t) => Object.fromEntries(Object.entries(D.cost[t.code] || {}).map(([y, n]) => [y, Math.floor(n * (t.done < D.refund.first ? D.refund.early : D.refund.share))])); // E317
+function cancel(t) { while (t.q && t.q.length) unqueue(t); payBack(t.side, refund(t), 'buildings'); FK.unbuild(t); }
+const repairCost = (t) => Object.fromEntries(Object.entries(D.cost[t.code] || {}).map(([y, n]) => [y, Math.ceil((n * D.repair.cost * (t.hpMax - t.hp)) / t.hpMax)]));
+// E318
+const wallLine = (a, b) => { const [ai, aj] = at(a), [bi, bj] = at(b), n = Math.max(Math.abs(bi - ai), Math.abs(bj - aj)), out = [a]; let [pi, pj] = [ai, aj];
+  for (let s = 0; s++ < n; ) { const i = ai + Math.round(((bi - ai) * s) / n), j = aj + Math.round(((bj - aj) * s) / n); if (i !== pi && j !== pj) out.push(pj * N + i); out.push(j * N + i); [pi, pj] = [i, j]; } return out; };
+function lay(side, c, cells) { const built = [], blocked = []; let broke = false; for (const k of cells) { if (!canPay(side, D.cost[c] || {})) { broke = true; break; } const t = plan(side, c, ...at(k)); if (t) { built.push(t); autoBuilder(side, t); } else blocked.push(k); } return { built: built.length, blocked: blocked.length, broke }; }
+function sealPath(side, extra) { const h = FK.seatOf(side); if (!h) return null; const ks = [], ci = h.i + h.n * P.half, cj = h.j + h.n * P.half, from = Math.floor(cj) * N + Math.floor(ci), shut = OCC[from]; // E319
+  for (let y = h.j; y < h.j + h.n; y++) for (let x = h.i; x < h.i + h.n; x++) ks.push(y * N + x); const add = extra.filter((k) => !OCC[k]), was = [...ks, ...add].map((k) => OCC[k]);
+  ks.forEach((k) => (OCC[k] = 0)); add.forEach((k) => (OCC[k] = shut)); const p = FK.findPath(from, (k) => { const [x, y] = at(k); return Math.hypot(x - ci, y - cj) >= D.seal.reach; }, from);
+  [...ks, ...add].forEach((k, n) => (OCC[k] = was[n])); return p || []; }
 // E218
 const timeOf = (side, c) => (T[c] ? FK.stat(c, side, 'time') : D.ages.includes(c) ? D.age.time[D.ages.indexOf(c)] : FK.stat(c, side, 'train')), nameOf = (c) => (T[c] ? T[c].name : FK.SH[c] ? FK.SH[c].name : c);
 const priceOf = (side, c) => (D.ages.includes(c) ? D.age.cost[D.ages.indexOf(c)] : FK.stat(c, side, 'cost')), room = (b) => (b.q || []).length < FK.stat(b.code, b.side, 'queue');
@@ -49,21 +79,22 @@ function spawnBy(b, code) { const s = FK.spotFor(b, b); if (!s) return null; con
 // E219
 const nextAge = (side) => { const n = SIDES[side].age + 1; return n < D.ages.length && n !== D.age.hidden ? n : null; }, ageCost = (side) => D.age.cost[nextAge(side)] || null;
 function ageUp(side) { const s = SIDES[side], n = nextAge(side), h = FK.seatOf(side); if (!n || s.aging || !h || !room(h) || !canPay(side, D.age.cost[n])) return false; pay(side, D.age.cost[n], 'research'); order(h, D.ages[n]); s.aging = timeOf(side, D.ages[n]); return true; }
-const rise = (side) => { const s = SIDES[side]; s.aging = 0; s.age++; if (side === 0) FK.fire('event', 'age', null); };
+const rise = (side) => { const s = SIDES[side]; s.aging = 0; s.age++; if (side === ME) FK.fire('event', 'age', null); };
 // E292
 const lineOf = (c) => Object.keys(T).filter((x) => T[x].value.at === T[c].value.at && T[x].value.line === T[c].value.line);
 const prevOf = (c) => { const L = lineOf(c); return L[L.indexOf(c) - 1] || null; };
 const needsOf = (c) => [...new Set([prevOf(c), ...(T[c].value.need || []).map((k) => TK[k] || k)].filter(Boolean))];
 const nextStep = (side, c) => lineOf(c).find((x) => !SIDES[side].techs.has(x)) || null;
 // E293
-const labOf = (side, c) => things().filter((t) => t.kind === 'bld' && t.side === side && t.done >= 1 && t.code === T[c].value.at).reduce((a, b) => (!a || (b.q || []).length < (a.q || []).length ? b : a), null);
+const lines = (side, ok) => things().filter((t) => t.kind === 'bld' && t.side === side && t.done >= 1 && ok(t)).reduce((a, b) => (!a || (b.q || []).length < (a.q || []).length ? b : a), null); // E327
+const labOf = (side, c) => lines(side, (t) => t.code === T[c].value.at), lineFor = (side, c) => lines(side, (t) => (D.trains[t.code] || []).includes(c));
 function researchWhy(side, c) { const s = SIDES[side], b = labOf(side, c);
   return s.techs.has(c) ? 'known' : T[c].value.age > s.age ? 'age' : needsOf(c).some((n) => !s.techs.has(n)) ? 'need' : things().some((t) => t.side === side && (t.q || []).includes(c)) ? 'busy' : !b ? 'at' : !room(b) ? 'full' : canPay(side, priceOf(side, c)) ? '' : 'cost'; }
 function research(side, c) { if (researchWhy(side, c)) return false; const b = labOf(side, c); pay(side, priceOf(side, c), 'research'); order(b, c); return true; }
 const learn = (side, c) => { SIDES[side].techs.add(c); FK.learn(side, c); };
 // E220
 const jobOf = (u) => (u.target && (u.job === 'gather' || u.job === 'carry' || (u.job === 'walk' && (u.then === 'gather' || u.then === 'carry'))) ? u.carry || yieldOf(u.target) : u.job === 'build' || (u.job === 'walk' && u.then === 'build') ? 'build' : null);
-const jobs = (side) => { const n = { food: 0, wood: 0, gold: 0, stone: 0, iron: 0, build: 0, idle: 0 }; for (const u of villagersOf(side)) { const j = jobOf(u); if (j) n[j]++; else if (u.job === 'idle' || u.job === 'wait') n.idle++; } return n; };
+const jobs = (side) => { const n = Object.fromEntries([...YIELDS, 'build', 'idle'].map((k) => [k, 0])); for (const u of villagersOf(side)) { const j = jobOf(u); if (j) n[j]++; else if (u.job === 'idle' || u.job === 'wait') n.idle++; } return n; };
 const findsOf = (y) => things().filter((t) => yieldOf(t) === y && alive(t) && (t.kind !== 'bld' || t.side >= 0));
 // E306
 const FO = D.forage, SR = D.search, capOf = (t) => FO.cap[t.kind] ?? FK.ring(t).m;
@@ -87,8 +118,20 @@ function bestFind(u, y, from, b = FK.dropFor(u, y)) { const r = from && searchR(
   return best; }
 function gatherAt(u, t) { u.tool = null; if (u.load && u.carry !== yieldOf(t)) { u.target = t; carry(u); return; } if (u.target !== t && (full(u, t) || (t.kind !== 'bld' && !FK.spotFor(u, t)))) { u.carry = yieldOf(t); u.lost = { x: t.bx, y: t.by, t: bell }; return look(u); } t.wk = ~~t.wk + (u.target !== t); u.target = t; u.carry = yieldOf(t); u.lost = null; if (beside(u, t)) { u.job = 'gather'; return; } u.job = 'walk'; u.then = 'gather'; if (!(t.kind === 'bld' ? FK.goBy(u, t) : FK.toSpot(u, t))) { t.noPath = bell; u.target = u.path = null; u.job = 'gather'; } } // E222
 function carry(u) { u.tool = null; const b = FK.dropFor(u, u.carry); if (!b) { u.job = 'wait'; u.wait = SR.again; return; } if (beside(u, b)) { u.job = 'carry'; return; } u.job = 'walk'; u.then = 'carry'; if (!FK.goBy(u, b)) { u.job = 'wait'; u.wait = SR.again; } }
-function buildAt(u, t) { u.tool = null; u.target = t; if (beside(u, t)) { u.job = 'build'; return; } u.job = 'walk'; u.then = 'build'; if (!FK.goBy(u, t)) u.job = 'idle'; }
-function idle(u) { u.job = 'idle'; u.then = null; u.tool = null; u.target = null; u.path = null; u.spot = u.lost = u.patch = null; }
+function buildAt(u, t, pulled) { if (u.target !== t && jobOf(u) !== 'build') u.was = { t: jobOf(u) && u.target, y: jobOf(u), back: !!pulled }; u.raise = t.done < 1; u.tool = null; u.target = t; if (beside(u, t)) { u.job = 'build'; return; } u.job = 'walk'; u.then = 'build'; if (!FK.goBy(u, t)) u.job = 'idle'; } // E320
+function idle(u) { u.job = 'idle'; u.then = null; u.tool = null; u.target = null; u.path = null; u.spot = u.lost = u.patch = u.was = null; }
+// E321
+function autoBuilder(side, t, by) { if (by) return buildAt(by, t); const vs = villagersOf(side).filter((v) => !posted(v));
+  if (wallish(t) && things().filter((s) => s.side === side && s.done < 1 && wallish(s) && vs.some((v) => v.target === s && jobOf(v) === 'build')).length >= D.builders.crew) return;
+  const free = vs.filter((v) => v.job === 'idle' || v.job === 'wait'), busy = vs.filter((v) => jobOf(v) && jobOf(v) !== 'build'), hand = side === ME && !free.length;
+  const [v] = free.length || hand ? (hand ? busy : free).sort((a, b) => dist(a, t) - dist(b, t)) : busy.sort((a, b) => forageNow(a) - forageNow(b)); if (v) buildAt(v, t, hand); }
+function back(u) { const w = u.was, f = w && (w.t && alive(w.t) ? w.t : w.y && bestFind(u, w.y)); u.raise = false; if (f) gatherAt(u, f); else idle(u); u.was = null; } // E322
+function nextSite(u, t) { const near = (r, ok) => { let best = null; FK.bldsNear(u.bx, u.by, r * D.tile, (q) => { if (q.side === u.side && q.done < 1 && ok(q) && dist(u, q) < r * D.tile && (!best || dist(u, q) < dist(u, best))) best = q; }); return best; }; // E323
+  return (wallish(t) && near(D.builders.wall, wallish)) || near(D.builders.site, (q) => !units().some((v) => v !== u && v.target === q && jobOf(v) === 'build')); }
+function done(u, t) { const w = u.was || {}; if (u.raise && t && alive(t)) { if ((!w.back || FK.SH[t.code].drop) && startWork(u, t)) return (u.was = null); const s = !w.back && nextSite(u, t); if (s) return buildAt(u, s); } back(u); } // E324
+function mend(u, t, dt) { const M = t.hpMax, heal = Math.min(M - t.hp, (M / D.buildTime[t.code] / D.repair.time) * dt), due = addRes({ ...t.rd }, D.cost[t.code], (D.repair.cost * heal) / M); // E325
+  if (Object.keys(due).some((y) => Math.floor(due[y]) > SIDES[u.side].store[y])) { if (u.side === ME) FK.fire('event', 'short', t); return back(u); }
+  t.rd = {}; for (const y in due) { spend(u.side, y, Math.floor(due[y]), 'repairs'); t.rd[y] = due[y] - Math.floor(due[y]); } t.hp += heal; }
 // E308
 const lose = (u) => { u.lost = u.lost || { x: u.bx, y: u.by, t: bell }; if (u.load) carry(u); else look(u); };
 function look(u) { const n = bestFind(u, u.carry, u.lost); if (n) return gatherAt(u, n); if (u.patch) return unbox(u); u.job = u.then = 'wait'; u.wait = SR.again + FK.rng(); const b = FK.dropFor(u, u.carry); if (b) FK.toSpot(u, b); }
@@ -111,28 +154,30 @@ function assign(side, y, n) { const vs = villagersOf(side);
 // E224
 FK.on('tick', (dt) => {
   if (result) return; bell += dt;
-  for (const t of things()) if (t.kind === 'bld' && t.q && t.q.length && t.done >= 1) { t.qt -= dt; const code = t.q[0]; if (D.ages.includes(code)) SIDES[t.side].aging = t.qt; if (t.qt <= 0) { const u = FK.SH[code] ? spawnBy(t, code) : null; if (FK.SH[code] && !u) continue; t.q.shift(); if (T[code]) learn(t.side, code); else if (!u) rise(t.side); if (u && t.side === 0) FK.fire('event', FK.has(u, 'Gather') ? 'trained' : 'trainedSol', u); const r = SIDES[t.side].rally; if (u && FK.has(u, 'Gather') && r) { const f = bestFind(u, r); if (f) gatherAt(u, f); } if (t.q.length) t.qt = timeOf(t.side, t.q[0]); } }
+  for (const t of things()) if (t.kind === 'bld' && t.q && t.q.length && t.done >= 1) { t.qt -= dt; const code = t.q[0]; if (D.ages.includes(code)) SIDES[t.side].aging = t.qt; if (t.qt <= 0) { const u = FK.SH[code] ? spawnBy(t, code) : null; if (FK.SH[code] && !u) continue; t.q.shift(); if (T[code]) learn(t.side, code); else if (!u) rise(t.side); if (u && t.side === ME) FK.fire('event', FK.has(u, 'Gather') ? 'trained' : 'trainedSol', u); const r = SIDES[t.side].rally; if (u && FK.has(u, 'Gather') && r) { const f = bestFind(u, r); if (f) gatherAt(u, f); } if (t.q.length) t.qt = timeOf(t.side, t.q[0]); } }
   for (const side of D.players) spend(side, 'food', Math.min(SIDES[side].store.food, units().filter((u) => u.side === side).length * D.upkeep / D.day * dt), 'upkeep');
-  for (const t of things()) t.wk = t.crew = 0; for (const u of units()) if (jobOf(u) && jobOf(u) !== 'build') u.target.wk++;
+  for (const t of things()) t.wk = t.crew = 0; for (const u of units()) if (jobOf(u) && jobOf(u) !== 'build') u.target.wk++; else if (u.job === 'build' && u.target) u.target.crew++;
   for (const u of units()) { if (!FK.has(u, 'Gather') || u.path) continue; const t = u.target;
     if (u.job === 'gather') { if (!t || !alive(t)) { lose(u); continue; } if (!beside(u, t)) { gatherAt(u, t); continue; }
       u.tool = FK.WORK[t.kind] ?? FK.WORK.other; u.face = t.bx < u.bx ? -1 : 1; const beat = Math.floor(u.t / D.beat); if (beat !== u.beat && beat % 2 === 0) FK.fire('event', 'work', t, u); u.beat = beat; const cap = FK.stat(u.code, u.side, 'carry'), n = Math.min(rateOf(t, u.side) * dt, t.kind === 'bld' ? 1e9 : t.amount, cap - u.load); u.load += n; if (t.kind !== 'bld') FK.take(t, n); if (u.load >= cap - 1e-6) carry(u); }
-    else if (u.job === 'carry') { const b = FK.dropFor(u, u.carry); if (!b || !beside(u, b)) { carry(u); continue; } earn(u.side, u.carry, u.load, 'gather'); u.load = 0; if (u.side === 0) FK.fire('event', 'drop.' + u.carry, b);
+    else if (u.job === 'carry') { const b = FK.dropFor(u, u.carry); if (!b || !beside(u, b)) { carry(u); continue; } earn(u.side, u.carry, u.load, 'gather'); u.load = 0; if (u.side === ME) FK.fire('event', 'drop.' + u.carry, b);
       const cur = t && alive(t) ? t : null, next = cur && posted(u) ? null : bestFind(u, u.carry, u.lost || { x: u.bx, y: u.by }, b); const go = cur && next && next !== cur && forage(u, next, b) > (1 + D.moveOn) * forage(u, cur, b) ? next : cur || next; if (go) gatherAt(u, go); else lose(u); }
-    else if (u.job === 'build' || u.job === 'repair') { if (!t || !alive(t) || (t.done >= 1 && t.hp >= t.hpMax)) { if (t && alive(t) && startWork(u, t)) continue; let site = null; FK.bldsNear(u.bx, u.by, D.next, (q) => q.side === u.side && q.done < 1 && dist(u, q) < D.next && (site = q)); if (site) buildAt(u, site); else idle(u); continue; } if (!beside(u, t)) { buildAt(u, t); continue; }
-      u.tool = 2; u.face = t.bx < u.bx ? -1 : 1; t.crew++; const share = Math.pow(t.crew, D.crew) / t.crew, time = FK.stat(t.code, t.side, 'build') || 30; const beat = Math.floor(u.t / D.beat); if (beat !== u.beat && beat % 2 === 0) FK.fire('event', 'raise', t, u); u.beat = beat; if (t.done < 1) { t.done = Math.min(1, t.done + share * dt / time); if (t.done >= 1 && t.side === 0) FK.fire('event', D.trains[t.code] && D.trains[t.code].some((c) => !FK.SH[c].ticks.includes('Gather')) ? 'builtWar' : 'built', t); if (t.hp != null) t.hp = Math.min(t.hpMax, t.hp + t.hpMax * share * dt / time); } else t.hp = Math.min(t.hpMax, t.hp + t.hpMax * share * dt / time); }
+    else if (u.job === 'build' || u.job === 'repair') { if (!t || !alive(t) || (t.done >= 1 && t.hp >= t.hpMax - D.repair.within)) { done(u, t); continue; } if (!beside(u, t)) { buildAt(u, t); continue; }
+      u.tool = 2; u.face = t.bx < u.bx ? -1 : 1; const beat = Math.floor(u.t / D.beat); if (beat !== u.beat && beat % 2 === 0) FK.fire('event', 'raise', t, u); u.beat = beat; if (t.done >= 1) { mend(u, t, dt); continue; } // E326
+      let k = ((Math.pow(t.crew, D.crew) / t.crew) * dt) / (FK.stat(t.code, t.side, 'build') || 30); if ((D.cost[t.code] || {}).stone && FK.K.temp <= D.frost.at) k *= D.frost.share; t.done = Math.min(1, t.done + k); t.hp = Math.min(t.hpMax, t.hp + t.hpMax * D.rising.rise * k);
+      if (t.done >= 1) { t.hp = t.hpMax; if (t.side === ME) FK.fire('event', wallish(t) || (D.trains[t.code] && D.trains[t.code].some((c) => !FK.SH[c].ticks.includes('Gather'))) ? 'builtWar' : 'built', t); } }
     else if (u.job === 'wait') { u.wait -= dt; if (u.wait <= 0) { if (u.load) carry(u); else if (u.lost) look(u); else idle(u); } }
     else if (u.job === 'idle' && u.load) carry(u);
   }
-  if (bell >= limit) { const sc = D.players.map((p) => [score(p).total, p]).sort((a, b) => b[0] - a[0]); result = { winner: sc[0][1], how: 'bell' }; FK.fire('event', result.winner === 0 ? 'win' : 'lose', null); }
+  if (bell >= limit) { const sc = D.players.map((p) => [score(p).total, p]).sort((a, b) => b[0] - a[0]); result = { winner: sc[0][1], how: 'bell' }; FK.fire('event', result.winner === ME ? 'win' : 'lose', null); }
 });
 FK.on('gone', (t) => { t.gone = true; });
-FK.on('gone', (t) => { if (result || !FK.has(t, 'Seat') || !D.players.includes(t.side)) return; if (!things().some((q) => FK.has(q, 'Seat') && q.side === t.side)) { result = { winner: D.players.find((p) => p !== t.side), how: 'conquest' }; FK.fire('event', result.winner === 0 ? 'win' : 'lose', null); } });
+FK.on('gone', (t) => { if (result || !FK.has(t, 'Seat') || !D.players.includes(t.side)) return; if (!things().some((q) => FK.has(q, 'Seat') && q.side === t.side)) { result = { winner: D.players.find((p) => p !== t.side), how: 'conquest' }; FK.fire('event', result.winner === ME ? 'win' : 'lose', null); } });
 FK.on('start', () => { result = null; bell = 0; for (const s of SIDES) Object.assign(s, fresh(), { store: { ...D.start } }); }); // E225
 // E226
 function score(side) { const s = { people: 0, army: 0, tech: (SIDES[side].ledger.out.research || 0) / D.score.tech, bld: 0, wealth: SIDES[side].gathered / D.score.wealth };
   for (const u of units()) if (u.side === side) s[FK.has(u, 'Gather') || !FK.has(u, 'Fight') ? 'people' : 'army'] += sumCost(D.cost[u.code]) / D.score.unit;
   for (const t of things()) if (t.kind === 'bld' && t.side === side && t.done >= 1) s.bld += sumCost(D.cost[t.code]) / D.score.bld;
   s.total = Math.floor(s.people + s.army + s.tech + s.bld + s.wealth); return s; }
-return { forage, forageNow, capOf, searchR, boxCut, sendOut, posted, idlePost, startWork, setBell: (s) => { limit = s; }, bell: () => limit, plan, cancel, canPlace, canPay, pay, payBack, earn, spend, addRes, sumCost, flowOf, outOf, netOf, velOf, queue, unqueue, timeOf, nameOf, ageUp, ageCost, nextAge, research, researchWhy, lineOf, prevOf, needsOf, nextStep, assign, jobs, jobOf, popOf, popCap, villagersOf, gatherAt, buildAt, carry, idle, bestFind, yieldOf, score, time: () => bell, result: () => result, YIELDS };
+return { at, capWhy, placeWhy, snap, refund, repairCost, wallLine, lay, sealPath, wallish, autoBuilder, room, lineFor, forage, forageNow, capOf, searchR, boxCut, sendOut, posted, idlePost, startWork, setBell: (s) => { limit = s; }, bell: () => limit, plan, cancel, canPlace, canPay, pay, payBack, earn, spend, addRes, sumCost, flowOf, outOf, netOf, velOf, queue, unqueue, timeOf, nameOf, ageUp, ageCost, nextAge, research, researchWhy, lineOf, prevOf, needsOf, nextStep, assign, jobs, jobOf, popOf, popCap, villagersOf, gatherAt, buildAt, carry, idle, bestFind, yieldOf, score, time: () => bell, result: () => result, YIELDS };
 })();

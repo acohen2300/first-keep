@@ -103,7 +103,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
 - **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156)
 - **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144)
-- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79) · D139 (N69) · D138 (N69) · D123 (N69) · D124 (N69) · D125 (N69) · SN1 (N133) · D87 (N112) · D127 (N69)
+- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79) · D139 (N69) · D138 (N69) · D123 (N168) · D124 (N69) · D125 (N169, N168) · SN1 (N133) · D87 (N112) · D127 (N69)
 - **E280** the one window for a kind's number after research (QCA): flat adds first, then the shares  · QCA (N154, N155, N156)
 - **E281** learning a step puts its effects in force for that side; every unit and building of the si
 - **E67** a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's · D182 (N122) · D184 (N122) · D98 (N112)
@@ -147,6 +147,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E85** the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book  · PN1 (N152, N164)
 - **E86** walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step pa
 - **E87** inland water bearing ice (QQ): walked as if flat · QQ (N17)
+- **E328** a gate is walkable only to those its owner does not count a foe: asked of combat.js by the
 - **E88** QN: mud and snow cost a walker · QN (N13)
 - **E89** QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic t · QBL (N74) · D198 (N74) · N74
 - **E90** most: the tiles it may open before giving up
@@ -280,6 +281,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E275** a place as the map's lettered squares, measured from the board's corner: D190 units a squa · D190 (N132) · A1 (N90)
 - **E276** a ledger line: its reasons largest first, each in its word and shortened, apart by a dot; 
 - **E183** 60w 60f, as Albert's Build menu
+- **E332** who trains a kind: the building with the shortest line; walls are laid as lines; walls and
 - **E184** read: the one window onto the world the glass draws from
 - **E185** VERBS: every way the player may act, each with its reason not to. act() asks whyNot first;
 - **E186** Train a kind: the nearest finished building that trains it
@@ -303,7 +305,18 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E204** the five stores, sound, play, mail (SN5) · SN5 (N137)
 - **E205** a page opens from the bottom edge, over the base's rows; the card waits behind it
 - **E206** the ghost: press and slide on the map moves it; the tile under the finger is its middle. B
+- **E333** the ghost to the finger, lifted above it on a phone, snapped beside yours; the reason it m
+- **E334** a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid
+- **E335** a finger on a wall's corner moves it, on its line slides the whole wall; elsewhere it look
+- **E336** Build: a wall line laid while the stores last, said in one toast; a building sent its near
+- **E337** while placing, the finger moves the ghost (a wall's corner or line), not the map
+- **E338** the ghost's own art tinted green where it fits and red where not, one tinted copy a sprite
+- **E339** while a wall or gate is placed: a red line where a foe could walk in, or Sealed over the T
+- **E340** the ghost: a wall's tiles green or red with its corners, the first ringed green; a buildin
 - **E207** the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing und
+- **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
+- **E341** a tap on open ground while the Build page is open: what fits there is picked and its ghost
+- **E342** dragging the ghost near the screen's edge scrolls the map (Mid's edgeScroll)
 - **E208** one height for every page but the Tall ones: each is laid out once, the tallest sets the p
 - **E209** the tallest of the pages that are not Tall sets the one height
 - **E210** sized once the modules and fonts are in (the first start)
@@ -325,21 +338,36 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E270** the stores' flow a minute: the last full minute, or before there is one the minute so far  · D189 (N132)
 - **E271** each minute (D188) the minute's in and out become the last minute's · D188 (N132)
 - **E217** a site: a building paid for and placed at done 0; villagers raise it. canPlace mirrors bui
+- **E313** how many of a building a side may have now: its age's limit with research added (D199), no · D199 (N168) · D200 (N168)
+- **E314** why a building may not stand here, Mid's rules in order: the edge, the limit, the ground u
+- **E315** two squares from every find too, measured from the footprint's edge to the find's middle (
+- **E316** the ghost snaps to the nearest spot that fits beside one of yours (touching, or a lane apa
+- **E317** taking a building down pays back half its price, all of it early in the build; its line is
+- **E318** a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing s
+- **E319** the walk starts on the Town Center's own floor; walls being laid count as built; everythin
 - **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156) · D124 (N69) · D129 (N160)
 - **E311** a trained unit steps out onto the free spot of its building's outline nearest the middle (
 - **E219** the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid · D129 (N160) · D130 (N160)
 - **E292** Mid's research lines: a line is the steps of one line at one building, in the book's order
 - **E293** research (Mid's researchWhy and research): a step is refused when known, before its age, b
+- **E327** of the buildings that can take an order, the one with the shortest line (Mid's shortest)
 - **E220** the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept
 - **E306** the forager (QV, QX): a find takes D195's cap (a tree one feller, a field one worker) or a · QV (N23, N24) · QX (N25, N26) · D195 (N164, N166)
 - **E307** QV R = c / (c/g + 2d/v + w·c/(A·v)): c the load, g the rate crowded (QX), v the walk, d th · QV (N23, N24) · QX (N25, N26)
 - **E221** QV: the find of a yield whose rate of return R is best (the walk out, the walk home and th · QV (N23, N24) · D195 (N164, N166) · D137 (N114) · D197 (N164)
 - **E222** a find no path reaches, or with no spot free on its ring, is left alone a while (D137), an · D137 (N114)
+- **E320** a builder remembers the work it left (its find and yield, and whether it was pulled off it
+- **E321** a new site gets the nearest free villager; with none free, your nearest worker is pulled o
+- **E322** back to the very find it left if it still stands, else the best of its yield, else idle (M
+- **E323** the next site for a builder done: a wall piece close by, else a site nobody raises (Mid's 
+- **E324** a site finished: a drop-off or field puts its builder to work there, unless it was pulled 
+- **E325** mending, Mid's: three times the build time for a whole building, a quarter of its price pa · QCK (N168)
 - **E308** a lost find (Mid's decision 1): it delivers what it carries, then looks from where the fin · D197 (N164)
 - **E309** builders who finish a place of work take it up (Mid's startWork): a field if nobody works 
 - **E310** a box over finds (Mid's boxCut): n villagers, idle first then the nearest, cut the finds i
 - **E223** assign: + sends an idle or waiting villager (else the one earning least, QV, on another jo · QV (N23, N24)
 - **E224** the tick: training and research, ages, upkeep, the villagers, the bell
+- **E326** a crew of n raises a site at n^0.7 (QAC), counted once a tick; frost slows stone work; the · QAC (N31)
 - **E225** a new game: the book's stores (D172); the bell stays as Start set it · D172 (N119)
 - **E226** the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what i · QBR (N75) · D135 (N75)
 
@@ -368,6 +396,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E284** against theirs: its soldiers, its towers (not its seat) at D177 each, its people at D192 ( · D177 (N157) · D192 (N157)
 - **E239** a villager fights back only when bitten
 - **E240** the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of th
+- **E329** a gate is shut to a foe of its owner, and to an unknown walker (the seal's foe)
 
 ## ai.js
 
@@ -377,8 +406,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E243** the shells a side can pay for that tick a capability
 - **E244** each yield's camp: the drop-off that takes it in
 - **E245** a spot: the nearest free footprint to a point, searched in rings, kept off the home's own 
+- **E331** an arc of wall round the Town Center facing the middle, four-connected; its two squares ne
 - **E246** jobs by need: the yield whose share is most under its wanted share takes an idle villager,
 - **E247** people, homes, drop-offs, plots, the age
+- **E330** the computer's wall ring: from its age, with stone, a few pieces a round, gates first, whi
 - **E248** the army: the best counter to what the enemy (the first side in play it is at war with) fi
 - **E249** the wave: it sets out at the odds (QAF, combat.js) of D155 or better against the other sid · QAF (N35) · D155 (N114)
 

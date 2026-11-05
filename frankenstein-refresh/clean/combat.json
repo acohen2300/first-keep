@@ -254,12 +254,12 @@
    "the wait before a kind's move is ready again (the reload, the charge)"
   ],
   "SUGGEST": [
-   "bring",
-   "the numbers of the build suggestion (reach, weights, a gap's width)"
+   "in v100",
+   "F15: D209 suggest"
   ],
   "suggestAt": [
-   "bring",
-   "what the game thinks fits a tapped spot: a drop-off, more of the same, a wall in a gap, a house (Albert, Build 41)"
+   "in v100",
+   "F15: menu.js suggest(): a tap on open ground while the Build page is open picks what fits and puts its ghost there"
   ],
   "dialBtns": [
    "bring",

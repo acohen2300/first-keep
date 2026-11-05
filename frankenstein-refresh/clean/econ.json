@@ -86,12 +86,12 @@
    "econ.js plan: paid, a site at done 0"
   ],
   "autoBuilder": [
-   "bring",
-   "the nearest free villager goes to a new site at once; a wall line gets two who work down it; v100's Build sends one, the computer's raise D.ai.builders"
+   "in v100",
+   "F15: econ.js autoBuilder: the nearest free villager, else the nearest at work, pulled off and sent back after; a wall line two at most (D203); the computer's own sites keep D157"
   ],
   "sendBuilder": [
-   "bring",
-   "a builder remembers its old job and goes back after; v100's buildAt leaves it idle"
+   "in v100",
+   "F15: econ.js buildAt remembers the work it left (u.was: the find, the yield, pulled or not)"
   ],
   "sendBuild": [
    "in v100",
@@ -114,16 +114,16 @@
    "replant every worked-out plot from a drop-off"
   ],
   "shellBack": [
-   "bring",
-   "taking a building down gives half its cost back (all in the first 15%); v100's scrap refunds a site in full, a building nothing"
+   "in v100",
+   "F15: econ.js refund (D202: half, all under 15%)"
   ],
   "refundOf": [
-   "bring",
-   "with shellBack: the orders inside paid back too"
+   "in v100",
+   "F15: econ.js cancel: the line paid back in full first (unqueue)"
   ],
   "demolish": [
-   "bring",
-   "take a building down with the refund; v100 has scrap (econ.js cancel), never the hall"
+   "in v100",
+   "F15: econ.js cancel and menu.js scrap (the toast says what came back); never the hall (menu.js)"
   ],
   "declareWar": [
    "bring",
@@ -402,16 +402,16 @@
    "menu.js VERBS.raise (Repair) and econ.js buildAt"
   ],
   "repairCost": [
-   "bring",
-   "repair costs a quarter of the price by the damage; v100's repair is free (parked: repair's cost)"
+   "in v100",
+   "F15: econ.js repairCost (D201 cost); the Repair button shows it (menu.js raise)"
   ],
   "nodeName": [
    "cut",
    "a find's name comes from its shell (books/shells.js)"
   ],
   "commitPlace": [
-   "bring",
-   "placing: walls as a dragged line, many pieces at once; v100's Build places one (menu.js build)"
+   "in v100",
+   "F15: menu.js place (one toast for a line; the ghost waits on the next spot, D206 next) and econ.js lay"
   ],
   "boxCut": [
    "in v100",
@@ -494,12 +494,12 @@
    "the wins: every rival fallen and the bell are in v100 (econ.js); holding the Throne, ruling every rival as vassals, a Wonder standing, the bell's warnings to bring"
   ],
   "bldTick": [
-   "bring",
-   "v100 has the crew (QAC), the training line and towers (D143); frost slows stone work, Midwives train two villagers, a spy-watch tower, sheltered men add to a tower's shot; health from D139"
+   "in v100",
+   "F15: econ.js tick: the crew counted once a tick, n^0.7 (QAC, D126); frost slows stone work (D205); a site's health rises from D204; Midwives' second villager, the spy-watch tower and sheltered men's arrows wait for their features (Parked)"
   ],
   "built": [
-   "bring",
-   "v100 marks a building done in econ.js; Mid's worn ground, the Wonder's clock and a new flock to bring; health from D139"
+   "in v100",
+   "F15: econ.js: whole health, the war drum for walls too (builtWar); worn ground, the Wonder's clock and the new flock wait for their features (Parked)"
   ],
   "jobDone": [
    "in v100",
@@ -622,12 +622,12 @@
    "hunting (Later)"
   ],
   "backToWork": [
-   "bring",
-   "after building or mending, back to the old job"
+   "in v100",
+   "F15: econ.js back(): the very find, else the best of its yield, else idle"
   ],
   "repairTick": [
-   "bring",
-   "mending at three times the build time for a quarter of the cost, and fighting fires; v100 mends at the build rate, free"
+   "in v100",
+   "F15: econ.js mend (QCK, D201: three times the build time, a quarter of the price paid as it goes, short stops it, whole within half a point); the next site for a builder done (nextSite, D203); fighting fires waits for fire (Parked)"
   ],
   "homeSpot": [
    "bring",

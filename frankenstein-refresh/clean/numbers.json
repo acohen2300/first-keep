@@ -123,11 +123,11 @@
    {
     "vil": [
      "in v100",
-     "Villager → Villager; train Mid 8 v100 25"
+     "Villager → Villager; train Mid 8 v100 25; F15: D123 holds Mid's cost for the shell that wears it"
     ],
     "scout": [
      "in v100",
-     "Scout → Scout; train Mid 12 v100 30"
+     "Scout → Scout; train Mid 12 v100 30; F15: D123 holds Mid's cost for the shell that wears it"
     ],
     "envoy": [
      "bring",
@@ -159,7 +159,7 @@
     ],
     "spear": [
      "in v100",
-     "Spearman → Foot; hp Mid 60 v100 45; train Mid 10 v100 21"
+     "Spearman → Foot; hp Mid 60 v100 45; train Mid 10 v100 21; F15: D123 holds Mid's cost for the shell that wears it"
     ],
     "sword": [
      "in v100",
@@ -167,7 +167,7 @@
     ],
     "archer": [
      "in v100",
-     "Archer → Archers; train Mid 10 v100 35"
+     "Archer → Archers; train Mid 10 v100 35; F15: D123 holds Mid's cost for the shell that wears it"
     ],
     "jav": [
      "in v100",
@@ -183,7 +183,7 @@
     ],
     "cata": [
      "in v100",
-     "Cataphract → Riders; hp Mid 120 v100 100; train Mid 16 v100 30"
+     "Cataphract → Riders; hp Mid 120 v100 100; train Mid 16 v100 30; F15: D123 holds Mid's cost for the shell that wears it"
     ],
     "harcher": [
      "in v100",
@@ -195,7 +195,7 @@
     ],
     "ram": [
      "in v100",
-     "Ram → Engines; hp Mid 200 v100 175; train Mid 20 v100 36"
+     "Ram → Engines; hp Mid 200 v100 175; train Mid 20 v100 36; F15: D123 holds Mid's cost for the shell that wears it"
     ],
     "stower": [
      "in v100",
@@ -341,15 +341,15 @@
   ],
   "BLD": [
    "bring",
-   "51 kinds: 47 are v100 shells (some with numbers, most without), 4 traps to bring (pit, net, stakes, caltrops). Where both have numbers they differ widely (rows below): Albert's call · Albert, Nov 5 10:11: Mid's build and train times; v100's health for every building; damage and units' health to review",
+   "51 kinds: 47 are v100 shells (some with numbers, most without), 4 traps to bring (pit, net, stakes, caltrops). Where both have numbers they differ widely (rows below): Albert's call · Albert, Nov 5 10:11: Mid's build and train times; v100's health for every building; damage and units' health to review; F15 (coordinator, by the 10:31 rule): every price Mid's (D123)",
    {
     "keep": [
      "in v100",
-     "Town Center → Town Center; cost Mid {} v100 {'wood': 275, 'stone': 100}; build time Mid None v100 150"
+     "Town Center → Town Center; cost Mid {} v100 {'wood': 275, 'stone': 100}; build time Mid None v100 150; F15: D123 holds Mid's cost (the 10:31 rule)"
     ],
     "house": [
      "in v100",
-     "House → Home; cost Mid {'wood': 30} v100 {'wood': 25}; build time Mid 12 v100 25; hp Mid 200 v100 550"
+     "House → Home; cost Mid {'wood': 30} v100 {'wood': 25}; build time Mid 12 v100 25; hp Mid 200 v100 550; F15: D123 holds Mid's cost (the 10:31 rule)"
     ],
     "farm": [
      "in v100",
@@ -361,7 +361,7 @@
     ],
     "mill": [
      "in v100",
-     "Mill → Mill; cost Mid {'wood': 80} v100 {'wood': 100}; build time Mid 15 v100 35; hp Mid 250 v100 600"
+     "Mill → Mill; cost Mid {'wood': 80} v100 {'wood': 100}; build time Mid 15 v100 35; hp Mid 250 v100 600; F15: D123 holds Mid's cost (the 10:31 rule)"
     ],
     "store": [
      "in v100",
@@ -369,15 +369,15 @@
     ],
     "lumber": [
      "in v100",
-     "Lumber camp → Lumber camp; cost Mid {'wood': 80} v100 {'wood': 100}; build time Mid 15 v100 35; hp Mid 250 v100 600"
+     "Lumber camp → Lumber camp; cost Mid {'wood': 80} v100 {'wood': 100}; build time Mid 15 v100 35; hp Mid 250 v100 600; F15: D123 holds Mid's cost (the 10:31 rule)"
     ],
     "mining": [
      "in v100",
-     "Mine → Mining camp; cost Mid {'wood': 80} v100 {'wood': 100}; build time Mid 15 v100 35; hp Mid 250 v100 600"
+     "Mine → Mining camp; cost Mid {'wood': 80} v100 {'wood': 100}; build time Mid 15 v100 35; hp Mid 250 v100 600; F15: D123 holds Mid's cost (the 10:31 rule)"
     ],
     "barracks": [
      "in v100",
-     "Barracks → Barracks; cost Mid {'wood': 150} v100 {'wood': 175}; build time Mid 25 v100 50; hp Mid 450 v100 1200"
+     "Barracks → Barracks; cost Mid {'wood': 150} v100 {'wood': 175}; build time Mid 25 v100 50; hp Mid 450 v100 1200; F15: D123 holds Mid's cost (the 10:31 rule)"
     ],
     "wall": [
      "in v100",
@@ -401,15 +401,15 @@
     ],
     "gate": [
      "in v100",
-     "Gate → Gate; cost Mid {'stone': 10, 'wood': 10} v100 {'stone': 30}; build time Mid 12 v100 70; hp Mid 150 v100 2750"
+     "Gate → Gate; cost Mid {'stone': 10, 'wood': 10} v100 {'stone': 30}; build time Mid 12 v100 70; hp Mid 150 v100 2750; F15: D123 holds Mid's cost (the 10:31 rule)"
     ],
     "tower": [
      "in v100",
-     "Watchtower → Tower; cost Mid {'stone': 100, 'wood': 40} v100 {'wood': 50, 'stone': 100}; build time Mid 25 v100 80; hp Mid 500 v100 1020"
+     "Watchtower → Tower; cost Mid {'stone': 100, 'wood': 40} v100 {'wood': 50, 'stone': 100}; build time Mid 25 v100 80; hp Mid 500 v100 1020; F15: D123 holds Mid's cost (the 10:31 rule)"
     ],
     "range": [
      "in v100",
-     "Archery range → Range; cost Mid {'wood': 150} v100 {'wood': 175}; build time Mid 25 v100 50; hp Mid 400 v100 1200"
+     "Archery range → Range; cost Mid {'wood': 150} v100 {'wood': 175}; build time Mid 25 v100 50; hp Mid 400 v100 1200; F15: D123 holds Mid's cost (the 10:31 rule)"
     ],
     "stable": [
      "in v100",
@@ -477,7 +477,7 @@
     ],
     "palisade": [
      "in v100",
-     "Palisade → Palisade; cost Mid {} v100 {'wood': 5}; build time Mid 6 v100 5; hp Mid 60 v100 250"
+     "Palisade → Palisade; cost Mid {} v100 {'wood': 5}; build time Mid 6 v100 5; hp Mid 60 v100 250; F15: D123 holds Mid's cost (the 10:31 rule)"
     ],
     "hospital": [
      "in v100",
@@ -489,7 +489,7 @@
     ],
     "siege": [
      "in v100",
-     "Siege workshop → Siege workshop; cost Mid {'wood': 250, 'stone': 100} v100 {'wood': 200, 'stone': 100}; build time Mid 30 v100 40; hp Mid 450 v100 1500"
+     "Siege workshop → Siege workshop; cost Mid {'wood': 250, 'stone': 100} v100 {'wood': 200, 'stone': 100}; build time Mid 30 v100 40; hp Mid 450 v100 1500; F15: D123 holds Mid's cost (the 10:31 rule)"
     ],
     "aqueduct": [
      "in v100",
@@ -501,7 +501,7 @@
     ],
     "town": [
      "in v100",
-     "Town Center → Town Center; cost Mid {'wood': 400, 'stone': 300, 'food': 200} v100 {'wood': 275, 'stone': 100}; build time Mid 60 v100 150; hp Mid 1800 v100 2400"
+     "Town Center → Town Center; cost Mid {'wood': 400, 'stone': 300, 'food': 200} v100 {'wood': 275, 'stone': 100}; build time Mid 60 v100 150; hp Mid 1800 v100 2400; F15: D123 holds Mid's cost (the 10:31 rule)"
     ],
     "castle": [
      "in v100",
@@ -894,12 +894,12 @@
    "the home finds' walk (the first bush at 150, v70's great map)"
   ],
   "WALL_R": [
-   "bring",
-   "the wall ring round a home"
+   "in v100",
+   "F15: D208 ai.walls ring (26 tiles: Mid's 260 units in its 10-unit squares)"
   ],
   "REACH": [
-   "bring",
-   "with WALL_R"
+   "in v100",
+   "F15: the same number as WALL_R (D208); its use as the search's reach is in v100 since F14 (D197)"
   ],
   "SEARCH": [
    "in v100",

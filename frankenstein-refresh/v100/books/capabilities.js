@@ -8,8 +8,8 @@ BOOK("capabilities", {
  "SC1": {"key": "Walk", "value": {"by": "index.html floor 5: step, findPath", "law": ["QBL", "QBM", "QBU"], "needs": ["pace", "body"], "may": ["mount", "kit", "voice"]}, "name": "walks the tiles at its pace", "cite": ["N94"], "law": ["QBL", "QBM", "QBU"]},
  "SC2": {"key": "Gather", "value": {"by": "econ.js", "law": ["QBN", "QV", "QW", "QX", "QCI"], "needs": ["body"], "may": []}, "name": "works a find of best rate from a spot of its own on its ring, as many as the find takes (D195), and fills a load; also counts it among the people", "cite": ["N95", "N164"], "law": ["QBN", "QV", "QW", "QX", "QCI"]},
  "SC3": {"key": "Carry", "value": {"by": "econ.js", "law": ["QBN"], "needs": ["body"], "may": []}, "name": "takes a load to the nearest drop-off of its side", "cite": ["N95"], "law": ["QBN"]},
- "SC4": {"key": "Build", "value": {"by": "econ.js", "law": ["QAC"], "needs": ["body"], "may": []}, "name": "raises a site", "cite": ["N95"], "law": ["QAC"]},
- "SC5": {"key": "Repair", "value": {"by": "econ.js", "law": ["QAC"], "needs": ["body"], "may": []}, "name": "mends a hurt building", "cite": ["N95"], "law": ["QAC"]},
+ "SC4": {"key": "Build", "value": {"by": "econ.js", "law": ["QAC"], "needs": ["body"], "may": []}, "name": "raises a site; a builder remembers its work and goes back to it after (Mid's)", "cite": ["N95", "N168"], "law": ["QAC"]},
+ "SC5": {"key": "Repair", "value": {"by": "econ.js", "law": ["QCK"], "needs": ["body"], "may": []}, "name": "mends a hurt building at D201's time and price, paid as it goes, then goes back to its work (Mid's)", "cite": ["N95", "N168"], "law": ["QCK"]},
  "SC6": {"key": "Fight", "value": {"by": "combat.js", "law": ["QBO", "QAG", "QBT"], "needs": ["D138"], "may": []}, "name": "strikes; without Gather it is a soldier; a wild one with it bites", "cite": ["N96"], "law": ["QBO", "QAG", "QBT"]},
  "SC7": {"key": "Shoot", "value": {"by": "combat.js", "law": ["QAL"], "needs": ["D143|D138"], "may": []}, "name": "looses at range (a building that shoots reads D143)", "cite": ["N96"], "law": ["QAL"]},
  "SC8": {"key": "Health", "value": {"by": "combat.js, index.html", "law": ["QBS"], "needs": ["D138|D139"], "may": []}, "name": "has health, and sways when badly hurt", "cite": ["N97"], "law": ["QBS"]},
@@ -24,5 +24,7 @@ BOOK("capabilities", {
  "SC17": {"key": "Yield", "value": {"by": "econ.js", "law": ["QBN"], "needs": ["yield", "amount"], "may": []}, "name": "a find: holds an amount of a yield", "cite": ["N99"], "law": ["QBN"]},
  "SC18": {"key": "Scout", "value": {"by": "waiting", "law": [], "needs": [], "may": []}, "name": "scouts (not built yet)", "cite": ["N100"], "law": []},
  "SC19": {"key": "Trade", "value": {"by": "waiting", "law": [], "needs": [], "may": []}, "name": "trades (not built yet)", "cite": ["N100"], "law": []},
- "SC20": {"key": "Tall", "value": {"by": "menu.js", "law": [], "needs": [], "may": []}, "name": "a page that keeps its own height (the Town Center, the Start page); every other page shares the tallest of the rest", "cite": ["N101"], "law": []}
+ "SC20": {"key": "Tall", "value": {"by": "menu.js", "law": [], "needs": [], "may": []}, "name": "a page that keeps its own height (the Town Center, the Start page); every other page shares the tallest of the rest", "cite": ["N101"], "law": []},
+ "SC21": {"key": "Line", "value": {"by": "econ.js, menu.js", "law": [], "needs": [], "may": []}, "name": "laid as a line, corner to corner, one piece a tile, four-connected; touches any building, keeps no lane (Mid's lineKind)", "cite": ["N168"], "law": []},
+ "SC22": {"key": "Gate", "value": {"by": "index.html walkable, combat.js", "law": [], "needs": [], "may": []}, "name": "shut to a foe of its owner, open to the rest; laid on its owner's wall, it takes the piece's place (Mid's blockedCell)", "cite": ["N168"], "law": []}
 });

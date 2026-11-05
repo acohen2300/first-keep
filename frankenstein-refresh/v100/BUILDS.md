@@ -1365,3 +1365,77 @@ MODIFIED (53):
 LOCKED (1077 of 1130): byte for byte as sealed, 349,527 bytes
 Tests: 25/25 rules hold
 Inventory: 1130 items sealed · 1021 book entries · 77 laws · 167 citations, 23 still to open · 7 known
+
+## F15 · builders, repair, placing, walls as lines · 2026-11-05 16:07
+Albert, Nov 5 11:40: yes yes F10–F39; 13:30: one module a build
+Opened: code:index.html, code:econ.js, code:combat.js, code:menu.js, code:ai.js, book:measure, book:shells, book:capabilities, book:sprites, book:words, book:comments, book:rules, book:citations, tool:test.py, law:QCK
+MODIFIED (66):
+- book:capabilities:SC21 · added
+- book:capabilities:SC22 · added
+- book:capabilities:SC4 · 148 → 220 bytes
+- book:capabilities:SC5 · 157 → 243 bytes
+- book:citations:N168 · added
+- book:citations:N169 · added
+- book:comments:E313 · added
+- book:comments:E314 · added
+- book:comments:E315 · added
+- book:comments:E316 · added
+- book:comments:E317 · added
+- book:comments:E318 · added
+- book:comments:E319 · added
+- book:comments:E320 · added
+- book:comments:E321 · added
+- book:comments:E322 · added
+- book:comments:E323 · added
+- book:comments:E324 · added
+- book:comments:E325 · added
+- book:comments:E326 · added
+- book:comments:E327 · added
+- book:comments:E328 · added
+- book:comments:E329 · added
+- book:comments:E330 · added
+- book:comments:E331 · added
+- book:comments:E332 · added
+- book:comments:E333 · added
+- book:comments:E334 · added
+- book:comments:E335 · added
+- book:comments:E336 · added
+- book:comments:E337 · added
+- book:comments:E338 · added
+- book:comments:E339 · added
+- book:comments:E340 · added
+- book:comments:E341 · added
+- book:comments:E342 · added
+- book:comments:E343 · added
+- book:measure:D123 · 604 → 741 bytes
+- book:measure:D125 · 265 → 342 bytes
+- book:measure:D199 · added
+- book:measure:D200 · added
+- book:measure:D201 · added
+- book:measure:D202 · added
+- book:measure:D203 · added
+- book:measure:D204 · added
+- book:measure:D205 · added
+- book:measure:D206 · added
+- book:measure:D207 · added
+- book:measure:D208 · added
+- book:measure:D209 · added
+- book:measure:D210 · added
+- book:rules:X52 · added
+- book:shells:BW1 · 141 → 149 bytes
+- book:shells:BW2 · 141 → 149 bytes
+- book:shells:BW4 · 150 → 158 bytes
+- book:words:J7 · 9,394 → 9,634 bytes
+- code:ai.js · 5,054 → 6,424 bytes
+- code:combat.js · 9,043 → 9,101 bytes
+- code:econ.js · 18,413 → 25,924 bytes
+- code:index.html#b-the-buildings · 1,294 → 1,373 bytes
+- code:index.html#floor-5-movables · 10,943 → 11,067 bytes
+- code:index.html#the-door · 5,048 → 5,083 bytes
+- code:index.html#touch · 4,481 → 4,496 bytes
+- code:menu.js · 41,803 → 49,836 bytes
+- law:QCK · added
+- tool:test.py · 56,443 → 76,118 bytes
+LOCKED (1113 of 1179): byte for byte as sealed, 321,651 bytes
+Tests: 26/26 rules hold
+Inventory: 1179 items sealed · 1069 book entries · 78 laws · 169 citations, 23 still to open · 7 known

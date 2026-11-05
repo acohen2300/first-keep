@@ -84,6 +84,18 @@
   [
    "Nov 5 13:30",
    "the permit's cap of ten is lifted for the refresh: one build carries a whole module (or a few small ones), never split; the byte budget with its why, the gate and the match test hold every build; from F13b on"
+  ],
+  [
+   "Nov 5 15:02",
+   "F14's three crowd rules, not Mid's, approved: keep right when meeting head-on; a walker pushed within a pace of its target has arrived; a villager is at a building within its ring plus a pace"
+  ],
+  [
+   "Nov 5 15:12",
+   "whatever is cleaner, more effective and efficient; if it is not a problem, no change: the Measurements book stays one book"
+  ],
+  [
+   "Nov 5 15:12",
+   "the tests: one shared loader for Mid's frozen code, a build runs only the tests its permit touches, the full set at publish; done as a tools build after F15"
   ]
  ]
 }

@@ -2,7 +2,7 @@
 // E168
 // E169
 window.MENU = (() => {
-const { D, B, U, SIDES, N, show } = FK, things = FK.things, units = FK.units;
+const { D, B, U, SIDES, N, show } = FK, things = FK.things, units = FK.units, [ME] = D.players;
 // E170
 const LAYERS = [['G', 'Grid'], ['Z', 'Zones'], ['T', 'Things'], ['R', 'Rim'], ['B', 'Buildings'], ['U', 'Units'], ['K', 'Climate'], ['V', 'View']]; // E171
 const SCR = fromBook('screen'), GROUPS = SCR.tabs; // E172
@@ -92,20 +92,20 @@ const slowPct = (f) => Math.round((f / (1 + f)) * SAY.percent); // E274
 const coord = (bx, by) => { const n = Math.ceil(D.board / D.coord), at = (v) => Math.min(n - 1, Math.max(0, Math.floor((v - FK.B0) / D.coord))); return WD.squares[at(bx)] + (at(by) + 1); }; // E275
 const ledgerLine = (o) => Object.entries(o || {}).filter(([, v]) => v >= D.flow.half).sort(([, a], [, b]) => b - a).map(([w, v]) => `${WD.ledger[w] || w} ${fmt(v)}`).join(WD.list.dot) || WD.none; // E276
 const mixc = (a, b, t) => '#' + [0, 2, 4].map((i) => Math.round(parseInt(a.substr(i + 1, 2), 16) * (1 - t) + parseInt(b.substr(i + 1, 2), 16) * t).toString(16).padStart(2, '0')).join('');
-const price = (c) => { const st = SIDES[0].store, miss = Object.entries(c || {}).map(([y, n]) => [y, Math.ceil(n - (st[y] || 0)), n]).filter(([, m]) => m > 0); if (!miss.length) return `<small class="c">${costText(c)}</small>`;
+const price = (c) => { const st = SIDES[ME].store, miss = Object.entries(c || {}).map(([y, n]) => [y, Math.ceil(n - (st[y] || 0)), n]).filter(([, m]) => m > 0); if (!miss.length) return `<small class="c">${costText(c)}</small>`;
   const f = Math.min(...miss.map(([, m, n]) => 1 - m / n)); return `<small style="color:${f < 0.5 ? mixc(COL.rr, COL.rw, f * 2) : mixc(COL.rw, COL.rg, f * 2 - 1)};opacity:1">Short ${miss.map(([y, m]) => m + y[0]).join(' ')}</small>`; };
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.ceil(t % 60) % 60).padStart(2, '0')}`;
 const costText = (c) => Object.entries(c || {}).filter(([, n]) => n > 0).map(([y, n]) => `${n}${y[0]}`).join(' ') || 'free'; // E183
-const own = (t) => t && t.side === 0;
+const own = (t) => t && t.side === ME;
 const isVil = (u) => u && u.kind === 'unit' && FK.has(u, 'Gather') && own(u);
 const isSoldier = (u) => u && u.kind === 'unit' && own(u) && WAR.armed(u);
-const hall = () => { const h = FK.seatOf(0); return h && h.done >= 1 ? h : null; };
-const trainer = (c) => things().find((t) => t.kind === 'bld' && t.side === 0 && t.done >= 1 && (D.trains[t.code] || []).includes(c));
-const count = (c) => things().filter((t) => t.kind === 'bld' && t.side === 0 && t.code === c).length, picked = (c) => S.ghost && S.ghost.code === c;
+const hall = () => { const h = FK.seatOf(ME); return h && h.done >= 1 ? h : null; };
+const trainer = (c) => ECON.lineFor(ME, c), P = D.place, line = (c) => FK.SH[c].ticks.includes('Line'), walled = (c) => line(c) || FK.SH[c].ticks.includes('Gate'); // E332
+const count = (c) => things().filter((t) => t.kind === 'bld' && t.side === ME && t.code === c).length, picked = (c) => S.ghost && S.ghost.code === c;
 const summary = () => `${OPTS.len[S.opt.len][0]} · Fog ${OPTS.fog[S.opt.fog][0].toLowerCase()} · Daily ${OPTS.daily[S.opt.daily][0].toLowerCase()}`;
 const isFind = (t) => t && t.kind !== 'unit' && t.kind !== 'bld' && ECON.yieldOf(t);
 // E184
-function read() { const s = SIDES[0], r = ECON.result(); return { store: s.store, pop: ECON.popOf(0), cap: ECON.popCap(0), age: D.ages[s.age], aging: s.aging, ageCost: ECON.ageCost(0), jobs: ECON.jobs(0), rally: s.rally, army: WAR.armyOf(0).length, wave: WAR.waves[0], sel: FK.sel(), subject: S.subject, time: ECON.time(), left: Math.max(0, D.bell - ECON.time()), score: ECON.score(0), theirs: ECON.score(D.players[1]), result: r, next: D.ages[ECON.nextAge(0)] || null, hall: hallRead() }; }
+function read() { const s = SIDES[ME], r = ECON.result(); return { store: s.store, pop: ECON.popOf(ME), cap: ECON.popCap(ME), age: D.ages[s.age], aging: s.aging, ageCost: ECON.ageCost(ME), jobs: ECON.jobs(ME), rally: s.rally, army: WAR.armyOf(ME).length, wave: WAR.waves[0], sel: FK.sel(), subject: S.subject, time: ECON.time(), left: Math.max(0, D.bell - ECON.time()), score: ECON.score(ME), theirs: ECON.score(D.players[1]), result: r, next: D.ages[ECON.nextAge(ME)] || null, hall: hallRead() }; }
 function hallRead() { const h = (S.subject && FK.has(S.subject, 'Seat') && own(S.subject) ? S.subject : hall()) || null; if (!h) return null; const q = h.q || []; let at = h.qt || 0;
   return { k: key(h), hp: h.hp, hpMax: h.hpMax, life: h.hp / h.hpMax, done: q.length ? 1 - h.qt / ECON.timeOf(h.side, q[0]) : 0, queue: q.slice(0, SCR.mold.slots).map((c, i) => [ECON.nameOf(c), i ? (at += ECON.timeOf(h.side, c)) : at]), more: Math.max(0, q.length - SCR.mold.slots + 1) }; }
 // E185
@@ -126,26 +126,26 @@ const VERBS = {
   mute: { label: () => `<span class="t" style="opacity:${window.SOUND && SOUND.on() ? 1 : 0.35}">${SVG.sound}</span>`, whyNot: () => '', run: () => SOUND.toggle() }, // E188
   later: { label: (t) => SVG[t] || `${t}<small>Later</small>`, whyNot: () => 'Not built yet', run: () => {} }, // E189
   start: { label: () => `Start<small>${summary()}</small>`, whyNot: () => '', run: () => { const o = (k) => OPTS[k][S.opt[k]][1]; ECON.setBell(o('len') || Infinity); show.fog = o('fog'); S.tab = null; if (!o('daily')) FK.restart(); else if (location.hash.length > 1) location.hash = ''; else FK.reset(); } }, // E190
-  job: { label: (y, n) => (n > 0 ? '+' : '−'), whyNot: (y, n) => (n > 0 && !ECON.villagersOf(0).length ? 'No villagers' : n < 0 && !ECON.jobs(0)[y] ? `No one on ${y}` : ''), run: (y, n) => { if (!ECON.assign(0, y, n)) toast(n > 0 ? `No ${y} within reach` : `No one on ${y}`); } },
+  job: { label: (y, n) => (n > 0 ? '+' : '−'), whyNot: (y, n) => (n > 0 && !ECON.villagersOf(ME).length ? 'No villagers' : n < 0 && !ECON.jobs(ME)[y] ? `No one on ${y}` : ''), run: (y, n) => { if (!ECON.assign(ME, y, n)) toast(n > 0 ? `No ${y} within reach` : `No one on ${y}`); } },
   people: { label: () => `<span class="t">${SVG.people}</span>People`, whyNot: () => { const h = hall(); return !h ? 'No hall' : VERBS.train.whyNot(born(), h); }, run: () => ECON.queue(hall(), born()) },
-  yield: { label: (y) => `<span class="t">${SVG[y]}${ECON.jobs(0)[y]}</span>${NAME[y]}`, whyNot: () => '', run: (y) => { SIDES[0].rally = SIDES[0].rally === y ? null : y; } }, // E191
-  ageUp: { label: () => { const r = read(); return !r.next ? 'Last age' : `${r.next} age${r.aging ? `<small>rising, ${Math.ceil(r.aging)}s</small>` : price(r.ageCost)}`; }, whyNot: () => { const c = ECON.ageCost(0); return !c ? 'Last age' : SIDES[0].aging ? 'Already rising' : !ECON.canPay(0, c) ? `Needs ${costText(c)}` : ''; }, run: () => ECON.ageUp(0) },
-  pick: { label: (c) => `${B[c][0]} ${count(c)}${picked(c) ? '<small>' : ''}${picked(c) ? (S.ghost.i < -50 ? 'Slide to place' : S.ghost.ok ? 'Fits here' : 'Not here') : ''}</small>${picked(c) ? '' : price(D.cost[c])}`, // E192
-    whyNot: (c) => (picked(c) ? VERBS.build.whyNot() : !ECON.canPay(0, D.cost[c] || {}) ? `Needs ${costText(D.cost[c])}` : ''), run: (c) => { if (picked(c)) return VERBS.build.run(); S.ghost = { code: c, i: -99, j: -99, ok: false }; S.arming = false; } },
-  build: { label: () => 'Build', whyNot: () => (!S.ghost ? 'Pick a building' : !S.ghost.ok ? 'Not here: it needs flat, free ground' : ''), run: () => { const g = S.ghost, t = ECON.plan(0, g.code, g.i, g.j); if (!t) return toast('Not here'); const sel = FK.sel(), u = isVil(sel) ? sel : ECON.villagersOf(0).find((v) => v.job === 'idle' || v.job === 'wait') || ECON.villagersOf(0)[0]; if (u) ECON.buildAt(u, t); S.ghost = null; FK.dirty(); } },
+  yield: { label: (y) => `<span class="t">${SVG[y]}${ECON.jobs(ME)[y]}</span>${NAME[y]}`, whyNot: () => '', run: (y) => { SIDES[ME].rally = SIDES[ME].rally === y ? null : y; } }, // E191
+  ageUp: { label: () => { const r = read(); return !r.next ? 'Last age' : `${r.next} age${r.aging ? `<small>rising, ${Math.ceil(r.aging)}s</small>` : price(r.ageCost)}`; }, whyNot: () => { const c = ECON.ageCost(ME); return !c ? 'Last age' : SIDES[ME].aging ? 'Already rising' : !ECON.canPay(ME, c) ? `Needs ${costText(c)}` : ''; }, run: () => ECON.ageUp(ME) },
+  pick: { label: (c) => `${B[c][0]} ${count(c)}${picked(c) ? `<small>${ghostSay(S.ghost)}</small>` : price(D.cost[c])}`, // E192
+    whyNot: (c) => (picked(c) ? VERBS.build.whyNot() : ECON.capWhy(ME, c) || (!ECON.canPay(ME, D.cost[c] || {}) ? `Needs ${costText(D.cost[c])}` : '')), run: (c) => { if (picked(c)) return VERBS.build.run(); S.ghost = { code: c, i: -99, j: -99, ok: false, pts: [], cells: [] }; S.arming = false; if (!line(c)) { const [w, h] = FK.size(); ghostTo(w * P.half, h * P.half, P.start); } } },
+  build: { label: () => 'Build', whyNot: () => { const g = S.ghost; return !g ? 'Pick a building' : line(g.code) ? (!g.cells.length ? 'Tap the corners' : g.bad === g.cells.length ? 'Something is in the way' : '') : g.ok ? '' : g.why || 'Slide to place'; }, run: () => place(S.ghost) },
   group: { label: (g) => g, whyNot: () => '', run: (g) => { S.group = g; S.ghost = null; FK.dirty(); } },
   target: { label: () => 'Set target', whyNot: () => '', run: () => { S.arming = !S.arming; S.ghost = null; if (S.arming) toast('Tap the map to aim'); } },
-  attack: { label: () => `<span class="t">${SVG.attack}</span>Attack`, whyNot: () => (!WAR.armyOf(0).length ? 'No soldiers' : ''), run: () => { S.arming = true; S.ghost = null; toast('Tap the map where they go'); } },
-  recall: { label: () => 'Recall', whyNot: () => (!WAR.armyOf(0).length ? 'No soldiers' : ''), run: () => WAR.recall(0) },
-  train: { label: (c) => `${U[c][0]}${price(D.cost[c])}`, whyNot: (c, b) => (b.done < 1 ? 'Not built yet' : !ECON.canPay(0, D.cost[c]) ? `Needs ${costText(D.cost[c])}` : ECON.popOf(0) >= ECON.popCap(0) ? 'No room: build a home' : ''), run: (c, b) => ECON.queue(b, c) },
+  attack: { label: () => `<span class="t">${SVG.attack}</span>Attack`, whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => { S.arming = true; S.ghost = null; toast('Tap the map where they go'); } },
+  recall: { label: () => 'Recall', whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => WAR.recall(ME) },
+  train: { label: (c) => `${U[c][0]}${price(D.cost[c])}`, whyNot: (c, b) => (b.done < 1 ? 'Not built yet' : !ECON.room(b) ? 'That line is full' : !ECON.canPay(ME, D.cost[c]) ? `Needs ${costText(D.cost[c])}` : ECON.popOf(ME) >= ECON.popCap(ME) ? 'No room: build a home' : ''), run: (c, b) => ECON.queue(b, c) },
   untrain: { label: () => '−', whyNot: (b) => (!b.q || !b.q.length ? 'Nothing queued' : ''), run: (b) => ECON.unqueue(b) },
   stop: { label: () => 'Stop', whyNot: (u) => (u.job === 'idle' ? 'Already idle' : ''), run: (u) => { if (u.load) ECON.carry(u); else ECON.idle(u); } },
   gather: { label: () => 'Gather', whyNot: (t) => (!isVil(FK.sel()) ? 'Pick a villager' : ''), run: (t) => ECON.gatherAt(FK.sel(), t) },
-  send: { label: () => 'Send one', whyNot: (t) => (!ECON.villagersOf(0).some((v) => v.job === 'idle' || v.job === 'wait') ? 'No idle villager' : ''), run: (t) => { const u = ECON.villagersOf(0).filter((v) => v.job === 'idle' || v.job === 'wait').sort((a, b) => Math.hypot(a.bx - t.bx, a.by - t.by) - Math.hypot(b.bx - t.bx, b.by - t.by))[0]; ECON.gatherAt(u, t); } },
-  raise: { label: (t) => (t.done < 1 ? 'Raise' : 'Repair'), whyNot: (t) => (!isVil(FK.sel()) ? 'Pick a villager' : t.done >= 1 && t.hp >= t.hpMax ? 'Not hurt' : ''), run: (t) => ECON.buildAt(FK.sel(), t) },
-  scrap: { label: (t) => (t.done < 1 ? 'Cancel site' : 'Demolish'), whyNot: (t) => (FK.has(t, 'Seat') && t.done >= 1 ? 'The hall stays' : ''), run: (t) => { ECON.cancel(t); S.subject = null; } },
+  send: { label: () => 'Send one', whyNot: (t) => (!ECON.villagersOf(ME).some((v) => v.job === 'idle' || v.job === 'wait') ? 'No idle villager' : ''), run: (t) => { const u = ECON.villagersOf(ME).filter((v) => v.job === 'idle' || v.job === 'wait').sort((a, b) => Math.hypot(a.bx - t.bx, a.by - t.by) - Math.hypot(b.bx - t.bx, b.by - t.by))[0]; ECON.gatherAt(u, t); } },
+  raise: { label: (t) => (t.done < 1 ? 'Raise' : `Repair${price(ECON.repairCost(t))}`), whyNot: (t) => (!isVil(FK.sel()) ? 'Pick a villager' : t.done >= 1 && t.hp >= t.hpMax - D.repair.within ? 'Not hurt' : ''), run: (t) => ECON.buildAt(FK.sel(), t) },
+  scrap: { label: (t) => (t.done < 1 ? 'Cancel site' : 'Demolish'), whyNot: (t) => (FK.has(t, 'Seat') && t.done >= 1 ? 'The hall stays' : ''), run: (t) => { toast(`${B[t.code][0]} ${t.done < D.refund.first ? 'cancelled' : 'taken down'}: ${costText(ECON.refund(t))} back`); ECON.cancel(t); S.subject = null; } },
   fight: { label: () => 'Attack this', whyNot: (t) => (!isSoldier(FK.sel()) ? 'Pick a soldier' : ''), run: (t) => WAR.fight(FK.sel(), t) },
-  here: { label: () => 'Soldiers here', whyNot: (t) => (!WAR.armyOf(0).length ? 'No soldiers' : ''), run: (t) => WAR.attack(0, t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k) },
+  here: { label: () => 'Soldiers here', whyNot: (t) => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: (t) => WAR.attack(ME, t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k) },
 };
 function act(verb, arg, arg2) { const v = VERBS[verb], why = v.whyNot(arg, arg2); if (why) { FK.fire('event', 'err', null); toast(why); return false; } FK.fire('event', verb === 'build' ? 'place' : 'tap', null); v.run(arg, arg2); render(true); return true; }
 // E193
@@ -173,8 +173,8 @@ const SCREENS = {
     return [head('Build'), `<div class="row6 tabs">${Object.keys(GROUPS).map((x) => vcell('group', x, null, '', S.group === x)).join('')}</div>`,
       `<div class="frame">${g.map((c) => (D.cost[c] ? vcell('pick', c, null, `two ${picked(c) ? 'blue' : ''}`) : vcell('later', B[c][0], null, 'two'))).join('')}</div>`]; },
   Hall: () => { const r = read(), h = r.hall || {}; // E197
-    const title = row(span(4, cell(`${bar(1, `var(--age${Math.min(4, SIDES[0].age)})`, 1)}${FK.SH[seatCode()].name}${h.hp != null ? bar(h.life, h.life > 0.5 ? 'var(--rg)' : 'var(--rr)') : ''}`, 'title')), vcell('info', null, null, '', S.info), vcell('close'));
-    if (S.info) return [title, `<div class="info"><p>Health ${h.hp != null ? `${Math.ceil(h.hp)}/${h.hpMax}` : '–'} · ${r.age} age · room for ${Math.max(0, r.cap - r.pop)}.</p><p><b>Food:</b> your people eat ${Math.round(r.pop * D.upkeep * 600 / D.day) / 10} a minute.</p><p><b>${r.next ? r.next + ' age' : 'Last age'}:</b> ${r.next ? `${costText(r.ageCost)}, ${D.age.time[ECON.nextAge(0)]}s to rise` : 'reached'}.</p><p><b>Later:</b> the age's history, tech, the civilization, goods wanted by others.</p></div>`];
+    const title = row(span(4, cell(`${bar(1, `var(--age${Math.min(4, SIDES[ME].age)})`, 1)}${FK.SH[seatCode()].name}${h.hp != null ? bar(h.life, h.life > 0.5 ? 'var(--rg)' : 'var(--rr)') : ''}`, 'title')), vcell('info', null, null, '', S.info), vcell('close'));
+    if (S.info) return [title, `<div class="info"><p>Health ${h.hp != null ? `${Math.ceil(h.hp)}/${h.hpMax}` : '–'} · ${r.age} age · room for ${Math.max(0, r.cap - r.pop)}.</p><p><b>Food:</b> your people eat ${Math.round(r.pop * D.upkeep * 600 / D.day) / 10} a minute.</p><p><b>${r.next ? r.next + ' age' : 'Last age'}:</b> ${r.next ? `${costText(r.ageCost)}, ${D.age.time[ECON.nextAge(ME)]}s to rise` : 'reached'}.</p><p><b>Later:</b> the age's history, tech, the civilization, goods wanted by others.</p></div>`];
     const tabs = `<div class="row6 tabs">${['Town', 'Relations', 'Misfits'].map((t) => span(2, vcell('htab', t, null, '', S.htab === t))).join('')}</div>`;
     if (S.htab !== 'Town') return [title, tabs, stances(S.htab)];
     return [title, tabs, row(...queue6(h.queue || [], h.done, h.more)), frame([h.k ? vcell('train', born(), h.k, 'two') : '<i></i>', vcell('later', 'Scout', null, 'two'), '<i></i>',
@@ -230,18 +230,56 @@ ui.addEventListener('click', click); topEl.addEventListener('click', click);
 // E206
 const canvas = document.getElementById('map');
 const tileUnder = (px, py) => { const [cw, ch] = FK.size(), c = FK.cam, vx = c.x + (px - cw / 2) / c.z, vy = c.y + (py - ch / 2) / c.z, [sx, sy] = FK.fromBoard(vx, (vy + D.land * Math.cos(FK.A.rise * Math.PI / 180)) / Math.sin(FK.A.rise * Math.PI / 180)); return [Math.floor(sx / D.tile), Math.floor(sy / D.tile)]; };
-const ghostTo = (px, py) => { const g = S.ghost, [i, j] = tileUnder(px, py), n = B[g.code][1]; g.i = i - Math.floor(n / 2); g.j = j - Math.floor(n / 2); g.ok = ECON.canPlace(g.code, g.i, g.j); FK.dirty(); };
-let pressing = false;
-for (const ev of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel']) canvas.addEventListener(ev, (e) => { if (!S.ghost) return; if (ev === 'pointerdown') pressing = true; if (ev === 'pointerup' || ev === 'pointercancel') { pressing = false; render(true); } if (pressing && (ev === 'pointerdown' || ev === 'pointermove')) ghostTo(e.clientX, e.clientY); e.stopImmediatePropagation(); }, true);
-FK.on('draw', (ctx, s) => { const g = S.ghost; if (!g || g.i < -50) return; const n = B[g.code][1], T = D.tile, h = FK.H[Math.max(0, g.j) * N + Math.max(0, g.i)] ?? D.land, P = (sx, sy) => FK.toScreen(...FK.toView(...FK.toBoard(sx, sy), Math.max(D.land, h)));
-  ctx.save(); ctx.globalAlpha = 0.5; const [bx, by] = FK.toBoard((g.i + n / 2) * T, (g.j + n / 2) * T), [vx, vy] = FK.toView(bx, by, Math.max(D.land, h)), [x, y] = FK.toScreen(vx, vy); FK.blit(FK.bldSprite(g.code, SIDES[0].col, s), x, y, s); ctx.globalAlpha = 0.9;
-  ctx.strokeStyle = g.ok ? COL.rg : COL.rr; ctx.lineWidth = 2; ctx.beginPath(); [[0, 0], [n, 0], [n, n], [0, n]].forEach(([a, b], q) => { const [px, py] = P((g.i + a) * T, (g.j + b) * T); q ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.closePath(); ctx.stroke(); ctx.restore(); });
+const ghostTo = (px, py, tol = Math.max(P.tol.least, P.tol.zoom / FK.cam.z)) => { const g = S.ghost, [i, j] = tileUnder(px, py), [, n] = B[g.code], h = Math.floor(n * P.half); [g.i, g.j] = ECON.snap(ME, g.code, i - h, j - h, tol); g.why = ECON.placeWhy(ME, g.code, g.i, g.j); g.ok = !g.why; FK.dirty(); }; // E333
+const inN = (v) => Math.max(0, Math.min(N - 1, v)), tileK = (px, py) => { const [i, j] = tileUnder(px, py).map(inN); return j * N + i; }, ij = (k) => ECON.at(k), fits = (g, k) => ECON.canPlace(g.code, ...ij(k));
+const wallSnap = (a, k) => { if (a == null) return k; const [ai, aj] = ij(a), [i, j] = ij(k); return Math.abs(j - aj) * P.flat < Math.abs(i - ai) ? aj * N + i : Math.abs(i - ai) * P.flat < Math.abs(j - aj) ? j * N + ai : k; }; // E334
+const wallSet = (g) => { let prev = null; g.cells = g.pts.flatMap((k) => { const run = prev == null ? [k] : ECON.wallLine(prev, k).filter((q) => q !== prev); prev = k; return run; }); g.bad = g.cells.filter((k) => !fits(g, k)).length; g.seal = null; FK.dirty(); };
+const onMap = (k) => FK.toScreen(...FK.toView(...FK.tileMid(k), Math.max(D.land, FK.H[k])));
+function wallHit(g, x, y) { const at = g.pts.map(onMap), i = at.findIndex(([a, b]) => Math.hypot(a - x, b - y) < P.hit); if (i >= 0) return { i }; let q = null; // E335
+  for (const [c, d] of at) { if (q) { const [a, b] = q, L = Math.hypot(c - a, d - b), along = ((x - a) * (c - a) + (y - b) * (d - b)) / L; if (along > -P.hit && along < L + P.hit && Math.abs((x - a) * (d - b) - (y - b) * (c - a)) / L < P.hit) return { k0: tileK(x, y), pts0: g.pts.slice() }; } q = [c, d]; }
+  return null; }
+function wallDrag(d, x, y) { const g = S.ghost, k = tileK(x, y), [i0, j0] = ij(d.k0 ?? k), [di, dj] = ij(k).map((v, n) => v - [i0, j0][n]); if (d.i != null) g.pts[d.i] = wallSnap(g.pts[d.i - 1] ?? g.pts[d.i + 1], k); else g.pts = d.pts0.map((q) => { const [i, j] = ij(q); return inN(j + dj) * N + inN(i + di); }); wallSet(g); }
+const ghostSay = (g) => (line(g.code) ? (g.cells.length ? `${g.cells.length} × ${costText(D.cost[g.code])}${g.bad ? ` · ${g.bad} blocked` : ''}` : 'Tap the corners') : g.i < -50 ? 'Slide to place' : g.ok ? 'Fits here' : g.why);
+function place(g) { const sel = FK.sel(), [first] = Object.keys(D.cost[g.code] || {}); // E336
+  if (line(g.code)) { const r = ECON.lay(ME, g.code, g.cells); toast(r.built ? `${r.built} ${some(r.built, ECON.nameOf(g.code).toLowerCase())} going up${r.blocked ? `; ${r.blocked} blocked` : ''}${r.broke ? `; out of ${first}` : ''}` : r.broke ? `Not enough: ${costText(D.cost[g.code])} a piece` : 'Something is in the way'); g.pts = []; wallSet(g); return; }
+  const t = ECON.plan(ME, g.code, g.i, g.j); if (!t) return toast(g.why || 'Not here'); ECON.autoBuilder(ME, t, isVil(sel) ? sel : null);
+  const k = t.n + P.next[FK.SH[t.code].material], at = !ECON.capWhy(ME, g.code) && ECON.canPay(ME, D.cost[g.code] || {}) && D.ways.filter(([a, b]) => !a || !b).map(([a, b]) => [t.i + a * k, t.j + b * k]).find(([i, j]) => ECON.canPlace(g.code, i, j));
+  if (at) { [g.i, g.j] = at; g.ok = true; g.why = ''; } else S.ghost = null; FK.dirty(); }
+let drag = null, edge = null;
+for (const ev of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel']) canvas.addEventListener(ev, (e) => { const g = S.ghost; if (!g) return; // E337
+  if (ev === 'pointerdown') drag = line(g.code) ? wallHit(g, e.clientX, e.clientY) : { lift: P.lift * (e.pointerType !== 'mouse') }; if (!drag) return;
+  if (ev === 'pointerup' || ev === 'pointercancel') { drag = edge = null; render(true); } else if (line(g.code)) { if (ev === 'pointermove') wallDrag(drag, e.clientX, e.clientY); } else { edge = { x: e.clientX, y: e.clientY }; ghostTo(edge.x, edge.y - drag.lift); }
+  e.stopImmediatePropagation(); }, true);
+const tints = new WeakMap(), tinted = (c, col) => { const T = tints.get(c) || {}; if (!T[col]) { const t = Object.assign(document.createElement('canvas'), { width: c.width, height: c.height }), x = t.getContext('2d'); Object.assign(t, { ax: c.ax, ay: c.ay, q: c.q }); x.drawImage(c, 0, 0); x.globalCompositeOperation = 'source-atop'; x.globalAlpha = P.tint; x.fillStyle = col; x.fillRect(0, 0, t.width, t.height); T[col] = t; tints.set(c, T); } return T[col]; }; // E338
+function drawSeal(ctx, g) { if (!g.seal || FK.K.t - g.sealT > D.seal.every) { g.seal = ECON.sealPath(ME, line(g.code) ? g.cells.filter((k) => fits(g, k)) : g.ok ? [g.j * N + g.i] : []); g.sealT = FK.K.t; } // E339
+  const p = g.seal, h = FK.seatOf(ME); if (!p || !h) return; ctx.fillStyle = COL.rw; ctx.font = getComputedStyle(toastEl).font; ctx.textAlign = 'center'; if (!p.length) return ctx.fillText('Sealed', ...FK.toScreen(h.vx, h.vy));
+  ctx.strokeStyle = COL.rr; ctx.lineWidth = P.width.seal; ctx.setLineDash(P.dash.seal); ctx.beginPath(); p.forEach((k, n) => ctx[n ? 'lineTo' : 'moveTo'](...onMap(k))); ctx.stroke(); ctx.setLineDash([]); ctx.fillText('Open: a foe walks in', ...onMap(p.at(-1))); }
+FK.on('draw', (ctx, s) => { const g = S.ghost; if (!g) return; const [, n] = B[g.code], T = D.tile, h = FK.H[Math.max(0, g.j) * N + Math.max(0, g.i)] ?? D.land, at = (sx, sy, z = h) => FK.toScreen(...FK.toView(...FK.toBoard(sx * T, sy * T), Math.max(D.land, z))); ctx.save(); // E340
+  if (walled(g.code)) drawSeal(ctx, g);
+  if (line(g.code)) { ctx.globalAlpha = P.tint; for (const k of g.cells) { const [i, j] = ij(k); ctx.fillStyle = fits(g, k) ? COL.rg : COL.rr; ctx.beginPath(); P.quad.forEach(([a, b], q) => ctx[q ? 'lineTo' : 'moveTo'](...at(i + a, j + b, FK.H[k]))); ctx.fill(); }
+    ctx.globalAlpha = P.ghost; ctx.lineWidth = P.width.knob; ctx.setLineDash([]); g.pts.forEach((k, q) => { ctx.fillStyle = COL.rw; ctx.strokeStyle = q ? COL.ink : COL.rg; ctx.beginPath(); ctx.arc(...onMap(k), P.knob, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }); }
+  else if (g.i > -50) { const ci = g.i + n * P.half, cj = g.j + n * P.half, seg = (a, z) => { ctx.moveTo(...at(...a)); ctx.lineTo(...at(...z)); }; ctx.strokeStyle = COL.rb; ctx.lineWidth = P.width.guide; ctx.setLineDash(P.dash.guide); ctx.beginPath();
+    for (const b of things()) if (b.kind === 'bld' && b.side === ME && !ECON.wallish(b)) { const mi = b.i + b.n * P.half, mj = b.j + b.n * P.half, pad = P.pad + (n + b.n) * P.half; if (Math.abs(mi - ci) >= P.guide || Math.abs(mj - cj) >= P.guide) continue;
+      if (mi === ci) seg([ci, Math.min(mj, cj) - pad], [ci, Math.max(mj, cj) + pad]); if (mj === cj) seg([Math.min(mi, ci) - pad, cj], [Math.max(mi, ci) + pad, cj]); }
+    ctx.stroke(); ctx.globalAlpha = P.ghost; FK.blit(tinted(FK.bldSprite(g.code, SIDES[ME].col, s), g.ok ? COL.rg : COL.rr), ...at(ci, cj), s); }
+  ctx.restore(); });
 // E207
+function suggest(k) { const G = D.suggest, [bx, by] = FK.tileMid(k), [ki, kj] = ECON.at(k), R = G.r * D.tile, sc = {}, far = (t) => Math.hypot(t.bx - bx, t.by - by), add = (c, v) => { if (c && D.cost[c] && !ECON.capWhy(ME, c)) sc[c] = (sc[c] || 0) + v; }; // E343
+  const bought = (cap) => FK.ticked(cap).filter((c) => D.cost[c] && !FK.ticked('Seat').includes(c)), camp = (y) => bought('Drop-off').find((c) => FK.SH[c].drop.includes(y)), [house] = bought('House'), [wall] = bought('Line'), [gate] = bought('Gate'), [field] = bought('Field');
+  const mine = things().filter((t) => t.kind === 'bld' && t.side === ME && far(t) < R), near = (y) => mine.some((t) => !FK.has(t, 'Seat') && (FK.SH[t.code].drop || []).includes(y));
+  new Set(things().filter((t) => t.kind !== 'bld' && t.amount > 0 && far(t) < R * G.near).filter((t) => { const d = FK.dropFor({ bx: t.bx, by: t.by, side: ME }, ECON.yieldOf(t)); return !d || Math.hypot(d.bx - t.bx, d.by - t.by) > G.dropR * D.tile; }).map((t) => camp(ECON.yieldOf(t)))).forEach((c) => add(c, G.drop));
+  for (const b of mine) add(FK.has(b, 'House') ? house : FK.has(b, 'Field') ? (near('food') ? field : camp('food')) : FK.has(b, 'Spawn') ? bought('Spawn').find((c) => !count(c)) || b.code : FK.has(b, 'Line') ? gate : null, FK.has(b, 'Seat') ? G.keep : G.kin);
+  const disc = []; for (let j = kj - G.area; j <= kj + G.area; j++) for (let i = ki - G.area; i <= ki + G.area; i++) if (Math.hypot(i - ki, j - kj) <= G.area) disc.push(j * N + i);
+  const solid = disc.filter((q) => !FK.walkable(q)).length / disc.length; if (solid > G.choke.lo && solid < G.choke.hi && FK.walkable(k)) add(mine.some((t) => FK.has(t, 'Line')) ? gate : wall, G.chokeW);
+  if (ECON.popCap(ME) - ECON.popOf(ME) <= G.room) add(house, G.short);
+  const [best] = Object.keys(sc).sort((a, b) => sc[b] - sc[a]); return best || null; }
 const under = (k) => things().find((t) => t.kind === 'bld' ? k % N >= t.i && k % N < t.i + t.n && Math.floor(k / N) >= t.j && Math.floor(k / N) < t.j + t.n : t.k === k && !t.deep);
 FK.on('tap', (k, mine, px, py) => {
-  if (S.ghost) { ghostTo(px, py); return true; }
-  if (S.arming) { if (k < 0) return true; S.target = k; S.arming = false; if (WAR.armyOf(0).length) WAR.attack(0, k); toast('Attacking'); render(true); return true; }
-  let other = null; for (const u of units()) if (u.side !== 0 && FK.inSight(u.k)) { const [x, y] = FK.toScreen(u.vx, u.vy), d = Math.hypot(x - px, y - py + 8 * FK.cam.z); if (d < 16 && (!other || d < other[1])) other = [u, d]; }
+  if (S.ghost) { if (!line(S.ghost.code)) ghostTo(px, py); else if (k >= 0) { S.ghost.pts.push(wallSnap(S.ghost.pts.at(-1), k)); wallSet(S.ghost); render(true); } return true; }
+  if (S.arming) { if (k < 0) return true; S.target = k; S.arming = false; if (WAR.armyOf(ME).length) WAR.attack(ME, k); toast('Attacking'); render(true); return true; }
+  const hint = S.tab === 'Build' && !mine && k >= 0 && !under(k) && suggest(k); // E341
+  if (hint) { S.group = Object.keys(GROUPS).find((g) => GROUPS[g].includes(hint)); VERBS.pick.run(hint); if (line(hint)) { S.ghost.pts.push(k); wallSet(S.ghost); } else ghostTo(px, py, P.start); render(true); return true; }
+  let other = null; for (const u of units()) if (u.side !== ME && FK.inSight(u.k)) { const [x, y] = FK.toScreen(u.vx, u.vy), d = Math.hypot(x - px, y - py + 8 * FK.cam.z); if (d < 16 && (!other || d < other[1])) other = [u, d]; }
   const sel = FK.sel(), t = mine || (other && other[0]) || (k >= 0 && FK.inSight(k) ? under(k) : null);
   if (mine) { FK.select(mine); FK.fire('event', 'pick', mine); S.subject = mine; render(true); return true; }
   if (t && t.kind === 'unit') { if (isSoldier(sel) && WAR.enemies(sel, t)) { WAR.fight(sel, t); return true; } if (isVil(sel) && t.side < 0 && FK.has(t, 'Prey')) { toast('Hunting is not built yet'); } S.subject = t; render(true); return true; }
@@ -249,11 +287,13 @@ FK.on('tap', (k, mine, px, py) => {
   if (!sel) S.subject = null; else if (isSoldier(sel) && k >= 0 && FK.walkable(k)) { WAR.march(sel, k); return true; }
   render(true); return false;
 });
-FK.on('tick', (dt) => { acc += dt / (show.fast ? D.fast : 1); if (S.toastT > 0) { S.toastT -= dt / (show.fast ? D.fast : 1); if (S.toastT <= 0) toastEl.style.opacity = 0; } if (acc >= D.beatUi) { acc = 0; render(); } });
+FK.on('event', (e) => { if (e === 'short') toast('Not enough to pay for repairs'); });
+FK.on('tick', (dt) => { const real = dt / (show.fast ? D.fast : 1); if (edge && drag && S.ghost) { const [w, h] = FK.size(), vx = (edge.x > w - P.edge) - (edge.x < P.edge), vy = (edge.y > h - P.edge) - (edge.y < P.edge), f = (P.scroll * real) / FK.cam.z; if (vx || vy) { FK.cam.x += vx * f; FK.cam.y += vy * f; FK.keepOn(); ghostTo(edge.x, edge.y - drag.lift); } } // E342
+  acc += real; if (S.toastT > 0) { S.toastT -= real; if (S.toastT <= 0) toastEl.style.opacity = 0; } if (acc >= D.beatUi) { acc = 0; render(); } });
 // E208
 let PANEL = 0; function sizePanel() { const el = $('panel'), keep = S.tab; PANEL = 0; let h = 0; const keepH = S.htab; for (const t of Object.keys(SCREENS)) if (!tall(t)) for (const g of t === 'Build' ? Object.keys(GROUPS) : [S.group]) { const kg = S.group; S.tab = t; S.group = g; render(true); h = Math.max(h, el.offsetHeight); S.group = kg; } S.htab = keepH; PANEL = h; S.tab = keep; render(true); } // E209
 addEventListener('resize', sizePanel); let sized = false; // E210
-FK.on('start', () => { if (!sized) { sized = true; (document.fonts ? document.fonts.ready : Promise.resolve()).then(sizePanel); } S.subject = null; S.ghost = null; S.arming = false; S.target = null; S.last = ''; const h = FK.seatOf(0); if (h) { const [cw] = FK.size(); FK.cam.x = h.vx; FK.cam.y = h.vy; FK.cam.z = (cw * D.openShare) / (h.n * D.tile); FK.keepOn(); } render(true); }); // E211
+FK.on('start', () => { if (!sized) { sized = true; (document.fonts ? document.fonts.ready : Promise.resolve()).then(sizePanel); } S.subject = null; S.ghost = null; S.arming = false; S.target = null; S.last = ''; const h = FK.seatOf(ME); if (h) { const [cw] = FK.size(); FK.cam.x = h.vx; FK.cam.y = h.vy; FK.cam.z = (cw * D.openShare) / (h.n * D.tile); FK.keepOn(); } render(true); }); // E211
 $('ver').textContent = 'v' + D.version; document.title = 'First Keep v' + D.version; // E212
 return { read, act, VERBS, S, render, SCR, fmt, plural, some, orList, slowPct, coord, ledgerLine };
 })();

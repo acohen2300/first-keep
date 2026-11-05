@@ -58,5 +58,6 @@ FK.on('draw', (ctx, s) => { if (!FK.show.U) return; const [cw, ch] = FK.size();
   for (const t of things()) if (t.kind === 'bld' && t.hp != null && t.hp < t.hpMax && t.done >= 1 && (t.side === 0 || FK.inSight(t.k ?? FK.tileAt(t.bx, t.by)))) { const [x, y] = FK.toScreen(t.vx, t.vy); if (x > -40 && x < cw + 40 && y > -40 && y < ch + 40) bar(x, y - (t.n * 12 + 20) * s, t.n * 10 * s, t.hp / t.hpMax, SIDES[t.side].col); }
   const w = waves[0]; if (w) { const [bx, by] = FK.tileMid(w.k), [vx, vy] = FK.toView(bx, by, Math.max(0, FK.H[w.k])), [x, y] = FK.toScreen(vx, vy); ctx.strokeStyle = '#ff6b5b'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(x, y, 14 * s, 7 * s, 0, 0, 7); ctx.moveTo(x - 20 * s, y); ctx.lineTo(x + 20 * s, y); ctx.moveTo(x, y - 10 * s); ctx.lineTo(x, y + 10 * s); ctx.stroke(); }
 });
+FK.on('shut', (side, u) => !u || isFoe(side, u)); // E329
 return { attack, recall, fight, march, hit, damage, die, armyOf, power, odds, waves, armed, enemies, isFoe, groupOf, stance, treaty, atWar, friendly, hpMax, stat };
 })();

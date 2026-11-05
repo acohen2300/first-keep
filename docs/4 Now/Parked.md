@@ -268,3 +268,18 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - Waiting: the hold-and-drag box over trees and its card (boxCut's order is in econ.js), the Send out button on a field's card (sendOut is in econ.js), the idle reading (SN6) and the 'Every bush is full: one waits at the mill' notice: each with its screen, from a mock-up.
 - Waiting: the Guide row 'Trees stand in the way' (words TRIGGERS), with the Guide.
 - Added, not Mid's: two who meet part with half as much again to each one's right (D196 pass, QCJ; pedestrians' side preference, N167), so two walkers head-on never stall; a walker pushed off its way takes the next point within a pace (Mid's own arrival within SPACE when pushed). Albert to confirm.
+
+- F14 (Nov 5, 15:02): Albert said yes to the three crowd rules that are not Mid's: keep right head-on, arrived within a pace when pushed, at a building within its ring plus a pace. They are no longer waiting.
+
+## Frankenstein F15 · builders, repair, limits, placing, walls as lines (Nov 5, Albert 11:40)
+- Waiting: walls joined into one run (Mid's WALL_KEYS, wkey, wallKeys: the inner faces between neighbouring pieces left out). It is art in the building-art floor; v100 draws each piece as a whole-tile block, so a run shows its seams. With the building art.
+- Waiting: the Guide rows 'Limits', 'You build', 'You raze a building', 'A building of yours is damaged: tap it, then Repair', 'A building is placed' and 'A wall or building stands in the way' (words TRIGGERS). The rules are in; the rows come with the Guide.
+- Waiting, each with its feature: fighting fires (repairTick's firemen, with fire), Midwives' second villager in the line (with the training line's own timers), the spy-watch tower (with spies), sheltered men's arrows from a tower (with Shelter), worn ground under a new building, the Wonder's clock, a new flock's wool (bldTick and built).
+- Waiting: a trade post only on a trade stop, a dock only by a lake (canPlace). Neither is priced in v100 yet.
+- Not Mid's, following v100's own earlier decisions (kept; nothing waits on Albert):
+  - The Palisade (BW4) is laid as a line, like the Wall. This follows the v100 dictionary (BW1, BW2, BW4 laid as lines) and the plan. In Mid it was a war-camp piece placed one at a time.
+  - Frost is read as v100's air at or under 0 °C (D205). v100's climate works by temperature; Mid had a frost weather state.
+  - A gate shuts to whoever its owner counts a foe, by v100's one hostility test (isFoe, so beasts too), and opens to the rest. A walk with no walker named (the seal) treats it as shut.
+  - The suggestion opens on a tap on open ground while the Build page is open, since v100's screen has no hammer button.
+- Prices are Mid's (the coordinator, by Albert's 10:31 rule: costs meet no v100 call). D123 holds Mid's BLD and UNIT costs for every priced shell: a second Town Center is Mid's town, and each unit is the Mid kind it wears. One effect: Mid's Palisade costs nothing.
+- Test fixture: F14's t-gather now lays its mill as the map lays a building (flat, free ground) and no longer uses the player's placing rule. Under Mid's rule the mill keeps two squares from every find, so it stood farther away. With the mill at that farther spot, v100's five minutes of food came to 2,049 against Mid's 2,098 (2.4%, past the 2%). Longer walks lose more to pushes. Noted for the walk's review.

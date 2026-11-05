@@ -1258,12 +1258,12 @@
      "the history card for Tower (BW3) (Mid: Watchtower), with its building"
     ],
     "wall": [
-     "bring",
-     "the history card for Wall (BW1), with its building"
+     "in v100",
+     "F15: Words book J7 (why), by its key"
     ],
     "gate": [
-     "bring",
-     "the history card for Gate (BW2), with its building"
+     "in v100",
+     "F15: Words book J7 (why), by its key"
     ],
     "wonder": [
      "bring",
@@ -1845,7 +1845,7 @@
     ],
     "Limits": [
      "bring",
-     "each building's limit grows with the age, with build limits"
+     "each building's limit grows with the age, with build limits; F15: the rule is in, its Guide row waits for the Guide (Parked)"
     ],
     "The War Council ladder": [
      "bring",
@@ -1861,7 +1861,7 @@
     ],
     "You build": [
      "bring",
-     "placing a building: Mid snaps two squares apart and replants tree farms; v100's ghost (menu.js pick) is the base"
+     "placing a building: Mid snaps two squares apart and replants tree farms; v100's ghost (menu.js pick) is the base; F15: the rule is in, its Guide row waits for the Guide (Parked)"
     ],
     "Everyone eats": [
      "bring",
@@ -1877,7 +1877,7 @@
     ],
     "You raze a building": [
      "bring",
-     "razing refunds half (all if cancelled early); v100 has Demolish and Cancel site (menu.js scrap), the refund rule comes"
+     "razing refunds half (all if cancelled early); v100 has Demolish and Cancel site (menu.js scrap), the refund rule comes; F15: the rule is in, its Guide row waits for the Guide (Parked)"
     ],
     "Soldiers destroy a building": [
      "bring",
@@ -1997,7 +1997,7 @@
     ],
     "A building of yours is damaged: tap it, then Repair": [
      "bring",
-     "repair costs and time; v100 has the Repair button (menu.js raise), the rule comes"
+     "repair costs and time; v100 has the Repair button (menu.js raise), the rule comes; F15: the rule is in, its Guide row waits for the Guide (Parked)"
     ],
     "Soldiers come within ${SHELTER.flee} of a villager": [
      "bring",
@@ -2093,7 +2093,7 @@
     ],
     "A building is placed": [
      "bring",
-     "a site and its builders; v100's Build sends a villager (menu.js build), the rule comes"
+     "a site and its builders; v100's Build sends a villager (menu.js build), the rule comes; F15: the rule is in, its Guide row waits for the Guide (Parked)"
     ],
     "Fog of war": [
      "bring",
@@ -2101,7 +2101,7 @@
     ],
     "A wall or building stands in the way": [
      "bring",
-     "walking round walls, with walking"
+     "walking round walls, with walking; F15: the rule is in, its Guide row waits for the Guide (Parked)"
     ],
     "The game saves itself": [
      "bring",
