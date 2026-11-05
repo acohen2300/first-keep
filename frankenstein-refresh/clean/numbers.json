@@ -1,0 +1,945 @@
+{
+ "about": "Step 6, temp book staging/numbers.js (Mid's 01, 02, 03, 05, 06 rules files): every piece, and what becomes of it. in v100: already home (a difference in value is noted for Albert's call at step 7). bring: Mid has it, v100 does not; it comes in as book entries and laws with its feature. cut: v100 does it another way; logged in Parked.md when Albert agrees. The big tables (UNIT, BLD) carry a line per row.",
+ "pieces": {
+  "BUILD": [
+   "cut",
+   "the build number: v100's one home is D171 version"
+  ],
+  "BUILD_NAME": [
+   "cut",
+   "the version's name: D171"
+  ],
+  "SQUARE": [
+   "in v100",
+   "D2 board 2160, D1 site 3060 (the same); DT is D98 fps 30"
+  ],
+  "BN": [
+   "bring",
+   "the three squads' names (Alpha, Bravo, Charlie): with squads (War)"
+  ],
+  "CLS": [
+   "in v100",
+   "the four soldier classes and their buildings: shells UM1 Foot, UM2 Archers, UM3 Riders, UM4 Engines, trained per D133"
+  ],
+  "POPMAX": [
+   "bring",
+   "POPMAX 180 is D128 popMax, but v100 has 200 (differs, Albert's call); ARMYMAX 120, BNSIZE 40, SHARE_FALLEN 0.5 to bring with the army and the fallen side"
+  ],
+  "RICH": [
+   "bring",
+   "CARRY 10 is D87 (same); NAVC 10 is D12 tile (same); FOOT 2.65 units a foot is cut: v100's scale is D85, 11.7 units a metre (3.57 a foot, Albert's real-walking call); RICH 2.5 and PLUNDER 0.25 to bring"
+  ],
+  "LAKE0": [
+   "bring",
+   "the great lake round the Throne's island, radius 170, at the middle: v100 has the Throne (BS1) but no great lake"
+  ],
+  "SEASON_LEN": [
+   "bring",
+   "season 180, year, day 120 are D21, D22, D20 (the same); night sight 0.6 and the moon's 29.53-day month (Meeus) to bring"
+  ],
+  "EASY_SAFE": [
+   "bring",
+   "Easy's first six minutes without a raid; the save every 10 s goes with Saving"
+  ],
+  "DIFF": [
+   "bring",
+   "difficulty turns the computers' minds, never their stores: react, bold, opp, allyAt, gang, envoy"
+  ],
+  "DIFK": [
+   "bring",
+   "with DIFF"
+  ],
+  "ZOOM_MAX": [
+   "in v100",
+   "the camera: VIEW.angle 15 is A1; TILT 0.55 is replaced by A2's 41° rise (Albert's call, squash 0.66); the opening zoom is law QBW; RIM is the coast (D16, D19); zoom-out limit and map label sizes to check at step 7"
+  ],
+  "worldXY": [
+   "cut",
+   "Mid's land and world frames: v100 has its own (toView, toBoard, fromBoard) turned by A1"
+  ],
+  "landXY": [
+   "cut",
+   "as worldXY"
+  ],
+  "landAt": [
+   "cut",
+   "as worldXY"
+  ],
+  "inLand": [
+   "cut",
+   "as worldXY: v100 asks walkable() and its board"
+  ],
+  "FOG": [
+   "in v100",
+   "the fog of war: v100's floor 7 by tile (D117-D119)"
+  ],
+  "WILD": [
+   "cut",
+   "the fifth side's number: v100 tells the wild by its shells (layer and ticks)"
+  ],
+  "RESOURCES": [
+   "in v100",
+   "the five stores: v100's yields, their colours in the Colours book, drop-offs by tick; Mid's short keys (f, w, s, g, i) are not needed"
+  ],
+  "REL_WORD": [
+   "bring",
+   "Foe, Neutral, Friend: with relations"
+  ],
+  "CORNER": [
+   "in v100",
+   "the four homes the same distance from the middle: v100 places them on its board; Mid's 753 to compare at step 7"
+  ],
+  "KEEP_W": [
+   "in v100",
+   "as CORNER"
+  ],
+  "KEEP_OFF": [
+   "cut",
+   "a correction for Mid's snapping at 45°: not needed"
+  ],
+  "PLAYERS": [
+   "bring",
+   "four computers with personalities (Raiders, Rivals, Fortress) and the Natives: v100 has two sides (D122)"
+  ],
+  "FORT": [
+   "bring",
+   "with PLAYERS"
+  ],
+  "AGES": [
+   "bring",
+   "six ages with their own prices and times, the last hidden behind a year of peace: v100 has six names (D130: Camp, Village, Town, City, Kingdom, Empire; Mid: Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment) and one price (D129). Names differ: Albert's call"
+  ],
+  "SEASONS": [
+   "bring",
+   "each season's walking speed, farm yield and tint: v100 has the seasons' temperatures (D100) only"
+  ],
+  "CAMP": [
+   "bring",
+   "the camp wagon's camp: building share, tents, healing, supply"
+  ],
+  "UNIT": [
+   "bring",
+   "44 kinds; v100's shells hold 27 of them as 15 (soldiers by class); 17 to bring. Rows below",
+   {
+    "vil": [
+     "in v100",
+     "Villager → Villager; train Mid 8 v100 25"
+    ],
+    "scout": [
+     "in v100",
+     "Scout → Scout; train Mid 12 v100 30"
+    ],
+    "envoy": [
+     "bring",
+     "Emissary"
+    ],
+    "outpostcart": [
+     "bring",
+     "Outpost wagon"
+    ],
+    "campcart": [
+     "in v100",
+     "Camp wagon → Camp wagon"
+    ],
+    "caravan": [
+     "in v100",
+     "Caravan → Caravan"
+    ],
+    "spy": [
+     "in v100",
+     "Spy → Spy"
+    ],
+    "priest": [
+     "in v100",
+     "Priest → Priest"
+    ],
+    "medic": [
+     "in v100",
+     "Medic → Medic"
+    ],
+    "spear": [
+     "in v100",
+     "Spearman → Foot; hp Mid 60 v100 45; train Mid 10 v100 21"
+    ],
+    "sword": [
+     "in v100",
+     "Swordsman → Foot; hp Mid 70 v100 45; train Mid 12 v100 21"
+    ],
+    "archer": [
+     "in v100",
+     "Archer → Archers; train Mid 10 v100 35"
+    ],
+    "jav": [
+     "in v100",
+     "Javelineer → Archers; hp Mid 40 v100 30; train Mid 9 v100 35"
+    ],
+    "crossbow": [
+     "in v100",
+     "Crossbowman → Archers; hp Mid 35 v100 30; train Mid 12 v100 35"
+    ],
+    "chariot": [
+     "in v100",
+     "Chariot → Riders; hp Mid 70 v100 100; train Mid 12 v100 30"
+    ],
+    "cata": [
+     "in v100",
+     "Cataphract → Riders; hp Mid 120 v100 100; train Mid 16 v100 30"
+    ],
+    "harcher": [
+     "in v100",
+     "Horse archer → Riders; hp Mid 55 v100 100; train Mid 14 v100 30"
+    ],
+    "elephant": [
+     "in v100",
+     "War elephant → Riders; hp Mid 260 v100 100; train Mid 28 v100 30"
+    ],
+    "ram": [
+     "in v100",
+     "Ram → Engines; hp Mid 200 v100 175; train Mid 20 v100 36"
+    ],
+    "stower": [
+     "in v100",
+     "Siege tower → Engines; hp Mid 260 v100 175; train Mid 24 v100 36"
+    ],
+    "catapult": [
+     "in v100",
+     "Catapult → Engines"
+    ],
+    "bombard": [
+     "in v100",
+     "Bombard → Engines"
+    ],
+    "ballista": [
+     "in v100",
+     "Ballista → Engines"
+    ],
+    "arquebus": [
+     "in v100",
+     "Arquebusier → Archers; hp Mid 40 v100 30; train Mid 14 v100 35"
+    ],
+    "treb": [
+     "in v100",
+     "Trebuchet → Engines"
+    ],
+    "rebel": [
+     "bring",
+     "Rebel"
+    ],
+    "deer": [
+     "in v100",
+     "Deer → Deer; hp Mid 30 v100 20"
+    ],
+    "boar": [
+     "bring",
+     "Boar"
+    ],
+    "wolf": [
+     "in v100",
+     "Wolf → Wolf; hp Mid 45 v100 40"
+    ],
+    "bear": [
+     "in v100",
+     "Bear → Bear"
+    ],
+    "bandit": [
+     "in v100",
+     "Bandit → Outlaws"
+    ],
+    "robber": [
+     "in v100",
+     "Robber → Robbers"
+    ],
+    "wayfarer": [
+     "in v100",
+     "Wayfarer → Wayfarers"
+    ],
+    "wagon": [
+     "bring",
+     "Wagon train"
+    ],
+    "bison": [
+     "bring",
+     "Bison"
+    ],
+    "performer": [
+     "bring",
+     "Performer"
+    ],
+    "vagabond": [
+     "in v100",
+     "Vagabond → Vagabonds"
+    ],
+    "direwolf": [
+     "bring",
+     "Dire wolf"
+    ],
+    "goblin": [
+     "bring",
+     "Goblin"
+    ],
+    "skeleton": [
+     "bring",
+     "Skeleton"
+    ],
+    "troll": [
+     "bring",
+     "Troll"
+    ],
+    "native": [
+     "bring",
+     "Warrior"
+    ],
+    "nativebow": [
+     "bring",
+     "Bowman"
+    ],
+    "dragon": [
+     "bring",
+     "Dragon"
+    ]
+   }
+  ],
+  "hasTag": [
+   "cut",
+   "asks by tag: v100 asks by tick (has)"
+  ],
+  "GOODS": [
+   "bring",
+   "the goods (wool, cloth, spice and the rest): the economy's depth"
+  ],
+  "GOODK": [
+   "bring",
+   "with GOODS"
+  ],
+  "LOAD": [
+   "bring",
+   "a caravan's load and the wares: with trade"
+  ],
+  "UPKEEP": [
+   "bring",
+   "food per person by kind (foot, mounted, cart) and hunger: v100 has one rate (D131); Albert's call"
+  ],
+  "TAX": [
+   "bring",
+   "with vassals"
+  ],
+  "VASSAL": [
+   "bring",
+   "vassals: tax, loyalty, unrest, rebellion"
+  ],
+  "VENTURE": [
+   "bring",
+   "trade ventures"
+  ],
+  "SPOIL": [
+   "bring",
+   "food spoils, 5% a year"
+  ],
+  "PRICE": [
+   "bring",
+   "the Market's prices"
+  ],
+  "BLD": [
+   "bring",
+   "51 kinds: 47 are v100 shells (some with numbers, most without), 4 traps to bring (pit, net, stakes, caltrops). Where both have numbers they differ widely (rows below): Albert's call",
+   {
+    "keep": [
+     "in v100",
+     "Town Center → Town Center; cost Mid {} v100 {'wood': 275, 'stone': 100}; build time Mid None v100 150"
+    ],
+    "house": [
+     "in v100",
+     "House → Home; cost Mid {'wood': 30} v100 {'wood': 25}; build time Mid 12 v100 25; hp Mid 200 v100 550"
+    ],
+    "farm": [
+     "in v100",
+     "Farm → Farm; build time Mid 10 v100 15; hp Mid 120 v100 480"
+    ],
+    "treefarm": [
+     "in v100",
+     "Tree farm → Tree farm"
+    ],
+    "mill": [
+     "in v100",
+     "Mill → Mill; cost Mid {'wood': 80} v100 {'wood': 100}; build time Mid 15 v100 35; hp Mid 250 v100 600"
+    ],
+    "store": [
+     "in v100",
+     "Store → Store"
+    ],
+    "lumber": [
+     "in v100",
+     "Lumber camp → Lumber camp; cost Mid {'wood': 80} v100 {'wood': 100}; build time Mid 15 v100 35; hp Mid 250 v100 600"
+    ],
+    "mining": [
+     "in v100",
+     "Mine → Mining camp; cost Mid {'wood': 80} v100 {'wood': 100}; build time Mid 15 v100 35; hp Mid 250 v100 600"
+    ],
+    "barracks": [
+     "in v100",
+     "Barracks → Barracks; cost Mid {'wood': 150} v100 {'wood': 175}; build time Mid 25 v100 50; hp Mid 450 v100 1200"
+    ],
+    "wall": [
+     "in v100",
+     "Wall → Wall; hp Mid 100 v100 1800"
+    ],
+    "pit": [
+     "bring",
+     "Pit"
+    ],
+    "net": [
+     "bring",
+     "Net"
+    ],
+    "stakes": [
+     "bring",
+     "Stakes"
+    ],
+    "caltrops": [
+     "bring",
+     "Caltrops"
+    ],
+    "gate": [
+     "in v100",
+     "Gate → Gate; cost Mid {'stone': 10, 'wood': 10} v100 {'stone': 30}; build time Mid 12 v100 70; hp Mid 150 v100 2750"
+    ],
+    "tower": [
+     "in v100",
+     "Watchtower → Tower; cost Mid {'stone': 100, 'wood': 40} v100 {'wood': 50, 'stone': 100}; build time Mid 25 v100 80; hp Mid 500 v100 1020"
+    ],
+    "range": [
+     "in v100",
+     "Archery range → Range; cost Mid {'wood': 150} v100 {'wood': 175}; build time Mid 25 v100 50; hp Mid 400 v100 1200"
+    ],
+    "stable": [
+     "in v100",
+     "Stable → Stable; build time Mid 25 v100 50; hp Mid 450 v100 1200"
+    ],
+    "smith": [
+     "in v100",
+     "Smithy → Smith"
+    ],
+    "market": [
+     "in v100",
+     "Market → Market"
+    ],
+    "school": [
+     "in v100",
+     "School → School"
+    ],
+    "temple": [
+     "in v100",
+     "Temple → Temple"
+    ],
+    "baths": [
+     "in v100",
+     "Baths → Baths"
+    ],
+    "theatre": [
+     "in v100",
+     "Theatre → Theatre"
+    ],
+    "tavern": [
+     "in v100",
+     "Tavern → Tavern"
+    ],
+    "courthouse": [
+     "in v100",
+     "Courthouse → Courthouse"
+    ],
+    "apartment": [
+     "in v100",
+     "Apartment → Apartment"
+    ],
+    "medtent": [
+     "in v100",
+     "Medical tent → Medical tent"
+    ],
+    "traintent": [
+     "in v100",
+     "Training tent → Training tent"
+    ],
+    "messtent": [
+     "in v100",
+     "Mess tent → Mess tent"
+    ],
+    "depot": [
+     "in v100",
+     "Supply depot → Depot"
+    ],
+    "camptower": [
+     "in v100",
+     "Camp tower → Camp tower"
+    ],
+    "abatis": [
+     "in v100",
+     "Abatis → Abatis"
+    ],
+    "palisade": [
+     "in v100",
+     "Palisade → Palisade; cost Mid {} v100 {'wood': 5}; build time Mid 6 v100 5; hp Mid 60 v100 250"
+    ],
+    "hospital": [
+     "in v100",
+     "Hospital → Hospital"
+    ],
+    "library": [
+     "in v100",
+     "Library → Library"
+    ],
+    "siege": [
+     "in v100",
+     "Siege workshop → Siege workshop; cost Mid {'wood': 250, 'stone': 100} v100 {'wood': 200, 'stone': 100}; build time Mid 30 v100 40; hp Mid 450 v100 1500"
+    ],
+    "aqueduct": [
+     "in v100",
+     "Aqueduct → Aqueduct"
+    ],
+    "dock": [
+     "in v100",
+     "Dock → Dock"
+    ],
+    "town": [
+     "in v100",
+     "Town Center → Town Center; cost Mid {'wood': 400, 'stone': 300, 'food': 200} v100 {'wood': 275, 'stone': 100}; build time Mid 60 v100 150; hp Mid 1800 v100 2400"
+    ],
+    "castle": [
+     "in v100",
+     "Castle → Castle"
+    ],
+    "pasture": [
+     "in v100",
+     "Pasture → Pasture"
+    ],
+    "council": [
+     "in v100",
+     "War Council → War Council"
+    ],
+    "tpost": [
+     "in v100",
+     "Trade post → Trade post"
+    ],
+    "workshop": [
+     "in v100",
+     "Workshop → Workshop"
+    ],
+    "mint": [
+     "in v100",
+     "Mint → Mint"
+    ],
+    "foundry": [
+     "in v100",
+     "Foundry → Foundry"
+    ],
+    "quarry": [
+     "in v100",
+     "Quarry → Quarry"
+    ],
+    "throne": [
+     "in v100",
+     "Throne → Throne"
+    ],
+    "hall": [
+     "in v100",
+     "Hall → Hall"
+    ],
+    "wonder": [
+     "in v100",
+     "Wonder → Wonder"
+    ]
+   }
+  ],
+  "WONDER_HOLD": [
+   "bring",
+   "hold a Wonder 8 minutes to win"
+  ],
+  "QUEUE": [
+   "in v100",
+   "a building's line: v100's mold is six (SN1, Albert's), Mid's five; Written records and Guilds lengthen it (with tech)"
+  ],
+  "MINT": [
+   "bring",
+   "debasing the coin"
+  ],
+  "NOTICE": [
+   "bring",
+   "30 s from declaring war to the first blow: with relations"
+  ],
+  "DEMAND": [
+   "bring",
+   "the Market's demand"
+  ],
+  "TRAINERS": [
+   "cut",
+   "which buildings train: v100's D133 trains says it once"
+  ],
+  "MENUS": [
+   "cut",
+   "Mid's Build menu lists: v100's Screen book (SN2, Albert's six tabs)"
+  ],
+  "FINDS": [
+   "bring",
+   "10 finds: treasure, ruins and cemetery are v100's MG4, MG1, MG2; robber camp, bear den, trade stop, shrine, vagabonds, mercenaries, fallen star to bring"
+  ],
+  "WAYFARER_EVERY": [
+   "bring",
+   "a wayfarer every 4 minutes"
+  ],
+  "WILD_LOOK": [
+   "bring",
+   "how far a beast or a guard looks from its home (140): v100 has aggro ranges (D144, D146) without a home"
+  ],
+  "REGARD": [
+   "bring",
+   "how each side regards the others"
+  ],
+  "GANG": [
+   "bring",
+   "the wild's bands by name: with the Natives and outlaws"
+  ],
+  "NATIVE": [
+   "bring",
+   "the Natives, the fifth side"
+  ],
+  "THRONE": [
+   "bring",
+   "holding the Throne: 15 minutes, tithe, score, the island and causeways"
+  ],
+  "WAVE": [
+   "bring",
+   "attack waves"
+  ],
+  "PERS": [
+   "bring",
+   "the computers' three personalities"
+  ],
+  "TRADE": [
+   "bring",
+   "trade runs: pay by distance², sell and buy prices"
+  ],
+  "ZEAL": [
+   "bring",
+   "zeal (religion)"
+  ],
+  "SAB": [
+   "bring",
+   "sabotage"
+  ],
+  "FLANK": [
+   "in v100",
+   "a blow from behind 30% harder: D141 (the same)"
+  ],
+  "FLANKING": [
+   "bring",
+   "flank cover and lines"
+  ],
+  "MORALE": [
+   "bring",
+   "nerve and breaking: v100 has the break at 30% (D142) and shock (D167, law QBS)"
+  ],
+  "CHARGE": [
+   "bring",
+   "the charge"
+  ],
+  "ORDER": [
+   "bring",
+   "orders keep their temper"
+  ],
+  "SCALE": [
+   "bring",
+   "fields and workshops grow with use, 5% a step"
+  ],
+  "CALTROPS": [
+   "bring",
+   "with the traps"
+  ],
+  "STAKES": [
+   "bring",
+   "with the traps"
+  ],
+  "FORMING": [
+   "bring",
+   "forming up"
+  ],
+  "JUICE": [
+   "cut",
+   "shove, jolt, recoil, stagger by hand: v100 does these with real physics (impact, slide, sway: laws QBT, QBS; D166 jolt)"
+  ],
+  "CLIMATE": [
+   "bring",
+   "temperature, wetness, the sky's run: v100 has a climate (D99-D108); Mid's 51 lines to compare at step 7"
+  ],
+  "FIRE": [
+   "bring",
+   "fire spreading"
+  ],
+  "FIREARMS": [
+   "bring",
+   "burning shot"
+  ],
+  "SOUND": [
+   "in v100",
+   "the ear (HX1, law QAX); Mid's metre is v100's D85"
+  ],
+  "BEAT": [
+   "bring",
+   "how often slow things, health and the Natives think"
+  ],
+  "YARD": [
+   "bring",
+   "a soldier at home fights within 320 of its post"
+  ],
+  "GARRISON": [
+   "bring",
+   "resting soldiers heal"
+  ],
+  "TEACH": [
+   "bring",
+   "a soldier learns a newer kind at the School"
+  ],
+  "TEACH_TO": [
+   "bring",
+   "with TEACH"
+  ],
+  "FALLBACK": [
+   "bring",
+   "fall back in order"
+  ],
+  "PRISON": [
+   "bring",
+   "prisoners and ransom"
+  ],
+  "CONVERT": [
+   "bring",
+   "a priest turns an enemy"
+  ],
+  "BUILDER_POW": [
+   "in v100",
+   "a crew of n builds n^0.7 as fast: D126 crew 0.7 (the same, Thomas & Smith)"
+  ],
+  "FORM": [
+   "bring",
+   "formations"
+  ],
+  "CHOKE": [
+   "bring",
+   "the choke"
+  ],
+  "AMBUSH": [
+   "bring",
+   "the ambush"
+  ],
+  "COLUMN": [
+   "bring",
+   "the column"
+  ],
+  "GRID": [
+   "bring",
+   "an army stands in a grid"
+  ],
+  "DOCKR": [
+   "bring",
+   "fish only near a dock"
+  ],
+  "KITE": [
+   "bring",
+   "a shooter steps back while it reloads"
+  ],
+  "TEMPER": [
+   "bring",
+   "a squad's temper: hold, guard, press"
+  ],
+  "T_HOLD": [
+   "bring",
+   "with TEMPER"
+  ],
+  "SHELTER": [
+   "bring",
+   "villagers run for shelter"
+  ],
+  "LOOKOUT": [
+   "bring",
+   "a building sees 60 + 24 × √height (the horizon grows with the square root of height): real math where v100 gives every building 100 (D117); Albert's call"
+  ],
+  "WORK_R": [
+   "bring",
+   "how near a worker stands to work"
+  ],
+  "SPACE": [
+   "bring",
+   "how far apart people stand"
+  ],
+  "DANGER_R": [
+   "bring",
+   "gatherers keep away from danger"
+  ],
+  "DIRECT": [
+   "bring",
+   "the War Director's orders"
+  ],
+  "TOAST": [
+   "in v100",
+   "a message's time on screen: D163 (one length; Mid has three)"
+  ],
+  "SCORE": [
+   "in v100",
+   "D135 score (the same)"
+  ],
+  "FERT": [
+   "bring",
+   "soil wears and rests"
+  ],
+  "HARVEST": [
+   "bring",
+   "the year's harvest"
+  ],
+  "WEATHER": [
+   "bring",
+   "weather each minute: v100 has its own chain (D102, D103); compare at step 7"
+  ],
+  "WX_EVERY": [
+   "bring",
+   "with WEATHER"
+  ],
+  "HAZARDS": [
+   "bring",
+   "the Challenge's hazards"
+  ],
+  "HZK": [
+   "bring",
+   "with HAZARDS"
+  ],
+  "STARVE": [
+   "bring",
+   "starving, Hard, the horde"
+  ],
+  "TELL": [
+   "bring",
+   "how news reaches you"
+  ],
+  "UI_BUDGET": [
+   "bring",
+   "no more than 33 buttons always on screen: a rule for the gate"
+  ],
+  "SAVE": [
+   "bring",
+   "a computer saving for an age"
+  ],
+  "EV_MEAN": [
+   "bring",
+   "the wait between events"
+  ],
+  "EVENTS": [
+   "bring",
+   "the events"
+  ],
+  "EVK": [
+   "bring",
+   "with EVENTS"
+  ],
+  "PLACES": [
+   "bring",
+   "trade stops, the scouts' marks, where the first people stand"
+  ],
+  "cross": [
+   "bring",
+   "the trade routes"
+  ],
+  "ROUTES_L": [
+   "bring",
+   "the trade routes"
+  ],
+  "POST": [
+   "bring",
+   "trade posts on the routes"
+  ],
+  "HEALTH": [
+   "bring",
+   "sickness"
+  ],
+  "MKT_SELL": [
+   "bring",
+   "the Market's goods"
+  ],
+  "MKTK": [
+   "bring",
+   "with MKT_SELL"
+  ],
+  "RATE_OF": [
+   "bring",
+   "gathering a second: bush, tree, gold, stone are D88 (check the same at step 7); fish and meat to bring"
+  ],
+  "FIND_SIZE": [
+   "in v100",
+   "a find's size: v100's sizes (D8-D11) and room (D169)"
+  ],
+  "LAND": [
+   "bring",
+   "four kinds of land (fertile, timber, stony, gold country), each richer in one store"
+  ],
+  "LANDK": [
+   "bring",
+   "with LAND"
+  ],
+  "CLEAR": [
+   "bring",
+   "no water within 360 of a Town Center"
+  ],
+  "LANE": [
+   "in v100",
+   "the lanes kept clear: D46"
+  ],
+  "HOME": [
+   "bring",
+   "the home finds' walk (the first bush at 150, v70's great map)"
+  ],
+  "WALL_R": [
+   "bring",
+   "the wall ring round a home"
+  ],
+  "REACH": [
+   "bring",
+   "with WALL_R"
+  ],
+  "SEARCH": [
+   "bring",
+   "a lost worker's look grows over 20 s (Albert's B, Nov 4)"
+  ],
+  "searchR": [
+   "bring",
+   "with SEARCH"
+  ],
+  "BACK_MARGIN": [
+   "bring",
+   "the room behind a home"
+  ],
+  "WATER": [
+   "bring",
+   "lakes with fractal shores (Mandelbrot), rivers whose width grows with √flow (Leopold), fords, fish: v100 lays its own water (D24-D35); Mid's laws to compare at step 7"
+  ],
+  "START_VILS": [
+   "in v100",
+   "the first people: D67, but v100 has 6 and Mid 3 (differs, Albert's call)"
+  ],
+  "START_RES": [
+   "in v100",
+   "D172 start (the same: 200 each, no iron)"
+  ],
+  "HANDICAP": [
+   "bring",
+   "Easy's head start"
+  ],
+  "SCENARIOS": [
+   "bring",
+   "the scenarios (Open, Siege, Silk Road, Last Keep): the Start page shows them, not built"
+  ],
+  "RES": [
+   "in v100",
+   "the stores' list, KEY and LONG (Mid's short keys): v100's yields by name"
+  ],
+  "JOBS": [
+   "in v100",
+   "a job for each store: v100's Gather tick and its yield"
+  ]
+ }
+}
