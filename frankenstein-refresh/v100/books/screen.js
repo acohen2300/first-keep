@@ -1,0 +1,14 @@
+// Book · SN Screen: the menus as shells. One mold, a row of six slots; a cell takes half a slot, one or two. A page is a shell: it ticks Tall to keep its own height,
+// else every page shares the tallest of the rest. On a card the subject's ticks pick the rows, in the order here. Every cell points at the books (its name in Shells, its price in D, its icon in Sprites). Edit here only.
+BOOK("screen", {
+ "SN1": {"key":"mold","value":{"slots":6,"slot":44,"gap":6},"name":"the mold: six slots a row, a slot 44 tall (Apple's least touch target), gaps and edges 6","cite":["Design: Albert, the Rank Ribbon (Oct 30) and the Formation"],"law":[]},
+ "SN2": {"key":"tabs","value":{"Home":["BTC1","BR1","BR2","BCR2","BP4","BP6","BP7"],"Land":["BCL1","BI1","BCL2","BI3","BCT2","BI2","BCL3","BCL4","BI5"],"Trade":["BCR1","BCT1","BI6","BI4","BI7","BI8"],"War":["BM1","BM2","BM3","BM4","BI9","BP10","BTC2"],"Walls":["BW1","BW2","BW3","BW4","BF5"],"Culture":["BP1","BP2","BP3","BP5","BP8","BP9","BS2"]},"name":"the Build tabs: six, up to nine buildings each, three to a row (each cell two slots wide)","cite":["Design: Albert, Nov 5 07:13–07:15 (his Land list; six tabs of up to nine)"],"law":[]},
+ "SN3": {"key":"offmenu","value":["BS1","BTC5","BTC6","BTC7","BTC8"],"name":"buildings not on the Build menu: the Throne is the map's; the camp tents come with the camp wagon","cite":["Design: Albert, Nov 5 07:30"],"law":[]},
+ "SN4": {"key":"card","value":[["title",null],["health","Health"],["load","Gather"],["store","Yield"],["queue","Spawn"],["train","Spawn"],["tech","Research"],["acts",null]],"name":"a card's rows, in order: a row shows when the subject ticks what it names (none: always)","cite":["Design: Albert, Nov 5 07:30 (the Inspector precedent)"],"law":[]},
+ "SN5": {"key":"top","value":["food","wood","stone","gold","iron","mute","play","mail"],"name":"the top ribbon: the five stores, sound, play, mail","cite":["Design: Albert's Build 30 top bar"],"law":[]},
+ "SN6": {"key":"waiting","value":["season and time of day","the clock to the bell","people and room","idle villagers","records","rank","army"],"name":"readings with no row: the second top row was cut, each waits for its new home","cite":["Design: Albert, Nov 5 07:36"],"law":[]},
+ "SN10": {"key":"Start","value":{"ticks":["Tall"],"rows":"the new game's choices"},"name":"the Start page","cite":["Design: Albert, Nov 4 (the setup screen its own height)"],"law":[]},
+ "SN11": {"key":"Build","value":{"ticks":[],"rows":"title, the six tabs, the tab's grid"},"name":"the Build page","cite":["Design: Albert, Nov 5"],"law":[]},
+ "SN12": {"key":"Hall","value":{"ticks":["Tall"],"rows":"title, three tabs, the queue, train, tech"},"name":"the Town Center page","cite":["Design: Albert, Nov 5 07:34"],"law":[]},
+ "SN13": {"key":"Layers","value":{"ticks":[],"rows":"title, the layers, Fast and New"},"name":"the Yard","cite":["Design: v100 floor 8, Nov 5"],"law":[]}
+});

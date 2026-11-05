@@ -1,0 +1,523 @@
+// ═════ 06-rules-tuning.js: combat, morale, weather, hazards, events, routes, market and land numbers ═════
+const TRADE = { f: 80, w: 80, s: 110, i: 120 },
+	TRADE_CAP = 80,
+	TRADE_DIV = 16000,
+	SELL = 0.8,
+	BUY = 1.25; // TRADE_CAP, TRADE_DIV: an ally run pays distance² ÷ 16000, at most 80 gold
+const ZEAL = { cost: { g: 60 }, secs: 45, cd: 120, mul: 1.2 };
+const SAB = { burn: 0.6, stall: 40 };
+const FLANK = 1.3; // a blow from behind lands 30% harder
+// Where a blow comes from (Build 62, Albert: "a big group's orientation is random; that is not a flank"): a blow counts as from the side or
+// behind only when the man cannot turn to meet it (engaged with another, slipped, or broken) and no comrade stands between him and it
+// within cover (the line covers its own); the facing is the group's line (the mean facing within line), not the one figure's. The unit-level
+// facing of wargaming (the ancient line was turned only at its ends) rather than per-figure chance.
+const FLANKING = { cover: 30, line: 40 };
+// ───────────────────────── Combat you steer: nerve, flanks, charge and fall back, prisoners, conversion ─────────────────────────
+// Every soldier has nerve (0..1). Blows drain it by the share of health they take, times hit (a flank blow 1.5 times, a rear blow twice); being
+// outnumbered drains it; a loss beside it drains it by its share of the group (Dupuy's break point, Build 62: a force breaks when its losses reach
+// a share, breakAt, of its number; Dupuy, *Numbers, Predictions and War*, 1979, and *Understanding War*, 1987, ch. 8: historical breakpoints
+// 10% to 40%). Quiet restores it as the first-order lag toward 1 (tau seconds to 63%); a wall or tower of its own, its Town Center and a priest
+// shorten that time; Engagement at the War Council shortens the rout. At zero it routs: runs for home for a spell, takes more harm, and can be
+// taken prisoner by any foe who lays a hand on it. Most real battles ended in a rout.
+const MORALE = {
+	hit: 0.8,
+	side: 1.5,
+	rear: 2,
+	kill: 0.04,
+	breakAt: 0.3,
+	lossR: 40,
+	odds: 0.02,
+	tau: 15,
+	shelter: 1.5,
+	priest: 2,
+	priestR: 120,
+	rout: 8,
+	routHit: 1.5,
+	routSpd: 1.3,
+	after: 0.6,
+	wild: 0.5, // an animal (its kind, not its owner: N4) hits a soldier at half strength and does not shake its nerve (Build 44)
+	capR: 10,
+	capAfter: 2, // seconds a runner has to get away before a hand may take it prisoner
+};
+const CHARGE = { secs: 6, spd: 1.5, dmg: 1.3, tired: 10, tiredSpd: 0.8, cd: 30 }; // a burst, then tired
+// the juice pass (Albert, Nov 3; Bad North, Iron Marines: every blow felt): a charging blow shoves the one it lands on back shove units and
+// jolts the screen jolt px for joltS s with a thud; a soldier hit recoils recoil px for recoilS s; one under stagger of its health sways
+// the cost of an order (Albert, Nov 3, 11:14: "in real life you can't just move people around … it should cost something, a little extra
+// food, maybe makes them a little more tired"): a drill of the Director or a squad sent eats, for each soldier, mins minutes' worth of its
+// share (shareOf, 36-economy: a foot soldier 1.5 shares, a rider 3, as Engels has a soldier's grain at 3 to 4 lb a day and a horse's at 10
+// with 10 of fodder), and leaves it tired for tired s (CHARGE.tiredSpd): give many orders and the army slows. With no food in the store
+// the order still goes; the hunger rule (UPKEEP.hunger) is the price then
+const ORDER = { mins: 0.5, tired: 6 };
+// scale (the Store's Learning by doing; Wright 1936: unit labour falls a constant share per doubling of the quantity made; here a plot's
+// yield rises per standing plot of its kind past the first, to a cap): yield × (1 + per × min(cap, n − 1)) with fx 'scale'
+const SCALE = { per: 0.05, cap: 4, kinds: ['farm', 'treefarm', 'quarry', 'mint', 'foundry'] }; // kinds: the five the step names (p44)
+// field defences (Albert, Nov 3, "yes" to the report docs/4 Now/Field defences.md): caltrops, a sown square takes `hits` before it is flat; a horse
+// loses `horse` of its health and is stuck `stuck` s, a foot soldier `foot`; one unit is spiked once in `again` s. The archers' stakes: a
+// shooter that has stood `plant` s with Archers' stakes researched has its stake in the ground; a horse that strikes it takes `dmg` of its
+// health, its charge ends and it is thrown back; the stake comes up when the shooter moves
+const CALTROPS = { hits: 3, horse: 0.3, foot: 0.08, stuck: 3, again: 2 };
+const STAKES = { plant: 5, dmg: 0.25, shove: 10 };
+// forming (Albert, Nov 3, 10:48; his outside note of 09:35): while soldiers walk to their places in a shape, the one of lower precedence
+// gives way (foot, then archers, then riders, then siege: CLS order), and the push between two forming is soft; past share of the drill's
+// time, one not share of the way to its place holds where it stands and fights from there (the x% by x% rule)
+const FORMING = { soft: 0.5, share: 0.7 };
+const JUICE = { shove: 5, jolt: 2, joltS: 0.08, recoil: 2.5, recoilS: 0.2, stagger: 0.3 };
+// ───────────────────────── The climate (Build 54): the whole game reads three numbers, the air's temperature, the ground's wetness and the sky's run ─────────────────────────
+// Temperature: a yearly swing and a daily swing round a mean (design: a temperate land about 45° north). The sky runs as a chain: whether the
+// next minute is wet depends on this one (Gabriel & Neumann, QJRMS 1962, Tel Aviv: P(wet|dry) 0.25, P(wet|wet) 0.66, rounded here; dry
+// summers by design). What falls is set by the temperature: rain above freezing, snow below. Wetness closes on where the sky puts it on an
+// exponential timelag (the 10-hour fuel class, scaled to the game's 2-minute day). Mud is wetness past a threshold, deeper by water (pooling).
+// Snow melts by degree-days; ice forms on wet ground below freezing and thaws above it. Walking pays Pandolf's terrain factors (1977:
+// over dirt, swamp 1.8, soft snow about 1.6). Fire follows Rothermel's moisture damping (1972; USDA RMRS-GTR-371). Every number: SCIENCE.md.
+// Research at the Library (Weather line), Stable (horseshoes), Barracks (cloaks) and Smithy (tempering, oiling) takes the edge off, never all of it at once.
+const CLIMATE = {
+	lat: 45, // degrees north: the land's place, which sets the sun's arc and the day's length by season
+	equinox: 80, // the game's year begins in Spring: day 80 of the real year (about March 21)
+	noon: 0.28, // the game day's fraction at which the sun is highest (midnight at 0.78, as the old night was)
+	mean: 10,
+	year: 12,
+	day: 5, // °C: the yearly mean, half the swing of the year, half the swing of the day
+	peakDay: 0.375,
+	peakHour: 0.42, // when the year is hottest (mid-Summer) and the day (mid-afternoon)
+	chain: { Spring: [0.3, 0.7], Summer: [0.15, 0.5], Autumn: [0.3, 0.7], Winter: [0.3, 0.7] }, // P(wet next | dry now), P(wet next | wet now)
+	hazard: { drought: [0.05, 0.3], winter: [0.45, 0.8] }, // the chain under the Drought hazard (Summer) and the Harsh winter hazard (Winter)
+	drought: { dry: 4, temp: 16 }, // a drought: this many dry minutes in a row with the air above this
+	blizzard: 0.6, // under the Harsh winter hazard, this share of snowfalls is a blizzard
+	tau: { wet: 20, dry: 50 }, // seconds for wetness to close 63% of its gap, getting wet and drying
+	eq: { rain: 1, snow: 0.85, blizzard: 0.85, clear: 0.12, frost: 0.12, drought: 0.04 }, // where wetness settles under each sky
+	mud: [0.45, 0.95], // wetness where mud begins and is full
+	shore: 1.5, // mud within reach of water is this much deeper (pooling)
+	// The ground (Build 62): one water balance. Rain wets the ground (the timelag above); snow and ice melt by the degree-day method, and
+	// what melts goes into the ground's water (nothing vanishes); water freezes into ice by Stefan's law, thickness ∝ √(freezing degree-seconds).
+	snowAt: 1, // °C and below, what falls is snow (Jennings, Winchell, Livneh & Molotch, Nature Comm. 9, 2018: the 50% rain–snow air temperature, 1.0 °C in humid air)
+	snow: { fall: 0.02, melt: 0.004, rain: 0.5, water: 0.5 }, // depth a second of snowfall (a blizzard twice); melt a second per °C above 0 (the degree-day factor; Hock 2003); rain on snow melts it this much faster per °C (the rain's heat, USACE 1956, scaled); full snow holds this much ground water
+	ice: { fdd: 500, melt: 0.0064, water: 0.3 }, // Stefan (1891): thickness = √(freezing degree-seconds / fdd), full at fdd; melt a second per °C above 0, 1.6 × snow (Hock 2003: ice is darker); full ice holds this much ground water
+	terrain: { mud: 0.8, snow: 0.6 }, // Pandolf's factors over dirt: swamp +0.8 at full mud, soft snow +0.6 at full depth
+	rut: { n0: 300, deep: 1, tau: 600 }, // mud by traffic: a square trodden n0 unit-seconds has rut depth deep × full mud; depth ∝ passes^0.4 (USFS trafficability, Build 62); ruts heal with tau
+	// Traction (Build 62): the friction a surface offers against what a step needs. Measured coefficients, boot on surface: dry soil 0.7, wet soil 0.45,
+	// packed snow 0.3, ice 0.08 near 0 °C rising to 0.25 at −20 (Bowden & Hughes 1939: the melt film is what makes ice slick, and deep cold has none).
+	// A walker needs about 0.2 (Hanson, Redfern & Mazumdar, Ergonomics 42, 1999); the chance of a slip rises as what is on offer falls below it.
+	// Bare boots on wet ice measure 0.08, on cold dry ice 0.20 (Hsu et al., Ergonomics 59, 2016). Iron studs bite the ice: studded tyres on ice
+	// and snow 0.28 at −5 °C and below, more nearer 0 (Ichihara & Mizoguchi, HRB Special Report 115, Table 2; the lowest bin taken). Horseshoes
+	// (hooves) and Crampons (boots) give the ice term at least `studs`; each is on its own contact, so they never add (D-064).
+	mu: {
+		dry: 0.7,
+		mud: 0.45,
+		snow: 0.3,
+		ice0: 0.08,
+		iceCold: 0.25,
+		coldAt: 20,
+		need: { foot: 0.2, horse: 0.25, siege: 0.3 },
+		studs: 0.28,
+		soft: 0.03,
+		stride: 0.25,
+	},
+	slipSecs: 1.5, // a slip holds a man in place this long
+	miss: 0.5,
+	missHurt: 0.08, // snow: an engine slides and its shot falls short, hurting its own crew
+	wear: 0.15, // frost makes blades brittle and rain rusts them: weapons do 15% less until tempered and oiled
+};
+// Fire between buildings (Build 61): a fire grows as the square of its age (the t² design fire, NFPA 72 / Heskestad 1984), and what a neighbour
+// receives falls with the configuration factor of radiant heat, about (near / (gap + near))² (the view-factor method of BR 187 / Approved
+// Document B, "space separation"). rate: the chance a second a full fire lights a touching wooden neighbour, times the ground's dryness
+// (Rothermel); grow: seconds to a full fire (design: a house burns down in 50); near: the gap, in units, at which the heat is a quarter; reach: beyond this none.
+const FIRE = { rate: 0.12, grow: 20, near: 10, reach: 40 };
+const FIREARMS = { chance: 0.12, blast: 0.3, splash: 40, splashHit: 0.3 }; // fire arrows and burning shot ignite a wooden building on a hit (rain halves it); a petard bombard ignites and shakes the neighbours too
+// Sound by distance (Build 62; the ear at the camera's height since Build 64): ISO 9613-2, L = L0 − 20 log10(s / d0) − α s, s the slant
+// distance from the camera, full within d0 (the camera's height at the closest zoom), then the inverse-square law, less the air's absorption α: 5 dB a kilometre at 1 kHz, 20 °C, 50% humidity (ISO 9613-1), over a world unit of 0.14 m.
+// Thunder reaches the ear after the flash at 340 m/s over the same metre. floor: below this share it is not played.
+const SOUND = { fov: 60, alphaKm: 5, metre: 0.14, floor: 0.03, c: 340 }; // fov: the camera's field of view, degrees, which turns the zoom into a height (Albert, Build 64)
+// The slow ticks (hunt A #10): each runs every so many seconds (at its own phase in ticks, so they do not land on one step), and its body
+// reads the same seconds (every, 08-core): one home for the period. slow: prices, ventures, vassals, the league; health: sickness; natives: regard, the garrison, raids
+const BEAT = { slow: [10, 150], health: [5, 75], natives: [5, 7] };
+const YARD = 320; // a soldier at home fights within this of its post or its Town Center (the Natives: of the Throne, their camp's radius in 4b)
+const GARRISON = { r: 70, heal: 0.6 }; // soldiers resting by their own Castle, Barracks or Town Center heal; Garrison wards double it
+const TEACH = { seats: 4, mul: 1.5, tuition: 40 }; // Teach: a soldier learns a newer kind at the School, four at a time; time ×1.5 per age climbed, tuition in gold per age; opened by Veterans
+const TEACH_TO = {
+	spear: 'sword',
+	archer: 'crossbow',
+	jav: 'arquebus',
+	crossbow: 'arquebus',
+	chariot: 'cata',
+	catapult: 'treb',
+	ballista: 'bombard',
+}; // what a soldier can be taught to become: always a later age (D16: horse archer to cataphract and ram to catapult were one age, never usable)
+const FALLBACK = { secs: 6, back: 200, hit: 0.7 }; // withdraw in order: fewer losses than a rout
+const PRISON = { secs: 180, ransom: 1.0 }; // a prisoner unransomed in three minutes serves the captor
+const CONVERT = { r: 40, secs: 12, cd: 60 }; // a priest beside an enemy for a spell turns them; the counter is to kill the priest
+const BUILDER_POW = 0.7; // a crew of n builds n^0.7 times as fast as one: two builders ≈ 1.6×, three ≈ 2.1×. Crowding on a site: output per worker falls as n^−0.25 to n^−0.3 (Thomas & Smith, *Loss of Construction Labor Productivity due to Inefficiencies and Disruptions*, 1990; the overmanning curves), so the crew does n^0.7 (Build 62: cited)
+// Shape (research Formations at the War Council): each battalion takes one, three in all. spd: march speed; hit: damage taken; dmg: damage dealt by its riders; vsMounted: damage taken from riders
+// An army marches in a column (COLUMN, never picked: armies did) and stands to its shape on contact: the Roman three lines, the medieval three battles.
+const FORM = [
+	{ name: 'Line', shape: 'line', note: 'as they stand' },
+	{ name: 'Wedge', shape: 'wedge', dmg: 1.15, hit: 1.1, note: 'riders hit 15% harder, take 10% more' },
+	{
+		name: 'Square',
+		shape: 'square',
+		spd: 0.8,
+		hit: 0.9,
+		vsMounted: 0.7,
+		note: '10% less damage, 30% less from riders, 20% slower',
+	},
+	// three more (Albert, Nov 3, 11:06), each a trade the ground decides: a front line is one rank, every man at the blade, and a charge
+	// breaks it (the skirmish line; vsMounted); a choke is deep and narrow, hard to break, only its front fights (the phalanx in the pass at
+	// Thermopylae, from memory); support is a ring of foot with the shooters inside, slow, the inside safe (the Roman orbis, the hollow
+	// square against riders, from memory)
+	{ name: 'Front', shape: 'front', vsMounted: 1.3, note: 'one rank: every man fights, riders break it (30% more from them)' },
+	{ name: 'Choke', shape: 'choke', spd: 0.85, hit: 0.85, vsMounted: 0.8, note: 'deep and narrow: 15% less damage, 20% less from riders, 15% slower; only the front fights' },
+	{ name: 'Support', shape: 'support', spd: 0.85, hit: 0.95, note: 'foot round the shooters: 5% less damage, 15% slower; the inside is safe' },
+];
+// the choke drawn on the map (hold the shape on War, then drag across the gap): as many files as the gap holds, GRID.gap apart, facing across
+// the drag; the ambush (hold Rally, then tap cover): the soldiers hide within cover of forest and spring on a foe within spring, with a
+// charge's burst; hidden, no foe takes them for a mark
+const CHOKE = { min: 1, max: 12 };
+const AMBUSH = { cover: 1, spring: 45, find: 90 };
+const COLUMN = { name: 'Column', shape: 'column', spd: 1.15, hit: 1.1 };
+const GRID = { gap: 15, rows: 2.0, fan: 90, share: 40 }; // an army stands in a grid: 15 apart, about twice as wide as deep; on the march it follows one way to the spot and opens into its shape in the last 90 (as real armies marched in column and deployed); a soldier within 40 of where a path began takes that path too
+const DOCKR = 150; // fish are caught only within 150 of a finished dock of yours
+const KITE = 45; // a shooter steps back from a foe this close while it reloads
+// a battalion's temper, three in all (the computers keep Guard). nerve: how fast blows break it; dmg: blows dealt; chase: how far past its sight it follows a foe
+const TEMPER = [
+	{ name: 'Hold', nerve: 0.8, note: 'fight only what comes within reach, no chase, steadier nerve' },
+	{ name: 'Guard', note: 'fight what comes; shooters step back from anyone who closes in' },
+	{
+		name: 'Press',
+		nerve: 1.3,
+		dmg: 1.1,
+		chase: 1.3,
+		note: 'chase and charge: blows 10% harder, nerve breaks 30% faster',
+	},
+];
+const T_HOLD = 0,
+	T_GUARD = 1,
+	T_PRESS = 2;
+const SHELTER = { flee: 70, clear: 150, raid: 3, hurt: 6 }; // villagers run into the nearest Town Center or tower when an enemy soldier comes within 70, when three or more beasts or robbers do, or when a lone beast or robber hits them (it scares only the one it hits); out when none within 150 of it; each adds an arrow up to the limit (the room is the same)
+const LOOKOUT = { base: 60, k: 24 }; // a building sees 60 + 24 × the square root of its height: the horizon from a height grows with its square root, so a 44 tower sees 220, a 16 house 156, a field 84 (Build 51: every building but six saw a flat 90, and no research reached them)
+// Where a villager looks for the next find (decision 1; area-restricted search, tight near the last find and wider with time since it was lost):
+// r(t) = x + y min(1, t/tau), from where it was placed, else from its nearest drop-off; x + y is a placed villager's cap. Nothing found: it keeps
+// its job and waits at the drop-off, looking again every 'again' seconds (plus up to one of dice), with no end.
+// Personal space, one number (Albert: Hall's personal distance, 2.5 to 4 ft; OSHA 1910.142(b)(3), 36 inches between beds): 3 ft. Spots are laid
+// SPACE apart, two bodies nearer than SPACE are pushed apart, a villager at work arrives within SPACE (the push's reach: decision 10a), and
+// one at its own spot within ARRIVE, a quarter of it: under half the spacing, so it always stands nearer its own spot than any other's (item 5).
+// where a gatherer stands to work a find: within this of its middle (fish from the shore, further out); the ring its working spots sit on
+const WORK_R = { fish: 13, other: 9 };
+const SPACE = 3 * FOOT,
+	ARRIVE = SPACE / 4;
+// SEARCH and searchR (where a villager looks for work) are below HOME: the search reaches the home band (REACH).
+const DANGER_R = { near: 110, reach: 30, fire: 60, mem: 80, secs: 45, far: 200, keep: 8 }; // a gatherer will not work within 110 of an enemy or a hunting beast, inside an enemy tower's reach plus 30, within 60 of a fire, or for 45 s within 80 of where one of its side was frightened more than 200 from home (the last 8 such places are kept)
+// How long a toast stays (Nov 2, M7: 219 calls typed their own seconds, from 2 to 10): three lengths, by how much there is to read.
+// At about 200 words a minute (adult silent reading, 238 in Brysbaert's 2019 review, from memory, not opened) a short line of a few words
+// needs 2 to 3 s, a sentence 4 to 5, two sentences 7 to 8. 2 and 3 became short; 4, 5 and 6 mid; 7 to 10 long.
+// The War Director (Albert, Nov 2: "a war director"): one move a kind, every soldier of that kind at once, from the battle station. Each move
+// is a drill the rules already hold, so no new number but these: how long a shield wall stands (secs), how long the volley's reload is lined
+// up (loose), and the wait after Wheel (wheel). wall: the Square shape's numbers while it stands (FORM[2]: 10% less damage, 30% less from
+// riders, 20% slower) and the Hold temper (no chase, steadier nerve), their target dropped. loose: every archer's reload set to zero together, so they release
+// in one instant; each arrow does its usual harm, but Dupuy's break point (MORALE.breakAt) is counted on losses in one blow, which is why
+// massed volleys broke armies the same losses spread out would not (Crécy, Agincourt; from memory). charge: CHARGE. wheel: the riders ride
+// to the far side of the enemy nearest the crosshair and hit from behind (FLANK, MORALE.rear). bombard: the engines on the nearest enemy
+// building to the crosshair, burning once Burning shot is researched (FIREARMS). back: FALLBACK.
+const DIRECT = { wall: 12, loose: 6, wheel: 15, behind: 70, arc: 0.8 }; // arc: the archers' arc stands at 80% of the shortest bow's reach (Albert, Nov 3: 'fall back a bit, form an arc'); wall: seconds a shield wall stands; loose: seconds before the archers may volley again (an audit, Nov 2: with none, a tap a frame was a machine gun); wheel: seconds before riders may wheel again; behind: how far past the foe they ride, away from home
+const TOAST = { short: 3, mid: 5, long: 8 };
+const SCORE = { unit: 5, bld: 5, tech: 5, wealth: 10 }; // score = value held / 5, research / 5, everything gathered / 10
+
+// ───────────────────────── The world's own numbers: weather, soil, sickness, the trade routes, the market ─────────────────────────
+const FERT = { loss: 0.1, floor: 0.6, rest: 0.4 }; // soil: 10% a year worked, never below 60%; a season of rest gives back 40%
+const HARVEST = [
+	{ p: 1 / 20, m: 0.5, text: 'A failed harvest this year: fields give half.' },
+	{ p: 1 / 6, m: 0.7, text: 'A poor harvest this year: fields give 30% less.' },
+];
+// the skies and what each does beyond the ground (the ground, mud, snow, ice and fire come from the climate): bows in rain, fields in drought, mortar in frost, sight in a whiteout.
+// vis: the visibility in haze, snow or fog, in game units: nothing sees farther than it, a tower no more than a man (Koschmieder 1924: V = 3.912 / β,
+// the distance at which contrast falls to 2%; the game has no metre, so the values are design, the form is his). An eclipse dims the light instead (sight ×).
+const WEATHER = {
+	clear: { name: 'Clear' },
+	rain: { name: 'Rain', rng: 0.85, text: 'Rain: the ground softens and bows reach less.' },
+	drought: { name: 'Drought', crop: 0.7, text: 'Drought: fields give 30% less and fire catches at a touch.' },
+	frost: { name: 'Frost', stone: 0.5, text: 'Frost: mortar will not set, stone builds at half speed.' },
+	snow: { name: 'Snow', vis: 160, text: 'Snow: the ground deepens and sight shortens.' },
+	blizzard: {
+		name: 'Blizzard',
+		spd: 0.6,
+		vis: 60,
+		gather: 0.5,
+		text: 'Blizzard: a whiteout. Marches crawl, sight is gone, gathering halves.',
+	}, // Harsh winters only
+};
+const WX_EVERY = 60;
+
+// ───────────────────────── The Challenge: hazards you switch on. Their points are your level; the level multiplies your score ─────────────────────────
+// Random when, never random whether: everything a hazard sends is announced first, and hazards drawn by lot are told in the first line (Build 70). Easy keeps the old polite game whatever is switched on.
+const HAZARDS = {
+	// six, in two columns (Albert, Build 41)
+	hard: {
+		pts: 3,
+		name: 'Hardest',
+		desc: 'The computers strike in winter, send more riders at your villagers and drop-offs, and need shorter odds to come.',
+	},
+	starve: {
+		pts: 2,
+		name: 'Famine',
+		desc: 'Two days of famine (no food in store or in reach): a villager leaves and a soldier deserts every half minute.',
+	},
+	winter: {
+		pts: 2,
+		name: 'Bad weather',
+		short: 'Weather', // its one slot on Setup
+		desc: 'Winter fields give a quarter and marches crawl; blizzards blind the small map.',
+	},
+	drought: {
+		pts: 2,
+		name: 'Drought',
+		desc: 'Summers run dry three times as often and springs can too: fields give 30% less and fires spread fast.',
+	},
+	horde: {
+		pts: 3,
+		name: 'Outlaws',
+		desc: 'Between minute 20 and 40 a horde comes for the weakest side, announced two seasons ahead; outlaws raid twice as often.',
+	},
+	plague: {
+		pts: 2,
+		name: 'Plague',
+		desc: 'Plague is three times as likely and spreads twice as fast along the roads. Hospitals matter.',
+	},
+};
+const HZK = Object.keys(HAZARDS),
+	HZ_ODDS = 0.5, // none picked (Build 70, Albert's A): each hazard is on at even odds, drawn by lot for the game (design: a coin, the plainest random)
+	TODAY_HZ = { hard: 1, starve: 1, horde: 1, winter: 1 }; // the challenge today is level 10 on the day's seed
+// Hunger (Albert, Nov 1). An empty store is not a famine: people working food eat from it, and the rest work on. A famine is an empty store
+// with no bush, field, fish or game in reach: full strength for grace (two days: with water, hunger takes weeks, the rule of threes), then
+// work and blows at UPKEEP.hunger; then, under the Famine hazard, one leaves every every seconds
+const STARVE = { grace: 2 * DAY_LEN, every: 30 },
+	HARD = { bold: -0.1, raid: 2, winterBold: -0.2, waitForWinter: 90 },
+	HORDE = { min: 1200, mean: 1800, warn: SEASON_LEN * 2, n: 16, perAge: 6 }; // the horde comes after min seconds, at an exponential wait about mean (nextIn)
+// Spectacle: something happens every minute or three, announced WARN seconds ahead; gorgeous first, mostly harmless, always real. Each entry's numbers; the doing is in 37-events.
+// How news reaches you (Build 59, Albert: "you can't have alerts if you can't see or hear them"): seen in your sight, heard by your people,
+// or told by a messenger who walks or rides the distance. The post research (keep, line Post) decides how far a messenger serves and how fast.
+//   level 1 Runners: your near lands, on foot · 2 Royal Road: your far lands, riders · 3 Yam: your allies' lands · 4 Post riders: the whole
+//   board, the other courts' news too · 5 News sheets: the digest of the board's doings (the age news)
+const TELL = {
+	near: 320, // your near lands: within this of one of your buildings
+	far: 900, // your far lands
+	hear: 380, // the noise of a fight carries this far from any of your people (shouts and clash of arms: a few hundred paces; gunfire farther)
+	gun: 2, // gunfire is heard twice as far
+	foot: 27, // a runner's speed (the scout on foot)
+	ride: 49, // a rider's (the scout on a horse)
+	spy: 120, // a spy's report of an army holds this long (design): the odds you are shown use it, else only the soldiers you see
+};
+const UI_BUDGET = 33; // always-visible buttons on the play screen, at most (Build 59, from the Google audit): a new control must replace one (the gate counts them)
+const SAVE = { step: 0.02, stall: 90, spend: 45 }; // a computer saving for an age: progress counts in steps of 2%; 90 s without one and it spends for 45 s (17-ai)
+const EV_MEAN = 120, // the mean wait between events (an exponential wait, nextIn); EV_MIN keeps two from stacking
+	EV_MIN = 30,
+	EV_WARN = 12;
+const EVENTS = {
+	eclipse: { name: 'Eclipse', secs: 20, dmg: 0.6, spd: 0.7, sight: 0.7, harm: 1 },
+	storm: { name: 'Thunderstorm', secs: 40, band: 260 },
+	stampede: { name: 'Stampede', secs: 30, n: 10, harm: 1 },
+	flood: { name: 'Flood', secs: 90, rise: 40, hit: 0.004, harm: 1 },
+	meteor: { name: 'Falling star', secs: 3 },
+	wildfire: {
+		name: 'Wildfire',
+		secs: 60,
+		spread: 0.2,
+		r: 32,
+		burn: 0.12,
+		most: 20,
+		season: ['Summer', 'Autumn'],
+		harm: 12,
+	}, // most: trees alight at once; the dry seasons, drought or not
+	fog: { name: 'Fog', secs: 60, vis: 70 },
+	sinkhole: { name: 'Sinkhole', secs: 2, hit: 0.4 },
+	quicksand: { name: 'Quicksand', secs: 120, r: 60, slow: 0.3 },
+	heatwave: { name: 'Heat', secs: 60, dmg: 0.85, spd: 0.9, need: 'drought', season: 'Summer' },
+	mirage: { name: 'Mirage', secs: 30, n: 12, season: 'Summer' },
+	circus: { name: 'Circus', secs: 60, n: 5, r: 150, cheer: 120, mul: 1.1, gift: 1 },
+	wagon: { name: 'Wagon train', secs: 90, gift: 1 },
+	mercs: { name: 'Mercenaries', secs: 180, gift: 1 },
+	dragon: { name: 'Dragon', secs: 25, fantasy: true, harm: 1 },
+	troll: { name: 'Troll', secs: 90, fantasy: true },
+	aurora: { name: 'Aurora', secs: 45, fantasy: true, night: true },
+};
+const EVK = Object.keys(EVENTS),
+	NEWS_EVERY = 150;
+// Where the shared places stand, each from what it belongs to (5a step 1: no map coordinate typed by hand). From the middle: stop, the
+// trade stops' two distances along each middle line; lode, the gold and stone by the great lake; scout, the inner corners of a scout's loop.
+// From the edge: camp, the robbers' camp at the end of each trade route; scout, its loop's points on the middle lines. From a Town Center,
+// toward the middle on both axes: scout, its loop's corner points.
+// start: the first villagers stand this far from their Town Center toward the middle.
+const PLACES = { stop: [490, 320], lode: 270, camp: 160, scout: { mid: 300, edge: 420, keep: 215 }, start: 15 }; // start: how far past the Town Center's footprint its first people stand, toward the middle (doorOf, 08; it was 40 from the centre, the same point at 45°)
+const cross = (d) => [
+	[LMID, LMID - d],
+	[LMID, LMID + d],
+	[LMID - d, LMID],
+	[LMID + d, LMID],
+]; // the four points d from the middle on the middle lines: north, south, west, east
+// two old trade routes, west to east and north to south, each with four stops; they bend around the great lake
+const ROUTES_L = [0, 1].map((ax) => [-PLACES.stop[0], -PLACES.stop[1], PLACES.stop[1], PLACES.stop[0]].map((d) => (ax ? [LMID, LMID + d] : [LMID + d, LMID]))), // in the land's frame, for the map-maker
+	ROUTES = ROUTES_L.map((r) =>
+		r.map(([x, y]) => {
+			const w = worldXY(x, y); // the same stops in the world's frame, for the game (preview 51)
+			return [w.x, w.y];
+		}),
+	);
+const POST = { all: 2, cut: [0, 0.2, 0.25, 0.3, 0.4], safe: 120, guard: 12, far: 2.5, want: 1.5 }; // each route has four stops. all: gold a second to whoever holds all four of a route; cut: of other sides' sales at a stop, by how many of its route you hold; guard: soldiers per stop or caravan
+// Sickness as the SIR model (Kermack & McKendrick 1927; Build 56): among a side's people, those who are well (S), sick (I) and over it (R, well
+// again after the course, as the game has no lasting immunity). New cases a tick = β S I / N, the mass-action law; the course lasts sickFor
+// (recovery γ = 1/sickFor). R0 = β/γ: 2 here, in the range of influenza (1.5 to 3; measles would be 12 to 18). Clean water, sewers and
+// quarantine lower β; medicine raises the cure and lowers the death. A case is seeded now and then (risk) as if from outside; plague on the roads
+// multiplies R0 and the death.
+const HEALTH = {
+	every: 60,
+	risk: 0.06, // the chance a minute that a case arrives from outside
+	sickFor: 60, // the course of the illness, seconds (γ = 1/60)
+	R0: 2, // cases one case makes in a well population
+	death: 0.004,
+	cure: 0.3,
+	plague: 0.15,
+	plagueR0: 1.5, // plague: R0 × this, death × 4
+	plagueCap: 0.1,
+	plagueCart: 0.5, // the share of carts back from abroad in a plague year that bring cases home; the Plague hazard doubles it
+};
+const MKT_SELL = ['f', 'w', 's', 'i', ...WARES],
+	MKT_BUY = ['f', 'w', 's', 'i', 'spice']; // wool goes to a Workshop, not to market; spice is the only good not made here
+const MKTK = [...GOODK, 'f', 'w', 's', 'i'];
+const RATE_OF = { bush: 0.9, fish: 0.8, tree: 0.75, stone: 0.55, gold: 0.6, iron: 0.5, meat: 1.2 }; // what a villager gathers a second from each kind of find (fields carry their own rate)
+
+// Bigger finds (Albert, Nov 4, C): a patch lasts long enough that villagers are not moved every few minutes, and gold lasts into the late
+// game instead of running dry; one multiplier a kind, on every find of that kind (fish keep their own law, layFish). Tuned after play.
+const FIND_SIZE = { bush: 3, tree: 2, gold: 2.5, stone: 1.5, iron: 1.5 };
+// The land's character: each game rolls one, the same for all four corners (fair), so no two games share a map. amt: what each resource
+// is worth there; extra: one more deposit of its specialty, farther out; spread: how far the rings may stretch.
+const LAND = {
+	fertile: { name: 'Fertile land', amt: { food: 1.4, wood: 1, stone: 0.8, gold: 1, iron: 1 }, extra: 'bush' },
+	timber: { name: 'Timberland', amt: { food: 1, wood: 1.35, stone: 1, gold: 0.8, iron: 1 }, extra: null },
+	stony: { name: 'Stony hills', amt: { food: 0.85, wood: 1, stone: 1.5, gold: 1, iron: 1.2 }, extra: 'stone' },
+	golden: { name: 'Gold country', amt: { food: 1, wood: 0.85, stone: 1, gold: 1.5, iron: 1 }, extra: 'gold' },
+};
+const LANDK = Object.keys(LAND),
+	SPREAD = [0.85, 1.25];
+// The map's base rules (Albert, Build 70): a flat page, four corners (CORNER), the same zones and home finds in every corner, the Throne at
+// the middle. All else is random from the one randomizer, laid once: no measure, no reshuffle. CLEAR: no water within it of a Town Center.
+const CLEAR = 360;
+// Between two buildings (decision 2, Albert, Oct 31): LANE squares at least. A gap is passable only if wider than a figure (2r); the slit rule
+// shuts a one-square gap because the drawn figure is wider than it (Build 41), so two. Walls, gates and crops may touch.
+const LANE = 2;
+// The four zones (Albert, Nov 2, 07:07 to 07:14, D-090; the same in every corner), measured on the finds' own nodes (each bush, tree, rock):
+//   1 close: behind the Town Center, between it and its corner (BACK below): enough to reach Bronze;
+//   2 your zone: the rest of the clearing, to HOME.clear (220, Albert's number): no forest, open ground to build on, and the five home finds
+//     (HOME_IDS in 10), each the same walk from the Town Center in every corner (HOME.at), in a random direction (fair, not mirrored: the
+//     same deal, a different layout). The nearer the find, the sooner it is needed: food, wood, gold, stone, iron, the order the ages ask for
+//     them (AGES), as von Thünen laid the land most worked nearest the town (von Thünen 1826, from memory, not opened);
+//   3 the wall band: the computers' wall ring (WALL_R), two squares past the clearing; no finds; the forest starts past the ring (HOME.out);
+//   4 further: the rest of the map, every wild find and the forest from HOME.out on.
+// HOME.near: the first home find's walk, v70's nearest bush (147, measured Nov 1 on seed 1; v62 to v70 was the map Albert called great),
+// rounded to 150; HOME.step spreads the five evenly from there to the clearing, the iron pair's room (10) inside it.
+const HOME = { clear: 220, near: 150, rich: 1.18 };
+HOME.step = (HOME.clear - 10 - HOME.near) / 4;
+HOME.at = (k) => HOME.near + k * HOME.step;
+// The computers' wall ring (wallPlan in 17): the clearing, then the margin a ring square can reach (its diagonal, NAVC √2: the ring is
+// drawn on the grid), then LANE squares, rounded up to whole squares (260), so no find stands within the gap of any square of the ring.
+const WALL_R = Math.ceil((HOME.clear + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC;
+// The wall band's far side, by the same rule from the ring (300): the forest and every wild find lie wholly past it, so every ring closes.
+HOME.out = Math.ceil((WALL_R + NAVC * Math.SQRT2 + LANE * NAVC) / NAVC) * NAVC;
+// Reach (D-088, Albert's sighting of Nov 1: villagers asleep at the mill with full bushes in sight; D-090 moved the finds in): a villager
+// looks for work, and is leashed, within the wall ring of its drop-off. Every home find's every node lies inside it (HOME.clear < WALL_R),
+// the wild past it is reached from a drop-off built out there. r(t) keeps its form (decision 1): half of REACH at the loss, all from tau on.
+const REACH = WALL_R;
+const SEARCH = { x: REACH / 2, y: REACH * 1.5, tau: 20, again: 2 }; // B (Nov 4): the look grows from half the ring to twice it over 20 s; the drop-off leash and the forager's rate still decide
+const searchR = (u) => SEARCH.x + SEARCH.y * Math.min(1, (G.t - (u.lostT ?? G.t)) / SEARCH.tau);
+// Zone 1 (Albert, Nov 1; on, Nov 2: "Close was supposed to have enough to get you to the first age between you and the corner"): a berry
+// patch and a small grove that hold Bronze's cost with a margin for the villagers and houses on the way (600 food, 250 wood), worked out from
+// the costs, not typed; on every land the same (no land's amt). Each node behind the Town Center (on the corner's side of both its axes),
+// from near (the Town Center's half and LANE squares: the find gap from its wall) to the clearing, LANE squares or more from any other
+// find's, and edge or more from the map's edge: whole squares enough for half a tap (22 px) at the opening zoom on the tilted axis, so the
+// corner's finds can be seen and tapped (tests/map.py's camera check; LANE squares gave 19 px). Laid first: a corner it does not fit fails.
+const BACK_MARGIN = { vils: 6, houses: 5 },
+	BACK = {
+		near: (BLD.keep.fp * NAVC) / 2 + LANE * NAVC,
+		bushes: 2, // Albert, Nov 1 14:13: fewer, bigger finds (300 and 125), so a drop-off by them is worth its cost
+		trees: 2,
+		edge: Math.ceil(22 / (ZOOM_START * TILT) / NAVC) * NAVC,
+		food: AGES[1].cost.f + BACK_MARGIN.vils * UNIT.vil.cost.f,
+		wood: AGES[1].cost.w + BACK_MARGIN.houses * BLD.house.cost.w,
+	};
+// Lakes and rivers (Build 70: random; it was one lake and one river of one width a corner). lakes: how many beside the great lake; r: from a
+// pond five houses across to a lake short of the great lake's 170, on the power law of lake sizes (lakeSize; Downing et al. 2006: the number
+// of lakes larger than an area falls as area^−c, c 1.06). On 60 seeds about nine tenths of the old water and fish (fish 31 to 105, median 58;
+// it was 50 to 73, median 64). gap: open ground from the middle lines (roads, trade routes) and between waters; shore: from the great lake.
+// A lake drains to its nearer map edge (else the other), as most lakes in a wet climate do, by a river w × its radius wide (Leopold & Maddock
+// 1953: width ∝ √flow, the flow taken ∝ the lake's area): pools every step × the width, bending up to bend; fords at about a third and two
+// thirds, each at least ford of dry ground; a fish every third pool.
+const WATER = {
+	lakes: [4, 9],
+	// the shore (Albert, Nov 3: "lakes too circular"): a lake's edge is its radius times 1 + Σ a_k cos(kθ + φ_k), k from 2 to harm, the
+	// amplitudes a_k = amp · k^(−H) with H = 2 − D for a fractal shore of dimension D (Mandelbrot 1967, Science 156, a coast's D a little
+	// over 1; Britain's about 1.25, from memory). The shoreline development DL = P / 2√(πA) (Hutchinson 1957, opened on Wikipedia: 1 for a
+	// circle, higher the more bays) is computed for every lake and held in shore[]; the map test keeps it in the range
+	amp: 0.3,
+	H: 0.75,
+	harm: 12,
+	shore: [1.15, 1.6],
+	r: [50, 160],
+	c: 1.06,
+	gap: 70,
+	clear: 110,
+	w: 0.25,
+	step: 0.9,
+	bend: 45,
+	waves: 1.6,
+	ford1: [0.28, 0.4],
+	ford2: [0.6, 0.72],
+	ford: 32,
+	fish: 3,
+};
+
+// Scenarios (Build 58, item 41): three set starts on the same rules, each a table of what differs, read by applyScenario in 10-world.
+// Nothing here is a new rule: an age, a store, relations, hazards, buildings already in the game, and the mode.
+// the villagers every side starts with, beside its keep and scout; a scenario's vils come on top (F1: the Open text said five)
+const START_VILS = 3;
+// the stores every side starts with (Albert, Nov 1 14:18): 200 of food, wood, stone and gold, no iron
+const START_RES = { f: 200, w: 200, s: 200, g: 200, i: 0 };
+// EXCEPTIONS #16, LIVE TEST IN PROCESS (Albert, Nov 1 14:23): each computer starts with these already built beside its Town Center, the
+// player not. The computers play worse than a person, so this is a handicap (Go's handicap stones). Laid by the placing rules (findSpot,
+// canPlace: the lanes, the gap from finds) within r of the Town Center. Remove it when the computers reach Classical as fast without it as
+// v70 did (8.2 min median, tests/balance.py).
+const HANDICAP = { blds: ['mill', 'farm'], r: [60, 170] };
+const SCENARIOS = {
+	open: {}, // the ordinary start
+	siege: {
+		// The Siege: a Medieval town behind its walls, a full store, every rival at war with you, the horde a few minutes out
+		age: 3,
+		res: { f: 1200, w: 900, s: 900, g: 500, i: 150 },
+		techs: ['masonry', 'greattower'], // a step brings the steps it waits on
+		rel: 'war',
+		hz: { hard: 1, starve: 1, horde: 1 },
+		hordeAt: 420,
+		walls: true,
+		blds: [
+			['tower', 150],
+			['tower', -150],
+			['barracks', 110],
+			['range', -110],
+		],
+		vils: 8,
+		mode: 't30',
+	},
+	road: {
+		// The Silk Road: every court Classical and at peace, markets up, the board truce already running
+		age: 2,
+		all: true, // the ages and stores go to every court
+		res: { f: 800, w: 600, s: 300, g: 600, i: 50 },
+		rel: 'peace',
+		truce: true,
+		sworn: 600, // no court may declare war for ten minutes: the peace is sworn, as the Olympic truce was
+		blds: [['market', 120]],
+		vils: 6,
+		mode: 't60',
+	},
+	last: {
+		// Last Keep: three courts allied against you from the first minute, nothing else changed
+		league: true,
+		rel: 'war',
+		mode: 'conquest',
+	},
+};

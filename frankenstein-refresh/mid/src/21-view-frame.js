@@ -1,0 +1,384 @@
+// ═════ 21-view-frame.js: the ground texture and the draw of one frame ═════
+// the ground: one soft picture at half detail for the big shapes, a sharp grass texture over it when you are close
+function makeBg() {
+	const N = MAP * bgK;
+	bg = document.createElement('canvas');
+	bg.width = bg.height = N;
+	const b = bg.getContext('2d');
+	b.scale(bgK, bgK);
+	const R = (a, z) => a + lookDice() * (z - a);
+	b.save();
+	landMat(b);
+	b.beginPath();
+	b.rect(0, 0, SQUARE, SQUARE);
+	b.restore();
+	b.save();
+	b.clip(); // the land's square, turned: everything painted for the land stays on it (preview 51)
+	b.fillStyle = '#4a6634';
+	b.fillRect(0, 0, MAP, MAP);
+	const blot = (n, cols, r0, r1) => {
+		for (let i = 0; i < n; i++) {
+			b.fillStyle = cols[i % cols.length];
+			b.beginPath();
+			b.ellipse(lookDice() * MAP, lookDice() * MAP, R(r0, r1), R(r0, r1) * 0.7, R(0, 3), 0, 7);
+			b.fill();
+		}
+	};
+	blot(1400, ['rgba(88,124,56,.22)', 'rgba(52,78,38,.22)', 'rgba(104,128,60,.16)'], 20, 90);
+	b.fillStyle = 'rgba(30,42,22,.22)';
+	for (const n of G.nodes)
+		if (n.kind === 'tree') {
+			b.beginPath();
+			b.ellipse(n.x + 2, n.y + 3, TREE.floor[0], TREE.floor[1], 0, 0, 7);
+			b.fill();
+		} // the floor of a wood is darker, needles and leaf litter, and stays when the trees are cut (Build 52)
+	blot(220, ['rgba(122,100,62,.16)', 'rgba(140,118,76,.12)'], 10, 34);
+	for (let i = 0; i < 500; i++) {
+		b.fillStyle = lookDice() < 0.5 ? 'rgba(230,220,120,.5)' : 'rgba(235,235,245,.45)';
+		b.beginPath();
+		b.arc(lookDice() * MAP, lookDice() * MAP, 2.4, 0, 7);
+		b.fill();
+	}
+	// A river is drawn as one stream (Build 53): each unbroken run of pools is a smooth curve through their centres, stroked three times
+	// (the outer bank, the inner bank, the water) with round ends, so it leaves its lake and reaches a ford as one body of water. The pools
+	// themselves stay the walking grid's truth; the curve through their centres covers the same ground (a pool every 0.9 of its radius).
+	const runs = riverRuns(); // each stretch of river (its pools between two fords), from the water layer
+	const stream = (run, extra, col) => {
+		b.strokeStyle = col;
+		b.lineWidth = 2 * (run[0].r + extra);
+		b.lineCap = b.lineJoin = 'round';
+		b.beginPath();
+		b.moveTo(run[0].x, run[0].y);
+		for (let i = 1; i < run.length; i++) {
+			const p = run[i - 1],
+				q = run[i];
+			if (i < run.length - 1) b.quadraticCurveTo(p.x, p.y, (p.x + q.x) / 2, (p.y + q.y) / 2);
+			else b.lineTo(q.x, q.y);
+		}
+		b.stroke();
+	};
+	for (const L of G.lakes) {
+		if (L.river) continue;
+		const sand = b.createRadialGradient(L.x, L.y, L.r - 4, L.x, L.y, L.r * (1 + WATER.amp) + 26);
+		sand.addColorStop(0, 'rgba(206,190,138,1)');
+		sand.addColorStop(0.5, 'rgba(196,180,128,.85)');
+		sand.addColorStop(1, 'rgba(196,180,128,0)');
+		b.fillStyle = sand;
+		shorePath(b, L, 26);
+		b.fill();
+	} // every shore first, then every water
+	for (const run of runs) {
+		stream(run, 14, 'rgba(196,180,128,.55)');
+		stream(run, 7, 'rgba(201,185,133,.9)');
+	}
+	// the water, lake and river alike (Build 61: the river was one flat blue and met the lake's shaded edge in a hard line): the shallows pale
+	// at the bank, the deep dark in the middle; a river is drawn as three strokes, bank, shallow, channel, in the lake's own colours
+	for (const run of runs) stream(run, 2, '#79b2bf');
+	for (const run of runs) stream(run, -2, '#4e93ad');
+	for (const run of runs) stream(run, -5, '#2a6488');
+	for (const L of G.lakes) {
+		if (L.river) continue;
+		const lg = b.createRadialGradient(L.x - L.r * 0.2, L.y - L.r * 0.2, 10, L.x, L.y, L.r * (1 + WATER.amp * 0.6) + 2);
+		lg.addColorStop(0, '#1b4466');
+		lg.addColorStop(0.7, '#2a6488');
+		lg.addColorStop(0.95, '#4e93ad');
+		lg.addColorStop(1, '#79b2bf');
+		b.fillStyle = lg;
+		shorePath(b, L, 2);
+		b.fill();
+		b.strokeStyle = '#79b2bf';
+		b.lineWidth = 3;
+		b.stroke(); // the shallows follow the shore's bays, not the gradient's circle
+	}
+	for (const run of runs) {
+		// where a river leaves its lake, the lake's shade covers the join
+		const L = run[0];
+		if (!L.river) continue;
+		const src = G.lakes[L.src]; // the lake it leaves (makeRiver)
+		if (!src || L.run) continue; // only the first stretch leaves the lake
+		const lg = b.createRadialGradient(src.x, src.y, src.r - 6, src.x, src.y, src.r + 14);
+		lg.addColorStop(0, '#2a6488');
+		lg.addColorStop(1, 'rgba(42,100,136,0)');
+		b.fillStyle = lg;
+		b.beginPath();
+		b.arc(src.x, src.y, src.r + 14, 0, 7);
+		b.fill();
+	}
+	{
+		b.save();
+		landMat(b); // the island and the causeways lie on the land's middle lines (preview 51)
+		const L = LAKE0,
+			R = THRONE.isle,
+			W = THRONE.cause; // the Throne's island and its four causeways: stone over the water, the shape the walking grid holds (onLand: isle, cause, causeTo), with a sand edge of 10 round the island and 4 each side of a causeway
+		b.fillStyle = 'rgba(206,190,138,1)';
+		b.beginPath();
+		b.arc(L.x, L.y, R + 10, 0, 7);
+		b.fill();
+		for (const [dx, dy] of [
+			[1, 0],
+			[-1, 0],
+			[0, 1],
+			[0, -1],
+		]) {
+			const len = THRONE.causeTo;
+			b.fillStyle = '#9a917e';
+			b.fillRect(
+				L.x + (dx < 0 ? -len : dy ? -W / 2 - 4 : 0),
+				L.y + (dy < 0 ? -len : dx ? -W / 2 - 4 : 0),
+				dx ? len : W + 8,
+				dy ? len : W + 8,
+			);
+		}
+		const pv = b.createRadialGradient(L.x, L.y, 20, L.x, L.y, R);
+		pv.addColorStop(0, '#b8ad98');
+		pv.addColorStop(1, '#8f8775');
+		b.fillStyle = pv;
+		b.beginPath();
+		b.arc(L.x, L.y, R, 0, 7);
+		b.fill();
+		b.strokeStyle = 'rgba(60,50,40,.25)';
+		b.lineWidth = 1;
+		for (let i = -R; i <= R; i += 12) {
+			b.beginPath();
+			b.moveTo(L.x - R, L.y + i);
+			b.lineTo(L.x + R, L.y + i);
+			b.stroke();
+			b.beginPath();
+			b.moveTo(L.x + i, L.y - R);
+			b.lineTo(L.x + i, L.y + R);
+			b.stroke();
+		}
+		b.restore();
+	}
+	// the old trade roads: a worn dirt track through each route's stops, bending round the great lake (drawn once, into the ground)
+	b.lineCap = 'round';
+	b.lineJoin = 'round';
+	for (const r of ROUTES) {
+		const [a, c, d, e] = r.map(([x, y]) => ({ x, y })),
+			vert = a.x === c.x,
+			bend = 2 * (LAKE0.r + 70),
+			m1 = vert ? { x: MID - bend, y: MID } : { x: MID, y: MID - bend }; // a quadratic's middle sits halfway to its control point: twice the clearance
+		const path = () => {
+			b.beginPath();
+			b.moveTo(a.x, a.y);
+			b.lineTo(c.x, c.y);
+			b.quadraticCurveTo(m1.x + (vert ? -40 : 0), m1.y + (vert ? 0 : -40), d.x, d.y);
+			b.lineTo(e.x, e.y);
+		};
+		for (const [w, col] of [
+			[14, 'rgba(120,96,58,.35)'],
+			[8, 'rgba(150,124,78,.45)'],
+			[3, 'rgba(96,74,44,.35)'],
+		]) {
+			b.strokeStyle = col;
+			b.lineWidth = w;
+			b.setLineDash(w === 3 ? [10, 14] : []);
+			path();
+			b.stroke();
+		}
+		b.setLineDash([]);
+	}
+	b.restore(); // the land's clip
+	{
+		// outside the land (preview 51): every walking square whose middle is off the land, painted by which edge it lies past: the sea beyond the
+		// near edges (the land's south and east, the screen's bottom and right), the cliffs beyond the far; a strand of sand one square wide
+		// along the shore. Square by square, so the edge is the sawtooth of the diagonal squares (Albert's picture)
+		for (let gy = 0; gy < NC; gy++)
+			for (let gx = 0; gx < NC; gx++) {
+				const x = gx * NAVC,
+					y = gy * NAVC,
+					l = landXY(x + 5, y + 5);
+				if (l.x >= 0 && l.y >= 0 && l.x <= SQUARE && l.y <= SQUARE) continue;
+				const sea = l.x > SQUARE || l.y > SQUARE,
+					near = sea && l.x < SQUARE + 12 && l.y < SQUARE + 12;
+				if (!near) continue; // the sea and, past the far edges, the cliff face and its plateau are the frame's (drawRim); only the strand is painted here, one square wide, the sawtooth
+				b.fillStyle = '#cdbb88';
+				b.fillRect(x, y, NAVC, NAVC);
+			}
+	}
+	terrainMini = document.createElement('canvas');
+	terrainMini.width = terrainMini.height = 172;
+	terrainMini.getContext('2d').drawImage(bg, 0, 0, 172, 172);
+	// a 64-unit square of grass blades, repeated
+	const t = document.createElement('canvas');
+	t.width = t.height = 128;
+	const q = t.getContext('2d');
+	q.lineCap = 'round';
+	for (let i = 0; i < 260; i++) {
+		const x = lookDice() * 128,
+			y = lookDice() * 128;
+		q.strokeStyle = lookDice() < 0.5 ? 'rgba(28,48,22,.42)' : 'rgba(140,170,90,.32)';
+		q.lineWidth = 1.4;
+		q.beginPath();
+		q.moveTo(x, y);
+		q.lineTo(x + R(-2, 2), y - R(3, 7));
+		q.stroke();
+	}
+	grassPat = ctx.createPattern(t, 'repeat');
+}
+let SPARKS = [],
+	miniT = 0;
+// The rim (preview 50, Albert: "I wanted water and cliffs and sky anyway"): the screen is a rectangle and the map a diamond, so when the view
+// meets an edge the corners show what lies beyond. The near sides (south and east, the bottom of the screen) are the sea with a strand; the
+// far sides (north and west, the top) are cliffs, and above the cliffs the sky. Drawn in world units under the turned matrix, RIM deep.
+const RIMC = { sea: '#2f6684', deep: '#214a63', sand: '#cdbb88', cliff: '#4f463d', cliffLit: '#847566', top: '#5e6a4e', skyLo: '#b9cad6', skyHi: '#6b93b4' },
+	CLIFF_H = 140; // the far edges rise this much above the map
+function drawRim(z) {
+	const VB = viewBox(),
+		on = (x, y) => inLand(x, y);
+	if (on(VB.x0, VB.y0) && on(VB.x1, VB.y0) && on(VB.x0, VB.y1) && on(VB.x1, VB.y1)) return; // the whole screen is on the land
+	// a land point on the screen, h up; the land's edges: north and west at the top and left of the screen (the cliffs), south and east at the
+	// bottom and right (the sea). The ground's picture already paints the sawtooth band beside each edge; this is what lies beyond the array
+	const c = (lx, ly, h = 0) => {
+			const w = worldXY(lx, ly);
+			return [SX(w.x, w.y), SY(w.y, h, w.x)];
+		},
+		poly = (pts, fill) => {
+			ctx.beginPath();
+			pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+			ctx.closePath();
+			ctx.fillStyle = fill;
+			ctx.fill();
+		},
+		S = SQUARE,
+		R = RIM,
+		H = CLIFF_H;
+	const g = ctx.createLinearGradient(0, 0, 0, ch);
+	g.addColorStop(0, RIMC.skyHi);
+	g.addColorStop(1, RIMC.skyLo);
+	ctx.fillStyle = g;
+	ctx.fillRect(0, 0, cw, ch);
+	poly([c(-3 * R, S), c(S + 3 * R, S), c(S + 3 * R, S + 3 * R), c(-3 * R, S + 3 * R)], RIMC.sea); // the sea south, to the horizon
+	poly([c(S, -R), c(S + 3 * R, -R), c(S + 3 * R, S + 3 * R), c(S, S + 3 * R)], RIMC.sea); // and east
+	poly([c(-3 * R, S + 180), c(S + 3 * R, S + 180), c(S + 3 * R, S + 3 * R), c(-3 * R, S + 3 * R)], RIMC.deep); // deeper water farther out
+	poly([c(S + 180, -R), c(S + 3 * R, -R), c(S + 3 * R, S + 3 * R), c(S + 180, S + 3 * R)], RIMC.deep);
+	poly([c(-R, -R, H), c(S, -R, H), c(S, 0, H), c(0, 0, H), c(0, S, H), c(-R, S, H)], RIMC.top); // the plateau north and west, H up
+	poly([c(0, 0, 0), c(S, 0, 0), c(S, 0, H), c(0, 0, H)], RIMC.cliffLit); // the north face, lit (it faces the sun)
+	poly([c(0, 0, 0), c(0, S, 0), c(0, S, H), c(0, 0, H)], RIMC.cliff); // the west face, in shade
+}
+function draw() {
+	followCam(Math.min(0.1, (performance.now() - (draw.last || performance.now())) / 1000));
+	draw.last = performance.now();
+	shadeFrame();
+	ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+	const z = cam.z,
+		x0 = SX(0, 0),
+		y0 = SY(0, 0, 0),
+		sn = season();
+	drawRim(z); // beyond the map's edge: the sea, the cliffs and the sky (preview 50); the map itself is painted over in full
+	ctx.imageSmoothingEnabled = true;
+	const VB = viewBox(),
+		layer = (img) => {
+			// the picture of the land, drawn in world units under the turned matrix: the canvas turns it (preview 50)
+			const sx0 = clamp(VB.x0, 0, MAP),
+				sy0 = clamp(VB.y0, 0, MAP),
+				sx1 = clamp(VB.x1, 0, MAP),
+				sy1 = clamp(VB.y1, 0, MAP);
+			if (sx1 > sx0 && sy1 > sy0) {
+				wmat();
+				ctx.drawImage(img, sx0 * bgK, sy0 * bgK, (sx1 - sx0) * bgK, (sy1 - sy0) * bgK, sx0, sy0, sx1 - sx0, sy1 - sy0);
+				flat();
+			}
+		};
+	layer(bg);
+	if (z > 1.1 && grassPat) {
+		if (grassM.a !== 0.5) {
+			grassM.a = 0.5;
+			grassM.d = 0.5; // the tufts in world units: the matrix turns and squashes them with the ground
+			grassPat.setTransform(grassM);
+		}
+		ctx.globalAlpha = Math.min(1, (z - 1.1) * 1.5);
+		ctx.fillStyle = grassPat;
+		wrect(0, 0, MAP, MAP);
+		ctx.globalAlpha = 1;
+	}
+	if (G.shake > G.t && !still()) {
+		const k = (G.shake - G.t) * 3;
+		ctx.translate(rnd2() * k, rnd2() * k);
+	} // a sinkhole or a falling star: the whole view judders for a moment
+	if (G.jolt > G.t && !still()) ctx.translate(rnd2() * JUICE.jolt, rnd2() * JUICE.jolt); // a charge landing on screen: a jolt (the juice pass)
+	layer(scarCv);
+	drawFlood(z);
+	drawSand(z);
+	drawLakeRipples(z);
+	if (sn.tint) {
+		ctx.fillStyle = sn.tint;
+		wrect(0, 0, MAP, MAP);
+	}
+	if (DRAW.lvl < 1) drawRainRings(z);
+	drawGround(); // the weather's mark on the land, under everything standing
+	drawPicks(z); // the pick rings lie on the ground, under the figure and the building (Albert, Build 40)
+	// everything standing, back to front
+	// what is on screen: margins in world units, wide enough for the widest building (its turned east wall) and the tallest (a wonder, standing just below the edge)
+	const mx = Math.max(160 / z, 115),
+		wv = { x: VB.x0 - mx, y: VB.y0 - mx },
+		wv2 = { x: VB.x1 + mx, y: VB.y1 + mx },
+		inView = (e) => e.x > wv.x && e.x < wv2.x && e.y > wv.y && e.y < wv2.y;
+	const list = []; // back to front: by x + y, the screen's down axis in the turned view (preview 50)
+	for (const b of G.blds)
+		if (inView(b) && trapShown(b) && knownB(b)) list.push([b.x + b.y + (BLD[b.kind].crop ? -120 : halfOf(b) * 0.8), 1, b]);
+	const far = z < 0.55;
+	if (far) layer(forestLayer()); // zoomed out, the forest is one picture; close in, each tree
+	for (const f of G.finds) if (inView(f) && !(f.done && FINDS[f.kind].got)) list.push([f.x + f.y, 3, f]);
+	for (const u of G.units) if (!u.inside && inView(u) && visibleTo0(u)) list.push([u.x + u.y, 2, u]);
+	{
+		const now = performance.now();
+		while (FALL.length && now - FALL[0].t > 1400) FALL.shift();
+		for (const f of FALL) if (inView(f)) list.push([f.x + f.y, 4, f]);
+	}
+	list.sort((a, b) => a[0] - b[0]);
+	const N = viewNodes(wv, wv2, far),
+		sB = quant(z * dpr),
+		sU = quant(z * dpr * FIG);
+	sunShadows(N, list, z, far); // every sun shadow, one path, on the ground under everything standing (the trees' are the first shed under load)
+	// the standing nodes (about 2,000 trees, bushes and rocks) are kept sorted until the view moves a step; the few moving things are merged in
+	for (let i = 0, j = 0; i < N.length || j < list.length; ) {
+		const take = j >= list.length || (i < N.length && N[i].x + N[i].y < list[j][0]),
+			e = take ? N[i++] : list[j][2],
+			t = take ? 0 : list[j++][1];
+		try {
+			t === 0
+				? drawNode(e, sB)
+				: t === 1
+					? drawBld(e, sB)
+					: t === 2
+						? e.hid
+							? ((ctx.globalAlpha = 0.55), drawUnit(e, sU), (ctx.globalAlpha = 1), leavesOver(e)) // in ambush: half seen under a few leaves, so you know where they lie
+							: drawUnit(e, sU)
+						: t === 4
+							? drawFallen(e, sU)
+							: drawFind(e);
+		} catch (er) {
+			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+			ctx.globalAlpha = 1;
+			ctx.globalCompositeOperation = 'source-over';
+			ctx.setLineDash([]);
+			fault(er);
+		} // one bad piece must never take the rest of the picture with it: the canvas is put back as it was
+	}
+	drawFire(z, inView);
+	drawStandards(z, inView);
+	drawFogLayer(z);
+	sparkDraw();
+	ripDraw();
+	drawEvents(z);
+	drawOrders(z);
+	drawReticle();
+	if (G.rally0) flagAt(SX(G.rally0.x, G.rally0.y), SY(G.rally0.y, 0, G.rally0.x), G.P[0].color, z);
+	drawTracers();
+	drawLight(z, inView);
+	drawHitGlow();
+	drawFlash();
+	drawSky();
+	drawWeather();
+	drawRadar(wv, wv2);
+	drawTouch(z);
+	drawGhost();
+	{
+		const now = performance.now();
+		if (G.hud.page === 'war' && now - miniT > 150) {
+			miniT = now;
+			drawMini();
+		}
+	} // the map corner needs no more than seven looks a second
+}

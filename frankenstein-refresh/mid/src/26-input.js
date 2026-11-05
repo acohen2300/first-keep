@@ -1,0 +1,669 @@
+// ═════ 26-input.js: the finger: tap, hold, box, pick ═════
+// ───────────────────────── Touch: drag to look, pinch to zoom, tap to ask, press and slide to place ─────────────────────────
+const ptrs = new Map();
+let drag = null,
+	pinch = null;
+const HOLD_MS = 320,
+	PRESS_SHOW = 250, // ms before the hold's ring shows: a tap (under about 200 ms) never sees it (Albert, Nov 3)
+	DBL_MS = 320;
+let holdT = 0; // hold a finger: on one of yours, pick it and keep picking; on open ground, then drag: a box
+const holdStop = () => {
+	clearTimeout(holdT);
+	G.press = null;
+};
+const lp = (e) => {
+	const r = cv.getBoundingClientRect();
+	return { x: e.clientX - r.left, y: e.clientY - r.top };
+};
+let EDGE = null; // where the finger is while it drags the ghost: near the screen edge the map scrolls
+function edgeScroll(dt) {
+	if (!EDGE || !G.place || !drag || drag.mode !== 'place') return;
+	const m = 48,
+		vx = EDGE.x < m ? -1 : EDGE.x > cw - m ? 1 : 0,
+		vy = EDGE.y < m ? -1 : EDGE.y > ch - m ? 1 : 0;
+	if (!vx && !vy) return;
+	{
+		const d = dWorld(vx * 320 * dt, vy * 320 * dt); // the screen's push, turned into the world's (preview 50)
+		cam.x += d.x;
+		cam.y += d.y;
+	}
+	clampCam();
+	ghostAt(EDGE, drag.touch);
+}
+const LIFT = 64; // on a phone the building waits this far above your finger, so you can see it
+// A wall is a list of corners: tap to add one, drag a corner to move it, drag the wall to slide all of it. `pl.cells` is every square of it.
+const wallSnap = (prev, c) => {
+	if (!prev) return c;
+	const dx = c.gx - prev.gx,
+		dy = c.gy - prev.gy;
+	if (Math.abs(dy) * 3 < Math.abs(dx)) return { gx: c.gx, gy: prev.gy }; // nearly flat or upright: make it so
+	if (Math.abs(dx) * 3 < Math.abs(dy)) return { gx: prev.gx, gy: c.gy };
+	return c;
+};
+function wallSet(pl) {
+	const P = pl.pts;
+	pl.cells = P.length > 1 ? P.slice(1).flatMap((c, i) => wallLine(P[i], c).slice(i ? 1 : 0)) : P.slice();
+	pl.at = P.length ? { x: P[P.length - 1].gx * NAVC + 5, y: P[P.length - 1].gy * NAVC + 5 } : null;
+}
+const wallXY = (c) => ({ x: SX(c.gx * NAVC + 5, c.gy * NAVC + 5), y: SY(c.gy * NAVC + 5, 0, c.gx * NAVC + 5) });
+function wallHit(pl, p) {
+	const R = 24,
+		P = pl.pts.map(wallXY);
+	const i = P.findIndex((q) => dist(q, p) < R);
+	if (i >= 0) return { mode: 'wpt', i };
+	for (let j = 1; j < P.length; j++) {
+		const a = P[j - 1],
+			b = P[j],
+			l2 = (b.x - a.x) ** 2 + (b.y - a.y) ** 2 || 1,
+			t = clamp(((p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y)) / l2, 0, 1);
+		if (hyp(p.x - (a.x + t * (b.x - a.x)), p.y - (a.y + t * (b.y - a.y))) < R) return { mode: 'wall' };
+	}
+	return null;
+}
+function ghostAt(p, touch) {
+	const pl = G.place,
+		w = toWorld(p.x, p.y - (touch ? LIFT : 0));
+	pl.at = snapGhost(0, pl.kind, w.x, w.y, Math.max(14, 26 / cam.z));
+}
+function wallDrag(d, p) {
+	const pl = G.place,
+		c = toCell(toWorld(p.x, p.y));
+	if (d.mode === 'wpt') pl.pts[d.i] = wallSnap(pl.pts[d.i - 1] || pl.pts[d.i + 1], c);
+	else {
+		const dx = c.gx - d.c0.gx,
+			dy = c.gy - d.c0.gy;
+		pl.pts = d.pts0.map((q) => ({ gx: clamp(q.gx + dx, 0, NC - 1), gy: clamp(q.gy + dy, 0, NC - 1) }));
+	}
+	wallSet(pl);
+}
+cv.addEventListener('pointerdown', (e) => {
+	holdStop();
+	try {
+		cv.setPointerCapture(e.pointerId);
+	} catch (err) {}
+	const p = lp(e);
+	ptrs.set(e.pointerId, p);
+	if (ptrs.size >= 2) {
+		dropDrag();
+		const [a, b] = [...ptrs.values()];
+		pinch = { d: dist(a, b) || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
+		if (G.qa) hideQuick(); // a pinch moves the map under the chips
+		return;
+	}
+	if (G.place && lineKind(G.place.kind)) {
+		const h = wallHit(G.place, p);
+		drag = h
+			? { ...h, p0: p, c0: toCell(toWorld(p.x, p.y)), pts0: G.place.pts.map((q) => ({ ...q })), touch: true }
+			: { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, touch: true }; // on a corner or the wall: move it; elsewhere: look around, and a tap adds a corner
+		return;
+	}
+	if (G.place) {
+		const touch = e.pointerType !== 'mouse',
+			at = G.place.at,
+			gx = at ? SX(at.x, at.y) : 0,
+			gy = at ? SY(at.y, 0, at.x) : 0,
+			nearGhost =
+				!at ||
+				Math.min(hyp(p.x - gx, p.y - gy), hyp(p.x - gx, p.y - (touch ? LIFT : 0) - gy)) <
+					Math.max(70, BLD[G.place.kind].fp * NAVC * cam.z * 0.7);
+		if (nearGhost) {
+			ghostAt(p, touch);
+			drag = { mode: 'place', touch };
+			EDGE = p;
+			ui(true);
+			return;
+		}
+		drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, touch }; // away from the ghost: drag looks around; a tap moves the ghost there
+		return;
+	}
+	if (G.hud.aim === 'choke') {
+		const a = toWorld(p.x, p.y);
+		drag = { mode: 'choke', a };
+		G.chokeLine = { a, b: a };
+		return;
+	} // the choke tool (28-army-quick): the drag is the gap
+	drag = { mode: 'pan', x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, t0: performance.now() };
+	G.press = { x: p.x, y: p.y, t: performance.now() };
+	holdT = setTimeout(() => {
+		const d = drag;
+		if (!(d && d.mode === 'pan' && !d.moved && G.press)) return;
+		feel('snap');
+		if (aimNear(G.press.x, G.press.y)) {
+			G.hud.drag = true;
+			drag = { mode: 'ret' };
+			G.press = null;
+			return;
+		} // held on the crosshair: it is yours to drag
+		const h = hitAt(G.press.x, G.press.y);
+		if (h.t === 'unit' && h.e.owner === 0) {
+			G.pickMore = true;
+			pickToggle(h.e, true);
+			drag = null;
+			G.press = null;
+			ui(true);
+			return;
+		} // held on one of yours: it is picked, and the next taps add more
+		const at = { x0: G.press.x, y0: G.press.y, x1: G.press.x, y1: G.press.y };
+		G.press = null;
+		drag = { mode: 'box', ...at };
+		G.box = drag;
+	}, HOLD_MS);
+});
+cv.addEventListener('pointermove', (e) => {
+	const p = lp(e);
+	if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, p);
+	if (pinch && ptrs.size >= 2) {
+		const [a, b] = [...ptrs.values()],
+			d = dist(a, b) || 1,
+			mx = (a.x + b.x) / 2,
+			my = (a.y + b.y) / 2;
+		if (G) G.follow = false; // a pinch is yours: the camera stops following
+		camStop();
+		zoomAt((cam.z * d) / pinch.d, mx, my);
+		{
+			const d = dWorld(mx - pinch.mx, my - pinch.my);
+			cam.x -= d.x;
+			cam.y -= d.y;
+		}
+		clampCam();
+		pinch.d = d;
+		pinch.mx = mx;
+		pinch.my = my;
+		return;
+	}
+	if (drag && drag.mode === 'ret') {
+		aimSpot(p.x, p.y);
+		return;
+	}
+	if (drag && drag.mode === 'choke') {
+		G.chokeLine = { a: drag.a, b: toWorld(p.x, p.y) };
+		return;
+	}
+	if (drag && drag.mode === 'box') {
+		drag.x1 = p.x;
+		drag.y1 = p.y;
+		return;
+	}
+	if (drag && (drag.mode === 'wpt' || drag.mode === 'wall')) {
+		wallDrag(drag, p);
+		return;
+	}
+	if (G.place && drag && drag.mode === 'place') {
+		ghostAt(p, drag.touch);
+		EDGE = p;
+		return;
+	}
+	if (G.place && !drag && e.pointerType === 'mouse' && G.place.kind !== 'wall') {
+		ghostAt(p, false);
+		return;
+	}
+	if (!drag || drag.mode !== 'pan') return;
+	const dx = e.clientX - drag.x,
+		dy = e.clientY - drag.y;
+	if (!drag.moved && hyp(dx, dy) > 8) {
+		drag.moved = true;
+		if (G.qa) hideQuick(); // the map moved under the chips: they close
+		holdStop();
+	}
+	if (drag.moved) {
+		if (G) G.follow = false; // a drag is yours too
+		camStop();
+		{
+			const d = dWorld(dx, dy);
+			cam.x = drag.cx - d.x;
+			cam.y = drag.cy - d.y;
+		}
+		clampCam();
+	}
+});
+cv.addEventListener('pointerup', (e) => {
+	ptrs.delete(e.pointerId);
+	holdStop();
+	if (pinch) {
+		if (ptrs.size < 2) pinch = null;
+		dropDrag();
+		return;
+	}
+	const d = drag;
+	drag = null;
+	if (!d) return;
+	EDGE = null;
+	if (d.mode === 'choke') {
+		const q = lp(e);
+		G.chokeLine = null;
+		G.hud.aim = G.hud.page === 'war'; // the station's crosshair stays up
+		chokeAt(d.a, toWorld(q.x, q.y));
+		ui(true);
+		return;
+	}
+	if (d.mode === 'ret') {
+		G.hud.drag = false;
+		ui(true);
+		return;
+	}
+	if (d.mode === 'box') {
+		G.box = null;
+		if (Math.abs(d.x1 - d.x0) < 12 && Math.abs(d.y1 - d.y0) < 12) {
+			const q = lp(e);
+			tapAt(q.x, q.y);
+		} else boxPick(d);
+		ui(true);
+		return;
+	} // held but never dragged: it was a tap
+	if (d.mode === 'place' || d.mode === 'wpt' || d.mode === 'wall') {
+		ui(true);
+		return;
+	} // it waits: drag again to adjust, or tap Build
+	if (d.moved) return;
+	const p = lp(e);
+	if (G.place) {
+		const pl = G.place;
+		if (lineKind(pl.kind)) {
+			pl.pts.push(wallSnap(pl.pts[pl.pts.length - 1], toCell(toWorld(p.x, p.y)))); // a tap: the next corner, exactly where the finger is
+			wallSet(pl);
+		} else ghostAt(p, d.touch);
+		ui(true);
+		return;
+	}
+	tapAt(p.x, p.y);
+});
+// a side you are not at war with: the toast says what to do first, in the stance words (REL_WORD)
+const foeFirst = (o) => `${REL_WORD[G.rel[0][o]]}: make them a ${REL_WORD.war.toLowerCase()} at your Town Center first.`;
+// letting go of a drag, one home (E5: a pinch dropped the drag but left the box drawn and the crosshair glowing): the box, the crosshair's
+// glow, the edge and the drag itself, from a pinch's start and end and a cancel
+function dropDrag() {
+	EDGE = null;
+	if (G.hud) G.hud.drag = false;
+	G.box = null;
+	drag = null;
+}
+cv.addEventListener('pointercancel', (e) => {
+	holdStop();
+	ptrs.delete(e.pointerId);
+	if (ptrs.size < 2) pinch = null;
+	dropDrag();
+});
+cv.addEventListener(
+	'wheel',
+	(e) => {
+		e.preventDefault();
+		const p = lp(e);
+		if (G) G.follow = false;
+		if (G && G.qa) hideQuick();
+		zoomAt(cam.z * Math.exp(-e.deltaY * 0.0015), p.x, p.y);
+	},
+	{ passive: false },
+);
+['gesturestart', 'gesturechange', 'gestureend'].forEach((t) => document.addEventListener(t, (e) => e.preventDefault()));
+let miniAt = null;
+mini.addEventListener('pointerdown', (e) => {
+	e.stopPropagation();
+	if (G) G.follow = false;
+	try {
+		mini.setPointerCapture(e.pointerId);
+	} catch (err) {} // the finger stays the map's until it lifts, even off its edge (an audit, Nov 2)
+	const r = mini.getBoundingClientRect(),
+		w = miniWorld(((e.clientX - r.left) / r.width) * 172, ((e.clientY - r.top) / r.height) * 172),
+		x = w.x,
+		y = w.y;
+	camGo(x, y);
+	miniAt = { x: e.clientX, y: e.clientY, pan: false };
+});
+mini.addEventListener('pointermove', (e) => {
+	if (!miniAt) return;
+	if (!miniAt.pan && hyp(e.clientX - miniAt.x, e.clientY - miniAt.y) > 8) {
+		miniAt.pan = true;
+	} // a finger that moves is looking
+	if (miniAt.pan) {
+		const r = mini.getBoundingClientRect();
+		camStop();
+		const w = miniWorld(((e.clientX - r.left) / r.width) * 172, ((e.clientY - r.top) / r.height) * 172);
+		cam.x = w.x;
+		cam.y = w.y;
+		clampCam();
+	} // and a drag on the small map sweeps the camera with it, no glide (Albert, Nov 2)
+});
+for (const ev of ['pointerup', 'pointercancel'])
+	mini.addEventListener(ev, () => {
+		miniAt = null;
+	});
+// what is under the finger: a building (they have height), a find, a unit, a resource, else the ground
+function hitAt(sx, sy) {
+	const z = cam.z;
+	let foot = null,
+		roof = null,
+		fy = -1e9,
+		ry = -1e9;
+	{
+		let u = null,
+			ud = Math.max(16, 9 * z);
+		for (const v of G.units)
+			if (!v.inside && visibleTo0(v)) {
+				const d = hyp(SX(v.x, v.y) - sx, SY(v.y, 0, v.x) - 6 * z - sy);
+				if (d < ud) {
+					ud = d;
+					u = v;
+				}
+			}
+		if (u) return { t: 'unit', e: u };
+	} // a person is the smallest thing under the finger: it wins over the ground it stands on
+	for (const b of G.blds) {
+		// footprint: the ground it stands on; roof: the height drawn above it
+		const B = BLD[b.kind],
+			w = Math.max(B.fp * NAVC * z * TURN, 22),
+			x = SX(b.x, b.y),
+			gy = SY(b.y, 0, b.x),
+			d = B.fp * NAVC * z * TURN * TILT; // the footprint's box on the turned screen (preview 50): TURN is the diagonal's width per unit
+		if ((B.trap && !trapShown(b)) || !knownB(b)) continue;
+		if (sx <= x - w / 2 - 4 || sx >= x + w / 2 + 4 || sy >= gy + d / 2 + 4) continue;
+		if (sy > gy - d / 2 - 4) {
+			if (gy > fy) {
+				foot = b;
+				fy = gy;
+			}
+		} else if (sy > gy - d / 2 - (B.h + 8) * z - 10 && gy > ry) {
+			roof = b;
+			ry = gy;
+		}
+	}
+	if (foot) return { t: 'bld', e: foot };
+	const near = (x, y, r) => hyp(SX(x, y) - sx, SY(y, 0, x) - 6 * z - sy) < r;
+	const f = G.finds.find((f) => !(f.done && FINDS[f.kind].got) && known0(f) && near(f.x, f.y, Math.max(22, 14 * z)));
+	if (f) return { t: 'find', e: f };
+	if (roof) return { t: 'bld', e: roof };
+	let nd = null,
+		nr = Math.max(16, 11 * z);
+	for (const n of G.nodes)
+		if (n.kind !== 'farm' && (!G.fogOn || fogAt(n.x, n.y) > 0)) {
+			// a find under the fog is not there to tap: the same test the drawing uses (E4)
+			const d = hyp(SX(n.x, n.y) - sx, SY(n.y, 0, n.x) - 6 * z - sy);
+			if (d < nr) {
+				nr = d;
+				nd = n;
+			}
+		}
+	if (nd) return { t: 'node', e: nd };
+	return { t: 'ground', e: toWorld(sx, sy) };
+}
+const cardFor = (h) =>
+	h.t === 'bld'
+		? { type: 'bld', id: h.e.id }
+		: h.t === 'find'
+			? { type: 'find', id: h.e.id }
+			: h.t === 'unit'
+				? { type: 'unit', id: h.e.id }
+				: { type: 'node', id: h.e.id };
+// One rule for the finger (Albert, Build 40; Nov 2): a tap picks a unit, a double tap opens its card, a hold does more (on yours, picks and keeps picking; on the ground or an enemy, the attack's ring; held and dragged, a box). Buildings and places open on one tap.
+// With one or more of yours picked, a tap on anything else is the obvious order, without a menu: attack, hunt, gather, build, mend, walk.
+// The order goes at once (Build 40 reviews: a waiting order reads as lag); a second tap on the same thing within a blink opens its card, the order already given.
+let lastTap = { key: '', t: 0 };
+function tapAt(sx, sy) {
+	if (G.over) return;
+	if (RADAR && hyp(sx - RADAR.sx, sy - RADAR.sy) < 26) {
+		G.follow = false;
+		camGo(RADAR.x, RADAR.y);
+		return;
+	}
+	if (G.hud.aim) return aimAt(sx, sy); // Aim: the next tap is the target
+	if (G.qa) return hideQuick(); // the sword and ✕ are up: a tap anywhere else only closes them (28-army-quick)
+	const h = hitAt(sx, sy),
+		key = h.t === 'ground' ? 'ground' : h.t + h.e.id,
+		now = performance.now(),
+		dbl = key === lastTap.key && now - lastTap.t < DBL_MS && (key !== 'ground' || hyp(sx - lastTap.sx, sy - lastTap.sy) < 26);
+	lastTap = { key, t: now, sx, sy };
+	if (dbl) {
+		if (h.t === 'ground') return; // the ground has no card (the Here card is cut, Nov 2)
+		setPick([]);
+		openCard(cardFor(h));
+		return;
+	}
+	if (h.t === 'unit' && h.e.owner === 0 && !h.e.inside) {
+		pickToggle(h.e);
+		return;
+	}
+	const mine = picked();
+	if (mine.length) {
+		order(mine, h);
+		if (!mine.some(isSoldier)) setPick([]); // villagers given work are let go of; soldiers keep their orders coming (Build 61, Albert)
+		refresh();
+		return;
+	}
+	if (h.t === 'ground') {
+		const O = ordAt(sx, sy);
+		if (O) {
+			ACT.ordpick(String(O.id));
+			return;
+		} // the ring of a group on the march: tap it to pick the group
+		showQuick(sx, sy, h.e.x, h.e.y);
+		return;
+	} // nothing picked: the sword and ✕ (Albert, Nov 3: a tap is a right click)
+	if (
+		h.t === 'bld' &&
+		h.e.owner === 0 &&
+		h.e.node &&
+		BLD[h.e.kind].reserve &&
+		h.e.node.amt <= 0 &&
+		!replantWhy(0, h.e)
+	) {
+		replant(0, h.e.id);
+		sfx('place');
+		return;
+	} // a plot cut out: one tap replants it (Build 61, Albert); if it cannot be, the tap opens its card, which says why
+	if (h.t !== 'unit') {
+		setPick([]);
+		openCard(cardFor(h));
+		return;
+	} // a building, a field, a find: nothing to pick, so one tap opens it (Albert, Build 40)
+	setPick([{ t: h.t, id: h.e.id }]); // a unit not yours: a ring says what the finger found; a second tap opens its page
+}
+// the order ring under a finger (tap slop 26 px): the nearest group ring wins
+function ordAt(sx, sy) {
+	let best = null,
+		bd = 26;
+	for (const id in G.ords || {}) {
+		const O = G.ords[id],
+			d = hyp(SX(O.x, O.y) - sx, SY(O.y, 0, O.x) - sy);
+		if (O.n && d < bd) {
+			bd = d;
+			best = O;
+		}
+	}
+	return best;
+}
+// what the finger holds
+const picked = () =>
+	G.pick
+		.filter((k) => k.t === 'unit')
+		.map((k) => byId(G.units, k.id))
+		.filter((u) => u && u.owner === 0 && u.hp > 0 && !u.inside);
+const pickObj = (k) =>
+	(k.t === 'unit' ? G.units : k.t === 'bld' ? G.blds : k.t === 'find' ? G.finds : G.nodes).find((e) => e.id === k.id);
+function setPick(list) {
+	G.pick = list;
+	G.pickSet = new Set(list.map((k) => k.t + k.id));
+	G.pickE = list.map(pickObj).filter(Boolean);
+	if (!list.length) G.pickMore = false;
+	ui(true);
+}
+function pickToggle(u, hold) {
+	const k = { t: 'unit', id: u.id },
+		has = G.pickSet && G.pickSet.has('unit' + u.id);
+	if (G.pickMore && !hold)
+		setPick(
+			has
+				? G.pick.filter((x) => !(x.t === 'unit' && x.id === u.id))
+				: [...picked().map((v) => ({ t: 'unit', id: v.id })), k],
+		);
+	else setPick([k]);
+	sfx(pickSound(u));
+}
+// the sound a picked unit answers with: by what it is made of and how it moves (35-sound)
+const pickSound = (u) => {
+	const T = UNIT[u.kind].tags || [];
+	return T.includes('mounted')
+		? 'pickHoof'
+		: T.includes('ranged')
+			? 'pickTwang'
+			: isSoldier(u)
+				? 'pickMetal'
+				: 'pickWood';
+};
+function order(S, h) {
+	const sol = S.filter(isSoldier),
+		vil = S.filter((u) => u.kind === 'vil'),
+		e = h.e,
+		go = (list, x, y) => {
+			postTo(
+				list.filter((u) => u.kind === 'vil'),
+				{ x, y },
+			); // each villager to its own spot round the point (item 5)
+			list.forEach((u) => {
+				if (u.kind === 'vil') setJob(u, null);
+				else {
+					u.state = 'goto';
+					u.px = x;
+					u.py = y;
+					u.idleT = 0;
+					u.focus = null;
+					u.sent = true; // A (Albert, Nov 4): placed by hand, it is not one of the idle ones the sword sends
+				}
+			});
+		};
+	if (h.t === 'unit' && e.owner !== 0) {
+		if (e.owner !== WILD && !atWar(0, e.owner)) {
+			say(foeFirst(e.owner), '', TOAST.mid);
+			return;
+		}
+		if (UNIT[e.kind].meat && vil.length)
+			vil.forEach((v) => {
+				setJob(v, 'food');
+				v.hunt = e;
+				v.post = null;
+			});
+		for (const pr of S)
+			if (pr.kind === 'priest' && e.owner !== WILD && UNIT[e.kind].cls && !(pr.cvCd > G.t)) {
+				pr.state = 'convert';
+				pr.cv = e.id;
+				pr.cvT = 0;
+			} // a priest sent at a foe converts them
+		sol.forEach((u) => {
+			u.state = 'goto';
+			u.px = e.x;
+			u.py = e.y;
+			u.idleT = 0;
+			u.focus = e;
+		});
+		if (sol.length) march(sol, e, e.owner === WILD ? UNIT[e.kind].name : G.P[e.owner].name);
+	} else if (h.t === 'bld' && e.owner !== 0) {
+		if (!atWar(0, e.owner)) {
+			say(foeFirst(e.owner), '', TOAST.mid);
+			return;
+		}
+		sol.forEach((u) => {
+			u.state = 'attack';
+			u.target = e.owner;
+			u.bid = e.id;
+			u.focus = null;
+		});
+		if (sol.length) march(sol, e, `the ${bldName(e.owner, e.kind)} of ${G.P[e.owner].name}`);
+	} else if (h.t === 'bld') {
+		if (e.prog < 1)
+			vil.forEach((v) => {
+				sendBuilder(v, e);
+				v.post = null;
+			});
+		else if (e.hp < maxHpB(0, e.kind) - 0.5)
+			vil.forEach((v) => {
+				setJob(v, 'repair');
+				v.rep = e;
+				v.post = null;
+			});
+		else
+			vil.forEach((v) => {
+				if (!startWork(v, e)) go([v], e.x, e.y + halfOf(e) + 12);
+			});
+		go(sol, e.x, e.y + halfOf(e) + 16);
+	} else if (h.t === 'node') {
+		vil.forEach((v) => {
+			setJob(v, e.type, e, e); // placed: the find is its anchor (decision 1)
+			v.sent = true; // your order: it outlasts a fright remembered there, and says why if it must leave
+			v.post = null;
+		});
+		go(sol, e.x, e.y + 14);
+	} else if (h.t === 'find') {
+		if (e.kind === 'shrine') {
+			const pr = S.find((u) => u.kind === 'priest');
+			if (pr) {
+				pr.state = 'shrine';
+				pr.fid = e.id;
+			}
+		}
+		go(
+			S.filter((u) => u.kind !== 'priest' || e.kind !== 'shrine'),
+			e.x,
+			e.y,
+		);
+		if (sol.length) march(sol, e, FINDS[e.kind].name);
+	} else {
+		for (const w of S)
+			if (UNIT[w.kind].camp) {
+				const why = campWhy(0, UNIT[w.kind].camp, e.x, e.y); // the wagon's spot is checked when it is sent, not after the drive (p44)
+				if (why) return say(why + ' Send the wagon elsewhere.', 'warn', TOAST.mid);
+			}
+		go(S, e.x, e.y);
+		if (sol.length) march(sol, e, coord(e.x, e.y));
+	}
+	if (sol.length) orderCost(0, sol); // an order by tap costs the same meals as one from the controller (p44)
+	ripple(e.x, e.y, '#ffd35e');
+	G.pickMore = false;
+}
+function startPlace(kind) {
+	const B = BLD[kind],
+		p = G.P[0];
+	if (B.age > p.age) {
+		openCard({ type: 'info', kind });
+		return;
+	}
+	if (G.place && G.place.kind === kind) {
+		cancelPlace();
+		return;
+	}
+	const why = capWhy(0, kind);
+	if (why) {
+		say(why + '.', '', TOAST.short);
+		sfx('err');
+		return;
+	}
+	closeCard();
+	setPick([]);
+	G.place = { kind, at: null, pts: [], cells: null };
+	// start the ghost in the middle of the screen, snapped beside something of yours if it can be
+	const w = G.buildAt && G.buildAt.x !== undefined ? G.buildAt : toWorld(cw / 2, ch / 2);
+	G.buildAt = null;
+	if (kind !== 'wall') G.place.at = snapGhost(0, kind, w.x, w.y, 200); // from the hammer on open ground: there; otherwise the middle of the screen
+	ui(true);
+}
+// you tapped Build: build what the ghost shows; houses, fields and gates offer the next spot beside it
+function cancelPlace() {
+	if (G) G.place = null; // the bar follows in ui()
+}
+
+// The box: your people inside it are picked; a box of trees and nobody is a road to cut
+function boxPick(d) {
+	const a = toWorld(Math.min(d.x0, d.x1), Math.min(d.y0, d.y1)),
+		b = toWorld(Math.max(d.x0, d.x1), Math.max(d.y0, d.y1)),
+		r = { x0: a.x, y0: a.y, x1: b.x, y1: b.y };
+	const mine = armyOf(0)
+		.concat(unitsOf(0, 'vil'))
+		.filter((u) => !u.inside && inBox(u, r));
+	if (mine.length) {
+		setPick(mine.map((u) => ({ t: 'unit', id: u.id })));
+		return;
+	}
+	const trees = G.nodes.filter((n) => n.kind === 'tree' && n.amt > 0 && inBox(n, r)).length;
+	if (!trees) {
+		say('Nothing of yours in that box.', '', TOAST.short);
+		return;
+	}
+	openCard({ type: 'box', r, trees });
+}

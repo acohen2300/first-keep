@@ -1,0 +1,761 @@
+// ═════ 37-events.js: the event scheduler and what each event does ═════
+// ───────────────────────── The Challenge and the spectacle: one scheduler, one table of events, one set of knobs ─────────────────────────
+// EVM: the knobs an event turns (every unit reads them: damage, speed, sight, gathering). A hazard is a switch in G.hz; a spectacle is a row of EVENTS.
+// Random when, never random whether: the next event is picked when the last ends (an exponential wait, the Poisson process: nextIn in 08-core), announced EV_WARN seconds ahead, then run for its seconds.
+const EVM = { dmg: 1, spd: 1, sight: 1, gather: 1 };
+// the knobs follow the event now running and nothing else; set when one starts or ends, and on a new game or a load (Build 48: a game begun or loaded in an eclipse kept its dark)
+const KNOBS = { eclipse: ['dmg', 'spd', 'sight'], heatwave: ['dmg', 'spd'] }; // fog caps sight by visibility instead (visCap, 08)
+function evmSet() {
+	EVM.dmg = EVM.spd = EVM.sight = EVM.gather = 1;
+	const e = G && G.ev && G.ev.cur;
+	if (e) for (const k of KNOBS[e.kind] || []) EVM[k] = EVENTS[e.kind][k];
+}
+const hz = (id) => !!(G.hz && G.hz[id]) && G.diff !== 'easy'; // Easy keeps the polite game whatever is switched on
+const levelOf = (h) => HZK.reduce((s, k) => s + (h && h[k] ? HAZARDS[k].pts : 0), 0);
+const levelMul = () => (G.diff === 'easy' ? 1 : 1 + levelOf(G.hz) / 10); // the score's multiplier for the level played; Easy has no hazards, so no bonus (B8)
+const evOn = (kind) => !!(G.ev.cur && G.ev.cur.kind === kind);
+const edgeSpot = () => {
+	// a spot on one of the land's edges, in the world (preview 51)
+	const e = Math.floor(rng() * 4),
+		t = rnd(300, SQUARE - 300);
+	return landAt(...(e === 0 ? [t, 40] : e === 1 ? [SQUARE - 40, t] : e === 2 ? [t, SQUARE - 40] : [40, t]));
+};
+const across = (a) => ({ x: 2 * MID - a.x, y: 2 * MID - a.y }); // the far side of the land from a spot (through the middle)
+const wildSpot = () => {
+	for (let i = 0; i < 40; i++) {
+		const s = landAt(rnd(200, SQUARE - 200), rnd(200, SQUARE - 200));
+		if (
+			lakeGap(s.x, s.y) > 60 &&
+			!G.P.some((p) => p.id !== WILD && p.alive && keepOf(p.id) && dist(keepOf(p.id), s) < 420)
+		)
+			return s;
+	}
+	return { x: MID, y: MID - 300 };
+};
+const canEv = (k) => {
+	const E = EVENTS[k];
+	return (
+		!(E.fantasy && !G.fantasy) &&
+		!(E.need && G.wx !== E.need) &&
+		!(E.season && ![].concat(E.season).includes(season().name)) &&
+		!(E.night && G.night < 0.5) &&
+		!(k === 'quicksand' && G.wx !== 'rain') &&
+		!(k === 'flood' && G.wx !== 'rain')
+	);
+};
+function pickEvent() {
+	const can = EVK.filter(canEv);
+	let k = can[Math.floor(rng() * can.length)];
+	if (k === G.ev.last && can.length > 1) k = can[(can.indexOf(k) + 1) % can.length];
+	return k;
+}
+// the swarm, the herd and the cloud all cross the map the same way: from one edge to the far side, in E.secs
+const crossing = (e) => {
+	e.a = e.a || edgeSpot();
+	e.b = e.b || across(e.a);
+	const f = clamp((G.t - e.t0) / (e.until - e.t0), 0, 1);
+	return { x: e.a.x + (e.b.x - e.a.x) * f, y: e.a.y + (e.b.y - e.a.y) * f, f };
+};
+const herdAt = (kind, n, a, b, spread) => {
+	const out = [];
+	for (let i = 0; i < n; i++) {
+		const u = addUnit(WILD, kind, a.x + rnd(-spread, spread), a.y + rnd(-spread, spread));
+		u.px = b.x + rnd(-spread, spread);
+		u.py = b.y + rnd(-spread, spread);
+		u.hx = u.x;
+		u.hy = u.y;
+		u.herd = true;
+		u.tier = i;
+		out.push(u);
+	}
+	return out;
+}; // tier: which coat a performer wears
+const EV = {
+	eclipse: {
+		draw(e, z, t) {
+			const f = Math.sin(Math.PI * clamp((G.t - e.t0) / (e.until - e.t0), 0, 1)),
+				x = cw * 0.5,
+				y = ch * 0.28;
+			ctx.globalAlpha = f;
+			const gl = ctx.createRadialGradient(x, y, 26, x, y, 60);
+			gl.addColorStop(0, 'rgba(255,250,230,.9)');
+			gl.addColorStop(1, 'rgba(255,250,230,0)');
+			ctx.fillStyle = gl;
+			ctx.beginPath();
+			ctx.arc(x, y, 60, 0, 7);
+			ctx.fill();
+			ctx.fillStyle = '#0b0f0d';
+			ctx.beginPath();
+			ctx.arc(x, y, 27, 0, 7);
+			ctx.fill();
+			ctx.globalAlpha = 1;
+		}, // the corona at the top of the glass
+		start(e) {
+			sfx('hush');
+		},
+	},
+	storm: {
+		draw(e, z, t) {
+			if (still() || !Number.isFinite(e.x)) return; // no place yet in the first second
+			// a dark band of cloud walking east, rain under it
+			const x = SX(e.x, e.y),
+				w = EVENTS.storm.band * z;
+			const gr = ctx.createLinearGradient(x - w, 0, x + w, 0);
+			gr.addColorStop(0, 'rgba(20,24,34,0)');
+			gr.addColorStop(0.5, 'rgba(14,18,28,.62)');
+			gr.addColorStop(1, 'rgba(20,24,34,0)');
+			ctx.fillStyle = gr;
+			ctx.fillRect(x - w, 0, 2 * w, ch);
+			ctx.fillStyle = 'rgba(40,46,60,.85)';
+			for (let i = 0; i < 9; i++) {
+				ctx.beginPath();
+				ctx.ellipse(
+					x + (i - 4) * w * 0.22 + Math.sin(t * 0.7 + i) * 8,
+					30 + (i % 3) * 14,
+					70 + (i % 2) * 30,
+					26,
+					0,
+					0,
+					7,
+				);
+				ctx.fill();
+			} // the cloud itself along the top of the glass
+		},
+		start(e) {
+			e.a = landAt(-EVENTS.storm.band, LMID);
+			e.b = landAt(SQUARE + EVENTS.storm.band, LMID); // the storm crosses the land west to east (preview 51)
+			sfx('wind');
+		},
+		tick(e) {
+			const c = crossing(e);
+			e.x = c.x;
+			e.y = c.y;
+			if (e.s % 2 === 0) {
+				const sp = landAt(clamp(landXY(e.x, e.y).x + rnd(-EVENTS.storm.band, EVENTS.storm.band), 40, SQUARE - 40), rnd(80, SQUARE - 80)),
+					x = sp.x,
+					y = sp.y,
+					W = G.blds.filter(
+						(b) => BLD[b.kind].wood && b.prog >= 1 && Math.abs(landXY(b.x, b.y).x - landXY(e.x, e.y).x) < EVENTS.storm.band && rng() < 0.3, // the storm's band, across the land (preview 51)
+					);
+				const b = W.length && rng() < 0.25 ? W[Math.floor(rng() * W.length)] : null;
+				strike(b ? b.x : x, b ? b.y : y, b);
+			}
+		},
+	},
+	stampede: {
+		start(e) {
+			e.a = edgeSpot();
+			e.b = across(e.a);
+			e.units = herdAt('bison', EVENTS.stampede.n, e.a, e.b, 40);
+			sfx('hooves');
+		},
+		tick(e) {
+			if (e.s % 3 === 0) sfx('hooves', e.units[0] && e.units[0].x, e.units[0] && e.units[0].y);
+		},
+		end(e) {
+			for (const u of e.units)
+				if (u.hp > 0 && dist(u, { x: u.px, y: u.py }) < 120) {
+					u.hp = 0;
+					u.gone = true;
+				}
+		},
+	},
+	flood: {
+		start(e) {
+			G.flood = e.until;
+			G.navDirty = true;
+		},
+		tick(e) {
+			for (const b of G.blds)
+				if (
+					b.prog >= 1 &&
+					b.owner !== WILD &&
+					fxv(b.owner, 'flood').a < 1 &&
+					lakeGap(b.x, b.y) < EVENTS.flood.rise - halfOf(b)
+				) {
+					b.hp -= maxHpB(b.owner, b.kind) * EVENTS.flood.hit;
+					if (b.owner === 0 && e.s % 10 === 1)
+						news('land', `Water at the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', TOAST.mid, b);
+				}
+		},
+		end() {
+			G.flood = 0;
+			G.navDirty = true;
+		},
+	},
+	meteor: {
+		draw(e, z, t) {
+			const f = clamp((G.t - e.t0) / (e.until - e.t0), 0, 1),
+				x1 = SX(e.at.x, e.at.y),
+				y1 = SY(e.at.y, 0, e.at.x),
+				x0 = x1 - 420,
+				y0 = y1 - 560,
+				x = x0 + (x1 - x0) * f,
+				y = y0 + (y1 - y0) * f;
+			ctx.strokeStyle = 'rgba(255,240,200,.9)';
+			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.moveTo(x - (x1 - x0) * 0.12, y - (y1 - y0) * 0.12);
+			ctx.lineTo(x, y);
+			ctx.stroke();
+			ctx.fillStyle = '#fff6dc';
+			ctx.beginPath();
+			ctx.arc(x, y, 4, 0, 7);
+			ctx.fill();
+		},
+		start(e) {
+			e.at = wildSpot();
+			e.a = { x: e.at.x - 900, y: e.at.y - 700 };
+		},
+		end(e) {
+			addFind('meteor', e.at.x, e.at.y);
+			scarStrike(e.at.x, e.at.y);
+			scarStrike(e.at.x + 6, e.at.y + 4);
+			sfx('boom', e.at.x, e.at.y);
+			G.whiteT = G.t;
+			news('land', EV_TEXT.meteor[1], 'good', TOAST.long, e.at);
+		},
+	},
+	wildfire: {
+		start(e) {
+			const far = G.nodes.filter(
+				(n) =>
+					n.kind === 'tree' &&
+					n.amt > 0 &&
+					!G.P.some((p) => p.id !== WILD && p.alive && keepOf(p.id) && dist(keepOf(p.id), n) < 300),
+			);
+			const t = far[Math.floor(rng() * far.length)];
+			e.burn = t ? [t] : [];
+			e.at = t ? { x: t.x, y: t.y } : null;
+			G.fire = e.burn;
+			sfx('crash', t && t.x, t && t.y);
+		},
+		tick(e) {
+			if (precip(G.wx)) {
+				e.until = G.t;
+				return;
+			}
+			const E = EVENTS.wildfire,
+				next = [];
+			for (const n of e.burn) {
+				n.amt -= n.max * E.burn;
+				if (n.amt > 0) next.push(n);
+				else {
+					scarStrike(n.x, n.y);
+				}
+				nodesNear(n.x, n.y, E.r, (m) => {
+					if (
+						m.kind === 'tree' &&
+						m.amt > 0 &&
+						!e.burn.includes(m) &&
+						!next.includes(m) &&
+						rng() < E.spread * fireMul()
+					)
+						next.push(m);
+				});
+				bldsNear(n.x, n.y, 40, (b) => {
+					if (BLD[b.kind].wood && b.prog >= 1) ignite(b, 'the wildfire');
+				});
+			}
+			e.burn = next.slice(0, E.most);
+			G.fire = e.burn;
+			if (!e.burn.length) e.until = G.t;
+		},
+		end() {
+			G.fire = null;
+		},
+	},
+	fog: {
+		draw(e, z, t) {
+			const f = Math.min(1, (G.t - e.t0) / 4, (e.until - G.t) / 4);
+			ctx.fillStyle = `rgba(214,220,222,${0.55 * f})`;
+			ctx.fillRect(0, 0, cw, ch);
+			if (!still()) {
+				ctx.fillStyle = `rgba(230,234,236,${0.25 * f})`;
+				for (let i = 0; i < 8; i++) {
+					ctx.beginPath();
+					ctx.ellipse(((i * 173 + t * 12) % (cw + 300)) - 150, (i * 97) % ch, 160, 50, 0, 0, 7);
+					ctx.fill();
+				}
+			}
+		},
+	},
+	sinkhole: {
+		start(e) {
+			const B = G.blds.filter((b) => b.prog >= 1 && !BLD[b.kind].wallish && b.kind !== 'keep');
+			const b = B[Math.floor(rng() * B.length)];
+			if (!b) return;
+			b.hp -= maxHpB(b.owner, b.kind) * EVENTS.sinkhole.hit;
+			scarStrike(b.x, b.y - 4);
+			scarStrike(b.x + 5, b.y + 3);
+			G.shake = G.t + 1;
+			crackAt(b.x, b.y, 36);
+			sfx('rumble', b.x, b.y);
+			if (b.owner === 0)
+				news('land', `A sinkhole under the ${bldName(0, b.kind).toLowerCase()} (${coord(b.x, b.y)}).`, 'warn', TOAST.mid, b);
+		},
+	},
+	quicksand: {
+		start(e) {
+			e.at = wildSpot();
+			G.sand = { x: e.at.x, y: e.at.y, r: EVENTS.quicksand.r, until: e.until };
+		},
+		end() {
+			G.sand = null;
+		},
+	},
+	heatwave: {},
+	mirage: {
+		start(e) {
+			const k = keepOf(0);
+			e.at = k ? towardMid(k, 500) : { x: MID, y: MID };
+			G.mirage = { x: e.at.x, y: e.at.y, n: EVENTS.mirage.n, until: e.until };
+			news('war', `An army seen at ${coord(e.at.x, e.at.y)}.`, 'warn', TOAST.mid, e.at);
+		},
+		end() {
+			G.mirage = null;
+			news('war', 'The army at that spot was a mirage.', '', TOAST.mid);
+		},
+	},
+	circus: {
+		start(e) {
+			e.a = edgeSpot();
+			e.b = across(e.a);
+			e.units = herdAt('performer', EVENTS.circus.n, e.a, e.b, 14);
+			sfx('jingle');
+		},
+		tick(e) {
+			for (const p of e.units)
+				if (p.hp > 0)
+					unitsNear(p, EVENTS.circus.r, (v) => {
+						if (v.kind === 'vil' && !v.inside) v.cheer = G.t + EVENTS.circus.cheer;
+					});
+		},
+		end(e) {
+			for (const u of e.units) {
+				u.hp = 0;
+				u.gone = true;
+			}
+		},
+	},
+	wagon: {
+		start(e) {
+			const a = edgeSpot(),
+				b = across(a),
+				w = addUnit(WILD, 'wagon', a.x, a.y);
+			w.px = b.x;
+			w.py = b.y;
+			e.units = [w];
+		},
+	},
+	mercs: {
+		start(e) {
+			const a = edgeSpot();
+			e.f = addFind('mercs', a.x, a.y);
+			e.f.until = e.until;
+		},
+		end(e) {
+			if (e.f && !e.f.done) {
+				e.f.done = true;
+				for (const v of G.units)
+					if (v.find === e.f.id) {
+						v.hp = 0;
+						v.gone = true;
+					}
+			}
+		},
+	},
+	dragon: {
+		start(e) {
+			e.a = edgeSpot();
+			e.b = across(e.a);
+			e.units = herdAt('dragon', 1, e.a, e.b, 0);
+			sfx('roar');
+		},
+		tick(e) {
+			const d = e.units[0];
+			if (!d || d.hp <= 0) return;
+			nodesNear(d.x, d.y, UNIT.dragon.scorch, (n) => {
+				if (n.kind === 'tree' && n.amt > 0 && rng() < 0.5) {
+					n.amt = 0;
+					scarStrike(n.x, n.y);
+				}
+			});
+			unitsNear(d, UNIT.dragon.scorch, (v) => {
+				if (v !== d && v.hp > 0) {
+					v.hp -= 10;
+					v.hurtT = G.t;
+				}
+			});
+			bldsNear(d.x, d.y, 40, (b) => {
+				if (BLD[b.kind].wood && b.prog >= 1) ignite(b, 'the dragon');
+			});
+		},
+		end(e) {
+			for (const u of e.units) {
+				u.hp = 0;
+				u.gone = true;
+			}
+		},
+	},
+	troll: {
+		start(e) {
+			const q = G.P.filter((p) => p.id !== WILD && p.alive && keepOf(p.id)),
+				p = q[Math.floor(rng() * q.length)],
+				k = keepOf(p.id),
+				at = towardMid(k, 260);
+			e.units = [wildAt('troll', at.x, at.y)];
+			sfx('roar', at.x, at.y);
+		},
+		end(e) {
+			for (const u of e.units)
+				if (u.hp > 0) {
+					u.hp = 0;
+					u.gone = true;
+				}
+		},
+	},
+	aurora: {
+		draw(e, z, t) {
+			const f = Math.sin(Math.PI * clamp((G.t - e.t0) / (e.until - e.t0), 0, 1));
+			for (let i = 0; i < 3; i++) {
+				const gr = ctx.createLinearGradient(0, 0, 0, ch * 0.5);
+				gr.addColorStop(0, `rgba(${i ? 120 : 60},${220 - i * 40},${140 + i * 40},${0.5 * f})`);
+				gr.addColorStop(1, 'rgba(60,200,140,0)');
+				ctx.fillStyle = gr;
+				ctx.beginPath();
+				ctx.moveTo(0, 0);
+				for (let x = 0; x <= cw; x += 20) ctx.lineTo(x, ch * 0.18 + Math.sin(x / 60 + t * 0.6 + i) * 30 + i * 25);
+				ctx.lineTo(cw, 0);
+				ctx.closePath();
+				ctx.fill();
+			}
+		},
+	},
+};
+// The ground splits: a star of jagged cracks and a puff of dust at (x, y), r wide. Cosmetic: the damage is done by the sinkhole.
+// The arms are worked out once from a seed; the view draws them for 45 s and the ground keeps a faint scar of them.
+function crackAt(x, y, r) {
+	let s = ((Math.floor(x) * 73856093) ^ (Math.floor(y) * 19349663) ^ G.tick) >>> 0 || 1; // the seed from the place and the tick: no Math.random in the simulation (Build 60)
+	const rn = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296,
+		n = 5 + Math.floor(rn() * 3),
+		arms = [];
+	for (let i = 0; i < n; i++) {
+		let a = (i / n) * 6.2832 + rn() * 0.6,
+			px = 0,
+			py = 0;
+		const len = r * (0.45 + rn() * 0.55),
+			arm = [[0, 0]];
+		for (let j = 1; j <= 6; j++) {
+			a += (rn() - 0.5) * 0.9;
+			px += (Math.cos(a) * len) / 6;
+			py += (Math.sin(a) * len) / 6;
+			arm.push([px, py]);
+		}
+		arms.push(arm);
+	}
+	const c = { x, y, r, t0: G.t, arms };
+	(G.cracks = G.cracks || []).push(c);
+	scarCrack(c);
+}
+function startEvent(kind) {
+	const E = EVENTS[kind],
+		e = { kind, t0: G.t, until: G.t + E.secs };
+	G.ev.cur = e;
+	G.ev.last = kind;
+	G.ev.warned = null;
+	if (EV[kind].start) EV[kind].start(e);
+	evmSet();
+	if (EV_TEXT[kind] && kind !== 'meteor' && kind !== 'mirage')
+		news('land', 
+			EV_TEXT[kind][1],
+			E.harm ? 'warn' : E.gift ? 'good' : 'soft',
+			TOAST.mid,
+			e.at || (e.units && e.units[0]) || null,
+			null,
+			EV_WHY[kind],
+		); // only what can hurt you takes the line
+}
+function endEvent() {
+	const e = G.ev.cur;
+	if (!e) return;
+	if (EV[e.kind].end) EV[e.kind].end(e);
+	G.ev.cur = null;
+	evmSet();
+	G.ev.next = G.t + EV_MIN + nextIn(EV_MEAN - EV_MIN);
+}
+function eventsTick() {
+	// once a second
+	if (G.cracks && G.cracks.length) G.cracks = G.cracks.filter((c) => G.t - c.t0 < 45); // a sinkhole's cracks fade in 45 s
+	const V = G.ev;
+	if (!V.next) V.next = G.t + EV_MIN + nextIn(EV_MEAN - EV_MIN);
+	if (V.cur) {
+		V.cur.s = (V.cur.s || 0) + 1; // seconds the event has run: a tick comes once a second
+		if (EV[V.cur.kind].tick) EV[V.cur.kind].tick(V.cur);
+		if (G.t >= V.cur.until) endEvent();
+	} else if (!V.warned && G.t >= V.next - EV_WARN) {
+		V.warned = pickEvent();
+		news('land', EV_TEXT[V.warned][0], 'soft', EV_WARN);
+	} // the warning is quiet: in the list, not on the line
+	else if (V.warned && G.t >= V.next) {
+		if (canEv(V.warned)) startEvent(V.warned);
+		else {
+			V.warned = null;
+			V.next = G.t + 30;
+		}
+	}
+	hordeTick();
+	newsTick();
+	postTick();
+}
+// The horde (the hazard): announced two seasons ahead, then one; from an edge or out of the wild, for the weakest side; its number grows with the age
+function hordeTick() {
+	if (!hz('horde') || G.horde === 'done') return;
+	if (!G.horde) {
+		G.horde = { at: HORDE.min + nextIn(HORDE.mean - HORDE.min), said: 0 };
+		return;
+	}
+	const H = G.horde,
+		left = H.at - G.t;
+	if (H.said < 1 && left <= HORDE.warn) {
+		H.said = 1;
+		news('war', EV_TEXT.horde[0], 'warn', TOAST.long);
+	}
+	if (H.said < 2 && left <= HORDE.warn / 2) {
+		H.said = 2;
+		news('war', EV_TEXT.horde[1], 'warn', TOAST.long);
+	}
+	if (left > 0) return;
+	const sides = G.P.filter((p) => p.id !== WILD && !calm4b(p.id) && p.alive && keepOf(p.id) && gangRel(p.id, 'out') === 'war'), // 4b: the horde starts nothing with a computer, nor with a side at peace with the outlaws
+		weak = sides.sort((a, b) => estPower(WILD, a.id) - estPower(WILD, b.id))[0];
+	if (!weak) {
+		G.horde = 'done';
+		return;
+	}
+	const from = rng() < 0.5 ? edgeSpot() : wildSpot(),
+		age = Math.max(...sides.map((p) => p.age)),
+		n = HORDE.n + HORDE.perAge * age,
+		k = keepOf(weak.id),
+		kinds = G.fantasy ? ['goblin', 'goblin', 'troll'] : ['bandit', 'robber', 'bandit'];
+	for (let i = 0; i < n; i++) {
+		const u = wildAt(kinds[i % 3], from.x + rnd(-40, 40), from.y + rnd(-40, 40));
+		u.hx = k.x;
+		u.hy = k.y;
+		u.horde = true;
+	}
+	news('war', EV_TEXT.horde[2], 'warn', TOAST.long, from);
+	sfx('horn');
+	G.horde = 'done';
+}
+// ── The climate (Build 54): one tick a second. The air's temperature from the year and the hour; the sky's run as a chain, a new minute
+// at a time; wetness closing on where the sky puts it; mud, snow and ice from those. `G.wx` stays the sky's name, which the rest reads.
+const blankClim = () => ({ T: CLIMATE.mean, W: CLIMATE.eq.clear, snow: 0, ice: 0, fdd: 0, mud: 0, wet: false, dry: 0, ahead: [] });
+const airTemp = (t = G.t) =>
+	CLIMATE.mean +
+	CLIMATE.year * Math.cos(2 * Math.PI * ((t % YEAR) / YEAR - CLIMATE.peakDay)) +
+	CLIMATE.day * Math.cos(2 * Math.PI * ((t % DAY_LEN) / DAY_LEN - CLIMATE.peakHour)); // °C now: the year's swing and the day's
+// why the sky turned, in the chain's own numbers: the list shows it under the line (Build 58)
+function wxWhy(wx, was, P, c) {
+	const pct = (x) => Math.round(x * 10) + ' in 10',
+		wet = precip(wx),
+		wasWet = precip(was);
+	if (wet && wasWet) return `the wet spell holds: ${pct(P[1])} each minute`;
+	if (wet)
+		return `rain begins ${pct(P[0])} of dry minutes${wx === 'snow' ? '; below freezing it falls as snow' : wx === 'blizzard' ? '; a winter storm' : ''}`;
+	if (wx === 'frost') return `clear and the air at ${Math.round(c.T)} °C: frost`;
+	if (wx === 'drought') return `${c.dry} dry minutes in heat of ${Math.round(c.T)} °C`;
+	return wasWet ? `the rain stopped: ${pct(1 - P[1])} each wet minute` : 'a dry minute: the chain stays dry';
+}
+const precip = (wx) => wx === 'rain' || wx === 'snow' || wx === 'blizzard';
+function skyTurn() {
+	// the next minute's sky from this one: the chain, then what falls from the air's temperature
+	const c = G.clim,
+		s = season().name,
+		P =
+			hz('drought') && s === 'Summer'
+				? CLIMATE.hazard.drought
+				: hz('winter') && s === 'Winter'
+					? CLIMATE.hazard.winter
+					: CLIMATE.chain[s],
+		was = G.wx;
+	// the sky is rolled ahead, a minute for each step of forecast (Weather signs) and never less than one, so they can tell it
+	const lead = fxv(0, 'forecast').a,
+		A = c.ahead;
+	c.wet = A.length ? A.shift() : rng() < P[c.wet ? 1 : 0];
+	while (A.length < Math.max(1, lead)) A.push(rng() < P[(A.length ? A[A.length - 1] : c.wet) ? 1 : 0]);
+	if (lead && A[lead - 1] !== (lead > 1 ? A[lead - 2] : c.wet))
+		news('land', `${A[lead - 1] ? 'Signs of rain' : 'Signs of a clearing sky'} in ${lead > 1 ? lead + ' minutes' : 'a minute'}.`, 'soft', TOAST.mid);
+	c.dry = c.wet ? 0 : c.dry + 1;
+	G.wx = c.wet
+		? c.T <= CLIMATE.snowAt
+			? hz('winter') && rng() < CLIMATE.blizzard
+				? 'blizzard'
+				: 'snow'
+			: 'rain'
+		: c.T < 0
+			? 'frost'
+			: c.dry >= CLIMATE.drought.dry && c.T > CLIMATE.drought.temp
+				? 'drought'
+				: 'clear';
+	if (G.wx !== was && G.t > 1 && WEATHER[G.wx].text) news('land', WEATHER[G.wx].text, '', TOAST.mid, null, null, wxWhy(G.wx, was, P, c));
+}
+function climateTick(dt) {
+	const c = G.clim;
+	c.T = airTemp();
+	G.wxT -= dt;
+	if (G.wxT <= 0) {
+		G.wxT = WX_EVERY;
+		skyTurn();
+		lightning();
+	}
+	groundTick(c, G.wx, dt);
+	if (G.tick % 300 === 2) rutHeal(); // every 10 s the ruts dry back a little
+}
+// The ground's water, snow, ice and mud for one step, from the air's temperature c.T and the sky wx (pure in c, so the science test can drive it)
+function groundTick(c, wx, dt) {
+	const K = CLIMATE,
+		eq = K.eq[wx] ?? K.eq.clear,
+		tau = eq > c.W ? K.tau.wet : K.tau.dry,
+		warm = Math.max(0, c.T);
+	c.W = relax(c.W, eq, tau, dt); // M(t) = Me + (M0 − Me) e^(−t/τ), the timelag fuel-moisture model
+	// snow: falls below snowAt; melts by the degree-day method, faster under rain; the melt water goes into the ground
+	const falls = precip(wx) && c.T <= K.snowAt,
+		meltS = Math.min(c.snow, K.snow.melt * warm * (precip(wx) && !falls ? 1 + K.snow.rain : 1) * dt);
+	c.snow = clamp(c.snow + (falls ? K.snow.fall * (wx === 'blizzard' ? 2 : 1) * dt : -meltS), 0, 1);
+	// ice: below freezing, wet ground freezes by Stefan's law (thickness ∝ √ of the freezing degree-seconds); above, it melts by the degree-day
+	let meltI = 0;
+	if (c.T < 0) {
+		if (c.W > K.mud[0] * 0.5) {
+			const before = c.ice;
+			c.fdd += -c.T * dt;
+			c.ice = Math.min(1, Math.sqrt(c.fdd / K.ice.fdd));
+			c.W = Math.max(0, c.W - (c.ice - before) * K.ice.water); // the water that froze leaves the ground
+		}
+	} else {
+		meltI = Math.min(c.ice, K.ice.melt * warm * dt);
+		c.ice -= meltI;
+		c.fdd = c.ice * c.ice * K.ice.fdd; // so the next freeze grows from the ice that is left
+	}
+	c.W = Math.min(1, c.W + meltS * K.snow.water + meltI * K.ice.water); // the melt wets the ground (conservation: nothing vanishes)
+	c.mud = c.T < 0 ? 0 : clamp((c.W - K.mud[0]) / (K.mud[1] - K.mud[0]), 0, 1); // frozen ground is hard ground
+}
+// Traffic (Build 62): every unit-second on a square deepens its ruts. Ruts hold water, so mud is deeper where the feet go: rut depth grows as
+// passes^0.4 (USFS trafficability studies, Build 62) toward `deep` at n0 unit-seconds, and heals with the timelag. Roads (the mud research) count here too.
+const ruts = () => G.tread || (G.tread = new Uint16Array(FOGN * FOGN));
+const rutsAt = (x, y) => ruts()[clamp((y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((x / FOG) | 0, 0, FOGN - 1)];
+const rutsOn = (u) => {
+	const T = ruts(),
+		i = clamp((u.y / FOG) | 0, 0, FOGN - 1) * FOGN + clamp((u.x / FOG) | 0, 0, FOGN - 1);
+	if (T[i] < 65535) T[i]++;
+};
+function rutHeal() {
+	const T = ruts(),
+		k = Math.exp(-10 / CLIMATE.rut.tau);
+	for (let i = 0; i < T.length; i++) if (T[i]) T[i] = Math.floor(T[i] * k);
+}
+const rutOf = (x, y) => CLIMATE.rut.deep * Math.min(1, rutsAt(x, y) / CLIMATE.rut.n0) ** 0.4;
+// mud at a place: the ground's mud, deeper by water (pooling) and by traffic (ruts)
+const mudAt = (at) =>
+	at ? G.clim.mud * (NAV.shore[gcell(at.x, at.y)] ? CLIMATE.shore : 1) * (1 + rutOf(at.x, at.y)) : G.clim.mud;
+// what a step needs of the ground (Hanson et al. 1999), by what is stepping: an engine's haulers, a horse, a man (keys: unitKeys)
+const groundNeed = (keys) =>
+	CLIMATE.mu.need[keys && keys.includes('#siege') ? 'siege' : keys && keys.includes('#mounted') ? 'horse' : 'foot'];
+// whether iron bites the ice for this contact (D-064): Horseshoes on hooves, Crampons on boots, each keyed to its own
+const studded = (o, keys) => o !== WILD && fxv(o, 'studs', keys).a > 0;
+// the ice's friction now: slickest just below freezing (the melt film), better in deep cold; iron studs give at least theirs
+const iceMu = (studs) => {
+	const M = CLIMATE.mu,
+		ice = G.clim.T <= 0 ? M.ice0 + (M.iceCold - M.ice0) * Math.min(1, -G.clim.T / M.coldAt) : M.ice0 * 0.6;
+	return studs ? Math.max(ice, M.studs) : ice;
+};
+// what the ground takes off a march for one side, at a place if given: Pandolf's terrain factor over dirt, as 1 / η, and the shorter stride on
+// ice, by the share of the grip a step lacks there (none when what the ice offers meets the need: design, inside the measured μ)
+const strideShare = (need, mu) => (need <= mu ? 0 : clamp((need - mu) / (need - iceMu(false)), 0, 1)); // no stride lost when the studs hold the need
+const groundSpd = (o, keys, at) => {
+	const c = G.clim,
+		need = groundNeed(keys);
+	return (
+		(1 /
+			(1 +
+				CLIMATE.terrain.mud * Math.min(1, mudAt(at)) * fxv(o, 'mud', keys).m * (keys.includes('#wagon') ? CAMP.wheelMud : 1) + // a wagon's wheels sink deeper (CAMP)
+				CLIMATE.terrain.snow * c.snow * (1 - fxv(o, 'snow', keys).a))) *
+		(1 - CLIMATE.mu.stride * c.ice * (studded(o, keys) ? strideShare(need, iceMu(true)) : 1))
+	);
+};
+// Traction: the friction the ground offers now, a blend by cover (ice over snow over mud over dry); studs change only the ice's part
+const muOf = (at, studs) => {
+	const c = G.clim,
+		M = CLIMATE.mu,
+		ground = Math.min(1, mudAt(at)) * M.mud + (1 - Math.min(1, mudAt(at))) * M.dry,
+		snow = c.snow * M.snow + (1 - c.snow) * ground;
+	return c.ice * iceMu(studs) + (1 - c.ice) * snow;
+};
+// the chance of a slip in a check: a logistic step on what the step needs less what the ground offers (Hanson et al. 1999), only where there is ice to slip on
+const slipChance = (u, need, studs) =>
+	G.clim.ice <= 0 ? 0 : G.clim.ice / (1 + Math.exp(-(need - muOf(u, studs)) / CLIMATE.mu.soft));
+// fire against the ground's wetness: Rothermel's damping η = 1 − 2.59r + 5.11r² − 3.52r³, r = M/Mx ≤ 1, as a share of a clear day's
+const rothermel = (r) => 1 - 2.59 * r + 5.11 * r * r - 3.52 * r * r * r;
+const fireMul = () => clamp(rothermel(Math.min(1, G.clim.W)) / rothermel(CLIMATE.eq.clear), 0, 2);
+const wearMul = (o) => (G.wx === 'frost' || precip(G.wx) ? 1 - CLIMATE.wear * (1 - Math.min(1, fxv(o, 'wear').a)) : 1); // brittle in frost, rusted in rain
+function newsTick() {
+	if (G.t - (G.ev.newsT || 0) < NEWS_EVERY || G.t < 60) return;
+	G.ev.newsT = G.t;
+	const L = NEWS[Math.min(G.P[0].age, NEWS.length - 1)],
+		i = (G.ev.newsI = (G.ev.newsI || 0) + 1) % L.length;
+	news('chronicle', L[i], 'news', TOAST.long);
+}
+// a herd crosses: bison trample what they run over; performers only pass; a dragon flies (it is drawn above everything and walks through walls)
+function herdTick(u, dt, SP) {
+	const U = UNIT[u.kind];
+	if (U.look === 'dragon') {
+		const d = hyp(u.px - u.x, u.py - u.y) || 1;
+		stepTo(u, u.x + ((u.px - u.x) / d) * U.spd * dt, u.y + ((u.py - u.y) / d) * U.spd * dt);
+		u.fx = Math.sign(u.px - u.x) || u.fx;
+		u.mvT = G.t;
+		u.fly = 34;
+		return;
+	}
+	if (moveTo(u, u.px, u.py, dt, 10, 1)) {
+		u.hp = 0;
+		u.gone = true;
+		return;
+	}
+	if (U.trample && (G.tick + u.id) % 6 === 0) {
+		unitsNear(u, 12, (v) => {
+			if (v !== u && !v.herd && v.hp > 0 && dist(u, v) < 12) {
+				v.hp -= U.trample;
+				v.hurtT = G.t;
+				v.flashT = G.t;
+				stepTo(v, v.x + (v.x - u.x) * 0.6, v.y + (v.y - u.y) * 0.6);
+			}
+		});
+		const n = G.nodes.find((m) => m.kind === 'farm' && m.farm && m.type === 'food' && dist(m, u) < 20);
+		if (n && n.farm.fert > FERT.floor) n.farm.fert = Math.max(FERT.floor, n.farm.fert - 0.02);
+	}
+}
+// hunger, once a second, for every side (Albert, Nov 1): the store empty is hunger (p.hungry); with no food in reach too it is a famine (famT),
+// which weakens the work after STARVE.grace (hungerOf); under the Famine hazard people then leave, one every STARVE.every
+function starveTick(p) {
+	const o = p.id;
+	p.famT = p.hungry && !foodInReach(o) ? (p.famT || 0) + 1 : 0;
+	if (o === 0 && p.famT === 1) news('home', 'Famine: no food in reach. Two days to recover.', 'warn', TOAST.long);
+	if (!hz('starve') || p.famT < STARVE.grace || (p.famT - STARVE.grace) % STARVE.every) return;
+	const v = unitsOf(o, 'vil').sort((a, b) => a.carry - b.carry)[0],
+		s = soldiersOf(o).filter((u) => u.state === 'home')[0];
+	for (const u of [v, s])
+		if (u) {
+			u.hp = 0;
+			u.gone = true;
+		}
+	if (o === 0 && (v || s)) news('home', `Starving: ${v ? 'a villager left' : ''}${v && s ? ', ' : ''}${s ? 'a soldier deserted' : ''}.`, 'warn', TOAST.mid);
+}
+// food a side can still reach: a bush, its own field, fish or meat with something left, or game, in its Town Center's region of the walking grid
+function foodInReach(o) {
+	const k = keepOf(o);
+	if (!k) return false;
+	const cm = regionAt(k, o);
+	return (
+		G.nodes.some((n) => n.type === 'food' && n.amt > 0 && (!n.farm || n.farm.owner === o) && (n.kind !== 'fish' || dockNear(o, n)) && reachFrom(n, cm, o)) || // a field only if it is your own
+		G.units.some((u) => u.owner === WILD && u.hp > 0 && UNIT[u.kind].meat && regionAt(u, o) === cm)
+	);
+}

@@ -1,0 +1,314 @@
+{
+"index.html": {
+"sha": "226a192f167b0f8e11434da96b39d7a69a8d7a1a6d99bb62b7d87defd80d5ff6",
+"lines": 34238,
+"chars": 1394999,
+"bytes": 1402247
+},
+"src/00-elements.js": {
+"sha": "8e6e894939ba9fbde888a810d00f5f9d53078f88457442c447f9b6e61730ac13",
+"lines": 25,
+"chars": 2153,
+"bytes": 2173
+},
+"src/00-pre.js": {
+"sha": "0ce0c7a54b216e5ec6aeb50ce98b3bc7835b18ae42971c0251c7f1361895f93c",
+"lines": 2,
+"chars": 23,
+"bytes": 23
+},
+"src/01-rules-basics.js": {
+"sha": "41ba680417e37940e161fa7d56065d2641ce3a574ff9f5df0484ab12f4d17e14",
+"lines": 140,
+"chars": 10716,
+"bytes": 10861
+},
+"src/02-rules-units.js": {
+"sha": "c89b3a0c1edf14e84aa164d28a00ab69dc3e6e96343053413d244b69817902d3",
+"lines": 761,
+"chars": 18245,
+"bytes": 18270
+},
+"src/03-rules-buildings.js": {
+"sha": "a925cefd0bcd0184e0bf7cdcbe8436d9a19eaa4b30a7af77ea5f5a6555c3cbba",
+"lines": 848,
+"chars": 23775,
+"bytes": 23806
+},
+"src/04-rules-tech.js": {
+"sha": "3802bb21d4f552ff473c6277c06dda70cb8f6200323ba206aaa505e16b64b7a5",
+"lines": 3375,
+"chars": 73123,
+"bytes": 73159
+},
+"src/05-rules-wild.js": {
+"sha": "3aff437d4b43392068192cb7e49ccbc3c4676bd8d0c64344d6d484a7b3313e90",
+"lines": 309,
+"chars": 9979,
+"bytes": 10105
+},
+"src/06-rules-tuning.js": {
+"sha": "abfb9f16c7b835f589f83912b5bee86f164137d2e3ba5f33808dbcdefdbded9a",
+"lines": 523,
+"chars": 40584,
+"bytes": 41099
+},
+"src/07-text.js": {
+"sha": "72dd589411127564c52fe70e040412a43f2041932ad2ef38151ea12ea2ba8474",
+"lines": 1215,
+"chars": 103803,
+"bytes": 104005
+},
+"src/08-core.js": {
+"sha": "76e9de05d62f8200a55ce08415eb38df0e005948ae5e8b4d511fdc114a99da8b",
+"lines": 763,
+"chars": 38675,
+"bytes": 39052
+},
+"src/09-nav.js": {
+"sha": "1d8868654ea542014c4224f61bd5b5d5f5c00744bb7c094aef10c714d39303ec",
+"lines": 846,
+"chars": 34215,
+"bytes": 34437
+},
+"src/10-world-citadel.js": {
+"sha": "998783408ca4b354031249ebf1379b416abd1049bf57680590a7f4ceaf7e16a1",
+"lines": 34,
+"chars": 1941,
+"bytes": 1963
+},
+"src/10-world-forest.js": {
+"sha": "f688d7d24617fee8b46d02c4d6a0fa18f563dcfac1611df6b083d1ef314a568a",
+"lines": 203,
+"chars": 9990,
+"bytes": 10011
+},
+"src/10-world-ground.js": {
+"sha": "f06e4a6733c4549632d529e7e2b7c7779fd3bc6a78189217a7f791861699e625",
+"lines": 91,
+"chars": 4890,
+"bytes": 5221
+},
+"src/10-world-movers.js": {
+"sha": "ebdf8bfb1d0b64ad4fae08b5870cfa866c24a04a6868e14a08c5d54b81a85132",
+"lines": 43,
+"chars": 2051,
+"bytes": 2071
+},
+"src/10-world-plots.js": {
+"sha": "0554705585047975414d0760fa329d407c9c2efeb57dda0918e1cfa2442a9146",
+"lines": 234,
+"chars": 12814,
+"bytes": 12834
+},
+"src/10-world-water.js": {
+"sha": "7f9f9e2340b3bcea0e60fc69570fb1a94a591ac9d430386bcf7d8b3cbd90d32c",
+"lines": 196,
+"chars": 10204,
+"bytes": 10531
+},
+"src/10-world.js": {
+"sha": "02d7284353b76c8f02adcca1d2ac4b15ace5f194bfdc9860f0d8cb3ba3412ff2",
+"lines": 294,
+"chars": 10606,
+"bytes": 10730
+},
+"src/11-orders.js": {
+"sha": "232993f999ebaae7ed3e46b9f46e94b84f66e2398d44eafa94472332049c7e6c",
+"lines": 1232,
+"chars": 47517,
+"bytes": 48061
+},
+"src/12-sim-core.js": {
+"sha": "d6e837f235eef0ee1003b9a6b61d75af811028e2930103da27fde9fd3c79b23a",
+"lines": 815,
+"chars": 33798,
+"bytes": 34181
+},
+"src/13-sim-civil.js": {
+"sha": "07e59b143b0d82d677015294e11be5528c16799f6adeee4eab963592685226eb",
+"lines": 876,
+"chars": 33634,
+"bytes": 33774
+},
+"src/14-sim-troops.js": {
+"sha": "5106524af3a1b22aa2ce75556911ac6a750b2c958087a5eb6c2011287bc89dbe",
+"lines": 661,
+"chars": 25073,
+"bytes": 25314
+},
+"src/15-sim-spatial.js": {
+"sha": "20f613c566fdc4b045343637fae1c1a480cfba0f9110b022f1535750d94b8c9f",
+"lines": 194,
+"chars": 8489,
+"bytes": 8662
+},
+"src/16-sim-fight.js": {
+"sha": "3c71aebb8830ed69db0e4ccabd2965f2bafe5b9097d8c877b3bb0046a1c18dc1",
+"lines": 453,
+"chars": 17780,
+"bytes": 17903
+},
+"src/17-ai.js": {
+"sha": "c056b246cd958370bab075eb806b1e4349a13b670ca47d11bc395cbc8946ab37",
+"lines": 782,
+"chars": 36855,
+"bytes": 37048
+},
+"src/18-figures.js": {
+"sha": "3faf5b6833513743a58f554e33093249bd7f37f703d9f4dc1bd366fb5185f3c7",
+"lines": 2067,
+"chars": 45959,
+"bytes": 46095
+},
+"src/19-building-art.js": {
+"sha": "e3f54ca35a8e2a634a0500d24d5e346494ab78424284c327937bb39d6b427f06",
+"lines": 3067,
+"chars": 76409,
+"bytes": 76547
+},
+"src/20-view-base.js": {
+"sha": "3297b59216f9d8cd8bd407ed016ff7058f83238969df6b6457ee5259b8aeadb1",
+"lines": 263,
+"chars": 10246,
+"bytes": 10380
+},
+"src/21-view-frame.js": {
+"sha": "0d0e635d86633790abbe25210574e3ffd3f93b1e0786b84a3bc60bcc5296e067",
+"lines": 384,
+"chars": 15684,
+"bytes": 15704
+},
+"src/22-view-fog.js": {
+"sha": "92812605aed403cb24ecd886941c2c18c4c9b88e53fb72c7b362e701f0619521",
+"lines": 174,
+"chars": 7034,
+"bytes": 7054
+},
+"src/23-view-things.js": {
+"sha": "ea8892b15400c1c003d4f0b97a512dc0b9b986789d318f440580abfc2f9f65dd",
+"lines": 1598,
+"chars": 58100,
+"bytes": 58151
+},
+"src/24-view-overlays.js": {
+"sha": "1562bbaabb7bb017ad293b44fb9fbe7cd04f1b835dfb0f0b9e077ba5d3855dd9",
+"lines": 720,
+"chars": 27775,
+"bytes": 27802
+},
+"src/25-view-weather.js": {
+"sha": "7164c848ccd518a12414d55ec950d081d4b7b3c932bebc77e1deeaa3d8ec316a",
+"lines": 230,
+"chars": 8342,
+"bytes": 8366
+},
+"src/26-input.js": {
+"sha": "445874e5a47b44624882d198fceaf03a390b3dcec539437075b6cb51e8c3792e",
+"lines": 669,
+"chars": 21388,
+"bytes": 21512
+},
+"src/27-cards-core.js": {
+"sha": "8873afedcd1ad7bd0bf27a5dd816ff05786d0a82e94309c7c8316b2bef8f73a1",
+"lines": 526,
+"chars": 27246,
+"bytes": 27408
+},
+"src/28-army-quick.js": {
+"sha": "a6dc6fd1263d84b587d82180c929c21bf9c6a3c2cacdb6d74d6b44e2c5d02675",
+"lines": 409,
+"chars": 19105,
+"bytes": 19158
+},
+"src/29-card-pages.js": {
+"sha": "8cf757a2c85590418fe5726046c4157f4032482fb40c2884ab64973731703d06",
+"lines": 576,
+"chars": 30216,
+"bytes": 30422
+},
+"src/30-cards.js": {
+"sha": "f4d0d9c0f1f4e7bf2c3714513d3fc9dd38fca1f0ddd35d6658e78e38b502d94b",
+"lines": 846,
+"chars": 38806,
+"bytes": 39008
+},
+"src/31-guide.js": {
+"sha": "8d6d4d4b8160988e3a2448d2761bb8f4116dcdb613b4c151d92105b8f7e57c5c",
+"lines": 269,
+"chars": 9572,
+"bytes": 9623
+},
+"src/32-frame.js": {
+"sha": "e296f3347d2c1058319da8416b289ef312e4f0fe0ac6631eceb99dc643f6068e",
+"lines": 712,
+"chars": 39136,
+"bytes": 39499
+},
+"src/33-verbs.js": {
+"sha": "799ea1fc43ba23a0bb2a97070b2315d2c10bb20e9f8762318bdfa82de8ab8adc",
+"lines": 1138,
+"chars": 31755,
+"bytes": 31893
+},
+"src/34-save.js": {
+"sha": "8d1bf8c9540ee6dd05bd48c270fca6c69eb5afc924fbb20458ea9f72629044b0",
+"lines": 771,
+"chars": 27462,
+"bytes": 27595
+},
+"src/35-sound.js": {
+"sha": "39ac3c5d8f8a357fbbe29ddf27511f24ad3bb8922ebad2905cadc4e60383177f",
+"lines": 478,
+"chars": 14907,
+"bytes": 15043
+},
+"src/36-economy.js": {
+"sha": "20d576941e50c401b2c4d988272c501a64a07fa1540e8e13f1e99627797115d0",
+"lines": 955,
+"chars": 36428,
+"bytes": 36591
+},
+"src/37-events.js": {
+"sha": "b8d30cd10d8c2aebe3df4ea6842f3572eea14471fb1ca9213768f374bfc212bd",
+"lines": 761,
+"chars": 27899,
+"bytes": 28046
+},
+"src/38-camps.js": {
+"sha": "403c8d6966bcc99919259161dde3704b245eb8d07940a8980daae07d6fc239d8",
+"lines": 306,
+"chars": 14306,
+"bytes": 14335
+},
+"src/38-natives.js": {
+"sha": "327207a6fbd5fc61c41edc55b293bf6a4efa6cd774ca7da2c2f2356665aecadf",
+"lines": 362,
+"chars": 14866,
+"bytes": 14991
+},
+"src/39-games.js": {
+"sha": "dc171833433443f3a7313c753b4b45f7b899dba0bc3669614a28e1512edc4a06",
+"lines": 207,
+"chars": 9991,
+"bytes": 10020
+},
+"src/39-huddle.js": {
+"sha": "ecb2cbe6674b68ceb3d098cf8d9de90641fa2189022e143921fce8c734f79a46",
+"lines": 638,
+"chars": 29547,
+"bytes": 29635
+},
+"src/40-emergency.js": {
+"sha": "3ef4d7e55e5fb9686fc263762b158a87b18fd2c7ddbc543ea890fae7a0a9de11",
+"lines": 166,
+"chars": 6691,
+"bytes": 6712
+},
+"src/41-boot.js": {
+"sha": "f4b876c9d8651eb8445cb8895a6a711e532473d11dd9fd43739a63aa798dcc47",
+"lines": 750,
+"chars": 12347,
+"bytes": 12467
+}
+}
