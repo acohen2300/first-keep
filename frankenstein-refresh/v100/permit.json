@@ -1,5 +1,1 @@
-{
- "build": "",
- "agreed": "",
- "opens": []
-}
+{"build": "F17b · the physics of pace, cuts one at a time, weather by intensity, grip by friction", "agreed": "Albert, Nov 5 18:07-18:08: pace by floor, weather, mass and gravity; cuts one at a time, never 0 or 100; weather one system by intensity, the blizzard by the NWS definition, visuals by code and math (SoRen's); grip by measured friction", "opens": ["code:index.html", "code:econ.js", "code:combat.js", "code:sound.js", "book:measure", "book:ground", "book:mass", "book:shells", "book:sprites", "book:sound", "book:tech", "book:words", "book:comments", "book:rules", "book:citations", "law:QCA", "law:QCB", "law:QR", "law:QN", "tool:test.py"]}
