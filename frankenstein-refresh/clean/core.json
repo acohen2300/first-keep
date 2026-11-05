@@ -482,40 +482,40 @@
    "how many a building shelters"
   ],
   "fxList": [
-   "bring",
-   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+   "in v100",
+   "F12a: index.html the door, known (what each side has learned) and the effects stat() gathers from the Research book; civs' and buildings' effects come with their modules"
   ],
   "FX1": [
-   "bring",
-   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+   "in v100",
+   "F12a: index.html stat(): no effect in force leaves the base as it is (the empty sums)"
   ],
   "fxFits": [
-   "bring",
-   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+   "in v100",
+   "F12a: index.html stat(): an effect reaches a thing whose keys hold its k, or every thing with no k or '*'"
   ],
   "fxv": [
-   "bring",
-   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+   "in v100",
+   "F12a: index.html stat(), QCA: (base + Σa) × (1 + Σ shares), the lowest kept; shares add (Albert, Nov 5 11:40)"
   ],
   "fxDirty": [
-   "bring",
-   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+   "in v100",
+   "F12a: index.html learn(): the side's numbers worked out again"
   ],
   "keepHealth": [
-   "bring",
-   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+   "in v100",
+   "F12a: index.html learn(): every unit and building keeps its share of health (merged with rehealth)"
   ],
   "rehealth": [
-   "bring",
-   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+   "in v100",
+   "F12a: index.html learn(): every unit and building keeps its share of health"
   ],
   "unitKeys": [
-   "bring",
-   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+   "in v100",
+   "F12a: index.html keysOf(): the heads of a code's letters, the code, its ticks"
   ],
   "bldKeys": [
-   "bring",
-   "research's effects on a stat (multiply, add, keep the lowest), cached per side; health kept in share when it moves: with Ages and tech, applied by one law"
+   "in v100",
+   "F12a: index.html keysOf(): the same keys for a building (B is every building)"
   ],
   "freeVil": [
    "bring",
@@ -534,24 +534,24 @@
    "the test harness's seat: v100's tests play the page"
   ],
   "stats": [
-   "bring",
-   "a kind's numbers after research"
+   "in v100",
+   "F12a: index.html stat(code, side, key) for hp, atk, rng, spd and any D138 key; ranks (tiers) come with M18"
   ],
   "maxHpU": [
-   "bring",
-   "a kind's numbers after research"
+   "in v100",
+   "F12a: index.html stat(code, side, 'hp'); combat.js hpMax reads it when combat.js is opened"
   ],
   "maxHpB": [
-   "bring",
-   "a kind's numbers after research"
+   "in v100",
+   "F12a: index.html stat(code, side, 'hp'): D139 × (1 + Σ shares) (Albert 11:16 (4))"
   ],
   "dmgOf": [
-   "bring",
-   "a kind's numbers after research"
+   "in v100",
+   "F12a: index.html stat(code, side, 'atk') is its research part; wear, temper, zeal, sickness, hunger, events and the charge come with their modules"
   ],
   "rngOf": [
-   "bring",
-   "a kind's numbers after research"
+   "in v100",
+   "F12a: index.html stat(code, side, 'rng'); the weather on long range comes with M42"
   ],
   "rangeFrom": [
    "bring",
@@ -594,12 +594,12 @@
    "D87 carry; research that adds comes with tech"
   ],
   "nodeKey": [
-   "bring",
-   "research on gathering, by the find"
+   "in v100",
+   "F12a: index.html keysOf(): a find's own code and class"
   ],
   "gatherMul": [
-   "bring",
-   "research on gathering, by the find"
+   "in v100",
+   "F12a: index.html stat(find, side, 'rate') is its research part; weather, season, soil and the workshops come with their modules"
   ],
   "makeOf": [
    "bring",

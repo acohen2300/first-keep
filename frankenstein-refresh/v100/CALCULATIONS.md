@@ -37,6 +37,7 @@ QAB Learning curve: labour falls a set share per doubling · N30
 QAC Crew: n builders work n^p times as fast · N31
 QAD Spoilage: Q = Q0 e^(−k t) · N32, N33
 QAE Price: P = P0 (Q / Q0)^(−1/ε) · N34
+QCA Effects: a kind's number = (base + Σ flat adds) × (1 + Σ research shares), the shares added, never multiplied, and applied once to the base; a "lowest" effect keeps the minimum; a price rounds to the whole unit. The base is the book's: walking D86 (3.4 mph), a unit's D138, a building's health D139, a price D123. When the shares move, every unit and building of the side keeps its share of health · N154, N155, N156
 Combat and behaviour
 QAF Battle odds: r² / (1 + r²) · N35
 QAG Who to fight: damage a second ÷ (time to kill + time to reach) · N36, N37

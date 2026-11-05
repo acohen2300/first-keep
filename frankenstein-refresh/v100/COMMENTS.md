@@ -280,3 +280,8 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E274 | menu.js | how much slower a full cover of mud or snow makes a march, in percent, from its terrain factor f: 1 − 1 ÷ (1 + f) (QN) |
 | E275 | menu.js | a place as the map's lettered squares, measured from the board's corner: D190 units a square, letters across, numbers down (A1 to V22); off the board, the nearest square |
 | E276 | menu.js | a ledger line: its reasons largest first, each in its word and shortened, apart by a dot; under half a unit is left out |
+| E277 | index.html#the-door | QCA, the effects: what each side has learned, and each side's numbers worked out once until its learning changes; a new game forgets both |
+| E278 | index.html#the-door | a thing's keys, the names an effect may reach it by: every head of its code's letters (B, BR for BR1), its code, and its ticks |
+| E279 | index.html#the-door | a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's (D138), a find's or a field's rate, a price (D123, or the step's own); any other key is the unit's D138 entry |
+| E280 | index.html#the-door | the one window for a kind's number after research (QCA): flat adds first, then the shares summed and applied once to that (Albert, Nov 5 11:40), then the lowest kept; a price rounds each yield to the whole unit |
+| E281 | index.html#the-door | learning a step puts its effects in force for that side; every unit and building of the side keeps its share of health as the most it can have moves |

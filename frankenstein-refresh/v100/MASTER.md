@@ -101,6 +101,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E65** The door (floor 8): the modules (menu, econ, combat, ai) hang on these hooks and read the 
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
+- **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156)
+- **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144)
+- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79) · D139 (N69) · D138 (N69) · D123 (N69)
+- **E280** the one window for a kind's number after research (QCA): flat adds first, then the shares  · QCA (N154, N155, N156)
+- **E281** learning a step puts its effects in force for that side; every unit and building of the si
 - **E67** a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's · D182 (N122) · D184 (N122) · D98 (N112)
 - **E68** the screen jolts with a heavy impact (QBT) · QBT (N81, N82, N83, N18)
 - **E69** the walking grid, at the land's height, clipped to the played ground: the coast's line bro · D7 (N112)

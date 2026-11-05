@@ -34,6 +34,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAC** Crew → N31 · used by SC4, SC5, D126
 - **QAD** Spoilage → N32, N33
 - **QAE** Price → N34
+- **QCA** Effects → N154, N155, N156 · used by X47
 - **QAF** Battle odds → N35 · used by D155, D177
 - **QAG** Who to fight → N36, N37 · used by SC6
 - **QAH** Fight or not → N38
@@ -81,7 +82,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 
 ## By citation
 
-- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QBT
+- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QBT
 - **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QS, QT, QU, QV, QW, QX, QY, QZ, QAA
 - **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
 - **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
@@ -95,7 +96,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N12** Poisson (1837); Feller, An Introduction to Probability Theory, vol. 1 → QM, HX4
 - **N13** Pandolf, Givoni & Goldman (1977) → QN
 - **N14** Hock (2003), degree-day melt → QO
-- **N15** US Army Corps of Engineers (1956), Snow Hydrology → QO
+- **N15** US Army Corps of Engineers (1956), Snow Hydrology → QO, QCA
 - **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP
 - **N17** Stefan (1891) → QQ
 - **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QBT, G7, G8
@@ -234,6 +235,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N151** Art: preview 49 (19-building-art.js) → PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8, PB9, PB10, PB11
 - **N152** Art: preview 49 → PN1
 - **N153** Design: Albert, Nov 5 12:21: comments in their own book, by letter code; five pages: 1 Index, 2 Citations, 3 I → X45
+- **N154** Design: Albert, Nov 5 11:40: research stacks and its percents add, applied once to the base (3.0 with +10% and → QCA, X47
+- **N155** Design: Albert, Nov 5 11:16 (3) and (4): walking's base is 3.4 mph and research improves it; building-health r → QCA
+- **N156** Design: Mid's effects (08-core.js fxList, fxFits, fxv, keepHealth, rehealth, stats, maxHpB; 11-orders.js scale → QCA
 
 ## Named exceptions
 

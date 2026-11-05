@@ -1106,3 +1106,27 @@ MODIFIED (25):
 LOCKED (971 of 996): byte for byte as sealed, 305,952 bytes
 Tests: 20/20 rules hold
 Inventory: 996 items sealed · 890 book entries · 74 laws · 153 citations, 17 still to open · 7 known
+
+## F12a · the effects law · 2026-11-05 12:56
+Albert, Nov 5 11:40: yes yes F10–F39; research percents add (11:40)
+Opened: code:index.html, book:tech, book:shells, law:QCA, book:measure, book:rules, book:comments, book:citations, tool:test.py
+MODIFIED (16):
+- book:citations:N154 · added
+- book:citations:N155 · added
+- book:citations:N156 · added
+- book:comments:E277 · added
+- book:comments:E278 · added
+- book:comments:E279 · added
+- book:comments:E280 · added
+- book:comments:E281 · added
+- book:rules:X47 · added
+- code:index.html#floor-5-movables · 7,502 → 7,508 bytes
+- code:index.html#page · 1,659 → 1,697 bytes
+- code:index.html#the-body-s-laws · 2,346 → 2,352 bytes
+- code:index.html#the-door · 3,251 → 4,853 bytes
+- code:index.html#touch · 4,352 → 4,373 bytes
+- law:QCA · added
+- tool:test.py · 20,378 → 27,730 bytes
+LOCKED (990 of 1006): byte for byte as sealed, 347,711 bytes
+Tests: 21/21 rules hold
+Inventory: 1006 items sealed · 899 book entries · 75 laws · 156 citations, 17 still to open · 7 known

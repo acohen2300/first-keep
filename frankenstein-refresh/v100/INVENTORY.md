@@ -4,16 +4,16 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,646 | 211,795 | 211,925 |
-| Books | 890 | 0 | 118,217 | 118,471 |
-| Laws | 74 | 0 | 7,375 | 7,617 |
-| Tools | 4 | 425 | 49,105 | 49,186 |
+| Game code | 28 | 1,659 | 213,468 | 213,598 |
+| Books | 899 | 0 | 120,104 | 120,363 |
+| Laws | 75 | 0 | 7,795 | 8,041 |
+| Tools | 4 | 472 | 56,453 | 56,538 |
 
 ## The trades (code)
 
 | Item | Lines | Characters | Bytes | Typed numbers |
 |---|---|---|---|---|
-| index.html#page | 28 | 1,659 | 1,659 | 11 |
+| index.html#page | 29 | 1,697 | 1,697 | 11 |
 | index.html#frames | 13 | 1,035 | 1,035 | 3 |
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,071 | 1,075 | 25 |
@@ -23,19 +23,19 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 41 | 4,171 | 4,175 | 82 |
 | index.html#drawn-once-in-the-view-frame | 47 | 4,130 | 4,134 | 123 |
 | index.html#the-view | 9 | 916 | 920 | 14 |
-| index.html#the-door | 41 | 3,247 | 3,251 | 69 |
+| index.html#the-door | 53 | 4,849 | 4,853 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 314 | 49,153 | 49,157 | 4096 |
 | index.html#the-node-art | 26 | 3,804 | 3,808 | 244 |
 | index.html#the-figures | 144 | 23,020 | 23,024 | 1610 |
 | index.html#b-the-buildings | 15 | 1,290 | 1,294 | 20 |
-| index.html#floor-5-movables | 77 | 7,498 | 7,502 | 97 |
-| index.html#the-body-s-laws | 30 | 2,342 | 2,346 | 36 |
+| index.html#floor-5-movables | 77 | 7,504 | 7,508 | 96 |
+| index.html#the-body-s-laws | 30 | 2,348 | 2,352 | 35 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,188 | 3,192 | 92 |
 | index.html#floor-6-climate | 63 | 7,867 | 7,879 | 288 |
 | index.html#floor-7-display | 28 | 2,927 | 2,931 | 75 |
 | index.html#the-woods-cache | 51 | 4,814 | 4,818 | 89 |
-| index.html#touch | 40 | 4,348 | 4,352 | 59 |
+| index.html#touch | 40 | 4,369 | 4,373 | 59 |
 | menu.js | 259 | 41,707 | 41,745 | 641 |
 | econ.js | 91 | 12,732 | 12,732 | 102 |
 | combat.js | 53 | 7,637 | 7,637 | 101 |
@@ -48,17 +48,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 3 | 461 |
 | capabilities | 25 | 5,321 |
-| citations | 153 | 16,473 |
+| citations | 156 | 17,169 |
 | colours | 9 | 951 |
-| comments | 276 | 36,420 |
+| comments | 281 | 37,356 |
 | ground | 4 | 640 |
 | mass | 16 | 2,354 |
 | measure | 186 | 24,519 |
-| rules | 46 | 8,186 |
+| rules | 47 | 8,529 |
 | screen | 10 | 2,597 |
 | shells | 74 | 12,258 |
 | sound | 51 | 11,159 |
 | sprites | 31 | 5,485 |
+| tech | 0 | 509 |
 | words | 6 | 1,881 |
 
 ## The shells
@@ -119,5 +120,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X44 | t-same | page | same seed, same game: two pages on one seed draw alike and stand alike after 300 s with the weather in it; the rules' dice are Mid's rng draw for draw, BEAT and the grid squares Mid's; unitsNear finds exactly what a full scan finds, bldsNear every building a scan finds |
 | X45 | comments | code | a comment in code written in words instead of its code, a code not in the Comments book, or a Comments entry no code names |
 | X46 | t-ledger | page | every store in or out goes through earn and spend: an earning, a Home built and scrapped at 10%, a villager queued and taken back, an age, the people eating, a spend and the minute's turn leave the stores, the minute's flow, its velocity and the ledger and its lines as Mid's frozen code leaves them; fmt, plural, some, orList, slowPct and coord read as Mid's; 300 s of four sides' play balance the ledger to the unit |
+| X47 | t-effects | page | a kind's numbers after research are Mid's stats(), maxHpB, unitCost, techCost and rehealth with its shares added, not multiplied (QCA); a Home's health is D139 × (1 + Σ shares); the lowest is kept; a find's rate and the walk read the law |
 
-996 items sealed · 890 book entries · 74 laws · 153 citations, 17 still to open · 7 known
+1006 items sealed · 899 book entries · 75 laws · 156 citations, 17 still to open · 7 known

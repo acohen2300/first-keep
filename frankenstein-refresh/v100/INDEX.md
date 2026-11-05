@@ -197,6 +197,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N151 |  | Art: preview 49 (19-building-art.js) | opened |
 | N152 |  | Art: preview 49 | opened |
 | N153 |  | Design: Albert, Nov 5 12:21: comments in their own book, by letter code; five pages: 1 Index, 2 Citations, 3 Index and Citations, 4 Comments | opened |
+| N154 |  | Design: Albert, Nov 5 11:40: research stacks and its percents add, applied once to the base (3.0 with +10% and +8% is 3.0 × 1.18 = 3.54, not | opened |
+| N155 |  | Design: Albert, Nov 5 11:16 (3) and (4): walking's base is 3.4 mph and research improves it; building-health research is a share on top of v | opened |
+| N156 |  | Design: Mid's effects (08-core.js fxList, fxFits, fxv, keepHealth, rehealth, stats, maxHpB; 11-orders.js scaled, unitCost, techCost), brough | opened |
 
 ## colours
 
@@ -492,6 +495,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E274 |  | how much slower a full cover of mud or snow makes a march, in percent, from its terrain factor f: 1 − 1 ÷ (1 + f) (QN) |  |
 | E275 |  | a place as the map's lettered squares, measured from the board's corner: D190 units a square, letters across, numbers down (A1 to V22); off  |  |
 | E276 |  | a ledger line: its reasons largest first, each in its word and shortened, apart by a dot; under half a unit is left out |  |
+| E277 |  | QCA, the effects: what each side has learned, and each side's numbers worked out once until its learning changes; a new game forgets both |  |
+| E278 |  | a thing's keys, the names an effect may reach it by: every head of its code's letters (B, BR for BR1), its code, and its ticks |  |
+| E279 |  | a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's (D138), a find's or a field's rate, a price (D123 |  |
+| E280 |  | the one window for a kind's number after research (QCA): flat adds first, then the shares summed and applied once to that (Albert, Nov 5 11: |  |
+| E281 |  | learning a step puts its effects in force for that side; every unit and building of the side keeps its share of health as the most it can ha |  |
 
 ## ground
 
@@ -764,6 +772,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X44 | same seed, same game: two pages on one seed draw alike and stand alike after 300 s with the weather in it; the rules' dice are Mid's rng draw for draw, BEAT and the grid squares Mid's; unitsNear finds exactly what a full scan finds, bldsNear every building a scan finds | {stage: page} | N132 |
 | X45 | a comment in code written in words instead of its code, a code not in the Comments book, or a Comments entry no code names | {stage: code} | N153 |
 | X46 | every store in or out goes through earn and spend: an earning, a Home built and scrapped at 10%, a villager queued and taken back, an age, the people eating, a spend and the minute's turn leave the stores, the minute's flow, its velocity and the ledger and its lines as Mid's frozen code leaves them; fmt, plural, some, orList, slowPct and coord read as Mid's; 300 s of four sides' play balance the ledger to the unit | {stage: page} | N132 |
+| X47 | a kind's numbers after research are Mid's stats(), maxHpB, unitCost, techCost and rehealth with its shares added, not multiplied (QCA); a Home's health is D139 × (1 + Σ shares); the lowest is kept; a find's rate and the walk read the law | {stage: page} | N154 |
 
 ## screen
 
@@ -950,6 +959,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | PB10 | the aqueduct building picture | {top: 40} | N151 |
 | PB11 | the siege building picture | {top: 40} | N151 |
 | PN1 | the finds: their scale, and their dot far out | {scale: {tree: 0.88, bush: 1.45, other: 1.25}, dot: {tree: #3c6c32, bush: #3f6b33, gold: gold, stone: rock, iron: ruin, ruins: ruin, cemeter | N152 |
+
+## tech
+
+| Code | Name | Value | Cited |
+|---|---|---|---|
 
 ## words
 

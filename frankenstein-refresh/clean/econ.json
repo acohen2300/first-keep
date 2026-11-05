@@ -2,16 +2,16 @@
  "about": "Step 6, temp book staging/econ.js (Mid's 11-orders, 12-sim-core, 13-sim-civil, 36-economy): every piece. in v100: already home (a part v100 lacks is noted). bring: Mid has it, v100 does not; it comes with its feature, as book entries and laws, with Mid's values. cut: v100 does it another way. Building health is always v100's D139 wherever Mid read its own.",
  "pieces": {
   "scaled": [
-   "bring",
-   "a price after research's effects; with the tech tree (Content pull)"
+   "in v100",
+   "F12a: index.html stat(code, side, 'cost'): each yield by the law, rounded to the whole unit"
   ],
   "unitCost": [
-   "bring",
-   "a unit's price after research; v100 has the flat prices D123"
+   "in v100",
+   "F12a: index.html stat(code, side, 'cost') over D123"
   ],
   "techCost": [
-   "bring",
-   "research's price after research; with the tech tree"
+   "in v100",
+   "F12a: index.html stat(step, side, 'cost') over the step's own price"
   ],
   "trainWhy": [
    "in v100",

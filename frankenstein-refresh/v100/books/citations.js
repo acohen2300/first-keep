@@ -152,5 +152,8 @@ BOOK("citations", {
  "N150": {"text":"Art: preview 49 (18-figures.js), the last build before the camera turn","opened":true,"kind":"art"},
  "N151": {"text":"Art: preview 49 (19-building-art.js)","opened":true,"kind":"art"},
  "N152": {"text":"Art: preview 49","opened":true,"kind":"art"},
- "N153": {"text":"Design: Albert, Nov 5 12:21: comments in their own book, by letter code; five pages: 1 Index, 2 Citations, 3 Index and Citations, 4 Comments, 5 Index, Citations and Comments","opened":true,"kind":"design"}
+ "N153": {"text":"Design: Albert, Nov 5 12:21: comments in their own book, by letter code; five pages: 1 Index, 2 Citations, 3 Index and Citations, 4 Comments, 5 Index, Citations and Comments","opened":true,"kind":"design"},
+ "N154": {"text":"Design: Albert, Nov 5 11:40: research stacks and its percents add, applied once to the base (3.0 with +10% and +8% is 3.0 × 1.18 = 3.54, not 3.0 × 1.10 × 1.08 = 3.564), every stat, speed included","opened":true,"kind":"design"},
+ "N155": {"text":"Design: Albert, Nov 5 11:16 (3) and (4): walking's base is 3.4 mph and research improves it; building-health research is a share on top of v100's health","opened":true,"kind":"design"},
+ "N156": {"text":"Design: Mid's effects (08-core.js fxList, fxFits, fxv, keepHealth, rehealth, stats, maxHpB; 11-orders.js scaled, unitCost, techCost), brought by Albert's yes, Nov 5 11:40 (Frankenstein F12a)","opened":true,"kind":"design"}
 });

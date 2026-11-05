@@ -26,6 +26,7 @@ canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: non
 <script src="books/sound.js"></script>
 <script src="books/screen.js"></script>
 <script src="books/words.js"></script>
+<script src="books/tech.js"></script>
 <script>
 'use strict';
 // E1
@@ -281,6 +282,18 @@ function dirty() { if (!queued) { queued = true; requestAnimationFrame(draw); } 
 // ── The door (E65)
 const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], spawn: [], gone: [], event: [] }; // E66
 const on = (ev, fn) => HOOK[ev].push(fn), fire = (ev, ...a) => { for (const f of HOOK[ev]) if (f(...a)) return true; return false; };
+// E277
+const known = new Map(), FXC = new Map(); on('start', () => { known.clear(); FXC.clear(); });
+const keysOf = (code) => { let p = ''; const [L] = code.match(/^[A-Z]*/); return [...L].map((c) => (p += c)).concat(code, SH[code] ? SH[code].ticks : []); }; // E278
+const BASE = { spd: (c) => ref(SH[c].pace), hp: (c) => D.bldHp[c] ?? (D.stats[c] || {}).hp, rate: (c) => (SH[c].rate ? ref(SH[c].rate) : D.rate[SH[c].find]), cost: (c) => D.cost[c] || (BOOKS.tech[c] || {}).value?.cost }; // E279
+function stat(code, side, key) { // E280
+  const memo = FXC.get(side) || FXC.set(side, new Map()).get(side), id = code + ' ' + key; if (memo.has(id)) return memo.get(id);
+  const ks = keysOf(code), fx = [...(known.get(side) || [])].flatMap((t) => BOOKS.tech[t].value.fx).filter((f) => f.s === key && (!f.k || [].concat(f.k).some((k) => k === '*' || ks.includes(k))));
+  const law = (n) => { const b = fx.filter((f) => f.a).reduce((v, f) => v + f.a, n); return fx.filter((f) => f.min != null).reduce((v, f) => Math.min(v, f.min), fx.filter((f) => f.p).reduce((v, f) => v + b * f.p, b)); };
+  const base = (BASE[key] || ((c) => (D.stats[c] || {})[key]))(code), v = base == null ? base : typeof base === 'object' ? Object.fromEntries(Object.entries(base).map(([y, n]) => [y, Math.round(law(n))])) : law(base);
+  memo.set(id, v); return v;
+}
+function learn(side, id) { (known.get(side) || known.set(side, new Set()).get(side)).add(id); FXC.delete(side); for (const t of [...units, ...things]) if (t.side === side && t.hpMax) { const M = stat(t.code, side, 'hp'); t.hp *= M / t.hpMax; t.hpMax = M; } } // E281
 let last = 0, frameDt = 0;
 const every = ([secs, ph]) => Math.floor((K.t - ph / D.fps) / secs) > Math.floor((K.t0 - ph / D.fps) / secs); // E67
 function loop(now) { if (now - last >= 1000 / D.fps) { const dt = Math.min(0.1, (now - last) / 1000 || 0) * (show.fast ? D.fast : 1); last = now; frameDt = dt; if (!document.hidden) { climate(dt); step(dt); fire('tick', dt); look(dt); draw(); } } requestAnimationFrame(loop); }
@@ -877,7 +890,7 @@ function step(dt) { // E99
     u.t += dt; u.mps = 0;
     if (u.slide) slide(u, dt);
     if (u.path) { // E100
-      const [tx, ty] = tileMid(u.path[u.at]), dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy), v = D.speed[U[u.code][2]] * D.upm * footing(u.k) * dt;
+      const [tx, ty] = tileMid(u.path[u.at]), dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy), v = stat(u.code, u.side, 'spd') * D.upm * footing(u.k) * dt;
       u.walked = (u.walked || 0) + Math.min(d, v) / D.upm; u.mps = v / D.upm / dt; // E101
       if (d <= v) { u.bx = tx; u.by = ty; if (++u.at >= u.path.length) { u.path = null; u.job = u.then || 'idle'; } } else { u.bx += (dx / d) * v; u.by += (dy / d) * v; u.face = dx < 0 ? -1 : 1; }
       place(u); continue;
@@ -912,7 +925,7 @@ const groundAt = (k) => (iced(k) ? G.ice : K.snow > 0.5 ? G.snow : MARSH[k] || K
 let jolt = { t: 0, px: 0 };
 function impact(a, t) { // E112
   if (t.kind !== 'unit') { fire('event', 'hitBld', t); return 0; }
-  const b = blowOf(a.code), moving = a.mps > 0.1, ms = moving || !b ? massOf(a.code) : b.kg, vs = moving ? a.mps : b ? b.mps : D.speed[U[a.code][2]];
+  const b = blowOf(a.code), moving = a.mps > 0.1, ms = moving || !b ? massOf(a.code) : b.kg, vs = moving ? a.mps : b ? b.mps : stat(a.code, a.side, 'spd');
   const v = (ms * vs) / (ms + massOf(t.code)), dx = t.bx - a.bx, dy = t.by - a.by, dd = Math.hypot(dx, dy) || 1;
   t.slide = { vx: (dx / dd) * v, vy: (dy / dd) * v };
   if (v >= D.jolt.from && (t.side === 0 || inSight(t.k))) jolt = { t: D.jolt.s, px: Math.min(D.jolt.max, v * D.jolt.px) };
@@ -1129,7 +1142,7 @@ canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, 
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
 function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); fogT = 0; K.t = K.snow = K.fds = K.wet = K.rain = K.snowing = K.fog = K.fogT = K.storm = K.flash = K.hour = K.strikeT = jolt.t = 0; K.wetHour = false; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
-window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1,
+window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1,
   rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, sel: () => sel, select: (u) => (sel = u), seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>
