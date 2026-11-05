@@ -23,7 +23,7 @@
   ],
   "POPMAX": [
    "bring",
-   "POPMAX 180 is D128 popMax, but v100 has 200 (differs, Albert's call); ARMYMAX 120, BNSIZE 40, SHARE_FALLEN 0.5 to bring with the army and the fallen side"
+   "POPMAX 180 is D128 popMax, but v100 has 200 (differs, Albert's call); ARMYMAX 120, BNSIZE 40, SHARE_FALLEN 0.5 to bring with the army and the fallen side · by the 10:31 rule: Mid's"
   ],
   "RICH": [
    "bring",
@@ -107,7 +107,7 @@
   ],
   "AGES": [
    "bring",
-   "six ages with their own prices and times, the last hidden behind a year of peace: v100 has six names (D130: Camp, Village, Town, City, Kingdom, Empire; Mid: Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment) and one price (D129). Names differ: Albert's call · Albert, Nov 5 10:30: Mid's names"
+   "six ages with their own prices and times, the last hidden behind a year of peace: v100 has six names (D130: Camp, Village, Town, City, Kingdom, Empire; Mid: Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment) and one price (D129). Names differ: Albert's call · Albert, Nov 5 10:30: Mid's names · by the 10:31 rule: Mid's"
   ],
   "SEASONS": [
    "bring",
@@ -317,7 +317,7 @@
   ],
   "UPKEEP": [
    "bring",
-   "food per person by kind (foot, mounted, cart) and hunger: v100 has one rate (D131); Albert's call"
+   "food per person by kind (foot, mounted, cart) and hunger: v100 has one rate (D131); Albert's call · by the 10:31 rule: Mid's"
   ],
   "TAX": [
    "bring",
@@ -759,7 +759,7 @@
   ],
   "LOOKOUT": [
    "bring",
-   "a building sees 60 + 24 × √height (the horizon grows with the square root of height): real math where v100 gives every building 100 (D117); Albert's call"
+   "a building sees 60 + 24 × √height (the horizon grows with the square root of height): real math where v100 gives every building 100 (D117); Albert's call · by the 10:31 rule: Mid's"
   ],
   "WORK_R": [
    "bring",
@@ -919,7 +919,7 @@
   ],
   "START_VILS": [
    "in v100",
-   "the first people: D67, but v100 has 6 and Mid 3 (differs, Albert's call)"
+   "the first people: D67, but v100 has 6 and Mid 3 (differs, Albert's call) · by the 10:31 rule: Mid's"
   ],
   "START_RES": [
    "in v100",
@@ -958,6 +958,10 @@
   [
    "Albert, Nov 5 10:30",
    "ages: Mid's names (Stone, Bronze, Classical, Medieval, Gunpowder, and the hidden Enlightenment); their times Mid's by the 10:06 call; their prices still open"
+  ],
+  [
+   "Albert, Nov 5 10:31",
+   "the rule for every number: Mid's gameplay comes over as it is (its values), unless it meets a call Albert already made for v100 (the camera's 15° and 41°, walking at 3.4 mph, every building's health v100's, damage open). Only those meetings come to him"
   ]
  ]
 }
