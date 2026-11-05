@@ -1,0 +1,2199 @@
+{
+ "about": "Step 6, temp book staging/words.js (Mid's 07-text.js): every line of wording the game says, and the history behind each row. in v100: v100 already shows it (mostly menu.js). bring: comes as entries in a new Words book with its feature. cut: v100 does it another way. The big tables (WHY, MS_TEXT, EV_WHY, EV_TEXT, ROW_WORD, TRIGGERS) carry a line per row; misfits go to Albert.",
+ "pieces": {
+  "slowPct": [
+   "bring",
+   "percent slower in mud or snow for the wording; the factor is v100's QN (Pandolf, N13)"
+  ],
+  "orList": [
+   "bring",
+   "'a, b or c' for the wording, with the Words book"
+  ],
+  "investText": [
+   "bring",
+   "the loyalty each building buys near a vassal, with vassals"
+  ],
+  "TITLE_SHORT": [
+   "bring",
+   "short card titles for long names (wonders, civ soldiers, the error card), with civilisations and the cards"
+  ],
+  "LEDGER_WORD": [
+   "bring",
+   "the ledger's earn and spend words, with the ledger; 'the Throne tithe' waits on the Throne (misfits)"
+  ],
+  "SCEN_TEXT": [
+   "bring",
+   "the four scenarios' descriptions; v100 has their names (menu.js OPTS.scen: Open, Siege, Silk Road, Last Keep); 'a keep' (misfits)"
+  ],
+  "WHY": [
+   "bring",
+   "366 history lines: ages, research, buildings, units, finds, wonders, bonuses; every row comes with its feature. Rows below",
+   {
+    "age0": [
+     "bring",
+     "the Stone age's history (age card), with ages; Mid's age names are agreed"
+    ],
+    "age1": [
+     "bring",
+     "the Bronze age's history (age card), with ages; Mid's age names are agreed"
+    ],
+    "age2": [
+     "bring",
+     "the Classical age's history (age card), with ages; Mid's age names are agreed"
+    ],
+    "age3": [
+     "bring",
+     "the Medieval age's history (age card), with ages; Mid's age names are agreed"
+    ],
+    "age5": [
+     "bring",
+     "the Enlightenment (hidden) age's history (age card), with ages; Mid's age names are agreed"
+    ],
+    "method": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "vaccine": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "fourcourse": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "encyclopedia": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "schooling": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "freetrade": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "age4": [
+     "bring",
+     "the Gunpowder age's history (age card), with ages; Mid's age names are agreed"
+    ],
+    "arquebus": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "bombard": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "hafting": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "axes": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "ironaxe": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "sawpits": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "twosaw": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "sawmill": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "coppice": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "pollard": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "forestry": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "plantation": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "timber": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "charcoal": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "carts": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "logdrive": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "sickles": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "threshing": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "plough": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "noria": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "horsecollar": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "heavyplough": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "windmill": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "seeddrill": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "seedstore": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "manure": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "irrigation": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "rotation": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "enclosure": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "potato": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "ovens": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "granary": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "wheelbarrow": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "picks": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "firesetting": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "deep": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "pumps": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "rails": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "blasting": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "masonry": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "brick": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "ventilation": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "wedges": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "chisels": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "stonesaw": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "rollers": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "cranes": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "fishtraps": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "nets": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "salting": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "deepboats": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "trawl": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "dugouts": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "sails": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "harbours": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "compass": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "lighthouse": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "tally": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "baskets": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "midwives": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "bank": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "census": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "charter": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "townwatch": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "calendar": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "pride": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "hearth": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "icehouse": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "chimney": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "lanterns": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "runners": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "royalroad": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "yam": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "postal": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "sheets": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "weathersigns": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "shields": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "spearwall": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "drill": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "phalanx": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "tech:legion": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull); the Legion research, kept apart from the Legion soldier (techWhy)"
+    ],
+    "pikesquare": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "arms": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "halberd": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "tercio": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "bayonet": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "fieldcraft": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "camps": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "marching": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "archerstakes": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "viamil": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "horrea": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "castra": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "trigger": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "changping": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "taixue": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "satrapy": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "immortals": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "persianroad": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "mongolyam": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "mongolremounts": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "tumen": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "sixth": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "hastin": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "pataliputra": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "bambuk": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "saltroad": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "sankore": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "learning": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "pinfactory": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "campwagons": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "fieldlog": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "warmclothes": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "waterproof": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "drillyard": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "veterans": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "feudal": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "slings": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "composite": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "bodkin": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "firearrows": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "longbow": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "xbowdrill": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "musket": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "volley": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "horses": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "bridles": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "saddles": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "stirrups": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "horseshoes": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "remounts": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "cavalry": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "knighthood": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "dragoons": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "bronze": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "spearheads": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "iron": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "tempering": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "casehard": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "leather": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "helmets": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "scale": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "chain": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "plate": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "oiling": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "slits": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "fortify": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "machic": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "beacons": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "greattower": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "guntower": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "guncast": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "starfort": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "engineers": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "torsion": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "counterweight": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "burningshot": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "corned": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "limbers": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "petards": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "standing": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "drawbridge": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "garrison": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "bastion": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "writing": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "records": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "rhetoric": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "universities": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "science": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "maths": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "algebra": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "ballistics": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "apprentices": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "academy": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "military_academy": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "medicine": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "architecture": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "guilds": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "medschool": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "press": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "optics": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "roads": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "drainage": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "snowclear": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "crampons": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "levees": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull); its flood is held (KI4)"
+    ],
+    "meteorology": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "bandages": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "herbs": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "hospitals": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "pharmacy": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "quarantine": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "surgeons": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "anatomy": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "inoculation": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "rites": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "games": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "relics": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "sermons": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "reform": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "watch": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "codes": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "magistrates": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "informers": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "tolls": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "assizes": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "police": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "engage": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "command": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "formations": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "standards": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "supply": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "muster": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "staff": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "weights": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "coinage": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "credit": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "banking": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "exchange": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "armedcart": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "convoys": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "milestones": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "caravanserai": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "fortpost": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "postroads": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "customs": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "looms": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "spinwheel": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "fulling": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "frame": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "hops": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "brewhouse": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "lager": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "dies": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "assay": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "milled": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "bellows": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "castiron": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "blast": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "finery": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "cleanwater": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "sewers": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "plumbing": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "waterworks": [
+     "bring",
+     "a research step's history and date, with the tech tree (the Content pull)"
+    ],
+    "keep": [
+     "bring",
+     "the history card for Town Center (BTC1), with its building"
+    ],
+    "town": [
+     "bring",
+     "the history card for a second Town Center (BTC1, Mid's new town), with towns"
+    ],
+    "venture": [
+     "bring",
+     "the Market's ventures (credit, the Bourse), with the Market"
+    ],
+    "house": [
+     "bring",
+     "the history card for Home (BR1) (Mid: House), with its building"
+    ],
+    "apartment": [
+     "bring",
+     "the history card for Apartment (BR2), with its building"
+    ],
+    "aqueduct": [
+     "bring",
+     "the history card for Aqueduct (BP7), with its building"
+    ],
+    "farm": [
+     "bring",
+     "the history card for Farm (BCL1), with its building"
+    ],
+    "treefarm": [
+     "bring",
+     "the history card for Tree farm (BCL2), with its building"
+    ],
+    "mill": [
+     "bring",
+     "the history card for Mill (BI1), with its building"
+    ],
+    "lumber": [
+     "bring",
+     "the history card for Lumber camp (BI2), with its building"
+    ],
+    "mining": [
+     "bring",
+     "the history card for Mining camp (BI3) (Mid: Mine), with its building"
+    ],
+    "barracks": [
+     "bring",
+     "the history card for Barracks (BM1), with its building"
+    ],
+    "range": [
+     "bring",
+     "the history card for Range (BM2) (Mid: Archery range), with its building"
+    ],
+    "stable": [
+     "bring",
+     "the history card for Stable (BM3), with its building"
+    ],
+    "smith": [
+     "bring",
+     "the history card for Smith (BI9) (Mid: Smithy), with its building"
+    ],
+    "siege": [
+     "bring",
+     "the history card for Siege workshop (BM4), with its building"
+    ],
+    "council": [
+     "bring",
+     "the history card for War Council (BP10), with its building"
+    ],
+    "market": [
+     "bring",
+     "the history card for Market (BCR1), with its building"
+    ],
+    "courthouse": [
+     "bring",
+     "the history card for Courthouse (BP8), with its building"
+    ],
+    "school": [
+     "bring",
+     "the history card for School (BP1), with its building"
+    ],
+    "library": [
+     "bring",
+     "the history card for Library (BP2), with its building"
+    ],
+    "hall": [
+     "bring",
+     "the history card for Hall (BP9), with its building"
+    ],
+    "store": [
+     "bring",
+     "the history card for Store (BI4), with its building"
+    ],
+    "caltrops": [
+     "bring",
+     "the history card for Caltrops (BF4), with its building"
+    ],
+    "abatis": [
+     "bring",
+     "the history card for Abatis (BF5), with its building"
+    ],
+    "medtent": [
+     "bring",
+     "the history card for Medical tent (BTC5), with its building"
+    ],
+    "traintent": [
+     "bring",
+     "the history card for Training tent (BTC6), with its building"
+    ],
+    "messtent": [
+     "bring",
+     "the history card for Mess tent (BTC7), with its building"
+    ],
+    "depot": [
+     "bring",
+     "the history card for Depot (BI5) (Mid: Supply depot), with its building"
+    ],
+    "camptower": [
+     "bring",
+     "the history card for Camp tower (BTC8), with its building"
+    ],
+    "palisade": [
+     "bring",
+     "the history card for Palisade (BW4), with its building"
+    ],
+    "outpostcart": [
+     "bring",
+     "the Outpost wagon's history, with war camps (see misfits)"
+    ],
+    "campcart": [
+     "bring",
+     "the Camp wagon (UT2)'s history, with war camps"
+    ],
+    "hospital": [
+     "bring",
+     "the history card for Hospital (BP6), with its building"
+    ],
+    "baths": [
+     "bring",
+     "the history card for Baths (BP4), with its building"
+    ],
+    "theatre": [
+     "bring",
+     "the history card for Theatre (BP5), with its building"
+    ],
+    "tavern": [
+     "bring",
+     "the history card for Tavern (BCR2), with its building"
+    ],
+    "temple": [
+     "bring",
+     "the history card for Temple (BP3), with its building"
+    ],
+    "pasture": [
+     "bring",
+     "the history card for Pasture (BCL3), with its building"
+    ],
+    "tpost": [
+     "bring",
+     "the history card for Trade post (BCT1), with its building"
+    ],
+    "pit": [
+     "bring",
+     "the history card for Pit (BF1), with its building"
+    ],
+    "net": [
+     "bring",
+     "the history card for Net (BF2), with its building"
+    ],
+    "stakes": [
+     "bring",
+     "the history card for Stakes (BF3), with its building"
+    ],
+    "workshop": [
+     "bring",
+     "the history card for Workshop (BI8), with its building"
+    ],
+    "foundry": [
+     "bring",
+     "the history card for Foundry (BI7), with its building"
+    ],
+    "quarry": [
+     "bring",
+     "the history card for Quarry (BCL4), with its building"
+    ],
+    "throne": [
+     "bring",
+     "the history card for Throne (BS1), with its building; the Throne waits for Albert's reimagining (misfits)"
+    ],
+    "mint": [
+     "bring",
+     "the history card for Mint (BI6), with its building"
+    ],
+    "stop": [
+     "bring",
+     "a trade stop's spice, with trade routes"
+    ],
+    "dock": [
+     "bring",
+     "the history card for Dock (BCT2), with its building"
+    ],
+    "tower": [
+     "bring",
+     "the history card for Tower (BW3) (Mid: Watchtower), with its building"
+    ],
+    "wall": [
+     "bring",
+     "the history card for Wall (BW1), with its building"
+    ],
+    "gate": [
+     "bring",
+     "the history card for Gate (BW2), with its building"
+    ],
+    "wonder": [
+     "bring",
+     "the history card for Wonder (BS2), with its building"
+    ],
+    "vil": [
+     "bring",
+     "the history card for the Villager (v100 Villager, UV), with its unit"
+    ],
+    "scout": [
+     "bring",
+     "the history card for the Scout (v100 Scout, US4), with its unit"
+    ],
+    "envoy": [
+     "bring",
+     "the history card for the Emissary, with its unit"
+    ],
+    "caravan": [
+     "bring",
+     "the history card for the Caravan (v100 Caravan, UT1), with its unit"
+    ],
+    "spy": [
+     "bring",
+     "the history card for the Spy (v100 Spy, US3), with its unit"
+    ],
+    "priest": [
+     "bring",
+     "the history card for the Priest (v100 Priest, US1), with its unit"
+    ],
+    "medic": [
+     "bring",
+     "the history card for the Medic (v100 Medic, US2), with its unit"
+    ],
+    "spear": [
+     "bring",
+     "the history card for the Spearman (v100 Foot, UM1), with its unit"
+    ],
+    "sword": [
+     "bring",
+     "the history card for the Swordsman (v100 Foot, UM1), with its unit"
+    ],
+    "archer": [
+     "bring",
+     "the history card for the Archer (v100 Archers, UM2), with its unit"
+    ],
+    "jav": [
+     "bring",
+     "the history card for the Javelineer (v100 Archers, UM2), with its unit"
+    ],
+    "crossbow": [
+     "bring",
+     "the history card for the Crossbowman (v100 Archers, UM2), with its unit"
+    ],
+    "chariot": [
+     "bring",
+     "the history card for the Chariot (v100 Riders, UM3), with its unit"
+    ],
+    "cata": [
+     "bring",
+     "the history card for the Cataphract (v100 Riders, UM3), with its unit"
+    ],
+    "harcher": [
+     "bring",
+     "the history card for the Horse archer (v100 Riders, UM3), with its unit"
+    ],
+    "elephant": [
+     "bring",
+     "the history card for the War elephant (v100 Riders, UM3), with its unit"
+    ],
+    "ram": [
+     "bring",
+     "the history card for the Ram (v100 Engines, UM4), with its unit"
+    ],
+    "stower": [
+     "bring",
+     "the history card for the Siege tower (v100 Engines, UM4), with its unit"
+    ],
+    "catapult": [
+     "bring",
+     "the history card for the Catapult (v100 Engines, UM4), with its unit"
+    ],
+    "ballista": [
+     "bring",
+     "the history card for the Ballista (v100 Engines, UM4), with its unit"
+    ],
+    "treb": [
+     "bring",
+     "the history card for the Trebuchet (v100 Engines, UM4), with its unit"
+    ],
+    "hanxbow": [
+     "bring",
+     "a civilisation's unique soldier, with civilisations"
+    ],
+    "legion": [
+     "bring",
+     "a civilisation's unique soldier, with civilisations"
+    ],
+    "immortal": [
+     "bring",
+     "a civilisation's unique soldier, with civilisations"
+    ],
+    "mongolha": [
+     "bring",
+     "a civilisation's unique soldier, with civilisations"
+    ],
+    "mauryael": [
+     "bring",
+     "a civilisation's unique soldier, with civilisations"
+    ],
+    "malihorse": [
+     "bring",
+     "a civilisation's unique soldier, with civilisations"
+    ],
+    "elite_roman": [
+     "bring",
+     "the Roman unique soldier's elite rank, with civilisations and the tech tree"
+    ],
+    "elite_han": [
+     "bring",
+     "the Han unique soldier's elite rank, with civilisations and the tech tree"
+    ],
+    "elite_persian": [
+     "bring",
+     "the Persian unique soldier's elite rank, with civilisations and the tech tree"
+    ],
+    "elite_mongol": [
+     "bring",
+     "the Mongol unique soldier's elite rank, with civilisations and the tech tree"
+    ],
+    "elite_maurya": [
+     "bring",
+     "the Maurya unique soldier's elite rank, with civilisations and the tech tree"
+    ],
+    "elite_mali": [
+     "bring",
+     "the Mali unique soldier's elite rank, with civilisations and the tech tree"
+    ],
+    "castle": [
+     "bring",
+     "the history card for Castle (BTC2), with its building"
+    ],
+    "chest": [
+     "bring",
+     "the treasure chest (MG4 Treasure), with finds"
+    ],
+    "ruins": [
+     "bring",
+     "MG1 Ruins, with finds"
+    ],
+    "cemetery": [
+     "bring",
+     "MG2 Cemetery, with finds"
+    ],
+    "camp": [
+     "bring",
+     "the robbers' camp, with the hazards (MH3 Robbers)"
+    ],
+    "den": [
+     "bring",
+     "the bear den, with finds (MW6 Bear)"
+    ],
+    "shrine": [
+     "bring",
+     "the shrine at the Throne, with finds (see misfits: the Throne)"
+    ],
+    "vagabonds": [
+     "bring",
+     "the vagabonds to hire (MH4), with finds"
+    ],
+    "mercs": [
+     "bring",
+     "the free company, with events"
+    ],
+    "meteor": [
+     "bring",
+     "the fallen star (iron), with events"
+    ],
+    "wayfarer": [
+     "bring",
+     "MH5 Wayfarers, with finds"
+    ],
+    "wonder:roman": [
+     "bring",
+     "the Roman wonder's history (BS2 Wonder), with civilisations"
+    ],
+    "wonder:han": [
+     "bring",
+     "the Han wonder's history (BS2 Wonder), with civilisations"
+    ],
+    "wonder:persian": [
+     "bring",
+     "the Persian wonder's history (BS2 Wonder), with civilisations"
+    ],
+    "wonder:mongol": [
+     "bring",
+     "the Mongol wonder's history (BS2 Wonder), with civilisations"
+    ],
+    "wonder:maurya": [
+     "bring",
+     "the Maurya wonder's history (BS2 Wonder), with civilisations"
+    ],
+    "wonder:mali": [
+     "bring",
+     "the Mali wonder's history (BS2 Wonder), with civilisations"
+    ],
+    "bonus:roman": [
+     "bring",
+     "the Roman bonus's history, with civilisations"
+    ],
+    "bonus:han": [
+     "bring",
+     "the Han bonus's history, with civilisations"
+    ],
+    "bonus:persian": [
+     "bring",
+     "the Persian bonus's history, with civilisations"
+    ],
+    "bonus:mongol": [
+     "bring",
+     "the Mongol bonus's history, with civilisations"
+    ],
+    "bonus:maurya": [
+     "bring",
+     "the Maurya bonus's history, with civilisations"
+    ],
+    "bonus:mali": [
+     "bring",
+     "the Mali bonus's history, with civilisations"
+    ]
+   }
+  ],
+  "NEWS": [
+   "bring",
+   "world news by age (five lists), with the news"
+  ],
+  "SONG": [
+   "bring",
+   "the song line, said by the Guide and the Sound page"
+  ],
+  "MS_TEXT": [
+   "bring",
+   "14 teaching milestones (line, why, fix, target), with milestones; their fixes point at Mid's cards (misfits). Rows below",
+   {
+    "house": [
+     "bring",
+     "the first-house milestone; says house for Home (misfits); its fix opens menu:land (v100's Land tab)"
+    ],
+    "field": [
+     "bring",
+     "the first field, with milestones"
+    ],
+    "drop": [
+     "bring",
+     "a camp by the finds, with milestones"
+    ],
+    "soldier": [
+     "bring",
+     "the first soldier; teaches Mid's cycle button (misfits)"
+    ],
+    "squad": [
+     "bring",
+     "the first squad, with squads"
+    ],
+    "age": [
+     "bring",
+     "a new age, with milestones"
+    ],
+    "mud": [
+     "bring",
+     "an army slowed by mud; names ruts (held, misfits)"
+    ],
+    "snow": [
+     "bring",
+     "snow slows walking (QN), with milestones"
+    ],
+    "ice": [
+     "bring",
+     "ice and Crampons, with milestones"
+    ],
+    "hungry": [
+     "bring",
+     "empty food stores, with milestones"
+    ],
+    "fire": [
+     "bring",
+     "a fire spreads, with fire"
+    ],
+    "rout": [
+     "bring",
+     "a rout (Dupuy), with milestones"
+    ],
+    "trade": [
+     "bring",
+     "the first caravan, with trade"
+    ],
+    "winter": [
+     "bring",
+     "winter, with seasons"
+    ]
+   }
+  ],
+  "EV_WHY": [
+   "bring",
+   "why each event happened, with events. Rows below",
+   {
+    "eclipse": [
+     "cut",
+     "the eclipse is cut (DICTIONARY K, Cut:) (misfits)"
+    ],
+    "storm": [
+     "bring",
+     "v100 has the storm (KW1+KW2+KW6); the event's wording comes"
+    ],
+    "stampede": [
+     "bring",
+     "bison, with events"
+    ],
+    "flood": [
+     "cut",
+     "flood is held (KI4) (misfits)"
+    ],
+    "meteor": [
+     "bring",
+     "the fallen star, with events"
+    ],
+    "wildfire": [
+     "bring",
+     "with fire"
+    ],
+    "fog": [
+     "bring",
+     "fog (KW7) is in v100; the event wording comes; sight in fog is held (misfits)"
+    ],
+    "sinkhole": [
+     "bring",
+     "with events"
+    ],
+    "quicksand": [
+     "bring",
+     "with events"
+    ],
+    "heatwave": [
+     "bring",
+     "with events and the air temperature"
+    ],
+    "mirage": [
+     "bring",
+     "with events"
+    ],
+    "circus": [
+     "bring",
+     "with events"
+    ],
+    "wagon": [
+     "bring",
+     "settlers, with events"
+    ],
+    "mercs": [
+     "bring",
+     "with events"
+    ],
+    "dragon": [
+     "bring",
+     "with the Fantasy world"
+    ],
+    "troll": [
+     "bring",
+     "with the Fantasy world"
+    ],
+    "aurora": [
+     "cut",
+     "the sky (KS) is held with the Host (misfits)"
+    ]
+   }
+  ],
+  "EV_TEXT": [
+   "bring",
+   "each event's warning and its line, with events. Rows below",
+   {
+    "eclipse": [
+     "cut",
+     "the eclipse is cut (DICTIONARY K, Cut:) (misfits)"
+    ],
+    "storm": [
+     "bring",
+     "v100 has the storm (KW1+KW2+KW6); the event's wording comes"
+    ],
+    "stampede": [
+     "bring",
+     "bison, with events"
+    ],
+    "flood": [
+     "cut",
+     "flood is held (KI4) (misfits)"
+    ],
+    "meteor": [
+     "bring",
+     "the fallen star, with events"
+    ],
+    "wildfire": [
+     "bring",
+     "with fire"
+    ],
+    "fog": [
+     "bring",
+     "fog (KW7) is in v100; the event wording comes; sight in fog is held (misfits)"
+    ],
+    "sinkhole": [
+     "bring",
+     "with events"
+    ],
+    "quicksand": [
+     "bring",
+     "with events"
+    ],
+    "heatwave": [
+     "bring",
+     "with events and the air temperature"
+    ],
+    "mirage": [
+     "bring",
+     "with events"
+    ],
+    "circus": [
+     "bring",
+     "with events"
+    ],
+    "wagon": [
+     "bring",
+     "settlers, with events"
+    ],
+    "mercs": [
+     "bring",
+     "with events"
+    ],
+    "dragon": [
+     "bring",
+     "with the Fantasy world"
+    ],
+    "troll": [
+     "bring",
+     "with the Fantasy world"
+    ],
+    "aurora": [
+     "cut",
+     "the sky (KS) is held with the Host (misfits)"
+    ],
+    "horde": [
+     "bring",
+     "the horde's three warnings, with MH2 Hordes"
+    ]
+   }
+  ],
+  "HOLD_WORD": [
+   "cut",
+   "'No soldiers yet'; v100's Attack and Recall say 'No soldiers' (menu.js whyNot)"
+  ],
+  "ROW_WORD": [
+   "in v100",
+   "the row's words: most are in v100's menu.js (typed in code until the Words book); rows below",
+   {
+    "jobs": [
+     "cut",
+     "Mid's page name; v100's base row is the jobs, unnamed (menu.js base)"
+    ],
+    "war": [
+     "in v100",
+     "menu.js War button"
+    ],
+    "train": [
+     "in v100",
+     "menu.js MID 'Train'"
+    ],
+    "people": [
+     "in v100",
+     "menu.js VERBS.people 'People'"
+    ],
+    "build": [
+     "in v100",
+     "menu.js Build tab"
+    ],
+    "home": [
+     "cut",
+     "Mid's 'Home' (call soldiers home); v100's Recall does it (menu.js)"
+    ],
+    "orders": [
+     "bring",
+     "the squad new soldiers join, with squads"
+    ],
+    "direct": [
+     "in v100",
+     "menu.js MID 'Direct'"
+    ],
+    "attack": [
+     "in v100",
+     "menu.js VERBS.attack 'Attack'"
+    ],
+    "squad": [
+     "in v100",
+     "menu.js MID 'Squad'"
+    ],
+    "setup": [
+     "in v100",
+     "menu.js 'Set up' (Mid 'Set Up')"
+    ],
+    "army": [
+     "bring",
+     "the Army card's title, with the army"
+    ],
+    "pace": [
+     "bring",
+     "a squad's pace words, with squads"
+    ],
+    "emg": [
+     "cut",
+     "Mid's red War button; v100's War button is the battle station"
+    ],
+    "idle": [
+     "bring",
+     "the quick action's idle, with the quick action"
+    ],
+    "ambush": [
+     "bring",
+     "a Yard tool, with the War Director"
+    ],
+    "choke": [
+     "bring",
+     "a Yard tool, with the War Director (Choke is a formation name in DICTIONARY)"
+    ],
+    "yard": [
+     "in v100",
+     "menu.js 'Yard' (the Layers tab, SN13)"
+    ],
+    "emgW": [
+     "in v100",
+     "menu.js warBase Work, Gather, Garrison, Shelter; their second words (all clear, at home, all in, hide) to bring"
+    ]
+   }
+  ],
+  "techWhy": [
+   "bring",
+   "a research step's history, with the tech tree"
+  ],
+  "tierLines": [
+   "bring",
+   "the upgrade lines read from the research table, with the tech tree"
+  ],
+  "TRIGGERS": [
+   "bring",
+   "75 Guide entries (when, then, why), numbers read from the tables, with each feature. Rows below",
+   {
+    "You send soldiers somewhere": [
+     "bring",
+     "what soldiers sent out show (states, ring, Recall, Follow): Guide, with the army"
+    ],
+    "An enemy group you can see heads for your buildings": [
+     "bring",
+     "the red warning bar for a raid, with the army"
+    ],
+    "You start a game": [
+     "bring",
+     "the civilisations at the start, with civilisations"
+    ],
+    "You order a unit and the town is full": [
+     "bring",
+     "an order waits for room; names a House (misfits); v100's train whyNot says 'No room: build a home'"
+    ],
+    "The screen": [
+     "bring",
+     "Mid's screen tour (top strip, cycle button Jobs → War → Train): to rewrite for v100's menus (misfits)"
+    ],
+    "Messages and sound": [
+     "bring",
+     "messages 10 words or fewer, tips and messages switch off, sound follows the silent switch: Guide, with messages"
+    ],
+    "Room": [
+     "bring",
+     "one population, homes hold people; names a House (misfits); Mid's POPMAX 180 against v100's 200 (numbers.json)"
+    ],
+    "Limits": [
+     "bring",
+     "each building's limit grows with the age, with build limits"
+    ],
+    "The War Council ladder": [
+     "bring",
+     "the War Council's four researches (Engagement, Battalions, Formations, Muster); says Siege for Engines (misfits)"
+    ],
+    "Villager jobs: Food, Wood, Stone, Gold, Iron": [
+     "bring",
+     "the − and + of the jobs; v100 has − and + (menu.js job, QW) but picks differently: Mid's rule comes with it"
+    ],
+    "Hunting": [
+     "bring",
+     "hunting deer and boar, with hunting (v100 says 'Hunting is not built yet')"
+    ],
+    "You build": [
+     "bring",
+     "placing a building: Mid snaps two squares apart and replants tree farms; v100's ghost (menu.js pick) is the base"
+    ],
+    "Everyone eats": [
+     "bring",
+     "everyone eats, shares by kind, hunger: with upkeep"
+    ],
+    "You hold a vassal": [
+     "bring",
+     "holding a vassal, tax and loyalty (investText), with vassals"
+    ],
+    "Unrest reaches 100": [
+     "bring",
+     "a vassal's rebellion, with vassals"
+    ],
+    "You raze a building": [
+     "bring",
+     "razing refunds half (all if cancelled early); v100 has Demolish and Cancel site (menu.js scrap), the refund rule comes"
+    ],
+    "Soldiers destroy a building": [
+     "bring",
+     "plunder for a destroyed building, with war"
+    ],
+    "A Town Center falls": [
+     "bring",
+     "a fallen Town Center gives up its stockpile, with war"
+    ],
+    "Score": [
+     "bring",
+     "the score and its five parts, with the score (v100's rank waits for a home, SN6)"
+    ],
+    "A timed game": [
+     "bring",
+     "timed games and scenarios; points to Help → Game, where v100 has its Start page"
+    ],
+    "A wonder is finished": [
+     "bring",
+     "a wonder held wins, with wonders"
+    ],
+    "Finds in the wild": [
+     "bring",
+     "the guarded finds in each corner; the shrine at the Throne (misfits)"
+    ],
+    "Robbers": [
+     "bring",
+     "robbers raid near their camps, with hazards"
+    ],
+    "The shrine": [
+     "bring",
+     "the shrine in the Throne (misfits: the Throne)"
+    ],
+    "Wayfarers": [
+     "bring",
+     "wayfarers walk across and give a villager, with hazards"
+    ],
+    "The fantasy toggle": [
+     "bring",
+     "the fantasy world (v100's Start has Real / Fantasy); points to Help → World"
+    ],
+    "Courthouse and spies": [
+     "bring",
+     "the Courthouse's spies and who sees them, with spies"
+    ],
+    "Sabotage": [
+     "bring",
+     "a spy's sabotage; names a house (misfits)"
+    ],
+    "Market": [
+     "bring",
+     "the Market's prices, with the Market"
+    ],
+    "Trade with an ally": [
+     "bring",
+     "caravans to an ally, with trade"
+    ],
+    "Unit lines and tiers": [
+     "bring",
+     "unit lines and tiers (tierLines), with the tech tree"
+    ],
+    "Counters": [
+     "bring",
+     "who beats whom, with combat"
+    ],
+    "Siege": [
+     "bring",
+     "what siege engines hit, with combat"
+    ],
+    "War camps": [
+     "bring",
+     "the war camps on wagons; Mid's Outpost wagon and Camp wagon against v100's one Camp wagon (misfits)"
+    ],
+    "Temper and shape": [
+     "bring",
+     "temper and shape (the dials), with the army; formations are held in v100 (misfits)"
+    ],
+    "Nerve and the rout": [
+     "bring",
+     "nerve and the rout (Dupuy), with the Nerve attribute"
+    ],
+    "The song": [
+     "bring",
+     "the song (SONG); names the wind (cut) and thunder (held) as sounds (misfits)"
+    ],
+    "Hit from behind": [
+     "bring",
+     "flank and rear blows (Cannae), with combat"
+    ],
+    "Heavy blows": [
+     "bring",
+     "knock-back of heavy blows, with combat"
+    ],
+    "The quick action": [
+     "bring",
+     "the quick action at your finger, with the screen"
+    ],
+    "The Natives and the Throne": [
+     "bring",
+     "the Natives and the Throne on the great lake's island (misfits: the Throne)"
+    ],
+    "The Throne": [
+     "bring",
+     "holding the Throne (misfits: the Throne)"
+    ],
+    "The ground remembers": [
+     "bring",
+     "scorch marks and ruts: ruts and tracks are held (KI13–KI15) (misfits)"
+    ],
+    "Temple: Zeal": [
+     "bring",
+     "the Temple's Zeal, with the Temple"
+    ],
+    "Hospital and medics": [
+     "bring",
+     "healing by Hospital and medic, with healing"
+    ],
+    "A building of yours is damaged: tap it, then Repair": [
+     "bring",
+     "repair costs and time; v100 has the Repair button (menu.js raise), the rule comes"
+    ],
+    "Soldiers come within ${SHELTER.flee} of a villager": [
+     "bring",
+     "villagers flee into towers and the Town Center (Shelter), with Shelter"
+    ],
+    "You pay for an age at the Town Center": [
+     "bring",
+     "an age's time by name; Mid's age names are agreed (v100's D129 'ages' still reads Camp, Village, Town…)"
+    ],
+    "You hit someone you are at peace with or allied to": [
+     "bring",
+     "striking a friend is war, with diplomacy"
+    ],
+    "You send an emissary (Bronze age)": [
+     "bring",
+     "the emissary, with diplomacy"
+    ],
+    "An ally": [
+     "bring",
+     "what an ally does, with diplomacy"
+    ],
+    "A computer decides to attack": [
+     "bring",
+     "when a computer attacks (Lanchester), with the computers"
+    ],
+    "Trees stand in the way": [
+     "bring",
+     "forest blocks and is cut from the edge; box-select over trees (misfits: forest)"
+    ],
+    "The ground remembers the weather": [
+     "bring",
+     "mud, snow and ice by the weather; v100 has wet, mud, snow cover and frozen (KI1, KI2, KI5, KI6) but not this wording"
+    ],
+    "Research comes in lines": [
+     "bring",
+     "research in lines, with the tech tree"
+    ],
+    "The row, the squads and pausing": [
+     "bring",
+     "Mid's cycle button and squads, pausing on cards: to rewrite for v100's menus (misfits)"
+    ],
+    "War: four missions": [
+     "bring",
+     "missions with a promised time, with the army (v100 has Set target, Attack, Recall)"
+    ],
+    "The Alarm: four orders": [
+     "bring",
+     "the Alarm's four orders; v100 draws Work, Gather, Garrison, Shelter (Later cells), this wording comes"
+    ],
+    "Teach": [
+     "bring",
+     "Teach (retraining) and fire weapons, with the School"
+    ],
+    "The seasons turn": [
+     "bring",
+     "the seasons' effects and the harvest roll, with seasons"
+    ],
+    "The weather runs in spells": [
+     "bring",
+     "weather in spells and its effects; ruts held (misfits)"
+    ],
+    "A wooden building catches fire": [
+     "bring",
+     "fire in wooden buildings; lightning fires are held, and it says smithy for Smith (misfits)"
+    ],
+    "Sickness": [
+     "bring",
+     "sickness (SIR), with health"
+    ],
+    "How news reaches you": [
+     "bring",
+     "news by sight, sound and messenger, with the post"
+    ],
+    "The whole board is at peace": [
+     "bring",
+     "the board at peace and the peace age, with diplomacy; the Games at the Throne (misfits)"
+    ],
+    "The Games": [
+     "bring",
+     "the Games, with the peace age"
+    ],
+    "The crowns": [
+     "bring",
+     "the three crowns, with the peace age's end"
+    ],
+    "A caravan has a route": [
+     "bring",
+     "caravan routes, with trade"
+    ],
+    "You hold trade stops": [
+     "bring",
+     "trade stops, with trade"
+    ],
+    "A building is placed": [
+     "bring",
+     "a site and its builders; v100's Build sends a villager (menu.js build), the rule comes"
+    ],
+    "Fog of war": [
+     "bring",
+     "fog of war with messengers and spies; woods blocking sight is held (QAM) (misfits); v100 has the fog (V)"
+    ],
+    "A wall or building stands in the way": [
+     "bring",
+     "walking round walls, with walking"
+    ],
+    "The game saves itself": [
+     "bring",
+     "the save every few seconds, with saving"
+    ],
+    "Difficulty": [
+     "bring",
+     "difficulty turns the computers' minds; v100's Start has Easy / Normal / Hard"
+    ],
+    "Winning and losing": [
+     "bring",
+     "winning and losing; v100's end card covers the hall and the bell; the Throne hold (misfits)"
+    ]
+   }
+  ]
+ },
+ "misfits": [
+  [
+   "MS_TEXT.house, TRIGGERS 'You order a unit and the town is full', 'Room', 'Sabotage'",
+   "They say 'House'; v100 calls it Home. Change the wording to Home?"
+  ],
+  [
+   "TRIGGERS 'A wooden building catches fire'",
+   "It says 'sparks from a smithy'; v100 calls it the Smith. Change to Smith?"
+  ],
+  [
+   "TRIGGERS 'The War Council ladder', 'The row, the squads and pausing'",
+   "They call the fourth soldier kind 'Siege'; v100 calls it Engines. Change to Engines?"
+  ],
+  [
+   "SCEN_TEXT.open",
+   "'The ordinary start: a keep, …': v100 calls it the Town Center. Change to Town Center? (v100's scenario labels are also shorter: 'Siege' and 'Silk Road' for Mid's 'The Siege' and 'The Silk Road'.)"
+  ],
+  [
+   "EV_WHY.eclipse, EV_TEXT.eclipse",
+   "The eclipse event: you cut the eclipse. Drop its wording?"
+  ],
+  [
+   "TRIGGERS 'The song'",
+   "It says the wind sounds (wind is cut) and thunder sounds (held for later). Drop 'the wind', and hold 'the thunder' until it comes?"
+  ],
+  [
+   "EV_WHY.flood, EV_TEXT.flood",
+   "The flood event: flood is held for later (KI4). Hold its wording with it?"
+  ],
+  [
+   "EV_WHY.aurora, EV_TEXT.aurora (and the meteor's 'A light in the sky')",
+   "The northern lights: the sky (stars, aurora, meteors, comets) is held with the sun and moon. Hold the aurora's wording? The meteor event is a fallen star you walk to for iron: keep it as a ground event?"
+  ],
+  [
+   "EV_TEXT.fog",
+   "'Fog: nobody sees far.' v100 has the fog but holds sight in fog for later. Keep the line now, or hold it until sight in fog comes?"
+  ],
+  [
+   "TRIGGERS 'The ground remembers', 'The weather runs in spells', MS_TEXT.mud",
+   "They talk about ruts and foot tracks that slow a march; ruts and tracks are held for later. Hold those sentences?"
+  ],
+  [
+   "TRIGGERS 'A wooden building catches fire'",
+   "It lists summer lightning as a cause of fire; fire from a strike is held for later. Drop that cause for now?"
+  ],
+  [
+   "TRIGGERS 'Fog of war'",
+   "It says a wood blocks sight; that is held for later (QAM). Drop that sentence for now?"
+  ],
+  [
+   "TRIGGERS 'Temper and shape'",
+   "Formations (Line, Wedge, Square, the column) are held in v100 until defined. Hold this entry's shape half?"
+  ],
+  [
+   "TRIGGERS 'The Natives and the Throne', 'The Throne', 'The shrine', 'Finds in the wild', 'The whole board is at peace', 'Winning and losing', LEDGER_WORD.tithe, WHY.throne",
+   "Mid's Throne sits on an island in a great lake with a shrine, a tithe and the Games. You said the Throne and the lake will be reimagined and the middle stays clear until you describe them. Hold all Throne wording until then?"
+  ],
+  [
+   "TRIGGERS 'War camps', WHY.outpostcart",
+   "Mid has two wagons (an Outpost wagon in Bronze, then a Camp wagon); v100 has one Camp wagon and war camps large and small. Is the Outpost wagon v100's small war camp?"
+  ],
+  [
+   "TRIGGERS 'The screen', 'The row, the squads and pausing', 'A timed game', 'The fantasy toggle', MS_TEXT.soldier, MS_TEXT fixes",
+   "They describe Mid's screen (the thin second strip, the cycle button Jobs → War → Train, Help → Game, the Guide and Stores cards). v100's menus are different. Rewrite these for v100's menus when they come over?"
+  ],
+  [
+   "TRIGGERS 'Trees stand in the way'",
+   "Box-select over trees to cut a road: Parked.md still lists it as waiting for your yes (Build 20). Mid built it; bring it?"
+  ],
+  [
+   "TRIGGERS (many rows), MS_TEXT",
+   "The help sentences type building and soldier names in by hand (Town Center, Barracks, Hospital…). In v100 a name lives once, in shells.js. Fill the names in from there, as Mid already does with numbers?"
+  ],
+  [
+   "TRIGGERS 'Messages and sound', 'You hold a vassal', 'You raze a building', 'Everyone eats', 'You build', 'A building of yours is damaged'",
+   "Some numbers are typed into the sentences (10 words, every 10 s, half, 15%, three times, a quarter, about 8, two squares) instead of read from the numbers book. Move each to a D entry and read it?"
+  ]
+ ]
+}
