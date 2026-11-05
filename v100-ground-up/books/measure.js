@@ -165,5 +165,5 @@ BOOK("measure", {
  "D168": {"key": "g", "value": 9.81, "name": "gravity, m/s²", "cite": ["Standard gravity (standard)"], "law": ["QBS", "QBT"]},
  "D169": {"key": "room", "value": {"gold": 9, "stone": 9, "iron": 9, "ruins": 14, "cemetery": 12, "campfire": 6, "treasure": 4}, "name": "the ground a find keeps clear round it, in units", "cite": ["Design: v100 floors, Nov 4 (Albert to confirm)"], "law": []},
  "D170": {"key": "single", "value": 1, "name": "a wall piece: one tile", "cite": ["Design: v100 floors, Nov 4 (Albert to confirm)"], "law": []},
- "D171": {"key": "version", "value": "100 · 10", "name": "the build: First Keep v100, the build number", "cite": ["Design: the build log (README)"], "law": []}
+ "D171": {"key": "version", "value": "100 · 11", "name": "the build: First Keep v100, the build number", "cite": ["Design: the build log (README)"], "law": []}
 });

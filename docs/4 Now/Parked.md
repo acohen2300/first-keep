@@ -231,3 +231,9 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - Unticked (a tick the shell could not back; the mold now stops it): Health on US1–US3, UT1–UT2, MH1, MH3–MH5 (no stats in D138); Fight and Health on UM4b (a second look for Engines, no stats); House on BR2 Apartment (no room in D127). Added: Health on every building with a health in D139. [2026-11-05 08:40]
 - Moved: the Yard's Fast and New into its title row, so the Yard is no taller than Build (one height for all but the Tall pages). [2026-11-05 08:40]
 - Not done, needs a permit on the locked world: the map is still drawn under the solid panel (the draw section of index.html); the menu's colours (COL) still live in menu.js, not the Colours book; shell codes named in the locked ai.js and index.html (the Index lists each as KNOWN). [2026-11-05 08:40]
+
+## v100 · 11, the gate rebuilt clean (Nov 5, Albert 08:13: "do it") [2026-11-05 09:10]
+- Changed: every check is an entry in the Rules book (`books/rules.js`, X1 to X33); the gate runs each by key and stops on a rule nothing runs. index.py rewritten from nothing, 205 → 141 lines. [2026-11-05 09:10]
+- Cut: `seal-numbers.json`, merged into `seal.json` (one seal: fingerprint, bytes, typed numbers). [2026-11-05 09:10]
+- Cut from test.py: the six tab-count tests and the every-building-once test, which the gate already proves from the books; the Build tabs are now one rendering test. 21 tests → 11 rules (with the planted-break proof run five ways). [2026-11-05 09:10]
+- Added: INVENTORY.md written by the gate at every build, with the change against the last seal; a byte budget per code item (it may shrink freely, grow only by what the permit grants). [2026-11-05 09:10]

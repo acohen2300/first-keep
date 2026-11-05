@@ -1,30 +1,14 @@
 # First Keep v100 · the Index
 
-Written by `index.py` from the Books and the Laws, never by hand.
+Written by `index.py`, never by hand.
 
-## The Books
-
-| Book | Entries |
-|---|---|
-| angles | 3 |
-| capabilities | 25 |
-| citations | 88 |
-| colours | 9 |
-| ground | 4 |
-| mass | 16 |
-| measure | 166 |
-| screen | 10 |
-| shells | 74 |
-| sound | 37 |
-| sprites | 31 |
-
-## By law (Book 1, CALCULATIONS.md)
+## By law
 
 - **QA** Sun height → N1, N2 · used by D99
 - **QB** True sun, moon and planets → N2, N3
 - **QC** Moon lit fraction → N2
 - **QD** Day's edges → N2
-- **QE** Eclipses, by geometry → N2
+- **QE** Eclipses, by geometry · N2 → N2
 - **QF** Colour from temperature → N4, N5, N54
 - **QH** Rain or dry → N7 · used by D102
 - **QI** Snow line → N8
@@ -39,7 +23,7 @@ Written by `index.py` from the Books and the Laws, never by hand.
 - **QR** Slip → N18, N19
 - **QS** Ruts → N20
 - **QT** Fire vs wetness → N21
-- **QU** Fire growth ∝ t²; heat to a neighbour ∝ (near / (gap + near))² → N22
+- **QU** Fire growth ∝ t²; heat to a neighbour ∝ (near / (gap + near))² · N22 → N22
 - **QV** Forager's rate → N23, N24
 - **QW** Move on → N24 · used by SC2, D132
 - **QX** Crowding → N25, N26
@@ -64,14 +48,14 @@ Written by `index.py` from the Books and the Laws, never by hand.
 - **QAR** Weighted pick → N49
 - **QAS** Breaking → N50, N51, N52
 - **QAT** Shadow → N53 · used by D120
-- **QAU** Light reach ∝ √power (flame colour uses QF, colour from temperature) → N54
+- **QAU** Light reach ∝ √power (flame colour uses QF, colour from temperature) · N54 → N54
 - **QAV** Smoke → N55, N56
 - **QAW** Camera → N57
 - **QAX** Sound → N58 · used by HA3, HX1
-- **QAY** Material sound by decay rate → N59 · used by HM1, HM2, HM3, HU4, HU11, HU12, HU14, HW2, HW3, HW4
+- **QAY** Material sound by decay rate · N59 → N59 · used by HM1, HM2, HM3, HU4, HU11, HU12, HU14, HW2, HW3, HW4
 - **QAZ** Coastline → N60
 - **QBA** Lake sizes → N61
-- **QBB** River width grows with the lake as a power → N62
+- **QBB** River width grows with the lake as a power · N62 → N62
 - **QBC** Shoreline index → N63
 - **QBD** The view → N66 · used by A1, A2
 - **QBE** Slope or face → N64 · used by A3
@@ -96,14 +80,14 @@ Written by `index.py` from the Books and the Laws, never by hand.
 
 ## By citation
 
-- **N1** Spherical astronomy, the altitude formula (standard) → QA
-- **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE
-- **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB
-- **N4** Mallama & Hilton (2018), colour indices → QF
-- **N5** Ballesteros (2012), colour index to temperature → QF
-- **N6** (retired: satellites cut, Stone Age) → unused
-- **N7** Gabriel & Neumann (1962), QJRMS 88 → QH, D102
-- **N8** Jennings, Winchell, Livneh & Molotch (2018), Nature Communications 9:1148 → QI
+- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QBT
+- **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QS, QT, QU, QV, QW, QX, QY, QZ, QAA
+- **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
+- **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
+- **N5** Ballesteros (2012), colour index to temperature → QF, QAS, QAT, QAU, QAV, QAW, QAX, QAY
+- **N6** (retired: satellites cut, Stone Age) → QAZ, QBA, QBB, QBC, QBD, QBE, QBF, QBG, QBH, QBI, QBK, QBJ, QBO
+- **N7** Gabriel & Neumann (1962), QJRMS 88 → QH, QBL, QBM, QBN, QBQ, QBR, QBS, QBU, D102
+- **N8** Jennings, Winchell, Livneh & Molotch (2018), Nature Communications 9:1148 → QI, QBS, QBT, QBX
 - **N9** Atlas, Srivastava & Sekhon (1973); Gunn & Kinzer (1949) → QJ
 - **N10** Koschmieder (1924) → QK
 - **N11** WCAG 2.3.1, three flashes → QL
@@ -115,7 +99,7 @@ Written by `index.py` from the Books and the Laws, never by hand.
 - **N17** Stefan (1891) → QQ
 - **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QBT, G7, G8
 - **N19** Hanson et al. (1999), slip and the grip a step needs → QR
-- **N20** (from memory, to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles (multi-pass → QS
+- **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS
 - **N21** Rothermel (1972); USDA RMRS-GTR-371 → QT
 - **N22** Heskestad (1984); NFPA 72, the t² fire → QU
 - **N23** Holling (1959), Can. Entomol. 91 → QV
@@ -124,7 +108,7 @@ Written by `index.py` from the Books and the Laws, never by hand.
 - **N26** Sutherland (1983) → QX
 - **N27** Verhulst (1838) → QY
 - **N28** Schaefer (1954) → QZ
-- **N29** (from memory, to open) White (1962), Medieval Technology and Social Change: three-field rotation raised the sown share from 1/2 to 2/3 — from m → QAA
+- **N29** (to open) White (1962), Medieval Technology and Social Change: three-field rotation raised the sown share from 1/2 to 2/ → QAA
 - **N30** Wright (1936), learning curve → QAB
 - **N31** Thomas & Smith (1990), overmanning → QAC
 - **N32** Labuza, first-order food loss → QAD
@@ -159,63 +143,33 @@ Written by `index.py` from the Books and the Laws, never by hand.
 - **N61** Downing et al. (2006), lake sizes → QBA, QBH
 - **N62** Leopold & Maddock (1953), USGS Paper 252 → QBB
 - **N63** Hutchinson (1957), shoreline development → QBC
-- **N64** (from memory, to open) Angle of repose, dry sand about 34° (Al-Hashemi & Al-Amoudi 2018, Powder Technology 330, a review; from memory, to open) → QBE, A3
+- **N64** (to open) Angle of repose, dry sand about 34° (Al-Hashemi & Al-Amoudi 2018, Powder Technology 330, a review; from memory → QBE, A3
 - **N65** Ettinger (2017), Mulberry32, a 32-bit generator; the seed of the day is the game's own rule → QBF
-- **N66** (from memory, to open) Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the ground (from  → QBD, QBK
-- **N67** (from memory, to open) Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology, standard;  → QBG
-- **N68** (from memory, to open) Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory → QBI
-- **N69** (from memory, to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house 25 wood,  → QBJ, QBO, D61, D123, D124, D125, D127, D128, D136, D138, D139, D143
-- **N70** First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6, stone 0.55 → QBN, D88
-- **N71** (from memory, to open) Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) → QBM, D86
-- **N72** (from memory, to open) Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) → QBM, D86
-- **N73** (from memory, to open) Travel speeds of deer, wolf and bear at a walk or trot (natural history, standard; from memory, to open) → QBM, D86
+- **N66** (to open) Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the gro → QBD, QBK
+- **N67** (to open) Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology,  → QBG
+- **N68** (to open) Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory → QBI
+- **N69** (to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house → QBJ, QBO, D61, D123, D124, D125, D127, D128, D136, D138, D139, D143
+- **N70** First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6,  → QBN, D88
+- **N71** (to open) Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) → QBM, D86
+- **N72** (to open) Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) → QBM, D86
+- **N73** (to open) Travel speeds of deer, wolf and bear at a walk or trot (natural history, standard; from memory, to open) → QBM, D86
 - **N74** Hart, Nilsson & Raphael (1968), IEEE Trans. SSC 4: A* → QBL
 - **N75** First Keep Build 42 (Oct 28), the old game's SCORE: unit 5, bld 5, tech 5, wealth 10 (its weights, kept) → QBR, D135
-- **N76** (from memory, to open) Dupuy (1987), Understanding War: forces break at losses well short of annihilation; the classic breakpoint near 30% (fro → QBQ, D142
-- **N77** Ranger Medic Handbook (2025), p. 45, the classes of haemorrhagic shock: I up to 15% blood lost, slightly anxious; II 15– → QBS, D167
-- **N78** FBI Academy, Handgun Wounding Factors and Effectiveness (Patrick, 1989): short of a hit to the brain or upper spinal cor → QBS, D167
-- **N79** NAVMC 2691, Marine Corps Drill and Ceremonies Manual: quick time is 120 steps a minute at 30 inches a step (3.4 mph, 1.5 → QBM, QBU, W1, D86
-- **N80** (from memory, to open) Winter (1995), Human balance and posture control during standing and walking, Gait & Posture 3: quiet standing as an inv → QBS, W1
-- **N81** Engineering ToolBox, Friction coefficients for common materials: rubber on dry concrete 0.6–0.85, on wet 0.45–0.75; car  → QBT, G5, G7, G8
+- **N76** (to open) Dupuy (1987), Understanding War: forces break at losses well short of annihilation; the classic breakpoint nea → QBQ, D142
+- **N77** Ranger Medic Handbook (2025), p. 45, the classes of haemorrhagic shock: I up to 15% blood lost, slightly anxio → QBS, D167
+- **N78** FBI Academy, Handgun Wounding Factors and Effectiveness (Patrick, 1989): short of a hit to the brain or upper  → QBS, D167
+- **N79** NAVMC 2691, Marine Corps Drill and Ceremonies Manual: quick time is 120 steps a minute at 30 inches a step (3. → QBM, QBU, W1, D86
+- **N80** (to open) Winter (1995), Human balance and posture control during standing and walking, Gait & Posture 3: quiet standing → QBS, W1
+- **N81** Engineering ToolBox, Friction coefficients for common materials: rubber on dry concrete 0.6–0.85, on wet 0.45– → QBT, G5, G7, G8
 - **N82** Conservation of momentum; the perfectly inelastic collision v = m₁v₁ / (m₁ + m₂) (standard mechanics) → QBT
 - **N83** Sliding to rest under Coulomb friction: d = v² / (2 μ g) (standard mechanics) → QBT
-- **N84** (from memory, to open) ICRP Publication 23 (1975), Reference Man: 70 kg (from memory, to open) → W1
-- **N85** (from memory, to open) Masses of animals and arms: horse about 500 kg, deer 70, wolf 40, bear 200; spear 2.5 kg, shield 5, scale armour 12, lan → W2, W3, W4, W5, W7, W8, W9, W10, W11, W13
-- **N86** (from memory, to open) Rossing, The Science of Sound: the modes of a free bar at 1 : 2.756 : 5.404 (from memory, to open; carried from Base) → HM1, HM2, HM3
-- **N87** (from memory, to open) Densities: timber about 600 kg/m³, stone about 2,400, iron 7,870 (standard tables, from memory, to open) → W12, W15, W16
-- **N88** (from memory, to open) Fresh snow is porous and absorbs sound, high frequencies most: a snowy landscape sounds muffled (acoustics of snow, from → QBX, HX5
+- **N84** (to open) ICRP Publication 23 (1975), Reference Man: 70 kg (from memory, to open) → W1
+- **N85** (to open) Masses of animals and arms: horse about 500 kg, deer 70, wolf 40, bear 200; spear 2.5 kg, shield 5, scale armo → W2, W3, W4, W5, W7, W8, W9, W10, W11, W13
+- **N86** (to open) Rossing, The Science of Sound: the modes of a free bar at 1 : 2.756 : 5.404 (from memory, to open; carried fro → HM1, HM2, HM3
+- **N87** (to open) Densities: timber about 600 kg/m³, stone about 2,400, iron 7,870 (standard tables, from memory, to open) → W12, W15, W16
+- **N88** (to open) Fresh snow is porous and absorbs sound, high frequencies most: a snowy landscape sounds muffled (acoustics of  → QBX, HX5
 
-## Exceptions, named
+## Named exceptions
 
-- Tall (their own height): Start, Hall
+- Tall: Start, Hall
 - Off the Build menu: BS1, BTC5, BTC6, BTC7, BTC8
-
-463 entries in 11 books · 73 laws · 88 citations, 17 still to open · 568 items sealed.
-
-## Waiting
-
-- season and time of day: a reading waiting for its new home (the second top row was cut, Nov 5)
-- the clock to the bell: a reading waiting for its new home (the second top row was cut, Nov 5)
-- people and room: a reading waiting for its new home (the second top row was cut, Nov 5)
-- idle villagers: a reading waiting for its new home (the second top row was cut, Nov 5)
-- records: a reading waiting for its new home (the second top row was cut, Nov 5)
-- rank: a reading waiting for its new home (the second top row was cut, Nov 5)
-- army: a reading waiting for its new home (the second top row was cut, Nov 5)
-- code:ai.js: names 'UV' (locked; clean it when a permit opens it)
-- code:ai.js: names 'BM1' (locked; clean it when a permit opens it)
-- code:ai.js: names 'BM1' (locked; clean it when a permit opens it)
-- code:ai.js: names 'BM2' (locked; clean it when a permit opens it)
-- code:ai.js: names 'BM2' (locked; clean it when a permit opens it)
-- code:ai.js: names 'BM3' (locked; clean it when a permit opens it)
-- code:ai.js: names 'BM3' (locked; clean it when a permit opens it)
-- code:ai.js: names 'UM1' (locked; clean it when a permit opens it)
-- code:ai.js: names 'UM2' (locked; clean it when a permit opens it)
-- code:ai.js: names 'UM3' (locked; clean it when a permit opens it)
-- code:ai.js: names 'UM1' (locked; clean it when a permit opens it)
-- code:ai.js: names 'UM1' (locked; clean it when a permit opens it)
-- code:ai.js: names 'UM2' (locked; clean it when a permit opens it)
-- code:ai.js: names 'UM3' (locked; clean it when a permit opens it)
-- code:index.html#b-the-buildings: names B.BTC1 (locked; clean it when a permit opens it)
-- code:index.html#b-the-buildings: names 'BTC1' (locked; clean it when a permit opens it)
-- code:index.html#floor-5-movables: names 'MW3' (locked; clean it when a permit opens it)
-- code:index.html#floor-5-movables: names 'MW4' (locked; clean it when a permit opens it)

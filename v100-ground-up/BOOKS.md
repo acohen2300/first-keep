@@ -1,6 +1,6 @@
 # First Keep v100 · the Books
 
-Written by `index.py` from `books/*.js`, never by hand. Each book is the one home of what it holds; the game reads the files, this page shows them.
+Written by `index.py` from `books/*.js`, never by hand.
 
 ## angles
 
@@ -44,94 +44,94 @@ Written by `index.py` from `books/*.js`, never by hand. Each book is the one hom
 
 | Code | Name | Value | Cited |
 |---|---|---|---|
-| N1 | opened | Spherical astronomy, the altitude formula (standard) | |
-| N2 | opened | Meeus, Astronomical Algorithms, 2nd ed. (1998) | |
-| N3 | opened | JPL, Approximate Positions of the Planets (1800–2050) | |
-| N4 | opened | Mallama & Hilton (2018), colour indices | |
-| N5 | opened | Ballesteros (2012), colour index to temperature | |
-| N6 | opened | (retired: satellites cut, Stone Age) | |
-| N7 | opened | Gabriel & Neumann (1962), QJRMS 88 | |
-| N8 | opened | Jennings, Winchell, Livneh & Molotch (2018), Nature Communications 9:1148 | |
-| N9 | opened | Atlas, Srivastava & Sekhon (1973); Gunn & Kinzer (1949) | |
-| N10 | opened | Koschmieder (1924) | |
-| N11 | opened | WCAG 2.3.1, three flashes | |
-| N12 | opened | Poisson (1837); Feller, An Introduction to Probability Theory, vol. 1 | |
-| N13 | opened | Pandolf, Givoni & Goldman (1977) | |
-| N14 | opened | Hock (2003), degree-day melt | |
-| N15 | opened | US Army Corps of Engineers (1956), Snow Hydrology | |
-| N16 | opened | First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) | |
-| N17 | opened | Stefan (1891) | |
-| N18 | opened | Bowden & Hughes (1939), friction on ice and snow | |
-| N19 | opened | Hanson et al. (1999), slip and the grip a step needs | |
-| N20 | to open | Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles (multi-pass) — from memory, to  | |
-| N21 | opened | Rothermel (1972); USDA RMRS-GTR-371 | |
-| N22 | opened | Heskestad (1984); NFPA 72, the t² fire | |
-| N23 | opened | Holling (1959), Can. Entomol. 91 | |
-| N24 | opened | Charnov (1976), Theor. Pop. Biol. 9 | |
-| N25 | opened | Fretwell & Lucas (1970) | |
-| N26 | opened | Sutherland (1983) | |
-| N27 | opened | Verhulst (1838) | |
-| N28 | opened | Schaefer (1954) | |
-| N29 | to open | White (1962), Medieval Technology and Social Change: three-field rotation raised the sown share from 1/2 to 2/3 — from memory; Rothamsted Br | |
-| N30 | opened | Wright (1936), learning curve | |
-| N31 | opened | Thomas & Smith (1990), overmanning | |
-| N32 | opened | Labuza, first-order food loss | |
-| N33 | opened | FAO, Grain storage techniques, ch. 6 | |
-| N34 | opened | Andreyeva, Long & Brownell (2010), food price elasticities | |
-| N35 | opened | Lanchester (1916), Aircraft in Warfare | |
-| N36 | opened | Churchill, Saffidine & Buro (2012), AIIDE | |
-| N37 | opened | Cox & Smith (1961), Queues | |
-| N38 | opened | Maynard Smith & Price (1973), hawk–dove | |
-| N39 | opened | Projectile motion from a height (standard) | |
-| N40 | opened | Drag on a sphere (standard fluid dynamics) | |
-| N41 | opened | Horizon from a height, √(2Rh) (standard) | |
-| N42 | opened | Bresenham (1965), grid line | |
-| N43 | opened | Pulliam (1973) | |
-| N44 | opened | Lima (1995) | |
-| N45 | opened | Ydenberg & Dill (1986) | |
-| N46 | opened | Thermal resistance in series (standard) | |
-| N47 | opened | Kermack & McKendrick (1927), Proc. R. Soc. A 115 | |
-| N48 | opened | Bootsma & Ferguson (2007), PNAS 104(18) | |
-| N49 | opened | Goldberg (1989), roulette-wheel selection | |
-| N50 | opened | Hertz (1882), contact | |
-| N51 | opened | Auerbach (1891), crack threshold | |
-| N52 | opened | Weibull (1951), strength by size | |
-| N53 | opened | Plane geometry, shadow length | |
-| N54 | opened | Black-body colour; inverse-square light | |
-| N55 | opened | Briggs (1969), plume rise | |
-| N56 | opened | Pasquill–Gifford dispersion | |
-| N57 | opened | Damped harmonic oscillator (standard) | |
-| N58 | opened | ISO 9613-2, sound outdoors | |
-| N59 | opened | Klatzky, Pai & Krotkov (2000), Presence 9 | |
-| N60 | opened | Mandelbrot (1967), Science 156 | |
-| N61 | opened | Downing et al. (2006), lake sizes | |
-| N62 | opened | Leopold & Maddock (1953), USGS Paper 252 | |
-| N63 | opened | Hutchinson (1957), shoreline development | |
-| N64 | to open | Angle of repose, dry sand about 34° (Al-Hashemi & Al-Amoudi 2018, Powder Technology 330, a review; from memory, to open) | |
-| N65 | opened | Ettinger (2017), Mulberry32, a 32-bit generator; the seed of the day is the game's own rule | |
-| N66 | to open | Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the ground (from memory: Age of Empir | |
-| N67 | to open | Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology, standard; Bird, Coastal Geomor | |
-| N68 | to open | Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory | |
-| N69 | to open | Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house 25 wood, the mill and the lum | |
-| N70 | opened | First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6, stone 0.55, iron 0.5 (its time | |
-| N71 | to open | Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) | |
-| N72 | to open | Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) | |
-| N73 | to open | Travel speeds of deer, wolf and bear at a walk or trot (natural history, standard; from memory, to open) | |
-| N74 | opened | Hart, Nilsson & Raphael (1968), IEEE Trans. SSC 4: A* | |
-| N75 | opened | First Keep Build 42 (Oct 28), the old game's SCORE: unit 5, bld 5, tech 5, wealth 10 (its weights, kept) | |
-| N76 | to open | Dupuy (1987), Understanding War: forces break at losses well short of annihilation; the classic breakpoint near 30% (from memory, to open) | |
-| N77 | opened | Ranger Medic Handbook (2025), p. 45, the classes of haemorrhagic shock: I up to 15% blood lost, slightly anxious; II 15–30%, mildly anxious; | |
-| N78 | opened | FBI Academy, Handgun Wounding Factors and Effectiveness (Patrick, 1989): short of a hit to the brain or upper spinal cord, a wounded man is  | |
-| N79 | opened | NAVMC 2691, Marine Corps Drill and Ceremonies Manual: quick time is 120 steps a minute at 30 inches a step (3.4 mph, 1.52 m/s); summary open | |
-| N80 | to open | Winter (1995), Human balance and posture control during standing and walking, Gait & Posture 3: quiet standing as an inverted pendulum; the  | |
-| N81 | opened | Engineering ToolBox, Friction coefficients for common materials: rubber on dry concrete 0.6–0.85, on wet 0.45–0.75; car tyre on dry grass 0. | |
-| N82 | opened | Conservation of momentum; the perfectly inelastic collision v = m₁v₁ / (m₁ + m₂) (standard mechanics) | |
-| N83 | opened | Sliding to rest under Coulomb friction: d = v² / (2 μ g) (standard mechanics) | |
-| N84 | to open | ICRP Publication 23 (1975), Reference Man: 70 kg (from memory, to open) | |
-| N85 | to open | Masses of animals and arms: horse about 500 kg, deer 70, wolf 40, bear 200; spear 2.5 kg, shield 5, scale armour 12, lance 4; strides and bl | |
-| N86 | to open | Rossing, The Science of Sound: the modes of a free bar at 1 : 2.756 : 5.404 (from memory, to open; carried from Base) | |
-| N87 | to open | Densities: timber about 600 kg/m³, stone about 2,400, iron 7,870 (standard tables, from memory, to open) | |
-| N88 | to open | Fresh snow is porous and absorbs sound, high frequencies most: a snowy landscape sounds muffled (acoustics of snow, from memory, to open) | |
+| N1 |  | Spherical astronomy, the altitude formula (standard) | opened |
+| N2 |  | Meeus, Astronomical Algorithms, 2nd ed. (1998) | opened |
+| N3 |  | JPL, Approximate Positions of the Planets (1800–2050) | opened |
+| N4 |  | Mallama & Hilton (2018), colour indices | opened |
+| N5 |  | Ballesteros (2012), colour index to temperature | opened |
+| N6 |  | (retired: satellites cut, Stone Age) | opened |
+| N7 |  | Gabriel & Neumann (1962), QJRMS 88 | opened |
+| N8 |  | Jennings, Winchell, Livneh & Molotch (2018), Nature Communications 9:1148 | opened |
+| N9 |  | Atlas, Srivastava & Sekhon (1973); Gunn & Kinzer (1949) | opened |
+| N10 |  | Koschmieder (1924) | opened |
+| N11 |  | WCAG 2.3.1, three flashes | opened |
+| N12 |  | Poisson (1837); Feller, An Introduction to Probability Theory, vol. 1 | opened |
+| N13 |  | Pandolf, Givoni & Goldman (1977) | opened |
+| N14 |  | Hock (2003), degree-day melt | opened |
+| N15 |  | US Army Corps of Engineers (1956), Snow Hydrology | opened |
+| N16 |  | First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) | opened |
+| N17 |  | Stefan (1891) | opened |
+| N18 |  | Bowden & Hughes (1939), friction on ice and snow | opened |
+| N19 |  | Hanson et al. (1999), slip and the grip a step needs | opened |
+| N20 |  | Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles (multi-pass) — from memory, to  | to open |
+| N21 |  | Rothermel (1972); USDA RMRS-GTR-371 | opened |
+| N22 |  | Heskestad (1984); NFPA 72, the t² fire | opened |
+| N23 |  | Holling (1959), Can. Entomol. 91 | opened |
+| N24 |  | Charnov (1976), Theor. Pop. Biol. 9 | opened |
+| N25 |  | Fretwell & Lucas (1970) | opened |
+| N26 |  | Sutherland (1983) | opened |
+| N27 |  | Verhulst (1838) | opened |
+| N28 |  | Schaefer (1954) | opened |
+| N29 |  | White (1962), Medieval Technology and Social Change: three-field rotation raised the sown share from 1/2 to 2/3 — from memory; Rothamsted Br | to open |
+| N30 |  | Wright (1936), learning curve | opened |
+| N31 |  | Thomas & Smith (1990), overmanning | opened |
+| N32 |  | Labuza, first-order food loss | opened |
+| N33 |  | FAO, Grain storage techniques, ch. 6 | opened |
+| N34 |  | Andreyeva, Long & Brownell (2010), food price elasticities | opened |
+| N35 |  | Lanchester (1916), Aircraft in Warfare | opened |
+| N36 |  | Churchill, Saffidine & Buro (2012), AIIDE | opened |
+| N37 |  | Cox & Smith (1961), Queues | opened |
+| N38 |  | Maynard Smith & Price (1973), hawk–dove | opened |
+| N39 |  | Projectile motion from a height (standard) | opened |
+| N40 |  | Drag on a sphere (standard fluid dynamics) | opened |
+| N41 |  | Horizon from a height, √(2Rh) (standard) | opened |
+| N42 |  | Bresenham (1965), grid line | opened |
+| N43 |  | Pulliam (1973) | opened |
+| N44 |  | Lima (1995) | opened |
+| N45 |  | Ydenberg & Dill (1986) | opened |
+| N46 |  | Thermal resistance in series (standard) | opened |
+| N47 |  | Kermack & McKendrick (1927), Proc. R. Soc. A 115 | opened |
+| N48 |  | Bootsma & Ferguson (2007), PNAS 104(18) | opened |
+| N49 |  | Goldberg (1989), roulette-wheel selection | opened |
+| N50 |  | Hertz (1882), contact | opened |
+| N51 |  | Auerbach (1891), crack threshold | opened |
+| N52 |  | Weibull (1951), strength by size | opened |
+| N53 |  | Plane geometry, shadow length | opened |
+| N54 |  | Black-body colour; inverse-square light | opened |
+| N55 |  | Briggs (1969), plume rise | opened |
+| N56 |  | Pasquill–Gifford dispersion | opened |
+| N57 |  | Damped harmonic oscillator (standard) | opened |
+| N58 |  | ISO 9613-2, sound outdoors | opened |
+| N59 |  | Klatzky, Pai & Krotkov (2000), Presence 9 | opened |
+| N60 |  | Mandelbrot (1967), Science 156 | opened |
+| N61 |  | Downing et al. (2006), lake sizes | opened |
+| N62 |  | Leopold & Maddock (1953), USGS Paper 252 | opened |
+| N63 |  | Hutchinson (1957), shoreline development | opened |
+| N64 |  | Angle of repose, dry sand about 34° (Al-Hashemi & Al-Amoudi 2018, Powder Technology 330, a review; from memory, to open) | to open |
+| N65 |  | Ettinger (2017), Mulberry32, a 32-bit generator; the seed of the day is the game's own rule | opened |
+| N66 |  | Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the ground (from memory: Age of Empir | to open |
+| N67 |  | Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology, standard; Bird, Coastal Geomor | to open |
+| N68 |  | Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory | to open |
+| N69 |  | Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house 25 wood, the mill and the lum | to open |
+| N70 |  | First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6, stone 0.55, iron 0.5 (its time | opened |
+| N71 |  | Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) | to open |
+| N72 |  | Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) | to open |
+| N73 |  | Travel speeds of deer, wolf and bear at a walk or trot (natural history, standard; from memory, to open) | to open |
+| N74 |  | Hart, Nilsson & Raphael (1968), IEEE Trans. SSC 4: A* | opened |
+| N75 |  | First Keep Build 42 (Oct 28), the old game's SCORE: unit 5, bld 5, tech 5, wealth 10 (its weights, kept) | opened |
+| N76 |  | Dupuy (1987), Understanding War: forces break at losses well short of annihilation; the classic breakpoint near 30% (from memory, to open) | to open |
+| N77 |  | Ranger Medic Handbook (2025), p. 45, the classes of haemorrhagic shock: I up to 15% blood lost, slightly anxious; II 15–30%, mildly anxious; | opened |
+| N78 |  | FBI Academy, Handgun Wounding Factors and Effectiveness (Patrick, 1989): short of a hit to the brain or upper spinal cord, a wounded man is  | opened |
+| N79 |  | NAVMC 2691, Marine Corps Drill and Ceremonies Manual: quick time is 120 steps a minute at 30 inches a step (3.4 mph, 1.52 m/s); summary open | opened |
+| N80 |  | Winter (1995), Human balance and posture control during standing and walking, Gait & Posture 3: quiet standing as an inverted pendulum; the  | to open |
+| N81 |  | Engineering ToolBox, Friction coefficients for common materials: rubber on dry concrete 0.6–0.85, on wet 0.45–0.75; car tyre on dry grass 0. | opened |
+| N82 |  | Conservation of momentum; the perfectly inelastic collision v = m₁v₁ / (m₁ + m₂) (standard mechanics) | opened |
+| N83 |  | Sliding to rest under Coulomb friction: d = v² / (2 μ g) (standard mechanics) | opened |
+| N84 |  | ICRP Publication 23 (1975), Reference Man: 70 kg (from memory, to open) | to open |
+| N85 |  | Masses of animals and arms: horse about 500 kg, deer 70, wolf 40, bear 200; spear 2.5 kg, shield 5, scale armour 12, lance 4; strides and bl | to open |
+| N86 |  | Rossing, The Science of Sound: the modes of a free bar at 1 : 2.756 : 5.404 (from memory, to open; carried from Base) | to open |
+| N87 |  | Densities: timber about 600 kg/m³, stone about 2,400, iron 7,870 (standard tables, from memory, to open) | to open |
+| N88 |  | Fresh snow is porous and absorbs sound, high frequencies most: a snowy landscape sounds muffled (acoustics of snow, from memory, to open) | to open |
 
 ## colours
 
@@ -346,7 +346,45 @@ Written by `index.py` from `books/*.js`, never by hand. Each book is the one hom
 | D168 | gravity, m/s² | 9.81 | Standard gravity (standard) |
 | D169 | the ground a find keeps clear round it, in units | {gold: 9, stone: 9, iron: 9, ruins: 14, cemetery: 12, campfire: 6, treasure: 4} | Design: v100 floors, Nov 4 (Albert to confirm) |
 | D170 | a wall piece: one tile | 1 | Design: v100 floors, Nov 4 (Albert to confirm) |
-| D171 | the build: First Keep v100, the build number | 100 · 10 | Design: the build log (README) |
+| D171 | the build: First Keep v100, the build number | 100 · 11 | Design: the build log (README) |
+
+## rules
+
+| Code | Name | Value | Cited |
+|---|---|---|---|
+| X1 | a code that has two homes (two books) | {stage: books} | Design: Albert, Nov 5 (the gate) |
+| X2 | a book entry with no citation, or citing an N not in the Citations book | {stage: books} | Design: Albert, Nov 5 (the gate) |
+| X3 | an entry or a law naming a Q or an N that does not exist | {stage: books} | Design: Albert, Nov 5 (the gate) |
+| X4 | a shell lacking what its layer's mold needs | {stage: books} | Design: Albert, Nov 5 (the gate) |
+| X5 | a shell ticking what it cannot back | {stage: books} | Design: Albert, Nov 5 (the gate) |
+| X6 | a slot on a shell that nothing it ticks asks for | {stage: books} | Design: Albert, Nov 5 (the gate) |
+| X7 | a slot pointing at nothing: a D code, a body, a kit, a look, a sound | {stage: books} | Design: Albert, Nov 5 (the gate) |
+| X8 | an event playing a sound that is not in the Sound book | {stage: books} | Design: Albert, Nov 5 (the gate) |
+| X9 | a Build tab over nine, or listing something that is not a building | {stage: books} | Design: Albert, Nov 5 (the gate) |
+| X10 | a building missing from the Build menu or listed twice (unless named off it) | {stage: books} | Design: Albert, Nov 5 (the gate) |
+| X11 | opened code naming a shell instead of asking by tick or by book | {stage: code} | Design: Albert, Nov 5 (the gate) |
+| X12 | numbers typed into D instead of the Measurements book | {stage: code} | Design: Albert, Nov 5 (the gate) |
+| X13 | a comment that ends in a statement: it may have swallowed code | {stage: code} | Design: Albert, Nov 5 (the gate) |
+| X14 | the version typed into the page instead of read from D171 | {stage: code} | Design: Albert, Nov 5 (the gate) |
+| X15 | a code file that does not parse on its own | {stage: code} | Design: Albert, Nov 5 (the gate) |
+| X16 | the whole game, joined, not parsing (a name declared twice) | {stage: code} | Design: Albert, Nov 5 (the gate) |
+| X17 | a permit opening more than ten items, or a change it does not open | {stage: seal} | Design: Albert, Nov 5 (the gate) |
+| X18 | a locked item differing from its seal by a single byte | {stage: seal} | Design: Albert, Nov 5 (the gate) |
+| X19 | opened code typing more numbers or colours than when sealed | {stage: seal} | Design: Albert, Nov 5 (the gate) |
+| X20 | opened code growing past its sealed size without growth the permit grants | {stage: seal} | Design: Albert, Nov 5 (the gate) |
+| X21 | INDEX.md, BOOKS.md or INVENTORY.md not what the books say (on GitHub) | {stage: seal} | Design: Albert, Nov 5 (the gate) |
+| X22 | a rule in this book that nothing runs | {stage: seal} | Design: Albert, Nov 5 (the gate) |
+| X23 | the page shows the version from the book | {stage: page} | Design: Albert, Nov 5 (the gate) |
+| X24 | the top is one ribbon of the cells the Screen book names | {stage: page} | Design: Albert, Nov 5 (the gate) |
+| X25 | Build renders the book's tabs, each with its buildings | {stage: page} | Design: Albert, Nov 5 (the gate) |
+| X26 | every page that is not Tall shares one height | {stage: page} | Design: Albert, Nov 5 (the gate) |
+| X27 | the Tall pages keep their own height | {stage: page} | Design: Albert, Nov 5 (the gate) |
+| X28 | the panel is solid | {stage: page} | Design: Albert, Nov 5 (the gate) |
+| X29 | the seat's queue is the mold's six single slots, filling in order | {stage: page} | Design: Albert, Nov 5 (the gate) |
+| X30 | a card shows the rows its subject ticks: a villager, a find, the seat | {stage: page} | Design: Albert, Nov 5 (the gate) |
+| X31 | a building picked from Build is placed as a site | {stage: page} | Design: Albert, Nov 5 (the gate) |
+| X32 | the page runs with no errors | {stage: page} | Design: Albert, Nov 5 (the gate) |
+| X33 | the gate stops each planted break: a second home, a bad tick, a shell named in code, swallowed code, one byte of a locked law | {stage: page} | Design: Albert, Nov 5 (the gate) |
 
 ## screen
 
@@ -367,80 +405,80 @@ Written by `index.py` from `books/*.js`, never by hand. Each book is the one hom
 
 | Code | Name | Value | Cited |
 |---|---|---|---|
-| R1 | Tree | layer 100 · Yield | |
-| R5 | Bush | layer 100 · Yield | |
-| R2 | Gold | layer 100 · Yield | |
-| R3 | Stone | layer 100 · Yield | |
-| R4 | Iron | layer 100 · Yield | |
-| MG1 | Ruins | layer 100 · Yield | |
-| MG2 | Cemetery | layer 100 · no ticks | |
-| MG3 | Campfire | layer 100 · Yield | |
-| MG4 | Treasure | layer 100 · Yield | |
-| BTC1 | Town Center | layer 110 · Seat, Drop-off, Spawn, Shoot, House, Research, Health | |
-| BTC2 | Castle | layer 110 · no ticks | |
-| BTC5 | Medical tent | layer 110 · no ticks | |
-| BTC6 | Training tent | layer 110 · no ticks | |
-| BTC7 | Mess tent | layer 110 · no ticks | |
-| BTC8 | Camp tower | layer 110 · Shoot | |
-| BR1 | Home | layer 110 · House, Health | |
-| BR2 | Apartment | layer 110 · no ticks | |
-| BCR1 | Market | layer 110 · no ticks | |
-| BCR2 | Tavern | layer 110 · no ticks | |
-| BCL1 | Farm | layer 110 · Field, Health | |
-| BCL2 | Tree farm | layer 110 · no ticks | |
-| BCL3 | Pasture | layer 110 · no ticks | |
-| BCL4 | Quarry | layer 110 · no ticks | |
-| BCT1 | Trade post | layer 110 · no ticks | |
-| BCT2 | Dock | layer 110 · no ticks | |
-| BP1 | School | layer 110 · no ticks | |
-| BP2 | Library | layer 110 · no ticks | |
-| BP3 | Temple | layer 110 · no ticks | |
-| BP4 | Baths | layer 110 · no ticks | |
-| BP5 | Theatre | layer 110 · no ticks | |
-| BP6 | Hospital | layer 110 · no ticks | |
-| BP7 | Aqueduct | layer 110 · no ticks | |
-| BP8 | Courthouse | layer 110 · no ticks | |
-| BP9 | Hall | layer 110 · no ticks | |
-| BP10 | War Council | layer 110 · no ticks | |
-| BI1 | Mill | layer 110 · Drop-off, Health | |
-| BI2 | Lumber camp | layer 110 · Drop-off, Health | |
-| BI3 | Mining camp | layer 110 · Drop-off, Health | |
-| BI4 | Store | layer 110 · no ticks | |
-| BI5 | Depot | layer 110 · no ticks | |
-| BI6 | Mint | layer 110 · no ticks | |
-| BI7 | Foundry | layer 110 · no ticks | |
-| BI8 | Workshop | layer 110 · no ticks | |
-| BI9 | Smith | layer 110 · no ticks | |
-| BM1 | Barracks | layer 110 · Spawn, Health | |
-| BM2 | Range | layer 110 · Spawn, Health | |
-| BM3 | Stable | layer 110 · Spawn, Health | |
-| BM4 | Siege workshop | layer 110 · Spawn, Health | |
-| BW1 | Wall | layer 110 · Health | |
-| BW2 | Gate | layer 110 · Health | |
-| BW3 | Tower | layer 110 · Shoot, Health | |
-| BW4 | Palisade | layer 110 · Health | |
-| BF5 | Abatis | layer 110 · no ticks | |
-| BS1 | Throne | layer 110 · no ticks | |
-| BS2 | Wonder | layer 110 · no ticks | |
-| UV | Villager | layer 120 · Walk, Gather, Carry, Build, Repair, Fight, Health | |
-| UM1 | Foot | layer 120 · Walk, Fight, Health | |
-| UM2 | Archers | layer 120 · Walk, Fight, Shoot, Health | |
-| UM3 | Riders | layer 120 · Walk, Fight, Health | |
-| UM4 | Engines | layer 120 · Walk, Fight, Health | |
-| UM4b | Engines | layer 120 · Walk | |
-| US1 | Priest | layer 120 · Walk | |
-| US2 | Medic | layer 120 · Walk | |
-| US3 | Spy | layer 120 · Walk | |
-| US4 | Scout | layer 120 · Walk, Fight, Scout, Health | |
-| UT1 | Caravan | layer 120 · Walk, Carry, Trade | |
-| UT2 | Camp wagon | layer 120 · Walk, Carry | |
-| MH1 | Outlaws | layer 120 · Walk | |
-| MH3 | Robbers | layer 120 · Walk | |
-| MH4 | Vagabonds | layer 120 · Walk | |
-| MH5 | Wayfarers | layer 120 · Walk | |
-| MW3 | Deer | layer 120 · Walk, Wander, Prey, Health | |
-| MW4 | Wolf | layer 120 · Walk, Wander, Fight, Health | |
-| MW6 | Bear | layer 120 · Walk, Wander, Fight, Health | |
+| R1 | Tree | [Yield] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| R5 | Bush | [Yield] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| R2 | Gold | [Yield] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| R3 | Stone | [Yield] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| R4 | Iron | [Yield] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| MG1 | Ruins | [Yield] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| MG2 | Cemetery | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| MG3 | Campfire | [Yield] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| MG4 | Treasure | [Yield] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BTC1 | Town Center | [Seat, Drop-off, Spawn, Shoot, House, Research, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BTC2 | Castle | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BTC5 | Medical tent | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BTC6 | Training tent | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BTC7 | Mess tent | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BTC8 | Camp tower | [Shoot] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BR1 | Home | [House, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BR2 | Apartment | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BCR1 | Market | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BCR2 | Tavern | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BCL1 | Farm | [Field, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BCL2 | Tree farm | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BCL3 | Pasture | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BCL4 | Quarry | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BCT1 | Trade post | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BCT2 | Dock | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BP1 | School | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BP2 | Library | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BP3 | Temple | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BP4 | Baths | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BP5 | Theatre | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BP6 | Hospital | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BP7 | Aqueduct | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BP8 | Courthouse | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BP9 | Hall | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BP10 | War Council | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BI1 | Mill | [Drop-off, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BI2 | Lumber camp | [Drop-off, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BI3 | Mining camp | [Drop-off, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BI4 | Store | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BI5 | Depot | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BI6 | Mint | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BI7 | Foundry | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BI8 | Workshop | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BI9 | Smith | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BM1 | Barracks | [Spawn, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BM2 | Range | [Spawn, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BM3 | Stable | [Spawn, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BM4 | Siege workshop | [Spawn, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BW1 | Wall | [Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BW2 | Gate | [Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BW3 | Tower | [Shoot, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BW4 | Palisade | [Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BF5 | Abatis | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BS1 | Throne | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| BS2 | Wonder | [] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| UV | Villager | [Walk, Gather, Carry, Build, Repair, Fight, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| UM1 | Foot | [Walk, Fight, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| UM2 | Archers | [Walk, Fight, Shoot, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| UM3 | Riders | [Walk, Fight, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| UM4 | Engines | [Walk, Fight, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| UM4b | Engines | [Walk] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| US1 | Priest | [Walk] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| US2 | Medic | [Walk] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| US3 | Spy | [Walk] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| US4 | Scout | [Walk, Fight, Scout, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| UT1 | Caravan | [Walk, Carry, Trade] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| UT2 | Camp wagon | [Walk, Carry] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| MH1 | Outlaws | [Walk] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| MH3 | Robbers | [Walk] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| MH4 | Vagabonds | [Walk] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| MH5 | Wayfarers | [Walk] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| MW3 | Deer | [Walk, Wander, Prey, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| MW4 | Wolf | [Walk, Wander, Fight, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
+| MW6 | Bear | [Walk, Wander, Fight, Health] | Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) |
 
 ## sound
 

@@ -77,3 +77,48 @@ MODIFIED (72):
 - tool:test.py · test.py · added
 LOCKED (496 of 568): byte for byte as sealed, 255,852 bytes
 Tests: 21/21 passed
+
+## v100 · 11, the gate rebuilt clean · 2026-11-05 08:16
+Albert, Nov 5 08:13: do it
+Opened: tool:index.py, tool:test.py, tool:publish.py, book:rules, book:measure:D171
+MODIFIED (37):
+- book:measure:D171 · 151 → 151 bytes
+- book:rules:X1 · added
+- book:rules:X10 · added
+- book:rules:X11 · added
+- book:rules:X12 · added
+- book:rules:X13 · added
+- book:rules:X14 · added
+- book:rules:X15 · added
+- book:rules:X16 · added
+- book:rules:X17 · added
+- book:rules:X18 · added
+- book:rules:X19 · added
+- book:rules:X2 · added
+- book:rules:X20 · added
+- book:rules:X21 · added
+- book:rules:X22 · added
+- book:rules:X23 · added
+- book:rules:X24 · added
+- book:rules:X25 · added
+- book:rules:X26 · added
+- book:rules:X27 · added
+- book:rules:X28 · added
+- book:rules:X29 · added
+- book:rules:X3 · added
+- book:rules:X30 · added
+- book:rules:X31 · added
+- book:rules:X32 · added
+- book:rules:X33 · added
+- book:rules:X4 · added
+- book:rules:X5 · added
+- book:rules:X6 · added
+- book:rules:X7 · added
+- book:rules:X8 · added
+- book:rules:X9 · added
+- tool:index.py · 15,151 → 14,027 bytes
+- tool:publish.py · 2,124 → 2,046 bytes
+- tool:test.py · 6,465 → 5,799 bytes
+LOCKED (564 of 601): byte for byte as sealed, 316,620 bytes
+Tests: 11/11 rules hold
+Inventory: 601 items sealed · 496 book entries · 73 laws · 88 citations, 17 still to open · 25 known
