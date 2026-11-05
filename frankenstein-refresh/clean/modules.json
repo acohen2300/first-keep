@@ -1,0 +1,4491 @@
+{
+ "about": "Step 7 plan (Nov 5): every \"bring\" piece of Mid, sorted in clean/*.json, gathered into modules a player would recognise, each mapped to v100's structure (one Unit shell with settings, ticks, book entries, one effects law, laws with real math), and the builds that move them in, at most 10 permit items each, each with one match test against Mid. Plumbing first, then the economy, the soldiers and fighting, then the extras; each feature's screen comes later as a menu build from a mock-up. Pieces are \"book.piece\"; a big table split by feature lists its rows as \"book.piece.row\". Sizes are Mid's bytes from map/PIECES.md (a split table's share by its rows). New laws are numbered QCA on; ones reused keep their Q code.",
+ "modules": [
+  {
+   "id": "M1",
+   "name": "The dice and the slow beats",
+   "what": "One seeded dice for every roll, so the same game can be played twice and tested, and one clock for the things that think slowly.",
+   "pieces": [
+    "core.rng",
+    "core.rnd",
+    "core.roulette",
+    "core.every",
+    "numbers.BEAT",
+    "core.relax",
+    "core.logistic"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: BEAT (slow, health, Natives) as D entries"
+    ],
+    "laws": [
+     "none new: QBF the dice (Mulberry32, N65), QAR weighted pick p = w_i / Σw (N49) for roulette, QP settle x(t) = L + (x0 − L) e^(−t/τ) (N16) for relax, QY ΔN = rN(1 − N/K) (N27) for logistic"
+    ],
+    "code": [
+     "index.html floor \"QBF the dice\": rnd() and roulette() beside the seed; every Math.random in econ.js, combat.js, ai.js asks it",
+     "index.html floor \"the door\": every(sec) beside the tick"
+    ]
+   },
+   "needs": [],
+   "size": 1370
+  },
+  {
+   "id": "M2",
+   "name": "Earn and spend",
+   "what": "One place every store goes in or out, with the last minute's flow and a ledger of where it came from and went.",
+   "pieces": [
+    "core.earn",
+    "core.spend",
+    "core.pay",
+    "core.payBack",
+    "core.addRes",
+    "core.sumCost",
+    "econ.flowOf",
+    "econ.outOf",
+    "econ.netOf",
+    "econ.VEL",
+    "econ.velOf",
+    "econ.flowTick",
+    "words.LEDGER_WORD"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: the flow window (VEL) as a D entry",
+     "words (new book): the ledger's earn and spend words"
+    ],
+    "laws": [
+     "none: a running sum"
+    ],
+    "code": [
+     "econ.js: earn/spend/pay; every write to SIDES[].store in econ.js, combat.js, ai.js goes through them"
+    ]
+   },
+   "needs": [
+    "M1"
+   ],
+   "size": 3140
+  },
+  {
+   "id": "M3",
+   "name": "The unit and building grids",
+   "what": "Things are filed by square, so a unit looking for something nearby looks only nearby, not at the whole map.",
+   "pieces": [
+    "core.UG",
+    "core.UGX",
+    "core.buildGrid",
+    "core.SGC",
+    "core.SG",
+    "core.sgrid",
+    "core.sgNear",
+    "core.bldsNear",
+    "core.unitsNear",
+    "core.nearU",
+    "core.scanNear"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: the two grid squares (UG, SGC) as D entries"
+    ],
+    "laws": [
+     "none: a spatial hash"
+    ],
+    "code": [
+     "index.html floor \"Floor 5, movables\": the grids rebuilt each tick; combat.js and econ.js ask unitsNear / bldsNear instead of scanning THINGS"
+    ]
+   },
+   "needs": [],
+   "size": 3410
+  },
+  {
+   "id": "M4",
+   "name": "The effects law and a kind's numbers",
+   "what": "Research changes a number (speed, health, damage, cost, gathering) through one rule, read every time a kind's number is asked for.",
+   "pieces": [
+    "core.fxList",
+    "core.FX1",
+    "core.fxFits",
+    "core.fxv",
+    "core.fxDirty",
+    "core.keepHealth",
+    "core.rehealth",
+    "core.unitKeys",
+    "core.bldKeys",
+    "core.stats",
+    "core.maxHpU",
+    "core.maxHpB",
+    "core.dmgOf",
+    "core.rngOf",
+    "core.nodeKey",
+    "core.gatherMul",
+    "econ.scaled",
+    "econ.unitCost",
+    "econ.techCost"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "every shell row gets \"keys\" (its class and kind) that an effect names (fx.k)"
+    ],
+    "books": [
+     "tech (new book, empty mold): an entry = {at, line, age, cost, time, fx:[{s, k, m|a|min}], need, when, cite}",
+     "measure: none new"
+    ],
+    "laws": [
+     "QCA Effects: stat = (base + Σa) × Πm, a \"lowest\" effect takes min; speed takes only the single best research share, never a product (Albert Nov 5 11:16 (3)); a building's health = v100's health × (1 + Σ research share) (11:16 (4)); a kind's health kept in share when its most moves (keepHealth). Source: Mid 08-core.js fxv (design), Albert's calls"
+    ],
+    "code": [
+     "index.html floor \"the door\": stat(shell, side, key) the one window every module reads; nothing reads D for a kind's stat directly"
+    ]
+   },
+   "needs": [
+    "M1"
+   ],
+   "size": 6630
+  },
+  {
+   "id": "M5",
+   "name": "Who is a foe",
+   "what": "One test says who fights whom: sides, animals, the wild bands and treaties, which bind only those who signed them.",
+   "pieces": [
+    "core.atWar",
+    "core.gangOf",
+    "core.gangRel",
+    "core.calm4b",
+    "core.campOf",
+    "core.groundOf",
+    "core.struckBy",
+    "core.isFoe",
+    "core.friendly",
+    "core.onMe",
+    "core.ignorable",
+    "core.strikes",
+    "events.homeOf"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "sides (new book, its home asked in econ misfits setRel): the stance between any two sides and groups",
+     "measure: none"
+    ],
+    "laws": [
+     "none: a table look-up"
+    ],
+    "code": [
+     "combat.js: isFoe() replaces \"s.side !== t.side\" wherever a target is picked"
+    ]
+   },
+   "needs": [],
+   "size": 3690
+  },
+  {
+   "id": "M6",
+   "name": "The odds of a battle",
+   "what": "Before anyone attacks, the game works out who would win from both sides' strength and who counters whom.",
+   "pieces": [
+    "ai.powerFrom",
+    "ai.estPower",
+    "ai.matchup",
+    "core.hawkP",
+    "core.unitPower",
+    "core.powerOf",
+    "core.lanchester",
+    "econ.oddsOf",
+    "menu.powerSum",
+    "menu.chance",
+    "menu.dpsOf"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: a tower's worth 120 and a villager's 250 (Mid; D177 holds 100: by the 10:31 rule Mid's)"
+    ],
+    "laws": [
+     "reuse QAF P = r²/(1 + r²) (Lanchester 1916, N35) with r bent by the counter factor D140 when the striker's kind counters the struck's (Mid matchup); reuse QAH fight with probability V/C (Maynard Smith & Price 1973, N38)"
+    ],
+    "code": [
+     "combat.js: WAR.strength and odds(a, b) in one home; ai.js and menu.js read it"
+    ]
+   },
+   "needs": [
+    "M4",
+    "M5"
+   ],
+   "size": 1720
+  },
+  {
+   "id": "M7",
+   "name": "Words helpers",
+   "what": "Numbers shortened (1.2k), lists said as \"a, b or c\", plurals, and the map's lettered squares for messages that say where.",
+   "pieces": [
+    "core.fmt",
+    "core.plural",
+    "core.some",
+    "words.orList",
+    "words.slowPct",
+    "paths.COORD",
+    "paths.coord"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "words (new book): the helpers' fixed words",
+     "measure: the lettered square's size"
+    ],
+    "laws": [],
+    "code": [
+     "menu.js: fmt/plural/orList beside toast(); index.html floor \"the frames\": coord(x, y)"
+    ]
+   },
+   "needs": [],
+   "size": 1320
+  },
+  {
+   "id": "M8",
+   "name": "Gathering",
+   "what": "Villagers pick where to work by what pays best counting the walk and the crowd there, finds shrink as they are used, and a box over trees sends cutters.",
+   "pieces": [
+    "core.crowd",
+    "core.freeVil",
+    "core.posted",
+    "core.idlePost",
+    "econ.recount",
+    "econ.FORAGE",
+    "econ.forage",
+    "econ.forageNow",
+    "econ.findCap",
+    "econ.sendOut",
+    "econ.boxCut",
+    "combat.slotsOf",
+    "combat.startWork",
+    "numbers.RATE_OF",
+    "numbers.WORK_R",
+    "numbers.SEARCH",
+    "numbers.searchR",
+    "paths.wayLen",
+    "world.nodeScale",
+    "display.drawNode",
+    "words.TRIGGERS.Trees stand in the way"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "Gather (SC2) and Field (SC16) read findCap and the Open style's one worker"
+    ],
+    "books": [
+     "measure: RATE_OF fish and meat, WORK_R, SEARCH, FORAGE (move on 18%, a field's life, room) checked against D88, D89"
+    ],
+    "laws": [
+     "reuse QV R = c(1 − δ)/(c/g + 2d/v + w·c/(A·v)) (Holling 1959, Charnov 1976; N23, N24) with d the walked length round water (wayLen), not the straight line",
+     "reuse QX g ÷ (1 + others/room) (Fretwell & Lucas 1970, N25)",
+     "reuse QW move on only when the new find pays more"
+    ],
+    "code": [
+     "econ.js: bestFind asks forage(); a tree one feller (OSHA 29 CFR 1910.266, Mid's cite)",
+     "index.html floor \"the things\": a node drawn by its amount left"
+    ]
+   },
+   "needs": [
+    "M2",
+    "M3"
+   ],
+   "size": 9580
+  },
+  {
+   "id": "M9",
+   "name": "Standing spots and crowd spacing",
+   "what": "Everyone stands on their own spot, a pace apart, and two people never stand on each other.",
+   "pieces": [
+    "econ.LATTICE",
+    "econ.spotAt",
+    "econ.regionAt",
+    "econ.spotFree",
+    "econ.takeSpots",
+    "econ.postTo",
+    "econ.stepOut",
+    "econ.waitAt",
+    "combat.CHS",
+    "combat.CHNEXT",
+    "combat.heft",
+    "combat.pushApart",
+    "combat.atRest",
+    "combat.collide",
+    "numbers.SPACE"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: SPACE 3 ft (Hall's personal distance; OSHA 1910.142), the crowd square",
+     "mass: who gives way by body mass (W) instead of Mid's hand weights 9, 3, 1 (combat misfit, Albert to pick)"
+    ],
+    "laws": [
+     "QCI Standing spots: n spots on the hex lattice fill a disc R ≈ 0.525·d·√n (hexagonal packing, density π/(2√3)); Mid 13-sim-civil.js",
+     "QCJ Separation: two closer than d part along a fixed direction by their ids (Reynolds 1987 separation, Mid's cite)"
+    ],
+    "code": [
+     "index.html floor \"Floor 5, movables\": collide() after the steps, one pass over the M3 grid"
+    ]
+   },
+   "needs": [
+    "M3"
+   ],
+   "size": 10440
+  },
+  {
+   "id": "M10",
+   "name": "Builders, repair, limits and taking down",
+   "what": "The nearest free villager goes to a new site and back to its job after, repair costs a quarter, each building has a limit by age, and taking one down gives half back.",
+   "pieces": [
+    "econ.autoBuilder",
+    "econ.sendBuilder",
+    "econ.backToWork",
+    "econ.repairCost",
+    "econ.repairTick",
+    "econ.shellBack",
+    "econ.refundOf",
+    "econ.demolish",
+    "econ.bldTick",
+    "econ.built",
+    "core.capAt",
+    "core.capFor",
+    "core.atCap",
+    "core.capWhy",
+    "core.clsCount",
+    "core.shortest",
+    "core.lineFree",
+    "core.queuedOf",
+    "words.TRIGGERS.Limits",
+    "words.TRIGGERS.You build",
+    "words.TRIGGERS.You raze a building",
+    "words.TRIGGERS.A building of yours is damaged: tap it, then Repair"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "Build (SC4), Repair (SC5): the old job remembered"
+    ],
+    "books": [
+     "measure: repair ×3 time and ¼ cost, the refund share and its first 15%, caps by age (BLD caps)",
+     "shells: each building's cap by age as a slot pointing to D"
+    ],
+    "laws": [
+     "reuse QAC n builders work n^p times as fast (Thomas & Smith 1990, N31)"
+    ],
+    "code": [
+     "econ.js: buildAt, the training line (shortest line takes the order), scrap"
+    ]
+   },
+   "needs": [
+    "M2",
+    "M4"
+   ],
+   "size": 13390
+  },
+  {
+   "id": "M11",
+   "name": "Placing a building",
+   "what": "The ghost snaps in line with your buildings, keeps a lane round the ones that train, lifts above your finger, and the game suggests what fits a tapped spot.",
+   "pieces": [
+    "paths.canPlace",
+    "paths.GUIDE_R",
+    "paths.snapGhost",
+    "combat.SUGGEST",
+    "combat.suggestAt",
+    "display.drawGhost",
+    "display.drawGuides",
+    "display.GHOST_TINT",
+    "display.ghostTint",
+    "touch.EDGE",
+    "touch.edgeScroll",
+    "touch.LIFT",
+    "touch.ghostAt",
+    "touch.startPlace",
+    "words.TRIGGERS.A building is placed"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: the two clear squares, the lane, GUIDE_R, LIFT 64 px, edge 48 px at 320 px/s",
+     "colours: the ghost's green and red"
+    ],
+    "laws": [],
+    "code": [
+     "econ.js canPlace (the clear squares and lanes)",
+     "menu.js ghostTo (snap, lift, edge scroll)",
+     "index.html floor \"Floor 7, display\": the guides"
+    ]
+   },
+   "needs": [
+    "M3",
+    "M10"
+   ],
+   "size": 14660
+  },
+  {
+   "id": "M12",
+   "name": "Walls as lines, gates and the seal",
+   "what": "Walls are dragged as a line of pieces, gates shut only to foes, and while you lay them a red line shows where a foe could still walk in.",
+   "pieces": [
+    "core.lineKind",
+    "econ.commitPlace",
+    "paths.wallLine",
+    "paths.SEAL",
+    "paths.sealSeen",
+    "paths.sealGen",
+    "paths.sealPath",
+    "paths.blockedCell",
+    "display.drawSeal",
+    "display.WALL_KEYS",
+    "display.wkey",
+    "display.wallKeys",
+    "touch.wallSnap",
+    "touch.wallSet",
+    "touch.wallXY",
+    "touch.wallHit",
+    "touch.wallDrag",
+    "numbers.WALL_R",
+    "numbers.REACH",
+    "ai.wallPlan",
+    "words.WHY.wall",
+    "words.WHY.gate",
+    "words.TRIGGERS.A wall or building stands in the way"
+   ],
+   "v100": {
+    "shells": [
+     "BW1 Wall, BW2 Gate, BW4 Palisade: a \"line\" slot (laid corner to corner)"
+    ],
+    "ticks": [
+     "Gate: a new tick \"Gate\" (shut to those at war with its owner, open to the rest)"
+    ],
+    "books": [
+     "measure: WALL_R, REACH, the wall corner's 24 px"
+    ],
+    "laws": [
+     "reuse QBL A* (N74) for the seal: the walk outward from the Town Center"
+    ],
+    "code": [
+     "index.html floor \"Floor 5, movables\": walkable() asks blockedCell for a gate",
+     "econ.js: place a line",
+     "index.html floor \"touch\": the wall drag"
+    ]
+   },
+   "needs": [
+    "M5",
+    "M11"
+   ],
+   "size": 16000
+  },
+  {
+   "id": "M13",
+   "name": "Ages and research",
+   "what": "Mid's six ages (Stone to Gunpowder, the hidden Enlightenment) with their prices, and the research tree in lines, each step after the one before, raising buildings in place.",
+   "pieces": [
+    "numbers.AGES",
+    "core.lineOf",
+    "core.prevOf",
+    "core.needsOf",
+    "core.nextStep",
+    "core.isNext",
+    "core.BTIER",
+    "core.btierOf",
+    "core.bldName",
+    "econ.researchWhy",
+    "econ.research",
+    "econ.learnTech",
+    "econ.turtlePlan",
+    "ai.firstNeed",
+    "display.researchBadge",
+    "display.badgeArt",
+    "sprites.UP",
+    "sprites.TECHAT",
+    "sprites.upTier",
+    "words.techWhy",
+    "words.tierLines",
+    "menu.FIRST",
+    "menu.firstAge",
+    "menu.resAge",
+    "menu.shut",
+    "tech.TECH.hafting",
+    "tech.TECH.axes",
+    "tech.TECH.ironaxe",
+    "tech.TECH.sawpits",
+    "tech.TECH.twosaw",
+    "tech.TECH.sawmill",
+    "tech.TECH.coppice",
+    "tech.TECH.pollard",
+    "tech.TECH.forestry",
+    "tech.TECH.plantation",
+    "tech.TECH.timber",
+    "tech.TECH.charcoal",
+    "tech.TECH.carts",
+    "tech.TECH.logdrive",
+    "tech.TECH.sickles",
+    "tech.TECH.threshing",
+    "tech.TECH.plough",
+    "tech.TECH.noria",
+    "tech.TECH.horsecollar",
+    "tech.TECH.heavyplough",
+    "tech.TECH.windmill",
+    "tech.TECH.seeddrill",
+    "tech.TECH.ovens",
+    "tech.TECH.granary",
+    "tech.TECH.wheelbarrow",
+    "tech.TECH.picks",
+    "tech.TECH.firesetting",
+    "tech.TECH.deep",
+    "tech.TECH.pumps",
+    "tech.TECH.rails",
+    "tech.TECH.blasting",
+    "tech.TECH.brick",
+    "tech.TECH.masonry",
+    "tech.TECH.ventilation",
+    "tech.TECH.wedges",
+    "tech.TECH.chisels",
+    "tech.TECH.stonesaw",
+    "tech.TECH.rollers",
+    "tech.TECH.cranes",
+    "tech.TECH.tally",
+    "tech.TECH.baskets",
+    "tech.TECH.midwives",
+    "tech.TECH.census",
+    "tech.TECH.charter",
+    "tech.TECH.hearth",
+    "tech.TECH.icehouse",
+    "tech.TECH.chimney",
+    "tech.TECH.calendar",
+    "tech.TECH.townwatch",
+    "tech.TECH.pride",
+    "tech.TECH.lanterns",
+    "tech.TECH.writing",
+    "tech.TECH.records",
+    "tech.TECH.rhetoric",
+    "tech.TECH.universities",
+    "tech.TECH.science",
+    "tech.TECH.maths",
+    "tech.TECH.algebra",
+    "tech.TECH.ballistics",
+    "tech.TECH.architecture",
+    "tech.TECH.guilds",
+    "tech.TECH.press",
+    "tech.TECH.optics",
+    "sprites.ART.keep",
+    "sprites.ART.town",
+    "sprites.ART.library",
+    "sprites.ART.tower",
+    "words.WHY.age0",
+    "words.WHY.age1",
+    "words.WHY.age2",
+    "words.WHY.age3",
+    "words.WHY.age4",
+    "words.WHY.hafting",
+    "words.WHY.axes",
+    "words.WHY.ironaxe",
+    "words.WHY.sawpits",
+    "words.WHY.twosaw",
+    "words.WHY.sawmill",
+    "words.WHY.coppice",
+    "words.WHY.pollard",
+    "words.WHY.forestry",
+    "words.WHY.plantation",
+    "words.WHY.timber",
+    "words.WHY.charcoal",
+    "words.WHY.carts",
+    "words.WHY.logdrive",
+    "words.WHY.sickles",
+    "words.WHY.threshing",
+    "words.WHY.plough",
+    "words.WHY.noria",
+    "words.WHY.horsecollar",
+    "words.WHY.heavyplough",
+    "words.WHY.windmill",
+    "words.WHY.seeddrill",
+    "words.WHY.ovens",
+    "words.WHY.granary",
+    "words.WHY.wheelbarrow",
+    "words.WHY.picks",
+    "words.WHY.firesetting",
+    "words.WHY.deep",
+    "words.WHY.pumps",
+    "words.WHY.rails",
+    "words.WHY.blasting",
+    "words.WHY.masonry",
+    "words.WHY.brick",
+    "words.WHY.ventilation",
+    "words.WHY.wedges",
+    "words.WHY.chisels",
+    "words.WHY.stonesaw",
+    "words.WHY.rollers",
+    "words.WHY.cranes",
+    "words.WHY.tally",
+    "words.WHY.baskets",
+    "words.WHY.midwives",
+    "words.WHY.census",
+    "words.WHY.charter",
+    "words.WHY.townwatch",
+    "words.WHY.calendar",
+    "words.WHY.pride",
+    "words.WHY.hearth",
+    "words.WHY.icehouse",
+    "words.WHY.chimney",
+    "words.WHY.lanterns",
+    "words.WHY.writing",
+    "words.WHY.records",
+    "words.WHY.rhetoric",
+    "words.WHY.universities",
+    "words.WHY.science",
+    "words.WHY.maths",
+    "words.WHY.algebra",
+    "words.WHY.ballistics",
+    "words.WHY.architecture",
+    "words.WHY.guilds",
+    "words.WHY.press",
+    "words.WHY.optics",
+    "words.TRIGGERS.Villager jobs: Food, Wood, Stone, Gold, Iron",
+    "words.TRIGGERS.You pay for an age at the Town Center",
+    "words.TRIGGERS.Research comes in lines"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "Research (SC15): the queue holds research as well as units"
+    ],
+    "books": [
+     "measure: D130 ages renamed to Mid's (Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment) with Mid's prices and times (Albert 10:30)",
+     "tech: the economy and learning lines (rows listed)",
+     "sprites: the research footing UP 0–2 and the tower and keep tiers as skins",
+     "words: history lines of those steps"
+    ],
+    "laws": [
+     "QCA (M4) applies every step"
+    ],
+    "code": [
+     "econ.js: ageUp and research(side, id)",
+     "index.html floor \"the building art\": the tier skin chosen by a Level attribute"
+    ]
+   },
+   "needs": [
+    "M2",
+    "M4"
+   ],
+   "size": 40330
+  },
+  {
+   "id": "M14",
+   "name": "Upkeep and hunger",
+   "what": "Soldiers eat more than villagers and horses far more; an order costs meals; with no food in reach work weakens.",
+   "pieces": [
+    "numbers.UPKEEP",
+    "econ.shareOf",
+    "econ.orderCost",
+    "econ.hungerOf",
+    "econ.workMul",
+    "events.starveTick",
+    "events.foodInReach",
+    "numbers.STARVE",
+    "words.TRIGGERS.Everyone eats"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: UPKEEP shares (foot, mounted, cart) and hunger's grace, by the 10:31 rule Mid's"
+    ],
+    "laws": [
+     "QBP changed: every unit eats D131 × its share a day (Mid's shares); work × (1 − famine) after the grace (design)"
+    ],
+    "code": [
+     "econ.js: upkeep()"
+    ]
+   },
+   "needs": [
+    "M2"
+   ],
+   "size": 4320
+  },
+  {
+   "id": "M15",
+   "name": "Farms, soil, seasons and spoilage",
+   "what": "Fields tire and rest, the year's harvest varies, each season changes walking and yields, worked-out fields are replanted, and stored food spoils.",
+   "pieces": [
+    "econ.replantWhy",
+    "econ.replant",
+    "econ.cutOut",
+    "econ.replantAll",
+    "econ.natureTick",
+    "econ.seasonTurn",
+    "numbers.FERT",
+    "numbers.HARVEST",
+    "numbers.SEASONS",
+    "numbers.SPOIL",
+    "display.FLAT",
+    "display.drawPlot",
+    "sprites.nodeSprite",
+    "tech.TECH.seedstore",
+    "tech.TECH.irrigation",
+    "tech.TECH.manure",
+    "tech.TECH.rotation",
+    "tech.TECH.enclosure",
+    "tech.TECH.potato",
+    "sprites.ART.farm",
+    "sprites.ART.treefarm",
+    "words.WHY.seedstore",
+    "words.WHY.manure",
+    "words.WHY.irrigation",
+    "words.WHY.rotation",
+    "words.WHY.enclosure",
+    "words.WHY.potato",
+    "words.WHY.farm",
+    "words.WHY.treefarm",
+    "words.TRIGGERS.The seasons turn"
+   ],
+   "v100": {
+    "shells": [
+     "BCL1 Farm, BCL2 Tree farm: an amount and a replant price"
+    ],
+    "ticks": [],
+    "books": [
+     "measure: FERT, HARVEST, SEASONS (walk, yield, tint), SPOIL 5% a year",
+     "sprites: farm by season and crop, the spent tree farm, trees by season (skins)"
+    ],
+    "laws": [
+     "reuse QAA soil wears when worked, rests back, never below a floor (White 1962, N29)",
+     "reuse QAD Q = Q0 e^(−kt) (Labuza; FAO; N32, N33)"
+    ],
+    "code": [
+     "econ.js: seasonTurn once a season (Y2)"
+    ]
+   },
+   "needs": [
+    "M8",
+    "M13"
+   ],
+   "size": 17640
+  },
+  {
+   "id": "M16",
+   "name": "Hunting, fishing and flocks",
+   "what": "Villagers hunt game, fish near a dock, and sheep give wool and lambs, the flock growing and culled.",
+   "pieces": [
+    "econ.sendHunt",
+    "econ.huntTick",
+    "econ.dockNear",
+    "econ.FLEECE",
+    "numbers.DOCKR",
+    "world.layFish",
+    "tech.TECH.fishtraps",
+    "tech.TECH.nets",
+    "tech.TECH.salting",
+    "tech.TECH.deepboats",
+    "tech.TECH.trawl",
+    "tech.TECH.dugouts",
+    "tech.TECH.sails",
+    "tech.TECH.harbours",
+    "tech.TECH.compass",
+    "tech.TECH.lighthouse",
+    "numbers.UNIT.boar",
+    "numbers.UNIT.bison",
+    "sprites.LOOKS.boar",
+    "sprites.LOOKS.bison",
+    "sprites.ART.pasture",
+    "words.WHY.fishtraps",
+    "words.WHY.nets",
+    "words.WHY.salting",
+    "words.WHY.deepboats",
+    "words.WHY.trawl",
+    "words.WHY.dugouts",
+    "words.WHY.sails",
+    "words.WHY.harbours",
+    "words.WHY.compass",
+    "words.WHY.lighthouse",
+    "words.WHY.pasture",
+    "words.WHY.dock",
+    "words.TRIGGERS.Hunting"
+   ],
+   "v100": {
+    "shells": [
+     "MW1 Fish (Amount, Yield food, Spawn)",
+     "ML1 Sheep, ML2 Cattle",
+     "MW7 Boar, MW8 Bison (from UNIT rows)"
+    ],
+    "ticks": [
+     "Prey (SC10) answered by econ.js hunting"
+    ],
+    "books": [
+     "measure: DOCKR, fleece, fish stock",
+     "sprites: boar, bison, sheep on the pasture"
+    ],
+    "laws": [
+     "reuse QY growth ΔN = rN(1 − N/K) (Verhulst, N27)",
+     "reuse QZ sustainable take: hold K/2, yield rK/4 (Schaefer 1954, N28)"
+    ],
+    "code": [
+     "econ.js: hunt and fish as Gather by kind"
+    ]
+   },
+   "needs": [
+    "M8"
+   ],
+   "size": 10010
+  },
+  {
+   "id": "M17",
+   "name": "Pace: load, weather, ground and ice",
+   "what": "A walker starts at 3.4 mph and is slowed by its load, sickness, the season and weather, mud, snow and ice, each by its own law; research speeds it once, never stacking.",
+   "pieces": [
+    "paths.paceOf",
+    "econ.sideSpd",
+    "econ.insulate",
+    "events.groundSpd",
+    "events.groundNeed",
+    "events.studded",
+    "events.iceMu",
+    "events.strideShare",
+    "events.muOf",
+    "events.slipChance",
+    "tech.TECH.fieldcraft",
+    "tech.TECH.marching",
+    "tech.TECH.warmclothes",
+    "tech.TECH.waterproof",
+    "tech.TECH.roads",
+    "tech.TECH.drainage",
+    "tech.TECH.snowclear",
+    "tech.TECH.crampons",
+    "words.WHY.fieldcraft",
+    "words.WHY.marching",
+    "words.WHY.warmclothes",
+    "words.WHY.waterproof",
+    "words.WHY.roads",
+    "words.WHY.drainage",
+    "words.WHY.snowclear",
+    "words.WHY.crampons"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "ground: ice friction slickest just under freezing, studs' grip",
+     "measure: load 0.9, sickness 0.8, wagon wheels in mud",
+     "tech: the march, roads and weather rows"
+    ],
+    "laws": [
+     "QCB Pace: v = D86 (1.52 m/s, 3.4 mph) × best research share (QCA, never stacking) × load × sickness × 1/η ground (QN, Pandolf 1977, N13) × cold and wet (QAP, N46) × ice stride by the grip lacking (QR, Hanson 1999, N19)"
+    ],
+    "code": [
+     "index.html floor \"Floor 5, movables\": step() multiplies by pace(u) only"
+    ]
+   },
+   "needs": [
+    "M4"
+   ],
+   "size": 6890
+  },
+  {
+   "id": "M18",
+   "name": "Soldier kinds, ranks and kits",
+   "what": "Every soldier is the one Unit shell with its settings (age, class, level, behaviour, look, speed, health); kinds change with the ages, armour kits show research, the army has a ceiling.",
+   "pieces": [
+    "core.armyOf",
+    "core.BUSY",
+    "core.armyFree",
+    "core.armyRoom",
+    "core.clsMax",
+    "core.armyFull",
+    "numbers.POPMAX",
+    "menu.kindOf",
+    "sprites.KIT",
+    "sprites.person",
+    "sprites.helm",
+    "sprites.ELITE_LOOK",
+    "sprites.elitePennant",
+    "sprites.sprite",
+    "tech.TECH.shields",
+    "tech.TECH.spearwall",
+    "tech.TECH.drill",
+    "tech.TECH.phalanx",
+    "tech.TECH.legion",
+    "tech.TECH.pikesquare",
+    "tech.TECH.arms",
+    "tech.TECH.halberd",
+    "tech.TECH.tercio",
+    "tech.TECH.bayonet",
+    "tech.TECH.slings",
+    "tech.TECH.composite",
+    "tech.TECH.firearrows",
+    "tech.TECH.bodkin",
+    "tech.TECH.xbowdrill",
+    "tech.TECH.longbow",
+    "tech.TECH.musket",
+    "tech.TECH.volley",
+    "tech.TECH.horses",
+    "tech.TECH.bridles",
+    "tech.TECH.saddles",
+    "tech.TECH.stirrups",
+    "tech.TECH.horseshoes",
+    "tech.TECH.remounts",
+    "tech.TECH.cavalry",
+    "tech.TECH.knighthood",
+    "tech.TECH.dragoons",
+    "tech.TECH.bronze",
+    "tech.TECH.spearheads",
+    "tech.TECH.iron",
+    "tech.TECH.tempering",
+    "tech.TECH.casehard",
+    "tech.TECH.helmets",
+    "tech.TECH.leather",
+    "tech.TECH.scale",
+    "tech.TECH.chain",
+    "tech.TECH.plate",
+    "tech.TECH.oiling",
+    "tech.TECH.torsion",
+    "tech.TECH.engineers",
+    "tech.TECH.burningshot",
+    "tech.TECH.counterweight",
+    "tech.TECH.corned",
+    "tech.TECH.limbers",
+    "tech.TECH.petards",
+    "sprites.LOOKS.sword",
+    "sprites.LOOKS.jav",
+    "sprites.LOOKS.crossbow",
+    "sprites.LOOKS.arquebus",
+    "sprites.LOOKS.bombard",
+    "sprites.LOOKS.stower",
+    "sprites.LOOKS.ballista",
+    "sprites.LOOKS.treb",
+    "words.WHY.arquebus",
+    "words.WHY.bombard",
+    "words.WHY.shields",
+    "words.WHY.spearwall",
+    "words.WHY.drill",
+    "words.WHY.phalanx",
+    "words.WHY.tech:legion",
+    "words.WHY.pikesquare",
+    "words.WHY.arms",
+    "words.WHY.halberd",
+    "words.WHY.tercio",
+    "words.WHY.bayonet",
+    "words.WHY.slings",
+    "words.WHY.composite",
+    "words.WHY.bodkin",
+    "words.WHY.firearrows",
+    "words.WHY.longbow",
+    "words.WHY.xbowdrill",
+    "words.WHY.musket",
+    "words.WHY.volley",
+    "words.WHY.horses",
+    "words.WHY.bridles",
+    "words.WHY.saddles",
+    "words.WHY.stirrups",
+    "words.WHY.horseshoes",
+    "words.WHY.remounts",
+    "words.WHY.cavalry",
+    "words.WHY.knighthood",
+    "words.WHY.dragoons",
+    "words.WHY.bronze",
+    "words.WHY.spearheads",
+    "words.WHY.iron",
+    "words.WHY.tempering",
+    "words.WHY.casehard",
+    "words.WHY.leather",
+    "words.WHY.helmets",
+    "words.WHY.scale",
+    "words.WHY.chain",
+    "words.WHY.plate",
+    "words.WHY.oiling",
+    "words.WHY.engineers",
+    "words.WHY.torsion",
+    "words.WHY.counterweight",
+    "words.WHY.burningshot",
+    "words.WHY.corned",
+    "words.WHY.limbers",
+    "words.WHY.petards",
+    "words.WHY.spear",
+    "words.WHY.sword",
+    "words.WHY.archer",
+    "words.WHY.jav",
+    "words.WHY.crossbow",
+    "words.WHY.chariot",
+    "words.WHY.cata",
+    "words.WHY.harcher",
+    "words.WHY.elephant",
+    "words.WHY.ram",
+    "words.WHY.stower",
+    "words.WHY.catapult",
+    "words.WHY.ballista",
+    "words.WHY.treb",
+    "words.TRIGGERS.Unit lines and tiers"
+   ],
+   "v100": {
+    "shells": [
+     "one Unit shell (the mold) replacing UM1–UM4b, US1–US4, UT1–UT2 rows; each kind a settings row: Age, Class, Level, Behavior, Attitude, Sprite, Motion, Speed, Health (Albert 10:26)"
+    ],
+    "ticks": [
+     "unchanged ticks read from the kind row"
+    ],
+    "books": [
+     "sprites: sword, jav, crossbow, arquebus, bombard, siege tower, ballista, trebuchet looks; the armour kits and the elite pennant",
+     "measure: ARMYMAX 120, BNSIZE 40, POPMAX 180 (Mid's by 10:31; v100's 200 flagged)",
+     "tech: the barracks, range, stable, smith and siege rows"
+    ],
+    "laws": [
+     "QCA applies the kit and blade steps"
+    ],
+    "code": [
+     "econ.js train(kind): asks the kind row, never the name",
+     "index.html floor \"the figures\": the kit key"
+    ]
+   },
+   "needs": [
+    "M4",
+    "M13"
+   ],
+   "size": 37220
+  },
+  {
+   "id": "M19",
+   "name": "The blow",
+   "what": "Who a soldier fights, how hard it hits by counters, flanks and armour, how far a building shoots from its height, the missile in flight, and the plunder from what falls.",
+   "pieces": [
+    "core.nearestFoe",
+    "core.foeValue",
+    "core.GROUP_R",
+    "core.groupPower",
+    "core.canBeat",
+    "core.bestFoe",
+    "core.nearestFoeBld",
+    "core.vsMul",
+    "core.rangeFrom",
+    "core.rangeOf",
+    "combat.hurt",
+    "combat.fromWhere",
+    "combat.shot",
+    "combat.plunder",
+    "combat.plunderBld",
+    "numbers.FLANKING",
+    "numbers.RICH",
+    "events.wearMul",
+    "paths.findBlocker",
+    "display.drawTracers",
+    "display.SPARKS",
+    "display.sparkDraw",
+    "words.TRIGGERS.Soldiers destroy a building",
+    "words.TRIGGERS.Counters",
+    "words.TRIGGERS.Siege",
+    "words.TRIGGERS.Hit from behind",
+    "words.TRIGGERS.Heavy blows"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: vs table by kind (replaces the one counter D140), FLANKING, PLUNDER 0.25, RICH 2.5, wear in frost and rain"
+    ],
+    "laws": [
+     "QBO changed: damage = max(1, base × counter(kind, kind) × flank(cos of the angle, fromWhere) × wear − armour) (Mid 16-sim-fight.js)",
+     "reuse QAG who to fight: damage a second ÷ (time to kill + time to reach) (Churchill, Saffidine & Buro 2012, N36)",
+     "reuse QAJ the missile on the drag path (N39, N40), replacing Mid's hand arc (combat misfit)"
+    ],
+    "code": [
+     "combat.js: damage() and target()"
+    ]
+   },
+   "needs": [
+    "M3",
+    "M4",
+    "M5",
+    "M18"
+   ],
+   "size": 17380
+  },
+  {
+   "id": "M20",
+   "name": "Nerve and the rout",
+   "what": "Each loss nearby drains a soldier's nerve; a broken one runs for a while, then comes back.",
+   "pieces": [
+    "combat.routSecs",
+    "econ.died",
+    "numbers.MORALE",
+    "words.TRIGGERS.Nerve and the rout"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "Nerve as an attribute (SA Nerve) on the kind row"
+    ],
+    "books": [
+     "measure: MORALE (break, run seconds, recovery)"
+    ],
+    "laws": [
+     "reuse QAI each loss nearby drains 1/(break × n) (design)",
+     "reuse QP nerve comes back as a first-order lag (N16)",
+     "reuse QAO flee when staying costs more (N45)"
+    ],
+    "code": [
+     "combat.js: per-soldier nerve beside the wave's break (QBQ)"
+    ]
+   },
+   "needs": [
+    "M19"
+   ],
+   "size": 2800
+  },
+  {
+   "id": "M21",
+   "name": "A soldier's day",
+   "what": "At home a soldier guards round its yard, shooters step back while they reload, and resting soldiers in a building heal.",
+   "pieces": [
+    "combat.solTick",
+    "combat.nearHome",
+    "core.kiteOf",
+    "numbers.YARD",
+    "numbers.KITE",
+    "numbers.GARRISON",
+    "tech.TECH.slits",
+    "tech.TECH.fortify",
+    "tech.TECH.machic",
+    "tech.TECH.guncast",
+    "tech.TECH.starfort",
+    "tech.TECH.beacons",
+    "tech.TECH.greattower",
+    "tech.TECH.guntower",
+    "tech.TECH.drawbridge",
+    "tech.TECH.standing",
+    "tech.TECH.garrison",
+    "tech.TECH.bastion",
+    "words.WHY.slits",
+    "words.WHY.fortify",
+    "words.WHY.machic",
+    "words.WHY.beacons",
+    "words.WHY.greattower",
+    "words.WHY.guntower",
+    "words.WHY.guncast",
+    "words.WHY.starfort",
+    "words.WHY.standing",
+    "words.WHY.drawbridge",
+    "words.WHY.garrison",
+    "words.WHY.bastion",
+    "words.WHY.tower",
+    "words.WHY.castle"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "Shelter (a soldier goes in; the building holds and heals)",
+     "Stance (SM)"
+    ],
+    "books": [
+     "measure: YARD 320, KITE, GARRISON healing"
+    ],
+    "laws": [
+     "reuse QP healing at rest (Cukjati 2001, N16)"
+    ],
+    "code": [
+     "combat.js tick: idle → guard, kite, garrison"
+    ]
+   },
+   "needs": [
+    "M19",
+    "M20"
+   ],
+   "size": 17490
+  },
+  {
+   "id": "M22",
+   "name": "Squads, formations and muster",
+   "what": "Soldiers form three squads (Alpha, Bravo, Charlie), stand in ranks at home, take shapes and a temper, carry a standard, and a whole battalion can be mustered at once.",
+   "pieces": [
+    "core.orderSet",
+    "core.selName",
+    "core.hasCmd",
+    "core.formOf",
+    "core.marching",
+    "core.shapeOf",
+    "core.dialOf",
+    "core.cycle",
+    "core.temperOf",
+    "core.clsOf",
+    "core.rebattalion",
+    "econ.formUp",
+    "econ.homeSpot",
+    "econ.musterN",
+    "econ.musterCost",
+    "econ.musterWhy",
+    "econ.muster",
+    "combat.forming",
+    "combat.drillOn",
+    "combat.dress",
+    "combat.drillHold",
+    "combat.musterGap",
+    "menu.sqPlan",
+    "menu.sqUnits",
+    "menu.sqOut",
+    "menu.INTENT",
+    "numbers.BN",
+    "numbers.FORM",
+    "numbers.FORMING",
+    "numbers.GRID",
+    "numbers.COLUMN",
+    "numbers.TEMPER",
+    "numbers.T_HOLD",
+    "numbers.ORDER",
+    "display.STANDARDS",
+    "display.drawStandards",
+    "tech.TECH.engage",
+    "tech.TECH.command",
+    "tech.TECH.formations",
+    "tech.TECH.standards",
+    "tech.TECH.supply",
+    "tech.TECH.muster",
+    "tech.TECH.staff",
+    "words.WHY.engage",
+    "words.WHY.command",
+    "words.WHY.formations",
+    "words.WHY.standards",
+    "words.WHY.supply",
+    "words.WHY.muster",
+    "words.WHY.staff",
+    "words.WHY.council",
+    "words.TRIGGERS.The War Council ladder",
+    "words.TRIGGERS.Temper and shape"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "Squad, Formation (SM commands) answered by combat.js"
+    ],
+    "books": [
+     "measure: BN names, FORM, GRID, COLUMN, TEMPER, ORDER; muster ×2 cost, ¼ longer",
+     "tech: the War Council rows",
+     "sprites: the standard"
+    ],
+    "laws": [
+     "none new: shapes are placements (Albert holds the six formations' definitions; Mid's ranks stand in until then)"
+    ],
+    "code": [
+     "combat.js: squads and formUp",
+     "econ.js: muster at the War Council (BP10)"
+    ]
+   },
+   "needs": [
+    "M9",
+    "M21"
+   ],
+   "size": 23400
+  },
+  {
+   "id": "M23",
+   "name": "Missions, the crosshair and orders you can follow",
+   "what": "A tap moves the crosshair, squads march on it and report, reinforcements are sent by who arrives in time, and every group on the march shows its line and its time left.",
+   "pieces": [
+    "menu.HUD",
+    "menu.mUnits",
+    "menu.hostile",
+    "menu.foesNear",
+    "menu.sqFree",
+    "menu.hudEta",
+    "menu.hudFire",
+    "menu.hudGo",
+    "menu.hudAbort",
+    "menu.hudAbortAll",
+    "menu.setRally",
+    "menu.missionsTick",
+    "menu.reinforcePlan",
+    "menu.waveLine",
+    "menu.hudJoin",
+    "menu.hudReinforce",
+    "menu.aimSpot",
+    "menu.aimNear",
+    "menu.aimAt",
+    "menu.aimColor",
+    "menu.hazardAt",
+    "menu.drawReticle",
+    "combat.qsPool",
+    "combat.qsPick",
+    "combat.sendable",
+    "combat.ARMY_STILL",
+    "combat.armyStatus",
+    "combat.idleSoldier",
+    "combat.free",
+    "combat.freeWhy",
+    "combat.showQuick",
+    "combat.hideQuick",
+    "combat.quickGo",
+    "econ.centreOf",
+    "econ.routeK",
+    "econ.etaOf",
+    "econ.march",
+    "econ.ordersTick",
+    "display.drawOrders",
+    "display.flagAt",
+    "touch.ordAt",
+    "words.TRIGGERS.You send soldiers somewhere",
+    "words.TRIGGERS.The quick action",
+    "words.TRIGGERS.War: four missions"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: HUD (fight reach 140, losing under 0.4), ARMY_STILL 2.5 s, the crosshair 56 px",
+     "colours: the crosshair by side"
+    ],
+    "laws": [
+     "reuse QBL for the walked length (eta = longest walk ÷ slowest pace, QCB)"
+    ],
+    "code": [
+     "combat.js: missions beside march/attack/recall",
+     "index.html floor \"Floor 7, display\": the reticle and order lines"
+    ]
+   },
+   "needs": [
+    "M6",
+    "M17",
+    "M22"
+   ],
+   "size": 19560
+  },
+  {
+   "id": "M24",
+   "name": "The War Director: moves, choke, ambush, charge",
+   "what": "Six battle moves (shield wall, advance, loose, fall back, charge, wheel), holding a gap across its width, and hiding in cover to spring an ambush.",
+   "pieces": [
+    "combat.DIRECT_WHY",
+    "combat.DIRECTS",
+    "combat.DIRECT_OF",
+    "combat.direct",
+    "combat.directWait",
+    "combat.ofKind",
+    "combat.aimH",
+    "combat.toolSet",
+    "combat.chokeAt",
+    "combat.coverNear",
+    "combat.ambushAt",
+    "combat.ambushTick",
+    "econ.chargeWhy",
+    "econ.charge",
+    "econ.fallBack",
+    "numbers.DIRECT",
+    "numbers.CHOKE",
+    "numbers.AMBUSH",
+    "numbers.CHARGE",
+    "numbers.FALLBACK",
+    "ai.gapOnRoad",
+    "ai.chokeClaim",
+    "display.leavesOver"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: DIRECT reloads and costs, CHARGE (faster, then tired), CHOKE, AMBUSH, FALLBACK",
+     "sprites: leaves over a hidden soldier"
+    ],
+    "laws": [
+     "reuse QP tiredness after a charge settles back (N16)"
+    ],
+    "code": [
+     "combat.js: direct(kind, move)"
+    ]
+   },
+   "needs": [
+    "M14",
+    "M22",
+    "M23"
+   ],
+   "size": 13590
+  },
+  {
+   "id": "M25",
+   "name": "The Alarm and the danger map",
+   "what": "Villagers keep away from danger, a warning comes when foes head your way, and four orders (Gather, Garrison, Shelter, Work) move everyone at once.",
+   "pieces": [
+    "paths.DANGER",
+    "paths.DISC",
+    "paths.discRows",
+    "paths.stampDanger",
+    "paths.dangerMap",
+    "paths.dangerWhy",
+    "numbers.DANGER_R",
+    "numbers.SHELTER",
+    "econ.isThreat",
+    "econ.unsafe",
+    "econ.incomingTick",
+    "combat.watchHome",
+    "core.shelterOf",
+    "menu.EMERGENCY",
+    "menu.EMG",
+    "menu.shelterRank",
+    "menu.roomIn",
+    "menu.troops",
+    "menu.stand",
+    "menu.threatDir",
+    "menu.fillRank",
+    "menu.emgSnap",
+    "menu.release",
+    "menu.villagersIn",
+    "menu.soldiersIn",
+    "menu.townSquare",
+    "menu.emgStart",
+    "menu.emgStop",
+    "display.RADAR",
+    "display.drawRadar",
+    "display.hg",
+    "display.drawHitGlow",
+    "words.TRIGGERS.An enemy group you can see heads for your buildings",
+    "words.TRIGGERS.Soldiers come within ${SHELTER.flee} of a villager",
+    "words.TRIGGERS.The Alarm: four orders"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "Shelter: a building's room (shelterOf) as a slot"
+    ],
+    "books": [
+     "measure: DANGER_R three levels, SHELTER flee, EMG"
+    ],
+    "laws": [
+     "reuse QAO flee when staying costs more than running (N45)"
+    ],
+    "code": [
+     "econ.js: the danger map once a second; bestFind skips unsafe finds",
+     "index.html floor \"Floor 7, display\": radar and hit glow"
+    ]
+   },
+   "needs": [
+    "M3",
+    "M5",
+    "M21"
+   ],
+   "size": 17950
+  },
+  {
+   "id": "M26",
+   "name": "Teaching soldiers",
+   "what": "An older soldier learns a newer kind at the School for a price, rising a level.",
+   "pieces": [
+    "econ.teachTo",
+    "econ.teachGap",
+    "econ.teachCost",
+    "econ.teachSecs",
+    "econ.schooling",
+    "econ.teachWhy",
+    "econ.teach",
+    "econ.graduate",
+    "numbers.TEACH",
+    "numbers.TEACH_TO",
+    "tech.TECH.drillyard",
+    "tech.TECH.veterans",
+    "tech.TECH.feudal",
+    "tech.TECH.apprentices",
+    "tech.TECH.academy",
+    "tech.TECH.military_academy",
+    "words.WHY.drillyard",
+    "words.WHY.veterans",
+    "words.WHY.feudal",
+    "words.WHY.apprentices",
+    "words.WHY.academy",
+    "words.WHY.military_academy",
+    "words.WHY.school",
+    "words.TRIGGERS.Teach"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "Teach (new tick on BP1 School)"
+    ],
+    "books": [
+     "measure: TEACH, TEACH_TO",
+     "tech: the School's teaching rows and the barracks levy rows"
+    ],
+    "laws": [],
+    "code": [
+     "econ.js: teach(unit) changes the kind row's Level"
+    ]
+   },
+   "needs": [
+    "M18"
+   ],
+   "size": 5490
+  },
+  {
+   "id": "M27",
+   "name": "Prisoners and ransom",
+   "what": "Soldiers can be taken prisoner, ransomed back, or made to serve their captor.",
+   "pieces": [
+    "econ.takePrisoner",
+    "econ.prisonersOf",
+    "econ.payRansom",
+    "econ.prisonersTick",
+    "numbers.PRISON"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: PRISON"
+    ],
+    "laws": [],
+    "code": [
+     "combat.js: die() may take a prisoner"
+    ]
+   },
+   "needs": [
+    "M19",
+    "M2"
+   ],
+   "size": 2040
+  },
+  {
+   "id": "M28",
+   "name": "Priests, medics and Zeal",
+   "what": "Priests convert a foe beside them, medics follow the army and close wounds, the Hospital heals, and the Temple's Zeal lifts your people for a while.",
+   "pieces": [
+    "combat.followArmy",
+    "combat.priestTick",
+    "combat.medicTick",
+    "combat.healTick",
+    "numbers.CONVERT",
+    "numbers.ZEAL",
+    "econ.zealCost",
+    "econ.zealWhy",
+    "econ.zeal",
+    "tech.TECH.rites",
+    "tech.TECH.games",
+    "tech.TECH.relics",
+    "tech.TECH.sermons",
+    "tech.TECH.reform",
+    "words.WHY.rites",
+    "words.WHY.games",
+    "words.WHY.relics",
+    "words.WHY.sermons",
+    "words.WHY.reform",
+    "words.WHY.temple",
+    "words.WHY.priest",
+    "words.WHY.medic",
+    "words.TRIGGERS.Temple: Zeal",
+    "words.TRIGGERS.Hospital and medics"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "Heal, Convert (SC, on US1 Priest, US2 Medic, BP6 Hospital)",
+     "Zeal (BP3 Temple)"
+    ],
+    "books": [
+     "measure: CONVERT, ZEAL",
+     "tech: the Temple rows"
+    ],
+    "laws": [
+     "reuse QP wounds close as a first-order lag (Cukjati 2001, N16)"
+    ],
+    "code": [
+     "combat.js: heal and convert"
+    ]
+   },
+   "needs": [
+    "M19",
+    "M23"
+   ],
+   "size": 9160
+  },
+  {
+   "id": "M29",
+   "name": "Spies and sabotage",
+   "what": "A spy watches and reports a side's strength, sabotage stalls a building, and towers and the Courthouse catch spies.",
+   "pieces": [
+    "econ.watchtower",
+    "econ.guarded",
+    "econ.sabotage",
+    "econ.intel",
+    "econ.spyTick",
+    "core.spySeen",
+    "display.visibleTo0",
+    "numbers.SAB",
+    "tech.TECH.codes",
+    "tech.TECH.magistrates",
+    "tech.TECH.watch",
+    "tech.TECH.informers",
+    "tech.TECH.tolls",
+    "tech.TECH.assizes",
+    "tech.TECH.police",
+    "words.WHY.watch",
+    "words.WHY.codes",
+    "words.WHY.magistrates",
+    "words.WHY.informers",
+    "words.WHY.tolls",
+    "words.WHY.assizes",
+    "words.WHY.police",
+    "words.WHY.courthouse",
+    "words.WHY.spy",
+    "words.TRIGGERS.Courthouse and spies",
+    "words.TRIGGERS.Sabotage"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "Spy (US3), and \"Watch\" on towers and the Courthouse"
+    ],
+    "books": [
+     "measure: SAB",
+     "tech: the Courthouse rows"
+    ],
+    "laws": [],
+    "code": [
+     "combat.js: spy and sabotage"
+    ]
+   },
+   "needs": [
+    "M5",
+    "M6"
+   ],
+   "size": 7990
+  },
+  {
+   "id": "M30",
+   "name": "Winning, losing and the fallen",
+   "what": "A side falls and its stores go to its killer, the bodies stay a while, a standing Wonder held long enough wins, and the end counts the score.",
+   "pieces": [
+    "econ.judge",
+    "econ.reap",
+    "combat.fall",
+    "combat.finish",
+    "numbers.WONDER_HOLD",
+    "display.FALL",
+    "display.fallen",
+    "display.drawFallen",
+    "words.WHY.wonder",
+    "words.TRIGGERS.A Town Center falls",
+    "words.TRIGGERS.Score",
+    "words.TRIGGERS.A timed game",
+    "words.TRIGGERS.A wonder is finished",
+    "words.TRIGGERS.Winning and losing"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: WONDER_HOLD 8 min, SHARE_FALLEN 0.5, bodies' time"
+    ],
+    "laws": [
+     "reuse QBR the score (N75)"
+    ],
+    "code": [
+     "econ.js: the result beside the last Seat"
+    ]
+   },
+   "needs": [
+    "M2",
+    "M19"
+   ],
+   "size": 10980
+  },
+  {
+   "id": "M31",
+   "name": "The war camp",
+   "what": "The camp wagon in two sizes drives out and unpacks: the small an outpost, the large a walled camp that holds an army like a safe zone, with tents that heal, train, feed and supply.",
+   "pieces": [
+    "events.CAMP_TENTS",
+    "events.campLayout",
+    "events.campFacing",
+    "events.campCells",
+    "events.campWhy",
+    "events.campUnpack",
+    "events.wagonTick",
+    "events.campCap",
+    "events.campsOut",
+    "events.campWhyTrain",
+    "events.canRaise",
+    "events.campRaise",
+    "events.campSendHome",
+    "events.depotsOf",
+    "events.depotNear",
+    "events.campEat",
+    "events.supplyRun",
+    "events.campWearTick",
+    "numbers.CAMP",
+    "econ.tentCost",
+    "econ.tentOrNot",
+    "tech.TECH.camps",
+    "tech.TECH.campwagons",
+    "tech.TECH.fieldlog",
+    "numbers.UNIT.outpostcart",
+    "numbers.UNIT.campcart",
+    "sprites.ART.tent",
+    "words.WHY.camps",
+    "words.WHY.campwagons",
+    "words.WHY.fieldlog",
+    "words.WHY.abatis",
+    "words.WHY.medtent",
+    "words.WHY.traintent",
+    "words.WHY.messtent",
+    "words.WHY.depot",
+    "words.WHY.camptower",
+    "words.WHY.palisade",
+    "words.WHY.outpostcart",
+    "words.WHY.campcart",
+    "words.TRIGGERS.War camps"
+   ],
+   "v100": {
+    "shells": [
+     "UT2 Camp wagon: Size small and large (Albert 11:16 (7)); BTC3, BTC4 composed of BTC5–BTC8, BI5, BW4, BF5"
+    ],
+    "ticks": [
+     "Unpack (new), Supply (BI5 Depot)"
+    ],
+    "books": [
+     "measure: CAMP (tents, healing, supply), camp caps",
+     "sprites: the tent's sign",
+     "tech: the stable camps rows"
+    ],
+    "laws": [
+     "none new: Hyginus §1 for the layout (Mid's cite); QP for healing"
+    ],
+    "code": [
+     "econ.js: unpack(wagon)"
+    ]
+   },
+   "needs": [
+    "M10",
+    "M14",
+    "M28"
+   ],
+   "size": 19280
+  },
+  {
+   "id": "M32",
+   "name": "Field traps",
+   "what": "Pits, nets, stakes and caltrops hidden on the ground spring on foes, show only to their side and a scout who finds them, and wear flat.",
+   "pieces": [
+    "events.trapAt",
+    "events.trapsTick",
+    "numbers.CALTROPS",
+    "numbers.STAKES",
+    "display.trapShown",
+    "tech.TECH.caltrops",
+    "tech.TECH.archerstakes",
+    "numbers.BLD.pit",
+    "numbers.BLD.net",
+    "numbers.BLD.stakes",
+    "numbers.BLD.caltrops",
+    "words.WHY.archerstakes",
+    "words.WHY.caltrops",
+    "words.WHY.pit",
+    "words.WHY.net",
+    "words.WHY.stakes"
+   ],
+   "v100": {
+    "shells": [
+     "BF1 Pit, BF2 Net, BF3 Stakes, BF4 Caltrops (from BLD rows)"
+    ],
+    "ticks": [
+     "Trap (new)"
+    ],
+    "books": [
+     "measure: CALTROPS, STAKES",
+     "tech: caltrops, archers' stakes"
+    ],
+    "laws": [],
+    "code": [
+     "combat.js: traps each tick"
+    ]
+   },
+   "needs": [
+    "M5",
+    "M19"
+   ],
+   "size": 6280
+  },
+  {
+   "id": "M33",
+   "name": "The Market, coin, bank and ventures",
+   "what": "Buy and sell at prices that float with what is sold, the Mint debases coin, gold earns interest in the bank, and ventures come back richer or not at all.",
+   "pieces": [
+    "econ.LOT",
+    "econ.worth",
+    "econ.coinOf",
+    "econ.sellPrice",
+    "econ.buyPrice",
+    "econ.haveOf",
+    "econ.marketTrade",
+    "econ.mkt",
+    "econ.debase",
+    "econ.mktHit",
+    "econ.priceDrift",
+    "econ.venture",
+    "econ.ventureTick",
+    "econ.BANK_CAP",
+    "econ.bankTick",
+    "numbers.PRICE",
+    "numbers.DEMAND",
+    "numbers.MKT_SELL",
+    "numbers.MKTK",
+    "numbers.MINT",
+    "numbers.VENTURE",
+    "tech.TECH.weights",
+    "tech.TECH.coinage",
+    "tech.TECH.credit",
+    "tech.TECH.bank",
+    "tech.TECH.banking",
+    "tech.TECH.exchange",
+    "tech.TECH.dies",
+    "tech.TECH.assay",
+    "tech.TECH.milled",
+    "words.WHY.bank",
+    "words.WHY.weights",
+    "words.WHY.coinage",
+    "words.WHY.credit",
+    "words.WHY.banking",
+    "words.WHY.exchange",
+    "words.WHY.dies",
+    "words.WHY.assay",
+    "words.WHY.milled",
+    "words.WHY.venture",
+    "words.WHY.market",
+    "words.WHY.mint",
+    "words.TRIGGERS.Market"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "Trade (SC19, waiting) on BCR1 Market; Make on BI6 Mint"
+    ],
+    "books": [
+     "measure: PRICE, DEMAND, MINT, VENTURE, BANK_CAP",
+     "tech: the market and mint rows"
+    ],
+    "laws": [
+     "reuse QAE P = P0 (Q/Q0)^(−1/ε) (Andreyeva, Long & Brownell 2010, N34); drift back by QP",
+     "QCF Returns: interest gold × i a minute to a cap; a venture returns 1.4× after a year with chance p, else nothing (Mid 36-economy.js; Florentine deposits, design)"
+    ],
+    "code": [
+     "econ.js: market(side, good, n)"
+    ]
+   },
+   "needs": [
+    "M2",
+    "M13"
+   ],
+   "size": 10950
+  },
+  {
+   "id": "M34",
+   "name": "Goods and workshops",
+   "what": "Workshops, the Foundry and the Mint turn raw stores into goods (cloth, drink, iron), and a place of work grows better with use.",
+   "pieces": [
+    "numbers.GOODS",
+    "numbers.GOODK",
+    "numbers.SCALE",
+    "econ.atShop",
+    "econ.shopTick",
+    "econ.setMake",
+    "core.makeOf",
+    "tech.TECH.learning",
+    "tech.TECH.pinfactory",
+    "tech.TECH.looms",
+    "tech.TECH.spinwheel",
+    "tech.TECH.fulling",
+    "tech.TECH.frame",
+    "tech.TECH.hops",
+    "tech.TECH.brewhouse",
+    "tech.TECH.lager",
+    "tech.TECH.castiron",
+    "tech.TECH.bellows",
+    "tech.TECH.blast",
+    "tech.TECH.finery",
+    "words.WHY.learning",
+    "words.WHY.pinfactory",
+    "words.WHY.looms",
+    "words.WHY.spinwheel",
+    "words.WHY.fulling",
+    "words.WHY.frame",
+    "words.WHY.hops",
+    "words.WHY.brewhouse",
+    "words.WHY.lager",
+    "words.WHY.bellows",
+    "words.WHY.castiron",
+    "words.WHY.blast",
+    "words.WHY.finery",
+    "words.WHY.workshop",
+    "words.WHY.foundry"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "Make (SC on BI6, BI7, BI8)"
+    ],
+    "books": [
+     "measure: GOODS, SCALE 5% a step",
+     "tech: workshop, foundry and the store's scale rows"
+    ],
+    "laws": [
+     "reuse QAB labour falls a set share per doubling (Wright 1936, N30)"
+    ],
+    "code": [
+     "econ.js: make()"
+    ]
+   },
+   "needs": [
+    "M2",
+    "M33"
+   ],
+   "size": 8240
+  },
+  {
+   "id": "M35",
+   "name": "Trade and caravans",
+   "what": "Caravans run routes to trade stops and allies' markets, paid by distance, guarded or robbed on the way.",
+   "pieces": [
+    "econ.caravanTick",
+    "econ.stopsAll",
+    "econ.postAt",
+    "econ.stopsHeld",
+    "econ.distF",
+    "econ.baseOf",
+    "econ.loadable",
+    "econ.takeFrom",
+    "econ.giveTo",
+    "econ.priceAt",
+    "econ.tradeTargets",
+    "econ.allyMarket",
+    "econ.targetOf",
+    "econ.homeBiz",
+    "econ.estPay",
+    "econ.setRoute",
+    "econ.bestTarget",
+    "econ.routeTick",
+    "econ.guardedCart",
+    "econ.robbed",
+    "econ.spiceCost",
+    "combat.escortPick",
+    "combat.guardsOf",
+    "numbers.LOAD",
+    "numbers.TRADE",
+    "numbers.PLACES",
+    "numbers.cross",
+    "numbers.ROUTES_L",
+    "numbers.POST",
+    "tech.TECH.freetrade",
+    "tech.TECH.armedcart",
+    "tech.TECH.convoys",
+    "tech.TECH.caravanserai",
+    "tech.TECH.milestones",
+    "tech.TECH.fortpost",
+    "tech.TECH.customs",
+    "tech.TECH.postroads",
+    "words.WHY.freetrade",
+    "words.WHY.armedcart",
+    "words.WHY.convoys",
+    "words.WHY.milestones",
+    "words.WHY.caravanserai",
+    "words.WHY.fortpost",
+    "words.WHY.postroads",
+    "words.WHY.customs",
+    "words.WHY.tpost",
+    "words.WHY.stop",
+    "words.WHY.caravan",
+    "words.TRIGGERS.Trade with an ally",
+    "words.TRIGGERS.A caravan has a route",
+    "words.TRIGGERS.You hold trade stops"
+   ],
+   "v100": {
+    "shells": [
+     "UT1 Caravan load slot; BCT1 Trade post on a trade stop"
+    ],
+    "ticks": [
+     "Trade (SC19) answered by econ.js"
+    ],
+    "books": [
+     "measure: LOAD, TRADE, ROUTES_L, POST, PLACES",
+     "tech: caravans and roads rows"
+    ],
+    "laws": [
+     "QCE Trade pay: pay = k × distance² of the route (Mid TRADE; the genre's trade formula, from memory)"
+    ],
+    "code": [
+     "econ.js: route(caravan)"
+    ]
+   },
+   "needs": [
+    "M33",
+    "M5"
+   ],
+   "size": 16950
+  },
+  {
+   "id": "M36",
+   "name": "Relations and diplomacy",
+   "what": "Sides are at war, peace or allied; envoys carry offers judged by the odds; allies help; gifts buy a band's regard, each less than the last; the computers gang up on a runaway leader.",
+   "pieces": [
+    "econ.declareWar",
+    "econ.makePeace",
+    "econ.makeAlly",
+    "econ.noticeLeft",
+    "econ.gangKey",
+    "econ.relWhy",
+    "econ.envoyWhy",
+    "econ.setRel",
+    "econ.noticeTick",
+    "econ.sendEnvoy",
+    "econ.judgeEnvoy",
+    "econ.reply",
+    "econ.sendHelp",
+    "econ.envoyTick",
+    "events.gangState",
+    "events.regardOf",
+    "events.addRegard",
+    "events.gangSet",
+    "events.gangSync",
+    "events.giftsRecent",
+    "events.giftGain",
+    "events.giftWhy",
+    "events.giveGift",
+    "events.judgeGang",
+    "ai.aiDiplomacy",
+    "ai.allyDuty",
+    "ai.peaceAll",
+    "ai.LEAGUE",
+    "ai.leagueTick",
+    "numbers.NOTICE",
+    "numbers.REL_WORD",
+    "numbers.REGARD",
+    "numbers.GANG",
+    "touch.foeFirst",
+    "numbers.UNIT.envoy",
+    "sprites.LOOKS.envoy",
+    "words.WHY.envoy",
+    "words.TRIGGERS.You hit someone you are at peace with or allied to",
+    "words.TRIGGERS.You send an emissary (Bronze age)",
+    "words.TRIGGERS.An ally"
+   ],
+   "v100": {
+    "shells": [
+     "US5 Envoy (UNIT row envoy)"
+    ],
+    "ticks": [
+     "Envoy (new)"
+    ],
+    "books": [
+     "sides: stances, regard",
+     "measure: NOTICE 30 s, REGARD, LEAGUE 1.4 and 1.15",
+     "sprites: the envoy"
+    ],
+    "laws": [
+     "QCD Danegeld: the n-th gift in the window buys g0 × k^n regard (Mid 38-natives.js, the Danegeld of 991)",
+     "reuse QAF for the envoy's answer"
+    ],
+    "code": [
+     "econ.js: setRel(a, b, stance)",
+     "ai.js: diplomacy by odds"
+    ]
+   },
+   "needs": [
+    "M5",
+    "M6"
+   ],
+   "size": 19930
+  },
+  {
+   "id": "M37",
+   "name": "Vassals and tribute",
+   "what": "A beaten side can surrender as a vassal: it pays tribute, lends soldiers, its loyalty rises and falls, and unrest can turn to rebellion. (No tax: parked.)",
+   "pieces": [
+    "econ.overlordWhy",
+    "econ.offerOverlord",
+    "econ.breakTies",
+    "econ.demandCost",
+    "econ.demandWhy",
+    "econ.demand",
+    "econ.menAt",
+    "econ.tributeWhy",
+    "econ.forceTribute",
+    "econ.levyOf",
+    "econ.levyRoom",
+    "econ.levyWhy",
+    "econ.levy",
+    "econ.releaseLevy",
+    "econ.releaseAll",
+    "econ.vassalsOf",
+    "econ.shareUp",
+    "econ.loyaltyParts",
+    "econ.makeVassal",
+    "econ.surrenderWhy",
+    "econ.demandSurrender",
+    "econ.rebel",
+    "econ.vassalTick",
+    "numbers.VASSAL",
+    "words.investText",
+    "numbers.UNIT.rebel",
+    "words.TRIGGERS.You hold a vassal",
+    "words.TRIGGERS.Unrest reaches 100"
+   ],
+   "v100": {
+    "shells": [
+     "MH6 Rebels (UNIT row rebel)"
+    ],
+    "ticks": [],
+    "books": [
+     "sides: overlord and vassal",
+     "measure: VASSAL (loyalty, unrest, tribute)"
+    ],
+    "laws": [
+     "reuse QP loyalty settles toward its level (N16)"
+    ],
+    "code": [
+     "econ.js: vassals once a beat"
+    ]
+   },
+   "needs": [
+    "M36"
+   ],
+   "size": 13400
+  },
+  {
+   "id": "M38",
+   "name": "The computers' minds",
+   "what": "Each computer has a personality (Raiders, Rivals, Fortress), plans by need for its next goal, mixes the army that best counters yours, saves for ages, and picks when and whom to attack; difficulty changes its mind, never its stores.",
+   "pieces": [
+    "ai.bestCounter",
+    "ai.timeLeft",
+    "ai.rateFrom",
+    "ai.goalOf",
+    "ai.needOf",
+    "ai.runsOut",
+    "ai.famineNear",
+    "ai.PLOTS",
+    "ai.plotPays",
+    "ai.think",
+    "ai.armyCap",
+    "ai.armyAim",
+    "ai.decideWar",
+    "ai.storesOf",
+    "econ.aiEconomy",
+    "econ.DF",
+    "econ.react",
+    "numbers.PERS",
+    "numbers.PLAYERS",
+    "numbers.FORT",
+    "numbers.WAVE",
+    "numbers.SAVE",
+    "numbers.DIFF",
+    "numbers.DIFK",
+    "numbers.EASY_SAFE",
+    "words.TRIGGERS.A computer decides to attack",
+    "words.TRIGGERS.Difficulty"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: PERS, WAVE, SAVE, DIFF, EASY_SAFE (no free mill and farm: Albert 11:16 (6); no surplus selling: 11:16 (5))"
+    ],
+    "laws": [
+     "reuse QV and QW (Charnov) for the by-need plan; QAF and QAH for war"
+    ],
+    "code": [
+     "ai.js: round() replaced by think(side) by personality"
+    ]
+   },
+   "needs": [
+    "M6",
+    "M13",
+    "M15",
+    "M22"
+   ],
+   "size": 34040
+  },
+  {
+   "id": "M39",
+   "name": "Finds, wild guards and drifters",
+   "what": "Guarded finds are taken when their guards fall, wayfarers leave food, robbers raid from their camps, drifters can be hired, and the scout loops the map for treasure.",
+   "pieces": [
+    "combat.wildLeash",
+    "combat.wildTick",
+    "combat.wayfarers",
+    "combat.wayfarerTick",
+    "combat.guardsLeft",
+    "combat.findsTick",
+    "numbers.FINDS",
+    "numbers.WAYFARER_EVERY",
+    "numbers.WILD_LOOK",
+    "world.layCamps",
+    "world.addFind",
+    "ai.lootRun",
+    "econ.hireWhy",
+    "econ.hire",
+    "econ.scoutTick",
+    "events.natRaid",
+    "display.drawFind",
+    "words.WHY.chest",
+    "words.WHY.ruins",
+    "words.WHY.cemetery",
+    "words.WHY.camp",
+    "words.WHY.den",
+    "words.WHY.vagabonds",
+    "words.WHY.wayfarer",
+    "words.TRIGGERS.Finds in the wild",
+    "words.TRIGGERS.Robbers",
+    "words.TRIGGERS.Wayfarers"
+   ],
+   "v100": {
+    "shells": [
+     "MG5 Booty, MG6 Stolen goods; finds: robbers' camp, bear den, trade stop, shrine, drifters' camp, mercenaries, fallen star (MG7–MG13)"
+    ],
+    "ticks": [
+     "Scout (SC18), Wander with a home leash"
+    ],
+    "books": [
+     "measure: FINDS, WAYFARER_EVERY, WILD_LOOK 140"
+    ],
+    "laws": [
+     "reuse QAH a defender fights with probability V/C (N38); QAR the raid's mark (N49); QM arrivals (N12)"
+    ],
+    "code": [
+     "combat.js: wild and finds",
+     "index.html floor \"Floor 3, non-movables\": the finds placed"
+    ]
+   },
+   "needs": [
+    "M5",
+    "M19"
+   ],
+   "size": 25650
+  },
+  {
+   "id": "M40",
+   "name": "Fire",
+   "what": "Wood and thatch catch, fire grows and leaps to neighbours unless wet, summer lightning starts it, villagers put it out, and burning arrows and shot spread it.",
+   "pieces": [
+    "econ.fireHeat",
+    "econ.FIRE_SMOKE",
+    "econ.ignite",
+    "econ.lightning",
+    "econ.fireTick",
+    "numbers.FIRE",
+    "numbers.FIREARMS",
+    "events.rothermel",
+    "events.fireMul",
+    "display.blaze",
+    "display.drawFire",
+    "words.TRIGGERS.A wooden building catches fire"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [
+     "Burn (new: wooden and thatched shells)"
+    ],
+    "books": [
+     "measure: FIRE, FIREARMS",
+     "mass: timber W12 for what burns"
+    ],
+    "laws": [
+     "reuse QT η = 1 − 2.59r + 5.11r² − 3.52r³ (Rothermel 1972, N21)",
+     "reuse QU growth ∝ t², heat to a neighbour ∝ (near/(gap + near))² (Heskestad 1984, N22)",
+     "reuse QL strikes (N11)"
+    ],
+    "code": [
+     "econ.js: fireTick",
+     "index.html floor \"Floor 6, climate\": a strike calls ignite"
+    ]
+   },
+   "needs": [
+    "M10",
+    "M42"
+   ],
+   "size": 5380
+  },
+  {
+   "id": "M41",
+   "name": "Sickness and healing",
+   "what": "Sickness spreads more in summer and winter and less with clean water and quarantine, halves work, and the Hospital and medics cure it.",
+   "pieces": [
+    "econ.sickRisk",
+    "econ.outbreak",
+    "econ.healthTick",
+    "numbers.HEALTH",
+    "tech.MEASURED",
+    "tech.TECH.medicine",
+    "tech.TECH.medschool",
+    "tech.TECH.vaccine",
+    "tech.TECH.bandages",
+    "tech.TECH.herbs",
+    "tech.TECH.hospitals",
+    "tech.TECH.pharmacy",
+    "tech.TECH.quarantine",
+    "tech.TECH.inoculation",
+    "tech.TECH.anatomy",
+    "tech.TECH.surgeons",
+    "tech.TECH.sewers",
+    "tech.TECH.cleanwater",
+    "tech.TECH.plumbing",
+    "tech.TECH.waterworks",
+    "words.WHY.vaccine",
+    "words.WHY.medicine",
+    "words.WHY.medschool",
+    "words.WHY.bandages",
+    "words.WHY.herbs",
+    "words.WHY.hospitals",
+    "words.WHY.pharmacy",
+    "words.WHY.quarantine",
+    "words.WHY.surgeons",
+    "words.WHY.anatomy",
+    "words.WHY.inoculation",
+    "words.WHY.cleanwater",
+    "words.WHY.sewers",
+    "words.WHY.plumbing",
+    "words.WHY.waterworks",
+    "words.WHY.hospital",
+    "words.TRIGGERS.Sickness"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: HEALTH, MEASURED (Alsan & Goldin 2019; Bootsma & Ferguson 2007; Rosenzweig & Udry 2013) with citations N",
+     "tech: hospital, aqueduct, medicine rows"
+    ],
+    "laws": [
+     "reuse QAQ new = βSI/N, recovery γ, quarantine cuts β (Kermack–McKendrick, N47, N48)"
+    ],
+    "code": [
+     "econ.js: healthTick"
+    ]
+   },
+   "needs": [
+    "M14",
+    "M28"
+   ],
+   "size": 11090
+  },
+  {
+   "id": "M42",
+   "name": "Weather, the moon and the sky",
+   "what": "The sky is rolled ahead (for the Weather signs research) with a news line when it turns, the moon has its place, phase and light, the sky band and weather tints show, and the wind is heard.",
+   "pieces": [
+    "events.skyTurn",
+    "events.wxWhy",
+    "numbers.CLIMATE",
+    "numbers.WEATHER",
+    "numbers.WX_EVERY",
+    "numbers.SEASON_LEN",
+    "core.moonVec",
+    "core.moonPhase",
+    "core.moonLight",
+    "display.SKY",
+    "display.drawSky",
+    "display.wxT",
+    "display.WX_TINT",
+    "sound.AMB",
+    "sound.ambience",
+    "tech.TECH.weathersigns",
+    "tech.TECH.meteorology",
+    "words.WHY.weathersigns",
+    "words.WHY.meteorology",
+    "words.TRIGGERS.The weather runs in spells"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: CLIMATE and WEATHER compared with D99–D108 (one set kept), night sight 0.6, the month 29.53 d",
+     "sound: the wind line (kept, Albert 10:27)",
+     "tech: weather signs, meteorology"
+    ],
+    "laws": [
+     "reuse QB true moon (Meeus, N2, N3), QC lit fraction (1 − cos i)/2 (N2), QH the two-state chain (N7)"
+    ],
+    "code": [
+     "index.html floor \"Floor 6, climate\": the moon and the rolled-ahead sky"
+    ]
+   },
+   "needs": [
+    "M1"
+   ],
+   "size": 12410
+  },
+  {
+   "id": "M43",
+   "name": "Lights after dark",
+   "what": "After dark windows, hearths, lanterns and torches glow, their colour from their heat, dimmed by rain, throwing long shadows.",
+   "pieces": [
+    "display.FLAME",
+    "display.LIGHT",
+    "display.kelvinRGB",
+    "display.FLAME_RGB",
+    "display.flameLife",
+    "display.flame",
+    "display.glow",
+    "display.flameShadow",
+    "display.HEARTH",
+    "display.drawLight"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: FLAME (power, kelvin, size), LIGHT"
+    ],
+    "laws": [
+     "reuse QF black-body colour (N4, N5, N54)",
+     "reuse QAU reach ∝ √power, glow ∝ 1/r² (N54)"
+    ],
+    "code": [
+     "index.html floor \"Floor 7, display\": drawLight after drawSky"
+    ]
+   },
+   "needs": [
+    "M42"
+   ],
+   "size": 6610
+  },
+  {
+   "id": "M44",
+   "name": "The ground remembers",
+   "what": "Where people fell, buildings burned, lightning struck or the ground split leaves a mark, and feet wear ruts that deepen the mud.",
+   "pieces": [
+    "display.scarCv",
+    "display.resetScars",
+    "display.wearGround",
+    "display.scarFall",
+    "display.scarStrike",
+    "display.scarCrack",
+    "display.scarBurn",
+    "events.ruts",
+    "events.rutsAt",
+    "events.rutsOn",
+    "events.rutHeal",
+    "events.rutOf",
+    "events.mudAt",
+    "words.TRIGGERS.The ground remembers",
+    "words.TRIGGERS.The ground remembers the weather"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: ruts' counts and healing",
+     "colours: scars"
+    ],
+    "laws": [
+     "reuse QS depth ∝ passes^0.4 (Bekker 1960, N20); healing by QP"
+    ],
+    "code": [
+     "index.html floor \"drawn once in the view frame\": the scar layer"
+    ]
+   },
+   "needs": [
+    "M17"
+   ],
+   "size": 4440
+  },
+  {
+   "id": "M45",
+   "name": "Floods, ripples and rain rings",
+   "what": "Lakes rise over the shore in a flood (waded where there are levees), and ripples and rain rings show on the water and ground.",
+   "pieces": [
+    "world.inFlood",
+    "world.lakeGrid",
+    "display.drawFlood",
+    "display.drawLakeRipples",
+    "display.drawRainRings",
+    "tech.TECH.levees",
+    "words.WHY.levees"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: the flood's rise",
+     "tech: levees"
+    ],
+    "laws": [
+     "none new"
+    ],
+    "code": [
+     "index.html floor \"Floor 6, climate\": KI4 Flood",
+     "floor \"Floor 5, movables\": walkable reads the flood"
+    ]
+   },
+   "needs": [
+    "M42"
+   ],
+   "size": 3980
+  },
+  {
+   "id": "M46",
+   "name": "Sight",
+   "what": "A building sees further the taller it is, night, fog and snow shorten sight, woods block it, and another side's buildings show only where seen.",
+   "pieces": [
+    "core.lookout",
+    "core.sightFx",
+    "core.sightClear",
+    "core.visCap",
+    "core.sightOf",
+    "numbers.LOOKOUT",
+    "display.WOODS",
+    "display.woodsGrid",
+    "display.openLine",
+    "display.knownB",
+    "words.TRIGGERS.Fog of war"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: LOOKOUT 60 + 24√h (Mid's, 10:31)"
+    ],
+    "laws": [
+     "reuse QAL a + b√h (N41)",
+     "reuse QAM grid line of sight, woods block (N42)",
+     "reuse QK V = 3.912/β (Koschmieder, N10)"
+    ],
+    "code": [
+     "index.html floor \"Floor 7, display\": the fog reads sightOf"
+    ]
+   },
+   "needs": [
+    "M42"
+   ],
+   "size": 4820
+  },
+  {
+   "id": "M47",
+   "name": "The camera's glide and Follow",
+   "what": "The camera glides to a point instead of jumping, and Follow keeps your picked units in the middle.",
+   "pieces": [
+    "display.spring",
+    "display.CAM_W",
+    "display.camGo",
+    "display.camStop",
+    "display.followCam"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: CAM_W ω 9"
+    ],
+    "laws": [
+     "reuse QAW critically damped spring (N57)"
+    ],
+    "code": [
+     "index.html floor \"the view\""
+    ]
+   },
+   "needs": [],
+   "size": 1630
+  },
+  {
+   "id": "M48",
+   "name": "Theatrics",
+   "what": "Ripples where you tap, sparks where blows land, a finished building swells and settles, and a pale flash and celebration for a new age, a wonder or a victory.",
+   "pieces": [
+    "display.RIPS",
+    "display.ripple",
+    "display.ripDraw",
+    "display.popC",
+    "display.celebrate",
+    "display.drawFlash"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: the pop, the flash, the ripple's life"
+    ],
+    "laws": [],
+    "code": [
+     "index.html floor \"Floor 7, display\""
+    ]
+   },
+   "needs": [],
+   "size": 1410
+  },
+  {
+   "id": "M49",
+   "name": "Building and figure dressing",
+   "what": "Buildings show sites rising, health, chimney smoke, flags and the camp's piles; figures lean into work, step, lunge and show marks; trees and rocks throw shadows.",
+   "pieces": [
+    "display.drawBld",
+    "display.CHIMNEY",
+    "display.smoke",
+    "display.flagsOn",
+    "display.PILE",
+    "display.pileAt",
+    "display.pileArt",
+    "display.LEAN",
+    "display.drawUnit",
+    "display.idleMark",
+    "display.shadowPath",
+    "sprites.NODE_H",
+    "sprites.FLAGS",
+    "sprites.bldSprite"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "sprites: piles, chimneys, flag slots, the variant chooser as Sprite entries (no kind checks)",
+     "measure: NODE_H"
+    ],
+    "laws": [
+     "reuse QAV smoke rise ∝ x^(2/3) (N55, N56), one fixed lean (wind cut)",
+     "reuse QAT shadow length = h·cot(alt) (N53)"
+    ],
+    "code": [
+     "index.html floor \"the things drawn each frame\""
+    ]
+   },
+   "needs": [
+    "M13"
+   ],
+   "size": 22830
+  },
+  {
+   "id": "M50",
+   "name": "The ground picture and the rim",
+   "what": "The grass is mottled, roads show a worn track, and past the edge the sea, cliffs and (held) sky are drawn.",
+   "pieces": [
+    "display.makeBg",
+    "display.RIMC",
+    "display.drawRim"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "colours: mottling, worn track, rim"
+    ],
+    "laws": [],
+    "code": [
+     "index.html floor \"drawn once in the view frame\""
+    ]
+   },
+   "needs": [],
+   "size": 10150
+  },
+  {
+   "id": "M51",
+   "name": "The small map and map labels",
+   "what": "A small map you tap to jump to and drag to sweep, marking armies coming, and words on the map that scale with the zoom.",
+   "pieces": [
+    "display.miniIncoming",
+    "display.MINI_K",
+    "display.drawMini",
+    "touch.miniAt",
+    "display.labelK",
+    "display.mapFont",
+    "display.tag"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: MINI_K, the label floor",
+     "screen: the map font"
+    ],
+    "laws": [],
+    "code": [
+     "index.html floor \"Floor 7, display\"",
+     "menu.js: the small map's cell"
+    ]
+   },
+   "needs": [
+    "M46"
+   ],
+   "size": 6200
+  },
+  {
+   "id": "M52",
+   "name": "The draw budget and Reduce motion",
+   "what": "A phone that falls behind sheds cosmetic drawing in a set order and climbs back, and the player can turn the moving extras off.",
+   "pieces": [
+    "sprites.lessMotion",
+    "sprites.DRAW",
+    "sprites.still",
+    "sprites.trim",
+    "start.shed"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: DRAW order, the shed thresholds"
+    ],
+    "laws": [],
+    "code": [
+     "index.html floor \"the things\": the governor; the sprite cache frees memory"
+    ]
+   },
+   "needs": [],
+   "size": 1530
+  },
+  {
+   "id": "M53",
+   "name": "Events and the hazards setting",
+   "what": "Storms, stampedes, floods, falling stars, wildfires, fog, sinkholes, quicksand, heatwaves, a merchant wagon, mercenaries, the horde and the rest come one at a time with a warning, by the hazards switched on.",
+   "pieces": [
+    "events.EVM",
+    "events.KNOBS",
+    "events.evmSet",
+    "events.hz",
+    "events.levelOf",
+    "events.levelMul",
+    "events.evOn",
+    "events.edgeSpot",
+    "events.across",
+    "events.wildSpot",
+    "events.canEv",
+    "events.pickEvent",
+    "events.crossing",
+    "events.herdAt",
+    "events.EV",
+    "events.crackAt",
+    "events.startEvent",
+    "events.endEvent",
+    "events.eventsTick",
+    "events.hordeTick",
+    "events.herdTick",
+    "numbers.EV_MEAN",
+    "numbers.EVENTS",
+    "numbers.EVK",
+    "numbers.HAZARDS",
+    "numbers.HZK",
+    "display.drawCracks",
+    "display.drawEvents",
+    "display.drawSand",
+    "words.EV_WHY",
+    "words.EV_TEXT",
+    "numbers.UNIT.wagon",
+    "numbers.UNIT.performer",
+    "sprites.LOOKS.performer",
+    "words.WHY.mercs",
+    "words.WHY.meteor"
+   ],
+   "v100": {
+    "shells": [
+     "MH2 Hordes; the event wagon and performers (UNIT rows wagon, performer)"
+    ],
+    "ticks": [],
+    "books": [
+     "events (new section of measure, or a book): EV rows, EV_MEAN, HAZARDS",
+     "words: EV_WHY, EV_TEXT",
+     "sprites: performer"
+    ],
+    "laws": [
+     "reuse QM wait = −mean·ln U (Poisson 1837, N12); QAR the pick (N49)"
+    ],
+    "code": [
+     "index.html floor \"Floor 6, climate\": the scheduler once a second"
+    ]
+   },
+   "needs": [
+    "M1",
+    "M39",
+    "M42"
+   ],
+   "size": 27370
+  },
+  {
+   "id": "M55",
+   "name": "Peace, the Games and the crowns",
+   "what": "A year of peace across the board opens the hidden Enlightenment age; at peace soldiers go home; the Games are held under a truce; three crowns (Wealth, War, Wellbeing) are awarded.",
+   "pieces": [
+    "events.PEACE",
+    "events.CARE",
+    "events.bestOf",
+    "events.truceAll",
+    "events.truceFor",
+    "events.ageOpen",
+    "events.nextAge",
+    "events.peaceTick",
+    "events.standDown",
+    "events.holdGames",
+    "events.crownsOf",
+    "events.CROWN_NAME",
+    "events.enlightenTick",
+    "events.chaseCrown",
+    "combat.warCredit",
+    "tech.TECH.method",
+    "tech.TECH.fourcourse",
+    "tech.TECH.encyclopedia",
+    "tech.TECH.schooling",
+    "words.WHY.age5",
+    "words.WHY.method",
+    "words.WHY.fourcourse",
+    "words.WHY.encyclopedia",
+    "words.WHY.schooling",
+    "words.TRIGGERS.The whole board is at peace",
+    "words.TRIGGERS.The Games",
+    "words.TRIGGERS.The crowns"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: PEACE (truce price, stand-down, the hidden age)",
+     "words: crown names",
+     "tech: the Enlightenment rows"
+    ],
+    "laws": [
+     "reuse QAR the Games: p_i = b_i² / Σ b² (each side's best squared, Mid)"
+    ],
+    "code": [
+     "econ.js: peaceTick"
+    ]
+   },
+   "needs": [
+    "M13",
+    "M36"
+   ],
+   "size": 11540
+  },
+  {
+   "id": "M56",
+   "name": "Mail, news and messengers",
+   "what": "Messages are grouped and merged, news from out of sight arrives late by messenger from its direction, the age's world news, and the match's chronicle.",
+   "pieces": [
+    "menu.MSG",
+    "menu.GROUPS",
+    "menu.QUIET",
+    "menu.urgentCls",
+    "menu.ccOf",
+    "menu.hiddenG",
+    "menu.news",
+    "menu.DIR8",
+    "menu.tell",
+    "menu.postTick",
+    "menu.say",
+    "menu.hushKey",
+    "numbers.TELL",
+    "events.newsTick",
+    "events.chron",
+    "words.NEWS",
+    "tech.TECH.runners",
+    "tech.TECH.royalroad",
+    "tech.TECH.yam",
+    "tech.TECH.postal",
+    "tech.TECH.sheets",
+    "words.WHY.runners",
+    "words.WHY.royalroad",
+    "words.WHY.yam",
+    "words.WHY.postal",
+    "words.WHY.sheets",
+    "words.TRIGGERS.Messages and sound",
+    "words.TRIGGERS.How news reaches you"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: MSG (4 s, merged within 30 s, 30 kept), TELL foot and ride",
+     "words: NEWS",
+     "tech: the post rows"
+    ],
+    "laws": [
+     "QCH Messenger: delay = walked length (QBL) ÷ the courier's speed, foot or ride (Mid TELL; measured 15% longer than the crow's line, Build 60)"
+    ],
+    "code": [
+     "menu.js: say() replaces toast()"
+    ]
+   },
+   "needs": [
+    "M7",
+    "M46"
+   ],
+   "size": 10530
+  },
+  {
+   "id": "M57",
+   "name": "Tips and milestones",
+   "what": "Fourteen teaching milestones fire once each, a tip names the next thing to do, and a hint learned three times is not shown again.",
+   "pieces": [
+    "menu.MS_TEST",
+    "menu.msFill",
+    "menu.milestoneTick",
+    "menu.goldTight",
+    "menu.NEEDS",
+    "menu.advise",
+    "menu.L",
+    "menu.learn",
+    "menu.learnAct",
+    "words.MS_TEXT"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "words: MS_TEXT (names from shells.js)"
+    ],
+    "laws": [],
+    "code": [
+     "menu.js: milestones"
+    ]
+   },
+   "needs": [
+    "M56"
+   ],
+   "size": 9470
+  },
+  {
+   "id": "M58",
+   "name": "The civilisations",
+   "what": "Six peoples (Roman, Han, Persian, Mongol, Maurya, Mali), each with its own unit, a small bonus, a wonder, a hall and research.",
+   "pieces": [
+    "tech.CIVS",
+    "tech.CIVK",
+    "core.civOf",
+    "core.civKind",
+    "core.baseKind",
+    "sprites.elephant",
+    "words.TITLE_SHORT",
+    "tech.TECH.viamil",
+    "tech.TECH.horrea",
+    "tech.TECH.castra",
+    "tech.TECH.trigger",
+    "tech.TECH.changping",
+    "tech.TECH.taixue",
+    "tech.TECH.persianroad",
+    "tech.TECH.immortals",
+    "tech.TECH.mongolyam",
+    "tech.TECH.mongolremounts",
+    "tech.TECH.tumen",
+    "tech.TECH.hastin",
+    "tech.TECH.pataliputra",
+    "tech.TECH.bambuk",
+    "tech.TECH.saltroad",
+    "tech.TECH.sankore",
+    "tech.TECH.elite_roman",
+    "tech.TECH.elite_han",
+    "tech.TECH.elite_persian",
+    "tech.TECH.elite_mongol",
+    "tech.TECH.elite_maurya",
+    "tech.TECH.elite_mali",
+    "sprites.LOOKS.legion",
+    "sprites.LOOKS.immortal",
+    "sprites.LOOKS.chariot",
+    "sprites.LOOKS.malihorse",
+    "sprites.LOOKS.harcher",
+    "sprites.LOOKS.elephant",
+    "sprites.ART.hall",
+    "sprites.ART.wonder",
+    "sprites.WONDERART.han",
+    "sprites.WONDERART.persian",
+    "sprites.WONDERART.mongol",
+    "sprites.WONDERART.maurya",
+    "sprites.WONDERART.mali",
+    "words.WHY.viamil",
+    "words.WHY.horrea",
+    "words.WHY.castra",
+    "words.WHY.trigger",
+    "words.WHY.changping",
+    "words.WHY.taixue",
+    "words.WHY.satrapy",
+    "words.WHY.immortals",
+    "words.WHY.persianroad",
+    "words.WHY.mongolyam",
+    "words.WHY.mongolremounts",
+    "words.WHY.tumen",
+    "words.WHY.sixth",
+    "words.WHY.hastin",
+    "words.WHY.pataliputra",
+    "words.WHY.bambuk",
+    "words.WHY.saltroad",
+    "words.WHY.sankore",
+    "words.WHY.hanxbow",
+    "words.WHY.legion",
+    "words.WHY.immortal",
+    "words.WHY.mongolha",
+    "words.WHY.mauryael",
+    "words.WHY.malihorse",
+    "words.WHY.elite_roman",
+    "words.WHY.elite_han",
+    "words.WHY.elite_persian",
+    "words.WHY.elite_mongol",
+    "words.WHY.elite_maurya",
+    "words.WHY.elite_mali",
+    "words.WHY.wonder:roman",
+    "words.WHY.wonder:han",
+    "words.WHY.wonder:persian",
+    "words.WHY.wonder:mongol",
+    "words.WHY.wonder:maurya",
+    "words.WHY.wonder:mali",
+    "words.WHY.bonus:roman",
+    "words.WHY.bonus:han",
+    "words.WHY.bonus:persian",
+    "words.WHY.bonus:mongol",
+    "words.WHY.bonus:maurya",
+    "words.WHY.bonus:mali"
+   ],
+   "v100": {
+    "shells": [
+     "the six unique units as Unit kind rows (a common kind's settings with a few changed)"
+    ],
+    "ticks": [],
+    "books": [
+     "tech: the Hall rows and the six elite steps",
+     "sprites: legionary, Immortal, chariot, horse archer, war elephant, Mali horseman; the hall and Wonder fronts",
+     "words: civ history lines"
+    ],
+    "laws": [
+     "QCA applies each bonus"
+    ],
+    "code": [
+     "econ.js: kind for a side reads its civ"
+    ]
+   },
+   "needs": [
+    "M13",
+    "M18"
+   ],
+   "size": 27280
+  },
+  {
+   "id": "M59",
+   "name": "The Throne and the Natives",
+   "what": "The Throne on its island, its Native guards, the traps on the causeways, the raids and the win by holding it. Waits for Albert's reimagined Throne.",
+   "pieces": [
+    "events.throneB",
+    "events.natState",
+    "events.gunAge",
+    "events.garrisonMax",
+    "events.natSpawn",
+    "events.throneHold",
+    "events.takeThrone",
+    "events.layTraps",
+    "events.nativesTick",
+    "numbers.NATIVE",
+    "numbers.THRONE",
+    "numbers.LAKE0",
+    "world.makeCitadel",
+    "ai.throneRun",
+    "numbers.UNIT.native",
+    "numbers.UNIT.nativebow",
+    "sprites.LOOKS.native",
+    "sprites.LOOKS.nativebow",
+    "words.WHY.throne",
+    "words.WHY.shrine",
+    "words.TRIGGERS.The shrine",
+    "words.TRIGGERS.The Natives and the Throne",
+    "words.TRIGGERS.The Throne",
+    "menu.BLD_PAGE.throne",
+    "menu.PLAY.shrine"
+   ],
+   "v100": {
+    "shells": [
+     "MN1 Native warrior, MN2 Native bowman (UNIT rows)"
+    ],
+    "ticks": [],
+    "books": [
+     "measure: NATIVE, THRONE, LAKE0",
+     "sprites: natives"
+    ],
+    "laws": [],
+    "code": [
+     "held: index.html floor \"Floor 2, terrain\" (the middle) once described"
+    ]
+   },
+   "needs": [
+    "M32",
+    "M36",
+    "M39"
+   ],
+   "size": 12930
+  },
+  {
+   "id": "M60",
+   "name": "The map's character",
+   "what": "Each map has land kinds rich in one store, home finds laid in reach, room behind a home, no water at the Town Center, and no find walled in by trees.",
+   "pieces": [
+    "world.makeMap",
+    "world.openWays",
+    "world.wayHome",
+    "numbers.LAND",
+    "numbers.LANDK",
+    "numbers.CLEAR",
+    "numbers.HOME",
+    "numbers.BACK_MARGIN",
+    "numbers.WATER"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: LAND, CLEAR, HOME, BACK_MARGIN; WATER compared with D24–D35"
+    ],
+    "laws": [
+     "reuse QAZ, QBA, QBB (Mandelbrot, Leopold) where Mid's water matches v100's; QBL for the way home"
+    ],
+    "code": [
+     "index.html floor \"Floor 3, non-movables\": the character rolled by the Randomizer (L13)"
+    ]
+   },
+   "needs": [
+    "M1"
+   ],
+   "size": 13060
+  },
+  {
+   "id": "M61",
+   "name": "New game, modes and scenarios",
+   "what": "A new game's sides and starting layout, the day's challenge, the four scenarios (Open, Siege, Silk Road, Last Keep), and Albert's test field.",
+   "pieces": [
+    "world.mkPlayer",
+    "world.newGame",
+    "world.applyScenario",
+    "world.layMovers",
+    "core.todaySeed",
+    "core.MODES",
+    "numbers.SCENARIOS",
+    "words.SCEN_TEXT",
+    "start.TEST_FIELD",
+    "start.testField",
+    "econ.initEconomy",
+    "words.TRIGGERS.You start a game"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: SCENARIOS",
+     "words: SCEN_TEXT"
+    ],
+    "laws": [],
+    "code": [
+     "index.html floor \"the door\": start(mode, scenario)"
+    ]
+   },
+   "needs": [
+    "M13",
+    "M60"
+   ],
+   "size": 13690
+  },
+  {
+   "id": "M62",
+   "name": "Saving",
+   "what": "The game saves itself every 10 seconds and on leaving, keeps the save before as a backup, waits out a battle, and opens again where you left off; v100 starts fresh.",
+   "pieces": [
+    "save.SAVEKEY",
+    "save.MIGRATE",
+    "save.evSave",
+    "save.staleSave",
+    "save.SKIP_U",
+    "save.cardLocked",
+    "save.freshSlate",
+    "save.holdSave",
+    "save.inFight",
+    "save.fightHold",
+    "save.saveFailT",
+    "save.saveGame",
+    "save.readSave",
+    "save.keepAside",
+    "save.migrateChain",
+    "save.clearSave",
+    "save.loadGame",
+    "core.SET",
+    "core.PLACE",
+    "core.saveSet",
+    "words.TRIGGERS.The game saves itself",
+    "menu.CARDS.resume"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: the 10 s, the battle wait"
+    ],
+    "laws": [],
+    "code": [
+     "index.html floor \"the door\": save()/load() of v100's own state; MIGRATE's way kept, Mid's steps not needed (Albert 11:16 (8))"
+    ]
+   },
+   "needs": [],
+   "size": 30130
+  },
+  {
+   "id": "M63",
+   "name": "The safety net and test tools",
+   "what": "An error costs a frame, never the game; the match log for Claude to read; copying to the clipboard; tap counts; the 33-button budget for the gate.",
+   "pieces": [
+    "start.seenErr",
+    "start.fault",
+    "start.clip",
+    "menu.matchLog",
+    "menu.matchLogText",
+    "menu.copyLog",
+    "menu.fallbackCopy",
+    "menu.TAPS",
+    "menu.tapCount",
+    "numbers.UI_BUDGET",
+    "menu.CARDS.fault",
+    "menu.CARDS.taps",
+    "menu.ACT.copylog"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "rules: UI_BUDGET as a gate rule (X)"
+    ],
+    "laws": [],
+    "code": [
+     "index.html floor \"the door\": fault()"
+    ]
+   },
+   "needs": [
+    "M62"
+   ],
+   "size": 15760
+  },
+  {
+   "id": "M64",
+   "name": "Touch: picking many and the obvious order",
+   "what": "Hold to pick more or draw a box, double tap for the card, and a tap gives the obvious order for what is picked (attack, hunt, gather, build, mend, walk).",
+   "pieces": [
+    "touch.drag",
+    "touch.HOLD_MS",
+    "touch.holdT",
+    "touch.holdStop",
+    "touch.dropDrag",
+    "touch.hitAt",
+    "touch.lastTap",
+    "touch.tapAt",
+    "touch.picked",
+    "touch.pickObj",
+    "touch.setPick",
+    "touch.pickToggle",
+    "touch.order",
+    "touch.boxPick",
+    "menu.lpT",
+    "menu.lpStop",
+    "display.drawTouch"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "measure: HOLD_MS 320, ring 250, double tap 320, hit 16 and 24 px"
+    ],
+    "laws": [],
+    "code": [
+     "index.html floor \"touch\"",
+     "menu.js: tap() and FK.sel as a list"
+    ]
+   },
+   "needs": [
+    "M8",
+    "M22"
+   ],
+   "size": 12520
+  },
+  {
+   "id": "M65",
+   "name": "History and the Guide (words)",
+   "what": "The Guide written from the tables (when, then, why), each research's and building's history line, and History as a searchable list.",
+   "pieces": [
+    "menu.guideModel",
+    "menu.HIST_NOTE",
+    "menu.HIST_ASK",
+    "menu.yearOf",
+    "menu.histRows",
+    "menu.histText",
+    "menu.guideMd",
+    "words.SONG",
+    "words.WHY.keep",
+    "words.WHY.town",
+    "words.WHY.house",
+    "words.WHY.apartment",
+    "words.WHY.aqueduct",
+    "words.WHY.mill",
+    "words.WHY.lumber",
+    "words.WHY.mining",
+    "words.WHY.barracks",
+    "words.WHY.range",
+    "words.WHY.stable",
+    "words.WHY.smith",
+    "words.WHY.siege",
+    "words.WHY.library",
+    "words.WHY.hall",
+    "words.WHY.store",
+    "words.WHY.baths",
+    "words.WHY.theatre",
+    "words.WHY.tavern",
+    "words.WHY.quarry",
+    "words.WHY.vil",
+    "words.WHY.scout",
+    "words.TRIGGERS.You order a unit and the town is full",
+    "words.TRIGGERS.Room",
+    "words.TRIGGERS.The song"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "words: WHY and TRIGGERS rows for what v100 already has; numbers read from the books, names from shells.js"
+    ],
+    "laws": [],
+    "code": [
+     "menu.js: guide() reads the books"
+    ]
+   },
+   "needs": [
+    "M7",
+    "M13"
+   ],
+   "size": 11260
+  },
+  {
+   "id": "M66",
+   "name": "Menu: the frame",
+   "what": "The top bar's pause and speeds, the reading cards that pause the game, the icons, card heights, the explanations behind the book icon, and the screen's refresh.",
+   "pieces": [
+    "menu.paceBtn",
+    "menu.setPause",
+    "menu.READ_CARDS",
+    "menu.cardPK",
+    "menu.cardPause",
+    "menu.ui",
+    "menu.AGE_SHORT",
+    "menu.STATUS",
+    "menu.ICON",
+    "menu.FULL",
+    "menu.SIZE_OF",
+    "menu.openCard",
+    "menu.pager",
+    "menu.FOLD",
+    "menu.INFO",
+    "menu.infoBuf",
+    "menu.fold",
+    "start.spdPop",
+    "core.clock",
+    "words.TRIGGERS.The screen",
+    "menu.CARDS.info",
+    "menu.CARDS.box",
+    "menu.ACT.pause",
+    "menu.ACT.spd",
+    "menu.ACT.cardback",
+    "menu.ACT.vibe",
+    "menu.ACT.lights",
+    "menu.ACT.cardpause",
+    "menu.ACT.qlock"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "screen: SN5 play cell, SN6 readings placed, card heights",
+     "measure: the speeds"
+    ],
+    "laws": [],
+    "code": [
+     "menu.js render()"
+    ]
+   },
+   "needs": [
+    "M56"
+   ],
+   "size": 28530
+  },
+  {
+   "id": "M67",
+   "name": "Menu: the subject cards",
+   "what": "The card of a unit, a building or a find: what it is doing, its life, a find's math, the train cells and queue, and the orders it takes.",
+   "pieces": [
+    "menu.statusOf",
+    "menu.lifeText",
+    "menu.yieldText",
+    "menu.bonusText",
+    "menu.fxName",
+    "menu.slotText",
+    "menu.qName",
+    "menu.whoIs",
+    "menu.factOf",
+    "menu.slotsHTML",
+    "menu.trainButtons",
+    "menu.unitLine",
+    "menu.VS_WORD",
+    "menu.beatsText",
+    "menu.CARDS.bld",
+    "menu.CARDS.find",
+    "menu.CARDS.unit",
+    "menu.CARDS.node",
+    "menu.BLD_PAGE.castle",
+    "menu.BLD_PAGE.school",
+    "menu.BLD_PAGE.farm",
+    "menu.BLD_PAGE.treefarm",
+    "menu.BLD_PAGE.pasture",
+    "menu.ACT.wundo",
+    "menu.ACT.buildrow",
+    "menu.ACT.seek",
+    "menu.ACT.bldgo",
+    "menu.ACT.jump",
+    "menu.PLAY.sendvil",
+    "menu.PLAY.sendout",
+    "menu.PLAY.vfocus",
+    "menu.PLAY.vhome",
+    "menu.PLAY.replant",
+    "menu.PLAY.replantall",
+    "menu.PLAY.boxcut",
+    "menu.PLAY.unpick",
+    "menu.PLAY.pjob",
+    "menu.PLAY.pbuild",
+    "menu.PLAY.phold",
+    "menu.PLAY.precall",
+    "menu.PLAY.pvil",
+    "menu.PLAY.pteach",
+    "menu.PLAY.teach",
+    "menu.PLAY.qcancel",
+    "menu.PLAY.douse",
+    "menu.PLAY.hunt3",
+    "menu.PLAY.hunt",
+    "menu.PLAY.repair",
+    "menu.PLAY.takedown",
+    "menu.PLAY.tech",
+    "menu.PLAY.vjob",
+    "menu.PLAY.vgo",
+    "menu.PLAY.dismiss",
+    "menu.PLAY.sab",
+    "menu.PLAY.hire",
+    "menu.PLAY.zeal"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "screen: SN4 card rows by tick"
+    ],
+    "laws": [],
+    "code": [
+     "menu.js ROWS"
+    ]
+   },
+   "needs": [
+    "M66",
+    "M18",
+    "M8",
+    "M10"
+   ],
+   "size": 27490
+  },
+  {
+   "id": "M68",
+   "name": "Menu: research",
+   "what": "The Research card: every step ready, short, busy or locked and why, and the whole tree behind the Hall's book.",
+   "pieces": [
+    "menu.techState",
+    "menu.lockedWhy",
+    "menu.techBtn",
+    "menu.researchHTML",
+    "menu.keepMoreHTML",
+    "menu.techBook",
+    "menu.ownTech",
+    "menu.CARDS.research",
+    "menu.ACT.techgo"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "screen: the Research page"
+    ],
+    "laws": [],
+    "code": [
+     "menu.js"
+    ]
+   },
+   "needs": [
+    "M66",
+    "M13"
+   ],
+   "size": 7510
+  },
+  {
+   "id": "M69",
+   "name": "Menu: the War page",
+   "what": "The War rows working: squads at home and out, intents, the Attack-with card, the Director, the Alarm, Choke and Ambush and idle soldiers, the odds line.",
+   "pieces": [
+    "menu.jobsPage",
+    "menu.stationPage",
+    "menu.idleSoldiers",
+    "menu.intentsHTML",
+    "menu.squadHomeHTML",
+    "menu.squadOutHTML",
+    "menu.YARD_LIST",
+    "menu.wxWord",
+    "menu.paceWord",
+    "menu.foeNearest",
+    "menu.knownPower",
+    "menu.oddsText",
+    "combat.qsHTML",
+    "combat.dialBtns",
+    "words.TRIGGERS.The row, the squads and pausing",
+    "menu.CARDS.troops",
+    "menu.BLD_PAGE.council",
+    "menu.ACT.idlego",
+    "menu.ACT.ordpick",
+    "menu.ACT.pfollow",
+    "menu.PLAY.sel",
+    "menu.PLAY.emg",
+    "menu.PLAY.emgstop",
+    "menu.PLAY.tok",
+    "menu.PLAY.intent",
+    "menu.PLAY.direct",
+    "menu.PLAY.directh",
+    "menu.PLAY.ytool",
+    "menu.PLAY.choketool",
+    "menu.PLAY.ambushtool",
+    "menu.PLAY.kidle",
+    "menu.PLAY.sqpk",
+    "menu.PLAY.sqcancel",
+    "menu.PLAY.sqsave",
+    "menu.PLAY.wsq",
+    "menu.PLAY.sqcard",
+    "menu.PLAY.qsword",
+    "menu.PLAY.qclose",
+    "menu.PLAY.sqsetup",
+    "menu.PLAY.wfire",
+    "menu.PLAY.hdel",
+    "menu.PLAY.hudrein",
+    "menu.PLAY.qsfrom",
+    "menu.PLAY.qsn",
+    "menu.PLAY.qgo",
+    "menu.PLAY.qatk",
+    "menu.PLAY.qfoe",
+    "menu.PLAY.muster",
+    "menu.PLAY.shape",
+    "menu.PLAY.temper",
+    "menu.PLAY.look",
+    "menu.PLAY.pcharge",
+    "menu.PLAY.pfall",
+    "menu.PLAY.charge",
+    "menu.PLAY.fallback",
+    "menu.PLAY.scoutgo",
+    "menu.PLAY.attack",
+    "menu.PLAY.ransom",
+    "menu.PLAY.stand",
+    "menu.PLAY.guard",
+    "menu.PLAY.unguard",
+    "words.ROW_WORD.orders",
+    "words.ROW_WORD.army",
+    "words.ROW_WORD.pace",
+    "words.ROW_WORD.idle",
+    "words.ROW_WORD.ambush",
+    "words.ROW_WORD.choke"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "screen: War page rows; how four kinds sit on six slots"
+    ],
+    "laws": [],
+    "code": [
+     "menu.js warBase()"
+    ]
+   },
+   "needs": [
+    "M66",
+    "M22",
+    "M23",
+    "M24",
+    "M25"
+   ],
+   "size": 22660
+  },
+  {
+   "id": "M70",
+   "name": "Menu: Relations and vassals",
+   "what": "The Relations and Misfits tabs (who, where they stand, the gift, the three stances) and a vassal's page.",
+   "pieces": [
+    "menu.relSides",
+    "menu.relKey",
+    "menu.relLord",
+    "menu.relName",
+    "menu.stanceOff",
+    "menu.relOf",
+    "menu.giftLock",
+    "menu.relDraft",
+    "menu.relPickOf",
+    "menu.relRow",
+    "menu.relStatus",
+    "menu.relHTML",
+    "menu.vassalHTML",
+    "menu.slt",
+    "menu.PLAY.relwant",
+    "menu.PLAY.relgift",
+    "menu.PLAY.relon",
+    "menu.PLAY.relok",
+    "menu.PLAY.breakties",
+    "menu.PLAY.demand",
+    "menu.PLAY.tribute",
+    "menu.PLAY.levy",
+    "menu.PLAY.release",
+    "menu.PLAY.surrender",
+    "menu.PLAY.overlord"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "screen: Relations page on the Hall"
+    ],
+    "laws": [],
+    "code": [
+     "menu.js"
+    ]
+   },
+   "needs": [
+    "M66",
+    "M36",
+    "M37"
+   ],
+   "size": 12170
+  },
+  {
+   "id": "M71",
+   "name": "Menu: Market, workshops, trade and stores",
+   "what": "The Market's card (sell, buy, ventures), a workshop's card, a trade stop's and a caravan's route card, the stores card, and the guards row.",
+   "pieces": [
+    "menu.marketPage",
+    "menu.workshopPage",
+    "menu.stopHTML",
+    "menu.caravanHTML",
+    "menu.goodsText",
+    "combat.guardRow",
+    "menu.CARDS.stores",
+    "menu.BLD_PAGE.tpost",
+    "menu.BLD_PAGE.market",
+    "menu.BLD_PAGE.mint",
+    "menu.ACT.storesk",
+    "menu.PLAY.mpick",
+    "menu.PLAY.sellat",
+    "menu.PLAY.debase",
+    "menu.PLAY.venture",
+    "menu.PLAY.tpost",
+    "menu.PLAY.want",
+    "menu.PLAY.route",
+    "menu.PLAY.make",
+    "menu.PLAY.routeto",
+    "menu.PLAY.rrep",
+    "menu.PLAY.rsp",
+    "menu.PLAY.rclr",
+    "menu.PLAY.trade"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "screen: the market, workshop, stop, caravan and stores pages"
+    ],
+    "laws": [],
+    "code": [
+     "menu.js"
+    ]
+   },
+   "needs": [
+    "M66",
+    "M33",
+    "M34",
+    "M35"
+   ],
+   "size": 13020
+  },
+  {
+   "id": "M72",
+   "name": "Menu: Mail and the preview",
+   "what": "The Mail card with its filters, the newest line under the top bar, and where a message's tap goes.",
+   "pieces": [
+    "menu.MAIL_FILTERS",
+    "menu.linkOf",
+    "menu.shownMsg",
+    "menu.preview",
+    "menu.CARDS.mail",
+    "menu.ACT.msgs",
+    "menu.ACT.news",
+    "menu.ACT.pvx",
+    "menu.ACT.pvhide",
+    "menu.ACT.pvkeep",
+    "menu.ACT.mail",
+    "menu.ACT.mailg",
+    "menu.ACT.chronp",
+    "menu.ACT.mailp",
+    "menu.ACT.mailtog",
+    "menu.ACT.mailall"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "screen: Mail page"
+    ],
+    "laws": [],
+    "code": [
+     "menu.js"
+    ]
+   },
+   "needs": [
+    "M66",
+    "M56"
+   ],
+   "size": 5440
+  },
+  {
+   "id": "M73",
+   "name": "Menu: Guide, History and Help",
+   "what": "The Guide's pages, History searchable, Help, and the tips and milestones cards.",
+   "pieces": [
+    "menu.guideHTML",
+    "menu.histHTML",
+    "menu.CARDS.milestone",
+    "menu.CARDS.guide",
+    "menu.CARDS.help",
+    "menu.ACT.help",
+    "menu.ACT.guide",
+    "menu.ACT.copy",
+    "menu.ACT.copyhist",
+    "menu.ACT.tips"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "screen: Guide and History pages"
+    ],
+    "laws": [],
+    "code": [
+     "menu.js"
+    ]
+   },
+   "needs": [
+    "M66",
+    "M65",
+    "M57"
+   ],
+   "size": 9330
+  },
+  {
+   "id": "M74",
+   "name": "Menu: Start, settings and the end",
+   "what": "The Start page's settings and their whys (difficulty, tension, hazards, scenario, civ), the end card (Victory, Defeat, Again, Free play, Next), the score and crowns.",
+   "pieces": [
+    "menu.SET_WHY",
+    "menu.settingsWhy",
+    "menu.showEnd",
+    "events.crownsHTML",
+    "menu.CARDS.score",
+    "menu.ACT.again",
+    "menu.ACT.free",
+    "menu.ACT.next",
+    "menu.ACT.reload",
+    "menu.ACT.home",
+    "menu.ACT.resume",
+    "menu.ACT.civ",
+    "menu.ACT.tension",
+    "menu.ACT.diff",
+    "menu.ACT.scen",
+    "menu.ACT.fantasy",
+    "menu.ACT.hz"
+   ],
+   "v100": {
+    "shells": [],
+    "ticks": [],
+    "books": [
+     "screen: SN10 Start rows, the end card"
+    ],
+    "laws": [],
+    "code": [
+     "menu.js"
+    ]
+   },
+   "needs": [
+    "M66",
+    "M30",
+    "M55",
+    "M61"
+   ],
+   "size": 6310
+  }
+ ],
+ "builds": [
+  {
+   "build": "F10",
+   "modules": [
+    "M1",
+    "M3"
+   ],
+   "opens": [
+    "code:index.html#qbf-the-dice",
+    "code:index.html#floor-5-movables",
+    "code:econ.js",
+    "code:combat.js",
+    "code:ai.js",
+    "book:measure",
+    "tool:test.py"
+   ],
+   "test": "Same seed, same game: Mid's rng(seed) and v100's rnd() give the same 1,000 draws, and unitsNear(x, y, r) returns the same set as a full scan of THINGS on Mid's opening."
+  },
+  {
+   "build": "F11",
+   "modules": [
+    "M2",
+    "M7"
+   ],
+   "opens": [
+    "code:econ.js",
+    "code:combat.js",
+    "code:ai.js",
+    "code:menu.js",
+    "code:index.html#the-frames",
+    "book:words",
+    "book:measure",
+    "tool:test.py"
+   ],
+   "test": "Build a Home and scrap it at 10%: stores, the minute's flow and the ledger lines equal Mid's; fmt(1234) reads 1.2k in both."
+  },
+  {
+   "build": "F12",
+   "modules": [
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "opens": [
+    "code:index.html#the-door",
+    "code:combat.js",
+    "code:ai.js",
+    "book:tech",
+    "book:sides",
+    "book:shells",
+    "law:QCA",
+    "law:QAF",
+    "book:measure",
+    "tool:test.py"
+   ],
+   "test": "With Bronze working and Leather armour learned, a spearman's armour, a Home's health share and the odds of 10 spears against 8 archers equal Mid's stats() and chance()."
+  },
+  {
+   "build": "F13",
+   "modules": [
+    "M13"
+   ],
+   "opens": [
+    "code:econ.js",
+    "book:tech",
+    "book:measure",
+    "book:shells",
+    "book:capabilities:SC15",
+    "book:sprites",
+    "book:words",
+    "code:index.html#the-building-art",
+    "tool:test.py"
+   ],
+   "test": "Age up from Stone to Bronze and research Axes then Iron axes: prices, times, the order of the line and a woodcutter's rate equal Mid's."
+  },
+  {
+   "build": "F14",
+   "modules": [
+    "M8",
+    "M9"
+   ],
+   "opens": [
+    "code:econ.js",
+    "code:index.html#floor-5-movables",
+    "code:index.html#the-things-drawn-each-frame-back-to-fr",
+    "law:QCI",
+    "law:QCJ",
+    "law:QV",
+    "book:measure",
+    "book:mass",
+    "book:capabilities",
+    "tool:test.py"
+   ],
+   "test": "Ten villagers sent to one bush patch: each stands on its own spot, the crowd share and wood/food gathered in 5 minutes equal Mid's within 2%."
+  },
+  {
+   "build": "F15",
+   "modules": [
+    "M10",
+    "M11",
+    "M12"
+   ],
+   "opens": [
+    "code:econ.js",
+    "code:menu.js",
+    "code:index.html#touch",
+    "code:index.html#floor-5-movables",
+    "code:index.html#floor-7-display",
+    "book:shells",
+    "book:capabilities",
+    "book:measure",
+    "book:colours",
+    "tool:test.py"
+   ],
+   "test": "Place a Barracks and drag a 12-piece wall with a gate: the snapped spot, the builders sent, the build time, the gate open to an ally and shut to a foe, and the seal's gap equal Mid's."
+  },
+  {
+   "build": "F16",
+   "modules": [
+    "M14",
+    "M15",
+    "M16"
+   ],
+   "opens": [
+    "code:econ.js",
+    "code:index.html#floor-3-non-movables",
+    "book:shells",
+    "book:measure",
+    "book:sprites",
+    "law:QBP",
+    "law:QAA",
+    "law:QAD",
+    "law:QY",
+    "tool:test.py"
+   ],
+   "test": "One game year with 4 farms, a pasture, 20 villagers and 10 soldiers: food eaten, spoiled, harvested, the soil left and the flock equal Mid's."
+  },
+  {
+   "build": "F17",
+   "modules": [
+    "M17"
+   ],
+   "opens": [
+    "code:index.html#floor-5-movables",
+    "law:QCB",
+    "law:QN",
+    "law:QR",
+    "law:QAP",
+    "book:ground",
+    "book:measure",
+    "book:tech",
+    "tool:test.py"
+   ],
+   "test": "A loaded villager and a rider walk 100 m over grass, mud, snow and ice in winter with and without Horseshoes: times equal Mid's, and research never multiplies twice."
+  },
+  {
+   "build": "F18",
+   "modules": [
+    "M18"
+   ],
+   "opens": [
+    "book:shells",
+    "book:capabilities",
+    "book:sprites",
+    "book:mass",
+    "book:measure",
+    "book:tech",
+    "code:econ.js",
+    "code:combat.js",
+    "code:index.html#the-figures",
+    "tool:test.py"
+   ],
+   "test": "Train every kind the Barracks, Range, Stable and Siege workshop offer in each age: kinds, prices, times, speed and the kit drawn equal Mid's."
+  },
+  {
+   "build": "F19",
+   "modules": [
+    "M19",
+    "M20"
+   ],
+   "opens": [
+    "code:combat.js",
+    "law:QBO",
+    "law:QAG",
+    "law:QAI",
+    "law:QAJ",
+    "book:measure",
+    "book:mass",
+    "code:index.html#the-things-drawn-each-frame-back-to-fr",
+    "tool:test.py"
+   ],
+   "test": "20 spears charge 20 archers from behind on Mid's seed: blows, who targets whom, routs and survivors equal Mid's fight."
+  },
+  {
+   "build": "F20",
+   "modules": [
+    "M21",
+    "M22"
+   ],
+   "opens": [
+    "code:combat.js",
+    "code:econ.js",
+    "book:capabilities",
+    "book:measure",
+    "book:sprites",
+    "book:tech",
+    "code:index.html#floor-5-movables",
+    "tool:test.py"
+   ],
+   "test": "Muster a battalion at the War Council and let it stand at home while a raider comes: squads, ranks, the guard ring, kiting and healing in a tower equal Mid's."
+  },
+  {
+   "build": "F21",
+   "modules": [
+    "M64"
+   ],
+   "opens": [
+    "code:index.html#touch",
+    "code:menu.js",
+    "book:measure",
+    "tool:test.py"
+   ],
+   "test": "Hold on a soldier, box 8 more, tap a deer, tap a foe: picked set and orders given equal Mid's tapAt/order on the same taps."
+  },
+  {
+   "build": "F22",
+   "modules": [
+    "M23",
+    "M24"
+   ],
+   "opens": [
+    "code:combat.js",
+    "code:econ.js",
+    "code:index.html#floor-7-display",
+    "book:measure",
+    "book:colours",
+    "book:sprites",
+    "law:QCB",
+    "tool:test.py"
+   ],
+   "test": "Send Alpha to the crosshair, reinforce with Bravo, then shield wall and charge: arrival times, the reinforcement plan and the charge's tiredness equal Mid's."
+  },
+  {
+   "build": "F23",
+   "modules": [
+    "M25",
+    "M30"
+   ],
+   "opens": [
+    "code:econ.js",
+    "code:combat.js",
+    "code:index.html#floor-7-display",
+    "book:capabilities",
+    "book:measure",
+    "law:QAO",
+    "law:QBR",
+    "tool:test.py"
+   ],
+   "test": "A raid on the town: villagers leave unsafe finds, Shelter fills the buildings, and when the rival's Town Center falls its stores go to you and the score equals Mid's."
+  },
+  {
+   "build": "F24",
+   "modules": [
+    "M26",
+    "M27",
+    "M28",
+    "M29"
+   ],
+   "opens": [
+    "code:econ.js",
+    "code:combat.js",
+    "book:capabilities",
+    "book:shells",
+    "book:measure",
+    "book:tech",
+    "law:QP",
+    "tool:test.py"
+   ],
+   "test": "Teach 5 spears into swords, a priest converts, medics heal after a fight, a spy sabotages a mill: costs, times, health and the stall equal Mid's."
+  },
+  {
+   "build": "F25",
+   "modules": [
+    "M31",
+    "M32"
+   ],
+   "opens": [
+    "code:econ.js",
+    "code:combat.js",
+    "book:shells",
+    "book:capabilities",
+    "book:measure",
+    "book:sprites",
+    "book:tech",
+    "tool:test.py"
+   ],
+   "test": "Send a small and a large camp wagon and lay caltrops on the road: the camp's pieces, supply, healing, and the trap's toll on a passing column equal Mid's."
+  },
+  {
+   "build": "F26",
+   "modules": [
+    "M33",
+    "M34"
+   ],
+   "opens": [
+    "code:econ.js",
+    "book:capabilities",
+    "book:measure",
+    "book:tech",
+    "law:QAE",
+    "law:QCF",
+    "law:QAB",
+    "tool:test.py"
+   ],
+   "test": "Sell 300 wood, buy 200 stone, debase the coin, run a workshop on cloth for 5 minutes: prices, gold and goods equal Mid's."
+  },
+  {
+   "build": "F27",
+   "modules": [
+    "M35"
+   ],
+   "opens": [
+    "code:econ.js",
+    "code:combat.js",
+    "book:shells",
+    "book:capabilities",
+    "book:measure",
+    "book:tech",
+    "law:QCE",
+    "tool:test.py"
+   ],
+   "test": "Two caravans on a route to a trade stop, one guarded, robbers about: pay a run and what is robbed equal Mid's."
+  },
+  {
+   "build": "F28",
+   "modules": [
+    "M36",
+    "M37"
+   ],
+   "opens": [
+    "code:econ.js",
+    "code:ai.js",
+    "book:sides",
+    "book:shells",
+    "book:measure",
+    "book:sprites",
+    "law:QCD",
+    "tool:test.py"
+   ],
+   "test": "Declare war, send an envoy, make a beaten rival a vassal: notice, answers, tribute, levy and loyalty over 10 minutes equal Mid's."
+  },
+  {
+   "build": "F29",
+   "modules": [
+    "M38"
+   ],
+   "opens": [
+    "code:ai.js",
+    "code:econ.js",
+    "book:measure",
+    "tool:test.py"
+   ],
+   "test": "A computer of each personality plays 20 minutes alone on Mid's seed: its goals in order, its army mix and its first attack time equal Mid's."
+  },
+  {
+   "build": "F30",
+   "modules": [
+    "M42",
+    "M44",
+    "M45"
+   ],
+   "opens": [
+    "code:index.html#floor-6-climate",
+    "code:index.html#drawn-once-in-the-view-frame",
+    "code:index.html#floor-5-movables",
+    "book:measure",
+    "book:sound",
+    "book:colours",
+    "law:QB",
+    "law:QC",
+    "law:QS",
+    "tool:test.py"
+   ],
+   "test": "One year on Mid's seed: the sky's spells, the moon's phase each night, the ruts on the road and a flood equal Mid's."
+  },
+  {
+   "build": "F31",
+   "modules": [
+    "M39",
+    "M53"
+   ],
+   "opens": [
+    "code:combat.js",
+    "code:index.html#floor-3-non-movables",
+    "code:index.html#floor-6-climate",
+    "book:shells",
+    "book:measure",
+    "book:sprites",
+    "book:words",
+    "law:QM",
+    "tool:test.py"
+   ],
+   "test": "On Mid's seed with every hazard on: the finds and their guards laid, the events in order with their warnings, a robbers' raid, a hired drifter equal Mid's."
+  },
+  {
+   "build": "F32",
+   "modules": [
+    "M40",
+    "M41"
+   ],
+   "opens": [
+    "code:econ.js",
+    "code:index.html#floor-6-climate",
+    "book:capabilities",
+    "book:measure",
+    "book:citations",
+    "book:tech",
+    "law:QT",
+    "law:QU",
+    "law:QAQ",
+    "tool:test.py"
+   ],
+   "test": "A summer storm over a wooden town, then an outbreak: the buildings that burn, those saved by villagers, the sick and the cured equal Mid's."
+  },
+  {
+   "build": "F33",
+   "modules": [
+    "M46",
+    "M51"
+   ],
+   "opens": [
+    "code:index.html#floor-7-display",
+    "code:menu.js",
+    "book:measure",
+    "book:screen",
+    "law:QAL",
+    "law:QAM",
+    "tool:test.py"
+   ],
+   "test": "A tower at dusk in fog beside a wood: tiles seen and remembered equal Mid's fog grid; the small map marks the same incoming army."
+  },
+  {
+   "build": "F34",
+   "modules": [
+    "M43",
+    "M47",
+    "M48",
+    "M49",
+    "M50",
+    "M52"
+   ],
+   "opens": [
+    "code:index.html#floor-7-display",
+    "code:index.html#the-view",
+    "code:index.html#the-things-drawn-each-frame-back-to-fr",
+    "code:index.html#drawn-once-in-the-view-frame",
+    "book:sprites",
+    "book:measure",
+    "book:colours",
+    "law:QAW",
+    "tool:test.py"
+   ],
+   "test": "Mid's night scene with a finished building and a glide to the Town Center: the camera's path, the lights' list and the pop's curve equal Mid's frame by frame (pictures side by side for Albert)."
+  },
+  {
+   "build": "F35",
+   "modules": [
+    "M55",
+    "M56",
+    "M57"
+   ],
+   "opens": [
+    "code:econ.js",
+    "code:menu.js",
+    "book:measure",
+    "book:words",
+    "book:tech",
+    "law:QCH",
+    "tool:test.py"
+   ],
+   "test": "A board truce for a year: the hidden age opens, soldiers stand down, the Games' winner and the crowns equal Mid's; a raid out of sight is told at Mid's delay."
+  },
+  {
+   "build": "F36",
+   "modules": [
+    "M58"
+   ],
+   "opens": [
+    "book:tech",
+    "book:shells",
+    "book:sprites",
+    "book:words",
+    "code:econ.js",
+    "code:index.html#the-building-art",
+    "tool:test.py"
+   ],
+   "test": "Each of the six civs trains its own unit and gets its bonus: the unit's numbers and the bonus applied equal Mid's."
+  },
+  {
+   "build": "F37",
+   "modules": [
+    "M60",
+    "M61"
+   ],
+   "opens": [
+    "code:index.html#floor-3-non-movables",
+    "code:index.html#the-door",
+    "book:measure",
+    "book:words",
+    "tool:test.py"
+   ],
+   "test": "New game, the Silk Road scenario on Mid's seed: the land's character, the home finds, the open ways and the starting stores equal Mid's."
+  },
+  {
+   "build": "F38",
+   "modules": [
+    "M62",
+    "M63"
+   ],
+   "opens": [
+    "code:index.html#the-door",
+    "book:measure",
+    "book:rules",
+    "tool:test.py"
+   ],
+   "test": "Save mid-battle and on leaving, reload: the waits and every unit, find and building restored equal Mid's save/load round trip; a thrown error costs one frame."
+  },
+  {
+   "build": "F39",
+   "modules": [
+    "M65"
+   ],
+   "opens": [
+    "code:menu.js",
+    "book:words",
+    "tool:test.py"
+   ],
+   "test": "The Guide written from v100's books lists the same entries, numbers and order as Mid's guideModel on the same tables."
+  },
+  {
+   "build": "F40",
+   "modules": [
+    "M59"
+   ],
+   "opens": [
+    "code:index.html#floor-2-terrain",
+    "code:combat.js",
+    "code:ai.js",
+    "book:shells",
+    "book:measure",
+    "book:sprites",
+    "tool:test.py"
+   ],
+   "test": "Held until Albert describes the reimagined Throne; then: take and hold the Throne past its time against its Natives and win, as in Mid."
+  },
+  {
+   "build": "F41",
+   "modules": [
+    "M66"
+   ],
+   "opens": [
+    "code:menu.js",
+    "book:screen",
+    "book:measure",
+    "tool:test.py"
+   ],
+   "test": "Mock-up: the frame sheet (top bar, pause and speeds, card heights). Test: pause, ×2, ×3 and a reading card pause the clock exactly as in Mid."
+  },
+  {
+   "build": "F42",
+   "modules": [
+    "M67"
+   ],
+   "opens": [
+    "code:menu.js",
+    "book:screen",
+    "tool:test.py"
+   ],
+   "test": "Mock-up: the subject card (unit, building, find). Test: each verb on the card gives the same result as Mid's PLAY verb, and dim cells give Mid's why."
+  },
+  {
+   "build": "F43",
+   "modules": [
+    "M68"
+   ],
+   "opens": [
+    "code:menu.js",
+    "book:screen",
+    "tool:test.py"
+   ],
+   "test": "Mock-up: the Research card. Test: ready, short, busy and locked states and reasons equal Mid's for a side in each age."
+  },
+  {
+   "build": "F44",
+   "modules": [
+    "M69"
+   ],
+   "opens": [
+    "code:menu.js",
+    "book:screen",
+    "tool:test.py"
+   ],
+   "test": "Mock-up: the War page (squads at home and out, Director, Alarm). Test: every War verb gives Mid's result."
+  },
+  {
+   "build": "F45",
+   "modules": [
+    "M70"
+   ],
+   "opens": [
+    "code:menu.js",
+    "book:screen",
+    "tool:test.py"
+   ],
+   "test": "Mock-up: Relations and vassal pages. Test: each check sends what Mid's relDraft sends."
+  },
+  {
+   "build": "F46",
+   "modules": [
+    "M71"
+   ],
+   "opens": [
+    "code:menu.js",
+    "book:screen",
+    "tool:test.py"
+   ],
+   "test": "Mock-up: Market, workshop, trade stop, caravan and stores cards. Test: each sell, buy, make and route verb equals Mid's."
+  },
+  {
+   "build": "F47",
+   "modules": [
+    "M72"
+   ],
+   "opens": [
+    "code:menu.js",
+    "book:screen",
+    "tool:test.py"
+   ],
+   "test": "Mock-up: the Mail card and preview. Test: a minute of Mid's messages merges, groups and previews the same."
+  },
+  {
+   "build": "F48",
+   "modules": [
+    "M73"
+   ],
+   "opens": [
+    "code:menu.js",
+    "book:screen",
+    "tool:test.py"
+   ],
+   "test": "Mock-up: Guide, History and Help. Test: History search for \"iron\" lists Mid's rows in Mid's order."
+  },
+  {
+   "build": "F49",
+   "modules": [
+    "M74"
+   ],
+   "opens": [
+    "code:menu.js",
+    "book:screen",
+    "tool:test.py"
+   ],
+   "test": "Mock-up: Start settings and the end card. Test: each setting starts the game Mid starts, and the end shows Mid's result and score."
+  }
+ ],
+ "order_why": "Need first: the dice, the ledger, the grids, the effects law, the foe test and the odds (F10–F12) are read by everything after, so nothing is built twice. Then what makes v100 play like Mid soonest: the ages and research, gathering and building, food, seasons and pace (F13–F17), then the soldiers as one Unit shell with kinds by age, the blow, nerve, squads, picking many, missions and the Director (F18–F22), then the Alarm and winning, the School, priests, spies and prisoners, and the war camp (F23–F25). The extras follow by what they lean on: market before trade, relations before vassals, the computers once they have everything they choose between, finds before events, weather before fire, lights and sight, then the look, peace and mail, the civs, the map, saving (last, so its fields are written once), and the Guide's words. The Throne waits for Albert's description. The menus come last, one build a mock-up, after the features they show work by test hooks.",
+ "applied": [
+  "M54, the fantasy switch, removed: fantasy was cut Nov 4, so its figures, kinds and the World: Fantasy switch on Start are cut (Claude, Nov 5, from the record)",
+  "the population cap is Mid's 180, by Albert's 10:31 rule (Mid's values unless they meet a v100 call)",
+  "the crowd push: the Mass book decides who gives way (v100's bodies), by Albert's call that real physics replaces hand-tuned shoves",
+  "relations (war, peace, ally, vassal) get one home, a new Sides book: books are where state lives",
+  "QCE (trade pay with distance squared) is entered 'from memory, to open' until its source is opened; QCF (interest and ventures) is cited as Mid's design"
+ ]
+}
