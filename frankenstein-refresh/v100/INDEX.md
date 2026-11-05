@@ -159,17 +159,80 @@ Written by `index.py`, never by hand.
 - **N76** (to open) Dupuy (1987), Understanding War: forces break at losses well short of annihilation; the classic breakpoint nea → QBQ, D142
 - **N77** Ranger Medic Handbook (2025), p. 45, the classes of haemorrhagic shock: I up to 15% blood lost, slightly anxio → QBS, D167
 - **N78** FBI Academy, Handgun Wounding Factors and Effectiveness (Patrick, 1989): short of a hit to the brain or upper  → QBS, D167
-- **N79** NAVMC 2691, Marine Corps Drill and Ceremonies Manual: quick time is 120 steps a minute at 30 inches a step (3. → QBM, QBU, W1, D86
-- **N80** (to open) Winter (1995), Human balance and posture control during standing and walking, Gait & Posture 3: quiet standing → QBS, W1
-- **N81** Engineering ToolBox, Friction coefficients for common materials: rubber on dry concrete 0.6–0.85, on wet 0.45– → QBT, G5, G7, G8
+- **N79** NAVMC 2691, Marine Corps Drill and Ceremonies Manual: quick time is 120 steps a minute at 30 inches a step (3. → QBM, QBU, D86
+- **N80** (to open) Winter (1995), Human balance and posture control during standing and walking, Gait & Posture 3: quiet standing → QBS
+- **N81** Engineering ToolBox, Friction coefficients for common materials: rubber on dry concrete 0.6–0.85, on wet 0.45– → QBT
 - **N82** Conservation of momentum; the perfectly inelastic collision v = m₁v₁ / (m₁ + m₂) (standard mechanics) → QBT
 - **N83** Sliding to rest under Coulomb friction: d = v² / (2 μ g) (standard mechanics) → QBT
-- **N84** (to open) ICRP Publication 23 (1975), Reference Man: 70 kg (from memory, to open) → W1
+- **N84** (to open) ICRP Publication 23 (1975), Reference Man: 70 kg (from memory, to open) → unused
 - **N85** (to open) Masses of animals and arms: horse about 500 kg, deer 70, wolf 40, bear 200; spear 2.5 kg, shield 5, scale armo → W2, W3, W4, W5, W7, W8, W9, W10, W11, W13
 - **N86** (to open) Rossing, The Science of Sound: the modes of a free bar at 1 : 2.756 : 5.404 (from memory, to open; carried fro → HM1, HM2, HM3
 - **N87** (to open) Densities: timber about 600 kg/m³, stone about 2,400, iron 7,870 (standard tables, from memory, to open) → W12, W15, W16
 - **N88** (to open) Fresh snow is porous and absorbs sound, high frequencies most: a snowy landscape sounds muffled (acoustics of  → QBX, HX5
 - **N89** National Weather Service, Understanding Lightning: Thunder (weather.gov/safety/lightning-science-thunder): thu → QBY, HX7
+- **N90** Design: Albert, Nov 4 (the turned grid, "B") → A1
+- **N91** Design: Albert, Nov 5: matched to Base's squash of 0.66 (sin 41.3°), the look he played and liked → A2
+- **N92** Design: Albert, Nov 5 (the mold) → SC0, SC01, SC02, SC03
+- **N93** Design: Albert, Nov 5 (menus are shells) → SC04
+- **N94** Design: v100 floor 5, Nov 4 → SC1, SC9, SC10
+- **N95** Design: v100 floor 9, Nov 5 → SC2, SC3, SC4, SC5, SC11, SC13, SC14, SC15, SC16
+- **N96** Design: v100 floor 10, Nov 5 → SC6, SC7
+- **N97** Design, Nov 5 → SC8, W14
+- **N98** Design: v100 floor 4, Nov 4 → SC12
+- **N99** Design: v100 floor 3, Nov 4 → SC17
+- **N100** Design: dictionary SC → SC18, SC19
+- **N101** Design: Albert, Nov 5 07:35 → SC20
+- **N102** Design: v100 floor 1, Nov 4 → C1, C2, C3, C4
+- **N103** Design: v100, Nov 4 → C5, C6, C7, C8, C10
+- **N104** N81 (car tyre on dry grass, 0.35: the nearest measured pair) → G5
+- **N105** Design, Nov 5: no measured value found; set between grass and snow → G6
+- **N106** N81 (waxed wood on wet snow, 0.14 static) → G7
+- **N107** N81 (ice on ice, 0.1 static) → G8
+- **N108** N84 (70 kg) → W1
+- **N109** N79 (stride: two steps of 30 in) → W1
+- **N110** N80 (centre of mass 0.55 of height; foot) → W1
+- **N111** Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn → W6
+- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D49, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D62, D63, D64, D65, D66, D67, D68, D69, D70, D71, D72, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D109, D110, D111, D112, D113, D114, D115, D116, D117, D118, D119, D120, D121, D169, D170
+- **N113** Design: the figures' four-frame walk (preview 49) → D96
+- **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D129, D130, D131, D132, D133, D134, D137, D140, D141, D144, D145, D146, D147, D148, D149, D150, D151, D152, D153, D154, D155, D156, D157, D160, D161, D162, D163, D164
+- **N115** Design: Albert, Nov 5 (his screenshot of Base) → D165
+- **N116** Design: the juice pass of Nov 3 (Base: 2 px, 0.08 s) → D166
+- **N117** Standard gravity (standard) → D168
+- **N118** Design: the build log (README) → D171
+- **N119** Design: Albert, Nov 1 14:18 (the old game's START_RES: 200 of food, wood, stone and gold, no iron) → D172
+- **N120** Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, Build A) → D173, D174, D175, D176, D177, D178, D179, D180
+- **N121** Design: v100 floor 5, Nov 4 (deer herds D90–D91, wolf packs D92–D93) → D181
+- **N122** Design: Mid's BEAT (numbers.js), brought by Albert's yes, Nov 5 11:40 (Frankenstein F10) → D182, D183, D184
+- **N123** Design: Mid's UG (15-sim-spatial.js), brought by Albert's yes, Nov 5 11:40 (Frankenstein F10) → D185
+- **N124** Design: Mid's SGC (15-sim-spatial.js), brought by Albert's yes, Nov 5 11:40 (Frankenstein F10) → D186
+- **N125** Design: Albert's randomizer rule, Nov 5 (Frankenstein F10): no Math.random in the world, looks included → D187
+- **N126** Design: Albert, Nov 5 (the gate) → X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13, X14, X15, X16, X17, X18, X19, X20, X21, X22, X23, X24, X25, X26, X27, X28, X29, X30, X31, X32, X33
+- **N127** Design: the audit of Nov 5, Build A: a test for each fix → X34, X35, X36, X37, X38, X39
+- **N128** Design: Albert, Nov 5 (Frankenstein Refresh: map Mid with our tests) → X40
+- **N129** Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it) → X41
+- **N130** Design: Albert, Nov 5 09:49 (Frankenstein 4: the match test) → X42
+- **N131** Design: Albert, Nov 5 09:47 (sort every piece) → X43
+- **N132** Design: Albert, Nov 5 11:40 (Frankenstein F10) → X44
+- **N133** Design: Albert, the Rank Ribbon (Oct 30) and the Formation → SN1
+- **N134** Design: Albert, Nov 5 07:13–07:15 (his Land list; six tabs of up to nine) → SN2
+- **N135** Design: Albert, Nov 5 07:30 → SN3
+- **N136** Design: Albert, Nov 5 07:30 (the Inspector precedent) → SN4
+- **N137** Design: Albert's Build 30 top bar → SN5
+- **N138** Design: Albert, Nov 5 07:36 → SN6
+- **N139** Design: Albert, Nov 4 (the setup screen its own height) → SN10
+- **N140** Design: Albert, Nov 5 → SN11
+- **N141** Design: Albert, Nov 5 07:34 → SN12
+- **N142** Design: v100 floor 8, Nov 5 → SN13
+- **N143** Design: Albert, Nov 5 10:28 (Tall for the volume row: keep for now) → SN13
+- **N144** Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) → unused
+- **N145** Art: Base → unused
+- **N146** Art: Mid (35-sound.js), Nov 5 → unused
+- **N147** Art: Base (the juice pass, Nov 3) → unused
+- **N148** Design: Apple's ambient audio session for games, carried from Mid (35-sound.js) → unused
+- **N149** Design: Albert, Nov 5 09:47 (three volumes) → unused
+- **N150** Art: preview 49 (18-figures.js), the last build before the camera turn → unused
+- **N151** Art: preview 49 (19-building-art.js) → unused
+- **N152** Art: preview 49 → unused
 
 ## Named exceptions
 

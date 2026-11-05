@@ -273,3 +273,337 @@ MODIFIED (15):
 LOCKED (629 of 644): byte for byte as sealed, 309,162 bytes
 Tests: 19/19 rules hold
 Inventory: 644 items sealed · 538 book entries · 74 laws · 89 citations, 17 still to open · 9 known
+
+## C1 · citations by code (first books) · 2026-11-05 12:23
+Albert, Nov 5 12:21: yes yes: every citation an index code; the five pages; comments by code
+Opened: book:citations, book:angles, book:capabilities, book:colours, book:ground, book:mass, book:measure, book:rules, book:screen
+MODIFIED (326):
+- book:angles:A1 · 145 → 102 bytes
+- book:angles:A2 · 201 → 106 bytes
+- book:capabilities:SC0 · 244 → 215 bytes
+- book:capabilities:SC01 · 217 → 188 bytes
+- book:capabilities:SC02 · 231 → 202 bytes
+- book:capabilities:SC03 · 223 → 194 bytes
+- book:capabilities:SC04 · 210 → 173 bytes
+- book:capabilities:SC1 · 271 → 247 bytes
+- book:capabilities:SC10 · 179 → 155 bytes
+- book:capabilities:SC11 · 235 → 211 bytes
+- book:capabilities:SC12 · 213 → 189 bytes
+- book:capabilities:SC13 · 179 → 155 bytes
+- book:capabilities:SC14 · 187 → 163 bytes
+- book:capabilities:SC15 · 181 → 157 bytes
+- book:capabilities:SC16 · 228 → 204 bytes
+- book:capabilities:SC17 · 204 → 180 bytes
+- book:capabilities:SC18 · 159 → 142 bytes
+- book:capabilities:SC19 · 159 → 142 bytes
+- book:capabilities:SC2 · 234 → 210 bytes
+- book:capabilities:SC20 · 257 → 234 bytes
+- book:capabilities:SC3 · 207 → 183 bytes
+- book:capabilities:SC4 · 172 → 148 bytes
+- book:capabilities:SC5 · 181 → 157 bytes
+- book:capabilities:SC6 · 255 → 230 bytes
+- book:capabilities:SC7 · 218 → 193 bytes
+- book:capabilities:SC8 · 202 → 192 bytes
+- book:capabilities:SC9 · 200 → 176 bytes
+- book:citations:N100 · added
+- book:citations:N101 · added
+- book:citations:N102 · added
+- book:citations:N103 · added
+- book:citations:N104 · added
+- book:citations:N105 · added
+- book:citations:N106 · added
+- book:citations:N107 · added
+- book:citations:N108 · added
+- book:citations:N109 · added
+- book:citations:N110 · added
+- book:citations:N111 · added
+- book:citations:N112 · added
+- book:citations:N113 · added
+- book:citations:N114 · added
+- book:citations:N115 · added
+- book:citations:N116 · added
+- book:citations:N117 · added
+- book:citations:N118 · added
+- book:citations:N119 · added
+- book:citations:N120 · added
+- book:citations:N121 · added
+- book:citations:N122 · added
+- book:citations:N123 · added
+- book:citations:N124 · added
+- book:citations:N125 · added
+- book:citations:N126 · added
+- book:citations:N127 · added
+- book:citations:N128 · added
+- book:citations:N129 · added
+- book:citations:N130 · added
+- book:citations:N131 · added
+- book:citations:N132 · added
+- book:citations:N133 · added
+- book:citations:N134 · added
+- book:citations:N135 · added
+- book:citations:N136 · added
+- book:citations:N137 · added
+- book:citations:N138 · added
+- book:citations:N139 · added
+- book:citations:N140 · added
+- book:citations:N141 · added
+- book:citations:N142 · added
+- book:citations:N143 · added
+- book:citations:N144 · added
+- book:citations:N145 · added
+- book:citations:N146 · added
+- book:citations:N147 · added
+- book:citations:N148 · added
+- book:citations:N149 · added
+- book:citations:N150 · added
+- book:citations:N151 · added
+- book:citations:N152 · added
+- book:citations:N90 · added
+- book:citations:N91 · added
+- book:citations:N92 · added
+- book:citations:N93 · added
+- book:citations:N94 · added
+- book:citations:N95 · added
+- book:citations:N96 · added
+- book:citations:N97 · added
+- book:citations:N98 · added
+- book:citations:N99 · added
+- book:colours:C1 · 105 → 82 bytes
+- book:colours:C10 · 100 → 85 bytes
+- book:colours:C2 · 103 → 80 bytes
+- book:colours:C3 · 103 → 80 bytes
+- book:colours:C4 · 105 → 82 bytes
+- book:colours:C5 · 112 → 97 bytes
+- book:colours:C6 · 102 → 87 bytes
+- book:colours:C7 · 98 → 83 bytes
+- book:colours:C8 · 102 → 87 bytes
+- book:ground:G5 · 150 → 94 bytes
+- book:ground:G6 · 169 → 107 bytes
+- book:ground:G7 · 138 → 101 bytes
+- book:ground:G8 · 136 → 112 bytes
+- book:mass:W1 · 253 → 181 bytes
+- book:mass:W14 · 119 → 109 bytes
+- book:mass:W6 · 237 → 158 bytes
+- book:measure:D1 · 138 → 96 bytes
+- book:measure:D10 · 132 → 90 bytes
+- book:measure:D100 · 165 → 123 bytes
+- book:measure:D101 · 126 → 84 bytes
+- book:measure:D103 · 141 → 99 bytes
+- book:measure:D104 · 130 → 88 bytes
+- book:measure:D105 · 125 → 83 bytes
+- book:measure:D106 · 171 → 129 bytes
+- book:measure:D107 · 144 → 102 bytes
+- book:measure:D108 · 131 → 89 bytes
+- book:measure:D109 · 164 → 122 bytes
+- book:measure:D11 · 130 → 88 bytes
+- book:measure:D110 · 129 → 87 bytes
+- book:measure:D111 · 123 → 81 bytes
+- book:measure:D112 · 136 → 94 bytes
+- book:measure:D113 · 138 → 96 bytes
+- book:measure:D114 · 130 → 88 bytes
+- book:measure:D115 · 128 → 86 bytes
+- book:measure:D116 · 127 → 85 bytes
+- book:measure:D117 · 167 → 125 bytes
+- book:measure:D118 · 171 → 129 bytes
+- book:measure:D119 · 129 → 87 bytes
+- book:measure:D12 · 117 → 75 bytes
+- book:measure:D120 · 154 → 112 bytes
+- book:measure:D121 · 135 → 93 bytes
+- book:measure:D122 · 135 → 93 bytes
+- book:measure:D126 · 147 → 105 bytes
+- book:measure:D129 · 204 → 162 bytes
+- book:measure:D13 · 143 → 101 bytes
+- book:measure:D130 · 177 → 135 bytes
+- book:measure:D131 · 136 → 94 bytes
+- book:measure:D132 · 177 → 135 bytes
+- book:measure:D133 · 213 → 171 bytes
+- book:measure:D134 · 120 → 78 bytes
+- book:measure:D137 · 153 → 111 bytes
+- book:measure:D14 · 128 → 86 bytes
+- book:measure:D140 · 136 → 94 bytes
+- book:measure:D141 · 136 → 94 bytes
+- book:measure:D144 · 144 → 102 bytes
+- book:measure:D145 · 143 → 101 bytes
+- book:measure:D146 · 136 → 94 bytes
+- book:measure:D147 · 138 → 96 bytes
+- book:measure:D148 · 152 → 110 bytes
+- book:measure:D149 · 139 → 97 bytes
+- book:measure:D15 · 128 → 86 bytes
+- book:measure:D150 · 161 → 119 bytes
+- book:measure:D151 · 316 → 274 bytes
+- book:measure:D152 · 174 → 132 bytes
+- book:measure:D153 · 187 → 145 bytes
+- book:measure:D154 · 156 → 114 bytes
+- book:measure:D155 · 156 → 114 bytes
+- book:measure:D156 · 170 → 128 bytes
+- book:measure:D157 · 141 → 99 bytes
+- book:measure:D16 · 143 → 101 bytes
+- book:measure:D160 · 128 → 86 bytes
+- book:measure:D161 · 165 → 123 bytes
+- book:measure:D162 · 138 → 96 bytes
+- book:measure:D163 · 127 → 85 bytes
+- book:measure:D164 · 139 → 97 bytes
+- book:measure:D165 · 191 → 149 bytes
+- book:measure:D166 · 250 → 202 bytes
+- book:measure:D168 · 117 → 94 bytes
+- book:measure:D169 · 250 → 208 bytes
+- book:measure:D17 · 129 → 87 bytes
+- book:measure:D170 · 134 → 92 bytes
+- book:measure:D171 · 151 → 125 bytes
+- book:measure:D172 · 259 → 165 bytes
+- book:measure:D173 · 200 → 115 bytes
+- book:measure:D174 · 231 → 146 bytes
+- book:measure:D175 · 208 → 123 bytes
+- book:measure:D176 · 206 → 121 bytes
+- book:measure:D177 · 224 → 139 bytes
+- book:measure:D178 · 243 → 158 bytes
+- book:measure:D179 · 380 → 295 bytes
+- book:measure:D18 · 144 → 102 bytes
+- book:measure:D180 · 246 → 161 bytes
+- book:measure:D181 · 338 → 270 bytes
+- book:measure:D182 · 270 → 186 bytes
+- book:measure:D183 · 209 → 125 bytes
+- book:measure:D184 · 210 → 126 bytes
+- book:measure:D185 · 265 → 176 bytes
+- book:measure:D186 · 200 → 110 bytes
+- book:measure:D187 · 274 → 175 bytes
+- book:measure:D19 · 141 → 99 bytes
+- book:measure:D2 · 140 → 98 bytes
+- book:measure:D20 · 121 → 79 bytes
+- book:measure:D21 · 127 → 85 bytes
+- book:measure:D22 · 123 → 81 bytes
+- book:measure:D23 · 146 → 104 bytes
+- book:measure:D24 · 145 → 103 bytes
+- book:measure:D25 · 131 → 89 bytes
+- book:measure:D26 · 134 → 92 bytes
+- book:measure:D27 · 143 → 101 bytes
+- book:measure:D28 · 155 → 113 bytes
+- book:measure:D29 · 130 → 88 bytes
+- book:measure:D3 · 181 → 139 bytes
+- book:measure:D30 · 167 → 125 bytes
+- book:measure:D31 · 134 → 92 bytes
+- book:measure:D32 · 128 → 86 bytes
+- book:measure:D33 · 126 → 84 bytes
+- book:measure:D34 · 133 → 91 bytes
+- book:measure:D35 · 132 → 90 bytes
+- book:measure:D36 · 131 → 89 bytes
+- book:measure:D37 · 134 → 92 bytes
+- book:measure:D38 · 127 → 85 bytes
+- book:measure:D39 · 131 → 89 bytes
+- book:measure:D40 · 133 → 91 bytes
+- book:measure:D41 · 127 → 85 bytes
+- book:measure:D42 · 137 → 95 bytes
+- book:measure:D43 · 136 → 94 bytes
+- book:measure:D44 · 136 → 94 bytes
+- book:measure:D45 · 141 → 99 bytes
+- book:measure:D46 · 136 → 94 bytes
+- book:measure:D47 · 135 → 93 bytes
+- book:measure:D48 · 142 → 100 bytes
+- book:measure:D49 · 163 → 121 bytes
+- book:measure:D50 · 161 → 119 bytes
+- book:measure:D51 · 161 → 119 bytes
+- book:measure:D52 · 134 → 92 bytes
+- book:measure:D53 · 129 → 87 bytes
+- book:measure:D54 · 129 → 87 bytes
+- book:measure:D55 · 127 → 85 bytes
+- book:measure:D56 · 129 → 87 bytes
+- book:measure:D57 · 128 → 86 bytes
+- book:measure:D58 · 131 → 89 bytes
+- book:measure:D59 · 133 → 91 bytes
+- book:measure:D60 · 134 → 92 bytes
+- book:measure:D62 · 125 → 83 bytes
+- book:measure:D63 · 120 → 78 bytes
+- book:measure:D64 · 129 → 87 bytes
+- book:measure:D65 · 117 → 75 bytes
+- book:measure:D66 · 128 → 86 bytes
+- book:measure:D67 · 132 → 90 bytes
+- book:measure:D68 · 124 → 82 bytes
+- book:measure:D69 · 125 → 83 bytes
+- book:measure:D7 · 143 → 101 bytes
+- book:measure:D70 · 220 → 178 bytes
+- book:measure:D71 · 218 → 176 bytes
+- book:measure:D72 · 136 → 94 bytes
+- book:measure:D73 · 132 → 90 bytes
+- book:measure:D74 · 129 → 87 bytes
+- book:measure:D75 · 127 → 85 bytes
+- book:measure:D76 · 132 → 90 bytes
+- book:measure:D77 · 130 → 88 bytes
+- book:measure:D78 · 121 → 79 bytes
+- book:measure:D79 · 131 → 89 bytes
+- book:measure:D8 · 141 → 99 bytes
+- book:measure:D80 · 129 → 87 bytes
+- book:measure:D81 · 129 → 87 bytes
+- book:measure:D82 · 150 → 108 bytes
+- book:measure:D83 · 174 → 132 bytes
+- book:measure:D84 · 177 → 135 bytes
+- book:measure:D85 · 142 → 100 bytes
+- book:measure:D87 · 118 → 76 bytes
+- book:measure:D89 · 132 → 90 bytes
+- book:measure:D9 · 136 → 94 bytes
+- book:measure:D90 · 126 → 84 bytes
+- book:measure:D91 · 121 → 79 bytes
+- book:measure:D92 · 126 → 84 bytes
+- book:measure:D93 · 121 → 79 bytes
+- book:measure:D94 · 130 → 88 bytes
+- book:measure:D95 · 121 → 79 bytes
+- book:measure:D96 · 164 → 119 bytes
+- book:measure:D97 · 123 → 81 bytes
+- book:measure:D98 · 125 → 83 bytes
+- book:measure:D99 · 126 → 84 bytes
+- book:rules:X1 · 150 → 122 bytes
+- book:rules:X10 · 189 → 161 bytes
+- book:rules:X11 · 176 → 148 bytes
+- book:rules:X12 · 167 → 139 bytes
+- book:rules:X13 · 179 → 151 bytes
+- book:rules:X14 · 172 → 144 bytes
+- book:rules:X15 · 155 → 127 bytes
+- book:rules:X16 · 173 → 145 bytes
+- book:rules:X17 · 180 → 152 bytes
+- book:rules:X18 · 167 → 139 bytes
+- book:rules:X19 · 174 → 146 bytes
+- book:rules:X2 · 185 → 157 bytes
+- book:rules:X20 · 187 → 159 bytes
+- book:rules:X21 · 182 → 154 bytes
+- book:rules:X22 · 150 → 122 bytes
+- book:rules:X23 · 157 → 129 bytes
+- book:rules:X24 · 169 → 141 bytes
+- book:rules:X25 · 168 → 140 bytes
+- book:rules:X26 · 161 → 133 bytes
+- book:rules:X27 · 150 → 122 bytes
+- book:rules:X28 · 133 → 105 bytes
+- book:rules:X29 · 180 → 152 bytes
+- book:rules:X3 · 169 → 141 bytes
+- book:rules:X30 · 184 → 156 bytes
+- book:rules:X31 · 163 → 135 bytes
+- book:rules:X32 · 144 → 116 bytes
+- book:rules:X33 · 240 → 212 bytes
+- book:rules:X34 · 229 → 177 bytes
+- book:rules:X35 · 190 → 138 bytes
+- book:rules:X36 · 204 → 152 bytes
+- book:rules:X37 · 209 → 157 bytes
+- book:rules:X38 · 192 → 140 bytes
+- book:rules:X39 · 201 → 149 bytes
+- book:rules:X4 · 156 → 128 bytes
+- book:rules:X40 · 229 → 165 bytes
+- book:rules:X41 · 283 → 217 bytes
+- book:rules:X42 · 242 → 186 bytes
+- book:rules:X43 · 225 → 183 bytes
+- book:rules:X44 · 397 → 355 bytes
+- book:rules:X5 · 149 → 121 bytes
+- book:rules:X6 · 163 → 135 bytes
+- book:rules:X7 · 185 → 157 bytes
+- book:rules:X8 · 169 → 141 bytes
+- book:rules:X9 · 179 → 151 bytes
+- book:screen:SN1 · 243 → 189 bytes
+- book:screen:SN10 · 186 → 135 bytes
+- book:screen:SN11 · 159 → 142 bytes
+- book:screen:SN12 · 182 → 159 bytes
+- book:screen:SN13 · 252 → 166 bytes
+- book:screen:SN2 · 589 → 518 bytes
+- book:screen:SN3 · 229 → 206 bytes
+- book:screen:SN4 · 361 → 312 bytes
+- book:screen:SN5 · 210 → 181 bytes
+- book:screen:SN6 · 285 → 262 bytes
+LOCKED (381 of 707): byte for byte as sealed, 331,418 bytes
+Tests: 19/19 rules hold
+Inventory: 707 items sealed · 601 book entries · 74 laws · 152 citations, 17 still to open · 9 known

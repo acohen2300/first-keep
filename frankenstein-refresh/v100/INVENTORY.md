@@ -5,7 +5,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
 | Game code | 28 | 1,623 | 235,899 | 236,206 |
-| Books | 538 | 0 | 92,401 | 92,617 |
+| Books | 601 | 0 | 87,420 | 87,638 |
 | Laws | 74 | 0 | 7,375 | 7,617 |
 | Tools | 4 | 354 | 39,000 | 39,072 |
 
@@ -46,15 +46,15 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Book | Entries | Bytes |
 |---|---|---|
-| angles | 3 | 599 |
-| capabilities | 25 | 5,927 |
-| citations | 89 | 9,939 |
-| colours | 9 | 1,118 |
-| ground | 4 | 819 |
-| mass | 16 | 2,515 |
-| measure | 182 | 31,185 |
-| rules | 44 | 8,904 |
-| screen | 10 | 3,023 |
+| angles | 3 | 461 |
+| capabilities | 25 | 5,321 |
+| citations | 152 | 16,248 |
+| colours | 9 | 951 |
+| ground | 4 | 640 |
+| mass | 16 | 2,354 |
+| measure | 182 | 23,539 |
+| rules | 44 | 7,398 |
+| screen | 10 | 2,597 |
 | shells | 74 | 15,958 |
 | sound | 51 | 11,772 |
 | sprites | 31 | 7,102 |
@@ -116,4 +116,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X43 | sorted | survey | a temp book being sorted leaves a piece of Mid without its line (in v100, bring, cut or parked) |
 | X44 | t-same | page | same seed, same game: two pages on one seed draw alike and stand alike after 300 s with the weather in it; the rules' dice are Mid's rng draw for draw, BEAT and the grid squares Mid's; unitsNear finds exactly what a full scan finds, bldsNear every building a scan finds |
 
-644 items sealed · 538 book entries · 74 laws · 89 citations, 17 still to open · 9 known
+707 items sealed · 601 book entries · 74 laws · 152 citations, 17 still to open · 9 known
