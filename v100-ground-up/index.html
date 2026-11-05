@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>First Keep v100 · Buildings</title>
+<title>First Keep v100 · Movables</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600&family=IM+Fell+English+SC&display=swap">
 <style>
 :root { --ui: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif; --display: "IM Fell English SC", Georgia, serif; --slot: 44px; --gap: 6px; }
@@ -12,6 +12,7 @@ canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: non
 #top { position: fixed; left: var(--gap); right: var(--gap); top: calc(env(safe-area-inset-top, 0px) + var(--gap)); display: flex; align-items: center; gap: 12px; height: var(--slot); padding: 0 12px; box-sizing: border-box; background: #2a1d13; border: 1px solid #785c3a; border-radius: 6px; }
 #top b { font-family: var(--display); font-weight: 400; font-size: 18px; color: #e6b947; }
 #top span { opacity: .75; }
+#store { margin-left: auto; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 12px; }
 #bar { position: fixed; left: var(--gap); right: var(--gap); bottom: calc(env(safe-area-inset-bottom, 0px) + var(--gap)); display: flex; gap: var(--gap); }
 #bar button { flex: 1; height: var(--slot); background: #2a1d13; color: #ece5d3; border: 1px solid #785c3a; border-radius: 6px; font: inherit; padding: 0; }
 #bar button.on { border: 2px solid #e6b947; color: #e6b947; }
@@ -23,7 +24,7 @@ canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: non
 </head>
 <body>
 <canvas id="map"></canvas>
-<div id="top"><b>First Keep</b><span>v100 · floor 4 · Buildings</span><span id="seed"></span></div>
+<div id="top"><b>First Keep</b><span style="white-space:nowrap">v100 · 5 · Movables</span><span id="store"></span><span id="seed"></span></div>
 <div id="pick"></div>
 <div id="bar"><button data-t="grid">Grid</button><button data-t="zones" class="on">Zones</button><button data-t="edge" class="on">Edge</button><button data-t="build">Build</button><button id="new">New map</button></div>
 <script>
@@ -38,9 +39,11 @@ const D = { site: 3060, board: 2160, zone: [300, 600, 900], edge: 60, tile: 10, 
   z1: { bush: [250, 140], tree: [140, 250], gold: [200, 120], stone: [120, 200] }, z3: { bush: [820, 300], tree: [300, 820], iron: [560, 680], stone: [450, 750], gold: [680, 560] }, z3x: 3, // D70–D72 the home spots, in the corner's frame
   goldZ4: [4, 6], stoneZ4: [3, 5], ironZ4: [3, 5], patches: [6, 10], patch: [4, 6], ruins: [2, 2], cemeteries: [1, 2], campfires: [2, 3], treasures: [1, 2], // D73–D81 Z4's finds
   jitter: 3, lod: 5, // D82 a thing's stand wanders in its tile by this much, D83 under this many pixels a tile things are dots and the grid is off
-  tc: [380, 380] }; // D84 the Town Center's spot in the corner's frame (Z2, on the road)
+  tc: [380, 380], // D84 the Town Center's spot in the corner's frame (Z2, on the road)
+  upm: 11.7, speed: { walk: 1.4, trot: 3.6, horse: 1.7, push: 0.7, deer: 1.5, wolf: 2.5, bear: 1.5 }, carry: 10, rate: { bush: 0.9, tree: 0.75, gold: 0.6, stone: 0.55, iron: 0.5 }, // D85 units a metre, D86 speeds in m/s, D87 a load, D88 gathering a second
+  next: 100, herds: [3, 5], herd: [3, 5], packs: [2, 3], pack: [2, 3], wait: 6, reach: 60, steps: 6, beat: 0.4, fps: 30 }; // D89 the next find within, D90–D93 the wildlife, D94 a wander's mean wait, D95 its reach, D96 walk frames a second, D97 a work beat, D98 frames a second
 const A = { turn: 15, rise: 30, repose: 34 }; // A1 the grid's turn, A2 the camera's rise, A3 the angle of repose
-const C = { water: '#2a6488', sand: '#cdbb88', dirt: '#785c3a', grass: '#4a6634', blue: '#6aaeff', red: '#ff6b5b', white: '#ece5d3', gold: '#e6b947' }; // C1–C5, C7, C8, C10
+const C = { water: '#2a6488', sand: '#cdbb88', dirt: '#785c3a', grass: '#4a6634', blue: '#6aaeff', green: '#5fd08a', red: '#ff6b5b', white: '#ece5d3', gold: '#e6b947' }; // C1–C8, C10
 
 // ── The frames (QBD). The grid is square in its own frame; the board frame is the grid turned A1 about the site's middle; the view foreshortens depth by sin A2 and shows height by cos A2.
 const RAD = Math.PI / 180, N = D.site / D.tile, MID = D.site / 2, B0 = (D.site - D.board) / 2, B1 = B0 + D.board;
@@ -52,7 +55,7 @@ const fromBoard = (bx, by) => { const x = bx - MID, y = by - MID; return [MID + 
 const toView = (bx, by, h) => [bx, by * TILT - h * UP];
 const V = (sx, sy, h) => { const [bx, by] = toBoard(sx, sy); return toView(bx, by, h); };
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
-const shade = (hex, f) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(hex.slice(i, i + 2), 16) * f).toString(16).padStart(2, '0')).join('');
+const shade = (hex, f) => '#' + [1, 3, 5].map((i) => clamp(Math.round(parseInt(hex.slice(i, i + 2), 16) * f), 0, 255).toString(16).padStart(2, '0')).join('');
 
 // ── QBF the dice (N65): one seed, Mulberry32. Every roll names Who, What, Where, When, Why and How beside it (L13).
 function dice(seed) { let a = seed >>> 0; return () => { a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), a | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
@@ -217,6 +220,7 @@ function makeThings(roll) {
   // The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size and shade · Where its tile · When the map is made · Why the woods are what is cut for wood (R1) · How three rolls a tile
   for (let k = 0; k < N * N; k++) if (FOR[k]) put('tree', k, roll, 0.85 + roll() * 0.3, Math.floor(roll() * 6));
   things.sort((a, b) => a.vy - b.vy); // drawn back to front
+  for (const t of things) if (t.kind === 'tree') deepen(t); // a tree with trees on all eight sides is deep: nothing can stand between it and its neighbours, so the deep woods are painted once a chunk (see the woods cache)
 }
 const stratum = (h) => (h <= 0 ? 0 : h < D.sandTop ? 1 : h < D.dirtTop || h >= D.land + D.bare ? 2 : 3); // 0 water, 1 sand, 2 dirt, 3 grass; bare dirt again high over the land (D23)
 const BANDS = 6, deepest = shade(C.water, 0.6);
@@ -276,6 +280,8 @@ const S = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return toScreen(x, y); }
 function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 0); cam.x = (l + r) / 2; cam.y = (t + b) / 2; cam.z = Math.min((cw - 24) / (r - l), (ch - 200) / (b - t)); zmin = cam.z / 2; }
 function resize() { dpr = Math.min(2, devicePixelRatio || 1); cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; fit(); dirty(); }
 function dirty() { if (!queued) { queued = true; requestAnimationFrame(draw); } }
+let last = 0;
+function loop(now) { if (now - last >= 1000 / D.fps) { const dt = Math.min(0.1, (now - last) / 1000 || 0); last = now; if (!document.hidden) { step(dt); draw(); } } requestAnimationFrame(loop); }
 function draw() {
   queued = false;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -658,13 +664,168 @@ NS_poly([P[1], P[2], P[3], P[4], [3, -6.5], [-3, -5]], top, 'rgba(0,0,0,.25)', 0
 g.strokeStyle = 'rgba(10,12,14,.5)'; g.lineWidth = 0.4; g.beginPath(); g.moveTo(-2, -5); g.lineTo(-1, -1); g.moveTo(4, -6); g.lineTo(5, -9); g.stroke(); if (gold || iron) for (const [x, y] of [
 [-1, -7], [3, -5], [-5, -4], ]) { g.fillStyle = gold ? '#fff6c8' : '#d5e2ee'; NS_poly([ [x, y - 1.1], [x + 0.9, y], [x, y + 1.1], [x - 0.9, y], ]); g.fill(); } } }
 
+// ── The figures (preview 49, 18-figures.js): people and beasts drawn from data, feet at (0, 0), facing right, a person about 21 tall; fr 0–3 the walk, 10 and up at work (the tool, two poses). One look a code; the rest of the roster stays in preview 49 as skins.
+const INK = '#141210',
+SKIN = '#e0b48e',
+STEEL = '#aeb6be',
+BRONZE = '#c08a3a',
+WOOD = '#8a5d34',
+LEATHER = '#6b4a2c';
+const steel = (x0, y0, x1, y1) => LG(x0, y0, x1, y1, ['#eef2f5', '#a9b2bb', '#66707a']);
+const bronzeG = (x0, y0, x1, y1) => LG(x0, y0, x1, y1, ['#f0c477', '#c08a3a', '#7d5420']);
+function person(o, fr) { const tunic = o.tunic, trim = o.trim || tunic, sk = o.skin || SKIN, hip = o.seated ? -13 : -9, sh = hip - 7.5; const sw = fr === 1 ? 3 : fr === 2 ? -3 : 0, atk = fr === 3;
+const leg = (x0, dx, c) => { if (o.seated) { P_( [ [x0 - 1.4, hip], [x0 + 1.4, hip], [x0 + 4.4, hip + 1.6], [x0 + 3, hip + 3], ], c, INK, 0.4, ); P_( [ [x0 + 3, hip + 1.5], [x0 + 4.6, hip + 1.5],
+[x0 + 4.2, hip + 7], [x0 + 2.8, hip + 7], ], c, INK, 0.4, ); E_(x0 + 3.9, hip + 7.4, 1.4, 0.8, o.boots || '#2c2118'); return; } P_( [ [x0 - 1.3, hip], [x0 + 1.3, hip], [x0 + dx * 0.6 + 1.1, hip + 5],
+[x0 + dx - 0.2 + 1, -0.6], [x0 + dx - 1.4, -0.6], [x0 + dx * 0.6 - 1.2, hip + 5], ], c, INK, 0.4, ); P_( [ [x0 + dx - 1.6, -1.8], [x0 + dx + 1.4, -1.8], [x0 + dx + 2.8, 0], [x0 + dx - 1.6, 0], ],
+o.boots || '#2c2118', ); }; leg(-0.6, -sw, shade(o.legs || '#5a4a38', 0.75)); const hand = atk ? [6.2, sh + 2.6] : [3.6, sh + 4]; if (o.weapon && o.weapon !== 'none') { P_( [ [-0.4, sh + 0.4],
+[1.4, sh], [hand[0] + 0.8, hand[1] - 0.6], [hand[0] - 0.6, hand[1] + 0.8], ], shade(tunic, 0.7), INK, 0.4, ); weapon(o.weapon, hand, atk, sh); E_(hand[0], hand[1], 0.9, 0.9, sk); } if (o.cape) P_( [
+[-3.6, sh + 0.6], [-1, sh], [-2, hip + 3], [-5.2, hip + 4], ], o.cape, INK, 0.4, ); leg(0.6, sw, o.legs || '#5a4a38'); if (o.lean) { g.save(); g.translate(0, hip); g.rotate(o.lean);
+g.translate(0, -hip); } const bodyCol = o.body === 'mail' ? '#9aa2a8' : o.body === 'plate' ? steel(-4, 0, 4, 0) : o.body === 'scale' ? bronzeG(-4, 0, 4, 0)
+: LG(-4, 0, 4, 0, [shade(tunic, 1.15), tunic, shade(tunic, 0.72)]); const hem = o.body === 'robe' ? -0.6 : hip + 3.2; P_( [ [-3.4, hip], [3.4, hip], [3.9, hem], [-3.9, hem], ],
+o.body === 'robe' ? LG(-4, 0, 4, 0, [shade(tunic, 1.1), tunic, shade(tunic, 0.7)]) : shade(tunic, 0.85), INK, 0.45, ); P_( [ [-3.4, hip + 0.4], [3.6, hip + 0.4], [4, sh + 0.8], [-3.6, sh + 0.8], ],
+bodyCol, INK, 0.5, ); if (o.body === 'mail') { g.fillStyle = 'rgba(40,46,52,.55)'; for (let y = sh + 1.6; y < hip; y += 1.2)
+for (let x = -3; x < 3.5; x += 1.2) g.fillRect(x + ((y * 3) % 1.2), y, 0.45, 0.45); } if (o.body === 'scale') { g.strokeStyle = 'rgba(60,36,10,.6)'; g.lineWidth = 0.35;
+for (let y = sh + 1.6; y < hip; y += 1.3) for (let x = -3; x < 3.5; x += 1.4) { g.beginPath(); g.arc(x, y, 0.7, 0, Math.PI); g.stroke(); } } if (o.body === 'segm') { P_( [ [-3.4, hip + 0.4],
+[3.6, hip + 0.4], [4, sh + 0.8], [-3.6, sh + 0.8], ], steel(-4, 0, 4, 0), INK, 0.5, ); for (let y = sh + 2; y < hip; y += 1.4) L_(-3.5, y, 3.8, y - 0.1, '#5d6670', 0.45); }
+if (o.body === 'plate' || o.body === 'segm' || o.body === 'mail' || o.body === 'scale') P_( [ [-3.2, hip - 2.6], [3.4, hip - 2.6], [3.6, hip + 2.2], [-3.4, hip + 2.2], ],
+LG(0, hip - 3, 0, hip + 2, [shade(trim, 1.15), trim]), INK, 0.4, ); if (o.sash) L_(-3, sh + 1.2, 3.4, hip - 0.6, o.sash, 1.3); L_(-3.5, hip - 0.4, 3.8, hip - 0.5, '#3b2a14', 1); if (o.cross) { P_( [
+[-0.6, sh + 1.5], [0.6, sh + 1.5], [0.6, hip - 1.2], [-0.6, hip - 1.2], ], o.cross, ); P_( [ [-2.5, sh + 3.4], [2.7, sh + 3.4], [2.7, sh + 4.5], [-2.5, sh + 4.5], ], o.cross, ); } const hx = 0.5,
+hy = sh - 2.9; P_( [ [-0.6, sh + 0.6], [1.4, sh + 0.6], [1.2, sh - 1], [-0.4, sh - 1], ], shade(sk, 0.85), );
+E_(hx, hy, 2.6, 2.7, LG(hx - 2, hy - 2, hx + 2, hy + 2, [shade(sk, 1.08), sk, shade(sk, 0.82)]), shade(sk, 0.5), 0.4); if (o.beard) P_( [ [hx - 0.4, hy + 1], [hx + 2.4, hy + 0.8],
+[hx + 1.2, hy + 3.4], [hx - 0.6, hy + 2.6], ], o.beard, ); E_(hx + 1.4, hy - 0.4, 0.42, 0.42, '#1a1a1a'); helm(o.head, hx, hy, o); if (o.shield) shield(o.shield, o, sh, hip, atk);
+else if (o.weapon2) { P_( [ [0.2, sh + 0.6], [1.8, sh + 0.2], [3.4, sh + 4.6], [2.2, sh + 5], ], shade(tunic, 0.95), INK, 0.4, ); weapon(o.weapon2, [3, sh + 4.8], atk, sh);
+E_(3, sh + 4.8, 0.9, 0.9, sk); } else { P_( [ [0.2, sh + 0.6], [1.8, sh + 0.2], [2.2, sh + 6.4], [0.8, sh + 6.6], ], shade(tunic, 0.95), INK, 0.4, ); E_(1.6, sh + 6.9, 0.9, 0.9, sk); }
+if (o.lean) g.restore(); }
+function helm(kind, x, y, o) { switch (kind) { case 'hood': P_( [ [x - 3, y + 1.6], [x - 2.8, y - 2.4], [x, y - 3.4], [x + 2.6, y - 2], [x + 2.2, y - 0.6], [x - 1, y - 1], [x - 1.4, y + 2], ],
+o.hoodCol || shade(o.tunic, 0.8), INK, 0.4, ); break; case 'cap': P_( [ [x - 2.8, y - 0.6], [x - 2.2, y - 2.8], [x + 0.2, y - 3.5], [x + 2.6, y - 2.2], [x + 3.2, y - 1.2], ],
+o.capCol || shade(o.tunic, 0.8), INK, 0.4, ); break; case 'straw': E_(x, y - 1.6, 4.2, 0.9, '#d8c27a', '#7a6430', 0.4); P_( [ [x - 2, y - 1.8], [x - 1.4, y - 3.6], [x + 1.4, y - 3.6],
+[x + 2, y - 1.8], ], '#cdb66c', '#7a6430', 0.4, ); break; case 'kettle': E_(x, y - 1.6, 4.6, 1.0, steel(x - 4, y - 2, x + 4, y - 1), '#2a3036', 0.4); P_( [ [x - 2.4, y - 1.8], [x - 1.6, y - 4],
+[x + 1.6, y - 4], [x + 2.4, y - 1.8], ], steel(x - 2, y - 4, x + 2, y - 2), '#2a3036', 0.4, ); break; case 'conical': P_( [ [x - 3, y - 0.8], [x, y - 5.2], [x + 3, y - 0.8], ], o.helmCol || '#3a2a20',
+INK, 0.4, ); E_(x, y - 0.8, 3.2, 0.7, shade(o.helmCol || '#3a2a20', 1.3)); break; case 'galea': P_( [ [x - 2.8, y + 0.6], [x - 2.8, y - 2], [x - 0.6, y - 3.4], [x + 2.2, y - 2.6], [x + 2.6, y - 1.2],
+[x - 0.6, y - 1.2], [x - 0.8, y + 1.6], ], steel(x - 3, y - 3, x + 3, y), '#2a3036', 0.4, ); P_( [ [x + 0.2, y - 1.2], [x + 1.4, y - 1.2], [x + 1.2, y + 1.8], [x + 0.2, y + 1.6], ], STEEL, '#2a3036',
+0.3, ); P_( [ [x - 2.6, y - 2.6], [x - 1.4, y - 5.4], [x + 1.8, y - 5.2], [x + 2.2, y - 3], ], o.crest || '#b33a2e', INK, 0.3, ); break; case 'corinth': P_( [ [x - 2.8, y + 2.2], [x - 2.9, y - 2.2],
+[x - 0.6, y - 3.5], [x + 2.4, y - 2.6], [x + 2.8, y + 0.2], [x + 2.2, y + 2.4], [x + 0.6, y + 2.4], [x + 0.6, y - 0.2], [x - 1, y - 0.2], [x - 1.2, y + 2.4], ], bronzeG(x - 3, y - 3, x + 3, y + 2),
+'#4a3010', 0.4, ); P_( [ [x - 2.6, y - 2.8], [x - 3.6, y - 6], [x + 2.6, y - 6.2], [x + 2.2, y - 3.2], ], o.crest || '#c33', INK, 0.3, ); break; case 'great': P_( [ [x - 2.8, y + 2.4],
+[x - 2.8, y - 2.8], [x - 0.6, y - 3.6], [x + 2.8, y - 2.8], [x + 2.8, y + 2.4], ], steel(x - 3, 0, x + 3, 0), '#222a30', 0.45, ); g.fillStyle = '#0b0e10'; g.fillRect(x - 0.2, y - 0.9, 3, 0.7);
+g.fillRect(x + 0.6, y + 0.4, 2.2, 0.4); if (o.crest) { g.strokeStyle = o.crest; g.lineWidth = 1.1; for (let i = 0; i < 4; i++) { g.beginPath(); g.moveTo(x - 1 + i * 0.6, y - 3.4);
+g.quadraticCurveTo(x - 4 + i * 0.6, y - 7 - i * 0.3, x - 6.5 + i * 0.9, y - 3.6 + i * 0.6); g.stroke(); } } break; case 'morion':
+E_(x, y - 1.6, 4.8, 1.0, steel(x - 4, y - 2, x + 4, y - 1), '#2a3036', 0.4); P_( [ [x - 2.4, y - 1.8], [x - 1.8, y - 4.2], [x + 1.8, y - 4.2], [x + 2.4, y - 1.8], ], steel(x - 2, y - 4, x + 2, y - 2),
+'#2a3036', 0.4, ); P_( [ [x - 2, y - 4.1], [x, y - 5.6], [x + 2, y - 4.1], ], shade(STEEL, 0.8), '#2a3036', 0.3, ); break; case 'tiara': P_( [ [x - 2.6, y - 1], [x - 2.2, y - 5.6], [x + 2, y - 5.6],
+[x + 2.6, y - 1], ], o.helmCol || '#e8dcc0', INK, 0.4, ); L_(x - 2.4, y - 1.6, x + 2.4, y - 1.6, '#c9a227', 0.6); break; case 'fur': E_(x, y - 2, 3.2, 1.8, '#6b4a2c', INK, 0.4); P_( [
+[x - 1.6, y - 3], [x, y - 6], [x + 1.6, y - 3], ], o.helmCol || '#b33a2e', INK, 0.3, ); break; case 'turban': E_(x, y - 2.2, 3, 1.9, o.helmCol || '#efe4cc', INK, 0.4);
+L_(x - 2.6, y - 2.4, x + 2.6, y - 1.6, 'rgba(0,0,0,.2)', 0.4); break; case 'skull': E_(x, y, 2.6, 2.7, '#e8e4d8', '#6b6658', 0.4); E_(x + 1.2, y - 0.2, 0.8, 0.9, '#1a1a1a');
+E_(x - 0.4, y - 0.2, 0.7, 0.8, '#1a1a1a'); L_(x - 0.2, y + 1.6, x + 2.2, y + 1.6, '#3a3630', 0.4); break; case 'mask': P_( [ [x - 0.4, y - 0.2], [x + 2.8, y - 0.4], [x + 2.6, y + 2.4],
+[x - 0.2, y + 2.6], ], '#2a2420', ); helm('hood', x, y, { ...o, hoodCol: '#3a3028' }); break; } }
+function weapon(w, h, atk, sh) { const [x, y] = h; switch (w) { case 'spear': { const a = atk ? 0.12 : -0.28, L = 14, B = 6; const dx = Math.cos(a), dy = Math.sin(a);
+L_(x - dx * B, y - dy * B, x + dx * L, y + dy * L, '#8a6a3a', 0.8); P_( [ [x + dx * L, y + dy * L - 0.6], [x + dx * (L + 3), y + dy * (L + 3)], [x + dx * L, y + dy * L + 0.6], ], '#dfe4e8', '#555',
+0.3, ); break; } case 'pike': { const a = atk ? 0.05 : -0.42, L = 22, B = 8; const dx = Math.cos(a), dy = Math.sin(a); L_(x - dx * B, y - dy * B, x + dx * L, y + dy * L, '#8a6a3a', 0.8); P_( [
+[x + dx * L, y + dy * L - 0.5], [x + dx * (L + 3), y + dy * (L + 3)], [x + dx * L, y + dy * L + 0.5], ], '#dfe4e8', '#555', 0.3, ); break; } case 'sword': case 'gladius': {
+const len = w === 'gladius' ? 5 : 7, a = atk ? 0.1 : -1.1, dx = Math.cos(a), dy = Math.sin(a); L_(x, y, x + dx * len, y + dy * len, '#e6eaee', 1);
+L_(x - dy * 1.4, y + dx * 1.4, x + dy * 1.4, y - dx * 1.4, '#c9a227', 0.6); break; } case 'axe': { const a = atk ? 0.4 : -1.2, dx = Math.cos(a), dy = Math.sin(a);
+L_(x - dx, y - dy, x + dx * 6, y + dy * 6, '#7a5430', 0.7); P_( [ [x + dx * 5 - dy * 0.2, y + dy * 5 + dx * 0.2], [x + dx * 6.2 + dy * 2, y + dy * 6.2 - dx * 2],
+[x + dx * 4 + dy * 1.8, y + dy * 4 - dx * 1.8], ], '#c4ccd2', '#555', 0.3, ); break; } case 'pick': { const a = atk ? 0.5 : -1.3, dx = Math.cos(a), dy = Math.sin(a);
+L_(x - dx, y - dy, x + dx * 6.5, y + dy * 6.5, '#7a5430', 0.7); P_( [ [x + dx * 6.5 - dy * 2.6, y + dy * 6.5 + dx * 2.6], [x + dx * 6.5 + dy * 2.6, y + dy * 6.5 - dx * 2.6],
+[x + dx * 7.2 + dy * 0.2, y + dy * 7.2 - dx * 0.2], ], '#8c949b', INK, 0.4, ); break; } case 'hammer': { const a = atk ? 0.6 : -1.1, dx = Math.cos(a), dy = Math.sin(a);
+L_(x, y, x + dx * 5, y + dy * 5, '#7a5430', 0.8); P_( [ [x + dx * 5 - dy * 1.6, y + dy * 5 + dx * 1.6], [x + dx * 5 + dy * 1.6, y + dy * 5 - dx * 1.6],
+[x + dx * 6.4 + dy * 1.6, y + dy * 6.4 - dx * 1.6], [x + dx * 6.4 - dy * 1.6, y + dy * 6.4 + dx * 1.6], ], '#6e747a', INK, 0.4, ); break; } case 'rod': { const a = atk ? -0.5 : -0.95,
+dx = Math.cos(a), dy = Math.sin(a); L_(x - dx, y - dy, x + dx * 12, y + dy * 12, '#8a6a3a', 0.5); L_(x + dx * 12, y + dy * 12, x + dx * 13 + 1, y + dy * 12 + 9, 'rgba(235,240,245,.8)', 0.25); break; }
+case 'club': { const a = atk ? 0.3 : -1.3, dx = Math.cos(a), dy = Math.sin(a); g.lineCap = 'round'; L_(x, y, x + dx * 7, y + dy * 7, '#6b4a2c', 1.6); E_(x + dx * 7, y + dy * 7, 1.4, 1.4, '#5a3c22');
+break; } case 'bigclub': { const a = atk ? 0.3 : -1.3, dx = Math.cos(a), dy = Math.sin(a); g.lineCap = 'round'; L_(x, y, x + dx * 11, y + dy * 11, '#5a4030', 2.6);
+E_(x + dx * 11, y + dy * 11, 2.6, 2.6, '#4a3020'); break; } case 'dagger': L_(x, y, x + 3.4, y + (atk ? -0.2 : -2.4), '#dfe4e8', 0.8); break; case 'staff': L_(x, sh - 6, x + 0.3, 0, '#8a6a3a', 0.9);
+if (w === 'staff') E_(x, sh - 6.4, 1.1, 1.1, '#e6c75a'); break; case 'crook': L_(x, sh - 4, x + 0.3, 0, '#8a6a3a', 0.9); g.strokeStyle = '#8a6a3a'; g.lineWidth = 0.9; g.beginPath();
+g.arc(x - 1.4, sh - 4, 1.4, 0, Math.PI, true); g.stroke(); break; case 'bow': case 'longbow': { const t = w === 'longbow' ? 9 : 6.8, bx = x + 1.2; g.strokeStyle = '#5a3a1c'; g.lineWidth = 0.9;
+g.beginPath(); g.moveTo(bx - 1, y - t); g.quadraticCurveTo(bx + (atk ? 2.4 : 3.4), y, bx - 1, y + t); g.stroke(); L_(bx - 1, y - t, atk ? bx - 4.6 : bx - 1, y, '#efe6cf', 0.3);
+L_(atk ? bx - 4.6 : bx - 1, y, bx - 1, y + t, '#efe6cf', 0.3); if (atk) { L_(bx - 4.6, y, bx + 4, y, '#d9c79a', 0.5); P_( [ [bx + 4, y - 0.5], [bx + 5.4, y], [bx + 4, y + 0.5], ], '#ccc', ); } break;
+} case 'xbow': { L_(x - 3, y + 0.4, x + 6, y - 0.4, '#7a5430', 1.4); g.strokeStyle = '#3a3a3a'; g.lineWidth = 0.8; g.beginPath(); g.moveTo(x + 5, y - 4); g.quadraticCurveTo(x + 6.6, y, x + 5, y + 4);
+g.stroke(); L_(x + 5, y - 4, atk ? x + 5 : x + 1.6, y, '#efe6cf', 0.3); L_(atk ? x + 5 : x + 1.6, y, x + 5, y + 4, '#efe6cf', 0.3); if (!atk) L_(x + 1.6, y - 0.2, x + 7, y - 0.4, '#d9c79a', 0.5);
+break; } case 'gun': { L_(x - 3.4, y + 0.8, x + 4, y, '#6b4a2c', 1.7); L_(x + 3, y - 0.2, x + 14, y - 1.2, '#2c2c32', 1.1); L_(x + 5.5, y - 0.4, x + 5.5, y + 1.6, '#c9a227', 0.5); if (atk) {
+E_(x + 15.4, y - 1.4, 2.2, 1.6, '#ffd35e'); E_(x + 18.4, y - 2.8, 2.8, 2.2, 'rgba(228,228,222,.8)'); } break; } case 'jav': { const a = atk ? -0.05 : -0.9, dx = Math.cos(a), dy = Math.sin(a);
+L_(x - dx * 3, y - dy * 3, x + dx * 9, y + dy * 9, '#9a7a4a', 0.6); P_( [ [x + dx * 9 - dy * 0.4, y + dy * 9 + dx * 0.4], [x + dx * 11, y + dy * 11], [x + dx * 9 + dy * 0.4, y + dy * 9 - dx * 0.4], ],
+'#ccc', ); break; } case 'lance': { const a = atk ? 0 : -0.16, dx = Math.cos(a), dy = Math.sin(a); L_(x - dx * 8, y - dy * 8, x + dx * 18, y + dy * 18, '#d9c79a', 1.1); P_( [
+[x + dx * 18, y + dy * 18 - 0.6], [x + dx * 21, y + dy * 21], [x + dx * 18, y + dy * 18 + 0.6], ], '#dfe4e8', '#555', 0.3, ); break; } case 'scroll': P_( [ [x - 0.6, y - 2.6], [x + 1.4, y - 2.6],
+[x + 1.4, y + 1.6], [x - 0.6, y + 1.6], ], '#f2ead2', '#8a7a5a', 0.3, ); break; case 'bag': E_(x + 0.4, y + 2, 1.8, 1.5, '#7a5a3a', INK, 0.3); L_(x - 0.2, y + 0.8, x + 1, y + 0.8, '#c33', 0.6); break;
+} }
+function shield(kind, o, sh, hip, atk) { const cx = 3.4 + (atk ? -0.6 : 0), cy = sh + 5.2, col = o.trim || o.tunic; if (kind === 'round') {
+E_(cx, cy, 3.6, 4.4, LG(cx - 3, cy - 4, cx + 3, cy + 4, [shade(col, 1.25), col, shade(col, 0.7)]), INK, 0.5); E_(cx, cy, 3.6, 4.4, null, BRONZE, 0.7); E_(cx + 0.3, cy, 0.9, 1.1, BRONZE);
+} else if (kind === 'aspis') { E_(cx, cy - 0.4, 4.4, 5.4, bronzeG(cx - 4, cy - 5, cx + 4, cy + 5), '#4a3010', 0.5); E_(cx, cy - 0.4, 3.4, 4.2, col); E_(cx + 0.4, cy - 0.6, 1.4, 1.6, shade(col, 0.6));
+} else if (kind === 'kite') { P_( [ [cx - 3.2, cy - 5.6], [cx + 3.4, cy - 5.6], [cx + 3.4, cy - 1], [cx + 0.1, cy + 6.6], [cx - 3.2, cy - 1], ],
+LG(cx - 3, 0, cx + 3, 0, [shade(col, 1.2), col, shade(col, 0.7)]), INK, 0.5, ); P_( [ [cx - 3.2, cy - 5.6], [cx + 3.4, cy - 5.6], [cx + 3.4, cy - 1], [cx + 0.1, cy + 6.6], [cx - 3.2, cy - 1], ], null,
+'#d8c27a', 0.5, ); L_(cx, cy - 5.3, cx, cy + 5.8, '#f2e9c8', 0.9); L_(cx - 3, cy - 2.4, cx + 3.2, cy - 2.4, '#f2e9c8', 0.9); } else if (kind === 'scutum') { P_( [ [cx - 2.6, cy - 6.6],
+[cx + 3.2, cy - 6.6], [cx + 3.6, cy + 5.8], [cx - 2.6, cy + 5.8], ], LG(cx - 3, 0, cx + 4, 0, [shade(col, 0.75), col, shade(col, 1.15)]), INK, 0.5, ); P_( [ [cx - 2.6, cy - 6.6], [cx + 3.2, cy - 6.6],
+[cx + 3.6, cy + 5.8], [cx - 2.6, cy + 5.8], ], null, '#d8c27a', 0.6, ); E_(cx + 0.5, cy - 0.4, 1.2, 1.4, BRONZE); L_(cx - 2, cy - 4, cx + 3, cy + 3, 'rgba(242,207,85,.7)', 0.5);
+L_(cx - 2, cy + 3, cx + 3, cy - 4, 'rgba(242,207,85,.7)', 0.5); } else if (kind === 'wicker') { P_( [ [cx - 2.6, cy - 6], [cx + 3.2, cy - 6], [cx + 3.2, cy + 5], [cx - 2.6, cy + 5], ], '#c9a96a',
+'#6b5230', 0.5, ); g.strokeStyle = 'rgba(90,64,30,.6)'; g.lineWidth = 0.35; for (let y = cy - 5.4; y < cy + 5; y += 1.2) { g.beginPath(); g.moveTo(cx - 2.4, y); g.lineTo(cx + 3, y); g.stroke(); }
+L_(cx - 2.6, cy - 6, cx + 3.2, cy - 6, col, 1); } P_( [ [0.2, sh + 0.6], [1.8, sh + 0.2], [cx + 0.6, cy - 0.6], [cx - 0.8, cy + 0.8], ], shade(o.tunic, 0.95), ); }
+function horse(o, fr, dx = 0) { const c = o.coat || '#7a4e2c', cd = shade(c, 0.7), sw = fr === 1 ? 1 : fr === 2 ? -1 : 0; const leg = (x, a, col) => { g.save(); g.translate(x + dx, -7); g.rotate(a);
+P_( [ [-1.1, 0], [1.1, 0], [0.9, 4.2], [-0.9, 4.2], ], col, INK, 0.35, ); P_( [ [-0.9, 4.2], [0.9, 4.2], [0.8, 6.6], [-0.8, 6.6], ], col, INK, 0.35, ); P_( [ [-1, 6.6], [1, 6.6], [1.2, 7.4],
+[-1.2, 7.4], ], '#1e1a16', ); g.restore(); }; leg(-6, -0.25 * sw, cd); leg(6.4, 0.25 * sw, cd); g.strokeStyle = shade(c, 0.45); g.lineWidth = 1.6; g.beginPath(); g.moveTo(dx - 9, -11);
+g.quadraticCurveTo(dx - 12.5, -8, dx - 11.5, -3.5); g.stroke(); E_(dx, -10.6, 10, 4.3, LG(dx, -15, dx, -6, [shade(c, 1.2), c, shade(c, 0.75)]), INK, 0.45); P_( [ [dx + 6.5, -13], [dx + 10, -19],
+[dx + 12.4, -20.2], [dx + 13, -17.4], [dx + 9.2, -10], ], LG(dx + 6, -20, dx + 13, -10, [shade(c, 1.15), c]), INK, 0.45, ); P_( [ [dx + 11.4, -20.6], [dx + 15.6, -18], [dx + 16.6, -15.8],
+[dx + 15.2, -15], [dx + 12.4, -16.6], ], LG(dx + 11, -20, dx + 17, -15, [shade(c, 1.1), shade(c, 0.85)]), INK, 0.45, ); P_( [ [dx + 11.6, -20.4], [dx + 12.2, -22.6], [dx + 12.8, -20.4], ], cd, );
+E_(dx + 13.2, -18.6, 0.45, 0.45, '#0b0b0b'); g.strokeStyle = shade(c, 0.4); g.lineWidth = 1.1; g.beginPath(); g.moveTo(dx + 7, -14.5); g.quadraticCurveTo(dx + 9, -19, dx + 11.6, -20.6); g.stroke();
+if (o.barding === 'cloth') { P_( [ [dx - 9.6, -12.4], [dx + 8.6, -13], [dx + 9.4, -7.6], [dx + 6, -5.2], [dx - 4, -5.4], [dx - 9.8, -7.2], ],
+LG(0, -13, 0, -5, [shade(o.cloth, 1.2), o.cloth, shade(o.cloth, 0.7)]), INK, 0.45, ); for (let i = 0; i < 6; i++) P_( [ [dx - 8.4 + i * 3, -5.6], [dx - 7 + i * 3, -4.2], [dx - 5.6 + i * 3, -5.6], ],
+'#e9d28a', ); L_(dx - 9.4, -12.2, dx + 8.6, -12.8, '#e9d28a', 0.6); } if (o.barding === 'scale' || o.barding === 'mail') { P_( [ [dx - 9.6, -13], [dx + 9, -13.6], [dx + 9.6, -7.8], [dx - 9.8, -7.4],
+], o.barding === 'scale' ? bronzeG(0, -14, 0, -7) : '#9aa2a8', INK, 0.45, ); g.strokeStyle = 'rgba(40,30,20,.55)'; g.lineWidth = 0.3; for (let y = -12.6; y < -8; y += 1.1)
+for (let x = -9; x < 9; x += 1.3) { g.beginPath(); g.arc(dx + x, y, 0.6, 0, Math.PI); g.stroke(); } P_( [ [dx + 6.8, -13.4], [dx + 10.4, -19.4], [dx + 12.2, -20.4], [dx + 10.4, -13], ],
+o.barding === 'scale' ? bronzeG(0, -20, 0, -13) : '#9aa2a8', INK, 0.4, ); } if (o.saddle !== false) P_( [ [dx - 3.6, -15], [dx + 2.4, -15.2], [dx + 3, -13.6], [dx - 4.2, -13.4], ], '#3a2414', INK,
+0.4, ); leg(-4.2, 0.25 * sw, c); leg(8.2, -0.25 * sw, c); }
+function quad(o, fr) { const c = o.col, L = o.len, H = o.h, sw = fr === 1 ? 1 : fr === 2 ? -1 : 0, cd = shade(c, 0.7); const leg = (x, a, col) => { g.save(); g.translate(x, -o.legH); g.rotate(a); P_(
+[ [-o.legW, 0], [o.legW, 0], [o.legW * 0.8, o.legH], [-o.legW * 0.8, o.legH], ], col, INK, 0.3, ); g.restore(); }; leg(-L * 0.32, -0.3 * sw, cd); leg(L * 0.3, 0.3 * sw, cd);
+if (o.tail) L_(-L * 0.48, -o.legH - H * 0.6, -L * 0.6, -o.legH - H * 0.1, cd, o.tail);
+E_(0, -o.legH - H / 2, L / 2, H / 2, LG(0, -o.legH - H, 0, -o.legH, [shade(c, 1.2), c, shade(c, 0.75)]), INK, 0.4); if (o.hump) E_(-L * 0.05, -o.legH - H * 0.9, L * 0.3, H * 0.4, shade(c, 1.05));
+const hx = L / 2 + o.head * (fr === 4 ? 1.2 : 0.4), hy = fr === 4 ? -o.head * 0.9 : -o.legH - H * o.headY; P_( [ [L * 0.35, -o.legH - H * 0.9], [hx, hy - o.head * 0.7],
+[hx + o.head * 1.4, hy + o.head * 0.2], [hx + o.head * 1.2, hy + o.head * 0.8], [L * 0.38, -o.legH - H * 0.2], ], c, INK, 0.4, );
+E_(hx + o.head * 0.4, hy, o.head, o.head * 0.8, shade(c, 1.05), INK, 0.35); E_(hx + o.head * 0.6, hy - o.head * 0.25, 0.4, 0.4, o.eye || '#0b0b0b'); P_( [ [hx - o.head * 0.4, hy - o.head * 0.6],
+[hx - o.head * 0.1, hy - o.head * 1.6], [hx + o.head * 0.3, hy - o.head * 0.6], ], cd, ); if (o.antlers) { g.strokeStyle = '#d8c8a0'; g.lineWidth = 0.6; g.beginPath(); g.moveTo(hx, hy - o.head);
+g.lineTo(hx - 1.2, hy - o.head - 4); g.moveTo(hx - 0.7, hy - o.head - 2.4); g.lineTo(hx + 1.2, hy - o.head - 3.6); g.moveTo(hx - 1.1, hy - o.head - 3.6); g.lineTo(hx - 3, hy - o.head - 4.6);
+g.stroke(); } if (o.tusk) { g.strokeStyle = '#efe6cf'; g.lineWidth = 0.6; g.beginPath(); g.moveTo(hx + o.head * 1.2, hy + o.head * 0.4);
+g.quadraticCurveTo(hx + o.head * 1.8, hy, hx + o.head * 1.4, hy - o.head * 0.5); g.stroke(); } if (o.bristle) { g.strokeStyle = shade(c, 0.5); g.lineWidth = 0.4; for (let i = 0; i < 6; i++)
+L_(-L * 0.2 + i * L * 0.08, -o.legH - H, -L * 0.22 + i * L * 0.08, -o.legH - H - 1.2, shade(c, 0.5), 0.4); } leg(-L * 0.22, 0.3 * sw, c); leg(L * 0.38, -0.3 * sw, c); }
+function planks(x0, y0, x1, y1, col) { P_( [ [x0, y0], [x1, y0], [x1, y1], [x0, y1], ], LG(x0, 0, x1, 0, [shade(col, 1.15), col, shade(col, 0.75)]), INK, 0.5, ); g.strokeStyle = 'rgba(40,24,10,.45)';
+g.lineWidth = 0.35; for (let y = y0 + 2; y < y1; y += 2.2) { g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke(); } }
+const WORKTOOL = ['axe', 'none', 'pick', 'none', 'rod', 'hammer'];
+const LOOKS = {
+vil: (c, t, fr) => { const wk = fr >= 10 ? (fr - 10) >> 1 : -1, ph = fr >= 10 ? (fr - 10) & 1 : 0; return person( { tunic: '#8a6a44', trim: c, sash: c, head: 'bare',
+weapon: wk < 0 ? 'axe' : WORKTOOL[wk], lean: wk === 1 || wk === 3 ? (ph ? 0.62 : 0.4) : 0, legs: '#5a4a38', beard: '#6b4a2c', }, wk < 0 ? fr : ph ? 3 : 0, ); },
+spear: (c, t, fr) => person({ tunic: c, head: 'bare', shield: 'round', weapon: 'spear', legs: '#6b5a40', beard: '#4a3420' }, fr),
+archer: (c, t, fr) => person({ tunic: c, head: 'hood', weapon: 'bow', legs: '#5a4a38' }, fr),
+cata: (c, t, fr) => (() => { horse({ coat: '#5a3a24', barding: 'scale' }, fr); g.save(); g.translate(-0.6, -1); person( { tunic: c, body: 'scale', head: 'conical', helmCol: STEEL, weapon: 'lance',
+seated: true, legs: '#9aa2a8', }, fr, ); g.restore(); })(),
+ram: (c, t, fr) => { L_(-17 + (fr === 3 ? 4 : 0), -8, 15 + (fr === 3 ? 4 : 0), -8, '#6b4a2c', 3); P_( [ [15 + (fr === 3 ? 4 : 0), -10], [19 + (fr === 3 ? 4 : 0), -8], [15 + (fr === 3 ? 4 : 0), -6], ],
+'#5d6670', INK, 0.4, ); P_( [ [-13, -6], [13, -6], [13, -12], [0, -19], [-13, -12], ], LG(0, -19, 0, -6, ['#8a6a44', '#6b4a2c']), INK, 0.6, ); g.strokeStyle = 'rgba(30,20,10,.5)'; g.lineWidth = 0.4;
+for (let i = -11; i < 13; i += 3) { g.beginPath(); g.moveTo(i, -6); g.lineTo(i, -12 + Math.abs(i) * 0); g.stroke(); } P_( [ [-13, -12], [0, -19], [13, -12], [0, -14], ], '#7a8a5a', INK, 0.4, );
+g.fillStyle = c; g.fillRect(-1, -19, 2, -5); P_( [ [1, -24], [6, -22.6], [1, -21.2], ], c, ); wheel(-9, -3.2, 3.2); wheel(0, -3.2, 3.2); wheel(9, -3.2, 3.2); },
+catapult: (c, t, fr) => { planks(-11, -6, 11, -3, WOOD); P_( [ [-2, -6], [0, -14], [2, -6], ], WOOD, INK, 0.5, ); const a = fr === 3 ? -1.2 : -0.35; g.save(); g.translate(0, -12); g.rotate(a);
+L_(-14, 0, 6, 0, '#6b4a2c', 1.6); E_(-14, 0, 2.6, 1.6, '#4a3020', INK, 0.4); if (fr !== 3) E_(-14, -1.6, 1.4, 1.4, '#8a8a8a'); g.restore(); L_(-8, -6, -11, -9, '#6b4a2c', 0.8); g.fillStyle = c;
+g.fillRect(8, -6, 3, -4); wheel(-7, -2.6, 2.8); wheel(7, -2.6, 2.8); },
+priest: (c, t, fr) => person( { tunic: '#efe6cf', trim: '#c9a227', body: 'robe', head: 'bare', weapon: 'staff', sash: c, legs: '#d8cdb2', beard: '#d8d0c0', }, fr, ),
+medic: (c, t, fr) => person( { tunic: '#e4dccb', trim: c, head: 'cap', capCol: '#e4dccb', weapon: 'bag', sash: '#c23a30', legs: '#6b5a48' }, fr, ),
+spy: (c, t, fr) => person( { tunic: '#2a2a30', trim: c, body: 'robe', head: 'hood', hoodCol: '#1c1c22', weapon: 'dagger', cape: '#1c1c22', legs: '#22222a', }, fr, ),
+scout: (c, t, fr) => { person({ tunic: c, head: 'cap', capCol: shade(c, 0.6), weapon: 'staff', cape: shade(c, 0.6) }, fr); },
+caravan: (c, t, fr) => { horse({ coat: '#8a7a6a', saddle: false }, fr, 9); L_(-2, -9, 6, -11, '#5a3a1c', 0.8); planks(-14, -13, -1, -6, WOOD); E_(-11, -16, 2.6, 2.4, '#c9a96a', INK, 0.3);
+E_(-6.5, -16.4, 2.6, 2.6, '#d8c27a', INK, 0.3); E_(-8.5, -18.6, 2.2, 2, c, INK, 0.3); wheel(-7.5, -4.6, 4.4); },
+wagon: (c, t, fr) => { horse({ coat: '#6a5a4a', saddle: false }, fr, 14); horse({ coat: '#8a7a6a', saddle: false }, fr, 4); L_(-6, -9, 2, -11, '#5a3a1c', 0.8); planks(-22, -13, -4, -6, WOOD); P_( [
+[-22, -13], [-4, -13], [-5, -22], [-13, -25], [-21, -22], ], '#e4dcc6', INK, 0.4, ); for (const x of [-18, -13, -8]) L_(x, -13, x, -22, '#d2c8ae', 0.6); L_(-21, -22, -5, -22, c, 1.4);
+wheel(-17, -4.6, 4.6); wheel(-8, -4.6, 4.6); },
+bandit: (c, t, fr) => person( { tunic: '#5a5040', head: 'hood', hoodCol: '#4a3e2e', weapon: 'club', legs: '#3a3228', beard: '#3a2a1a' }, fr, ),
+robber: (c, t, fr) => person({ tunic: '#4a3a30', head: 'mask', weapon: 'sword', shield: 'round', trim: '#6b3a2a', legs: '#2e2620' }, fr),
+vagabond: (c, t, fr) => person({ tunic: '#6a5e4e', head: 'bare', weapon: 'none', legs: '#4a4038', beard: '#4a3a2a', sash: '#8a3a2a' }, fr),
+wayfarer: (c, t, fr) => person( { tunic: '#7a6a50', head: 'straw', weapon: 'crook', legs: '#5a4a38', beard: '#8a8070', cape: '#6b5a40' }, fr, ),
+deer: (c, t, fr) => quad( { col: '#a0703e', len: 13, h: 5.6, legH: 7.4, legW: 0.6, head: 2.2, headY: 1.8, antlers: true, tail: 0.8 }, fr, ),
+wolf: (c, t, fr) => quad({ col: '#7a7570', len: 13, h: 5, legH: 5.2, legW: 0.7, head: 2.2, headY: 1.0, tail: 1.6 }, fr),
+bear: (c, t, fr) => quad({ col: '#4e3524', len: 17, h: 9, legH: 4.5, legW: 1.5, head: 3.2, headY: 0.8, hump: true, tail: 0 }, fr),
+};
+const LOOKBOX = { scout: [44, 34], caravan: [36, 30], wagon: [48, 32], chariot: [36, 34], cata: [58, 36], malihorse: [58, 36], harcher: [36, 36], elephant: [48, 44], ram: [42, 30], stower: [24, 58],
+catapult: [32, 26], ballista: [30, 24], treb: [48, 50], deer: [26, 22], boar: [24, 16], wolf: [24, 16], direwolf: [36, 24], bear: [30, 22], bison: [40, 26], dragon: [48, 24], troll: [26, 46],
+spear: [52, 34], vil: [30, 30], legion: [30, 30], immortal: [44, 30], sword: [30, 30], jav: [34, 30], crossbow: [34, 30], arquebus: [40, 30], bombard: [44, 30], };
 // ── B the buildings (layer 110; shells without Walk): the size in tiles (D8–D11; a wall piece is one tile, D12), Open or Closed (S Styles), the picture it wears. Health, prices and times come with the Content pull.
 const B = {
-  BTC1: ['Town Center', 6, 0, 'keep'], BTC2: ['Castle', 6, 0, 'castle'], BTC5: ['Medical tent', 2, 0, 'medtent'], BTC6: ['Training tent', 2, 0, 'traintent'], BTC7: ['Mess tent', 2, 0, 'messtent'], BTC8: ['Camp tower', 2, 0, 'camptower'],
+  BTC1: ['Town Center', 6, 0, 'keep', ['food', 'wood', 'gold', 'stone', 'iron']], BTC2: ['Castle', 6, 0, 'castle'], BTC5: ['Medical tent', 2, 0, 'medtent'], BTC6: ['Training tent', 2, 0, 'traintent'], BTC7: ['Mess tent', 2, 0, 'messtent'], BTC8: ['Camp tower', 2, 0, 'camptower'],
   BR1: ['Home', 2, 0, 'house'], BR2: ['Apartment', 3, 0, 'apartment'],
   BCR1: ['Market', 3, 1, 'market'], BCR2: ['Tavern', 2, 0, 'tavern'], BCL1: ['Farm', 3, 1, 'farm'], BCL2: ['Tree farm', 3, 1, 'treefarm'], BCL3: ['Pasture', 3, 1, 'pasture'], BCL4: ['Quarry', 3, 1, 'quarry'], BCT1: ['Trade post', 2, 1, 'tpost'], BCT2: ['Dock', 2, 1, 'dock'],
   BP1: ['School', 3, 0, 'school'], BP2: ['Library', 4, 0, 'library'], BP3: ['Temple', 4, 0, 'temple'], BP4: ['Baths', 3, 0, 'baths'], BP5: ['Theatre', 4, 0, 'theatre'], BP6: ['Hospital', 3, 0, 'hospital'], BP7: ['Aqueduct', 3, 0, 'aqueduct'], BP8: ['Courthouse', 3, 0, 'courthouse'], BP9: ['Hall', 3, 0, 'hall'], BP10: ['War Council', 3, 0, 'council'],
-  BI1: ['Mill', 3, 0, 'mill'], BI2: ['Lumber camp', 3, 0, 'lumber'], BI3: ['Mining camp', 3, 0, 'mining'], BI4: ['Store', 3, 0, 'store'], BI5: ['Depot', 2, 0, 'depot'], BI6: ['Mint', 3, 0, 'mint'], BI7: ['Foundry', 3, 0, 'foundry'], BI8: ['Workshop', 3, 0, 'workshop'], BI9: ['Smith', 3, 0, 'smith'],
+  BI1: ['Mill', 3, 0, 'mill', ['food']], BI2: ['Lumber camp', 3, 0, 'lumber', ['wood']], BI3: ['Mining camp', 3, 0, 'mining', ['gold', 'stone', 'iron']], BI4: ['Store', 3, 0, 'store'], BI5: ['Depot', 2, 0, 'depot'], BI6: ['Mint', 3, 0, 'mint'], BI7: ['Foundry', 3, 0, 'foundry'], BI8: ['Workshop', 3, 0, 'workshop'], BI9: ['Smith', 3, 0, 'smith'],
   BM1: ['Barracks', 4, 0, 'barracks'], BM2: ['Range', 4, 1, 'range'], BM3: ['Stable', 4, 0, 'stable'], BM4: ['Siege workshop', 4, 0, 'siege'],
   BW1: ['Wall', 1, 0, 'wall'], BW2: ['Gate', 1, 0, 'gate'], BW3: ['Tower', 2, 0, 'tower'], BW4: ['Palisade', 1, 0, 'palisade'], BF5: ['Abatis', 1, 0, 'abatis'],
   BS1: ['Throne', 6, 0, 'throne'], BS2: ['Wonder', 6, 0, 'wonder'],
@@ -674,14 +835,90 @@ function build(code, i, j, col = C.blue) {
   const [, n] = B[code]; if (i < 0 || j < 0 || i + n > N || j + n > N) return null;
   for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) if (!free(y * N + x) || H[y * N + x] !== H[j * N + i]) return null;
   for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) OCC[y * N + x] = B[code][2] ? 3 : 2;
-  const [bx, by] = toBoard((i + n / 2) * D.tile, (j + n / 2) * D.tile), [vx, vy] = toView(bx, by, H[j * N + i]), t = { kind: 'bld', code, i, j, n, bx, by, vx, vy, col, size: 1 };
+  const [bx, by] = toBoard((i + n / 2) * D.tile, (j + n / 2) * D.tile), [vx, vy] = toView(bx, by, H[j * N + i]), t = { kind: 'bld', code, i, j, n, bx, by, vx, vy, col, side: SIDES.findIndex((q) => q.col === col), size: 1 };
   things.push(t); things.sort((a, b) => a.vy - b.vy); return t;
 }
 function unbuild(t) { for (let y = t.j; y < t.j + t.n; y++) for (let x = t.i; x < t.i + t.n; x++) OCC[y * N + x] = 0; things.splice(things.indexOf(t), 1); }
 function makeBuildings() { // The Town Center: Who every corner · What one · Where Z2 on the road at D84, the same in all four (L12) · When the map is made · Why the game starts with a hall to gather at · How no roll: fixed
-  for (let c = 0; c < 4; c++) { const [sx, sy] = fromBoard(...corner(c, ...D.tc)), n = B.BTC1[1]; build('BTC1', Math.round(sx / D.tile - n / 2), Math.round(sy / D.tile - n / 2)); }
+  for (let c = 0; c < 4; c++) { const [sx, sy] = fromBoard(...corner(c, ...D.tc)), n = B.BTC1[1]; build('BTC1', Math.round(sx / D.tile - n / 2), Math.round(sy / D.tile - n / 2), SIDES[c].col); }
 }
 
+// ── Floor 5, movables (layer 120): U units and M moveables are shells that walk. Each stands at a board point, walks tile to tile along a path (QBL), and does one thing at a time.
+const SIDES = [{ col: C.blue }, { col: C.green }, { col: C.red }, { col: C.white }].map((q) => ({ ...q, store: { food: 0, wood: 0, gold: 0, stone: 0, iron: 0 } })); // one a corner (C5–C8); the player is 0
+const U = { // code → name, look (preview 49), speed (D86, m/s → units by D85), what it is
+  UV: ['Villager', 'vil', 'walk'], UM1: ['Foot', 'spear', 'walk'], UM2: ['Archers', 'archer', 'walk'], UM3: ['Riders', 'cata', 'trot'], UM4: ['Engines', 'ram', 'push'], UM4b: ['Engines', 'catapult', 'push'],
+  US1: ['Priest', 'priest', 'walk'], US2: ['Medic', 'medic', 'walk'], US3: ['Spy', 'spy', 'walk'], US4: ['Scout', 'scout', 'walk'], UT1: ['Caravan', 'caravan', 'horse'], UT2: ['Camp wagon', 'wagon', 'horse'],
+  MH1: ['Outlaws', 'bandit', 'walk'], MH3: ['Robbers', 'robber', 'walk'], MH4: ['Vagabonds', 'vagabond', 'walk'], MH5: ['Wayfarers', 'wayfarer', 'walk'], MW3: ['Deer', 'deer', 'deer'], MW4: ['Wolf', 'wolf', 'wolf'], MW6: ['Bear', 'bear', 'bear'],
+};
+let units = [], sel = null;
+const WORK = { tree: 0, bush: 1, gold: 2, stone: 2, iron: 2 }; // the tool a villager works a find with (WORKTOOL): axe, hands, pick
+const YIELD = (t) => KIND[t.kind].yield;
+// walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step past the angle of repose is not
+const walkable = (k) => k >= 0 && H[k] > -D.wade / 2 && (OCC[k] === 0 || OCC[k] === 3);
+const stepOk = (a, b) => walkable(b) && Math.abs(H[a] - H[b]) <= REPOSE;
+// QBL A* over the tiles, eight ways, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile will do; returns the tiles to walk, or null
+function findPath(from, goal, near) {
+  const open = [from], gs = new Map([[from, 0]]), came = new Map(), done = new Set(), fs = new Map([[from, 0]]), hx = (k) => { const dx = Math.abs((k % N) - (near % N)), dy = Math.abs(Math.floor(k / N) - Math.floor(near / N)); return Math.max(dx, dy) + (Math.SQRT2 - 1) * Math.min(dx, dy); };
+  const push = (k) => { open.push(k); let i = open.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (fs.get(open[p]) <= fs.get(open[i])) break; [open[p], open[i]] = [open[i], open[p]]; i = p; } };
+  const pop = () => { const top = open[0], last = open.pop(); if (open.length) { open[0] = last; let i = 0; for (;;) { const l = 2 * i + 1, r = l + 1; let m = i; if (l < open.length && fs.get(open[l]) < fs.get(open[m])) m = l; if (r < open.length && fs.get(open[r]) < fs.get(open[m])) m = r; if (m === i) break; [open[m], open[i]] = [open[i], open[m]]; i = m; } } return top; };
+  for (let n = 0; open.length && n < 20000; n++) {
+    const k = pop(); if (done.has(k)) continue; done.add(k);
+    if (goal(k)) { const path = [k]; let q = k; while (came.has(q)) { q = came.get(q); path.push(q); } return path.reverse(); }
+    const i = k % N, j = (k - i) / N;
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]) {
+      const x = i + dx, y = j + dy; if (x < 0 || y < 0 || x >= N || y >= N) continue; const q = y * N + x; if (done.has(q) || !stepOk(k, q)) continue;
+      if (dx && dy && !(walkable(j * N + x) && walkable(y * N + i))) continue; // no cutting a corner
+      const g = gs.get(k) + (dx && dy ? Math.SQRT2 : 1); if (g >= (gs.get(q) ?? 1e9)) continue; gs.set(q, g); fs.set(q, g + hx(q)); came.set(q, k); push(q);
+    }
+  }
+  return null;
+}
+const tileMid = (k) => { const i = k % N; return toBoard((i + 0.5) * D.tile, ((k - i) / N + 0.5) * D.tile); };
+const nextTo = (k) => (q) => Math.abs((q % N) - (k % N)) <= 1 && Math.abs(Math.floor(q / N) - Math.floor(k / N)) <= 1 && q !== k;
+function spawn(code, side, k, roll) { // a unit on a tile; its stand wanders in the tile (D82)
+  const [bx, by] = tileMid(k), u = { kind: 'unit', code, side, bx: bx + (roll() * 2 - 1) * D.jitter, by: by + (roll() * 2 - 1) * D.jitter, k, vx: 0, vy: 0, path: null, at: 0, job: 'idle', target: null, load: 0, carry: null, face: 1, t: roll() * 10, wait: 0 };
+  place(u); units.push(u); return u;
+}
+const place = (u) => { u.k = tileAt(u.bx, u.by); [u.vx, u.vy] = toView(u.bx, u.by, Math.max(0, H[u.k])); };
+function walkTo(u, goal, near) { const p = findPath(u.k, goal, near); if (!p) return false; u.path = p; u.at = 1; return true; }
+function go(u, k) { return walkTo(u, (q) => q === k, k); } // to a tile
+function goBeside(u, k) { return walkTo(u, nextTo(k), k); } // to a tile beside one
+// the drop-off for a yield: the side's nearest building that takes it in (SC Drop-off, B's fifth field)
+const dropFor = (u, y) => { let best = null; for (const t of things) if (t.kind === 'bld' && t.side === u.side && (B[t.code][4] || []).includes(y)) { const d = Math.hypot(t.bx - u.bx, t.by - u.by); if (!best || d < best[1]) best = [t, d]; } return best && best[0]; };
+const findNear = (u, kind) => { let best = null; for (const t of things) if (t.kind === kind && t.amount > 0) { const d = Math.hypot(t.bx - u.bx, t.by - u.by); if (d <= D.next && (!best || d < best[1])) best = [t, d]; } return best && best[0]; };
+function gather(u, t) { u.job = 'go'; u.then = 'gather'; u.target = t; if (!goBeside(u, t.k)) u.job = 'idle'; }
+function deliver(u) { const b = dropFor(u, u.carry); if (!b) { u.job = 'idle'; return; } u.job = 'go'; u.then = 'drop'; u.drop = b; if (!walkTo(u, (q) => { const i = q % N, j = (q - i) / N; return i >= b.i - 1 && i <= b.i + b.n && j >= b.j - 1 && j <= b.j + b.n; }, tileAt(b.bx, b.by))) u.job = 'idle'; }
+function take(t, n) { t.amount -= n; if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); if (t.kind === 'tree') wake(t); } } // a find used up is gone; its tile is free again
+function step(dt) { // one tick for every unit
+  for (const u of units) {
+    u.t += dt;
+    if (u.path) { // walking: toward the next tile's middle at the shell's speed
+      const [tx, ty] = tileMid(u.path[u.at]), dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy), v = D.speed[U[u.code][2]] * D.upm * dt;
+      if (d <= v) { u.bx = tx; u.by = ty; if (++u.at >= u.path.length) { u.path = null; u.job = u.then || 'idle'; } } else { u.bx += (dx / d) * v; u.by += (dy / d) * v; u.face = dx < 0 ? -1 : 1; }
+      place(u); continue;
+    }
+    if (u.job === 'gather') { const t = u.target; if (!t || t.amount <= 0 || things.indexOf(t) < 0) { const n = t && findNear(u, t.kind); u.job = 'idle'; if (n) gather(u, n); else if (u.load) deliver(u); continue; }
+      const y = YIELD(t); if (u.carry && u.carry !== y) { deliver(u); continue; } u.carry = y; u.face = t.bx < u.bx ? -1 : 1;
+      const n = Math.min(D.rate[t.kind] * dt, t.amount, D.carry - u.load); u.load += n; take(t, n); if (u.load >= D.carry - 1e-6) deliver(u); }
+    else if (u.job === 'drop') { SIDES[u.side].store[u.carry] += u.load; u.load = 0; const t = u.target, n = t && things.indexOf(t) >= 0 && t.amount > 0 ? t : t && findNear(u, t.kind); u.job = 'idle'; if (n) gather(u, n); }
+    else if (u.code[0] === 'M' && u.job === 'idle') { // wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95
+      if (u.wait <= 0) { u.wait = -D.wait * Math.log(1 - Math.random()); const k = tileAt(u.bx + (Math.random() * 2 - 1) * D.reach, u.by + (Math.random() * 2 - 1) * D.reach); if (walkable(k)) go(u, k); } else u.wait -= dt; }
+  }
+  if (sel) showStore();
+}
+function showStore() { const st = SIDES[0].store; document.getElementById('store').textContent = ['food', 'wood', 'gold', 'stone', 'iron'].map((y) => Math.floor(st[y])).join(' · '); }
+function makeUnits(roll) {
+  // The villagers: Who every side · What D67 villagers · Where round its Town Center · When the game starts · Why hands to gather and build · How the free tiles nearest the hall
+  for (const t of things) if (t.kind === 'bld' && t.code === 'BTC1') { const got = []; stamp(t.bx, t.by, (t.n / 2 + 3) * D.tile, (k, d) => { if (walkable(k)) got.push([d, k]); }); got.sort((a, b) => a[0] - b[0]); for (const [, k] of got.slice(0, D.villagers)) spawn('UV', t.side, k, roll); }
+  // The wildlife: Who the map · What herds of deer and packs of wolves · Where Z4, on walkable ground · When the map is made · Why food to hunt, teeth to fear · How counts D90–D93, places uniform until one walks
+  for (const [code, herds, herd] of [['MW3', D.herds, D.herd], ['MW4', D.packs, D.pack]]) for (let m = count(roll, herds); m > 0; m--) {
+    for (let tries = 0; tries < 100; tries++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (!inZ4(bx, by, 2 * D.tile) || !walkable(k)) continue;
+      const got = []; stamp(bx, by, 3 * D.tile, (q, d) => { if (walkable(q)) got.push([d, q]); }); got.sort((a, b) => a[0] - b[0]); for (const [, q] of got.slice(0, count(roll, herd))) spawn(code, -1, q, roll); break; } }
+}
+// a unit's picture: the look at its frame, facing right, painted once per look, colour and frame (LOOKBOX gives the box)
+function unitSprite(u, s) { const look = U[u.code][1], col = u.side >= 0 ? SIDES[u.side].col : C.white, [bw, bh] = LOOKBOX[look] || [26, 30], pad = 3;
+  const fr = u.path ? Math.floor(u.t * D.steps) % 4 : u.job === 'gather' ? 10 + WORK[u.target.kind] * 2 + (Math.floor(u.t / D.beat) % 2) : 0;
+  return sprite(look + col + fr, bw + 2 * pad, bh + 2 * pad, bw / 2 + pad, bh + pad - 1, bw / 2 + pad, bh + pad - 1, 0, s, () => LOOKS[look](col, 0, fr)); }
 // ── The things, drawn each frame back to front, only those on the screen. A picture is painted once per look and zoom step, then stamped (the sprite cache); far out (D83) a node is a dot. The gifts are drawn direct, as tints of C.
 const SPR = new Map(), STEP = Math.SQRT2;
 function sprite(key, W, H, tx, ty, ax, ay, skew, s, paint) { // W × H units, the art's origin at (tx, ty), its anchor (the point stamped at the thing's stand) at (ax, ay)
@@ -689,7 +926,7 @@ function sprite(key, W, H, tx, ty, ax, ay, skew, s, paint) { // W × H units, th
   c = document.createElement('canvas'); c.width = Math.ceil(W * q); c.height = Math.ceil(H * q); g = c.getContext('2d'); g.scale(q, q); g.translate(tx, ty); if (skew) g.transform(1, skew, 0, 1, 0, 0); g.lineJoin = 'round'; g.lineCap = 'round'; paint(); g = null;
   c.ax = ax; c.ay = ay; c.q = q; if (SPR.size > 400) SPR.delete(SPR.keys().next().value); SPR.set(k, c); return c;
 }
-const blit = (c, x, y, s) => { const f = s / c.q; ctx.drawImage(c, x - c.ax * s, y - c.ay * s, c.width * f, c.height * f); };
+const blit = (c, x, y, s, into = ctx) => { const f = s / c.q; into.drawImage(c, x - c.ax * s, y - c.ay * s, c.width * f, c.height * f); };
 const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647; // the node art's own small dice, seeded by the variant, so a tree's leaves fall the same each paint
 const NODE_SCALE = { tree: 0.88, bush: 1.45 };
 const nodeSprite = (kind, v, s) => sprite(kind + v, 46, 58, 17, 54, 17, 54, 0, s, () => { const f = NODE_SCALE[kind] || 1.25; g.scale(f, f); nodeArt(kind, v, NS_rng(11 + v * 7 + kind.length)); });
@@ -706,14 +943,42 @@ const GIFT = { // each drawn at its stand (x, y on the screen), s pixels a unit
   treasure: (x, y, s) => { rect(x - 3 * s, y - 4 * s, 6 * s, 4 * s, CHEST); rect(x - 3 * s, y - 5.2 * s, 6 * s, 1.5 * s, LID); rect(x - 0.6 * s, y - 5.2 * s, 1.2 * s, 5.2 * s, C.gold); },
 };
 const DOT = { tree: '#3c6c32', bush: '#3f6b33', gold: C.gold, stone: ROCK, iron: RUIN, ruins: RUIN, cemetery: ROCKLIT, campfire: C.gold, treasure: C.gold };
+// ── The woods cache: the deep trees (eight tree neighbours) are painted once per chunk of the board and zoom step; the rest of the things are stamped each frame. Cutting a tree wakes its neighbours and repaints the chunk.
+const CS = 32, NC = Math.ceil(N / CS), WOODS = new Map(), DEEP = Array.from({ length: NC * NC }, () => []); // chunks of CS × CS tiles
+const chunkOf = (k) => Math.floor((k % N) / CS) + Math.floor(k / N / CS) * NC;
+const treeAt = (k) => OCC[k] === 1 && FOR[k];
+function deepen(t) { const i = t.k % N, j = (t.k - i) / N; if (i < 1 || j < 1 || i >= N - 1 || j >= N - 1) return; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]) if (!treeAt((j + dy) * N + i + dx)) return; t.deep = true; DEEP[chunkOf(t.k)].push(t); }
+function wake(t) { // a tree cut: its chunk is stale, and its neighbours stand at an edge now
+  const c = chunkOf(t.k); for (const k of WOODS.keys()) if (k.startsWith(c + '@')) WOODS.delete(k);
+  if (t.deep) { t.deep = false; DEEP[c].splice(DEEP[c].indexOf(t), 1); }
+  const i = t.k % N, j = (t.k - i) / N; for (const q of things) if (q.deep && Math.abs((q.k % N) - i) <= 1 && Math.abs(Math.floor(q.k / N) - j) <= 1) { q.deep = false; const d = DEEP[chunkOf(q.k)]; d.splice(d.indexOf(q), 1); for (const k of WOODS.keys()) if (k.startsWith(chunkOf(q.k) + '@')) WOODS.delete(k); }
+}
+const BOX = Array.from({ length: NC * NC }, (_, c) => { const ci = c % NC, cj = (c - ci) / NC, pts = []; for (const [x, y] of [[ci, cj], [ci + 1, cj], [ci, cj + 1], [ci + 1, cj + 1]]) pts.push(V(x * CS * D.tile, y * CS * D.tile, D.land));
+  return [Math.min(...pts.map((p) => p[0])) - 12, Math.min(...pts.map((p) => p[1])) - 30, Math.max(...pts.map((p) => p[0])) + 12, Math.max(...pts.map((p) => p[1])) + 6]; }); // each chunk's box in the view frame, with room above for the trees' height
+function woodsChunk(c, q) { // the chunk's deep trees on one canvas
+  const key = c + '@' + q; let w = WOODS.get(key); if (w) return w;
+  const [x0, y0, x1, y1] = BOX[c], cv = document.createElement('canvas'); cv.width = Math.ceil((x1 - x0) * q); cv.height = Math.ceil((y1 - y0) * q); const g2 = cv.getContext('2d');
+  for (const t of DEEP[c]) blit(nodeSprite(t.kind, t.v, q * t.size), (t.vx - x0) * q, (t.vy - y0) * q, q * t.size, g2);
+  w = { cv, q }; if (WOODS.size > 24) WOODS.delete(WOODS.keys().next().value); WOODS.set(key, w); return w;
+}
+function drawWoods(s) { const q = STEP ** Math.round(Math.log(s) / Math.log(STEP));
+  for (let c = 0; c < NC * NC; c++) { if (!DEEP[c].length) continue; const [x0, y0, x1, y1] = BOX[c], [x, y] = toScreen(x0, y0), ww = (x1 - x0) * s, hh = (y1 - y0) * s; if (x > cw || y > ch || x + ww < 0 || y + hh < 0) continue; ctx.drawImage(woodsChunk(c, q).cv, x, y, ww, hh); }
+}
 function drawThings() {
-  const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s;
+  const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s, us = units.slice().sort((a, b) => a.vy - b.vy); let n = 0;
+  const unit = (u) => { const [x, y] = toScreen(u.vx, u.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) return;
+    if (u === sel) { ctx.strokeStyle = C.gold; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(x, y, 7 * s, 3.5 * s, 0, 0, 7); ctx.stroke(); }
+    if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else if (u.face < 0) { ctx.save(); ctx.translate(x, y); ctx.scale(-1, 1); blit(unitSprite(u, s), 0, 0, s); ctx.restore(); } else blit(unitSprite(u, s), x, y, s); };
+  if (!dots) drawWoods(s);
   for (const t of things) {
+    while (n < us.length && us[n].vy <= t.vy) unit(us[n++]);
+    if (t.deep && !dots) continue;
     const [x, y] = toScreen(t.vx, t.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) continue;
     if (t.kind === 'bld') blit(bldSprite(t.code, t.col, s), x, y, s);
     else if (GIFT[t.kind]) { if (!dots) GIFT[t.kind](x, y, s); }
     else if (dots) rect(x - 1, y - 1, 2, 2, DOT[t.kind]); else blit(nodeSprite(t.kind, t.v, s * t.size), x, y, s * t.size);
   }
+  while (n < us.length) unit(us[n++]);
 }
 let edgeSegs = null;
 function drawEdge() { // L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tiles' own edges
@@ -740,10 +1005,13 @@ canvas.addEventListener('pointermove', (e) => {
     cam.x -= (e.clientX - was[0]) / 2 / cam.z; cam.y -= (e.clientY - was[1]) / 2 / cam.z; if (d0 > 0) zoomAt((e.clientX + other[0]) / 2, (e.clientY + other[1]) / 2, d1 / d0); }
   ptrs.set(e.pointerId, [e.clientX, e.clientY, was[2], was[3]]); dirty();
 });
-for (const ev of ['pointerup', 'pointercancel']) canvas.addEventListener(ev, (e) => { const p = ptrs.get(e.pointerId); ptrs.delete(e.pointerId); if (ev === 'pointerup' && p && show.build && Math.hypot(e.clientX - p[2], e.clientY - p[3]) < 6) tap(e.clientX, e.clientY); });
-function tap(px, py) { // the tile under a tap, at the land's height; a building there comes down, else the picked one goes up with its middle there
-  const vx = cam.x + (px - cw / 2) / cam.z, vy = cam.y + (py - ch / 2) / cam.z, [sx, sy] = fromBoard(vx, (vy + D.land * UP) / TILT), i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile);
-  const hit = things.find((t) => t.kind === 'bld' && i >= t.i && i < t.i + t.n && j >= t.j && j < t.j + t.n); if (hit) unbuild(hit); else build(pick, i - Math.floor(B[pick][1] / 2), j - Math.floor(B[pick][1] / 2)); dirty();
+for (const ev of ['pointerup', 'pointercancel']) canvas.addEventListener(ev, (e) => { const p = ptrs.get(e.pointerId); ptrs.delete(e.pointerId); if (ev === 'pointerup' && p && Math.hypot(e.clientX - p[2], e.clientY - p[3]) < 6) tap(e.clientX, e.clientY); });
+function tap(px, py) { // the tile under a tap, at the land's height. Build on: a building there comes down, else the picked one goes up. Otherwise (SM Select, Move): a villager of the player's is picked; a find sends the picked one gathering, the ground sends it walking
+  const vx = cam.x + (px - cw / 2) / cam.z, vy = cam.y + (py - ch / 2) / cam.z, [sx, sy] = fromBoard(vx, (vy + D.land * UP) / TILT), i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile), k = j * N + i;
+  if (show.build) { const hit = things.find((t) => t.kind === 'bld' && i >= t.i && i < t.i + t.n && j >= t.j && j < t.j + t.n); if (hit) unbuild(hit); else build(pick, i - Math.floor(B[pick][1] / 2), j - Math.floor(B[pick][1] / 2)); dirty(); return; }
+  let near = null; for (const u of units) if (u.side === 0) { const [x, y] = toScreen(u.vx, u.vy), d = Math.hypot(x - px, y - py + 8 * cam.z); if (d < 16 && (!near || d < near[1])) near = [u, d]; }
+  if (near) sel = near[0]; else if (sel) { const t = things.find((q) => q.k === k && KIND[q.kind] && KIND[q.kind].yield); if (t) gather(sel, t); else if (walkable(k)) { sel.job = 'go'; sel.then = 'idle'; sel.target = null; if (!go(sel, k)) sel.job = 'idle'; } }
+  dirty();
 }
 const pickBar = document.getElementById('pick');
 for (const code of Object.keys(B)) { const b = document.createElement('button'); b.textContent = B[code][0]; b.classList.toggle('on', code === pick); b.onclick = () => { pick = code; for (const q of pickBar.children) q.classList.toggle('on', q === b); }; pickBar.appendChild(b); }
@@ -752,10 +1020,10 @@ for (const b of document.querySelectorAll('#bar [data-t]')) b.onclick = () => { 
 document.getElementById('new').onclick = () => { location.hash = String(Math.floor(Math.random() * 4294967296)); };
 // The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a seed in the address overrides it.
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
-function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); things = []; makeGround(Number(location.hash.slice(1)) || today()); dirty(); }
+function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); showStore(); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
-resize(); start();
-window.fk = { D, A, C, B, cam, show, dirty, fit, H, DEP, FOR, OCC, N, V, toView, fromBoard, corner, B0, B1, KIND, Z1, z1, build, unbuild, seed: () => seed, things: () => things, coast: (s, p) => coast(s, p) }; // the test hook
+resize(); start(); requestAnimationFrame(loop);
+window.fk = { D, A, C, B, U, SIDES, cam, show, dirty, fit, H, DEP, FOR, OCC, N, V, toView, fromBoard, corner, B0, B1, KIND, Z1, z1, build, unbuild, gather, go, step, findPath, tileAt, walkable, select: (u) => (sel = u), seed: () => seed, things: () => things, units: () => units, coast: (s, p) => coast(s, p) }; // the test hook
 </script>
 </body>
 </html>

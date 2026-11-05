@@ -70,6 +70,7 @@ QBG Headlands and bays: where the coast stands out the waves gather and cut a cl
 QBH A lake's size drawn from the power law (QBA): area = a_min · U^(−1/c), U uniform, capped at a_max (the Pareto draw) · N61
 QBI Roads cross rivers at fords: where a river meets one of the four roads its bed rises to wading depth · N68
 QBK The art frame: a building's picture is painted with its front edge along x and sheared by sin A2 · sin A1 so that edge follows the turned grid; its depth is (sin A2 · cos A1 + shear · sin A1) a unit of width, the back standing sin A1 to the right (QBD worked for a picture painted flat) · N66
+QBL The way: A* over the tiles, eight neighbours, a straight step 1 and a diagonal √2, the octile distance as the heuristic; a diagonal never cuts a blocked corner · N74
 QBJ Z1's store: food = (age up + villagers × a villager) × (1 + margin); wood = (mill + lumber camp + homes × a home + barracks) × (1 + margin); bushes = ⌈food / a bush⌉, trees = ⌈wood / a tree⌉ (Albert's rule; the prices are the genre's until the Content pull) · N69
 
 ## N Citations
@@ -141,6 +142,11 @@ N65 Ettinger (2017), Mulberry32, a 32-bit generator; the seed of the day is the 
 N66 Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the ground (from memory: Age of Empires II's tiles are 2:1)
 N67 Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology, standard; Bird, Coastal Geomorphology, 2008; from memory)
 N68 Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory
+N70 First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6, stone 0.55, iron 0.5 (its time values, kept)
+N71 Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open)
+N72 Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory)
+N73 Travel speeds of deer, wolf and bear at a walk or trot (natural history, standard; from memory, to open)
+N74 Hart, Nilsson & Raphael (1968), IEEE Trans. SSC 4: A*
 N69 Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house 25 wood, the mill and the lumber camp 100 wood, the barracks 175 wood; a tree 100 wood, a forage bush 125 food, a gold tile 800, a stone tile 350 (from memory, to open; stand-ins)
 
 ## Values these use (numbers; floor 1's are in D now, the rest go to D at their floor)
