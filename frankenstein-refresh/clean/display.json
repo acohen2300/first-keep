@@ -1,0 +1,783 @@
+{
+ "about": "Step 6, temp book staging/display.js (Mid's 20 to 25, the view): every piece. in v100: already home (a difference in value noted for step 7). bring: comes with its feature, as book entries and laws, Mid's values kept. cut: v100 does the same job another way. A piece held or cut by Albert is in misfits.",
+ "pieces": {
+  "cv": [
+   "cut",
+   "the map's canvas (and the small map's): index.html's canvas"
+  ],
+  "ctx": [
+   "in v100",
+   "index.html ctx; Mid swaps it to paint caches, v100's sprite() paints into its own canvas"
+  ],
+  "cam": [
+   "in v100",
+   "index.html cam {x, y, z}"
+  ],
+  "FIG": [
+   "in v100",
+   "v100 draws a figure one unit per figure unit (unitSprite, LOOKBOX); Mid draws 0.66, a person 14 tall against v100's 21: see misfits"
+  ],
+  "cw": [
+   "in v100",
+   "index.html cw, ch, dpr"
+  ],
+  "grassM": [
+   "cut",
+   "the grass texture's matrix over Mid's land picture; v100 bakes the blades into the ground (renderGround, D121)"
+  ],
+  "scarCv": [
+   "bring",
+   "the ground's memory: a layer under everything where people fell, buildings burned, lightning struck, the ground split; cleared each game (View)"
+  ],
+  "resetScars": [
+   "bring",
+   "clears the ground's memory each new game (with scarCv)"
+  ],
+  "wearGround": [
+   "bring",
+   "bare worn earth round a finished building, painted once into the ground's memory (look: Colours)"
+  ],
+  "scarFall": [
+   "bring",
+   "the dark mark where someone fell (with combat)"
+  ],
+  "scarStrike": [
+   "bring",
+   "the scorch where lightning struck (v100 has the strikes, KW6, not the mark)"
+  ],
+  "scarCrack": [
+   "bring",
+   "the cracks a sinkhole leaves (with the events)"
+  ],
+  "scarBurn": [
+   "bring",
+   "burnt ground and rubble where a building burned (with fire and combat)"
+  ],
+  "drawOnce": [
+   "cut",
+   "paints art once into a small canvas; v100's sprite() cache does it"
+  ],
+  "BADGE": [
+   "cut",
+   "the badge's cache; v100's sprite cache (SPR) does it"
+  ],
+  "researchBadge": [
+   "bring",
+   "a parchment tab over a building with the number of researches waiting (with the tech tree)"
+  ],
+  "badgeArt": [
+   "bring",
+   "the research tab's art: parchment, red book, count (Sprites, Colours)"
+  ],
+  "vy": [
+   "cut",
+   "centres Mid's view between its top and bottom bars; v100's camera rule (keepOn) and the Screen floor"
+  ],
+  "bandH": [
+   "cut",
+   "the clear band between Mid's bars; v100's camera rule and Screen floor"
+  ],
+  "clampCam": [
+   "cut",
+   "v100's keepOn (the camera rule); Mid's clamps in the 45° land frame past its rim, both replaced"
+  ],
+  "spring": [
+   "bring",
+   "the camera's glide, a critically damped spring (law QAW, written but not built in v100)"
+  ],
+  "CAM_W": [
+   "bring",
+   "the glide's speed, ω 9, about half a second (Measurements, with QAW)"
+  ],
+  "camGo": [
+   "bring",
+   "glide the camera to a point: Follow, Home, go there, an alert (with QAW)"
+  ],
+  "camStop": [
+   "bring",
+   "stops a glide; a drag or pinch takes over (with QAW)"
+  ],
+  "followCam": [
+   "bring",
+   "Follow: the camera keeps the picked units in the middle (with QAW and the pick)"
+  ],
+  "SX": [
+   "cut",
+   "world to screen; v100's toView, toScreen and S (QBD). Mid's TILT squash is replaced by A2"
+  ],
+  "SY": [
+   "cut",
+   "world to screen; v100's toView, toScreen and S (QBD). Mid's TILT squash is replaced by A2"
+  ],
+  "DX": [
+   "cut",
+   "an offset to the screen; v100's toView (QBD)"
+  ],
+  "toWorld": [
+   "cut",
+   "screen to world; v100's tap() and zoomAt() undo the view (fromBoard)"
+  ],
+  "dWorld": [
+   "cut",
+   "a drag as a world move; v100 pans in view units (pointermove)"
+  ],
+  "wmat": [
+   "cut",
+   "the view as a canvas matrix for flat ground art; v100's one affine in drawFog (QBD)"
+  ],
+  "flat": [
+   "cut",
+   "resets the canvas matrix; v100's draw() does it"
+  ],
+  "viewBox": [
+   "cut",
+   "what the screen sees in the world; v100 culls by the screen box in drawThings"
+  ],
+  "wrect": [
+   "cut",
+   "a flat rectangle on the turned ground; v100 draws footprints through S() (menu.js ghost)"
+  ],
+  "landMat": [
+   "cut",
+   "Mid's 45° land frame on a canvas; replaced by v100's frames (A1, QBD)"
+  ],
+  "minZ": [
+   "in v100",
+   "index.html fit() sets zmin"
+  ],
+  "zoomAt": [
+   "in v100",
+   "index.html zoomAt, about the pointer"
+  ],
+  "quant": [
+   "in v100",
+   "v100's sprite() steps the zoom by √2 (STEP); Mid's steps are SCALES 1 to 6"
+  ],
+  "makeBg": [
+   "bring",
+   "Mid's ground picture: v100's renderGround already paints the strata, water by depth, the forest floor and grass blades; what comes is the grass's mottling and the worn track of the roads (Colours, Sprites). Its land-frame clip, the Throne's island and Mid's lake and river painting do not"
+  ],
+  "SPARKS": [
+   "bring",
+   "sparks where a blow lands (with combat)"
+  ],
+  "RIMC": [
+   "cut",
+   "colours of Mid's rim; v100's fractal coast and sea replace the rim. Its sky: see misfits"
+  ],
+  "drawRim": [
+   "cut",
+   "sea, cliffs and sky past the diamond's edge; v100's fractal coast hides the board's edges. Its sky: see misfits"
+  ],
+  "draw": [
+   "in v100",
+   "index.html draw(): one frame, back to front; Mid's extra passes come with their own pieces"
+  ],
+  "RADAR": [
+   "bring",
+   "the alert marker's place, for a tap (with drawRadar)"
+  ],
+  "drawRadar": [
+   "bring",
+   "a red marker on the screen's edge pointing at foes near your Town Center, with their count; tap to look"
+  ],
+  "hg": [
+   "bring",
+   "the hit glow's gradients, kept (with drawHitGlow)"
+  ],
+  "fogAt": [
+   "in v100",
+   "index.html SEEN, one a tile"
+  ],
+  "seen0": [
+   "in v100",
+   "index.html inSight"
+  ],
+  "known0": [
+   "in v100",
+   "index.html SEEN 1, remembered, drawn dim (D118)"
+  ],
+  "knownB": [
+   "bring",
+   "another side's building shows only where seen now or once (remembered buildings); v100 draws every building under the fog"
+  ],
+  "visibleTo0": [
+   "bring",
+   "a foe's spy shows only once exposed (with the Spy, US3)"
+  ],
+  "fogCv": [
+   "in v100",
+   "index.html fogCv"
+  ],
+  "WOODS": [
+   "bring",
+   "held: the woods block sight (QAM, DICTIONARY V); see misfits"
+  ],
+  "woodsGrid": [
+   "bring",
+   "held: the woods block sight (QAM); see misfits"
+  ],
+  "openLine": [
+   "bring",
+   "held: the woods block sight (QAM), a grid line of sight; see misfits"
+  ],
+  "fogTick": [
+   "in v100",
+   "index.html look(), every D119; Mid's woods line (QAM) and sight from height (QAL) are held, see misfits; remembering others' buildings comes with knownB"
+  ],
+  "fogOff": [
+   "in v100",
+   "index.html look(): the sea is never fogged"
+  ],
+  "fogLayer": [
+   "in v100",
+   "index.html look() writes the fog picture, drawFog lays it"
+  ],
+  "stamp": [
+   "in v100",
+   "index.html blit(); flipped by ctx.scale in drawThings"
+  ],
+  "trapShown": [
+   "bring",
+   "a hidden trap shows only to its side, allies and a scout who found it (with the field defences, BF)"
+  ],
+  "WALL_LOOK": [
+   "in v100",
+   "v100 draws walls, gates and palisades as preview 49 pictures (ART wall, gate, palisade); Mid's box mold is another look: see misfits"
+  ],
+  "WALL_KEYS": [
+   "bring",
+   "walls next to each other join into one run (with the wall look)"
+  ],
+  "wkey": [
+   "bring",
+   "a wall's square key (with WALL_KEYS)"
+  ],
+  "wallKeys": [
+   "bring",
+   "which squares hold wall, once a tick (with WALL_KEYS)"
+  ],
+  "drawWallBox": [
+   "in v100",
+   "v100's wall pictures (ART); Mid's box with merlons and joined faces is another look: see misfits"
+  ],
+  "BOX_LOOK": [
+   "in v100",
+   "v100 draws buildings as preview 49 pictures (bldSprite, ART); Mid's box mold is another look: see misfits"
+  ],
+  "FLAT": [
+   "bring",
+   "which buildings lie flat as plots: farm, tree farm, pasture (with drawPlot)"
+  ],
+  "boxed": [
+   "cut",
+   "Mid's switch between its boxes and its old art (SET.boxes); v100 has one look a building (bldSprite)"
+  ],
+  "flat_": [
+   "cut",
+   "the same switch for plots; v100 has one look a building"
+  ],
+  "drawPlot": [
+   "bring",
+   "fields, orchards and pastures drawn flat, turning with the land: crop by the season, young trees, grass and sheep, soil growing with the work; v100 has farm, tree farm and pasture pictures (ART): see misfits"
+  ],
+  "drawBldBox": [
+   "in v100",
+   "v100's bldSprite (ART); Mid's box mold: see misfits"
+  ],
+  "drawBld": [
+   "bring",
+   "a building's dressing: traps, the site rising with stakes and progress bar, the finish pop and glow, worker dots on a field, the research tab, mill sails, chimney smoke, fire when hurt, + for an empty post, health bar, the wonder's clock; v100 has the stamp, a site's fade (t.done) and health bars (combat.js)"
+  ],
+  "CHIMNEY": [
+   "bring",
+   "where each building's chimney stands, for its smoke (Sprites)"
+  ],
+  "FLAME": [
+   "bring",
+   "one table of every flame: power, colour temperature, size, covered or not (laws QF, QAU)"
+  ],
+  "LIGHT": [
+   "bring",
+   "how far a flame's light reaches, what rain leaves of it (QAU)"
+  ],
+  "CAST": [
+   "in v100",
+   "v100's shadowVec (QAT, cap D120); Mid's sun 0.3 v100 0.35; Mid's moon shadow is held (KH2) and its cloud softening by weather kind meets v100's climate"
+  ],
+  "SHADE": [
+   "in v100",
+   "index.html shadowVec"
+  ],
+  "shadeFrame": [
+   "in v100",
+   "index.html shadowVec (QAT); Mid's moon shadow at night is held with the Moon (KH2): see misfits"
+  ],
+  "shadowPath": [
+   "bring",
+   "shadows of the trees, bushes and rocks in view (not the deep woods); v100 shadows buildings and units only"
+  ],
+  "BOX": [
+   "cut",
+   "a building's footprint for its shadow; v100's drawShadows throws the box (QAT)"
+  ],
+  "corners": [
+   "cut",
+   "the footprint's corners on the screen; v100's drawShadows"
+  ],
+  "HEX": [
+   "cut",
+   "the cached shadow shape; v100's drawShadows"
+  ],
+  "hexOf": [
+   "cut",
+   "a box's swept shadow as a hexagon; v100's drawShadows joins top and foot in one fill"
+  ],
+  "boxShadow": [
+   "cut",
+   "a building's shadow; v100's drawShadows"
+  ],
+  "sunShadows": [
+   "in v100",
+   "index.html drawShadows, one fill; the trees' shadows come with shadowPath"
+  ],
+  "flameShadow": [
+   "bring",
+   "the long shadow a fire throws of a thing near it, after dark"
+  ],
+  "kelvinRGB": [
+   "bring",
+   "a flame's colour from its temperature, black body (law QF)"
+  ],
+  "FLAME_RGB": [
+   "bring",
+   "each flame's colour, worked out once (with FLAME)"
+  ],
+  "flameLife": [
+   "bring",
+   "rain dims an open flame; a lantern keeps its light (reads v100's K.rain)"
+  ],
+  "flame": [
+   "bring",
+   "the flame itself: a flickering teardrop, whiter at heart; it leans with the wind: see misfits"
+  ],
+  "glow": [
+   "bring",
+   "a flame's light on the ground, fading as 1/r² (QAU)"
+  ],
+  "flagsOn": [
+   "bring",
+   "a building's flags fly, longer in a strong wind: see misfits"
+  ],
+  "PILE": [
+   "bring",
+   "a side's stores shown as piles by the camp that takes them in: logs, cut stone, gold, sacks"
+  ],
+  "PSPR": [
+   "cut",
+   "the piles' cache; v100's sprite cache (SPR)"
+  ],
+  "pileAt": [
+   "bring",
+   "draws a camp's pile by the size of the store (with PILE)"
+  ],
+  "pileArt": [
+   "bring",
+   "the piles' art (Sprites)"
+  ],
+  "smoke": [
+   "bring",
+   "a chimney's plume (law QAV), bent over by the wind: see misfits"
+  ],
+  "blaze": [
+   "bring",
+   "fire on a badly hurt building, dark smoke when sabotage stalls it"
+  ],
+  "RIPS": [
+   "bring",
+   "the rings that spread from a tap or an order (with ripple)"
+  ],
+  "ripple": [
+   "bring",
+   "a ring spreading on the ground where you tapped or ordered (Touch, Menus)"
+  ],
+  "popC": [
+   "bring",
+   "the swell-and-settle curve of a finished building (theatrics)"
+  ],
+  "celebrate": [
+   "bring",
+   "three sizes of celebration: a building done, an upgrade through an army, a new age, wonder or victory: see misfits"
+  ],
+  "ripDraw": [
+   "bring",
+   "draws the ripples (with ripple)"
+  ],
+  "sparkDraw": [
+   "bring",
+   "draws the sparks (with SPARKS)"
+  ],
+  "WX_TINT": [
+   "cut",
+   "a colour cast for each of Mid's weather kinds; v100's climate lays its own gloom (drawSky). Drought and blizzard: see misfits"
+  ],
+  "tintC": [
+   "in v100",
+   "v100's drawSky lays its dusk, night and gloom each frame"
+  ],
+  "tintOf": [
+   "in v100",
+   "index.html drawSky: dusk, night, gloom; Mid's night darker toward the new moon is held with the Moon (KH2)"
+  ],
+  "NV": [
+   "cut",
+   "the nodes on screen, kept sorted; v100 sorts once and culls in drawThings, the woods cache"
+  ],
+  "viewNodes": [
+   "cut",
+   "v100's drawThings and woods cache"
+  ],
+  "drawNode": [
+   "bring",
+   "a tree, bush or rock drawn smaller as it is used up (nodeScale); v100 stamps nodes at a fixed size (nodeSprite)"
+  ],
+  "workOf": [
+   "in v100",
+   "v100's work poses by u.tool (WORKTOOL: axe, pick, rod, hammer)"
+  ],
+  "STRIDE": [
+   "cut",
+   "ground a step covers; v100's law QBU turns the frame with metres walked over the body's stride (W)"
+  ],
+  "STANDARDS": [
+   "bring",
+   "the standards drawn this frame, for their torches (with drawStandards)"
+  ],
+  "drawStandards": [
+   "bring",
+   "an army on the move carries its side's standard, a ring at its foot as full as the group's health (War)"
+  ],
+  "FALL": [
+   "bring",
+   "the fallen, for the picture only (with fallen)"
+  ],
+  "fallen": [
+   "bring",
+   "one who dies in sight topples over and fades (War)"
+  ],
+  "drawFallen": [
+   "bring",
+   "draws the toppling (with fallen)"
+  ],
+  "LEAN": [
+   "bring",
+   "the view's memory of a woodcutter's lean into its tree"
+  ],
+  "PACED": [
+   "cut",
+   "when a walker last moved, to move its legs; v100 steps the frames by u.path and metres walked (QBU)"
+  ],
+  "leavesOver": [
+   "bring",
+   "leaves over a soldier in ambush (with the ambush)"
+  ],
+  "drawUnit": [
+   "bring",
+   "a figure's motion and marks: the woodcutter's lean, the step's rise and fall, the lunge, a shooter's kick, the recoil, the stagger, nerve bar, rout badge, march chevron, conversion, idle z and focus F, the archer's stakes; v100 has the ring, the sprite, the stride (QBU), the sway (QBS), dots far out"
+  ],
+  "drawFind": [
+   "bring",
+   "the finds' art: v100 draws ruins, cemetery, campfire, treasure (GIFT); Mid's robbers' camp, wolf den, trade stop and drifters' camp come with their features; the Throne's shrine: see misfits"
+  ],
+  "drawPicks": [
+   "in v100",
+   "index.html drawThings' rings: side colour, gold when picked (C10); Mid's rings green for yours, red for a foe's, gold for the wild differ"
+  ],
+  "rnd2": [
+   "cut",
+   "a random ±1 for the jolt; Math.random in v100's draw()"
+  ],
+  "drawGround": [
+   "in v100",
+   "index.html drawSkin: wet darkens, snow whitens, ice whitens the water; Mid's ruts are held (KI15): see misfits"
+  ],
+  "drawCracks": [
+   "bring",
+   "a sinkhole's cracks and dust (with the events)"
+  ],
+  "drawEvents": [
+   "bring",
+   "each event draws itself (events module); its blizzard snow: see misfits"
+  ],
+  "bar": [
+   "in v100",
+   "combat.js bar(), the health bars"
+  ],
+  "flagAt": [
+   "bring",
+   "the flag at your rally point"
+  ],
+  "FONTF": [
+   "cut",
+   "the map font read from the page; v100's Screen book holds the font"
+  ],
+  "fontF": [
+   "cut",
+   "the same; v100's Screen book"
+  ],
+  "labelK": [
+   "bring",
+   "words on the map scale with the zoom down to a floor (the map's one text size rule)"
+  ],
+  "mapFont": [
+   "bring",
+   "the map's font at that size (with labelK; the font from the Screen book)"
+  ],
+  "ring": [
+   "in v100",
+   "index.html drawThings' ellipse ring"
+  ],
+  "idleMark": [
+   "bring",
+   "z over an idle villager, + over an empty post, F over a focused one"
+  ],
+  "tag": [
+   "bring",
+   "held: a label pill on the map (DICTIONARY V, labels); see misfits"
+  ],
+  "drawSeal": [
+   "bring",
+   "while laying walls: a red line where a foe could walk in, or Sealed over the Town Center"
+  ],
+  "drawGuides": [
+   "bring",
+   "alignment lines from the ghost to buildings in line with it"
+  ],
+  "drawGhost": [
+   "bring",
+   "the building being placed: its art tinted, the reason, the guides, the seal; v100's ghost (menu.js) is the picture half seen with a green or red outline"
+  ],
+  "GHOST_TINT": [
+   "bring",
+   "the ghost's green and red tints (Colours)"
+  ],
+  "ghostTint": [
+   "bring",
+   "tints the ghost's own art (with drawGhost)"
+  ],
+  "miniIncoming": [
+   "bring",
+   "held: the small map's mark for an army coming (DICTIONARY V); see misfits"
+  ],
+  "MINI_K": [
+   "bring",
+   "held: the small map's scale (DICTIONARY V); see misfits"
+  ],
+  "drawMini": [
+   "bring",
+   "held: the small map (DICTIONARY V); its mirage and blizzard: see misfits"
+  ],
+  "drawFlood": [
+   "bring",
+   "held: the flood over the shore (KI4); see misfits"
+  ],
+  "drawSand": [
+   "bring",
+   "quicksand: a pale patch with ripples (with the events)"
+  ],
+  "drawLakeRipples": [
+   "bring",
+   "held: ripples on the lakes (DICTIONARY V); see misfits"
+  ],
+  "drawRainRings": [
+   "bring",
+   "held: rain rings on the ground (DICTIONARY V); see misfits"
+  ],
+  "drawFire": [
+   "bring",
+   "the wildfire; fire spreading (QT, QU) is held: see misfits"
+  ],
+  "drawFogLayer": [
+   "in v100",
+   "index.html drawFog"
+  ],
+  "drawOrders": [
+   "bring",
+   "your groups on the march: a dashed line to where they go, a ring there, the time left; v100 has the War page's crosshair (combat.js)"
+  ],
+  "drawTracers": [
+   "bring",
+   "arrows and shots as short streaks along their flight, a burning arrow lit (War)"
+  ],
+  "drawLight": [
+   "bring",
+   "after dark: lit windows, hearths, lanterns, torches, fires throwing their glow; v100's drawSky already lays dusk and night"
+  ],
+  "HEARTH": [
+   "bring",
+   "where a fire is always lit after dark (with drawLight)"
+  ],
+  "drawHitGlow": [
+   "bring",
+   "something of yours is hit: a red glow round the screen's edge, orange for bandits and beasts"
+  ],
+  "drawFlash": [
+   "bring",
+   "a pale flash for a new age, a wonder, a victory (theatrics)"
+  ],
+  "drawTouch": [
+   "bring",
+   "the trees marked for cutting, the hold ring, the selection box, the choke being drawn (Touch)"
+  ],
+  "RAINP": [
+   "in v100",
+   "index.html RAINP, the same values"
+  ],
+  "RAIN": [
+   "in v100",
+   "index.html RAIN"
+  ],
+  "wxT": [
+   "cut",
+   "Mid's weather clock, the wind and the flash's state; v100's K holds the weather. The wind: see misfits"
+  ],
+  "FLASH_GAP": [
+   "in v100",
+   "D112 (flashGap)"
+  ],
+  "flashOK": [
+   "in v100",
+   "index.html strike(), never within D112"
+  ],
+  "drawWeather": [
+   "in v100",
+   "index.html drawSky: rain, snow, bolts with forks, sheet flashes (QJ, QL); Mid's wind slant and blizzard and frost flakes: see misfits"
+  ],
+  "SKY": [
+   "bring",
+   "held: the sky band's colours by hour and weather; see misfits"
+  ],
+  "drawSky": [
+   "bring",
+   "held: a band of sky along the top with clouds and the storm's front; see misfits"
+  ],
+  "forestCv": [
+   "cut",
+   "the whole forest as one picture far out; v100's woods cache (woodsChunk) and dots far out"
+  ],
+  "forestLayer": [
+   "cut",
+   "v100's woods cache and dots (drawWoods, D83)"
+  ]
+ },
+ "misfits": [
+  [
+   "FIG",
+   "Mid draws people at two-thirds the size v100 does: about 14 tall against v100's 21 on the same ground. Which size?"
+  ],
+  [
+   "drawRim",
+   "Mid shows sky above cliffs past the map's far edge. v100's coast replaces the rim, and sky in the frame is parked (Parked.md, Nov 3). Keep it parked?"
+  ],
+  [
+   "drawWallBox",
+   "Mid draws walls, gates and palisades as boxes that join into one run; v100 draws each as a preview 49 picture. Which look?"
+  ],
+  [
+   "drawBldBox",
+   "Mid draws buildings as plain boxes (front, side, roof: 'the cheapest way possible', Nov 4); v100 wears preview 49's pictures. Which look? (BOX_LOOK and WALL_LOOK go with the answer)"
+  ],
+  [
+   "drawPlot",
+   "Mid draws fields and pastures flat on the ground, turning with it, crops changing by season; v100 has pictures for them. Which?"
+  ],
+  [
+   "flame",
+   "Flames lean with the wind, and the wind is cut. Bring them upright?"
+  ],
+  [
+   "flagsOn",
+   "Flags fly longer in a strong wind, and the wind is cut. Let them fly at one steady breeze?"
+  ],
+  [
+   "smoke",
+   "Chimney smoke bends with the wind (the smoke law), and the wind is cut. Let it rise and lean one fixed way?"
+  ],
+  [
+   "wxT",
+   "Mid's weather keeps a wind that slants the rain and drifts the snow; the wind is cut. Drop it?"
+  ],
+  [
+   "drawWeather",
+   "Mid's rain slants in the wind (cut), and it has blizzard and frost flakes; v100's climate has no blizzard or frost weather. Drop them, or add them to the climate?"
+  ],
+  [
+   "WX_TINT",
+   "Mid's weather has drought and blizzard; v100's climate has neither (dust and dry grass are held). Add them, or drop them?"
+  ],
+  [
+   "drawEvents",
+   "Mid's blizzard draws its own thick snow over the screen; v100 has no blizzard. Drop it?"
+  ],
+  [
+   "shadeFrame",
+   "At night Mid throws shadows by the moon; the moon is held with the Host. Keep it waiting?"
+  ],
+  [
+   "tintOf",
+   "Mid's night is darker toward the new moon; the moon is held. Keep it waiting?"
+  ],
+  [
+   "drawSky",
+   "Mid draws a band of sky along the top of the screen; the sky has nowhere to show in v100 (held, no horizon; 'some sky in the frame' parked). Keep it waiting?"
+  ],
+  [
+   "SKY",
+   "The sky band's colours: waiting with the sky band?"
+  ],
+  [
+   "woodsGrid",
+   "The woods blocking sight is held (QAM). Keep it waiting? (WOODS and openLine go with it)"
+  ],
+  [
+   "fogTick",
+   "Mid's sight reaches further from a tall building (QAL), which is held. Keep it waiting?"
+  ],
+  [
+   "drawMini",
+   "The small map is held. Keep it waiting? It also draws the mirage, a fantasy event you cut. (MINI_K and miniIncoming go with it)"
+  ],
+  [
+   "tag",
+   "Labels on the map are held. Keep them waiting?"
+  ],
+  [
+   "drawLakeRipples",
+   "Ripples on the lakes are held. Keep them waiting?"
+  ],
+  [
+   "drawRainRings",
+   "Rain rings on the ground are held. Keep them waiting?"
+  ],
+  [
+   "drawFlood",
+   "The flood is held (KI4). Keep it waiting?"
+  ],
+  [
+   "drawGround",
+   "Ruts worn by feet, darker in mud, are held (KI15). Keep them waiting?"
+  ],
+  [
+   "drawFire",
+   "The wildfire spreads by the fire laws QT and QU, which are held. Keep it waiting?"
+  ],
+  [
+   "celebrate",
+   "Parked.md still lists Theatrics as parked until you pick from a list (Build 26), but Mid has it built: the pop, the sparks, the flash. Bring it?"
+  ],
+  [
+   "drawFind",
+   "Mid draws the Throne's shrine; the Throne waits to be reimagined and the middle stays clear. Leave it out?"
+  ]
+ ]
+}

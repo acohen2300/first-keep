@@ -1,0 +1,251 @@
+{
+ "about": "Step 6, temp book staging/world.js (Mid's 10-world*, the map-maker and a new game): every piece. in v100: already home. bring: comes with its feature, as book entries and laws, Mid's values kept. cut: v100's own map-maker (DICTIONARY) or frames do the job. A piece that meets Albert's calls is in misfits.",
+ "pieces": {
+  "makeCitadel": [
+   "bring",
+   "held: the Throne's walled citadel on the great lake's island; the Throne comes back reimagined (DICTIONARY Later); see misfits"
+  ],
+  "FOREST": [
+   "cut",
+   "Mid's forest lattice, paths and lanes; v100's woods (TF1: a wall round every home at D50 with the road through it, patches over Z4)"
+  ],
+  "TREE": [
+   "cut",
+   "a tree blocking 3 × 3 squares, deep at 6 neighbours; v100: one tree a tile of woods, deep at eight (deepen)"
+  ],
+  "nodeScale": [
+   "bring",
+   "a tree, bush or rock drawn smaller as it is used up"
+  ],
+  "findRoom": [
+   "cut",
+   "room kept round a find by kind; v100's room from each shell (KIND r) and clear()"
+  ],
+  "makeForest": [
+   "cut",
+   "v100's makeTerrain lays the woods (TF1)"
+  ],
+  "segGap": [
+   "cut",
+   "distance from a point to a segment; index.html segDist"
+  ],
+  "openWays": [
+   "bring",
+   "nothing walled in: a find cut off by trees gets a way cut home through the woods; v100's map-maker has no such check"
+  ],
+  "wayHome": [
+   "bring",
+   "finds that way: the fewest trees between a find and its home, never across water (with openWays)"
+  ],
+  "DEEP": [
+   "cut",
+   "index.html DEEP and deepen()"
+  ],
+  "deepTrees": [
+   "cut",
+   "index.html deepen()"
+  ],
+  "QUARTER": [
+   "cut",
+   "a corner's quarter in Mid's land frame; v100's corners and zones (corner(), Z1–Z4, L11, L12)"
+  ],
+  "inQuarterL": [
+   "cut",
+   "v100's corners and zones"
+  ],
+  "inQuarter": [
+   "cut",
+   "v100's corners and zones"
+  ],
+  "ROOM": [
+   "cut",
+   "how near each laid thing may come to each kind; v100's rooms from the shells and the Randomizer's rules (L13)"
+  ],
+  "takenGap": [
+   "cut",
+   "gap to what is already laid; v100's clear() and free()"
+  ],
+  "turnLand": [
+   "cut",
+   "turns Mid's 45° land frame into the world; replaced by v100's frames (A1, QBD)"
+  ],
+  "navOffLand": [
+   "cut",
+   "squares off the land are solid; in v100 the sea is in the height field (walkable)"
+  ],
+  "layMovers": [
+   "bring",
+   "the start: v100's makeUnits places D67 villagers round the Town Center and herds in Z4; Mid also gives each side first jobs, a scout, deer and a boar near home, and a chest, ruins, wolf den, cemetery and drifters' camp each corner (where: by v100's zones)"
+  ],
+  "layCamps": [
+   "bring",
+   "a robbers' camp each side of the map (with the outlaws, MH); where: by v100's zones"
+  ],
+  "wildAt": [
+   "in v100",
+   "index.html spawn() with side −1; Mid's home point and a find's guard come with addFind"
+  ],
+  "addFind": [
+   "bring",
+   "a find with its guards (wolves round a den) or hired drifters; v100's put() lays the gifts. Its fantasy guards: see misfits"
+  ],
+  "SHAPE": [
+   "cut",
+   "Mid's bush and pair offsets; v100's cluster() takes the nearest free tiles"
+  ],
+  "LAYOUT": [
+   "cut",
+   "Mid's ring of distances a find from the keep; v100's zones Z1–Z4 and D70–D81 place them"
+  ],
+  "BACK_IDS": [
+   "cut",
+   "Mid's zone sets; v100's zones"
+  ],
+  "SEEK": [
+   "cut",
+   "the search for room; v100's spot() tries"
+  ],
+  "laySpots": [
+   "cut",
+   "places finds in Mid's rings; v100's makeThings and the Randomizer (L13)"
+  ],
+  "cluster": [
+   "in v100",
+   "index.html cluster()"
+  ],
+  "makeMap": [
+   "cut",
+   "Mid's map-maker; v100's makeGround, makeTerrain, makeThings. The land's character per game: see misfits"
+  ],
+  "SHORE": [
+   "cut",
+   "squares counted as shore; v100's coast and lakes in the height field (D.shore)"
+  ],
+  "lakeFor": [
+   "cut",
+   "the lakes the walking grid was drawn for; v100 reads water from the height (L5)"
+  ],
+  "inFlood": [
+   "bring",
+   "held: the flood (KI4); see misfits"
+  ],
+  "lakeR": [
+   "cut",
+   "a lake's radius; v100's lakes are cuts in the height field (TC1)"
+  ],
+  "lakeRAt": [
+   "cut",
+   "a lake's shore by harmonics; v100's fractal shore (QAZ)"
+  ],
+  "lakeRTo": [
+   "cut",
+   "v100's fractal shore (QAZ)"
+  ],
+  "shoreWalk": [
+   "cut",
+   "traces a shore; v100's lakes live in the height field"
+  ],
+  "shorePath": [
+   "cut",
+   "v100's lakes live in the height field"
+  ],
+  "onLand": [
+   "cut",
+   "v100: a tile is land by its height (L5); the Throne's island and causeways wait with the Throne"
+  ],
+  "lakeGap": [
+   "cut",
+   "distance to the nearest lake; v100's terrain keeps its own rules (between())"
+  ],
+  "lakeGrid": [
+   "cut",
+   "water on the walking grid, flood water wadeable with levees; v100's walkable() reads the height (L5). The flood: see misfits"
+  ],
+  "lakeSize": [
+   "cut",
+   "the lake-size power law; v100's QBH, the same Pareto draw"
+  ],
+  "lakeShape": [
+   "cut",
+   "v100's fractal shore (QAZ)"
+  ],
+  "lakeHarm": [
+   "cut",
+   "v100's fractal shore (QAZ)"
+  ],
+  "makeWater": [
+   "cut",
+   "v100's makeTerrain lakes (TC1)"
+  ],
+  "makeRiver": [
+   "cut",
+   "v100's rivers (TC2) and fords (TC4, QBI)"
+  ],
+  "riverRuns": [
+   "cut",
+   "a river's stretches for painting; v100 paints the height field"
+  ],
+  "layFish": [
+   "bring",
+   "fish in rivers and round lake shores (MW1; fish as a resource, Later)"
+  ],
+  "G": [
+   "cut",
+   "Mid's one game object; v100 keeps its state in things, units, SIDES, K and SEEN (the FK door)"
+  ],
+  "blankGame": [
+   "cut",
+   "a new game's blank state; v100's start() resets; each field (mail, milestones, truce, hazards) comes with its feature"
+  ],
+  "mkPlayer": [
+   "bring",
+   "a side's record: v100's SIDES has colour and store; age, research, relations, the crowns' tally and the computer's state come with their features"
+  ],
+  "newGame": [
+   "bring",
+   "a new game: v100's start() (seed of the day QBF, the opening view QBW); the hazards drawn each game, the scenario and the computers' handicap come with their features: see misfits"
+  ],
+  "applyScenario": [
+   "bring",
+   "a scenario: an age, a store, relations, buildings already up (v100's Start page lists Open, Siege, Silk Road, Last Keep, not built)"
+  ],
+  "inBox": [
+   "cut",
+   "a point in a box; v100 tests its own bounds inline"
+  ],
+  "node": [
+   "in v100",
+   "index.html put(): a find on a tile, its amount from its shell"
+  ],
+  "mkBld": [
+   "in v100",
+   "index.html build(): n × n tiles, Open or Closed; progress and health come with econ.js and combat.js"
+  ],
+  "addUnit": [
+   "in v100",
+   "index.html spawn()"
+  ]
+ },
+ "misfits": [
+  [
+   "makeCitadel",
+   "Mid builds the Throne's walled citadel on an island in the great lake at the middle; v100 keeps the middle clear until you describe the Throne again. Leave Mid's out?"
+  ],
+  [
+   "addFind",
+   "A find's guards can be fantasy beasts when fantasy is on; the fantasy is cut. Real guards only?"
+  ],
+  [
+   "makeMap",
+   "Mid rolls a character for each map (rich in one thing, poor in another, one extra find), so maps feel different; v100's map-maker has none. Add it to Z4's Randomizer?"
+  ],
+  [
+   "inFlood",
+   "The flood (lakes rising over the shore, waded with levees) is held (KI4). Keep it waiting?"
+  ],
+  [
+   "newGame",
+   "Each computer starts with a free mill and farm (EXCEPTIONS #16, a live test); Parked.md has your idea to replace it with pressure. Bring the handicap or not?"
+  ]
+ ]
+}
